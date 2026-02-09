@@ -242,6 +242,7 @@ class RangeStrategy:
 
         sl_width_frac: float = 0.10,     # SL distance = max(width*10%, ATR*mult)
         sl_atr_mult: float = 1.0,
+        sl_buffer_frac: float = 0.0,    # compat: optional extra buffer (unused)
 
         allow_long: bool = True,
         allow_short: bool = True,
@@ -265,6 +266,7 @@ class RangeStrategy:
 
         self.sl_width_frac = float(sl_width_frac)
         self.sl_atr_mult = float(sl_atr_mult)
+        self.sl_buffer_frac = float(sl_buffer_frac)
 
         self.allow_long = bool(allow_long)
         self.allow_short = bool(allow_short)

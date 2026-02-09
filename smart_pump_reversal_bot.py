@@ -1,15 +1,9 @@
-# smart_pump_reversal_bot.py
-
-import os
-
-# Минимальная доля "желательного" notional (по риск-сайзингу), которую нужно уметь разместить.
-# Если меньше — пропускаем сделку (иначе комиссии/проскальзывание убивают ожидание).
-MIN_NOTIONAL_FILL_FRAC = float(os.getenv("MIN_NOTIONAL_FILL_FRAC", "0.40"))
-
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# smart_pump_reversal_bot.py
+
+import os
 import time, json, statistics, asyncio, requests, collections, re, csv, traceback, random, math
 from typing import Dict, Tuple, List, Optional, Any
 import websockets
@@ -33,6 +27,10 @@ from indicators import (
     engulfing as engulfing_bear,
     trade_quality as calc_trade_quality,
 )
+
+# Минимальная доля "желательного" notional (по риск-сайзингу), которую нужно уметь разместить.
+# Если меньше — пропускаем сделку (иначе комиссии/проскальзывание убивают ожидание).
+MIN_NOTIONAL_FILL_FRAC = float(os.getenv("MIN_NOTIONAL_FILL_FRAC", "0.40"))
 
 
 # =========================== ГЛОБАЛ ===========================
