@@ -1,0 +1,198 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""Run a combined portfolio backtest (multi-strategy, multi-symbol).
+
+Use this after you have at least a couple strategies that look OK in
+isolation. It runs all selected strategies together on the same symbol universe
+and period, sharing capital and `max_positions`.
+
+Example:
+
+  INPLAY_EXIT_MODE=runner \
+  python3 backtest/run_portfolio.py \
+    --symbols BTCUSDT,ETHUSDT \
+    --strategies bounce,range,inplay \
+    --days 60 --end 2026-02-01 \
+    --starting_equity 100 \
+    --risk_pct 0.01 --max_positions 5 \
+    --cap_notional 30 --leverage 1 \
+    --tag portfolio_try1
+"""
+
+from __future__ import annotations
+
+
+import os
+import sys
+
+_THIS_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.abspath(os.path.join(_THIS_DIR, '..'))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+
+import argparse
+import csv
+import json
+import os
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Dict, List, Optional
+
+from backtest.bybit_data import fetch_klines_public
+from backtest.engine import BacktestParams, KlineStore
+from backtest.metrics import summarize_trades
+from backtest.portfolio_engine import run_portfolio_backtest
+from strategies.bounce_bt import BounceBTStrategy
+from strategies.range_bt import RangeWrapper
+from strategies.inplay_wrapper import InPlayWrapper
+from strategies.pump_fade import PumpFadeStrategy
+
+
+def _parse_end(s: Optional[str]) -> int:
+    if not s:
+        return int(time.time())
+    # Accept YYYY-MM-DD
+    dt = datetime.strptime(s.strip(), "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    return int(dt.timestamp())
+
+
+def _load_symbol_5m(symbol: str, start_ts: int, end_ts: int, *, bybit_base: str, cache_dir: Path) -> List[List[str]]:
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    fname = cache_dir / f"{symbol}_5_{start_ts}_{end_ts}.json"
+    if fname.exists():
+        return json.loads(fname.read_text(encoding="utf-8"))
+    raw = fetch_klines_public(symbol, interval="5", start_ts=start_ts, end_ts=end_ts, bybit_base=bybit_base, cache_dir=str(cache_dir))
+    fname.write_text(json.dumps(raw), encoding="utf-8")
+    return raw
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--symbols", default="", help="Comma-separated symbols")
+    ap.add_argument(
+        "--strategies",
+        default="bounce,range,inplay,pump_fade",
+        help="Comma-separated strategies (priority order): bounce,range,inplay,pump_fade",
+    )
+    ap.add_argument("--days", type=int, default=30)
+    ap.add_argument("--end", default="", help="YYYY-MM-DD (UTC)")
+    ap.add_argument("--starting_equity", type=float, default=100.0)
+    ap.add_argument("--risk_pct", type=float, default=0.01)
+    ap.add_argument("--cap_notional", type=float, default=30.0)
+    ap.add_argument("--leverage", type=float, default=1.0)
+    ap.add_argument("--max_positions", type=int, default=5)
+    ap.add_argument("--fee_bps", type=float, default=6.0)
+    ap.add_argument("--slippage_bps", type=float, default=2.0)
+    ap.add_argument("--bybit_base", default=os.getenv("BYBIT_BASE", "https://api.bybit.com"))
+    ap.add_argument("--cache", default=".cache/klines")
+    ap.add_argument("--tag", default="portfolio")
+    args = ap.parse_args()
+
+    symbols = [s.strip() for s in args.symbols.split(",") if s.strip()]
+    if not symbols:
+        raise SystemExit("Provide --symbols, e.g. BTCUSDT,ETHUSDT")
+
+    strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
+    allowed = {"bounce", "range", "inplay", "pump_fade"}
+    for s in strategies:
+        if s not in allowed:
+            raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
+
+    end_ts = _parse_end(args.end)
+    start_ts = end_ts - int(args.days) * 86400
+
+    cache_dir = Path(args.cache)
+    stores: Dict[str, KlineStore] = {}
+    for sym in symbols:
+        raw5 = _load_symbol_5m(sym, start_ts, end_ts, bybit_base=args.bybit_base, cache_dir=cache_dir)
+        stores[sym] = KlineStore(sym, raw5)
+
+    # Build per-symbol strategy instances (avoid cross-symbol state bleed).
+    bounce = {sym: BounceBTStrategy() for sym in symbols} if "bounce" in strategies else {}
+    range_wrappers = {sym: RangeWrapper(fetch_klines=stores[sym].fetch_klines) for sym in symbols} if "range" in strategies else {}
+    inplay = {sym: InPlayWrapper() for sym in symbols} if "inplay" in strategies else {}
+    pump_fade = {sym: PumpFadeStrategy() for sym in symbols} if "pump_fade" in strategies else {}
+
+    def selector(sym: str, store: KlineStore, ts_ms: int, last_price: float):
+        # IMPORTANT: first-match wins (priority = order in --strategies)
+        for st in strategies:
+            if st == "bounce":
+                sig = bounce[sym].maybe_signal(store, ts_ms, last_price)
+            elif st == "range":
+                sig = range_wrappers[sym].maybe_signal(store, ts_ms, last_price)
+            elif st == "inplay":
+                sig = inplay[sym].maybe_signal(store, ts_ms, last_price)
+            elif st == "pump_fade":
+                # PumpFadeStrategy expects OHLCV
+                bar = store.c5[store.i]
+                sig = pump_fade[sym].maybe_signal(sym, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            else:
+                sig = None
+            if sig is not None:
+                return sig
+        return None
+
+    params = BacktestParams(
+        starting_equity=args.starting_equity,
+        risk_pct=args.risk_pct,
+        cap_notional_usd=args.cap_notional,
+        leverage=args.leverage,
+        max_positions=args.max_positions,
+        fee_bps=args.fee_bps,
+        slippage_bps=args.slippage_bps,
+    )
+
+    out_dir = Path("backtest_runs") / f"portfolio_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{args.tag}"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    res = run_portfolio_backtest(stores, selector, params=params, symbols_order=symbols)
+
+    # Save trades
+    trades_path = out_dir / "trades.csv"
+    with trades_path.open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow([
+            "strategy","symbol","side","entry_ts","exit_ts","entry_price","exit_price","qty","pnl","pnl_pct_equity","fees","outcome","reason"
+        ])
+        for t in res.trades:
+            w.writerow([
+                t.strategy, t.symbol, t.side, t.entry_ts, t.exit_ts,
+                f"{t.entry_price:.8f}", f"{t.exit_price:.8f}", f"{t.qty:.8f}",
+                f"{t.pnl:.8f}", f"{t.pnl_pct_equity:.6f}", f"{t.fees:.8f}", t.outcome, t.reason
+            ])
+
+    # Save summary
+    overall = summarize_trades(res.trades, res.equity_curve)
+    summary_path = out_dir / "summary.csv"
+    with summary_path.open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow([
+            "tag","days","end_date_utc","symbols","strategies","starting_equity","ending_equity",
+            "trades","net_pnl","profit_factor","winrate","avg_win","avg_loss","max_drawdown"
+        ])
+        w.writerow([
+            args.tag,
+            args.days,
+            datetime.fromtimestamp(end_ts, tz=timezone.utc).strftime("%Y-%m-%d"),
+            ";".join(symbols),
+            ";".join(strategies),
+            f"{args.starting_equity:.2f}",
+            f"{res.equity_curve[-1]:.2f}",
+            overall.get("trades", 0),
+            f"{overall.get('net_pnl', 0.0):.2f}",
+            f"{overall.get('profit_factor', 0.0):.3f}",
+            f"{overall.get('winrate', 0.0):.3f}",
+            f"{overall.get('avg_win', 0.0):.4f}",
+            f"{overall.get('avg_loss', 0.0):.4f}",
+            f"{overall.get('max_drawdown', 0.0):.4f}",
+        ])
+
+    print(f"Saved portfolio run to: {out_dir}")
+    print(f"  trades:   {trades_path}")
+    print(f"  summary:  {summary_path}")
+
+
+if __name__ == "__main__":
+    main()

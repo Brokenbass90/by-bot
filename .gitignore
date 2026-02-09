@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.log
+.env
+signals.csv
+errors.log
+data_cache/
+backtest_runs/
+backtest_results/
+.cache/
+.venv/
+.DS_Store
