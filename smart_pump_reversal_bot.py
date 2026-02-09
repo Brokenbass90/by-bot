@@ -284,6 +284,24 @@ def fetch_klines(symbol: str, interval: str, limit: int):
 if INPLAY_ENGINE is None:
     INPLAY_ENGINE = InPlayLiveEngine(fetch_klines)
 
+
+def _atr_abs_from_klines(rows: list, period: int) -> float:
+    if not rows or period <= 0 or len(rows) < period + 2:
+        return 0.0
+    trs = []
+    # rows: [ts, o, h, l, c, v, ...]
+    for i in range(1, len(rows)):
+        try:
+            h = float(rows[i][2]); l = float(rows[i][3]); pc = float(rows[i-1][4])
+        except Exception:
+            return 0.0
+        tr = max(h - l, abs(h - pc), abs(l - pc))
+        trs.append(tr)
+    tail = trs[-period:]
+    if not tail:
+        return 0.0
+    return float(sum(tail) / len(tail))
+
 def _pos_size_abs(pos: dict) -> float:
     # подстроено под Bybit: size часто строка
     try:
@@ -966,7 +984,7 @@ def sync_trades_with_exchange():
                     tr.entry_price = float(avg_ex)
 
                     # если TP/SL уже были рассчитаны по "примерному" price — пересчитаем от реального avg
-                    if getattr(tr, "strategy", "pump") in ("bounce", "range"):
+                    if getattr(tr, "strategy", "pump") in ("bounce", "range", "inplay"):
                         # bounce tp/sl могли прийти из сигнала — оставляем их как есть,
                         # но гарантируем корректное округление относительно entry
                         tr.tp_price, tr.sl_price = round_tp_sl_prices(sym, tr.side, tr.avg, tr.tp_price, tr.sl_price)
@@ -1590,6 +1608,73 @@ def max_notional_allowed(equity: float) -> float:
     except Exception:
         pass
     return max(0.0, float(per_trade))
+
+
+def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
+    if TRADE_CLIENT is None:
+        return
+    now = now_s()
+    if now - int(getattr(tr, "last_runner_action_ts", 0) or 0) < 2:
+        return
+
+    side = tr.side
+    if side not in ("Buy", "Sell"):
+        return
+
+    if side == "Buy":
+        tr.hh = price if tr.hh is None else max(tr.hh, price)
+    else:
+        tr.ll = price if tr.ll is None else min(tr.ll, price)
+
+    if tr.time_stop_sec and tr.entry_ts:
+        if now - int(tr.entry_ts) >= int(tr.time_stop_sec):
+            qty = float(tr.remaining_qty or tr.qty or 0.0)
+            if qty > 0:
+                TRADE_CLIENT.close_market(symbol, side, qty)
+                tr.close_reason = "TIME_STOP"
+                tr.last_runner_action_ts = now
+                tg_trade(f"🟧 INPLAY TIME STOP {symbol}: closed qty≈{qty}")
+            return
+
+    if tr.tps and tr.tp_fracs and tr.tp_hit:
+        for i, tp in enumerate(tr.tps):
+            if i >= len(tr.tp_hit) or tr.tp_hit[i]:
+                continue
+            hit = (price >= tp) if side == "Buy" else (price <= tp)
+            if not hit:
+                continue
+            qty_target = float(tr.initial_qty) * float(tr.tp_fracs[i])
+            qty_left = float(tr.remaining_qty or tr.qty or 0.0)
+            qty_to_close = min(qty_target, qty_left)
+            if qty_to_close <= 0:
+                tr.tp_hit[i] = True
+                continue
+            TRADE_CLIENT.close_market(symbol, side, qty_to_close)
+            tr.remaining_qty = max(0.0, qty_left - qty_to_close)
+            tr.tp_hit[i] = True
+            tr.last_runner_action_ts = now
+            tg_trade(f"🟩 INPLAY TP{i+1} {symbol}: closed≈{qty_to_close}")
+
+    if tr.trail_mult and tr.trail_mult > 0:
+        rows = fetch_klines(symbol, "5", max(5, tr.trail_period + 3))
+        atr = _atr_abs_from_klines(rows, int(tr.trail_period))
+        if atr > 0:
+            if side == "Buy" and tr.hh is not None:
+                new_sl = tr.hh - float(tr.trail_mult) * atr
+                if tr.sl_price is None or new_sl > float(tr.sl_price):
+                    tr.sl_price = float(new_sl)
+                    ok = set_tp_sl_retry(symbol, side, None, tr.sl_price)
+                    if ok:
+                        tr.tpsl_last_set_ts = now_s()
+                        tr.last_runner_action_ts = now
+            elif side == "Sell" and tr.ll is not None:
+                new_sl = tr.ll + float(tr.trail_mult) * atr
+                if tr.sl_price is None or new_sl < float(tr.sl_price):
+                    tr.sl_price = float(new_sl)
+                    ok = set_tp_sl_retry(symbol, side, None, tr.sl_price)
+                    if ok:
+                        tr.tpsl_last_set_ts = now_s()
+                        tr.last_runner_action_ts = now
 
 def calc_notional_usd_from_stop_pct(stop_pct: float) -> float:
     """
@@ -2304,7 +2389,9 @@ async def try_inplay_entry_async(symbol: str, price: float):
     tp = float(sig.tp)
     sl = float(sig.sl)
 
-    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, tp, sl)
+    # If runner plan exists, we only place SL on exchange (TPs handled by runner)
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
         return
 
@@ -2335,8 +2422,19 @@ async def try_inplay_entry_async(symbol: str, price: float):
     tr.strategy = "inplay"
     tr.avg = float(entry)
     tr.entry_price = float(entry)
-    tr.tp_price = float(tp_r)
+    tr.tp_price = float(tp_r) if tp_r is not None else None
     tr.sl_price = float(sl_r)
+    tr.runner_enabled = bool(use_runner)
+    if tr.runner_enabled:
+        tr.tps = [float(x) for x in (sig.tps or [])]
+        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+        tr.tp_hit = [False for _ in tr.tps]
+        tr.initial_qty = float(q)
+        tr.remaining_qty = float(q)
+        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+        tr.time_stop_sec = int(ts_bars * 300)
     TRADES[("Bybit", symbol)] = tr
 
     ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -2345,9 +2443,13 @@ async def try_inplay_entry_async(symbol: str, price: float):
     if ok:
         tr.tpsl_manual_lock = False
 
+    if tr.tp_price is not None:
+        tp_txt = f"{tr.tp_price:.6f}"
+    else:
+        tp_txt = "runner"
     tg_trade(
         f"🟩 INPLAY ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
-        f"entry≈{entry:.6f} TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}\n"
+        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
         f"notional≈{notional_real:.2f}$ qty≈{q}\n"
         f"reason={sig.reason}"
     )
@@ -2727,6 +2829,15 @@ def detect(exch: str, sym: str, st: SymState, now: int):
             and p1 is not None
         ):
             POS_MANAGER.manage(exch, sym, st, tr, p1, buys2, sells2)
+
+        # ===== INPLAY runner management (partials + trailing + time stop) =====
+        if (tr
+            and getattr(tr, "strategy", "") == "inplay"
+            and getattr(tr, "status", None) == "OPEN"
+            and getattr(tr, "runner_enabled", False)
+            and p1 is not None
+        ):
+            _manage_inplay_runner(sym, tr, p1)
 
     rng = max(1e-9, (w_high - w_low) if (w_high is not None and w_low is not None) else abs(p1 - p0))
     body_ratio = abs(p1 - p0) / rng

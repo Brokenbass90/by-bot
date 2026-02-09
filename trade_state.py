@@ -95,3 +95,17 @@ class TradeState:
     close_reason: Optional[str] = None
 
     last_sync_ts: int = 0
+
+    # --- inplay runner (live) ---
+    runner_enabled: bool = False
+    initial_qty: float = 0.0
+    remaining_qty: float = 0.0
+    tps: List[float] = field(default_factory=list)
+    tp_fracs: List[float] = field(default_factory=list)
+    tp_hit: List[bool] = field(default_factory=list)
+    trail_mult: float = 0.0
+    trail_period: int = 14
+    hh: Optional[float] = None
+    ll: Optional[float] = None
+    time_stop_sec: int = 0
+    last_runner_action_ts: int = 0
