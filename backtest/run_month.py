@@ -44,6 +44,7 @@ from backtest.metrics import PerformanceSummary, summarize_trades
 
 from strategies.bounce_bt import BounceBTConfig, BounceBTStrategy
 from strategies.inplay_wrapper import InPlayWrapper, InPlayWrapperConfig
+from strategies.retest_backtest import RetestBacktestStrategy, RetestBTConfig
 from strategies.inplay_breakout import InPlayBreakoutWrapper, InPlayBreakoutConfig
 from strategies.inplay_pullback import InPlayPullbackWrapper, InPlayPullbackConfig
 from strategies.pump_fade import PumpFadeConfig, PumpFadeStrategy
@@ -144,8 +145,8 @@ def main() -> int:
     ap.add_argument(
         "--strategies",
         type=str,
-        default="range,bounce,pump_fade,inplay,inplay_pullback,inplay_breakout",
-        help="Comma-separated: range,bounce,pump_fade,inplay,inplay_pullback,inplay_breakout",
+        default="range,bounce,pump_fade,inplay,inplay_pullback,inplay_breakout,retest_levels",
+        help="Comma-separated: range,bounce,pump_fade,inplay,inplay_pullback,inplay_breakout,retest_levels",
     )
     ap.add_argument(
         "--strict",
@@ -328,6 +329,9 @@ def main() -> int:
     def make_inplay_breakout():
         return InPlayBreakoutWrapper(InPlayBreakoutConfig())
 
+    def make_retest_levels():
+        return RetestBacktestStrategy(None, RetestBTConfig())
+
     factories = {
         "range": make_range,
         "bounce": make_bounce,
@@ -335,6 +339,7 @@ def main() -> int:
         "inplay": make_inplay,
         "inplay_pullback": make_inplay_pullback,
         "inplay_breakout": make_inplay_breakout,
+        "retest_levels": make_retest_levels,
     }
 
 
@@ -414,6 +419,8 @@ def main() -> int:
                 try:
                     if strat_name == "range":
                         strat = RangeWrapper(store.fetch_klines, RangeWrapperConfig())
+                    elif strat_name == "retest_levels":
+                        strat = RetestBacktestStrategy(store, RetestBTConfig())
                     else:
                         strat = factories[strat_name]()
                 except Exception as e:
@@ -432,6 +439,8 @@ def main() -> int:
                         return _resolve(strat.maybe_signal(store, ts_ms, last_price))
                     if strat_name == "inplay_breakout":
                         return _resolve(strat.maybe_signal(store, ts_ms, last_price))
+                    if strat_name == "retest_levels":
+                        return _resolve(strat.signal(store, ts_ms, last_price))
                     if strat_name == "bounce":
                         return _resolve(strat.maybe_signal(store, ts_ms, last_price))
                     if strat_name == "pump_fade":
