@@ -4,6 +4,7 @@ __pycache__/
 .env
 signals.csv
 errors.log
+bounce_debug.csv
 data_cache/
 backtest_runs/
 backtest_results/

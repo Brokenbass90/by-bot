@@ -74,6 +74,8 @@ class RangeWrapperConfig:
     # Scanner
     lookback_h: int = 200
     rescan_every_bars_5m: int = 12 * 6  # every 6 hours
+    scan_tf: str = "60"
+    mode: str = "box"
 
     # Scanner filters (defaults relaxed vs earlier versions)
     min_range_pct: float = 1.5
@@ -81,6 +83,10 @@ class RangeWrapperConfig:
     max_ema_spread_pct: float = 1.5
     min_touches: int = 2
     spike_mult: float = 3.0
+    low_pct: float = 0.10
+    high_pct: float = 0.90
+    touch_tolerance_pct: float = 0.003
+    touch_tolerance_atr_mult: float = 0.6
 
     # Strategy
     confirm_tf: str = "5"
@@ -107,11 +113,17 @@ class RangeBacktestStrategy:
 
         # Fast iteration knobs (optional)
         self.cfg.lookback_h = _env_int("RANGE_LOOKBACK_H", self.cfg.lookback_h)
+        self.cfg.scan_tf = os.getenv("RANGE_SCAN_TF", self.cfg.scan_tf)
+        self.cfg.mode = os.getenv("RANGE_MODE", self.cfg.mode)
         self.cfg.min_range_pct = _env_float("RANGE_MIN_RANGE_PCT", self.cfg.min_range_pct)
         self.cfg.max_range_pct = _env_float("RANGE_MAX_RANGE_PCT", self.cfg.max_range_pct)
         self.cfg.max_ema_spread_pct = _env_float("RANGE_MAX_EMA_SPREAD_PCT", self.cfg.max_ema_spread_pct)
         self.cfg.min_touches = _env_int("RANGE_MIN_TOUCHES", self.cfg.min_touches)
         self.cfg.spike_mult = _env_float("RANGE_SPIKE_MULT", self.cfg.spike_mult)
+        self.cfg.low_pct = _env_float("RANGE_LOW_PCT", self.cfg.low_pct)
+        self.cfg.high_pct = _env_float("RANGE_HIGH_PCT", self.cfg.high_pct)
+        self.cfg.touch_tolerance_pct = _env_float("RANGE_TOUCH_TOL_PCT", self.cfg.touch_tolerance_pct)
+        self.cfg.touch_tolerance_atr_mult = _env_float("RANGE_TOUCH_TOL_ATR_MULT", self.cfg.touch_tolerance_atr_mult)
 
         self.cfg.atr_period = _env_int("RANGE_ATR_PERIOD", self.cfg.atr_period)
         self.cfg.min_rr = _env_float("RANGE_MIN_RR", self.cfg.min_rr)
@@ -124,7 +136,7 @@ class RangeBacktestStrategy:
         self.scanner = RangeScanner(
             fetch_klines=self.fetch_klines,
             registry=self.registry,
-            interval_1h="60",
+            interval_1h=self.cfg.scan_tf,
             lookback_h=self.cfg.lookback_h,
             rescan_ttl_sec=0,
             min_range_pct=self.cfg.min_range_pct,
@@ -132,6 +144,11 @@ class RangeBacktestStrategy:
             max_ema_spread_pct=self.cfg.max_ema_spread_pct,
             min_touches=self.cfg.min_touches,
             spike_mult=self.cfg.spike_mult,
+            mode=self.cfg.mode,
+            low_pct=self.cfg.low_pct,
+            high_pct=self.cfg.high_pct,
+            touch_tolerance_pct=self.cfg.touch_tolerance_pct,
+            touch_tolerance_atr_mult=self.cfg.touch_tolerance_atr_mult,
         )
         self.strategy = RangeStrategy(
             fetch_klines=self.fetch_klines,

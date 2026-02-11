@@ -709,6 +709,7 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         fetch_klines: Callable[[str, str, int], Any],
         *,
         tf_break: str = "15",
+        tf_entry: str = "5",
         lookback_break_bars: int = 24,
         atr_period: int = 14,
         impulse_atr_mult: float = 1.0,
@@ -717,6 +718,12 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         impulse_vol_period: int = 20,
         breakout_buffer_atr: float = 0.10,
         breakout_sl_atr: float = 0.40,
+        retest_touch_atr: float = 0.35,
+        reclaim_atr: float = 0.15,
+        min_hold_bars: int = 0,
+        max_retest_bars: int = 30,
+        min_break_bars: int = 1,
+        max_dist_atr: float = 1.2,
         rr: float = 1.2,
         allow_longs: bool = True,
         allow_shorts: bool = False,
@@ -736,7 +743,7 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         super().__init__(
             fetch_klines,
             tf_break=tf_break,
-            tf_entry="5",
+            tf_entry=tf_entry,
             lookback_break_bars=lookback_break_bars,
             atr_period=atr_period,
             impulse_atr_mult=impulse_atr_mult,
@@ -764,6 +771,12 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
             chop_in_range_only=chop_in_range_only,
         )
         self.breakout_sl_atr = float(breakout_sl_atr)
+        self.retest_touch_atr = float(retest_touch_atr)
+        self.reclaim_atr = float(reclaim_atr)
+        self.min_hold_bars = int(min_hold_bars)
+        self.max_retest_bars = int(max_retest_bars)
+        self.min_break_bars = int(min_break_bars)
+        self.max_dist_atr = float(max_dist_atr)
 
     async def maybe_signal(self, symbol: str, *, price: float, ts_ms: int) -> Optional[RetestSignal]:
         htf = self.fetch_klines(symbol, self.tf_break, self.lookback_break_bars + 10) or []
@@ -806,22 +819,72 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         close = _get_num(last, "close")
         buf = max(0.0, self.breakout_buffer_atr) * atr
 
-        if self.allow_longs and close > (hh + buf) and self._regime_ok(symbol, "long"):
-            entry = close
-            sl = hh - max(0.0, self.breakout_sl_atr) * atr
-            r = entry - sl
-            if r <= 0:
-                return None
-            tp = entry + self.rr * r
-            return RetestSignal("Buy", entry, sl, tp, "breakout_long")
+        # LTF confirmation (retest + reclaim/hold)
+        ltf = self.fetch_klines(symbol, self.tf_entry, max(80, self.max_retest_bars + self.min_hold_bars + 20)) or []
+        if len(ltf) < max(20, self.min_hold_bars + 5):
+            return None
 
+        ltf_atr = _atr(ltf, max(5, self.atr_period))
+        if ltf_atr <= 0:
+            ltf_atr = atr
+
+        touch_buf = max(0.0, self.retest_touch_atr) * ltf_atr
+        reclaim_buf = max(0.0, self.reclaim_atr) * ltf_atr
+        sl_buf = max(0.0, self.breakout_sl_atr) * ltf_atr
+        max_dist = max(0.0, self.max_dist_atr) * ltf_atr
+
+        # If timestamps exist, use them to filter ltf bars after breakout bar
+        b_ts = _get_num(last, "startTime", "ts")
+        def _after_break_idx() -> int:
+            if not (isinstance(b_ts, (int, float)) and math.isfinite(b_ts) and b_ts > 0):
+                return max(0, len(ltf) - self.max_retest_bars - 1)
+            for i, c in enumerate(ltf):
+                ts = _get_num(c, "startTime", "ts")
+                if isinstance(ts, (int, float)) and math.isfinite(ts) and ts >= b_ts:
+                    return max(0, i)
+            return max(0, len(ltf) - self.max_retest_bars - 1)
+
+        start_idx = _after_break_idx()
+        tail = ltf[start_idx:]
+        if len(tail) < 5:
+            return None
+
+        def _holds_above(level: float) -> bool:
+            if self.min_hold_bars <= 0:
+                return _get_num(ltf[-1], "close") >= (level + reclaim_buf)
+            hold_start = max(0, len(ltf) - self.min_hold_bars)
+            closes = [_get_num(c, "close") for c in ltf[hold_start:]]
+            return min(closes) >= (level + reclaim_buf)
+
+        def _holds_below(level: float) -> bool:
+            if self.min_hold_bars <= 0:
+                return _get_num(ltf[-1], "close") <= (level - reclaim_buf)
+            hold_start = max(0, len(ltf) - self.min_hold_bars)
+            closes = [_get_num(c, "close") for c in ltf[hold_start:]]
+            return max(closes) <= (level - reclaim_buf)
+
+        # Long: breakout above hh, then retest hh and reclaim
+        if self.allow_longs and close > (hh + buf) and self._regime_ok(symbol, "long"):
+            if abs(price - hh) <= max_dist:
+                touched = any(_get_num(c, "low") <= (hh + touch_buf) for c in tail[-self.max_retest_bars:])
+                if touched and _holds_above(hh):
+                    entry = float(price)
+                    sl = float(hh - sl_buf)
+                    r = entry - sl
+                    if r > 0:
+                        tp = entry + self.rr * r
+                        return RetestSignal("Buy", entry, sl, tp, "breakout_retest_long")
+
+        # Short: breakout below ll, then retest ll and reclaim
         if self.allow_shorts and close < (ll - buf) and self._regime_ok(symbol, "short"):
-            entry = close
-            sl = ll + max(0.0, self.breakout_sl_atr) * atr
-            r = sl - entry
-            if r <= 0:
-                return None
-            tp = entry - self.rr * r
-            return RetestSignal("Sell", entry, sl, tp, "breakout_short")
+            if abs(price - ll) <= max_dist:
+                touched = any(_get_num(c, "high") >= (ll - touch_buf) for c in tail[-self.max_retest_bars:])
+                if touched and _holds_below(ll):
+                    entry = float(price)
+                    sl = float(ll + sl_buf)
+                    r = sl - entry
+                    if r > 0:
+                        tp = entry - self.rr * r
+                        return RetestSignal("Sell", entry, sl, tp, "breakout_retest_short")
 
         return None

@@ -72,7 +72,8 @@ def _env_csv_floats(name: str, default: List[float]) -> List[float]:
 
 @dataclass
 class InPlayBreakoutConfig:
-    tf_break: str = "15"
+    tf_break: str = "240"
+    tf_entry: str = "5"
     lookback_h: int = 24
     atr_period: int = 14
     impulse_atr_mult: float = 1.0
@@ -81,6 +82,12 @@ class InPlayBreakoutConfig:
     impulse_vol_period: int = 20
     breakout_buffer_atr: float = 0.10
     breakout_sl_atr: float = 0.40
+    retest_touch_atr: float = 0.35
+    reclaim_atr: float = 0.15
+    min_hold_bars: int = 0
+    max_retest_bars: int = 30
+    min_break_bars: int = 1
+    max_dist_atr: float = 1.2
     rr: float = 1.2
 
     range_atr_max: float = 8.0
@@ -105,6 +112,7 @@ class InPlayBreakoutWrapper:
         self.cfg = cfg or InPlayBreakoutConfig()
 
         self.cfg.tf_break = os.getenv("BREAKOUT_TF_BREAK", self.cfg.tf_break)
+        self.cfg.tf_entry = os.getenv("BREAKOUT_TF_ENTRY", self.cfg.tf_entry)
         self.cfg.lookback_h = _env_int("BREAKOUT_LOOKBACK_H", self.cfg.lookback_h)
         self.cfg.atr_period = _env_int("BREAKOUT_ATR_PERIOD", self.cfg.atr_period)
         self.cfg.impulse_atr_mult = _env_float("BREAKOUT_IMPULSE_ATR_MULT", self.cfg.impulse_atr_mult)
@@ -113,6 +121,12 @@ class InPlayBreakoutWrapper:
         self.cfg.impulse_vol_period = _env_int("BREAKOUT_IMPULSE_VOL_PERIOD", self.cfg.impulse_vol_period)
         self.cfg.breakout_buffer_atr = _env_float("BREAKOUT_BUFFER_ATR", self.cfg.breakout_buffer_atr)
         self.cfg.breakout_sl_atr = _env_float("BREAKOUT_SL_ATR", self.cfg.breakout_sl_atr)
+        self.cfg.retest_touch_atr = _env_float("BREAKOUT_RETEST_TOUCH_ATR", self.cfg.retest_touch_atr)
+        self.cfg.reclaim_atr = _env_float("BREAKOUT_RECLAIM_ATR", self.cfg.reclaim_atr)
+        self.cfg.min_hold_bars = _env_int("BREAKOUT_MIN_HOLD_BARS", self.cfg.min_hold_bars)
+        self.cfg.max_retest_bars = _env_int("BREAKOUT_MAX_RETEST_BARS", self.cfg.max_retest_bars)
+        self.cfg.min_break_bars = _env_int("BREAKOUT_MIN_BREAK_BARS", self.cfg.min_break_bars)
+        self.cfg.max_dist_atr = _env_float("BREAKOUT_MAX_DIST_ATR", self.cfg.max_dist_atr)
         self.cfg.rr = _env_float("BREAKOUT_RR", self.cfg.rr)
         self.cfg.range_atr_max = _env_float("BREAKOUT_RANGE_ATR_MAX", self.cfg.range_atr_max)
 
@@ -212,6 +226,13 @@ class InPlayBreakoutWrapper:
             "impulse_vol_period": int(self.cfg.impulse_vol_period),
             "breakout_buffer_atr": float(self.cfg.breakout_buffer_atr),
             "breakout_sl_atr": float(self.cfg.breakout_sl_atr),
+            "tf_entry": str(self.cfg.tf_entry),
+            "retest_touch_atr": float(self.cfg.retest_touch_atr),
+            "reclaim_atr": float(self.cfg.reclaim_atr),
+            "min_hold_bars": int(self.cfg.min_hold_bars),
+            "max_retest_bars": int(self.cfg.max_retest_bars),
+            "min_break_bars": int(self.cfg.min_break_bars),
+            "max_dist_atr": float(self.cfg.max_dist_atr),
             "rr": float(self.cfg.rr),
             "range_atr_max": float(self.cfg.range_atr_max),
             "allow_longs": bool(self.cfg.allow_longs),

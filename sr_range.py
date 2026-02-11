@@ -260,9 +260,13 @@ class RangeScanner:
         ema_slow: int = 50,
         max_ema_spread_pct: float = 0.6,
         touch_tolerance_pct: float = 0.003,
+        touch_tolerance_atr_mult: float = 0.6,
         spike_mult: float = 2.5,
         tail_frac: float = 0.10,  # доля хвоста для расчёта границ
         tail_min_k: int = 5,
+        low_pct: float = 0.10,
+        high_pct: float = 0.90,
+        mode: str = "box",
     ) -> None:
         self.fetch_klines = fetch_klines
         self.registry = registry
@@ -280,10 +284,14 @@ class RangeScanner:
         self.max_ema_spread_pct = float(max_ema_spread_pct)
 
         self.touch_tolerance_pct = float(touch_tolerance_pct)
+        self.touch_tolerance_atr_mult = float(touch_tolerance_atr_mult)
         self.spike_mult = float(spike_mult)
 
         self.tail_frac = float(tail_frac)
         self.tail_min_k = int(tail_min_k)
+        self.low_pct = float(low_pct)
+        self.high_pct = float(high_pct)
+        self.mode = str(mode or "box").lower().strip()
 
     async def detect(self, symbol: str) -> Optional[RangeInfo]:
         raw = await maybe_await(self.fetch_klines(symbol, self.interval_1h, self.lookback_h))
@@ -309,7 +317,7 @@ class RangeScanner:
         if ema_spread_pct > self.max_ema_spread_pct:
             return None
 
-        # Границы диапазона через хвосты low/high
+        # Границы диапазона: "box" с отсечением выбросов
         sorted_lows = sorted(lows)
         sorted_highs = sorted(highs)
 
@@ -320,8 +328,16 @@ class RangeScanner:
         k = max(self.tail_min_k, int(n * self.tail_frac))
         k = min(k, n)
 
-        support = sum(sorted_lows[:k]) / float(k)
-        resistance = sum(sorted_highs[-k:]) / float(k)
+        low_idx = max(0, min(n - 1, int(n * self.low_pct)))
+        high_idx = max(0, min(n, int(n * self.high_pct)))
+        low_slice = sorted_lows[low_idx : min(n, low_idx + k)]
+        high_slice = sorted_highs[max(0, high_idx - k) : max(1, high_idx)]
+
+        if len(low_slice) < 3 or len(high_slice) < 3:
+            return None
+
+        support = sum(low_slice) / float(len(low_slice))
+        resistance = sum(high_slice) / float(len(high_slice))
 
         if not (math.isfinite(support) and math.isfinite(resistance)):
             return None
@@ -349,15 +365,19 @@ class RangeScanner:
             if avg_r > 0 and max_r > avg_r * self.spike_mult:
                 return None
 
-        # Касания границ
-        t_sup = count_touches(candles, support, "support", self.touch_tolerance_pct)
-        t_res = count_touches(candles, resistance, "resistance", self.touch_tolerance_pct)
-        if t_sup < self.min_touches or t_res < self.min_touches:
-            return None
-
         a1h = atr(candles, 14)
         if not math.isfinite(a1h):
             a1h = 0.0
+
+        # Касания границ с динамическим допуском (по ATR)
+        tol_from_atr = 0.0
+        if a1h > 0 and math.isfinite(a1h):
+            tol_from_atr = (a1h / max(mid, 1e-12)) * self.touch_tolerance_atr_mult
+        tol_pct = max(self.touch_tolerance_pct, tol_from_atr)
+        t_sup = count_touches(candles, support, "support", tol_pct)
+        t_res = count_touches(candles, resistance, "resistance", tol_pct)
+        if t_sup < self.min_touches or t_res < self.min_touches:
+            return None
 
         # Score: чем уже диапазон и чем меньше ema_spread, тем выше; плюс касания
         score = 0.0

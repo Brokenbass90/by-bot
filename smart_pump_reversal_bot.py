@@ -16,6 +16,7 @@ from sr_levels import LevelsService
 from sr_bounce import BounceStrategy
 from trade_state import TradeState
 from inplay_live import InPlayLiveEngine
+from breakout_live import BreakoutLiveEngine
 from retest_live import RetestEngine
 
 from sr_range import RangeRegistry, RangeScanner
@@ -121,6 +122,13 @@ INPLAY_TRY_EVERY_SEC = int(os.getenv("INPLAY_TRY_EVERY_SEC", "30"))
 INPLAY_TOP_N = int(os.getenv("INPLAY_TOP_N", "60"))
 INPLAY_SYMBOLS = set()
 INPLAY_ENGINE = None
+
+# ===== BREAKOUT (live) =====
+ENABLE_BREAKOUT_TRADING = os.getenv("ENABLE_BREAKOUT_TRADING", "0").strip() == "1"
+BREAKOUT_TRY_EVERY_SEC = int(os.getenv("BREAKOUT_TRY_EVERY_SEC", "30"))
+BREAKOUT_TOP_N = int(os.getenv("BREAKOUT_TOP_N", "60"))
+BREAKOUT_SYMBOLS = set()
+BREAKOUT_ENGINE = None
 
 # ===== RETEST LEVELS (live) =====
 ENABLE_RETEST_TRADING = os.getenv("ENABLE_RETEST_TRADING", "0").strip() == "1"
@@ -291,6 +299,8 @@ def fetch_klines(symbol: str, interval: str, limit: int):
 # init inplay live engine after fetch_klines is available
 if INPLAY_ENGINE is None:
     INPLAY_ENGINE = InPlayLiveEngine(fetch_klines)
+if BREAKOUT_ENGINE is None:
+    BREAKOUT_ENGINE = BreakoutLiveEngine(fetch_klines)
 if RETEST_ENGINE is None:
     RETEST_ENGINE = RetestEngine(fetch_klines)
 
@@ -2292,6 +2302,7 @@ _RANGE_LAST_TRY = {}            # symbol -> ts
 RANGE_TRY_EVERY_SEC = 20
 
 _INPLAY_LAST_TRY = {}           # symbol -> ts
+_BREAKOUT_LAST_TRY = {}         # symbol -> ts
 _RETEST_LAST_TRY = {}           # symbol -> ts
 
 async def try_range_entry_async(symbol: str, price: float):
@@ -2461,6 +2472,87 @@ async def try_inplay_entry_async(symbol: str, price: float):
     tg_trade(
         f"🟩 INPLAY ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
         f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+        f"reason={sig.reason}"
+    )
+
+
+async def try_breakout_entry_async(symbol: str, price: float):
+    if not ENABLE_BREAKOUT_TRADING:
+        return
+    if not TRADE_ON or DRY_RUN:
+        return
+    if TRADE_CLIENT is None:
+        return
+    if get_trade("Bybit", symbol) is not None:
+        return
+    if BREAKOUT_SYMBOLS and (symbol not in BREAKOUT_SYMBOLS):
+        return
+    if not portfolio_can_open():
+        return
+
+    now = now_s()
+    last = int(_BREAKOUT_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < BREAKOUT_TRY_EVERY_SEC:
+        return
+    _BREAKOUT_LAST_TRY[symbol] = now
+
+    try:
+        sig = BREAKOUT_ENGINE.signal(symbol, price, int(now * 1000))
+    except Exception as e:
+        log_error(f"breakout signal error {symbol}: {e}")
+        return
+    if not sig:
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    tp = float(sig.tp)
+    sl = float(sig.sl)
+
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
+    if dyn_usd <= 0:
+        tg_trade(f"🟡 BREAKOUT SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+
+    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
+    if qty_floor <= 0:
+        tg_trade(f"🟡 BREAKOUT SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+
+    ensure_leverage(symbol, BYBIT_LEVERAGE)
+    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+
+    tr = TradeState(
+        symbol=symbol,
+        side=side,
+        qty=q,
+        entry_price_req=float(entry),
+        entry_ts=now,
+    )
+    tr.entry_order_id = oid
+    tr.status = "PENDING_ENTRY"
+    tr.strategy = "inplay_breakout"
+    tr.avg = float(entry)
+    tr.entry_price = float(entry)
+    tr.tp_price = float(tp_r)
+    tr.sl_price = float(sl_r)
+    TRADES[("Bybit", symbol)] = tr
+
+    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+    tr.tpsl_on_exchange = bool(ok)
+    tr.tpsl_last_set_ts = now_s()
+    if ok:
+        tr.tpsl_manual_lock = False
+
+    tg_trade(
+        f"🟩 BREAKOUT ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
+        f"entry≈{entry:.6f} TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}\n"
         f"notional≈{notional_real:.2f}$ qty≈{q}\n"
         f"reason={sig.reason}"
     )
@@ -2909,6 +3001,15 @@ def detect(exch: str, sym: str, st: SymState, now: int):
             except Exception as _e:
                 log_error(f"try_inplay_entry schedule fail {sym}: {_e}")
 
+    # ===== BREAKOUT ENTRY (retest -> continue) =====
+    if exch == "Bybit" and ENABLE_BREAKOUT_TRADING and TRADE_ON and (not DRY_RUN):
+        last = int(_BREAKOUT_LAST_TRY.get(sym, 0) or 0)
+        if now - last >= BREAKOUT_TRY_EVERY_SEC:
+            try:
+                asyncio.create_task(try_breakout_entry_async(sym, p1))
+            except Exception as _e:
+                log_error(f"try_breakout_entry schedule fail {sym}: {_e}")
+
     # ===== RETEST LEVELS ENTRY =====
     if exch == "Bybit" and ENABLE_RETEST_TRADING and TRADE_ON and (not DRY_RUN):
         last = int(_RETEST_LAST_TRY.get(sym, 0) or 0)
@@ -3332,6 +3433,7 @@ async def bybit_ws():
     # bounce universe = подмножество, которое реально можно открыть на текущий cap
     global BOUNCE_SYMBOLS
     global INPLAY_SYMBOLS
+    global BREAKOUT_SYMBOLS
     global RETEST_SYMBOLS
 
     eq_eff = 0.0
@@ -3366,6 +3468,7 @@ async def bybit_ws():
 
     BOUNCE_SYMBOLS = set(eligible[:BOUNCE_TOP_N])
     INPLAY_SYMBOLS = set(eligible[:max(1, int(INPLAY_TOP_N))])
+    BREAKOUT_SYMBOLS = set(eligible[:max(1, int(BREAKOUT_TOP_N))])
     RETEST_SYMBOLS = set(eligible[:max(1, int(RETEST_TOP_N))])
 
     # global RANGE_RESCAN_TASK
@@ -3376,6 +3479,8 @@ async def bybit_ws():
     print(f"[bounce] cap≈{cap:.2f} USDT | eligible={len(eligible)}/{len(syms)} | universe size={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
     if ENABLE_INPLAY_TRADING:
         print(f"[inplay] universe size={len(INPLAY_SYMBOLS)} (top {INPLAY_TOP_N})")
+    if ENABLE_BREAKOUT_TRADING:
+        print(f"[breakout] universe size={len(BREAKOUT_SYMBOLS)} (top {BREAKOUT_TOP_N})")
     if ENABLE_RETEST_TRADING:
         print(f"[retest] universe size={len(RETEST_SYMBOLS)} (top {RETEST_TOP_N})")
 
@@ -3383,6 +3488,8 @@ async def bybit_ws():
     tg_trade(f"🧩 bounce-universe: cap≈{cap:.2f} | eligible={len(eligible)}/{len(syms)} | using={len(BOUNCE_SYMBOLS)}")
     if ENABLE_INPLAY_TRADING:
         tg_trade(f"🧩 inplay-universe: using={len(INPLAY_SYMBOLS)} (top {INPLAY_TOP_N})")
+    if ENABLE_BREAKOUT_TRADING:
+        tg_trade(f"🧩 breakout-universe: using={len(BREAKOUT_SYMBOLS)} (top {BREAKOUT_TOP_N})")
     if ENABLE_RETEST_TRADING:
         tg_trade(f"🧩 retest-universe: using={len(RETEST_SYMBOLS)} (top {RETEST_TOP_N})")
 
