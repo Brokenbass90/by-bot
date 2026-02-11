@@ -41,6 +41,7 @@ DEBUG_WINDOWS = True
 MSG_COUNTER = {"Bybit": 0, "Binance": 0}
 AUTH_DISABLED_UNTIL = {}  # name -> ts
 AUTH_LAST_ERROR = {}      # name -> str
+BOT_START_TS = int(time.time())
 
 def auth_disabled(name: str) -> bool:
     if DRY_RUN:
@@ -530,7 +531,16 @@ def _handle_tg_command(text: str):
     name = cmd[0].lower()
 
     if name in ("/help", "/start"):
-        _tg_reply("Команды: /status, /pause, /resume, /risk <pct>, /capital <usd>, /positions <1-10>")
+        _tg_reply(
+            "🤖 Управление ботом\n"
+            "• /status — статус и риск\n"
+            "• /ping — жив ли бот\n"
+            "• /pause — пауза торговли\n"
+            "• /resume — продолжить\n"
+            "• /risk 0.5 — риск в %\n"
+            "• /capital 200 — кап бота\n"
+            "• /positions 3 — макс. позиций (1–10)"
+        )
         return
 
     if name == "/status":
@@ -540,6 +550,14 @@ def _handle_tg_command(text: str):
             f"Equity≈{eq:.2f} USDT | open={len(TRADES)}\n"
             f"risk={RISK_PER_TRADE_PCT:.2f}% | max_positions={MAX_POSITIONS} | capital={BOT_CAPITAL_USD}"
         )
+        return
+
+    if name == "/ping":
+        up = max(0, int(time.time()) - int(BOT_START_TS))
+        h = up // 3600
+        m = (up % 3600) // 60
+        s = up % 60
+        _tg_reply(f"✅ alive | uptime {h:02d}:{m:02d}:{s:02d}")
         return
 
     if name == "/pause":
@@ -3906,6 +3924,10 @@ async def runner(coro, title):
             msg = f"{title} crash: {repr(e)}\n{traceback.format_exc()}"
             print(msg)
             log_error(msg)
+            try:
+                tg_trade(f"🧯 {title} crashed. See errors.log")
+            except Exception:
+                pass
             await asyncio.sleep(3)
 
 async def main_async():
@@ -3948,7 +3970,15 @@ def main():
     else:
         auth_check_all_accounts()
         portfolio_init_if_needed()
-    asyncio.run(main_async())
+    try:
+        asyncio.run(main_async())
+    except Exception as e:
+        log_error(f"fatal: {repr(e)}\n{traceback.format_exc()}")
+        try:
+            tg_trade("🛑 BOT STOPPED: fatal error. Check errors.log")
+        except Exception:
+            pass
+        raise
 
 if __name__ == "__main__":
     main()
