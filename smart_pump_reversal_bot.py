@@ -5,6 +5,7 @@
 
 import os
 import time, json, statistics, asyncio, requests, collections, re, csv, traceback, random, math
+import sqlite3
 from typing import Dict, Tuple, List, Optional, Any
 import websockets
 from websockets.exceptions import InvalidStatus
@@ -446,6 +447,170 @@ def tg_send(t: str):
         )
     except Exception:
         pass
+
+# =========================== TRADE DB (SQLite) ===========================
+TRADE_DB_PATH = os.getenv("TRADE_DB_PATH", "trades.db")
+
+def _db_init():
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            con.execute(
+                """
+                CREATE TABLE IF NOT EXISTS trade_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    ts INTEGER,
+                    event TEXT,
+                    exchange TEXT,
+                    symbol TEXT,
+                    side TEXT,
+                    strategy TEXT,
+                    qty REAL,
+                    entry_price REAL,
+                    exit_price REAL,
+                    tp_price REAL,
+                    sl_price REAL,
+                    pnl REAL,
+                    fees REAL,
+                    reason TEXT
+                )
+                """
+            )
+            con.commit()
+    except Exception as e:
+        log_error(f"db init fail: {e}")
+
+def _db_log_event(event: str, tr, sym: str, *, pnl: float | None = None, fees: float | None = None, exit_px: float | None = None):
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            con.execute(
+                """
+                INSERT INTO trade_events
+                (ts, event, exchange, symbol, side, strategy, qty, entry_price, exit_price, tp_price, sl_price, pnl, fees, reason)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    int(time.time()),
+                    str(event),
+                    "Bybit",
+                    str(sym),
+                    str(getattr(tr, "side", "")),
+                    str(getattr(tr, "strategy", "")),
+                    float(getattr(tr, "qty", 0) or 0),
+                    float(getattr(tr, "entry_price", getattr(tr, "avg", 0) or 0) or 0),
+                    float(exit_px) if exit_px is not None else None,
+                    float(getattr(tr, "tp_price", 0) or 0) if getattr(tr, "tp_price", None) is not None else None,
+                    float(getattr(tr, "sl_price", 0) or 0) if getattr(tr, "sl_price", None) is not None else None,
+                    float(pnl) if pnl is not None else None,
+                    float(fees) if fees is not None else None,
+                    str(getattr(tr, "close_reason", "") or getattr(tr, "reason_close", "") or ""),
+                ),
+            )
+            con.commit()
+    except Exception as e:
+        log_error(f"db log fail: {e}")
+
+# =========================== TELEGRAM COMMANDS ===========================
+TG_COMMANDS_ENABLE = os.getenv("TG_COMMANDS_ENABLE", "1").strip() == "1"
+
+def _tg_reply(msg: str):
+    tg_send(msg)
+
+def _parse_float(s: str) -> float | None:
+    try:
+        return float(s)
+    except Exception:
+        return None
+
+def _handle_tg_command(text: str):
+    global TRADE_ON, RISK_PER_TRADE_PCT, BOT_CAPITAL_USD, MAX_POSITIONS
+
+    cmd = text.strip().split()
+    if not cmd:
+        return
+    name = cmd[0].lower()
+
+    if name in ("/help", "/start"):
+        _tg_reply("Команды: /status, /pause, /resume, /risk <pct>, /capital <usd>, /positions <1-10>")
+        return
+
+    if name == "/status":
+        eq = _get_effective_equity()
+        _tg_reply(
+            f"Status: {'ON' if TRADE_ON else 'OFF'} | disabled={PORTFOLIO_STATE.get('disabled')}\n"
+            f"Equity≈{eq:.2f} USDT | open={len(TRADES)}\n"
+            f"risk={RISK_PER_TRADE_PCT:.2f}% | max_positions={MAX_POSITIONS} | capital={BOT_CAPITAL_USD}"
+        )
+        return
+
+    if name == "/pause":
+        TRADE_ON = False
+        PORTFOLIO_STATE["disabled"] = True
+        _tg_reply("Trading paused.")
+        return
+
+    if name == "/resume":
+        TRADE_ON = True
+        PORTFOLIO_STATE["disabled"] = False
+        _tg_reply("Trading resumed.")
+        return
+
+    if name == "/risk" and len(cmd) >= 2:
+        v = _parse_float(cmd[1])
+        if v is None or v <= 0:
+            _tg_reply("Usage: /risk 0.5  (percent)")
+            return
+        # treat as percent
+        RISK_PER_TRADE_PCT = float(v)
+        _tg_reply(f"Risk set to {RISK_PER_TRADE_PCT:.2f}%")
+        return
+
+    if name == "/capital" and len(cmd) >= 2:
+        v = _parse_float(cmd[1])
+        if v is None or v <= 0:
+            _tg_reply("Usage: /capital 200")
+            return
+        BOT_CAPITAL_USD = float(v)
+        _tg_reply(f"Bot capital set to {BOT_CAPITAL_USD:.2f} USDT")
+        return
+
+    if name in ("/positions", "/maxpos") and len(cmd) >= 2:
+        v = _parse_float(cmd[1])
+        if v is None:
+            _tg_reply("Usage: /positions 3")
+            return
+        v = int(max(1, min(10, v)))
+        MAX_POSITIONS = v
+        _tg_reply(f"Max positions set to {MAX_POSITIONS}")
+        return
+
+    _tg_reply("Unknown command. /help")
+
+async def tg_cmd_loop():
+    if not (TG_TOKEN and TG_CHAT and TG_COMMANDS_ENABLE):
+        return
+    last_id = 0
+    while True:
+        try:
+            params = {"timeout": 20}
+            if last_id:
+                params["offset"] = last_id + 1
+            r = requests.get(f"https://api.telegram.org/bot{TG_TOKEN}/getUpdates", params=params, timeout=25)
+            j = r.json()
+            updates = j.get("result", []) if isinstance(j, dict) else []
+            for u in updates:
+                uid = u.get("update_id") or 0
+                if uid > last_id:
+                    last_id = uid
+                msg = u.get("message") or u.get("edited_message") or {}
+                chat_id = str((msg.get("chat") or {}).get("id") or "")
+                if chat_id != str(TG_CHAT):
+                    continue
+                text = (msg.get("text") or "").strip()
+                if text.startswith("/"):
+                    _handle_tg_command(text)
+        except Exception as e:
+            log_error(f"tg cmd loop error: {e}")
+        await asyncio.sleep(1)
 
 def log_signal(row: dict):
     if not LOG_SIGNALS:
@@ -1030,6 +1195,7 @@ def sync_trades_with_exchange():
                 if not getattr(tr, "entry_confirm_sent", False):
                     tr.entry_confirm_sent = True
                     tg_trade(f"✅ ENTRY FILLED {sym} {tr.side} qty={tr.qty} avg={float(getattr(tr,'avg',0) or 0):.6f}")
+                    _db_log_event("ENTRY", tr, sym)
                 continue
 
             # позиции нет — ждём grace период
@@ -1573,6 +1739,7 @@ def _finalize_and_report_closed(tr, sym: str):
     if getattr(tr, "close_reason", None):
         msg += f"\nReason: {tr.close_reason}"
     tg_trade(msg)
+    _db_log_event("CLOSE", tr, sym, pnl=pnl_closed, fees=fee_sum, exit_px=exit_px)
 
 def set_tp_sl_retry(symbol: str, side: str, tp: Optional[float], sl: Optional[float]) -> bool:
     if DRY_RUN or TRADE_CLIENT is None:
@@ -3751,11 +3918,15 @@ async def main_async():
     if ENABLE_RANGE_TRADING:
         tasks.append(asyncio.create_task(runner(range_rescan_loop, "RANGE_RESCAN")))
 
+    if TG_COMMANDS_ENABLE:
+        tasks.append(asyncio.create_task(runner(tg_cmd_loop, "TG_CMD")))
+
     tasks.append(asyncio.create_task(pulse()))
     await asyncio.gather(*tasks)
 
 
 def main():
+    _db_init()
     print("Starting real-time pump detector…")
     print(f"Sources: Bybit={ENABLE_BYBIT}, Binance={ENABLE_BINANCE}, MEXC={ENABLE_MEXC}")
     print(f"Trading: {'ON' if TRADE_ON else 'OFF'} (Bybit short fade); DRY_RUN={'ON' if DRY_RUN else 'OFF'}")
