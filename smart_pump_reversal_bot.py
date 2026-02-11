@@ -393,6 +393,29 @@ def tg_trade(msg: str):
     except Exception:
         pass
 
+# =========================== TELEGRAM UI ===========================
+TG_KB = {
+    "keyboard": [
+        ["📊 Status", "✅ Ping"],
+        ["⏸ Pause", "▶ Resume"],
+        ["🎯 Risk 0.5%", "💰 Capital 100"],
+        ["📈 Positions 3", "ℹ Help"],
+    ],
+    "resize_keyboard": True,
+    "one_time_keyboard": False,
+}
+
+BUTTON_MAP = {
+    "📊 status": "/status",
+    "✅ ping": "/ping",
+    "⏸ pause": "/pause",
+    "▶ resume": "/resume",
+    "🎯 risk 0.5%": "/risk 0.5",
+    "💰 capital 100": "/capital 100",
+    "📈 positions 3": "/positions 3",
+    "ℹ help": "/help",
+}
+
 # =========================== .env ===========================
 load_dotenv()
 TG_TOKEN = os.getenv("TG_TOKEN")
@@ -444,6 +467,18 @@ def tg_send(t: str):
         requests.post(
             f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
             json={"chat_id": TG_CHAT, "text": t},
+            timeout=10
+        )
+    except Exception:
+        pass
+
+def tg_send_kb(t: str):
+    if not (TG_TOKEN and TG_CHAT):
+        return
+    try:
+        requests.post(
+            f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
+            json={"chat_id": TG_CHAT, "text": t, "reply_markup": TG_KB},
             timeout=10
         )
     except Exception:
@@ -531,7 +566,7 @@ def _handle_tg_command(text: str):
     name = cmd[0].lower()
 
     if name in ("/help", "/start"):
-        _tg_reply(
+        tg_send_kb(
             "🤖 Управление ботом\n"
             "• /status — статус и риск\n"
             "• /ping — жив ли бот\n"
@@ -558,6 +593,10 @@ def _handle_tg_command(text: str):
         m = (up % 3600) // 60
         s = up % 60
         _tg_reply(f"✅ alive | uptime {h:02d}:{m:02d}:{s:02d}")
+        return
+
+    if name == "/menu":
+        tg_send_kb("Меню управления:")
         return
 
     if name == "/pause":
@@ -624,6 +663,10 @@ async def tg_cmd_loop():
                 if chat_id != str(TG_CHAT):
                     continue
                 text = (msg.get("text") or "").strip()
+                if text:
+                    mapped = BUTTON_MAP.get(text.lower().strip())
+                    if mapped:
+                        text = mapped
                 if text.startswith("/"):
                     _handle_tg_command(text)
         except Exception as e:
