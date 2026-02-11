@@ -66,6 +66,10 @@ class RetestBTConfig:
     allow_longs: bool = True
     allow_shorts: bool = True
 
+    # retest style controls
+    trend_only: bool = True
+    levels_only_4h: bool = True
+
     # regime filter
     regime_enable: bool = False
     regime_tf: str = "60"
@@ -97,6 +101,8 @@ class RetestBacktestStrategy:
         self.cfg.rr = _env_float("RETEST_RR", self.cfg.rr)
         self.cfg.allow_longs = _env_bool("RETEST_ALLOW_LONGS", self.cfg.allow_longs)
         self.cfg.allow_shorts = _env_bool("RETEST_ALLOW_SHORTS", self.cfg.allow_shorts)
+        self.cfg.trend_only = _env_bool("RETEST_TREND_ONLY", self.cfg.trend_only)
+        self.cfg.levels_only_4h = _env_bool("RETEST_LEVELS_ONLY_4H", self.cfg.levels_only_4h)
 
         self.cfg.regime_enable = _env_bool("RETEST_REGIME", self.cfg.regime_enable)
         self.cfg.regime_tf = os.getenv("RETEST_REGIME_TF", self.cfg.regime_tf)
@@ -182,6 +188,8 @@ class RetestBacktestStrategy:
         tol_pct = max(self.cfg.tol_1h_min, self.cfg.tol_4h_min)
         lv = LevelsService.best_near(levels, price, tol_pct=tol_pct, tf_prefer="4h")
         if not lv:
+            return None
+        if self.cfg.levels_only_4h and str(getattr(lv, "tf", "")) != "4h":
             return None
 
         bias = self._regime_bias()
@@ -274,7 +282,7 @@ class RetestBacktestStrategy:
                                     return TradeSignal("retest_levels", store.symbol, "short", entry, sl, tp, reason=f"retest_short {lv.tf}")
 
         # Range bounce (sideways)
-        if self.cfg.range_enable:
+        if (not self.cfg.trend_only) and self.cfg.range_enable:
             if self.cfg.range_only_neutral and bias is not None and bias != 1:
                 return None
             if self.cfg.allow_longs and lv.kind == "support" and price >= lv.price:

@@ -59,6 +59,8 @@ class RetestEngine:
         self.max_retest_bars = _env_int("RETEST_MAX_RETEST_BARS", 30)
         self.min_rr = _env_float("RETEST_MIN_RR", 1.2)
         self.rr = _env_float("RETEST_RR", 1.5)
+        self.trend_only = _env_bool("RETEST_TREND_ONLY", True)
+        self.levels_only_4h = _env_bool("RETEST_LEVELS_ONLY_4H", True)
 
         self.regime_enable = _env_bool("RETEST_REGIME", False)
         self.regime_tf = os.getenv("RETEST_REGIME_TF", "60")
@@ -110,6 +112,8 @@ class RetestEngine:
         tol_pct = max(float(meta.get("tol_1h_pct", 0.4)), float(meta.get("tol_4h_pct", 0.4)))
         lv = LevelsService.best_near(levels, price, tol_pct=tol_pct, tf_prefer="4h")
         if not lv:
+            return None
+        if self.levels_only_4h and str(getattr(lv, "tf", "")) != "4h":
             return None
 
         # regime filter
@@ -224,7 +228,7 @@ class RetestEngine:
                                     )
 
         # Range bounce (sideways)
-        if self.range_enable:
+        if (not self.trend_only) and self.range_enable:
             if self.range_only_neutral and bias is not None and bias != 1:
                 return None
             if self.allow_longs and lv.kind == "support" and price >= lv.price:
