@@ -19,6 +19,7 @@ from trade_state import TradeState
 from inplay_live import InPlayLiveEngine
 from breakout_live import BreakoutLiveEngine
 from retest_live import RetestEngine
+from trade_reporting import generate_report, since_days
 
 from sr_range import RangeRegistry, RangeScanner
 from sr_range_strategy import RangeStrategy
@@ -484,6 +485,34 @@ def tg_send_kb(t: str):
     except Exception:
         pass
 
+def tg_send_doc(path: str, caption: str | None = None):
+    if not (TG_TOKEN and TG_CHAT) or not path or not os.path.exists(path):
+        return
+    try:
+        with open(path, "rb") as f:
+            requests.post(
+                f"https://api.telegram.org/bot{TG_TOKEN}/sendDocument",
+                data={"chat_id": TG_CHAT, "caption": caption or ""},
+                files={"document": f},
+                timeout=20,
+            )
+    except Exception:
+        pass
+
+def tg_send_photo(path: str, caption: str | None = None):
+    if not (TG_TOKEN and TG_CHAT) or not path or not os.path.exists(path):
+        return
+    try:
+        with open(path, "rb") as f:
+            requests.post(
+                f"https://api.telegram.org/bot{TG_TOKEN}/sendPhoto",
+                data={"chat_id": TG_CHAT, "caption": caption or ""},
+                files={"photo": f},
+                timeout=20,
+            )
+    except Exception:
+        pass
+
 # =========================== TRADE DB (SQLite) ===========================
 TRADE_DB_PATH = os.getenv("TRADE_DB_PATH", "trades.db")
 
@@ -547,6 +576,10 @@ def _db_log_event(event: str, tr, sym: str, *, pnl: float | None = None, fees: f
 
 # =========================== TELEGRAM COMMANDS ===========================
 TG_COMMANDS_ENABLE = os.getenv("TG_COMMANDS_ENABLE", "1").strip() == "1"
+REPORTS_ENABLE = os.getenv("REPORTS_ENABLE", "1").strip() == "1"
+REPORTS_SEND_ON_START = os.getenv("REPORTS_SEND_ON_START", "0").strip() == "1"
+REPORTS_OUT_DIR = os.getenv("REPORTS_OUT_DIR", "/tmp").strip() or "/tmp"
+REPORTS_STATE_PATH = os.getenv("REPORTS_STATE_PATH", "/tmp/bybot_report_state.json").strip()
 
 def _tg_reply(msg: str):
     tg_send(msg)
@@ -672,6 +705,66 @@ async def tg_cmd_loop():
         except Exception as e:
             log_error(f"tg cmd loop error: {e}")
         await asyncio.sleep(1)
+
+def _load_report_state() -> Dict[str, int]:
+    try:
+        if not os.path.exists(REPORTS_STATE_PATH):
+            return {}
+        with open(REPORTS_STATE_PATH, "r") as f:
+            return json.load(f) or {}
+    except Exception:
+        return {}
+
+def _save_report_state(state: Dict[str, int]) -> None:
+    try:
+        with open(REPORTS_STATE_PATH, "w") as f:
+            json.dump(state, f)
+    except Exception:
+        pass
+
+def _send_report(tag: str, days: int) -> None:
+    since_ts = since_days(days)
+    rep = generate_report(TRADE_DB_PATH, since_ts, REPORTS_OUT_DIR, tag)
+    tg_trade(rep.text)
+    if rep.csv_path:
+        tg_send_doc(rep.csv_path, caption=f"{tag} CSV")
+    if rep.png_path:
+        tg_send_photo(rep.png_path, caption=f"{tag} chart")
+
+async def reports_loop():
+    if not REPORTS_ENABLE:
+        return
+    state = _load_report_state()
+    now = int(time.time())
+    if REPORTS_SEND_ON_START:
+        _send_report("daily", 1)
+        _send_report("weekly", 7)
+        _send_report("monthly", 30)
+        _send_report("yearly", 365)
+        state["daily"] = now
+        state["weekly"] = now
+        state["monthly"] = now
+        state["yearly"] = now
+        _save_report_state(state)
+    while True:
+        now = int(time.time())
+        for tag, days, period in [
+            ("daily", 1, 86400),
+            ("weekly", 7, 7 * 86400),
+            ("monthly", 30, 30 * 86400),
+            ("yearly", 365, 365 * 86400),
+        ]:
+            last = int(state.get(tag, 0) or 0)
+            if last == 0:
+                # initialize without spamming
+                state[tag] = now
+                _save_report_state(state)
+                continue
+            if now - last >= period:
+                _send_report(tag, days)
+                state[tag] = now
+                _save_report_state(state)
+        await asyncio.sleep(600)
 
 def log_signal(row: dict):
     if not LOG_SIGNALS:
@@ -3985,6 +4078,8 @@ async def main_async():
 
     if TG_COMMANDS_ENABLE:
         tasks.append(asyncio.create_task(runner(tg_cmd_loop, "TG_CMD")))
+    if REPORTS_ENABLE:
+        tasks.append(asyncio.create_task(runner(reports_loop, "REPORTS")))
 
     tasks.append(asyncio.create_task(pulse()))
     await asyncio.gather(*tasks)
