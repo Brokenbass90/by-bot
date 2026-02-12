@@ -43,6 +43,7 @@ from backtest.engine import Candle, KlineStore, BacktestParams, run_symbol_backt
 from backtest.metrics import PerformanceSummary, summarize_trades
 
 from strategies.bounce_bt import BounceBTConfig, BounceBTStrategy
+from strategies.bounce_bt_v2 import BounceBTV2Config, BounceBTV2Strategy
 from strategies.inplay_wrapper import InPlayWrapper, InPlayWrapperConfig
 from strategies.retest_backtest import RetestBacktestStrategy, RetestBTConfig
 from strategies.inplay_breakout import InPlayBreakoutWrapper, InPlayBreakoutConfig
@@ -145,8 +146,8 @@ def main() -> int:
     ap.add_argument(
         "--strategies",
         type=str,
-        default="range,bounce,pump_fade,inplay,inplay_pullback,inplay_breakout,retest_levels",
-        help="Comma-separated: range,bounce,pump_fade,inplay,inplay_pullback,inplay_breakout,retest_levels",
+        default="range,bounce,bounce_v2,pump_fade,inplay,inplay_pullback,inplay_breakout,retest_levels",
+        help="Comma-separated: range,bounce,bounce_v2,pump_fade,inplay,inplay_pullback,inplay_breakout,retest_levels",
     )
     ap.add_argument(
         "--strict",
@@ -317,6 +318,9 @@ def main() -> int:
     def make_bounce():
         return BounceBTStrategy(BounceBTConfig())
 
+    def make_bounce_v2():
+        return BounceBTV2Strategy(BounceBTV2Config())
+
     def make_pump_fade():
         return PumpFadeStrategy(PumpFadeConfig())
 
@@ -335,6 +339,7 @@ def main() -> int:
     factories = {
         "range": make_range,
         "bounce": make_bounce,
+        "bounce_v2": make_bounce_v2,
         "pump_fade": make_pump_fade,
         "inplay": make_inplay,
         "inplay_pullback": make_inplay_pullback,
@@ -442,6 +447,8 @@ def main() -> int:
                     if strat_name == "retest_levels":
                         return _resolve(strat.signal(store, ts_ms, last_price))
                     if strat_name == "bounce":
+                        return _resolve(strat.maybe_signal(store, ts_ms, last_price))
+                    if strat_name == "bounce_v2":
                         return _resolve(strat.maybe_signal(store, ts_ms, last_price))
                     if strat_name == "pump_fade":
                         # pump_fade uses 5m bar features

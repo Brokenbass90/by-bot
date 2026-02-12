@@ -47,6 +47,7 @@ from backtest.engine import BacktestParams, KlineStore, Candle
 from backtest.metrics import summarize_trades
 from backtest.portfolio_engine import run_portfolio_backtest
 from strategies.bounce_bt import BounceBTStrategy
+from strategies.bounce_bt_v2 import BounceBTV2Strategy
 from strategies.range_wrapper import RangeWrapper
 from strategies.inplay_wrapper import InPlayWrapper
 from strategies.retest_backtest import RetestBacktestStrategy
@@ -159,8 +160,8 @@ def main():
                     help="Comma-separated symbols to exclude from the auto universe.")
     ap.add_argument(
         "--strategies",
-        default="bounce,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout",
-        help="Comma-separated strategies (priority order): bounce,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout",
+        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout",
+        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout",
     )
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--end", default="", help="YYYY-MM-DD (UTC)")
@@ -184,7 +185,7 @@ def main():
         raise SystemExit("No symbols selected. Provide --symbols or relax --min_volume_usd/--top_n.")
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
-    allowed = {"bounce", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_breakout", "vol_breakout"}
+    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_breakout", "vol_breakout"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -200,6 +201,7 @@ def main():
 
     # Build per-symbol strategy instances (avoid cross-symbol state bleed).
     bounce = {sym: BounceBTStrategy() for sym in symbols} if "bounce" in strategies else {}
+    bounce_v2 = {sym: BounceBTV2Strategy() for sym in symbols} if "bounce_v2" in strategies else {}
     range_wrappers = {sym: RangeWrapper(fetch_klines=stores[sym].fetch_klines) for sym in symbols} if "range" in strategies else {}
     inplay = {sym: InPlayWrapper() for sym in symbols} if "inplay" in strategies else {}
     breakout = {sym: InPlayBreakoutWrapper() for sym in symbols} if "inplay_breakout" in strategies else {}
@@ -216,6 +218,8 @@ def main():
         for st in strategies:
             if st == "bounce":
                 sig = bounce[sym].maybe_signal(store, ts_ms, last_price)
+            elif st == "bounce_v2":
+                sig = bounce_v2[sym].maybe_signal(store, ts_ms, last_price)
             elif st == "range":
                 sig = range_wrappers[sym].signal(store, ts_ms, last_price)
             elif st == "inplay":
