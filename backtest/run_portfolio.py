@@ -54,6 +54,7 @@ from strategies.inplay_breakout import InPlayBreakoutWrapper
 from strategies.inplay_pullback import InPlayPullbackWrapper
 from strategies.pump_fade import PumpFadeStrategy
 from strategies.momentum_continuation import MomentumContinuationStrategy
+from strategies.trend_pullback import TrendPullbackStrategy
 
 
 def _parse_end(s: Optional[str]) -> int:
@@ -156,8 +157,8 @@ def main():
                     help="Comma-separated symbols to exclude from the auto universe.")
     ap.add_argument(
         "--strategies",
-        default="bounce,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum",
-        help="Comma-separated strategies (priority order): bounce,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum",
+        default="bounce,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback",
+        help="Comma-separated strategies (priority order): bounce,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback",
     )
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--end", default="", help="YYYY-MM-DD (UTC)")
@@ -181,7 +182,7 @@ def main():
         raise SystemExit("No symbols selected. Provide --symbols or relax --min_volume_usd/--top_n.")
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
-    allowed = {"bounce", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum"}
+    allowed = {"bounce", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -204,6 +205,7 @@ def main():
     pump_fade = {sym: PumpFadeStrategy() for sym in symbols} if "pump_fade" in strategies else {}
     retest = {sym: RetestBacktestStrategy(stores[sym]) for sym in symbols} if "retest_levels" in strategies else {}
     momentum = {sym: MomentumContinuationStrategy() for sym in symbols} if "momentum" in strategies else {}
+    trend_pullback = {sym: TrendPullbackStrategy() for sym in symbols} if "trend_pullback" in strategies else {}
 
     def selector(sym: str, store: KlineStore, ts_ms: int, last_price: float):
         # IMPORTANT: first-match wins (priority = order in --strategies)
@@ -235,6 +237,12 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = momentum[sym].maybe_signal(sym, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "trend_pullback":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = trend_pullback[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             else:
                 sig = None
             if sig is not None:
