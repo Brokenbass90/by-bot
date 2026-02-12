@@ -2720,7 +2720,7 @@ async def try_inplay_entry_async(symbol: str, price: float):
     _INPLAY_LAST_TRY[symbol] = now
 
     try:
-        sig = INPLAY_ENGINE.signal(symbol, price, int(now * 1000))
+        sig = await INPLAY_ENGINE.signal_async(symbol, price, int(now * 1000))
     except Exception as e:
         log_error(f"inplay signal error {symbol}: {e}")
         return
@@ -2819,7 +2819,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
     _BREAKOUT_LAST_TRY[symbol] = now
 
     try:
-        sig = BREAKOUT_ENGINE.signal(symbol, price, int(now * 1000))
+        sig = await BREAKOUT_ENGINE.signal_async(symbol, price, int(now * 1000))
     except Exception as e:
         log_error(f"breakout signal error {symbol}: {e}")
         return

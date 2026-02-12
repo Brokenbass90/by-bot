@@ -55,3 +55,13 @@ class InPlayLiveEngine:
         store = self._stores[symbol]
         wrapper = self._wrappers[symbol]
         return wrapper.signal(store, ts_ms, price)
+
+    async def signal_async(self, symbol: str, price: float, ts_ms: int) -> Optional[TradeSignal]:
+        """Async entry point to avoid coroutine warnings in async contexts."""
+        if symbol not in self._stores:
+            self._stores[symbol] = LiveKlineStore(symbol, self._fetch)
+        if symbol not in self._wrappers:
+            self._wrappers[symbol] = InPlayWrapper()
+        store = self._stores[symbol]
+        wrapper = self._wrappers[symbol]
+        return await wrapper.maybe_signal(store, ts_ms, price)
