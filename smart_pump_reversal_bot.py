@@ -38,6 +38,11 @@ MIN_NOTIONAL_FILL_FRAC = float(os.getenv("MIN_NOTIONAL_FILL_FRAC", "0.40"))
 
 
 # =========================== ГЛОБАЛ ===========================
+def _env_bool(name: str, default: bool) -> bool:
+    v = os.getenv(name)
+    if v is None:
+        return default
+    return str(v).strip().lower() in ("1", "true", "yes", "on")
 DEBUG_WINDOWS = True
 MSG_COUNTER = {"Bybit": 0, "Binance": 0}
 AUTH_DISABLED_UNTIL = {}  # name -> ts
@@ -187,7 +192,10 @@ MANUAL_TPSL_DETECT_TICKS = 2        # допуск расхождения в "т
 
 
 # =========================== BOUNCE DEBUG/CONTROL ===========================
-BOUNCE_DEBUG = True
+BOUNCE_DEBUG = _env_bool("BOUNCE_DEBUG", True)
+# Control bounce-related Telegram chatter when bounce is disabled
+BOUNCE_TG_LOGS = _env_bool("BOUNCE_TG_LOGS", True)
+BOUNCE_LOG_ONLY = _env_bool("BOUNCE_LOG_ONLY", True)
 BOUNCE_DEBUG_CSV = "bounce_debug.csv"
 
 BOUNCE_MAX_DIST_PCT = 0.60
@@ -3086,7 +3094,7 @@ def try_bounce_entry(exch: str, sym: str, st: SymState, now: int, price: float):
                     })
 
         # Плюс короткий DEBUG в телегу, чтобы руками сверять с TV
-        if BOUNCE_DEBUG:
+        if BOUNCE_DEBUG and BOUNCE_TG_LOGS:
             tg_trade(
                 f"🧪 BOUNCE DEBUG {sym} {sig.side}  price={price:.6f}  lvl={lvl:.6f} "
                 f"dist={d:+.3f}%  kind={sig.level.kind},{sig.level.tf}  risk={sig.breakout_risk:.2f}  decision={decision}"
@@ -3097,7 +3105,8 @@ def try_bounce_entry(exch: str, sym: str, st: SymState, now: int, price: float):
 
         # Проверочный режим: только логируем, но не торгуем
         if not BOUNCE_EXECUTE_TRADES:
-            tg_trade(f"🟡 BOUNCE LOG-ONLY (no trade): {sym} {sig.side} dist={d:+.3f}%")
+            if BOUNCE_LOG_ONLY and BOUNCE_TG_LOGS:
+                tg_trade(f"🟡 BOUNCE LOG-ONLY (no trade): {sym} {sig.side} dist={d:+.3f}%")
             return
 
         tp_r, sl_r = round_tp_sl_prices(sym, sig.side, float(price), sig.tp_price, sig.sl_price)
@@ -3806,7 +3815,8 @@ async def bybit_ws():
         print(f"[retest] universe size={len(RETEST_SYMBOLS)} (top {RETEST_TOP_N})")
 
     # опционально: в телегу
-    tg_trade(f"🧩 bounce-universe: cap≈{cap:.2f} | eligible={len(eligible)}/{len(syms)} | using={len(BOUNCE_SYMBOLS)}")
+    if BOUNCE_TG_LOGS:
+        tg_trade(f"🧩 bounce-universe: cap≈{cap:.2f} | eligible={len(eligible)}/{len(syms)} | using={len(BOUNCE_SYMBOLS)}")
     if ENABLE_INPLAY_TRADING:
         tg_trade(f"🧩 inplay-universe: using={len(INPLAY_SYMBOLS)} (top {INPLAY_TOP_N})")
     if ENABLE_BREAKOUT_TRADING:
