@@ -662,11 +662,22 @@ def _compute_reco_symbols() -> list[str]:
         with sqlite3.connect(TRADE_DB_PATH) as con:
             if strat_filter:
                 placeholders = ",".join(["?"] * len(strat_filter))
-                cur = con.execute(
-                    f\"\"\"\nSELECT symbol, COUNT(*), SUM(pnl)\nFROM trade_events\nWHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=? AND strategy IN ({placeholders})\nGROUP BY symbol\n\"\"\",\n                    [since_ts, *strat_filter],\n                )
+                query = (
+                    "SELECT symbol, COUNT(*), SUM(pnl) "
+                    "FROM trade_events "
+                    "WHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=? "
+                    f"AND strategy IN ({placeholders}) "
+                    "GROUP BY symbol"
+                )
+                cur = con.execute(query, [since_ts, *strat_filter])
             else:
-                cur = con.execute(
-                    \"\"\"\nSELECT symbol, COUNT(*), SUM(pnl)\nFROM trade_events\nWHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=?\nGROUP BY symbol\n\"\"\",\n                    (since_ts,),\n                )
+                query = (
+                    "SELECT symbol, COUNT(*), SUM(pnl) "
+                    "FROM trade_events "
+                    "WHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=? "
+                    "GROUP BY symbol"
+                )
+                cur = con.execute(query, (since_ts,))
             for sym, cnt, pnl in cur.fetchall():
                 rows.append((str(sym).upper(), int(cnt), float(pnl or 0.0)))
     except Exception as e:
