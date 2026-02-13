@@ -408,6 +408,7 @@ TG_KB = {
         ["📊 Status", "✅ Ping"],
         ["⏸ Pause", "▶ Resume"],
         ["🎯 Risk 0.5%", "💰 Capital 100"],
+        ["🧹 Reco", "✅ Apply Reco"],
         ["📈 Positions 3", "ℹ Help"],
     ],
     "resize_keyboard": True,
@@ -421,6 +422,8 @@ BUTTON_MAP = {
     "▶ resume": "/resume",
     "🎯 risk 0.5%": "/risk 0.5",
     "💰 capital 100": "/capital 100",
+    "🧹 reco": "/banreco",
+    "✅ apply reco": "/banapply",
     "📈 positions 3": "/positions 3",
     "ℹ help": "/help",
 }
@@ -589,6 +592,91 @@ REPORTS_SEND_ON_START = os.getenv("REPORTS_SEND_ON_START", "0").strip() == "1"
 REPORTS_OUT_DIR = os.getenv("REPORTS_OUT_DIR", "/tmp").strip() or "/tmp"
 REPORTS_STATE_PATH = os.getenv("REPORTS_STATE_PATH", "/tmp/bybot_report_state.json").strip()
 
+# Symbol filters (allow/deny lists)
+SYMBOL_FILTERS_PATH = os.getenv("SYMBOL_FILTERS_PATH", "/tmp/bybot_symbol_filters.json").strip()
+SYMBOL_ALLOWLIST_ENV = os.getenv("SYMBOL_ALLOWLIST", "").strip()
+SYMBOL_DENYLIST_ENV = os.getenv("SYMBOL_DENYLIST", "").strip()
+
+# Recommendation (banlist) loop
+RECO_ENABLE = os.getenv("RECO_ENABLE", "1").strip() == "1"
+RECO_SEND_ON_START = os.getenv("RECO_SEND_ON_START", "0").strip() == "1"
+RECO_PERIOD_SEC = int(os.getenv("RECO_PERIOD_SEC", str(7 * 86400)))
+RECO_LOOKBACK_DAYS = int(os.getenv("RECO_LOOKBACK_DAYS", "60"))
+RECO_WORST_N = int(os.getenv("RECO_WORST_N", "3"))
+RECO_MIN_TRADES = int(os.getenv("RECO_MIN_TRADES", "8"))
+RECO_STRATEGIES = os.getenv("RECO_STRATEGIES", "").strip()
+
+LAST_RECO_SYMBOLS: list[str] = []
+
+def _parse_symbol_csv(s: str) -> list[str]:
+    parts = [p.strip().upper() for p in s.replace(";", ",").split(",") if p.strip()]
+    return [p for p in parts if p]
+
+def _load_symbol_filters() -> dict:
+    base = {"allowlist": [], "denylist": []}
+    if SYMBOL_FILTERS_PATH and os.path.exists(SYMBOL_FILTERS_PATH):
+        try:
+            with open(SYMBOL_FILTERS_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f) or {}
+            base["allowlist"] = [str(x).upper() for x in (data.get("allowlist") or [])]
+            base["denylist"] = [str(x).upper() for x in (data.get("denylist") or [])]
+        except Exception:
+            pass
+    return base
+
+def _save_symbol_filters(data: dict) -> None:
+    try:
+        if not SYMBOL_FILTERS_PATH:
+            return
+        with open(SYMBOL_FILTERS_PATH, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+    except Exception:
+        pass
+
+def _get_symbol_filters() -> tuple[set[str], set[str]]:
+    allow = set(_parse_symbol_csv(SYMBOL_ALLOWLIST_ENV)) if SYMBOL_ALLOWLIST_ENV else set()
+    deny = set(_parse_symbol_csv(SYMBOL_DENYLIST_ENV)) if SYMBOL_DENYLIST_ENV else set()
+    data = _load_symbol_filters()
+    allow.update(data.get("allowlist") or [])
+    deny.update(data.get("denylist") or [])
+    return allow, deny
+
+def _apply_symbol_filters(symbols: list[str]) -> list[str]:
+    allow, deny = _get_symbol_filters()
+    out = []
+    for s in symbols:
+        if allow and s not in allow:
+            continue
+        if s in deny:
+            continue
+        out.append(s)
+    return out
+
+def _compute_reco_symbols() -> list[str]:
+    if not os.path.exists(TRADE_DB_PATH):
+        return []
+    since_ts = int(time.time()) - int(RECO_LOOKBACK_DAYS) * 86400
+    strat_filter = [s.strip() for s in RECO_STRATEGIES.split(",") if s.strip()]
+    rows = []
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            if strat_filter:
+                placeholders = ",".join(["?"] * len(strat_filter))
+                cur = con.execute(
+                    f\"\"\"\nSELECT symbol, COUNT(*), SUM(pnl)\nFROM trade_events\nWHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=? AND strategy IN ({placeholders})\nGROUP BY symbol\n\"\"\",\n                    [since_ts, *strat_filter],\n                )
+            else:
+                cur = con.execute(
+                    \"\"\"\nSELECT symbol, COUNT(*), SUM(pnl)\nFROM trade_events\nWHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=?\nGROUP BY symbol\n\"\"\",\n                    (since_ts,),\n                )
+            for sym, cnt, pnl in cur.fetchall():
+                rows.append((str(sym).upper(), int(cnt), float(pnl or 0.0)))
+    except Exception as e:
+        log_error(f\"reco query failed: {e}\")
+        return []
+
+    rows = [r for r in rows if r[1] >= int(RECO_MIN_TRADES)]
+    rows.sort(key=lambda x: x[2])  # worst first
+    return [sym for sym, _, _ in rows[: max(0, int(RECO_WORST_N))]]
+
 def _tg_reply(msg: str):
     tg_send(msg)
 
@@ -615,7 +703,12 @@ def _handle_tg_command(text: str):
             "• /resume — продолжить\n"
             "• /risk 0.5 — риск в %\n"
             "• /capital 200 — кап бота\n"
-            "• /positions 3 — макс. позиций (1–10)"
+            "• /positions 3 — макс. позиций (1–10)\n"
+            "• /banreco — рекомендации бан-листа\n"
+            "• /banapply — применить последние рекомендации\n"
+            "• /banlist — текущие фильтры\n"
+            "• /ban SYM1,SYM2 — добавить в бан\n"
+            "• /unban SYM1,SYM2 — убрать из бана"
         )
         return
 
@@ -679,6 +772,59 @@ def _handle_tg_command(text: str):
         v = int(max(1, min(10, v)))
         MAX_POSITIONS = v
         _tg_reply(f"Max positions set to {MAX_POSITIONS}")
+        return
+
+    if name == "/banlist":
+        allow, deny = _get_symbol_filters()
+        _tg_reply(
+            f"Allowlist ({len(allow)}): {','.join(sorted(allow)) if allow else '-'}\n"
+            f"Denylist ({len(deny)}): {','.join(sorted(deny)) if deny else '-'}"
+        )
+        return
+
+    if name == "/banreco":
+        global LAST_RECO_SYMBOLS
+        LAST_RECO_SYMBOLS = _compute_reco_symbols()
+        if not LAST_RECO_SYMBOLS:
+            _tg_reply("Нет рекомендаций (мало сделок/нет данных).")
+            return
+        _tg_reply("Рекомендую в бан: " + ",".join(LAST_RECO_SYMBOLS))
+        return
+
+    if name == "/banapply":
+        if not LAST_RECO_SYMBOLS:
+            _tg_reply("Нет сохранённых рекомендаций. Сначала /banreco.")
+            return
+        data = _load_symbol_filters()
+        deny = set([str(x).upper() for x in (data.get("denylist") or [])])
+        for s in LAST_RECO_SYMBOLS:
+            deny.add(str(s).upper())
+        data["denylist"] = sorted(deny)
+        _save_symbol_filters(data)
+        _tg_reply("Применил бан: " + ",".join(sorted(LAST_RECO_SYMBOLS)))
+        return
+
+    if name in ("/ban", "/unban") and len(cmd) >= 2:
+        symbols = []
+        for part in cmd[1:]:
+            symbols.extend([s.strip().upper() for s in part.replace(";", ",").split(",") if s.strip()])
+        if not symbols:
+            _tg_reply("Usage: /ban SYM1,SYM2 или /unban SYM1,SYM2")
+            return
+        data = _load_symbol_filters()
+        deny = set([str(x).upper() for x in (data.get("denylist") or [])])
+        if name == "/ban":
+            for s in symbols:
+                deny.add(s)
+            data["denylist"] = sorted(deny)
+            _save_symbol_filters(data)
+            _tg_reply("Добавил в бан: " + ",".join(symbols))
+        else:
+            for s in symbols:
+                deny.discard(s)
+            data["denylist"] = sorted(deny)
+            _save_symbol_filters(data)
+            _tg_reply("Убрал из бана: " + ",".join(symbols))
         return
 
     _tg_reply("Unknown command. /help")
@@ -749,10 +895,16 @@ async def reports_loop():
         _send_report("weekly", 7)
         _send_report("monthly", 30)
         _send_report("yearly", 365)
+        if RECO_ENABLE:
+            syms = _compute_reco_symbols()
+            if syms:
+                tg_trade("🧹 Рекомендую в бан: " + ",".join(syms))
         state["daily"] = now
         state["weekly"] = now
         state["monthly"] = now
         state["yearly"] = now
+        if RECO_ENABLE:
+            state["reco"] = now
         _save_report_state(state)
     while True:
         now = int(time.time())
@@ -771,6 +923,19 @@ async def reports_loop():
             if now - last >= period:
                 _send_report(tag, days)
                 state[tag] = now
+                _save_report_state(state)
+        if RECO_ENABLE:
+            last_reco = int(state.get("reco", 0) or 0)
+            if last_reco == 0:
+                state["reco"] = now
+                _save_report_state(state)
+            elif now - last_reco >= int(RECO_PERIOD_SEC):
+                syms = _compute_reco_symbols()
+                if syms:
+                    tg_trade("🧹 Рекомендую в бан: " + ",".join(syms))
+                    global LAST_RECO_SYMBOLS
+                    LAST_RECO_SYMBOLS = list(syms)
+                state["reco"] = now
                 _save_report_state(state)
         await asyncio.sleep(600)
 
@@ -3796,10 +3961,12 @@ async def bybit_ws():
         except Exception:
             continue
 
+    filtered = _apply_symbol_filters(eligible)
+
     BOUNCE_SYMBOLS = set(eligible[:BOUNCE_TOP_N])
-    INPLAY_SYMBOLS = set(eligible[:max(1, int(INPLAY_TOP_N))])
-    BREAKOUT_SYMBOLS = set(eligible[:max(1, int(BREAKOUT_TOP_N))])
-    RETEST_SYMBOLS = set(eligible[:max(1, int(RETEST_TOP_N))])
+    INPLAY_SYMBOLS = set(filtered[:max(1, int(INPLAY_TOP_N))])
+    BREAKOUT_SYMBOLS = set(filtered[:max(1, int(BREAKOUT_TOP_N))])
+    RETEST_SYMBOLS = set(filtered[:max(1, int(RETEST_TOP_N))])
 
     # global RANGE_RESCAN_TASK
     # if ENABLE_RANGE_TRADING and RANGE_RESCAN_TASK is None:
