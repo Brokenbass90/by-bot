@@ -435,26 +435,32 @@ def main() -> int:
                     continue
 
                 # signal function per strategy type
-                def signal_fn(ts_ms: int, last_price: float) -> "TradeSignal|None":
+                def signal_fn(store_obj, bar) -> "TradeSignal|None":
+                    # Engine passes (store, Candle). Convert to ts/price for strategies.
+                    try:
+                        ts_ms = int(getattr(bar, "ts"))
+                        last_price = float(getattr(bar, "c"))
+                    except Exception:
+                        return None
                     if strat_name == "range":
-                        return _resolve(strat.maybe_signal(store, ts_ms, last_price))
+                        return _resolve(strat.maybe_signal(store_obj, ts_ms, last_price))
                     if strat_name == "inplay":
-                        return _resolve(strat.maybe_signal(store, ts_ms, last_price))
+                        return _resolve(strat.maybe_signal(store_obj, ts_ms, last_price))
                     if strat_name == "inplay_pullback":
-                        return _resolve(strat.maybe_signal(store, ts_ms, last_price))
+                        return _resolve(strat.maybe_signal(store_obj, ts_ms, last_price))
                     if strat_name == "inplay_breakout":
-                        return _resolve(strat.maybe_signal(store, ts_ms, last_price))
+                        return _resolve(strat.maybe_signal(store_obj, ts_ms, last_price))
                     if strat_name == "retest_levels":
-                        return _resolve(strat.signal(store, ts_ms, last_price))
+                        return _resolve(strat.signal(store_obj, ts_ms, last_price))
                     if strat_name == "bounce":
-                        return _resolve(strat.maybe_signal(store, ts_ms, last_price))
+                        return _resolve(strat.maybe_signal(store_obj, ts_ms, last_price))
                     if strat_name == "bounce_v2":
-                        return _resolve(strat.maybe_signal(store, ts_ms, last_price))
+                        return _resolve(strat.maybe_signal(store_obj, ts_ms, last_price))
                     if strat_name == "pump_fade":
                         # pump_fade uses 5m bar features
                         # pass latest 5m candle
-                        idx = store.i5
-                        cur = store.c5[idx]
+                        idx = store_obj.i5
+                        cur = store_obj.c5[idx]
                         return strat.maybe_signal(sym, ts_ms, cur.o, cur.h, cur.l, cur.c, cur.v)
                     return None
 
