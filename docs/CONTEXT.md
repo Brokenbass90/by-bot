@@ -46,6 +46,10 @@
 - probe_breakout_180d_clean8_risk05 (180d, breakout only, clean8, risk 0.5%): ending_equity 129.10, net_pnl +29.10, PF 1.147, DD 11.15
 - probe_combo_180d_clean8_risk05 (180d, combo, clean8, risk 0.5%): ending_equity 151.10, net_pnl +51.10, PF 1.138, DD 11.52
 - probe_breakout_180d_clean8_regime_soft (EMA soft): ending_equity 162.25, net_pnl +62.25 (no change)
+- probe_retest_60d_clean8 (retest_levels): ending_equity 0.00, net_pnl -100.00, PF 0.389, DD ~100 (failed)
+- probe_trend_pullback_60d_clean8: ending_equity 0.00, net_pnl -100.00, PF 0.499, DD ~100 (failed)
+- probe_trend_pullback_180d_clean8: ending_equity 0.00, net_pnl -100.00, PF 0.559, DD ~100 (failed)
+- probe_trend_breakout_60d_clean8: no trades (0)
 
 ## Walk-forward (dynamic exclusion, 30d windows, base 25 symbols)
 - walkforward_wf_combo_180d: total_net -62.46 (ending_equity ~37.54). Monthly PnL mostly negative. Dynamic exclusion as implemented is not yet stable.
@@ -61,6 +65,11 @@
 - Pump_fade = дамп после сильного пампа.
 - inplay и inplay_breakout = разные стратегии, часто работают в комбо.
 - Full universe is currently unprofitable; symbol selection materially changes results.
+## Dynamic Universe Plan (Bybit-wide)
+- Filter: turnover24h >= 25M USDT
+- ATR filter: 1h ATR% >= 0.35 (fallback 0.25 if too few)
+- Exclude listings younger than 7 days
+- Script: scripts/universe_scan.py (prints ranked symbols, optional out file)
 
 ## Open Questions / TODO
 - Pull server .env flags and risk settings
