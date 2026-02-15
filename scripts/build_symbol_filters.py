@@ -63,6 +63,16 @@ def _get_instruments_info(base: str) -> Dict[str, dict]:
     return out
 
 
+def _load_json(path: str) -> dict:
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f) or {}
+
+
+def _save_json(path: str, data: dict) -> None:
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=True)
+
+
 def _atr_pct_1h(symbol: str, *, base: str, lookback_days: int, polite_sleep_sec: float) -> float:
     end_ms = _now_ms()
     start_ms = end_ms - int(lookback_days) * 86400 * 1000
@@ -138,6 +148,9 @@ def main() -> int:
     ap.add_argument("--out", required=True, help="Output JSON file (SYMBOL_FILTERS_PATH).")
     ap.add_argument("--bybit_base", default=DEFAULT_BYBIT_BASE)
     ap.add_argument("--polite_sleep_sec", type=float, default=float(os.getenv("BYBIT_DATA_POLITE_SLEEP_SEC", "0.8")))
+    ap.add_argument("--tickers_json", default="", help="Optional: load /v5/market/tickers response from file.")
+    ap.add_argument("--instruments_json", default="", help="Optional: load /v5/market/instruments-info response from file.")
+    ap.add_argument("--dump_json_dir", default="", help="Optional: save raw JSON responses to this dir.")
     args = ap.parse_args()
 
     with open(args.profiles, "r", encoding="utf-8") as f:
@@ -147,8 +160,27 @@ def main() -> int:
     strat_cfg = profiles.get("per_strategy") or {}
 
     base = args.bybit_base
-    instruments = _get_instruments_info(base)
-    tickers = _get_tickers(base)
+    if args.instruments_json:
+        js = _load_json(args.instruments_json)
+        instruments = {}
+        lst = ((js.get("result") or {}).get("list") or [])
+        for it in lst:
+            sym = str(it.get("symbol") or "").upper()
+            if sym:
+                instruments[sym] = it
+    else:
+        js = None
+        instruments = _get_instruments_info(base)
+        if args.dump_json_dir:
+            _save_json(os.path.join(args.dump_json_dir, "instruments.json"), {"result": {"list": list(instruments.values())}})
+
+    if args.tickers_json:
+        js = _load_json(args.tickers_json)
+        tickers = ((js.get("result") or {}).get("list") or [])
+    else:
+        tickers = _get_tickers(base)
+        if args.dump_json_dir:
+            _save_json(os.path.join(args.dump_json_dir, "tickers.json"), {"result": {"list": tickers}})
 
     base_allow = _select_symbols(
         tickers,
