@@ -18,14 +18,11 @@ import time
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-import requests
-
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from backtest.bybit_data import DEFAULT_BYBIT_BASE, fetch_klines_public
-from indicators import atr_pct_from_ohlc
 
 
 def _now_ms() -> int:
@@ -33,6 +30,7 @@ def _now_ms() -> int:
 
 
 def _get_tickers(base: str) -> List[dict]:
+    import requests
     url = f"{base.rstrip('/')}/v5/market/tickers"
     params = {"category": "linear"}
     js = requests.get(url, params=params, timeout=20).json()
@@ -42,6 +40,7 @@ def _get_tickers(base: str) -> List[dict]:
 
 
 def _get_instruments_info(base: str) -> Dict[str, dict]:
+    import requests
     url = f"{base.rstrip('/')}/v5/market/instruments-info"
     params = {"category": "linear"}
     out: Dict[str, dict] = {}
@@ -73,6 +72,17 @@ def _save_json(path: str, data: dict) -> None:
         json.dump(data, f, ensure_ascii=True)
 
 
+def _atr_pct_from_ohlc(h: list[float], l: list[float], c: list[float], period: int = 14, fallback: float = 0.0) -> float:
+    if len(c) < period + 1 or len(h) < period or len(l) < period:
+        return float(fallback)
+    trs: list[float] = []
+    for i in range(1, period + 1):
+        pc = c[-i - 1]
+        tr = max(h[-i] - l[-i], abs(h[-i] - pc), abs(l[-i] - pc))
+        trs.append(tr / max(1e-12, pc))
+    return 100.0 * sum(trs) / float(period)
+
+
 def _atr_pct_1h(symbol: str, *, base: str, lookback_days: int, polite_sleep_sec: float) -> float:
     end_ms = _now_ms()
     start_ms = end_ms - int(lookback_days) * 86400 * 1000
@@ -90,7 +100,7 @@ def _atr_pct_1h(symbol: str, *, base: str, lookback_days: int, polite_sleep_sec:
     h = [float(k.h) for k in kl]
     l = [float(k.l) for k in kl]
     c = [float(k.c) for k in kl]
-    return float(atr_pct_from_ohlc(h, l, c, period=14, fallback=0.0))
+    return float(_atr_pct_from_ohlc(h, l, c, period=14, fallback=0.0))
 
 
 def _resample_1h_from_5m(bars: list[dict]) -> list[dict]:
@@ -134,7 +144,7 @@ def _atr_pct_1h_from_cache(bars_5m: list[dict], lookback_days: int) -> float:
     h = [float(b["h"]) for b in bars_1h]
     l = [float(b["l"]) for b in bars_1h]
     c = [float(b["c"]) for b in bars_1h]
-    return float(atr_pct_from_ohlc(h, l, c, period=14, fallback=0.0))
+    return float(_atr_pct_from_ohlc(h, l, c, period=14, fallback=0.0))
 
 
 def _turnover_24h_from_cache(bars_5m: list[dict]) -> float:
