@@ -6,6 +6,7 @@
 import os
 import time, json, statistics, asyncio, requests, collections, re, csv, traceback, random, math
 import sqlite3
+import subprocess
 from typing import Dict, Tuple, List, Optional, Any
 import websockets
 from websockets.exceptions import InvalidStatus
@@ -594,6 +595,8 @@ REPORTS_STATE_PATH = os.getenv("REPORTS_STATE_PATH", "/tmp/bybot_report_state.js
 
 # Symbol filters (allow/deny lists)
 SYMBOL_FILTERS_PATH = os.getenv("SYMBOL_FILTERS_PATH", "/tmp/bybot_symbol_filters.json").strip()
+SYMBOL_FILTERS_PROFILES_PATH = os.getenv("SYMBOL_FILTERS_PROFILES_PATH", "configs/symbol_filters_profiles.json").strip()
+SYMBOL_FILTERS_CACHE_DIR = os.getenv("SYMBOL_FILTERS_CACHE_DIR", "").strip()
 SYMBOL_ALLOWLIST_ENV = os.getenv("SYMBOL_ALLOWLIST", "").strip()
 SYMBOL_DENYLIST_ENV = os.getenv("SYMBOL_DENYLIST", "").strip()
 
@@ -669,6 +672,39 @@ def _apply_symbol_filters(symbols: list[str], strategy: str | None = None) -> li
         out.append(s)
     return out
 
+def _symbol_filters_summary() -> str:
+    data = _load_symbol_filters()
+    allow = [str(x).upper() for x in (data.get("allowlist") or [])]
+    deny = [str(x).upper() for x in (data.get("denylist") or [])]
+    per = data.get("per_strategy") or {}
+    parts = [
+        f"Filters file: {SYMBOL_FILTERS_PATH}",
+        f"Base allow={len(allow)} | deny={len(deny)}",
+    ]
+    for k in ("breakout", "inplay", "range", "bounce", "retest"):
+        v = per.get(k) or {}
+        a = v.get("allowlist") or []
+        d = v.get("denylist") or []
+        if a or d:
+            parts.append(f"{k}: allow={len(a)} deny={len(d)}")
+    return "\n".join(parts)
+
+def _build_symbol_filters() -> tuple[bool, str]:
+    script = os.path.join(os.path.dirname(__file__), "scripts", "build_symbol_filters.py")
+    cmd = ["python3", script, "--profiles", SYMBOL_FILTERS_PROFILES_PATH, "--out", SYMBOL_FILTERS_PATH]
+    if SYMBOL_FILTERS_CACHE_DIR:
+        cmd += ["--cache_dir", SYMBOL_FILTERS_CACHE_DIR]
+    try:
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        out = (res.stdout or "").strip()
+        err = (res.stderr or "").strip()
+        if res.returncode != 0:
+            msg = err or out or f"exit={res.returncode}"
+            return False, f"build failed: {msg}"
+        return True, out or "filters built"
+    except Exception as e:
+        return False, f"build failed: {e}"
+
 def _compute_reco_symbols() -> list[str]:
     if not os.path.exists(TRADE_DB_PATH):
         return []
@@ -732,6 +768,8 @@ def _handle_tg_command(text: str):
             "• /risk 0.5 — риск в %\n"
             "• /capital 200 — кап бота\n"
             "• /positions 3 — макс. позиций (1–10)\n"
+            "• /filters — текущие фильтры символов\n"
+            "• /filters_build — пересобрать фильтры\n"
             "• /banreco — рекомендации бан-листа\n"
             "• /banapply — применить последние рекомендации\n"
             "• /banlist — текущие фильтры\n"
@@ -808,6 +846,18 @@ def _handle_tg_command(text: str):
             f"Allowlist ({len(allow)}): {','.join(sorted(allow)) if allow else '-'}\n"
             f"Denylist ({len(deny)}): {','.join(sorted(deny)) if deny else '-'}"
         )
+        return
+
+    if name == "/filters":
+        _tg_reply(_symbol_filters_summary())
+        return
+
+    if name == "/filters_build":
+        ok, msg = _build_symbol_filters()
+        if ok:
+            _tg_reply("✅ filters rebuilt\n" + _symbol_filters_summary())
+        else:
+            _tg_reply("❌ " + msg)
         return
 
     if name == "/banreco":

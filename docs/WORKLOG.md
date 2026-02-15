@@ -63,3 +63,5 @@
   - Применение: сначала базовый фильтр, затем конкретный для `breakout/inplay/retest/range/bounce`.
 - Добавлен генератор фильтров: `scripts/build_symbol_filters.py`.
 - Добавлены профили фильтров: `configs/symbol_filters_profiles.json` (пороговые значения — стартовые).
+- Генератор поддерживает офлайн-режим через `--cache_dir data_cache` (без Bybit API).
+- В Telegram будут добавлены команды `/filters` и `/filters_build`.
