@@ -613,13 +613,22 @@ def _parse_symbol_csv(s: str) -> list[str]:
     return [p for p in parts if p]
 
 def _load_symbol_filters() -> dict:
-    base = {"allowlist": [], "denylist": []}
+    base = {"allowlist": [], "denylist": [], "per_strategy": {}}
     if SYMBOL_FILTERS_PATH and os.path.exists(SYMBOL_FILTERS_PATH):
         try:
             with open(SYMBOL_FILTERS_PATH, "r", encoding="utf-8") as f:
                 data = json.load(f) or {}
             base["allowlist"] = [str(x).upper() for x in (data.get("allowlist") or [])]
             base["denylist"] = [str(x).upper() for x in (data.get("denylist") or [])]
+            per = data.get("per_strategy") or data.get("strategies") or {}
+            norm: dict[str, dict] = {}
+            for k, v in (per or {}).items():
+                if not isinstance(v, dict):
+                    continue
+                allow = [str(x).upper() for x in (v.get("allowlist") or [])]
+                deny = [str(x).upper() for x in (v.get("denylist") or [])]
+                norm[str(k).lower()] = {"allowlist": allow, "denylist": deny}
+            base["per_strategy"] = norm
         except Exception:
             pass
     return base
@@ -633,16 +642,24 @@ def _save_symbol_filters(data: dict) -> None:
     except Exception:
         pass
 
-def _get_symbol_filters() -> tuple[set[str], set[str]]:
+def _get_symbol_filters(strategy: str | None = None) -> tuple[set[str], set[str]]:
     allow = set(_parse_symbol_csv(SYMBOL_ALLOWLIST_ENV)) if SYMBOL_ALLOWLIST_ENV else set()
     deny = set(_parse_symbol_csv(SYMBOL_DENYLIST_ENV)) if SYMBOL_DENYLIST_ENV else set()
     data = _load_symbol_filters()
     allow.update(data.get("allowlist") or [])
     deny.update(data.get("denylist") or [])
+    if strategy:
+        per = (data.get("per_strategy") or {}).get(str(strategy).lower())
+        if per:
+            per_allow = set(per.get("allowlist") or [])
+            per_deny = set(per.get("denylist") or [])
+            if per_allow:
+                allow = (allow & per_allow) if allow else per_allow
+            deny.update(per_deny)
     return allow, deny
 
-def _apply_symbol_filters(symbols: list[str]) -> list[str]:
-    allow, deny = _get_symbol_filters()
+def _apply_symbol_filters(symbols: list[str], strategy: str | None = None) -> list[str]:
+    allow, deny = _get_symbol_filters(strategy=strategy)
     out = []
     for s in symbols:
         if allow and s not in allow:
@@ -3972,19 +3989,24 @@ async def bybit_ws():
         except Exception:
             continue
 
-    filtered = _apply_symbol_filters(eligible)
+    base_filtered = _apply_symbol_filters(eligible)
+    bounce_filtered = _apply_symbol_filters(base_filtered, strategy="bounce")
+    inplay_filtered = _apply_symbol_filters(base_filtered, strategy="inplay")
+    breakout_filtered = _apply_symbol_filters(base_filtered, strategy="breakout")
+    retest_filtered = _apply_symbol_filters(base_filtered, strategy="retest")
+    range_filtered = _apply_symbol_filters(base_filtered, strategy="range")
 
-    BOUNCE_SYMBOLS = set(eligible[:BOUNCE_TOP_N])
-    INPLAY_SYMBOLS = set(filtered[:max(1, int(INPLAY_TOP_N))])
-    BREAKOUT_SYMBOLS = set(filtered[:max(1, int(BREAKOUT_TOP_N))])
-    RETEST_SYMBOLS = set(filtered[:max(1, int(RETEST_TOP_N))])
+    BOUNCE_SYMBOLS = set(bounce_filtered[:BOUNCE_TOP_N])
+    INPLAY_SYMBOLS = set(inplay_filtered[:max(1, int(INPLAY_TOP_N))])
+    BREAKOUT_SYMBOLS = set(breakout_filtered[:max(1, int(BREAKOUT_TOP_N))])
+    RETEST_SYMBOLS = set(retest_filtered[:max(1, int(RETEST_TOP_N))])
 
     # global RANGE_RESCAN_TASK
     # if ENABLE_RANGE_TRADING and RANGE_RESCAN_TASK is None:
     #     RANGE_RESCAN_TASK = asyncio.create_task(range_rescan_loop())
 
 
-    print(f"[bounce] cap≈{cap:.2f} USDT | eligible={len(eligible)}/{len(syms)} | universe size={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
+    print(f"[bounce] cap≈{cap:.2f} USDT | eligible={len(eligible)}/{len(syms)} | base_filtered={len(base_filtered)} | universe size={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
     if ENABLE_INPLAY_TRADING:
         print(f"[inplay] universe size={len(INPLAY_SYMBOLS)} (top {INPLAY_TOP_N})")
     if ENABLE_BREAKOUT_TRADING:

@@ -13,6 +13,21 @@
 - `BREAKOUT_TRY_EVERY_SEC=30`
 - `BYBIT_ACCOUNTS_JSON=[{"name":"main","key":"***","secret":"***","base":"https://api.bybit.com","trade":{"enabled":true,"position_mode":"oneway","leverage":3,"risk_pct":0.01,"bot_capital_usd":100,"cap_notional_to_equity":false,"reserve_equity_frac":0.0,"max_positions":3,"min_notional_usd":18.0,"bounce_execute_trades":false,"bounce_top_n":50}}]`
 
+## Live note (2026-02-14)
+- Сейчас в бою тест на 2 недели с риском **0.5%** на сделку (обновить `risk_pct` в live `.env`, если отличается).
+
+## Live .env snapshot (2026-02-14, последний использованный)
+- `ENABLE_INPLAY_TRADING=0`
+- `ENABLE_BREAKOUT_TRADING=1`
+- `ENABLE_RETEST_TRADING=0`
+- `ENABLE_RANGE_TRADING` не задан
+- `BREAKOUT_TOP_N=16`, `BREAKOUT_TRY_EVERY_SEC=30`
+- `SYMBOL_FILTERS_PATH=/tmp/bybot_symbol_filters.json`
+- `SYMBOL_ALLOWLIST` задан (16 тикеров), `SYMBOL_DENYLIST` пуст
+- `RECO_ENABLE=1`, `RECO_PERIOD_SEC=604800`, `RECO_LOOKBACK_DAYS=60`, `RECO_WORST_N=3`, `RECO_MIN_TRADES=8`, `RECO_STRATEGIES=inplay_breakout`
+- Risk: `risk_pct=0.005` (0.5%), `bot_capital_usd=100`, `max_positions=3`, `min_notional_usd=18.0`
+- `bounce_execute_trades=false`
+
 ## Recent backtest (2026-02-13, 180d, inplay + inplay_breakout)
 - Source: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/20260213_101122_inplay_breakout_base_180d/summary.csv`
 - Summary shows per-symbol rows; aggregated inplay net_pnl ~ -28.04, inplay_breakout net_pnl ~ -32.40 (winrate 0%).

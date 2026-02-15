@@ -1,0 +1,39 @@
+{
+  "base": {
+    "min_turnover": 25000000,
+    "min_atr_pct": 0.35,
+    "min_listing_days": 7,
+    "lookback_days": 14,
+    "top_n": 60
+  },
+  "per_strategy": {
+    "breakout": {
+      "min_turnover": 25000000,
+      "min_atr_pct": 0.45,
+      "min_listing_days": 7,
+      "lookback_days": 14,
+      "top_n": 30
+    },
+    "inplay": {
+      "min_turnover": 25000000,
+      "min_atr_pct": 0.35,
+      "min_listing_days": 7,
+      "lookback_days": 14,
+      "top_n": 40
+    },
+    "range": {
+      "min_turnover": 25000000,
+      "min_atr_pct": 0.20,
+      "min_listing_days": 7,
+      "lookback_days": 14,
+      "top_n": 40
+    },
+    "bounce": {
+      "min_turnover": 25000000,
+      "min_atr_pct": 0.30,
+      "min_listing_days": 7,
+      "lookback_days": 14,
+      "top_n": 30
+    }
+  }
+}
