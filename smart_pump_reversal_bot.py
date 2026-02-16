@@ -136,6 +136,7 @@ INPLAY_ENGINE = None
 ENABLE_BREAKOUT_TRADING = os.getenv("ENABLE_BREAKOUT_TRADING", "0").strip() == "1"
 BREAKOUT_TRY_EVERY_SEC = int(os.getenv("BREAKOUT_TRY_EVERY_SEC", "30"))
 BREAKOUT_TOP_N = int(os.getenv("BREAKOUT_TOP_N", "60"))
+BREAKOUT_MAX_SPREAD_PCT = float(os.getenv("BREAKOUT_MAX_SPREAD_PCT", "0.20"))
 BREAKOUT_SYMBOLS = set()
 BREAKOUT_ENGINE = None
 
@@ -2390,6 +2391,30 @@ class OrderBookAnalyzer:
         except Exception:
             return 0.5
 
+    def get_spread_pct(self, symbol: str) -> float:
+        try:
+            j = requests.get(
+                f"{self.base_url}/v5/market/orderbook",
+                params={"category":"linear","symbol":symbol,"limit":1},
+                timeout=3
+            ).json()
+            if str(j.get("retCode")) != "0":
+                return 0.0
+            asks = j["result"].get("a", [])
+            bids = j["result"].get("b", [])
+            if not asks or not bids:
+                return 0.0
+            best_ask = float(asks[0][0])
+            best_bid = float(bids[0][0])
+            if best_ask <= 0 or best_bid <= 0:
+                return 0.0
+            mid = (best_ask + best_bid) / 2.0
+            if mid <= 0:
+                return 0.0
+            return abs(best_ask - best_bid) / mid * 100.0
+        except Exception:
+            return 0.0
+
 ORDERBOOK = OrderBookAnalyzer((TRADE_CLIENT.base if TRADE_CLIENT else BYBIT_BASE_DEFAULT))
 _OB_CACHE = {}   # symbol -> (ts, value)
 OB_TTL_SEC = 2   # не дергать стакан чаще чем раз в 2 секунды на символ
@@ -2401,6 +2426,15 @@ def get_sell_pressure_cached(symbol: str) -> float:
         return v[1]
     val = ORDERBOOK.get_sell_pressure(symbol)
     _OB_CACHE[symbol] = (now, val)
+    return val
+
+def get_spread_pct_cached(symbol: str) -> float:
+    now = now_s()
+    v = _OB_CACHE.get(("spread", symbol))
+    if v and (now - v[0] <= OB_TTL_SEC):
+        return v[1]
+    val = ORDERBOOK.get_spread_pct(symbol)
+    _OB_CACHE[("spread", symbol)] = (now, val)
     return val
 
 BASE_URL_PUBLIC = (TRADE_CLIENT.base if TRADE_CLIENT else BYBIT_BASE_DEFAULT)
@@ -3085,6 +3119,12 @@ async def try_breakout_entry_async(symbol: str, price: float):
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, tp, sl)
     if tp_r is None or sl_r is None:
         return
+
+    if BREAKOUT_MAX_SPREAD_PCT > 0:
+        sp = float(get_spread_pct_cached(symbol))
+        if sp >= BREAKOUT_MAX_SPREAD_PCT:
+            tg_trade(f"🟡 BREAKOUT SKIP {symbol}: spread {sp:.2f}% >= {BREAKOUT_MAX_SPREAD_PCT:.2f}%")
+            return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)

@@ -65,3 +65,18 @@
 - Добавлены профили фильтров: `configs/symbol_filters_profiles.json` (пороговые значения — стартовые).
 - Генератор поддерживает офлайн-режим через `--cache_dir data_cache` (без Bybit API).
 - В Telegram будут добавлены команды `/filters` и `/filters_build`.
+
+## 2026-02-14 — Сервер и git (фиксация)
+- Сервер: DigitalOcean droplet `ubuntu-s-1vcpu-1gb-fra1-01`, IP `64.226.73.119`, Ubuntu 24.04 LTS.
+- SSH попытка `root@64.226.73.119` дала `Permission denied (publickey)` — нужно проверить ключ/юзера.
+- Git remote: `https://github.com/Brokenbass90/by-bot` (ветка `codex/dynamic-symbol-filters`).
+- Локальные SSH-ключи: `~/.ssh/by-bot` и `~/.ssh/by-bot.pub`.
+## 2026-02-16 — Сервер: выкладка ветки и инцидент
+- SSH вход успешен: `ssh -i ~/.ssh/by-bot root@64.226.73.119`.
+- На `main` были локальные изменения `smart_pump_reversal_bot.py` и `trades.db`, сделали `git stash push -m "server-local-changes-before-codex"`.
+- Перешли на `codex/dynamic-symbol-filters`, фильтры сгенерированы на сервере (base_allow≈35).
+- При рестарте сервис падает с `SyntaxError` в `smart_pump_reversal_bot.py` около строки ~737 — нужна проверка и исправление файла на сервере.
+- `.env` на сервере несколько раз повреждался из-за некорректной вставки here-doc; нужно перезаписать аккуратно.
+## 2026-02-16 — Breakout фильтры и спред
+- В конфиге фильтров ужесточаем breakout: `min_turnover=50M`, `min_atr_pct=0.55`, `top_n=20`.
+- Добавляем спред‑фильтр для breakout (по orderbook, % от mid), чтобы избегать сильного проскальзывания.

@@ -8,11 +8,11 @@
   },
   "per_strategy": {
     "breakout": {
-      "min_turnover": 25000000,
-      "min_atr_pct": 0.45,
+      "min_turnover": 50000000,
+      "min_atr_pct": 0.55,
       "min_listing_days": 7,
       "lookback_days": 14,
-      "top_n": 30
+      "top_n": 20
     },
     "inplay": {
       "min_turnover": 25000000,
