@@ -1151,7 +1151,8 @@ def _save_report_state(state: Dict[str, int]) -> None:
 def _fetch_5m_bars_bybit(sym: str, start_ts: int | None = None, end_ts: int | None = None) -> list[dict]:
     out: list[dict] = []
     try:
-        url = f"{BYBIT_BASE}/v5/market/kline"
+        base = (getattr(TRADE_CLIENT, "base", None) or BYBIT_BASE_DEFAULT).rstrip("/")
+        url = f"{base}/v5/market/kline"
         params = {
             "category": "linear",
             "symbol": str(sym).upper(),
