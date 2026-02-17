@@ -1148,6 +1148,49 @@ def _save_report_state(state: Dict[str, int]) -> None:
     except Exception:
         pass
 
+def _fetch_5m_bars_bybit(sym: str, start_ts: int, end_ts: int) -> list[dict]:
+    out: list[dict] = []
+    try:
+        start_ms = int(start_ts * 1000)
+        end_ms = int(end_ts * 1000)
+        url = f"{BYBIT_BASE}/v5/market/kline"
+        params = {
+            "category": "linear",
+            "symbol": str(sym).upper(),
+            "interval": "5",
+            "start": start_ms,
+            "end": end_ms,
+            "limit": 1000,
+        }
+        r = requests.get(url, params=params, timeout=15)
+        js = r.json() if r is not None else {}
+        if int(js.get("retCode", -1)) != 0:
+            return []
+        rows = (((js or {}).get("result") or {}).get("list") or [])
+        for row in rows:
+            try:
+                ts = int(row[0]) // 1000
+                o = float(row[1]); h = float(row[2]); l = float(row[3]); c = float(row[4])
+                q = float(row[6]) if len(row) > 6 else 0.0
+                out.append({
+                    "id": int(ts // 300),
+                    "o": o,
+                    "h": h,
+                    "l": l,
+                    "c": c,
+                    "quote": q,
+                })
+            except Exception:
+                continue
+        out.sort(key=lambda b: int(b.get("id", 0)))
+        dedup = {}
+        for b in out:
+            dedup[int(b.get("id", 0))] = b
+        return [dedup[k] for k in sorted(dedup)]
+    except Exception as e:
+        log_error(f"chart bybit fetch fail {sym}: {e}")
+        return []
+
 def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float | None = None, exit_px: float | None = None) -> str | None:
     if not TRADE_CHARTS_ENABLE:
         return None
@@ -1163,6 +1206,16 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
                 "c": st.cur5_c,
                 "quote": st.cur5_quote,
             })
+        if len(bars) < 20:
+            entry_ts = int(getattr(tr, "entry_ts", 0) or 0)
+            exit_ts = int(getattr(tr, "exit_ts", 0) or int(time.time()))
+            pad = max(20, int(TRADE_CHARTS_PAD_BARS))
+            win_sec = int((pad + 20) * 300)
+            start_ts = max(0, min(entry_ts or exit_ts, exit_ts) - win_sec)
+            end_ts = max(entry_ts, exit_ts) + win_sec
+            remote = _fetch_5m_bars_bybit(sym, start_ts=start_ts, end_ts=end_ts)
+            if remote:
+                bars = remote
         if len(bars) < 20:
             return None
 

@@ -101,3 +101,5 @@
 - 2026-02-17 13:47 UTC | filter-audit | Проверена интеграция автообновления фильтров и /health в коде (поиск ключевых точек) | done
 - 2026-02-17 13:53 UTC | viz | Добавлена авто-визуализация ENTRY/CLOSE (PNG, уровни entry/tp/sl/exit) и отправка в Telegram | done
 - 2026-02-17 13:59 UTC | viz | Добавлена TG-команда /plotlast [SYM] для графика последней закрытой сделки | done
+- 2026-02-17 14:10 UTC | deploy | Проверка: /plotlast есть в origin, диагностика сервера где команда еще Unknown | in_progress
+- 2026-02-17 14:13 UTC | viz | /plotlast: добавлен fallback на Bybit 5m kline при пустом локальном буфере | done
