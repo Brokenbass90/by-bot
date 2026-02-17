@@ -108,3 +108,4 @@
 - 2026-02-17 14:57 UTC | viz | Улучшен стиль графика: dark candlesticks, entry/exit markers, TP/SL линии, контекстные уровни, инфоблок | done
 - 2026-02-17 15:07 UTC | analysis | Добавлен scripts/analyze_entry_quality.py (late-entry/adverse/favorable move audit по CLOSE/ENTRY) | done
 - 2026-02-17 15:16 UTC | breakout | Добавлены: retest-confirm, max-chase guard, ATR-floor для SL, cooldown после SL, killer-guard skip | done
+- 2026-02-17 15:24 UTC | range | FIX: confirm_limit вынесен в env (default 40) + ATR/RR/reclaim/wick/sl-width параметры для live RangeStrategy | done

@@ -464,13 +464,19 @@ RANGE_LOOKBACK_H = int(os.getenv("RANGE_LOOKBACK_H", "72"))
 MIN_RANGE_PCT = float(os.getenv("MIN_RANGE_PCT", "3.0"))
 MAX_RANGE_PCT = float(os.getenv("MAX_RANGE_PCT", "8.0"))
 RANGE_MIN_TOUCHES = int(os.getenv("RANGE_MIN_TOUCHES", "3"))
+RANGE_CONFIRM_LIMIT = int(os.getenv("RANGE_CONFIRM_LIMIT", "40"))
+RANGE_ATR_PERIOD = int(os.getenv("RANGE_ATR_PERIOD", "14"))
 
 RANGE_ENTRY_ZONE_FRAC = float(os.getenv("RANGE_ENTRY_ZONE_FRAC", "0.08"))
 RANGE_SWEEP_FRAC = float(os.getenv("RANGE_SWEEP_FRAC", "0.02"))
+RANGE_RECLAIM_FRAC = float(os.getenv("RANGE_RECLAIM_FRAC", "0.01"))
+RANGE_WICK_FRAC_MIN = float(os.getenv("RANGE_WICK_FRAC_MIN", "0.35"))
 RANGE_TP_MODE = os.getenv("RANGE_TP_MODE", "mid").strip()
 RANGE_TP_FRAC = float(os.getenv("RANGE_TP_FRAC", "0.45"))
 RANGE_SL_BUFFER_FRAC = float(os.getenv("RANGE_SL_BUFFER_FRAC", "0.03"))
 RANGE_SL_ATR_MULT = float(os.getenv("RANGE_SL_ATR_MULT", "0.8"))
+RANGE_SL_WIDTH_FRAC = float(os.getenv("RANGE_SL_WIDTH_FRAC", "0.10"))
+RANGE_MIN_RR = float(os.getenv("RANGE_MIN_RR", "0.90"))
 
 RANGE_ALLOW_LONG = os.getenv("RANGE_ALLOW_LONG", "1").strip() == "1"
 RANGE_ALLOW_SHORT = os.getenv("RANGE_ALLOW_SHORT", "1").strip() == "1"
@@ -2945,10 +2951,15 @@ RANGE_STRATEGY = RangeStrategy(
     fetch_klines=fetch_klines_for_range,
     registry=RANGE_REGISTRY,
     confirm_tf="5",
-    confirm_limit=5,
+    confirm_limit=RANGE_CONFIRM_LIMIT,
+    atr_period=RANGE_ATR_PERIOD,
     entry_zone_frac=RANGE_ENTRY_ZONE_FRAC,
     sweep_frac=RANGE_SWEEP_FRAC,
+    reclaim_frac=RANGE_RECLAIM_FRAC,
+    wick_frac_min=RANGE_WICK_FRAC_MIN,
     tp_mode=RANGE_TP_MODE,
+    min_rr=RANGE_MIN_RR,
+    sl_width_frac=RANGE_SL_WIDTH_FRAC,
     sl_buffer_frac=RANGE_SL_BUFFER_FRAC,
     sl_atr_mult=RANGE_SL_ATR_MULT,
     allow_long=RANGE_ALLOW_LONG,
