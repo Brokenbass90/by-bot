@@ -598,6 +598,9 @@ REPORTS_STATE_PATH = os.getenv("REPORTS_STATE_PATH", "/tmp/bybot_report_state.js
 SYMBOL_FILTERS_PATH = os.getenv("SYMBOL_FILTERS_PATH", "/tmp/bybot_symbol_filters.json").strip()
 SYMBOL_FILTERS_PROFILES_PATH = os.getenv("SYMBOL_FILTERS_PROFILES_PATH", "configs/symbol_filters_profiles.json").strip()
 SYMBOL_FILTERS_CACHE_DIR = os.getenv("SYMBOL_FILTERS_CACHE_DIR", "").strip()
+FILTERS_AUTO_REFRESH_SEC = int(os.getenv("FILTERS_AUTO_REFRESH_SEC", "1800"))
+FILTERS_AUTO_BUILD = os.getenv("FILTERS_AUTO_BUILD", "1").strip() == "1"
+FILTERS_AUTO_BUILD_SEC = int(os.getenv("FILTERS_AUTO_BUILD_SEC", "1800"))
 SYMBOL_ALLOWLIST_ENV = os.getenv("SYMBOL_ALLOWLIST", "").strip()
 SYMBOL_DENYLIST_ENV = os.getenv("SYMBOL_DENYLIST", "").strip()
 
@@ -611,6 +614,8 @@ RECO_MIN_TRADES = int(os.getenv("RECO_MIN_TRADES", "8"))
 RECO_STRATEGIES = os.getenv("RECO_STRATEGIES", "").strip()
 
 LAST_RECO_SYMBOLS: list[str] = []
+LAST_FILTER_BUILD_TS = 0
+LAST_UNIVERSE_REFRESH_TS = 0
 
 def _parse_symbol_csv(s: str) -> list[str]:
     parts = [p.strip().upper() for p in s.replace(";", ",").split(",") if p.strip()]
@@ -691,6 +696,7 @@ def _symbol_filters_summary() -> str:
     return "\n".join(parts)
 
 def _build_symbol_filters() -> tuple[bool, str]:
+    global LAST_FILTER_BUILD_TS
     script = os.path.join(os.path.dirname(__file__), "scripts", "build_symbol_filters.py")
     cmd = ["python3", script, "--profiles", SYMBOL_FILTERS_PROFILES_PATH, "--out", SYMBOL_FILTERS_PATH]
     if SYMBOL_FILTERS_CACHE_DIR:
@@ -702,9 +708,84 @@ def _build_symbol_filters() -> tuple[bool, str]:
         if res.returncode != 0:
             msg = err or out or f"exit={res.returncode}"
             return False, f"build failed: {msg}"
+        LAST_FILTER_BUILD_TS = int(time.time())
         return True, out or "filters built"
     except Exception as e:
         return False, f"build failed: {e}"
+
+def _load_filter_profiles() -> dict:
+    try:
+        if not SYMBOL_FILTERS_PROFILES_PATH:
+            return {}
+        with open(SYMBOL_FILTERS_PROFILES_PATH, "r", encoding="utf-8") as f:
+            return json.load(f) or {}
+    except Exception:
+        return {}
+
+def _compute_symbol_health(lookback_days: int = 30, min_trades: int = 2, top_n: int = 5) -> tuple[list[tuple], list[tuple]]:
+    if not os.path.exists(TRADE_DB_PATH):
+        return [], []
+    since_ts = int(time.time()) - int(lookback_days) * 86400
+    rows: list[tuple] = []
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            cur = con.execute(
+                """
+                SELECT symbol,
+                       COUNT(*) AS trades,
+                       SUM(CASE WHEN pnl > 0 THEN 1 ELSE 0 END) AS wins,
+                       SUM(pnl) AS net
+                FROM trade_events
+                WHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=?
+                GROUP BY symbol
+                """,
+                (since_ts,),
+            )
+            rows = cur.fetchall()
+    except Exception as e:
+        log_error(f"health query failed: {e}")
+        return [], []
+
+    norm = []
+    for sym, trades, wins, net in rows:
+        t = int(trades or 0)
+        if t < int(min_trades):
+            continue
+        w = int(wins or 0)
+        n = float(net or 0.0)
+        wr = (100.0 * w / t) if t > 0 else 0.0
+        norm.append((str(sym).upper(), t, w, wr, n))
+
+    killers = sorted(norm, key=lambda x: x[4])[: max(1, int(top_n))]
+    winners = sorted(norm, key=lambda x: x[4], reverse=True)[: max(1, int(top_n))]
+    return killers, winners
+
+def _health_summary_text(lookback_days: int = 30, min_trades: int = 2, top_n: int = 5) -> str:
+    killers, winners = _compute_symbol_health(lookback_days=lookback_days, min_trades=min_trades, top_n=top_n)
+    data = _load_symbol_filters()
+    profiles = _load_filter_profiles()
+    base_cfg = profiles.get("base") or {}
+    br_cfg = (profiles.get("per_strategy") or {}).get("breakout") or {}
+
+    lines = [
+        f"Health lookback={lookback_days}d, min_trades={min_trades}",
+        f"Filters: base_allow={len(data.get('allowlist') or [])}, deny={len(data.get('denylist') or [])}",
+        f"Base criteria: turnover>={base_cfg.get('min_turnover', '-')}, atr%>={base_cfg.get('min_atr_pct', '-')}, age>={base_cfg.get('min_listing_days', '-')}, top_n={base_cfg.get('top_n', '-')}",
+        f"Breakout criteria: turnover>={br_cfg.get('min_turnover', '-')}, atr%>={br_cfg.get('min_atr_pct', '-')}, top_n={br_cfg.get('top_n', '-')}, spread<={BREAKOUT_MAX_SPREAD_PCT:.2f}%",
+        "Killers:",
+    ]
+    if killers:
+        for sym, t, _w, wr, net in killers:
+            lines.append(f"{sym}: trades={t}, wr={wr:.1f}%, net={net:.4f}")
+    else:
+        lines.append("-")
+    lines.append("Winners:")
+    if winners:
+        for sym, t, _w, wr, net in winners:
+            lines.append(f"{sym}: trades={t}, wr={wr:.1f}%, net={net:.4f}")
+    else:
+        lines.append("-")
+    return "\n".join(lines)
 
 def _compute_reco_symbols() -> list[str]:
     if not os.path.exists(TRADE_DB_PATH):
@@ -771,6 +852,7 @@ def _handle_tg_command(text: str):
             "• /positions 3 — макс. позиций (1–10)\n"
             "• /filters — текущие фильтры символов\n"
             "• /filters_build — пересобрать фильтры\n"
+            "• /health — killers/winners + критерии фильтра\n"
             "• /banreco — рекомендации бан-листа\n"
             "• /banapply — применить последние рекомендации\n"
             "• /banlist — текущие фильтры\n"
@@ -859,6 +941,10 @@ def _handle_tg_command(text: str):
             _tg_reply("✅ filters rebuilt\n" + _symbol_filters_summary())
         else:
             _tg_reply("❌ " + msg)
+        return
+
+    if name == "/health":
+        _tg_reply(_health_summary_text())
         return
 
     if name == "/banreco":
@@ -4038,24 +4124,18 @@ def detect(exch: str, sym: str, st: SymState, now: int):
 
 
 # =========================== WS BYBIT ===========================
-async def bybit_ws():
-    url = "wss://stream.bybit.com/v5/public/linear"
-    syms = bybit_symbols(TOP_N_BYBIT)
-
-
-    # bounce universe = подмножество, которое реально можно открыть на текущий cap
+def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) -> None:
     global BOUNCE_SYMBOLS
     global INPLAY_SYMBOLS
     global BREAKOUT_SYMBOLS
     global RETEST_SYMBOLS
+    global LAST_UNIVERSE_REFRESH_TS
 
     eq_eff = 0.0
     try:
         eq_eff = float(_get_effective_equity() or 0.0)
     except Exception:
         eq_eff = 0.0
-
-    # если equity не получили, но задан BOT_CAPITAL_USD — используем его как “плановый” cap
     if eq_eff <= 0 and BOT_CAPITAL_USD:
         try:
             eq_eff = float(BOT_CAPITAL_USD)
@@ -4063,9 +4143,7 @@ async def bybit_ws():
             pass
 
     cap = max_notional_allowed(eq_eff)
-
-    eligible = []
-
+    eligible: list[str] = []
     for s in syms:
         try:
             m = _get_meta(s)
@@ -4084,35 +4162,50 @@ async def bybit_ws():
     inplay_filtered = _apply_symbol_filters(base_filtered, strategy="inplay")
     breakout_filtered = _apply_symbol_filters(base_filtered, strategy="breakout")
     retest_filtered = _apply_symbol_filters(base_filtered, strategy="retest")
-    range_filtered = _apply_symbol_filters(base_filtered, strategy="range")
 
     BOUNCE_SYMBOLS = set(bounce_filtered[:BOUNCE_TOP_N])
     INPLAY_SYMBOLS = set(inplay_filtered[:max(1, int(INPLAY_TOP_N))])
     BREAKOUT_SYMBOLS = set(breakout_filtered[:max(1, int(BREAKOUT_TOP_N))])
     RETEST_SYMBOLS = set(retest_filtered[:max(1, int(RETEST_TOP_N))])
+    LAST_UNIVERSE_REFRESH_TS = int(time.time())
 
-    # global RANGE_RESCAN_TASK
-    # if ENABLE_RANGE_TRADING and RANGE_RESCAN_TASK is None:
-    #     RANGE_RESCAN_TASK = asyncio.create_task(range_rescan_loop())
+    print(f"[filters] cap≈{cap:.2f} | eligible={len(eligible)}/{len(syms)} | base={len(base_filtered)} | breakout={len(BREAKOUT_SYMBOLS)}")
+    if notify:
+        if ENABLE_BREAKOUT_TRADING:
+            tg_trade(f"🧩 breakout-universe: using={len(BREAKOUT_SYMBOLS)} (top {BREAKOUT_TOP_N})")
+        if ENABLE_INPLAY_TRADING:
+            tg_trade(f"🧩 inplay-universe: using={len(INPLAY_SYMBOLS)} (top {INPLAY_TOP_N})")
+        if ENABLE_RETEST_TRADING:
+            tg_trade(f"🧩 retest-universe: using={len(RETEST_SYMBOLS)} (top {RETEST_TOP_N})")
+        if BOUNCE_TG_LOGS:
+            tg_trade(f"🧩 bounce-universe: using={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
 
 
-    print(f"[bounce] cap≈{cap:.2f} USDT | eligible={len(eligible)}/{len(syms)} | base_filtered={len(base_filtered)} | universe size={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
-    if ENABLE_INPLAY_TRADING:
-        print(f"[inplay] universe size={len(INPLAY_SYMBOLS)} (top {INPLAY_TOP_N})")
-    if ENABLE_BREAKOUT_TRADING:
-        print(f"[breakout] universe size={len(BREAKOUT_SYMBOLS)} (top {BREAKOUT_TOP_N})")
-    if ENABLE_RETEST_TRADING:
-        print(f"[retest] universe size={len(RETEST_SYMBOLS)} (top {RETEST_TOP_N})")
+async def symbol_filters_loop():
+    """Optional periodic rebuild + in-memory universe refresh without bot restart."""
+    if FILTERS_AUTO_REFRESH_SEC <= 0:
+        return
+    while True:
+        try:
+            if FILTERS_AUTO_BUILD and FILTERS_AUTO_BUILD_SEC > 0:
+                now = int(time.time())
+                if now - int(LAST_FILTER_BUILD_TS or 0) >= int(FILTERS_AUTO_BUILD_SEC):
+                    ok, msg = _build_symbol_filters()
+                    if ok:
+                        print("[filters] auto build ok")
+                    else:
+                        log_error(f"filters auto build failed: {msg}")
+            syms = bybit_symbols(TOP_N_BYBIT)
+            _recompute_universe_from_symbols(syms, notify=False)
+        except Exception as e:
+            log_error(f"symbol_filters_loop crash: {e}")
+        await asyncio.sleep(max(60, int(FILTERS_AUTO_REFRESH_SEC)))
 
-    # опционально: в телегу
-    if BOUNCE_TG_LOGS:
-        tg_trade(f"🧩 bounce-universe: cap≈{cap:.2f} | eligible={len(eligible)}/{len(syms)} | using={len(BOUNCE_SYMBOLS)}")
-    if ENABLE_INPLAY_TRADING:
-        tg_trade(f"🧩 inplay-universe: using={len(INPLAY_SYMBOLS)} (top {INPLAY_TOP_N})")
-    if ENABLE_BREAKOUT_TRADING:
-        tg_trade(f"🧩 breakout-universe: using={len(BREAKOUT_SYMBOLS)} (top {BREAKOUT_TOP_N})")
-    if ENABLE_RETEST_TRADING:
-        tg_trade(f"🧩 retest-universe: using={len(RETEST_SYMBOLS)} (top {RETEST_TOP_N})")
+
+async def bybit_ws():
+    url = "wss://stream.bybit.com/v5/public/linear"
+    syms = bybit_symbols(TOP_N_BYBIT)
+    _recompute_universe_from_symbols(syms, notify=True)
 
 
     print(f"[bybit] got {len(syms)} symbols from REST")
@@ -4370,6 +4463,7 @@ async def main_async():
     tasks = []
     if ENABLE_BYBIT:
         tasks.append(asyncio.create_task(runner(bybit_ws, "BYBIT")))
+        tasks.append(asyncio.create_task(runner(symbol_filters_loop, "FILTERS_REFRESH")))
     if ENABLE_BINANCE:
         tasks.append(asyncio.create_task(runner(binance_ws, "BINANCE")))
 

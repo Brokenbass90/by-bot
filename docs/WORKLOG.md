@@ -80,3 +80,17 @@
 ## 2026-02-16 — Breakout фильтры и спред
 - В конфиге фильтров ужесточаем breakout: `min_turnover=50M`, `min_atr_pct=0.55`, `top_n=20`.
 - Добавляем спред‑фильтр для breakout (по orderbook, % от mid), чтобы избегать сильного проскальзывания.
+- Изменения пока не подтянуты на сервер (нужно push и pull).
+
+## 2026-02-17 — Сервер после фиксов
+- Ветка сервера: `codex/dynamic-symbol-filters`, head `b098249` (fix escaped f-string).
+- Сервис `bybot` запущен стабильно (последние `SyntaxError` в `journalctl` были историческими до фикса).
+- В `.env` включен `BREAKOUT_MAX_SPREAD_PCT=0.20`.
+- Фильтры пересобраны: `base_allow=34`, `breakout_allow=18`, `inplay_allow=34`, `range_allow=34`, `bounce_allow=30`.
+- Live PnL за 7 дней (`trade_events`, `event='CLOSE'`): `inplay_breakout` — 14 сделок, `sum_pnl=-2.353697`, winrate `35.71%`.
+- Топ-убыточные символы за 7 дней: `SIRENUSDT (-1.305544)`, `BCHUSDT (-1.079424)`.
+- Проверка лога после фикса: старые `SyntaxError` до 00:39 были в истории рестартов; после запуска в 00:45 бот работает, подключен к WS, принимает трейды.
+
+## 2026-02-17 — План, этап 4 (фильтр)
+- Добавлена команда `/health` (killers/winners + текущие критерии base/breakout).
+- Добавлен фоновый `symbol_filters_loop`: периодическая пересборка фильтра (`FILTERS_AUTO_BUILD`) и refresh universe без ручного рестарта.
