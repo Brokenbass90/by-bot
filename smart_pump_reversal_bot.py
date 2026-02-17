@@ -735,7 +735,7 @@ def _compute_reco_symbols() -> list[str]:
             for sym, cnt, pnl in cur.fetchall():
                 rows.append((str(sym).upper(), int(cnt), float(pnl or 0.0)))
     except Exception as e:
-        log_error(f\"reco query failed: {e}\")
+        log_error(f"reco query failed: {e}")
         return []
 
     rows = [r for r in rows if r[1] >= int(RECO_MIN_TRADES)]
