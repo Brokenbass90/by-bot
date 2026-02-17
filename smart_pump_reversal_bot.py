@@ -592,7 +592,11 @@ TG_COMMANDS_ENABLE = os.getenv("TG_COMMANDS_ENABLE", "1").strip() == "1"
 REPORTS_ENABLE = os.getenv("REPORTS_ENABLE", "1").strip() == "1"
 REPORTS_SEND_ON_START = os.getenv("REPORTS_SEND_ON_START", "0").strip() == "1"
 REPORTS_OUT_DIR = os.getenv("REPORTS_OUT_DIR", "/tmp").strip() or "/tmp"
-REPORTS_STATE_PATH = os.getenv("REPORTS_STATE_PATH", "/tmp/bybot_report_state.json").strip()
+TRADE_CHARTS_ENABLE = os.getenv("TRADE_CHARTS_ENABLE", "1").strip() == "1"
+TRADE_CHARTS_SEND_ON_ENTRY = os.getenv("TRADE_CHARTS_SEND_ON_ENTRY", "1").strip() == "1"
+TRADE_CHARTS_SEND_ON_CLOSE = os.getenv("TRADE_CHARTS_SEND_ON_CLOSE", "1").strip() == "1"
+TRADE_CHARTS_PAD_BARS = int(os.getenv("TRADE_CHARTS_PAD_BARS", "80"))
+TRADE_CHARTS_OUT_DIR = os.getenv("TRADE_CHARTS_OUT_DIR", "/tmp/bybot_trade_charts").strip() or "/tmp/bybot_trade_charts"
 
 # Symbol filters (allow/deny lists)
 SYMBOL_FILTERS_PATH = os.getenv("SYMBOL_FILTERS_PATH", "/tmp/bybot_symbol_filters.json").strip()
@@ -1040,6 +1044,105 @@ def _save_report_state(state: Dict[str, int]) -> None:
             json.dump(state, f)
     except Exception:
         pass
+
+def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float | None = None, exit_px: float | None = None) -> str | None:
+    if not TRADE_CHARTS_ENABLE:
+        return None
+    try:
+        st = S("Bybit", sym)
+        bars = list(st.bars5m)
+        if st.cur5_id is not None and st.cur5_o is not None:
+            bars.append({
+                "id": st.cur5_id,
+                "o": st.cur5_o,
+                "h": st.cur5_h,
+                "l": st.cur5_l,
+                "c": st.cur5_c,
+                "quote": st.cur5_quote,
+            })
+        if len(bars) < 20:
+            return None
+
+        def _nearest_idx(target_id: int) -> int:
+            best_i, best_d = 0, 10**18
+            for i, b in enumerate(bars):
+                d = abs(int(b.get("id", 0)) - target_id)
+                if d < best_d:
+                    best_i, best_d = i, d
+            return best_i
+
+        entry_ts = int(getattr(tr, "entry_ts", 0) or 0)
+        exit_ts = int(getattr(tr, "exit_ts", 0) or 0)
+        entry_id = max(0, entry_ts // 300) if entry_ts > 0 else int(bars[-1]["id"])
+        exit_id = max(0, exit_ts // 300) if exit_ts > 0 else int(bars[-1]["id"])
+
+        i_entry = _nearest_idx(entry_id)
+        i_exit = _nearest_idx(exit_id)
+        i_mid = i_exit if stage == "close" else i_entry
+        pad = max(20, int(TRADE_CHARTS_PAD_BARS))
+        i0 = max(0, i_mid - pad)
+        i1 = min(len(bars), i_mid + pad)
+        seg = bars[i0:i1]
+        if len(seg) < 10:
+            return None
+
+        xs = list(range(len(seg)))
+        closes = [float(b.get("c", 0) or 0) for b in seg]
+        highs = [float(b.get("h", 0) or 0) for b in seg]
+        lows = [float(b.get("l", 0) or 0) for b in seg]
+
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+
+        os.makedirs(TRADE_CHARTS_OUT_DIR, exist_ok=True)
+        out = os.path.join(
+            TRADE_CHARTS_OUT_DIR,
+            f"{sym}_{stage}_{int(time.time())}.png",
+        )
+
+        plt.figure(figsize=(11, 4.8))
+        plt.plot(xs, closes, linewidth=1.6, label="close")
+        plt.fill_between(xs, lows, highs, alpha=0.15, label="high-low")
+
+        seg_ids = [int(b.get("id", 0)) for b in seg]
+
+        def _plot_vline(target_id: int, label: str):
+            if not seg_ids:
+                return
+            idx = min(range(len(seg_ids)), key=lambda i: abs(seg_ids[i] - target_id))
+            plt.axvline(idx, linestyle="--", linewidth=1.1, label=label)
+
+        _plot_vline(entry_id, "entry")
+        if stage == "close" and exit_ts > 0:
+            _plot_vline(exit_id, "exit")
+
+        entry_px = float(getattr(tr, "avg", 0) or getattr(tr, "entry_price", 0) or 0)
+        tp = getattr(tr, "tp_price", None)
+        sl = getattr(tr, "sl_price", None)
+        if entry_px > 0:
+            plt.axhline(entry_px, linestyle=":", linewidth=1.0, label=f"entry_px {entry_px:.6f}")
+        if tp is not None:
+            plt.axhline(float(tp), linestyle=":", linewidth=1.0, label=f"tp {float(tp):.6f}")
+        if sl is not None:
+            plt.axhline(float(sl), linestyle=":", linewidth=1.0, label=f"sl {float(sl):.6f}")
+        if exit_px is not None:
+            plt.axhline(float(exit_px), linestyle=":", linewidth=1.0, label=f"exit {float(exit_px):.6f}")
+
+        title = f"{sym} {getattr(tr, 'side', '')} [{getattr(tr, 'strategy', '')}] {stage}"
+        if pnl is not None:
+            title += f" pnl={float(pnl):+.4f}"
+        plt.title(title)
+        plt.xlabel("5m bars (window)")
+        plt.ylabel("price")
+        plt.legend(loc="best", fontsize=8)
+        plt.tight_layout()
+        plt.savefig(out, dpi=140)
+        plt.close()
+        return out
+    except Exception as e:
+        log_error(f"trade chart fail {sym} {stage}: {e}")
+        return None
 
 def _send_report(tag: str, days: int) -> None:
     since_ts = since_days(days)
@@ -1688,6 +1791,10 @@ def sync_trades_with_exchange():
                     tr.entry_confirm_sent = True
                     tg_trade(f"✅ ENTRY FILLED {sym} {tr.side} qty={tr.qty} avg={float(getattr(tr,'avg',0) or 0):.6f}")
                     _db_log_event("ENTRY", tr, sym)
+                    if TRADE_CHARTS_SEND_ON_ENTRY:
+                        p = _make_trade_chart(sym, tr, stage="entry")
+                        if p:
+                            tg_send_photo(p, caption=f"entry chart {sym} {tr.side} [{getattr(tr, 'strategy', '')}]")
                 continue
 
             # позиции нет — ждём grace период
@@ -2232,6 +2339,10 @@ def _finalize_and_report_closed(tr, sym: str):
         msg += f"\nReason: {tr.close_reason}"
     tg_trade(msg)
     _db_log_event("CLOSE", tr, sym, pnl=pnl_closed, fees=fee_sum, exit_px=exit_px)
+    if TRADE_CHARTS_SEND_ON_CLOSE:
+        p = _make_trade_chart(sym, tr, stage="close", pnl=pnl_closed, exit_px=exit_px)
+        if p:
+            tg_send_photo(p, caption=f"close chart {sym} [{getattr(tr, 'strategy', '')}] pnl={pnl_closed:+.4f}")
 
 def set_tp_sl_retry(symbol: str, side: str, tp: Optional[float], sl: Optional[float]) -> bool:
     if DRY_RUN or TRADE_CLIENT is None:
