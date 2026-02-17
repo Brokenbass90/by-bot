@@ -1148,23 +1148,25 @@ def _save_report_state(state: Dict[str, int]) -> None:
     except Exception:
         pass
 
-def _fetch_5m_bars_bybit(sym: str, start_ts: int, end_ts: int) -> list[dict]:
+def _fetch_5m_bars_bybit(sym: str, start_ts: int | None = None, end_ts: int | None = None) -> list[dict]:
     out: list[dict] = []
     try:
-        start_ms = int(start_ts * 1000)
-        end_ms = int(end_ts * 1000)
         url = f"{BYBIT_BASE}/v5/market/kline"
         params = {
             "category": "linear",
             "symbol": str(sym).upper(),
             "interval": "5",
-            "start": start_ms,
-            "end": end_ms,
             "limit": 1000,
         }
+        if start_ts is not None:
+            params["start"] = int(start_ts * 1000)
+        if end_ts is not None:
+            params["end"] = int(end_ts * 1000)
+
         r = requests.get(url, params=params, timeout=15)
         js = r.json() if r is not None else {}
         if int(js.get("retCode", -1)) != 0:
+            log_error(f"chart bybit retCode={js.get('retCode')} retMsg={js.get('retMsg')} sym={sym}")
             return []
         rows = (((js or {}).get("result") or {}).get("list") or [])
         for row in rows:
@@ -1214,6 +1216,9 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             start_ts = max(0, min(entry_ts or exit_ts, exit_ts) - win_sec)
             end_ts = max(entry_ts, exit_ts) + win_sec
             remote = _fetch_5m_bars_bybit(sym, start_ts=start_ts, end_ts=end_ts)
+            if not remote:
+                # Fallback: latest bars without time range
+                remote = _fetch_5m_bars_bybit(sym)
             if remote:
                 bars = remote
         if len(bars) < 20:
