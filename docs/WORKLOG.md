@@ -106,3 +106,4 @@
 - 2026-02-17 14:33 UTC | viz | /plotlast: добавлен второй fallback (latest bars без time range) + лог retCode | done
 - 2026-02-17 14:40 UTC | viz | FIX: /plotlast Bybit fallback использовал undefined BYBIT_BASE; переключено на TRADE_CLIENT.base/BYBIT_BASE_DEFAULT | done
 - 2026-02-17 14:57 UTC | viz | Улучшен стиль графика: dark candlesticks, entry/exit markers, TP/SL линии, контекстные уровни, инфоблок | done
+- 2026-02-17 15:07 UTC | analysis | Добавлен scripts/analyze_entry_quality.py (late-entry/adverse/favorable move audit по CLOSE/ENTRY) | done
