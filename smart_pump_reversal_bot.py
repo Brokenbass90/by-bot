@@ -137,6 +137,11 @@ ENABLE_BREAKOUT_TRADING = os.getenv("ENABLE_BREAKOUT_TRADING", "0").strip() == "
 BREAKOUT_TRY_EVERY_SEC = int(os.getenv("BREAKOUT_TRY_EVERY_SEC", "30"))
 BREAKOUT_TOP_N = int(os.getenv("BREAKOUT_TOP_N", "60"))
 BREAKOUT_MAX_SPREAD_PCT = float(os.getenv("BREAKOUT_MAX_SPREAD_PCT", "0.20"))
+BREAKOUT_MAX_CHASE_PCT = float(os.getenv("BREAKOUT_MAX_CHASE_PCT", "0.15"))
+BREAKOUT_REQUIRE_RETEST_CONFIRM = os.getenv("BREAKOUT_REQUIRE_RETEST_CONFIRM", "1").strip() == "1"
+BREAKOUT_RETEST_TOUCH_PCT = float(os.getenv("BREAKOUT_RETEST_TOUCH_PCT", "0.15"))
+BREAKOUT_MIN_STOP_ATR_MULT = float(os.getenv("BREAKOUT_MIN_STOP_ATR_MULT", "0.80"))
+BREAKOUT_SL_COOLDOWN_SEC = int(os.getenv("BREAKOUT_SL_COOLDOWN_SEC", "2700"))
 BREAKOUT_SYMBOLS = set()
 BREAKOUT_ENGINE = None
 
@@ -617,9 +622,18 @@ RECO_WORST_N = int(os.getenv("RECO_WORST_N", "3"))
 RECO_MIN_TRADES = int(os.getenv("RECO_MIN_TRADES", "8"))
 RECO_STRATEGIES = os.getenv("RECO_STRATEGIES", "").strip()
 
+KILLER_GUARD_ENABLE = os.getenv("KILLER_GUARD_ENABLE", "1").strip() == "1"
+KILLER_GUARD_LOOKBACK_DAYS = int(os.getenv("KILLER_GUARD_LOOKBACK_DAYS", "7"))
+KILLER_GUARD_MIN_TRADES = int(os.getenv("KILLER_GUARD_MIN_TRADES", "3"))
+KILLER_GUARD_MAX_NET_PNL = float(os.getenv("KILLER_GUARD_MAX_NET_PNL", "-0.8"))
+KILLER_GUARD_STRATEGIES = os.getenv("KILLER_GUARD_STRATEGIES", "inplay_breakout").strip()
+KILLER_GUARD_REFRESH_SEC = int(os.getenv("KILLER_GUARD_REFRESH_SEC", "600"))
+
 LAST_RECO_SYMBOLS: list[str] = []
 LAST_FILTER_BUILD_TS = 0
 LAST_UNIVERSE_REFRESH_TS = 0
+KILLER_GUARD_CACHE_TS = 0
+KILLER_GUARD_BANNED: set[str] = set()
 
 def _parse_symbol_csv(s: str) -> list[str]:
     parts = [p.strip().upper() for p in s.replace(";", ",").split(",") if p.strip()]
@@ -826,6 +840,51 @@ def _compute_reco_symbols() -> list[str]:
     rows = [r for r in rows if r[1] >= int(RECO_MIN_TRADES)]
     rows.sort(key=lambda x: x[2])  # worst first
     return [sym for sym, _, _ in rows[: max(0, int(RECO_WORST_N))]]
+
+def _refresh_killer_guard_cache(force: bool = False) -> set[str]:
+    global KILLER_GUARD_CACHE_TS, KILLER_GUARD_BANNED
+    if not KILLER_GUARD_ENABLE:
+        return set()
+    now = int(time.time())
+    if (not force) and (now - int(KILLER_GUARD_CACHE_TS or 0) < int(KILLER_GUARD_REFRESH_SEC)):
+        return set(KILLER_GUARD_BANNED)
+    if not os.path.exists(TRADE_DB_PATH):
+        KILLER_GUARD_BANNED = set()
+        KILLER_GUARD_CACHE_TS = now
+        return set()
+    strat_filter = [s.strip() for s in KILLER_GUARD_STRATEGIES.split(",") if s.strip()]
+    since_ts = now - int(KILLER_GUARD_LOOKBACK_DAYS) * 86400
+    banned: set[str] = set()
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            if strat_filter:
+                placeholders = ",".join(["?"] * len(strat_filter))
+                query = (
+                    "SELECT symbol, COUNT(*), SUM(pnl) "
+                    "FROM trade_events "
+                    "WHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=? "
+                    f"AND strategy IN ({placeholders}) "
+                    "GROUP BY symbol"
+                )
+                params = [since_ts, *strat_filter]
+            else:
+                query = (
+                    "SELECT symbol, COUNT(*), SUM(pnl) "
+                    "FROM trade_events "
+                    "WHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=? "
+                    "GROUP BY symbol"
+                )
+                params = [since_ts]
+            for sym, cnt, net in con.execute(query, params).fetchall():
+                c = int(cnt or 0)
+                n = float(net or 0.0)
+                if c >= int(KILLER_GUARD_MIN_TRADES) and n <= float(KILLER_GUARD_MAX_NET_PNL):
+                    banned.add(str(sym).upper())
+    except Exception as e:
+        log_error(f"killer guard query failed: {e}")
+    KILLER_GUARD_BANNED = set(banned)
+    KILLER_GUARD_CACHE_TS = now
+    return set(KILLER_GUARD_BANNED)
 
 def _tg_reply(msg: str):
     tg_send(msg)
@@ -2557,6 +2616,14 @@ def _finalize_and_report_closed(tr, sym: str):
         msg += f"\nReason: {tr.close_reason}"
     tg_trade(msg)
     _db_log_event("CLOSE", tr, sym, pnl=pnl_closed, fees=fee_sum, exit_px=exit_px)
+    # Cooldown after breakout SL to reduce repeated entries in noisy chop.
+    try:
+        if str(getattr(tr, "strategy", "")) == "inplay_breakout":
+            reason = str(getattr(tr, "close_reason", "") or "").upper()
+            if ("SL" in reason) and int(BREAKOUT_SL_COOLDOWN_SEC) > 0:
+                _BREAKOUT_COOLDOWN_UNTIL[str(sym).upper()] = int(now) + int(BREAKOUT_SL_COOLDOWN_SEC)
+    except Exception as e:
+        log_error(f"breakout cooldown set fail {sym}: {e}")
     if TRADE_CHARTS_SEND_ON_CLOSE:
         p = _make_trade_chart(sym, tr, stage="close", pnl=pnl_closed, exit_px=exit_px)
         if p:
@@ -3325,6 +3392,8 @@ RANGE_TRY_EVERY_SEC = 20
 _INPLAY_LAST_TRY = {}           # symbol -> ts
 _BREAKOUT_LAST_TRY = {}         # symbol -> ts
 _RETEST_LAST_TRY = {}           # symbol -> ts
+_BREAKOUT_COOLDOWN_UNTIL = {}   # symbol -> ts
+_BREAKOUT_COOLDOWN_LOG_TS = {}  # symbol -> ts
 
 async def try_range_entry_async(symbol: str, price: float):
     if not ENABLE_RANGE_TRADING:
@@ -3513,6 +3582,21 @@ async def try_breakout_entry_async(symbol: str, price: float):
         return
 
     now = now_s()
+    cool_until = int(_BREAKOUT_COOLDOWN_UNTIL.get(symbol, 0) or 0)
+    if cool_until > now:
+        last_log = int(_BREAKOUT_COOLDOWN_LOG_TS.get(symbol, 0) or 0)
+        if now - last_log >= 300:
+            mins = max(1, (cool_until - now) // 60)
+            tg_trade(f"🟡 BREAKOUT COOLDOWN {symbol}: {mins}m left")
+            _BREAKOUT_COOLDOWN_LOG_TS[symbol] = now
+        return
+
+    if KILLER_GUARD_ENABLE:
+        banned = _refresh_killer_guard_cache()
+        if symbol in banned:
+            tg_trade(f"🟡 BREAKOUT SKIP {symbol}: killer-guard (recent net<= {KILLER_GUARD_MAX_NET_PNL})")
+            return
+
     last = int(_BREAKOUT_LAST_TRY.get(symbol, 0) or 0)
     if now - last < BREAKOUT_TRY_EVERY_SEC:
         return
@@ -3531,6 +3615,29 @@ async def try_breakout_entry_async(symbol: str, price: float):
     tp = float(sig.tp)
     sl = float(sig.sl)
 
+    # Don't chase far from planned entry; prefer retest-like fills.
+    if BREAKOUT_MAX_CHASE_PCT > 0:
+        chase_pct = abs((float(price) - float(entry)) / max(1e-12, float(entry))) * 100.0
+        if chase_pct > BREAKOUT_MAX_CHASE_PCT:
+            tg_trade(f"🟡 BREAKOUT SKIP {symbol}: chase {chase_pct:.2f}% > {BREAKOUT_MAX_CHASE_PCT:.2f}%")
+            return
+
+    # Retest confirmation: require touch near entry and directional close in current 5m bar.
+    if BREAKOUT_REQUIRE_RETEST_CONFIRM:
+        st = S("Bybit", symbol)
+        _prev5, cur5 = last_two_5m_bars(st, now)
+        if not cur5:
+            return
+        tol = max(0.01, float(BREAKOUT_RETEST_TOUCH_PCT))
+        if side == "Buy":
+            touched = cur5["low"] <= float(entry) * (1.0 + tol / 100.0)
+            confirmed = bool(cur5["up"]) and float(cur5["close"]) >= float(entry)
+        else:
+            touched = cur5["high"] >= float(entry) * (1.0 - tol / 100.0)
+            confirmed = (not bool(cur5["up"])) and float(cur5["close"]) <= float(entry)
+        if not (touched and confirmed):
+            return
+
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, tp, sl)
     if tp_r is None or sl_r is None:
         return
@@ -3542,6 +3649,28 @@ async def try_breakout_entry_async(symbol: str, price: float):
             return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+
+    # Widen too-tight stops using ATR floor (helps noisy post-breakout pullbacks).
+    st = S("Bybit", symbol)
+    atr_pct = calc_atr_pct(list(st.highs), list(st.lows), list(st.closes))
+    min_stop_pct = float(BREAKOUT_MIN_STOP_ATR_MULT) * float(atr_pct)
+    if min_stop_pct > 0 and stop_pct < min_stop_pct:
+        rr = 1.0
+        try:
+            if side == "Buy":
+                rr = max(0.5, (float(tp_r) - float(entry)) / max(1e-12, float(entry) - float(sl_r)))
+                sl = float(entry) * (1.0 - min_stop_pct / 100.0)
+                tp = float(entry) + rr * (float(entry) - float(sl))
+            else:
+                rr = max(0.5, (float(entry) - float(tp_r)) / max(1e-12, float(sl_r) - float(entry)))
+                sl = float(entry) * (1.0 + min_stop_pct / 100.0)
+                tp = float(entry) - rr * (float(sl) - float(entry))
+            tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, tp, sl)
+            if tp_r is None or sl_r is None:
+                return
+            stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+        except Exception as e:
+            log_error(f"breakout atr-sl adjust fail {symbol}: {e}")
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
     if dyn_usd <= 0:
         tg_trade(f"🟡 BREAKOUT SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
