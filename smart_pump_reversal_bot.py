@@ -836,6 +836,72 @@ def _parse_float(s: str) -> float | None:
     except Exception:
         return None
 
+def _get_last_close_event(symbol: str | None = None) -> dict | None:
+    if not os.path.exists(TRADE_DB_PATH):
+        return None
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            if symbol:
+                cur = con.execute(
+                    """
+                    SELECT ts, symbol, side, strategy, entry_price, exit_price, tp_price, sl_price, pnl, reason
+                    FROM trade_events
+                    WHERE event='CLOSE' AND symbol=?
+                    ORDER BY ts DESC
+                    LIMIT 1
+                    """,
+                    (str(symbol).upper(),),
+                )
+            else:
+                cur = con.execute(
+                    """
+                    SELECT ts, symbol, side, strategy, entry_price, exit_price, tp_price, sl_price, pnl, reason
+                    FROM trade_events
+                    WHERE event='CLOSE'
+                    ORDER BY ts DESC
+                    LIMIT 1
+                    """
+                )
+            row = cur.fetchone()
+            if not row:
+                return None
+            close_ts, sym, side, strategy, entry_px, exit_px, tp, sl, pnl, reason = row
+
+            entry_ts = None
+            try:
+                ecur = con.execute(
+                    """
+                    SELECT ts
+                    FROM trade_events
+                    WHERE event='ENTRY' AND symbol=? AND side=? AND strategy=? AND ts<=?
+                    ORDER BY ts DESC
+                    LIMIT 1
+                    """,
+                    (str(sym).upper(), str(side or ''), str(strategy or ''), int(close_ts or 0)),
+                )
+                erow = ecur.fetchone()
+                if erow:
+                    entry_ts = int(erow[0])
+            except Exception:
+                entry_ts = None
+
+            return {
+                "close_ts": int(close_ts or 0),
+                "entry_ts": int(entry_ts or 0),
+                "symbol": str(sym).upper(),
+                "side": str(side or "Buy"),
+                "strategy": str(strategy or ""),
+                "entry_price": float(entry_px or 0.0),
+                "exit_price": float(exit_px or 0.0),
+                "tp_price": float(tp) if tp is not None else None,
+                "sl_price": float(sl) if sl is not None else None,
+                "pnl": float(pnl) if pnl is not None else None,
+                "reason": str(reason or ""),
+            }
+    except Exception as e:
+        log_error(f"plotlast query failed: {e}")
+        return None
+
 def _handle_tg_command(text: str):
     global TRADE_ON, RISK_PER_TRADE_PCT, BOT_CAPITAL_USD, MAX_POSITIONS
 
@@ -857,6 +923,7 @@ def _handle_tg_command(text: str):
             "• /filters — текущие фильтры символов\n"
             "• /filters_build — пересобрать фильтры\n"
             "• /health — killers/winners + критерии фильтра\n"
+            "• /plotlast [SYM] — график последней закрытой сделки\n"
             "• /banreco — рекомендации бан-листа\n"
             "• /banapply — применить последние рекомендации\n"
             "• /banlist — текущие фильтры\n"
@@ -949,6 +1016,42 @@ def _handle_tg_command(text: str):
 
     if name == "/health":
         _tg_reply(_health_summary_text())
+        return
+
+    if name == "/plotlast":
+        req_sym = None
+        if len(cmd) >= 2:
+            req_sym = str(cmd[1]).upper().strip()
+        ev = _get_last_close_event(req_sym)
+        if not ev:
+            _tg_reply("Нет закрытых сделок для построения графика.")
+            return
+        tr = TradeState(symbol=ev["symbol"], side=ev["side"], strategy=ev["strategy"])
+        tr.entry_ts = int(ev.get("entry_ts") or 0)
+        tr.exit_ts = int(ev.get("close_ts") or 0)
+        tr.avg = float(ev.get("entry_price") or 0.0)
+        tr.entry_price = float(ev.get("entry_price") or 0.0)
+        tr.tp_price = ev.get("tp_price")
+        tr.sl_price = ev.get("sl_price")
+        png = _make_trade_chart(
+            ev["symbol"],
+            tr,
+            stage="close",
+            pnl=ev.get("pnl"),
+            exit_px=ev.get("exit_price"),
+        )
+        if not png:
+            _tg_reply("Не удалось построить график (недостаточно локальных 5m-баров).")
+            return
+        close_ts = int(ev.get("close_ts") or 0)
+        dt = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime(close_ts)) if close_ts > 0 else "-"
+        pnl = ev.get("pnl")
+        pnl_txt = f"{float(pnl):+.4f}" if pnl is not None else "n/a"
+        cap = (
+            f"plotlast {ev['symbol']} {ev['side']} [{ev.get('strategy','')}]\n"
+            f"close={dt} pnl={pnl_txt} reason={ev.get('reason','')}"
+        )
+        tg_send_photo(png, caption=cap)
         return
 
     if name == "/banreco":
