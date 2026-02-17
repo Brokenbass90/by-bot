@@ -1249,13 +1249,16 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             return None
 
         xs = list(range(len(seg)))
+        opens = [float(b.get("o", 0) or 0) for b in seg]
         closes = [float(b.get("c", 0) or 0) for b in seg]
         highs = [float(b.get("h", 0) or 0) for b in seg]
         lows = [float(b.get("l", 0) or 0) for b in seg]
+        quotes = [float(b.get("quote", 0) or 0) for b in seg]
 
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
+        from matplotlib.patches import Rectangle
 
         os.makedirs(TRADE_CHARTS_OUT_DIR, exist_ok=True)
         out = os.path.join(
@@ -1263,9 +1266,20 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             f"{sym}_{stage}_{int(time.time())}.png",
         )
 
-        plt.figure(figsize=(11, 4.8))
-        plt.plot(xs, closes, linewidth=1.6, label="close")
-        plt.fill_between(xs, lows, highs, alpha=0.15, label="high-low")
+        fig, ax = plt.subplots(figsize=(12.5, 6.2))
+        fig.patch.set_facecolor("#0b1020")
+        ax.set_facecolor("#0f172a")
+        ax.grid(True, alpha=0.15, color="#94a3b8", linewidth=0.6)
+
+        # Candlesticks
+        candle_w = 0.65
+        for i, (o, h, l, c) in enumerate(zip(opens, highs, lows, closes)):
+            up = c >= o
+            col = "#22c55e" if up else "#ef4444"
+            ax.vlines(i, l, h, color=col, linewidth=1.0, alpha=0.95, zorder=2)
+            body_low = min(o, c)
+            body_h = max(abs(c - o), 1e-9)
+            ax.add_patch(Rectangle((i - candle_w / 2.0, body_low), candle_w, body_h, facecolor=col, edgecolor=col, linewidth=0.8, alpha=0.9, zorder=3))
 
         seg_ids = [int(b.get("id", 0)) for b in seg]
 
@@ -1273,34 +1287,76 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             if not seg_ids:
                 return
             idx = min(range(len(seg_ids)), key=lambda i: abs(seg_ids[i] - target_id))
-            plt.axvline(idx, linestyle="--", linewidth=1.1, label=label)
+            col = "#38bdf8" if label == "entry" else "#f59e0b"
+            ax.axvline(idx, linestyle="--", linewidth=1.1, color=col, alpha=0.9, zorder=1)
+            return idx
 
-        _plot_vline(entry_id, "entry")
+        entry_idx = _plot_vline(entry_id, "entry")
+        exit_idx = None
         if stage == "close" and exit_ts > 0:
-            _plot_vline(exit_id, "exit")
+            exit_idx = _plot_vline(exit_id, "exit")
 
         entry_px = float(getattr(tr, "avg", 0) or getattr(tr, "entry_price", 0) or 0)
         tp = getattr(tr, "tp_price", None)
         sl = getattr(tr, "sl_price", None)
         if entry_px > 0:
-            plt.axhline(entry_px, linestyle=":", linewidth=1.0, label=f"entry_px {entry_px:.6f}")
+            ax.axhline(entry_px, linestyle="-", linewidth=1.0, color="#38bdf8", alpha=0.75)
         if tp is not None:
-            plt.axhline(float(tp), linestyle=":", linewidth=1.0, label=f"tp {float(tp):.6f}")
+            ax.axhline(float(tp), linestyle="--", linewidth=1.0, color="#22c55e", alpha=0.8)
         if sl is not None:
-            plt.axhline(float(sl), linestyle=":", linewidth=1.0, label=f"sl {float(sl):.6f}")
+            ax.axhline(float(sl), linestyle="--", linewidth=1.0, color="#ef4444", alpha=0.8)
         if exit_px is not None:
-            plt.axhline(float(exit_px), linestyle=":", linewidth=1.0, label=f"exit {float(exit_px):.6f}")
+            ax.axhline(float(exit_px), linestyle="-.", linewidth=1.0, color="#f59e0b", alpha=0.75)
+
+        # Context levels (simple SR from window)
+        sr_hi = max(highs) if highs else None
+        sr_lo = min(lows) if lows else None
+        if sr_hi is not None and sr_lo is not None:
+            span = max(sr_hi - sr_lo, 1e-9)
+            lvl1 = sr_lo + span * 0.25
+            lvl2 = sr_lo + span * 0.75
+            ax.axhline(lvl1, color="#64748b", linewidth=0.8, alpha=0.35)
+            ax.axhline(lvl2, color="#64748b", linewidth=0.8, alpha=0.35)
+
+        if entry_idx is not None and 0 <= entry_idx < len(closes):
+            ax.scatter([entry_idx], [closes[entry_idx]], color="#38bdf8", s=28, zorder=4)
+        if exit_idx is not None and 0 <= exit_idx < len(closes):
+            ax.scatter([exit_idx], [closes[exit_idx]], color="#f59e0b", s=28, zorder=4)
 
         title = f"{sym} {getattr(tr, 'side', '')} [{getattr(tr, 'strategy', '')}] {stage}"
         if pnl is not None:
             title += f" pnl={float(pnl):+.4f}"
-        plt.title(title)
-        plt.xlabel("5m bars (window)")
-        plt.ylabel("price")
-        plt.legend(loc="best", fontsize=8)
-        plt.tight_layout()
-        plt.savefig(out, dpi=140)
-        plt.close()
+        ax.set_title(title, color="#e2e8f0", fontsize=12, fontweight="bold")
+        ax.set_xlabel("5m candles", color="#cbd5e1")
+        ax.set_ylabel("price", color="#cbd5e1")
+        ax.tick_params(colors="#94a3b8")
+        for spine in ax.spines.values():
+            spine.set_color("#334155")
+
+        vol24h = sum(quotes) * 12.0
+        info = [
+            f"Entry: {entry_px:.6f}" if entry_px > 0 else "Entry: -",
+            f"Exit: {float(exit_px):.6f}" if exit_px is not None else "Exit: -",
+            f"TP: {float(tp):.6f}" if tp is not None else "TP: -",
+            f"SL: {float(sl):.6f}" if sl is not None else "SL: -",
+            f"PnL: {float(pnl):+.4f}" if pnl is not None else "PnL: -",
+            f"Vol(24h est): {vol24h:,.0f}",
+        ]
+        ax.text(
+            0.01,
+            0.99,
+            "\n".join(info),
+            transform=ax.transAxes,
+            va="top",
+            ha="left",
+            fontsize=9,
+            color="#e2e8f0",
+            bbox=dict(boxstyle="round,pad=0.4", facecolor="#111827", edgecolor="#334155", alpha=0.9),
+        )
+
+        fig.tight_layout()
+        fig.savefig(out, dpi=160)
+        plt.close(fig)
         return out
     except Exception as e:
         log_error(f"trade chart fail {sym} {stage}: {e}")
