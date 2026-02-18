@@ -114,3 +114,11 @@
 - 2026-02-18 11:27 UTC | range | v7: добавлены anti-chop фильтры в wrapper (allow/deny, regime gate, cooldown bars, max signals/day) | done
 - 2026-02-18 11:27 UTC | range | bugfix: восстановлен _env_float в strategies/range_wrapper.py (иначе RANGE_MIN_RR становился None) | done
 - 2026-02-18 11:27 UTC | range | backtest 60d range_v7_antichop_60d: trades=7 net=-1.58 PF=0.461 DD=1.58 (существенно лучше по риску, но still <0) | done
+- 2026-02-18 19:58 UTC | range | backtest 60d range_v9_tf15_box_60d: trades=0 net=0.00 (слишком жестко) | done
+- 2026-02-18 20:12 UTC | range | backtest 180d range_v9_tf15_box_180d: trades=0 net=0.00 | done
+- 2026-02-18 20:13 UTC | range | backtest 60d range_v10_tf5_tight_rr3_60d: trades=0 net=0.00 | done
+- 2026-02-18 20:24 UTC | range | backtest 180d range_v8_tf15_strict_180d_rerun: trades=1 net=+0.49 PF=inf (стат. недостаточно) | done
+- 2026-02-18 20:30 UTC | range | backtest 180d range_v13_tf15_relaxed_180d: trades=60 net=-6.59 PF=0.698 DD=9.47 | done
+- 2026-02-18 20:33 UTC | range | backtest 180d range_v14_tf15_relaxed_rr12_180d: trades=87 net=-11.47 PF=0.640 DD=14.63 | done
+- 2026-02-18 20:38 UTC | range | backtest 60d range_v13_tf15_relaxed_60d: trades=17 net=-3.93 PF=0.419 DD=4.83 | done
+- 2026-02-18 20:44 UTC | tg | Добавлена команда /stats (алиас /report) с периодами 1/7/30/90/365 и отправкой text+csv+png отчёта | done

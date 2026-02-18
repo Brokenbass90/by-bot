@@ -989,6 +989,7 @@ def _handle_tg_command(text: str):
             "• /positions 3 — макс. позиций (1–10)\n"
             "• /filters — текущие фильтры символов\n"
             "• /filters_build — пересобрать фильтры\n"
+            "• /stats [7|30|90|365] — отчёт за период\n"
             "• /health — killers/winners + критерии фильтра\n"
             "• /plotlast [SYM] — график последней закрытой сделки\n"
             "• /banreco — рекомендации бан-листа\n"
@@ -1079,6 +1080,22 @@ def _handle_tg_command(text: str):
             _tg_reply("✅ filters rebuilt\n" + _symbol_filters_summary())
         else:
             _tg_reply("❌ " + msg)
+        return
+
+    if name in ("/stats", "/report"):
+        arg = (cmd[1].strip().lower() if len(cmd) >= 2 else "7")
+        alias = {
+            "d": 1, "day": 1, "daily": 1, "1d": 1, "1": 1,
+            "w": 7, "week": 7, "weekly": 7, "7d": 7, "7": 7,
+            "m": 30, "month": 30, "monthly": 30, "30d": 30, "30": 30,
+            "q": 90, "90d": 90, "90": 90,
+            "y": 365, "year": 365, "yearly": 365, "365d": 365, "365": 365,
+        }
+        days = alias.get(arg)
+        if days is None:
+            _tg_reply("Usage: /stats 7  (or 30/90/365)")
+            return
+        _send_report(f"manual_{days}d", int(days))
         return
 
     if name == "/health":
