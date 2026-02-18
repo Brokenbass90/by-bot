@@ -461,11 +461,13 @@ POS_IS_ONEWAY = (BYBIT_POS_MODE != "hedge")
 ENABLE_RANGE_TRADING = os.getenv("ENABLE_RANGE_TRADING", "0").strip() == "1"
 RANGE_RESCAN_SEC = int(os.getenv("RANGE_RESCAN_SEC", "14400"))
 RANGE_LOOKBACK_H = int(os.getenv("RANGE_LOOKBACK_H", "72"))
+RANGE_SCAN_TF = os.getenv("RANGE_SCAN_TF", "60").strip()
 MIN_RANGE_PCT = float(os.getenv("MIN_RANGE_PCT", "3.0"))
 MAX_RANGE_PCT = float(os.getenv("MAX_RANGE_PCT", "8.0"))
 RANGE_MIN_TOUCHES = int(os.getenv("RANGE_MIN_TOUCHES", "3"))
 RANGE_CONFIRM_LIMIT = int(os.getenv("RANGE_CONFIRM_LIMIT", "40"))
 RANGE_ATR_PERIOD = int(os.getenv("RANGE_ATR_PERIOD", "14"))
+RANGE_CONFIRM_TF = os.getenv("RANGE_CONFIRM_TF", "5").strip()
 
 RANGE_ENTRY_ZONE_FRAC = float(os.getenv("RANGE_ENTRY_ZONE_FRAC", "0.08"))
 RANGE_SWEEP_FRAC = float(os.getenv("RANGE_SWEEP_FRAC", "0.02"))
@@ -476,7 +478,7 @@ RANGE_TP_FRAC = float(os.getenv("RANGE_TP_FRAC", "0.45"))
 RANGE_SL_BUFFER_FRAC = float(os.getenv("RANGE_SL_BUFFER_FRAC", "0.03"))
 RANGE_SL_ATR_MULT = float(os.getenv("RANGE_SL_ATR_MULT", "0.8"))
 RANGE_SL_WIDTH_FRAC = float(os.getenv("RANGE_SL_WIDTH_FRAC", "0.10"))
-RANGE_MIN_RR = float(os.getenv("RANGE_MIN_RR", "0.90"))
+RANGE_MIN_RR = float(os.getenv("RANGE_MIN_RR", "3.00"))
 
 RANGE_ALLOW_LONG = os.getenv("RANGE_ALLOW_LONG", "1").strip() == "1"
 RANGE_ALLOW_SHORT = os.getenv("RANGE_ALLOW_SHORT", "1").strip() == "1"
@@ -2939,7 +2941,7 @@ RANGE_SCANNER = RangeScanner(
     fetch_klines=fetch_klines_for_range,
 
     registry=RANGE_REGISTRY,
-    interval_1h="60",
+    interval_1h=RANGE_SCAN_TF,
     lookback_h=RANGE_LOOKBACK_H,
     rescan_ttl_sec=RANGE_RESCAN_SEC,
     min_range_pct=MIN_RANGE_PCT,
@@ -2950,7 +2952,7 @@ RANGE_SCANNER = RangeScanner(
 RANGE_STRATEGY = RangeStrategy(
     fetch_klines=fetch_klines_for_range,
     registry=RANGE_REGISTRY,
-    confirm_tf="5",
+    confirm_tf=RANGE_CONFIRM_TF,
     confirm_limit=RANGE_CONFIRM_LIMIT,
     atr_period=RANGE_ATR_PERIOD,
     entry_zone_frac=RANGE_ENTRY_ZONE_FRAC,

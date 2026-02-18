@@ -93,7 +93,7 @@ class RangeWrapperConfig:
     confirm_limit: int = 60
     atr_period: int = 14
     tp_mode: str = "mid"  # "mid" | "other"
-    min_rr: float = 0.8
+    min_rr: float = 3.0
     entry_zone_frac: float = 0.30
     sweep_frac: float = 0.015
     reclaim_frac: float = 0.003
