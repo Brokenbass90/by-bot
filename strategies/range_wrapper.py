@@ -108,6 +108,13 @@ class RangeWrapperConfig:
     wick_frac_min: float = 0.15
     require_prev_sweep: bool = True
     impulse_body_atr_max: float = 0.9
+    adaptive_regime: bool = False
+    regime_low_atr_pct: float = 0.35
+    regime_high_atr_pct: float = 0.90
+    impulse_body_atr_max_low: float = 0.60
+    impulse_body_atr_max_high: float = 1.10
+    min_rr_low: float = 2.2
+    min_rr_high: float = 1.5
 
 
 class RangeBacktestStrategy:
@@ -143,6 +150,13 @@ class RangeBacktestStrategy:
         self.cfg.wick_frac_min = _env_float("RANGE_WICK_FRAC_MIN", self.cfg.wick_frac_min)
         self.cfg.require_prev_sweep = _env_bool("RANGE_REQUIRE_PREV_SWEEP", self.cfg.require_prev_sweep)
         self.cfg.impulse_body_atr_max = _env_float("RANGE_IMPULSE_BODY_ATR_MAX", self.cfg.impulse_body_atr_max)
+        self.cfg.adaptive_regime = _env_bool("RANGE_ADAPTIVE_REGIME", self.cfg.adaptive_regime)
+        self.cfg.regime_low_atr_pct = _env_float("RANGE_REGIME_LOW_ATR_PCT", self.cfg.regime_low_atr_pct)
+        self.cfg.regime_high_atr_pct = _env_float("RANGE_REGIME_HIGH_ATR_PCT", self.cfg.regime_high_atr_pct)
+        self.cfg.impulse_body_atr_max_low = _env_float("RANGE_IMPULSE_BODY_ATR_MAX_LOW", self.cfg.impulse_body_atr_max_low)
+        self.cfg.impulse_body_atr_max_high = _env_float("RANGE_IMPULSE_BODY_ATR_MAX_HIGH", self.cfg.impulse_body_atr_max_high)
+        self.cfg.min_rr_low = _env_float("RANGE_MIN_RR_LOW", self.cfg.min_rr_low)
+        self.cfg.min_rr_high = _env_float("RANGE_MIN_RR_HIGH", self.cfg.min_rr_high)
 
         self.registry = RangeRegistry()
         self.scanner = RangeScanner(
@@ -177,6 +191,13 @@ class RangeBacktestStrategy:
             wick_frac_min=self.cfg.wick_frac_min,
             require_prev_sweep=self.cfg.require_prev_sweep,
             impulse_body_atr_max=self.cfg.impulse_body_atr_max,
+            adaptive_regime=self.cfg.adaptive_regime,
+            regime_low_atr_pct=self.cfg.regime_low_atr_pct,
+            regime_high_atr_pct=self.cfg.regime_high_atr_pct,
+            impulse_body_atr_max_low=self.cfg.impulse_body_atr_max_low,
+            impulse_body_atr_max_high=self.cfg.impulse_body_atr_max_high,
+            min_rr_low=self.cfg.min_rr_low,
+            min_rr_high=self.cfg.min_rr_high,
             confirm_cache_ttl_sec=0,
         )
 

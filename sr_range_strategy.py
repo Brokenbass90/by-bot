@@ -239,6 +239,13 @@ class RangeStrategy:
         wick_frac_min: float = 0.35,     # минимальная доля тени для rejection
         require_prev_sweep: bool = True, # вход только после "ложного пробоя" на предыдущей свече
         impulse_body_atr_max: float = 0.9,  # запрет входа по импульсной свече (body > ATR*mult)
+        adaptive_regime: bool = False,   # адаптировать пороги по волатильности
+        regime_low_atr_pct: float = 0.35,
+        regime_high_atr_pct: float = 0.90,
+        impulse_body_atr_max_low: float = 0.60,
+        impulse_body_atr_max_high: float = 1.10,
+        min_rr_low: float = 2.2,
+        min_rr_high: float = 1.5,
         tp_mode: str = "mid",            # "mid" | "opposite"
         min_rr: float = 1.0,             # минимум RR, иначе пропускаем
 
@@ -265,6 +272,13 @@ class RangeStrategy:
         self.wick_frac_min = float(wick_frac_min)
         self.require_prev_sweep = bool(require_prev_sweep)
         self.impulse_body_atr_max = float(impulse_body_atr_max)
+        self.adaptive_regime = bool(adaptive_regime)
+        self.regime_low_atr_pct = float(regime_low_atr_pct)
+        self.regime_high_atr_pct = float(regime_high_atr_pct)
+        self.impulse_body_atr_max_low = float(impulse_body_atr_max_low)
+        self.impulse_body_atr_max_high = float(impulse_body_atr_max_high)
+        self.min_rr_low = float(min_rr_low)
+        self.min_rr_high = float(min_rr_high)
         self.tp_mode = str(tp_mode).strip().lower()
         self.min_rr = float(min_rr)
 
@@ -309,13 +323,13 @@ class RangeStrategy:
         upper_wick = c.h - max(c.o, c.c)
         return (lower_wick / rng, upper_wick / rng, rng)
 
-    def _impulse_body_ok(self, c: Candle, atr5: float) -> bool:
-        if not (_is_finite(atr5) and atr5 > 0 and _is_finite(self.impulse_body_atr_max) and self.impulse_body_atr_max > 0):
+    def _impulse_body_ok(self, c: Candle, atr5: float, impulse_mult: float) -> bool:
+        if not (_is_finite(atr5) and atr5 > 0 and _is_finite(impulse_mult) and impulse_mult > 0):
             return True
         body = abs(c.c - c.o)
-        return body <= atr5 * self.impulse_body_atr_max
+        return body <= atr5 * impulse_mult
 
-    def _confirm_long(self, info: RangeInfo, prev: Candle, last: Candle, atr5: float) -> bool:
+    def _confirm_long(self, info: RangeInfo, prev: Candle, last: Candle, atr5: float, impulse_mult: float) -> bool:
         support = float(info.support)
         w = max(1e-12, float(info.width))
 
@@ -328,12 +342,12 @@ class RangeStrategy:
 
         lower_wick_frac, _, _ = self._wick_stats(last)
         green = last.c >= last.o
-        body_ok = self._impulse_body_ok(last, atr5)
+        body_ok = self._impulse_body_ok(last, atr5, impulse_mult)
         sweep_ok = prev_swept if self.require_prev_sweep else touched_or_swept
 
         return bool(sweep_ok and reclaimed and (green or lower_wick_frac >= self.wick_frac_min) and body_ok)
 
-    def _confirm_short(self, info: RangeInfo, prev: Candle, last: Candle, atr5: float) -> bool:
+    def _confirm_short(self, info: RangeInfo, prev: Candle, last: Candle, atr5: float, impulse_mult: float) -> bool:
         resistance = float(info.resistance)
         w = max(1e-12, float(info.width))
 
@@ -346,10 +360,27 @@ class RangeStrategy:
 
         _, upper_wick_frac, _ = self._wick_stats(last)
         red = last.c <= last.o
-        body_ok = self._impulse_body_ok(last, atr5)
+        body_ok = self._impulse_body_ok(last, atr5, impulse_mult)
         sweep_ok = prev_swept if self.require_prev_sweep else touched_or_swept
 
         return bool(sweep_ok and reclaimed and (red or upper_wick_frac >= self.wick_frac_min) and body_ok)
+
+    def _adaptive_params(self, price: float, atr5: float) -> tuple[float, float]:
+        """Return (min_rr, impulse_body_atr_mult) for current volatility regime."""
+        if not self.adaptive_regime:
+            return self.min_rr, self.impulse_body_atr_max
+        if not (_is_finite(price) and price > 0 and _is_finite(atr5) and atr5 > 0):
+            return self.min_rr, self.impulse_body_atr_max
+        atr_pct = (atr5 / price) * 100.0
+        if atr_pct <= self.regime_low_atr_pct:
+            return self.min_rr_low, self.impulse_body_atr_max_low
+        if atr_pct >= self.regime_high_atr_pct:
+            return self.min_rr_high, self.impulse_body_atr_max_high
+        # linear interpolation in mid regime
+        t = (atr_pct - self.regime_low_atr_pct) / max(1e-9, (self.regime_high_atr_pct - self.regime_low_atr_pct))
+        min_rr = self.min_rr_low + t * (self.min_rr_high - self.min_rr_low)
+        imp = self.impulse_body_atr_max_low + t * (self.impulse_body_atr_max_high - self.impulse_body_atr_max_low)
+        return float(min_rr), float(imp)
 
     def _calc_sl(self, info: RangeInfo, side: str, atr5: float) -> float:
         w = max(1e-12, float(info.width))
@@ -404,30 +435,31 @@ class RangeStrategy:
         atr5 = atr(candles5, self.atr_period)
         if not _is_finite(atr5):
             atr5 = 0.0
+        min_rr_curr, impulse_mult_curr = self._adaptive_params(price, atr5)
 
         # LONG
-        if want_long and self._confirm_long(info, prev, last, atr5):
+        if want_long and self._confirm_long(info, prev, last, atr5, impulse_mult_curr):
             sl = self._calc_sl(info, "Buy", atr5)
             tp = self._calc_tp(info, "Buy")
             rr = self._rr(price, sl, tp)
-            if rr < self.min_rr:
+            if rr < min_rr_curr:
                 return None
             reason = (
                 f"range-long: sup={float(info.support):.6f} mid={float(info.mid):.6f} "
-                f"w={float(info.width):.6f} atr5={atr5:.6f} rr={rr:.2f}"
+                f"w={float(info.width):.6f} atr5={atr5:.6f} rr={rr:.2f} min_rr={min_rr_curr:.2f}"
             )
             return RangeSignal(side="Buy", tp=float(tp), sl=float(sl), reason=reason)
 
         # SHORT
-        if want_short and self._confirm_short(info, prev, last, atr5):
+        if want_short and self._confirm_short(info, prev, last, atr5, impulse_mult_curr):
             sl = self._calc_sl(info, "Sell", atr5)
             tp = self._calc_tp(info, "Sell")
             rr = self._rr(price, sl, tp)
-            if rr < self.min_rr:
+            if rr < min_rr_curr:
                 return None
             reason = (
                 f"range-short: res={float(info.resistance):.6f} mid={float(info.mid):.6f} "
-                f"w={float(info.width):.6f} atr5={atr5:.6f} rr={rr:.2f}"
+                f"w={float(info.width):.6f} atr5={atr5:.6f} rr={rr:.2f} min_rr={min_rr_curr:.2f}"
             )
             return RangeSignal(side="Sell", tp=float(tp), sl=float(sl), reason=reason)
 

@@ -475,6 +475,13 @@ RANGE_RECLAIM_FRAC = float(os.getenv("RANGE_RECLAIM_FRAC", "0.01"))
 RANGE_WICK_FRAC_MIN = float(os.getenv("RANGE_WICK_FRAC_MIN", "0.35"))
 RANGE_REQUIRE_PREV_SWEEP = os.getenv("RANGE_REQUIRE_PREV_SWEEP", "1").strip() == "1"
 RANGE_IMPULSE_BODY_ATR_MAX = float(os.getenv("RANGE_IMPULSE_BODY_ATR_MAX", "0.90"))
+RANGE_ADAPTIVE_REGIME = os.getenv("RANGE_ADAPTIVE_REGIME", "0").strip() == "1"
+RANGE_REGIME_LOW_ATR_PCT = float(os.getenv("RANGE_REGIME_LOW_ATR_PCT", "0.35"))
+RANGE_REGIME_HIGH_ATR_PCT = float(os.getenv("RANGE_REGIME_HIGH_ATR_PCT", "0.90"))
+RANGE_IMPULSE_BODY_ATR_MAX_LOW = float(os.getenv("RANGE_IMPULSE_BODY_ATR_MAX_LOW", "0.60"))
+RANGE_IMPULSE_BODY_ATR_MAX_HIGH = float(os.getenv("RANGE_IMPULSE_BODY_ATR_MAX_HIGH", "1.10"))
+RANGE_MIN_RR_LOW = float(os.getenv("RANGE_MIN_RR_LOW", "2.20"))
+RANGE_MIN_RR_HIGH = float(os.getenv("RANGE_MIN_RR_HIGH", "1.50"))
 RANGE_TP_MODE = os.getenv("RANGE_TP_MODE", "mid").strip()
 RANGE_TP_FRAC = float(os.getenv("RANGE_TP_FRAC", "0.45"))
 RANGE_SL_BUFFER_FRAC = float(os.getenv("RANGE_SL_BUFFER_FRAC", "0.03"))
@@ -2980,6 +2987,13 @@ RANGE_STRATEGY = RangeStrategy(
     wick_frac_min=RANGE_WICK_FRAC_MIN,
     require_prev_sweep=RANGE_REQUIRE_PREV_SWEEP,
     impulse_body_atr_max=RANGE_IMPULSE_BODY_ATR_MAX,
+    adaptive_regime=RANGE_ADAPTIVE_REGIME,
+    regime_low_atr_pct=RANGE_REGIME_LOW_ATR_PCT,
+    regime_high_atr_pct=RANGE_REGIME_HIGH_ATR_PCT,
+    impulse_body_atr_max_low=RANGE_IMPULSE_BODY_ATR_MAX_LOW,
+    impulse_body_atr_max_high=RANGE_IMPULSE_BODY_ATR_MAX_HIGH,
+    min_rr_low=RANGE_MIN_RR_LOW,
+    min_rr_high=RANGE_MIN_RR_HIGH,
     tp_mode=RANGE_TP_MODE,
     min_rr=RANGE_MIN_RR,
     sl_width_frac=RANGE_SL_WIDTH_FRAC,
