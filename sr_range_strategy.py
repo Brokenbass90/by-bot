@@ -237,6 +237,8 @@ class RangeStrategy:
         reclaim_frac: float = 0.01,      # “вернулись в диапазон”: 1% width
 
         wick_frac_min: float = 0.35,     # минимальная доля тени для rejection
+        require_prev_sweep: bool = True, # вход только после "ложного пробоя" на предыдущей свече
+        impulse_body_atr_max: float = 0.9,  # запрет входа по импульсной свече (body > ATR*mult)
         tp_mode: str = "mid",            # "mid" | "opposite"
         min_rr: float = 1.0,             # минимум RR, иначе пропускаем
 
@@ -261,6 +263,8 @@ class RangeStrategy:
         self.reclaim_frac = float(reclaim_frac)
 
         self.wick_frac_min = float(wick_frac_min)
+        self.require_prev_sweep = bool(require_prev_sweep)
+        self.impulse_body_atr_max = float(impulse_body_atr_max)
         self.tp_mode = str(tp_mode).strip().lower()
         self.min_rr = float(min_rr)
 
@@ -305,7 +309,13 @@ class RangeStrategy:
         upper_wick = c.h - max(c.o, c.c)
         return (lower_wick / rng, upper_wick / rng, rng)
 
-    def _confirm_long(self, info: RangeInfo, last: Candle) -> bool:
+    def _impulse_body_ok(self, c: Candle, atr5: float) -> bool:
+        if not (_is_finite(atr5) and atr5 > 0 and _is_finite(self.impulse_body_atr_max) and self.impulse_body_atr_max > 0):
+            return True
+        body = abs(c.c - c.o)
+        return body <= atr5 * self.impulse_body_atr_max
+
+    def _confirm_long(self, info: RangeInfo, prev: Candle, last: Candle, atr5: float) -> bool:
         support = float(info.support)
         w = max(1e-12, float(info.width))
 
@@ -313,14 +323,17 @@ class RangeStrategy:
         reclaim_level = support + w * self.reclaim_frac
 
         touched_or_swept = (last.l <= support) or (last.l <= sweep_level)
+        prev_swept = (prev.l <= support) or (prev.l <= sweep_level)
         reclaimed = last.c >= reclaim_level
 
         lower_wick_frac, _, _ = self._wick_stats(last)
         green = last.c >= last.o
+        body_ok = self._impulse_body_ok(last, atr5)
+        sweep_ok = prev_swept if self.require_prev_sweep else touched_or_swept
 
-        return bool(touched_or_swept and reclaimed and (green or lower_wick_frac >= self.wick_frac_min))
+        return bool(sweep_ok and reclaimed and (green or lower_wick_frac >= self.wick_frac_min) and body_ok)
 
-    def _confirm_short(self, info: RangeInfo, last: Candle) -> bool:
+    def _confirm_short(self, info: RangeInfo, prev: Candle, last: Candle, atr5: float) -> bool:
         resistance = float(info.resistance)
         w = max(1e-12, float(info.width))
 
@@ -328,12 +341,15 @@ class RangeStrategy:
         reclaim_level = resistance - w * self.reclaim_frac
 
         touched_or_swept = (last.h >= resistance) or (last.h >= sweep_level)
+        prev_swept = (prev.h >= resistance) or (prev.h >= sweep_level)
         reclaimed = last.c <= reclaim_level
 
         _, upper_wick_frac, _ = self._wick_stats(last)
         red = last.c <= last.o
+        body_ok = self._impulse_body_ok(last, atr5)
+        sweep_ok = prev_swept if self.require_prev_sweep else touched_or_swept
 
-        return bool(touched_or_swept and reclaimed and (red or upper_wick_frac >= self.wick_frac_min))
+        return bool(sweep_ok and reclaimed and (red or upper_wick_frac >= self.wick_frac_min) and body_ok)
 
     def _calc_sl(self, info: RangeInfo, side: str, atr5: float) -> float:
         w = max(1e-12, float(info.width))
@@ -382,6 +398,7 @@ class RangeStrategy:
         # надо минимум atr_period+2 свечи, иначе ATR нестабилен
         if len(candles5) < max(5, self.atr_period + 2):
             return None
+        prev = candles5[-2]
         last = candles5[-1]
 
         atr5 = atr(candles5, self.atr_period)
@@ -389,7 +406,7 @@ class RangeStrategy:
             atr5 = 0.0
 
         # LONG
-        if want_long and self._confirm_long(info, last):
+        if want_long and self._confirm_long(info, prev, last, atr5):
             sl = self._calc_sl(info, "Buy", atr5)
             tp = self._calc_tp(info, "Buy")
             rr = self._rr(price, sl, tp)
@@ -402,7 +419,7 @@ class RangeStrategy:
             return RangeSignal(side="Buy", tp=float(tp), sl=float(sl), reason=reason)
 
         # SHORT
-        if want_short and self._confirm_short(info, last):
+        if want_short and self._confirm_short(info, prev, last, atr5):
             sl = self._calc_sl(info, "Sell", atr5)
             tp = self._calc_tp(info, "Sell")
             rr = self._rr(price, sl, tp)

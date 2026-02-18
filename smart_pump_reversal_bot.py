@@ -473,6 +473,8 @@ RANGE_ENTRY_ZONE_FRAC = float(os.getenv("RANGE_ENTRY_ZONE_FRAC", "0.08"))
 RANGE_SWEEP_FRAC = float(os.getenv("RANGE_SWEEP_FRAC", "0.02"))
 RANGE_RECLAIM_FRAC = float(os.getenv("RANGE_RECLAIM_FRAC", "0.01"))
 RANGE_WICK_FRAC_MIN = float(os.getenv("RANGE_WICK_FRAC_MIN", "0.35"))
+RANGE_REQUIRE_PREV_SWEEP = os.getenv("RANGE_REQUIRE_PREV_SWEEP", "1").strip() == "1"
+RANGE_IMPULSE_BODY_ATR_MAX = float(os.getenv("RANGE_IMPULSE_BODY_ATR_MAX", "0.90"))
 RANGE_TP_MODE = os.getenv("RANGE_TP_MODE", "mid").strip()
 RANGE_TP_FRAC = float(os.getenv("RANGE_TP_FRAC", "0.45"))
 RANGE_SL_BUFFER_FRAC = float(os.getenv("RANGE_SL_BUFFER_FRAC", "0.03"))
@@ -2976,6 +2978,8 @@ RANGE_STRATEGY = RangeStrategy(
     sweep_frac=RANGE_SWEEP_FRAC,
     reclaim_frac=RANGE_RECLAIM_FRAC,
     wick_frac_min=RANGE_WICK_FRAC_MIN,
+    require_prev_sweep=RANGE_REQUIRE_PREV_SWEEP,
+    impulse_body_atr_max=RANGE_IMPULSE_BODY_ATR_MAX,
     tp_mode=RANGE_TP_MODE,
     min_rr=RANGE_MIN_RR,
     sl_width_frac=RANGE_SL_WIDTH_FRAC,

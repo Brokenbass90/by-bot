@@ -106,6 +106,8 @@ class RangeWrapperConfig:
     sweep_frac: float = 0.015
     reclaim_frac: float = 0.003
     wick_frac_min: float = 0.15
+    require_prev_sweep: bool = True
+    impulse_body_atr_max: float = 0.9
 
 
 class RangeBacktestStrategy:
@@ -139,6 +141,8 @@ class RangeBacktestStrategy:
         self.cfg.sweep_frac = _env_float("RANGE_SWEEP_FRAC", self.cfg.sweep_frac)
         self.cfg.reclaim_frac = _env_float("RANGE_RECLAIM_FRAC", self.cfg.reclaim_frac)
         self.cfg.wick_frac_min = _env_float("RANGE_WICK_FRAC_MIN", self.cfg.wick_frac_min)
+        self.cfg.require_prev_sweep = _env_bool("RANGE_REQUIRE_PREV_SWEEP", self.cfg.require_prev_sweep)
+        self.cfg.impulse_body_atr_max = _env_float("RANGE_IMPULSE_BODY_ATR_MAX", self.cfg.impulse_body_atr_max)
 
         self.registry = RangeRegistry()
         self.scanner = RangeScanner(
@@ -171,6 +175,8 @@ class RangeBacktestStrategy:
             sweep_frac=self.cfg.sweep_frac,
             reclaim_frac=self.cfg.reclaim_frac,
             wick_frac_min=self.cfg.wick_frac_min,
+            require_prev_sweep=self.cfg.require_prev_sweep,
+            impulse_body_atr_max=self.cfg.impulse_body_atr_max,
             confirm_cache_ttl_sec=0,
         )
 

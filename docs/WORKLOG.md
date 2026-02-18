@@ -122,3 +122,6 @@
 - 2026-02-18 20:33 UTC | range | backtest 180d range_v14_tf15_relaxed_rr12_180d: trades=87 net=-11.47 PF=0.640 DD=14.63 | done
 - 2026-02-18 20:38 UTC | range | backtest 60d range_v13_tf15_relaxed_60d: trades=17 net=-3.93 PF=0.419 DD=4.83 | done
 - 2026-02-18 20:44 UTC | tg | Добавлена команда /stats (алиас /report) с периодами 1/7/30/90/365 и отправкой text+csv+png отчёта | done
+- 2026-02-18 21:08 UTC | range | Перепил логики входа: require_prev_sweep + фильтр импульсной свечи (body<=ATR*mult), прокинуты env RANGE_REQUIRE_PREV_SWEEP и RANGE_IMPULSE_BODY_ATR_MAX | done
+- 2026-02-18 21:14 UTC | range | backtest 60d range_v15_reentry_impulse_60d: trades=20 net=-5.14 PF=0.357 DD=7.20 | done
+- 2026-02-18 21:14 UTC | range | backtest 180d range_v15_reentry_impulse_180d: trades=50 net=+2.95 PF=1.184 DD=3.56 (месяцы: 4/6 в плюс) | done
