@@ -129,6 +129,8 @@
 - 2026-02-18 22:07 UTC | range | backtest 60d range_v16_adaptive_60d: trades=20 net=-3.58 PF=0.523 DD=6.73 (лучше v15, но <0) | done
 - 2026-02-18 22:07 UTC | range | backtest 180d range_v16_adaptive_180d: trades=39 net=+4.05 PF=1.342 DD=4.38 (лучше v15 по PF и net) | done
 - 2026-02-18 23:16 UTC | range | v17 adaptive TP (tp_mode=frac + tp_frac by regime): 60d net=-4.17 PF=0.500; 180d net=-0.94 PF=0.945 — хуже v16, не брать в прод | done
+- 2026-02-18 23:28 UTC | audit | quick audit inplay_breakout 7/30d: trades=17 net=-2.3075 winrate=41.18%; reason SL=10 trades net=-3.3905; top losers SIRENUSDT (-1.3055) и BCHUSDT (-1.0794) | done
+- 2026-02-18 23:29 UTC | plan | range-направление не закрыто: вернуться после блока "наклонки"; дополнительно исследовать отскоки вне классического флэта и пробойные сценарии на базе range-структур | todo
 
 ## 2026-02-18 — Стратегический план (долгий горизонт)
 - Цель проекта: дотянуть систему до самообучаемого торгового контура с контролем риска и регулярной переоценкой качества сигналов.
