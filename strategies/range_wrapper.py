@@ -72,8 +72,8 @@ def _env_float(name: str, default: float) -> float:
 @dataclass
 class RangeWrapperConfig:
     # Scanner
-    lookback_h: int = 200
-    rescan_every_bars_5m: int = 12 * 6  # every 6 hours
+    lookback_h: int = 120
+    rescan_every_bars_5m: int = 12 * 3  # every 3 hours
     scan_tf: str = "60"
     mode: str = "box"
 
@@ -90,14 +90,14 @@ class RangeWrapperConfig:
 
     # Strategy
     confirm_tf: str = "5"
-    confirm_limit: int = 24
+    confirm_limit: int = 60
     atr_period: int = 14
     tp_mode: str = "mid"  # "mid" | "other"
-    min_rr: float = 1.2
-    entry_zone_frac: float = 0.20
+    min_rr: float = 0.8
+    entry_zone_frac: float = 0.30
     sweep_frac: float = 0.015
-    reclaim_frac: float = 0.006
-    wick_frac_min: float = 0.25
+    reclaim_frac: float = 0.003
+    wick_frac_min: float = 0.15
 
 
 class RangeBacktestStrategy:
@@ -138,7 +138,8 @@ class RangeBacktestStrategy:
             registry=self.registry,
             interval_1h=self.cfg.scan_tf,
             lookback_h=self.cfg.lookback_h,
-            rescan_ttl_sec=0,
+            # Keep detected ranges alive between rescans; 0 would expire immediately.
+            rescan_ttl_sec=max(900, int(self.cfg.rescan_every_bars_5m * 300 * 2)),
             min_range_pct=self.cfg.min_range_pct,
             max_range_pct=self.cfg.max_range_pct,
             max_ema_spread_pct=self.cfg.max_ema_spread_pct,
@@ -202,8 +203,8 @@ class RangeBacktestStrategy:
                     self.registry.set(info)
                     if self._debug:
                         print(
-                            f"[RANGE] {symbol} detected: low={info.low:.6g} high={info.high:.6g} "
-                            f"width%={info.width_pct:.2f} touches={info.touches} score={info.score:.1f}"
+                            f"[RANGE] {symbol} detected: support={info.support:.6g} resistance={info.resistance:.6g} "
+                            f"range%={info.range_pct:.2f} touches=({info.touches_support},{info.touches_resistance}) score={info.score:.1f}"
                         )
             except Exception:
                 # In backtests we treat scanner failures as "no range" for this step.
@@ -229,7 +230,7 @@ class RangeBacktestStrategy:
             entry=entry,
             sl=float(sig.sl),
             tp=float(sig.tp),
-            reason=f"range {sig.edge} rr={sig.rr:.2f}",
+            reason=str(getattr(sig, "reason", "range")),
         )
         return out if out.validate() else None
 

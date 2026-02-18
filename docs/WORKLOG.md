@@ -109,3 +109,4 @@
 - 2026-02-17 15:07 UTC | analysis | Добавлен scripts/analyze_entry_quality.py (late-entry/adverse/favorable move audit по CLOSE/ENTRY) | done
 - 2026-02-17 15:16 UTC | breakout | Добавлены: retest-confirm, max-chase guard, ATR-floor для SL, cooldown после SL, killer-guard skip | done
 - 2026-02-17 15:24 UTC | range | FIX: confirm_limit вынесен в env (default 40) + ATR/RR/reclaim/wick/sl-width параметры для live RangeStrategy | done
+- 2026-02-18 10:05 UTC | range | FIX backtest wrapper: range TTL>0 (иначе диапазон тух сразу) + корректный reason + мягче дефолты; v4 дал 262 trades, net -36.05 (отклонено) | done
