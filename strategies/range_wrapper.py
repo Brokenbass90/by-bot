@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import time
 from dataclasses import dataclass
 from typing import Optional, Any
 
@@ -67,6 +68,13 @@ def _env_float(name: str, default: float) -> float:
         return float(v.strip())
     except Exception:
         return default
+
+
+def _env_csv_set(name: str) -> set[str]:
+    v = os.getenv(name, "").strip()
+    if not v:
+        return set()
+    return {p.strip().upper() for p in v.replace(";", ",").split(",") if p.strip()}
 
 
 @dataclass
@@ -167,6 +175,16 @@ class RangeBacktestStrategy:
         )
 
         self._debug = os.getenv("RANGE_DEBUG", "0").strip().lower() in {"1", "true", "yes", "on"}
+        self._allow = _env_csv_set("RANGE_SYMBOL_ALLOWLIST")
+        self._deny = _env_csv_set("RANGE_SYMBOL_DENYLIST")
+        self._entry_max_ema_spread_pct = _env_float("RANGE_ENTRY_MAX_EMA_SPREAD_PCT", 0.8)
+        self._entry_max_range_pct = _env_float("RANGE_ENTRY_MAX_RANGE_PCT", 12.0)
+        self._entry_min_range_pct = _env_float("RANGE_ENTRY_MIN_RANGE_PCT", 1.2)
+        self._cooldown_bars = _env_int("RANGE_ENTRY_COOLDOWN_BARS", 24)  # 24*5m = 2h
+        self._max_signals_per_day = _env_int("RANGE_MAX_SIGNALS_PER_DAY", 2)
+        self._last_signal_i5 = -10**9
+        self._day_key: Optional[int] = None
+        self._day_signals = 0
 
         self._bar_count_5m = 0
 
@@ -181,6 +199,11 @@ class RangeBacktestStrategy:
         Internally, range detection and trading logic are keyed by symbol.
         """
         symbol = getattr(store, "symbol", None) or getattr(store, "_symbol", None) or ""
+        symbol_u = str(symbol).upper()
+        if self._allow and symbol_u not in self._allow:
+            return None
+        if symbol_u in self._deny:
+            return None
 
         # IMPORTANT: In backtests we already have the full candle series in-memory
         # (via the KlineStore). Using the public Bybit REST endpoint here will be
@@ -218,6 +241,30 @@ class RangeBacktestStrategy:
         if not sig:
             return None
 
+        info = self.registry.get(symbol)
+        if not info:
+            return None
+        # Extra anti-chop / regime filters
+        if float(info.ema_spread_pct) > float(self._entry_max_ema_spread_pct):
+            return None
+        if float(info.range_pct) > float(self._entry_max_range_pct):
+            return None
+        if float(info.range_pct) < float(self._entry_min_range_pct):
+            return None
+
+        # Per-symbol cooldown after each signal
+        i5 = int(getattr(store, "i5", -1))
+        if i5 - int(self._last_signal_i5) < int(self._cooldown_bars):
+            return None
+        # Cap signals per day
+        ts_sec = int(ts_ms // 1000 if ts_ms > 10_000_000_000 else ts_ms)
+        day_key = int(ts_sec // 86400)
+        if self._day_key != day_key:
+            self._day_key = day_key
+            self._day_signals = 0
+        if self._day_signals >= int(self._max_signals_per_day):
+            return None
+
         # Backtest engine expects side in {"long", "short"}.
         # RangeStrategy emits {"Buy", "Sell"}.
         side = "long" if sig.side == "Buy" else "short"
@@ -232,7 +279,11 @@ class RangeBacktestStrategy:
             tp=float(sig.tp),
             reason=str(getattr(sig, "reason", "range")),
         )
-        return out if out.validate() else None
+        if out.validate():
+            self._last_signal_i5 = i5
+            self._day_signals += 1
+            return out
+        return None
 
 # Backwards-compatible alias expected by backtest.run_month
 RangeWrapper = RangeBacktestStrategy

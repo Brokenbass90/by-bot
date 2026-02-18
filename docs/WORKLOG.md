@@ -111,3 +111,6 @@
 - 2026-02-17 15:24 UTC | range | FIX: confirm_limit вынесен в env (default 40) + ATR/RR/reclaim/wick/sl-width параметры для live RangeStrategy | done
 - 2026-02-18 10:05 UTC | range | FIX backtest wrapper: range TTL>0 (иначе диапазон тух сразу) + корректный reason + мягче дефолты; v4 дал 262 trades, net -36.05 (отклонено) | done
 - 2026-02-18 10:33 UTC | range | Перепил: scan_tf/confirm_tf вынесены в env; RANGE_MIN_RR поднят до 3.0 (TP >= 3x risk) | done
+- 2026-02-18 11:27 UTC | range | v7: добавлены anti-chop фильтры в wrapper (allow/deny, regime gate, cooldown bars, max signals/day) | done
+- 2026-02-18 11:27 UTC | range | bugfix: восстановлен _env_float в strategies/range_wrapper.py (иначе RANGE_MIN_RR становился None) | done
+- 2026-02-18 11:27 UTC | range | backtest 60d range_v7_antichop_60d: trades=7 net=-1.58 PF=0.461 DD=1.58 (существенно лучше по риску, но still <0) | done
