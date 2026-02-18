@@ -246,6 +246,9 @@ class RangeStrategy:
         impulse_body_atr_max_high: float = 1.10,
         min_rr_low: float = 2.2,
         min_rr_high: float = 1.5,
+        adaptive_tp: bool = False,       # адаптивная цель (ближе в высокой волатильности)
+        tp_frac_low: float = 0.60,       # доля ширины диапазона в low-vol
+        tp_frac_high: float = 0.40,      # доля ширины диапазона в high-vol
         tp_mode: str = "mid",            # "mid" | "opposite"
         min_rr: float = 1.0,             # минимум RR, иначе пропускаем
 
@@ -279,6 +282,9 @@ class RangeStrategy:
         self.impulse_body_atr_max_high = float(impulse_body_atr_max_high)
         self.min_rr_low = float(min_rr_low)
         self.min_rr_high = float(min_rr_high)
+        self.adaptive_tp = bool(adaptive_tp)
+        self.tp_frac_low = float(tp_frac_low)
+        self.tp_frac_high = float(tp_frac_high)
         self.tp_mode = str(tp_mode).strip().lower()
         self.min_rr = float(min_rr)
 
@@ -365,22 +371,28 @@ class RangeStrategy:
 
         return bool(sweep_ok and reclaimed and (red or upper_wick_frac >= self.wick_frac_min) and body_ok)
 
-    def _adaptive_params(self, price: float, atr5: float) -> tuple[float, float]:
-        """Return (min_rr, impulse_body_atr_mult) for current volatility regime."""
+    def _adaptive_params(self, price: float, atr5: float) -> tuple[float, float, float]:
+        """Return (min_rr, impulse_body_atr_mult, tp_frac) for current volatility regime."""
+        base_tp_frac = 0.50
         if not self.adaptive_regime:
-            return self.min_rr, self.impulse_body_atr_max
+            return self.min_rr, self.impulse_body_atr_max, base_tp_frac
         if not (_is_finite(price) and price > 0 and _is_finite(atr5) and atr5 > 0):
-            return self.min_rr, self.impulse_body_atr_max
+            return self.min_rr, self.impulse_body_atr_max, base_tp_frac
         atr_pct = (atr5 / price) * 100.0
         if atr_pct <= self.regime_low_atr_pct:
-            return self.min_rr_low, self.impulse_body_atr_max_low
+            tpf = self.tp_frac_low if self.adaptive_tp else base_tp_frac
+            return self.min_rr_low, self.impulse_body_atr_max_low, tpf
         if atr_pct >= self.regime_high_atr_pct:
-            return self.min_rr_high, self.impulse_body_atr_max_high
+            tpf = self.tp_frac_high if self.adaptive_tp else base_tp_frac
+            return self.min_rr_high, self.impulse_body_atr_max_high, tpf
         # linear interpolation in mid regime
         t = (atr_pct - self.regime_low_atr_pct) / max(1e-9, (self.regime_high_atr_pct - self.regime_low_atr_pct))
         min_rr = self.min_rr_low + t * (self.min_rr_high - self.min_rr_low)
         imp = self.impulse_body_atr_max_low + t * (self.impulse_body_atr_max_high - self.impulse_body_atr_max_low)
-        return float(min_rr), float(imp)
+        tpf = base_tp_frac
+        if self.adaptive_tp:
+            tpf = self.tp_frac_low + t * (self.tp_frac_high - self.tp_frac_low)
+        return float(min_rr), float(imp), float(tpf)
 
     def _calc_sl(self, info: RangeInfo, side: str, atr5: float) -> float:
         w = max(1e-12, float(info.width))
@@ -393,9 +405,16 @@ class RangeStrategy:
         else:
             return float(info.resistance) + dist
 
-    def _calc_tp(self, info: RangeInfo, side: str) -> float:
+    def _calc_tp(self, info: RangeInfo, side: str, tp_frac: float | None = None) -> float:
         if self.tp_mode == "opposite":
             return float(info.resistance if side == "Buy" else info.support)
+        if self.tp_mode == "frac":
+            w = max(1e-12, float(info.width))
+            f = float(tp_frac if tp_frac is not None else 0.50)
+            f = max(0.10, min(0.95, f))
+            if side == "Buy":
+                return float(info.support + w * f)
+            return float(info.resistance - w * f)
         # default mid
         return float(info.mid)
 
@@ -435,12 +454,12 @@ class RangeStrategy:
         atr5 = atr(candles5, self.atr_period)
         if not _is_finite(atr5):
             atr5 = 0.0
-        min_rr_curr, impulse_mult_curr = self._adaptive_params(price, atr5)
+        min_rr_curr, impulse_mult_curr, tp_frac_curr = self._adaptive_params(price, atr5)
 
         # LONG
         if want_long and self._confirm_long(info, prev, last, atr5, impulse_mult_curr):
             sl = self._calc_sl(info, "Buy", atr5)
-            tp = self._calc_tp(info, "Buy")
+            tp = self._calc_tp(info, "Buy", tp_frac_curr)
             rr = self._rr(price, sl, tp)
             if rr < min_rr_curr:
                 return None
@@ -453,7 +472,7 @@ class RangeStrategy:
         # SHORT
         if want_short and self._confirm_short(info, prev, last, atr5, impulse_mult_curr):
             sl = self._calc_sl(info, "Sell", atr5)
-            tp = self._calc_tp(info, "Sell")
+            tp = self._calc_tp(info, "Sell", tp_frac_curr)
             rr = self._rr(price, sl, tp)
             if rr < min_rr_curr:
                 return None

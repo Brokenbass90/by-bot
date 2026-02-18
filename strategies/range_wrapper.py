@@ -115,6 +115,9 @@ class RangeWrapperConfig:
     impulse_body_atr_max_high: float = 1.10
     min_rr_low: float = 2.2
     min_rr_high: float = 1.5
+    adaptive_tp: bool = False
+    tp_frac_low: float = 0.60
+    tp_frac_high: float = 0.40
 
 
 class RangeBacktestStrategy:
@@ -143,6 +146,7 @@ class RangeBacktestStrategy:
         self.cfg.touch_tolerance_atr_mult = _env_float("RANGE_TOUCH_TOL_ATR_MULT", self.cfg.touch_tolerance_atr_mult)
 
         self.cfg.atr_period = _env_int("RANGE_ATR_PERIOD", self.cfg.atr_period)
+        self.cfg.tp_mode = os.getenv("RANGE_TP_MODE", self.cfg.tp_mode).strip().lower()
         self.cfg.min_rr = _env_float("RANGE_MIN_RR", self.cfg.min_rr)
         self.cfg.entry_zone_frac = _env_float("RANGE_ENTRY_ZONE_FRAC", self.cfg.entry_zone_frac)
         self.cfg.sweep_frac = _env_float("RANGE_SWEEP_FRAC", self.cfg.sweep_frac)
@@ -157,6 +161,9 @@ class RangeBacktestStrategy:
         self.cfg.impulse_body_atr_max_high = _env_float("RANGE_IMPULSE_BODY_ATR_MAX_HIGH", self.cfg.impulse_body_atr_max_high)
         self.cfg.min_rr_low = _env_float("RANGE_MIN_RR_LOW", self.cfg.min_rr_low)
         self.cfg.min_rr_high = _env_float("RANGE_MIN_RR_HIGH", self.cfg.min_rr_high)
+        self.cfg.adaptive_tp = _env_bool("RANGE_ADAPTIVE_TP", self.cfg.adaptive_tp)
+        self.cfg.tp_frac_low = _env_float("RANGE_TP_FRAC_LOW", self.cfg.tp_frac_low)
+        self.cfg.tp_frac_high = _env_float("RANGE_TP_FRAC_HIGH", self.cfg.tp_frac_high)
 
         self.registry = RangeRegistry()
         self.scanner = RangeScanner(
@@ -198,6 +205,9 @@ class RangeBacktestStrategy:
             impulse_body_atr_max_high=self.cfg.impulse_body_atr_max_high,
             min_rr_low=self.cfg.min_rr_low,
             min_rr_high=self.cfg.min_rr_high,
+            adaptive_tp=self.cfg.adaptive_tp,
+            tp_frac_low=self.cfg.tp_frac_low,
+            tp_frac_high=self.cfg.tp_frac_high,
             confirm_cache_ttl_sec=0,
         )
 
