@@ -142,6 +142,9 @@ BREAKOUT_REQUIRE_RETEST_CONFIRM = os.getenv("BREAKOUT_REQUIRE_RETEST_CONFIRM", "
 BREAKOUT_RETEST_TOUCH_PCT = float(os.getenv("BREAKOUT_RETEST_TOUCH_PCT", "0.15"))
 BREAKOUT_MIN_STOP_ATR_MULT = float(os.getenv("BREAKOUT_MIN_STOP_ATR_MULT", "0.80"))
 BREAKOUT_SL_COOLDOWN_SEC = int(os.getenv("BREAKOUT_SL_COOLDOWN_SEC", "2700"))
+BREAKOUT_REF_LOOKBACK_BARS = int(os.getenv("BREAKOUT_REF_LOOKBACK_BARS", "20"))
+BREAKOUT_MAX_LATE_VS_REF_PCT = float(os.getenv("BREAKOUT_MAX_LATE_VS_REF_PCT", "0.35"))
+BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT = float(os.getenv("BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT", "0.08"))
 BREAKOUT_SYMBOLS = set()
 BREAKOUT_ENGINE = None
 
@@ -2235,6 +2238,8 @@ def sync_trades_with_exchange():
             # позиция появилась -> OPEN
             if size > 0:
                 tr.status = "OPEN"
+                if not getattr(tr, "entry_fill_ts", 0):
+                    tr.entry_fill_ts = int(now)
 
                 tr.qty = float(size)
                 if side in ("Buy", "Sell"):
@@ -2246,7 +2251,7 @@ def sync_trades_with_exchange():
                     tr.entry_price = float(avg_ex)
 
                     # если TP/SL уже были рассчитаны по "примерному" price — пересчитаем от реального avg
-                    if getattr(tr, "strategy", "pump") in ("bounce", "range", "inplay"):
+                    if getattr(tr, "strategy", "pump") in ("bounce", "range", "inplay", "inplay_breakout"):
                         # bounce tp/sl могли прийти из сигнала — оставляем их как есть,
                         # но гарантируем корректное округление относительно entry
                         tr.tp_price, tr.sl_price = round_tp_sl_prices(sym, tr.side, tr.avg, tr.tp_price, tr.sl_price)
@@ -2271,7 +2276,19 @@ def sync_trades_with_exchange():
 
                 if not getattr(tr, "entry_confirm_sent", False):
                     tr.entry_confirm_sent = True
-                    tg_trade(f"✅ ENTRY FILLED {sym} {tr.side} qty={tr.qty} avg={float(getattr(tr,'avg',0) or 0):.6f}")
+                    lat_parts = []
+                    sig_ts = int(getattr(tr, "signal_ts", 0) or 0)
+                    send_ts = int(getattr(tr, "order_send_ts", 0) or 0)
+                    fill_ts = int(getattr(tr, "entry_fill_ts", 0) or 0)
+                    if sig_ts > 0 and send_ts >= sig_ts:
+                        lat_parts.append(f"sig→send={send_ts - sig_ts}s")
+                    if send_ts > 0 and fill_ts >= send_ts:
+                        lat_parts.append(f"send→fill={fill_ts - send_ts}s")
+                    lat_txt = ("\nLatency: " + " | ".join(lat_parts)) if lat_parts else ""
+                    tg_trade(
+                        f"✅ ENTRY FILLED {sym} {tr.side} qty={tr.qty} avg={float(getattr(tr,'avg',0) or 0):.6f}"
+                        f"{lat_txt}"
+                    )
                     _db_log_event("ENTRY", tr, sym)
                     if TRADE_CHARTS_SEND_ON_ENTRY:
                         p = _make_trade_chart(sym, tr, stage="entry")
@@ -2786,6 +2803,11 @@ def _finalize_and_report_closed(tr, sym: str):
     except Exception as e:
         log_error(f"reason classify fail {sym}: {e}")
 
+    try:
+        tr.exit_source = str(getattr(tr, "close_reason", "") or "UNKNOWN")
+    except Exception:
+        pass
+
     # --- fees fallback: если Bybit не отдал нормальные fee-поля (часто бывает)
     if fee_sum is None:
         fee_sum = 0.0
@@ -2819,6 +2841,18 @@ def _finalize_and_report_closed(tr, sym: str):
         msg += f"\nExit px: {exit_px:.6f}"
     if getattr(tr, "close_reason", None):
         msg += f"\nReason: {tr.close_reason}"
+    hold_txt = []
+    fill_ts = int(getattr(tr, "entry_fill_ts", 0) or 0)
+    exit_ts = int(now)
+    if fill_ts > 0 and exit_ts >= fill_ts:
+        hold_txt.append(f"hold={exit_ts - fill_ts}s")
+    send_ts = int(getattr(tr, "order_send_ts", 0) or 0)
+    if send_ts > 0 and fill_ts > 0 and fill_ts >= send_ts:
+        hold_txt.append(f"send→fill={fill_ts - send_ts}s")
+    if fill_ts > 0 and exit_ts >= fill_ts:
+        hold_txt.append(f"fill→close={exit_ts - fill_ts}s")
+    if hold_txt:
+        msg += "\nTiming: " + " | ".join(hold_txt)
     tg_trade(msg)
     _db_log_event("CLOSE", tr, sym, pnl=pnl_closed, fees=fee_sum, exit_px=exit_px)
     # Cooldown after breakout SL to reduce repeated entries in noisy chop.
@@ -3581,6 +3615,19 @@ def last_two_5m_bars(st: SymState, now: int):
     cur_bar  = make_bar(cur_prices)
     return prev_bar, cur_bar
 
+def breakout_ref_price(st: SymState, side: str, lookback_bars: int = 20) -> Optional[float]:
+    bars = list(getattr(st, "bars5m", []) or [])
+    lb = max(5, int(lookback_bars))
+    if len(bars) < 3:
+        return None
+    seg = bars[-lb:]
+    try:
+        if str(side).lower() == "buy":
+            return max(float(b.get("h", 0.0) or 0.0) for b in seg)
+        return min(float(b.get("l", 0.0) or 0.0) for b in seg)
+    except Exception:
+        return None
+
 def qty_floor_from_notional(symbol: str, notional_usd: float, price: float) -> tuple[float, float, str]:
     """
     notional_usd -> qty, округление ВНИЗ по qtyStep.
@@ -3804,6 +3851,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
         return
 
     now = now_s()
+    signal_ts = int(now)
     cool_until = int(_BREAKOUT_COOLDOWN_UNTIL.get(symbol, 0) or 0)
     if cool_until > now:
         last_log = int(_BREAKOUT_COOLDOWN_LOG_TS.get(symbol, 0) or 0)
@@ -3844,10 +3892,11 @@ async def try_breakout_entry_async(symbol: str, price: float):
             tg_trade(f"🟡 BREAKOUT SKIP {symbol}: chase {chase_pct:.2f}% > {BREAKOUT_MAX_CHASE_PCT:.2f}%")
             return
 
+    st = S("Bybit", symbol)
+    _prev5, cur5 = last_two_5m_bars(st, now)
+
     # Retest confirmation: require touch near entry and directional close in current 5m bar.
     if BREAKOUT_REQUIRE_RETEST_CONFIRM:
-        st = S("Bybit", symbol)
-        _prev5, cur5 = last_two_5m_bars(st, now)
         if not cur5:
             return
         tol = max(0.01, float(BREAKOUT_RETEST_TOUCH_PCT))
@@ -3860,7 +3909,32 @@ async def try_breakout_entry_async(symbol: str, price: float):
         if not (touched and confirmed):
             return
 
-    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, tp, sl)
+    # Anti-late-entry: skip if current/entry price is too far beyond breakout reference.
+    ref_px = breakout_ref_price(st, side, BREAKOUT_REF_LOOKBACK_BARS)
+    if ref_px and BREAKOUT_MAX_LATE_VS_REF_PCT > 0:
+        base_px = max(float(entry), float(price)) if side == "Buy" else min(float(entry), float(price))
+        if side == "Buy":
+            late_pct = (base_px - ref_px) / max(ref_px, 1e-12) * 100.0
+        else:
+            late_pct = (ref_px - base_px) / max(ref_px, 1e-12) * 100.0
+        if late_pct > BREAKOUT_MAX_LATE_VS_REF_PCT:
+            tg_trade(f"🟡 BREAKOUT SKIP {symbol}: late {late_pct:.2f}% > {BREAKOUT_MAX_LATE_VS_REF_PCT:.2f}%")
+            return
+
+    # Anti-FOMO: require at least minimal pullback from the current 5m extreme.
+    if cur5 and BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT > 0:
+        if side == "Buy":
+            pullback = (float(cur5["high"]) - float(price)) / max(float(cur5["high"]), 1e-12) * 100.0
+        else:
+            pullback = (float(price) - float(cur5["low"])) / max(float(cur5["low"]), 1e-12) * 100.0
+        if pullback < BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT:
+            tg_trade(
+                f"🟡 BREAKOUT SKIP {symbol}: pullback {pullback:.2f}% < {BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT:.2f}%"
+            )
+            return
+
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
         return
 
@@ -3873,7 +3947,6 @@ async def try_breakout_entry_async(symbol: str, price: float):
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
 
     # Widen too-tight stops using ATR floor (helps noisy post-breakout pullbacks).
-    st = S("Bybit", symbol)
     atr_pct = calc_atr_pct(list(st.highs), list(st.lows), list(st.closes))
     min_stop_pct = float(BREAKOUT_MIN_STOP_ATR_MULT) * float(atr_pct)
     if min_stop_pct > 0 and stop_pct < min_stop_pct:
@@ -3887,7 +3960,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
                 rr = max(0.5, (float(entry) - float(tp_r)) / max(1e-12, float(sl_r) - float(entry)))
                 sl = float(entry) * (1.0 + min_stop_pct / 100.0)
                 tp = float(entry) - rr * (float(sl) - float(entry))
-            tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, tp, sl)
+            tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
             if tp_r is None or sl_r is None:
                 return
             stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -3904,7 +3977,9 @@ async def try_breakout_entry_async(symbol: str, price: float):
         return
 
     ensure_leverage(symbol, BYBIT_LEVERAGE)
+    order_send_ts = int(now_s())
     oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+    order_ack_ts = int(now_s())
 
     tr = TradeState(
         symbol=symbol,
@@ -3918,8 +3993,22 @@ async def try_breakout_entry_async(symbol: str, price: float):
     tr.strategy = "inplay_breakout"
     tr.avg = float(entry)
     tr.entry_price = float(entry)
-    tr.tp_price = float(tp_r)
+    tr.tp_price = float(tp_r) if tp_r is not None else None
     tr.sl_price = float(sl_r)
+    tr.signal_ts = int(signal_ts)
+    tr.order_send_ts = int(order_send_ts)
+    tr.order_ack_ts = int(order_ack_ts)
+    tr.runner_enabled = bool(use_runner)
+    if tr.runner_enabled:
+        tr.tps = [float(x) for x in (sig.tps or [])]
+        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+        tr.tp_hit = [False for _ in tr.tps]
+        tr.initial_qty = float(q)
+        tr.remaining_qty = float(q)
+        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+        tr.time_stop_sec = int(ts_bars * 300)
     TRADES[("Bybit", symbol)] = tr
 
     ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -3928,9 +4017,10 @@ async def try_breakout_entry_async(symbol: str, price: float):
     if ok:
         tr.tpsl_manual_lock = False
 
+    tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
     tg_trade(
         f"🟩 BREAKOUT ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
-        f"entry≈{entry:.6f} TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}\n"
+        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
         f"notional≈{notional_real:.2f}$ qty≈{q}\n"
         f"reason={sig.reason}"
     )
@@ -4413,7 +4503,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
 
         # ===== INPLAY runner management (partials + trailing + time stop) =====
         if (tr
-            and getattr(tr, "strategy", "") == "inplay"
+            and getattr(tr, "strategy", "") in ("inplay", "inplay_breakout")
             and getattr(tr, "status", None) == "OPEN"
             and getattr(tr, "runner_enabled", False)
             and p1 is not None
