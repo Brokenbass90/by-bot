@@ -1523,10 +1523,28 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             ax.axhline(lvl1, color="#64748b", linewidth=0.8, alpha=0.35)
             ax.axhline(lvl2, color="#64748b", linewidth=0.8, alpha=0.35)
 
+        # Inplay breakout reference level: prior 20-bar extreme before entry.
+        # This helps see if entry is taken right into local exhaustion.
+        if str(getattr(tr, "strategy", "")) == "inplay_breakout" and entry_idx is not None and entry_idx > 5:
+            lb = max(5, entry_idx - 20)
+            pre_high = max(highs[lb:entry_idx]) if highs[lb:entry_idx] else None
+            pre_low = min(lows[lb:entry_idx]) if lows[lb:entry_idx] else None
+            side = str(getattr(tr, "side", "")).lower()
+            if side == "buy" and pre_high is not None:
+                ax.axhline(pre_high, color="#a78bfa", linestyle=":", linewidth=1.0, alpha=0.9)
+                ax.text(len(seg) + 0.6, pre_high, "BRK_REF", color="#a78bfa", fontsize=8, va="center", ha="left")
+            if side == "sell" and pre_low is not None:
+                ax.axhline(pre_low, color="#a78bfa", linestyle=":", linewidth=1.0, alpha=0.9)
+                ax.text(len(seg) + 0.6, pre_low, "BRK_REF", color="#a78bfa", fontsize=8, va="center", ha="left")
+
         if entry_idx is not None and 0 <= entry_idx < len(closes):
-            ax.scatter([entry_idx], [closes[entry_idx]], color="#38bdf8", s=28, zorder=4)
+            side = str(getattr(tr, "side", "")).lower()
+            m = "^" if side == "buy" else "v"
+            ax.scatter([entry_idx], [closes[entry_idx]], color="#38bdf8", s=80, marker=m, zorder=5, edgecolors="#0f172a", linewidths=0.8)
         if exit_idx is not None and 0 <= exit_idx < len(closes):
-            ax.scatter([exit_idx], [closes[exit_idx]], color="#f59e0b", s=28, zorder=4)
+            side = str(getattr(tr, "side", "")).lower()
+            m = "v" if side == "buy" else "^"
+            ax.scatter([exit_idx], [closes[exit_idx]], color="#f59e0b", s=80, marker=m, zorder=5, edgecolors="#0f172a", linewidths=0.8)
 
         title = f"{sym} {getattr(tr, 'side', '')} [{getattr(tr, 'strategy', '')}] {stage}"
         if pnl is not None:
@@ -1538,6 +1556,15 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
         for spine in ax.spines.values():
             spine.set_color("#334155")
         ax.set_xlim(-1, len(seg) + 8)
+        legend_lines = [
+            ("#38bdf8", "ENTRY line"),
+            ("#22c55e", "TP line"),
+            ("#ef4444", "SL line"),
+            ("#f59e0b", "EXIT line"),
+        ]
+        for col, name in legend_lines:
+            ax.plot([], [], color=col, label=name, linewidth=1.4)
+        ax.legend(loc="upper right", facecolor="#111827", edgecolor="#334155", framealpha=0.9, fontsize=8, labelcolor="#e2e8f0")
 
         vol24h = sum(quotes) * 12.0
         info = [
