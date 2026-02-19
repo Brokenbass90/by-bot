@@ -1485,7 +1485,8 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             ax.axvline(idx, linestyle="--", linewidth=1.1, color=col, alpha=0.9, zorder=1)
             y_top = max(highs) if highs else 0.0
             if y_top > 0:
-                ax.text(idx + 0.2, y_top, label.upper(), color=col, fontsize=8, va="bottom", ha="left")
+                y_shift = (max(highs) - min(lows)) * (0.01 if label == "entry" else 0.03)
+                ax.text(idx + 0.2, y_top - y_shift, label.upper(), color=col, fontsize=8, va="bottom", ha="left")
             return idx
 
         entry_idx = _plot_vline(entry_id, "entry")
@@ -1525,26 +1526,31 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
 
         # Inplay breakout reference level: prior 20-bar extreme before entry.
         # This helps see if entry is taken right into local exhaustion.
+        brk_ref = None
         if str(getattr(tr, "strategy", "")) == "inplay_breakout" and entry_idx is not None and entry_idx > 5:
             lb = max(5, entry_idx - 20)
             pre_high = max(highs[lb:entry_idx]) if highs[lb:entry_idx] else None
             pre_low = min(lows[lb:entry_idx]) if lows[lb:entry_idx] else None
             side = str(getattr(tr, "side", "")).lower()
             if side == "buy" and pre_high is not None:
+                brk_ref = float(pre_high)
                 ax.axhline(pre_high, color="#a78bfa", linestyle=":", linewidth=1.0, alpha=0.9)
                 ax.text(len(seg) + 0.6, pre_high, "BRK_REF", color="#a78bfa", fontsize=8, va="center", ha="left")
             if side == "sell" and pre_low is not None:
+                brk_ref = float(pre_low)
                 ax.axhline(pre_low, color="#a78bfa", linestyle=":", linewidth=1.0, alpha=0.9)
                 ax.text(len(seg) + 0.6, pre_low, "BRK_REF", color="#a78bfa", fontsize=8, va="center", ha="left")
 
         if entry_idx is not None and 0 <= entry_idx < len(closes):
             side = str(getattr(tr, "side", "")).lower()
             m = "^" if side == "buy" else "v"
-            ax.scatter([entry_idx], [closes[entry_idx]], color="#38bdf8", s=80, marker=m, zorder=5, edgecolors="#0f172a", linewidths=0.8)
+            y_entry = entry_px if entry_px > 0 else closes[entry_idx]
+            ax.scatter([entry_idx], [y_entry], color="#38bdf8", s=80, marker=m, zorder=5, edgecolors="#0f172a", linewidths=0.8)
         if exit_idx is not None and 0 <= exit_idx < len(closes):
             side = str(getattr(tr, "side", "")).lower()
             m = "v" if side == "buy" else "^"
-            ax.scatter([exit_idx], [closes[exit_idx]], color="#f59e0b", s=80, marker=m, zorder=5, edgecolors="#0f172a", linewidths=0.8)
+            y_exit = float(exit_px) if exit_px is not None else closes[exit_idx]
+            ax.scatter([exit_idx], [y_exit], color="#f59e0b", s=80, marker=m, zorder=5, edgecolors="#0f172a", linewidths=0.8)
 
         title = f"{sym} {getattr(tr, 'side', '')} [{getattr(tr, 'strategy', '')}] {stage}"
         if pnl is not None:
@@ -1567,12 +1573,37 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
         ax.legend(loc="upper right", facecolor="#111827", edgecolor="#334155", framealpha=0.9, fontsize=8, labelcolor="#e2e8f0")
 
         vol24h = sum(quotes) * 12.0
+        mfe_txt = "-"
+        mae_txt = "-"
+        late_txt = "-"
+        if entry_px > 0 and entry_idx is not None and 0 <= entry_idx < len(seg):
+            h1 = min(len(seg), entry_idx + 13)  # 1h on 5m bars
+            w_high = max(highs[entry_idx:h1]) if entry_idx < h1 else entry_px
+            w_low = min(lows[entry_idx:h1]) if entry_idx < h1 else entry_px
+            side = str(getattr(tr, "side", "")).lower()
+            if side == "sell":
+                mfe = (entry_px - w_low) / max(entry_px, 1e-9) * 100.0
+                mae = (entry_px - w_high) / max(entry_px, 1e-9) * 100.0
+            else:
+                mfe = (w_high - entry_px) / max(entry_px, 1e-9) * 100.0
+                mae = (w_low - entry_px) / max(entry_px, 1e-9) * 100.0
+            mfe_txt = f"{mfe:+.2f}%"
+            mae_txt = f"{mae:+.2f}%"
+            if brk_ref is not None and brk_ref > 0:
+                if side == "sell":
+                    late = (brk_ref - entry_px) / brk_ref * 100.0
+                else:
+                    late = (entry_px - brk_ref) / brk_ref * 100.0
+                late_txt = f"{late:+.2f}%"
         info = [
             f"Entry: {entry_px:.6f}" if entry_px > 0 else "Entry: -",
             f"Exit: {float(exit_px):.6f}" if exit_px is not None else "Exit: -",
             f"TP: {float(tp):.6f}" if tp is not None else "TP: -",
             f"SL: {float(sl):.6f}" if sl is not None else "SL: -",
             f"PnL: {float(pnl):+.4f}" if pnl is not None else "PnL: -",
+            f"MFE(1h): {mfe_txt}",
+            f"MAE(1h): {mae_txt}",
+            f"Late vs BRK_REF: {late_txt}",
             f"Vol(24h est): {vol24h:,.0f}",
         ]
         ax.text(
