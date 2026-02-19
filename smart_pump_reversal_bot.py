@@ -981,6 +981,59 @@ def _get_last_close_event(symbol: str | None = None) -> dict | None:
         log_error(f"plotlast query failed: {e}")
         return None
 
+def _get_close_event_by_ts(symbol: str, close_ts: int) -> dict | None:
+    if not os.path.exists(TRADE_DB_PATH):
+        return None
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            cur = con.execute(
+                """
+                SELECT ts, symbol, side, strategy, entry_price, exit_price, tp_price, sl_price, pnl, reason
+                FROM trade_events
+                WHERE event='CLOSE' AND symbol=? AND ts<=?
+                ORDER BY ts DESC
+                LIMIT 1
+                """,
+                (str(symbol).upper(), int(close_ts)),
+            )
+            row = cur.fetchone()
+            if not row:
+                return None
+            close_ts_r, sym, side, strategy, entry_px, exit_px, tp, sl, pnl, reason = row
+            entry_ts = None
+            try:
+                ecur = con.execute(
+                    """
+                    SELECT ts
+                    FROM trade_events
+                    WHERE event='ENTRY' AND symbol=? AND side=? AND strategy=? AND ts<=?
+                    ORDER BY ts DESC
+                    LIMIT 1
+                    """,
+                    (str(sym).upper(), str(side or ""), str(strategy or ""), int(close_ts_r or 0)),
+                )
+                erow = ecur.fetchone()
+                if erow:
+                    entry_ts = int(erow[0])
+            except Exception:
+                entry_ts = None
+            return {
+                "close_ts": int(close_ts_r or 0),
+                "entry_ts": int(entry_ts or 0),
+                "symbol": str(sym).upper(),
+                "side": str(side or "Buy"),
+                "strategy": str(strategy or ""),
+                "entry_price": float(entry_px or 0.0),
+                "exit_price": float(exit_px or 0.0),
+                "tp_price": float(tp) if tp is not None else None,
+                "sl_price": float(sl) if sl is not None else None,
+                "pnl": float(pnl) if pnl is not None else None,
+                "reason": str(reason or ""),
+            }
+    except Exception as e:
+        log_error(f"plotts query failed: {e}")
+        return None
+
 def _handle_tg_command(text: str):
     global TRADE_ON, RISK_PER_TRADE_PCT, BOT_CAPITAL_USD, MAX_POSITIONS
 
@@ -1004,6 +1057,7 @@ def _handle_tg_command(text: str):
             "• /stats [7|30|90|365] — отчёт за период\n"
             "• /health — killers/winners + критерии фильтра\n"
             "• /plotlast [SYM] — график последней закрытой сделки\n"
+            "• /plotts SYM TS — график закрытия по timestamp\n"
             "• /banreco — рекомендации бан-листа\n"
             "• /banapply — применить последние рекомендации\n"
             "• /banlist — текущие фильтры\n"
@@ -1145,7 +1199,51 @@ def _handle_tg_command(text: str):
         pnl_txt = f"{float(pnl):+.4f}" if pnl is not None else "n/a"
         cap = (
             f"plotlast {ev['symbol']} {ev['side']} [{ev.get('strategy','')}]\n"
-            f"close={dt} pnl={pnl_txt} reason={ev.get('reason','')}"
+            f"close={dt} pnl={pnl_txt} reason={ev.get('reason','')}\n"
+            f"lines: cyan=ENTRY green=TP red=SL orange=EXIT"
+        )
+        tg_send_photo(png, caption=cap)
+        return
+
+    if name == "/plotts":
+        if len(cmd) < 3:
+            _tg_reply("Usage: /plotts SYMBOL CLOSE_TS")
+            return
+        req_sym = str(cmd[1]).upper().strip()
+        try:
+            req_ts = int(float(cmd[2]))
+        except Exception:
+            _tg_reply("Usage: /plotts SYMBOL CLOSE_TS")
+            return
+        ev = _get_close_event_by_ts(req_sym, req_ts)
+        if not ev:
+            _tg_reply("Сделка не найдена. Проверь SYMBOL/TS.")
+            return
+        tr = TradeState(symbol=ev["symbol"], side=ev["side"], strategy=ev["strategy"])
+        tr.entry_ts = int(ev.get("entry_ts") or 0)
+        tr.exit_ts = int(ev.get("close_ts") or 0)
+        tr.avg = float(ev.get("entry_price") or 0.0)
+        tr.entry_price = float(ev.get("entry_price") or 0.0)
+        tr.tp_price = ev.get("tp_price")
+        tr.sl_price = ev.get("sl_price")
+        png = _make_trade_chart(
+            ev["symbol"],
+            tr,
+            stage="close",
+            pnl=ev.get("pnl"),
+            exit_px=ev.get("exit_price"),
+        )
+        if not png:
+            _tg_reply("Не удалось построить график (нет 5m баров).")
+            return
+        close_ts = int(ev.get("close_ts") or 0)
+        dt = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime(close_ts)) if close_ts > 0 else "-"
+        pnl = ev.get("pnl")
+        pnl_txt = f"{float(pnl):+.4f}" if pnl is not None else "n/a"
+        cap = (
+            f"plotts {ev['symbol']} {ev['side']} [{ev.get('strategy','')}]\n"
+            f"close={dt} pnl={pnl_txt} reason={ev.get('reason','')}\n"
+            f"lines: cyan=ENTRY green=TP red=SL orange=EXIT"
         )
         tg_send_photo(png, caption=cap)
         return
@@ -1385,6 +1483,9 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             idx = min(range(len(seg_ids)), key=lambda i: abs(seg_ids[i] - target_id))
             col = "#38bdf8" if label == "entry" else "#f59e0b"
             ax.axvline(idx, linestyle="--", linewidth=1.1, color=col, alpha=0.9, zorder=1)
+            y_top = max(highs) if highs else 0.0
+            if y_top > 0:
+                ax.text(idx + 0.2, y_top, label.upper(), color=col, fontsize=8, va="bottom", ha="left")
             return idx
 
         entry_idx = _plot_vline(entry_id, "entry")
@@ -1395,14 +1496,22 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
         entry_px = float(getattr(tr, "avg", 0) or getattr(tr, "entry_price", 0) or 0)
         tp = getattr(tr, "tp_price", None)
         sl = getattr(tr, "sl_price", None)
+        x_lbl = len(seg) + 0.6
         if entry_px > 0:
             ax.axhline(entry_px, linestyle="-", linewidth=1.0, color="#38bdf8", alpha=0.75)
+            ax.text(x_lbl, entry_px, "ENTRY", color="#38bdf8", fontsize=8, va="center", ha="left")
         if tp is not None:
-            ax.axhline(float(tp), linestyle="--", linewidth=1.0, color="#22c55e", alpha=0.8)
+            tp_v = float(tp)
+            ax.axhline(tp_v, linestyle="--", linewidth=1.0, color="#22c55e", alpha=0.8)
+            ax.text(x_lbl, tp_v, "TP", color="#22c55e", fontsize=8, va="center", ha="left")
         if sl is not None:
-            ax.axhline(float(sl), linestyle="--", linewidth=1.0, color="#ef4444", alpha=0.8)
+            sl_v = float(sl)
+            ax.axhline(sl_v, linestyle="--", linewidth=1.0, color="#ef4444", alpha=0.8)
+            ax.text(x_lbl, sl_v, "SL", color="#ef4444", fontsize=8, va="center", ha="left")
         if exit_px is not None:
-            ax.axhline(float(exit_px), linestyle="-.", linewidth=1.0, color="#f59e0b", alpha=0.75)
+            ex_v = float(exit_px)
+            ax.axhline(ex_v, linestyle="-.", linewidth=1.0, color="#f59e0b", alpha=0.75)
+            ax.text(x_lbl, ex_v, "EXIT", color="#f59e0b", fontsize=8, va="center", ha="left")
 
         # Context levels (simple SR from window)
         sr_hi = max(highs) if highs else None
@@ -1428,6 +1537,7 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
         ax.tick_params(colors="#94a3b8")
         for spine in ax.spines.values():
             spine.set_color("#334155")
+        ax.set_xlim(-1, len(seg) + 8)
 
         vol24h = sum(quotes) * 12.0
         info = [
