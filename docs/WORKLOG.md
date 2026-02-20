@@ -140,6 +140,7 @@
 - 2026-02-19 09:58 UTC | viz | trade chart v3: фиксация рассинхрона marker/line (маркеры теперь на фактических entry/exit ценах), добавлены MFE/MAE(1h) и Late vs BRK_REF в инфоблок для быстрой диагностики качества входа | done
 - 2026-02-19 10:20 UTC | breakout | inplay_breakout: добавлены anti-late/anti-fomo guards (late_vs_ref + min pullback), включен runner-режим выходов для breakout (partials+trail), добавлен timing-лог (sig→send, send→fill, fill→close) в ENTRY/CLOSE уведомления | done
 - 2026-02-19 10:28 UTC | analytics | добавлен scripts/monthly_pnl.py для помесячного среза trades.csv (trades/winrate/net/PF + overall max_dd_usdt) | done
+- 2026-02-20 16:20 UTC | filters | добавлен scripts/update_filters_from_trades.py: strategy-aware denylist из trades.csv (min-trades/max-net, dry-run), для обновления per_strategy фильтров | done
 
 ## 2026-02-18 — Стратегический план (долгий горизонт)
 - Цель проекта: дотянуть систему до самообучаемого торгового контура с контролем риска и регулярной переоценкой качества сигналов.
