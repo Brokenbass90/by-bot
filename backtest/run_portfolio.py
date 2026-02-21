@@ -58,6 +58,7 @@ from strategies.momentum_continuation import MomentumContinuationStrategy
 from strategies.trend_pullback import TrendPullbackStrategy
 from strategies.trend_regime_breakout import TrendRegimeBreakoutStrategy
 from strategies.vol_breakout import VolatilityBreakoutStrategy
+from strategies.adaptive_range_short import AdaptiveRangeShortStrategy
 
 
 def _parse_end(s: Optional[str]) -> int:
@@ -160,8 +161,8 @@ def main():
                     help="Comma-separated symbols to exclude from the auto universe.")
     ap.add_argument(
         "--strategies",
-        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout",
-        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout",
+        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short",
+        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short",
     )
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--end", default="", help="YYYY-MM-DD (UTC)")
@@ -185,7 +186,7 @@ def main():
         raise SystemExit("No symbols selected. Provide --symbols or relax --min_volume_usd/--top_n.")
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
-    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_breakout", "vol_breakout"}
+    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_breakout", "vol_breakout", "adaptive_range_short"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -212,6 +213,7 @@ def main():
     trend_pullback = {sym: TrendPullbackStrategy() for sym in symbols} if "trend_pullback" in strategies else {}
     trend_breakout = {sym: TrendRegimeBreakoutStrategy() for sym in symbols} if "trend_breakout" in strategies else {}
     vol_breakout = {sym: VolatilityBreakoutStrategy() for sym in symbols} if "vol_breakout" in strategies else {}
+    adaptive_range_short = {sym: AdaptiveRangeShortStrategy() for sym in symbols} if "adaptive_range_short" in strategies else {}
 
     def selector(sym: str, store: KlineStore, ts_ms: int, last_price: float):
         # IMPORTANT: first-match wins (priority = order in --strategies)
@@ -263,6 +265,12 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = vol_breakout[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "adaptive_range_short":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = adaptive_range_short[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             else:
                 sig = None
             if sig is not None:

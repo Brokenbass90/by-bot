@@ -155,3 +155,4 @@
 - 2026-02-20 19:06 UTC | filters | combo deny (v7a+v8+v9): deny BCH/ESP/FARTCOIN/INJ/RAVE; v10 360d net=+26.79 PF=20.37 DD=0.52% | done
 - 2026-02-20 23:58 UTC | robustness | v10 окна: 120d +6.69, 180d +7.27, 240d +8.76, 300d +8.18; есть убыточные месяцы в отдельных окнах, но net>0 на всех | done
 - 2026-02-20 23:59 UTC | baseline | зафиксирован baseline inplay_v10_combo_deny_360d в baselines/ + snapshot filters + commit e6d6e28 | done
+- 2026-02-21 00:20 UTC | range-short | старт блока adaptive_range_short: добавлен новый модуль стратегии и интеграция в run_portfolio CLI/selector | in_progress
