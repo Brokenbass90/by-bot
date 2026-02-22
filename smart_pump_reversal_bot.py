@@ -651,6 +651,7 @@ KILLER_GUARD_MIN_TRADES = int(os.getenv("KILLER_GUARD_MIN_TRADES", "3"))
 KILLER_GUARD_MAX_NET_PNL = float(os.getenv("KILLER_GUARD_MAX_NET_PNL", "-0.8"))
 KILLER_GUARD_STRATEGIES = os.getenv("KILLER_GUARD_STRATEGIES", "inplay_breakout").strip()
 KILLER_GUARD_REFRESH_SEC = int(os.getenv("KILLER_GUARD_REFRESH_SEC", "600"))
+KILLER_GUARD_LOG_EVERY_SEC = int(os.getenv("KILLER_GUARD_LOG_EVERY_SEC", "300"))
 
 LAST_RECO_SYMBOLS: list[str] = []
 LAST_FILTER_BUILD_TS = 0
@@ -3663,6 +3664,7 @@ _BREAKOUT_LAST_TRY = {}         # symbol -> ts
 _RETEST_LAST_TRY = {}           # symbol -> ts
 _BREAKOUT_COOLDOWN_UNTIL = {}   # symbol -> ts
 _BREAKOUT_COOLDOWN_LOG_TS = {}  # symbol -> ts
+_KILLER_GUARD_LOG_TS = {}       # symbol -> ts
 
 async def try_range_entry_async(symbol: str, price: float):
     if not ENABLE_RANGE_TRADING:
@@ -3864,7 +3866,10 @@ async def try_breakout_entry_async(symbol: str, price: float):
     if KILLER_GUARD_ENABLE:
         banned = _refresh_killer_guard_cache()
         if symbol in banned:
-            tg_trade(f"🟡 BREAKOUT SKIP {symbol}: killer-guard (recent net<= {KILLER_GUARD_MAX_NET_PNL})")
+            last_log = int(_KILLER_GUARD_LOG_TS.get(symbol, 0) or 0)
+            if now - last_log >= max(30, int(KILLER_GUARD_LOG_EVERY_SEC)):
+                tg_trade(f"🟡 BREAKOUT SKIP {symbol}: killer-guard (recent net<= {KILLER_GUARD_MAX_NET_PNL})")
+                _KILLER_GUARD_LOG_TS[symbol] = now
             return
 
     last = int(_BREAKOUT_LAST_TRY.get(symbol, 0) or 0)
