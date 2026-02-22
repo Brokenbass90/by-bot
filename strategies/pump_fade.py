@@ -20,6 +20,29 @@ def ema(values: List[float], period: int) -> float:
     return e
 
 
+
+
+def _env_float(name: str, default: float) -> float:
+    import os
+    v = os.getenv(name)
+    if v is None or not str(v).strip():
+        return default
+    try:
+        return float(str(v).strip())
+    except Exception:
+        return default
+
+
+def _env_int(name: str, default: int) -> int:
+    import os
+    v = os.getenv(name)
+    if v is None or not str(v).strip():
+        return default
+    try:
+        return int(str(v).strip())
+    except Exception:
+        return default
+
 def rsi(values: List[float], period: int = 14) -> float:
     if len(values) < period + 1:
         return float("nan")
@@ -63,6 +86,18 @@ class PumpFadeStrategy:
 
     def __init__(self, cfg: Optional[PumpFadeConfig] = None):
         self.cfg = cfg or PumpFadeConfig()
+
+        # Optional env overrides for fast parameter sweeps in portfolio backtests
+        self.cfg.interval_min = _env_int("PF_INTERVAL_MIN", self.cfg.interval_min)
+        self.cfg.pump_window_min = _env_int("PF_PUMP_WINDOW_MIN", self.cfg.pump_window_min)
+        self.cfg.pump_threshold_pct = _env_float("PF_PUMP_THRESHOLD_PCT", self.cfg.pump_threshold_pct)
+        self.cfg.rsi_overbought = _env_float("PF_RSI_OVERBOUGHT", self.cfg.rsi_overbought)
+        self.cfg.ema_period = _env_int("PF_EMA_PERIOD", self.cfg.ema_period)
+        self.cfg.peak_lookback_min = _env_int("PF_PEAK_LOOKBACK_MIN", self.cfg.peak_lookback_min)
+        self.cfg.stop_buffer_pct = _env_float("PF_STOP_BUFFER_PCT", self.cfg.stop_buffer_pct)
+        self.cfg.rr = _env_float("PF_RR", self.cfg.rr)
+        self.cfg.cooldown_bars = _env_int("PF_COOLDOWN_BARS", self.cfg.cooldown_bars)
+
         self._closes: List[float] = []
         self._highs: List[float] = []
         self._lows: List[float] = []
