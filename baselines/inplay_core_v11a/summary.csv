@@ -1,0 +1,2 @@
+tag,days,end_date_utc,symbols,strategies,starting_equity,ending_equity,trades,net_pnl,profit_factor,winrate,avg_win,avg_loss,max_drawdown
+inplay_core_v11a_360d,360,2026-02-22,BTCUSDT;ETHUSDT;SOLUSDT;XRPUSDT;ENSOUSDT;PIPPINUSDT;AZTECUSDT;1000PEPEUSDT;DOGEUSDT;HYPEUSDT;BCHUSDT;AGLDUSDT;KITEUSDT;ESPUSDT;INJUSDT,inplay_breakout,100.00,112.70,23,12.70,11.844,0.739,0.8162,-0.1952,0.6932
