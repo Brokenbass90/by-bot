@@ -40,7 +40,14 @@ def _http_get_json(url: str, timeout_sec: float = 20.0) -> dict:
         raise RuntimeError(f"Failed to decode JSON from Bybit (len={len(raw)}): {e}") from e
 
 
-def fetch_klines(symbol: str, interval: str, start_ms: int, end_ms: int, limit: int = 200):
+def fetch_klines(
+    symbol: str,
+    interval: str,
+    start_ms: int,
+    end_ms: int,
+    limit: int = 200,
+    base: str = "https://api.bybit.com",
+):
     """Fetch klines from Bybit public API (v5).
     Interval examples: 1,3,5,15,30,60,120,240 (minutes).
     """
@@ -57,7 +64,7 @@ def fetch_klines(symbol: str, interval: str, start_ms: int, end_ms: int, limit: 
             "end": str(int(cursor_end)),
             "limit": str(int(limit)),
         }
-        url = BYBIT_BASE + "/v5/market/kline?" + urllib.parse.urlencode(params)
+        url = base.rstrip("/") + "/v5/market/kline?" + urllib.parse.urlencode(params)
         js = _http_get_json(url)
 
         if js.get("retCode") not in (0, "0", None):

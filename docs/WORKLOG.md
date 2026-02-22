@@ -159,3 +159,4 @@
 - 2026-02-22 12:15 UTC | pump_fade | добавлены env-overrides (PF_*) для быстрого тюнинга без правок кода | done
 - 2026-02-22 18:30 UTC | pump_fade | v6 logicfix: added level/reversal gates (entry min/max drop, bearish body confirms), runner exits (partials+ATR trail+time-stop) via PF_* envs | done
 - 2026-02-22 18:58 UTC | pump_fade | baseline fixed: pf_v4c_240d (net=+7.81, PF=1.883, DD=3.77, ~+0.98%%/month over 240d) | done
+- 2026-02-22 19:10 UTC | pump_fade | v7 spike-only mode added (PF_SPIKE_ONLY + spike thresholds/last-leg gate); fixed scripts/plot_trade_bybit.py base URL bug for backtest trade visualization | done

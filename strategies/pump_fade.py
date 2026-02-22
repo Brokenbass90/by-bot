@@ -43,6 +43,46 @@ def _env_int(name: str, default: int) -> int:
     except Exception:
         return default
 
+
+def _env_bool(name: str, default: bool) -> bool:
+    import os
+    v = os.getenv(name)
+    if v is None or not str(v).strip():
+        return default
+    s = str(v).strip().lower()
+    return s in {"1", "true", "yes", "on"}
+
+
+def _env_float_list(name: str, default: List[float]) -> List[float]:
+    import os
+    raw = os.getenv(name)
+    if raw is None or not str(raw).strip():
+        return list(default)
+    out: List[float] = []
+    for part in str(raw).split(","):
+        s = part.strip()
+        if not s:
+            continue
+        try:
+            out.append(float(s))
+        except Exception:
+            return list(default)
+    return out or list(default)
+
+
+def _atr_last(highs: List[float], lows: List[float], closes: List[float], period: int = 14) -> float:
+    if len(highs) < period + 1 or len(lows) < period + 1 or len(closes) < period + 1:
+        return float("nan")
+    trs: List[float] = []
+    for i in range(-period, 0):
+        hi = highs[i]
+        lo = lows[i]
+        pc = closes[i - 1]
+        tr = max(hi - lo, abs(hi - pc), abs(lo - pc))
+        trs.append(max(0.0, tr))
+    return sum(trs) / float(period) if trs else float("nan")
+
+
 def rsi(values: List[float], period: int = 14) -> float:
     if len(values) < period + 1:
         return float("nan")
@@ -75,6 +115,19 @@ class PumpFadeConfig:
     rr: float = 1.6
 
     cooldown_bars: int = 24  # don't re-enter for N bars after a trade
+    entry_max_drop_pct: float = 0.08  # reject entries too late from pump peak
+    entry_min_drop_pct: float = 0.005  # reject ultra-early entries before actual pullback
+    reversal_body_min_frac: float = 0.45  # candle body / candle range
+    confirm_bars: int = 2  # require N bearish confirmation bars
+    time_stop_bars: int = 48
+    trailing_atr_mult: float = 1.4
+    trailing_atr_period: int = 14
+    partial_rs: Optional[List[float]] = None
+    partial_fracs: Optional[List[float]] = None
+    spike_only: bool = False
+    spike_threshold_pct: float = 0.10
+    spike_last_leg_bars: int = 6
+    spike_last_leg_min_pct: float = 0.025
 
 
 class PumpFadeStrategy:
@@ -97,7 +150,30 @@ class PumpFadeStrategy:
         self.cfg.stop_buffer_pct = _env_float("PF_STOP_BUFFER_PCT", self.cfg.stop_buffer_pct)
         self.cfg.rr = _env_float("PF_RR", self.cfg.rr)
         self.cfg.cooldown_bars = _env_int("PF_COOLDOWN_BARS", self.cfg.cooldown_bars)
+        self.cfg.entry_max_drop_pct = _env_float("PF_ENTRY_MAX_DROP_PCT", self.cfg.entry_max_drop_pct)
+        self.cfg.entry_min_drop_pct = _env_float("PF_ENTRY_MIN_DROP_PCT", self.cfg.entry_min_drop_pct)
+        self.cfg.reversal_body_min_frac = _env_float("PF_REVERSAL_BODY_MIN_FRAC", self.cfg.reversal_body_min_frac)
+        self.cfg.confirm_bars = _env_int("PF_CONFIRM_BARS", self.cfg.confirm_bars)
+        self.cfg.time_stop_bars = _env_int("PF_TIME_STOP_BARS", self.cfg.time_stop_bars)
+        self.cfg.trailing_atr_mult = _env_float("PF_TRAIL_ATR_MULT", self.cfg.trailing_atr_mult)
+        self.cfg.trailing_atr_period = _env_int("PF_TRAIL_ATR_PERIOD", self.cfg.trailing_atr_period)
+        self.cfg.partial_rs = _env_float_list("PF_PARTIAL_RS", [0.9, 1.8, 3.0])
+        self.cfg.partial_fracs = _env_float_list("PF_PARTIAL_FRACS", [0.40, 0.30, 0.30])
+        self.cfg.spike_only = _env_bool("PF_SPIKE_ONLY", self.cfg.spike_only)
+        self.cfg.spike_threshold_pct = _env_float("PF_SPIKE_THRESHOLD_PCT", self.cfg.spike_threshold_pct)
+        self.cfg.spike_last_leg_bars = _env_int("PF_SPIKE_LAST_LEG_BARS", self.cfg.spike_last_leg_bars)
+        self.cfg.spike_last_leg_min_pct = _env_float("PF_SPIKE_LAST_LEG_MIN_PCT", self.cfg.spike_last_leg_min_pct)
 
+        if not self.cfg.partial_rs:
+            self.cfg.partial_rs = [self.cfg.rr]
+        if len(self.cfg.partial_fracs or []) != len(self.cfg.partial_rs):
+            self.cfg.partial_fracs = [1.0 / float(len(self.cfg.partial_rs))] * len(self.cfg.partial_rs)
+
+        fr_sum = sum(self.cfg.partial_fracs or [])
+        if fr_sum > 1.000001:
+            self.cfg.partial_fracs = [x / fr_sum for x in (self.cfg.partial_fracs or [1.0])]
+
+        self._opens: List[float] = []
         self._closes: List[float] = []
         self._highs: List[float] = []
         self._lows: List[float] = []
@@ -105,6 +181,7 @@ class PumpFadeStrategy:
         self._pumped_flag: bool = False
 
     def on_bar(self, symbol: str, o: float, h: float, l: float, c: float) -> Optional[TradeSignal]:
+        self._opens.append(o)
         self._closes.append(c)
         self._highs.append(h)
         self._lows.append(l)
@@ -122,6 +199,12 @@ class PumpFadeStrategy:
         if base <= 0:
             return None
         move_pct = (c / base) - 1.0
+        leg_bars = max(1, int(self.cfg.spike_last_leg_bars))
+        if len(self._closes) > leg_bars:
+            leg_base = self._closes[-leg_bars - 1]
+            leg_pct = ((c / leg_base) - 1.0) if leg_base > 0 else 0.0
+        else:
+            leg_pct = 0.0
 
         # Pump detection
         if move_pct >= self.cfg.pump_threshold_pct:
@@ -130,7 +213,11 @@ class PumpFadeStrategy:
         if not self._pumped_flag:
             return None
 
-        # Reversal confirmation: close below EMA after pump AND RSI was overbought recently
+        if self.cfg.spike_only:
+            if not (move_pct >= self.cfg.spike_threshold_pct and leg_pct >= self.cfg.spike_last_leg_min_pct):
+                return None
+
+        # Reversal confirmation: pump + overbought + near peak + bearish confirmation
         ema_now = ema(self._closes[-(self.cfg.ema_period * 4):], self.cfg.ema_period)
         rsi_now = rsi(self._closes, 14)
 
@@ -138,38 +225,89 @@ class PumpFadeStrategy:
         peak_high = max(self._highs[-peak_bars:])
 
         # if price already collapsed too far, skip (avoid late entries)
-        if peak_high > 0 and (peak_high - c) / peak_high > 0.08:
+        if peak_high <= 0:
             self._pumped_flag = False
+            return None
+        peak_drop = (peak_high - c) / peak_high
+        if peak_drop > self.cfg.entry_max_drop_pct:
+            self._pumped_flag = False
+            return None
+        if peak_drop < self.cfg.entry_min_drop_pct:
             return None
 
         if not (rsi_now >= self.cfg.rsi_overbought):
             return None
 
-        # reversal trigger
-        if math.isfinite(ema_now) and c < ema_now and c < self._closes[-2]:
-            entry = c
-            sl = peak_high * (1.0 + self.cfg.stop_buffer_pct)
-            if sl <= entry:
-                self._pumped_flag = False
-                return None
-            tp = entry - self.cfg.rr * (sl - entry)
-            if tp <= 0:
-                self._pumped_flag = False
-                return None
+        # Reversal trigger.
+        # 1) close under EMA
+        # 2) last N bars are bearish with meaningful body
+        # 3) close structure is non-increasing across confirmations
+        confirm_n = max(1, int(self.cfg.confirm_bars))
+        if len(self._closes) < confirm_n + 1 or len(self._opens) < confirm_n:
+            return None
+        if not (math.isfinite(ema_now) and c < ema_now):
+            return None
 
-            self._cooldown = self.cfg.cooldown_bars
+        bearish_ok = True
+        for i in range(1, confirm_n + 1):
+            oi = self._opens[-i]
+            ci = self._closes[-i]
+            hi = self._highs[-i]
+            li = self._lows[-i]
+            rng = max(1e-12, hi - li)
+            body_frac = abs(ci - oi) / rng
+            if not (ci < oi and body_frac >= self.cfg.reversal_body_min_frac):
+                bearish_ok = False
+                break
+            if i > 1 and self._closes[-i] < self._closes[-(i - 1)]:
+                bearish_ok = False
+                break
+        if not bearish_ok:
+            return None
+
+        entry = c
+        sl = peak_high * (1.0 + self.cfg.stop_buffer_pct)
+        if sl <= entry:
             self._pumped_flag = False
+            return None
 
-            sig = TradeSignal(
-                strategy="pump_fade",
-                symbol=symbol,
-                side="short",
-                entry=entry,
-                sl=sl,
-                tp=tp,
-                reason=f"pump {move_pct*100:.1f}%/{self.cfg.pump_window_min}m then reversal",
-            )
-            return sig if sig.validate() else None
+        risk = (sl - entry)
+        if risk <= 0:
+            self._pumped_flag = False
+            return None
+
+        tps = []
+        for r in (self.cfg.partial_rs or [self.cfg.rr]):
+            tpv = entry - float(r) * risk
+            if tpv > 0:
+                tps.append(float(tpv))
+        if not tps:
+            self._pumped_flag = False
+            return None
+        tps = sorted(set(tps), reverse=True)
+        tp = float(tps[-1])
+
+        atr_now = _atr_last(self._highs, self._lows, self._closes, max(5, int(self.cfg.trailing_atr_period)))
+        trail_mult = float(self.cfg.trailing_atr_mult) if math.isfinite(atr_now) and atr_now > 0 else 0.0
+
+        self._cooldown = self.cfg.cooldown_bars
+        self._pumped_flag = False
+
+        sig = TradeSignal(
+            strategy="pump_fade",
+            symbol=symbol,
+            side="short",
+            entry=entry,
+            sl=sl,
+            tp=tp,
+            tps=tps,
+            tp_fracs=self.cfg.partial_fracs,
+            trailing_atr_mult=trail_mult,
+            trailing_atr_period=max(5, int(self.cfg.trailing_atr_period)),
+            time_stop_bars=max(0, int(self.cfg.time_stop_bars)),
+            reason=f"pump {move_pct*100:.1f}%/{self.cfg.pump_window_min}m leg={leg_pct*100:.1f}% then reversal;confirm={confirm_n}",
+        )
+        return sig if sig.validate() else None
 
         return None
 
