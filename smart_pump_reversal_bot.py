@@ -621,6 +621,9 @@ TG_COMMANDS_ENABLE = os.getenv("TG_COMMANDS_ENABLE", "1").strip() == "1"
 REPORTS_ENABLE = os.getenv("REPORTS_ENABLE", "1").strip() == "1"
 REPORTS_SEND_ON_START = os.getenv("REPORTS_SEND_ON_START", "0").strip() == "1"
 REPORTS_OUT_DIR = os.getenv("REPORTS_OUT_DIR", "/tmp").strip() or "/tmp"
+REPORTS_STATE_PATH = os.getenv("REPORTS_STATE_PATH", "/tmp/bybot_reports_state.json").strip() or "/tmp/bybot_reports_state.json"
+STRATEGY_STATS_TG_EVERY_SEC = int(os.getenv("STRATEGY_STATS_TG_EVERY_SEC", "3600"))
+STRATEGY_STATS_LOOKBACK_H = int(os.getenv("STRATEGY_STATS_LOOKBACK_H", "24"))
 TRADE_CHARTS_ENABLE = os.getenv("TRADE_CHARTS_ENABLE", "1").strip() == "1"
 TRADE_CHARTS_SEND_ON_ENTRY = os.getenv("TRADE_CHARTS_SEND_ON_ENTRY", "1").strip() == "1"
 TRADE_CHARTS_SEND_ON_CLOSE = os.getenv("TRADE_CHARTS_SEND_ON_CLOSE", "1").strip() == "1"
@@ -1346,6 +1349,67 @@ def _save_report_state(state: Dict[str, int]) -> None:
             json.dump(state, f)
     except Exception:
         pass
+
+
+def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
+    since_ts = int(time.time()) - max(1, int(lookback_hours)) * 3600
+    by_strategy: dict[str, dict] = {}
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            cur = con.cursor()
+            cur.execute(
+                """
+                SELECT strategy,
+                       SUM(CASE WHEN event='ENTRY' THEN 1 ELSE 0 END) AS entries,
+                       SUM(CASE WHEN event='CLOSE' THEN 1 ELSE 0 END) AS closes,
+                       SUM(CASE WHEN event='CLOSE' THEN COALESCE(pnl, 0.0) ELSE 0.0 END) AS net
+                  FROM trade_log
+                 WHERE ts >= ?
+                 GROUP BY strategy
+                """,
+                (since_ts,),
+            )
+            for st, e_cnt, c_cnt, net in cur.fetchall():
+                name = str(st or "unknown")
+                by_strategy[name] = {
+                    "entries": int(e_cnt or 0),
+                    "closes": int(c_cnt or 0),
+                    "net": float(net or 0.0),
+                    "open": 0,
+                }
+    except Exception as e:
+        return f"📊 strategy-stats error: {e}"
+
+    for tr in list(TRADES.values()):
+        st_name = str(getattr(tr, "strategy", "") or "unknown")
+        slot = by_strategy.setdefault(st_name, {"entries": 0, "closes": 0, "net": 0.0, "open": 0})
+        if getattr(tr, "status", "") in ("OPEN", "PENDING_ENTRY"):
+            slot["open"] += 1
+
+    enabled = [
+        f"breakout={ENABLE_BREAKOUT_TRADING}",
+        f"pump_fade={ENABLE_PUMP_FADE_TRADING}",
+        f"inplay={ENABLE_INPLAY_TRADING}",
+        f"retest={ENABLE_RETEST_TRADING}",
+        f"range={ENABLE_RANGE_TRADING}",
+    ]
+    lines = [
+        "🧠 strategies: " + " | ".join(enabled),
+        f"📊 stats ({max(1, int(lookback_hours))}h):",
+    ]
+    if not by_strategy:
+        lines.append(" - no events")
+        return "\n".join(lines)
+
+    def _score(item: tuple[str, dict]) -> tuple[float, int]:
+        d = item[1]
+        return (float(d.get("net", 0.0)), int(d.get("closes", 0)))
+
+    for st_name, d in sorted(by_strategy.items(), key=_score, reverse=True):
+        lines.append(
+            f" - {st_name}: entry={d['entries']} close={d['closes']} open={d['open']} net={d['net']:+.4f}"
+        )
+    return "\n".join(lines)
 
 def _fetch_5m_bars_bybit(sym: str, start_ts: int | None = None, end_ts: int | None = None) -> list[dict]:
     out: list[dict] = []
@@ -5172,6 +5236,14 @@ def auth_check_all_accounts():
         lines.append(f"🤖 Торговый аккаунт: {TRADE_CLIENT.name}")
     else:
         lines.append("🤖 Торговый аккаунт: не выбран/нет ключей")
+    lines.append(
+        "🧠 strategies: "
+        f"breakout={ENABLE_BREAKOUT_TRADING}, "
+        f"pump_fade={ENABLE_PUMP_FADE_TRADING}, "
+        f"inplay={ENABLE_INPLAY_TRADING}, "
+        f"retest={ENABLE_RETEST_TRADING}, "
+        f"range={ENABLE_RANGE_TRADING}"
+    )
 
     text = "\n".join(lines)
     print(text)
@@ -5208,6 +5280,7 @@ async def range_rescan_loop():
 
 # =========================== PULSE ===========================
 async def pulse():
+    last_stats_sent = 0
     while True:
         try:
             sync_trades_with_exchange()
@@ -5220,6 +5293,13 @@ async def pulse():
             log_error(f"ensure_tpsl crash: {e}")
 
         print(f"[pulse] Bybit msgs={MSG_COUNTER.get('Bybit', 0)}  open_trades={len(TRADES)}  disabled={PORTFOLIO_STATE.get('disabled')}")
+        try:
+            now = int(time.time())
+            if STRATEGY_STATS_TG_EVERY_SEC > 0 and (now - last_stats_sent) >= int(STRATEGY_STATS_TG_EVERY_SEC):
+                tg_trade(_strategy_runtime_stats_text(STRATEGY_STATS_LOOKBACK_H))
+                last_stats_sent = now
+        except Exception as e:
+            log_error(f"strategy-stats pulse fail: {e}")
         await asyncio.sleep(10)
 
 # =========================== RUNNER ===========================
