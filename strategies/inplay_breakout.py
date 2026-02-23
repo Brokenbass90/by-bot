@@ -151,6 +151,72 @@ class InPlayBreakoutWrapper:
         self.impl: Optional[InPlayBreakoutStrategy] = None
 
     @staticmethod
+    def _bar_value(bar: Any, key: str) -> Optional[float]:
+        if isinstance(bar, dict):
+            v = bar.get(key)
+            if v is None and key in {"h", "l", "c"}:
+                alt = {"h": "high", "l": "low", "c": "close"}[key]
+                v = bar.get(alt)
+            try:
+                return float(v) if v is not None else None
+            except Exception:
+                return None
+        try:
+            return float(getattr(bar, key))
+        except Exception:
+            return None
+
+    def _passes_entry_timing_guards(self, store: Any, side: str, entry: float) -> bool:
+        max_late_pct = _env_float("BREAKOUT_MAX_LATE_VS_REF_PCT", 0.0)
+        min_pullback_pct = _env_float("BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT", 0.0)
+        if max_late_pct <= 0 and min_pullback_pct <= 0:
+            return True
+
+        bars = getattr(store, "c5", None)
+        i = getattr(store, "i5", None)
+        if bars is None or i is None:
+            return True
+        i = int(i)
+        if i <= 2:
+            return True
+
+        lookback = max(5, _env_int("BREAKOUT_REF_LOOKBACK_BARS", 20))
+        lo = max(0, i - lookback)
+        seg = list(bars[lo:i])
+        if len(seg) < 3:
+            return True
+
+        highs = [self._bar_value(b, "h") for b in seg]
+        lows = [self._bar_value(b, "l") for b in seg]
+        highs = [x for x in highs if x is not None]
+        lows = [x for x in lows if x is not None]
+        if not highs or not lows:
+            return True
+
+        if side == "long":
+            brk_ref = max(highs)
+            if max_late_pct > 0 and brk_ref > 0:
+                late_pct = ((entry / brk_ref) - 1.0) * 100.0
+                if late_pct > max_late_pct:
+                    return False
+            if min_pullback_pct > 0 and brk_ref > 0:
+                pb_pct = ((brk_ref - entry) / brk_ref) * 100.0
+                if pb_pct < min_pullback_pct:
+                    return False
+            return True
+
+        brk_ref = min(lows)
+        if max_late_pct > 0 and brk_ref > 0:
+            late_pct = ((brk_ref / entry) - 1.0) * 100.0
+            if late_pct > max_late_pct:
+                return False
+        if min_pullback_pct > 0 and brk_ref > 0:
+            bounce_pct = ((entry - brk_ref) / brk_ref) * 100.0
+            if bounce_pct < min_pullback_pct:
+                return False
+        return True
+
+    @staticmethod
     def _hours_to_break_bars(lookback_h: int, tf_break: str) -> int:
         try:
             minutes = int(tf_break)
@@ -272,6 +338,9 @@ class InPlayBreakoutWrapper:
         entry = float(sig.entry)
         sl = float(sig.sl)
         tp = float(sig.tp)
+
+        if not self._passes_entry_timing_guards(store, side, entry):
+            return None
 
         min_stop_pct = _env_float('BREAKOUT_MIN_STOP_PCT', 0.0)
         max_stop_pct = _env_float('BREAKOUT_MAX_STOP_PCT', 0.0)
