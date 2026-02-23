@@ -277,10 +277,14 @@ def main():
                 return sig
         return None
 
+    cap_notional = float(args.cap_notional)
+    if cap_notional <= 0:
+        cap_notional = None
+
     params = BacktestParams(
         starting_equity=args.starting_equity,
         risk_pct=args.risk_pct,
-        cap_notional_usd=args.cap_notional,
+        cap_notional_usd=cap_notional,
         leverage=args.leverage,
         max_positions=args.max_positions,
         fee_bps=args.fee_bps,
