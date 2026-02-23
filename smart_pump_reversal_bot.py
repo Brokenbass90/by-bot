@@ -134,6 +134,7 @@ INPLAY_ENGINE = None
 
 # ===== BREAKOUT (live) =====
 ENABLE_BREAKOUT_TRADING = os.getenv("ENABLE_BREAKOUT_TRADING", "0").strip() == "1"
+ENABLE_PUMP_FADE_TRADING = os.getenv("ENABLE_PUMP_FADE_TRADING", "0").strip() == "1"
 BREAKOUT_TRY_EVERY_SEC = int(os.getenv("BREAKOUT_TRY_EVERY_SEC", "30"))
 BREAKOUT_TOP_N = int(os.getenv("BREAKOUT_TOP_N", "60"))
 BREAKOUT_MAX_SPREAD_PCT = float(os.getenv("BREAKOUT_MAX_SPREAD_PCT", "0.20"))
@@ -4781,6 +4782,8 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                 })
 
             can_enter = (
+                ENABLE_PUMP_FADE_TRADING
+                and
                 TRADE_ON and exch == "Bybit"
                 and portfolio_can_open()
                 and (get_trade(exch, sym) is None)
@@ -4807,7 +4810,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                 )
                 tr.entry_order_id = oid
                 tr.status = "PENDING_ENTRY"
-                tr.strategy = "pump"
+                tr.strategy = "pump_fade"
                 tr.avg = float(p1)
                 tr.entry_price = float(p1)
                 tr.leg1_done = True
@@ -4835,7 +4838,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
 
                 acc_name = TRADE_CLIENT.name if TRADE_CLIENT else "NO_CLIENT"
                 tg_trade(
-                    f"🟣 ENTRY [{acc_name}] {sym}\n"
+                    f"🟣 PUMP_FADE ENTRY [{acc_name}] {sym}\n"
                     f"usd={dyn_usd:.2f} qty≈{q} lev={BYBIT_LEVERAGE}x\n"
                     f"px={p1:.6f} TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}"
                 )
@@ -5265,6 +5268,10 @@ def main():
         f"Account: {TRADE_ACCOUNT_NAME} | leverage={BYBIT_LEVERAGE} | max_positions={MAX_POSITIONS} | "
         f"risk={RISK_PER_TRADE_PCT:.2f}% | cap_notional_to_equity={CAP_NOTIONAL_TO_EQUITY} | "
         f"reserve={RESERVE_EQUITY_FRAC:.2f} | min_notional={MIN_NOTIONAL_USD}"
+    )
+    print(
+        f"Strategies: breakout={ENABLE_BREAKOUT_TRADING} inplay={ENABLE_INPLAY_TRADING} "
+        f"retest={ENABLE_RETEST_TRADING} range={ENABLE_RANGE_TRADING} pump_fade={ENABLE_PUMP_FADE_TRADING}"
     )
     if BOT_CAPITAL_USD is not None:
         print(f"Bot capital cap: {BOT_CAPITAL_USD} USDT")
