@@ -20,6 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import asyncio
 import inspect
+import os
 from typing import Callable, Dict, List, Optional, Tuple
 
 from backtest.engine import (
@@ -69,6 +70,11 @@ class PortfolioResult:
 SignalSelector = Callable[[str, KlineStore, int, float], Optional[object]]
 
 
+def _csv_set(name: str) -> set[str]:
+    raw = os.getenv(name, "") or ""
+    return {p.strip().lower() for p in str(raw).split(",") if p.strip()}
+
+
 def run_portfolio_backtest(
     stores: Dict[str, KlineStore],
     selector: SignalSelector,
@@ -95,6 +101,10 @@ def run_portfolio_backtest(
     # One open position per symbol, plus which strategy opened it.
     pos_by_sym: Dict[str, Position] = {}
     pos_strat: Dict[str, str] = {}
+    cooldown_until_i: Dict[str, int] = {}
+
+    sl_cooldown_bars = max(0, int(os.getenv("PORTFOLIO_SL_COOLDOWN_BARS", "0") or 0))
+    sl_cooldown_strategies = _csv_set("PORTFOLIO_SL_COOLDOWN_STRATEGIES") or {"inplay_breakout"}
 
     # ATR cache per symbol, keyed by period.
     atr_cache: Dict[str, Dict[int, List[float]]] = {s: {} for s in syms}
@@ -133,6 +143,14 @@ def run_portfolio_backtest(
                 reason=reason,
             )
         )
+
+        strat_name = str(pos_strat.get(sym, "unknown") or "").lower()
+        if (
+            sl_cooldown_bars > 0
+            and ("SL" in str(reason or "").upper())
+            and (strat_name in sl_cooldown_strategies)
+        ):
+            cooldown_until_i[sym] = i + sl_cooldown_bars
 
         pos_by_sym.pop(sym, None)
         pos_strat.pop(sym, None)
@@ -249,6 +267,8 @@ def run_portfolio_backtest(
                 if len(pos_by_sym) >= int(params.max_positions):
                     break
                 if sym in pos_by_sym:
+                    continue
+                if int(cooldown_until_i.get(sym, -1)) > i:
                     continue
 
                 store = stores[sym]
