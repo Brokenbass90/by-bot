@@ -83,6 +83,8 @@ class TrendPullbackConfig:
     touch_tol_pct: float = 0.05
     max_atr_pct: float = 0.90
     max_signals_per_day: int = 2
+    require_touch: bool = True
+    require_cross: bool = True
     allow_longs: bool = True
     allow_shorts: bool = True
 
@@ -110,6 +112,8 @@ class TrendPullbackStrategy:
         self.cfg.touch_tol_pct = _env_float("TPB_TOUCH_TOL_PCT", self.cfg.touch_tol_pct)
         self.cfg.max_atr_pct = _env_float("TPB_MAX_ATR_PCT", self.cfg.max_atr_pct)
         self.cfg.max_signals_per_day = _env_int("TPB_MAX_SIGNALS_PER_DAY", self.cfg.max_signals_per_day)
+        self.cfg.require_touch = _env_bool("TPB_REQUIRE_TOUCH", self.cfg.require_touch)
+        self.cfg.require_cross = _env_bool("TPB_REQUIRE_CROSS", self.cfg.require_cross)
         self.cfg.allow_longs = _env_bool("TPB_ALLOW_LONGS", self.cfg.allow_longs)
         self.cfg.allow_shorts = _env_bool("TPB_ALLOW_SHORTS", self.cfg.allow_shorts)
         self._deny = _env_csv_set("TPB_SYMBOL_DENYLIST")
@@ -193,9 +197,12 @@ class TrendPullbackStrategy:
         # Long: trend up, pullback to/below EMA, reclaim above EMA
         if self.cfg.allow_longs and bias == 2:
             touched = min(recent_l) <= ema5 * (1.0 + self.cfg.touch_tol_pct / 100.0)
-            close_reclaim = (prev_c <= ema5) and (c >= ema5 * (1.0 + self.cfg.reclaim_pct / 100.0))
+            close_reclaim = (c >= ema5 * (1.0 + self.cfg.reclaim_pct / 100.0))
+            if self.cfg.require_cross:
+                close_reclaim = (prev_c <= ema5) and close_reclaim
             pullback_pct = max(0.0, (ema5 - min(recent_l)) / max(1e-12, ema5) * 100.0)
-            if touched and close_reclaim and pullback_pct <= self.cfg.pullback_max_pct:
+            touch_ok = touched or (not self.cfg.require_touch)
+            if touch_ok and close_reclaim and pullback_pct <= self.cfg.pullback_max_pct:
                 sl = c - self.cfg.sl_atr_mult * atr5
                 if sl >= c:
                     return None
@@ -215,9 +222,12 @@ class TrendPullbackStrategy:
         # Short: trend down, pullback to/above EMA, reclaim below EMA
         if self.cfg.allow_shorts and bias == 0:
             touched = max(recent_h) >= ema5 * (1.0 - self.cfg.touch_tol_pct / 100.0)
-            close_reclaim = (prev_c >= ema5) and (c <= ema5 * (1.0 - self.cfg.reclaim_pct / 100.0))
+            close_reclaim = (c <= ema5 * (1.0 - self.cfg.reclaim_pct / 100.0))
+            if self.cfg.require_cross:
+                close_reclaim = (prev_c >= ema5) and close_reclaim
             pullback_pct = max(0.0, (max(recent_h) - ema5) / max(1e-12, ema5) * 100.0)
-            if touched and close_reclaim and pullback_pct <= self.cfg.pullback_max_pct:
+            touch_ok = touched or (not self.cfg.require_touch)
+            if touch_ok and close_reclaim and pullback_pct <= self.cfg.pullback_max_pct:
                 sl = c + self.cfg.sl_atr_mult * atr5
                 if sl <= c:
                     return None
