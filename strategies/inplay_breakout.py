@@ -70,6 +70,11 @@ def _env_csv_floats(name: str, default: List[float]) -> List[float]:
     return out if out else list(default)
 
 
+def _env_csv_set(name: str) -> set[str]:
+    raw = os.getenv(name, "") or ""
+    return {p.strip().upper() for p in raw.split(",") if p.strip()}
+
+
 @dataclass
 class InPlayBreakoutConfig:
     tf_break: str = "240"
@@ -110,6 +115,8 @@ class InPlayBreakoutConfig:
 class InPlayBreakoutWrapper:
     def __init__(self, cfg: Optional[InPlayBreakoutConfig] = None):
         self.cfg = cfg or InPlayBreakoutConfig()
+        self._allow = _env_csv_set("BREAKOUT_SYMBOL_ALLOWLIST")
+        self._deny = _env_csv_set("BREAKOUT_SYMBOL_DENYLIST")
 
         self.cfg.tf_break = os.getenv("BREAKOUT_TF_BREAK", self.cfg.tf_break)
         self.cfg.tf_entry = os.getenv("BREAKOUT_TF_ENTRY", self.cfg.tf_entry)
@@ -330,6 +337,11 @@ class InPlayBreakoutWrapper:
         assert self.impl is not None
 
         symbol = store.symbol
+        sym_u = str(symbol or "").upper()
+        if self._allow and sym_u not in self._allow:
+            return None
+        if sym_u in self._deny:
+            return None
         sig = await self.impl.maybe_signal(symbol, price=float(last_price), ts_ms=int(ts_ms))
         if not sig:
             return None

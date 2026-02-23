@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import math
+import os
 from dataclasses import dataclass
 from typing import List, Optional
 
@@ -23,7 +24,6 @@ def ema(values: List[float], period: int) -> float:
 
 
 def _env_float(name: str, default: float) -> float:
-    import os
     v = os.getenv(name)
     if v is None or not str(v).strip():
         return default
@@ -34,7 +34,6 @@ def _env_float(name: str, default: float) -> float:
 
 
 def _env_int(name: str, default: int) -> int:
-    import os
     v = os.getenv(name)
     if v is None or not str(v).strip():
         return default
@@ -45,7 +44,6 @@ def _env_int(name: str, default: int) -> int:
 
 
 def _env_bool(name: str, default: bool) -> bool:
-    import os
     v = os.getenv(name)
     if v is None or not str(v).strip():
         return default
@@ -54,7 +52,6 @@ def _env_bool(name: str, default: bool) -> bool:
 
 
 def _env_float_list(name: str, default: List[float]) -> List[float]:
-    import os
     raw = os.getenv(name)
     if raw is None or not str(raw).strip():
         return list(default)
@@ -68,6 +65,11 @@ def _env_float_list(name: str, default: List[float]) -> List[float]:
         except Exception:
             return list(default)
     return out or list(default)
+
+
+def _env_csv_set(name: str) -> set[str]:
+    raw = os.getenv(name, "") or ""
+    return {p.strip().upper() for p in str(raw).split(",") if p.strip()}
 
 
 def _atr_last(highs: List[float], lows: List[float], closes: List[float], period: int = 14) -> float:
@@ -139,6 +141,8 @@ class PumpFadeStrategy:
 
     def __init__(self, cfg: Optional[PumpFadeConfig] = None):
         self.cfg = cfg or PumpFadeConfig()
+        self._allow = _env_csv_set("PF_SYMBOL_ALLOWLIST")
+        self._deny = _env_csv_set("PF_SYMBOL_DENYLIST")
 
         # Optional env overrides for fast parameter sweeps in portfolio backtests
         self.cfg.interval_min = _env_int("PF_INTERVAL_MIN", self.cfg.interval_min)
@@ -181,6 +185,12 @@ class PumpFadeStrategy:
         self._pumped_flag: bool = False
 
     def on_bar(self, symbol: str, o: float, h: float, l: float, c: float) -> Optional[TradeSignal]:
+        sym_u = str(symbol or "").upper()
+        if self._allow and sym_u not in self._allow:
+            return None
+        if sym_u in self._deny:
+            return None
+
         self._opens.append(o)
         self._closes.append(c)
         self._highs.append(h)
