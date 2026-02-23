@@ -1363,7 +1363,7 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
                        SUM(CASE WHEN event='ENTRY' THEN 1 ELSE 0 END) AS entries,
                        SUM(CASE WHEN event='CLOSE' THEN 1 ELSE 0 END) AS closes,
                        SUM(CASE WHEN event='CLOSE' THEN COALESCE(pnl, 0.0) ELSE 0.0 END) AS net
-                  FROM trade_log
+                  FROM trade_events
                  WHERE ts >= ?
                  GROUP BY strategy
                 """,
