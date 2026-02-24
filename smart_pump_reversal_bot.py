@@ -122,8 +122,8 @@ CLOSE_IN_TOP_FRAC = 0.35
 ENABLE_BYBIT = True
 ENABLE_BINANCE = False
 ENABLE_MEXC = False
-TOP_N_BYBIT = 220
-TOP_N_BINANCE = 200
+TOP_N_BYBIT = int(os.getenv("TOP_N_BYBIT", "120"))
+TOP_N_BINANCE = int(os.getenv("TOP_N_BINANCE", "200"))
 
 # ===== INPLAY (live) =====
 ENABLE_INPLAY_TRADING = os.getenv("ENABLE_INPLAY_TRADING", "0").strip() == "1"
@@ -5057,10 +5057,10 @@ async def bybit_ws():
     print(f"[bybit] got {len(syms)} symbols from REST")
     topics = [f"publicTrade.{s}" for s in syms]
 
-    SHARD_SIZE  = 80
-    BATCH_SIZE  = 8
-    BATCH_DELAY = 1.5
-    START_STAGGER = 2.0
+    SHARD_SIZE  = int(os.getenv("BYBIT_WS_SHARD_SIZE", "40"))
+    BATCH_SIZE  = int(os.getenv("BYBIT_WS_BATCH_SIZE", "6"))
+    BATCH_DELAY = float(os.getenv("BYBIT_WS_BATCH_DELAY", "1.8"))
+    START_STAGGER = float(os.getenv("BYBIT_WS_START_STAGGER", "2.0"))
 
     shards = [topics[i:i+SHARD_SIZE] for i in range(0, len(topics), SHARD_SIZE)]
 
@@ -5073,8 +5073,8 @@ async def bybit_ws():
 
                 async with websockets.connect(
                     url,
-                    ping_interval=20,
-                    ping_timeout=45,
+                    ping_interval=float(os.getenv("BYBIT_WS_PING_INTERVAL", "20")),
+                    ping_timeout=float(os.getenv("BYBIT_WS_PING_TIMEOUT", "60")),
                     open_timeout=60,
                     close_timeout=10,
                     max_queue=None,
