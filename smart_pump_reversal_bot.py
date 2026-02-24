@@ -622,6 +622,10 @@ REPORTS_ENABLE = os.getenv("REPORTS_ENABLE", "1").strip() == "1"
 REPORTS_SEND_ON_START = os.getenv("REPORTS_SEND_ON_START", "0").strip() == "1"
 REPORTS_OUT_DIR = os.getenv("REPORTS_OUT_DIR", "/tmp").strip() or "/tmp"
 REPORTS_STATE_PATH = os.getenv("REPORTS_STATE_PATH", "/tmp/bybot_reports_state.json").strip() or "/tmp/bybot_reports_state.json"
+REPORT_DAILY_ENABLE = os.getenv("REPORT_DAILY_ENABLE", "1").strip() == "1"
+REPORT_WEEKLY_ENABLE = os.getenv("REPORT_WEEKLY_ENABLE", "1").strip() == "1"
+REPORT_MONTHLY_ENABLE = os.getenv("REPORT_MONTHLY_ENABLE", "1").strip() == "1"
+REPORT_YEARLY_ENABLE = os.getenv("REPORT_YEARLY_ENABLE", "1").strip() == "1"
 STRATEGY_STATS_TG_EVERY_SEC = int(os.getenv("STRATEGY_STATS_TG_EVERY_SEC", "3600"))
 STRATEGY_STATS_LOOKBACK_H = int(os.getenv("STRATEGY_STATS_LOOKBACK_H", "24"))
 TRADE_CHARTS_ENABLE = os.getenv("TRADE_CHARTS_ENABLE", "1").strip() == "1"
@@ -1707,32 +1711,32 @@ def _send_report(tag: str, days: int) -> None:
 async def reports_loop():
     if not REPORTS_ENABLE:
         return
+    schedules = []
+    if REPORT_DAILY_ENABLE:
+        schedules.append(("daily", 1, 86400))
+    if REPORT_WEEKLY_ENABLE:
+        schedules.append(("weekly", 7, 7 * 86400))
+    if REPORT_MONTHLY_ENABLE:
+        schedules.append(("monthly", 30, 30 * 86400))
+    if REPORT_YEARLY_ENABLE:
+        schedules.append(("yearly", 365, 365 * 86400))
     state = _load_report_state()
     now = int(time.time())
     if REPORTS_SEND_ON_START:
-        _send_report("daily", 1)
-        _send_report("weekly", 7)
-        _send_report("monthly", 30)
-        _send_report("yearly", 365)
+        for tag, days, _ in schedules:
+            _send_report(tag, days)
         if RECO_ENABLE:
             syms = _compute_reco_symbols()
             if syms:
                 tg_trade("🧹 Рекомендую в бан: " + ",".join(syms))
-        state["daily"] = now
-        state["weekly"] = now
-        state["monthly"] = now
-        state["yearly"] = now
+        for tag, _, _ in schedules:
+            state[tag] = now
         if RECO_ENABLE:
             state["reco"] = now
         _save_report_state(state)
     while True:
         now = int(time.time())
-        for tag, days, period in [
-            ("daily", 1, 86400),
-            ("weekly", 7, 7 * 86400),
-            ("monthly", 30, 30 * 86400),
-            ("yearly", 365, 365 * 86400),
-        ]:
+        for tag, days, period in schedules:
             last = int(state.get(tag, 0) or 0)
             if last == 0:
                 # initialize without spamming
