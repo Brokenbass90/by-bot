@@ -69,6 +69,78 @@ from strategies.trendline_break_retest import TrendlineBreakRetestStrategy
 from strategies.btc_eth_trend_follow import BTCETHTrendFollowStrategy
 
 
+def _ema(values: List[float], period: int) -> float:
+    if not values or period <= 0:
+        return float("nan")
+    k = 2.0 / (period + 1.0)
+    e = values[0]
+    for v in values[1:]:
+        e = v * k + e * (1.0 - k)
+    return e
+
+
+def _atr_from_candles(c5: List[Candle], period: int = 14) -> float:
+    if len(c5) < period + 1:
+        return float("nan")
+    trs: List[float] = []
+    for i in range(-period, 0):
+        h = float(c5[i].h)
+        l = float(c5[i].l)
+        pc = float(c5[i - 1].c)
+        trs.append(max(h - l, abs(h - pc), abs(l - pc)))
+    return sum(trs) / float(period) if trs else float("nan")
+
+
+def _flat_score(c5: List[Candle]) -> tuple[float, dict]:
+    """Compute a flat-regime score in [0..1] for symbol prefiltering."""
+    if len(c5) < 240:
+        return 0.0, {"reason": "history_short"}
+
+    closes = [float(x.c) for x in c5[-240:]]
+    highs = [float(x.h) for x in c5[-240:]]
+    lows = [float(x.l) for x in c5[-240:]]
+    c_now = closes[-1]
+    if c_now <= 0:
+        return 0.0, {"reason": "invalid_price"}
+
+    ef = _ema(closes[-80:], 20)
+    es = _ema(closes[-110:], 50)
+    atr = _atr_from_candles(c5[-120:], 14)
+    if not (math.isfinite(ef) and math.isfinite(es) and math.isfinite(atr) and atr > 0):
+        return 0.0, {"reason": "nan_indicators"}
+
+    gap_pct = abs(ef - es) / c_now * 100.0
+    atr_pct = atr / c_now * 100.0
+
+    # Flatness from 4h proxy slope (using 5m series sampled every 48 bars).
+    sampled = closes[::48]
+    if len(sampled) < 12:
+        return 0.0, {"reason": "sample_short"}
+    ema_s = _ema(sampled, 10)
+    ema_prev = _ema(sampled[:-4], 10)
+    slope_pct = abs((ema_s - ema_prev) / max(1e-12, abs(ema_prev))) * 100.0 if math.isfinite(ema_prev) else 999.0
+
+    rng_hi = max(highs[-180:])
+    rng_lo = min(lows[-180:])
+    range_pct = (rng_hi - rng_lo) / c_now * 100.0
+
+    # Smooth normalization to avoid full-zero scores on trending symbols.
+    s_gap = 1.0 / (1.0 + gap_pct / 0.70)
+    s_slope = 1.0 / (1.0 + slope_pct / 0.80)
+    # Prefer moderate ATR (too low dead, too high turbulent).
+    s_atr = math.exp(-abs(atr_pct - 0.90) / 0.90)
+    # Prefer moderate local range, not dead and not explosive.
+    s_range = math.exp(-abs(range_pct - 7.0) / 6.0)
+
+    score = 0.35 * s_gap + 0.30 * s_slope + 0.20 * s_atr + 0.15 * s_range
+    return float(max(0.0, min(1.0, score))), {
+        "gap_pct": gap_pct,
+        "slope_pct": slope_pct,
+        "atr_pct": atr_pct,
+        "range_pct": range_pct,
+    }
+
+
 def _parse_end(s: Optional[str]) -> int:
     if not s:
         return int(time.time())
@@ -282,6 +354,30 @@ def main():
     for sym in symbols:
         c5 = _load_symbol_5m(sym, start_ts, end_ts, bybit_base=args.bybit_base, cache_dir=cache_dir)
         stores[sym] = KlineStore(sym, c5)
+
+    # Optional flat-regime symbol prefilter for mean-reversion arms.
+    if str(os.getenv("FLAT_SYMBOL_FILTER_ENABLE", "0")).strip().lower() in {"1", "true", "yes", "on"}:
+        if any(s in strategies for s in ("smart_grid", "range_bounce")):
+            min_score = float(os.getenv("FLAT_SYMBOL_MIN_SCORE", "0.58"))
+            keep_top_n = max(1, int(os.getenv("FLAT_SYMBOL_KEEP_TOP_N", "3")))
+            scored: List[tuple[str, float, dict]] = []
+            keep: List[str] = []
+            for sym in symbols:
+                score, meta = _flat_score(stores[sym].c5)
+                scored.append((sym, score, meta))
+                if score >= min_score:
+                    keep.append(sym)
+            if keep:
+                symbols = keep
+                stores = {k: v for k, v in stores.items() if k in symbols}
+                print(f"[flat-filter] kept={len(symbols)} min_score={min_score:.2f} symbols={','.join(symbols)}")
+            else:
+                scored.sort(key=lambda x: x[1], reverse=True)
+                symbols = [s for s, _, _ in scored[:keep_top_n]]
+                stores = {k: v for k, v in stores.items() if k in symbols}
+                dbg = ", ".join(f"{s}:{sc:.3f}" for s, sc, _ in scored[: min(len(scored), 8)])
+                print(f"[flat-filter] no symbols passed min_score={min_score:.2f}; keep_top_n={keep_top_n} => {','.join(symbols)}")
+                print(f"[flat-filter] top_scores: {dbg}")
 
     # Build per-symbol strategy instances (avoid cross-symbol state bleed).
     bounce = {sym: BounceBTStrategy() for sym in symbols} if "bounce" in strategies else {}
