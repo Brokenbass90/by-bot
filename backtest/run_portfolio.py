@@ -93,12 +93,13 @@ def _atr_from_candles(c5: List[Candle], period: int = 14) -> float:
 
 def _flat_score(c5: List[Candle]) -> tuple[float, dict]:
     """Compute a flat-regime score in [0..1] for symbol prefiltering."""
-    if len(c5) < 240:
+    if len(c5) < 1200:
         return 0.0, {"reason": "history_short"}
 
-    closes = [float(x.c) for x in c5[-240:]]
-    highs = [float(x.h) for x in c5[-240:]]
-    lows = [float(x.l) for x in c5[-240:]]
+    # Use ~20+ days of 5m bars for stable regime classification.
+    closes = [float(x.c) for x in c5[-6000:]]
+    highs = [float(x.h) for x in c5[-6000:]]
+    lows = [float(x.l) for x in c5[-6000:]]
     c_now = closes[-1]
     if c_now <= 0:
         return 0.0, {"reason": "invalid_price"}
