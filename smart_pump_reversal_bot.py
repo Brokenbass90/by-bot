@@ -19,6 +19,7 @@ from sr_bounce import BounceStrategy
 from trade_state import TradeState
 from inplay_live import InPlayLiveEngine
 from breakout_live import BreakoutLiveEngine
+from midterm_live import MidtermLiveEngine
 from retest_live import RetestEngine
 from trade_reporting import generate_report, since_days
 
@@ -151,6 +152,7 @@ INPLAY_ENGINE = None
 # ===== BREAKOUT (live) =====
 ENABLE_BREAKOUT_TRADING = os.getenv("ENABLE_BREAKOUT_TRADING", "0").strip() == "1"
 ENABLE_PUMP_FADE_TRADING = os.getenv("ENABLE_PUMP_FADE_TRADING", "0").strip() == "1"
+ENABLE_MIDTERM_TRADING = os.getenv("ENABLE_MIDTERM_TRADING", "0").strip() == "1"
 BREAKOUT_TRY_EVERY_SEC = int(os.getenv("BREAKOUT_TRY_EVERY_SEC", "30"))
 BREAKOUT_TOP_N = int(os.getenv("BREAKOUT_TOP_N", "60"))
 BREAKOUT_MAX_SPREAD_PCT = float(os.getenv("BREAKOUT_MAX_SPREAD_PCT", "0.20"))
@@ -170,6 +172,11 @@ BREAKOUT_SESSION_FILTER_ENABLE = _env_bool("BREAKOUT_SESSION_FILTER_ENABLE", Fal
 BREAKOUT_SESSION_ALLOWED = _csv_lower_set("BREAKOUT_SESSION_ALLOWED")
 BREAKOUT_SYMBOLS = set()
 BREAKOUT_ENGINE = None
+MIDTERM_TRY_EVERY_SEC = int(os.getenv("MIDTERM_TRY_EVERY_SEC", "90"))
+MIDTERM_NOTIONAL_MULT = max(0.05, min(1.0, float(os.getenv("MIDTERM_NOTIONAL_MULT", "0.35"))))
+MIDTERM_SYMBOLS = {s.strip().upper() for s in str(os.getenv("MIDTERM_SYMBOLS", "BTCUSDT,ETHUSDT")).split(",") if s.strip()}
+MIDTERM_ACTIVE_SYMBOLS = set()
+MIDTERM_ENGINE = None
 
 # ===== RETEST LEVELS (live) =====
 ENABLE_RETEST_TRADING = os.getenv("ENABLE_RETEST_TRADING", "0").strip() == "1"
@@ -347,6 +354,8 @@ if BREAKOUT_ENGINE is None:
     BREAKOUT_ENGINE = BreakoutLiveEngine(fetch_klines)
 if RETEST_ENGINE is None:
     RETEST_ENGINE = RetestEngine(fetch_klines)
+if MIDTERM_ENGINE is None:
+    MIDTERM_ENGINE = MidtermLiveEngine(fetch_klines)
 
 
 def _atr_abs_from_klines(rows: list, period: int) -> float:
@@ -1415,6 +1424,7 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
     enabled = [
         f"breakout={ENABLE_BREAKOUT_TRADING}",
         f"pump_fade={ENABLE_PUMP_FADE_TRADING}",
+        f"midterm={ENABLE_MIDTERM_TRADING}",
         f"inplay={ENABLE_INPLAY_TRADING}",
         f"retest={ENABLE_RETEST_TRADING}",
         f"range={ENABLE_RANGE_TRADING}",
@@ -3788,6 +3798,7 @@ RANGE_TRY_EVERY_SEC = 20
 _INPLAY_LAST_TRY = {}           # symbol -> ts
 _BREAKOUT_LAST_TRY = {}         # symbol -> ts
 _RETEST_LAST_TRY = {}           # symbol -> ts
+_MIDTERM_LAST_TRY = {}          # symbol -> ts
 _BREAKOUT_COOLDOWN_UNTIL = {}   # symbol -> ts
 _BREAKOUT_COOLDOWN_LOG_TS = {}  # symbol -> ts
 _KILLER_GUARD_LOG_TS = {}       # symbol -> ts
@@ -4268,6 +4279,101 @@ async def try_retest_entry_async(symbol: str, price: float):
     )
 
 
+async def try_midterm_entry_async(symbol: str, price: float):
+    if not ENABLE_MIDTERM_TRADING:
+        return
+    if not TRADE_ON or DRY_RUN:
+        return
+    if TRADE_CLIENT is None:
+        return
+    if get_trade("Bybit", symbol) is not None:
+        return
+    if MIDTERM_ACTIVE_SYMBOLS and (symbol not in MIDTERM_ACTIVE_SYMBOLS):
+        return
+    if not portfolio_can_open():
+        return
+
+    now = now_s()
+    last = int(_MIDTERM_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < MIDTERM_TRY_EVERY_SEC:
+        return
+    _MIDTERM_LAST_TRY[symbol] = now
+
+    try:
+        sig = await MIDTERM_ENGINE.signal_async(symbol, price, int(now * 1000))
+    except Exception as e:
+        log_error(f"midterm signal error {symbol}: {e}")
+        return
+    if not sig:
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    tp = float(sig.tp)
+    sl = float(sig.sl)
+
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
+    dyn_usd *= float(MIDTERM_NOTIONAL_MULT)
+    if dyn_usd <= 0:
+        tg_trade(f"🟡 MIDTERM SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+
+    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
+    if qty_floor <= 0:
+        tg_trade(f"🟡 MIDTERM SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+
+    ensure_leverage(symbol, BYBIT_LEVERAGE)
+    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+
+    tr = TradeState(
+        symbol=symbol,
+        side=side,
+        qty=q,
+        entry_price_req=float(entry),
+        entry_ts=now,
+    )
+    tr.entry_order_id = oid
+    tr.status = "PENDING_ENTRY"
+    tr.strategy = "btc_eth_midterm_pullback"
+    tr.avg = float(entry)
+    tr.entry_price = float(entry)
+    tr.tp_price = float(tp_r) if tp_r is not None else None
+    tr.sl_price = float(sl_r)
+    tr.runner_enabled = bool(use_runner)
+    if tr.runner_enabled:
+        tr.tps = [float(x) for x in (sig.tps or [])]
+        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+        tr.tp_hit = [False for _ in tr.tps]
+        tr.initial_qty = float(q)
+        tr.remaining_qty = float(q)
+        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+        tr.time_stop_sec = int(ts_bars * 300)
+    TRADES[("Bybit", symbol)] = tr
+
+    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+    tr.tpsl_on_exchange = bool(ok)
+    tr.tpsl_last_set_ts = now_s()
+    if ok:
+        tr.tpsl_manual_lock = False
+
+    tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+    tg_trade(
+        f"🟧 MIDTERM ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
+        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+        f"notional≈{notional_real:.2f}$ qty≈{q} alloc_mult={MIDTERM_NOTIONAL_MULT:.2f}\n"
+        f"reason={sig.reason}"
+    )
+
+
 
 
 def try_bounce_entry(exch: str, sym: str, st: SymState, now: int, price: float):
@@ -4640,6 +4746,14 @@ def detect(exch: str, sym: str, st: SymState, now: int):
             except Exception as _e:
                 log_error(f"try_breakout_entry schedule fail {sym}: {_e}")
 
+    if exch == "Bybit" and ENABLE_MIDTERM_TRADING and TRADE_ON and (not DRY_RUN):
+        last = int(_MIDTERM_LAST_TRY.get(sym, 0) or 0)
+        if now - last >= MIDTERM_TRY_EVERY_SEC:
+            try:
+                asyncio.create_task(try_midterm_entry_async(sym, p1))
+            except Exception as _e:
+                log_error(f"try_midterm_entry schedule fail {sym}: {_e}")
+
     # ===== RETEST LEVELS ENTRY =====
     if exch == "Bybit" and ENABLE_RETEST_TRADING and TRADE_ON and (not DRY_RUN):
         last = int(_RETEST_LAST_TRY.get(sym, 0) or 0)
@@ -4664,7 +4778,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
 
         # ===== INPLAY runner management (partials + trailing + time stop) =====
         if (tr
-            and getattr(tr, "strategy", "") in ("inplay", "inplay_breakout")
+            and getattr(tr, "strategy", "") in ("inplay", "inplay_breakout", "btc_eth_midterm_pullback")
             and getattr(tr, "status", None) == "OPEN"
             and getattr(tr, "runner_enabled", False)
             and p1 is not None
@@ -5062,6 +5176,7 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
     global INPLAY_SYMBOLS
     global BREAKOUT_SYMBOLS
     global RETEST_SYMBOLS
+    global MIDTERM_ACTIVE_SYMBOLS
     global LAST_UNIVERSE_REFRESH_TS
 
     eq_eff = 0.0
@@ -5100,6 +5215,7 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
     INPLAY_SYMBOLS = set(inplay_filtered[:max(1, int(INPLAY_TOP_N))])
     BREAKOUT_SYMBOLS = set(breakout_filtered[:max(1, int(BREAKOUT_TOP_N))])
     RETEST_SYMBOLS = set(retest_filtered[:max(1, int(RETEST_TOP_N))])
+    MIDTERM_ACTIVE_SYMBOLS = {s for s in base_filtered if s in MIDTERM_SYMBOLS}
     LAST_UNIVERSE_REFRESH_TS = int(time.time())
 
     print(f"[filters] cap≈{cap:.2f} | eligible={len(eligible)}/{len(syms)} | base={len(base_filtered)} | breakout={len(BREAKOUT_SYMBOLS)}")
@@ -5110,6 +5226,8 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
             tg_trade(f"🧩 inplay-universe: using={len(INPLAY_SYMBOLS)} (top {INPLAY_TOP_N})")
         if ENABLE_RETEST_TRADING:
             tg_trade(f"🧩 retest-universe: using={len(RETEST_SYMBOLS)} (top {RETEST_TOP_N})")
+        if ENABLE_MIDTERM_TRADING:
+            tg_trade(f"🧩 midterm-universe: using={len(MIDTERM_ACTIVE_SYMBOLS)} ({','.join(sorted(MIDTERM_ACTIVE_SYMBOLS))})")
         if BOUNCE_TG_LOGS:
             tg_trade(f"🧩 bounce-universe: using={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
 
@@ -5350,6 +5468,7 @@ def auth_check_all_accounts():
         "🧠 strategies: "
         f"breakout={ENABLE_BREAKOUT_TRADING}, "
         f"pump_fade={ENABLE_PUMP_FADE_TRADING}, "
+        f"midterm={ENABLE_MIDTERM_TRADING}, "
         f"inplay={ENABLE_INPLAY_TRADING}, "
         f"retest={ENABLE_RETEST_TRADING}, "
         f"range={ENABLE_RANGE_TRADING}"
@@ -5461,7 +5580,8 @@ def main():
     )
     print(
         f"Strategies: breakout={ENABLE_BREAKOUT_TRADING} inplay={ENABLE_INPLAY_TRADING} "
-        f"retest={ENABLE_RETEST_TRADING} range={ENABLE_RANGE_TRADING} pump_fade={ENABLE_PUMP_FADE_TRADING}"
+        f"retest={ENABLE_RETEST_TRADING} range={ENABLE_RANGE_TRADING} pump_fade={ENABLE_PUMP_FADE_TRADING} "
+        f"midterm={ENABLE_MIDTERM_TRADING}"
     )
     if BOT_CAPITAL_USD is not None:
         print(f"Bot capital cap: {BOT_CAPITAL_USD} USDT")
