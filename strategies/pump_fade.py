@@ -170,6 +170,11 @@ class PumpFadeConfig:
     v3_sl_buffer_pct: float = 0.0020
     v3_min_atr_pct: float = 0.28
     v3_max_atr_pct: float = 2.80
+    v3_long_window_mult: int = 3
+    v3_long_pump_threshold_pct: float = 0.12
+    v3_peak_recent_mult: float = 1.8
+    v3_rr_boost_k: float = 3.0
+    v3_rr_max: float = 2.4
 
 
 class PumpFadeStrategy:
@@ -240,6 +245,11 @@ class PumpFadeStrategy:
         self.cfg.v3_sl_buffer_pct = _env_float("PF_V3_SL_BUFFER_PCT", self.cfg.v3_sl_buffer_pct)
         self.cfg.v3_min_atr_pct = _env_float("PF_V3_MIN_ATR_PCT", self.cfg.v3_min_atr_pct)
         self.cfg.v3_max_atr_pct = _env_float("PF_V3_MAX_ATR_PCT", self.cfg.v3_max_atr_pct)
+        self.cfg.v3_long_window_mult = _env_int("PF_V3_LONG_WINDOW_MULT", self.cfg.v3_long_window_mult)
+        self.cfg.v3_long_pump_threshold_pct = _env_float("PF_V3_LONG_PUMP_THRESHOLD_PCT", self.cfg.v3_long_pump_threshold_pct)
+        self.cfg.v3_peak_recent_mult = _env_float("PF_V3_PEAK_RECENT_MULT", self.cfg.v3_peak_recent_mult)
+        self.cfg.v3_rr_boost_k = _env_float("PF_V3_RR_BOOST_K", self.cfg.v3_rr_boost_k)
+        self.cfg.v3_rr_max = _env_float("PF_V3_RR_MAX", self.cfg.v3_rr_max)
         self._v3_sessions_allowed = _env_csv_set_lower("PF_V3_SESSIONS_ALLOWED")
 
         if not self.cfg.partial_rs:
@@ -317,7 +327,9 @@ class PumpFadeStrategy:
                 return None
 
         bars_in_window = max(4, int(self.cfg.pump_window_min / self.cfg.interval_min))
-        if len(self._closes) < bars_in_window + 8:
+        long_mult = max(1, int(self.cfg.v3_long_window_mult))
+        bars_long = max(bars_in_window, bars_in_window * long_mult)
+        if len(self._closes) < bars_long + 8:
             self._mark_skip("V3_HISTORY_SHORT")
             return None
 
@@ -325,18 +337,27 @@ class PumpFadeStrategy:
         highs_w = self._highs[-bars_in_window:]
         vols_w = self._volumes[-bars_in_window:]
         base = self._closes[-bars_in_window - 1]
+        base_long = self._closes[-bars_long - 1]
         if base <= 0:
             self._mark_skip("V3_INVALID_BASE_PRICE")
+            return None
+        if base_long <= 0:
+            self._mark_skip("V3_INVALID_BASE_LONG")
             return None
 
         peak_high = max(highs_w)
         peak_idx = highs_w.index(peak_high)
         peak_age = bars_in_window - 1 - peak_idx
-        if peak_age > max(2, int(self.cfg.v3_peak_recent_bars)):
+        peak_recent_cap = max(2, int(float(self.cfg.v3_peak_recent_bars) * max(1.0, float(self.cfg.v3_peak_recent_mult))))
+        if peak_age > peak_recent_cap:
             self._mark_skip("V3_PEAK_TOO_OLD")
             return None
         move_pct = (peak_high / base) - 1.0
-        if move_pct < float(self.cfg.v3_pump_threshold_pct):
+        peak_high_long = max(self._highs[-bars_long:])
+        move_long_pct = (peak_high_long / base_long) - 1.0
+        short_ok = move_pct >= float(self.cfg.v3_pump_threshold_pct)
+        long_ok = move_long_pct >= float(self.cfg.v3_long_pump_threshold_pct)
+        if not (short_ok or long_ok):
             self._mark_skip("V3_NO_PUMP")
             return None
 
@@ -422,12 +443,20 @@ class PumpFadeStrategy:
             self._mark_skip("V3_VOL_NOT_FADED")
             return None
 
+        rr_dyn = float(self.cfg.v3_rr)
+        if short_ok:
+            extra = max(0.0, float(move_pct) - float(self.cfg.v3_pump_threshold_pct))
+            rr_dyn = min(float(self.cfg.v3_rr_max), rr_dyn + float(self.cfg.v3_rr_boost_k) * extra)
+        elif long_ok:
+            extra = max(0.0, float(move_long_pct) - float(self.cfg.v3_long_pump_threshold_pct))
+            rr_dyn = min(float(self.cfg.v3_rr_max), rr_dyn + float(self.cfg.v3_rr_boost_k) * extra)
+
         return self._emit_short_signal(
             symbol,
             entry=float(c),
             peak_high=float(peak_high),
             stop_buffer_pct=float(self.cfg.v3_sl_buffer_pct),
-            rr=float(self.cfg.v3_rr),
+            rr=rr_dyn,
             move_pct=float(move_pct),
         )
 
