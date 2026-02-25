@@ -149,6 +149,7 @@ BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT = float(os.getenv("BREAKOUT_MIN_PULLBACK_
 BREAKOUT_SIZEUP_ENABLE = _env_bool("BREAKOUT_SIZEUP_ENABLE", True)
 BREAKOUT_SIZEUP_MAX_MULT = max(1.0, float(os.getenv("BREAKOUT_SIZEUP_MAX_MULT", "1.30")))
 BREAKOUT_SIZEUP_MIN_SCORE = min(0.95, max(0.10, float(os.getenv("BREAKOUT_SIZEUP_MIN_SCORE", "0.62"))))
+BREAKOUT_MIN_QUOTE_5M_USD = max(0.0, float(os.getenv("BREAKOUT_MIN_QUOTE_5M_USD", "70000")))
 BREAKOUT_SYMBOLS = set()
 BREAKOUT_ENGINE = None
 
@@ -4010,6 +4011,15 @@ async def try_breakout_entry_async(symbol: str, price: float):
 
     st = S("Bybit", symbol)
     _prev5, cur5 = last_two_5m_bars(st, now)
+    if BREAKOUT_MIN_QUOTE_5M_USD > 0:
+        t0_liq = int(now - 300)
+        q5m = 0.0
+        for x in st.trades:
+            if x[0] >= t0_liq:
+                q5m += float(x[2] or 0.0)
+        if q5m < BREAKOUT_MIN_QUOTE_5M_USD:
+            tg_trade(f"🟡 BREAKOUT SKIP {symbol}: liq5m {q5m:.0f}$ < {BREAKOUT_MIN_QUOTE_5M_USD:.0f}$")
+            return
 
     # Retest confirmation: require touch near entry and directional close in current 5m bar.
     if BREAKOUT_REQUIRE_RETEST_CONFIRM:
