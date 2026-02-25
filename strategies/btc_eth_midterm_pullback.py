@@ -74,20 +74,28 @@ class BTCETHMidtermPullbackConfig:
     trend_ema_fast: int = 50
     trend_ema_slow: int = 200
     trend_slope_bars: int = 8
-    trend_slope_min_pct: float = 0.25
+    trend_slope_min_pct: float = 0.40
+    trend_min_gap_pct: float = 0.18
 
     signal_ema_period: int = 20
     atr_period: int = 14
-    max_pullback_pct: float = 1.20
+    max_pullback_pct: float = 1.00
     touch_tol_pct: float = 0.20
-    reclaim_pct: float = 0.08
+    reclaim_pct: float = 0.12
     swing_lookback_bars: int = 10
+    max_atr_pct_1h: float = 2.50
 
     sl_atr_mult: float = 1.20
     swing_sl_buffer_atr: float = 0.15
     rr: float = 2.2
+    use_runner_exits: bool = False
+    tp1_rr: float = 1.2
+    tp2_rr: float = 2.6
+    tp1_frac: float = 0.50
+    trail_atr_mult: float = 1.1
+    time_stop_bars_5m: int = 84
 
-    cooldown_bars_5m: int = 48
+    cooldown_bars_5m: int = 72
     max_signals_per_day: int = 2
     allow_longs: bool = True
     allow_shorts: bool = True
@@ -106,15 +114,23 @@ class BTCETHMidtermPullbackStrategy:
         self.cfg.trend_ema_slow = _env_int("MTPB_TREND_EMA_SLOW", self.cfg.trend_ema_slow)
         self.cfg.trend_slope_bars = _env_int("MTPB_TREND_SLOPE_BARS", self.cfg.trend_slope_bars)
         self.cfg.trend_slope_min_pct = _env_float("MTPB_TREND_SLOPE_MIN_PCT", self.cfg.trend_slope_min_pct)
+        self.cfg.trend_min_gap_pct = _env_float("MTPB_TREND_MIN_GAP_PCT", self.cfg.trend_min_gap_pct)
         self.cfg.signal_ema_period = _env_int("MTPB_SIGNAL_EMA_PERIOD", self.cfg.signal_ema_period)
         self.cfg.atr_period = _env_int("MTPB_ATR_PERIOD", self.cfg.atr_period)
         self.cfg.max_pullback_pct = _env_float("MTPB_MAX_PULLBACK_PCT", self.cfg.max_pullback_pct)
         self.cfg.touch_tol_pct = _env_float("MTPB_TOUCH_TOL_PCT", self.cfg.touch_tol_pct)
         self.cfg.reclaim_pct = _env_float("MTPB_RECLAIM_PCT", self.cfg.reclaim_pct)
         self.cfg.swing_lookback_bars = _env_int("MTPB_SWING_LOOKBACK_BARS", self.cfg.swing_lookback_bars)
+        self.cfg.max_atr_pct_1h = _env_float("MTPB_MAX_ATR_PCT_1H", self.cfg.max_atr_pct_1h)
         self.cfg.sl_atr_mult = _env_float("MTPB_SL_ATR_MULT", self.cfg.sl_atr_mult)
         self.cfg.swing_sl_buffer_atr = _env_float("MTPB_SWING_SL_BUFFER_ATR", self.cfg.swing_sl_buffer_atr)
         self.cfg.rr = _env_float("MTPB_RR", self.cfg.rr)
+        self.cfg.use_runner_exits = _env_bool("MTPB_USE_RUNNER_EXITS", self.cfg.use_runner_exits)
+        self.cfg.tp1_rr = _env_float("MTPB_TP1_RR", self.cfg.tp1_rr)
+        self.cfg.tp2_rr = _env_float("MTPB_TP2_RR", self.cfg.tp2_rr)
+        self.cfg.tp1_frac = _env_float("MTPB_TP1_FRAC", self.cfg.tp1_frac)
+        self.cfg.trail_atr_mult = _env_float("MTPB_TRAIL_ATR_MULT", self.cfg.trail_atr_mult)
+        self.cfg.time_stop_bars_5m = _env_int("MTPB_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
         self.cfg.cooldown_bars_5m = _env_int("MTPB_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
         self.cfg.max_signals_per_day = _env_int("MTPB_MAX_SIGNALS_PER_DAY", self.cfg.max_signals_per_day)
         self.cfg.allow_longs = _env_bool("MTPB_ALLOW_LONGS", self.cfg.allow_longs)
@@ -143,6 +159,11 @@ class BTCETHMidtermPullbackStrategy:
             return None
         if es_prev == 0:
             return None
+
+        last_c = max(1e-12, abs(closes[-1]))
+        gap_pct = abs(ef - es) / last_c * 100.0
+        if gap_pct < float(self.cfg.trend_min_gap_pct):
+            return 1
 
         slope_pct = (es - es_prev) / abs(es_prev) * 100.0
         if ef > es and slope_pct >= self.cfg.trend_slope_min_pct:
@@ -192,9 +213,12 @@ class BTCETHMidtermPullbackStrategy:
         atr1h = _atr_from_rows(rows_1h, self.cfg.atr_period)
         if not (math.isfinite(ema1h) and math.isfinite(atr1h) and atr1h > 0):
             return None
+        cur_c = closes[-1]
+        atr_pct_1h = (atr1h / max(1e-12, abs(cur_c))) * 100.0
+        if atr_pct_1h > float(self.cfg.max_atr_pct_1h):
+            return None
 
         prev_c = closes[-2]
-        cur_c = closes[-1]
         look = max(3, min(len(rows_1h), int(self.cfg.swing_lookback_bars)))
         swing_low = min(lows[-look:])
         swing_high = max(highs[-look:])
@@ -210,10 +234,13 @@ class BTCETHMidtermPullbackStrategy:
                 sl = min(swing_sl, atr_sl)
                 if sl >= float(c):
                     return None
-                tp = float(c) + self.cfg.rr * (float(c) - sl)
+                risk = float(c) - sl
+                tp1 = float(c) + float(self.cfg.tp1_rr) * risk
+                tp2 = float(c) + float(self.cfg.tp2_rr) * risk
+                tp = float(c) + self.cfg.rr * risk
                 self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
                 self._day_signals += 1
-                return TradeSignal(
+                sig = TradeSignal(
                     strategy="btc_eth_midterm_pullback",
                     symbol=store.symbol,
                     side="long",
@@ -222,6 +249,14 @@ class BTCETHMidtermPullbackStrategy:
                     tp=float(tp),
                     reason=f"mtpb_long trend4h pullback1h ema={self.cfg.signal_ema_period}",
                 )
+                if self.cfg.use_runner_exits:
+                    tp1_frac = min(0.9, max(0.1, float(self.cfg.tp1_frac)))
+                    sig.tps = [float(tp1), float(tp2)]
+                    sig.tp_fracs = [tp1_frac, max(0.0, 1.0 - tp1_frac)]
+                    sig.trailing_atr_mult = max(0.0, float(self.cfg.trail_atr_mult))
+                    sig.trailing_atr_period = max(5, int(self.cfg.atr_period))
+                    sig.time_stop_bars = max(0, int(self.cfg.time_stop_bars_5m))
+                return sig
 
         # Short: 4h downtrend + 1h pullback to EMA20 + reclaim below EMA.
         if self.cfg.allow_shorts and bias == 0:
@@ -234,10 +269,13 @@ class BTCETHMidtermPullbackStrategy:
                 sl = max(swing_sl, atr_sl)
                 if sl <= float(c):
                     return None
-                tp = float(c) - self.cfg.rr * (sl - float(c))
+                risk = sl - float(c)
+                tp1 = float(c) - float(self.cfg.tp1_rr) * risk
+                tp2 = float(c) - float(self.cfg.tp2_rr) * risk
+                tp = float(c) - self.cfg.rr * risk
                 self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
                 self._day_signals += 1
-                return TradeSignal(
+                sig = TradeSignal(
                     strategy="btc_eth_midterm_pullback",
                     symbol=store.symbol,
                     side="short",
@@ -246,5 +284,13 @@ class BTCETHMidtermPullbackStrategy:
                     tp=float(tp),
                     reason=f"mtpb_short trend4h pullback1h ema={self.cfg.signal_ema_period}",
                 )
+                if self.cfg.use_runner_exits:
+                    tp1_frac = min(0.9, max(0.1, float(self.cfg.tp1_frac)))
+                    sig.tps = [float(tp1), float(tp2)]
+                    sig.tp_fracs = [tp1_frac, max(0.0, 1.0 - tp1_frac)]
+                    sig.trailing_atr_mult = max(0.0, float(self.cfg.trail_atr_mult))
+                    sig.trailing_atr_period = max(5, int(self.cfg.atr_period))
+                    sig.time_stop_bars = max(0, int(self.cfg.time_stop_bars_5m))
+                return sig
 
         return None
