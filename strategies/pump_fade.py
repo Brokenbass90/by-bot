@@ -138,6 +138,20 @@ class PumpFadeConfig:
     rsi_override_enable: bool = True
     rsi_override_pump_pct: float = 0.14
     rsi_override_leg_pct: float = 0.040
+    # PF v3: peak -> loss of momentum -> short re-entry
+    v3_enable: bool = False
+    v3_pump_threshold_pct: float = 0.09
+    v3_peak_recent_bars: int = 14
+    v3_min_drop_pct: float = 0.006
+    v3_max_drop_pct: float = 0.085
+    v3_rsi_peak_min: float = 74.0
+    v3_rsi_reentry_max: float = 60.0
+    v3_reversal_bars: int = 2
+    v3_reversal_body_min_frac: float = 0.30
+    v3_peak_vol_mult: float = 1.20
+    v3_vol_fade_ratio: float = 0.80
+    v3_rr: float = 1.7
+    v3_sl_buffer_pct: float = 0.0020
 
 
 class PumpFadeStrategy:
@@ -191,6 +205,21 @@ class PumpFadeStrategy:
         self.cfg.rsi_override_enable = _env_bool("PF_RSI_OVERRIDE_ENABLE", self.cfg.rsi_override_enable)
         self.cfg.rsi_override_pump_pct = _env_float("PF_RSI_OVERRIDE_PUMP_PCT", self.cfg.rsi_override_pump_pct)
         self.cfg.rsi_override_leg_pct = _env_float("PF_RSI_OVERRIDE_LEG_PCT", self.cfg.rsi_override_leg_pct)
+        self.cfg.v3_enable = _env_bool("PF_V3_ENABLE", self.cfg.v3_enable)
+        self.cfg.v3_pump_threshold_pct = _env_float("PF_V3_PUMP_THRESHOLD_PCT", self.cfg.v3_pump_threshold_pct)
+        self.cfg.v3_peak_recent_bars = _env_int("PF_V3_PEAK_RECENT_BARS", self.cfg.v3_peak_recent_bars)
+        self.cfg.v3_min_drop_pct = _env_float("PF_V3_MIN_DROP_PCT", self.cfg.v3_min_drop_pct)
+        self.cfg.v3_max_drop_pct = _env_float("PF_V3_MAX_DROP_PCT", self.cfg.v3_max_drop_pct)
+        self.cfg.v3_rsi_peak_min = _env_float("PF_V3_RSI_PEAK_MIN", self.cfg.v3_rsi_peak_min)
+        self.cfg.v3_rsi_reentry_max = _env_float("PF_V3_RSI_REENTRY_MAX", self.cfg.v3_rsi_reentry_max)
+        self.cfg.v3_reversal_bars = _env_int("PF_V3_REVERSAL_BARS", self.cfg.v3_reversal_bars)
+        self.cfg.v3_reversal_body_min_frac = _env_float(
+            "PF_V3_REVERSAL_BODY_MIN_FRAC", self.cfg.v3_reversal_body_min_frac
+        )
+        self.cfg.v3_peak_vol_mult = _env_float("PF_V3_PEAK_VOL_MULT", self.cfg.v3_peak_vol_mult)
+        self.cfg.v3_vol_fade_ratio = _env_float("PF_V3_VOL_FADE_RATIO", self.cfg.v3_vol_fade_ratio)
+        self.cfg.v3_rr = _env_float("PF_V3_RR", self.cfg.v3_rr)
+        self.cfg.v3_sl_buffer_pct = _env_float("PF_V3_SL_BUFFER_PCT", self.cfg.v3_sl_buffer_pct)
 
         if not self.cfg.partial_rs:
             self.cfg.partial_rs = [self.cfg.rr]
@@ -210,6 +239,157 @@ class PumpFadeStrategy:
         self._pumped_flag: bool = False
         self._skip_reasons: Dict[str, int] = {}
         self._signals_emitted: int = 0
+
+    def _emit_short_signal(self, symbol: str, *, entry: float, peak_high: float, stop_buffer_pct: float, rr: float, move_pct: float) -> Optional[TradeSignal]:
+        sl = peak_high * (1.0 + float(stop_buffer_pct))
+        if sl <= entry:
+            self._mark_skip("INVALID_SL_LEVEL", reset_pumped=True)
+            return None
+        risk = (sl - entry)
+        if risk <= 0:
+            self._mark_skip("NON_POSITIVE_RISK", reset_pumped=True)
+            return None
+
+        tps: List[float] = []
+        for r in (self.cfg.partial_rs or [rr]):
+            tpv = entry - float(r) * risk
+            if tpv > 0:
+                tps.append(float(tpv))
+        if not tps:
+            self._mark_skip("NO_VALID_TPS", reset_pumped=True)
+            return None
+        tps = sorted(set(tps), reverse=True)
+        tp = float(tps[-1])
+
+        atr_now = _atr_last(self._highs, self._lows, self._closes, max(5, int(self.cfg.trailing_atr_period)))
+        trail_mult = float(self.cfg.trailing_atr_mult) if math.isfinite(atr_now) and atr_now > 0 else 0.0
+
+        self._cooldown = self.cfg.cooldown_bars
+        self._pumped_flag = False
+
+        sig = TradeSignal(
+            strategy="pump_fade",
+            symbol=symbol,
+            side="short",
+            entry=entry,
+            sl=sl,
+            tp=tp,
+            tps=tps,
+            tp_fracs=self.cfg.partial_fracs,
+            trailing_atr_mult=trail_mult,
+            trailing_atr_period=max(5, int(self.cfg.trailing_atr_period)),
+            time_stop_bars=max(0, int(self.cfg.time_stop_bars)),
+            reason=f"pump {move_pct*100:.1f}%/{self.cfg.pump_window_min}m fade",
+        )
+        if sig.validate():
+            self._signals_emitted += 1
+            return sig
+        self._mark_skip("INVALID_SIGNAL_OBJECT")
+        return None
+
+    def _on_bar_v3(self, symbol: str, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
+        bars_in_window = max(4, int(self.cfg.pump_window_min / self.cfg.interval_min))
+        if len(self._closes) < bars_in_window + 8:
+            self._mark_skip("V3_HISTORY_SHORT")
+            return None
+
+        closes_w = self._closes[-bars_in_window:]
+        highs_w = self._highs[-bars_in_window:]
+        vols_w = self._volumes[-bars_in_window:]
+        base = self._closes[-bars_in_window - 1]
+        if base <= 0:
+            self._mark_skip("V3_INVALID_BASE_PRICE")
+            return None
+
+        peak_high = max(highs_w)
+        peak_idx = highs_w.index(peak_high)
+        peak_age = bars_in_window - 1 - peak_idx
+        if peak_age > max(2, int(self.cfg.v3_peak_recent_bars)):
+            self._mark_skip("V3_PEAK_TOO_OLD")
+            return None
+        move_pct = (peak_high / base) - 1.0
+        if move_pct < float(self.cfg.v3_pump_threshold_pct):
+            self._mark_skip("V3_NO_PUMP")
+            return None
+
+        if peak_high <= 0:
+            self._mark_skip("V3_INVALID_PEAK")
+            return None
+        peak_drop = (peak_high - c) / peak_high
+        if peak_drop < float(self.cfg.v3_min_drop_pct):
+            self._mark_skip("V3_ENTRY_TOO_EARLY")
+            return None
+        if peak_drop > float(self.cfg.v3_max_drop_pct):
+            self._mark_skip("V3_ENTRY_TOO_LATE")
+            return None
+
+        ema_now = ema(self._closes[-(self.cfg.ema_period * 4):], self.cfg.ema_period)
+        if not (math.isfinite(ema_now) and c < ema_now):
+            self._mark_skip("V3_EMA_NOT_BEARISH")
+            return None
+
+        rsi_now = rsi(self._closes, 14)
+        if not math.isfinite(rsi_now):
+            self._mark_skip("V3_RSI_NAN")
+            return None
+
+        # RSI at/near peak should be overheated. If exact index is not enough history, fallback to max recent RSI.
+        rsi_peak = float("nan")
+        try:
+            abs_peak_idx = len(self._closes) - bars_in_window + peak_idx
+            if abs_peak_idx >= 15:
+                rsi_peak = rsi(self._closes[:abs_peak_idx + 1], 14)
+        except Exception:
+            rsi_peak = float("nan")
+        if not math.isfinite(rsi_peak):
+            vals: List[float] = []
+            for i in range(max(15, len(self._closes) - 10), len(self._closes) + 1):
+                rv = rsi(self._closes[:i], 14)
+                if math.isfinite(rv):
+                    vals.append(float(rv))
+            rsi_peak = max(vals) if vals else float("nan")
+
+        if not (math.isfinite(rsi_peak) and rsi_peak >= float(self.cfg.v3_rsi_peak_min)):
+            self._mark_skip("V3_RSI_PEAK_LOW")
+            return None
+        if rsi_now > float(self.cfg.v3_rsi_reentry_max):
+            self._mark_skip("V3_RSI_REENTRY_HIGH")
+            return None
+
+        # Reversal bars: bearish closes with meaningful body.
+        rev_n = max(1, int(self.cfg.v3_reversal_bars))
+        if len(self._opens) < rev_n + 1 or len(self._closes) < rev_n + 1:
+            self._mark_skip("V3_REV_HISTORY_SHORT")
+            return None
+        for i in range(1, rev_n + 1):
+            oi = self._opens[-i]
+            ci = self._closes[-i]
+            hi = self._highs[-i]
+            li = self._lows[-i]
+            rng = max(1e-12, hi - li)
+            body_frac = abs(ci - oi) / rng
+            if not (ci < oi and body_frac >= float(self.cfg.v3_reversal_body_min_frac)):
+                self._mark_skip("V3_REVERSAL_FAIL")
+                return None
+
+        # Peak volume climax then fade.
+        vol_avg = sum(vols_w) / float(len(vols_w)) if vols_w else 0.0
+        peak_vol = vols_w[peak_idx] if peak_idx < len(vols_w) else 0.0
+        if vol_avg > 0 and peak_vol < vol_avg * float(self.cfg.v3_peak_vol_mult):
+            self._mark_skip("V3_PEAK_VOL_WEAK")
+            return None
+        if peak_vol > 0 and self._volumes[-1] > peak_vol * float(self.cfg.v3_vol_fade_ratio):
+            self._mark_skip("V3_VOL_NOT_FADED")
+            return None
+
+        return self._emit_short_signal(
+            symbol,
+            entry=float(c),
+            peak_high=float(peak_high),
+            stop_buffer_pct=float(self.cfg.v3_sl_buffer_pct),
+            rr=float(self.cfg.v3_rr),
+            move_pct=float(move_pct),
+        )
 
     def _mark_skip(self, reason: str, *, reset_pumped: bool = False) -> None:
         key = str(reason or "UNKNOWN").strip().upper()
@@ -239,6 +419,9 @@ class PumpFadeStrategy:
         self._highs.append(h)
         self._lows.append(l)
         self._volumes.append(max(0.0, float(v or 0.0)))
+
+        if self.cfg.v3_enable:
+            return self._on_bar_v3(symbol, o, h, l, c, v)
 
         if self._cooldown > 0:
             self._cooldown -= 1
@@ -360,53 +543,17 @@ class PumpFadeStrategy:
             self._mark_skip("BEARISH_CONFIRM_FAIL")
             return None
 
-        entry = c
-        sl = peak_high * (1.0 + self.cfg.stop_buffer_pct)
-        if sl <= entry:
-            self._mark_skip("INVALID_SL_LEVEL", reset_pumped=True)
-            return None
-
-        risk = (sl - entry)
-        if risk <= 0:
-            self._mark_skip("NON_POSITIVE_RISK", reset_pumped=True)
-            return None
-
-        tps = []
-        for r in (self.cfg.partial_rs or [self.cfg.rr]):
-            tpv = entry - float(r) * risk
-            if tpv > 0:
-                tps.append(float(tpv))
-        if not tps:
-            self._mark_skip("NO_VALID_TPS", reset_pumped=True)
-            return None
-        tps = sorted(set(tps), reverse=True)
-        tp = float(tps[-1])
-
-        atr_now = _atr_last(self._highs, self._lows, self._closes, max(5, int(self.cfg.trailing_atr_period)))
-        trail_mult = float(self.cfg.trailing_atr_mult) if math.isfinite(atr_now) and atr_now > 0 else 0.0
-
-        self._cooldown = self.cfg.cooldown_bars
-        self._pumped_flag = False
-
-        sig = TradeSignal(
-            strategy="pump_fade",
-            symbol=symbol,
-            side="short",
-            entry=entry,
-            sl=sl,
-            tp=tp,
-            tps=tps,
-            tp_fracs=self.cfg.partial_fracs,
-            trailing_atr_mult=trail_mult,
-            trailing_atr_period=max(5, int(self.cfg.trailing_atr_period)),
-            time_stop_bars=max(0, int(self.cfg.time_stop_bars)),
-            reason=f"pump {move_pct*100:.1f}%/{self.cfg.pump_window_min}m leg={leg_pct*100:.1f}% then reversal;confirm={confirm_n}",
+        sig = self._emit_short_signal(
+            symbol,
+            entry=float(c),
+            peak_high=float(peak_high),
+            stop_buffer_pct=float(self.cfg.stop_buffer_pct),
+            rr=float(self.cfg.rr),
+            move_pct=float(move_pct),
         )
-        if sig.validate():
-            self._signals_emitted += 1
-            return sig
-        self._mark_skip("INVALID_SIGNAL_OBJECT")
-        return None
+        if sig is not None:
+            sig.reason = f"pump {move_pct*100:.1f}%/{self.cfg.pump_window_min}m leg={leg_pct*100:.1f}% then reversal;confirm={confirm_n}"
+        return sig
 
         return None
 
