@@ -74,14 +74,14 @@ class BTCETHMidtermPullbackConfig:
     trend_ema_fast: int = 50
     trend_ema_slow: int = 200
     trend_slope_bars: int = 8
-    trend_slope_min_pct: float = 0.40
+    trend_slope_min_pct: float = 0.45
     trend_min_gap_pct: float = 0.18
 
     signal_ema_period: int = 20
     atr_period: int = 14
-    max_pullback_pct: float = 1.00
+    max_pullback_pct: float = 0.90
     touch_tol_pct: float = 0.20
-    reclaim_pct: float = 0.12
+    reclaim_pct: float = 0.15
     swing_lookback_bars: int = 10
     max_atr_pct_1h: float = 2.50
 
@@ -95,7 +95,7 @@ class BTCETHMidtermPullbackConfig:
     trail_atr_mult: float = 1.1
     time_stop_bars_5m: int = 84
 
-    cooldown_bars_5m: int = 72
+    cooldown_bars_5m: int = 84
     max_signals_per_day: int = 2
     allow_longs: bool = True
     allow_shorts: bool = True
