@@ -142,6 +142,38 @@ def _flat_score(c5: List[Candle]) -> tuple[float, dict]:
     }
 
 
+def _csv_set(name: str, default_csv: str = "") -> set[str]:
+    raw = os.getenv(name, default_csv) or ""
+    return {x.strip() for x in str(raw).split(",") if x.strip()}
+
+
+def _regime_at_bar(store: KlineStore, i: int) -> str:
+    """Classify regime at current bar index: 'flat' or 'trend'."""
+    if i < 260:
+        return "trend"
+    c = [float(x.c) for x in store.c5[: i + 1]]
+    h = [float(x.h) for x in store.c5[: i + 1]]
+    l = [float(x.l) for x in store.c5[: i + 1]]
+    cur = c[-1]
+    if cur <= 0:
+        return "trend"
+
+    ef = _ema(c[-90:], 20)
+    es = _ema(c[-140:], 50)
+    atr = _atr_from_candles(store.c5[max(0, i - 180): i + 1], 14)
+    if not (math.isfinite(ef) and math.isfinite(es) and math.isfinite(atr) and atr > 0):
+        return "trend"
+
+    gap_pct = abs(ef - es) / cur * 100.0
+    atr_pct = atr / cur * 100.0
+    es_prev = _ema(c[-190:-40], 50) if len(c) >= 190 else float("nan")
+    slope_pct = abs((es - es_prev) / max(1e-12, abs(es_prev))) * 100.0 if math.isfinite(es_prev) else 999.0
+
+    # Conservative flat definition; otherwise trend.
+    is_flat = (gap_pct <= 0.55) and (slope_pct <= 0.55) and (0.20 <= atr_pct <= 2.40)
+    return "flat" if is_flat else "trend"
+
+
 def _parse_end(s: Optional[str]) -> int:
     if not s:
         return int(time.time())
@@ -333,6 +365,12 @@ def main():
     ap.add_argument("--cache", default=".cache/klines")
     ap.add_argument("--tag", default="portfolio")
     args = ap.parse_args()
+    regime_router_enable = str(os.getenv("REGIME_ROUTER_ENABLE", "0")).strip().lower() in {"1", "true", "yes", "on"}
+    regime_flat_set = _csv_set("REGIME_FLAT_STRATEGIES", "smart_grid,range_bounce")
+    regime_trend_set = _csv_set(
+        "REGIME_TREND_STRATEGIES",
+        "inplay_breakout,btc_eth_midterm_pullback,trend_breakout,trend_pullback,btc_eth_trend_follow",
+    )
 
     symbols = [s.strip() for s in args.symbols.split(",") if s.strip()]
     exclude = [s.strip() for s in (args.exclude_symbols or "").split(",") if s.strip()]
@@ -405,7 +443,19 @@ def main():
 
     def selector(sym: str, store: KlineStore, ts_ms: int, last_price: float):
         # IMPORTANT: first-match wins (priority = order in --strategies)
+        i_cur = getattr(store, 'i5', getattr(store, 'i', None))
+        regime = "trend"
+        if regime_router_enable and i_cur is not None:
+            try:
+                regime = _regime_at_bar(store, int(i_cur))
+            except Exception:
+                regime = "trend"
         for st in strategies:
+            if regime_router_enable:
+                if regime == "flat" and st not in regime_flat_set:
+                    continue
+                if regime == "trend" and st not in regime_trend_set:
+                    continue
             if st == "bounce":
                 sig = bounce[sym].maybe_signal(store, ts_ms, last_price)
             elif st == "bounce_v2":
