@@ -62,6 +62,7 @@ from strategies.adaptive_range_short import AdaptiveRangeShortStrategy
 from strategies.smart_grid import SmartGridStrategy
 from strategies.range_bounce import RangeBounceStrategy
 from strategies.donchian_breakout import DonchianBreakoutStrategy
+from strategies.btc_eth_midterm_pullback import BTCETHMidtermPullbackStrategy
 
 
 def _parse_end(s: Optional[str]) -> int:
@@ -239,8 +240,8 @@ def main():
                     help="Comma-separated symbols to exclude from the auto universe.")
     ap.add_argument(
         "--strategies",
-        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,range_bounce,donchian_breakout",
-        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,range_bounce,donchian_breakout",
+        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,range_bounce,donchian_breakout,btc_eth_midterm_pullback",
+        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,range_bounce,donchian_breakout,btc_eth_midterm_pullback",
     )
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--end", default="", help="YYYY-MM-DD (UTC)")
@@ -264,7 +265,7 @@ def main():
         raise SystemExit("No symbols selected. Provide --symbols or relax --min_volume_usd/--top_n.")
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
-    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "range_bounce", "donchian_breakout"}
+    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -295,6 +296,7 @@ def main():
     smart_grid = {sym: SmartGridStrategy() for sym in symbols} if "smart_grid" in strategies else {}
     range_bounce = {sym: RangeBounceStrategy() for sym in symbols} if "range_bounce" in strategies else {}
     donchian_breakout = {sym: DonchianBreakoutStrategy() for sym in symbols} if "donchian_breakout" in strategies else {}
+    btc_eth_midterm_pullback = {sym: BTCETHMidtermPullbackStrategy() for sym in symbols} if "btc_eth_midterm_pullback" in strategies else {}
 
     def selector(sym: str, store: KlineStore, ts_ms: int, last_price: float):
         # IMPORTANT: first-match wins (priority = order in --strategies)
@@ -370,6 +372,12 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = donchian_breakout[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "btc_eth_midterm_pullback":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = btc_eth_midterm_pullback[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             else:
                 sig = None
             if sig is not None:
