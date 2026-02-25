@@ -161,3 +161,39 @@
 - 2026-02-22 18:58 UTC | pump_fade | baseline fixed: pf_v4c_240d (net=+7.81, PF=1.883, DD=3.77, ~+0.98%%/month over 240d) | done
 - 2026-02-22 19:10 UTC | pump_fade | v7 spike-only mode added (PF_SPIKE_ONLY + spike thresholds/last-leg gate); fixed scripts/plot_trade_bybit.py base URL bug for backtest trade visualization | done
 - 2026-02-22 19:25 UTC | live | anti-spam fix: BREAKOUT killer-guard skip notifications throttled per-symbol (KILLER_GUARD_LOG_EVERY_SEC, default 300s) | done
+- 2026-02-24 00:00 UTC | smart_grid | added new range mean-reversion grid-like strategy (long/short, zone-based entries, ATR SL, 2 partial TPs), integrated into backtest/run_portfolio.py via --strategies smart_grid | done
+- 2026-02-24 00:00 UTC | range_bounce | added new level-bounce strategy (touch-count + volume context + rejection candle, long/short) and integrated into backtest/run_portfolio.py via --strategies range_bounce | done
+- 2026-02-24 00:00 UTC | roadmap | accepted next R&D queue: (1) HTF trend pullback 4h/1h (BTC/ETH/SOL), (2) Donchian 20/55 breakout, (3) volatility expansion (ATR/BB squeeze->breakout), (4) funding/OI filter module, (5) BTC regime master-filter for alts; news layer planned as optional toggleable module after price-action stack | planned
+- 2026-02-24 00:00 UTC | trend_pullback/trend_breakout | screened as R&D candidates: trend_pullback strongly negative; trend_breakout proxy produced 0 trades on BTC/ETH/SOL for 180d/360d at current defaults | done\n
+- 2026-02-24 00:00 UTC | donchian_breakout | added new HTF Donchian breakout candidate (55 channel + EMA filter + ATR SL + RR target), integrated into backtest/run_portfolio.py via --strategies donchian_breakout | done\n
+- 2026-02-24 00:00 UTC | strategy-screen | range_bounce v1/v2 screened on 180d/360d: persistent negative PF (<1), rejected for live; donchian_breakout v1 screened on 180d/360d(+stress): negative PF, rejected for live; inplay vs inplay_breakout head-to-head: breakout strongly superior and remains core | done\n
+- 2026-02-24 00:00 UTC | roadmap-priority | priorities updated: P1 BTC regime master-filter (portfolio gate), P2 volatility expansion candidate (vol_breakout tuning/screen), P3 session/seasonality filters, P4 liquidation-event setup, P5 funding/OI module (optional), P6 pairs/stat-arb R&D, P7 optional news layer (toggleable) | planned\n
+- 2026-02-24 00:00 UTC | core-improvements | queued implementation items for live core: session filter, spread/liquidity filters, soft BTC-regime as position-size multiplier (not hard gate), and slippage control guards | planned\n
+- 2026-02-24 00:00 UTC | midterm-screen | donchian_breakout 4h v1 screen on BTC/ETH/SOL (360d): base +3.48 USDT, stress +2.38 USDT, 66 trades/year, max DD ~3-3.5 USDT; weak but resilient candidate for further tuning | done\n
+- 2026-02-24 00:00 UTC | donchian_breakout v2 | upgraded medium-term candidate: one-signal-per-new-HTF-bar, ATR%% and volume breakout filters, EMA-distance/slope guard, TP1/TP2 partials + ATR trailing + time stop, cooldown interpreted in HTF bars | done
+- 2026-02-24 00:00 UTC | donchian_breakout v2 | screen result: fail (360d base/stress both negative, 28 trades, 0% winrate), archived as R&D with potential revisit later | done\n
+- 2026-02-24 00:00 UTC | session-filter | added session gating to backtest/run_portfolio.py (SESSION_FILTER_ENABLE, SESSION_FILTER_ALLOWED, SESSION_ALLOWED_<STRATEGY>) with UTC windows: asia/europe/us | done\n
+
+- 2026-02-25 06:20 UTC | context | Product snapshot recorded for handoff/new chat continuity.
+  Product: Bybit futures trading bot (`smart_pump_reversal_bot.py`) with live execution, Telegram notifications, dynamic symbol filters, and backtest framework (`backtest/run_portfolio.py`).
+  Current live mode: breakout enabled, pump_fade disabled temporarily, inplay/retest/range disabled. Dynamic filter auto-build/auto-refresh enabled every 1800s.
+  Current known status: `inplay_breakout` shows strong base backtests but degrades under stress-cost assumptions; `pump_fade` currently underperforming / low signal frequency and moved to R&D.
+  Infra: Bybit WS stability tuning in progress (TOP_N/SHARD/BATCH/PING params via `.env`), monitored via journalctl counts for keepalive timeouts and ENTRY/CLOSED events.
+
+- 2026-02-25 06:20 UTC | roadmap | Mandatory cleanup TODO added.
+  TODO (project hygiene):
+  1) inventory and remove/archive obsolete backtest runs (keep baselines only),
+  2) clean stale cache artifacts (`data_cache`, `.cache/klines`) by retention policy,
+  3) normalize env templates and remove dead vars,
+  4) consolidate strategy docs + decision log,
+  5) prune unused scripts/modules after PF v2 and core baseline are finalized.
+- 2026-02-25 06:35 UTC | pump_fade v2 | added exhaustion gates to strategy (`PF_USE_EXHAUSTION_FILTER`, `PF_EXHAUSTION_BODY_TO_WICK_MAX`, `PF_EXHAUSTION_VOL_DROP_RATIO`), wired volume stream into signal logic, kept compatibility via maybe_signal() pass-through | done
+- 2026-02-25 06:55 UTC | handoff summary | Consolidated status for next-chat continuity.
+  Bot product: automated Bybit USDT-perp trading system with live execution (`smart_pump_reversal_bot.py`), strategy toggles via `.env`, dynamic symbol filtering, Telegram reporting, and portfolio backtesting (`backtest/run_portfolio.py`).
+  Live config now: breakout ON, pump_fade OFF (temporary), inplay/retest/range OFF; dynamic filter auto build+refresh every 1800s; WS shard/batch tuning applied for stability.
+  Proven by recent tests: `inplay_breakout` remains the only currently robust alpha source in base-cost runs; legacy `inplay` underperforms; `pump_fade` v1/v2 currently non-viable (low trade count and negative 180/360d).
+  Key risk observed: severe degradation under stress execution assumptions (high fee+slippage), indicating execution-cost sensitivity.
+  Decision: keep live conservative (breakout-only) while running PF v3 redesign in R&D and preparing a second non-correlated strategy candidate.
+  Immediate next tasks: (1) breakout execution hardening (spread/liquidity/slippage guards), (2) PF v3 new hypothesis with explicit skip-reason diagnostics, (3) project cleanup pass (archive old runs, cache retention, env/doc normalization).
+- 2026-02-25 07:30 UTC | pump_fade v3 diagnostics | added explicit skip_reason counters in strategies/pump_fade.py and aggregated export in backtest/run_portfolio.py (pump_fade_skip_reasons.csv with per-symbol and TOTAL breakdown + signals_emitted) for PF hypothesis debugging | done
+- 2026-02-25 07:57 UTC | live/ws hardening | bybit WS reconnect loop hardened in smart_pump_reversal_bot.py: first-connect stagger only, fast reconnect path for ConnectionClosed/Reset/OSError, env-configurable reconnect/open/close timeouts (BYBIT_WS_RECONNECT_* / BYBIT_WS_OPEN_TIMEOUT / BYBIT_WS_CLOSE_TIMEOUT), reduced traceback noise for transient disconnects | done

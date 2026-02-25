@@ -9,7 +9,7 @@ import sqlite3
 import subprocess
 from typing import Dict, Tuple, List, Optional, Any
 import websockets
-from websockets.exceptions import InvalidStatus
+from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK, InvalidStatus
 from dotenv import load_dotenv
 import hmac, hashlib
 from urllib.parse import urlencode
@@ -5061,27 +5061,39 @@ async def bybit_ws():
     BATCH_SIZE  = int(os.getenv("BYBIT_WS_BATCH_SIZE", "6"))
     BATCH_DELAY = float(os.getenv("BYBIT_WS_BATCH_DELAY", "1.8"))
     START_STAGGER = float(os.getenv("BYBIT_WS_START_STAGGER", "2.0"))
+    WS_PING_INTERVAL = float(os.getenv("BYBIT_WS_PING_INTERVAL", "20"))
+    WS_PING_TIMEOUT = float(os.getenv("BYBIT_WS_PING_TIMEOUT", "60"))
+    WS_OPEN_TIMEOUT = float(os.getenv("BYBIT_WS_OPEN_TIMEOUT", "60"))
+    WS_CLOSE_TIMEOUT = float(os.getenv("BYBIT_WS_CLOSE_TIMEOUT", "10"))
+    WS_RECONNECT_MIN = max(1.0, float(os.getenv("BYBIT_WS_RECONNECT_MIN_SEC", "5")))
+    WS_RECONNECT_MAX = max(WS_RECONNECT_MIN, float(os.getenv("BYBIT_WS_RECONNECT_MAX_SEC", "90")))
+    WS_RECONNECT_JITTER = max(0.0, float(os.getenv("BYBIT_WS_RECONNECT_JITTER_SEC", "2.5")))
 
     shards = [topics[i:i+SHARD_SIZE] for i in range(0, len(topics), SHARD_SIZE)]
 
     async def run_one(shard_args: List[str], shard_id: int):
-        backoff = 10  # стартовый backoff
+        backoff = float(WS_RECONNECT_MIN)
+        first_connect = True
         while True:
             try:
-                await asyncio.sleep(START_STAGGER * shard_id + random.uniform(0, 1.0))
+                if first_connect:
+                    await asyncio.sleep(START_STAGGER * shard_id + random.uniform(0, 1.0))
+                    first_connect = False
+                else:
+                    await asyncio.sleep(random.uniform(0.2, 1.2))
                 print(f"[bybit] shard {shard_id} connecting... ({len(shard_args)} topics)")
 
                 async with websockets.connect(
                     url,
-                    ping_interval=float(os.getenv("BYBIT_WS_PING_INTERVAL", "20")),
-                    ping_timeout=float(os.getenv("BYBIT_WS_PING_TIMEOUT", "60")),
-                    open_timeout=60,
-                    close_timeout=10,
+                    ping_interval=WS_PING_INTERVAL,
+                    ping_timeout=WS_PING_TIMEOUT,
+                    open_timeout=WS_OPEN_TIMEOUT,
+                    close_timeout=WS_CLOSE_TIMEOUT,
                     max_queue=None,
                     max_size=None,   # <-- ВАЖНО: добавить
                 ) as ws:
                     print(f"[bybit] shard {shard_id} CONNECTED ✅")
-                    backoff = 10  # сбрасываем после успешного коннекта
+                    backoff = float(WS_RECONNECT_MIN)
 
                     for i in range(0, len(shard_args), BATCH_SIZE):
                         batch = shard_args[i:i+BATCH_SIZE]
@@ -5132,20 +5144,27 @@ async def bybit_ws():
                 # это как раз "timed out during opening handshake"
                 print(f"[bybit] shard {shard_id} handshake timeout; retry in ~{backoff}s")
                 log_error(f"BYBIT shard {shard_id} handshake timeout: {repr(e)}")
-                await asyncio.sleep(backoff + random.uniform(0, 5.0))
-                backoff = min(backoff * 2, 120)
+                await asyncio.sleep(backoff + random.uniform(0, WS_RECONNECT_JITTER))
+                backoff = min(backoff * 1.7, WS_RECONNECT_MAX)
 
             except InvalidStatus as e:
                 print(f"[bybit] shard {shard_id} InvalidStatus: {repr(e)}")
                 log_error(f"BYBIT InvalidStatus shard {shard_id}: {repr(e)}")
-                await asyncio.sleep(300)
+                await asyncio.sleep(min(300.0, WS_RECONNECT_MAX * 2.0))
+
+            except (ConnectionClosedError, ConnectionClosedOK, ConnectionResetError, OSError) as e:
+                # Typical transient WS disconnects; keep logs concise and reconnect fast.
+                print(f"[bybit] shard {shard_id} disconnected: {repr(e)}; retry in ~{backoff}s")
+                log_error(f"BYBIT shard {shard_id} disconnected: {repr(e)}")
+                await asyncio.sleep(backoff + random.uniform(0, WS_RECONNECT_JITTER))
+                backoff = min(backoff * 1.7, WS_RECONNECT_MAX)
 
             except Exception as e:
                 print(f"[bybit] shard {shard_id} ERROR: {repr(e)}")
                 print(traceback.format_exc())
                 log_error(f"BYBIT shard {shard_id} crash: {repr(e)}")
-                await asyncio.sleep(backoff + random.uniform(0, 5.0))
-                backoff = min(backoff * 2, 120)
+                await asyncio.sleep(backoff + random.uniform(0, WS_RECONNECT_JITTER))
+                backoff = min(backoff * 1.7, WS_RECONNECT_MAX)
 
     tasks = [asyncio.create_task(run_one(chunk, i)) for i, chunk in enumerate(shards)]
     await asyncio.gather(*tasks)

@@ -59,6 +59,9 @@ from strategies.trend_pullback import TrendPullbackStrategy
 from strategies.trend_regime_breakout import TrendRegimeBreakoutStrategy
 from strategies.vol_breakout import VolatilityBreakoutStrategy
 from strategies.adaptive_range_short import AdaptiveRangeShortStrategy
+from strategies.smart_grid import SmartGridStrategy
+from strategies.range_bounce import RangeBounceStrategy
+from strategies.donchian_breakout import DonchianBreakoutStrategy
 
 
 def _parse_end(s: Optional[str]) -> int:
@@ -114,6 +117,81 @@ def _load_symbol_5m(symbol: str, start_ts: int, end_ts: int, *, bybit_base: str,
 
 
 
+
+
+def _session_name(ts_ms: int) -> str:
+    ts_sec = int(ts_ms // 1000 if ts_ms > 10_000_000_000 else ts_ms)
+    hour = (ts_sec // 3600) % 24
+    # UTC windows
+    if 0 <= hour < 9:
+        return "asia"
+    if 8 <= hour < 17:
+        return "europe"
+    if 13 <= hour < 22:
+        return "us"
+    return "off"
+
+
+def _csv_lower_set(name: str) -> set[str]:
+    raw = os.getenv(name, "") or ""
+    return {x.strip().lower() for x in raw.split(",") if x.strip()}
+
+
+def _session_allowed(strategy: str, ts_ms: int) -> bool:
+    if str(os.getenv("SESSION_FILTER_ENABLE", "0")).strip().lower() not in {"1", "true", "yes", "on"}:
+        return True
+    sess = _session_name(ts_ms)
+    if sess == "off":
+        return False
+
+    key = f"SESSION_ALLOWED_{str(strategy).upper()}"
+    allow = _csv_lower_set(key)
+    if not allow:
+        allow = _csv_lower_set("SESSION_FILTER_ALLOWED")
+    if not allow:
+        return True
+    return sess in allow
+
+
+def _write_pump_fade_diagnostics(out_dir: Path, pump_fade: Dict[str, PumpFadeStrategy]) -> Optional[Path]:
+    if not pump_fade:
+        return None
+
+    rows: List[List[object]] = []
+    totals: Dict[str, int] = {}
+    total_signals = 0
+    for sym, strat in pump_fade.items():
+        try:
+            total_signals += int(strat.signals_emitted())
+            stats = strat.skip_reason_stats()
+        except Exception:
+            continue
+        for reason, cnt in stats.items():
+            c = int(cnt or 0)
+            if c <= 0:
+                continue
+            rows.append([sym, reason, c])
+            totals[reason] = int(totals.get(reason, 0)) + c
+
+    if not rows:
+        return None
+
+    rows.sort(key=lambda x: (x[0], -int(x[2]), str(x[1])))
+    total_items = sorted(totals.items(), key=lambda kv: kv[1], reverse=True)
+
+    out_path = out_dir / "pump_fade_skip_reasons.csv"
+    with out_path.open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["symbol", "reason", "count"])
+        for r in rows:
+            w.writerow(r)
+        w.writerow([])
+        w.writerow(["TOTAL", "SIGNALS_EMITTED", total_signals])
+        w.writerow(["TOTAL", "SKIPS", int(sum(totals.values()))])
+        for reason, cnt in total_items:
+            w.writerow(["TOTAL", reason, cnt])
+    return out_path
+
 def _select_auto_symbols(*, base: str, min_volume_usd: float, top_n: int, exclude: List[str]) -> List[str]:
     """Pick a universe from Bybit 24h tickers (linear USDT).
 
@@ -161,8 +239,8 @@ def main():
                     help="Comma-separated symbols to exclude from the auto universe.")
     ap.add_argument(
         "--strategies",
-        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short",
-        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short",
+        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,range_bounce,donchian_breakout",
+        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,range_bounce,donchian_breakout",
     )
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--end", default="", help="YYYY-MM-DD (UTC)")
@@ -186,7 +264,7 @@ def main():
         raise SystemExit("No symbols selected. Provide --symbols or relax --min_volume_usd/--top_n.")
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
-    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_breakout", "vol_breakout", "adaptive_range_short"}
+    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "range_bounce", "donchian_breakout"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -214,6 +292,9 @@ def main():
     trend_breakout = {sym: TrendRegimeBreakoutStrategy() for sym in symbols} if "trend_breakout" in strategies else {}
     vol_breakout = {sym: VolatilityBreakoutStrategy() for sym in symbols} if "vol_breakout" in strategies else {}
     adaptive_range_short = {sym: AdaptiveRangeShortStrategy() for sym in symbols} if "adaptive_range_short" in strategies else {}
+    smart_grid = {sym: SmartGridStrategy() for sym in symbols} if "smart_grid" in strategies else {}
+    range_bounce = {sym: RangeBounceStrategy() for sym in symbols} if "range_bounce" in strategies else {}
+    donchian_breakout = {sym: DonchianBreakoutStrategy() for sym in symbols} if "donchian_breakout" in strategies else {}
 
     def selector(sym: str, store: KlineStore, ts_ms: int, last_price: float):
         # IMPORTANT: first-match wins (priority = order in --strategies)
@@ -271,9 +352,30 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = adaptive_range_short[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "smart_grid":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = smart_grid[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "range_bounce":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = range_bounce[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "donchian_breakout":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = donchian_breakout[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             else:
                 sig = None
             if sig is not None:
+                st_name = str(getattr(sig, "strategy", st) or st)
+                if not _session_allowed(st_name, ts_ms):
+                    continue
                 return sig
         return None
 
@@ -347,6 +449,10 @@ def main():
     print(f"Saved portfolio run to: {out_dir}")
     print(f"  trades:   {trades_path}")
     print(f"  summary:  {summary_path}")
+    if "pump_fade" in strategies and pump_fade:
+        pf_diag = _write_pump_fade_diagnostics(out_dir, pump_fade)
+        if pf_diag is not None:
+            print(f"  pf_diag:  {pf_diag}")
 
 
 if __name__ == "__main__":

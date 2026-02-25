@@ -6,7 +6,7 @@ from __future__ import annotations
 import math
 import os
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from .signals import TradeSignal
 
@@ -130,6 +130,9 @@ class PumpFadeConfig:
     spike_threshold_pct: float = 0.10
     spike_last_leg_bars: int = 6
     spike_last_leg_min_pct: float = 0.025
+    use_exhaustion_filter: bool = True
+    exhaustion_body_to_wick_max: float = 0.35
+    exhaustion_vol_drop_ratio: float = 0.75
 
 
 class PumpFadeStrategy:
@@ -167,6 +170,13 @@ class PumpFadeStrategy:
         self.cfg.spike_threshold_pct = _env_float("PF_SPIKE_THRESHOLD_PCT", self.cfg.spike_threshold_pct)
         self.cfg.spike_last_leg_bars = _env_int("PF_SPIKE_LAST_LEG_BARS", self.cfg.spike_last_leg_bars)
         self.cfg.spike_last_leg_min_pct = _env_float("PF_SPIKE_LAST_LEG_MIN_PCT", self.cfg.spike_last_leg_min_pct)
+        self.cfg.use_exhaustion_filter = _env_bool("PF_USE_EXHAUSTION_FILTER", self.cfg.use_exhaustion_filter)
+        self.cfg.exhaustion_body_to_wick_max = _env_float(
+            "PF_EXHAUSTION_BODY_TO_WICK_MAX", self.cfg.exhaustion_body_to_wick_max
+        )
+        self.cfg.exhaustion_vol_drop_ratio = _env_float(
+            "PF_EXHAUSTION_VOL_DROP_RATIO", self.cfg.exhaustion_vol_drop_ratio
+        )
 
         if not self.cfg.partial_rs:
             self.cfg.partial_rs = [self.cfg.rr]
@@ -181,32 +191,55 @@ class PumpFadeStrategy:
         self._closes: List[float] = []
         self._highs: List[float] = []
         self._lows: List[float] = []
+        self._volumes: List[float] = []
         self._cooldown: int = 0
         self._pumped_flag: bool = False
+        self._skip_reasons: Dict[str, int] = {}
+        self._signals_emitted: int = 0
 
-    def on_bar(self, symbol: str, o: float, h: float, l: float, c: float) -> Optional[TradeSignal]:
+    def _mark_skip(self, reason: str, *, reset_pumped: bool = False) -> None:
+        key = str(reason or "UNKNOWN").strip().upper()
+        if not key:
+            key = "UNKNOWN"
+        self._skip_reasons[key] = int(self._skip_reasons.get(key, 0)) + 1
+        if reset_pumped:
+            self._pumped_flag = False
+
+    def skip_reason_stats(self) -> Dict[str, int]:
+        return dict(self._skip_reasons)
+
+    def signals_emitted(self) -> int:
+        return int(self._signals_emitted)
+
+    def on_bar(self, symbol: str, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         sym_u = str(symbol or "").upper()
         if self._allow and sym_u not in self._allow:
+            self._mark_skip("ALLOWLIST_REJECT")
             return None
         if sym_u in self._deny:
+            self._mark_skip("DENYLIST_REJECT")
             return None
 
         self._opens.append(o)
         self._closes.append(c)
         self._highs.append(h)
         self._lows.append(l)
+        self._volumes.append(max(0.0, float(v or 0.0)))
 
         if self._cooldown > 0:
             self._cooldown -= 1
+            self._mark_skip("COOLDOWN_ACTIVE")
             return None
 
         # need enough history
         bars_in_window = max(1, int(self.cfg.pump_window_min / self.cfg.interval_min))
         if len(self._closes) < bars_in_window + 2:
+            self._mark_skip("HISTORY_SHORT")
             return None
 
         base = self._closes[-bars_in_window - 1]
         if base <= 0:
+            self._mark_skip("INVALID_BASE_PRICE")
             return None
         move_pct = (c / base) - 1.0
         leg_bars = max(1, int(self.cfg.spike_last_leg_bars))
@@ -221,10 +254,12 @@ class PumpFadeStrategy:
             self._pumped_flag = True
 
         if not self._pumped_flag:
+            self._mark_skip("NO_PUMP_DETECTED")
             return None
 
         if self.cfg.spike_only:
             if not (move_pct >= self.cfg.spike_threshold_pct and leg_pct >= self.cfg.spike_last_leg_min_pct):
+                self._mark_skip("SPIKE_ONLY_GATE")
                 return None
 
         # Reversal confirmation: pump + overbought + near peak + bearish confirmation
@@ -236,17 +271,37 @@ class PumpFadeStrategy:
 
         # if price already collapsed too far, skip (avoid late entries)
         if peak_high <= 0:
-            self._pumped_flag = False
+            self._mark_skip("INVALID_PEAK_HIGH", reset_pumped=True)
             return None
         peak_drop = (peak_high - c) / peak_high
         if peak_drop > self.cfg.entry_max_drop_pct:
-            self._pumped_flag = False
+            self._mark_skip("ENTRY_TOO_LATE", reset_pumped=True)
             return None
         if peak_drop < self.cfg.entry_min_drop_pct:
+            self._mark_skip("ENTRY_TOO_EARLY")
             return None
 
         if not (rsi_now >= self.cfg.rsi_overbought):
+            self._mark_skip("RSI_NOT_OVERBOUGHT")
             return None
+
+        # Exhaustion filter (custom-indicators aligned):
+        # accept reversal only when the latest bar shows either:
+        # - weak body vs upper wick (buyers exhausted), or
+        # - visible volume fade vs previous bar.
+        if self.cfg.use_exhaustion_filter and len(self._opens) >= 2 and len(self._volumes) >= 2:
+            o1, c1, h1 = self._opens[-1], self._closes[-1], self._highs[-1]
+            body = abs(c1 - o1)
+            upper_wick = max(0.0, h1 - max(o1, c1))
+            weak_body = upper_wick > 0 and body <= self.cfg.exhaustion_body_to_wick_max * upper_wick
+
+            v_prev = max(1e-12, self._volumes[-2])
+            v_now = self._volumes[-1]
+            vol_fade = v_now <= (v_prev * self.cfg.exhaustion_vol_drop_ratio)
+
+            if not (weak_body or vol_fade):
+                self._mark_skip("EXHAUSTION_NOT_CONFIRMED")
+                return None
 
         # Reversal trigger.
         # 1) close under EMA
@@ -254,8 +309,10 @@ class PumpFadeStrategy:
         # 3) close structure is non-increasing across confirmations
         confirm_n = max(1, int(self.cfg.confirm_bars))
         if len(self._closes) < confirm_n + 1 or len(self._opens) < confirm_n:
+            self._mark_skip("CONFIRM_HISTORY_SHORT")
             return None
         if not (math.isfinite(ema_now) and c < ema_now):
+            self._mark_skip("EMA_REVERSAL_NOT_CONFIRMED")
             return None
 
         bearish_ok = True
@@ -273,17 +330,18 @@ class PumpFadeStrategy:
                 bearish_ok = False
                 break
         if not bearish_ok:
+            self._mark_skip("BEARISH_CONFIRM_FAIL")
             return None
 
         entry = c
         sl = peak_high * (1.0 + self.cfg.stop_buffer_pct)
         if sl <= entry:
-            self._pumped_flag = False
+            self._mark_skip("INVALID_SL_LEVEL", reset_pumped=True)
             return None
 
         risk = (sl - entry)
         if risk <= 0:
-            self._pumped_flag = False
+            self._mark_skip("NON_POSITIVE_RISK", reset_pumped=True)
             return None
 
         tps = []
@@ -292,7 +350,7 @@ class PumpFadeStrategy:
             if tpv > 0:
                 tps.append(float(tpv))
         if not tps:
-            self._pumped_flag = False
+            self._mark_skip("NO_VALID_TPS", reset_pumped=True)
             return None
         tps = sorted(set(tps), reverse=True)
         tp = float(tps[-1])
@@ -317,7 +375,11 @@ class PumpFadeStrategy:
             time_stop_bars=max(0, int(self.cfg.time_stop_bars)),
             reason=f"pump {move_pct*100:.1f}%/{self.cfg.pump_window_min}m leg={leg_pct*100:.1f}% then reversal;confirm={confirm_n}",
         )
-        return sig if sig.validate() else None
+        if sig.validate():
+            self._signals_emitted += 1
+            return sig
+        self._mark_skip("INVALID_SIGNAL_OBJECT")
+        return None
 
         return None
 
@@ -334,5 +396,4 @@ class PumpFadeStrategy:
         v: float = 0.0,
     ) -> Optional[TradeSignal]:
         _ = ts_ms
-        _ = v
-        return self.on_bar(symbol, o, h, l, c)
+        return self.on_bar(symbol, o, h, l, c, v)
