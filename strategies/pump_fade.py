@@ -133,6 +133,11 @@ class PumpFadeConfig:
     use_exhaustion_filter: bool = True
     exhaustion_body_to_wick_max: float = 0.35
     exhaustion_vol_drop_ratio: float = 0.75
+    strong_pump_threshold_pct: float = 0.12
+    strong_entry_min_drop_pct: float = 0.002
+    rsi_override_enable: bool = True
+    rsi_override_pump_pct: float = 0.14
+    rsi_override_leg_pct: float = 0.040
 
 
 class PumpFadeStrategy:
@@ -177,6 +182,15 @@ class PumpFadeStrategy:
         self.cfg.exhaustion_vol_drop_ratio = _env_float(
             "PF_EXHAUSTION_VOL_DROP_RATIO", self.cfg.exhaustion_vol_drop_ratio
         )
+        self.cfg.strong_pump_threshold_pct = _env_float(
+            "PF_STRONG_PUMP_THRESHOLD_PCT", self.cfg.strong_pump_threshold_pct
+        )
+        self.cfg.strong_entry_min_drop_pct = _env_float(
+            "PF_STRONG_ENTRY_MIN_DROP_PCT", self.cfg.strong_entry_min_drop_pct
+        )
+        self.cfg.rsi_override_enable = _env_bool("PF_RSI_OVERRIDE_ENABLE", self.cfg.rsi_override_enable)
+        self.cfg.rsi_override_pump_pct = _env_float("PF_RSI_OVERRIDE_PUMP_PCT", self.cfg.rsi_override_pump_pct)
+        self.cfg.rsi_override_leg_pct = _env_float("PF_RSI_OVERRIDE_LEG_PCT", self.cfg.rsi_override_leg_pct)
 
         if not self.cfg.partial_rs:
             self.cfg.partial_rs = [self.cfg.rr]
@@ -241,11 +255,15 @@ class PumpFadeStrategy:
         if base <= 0:
             self._mark_skip("INVALID_BASE_PRICE")
             return None
-        move_pct = (c / base) - 1.0
+        window_high = max(self._highs[-bars_in_window:]) if len(self._highs) >= bars_in_window else c
+        move_ref = max(c, window_high)
+        move_pct = (move_ref / base) - 1.0
         leg_bars = max(1, int(self.cfg.spike_last_leg_bars))
-        if len(self._closes) > leg_bars:
+        if len(self._closes) > leg_bars and len(self._highs) > leg_bars:
             leg_base = self._closes[-leg_bars - 1]
-            leg_pct = ((c / leg_base) - 1.0) if leg_base > 0 else 0.0
+            leg_peak = max(self._highs[-leg_bars:])
+            leg_ref = max(c, leg_peak)
+            leg_pct = ((leg_ref / leg_base) - 1.0) if leg_base > 0 else 0.0
         else:
             leg_pct = 0.0
 
@@ -277,11 +295,20 @@ class PumpFadeStrategy:
         if peak_drop > self.cfg.entry_max_drop_pct:
             self._mark_skip("ENTRY_TOO_LATE", reset_pumped=True)
             return None
-        if peak_drop < self.cfg.entry_min_drop_pct:
+        min_drop_needed = float(self.cfg.entry_min_drop_pct)
+        if move_pct >= float(self.cfg.strong_pump_threshold_pct):
+            min_drop_needed = min(min_drop_needed, float(self.cfg.strong_entry_min_drop_pct))
+        if peak_drop < min_drop_needed:
             self._mark_skip("ENTRY_TOO_EARLY")
             return None
 
-        if not (rsi_now >= self.cfg.rsi_overbought):
+        rsi_ok = bool(rsi_now >= self.cfg.rsi_overbought)
+        rsi_override = bool(
+            self.cfg.rsi_override_enable
+            and move_pct >= float(self.cfg.rsi_override_pump_pct)
+            and leg_pct >= float(self.cfg.rsi_override_leg_pct)
+        )
+        if not (rsi_ok or rsi_override):
             self._mark_skip("RSI_NOT_OVERBOUGHT")
             return None
 

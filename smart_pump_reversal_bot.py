@@ -44,6 +44,22 @@ def _env_bool(name: str, default: bool) -> bool:
     if v is None:
         return default
     return str(v).strip().lower() in ("1", "true", "yes", "on")
+
+
+def _csv_lower_set(name: str) -> set[str]:
+    raw = os.getenv(name, "") or ""
+    return {x.strip().lower() for x in str(raw).split(",") if x.strip()}
+
+
+def _session_name_utc(ts_sec: int) -> str:
+    hour = (int(ts_sec) // 3600) % 24
+    if 0 <= hour < 9:
+        return "asia"
+    if 8 <= hour < 17:
+        return "europe"
+    if 13 <= hour < 22:
+        return "us"
+    return "off"
 DEBUG_WINDOWS = True
 MSG_COUNTER = {"Bybit": 0, "Binance": 0}
 AUTH_DISABLED_UNTIL = {}  # name -> ts
@@ -150,6 +166,8 @@ BREAKOUT_SIZEUP_ENABLE = _env_bool("BREAKOUT_SIZEUP_ENABLE", True)
 BREAKOUT_SIZEUP_MAX_MULT = max(1.0, float(os.getenv("BREAKOUT_SIZEUP_MAX_MULT", "1.30")))
 BREAKOUT_SIZEUP_MIN_SCORE = min(0.95, max(0.10, float(os.getenv("BREAKOUT_SIZEUP_MIN_SCORE", "0.62"))))
 BREAKOUT_MIN_QUOTE_5M_USD = max(0.0, float(os.getenv("BREAKOUT_MIN_QUOTE_5M_USD", "70000")))
+BREAKOUT_SESSION_FILTER_ENABLE = _env_bool("BREAKOUT_SESSION_FILTER_ENABLE", False)
+BREAKOUT_SESSION_ALLOWED = _csv_lower_set("BREAKOUT_SESSION_ALLOWED")
 BREAKOUT_SYMBOLS = set()
 BREAKOUT_ENGINE = None
 
@@ -3773,6 +3791,7 @@ _RETEST_LAST_TRY = {}           # symbol -> ts
 _BREAKOUT_COOLDOWN_UNTIL = {}   # symbol -> ts
 _BREAKOUT_COOLDOWN_LOG_TS = {}  # symbol -> ts
 _KILLER_GUARD_LOG_TS = {}       # symbol -> ts
+_BREAKOUT_SESSION_LOG_TS = {}   # symbol -> ts
 
 async def try_range_entry_async(symbol: str, price: float):
     if not ENABLE_RANGE_TRADING:
@@ -3984,6 +4003,16 @@ async def try_breakout_entry_async(symbol: str, price: float):
     if now - last < BREAKOUT_TRY_EVERY_SEC:
         return
     _BREAKOUT_LAST_TRY[symbol] = now
+
+    if BREAKOUT_SESSION_FILTER_ENABLE:
+        sess = _session_name_utc(now)
+        allowed = BREAKOUT_SESSION_ALLOWED or {"asia", "europe", "us"}
+        if sess not in allowed:
+            last_log = int(_BREAKOUT_SESSION_LOG_TS.get(symbol, 0) or 0)
+            if now - last_log >= 600:
+                tg_trade(f"🟡 BREAKOUT SKIP {symbol}: session={sess} not in {sorted(allowed)}")
+                _BREAKOUT_SESSION_LOG_TS[symbol] = now
+            return
 
     try:
         sig = await BREAKOUT_ENGINE.signal_async(symbol, price, int(now * 1000))
