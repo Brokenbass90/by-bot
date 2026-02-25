@@ -65,6 +65,8 @@ from strategies.donchian_breakout import DonchianBreakoutStrategy
 from strategies.btc_eth_midterm_pullback import BTCETHMidtermPullbackStrategy
 from strategies.btc_eth_vol_expansion import BTCETHVolExpansionStrategy
 from strategies.btc_eth_trend_rsi_reentry import BTCETHTrendRSIReentryStrategy
+from strategies.trendline_break_retest import TrendlineBreakRetestStrategy
+from strategies.btc_eth_trend_follow import BTCETHTrendFollowStrategy
 
 
 def _parse_end(s: Optional[str]) -> int:
@@ -242,8 +244,8 @@ def main():
                     help="Comma-separated symbols to exclude from the auto universe.")
     ap.add_argument(
         "--strategies",
-        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,range_bounce,donchian_breakout,btc_eth_midterm_pullback,btc_eth_vol_expansion,btc_eth_trend_rsi_reentry",
-        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,range_bounce,donchian_breakout,btc_eth_midterm_pullback,btc_eth_vol_expansion,btc_eth_trend_rsi_reentry",
+        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,range_bounce,donchian_breakout,btc_eth_midterm_pullback,btc_eth_vol_expansion,btc_eth_trend_rsi_reentry,trendline_break_retest,btc_eth_trend_follow",
+        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,range_bounce,donchian_breakout,btc_eth_midterm_pullback,btc_eth_vol_expansion,btc_eth_trend_rsi_reentry,trendline_break_retest,btc_eth_trend_follow",
     )
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--end", default="", help="YYYY-MM-DD (UTC)")
@@ -267,7 +269,7 @@ def main():
         raise SystemExit("No symbols selected. Provide --symbols or relax --min_volume_usd/--top_n.")
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
-    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry"}
+    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -301,6 +303,8 @@ def main():
     btc_eth_midterm_pullback = {sym: BTCETHMidtermPullbackStrategy() for sym in symbols} if "btc_eth_midterm_pullback" in strategies else {}
     btc_eth_vol_expansion = {sym: BTCETHVolExpansionStrategy() for sym in symbols} if "btc_eth_vol_expansion" in strategies else {}
     btc_eth_trend_rsi_reentry = {sym: BTCETHTrendRSIReentryStrategy() for sym in symbols} if "btc_eth_trend_rsi_reentry" in strategies else {}
+    trendline_break_retest = {sym: TrendlineBreakRetestStrategy() for sym in symbols} if "trendline_break_retest" in strategies else {}
+    btc_eth_trend_follow = {sym: BTCETHTrendFollowStrategy() for sym in symbols} if "btc_eth_trend_follow" in strategies else {}
 
     def selector(sym: str, store: KlineStore, ts_ms: int, last_price: float):
         # IMPORTANT: first-match wins (priority = order in --strategies)
@@ -394,6 +398,18 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = btc_eth_trend_rsi_reentry[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "trendline_break_retest":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = trendline_break_retest[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "btc_eth_trend_follow":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = btc_eth_trend_follow[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             else:
                 sig = None
             if sig is not None:
