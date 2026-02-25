@@ -146,6 +146,9 @@ BREAKOUT_SL_COOLDOWN_SEC = int(os.getenv("BREAKOUT_SL_COOLDOWN_SEC", "2700"))
 BREAKOUT_REF_LOOKBACK_BARS = int(os.getenv("BREAKOUT_REF_LOOKBACK_BARS", "20"))
 BREAKOUT_MAX_LATE_VS_REF_PCT = float(os.getenv("BREAKOUT_MAX_LATE_VS_REF_PCT", "0.35"))
 BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT = float(os.getenv("BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT", "0.08"))
+BREAKOUT_SIZEUP_ENABLE = _env_bool("BREAKOUT_SIZEUP_ENABLE", True)
+BREAKOUT_SIZEUP_MAX_MULT = max(1.0, float(os.getenv("BREAKOUT_SIZEUP_MAX_MULT", "1.30")))
+BREAKOUT_SIZEUP_MIN_SCORE = min(0.95, max(0.10, float(os.getenv("BREAKOUT_SIZEUP_MIN_SCORE", "0.62"))))
 BREAKOUT_SYMBOLS = set()
 BREAKOUT_ENGINE = None
 
@@ -3060,7 +3063,7 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                         tr.tpsl_last_set_ts = now_s()
                         tr.last_runner_action_ts = now
 
-def calc_notional_usd_from_stop_pct(stop_pct: float) -> float:
+def calc_notional_usd_from_stop_pct(stop_pct: float, risk_mult: float = 1.0) -> float:
     """
     Риск-модель:
       risk_usd = equity * RISK_PER_TRADE_PCT
@@ -3075,7 +3078,8 @@ def calc_notional_usd_from_stop_pct(stop_pct: float) -> float:
     if equity <= 0:
         return 0.0
 
-    risk_usd = equity * (RISK_PER_TRADE_PCT / 100.0)
+    mult = max(0.1, float(risk_mult or 1.0))
+    risk_usd = equity * (RISK_PER_TRADE_PCT / 100.0) * mult
 
     notional_raw = risk_usd / (stop_pct / 100.0)
     notional = min(notional_raw, max_notional_allowed(equity))
@@ -3089,6 +3093,40 @@ def calc_notional_usd_from_stop_pct(stop_pct: float) -> float:
         return 0.0
 
     return float(notional)
+
+
+def breakout_sizeup_multiplier(
+    *,
+    chase_pct: float,
+    late_pct: float,
+    spread_pct: float,
+    pullback_pct: float,
+) -> float:
+    if not BREAKOUT_SIZEUP_ENABLE or BREAKOUT_SIZEUP_MAX_MULT <= 1.0:
+        return 1.0
+
+    chase_cap = max(0.01, float(BREAKOUT_MAX_CHASE_PCT or 0.01))
+    late_cap = max(0.01, float(BREAKOUT_MAX_LATE_VS_REF_PCT or 0.01))
+    spread_cap = max(0.01, float(BREAKOUT_MAX_SPREAD_PCT or 0.01))
+    pull_thr = max(0.01, float(BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT or 0.01))
+
+    chase_score = max(0.0, min(1.0, 1.0 - (max(0.0, chase_pct) / chase_cap)))
+    late_score = max(0.0, min(1.0, 1.0 - (max(0.0, late_pct) / late_cap)))
+    spread_score = max(0.0, min(1.0, 1.0 - (max(0.0, spread_pct) / spread_cap)))
+    pull_score = max(0.0, min(1.0, max(0.0, pullback_pct) / (pull_thr * 1.8)))
+
+    score = (
+        0.30 * spread_score
+        + 0.25 * chase_score
+        + 0.25 * late_score
+        + 0.20 * pull_score
+    )
+    if score < BREAKOUT_SIZEUP_MIN_SCORE:
+        return 1.0
+
+    stretch = (score - BREAKOUT_SIZEUP_MIN_SCORE) / max(1e-9, (1.0 - BREAKOUT_SIZEUP_MIN_SCORE))
+    stretch = max(0.0, min(1.0, stretch))
+    return 1.0 + (BREAKOUT_SIZEUP_MAX_MULT - 1.0) * stretch
 
     
 
@@ -3958,6 +3996,10 @@ async def try_breakout_entry_async(symbol: str, price: float):
     entry = float(sig.entry)
     tp = float(sig.tp)
     sl = float(sig.sl)
+    chase_pct = 0.0
+    late_pct = 0.0
+    pullback = 0.0
+    sp = 0.0
 
     # Don't chase far from planned entry; prefer retest-like fills.
     if BREAKOUT_MAX_CHASE_PCT > 0:
@@ -4040,7 +4082,13 @@ async def try_breakout_entry_async(symbol: str, price: float):
             stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
         except Exception as e:
             log_error(f"breakout atr-sl adjust fail {symbol}: {e}")
-    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
+    size_mult = breakout_sizeup_multiplier(
+        chase_pct=chase_pct,
+        late_pct=late_pct,
+        spread_pct=sp,
+        pullback_pct=pullback,
+    )
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=size_mult)
     if dyn_usd <= 0:
         tg_trade(f"🟡 BREAKOUT SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
@@ -4095,7 +4143,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
     tg_trade(
         f"🟩 BREAKOUT ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
         f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
-        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+        f"notional≈{notional_real:.2f}$ qty≈{q} size_mult={size_mult:.2f}\n"
         f"reason={sig.reason}"
     )
 
