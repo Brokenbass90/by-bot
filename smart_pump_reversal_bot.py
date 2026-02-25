@@ -613,6 +613,31 @@ def _db_init():
                 )
                 """
             )
+            con.execute(
+                """
+                CREATE TABLE IF NOT EXISTS ml_samples (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    ts_entry INTEGER,
+                    ts_close INTEGER,
+                    strategy TEXT,
+                    symbol TEXT,
+                    side TEXT,
+                    entry_price REAL,
+                    sl_price REAL,
+                    tp_price REAL,
+                    stop_pct REAL,
+                    notional_usd REAL,
+                    leverage REAL,
+                    risk_pct REAL,
+                    feature_json TEXT,
+                    status TEXT,
+                    outcome TEXT,
+                    pnl REAL,
+                    fees REAL,
+                    close_reason TEXT
+                )
+                """
+            )
             con.commit()
     except Exception as e:
         log_error(f"db init fail: {e}")
@@ -646,6 +671,105 @@ def _db_log_event(event: str, tr, sym: str, *, pnl: float | None = None, fees: f
             con.commit()
     except Exception as e:
         log_error(f"db log fail: {e}")
+
+
+def _db_log_ml_entry(tr, sym: str):
+    try:
+        f = getattr(tr, "ml_features", None) or {}
+        entry_px = float(getattr(tr, "entry_price", getattr(tr, "avg", 0) or 0) or 0)
+        sl_px = float(getattr(tr, "sl_price", 0) or 0)
+        tp_px = float(getattr(tr, "tp_price", 0) or 0)
+        stop_pct = abs((sl_px - entry_px) / max(1e-12, entry_px)) * 100.0 if entry_px > 0 and sl_px > 0 else None
+        notional_usd = float(getattr(tr, "entry_notional_usd", 0.0) or 0.0)
+        if notional_usd <= 0:
+            try:
+                notional_usd = float(getattr(tr, "qty", 0.0) or 0.0) * float(entry_px)
+            except Exception:
+                notional_usd = 0.0
+
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            cur = con.execute(
+                """
+                INSERT INTO ml_samples
+                (ts_entry, ts_close, strategy, symbol, side, entry_price, sl_price, tp_price, stop_pct, notional_usd, leverage, risk_pct, feature_json, status, outcome, pnl, fees, close_reason)
+                VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'OPEN', NULL, NULL, NULL, NULL)
+                """,
+                (
+                    int(time.time()),
+                    str(getattr(tr, "strategy", "") or ""),
+                    str(sym),
+                    str(getattr(tr, "side", "") or ""),
+                    entry_px if entry_px > 0 else None,
+                    sl_px if sl_px > 0 else None,
+                    tp_px if tp_px > 0 else None,
+                    float(stop_pct) if stop_pct is not None else None,
+                    float(notional_usd) if notional_usd > 0 else None,
+                    float(BYBIT_LEVERAGE),
+                    float(RISK_PER_TRADE_PCT),
+                    json.dumps(f, ensure_ascii=True),
+                ),
+            )
+            tr.ml_sample_id = int(cur.lastrowid or 0)
+            con.commit()
+    except Exception as e:
+        log_error(f"db ml entry fail: {e}")
+
+
+def _db_log_ml_close(tr, sym: str, *, pnl: float | None = None, fees: float | None = None):
+    try:
+        sid = int(getattr(tr, "ml_sample_id", 0) or 0)
+        if sid <= 0:
+            return
+        ts_close = int(time.time())
+        pnl_v = float(pnl or 0.0)
+        outcome = "win" if pnl_v > 0 else ("loss" if pnl_v < 0 else "flat")
+        entry_ts = int(getattr(tr, "entry_ts", 0) or 0)
+        fill_ts = int(getattr(tr, "entry_fill_ts", 0) or 0)
+        send_ts = int(getattr(tr, "order_send_ts", 0) or 0)
+
+        close_feats = {
+            "close_reason": str(getattr(tr, "close_reason", "") or ""),
+            "close_session": str(_session_name_utc(ts_close)),
+            "close_hour_utc": int((ts_close // 3600) % 24),
+        }
+        if entry_ts > 0 and ts_close >= entry_ts:
+            close_feats["entry_to_close_sec"] = int(ts_close - entry_ts)
+        if fill_ts > 0 and ts_close >= fill_ts:
+            close_feats["fill_to_close_sec"] = int(ts_close - fill_ts)
+        if send_ts > 0 and fill_ts > 0 and fill_ts >= send_ts:
+            close_feats["send_to_fill_sec"] = int(fill_ts - send_ts)
+
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            cur = con.execute("SELECT feature_json FROM ml_samples WHERE id=?", (sid,))
+            row = cur.fetchone()
+            merged = {}
+            if row and row[0]:
+                try:
+                    parsed = json.loads(row[0]) if isinstance(row[0], str) else {}
+                    if isinstance(parsed, dict):
+                        merged.update(parsed)
+                except Exception:
+                    pass
+            merged.update(close_feats)
+            con.execute(
+                """
+                UPDATE ml_samples
+                   SET ts_close=?, status='CLOSED', outcome=?, pnl=?, fees=?, close_reason=?, feature_json=?
+                 WHERE id=?
+                """,
+                (
+                    ts_close,
+                    outcome,
+                    pnl_v,
+                    float(fees or 0.0),
+                    str(getattr(tr, "close_reason", "") or ""),
+                    json.dumps(merged, ensure_ascii=True),
+                    sid,
+                ),
+            )
+            con.commit()
+    except Exception as e:
+        log_error(f"db ml close fail: {e}")
 
 # =========================== TELEGRAM COMMANDS ===========================
 TG_COMMANDS_ENABLE = os.getenv("TG_COMMANDS_ENABLE", "1").strip() == "1"
@@ -2353,7 +2477,7 @@ def sync_trades_with_exchange():
                     tr.entry_price = float(avg_ex)
 
                     # если TP/SL уже были рассчитаны по "примерному" price — пересчитаем от реального avg
-                    if getattr(tr, "strategy", "pump") in ("bounce", "range", "inplay", "inplay_breakout"):
+                    if getattr(tr, "strategy", "pump") in ("bounce", "range", "inplay", "inplay_breakout", "btc_eth_midterm_pullback"):
                         # bounce tp/sl могли прийти из сигнала — оставляем их как есть,
                         # но гарантируем корректное округление относительно entry
                         tr.tp_price, tr.sl_price = round_tp_sl_prices(sym, tr.side, tr.avg, tr.tp_price, tr.sl_price)
@@ -2392,6 +2516,7 @@ def sync_trades_with_exchange():
                         f"{lat_txt}"
                     )
                     _db_log_event("ENTRY", tr, sym)
+                    _db_log_ml_entry(tr, sym)
                     if TRADE_CHARTS_SEND_ON_ENTRY:
                         p = _make_trade_chart(sym, tr, stage="entry")
                         if p:
@@ -2957,6 +3082,7 @@ def _finalize_and_report_closed(tr, sym: str):
         msg += "\nTiming: " + " | ".join(hold_txt)
     tg_trade(msg)
     _db_log_event("CLOSE", tr, sym, pnl=pnl_closed, fees=fee_sum, exit_px=exit_px)
+    _db_log_ml_close(tr, sym, pnl=pnl_closed, fees=fee_sum)
     # Cooldown after breakout SL to reduce repeated entries in noisy chop.
     try:
         if str(getattr(tr, "strategy", "")) == "inplay_breakout":
@@ -4165,6 +4291,18 @@ async def try_breakout_entry_async(symbol: str, price: float):
     tr.strategy = "inplay_breakout"
     tr.avg = float(entry)
     tr.entry_price = float(entry)
+    tr.entry_notional_usd = float(notional_real)
+    tr.ml_features = {
+        "signal": "inplay_breakout",
+        "chase_pct": float(chase_pct),
+        "late_pct": float(late_pct),
+        "pullback_pct": float(pullback),
+        "spread_pct": float(sp),
+        "size_mult": float(size_mult),
+        "stop_pct": float(stop_pct),
+        "session": str(_session_name_utc(now)),
+        "symbol_family": "alt",
+    }
     tr.tp_price = float(tp_r) if tp_r is not None else None
     tr.sl_price = float(sl_r)
     tr.signal_ts = int(signal_ts)
@@ -4344,6 +4482,14 @@ async def try_midterm_entry_async(symbol: str, price: float):
     tr.strategy = "btc_eth_midterm_pullback"
     tr.avg = float(entry)
     tr.entry_price = float(entry)
+    tr.entry_notional_usd = float(notional_real)
+    tr.ml_features = {
+        "signal": "btc_eth_midterm_pullback",
+        "stop_pct": float(stop_pct),
+        "alloc_mult": float(MIDTERM_NOTIONAL_MULT),
+        "session": str(_session_name_utc(now)),
+        "symbol_family": "btc_eth",
+    }
     tr.tp_price = float(tp_r) if tp_r is not None else None
     tr.sl_price = float(sl_r)
     tr.runner_enabled = bool(use_runner)
