@@ -72,6 +72,22 @@ def _env_csv_set(name: str) -> set[str]:
     return {p.strip().upper() for p in str(raw).split(",") if p.strip()}
 
 
+def _env_csv_set_lower(name: str) -> set[str]:
+    raw = os.getenv(name, "") or ""
+    return {p.strip().lower() for p in str(raw).split(",") if p.strip()}
+
+
+def _session_name_utc(ts_sec: int) -> str:
+    hour = (int(ts_sec) // 3600) % 24
+    if 0 <= hour < 9:
+        return "asia"
+    if 8 <= hour < 17:
+        return "europe"
+    if 13 <= hour < 22:
+        return "us"
+    return "off"
+
+
 def _atr_last(highs: List[float], lows: List[float], closes: List[float], period: int = 14) -> float:
     if len(highs) < period + 1 or len(lows) < period + 1 or len(closes) < period + 1:
         return float("nan")
@@ -152,6 +168,8 @@ class PumpFadeConfig:
     v3_vol_fade_ratio: float = 0.80
     v3_rr: float = 1.7
     v3_sl_buffer_pct: float = 0.0020
+    v3_min_atr_pct: float = 0.28
+    v3_max_atr_pct: float = 2.80
 
 
 class PumpFadeStrategy:
@@ -220,6 +238,9 @@ class PumpFadeStrategy:
         self.cfg.v3_vol_fade_ratio = _env_float("PF_V3_VOL_FADE_RATIO", self.cfg.v3_vol_fade_ratio)
         self.cfg.v3_rr = _env_float("PF_V3_RR", self.cfg.v3_rr)
         self.cfg.v3_sl_buffer_pct = _env_float("PF_V3_SL_BUFFER_PCT", self.cfg.v3_sl_buffer_pct)
+        self.cfg.v3_min_atr_pct = _env_float("PF_V3_MIN_ATR_PCT", self.cfg.v3_min_atr_pct)
+        self.cfg.v3_max_atr_pct = _env_float("PF_V3_MAX_ATR_PCT", self.cfg.v3_max_atr_pct)
+        self._v3_sessions_allowed = _env_csv_set_lower("PF_V3_SESSIONS_ALLOWED")
 
         if not self.cfg.partial_rs:
             self.cfg.partial_rs = [self.cfg.rr]
@@ -287,7 +308,14 @@ class PumpFadeStrategy:
         self._mark_skip("INVALID_SIGNAL_OBJECT")
         return None
 
-    def _on_bar_v3(self, symbol: str, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
+    def _on_bar_v3(self, symbol: str, o: float, h: float, l: float, c: float, v: float = 0.0, ts_ms: Optional[int] = None) -> Optional[TradeSignal]:
+        if ts_ms is not None and self._v3_sessions_allowed:
+            ts_sec = int(ts_ms // 1000 if ts_ms > 10_000_000_000 else ts_ms)
+            sess = _session_name_utc(ts_sec)
+            if sess not in self._v3_sessions_allowed:
+                self._mark_skip("V3_SESSION_FILTER")
+                return None
+
         bars_in_window = max(4, int(self.cfg.pump_window_min / self.cfg.interval_min))
         if len(self._closes) < bars_in_window + 8:
             self._mark_skip("V3_HISTORY_SHORT")
@@ -321,6 +349,18 @@ class PumpFadeStrategy:
             return None
         if peak_drop > float(self.cfg.v3_max_drop_pct):
             self._mark_skip("V3_ENTRY_TOO_LATE")
+            return None
+
+        atr_now = _atr_last(self._highs, self._lows, self._closes, max(5, int(self.cfg.trailing_atr_period)))
+        if not math.isfinite(atr_now) or atr_now <= 0:
+            self._mark_skip("V3_ATR_INVALID")
+            return None
+        atr_pct = (atr_now / max(1e-12, abs(c))) * 100.0
+        if atr_pct < float(self.cfg.v3_min_atr_pct):
+            self._mark_skip("V3_ATR_TOO_LOW")
+            return None
+        if atr_pct > float(self.cfg.v3_max_atr_pct):
+            self._mark_skip("V3_ATR_TOO_HIGH")
             return None
 
         ema_now = ema(self._closes[-(self.cfg.ema_period * 4):], self.cfg.ema_period)
@@ -405,7 +445,7 @@ class PumpFadeStrategy:
     def signals_emitted(self) -> int:
         return int(self._signals_emitted)
 
-    def on_bar(self, symbol: str, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
+    def on_bar(self, symbol: str, o: float, h: float, l: float, c: float, v: float = 0.0, ts_ms: Optional[int] = None) -> Optional[TradeSignal]:
         sym_u = str(symbol or "").upper()
         if self._allow and sym_u not in self._allow:
             self._mark_skip("ALLOWLIST_REJECT")
@@ -421,7 +461,7 @@ class PumpFadeStrategy:
         self._volumes.append(max(0.0, float(v or 0.0)))
 
         if self.cfg.v3_enable:
-            return self._on_bar_v3(symbol, o, h, l, c, v)
+            return self._on_bar_v3(symbol, o, h, l, c, v, ts_ms=ts_ms)
 
         if self._cooldown > 0:
             self._cooldown -= 1
@@ -569,5 +609,4 @@ class PumpFadeStrategy:
         c: float,
         v: float = 0.0,
     ) -> Optional[TradeSignal]:
-        _ = ts_ms
-        return self.on_bar(symbol, o, h, l, c, v)
+        return self.on_bar(symbol, o, h, l, c, v, ts_ms=ts_ms)
