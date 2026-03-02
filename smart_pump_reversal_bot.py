@@ -66,6 +66,40 @@ MSG_COUNTER = {"Bybit": 0, "Binance": 0}
 AUTH_DISABLED_UNTIL = {}  # name -> ts
 AUTH_LAST_ERROR = {}      # name -> str
 BOT_START_TS = int(time.time())
+RUNTIME_DIAG_ENABLE = _env_bool("RUNTIME_DIAG_ENABLE", True)
+RUNTIME_COUNTER = collections.Counter()
+
+
+def _diag_inc(key: str, n: int = 1) -> None:
+    if not RUNTIME_DIAG_ENABLE:
+        return
+    try:
+        RUNTIME_COUNTER[str(key)] += int(n)
+    except Exception:
+        pass
+
+
+def _runtime_diag_snapshot() -> str:
+    if not RUNTIME_DIAG_ENABLE:
+        return "diag=off"
+    keys = [
+        "ws_connect",
+        "ws_disconnect",
+        "ws_handshake_timeout",
+        "breakout_try",
+        "breakout_no_signal",
+        "breakout_entry",
+        "breakout_skip_liq",
+        "breakout_skip_pullback",
+        "breakout_skip_quality",
+        "breakout_skip_minqty",
+        "midterm_try",
+        "midterm_no_signal",
+        "midterm_entry",
+        "midterm_skip_minqty",
+    ]
+    parts = [f"{k}={int(RUNTIME_COUNTER.get(k, 0))}" for k in keys]
+    return "diag " + " ".join(parts)
 
 def auth_disabled(name: str) -> bool:
     if DRY_RUN:
@@ -167,6 +201,12 @@ BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT = float(os.getenv("BREAKOUT_MIN_PULLBACK_
 BREAKOUT_SIZEUP_ENABLE = _env_bool("BREAKOUT_SIZEUP_ENABLE", True)
 BREAKOUT_SIZEUP_MAX_MULT = max(1.0, float(os.getenv("BREAKOUT_SIZEUP_MAX_MULT", "1.30")))
 BREAKOUT_SIZEUP_MIN_SCORE = min(0.95, max(0.10, float(os.getenv("BREAKOUT_SIZEUP_MIN_SCORE", "0.62"))))
+BREAKOUT_QUALITY_MIN_SCORE = max(0.0, min(0.99, float(os.getenv("BREAKOUT_QUALITY_MIN_SCORE", "0.00"))))
+BREAKOUT_QUALITY_BOOST_ENABLE = _env_bool("BREAKOUT_QUALITY_BOOST_ENABLE", True)
+BREAKOUT_QUALITY_BOOST_SCORE_1 = max(0.0, min(1.0, float(os.getenv("BREAKOUT_QUALITY_BOOST_SCORE_1", "0.78"))))
+BREAKOUT_QUALITY_BOOST_MULT_1 = max(1.0, float(os.getenv("BREAKOUT_QUALITY_BOOST_MULT_1", "1.10")))
+BREAKOUT_QUALITY_BOOST_SCORE_2 = max(0.0, min(1.0, float(os.getenv("BREAKOUT_QUALITY_BOOST_SCORE_2", "0.88"))))
+BREAKOUT_QUALITY_BOOST_MULT_2 = max(1.0, float(os.getenv("BREAKOUT_QUALITY_BOOST_MULT_2", "1.20")))
 BREAKOUT_MIN_QUOTE_5M_USD = max(0.0, float(os.getenv("BREAKOUT_MIN_QUOTE_5M_USD", "70000")))
 BREAKOUT_SESSION_FILTER_ENABLE = _env_bool("BREAKOUT_SESSION_FILTER_ENABLE", False)
 BREAKOUT_SESSION_ALLOWED = _csv_lower_set("BREAKOUT_SESSION_ALLOWED")
@@ -174,9 +214,20 @@ BREAKOUT_SYMBOLS = set()
 BREAKOUT_ENGINE = None
 MIDTERM_TRY_EVERY_SEC = int(os.getenv("MIDTERM_TRY_EVERY_SEC", "90"))
 MIDTERM_NOTIONAL_MULT = max(0.05, min(1.0, float(os.getenv("MIDTERM_NOTIONAL_MULT", "0.35"))))
+MIDTERM_ALLOW_MINQTY_FALLBACK = _env_bool("MIDTERM_ALLOW_MINQTY_FALLBACK", True)
+MIDTERM_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("MIDTERM_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 MIDTERM_SYMBOLS = {s.strip().upper() for s in str(os.getenv("MIDTERM_SYMBOLS", "BTCUSDT,ETHUSDT")).split(",") if s.strip()}
 MIDTERM_ACTIVE_SYMBOLS = set()
 MIDTERM_ENGINE = None
+
+# ===== Live allocator (risk mult by regime/strategy) =====
+LIVE_ALLOCATOR_ENABLE = _env_bool("LIVE_ALLOCATOR_ENABLE", False)
+LIVE_ALLOCATOR_MULT_MIN = max(0.10, float(os.getenv("LIVE_ALLOCATOR_MULT_MIN", "0.60")))
+LIVE_ALLOCATOR_MULT_MAX = max(LIVE_ALLOCATOR_MULT_MIN, float(os.getenv("LIVE_ALLOCATOR_MULT_MAX", "1.40")))
+LIVE_ALLOCATOR_BREAKOUT_TREND_MULT = max(0.10, float(os.getenv("LIVE_ALLOCATOR_BREAKOUT_TREND_MULT", "1.12")))
+LIVE_ALLOCATOR_BREAKOUT_FLAT_MULT = max(0.10, float(os.getenv("LIVE_ALLOCATOR_BREAKOUT_FLAT_MULT", "0.80")))
+LIVE_ALLOCATOR_MIDTERM_TREND_MULT = max(0.10, float(os.getenv("LIVE_ALLOCATOR_MIDTERM_TREND_MULT", "0.90")))
+LIVE_ALLOCATOR_MIDTERM_FLAT_MULT = max(0.10, float(os.getenv("LIVE_ALLOCATOR_MIDTERM_FLAT_MULT", "1.12")))
 
 # ===== RETEST LEVELS (live) =====
 ENABLE_RETEST_TRADING = os.getenv("ENABLE_RETEST_TRADING", "0").strip() == "1"
@@ -1556,6 +1607,7 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
     lines = [
         "🧠 strategies: " + " | ".join(enabled),
         f"📊 stats ({max(1, int(lookback_hours))}h):",
+        f"🧪 {_runtime_diag_snapshot()}",
     ]
     if not by_strategy:
         lines.append(" - no events")
@@ -3250,16 +3302,13 @@ def calc_notional_usd_from_stop_pct(stop_pct: float, risk_mult: float = 1.0) -> 
     return float(notional)
 
 
-def breakout_sizeup_multiplier(
+def breakout_quality_score(
     *,
     chase_pct: float,
     late_pct: float,
     spread_pct: float,
     pullback_pct: float,
 ) -> float:
-    if not BREAKOUT_SIZEUP_ENABLE or BREAKOUT_SIZEUP_MAX_MULT <= 1.0:
-        return 1.0
-
     chase_cap = max(0.01, float(BREAKOUT_MAX_CHASE_PCT or 0.01))
     late_cap = max(0.01, float(BREAKOUT_MAX_LATE_VS_REF_PCT or 0.01))
     spread_cap = max(0.01, float(BREAKOUT_MAX_SPREAD_PCT or 0.01))
@@ -3270,18 +3319,36 @@ def breakout_sizeup_multiplier(
     spread_score = max(0.0, min(1.0, 1.0 - (max(0.0, spread_pct) / spread_cap)))
     pull_score = max(0.0, min(1.0, max(0.0, pullback_pct) / (pull_thr * 1.8)))
 
-    score = (
+    return (
         0.30 * spread_score
         + 0.25 * chase_score
         + 0.25 * late_score
         + 0.20 * pull_score
     )
+
+
+def breakout_sizeup_multiplier_from_score(score: float) -> float:
+    if not BREAKOUT_SIZEUP_ENABLE or BREAKOUT_SIZEUP_MAX_MULT <= 1.0:
+        return 1.0
     if score < BREAKOUT_SIZEUP_MIN_SCORE:
         return 1.0
 
     stretch = (score - BREAKOUT_SIZEUP_MIN_SCORE) / max(1e-9, (1.0 - BREAKOUT_SIZEUP_MIN_SCORE))
     stretch = max(0.0, min(1.0, stretch))
     return 1.0 + (BREAKOUT_SIZEUP_MAX_MULT - 1.0) * stretch
+
+
+def breakout_quality_boost_multiplier(score: float) -> float:
+    """Extra risk/notional boost only for top-quality setups."""
+    if not BREAKOUT_QUALITY_BOOST_ENABLE:
+        return 1.0
+    s1 = min(float(BREAKOUT_QUALITY_BOOST_SCORE_1), float(BREAKOUT_QUALITY_BOOST_SCORE_2))
+    s2 = max(float(BREAKOUT_QUALITY_BOOST_SCORE_1), float(BREAKOUT_QUALITY_BOOST_SCORE_2))
+    if score >= s2:
+        return max(float(BREAKOUT_QUALITY_BOOST_MULT_1), float(BREAKOUT_QUALITY_BOOST_MULT_2))
+    if score >= s1:
+        return min(float(BREAKOUT_QUALITY_BOOST_MULT_1), float(BREAKOUT_QUALITY_BOOST_MULT_2))
+    return 1.0
 
     
 
@@ -3918,6 +3985,64 @@ def qty_floor_from_notional(symbol: str, notional_usd: float, price: float) -> t
     return qty_floor, notional_real, ""
 
 
+def min_notional_for_min_qty(symbol: str, price: float) -> float:
+    """Estimate minimum notional needed to satisfy exchange min qty after floor rounding."""
+    meta = _get_meta(symbol)
+    min_qty = float(meta.get("minOrderQty") or 0.0)
+    qty_step = float(meta.get("qtyStep") or 0.0) or 1.0
+    if min_qty <= 0:
+        return 0.0
+    # Ensure we ask at least one step above min_qty to survive floor operations.
+    qty_target = max(min_qty, min_qty + qty_step)
+    return float(qty_target) * max(1e-12, float(price))
+
+
+def _ema_list(vals: list[float], period: int) -> float:
+    if not vals or period <= 0:
+        return float("nan")
+    k = 2.0 / (period + 1.0)
+    e = float(vals[0])
+    for x in vals[1:]:
+        e = float(x) * k + e * (1.0 - k)
+    return e
+
+
+def _live_regime_from_state(st: SymState) -> str:
+    """Classify market regime from live 5m state as 'flat' or 'trend'."""
+    closes = list(getattr(st, "closes", []) or [])
+    highs = list(getattr(st, "highs", []) or [])
+    lows = list(getattr(st, "lows", []) or [])
+    if len(closes) < 120 or len(highs) < 120 or len(lows) < 120:
+        return "trend"
+    cur = float(closes[-1] or 0.0)
+    if cur <= 0:
+        return "trend"
+    ef = _ema_list(closes[-90:], 20)
+    es = _ema_list(closes[-140:], 50)
+    es_prev = _ema_list(closes[-190:-40], 50) if len(closes) >= 190 else float("nan")
+    atr_pct = calc_atr_pct(highs, lows, closes)
+    if not (math.isfinite(ef) and math.isfinite(es) and math.isfinite(es_prev) and math.isfinite(atr_pct)):
+        return "trend"
+    gap_pct = abs(ef - es) / cur * 100.0
+    slope_pct = abs((es - es_prev) / max(1e-12, abs(es_prev))) * 100.0
+    is_flat = (gap_pct <= 0.55) and (slope_pct <= 0.55) and (0.20 <= atr_pct <= 2.40)
+    return "flat" if is_flat else "trend"
+
+
+def live_allocator_multiplier(strategy_key: str, regime: str) -> float:
+    if not LIVE_ALLOCATOR_ENABLE:
+        return 1.0
+    st = str(strategy_key or "").strip().lower()
+    rg = str(regime or "trend").strip().lower()
+    if st == "breakout":
+        m = LIVE_ALLOCATOR_BREAKOUT_FLAT_MULT if rg == "flat" else LIVE_ALLOCATOR_BREAKOUT_TREND_MULT
+    elif st == "midterm":
+        m = LIVE_ALLOCATOR_MIDTERM_FLAT_MULT if rg == "flat" else LIVE_ALLOCATOR_MIDTERM_TREND_MULT
+    else:
+        m = 1.0
+    return max(float(LIVE_ALLOCATOR_MULT_MIN), min(float(LIVE_ALLOCATOR_MULT_MAX), float(m)))
+
+
 _RANGE_LAST_TRY = {}            # symbol -> ts
 RANGE_TRY_EVERY_SEC = 20
 
@@ -4140,6 +4265,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
     if now - last < BREAKOUT_TRY_EVERY_SEC:
         return
     _BREAKOUT_LAST_TRY[symbol] = now
+    _diag_inc("breakout_try")
 
     if BREAKOUT_SESSION_FILTER_ENABLE:
         sess = _session_name_utc(now)
@@ -4157,6 +4283,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
         log_error(f"breakout signal error {symbol}: {e}")
         return
     if not sig:
+        _diag_inc("breakout_no_signal")
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
@@ -4184,6 +4311,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
             if x[0] >= t0_liq:
                 q5m += float(x[2] or 0.0)
         if q5m < BREAKOUT_MIN_QUOTE_5M_USD:
+            _diag_inc("breakout_skip_liq")
             tg_trade(f"🟡 BREAKOUT SKIP {symbol}: liq5m {q5m:.0f}$ < {BREAKOUT_MIN_QUOTE_5M_USD:.0f}$")
             return
 
@@ -4220,6 +4348,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
         else:
             pullback = (float(price) - float(cur5["low"])) / max(float(cur5["low"]), 1e-12) * 100.0
         if pullback < BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT:
+            _diag_inc("breakout_skip_pullback")
             tg_trade(
                 f"🟡 BREAKOUT SKIP {symbol}: pullback {pullback:.2f}% < {BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT:.2f}%"
             )
@@ -4258,23 +4387,35 @@ async def try_breakout_entry_async(symbol: str, price: float):
             stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
         except Exception as e:
             log_error(f"breakout atr-sl adjust fail {symbol}: {e}")
-    size_mult = breakout_sizeup_multiplier(
+    quality_score = breakout_quality_score(
         chase_pct=chase_pct,
         late_pct=late_pct,
         spread_pct=sp,
         pullback_pct=pullback,
     )
-    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=size_mult)
+    if BREAKOUT_QUALITY_MIN_SCORE > 0 and quality_score < BREAKOUT_QUALITY_MIN_SCORE:
+        _diag_inc("breakout_skip_quality")
+        tg_trade(
+            f"🟡 BREAKOUT SKIP {symbol}: quality {quality_score:.2f} < {BREAKOUT_QUALITY_MIN_SCORE:.2f}"
+        )
+        return
+    size_mult = breakout_sizeup_multiplier_from_score(quality_score)
+    quality_boost_mult = breakout_quality_boost_multiplier(quality_score)
+    st_alloc = live_allocator_multiplier("breakout", _live_regime_from_state(st))
+    risk_mult = float(size_mult) * float(quality_boost_mult) * float(st_alloc)
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=risk_mult)
     if dyn_usd <= 0:
         tg_trade(f"🟡 BREAKOUT SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
     if qty_floor <= 0:
+        _diag_inc("breakout_skip_minqty")
         tg_trade(f"🟡 BREAKOUT SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
 
     ensure_leverage(symbol, BYBIT_LEVERAGE)
+    _diag_inc("breakout_entry")
     order_send_ts = int(now_s())
     oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
     order_ack_ts = int(now_s())
@@ -4298,7 +4439,11 @@ async def try_breakout_entry_async(symbol: str, price: float):
         "late_pct": float(late_pct),
         "pullback_pct": float(pullback),
         "spread_pct": float(sp),
+        "quality_score": float(quality_score),
         "size_mult": float(size_mult),
+        "quality_boost_mult": float(quality_boost_mult),
+        "alloc_mult": float(st_alloc),
+        "risk_mult": float(risk_mult),
         "stop_pct": float(stop_pct),
         "session": str(_session_name_utc(now)),
         "symbol_family": "alt",
@@ -4331,7 +4476,8 @@ async def try_breakout_entry_async(symbol: str, price: float):
     tg_trade(
         f"🟩 BREAKOUT ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
         f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
-        f"notional≈{notional_real:.2f}$ qty≈{q} size_mult={size_mult:.2f}\n"
+        f"notional≈{notional_real:.2f}$ qty≈{q} quality={quality_score:.2f} "
+        f"size_mult={size_mult:.2f} boost={quality_boost_mult:.2f} alloc={st_alloc:.2f}\n"
         f"reason={sig.reason}"
     )
 
@@ -4436,6 +4582,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
     if now - last < MIDTERM_TRY_EVERY_SEC:
         return
     _MIDTERM_LAST_TRY[symbol] = now
+    _diag_inc("midterm_try")
 
     try:
         sig = await MIDTERM_ENGINE.signal_async(symbol, price, int(now * 1000))
@@ -4443,6 +4590,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
         log_error(f"midterm signal error {symbol}: {e}")
         return
     if not sig:
+        _diag_inc("midterm_no_signal")
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
@@ -4457,17 +4605,33 @@ async def try_midterm_entry_async(symbol: str, price: float):
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
-    dyn_usd *= float(MIDTERM_NOTIONAL_MULT)
+    st = S("Bybit", symbol)
+    alloc_mult = live_allocator_multiplier("midterm", _live_regime_from_state(st))
+    dyn_usd *= float(MIDTERM_NOTIONAL_MULT) * float(alloc_mult)
     if dyn_usd <= 0:
         tg_trade(f"🟡 MIDTERM SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
+    if qty_floor <= 0 and reason == "BELOW_MIN_QTY" and MIDTERM_ALLOW_MINQTY_FALLBACK:
+        need_min = min_notional_for_min_qty(symbol, entry)
+        if need_min > 0:
+            dyn_max = dyn_usd * float(MIDTERM_MINQTY_FALLBACK_MAX_MULT)
+            dyn_fallback = min(need_min, dyn_max)
+            if dyn_fallback > dyn_usd + 1e-9:
+                qty_floor, notional_real, reason2 = qty_floor_from_notional(symbol, dyn_fallback, entry)
+                if qty_floor > 0:
+                    reason = ""
+                    dyn_usd = dyn_fallback
+                else:
+                    reason = reason2
     if qty_floor <= 0:
+        _diag_inc("midterm_skip_minqty")
         tg_trade(f"🟡 MIDTERM SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
 
     ensure_leverage(symbol, BYBIT_LEVERAGE)
+    _diag_inc("midterm_entry")
     oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
 
     tr = TradeState(
@@ -4487,6 +4651,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
         "signal": "btc_eth_midterm_pullback",
         "stop_pct": float(stop_pct),
         "alloc_mult": float(MIDTERM_NOTIONAL_MULT),
+        "regime_alloc_mult": float(alloc_mult),
         "session": str(_session_name_utc(now)),
         "symbol_family": "btc_eth",
     }
@@ -4515,7 +4680,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
     tg_trade(
         f"🟧 MIDTERM ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
         f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
-        f"notional≈{notional_real:.2f}$ qty≈{q} alloc_mult={MIDTERM_NOTIONAL_MULT:.2f}\n"
+        f"notional≈{notional_real:.2f}$ qty≈{q} alloc_mult={MIDTERM_NOTIONAL_MULT:.2f} regime={alloc_mult:.2f}\n"
         f"reason={sig.reason}"
     )
 
@@ -5444,6 +5609,7 @@ async def bybit_ws():
                     max_size=None,   # <-- ВАЖНО: добавить
                 ) as ws:
                     print(f"[bybit] shard {shard_id} CONNECTED ✅")
+                    _diag_inc("ws_connect")
                     backoff = float(WS_RECONNECT_MIN)
 
                     for i in range(0, len(shard_args), BATCH_SIZE):
@@ -5493,24 +5659,29 @@ async def bybit_ws():
 
             except (TimeoutError, asyncio.TimeoutError) as e:
                 # это как раз "timed out during opening handshake"
+                _diag_inc("ws_handshake_timeout")
+                _diag_inc("ws_disconnect")
                 print(f"[bybit] shard {shard_id} handshake timeout; retry in ~{backoff}s")
                 log_error(f"BYBIT shard {shard_id} handshake timeout: {repr(e)}")
                 await asyncio.sleep(backoff + random.uniform(0, WS_RECONNECT_JITTER))
                 backoff = min(backoff * 1.7, WS_RECONNECT_MAX)
 
             except InvalidStatus as e:
+                _diag_inc("ws_disconnect")
                 print(f"[bybit] shard {shard_id} InvalidStatus: {repr(e)}")
                 log_error(f"BYBIT InvalidStatus shard {shard_id}: {repr(e)}")
                 await asyncio.sleep(min(300.0, WS_RECONNECT_MAX * 2.0))
 
             except (ConnectionClosedError, ConnectionClosedOK, ConnectionResetError, OSError) as e:
                 # Typical transient WS disconnects; keep logs concise and reconnect fast.
+                _diag_inc("ws_disconnect")
                 print(f"[bybit] shard {shard_id} disconnected: {repr(e)}; retry in ~{backoff}s")
                 log_error(f"BYBIT shard {shard_id} disconnected: {repr(e)}")
                 await asyncio.sleep(backoff + random.uniform(0, WS_RECONNECT_JITTER))
                 backoff = min(backoff * 1.7, WS_RECONNECT_MAX)
 
             except Exception as e:
+                _diag_inc("ws_disconnect")
                 print(f"[bybit] shard {shard_id} ERROR: {repr(e)}")
                 print(traceback.format_exc())
                 log_error(f"BYBIT shard {shard_id} crash: {repr(e)}")
@@ -5667,7 +5838,10 @@ async def pulse():
         except Exception as e:
             log_error(f"ensure_tpsl crash: {e}")
 
-        print(f"[pulse] Bybit msgs={MSG_COUNTER.get('Bybit', 0)}  open_trades={len(TRADES)}  disabled={PORTFOLIO_STATE.get('disabled')}")
+        print(
+            f"[pulse] Bybit msgs={MSG_COUNTER.get('Bybit', 0)}  open_trades={len(TRADES)}  "
+            f"disabled={PORTFOLIO_STATE.get('disabled')} | {_runtime_diag_snapshot()}"
+        )
         try:
             now = int(time.time())
             if STRATEGY_STATS_TG_EVERY_SEC > 0 and (now - last_stats_sent) >= int(STRATEGY_STATS_TG_EVERY_SEC):
