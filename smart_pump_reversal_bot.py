@@ -99,6 +99,14 @@ def _runtime_diag_snapshot() -> str:
         "breakout_ns_hold",
         "breakout_ns_dist",
         "breakout_ns_impulse",
+        "breakout_ns_entry_timing",
+        "breakout_ns_invalid_risk",
+        "breakout_ns_history",
+        "breakout_ns_symbol",
+        "breakout_ns_stop",
+        "breakout_ns_atr",
+        "breakout_ns_range",
+        "breakout_ns_post",
         "breakout_ns_other",
         "midterm_try",
         "midterm_no_signal",
@@ -113,6 +121,22 @@ def _breakout_no_signal_diag_key(reason: str) -> str:
     r = str(reason or "").strip().lower()
     if not r:
         return "breakout_ns_other"
+    if "symbol_not_allowed" in r or "symbol_denied" in r:
+        return "breakout_ns_symbol"
+    if "entry_timing_guard" in r:
+        return "breakout_ns_entry_timing"
+    if "invalid_risk" in r:
+        return "breakout_ns_invalid_risk"
+    if "atr_zero" in r:
+        return "breakout_ns_atr"
+    if "range_too_wide" in r:
+        return "breakout_ns_range"
+    if "post_filters_block" in r:
+        return "breakout_ns_post"
+    if "stop_too_tight" in r or "stop_too_wide" in r:
+        return "breakout_ns_stop"
+    if "history_short" in r or "ltf_short" in r or "ltf_tail_short" in r:
+        return "breakout_ns_history"
     if "no_breakout_side" in r:
         return "breakout_ns_no_break"
     if "regime_block" in r:
