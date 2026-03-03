@@ -117,6 +117,7 @@ class InPlayBreakoutWrapper:
         self.cfg = cfg or InPlayBreakoutConfig()
         self._allow = _env_csv_set("BREAKOUT_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set("BREAKOUT_SYMBOL_DENYLIST")
+        self.last_no_signal_reason: str = ""
 
         self.cfg.tf_break = os.getenv("BREAKOUT_TF_BREAK", self.cfg.tf_break)
         self.cfg.tf_entry = os.getenv("BREAKOUT_TF_ENTRY", self.cfg.tf_entry)
@@ -339,11 +340,14 @@ class InPlayBreakoutWrapper:
         symbol = store.symbol
         sym_u = str(symbol or "").upper()
         if self._allow and sym_u not in self._allow:
+            self.last_no_signal_reason = "symbol_not_allowed"
             return None
         if sym_u in self._deny:
+            self.last_no_signal_reason = "symbol_denied"
             return None
         sig = await self.impl.maybe_signal(symbol, price=float(last_price), ts_ms=int(ts_ms))
         if not sig:
+            self.last_no_signal_reason = str(getattr(self.impl, "last_no_signal_reason", "") or "engine_no_signal")
             return None
 
         side = "long" if sig.side == "Buy" else "short"
@@ -352,14 +356,17 @@ class InPlayBreakoutWrapper:
         tp = float(sig.tp)
 
         if not self._passes_entry_timing_guards(store, side, entry):
+            self.last_no_signal_reason = "entry_timing_guard"
             return None
 
         min_stop_pct = _env_float('BREAKOUT_MIN_STOP_PCT', 0.0)
         max_stop_pct = _env_float('BREAKOUT_MAX_STOP_PCT', 0.0)
         stop_pct = abs(entry - sl) / max(1e-12, entry)
         if min_stop_pct > 0 and stop_pct < min_stop_pct:
+            self.last_no_signal_reason = "stop_too_tight"
             return None
         if max_stop_pct > 0 and stop_pct > max_stop_pct:
+            self.last_no_signal_reason = "stop_too_wide"
             return None
 
         base_reason = getattr(sig, "reason", "breakout")
@@ -397,6 +404,7 @@ class InPlayBreakoutWrapper:
                     reason=(base_reason + ";runner"),
                 )
 
+        self.last_no_signal_reason = ""
         return TradeSignal(
             strategy="inplay_breakout",
             symbol=symbol,

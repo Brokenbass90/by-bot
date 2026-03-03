@@ -777,15 +777,19 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         self.max_retest_bars = int(max_retest_bars)
         self.min_break_bars = int(min_break_bars)
         self.max_dist_atr = float(max_dist_atr)
+        self.last_no_signal_reason: str = "init"
 
     async def maybe_signal(self, symbol: str, *, price: float, ts_ms: int) -> Optional[RetestSignal]:
+        self.last_no_signal_reason = "unknown"
         htf = self.fetch_klines(symbol, self.tf_break, self.lookback_break_bars + 10) or []
         if len(htf) < self.lookback_break_bars + 2:
+            self.last_no_signal_reason = "history_short"
             return None
 
         last = htf[-1]
         atr = _atr(htf, self.atr_period)
         if atr <= 0:
+            self.last_no_signal_reason = "atr_zero"
             return None
 
         window = htf[-(self.lookback_break_bars + 2):-2]
@@ -795,6 +799,7 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         if self.range_atr_max > 0:
             width = abs(hh - ll)
             if width > self.range_atr_max * atr:
+                self.last_no_signal_reason = "range_too_wide"
                 return None
 
         body = abs(_get_num(last, "close") - _get_num(last, "open"))
@@ -806,14 +811,18 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
             body_frac = body / rng
             if body_frac < self.impulse_body_min_frac:
                 impulse_ok = False
+                self.last_no_signal_reason = "impulse_body_weak"
         if impulse_ok and self.impulse_vol_mult > 0.0 and self.impulse_vol_period > 1:
             vols = [_get_num(x, "volume", "v") for x in htf]
             baseline = sma(vols[:-1], self.impulse_vol_period)
             last_vol = _get_num(last, "volume", "v")
             if not (baseline > 0 and last_vol >= self.impulse_vol_mult * baseline):
                 impulse_ok = False
+                self.last_no_signal_reason = "impulse_vol_weak"
 
         if not impulse_ok:
+            if self.last_no_signal_reason == "unknown":
+                self.last_no_signal_reason = "impulse_weak"
             return None
 
         close = _get_num(last, "close")
@@ -822,6 +831,7 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         # LTF confirmation (retest + reclaim/hold)
         ltf = self.fetch_klines(symbol, self.tf_entry, max(80, self.max_retest_bars + self.min_hold_bars + 20)) or []
         if len(ltf) < max(20, self.min_hold_bars + 5):
+            self.last_no_signal_reason = "ltf_short"
             return None
 
         ltf_atr = _atr(ltf, max(5, self.atr_period))
@@ -847,6 +857,7 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         start_idx = _after_break_idx()
         tail = ltf[start_idx:]
         if len(tail) < 5:
+            self.last_no_signal_reason = "ltf_tail_short"
             return None
 
         def _holds_above(level: float) -> bool:
@@ -864,27 +875,57 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
             return max(closes) <= (level - reclaim_buf)
 
         # Long: breakout above hh, then retest hh and reclaim
-        if self.allow_longs and close > (hh + buf) and self._regime_ok(symbol, "long"):
-            if abs(price - hh) <= max_dist:
+        long_break = self.allow_longs and close > (hh + buf)
+        short_break = self.allow_shorts and close < (ll - buf)
+        if not long_break and not short_break:
+            self.last_no_signal_reason = "no_breakout_side"
+            return None
+
+        if long_break:
+            if not self._regime_ok(symbol, "long"):
+                self.last_no_signal_reason = "long_regime_block"
+            elif abs(price - hh) > max_dist:
+                self.last_no_signal_reason = "long_too_far"
+            else:
                 touched = any(_get_num(c, "low") <= (hh + touch_buf) for c in tail[-self.max_retest_bars:])
-                if touched and _holds_above(hh):
+                if not touched:
+                    self.last_no_signal_reason = "long_no_retest_touch"
+                elif not _holds_above(hh):
+                    self.last_no_signal_reason = "long_no_reclaim_hold"
+                else:
                     entry = float(price)
                     sl = float(hh - sl_buf)
                     r = entry - sl
-                    if r > 0:
-                        tp = entry + self.rr * r
-                        return RetestSignal("Buy", entry, sl, tp, "breakout_retest_long")
+                    if r <= 0:
+                        self.last_no_signal_reason = "long_invalid_risk"
+                        return None
+                    tp = entry + self.rr * r
+                    self.last_no_signal_reason = ""
+                    return RetestSignal("Buy", entry, sl, tp, "breakout_retest_long")
 
         # Short: breakout below ll, then retest ll and reclaim
-        if self.allow_shorts and close < (ll - buf) and self._regime_ok(symbol, "short"):
-            if abs(price - ll) <= max_dist:
+        if short_break:
+            if not self._regime_ok(symbol, "short"):
+                self.last_no_signal_reason = "short_regime_block"
+            elif abs(price - ll) > max_dist:
+                self.last_no_signal_reason = "short_too_far"
+            else:
                 touched = any(_get_num(c, "high") >= (ll - touch_buf) for c in tail[-self.max_retest_bars:])
-                if touched and _holds_below(ll):
+                if not touched:
+                    self.last_no_signal_reason = "short_no_retest_touch"
+                elif not _holds_below(ll):
+                    self.last_no_signal_reason = "short_no_reclaim_hold"
+                else:
                     entry = float(price)
                     sl = float(ll + sl_buf)
                     r = sl - entry
-                    if r > 0:
-                        tp = entry - self.rr * r
-                        return RetestSignal("Sell", entry, sl, tp, "breakout_retest_short")
+                    if r <= 0:
+                        self.last_no_signal_reason = "short_invalid_risk"
+                        return None
+                    tp = entry - self.rr * r
+                    self.last_no_signal_reason = ""
+                    return RetestSignal("Sell", entry, sl, tp, "breakout_retest_short")
 
+        if self.last_no_signal_reason == "unknown":
+            self.last_no_signal_reason = "post_filters_block"
         return None

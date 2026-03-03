@@ -93,6 +93,13 @@ def _runtime_diag_snapshot() -> str:
         "breakout_skip_pullback",
         "breakout_skip_quality",
         "breakout_skip_minqty",
+        "breakout_ns_no_break",
+        "breakout_ns_regime",
+        "breakout_ns_retest",
+        "breakout_ns_hold",
+        "breakout_ns_dist",
+        "breakout_ns_impulse",
+        "breakout_ns_other",
         "midterm_try",
         "midterm_no_signal",
         "midterm_entry",
@@ -100,6 +107,25 @@ def _runtime_diag_snapshot() -> str:
     ]
     parts = [f"{k}={int(RUNTIME_COUNTER.get(k, 0))}" for k in keys]
     return "diag " + " ".join(parts)
+
+
+def _breakout_no_signal_diag_key(reason: str) -> str:
+    r = str(reason or "").strip().lower()
+    if not r:
+        return "breakout_ns_other"
+    if "no_breakout_side" in r:
+        return "breakout_ns_no_break"
+    if "regime_block" in r:
+        return "breakout_ns_regime"
+    if "no_retest_touch" in r:
+        return "breakout_ns_retest"
+    if "no_reclaim_hold" in r:
+        return "breakout_ns_hold"
+    if "too_far" in r:
+        return "breakout_ns_dist"
+    if "impulse" in r:
+        return "breakout_ns_impulse"
+    return "breakout_ns_other"
 
 def auth_disabled(name: str) -> bool:
     if DRY_RUN:
@@ -4284,6 +4310,11 @@ async def try_breakout_entry_async(symbol: str, price: float):
         return
     if not sig:
         _diag_inc("breakout_no_signal")
+        try:
+            ns_reason = BREAKOUT_ENGINE.last_no_signal_reason(symbol)
+        except Exception:
+            ns_reason = ""
+        _diag_inc(_breakout_no_signal_diag_key(ns_reason))
         return
 
     side = "Buy" if sig.side == "long" else "Sell"

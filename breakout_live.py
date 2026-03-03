@@ -65,3 +65,9 @@ class BreakoutLiveEngine:
         store = self._stores[symbol]
         wrapper = self._wrappers[symbol]
         return await wrapper.maybe_signal(store, ts_ms, price)
+
+    def last_no_signal_reason(self, symbol: str) -> str:
+        wrapper = self._wrappers.get(symbol)
+        if wrapper is None:
+            return ""
+        return str(getattr(wrapper, "last_no_signal_reason", "") or "")
