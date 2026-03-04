@@ -99,6 +99,9 @@ def _runtime_diag_snapshot() -> str:
         "breakout_ns_hold",
         "breakout_ns_dist",
         "breakout_ns_impulse",
+        "breakout_ns_impulse_weak",
+        "breakout_ns_impulse_body",
+        "breakout_ns_impulse_vol",
         "breakout_ns_entry_timing",
         "breakout_ns_invalid_risk",
         "breakout_ns_history",
@@ -147,6 +150,12 @@ def _breakout_no_signal_diag_key(reason: str) -> str:
         return "breakout_ns_hold"
     if "too_far" in r:
         return "breakout_ns_dist"
+    if "impulse_body_weak" in r:
+        return "breakout_ns_impulse_body"
+    if "impulse_vol_weak" in r:
+        return "breakout_ns_impulse_vol"
+    if "impulse_weak" in r:
+        return "breakout_ns_impulse_weak"
     if "impulse" in r:
         return "breakout_ns_impulse"
     return "breakout_ns_other"

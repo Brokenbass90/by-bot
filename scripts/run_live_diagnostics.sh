@@ -49,6 +49,9 @@ KEYS = (
     "breakout_ns_hold",
     "breakout_ns_dist",
     "breakout_ns_impulse",
+    "breakout_ns_impulse_weak",
+    "breakout_ns_impulse_body",
+    "breakout_ns_impulse_vol",
     "breakout_ns_entry_timing",
     "breakout_ns_invalid_risk",
     "breakout_ns_history",
@@ -114,6 +117,9 @@ b_ns_rt = delta["breakout_ns_retest"]
 b_ns_hd = delta["breakout_ns_hold"]
 b_ns_ds = delta["breakout_ns_dist"]
 b_ns_im = delta["breakout_ns_impulse"]
+b_ns_im_w = delta["breakout_ns_impulse_weak"]
+b_ns_im_b = delta["breakout_ns_impulse_body"]
+b_ns_im_v = delta["breakout_ns_impulse_vol"]
 b_ns_et = delta["breakout_ns_entry_timing"]
 b_ns_ir = delta["breakout_ns_invalid_risk"]
 b_ns_hs = delta["breakout_ns_history"]
@@ -156,6 +162,9 @@ if b_no > 0:
         f"hold={b_ns_hd} ({r(b_ns_hd, b_no):.2f}%) | "
         f"dist={b_ns_ds} ({r(b_ns_ds, b_no):.2f}%) | "
         f"impulse={b_ns_im} ({r(b_ns_im, b_no):.2f}%) | "
+        f"impulse_weak={b_ns_im_w} ({r(b_ns_im_w, b_no):.2f}%) | "
+        f"impulse_body={b_ns_im_b} ({r(b_ns_im_b, b_no):.2f}%) | "
+        f"impulse_vol={b_ns_im_v} ({r(b_ns_im_v, b_no):.2f}%) | "
         f"entry_timing={b_ns_et} ({r(b_ns_et, b_no):.2f}%) | "
         f"invalid_risk={b_ns_ir} ({r(b_ns_ir, b_no):.2f}%) | "
         f"history={b_ns_hs} ({r(b_ns_hs, b_no):.2f}%) | "
