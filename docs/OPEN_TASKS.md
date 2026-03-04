@@ -11,6 +11,8 @@ Last update: 2026-03-04
 - [x] Added cleanup plan: `docs/RD_CLEANUP_PLAN.md`.
 - [x] Added rejected candidates inventory: `docs/rd_cleanup_candidates.csv`.
 - [x] Added old runs catalog: `docs/backtest_runs_catalog.csv`.
+- [x] Added broker CSV converter for Forex pilot: `scripts/forex_import_csv.py` (MT5/generic -> `ts,o,h,l,c,v`).
+- [x] Added Forex preset scanner: `scripts/run_forex_strategy_scan.sh` (conservative/balanced/active per pair with ranked summary).
 
 ## In Progress
 - [ ] Live diagnostics-driven tuning for breakout+midterm (production stack).
@@ -24,6 +26,22 @@ Last update: 2026-03-04
   - Guardrail checks:
     - `BREAKOUT_IMPULSE_BODY_MIN_FRAC=0.20` degrades stress (180d: `96.84`, `-3.16`, `DD 7.18`) -> reject.
     - `BREAKOUT_IMPULSE_BODY_MIN_FRAC=0.30` near flat but still worse than baseline (180d stress: `99.86`, `-0.14`, `DD 6.07`) -> reject.
+  - Cached-week sanity test (7d ending `2026-03-01`, live-like profile): trades present and positive.
+    - base: `11 trades`, `+1.9951` (ending `102.00`)
+    - stress: `11 trades`, `+1.2041` (ending `101.20`)
+  - Server restart window check (`since 2026-03-04 06:15 UTC`, 34m):
+    - `breakout_try=832`, `entry=0`
+    - no-signal mix: `impulse_weak=82.45%`, `impulse_body=5.53%`, `symbol=11.66%`, `no_break=0.36%`
+    - infra healthy: ws connect/disconnect active, handshake timeouts `0`.
+  - Added parity tool: `scripts/run_live_parity_backtest.sh` to replay base+stress with live-like parameters and auto top-N universe, so live-vs-backtest comparison is no longer manual.
+  - Added universe guard in live bot: `BREAKOUT_SYMBOL_ALLOWLIST/DENYLIST` now also applied during breakout universe construction (not only in signal wrapper), removing wasted attempts on pre-denied symbols.
+  - Live-universe mismatch note:
+    - server dynamic top-16 currently includes symbols outside our 10-coin baseline (`RIVER/HYPE/PIPPIN/SAHARA/FARTCOIN/PHA/...`), so fixed-10 backtests are not 1:1 parity with live.
+    - approximate replay on available live-like subset (`BTC,ETH,SOL,DOGE,ADA,NEAR`, 7d ending `2026-03-01`) stays positive:
+      - base `+3.1954` (13 trades), stress `+2.2589` (13 trades)
+  - 7d impulse stress sweep (same window) shows over-loosening is not helpful:
+    - `1.00/0.90/0.80`: `10 trades`, `+1.55`, PF `3.546`
+    - `0.75/0.65`: `11 trades`, `+1.20`, PF `2.262`
   - Next canary: keep body filter intact, investigate `symbol` blockers and split impulse diagnostics into sub-reasons (`weak/body/vol`).
 - [ ] Cleanup phase 1: archive-first strategy/scripts restructuring (no destructive deletes).
   - Technical prerequisite: `backtest/run_portfolio.py` still has static imports for many rejected strategies, so physical file move must happen together with import/allowed-list pruning in one change-set.

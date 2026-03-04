@@ -52,6 +52,11 @@ def _csv_lower_set(name: str) -> set[str]:
     return {x.strip().lower() for x in str(raw).split(",") if x.strip()}
 
 
+def _csv_upper_set(name: str) -> set[str]:
+    raw = os.getenv(name, "") or ""
+    return {x.strip().upper() for x in str(raw).split(",") if x.strip()}
+
+
 def _session_name_utc(ts_sec: int) -> str:
     hour = (int(ts_sec) // 3600) % 24
     if 0 <= hour < 9:
@@ -269,6 +274,8 @@ BREAKOUT_QUALITY_BOOST_MULT_2 = max(1.0, float(os.getenv("BREAKOUT_QUALITY_BOOST
 BREAKOUT_MIN_QUOTE_5M_USD = max(0.0, float(os.getenv("BREAKOUT_MIN_QUOTE_5M_USD", "70000")))
 BREAKOUT_SESSION_FILTER_ENABLE = _env_bool("BREAKOUT_SESSION_FILTER_ENABLE", False)
 BREAKOUT_SESSION_ALLOWED = _csv_lower_set("BREAKOUT_SESSION_ALLOWED")
+BREAKOUT_SYMBOL_ALLOWLIST = _csv_upper_set("BREAKOUT_SYMBOL_ALLOWLIST")
+BREAKOUT_SYMBOL_DENYLIST = _csv_upper_set("BREAKOUT_SYMBOL_DENYLIST")
 BREAKOUT_SYMBOLS = set()
 BREAKOUT_ENGINE = None
 MIDTERM_TRY_EVERY_SEC = int(os.getenv("MIDTERM_TRY_EVERY_SEC", "90"))
@@ -5584,6 +5591,10 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
     bounce_filtered = _apply_symbol_filters(base_filtered, strategy="bounce")
     inplay_filtered = _apply_symbol_filters(base_filtered, strategy="inplay")
     breakout_filtered = _apply_symbol_filters(base_filtered, strategy="breakout")
+    if BREAKOUT_SYMBOL_ALLOWLIST:
+        breakout_filtered = [s for s in breakout_filtered if s in BREAKOUT_SYMBOL_ALLOWLIST]
+    if BREAKOUT_SYMBOL_DENYLIST:
+        breakout_filtered = [s for s in breakout_filtered if s not in BREAKOUT_SYMBOL_DENYLIST]
     retest_filtered = _apply_symbol_filters(base_filtered, strategy="retest")
 
     BOUNCE_SYMBOLS = set(bounce_filtered[:BOUNCE_TOP_N])
