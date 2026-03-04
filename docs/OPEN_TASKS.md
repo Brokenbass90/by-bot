@@ -13,6 +13,8 @@ Last update: 2026-03-04
 - [x] Added old runs catalog: `docs/backtest_runs_catalog.csv`.
 - [x] Added broker CSV converter for Forex pilot: `scripts/forex_import_csv.py` (MT5/generic -> `ts,o,h,l,c,v`).
 - [x] Added Forex preset scanner: `scripts/run_forex_strategy_scan.sh` (conservative/balanced/active per pair with ranked summary).
+- [x] Added one-command Forex refresh pipeline: `scripts/run_forex_dynamic_gate.sh` (fetch + data check + recent-aware universe gate + latest snapshots in `docs/`).
+- [x] Added Forex combo state machine: `scripts/update_forex_combo_state.py` + `scripts/run_forex_combo_state.sh` (`ACTIVE/CANARY/BANNED` with streaks, cooldown, max-active quota, latest outputs in `docs/forex_combo_*_latest.*`).
 
 ## In Progress
 - [ ] Live diagnostics-driven tuning for breakout+midterm (production stack).
@@ -48,20 +50,97 @@ Last update: 2026-03-04
   - Gap report generated: `docs/cleanup_gap_report.csv`
     - `prune_import_before_archive=33`
     - `archive_ready=1` (`funding_hold_v1.py`)
-- [ ] Forex data pipeline: load M5 CSV for EURUSD/GBPUSD/USDJPY into `data_cache/forex/`.
-  - Data readiness report generated: `docs/forex_data_status.csv` (`ready=0/3`, all three CSV files missing).
+- [ ] Forex stabilization program (primary R&D track).
+  - Data status now healthy: `docs/forex_data_status.csv` shows `ready=12/12` for majors/crosses (`EURUSD, GBPUSD, USDJPY, AUDUSD, USDCAD, USDCHF, NZDUSD, EURGBP, EURJPY, GBPJPY, AUDJPY, CADJPY`).
+  - Added broker-grade year+ fetch path: `scripts/fetch_forex_oanda.py` + `scripts/run_forex_fetch_oanda.sh` (requires `OANDA_API_TOKEN`).
+  - Dynamic gate result (`scripts/run_forex_dynamic_gate.sh`, tag `fx_gate_dynamic_20260304_093245`):
+    - pass: `GBPUSD conservative` (`base +158.97`, `stress +105.37`, `recent_stress +56.87`, `87 trades`, `DD 86.24`)
+    - fail: all other scanned pairs on current parameters and costs.
+  - Multi-strategy fast gate (`scripts/run_forex_multi_strategy_gate.sh`, recent bars, 3 strategies):
+    - pass candidates: `AUDJPY + breakout_continuation_session_v1` (`stress +31.67`, `21 trades`), `USDCHF + breakout_continuation_session_v1` (`stress +1.86`, `23 trades`)
+    - implication: single-strategy bottleneck is real; pair+strategy routing increases candidate count.
+  - Multi-strategy full-history gate (`12 pairs x 5 strategies`) confirms robustness check:
+    - robust pass: `GBPUSD + trend_retest_session_v1` only.
+    - example of stale profile rejected by recent filter: `EURJPY + grid_reversion_session_v1` (overall stress positive, recent stress negative).
+  - Afternoon verification (`2026-03-04 14:04 UTC`, fast window `FX_MAX_BARS=4000`) produced extra temporary passes (`GBPJPY trend_retest`, `AUDJPY breakout_continuation`, `EURUSD trend_retest`, `EURJPY grid`, `AUDUSD trend_retest`), but full-history focus gate right after (`4 pairs x 3 strategies`, no bar cap) collapsed back to single robust pass: `GBPUSD trend_retest`.
+  - Walk-forward delta check (`2026-03-04 14:07 UTC`) confirms stability gap:
+    - `GBPUSD conservative`: monthly `2/3` positive, rolling `6/9` positive.
+    - `GBPJPY conservative`: monthly `1/3` positive, rolling `4/9` positive with deep late-window drawdowns.
+  - State machine bootstrapped (`2026-03-04 14:29 UTC`):
+    - `docs/forex_combo_state_latest.csv` now tracks `ACTIVE/CANARY/WATCHLIST/BANNED` per `pair+strategy`.
+    - strategy ID canonicalization enabled (`strategy:default`) to prevent duplicate keys in state.
+    - current active set after promotion streak: `GBPUSD@trend_retest_session_v1:conservative`.
+  - Added two-stage runner (`scripts/run_forex_two_stage_gate.sh`):
+    - stage1: fast multi-preset scout (`max_bars` window),
+    - stage2: full-history confirm on top fast candidates,
+    - stage3: state update from full confirm only.
+  - Added pair-specific preset `grid_reversion_session_v1:eurjpy_canary` to lock tuned EURJPY grid parameters from brute-force scan.
+    - full confirm (`fx_stage_full_smoke_20260304_155121`): `EURJPY grid:eurjpy_canary base +324.63 / stress +249.40 / recent +74.74 / trades 148 / dd 97.86`.
+  - Added pair-specific preset `trend_retest_session_v1:eurusd_canary` from staged EURUSD sweep.
+    - checkpoint (`fx_third_combo_check_20260304_173235`): `EURUSD trend:eurusd_canary base +114.63 / stress +67.83 / recent +71.26 / trades 93 / dd 94.63`.
+  - State canonicalization fix: `trend_retest_session_v1:default` is now normalized to `:conservative` in state updater to avoid duplicate combo keys.
+  - Multi-preset fast scan found additional short-window positives, but full confirm still rejects them; useful for narrowing tuning targets, not for direct promotion to ACTIVE.
+  - Added soft-canary policy in state updater:
+    - near-pass combos (positive stress/base, sufficient trades/DD, slightly negative recent) are tracked as `CANARY` instead of dropping to `WATCHLIST`.
+    - fail chain corrected: first fail keeps `CANARY`, ban only after configured fail streak.
+  - Current practical split:
+    - `ACTIVE`: `EURJPY@grid_reversion_session_v1:eurjpy_canary`, `GBPUSD@trend_retest_session_v1:conservative`, `EURUSD@trend_retest_session_v1:eurusd_canary`
+    - `CANARY`: `EURJPY@grid_reversion_session_v1:default` (strong full stress, marginal recent dip).
+  - Added generic combo walk-forward tool: `scripts/run_forex_combo_walkforward.py` (works for any `strategy:preset`, outputs base+stress by segment).
+    - Rolling 28/7 checkpoint (`2026-03-04`):
+      - `GBPUSD trend_retest:conservative`: `6/9` windows both positive (`base+stress`), but has weak Dec-Jan windows.
+      - `EURJPY grid:eurjpy_canary`: `9/9` windows both positive on current 60d sample.
+  - Added live filter exporter: `scripts/export_forex_live_filters.py` and wired it into `scripts/run_forex_combo_state.sh` (auto-export `ACTIVE/CANARY` as txt/csv/json/env after each state update).
+  - Additional full-history branch scans (`2026-03-04`):
+    - `trend_pullback_rebound_v1` (default/strict, 12 pairs): `0` gate passes.
+    - `range_bounce_session_v1` (default/loose, 12 pairs): `0` gate passes.
+  - Staged tuning checks (`2026-03-04`):
+    - `AUDJPY breakout_continuation`: fast-window winners collapsed on full confirm (`0` strict passes).
+    - `USDCAD grid_reversion`: strong fast-window scores, but full confirm failed hard (`0` strict passes, stress negative, DD > 300).
+  - Trend-family full scan (`trend_retest` presets on 12 pairs): robust passes remain `GBPUSD:conservative` and `EURUSD:eurusd_canary`; no additional pair passed strict gate.
+  - Full-universe two-stage confirm (`fx_stage_full_fullrun_20260304_155821`) validates 2 robust combos:
+    - `EURJPY@grid_reversion_session_v1:eurjpy_canary`
+    - `GBPUSD@trend_retest_session_v1:conservative`
+  - Expanded pair-check gate (`fx_third_combo_check_20260304_173235`) also passes:
+    - `EURUSD@trend_retest_session_v1:eurusd_canary`
+  - State file status now:
+    - `ACTIVE=3`, `CANARY=1`, `BANNED=0`.
+  - Active-health checkpoint (`2026-03-04 18:18 UTC`, rolling windows):
+    - `EURJPY@grid_reversion_session_v1:eurjpy_canary`: `9/9` both-positive, `stress_total +778.80` (`OK`)
+    - `GBPUSD@trend_retest_session_v1:conservative`: `6/9` both-positive, `stress_total +411.09` (`OK`)
+    - `EURUSD@trend_retest_session_v1:eurusd_canary`: `5/9` both-positive, `stress_total +33.87` (`OK`)
+  - Robustness checkpoints already positive for `GBPUSD conservative`:
+    - stress1 (`spread=1.8`, `swap=-0.6`): `+105.37`
+    - stress2 (`spread=2.4`, `swap=-0.8`): `+51.77`
+  - Near-term goal:
+    - keep 3 active forex combos in paper portfolio and monitor decay with daily gate + rolling walk-forward.
+    - add fourth independent combo (different pair/logic) before live forex rollout with meaningful capital.
+    - run overnight full-history multi-strategy gate (all 5 strategies) and confirm fast-scan passes are not local-noise artifacts.
+    - completed (`2026-03-04`): two-stage gate now auto-includes existing `ACTIVE` combos in full-confirm shortlist (`FX_INCLUDE_ACTIVE_IN_FULL=1` by default) to prevent accidental demotion from short-window omission.
+- [ ] Telegram control-plane cleanup and Forex commands.
+  - Problem: current bot commands/panels are mixed and hard to operate quickly.
+  - Target:
+    - split control sections: `crypto live`, `forex live`, `rd/scans`, `risk/execution`, `diagnostics`.
+    - add explicit Forex commands (universe, gate status, active pair list, manual refresh, dry-run/live toggle per stack).
+    - unify status output format and add concise “what changed since last run” block.
+  - Deliverables:
+    - command map doc,
+    - revised Telegram handler routes,
+    - quick-operate menu layout (minimal taps).
 
 ## Next Actions (Priority Order)
 1. Capture next live diagnostics window and decide one minimal canary change in breakout thresholds.
 2. Commit cleanup metadata and move rejected strategies to archive namespace with manifest.
-3. Run first Forex batch once CSV files exist and store summary in `backtest_runs/`.
-4. Build simple pass/fail gate report for crypto candidates (base+stress).
+3. Continue Forex gate refresh daily (`run_forex_dynamic_gate.sh`) and start walk-forward auto-disable rule for active pair list.
+4. Add crypto WS noise guardrail: track keepalive timeout frequency and auto-alert when reconnect rate breaches threshold (server not broken, but stream quality is noisy).
+5. Use new nightly runner (`scripts/run_forex_overnight_research.sh`) as default background R&D pipeline while waiting for broker API history.
+6. Draft Telegram control-plane refactor plan and implement Forex command subset first.
+7. Build simple pass/fail gate report for crypto candidates (base+stress).
 
 ## Blocked / Waiting
-- Forex pilot backtest is blocked by missing local CSV files:
-  - `data_cache/forex/EURUSD_M5.csv`
-  - `data_cache/forex/GBPUSD_M5.csv`
-  - `data_cache/forex/USDJPY_M5.csv`
+- Forex is not data-blocked anymore (`ready=12/12`).
+- Main blocker shifted from candidate scarcity to data horizon: current robust set is `3` combos, but sample is ~60d intraday and needs longer broker-grade history before live deployment.
+- For 12m+ M5 validation: waiting for broker API token/account (or MT5/cTrader export) with stable historical pull access.
 
 ## Rule Reminder
 - If no crypto candidate passes both base+stress for 10-14 days, shift 50% R&D to Forex.
