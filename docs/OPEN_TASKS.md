@@ -42,6 +42,7 @@ Last update: 2026-03-05
   - Added parity tool: `scripts/run_live_parity_backtest.sh` to replay base+stress with live-like parameters and auto top-N universe, so live-vs-backtest comparison is no longer manual.
   - Added universe guard in live bot: `BREAKOUT_SYMBOL_ALLOWLIST/DENYLIST` now also applied during breakout universe construction (not only in signal wrapper), removing wasted attempts on pre-denied symbols.
   - Added WS reason granularity in runtime counters (`ws_disconnect_timeout/invalid_status/closed/oserror/other`) and diagnostics breakdown in `scripts/run_live_diagnostics.sh` to isolate transport root cause before tuning signal filters.
+  - Server deploy checkpoint (`2026-03-05 09:10 UTC`): post-restart 30m window shows WS transport stabilized (`connect=3`, `disconnect=0`, `handshake=0`, status `OK`), while entries remain blocked by weak signal (`impulse_weak`).
   - Live-universe mismatch note:
     - server dynamic top-16 currently includes symbols outside our 10-coin baseline (`RIVER/HYPE/PIPPIN/SAHARA/FARTCOIN/PHA/...`), so fixed-10 backtests are not 1:1 parity with live.
     - approximate replay on available live-like subset (`BTC,ETH,SOL,DOGE,ADA,NEAR`, 7d ending `2026-03-01`) stays positive:
@@ -110,6 +111,7 @@ Last update: 2026-03-05
     - `EURUSD@trend_retest_session_v1:eurusd_canary`
   - State file status now:
     - `ACTIVE=3`, `CANARY=1`, `BANNED=0`.
+    - Added anti-concentration control `max_active_per_pair` (default `1`) in state updater to avoid duplicate ACTIVE presets on same pair.
   - Active-health checkpoint (`2026-03-04 18:18 UTC`, rolling windows):
     - `EURJPY@grid_reversion_session_v1:eurjpy_canary`: `9/9` both-positive, `stress_total +778.80` (`OK`)
     - `GBPUSD@trend_retest_session_v1:conservative`: `6/9` both-positive, `stress_total +411.09` (`OK`)
@@ -118,6 +120,11 @@ Last update: 2026-03-05
     - `EURJPY grid:eurjpy_canary` stress `+192.83`
     - `EURUSD trend:eurusd_canary` stress `+81.14`
     - `GBPUSD trend:conservative` stress `+75.93`
+  - Fresh full confirm (`2026-03-05 09:22 UTC`) keeps robust core unchanged; with per-pair active cap applied, ACTIVE set is:
+    - `EURJPY@grid_reversion_session_v1:eurjpy_canary`
+    - `GBPUSD@trend_retest_session_v1:conservative`
+    - `EURUSD@trend_retest_session_v1:eurusd_canary`
+    - `EURJPY@grid_reversion_session_v1:active` tracked as `CANARY`.
   - Robustness checkpoints already positive for `GBPUSD conservative`:
     - stress1 (`spread=1.8`, `swap=-0.6`): `+105.37`
     - stress2 (`spread=2.4`, `swap=-0.8`): `+51.77`
@@ -160,7 +167,7 @@ Last update: 2026-03-05
 - Forex is not data-blocked anymore (`ready=12/12`).
 - Main blocker shifted from candidate scarcity to data horizon: current robust set is `3` combos, but sample is ~60d intraday and needs longer broker-grade history before live deployment.
 - For 12m+ M5 validation: waiting for broker API token/account (or MT5/cTrader export) with stable historical pull access.
-- Crypto live entries remain blocked mostly by signal quality (`impulse_weak`) and now by WS transport noise (high handshake/disconnect rate); infra not down, but quality watchdog is required.
+- Crypto live entries remain blocked mostly by signal quality (`impulse_weak`); WS transport had noisy windows before, but latest post-restart sample is healthy. Keep watchdog active and continue monitoring.
 
 ## Rule Reminder
 - If no crypto candidate passes both base+stress for 10-14 days, shift 50% R&D to Forex.
