@@ -382,3 +382,6 @@
 - 2026-03-05 07:05 UTC | equities state machine | added scripts/update_equities_combo_state.py + scripts/run_equities_combo_state.sh; initialized docs/equities_combo_* latest files from walk-forward raw output | done
 - 2026-03-05 07:05 UTC | equities state bootstrap | first update produced ACTIVE=0 CANARY=9 WATCHLIST=1 (pass_streak_to_active=2, expected no ACTIVE on initial run) | done
 - 2026-03-05 07:08 UTC | live ws guardrail | added WS health watchdog in pulse (windowed delta check + WARN/CRITICAL Telegram alerts with cooldown) via WS_HEALTH_* env knobs; no trading logic changed | done
+- 2026-03-05 07:56 UTC | equities state promotion | second pass of run_equities_combo_state.sh promoted leaders to ACTIVE=6 (CANARY=3, WATCHLIST=1) with active tickers AAPL/AMD/GOOGL/META/TSLA | done
+- 2026-03-05 07:56 UTC | idea backlog | add monthly equities allocator concept: monthly AI-assisted macro/sector review + staged buy program + target exit band (2-3%% over 1-2 months) under separate long-horizon portfolio and strict risk caps | planned
+- 2026-03-05 08:08 UTC | fx import UX | improved scripts/run_forex_import_batch.sh: auto-discover source CSV/TXT by pair in configured roots (default Downloads/Desktop) when FX_<PAIR>_SRC is not set | done
