@@ -84,6 +84,13 @@ def _diag_inc(key: str, n: int = 1) -> None:
         pass
 
 
+def _diag_get_int(key: str) -> int:
+    try:
+        return int(RUNTIME_COUNTER.get(key, 0))
+    except Exception:
+        return 0
+
+
 def _runtime_diag_snapshot() -> str:
     if not RUNTIME_DIAG_ENABLE:
         return "diag=off"
@@ -123,6 +130,32 @@ def _runtime_diag_snapshot() -> str:
     ]
     parts = [f"{k}={int(RUNTIME_COUNTER.get(k, 0))}" for k in keys]
     return "diag " + " ".join(parts)
+
+
+def _ws_health_from_delta(connect_delta: int, disconnect_delta: int, handshake_delta: int) -> tuple[str, float, float]:
+    c = max(0, int(connect_delta))
+    d = max(0, int(disconnect_delta))
+    h = max(0, int(handshake_delta))
+    if c <= 0:
+        if d > 0 or h > 0:
+            return "CRITICAL_NO_CONNECT", float("inf"), float("inf")
+        return "NO_ACTIVITY", 0.0, 0.0
+    disc_conn_pct = (100.0 * d) / max(1, c)
+    hs_conn_pct = (100.0 * h) / max(1, c)
+    if disc_conn_pct >= WS_HEALTH_CRIT_DISC_CONN_PCT or hs_conn_pct >= WS_HEALTH_CRIT_HANDSHAKE_CONN_PCT:
+        return "CRITICAL", disc_conn_pct, hs_conn_pct
+    if disc_conn_pct >= WS_HEALTH_WARN_DISC_CONN_PCT or hs_conn_pct >= WS_HEALTH_WARN_HANDSHAKE_CONN_PCT:
+        return "WARN", disc_conn_pct, hs_conn_pct
+    return "OK", disc_conn_pct, hs_conn_pct
+
+
+def _fmt_ratio_or_inf(v: float) -> str:
+    if math.isinf(v):
+        return "inf"
+    try:
+        return f"{float(v):.1f}%"
+    except Exception:
+        return "n/a"
 
 
 def _breakout_no_signal_diag_key(reason: str) -> str:
@@ -900,6 +933,14 @@ REPORT_MONTHLY_ENABLE = os.getenv("REPORT_MONTHLY_ENABLE", "1").strip() == "1"
 REPORT_YEARLY_ENABLE = os.getenv("REPORT_YEARLY_ENABLE", "1").strip() == "1"
 STRATEGY_STATS_TG_EVERY_SEC = int(os.getenv("STRATEGY_STATS_TG_EVERY_SEC", "3600"))
 STRATEGY_STATS_LOOKBACK_H = int(os.getenv("STRATEGY_STATS_LOOKBACK_H", "24"))
+WS_HEALTH_ALERT_ENABLE = _env_bool("WS_HEALTH_ALERT_ENABLE", True)
+WS_HEALTH_CHECK_SEC = max(60, int(os.getenv("WS_HEALTH_CHECK_SEC", "300")))
+WS_HEALTH_ALERT_COOLDOWN_SEC = max(60, int(os.getenv("WS_HEALTH_ALERT_COOLDOWN_SEC", "1800")))
+WS_HEALTH_MIN_CONNECT_DELTA = max(1, int(os.getenv("WS_HEALTH_MIN_CONNECT_DELTA", "3")))
+WS_HEALTH_WARN_DISC_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_WARN_DISC_CONN_PCT", "120")))
+WS_HEALTH_CRIT_DISC_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_CRIT_DISC_CONN_PCT", "250")))
+WS_HEALTH_WARN_HANDSHAKE_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_WARN_HANDSHAKE_CONN_PCT", "30")))
+WS_HEALTH_CRIT_HANDSHAKE_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_CRIT_HANDSHAKE_CONN_PCT", "80")))
 TRADE_CHARTS_ENABLE = os.getenv("TRADE_CHARTS_ENABLE", "1").strip() == "1"
 TRADE_CHARTS_SEND_ON_ENTRY = os.getenv("TRADE_CHARTS_SEND_ON_ENTRY", "1").strip() == "1"
 TRADE_CHARTS_SEND_ON_CLOSE = os.getenv("TRADE_CHARTS_SEND_ON_CLOSE", "1").strip() == "1"
@@ -5902,6 +5943,14 @@ async def range_rescan_loop():
 # =========================== PULSE ===========================
 async def pulse():
     last_stats_sent = 0
+    last_ws_health_check_ts = 0
+    last_ws_alert_ts = 0
+    last_ws_alert_status = ""
+    last_ws_counters = (
+        _diag_get_int("ws_connect"),
+        _diag_get_int("ws_disconnect"),
+        _diag_get_int("ws_handshake_timeout"),
+    )
     while True:
         try:
             sync_trades_with_exchange()
@@ -5922,6 +5971,38 @@ async def pulse():
             if STRATEGY_STATS_TG_EVERY_SEC > 0 and (now - last_stats_sent) >= int(STRATEGY_STATS_TG_EVERY_SEC):
                 tg_trade(_strategy_runtime_stats_text(STRATEGY_STATS_LOOKBACK_H))
                 last_stats_sent = now
+            if WS_HEALTH_ALERT_ENABLE and (now - last_ws_health_check_ts) >= int(WS_HEALTH_CHECK_SEC):
+                cur_ws = (
+                    _diag_get_int("ws_connect"),
+                    _diag_get_int("ws_disconnect"),
+                    _diag_get_int("ws_handshake_timeout"),
+                )
+                d_connect = cur_ws[0] - last_ws_counters[0]
+                d_disconnect = cur_ws[1] - last_ws_counters[1]
+                d_handshake = cur_ws[2] - last_ws_counters[2]
+                status, disc_conn_pct, hs_conn_pct = _ws_health_from_delta(d_connect, d_disconnect, d_handshake)
+                if d_connect >= WS_HEALTH_MIN_CONNECT_DELTA and status in {"WARN", "CRITICAL"}:
+                    if (now - last_ws_alert_ts) >= int(WS_HEALTH_ALERT_COOLDOWN_SEC) or status != last_ws_alert_status:
+                        tg_trade(
+                            "⚠️ WS health "
+                            f"{status}: connect={d_connect} disconnect={d_disconnect} handshake_timeout={d_handshake} "
+                            f"| disconnect/connect={_fmt_ratio_or_inf(disc_conn_pct)} "
+                            f"| handshake/connect={_fmt_ratio_or_inf(hs_conn_pct)} "
+                            f"(window={int(WS_HEALTH_CHECK_SEC)}s)"
+                        )
+                        last_ws_alert_ts = now
+                        last_ws_alert_status = status
+                elif status == "CRITICAL_NO_CONNECT":
+                    if (now - last_ws_alert_ts) >= int(WS_HEALTH_ALERT_COOLDOWN_SEC) or status != last_ws_alert_status:
+                        tg_trade(
+                            "⚠️ WS health CRITICAL_NO_CONNECT: "
+                            f"connect={d_connect} disconnect={d_disconnect} handshake_timeout={d_handshake} "
+                            f"(window={int(WS_HEALTH_CHECK_SEC)}s)"
+                        )
+                        last_ws_alert_ts = now
+                        last_ws_alert_status = status
+                last_ws_counters = cur_ws
+                last_ws_health_check_ts = now
         except Exception as e:
             log_error(f"strategy-stats pulse fail: {e}")
         await asyncio.sleep(10)

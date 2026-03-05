@@ -1,6 +1,6 @@
 # Open Tasks (Single Source of Truth)
 
-Last update: 2026-03-04
+Last update: 2026-03-05
 
 ## Done Recently
 - [x] Added isolated Forex pilot module (`forex/`) with separate engine and strategy.
@@ -15,6 +15,7 @@ Last update: 2026-03-04
 - [x] Added Forex preset scanner: `scripts/run_forex_strategy_scan.sh` (conservative/balanced/active per pair with ranked summary).
 - [x] Added one-command Forex refresh pipeline: `scripts/run_forex_dynamic_gate.sh` (fetch + data check + recent-aware universe gate + latest snapshots in `docs/`).
 - [x] Added Forex combo state machine: `scripts/update_forex_combo_state.py` + `scripts/run_forex_combo_state.sh` (`ACTIVE/CANARY/BANNED` with streaks, cooldown, max-active quota, latest outputs in `docs/forex_combo_*_latest.*`).
+- [x] Added Equities combo state machine: `scripts/update_equities_combo_state.py` + `scripts/run_equities_combo_state.sh` (`ACTIVE/CANARY/WATCHLIST/BANNED` over walk-forward raw output; latest snapshots in `docs/equities_combo_*_latest.*`).
 
 ## In Progress
 - [ ] Live diagnostics-driven tuning for breakout+midterm (production stack).
@@ -85,7 +86,7 @@ Last update: 2026-03-04
     - fail chain corrected: first fail keeps `CANARY`, ban only after configured fail streak.
   - Current practical split:
     - `ACTIVE`: `EURJPY@grid_reversion_session_v1:eurjpy_canary`, `GBPUSD@trend_retest_session_v1:conservative`, `EURUSD@trend_retest_session_v1:eurusd_canary`
-    - `CANARY`: `EURJPY@grid_reversion_session_v1:default` (strong full stress, marginal recent dip).
+    - `CANARY`: `EURJPY@grid_reversion_session_v1:active` (positive full-history stress, weaker stability vs canary preset).
   - Added generic combo walk-forward tool: `scripts/run_forex_combo_walkforward.py` (works for any `strategy:preset`, outputs base+stress by segment).
     - Rolling 28/7 checkpoint (`2026-03-04`):
       - `GBPUSD trend_retest:conservative`: `6/9` windows both positive (`base+stress`), but has weak Dec-Jan windows.
@@ -109,6 +110,10 @@ Last update: 2026-03-04
     - `EURJPY@grid_reversion_session_v1:eurjpy_canary`: `9/9` both-positive, `stress_total +778.80` (`OK`)
     - `GBPUSD@trend_retest_session_v1:conservative`: `6/9` both-positive, `stress_total +411.09` (`OK`)
     - `EURUSD@trend_retest_session_v1:eurusd_canary`: `5/9` both-positive, `stress_total +33.87` (`OK`)
+  - Overnight refresh (`2026-03-05 05:30 UTC`, 12 pairs, full two-stage) re-confirmed ACTIVE=3 with updated full-history stress:
+    - `EURJPY grid:eurjpy_canary` stress `+192.83`
+    - `EURUSD trend:eurusd_canary` stress `+81.14`
+    - `GBPUSD trend:conservative` stress `+75.93`
   - Robustness checkpoints already positive for `GBPUSD conservative`:
     - stress1 (`spread=1.8`, `swap=-0.6`): `+105.37`
     - stress2 (`spread=2.4`, `swap=-0.8`): `+51.77`
@@ -117,6 +122,11 @@ Last update: 2026-03-04
     - add fourth independent combo (different pair/logic) before live forex rollout with meaningful capital.
     - run overnight full-history multi-strategy gate (all 5 strategies) and confirm fast-scan passes are not local-noise artifacts.
     - completed (`2026-03-04`): two-stage gate now auto-includes existing `ACTIVE` combos in full-confirm shortlist (`FX_INCLUDE_ACTIVE_IN_FULL=1` by default) to prevent accidental demotion from short-window omission.
+- [ ] Equities stabilization program (parallel R&D track).
+  - Walk-forward gate (`2026-03-05 07:00 UTC`) produced `7` robust pass combos (top: `TSLA grid`, `META trend_retest`, `GOOGL trend_retest`).
+  - State bootstrap (`2026-03-05 07:05 UTC`) initialized from raw walk-forward:
+    - `ACTIVE=0`, `CANARY=9`, `WATCHLIST=1`, `BANNED=0`.
+    - This is expected on first run with `pass_streak_to_active=2`; next confirming run promotes leaders to ACTIVE.
 - [ ] Telegram control-plane cleanup and Forex commands.
   - Problem: current bot commands/panels are mixed and hard to operate quickly.
   - Target:
@@ -133,14 +143,18 @@ Last update: 2026-03-04
 2. Commit cleanup metadata and move rejected strategies to archive namespace with manifest.
 3. Continue Forex gate refresh daily (`run_forex_dynamic_gate.sh`) and start walk-forward auto-disable rule for active pair list.
 4. Add crypto WS noise guardrail: track keepalive timeout frequency and auto-alert when reconnect rate breaches threshold (server not broken, but stream quality is noisy).
+   - implemented (`2026-03-05`): pulse-level WS watchdog with windowed deltas and `WARN/CRITICAL` Telegram alerts (`WS_HEALTH_*` envs).
 5. Use new nightly runner (`scripts/run_forex_overnight_research.sh`) as default background R&D pipeline while waiting for broker API history.
 6. Draft Telegram control-plane refactor plan and implement Forex command subset first.
 7. Build simple pass/fail gate report for crypto candidates (base+stress).
+8. Start equities R&D track (M5, US regular session): run daily fetch/check/scan, then add walk-forward gate before any paper/live step.
+9. Add equities state machine (ACTIVE/CANARY/WATCHLIST/BANNED) mirroring forex flow, then keep only walk-forward-passing candidates in ACTIVE.
 
 ## Blocked / Waiting
 - Forex is not data-blocked anymore (`ready=12/12`).
 - Main blocker shifted from candidate scarcity to data horizon: current robust set is `3` combos, but sample is ~60d intraday and needs longer broker-grade history before live deployment.
 - For 12m+ M5 validation: waiting for broker API token/account (or MT5/cTrader export) with stable historical pull access.
+- Crypto live entries remain blocked mostly by signal quality (`impulse_weak`) and now by WS transport noise (high handshake/disconnect rate); infra not down, but quality watchdog is required.
 
 ## Rule Reminder
 - If no crypto candidate passes both base+stress for 10-14 days, shift 50% R&D to Forex.
