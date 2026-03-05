@@ -18,6 +18,7 @@ Last update: 2026-03-05
 - [x] Added Equities combo state machine: `scripts/update_equities_combo_state.py` + `scripts/run_equities_combo_state.sh` (`ACTIVE/CANARY/WATCHLIST/BANNED` over walk-forward raw output; latest snapshots in `docs/equities_combo_*_latest.*`).
 - [x] Added free-history Forex fetch path via Dukascopy: `scripts/fetch_forex_dukascopy.py` + `scripts/run_forex_fetch_dukascopy.sh` (tick -> M5 aggregation).
 - [x] Added monthly tax export wrapper: `scripts/run_tax_monthly_report.sh` (exports `docs/tax_monthly_latest.csv/txt`).
+- [x] Added monthly operator bundle: `scripts/run_operator_monthly_report.sh` (tax + active combo snapshots + data readiness in `docs/operator_monthly_latest.{txt,json}`).
 
 ## In Progress
 - [ ] Live diagnostics-driven tuning for breakout+midterm (production stack).
