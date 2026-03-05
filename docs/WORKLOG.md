@@ -385,3 +385,5 @@
 - 2026-03-05 07:56 UTC | equities state promotion | second pass of run_equities_combo_state.sh promoted leaders to ACTIVE=6 (CANARY=3, WATCHLIST=1) with active tickers AAPL/AMD/GOOGL/META/TSLA | done
 - 2026-03-05 07:56 UTC | idea backlog | add monthly equities allocator concept: monthly AI-assisted macro/sector review + staged buy program + target exit band (2-3%% over 1-2 months) under separate long-horizon portfolio and strict risk caps | planned
 - 2026-03-05 08:08 UTC | fx import UX | improved scripts/run_forex_import_batch.sh: auto-discover source CSV/TXT by pair in configured roots (default Downloads/Desktop) when FX_<PAIR>_SRC is not set | done
+- 2026-03-05 10:42 UTC | fx free data path | added scripts/fetch_forex_dukascopy.py + scripts/run_forex_fetch_dukascopy.sh (free Dukascopy tick download -> M5 aggregation to `ts,o,h,l,c,v`) for long-history research without broker API
+- 2026-03-05 10:43 UTC | ops tax helper | added scripts/run_tax_monthly_report.sh wrapper for scripts/tax_monthly_report.py (monthly realized pnl + estimated tax table export to docs/tax_monthly_latest.*)

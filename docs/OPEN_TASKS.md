@@ -16,6 +16,8 @@ Last update: 2026-03-05
 - [x] Added one-command Forex refresh pipeline: `scripts/run_forex_dynamic_gate.sh` (fetch + data check + recent-aware universe gate + latest snapshots in `docs/`).
 - [x] Added Forex combo state machine: `scripts/update_forex_combo_state.py` + `scripts/run_forex_combo_state.sh` (`ACTIVE/CANARY/BANNED` with streaks, cooldown, max-active quota, latest outputs in `docs/forex_combo_*_latest.*`).
 - [x] Added Equities combo state machine: `scripts/update_equities_combo_state.py` + `scripts/run_equities_combo_state.sh` (`ACTIVE/CANARY/WATCHLIST/BANNED` over walk-forward raw output; latest snapshots in `docs/equities_combo_*_latest.*`).
+- [x] Added free-history Forex fetch path via Dukascopy: `scripts/fetch_forex_dukascopy.py` + `scripts/run_forex_fetch_dukascopy.sh` (tick -> M5 aggregation).
+- [x] Added monthly tax export wrapper: `scripts/run_tax_monthly_report.sh` (exports `docs/tax_monthly_latest.csv/txt`).
 
 ## In Progress
 - [ ] Live diagnostics-driven tuning for breakout+midterm (production stack).
@@ -125,8 +127,9 @@ Last update: 2026-03-05
 - [ ] Equities stabilization program (parallel R&D track).
   - Walk-forward gate (`2026-03-05 07:00 UTC`) produced `7` robust pass combos (top: `TSLA grid`, `META trend_retest`, `GOOGL trend_retest`).
   - State bootstrap (`2026-03-05 07:05 UTC`) initialized from raw walk-forward:
-    - `ACTIVE=0`, `CANARY=9`, `WATCHLIST=1`, `BANNED=0`.
-    - This is expected on first run with `pass_streak_to_active=2`; next confirming run promotes leaders to ACTIVE.
+    - pass #1: `ACTIVE=0`, `CANARY=9`, `WATCHLIST=1`, `BANNED=0`.
+    - pass #2 (same raw, streak promotion): `ACTIVE=6`, `CANARY=3`, `WATCHLIST=1`, `BANNED=0`.
+    - active combos now include: `TSLA grid`, `META trend_retest`, `GOOGL trend_retest`, `META breakout_continuation`, `AMD breakout_continuation`, `AAPL breakout_continuation`.
 - [ ] Telegram control-plane cleanup and Forex commands.
   - Problem: current bot commands/panels are mixed and hard to operate quickly.
   - Target:
@@ -149,6 +152,7 @@ Last update: 2026-03-05
 7. Build simple pass/fail gate report for crypto candidates (base+stress).
 8. Start equities R&D track (M5, US regular session): run daily fetch/check/scan, then add walk-forward gate before any paper/live step.
 9. Add equities state machine (ACTIVE/CANARY/WATCHLIST/BANNED) mirroring forex flow, then keep only walk-forward-passing candidates in ACTIVE.
+10. Add monthly operator report bundle (PnL + estimated tax + fees by stack) and align fields with manual Cyprus filing workflow.
 
 ## Blocked / Waiting
 - Forex is not data-blocked anymore (`ready=12/12`).
