@@ -36,6 +36,11 @@ KEYS = (
     "ws_connect",
     "ws_disconnect",
     "ws_handshake_timeout",
+    "ws_disconnect_timeout",
+    "ws_disconnect_invalid_status",
+    "ws_disconnect_closed",
+    "ws_disconnect_oserror",
+    "ws_disconnect_other",
     "breakout_try",
     "breakout_no_signal",
     "breakout_entry",
@@ -138,6 +143,11 @@ m_s_mq = delta["midterm_skip_minqty"]
 ws_c = delta["ws_connect"]
 ws_d = delta["ws_disconnect"]
 ws_h = delta["ws_handshake_timeout"]
+ws_tmo = delta["ws_disconnect_timeout"]
+ws_inv = delta["ws_disconnect_invalid_status"]
+ws_cls = delta["ws_disconnect_closed"]
+ws_ose = delta["ws_disconnect_oserror"]
+ws_oth = delta["ws_disconnect_other"]
 
 sum_resets = sum(resets.values())
 
@@ -153,6 +163,34 @@ print("--- ratios ---")
 print(f"breakout entry_rate={r(b_ent, b_try):.2f}% | no_signal_rate={r(b_no, b_try):.2f}%")
 print(f"midterm  entry_rate={r(m_ent, m_try):.2f}% | no_signal_rate={r(m_no, m_try):.2f}%")
 print(f"ws disconnect/connect={r(ws_d, ws_c):.2f}% | handshake/connect={r(ws_h, ws_c):.2f}%")
+disc_ratio = r(ws_d, ws_c)
+hs_ratio = r(ws_h, ws_c)
+if ws_c <= 0:
+    ws_health = "CRITICAL_NO_CONNECT" if (ws_d > 0 or ws_h > 0) else "NO_DATA"
+elif hs_ratio >= 15.0 or disc_ratio >= 150.0:
+    ws_health = "CRITICAL"
+elif hs_ratio >= 5.0 or disc_ratio >= 90.0:
+    ws_health = "WARN"
+else:
+    ws_health = "OK"
+print("--- ws health ---")
+print(
+    f"status={ws_health} | "
+    f"disconnect/connect={disc_ratio:.2f}% | "
+    f"handshake/connect={hs_ratio:.2f}% | "
+    f"connect={ws_c}"
+)
+if ws_d > 0:
+    print("--- ws breakdown ---")
+    print(
+        f"timeout={ws_tmo} ({r(ws_tmo, ws_d):.2f}%) | "
+        f"invalid_status={ws_inv} ({r(ws_inv, ws_d):.2f}%) | "
+        f"closed={ws_cls} ({r(ws_cls, ws_d):.2f}%) | "
+        f"oserror={ws_ose} ({r(ws_ose, ws_d):.2f}%) | "
+        f"other={ws_oth} ({r(ws_oth, ws_d):.2f}%)"
+    )
+    if (ws_tmo + ws_inv + ws_cls + ws_ose + ws_oth) == 0:
+        print("note=ws_breakdown_unavailable (server build likely without ws reason counters)")
 if b_no > 0:
     print("--- breakout no_signal breakdown ---")
     print(

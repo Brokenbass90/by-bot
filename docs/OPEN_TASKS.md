@@ -41,6 +41,7 @@ Last update: 2026-03-05
     - infra healthy: ws connect/disconnect active, handshake timeouts `0`.
   - Added parity tool: `scripts/run_live_parity_backtest.sh` to replay base+stress with live-like parameters and auto top-N universe, so live-vs-backtest comparison is no longer manual.
   - Added universe guard in live bot: `BREAKOUT_SYMBOL_ALLOWLIST/DENYLIST` now also applied during breakout universe construction (not only in signal wrapper), removing wasted attempts on pre-denied symbols.
+  - Added WS reason granularity in runtime counters (`ws_disconnect_timeout/invalid_status/closed/oserror/other`) and diagnostics breakdown in `scripts/run_live_diagnostics.sh` to isolate transport root cause before tuning signal filters.
   - Live-universe mismatch note:
     - server dynamic top-16 currently includes symbols outside our 10-coin baseline (`RIVER/HYPE/PIPPIN/SAHARA/FARTCOIN/PHA/...`), so fixed-10 backtests are not 1:1 parity with live.
     - approximate replay on available live-like subset (`BTC,ETH,SOL,DOGE,ADA,NEAR`, 7d ending `2026-03-01`) stays positive:

@@ -98,6 +98,11 @@ def _runtime_diag_snapshot() -> str:
         "ws_connect",
         "ws_disconnect",
         "ws_handshake_timeout",
+        "ws_disconnect_timeout",
+        "ws_disconnect_invalid_status",
+        "ws_disconnect_closed",
+        "ws_disconnect_oserror",
+        "ws_disconnect_other",
         "breakout_try",
         "breakout_no_signal",
         "breakout_entry",
@@ -5777,6 +5782,7 @@ async def bybit_ws():
                 # это как раз "timed out during opening handshake"
                 _diag_inc("ws_handshake_timeout")
                 _diag_inc("ws_disconnect")
+                _diag_inc("ws_disconnect_timeout")
                 print(f"[bybit] shard {shard_id} handshake timeout; retry in ~{backoff}s")
                 log_error(f"BYBIT shard {shard_id} handshake timeout: {repr(e)}")
                 await asyncio.sleep(backoff + random.uniform(0, WS_RECONNECT_JITTER))
@@ -5784,25 +5790,37 @@ async def bybit_ws():
 
             except InvalidStatus as e:
                 _diag_inc("ws_disconnect")
+                _diag_inc("ws_disconnect_invalid_status")
                 print(f"[bybit] shard {shard_id} InvalidStatus: {repr(e)}")
                 log_error(f"BYBIT InvalidStatus shard {shard_id}: {repr(e)}")
                 await asyncio.sleep(min(300.0, WS_RECONNECT_MAX * 2.0))
 
-            except (ConnectionClosedError, ConnectionClosedOK, ConnectionResetError, OSError) as e:
+            except (ConnectionClosedError, ConnectionClosedOK) as e:
                 # Typical transient WS disconnects; keep logs concise and reconnect fast.
                 _diag_inc("ws_disconnect")
-                print(f"[bybit] shard {shard_id} disconnected: {repr(e)}; retry in ~{backoff}s")
-                log_error(f"BYBIT shard {shard_id} disconnected: {repr(e)}")
+                _diag_inc("ws_disconnect_closed")
+                print(f"[bybit] shard {shard_id} disconnected(closed): {repr(e)}; retry in ~{backoff}s")
+                log_error(f"BYBIT shard {shard_id} disconnected(closed): {repr(e)}")
+                await asyncio.sleep(backoff + random.uniform(0, WS_RECONNECT_JITTER))
+                backoff = min(backoff * 1.7, WS_RECONNECT_MAX)
+
+            except (ConnectionResetError, OSError) as e:
+                _diag_inc("ws_disconnect")
+                _diag_inc("ws_disconnect_oserror")
+                print(f"[bybit] shard {shard_id} disconnected(oserror): {repr(e)}; retry in ~{backoff}s")
+                log_error(f"BYBIT shard {shard_id} disconnected(oserror): {repr(e)}")
                 await asyncio.sleep(backoff + random.uniform(0, WS_RECONNECT_JITTER))
                 backoff = min(backoff * 1.7, WS_RECONNECT_MAX)
 
             except Exception as e:
                 _diag_inc("ws_disconnect")
+                _diag_inc("ws_disconnect_other")
                 print(f"[bybit] shard {shard_id} ERROR: {repr(e)}")
                 print(traceback.format_exc())
                 log_error(f"BYBIT shard {shard_id} crash: {repr(e)}")
                 await asyncio.sleep(backoff + random.uniform(0, WS_RECONNECT_JITTER))
                 backoff = min(backoff * 1.7, WS_RECONNECT_MAX)
+
 
     tasks = [asyncio.create_task(run_one(chunk, i)) for i, chunk in enumerate(shards)]
     await asyncio.gather(*tasks)
