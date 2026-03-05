@@ -142,6 +142,12 @@ def _ws_health_from_delta(connect_delta: int, disconnect_delta: int, handshake_d
     d = max(0, int(disconnect_delta))
     h = max(0, int(handshake_delta))
     if c <= 0:
+        if d == 0 and h == 0:
+            return "NO_ACTIVITY", 0.0, 0.0
+        # A single close without reconnect in the same short window is often transient and
+        # should not page as critical.
+        if d <= WS_HEALTH_NO_CONNECT_DISC_TOL and h <= WS_HEALTH_NO_CONNECT_HS_TOL:
+            return "NO_CONNECT_TRANSIENT", float("inf"), float("inf")
         if d > 0 or h > 0:
             return "CRITICAL_NO_CONNECT", float("inf"), float("inf")
         return "NO_ACTIVITY", 0.0, 0.0
@@ -942,6 +948,13 @@ WS_HEALTH_ALERT_ENABLE = _env_bool("WS_HEALTH_ALERT_ENABLE", True)
 WS_HEALTH_CHECK_SEC = max(60, int(os.getenv("WS_HEALTH_CHECK_SEC", "300")))
 WS_HEALTH_ALERT_COOLDOWN_SEC = max(60, int(os.getenv("WS_HEALTH_ALERT_COOLDOWN_SEC", "1800")))
 WS_HEALTH_MIN_CONNECT_DELTA = max(1, int(os.getenv("WS_HEALTH_MIN_CONNECT_DELTA", "3")))
+WS_HEALTH_NO_CONNECT_STREAK_ALERT = max(1, int(os.getenv("WS_HEALTH_NO_CONNECT_STREAK_ALERT", "2")))
+WS_HEALTH_NO_CONNECT_ALERT_COOLDOWN_SEC = max(
+    60,
+    int(os.getenv("WS_HEALTH_NO_CONNECT_ALERT_COOLDOWN_SEC", str(WS_HEALTH_ALERT_COOLDOWN_SEC))),
+)
+WS_HEALTH_NO_CONNECT_DISC_TOL = max(0, int(os.getenv("WS_HEALTH_NO_CONNECT_DISC_TOL", "1")))
+WS_HEALTH_NO_CONNECT_HS_TOL = max(0, int(os.getenv("WS_HEALTH_NO_CONNECT_HS_TOL", "0")))
 WS_HEALTH_WARN_DISC_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_WARN_DISC_CONN_PCT", "120")))
 WS_HEALTH_CRIT_DISC_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_CRIT_DISC_CONN_PCT", "250")))
 WS_HEALTH_WARN_HANDSHAKE_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_WARN_HANDSHAKE_CONN_PCT", "30")))
@@ -5964,6 +5977,7 @@ async def pulse():
     last_ws_health_check_ts = 0
     last_ws_alert_ts = 0
     last_ws_alert_status = ""
+    ws_no_connect_streak = 0
     last_ws_counters = (
         _diag_get_int("ws_connect"),
         _diag_get_int("ws_disconnect"),
@@ -5999,6 +6013,10 @@ async def pulse():
                 d_disconnect = cur_ws[1] - last_ws_counters[1]
                 d_handshake = cur_ws[2] - last_ws_counters[2]
                 status, disc_conn_pct, hs_conn_pct = _ws_health_from_delta(d_connect, d_disconnect, d_handshake)
+                if status == "CRITICAL_NO_CONNECT":
+                    ws_no_connect_streak += 1
+                else:
+                    ws_no_connect_streak = 0
                 if d_connect >= WS_HEALTH_MIN_CONNECT_DELTA and status in {"WARN", "CRITICAL"}:
                     if (now - last_ws_alert_ts) >= int(WS_HEALTH_ALERT_COOLDOWN_SEC) or status != last_ws_alert_status:
                         tg_trade(
@@ -6011,11 +6029,17 @@ async def pulse():
                         last_ws_alert_ts = now
                         last_ws_alert_status = status
                 elif status == "CRITICAL_NO_CONNECT":
-                    if (now - last_ws_alert_ts) >= int(WS_HEALTH_ALERT_COOLDOWN_SEC) or status != last_ws_alert_status:
+                    if (
+                        ws_no_connect_streak >= int(WS_HEALTH_NO_CONNECT_STREAK_ALERT)
+                        and (
+                            (now - last_ws_alert_ts) >= int(WS_HEALTH_NO_CONNECT_ALERT_COOLDOWN_SEC)
+                            or status != last_ws_alert_status
+                        )
+                    ):
                         tg_trade(
                             "⚠️ WS health CRITICAL_NO_CONNECT: "
                             f"connect={d_connect} disconnect={d_disconnect} handshake_timeout={d_handshake} "
-                            f"(window={int(WS_HEALTH_CHECK_SEC)}s)"
+                            f"(window={int(WS_HEALTH_CHECK_SEC)}s, streak={ws_no_connect_streak})"
                         )
                         last_ws_alert_ts = now
                         last_ws_alert_status = status
