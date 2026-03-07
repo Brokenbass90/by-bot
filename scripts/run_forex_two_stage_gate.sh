@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.."
 source .venv/bin/activate
 
 PAIRS="${FX_PAIRS:-EURUSD,GBPUSD,USDJPY,AUDUSD,USDCAD,USDCHF,NZDUSD,EURGBP,EURJPY,GBPJPY,AUDJPY,CADJPY}"
-STRATS="${FX_STRATEGIES:-trend_retest_session_v1:conservative,trend_retest_session_v1:active,trend_retest_session_v1:eurusd_canary,range_bounce_session_v1:default,range_bounce_session_v1:loose,breakout_continuation_session_v1:default,breakout_continuation_session_v1:strict,breakout_continuation_session_v1:active,grid_reversion_session_v1:default,grid_reversion_session_v1:strict,grid_reversion_session_v1:active,grid_reversion_session_v1:eurjpy_canary,trend_pullback_rebound_v1:default,trend_pullback_rebound_v1:strict}"
+STRATS="${FX_STRATEGIES:-trend_retest_session_v1:conservative,trend_retest_session_v1:active,trend_retest_session_v1:eurusd_canary,trend_retest_session_v1:winrate_plus,trend_retest_session_v1:gbpjpy_stability_a,trend_retest_session_v1:gbpjpy_stability_b,range_bounce_session_v1:default,range_bounce_session_v1:loose,breakout_continuation_session_v1:default,breakout_continuation_session_v1:strict,breakout_continuation_session_v1:active,grid_reversion_session_v1:default,grid_reversion_session_v1:strict,grid_reversion_session_v1:active,grid_reversion_session_v1:eurjpy_canary,grid_reversion_session_v1:safe_winrate,trend_pullback_rebound_v1:default,trend_pullback_rebound_v1:strict}"
 
 FAST_TAG="${FX_FAST_TAG:-fx_stage_fast}"
 FULL_TAG="${FX_FULL_TAG:-fx_stage_full}"
@@ -25,6 +25,9 @@ FX_MIN_TRADES="${FX_FAST_MIN_TRADES:-15}" \
 FX_TOP_N="${FX_FAST_TOP_N:-20}" \
 FX_MIN_BASE_NET="${FX_FAST_MIN_BASE_NET:-0}" \
 FX_MIN_STRESS_NET="${FX_FAST_MIN_STRESS_NET:-0}" \
+FX_MIN_BASE_RETURN_PCT_EST="${FX_FAST_MIN_BASE_RETURN_PCT_EST:--999}" \
+FX_MIN_STRESS_RETURN_PCT_EST="${FX_FAST_MIN_STRESS_RETURN_PCT_EST:--999}" \
+FX_MIN_STRESS_RETURN_PCT_EST_MONTH="${FX_FAST_MIN_STRESS_RETURN_PCT_EST_MONTH:--999}" \
 FX_MAX_STRESS_DD="${FX_FAST_MAX_STRESS_DD:-300}" \
 FX_MIN_RECENT_STRESS_NET="${FX_FAST_MIN_RECENT_STRESS_NET:-0}" \
 FX_MIN_RECENT_TRADES="${FX_FAST_MIN_RECENT_TRADES:-8}" \
@@ -89,11 +92,14 @@ FX_UPDATE_STATE_AFTER_GATE=0 \
 FX_GATE_TAG="${FULL_TAG}" \
 FX_PAIRS="${full_pairs}" \
 FX_STRATEGIES="${full_strats}" \
-FX_MAX_BARS=0 \
+FX_MAX_BARS="${FX_FULL_MAX_BARS:-0}" \
 FX_MIN_TRADES="${FX_FULL_MIN_TRADES:-20}" \
 FX_TOP_N="${FX_FULL_TOP_N:-12}" \
 FX_MIN_BASE_NET="${FX_FULL_MIN_BASE_NET:-0}" \
 FX_MIN_STRESS_NET="${FX_FULL_MIN_STRESS_NET:-0}" \
+FX_MIN_BASE_RETURN_PCT_EST="${FX_FULL_MIN_BASE_RETURN_PCT_EST:--999}" \
+FX_MIN_STRESS_RETURN_PCT_EST="${FX_FULL_MIN_STRESS_RETURN_PCT_EST:--999}" \
+FX_MIN_STRESS_RETURN_PCT_EST_MONTH="${FX_FULL_MIN_STRESS_RETURN_PCT_EST_MONTH:--999}" \
 FX_MAX_STRESS_DD="${FX_FULL_MAX_STRESS_DD:-300}" \
 FX_MIN_RECENT_STRESS_NET="${FX_FULL_MIN_RECENT_STRESS_NET:-0}" \
 FX_MIN_RECENT_TRADES="${FX_FULL_MIN_RECENT_TRADES:-8}" \

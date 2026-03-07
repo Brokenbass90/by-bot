@@ -4473,14 +4473,17 @@ async def try_breakout_entry_async(symbol: str, price: float):
 
     # Anti-FOMO: require at least minimal pullback from the current 5m extreme.
     if cur5 and BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT > 0:
+        pullback_min = float(BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT)
         if side == "Buy":
             pullback = (float(cur5["high"]) - float(price)) / max(float(cur5["high"]), 1e-12) * 100.0
         else:
             pullback = (float(price) - float(cur5["low"])) / max(float(cur5["low"]), 1e-12) * 100.0
-        if pullback < BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT:
+        # Use a tiny epsilon to avoid noisy edge-case alerts like "0.03% < 0.03%" caused by formatting.
+        if pullback + 1e-9 < pullback_min:
             _diag_inc("breakout_skip_pullback")
+            delta = max(0.0, pullback_min - pullback)
             tg_trade(
-                f"🟡 BREAKOUT SKIP {symbol}: pullback {pullback:.2f}% < {BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT:.2f}%"
+                f"🟡 BREAKOUT SKIP {symbol}: pullback {pullback:.4f}% < {pullback_min:.4f}% (delta {delta:.4f}%)"
             )
             return
 

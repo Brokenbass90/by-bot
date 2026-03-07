@@ -11,12 +11,21 @@ KEY="${BYBOT_SSH_KEY:-$HOME/.ssh/by-bot}"
 SINCE="${SINCE:-24 hours ago}"
 
 TMP="$(mktemp)"
-trap 'rm -f "$TMP"' EXIT
+ERR="$(mktemp)"
+trap 'rm -f "$TMP" "$ERR"' EXIT
 
+set +e
 ssh -i "$KEY" "$HOST" \
-  "journalctl -u bybot --since '$SINCE' --no-pager | grep -E 'diag '" > "$TMP" || true
+  "journalctl -u bybot --since '$SINCE' --no-pager | grep -E 'diag '" > "$TMP" 2>"$ERR"
+SSH_RC=$?
+set -e
 
 if [[ ! -s "$TMP" ]]; then
+  if [[ $SSH_RC -ne 0 ]]; then
+    echo "SSH error (host=$HOST key=$KEY):"
+    sed -n '1,5p' "$ERR"
+    echo "hint: проверь интернет/VPN/доступ к серверу и повтори команду."
+  fi
   echo "No diag lines found for since='$SINCE'"
   exit 0
 fi
