@@ -75,15 +75,23 @@ class BTCETHMidtermPullbackConfig:
     trend_ema_slow: int = 200
     trend_slope_bars: int = 8
     trend_slope_min_pct: float = 0.45
-    trend_min_gap_pct: float = 0.18
+    trend_min_gap_pct: float = 0.25
 
     signal_ema_period: int = 20
     atr_period: int = 14
     max_pullback_pct: float = 0.90
+    long_max_pullback_pct: float = 0.90
+    short_max_pullback_pct: float = 0.90
     touch_tol_pct: float = 0.20
+    long_touch_tol_pct: float = 0.20
+    short_touch_tol_pct: float = 0.20
     reclaim_pct: float = 0.15
+    long_reclaim_pct: float = 0.15
+    short_reclaim_pct: float = 0.15
     swing_lookback_bars: int = 10
-    max_atr_pct_1h: float = 2.50
+    max_atr_pct_1h: float = 1.80
+    long_max_atr_pct_1h: float = 1.80
+    short_max_atr_pct_1h: float = 1.80
 
     sl_atr_mult: float = 1.20
     swing_sl_buffer_atr: float = 0.15
@@ -96,7 +104,7 @@ class BTCETHMidtermPullbackConfig:
     time_stop_bars_5m: int = 84
 
     cooldown_bars_5m: int = 84
-    max_signals_per_day: int = 2
+    max_signals_per_day: int = 1
     allow_longs: bool = True
     allow_shorts: bool = True
 
@@ -118,10 +126,18 @@ class BTCETHMidtermPullbackStrategy:
         self.cfg.signal_ema_period = _env_int("MTPB_SIGNAL_EMA_PERIOD", self.cfg.signal_ema_period)
         self.cfg.atr_period = _env_int("MTPB_ATR_PERIOD", self.cfg.atr_period)
         self.cfg.max_pullback_pct = _env_float("MTPB_MAX_PULLBACK_PCT", self.cfg.max_pullback_pct)
+        self.cfg.long_max_pullback_pct = _env_float("MTPB_LONG_MAX_PULLBACK_PCT", self.cfg.max_pullback_pct)
+        self.cfg.short_max_pullback_pct = _env_float("MTPB_SHORT_MAX_PULLBACK_PCT", self.cfg.max_pullback_pct)
         self.cfg.touch_tol_pct = _env_float("MTPB_TOUCH_TOL_PCT", self.cfg.touch_tol_pct)
+        self.cfg.long_touch_tol_pct = _env_float("MTPB_LONG_TOUCH_TOL_PCT", self.cfg.touch_tol_pct)
+        self.cfg.short_touch_tol_pct = _env_float("MTPB_SHORT_TOUCH_TOL_PCT", self.cfg.touch_tol_pct)
         self.cfg.reclaim_pct = _env_float("MTPB_RECLAIM_PCT", self.cfg.reclaim_pct)
+        self.cfg.long_reclaim_pct = _env_float("MTPB_LONG_RECLAIM_PCT", self.cfg.reclaim_pct)
+        self.cfg.short_reclaim_pct = _env_float("MTPB_SHORT_RECLAIM_PCT", self.cfg.reclaim_pct)
         self.cfg.swing_lookback_bars = _env_int("MTPB_SWING_LOOKBACK_BARS", self.cfg.swing_lookback_bars)
         self.cfg.max_atr_pct_1h = _env_float("MTPB_MAX_ATR_PCT_1H", self.cfg.max_atr_pct_1h)
+        self.cfg.long_max_atr_pct_1h = _env_float("MTPB_LONG_MAX_ATR_PCT_1H", self.cfg.max_atr_pct_1h)
+        self.cfg.short_max_atr_pct_1h = _env_float("MTPB_SHORT_MAX_ATR_PCT_1H", self.cfg.max_atr_pct_1h)
         self.cfg.sl_atr_mult = _env_float("MTPB_SL_ATR_MULT", self.cfg.sl_atr_mult)
         self.cfg.swing_sl_buffer_atr = _env_float("MTPB_SWING_SL_BUFFER_ATR", self.cfg.swing_sl_buffer_atr)
         self.cfg.rr = _env_float("MTPB_RR", self.cfg.rr)
@@ -215,7 +231,11 @@ class BTCETHMidtermPullbackStrategy:
             return None
         cur_c = closes[-1]
         atr_pct_1h = (atr1h / max(1e-12, abs(cur_c))) * 100.0
-        if atr_pct_1h > float(self.cfg.max_atr_pct_1h):
+        max_atr_pct = max(
+            float(self.cfg.long_max_atr_pct_1h),
+            float(self.cfg.short_max_atr_pct_1h),
+        )
+        if atr_pct_1h > max_atr_pct:
             return None
 
         prev_c = closes[-2]
@@ -225,10 +245,12 @@ class BTCETHMidtermPullbackStrategy:
 
         # Long: 4h uptrend + 1h pullback to EMA20 + reclaim.
         if self.cfg.allow_longs and bias == 2:
-            touched = swing_low <= ema1h * (1.0 + self.cfg.touch_tol_pct / 100.0)
-            reclaimed = (cur_c >= ema1h * (1.0 + self.cfg.reclaim_pct / 100.0)) and (prev_c <= ema1h * 1.003)
+            if atr_pct_1h > float(self.cfg.long_max_atr_pct_1h):
+                return None
+            touched = swing_low <= ema1h * (1.0 + self.cfg.long_touch_tol_pct / 100.0)
+            reclaimed = (cur_c >= ema1h * (1.0 + self.cfg.long_reclaim_pct / 100.0)) and (prev_c <= ema1h * 1.003)
             pullback_pct = max(0.0, (ema1h - swing_low) / max(1e-12, ema1h) * 100.0)
-            if touched and reclaimed and pullback_pct <= self.cfg.max_pullback_pct:
+            if touched and reclaimed and pullback_pct <= self.cfg.long_max_pullback_pct:
                 swing_sl = swing_low - self.cfg.swing_sl_buffer_atr * atr1h
                 atr_sl = float(c) - self.cfg.sl_atr_mult * atr1h
                 sl = min(swing_sl, atr_sl)
@@ -260,10 +282,12 @@ class BTCETHMidtermPullbackStrategy:
 
         # Short: 4h downtrend + 1h pullback to EMA20 + reclaim below EMA.
         if self.cfg.allow_shorts and bias == 0:
-            touched = swing_high >= ema1h * (1.0 - self.cfg.touch_tol_pct / 100.0)
-            reclaimed = (cur_c <= ema1h * (1.0 - self.cfg.reclaim_pct / 100.0)) and (prev_c >= ema1h * 0.997)
+            if atr_pct_1h > float(self.cfg.short_max_atr_pct_1h):
+                return None
+            touched = swing_high >= ema1h * (1.0 - self.cfg.short_touch_tol_pct / 100.0)
+            reclaimed = (cur_c <= ema1h * (1.0 - self.cfg.short_reclaim_pct / 100.0)) and (prev_c >= ema1h * 0.997)
             pullback_pct = max(0.0, (swing_high - ema1h) / max(1e-12, ema1h) * 100.0)
-            if touched and reclaimed and pullback_pct <= self.cfg.max_pullback_pct:
+            if touched and reclaimed and pullback_pct <= self.cfg.short_max_pullback_pct:
                 swing_sl = swing_high + self.cfg.swing_sl_buffer_atr * atr1h
                 atr_sl = float(c) + self.cfg.sl_atr_mult * atr1h
                 sl = max(swing_sl, atr_sl)
