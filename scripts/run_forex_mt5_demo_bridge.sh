@@ -8,6 +8,13 @@ if [[ -f ".venv/bin/activate" ]]; then
   source .venv/bin/activate
 fi
 
+if [[ -f ".env" ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source ".env"
+  set +a
+fi
+
 LOCAL_ENV="${FOREX_MT5_LOCAL_ENV:-}"
 if [[ -z "${LOCAL_ENV}" ]]; then
   if [[ -f "configs/forex_mt5_demo_local.env" ]]; then

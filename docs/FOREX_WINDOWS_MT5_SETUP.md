@@ -21,6 +21,7 @@ Morning checklist:
    - `MT5_PASSWORD=...`
    - `MT5_SERVER="FxPro-MT5 Demo"`
    - `FOREX_BRIDGE_SEND_ORDERS=0`
+   - optional: `TG_TOKEN=...` and `TG_CHAT=...` if you want bridge alerts in Telegram
 7. In project venv run:
    - `pip install MetaTrader5`
 8. Start dry-run:
@@ -32,3 +33,4 @@ Morning checklist:
 Notes:
 - This is for `demo` only.
 - Current Forex strategies are for forward validation, not real deployment.
+- Launcher loads project `.env` first, then local MT5 env, so local values can override Telegram settings if needed.
