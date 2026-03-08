@@ -25,7 +25,7 @@ Morning checklist:
 7. In project venv run:
    - `pip install MetaTrader5`
 8. Start dry-run:
-   - `bash scripts/run_forex_mt5_demo_bridge.sh`
+   - PowerShell: `powershell -ExecutionPolicy Bypass -File scripts/run_forex_mt5_demo_bridge_windows.ps1`
 9. If MT5 initializes cleanly and logs look normal:
    - set `FOREX_BRIDGE_SEND_ORDERS=1`
    - run the same script again
