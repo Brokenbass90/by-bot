@@ -10,10 +10,6 @@ import sqlite3
 from dataclasses import dataclass
 from typing import List, Tuple, Optional
 
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-
 
 @dataclass
 class ReportResult:
@@ -58,6 +54,11 @@ def _plot_equity(rows: List[Tuple[int, float]], out_path: str) -> Optional[str]:
     if not rows:
         return None
     try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+
         ts = []
         cum = []
         s = 0.0

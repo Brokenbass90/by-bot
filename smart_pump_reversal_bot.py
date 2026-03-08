@@ -955,6 +955,7 @@ WS_HEALTH_NO_CONNECT_ALERT_COOLDOWN_SEC = max(
 )
 WS_HEALTH_NO_CONNECT_DISC_TOL = max(0, int(os.getenv("WS_HEALTH_NO_CONNECT_DISC_TOL", "1")))
 WS_HEALTH_NO_CONNECT_HS_TOL = max(0, int(os.getenv("WS_HEALTH_NO_CONNECT_HS_TOL", "0")))
+WS_HEALTH_NO_CONNECT_MIN_MSG_DELTA = max(0, int(os.getenv("WS_HEALTH_NO_CONNECT_MIN_MSG_DELTA", "1000")))
 WS_HEALTH_WARN_DISC_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_WARN_DISC_CONN_PCT", "120")))
 WS_HEALTH_CRIT_DISC_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_CRIT_DISC_CONN_PCT", "250")))
 WS_HEALTH_WARN_HANDSHAKE_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_WARN_HANDSHAKE_CONN_PCT", "30")))
@@ -1375,6 +1376,66 @@ def _get_close_event_by_ts(symbol: str, close_ts: int) -> dict | None:
             }
     except Exception as e:
         log_error(f"plotts query failed: {e}")
+        return None
+
+
+def _get_last_open_entry_event(symbol: str, side: str | None = None) -> dict | None:
+    if not os.path.exists(TRADE_DB_PATH):
+        return None
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            params: list[Any] = [str(symbol).upper()]
+            side_sql = ""
+            if side:
+                side_sql = " AND side=? "
+                params.append(str(side))
+            cur = con.execute(
+                f"""
+                SELECT ts, symbol, side, strategy, qty, entry_price, tp_price, sl_price, reason
+                FROM trade_events
+                WHERE event='ENTRY' AND symbol=? {side_sql}
+                ORDER BY ts DESC
+                LIMIT 1
+                """,
+                params,
+            )
+            row = cur.fetchone()
+            if not row:
+                return None
+            entry_ts, sym, side_db, strategy, qty, entry_px, tp, sl, reason = row
+
+            close_params: list[Any] = [str(sym).upper(), int(entry_ts or 0)]
+            close_side_sql = ""
+            if side_db:
+                close_side_sql = " AND side=? "
+                close_params.insert(1, str(side_db))
+            ccur = con.execute(
+                f"""
+                SELECT ts
+                FROM trade_events
+                WHERE event='CLOSE' AND symbol=? {close_side_sql} AND ts>=?
+                ORDER BY ts DESC
+                LIMIT 1
+                """,
+                close_params,
+            )
+            crow = ccur.fetchone()
+            if crow and int(crow[0] or 0) >= int(entry_ts or 0):
+                return None
+
+            return {
+                "entry_ts": int(entry_ts or 0),
+                "symbol": str(sym).upper(),
+                "side": str(side_db or "Buy"),
+                "strategy": str(strategy or ""),
+                "qty": float(qty or 0.0),
+                "entry_price": float(entry_px or 0.0),
+                "tp_price": float(tp) if tp is not None else None,
+                "sl_price": float(sl) if sl is not None else None,
+                "reason": str(reason or ""),
+            }
+    except Exception as e:
+        log_error(f"open entry query failed {symbol}: {e}")
         return None
 
 def _handle_tg_command(text: str):
@@ -2552,6 +2613,20 @@ class BybitClient:
 
         return float(best_size), side, pidx, tp_f, sl_f, avg_f
 
+    def list_open_positions(self) -> list[dict]:
+        j = self.get("/v5/position/list", {"category": "linear", "settleCoin": "USDT"}, timeout=10)
+        lst = (j.get("result") or {}).get("list") or []
+        out = []
+        for row in lst:
+            try:
+                size = abs(float(row.get("size") or 0.0))
+            except Exception:
+                size = 0.0
+            if size <= 0:
+                continue
+            out.append(row)
+        return out
+
     def set_tp_sl(self, symbol: str, side: str, tp: Optional[float], sl: Optional[float]):
         """
         Ставит TP/SL на БИРЖЕ (position trading-stop).
@@ -3531,7 +3606,77 @@ def ensure_open_positions_have_tpsl():
             # уведомляем только если раньше считали, что TP/SL на бирже НЕ было
             if not was_on:
                 tg_trade(f"🧷 TP/SL ensured {sym}: TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}")
-        
+
+
+def bootstrap_open_trades_from_exchange():
+    """
+    На старте восстанавливает открытые Bybit-позиции в локальный TRADES.
+    Это нужно, чтобы pulse/sync/TP-SL управление не теряли позицию после рестарта.
+    """
+    if DRY_RUN or TRADE_CLIENT is None:
+        return
+
+    try:
+        rows = TRADE_CLIENT.list_open_positions()
+    except Exception as e:
+        log_error(f"bootstrap positions fail: {e}")
+        return
+
+    restored = 0
+    for row in rows:
+        sym = str(row.get("symbol") or "").upper().strip()
+        if not sym:
+            continue
+        key = ("Bybit", sym)
+        if key in TRADES:
+            continue
+
+        try:
+            qty = abs(float(row.get("size") or 0.0))
+        except Exception:
+            qty = 0.0
+        if qty <= 0:
+            continue
+
+        side = str(row.get("side") or "Buy").strip() or "Buy"
+        avg_raw = row.get("avgPrice")
+        tp_raw = row.get("takeProfit")
+        sl_raw = row.get("stopLoss")
+        avg_ex = float(avg_raw) if avg_raw not in (None, "", "0") else 0.0
+        tp_ex = float(tp_raw) if tp_raw not in (None, "", "0") else None
+        sl_ex = float(sl_raw) if sl_raw not in (None, "", "0") else None
+
+        ev = _get_last_open_entry_event(sym, side=side)
+        strategy = str((ev or {}).get("strategy") or "bootstrap")
+        entry_ts = int((ev or {}).get("entry_ts") or int(time.time()))
+        entry_px = float((ev or {}).get("entry_price") or avg_ex or 0.0)
+        tp_px = tp_ex if tp_ex is not None else (ev or {}).get("tp_price")
+        sl_px = sl_ex if sl_ex is not None else (ev or {}).get("sl_price")
+
+        tr = TradeState(symbol=sym, side=side, strategy=strategy)
+        tr.qty = float(qty)
+        tr.status = "OPEN"
+        tr.entry_ts = entry_ts
+        tr.entry_fill_ts = entry_ts
+        tr.entry_confirm_sent = True
+        tr.avg = float(avg_ex or entry_px or 0.0)
+        tr.entry_price = float(avg_ex or entry_px or 0.0)
+        tr.entry_price_req = float(entry_px or avg_ex or 0.0)
+        tr.tp_price = float(tp_px) if tp_px not in (None, "") else None
+        tr.sl_price = float(sl_px) if sl_px not in (None, "") else None
+        tr.tpsl_on_exchange = bool(tp_ex is not None or sl_ex is not None)
+        tr.tpsl_manual_lock = bool(tp_ex is not None or sl_ex is not None)
+        tr.tpsl_last_set_ts = now_s()
+        TRADES[key] = tr
+        restored += 1
+
+        tg_trade(
+            f"🔁 RESTORED [{TRADE_CLIENT.name}] {sym} {side} qty={qty:.6f} "
+            f"avg={float(tr.avg or 0.0):.6f} strategy={strategy}"
+        )
+
+    if restored > 0:
+        tg_trade(f"🔁 Startup restore complete: restored_open_positions={restored}")
 
 
 def ensure_leverage(symbol: str, lev: int = BYBIT_LEVERAGE):
@@ -5986,6 +6131,7 @@ async def pulse():
         _diag_get_int("ws_disconnect"),
         _diag_get_int("ws_handshake_timeout"),
     )
+    last_bybit_msg_count = int(MSG_COUNTER.get("Bybit", 0))
     while True:
         try:
             sync_trades_with_exchange()
@@ -6015,7 +6161,13 @@ async def pulse():
                 d_connect = cur_ws[0] - last_ws_counters[0]
                 d_disconnect = cur_ws[1] - last_ws_counters[1]
                 d_handshake = cur_ws[2] - last_ws_counters[2]
+                cur_bybit_msg_count = int(MSG_COUNTER.get("Bybit", 0))
+                d_bybit_msgs = max(0, cur_bybit_msg_count - last_bybit_msg_count)
                 status, disc_conn_pct, hs_conn_pct = _ws_health_from_delta(d_connect, d_disconnect, d_handshake)
+                # If market data is still flowing, avoid paging on "no connect" windows that
+                # are noisy but not functionally dead.
+                if status == "CRITICAL_NO_CONNECT" and d_bybit_msgs >= int(WS_HEALTH_NO_CONNECT_MIN_MSG_DELTA):
+                    status = "NO_DATA"
                 if status == "CRITICAL_NO_CONNECT":
                     ws_no_connect_streak += 1
                 else:
@@ -6047,6 +6199,7 @@ async def pulse():
                         last_ws_alert_ts = now
                         last_ws_alert_status = status
                 last_ws_counters = cur_ws
+                last_bybit_msg_count = cur_bybit_msg_count
                 last_ws_health_check_ts = now
         except Exception as e:
             log_error(f"strategy-stats pulse fail: {e}")
@@ -6115,6 +6268,7 @@ def main():
     else:
         auth_check_all_accounts()
         portfolio_init_if_needed()
+        bootstrap_open_trades_from_exchange()
     try:
         asyncio.run(main_async())
     except Exception as e:
