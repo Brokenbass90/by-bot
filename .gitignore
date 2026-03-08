@@ -13,3 +13,18 @@ backtest_results/
 .DS_Store
 
 .env.bak.*
+
+# Generated operator snapshots.
+docs/*_latest.csv
+docs/*_latest.txt
+docs/*_latest.json
+docs/*_latest.env
+docs/*_backup_*.csv
+
+# Local-only operator secrets.
+configs/forex_mt5_demo_local.env
+
+# Local share/archive bundles.
+backtest_runs_old_*.tgz
+share_main_strategy/
+share_main_strategy.tar.gz
