@@ -880,6 +880,32 @@ def _db_log_ml_close(tr, sym: str, *, pnl: float | None = None, fees: float | No
     try:
         sid = int(getattr(tr, "ml_sample_id", 0) or 0)
         if sid <= 0:
+            try:
+                with sqlite3.connect(TRADE_DB_PATH) as con:
+                    cur = con.execute(
+                        """
+                        SELECT id
+                          FROM ml_samples
+                         WHERE ts_close IS NULL
+                           AND symbol=?
+                           AND side=?
+                           AND strategy=?
+                         ORDER BY ts_entry DESC
+                         LIMIT 1
+                        """,
+                        (
+                            str(sym),
+                            str(getattr(tr, "side", "") or ""),
+                            str(getattr(tr, "strategy", "") or ""),
+                        ),
+                    )
+                    row = cur.fetchone()
+                    sid = int(row[0] or 0) if row else 0
+                    if sid > 0:
+                        tr.ml_sample_id = sid
+            except Exception:
+                sid = 0
+        if sid <= 0:
             return
         ts_close = int(time.time())
         pnl_v = float(pnl or 0.0)
