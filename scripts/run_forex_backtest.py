@@ -29,6 +29,12 @@ from forex.strategies.london_open_breakout_v1 import Config as LobV1Config
 from forex.strategies.london_open_breakout_v1 import LondonOpenBreakoutV1
 from forex.strategies.london_open_breakout_v2 import Config as LobV2Config
 from forex.strategies.london_open_breakout_v2 import LondonOpenBreakoutV2
+from forex.strategies.bb_mean_reversion_v1 import Config as BbRevV1Config
+from forex.strategies.bb_mean_reversion_v1 import BBMeanReversionV1
+from forex.strategies.bb_mean_reversion_v2 import Config as BbRevV2Config
+from forex.strategies.bb_mean_reversion_v2 import BBMeanReversionV2
+from forex.strategies.adaptive_grid_range_v1 import Config as GridV1Config
+from forex.strategies.adaptive_grid_range_v1 import AdaptiveGridRangeV1
 from news_filter import is_news_blocked, load_news_events, load_news_policy
 from run_forex_multi_strategy_gate import _build_strategy as _build_preset_strategy
 
@@ -98,6 +104,47 @@ def _build_strategy(args):
             rr=float(args.rr),
             london_start_utc=int(args.session_start_utc),
             london_end_utc=int(args.session_end_utc),
+        ))
+    if s == "bb_mean_reversion_v1":
+        is_jpy = args.symbol.upper().endswith("JPY")
+        ps = float(args.pip_size) if float(args.pip_size) > 0 else (0.01 if is_jpy else 0.0001)
+        return BBMeanReversionV1(BbRevV1Config(
+            pip_size=ps,
+            min_band_width_pips=30.0 if is_jpy else 8.0,
+        ))
+    if s == "bb_mean_reversion_v2":
+        is_jpy = args.symbol.upper().endswith("JPY")
+        is_crypto = args.symbol.upper().endswith("USDT") or args.symbol.upper() in ("BTCUSDT", "ETHUSDT")
+        ps = float(args.pip_size) if float(args.pip_size) > 0 else (0.01 if is_jpy else 0.0001)
+        if is_crypto:
+            return BBMeanReversionV2(BbRevV2Config(
+                pip_size=ps,
+                min_band_width_pips=600.0,
+                max_atr_pips=2500.0,
+                rsi_long_max=28.0,
+                rsi_short_min=72.0,
+                atr_regime_mult=0.82,
+                sl_atr_mult=1.0,
+                rr_min=1.3,
+                cooldown_bars=24,
+            ))
+        return BBMeanReversionV2(BbRevV2Config(
+            pip_size=ps,
+            min_band_width_pips=60.0 if is_jpy else 20.0,
+            max_atr_pips=250.0 if is_jpy else 25.0,
+        ))
+    if s == "adaptive_grid_range_v1":
+        is_jpy = args.symbol.upper().endswith("JPY")
+        is_crypto = args.symbol.upper().endswith("USDT") or args.symbol.upper().endswith("BTC")
+        ps = float(args.pip_size) if float(args.pip_size) > 0 else (0.01 if is_jpy else 0.0001)
+        return AdaptiveGridRangeV1(GridV1Config(
+            pip_size=ps,
+            min_range_pips=300.0 if is_crypto else (150.0 if is_jpy else 15.0),
+            max_range_pips=5000.0 if is_crypto else (1000.0 if is_jpy else 200.0),
+            max_atr_pips=1000.0 if is_crypto else (250.0 if is_jpy else 30.0),
+            min_atr_pips=20.0 if is_crypto else (1.0 if is_jpy else 1.0),
+            session_start_utc=0,
+            session_end_utc=24,  # 24/7
         ))
     raise ValueError(f"Unsupported strategy: {s}")
 
