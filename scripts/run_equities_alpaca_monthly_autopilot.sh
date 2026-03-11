@@ -33,6 +33,10 @@ if [[ -f "$LATEST_ENV" ]]; then
   set +a
 fi
 
+if [[ -n "${EQ_LATEST_REFRESH_UTC:-}" ]]; then
+  export ALPACA_REFRESH_UTC="$EQ_LATEST_REFRESH_UTC"
+fi
+
 LATEST_PICKS="${EQ_LATEST_PICKS_CSV:-}"
 if [[ -z "$LATEST_PICKS" && -f "$RUNTIME_DIR/latest_picks.csv" ]]; then
   LATEST_PICKS="$RUNTIME_DIR/latest_picks.csv"

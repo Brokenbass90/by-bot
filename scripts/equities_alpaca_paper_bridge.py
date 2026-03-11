@@ -197,6 +197,19 @@ def _pick_age_days(picks: list[Pick]) -> tuple[str, int | None]:
     return latest_entry, max(0, (now_utc - latest_dt).days)
 
 
+def _parse_iso_utc(text: str) -> datetime | None:
+    s = str(text or "").strip()
+    if not s:
+        return None
+    for fmt in ("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S"):
+        try:
+            dt = datetime.strptime(s, fmt)
+            return dt.replace(tzinfo=timezone.utc)
+        except Exception:
+            continue
+    return None
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Dry-run-first Alpaca paper bridge for monthly equities picks")
     ap.add_argument("--picks-csv", default=_env("ALPACA_PICKS_CSV", ""))
@@ -221,6 +234,14 @@ def main() -> int:
     capital_override_usd = max(0.0, _env_float("ALPACA_CAPITAL_OVERRIDE_USD", 0.0))
     allow_stale_picks = _env_bool("ALPACA_ALLOW_STALE_PICKS", False)
     max_pick_age_days = max(1, _env_int("ALPACA_MAX_PICK_AGE_DAYS", 45))
+    refresh_grace_hours = max(1, _env_int("ALPACA_REFRESH_GRACE_HOURS", 48))
+    refresh_utc_raw = _env("ALPACA_REFRESH_UTC")
+    refresh_utc = _parse_iso_utc(refresh_utc_raw)
+    refresh_age_hours: float | None = None
+    refreshed_recently = False
+    if refresh_utc is not None:
+        refresh_age_hours = max(0.0, (datetime.now(timezone.utc) - refresh_utc).total_seconds() / 3600.0)
+        refreshed_recently = refresh_age_hours <= float(refresh_grace_hours)
 
     tg_token   = _env("TG_TOKEN")
     tg_chat_id = _env("TG_CHAT_ID")
@@ -234,8 +255,20 @@ def main() -> int:
         print("error=missing_alpaca_keys", file=sys.stderr)
         return 4
 
+    client = AlpacaClient(base_url, key_id, secret_key)
+    account = client.get_account()
+    buying_power = float(account.get("buying_power") or account.get("cash") or 0.0)
+    cash = float(account.get("cash") or 0.0)
+    effective_capital = min(buying_power, capital_override_usd) if capital_override_usd > 0 else buying_power
+    positions = client.list_positions()
+    current_positions = {str(p.get("symbol") or "").strip().upper(): p for p in positions if str(p.get("symbol") or "").strip()}
     latest_entry_day, pick_age_days = _pick_age_days(picks)
-    if pick_age_days is not None and pick_age_days > max_pick_age_days and not allow_stale_picks:
+    stale_guard_triggered = (
+        pick_age_days is not None
+        and pick_age_days > max_pick_age_days
+        and not allow_stale_picks
+    )
+    if stale_guard_triggered and not refreshed_recently:
         print(
             json.dumps(
                 {
@@ -245,6 +278,8 @@ def main() -> int:
                     "latest_entry_day": latest_entry_day,
                     "pick_age_days": pick_age_days,
                     "max_pick_age_days": max_pick_age_days,
+                    "refresh_utc": refresh_utc_raw,
+                    "refresh_age_hours": None if refresh_age_hours is None else round(refresh_age_hours, 2),
                     "hint": "refresh equities research or set ALPACA_ALLOW_STALE_PICKS=1 explicitly",
                 },
                 ensure_ascii=True,
@@ -253,14 +288,6 @@ def main() -> int:
             file=sys.stderr,
         )
         return 5
-
-    client = AlpacaClient(base_url, key_id, secret_key)
-    account = client.get_account()
-    buying_power = float(account.get("buying_power") or account.get("cash") or 0.0)
-    cash = float(account.get("cash") or 0.0)
-    effective_capital = min(buying_power, capital_override_usd) if capital_override_usd > 0 else buying_power
-    positions = client.list_positions()
-    current_positions = {str(p.get("symbol") or "").strip().upper(): p for p in positions if str(p.get("symbol") or "").strip()}
     # ── Earnings filter ──────────────────────────────────────────────────────
     earnings_blocked: dict[str, str] = {}
     if use_earnings_filter:
@@ -269,16 +296,29 @@ def main() -> int:
         for sym, (safe, reason) in ek.items():
             if not safe:
                 earnings_blocked[sym] = reason
+    # If a fresh refresh still leaves only stale picks, interpret it as
+    # "no current cycle candidates" instead of buying old names.
+    no_current_cycle = bool(stale_guard_triggered and refreshed_recently)
+
     # Select only picks not blocked by earnings, up to max_positions
-    selected = [p for p in picks if p.ticker not in earnings_blocked][:max_positions]
+    selected = [] if no_current_cycle else [p for p in picks if p.ticker not in earnings_blocked][:max_positions]
     selected_symbols = {p.ticker for p in selected}
     stale_symbols = sorted(sym for sym in current_positions.keys() if sym not in selected_symbols)
     hold_symbols = sorted(sym for sym in current_positions.keys() if sym in selected_symbols)
     new_buy_symbols = [p.ticker for p in selected if p.ticker not in current_positions]
-    per_position_notional = max(min_dollar_order, effective_capital * target_alloc_pct / max(1, len(selected)))
+    per_position_notional = (
+        max(min_dollar_order, effective_capital * target_alloc_pct / max(1, len(selected)))
+        if selected
+        else 0.0
+    )
 
     report = {
-        "status": "dry_run" if not send_orders else "send_orders",
+        "status": (
+            "dry_run_no_current_cycle" if (no_current_cycle and not send_orders)
+            else "send_orders_no_current_cycle" if no_current_cycle
+            else "dry_run" if not send_orders
+            else "send_orders"
+        ),
         "month": selected[0].month if selected else (picks[0].month if picks else ""),
         "earnings_blocked": earnings_blocked,
         "picks_csv": str(picks_csv),
@@ -290,6 +330,9 @@ def main() -> int:
         "latest_entry_day": latest_entry_day,
         "pick_age_days": pick_age_days,
         "max_pick_age_days": max_pick_age_days,
+        "refresh_utc": refresh_utc_raw,
+        "refresh_age_hours": None if refresh_age_hours is None else round(refresh_age_hours, 2),
+        "no_current_cycle": no_current_cycle,
         "positions_before": [
             {
                 "ticker": sym,
@@ -355,6 +398,8 @@ def main() -> int:
         lines = [f"📊 <b>Equities {mode} — {month_label}</b>"]
         if not send_orders:
             lines.append("⚠️ DRY RUN — no real orders placed")
+        if no_current_cycle:
+            lines.append("🟡 No current monthly picks after fresh refresh; staying flat")
         lines += [
             f"💼 Capital: ${round(effective_capital,2):,}",
             f"📋 Per position: ${round(per_position_notional,2):,}",
