@@ -24,6 +24,7 @@ docs/*_backup_*.csv
 # Local-only operator secrets.
 configs/forex_mt5_demo_local.env
 configs/ctrader_openapi_local.env
+configs/alpaca_paper_local.env
 
 # Local share/archive bundles.
 backtest_runs_old_*.tgz
