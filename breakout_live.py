@@ -71,3 +71,17 @@ class BreakoutLiveEngine:
         if wrapper is None:
             return ""
         return str(getattr(wrapper, "last_no_signal_reason", "") or "")
+
+    def last_impulse_ratio(self, symbol: str) -> float:
+        """Return impulse_size / threshold from last signal attempt (< 1.0 = too weak).
+
+        Reads last_impulse_ratio from the InPlayBreakoutStrategy impl if available.
+        Falls back to 0.0 if the wrapper or its impl hasn't run yet.
+        """
+        wrapper = self._wrappers.get(symbol)
+        if wrapper is None:
+            return 0.0
+        impl = getattr(wrapper, "impl", None)
+        if impl is None:
+            return 0.0
+        return float(getattr(impl, "last_impulse_ratio", 0.0))

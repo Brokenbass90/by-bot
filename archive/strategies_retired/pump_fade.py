@@ -175,6 +175,44 @@ class PumpFadeConfig:
     v3_peak_recent_mult: float = 1.8
     v3_rr_boost_k: float = 3.0
     v3_rr_max: float = 2.4
+    # PF v4: climax wick near peak -> failure below exhaustion low.
+    v4_enable: bool = False
+    v4_pump_threshold_pct: float = 0.10
+    v4_long_window_mult: int = 3
+    v4_long_pump_threshold_pct: float = 0.15
+    v4_peak_recent_bars: int = 10
+    v4_min_drop_pct: float = 0.004
+    v4_max_drop_pct: float = 0.055
+    v4_exhaustion_wick_min_frac: float = 0.32
+    v4_exhaustion_body_max_frac: float = 0.55
+    v4_peak_vol_mult: float = 1.35
+    v4_fail_break_pct: float = 0.0005
+    v4_rsi_max: float = 58.0
+    v4_rr: float = 2.1
+    v4_rr_max: float = 2.8
+    v4_rr_boost_k: float = 2.0
+    v4_sl_buffer_pct: float = 0.0018
+    v4_min_atr_pct: float = 0.30
+    v4_max_atr_pct: float = 3.20
+    # PF v5: peak -> initial dump -> lower-high bounce -> support break.
+    v5_enable: bool = False
+    v5_pump_threshold_pct: float = 0.10
+    v5_long_window_mult: int = 3
+    v5_long_pump_threshold_pct: float = 0.15
+    v5_peak_recent_bars: int = 16
+    v5_min_drop_pct: float = 0.010
+    v5_max_drop_pct: float = 0.090
+    v5_min_retrace_frac: float = 0.25
+    v5_max_retrace_frac: float = 0.80
+    v5_lower_high_min_gap_pct: float = 0.010
+    v5_break_buffer_pct: float = 0.0005
+    v5_rsi_max: float = 62.0
+    v5_rr: float = 1.9
+    v5_rr_max: float = 2.6
+    v5_rr_boost_k: float = 1.8
+    v5_sl_buffer_pct: float = 0.0018
+    v5_min_atr_pct: float = 0.28
+    v5_max_atr_pct: float = 3.20
 
 
 class PumpFadeStrategy:
@@ -250,6 +288,52 @@ class PumpFadeStrategy:
         self.cfg.v3_peak_recent_mult = _env_float("PF_V3_PEAK_RECENT_MULT", self.cfg.v3_peak_recent_mult)
         self.cfg.v3_rr_boost_k = _env_float("PF_V3_RR_BOOST_K", self.cfg.v3_rr_boost_k)
         self.cfg.v3_rr_max = _env_float("PF_V3_RR_MAX", self.cfg.v3_rr_max)
+        self.cfg.v4_enable = _env_bool("PF_V4_ENABLE", self.cfg.v4_enable)
+        self.cfg.v4_pump_threshold_pct = _env_float("PF_V4_PUMP_THRESHOLD_PCT", self.cfg.v4_pump_threshold_pct)
+        self.cfg.v4_long_window_mult = _env_int("PF_V4_LONG_WINDOW_MULT", self.cfg.v4_long_window_mult)
+        self.cfg.v4_long_pump_threshold_pct = _env_float(
+            "PF_V4_LONG_PUMP_THRESHOLD_PCT", self.cfg.v4_long_pump_threshold_pct
+        )
+        self.cfg.v4_peak_recent_bars = _env_int("PF_V4_PEAK_RECENT_BARS", self.cfg.v4_peak_recent_bars)
+        self.cfg.v4_min_drop_pct = _env_float("PF_V4_MIN_DROP_PCT", self.cfg.v4_min_drop_pct)
+        self.cfg.v4_max_drop_pct = _env_float("PF_V4_MAX_DROP_PCT", self.cfg.v4_max_drop_pct)
+        self.cfg.v4_exhaustion_wick_min_frac = _env_float(
+            "PF_V4_EXHAUSTION_WICK_MIN_FRAC", self.cfg.v4_exhaustion_wick_min_frac
+        )
+        self.cfg.v4_exhaustion_body_max_frac = _env_float(
+            "PF_V4_EXHAUSTION_BODY_MAX_FRAC", self.cfg.v4_exhaustion_body_max_frac
+        )
+        self.cfg.v4_peak_vol_mult = _env_float("PF_V4_PEAK_VOL_MULT", self.cfg.v4_peak_vol_mult)
+        self.cfg.v4_fail_break_pct = _env_float("PF_V4_FAIL_BREAK_PCT", self.cfg.v4_fail_break_pct)
+        self.cfg.v4_rsi_max = _env_float("PF_V4_RSI_MAX", self.cfg.v4_rsi_max)
+        self.cfg.v4_rr = _env_float("PF_V4_RR", self.cfg.v4_rr)
+        self.cfg.v4_rr_max = _env_float("PF_V4_RR_MAX", self.cfg.v4_rr_max)
+        self.cfg.v4_rr_boost_k = _env_float("PF_V4_RR_BOOST_K", self.cfg.v4_rr_boost_k)
+        self.cfg.v4_sl_buffer_pct = _env_float("PF_V4_SL_BUFFER_PCT", self.cfg.v4_sl_buffer_pct)
+        self.cfg.v4_min_atr_pct = _env_float("PF_V4_MIN_ATR_PCT", self.cfg.v4_min_atr_pct)
+        self.cfg.v4_max_atr_pct = _env_float("PF_V4_MAX_ATR_PCT", self.cfg.v4_max_atr_pct)
+        self.cfg.v5_enable = _env_bool("PF_V5_ENABLE", self.cfg.v5_enable)
+        self.cfg.v5_pump_threshold_pct = _env_float("PF_V5_PUMP_THRESHOLD_PCT", self.cfg.v5_pump_threshold_pct)
+        self.cfg.v5_long_window_mult = _env_int("PF_V5_LONG_WINDOW_MULT", self.cfg.v5_long_window_mult)
+        self.cfg.v5_long_pump_threshold_pct = _env_float(
+            "PF_V5_LONG_PUMP_THRESHOLD_PCT", self.cfg.v5_long_pump_threshold_pct
+        )
+        self.cfg.v5_peak_recent_bars = _env_int("PF_V5_PEAK_RECENT_BARS", self.cfg.v5_peak_recent_bars)
+        self.cfg.v5_min_drop_pct = _env_float("PF_V5_MIN_DROP_PCT", self.cfg.v5_min_drop_pct)
+        self.cfg.v5_max_drop_pct = _env_float("PF_V5_MAX_DROP_PCT", self.cfg.v5_max_drop_pct)
+        self.cfg.v5_min_retrace_frac = _env_float("PF_V5_MIN_RETRACE_FRAC", self.cfg.v5_min_retrace_frac)
+        self.cfg.v5_max_retrace_frac = _env_float("PF_V5_MAX_RETRACE_FRAC", self.cfg.v5_max_retrace_frac)
+        self.cfg.v5_lower_high_min_gap_pct = _env_float(
+            "PF_V5_LOWER_HIGH_MIN_GAP_PCT", self.cfg.v5_lower_high_min_gap_pct
+        )
+        self.cfg.v5_break_buffer_pct = _env_float("PF_V5_BREAK_BUFFER_PCT", self.cfg.v5_break_buffer_pct)
+        self.cfg.v5_rsi_max = _env_float("PF_V5_RSI_MAX", self.cfg.v5_rsi_max)
+        self.cfg.v5_rr = _env_float("PF_V5_RR", self.cfg.v5_rr)
+        self.cfg.v5_rr_max = _env_float("PF_V5_RR_MAX", self.cfg.v5_rr_max)
+        self.cfg.v5_rr_boost_k = _env_float("PF_V5_RR_BOOST_K", self.cfg.v5_rr_boost_k)
+        self.cfg.v5_sl_buffer_pct = _env_float("PF_V5_SL_BUFFER_PCT", self.cfg.v5_sl_buffer_pct)
+        self.cfg.v5_min_atr_pct = _env_float("PF_V5_MIN_ATR_PCT", self.cfg.v5_min_atr_pct)
+        self.cfg.v5_max_atr_pct = _env_float("PF_V5_MAX_ATR_PCT", self.cfg.v5_max_atr_pct)
         self._v3_sessions_allowed = _env_csv_set_lower("PF_V3_SESSIONS_ALLOWED")
 
         if not self.cfg.partial_rs:
@@ -460,6 +544,238 @@ class PumpFadeStrategy:
             move_pct=float(move_pct),
         )
 
+    def _on_bar_v4(self, symbol: str, o: float, h: float, l: float, c: float, v: float = 0.0, ts_ms: Optional[int] = None) -> Optional[TradeSignal]:
+        bars_in_window = max(6, int(self.cfg.pump_window_min / self.cfg.interval_min))
+        long_mult = max(1, int(self.cfg.v4_long_window_mult))
+        bars_long = max(bars_in_window, bars_in_window * long_mult)
+        if len(self._closes) < bars_long + 10:
+            self._mark_skip("V4_HISTORY_SHORT")
+            return None
+
+        base = self._closes[-bars_in_window - 1]
+        base_long = self._closes[-bars_long - 1]
+        if base <= 0 or base_long <= 0:
+            self._mark_skip("V4_INVALID_BASE")
+            return None
+
+        highs_w = self._highs[-bars_in_window:]
+        vols_w = self._volumes[-bars_in_window:]
+        peak_high = max(highs_w)
+        peak_idx = highs_w.index(peak_high)
+        peak_age = bars_in_window - 1 - peak_idx
+        if peak_age > max(2, int(self.cfg.v4_peak_recent_bars)):
+            self._mark_skip("V4_PEAK_TOO_OLD")
+            return None
+
+        move_pct = (peak_high / base) - 1.0
+        peak_high_long = max(self._highs[-bars_long:])
+        move_long_pct = (peak_high_long / base_long) - 1.0
+        short_ok = move_pct >= float(self.cfg.v4_pump_threshold_pct)
+        long_ok = move_long_pct >= float(self.cfg.v4_long_pump_threshold_pct)
+        if not (short_ok or long_ok):
+            self._mark_skip("V4_NO_PUMP")
+            return None
+
+        peak_drop = (peak_high - c) / max(1e-12, peak_high)
+        if peak_drop < float(self.cfg.v4_min_drop_pct):
+            self._mark_skip("V4_ENTRY_TOO_EARLY")
+            return None
+        if peak_drop > float(self.cfg.v4_max_drop_pct):
+            self._mark_skip("V4_ENTRY_TOO_LATE")
+            return None
+
+        atr_now = _atr_last(self._highs, self._lows, self._closes, max(5, int(self.cfg.trailing_atr_period)))
+        if not math.isfinite(atr_now) or atr_now <= 0:
+            self._mark_skip("V4_ATR_INVALID")
+            return None
+        atr_pct = (atr_now / max(1e-12, abs(c))) * 100.0
+        if atr_pct < float(self.cfg.v4_min_atr_pct):
+            self._mark_skip("V4_ATR_TOO_LOW")
+            return None
+        if atr_pct > float(self.cfg.v4_max_atr_pct):
+            self._mark_skip("V4_ATR_TOO_HIGH")
+            return None
+
+        ema_now = ema(self._closes[-(self.cfg.ema_period * 4):], self.cfg.ema_period)
+        if not (math.isfinite(ema_now) and c < ema_now):
+            self._mark_skip("V4_EMA_NOT_BEARISH")
+            return None
+
+        rsi_now = rsi(self._closes, 14)
+        if not math.isfinite(rsi_now):
+            self._mark_skip("V4_RSI_NAN")
+            return None
+        if rsi_now > float(self.cfg.v4_rsi_max):
+            self._mark_skip("V4_RSI_TOO_HIGH")
+            return None
+
+        abs_peak_idx = len(self._highs) - bars_in_window + peak_idx
+        ex_open = self._opens[abs_peak_idx]
+        ex_close = self._closes[abs_peak_idx]
+        ex_high = self._highs[abs_peak_idx]
+        ex_low = self._lows[abs_peak_idx]
+        ex_range = max(1e-12, ex_high - ex_low)
+        ex_upper_wick_frac = max(0.0, ex_high - max(ex_open, ex_close)) / ex_range
+        ex_body_frac = abs(ex_close - ex_open) / ex_range
+        if ex_upper_wick_frac < float(self.cfg.v4_exhaustion_wick_min_frac):
+            self._mark_skip("V4_PEAK_WICK_WEAK")
+            return None
+        if ex_body_frac > float(self.cfg.v4_exhaustion_body_max_frac):
+            self._mark_skip("V4_PEAK_BODY_TOO_LARGE")
+            return None
+
+        vol_avg = sum(vols_w) / float(len(vols_w)) if vols_w else 0.0
+        peak_vol = vols_w[peak_idx] if peak_idx < len(vols_w) else 0.0
+        if vol_avg > 0 and peak_vol < vol_avg * float(self.cfg.v4_peak_vol_mult):
+            self._mark_skip("V4_PEAK_VOL_WEAK")
+            return None
+
+        fail_break_level = ex_low * (1.0 - float(self.cfg.v4_fail_break_pct))
+        if not (c < fail_break_level and l < ex_low):
+            self._mark_skip("V4_FAILURE_NOT_CONFIRMED")
+            return None
+        if not (c < o):
+            self._mark_skip("V4_FAILURE_BAR_NOT_BEARISH")
+            return None
+
+        rr_dyn = float(self.cfg.v4_rr)
+        if short_ok:
+            extra = max(0.0, float(move_pct) - float(self.cfg.v4_pump_threshold_pct))
+            rr_dyn = min(float(self.cfg.v4_rr_max), rr_dyn + float(self.cfg.v4_rr_boost_k) * extra)
+        elif long_ok:
+            extra = max(0.0, float(move_long_pct) - float(self.cfg.v4_long_pump_threshold_pct))
+            rr_dyn = min(float(self.cfg.v4_rr_max), rr_dyn + float(self.cfg.v4_rr_boost_k) * extra)
+
+        return self._emit_short_signal(
+            symbol,
+            entry=float(c),
+            peak_high=float(peak_high),
+            stop_buffer_pct=float(self.cfg.v4_sl_buffer_pct),
+            rr=rr_dyn,
+            move_pct=float(max(move_pct, move_long_pct)),
+        )
+
+    def _on_bar_v5(self, symbol: str, o: float, h: float, l: float, c: float, v: float = 0.0, ts_ms: Optional[int] = None) -> Optional[TradeSignal]:
+        bars_in_window = max(8, int(self.cfg.pump_window_min / self.cfg.interval_min))
+        long_mult = max(1, int(self.cfg.v5_long_window_mult))
+        bars_long = max(bars_in_window, bars_in_window * long_mult)
+        if len(self._closes) < bars_long + 12:
+            self._mark_skip("V5_HISTORY_SHORT")
+            return None
+
+        base = self._closes[-bars_in_window - 1]
+        base_long = self._closes[-bars_long - 1]
+        if base <= 0 or base_long <= 0:
+            self._mark_skip("V5_INVALID_BASE")
+            return None
+
+        highs_w = self._highs[-bars_in_window:]
+        lows_w = self._lows[-bars_in_window:]
+        peak_high = max(highs_w)
+        peak_idx = highs_w.index(peak_high)
+        peak_age = bars_in_window - 1 - peak_idx
+        if peak_age > max(3, int(self.cfg.v5_peak_recent_bars)):
+            self._mark_skip("V5_PEAK_TOO_OLD")
+            return None
+        if peak_idx >= len(highs_w) - 3:
+            self._mark_skip("V5_NOT_ENOUGH_POST_PEAK_BARS")
+            return None
+
+        move_pct = (peak_high / base) - 1.0
+        peak_high_long = max(self._highs[-bars_long:])
+        move_long_pct = (peak_high_long / base_long) - 1.0
+        short_ok = move_pct >= float(self.cfg.v5_pump_threshold_pct)
+        long_ok = move_long_pct >= float(self.cfg.v5_long_pump_threshold_pct)
+        if not (short_ok or long_ok):
+            self._mark_skip("V5_NO_PUMP")
+            return None
+
+        post_highs = highs_w[peak_idx + 1:]
+        post_lows = lows_w[peak_idx + 1:]
+        if len(post_lows) < 3:
+            self._mark_skip("V5_POST_SEGMENT_SHORT")
+            return None
+        trough_low = min(post_lows)
+        trough_idx = post_lows.index(trough_low)
+        drop_pct = (peak_high - trough_low) / max(1e-12, peak_high)
+        if drop_pct < float(self.cfg.v5_min_drop_pct):
+            self._mark_skip("V5_DROP_TOO_SMALL")
+            return None
+        if drop_pct > float(self.cfg.v5_max_drop_pct):
+            self._mark_skip("V5_DROP_TOO_LARGE")
+            return None
+
+        if trough_idx >= len(post_highs) - 2:
+            self._mark_skip("V5_NO_BOUNCE_PHASE")
+            return None
+        bounce_high = max(post_highs[trough_idx + 1 : -1]) if len(post_highs[trough_idx + 1 : -1]) > 0 else float("nan")
+        if not math.isfinite(bounce_high):
+            self._mark_skip("V5_BOUNCE_HIGH_NAN")
+            return None
+        retrace_frac = (bounce_high - trough_low) / max(1e-12, peak_high - trough_low)
+        if retrace_frac < float(self.cfg.v5_min_retrace_frac):
+            self._mark_skip("V5_RETRACE_TOO_SHALLOW")
+            return None
+        if retrace_frac > float(self.cfg.v5_max_retrace_frac):
+            self._mark_skip("V5_RETRACE_TOO_DEEP")
+            return None
+        lower_high_gap_pct = (peak_high - bounce_high) / max(1e-12, peak_high)
+        if lower_high_gap_pct < float(self.cfg.v5_lower_high_min_gap_pct):
+            self._mark_skip("V5_LOWER_HIGH_WEAK")
+            return None
+
+        atr_now = _atr_last(self._highs, self._lows, self._closes, max(5, int(self.cfg.trailing_atr_period)))
+        if not math.isfinite(atr_now) or atr_now <= 0:
+            self._mark_skip("V5_ATR_INVALID")
+            return None
+        atr_pct = (atr_now / max(1e-12, abs(c))) * 100.0
+        if atr_pct < float(self.cfg.v5_min_atr_pct):
+            self._mark_skip("V5_ATR_TOO_LOW")
+            return None
+        if atr_pct > float(self.cfg.v5_max_atr_pct):
+            self._mark_skip("V5_ATR_TOO_HIGH")
+            return None
+
+        ema_now = ema(self._closes[-(self.cfg.ema_period * 4):], self.cfg.ema_period)
+        if not (math.isfinite(ema_now) and c < ema_now):
+            self._mark_skip("V5_EMA_NOT_BEARISH")
+            return None
+
+        rsi_now = rsi(self._closes, 14)
+        if not math.isfinite(rsi_now):
+            self._mark_skip("V5_RSI_NAN")
+            return None
+        if rsi_now > float(self.cfg.v5_rsi_max):
+            self._mark_skip("V5_RSI_TOO_HIGH")
+            return None
+
+        # Break support after the lower-high bounce, not on the first reversal.
+        recent_support = min(post_lows[max(0, trough_idx + 1) :])
+        break_level = recent_support * (1.0 - float(self.cfg.v5_break_buffer_pct))
+        if not (c < break_level and l < recent_support):
+            self._mark_skip("V5_SUPPORT_NOT_BROKEN")
+            return None
+        if not (c < o):
+            self._mark_skip("V5_FAILURE_BAR_NOT_BEARISH")
+            return None
+
+        rr_dyn = float(self.cfg.v5_rr)
+        if short_ok:
+            extra = max(0.0, float(move_pct) - float(self.cfg.v5_pump_threshold_pct))
+            rr_dyn = min(float(self.cfg.v5_rr_max), rr_dyn + float(self.cfg.v5_rr_boost_k) * extra)
+        elif long_ok:
+            extra = max(0.0, float(move_long_pct) - float(self.cfg.v5_long_pump_threshold_pct))
+            rr_dyn = min(float(self.cfg.v5_rr_max), rr_dyn + float(self.cfg.v5_rr_boost_k) * extra)
+
+        return self._emit_short_signal(
+            symbol,
+            entry=float(c),
+            peak_high=float(peak_high),
+            stop_buffer_pct=float(self.cfg.v5_sl_buffer_pct),
+            rr=rr_dyn,
+            move_pct=float(max(move_pct, move_long_pct)),
+        )
+
     def _mark_skip(self, reason: str, *, reset_pumped: bool = False) -> None:
         key = str(reason or "UNKNOWN").strip().upper()
         if not key:
@@ -491,6 +807,10 @@ class PumpFadeStrategy:
 
         if self.cfg.v3_enable:
             return self._on_bar_v3(symbol, o, h, l, c, v, ts_ms=ts_ms)
+        if self.cfg.v4_enable:
+            return self._on_bar_v4(symbol, o, h, l, c, v, ts_ms=ts_ms)
+        if self.cfg.v5_enable:
+            return self._on_bar_v5(symbol, o, h, l, c, v, ts_ms=ts_ms)
 
         if self._cooldown > 0:
             self._cooldown -= 1

@@ -30,6 +30,12 @@ class TradeSignal:
     trailing_atr_mult: float = 0.0
     trailing_atr_period: int = 14
 
+    # Optional break-even trigger in R-multiples.
+    # Example: be_trigger_rr=1.0 moves SL to entry after price reaches +1R.
+    be_trigger_rr: float = 0.0
+    # Optional lock in R-multiples when BE arms (0 => exact entry).
+    be_lock_rr: float = 0.0
+
     # Optional time-based stop in 5m bars (0 disables).
     time_stop_bars: int = 0
 
@@ -76,5 +82,15 @@ class TradeSignal:
 
         # Must have meaningful stop and single target (legacy)
         if self.side == "long":
-            return self.sl < self.entry < self.tp
-        return self.tp < self.entry < self.sl
+            ok = self.sl < self.entry < self.tp
+        else:
+            ok = self.tp < self.entry < self.sl
+
+        if not ok:
+            return False
+
+        if float(self.be_trigger_rr or 0.0) < 0.0:
+            return False
+        if float(self.be_lock_rr or 0.0) < 0.0:
+            return False
+        return True

@@ -778,6 +778,8 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         self.min_break_bars = int(min_break_bars)
         self.max_dist_atr = float(max_dist_atr)
         self.last_no_signal_reason: str = "init"
+        # Ratio = impulse_size / threshold (< 1.0 means too weak). Updated each call.
+        self.last_impulse_ratio: float = 0.0
 
     async def maybe_signal(self, symbol: str, *, price: float, ts_ms: int) -> Optional[RetestSignal]:
         self.last_no_signal_reason = "unknown"
@@ -805,7 +807,9 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         body = abs(_get_num(last, "close") - _get_num(last, "open"))
         rng = abs(_get_num(last, "high") - _get_num(last, "low"))
         impulse_size = max(body, rng)
-        impulse_ok = impulse_size >= self.impulse_atr_mult * atr
+        _impulse_thr = max(1e-12, self.impulse_atr_mult * atr)
+        self.last_impulse_ratio = impulse_size / _impulse_thr
+        impulse_ok = impulse_size >= _impulse_thr
 
         if impulse_ok and self.impulse_body_min_frac > 0.0 and rng > 0:
             body_frac = body / rng

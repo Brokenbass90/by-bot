@@ -1,0 +1,33 @@
+{
+  "enabled": true,
+  "impact_levels_blocked": ["high"],
+  "default_before_min": 20,
+  "default_after_min": 30,
+  "strategies": {
+    "inplay_breakout": {
+      "markets": ["CRYPTO"],
+      "before_min": 20,
+      "after_min": 30
+    },
+    "breakout": {
+      "markets": ["CRYPTO"],
+      "before_min": 20,
+      "after_min": 30
+    },
+    "midterm": {
+      "markets": ["CRYPTO"],
+      "before_min": 30,
+      "after_min": 60
+    },
+    "pump": {
+      "markets": ["CRYPTO"],
+      "before_min": 15,
+      "after_min": 20
+    },
+    "bounce": {
+      "markets": ["CRYPTO"],
+      "before_min": 15,
+      "after_min": 20
+    }
+  }
+}

@@ -2,6 +2,17 @@
 # -*- coding: utf-8 -*-
 
 # smart_pump_reversal_bot.py
+# ──────────────────────────────────────────────────────────────────────────────
+# Refactor status (see docs/REFACTOR_ROADMAP.md):
+#   Phase 1 DONE — extracted to bot/ package:
+#     bot.env_helpers  → _env_bool, _csv_lower_set, _csv_upper_set, _session_name_utc
+#     bot.utils        → now_s, _to_float_safe, _today_ymd, base_from_usdt, dist_pct
+#     bot.auth         → AUTH_DISABLED_UNTIL, AUTH_LAST_ERROR, auth_disabled, mark_auth_fail
+#     bot.diagnostics  → RUNTIME_COUNTER, MSG_COUNTER, _diag_inc, _diag_get_int, ...
+#     bot.symbol_state → SymState, STATE, S, update_5m_bar, trim + indicator wrappers
+#   Phase 2 TODO — BybitClient, telegram, db
+#   Phase 3 TODO — strategy entries, risk/portfolio
+# ──────────────────────────────────────────────────────────────────────────────
 
 import os
 import time, json, statistics, asyncio, requests, collections, re, csv, traceback, random, math
@@ -19,6 +30,14 @@ from sr_bounce import BounceStrategy
 from trade_state import TradeState
 from inplay_live import InPlayLiveEngine
 from breakout_live import BreakoutLiveEngine
+try:
+    from news_filter import load_news_events, load_news_policy, is_news_blocked as _news_is_blocked
+    _NEWS_FILTER_AVAILABLE = True
+except ImportError:
+    _NEWS_FILTER_AVAILABLE = False
+    def load_news_events(p): return []      # type: ignore[misc]
+    def load_news_policy(p): return {}      # type: ignore[misc]
+    def _news_is_blocked(**kw): return False, ""  # type: ignore[misc]
 from midterm_live import MidtermLiveEngine
 from retest_live import RetestEngine
 from trade_reporting import generate_report, since_days
@@ -34,107 +53,43 @@ from indicators import (
     trade_quality as calc_trade_quality,
 )
 
+# ── Phase 1: bot/ package imports ────────────────────────────────────────────
+from bot.env_helpers import _env_bool, _csv_lower_set, _csv_upper_set, _session_name_utc
+from bot.utils import now_s, _to_float_safe, _today_ymd, base_from_usdt, dist_pct
+from bot.auth import (
+    AUTH_DISABLED_UNTIL, AUTH_LAST_ERROR, BOT_START_TS,
+    auth_cooldown_remaining,
+    # auth_disabled and mark_auth_fail kept in this file:
+    #   auth_disabled → references module-level DRY_RUN
+    #   mark_auth_fail → calls tg_trade (defined later in this file)
+    #   Both use the shared AUTH_DISABLED_UNTIL dict from bot.auth.
+)
+from bot.diagnostics import (
+    RUNTIME_DIAG_ENABLE, RUNTIME_COUNTER, MSG_COUNTER,
+    _diag_inc, _diag_get_int, _runtime_diag_snapshot,
+    _breakout_no_signal_diag_key,
+)
+from bot.symbol_state import (
+    SymState, STATE,
+    S, update_5m_bar, trim,
+    calc_atr_pct, calc_rsi, ema_val, candle_pattern, engulfing, trade_quality,
+)
+# ─────────────────────────────────────────────────────────────────────────────
+
 # Минимальная доля "желательного" notional (по риск-сайзингу), которую нужно уметь разместить.
 # Если меньше — пропускаем сделку (иначе комиссии/проскальзывание убивают ожидание).
 MIN_NOTIONAL_FILL_FRAC = float(os.getenv("MIN_NOTIONAL_FILL_FRAC", "0.40"))
 
 
 # =========================== ГЛОБАЛ ===========================
-def _env_bool(name: str, default: bool) -> bool:
-    v = os.getenv(name)
-    if v is None:
-        return default
-    return str(v).strip().lower() in ("1", "true", "yes", "on")
+# _env_bool, _csv_lower_set, _csv_upper_set, _session_name_utc → bot.env_helpers
+# now_s, _to_float_safe, _today_ymd, base_from_usdt, dist_pct  → bot.utils
+# AUTH_DISABLED_UNTIL, AUTH_LAST_ERROR, BOT_START_TS           → bot.auth
+# RUNTIME_COUNTER, MSG_COUNTER, _diag_inc/get, snapshot        → bot.diagnostics
+# SymState, STATE, S, update_5m_bar, trim + indicator wrappers → bot.symbol_state
+# (all imported at the top of this file)
 
-
-def _csv_lower_set(name: str) -> set[str]:
-    raw = os.getenv(name, "") or ""
-    return {x.strip().lower() for x in str(raw).split(",") if x.strip()}
-
-
-def _csv_upper_set(name: str) -> set[str]:
-    raw = os.getenv(name, "") or ""
-    return {x.strip().upper() for x in str(raw).split(",") if x.strip()}
-
-
-def _session_name_utc(ts_sec: int) -> str:
-    hour = (int(ts_sec) // 3600) % 24
-    if 0 <= hour < 9:
-        return "asia"
-    if 8 <= hour < 17:
-        return "europe"
-    if 13 <= hour < 22:
-        return "us"
-    return "off"
 DEBUG_WINDOWS = True
-MSG_COUNTER = {"Bybit": 0, "Binance": 0}
-AUTH_DISABLED_UNTIL = {}  # name -> ts
-AUTH_LAST_ERROR = {}      # name -> str
-BOT_START_TS = int(time.time())
-RUNTIME_DIAG_ENABLE = _env_bool("RUNTIME_DIAG_ENABLE", True)
-RUNTIME_COUNTER = collections.Counter()
-
-
-def _diag_inc(key: str, n: int = 1) -> None:
-    if not RUNTIME_DIAG_ENABLE:
-        return
-    try:
-        RUNTIME_COUNTER[str(key)] += int(n)
-    except Exception:
-        pass
-
-
-def _diag_get_int(key: str) -> int:
-    try:
-        return int(RUNTIME_COUNTER.get(key, 0))
-    except Exception:
-        return 0
-
-
-def _runtime_diag_snapshot() -> str:
-    if not RUNTIME_DIAG_ENABLE:
-        return "diag=off"
-    keys = [
-        "ws_connect",
-        "ws_disconnect",
-        "ws_handshake_timeout",
-        "ws_disconnect_timeout",
-        "ws_disconnect_invalid_status",
-        "ws_disconnect_closed",
-        "ws_disconnect_oserror",
-        "ws_disconnect_other",
-        "breakout_try",
-        "breakout_no_signal",
-        "breakout_entry",
-        "breakout_skip_liq",
-        "breakout_skip_pullback",
-        "breakout_skip_quality",
-        "breakout_skip_minqty",
-        "breakout_ns_no_break",
-        "breakout_ns_regime",
-        "breakout_ns_retest",
-        "breakout_ns_hold",
-        "breakout_ns_dist",
-        "breakout_ns_impulse",
-        "breakout_ns_impulse_weak",
-        "breakout_ns_impulse_body",
-        "breakout_ns_impulse_vol",
-        "breakout_ns_entry_timing",
-        "breakout_ns_invalid_risk",
-        "breakout_ns_history",
-        "breakout_ns_symbol",
-        "breakout_ns_stop",
-        "breakout_ns_atr",
-        "breakout_ns_range",
-        "breakout_ns_post",
-        "breakout_ns_other",
-        "midterm_try",
-        "midterm_no_signal",
-        "midterm_entry",
-        "midterm_skip_minqty",
-    ]
-    parts = [f"{k}={int(RUNTIME_COUNTER.get(k, 0))}" for k in keys]
-    return "diag " + " ".join(parts)
 
 
 def _ws_health_from_delta(connect_delta: int, disconnect_delta: int, handshake_delta: int) -> tuple[str, float, float]:
@@ -169,58 +124,29 @@ def _fmt_ratio_or_inf(v: float) -> str:
         return "n/a"
 
 
-def _breakout_no_signal_diag_key(reason: str) -> str:
-    r = str(reason or "").strip().lower()
-    if not r:
-        return "breakout_ns_other"
-    if "symbol_not_allowed" in r or "symbol_denied" in r:
-        return "breakout_ns_symbol"
-    if "entry_timing_guard" in r:
-        return "breakout_ns_entry_timing"
-    if "invalid_risk" in r:
-        return "breakout_ns_invalid_risk"
-    if "atr_zero" in r:
-        return "breakout_ns_atr"
-    if "range_too_wide" in r:
-        return "breakout_ns_range"
-    if "post_filters_block" in r:
-        return "breakout_ns_post"
-    if "stop_too_tight" in r or "stop_too_wide" in r:
-        return "breakout_ns_stop"
-    if "history_short" in r or "ltf_short" in r or "ltf_tail_short" in r:
-        return "breakout_ns_history"
-    if "no_breakout_side" in r:
-        return "breakout_ns_no_break"
-    if "regime_block" in r:
-        return "breakout_ns_regime"
-    if "no_retest_touch" in r:
-        return "breakout_ns_retest"
-    if "no_reclaim_hold" in r:
-        return "breakout_ns_hold"
-    if "too_far" in r:
-        return "breakout_ns_dist"
-    if "impulse_body_weak" in r:
-        return "breakout_ns_impulse_body"
-    if "impulse_vol_weak" in r:
-        return "breakout_ns_impulse_vol"
-    if "impulse_weak" in r:
-        return "breakout_ns_impulse_weak"
-    if "impulse" in r:
-        return "breakout_ns_impulse"
-    return "breakout_ns_other"
+# _breakout_no_signal_diag_key → moved to bot.diagnostics (imported above)
 
 def auth_disabled(name: str) -> bool:
+    """Check if auth is disabled for account `name`. Uses module-level DRY_RUN."""
     if DRY_RUN:
         return False
     until = int((AUTH_DISABLED_UNTIL.get(name) or 0))
     return int(time.time()) < until
 
+
 def mark_auth_fail(name: str, err: Exception, cooldown_sec: int = 600):
+    """Record auth failure, disable private calls for cooldown_sec.
+    Uses shared AUTH_DISABLED_UNTIL from bot.auth.
+    FIX: guard against flood-logging — downstream callers check auth_disabled()
+    before each request, so errors.log will stop flooding after first failure.
+    """
     AUTH_DISABLED_UNTIL[name] = int(time.time()) + int(cooldown_sec)
     AUTH_LAST_ERROR[name] = str(err)[:300]
-
     try:
-        tg_trade(f"🛑 AUTH FAIL [{name}]: {AUTH_LAST_ERROR[name]}\nОтключаю приватные вызовы на {cooldown_sec // 60} мин.")
+        tg_trade(
+            f"🛑 AUTH FAIL [{name}]: {AUTH_LAST_ERROR[name]}\n"
+            f"Отключаю приватные вызовы на {cooldown_sec // 60} мин."
+        )
     except Exception:
         pass
 
@@ -322,6 +248,16 @@ BREAKOUT_SYMBOL_ALLOWLIST = _csv_upper_set("BREAKOUT_SYMBOL_ALLOWLIST")
 BREAKOUT_SYMBOL_DENYLIST = _csv_upper_set("BREAKOUT_SYMBOL_DENYLIST")
 BREAKOUT_SYMBOLS = set()
 BREAKOUT_ENGINE = None
+
+# ── News filter (runtime/news_filter/) ───────────────────────────────────────
+_NEWS_FILTER_ENABLE = _env_bool("NEWS_FILTER_ENABLE", True)
+_NEWS_EVENTS_PATH = os.getenv("NEWS_EVENTS_PATH", "runtime/news_filter/events.csv")
+_NEWS_POLICY_PATH = os.getenv("NEWS_POLICY_PATH", "runtime/news_filter/policy.json")
+_NEWS_EVENTS: list = []
+_NEWS_POLICY: dict = {}
+_NEWS_CACHE_TS: int = 0
+_NEWS_CACHE_TTL: int = 300   # reload events every 5 minutes
+
 MIDTERM_TRY_EVERY_SEC = int(os.getenv("MIDTERM_TRY_EVERY_SEC", "90"))
 MIDTERM_NOTIONAL_MULT = max(0.05, min(1.0, float(os.getenv("MIDTERM_NOTIONAL_MULT", "0.35"))))
 MIDTERM_ALLOW_MINQTY_FALLBACK = _env_bool("MIDTERM_ALLOW_MINQTY_FALLBACK", True)
@@ -397,6 +333,7 @@ BOUNCE_DEBUG = _env_bool("BOUNCE_DEBUG", True)
 # Control bounce-related Telegram chatter when bounce is disabled
 BOUNCE_TG_LOGS = _env_bool("BOUNCE_TG_LOGS", True)
 BOUNCE_LOG_ONLY = _env_bool("BOUNCE_LOG_ONLY", True)
+BOUNCE_TG_DEBUG_WHEN_LOG_ONLY = _env_bool("BOUNCE_TG_DEBUG_WHEN_LOG_ONLY", False)
 BOUNCE_DEBUG_CSV = "bounce_debug.csv"
 
 BOUNCE_MAX_DIST_PCT = 0.60
@@ -406,6 +343,10 @@ BOUNCE_EXECUTE_TRADES = True  # False = только логировать
 BOUNCE_REQUIRE_TREND_MATCH = True       # не торговать bounce против EMA20/EMA60
 BOUNCE_MAX_BREAKOUT_RISK   = 0.55       # максимум допустимого breakout_risk
 BOUNCE_MIN_POTENTIAL_PCT   = 0.30       # минимум потенциала (в %)
+BOUNCE_MIN_GROSS_MOVE_PCT  = float(os.getenv("BOUNCE_MIN_GROSS_MOVE_PCT", "0.35"))
+BOUNCE_EST_ROUNDTRIP_COST_PCT = float(os.getenv("BOUNCE_EST_ROUNDTRIP_COST_PCT", "0.25"))
+BOUNCE_MIN_NET_MOVE_PCT = float(os.getenv("BOUNCE_MIN_NET_MOVE_PCT", "0.12"))
+BOUNCE_MIN_NET_RR = float(os.getenv("BOUNCE_MIN_NET_RR", "0.70"))
 
 # === Bounce universe control ===
 BOUNCE_TOP_N = 50                 # bounce только на топ-50 ликвидных инструментов
@@ -576,9 +517,7 @@ def log_bounce_debug(row: dict):
 
     _append_csv(BOUNCE_DEBUG_CSV, fields, row)
 
-def dist_pct(price: float, level: float) -> float:
-    return (price - level) / max(1e-12, level) * 100.0
-
+# dist_pct → bot.utils (imported above)
 
 # =========================== ПОРТФЕЛЬНЫЕ ЛИМИТЫ ===========================
 MAX_POSITIONS = 1
@@ -1464,6 +1403,108 @@ def _get_last_open_entry_event(symbol: str, side: str | None = None) -> dict | N
         log_error(f"open entry query failed {symbol}: {e}")
         return None
 
+
+def _list_unmatched_open_entry_events(limit: int = 50) -> list[dict]:
+    if not os.path.exists(TRADE_DB_PATH):
+        return []
+    out: list[dict] = []
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            cur = con.execute(
+                """
+                SELECT e.ts, e.symbol, e.side, e.strategy, e.qty, e.entry_price, e.tp_price, e.sl_price, e.reason
+                  FROM trade_events e
+                 WHERE e.event='ENTRY'
+                   AND NOT EXISTS (
+                       SELECT 1
+                         FROM trade_events c
+                        WHERE c.event='CLOSE'
+                          AND c.symbol=e.symbol
+                          AND c.side=e.side
+                          AND c.ts>=e.ts
+                   )
+                 ORDER BY e.ts DESC
+                 LIMIT ?
+                """,
+                (int(limit),),
+            )
+            seen: set[tuple[str, str, str]] = set()
+            for row in cur.fetchall():
+                entry_ts, sym, side, strategy, qty, entry_px, tp, sl, reason = row
+                key = (str(sym).upper(), str(side or "Buy"), str(strategy or ""))
+                if key in seen:
+                    continue
+                seen.add(key)
+                out.append(
+                    {
+                        "entry_ts": int(entry_ts or 0),
+                        "symbol": str(sym).upper(),
+                        "side": str(side or "Buy"),
+                        "strategy": str(strategy or ""),
+                        "qty": float(qty or 0.0),
+                        "entry_price": float(entry_px or 0.0),
+                        "tp_price": float(tp) if tp is not None else None,
+                        "sl_price": float(sl) if sl is not None else None,
+                        "reason": str(reason or ""),
+                    }
+                )
+    except Exception as e:
+        log_error(f"unmatched open entry query failed: {e}")
+    return out
+
+
+def reconcile_stale_db_entries_with_exchange(open_rows: list[dict]) -> None:
+    """
+    На старте подбирает незакрытые ENTRY в trades.db, которых уже нет в открытых
+    позициях на бирже, и отдаёт их в обычный sync/closed-pnl pipeline.
+    Так мы не оставляем stale-open хвосты после рестарта/ручного закрытия.
+    """
+    if DRY_RUN or TRADE_CLIENT is None:
+        return
+
+    live_open: set[tuple[str, str]] = set()
+    for row in open_rows or []:
+        sym = str(row.get("symbol") or "").upper().strip()
+        side = str(row.get("side") or "Buy").strip() or "Buy"
+        try:
+            qty = abs(float(row.get("size") or 0.0))
+        except Exception:
+            qty = 0.0
+        if sym and qty > 0:
+            live_open.add((sym, side))
+
+    staged = 0
+    for ev in _list_unmatched_open_entry_events(limit=100):
+        sym = str(ev.get("symbol") or "").upper().strip()
+        side = str(ev.get("side") or "Buy").strip() or "Buy"
+        if not sym or (sym, side) in live_open:
+            continue
+        key = ("Bybit", sym)
+        if key in TRADES:
+            continue
+
+        tr = TradeState(symbol=sym, side=side, strategy=str(ev.get("strategy") or "bootstrap"))
+        tr.qty = float(ev.get("qty") or 0.0)
+        tr.status = "OPEN"
+        tr.entry_ts = int(ev.get("entry_ts") or now_s())
+        tr.entry_fill_ts = int(ev.get("entry_ts") or tr.entry_ts)
+        tr.entry_confirm_sent = True
+        tr.avg = float(ev.get("entry_price") or 0.0)
+        tr.entry_price = float(ev.get("entry_price") or 0.0)
+        tr.entry_price_req = float(ev.get("entry_price") or 0.0)
+        tr.tp_price = ev.get("tp_price")
+        tr.sl_price = ev.get("sl_price")
+        tr.close_reason = "POSITION_GONE(RESTART_RECONCILE)"
+        TRADES[key] = tr
+        staged += 1
+
+    if staged > 0:
+        tg_trade(f"🔁 Startup reconcile: staged_stale_db_entries={staged}")
+        try:
+            sync_trades_with_exchange()
+        except Exception as e:
+            log_error(f"startup reconcile sync fail: {e}")
+
 def _handle_tg_command(text: str):
     global TRADE_ON, RISK_PER_TRADE_PCT, BOT_CAPITAL_USD, MAX_POSITIONS
 
@@ -2206,115 +2247,10 @@ def log_error(msg: str):
     except Exception:
         pass
 
-def base_from_usdt(s: str) -> str:
-    return s[:-4] if s.endswith("USDT") else s
-
-def now_s() -> int:
-    return int(time.time())
-
-def _to_float_safe(x, default=0.0):
-    try:
-        return float(x)
-    except Exception:
-        return default
-
-def _today_ymd():
-    return time.strftime("%Y-%m-%d", time.gmtime())
-
-# =========================== СОСТОЯНИЕ СИМВОЛОВ ===========================
-class SymState:
-    __slots__ = (
-        "trades","prices","win_hist","last_eval_ts","last_alert",
-        "highs","lows","closes","last_pump","q_hist",
-        "ema_fast","ema_slow","ctx5m","last_bounce_try",
-        # добавь это:
-        "bars5m","cur5_id","cur5_o","cur5_h","cur5_l","cur5_c","cur5_quote",
-    )
-    def __init__(self):
-        self.trades = collections.deque()
-        self.prices = collections.deque()
-        self.win_hist = collections.deque(maxlen=BASE_WINDOWS)
-        self.last_eval_ts = 0
-        self.last_alert = 0
-        self.highs  = collections.deque(maxlen=240)
-        self.lows   = collections.deque(maxlen=240)
-        self.closes = collections.deque(maxlen=240)
-        self.last_pump = None
-        self.q_hist = collections.deque(maxlen=2)
-        self.ema_fast = None
-        self.ema_slow = None
-        self.ctx5m = collections.deque()
-        self.last_bounce_try = 0
-
-        self.cur5_id = None
-        self.bars5m = collections.deque(maxlen=300)
-        self.cur5_o = self.cur5_h = self.cur5_l = self.cur5_c = None
-        self.cur5_quote = 0.0
-
-STATE: Dict[Tuple[str, str], SymState] = {}
-
-def update_5m_bar(st: SymState, t: int, p: float, qq: float):
-    bar_id = t // 300
-    if st.cur5_id != bar_id:
-        # закрываем прошлую
-        if st.cur5_id is not None and st.cur5_o is not None:
-            st.bars5m.append({
-                "id": st.cur5_id,
-                "o": st.cur5_o, "h": st.cur5_h, "l": st.cur5_l, "c": st.cur5_c,
-                "quote": st.cur5_quote,
-            })
-        # старт новой
-        st.cur5_id = bar_id
-        st.cur5_o = st.cur5_h = st.cur5_l = st.cur5_c = p
-        st.cur5_quote = 0.0
-    else:
-        st.cur5_h = max(st.cur5_h, p)
-        st.cur5_l = min(st.cur5_l, p)
-        st.cur5_c = p
-
-    st.cur5_quote += qq
-
-def S(exch: str, sym: str) -> SymState:
-    k = (exch, sym)
-    st = STATE.get(k)
-    if st is None:
-        st = SymState()
-        STATE[k] = st
-    return st
-
-def trim(st: SymState, ts: int):
-    cut = ts - WINDOW_SEC*2
-    while st.trades and st.trades[0][0] < cut: st.trades.popleft()
-    while st.prices and st.prices[0][0] < cut: st.prices.popleft()
-    cut5 = ts - (CTX_5M_SEC + 10)
-    while st.ctx5m and st.ctx5m[0][0] < cut5:
-        st.ctx5m.popleft()
-
-def calc_atr_pct(h, l, c, period=14):
-    """
-    Обёртка над indicators.atr_pct_from_ohlc для совместимости со старым API.
-    """
-    return atr_pct_from_ohlc(list(h), list(l), list(c), period=period, fallback=0.8)
-
-
-def calc_rsi(closes, period=14):
-    return rsi_calc(list(closes), period=period)
-
-
-def ema_val(prev: Optional[float], price: float, length: int) -> float:
-    return ema_incremental(prev, float(price), length)
-
-
-def candle_pattern(open_p, close_p, high_p, low_p) -> Optional[str]:
-    return candle_pattern_detect(float(open_p), float(close_p), float(high_p), float(low_p))
-
-
-def engulfing(prev_o, prev_c, o, c) -> bool:
-    return engulfing_bear(prev_o, prev_c, float(o), float(c))
-
-
-def trade_quality(trades: list, q_total: float) -> float:
-    return calc_trade_quality(trades, float(q_total))
+# base_from_usdt, now_s, _to_float_safe, _today_ymd → bot.utils (imported above)
+# SymState, STATE, S, update_5m_bar, trim            → bot.symbol_state (imported above)
+# calc_atr_pct, calc_rsi, ema_val, candle_pattern,
+# engulfing, trade_quality                           → bot.symbol_state (imported above)
 
 # =========================== BYBIT CLIENT ===========================
 class BybitClient:
@@ -3704,6 +3640,8 @@ def bootstrap_open_trades_from_exchange():
     if restored > 0:
         tg_trade(f"🔁 Startup restore complete: restored_open_positions={restored}")
 
+    reconcile_stale_db_entries_with_exchange(rows)
+
 
 def ensure_leverage(symbol: str, lev: int = BYBIT_LEVERAGE):
     if TRADE_CLIENT is None:
@@ -3863,6 +3801,17 @@ EQUITY_TTL_SEC = 25
 def _fetch_equity_live() -> Optional[float]:
     if TRADE_CLIENT is None:
         return None
+
+    # ── AUTH FLOOD FIX ──────────────────────────────────────────────────────
+    # If auth is disabled (cooldown after failure), return None *silently*.
+    # The caller (_get_equity_now) will use the cached value instead.
+    # This prevents errors.log from being flooded with hundreds of
+    # "equity fetch fail: AUTH_DISABLED" lines after a single auth expiry.
+    acct_name = getattr(TRADE_CLIENT, "name", TRADE_ACCOUNT_NAME)
+    if auth_disabled(acct_name):
+        return None
+    # ────────────────────────────────────────────────────────────────────────
+
     try:
         wb = TRADE_CLIENT.wallet_balance()
         lst = (wb.get("result") or {}).get("list") or []
@@ -3870,18 +3819,17 @@ def _fetch_equity_live() -> Optional[float]:
             return None
 
         row0 = lst[0] or {}
-        # Bybit unified обычно отдаёт totalEquity прямо тут
+        # Bybit unified отдаёт totalEquity прямо тут
         v = row0.get("totalEquity")
         if v not in (None, "", "0"):
             return float(v)
 
-        # fallback (на всякий)
-        v2 = row0.get("accountIMRate")  # не equity, но иногда поля разные; лучше просто None
         return None
 
     except Exception as e:
-        # не валим бота из-за equity, просто логируем
-        log_error(f"equity fetch fail: {e}")
+        # Логируем только если auth ещё не задизаблен — иначе flood
+        if not auth_disabled(acct_name):
+            log_error(f"equity fetch fail: {e}")
         return None
 
 
@@ -4349,6 +4297,23 @@ _MIDTERM_LAST_TRY = {}          # symbol -> ts
 _BREAKOUT_COOLDOWN_UNTIL = {}   # symbol -> ts
 _BREAKOUT_COOLDOWN_LOG_TS = {}  # symbol -> ts
 _KILLER_GUARD_LOG_TS = {}       # symbol -> ts
+
+
+def _get_news_events_and_policy():
+    """Return (events, policy) — reloads from disk every _NEWS_CACHE_TTL seconds."""
+    global _NEWS_EVENTS, _NEWS_POLICY, _NEWS_CACHE_TS
+    now = now_s()
+    if now - _NEWS_CACHE_TS > _NEWS_CACHE_TTL:
+        try:
+            _NEWS_EVENTS = load_news_events(_NEWS_EVENTS_PATH)
+        except Exception:
+            pass
+        try:
+            _NEWS_POLICY = load_news_policy(_NEWS_POLICY_PATH)
+        except Exception:
+            pass
+        _NEWS_CACHE_TS = now
+    return _NEWS_EVENTS, _NEWS_POLICY
 _BREAKOUT_SESSION_LOG_TS = {}   # symbol -> ts
 
 async def try_range_entry_async(symbol: str, price: float):
@@ -4563,6 +4528,24 @@ async def try_breakout_entry_async(symbol: str, price: float):
     _BREAKOUT_LAST_TRY[symbol] = now
     _diag_inc("breakout_try")
 
+    # ── News filter ──────────────────────────────────────────────────────────
+    if _NEWS_FILTER_ENABLE:
+        try:
+            _ev, _pol = _get_news_events_and_policy()
+            blocked, reason = _news_is_blocked(
+                symbol=symbol,
+                ts_utc=int(now),
+                strategy_name="inplay_breakout",
+                events=_ev,
+                policy=_pol,
+            )
+            if blocked:
+                _diag_inc("breakout_skip_news")
+                tg_trade(f"📰 BREAKOUT SKIP {symbol}: news blackout — {reason}")
+                return
+        except Exception as _nf_err:
+            log_error(f"news_filter error: {_nf_err}")
+
     if BREAKOUT_SESSION_FILTER_ENABLE:
         sess = _session_name_utc(now)
         allowed = BREAKOUT_SESSION_ALLOWED or {"asia", "europe", "us"}
@@ -4585,6 +4568,22 @@ async def try_breakout_entry_async(symbol: str, price: float):
         except Exception:
             ns_reason = ""
         _diag_inc(_breakout_no_signal_diag_key(ns_reason))
+        # ── Impulse deficit histogram ────────────────────────────────────────
+        # When the impulse filter is the blocker, record HOW FAR below threshold
+        # to distinguish "deep flat" (ratio < 0.25) from "almost there" (ratio ≥ 0.75).
+        if ns_reason in ("impulse_weak", "impulse_body_weak", "impulse_vol_weak"):
+            try:
+                ratio = BREAKOUT_ENGINE.last_impulse_ratio(symbol)
+            except Exception:
+                ratio = 0.0
+            if ratio < 0.25:
+                _diag_inc("breakout_ns_impulse_q1")    # < 25% of threshold
+            elif ratio < 0.50:
+                _diag_inc("breakout_ns_impulse_q2")    # 25-50% of threshold
+            elif ratio < 0.75:
+                _diag_inc("breakout_ns_impulse_q3")    # 50-75% of threshold
+            else:
+                _diag_inc("breakout_ns_impulse_q4")    # 75-100% of threshold
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
@@ -5115,7 +5114,7 @@ def try_bounce_entry(exch: str, sym: str, st: SymState, now: int, price: float):
                     })
 
         # Плюс короткий DEBUG в телегу, чтобы руками сверять с TV
-        if BOUNCE_DEBUG and BOUNCE_TG_LOGS:
+        if BOUNCE_DEBUG and BOUNCE_TG_LOGS and (BOUNCE_EXECUTE_TRADES or BOUNCE_TG_DEBUG_WHEN_LOG_ONLY):
             tg_trade(
                 f"🧪 BOUNCE DEBUG {sym} {sig.side}  price={price:.6f}  lvl={lvl:.6f} "
                 f"dist={d:+.3f}%  kind={sig.level.kind},{sig.level.tf}  risk={sig.breakout_risk:.2f}  decision={decision}"
@@ -5126,11 +5125,33 @@ def try_bounce_entry(exch: str, sym: str, st: SymState, now: int, price: float):
 
         # Проверочный режим: только логируем, но не торгуем
         if not BOUNCE_EXECUTE_TRADES:
-            if BOUNCE_LOG_ONLY and BOUNCE_TG_LOGS:
+            if BOUNCE_LOG_ONLY and BOUNCE_TG_LOGS and BOUNCE_TG_DEBUG_WHEN_LOG_ONLY:
                 tg_trade(f"🟡 BOUNCE LOG-ONLY (no trade): {sym} {sig.side} dist={d:+.3f}%")
             return
 
         tp_r, sl_r = round_tp_sl_prices(sym, sig.side, float(price), sig.tp_price, sig.sl_price)
+        if tp_r is None or sl_r is None:
+            return
+
+        if str(sig.side).lower() == "buy":
+            gross_move_pct = ((float(tp_r) - float(price)) / max(1e-12, float(price))) * 100.0
+            risk_pct = ((float(price) - float(sl_r)) / max(1e-12, float(price))) * 100.0
+        else:
+            gross_move_pct = ((float(price) - float(tp_r)) / max(1e-12, float(price))) * 100.0
+            risk_pct = ((float(sl_r) - float(price)) / max(1e-12, float(price))) * 100.0
+        net_move_pct = gross_move_pct - float(BOUNCE_EST_ROUNDTRIP_COST_PCT)
+        net_rr = net_move_pct / max(1e-12, risk_pct)
+        if (
+            gross_move_pct < float(BOUNCE_MIN_GROSS_MOVE_PCT)
+            or net_move_pct < float(BOUNCE_MIN_NET_MOVE_PCT)
+            or net_rr < float(BOUNCE_MIN_NET_RR)
+        ):
+            if BOUNCE_DEBUG and BOUNCE_TG_LOGS and (BOUNCE_EXECUTE_TRADES or BOUNCE_TG_DEBUG_WHEN_LOG_ONLY):
+                tg_trade(
+                    f"🟡 BOUNCE SKIP {sym}: weak economics gross={gross_move_pct:.2f}% "
+                    f"net={net_move_pct:.2f}% rr={net_rr:.2f}"
+                )
+            return
 
         # размер позиции: риск % по дистанции до SL (УЖЕ округлённого)
         if USE_RISK_SIZING and (sl_r is not None):
