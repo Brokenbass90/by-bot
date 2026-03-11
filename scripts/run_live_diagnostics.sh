@@ -9,22 +9,64 @@ set -euo pipefail
 HOST="${BYBOT_SSH_HOST:-root@64.226.73.119}"
 KEY="${BYBOT_SSH_KEY:-$HOME/.ssh/by-bot}"
 SINCE="${SINCE:-24 hours ago}"
+LOCAL_ONLY="${BYBOT_DIAG_LOCAL:-0}"
 
 TMP="$(mktemp)"
 ERR="$(mktemp)"
-trap 'rm -f "$TMP" "$ERR"' EXIT
+LOCAL_ERR="$(mktemp)"
+trap 'rm -f "$TMP" "$ERR" "$LOCAL_ERR"' EXIT
 
-set +e
-ssh -i "$KEY" "$HOST" \
-  "journalctl -u bybot --since '$SINCE' --no-pager | grep -E 'diag '" > "$TMP" 2>"$ERR"
-SSH_RC=$?
-set -e
+fetch_remote() {
+  set +e
+  ssh -i "$KEY" "$HOST" \
+    "journalctl -u bybot --since '$SINCE' --no-pager | grep -E 'diag '" > "$TMP" 2>"$ERR"
+  SSH_RC=$?
+  set -e
+  return "$SSH_RC"
+}
+
+fetch_local() {
+  if ! command -v journalctl >/dev/null 2>&1; then
+    printf 'journalctl not found in PATH\n' > "$LOCAL_ERR"
+    return 127
+  fi
+  set +e
+  journalctl -u bybot --since "$SINCE" --no-pager | grep -E 'diag ' > "$TMP" 2>"$LOCAL_ERR"
+  LOCAL_RC=$?
+  set -e
+  return "$LOCAL_RC"
+}
+
+SSH_RC=0
+LOCAL_RC=0
+SOURCE_MODE="remote"
+
+if [[ "$LOCAL_ONLY" == "1" ]]; then
+  SOURCE_MODE="local"
+  fetch_local || LOCAL_RC=$?
+else
+  if [[ -f "$KEY" ]]; then
+    fetch_remote || SSH_RC=$?
+  else
+    SSH_RC=255
+    printf 'SSH key not found: %s\n' "$KEY" > "$ERR"
+  fi
+
+  if [[ ! -s "$TMP" ]]; then
+    SOURCE_MODE="local"
+    fetch_local || LOCAL_RC=$?
+  fi
+fi
 
 if [[ ! -s "$TMP" ]]; then
-  if [[ $SSH_RC -ne 0 ]]; then
+  if [[ "$SOURCE_MODE" == "remote" && $SSH_RC -ne 0 ]]; then
     echo "SSH error (host=$HOST key=$KEY):"
     sed -n '1,5p' "$ERR"
     echo "hint: проверь интернет/VPN/доступ к серверу и повтори команду."
+  fi
+  if [[ "$SOURCE_MODE" == "local" && $LOCAL_RC -ne 0 ]]; then
+    echo "Local journalctl error:"
+    sed -n '1,5p' "$LOCAL_ERR"
   fi
   echo "No diag lines found for since='$SINCE'"
   exit 0
