@@ -26,7 +26,15 @@ try:
         trade_quality as _calc_trade_quality,
     )
     _INDICATORS_OK = True
-except ImportError:
+except ImportError as _ind_exc:
+    import sys as _sys
+    print(
+        f"[bot/symbol_state] WARNING: indicators.py import failed: {_ind_exc}. "
+        "All indicator functions will return FALLBACK constants "
+        "(atr_pct=0.8, rsi=50.0, ema=price, quality=0.0). "
+        "Signals and sizing may be incorrect. Check that indicators.py is in sys.path.",
+        file=_sys.stderr,
+    )
     _INDICATORS_OK = False
 
 
