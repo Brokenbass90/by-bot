@@ -35,6 +35,10 @@ from forex.strategies.bb_mean_reversion_v2 import Config as BbRevV2Config
 from forex.strategies.bb_mean_reversion_v2 import BBMeanReversionV2
 from forex.strategies.adaptive_grid_range_v1 import Config as GridV1Config
 from forex.strategies.adaptive_grid_range_v1 import AdaptiveGridRangeV1
+from forex.strategies.bb_mean_reversion_v3 import Config as BbRevV3Config
+from forex.strategies.bb_mean_reversion_v3 import BBMeanReversionV3
+from forex.strategies.trendline_break_bounce_v1 import Config as TlbbV1Config
+from forex.strategies.trendline_break_bounce_v1 import TrendlineBreakBounceV1
 from news_filter import is_news_blocked, load_news_events, load_news_policy
 from run_forex_multi_strategy_gate import _build_strategy as _build_preset_strategy
 
@@ -145,6 +149,22 @@ def _build_strategy(args):
             min_atr_pips=20.0 if is_crypto else (1.0 if is_jpy else 1.0),
             session_start_utc=0,
             session_end_utc=24,  # 24/7
+        ))
+    if s == "bb_mean_reversion_v3":
+        is_jpy = args.symbol.upper().endswith("JPY")
+        ps = float(args.pip_size) if float(args.pip_size) > 0 else (0.01 if is_jpy else 0.0001)
+        return BBMeanReversionV3(BbRevV3Config(
+            pip_size=ps,
+            min_band_width_pips=60.0 if is_jpy else 20.0,
+            max_atr_pips=250.0 if is_jpy else 25.0,
+        ))
+    if s == "trendline_break_bounce_v1":
+        is_jpy = args.symbol.upper().endswith("JPY")
+        ps = float(args.pip_size) if float(args.pip_size) > 0 else (0.01 if is_jpy else 0.0001)
+        return TrendlineBreakBounceV1(TlbbV1Config(
+            pip_size=ps,
+            touch_zone_pips=5.0 if is_jpy else 3.0,
+            breakout_confirm_pips=6.0 if is_jpy else 4.0,
         ))
     raise ValueError(f"Unsupported strategy: {s}")
 
