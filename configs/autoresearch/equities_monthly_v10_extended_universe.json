@@ -1,0 +1,58 @@
+{
+  "name": "equities_monthly_v10_extended_universe",
+  "description": "Extended universe (20 stocks) with dynamic regime and correlation filters",
+  "strategy": "equities_monthly_research",
+  "runner": "scripts/equities_monthly_research_sim.py",
+  "base_args": {
+    "tickers": "AAPL,MSFT,GOOGL,AMZN,META,NVDA,TSLA,AMD,AVGO,ADBE,NFLX,ORCL,PLTR,UBER,CRWD,PANW,JPM,XOM,GS,COST",
+    "data-dir": "data_cache/equities_1h",
+    "benchmark-tickers": "SPY,QQQ",
+    "benchmark-data-dir": "data_cache/equities_1h",
+    "benchmark-lookback-days": 60,
+    "benchmark-min-above-sma-count": 1,
+    "benchmark-min-positive-mom-count": 1,
+    "benchmark-min-avg-mom-pct": -2.0,
+    "earnings-csv": "data_cache/equities/earnings_dates.csv",
+    "earnings-blackout-days-before": 5,
+    "earnings-blackout-days-after": 2,
+    "position-weight-mode": "inv_vol",
+    "cluster-groups": "AAPL,MSFT,GOOGL,AMZN;NVDA,AMD,AVGO;META,NFLX;CRWD,PANW;JPM,GS",
+    "max-per-cluster": 1,
+    "forbid-pairs": "NVDA:AMD;CRWD:PANW;META:NFLX;JPM:GS"
+  },
+  "grid": {
+    "top-n": [2, 3],
+    "max-hold-days": [12, 18],
+    "lookback-days": [50, 70],
+    "min-mom-lookback-pct": [1.0, 2.0],
+    "pullback-min-pct": [-18.0, -12.0],
+    "pullback-max-pct": [-0.5, -1.5],
+    "stop-atr-mult": [1.2, 1.5, 2.0],
+    "target-atr-mult": [2.0, 2.5, 3.5],
+    "corr-lookback-days": [40, 60],
+    "corr-penalty-mult": [4.0, 5.5],
+    "universe-top-k": [4, 6, 8],
+    "universe-score-lookback-days": [60, 80],
+    "regime-min-breadth-sma-pct": [40.0, 55.0],
+    "regime-min-breadth-mom-pct": [40.0, 55.0],
+    "regime-min-avg-mom-pct": [-1.0, 1.0]
+  },
+  "constraints": {
+    "min_trades": 30,
+    "min_net_pnl_pct": 50.0,
+    "max_drawdown_pct": 12.0,
+    "max_negative_months": 5,
+    "max_negative_streak": 2,
+    "min_worst_month_pnl_pct": -6.0,
+    "min_winrate_pct": 55.0,
+    "min_positive_months_pct": 75.0
+  },
+  "scoring": {
+    "compounded_return_weight": 0.35,
+    "winrate_weight": 0.20,
+    "positive_months_pct_weight": 0.20,
+    "inverse_max_dd_weight": 0.15,
+    "trade_count_weight": 0.10
+  },
+  "notes": "Extended from v9 with 20 stocks, cluster/correlation filters, and dynamic regime thresholds"
+}
