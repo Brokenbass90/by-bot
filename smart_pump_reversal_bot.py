@@ -5650,67 +5650,71 @@ def detect(exch: str, sym: str, st: SymState, now: int):
     except Exception as _e:
         log_error(f"try_bounce_entry crash {sym}: {_e}")
 
-    # ===== RANGE ENTRY (flat/range) =====
-    if exch == "Bybit" and ENABLE_RANGE_TRADING and TRADE_ON and (not DRY_RUN):
-        last = int(_RANGE_LAST_TRY.get(sym, 0) or 0)
-        if now - last >= RANGE_TRY_EVERY_SEC:
-            try:
-                asyncio.create_task(try_range_entry_async(sym, p1))
-            except Exception as _e:
-                log_error(f"try_range_entry schedule fail {sym}: {_e}")
+    # Schedule live strategies before the legacy pump-detector gates below.
+    # Otherwise weak/flat market structure can return early and starve breakout,
+    # midterm, sloped, and other independent sleeves.
+    if exch == "Bybit" and TRADE_ON and (not DRY_RUN):
+        # ===== RANGE ENTRY (flat/range) =====
+        if ENABLE_RANGE_TRADING:
+            last = int(_RANGE_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= RANGE_TRY_EVERY_SEC:
+                try:
+                    asyncio.create_task(try_range_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_range_entry schedule fail {sym}: {_e}")
 
-    # ===== INPLAY ENTRY (retest/runner) =====
-    if exch == "Bybit" and ENABLE_INPLAY_TRADING and TRADE_ON and (not DRY_RUN):
-        last = int(_INPLAY_LAST_TRY.get(sym, 0) or 0)
-        if now - last >= INPLAY_TRY_EVERY_SEC:
-            try:
-                asyncio.create_task(try_inplay_entry_async(sym, p1))
-            except Exception as _e:
-                log_error(f"try_inplay_entry schedule fail {sym}: {_e}")
+        # ===== INPLAY ENTRY (retest/runner) =====
+        if ENABLE_INPLAY_TRADING:
+            last = int(_INPLAY_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= INPLAY_TRY_EVERY_SEC:
+                try:
+                    asyncio.create_task(try_inplay_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_inplay_entry schedule fail {sym}: {_e}")
 
-    # ===== BREAKOUT ENTRY (retest -> continue) =====
-    if exch == "Bybit" and ENABLE_BREAKOUT_TRADING and TRADE_ON and (not DRY_RUN):
-        last = int(_BREAKOUT_LAST_TRY.get(sym, 0) or 0)
-        if now - last >= BREAKOUT_TRY_EVERY_SEC:
-            try:
-                asyncio.create_task(try_breakout_entry_async(sym, p1))
-            except Exception as _e:
-                log_error(f"try_breakout_entry schedule fail {sym}: {_e}")
+        # ===== BREAKOUT ENTRY (retest -> continue) =====
+        if ENABLE_BREAKOUT_TRADING:
+            last = int(_BREAKOUT_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= BREAKOUT_TRY_EVERY_SEC:
+                try:
+                    asyncio.create_task(try_breakout_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_breakout_entry schedule fail {sym}: {_e}")
 
-    if exch == "Bybit" and ENABLE_MIDTERM_TRADING and TRADE_ON and (not DRY_RUN):
-        last = int(_MIDTERM_LAST_TRY.get(sym, 0) or 0)
-        if now - last >= MIDTERM_TRY_EVERY_SEC:
-            try:
-                asyncio.create_task(try_midterm_entry_async(sym, p1))
-            except Exception as _e:
-                log_error(f"try_midterm_entry schedule fail {sym}: {_e}")
+        if ENABLE_MIDTERM_TRADING:
+            last = int(_MIDTERM_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= MIDTERM_TRY_EVERY_SEC:
+                try:
+                    asyncio.create_task(try_midterm_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_midterm_entry schedule fail {sym}: {_e}")
 
-    # ===== RETEST LEVELS ENTRY =====
-    if exch == "Bybit" and ENABLE_RETEST_TRADING and TRADE_ON and (not DRY_RUN):
-        last = int(_RETEST_LAST_TRY.get(sym, 0) or 0)
-        if now - last >= RETEST_TRY_EVERY_SEC:
-            try:
-                asyncio.create_task(try_retest_entry_async(sym, p1))
-            except Exception as _e:
-                log_error(f"try_retest_entry schedule fail {sym}: {_e}")
+        # ===== RETEST LEVELS ENTRY =====
+        if ENABLE_RETEST_TRADING:
+            last = int(_RETEST_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= RETEST_TRY_EVERY_SEC:
+                try:
+                    asyncio.create_task(try_retest_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_retest_entry schedule fail {sym}: {_e}")
 
-    # ===== SLOPED CHANNEL ENTRY =====
-    if exch == "Bybit" and ENABLE_SLOPED_TRADING and TRADE_ON and (not DRY_RUN):
-        last = int(_SLOPED_LAST_TRY.get(sym, 0) or 0)
-        if now - last >= SLOPED_TRY_EVERY_SEC:
-            try:
-                asyncio.create_task(try_sloped_entry_async(sym, p1))
-            except Exception as _e:
-                log_error(f"try_sloped_entry schedule fail {sym}: {_e}")
+        # ===== SLOPED CHANNEL ENTRY =====
+        if ENABLE_SLOPED_TRADING:
+            last = int(_SLOPED_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= SLOPED_TRY_EVERY_SEC:
+                try:
+                    asyncio.create_task(try_sloped_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_sloped_entry schedule fail {sym}: {_e}")
 
-    # ===== TRIPLE SCREEN v132 ENTRY =====
-    if exch == "Bybit" and ENABLE_TS132_TRADING and TRADE_ON and (not DRY_RUN):
-        last = int(_TS132_LAST_TRY.get(sym, 0) or 0)
-        if now - last >= TS132_TRY_EVERY_SEC:
-            try:
-                asyncio.create_task(try_ts132_entry_async(sym, p1))
-            except Exception as _e:
-                log_error(f"try_ts132_entry schedule fail {sym}: {_e}")
+        # ===== TRIPLE SCREEN v132 ENTRY =====
+        if ENABLE_TS132_TRADING:
+            last = int(_TS132_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= TS132_TRY_EVERY_SEC:
+                try:
+                    asyncio.create_task(try_ts132_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_ts132_entry schedule fail {sym}: {_e}")
 
 
     # ✅ ВАЖНО: сопровождение открытых bounce-сделок должно работать даже когда фильтры пампа "молчат"
