@@ -1,0 +1,52 @@
+{
+  "name": "btc_early_flip_regime_v6_signal_plus_exits",
+  "symbols": ["BTCUSDT"],
+  "strategies": ["btc_cycle_pullback_v1", "btc_regime_retest_v1", "btc_regime_flip_continuation_v1"],
+  "days": 383,
+  "end_date": "2026-02-24",
+  "cache_only": true,
+  "base_env": {
+    "BTCC1_TRAIL_ATR_MULT": "0",
+    "BTCC1_TP1_RR": "0.8",
+    "BTCC1_TP2_RR": "2.2",
+    "BTCC1_TP1_FRAC": "0.70",
+    "BTCC1_TIME_STOP_BARS_5M": "864",
+    "BTCC1_REGIME_MAX_GAP_PCT": "4.0",
+    "BTCC1_REGIME_MAX_SLOPE_PCT": "2.4",
+    "BTCRF1_ALLOW_LONGS": "1",
+    "BTCRF1_HOLD_ABOVE_EMA_PCT": "-0.1",
+    "BTCRF1_REGIME_MAX_GAP_PCT": "3.2",
+    "BTCRF1_REGIME_MIN_GAP_PCT": "0.45",
+    "BTCRF1_REGIME_SLOPE_MIN_PCT": "0.10",
+    "BTCRF1_REGIME_SLOPE_MAX_PCT": "2.0",
+    "BTCRF1_BREAKOUT_BUFFER_PCT": "0.05",
+    "BTCRF1_BREAKOUT_LOOKBACK_BARS": "2",
+    "BTCRF1_MAX_ATR_PCT_4H": "2.8"
+  },
+  "grid": {
+    "BTCRF1_TP1_RR": [0.8, 0.9, 1.0],
+    "BTCRF1_TP2_RR": [2.6, 2.8, 3.0],
+    "BTCRF1_TP1_FRAC": [0.45, 0.55, 0.65],
+    "BTCRF1_TIME_STOP_BARS_5M": [864, 1008, 1152]
+  },
+  "constraints": {
+    "min_trades": 14,
+    "min_profit_factor": 2.2,
+    "max_drawdown": 1.2,
+    "min_net_pnl": 3.3,
+    "max_negative_months": 1,
+    "max_negative_streak": 1,
+    "min_worst_month_pnl": -0.3
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 3.0,
+    "winrate": 12.0,
+    "max_drawdown": 1.0,
+    "trades": 0.04,
+    "trades_cap": 30,
+    "negative_months": 1.5,
+    "max_negative_streak": 2.0,
+    "worst_month_pnl": 2.0
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "flat_slope_family_exit_v1",
+  "symbols": ["LINKUSDT", "ATOMUSDT", "BNBUSDT"],
+  "strategies": ["alt_sloped_channel_v1"],
+  "days": 360,
+  "end_date": "2026-02-24",
+  "cache_only": true,
+  "base_env": {
+    "ASC1_ALLOW_LONGS": "0",
+    "ASC1_ALLOW_SHORTS": "1",
+    "ASC1_SYMBOL_ALLOWLIST": "LINKUSDT,ATOMUSDT,BNBUSDT",
+    "ASC1_MAX_ABS_SLOPE_PCT": "2.0",
+    "ASC1_SHORT_MIN_REJECT_DEPTH_ATR": "0.65"
+  },
+  "grid": {
+    "ASC1_TP1_FRAC": [0.55, 0.7, 0.8],
+    "ASC1_TP2_BUFFER_PCT": [0.4, 0.8, 1.2],
+    "ASC1_TIME_STOP_BARS_5M": [288, 384, 480]
+  },
+  "constraints": {
+    "min_trades": 24,
+    "min_profit_factor": 1.6,
+    "max_drawdown": 4.0,
+    "min_net_pnl": 7.0
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 3.0,
+    "winrate": 12.0,
+    "max_drawdown": 1.0,
+    "trades": 0.03,
+    "trades_cap": 60
+  }
+}

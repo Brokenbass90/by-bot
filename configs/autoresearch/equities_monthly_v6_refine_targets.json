@@ -1,0 +1,93 @@
+{
+  "name": "equities_monthly_v6_refine_targets",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "scripts/equities_monthly_research_sim.py",
+    "--tickers",
+    "AMD,GOOGL,META,NVDA,TSLA",
+    "--data-dir",
+    "data_cache/equities_1h",
+    "--top-n",
+    "2",
+    "--max-hold-days",
+    "{MAX_HOLD_DAYS}",
+    "--lookback-days",
+    "70",
+    "--min-mom-lookback-pct",
+    "{MIN_MOM_LOOKBACK_PCT}",
+    "--pullback-min-pct",
+    "-16.0",
+    "--pullback-max-pct",
+    "-1.0",
+    "--regime-min-breadth-sma-pct",
+    "55",
+    "--regime-min-breadth-mom-pct",
+    "55",
+    "--regime-min-avg-mom-pct",
+    "2",
+    "--earnings-csv",
+    "data_cache/equities/earnings_dates.csv",
+    "--earnings-blackout-days-before",
+    "5",
+    "--earnings-blackout-days-after",
+    "2",
+    "--benchmark-tickers",
+    "SPY,QQQ",
+    "--benchmark-data-dir",
+    "data_cache/equities_1h",
+    "--corr-lookback-days",
+    "{CORR_LOOKBACK_DAYS}",
+    "--corr-penalty-mult",
+    "{CORR_PENALTY_MULT}",
+    "--corr-penalty-threshold",
+    "{CORR_PENALTY_THRESHOLD}",
+    "--position-weight-mode",
+    "inv_vol",
+    "--stop-atr-mult",
+    "{STOP_ATR_MULT}",
+    "--target-atr-mult",
+    "{TARGET_ATR_MULT}",
+    "--tag",
+    "{tag}"
+  ],
+  "field_map": {
+    "trades": "trades",
+    "net_pnl": "compounded_return_pct",
+    "winrate": "winrate_pct",
+    "max_drawdown": "max_monthly_dd_pct"
+  },
+  "field_scales": {
+    "winrate": 0.01
+  },
+  "grid": {
+    "MAX_HOLD_DAYS": [12, 15, 18],
+    "MIN_MOM_LOOKBACK_PCT": [1.5, 2.0, 2.5],
+    "CORR_LOOKBACK_DAYS": [40, 60],
+    "CORR_PENALTY_MULT": [2.5, 3.5],
+    "CORR_PENALTY_THRESHOLD": [0.5, 0.6],
+    "STOP_ATR_MULT": [1.3, 1.5, 1.7],
+    "TARGET_ATR_MULT": [2.2, 2.5, 2.8]
+  },
+  "base_env": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "constraints": {
+    "min_trades": 35,
+    "min_net_pnl": 70.0,
+    "max_drawdown": 11.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2,
+    "min_worst_month_pnl": -6.0
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "winrate": 20.0,
+    "max_drawdown": 1.0,
+    "trades": 0.02,
+    "trades_cap": 45,
+    "negative_months": 2.0,
+    "max_negative_streak": 3.0,
+    "worst_month_pnl": 1.5
+  }
+}

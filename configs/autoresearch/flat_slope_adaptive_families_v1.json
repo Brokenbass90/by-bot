@@ -1,0 +1,78 @@
+{
+  "name": "flat_slope_adaptive_families_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_sloped_channel_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-15",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "ATOMUSDT",
+      "ATOMUSDT,LINKUSDT",
+      "ATOMUSDT,DOGEUSDT",
+      "ATOMUSDT,LINKUSDT,DOGEUSDT",
+      "ATOMUSDT,LINKUSDT,ADAUSDT",
+      "ATOMUSDT,BCHUSDT",
+      "ATOMUSDT,LINKUSDT,BCHUSDT",
+      "ATOMUSDT,LTCUSDT",
+      "ATOMUSDT,LINKUSDT,DOGEUSDT,ADAUSDT"
+    ],
+    "ASC1_MIN_RANGE_R2": [0.20, 0.25, 0.30],
+    "ASC1_SHORT_MIN_RSI": [56, 58, 60, 62],
+    "ASC1_SHORT_MIN_REJECT_DEPTH_ATR": [0.65, 0.75, 0.85, 0.95],
+    "ASC1_MIN_BODY_FRAC": [0.18, 0.22, 0.26],
+    "ASC1_SL_ATR_MULT": [0.80, 0.90, 1.00],
+    "ASC1_TP1_FRAC": [0.50, 0.55, 0.60]
+  },
+  "base_env": {
+    "ASC1_ALLOW_LONGS": "0",
+    "ASC1_ALLOW_SHORTS": "1",
+    "ASC1_MAX_ABS_SLOPE_PCT": "2.0",
+    "ASC1_SHORT_MAX_NEAR_UPPER_BARS": "2",
+    "ASC1_SHORT_NEAR_UPPER_ATR": "0.15",
+    "ASC1_SHORT_MIN_REJECT_VOL_MULT": "0.0",
+    "BACKTEST_CACHE_ONLY": "1"
+  },
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.8,
+    "max_drawdown": 3.0,
+    "min_net_pnl": 3.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 1,
+    "min_worst_month_pnl": -1.0
+  },
+  "score_weights": {
+    "net_pnl": 1.5,
+    "profit_factor": 3.0,
+    "winrate": 15.0,
+    "max_drawdown": 2.0,
+    "trades": 0.05,
+    "trades_cap": 40,
+    "negative_months": 3.0,
+    "max_negative_streak": 2.5,
+    "worst_month_pnl": 2.0
+  }
+}

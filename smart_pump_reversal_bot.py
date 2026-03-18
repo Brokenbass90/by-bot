@@ -282,6 +282,17 @@ RETEST_TOP_N = int(os.getenv("RETEST_TOP_N", "60"))
 RETEST_SYMBOLS = set()
 RETEST_ENGINE = None
 
+# ===== SLOPED CHANNEL (live) =====
+ENABLE_SLOPED_TRADING = os.getenv("ENABLE_SLOPED_TRADING", "0").strip() == "1"
+SLOPED_TRY_EVERY_SEC = int(os.getenv("SLOPED_TRY_EVERY_SEC", "60"))
+SLOPED_ENGINE = None
+
+# ===== TRIPLE SCREEN v132 (live) =====
+ENABLE_TS132_TRADING = os.getenv("ENABLE_TS132_TRADING", "0").strip() == "1"
+TS132_TRY_EVERY_SEC = int(os.getenv("TS132_TRY_EVERY_SEC", "60"))
+TS132_SYMBOLS = {s.strip().upper() for s in str(os.getenv("TS132_SYMBOLS", "")).split(",") if s.strip()}
+TS132_ENGINE = None
+
 LOG_SIGNALS = True
 SIGNALS_CSV = "signals.csv"
 ERRORS_LOG = "errors.log"
@@ -352,7 +363,7 @@ BOUNCE_MIN_NET_RR = float(os.getenv("BOUNCE_MIN_NET_RR", "0.70"))
 BOUNCE_TOP_N = 50                 # bounce только на топ-50 ликвидных инструментов
 BOUNCE_SYMBOLS = set()            # заполнится в bybit_ws() после получения syms
 
-ENTRY_CONFIRM_GRACE_SEC = 25   # сколько ждём “позиция появится” прежде чем признать FAIL
+ENTRY_CONFIRM_GRACE_SEC = 25   # сколько ждём "позиция появится" прежде чем признать FAIL
 ENTRY_TIMEOUT_SEC = 120   
 ENTRY_CONFIRM_POLL_SEC  = 0.8
 
@@ -1856,6 +1867,8 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
         f"inplay={ENABLE_INPLAY_TRADING}",
         f"retest={ENABLE_RETEST_TRADING}",
         f"range={ENABLE_RANGE_TRADING}",
+        f"sloped={ENABLE_SLOPED_TRADING}",
+        f"ts132={ENABLE_TS132_TRADING}",
     ]
     lines = [
         "🧠 strategies: " + " | ".join(enabled),
@@ -2340,7 +2353,7 @@ class BybitClient:
             # 2) fallback → quoteCoin (USDT) c мин/шагом
             # 2) fallback → quoteCoin (USDT) c мин/шагом
             if not allow_quote_fallback:
-                # для bounce/риск-сайзинга нельзя “поднимать” notional через quoteCoin
+                # для bounce/риск-сайзинга нельзя "поднимать" notional через quoteCoin
                 raise
 
             try:
@@ -3775,9 +3788,28 @@ RANGE_STRATEGY = RangeStrategy(
     allow_short=RANGE_ALLOW_SHORT,
 )
 
+# ===== SLOPED CHANNEL ENGINE =====
+if ENABLE_SLOPED_TRADING:
+    try:
+        from strategies.sloped_channel_live import SlopedChannelLiveEngine
+        SLOPED_ENGINE = SlopedChannelLiveEngine(fetch_klines)
+        log(f"[SLOPED] engine initialised")
+    except Exception as _e:
+        log_error(f"[SLOPED] engine init fail: {_e}")
+        SLOPED_ENGINE = None
+
+# ===== TRIPLE SCREEN v132 ENGINE =====
+if ENABLE_TS132_TRADING:
+    try:
+        from archive.strategies_retired.triple_screen_v132 import TripleScreenV132Strategy
+        TS132_ENGINE = {}  # symbol -> TripleScreenV132Strategy
+        log(f"[TS132] engine initialised (per-symbol lazy)")
+    except Exception as _e:
+        log_error(f"[TS132] engine init fail: {_e}")
+        TS132_ENGINE = None
 
 
-# пример “короткого” bounce под маленький депозит
+# пример "короткого" bounce под маленький депозит
 BOUNCE_STRAT.sl_pct = 0.35     # стоп ~0.35%
 BOUNCE_STRAT.rr     = 1.3      # TP ~0.455%
 BOUNCE_STRAT.min_potential_pct = 0.30
@@ -4294,6 +4326,8 @@ _INPLAY_LAST_TRY = {}           # symbol -> ts
 _BREAKOUT_LAST_TRY = {}         # symbol -> ts
 _RETEST_LAST_TRY = {}           # symbol -> ts
 _MIDTERM_LAST_TRY = {}          # symbol -> ts
+_SLOPED_LAST_TRY = {}           # symbol -> ts
+_TS132_LAST_TRY = {}            # symbol -> ts
 _BREAKOUT_COOLDOWN_UNTIL = {}   # symbol -> ts
 _BREAKOUT_COOLDOWN_LOG_TS = {}  # symbol -> ts
 _KILLER_GUARD_LOG_TS = {}       # symbol -> ts
@@ -4990,6 +5024,218 @@ async def try_midterm_entry_async(symbol: str, price: float):
 
 
 
+async def try_sloped_entry_async(symbol: str, price: float):
+    """Try sloped channel entry for a symbol."""
+    if not ENABLE_SLOPED_TRADING:
+        return
+    if SLOPED_ENGINE is None:
+        return
+    if not TRADE_ON or DRY_RUN:
+        return
+    if TRADE_CLIENT is None:
+        return
+    if get_trade("Bybit", symbol) is not None:
+        return
+    if not portfolio_can_open():
+        return
+
+    now = now_s()
+    last = int(_SLOPED_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < SLOPED_TRY_EVERY_SEC:
+        return
+    _SLOPED_LAST_TRY[symbol] = now
+    _diag_inc("sloped_try")
+
+    try:
+        sig = SLOPED_ENGINE.signal(symbol, int(now * 1000), 0, 0, 0, price, 0)
+    except Exception as e:
+        log_error(f"sloped signal error {symbol}: {e}")
+        return
+    if not sig:
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
+    if dyn_usd <= 0:
+        tg_trade(f"🟡 SLOPED SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+
+    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0:
+        tg_trade(f"🟡 SLOPED SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+
+    ensure_leverage(symbol, BYBIT_LEVERAGE)
+    _diag_inc("sloped_entry")
+    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+
+    tr = TradeState(
+        symbol=symbol,
+        side=side,
+        qty=q,
+        entry_price_req=float(entry),
+        entry_ts=now,
+    )
+    tr.entry_order_id = oid
+    tr.status = "PENDING_ENTRY"
+    tr.strategy = "sloped_channel"
+    tr.avg = float(entry)
+    tr.entry_price = float(entry)
+    tr.entry_notional_usd = float(notional_real)
+    tr.tp_price = float(tp_r) if tp_r is not None else None
+    tr.sl_price = float(sl_r)
+    tr.runner_enabled = bool(use_runner)
+    if tr.runner_enabled:
+        tr.tps = [float(x) for x in (sig.tps or [])]
+        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+        tr.tp_hit = [False for _ in tr.tps]
+        tr.initial_qty = float(q)
+        tr.remaining_qty = float(q)
+        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+        tr.time_stop_sec = int(ts_bars * 300)
+    TRADES[("Bybit", symbol)] = tr
+
+    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+    tr.tpsl_on_exchange = bool(ok)
+    tr.tpsl_last_set_ts = now_s()
+    if ok:
+        tr.tpsl_manual_lock = False
+
+    tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+    tg_trade(
+        f"🟪 SLOPED ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+        f"reason={sig.reason}"
+    )
+
+
+class _TS132Store:
+    """Minimal store that TripleScreenV132Strategy expects for fetch_klines."""
+    def __init__(self, symbol: str):
+        self.symbol = symbol
+    def fetch_klines(self, symbol: str, interval: str, limit: int):
+        return fetch_klines(symbol, interval, limit)
+
+
+async def try_ts132_entry_async(symbol: str, price: float):
+    """Try Triple Screen v132 entry for a symbol."""
+    if not ENABLE_TS132_TRADING:
+        return
+    if TS132_ENGINE is None:
+        return
+    if not TRADE_ON or DRY_RUN:
+        return
+    if TRADE_CLIENT is None:
+        return
+    if get_trade("Bybit", symbol) is not None:
+        return
+    if TS132_SYMBOLS and (symbol not in TS132_SYMBOLS):
+        return
+    if not portfolio_can_open():
+        return
+
+    now = now_s()
+    last = int(_TS132_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < TS132_TRY_EVERY_SEC:
+        return
+    _TS132_LAST_TRY[symbol] = now
+    _diag_inc("ts132_try")
+
+    # Lazy create per-symbol strategy instance
+    if symbol not in TS132_ENGINE:
+        from archive.strategies_retired.triple_screen_v132 import TripleScreenV132Strategy
+        TS132_ENGINE[symbol] = TripleScreenV132Strategy()
+    strat = TS132_ENGINE[symbol]
+    store = _TS132Store(symbol)
+
+    try:
+        sig = strat.maybe_signal(store, int(now * 1000), price, price, price, price, 0.0)
+    except Exception as e:
+        log_error(f"ts132 signal error {symbol}: {e}")
+        return
+    if not sig:
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
+    if dyn_usd <= 0:
+        tg_trade(f"🟡 TS132 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+
+    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0:
+        tg_trade(f"🟡 TS132 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+
+    ensure_leverage(symbol, BYBIT_LEVERAGE)
+    _diag_inc("ts132_entry")
+    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+
+    tr = TradeState(
+        symbol=symbol,
+        side=side,
+        qty=q,
+        entry_price_req=float(entry),
+        entry_ts=now,
+    )
+    tr.entry_order_id = oid
+    tr.status = "PENDING_ENTRY"
+    tr.strategy = "triple_screen_v132"
+    tr.avg = float(entry)
+    tr.entry_price = float(entry)
+    tr.entry_notional_usd = float(notional_real)
+    tr.tp_price = float(tp_r)
+    tr.sl_price = float(sl_r)
+    trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+    if trail_mult > 0:
+        tr.runner_enabled = True
+        tr.tps = [float(tp)]
+        tr.tp_fracs = [1.0]
+        tr.tp_hit = [False]
+        tr.initial_qty = float(q)
+        tr.remaining_qty = float(q)
+        tr.trail_mult = trail_mult
+        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+        tr.time_stop_sec = int(ts_bars * 300)
+    TRADES[("Bybit", symbol)] = tr
+
+    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+    tr.tpsl_on_exchange = bool(ok)
+    tr.tpsl_last_set_ts = now_s()
+    if ok:
+        tr.tpsl_manual_lock = False
+
+    tg_trade(
+        f"🟫 TS132 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+        f"entry≈{entry:.6f} TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}\n"
+        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+        f"reason={sig.reason}"
+    )
+
+
 def try_bounce_entry(exch: str, sym: str, st: SymState, now: int, price: float):
     if not ENABLE_BOUNCE:
         return
@@ -5399,14 +5645,30 @@ def detect(exch: str, sym: str, st: SymState, now: int):
             except Exception as _e:
                 log_error(f"try_retest_entry schedule fail {sym}: {_e}")
 
+    # ===== SLOPED CHANNEL ENTRY =====
+    if exch == "Bybit" and ENABLE_SLOPED_TRADING and TRADE_ON and (not DRY_RUN):
+        last = int(_SLOPED_LAST_TRY.get(sym, 0) or 0)
+        if now - last >= SLOPED_TRY_EVERY_SEC:
+            try:
+                asyncio.create_task(try_sloped_entry_async(sym, p1))
+            except Exception as _e:
+                log_error(f"try_sloped_entry schedule fail {sym}: {_e}")
 
+    # ===== TRIPLE SCREEN v132 ENTRY =====
+    if exch == "Bybit" and ENABLE_TS132_TRADING and TRADE_ON and (not DRY_RUN):
+        last = int(_TS132_LAST_TRY.get(sym, 0) or 0)
+        if now - last >= TS132_TRY_EVERY_SEC:
+            try:
+                asyncio.create_task(try_ts132_entry_async(sym, p1))
+            except Exception as _e:
+                log_error(f"try_ts132_entry schedule fail {sym}: {_e}")
 
 
     # ✅ ВАЖНО: сопровождение открытых bounce-сделок должно работать даже когда фильтры пампа "молчат"
     if TRADE_ON and exch == "Bybit":
         tr = get_trade(exch, sym)
         if (tr
-            and getattr(tr, "strategy", "pump") in ("bounce", "range")
+            and getattr(tr, "strategy", "pump") in ("bounce", "range", "sloped_channel", "triple_screen_v132")
             and getattr(tr, "status", None) == "OPEN"   
             and p1 is not None
         ):
@@ -5571,7 +5833,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
     if prev_high is not None and prev_high > 0:
         expansion_ok = (high_win >= prev_high * (1 + EXPANSION_MIN_PCT/100.0))
 
-    # ---- требуем закрытие ближе к хаям окна (а не просто “перекрыли красную”)
+    # ---- требуем закрытие ближе к хаям окна (а не просто "перекрыли красную")
     topclose_ok = True
     if high_win is not None and low_win is not None and high_win > low_win:
         topclose_ok = ((high_win - close_win) <= CLOSE_IN_TOP_FRAC * (high_win - low_win))

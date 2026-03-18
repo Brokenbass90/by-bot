@@ -1,0 +1,53 @@
+{
+  "name": "flat_slope_symbol_baskets_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_sloped_channel_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--tag",
+    "{tag}"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "LINKUSDT,ATOMUSDT",
+      "LINKUSDT,ATOMUSDT,BCHUSDT",
+      "LINKUSDT,ATOMUSDT,BNBUSDT",
+      "LINKUSDT,ATOMUSDT,SOLUSDT",
+      "LINKUSDT,ATOMUSDT,AVAXUSDT",
+      "LINKUSDT,ATOMUSDT,BCHUSDT,SOLUSDT"
+    ],
+    "ASC1_MIN_RANGE_R2": [0.25, 0.30]
+  },
+  "base_env": {
+    "ASC1_ALLOW_LONGS": "0",
+    "ASC1_ALLOW_SHORTS": "1",
+    "ASC1_MAX_ABS_SLOPE_PCT": "2.0",
+    "ASC1_SHORT_MIN_REJECT_DEPTH_ATR": "0.75",
+    "ASC1_SHORT_MIN_RSI": "60",
+    "ASC1_SHORT_MAX_NEAR_UPPER_BARS": "2",
+    "ASC1_SHORT_NEAR_UPPER_ATR": "0.15",
+    "ASC1_SHORT_MIN_REJECT_VOL_MULT": "0.0"
+  },
+  "constraints": {
+    "min_trades": 18,
+    "min_profit_factor": 1.5,
+    "max_drawdown": 4.0,
+    "min_net_pnl": 7.0
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 3.0,
+    "winrate": 12.0,
+    "max_drawdown": 1.0,
+    "trades": 0.03,
+    "trades_cap": 50
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "name": "equities_monthly_v1",
+  "cache_only": true,
+  "command": [
+    "python3",
+    "scripts/equities_monthly_research_sim.py",
+    "--tickers",
+    "AMD,GOOGL,META,NVDA,TSLA",
+    "--data-dir",
+    "data_cache/equities_1h",
+    "--top-n",
+    "2",
+    "--max-hold-days",
+    "15",
+    "--lookback-days",
+    "60",
+    "--regime-min-breadth-sma-pct",
+    "55",
+    "--regime-min-breadth-mom-pct",
+    "55",
+    "--regime-min-avg-mom-pct",
+    "2",
+    "--earnings-csv",
+    "data_cache/equities/earnings_dates.csv",
+    "--earnings-blackout-days-before",
+    "5",
+    "--earnings-blackout-days-after",
+    "2",
+    "--benchmark-tickers",
+    "SPY,QQQ",
+    "--benchmark-data-dir",
+    "data_cache/equities_1h",
+    "--corr-lookback-days",
+    "60",
+    "--position-weight-mode",
+    "inv_vol",
+    "--tag",
+    "{tag}"
+  ],
+  "field_map": {
+    "trades": "trades",
+    "net_pnl": "compounded_return_pct",
+    "winrate": "winrate_pct",
+    "max_drawdown": "max_monthly_dd_pct"
+  },
+  "field_scales": {
+    "winrate": 0.01
+  },
+  "grid": {
+    "CORR_PENALTY_MULT": [2.5, 3.0, 3.5],
+    "CORR_PENALTY_THRESHOLD": [0.5, 0.55, 0.6]
+  },
+  "base_env": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "constraints": {
+    "min_trades": 30,
+    "min_net_pnl": 40.0,
+    "max_drawdown": 12.0
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "winrate": 20.0,
+    "max_drawdown": 0.8,
+    "trades": 0.02,
+    "trades_cap": 40
+  }
+}

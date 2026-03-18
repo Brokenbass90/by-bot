@@ -1,0 +1,65 @@
+{
+  "name": "flat_horizontal_core_v2_refine",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_resistance_fade_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--tag",
+    "{tag}"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "LINKUSDT",
+      "LTCUSDT",
+      "SUIUSDT",
+      "LINKUSDT,LTCUSDT",
+      "LINKUSDT,SUIUSDT",
+      "LTCUSDT,SUIUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT"
+    ],
+    "ARF1_REJECT_BELOW_RES_ATR": [0.10, 0.15, 0.20],
+    "ARF1_MIN_RSI": [56, 58, 60],
+    "ARF1_MAX_CLOSE_VS_EMA_PCT": [0.8, 1.0, 1.2],
+    "ARF1_TIME_STOP_BARS_5M": [384, 576]
+  },
+  "base_env": {
+    "ARF1_SYMBOL_ALLOWLIST": "LINKUSDT,LTCUSDT,SUIUSDT",
+    "ARF1_REGIME_MAX_GAP_PCT": "3.2",
+    "ARF1_REGIME_MAX_SLOPE_PCT": "1.8",
+    "ARF1_MIN_RANGE_PCT": "6.0",
+    "ARF1_MAX_RANGE_PCT": "30.0",
+    "ARF1_RES_TOUCH_BUFFER_ATR": "0.35",
+    "ARF1_MIN_BODY_FRAC": "0.22",
+    "ARF1_SL_ATR_MULT": "0.85",
+    "ARF1_TP1_FRAC": "0.60",
+    "ARF1_TP2_BUFFER_PCT": "0.45"
+  },
+  "constraints": {
+    "min_trades": 4,
+    "min_profit_factor": 1.2,
+    "max_drawdown": 3.0,
+    "min_net_pnl": 1.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 1,
+    "min_worst_month_pnl": -1.0
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 3.0,
+    "winrate": 12.0,
+    "max_drawdown": 1.0,
+    "trades": 0.03,
+    "trades_cap": 30,
+    "negative_months": 2.5,
+    "max_negative_streak": 3.0,
+    "worst_month_pnl": 1.5
+  }
+}

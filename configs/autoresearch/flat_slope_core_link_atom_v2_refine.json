@@ -1,0 +1,42 @@
+{
+  "name": "flat_slope_core_link_atom_v2_refine",
+  "symbols": ["LINKUSDT", "ATOMUSDT"],
+  "strategies": ["alt_sloped_channel_v1"],
+  "days": 360,
+  "end_date": "2026-02-24",
+  "cache_only": true,
+  "base_env": {
+    "ASC1_ALLOW_LONGS": "0",
+    "ASC1_ALLOW_SHORTS": "1",
+    "ASC1_SYMBOL_ALLOWLIST": "LINKUSDT,ATOMUSDT",
+    "ASC1_SHORT_MIN_REJECT_VOL_MULT": "0.0"
+  },
+  "grid": {
+    "ASC1_MAX_ABS_SLOPE_PCT": [2.0, 2.2],
+    "ASC1_SHORT_MIN_REJECT_DEPTH_ATR": [0.75, 0.85],
+    "ASC1_SHORT_MIN_RSI": [60, 62],
+    "ASC1_MIN_RANGE_R2": [0.25],
+    "ASC1_SHORT_MAX_NEAR_UPPER_BARS": [2, 3],
+    "ASC1_SHORT_NEAR_UPPER_ATR": [0.15, 0.20]
+  },
+  "constraints": {
+    "min_trades": 16,
+    "min_profit_factor": 2.0,
+    "max_drawdown": 2.2,
+    "min_net_pnl": 9.5,
+    "max_negative_months": 1,
+    "max_negative_streak": 1,
+    "min_worst_month_pnl": -0.75
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 3.0,
+    "winrate": 14.0,
+    "max_drawdown": 1.0,
+    "trades": 0.03,
+    "trades_cap": 40,
+    "negative_months": 2.0,
+    "max_negative_streak": 3.0,
+    "worst_month_pnl": 1.5
+  }
+}

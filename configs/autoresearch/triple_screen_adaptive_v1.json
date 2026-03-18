@@ -1,0 +1,78 @@
+{
+  "name": "triple_screen_adaptive_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "triple_screen_v132",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-15",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.02",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "5",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "AXSUSDT",
+      "STRKUSDT",
+      "KSMUSDT",
+      "AXSUSDT,STRKUSDT",
+      "AXSUSDT,STRKUSDT,KSMUSDT",
+      "DOGEUSDT,ADAUSDT",
+      "LINKUSDT,ATOMUSDT",
+      "AVAXUSDT,ETHUSDT",
+      "ARBUSDT,SUIUSDT",
+      "AXSUSDT,STRKUSDT,DOGEUSDT,ADAUSDT"
+    ],
+    "TS132_TRADE_MODE": ["active", "aggressive"],
+    "TS132_SL_ATR_MULT": [1.5, 2.0, 2.5],
+    "TS132_TP_ATR_MULT": [4.0, 6.0, 9.0],
+    "TS132_OSC_TYPE": ["stoch", "rsi"],
+    "TS132_OSC_PERIOD": [6, 8, 10],
+    "TS132_TREND_EMA_LEN": [30, 45, 60],
+    "TS132_EXEC_MODE": ["alts"]
+  },
+  "base_env": {
+    "TS132_ALLOW_LONGS": "1",
+    "TS132_ALLOW_SHORTS": "1",
+    "TS132_MAX_SIGNALS_PER_DAY": "4",
+    "TS132_USE_VOL_FILTER": "0",
+    "BACKTEST_CACHE_ONLY": "1"
+  },
+  "constraints": {
+    "min_trades": 15,
+    "min_profit_factor": 1.3,
+    "max_drawdown": 6.0,
+    "min_net_pnl": 3.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2,
+    "min_worst_month_pnl": -2.0
+  },
+  "score_weights": {
+    "net_pnl": 2.0,
+    "profit_factor": 2.5,
+    "winrate": 10.0,
+    "max_drawdown": 1.5,
+    "trades": 0.03,
+    "trades_cap": 80,
+    "negative_months": 2.0,
+    "max_negative_streak": 1.5,
+    "worst_month_pnl": 1.5
+  }
+}

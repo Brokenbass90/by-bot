@@ -1,0 +1,34 @@
+{
+  "name": "flat_dynamic_router_v3",
+  "symbols": ["LINKUSDT", "ATOMUSDT", "BNBUSDT", "BCHUSDT", "LTCUSDT", "ADAUSDT", "DOGEUSDT", "SOLUSDT", "AVAXUSDT", "DOTUSDT", "ETHUSDT"],
+  "strategies": ["alt_sloped_channel_v1"],
+  "days": 360,
+  "end_date": "2026-02-24",
+  "cache_only": true,
+  "base_env": {
+    "ASC1_ALLOW_LONGS": "0",
+    "ASC1_ALLOW_SHORTS": "1",
+    "ASC1_MAX_ABS_SLOPE_PCT": "2.0",
+    "ASC1_SHORT_MIN_RSI": "60",
+    "ASC1_MIN_RANGE_R2": "0.30"
+  },
+  "grid": {
+    "ASC1_SHORT_MIN_REJECT_DEPTH_ATR": [0.55, 0.65, 0.75],
+    "ARF1_BAR_MIN_SCORE": [0.08, 0.10],
+    "ARF1_BAR_TOP_N": [1, 2]
+  },
+  "constraints": {
+    "min_trades": 36,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 4.5,
+    "min_net_pnl": 4.5
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 3.0,
+    "winrate": 12.0,
+    "max_drawdown": 1.0,
+    "trades": 0.03,
+    "trades_cap": 80
+  }
+}

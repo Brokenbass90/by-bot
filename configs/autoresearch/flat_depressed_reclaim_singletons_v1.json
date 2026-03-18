@@ -1,0 +1,60 @@
+{
+  "name": "flat_depressed_reclaim_singletons_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_range_reclaim_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--tag",
+    "{tag}"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "ADAUSDT",
+      "DOGEUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "SUIUSDT",
+      "ARBUSDT",
+      "SEIUSDT",
+      "ATOMUSDT",
+      "SOLUSDT",
+      "AVAXUSDT",
+      "ETHUSDT",
+      "XRPUSDT",
+      "DOTUSDT",
+      "ETCUSDT",
+      "NEARUSDT"
+    ]
+  },
+  "base_env": {
+    "ARR1_SYMBOL_ALLOWLIST": "ADAUSDT,DOGEUSDT,LINKUSDT,LTCUSDT,SUIUSDT,ARBUSDT,SEIUSDT,ATOMUSDT,SOLUSDT,AVAXUSDT,ETHUSDT,XRPUSDT,DOTUSDT,ETCUSDT,NEARUSDT"
+  },
+  "constraints": {
+    "min_trades": 3,
+    "min_profit_factor": 1.05,
+    "max_drawdown": 4.0,
+    "min_net_pnl": 0.2,
+    "max_negative_months": 2,
+    "max_negative_streak": 1,
+    "min_worst_month_pnl": -1.5
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 3.0,
+    "winrate": 12.0,
+    "max_drawdown": 1.0,
+    "trades": 0.03,
+    "trades_cap": 30,
+    "negative_months": 2.0,
+    "max_negative_streak": 3.0,
+    "worst_month_pnl": 1.5
+  }
+}
