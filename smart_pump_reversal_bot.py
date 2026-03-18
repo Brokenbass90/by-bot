@@ -76,6 +76,9 @@ from bot.symbol_state import (
 )
 # ─────────────────────────────────────────────────────────────────────────────
 
+# Load .env before any module-level os.getenv(...) settings below are evaluated.
+load_dotenv()
+
 # Минимальная доля "желательного" notional (по риск-сайзингу), которую нужно уметь разместить.
 # Если меньше — пропускаем сделку (иначе комиссии/проскальзывание убивают ожидание).
 MIN_NOTIONAL_FILL_FRAC = float(os.getenv("MIN_NOTIONAL_FILL_FRAC", "0.40"))
@@ -584,7 +587,6 @@ BUTTON_MAP = {
 }
 
 # =========================== .env ===========================
-load_dotenv()
 TG_TOKEN = os.getenv("TG_TOKEN")
 TG_CHAT  = os.getenv("TG_CHAT")
 
