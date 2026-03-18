@@ -29,6 +29,9 @@ class TradeSignal:
     # If trailing_atr_mult <= 0, trailing is disabled.
     trailing_atr_mult: float = 0.0
     trailing_atr_period: int = 14
+    # Optional trailing activation threshold in R-multiples.
+    # If <= 0, trailing may arm immediately.
+    trail_activate_rr: float = 0.0
 
     # Optional break-even trigger in R-multiples.
     # Example: be_trigger_rr=1.0 moves SL to entry after price reaches +1R.

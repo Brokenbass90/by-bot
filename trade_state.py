@@ -110,6 +110,12 @@ class TradeState:
     tp_hit: List[bool] = field(default_factory=list)
     trail_mult: float = 0.0
     trail_period: int = 14
+    trail_activate_rr: float = 0.0
+    trail_armed: bool = False
+    initial_sl_price: Optional[float] = None
+    be_trigger_rr: float = 0.0
+    be_lock_rr: float = 0.0
+    be_armed: bool = False
     hh: Optional[float] = None
     ll: Optional[float] = None
     time_stop_sec: int = 0

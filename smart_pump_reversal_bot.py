@@ -285,6 +285,8 @@ RETEST_ENGINE = None
 # ===== SLOPED CHANNEL (live) =====
 ENABLE_SLOPED_TRADING = os.getenv("ENABLE_SLOPED_TRADING", "0").strip() == "1"
 SLOPED_TRY_EVERY_SEC = int(os.getenv("SLOPED_TRY_EVERY_SEC", "60"))
+SLOPED_RISK_MULT = max(0.05, float(os.getenv("SLOPED_RISK_MULT", "1.0")))
+SLOPED_MAX_OPEN_TRADES = int(os.getenv("SLOPED_MAX_OPEN_TRADES", "1"))
 SLOPED_ENGINE = None
 
 # ===== TRIPLE SCREEN v132 (live) =====
@@ -3405,6 +3407,27 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                 tg_trade(f"🟧 INPLAY TIME STOP {symbol}: closed qty≈{qty}")
             return
 
+    risk = 0.0
+    if tr.entry_price and tr.initial_sl_price:
+        risk = abs(float(tr.entry_price) - float(tr.initial_sl_price))
+
+    if tr.be_trigger_rr and tr.be_trigger_rr > 0 and (not tr.be_armed) and risk > 0:
+        if side == "Buy":
+            be_hit = price >= (float(tr.entry_price) + float(tr.be_trigger_rr) * risk)
+            be_sl = float(tr.entry_price) + float(tr.be_lock_rr or 0.0) * risk
+            better = tr.sl_price is None or be_sl > float(tr.sl_price)
+        else:
+            be_hit = price <= (float(tr.entry_price) - float(tr.be_trigger_rr) * risk)
+            be_sl = float(tr.entry_price) - float(tr.be_lock_rr or 0.0) * risk
+            better = tr.sl_price is None or be_sl < float(tr.sl_price)
+        if be_hit and better:
+            tr.sl_price = float(be_sl)
+            ok = set_tp_sl_retry(symbol, side, None, tr.sl_price)
+            if ok:
+                tr.tpsl_last_set_ts = now_s()
+                tr.last_runner_action_ts = now
+            tr.be_armed = True
+
     if tr.tps and tr.tp_fracs and tr.tp_hit:
         for i, tp in enumerate(tr.tps):
             if i >= len(tr.tp_hit) or tr.tp_hit[i]:
@@ -3424,7 +3447,16 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
             tr.last_runner_action_ts = now
             tg_trade(f"🟩 INPLAY TP{i+1} {symbol}: closed≈{qty_to_close}")
 
-    if tr.trail_mult and tr.trail_mult > 0:
+    trail_ready = bool((tr.trail_activate_rr or 0.0) <= 0.0 or tr.trail_armed)
+    if (not trail_ready) and tr.trail_mult and tr.trail_mult > 0 and risk > 0:
+        if side == "Buy":
+            trail_hit = price >= (float(tr.entry_price) + float(tr.trail_activate_rr) * risk)
+        else:
+            trail_hit = price <= (float(tr.entry_price) - float(tr.trail_activate_rr) * risk)
+        if trail_hit:
+            tr.trail_armed = True
+
+    if tr.trail_mult and tr.trail_mult > 0 and (((tr.trail_activate_rr or 0.0) <= 0.0) or tr.trail_armed):
         rows = fetch_klines(symbol, "5", max(5, tr.trail_period + 3))
         atr = _atr_abs_from_klines(rows, int(tr.trail_period))
         if atr > 0:
@@ -5036,6 +5068,16 @@ async def try_sloped_entry_async(symbol: str, price: float):
         return
     if get_trade("Bybit", symbol) is not None:
         return
+    if SLOPED_MAX_OPEN_TRADES > 0:
+        open_sloped = 0
+        for tr in TRADES.values():
+            if getattr(tr, "strategy", "") != "sloped_channel":
+                continue
+            if str(getattr(tr, "status", "") or "").upper() in {"CLOSED", "ERROR"}:
+                continue
+            open_sloped += 1
+        if open_sloped >= SLOPED_MAX_OPEN_TRADES:
+            return
     if not portfolio_can_open():
         return
 
@@ -5065,7 +5107,7 @@ async def try_sloped_entry_async(symbol: str, price: float):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
-    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=SLOPED_RISK_MULT)
     if dyn_usd <= 0:
         tg_trade(f"🟡 SLOPED SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
@@ -5208,6 +5250,11 @@ async def try_ts132_entry_async(symbol: str, price: float):
     tr.entry_notional_usd = float(notional_real)
     tr.tp_price = float(tp_r)
     tr.sl_price = float(sl_r)
+    tr.initial_sl_price = float(sl_r)
+    tr.be_trigger_rr = float(getattr(sig, "be_trigger_rr", 0.0) or 0.0)
+    tr.be_lock_rr = float(getattr(sig, "be_lock_rr", 0.0) or 0.0)
+    tr.trail_activate_rr = float(getattr(sig, "trail_activate_rr", 0.0) or 0.0)
+    tr.trail_armed = tr.trail_activate_rr <= 0.0
     trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
     if trail_mult > 0:
         tr.runner_enabled = True

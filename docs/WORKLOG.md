@@ -1,5 +1,396 @@
 # Bybit bot (v28) — worklog / reminders
 
+## 2026-03-18 (session 3) — Strategy Ideas, Equities Analysis & Development Roadmap
+
+### Вопросы по риску
+- Текущий лимит: 3 позиции одновременно, 0.5% риска на сделку
+- Предложение пользователя: поднять до 2% max, но с масштабированием
+- **Рекомендованная схема (тиered sizing)**:
+  ```
+  risk_per_trade_pct = 2.0  # максимальный риск
+  Но:
+  - если open_positions >= 2 → risk = 1.0%  (половина)
+  - если open_positions >= 3 → risk = 0.5%  (минимум)
+  - если equity_drawdown > 5% → risk = 0.5% до восстановления
+  ```
+  Это защищает от одновременных потерь при корреляции монет.
+- **Статус**: ИДЕЯ, требует реализации в `smart_pump_reversal_bot.py` + backtest проверка
+
+### Почему бот мало торгует (анализ)
+- Главная причина: `impulse_weak` блокирует 82% сигналов (данные из diagnostics)
+- Это не баг — бот намеренно жёсткий в фильтрации
+- Решение: БОЛЬШЕ СТРАТЕГИЙ (дополнительные источники сигналов)
+- Текущие стратегии практически не торгуют в боковом рынке
+
+### ═══════════════════════════════════════════
+### БАНК ИДЕЙ — Новые стратегии и направления
+### ═══════════════════════════════════════════
+
+#### ГРУППА 1: Улучшения риск-менеджмента
+**1.1 Tiered position sizing**
+- При 1 открытой позиции: 2% риска
+- При 2 открытых: 1% каждая
+- При 3 открытых: 0.5% каждая
+- При drawdown >5% от пика: заморозка на 0.5% до восстановления
+- Файл: `smart_pump_reversal_bot.py` (функция расчёта размера позиции)
+- Приоритет: ВЫСОКИЙ
+
+**1.2 Equity Curve Filter (автопауза)**
+- Если потеряно >10% от пика за последние 30 дней → DRY_RUN=true автоматически
+- Уведомление в Telegram: "Бот перешёл в режим наблюдения"
+- Возврат к live только после ручного подтверждения
+- Приоритет: ВЫСОКИЙ (защита капитала)
+
+**1.3 Корреляционный контроль**
+- Не открывать >2 позиций из одной монетной семьи (DeFi, Layer1, Meme)
+- BTC/ETH считать отдельной группой
+- Приоритет: СРЕДНИЙ
+
+#### ГРУППА 2: Новые торговые стратегии (крипто)
+**2.1 Funding Rate Mean Reversion** ← ВЫСОКИЙ ПРИОРИТЕТ
+- Когда funding rate > +0.10% → шорт (рынок перегрет лонгами, они скоро закроются)
+- Когда funding rate < -0.05% → лонг (рынок перегрет шортами)
+- API: `GET /v5/market/tickers` (поле `fundingRate`)
+- Как добавить в бот:
+  ```python
+  # В smart_pump_reversal_bot.py, функция detect()
+  funding = get_funding_rate(symbol)
+  if funding > 0.001 and signal_direction == 'short':
+      signal_boost = 1.2  # усилить качество
+  elif funding < -0.0005 and signal_direction == 'long':
+      signal_boost = 1.2
+  ```
+- Данные бесплатны, уже есть в Bybit API
+- Backtesting: нужно добавить funding_rate в kline загрузку
+- Приоритет: ВЫСОКИЙ (лёгкая интеграция, хорошая теория)
+
+**2.2 Liquidity Sweep Reversal**
+- Дождаться пробоя ключевого уровня (sweep ликвидности под минимум/над максимум)
+- Вход в противоположную сторону если цена возвращается за уровень в течение 2-3 свечей
+- Таймфрейм: 15m-1H на BTC/ETH
+- Схоже с тем что делают "smart money" трейдеры
+- Приоритет: СРЕДНИЙ (требует extensive backtesting)
+
+**2.3 Volume Profile / POC Strategy**
+- Point of Control (уровень наибольшего объёма за сессию/неделю)
+- Цена часто возвращается к POC после отклонения
+- Входы от границ value area с TP на POC
+- Совместимо с текущей инфраструктурой
+- Приоритет: СРЕДНИЙ
+
+**2.4 Statistical Pairs (BTC/ETH spread)**
+- BTC и ETH коррелируют ~0.85
+- Когда спред между ними отклоняется >2σ → торговать выравнивание
+- Лонг отстающего, шорт опережающего
+- Требует: margin на 2 позиции одновременно
+- Приоритет: НИЗКИЙ (сложная реализация, нужен хеджинг)
+
+#### ГРУППА 3: US Equities через Alpaca
+
+**Alpaca — ЧТО ЭТО И КАК РАБОТАЕТ:**
+- Бесплатный брокер для US акций (бумажный + реальный счёт)
+- REST API + WebSocket, очень похожи на Bybit
+- Paper trading: полностью бесплатно, без ограничений
+- Real trading: нужен US номер социального страхования (SSN) ← ПРОБЛЕМА для нерезидентов
+- Альтернатива для нерезидентов: Interactive Brokers (принимает иностранцев)
+- **Данные**: бесплатные данные задержаны на 15 мин, реальные от $9/мес
+- Для backtesting: polygon.io ($29/мес) или yfinance (бесплатно, дневные)
+
+**Уже готово в нашем боте:**
+- `scripts/equities_alpaca_paper_bridge.py` — уже есть!
+- `configs/alpaca_paper_local.env` — API ключи уже настроены
+- `scripts/equities_monthly_research_sim.py` — бэктест уже есть
+- Текущий результат: +76.7% за 19 месяцев на бумаге (5 акций)
+- Active combos: TSLA grid, META trend_retest, GOOGL trend_retest
+
+**Что нужно для расширения:**
+1. Пополнить список до 20-50 акций (config готов: `equities_monthly_v10_extended_universe.json`)
+2. Запустить autoresearch на расширенном universum
+3. Для реальной торговли: открыть счёт у Interactive Brokers (принимает кипрских резидентов)
+
+**Качество сигналов для Telegram-канала:**
+- Текущий WR 64% на бумаге — это хорошее качество
+- Для публичного Telegram канала нужен минимум 6 месяцев верифицированной истории
+- Платформа: MyFxBook или собственный дашборд
+- Монетизация: $30-50/мес × 50-100 подписчиков = $1500-5000/мес passively
+- Реально достичь через 6-12 месяцев при стабильных результатах
+
+#### ГРУППА 4: Автоматизированный доход
+**4.1 Bybit Copy Trading** ← ВЫСШИЙ ПОТЕНЦИАЛ
+- Что это: другие пользователи копируют твои сделки автоматически
+- Ты получаешь: 8-10% от их прибыли
+- Требования Bybit: минимум 90 дней торговли, >50 сделок, WR >50%
+- При $10k под управлением и 5% прибыли/мес → $40-50/мес пассивно
+- При $100k AUM → $400-500/мес
+- Нет ограничений для нерезидентов
+- Статус: МОЖНО НАЧАТЬ через ~3 месяца стабильной торговли
+- Приоритет: ВЫСОЧАЙШИЙ (нулевые дополнительные усилия)
+
+**4.2 Telegram сигналы**
+- Основной барьер: нужна верифицированная история
+- Канал пока не готов (бот только запустился стабильно)
+- Реалистичный старт: середина 2026
+- Предварительная подготовка сейчас: скриншоты каждой сделки в отдельный канал для себя
+
+**4.3 Autoresearch как сервис**
+- Продажа backtesting анализа трейдерам через Fiverr/Upwork
+- $100-300 за один полный анализ
+- Наша инфраструктура полностью готова
+- Не пассивно, но высокая почасовая ставка
+
+#### ГРУППА 5: ML-overlay (долгосрочно, после 500+ сделок)
+- Обучить модель классификации на closed_trades.csv
+- Input: 20+ фичей (ATR, объём, funding rate, время дня, тренд)
+- Output: вероятность успеха сигнала
+- Использовать только как дополнительный фильтр (+/- 20% к размеру позиции)
+- НЕ ЗАМЕНЯТЬ правила-на-входе — только ранжирование
+- Минимум 500 сделок перед обучением
+- Статус: BACKLOG (долгосрочно)
+
+### ═══════════════════════════════════════════
+### АУДИТ: ЧТО УЖЕ ЕСТЬ ДЛЯ EQUITIES (неожиданно много!)
+### ═══════════════════════════════════════════
+
+#### Что уже реализовано и работает:
+
+**`scripts/equities_universe_refresh.py`** — динамический отбор акций
+- Считает "health score" для каждой акции по: моментум 80д, SMA20/60, просадка от хая, волатильность
+- Берёт top-K из пула, с ограничением по секторным кластерам (max 2 из одного сектора)
+- Текущий пул: 15 акций (ADBE, AMD, AMZN, AVGO, CRWD, GOOGL, META, MSFT, NFLX, NVDA, ORCL, PANW, PLTR, TSLA, UBER)
+- **Надо**: расширить пул до 50-100 акций из S&P 500
+
+**`scripts/equities_earnings_filter.py`** — фильтр по датам отчётности
+- Использует yfinance для получения дат ближайших earnings
+- Блокирует входы если earnings в ближайшие N дней (по умолчанию 5)
+- УЖЕ ПОДКЛЮЧЁН к Alpaca bridge (импортируется)
+- Статус: РАБОТАЕТ
+
+**`news_filter.py`** — макро-новостной фильтр
+- Поддерживает scope `EQUITIES:ALL` и `EQUITIES:{TICKER}` (уже в коде!)
+- Текущая политика: настроена только для FX/Metals стратегий
+- Нужные события для equities: FOMC, CPI, NFP, GDP — уже перечислены в NEWS_FILTER_SPEC.md
+- **Что надо добавить**: в `configs/news_filter_policy.example.json` добавить секцию для equities_monthly стратегии
+- **Что надо добавить**: скрипт автоматической загрузки экономического календаря (сейчас вручную CSV)
+
+**`scripts/equities_alpaca_paper_bridge.py`** — исполнение через Alpaca
+- Бумажное торги работают. API ключи в `configs/alpaca_paper_local.env`
+- При переходе на реал: меняем BASE_URL с paper на live + реальные ключи
+- KYC уже пройден — осталось просто пополнить счёт
+
+**Текущие результаты (paper trading):**
+- 5 акций × 19 месяцев = +76.7% компаундированного
+- Active combos: TSLA grid, META trend_retest, GOOGL trend_retest, META breakout, AMD breakout, AAPL breakout
+
+#### Чего не хватает (задачи для следующей сессии):
+
+1. **Расширить пул до 50+ акций** — добавить в `equities_universe_refresh.py`:
+   - Tech: NVDA, SMCI, ASML, TSM, AMAT
+   - AI: PLTR, SNOW, AI, PATH
+   - Consumer: AMZN, NFLX, SBUX, NKE
+   - Finance: JPM, GS, MS, V
+   - Energy: XOM, CVX, OXY (добавить контрцикличность)
+   - Healthcare: LLY, ABBV, UNH
+   - ETFs как anchor: SPY, QQQ, IWM (для определения режима рынка)
+
+2. **Подключить новостной фильтр к equities**:
+   ```json
+   // Добавить в news_filter_policy.json:
+   "equities_monthly": {
+     "markets": ["EQUITIES"],
+     "before_min": 60,
+     "after_min": 120
+   }
+   ```
+   - Блокировать входы в день FOMC и NFP (рынок ходит сильно)
+   - Earnings уже блокируются отдельно через equities_earnings_filter.py
+
+3. **Авто-обновление экономического календаря**:
+   - Сейчас событий нет в `runtime/news_filter/events_latest.csv`
+   - Нужен скрипт который раз в неделю заполняет этот файл
+   - Источник: Trading Economics API (бесплатный tier) или investing.com RSS
+   - Альтернатива проще: hardcode FOMC/NFP даты на квартал вперёд через скрипт
+
+4. **Режим рынка (Market Regime)**:
+   - SPY выше SMA200 → бычий режим → торгуем лонги, берём больше позиций
+   - SPY ниже SMA200 → медвежий режим → только шорты или пауза
+   - VIX > 30 → режим высокой волатильности → уменьшаем позиции вдвое
+   - Это единственное что нельзя сделать через yfinance бесплатно для intraday
+
+5. **$500 старт план**:
+   - Стратегия monthly — 1-2 сделки в месяц
+   - При $500 и 2% риска = $10 риска на сделку (SL=10$, TP=20-30$)
+   - Акции по $50-200 → покупать 5-10 штук
+   - Комиссии Alpaca: НУЛЕВЫЕ на акции (!)
+   - Реалистично: +3-7% в месяц при хороших условиях → $15-35/мес на $500
+
+### Funding Rate фильтр — детали реализации
+
+**Что это даёт в деньги:**
+- Не новые деньги, а улучшение качества существующих сигналов
+- Если funding rate экстремальный (>0.1%) — шорт более вероятен
+- Статистически: добавляет 5-10% к WR на скользящем окне в таких условиях
+- На текущем объёме (мало сделок) эффект небольшой
+- При большом объёме (100+ сделок/год) — заметный вклад
+
+**Как добавить (конкретика):**
+1. Добавить вызов Bybit API `GET /v5/market/tickers` → поле `fundingRate`
+2. В функции расчёта quality score в `smart_pump_reversal_bot.py` добавить:
+   - SHORT сигнал + funding > 0.001 → quality × 1.15 (буст)
+   - LONG сигнал + funding < -0.0005 → quality × 1.15 (буст)
+   - Можно наоборот: при funding против направления → quality × 0.85 (снижение)
+3. Не нужен отдельный бэктест — достаточно добавить в диагностику
+
+**Вывод**: Стоит добавить, но это не первый приоритет. Сначала нужно чтобы бот вообще торговал.
+
+### Приоритизация (рекомендация)
+| Приоритет | Задача | Сложность | Ожидаемый эффект |
+|-----------|--------|-----------|-----------------|
+| 🔴 1 | Tiered sizing (2%→1%→0.5%) | Низкая | Защита капитала |
+| 🔴 2 | Equity Curve Filter | Низкая | Защита капитала |
+| 🟠 3 | Funding rate фильтр | Средняя | +10-15% к качеству сигналов |
+| 🟠 4 | Sloped channel на сервер | Готово! | +20 сделок/год |
+| 🟡 5 | Расширение equities до 20 акций | Низкая | Больше сделок |
+| 🟡 6 | TS132 autoresearch | Готово! | Потенциально новая стратегия |
+| 🟢 7 | Copy Trading (3 мес ожидания) | Нет | Пассивный доход |
+| 🔵 8 | Volume Profile стратегия | Высокая | Новый источник сигналов |
+| 🔵 9 | Telegram канал с сигналами | Средняя | $1500-5000/мес (через год) |
+
+---
+
+## 2026-03-18 (session 2) — Server Deploy + ETH Midterm Research + Flat Strategy Analysis + TS132 Plan
+
+### ═══════════════════════════════════════════
+### HANDOFF FOR CODEX (read before continuing)
+### ═══════════════════════════════════════════
+### TASK 1 — GitHub push (CRITICAL, do first)
+###   cd /Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28
+###   brew install gh                        # if not installed
+###   gh auth login                          # opens browser, click Authorize
+###   git push origin codex/dynamic-symbol-filters
+###
+### TASK 2 — Deploy to server
+###   ssh -i ~/.ssh/by-bot root@64.226.73.119 "cd /root/by-bot && git pull origin codex/dynamic-symbol-filters && echo DONE"
+###
+### TASK 3 — Enable sloped channel on server (ATOM + LINK shorts)
+###   ssh -i ~/.ssh/by-bot root@64.226.73.119 "cd /root/by-bot && \
+###     echo 'ENABLE_SLOPED_TRADING=1' >> .env && \
+###     echo 'ASC1_ALLOW_LONGS=0' >> .env && \
+###     echo 'ASC1_ALLOW_SHORTS=1' >> .env && \
+###     echo 'ASC1_SYMBOL_ALLOWLIST=LINKUSDT,ATOMUSDT' >> .env && \
+###     echo 'ASC1_MAX_ABS_SLOPE_PCT=2.0' >> .env && \
+###     echo 'ASC1_MIN_RANGE_R2=0.25' >> .env && \
+###     kill \$(pgrep -f smart_pump_reversal_bot) && sleep 3 && \
+###     nohup .venv/bin/python smart_pump_reversal_bot.py >> logs/bot.log 2>&1 &"
+###
+### TASK 4 — Run TS132 autoresearch in background on server
+###   ssh -i ~/.ssh/by-bot root@64.226.73.119 "cd /root/by-bot && \
+###     nohup .venv/bin/python scripts/run_strategy_autoresearch.py \
+###     configs/autoresearch/triple_screen_adaptive_v1.json \
+###     > logs/autoresearch_ts132.log 2>&1 &"
+###
+### Context: Server is at 64.226.73.119, SSH key at ~/.ssh/by-bot
+### Local branch has 2 new commits that are NOT yet on server.
+### Bot is running (PID ~532140), quality gate already fixed today.
+### ═══════════════════════════════════════════
+
+### Quality Gate Fixed on Server
+- Ran `sed -i` via SSH: `BREAKOUT_QUALITY_MIN_SCORE=0.48 → 0.0` on server `.env`
+- Bot restarted (PID 532140). Bot is live and running.
+- `ENABLE_BREAKOUT_TRADING=1` and `ENABLE_MIDTERM_TRADING=1` confirmed on server.
+
+### ETH Midterm Pullback V2 (Research Only)
+- Built `strategies/btc_eth_midterm_pullback_v2.py` — sloped channel filter + dynamic TP + two-phase exits.
+- Comparison vs V1 (360 days, forward simulation):
+  - V1: 80 sigs, WR 55%, PF 2.30, TotalR +43.5R ← BETTER
+  - V2: 33 sigs, WR 51.5%, PF 2.01, TotalR +15.6R ← WORSE
+- **Conclusion**: Channel as entry filter is too restrictive. V1 stays in production.
+- V2 file kept for future reference / V3 development.
+- Key learning: channel TP works well (Avg R:R 2.89) but combined filter reduces quality.
+
+### Flat Strategy (Sloped Channel) Analysis
+- 794 flat backtest runs analysed from autoresearch.
+- **Winner: LINKUSDT + ATOMUSDT, shorts only, alt_sloped_channel_v1**
+  - 360 days, 20 trades, WR 70%, PF 3.85, Net PnL +11.6%, Max DD 1.8%
+  - Config: ASC1_ALLOW_LONGS=0, ASC1_MAX_ABS_SLOPE_PCT=2.0, ASC1_MIN_RANGE_R2=0.25
+- Adding more coins doesn't help much (SOL/AVAX/ETH stay at PF 3.74, same 20 trades)
+- BNB adds 5 more trades but drops PF to 2.72
+- **Action**: Deploy LINK+ATOM shorts after GitHub push.
+
+### GitHub Push Status
+- Local branch `codex/dynamic-symbol-filters` is 2 commits ahead of server.
+- No GitHub SSH key on Mac, no `gh` CLI.
+- Solution: `brew install gh && gh auth login` (browser-based, no tokens needed).
+- Then: `git push origin codex/dynamic-symbol-filters`
+
+---
+
+## СТРАТЕГИЯ ДРУГА — Triple Screen v132 (Elder's Triple Screen)
+### Что это такое
+
+Классическая биржевая система Александра Элдера из книги "Как играть и выигрывать на бирже".
+Принцип: три независимых экрана фильтруют сигнал — торгуем только когда все три согласны.
+
+**Наша реализация** (`archive/strategies_retired/triple_screen_v132.py`):
+
+```
+Экран 1 — Тренд (1H EMA45):
+  Цена выше EMA → бычий рынок (разрешены только лонги)
+  Цена ниже EMA → медвежий рынок (разрешены только шорты)
+
+Экран 2 — Осциллятор (Stochastic/RSI/CCI на 5m):
+  Консервативно: осциллятор пересекает зону перепроданности/перекупленности
+  Активно: пересечение + небольшое смещение
+  Агрессивно: разворот + пробой предыдущего high/low
+
+Экран 3 — Вход (ATR-based):
+  SL = текущая цена ± 2.0×ATR
+  TP = текущая цена ± 9.0×ATR
+  Двухфазный выход с трейлинг-стопом 1.5×ATR
+```
+
+### Почему НЕ РАБОТАЕТ с дефолтными параметрами
+
+Протестировано на 16 монетах × 6 конфигураций = 96 комбинаций. ВСЕ убыточны.
+Причины:
+1. **TP=9.0×ATR слишком жадный** — цена разворачивается до достижения TP
+2. **SL=2.0×ATR слишком широкий** для альткоинов — убытки большие, прибыль маленькая
+3. **Осциллятор на 5m + тренд на 1H** — таймфреймы не совпадают с тем что использует друг
+4. **Нет фильтра монеты** — стратегия требует очень специфичных монет где она работает
+5. **Дефолтный stoch(8)** — друг скорее всего использует другие настройки под каждую монету
+
+### Что надо сделать чтобы заработало
+
+**Путь 1 — Автопоиск (запланировано):**
+```bash
+# На сервере:
+nohup .venv/bin/python scripts/run_strategy_autoresearch.py \
+  configs/autoresearch/triple_screen_adaptive_v1.json \
+  > logs/autoresearch_ts132.log 2>&1 &
+```
+Перебирает: SL [1.5/2.0/2.5], TP [4/6/9], OSC [stoch/rsi], period [6/8/10],
+EMA [30/45/60], 10 комбинаций монет. Итого ~5000+ комбинаций. Займёт 6-24 часов.
+
+**Путь 2 — Спросить у друга:**
+Узнать точные настройки которые он использует:
+- Какие монеты? (очень специфично под монету)
+- Какой осциллятор и период?
+- Какой EMA период для тренда?
+- Какой SL/TP в ATR?
+- Использует ли BTC как фильтр режима?
+- На каком таймфрейме смотрит тренд (1H? 4H? 1D?)
+
+**Путь 3 — Изменить концепцию:**
+Вместо поиска "волшебных параметров", добавить к TS132 те же фильтры что работают
+в наших стратегиях: R² канала, slope filter, RSI подтверждение, volume confirmation.
+По сути — гибрид TS132 + alt_sloped_channel_v1.
+
+### Текущий статус
+- Код готов и встроен в бота (флаг `ENABLE_TS132_TRADING=0`)
+- Автопоиск запустить ПОСЛЕ GitHub push + server pull
+- НЕ включать `ENABLE_TS132_TRADING=1` пока автопоиск не найдёт прибыльные конфиги
+- После автопоиска — сначала бэктест > 360 дней > минимум 30 сделок > PF > 1.5
+- Только после этого → лайв с минимальным риском (0.5% на сделку)
+
 ## 2026-03-18 — Full Audit + Strategy Integration + Quality Gate Fix
 
 ### Root Cause: Bot Not Trading
@@ -647,3 +1038,6 @@
 - 2026-03-14 15:45 UTC | next wave: family expansion, BTC exit sweep, and market-wide move miner | kept the focus on system-level refinement instead of ad hoc tinkering. First, added `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_symbol_baskets_v3_expand.json` to test whether the strongest flat core (`LINKUSDT+ATOMUSDT`) can be spread to additional liquid crypto symbols without breaking monthly smoothness; this new sweep varies basket composition around the core and lightly rechecks `R²`, `RSI`, and reject depth. Second, added `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_early_flip_regime_v5_exits.json` after discovering that the previous `btc_early_flip_regime_v4_focus` wave largely plateaued: many different regime/breakout combinations collapsed to the same profile (`~+3.88`, PF `4.748`, 15 trades), which is a good signal that the next honest BTC lever is now exit geometry (`TP1/TP2/time stop`), not yet more micro-tuning of the same signal inputs. Third, added `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v7_low_red_months.json` to push Alpaca/equities harder toward “fewer red months” by emphasizing `TOP_N`, hold length, lookback, and correlation penalties rather than only target/stop tweaks. Finally, created `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/scan_crypto_large_moves.py`, a new cache-only market-wide crypto move miner that scans local `data_cache/*.json` 5m files for the largest forward moves and exports pre-move features (prior returns, MA gap, ATR-like range, volume ratio, compression). This is the first concrete step toward the broader “analyze the whole crypto market, find the biggest moves, and learn what preceded them” research branch. Smoke validation on the move miner exposed mixed cache formats (`list[list]` and `list[dict]`) and a CSV export field mismatch; both were fixed, and the smoke scan is now running cleanly again. New long-running sessions now active: `flat_slope_symbol_baskets_v3_expand`, `btc_early_flip_regime_v5_exits`, `equities_monthly_v7_low_red_months`, plus the crypto move-miner smoke before a full-market run. | running
 - 2026-03-15 08:40 UTC | live steady, flat compatibility clarified, equities smoother, BTC still plateau-ish | continued from the overnight runs and got four important concrete outcomes. First, the live server now looks materially calmer after the prior websocket tuning: over the last 12 hours the bot stayed alive with only `ws_connect=1`, `ws_disconnect=1`, `handshake_timeout=0`, status only `WARN`, while the last 2-hour window had `ws_connect=0`, `ws_disconnect=0`, `handshake_timeout=0`. No entries were missed because of quality filters; the market was simply weak again (`impulse_weak` dominated both windows). Practical reading: live is no longer the urgent problem today. Second, the new `flat_slope_symbol_singletons_v1` run showed that the current flat winner is truly carried by a compatible mini-family rather than by hidden basket magic. `ATOMUSDT` alone came back very strong (`+7.75`, PF `4.05`, winrate `69.2%`, DD `0.98`) and, importantly, with `0` negative months; `LINKUSDT` alone stayed positive (`+3.82`, PF `3.513`, winrate `71.4%`) but still had `2` negative months; nearly every other tested symbol under the same rules produced `0` trades. Combined with the earlier basket tests this means the current sloped short family does generalize by *filtering out* non-matching assets, but it does **not** yet add new compatible symbols beyond the core pair in a meaningful way. Third, Alpaca/equities finally improved on monthly smoothness: the new `equities_monthly_v8_regime_smooth` sweep found a better island around `+84.40%`, `33` trades, winrate `63.6%`, max monthly DD `8.67%`, `3` negative months, `max_negative_streak=2`, `worst_month≈-4.65`. This is the first time the smooth branch dropped from `4` red months to `3`, and the winning region clearly wants stronger benchmark/universe regime gating rather than more exit tinkering. Fourth, BTC remains stubborn: `btc_early_flip_regime_v5_exits` underperformed (`~+3.23`, PF `2.525`), while the newer `btc_early_flip_regime_v6_signal_plus_exits` only marginally improved the already-good `v4` island (`+3.89`, PF `4.759`, winrate `73.3%`, `1` negative month) instead of opening a new breakthrough. Interpretation: the current BTC add-on is clean, but we are still on a plateau and likely need a genuinely new family, not another small adjustment of the same early-flip logic. Also confirmed that the market-wide crypto move miner smoke is productive: top BTC 6-hour bursts in the smoke sample often started after notable short-term weakness / negative MA gap rather than after already-clean momentum expansion, which is a useful research clue for future “big move” crypto modules. New runs launched from this checkpoint: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_symbol_singletons_v1.json`, `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_early_flip_regime_v6_signal_plus_exits.json`, `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v8_regime_smooth.json`, and a full rerun of `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/scan_crypto_large_moves.py` into `runtime/research/crypto_large_moves_full_v2`. | running
 - 2026-03-15 16:05 UTC | canary-readiness check for the flat leader + second family fork | moved from pure research into practical pre-live validation for the strongest flat candidate. Replayed the current best `LINKUSDT+ATOMUSDT` sloped short core with its actual winning settings (`ASC1_MAX_ABS_SLOPE_PCT=2.0`, `ASC1_MIN_RANGE_R2=0.25`, `ASC1_SHORT_MAX_NEAR_UPPER_BARS=2`, `ASC1_SHORT_MIN_REJECT_DEPTH_ATR=0.75`, `ASC1_SHORT_MIN_RSI=60`, `ASC1_SHORT_NEAR_UPPER_ATR=0.15`, `ASC1_TP1_FRAC=0.45`, `ASC1_TP2_BUFFER_PCT=0.4`, `ASC1_TIME_STOP_BARS_5M=480`) as an explicit canary candidate. Base run `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260315_155657_asc1_link_atom_canary_base_v1/summary.csv` held exactly as hoped: `+11.56`, `20` trades, PF `3.849`, winrate `70.0%`, DD `1.7859`. More importantly, the updated cost-stress run `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260315_155657_asc1_link_atom_canary_coststress_v1/summary.csv` also remained strong: `+10.02`, `20` trades, PF `3.209`, winrate `65.0%`, DD `2.0077`. Trade breakdown still shows the pair is genuinely two-legged rather than fake diversification: `ATOMUSDT` contributes `13` trades and about `+6.75..+7.75` depending on costs; `LINKUSDT` contributes `7` trades and about `+3.28..+3.82`. Then validated `ATOMUSDT` alone as an even cleaner sub-sleeve candidate: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260315_155817_asc1_atom_canary_base_v1/summary.csv` gave `+7.75`, PF `4.050`, winrate `69.2%`, DD `0.9811`, while cost-stress `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260315_155817_asc1_atom_canary_coststress_v1/summary.csv` still held at `+6.75`, PF `3.359`, winrate `61.5%`, DD `1.1097`. This means we now have both a strong pair-sleeve candidate and a very clean single-symbol micro-sleeve candidate for the same family. In parallel, started the search for the second flat family instead of overfitting only the slope-short branch. `flat_horizontal_resistance_singletons_v1` showed a live but still immature second family: `SUIUSDT` looks best on raw quality (`+3.12`, PF `6.255`, `3` trades, `1` negative month), while `LINKUSDT` (`+4.13`, `9` trades, PF `2.697`) and `LTCUSDT` (`+2.41`, `5` trades, PF `3.235`) also show positive horizontal-fade behavior, though still with `2` negative months each. By contrast, `flat_depressed_reclaim_singletons_v1` remained effectively dead (`0` trades` everywhere). Conclusion: the first deployable flat family is still the sloped short core; the second family candidate to refine next is horizontal resistance fade around `SUI/LINK/LTC`, while the depressed reclaim long branch can be deprioritized for now. Also launched `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_horizontal_core_v2_refine.json` and `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v9_red_month_push.json` to keep pushing the second flat family and the smoother Alpaca branch. | running
+- 2026-03-18 19:45 UTC | live status check + TS132 fidelity correction | resumed after the token gap and audited both the current live state and the new sloped/TS132 work that was done in the meantime. Live bot is currently alive, not dead: fresh `2h` diagnostics show `breakout_try=2699`, `midterm_try=53`, `entry=0`, `skip_quality=0`, `ws_connect=8`, `ws_disconnect=8`, `handshake_timeout=0`, status only `WARN`; the `12h` window is also `WARN`, not `CRITICAL`, with `43/44` ws connect/disconnect and `0` handshake timeouts. Practical reading: the server is running, and the main reason for no entries is still weak market tape (`impulse_weak` dominates), not a broken quality gate or a dead process. Also found an important documentation/code mismatch: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/AUDIT_20260318.md` still says sloped and TS132 are not wired, but local HEAD `32fc890` already contains live hooks in `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py` for both `ENABLE_SLOPED_TRADING` and `ENABLE_TS132_TRADING`; the branch is simply still ahead of `origin/codex/dynamic-symbol-filters` and not deployed yet. Then audited the friend's Pine file `/Users/nikolay.bulgakov/Downloads/triple_screen_v13_2_PROD (1).txt` against our port `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/archive/strategies_retired/triple_screen_v132.py` and found the biggest fidelity gap in exits: Pine uses explicit break-even activation and delayed trailing activation, while our port had simplified immediate ATR trailing. Fixed this by extending `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/signals.py`, `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/trade_state.py`, `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/engine.py`, `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/portfolio_engine.py`, and `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py` so `TradeSignal`/live trades can now carry `be_trigger_rr`, `be_lock_rr`, and `trail_activate_rr`, and `triple_screen_v132.py` now maps Pine-style `bePct`, separate long/short trailing ATR multipliers, and delayed trail activation into those fields. Added a new smarter search spec `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_adaptive_v2_fidelity.json` focused on the friend's actual active symbols (`KSM, STRK, AVAX, AXS, ETH`) and Pine-like knobs. Quick compile passed using `PYTHONPYCACHEPREFIX=/tmp/codex_pycache`. A first smoke backtest on `KSMUSDT` with Pine-like defaults still came back negative (`portfolio_20260318_193959_ts132_fidelity_smoke_ksm`, `2` trades, `-3.24`, PF `0.0`), which is useful honesty: the strategy is now closer to the original mechanics, but defaults alone are still not enough, so we need either the friend's exact per-coin presets or a longer `triple_screen_adaptive_v2_fidelity` autoresearch run before any live deployment. | running
+- 2026-03-18 20:05 UTC | TS132 stage-1 search launched | after the fidelity correction, created a narrower and actually runnable follow-up spec `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_adaptive_v2_stage1.json` instead of jumping straight into the very wide `v2_fidelity` grid. The stage-1 search focuses on the friend's currently active-looking symbols (`KSMUSDT, STRKUSDT, AVAXUSDT, AXSUSDT, ETHUSDT`) as single-symbol sleeves and only varies the most likely real levers: `trade_mode`, `SL/TP ATR`, `BE%`, oscillator type/period, trend EMA length, volume filter on/off, max signals/day, and execution mode. The first tiny `v2_fidelity` slice (`6` runs) found no passing candidate at all; every KSM default-like combination failed on trade count and PF, so the strategy still clearly needs either better per-coin islands or the friend's exact settings. That is why `stage1` is now the main active TS132 research queue and should be preferred over the older `triple_screen_adaptive_v1.json` for future long scans. | running
+- 2026-03-18 18:15 UTC | live recheck + safer sloped canary rollout prep | rechecked current live health after the recent server-side quality-gate changes. Fresh `2h` diagnostics still show the bot alive and scanning (`breakout_try=2748`, `midterm_try=52`, `entry=0`, `skip_quality=0`), with status only `WARN` and no handshake timeouts; the main no-signal reason remains weak tape (`impulse_weak=74.04%`, then `impulse_body=13.99%`). Fresh `12h` diagnostics also remain `WARN`, not dead (`ws_connect=44`, `ws_disconnect=45`, `handshake_timeout=0`), again dominated by `impulse_weak=60.61%`. Practical reading: removing the filter did not suddenly create trades because the market is still weak, not because live is broken. On deployment, attempted `git push origin codex/dynamic-symbol-filters`, but it failed on GitHub SSH auth (`Permission denied (publickey)`), and there is no saved HTTPS token file on this Mac (`~/.by-bot-github-token` missing). To make the first flat rollout safer, added isolated sloped-canary controls to `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py`: `SLOPED_RISK_MULT` now scales sizing independently from the global live risk, and `SLOPED_MAX_OPEN_TRADES` caps concurrent sloped positions without touching the rest of the stack. Updated `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/flat_slope_atom_canary.env.example` and `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/flat_slope_link_atom_canary.env.example` to reflect the actual live wiring, and added `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deploy_sloped_atom_canary_20260318.sh` as a purpose-built deploy path that pushes via HTTPS token, pulls on the server, enables `ENABLE_SLOPED_TRADING=1`, keeps `ENABLE_TS132_TRADING=0`, pins `ATOMUSDT` only, and applies the current winning `ASC1` settings without changing global `RISK_PER_TRADE_PCT` or `MAX_POSITIONS`. Also added a runner-compatible extended-universe equities spec `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v10_extended_universe_autoresearch.json`, because the old `v10` config used a non-`run_strategy_autoresearch.py` schema and could not be launched directly. New long queues launched now: `triple_screen_adaptive_v2_stage1`, `flat_slope_adaptive_families_v1`, and `equities_monthly_v10_extended_universe_autoresearch`. | running

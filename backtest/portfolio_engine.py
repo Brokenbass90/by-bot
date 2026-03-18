@@ -248,18 +248,49 @@ def run_portfolio_backtest(
                 _close(sym, p, bar.ts, reason)
                 continue
 
-            # Update trailing stop after processing exits on this bar.
-            if p.trailing_atr_mult > 0 and i > p.entry_i:
-                atr = _atr(sym, p.trailing_atr_period)[i]
-                if atr and atr > 0:
+            # Move SL to break-even only after full-bar processing (conservative).
+            if i > p.entry_i and p.be_trigger_rr > 0 and not p.be_armed:
+                risk = abs(float(p.entry_price) - float(p.initial_sl))
+                if risk > 0:
                     if p.side == "long":
-                        new_sl = p.hh_since_entry - p.trailing_atr_mult * atr
-                        if new_sl > p.sl:
-                            p.sl = new_sl
+                        be_hit = float(bar.h) >= (float(p.entry_price) + float(p.be_trigger_rr) * risk)
+                        if be_hit:
+                            be_sl = float(p.entry_price) + float(p.be_lock_rr) * risk
+                            if be_sl > p.sl:
+                                p.sl = be_sl
+                            p.be_armed = True
                     else:
-                        new_sl = p.ll_since_entry + p.trailing_atr_mult * atr
-                        if new_sl < p.sl:
-                            p.sl = new_sl
+                        be_hit = float(bar.l) <= (float(p.entry_price) - float(p.be_trigger_rr) * risk)
+                        if be_hit:
+                            be_sl = float(p.entry_price) - float(p.be_lock_rr) * risk
+                            if be_sl < p.sl:
+                                p.sl = be_sl
+                            p.be_armed = True
+
+            # Update trailing stop after processing exits on this bar.
+            if p.trailing_atr_mult > 0:
+                trail_ready = bool(getattr(p, "trail_armed", False) or float(getattr(p, "trail_activate_rr", 0.0) or 0.0) <= 0.0)
+                if not trail_ready and i > p.entry_i:
+                    risk = abs(float(p.entry_price) - float(p.initial_sl))
+                    trig_rr = float(getattr(p, "trail_activate_rr", 0.0) or 0.0)
+                    if risk > 0 and trig_rr > 0:
+                        if p.side == "long":
+                            trail_hit = float(bar.h) >= (float(p.entry_price) + trig_rr * risk)
+                        else:
+                            trail_hit = float(bar.l) <= (float(p.entry_price) - trig_rr * risk)
+                        if trail_hit:
+                            p.trail_armed = True
+                if trail_ready:
+                    atr = _atr(sym, p.trailing_atr_period)[i]
+                    if atr and atr > 0:
+                        if p.side == "long":
+                            new_sl = p.hh_since_entry - p.trailing_atr_mult * atr
+                            if new_sl > p.sl:
+                                p.sl = new_sl
+                        else:
+                            new_sl = p.ll_since_entry + p.trailing_atr_mult * atr
+                            if new_sl < p.sl:
+                                p.sl = new_sl
 
         # 2) Entries (respect global max_positions)
         if len(pos_by_sym) < int(params.max_positions):
@@ -289,7 +320,10 @@ def run_portfolio_backtest(
                 if cap is None:
                     cap = (equity * float(params.leverage)) / max(1, int(params.max_positions))
 
-                qty = _calc_qty(equity, sig, params.risk_pct, cap)
+                sig_risk_mult = float(getattr(sig, "risk_mult", 1.0) or 1.0)
+                sig_risk_mult = max(0.10, min(3.00, sig_risk_mult))
+                risk_pct_eff = float(params.risk_pct) * sig_risk_mult
+                qty = _calc_qty(equity, sig, risk_pct_eff, cap)
                 if qty <= 0:
                     continue
 
@@ -339,6 +373,10 @@ def run_portfolio_backtest(
                     tp_qty_remaining=tp_qty_remaining,
                     trailing_atr_mult=float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0),
                     trailing_atr_period=int(getattr(sig, "trailing_atr_period", 14) or 14),
+                    trail_activate_rr=float(getattr(sig, "trail_activate_rr", 0.0) or 0.0),
+                    trail_armed=float(getattr(sig, "trail_activate_rr", 0.0) or 0.0) <= 0.0,
+                    be_trigger_rr=float(getattr(sig, "be_trigger_rr", 0.0) or 0.0),
+                    be_lock_rr=float(getattr(sig, "be_lock_rr", 0.0) or 0.0),
                     time_stop_bars=int(getattr(sig, "time_stop_bars", 0) or 0),
                     hh_since_entry=entry_px,
                     ll_since_entry=entry_px,

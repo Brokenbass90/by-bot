@@ -106,7 +106,11 @@ class TripleScreenV132Config:
     atr_period: int = 14
     sl_atr_mult: float = 2.0
     tp_atr_mult: float = 9.0
-    trail_atr_mult: float = 1.5
+    be_pct: float = 3.0
+    trail_atr_mult_long: float = 1.5
+    trail_atr_mult_short: float = 2.0
+    trail_activate_long_atr: float = 3.0
+    trail_activate_short_atr: float = 4.0
     cooldown_conservative: int = 10
     cooldown_active: int = 5
     cooldown_aggressive: int = 2
@@ -136,7 +140,11 @@ class TripleScreenV132Strategy:
         self.cfg.atr_period = _env_int("TS132_ATR_PERIOD", self.cfg.atr_period)
         self.cfg.sl_atr_mult = _env_float("TS132_SL_ATR_MULT", self.cfg.sl_atr_mult)
         self.cfg.tp_atr_mult = _env_float("TS132_TP_ATR_MULT", self.cfg.tp_atr_mult)
-        self.cfg.trail_atr_mult = _env_float("TS132_TRAIL_ATR_MULT", self.cfg.trail_atr_mult)
+        self.cfg.be_pct = _env_float("TS132_BE_PCT", self.cfg.be_pct)
+        self.cfg.trail_atr_mult_long = _env_float("TS132_TRAIL_ATR_MULT_LONG", self.cfg.trail_atr_mult_long)
+        self.cfg.trail_atr_mult_short = _env_float("TS132_TRAIL_ATR_MULT_SHORT", self.cfg.trail_atr_mult_short)
+        self.cfg.trail_activate_long_atr = _env_float("TS132_TRAIL_ACTIVATE_LONG_ATR", self.cfg.trail_activate_long_atr)
+        self.cfg.trail_activate_short_atr = _env_float("TS132_TRAIL_ACTIVATE_SHORT_ATR", self.cfg.trail_activate_short_atr)
         self.cfg.cooldown_conservative = _env_int("TS132_COOLDOWN_CONSERVATIVE", self.cfg.cooldown_conservative)
         self.cfg.cooldown_active = _env_int("TS132_COOLDOWN_ACTIVE", self.cfg.cooldown_active)
         self.cfg.cooldown_aggressive = _env_int("TS132_COOLDOWN_AGGRESSIVE", self.cfg.cooldown_aggressive)
@@ -277,6 +285,10 @@ class TripleScreenV132Strategy:
 
         slip_adj = self._slip_adj()
         entry = float(self._c[-1])
+        risk = atr_now * float(self.cfg.sl_atr_mult)
+        be_trigger_rr = 0.0
+        if risk > 0 and self.cfg.be_pct > 0:
+            be_trigger_rr = (entry * (float(self.cfg.be_pct) / 100.0)) / risk
 
         if self.cfg.allow_longs and long_signal:
             sl = entry - atr_now * self.cfg.sl_atr_mult
@@ -294,8 +306,11 @@ class TripleScreenV132Strategy:
                     entry=entry,
                     sl=sl,
                     tp=tp,
-                    trailing_atr_mult=self.cfg.trail_atr_mult,
+                    trailing_atr_mult=self.cfg.trail_atr_mult_long,
                     trailing_atr_period=self.cfg.atr_period,
+                    trail_activate_rr=float(self.cfg.trail_activate_long_atr) / max(1e-12, float(self.cfg.sl_atr_mult)),
+                    be_trigger_rr=be_trigger_rr,
+                    be_lock_rr=0.0,
                     time_stop_bars=self.cfg.time_stop_bars_5m,
                     reason=f"ts132_long_{mode}_{self.cfg.osc_type}",
                 )
@@ -315,8 +330,11 @@ class TripleScreenV132Strategy:
                     entry=entry,
                     sl=sl,
                     tp=tp,
-                    trailing_atr_mult=self.cfg.trail_atr_mult,
+                    trailing_atr_mult=self.cfg.trail_atr_mult_short,
                     trailing_atr_period=self.cfg.atr_period,
+                    trail_activate_rr=float(self.cfg.trail_activate_short_atr) / max(1e-12, float(self.cfg.sl_atr_mult)),
+                    be_trigger_rr=be_trigger_rr,
+                    be_lock_rr=0.0,
                     time_stop_bars=self.cfg.time_stop_bars_5m,
                     reason=f"ts132_short_{mode}_{self.cfg.osc_type}",
                 )
