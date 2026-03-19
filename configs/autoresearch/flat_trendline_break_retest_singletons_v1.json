@@ -1,0 +1,78 @@
+{
+  "name": "flat_trendline_break_retest_singletons_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "trendline_break_retest_v4",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-15",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "2",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "ATOMUSDT",
+      "LINKUSDT",
+      "SUIUSDT",
+      "LTCUSDT",
+      "AVAXUSDT",
+      "ETHUSDT",
+      "SOLUSDT",
+      "BCHUSDT",
+      "DOGEUSDT"
+    ],
+    "TLB4_MIN_TOUCHES": [3, 4],
+    "TLB4_BREAKOUT_ATR_MULT": [0.25, 0.35],
+    "TLB4_MIN_BREAKOUT_EXT_ATR": [0.20, 0.30],
+    "TLB4_RETEST_PULLBACK_ATR": [0.40, 0.50, 0.60],
+    "TLB4_RETEST_MIN_BODY_FRAC": [0.20, 0.26],
+    "TLB4_VOL_BREAKOUT_MULT": [1.0, 1.2],
+    "TLB4_TREND_MIN_GAP_PCT": [0.12, 0.18]
+  },
+  "base_env": {
+    "TLB4_MAX_CONS_RANGE_ATR": "2.4",
+    "TLB4_RETEST_WINDOW_BARS": "12",
+    "TLB4_TREND_MIN_SLOPE_PCT": "0.05",
+    "TLB4_SL_ATR_MULT": "1.10",
+    "TLB4_RR": "2.1",
+    "BACKTEST_CACHE_ONLY": "1"
+  },
+  "constraints": {
+    "min_trades": 4,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 4.5,
+    "min_net_pnl": 1.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2,
+    "min_worst_month_pnl": -1.25
+  },
+  "score_weights": {
+    "net_pnl": 2.0,
+    "profit_factor": 2.5,
+    "winrate": 8.0,
+    "max_drawdown": 1.5,
+    "trades": 0.05,
+    "trades_cap": 40,
+    "negative_months": 2.0,
+    "max_negative_streak": 2.0,
+    "worst_month_pnl": 2.0
+  }
+}

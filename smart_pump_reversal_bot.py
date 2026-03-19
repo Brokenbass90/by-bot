@@ -328,6 +328,7 @@ STALL_MIN_SELL_IMB = 0.52
 # === Risk sizing (1% risk) ===
 USE_RISK_SIZING = True
 RISK_PER_TRADE_PCT = 1.0
+MAX_OPEN_PORTFOLIO_RISK_PCT = float(os.getenv("MAX_OPEN_PORTFOLIO_RISK_PCT", "0") or 0)
 
 # "почти без плеча": максимум notional = equity (а не equity*leverage)
 CAP_NOTIONAL_TO_EQUITY = True
@@ -559,6 +560,23 @@ def tg_trade(msg: str):
         )
     except Exception:
         pass
+
+
+_TG_ALERT_THROTTLE_TS: dict[str, int] = {}
+BREAKOUT_SKIP_ALERT_COOLDOWN_SEC = int(os.getenv("BREAKOUT_SKIP_ALERT_COOLDOWN_SEC", "14400") or 14400)
+
+
+def tg_trade_throttled(key: str, msg: str, cooldown_sec: int) -> bool:
+    if cooldown_sec <= 0:
+        tg_trade(msg)
+        return True
+    now = int(time.time())
+    last_ts = int(_TG_ALERT_THROTTLE_TS.get(key, 0) or 0)
+    if last_ts > 0 and (now - last_ts) < int(cooldown_sec):
+        return False
+    _TG_ALERT_THROTTLE_TS[key] = now
+    tg_trade(msg)
+    return True
 
 # =========================== TELEGRAM UI ===========================
 TG_KB = {
@@ -3999,6 +4017,45 @@ def portfolio_can_open() -> bool:
         return False
     return True
 
+
+def _trade_open_risk_usd(tr: TradeState) -> float:
+    try:
+        status = str(getattr(tr, "status", "") or "").upper()
+        if status in {"CLOSED", "FAILED", "CANCELLED", "ERROR"}:
+            return 0.0
+        qty = float(getattr(tr, "remaining_qty", 0.0) or getattr(tr, "qty", 0.0) or 0.0)
+        entry = float(
+            getattr(tr, "entry_price", 0.0)
+            or getattr(tr, "avg", 0.0)
+            or getattr(tr, "entry_price_req", 0.0)
+            or 0.0
+        )
+        sl = float(getattr(tr, "sl_price", 0.0) or 0.0)
+        if qty <= 0 or entry <= 0 or sl <= 0:
+            return 0.0
+        return max(0.0, qty * abs(entry - sl))
+    except Exception:
+        return 0.0
+
+
+def current_open_portfolio_risk_usd() -> float:
+    total = 0.0
+    for tr in TRADES.values():
+        total += _trade_open_risk_usd(tr)
+    return max(0.0, float(total))
+
+
+def portfolio_can_add_open_risk(additional_risk_usd: float = 0.0) -> tuple[bool, float, float]:
+    cap_pct = float(MAX_OPEN_PORTFOLIO_RISK_PCT or 0.0)
+    if cap_pct <= 0:
+        return True, 0.0, 0.0
+    eq = float(_get_effective_equity() or 0.0)
+    if eq <= 0:
+        return False, 0.0, cap_pct
+    total_usd = current_open_portfolio_risk_usd() + max(0.0, float(additional_risk_usd or 0.0))
+    total_pct = (total_usd / max(1e-12, eq)) * 100.0
+    return total_pct <= cap_pct + 1e-9, total_pct, cap_pct
+
 def portfolio_reg_pnl(notional_usd: float, pnl_pct: float):
     portfolio_init_if_needed()
     pnl_usd = notional_usd * (pnl_pct / 100.0)
@@ -4421,6 +4478,15 @@ async def try_range_entry_async(symbol: str, price: float):
     if qty_floor <= 0:
         tg_trade(f"🟡 RANGE SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
+    proposed_risk_usd = qty_floor * abs(float(price) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:range:{symbol}",
+            f"🟡 RANGE SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
 
     ensure_leverage(symbol, BYBIT_LEVERAGE)
 
@@ -4505,6 +4571,15 @@ async def try_inplay_entry_async(symbol: str, price: float):
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
     if qty_floor <= 0:
         tg_trade(f"🟡 INPLAY SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:inplay:{symbol}",
+            f"🟡 INPLAY SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
         return
 
     ensure_leverage(symbol, BYBIT_LEVERAGE)
@@ -4663,11 +4738,21 @@ async def try_breakout_entry_async(symbol: str, price: float):
     pullback = 0.0
     sp = 0.0
 
+    def _breakout_skip_alert(reason_key: str, msg: str):
+        tg_trade_throttled(
+            f"breakout_skip:{symbol}:{reason_key}",
+            msg,
+            BREAKOUT_SKIP_ALERT_COOLDOWN_SEC,
+        )
+
     # Don't chase far from planned entry; prefer retest-like fills.
     if BREAKOUT_MAX_CHASE_PCT > 0:
         chase_pct = abs((float(price) - float(entry)) / max(1e-12, float(entry))) * 100.0
         if chase_pct > BREAKOUT_MAX_CHASE_PCT:
-            tg_trade(f"🟡 BREAKOUT SKIP {symbol}: chase {chase_pct:.2f}% > {BREAKOUT_MAX_CHASE_PCT:.2f}%")
+            _breakout_skip_alert(
+                "chase",
+                f"🟡 BREAKOUT SKIP {symbol}: chase {chase_pct:.2f}% > {BREAKOUT_MAX_CHASE_PCT:.2f}%",
+            )
             return
 
     st = S("Bybit", symbol)
@@ -4680,7 +4765,10 @@ async def try_breakout_entry_async(symbol: str, price: float):
                 q5m += float(x[2] or 0.0)
         if q5m < BREAKOUT_MIN_QUOTE_5M_USD:
             _diag_inc("breakout_skip_liq")
-            tg_trade(f"🟡 BREAKOUT SKIP {symbol}: liq5m {q5m:.0f}$ < {BREAKOUT_MIN_QUOTE_5M_USD:.0f}$")
+            _breakout_skip_alert(
+                "liq5m",
+                f"🟡 BREAKOUT SKIP {symbol}: liq5m {q5m:.0f}$ < {BREAKOUT_MIN_QUOTE_5M_USD:.0f}$",
+            )
             return
 
     # Retest confirmation: require touch near entry and directional close in current 5m bar.
@@ -4706,7 +4794,10 @@ async def try_breakout_entry_async(symbol: str, price: float):
         else:
             late_pct = (ref_px - base_px) / max(ref_px, 1e-12) * 100.0
         if late_pct > BREAKOUT_MAX_LATE_VS_REF_PCT:
-            tg_trade(f"🟡 BREAKOUT SKIP {symbol}: late {late_pct:.2f}% > {BREAKOUT_MAX_LATE_VS_REF_PCT:.2f}%")
+            _breakout_skip_alert(
+                "late",
+                f"🟡 BREAKOUT SKIP {symbol}: late {late_pct:.2f}% > {BREAKOUT_MAX_LATE_VS_REF_PCT:.2f}%",
+            )
             return
 
     # Anti-FOMO: require at least minimal pullback from the current 5m extreme.
@@ -4720,7 +4811,8 @@ async def try_breakout_entry_async(symbol: str, price: float):
         if pullback + 1e-9 < pullback_min:
             _diag_inc("breakout_skip_pullback")
             delta = max(0.0, pullback_min - pullback)
-            tg_trade(
+            _breakout_skip_alert(
+                "pullback",
                 f"🟡 BREAKOUT SKIP {symbol}: pullback {pullback:.4f}% < {pullback_min:.4f}% (delta {delta:.4f}%)"
             )
             return
@@ -4733,7 +4825,10 @@ async def try_breakout_entry_async(symbol: str, price: float):
     if BREAKOUT_MAX_SPREAD_PCT > 0:
         sp = float(get_spread_pct_cached(symbol))
         if sp >= BREAKOUT_MAX_SPREAD_PCT:
-            tg_trade(f"🟡 BREAKOUT SKIP {symbol}: spread {sp:.2f}% >= {BREAKOUT_MAX_SPREAD_PCT:.2f}%")
+            _breakout_skip_alert(
+                "spread",
+                f"🟡 BREAKOUT SKIP {symbol}: spread {sp:.2f}% >= {BREAKOUT_MAX_SPREAD_PCT:.2f}%",
+            )
             return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -4766,7 +4861,8 @@ async def try_breakout_entry_async(symbol: str, price: float):
     )
     if BREAKOUT_QUALITY_MIN_SCORE > 0 and quality_score < BREAKOUT_QUALITY_MIN_SCORE:
         _diag_inc("breakout_skip_quality")
-        tg_trade(
+        _breakout_skip_alert(
+            "quality",
             f"🟡 BREAKOUT SKIP {symbol}: quality {quality_score:.2f} < {BREAKOUT_QUALITY_MIN_SCORE:.2f}"
         )
         return
@@ -4776,13 +4872,27 @@ async def try_breakout_entry_async(symbol: str, price: float):
     risk_mult = float(size_mult) * float(quality_boost_mult) * float(st_alloc)
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=risk_mult)
     if dyn_usd <= 0:
-        tg_trade(f"🟡 BREAKOUT SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        _breakout_skip_alert(
+            "notional_small",
+            f"🟡 BREAKOUT SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small",
+        )
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
     if qty_floor <= 0:
         _diag_inc("breakout_skip_minqty")
-        tg_trade(f"🟡 BREAKOUT SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        _breakout_skip_alert(
+            f"minqty:{reason}",
+            f"🟡 BREAKOUT SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)",
+        )
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        _breakout_skip_alert(
+            "portfolio_risk",
+            f"🟡 BREAKOUT SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+        )
         return
 
     ensure_leverage(symbol, BYBIT_LEVERAGE)
@@ -4900,6 +5010,15 @@ async def try_retest_entry_async(symbol: str, price: float):
     if qty_floor <= 0:
         tg_trade(f"🟡 RETEST SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:retest:{symbol}",
+            f"🟡 RETEST SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
 
     ensure_leverage(symbol, BYBIT_LEVERAGE)
     oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
@@ -4999,6 +5118,15 @@ async def try_midterm_entry_async(symbol: str, price: float):
     if qty_floor <= 0:
         _diag_inc("midterm_skip_minqty")
         tg_trade(f"🟡 MIDTERM SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:midterm:{symbol}",
+            f"🟡 MIDTERM SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
         return
 
     ensure_leverage(symbol, BYBIT_LEVERAGE)
@@ -5118,6 +5246,15 @@ async def try_sloped_entry_async(symbol: str, price: float):
     if qty_floor <= 0:
         tg_trade(f"🟡 SLOPED SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:sloped:{symbol}",
+            f"🟡 SLOPED SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
 
     ensure_leverage(symbol, BYBIT_LEVERAGE)
     _diag_inc("sloped_entry")
@@ -5231,6 +5368,15 @@ async def try_ts132_entry_async(symbol: str, price: float):
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0:
         tg_trade(f"🟡 TS132 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:ts132:{symbol}",
+            f"🟡 TS132 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
         return
 
     ensure_leverage(symbol, BYBIT_LEVERAGE)
