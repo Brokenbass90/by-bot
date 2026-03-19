@@ -6381,6 +6381,12 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
             tg_trade(f"🧩 retest-universe: using={len(RETEST_SYMBOLS)} (top {RETEST_TOP_N})")
         if ENABLE_MIDTERM_TRADING:
             tg_trade(f"🧩 midterm-universe: using={len(MIDTERM_ACTIVE_SYMBOLS)} ({','.join(sorted(MIDTERM_ACTIVE_SYMBOLS))})")
+        if ENABLE_SLOPED_TRADING:
+            sloped_symbols = sorted(_parse_symbol_csv(os.getenv("ASC1_SYMBOL_ALLOWLIST", "")))
+            if sloped_symbols:
+                tg_trade(f"🧩 sloped-universe: using={len(sloped_symbols)} ({','.join(sloped_symbols)})")
+            else:
+                tg_trade("🧩 sloped-universe: using=dynamic (allowlist unset)")
         if ENABLE_RANGE_TRADING and BOUNCE_TG_LOGS:
             tg_trade(f"🧩 bounce-universe: using={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
 
