@@ -29,6 +29,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from dotenv import load_dotenv
+except Exception:
+    load_dotenv = None  # type: ignore[assignment]
+
+
+ROOT = Path(__file__).resolve().parents[1]
+LOCAL_ENV = Path(os.getenv("ALPACA_REPORT_LOCAL_ENV", str(ROOT / "configs" / "alpaca_paper_local.env")))
+if load_dotenv is not None and LOCAL_ENV.exists():
+    load_dotenv(LOCAL_ENV, override=False)
+
 
 # ── Config ────────────────────────────────────────────────────────────────────
 def _env(name: str, default: str = "") -> str:
@@ -43,7 +54,7 @@ ALPACA_SECRET = _env("ALPACA_API_SECRET_KEY")
 ALPACA_URL    = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
 IS_PAPER = "paper" in ALPACA_URL.lower()
 MODE_LABEL = "📄 PAPER" if IS_PAPER else "💰 LIVE"
-RUNTIME_REPORT_DIR = Path(os.getenv("ALPACA_REPORT_RUNTIME_DIR", str(Path(__file__).resolve().parents[1] / "runtime" / "alpaca_reports")))
+RUNTIME_REPORT_DIR = Path(os.getenv("ALPACA_REPORT_RUNTIME_DIR", str(ROOT / "runtime" / "alpaca_reports")))
 
 _SSL = ssl.create_default_context()
 
@@ -138,7 +149,7 @@ def _tg_send_photo(path: Path, caption: str = "") -> bool:
 
 def _build_progress_chart(*, monthly: bool) -> Path | None:
     try:
-        os.environ.setdefault("MPLCONFIGDIR", str(Path(__file__).resolve().parents[1] / "runtime" / "mplconfig"))
+        os.environ.setdefault("MPLCONFIGDIR", str(ROOT / "runtime" / "mplconfig"))
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.dates as mdates
