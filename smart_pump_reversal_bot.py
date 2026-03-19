@@ -564,6 +564,12 @@ def tg_trade(msg: str):
 
 _TG_ALERT_THROTTLE_TS: dict[str, int] = {}
 BREAKOUT_SKIP_ALERT_COOLDOWN_SEC = int(os.getenv("BREAKOUT_SKIP_ALERT_COOLDOWN_SEC", "14400") or 14400)
+BREAKOUT_SKIP_DIGEST_ENABLE = _env_bool("BREAKOUT_SKIP_DIGEST_ENABLE", True)
+BREAKOUT_SKIP_DIGEST_EVERY_SEC = max(300, int(os.getenv("BREAKOUT_SKIP_DIGEST_EVERY_SEC", "14400") or 14400))
+BREAKOUT_SKIP_DIGEST_TOP_N = max(1, int(os.getenv("BREAKOUT_SKIP_DIGEST_TOP_N", "8") or 8))
+BREAKOUT_SKIP_TG_IMMEDIATE = _env_bool("BREAKOUT_SKIP_TG_IMMEDIATE", False)
+_BREAKOUT_SKIP_DIGEST_COUNTS: dict[tuple[str, str], int] = {}
+_BREAKOUT_SKIP_DIGEST_LAST_SENT_TS = int(time.time())
 
 
 def tg_trade_throttled(key: str, msg: str, cooldown_sec: int) -> bool:
@@ -576,6 +582,50 @@ def tg_trade_throttled(key: str, msg: str, cooldown_sec: int) -> bool:
         return False
     _TG_ALERT_THROTTLE_TS[key] = now
     tg_trade(msg)
+    return True
+
+
+def _record_breakout_skip(symbol: str, reason_key: str) -> None:
+    key = (str(symbol or "?"), str(reason_key or "other"))
+    _BREAKOUT_SKIP_DIGEST_COUNTS[key] = int(_BREAKOUT_SKIP_DIGEST_COUNTS.get(key, 0) or 0) + 1
+
+
+def _flush_breakout_skip_digest(force: bool = False) -> bool:
+    global _BREAKOUT_SKIP_DIGEST_LAST_SENT_TS
+    if not BREAKOUT_SKIP_DIGEST_ENABLE:
+        return False
+    if not _BREAKOUT_SKIP_DIGEST_COUNTS:
+        return False
+    now = int(time.time())
+    if not force and (now - int(_BREAKOUT_SKIP_DIGEST_LAST_SENT_TS or 0)) < int(BREAKOUT_SKIP_DIGEST_EVERY_SEC):
+        return False
+
+    reason_totals: dict[str, int] = {}
+    symbol_totals: dict[str, int] = {}
+    for (sym, reason), cnt in list(_BREAKOUT_SKIP_DIGEST_COUNTS.items()):
+        reason_totals[reason] = int(reason_totals.get(reason, 0) or 0) + int(cnt)
+        symbol_totals[sym] = int(symbol_totals.get(sym, 0) or 0) + int(cnt)
+
+    total = sum(int(v) for v in _BREAKOUT_SKIP_DIGEST_COUNTS.values())
+    if total <= 0:
+        _BREAKOUT_SKIP_DIGEST_COUNTS.clear()
+        _BREAKOUT_SKIP_DIGEST_LAST_SENT_TS = now
+        return False
+
+    def _fmt_top(d: dict[str, int]) -> str:
+        items = sorted(d.items(), key=lambda kv: (-int(kv[1]), kv[0]))[: int(BREAKOUT_SKIP_DIGEST_TOP_N)]
+        return ", ".join(f"{k}={v}" for k, v in items) if items else "n/a"
+
+    window_min = max(1, int(round((now - int(_BREAKOUT_SKIP_DIGEST_LAST_SENT_TS or now)) / 60.0)))
+    msg = (
+        f"🧾 BREAKOUT skip digest ({window_min}m)\n"
+        f"total={total}\n"
+        f"reasons: {_fmt_top(reason_totals)}\n"
+        f"symbols: {_fmt_top(symbol_totals)}"
+    )
+    tg_trade(msg)
+    _BREAKOUT_SKIP_DIGEST_COUNTS.clear()
+    _BREAKOUT_SKIP_DIGEST_LAST_SENT_TS = now
     return True
 
 # =========================== TELEGRAM UI ===========================
@@ -4739,11 +4789,13 @@ async def try_breakout_entry_async(symbol: str, price: float):
     sp = 0.0
 
     def _breakout_skip_alert(reason_key: str, msg: str):
-        tg_trade_throttled(
-            f"breakout_skip:{symbol}:{reason_key}",
-            msg,
-            BREAKOUT_SKIP_ALERT_COOLDOWN_SEC,
-        )
+        _record_breakout_skip(symbol, reason_key)
+        if BREAKOUT_SKIP_TG_IMMEDIATE:
+            tg_trade_throttled(
+                f"breakout_skip:{symbol}:{reason_key}",
+                msg,
+                BREAKOUT_SKIP_ALERT_COOLDOWN_SEC,
+            )
 
     # Don't chase far from planned entry; prefer retest-like fills.
     if BREAKOUT_MAX_CHASE_PCT > 0:
@@ -6591,7 +6643,9 @@ def auth_check_all_accounts():
         f"midterm={ENABLE_MIDTERM_TRADING}, "
         f"inplay={ENABLE_INPLAY_TRADING}, "
         f"retest={ENABLE_RETEST_TRADING}, "
-        f"range={ENABLE_RANGE_TRADING}"
+        f"range={ENABLE_RANGE_TRADING}, "
+        f"sloped={ENABLE_SLOPED_TRADING}, "
+        f"ts132={ENABLE_TS132_TRADING}"
     )
 
     text = "\n".join(lines)
@@ -6660,6 +6714,8 @@ async def pulse():
             if STRATEGY_STATS_TG_EVERY_SEC > 0 and (now - last_stats_sent) >= int(STRATEGY_STATS_TG_EVERY_SEC):
                 tg_trade(_strategy_runtime_stats_text(STRATEGY_STATS_LOOKBACK_H))
                 last_stats_sent = now
+            if BREAKOUT_SKIP_DIGEST_ENABLE:
+                _flush_breakout_skip_digest()
             if WS_HEALTH_ALERT_ENABLE and (now - last_ws_health_check_ts) >= int(WS_HEALTH_CHECK_SEC):
                 cur_ws = (
                     _diag_get_int("ws_connect"),
@@ -6763,7 +6819,7 @@ def main():
     print(
         f"Strategies: breakout={ENABLE_BREAKOUT_TRADING} inplay={ENABLE_INPLAY_TRADING} "
         f"retest={ENABLE_RETEST_TRADING} range={ENABLE_RANGE_TRADING} pump_fade={ENABLE_PUMP_FADE_TRADING} "
-        f"midterm={ENABLE_MIDTERM_TRADING}"
+        f"midterm={ENABLE_MIDTERM_TRADING} sloped={ENABLE_SLOPED_TRADING} ts132={ENABLE_TS132_TRADING}"
     )
     if BOT_CAPITAL_USD is not None:
         print(f"Bot capital cap: {BOT_CAPITAL_USD} USDT")

@@ -43,6 +43,7 @@ ALPACA_SECRET = _env("ALPACA_API_SECRET_KEY")
 ALPACA_URL    = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
 IS_PAPER = "paper" in ALPACA_URL.lower()
 MODE_LABEL = "📄 PAPER" if IS_PAPER else "💰 LIVE"
+RUNTIME_REPORT_DIR = Path(os.getenv("ALPACA_REPORT_RUNTIME_DIR", str(Path(__file__).resolve().parents[1] / "runtime" / "alpaca_reports")))
 
 _SSL = ssl.create_default_context()
 
@@ -108,6 +109,83 @@ def _tg_send(msg: str) -> None:
             pass
     except Exception as exc:
         print(f"TG send failed: {exc}", file=sys.stderr)
+
+
+def _tg_send_photo(path: Path, caption: str = "") -> bool:
+    if not TG_TOKEN or not TG_CHAT_ID or not path.exists():
+        return False
+    try:
+        import requests  # local dependency already used by the main bot
+    except Exception as exc:
+        print(f"TG photo disabled: requests import failed: {exc}", file=sys.stderr)
+        return False
+
+    url = f"https://api.telegram.org/bot{TG_TOKEN}/sendPhoto"
+    try:
+        with path.open("rb") as fh:
+            resp = requests.post(
+                url,
+                data={"chat_id": TG_CHAT_ID, "caption": caption},
+                files={"photo": fh},
+                timeout=20,
+            )
+        resp.raise_for_status()
+        return True
+    except Exception as exc:
+        print(f"TG photo send failed: {exc}", file=sys.stderr)
+        return False
+
+
+def _build_progress_chart(*, monthly: bool) -> Path | None:
+    try:
+        os.environ.setdefault("MPLCONFIGDIR", str(Path(__file__).resolve().parents[1] / "runtime" / "mplconfig"))
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.dates as mdates
+        import matplotlib.pyplot as plt
+        from matplotlib.ticker import FuncFormatter
+    except Exception as exc:
+        print(f"chart disabled: matplotlib unavailable: {exc}", file=sys.stderr)
+        return None
+
+    period = "3M" if monthly else "1M"
+    timeframe = "1D"
+    history = get_portfolio_history(period=period, timeframe=timeframe)
+    ts = history.get("timestamp") or []
+    equity = history.get("equity") or []
+    if not ts or not equity or len(ts) != len(equity):
+        return None
+
+    try:
+        xs = [datetime.fromtimestamp(int(t), tz=timezone.utc) for t in ts]
+        ys = [float(v) for v in equity]
+    except Exception:
+        return None
+    if len(xs) < 2:
+        return None
+
+    RUNTIME_REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    out = RUNTIME_REPORT_DIR / ("alpaca_monthly_progress.png" if monthly else "alpaca_daily_progress.png")
+    color = "#1f8f55" if (ys[-1] - ys[0]) >= 0 else "#b23b3b"
+
+    fig, ax = plt.subplots(figsize=(8, 3.6), dpi=150)
+    ax.plot(xs, ys, color=color, linewidth=2.0)
+    ax.fill_between(xs, ys, min(ys), color=color, alpha=0.12)
+    ax.set_title(f"Equities {MODE_LABEL} progress", fontsize=11)
+    ax.set_ylabel("Equity, USD")
+    ax.grid(alpha=0.22, linestyle="--", linewidth=0.7)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"${v:,.0f}"))
+    if monthly:
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
+    else:
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
+    fig.autofmt_xdate()
+    fig.tight_layout()
+    fig.savefig(out, bbox_inches="tight")
+    plt.close(fig)
+    return out
 
 
 # ── Reports ───────────────────────────────────────────────────────────────────
@@ -228,6 +306,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--monthly", action="store_true", help="Send monthly report instead of daily")
     ap.add_argument("--dry-run", action="store_true", help="Print report without sending to TG")
+    ap.add_argument("--no-chart", action="store_true", help="Do not attach progress chart")
     args = ap.parse_args()
 
     if not ALPACA_KEY or not ALPACA_SECRET:
@@ -242,9 +321,18 @@ def main() -> int:
 
     if args.dry_run:
         print(msg)
+        chart_path = None if args.no_chart else _build_progress_chart(monthly=args.monthly)
+        if chart_path:
+            print(f"chart={chart_path}")
         return 0
 
     _tg_send(msg)
+    chart_path = None if args.no_chart else _build_progress_chart(monthly=args.monthly)
+    if chart_path:
+        _tg_send_photo(
+            chart_path,
+            caption=f"Equities {MODE_LABEL} {'monthly' if args.monthly else 'daily'} progress",
+        )
     print(f"Sent {'monthly' if args.monthly else 'daily'} report to Telegram ({len(msg)} chars)")
     return 0
 
