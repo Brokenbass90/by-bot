@@ -24,8 +24,10 @@ class DeepSeekConfig:
     timeout_sec: float
     history_path: Path
     audit_log_path: Path
+    approval_queue_path: Path
     max_history_messages: int
     max_answer_chars: int
+    daily_request_cap: int
 
 
 def _load_config() -> DeepSeekConfig:
@@ -37,8 +39,10 @@ def _load_config() -> DeepSeekConfig:
         timeout_sec=float(os.getenv("DEEPSEEK_TIMEOUT_SEC", "8") or 8),
         history_path=Path(str(os.getenv("DEEPSEEK_CHAT_STATE_PATH", "/tmp/bybot_deepseek_chat.json") or "/tmp/bybot_deepseek_chat.json")),
         audit_log_path=Path(str(os.getenv("DEEPSEEK_AUDIT_LOG_PATH", "/tmp/bybot_deepseek_audit.jsonl") or "/tmp/bybot_deepseek_audit.jsonl")),
+        approval_queue_path=Path(str(os.getenv("DEEPSEEK_APPROVAL_QUEUE_PATH", "/tmp/bybot_deepseek_approval_queue.json") or "/tmp/bybot_deepseek_approval_queue.json")),
         max_history_messages=max(0, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "8") or 8)),
         max_answer_chars=max(600, int(os.getenv("DEEPSEEK_MAX_ANSWER_CHARS", "3500") or 3500)),
+        daily_request_cap=max(1, int(os.getenv("DEEPSEEK_DAILY_REQUEST_CAP", "60") or 60)),
     )
 
 
@@ -68,6 +72,8 @@ class DeepSeekOverlay:
             f"base_url={self.cfg.base_url}\n"
             f"history={self.cfg.history_path}\n"
             f"audit={self.cfg.audit_log_path}\n"
+            f"approval_queue={self.cfg.approval_queue_path}\n"
+            f"daily_request_cap={self.cfg.daily_request_cap}\n"
             f"api_key={'set' if self.cfg.api_key else 'missing'}"
         )
 
@@ -113,6 +119,105 @@ class DeepSeekOverlay:
         except Exception:
             pass
 
+    def _count_today_requests(self) -> int:
+        path = self.cfg.audit_log_path
+        if not path.exists():
+            return 0
+        day = time.strftime("%Y-%m-%d", time.gmtime())
+        count = 0
+        try:
+            with path.open("r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        row = json.loads(line)
+                    except Exception:
+                        continue
+                    ts = int(row.get("ts") or 0)
+                    row_day = time.strftime("%Y-%m-%d", time.gmtime(ts)) if ts else ""
+                    if row_day == day:
+                        count += 1
+        except Exception:
+            return 0
+        return count
+
+    def budget_status_text(self) -> str:
+        self.reload()
+        used = self._count_today_requests()
+        left = max(0, self.cfg.daily_request_cap - used)
+        return (
+            "DeepSeek budget:\n"
+            f"used_today={used}\n"
+            f"daily_cap={self.cfg.daily_request_cap}\n"
+            f"remaining={left}"
+        )
+
+    def _load_approval_queue(self) -> list[dict[str, Any]]:
+        path = self.cfg.approval_queue_path
+        if not path.exists():
+            return []
+        try:
+            with path.open("r", encoding="utf-8") as f:
+                data = json.load(f) or []
+            if isinstance(data, list):
+                return [x for x in data if isinstance(x, dict)]
+        except Exception:
+            pass
+        return []
+
+    def _save_approval_queue(self, items: list[dict[str, Any]]) -> None:
+        try:
+            self.cfg.approval_queue_path.parent.mkdir(parents=True, exist_ok=True)
+            with self.cfg.approval_queue_path.open("w", encoding="utf-8") as f:
+                json.dump(items, f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
+
+    def pending_actions_text(self) -> str:
+        self.reload()
+        items = [x for x in self._load_approval_queue() if str(x.get("status", "pending")) == "pending"]
+        if not items:
+            return "DeepSeek approval queue: пусто."
+        lines = ["DeepSeek approval queue:"]
+        for item in items[:10]:
+            lines.append(
+                f"- id={item.get('id')} kind={item.get('kind','proposal')} "
+                f"status={item.get('status','pending')} summary={item.get('summary','')}"
+            )
+        return "\n".join(lines)
+
+    def submit_proposal(self, summary: str, payload: dict[str, Any] | None = None, kind: str = "proposal") -> str:
+        self.reload()
+        items = self._load_approval_queue()
+        next_id = 1 + max([int(x.get("id") or 0) for x in items] or [0])
+        item = {
+            "id": next_id,
+            "kind": kind,
+            "status": "pending",
+            "summary": str(summary or "").strip(),
+            "payload": payload or {},
+            "created_ts": int(time.time()),
+        }
+        items.append(item)
+        self._save_approval_queue(items)
+        return f"DeepSeek proposal queued: id={next_id}"
+
+    def decide_proposal(self, proposal_id: int, approve: bool) -> str:
+        self.reload()
+        items = self._load_approval_queue()
+        for item in items:
+            if int(item.get("id") or 0) != int(proposal_id):
+                continue
+            if str(item.get("status", "pending")) != "pending":
+                return f"Proposal {proposal_id} уже не pending."
+            item["status"] = "approved" if approve else "rejected"
+            item["decided_ts"] = int(time.time())
+            self._save_approval_queue(items)
+            return f"Proposal {proposal_id} {'approved' if approve else 'rejected'}."
+        return f"Proposal {proposal_id} not found."
+
     def ask(self, question: str, snapshot: dict[str, Any]) -> str:
         self.reload()
         q = str(question or "").strip()
@@ -122,6 +227,8 @@ class DeepSeekOverlay:
             return "DeepSeek overlay выключен. Включи `DEEPSEEK_ENABLE=1` и добавь `DEEPSEEK_API_KEY`."
         if not self.cfg.api_key:
             return "DeepSeek API key не задан. Нужен `DEEPSEEK_API_KEY`."
+        if self._count_today_requests() >= self.cfg.daily_request_cap:
+            return "DeepSeek budget exhausted for today. Увеличь `DEEPSEEK_DAILY_REQUEST_CAP` или дождись следующего дня."
 
         system_prompt = (
             "Ты — advisory-менеджер торгового бота. "

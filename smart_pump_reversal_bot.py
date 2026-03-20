@@ -1663,7 +1663,11 @@ def _handle_tg_command(text: str):
             "• /ban SYM1,SYM2 — добавить в бан\n"
             "• /unban SYM1,SYM2 — убрать из бана\n"
             "• /ai <вопрос> — спросить advisory-AI о состоянии бота\n"
-            "• /ai_reset — сбросить историю AI-диалога"
+            "• /ai_reset — сбросить историю AI-диалога\n"
+            "• /ai_budget — usage/лимит AI\n"
+            "• /ai_pending — очередь proposal'ов\n"
+            "• /ai_approve ID — подтвердить proposal\n"
+            "• /ai_reject ID — отклонить proposal"
         )
         return
 
@@ -1786,6 +1790,30 @@ def _handle_tg_command(text: str):
     if name == "/ai_reset":
         DEEPSEEK_OVERLAY.reset_history()
         _tg_reply("AI history reset.")
+        return
+
+    if name == "/ai_budget":
+        _tg_reply(DEEPSEEK_OVERLAY.budget_status_text())
+        return
+
+    if name == "/ai_pending":
+        _tg_reply(DEEPSEEK_OVERLAY.pending_actions_text())
+        return
+
+    if name == "/ai_approve" and len(cmd) >= 2:
+        pid = _parse_float(cmd[1])
+        if pid is None:
+            _tg_reply("Usage: /ai_approve <id>")
+            return
+        _tg_reply(DEEPSEEK_OVERLAY.decide_proposal(int(pid), approve=True))
+        return
+
+    if name == "/ai_reject" and len(cmd) >= 2:
+        pid = _parse_float(cmd[1])
+        if pid is None:
+            _tg_reply("Usage: /ai_reject <id>")
+            return
+        _tg_reply(DEEPSEEK_OVERLAY.decide_proposal(int(pid), approve=False))
         return
 
     if name == "/plotlast":
