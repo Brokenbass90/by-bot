@@ -1,0 +1,71 @@
+{
+  "name": "triple_screen_adaptive_v8_friend_symbols",
+  "description": "TS132 v8 — focused on friend's exact coins (KSM, STRK, AXS, AVAX, ETH). Key new param: eval_tf_min (1h/3h/4h evaluation window). Screenshot analysis shows friend's entries at 6:00/9:00/12:00/15:00 UTC = 3h cadence. Also testing osc thresholds 65/35 vs 70/30 to increase signal frequency.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "triple_screen_v132",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-15",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.02",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "1",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "SYMBOLS":                  ["STRKUSDT", "KSMUSDT", "AXSUSDT", "AVAXUSDT", "ETHUSDT"],
+    "TS132_EVAL_TF_MIN":        [60, 120, 180, 240],
+    "TS132_TREND_TF":           ["60", "240"],
+    "TS132_TREND_EMA_LEN":      [16, 24, 36],
+    "TS132_OSC_TYPE":           ["rsi"],
+    "TS132_OSC_PERIOD":         [6, 8, 10],
+    "TS132_OSC_OB":             [65.0, 70.0],
+    "TS132_OSC_OS":             [30.0, 35.0],
+    "TS132_SL_ATR_MULT":        [1.5, 2.0],
+    "TS132_TP_ATR_MULT":        [6.0, 8.0, 10.0],
+    "TS132_BE_PCT":             [0.8, 1.0],
+    "TS132_TRADE_MODE":         ["active"],
+    "TS132_EXEC_MODE":          ["alts"],
+    "TS132_MAX_SIGNALS_PER_DAY": [5, 10],
+    "TS132_USE_VOL_FILTER":     ["0"]
+  },
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1"
+  },
+  "constraints": {
+    "min_trades": 8,
+    "min_profit_factor": 1.20,
+    "max_drawdown": 12.0,
+    "min_net_pnl": 2.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 3,
+    "min_worst_month_pnl": -3.0
+  },
+  "score_weights": {
+    "net_pnl": 1.5,
+    "profit_factor": 3.0,
+    "winrate": 8.0,
+    "max_drawdown": 1.8,
+    "trades": 0.35,
+    "trades_cap": 80,
+    "negative_months": 3.0,
+    "max_negative_streak": 2.5,
+    "worst_month_pnl": 2.0
+  }
+}
