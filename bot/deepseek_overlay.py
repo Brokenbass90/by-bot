@@ -23,6 +23,7 @@ class DeepSeekConfig:
     model: str
     timeout_sec: float
     history_path: Path
+    audit_log_path: Path
     max_history_messages: int
     max_answer_chars: int
 
@@ -35,6 +36,7 @@ def _load_config() -> DeepSeekConfig:
         model=str(os.getenv("DEEPSEEK_MODEL", "deepseek-chat") or "deepseek-chat").strip(),
         timeout_sec=float(os.getenv("DEEPSEEK_TIMEOUT_SEC", "8") or 8),
         history_path=Path(str(os.getenv("DEEPSEEK_CHAT_STATE_PATH", "/tmp/bybot_deepseek_chat.json") or "/tmp/bybot_deepseek_chat.json")),
+        audit_log_path=Path(str(os.getenv("DEEPSEEK_AUDIT_LOG_PATH", "/tmp/bybot_deepseek_audit.jsonl") or "/tmp/bybot_deepseek_audit.jsonl")),
         max_history_messages=max(0, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "8") or 8)),
         max_answer_chars=max(600, int(os.getenv("DEEPSEEK_MAX_ANSWER_CHARS", "3500") or 3500)),
     )
@@ -65,6 +67,7 @@ class DeepSeekOverlay:
             f"model={self.cfg.model}\n"
             f"base_url={self.cfg.base_url}\n"
             f"history={self.cfg.history_path}\n"
+            f"audit={self.cfg.audit_log_path}\n"
             f"api_key={'set' if self.cfg.api_key else 'missing'}"
         )
 
@@ -99,6 +102,14 @@ class DeepSeekOverlay:
             self.cfg.history_path.parent.mkdir(parents=True, exist_ok=True)
             with self.cfg.history_path.open("w", encoding="utf-8") as f:
                 json.dump(messages[-self.cfg.max_history_messages :], f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
+
+    def _append_audit(self, payload: dict[str, Any]) -> None:
+        try:
+            self.cfg.audit_log_path.parent.mkdir(parents=True, exist_ok=True)
+            with self.cfg.audit_log_path.open("a", encoding="utf-8") as f:
+                f.write(json.dumps(payload, ensure_ascii=False) + "\n")
         except Exception:
             pass
 
@@ -158,13 +169,36 @@ class DeepSeekOverlay:
                 msg = choices[0].get("message") or {}
                 content = str(msg.get("content") or "").strip()
             if not content:
-                return "DeepSeek не вернул содержательный ответ."
+                answer = "DeepSeek не вернул содержательный ответ."
+                self._append_audit({
+                    "ts": int(time.time()),
+                    "model": self.cfg.model,
+                    "question": q,
+                    "answer": answer,
+                    "status": "empty",
+                })
+                return answer
             answer = content[: self.cfg.max_answer_chars].strip()
             history.extend([
                 {"role": "user", "content": q},
                 {"role": "assistant", "content": answer},
             ])
             self._save_history(history)
+            self._append_audit({
+                "ts": int(time.time()),
+                "model": self.cfg.model,
+                "question": q,
+                "answer": answer,
+                "status": "ok",
+            })
             return answer
         except Exception as e:
-            return f"DeepSeek request failed: {e}"
+            answer = f"DeepSeek request failed: {e}"
+            self._append_audit({
+                "ts": int(time.time()),
+                "model": self.cfg.model,
+                "question": q,
+                "answer": answer,
+                "status": "error",
+            })
+            return answer

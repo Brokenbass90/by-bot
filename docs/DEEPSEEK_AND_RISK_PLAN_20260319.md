@@ -30,6 +30,7 @@ Goal: use a cheap LLM as an advisory/supervisory layer without letting it direct
   - read-only advisory mode only
   - uses local bot snapshot (`risk`, sleeves, diag counters, health summary, filter summary)
   - no trade execution, no parameter mutation
+  - writes a simple audit trail of AI requests/replies for operator review
 - Required env for activation:
   - `DEEPSEEK_ENABLE=1`
   - `DEEPSEEK_API_KEY=...`
