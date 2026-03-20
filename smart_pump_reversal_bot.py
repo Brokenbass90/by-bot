@@ -1666,6 +1666,8 @@ def _handle_tg_command(text: str):
             "• /ai_reset — сбросить историю AI-диалога\n"
             "• /ai_budget — usage/лимит AI\n"
             "• /ai_pending — очередь proposal'ов\n"
+            "• /ai_shadow — shadow-рекомендации AI\n"
+            "• /ai_shadow_reset — сбросить shadow-журнал AI\n"
             "• /ai_approve ID — подтвердить proposal\n"
             "• /ai_reject ID — отклонить proposal"
         )
@@ -1798,6 +1800,14 @@ def _handle_tg_command(text: str):
 
     if name == "/ai_pending":
         _tg_reply(DEEPSEEK_OVERLAY.pending_actions_text())
+        return
+
+    if name == "/ai_shadow":
+        _tg_reply(DEEPSEEK_OVERLAY.shadow_status_text())
+        return
+
+    if name == "/ai_shadow_reset":
+        _tg_reply(DEEPSEEK_OVERLAY.reset_shadow_log())
         return
 
     if name == "/ai_approve" and len(cmd) >= 2:

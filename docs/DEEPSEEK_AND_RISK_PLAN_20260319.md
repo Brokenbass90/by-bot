@@ -84,6 +84,11 @@ Goal: use a cheap LLM as an advisory/supervisory layer without letting it direct
 - Live impact:
   - shadow only at first
   - compare against current hard-priority router
+- Current scaffold status:
+  - local shadow journal path now exists in code
+  - Telegram can inspect/reset recent shadow recommendations
+  - advisory replies can already be mirrored into the shadow log for operator review
+  - still missing: automatic capture of competing live sleeves and before/after outcome comparison
 
 ### Phase 5: Limited live routing
 - Enable only after shadow logs show stable advantage.

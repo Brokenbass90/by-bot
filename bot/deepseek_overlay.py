@@ -25,9 +25,12 @@ class DeepSeekConfig:
     history_path: Path
     audit_log_path: Path
     approval_queue_path: Path
+    shadow_enabled: bool
+    shadow_log_path: Path
     max_history_messages: int
     max_answer_chars: int
     daily_request_cap: int
+    shadow_max_items: int
 
 
 def _load_config() -> DeepSeekConfig:
@@ -40,9 +43,12 @@ def _load_config() -> DeepSeekConfig:
         history_path=Path(str(os.getenv("DEEPSEEK_CHAT_STATE_PATH", "/tmp/bybot_deepseek_chat.json") or "/tmp/bybot_deepseek_chat.json")),
         audit_log_path=Path(str(os.getenv("DEEPSEEK_AUDIT_LOG_PATH", "/tmp/bybot_deepseek_audit.jsonl") or "/tmp/bybot_deepseek_audit.jsonl")),
         approval_queue_path=Path(str(os.getenv("DEEPSEEK_APPROVAL_QUEUE_PATH", "/tmp/bybot_deepseek_approval_queue.json") or "/tmp/bybot_deepseek_approval_queue.json")),
+        shadow_enabled=_env_bool("DEEPSEEK_SHADOW_ENABLE", True),
+        shadow_log_path=Path(str(os.getenv("DEEPSEEK_SHADOW_LOG_PATH", "/tmp/bybot_deepseek_shadow.json") or "/tmp/bybot_deepseek_shadow.json")),
         max_history_messages=max(0, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "8") or 8)),
         max_answer_chars=max(600, int(os.getenv("DEEPSEEK_MAX_ANSWER_CHARS", "3500") or 3500)),
         daily_request_cap=max(1, int(os.getenv("DEEPSEEK_DAILY_REQUEST_CAP", "60") or 60)),
+        shadow_max_items=max(10, int(os.getenv("DEEPSEEK_SHADOW_MAX_ITEMS", "200") or 200)),
     )
 
 
@@ -73,6 +79,8 @@ class DeepSeekOverlay:
             f"history={self.cfg.history_path}\n"
             f"audit={self.cfg.audit_log_path}\n"
             f"approval_queue={self.cfg.approval_queue_path}\n"
+            f"shadow={'ON' if self.cfg.shadow_enabled else 'OFF'}\n"
+            f"shadow_log={self.cfg.shadow_log_path}\n"
             f"daily_request_cap={self.cfg.daily_request_cap}\n"
             f"api_key={'set' if self.cfg.api_key else 'missing'}"
         )
@@ -153,6 +161,82 @@ class DeepSeekOverlay:
             f"daily_cap={self.cfg.daily_request_cap}\n"
             f"remaining={left}"
         )
+
+    def _load_shadow_items(self) -> list[dict[str, Any]]:
+        path = self.cfg.shadow_log_path
+        if not path.exists():
+            return []
+        try:
+            with path.open("r", encoding="utf-8") as f:
+                data = json.load(f) or []
+            if isinstance(data, list):
+                return [x for x in data if isinstance(x, dict)]
+        except Exception:
+            pass
+        return []
+
+    def _save_shadow_items(self, items: list[dict[str, Any]]) -> None:
+        try:
+            self.cfg.shadow_log_path.parent.mkdir(parents=True, exist_ok=True)
+            with self.cfg.shadow_log_path.open("w", encoding="utf-8") as f:
+                json.dump(items[-self.cfg.shadow_max_items :], f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
+
+    def append_shadow_recommendation(
+        self,
+        summary: str,
+        payload: dict[str, Any] | None = None,
+        *,
+        source: str = "manual",
+        recommendation_type: str = "advisory",
+    ) -> None:
+        self.reload()
+        if not self.cfg.shadow_enabled:
+            return
+        items = self._load_shadow_items()
+        items.append(
+            {
+                "id": 1 + max([int(x.get("id") or 0) for x in items] or [0]),
+                "ts": int(time.time()),
+                "source": str(source or "manual"),
+                "type": str(recommendation_type or "advisory"),
+                "summary": str(summary or "").strip(),
+                "payload": payload or {},
+            }
+        )
+        self._save_shadow_items(items)
+
+    def shadow_status_text(self, limit: int = 5) -> str:
+        self.reload()
+        items = self._load_shadow_items()
+        lines = [
+            "DeepSeek shadow mode:",
+            f"enabled={'yes' if self.cfg.shadow_enabled else 'no'}",
+            f"log={self.cfg.shadow_log_path}",
+            f"stored={len(items)}",
+        ]
+        if not items:
+            lines.append("recent=none")
+            return "\n".join(lines)
+        lines.append("recent:")
+        for item in items[-max(1, limit) :]:
+            ts = int(item.get("ts") or 0)
+            stamp = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime(ts)) if ts else "unknown"
+            lines.append(
+                f"- id={item.get('id')} ts={stamp} type={item.get('type','advisory')} "
+                f"source={item.get('source','manual')} summary={item.get('summary','')}"
+            )
+        return "\n".join(lines)
+
+    def reset_shadow_log(self) -> str:
+        self.reload()
+        try:
+            if self.cfg.shadow_log_path.exists():
+                self.cfg.shadow_log_path.unlink()
+            return "DeepSeek shadow log reset."
+        except Exception as e:
+            return f"DeepSeek shadow log reset failed: {e}"
 
     def _load_approval_queue(self) -> list[dict[str, Any]]:
         path = self.cfg.approval_queue_path
@@ -291,6 +375,12 @@ class DeepSeekOverlay:
                 {"role": "assistant", "content": answer},
             ])
             self._save_history(history)
+            self.append_shadow_recommendation(
+                summary=answer[:240],
+                payload={"question": q, "model": self.cfg.model},
+                source="telegram_ai",
+                recommendation_type="advisory_reply",
+            )
             self._append_audit({
                 "ts": int(time.time()),
                 "model": self.cfg.model,
