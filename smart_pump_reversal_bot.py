@@ -69,6 +69,7 @@ from bot.diagnostics import (
     _diag_inc, _diag_get_int, _runtime_diag_snapshot,
     _breakout_no_signal_diag_key,
 )
+from bot.deepseek_overlay import DeepSeekOverlay
 from bot.symbol_state import (
     SymState, STATE,
     S, update_5m_bar, trim,
@@ -1046,6 +1047,7 @@ LAST_FILTER_BUILD_TS = 0
 LAST_UNIVERSE_REFRESH_TS = 0
 KILLER_GUARD_CACHE_TS = 0
 KILLER_GUARD_BANNED: set[str] = set()
+DEEPSEEK_OVERLAY = DeepSeekOverlay()
 
 def _parse_symbol_csv(s: str) -> list[str]:
     parts = [p.strip().upper() for p in s.replace(";", ",").split(",") if p.strip()]
@@ -1300,6 +1302,49 @@ def _refresh_killer_guard_cache(force: bool = False) -> set[str]:
 
 def _tg_reply(msg: str):
     tg_send(msg)
+
+
+def _deepseek_snapshot() -> dict[str, Any]:
+    return {
+        "ts_utc": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+        "trade_on": bool(TRADE_ON),
+        "portfolio_disabled": bool(PORTFOLIO_STATE.get("disabled")),
+        "effective_equity": round(float(_get_effective_equity()), 4),
+        "open_trades": int(len(TRADES)),
+        "risk_pct": float(RISK_PER_TRADE_PCT),
+        "max_positions": int(MAX_POSITIONS),
+        "bot_capital_usd": float(BOT_CAPITAL_USD),
+        "strategies": {
+            "breakout": bool(ENABLE_BREAKOUT_TRADING),
+            "midterm": bool(ENABLE_MIDTERM_TRADING),
+            "sloped": bool(ENABLE_SLOPED_TRADING),
+            "ts132": bool(ENABLE_TS132_TRADING),
+            "pump_fade": bool(ENABLE_PUMP_STRATEGY),
+            "inplay": bool(ENABLE_INPLAY_TRADING),
+            "retest": bool(ENABLE_RETEST_TRADING),
+            "range": bool(ENABLE_RANGE_TRADING),
+        },
+        "diag": {
+            "ws_connect": int(_diag_get_int("ws_connect")),
+            "ws_disconnect": int(_diag_get_int("ws_disconnect")),
+            "ws_handshake_timeout": int(_diag_get_int("ws_handshake_timeout")),
+            "breakout_try": int(_diag_get_int("breakout_try")),
+            "breakout_entry": int(_diag_get_int("breakout_entry")),
+            "breakout_no_signal": int(_diag_get_int("breakout_no_signal")),
+            "breakout_ns_impulse_weak": int(_diag_get_int("breakout_ns_impulse_weak")),
+            "breakout_ns_impulse_body": int(_diag_get_int("breakout_ns_impulse_body")),
+            "breakout_ns_dist": int(_diag_get_int("breakout_ns_dist")),
+            "midterm_try": int(_diag_get_int("midterm_try")),
+            "midterm_entry": int(_diag_get_int("midterm_entry")),
+            "sloped_try": int(_diag_get_int("sloped_try")),
+            "sloped_entry": int(_diag_get_int("sloped_entry")),
+            "ts132_try": int(_diag_get_int("ts132_try")),
+            "ts132_entry": int(_diag_get_int("ts132_entry")),
+        },
+        "runtime_stats_12h": _strategy_runtime_stats_text(12),
+        "health_30d": _health_summary_text(30),
+        "filters": _symbol_filters_summary(),
+    }
 
 def _parse_float(s: str) -> float | None:
     try:
@@ -1616,7 +1661,9 @@ def _handle_tg_command(text: str):
             "• /banapply — применить последние рекомендации\n"
             "• /banlist — текущие фильтры\n"
             "• /ban SYM1,SYM2 — добавить в бан\n"
-            "• /unban SYM1,SYM2 — убрать из бана"
+            "• /unban SYM1,SYM2 — убрать из бана\n"
+            "• /ai <вопрос> — спросить advisory-AI о состоянии бота\n"
+            "• /ai_reset — сбросить историю AI-диалога"
         )
         return
 
@@ -1720,6 +1767,25 @@ def _handle_tg_command(text: str):
 
     if name == "/health":
         _tg_reply(_health_summary_text())
+        return
+
+    if name == "/ai":
+        prompt = text.partition(" ")[2].strip()
+        if not prompt:
+            _tg_reply(
+                DEEPSEEK_OVERLAY.status_text()
+                + "\n\nUsage: /ai <question>\n"
+                + "Example: /ai почему бот сегодня не входил?"
+            )
+            return
+        _tg_reply("🤖 AI думает...")
+        answer = DEEPSEEK_OVERLAY.ask(prompt, _deepseek_snapshot())
+        _tg_reply(answer)
+        return
+
+    if name == "/ai_reset":
+        DEEPSEEK_OVERLAY.reset_history()
+        _tg_reply("AI history reset.")
         return
 
     if name == "/plotlast":

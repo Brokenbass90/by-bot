@@ -21,6 +21,24 @@ Goal: use a cheap LLM as an advisory/supervisory layer without letting it direct
   - safest layer
   - helps research immediately
 
+### Phase 1a: Telegram advisory bootstrap
+- Implemented local bootstrap path in code:
+  - `bot/deepseek_overlay.py`
+  - `/ai <question>` command in the main Telegram bot
+  - `/ai_reset` to clear short chat history
+- Current behavior:
+  - read-only advisory mode only
+  - uses local bot snapshot (`risk`, sleeves, diag counters, health summary, filter summary)
+  - no trade execution, no parameter mutation
+- Required env for activation:
+  - `DEEPSEEK_ENABLE=1`
+  - `DEEPSEEK_API_KEY=...`
+  - optional: `DEEPSEEK_MODEL`, `DEEPSEEK_BASE_URL`, `DEEPSEEK_TIMEOUT_SEC`
+  - reference example: `configs/deepseek_overlay.env.example`
+- Purpose:
+  - give us a live conversational control surface before routing or execution overlays
+  - keep the first integration safe and operator-facing
+
 ### Phase 2: Hourly regime supervisor
 - Trigger hourly for crypto and daily or hourly for equities.
 - Inputs:
