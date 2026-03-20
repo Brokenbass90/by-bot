@@ -1,0 +1,76 @@
+{
+  "name": "triple_screen_adaptive_v5_strk_density_push",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "triple_screen_v132",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-15",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.02",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "1",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "STRKUSDT"
+    ],
+    "TS132_TRADE_MODE": ["active"],
+    "TS132_SL_ATR_MULT": [1.6, 1.7, 1.8],
+    "TS132_TP_ATR_MULT": [7.0, 8.0, 9.0],
+    "TS132_BE_PCT": [0.8, 1.0, 1.2],
+    "TS132_OSC_TYPE": ["rsi"],
+    "TS132_OSC_PERIOD": [8],
+    "TS132_TREND_EMA_LEN": [24, 30],
+    "TS132_USE_VOL_FILTER": ["0"],
+    "TS132_MAX_SIGNALS_PER_DAY": [3, 4, 5],
+    "TS132_EXEC_MODE": ["alts"]
+  },
+  "base_env": {
+    "TS132_ALLOW_LONGS": "1",
+    "TS132_ALLOW_SHORTS": "1",
+    "TS132_VOL_MULT": "0.5",
+    "TS132_TRAIL_ATR_MULT_LONG": "1.5",
+    "TS132_TRAIL_ATR_MULT_SHORT": "2.0",
+    "TS132_TRAIL_ACTIVATE_LONG_ATR": "3.0",
+    "TS132_TRAIL_ACTIVATE_SHORT_ATR": "4.0",
+    "TS132_USE_BTC_FILTER": "0",
+    "BACKTEST_CACHE_ONLY": "1"
+  },
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2,
+    "min_worst_month_pnl": -2.5
+  },
+  "score_weights": {
+    "net_pnl": 1.8,
+    "profit_factor": 1.6,
+    "winrate": 5.0,
+    "max_drawdown": 1.4,
+    "trades": 0.18,
+    "trades_cap": 50,
+    "negative_months": 2.2,
+    "max_negative_streak": 1.6,
+    "worst_month_pnl": 1.6
+  }
+}
