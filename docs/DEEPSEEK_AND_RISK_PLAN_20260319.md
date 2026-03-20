@@ -56,6 +56,10 @@ Goal: use a cheap LLM as an advisory/supervisory layer without letting it direct
   - only sleeve enable/disable and risk haircut
 - Fallback:
   - keep last valid regime for a bounded TTL
+- Current scaffold status:
+  - local heuristic regime hint now exists from live bot diagnostics
+  - Telegram can query it via `/ai_regime`
+  - still missing: market-wide benchmark inputs, external news context, periodic persistence/TTL
 
 ### Phase 3: News/context interpreter
 - Trigger on event refresh or hourly.

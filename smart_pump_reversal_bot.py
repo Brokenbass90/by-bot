@@ -1304,6 +1304,73 @@ def _tg_reply(msg: str):
     tg_send(msg)
 
 
+def _deepseek_local_regime_hint() -> dict[str, Any]:
+    breakout_try = int(_diag_get_int("breakout_try"))
+    breakout_entry = int(_diag_get_int("breakout_entry"))
+    breakout_no_signal = int(_diag_get_int("breakout_no_signal"))
+    weak = int(_diag_get_int("breakout_ns_impulse_weak"))
+    body = int(_diag_get_int("breakout_ns_impulse_body"))
+    dist = int(_diag_get_int("breakout_ns_dist"))
+    ws_connect = int(_diag_get_int("ws_connect"))
+    ws_disconnect = int(_diag_get_int("ws_disconnect"))
+    ws_handshake_timeout = int(_diag_get_int("ws_handshake_timeout"))
+
+    if ws_handshake_timeout > 0:
+        return {
+            "label": "infra_unstable",
+            "confidence": 0.95,
+            "reason": "websocket handshake timeouts observed",
+        }
+
+    if breakout_entry > 0 and breakout_try > 0:
+        return {
+            "label": "tradable_impulse",
+            "confidence": 0.65,
+            "reason": "live breakout sleeve is already seeing entries",
+        }
+
+    if breakout_no_signal <= 0:
+        return {
+            "label": "insufficient_data",
+            "confidence": 0.2,
+            "reason": "not enough recent no-signal evidence",
+        }
+
+    weak_ratio = weak / float(max(1, breakout_no_signal))
+    body_ratio = body / float(max(1, breakout_no_signal))
+    dist_ratio = dist / float(max(1, breakout_no_signal))
+
+    if weak_ratio >= 0.60:
+        return {
+            "label": "weak_chop",
+            "confidence": round(min(0.95, 0.55 + weak_ratio * 0.4), 2),
+            "reason": "impulse_weak dominates recent breakout rejections",
+        }
+    if body_ratio >= 0.28:
+        return {
+            "label": "messy_body",
+            "confidence": round(min(0.9, 0.45 + body_ratio * 0.7), 2),
+            "reason": "many setups fail on weak/ugly candle bodies",
+        }
+    if dist_ratio >= 0.18:
+        return {
+            "label": "late_extended",
+            "confidence": round(min(0.85, 0.4 + dist_ratio * 0.9), 2),
+            "reason": "setups often arrive too stretched from acceptable distance",
+        }
+    if ws_connect > 0 and ws_disconnect > ws_connect:
+        return {
+            "label": "infra_noisy",
+            "confidence": 0.7,
+            "reason": "disconnects exceed connects in current live window",
+        }
+    return {
+        "label": "mixed",
+        "confidence": 0.45,
+        "reason": "no single live rejection pattern dominates right now",
+    }
+
+
 def _deepseek_snapshot() -> dict[str, Any]:
     return {
         "ts_utc": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
@@ -1341,6 +1408,7 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "ts132_try": int(_diag_get_int("ts132_try")),
             "ts132_entry": int(_diag_get_int("ts132_entry")),
         },
+        "local_regime_hint": _deepseek_local_regime_hint(),
         "runtime_stats_12h": _strategy_runtime_stats_text(12),
         "health_30d": _health_summary_text(30),
         "filters": _symbol_filters_summary(),
@@ -1664,6 +1732,7 @@ def _handle_tg_command(text: str):
             "• /unban SYM1,SYM2 — убрать из бана\n"
             "• /ai <вопрос> — спросить advisory-AI о состоянии бота\n"
             "• /ai_reset — сбросить историю AI-диалога\n"
+            "• /ai_regime — локальная regime-подсказка\n"
             "• /ai_budget — usage/лимит AI\n"
             "• /ai_pending — очередь proposal'ов\n"
             "• /ai_shadow — shadow-рекомендации AI\n"
@@ -1792,6 +1861,16 @@ def _handle_tg_command(text: str):
     if name == "/ai_reset":
         DEEPSEEK_OVERLAY.reset_history()
         _tg_reply("AI history reset.")
+        return
+
+    if name == "/ai_regime":
+        rg = _deepseek_local_regime_hint()
+        _tg_reply(
+            "DeepSeek regime scaffold:\n"
+            f"label={rg.get('label')}\n"
+            f"confidence={rg.get('confidence')}\n"
+            f"reason={rg.get('reason')}"
+        )
         return
 
     if name == "/ai_budget":
