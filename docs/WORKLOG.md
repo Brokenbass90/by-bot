@@ -34,14 +34,36 @@
 - Красных месяцев: 1/11 (август 2025, -0.76%)
 - Сравни с тем что было: старый бот 0 нормальных сделок
 
+### Полный портфель 4 стратегии (2026-03-21, run full_portfolio_4strat_360d)
+- Backtest: 360 дней (2025-03 → 2026-03), 12 символов, BACKTEST_CACHE_ONLY=1
+- **РЕЗУЛЬТАТЫ:**
+  | Стратегия | Сделок | WR | PnL |
+  |---|---|---|---|
+  | inplay_breakout | 550 | 70% | +26.4% |
+  | alt_resistance_fade_v1 | 45 | 56% | +14.2% |
+  | alt_sloped_channel_v1 | 33 | 52% | +5.4% |
+  | btc_eth_midterm_pullback | 71 | 46% | +3.8% |
+  | **ИТОГО** | **699** | **66%** | **+63.7%** |
+  | $100 → $163.72, PF 1.576, MaxDD 4.3%, 1 красный месяц из 12 | | | |
+- Breakout = главная стратегия (80% от сделок)!
+  Проблема на сервере была: слишком жёсткие live-настройки → 0 входов из 1572 попыток.
+  Autoresearch v2_focus нашёл правильные настройки: BT_BREAKOUT_QUALITY_MIN_SCORE=0.54
+
+### Autoresearch
+- "Тулза Карпатого" = https://github.com/karpathy/autoresearch встроена в `scripts/run_strategy_autoresearch.py`
+- Запущен новый раунд: `configs/autoresearch/full_stack_v1_combined.json`
+  144 кандидата, ~1-2 часа. PID 197 на локальной машине (2026-03-21 14:09 UTC).
+  Результаты в: `backtest_runs/autoresearch_*/full_stack_v1_combined/`
+- Цель: найти ещё лучшую комбинацию всех 4 стратегий (хотим PF > 1.6, WR > 67%)
+
 ### Следующие шаги (очередь)
-1. **СРОЧНО**: Fix systemd service — убрать `inplay_soft_live.env` из EnvironmentFile
-2. **LINK longs (ASC2)** — отдельный инстанс ASC1 для LINK лонгов: +~6 сделок WR 83%
-   доведёт до ~43 сделок/год
-3. **Fast strategy** — TS132 autoresearch ещё идёт на сервере, ждать результатов
-4. **Увеличить flat allowlist** — протестировать BTC/ETH/SOL на ARF1 (больше частота)
-5. **Риск** — SLOPED_RISK_MULT=0.10 FLAT_RISK_MULT=0.10 — очень консервативно для $106 счёта,
-   можно поднять до 0.25-0.50 когда убедимся что всё работает live
+1. **ДЕПЛОЙ breakout+midterm**: После git push, на сервере:
+   `cp configs/server_clean.env .env && systemctl restart bybot`
+   Ожидаем: `breakout=True, midterm=True, sloped=True, flat=True`
+2. **Проверить autoresearch full_stack_v1**: Дождаться результатов, найти лучший config
+3. **LINK longs (ASC2)** — +~6 сделок WR 83%
+4. **Риск** — поднять SLOPED/FLAT RISK_MULT с 0.10 до 0.25 после 1-2 живых сделок
+5. **MIDTERM_SYMBOLS** — нужно проверить что `MIDTERM_SYMBOLS=BTCUSDT,ETHUSDT` поддерживается ботом
 
 ### Заметки
 - Бот в `/root/by-bot/` на сервере, НЕ в `/root/bybit-bot-clean-v28`
