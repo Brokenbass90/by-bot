@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import math
 import os
-from dataclasses import dataclass
-from typing import List, Optional, Tuple
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Tuple
 
 from .signals import TradeSignal
 
@@ -124,6 +124,10 @@ class AltSlopedChannelV1Config:
     be_lock_rr: float = 0.0
     time_stop_bars_5m: int = 480
     cooldown_bars_5m: int = 72
+    # 5m entry confirmation: wait N 5m bars after 1h setup for confirming candle
+    # 0 = disabled (fire immediately on 1h close, old behavior)
+    # 3-6 = wait 15-30 min for bearish/bullish 5m confirmation candle
+    confirm_5m_bars: int = 0
 
 
 class AltSlopedChannelV1Strategy:
@@ -193,6 +197,7 @@ class AltSlopedChannelV1Strategy:
         self.cfg.be_lock_rr = _env_float("ASC1_BE_LOCK_RR", self.cfg.be_lock_rr)
         self.cfg.time_stop_bars_5m = _env_int("ASC1_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
         self.cfg.cooldown_bars_5m = _env_int("ASC1_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
+        self.cfg.confirm_5m_bars = _env_int("ASC1_CONFIRM_5M_BARS", self.cfg.confirm_5m_bars)
 
         self._allow = _env_csv_set(
             "ASC1_SYMBOL_ALLOWLIST",
@@ -201,6 +206,10 @@ class AltSlopedChannelV1Strategy:
         self._deny = _env_csv_set("ASC1_SYMBOL_DENYLIST")
         self._cooldown = 0
         self._last_tf_ts: Optional[int] = None
+        # pending 5m confirmation state:
+        # {side, sl, tp, tp1, upper_band, lower_band, atr, timeout_bars}
+        self._pending: Optional[Dict] = None
+        self._pending_bars_left: int = 0
 
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (o, h, l, c, v)
@@ -212,6 +221,62 @@ class AltSlopedChannelV1Strategy:
         if self._cooldown > 0:
             self._cooldown -= 1
             return None
+
+        # ── 5m CONFIRMATION CHECK ─────────────────────────────────────
+        # If we have a pending 1h setup, check each 5m bar for entry confirmation.
+        if self._pending is not None and self.cfg.confirm_5m_bars > 0:
+            p = self._pending
+            self._pending_bars_left -= 1
+            confirmed = False
+            invalidated = False
+
+            if p["side"] == "short":
+                # Confirm: bearish 5m candle that stays below upper band
+                bearish = c < o and (o - c) > 0.05 * p["atr"]
+                still_below = h < p["upper_band"] + p["atr"] * 0.15
+                confirmed = bearish and still_below
+                # Invalidate: price breaks clearly above upper band
+                invalidated = c > p["upper_band"] + p["atr"] * 0.30
+            else:  # long
+                # Confirm: bullish 5m candle that stays above lower band
+                bullish = c > o and (c - o) > 0.05 * p["atr"]
+                still_above = l > p["lower_band"] - p["atr"] * 0.15
+                confirmed = bullish and still_above
+                # Invalidate: price breaks clearly below lower band
+                invalidated = c < p["lower_band"] - p["atr"] * 0.30
+
+            if confirmed:
+                # Build the signal with current 5m price as entry
+                entry = float(c)
+                sl = p["sl"] + (entry - p["entry_ref"]) if p["side"] == "long" else p["sl"] + (entry - p["entry_ref"])
+                tp2 = p["tp2"]
+                tp1 = p["tp1"] + (entry - p["entry_ref"])
+                self._pending = None
+                self._pending_bars_left = 0
+                self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
+                sig = TradeSignal(
+                    strategy="alt_sloped_channel_v1",
+                    symbol=store.symbol,
+                    side=p["side"],
+                    entry=entry,
+                    sl=float(p["sl"]),
+                    tp=float(tp2),
+                    tps=[float(tp1), float(tp2)],
+                    tp_fracs=[min(0.9, max(0.1, self.cfg.tp1_frac)), max(0.0, 1.0 - min(0.9, max(0.1, self.cfg.tp1_frac)))],
+                    be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
+                    be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
+                    trailing_atr_mult=0.0,
+                    time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
+                    reason=f"asc1_sloped_channel_{p['side']}_5m_confirm",
+                )
+                if sig.validate():
+                    return sig
+
+            if invalidated or self._pending_bars_left <= 0:
+                self._pending = None
+                self._pending_bars_left = 0
+            return None
+        # ── END 5m CONFIRMATION CHECK ─────────────────────────────────
 
         rows = store.fetch_klines(store.symbol, self.cfg.signal_tf, self.cfg.signal_lookback) or []
         if len(rows) < self.cfg.signal_lookback:
@@ -312,6 +377,15 @@ class AltSlopedChannelV1Strategy:
             tp2 = upper - self.cfg.tp2_buffer_pct / 100.0 * width
             if sl < cur < tp2:
                 tp1 = cur + (tp2 - cur) * 0.55
+                if self.cfg.confirm_5m_bars > 0:
+                    # Queue for 5m confirmation instead of firing immediately
+                    self._pending = {
+                        "side": "long", "entry_ref": float(cur),
+                        "sl": float(sl), "tp2": float(tp2), "tp1": float(tp1),
+                        "upper_band": float(upper), "lower_band": float(lower), "atr": float(atr),
+                    }
+                    self._pending_bars_left = max(1, int(self.cfg.confirm_5m_bars))
+                    return None
                 self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
                 sig = TradeSignal(
                     strategy="alt_sloped_channel_v1",
@@ -350,6 +424,15 @@ class AltSlopedChannelV1Strategy:
             tp2 = lower + self.cfg.tp2_buffer_pct / 100.0 * width
             if tp2 < cur < sl:
                 tp1 = cur - (cur - tp2) * 0.55
+                if self.cfg.confirm_5m_bars > 0:
+                    # Queue for 5m confirmation instead of firing immediately
+                    self._pending = {
+                        "side": "short", "entry_ref": float(cur),
+                        "sl": float(sl), "tp2": float(tp2), "tp1": float(tp1),
+                        "upper_band": float(upper), "lower_band": float(lower), "atr": float(atr),
+                    }
+                    self._pending_bars_left = max(1, int(self.cfg.confirm_5m_bars))
+                    return None
                 self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
                 sig = TradeSignal(
                     strategy="alt_sloped_channel_v1",
