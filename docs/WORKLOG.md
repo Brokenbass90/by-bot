@@ -1,5 +1,54 @@
 # Bybit bot (v28) — worklog / reminders
 
+## 2026-03-21 (session 5) — Clean Deploy: Sloped+Flat live, годовой бектест
+
+### Что сделано
+- **Добавлена ARF1 (flat resistance fade) в live бот** — `strategies/flat_resistance_fade_live.py`,
+  полная интеграция в `smart_pump_reversal_bot.py` (env vars, engine init, try_flat_entry_async,
+  wiring в main loop, trade management, status logs)
+- **ASC1 5m confirmation** — `ASC1_CONFIRM_5M_BARS=6` добавлено в `alt_sloped_channel_v1.py`
+- **Чистый .env** — `configs/server_clean.env`: только sloped+flat включены,
+  все старые стратегии выключены, нет дублей
+- **Деплой на сервер** — `git pull codex/dynamic-symbol-filters` в `/root/by-bot/`,
+  `.env.old` бэкап создан, запущен свежий бот
+
+### Текущее состояние сервера (2026-03-21 ~12:00 UTC)
+- Бот: `/root/by-bot/smart_pump_reversal_bot.py` (PID 607107, nohup)
+- Стратегии: `sloped=True, flat=True`, все остальные False
+- Монеты sloped: ATOMUSDT, LINKUSDT
+- Монеты flat: LINKUSDT, LTCUSDT, SUIUSDT, DOTUSDT
+- ⚠️ ПРОБЛЕМА: systemd `bybot.service` грузит доп. файл `configs/inplay_soft_live.env`
+  который включает breakout обратно → нужно убрать эту строку из service файла
+- Команды: `sed -i '/inplay_soft_live.env/d' /etc/systemd/system/bybot.service && systemctl daemon-reload && systemctl restart bybot`
+
+### Годовой бектест (точно как сервер настроен)
+- Run: `backtest_runs/portfolio_20260321_133552_server_live_config_360d`
+- Данные: 360 дней (2025-03 → 2026-03), из кэша, 5 символов
+- **РЕЗУЛЬТАТЫ:**
+  | Стратегия | Сделок | WR | PnL |
+  |---|---|---|---|
+  | alt_sloped_channel_v1 (ATOM+LINK) | 24 | 58% | +8.3% |
+  | alt_resistance_fade_v1 (LINK/LTC/SUI/DOT) | 13 | 62% | +7.4% |
+  | **ИТОГО** | **37** | **59%** | **+15.7%** |
+  | Summary equity: 100 → 116.79, PF 3.06, MaxDD 1.24% | | | |
+- Красных месяцев: 1/11 (август 2025, -0.76%)
+- Сравни с тем что было: старый бот 0 нормальных сделок
+
+### Следующие шаги (очередь)
+1. **СРОЧНО**: Fix systemd service — убрать `inplay_soft_live.env` из EnvironmentFile
+2. **LINK longs (ASC2)** — отдельный инстанс ASC1 для LINK лонгов: +~6 сделок WR 83%
+   доведёт до ~43 сделок/год
+3. **Fast strategy** — TS132 autoresearch ещё идёт на сервере, ждать результатов
+4. **Увеличить flat allowlist** — протестировать BTC/ETH/SOL на ARF1 (больше частота)
+5. **Риск** — SLOPED_RISK_MULT=0.10 FLAT_RISK_MULT=0.10 — очень консервативно для $106 счёта,
+   можно поднять до 0.25-0.50 когда убедимся что всё работает live
+
+### Заметки
+- Бот в `/root/by-bot/` на сервере, НЕ в `/root/bybit-bot-clean-v28`
+- SSH ключ для сервера: `~/.ssh/by-bot` (не дефолтный, всегда `-i ~/.ssh/by-bot`)
+- Ветка: `codex/dynamic-symbol-filters` (и на сервере и в репо)
+- При следующем чате: проверить health message в Telegram что breakout=False
+
 ## 2026-03-18 (session 3) — Strategy Ideas, Equities Analysis & Development Roadmap
 
 ### Вопросы по риску
@@ -21,6 +70,47 @@
 - Это не баг — бот намеренно жёсткий в фильтрации
 - Решение: БОЛЬШЕ СТРАТЕГИЙ (дополнительные источники сигналов)
 - Текущие стратегии практически не торгуют в боковом рынке
+
+### ═══════════════════════════════════════════
+### MICRO SCALPER V1 — Результаты исследования (2026-03-20)
+### ═══════════════════════════════════════════
+
+**Что сделано:**
+- Создан `strategies/micro_scalper_v1.py` — EMA pullback scalper на 5m с трендом 15m/1h
+- Создан `scripts/run_micro_scalper_backtest.py` — standalone backtest
+- Проведено 10+ тест-конфигураций на BTC/ETH/SOL/LINK/ATOM, 180 дней
+
+**Результаты:**
+- Дефолт (15m тренд): WR 17%, PF 0.07 — ❌
+- Строже (1h, slope 0.18%, vol 1.3x): WR 25%, PF 0.08 — ❌
+- Только шорты (очень строго): WR 42%, PF 0.38 — ❌ (всё ещё убыток)
+
+**Корневая причина провала:**
+```
+Taker fees Bybit: 0.055% × 2 = 0.11% на раунд
+Slippage:         0.06% × 2  = 0.12%
+Итого:            ~0.23% на каждую сделку
+
+Типичное 5m движение BTC:  0.05–0.15%
+При RR=2.0: нужен TP 0.14–0.30% → fees > edge → математически убыточно
+```
+
+**Вывод:** EMA pullback на 5m убыточен из-за fees. Это НЕ проблема алгоритма —
+это проблема размера комиссий относительно 5m движений.
+
+**Что ЯВЛЯЕТСЯ скальпером в нашей системе:**
+`inplay_breakout` с `TF_BREAK=15, TF_ENTRY=5` — это и есть scalper.
+Ждёт уровень (15m), входит на рикоше (5m), средний холд 1-4h.
+
+**Пути к реальному 5m скальперу:**
+1. VIP tier Bybit (maker 0.01%) → делает 5m математически возможным
+2. Opening Range Breakout (первые 15m сессии) — большие движения
+3. Funding rate extremes + RSI reversion → контртрендовый
+4. Order book imbalance (нужны иные данные, не только OHLCV)
+
+**Файлы созданы:**
+- `strategies/micro_scalper_v1.py` — фундамент для V2
+- `scripts/run_micro_scalper_backtest.py` — standalone backtest runner
 
 ### ═══════════════════════════════════════════
 ### БАНК ИДЕЙ — Новые стратегии и направления
@@ -1071,3 +1161,4 @@ EMA [30/45/60], 10 комбинаций монет. Итого ~5000+ комби
 - 2026-03-20 14:15 UTC | DeepSeek regime scaffold added via live diagnostics | moved the manager structure one step beyond plain chat/status. `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py` now derives a simple local regime hint from the live diagnostic mix (`impulse_weak`, `impulse_body`, `dist`, websocket instability, and recent entries) and exposes it via `/ai_regime`. This is still a heuristic scaffold, not a real external-news supervisor, but it gives the future DeepSeek layer an explicit regime slot in the local snapshot and a Telegram-visible operator surface. Updated `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/DEEPSEEK_AND_RISK_PLAN_20260319.md` to mark Phase 2 as scaffolded locally while noting the remaining missing pieces (benchmark inputs, news context, persistence/TTL). | done
 - 2026-03-20 15:40 UTC | minute scalper probe scaffold started on top of existing in-play logic | after the user asked for a minute-level scalper branch, chose the least speculative first move: do not invent a brand-new strategy yet, but probe the existing `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/inplay_breakout.py` on shorter intraday frames. Added `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/inplay_scalper_minute_probe_v1.json` targeting `BTC/ETH/SOL/LINK` with `15m/30m -> 1m/3m` break/retest logic, shorter lookback, tighter ATR distance, and both directions enabled. A short smoke run was launched (`--limit 2`); it already created its autoresearch output directory, so the branch is alive and not crashing immediately. Next check should confirm whether minute cache coverage is sufficient and whether the first candidates produce actual rows instead of stalling on data fetch. | running
 - 2026-03-20 15:50 UTC | minute probe root cause narrowed to backtest base timeframe mismatch | the first smoke did not fail because the idea was empty; it failed because the current portfolio backtest harness is 5m-based while the new minute probe asks `inplay_breakout` for `1m/3m` entry candles. Code review confirmed the mismatch: `backtest/run_portfolio.py` only loads 5m slices through `_load_symbol_5m(...)`, and `backtest/engine.py`'s `KlineStore` only supports `5/15/60/240` intervals. So the immediate blocker for true minute-scalper research is infrastructure, not edge: we need either a 1m-capable `KlineStore` / portfolio harness or a dedicated minute backtest runner. This is now a concrete next engineering step instead of a vague “maybe the strategy is bad.” | done
+- 2026-03-20 20:43 UTC | TS132 v8 autoresearch prepared: friend symbols + eval_tf_min probe | created `configs/autoresearch/triple_screen_adaptive_v8_friend_symbols.json` (34,560 combinations) targeting the friend's exact 5 coins (`STRKUSDT`, `KSMUSDT`, `AXSUSDT`, `AVAXUSDT`, `ETHUSDT`). Key new dimension is `TS132_EVAL_TF_MIN: [60, 120, 180, 240]` — testing whether 3-hour evaluation cadence (as observed in friend's screenshot showing entries at 6:00/9:00/12:00/15:00 UTC) reproduces the pattern. Also tests: `TREND_TF: [60, 240]`, `TREND_EMA_LEN: [16, 24, 36]`, `OSC_PERIOD: [6, 8, 10]`, `OSC_OB: [65, 70]`, `OSC_OS: [30, 35]`, `SL_ATR: [1.5, 2.0]`, `TP_ATR: [6, 8, 10]`, `BE_PCT: [0.8, 1.0]`. Seeds from v7 best result: `RSI(8)`, `SL=1.5xATR`, `TP=8.0xATR`. Smoke test reveals: eval_tf_min=60 wins on trade count (7 vs 1 trades on STRK, 180d), but eval_tf_min=180 achieves 100% WR on its 1 trade. AVAX/ETH/AXS generate 0 signals with current defaults — each symbol likely needs its own parameter island, which the full autoresearch will reveal. To launch on server: `nohup python3 scripts/run_strategy_autoresearch.py configs/autoresearch/triple_screen_adaptive_v8_friend_symbols.json > logs/autoresearch_ts132_v8.log 2>&1 &` | ready
