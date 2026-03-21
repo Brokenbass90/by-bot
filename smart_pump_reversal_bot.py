@@ -70,6 +70,18 @@ from bot.diagnostics import (
     _breakout_no_signal_diag_key,
 )
 from bot.deepseek_overlay import DeepSeekOverlay
+from bot.deepseek_autoresearch_agent import (
+    results_report_text,
+    tune_strategy,
+    trigger_mini_backtest,
+    build_research_context,
+)
+from bot.deepseek_action_executor import (
+    execute_proposal,
+    rollback_env,
+    check_server_status,
+    diff_pending_changes,
+)
 from bot.symbol_state import (
     SymState, STATE,
     S, update_5m_bar, trim,
@@ -1420,6 +1432,7 @@ def _deepseek_snapshot() -> dict[str, Any]:
         "runtime_stats_12h": _strategy_runtime_stats_text(12),
         "health_30d": _health_summary_text(30),
         "filters": _symbol_filters_summary(),
+        "research": build_research_context(),
     }
 
 def _parse_float(s: str) -> float | None:
@@ -1746,7 +1759,14 @@ def _handle_tg_command(text: str):
             "• /ai_shadow — shadow-рекомендации AI\n"
             "• /ai_shadow_reset — сбросить shadow-журнал AI\n"
             "• /ai_approve ID — подтвердить proposal\n"
-            "• /ai_reject ID — отклонить proposal"
+            "• /ai_reject ID — отклонить proposal\n"
+            "• /ai_results [strategy] — топ autoresearch кандидаты\n"
+            "• /ai_tune [strategy] — AI предложит изменения параметров\n"
+            "• /ai_backtest — быстрый мини-бэктест (90d cache)\n"
+            "• /ai_diff — что изменится при деплое approved proposal'ов\n"
+            "• /ai_deploy ID — применить approved proposal + деплой на сервер\n"
+            "• /ai_rollback — откат server_clean.env к предыдущему бэкапу\n"
+            "• /ai_server — проверить статус сервера"
         )
         return
 
@@ -1911,6 +1931,51 @@ def _handle_tg_command(text: str):
             _tg_reply("Usage: /ai_reject <id>")
             return
         _tg_reply(DEEPSEEK_OVERLAY.decide_proposal(int(pid), approve=False))
+        return
+
+    # ── AI Autoresearch & Action commands ─────────────────────────────────────
+
+    if name == "/ai_results":
+        strategy_hint = cmd[1].lower() if len(cmd) >= 2 else None
+        _tg_reply(results_report_text(strategy_hint=strategy_hint, top_n=3))
+        return
+
+    if name == "/ai_tune":
+        strategy_hint = cmd[1].lower() if len(cmd) >= 2 else "breakout"
+        _tg_reply("🔍 AI анализирует результаты, жди...")
+        msg = tune_strategy(strategy_hint, DEEPSEEK_OVERLAY, _deepseek_snapshot())
+        _tg_reply(msg)
+        return
+
+    if name == "/ai_backtest":
+        _tg_reply(trigger_mini_backtest())
+        return
+
+    if name == "/ai_diff":
+        queue = DEEPSEEK_OVERLAY._load_approval_queue()
+        pending = [x for x in queue if str(x.get("status", "")) == "approved"]
+        _tg_reply(diff_pending_changes(pending))
+        return
+
+    if name == "/ai_deploy" and len(cmd) >= 2:
+        pid = _parse_float(cmd[1])
+        if pid is None:
+            _tg_reply("Usage: /ai_deploy <proposal_id>")
+            return
+        queue = DEEPSEEK_OVERLAY._load_approval_queue()
+        _tg_reply("📡 Применяю и деплою, жди...")
+        result = execute_proposal(int(pid), queue, deploy=True)
+        DEEPSEEK_OVERLAY._save_approval_queue(queue)
+        _tg_reply(result)
+        return
+
+    if name == "/ai_rollback":
+        result = rollback_env()
+        _tg_reply(result)
+        return
+
+    if name == "/ai_server":
+        _tg_reply(check_server_status())
         return
 
     if name == "/plotlast":

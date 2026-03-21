@@ -1,5 +1,78 @@
 # Bybit bot (v28) — worklog / reminders
 
+## 2026-03-21 (session 6) — AI Controller: DeepSeek → автономное улучшение бота
+
+### Что сделано
+
+#### DeepSeek AI Controller (активный, не advisory)
+- **`bot/deepseek_autoresearch_agent.py`** (НОВЫЙ)
+  - Читает последние autoresearch результаты из `backtest_runs/`
+  - `/ai_results [strategy]` — топ кандидаты по стратегии
+  - `tune_strategy()` — просит DeepSeek проанализировать результаты, предлагает 1–4 конкретных изменения параметров, кладёт в approval queue
+  - `trigger_mini_backtest()` — запускает быстрый 90d бэктест в фоне
+- **`bot/deepseek_action_executor.py`** (НОВЫЙ)
+  - `execute_proposal()` — патчит `configs/server_clean.env`, создаёт бэкап, деплоит на сервер
+  - `deploy_env_to_server()` — SCP + `systemctl restart bybot`
+  - `rollback_env()` — откат к предыдущему бэкапу
+  - `check_server_status()` — быстрый health check сервера
+- **`smart_pump_reversal_bot.py`** — подключены новые TG команды:
+  - `/ai_results` — показывает топ autoresearch кандидатов
+  - `/ai_tune [strategy]` — DeepSeek анализирует результаты → предлагает изменения
+  - `/ai_backtest` — запускает мини бэктест
+  - `/ai_diff` — показывает что изменится при деплое approved proposals
+  - `/ai_deploy <id>` — применяет approved proposal + деплоит на сервер (патч env + SCP + restart)
+  - `/ai_rollback` — откат server_clean.env
+  - `/ai_server` — статус сервера
+
+**Схема работы:**
+```
+TG: /ai_tune breakout
+  → agent читает autoresearch results для breakout
+  → запрашивает DeepSeek API с топ-8 кандидатами
+  → DeepSeek возвращает JSON: [{env_key, old_value, new_value, reason}]
+  → agent кладёт proposal в approval queue
+
+TG: /ai_approve 3          (пользователь одобряет)
+TG: /ai_deploy 3           (пользователь запускает деплой)
+  → executor патчит server_clean.env
+  → SCP на сервер
+  → systemctl restart bybot
+  → отчёт в TG
+```
+
+#### Autoresearch прогресс
+- **full_stack_v2_overnight** (216 кандидатов) запущен локально, PID 162
+  - r001 PASS: net=46.24% PF=1.588 WR=62.7% dd=4.18% — старт хороший
+  - Ещё ~215 кандидатов впереди
+- **breakout_v2_focus overnight** (528 кандидатов): подтвердил current settings оптимальны
+  - Топ: quality_min=0.54, max_chase=0.14, buffer=0.12, max_dist=1.4 ✅
+- **breakout_v3_density** (444 кандидатов): слегка предпочитает quality=0.53, результат одинаковый
+
+#### Equities / Alpaca изучение
+- Лучший найденный config из всех autoresearch (v2, score=77.73):
+  ```
+  LOOKBACK_DAYS=70, MAX_HOLD_DAYS=20
+  MIN_MOM_LOOKBACK_PCT=2.0
+  PULLBACK_MIN_PCT=-16%, PULLBACK_MAX_PCT=-1%
+  STOP_ATR_MULT=1.5, TARGET_ATR_MULT=2.5
+  CORR_LOOKBACK_DAYS=60, CORR_PENALTY_MULT=2.5, CORR_PENALTY_THRESHOLD=0.5
+  POSITION_WEIGHT_MODE=score_inv_vol, TOP_N=3
+  → 51 trades, PnL=82.66%, WR=60.8%, DD=10.1%
+  ```
+- v8–v21 пытались снизить red_months через жёсткие режимные фильтры → score уходит в минус
+- Рекомендация: вернуться к v2-параметрам как базовым, запустить новый autoresearch
+  с фокусом на STOP/TARGET соотношение и UNIVERSE filter
+
+### Следующие шаги
+1. **Активировать DeepSeek** — добавить DEEPSEEK_API_KEY в .env, DEEPSEEK_ENABLE=1
+2. **Проверить /ai_tune breakout** — убедиться что предлагает адекватные изменения
+3. **Equities новый autoresearch** — v22 с диапазоном STOP_ATR_MULT 1.2-1.8,
+   TARGET_ATR_MULT 2.5-4.5, UNIVERSE_TOP_K 5-12, MAX_HOLD_DAYS 12-20
+4. **Риск** — поднять RISK_MULT с 0.10 → 0.25 после нескольких живых сделок
+5. **LINK longs** — добавить отдельный ASC1 instance для LINK longs
+
+---
+
 ## 2026-03-21 (session 5) — Clean Deploy: Sloped+Flat live, годовой бектест
 
 ### Что сделано
