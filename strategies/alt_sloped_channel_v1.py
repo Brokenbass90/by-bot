@@ -122,6 +122,9 @@ class AltSlopedChannelV1Config:
     tp2_buffer_pct: float = 0.40
     be_trigger_rr: float = 0.0
     be_lock_rr: float = 0.0
+    # ATR trailing stop: 0.0 = disabled, e.g. 1.5 = trail at 1.5*ATR below peak
+    trail_atr_mult: float = 0.0
+    trail_atr_period: int = 14
     time_stop_bars_5m: int = 480
     cooldown_bars_5m: int = 72
     # 5m entry confirmation: wait N 5m bars after 1h setup for confirming candle
@@ -195,6 +198,8 @@ class AltSlopedChannelV1Strategy:
         self.cfg.tp2_buffer_pct = _env_float("ASC1_TP2_BUFFER_PCT", self.cfg.tp2_buffer_pct)
         self.cfg.be_trigger_rr = _env_float("ASC1_BE_TRIGGER_RR", self.cfg.be_trigger_rr)
         self.cfg.be_lock_rr = _env_float("ASC1_BE_LOCK_RR", self.cfg.be_lock_rr)
+        self.cfg.trail_atr_mult = _env_float("ASC1_TRAIL_ATR_MULT", self.cfg.trail_atr_mult)
+        self.cfg.trail_atr_period = _env_int("ASC1_TRAIL_ATR_PERIOD", self.cfg.trail_atr_period)
         self.cfg.time_stop_bars_5m = _env_int("ASC1_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
         self.cfg.cooldown_bars_5m = _env_int("ASC1_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
         self.cfg.confirm_5m_bars = _env_int("ASC1_CONFIRM_5M_BARS", self.cfg.confirm_5m_bars)
@@ -265,7 +270,8 @@ class AltSlopedChannelV1Strategy:
                     tp_fracs=[min(0.9, max(0.1, self.cfg.tp1_frac)), max(0.0, 1.0 - min(0.9, max(0.1, self.cfg.tp1_frac)))],
                     be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
                     be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
-                    trailing_atr_mult=0.0,
+                    trailing_atr_mult=max(0.0, float(self.cfg.trail_atr_mult)),
+                    trailing_atr_period=max(5, int(self.cfg.trail_atr_period)),
                     time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
                     reason=f"asc1_sloped_channel_{p['side']}_5m_confirm",
                 )
@@ -398,7 +404,8 @@ class AltSlopedChannelV1Strategy:
                     tp_fracs=[min(0.9, max(0.1, self.cfg.tp1_frac)), max(0.0, 1.0 - min(0.9, max(0.1, self.cfg.tp1_frac)))],
                     be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
                     be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
-                    trailing_atr_mult=0.0,
+                    trailing_atr_mult=max(0.0, float(self.cfg.trail_atr_mult)),
+                    trailing_atr_period=max(5, int(self.cfg.trail_atr_period)),
                     time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
                     reason="asc1_sloped_channel_long",
                 )
@@ -445,7 +452,8 @@ class AltSlopedChannelV1Strategy:
                     tp_fracs=[min(0.9, max(0.1, self.cfg.tp1_frac)), max(0.0, 1.0 - min(0.9, max(0.1, self.cfg.tp1_frac)))],
                     be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
                     be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
-                    trailing_atr_mult=0.0,
+                    trailing_atr_mult=max(0.0, float(self.cfg.trail_atr_mult)),
+                    trailing_atr_period=max(5, int(self.cfg.trail_atr_period)),
                     time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
                     reason="asc1_sloped_channel_short",
                 )

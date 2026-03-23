@@ -39,13 +39,13 @@ def _load_config() -> DeepSeekConfig:
         api_key=str(os.getenv("DEEPSEEK_API_KEY", "") or "").strip(),
         base_url=str(os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com") or "https://api.deepseek.com").strip(),
         model=str(os.getenv("DEEPSEEK_MODEL", "deepseek-chat") or "deepseek-chat").strip(),
-        timeout_sec=float(os.getenv("DEEPSEEK_TIMEOUT_SEC", "8") or 8),
-        history_path=Path(str(os.getenv("DEEPSEEK_CHAT_STATE_PATH", "/tmp/bybot_deepseek_chat.json") or "/tmp/bybot_deepseek_chat.json")),
-        audit_log_path=Path(str(os.getenv("DEEPSEEK_AUDIT_LOG_PATH", "/tmp/bybot_deepseek_audit.jsonl") or "/tmp/bybot_deepseek_audit.jsonl")),
-        approval_queue_path=Path(str(os.getenv("DEEPSEEK_APPROVAL_QUEUE_PATH", "/tmp/bybot_deepseek_approval_queue.json") or "/tmp/bybot_deepseek_approval_queue.json")),
+        timeout_sec=float(os.getenv("DEEPSEEK_TIMEOUT_SEC", "20") or 20),
+        history_path=Path(str(os.getenv("DEEPSEEK_CHAT_STATE_PATH", "/root/by-bot/data/deepseek_chat.json") or "/root/by-bot/data/deepseek_chat.json")),
+        audit_log_path=Path(str(os.getenv("DEEPSEEK_AUDIT_LOG_PATH", "/root/by-bot/data/deepseek_audit.jsonl") or "/root/by-bot/data/deepseek_audit.jsonl")),
+        approval_queue_path=Path(str(os.getenv("DEEPSEEK_APPROVAL_QUEUE_PATH", "/root/by-bot/data/deepseek_approval_queue.json") or "/root/by-bot/data/deepseek_approval_queue.json")),
         shadow_enabled=_env_bool("DEEPSEEK_SHADOW_ENABLE", True),
-        shadow_log_path=Path(str(os.getenv("DEEPSEEK_SHADOW_LOG_PATH", "/tmp/bybot_deepseek_shadow.json") or "/tmp/bybot_deepseek_shadow.json")),
-        max_history_messages=max(0, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "8") or 8)),
+        shadow_log_path=Path(str(os.getenv("DEEPSEEK_SHADOW_LOG_PATH", "/root/by-bot/data/deepseek_shadow.json") or "/root/by-bot/data/deepseek_shadow.json")),
+        max_history_messages=max(0, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "16") or 16)),
         max_answer_chars=max(600, int(os.getenv("DEEPSEEK_MAX_ANSWER_CHARS", "3500") or 3500)),
         daily_request_cap=max(1, int(os.getenv("DEEPSEEK_DAILY_REQUEST_CAP", "60") or 60)),
         shadow_max_items=max(10, int(os.getenv("DEEPSEEK_SHADOW_MAX_ITEMS", "200") or 200)),
@@ -315,12 +315,42 @@ class DeepSeekOverlay:
             return "DeepSeek budget exhausted for today. Увеличь `DEEPSEEK_DAILY_REQUEST_CAP` или дождись следующего дня."
 
         system_prompt = (
-            "Ты — advisory-менеджер торгового бота. "
-            "Ты не управляешь ордерами и не меняешь настройки напрямую. "
-            "Отвечай кратко, по делу, на русском. "
-            "Опирайся только на локальный snapshot бота и вопрос пользователя. "
-            "Если данных мало, прямо скажи это. "
-            "Не выдумывай сделки, PnL или состояние рынка."
+            "Ты — senior партнёр по анализу алготрейдингового бота на Bybit perpetual futures.\n\n"
+            "== АРХИТЕКТУРА БОТА ==\n"
+            "Бот написан на Python, торгует на Bybit через WebSocket + REST.\n"
+            "Файлы: smart_pump_reversal_bot.py (главный цикл), bot/deepseek_overlay.py (ты),\n"
+            "bot/deepseek_autoresearch_agent.py (autoresearch + аудит), strategies/*.py.\n\n"
+            "== АКТИВНЫЕ СТРАТЕГИИ (5 штук) ==\n"
+            "1. alt_sloped_channel_v1 (ASC1) — торгует SHORT от верхней границы наклонного канала на ATOM/LINK.\n"
+            "   Параметры: ASC1_SL_ATR_MULT, ASC1_BE_TRIGGER_RR, ASC1_CONFIRM_5M_BARS, ASC1_TIME_STOP_BARS_5M.\n"
+            "   Trailing stop: пока 0.0 (отключён). Можно включить: ASC1_TRAIL_ATR_MULT.\n"
+            "   Лучший backtest: 24 trades/year, WR 58%, PF 8.94, DD 0.88%.\n\n"
+            "2. alt_resistance_fade_v1 (ARF1) — торгует SHORT от зон сопротивления на LINK/LTC/SUI/DOT.\n"
+            "   Trailing stop: 0.0 (отключён). Можно включить: ARF1_TRAIL_ATR_MULT.\n"
+            "   Лучший backtest: 13-17 trades/year, WR 59-62%, PF 2.5.\n\n"
+            "3. inplay_breakout — BTC/ETH лонги/шорты на пробой уровней.\n"
+            "   Trailing stop: BREAKOUT_TRAIL_ATR_MULT=2.2 (активен! ~10% от цены на волатильных монетах).\n"
+            "   Лучший backtest: 346 trades/year, WR 65.6%, PF 1.399, DD 2.95%.\n\n"
+            "4. btc_eth_midterm_pullback — среднесрок BTC/ETH на откатах.\n"
+            "   Trailing stop: MTPB_TRAIL_ATR_MULT=1.1 (активен!).\n"
+            "   Backtest: 71 trades/year, WR 46%, PF 1.3.\n\n"
+            "5. alt_inplay_breakdown_v1 — SHORT breakdowns на BTC/ETH/SOL/LINK/ATOM.\n"
+            "   Trailing stop: BREAKDOWN_TRAIL_ATR_MULT=2.2 (активен! наследует от inplay_breakout).\n"
+            "   Лучший backtest: PF=2.085, WR=54.3%, 127 trades, DD=2.41%.\n"
+            "   Статус: ENABLE_BREAKDOWN_TRADING=0 (не включена ещё, готова к деплою).\n\n"
+            "== AUTORESEARCH ==\n"
+            "Система grid-search backtesting через scripts/run_strategy_autoresearch.py.\n"
+            "Результаты в autoresearch_results/. Активные прогоны могут быть в /tmp/*.log.\n"
+            "BACKTEST_CACHE_ONLY=1 — работает без API, из кеша data_cache/.\n\n"
+            "== ВЫХОД ИЗ ПОЗИЦИИ ==\n"
+            "TradeSignal содержит: entry, sl, tp, tps (мульти-TP), tp_fracs, be_trigger_rr,\n"
+            "trailing_atr_mult (0=выкл), trail_activate_rr, time_stop_bars.\n"
+            "ATR trailing = цена двигается X*ATR за хай/лоу позиции, trailing SL следует.\n\n"
+            "== ПРАВИЛА ОТВЕТОВ ==\n"
+            "Отвечай кратко и конкретно на русском. Ты знаешь структуру кода.\n"
+            "Когда пользователь спрашивает о коде — ты можешь объяснить как он устроен.\n"
+            "Не выдумывай цифры — только из snapshot или архитектурных знаний выше.\n"
+            "Если чего-то не знаешь — честно скажи."
         )
         snapshot_text = _safe_json(snapshot)
         history = self._load_history()
@@ -329,8 +359,8 @@ class DeepSeekOverlay:
             {
                 "role": "system",
                 "content": (
-                    "Ниже локальный snapshot бота. "
-                    "Используй его как источник правды, а не догадки.\n"
+                    "Ниже живой snapshot бота (текущий момент). "
+                    "Используй как источник правды о текущих сделках, балансе и статистике.\n"
                     f"{snapshot_text}"
                 ),
             },

@@ -1,0 +1,53 @@
+{
+  "_comment": "ARF1 trailing stop research. Test ATR trailing vs fixed TP on LINK/LTC/SUI/DOT. Baseline: PF=2.5 WR=59-62% ~15trades. Goal: improve WR and PF without blowing DD.",
+  "name": "arf1_trailing_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_resistance_fade_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--tag",
+    "{tag}"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,ADAUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,ATOMUSDT"
+    ],
+    "ARF1_TRAIL_ATR_MULT": [0.0, 0.8, 1.2, 1.8, 2.5],
+    "ARF1_SL_ATR_MULT": [0.85, 1.0, 1.2],
+    "ARF1_TP1_FRAC": [0.50, 0.65],
+    "ARF1_MIN_RSI": [54, 56, 58]
+  },
+  "base_env": {
+    "ARF1_SYMBOL_ALLOWLIST": "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ADAUSDT,ATOMUSDT",
+    "ARF1_TIME_STOP_BARS_5M": "576",
+    "ARF1_REJECT_BELOW_RES_ATR": "0.08"
+  },
+  "constraints": {
+    "min_trades": 15,
+    "min_profit_factor": 2.0,
+    "max_drawdown": 3.0,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 1
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 5.0,
+    "winrate": 12.0,
+    "max_drawdown": 2.5,
+    "trades": 0.1,
+    "trades_cap": 60,
+    "negative_months": 2.0,
+    "max_negative_streak": 3.0
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "_comment": "ASC1 trailing stop research. Test ATR trailing vs fixed TP on ATOM/LINK shorts. Baseline: PF=8.94 WR=58% 24trades DD=0.88% with trail=0. Goal: keep DD<2% while improving WR or PF.",
+  "name": "asc1_trailing_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_sloped_channel_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--tag",
+    "{tag}"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "ATOMUSDT,LINKUSDT",
+      "ATOMUSDT,LINKUSDT,SOLUSDT",
+      "ATOMUSDT,LINKUSDT,ADAUSDT"
+    ],
+    "ASC1_TRAIL_ATR_MULT": [0.0, 0.8, 1.2, 1.8, 2.5],
+    "ASC1_SL_ATR_MULT": [0.85, 1.1, 1.4],
+    "ASC1_BE_TRIGGER_RR": [0.0, 0.8, 1.2],
+    "ASC1_ALLOW_SHORTS": ["1"],
+    "ASC1_ALLOW_LONGS": ["0"]
+  },
+  "base_env": {
+    "ASC1_SHORT_MIN_REJECT_DEPTH_ATR": "0.75",
+    "ASC1_SHORT_MIN_RSI": "60",
+    "ASC1_CONFIRM_5M_BARS": "6",
+    "ASC1_TIME_STOP_BARS_5M": "576"
+  },
+  "constraints": {
+    "min_trades": 18,
+    "min_profit_factor": 2.0,
+    "max_drawdown": 2.5,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 1
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 5.0,
+    "winrate": 12.0,
+    "max_drawdown": 3.0,
+    "trades": 0.1,
+    "trades_cap": 60,
+    "negative_months": 2.0,
+    "max_negative_streak": 3.0
+  }
+}
