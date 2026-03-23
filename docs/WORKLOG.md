@@ -1,5 +1,50 @@
 # Bybit bot (v28) — worklog / reminders
 
+## 2026-03-23 (session 8) — Autoresearch diagnostics + config optimization
+
+### Что сделано
+
+#### Диагностика запущенных autoresearch процессов
+- Обнаружено: `triple_screen_elder_friend_v9` использовал `TREND_TF=60` (1H) для первых 192/768 кандидатов → DD=10-17% на всех 16 прогонах, процесс уже умер
+- Обнаружено: `flat_arf1_expansion_v1` тратил время на 3-монетные базлайны (LINK+LTC+SUI) которые гарантированно падают по `trades<22` — 4-монетные комбо начинались только с r109
+
+#### Созданы оптимизированные конфиги
+- **`configs/autoresearch/triple_screen_elder_friend_v10.json`** (НОВЫЙ)
+  - Убран `TREND_TF=60` (1H) который провалился на всех тестах
+  - Только `TREND_TF=240` (4H) — 384 кандидата вместо 768
+  - Coins: STRKUSDT, KSMUSDT, AXSUSDT, AVAXUSDT, ETHUSDT
+
+- **`configs/autoresearch/flat_arf1_expansion_v2.json`** (НОВЫЙ)
+  - Убраны 3-монетные SYMBOLS (108 бесполезных прогонов)
+  - Только 4-монетные комбо: +ADA, +DOT, +ATOM, +BCH, +BNB (540 кандидатов)
+  - `min_trades` снижен с 22 до 18 чтобы поймать высококачественные редкие паттерны
+
+#### Перезапуск процессов
+- Убит `flat_arf1_expansion_v1` (PID 1969, 9/648 done, всё 3-монетное)
+- `triple_screen_elder_friend_v9` уже умер
+- Запущены `triple_screen_elder_friend_v10` (PID 3389) и `flat_arf1_expansion_v2` (PID 3392)
+- Обновлён watchdog task — теперь поддерживает v10/v2 вместо v9/v1
+
+#### Текущие результаты autoresearch (на 14:14 EET 23/03/2026)
+| Config | Progress | Last | Best passing |
+|--------|---------|------|-------------|
+| breakdown_shorts_v1 | 19/432 | PASS pf=2.374 | r003: PF=2.085 WR=54.3% DD=2.41% 127 trades |
+| full_stack_v2_overnight | 8/216 | - | r004: score=77.4 PF=1.588 WR=61.9% 467 trades |
+| equities_monthly_v22_balance | 39/1152 | FAIL | no pass yet |
+| triple_screen_elder_friend_v10 | 1/384 | FAIL pf=0.525 | still exploring TREND_TF=240 |
+| flat_arf1_expansion_v2 | 1/540 | FAIL trades<18 | r001: PF=5.786 WR=69.2% DD=1.08% (13 trades, too few) |
+
+#### Breakdown shorts: лучший кандидат для деплоя
+r003: `BREAKDOWN_REGIME_MODE=off, BREAKDOWN_LOOKBACK_H=48, BREAKDOWN_RR=2.0, BREAKDOWN_SL_ATR=1.8, BREAKDOWN_MAX_DIST_ATR=2.0`
+SYMBOLS: BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT
+→ PF=2.085, WR=54.3%, 127 trades, DD=2.41%, 1 negative month, neg_streak=1
+
+#### ARF1 expansion v2: инсайт
+4-монетный комбо LINK+LTC+SUI+ADA с параметрами RSI=54, ATR=0.06, SL=0.85 даёт 13 сделок PF=5.786 WR=69.2% DD=1.08%.
+Нужны либо более мягкие параметры (будут в r200-400) либо 5+ монет для 18+ сделок.
+
+---
+
 ## 2026-03-21 (session 6) — AI Controller: DeepSeek → автономное улучшение бота
 
 ### Что сделано
