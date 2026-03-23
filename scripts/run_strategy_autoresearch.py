@@ -255,6 +255,47 @@ def _run_backtest(spec: dict, overrides: Dict[str, str], run_id: int) -> Candida
     name = _slug(spec["name"])
     tag = f"{name}_r{run_id:03d}"
 
+    # Resume support: if a run dir with this tag already exists and has a summary,
+    # skip the subprocess and re-use the cached result.
+    existing_dir = _latest_run_dir(tag)
+    # Only reuse if the run completed with at least 1 trade (avoids caching bad 0-trade runs)
+    if existing_dir is not None and (existing_dir / "summary.csv").exists():
+        _check_summary = _read_summary(existing_dir / "summary.csv")
+        if int(float(_check_summary.get("trades", 0) or 0)) == 0:
+            existing_dir = None  # force re-run
+    if existing_dir is not None and (existing_dir / "summary.csv").exists():
+        summary = _read_summary(existing_dir / "summary.csv")
+        passed, fail_reasons, score = _score_candidate(summary, spec)
+        metrics = _extract_metrics(summary, spec)
+        month_metrics = _monthly_metrics(existing_dir)
+        constraints = spec.get("constraints", {})
+        score_weights = spec.get("score_weights", {})
+        extra_fail_reasons: List[str] = []
+        if int(month_metrics["negative_months"]) > int(constraints.get("max_negative_months", 10**9)):
+            extra_fail_reasons.append(f"neg_months>{constraints['max_negative_months']}")
+        if int(month_metrics["max_negative_streak"]) > int(constraints.get("max_negative_streak", 10**9)):
+            extra_fail_reasons.append(f"neg_streak>{constraints['max_negative_streak']}")
+        if float(month_metrics["worst_month_pnl"]) < float(constraints.get("min_worst_month_pnl", -1e18)):
+            extra_fail_reasons.append(f"worst_month<{constraints['min_worst_month_pnl']}")
+        if extra_fail_reasons:
+            passed = False
+            fail_reasons = ";".join(x for x in [fail_reasons, *extra_fail_reasons] if x)
+            score -= 1000.0
+        return CandidateResult(
+            run_id=run_id, tag=tag, run_dir=str(existing_dir),
+            passed=passed, fail_reasons=fail_reasons, score=score,
+            trades=int(float(metrics.get("trades") or 0)),
+            net_pnl=float(metrics.get("net_pnl") or 0.0),
+            profit_factor=float(metrics.get("profit_factor") or 0.0),
+            winrate=float(metrics.get("winrate") or 0.0),
+            max_drawdown=float(metrics.get("max_drawdown") or 0.0),
+            negative_months=int(month_metrics["negative_months"]),
+            positive_months=int(month_metrics["positive_months"]),
+            max_negative_streak=int(month_metrics["max_negative_streak"]),
+            worst_month_pnl=float(month_metrics["worst_month_pnl"]),
+            overrides_json=json.dumps(overrides, ensure_ascii=True, sort_keys=True),
+        )
+
     env = os.environ.copy()
     for k, v in spec.get("base_env", {}).items():
         env[str(k)] = str(v)

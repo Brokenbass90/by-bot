@@ -1,0 +1,55 @@
+{
+  "name": "flat_arf1_expansion_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_resistance_fade_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--tag",
+    "{tag}"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "LINKUSDT,LTCUSDT,SUIUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,ADAUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,ATOMUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,BCHUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,BNBUSDT"
+    ],
+    "ARF1_REJECT_BELOW_RES_ATR": [0.06, 0.08, 0.12],
+    "ARF1_MIN_RSI": [54, 56, 58],
+    "ARF1_MAX_CLOSE_VS_EMA_PCT": [1.0, 1.2],
+    "ARF1_SL_ATR_MULT": [0.85, 0.95, 1.10],
+    "ARF1_TP1_FRAC": [0.50, 0.65]
+  },
+  "base_env": {
+    "ARF1_SYMBOL_ALLOWLIST": "LINKUSDT,LTCUSDT,SUIUSDT,ADAUSDT,DOTUSDT,ATOMUSDT,BCHUSDT,BNBUSDT",
+    "ARF1_TIME_STOP_BARS_5M": "576"
+  },
+  "constraints": {
+    "min_trades": 22,
+    "min_profit_factor": 2.0,
+    "max_drawdown": 3.0,
+    "min_net_pnl": 8.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 1
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 5.0,
+    "winrate": 12.0,
+    "max_drawdown": 2.0,
+    "trades": 0.08,
+    "trades_cap": 60,
+    "negative_months": 2.0,
+    "max_negative_streak": 3.0
+  }
+}
