@@ -113,48 +113,50 @@ class InPlayBreakoutConfig:
 
 
 class InPlayBreakoutWrapper:
-    def __init__(self, cfg: Optional[InPlayBreakoutConfig] = None):
+    def __init__(self, cfg: Optional[InPlayBreakoutConfig] = None, env_prefix: str = "BREAKOUT"):
         self.cfg = cfg or InPlayBreakoutConfig()
-        self._allow = _env_csv_set("BREAKOUT_SYMBOL_ALLOWLIST")
-        self._deny = _env_csv_set("BREAKOUT_SYMBOL_DENYLIST")
+        p = env_prefix  # short alias for readability
+        self._prefix = p  # stored for use in instance methods
+        self._allow = _env_csv_set(f"{p}_SYMBOL_ALLOWLIST")
+        self._deny = _env_csv_set(f"{p}_SYMBOL_DENYLIST")
         self.last_no_signal_reason: str = ""
 
-        self.cfg.tf_break = os.getenv("BREAKOUT_TF_BREAK", self.cfg.tf_break)
-        self.cfg.tf_entry = os.getenv("BREAKOUT_TF_ENTRY", self.cfg.tf_entry)
-        self.cfg.lookback_h = _env_int("BREAKOUT_LOOKBACK_H", self.cfg.lookback_h)
-        self.cfg.atr_period = _env_int("BREAKOUT_ATR_PERIOD", self.cfg.atr_period)
-        self.cfg.impulse_atr_mult = _env_float("BREAKOUT_IMPULSE_ATR_MULT", self.cfg.impulse_atr_mult)
-        self.cfg.impulse_body_min_frac = _env_float("BREAKOUT_IMPULSE_BODY_MIN_FRAC", self.cfg.impulse_body_min_frac)
-        self.cfg.impulse_vol_mult = _env_float("BREAKOUT_IMPULSE_VOL_MULT", self.cfg.impulse_vol_mult)
-        self.cfg.impulse_vol_period = _env_int("BREAKOUT_IMPULSE_VOL_PERIOD", self.cfg.impulse_vol_period)
-        self.cfg.breakout_buffer_atr = _env_float("BREAKOUT_BUFFER_ATR", self.cfg.breakout_buffer_atr)
-        self.cfg.breakout_sl_atr = _env_float("BREAKOUT_SL_ATR", self.cfg.breakout_sl_atr)
-        self.cfg.retest_touch_atr = _env_float("BREAKOUT_RETEST_TOUCH_ATR", self.cfg.retest_touch_atr)
-        self.cfg.reclaim_atr = _env_float("BREAKOUT_RECLAIM_ATR", self.cfg.reclaim_atr)
-        self.cfg.min_hold_bars = _env_int("BREAKOUT_MIN_HOLD_BARS", self.cfg.min_hold_bars)
-        self.cfg.max_retest_bars = _env_int("BREAKOUT_MAX_RETEST_BARS", self.cfg.max_retest_bars)
-        self.cfg.min_break_bars = _env_int("BREAKOUT_MIN_BREAK_BARS", self.cfg.min_break_bars)
-        self.cfg.max_dist_atr = _env_float("BREAKOUT_MAX_DIST_ATR", self.cfg.max_dist_atr)
-        self.cfg.rr = _env_float("BREAKOUT_RR", self.cfg.rr)
-        self.cfg.range_atr_max = _env_float("BREAKOUT_RANGE_ATR_MAX", self.cfg.range_atr_max)
+        self.cfg.tf_break = os.getenv(f"{p}_TF_BREAK", self.cfg.tf_break)
+        self.cfg.tf_entry = os.getenv(f"{p}_TF_ENTRY", self.cfg.tf_entry)
+        self.cfg.lookback_h = _env_int(f"{p}_LOOKBACK_H", self.cfg.lookback_h)
+        self.cfg.atr_period = _env_int(f"{p}_ATR_PERIOD", self.cfg.atr_period)
+        self.cfg.impulse_atr_mult = _env_float(f"{p}_IMPULSE_ATR_MULT", self.cfg.impulse_atr_mult)
+        self.cfg.impulse_body_min_frac = _env_float(f"{p}_IMPULSE_BODY_MIN_FRAC", self.cfg.impulse_body_min_frac)
+        self.cfg.impulse_vol_mult = _env_float(f"{p}_IMPULSE_VOL_MULT", self.cfg.impulse_vol_mult)
+        self.cfg.impulse_vol_period = _env_int(f"{p}_IMPULSE_VOL_PERIOD", self.cfg.impulse_vol_period)
+        self.cfg.breakout_buffer_atr = _env_float(f"{p}_BUFFER_ATR", self.cfg.breakout_buffer_atr)
+        self.cfg.breakout_sl_atr = _env_float(f"{p}_SL_ATR", self.cfg.breakout_sl_atr)
+        self.cfg.retest_touch_atr = _env_float(f"{p}_RETEST_TOUCH_ATR", self.cfg.retest_touch_atr)
+        self.cfg.reclaim_atr = _env_float(f"{p}_RECLAIM_ATR", self.cfg.reclaim_atr)
+        self.cfg.min_hold_bars = _env_int(f"{p}_MIN_HOLD_BARS", self.cfg.min_hold_bars)
+        self.cfg.max_retest_bars = _env_int(f"{p}_MAX_RETEST_BARS", self.cfg.max_retest_bars)
+        self.cfg.min_break_bars = _env_int(f"{p}_MIN_BREAK_BARS", self.cfg.min_break_bars)
+        self.cfg.max_dist_atr = _env_float(f"{p}_MAX_DIST_ATR", self.cfg.max_dist_atr)
+        self.cfg.rr = _env_float(f"{p}_RR", self.cfg.rr)
+        self.cfg.range_atr_max = _env_float(f"{p}_RANGE_ATR_MAX", self.cfg.range_atr_max)
 
-        self.cfg.allow_longs = _env_bool("BREAKOUT_ALLOW_LONGS", self.cfg.allow_longs)
-        self.cfg.allow_shorts = _env_bool("BREAKOUT_ALLOW_SHORTS", self.cfg.allow_shorts)
+        self.cfg.allow_longs = _env_bool(f"{p}_ALLOW_LONGS", self.cfg.allow_longs)
+        self.cfg.allow_shorts = _env_bool(f"{p}_ALLOW_SHORTS", self.cfg.allow_shorts)
 
-        self.cfg.regime_mode = os.getenv("BREAKOUT_REGIME_MODE", self.cfg.regime_mode)
-        if str(os.getenv('BREAKOUT_REGIME', '')).strip().lower() in ('1','true','yes','on'):
+        self.cfg.regime_mode = os.getenv(f"{p}_REGIME_MODE", self.cfg.regime_mode)
+        if str(os.getenv(f'{p}_REGIME', '')).strip().lower() in ('1','true','yes','on'):
             if str(self.cfg.regime_mode).strip().lower() in ('off','0','false','none',''):
                 self.cfg.regime_mode = 'ema'
-        self.cfg.regime_tf = os.getenv("BREAKOUT_REGIME_TF", self.cfg.regime_tf)
-        self.cfg.regime_ema_fast = _env_int("BREAKOUT_REGIME_EMA_FAST", self.cfg.regime_ema_fast)
-        self.cfg.regime_ema_slow = _env_int("BREAKOUT_REGIME_EMA_SLOW", self.cfg.regime_ema_slow)
-        self.cfg.regime_min_gap_atr = _env_float("BREAKOUT_REGIME_MIN_GAP_ATR", self.cfg.regime_min_gap_atr)
-        self.cfg.regime_strict = _env_bool("BREAKOUT_REGIME_STRICT", self.cfg.regime_strict)
-        self.cfg.regime_price_filter = _env_bool("BREAKOUT_REGIME_PRICE_FILTER", self.cfg.regime_price_filter)
-        self.cfg.regime_cache_sec = int(os.getenv("BREAKOUT_REGIME_CACHE_SEC", str(self.cfg.regime_cache_sec)) or self.cfg.regime_cache_sec)
-        self.cfg.chop_er_min = _env_float("BREAKOUT_CHOP_ER_MIN", self.cfg.chop_er_min)
-        self.cfg.chop_er_period = int(os.getenv("BREAKOUT_CHOP_ER_PERIOD", str(self.cfg.chop_er_period)) or self.cfg.chop_er_period)
-        self.cfg.chop_in_range_only = _env_bool("BREAKOUT_CHOP_IN_RANGE_ONLY", self.cfg.chop_in_range_only)
+        self.cfg.regime_tf = os.getenv(f"{p}_REGIME_TF", self.cfg.regime_tf)
+        self.cfg.regime_ema_fast = _env_int(f"{p}_REGIME_EMA_FAST", self.cfg.regime_ema_fast)
+        self.cfg.regime_ema_slow = _env_int(f"{p}_REGIME_EMA_SLOW", self.cfg.regime_ema_slow)
+        self.cfg.regime_min_gap_atr = _env_float(f"{p}_REGIME_MIN_GAP_ATR", self.cfg.regime_min_gap_atr)
+        self.cfg.regime_strict = _env_bool(f"{p}_REGIME_STRICT", self.cfg.regime_strict)
+        self.cfg.regime_price_filter = _env_bool(f"{p}_REGIME_PRICE_FILTER", self.cfg.regime_price_filter)
+        self.cfg.regime_cache_sec = int(os.getenv(f"{p}_REGIME_CACHE_SEC", str(self.cfg.regime_cache_sec)) or self.cfg.regime_cache_sec)
+        self.cfg.chop_er_min = _env_float(f"{p}_CHOP_ER_MIN", self.cfg.chop_er_min)
+        self.cfg.chop_er_period = int(os.getenv(f"{p}_CHOP_ER_PERIOD", str(self.cfg.chop_er_period)) or self.cfg.chop_er_period)
+        self.cfg.chop_in_range_only = _env_bool(f"{p}_CHOP_IN_RANGE_ONLY", self.cfg.chop_in_range_only)
 
         self.impl: Optional[InPlayBreakoutStrategy] = None
 
@@ -175,8 +177,9 @@ class InPlayBreakoutWrapper:
             return None
 
     def _passes_entry_timing_guards(self, store: Any, side: str, entry: float) -> bool:
-        max_late_pct = _env_float("BREAKOUT_MAX_LATE_VS_REF_PCT", 0.0)
-        min_pullback_pct = _env_float("BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT", 0.0)
+        p = getattr(self, "_prefix", "BREAKOUT")
+        max_late_pct = _env_float(f"{p}_MAX_LATE_VS_REF_PCT", 0.0)
+        min_pullback_pct = _env_float(f"{p}_MIN_PULLBACK_FROM_EXTREME_PCT", 0.0)
         if max_late_pct <= 0 and min_pullback_pct <= 0:
             return True
 
@@ -188,7 +191,7 @@ class InPlayBreakoutWrapper:
         if i <= 2:
             return True
 
-        lookback = max(5, _env_int("BREAKOUT_REF_LOOKBACK_BARS", 20))
+        lookback = max(5, _env_int(f"{p}_REF_LOOKBACK_BARS", 20))
         lo = max(0, i - lookback)
         seg = list(bars[lo:i])
         if len(seg) < 3:
@@ -359,8 +362,9 @@ class InPlayBreakoutWrapper:
             self.last_no_signal_reason = "entry_timing_guard"
             return None
 
-        min_stop_pct = _env_float('BREAKOUT_MIN_STOP_PCT', 0.0)
-        max_stop_pct = _env_float('BREAKOUT_MAX_STOP_PCT', 0.0)
+        p = getattr(self, "_prefix", "BREAKOUT")
+        min_stop_pct = _env_float(f'{p}_MIN_STOP_PCT', 0.0)
+        max_stop_pct = _env_float(f'{p}_MAX_STOP_PCT', 0.0)
         stop_pct = abs(entry - sl) / max(1e-12, entry)
         if min_stop_pct > 0 and stop_pct < min_stop_pct:
             self.last_no_signal_reason = "stop_too_tight"
@@ -371,12 +375,12 @@ class InPlayBreakoutWrapper:
 
         base_reason = getattr(sig, "reason", "breakout")
 
-        exit_mode = (os.getenv("BREAKOUT_EXIT_MODE") or "fixed").strip().lower()
+        exit_mode = (os.getenv(f"{p}_EXIT_MODE") or "fixed").strip().lower()
         if exit_mode in {"runner", "managed"}:
             risk = abs(entry - sl)
             if risk > 0:
-                rs = _env_csv_floats("BREAKOUT_PARTIAL_RS", [1.0, 2.0, 3.5])
-                fracs = _env_csv_floats("BREAKOUT_PARTIAL_FRACS", [0.50, 0.25, 0.15])
+                rs = _env_csv_floats(f"{p}_PARTIAL_RS", [1.0, 2.0, 3.5])
+                fracs = _env_csv_floats(f"{p}_PARTIAL_FRACS", [0.50, 0.25, 0.15])
                 if len(fracs) != len(rs):
                     fracs = [1.0 / len(rs)] * len(rs)
 
@@ -385,9 +389,9 @@ class InPlayBreakoutWrapper:
                 else:
                     tps = [entry - (r * risk) for r in rs]
 
-                trail_mult = _env_float("BREAKOUT_TRAIL_ATR_MULT", 2.2)
-                trail_period = _env_int("BREAKOUT_TRAIL_ATR_PERIOD", 14)
-                time_stop = _env_int("BREAKOUT_TIME_STOP_BARS", 288)
+                trail_mult = _env_float(f"{p}_TRAIL_ATR_MULT", 2.2)
+                trail_period = _env_int(f"{p}_TRAIL_ATR_PERIOD", 14)
+                time_stop = _env_int(f"{p}_TIME_STOP_BARS", 288)
 
                 return TradeSignal(
                     strategy="inplay_breakout",

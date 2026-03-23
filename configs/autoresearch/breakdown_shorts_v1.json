@@ -1,0 +1,58 @@
+{
+  "name": "breakdown_shorts_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_inplay_breakdown_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--tag",
+    "{tag}"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,BNBUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,AVAXUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,BCHUSDT"
+    ],
+    "BREAKDOWN_REGIME_MODE": ["off", "ema"],
+    "BREAKDOWN_LOOKBACK_H": [48, 72, 96],
+    "BREAKDOWN_RR": [2.0, 2.5, 3.0],
+    "BREAKDOWN_SL_ATR": [1.5, 1.8, 2.2],
+    "BREAKDOWN_MAX_DIST_ATR": [2.0, 3.0]
+  },
+  "base_env": {
+    "BREAKDOWN_ALLOW_LONGS": "0",
+    "BREAKDOWN_ALLOW_SHORTS": "1",
+    "BREAKDOWN_REGIME_TF": "4h",
+    "BREAKDOWN_REGIME_EMA_FAST": "21",
+    "BREAKDOWN_REGIME_EMA_SLOW": "55",
+    "BREAKDOWN_MIN_BREAK_BARS": "3",
+    "BREAKDOWN_RANGE_ATR_MAX": "4.0"
+  },
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 1.5,
+    "max_drawdown": 4.0,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 1
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 3.0,
+    "winrate": 8.0,
+    "max_drawdown": 1.5,
+    "trades": 0.03,
+    "trades_cap": 80,
+    "negative_months": 1.5,
+    "max_negative_streak": 2.0
+  }
+}
