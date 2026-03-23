@@ -75,6 +75,8 @@ from bot.deepseek_autoresearch_agent import (
     tune_strategy,
     trigger_mini_backtest,
     build_research_context,
+    audit_bot_full,
+    ask_about_file,
 )
 from bot.deepseek_action_executor import (
     execute_proposal,
@@ -1002,6 +1004,8 @@ def _db_log_ml_close(tr, sym: str, *, pnl: float | None = None, fees: float | No
 
 # =========================== TELEGRAM COMMANDS ===========================
 TG_COMMANDS_ENABLE = os.getenv("TG_COMMANDS_ENABLE", "1").strip() == "1"
+# Restrict commands to this Telegram user_id (0 = no restriction)
+TG_ADMIN_USER_ID = os.getenv("TG_ADMIN_USER_ID", "").strip()
 REPORTS_ENABLE = os.getenv("REPORTS_ENABLE", "1").strip() == "1"
 REPORTS_SEND_ON_START = os.getenv("REPORTS_SEND_ON_START", "0").strip() == "1"
 REPORTS_OUT_DIR = os.getenv("REPORTS_OUT_DIR", "/tmp").strip() or "/tmp"
@@ -1433,6 +1437,24 @@ def _deepseek_snapshot() -> dict[str, Any]:
         "health_30d": _health_summary_text(30),
         "filters": _symbol_filters_summary(),
         "research": build_research_context(),
+        # Key live params — lets /ai answer questions about current settings
+        "live_params": {
+            "ASC1_SYMBOL_ALLOWLIST": os.getenv("ASC1_SYMBOL_ALLOWLIST", ""),
+            "ASC1_ALLOW_SHORTS": os.getenv("ASC1_ALLOW_SHORTS", ""),
+            "ASC1_SHORT_MIN_RSI": os.getenv("ASC1_SHORT_MIN_RSI", ""),
+            "ASC1_SHORT_MIN_REJECT_DEPTH_ATR": os.getenv("ASC1_SHORT_MIN_REJECT_DEPTH_ATR", ""),
+            "ARF1_SYMBOL_ALLOWLIST": os.getenv("ARF1_SYMBOL_ALLOWLIST", ""),
+            "ARF1_REJECT_BELOW_RES_ATR": os.getenv("ARF1_REJECT_BELOW_RES_ATR", ""),
+            "ARF1_MIN_RSI": os.getenv("ARF1_MIN_RSI", ""),
+            "BREAKOUT_ALLOW_SHORTS": os.getenv("BREAKOUT_ALLOW_SHORTS", ""),
+            "BREAKOUT_TOP_N": os.getenv("BREAKOUT_TOP_N", ""),
+            "BT_BREAKOUT_QUALITY_MIN_SCORE": os.getenv("BT_BREAKOUT_QUALITY_MIN_SCORE", ""),
+            "RISK_PER_TRADE_PCT": os.getenv("RISK_PER_TRADE_PCT", ""),
+            "SLOPED_RISK_MULT": os.getenv("SLOPED_RISK_MULT", ""),
+            "FLAT_RISK_MULT": os.getenv("FLAT_RISK_MULT", ""),
+            "DRY_RUN": os.getenv("DRY_RUN", ""),
+            "ENABLE_BREAKDOWN_TRADING": os.getenv("ENABLE_BREAKDOWN_TRADING", "0"),
+        },
     }
 
 def _parse_float(s: str) -> float | None:
@@ -1762,6 +1784,8 @@ def _handle_tg_command(text: str):
             "• /ai_reject ID — отклонить proposal\n"
             "• /ai_results [strategy] — топ autoresearch кандидаты\n"
             "• /ai_tune [strategy] — AI предложит изменения параметров\n"
+            "• /ai_audit — полный автономный аудит бота (код+конфиг)\n"
+            "• /ai_code <файл> [вопрос] — DeepSeek читает файл и отвечает\n"
             "• /ai_backtest — быстрый мини-бэктест (90d cache)\n"
             "• /ai_diff — что изменится при деплое approved proposal'ов\n"
             "• /ai_deploy ID — применить approved proposal + деплой на сервер\n"
@@ -1947,6 +1971,39 @@ def _handle_tg_command(text: str):
         _tg_reply(msg)
         return
 
+    if name == "/ai_audit":
+        _tg_reply("🔍 DeepSeek читает код стратегий и конфиг, жди ~30 сек...")
+        report = audit_bot_full(_deepseek_snapshot())
+        # Split into chunks if too long for TG
+        if len(report) > 4000:
+            for i in range(0, len(report), 4000):
+                _tg_reply(report[i:i+4000])
+        else:
+            _tg_reply(report)
+        return
+
+    if name == "/ai_code":
+        # /ai_code strategies/alt_sloped_channel_v1.py [optional question]
+        if len(cmd) < 2:
+            _tg_reply(
+                "Usage: /ai_code <filename> [вопрос]\n"
+                "Примеры:\n"
+                "  /ai_code strategies/alt_sloped_channel_v1.py\n"
+                "  /ai_code bot/deepseek_autoresearch_agent.py как работает аудит?\n"
+                "  /ai_code configs/server_clean.env что тут можно оптимизировать?"
+            )
+            return
+        filename = cmd[1]
+        question = " ".join(cmd[2:]) if len(cmd) > 2 else None
+        _tg_reply(f"📄 Читаю {filename}...")
+        answer = ask_about_file(filename, question, _deepseek_snapshot())
+        if len(answer) > 4000:
+            for i in range(0, len(answer), 4000):
+                _tg_reply(answer[i:i+4000])
+        else:
+            _tg_reply(answer)
+        return
+
     if name == "/ai_backtest":
         _tg_reply(trigger_mini_backtest())
         return
@@ -2124,6 +2181,10 @@ async def tg_cmd_loop():
                 msg = u.get("message") or u.get("edited_message") or {}
                 chat_id = str((msg.get("chat") or {}).get("id") or "")
                 if chat_id != str(TG_CHAT):
+                    continue
+                # Extra security: only allow the designated admin user
+                from_user_id = str((msg.get("from") or {}).get("id") or "")
+                if TG_ADMIN_USER_ID and from_user_id and from_user_id != TG_ADMIN_USER_ID:
                     continue
                 text = (msg.get("text") or "").strip()
                 if text:

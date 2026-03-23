@@ -359,6 +359,177 @@ def tune_strategy(
     )
 
 
+# ── Bot code audit ────────────────────────────────────────────────────────────
+
+_AUDIT_STRATEGIES = [
+    "alt_sloped_channel_v1",
+    "alt_resistance_fade_v1",
+    "alt_inplay_breakdown_v1",
+    "inplay_breakout",
+    "btc_eth_midterm_pullback",
+]
+
+_SECRET_KEYS_SUBSTRINGS = {"SECRET", "API_KEY", "API_SECRET", "ACCOUNTS_JSON", "TOKEN", "PASSWORD"}
+
+
+def _redact_env_line(line: str) -> str:
+    """Redact secrets from a single env file line."""
+    stripped = line.strip()
+    if not stripped or stripped.startswith("#") or "=" not in stripped:
+        return line
+    key = stripped.split("=", 1)[0].strip().upper()
+    if any(s in key for s in _SECRET_KEYS_SUBSTRINGS):
+        display_key = stripped.split("=", 1)[0].strip()
+        return f"{display_key}=<redacted>"
+    return line
+
+
+def read_env_config_redacted(max_lines: int = 120) -> str:
+    """Read the bot .env file with secrets redacted — safe for DeepSeek context."""
+    candidates = [
+        _ROOT / ".env",
+        _ROOT / "configs" / "server_clean.env",
+    ]
+    for path in candidates:
+        if path.exists():
+            try:
+                raw = path.read_text(encoding="utf-8", errors="replace")
+                lines = raw.splitlines()[:max_lines]
+                redacted = [_redact_env_line(l) for l in lines]
+                suffix = f"\n... ({len(raw.splitlines()) - max_lines} строк скрыто)" if len(raw.splitlines()) > max_lines else ""
+                return "\n".join(redacted) + suffix
+            except Exception:
+                continue
+    return "(файл конфига не найден)"
+
+
+def read_strategy_file(name: str, max_lines: int = 180) -> str:
+    """Read a strategy file from strategies/ dir, truncated to max_lines."""
+    path = _ROOT / "strategies" / f"{name}.py"
+    if not path.exists():
+        return f"(не найден: strategies/{name}.py)"
+    try:
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        snippet = "\n".join(lines[:max_lines])
+        if len(lines) > max_lines:
+            snippet += f"\n... ({len(lines) - max_lines} строк обрезано)"
+        return snippet
+    except Exception as e:
+        return f"(ошибка чтения: {e})"
+
+
+def read_any_bot_file(relative_path: str, max_lines: int = 250) -> str:
+    """
+    Read any file relative to bot root for /ai_code <filename>.
+    Only paths inside allowed directories to prevent traversal.
+    """
+    _ALLOWED_DIRS = {"strategies", "bot", "backtest", "configs", "scripts"}
+    p = Path(relative_path.replace("\\", "/"))
+    parts = p.parts
+    if not parts or ".." in parts or p.is_absolute():
+        return "❌ Отказано: абсолютный путь или '..' не разрешён."
+    if parts[0] not in _ALLOWED_DIRS and p.name != "smart_pump_reversal_bot.py":
+        return f"❌ Отказано: разрешены директории {', '.join(sorted(_ALLOWED_DIRS))}."
+    full = (_ROOT / p).resolve()
+    try:
+        full.relative_to(_ROOT.resolve())
+    except ValueError:
+        return "❌ Отказано: путь вне каталога бота."
+    if not full.exists():
+        return f"(файл не найден: {relative_path})"
+    if not full.is_file():
+        return f"(это не файл: {relative_path})"
+    try:
+        lines = full.read_text(encoding="utf-8", errors="replace").splitlines()
+        snippet = "\n".join(lines[:max_lines])
+        if len(lines) > max_lines:
+            snippet += f"\n... ({len(lines) - max_lines} строк обрезано)"
+        return snippet
+    except Exception as e:
+        return f"(ошибка чтения: {e})"
+
+
+def audit_bot_full(snapshot: dict[str, Any]) -> str:
+    """
+    Full autonomous audit: reads strategy code + config, sends to DeepSeek.
+    Returns Telegram-ready report string.
+    """
+    if not _env_bool("DEEPSEEK_ENABLE"):
+        return "⚠️ DeepSeek выключен (DEEPSEEK_ENABLE=0)."
+    if not _env("DEEPSEEK_API_KEY"):
+        return "⚠️ DEEPSEEK_API_KEY не задан."
+
+    # Collect config (redacted)
+    env_text = read_env_config_redacted(max_lines=90)
+
+    # Collect strategy summaries
+    strategy_parts = []
+    for strat in _AUDIT_STRATEGIES:
+        code = read_strategy_file(strat, max_lines=100)
+        strategy_parts.append(f"### {strat}.py\n{code}")
+    strategies_text = "\n\n".join(strategy_parts)
+
+    # Runtime summary
+    rt = snapshot.get("runtime_stats_12h", "n/a")
+    health = snapshot.get("health_30d", "n/a")
+    eq = snapshot.get("effective_equity", "?")
+    trade_on = snapshot.get("trade_on", "?")
+    research_json = json.dumps(
+        snapshot.get("research", {}).get("known_best_params", {}),
+        ensure_ascii=False, indent=2
+    )
+
+    system = (
+        "Ты senior Python-разработчик и квантовый трейдер. "
+        "Тебе дан торговый бот для Bybit perpetual futures. "
+        "Проведи честный профессиональный аудит. Отвечай строго на русском языке. "
+        "Будь конкретным и прямолинейным. Объём: до 600 слов."
+    )
+    user = (
+        f"== СТАТУС БОТА ==\n"
+        f"trade_on={trade_on}, equity≈{eq} USDT\n"
+        f"Статистика за 12h:\n{rt}\n\n"
+        f"Здоровье за 30d:\n{health}\n\n"
+        f"== ЛУЧШИЕ ИЗВЕСТНЫЕ ПАРАМЕТРЫ ==\n{research_json}\n\n"
+        f"== КОНФИГ (секреты скрыты) ==\n{env_text}\n\n"
+        f"== КОД СТРАТЕГИЙ (первые ~100 строк каждой) ==\n{strategies_text}\n\n"
+        "== ЗАДАЧА АУДИТА ==\n"
+        "Ответь по трём блокам:\n"
+        "1. ⚠️ РИСКИ: конкретные угрозы — что может пойти не так?\n"
+        "2. 📊 ПАРАМЕТРЫ: что выглядит не оптимально в текущих настройках?\n"
+        "3. 💡 ПРЕДЛОЖЕНИЯ: 3–5 конкретных улучшений.\n"
+        "   Каждое начни с «ПРЕДЛОЖЕНИЕ:» чтобы я мог обсудить с разработчиком.\n"
+        "Без воды. Только конкретика."
+    )
+
+    answer = _ds_chat(system, user, model=_env("DEEPSEEK_MODEL", "deepseek-chat"))
+    return "🔍 DeepSeek Аудит бота\n\n" + answer
+
+
+def ask_about_file(filename: str, question: str | None, snapshot: dict[str, Any]) -> str:
+    """
+    Read a specific bot file and ask DeepSeek about it.
+    Used by /ai_code <filename> [question].
+    """
+    if not _env_bool("DEEPSEEK_ENABLE"):
+        return "⚠️ DeepSeek выключен."
+    if not _env("DEEPSEEK_API_KEY"):
+        return "⚠️ DEEPSEEK_API_KEY не задан."
+
+    code = read_any_bot_file(filename, max_lines=250)
+    if code.startswith("❌") or code.startswith("("):
+        return code
+
+    system = (
+        "Ты senior Python-разработчик и квантовый трейдер. "
+        "Анализируй код торгового бота. Отвечай на русском. Кратко и конкретно."
+    )
+    q = question or "Что делает этот код? Что работает хорошо и что можно улучшить?"
+    user = f"Файл: {filename}\n\n```python\n{code}\n```\n\nВопрос: {q}"
+
+    return _ds_chat(system, user)
+
+
 # ── quick mini-backtest trigger ───────────────────────────────────────────────
 
 def trigger_mini_backtest(
