@@ -1303,3 +1303,58 @@ EMA [30/45/60], 10 комбинаций монет. Итого ~5000+ комби
 - 2026-03-20 15:50 UTC | minute probe root cause narrowed to backtest base timeframe mismatch | the first smoke did not fail because the idea was empty; it failed because the current portfolio backtest harness is 5m-based while the new minute probe asks `inplay_breakout` for `1m/3m` entry candles. Code review confirmed the mismatch: `backtest/run_portfolio.py` only loads 5m slices through `_load_symbol_5m(...)`, and `backtest/engine.py`'s `KlineStore` only supports `5/15/60/240` intervals. So the immediate blocker for true minute-scalper research is infrastructure, not edge: we need either a 1m-capable `KlineStore` / portfolio harness or a dedicated minute backtest runner. This is now a concrete next engineering step instead of a vague “maybe the strategy is bad.” | done
 - 2026-03-20 20:43 UTC | TS132 v8 autoresearch prepared: friend symbols + eval_tf_min probe | created `configs/autoresearch/triple_screen_adaptive_v8_friend_symbols.json` (34,560 combinations) targeting the friend's exact 5 coins (`STRKUSDT`, `KSMUSDT`, `AXSUSDT`, `AVAXUSDT`, `ETHUSDT`). Key new dimension is `TS132_EVAL_TF_MIN: [60, 120, 180, 240]` — testing whether 3-hour evaluation cadence (as observed in friend's screenshot showing entries at 6:00/9:00/12:00/15:00 UTC) reproduces the pattern. Also tests: `TREND_TF: [60, 240]`, `TREND_EMA_LEN: [16, 24, 36]`, `OSC_PERIOD: [6, 8, 10]`, `OSC_OB: [65, 70]`, `OSC_OS: [30, 35]`, `SL_ATR: [1.5, 2.0]`, `TP_ATR: [6, 8, 10]`, `BE_PCT: [0.8, 1.0]`. Seeds from v7 best result: `RSI(8)`, `SL=1.5xATR`, `TP=8.0xATR`. Smoke test reveals: eval_tf_min=60 wins on trade count (7 vs 1 trades on STRK, 180d), but eval_tf_min=180 achieves 100% WR on its 1 trade. AVAX/ETH/AXS generate 0 signals with current defaults — each symbol likely needs its own parameter island, which the full autoresearch will reveal. To launch on server: `nohup python3 scripts/run_strategy_autoresearch.py configs/autoresearch/triple_screen_adaptive_v8_friend_symbols.json > logs/autoresearch_ts132_v8.log 2>&1 &` | ready
 - 2026-03-23 12:45 UTC | Session 7: shorts engine built, autoresearches restarted | Key findings: (1) ASC1 expansion — adding SOLUSDT/AVAXUSDT/ETHUSDT to ASC1 generates ZERO new trades; BCHUSDT does trade but WR=27% (negative). Current LINK+ATOM config (PF=3.744, WR=70%, 20 trades, DD=1.72%) is already optimal. (2) Refactored `InPlayBreakoutWrapper` to accept `env_prefix` param — now all BREAKOUT_* var names are dynamic. (3) Created `strategies/alt_inplay_breakdown_v1.py` — shorts-only breakdown engine using `env_prefix="BREAKDOWN"` with EMA regime filter default. Registered in `backtest/run_portfolio.py`. Smoke test: 16 shorts, PF=1.645, WR=62.5%, net+1.89%. (4) Created `configs/autoresearch/breakdown_shorts_v1.json` (432 candidates) — early results PF=2.250 WR=55.8% 113 trades DD=3.24% (no regime filter, lookback=48h). (5) `BREAKDOWN_*` block added to `configs/server_clean.env` (ENABLE_BREAKDOWN_TRADING=0 until params confirmed). (6) Restarted full_stack_v2 (PID 1208, 216 candidates) and equities_v22 (PID 1237, 1152 candidates). (7) DeepSeek Mode 3 weekly task created via Claude scheduled tasks — runs every Monday 9am, checks autoresearch results, restarts if dead, generates markdown improvement report. | running
+
+## Сессия 9 — 2026-03-25
+
+### Trailing Stop Research (backtested locally)
+
+ASC1 trailing sweep (ATOM+LINK, 360 days):
+| trail_atr_mult | trades | net% | PF | WR |
+|---|---|---|---|---|
+| 0.0 (baseline) | 39 | +15.46% | 2.949 | 56.4% |
+| 0.8 | 46 | +0.78% | 1.647 | 52.2% |
+| 1.8 | 46 | +3.14% | 3.939 | 58.7% |
+| 2.5 | 46 | +4.56% | 4.245 | 56.5% |
+
+**Вывод: trailing УХУДШАЕТ ASC1.** Mean-reversion стратегии работают через точные TP, trailing режет победителей. ASC1_TRAIL_ATR_MULT=0 (off).
+
+ARF1 trailing: то же. Baseline +28.60% PF 3.635 >> trail best +10.35% PF 3.906. TRAIL=0.
+
+### Exit Mode Research (breakout)
+
+Fixed exit: **net +13.23%, PF 2.499, WR 72.4%**
+Runner mode best (rs=1.5,2.5,4.0): net +9.83%, PF 1.977, WR 55.0%
+
+**Вывод: fixed exit лучше для breakout.** EXIT_MODE=fixed.
+
+### Key Bug Fixed: BREAKOUT_QUALITY_MIN_SCORE
+Live bot читает `BREAKOUT_QUALITY_MIN_SCORE` (дефолт 0.0 = фильтр выключен).
+Backtest использует `BT_BREAKOUT_QUALITY_MIN_SCORE`.
+Server env имел только BT_ версию → live bot торговал без quality filter!
+**Fix: добавлен `BREAKOUT_QUALITY_MIN_SCORE=0.48` в server_clean.env.**
+
+### ARF1 6 Coins Research
+4 coins (LINK+LTC+SUI+DOT): trades=59 net=28.60% PF=3.635 WR=54.2% DD=1.62% neg_months=?
+6 coins (+ADA+BCH): trades=78 net=37.48% PF=3.495 WR=52.6% DD=1.59% neg_months=0!
+
+6 coins дают +9% net, чуть ниже PF, DD даже меньше, 0 red months!
+
+### Breakdown Shorts Research
+BTC+ETH+SOL (3 symbols), r003 params (REGIME=off, LOOKBACK=48h, RR=2.0, SL=1.8ATR):
+trades=192 net=**+36.09%** PF=1.922 WR=54.7% DD=3.33% neg_months=0
+Monthly: 9/12 green (3 tiny red: May -0.24%, Jul -0.33%, Feb -1.89%)
+
+5 symbols (BTC+ETH+SOL+LINK+ATOM):
+trades=289 net=**+72.37%** PF=2.218 WR=58.5% DD=3.77% neg_months=0
+Monthly: 11/12 green!
+
+**РЕКОМЕНДАЦИЯ: включить breakdown шортс на BTC+ETH+SOL (низкий риск, хорошая диверсификация).**
+
+### Current Best Settings
+server_clean.env updated:
+- `BREAKOUT_QUALITY_MIN_SCORE=0.48` (NEW — bug fix, live filter теперь работает)
+- `BT_BREAKOUT_QUALITY_MIN_SCORE=0.48` (was 0.54, aligned with best autoresearch r003)
+- `BREAKOUT_MAX_CHASE_PCT=0.11` (was 0.14)
+- `DEEPSEEK_TIMEOUT_SEC=20` (was 15)
+- `DEEPSEEK_HISTORY_MAX_MESSAGES=16` (was 10)
+
