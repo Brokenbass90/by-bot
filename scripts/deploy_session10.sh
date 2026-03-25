@@ -11,7 +11,7 @@
 #   3. DEEPSEEK_ENABLE=1 проверяется и включается
 # ===================================================================
 set -e
-SSH_KEY="${SSH_KEY:-~/.ssh/by-bot}"
+SSH_KEY="${SSH_KEY:-$HOME/.ssh/by-bot}"
 SERVER="root@64.226.73.119"
 LOCAL="$(cd "$(dirname "$0")/.." && pwd)"
 
