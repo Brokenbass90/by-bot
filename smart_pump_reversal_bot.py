@@ -653,27 +653,21 @@ def _flush_breakout_skip_digest(force: bool = False) -> bool:
 # =========================== TELEGRAM UI ===========================
 TG_KB = {
     "keyboard": [
-        ["📊 Status", "✅ Ping"],
-        ["⏸ Pause", "▶ Resume"],
-        ["🎯 Risk 0.5%", "💰 Capital 100"],
-        ["🧹 Reco", "✅ Apply Reco"],
-        ["📈 Positions 3", "ℹ Help"],
+        ["📊 /status", "✅ /ping"],
+        ["⏸ /pause", "▶ /resume"],
+        ["ℹ /help", "🤖 /ai"],
     ],
     "resize_keyboard": True,
     "one_time_keyboard": False,
 }
 
 BUTTON_MAP = {
-    "📊 status": "/status",
-    "✅ ping": "/ping",
-    "⏸ pause": "/pause",
-    "▶ resume": "/resume",
-    "🎯 risk 0.5%": "/risk 0.5",
-    "💰 capital 100": "/capital 100",
-    "🧹 reco": "/banreco",
-    "✅ apply reco": "/banapply",
-    "📈 positions 3": "/positions 3",
-    "ℹ help": "/help",
+    "📊 /status": "/status",
+    "✅ /ping": "/ping",
+    "⏸ /pause": "/pause",
+    "▶ /resume": "/resume",
+    "ℹ /help": "/help",
+    "🤖 /ai": "/ai",
 }
 
 # =========================== .env ===========================
@@ -1754,43 +1748,39 @@ def _handle_tg_command(text: str):
 
     if name in ("/help", "/start"):
         tg_send_kb(
-            "🤖 Управление ботом\n"
-            "• /status — статус и риск\n"
-            "• /ping — жив ли бот\n"
-            "• /pause — пауза торговли\n"
-            "• /resume — продолжить\n"
-            "• /risk 0.5 — риск в %\n"
-            "• /capital 200 — кап бота\n"
-            "• /positions 3 — макс. позиций (1–10)\n"
-            "• /filters — текущие фильтры символов\n"
-            "• /filters_build — пересобрать фильтры\n"
-            "• /stats [7|30|90|365] — отчёт за период\n"
-            "• /health — killers/winners + критерии фильтра\n"
-            "• /plotlast [SYM] — график последней закрытой сделки\n"
-            "• /plotts SYM TS — график закрытия по timestamp\n"
-            "• /banreco — рекомендации бан-листа\n"
-            "• /banapply — применить последние рекомендации\n"
-            "• /banlist — текущие фильтры\n"
-            "• /ban SYM1,SYM2 — добавить в бан\n"
-            "• /unban SYM1,SYM2 — убрать из бана\n"
-            "• /ai <вопрос> — спросить advisory-AI о состоянии бота\n"
-            "• /ai_reset — сбросить историю AI-диалога\n"
-            "• /ai_regime — локальная regime-подсказка\n"
-            "• /ai_budget — usage/лимит AI\n"
-            "• /ai_pending — очередь proposal'ов\n"
-            "• /ai_shadow — shadow-рекомендации AI\n"
-            "• /ai_shadow_reset — сбросить shadow-журнал AI\n"
-            "• /ai_approve ID — подтвердить proposal\n"
-            "• /ai_reject ID — отклонить proposal\n"
-            "• /ai_results [strategy] — топ autoresearch кандидаты\n"
-            "• /ai_tune [strategy] — AI предложит изменения параметров\n"
-            "• /ai_audit — полный автономный аудит бота (код+конфиг)\n"
-            "• /ai_code <файл> [вопрос] — DeepSeek читает файл и отвечает\n"
-            "• /ai_backtest — быстрый мини-бэктест (90d cache)\n"
-            "• /ai_diff — что изменится при деплое approved proposal'ов\n"
-            "• /ai_deploy ID — применить approved proposal + деплой на сервер\n"
-            "• /ai_rollback — откат server_clean.env к предыдущему бэкапу\n"
-            "• /ai_server — проверить статус сервера"
+            "🤖 *Bybit Bot — Команды*\n\n"
+            "📊 *Статус и мониторинг*\n"
+            "  /status — баланс, риск, открытые позиции\n"
+            "  /ping — время работы бота\n"
+            "  /stats 7|30|90|365 — отчёт за период\n"
+            "  /health — фильтр символов, killers/winners\n\n"
+            "⚙️ *Управление торговлей*\n"
+            "  /pause — пауза всех стратегий\n"
+            "  /resume — возобновить торговлю\n"
+            "  /risk 0.5 — риск на сделку в %\n"
+            "  /capital 300 — капитал бота (USDT)\n"
+            "  /positions 3 — макс. одновременных позиций\n\n"
+            "🔍 *Фильтры и бан-лист*\n"
+            "  /filters — текущие фильтры монет\n"
+            "  /banlist — бан-лист символов\n"
+            "  /ban BTC,ETH — добавить в бан\n"
+            "  /unban BTC,ETH — убрать из бана\n\n"
+            "📈 *Графики*\n"
+            "  /plotlast [SYM] — график последней сделки\n\n"
+            "🤖 *AI / DeepSeek*\n"
+            "  /ai <вопрос> — задать вопрос AI-партнёру\n"
+            "     Примеры:\n"
+            "     /ai почему бот не входил сегодня?\n"
+            "     /ai запусти autoresearch на breakdown\n"
+            "     /ai какие стратегии сейчас активны?\n"
+            "  /ai_backtest — быстрый бэктест 90d\n"
+            "  /ai_results [strat] — топ autoresearch кандидаты\n"
+            "  /ai_tune [strat] — AI предложит новые параметры\n"
+            "  /ai_audit — полный аудит бота (код+конфиг)\n"
+            "  /ai_code <файл> [вопрос] — AI читает файл\n"
+            "  /ai_budget — расход AI токенов\n"
+            "  /ai_reset — сбросить историю диалога\n"
+            "  /ai_server — статус сервера и процессов"
         )
         return
 
