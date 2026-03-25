@@ -40,6 +40,7 @@ except ImportError:
     def _news_is_blocked(**kw): return False, ""  # type: ignore[misc]
 from midterm_live import MidtermLiveEngine
 from retest_live import RetestEngine
+from strategies.breakdown_live import BreakdownLiveEngine
 from trade_reporting import generate_report, since_days
 
 from sr_range import RangeRegistry, RangeScanner
@@ -313,6 +314,13 @@ FLAT_TRY_EVERY_SEC = int(os.getenv("FLAT_TRY_EVERY_SEC", "60"))
 FLAT_RISK_MULT = max(0.05, float(os.getenv("FLAT_RISK_MULT", "1.0")))
 FLAT_MAX_OPEN_TRADES = int(os.getenv("FLAT_MAX_OPEN_TRADES", "1"))
 FLAT_ENGINE = None
+
+# ===== BREAKDOWN SHORTS (live) =====
+ENABLE_BREAKDOWN_TRADING = os.getenv("ENABLE_BREAKDOWN_TRADING", "0").strip() == "1"
+BREAKDOWN_TRY_EVERY_SEC = int(os.getenv("BREAKDOWN_TRY_EVERY_SEC", "60"))
+BREAKDOWN_RISK_MULT = max(0.05, float(os.getenv("BREAKDOWN_RISK_MULT", "0.10")))
+BREAKDOWN_MAX_OPEN_TRADES = int(os.getenv("BREAKDOWN_MAX_OPEN_TRADES", "1"))
+BREAKDOWN_ENGINE = None
 
 # ===== TRIPLE SCREEN v132 (live) =====
 ENABLE_TS132_TRADING = os.getenv("ENABLE_TS132_TRADING", "0").strip() == "1"
@@ -2248,6 +2256,7 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
         f"range={ENABLE_RANGE_TRADING}",
         f"sloped={ENABLE_SLOPED_TRADING}",
         f"flat={ENABLE_FLAT_TRADING}",
+        f"breakdown={ENABLE_BREAKDOWN_TRADING}",
         f"ts132={ENABLE_TS132_TRADING}",
     ]
     lines = [
@@ -4218,6 +4227,15 @@ if ENABLE_FLAT_TRADING:
         log_error(f"[FLAT] engine init fail: {_e}")
         FLAT_ENGINE = None
 
+# ===== BREAKDOWN SHORTS ENGINE =====
+if ENABLE_BREAKDOWN_TRADING:
+    try:
+        BREAKDOWN_ENGINE = BreakdownLiveEngine(fetch_klines)
+        log(f"[BREAKDOWN] engine initialised")
+    except Exception as _e:
+        log_error(f"[BREAKDOWN] engine init fail: {_e}")
+        BREAKDOWN_ENGINE = None
+
 # ===== TRIPLE SCREEN v132 ENGINE =====
 if ENABLE_TS132_TRADING:
     try:
@@ -4787,6 +4805,7 @@ _RETEST_LAST_TRY = {}           # symbol -> ts
 _MIDTERM_LAST_TRY = {}          # symbol -> ts
 _SLOPED_LAST_TRY = {}           # symbol -> ts
 _FLAT_LAST_TRY = {}             # symbol -> ts
+_BREAKDOWN_LAST_TRY = {}        # symbol -> ts
 _TS132_LAST_TRY = {}            # symbol -> ts
 _BREAKOUT_COOLDOWN_UNTIL = {}   # symbol -> ts
 _BREAKOUT_COOLDOWN_LOG_TS = {}  # symbol -> ts
@@ -5791,6 +5810,123 @@ async def try_flat_entry_async(symbol: str, price: float):
     )
 
 
+async def try_breakdown_entry_async(symbol: str, price: float):
+    """Try breakdown short entry for a symbol (alt_inplay_breakdown_v1)."""
+    if not ENABLE_BREAKDOWN_TRADING:
+        return
+    if BREAKDOWN_ENGINE is None:
+        return
+    if not TRADE_ON or DRY_RUN:
+        return
+    if TRADE_CLIENT is None:
+        return
+    if get_trade("Bybit", symbol) is not None:
+        return
+    if BREAKDOWN_MAX_OPEN_TRADES > 0:
+        open_bd = 0
+        for tr in TRADES.values():
+            if getattr(tr, "strategy", "") != "alt_inplay_breakdown_v1":
+                continue
+            if str(getattr(tr, "status", "") or "").upper() in {"CLOSED", "ERROR"}:
+                continue
+            open_bd += 1
+        if open_bd >= BREAKDOWN_MAX_OPEN_TRADES:
+            return
+    if not portfolio_can_open():
+        return
+
+    now = now_s()
+    last = int(_BREAKDOWN_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < BREAKDOWN_TRY_EVERY_SEC:
+        return
+    _BREAKDOWN_LAST_TRY[symbol] = now
+    _diag_inc("breakdown_try")
+
+    try:
+        sig = BREAKDOWN_ENGINE.signal(symbol, int(now * 1000), price)
+    except Exception as e:
+        log_error(f"breakdown signal error {symbol}: {e}")
+        return
+    if not sig:
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=BREAKDOWN_RISK_MULT)
+    if dyn_usd <= 0:
+        tg_trade(f"🟡 BREAKDOWN SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+
+    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0:
+        tg_trade(f"🟡 BREAKDOWN SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:breakdown:{symbol}",
+            f"🟡 BREAKDOWN SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
+
+    ensure_leverage(symbol, BYBIT_LEVERAGE)
+    _diag_inc("breakdown_entry")
+    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+
+    tr = TradeState(
+        symbol=symbol,
+        side=side,
+        qty=q,
+        entry_price_req=float(entry),
+        entry_ts=now,
+    )
+    tr.entry_order_id = oid
+    tr.status = "PENDING_ENTRY"
+    tr.strategy = "alt_inplay_breakdown_v1"
+    tr.avg = float(entry)
+    tr.entry_price = float(entry)
+    tr.entry_notional_usd = float(notional_real)
+    tr.tp_price = float(tp_r) if tp_r is not None else None
+    tr.sl_price = float(sl_r)
+    tr.runner_enabled = bool(use_runner)
+    if tr.runner_enabled:
+        tr.tps = [float(x) for x in (sig.tps or [])]
+        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+        tr.tp_hit = [False for _ in tr.tps]
+        tr.initial_qty = float(q)
+        tr.remaining_qty = float(q)
+        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+        tr.time_stop_sec = int(ts_bars * 300)
+    TRADES[("Bybit", symbol)] = tr
+
+    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+    tr.tpsl_on_exchange = bool(ok)
+    tr.tpsl_last_set_ts = now_s()
+    if ok:
+        tr.tpsl_manual_lock = False
+
+    tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+    tg_trade(
+        f"🔻 BREAKDOWN ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+        f"reason={sig.reason}"
+    )
+
+
 class _TS132Store:
     """Minimal store that TripleScreenV132Strategy expects for fetch_klines."""
     def __init__(self, symbol: str):
@@ -6350,6 +6486,15 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                 except Exception as _e:
                     log_error(f"try_flat_entry schedule fail {sym}: {_e}")
 
+        # ===== BREAKDOWN SHORTS ENTRY =====
+        if ENABLE_BREAKDOWN_TRADING:
+            last = int(_BREAKDOWN_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= BREAKDOWN_TRY_EVERY_SEC:
+                try:
+                    asyncio.create_task(try_breakdown_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_breakdown_entry schedule fail {sym}: {_e}")
+
         # ===== TRIPLE SCREEN v132 ENTRY =====
         if ENABLE_TS132_TRADING:
             last = int(_TS132_LAST_TRY.get(sym, 0) or 0)
@@ -6365,14 +6510,14 @@ def detect(exch: str, sym: str, st: SymState, now: int):
         tr = get_trade(exch, sym)
         if (tr
             and getattr(tr, "strategy", "pump") in ("bounce", "range", "sloped_channel", "triple_screen_v132", "flat_resistance_fade")
-            and getattr(tr, "status", None) == "OPEN"   
+            and getattr(tr, "status", None) == "OPEN"
             and p1 is not None
         ):
             POS_MANAGER.manage(exch, sym, st, tr, p1, buys2, sells2)
 
         # ===== INPLAY runner management (partials + trailing + time stop) =====
         if (tr
-            and getattr(tr, "strategy", "") in ("inplay", "inplay_breakout", "btc_eth_midterm_pullback")
+            and getattr(tr, "strategy", "") in ("inplay", "inplay_breakout", "btc_eth_midterm_pullback", "alt_inplay_breakdown_v1")
             and getattr(tr, "status", None) == "OPEN"
             and getattr(tr, "runner_enabled", False)
             and p1 is not None
@@ -7097,6 +7242,7 @@ def auth_check_all_accounts():
         f"range={ENABLE_RANGE_TRADING}, "
         f"sloped={ENABLE_SLOPED_TRADING}, "
         f"flat={ENABLE_FLAT_TRADING}, "
+        f"breakdown={ENABLE_BREAKDOWN_TRADING}, "
         f"ts132={ENABLE_TS132_TRADING}"
     )
 
@@ -7271,7 +7417,7 @@ def main():
     print(
         f"Strategies: breakout={ENABLE_BREAKOUT_TRADING} inplay={ENABLE_INPLAY_TRADING} "
         f"retest={ENABLE_RETEST_TRADING} range={ENABLE_RANGE_TRADING} pump_fade={ENABLE_PUMP_FADE_TRADING} "
-        f"midterm={ENABLE_MIDTERM_TRADING} sloped={ENABLE_SLOPED_TRADING} flat={ENABLE_FLAT_TRADING} ts132={ENABLE_TS132_TRADING}"
+        f"midterm={ENABLE_MIDTERM_TRADING} sloped={ENABLE_SLOPED_TRADING} flat={ENABLE_FLAT_TRADING} breakdown={ENABLE_BREAKDOWN_TRADING} ts132={ENABLE_TS132_TRADING}"
     )
     if BOT_CAPITAL_USD is not None:
         print(f"Bot capital cap: {BOT_CAPITAL_USD} USDT")
