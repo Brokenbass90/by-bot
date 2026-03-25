@@ -1,0 +1,41 @@
+{
+  "name": "breakdown_expansion_v1",
+  "description": "Test adding LINK+ATOM to breakdown shorts universe (currently BTC+ETH+SOL only)",
+  "strategy": "alt_inplay_breakdown_v1",
+  "days": 360,
+  "end": "2026-02-24",
+  "starting_equity": 100,
+  "risk_pct": 0.005,
+  "base_env": {
+    "ENABLE_BREAKDOWN_TRADING": "1",
+    "BREAKDOWN_ALLOW_LONGS": "0",
+    "BREAKDOWN_ALLOW_SHORTS": "1",
+    "BREAKDOWN_REGIME_MODE": "off",
+    "BREAKDOWN_LOOKBACK_H": "48",
+    "BREAKDOWN_RR": "2.0",
+    "BREAKDOWN_SL_ATR": "1.8",
+    "BREAKDOWN_MAX_DIST_ATR": "2.0",
+    "BREAKDOWN_MAX_OPEN_TRADES": "1"
+  },
+  "candidates": [
+    {"tag": "btc_eth_sol_baseline",       "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT"},
+    {"tag": "add_link",                    "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT"},
+    {"tag": "add_atom",                    "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,ATOMUSDT"},
+    {"tag": "add_link_atom",               "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT"},
+    {"tag": "add_link_atom_ltc",           "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,LTCUSDT"},
+    {"tag": "eth_sol_link_atom",           "BREAKDOWN_SYMBOL_ALLOWLIST": "ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT"},
+    {"tag": "btc_only",                    "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT"},
+    {"tag": "btc_eth_only",               "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT"},
+    {"tag": "sol_link_atom",              "BREAKDOWN_SYMBOL_ALLOWLIST": "SOLUSDT,LINKUSDT,ATOMUSDT"},
+    {"tag": "rr1_5_sol3",                 "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT", "BREAKDOWN_RR": "1.5"},
+    {"tag": "rr2_5_sol3",                 "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT", "BREAKDOWN_RR": "2.5"},
+    {"tag": "rr2_0_sl2_0_sol3",           "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT", "BREAKDOWN_SL_ATR": "2.0"},
+    {"tag": "rr2_0_sl1_5_sol3",           "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT", "BREAKDOWN_SL_ATR": "1.5"},
+    {"tag": "rr2_0_lookback72_sol3",      "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT", "BREAKDOWN_LOOKBACK_H": "72"},
+    {"tag": "rr2_0_lookback24_sol3",      "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT", "BREAKDOWN_LOOKBACK_H": "24"},
+    {"tag": "rr2_0_link_atom_rr1_5",      "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT", "BREAKDOWN_RR": "1.5"},
+    {"tag": "rr2_0_link_atom_sl2_0",      "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT", "BREAKDOWN_SL_ATR": "2.0"},
+    {"tag": "add_bnb",                    "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT"},
+    {"tag": "add_link_atom_bnb",          "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,BNBUSDT"}
+  ]
+}

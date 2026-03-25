@@ -1904,8 +1904,18 @@ def _handle_tg_command(text: str):
             )
             return
         _tg_reply("🤖 AI думает...")
-        answer = DEEPSEEK_OVERLAY.ask(prompt, _deepseek_snapshot())
-        _tg_reply(answer)
+        # Run in background thread to avoid blocking the asyncio event loop
+        import threading
+        snap = _deepseek_snapshot()
+        def _run_ai():
+            try:
+                answer = DEEPSEEK_OVERLAY.ask(prompt, snap)
+                if not answer or not answer.strip():
+                    answer = "❓ AI вернул пустой ответ. Попробуй ещё раз."
+            except Exception as exc:
+                answer = f"❌ AI ошибка: {exc}"
+            tg_send(answer)
+        threading.Thread(target=_run_ai, daemon=True).start()
         return
 
     if name == "/ai_reset":
