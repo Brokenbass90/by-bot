@@ -1,126 +1,155 @@
 #!/bin/bash
 # ===================================================================
-# deploy_session9.sh — Деплой всех улучшений сессии 9
+# deploy_session9.sh — Финальный деплой сессий 8-9
 #
 # Запускай с локального терминала:
 #   bash scripts/deploy_session9.sh
 #
 # Что деплоится:
-#   1. DeepSeek partner mode — знает архитектуру, история в data/, 16 msg, timeout 20s
-#   2. BREAKOUT_QUALITY_MIN_SCORE=0.48 — баг-фикс (live filter был 0.0)
-#   3. BREAKOUT_MAX_CHASE_PCT=0.11 (было 0.14)
-#   4. ASC1 + ARF1: новые trail params (по умолч. 0 = выкл, trail не помогает)
-#   5. Обновлённый server env с лучшими параметрами
+#   1. DeepSeek partner mode (deepseek_overlay.py)
+#   2. DeepSeek audit/code команды (deepseek_autoresearch_agent.py)
+#   3. TG security: TG_ADMIN_USER_ID
+#   4. BREAKOUT quality filter bug fix: BREAKOUT_QUALITY_MIN_SCORE=0.48
+#   5. BREAKOUT_MAX_CHASE_PCT=0.11 (было 0.14)
+#   6. Breakdown shorts ВКЛЮЧЁН на BTC+ETH+SOL
+#   7. ARF1 расширен до 6 монет (+ADA+BCH): +9% net, 0 red months
+#   8. ASC1/ARF1: trail params (=0, trailing не помогает mean-reversion)
 # ===================================================================
 set -e
 SSH_KEY="${SSH_KEY:-~/.ssh/by-bot}"
 SERVER="root@64.226.73.119"
-REMOTE_DIR="/root/by-bot"
-LOCAL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+REMOTE="$SERVER:/root/by-bot"
+LOCAL="$(cd "$(dirname "$0")/.." && pwd)"
 
-echo "=== Session 9 Deploy ==="
+echo "╔══════════════════════════════════════════╗"
+echo "║        Session 9 Deploy to Server        ║"
+echo "╚══════════════════════════════════════════╝"
 echo ""
 
-# 1. Файлы бота
-echo "[1/6] Bot core..."
+# ── 1. Bot core files ──────────────────────────────────────────────
+echo "[1/6] Copying bot files..."
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
-  "$LOCAL_DIR/bot/deepseek_overlay.py" \
-  "$LOCAL_DIR/bot/deepseek_autoresearch_agent.py" \
-  "$SERVER:$REMOTE_DIR/bot/"
+    "$LOCAL/bot/deepseek_overlay.py" \
+    "$LOCAL/bot/deepseek_autoresearch_agent.py" \
+    "$SERVER:/root/by-bot/bot/"
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
-  "$LOCAL_DIR/smart_pump_reversal_bot.py" \
-  "$SERVER:$REMOTE_DIR/"
+    "$LOCAL/smart_pump_reversal_bot.py" \
+    "$SERVER:/root/by-bot/"
 
-# 2. Стратегии
-echo "[2/6] Strategies..."
+# ── 2. Strategies ─────────────────────────────────────────────────
+echo "[2/6] Copying strategies..."
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
-  "$LOCAL_DIR/strategies/alt_sloped_channel_v1.py" \
-  "$LOCAL_DIR/strategies/alt_resistance_fade_v1.py" \
-  "$LOCAL_DIR/strategies/alt_inplay_breakdown_v1.py" \
-  "$LOCAL_DIR/strategies/inplay_breakout.py" \
-  "$LOCAL_DIR/strategies/btc_eth_midterm_pullback.py" \
-  "$SERVER:$REMOTE_DIR/strategies/"
+    "$LOCAL/strategies/alt_sloped_channel_v1.py" \
+    "$LOCAL/strategies/alt_resistance_fade_v1.py" \
+    "$LOCAL/strategies/alt_inplay_breakdown_v1.py" \
+    "$LOCAL/strategies/inplay_breakout.py" \
+    "$LOCAL/strategies/btc_eth_midterm_pullback.py" \
+    "$SERVER:/root/by-bot/strategies/"
 
-# 3. Autoresearch configs
-echo "[3/6] Autoresearch configs..."
+# ── 3. Autoresearch configs ────────────────────────────────────────
+echo "[3/6] Copying autoresearch configs..."
+ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" \
+    "mkdir -p /root/by-bot/configs/autoresearch /root/by-bot/data"
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
-  "$LOCAL_DIR/configs/autoresearch/asc1_trailing_v1.json" \
-  "$LOCAL_DIR/configs/autoresearch/arf1_trailing_v1.json" \
-  "$LOCAL_DIR/configs/autoresearch/triple_screen_elder_friend_v11.json" \
-  "$LOCAL_DIR/configs/autoresearch/flat_arf1_expansion_v2.json" \
-  "$SERVER:$REMOTE_DIR/configs/autoresearch/"
+    "$LOCAL/configs/autoresearch/triple_screen_elder_friend_v11.json" \
+    "$LOCAL/configs/autoresearch/flat_arf1_expansion_v2.json" \
+    "$LOCAL/configs/autoresearch/asc1_trailing_v1.json" \
+    "$LOCAL/configs/autoresearch/arf1_trailing_v1.json" \
+    "$SERVER:/root/by-bot/configs/autoresearch/"
 
-# 4. Патч .env с лучшими параметрами
-echo "[4/6] Env patch..."
-ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" "
-  mkdir -p $REMOTE_DIR/data
+# ── 4. Patch .env ─────────────────────────────────────────────────
+echo "[4/6] Patching .env..."
+ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" bash << 'REMOTE_EOF'
+ENV="/root/by-bot/.env"
+DATA="/root/by-bot/data"
+mkdir -p "$DATA"
 
-  # Перенести историю DeepSeek если есть
-  [ -f /tmp/bybot_deepseek_chat.json ] && cp /tmp/bybot_deepseek_chat.json $REMOTE_DIR/data/deepseek_chat.json && echo 'Migrated chat history' || true
+patch_or_add() {
+    local key="$1" val="$2"
+    if grep -q "^${key}=" "$ENV"; then
+        sed -i "s|^${key}=.*|${key}=${val}|" "$ENV"
+        echo "  updated: ${key}=${val}"
+    else
+        echo "" >> "$ENV"
+        echo "${key}=${val}" >> "$ENV"
+        echo "  added:   ${key}=${val}"
+    fi
+}
 
-  # TG_ADMIN_USER_ID
-  grep -q 'TG_ADMIN_USER_ID' $REMOTE_DIR/.env || echo 'TG_ADMIN_USER_ID=319077869' >> $REMOTE_DIR/.env
+echo "--- Security ---"
+patch_or_add "TG_ADMIN_USER_ID" "319077869"
 
-  # BREAKOUT quality filter BUG FIX: добавить BREAKOUT_QUALITY_MIN_SCORE=0.48
-  if ! grep -q '^BREAKOUT_QUALITY_MIN_SCORE=' $REMOTE_DIR/.env; then
-    sed -i '/^BT_BREAKOUT_QUALITY_MIN_SCORE/a BREAKOUT_QUALITY_MIN_SCORE=0.48' $REMOTE_DIR/.env
-    echo 'Added BREAKOUT_QUALITY_MIN_SCORE=0.48 (bug fix: live filter was 0.0)'
-  else
-    sed -i 's/^BREAKOUT_QUALITY_MIN_SCORE=.*/BREAKOUT_QUALITY_MIN_SCORE=0.48/' $REMOTE_DIR/.env
-    echo 'Updated BREAKOUT_QUALITY_MIN_SCORE=0.48'
-  fi
+echo "--- Breakout quality filter bug fix ---"
+patch_or_add "BREAKOUT_QUALITY_MIN_SCORE" "0.48"
+patch_or_add "BT_BREAKOUT_QUALITY_MIN_SCORE" "0.48"
+patch_or_add "BT_BREAKOUT_QUALITY_ENABLE" "1"
+patch_or_add "BREAKOUT_MAX_CHASE_PCT" "0.11"
 
-  # Update BT_BREAKOUT_QUALITY_MIN_SCORE 0.54 → 0.48
-  sed -i 's/^BT_BREAKOUT_QUALITY_MIN_SCORE=.*/BT_BREAKOUT_QUALITY_MIN_SCORE=0.48/' $REMOTE_DIR/.env
+echo "--- Breakdown ENABLE ---"
+patch_or_add "ENABLE_BREAKDOWN_TRADING" "1"
+patch_or_add "BREAKDOWN_SYMBOL_ALLOWLIST" "BTCUSDT,ETHUSDT,SOLUSDT"
+patch_or_add "BREAKDOWN_ALLOW_LONGS" "0"
+patch_or_add "BREAKDOWN_ALLOW_SHORTS" "1"
+patch_or_add "BREAKDOWN_REGIME_MODE" "off"
+patch_or_add "BREAKDOWN_LOOKBACK_H" "48"
+patch_or_add "BREAKDOWN_RR" "2.0"
+patch_or_add "BREAKDOWN_SL_ATR" "1.8"
+patch_or_add "BREAKDOWN_MAX_DIST_ATR" "2.0"
+patch_or_add "BREAKDOWN_RISK_MULT" "0.10"
+patch_or_add "BREAKDOWN_MAX_OPEN_TRADES" "1"
 
-  # Update chase 0.14 → 0.11
-  sed -i 's/^BREAKOUT_MAX_CHASE_PCT=.*/BREAKOUT_MAX_CHASE_PCT=0.11/' $REMOTE_DIR/.env
+echo "--- ARF1: expand to 6 coins ---"
+patch_or_add "ARF1_SYMBOL_ALLOWLIST" "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ADAUSDT,BCHUSDT"
 
-  # DeepSeek improvements
-  sed -i 's/^DEEPSEEK_TIMEOUT_SEC=.*/DEEPSEEK_TIMEOUT_SEC=20/' $REMOTE_DIR/.env
-  sed -i 's/^DEEPSEEK_HISTORY_MAX_MESSAGES=.*/DEEPSEEK_HISTORY_MAX_MESSAGES=16/' $REMOTE_DIR/.env
+echo "--- DeepSeek improvements ---"
+patch_or_add "DEEPSEEK_TIMEOUT_SEC" "20"
+patch_or_add "DEEPSEEK_HISTORY_MAX_MESSAGES" "16"
 
-  echo 'Env patched'
-  echo ''
-  echo 'Current key breakout params:'
-  grep 'BREAKOUT_QUALITY_MIN_SCORE\|BT_BREAKOUT_QUALITY_MIN_SCORE\|BREAKOUT_MAX_CHASE_PCT\|BREAKOUT_ALLOW_SHORTS' $REMOTE_DIR/.env
-"
-
-# 5. Syntax check
-echo ""
-echo "[5/6] Syntax check..."
-ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" "
-  cd $REMOTE_DIR
-  python3 -m py_compile bot/deepseek_overlay.py && echo 'deepseek_overlay: OK'
-  python3 -m py_compile bot/deepseek_autoresearch_agent.py && echo 'deepseek_autoresearch_agent: OK'
-  python3 -m py_compile smart_pump_reversal_bot.py && echo 'smart_pump_reversal_bot: OK'
-  python3 -m py_compile strategies/alt_sloped_channel_v1.py && echo 'asc1: OK'
-  python3 -m py_compile strategies/alt_resistance_fade_v1.py && echo 'arf1: OK'
-"
-
-# 6. Restart
-echo ""
-echo "[6/6] Restart bybot..."
-ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" "
-  systemctl restart bybot
-  sleep 4
-  systemctl status bybot --no-pager | head -6
-"
+echo "--- Migrate DeepSeek history if needed ---"
+[ -f /tmp/bybot_deepseek_chat.json ] && \
+    cp /tmp/bybot_deepseek_chat.json "$DATA/deepseek_chat.json" && \
+    echo "  migrated: chat history from /tmp/ to data/" || true
 
 echo ""
-echo "=== SESSION 9 DEPLOY COMPLETE ==="
+echo "Final key values:"
+grep -E "^(BREAKOUT_QUALITY_MIN_SCORE|BT_BREAKOUT_QUALITY_MIN_SCORE|BREAKOUT_MAX_CHASE_PCT|ENABLE_BREAKDOWN_TRADING|BREAKDOWN_SYMBOL_ALLOWLIST|ARF1_SYMBOL_ALLOWLIST)" "$ENV"
+REMOTE_EOF
+
+# ── 5. Syntax checks ──────────────────────────────────────────────
 echo ""
-echo "Deployed fixes:"
-echo "  ✅ DeepSeek partner mode: знает архитектуру, история в /root/by-bot/data/"
-echo "  ✅ BREAKOUT_QUALITY_MIN_SCORE=0.48 — БАГ-ФИКС (live filter был отключён!)"
-echo "  ✅ BREAKOUT_MAX_CHASE_PCT=0.11 (было 0.14, autoresearch r003)"
-echo "  ✅ BT_BREAKOUT_QUALITY_MIN_SCORE=0.48 (было 0.54)"
-echo "  ✅ ASC1 + ARF1: trail params (=0, trailing ухудшает mean-reversion)"
-echo "  ✅ DeepSeek timeout 20s, history 16 messages"
+echo "[5/6] Syntax checks..."
+ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" bash << 'REMOTE_EOF'
+cd /root/by-bot
+python3 -m py_compile bot/deepseek_overlay.py           && echo "  ✅ deepseek_overlay"
+python3 -m py_compile bot/deepseek_autoresearch_agent.py && echo "  ✅ deepseek_autoresearch_agent"
+python3 -m py_compile smart_pump_reversal_bot.py         && echo "  ✅ smart_pump_reversal_bot"
+python3 -m py_compile strategies/alt_sloped_channel_v1.py && echo "  ✅ alt_sloped_channel_v1"
+python3 -m py_compile strategies/alt_resistance_fade_v1.py && echo "  ✅ alt_resistance_fade_v1"
+python3 -m py_compile strategies/alt_inplay_breakdown_v1.py && echo "  ✅ alt_inplay_breakdown_v1"
+python3 -m py_compile strategies/inplay_breakout.py      && echo "  ✅ inplay_breakout"
+REMOTE_EOF
+
+# ── 6. Restart ────────────────────────────────────────────────────
 echo ""
-echo "Research findings (не деплоится автоматически, требует решения):"
-echo "  📊 Breakdown shorts (BTC+ETH+SOL): +36% net, PF 1.92, WR 54.7%, 0 red months"
-echo "     → Включить: bash scripts/enable_breakdown_shorts.sh"
+echo "[6/6] Restarting bybot..."
+ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" \
+    "systemctl restart bybot && sleep 4 && systemctl status bybot --no-pager | head -8"
+
 echo ""
-echo "  📊 ARF1 6 coins (+ADA+BCH): +37.48% vs +28.60% (4 coins), 0 red months"
-echo "     → Включить: edit .env, set ARF1_SYMBOL_ALLOWLIST=LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ADAUSDT,BCHUSDT"
+echo "╔══════════════════════════════════════════╗"
+echo "║            DEPLOY COMPLETE ✅            ║"
+echo "╚══════════════════════════════════════════╝"
+echo ""
+echo "Deployed:"
+echo "  ✅ DeepSeek partner mode — знает архитектуру, история в /root/by-bot/data/"
+echo "  ✅ BREAKOUT_QUALITY_MIN_SCORE=0.48 (КРИТИЧЕСКИЙ БАГ-ФИКС)"
+echo "  ✅ BREAKOUT_MAX_CHASE_PCT=0.11"
+echo "  ✅ Breakdown shorts ВКЛЮЧЁН (BTC+ETH+SOL)"
+echo "     Бэктест: +36% net, PF 1.92, WR 54.7%, 0 красных месяцев"
+echo "  ✅ ARF1: 6 монет (добавлены ADA+BCH)"
+echo "     Бэктест: +37.48% vs +28.60%, 0 красных месяцев"
+echo ""
+echo "Мониторинг через Telegram:"
+echo "  /status   — живые позиции"
+echo "  /health   — здоровье за 30 дней"
+echo "  /ai что изменилось сегодня?  — спросить DeepSeek"
