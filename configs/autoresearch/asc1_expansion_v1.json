@@ -1,11 +1,23 @@
 {
+  "_comment": "ASC1 sloped channel shorts expansion: currently ATOM+LINK only. Test SOL, LTC, BNB, DOT additions.",
   "name": "asc1_expansion_v1",
-  "description": "Find best coin set for ASC1 sloped-channel shorts: currently ATOM+LINK, test SOL+LTC+BNB+DOT",
-  "strategy": "alt_sloped_channel_v1",
-  "days": 360,
-  "end": "2026-02-24",
-  "starting_equity": 100,
-  "risk_pct": 0.005,
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "ATOMUSDT,LINKUSDT,SOLUSDT,LTCUSDT,BNBUSDT,DOTUSDT",
+    "--strategies",
+    "alt_sloped_channel_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--starting_equity", "100",
+    "--risk_pct", "0.005",
+    "--tag",
+    "{tag}"
+  ],
   "base_env": {
     "ASC1_ALLOW_SHORTS": "1",
     "ASC1_ALLOW_LONGS": "0",
@@ -14,30 +26,34 @@
     "ASC1_SHORT_MIN_REJECT_DEPTH_ATR": "0.75",
     "ASC1_TRAIL_ATR_MULT": "0.0"
   },
-  "candidates": [
-    {"tag": "atom_link_baseline",     "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT"},
-    {"tag": "sol_only",               "ASC1_SYMBOL_ALLOWLIST": "SOLUSDT"},
-    {"tag": "ltc_only",               "ASC1_SYMBOL_ALLOWLIST": "LTCUSDT"},
-    {"tag": "bnb_only",               "ASC1_SYMBOL_ALLOWLIST": "BNBUSDT"},
-    {"tag": "dot_only",               "ASC1_SYMBOL_ALLOWLIST": "DOTUSDT"},
-    {"tag": "atom_link_sol",          "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,SOLUSDT"},
-    {"tag": "atom_link_ltc",          "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,LTCUSDT"},
-    {"tag": "atom_link_bnb",          "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,BNBUSDT"},
-    {"tag": "atom_link_dot",          "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,DOTUSDT"},
-    {"tag": "atom_link_sol_ltc",      "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,SOLUSDT,LTCUSDT"},
-    {"tag": "atom_link_sol_bnb",      "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,SOLUSDT,BNBUSDT"},
-    {"tag": "atom_link_sol_dot",      "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,SOLUSDT,DOTUSDT"},
-    {"tag": "sol_ltc_bnb",            "ASC1_SYMBOL_ALLOWLIST": "SOLUSDT,LTCUSDT,BNBUSDT"},
-    {"tag": "atom_sol_ltc",           "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,SOLUSDT,LTCUSDT"},
-    {"tag": "link_sol_ltc",           "ASC1_SYMBOL_ALLOWLIST": "LINKUSDT,SOLUSDT,LTCUSDT"},
-    {"tag": "atom_link_sol_ltc_bnb",  "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,SOLUSDT,LTCUSDT,BNBUSDT"},
-    {"tag": "atom_link_sol_rsi55",    "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,SOLUSDT", "ASC1_SHORT_MIN_RSI": "55"},
-    {"tag": "atom_link_sol_rsi65",    "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,SOLUSDT", "ASC1_SHORT_MIN_RSI": "65"},
-    {"tag": "atom_link_sol_confirm4", "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,SOLUSDT", "ASC1_CONFIRM_5M_BARS": "4"},
-    {"tag": "atom_link_sol_confirm8", "ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,SOLUSDT", "ASC1_CONFIRM_5M_BARS": "8"},
-    {"tag": "sol_ltc_rsi55",          "ASC1_SYMBOL_ALLOWLIST": "SOLUSDT,LTCUSDT", "ASC1_SHORT_MIN_RSI": "55"},
-    {"tag": "sol_ltc_rsi60",          "ASC1_SYMBOL_ALLOWLIST": "SOLUSDT,LTCUSDT", "ASC1_SHORT_MIN_RSI": "60"},
-    {"tag": "bnb_dot_link",           "ASC1_SYMBOL_ALLOWLIST": "BNBUSDT,DOTUSDT,LINKUSDT"},
-    {"tag": "atom_link_sol_ltc_rsi55","ASC1_SYMBOL_ALLOWLIST": "ATOMUSDT,LINKUSDT,SOLUSDT,LTCUSDT", "ASC1_SHORT_MIN_RSI": "55"}
-  ]
+  "grid": {
+    "ASC1_SYMBOL_ALLOWLIST": [
+      "ATOMUSDT,LINKUSDT",
+      "SOLUSDT",
+      "LTCUSDT",
+      "BNBUSDT",
+      "DOTUSDT",
+      "ATOMUSDT,LINKUSDT,SOLUSDT",
+      "ATOMUSDT,LINKUSDT,LTCUSDT",
+      "ATOMUSDT,LINKUSDT,BNBUSDT",
+      "ATOMUSDT,LINKUSDT,DOTUSDT",
+      "ATOMUSDT,LINKUSDT,SOLUSDT,LTCUSDT",
+      "ATOMUSDT,LINKUSDT,SOLUSDT,BNBUSDT",
+      "SOLUSDT,LTCUSDT",
+      "LINKUSDT,SOLUSDT,LTCUSDT",
+      "ATOMUSDT,SOLUSDT,LTCUSDT"
+    ]
+  },
+  "constraints": {
+    "min_trades": 10,
+    "min_net_pnl_pct": 5.0,
+    "min_profit_factor": 1.5,
+    "max_drawdown_pct": 5.0
+  },
+  "score_weights": {
+    "net_pnl_pct": 0.30,
+    "profit_factor": 0.40,
+    "winrate": 0.15,
+    "max_drawdown": 0.15
+  }
 }
