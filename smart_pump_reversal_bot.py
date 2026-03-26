@@ -4260,6 +4260,68 @@ if ENABLE_BREAKDOWN_TRADING:
         log_error(f"[BREAKDOWN] engine init fail: {_e}")
         BREAKDOWN_ENGINE = None
 
+
+_ENGINE_LAZY_INIT_FAIL_TS: Dict[str, int] = {}
+
+
+def _log_engine_lazy_init_fail(tag: str, err: Exception) -> None:
+    now = now_s()
+    last = int(_ENGINE_LAZY_INIT_FAIL_TS.get(tag, 0) or 0)
+    if now - last < 300:
+        return
+    _ENGINE_LAZY_INIT_FAIL_TS[tag] = now
+    log_error(f"[{tag}] engine lazy-init fail: {err}\n{traceback.format_exc()}")
+
+
+def _ensure_sloped_engine() -> bool:
+    global SLOPED_ENGINE
+    if SLOPED_ENGINE is not None:
+        return True
+    if not ENABLE_SLOPED_TRADING:
+        return False
+    try:
+        from strategies.sloped_channel_live import SlopedChannelLiveEngine
+        SLOPED_ENGINE = SlopedChannelLiveEngine(fetch_klines)
+        log("[SLOPED] engine lazy-init ok")
+        return True
+    except Exception as e:
+        SLOPED_ENGINE = None
+        _log_engine_lazy_init_fail("SLOPED", e)
+        return False
+
+
+def _ensure_flat_engine() -> bool:
+    global FLAT_ENGINE
+    if FLAT_ENGINE is not None:
+        return True
+    if not ENABLE_FLAT_TRADING:
+        return False
+    try:
+        from strategies.flat_resistance_fade_live import FlatResistanceFadeLiveEngine
+        FLAT_ENGINE = FlatResistanceFadeLiveEngine(fetch_klines)
+        log("[FLAT] engine lazy-init ok")
+        return True
+    except Exception as e:
+        FLAT_ENGINE = None
+        _log_engine_lazy_init_fail("FLAT", e)
+        return False
+
+
+def _ensure_breakdown_engine() -> bool:
+    global BREAKDOWN_ENGINE
+    if BREAKDOWN_ENGINE is not None:
+        return True
+    if not ENABLE_BREAKDOWN_TRADING:
+        return False
+    try:
+        BREAKDOWN_ENGINE = BreakdownLiveEngine(fetch_klines)
+        log("[BREAKDOWN] engine lazy-init ok")
+        return True
+    except Exception as e:
+        BREAKDOWN_ENGINE = None
+        _log_engine_lazy_init_fail("BREAKDOWN", e)
+        return False
+
 # ===== TRIPLE SCREEN v132 ENGINE =====
 if ENABLE_TS132_TRADING:
     try:
@@ -5604,7 +5666,7 @@ async def try_sloped_entry_async(symbol: str, price: float):
     """Try sloped channel entry for a symbol."""
     if not ENABLE_SLOPED_TRADING:
         return
-    if SLOPED_ENGINE is None:
+    if not _ensure_sloped_engine():
         _diag_inc("sloped_skip_no_engine")
         return
     if not TRADE_ON or DRY_RUN:
@@ -5728,7 +5790,7 @@ async def try_flat_entry_async(symbol: str, price: float):
     """Try flat resistance fade entry for a symbol."""
     if not ENABLE_FLAT_TRADING:
         return
-    if FLAT_ENGINE is None:
+    if not _ensure_flat_engine():
         _diag_inc("flat_skip_no_engine")
         return
     if not TRADE_ON or DRY_RUN:
@@ -5852,7 +5914,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
     """Try breakdown short entry for a symbol (alt_inplay_breakdown_v1)."""
     if not ENABLE_BREAKDOWN_TRADING:
         return
-    if BREAKDOWN_ENGINE is None:
+    if not _ensure_breakdown_engine():
         _diag_inc("breakdown_skip_no_engine")
         return
     if not TRADE_ON or DRY_RUN:

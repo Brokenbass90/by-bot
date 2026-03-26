@@ -1702,3 +1702,15 @@ server_clean.env updated:
   - `bot/diagnostics.py`
 - Restarted `bybot.service`; service returned `active` after restart.
 - Immediate post-restart journal check confirmed the bot came back up cleanly, but a fresh new pulse with the added counters had not yet printed in the observed window.
+- The next live window revealed the actual blocker:
+  - `sloped_sched`, `flat_sched`, `breakdown_sched` were rising
+  - `sloped_try/flat_try/breakdown_try` stayed at `0`
+  - the dominant gate was `*_skip_no_engine`
+- Added lazy engine re-initialization in [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) for:
+  - `sloped`
+  - `flat`
+  - `breakdown`
+- New behavior: if engine startup init failed or was lost, the sleeve will retry engine init on demand at first live attempt instead of staying permanently `None`.
+- Lazy-init failures are throttled in logs (5 minutes) to avoid log spam while still surfacing the real exception.
+- Verified syntax with:
+  - `python3 -m py_compile smart_pump_reversal_bot.py`
