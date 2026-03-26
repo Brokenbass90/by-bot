@@ -1582,3 +1582,17 @@ server_clean.env updated:
 - Synced local gitignored [`.env`](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/.env) from the current working legacy config and saved a backup in [`.env.bak_20260326_local_sync`](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/.env.bak_20260326_local_sync).
 - Updated `scripts/deploy_session10.sh` and `scripts/deploy_all_latest.sh` so future deploys also carry `bot/diagnostics.py` and `bot/deepseek_action_executor.py`.
 - Updated `scripts/clean_deploy_server.sh` so it no longer overwrites live `.env` from tracked config by default; it now keeps the existing server `.env` unless `SERVER_ENV_SOURCE` is passed explicitly.
+
+### Observability deploy — 2026-03-26
+
+- Performed a small safe live deploy to `64.226.73.119`:
+  - `smart_pump_reversal_bot.py`
+  - `bot/diagnostics.py`
+  - `bot/deepseek_action_executor.py`
+- Took remote backups first:
+  - `smart_pump_reversal_bot.py.bak_20260326_obs`
+  - `bot/diagnostics.py.bak_20260326_obs`
+  - `bot/deepseek_action_executor.py.bak_20260326_obs`
+- Restarted `bybot.service` successfully; service is `active (running)` after restart.
+- Verified deploy integrity by matching local/server SHA1 for all three files after copy.
+- This deploy was intentionally limited to observability + env/deploy cleanup path; no strategy logic or live risk settings were changed.
