@@ -37,11 +37,12 @@ This block is the current source of truth. Older sections below remain useful as
 ### Current Research Order
 1. `breakout side-split` as the most promising core improvement
 2. `midterm` repair as the weakest live sleeve
-3. `TS132 / Elder` via symbol pockets, not one setup for all coins
-4. `Alpaca` red-month repair before any real-money rollout
-5. `micro scalper` only after the minute-level backtest path is honest
-6. `trendline break/retest` as separate long and short sleeves after current live stack is safer
-7. add dynamic weak-market / quiet-asset sleeves:
+3. `support reclaim` as the long-side mirror for quiet-market fade families
+4. `TS132 / Elder` via symbol pockets, not one setup for all coins
+5. `Alpaca` red-month repair before any real-money rollout
+6. `micro scalper` only after the minute-level backtest path is honest and the first live wrapper sweeps show a real edge
+7. `trendline break/retest` as separate long and short sleeves after current live stack is safer
+8. add dynamic weak-market / quiet-asset sleeves:
    - auto-find symbols and families for flat/chop conditions
    - keep new listings under watchlist/canary flow before live enable
    - do not forget breakout extensions and low-activity asset logic
