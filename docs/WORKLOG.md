@@ -1677,3 +1677,22 @@ server_clean.env updated:
   - `DD 2.19`
   - `3` negative months
 - Interpretation: the direction is alive, but current constraints are still stricter than the first explored pocket; full sweep is justified before changing live.
+
+### Live sleeve gate diagnostics — 2026-03-26
+
+- Continued investigating why `sloped/flat/breakdown` show `0 try` in live while their flags are enabled.
+- Verified locally that scheduling blocks for all three sleeves are present in `detect()` and that the engines are initialized behind the matching env flags.
+- Attempted a direct SSH/live log check, but the server timed out on port `22`, so no trustworthy remote root-cause was available from that path in this step.
+- Added low-risk runtime diagnostics to [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) and [bot/diagnostics.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/diagnostics.py):
+  - new schedule counters: `sloped_sched`, `flat_sched`, `breakdown_sched`
+  - new pre-signal gate counters for each sleeve:
+    - `*_skip_no_engine`
+    - `*_skip_trade_off`
+    - `*_skip_no_client`
+    - `*_skip_open_trade`
+    - `*_skip_max_open`
+    - `*_skip_portfolio`
+    - `*_skip_cooldown`
+- This patch does **not** change any trading logic or risk settings; it only makes the next live window diagnosable instead of ambiguous.
+- Verified syntax cleanly with:
+  - `python3 -m py_compile smart_pump_reversal_bot.py bot/diagnostics.py`

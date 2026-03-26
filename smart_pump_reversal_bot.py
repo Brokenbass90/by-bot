@@ -5605,12 +5605,16 @@ async def try_sloped_entry_async(symbol: str, price: float):
     if not ENABLE_SLOPED_TRADING:
         return
     if SLOPED_ENGINE is None:
+        _diag_inc("sloped_skip_no_engine")
         return
     if not TRADE_ON or DRY_RUN:
+        _diag_inc("sloped_skip_trade_off")
         return
     if TRADE_CLIENT is None:
+        _diag_inc("sloped_skip_no_client")
         return
     if get_trade("Bybit", symbol) is not None:
+        _diag_inc("sloped_skip_open_trade")
         return
     if SLOPED_MAX_OPEN_TRADES > 0:
         open_sloped = 0
@@ -5621,13 +5625,16 @@ async def try_sloped_entry_async(symbol: str, price: float):
                 continue
             open_sloped += 1
         if open_sloped >= SLOPED_MAX_OPEN_TRADES:
+            _diag_inc("sloped_skip_max_open")
             return
     if not portfolio_can_open():
+        _diag_inc("sloped_skip_portfolio")
         return
 
     now = now_s()
     last = int(_SLOPED_LAST_TRY.get(symbol, 0) or 0)
     if now - last < SLOPED_TRY_EVERY_SEC:
+        _diag_inc("sloped_skip_cooldown")
         return
     _SLOPED_LAST_TRY[symbol] = now
     _diag_inc("sloped_try")
@@ -5722,12 +5729,16 @@ async def try_flat_entry_async(symbol: str, price: float):
     if not ENABLE_FLAT_TRADING:
         return
     if FLAT_ENGINE is None:
+        _diag_inc("flat_skip_no_engine")
         return
     if not TRADE_ON or DRY_RUN:
+        _diag_inc("flat_skip_trade_off")
         return
     if TRADE_CLIENT is None:
+        _diag_inc("flat_skip_no_client")
         return
     if get_trade("Bybit", symbol) is not None:
+        _diag_inc("flat_skip_open_trade")
         return
     if FLAT_MAX_OPEN_TRADES > 0:
         open_flat = 0
@@ -5738,13 +5749,16 @@ async def try_flat_entry_async(symbol: str, price: float):
                 continue
             open_flat += 1
         if open_flat >= FLAT_MAX_OPEN_TRADES:
+            _diag_inc("flat_skip_max_open")
             return
     if not portfolio_can_open():
+        _diag_inc("flat_skip_portfolio")
         return
 
     now = now_s()
     last = int(_FLAT_LAST_TRY.get(symbol, 0) or 0)
     if now - last < FLAT_TRY_EVERY_SEC:
+        _diag_inc("flat_skip_cooldown")
         return
     _FLAT_LAST_TRY[symbol] = now
     _diag_inc("flat_try")
@@ -5839,12 +5853,16 @@ async def try_breakdown_entry_async(symbol: str, price: float):
     if not ENABLE_BREAKDOWN_TRADING:
         return
     if BREAKDOWN_ENGINE is None:
+        _diag_inc("breakdown_skip_no_engine")
         return
     if not TRADE_ON or DRY_RUN:
+        _diag_inc("breakdown_skip_trade_off")
         return
     if TRADE_CLIENT is None:
+        _diag_inc("breakdown_skip_no_client")
         return
     if get_trade("Bybit", symbol) is not None:
+        _diag_inc("breakdown_skip_open_trade")
         return
     if BREAKDOWN_MAX_OPEN_TRADES > 0:
         open_bd = 0
@@ -5855,13 +5873,16 @@ async def try_breakdown_entry_async(symbol: str, price: float):
                 continue
             open_bd += 1
         if open_bd >= BREAKDOWN_MAX_OPEN_TRADES:
+            _diag_inc("breakdown_skip_max_open")
             return
     if not portfolio_can_open():
+        _diag_inc("breakdown_skip_portfolio")
         return
 
     now = now_s()
     last = int(_BREAKDOWN_LAST_TRY.get(symbol, 0) or 0)
     if now - last < BREAKDOWN_TRY_EVERY_SEC:
+        _diag_inc("breakdown_skip_cooldown")
         return
     _BREAKDOWN_LAST_TRY[symbol] = now
     _diag_inc("breakdown_try")
@@ -6497,6 +6518,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
             last = int(_SLOPED_LAST_TRY.get(sym, 0) or 0)
             if now - last >= SLOPED_TRY_EVERY_SEC:
                 try:
+                    _diag_inc("sloped_sched")
                     asyncio.create_task(try_sloped_entry_async(sym, p1))
                 except Exception as _e:
                     log_error(f"try_sloped_entry schedule fail {sym}: {_e}")
@@ -6506,6 +6528,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
             last = int(_FLAT_LAST_TRY.get(sym, 0) or 0)
             if now - last >= FLAT_TRY_EVERY_SEC:
                 try:
+                    _diag_inc("flat_sched")
                     asyncio.create_task(try_flat_entry_async(sym, p1))
                 except Exception as _e:
                     log_error(f"try_flat_entry schedule fail {sym}: {_e}")
@@ -6515,6 +6538,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
             last = int(_BREAKDOWN_LAST_TRY.get(sym, 0) or 0)
             if now - last >= BREAKDOWN_TRY_EVERY_SEC:
                 try:
+                    _diag_inc("breakdown_sched")
                     asyncio.create_task(try_breakdown_entry_async(sym, p1))
                 except Exception as _e:
                     log_error(f"try_breakdown_entry schedule fail {sym}: {_e}")
