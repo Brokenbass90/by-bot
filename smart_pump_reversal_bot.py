@@ -1452,6 +1452,8 @@ def _deepseek_snapshot() -> dict[str, Any]:
         "risk_pct": float(RISK_PER_TRADE_PCT or 0),
         "max_positions": int(MAX_POSITIONS),
         "bot_capital_usd": float(BOT_CAPITAL_USD or 0),
+        "bot_capital_effective_usd": round(float(_get_effective_equity() or 0), 4) if not BOT_CAPITAL_USD else float(BOT_CAPITAL_USD or 0),
+        "bot_capital_mode": "fixed" if BOT_CAPITAL_USD else "auto_equity",
         "strategies": {
             "breakout": bool(ENABLE_BREAKOUT_TRADING),
             "midterm": bool(ENABLE_MIDTERM_TRADING),
@@ -1529,6 +1531,15 @@ def _fmt_list_compact(items: list[str], max_items: int = 6) -> str:
     return ",".join(items[:max_items]) + f",+{len(items) - max_items}"
 
 
+def _display_capital_text() -> str:
+    try:
+        if BOT_CAPITAL_USD is not None and float(BOT_CAPITAL_USD) > 0:
+            return f"{float(BOT_CAPITAL_USD):.2f}"
+    except Exception:
+        pass
+    return f"auto(eq≈{float(_get_effective_equity() or 0.0):.2f})"
+
+
 def _safe_read_csv_first(path: Path) -> Optional[dict[str, str]]:
     try:
         with path.open(newline="", encoding="utf-8") as f:
@@ -1570,7 +1581,7 @@ def _status_full_text() -> str:
         f"equity≈{eq:.2f} USDT | open={len(TRADES)}"
     )
     lines.append(
-        f"risk={RISK_PER_TRADE_PCT:.2f}% | max_positions={MAX_POSITIONS} | capital={BOT_CAPITAL_USD}"
+        f"risk={RISK_PER_TRADE_PCT:.2f}% | max_positions={MAX_POSITIONS} | capital={_display_capital_text()}"
     )
     lines.append(
         "strategies: "
@@ -2008,7 +2019,7 @@ def _handle_tg_command(text: str):
         _tg_reply(
             f"Status: {'ON' if TRADE_ON else 'OFF'} | disabled={PORTFOLIO_STATE.get('disabled')}\n"
             f"Equity≈{eq:.2f} USDT | open={len(TRADES)}\n"
-            f"risk={RISK_PER_TRADE_PCT:.2f}% | max_positions={MAX_POSITIONS} | capital={BOT_CAPITAL_USD}"
+            f"risk={RISK_PER_TRADE_PCT:.2f}% | max_positions={MAX_POSITIONS} | capital={_display_capital_text()}"
         )
         return
 

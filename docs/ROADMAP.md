@@ -21,6 +21,8 @@ This block is the current source of truth. Older sections below remain useful as
    - evidence-first proposals
    - approval-gated changes
    - bounded research launch
+   - dynamic symbol/family rotation with operator review, not blind auto-rollout
+   - later add internet/news context as advisory filter for crypto and equities
 5. Reduce deploy confusion before any bigger rollout or cleanup delete pass.
 
 ### Best Current Strategic Result
@@ -39,6 +41,10 @@ This block is the current source of truth. Older sections below remain useful as
 4. `Alpaca` red-month repair before any real-money rollout
 5. `micro scalper` only after the minute-level backtest path is honest
 6. `trendline break/retest` as separate long and short sleeves after current live stack is safer
+7. add dynamic weak-market / quiet-asset sleeves:
+   - auto-find symbols and families for flat/chop conditions
+   - keep new listings under watchlist/canary flow before live enable
+   - do not forget breakout extensions and low-activity asset logic
 
 ### Cleanup Rule
 - No blind deletes.
