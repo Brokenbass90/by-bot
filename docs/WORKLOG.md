@@ -100,6 +100,17 @@ scp -i ~/.ssh/by-bot -r \
   - это хуже текущего `v21`, значит стартовые мягкие breadth-углы не годятся
 - Несмотря на это, сетку оставили жить дальше, потому что в ней дальше лежат более жёсткие `breadth / benchmark / cluster` комбинации, которые как раз и являются целевым hypothesis-test.
 
+**Trendline break/retest — side split scaffold**
+- В `archive/strategies_retired/trendline_break_retest_v4.py` добавлены `TLB4_ALLOW_LONGS` и `TLB4_ALLOW_SHORTS`.
+- Это позволяет честно тестировать `long-only` и `short-only` pockets раздельно, а не мешать обе стороны в один общий результат.
+- Добавлены два новых autoresearch config:
+  - `configs/autoresearch/trendline_break_retest_v4_long_only_v1.json`
+  - `configs/autoresearch/trendline_break_retest_v4_short_only_v1.json`
+- Smoke `limit=4` на обоих конфигах:
+  - `long-only`: 4/4 FAIL, `0 trades`
+  - `short-only`: 4/4 FAIL, `0 trades`
+- Вывод: side split как инженерная основа готов, но текущий самый мягкий край сетки слишком пустой. Перед длинным прогоном нужен retune плотности/символьного кармана, иначе будем жечь время на нулевых комбинациях.
+
 **Autoresearch: breakout_expansion_v1 (24 кандидата)**
 - Цель: найти оптимальный фиксированный набор монет для inplay_breakout вместо dynamic TOP_N.
 - Спека: `configs/autoresearch/breakout_expansion_v1.json` — 12 SYMBOLS × 2 quality scores (0.48, 0.54).

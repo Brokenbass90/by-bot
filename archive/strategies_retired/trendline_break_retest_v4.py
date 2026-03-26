@@ -86,6 +86,15 @@ class TrendlineBreakRetestV4Config:
     rr: float = 2.1
     cooldown_bars: int = 72
     max_signals_per_day: int = 1
+    allow_longs: bool = True
+    allow_shorts: bool = True
+
+
+def _env_bool(name: str, default: bool) -> bool:
+    v = os.getenv(name)
+    if v is None or not str(v).strip():
+        return default
+    return str(v).strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
 class TrendlineBreakRetestV4Strategy:
@@ -119,6 +128,8 @@ class TrendlineBreakRetestV4Strategy:
         self.cfg.rr = _env_float("TLB4_RR", self.cfg.rr)
         self.cfg.cooldown_bars = _env_int("TLB4_COOLDOWN_BARS", self.cfg.cooldown_bars)
         self.cfg.max_signals_per_day = _env_int("TLB4_MAX_SIGNALS_PER_DAY", self.cfg.max_signals_per_day)
+        self.cfg.allow_longs = _env_bool("TLB4_ALLOW_LONGS", self.cfg.allow_longs)
+        self.cfg.allow_shorts = _env_bool("TLB4_ALLOW_SHORTS", self.cfg.allow_shorts)
 
         self._o: List[float] = []
         self._h: List[float] = []
@@ -230,7 +241,7 @@ class TrendlineBreakRetestV4Strategy:
                 line_now = self._line_px(float(pd["m"]), float(pd["b"]), idx)
                 touched = l <= line_now + self.cfg.retest_pullback_atr * float(pd["atr"])
                 rejected = c > line_now and c > o and body_frac >= self.cfg.retest_min_body_frac
-                if touched and rejected and trend == 2:
+                if self.cfg.allow_longs and touched and rejected and trend == 2:
                     entry = c
                     sl = min(float(pd["cons_lo"]), line_now) - self.cfg.sl_atr_mult * float(pd["atr"])
                     risk = entry - sl
@@ -256,7 +267,7 @@ class TrendlineBreakRetestV4Strategy:
                 line_now = self._line_px(float(pd["m"]), float(pd["b"]), idx)
                 touched = h >= line_now - self.cfg.retest_pullback_atr * float(pd["atr"])
                 rejected = c < line_now and c < o and body_frac >= self.cfg.retest_min_body_frac
-                if touched and rejected and trend == 0:
+                if self.cfg.allow_shorts and touched and rejected and trend == 0:
                     entry = c
                     sl = max(float(pd["cons_hi"]), line_now) + self.cfg.sl_atr_mult * float(pd["atr"])
                     risk = sl - entry
@@ -300,7 +311,7 @@ class TrendlineBreakRetestV4Strategy:
         bos_hi = max(self._h[-lb - 1:-1])
         bos_lo = min(self._l[-lb - 1:-1])
 
-        if len(highs) >= self.cfg.min_touches and trend == 2:
+        if self.cfg.allow_longs and len(highs) >= self.cfg.min_touches and trend == 2:
             h1, h2 = highs[-2], highs[-1]
             if h2[1] < h1[1]:
                 m, b = self._line(h1[0], h1[1], h2[0], h2[1])
@@ -322,7 +333,7 @@ class TrendlineBreakRetestV4Strategy:
                             "expire_idx": idx + max(2, int(self.cfg.retest_window_bars)),
                         }
 
-        if len(lows) >= self.cfg.min_touches and trend == 0:
+        if self.cfg.allow_shorts and len(lows) >= self.cfg.min_touches and trend == 0:
             l1, l2 = lows[-2], lows[-1]
             if l2[1] > l1[1]:
                 m, b = self._line(l1[0], l1[1], l2[0], l2[1])
@@ -345,4 +356,3 @@ class TrendlineBreakRetestV4Strategy:
                         }
 
         return None
-
