@@ -464,6 +464,40 @@ async def fetch_klines_for_range(symbol: str, interval: str, limit: int):
     return await asyncio.to_thread(fetch_klines, symbol, interval, limit)
 
 _KLINE_RAW_CACHE = {}  # (symbol, interval, limit) -> (saved_time, rows)
+KLINE_STALE_GRACE_SEC = int(os.getenv("KLINE_STALE_GRACE_SEC", "90"))
+KLINE_STALE_MAX_BARS = float(os.getenv("KLINE_STALE_MAX_BARS", "2.5"))
+
+
+def _interval_to_seconds(interval: str) -> int:
+    iv = str(interval).strip().upper()
+    if iv.isdigit():
+        return max(60, int(iv) * 60)
+    mapping = {
+        "D": 86400,
+        "W": 7 * 86400,
+        "M": 30 * 86400,
+    }
+    return int(mapping.get(iv, 300))
+
+
+def _latest_kline_age_sec(rows: list) -> Optional[float]:
+    if not rows:
+        return None
+    try:
+        ts_raw = int(rows[-1][0])
+    except Exception:
+        return None
+    ts_s = ts_raw / 1000.0 if ts_raw > 10**11 else float(ts_raw)
+    return max(0.0, time.time() - ts_s)
+
+
+def _klines_are_fresh(rows: list, interval: str) -> bool:
+    age = _latest_kline_age_sec(rows)
+    if age is None:
+        return False
+    interval_sec = _interval_to_seconds(interval)
+    max_age_sec = max(float(KLINE_STALE_GRACE_SEC), float(interval_sec) * float(KLINE_STALE_MAX_BARS))
+    return age <= max_age_sec
 
 
 def fetch_klines(symbol: str, interval: str, limit: int):
@@ -477,7 +511,7 @@ def fetch_klines(symbol: str, interval: str, limit: int):
     key = (symbol, str(interval), limit)
     now = time.time()
     hit = _KLINE_RAW_CACHE.get(key)
-    if hit and (now - hit[0] < 15):
+    if hit and (now - hit[0] < 15) and _klines_are_fresh(hit[1], interval):
         return hit[1]
 
     r = requests.get(
@@ -492,6 +526,15 @@ def fetch_klines(symbol: str, interval: str, limit: int):
 
     rows = ((j.get("result") or {}).get("list") or [])
     rows = list(reversed(rows))  # делаем: старые -> новые
+
+    if rows and not _klines_are_fresh(rows, interval):
+        age = _latest_kline_age_sec(rows)
+        interval_sec = _interval_to_seconds(interval)
+        max_age_sec = max(float(KLINE_STALE_GRACE_SEC), float(interval_sec) * float(KLINE_STALE_MAX_BARS))
+        raise RuntimeError(
+            f"Bybit kline stale: symbol={symbol} interval={interval} "
+            f"age={0.0 if age is None else age:.1f}s max={max_age_sec:.1f}s"
+        )
 
     _KLINE_RAW_CACHE[key] = (now, rows)
     return rows
