@@ -1,5 +1,68 @@
 # Bybit bot (v28) — worklog / reminders
 
+## 2026-03-26 (sessions 10-11) — Breakdown live, /ai fix, coin expansion
+
+### Что сделано
+
+**Breakdown стратегия — live интеграция (критический баг найден и исправлен)**
+- Обнаружено: `ENABLE_BREAKDOWN_TRADING=1` был в .env с самого начала, но бот НИКОГДА не исполнял breakdown в live — не было live wrapper-файла и не было вызова в main loop. Backtest только.
+- Создан `strategies/breakdown_live.py` — live wrapper для `AltInplayBreakdownV1Strategy` (паттерн как у flat/sloped live).
+- В `smart_pump_reversal_bot.py` добавлены: `BREAKDOWN_ENGINE`, `try_breakdown_entry_async()`, вызов в main loop, управление позициями.
+- Теперь breakdown реально торгует BTC+ETH+SOL шорты в live.
+
+**Исправление /ai (threading fix)**
+- Проблема: `DEEPSEEK_OVERLAY.ask()` делал блокирующий `requests.post()` в asyncio event loop → event loop замерзал, ответ никогда не доходил в Telegram.
+- Исправление: `/ai` теперь запускает DeepSeek в `threading.Thread(daemon=True)`, так что asyncio не блокируется. Ответ приходит через `tg_send()` когда API вернёт.
+- Итог: `/ai` теперь отвечает на любые сообщения, включая свободный разговор.
+
+**Упрощение клавиатуры Telegram**
+- Было 10 кнопок (неудобно на мобильном), стало 6: `/status`, `/ping`, `/pause`, `/resume`, `/help`, `/ai`.
+- Обновлён `/help` — разбит на секции: Status, Trading, Filters, Charts, AI.
+
+**Autoresearch: расширение монет**
+- `breakdown_expansion_v1`: тест 9 комбинаций монет для breakdown шортов.
+  - **Лучший результат**: `BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,LTCUSDT` → net=+81.22%, PF=2.118, WR=57.4%, DD=4.8%
+  - +45% net PnL vs базовый 3-монетный вариант, 10/12 зелёных месяцев.
+- `asc1_expansion_v1`: тест 14 комбинаций монет для ASC1 sloped channel.
+  - **Лучший результат**: `ATOMUSDT,LINKUSDT,DOTUSDT` → net=+19.41%, PF=2.683, WR=52.8%, DD=1.91%
+  - LTC/BNB/SOL по отдельности — отрицательные. DOT — лучшее добавление.
+
+**Задеплоены лучшие настройки**
+- `server_clean.env`: `ASC1_SYMBOL_ALLOWLIST=ATOMUSDT,LINKUSDT,DOTUSDT`
+- `server_clean.env`: `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,LTCUSDT`
+- `deploy_session10.sh` обновлён: добавлен шаг 3b для патча обоих allowlist-ов на сервере.
+
+**DeepSeek промпт обновлён**
+- Обновлён system prompt: breakdown теперь помечен как АКТИВНА, добавлена статистика портфеля ($100 → $200.93, PF=2.08, DD=3.65%).
+
+**Запущен Elder Triple Screen autoresearch**
+- `triple_screen_elder_friend_v11.json` — 1024 комбинации, ETH+AVAX+SOL+LINK.
+- Запущен в фоне локально, результаты — после завершения.
+
+### Статус стратегий (на 2026-03-26)
+
+| Стратегия | Монеты | Статус |
+|---|---|---|
+| ASC1 (sloped channel shorts) | ATOM+LINK+DOT | ✅ Live, расширено |
+| ARF1 (flat resistance fade) | LINK+LTC+SUI+DOT+ADA+BCH | ✅ Live |
+| Breakout (inplay longs) | Top 10 | ✅ Live |
+| BTC/ETH Midterm | BTC+ETH | ✅ Live |
+| Breakdown shorts | BTC+ETH+SOL+LINK+ATOM+LTC | ✅ Live (теперь реально торгует!) |
+
+### Деплой (запускать вручную с локала)
+```bash
+git push
+bash scripts/deploy_session10.sh
+```
+
+### Отложено на потом
+- Увеличение RISK_MULT 0.10 → 0.15 — через 2+ недели реальной торговли.
+- Лонговый аналог ARF1 (покупка от поддержки) — не начато.
+- Trailing stop для breakout/breakdown — не начато.
+- btc_eth_midterm_pullback autoresearch — слабейшая стратегия, нужен прогон.
+
+---
+
 ## 2026-03-23 (session 8) — Autoresearch diagnostics + config optimization
 
 ### Что сделано
