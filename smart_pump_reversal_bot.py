@@ -4327,7 +4327,7 @@ if ENABLE_TS132_TRADING:
     try:
         from archive.strategies_retired.triple_screen_v132 import TripleScreenV132Strategy
         TS132_ENGINE = {}  # symbol -> TripleScreenV132Strategy
-        log(f"[TS132] engine initialised (per-symbol lazy)")
+        print("[TS132] engine initialised (per-symbol lazy)")
     except Exception as _e:
         log_error(f"[TS132] engine init fail: {_e}")
         TS132_ENGINE = None
@@ -4537,6 +4537,20 @@ def portfolio_reg_pnl(notional_usd: float, pnl_pct: float):
         PORTFOLIO_STATE["disabled"] = True
 
 TRADES: Dict[Tuple[str,str], TradeState] = {}
+_SYMBOL_ENTRY_LOCKS: Dict[Tuple[str, str], asyncio.Lock] = {}
+
+
+def _entry_lock_key(exch: str, sym: str) -> Tuple[str, str]:
+    return (str(exch or "").strip(), str(sym or "").upper().strip())
+
+
+def _get_symbol_entry_lock(exch: str, sym: str) -> asyncio.Lock:
+    key = _entry_lock_key(exch, sym)
+    lock = _SYMBOL_ENTRY_LOCKS.get(key)
+    if lock is None:
+        lock = asyncio.Lock()
+        _SYMBOL_ENTRY_LOCKS[key] = lock
+    return lock
 
 def _update_avg(avg: float, q_old: float, px_new: float, q_new: float) -> float:
     if q_old <= 0:
@@ -5371,72 +5385,82 @@ async def try_breakout_entry_async(symbol: str, price: float):
         )
         return
 
-    ensure_leverage(symbol, BYBIT_LEVERAGE)
-    _diag_inc("breakout_entry")
-    order_send_ts = int(now_s())
-    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
-    order_ack_ts = int(now_s())
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("breakout_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if get_trade("Bybit", symbol) is not None:
+            return
+        if not portfolio_can_open():
+            return
 
-    tr = TradeState(
-        symbol=symbol,
-        side=side,
-        qty=q,
-        entry_price_req=float(entry),
-        entry_ts=now,
-    )
-    tr.entry_order_id = oid
-    tr.status = "PENDING_ENTRY"
-    tr.strategy = "inplay_breakout"
-    tr.avg = float(entry)
-    tr.entry_price = float(entry)
-    tr.entry_notional_usd = float(notional_real)
-    tr.ml_features = {
-        "signal": "inplay_breakout",
-        "chase_pct": float(chase_pct),
-        "late_pct": float(late_pct),
-        "pullback_pct": float(pullback),
-        "spread_pct": float(sp),
-        "quality_score": float(quality_score),
-        "size_mult": float(size_mult),
-        "quality_boost_mult": float(quality_boost_mult),
-        "alloc_mult": float(st_alloc),
-        "risk_mult": float(risk_mult),
-        "stop_pct": float(stop_pct),
-        "session": str(_session_name_utc(now)),
-        "symbol_family": "alt",
-    }
-    tr.tp_price = float(tp_r) if tp_r is not None else None
-    tr.sl_price = float(sl_r)
-    tr.signal_ts = int(signal_ts)
-    tr.order_send_ts = int(order_send_ts)
-    tr.order_ack_ts = int(order_ack_ts)
-    tr.runner_enabled = bool(use_runner)
-    if tr.runner_enabled:
-        tr.tps = [float(x) for x in (sig.tps or [])]
-        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-        tr.tp_hit = [False for _ in tr.tps]
-        tr.initial_qty = float(q)
-        tr.remaining_qty = float(q)
-        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-        tr.time_stop_sec = int(ts_bars * 300)
-    TRADES[("Bybit", symbol)] = tr
+        ensure_leverage(symbol, BYBIT_LEVERAGE)
+        _diag_inc("breakout_entry")
+        order_send_ts = int(now_s())
+        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        order_ack_ts = int(now_s())
 
-    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
-    tr.tpsl_on_exchange = bool(ok)
-    tr.tpsl_last_set_ts = now_s()
-    if ok:
-        tr.tpsl_manual_lock = False
+        tr = TradeState(
+            symbol=symbol,
+            side=side,
+            qty=q,
+            entry_price_req=float(entry),
+            entry_ts=now,
+        )
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "inplay_breakout"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.ml_features = {
+            "signal": "inplay_breakout",
+            "chase_pct": float(chase_pct),
+            "late_pct": float(late_pct),
+            "pullback_pct": float(pullback),
+            "spread_pct": float(sp),
+            "quality_score": float(quality_score),
+            "size_mult": float(size_mult),
+            "quality_boost_mult": float(quality_boost_mult),
+            "alloc_mult": float(st_alloc),
+            "risk_mult": float(risk_mult),
+            "stop_pct": float(stop_pct),
+            "session": str(_session_name_utc(now)),
+            "symbol_family": "alt",
+        }
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        tr.signal_ts = int(signal_ts)
+        tr.order_send_ts = int(order_send_ts)
+        tr.order_ack_ts = int(order_ack_ts)
+        tr.runner_enabled = bool(use_runner)
+        if tr.runner_enabled:
+            tr.tps = [float(x) for x in (sig.tps or [])]
+            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+            tr.tp_hit = [False for _ in tr.tps]
+            tr.initial_qty = float(q)
+            tr.remaining_qty = float(q)
+            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+            tr.time_stop_sec = int(ts_bars * 300)
+        TRADES[("Bybit", symbol)] = tr
 
-    tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
-    tg_trade(
-        f"🟩 BREAKOUT ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
-        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
-        f"notional≈{notional_real:.2f}$ qty≈{q} quality={quality_score:.2f} "
-        f"size_mult={size_mult:.2f} boost={quality_boost_mult:.2f} alloc={st_alloc:.2f}\n"
-        f"reason={sig.reason}"
-    )
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🟩 BREAKOUT ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q} quality={quality_score:.2f} "
+            f"size_mult={size_mult:.2f} boost={quality_boost_mult:.2f} alloc={st_alloc:.2f}\n"
+            f"reason={sig.reason}"
+        )
 
 
 async def try_retest_entry_async(symbol: str, price: float):
@@ -5605,59 +5629,69 @@ async def try_midterm_entry_async(symbol: str, price: float):
         )
         return
 
-    ensure_leverage(symbol, BYBIT_LEVERAGE)
-    _diag_inc("midterm_entry")
-    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("midterm_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if get_trade("Bybit", symbol) is not None:
+            return
+        if not portfolio_can_open():
+            return
 
-    tr = TradeState(
-        symbol=symbol,
-        side=side,
-        qty=q,
-        entry_price_req=float(entry),
-        entry_ts=now,
-    )
-    tr.entry_order_id = oid
-    tr.status = "PENDING_ENTRY"
-    tr.strategy = "btc_eth_midterm_pullback"
-    tr.avg = float(entry)
-    tr.entry_price = float(entry)
-    tr.entry_notional_usd = float(notional_real)
-    tr.ml_features = {
-        "signal": "btc_eth_midterm_pullback",
-        "stop_pct": float(stop_pct),
-        "alloc_mult": float(MIDTERM_NOTIONAL_MULT),
-        "regime_alloc_mult": float(alloc_mult),
-        "session": str(_session_name_utc(now)),
-        "symbol_family": "btc_eth",
-    }
-    tr.tp_price = float(tp_r) if tp_r is not None else None
-    tr.sl_price = float(sl_r)
-    tr.runner_enabled = bool(use_runner)
-    if tr.runner_enabled:
-        tr.tps = [float(x) for x in (sig.tps or [])]
-        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-        tr.tp_hit = [False for _ in tr.tps]
-        tr.initial_qty = float(q)
-        tr.remaining_qty = float(q)
-        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-        tr.time_stop_sec = int(ts_bars * 300)
-    TRADES[("Bybit", symbol)] = tr
+        ensure_leverage(symbol, BYBIT_LEVERAGE)
+        _diag_inc("midterm_entry")
+        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
 
-    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
-    tr.tpsl_on_exchange = bool(ok)
-    tr.tpsl_last_set_ts = now_s()
-    if ok:
-        tr.tpsl_manual_lock = False
+        tr = TradeState(
+            symbol=symbol,
+            side=side,
+            qty=q,
+            entry_price_req=float(entry),
+            entry_ts=now,
+        )
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "btc_eth_midterm_pullback"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.ml_features = {
+            "signal": "btc_eth_midterm_pullback",
+            "stop_pct": float(stop_pct),
+            "alloc_mult": float(MIDTERM_NOTIONAL_MULT),
+            "regime_alloc_mult": float(alloc_mult),
+            "session": str(_session_name_utc(now)),
+            "symbol_family": "btc_eth",
+        }
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        tr.runner_enabled = bool(use_runner)
+        if tr.runner_enabled:
+            tr.tps = [float(x) for x in (sig.tps or [])]
+            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+            tr.tp_hit = [False for _ in tr.tps]
+            tr.initial_qty = float(q)
+            tr.remaining_qty = float(q)
+            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+            tr.time_stop_sec = int(ts_bars * 300)
+        TRADES[("Bybit", symbol)] = tr
 
-    tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
-    tg_trade(
-        f"🟧 MIDTERM ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
-        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
-        f"notional≈{notional_real:.2f}$ qty≈{q} alloc_mult={MIDTERM_NOTIONAL_MULT:.2f} regime={alloc_mult:.2f}\n"
-        f"reason={sig.reason}"
-    )
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🟧 MIDTERM ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q} alloc_mult={MIDTERM_NOTIONAL_MULT:.2f} regime={alloc_mult:.2f}\n"
+            f"reason={sig.reason}"
+        )
 
 
 
@@ -5739,51 +5773,63 @@ async def try_sloped_entry_async(symbol: str, price: float):
         )
         return
 
-    ensure_leverage(symbol, BYBIT_LEVERAGE)
-    _diag_inc("sloped_entry")
-    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("sloped_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if get_trade("Bybit", symbol) is not None:
+            _diag_inc("sloped_skip_open_trade")
+            return
+        if not portfolio_can_open():
+            _diag_inc("sloped_skip_portfolio")
+            return
 
-    tr = TradeState(
-        symbol=symbol,
-        side=side,
-        qty=q,
-        entry_price_req=float(entry),
-        entry_ts=now,
-    )
-    tr.entry_order_id = oid
-    tr.status = "PENDING_ENTRY"
-    tr.strategy = "sloped_channel"
-    tr.avg = float(entry)
-    tr.entry_price = float(entry)
-    tr.entry_notional_usd = float(notional_real)
-    tr.tp_price = float(tp_r) if tp_r is not None else None
-    tr.sl_price = float(sl_r)
-    tr.runner_enabled = bool(use_runner)
-    if tr.runner_enabled:
-        tr.tps = [float(x) for x in (sig.tps or [])]
-        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-        tr.tp_hit = [False for _ in tr.tps]
-        tr.initial_qty = float(q)
-        tr.remaining_qty = float(q)
-        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-        tr.time_stop_sec = int(ts_bars * 300)
-    TRADES[("Bybit", symbol)] = tr
+        ensure_leverage(symbol, BYBIT_LEVERAGE)
+        _diag_inc("sloped_entry")
+        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
 
-    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
-    tr.tpsl_on_exchange = bool(ok)
-    tr.tpsl_last_set_ts = now_s()
-    if ok:
-        tr.tpsl_manual_lock = False
+        tr = TradeState(
+            symbol=symbol,
+            side=side,
+            qty=q,
+            entry_price_req=float(entry),
+            entry_ts=now,
+        )
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "sloped_channel"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        tr.runner_enabled = bool(use_runner)
+        if tr.runner_enabled:
+            tr.tps = [float(x) for x in (sig.tps or [])]
+            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+            tr.tp_hit = [False for _ in tr.tps]
+            tr.initial_qty = float(q)
+            tr.remaining_qty = float(q)
+            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+            tr.time_stop_sec = int(ts_bars * 300)
+        TRADES[("Bybit", symbol)] = tr
 
-    tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
-    tg_trade(
-        f"🟪 SLOPED ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
-        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
-        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
-        f"reason={sig.reason}"
-    )
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🟪 SLOPED ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
 
 
 async def try_flat_entry_async(symbol: str, price: float):
@@ -5863,51 +5909,63 @@ async def try_flat_entry_async(symbol: str, price: float):
         )
         return
 
-    ensure_leverage(symbol, BYBIT_LEVERAGE)
-    _diag_inc("flat_entry")
-    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("flat_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if get_trade("Bybit", symbol) is not None:
+            _diag_inc("flat_skip_open_trade")
+            return
+        if not portfolio_can_open():
+            _diag_inc("flat_skip_portfolio")
+            return
 
-    tr = TradeState(
-        symbol=symbol,
-        side=side,
-        qty=q,
-        entry_price_req=float(entry),
-        entry_ts=now,
-    )
-    tr.entry_order_id = oid
-    tr.status = "PENDING_ENTRY"
-    tr.strategy = "flat_resistance_fade"
-    tr.avg = float(entry)
-    tr.entry_price = float(entry)
-    tr.entry_notional_usd = float(notional_real)
-    tr.tp_price = float(tp_r) if tp_r is not None else None
-    tr.sl_price = float(sl_r)
-    tr.runner_enabled = bool(use_runner)
-    if tr.runner_enabled:
-        tr.tps = [float(x) for x in (sig.tps or [])]
-        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-        tr.tp_hit = [False for _ in tr.tps]
-        tr.initial_qty = float(q)
-        tr.remaining_qty = float(q)
-        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-        tr.time_stop_sec = int(ts_bars * 300)
-    TRADES[("Bybit", symbol)] = tr
+        ensure_leverage(symbol, BYBIT_LEVERAGE)
+        _diag_inc("flat_entry")
+        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
 
-    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
-    tr.tpsl_on_exchange = bool(ok)
-    tr.tpsl_last_set_ts = now_s()
-    if ok:
-        tr.tpsl_manual_lock = False
+        tr = TradeState(
+            symbol=symbol,
+            side=side,
+            qty=q,
+            entry_price_req=float(entry),
+            entry_ts=now,
+        )
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "flat_resistance_fade"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        tr.runner_enabled = bool(use_runner)
+        if tr.runner_enabled:
+            tr.tps = [float(x) for x in (sig.tps or [])]
+            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+            tr.tp_hit = [False for _ in tr.tps]
+            tr.initial_qty = float(q)
+            tr.remaining_qty = float(q)
+            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+            tr.time_stop_sec = int(ts_bars * 300)
+        TRADES[("Bybit", symbol)] = tr
 
-    tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
-    tg_trade(
-        f"🟦 FLAT ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
-        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
-        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
-        f"reason={sig.reason}"
-    )
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🟦 FLAT ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
 
 
 async def try_breakdown_entry_async(symbol: str, price: float):
@@ -5950,7 +6008,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
     _diag_inc("breakdown_try")
 
     try:
-        sig = BREAKDOWN_ENGINE.signal(symbol, int(now * 1000), price)
+        sig = await BREAKDOWN_ENGINE.signal_async(symbol, int(now * 1000), price)
     except Exception as e:
         log_error(f"breakdown signal error {symbol}: {e}")
         return
@@ -5987,51 +6045,63 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         )
         return
 
-    ensure_leverage(symbol, BYBIT_LEVERAGE)
-    _diag_inc("breakdown_entry")
-    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("breakdown_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if get_trade("Bybit", symbol) is not None:
+            _diag_inc("breakdown_skip_open_trade")
+            return
+        if not portfolio_can_open():
+            _diag_inc("breakdown_skip_portfolio")
+            return
 
-    tr = TradeState(
-        symbol=symbol,
-        side=side,
-        qty=q,
-        entry_price_req=float(entry),
-        entry_ts=now,
-    )
-    tr.entry_order_id = oid
-    tr.status = "PENDING_ENTRY"
-    tr.strategy = "alt_inplay_breakdown_v1"
-    tr.avg = float(entry)
-    tr.entry_price = float(entry)
-    tr.entry_notional_usd = float(notional_real)
-    tr.tp_price = float(tp_r) if tp_r is not None else None
-    tr.sl_price = float(sl_r)
-    tr.runner_enabled = bool(use_runner)
-    if tr.runner_enabled:
-        tr.tps = [float(x) for x in (sig.tps or [])]
-        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-        tr.tp_hit = [False for _ in tr.tps]
-        tr.initial_qty = float(q)
-        tr.remaining_qty = float(q)
-        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-        tr.time_stop_sec = int(ts_bars * 300)
-    TRADES[("Bybit", symbol)] = tr
+        ensure_leverage(symbol, BYBIT_LEVERAGE)
+        _diag_inc("breakdown_entry")
+        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
 
-    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
-    tr.tpsl_on_exchange = bool(ok)
-    tr.tpsl_last_set_ts = now_s()
-    if ok:
-        tr.tpsl_manual_lock = False
+        tr = TradeState(
+            symbol=symbol,
+            side=side,
+            qty=q,
+            entry_price_req=float(entry),
+            entry_ts=now,
+        )
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "alt_inplay_breakdown_v1"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        tr.runner_enabled = bool(use_runner)
+        if tr.runner_enabled:
+            tr.tps = [float(x) for x in (sig.tps or [])]
+            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+            tr.tp_hit = [False for _ in tr.tps]
+            tr.initial_qty = float(q)
+            tr.remaining_qty = float(q)
+            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+            tr.time_stop_sec = int(ts_bars * 300)
+        TRADES[("Bybit", symbol)] = tr
 
-    tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
-    tg_trade(
-        f"🔻 BREAKDOWN ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
-        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
-        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
-        f"reason={sig.reason}"
-    )
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🔻 BREAKDOWN ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
 
 
 class _TS132Store:

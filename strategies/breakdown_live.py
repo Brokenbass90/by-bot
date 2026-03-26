@@ -64,3 +64,17 @@ class BreakdownLiveEngine:
         store = self._stores[symbol]
         strat = self._strategies[symbol]
         return strat.signal(store, ts_ms, last_price)
+
+    async def signal_async(
+        self,
+        symbol: str,
+        ts_ms: int,
+        last_price: float,
+    ) -> Optional[TradeSignal]:
+        if symbol not in self._stores:
+            self._stores[symbol] = _BreakdownStore(symbol, self._fetch)
+        if symbol not in self._strategies:
+            self._strategies[symbol] = AltInplayBreakdownV1Strategy()
+        store = self._stores[symbol]
+        strat = self._strategies[symbol]
+        return await strat.maybe_signal(store, ts_ms, last_price)

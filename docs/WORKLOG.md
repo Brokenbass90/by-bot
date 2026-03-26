@@ -1,5 +1,53 @@
 # Bybit bot (v28) — worklog / reminders
 
+## 2026-03-26 — live sleeve recovery + operator roadmap + entry-safety follow-up
+
+### Live sleeve reality confirmed
+- Checked fresh live journal after the last deploy.
+- `sloped`, `flat`, and `breakdown` are no longer stuck on `skip_no_engine`.
+- They now show real `sched` and `try` activity in live.
+- Current blocker for these sleeves is no longer missing engines; it is downstream signal quality / gating.
+
+### New issue found from live logs
+- Live journal showed:
+  - `RuntimeWarning: coroutine 'InPlayBreakoutWrapper.maybe_signal' was never awaited`
+- Root cause:
+  - `breakdown_live.py` used sync `signal()` in an async live path
+  - that path ultimately touched async breakout wrapper logic
+
+### Fixes prepared locally
+- Added async path to `strategies/breakdown_live.py`:
+  - `signal_async(...)`
+- Updated `smart_pump_reversal_bot.py` to use async breakdown signal path in `try_breakdown_entry_async()`
+- Added per-symbol entry lock scaffolding in `smart_pump_reversal_bot.py`
+  - protects against two sleeves racing into the same symbol at the same time
+- Added symbol-lock diagnostics counters for:
+  - breakout
+  - midterm
+  - sloped
+  - flat
+  - breakdown
+- Fixed TS132 init log path to avoid the same `log(...) is not defined` class of bug if TS132 is enabled later.
+
+### Operator roadmap captured
+- Added:
+  - `docs/AI_OPERATOR_ROADMAP_20260326.md`
+- Purpose:
+  - define the path from advisory AI -> research operator -> approval-gated config steward -> portfolio supervisor
+  - keep the AI useful and active without giving it unsafe live authority
+
+### Server rollout
+- Deployed small safety patch to live:
+  - `smart_pump_reversal_bot.py`
+  - `strategies/breakdown_live.py`
+  - `bot/diagnostics.py`
+- Restarted `bybot.service` at `2026-03-26 18:57 UTC`.
+- Service is `active` on the new PID.
+- `errors.log` stopped updating after the old breakdown async failures at `18:56:43 UTC`, which is a good early sign that the new async breakdown path is no longer tripping the previous runtime error.
+- Next confirmation still needed:
+  - fresh post-restart pulse from the new process
+  - verify no new `breakdown signal error ... asyncio.run()` lines appear
+
 ## ROADMAP (приоритеты на следующие сессии)
 
 ### ✅ Приоритет 1 — Breakout expansion по монетам (ЗАВЕРШЕНО, сессия 12)

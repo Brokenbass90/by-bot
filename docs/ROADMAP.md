@@ -13,8 +13,15 @@ This block is the current source of truth. Older sections below remain useful as
    - `sloped`
    - `flat`
    - `breakdown`
-3. Verify live counters for `flat` and `breakdown` over a real post-deploy window.
-4. Reduce deploy confusion before any bigger rollout or cleanup delete pass.
+3. Lock in the recent live sleeve fixes:
+   - `sloped/flat/breakdown` engine init now recovers correctly
+   - sleeve counters now show real scheduling and try activity
+   - next target is safer entry flow, not basic engine survival
+4. Add operator/control-plane maturity without giving AI unsafe authority:
+   - evidence-first proposals
+   - approval-gated changes
+   - bounded research launch
+5. Reduce deploy confusion before any bigger rollout or cleanup delete pass.
 
 ### Best Current Strategic Result
 - `portfolio_20260325_172613_new_5strat_final`
@@ -31,6 +38,7 @@ This block is the current source of truth. Older sections below remain useful as
 3. `TS132 / Elder` via symbol pockets, not one setup for all coins
 4. `Alpaca` red-month repair before any real-money rollout
 5. `micro scalper` only after the minute-level backtest path is honest
+6. `trendline break/retest` as separate long and short sleeves after current live stack is safer
 
 ### Cleanup Rule
 - No blind deletes.
