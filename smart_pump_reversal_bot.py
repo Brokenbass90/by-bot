@@ -4236,7 +4236,7 @@ if ENABLE_SLOPED_TRADING:
     try:
         from strategies.sloped_channel_live import SlopedChannelLiveEngine
         SLOPED_ENGINE = SlopedChannelLiveEngine(fetch_klines)
-        log(f"[SLOPED] engine initialised")
+        print("[SLOPED] engine initialised")
     except Exception as _e:
         log_error(f"[SLOPED] engine init fail: {_e}")
         SLOPED_ENGINE = None
@@ -4246,7 +4246,7 @@ if ENABLE_FLAT_TRADING:
     try:
         from strategies.flat_resistance_fade_live import FlatResistanceFadeLiveEngine
         FLAT_ENGINE = FlatResistanceFadeLiveEngine(fetch_klines)
-        log(f"[FLAT] engine initialised")
+        print("[FLAT] engine initialised")
     except Exception as _e:
         log_error(f"[FLAT] engine init fail: {_e}")
         FLAT_ENGINE = None
@@ -4255,7 +4255,7 @@ if ENABLE_FLAT_TRADING:
 if ENABLE_BREAKDOWN_TRADING:
     try:
         BREAKDOWN_ENGINE = BreakdownLiveEngine(fetch_klines)
-        log(f"[BREAKDOWN] engine initialised")
+        print("[BREAKDOWN] engine initialised")
     except Exception as _e:
         log_error(f"[BREAKDOWN] engine init fail: {_e}")
         BREAKDOWN_ENGINE = None
@@ -4282,7 +4282,7 @@ def _ensure_sloped_engine() -> bool:
     try:
         from strategies.sloped_channel_live import SlopedChannelLiveEngine
         SLOPED_ENGINE = SlopedChannelLiveEngine(fetch_klines)
-        log("[SLOPED] engine lazy-init ok")
+        print("[SLOPED] engine lazy-init ok")
         return True
     except Exception as e:
         SLOPED_ENGINE = None
@@ -4299,7 +4299,7 @@ def _ensure_flat_engine() -> bool:
     try:
         from strategies.flat_resistance_fade_live import FlatResistanceFadeLiveEngine
         FLAT_ENGINE = FlatResistanceFadeLiveEngine(fetch_klines)
-        log("[FLAT] engine lazy-init ok")
+        print("[FLAT] engine lazy-init ok")
         return True
     except Exception as e:
         FLAT_ENGINE = None
@@ -4315,7 +4315,7 @@ def _ensure_breakdown_engine() -> bool:
         return False
     try:
         BREAKDOWN_ENGINE = BreakdownLiveEngine(fetch_klines)
-        log("[BREAKDOWN] engine lazy-init ok")
+        print("[BREAKDOWN] engine lazy-init ok")
         return True
     except Exception as e:
         BREAKDOWN_ENGINE = None

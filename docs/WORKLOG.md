@@ -1714,3 +1714,9 @@ server_clean.env updated:
 - Lazy-init failures are throttled in logs (5 minutes) to avoid log spam while still surfacing the real exception.
 - Verified syntax with:
   - `python3 -m py_compile smart_pump_reversal_bot.py`
+- Root cause was then confirmed directly from server `errors.log`:
+  - `[SLOPED] engine init fail: name 'log' is not defined`
+  - same for `FLAT` and `BREAKDOWN`
+- Fixed these init paths by replacing the non-existent `log()` success calls with safe `print()` logging in both:
+  - startup engine init
+  - lazy engine re-init
