@@ -1,5 +1,70 @@
 # Bybit bot (v28) — worklog / reminders
 
+## ROADMAP (приоритеты на следующие сессии)
+
+### 🔥 Приоритет 1 — Breakout expansion по монетам
+Autoresearch по семействам монет для inplay_breakout (как делали для breakdown).
+Цель: +30-50% к количеству входов без ухудшения качества.
+Файл спеки: `configs/autoresearch/breakout_expansion_v1.json` (создать).
+
+### 🔥 Приоритет 2 — ASC1 long режим (готово к тесту!)
+`ASC1_ALLOW_LONGS=1` уже есть в коде — покупка от нижней границы канала.
+Сейчас `ASC1_ALLOW_LONGS=0`. Нужен autoresearch с longs на развороте рынка.
+Backtest скорее всего покажет хороший результат — ASC1 умеет работать в обе стороны.
+
+### 🔥 Приоритет 3 — Midterm pullback improvement
+WR 46%, PF 1.3 — слабейшая стратегия. Autoresearch на параметрах.
+Если после прогона не улучшится — рассмотреть замену на Elder Triple Screen (v11).
+
+### 📋 Приоритет 4 — Long от поддержки (новая стратегия, аналог ARF1)
+ARF1 шортит от сопротивления → аналог это лонговать отскок от поддержки.
+ARF1 сейчас шорты-only (long логики нет в коде). Написать alt_support_reclaim_v1.
+Особенно актуально для разворота рынка.
+
+### 📋 Приоритет 5 — AI апрув по-человечески
+Вместо `/ai_approve 42` — AI пишет обычным текстом + кнопки Да/Нет в Telegram.
+Схема: предложение → запуск backtest → результат → кнопка "Применить".
+
+### 📋 Приоритет 6 — Пробой наклонного канала (ASC1-breakdown гибрид)
+SHORT на пробое нижней границы наклонного канала (сильнее чем горизонтальный breakdown).
+Вся логика ASC1 уже есть — нужно добавить breakdown-ветку.
+
+### 📋 Приоритет 7 — Autoresearch на сервере
+Переместить длинные прогоны (1024+ комбинаций) на сервер.
+Команда запуска: см. раздел "Autoresearch на сервере" ниже.
+
+### ⏳ Отложено
+- Динамический выбор монет — после 1-2 месяцев реальной торговли
+- RISK_MULT 0.10 → 0.15 — после 2+ недель подтверждения
+- Trailing stop для ASC1/ARF1 — после накопления статистики
+
+---
+
+### Запуск autoresearch на сервере (для длинных прогонов)
+```bash
+# SSH на сервер
+ssh -i ~/.ssh/by-bot root@64.226.73.119
+
+# Перейти в папку бота (venv уже там)
+cd /root/by-bot
+
+# Запустить прогон в фоне, логи в файл
+nohup .venv/bin/python3 scripts/run_strategy_autoresearch.py \
+    --spec configs/autoresearch/triple_screen_elder_friend_v11.json \
+    > /tmp/autoresearch_elder_v11.log 2>&1 &
+
+# Проверить прогресс
+tail -f /tmp/autoresearch_elder_v11.log
+
+# Скачать результаты когда готово
+# (с локала):
+scp -i ~/.ssh/by-bot -r \
+    root@64.226.73.119:/root/by-bot/backtest_runs/autoresearch_*elder_v11* \
+    backtest_runs/
+```
+
+---
+
 ## 2026-03-26 (sessions 10-11) — Breakdown live, /ai fix, coin expansion
 
 ### Что сделано
