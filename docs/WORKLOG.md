@@ -86,6 +86,20 @@ scp -i ~/.ssh/by-bot -r \
 - `/help` обновлён: явно перечислены поддерживаемые `strat` для `/ai_results` и `/ai_tune`.
 - Убрана ошибочная подсказка `/ai_code .env` — чтение `.env` намеренно запрещено из-за секретов.
 
+**Alpaca: новый focused repair-run под breadth/exit/concentration**
+- Добавлен новый autoresearch config:
+  - `configs/autoresearch/equities_monthly_v23_breadth_exit_cluster.json`
+- Цель:
+  - жёстче резать слабый breadth рынка
+  - раньше выходить из затухающего импульса
+  - сильнее контролировать concentration/correlation
+  - проверить, помогает ли `score_inv_vol` против умеренно красных месяцев
+- Первый smoke (`limit=8`) показал:
+  - ранний край сетки пока слишком слабый по DD
+  - best early raw pocket: `+40.36%`, WR `56.7%`, DD `16.69%`
+  - это хуже текущего `v21`, значит стартовые мягкие breadth-углы не годятся
+- Несмотря на это, сетку оставили жить дальше, потому что в ней дальше лежат более жёсткие `breadth / benchmark / cluster` комбинации, которые как раз и являются целевым hypothesis-test.
+
 **Autoresearch: breakout_expansion_v1 (24 кандидата)**
 - Цель: найти оптимальный фиксированный набор монет для inplay_breakout вместо dynamic TOP_N.
 - Спека: `configs/autoresearch/breakout_expansion_v1.json` — 12 SYMBOLS × 2 quality scores (0.48, 0.54).
