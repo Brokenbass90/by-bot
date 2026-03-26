@@ -1619,3 +1619,17 @@ server_clean.env updated:
   - `scripts/deploy_sloped_atom_canary_20260318.sh`
   - `scripts/deploy_to_server.sh`
 - These files were marked as `historical/reference` only; no delete and no live behavior change was made in this step.
+
+### Midterm repair follow-up — 2026-03-26
+
+- Added focused autoresearch spec [configs/autoresearch/midterm_eth_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/midterm_eth_repair_v1.json) for the weakest current sleeve: `btc_eth_midterm_pullback`.
+- Goal: validate whether the known `ETH-only` canary can be improved into a denser, still-smooth profile and re-check whether `BTC+ETH` still drags the sleeve.
+- Smoke run (`--limit 4`) completed successfully and confirmed the spec is valid.
+- Early result:
+  - best current row: `ETHUSDT`
+  - `51` trades
+  - `+4.73`
+  - `PF 1.39`
+  - `DD 2.19`
+  - `3` negative months
+- Interpretation: the direction is alive, but current constraints are still stricter than the first explored pocket; full sweep is justified before changing live.

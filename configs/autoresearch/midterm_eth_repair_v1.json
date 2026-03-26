@@ -1,0 +1,70 @@
+{
+  "name": "midterm_eth_repair_v1",
+  "description": "Focused repair sweep for btc_eth_midterm_pullback v1. Target: keep the ETH-only canary edge, test whether BTC still drags the sleeve, and increase trade density without reopening deep red months.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "btc_eth_midterm_pullback",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "1",
+    "--fee_bps",
+    "10",
+    "--slippage_bps",
+    "10"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "ETHUSDT",
+      "BTCUSDT,ETHUSDT"
+    ],
+    "MTPB_LONG_RECLAIM_PCT": [0.18, 0.20, 0.22],
+    "MTPB_LONG_TOUCH_TOL_PCT": [0.12, 0.15, 0.18],
+    "MTPB_LONG_MAX_PULLBACK_PCT": [0.70, 0.75, 0.80],
+    "MTPB_TREND_MIN_GAP_PCT": [0.20, 0.25, 0.30],
+    "MTPB_LONG_MAX_ATR_PCT_1H": [1.60, 1.80, 2.00],
+    "MTPB_SHORT_MAX_ATR_PCT_1H": [1.80, 2.00],
+    "MTPB_MAX_SIGNALS_PER_DAY": [1, 2],
+    "MTPB_COOLDOWN_BARS_5M": [60, 84]
+  },
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "MTPB_ALLOW_LONGS": "1",
+    "MTPB_ALLOW_SHORTS": "1"
+  },
+  "constraints": {
+    "min_trades": 45,
+    "min_profit_factor": 1.35,
+    "max_drawdown": 4.5,
+    "min_net_pnl": 8.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2,
+    "min_worst_month_pnl": -2.5
+  },
+  "score_weights": {
+    "net_pnl": 1.2,
+    "profit_factor": 4.0,
+    "winrate": 8.0,
+    "max_drawdown": 1.8,
+    "trades": 0.10,
+    "trades_cap": 90,
+    "negative_months": 4.0,
+    "max_negative_streak": 3.0,
+    "worst_month_pnl": 2.5
+  }
+}
