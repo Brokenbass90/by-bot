@@ -1,7 +1,7 @@
 {
   "_comment": "Elder Triple Screen v11 — правильный выбор монет. STRK/KSM/AXS убраны (graveyard altcoins без чётких трендов). Используем ETH+AVAX (монеты друга) + SOL+LINK как trending assets. TREND_TF: 240 (4H) + 1440 (1D).",
   "name": "triple_screen_elder_friend_v11",
-  "cache_only": true,
+  "cache_only": false,
   "command": [
     "{python}",
     "backtest/run_portfolio.py",
