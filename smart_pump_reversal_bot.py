@@ -3566,6 +3566,48 @@ def round_tp_sl_prices(symbol: str, side: str, entry: float,
     return tp, sl
 
 
+def _prepare_exchange_tpsl(
+    symbol: str,
+    side: str,
+    tp: Optional[float],
+    sl: Optional[float],
+    entry_ref: Optional[float] = None,
+) -> tuple[Optional[float], Optional[float], Optional[str]]:
+    """
+    Финальная sanity-подготовка TP/SL перед отправкой на биржу.
+
+    Что делаем:
+      - выбрасываем нечисловые / <= 0 значения;
+      - если есть entry_ref, ещё раз прогоняем через round_tp_sl_prices();
+      - не даём отправить на биржу логически перевёрнутые уровни.
+    """
+    def _norm(px: Optional[float]) -> Optional[float]:
+        if px in (None, "", "0"):
+            return None
+        try:
+            out = float(px)
+        except Exception:
+            return None
+        if not math.isfinite(out) or out <= 0:
+            return None
+        return out
+
+    tp_v = _norm(tp)
+    sl_v = _norm(sl)
+    entry_v = _norm(entry_ref)
+
+    if entry_v is not None:
+        tp_v, sl_v = round_tp_sl_prices(symbol, side, entry_v, tp_v, sl_v)
+
+    if tp_v is not None and sl_v is not None:
+        if side == "Buy" and tp_v <= sl_v:
+            return None, None, f"invalid Buy TP/SL after sanitize: tp={tp_v} sl={sl_v} entry={entry_v}"
+        if side == "Sell" and tp_v >= sl_v:
+            return None, None, f"invalid Sell TP/SL after sanitize: tp={tp_v} sl={sl_v} entry={entry_v}"
+
+    return tp_v, sl_v, None
+
+
 # =========================== TP/SL RETRY + RISK SIZING ===========================
 _LAST_TPSL_ENSURE_TS = 0
 
@@ -3742,9 +3784,25 @@ def set_tp_sl_retry(symbol: str, side: str, tp: Optional[float], sl: Optional[fl
     if not ALWAYS_SET_TPSL_ON_EXCHANGE:
         return False
 
+    tr = get_trade("Bybit", symbol)
+    entry_ref = None
+    if tr is not None:
+        try:
+            entry_ref = float(getattr(tr, "avg", 0.0) or getattr(tr, "entry_price", 0.0) or 0.0) or None
+        except Exception:
+            entry_ref = None
+
+    tp_send, sl_send, invalid_reason = _prepare_exchange_tpsl(symbol, side, tp, sl, entry_ref=entry_ref)
+    if invalid_reason:
+        log_error(f"TP/SL invariant reject {symbol}: {invalid_reason}")
+        return False
+    if tp_send is None and sl_send is None:
+        log_error(f"TP/SL invariant reject {symbol}: nothing valid to send (tp={tp}, sl={sl})")
+        return False
+
     for i in range(1, TPSL_RETRY_ATTEMPTS + 1):
         try:
-            TRADE_CLIENT.set_tp_sl(symbol, side, tp, sl)
+            TRADE_CLIENT.set_tp_sl(symbol, side, tp_send, sl_send)
             return True
 
         except Exception as e:

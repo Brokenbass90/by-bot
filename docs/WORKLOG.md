@@ -1770,3 +1770,4 @@ server_clean.env updated:
   - lazy engine re-init
 
 - 2026-03-26 19:00 UTC | tg universe visibility | added flat and breakdown universe lines to startup/status notifications so crypto live stack is fully visible in Telegram; clarified Alpaca remains separate from crypto live process | done
+- 2026-03-26 19:20 UTC | live TP/SL invariant guard | added centralized exchange-side TP/SL sanity preparation in [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py): invalid/non-finite prices are dropped, prices are re-rounded against live entry when available, inverted TP/SL pairs are rejected before hitting Bybit, and empty payloads are blocked instead of sending unsafe/meaningless trading-stop requests | done
