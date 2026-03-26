@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "candidates": [
+    {
+      "id": "crypto.inplay_breakout",
+      "stack": "crypto",
+      "stage": "core",
+      "rule_profile": "crypto_core",
+      "source_type": "crypto_pair",
+      "base_summary_glob": "backtest_runs/portfolio_*_inplay_core_verify_base_360d/summary.csv",
+      "base_trades_glob": "backtest_runs/portfolio_*_inplay_core_verify_base_360d/trades.csv",
+      "stress_summary_glob": "backtest_runs/portfolio_*_inplay_core_verify_stress_360d/summary.csv",
+      "stress_trades_glob": "backtest_runs/portfolio_*_inplay_core_verify_stress_360d/trades.csv"
+    },
+    {
+      "id": "crypto.btc_eth_midterm_pullback",
+      "stack": "crypto",
+      "stage": "secondary",
+      "rule_profile": "crypto_secondary",
+      "source_type": "crypto_pair",
+      "base_summary_glob": "backtest_runs/portfolio_*_mtpb_v2d_verify_base_360d/summary.csv",
+      "base_trades_glob": "backtest_runs/portfolio_*_mtpb_v2d_verify_base_360d/trades.csv",
+      "stress_summary_glob": "backtest_runs/portfolio_*_mtpb_v2d_verify_stress_360d/summary.csv",
+      "stress_trades_glob": "backtest_runs/portfolio_*_mtpb_v2d_verify_stress_360d/trades.csv"
+    },
+    {
+      "id": "crypto.flat_bounce_v3",
+      "stack": "crypto",
+      "stage": "reserve",
+      "rule_profile": "crypto_reserve",
+      "source_type": "crypto_pair",
+      "base_summary_glob": "backtest_runs/portfolio_*_fb3_base_360d/summary.csv",
+      "base_trades_glob": "backtest_runs/portfolio_*_fb3_base_360d/trades.csv",
+      "stress_summary_glob": "backtest_runs/portfolio_*_fb3_stress_360d/summary.csv",
+      "stress_trades_glob": "backtest_runs/portfolio_*_fb3_stress_360d/trades.csv"
+    },
+    {
+      "id": "forex.gbpjpy_stability_a",
+      "stack": "forex",
+      "stage": "demo_active",
+      "rule_profile": "forex_demo_active",
+      "source_type": "forex_stability",
+      "csv": "docs/forex_stability_latest.csv",
+      "pair": "GBPJPY",
+      "strategy": "trend_retest_session_v1:gbpjpy_stability_a",
+      "env_path": "docs/forex_demo_env_latest.env",
+      "expected_env_role": "ACTIVE"
+    },
+    {
+      "id": "forex.gbpjpy_stability_b",
+      "stack": "forex",
+      "stage": "demo_canary",
+      "rule_profile": "forex_demo_canary",
+      "source_type": "forex_stability",
+      "csv": "docs/forex_stability_latest.csv",
+      "pair": "GBPJPY",
+      "strategy": "trend_retest_session_v1:gbpjpy_stability_b",
+      "env_path": "docs/forex_demo_env_latest.env",
+      "expected_env_role": "CANARY"
+    },
+    {
+      "id": "equities.tsla_breakout_continuation",
+      "stack": "equities",
+      "stage": "paper_active",
+      "rule_profile": "equities_paper_active",
+      "source_type": "equities_state",
+      "csv": "docs/equities_combo_state_latest.csv",
+      "ticker": "TSLA",
+      "strategy": "breakout_continuation_session_v1"
+    },
+    {
+      "id": "equities.tsla_trend_pullback_rebound",
+      "stack": "equities",
+      "stage": "paper_canary",
+      "rule_profile": "equities_paper_canary",
+      "source_type": "equities_state",
+      "csv": "docs/equities_combo_state_latest.csv",
+      "ticker": "TSLA",
+      "strategy": "trend_pullback_rebound_v1"
+    },
+    {
+      "id": "equities.tsla_breakout_continuation_quality_guard",
+      "stack": "equities",
+      "stage": "paper_canary",
+      "rule_profile": "equities_paper_canary",
+      "source_type": "equities_state",
+      "csv": "docs/equities_combo_state_latest.csv",
+      "ticker": "TSLA",
+      "strategy": "breakout_continuation_session_v1:quality_guard"
+    },
+    {
+      "id": "equities.xom_trend_retest",
+      "stack": "equities",
+      "stage": "paper_canary",
+      "rule_profile": "equities_paper_canary",
+      "source_type": "equities_state",
+      "csv": "docs/equities_combo_state_latest.csv",
+      "ticker": "XOM",
+      "strategy": "trend_retest_session_v1"
+    },
+    {
+      "id": "equities.xom_breakout_continuation_quality_guard",
+      "stack": "equities",
+      "stage": "paper_canary",
+      "rule_profile": "equities_paper_canary",
+      "source_type": "equities_state",
+      "csv": "docs/equities_combo_state_latest.csv",
+      "ticker": "XOM",
+      "strategy": "breakout_continuation_session_v1:quality_guard"
+    },
+    {
+      "id": "equities.jpm_grid_reversion",
+      "stack": "equities",
+      "stage": "paper_canary",
+      "rule_profile": "equities_paper_canary",
+      "source_type": "equities_state",
+      "csv": "docs/equities_combo_state_latest.csv",
+      "ticker": "JPM",
+      "strategy": "grid_reversion_session_v1"
+    },
+    {
+      "id": "equities.jpm_trend_retest",
+      "stack": "equities",
+      "stage": "paper_canary",
+      "rule_profile": "equities_paper_canary",
+      "source_type": "equities_state",
+      "csv": "docs/equities_combo_state_latest.csv",
+      "ticker": "JPM",
+      "strategy": "trend_retest_session_v1"
+    },
+    {
+      "id": "equities.googl_grid_reversion_safe_winrate",
+      "stack": "equities",
+      "stage": "paper_canary",
+      "rule_profile": "equities_paper_canary",
+      "source_type": "equities_state",
+      "csv": "docs/equities_combo_state_latest.csv",
+      "ticker": "GOOGL",
+      "strategy": "grid_reversion_session_v1:safe_winrate"
+    },
+    {
+      "id": "equities.aapl_trend_retest_quality_guard",
+      "stack": "equities",
+      "stage": "paper_canary",
+      "rule_profile": "equities_paper_canary",
+      "source_type": "equities_state",
+      "csv": "docs/equities_combo_state_latest.csv",
+      "ticker": "AAPL",
+      "strategy": "trend_retest_session_v1:quality_guard"
+    },
+    {
+      "id": "equities.amd_grid_reversion_safe_winrate",
+      "stack": "equities",
+      "stage": "paper_canary",
+      "rule_profile": "equities_paper_canary",
+      "source_type": "equities_state",
+      "csv": "docs/equities_combo_state_latest.csv",
+      "ticker": "AMD",
+      "strategy": "grid_reversion_session_v1:safe_winrate"
+    }
+  ]
+}

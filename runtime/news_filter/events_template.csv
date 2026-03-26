@@ -1,0 +1,2 @@
+event_id,ts_utc,country,currency,instrument_scope,title,impact,source,blackout_before_min,blackout_after_min,notes
+evt_example_us_cpi,1773148200,US,USD,FX:USD,US CPI,high,template,20,30,replace_with_real_data

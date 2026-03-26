@@ -1,0 +1,2 @@
+tag,days,end_date_utc,symbols,strategies,starting_equity,ending_equity,trades,net_pnl,profit_factor,winrate,avg_win,avg_loss,max_drawdown
+wf_brk_strict_3x_step3_2025-05-25,30,2025-05-25,BTCUSDT;ETHUSDT;SOLUSDT;XRPUSDT;DOGEUSDT;ADAUSDT;AVAXUSDT;BNBUSDT;ARBUSDT;OPUSDT;SUIUSDT;ENAUSDT;TAOUSDT;VIRTUALUSDT;JTOUSDT;BIOUSDT;PIPPINUSDT;HYPEUSDT;AGLDUSDT;ORCAUSDT;SNXUSDT;AXSUSDT,inplay_breakout,100.00,169.47,336,69.47,2.097,0.613,0.6447,-0.4871,4.2216

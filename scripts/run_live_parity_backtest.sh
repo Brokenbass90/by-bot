@@ -16,6 +16,7 @@ DAYS="${DAYS:-7}"
 END_DATE="${END_DATE:-}"
 AUTO_SYMBOLS="${AUTO_SYMBOLS:-1}"
 TOP_N="${TOP_N:-16}"
+TAG_PREFIX="${TAG_PREFIX:-live_parity}"
 MIN_VOLUME_USD="${MIN_VOLUME_USD:-20000000}"
 EXCLUDE_SYMBOLS="${EXCLUDE_SYMBOLS:-${BREAKOUT_SYMBOL_DENYLIST:-}}"
 SYMBOLS="${SYMBOLS:-}"
@@ -60,7 +61,7 @@ run_case() {
   local costs="$1"
   local fee="$2"
   local slip="$3"
-  local tag="live_parity_${costs}_${DAYS}d"
+  local tag="${TAG_PREFIX}_${costs}_${DAYS}d"
   local -a args
 
   args=(
@@ -128,4 +129,3 @@ run_case stress 10 10
 echo "" | tee -a "$REPORT"
 echo "live parity replay done: $(date -u '+%F %T UTC')" | tee -a "$REPORT"
 echo "report=$REPORT" | tee -a "$REPORT"
-

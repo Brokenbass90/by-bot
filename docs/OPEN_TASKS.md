@@ -151,21 +151,25 @@ Last update: 2026-03-05
     - quick-operate menu layout (minimal taps).
 
 ## Next Actions (Priority Order)
-1. Capture next live diagnostics window and decide one minimal canary change in breakout thresholds.
+1. Capture next 2h crypto diagnostics window after env-order hotfix and confirm WS stays `OK/WARN` (not `CRITICAL`) before any further entry-threshold tuning.
 2. Commit cleanup metadata and move rejected strategies to archive namespace with manifest.
 3. Continue Forex gate refresh daily (`run_forex_dynamic_gate.sh`) and start walk-forward auto-disable rule for active pair list.
-4. Add crypto WS noise guardrail: track keepalive timeout frequency and auto-alert when reconnect rate breaches threshold (server not broken, but stream quality is noisy).
+4. Extend MT5 demo set from `ACTIVE=1` to `ACTIVE>=2` by tuning one independent non-GBPJPY combo under return-aware gate (`min_stress_return_pct_est>=0`).
+5. Add crypto WS noise guardrail: track keepalive timeout frequency and auto-alert when reconnect rate breaches threshold (server not broken, but stream quality is noisy).
    - implemented (`2026-03-05`): pulse-level WS watchdog with windowed deltas and `WARN/CRITICAL` Telegram alerts (`WS_HEALTH_*` envs).
-5. Use new nightly runner (`scripts/run_forex_overnight_research.sh`) as default background R&D pipeline while waiting for broker API history.
-6. Draft Telegram control-plane refactor plan and implement Forex command subset first.
-7. Build simple pass/fail gate report for crypto candidates (base+stress).
-8. Start equities R&D track (M5, US regular session): run daily fetch/check/scan, then add walk-forward gate before any paper/live step.
-9. Add equities state machine (ACTIVE/CANARY/WATCHLIST/BANNED) mirroring forex flow, then keep only walk-forward-passing candidates in ACTIVE.
-10. Add monthly operator report bundle (PnL + estimated tax + fees by stack) and align fields with manual Cyprus filing workflow.
+6. Use new nightly runner (`scripts/run_forex_overnight_research.sh`) as default background R&D pipeline while waiting for broker API history.
+7. Draft Telegram control-plane refactor plan and implement Forex command subset first.
+8. Build simple pass/fail gate report for crypto candidates (base+stress).
+9. Start equities R&D track (M5, US regular session): run daily fetch/check/scan, then add walk-forward gate before any paper/live step.
+10. Add equities state machine (ACTIVE/CANARY/WATCHLIST/BANNED) mirroring forex flow, then keep only walk-forward-passing candidates in ACTIVE.
+11. Add monthly operator report bundle (PnL + estimated tax + fees by stack) and align fields with manual Cyprus filing workflow.
+12. ML overlay backlog (post-demo only): train probability/ranking model on closed-trade dataset (>=500 trades per stack), validate with strict walk-forward, and allow only score-based ranking/sizing caps while rule-based entry/exit remains mandatory.
 
 ## Blocked / Waiting
 - Forex is not data-blocked anymore (`ready=12/12`).
-- Main blocker shifted from candidate scarcity to data horizon: current robust set is `3` combos, but sample is ~60d intraday and needs longer broker-grade history before live deployment.
+- Main blocker shifted from candidate scarcity to data horizon/cost calibration: strict MT5 long-window full-confirm (`2026-03-06`) still yields `ACTIVE=0`, while demo-calibrated window (`max_bars=15000`, return-aware gate) yields `ACTIVE=1` (`GBPJPY trend_retest:conservative`, health `both+=37/67`).
+- Additional long-window check (`max_bars=30000`, `GBPJPY/USDJPY/AUDJPY`, return-aware gate) confirms `0` strict passes; keep this as the current hard constraint for promoting any pair to AUTO demo-live.
+- Current classifier (`docs/forex_live_or_kill_latest.csv`): `short_ok=9` but `long_ok=0` over latest fast/full windows; decision remains `canary-only`, no auto scaling.
 - For 12m+ M5 validation: waiting for broker API token/account (or MT5/cTrader export) with stable historical pull access.
 - Crypto live entries remain blocked mostly by signal quality (`impulse_weak`); WS transport had noisy windows before, but latest post-restart sample is healthy. Keep watchdog active and continue monitoring.
 

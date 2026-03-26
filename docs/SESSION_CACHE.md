@@ -283,3 +283,25 @@ ENABLE_MIDTERM_TRADING=0      ← OFF
 - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_adaptive_v2_stage1.json`
 - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_adaptive_families_v1.json`
 - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v10_extended_universe_autoresearch.json`
+
+### Late-evening live restore
+- GitHub push is working again for this repo on this Mac because `.git/config` now pins the `by-bot` SSH key.
+- Pushed:
+  - `636b91d` `Fix dotenv load order for live strategy flags`
+  - `5df80a1` `Decouple live strategy scheduling from detector gates`
+- Root cause of “sloped rollout killed old strategies” was not sloped itself:
+  - `.env` was loaded too late for module-level strategy flags
+  - `breakout` / `midterm` / `sloped` / `ts132` scheduling lived below the legacy pump-detector gates in `detect()`
+- Server was updated and restarted in unbuffered mode.
+- Clean live log now confirms:
+  - `breakout=True`
+  - `midterm=True`
+  - `breakout-universe: using=15`
+  - Bybit shards connected
+  - market data flowing (`msgs=10417`)
+  - core counters moving again (`breakout_try=15`, `midterm_try=1`)
+- Live intent now:
+  - `breakout` ON
+  - `midterm` ON
+  - `sloped` ON (tiny ATOM canary)
+  - `ts132` OFF

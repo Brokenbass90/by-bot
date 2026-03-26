@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "profiles": {
+    "crypto_core": {
+      "min_base_net_pnl": 5.0,
+      "min_stress_net_pnl": 1.0,
+      "min_stress_profit_factor": 1.05,
+      "max_stress_drawdown": 10.0,
+      "min_stress_trades": 15,
+      "min_base_pos_month_share_pct": 60.0,
+      "min_stress_pos_month_share_pct": 45.0
+    },
+    "crypto_secondary": {
+      "min_base_net_pnl": 5.0,
+      "min_stress_net_pnl": 1.0,
+      "min_stress_profit_factor": 1.05,
+      "max_stress_drawdown": 7.0,
+      "min_stress_trades": 80,
+      "min_base_pos_month_share_pct": 60.0,
+      "min_stress_pos_month_share_pct": 50.0
+    },
+    "crypto_reserve": {
+      "min_base_net_pnl": 1.0,
+      "min_stress_net_pnl": 0.5,
+      "min_stress_profit_factor": 1.10,
+      "max_stress_drawdown": 5.0,
+      "min_stress_trades": 20,
+      "min_base_pos_month_share_pct": 50.0,
+      "min_stress_pos_month_share_pct": 40.0
+    },
+    "forex_demo_active": {
+      "required_status": "PASS",
+      "min_stress_trades": 90,
+      "min_stress_ret_pct": 0.0,
+      "max_stress_dd": 325.0,
+      "min_month_both_positive_share_pct": 55.0,
+      "min_roll_both_positive_share_pct": 55.0
+    },
+    "forex_demo_canary": {
+      "required_status": "PASS",
+      "min_stress_trades": 80,
+      "min_stress_ret_pct": 0.0,
+      "max_stress_dd": 325.0,
+      "min_month_both_positive_share_pct": 50.0,
+      "min_roll_both_positive_share_pct": 55.0
+    },
+    "equities_paper_active": {
+      "required_state": "ACTIVE",
+      "min_both_positive_share_pct": 60.0,
+      "min_stress_net_cents": 500.0,
+      "min_stress_trades": 40
+    },
+    "equities_paper_canary": {
+      "allowed_state": [
+        "ACTIVE",
+        "CANARY"
+      ],
+      "min_both_positive_share_pct": 55.0,
+      "min_stress_net_cents": 500.0,
+      "min_stress_trades": 40
+    }
+  }
+}

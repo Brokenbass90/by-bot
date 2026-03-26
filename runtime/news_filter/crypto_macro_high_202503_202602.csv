@@ -1,0 +1,32 @@
+event_id,ts_utc,country,currency,instrument_scope,title,impact,source,blackout_before_min,blackout_after_min,notes
+fomc_2025_mar19,1742407200,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-03-19 18:00 UTC
+fomc_2025_may07,1746640800,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-05-07 18:00 UTC
+fomc_2025_jun18,1750269600,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-06-18 18:00 UTC
+fomc_2025_jul30,1753898400,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-07-30 18:00 UTC
+fomc_2025_sep17,1758132000,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-09-17 18:00 UTC
+fomc_2025_oct29,1761760800,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-10-29 18:00 UTC
+fomc_2025_dec10,1765393200,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-12-10 19:00 UTC
+fomc_2026_jan28,1769626800,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2026-01-28 19:00 UTC
+cpi_2025_mar12,1741782600,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2025-03-12 12:30 UTC
+cpi_2025_apr10,1744288200,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2025-04-10 12:30 UTC
+cpi_2025_may13,1747139400,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2025-05-13 12:30 UTC
+cpi_2025_jun11,1749645000,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2025-06-11 12:30 UTC
+cpi_2025_jul15,1752582600,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2025-07-15 12:30 UTC
+cpi_2025_aug12,1755001800,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2025-08-12 12:30 UTC
+cpi_2025_sep11,1757593800,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2025-09-11 12:30 UTC
+cpi_2025_oct24,1761309000,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2025-10-24 12:30 UTC
+cpi_2025_dec18,1766064600,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2025-12-18 13:30 UTC
+cpi_2026_jan13,1768311000,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2026-01-13 13:30 UTC
+cpi_2026_feb13,1770989400,US,USD,CRYPTO,US CPI,high,bls.gov,30,60,2026-02-13 13:30 UTC
+nfp_2025_mar07,1741354200,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2025-03-07 13:30 UTC
+nfp_2025_apr04,1743769800,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2025-04-04 12:30 UTC
+nfp_2025_may02,1746189000,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2025-05-02 12:30 UTC
+nfp_2025_jun06,1749213000,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2025-06-06 12:30 UTC
+nfp_2025_jul03,1751545800,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2025-07-03 12:30 UTC
+nfp_2025_aug01,1754051400,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2025-08-01 12:30 UTC
+nfp_2025_sep05,1757075400,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2025-09-05 12:30 UTC
+nfp_2025_oct03,1759494600,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2025-10-03 12:30 UTC
+nfp_2025_nov20,1763645400,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2025-11-20 13:30 UTC
+nfp_2025_dec16,1765891800,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2025-12-16 13:30 UTC
+nfp_2026_jan09,1767965400,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2026-01-09 13:30 UTC
+nfp_2026_feb11,1770816600,US,USD,CRYPTO,Employment Situation,high,bls.gov,30,60,2026-02-11 13:30 UTC

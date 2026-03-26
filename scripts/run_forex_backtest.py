@@ -37,6 +37,8 @@ from forex.strategies.adaptive_grid_range_v1 import Config as GridV1Config
 from forex.strategies.adaptive_grid_range_v1 import AdaptiveGridRangeV1
 from forex.strategies.bb_mean_reversion_v3 import Config as BbRevV3Config
 from forex.strategies.bb_mean_reversion_v3 import BBMeanReversionV3
+from forex.strategies.bb_mean_reversion_v2p import Config as BbRevV2PConfig
+from forex.strategies.bb_mean_reversion_v2p import BBMeanReversionV2P
 from forex.strategies.trendline_break_bounce_v1 import Config as TlbbV1Config
 from forex.strategies.trendline_break_bounce_v1 import TrendlineBreakBounceV1
 from news_filter import is_news_blocked, load_news_events, load_news_policy
@@ -116,12 +118,15 @@ def _build_strategy(args):
             pip_size=ps,
             min_band_width_pips=30.0 if is_jpy else 8.0,
         ))
-    if s == "bb_mean_reversion_v2":
+    if s in ("bb_mean_reversion_v2", "bb_mean_reversion_v2p"):
         is_jpy = args.symbol.upper().endswith("JPY")
         is_crypto = args.symbol.upper().endswith("USDT") or args.symbol.upper() in ("BTCUSDT", "ETHUSDT")
         ps = float(args.pip_size) if float(args.pip_size) > 0 else (0.01 if is_jpy else 0.0001)
+        use_v2p = (s == "bb_mean_reversion_v2p")
+        Cls = BBMeanReversionV2P if use_v2p else BBMeanReversionV2
+        Cfg = BbRevV2PConfig    if use_v2p else BbRevV2Config
         if is_crypto:
-            return BBMeanReversionV2(BbRevV2Config(
+            return Cls(Cfg(
                 pip_size=ps,
                 min_band_width_pips=600.0,
                 max_atr_pips=2500.0,
@@ -132,7 +137,7 @@ def _build_strategy(args):
                 rr_min=1.3,
                 cooldown_bars=24,
             ))
-        return BBMeanReversionV2(BbRevV2Config(
+        return Cls(Cfg(
             pip_size=ps,
             min_band_width_pips=60.0 if is_jpy else 20.0,
             max_atr_pips=250.0 if is_jpy else 25.0,

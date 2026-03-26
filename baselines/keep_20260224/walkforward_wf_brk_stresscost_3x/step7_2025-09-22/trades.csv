@@ -1,0 +1,3 @@
+strategy,symbol,side,entry_ts,exit_ts,entry_price,exit_price,qty,pnl,pnl_pct_equity,fees,outcome,reason
+inplay_breakout,VIRTUALUSDT,short,1756125000000,1756129800000,1.19084656,1.18506198,69.72111554,0.20452603,0.002045,0.19878119,sl,breakout_retest_short;runner+TP1+TP2+TRAIL_SL
+inplay_breakout,VIRTUALUSDT,short,1756130700000,1756132200000,1.19184576,1.18477563,83.83635144,0.35363682,0.003529,0.23909672,tp,breakout_retest_short;runner+TP1+TP2+EOP

@@ -1,0 +1,38 @@
+{
+  "enabled": true,
+  "impact_levels_blocked": ["high"],
+  "default_before_min": 20,
+  "default_after_min": 30,
+  "strategies": {
+    "trend_retest_session_v1": {
+      "markets": ["FX", "METALS"],
+      "before_min": 20,
+      "after_min": 30
+    },
+    "trend_retest_session_v2": {
+      "markets": ["FX", "METALS"],
+      "before_min": 20,
+      "after_min": 30
+    },
+    "breakout_continuation_session_v1": {
+      "markets": ["FX", "METALS"],
+      "before_min": 30,
+      "after_min": 45
+    },
+    "failure_reclaim_session_v1": {
+      "markets": ["FX"],
+      "before_min": 30,
+      "after_min": 45
+    },
+    "asia_range_reversion_session_v1": {
+      "markets": ["FX"],
+      "before_min": 45,
+      "after_min": 60
+    },
+    "grid_reversion_session_v1": {
+      "markets": ["FX"],
+      "before_min": 45,
+      "after_min": 60
+    }
+  }
+}

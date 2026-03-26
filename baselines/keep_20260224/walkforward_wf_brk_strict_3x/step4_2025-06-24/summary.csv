@@ -1,0 +1,2 @@
+tag,days,end_date_utc,symbols,strategies,starting_equity,ending_equity,trades,net_pnl,profit_factor,winrate,avg_win,avg_loss,max_drawdown
+wf_brk_strict_3x_step4_2025-06-24,30,2025-06-24,ETHUSDT;SOLUSDT;XRPUSDT;DOGEUSDT;AVAXUSDT;LINKUSDT;BNBUSDT;AAVEUSDT;DOTUSDT;1000PEPEUSDT;ENAUSDT;TAOUSDT;VIRTUALUSDT;JTOUSDT;BIOUSDT;HYPEUSDT;AGLDUSDT;XAUTUSDT;ORCAUSDT;SNXUSDT;ZECUSDT;AXSUSDT,inplay_breakout,100.00,144.05,264,44.05,1.946,0.621,0.5525,-0.4656,5.6321

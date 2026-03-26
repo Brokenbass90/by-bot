@@ -1,0 +1,1465 @@
+# Handoff — 2026-03-10
+
+## Repo
+- path: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28`
+- branch: `codex/dynamic-symbol-filters`
+
+## Current live
+- crypto live runs on breakout core (`breakout_allowv2`) with reconcile fix for stale local opens after restart
+- local/exchange desync for `DOGEUSDT` and `ENAUSDT` is fixed in code and verified after restart
+- current risk remains conservative (`0.5%`) until more live trades accumulate
+- latest live profile is effectively `breakout_allowv2_midterm_eth_tiny` with a softened breakout canary (`quality 0.48`, `impulse ATR 0.70`, `body frac 0.35`) and `ETH-only` midterm tiny canary
+- the important current live fact: transport is healthy and signals are being evaluated (`ws_connect>0`, `breakout_try>0`), but entries are still limited mainly by weak impulse quality rather than by dead websockets or an over-tight execution gate
+- symbol filters do auto-refresh in-process every `1800s`; live breakout should stay on dynamic `per_strategy.breakout` filters, not on a hard `BREAKOUT_SYMBOL_ALLOWLIST`
+
+## Crypto
+
+### Core
+- current live core: `inplay_breakout` / breakout-family
+- transport/reconcile path fixed in `smart_pump_reversal_bot.py`
+
+### Midterm
+- ETH-only canary exists and is better than old BTC+ETH mix, but not a main motor
+- BTC-specific midterm still weak; likely needs separate logic, not ETH params
+- fresh read-through confirms BTC-only variants are still negative/weak while `ETH-only` remains positive; if BTC is revisited, do it as a dedicated new architecture (cycle/trend/pullback), not by broadening the current ETH canary
+- first dedicated BTC research branch now exists: `strategies/btc_regime_retest_v1.py` (`4h->daily proxy regime + breakout/retest`). First-pass result is informative but not live-ready: symmetric profile near-flat (`base +0.44`, `stress -0.20`, `6` trades); only a strict short-only variant was positive in both base/stress (`+0.73 / +0.46`) but on just `3` trades. Treat it as proof that BTC needs its own architecture, not as a deployable sleeve.
+- existing generic long-side BTC templates were checked immediately after that first pass and also failed: `donchian_breakout` long-only on BTC `360d` was negative in both base/stress (`-1.76 / -2.42`), and `trend_pullback` long-only was materially worse (`-5.89 / -30.55`). This strengthens the conclusion that BTC needs a dedicated long-side cycle/regime architecture, not a reused generic trend-follow shell.
+
+### Pump fade
+- old `pump_fade` should be treated as failed architecture
+- new v4/v5 rewrites exist in `strategies/pump_fade.py`
+- main conclusion: current trigger is still wrong/too narrow
+- likely next direction: `15m distribution structure + 5m trigger`
+
+## Forex
+
+### What is actually positive now
+- file: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/forex_stability_latest.csv`
+- `GBPJPY trend_retest_session_v1:gbpjpy_stability_a`
+  - stress_ret_pct: `2.9842%`
+  - trades: `95`
+  - months: `11+ / 7-`
+  - status: `PASS`
+- `GBPJPY trend_retest_session_v1:gbpjpy_stability_b`
+  - stress_ret_pct: `1.3685%`
+  - trades: `105`
+  - months: `10+ / 8-`
+  - status: `PASS`
+
+### Important interpretation
+- these are demo-forward candidates, not long-robust real-ready sleeves
+- file: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/forex_strategy_status_latest.md`
+- current status there is effectively:
+  - `Keep (Long Robust): none yet`
+  - only canary / short-positive candidates exist
+
+### Execution path
+- waiting for `cTrader Open API` app approval
+- local cTrader credentials env exists:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/ctrader_openapi_local.env`
+- once approved: continue Linux-friendly `cTrader` execution adapter
+- if the user's pending `OANDA` KYC completes, prefer `OANDA v20` as the next FX access lane for data/execution R&D; it is likely a cleaner automation path than pushing further into `cTrader` before FX edge exists
+
+## Equities
+
+### Best static candidate
+- run:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/equities_monthly_research_20260309_182252_growth5_no_nvda_tsla_pair/summary.csv`
+- profile:
+  - 20 months
+  - 38 trades
+  - winrate `63.16%`
+  - positive months `15/20`
+  - compounded `+79.67%`
+  - max monthly DD `-11.00%`
+- logic:
+  - curated growth universe
+  - earnings blackout
+  - breadth regime
+  - static pair forbid: `NVDA:TSLA`
+
+### Best static regularity variant
+- run:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/equities_monthly_research_20260309_202200_growth5_no_nvda_tsla_pair_invvol_fix/summary.csv`
+- profile:
+  - 20 months
+  - 40 trades
+  - winrate `60.00%`
+  - positive months `16/20`
+  - compounded `+58.96%`
+
+### Best dynamic architecture candidate
+- run:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/equities_monthly_research_20260309_184044_growth5_corr055/summary.csv`
+- profile:
+  - 20 months
+  - 33 trades
+  - winrate `63.64%`
+  - positive months `15/20`
+  - compounded `+71.80%`
+  - DD `-9.75%`
+- meaning:
+  - more autonomous / long-term architecture
+  - still weaker than best curated static on raw return
+
+### Auto-refresh watchlist scaffold
+- file:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/equities_universe_refresh.py`
+- first refresh selected:
+  - `META, GOOGL, AVGO, NVDA, TSLA`
+- refresh-backed sleeves currently underperform best curated static, but are promising as support tooling
+
+### Execution path
+- Alpaca paper scaffold exists:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/equities_alpaca_paper_bridge.py`
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_equities_alpaca_paper.sh`
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/alpaca_paper_local.env.example`
+- user's Alpaca application is `In review`
+- once approved: start `Alpaca paper` before any real deployment
+- as of `2026-03-12`, paper account check confirms open test positions in `GOOGL` and `TSLA` (~`$224.79` total market value under the current `$500` / `45%` sleeve cap). Next meaningful checkpoint is the next monthly rebalance/stat review rather than intraday monitoring
+
+## Grid
+- old grid logic should be considered failed
+- `smart_grid_v2` and `smart_grid_v3` exist but are not live candidates
+- broad FX grid checks also looked poor
+- if revisited, do it as fresh R&D sidecar, not by tuning old logic
+
+## News filter
+- deterministic scaffold exists:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/news_filter.py`
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/NEWS_FILTER_SPEC.md`
+- idea remains valid, but is not yet the top priority versus equities/pump_fade/cTrader execution
+
+## Key files
+- worklog:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/WORKLOG.md`
+- equities simulator:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/equities_monthly_research_sim.py`
+- universe refresh:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/equities_universe_refresh.py`
+- pump fade:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/pump_fade.py`
+- live bot:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py`
+
+## Recommended next steps
+1. Keep crypto risk unchanged and continue collecting live stats.
+2. Continue equities sleeve refinement, but focus on structural ideas, not re-tuning the same knobs.
+3. Start `Alpaca paper` execution as soon as approval arrives.
+4. Continue Forex R&D, but be explicit that no long-robust sleeve exists yet; if `OANDA` KYC lands, shift FX integration effort there.
+5. Treat `BTC-specific midterm` as a new future R&D branch, not as a broadening of the current `ETH-only` canary.
+6. Continue `pump_fade` redesign only if revisited as a narrow mania/news-event sleeve rather than a broad crypto engine.
+
+## BTC-specific update as of 2026-03-12 afternoon
+
+### Confirmed reality
+- `BTC` should not inherit the `ETH-only` canary logic.
+- First custom BTC branch `btc_regime_retest_v1` proved there is some real signal, but mostly on the bearish side:
+  - mixed `360d`: weakly positive in base, negative in stress
+  - long-only: still negative
+  - short-only strict: positive in both base and stress, but very low frequency
+
+### New long-side branch
+- new file:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/btc_cycle_pullback_v1.py`
+- design:
+  - BTC-only
+  - `4h` signal structure with `daily-proxy` regime
+  - `EMA20` pullback/reclaim on `4h`
+  - execution through the `5m` portfolio runner
+- key lesson:
+  - default `5m` trailing stop was too tight and killed the setup (`9` losing trades, base `-0.60`, stress `-1.22`)
+  - disabling trailing (`BTCC1_TRAIL_ATR_MULT=0`) turned the same branch positive:
+    - base `+1.46`
+    - stress `+1.03`
+    - `6` trades
+    - PF `3.44 / 2.39`
+
+### Best current BTC architecture
+- best current result is now the split pair:
+  - `btc_cycle_pullback_v1` for longs with trailing disabled
+  - `btc_regime_retest_v1` for shorts only
+- combined `360d` result:
+  - base `+2.35`
+  - stress `+1.85`
+  - `7` trades
+  - PF `4.93 / 3.49`
+  - `5/7` winning trades
+- run files:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_142941_btc_combo_longcycle_shortretest_base_360d_feb24/summary.csv`
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_142941_btc_combo_longcycle_shortretest_stress_360d_feb24/summary.csv`
+
+### Recommended next BTC steps
+1. Keep BTC as two separate modules: long-cycle and short-retest.
+2. Do not restore tight `5m` trailing on the long-cycle branch without proof.
+3. Add macro/news blackout only as an overlay after the split architecture is stable.
+4. Next test should be a slightly broader long-cycle variant with stronger daily/4h levels, not a return to generic BTC trend templates.
+
+### Extra BTC notes from same session
+- year structure matters:
+  - cached `2025-03-01 -> 2026-02-24` BTC window closed about `-25.09%`
+  - max close-to-close drawdown was about `49.54%`
+  - strong spring/summer up-leg, then much weaker/negative late-year regime
+- slower `1h` signal version of `btc_cycle_pullback_v1` was worse than the `4h`-structure version:
+  - base `-0.35`
+  - stress `-0.24`
+- implication:
+  - do not assume “slower signal TF = better”
+  - the better next direction is likely daily/4h level construction with selective execution, not simply replacing `4h` structure with `1h`
+- trailing lesson:
+  - default `5m` ATR trailing was the main reason the first BTC long-cycle run failed
+  - with trailing, average trade life was only about `22` minutes and all exits were `TRAIL_SL`
+  - without trailing, average trade life expanded to roughly `44h` and the branch turned positive
+- BTC flat sidecar lesson:
+  - generic flat engines do not currently activate on BTC
+  - both `flat_bounce_v3` and `smart_grid_v3` produced `0` trades on the same `360d` BTC window
+  - if BTC flat trading is revisited, it needs a dedicated BTC flat classifier rather than direct reuse of the generic flat family
+- longer-hold lesson:
+  - extending the BTC long-cycle hold to `6d` kept the branch positive, but did not improve it versus the original no-trailing baseline
+  - base/stress for `6d` hold long-only: `+1.28 / +0.84`
+  - a greedier runner profile (`TP1_RR=1.8`, `TP2_RR=5.0`, `TP1_FRAC=0.20`) degraded sharply to only `+0.23` in base
+  - split combo with `6d` hold + short-retest stayed positive (`+2.17 / +1.66`) but still underperformed the earlier shorter-hold split (`+2.35 / +1.85`)
+  - implication: do not chase bigger BTC profits just by holding longer; the next improvement likely comes from better levels/regime, not from more patience alone
+- daily-level lesson:
+  - a new BTC-only `btc_daily_level_reclaim_v1` branch was tested around daily breakout levels + reclaim
+  - both the strict and rescue variants produced `0` trades on the validated `360d` BTC window
+  - implication: daily levels may still matter, but the naive rolling daily-breakout formulation is too sparse; if revisited, prefer daily/4h swing zones or weekly levels over simple rolling highs
+- zone-to-zone lesson:
+  - a direct “support zone -> next resistance zone” BTC branch now exists:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/btc_swing_zone_reclaim_v1.py`
+  - long-only result on `360d` BTC was alive but weak:
+    - base `-0.25`
+    - stress `-0.57`
+    - `5` trades
+  - paired with `btc_regime_retest_v1` short-only it improved to:
+    - base `+0.64`
+    - stress `+0.25`
+  - implication: direct zone-entry is more real than the empty daily-breakout branch, but still weaker than the best BTC split baseline
+- level-target exit lesson:
+  - a stronger follow-up now exists:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/btc_cycle_level_target_v2.py`
+  - this branch keeps the better `btc_cycle_pullback_v1` long entry and only changes the exit to the next `4h` pivot-resistance target
+  - long-only result:
+    - base `+0.48`
+    - stress `+0.41`
+    - just `1` trade
+  - paired with short-only `btc_regime_retest_v1`:
+    - base `+1.37`
+    - stress `+1.23`
+    - `2` trades
+    - max DD only `0.018 / 0.030`
+  - loosening `btcl2` thresholds did not create extra trades
+  - implication:
+    - level-based exits are cleaner, but still too sparse to beat the current best BTC split
+    - next BTC work should move toward richer weekly/daily swing-zone logic, not more minor threshold tuning on `btcl2`
+- medium-term matrix lesson:
+  - there are now two BTC split benchmarks worth keeping, not one
+  - original return leader:
+    - `btc_cycle_pullback_v1` long-only with `BTCC1_TRAIL_ATR_MULT=0`
+    - plus `btc_regime_retest_v1` short-only
+    - base `+2.35`
+    - stress `+1.85`
+    - `7` trades
+    - `71.4%` winrate
+  - new high-winrate alternative:
+    - same short-only `btc_regime_retest_v1`
+    - but long-side `btc_cycle_pullback_v1` with:
+      - `BTCC1_TRAIL_ATR_MULT=0`
+      - `BTCC1_TP1_RR=0.8`
+      - `BTCC1_TP2_RR=2.2`
+      - `BTCC1_TP1_FRAC=0.70`
+      - `BTCC1_TIME_STOP_BARS_5M=864`
+    - combined result:
+      - base `+2.10`
+      - stress `+1.59`
+      - `7` trades
+      - `85.7%` winrate
+      - PF `4.85 / 3.58`
+    - run files:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_170334_btc_combo_hiwin_shortretest_base_360d_feb24/summary.csv`
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_170334_btc_combo_hiwin_shortretest_stress_360d_feb24/summary.csv`
+  - implication:
+    - if the priority is maximum BTC return, keep the original split benchmark
+    - if the priority is hit-rate / steadier profile, the new `hi_winrate` split is currently the better candidate
+- break-even lesson:
+  - `btc_cycle_pullback_v1` now supports:
+    - `BTCC1_BE_TRIGGER_RR`
+    - `BTCC1_BE_LOCK_RR`
+  - two BE probes were tested and neither beat the existing `hi_winrate` profile
+  - `beA` (`0.8R` trigger + original exits) degraded to about `+0.94`, `50%` winrate
+  - `beB` (`0.8R` trigger + hi-winrate exits) stayed clean but still underperformed the plain hi-winrate version (`+1.01` vs `+1.21` long-only)
+  - implication:
+    - break-even is not the next BTC lever
+    - keep it available, but prioritize better levels / regime logic over more BE tuning
+- stronger-regime lesson:
+  - tightening only `BTCC1_REGIME_MIN_GAP_PCT` / `BTCC1_REGIME_SLOPE_MIN_PCT` on the new BTC `hi_winrate` long profile did not change a single trade
+  - `regA/regB/regC` all reproduced the exact same `6` trades and `+1.21` base result
+  - implication:
+    - the remaining BTC long weakness is not in the current daily EMA regime thresholds
+    - next BTC work should move to weekly/daily levels and structure, not stronger macro-filter tuning
+- evening crypto live-check lesson:
+  - the live bot is not dead; evening silence in Telegram on `2026-03-12` was a market-quality issue, not an infra issue
+  - fresh `12h` diagnostics showed:
+    - `ws_connect=26`
+    - `breakout_try=12928`
+    - `breakout_entry=0`
+    - `midterm_try=397`
+    - `midterm_entry=0`
+    - `breakout_skip_quality=0`
+  - dominant breakout no-signal reasons:
+    - `impulse_weak=8233 (64.21%)`
+    - `impulse_body=1698 (13.24%)`
+    - `no_break=2571 (20.05%)`
+  - implication:
+    - current live canary is healthy and evaluating signals
+    - today’s “no trades” came from weak impulse structure, not from stale filters or dead websockets
+  - note:
+    - a local 1d parity replay with the same live params was attempted, but the parity runner stalled before producing a usable report; for this day the server diagnostics are the reliable answer
+- BTC weekly/daily zone reclaim v2 lesson:
+  - new file:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/btc_weekly_zone_reclaim_v2.py`
+  - new intent:
+    - weekly bullish regime
+    - daily/weekly support context
+    - `4h` reclaim entry
+    - stop behind zone
+    - target just before nearest higher resistance
+  - implementation note:
+    - initial version was too slow because it rebuilt HTF context on every `5m` bar
+    - fixed by caching HTF context per new `4h` candle
+  - honest result on `BTCUSDT`, `360d`, `end=2026-02-24`:
+    - long-only base `-0.46`
+    - long-only stress `-0.53`
+    - both from `1` trade
+    - run files:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_200426_btcw2_long_base_360d_feb24/summary.csv`
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_200450_btcw2_long_stress_360d_feb24/summary.csv`
+  - implication:
+    - the medium-term direction is still right
+    - but this first weekly/daily-zone formulation is too sparse and not yet an upgrade over the existing BTC split benchmarks
+- BTC anti-overheat lesson:
+  - the main BTC long loser in the split benchmarks (`2025-05-14`) was not a weak regime entry; it was an overheated one
+  - measured at entry:
+    - daily-proxy regime gap ~`5.06%`
+    - daily-proxy regime slope ~`2.61%`
+  - winner cluster was much lower:
+    - gap about `1.48..3.40`
+    - slope about `0.58..1.88`
+  - the smaller `2025-07-26` loser was already fixed by the `hi_winrate` exit profile, so the remaining edge loss came from buying one overextended bullish regime
+  - `strategies/btc_cycle_pullback_v1.py` now supports:
+    - `BTCC1_REGIME_MAX_GAP_PCT`
+    - `BTCC1_REGIME_MAX_SLOPE_PCT`
+  - new strongest BTC benchmark right now:
+    - long-side:
+      - `btc_cycle_pullback_v1`
+      - `BTCC1_TRAIL_ATR_MULT=0`
+      - `BTCC1_TP1_RR=0.8`
+      - `BTCC1_TP2_RR=2.2`
+      - `BTCC1_TP1_FRAC=0.70`
+      - `BTCC1_TIME_STOP_BARS_5M=864`
+      - `BTCC1_REGIME_MAX_GAP_PCT=4.0`
+      - `BTCC1_REGIME_MAX_SLOPE_PCT=2.4`
+    - short-side:
+      - `btc_regime_retest_v1` short-only
+  - combined result on `BTCUSDT`, `360d`, `end=2026-02-24`:
+    - base `+2.64`
+    - stress `+2.21`
+    - `6` trades
+    - `100%` winrate
+    - DD only `0.0526 / 0.0825`
+  - run files:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_202057_btc_combo_hiwin_gap4s24_base_360d_feb24/summary.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_202404_btc_combo_hiwin_gap4s24_stress_360d_feb24/summary.csv`
+  - monthly realized profile:
+    - only positive months in both base and stress (`2025-05`, `2025-07`, `2025-08`, `2025-11`)
+  - implication:
+    - biggest BTC improvement so far came from filtering overheated long regimes, not from longer holds or more ambitious targets
+    - still only `6` trades, so do not treat this as leverage-ready proof yet
+- BTC anti-overheat on the old return profile:
+  - same anti-overheat guard was also tested on the earlier BTC return-leader split
+  - config:
+    - `BTCC1_TRAIL_ATR_MULT=0`
+    - `BTCC1_REGIME_MAX_GAP_PCT=4.0`
+    - `BTCC1_REGIME_MAX_SLOPE_PCT=2.4`
+    - original no-trail / moderate-target exits (not the hi-winrate exits)
+  - result:
+    - base `+2.39`
+    - stress `+2.03`
+    - `5` trades
+    - `80%` winrate
+    - DD `0.104 / 0.217`
+  - run files:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_203545_btc_combo_return_gap4s24_base_360d_feb24/summary.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_203545_btc_combo_return_gap4s24_stress_360d_feb24/summary.csv`
+  - implication:
+    - anti-overheat helps the old return profile too
+    - but the cleanest BTC benchmark is still the newer `hi_winrate + anti-overheat` split (`+2.64 / +2.21`, `6/6` wins)
+- BTC continuation v1 lesson:
+  - new file:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/btc_cycle_continuation_v1.py`
+  - intent:
+    - separate BTC long continuation branch
+    - moderate bullish regime only
+    - fresh `4h` breakout hold above level
+    - not a replacement for the winning pullback module, but an additive long family
+  - result:
+    - strict default profile: `0` trades in base and stress
+    - relaxed rescue profile: still `0` trades
+  - run files:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_204703_btcc2_long_base_360d_feb24/summary.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_204703_btcc2_long_stress_360d_feb24/summary.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260312_204814_btcc2_relaxed_long_base_360d_feb24/summary.csv`
+  - implication:
+    - BTC continuation is still plausible in theory
+    - but this implementation is too restrictive / mismatched to the current historical tape
+    - next chat should not keep loosening `btcc2` blindly; better next moves are:
+      - inspect actual post-breakout BTC structures manually and rebuild continuation from examples
+      - or focus on strengthening the already-winning `hi_winrate + anti-overheat` split with overlays (news blackout / macro-event filter)
+- BTC macro/news overlay check:
+  - `backtest/run_portfolio.py` now supports:
+    - `--news-events-csv`
+    - `--news-policy-json`
+  - new historical datasets:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/news_filter/crypto_fomc_202503_202602.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/news_filter/crypto_macro_high_202503_202602.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/news_filter/btc_split_policy.json`
+  - honest result on the current BTC winner (`btc_cycle_pullback_v1` hi-winrate + anti-overheat longs + `btc_regime_retest_v1` short-only, `BTCUSDT`, `360d`, end `2026-02-24`):
+    - baseline: `+2.64`, `6` trades, `100%` winrate
+    - `FOMC-only`: identical, `news_blocked_signals=0`
+    - full `FOMC+CPI+Employment`: identical, `news_blocked_signals=0`
+  - explanation:
+    - all six historical entries were outside the normal high-impact blackout windows
+    - nearest event distances still tended to be `~14h+`, not minutes
+  - aggressive sanity-check:
+    - using a temporary `24h before / 24h after` policy finally blocked `6` candidate signals and removed `2` actual winners
+    - result degraded to `+1.28`, `4` trades, still `100%` winrate
+    - the removed real winners were:
+      - `2025-08-11` BTC long near `CPI 2025-08-12`
+      - `2025-11-21` BTC short near `Employment Situation 2025-11-20`
+  - implication:
+    - macro/news blackout is not the next edge source for this BTC split
+    - normal windows do nothing
+    - wide windows only throw away profitable setups
+    - treat macro/news overlay as a secondary safeguard only, not as the main next BTC direction
+- BTC macro-cycle v1 check:
+  - new file:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/btc_macro_cycle_v1.py`
+  - intent:
+    - explicit weekly/daily cycle regime gate
+    - two `4h` long entries:
+      - pullback reclaim
+      - breakout hold
+    - medium-term hold without micro-trailing
+  - honest result:
+    - default long-only: `0` trades
+    - paired with short-side: only the old short trade remained (`base +0.89`, `1` trade), so the new long module added nothing
+    - relaxed rescue profile: still `0` trades
+  - run files:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_092544_btcm1_long_base_360d_feb24/summary.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_092544_btcm1_short_combo_base_360d_feb24/summary.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_092942_btcm1_relaxed_long_base_360d_feb24/summary.csv`
+  - implication:
+    - top-down “BTC cycle” assumptions are not enough by themselves
+    - this branch is too restrictive / mismatched to actual BTC tape
+    - next chat should not keep loosening `btc_macro_cycle_v1` blindly
+    - better next step is example-driven BTC long research:
+      - inspect real missed BTC longs around strong winners
+      - classify whether they were `pullback`, `reclaim`, `second-entry continuation`, or `range expansion after reset`
+      - then build a narrow complementary long module from those examples
+- Overnight live + ETH transfer check:
+  - overnight live crypto was not dead:
+    - `breakout_try=13023`
+    - `midterm_try=304`
+    - `entry=0` for both
+    - dominant breakout no-signal reason still `impulse_weak` (~`63.6%`)
+  - but websocket transport quality degraded:
+    - `ws_connect=8`
+    - `ws_disconnect=11`
+    - `ws_handshake_timeout=3`
+    - ws health flagged `CRITICAL`
+  - implication:
+    - live silence overnight was mostly weak market quality, not a dead strategy
+    - but ws transport should be watched; if this repeats, the next chat may need a ws resilience / reconnect branch
+  - direct BTC->ETH transfer was also tested:
+    - reused the current best BTC split on `ETHUSDT` by switching symbol allowlists
+    - result: `-0.15`, only `2` trades, PF `0.33`
+    - run file:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_093715_eth_from_btc_split_base_360d_feb24/summary.csv`
+  - implication:
+    - the current BTC winner does not port to ETH as-is
+    - do not assume “strong assets family” from one BTC profile; ETH needs its own logic
+- BTC missed-strong-long analysis:
+  - manually scanned the same `360d` BTC window for strong `4h` upside moves (`>6%` within the next ~`3d`) that were not within `48h` of the current winner’s five long entries
+  - the important missed categories were narrow:
+    - `2025-04-20` looked like an early bull transition:
+      - `future3d +12.40%`
+      - `gap_low=0.77`
+      - no clean reclaim
+    - `2025-05-06` looked like continuation after reset:
+      - `future3d +11.25%`
+      - main blockers: `no_reclaim`, pullback slightly too deep (`1.45%` vs cap `1.20%`)
+    - `2025-05-19` was still a real upside move but already mildly overheated:
+      - `future3d +8.72%`
+      - `slope_hot=2.50`
+      - no reclaim
+  - most other “big misses” were not really clean bullish pullback longs:
+    - bear-to-bull reversals
+    - bearish regimes
+    - deep resets that do not belong in the current winner
+  - implication:
+    - the current BTC long winner is not missing everything
+    - it mainly misses only two specific scenarios:
+      - early bull transition
+      - continuation after reset
+    - next BTC work should add complementary modules for those scenarios, not loosen the existing winner
+- BTC regime-flip continuation v1:
+  - added:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/btc_regime_flip_continuation_v1.py`
+  - wired into:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py`
+  - intent:
+    - capture the two missed categories above by relaxing the bullish regime floor (`gap >= 0.45`) and using `4h breakout hold above EMA` instead of a strict reclaim
+  - honest result:
+    - long-only:
+      - base `+0.41`
+      - stress `-0.33`
+      - `10` trades
+      - run files:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_095726_btcrf1_long_base_360d_feb24/summary.csv`
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_095726_btcrf1_long_stress_360d_feb24/summary.csv`
+    - combo with `btc_regime_retest_v1` short-only:
+      - base `+1.93`
+      - stress `+0.85`
+      - `13` trades
+      - run files:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_095726_btcrf1_short_combo_base_360d_feb24/summary.csv`
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_095726_btcrf1_short_combo_stress_360d_feb24/summary.csv`
+  - implication:
+    - useful side branch because it proves the missed-pattern hypothesis is real and tradable
+    - still not a new leader
+    - current best BTC benchmark remains:
+      - `btc_cycle_pullback_v1` high-winrate + anti-overheat long
+      - `btc_regime_retest_v1` short-only
+      - `+2.64 / +2.21`
+    - next chat should mine the `btcrf1` losers and either:
+      - tighten the branch hard
+      - or split it into two narrower modules:
+        - `early bull flip`
+        - `continuation after reset`
+- BTC complementary long split result:
+  - that split was tested immediately by parameter slicing the new `btcrf1` branch
+  - `early flip` profile:
+    - idea:
+      - earlier bullish acceptance
+      - lower gap band
+      - softer slope ceiling
+      - tiny breakout buffer
+    - base long-only:
+      - `+0.48`
+      - `2` trades
+      - `100%` winrate
+      - run file:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_100703_btcrf1_earlyflip_base_360d_feb24/summary.csv`
+    - stress long-only:
+      - `+0.27`
+      - `2` trades
+      - run file:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_100952_btcrf1_earlyflip_stress_360d_feb24/summary.csv`
+    - base combo with `btc_regime_retest_v1` short-only:
+      - `+1.99`
+      - `5` trades
+      - PF `4.43`
+      - DD `0.57`
+      - run file:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_100703_btcrf1_earlyflip_combo_base_360d_feb24/summary.csv`
+    - stress combo with `btc_regime_retest_v1` short-only:
+      - `+1.47`
+      - `5` trades
+      - PF `2.75`
+      - DD `0.71`
+      - run file:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_100952_btcrf1_earlyflip_combo_stress_360d_feb24/summary.csv`
+    - implication:
+      - this is the cleanest complementary BTC long side-branch so far
+      - it still does not beat the main BTC winner on return
+      - but it is much cleaner than blended `btcrf1`
+  - `continuation after reset` profile:
+    - base long-only:
+      - `+0.74`
+      - `5` trades
+      - PF `1.34`
+      - DD `1.10`
+      - run file:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_100703_btcrf1_contreset_base_360d_feb24/summary.csv`
+    - base combo:
+      - `+2.26`
+      - `8` trades
+      - PF `1.83`
+      - DD `1.10`
+      - run file:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_100703_btcrf1_contreset_combo_base_360d_feb24/summary.csv`
+    - implication:
+      - still too stop-heavy
+      - this branch is not clean enough yet
+  - next chat guidance:
+    - keep `early flip` as the only promising BTC complementary long branch
+    - do not blend it back into the main winner yet
+    - either:
+      - test `early flip` as a tiny add-on sleeve to the BTC winner
+      - or mine only `contreset` losers and split that branch even further
+- Flat-bounce caution:
+  - `flat_bounce_v3` old benchmark is currently not reproducible on the present code path
+  - fresh broad rerun:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_114252_fb3_broad_repro_base_360d/summary.csv`
+    - result: `0` trades
+  - fresh hot5 rerun (`ADA,DOGE,BCH,LINK,LTC`):
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_114203_fb3_hot5_clean_base_360d/summary.csv`
+    - result: `0` trades
+  - direct strategy replay over cached `5m` candles also produced `0` signals on `ADA/DOGE/BCH/LINK`
+  - implication:
+    - the old March 11 `flat_bounce_v3` result (`+3.72 / +1.51`) should be treated as stale / non-reproducible for now
+    - do not use `flat_bounce_v3` as a deploy candidate until the drift source is identified
+- BTC winner reproducibility drift:
+  - fresh repro of the previously recorded winner (`btc_cycle_pullback_v1 + btc_regime_retest_v1`) now gives:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_103542_btc_combo_hiwin_gap4s24_repro_base_360d_feb24/summary.csv`
+    - result: `+5.34`, `19` trades
+  - this no longer matches the earlier `+2.64`, `6`-trade benchmark
+  - implication:
+    - `winner + early_flip` add-on comparisons are not yet apples-to-apples
+    - next chat should first re-pin the current BTC winner benchmark before deciding whether to merge `early flip`
+- live health automation scaffold now exists:
+  - new files:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/live_health_guard.py`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_live_health_guard.sh`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_cron_live_health_guard.sh`
+  - behavior:
+    - reads `scripts/run_live_diagnostics.sh`
+    - opens incident only on repeated `CRITICAL` (`LIVE_GUARD_ALERT_REPEAT`, default `2`) or immediate `CRITICAL_NO_CONNECT`
+    - closes incident again on `OK`
+    - stores state in `runtime/live_health_guard/state.json`
+  - local test-mode already confirmed:
+    - first `CRITICAL` => no alert
+    - second consecutive `CRITICAL` => incident opens
+    - later `OK` => incident closes
+- pinned BTC benchmark runner now exists but the first full run had not finished yet:
+  - new file:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_btc_benchmark_matrix.sh`
+  - intent:
+    - pin the current BTC `winner` with explicit env values
+    - pin `winner + early_flip`
+    - run both in base and stress with the same shell state
+  - in-progress manual run:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_115733_btc_bench_winner_base_manual_360d_feb24`
+  - implication:
+    - next chat should first wait for / re-run the pinned benchmark matrix
+    - only after that compare `winner` vs `winner + early_flip`
+- BTC benchmark is now formally re-pinned on the current code path:
+  - manual base repro:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_115733_btc_bench_winner_base_manual_360d_feb24/summary.csv`
+  - pinned matrix base / stress:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_115444_btc_bench_winner_base_20260313_095442/summary.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_115728_btc_bench_winner_stress_20260313_095442/summary.csv`
+  - all three now agree:
+    - `+2.64`
+    - `6` trades
+    - `100%` winrate
+    - DD `0.0526`
+  - implication:
+    - the anti-overheat high-winrate split is again a trustworthy pinned BTC benchmark on the present code path
+- `winner + early_flip` now has a clean apples-to-apples comparison:
+  - base:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_115956_btc_bench_winner_earlyflip_base_20260313_095442/summary.csv`
+  - stress:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_120248_btc_bench_winner_earlyflip_stress_20260313_095442/summary.csv`
+  - result:
+    - `+2.94`
+    - `7` trades
+    - `100%` winrate
+    - DD `0.0646`
+  - trade-level implication:
+    - `early_flip` adds exactly one extra BTC long (`2025-10-04`) without displacing the original six winner trades
+  - conclusion:
+    - `early_flip` is now a legitimate tiny BTC add-on candidate
+    - it improves return and frequency while keeping the clean profile in this window
+    - sample is still too small for leverage claims, but this is the first clean add-on that survives apples-to-apples comparison
+- longest honest BTC window check:
+  - local cache still does **not** support a real 2-year BTC test
+  - max honest window currently available is `383d`
+  - on that full local window:
+    - winner base:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_122119_btc_bench_winner_base_383d_feb24/summary.csv`
+      - result: `+2.64`, `6` trades, `100%` winrate, DD `0.0526`
+    - winner + early_flip base:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_122119_btc_bench_winner_earlyflip_base_383d_feb24/summary.csv`
+      - result: `+2.94`, `7` trades, `100%` winrate, DD `0.0646`
+  - implication:
+    - the BTC benchmark and `early_flip` add-on are at least stable across the full locally available history
+    - but this is still not “2-year proof” and still too few trades for leverage claims
+- live health guard is already deployed on the server:
+  - files copied to `/root/by-bot/scripts/`:
+    - `live_health_guard.py`
+    - `run_live_health_guard.sh`
+    - `setup_cron_live_health_guard.sh`
+  - cron installed:
+    - `17 * * * * /bin/bash -lc 'cd /root/by-bot && bash scripts/run_live_health_guard.sh >> /root/by-bot/logs/live_health_guard.log 2>&1'`
+  - first server run showed `status=CRITICAL`, but guard behaved correctly:
+    - first `CRITICAL` only increments streak
+    - no incident alert until the second consecutive critical window
+  - implication:
+    - live websocket instability is now monitored automatically
+    - next chat only needs to inspect `logs/live_health_guard.log` or Telegram alerts, not read every pulse manually
+- new flat direction status:
+  - do **not** trust the old `flat_bounce_v3` benchmark for deployment; it remains non-reproducible
+  - a fresh replacement attempt now exists:
+    - strategy:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_range_reclaim_v1.py`
+    - runner wiring:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py`
+  - intent:
+    - long-only reclaim on weak but liquid alts (`ADA,DOGE,LINK,LTC`)
+    - depressed higher-timeframe regime
+    - support-touch + reclaim
+    - target toward the opposite side of the range
+  - first reality check:
+    - initial `180d` probes:
+      - `ADA`: one SL loser `-0.50` in `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_122848_arr1_ada_base_180d_probe/summary.csv`
+      - `DOGE`: one weak time-stop loser `-0.26` in `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_122848_arr1_doge_base_180d_probe/summary.csv`
+      - `LINK`: `0` trades in `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_122909_arr1_link_base_180d_probe/summary.csv`
+      - `LTC`: `0` trades in `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_123150_arr1_ltc_base_180d_probe/summary.csv`
+    - loser analysis:
+      - both bad entries were still about `-3.5%` below the `1h EMA`
+    - v2 cleanup:
+      - added `ARR1_MIN_CLOSE_VS_EMA_PCT` to force reclaim near EMA
+      - this removed the bad early long entries completely:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_123100_arr1_ada_base_180d_probe_v2/summary.csv`
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_123108_arr1_doge_base_180d_probe_v2/summary.csv`
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_123128_arr1_link_base_180d_probe_v2/summary.csv`
+      - but it also reduced the branch to `0` trades on those probes
+    - middle-ground reclaim probe:
+      - old archived winners suggested a more realistic live zone around `-1.0% .. -2.1%` vs `1h EMA`
+      - tested `ARR1_MIN_CLOSE_VS_EMA_PCT=-2.2`
+      - results:
+        - `DOGEUSDT`: small positive `1`-trade signal, `+0.12` in `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_133337_arr1_doge_base_180d_probe_m22/summary.csv`
+        - `ADAUSDT`: `0` trades in `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_133337_arr1_ada_base_180d_probe_m22/summary.csv`
+        - `LINKUSDT`: `0` trades in `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_133337_arr1_link_base_180d_probe_m22/summary.csv`
+  - implication:
+    - `alt_range_reclaim_v1` is not a winner yet
+    - do not keep twiddling it blindly
+    - current best reading:
+      - there may be a very narrow `DOGE` long companion hidden in the reclaim family
+      - but broad alt long-reclaim is still not clean enough
+    - next flat work should pivot to either:
+      - a stronger `DOGE`-style long companion confirmation
+      - or a separate short/fade branch, likely closer to the historically cleaner `BCH`-style resistance fade
+- new flat short branch:
+  - strategy:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_resistance_fade_v1.py`
+  - runner wiring:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py`
+  - intent:
+    - narrow short-only flat sidecar
+    - resistance-fade, not broad grid
+    - current default allowlist is just `BCHUSDT`
+  - first honest result on `BCHUSDT`, `360d`, `end=2026-02-24`:
+    - base:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_125156_arf1_bch_base_360d_feb24/summary.csv`
+      - result: `+0.69`, `3` trades, PF `2.20`, DD `0.51`
+    - stress:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_125156_arf1_bch_stress_360d_feb24/summary.csv`
+      - result: `+0.54`, `3` trades, PF `1.81`, DD `0.57`
+  - quick tuning matrix:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_125238_arf1_bch_rsi62_base_360d/summary.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_125238_arf1_bch_rej18_base_360d/summary.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_125238_arf1_bch_ts288_base_360d/summary.csv`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_125238_arf1_bch_rsi62_rej18_base_360d/summary.csv`
+    - result:
+      - stronger RSI / stronger rejection changed nothing
+      - shorter time-stop reduced return slightly
+  - implication:
+    - this is the first new flat-sidecar branch that is both reproducible and positive on the current code path
+    - but it is still too narrow / too small for a main sleeve
+    - next flat work should enrich this branch or find a similarly clean long companion, not go back to old `fb3`
+- dynamic flat-filter status:
+  - new infrastructure now exists in `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py`:
+    - side-aware flat scoring for `long reclaim` vs `short fade`
+    - `BACKTEST_CACHE_ONLY=1`
+    - smarter cache fallback by overlap/coverage
+    - bar-level helper `_flat_side_scores_at_bar()`
+    - optional flat-history pruning via `FLAT_MIN_COVERAGE_FRAC`
+  - new scanner:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/scan_flat_archetypes.py`
+    - latest output:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/flat_filter/flat_archetype_scan_20260313.csv`
+  - key engineering lesson:
+    - a one-shot “pick flat coins at the end of the sample” filter is not enough
+    - flat candidates rotate over time, so the correct architecture is a dynamic flat router, not a permanent hand-picked `BCH/DOGE` list
+  - current scanner takeaways on the broad alt pool:
+    - current long leaders: roughly `LINK`, `ETC`, `BNB`
+    - current short leaders: roughly `LTC`, `ATOM`, `BCH`
+    - historical sampled top-counts rotate across `ETC/BNB/BCH/LTC/ATOM/...`, confirming the regime is time-varying
+  - honest backtest result:
+    - infrastructure improved, but entry logic is still too sparse
+    - one-shot dynamic allowlist probe:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_152238_flat_dynamic_probe_base_360d_v1/summary.csv`
+      - `0` trades
+    - first bar-level router probe:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_152458_flat_router_probe_base_360d_v1/summary.csv`
+      - `0` trades
+    - relaxed router probe:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_152536_flat_router_probe_base_360d_relaxed/summary.csv`
+      - `0` trades
+  - implication:
+    - the filter direction is now better than the old manual-list approach
+    - next flat work should focus on a new entry archetype on top of the dynamic filter, not more blind tuning of `alt_range_reclaim_v1` / `alt_resistance_fade_v1`
+
+- BTC archive technical screen:
+  - purpose:
+    - quickly check whether the missing third BTC add-on already exists in archived technical strategies before writing more custom code
+  - honest results on `BTCUSDT`, `383d`, `end=2026-02-24`:
+    - `trendline_break_retest_v4`:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155154_btc_tlb4_base_383d/summary.csv`
+      - result: `0` trades
+    - `triple_screen_v132b`:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155154_btc_ts132b_base_383d/summary.csv`
+      - result: `0` trades
+    - `structure_shift_v2`:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155154_btc_ss2_base_383d/summary.csv`
+      - result: `12` trades, `-3.40`, PF `0.463`, DD `3.75`
+    - `btc_eth_vol_expansion`:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155809_btc_bve_base_383d/summary.csv`
+      - result: `0` trades
+    - `btc_eth_trend_follow_v2`:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155809_btc_tfv2_base_383d/summary.csv`
+      - result: `12` trades, `-1.47`
+    - `btc_eth_trend_follow`:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155809_btc_tf_base_383d/summary.csv`
+      - result: `187` trades, `-21.16`
+  - implication:
+    - do not chase archived generic technical modules for BTC
+    - pinned `winner + early_flip` remains the BTC benchmark
+    - next BTC work should continue from BTC-specific examples/patterns, not archive reuse
+
+- new flat slope/channel branch:
+  - strategy:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_sloped_channel_v1.py`
+  - runner wiring:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py`
+  - intent:
+    - sloped `1h` channel mean-reversion instead of purely horizontal flat levels
+    - touch/reclaim at lower band or touch/reject at upper band
+  - first honest symbol results on `180d`, `end=2026-02-24`:
+    - all-side:
+      - `LINK`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155647_asc1_link_base_180d/summary.csv` -> `+2.10`, `24` trades, PF `1.289`, DD `2.30`
+      - `LTC`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155649_asc1_ltc_base_180d/summary.csv` -> `-7.86`
+      - `ETC`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155648_asc1_etc_base_180d/summary.csv` -> `-6.07`
+      - `BCH`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155656_asc1_bch_base_180d/summary.csv` -> `-5.53`
+      - `BNB`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155723_asc1_bnb_base_180d/summary.csv` -> `-4.26`
+  - key forensic finding:
+    - on `LINK`, positive edge sits mostly in the short-side; longs drag the profile down
+  - short-only slice on `180d`:
+    - `LINK`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155844_asc1_link_short_base_180d/summary.csv` -> `+5.43`, `14` trades, PF `3.123`, DD `0.83`
+    - `ATOM`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_160011_asc1_atom_short_base_180d/summary.csv` -> `+4.98`, `23` trades, PF `1.715`, DD `1.64`
+    - `BCH`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155853_asc1_bch_short_base_180d/summary.csv` -> `-1.84`
+    - `ETC`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_155845_asc1_etc_short_base_180d/summary.csv` -> `-0.93`
+    - `BNB`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_160009_asc1_bnb_short_base_180d/summary.csv` -> `-0.51`
+    - `ETH`: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_160009_asc1_eth_short_base_180d/summary.csv` -> `0` trades
+  - first mini-stack candidate:
+    - `LINK + ATOM` short-only on `180d`:
+      - base: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_160050_asc1_link_atom_short_base_180d/summary.csv` -> `+6.79`, `26` trades, PF `1.996`, DD `1.87`
+      - explicit cost-stress: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_160137_asc1_link_atom_short_coststress_180d/summary.csv` -> `+4.78`, PF `1.629`, DD `2.07`
+    - `LINK + ATOM` short-only on `360d`:
+      - base: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_160222_asc1_link_atom_short_base_360d/summary.csv` -> `+6.22`, `41` trades, PF `1.444`, DD `4.02`
+      - explicit cost-stress: `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_160222_asc1_link_atom_short_coststress_360d/summary.csv` -> `+3.60`, PF `1.230`, DD `4.56`
+  - implication:
+    - the sloped-level idea is real, but not broad/universal
+    - first clean edge is a narrow `LINK + ATOM` slope-short sidecar
+    - next flat work should extend this branch or find a matching sloped long companion, not go back to old `fb3`
+  - extra reality check:
+    - the `360d` monthly profile for `LINK + ATOM` short-only is usable but not elite:
+      - `7` positive months
+      - `4` negative months
+      - winrate only `48.8%`
+    - implication:
+      - edge comes from larger wins than losses, not high hit-rate
+      - treat this as the first flat-family seed, not a finished production sleeve
+
+- fresh BTC archive follow-up:
+  - `btc_eth_trend_rsi_reentry` on `BTCUSDT`, `383d`:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_162636_btc_trsi_base_383d/summary.csv`
+    - result: `15` trades, `-6.82`, PF `0.233`
+  - `btc_eth_midterm_pullback` recheck on `BTCUSDT`, `383d`:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_162636_btc_mtpb_recheck_383d/summary.csv`
+    - result: `6` trades, `+1.43`, PF `1.831`
+  - implication:
+    - even the cleaner old BTC/ETH midterm family on `BTC` alone is still weaker than the pinned BTC winner
+    - keep looking for the third BTC add-on from BTC-specific example-driven structures, not from old BTC/ETH families
+
+- new BTC sloped-level add-on seed:
+  - strategy:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/btc_sloped_reclaim_v1.py`
+  - idea:
+    - keep the existing daily-proxy bullish regime gate
+    - use a `4h` rising regression channel for long entry
+    - touch of lower band + small ATR reclaim back inside the channel
+    - target inside upper band, no tiny trailing stop
+  - honest result on `383d`:
+    - long-only:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_164615_btcs1_long_base_383d/summary.csv`
+      - result: `2` trades, `+0.29`, PF `3.774`, DD `0.10`
+    - with current BTC short-side:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_164747_btcs1_short_combo_base_383d/summary.csv`
+      - result: `7` trades, `+1.06`, PF `3.768`, DD `0.30`
+  - implication:
+    - sloped levels on BTC do produce signal
+    - this first version is still weaker than the pinned `winner + early_flip`
+    - keep it as an add-on seed, not the new benchmark
+
+- flat-family filter progression:
+  - scanner now emits first family labels plus signed `4h` slope to:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/flat_filter/flat_archetype_scan_20260313_families.csv`
+  - first clean current `slope_short_fade` examples:
+    - `ATOM`
+    - `BCH`
+  - broader historical short-family rotation still includes:
+    - `BNB`, `LTC`, `BCH`, `ETC`, `ATOM`, ...
+  - implication:
+    - do not freeze the family to one or two fixed symbols
+    - use current symbols as archetype seeds for a dynamic short-fade family filter
+
+- updated sloped short seed basket:
+  - `LINK + ATOM + BNB` short-only on `360d`:
+    - base:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_164919_asc1_link_atom_bnb_short_base_360d/summary.csv`
+      - result: `+7.35`, `54` trades, PF `1.408`, DD `4.03`
+    - cost-stress:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_164919_asc1_link_atom_bnb_short_coststress_360d/summary.csv`
+      - result: `+3.16`, PF `1.155`, DD `5.23`
+  - monthly recomposition from symbol trade logs:
+    - `8` positive months
+    - `4` negative months
+  - implication:
+    - `BNB` is not a hero alone, but it helps widen the first `slope_short_fade` family
+    - current best seed basket is closer to `LINK + ATOM + BNB` than the earlier `LINK + ATOM`
+  - loss forensics:
+    - most slope-short losses are **not** immediate clean breakouts against the fade
+    - current breakdown on `LINK + ATOM + BNB`:
+      - `25` losses = trade first moved in favor, then reversed back into loss
+      - `1` = clean breakout against short
+      - `2` = shallow failed rejection
+      - `1` = tiny time-drift loss
+    - implication:
+      - main issue is giveback / exit management, not just bad entry selection
+  - naive break-even check:
+    - always-on BE variants were worse than the baseline
+    - keep baseline `+7.35 / 8 positive months / 4 negative months` as the family benchmark for now
+    - next step should be selective profit-protection, not universal BE
+  - quality-metric check:
+    - losers do not separate cleanly from winners by one global “bad channel” metric
+    - effect looks symbol/family-specific:
+      - `ATOM` losers tended to happen in steeper channels
+      - `LINK` losers tended to happen in flatter/lower-`R²` channels
+    - implication:
+      - likely need family-aware or symbol-aware quality gates, not one blunt threshold for all slope-fade names
+  - steepness-cap test:
+    - baseline `360d` benchmark:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_171915_asc1_probe_baseline/summary.csv`
+      - result: `+7.35`, `54` trades, PF `1.408`, DD `4.03`, `8` positive / `4` negative months
+    - `ASC1_MAX_ABS_SLOPE_PCT=2.2`:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_171916_asc1_probe_slope22/summary.csv`
+      - result: `+7.02`, `39` trades, PF `1.570`, DD `4.31`, but monthly profile worsened to `5` positive / `6` negative months
+    - `ASC1_MAX_ABS_SLOPE_PCT=2.0`:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_171916_asc1_probe_slope20/summary.csv`
+      - result: `+8.52`, `35` trades, PF `1.858`, DD `3.60`, winrate `57.1%`, monthly `7` positive / `4` negative months
+    - implication:
+      - the first strong improvement came not from generic BE, but from refusing to fade channels that are too steep for this family
+      - next step is to confirm this under cost stress and then combine steepness-aware gating with family-aware exit logic
+
+- live status after Telegram health alert:
+  - latest `2h` recheck via `scripts/run_live_diagnostics.sh` still shows the bot alive:
+    - `breakout_try=1691`
+    - `breakout_entry=0`
+    - `midterm_try=36`
+    - `midterm_entry=0`
+    - `breakout_skip_quality=0`
+  - the market is still mainly weak/noisy:
+    - `impulse_weak=579`
+    - `impulse_body=549`
+    - `dist=241`
+    - `no_break=215`
+  - websocket health is noisy and currently `CRITICAL`, but not dead:
+    - `connect=9`
+    - `disconnect=14`
+    - `handshake_timeout=2`
+  - implication:
+    - do not treat current silence as a dead bot
+    - watch the next window; only escalate if `CRITICAL` persists with worsening `NO_CONNECT` or if strategy counters stop growing
+
+- BTC sloped-level steepness transfer test:
+  - the flat-family improvement does **not** transfer to BTC sloped longs
+  - `BTCS1_MAX_ABS_SLOPE_PCT=2.0`:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_172707_btcs1_probe_slope20/summary.csv`
+    - result: `-0.20`, `2` trades, PF `0.664`
+  - `BTCS1_MAX_ABS_SLOPE_PCT=1.8`:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_172707_btcs1_probe_slope18/summary.csv`
+    - result: `-0.14`, `2` trades, PF `0.732`
+  - implication:
+    - “avoid too-steep channels” is currently a valid improvement for the alt flat `slope_short_fade` family
+    - it is **not** a valid generic BTC rule
+    - keep BTC sloped-level work separate from flat-family tuning
+
+- slope touch-quality filter results:
+  - added two optional short-side quality controls to `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_sloped_channel_v1.py`:
+    - `ASC1_SHORT_MIN_REJECT_DEPTH_ATR`
+    - `ASC1_SHORT_MIN_UPPER_WICK_FRAC`
+  - best first result came from rejection depth, not wick:
+    - `ASC1_MAX_ABS_SLOPE_PCT=2.0 + ASC1_SHORT_MIN_REJECT_DEPTH_ATR=0.65`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_184407_asc1_slope20_rej065/summary.csv`
+    - result: `+8.71`, `32` trades, PF `1.955`, DD `3.53`, monthly `7` positive / `4` negative
+  - wick-only filter:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_184407_asc1_slope20_wick030/summary.csv`
+    - result: `+6.42`, `24` trades, PF `1.912`, DD `4.39`, monthly `8` positive / `3` negative
+  - combined reject-depth + wick over-tightened the family:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_184407_asc1_slope20_rej065_wick030/summary.csv`
+    - result: `+4.27`, `23` trades, PF `1.565`, DD `4.40`
+  - implication:
+    - the first useful universal touch-quality improvement is “require a deeper rejection from the upper sloped boundary”
+    - pure wick filtering may help monthly regularity, but it currently cuts too much return
+
+- BTC additive stacking warning:
+  - broad probe with `btc_cycle_pullback_v1 + btc_regime_retest_v1 + btc_regime_flip_continuation_v1 + btc_sloped_reclaim_v1` on `383d`:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_184253_btc_combo_with_sloped_probe/summary.csv`
+    - result: `+1.09`, `20` trades, PF `1.346`, DD `1.31`
+  - implication:
+    - do not just stack every BTC module
+    - keep the pinned BTC benchmark selective and modular
+
+- BTC sloped overlap check:
+  - the new `btc_sloped_reclaim_v1` entries do not overlap the pinned BTC `winner` or `winner + early_flip` entries at all
+  - implication:
+    - BTC sloped levels are orthogonal to the current BTC benchmark
+    - they are valid add-on research, just not strong enough yet to replace the winner
+
+- flat touch-maturity follow-up:
+  - added touch-count controls to `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_sloped_channel_v1.py`:
+    - `ASC1_TOUCH_COUNT_LOOKBACK_BARS`
+    - `ASC1_SHORT_MIN_UPPER_TOUCHES`
+  - honest result: naive upper-touch counting hurts badly
+    - `ASC1_MAX_ABS_SLOPE_PCT=2.0 + ASC1_SHORT_MIN_REJECT_DEPTH_ATR=0.65 + ASC1_SHORT_MIN_UPPER_TOUCHES=2`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_194146_asc1_slope20_rej065_touch2_cache/summary.csv`
+    - result: `+1.83`, `20` trades, PF `1.275`, DD `4.80`
+  - implication:
+    - “3rd/4th touch should be better” may still be true in spirit, but raw touch counting is too crude
+    - do not use naive touch-count gating as the next universal flat filter
+
+- flat universalization reality check:
+  - a one-shot hybrid basket from current short shape + historical short affinity is not enough
+  - `LTC + BNB + BCH + ATOM`, `180d`, `asc1_hybrid_top4_180d`:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_195043_asc1_hybrid_top4_180d/summary.csv`
+    - result: `-2.17`, `27` trades, PF `0.795`, DD `3.95`
+  - implication:
+    - a static top-N snapshot is worse than the current seed basket
+    - if flat is to become universal, it needs a time-varying router, not a one-shot scan
+  - note:
+    - broad `12`-symbol `cache-only` router validation `asc1_dynamic_router12_cache` completed:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_194323_asc1_dynamic_router12_cache/summary.csv`
+      - result: `+5.26`, `64` trades, PF `1.237`, DD `3.88`
+    - implication:
+      - broad router is weaker than the current fixed seed basket but still positive
+      - dynamic universality looks viable, but router/scorer quality still needs improvement before replacing the seed basket
+
+- BTC frequency probe:
+  - simple widening of winner pullback tolerance does not look like the right lever
+  - `BTCC1_MAX_PULLBACK_PCT=1.35`, pinned winner settings otherwise intact:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_195159_btc_winner_earlyflip_pullback135_cache/summary.csv`
+    - result: `+1.74`, `19` trades, PF `1.482`, DD `1.33`
+  - implication:
+    - more frequency came, but profile got clearly dirtier versus pinned `winner + early_flip`
+    - do not widen pullback further by default
+  - note:
+    - the milder `1.25` pullback probe also failed:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_195558_btc_winner_earlyflip_pullback125_cache/summary.csv`
+      - result: `+1.57`, `18` trades, PF `1.470`, DD `1.34`
+    - implication:
+      - the pullback-width lever does not show a useful middle ground
+      - more BTC frequency should come from a new orthogonal add-on, not looser winner rules
+
+- local autoresearch scaffold:
+  - added in-repo systematic search loop:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_strategy_autoresearch.py`
+  - first JSON specs:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_winner_addon_v1.json`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_family_v1.json`
+  - purpose:
+    - sequential pinned backtests
+    - configurable constraints and scoring
+    - writes `results.csv` / `ranked_results.csv` into dedicated `backtest_runs/autoresearch_*`
+  - implication:
+    - project now has the first practical “systematic search” integration inspired by Mac autoresearch repos
+    - next step is to let it finish the first BTC smoke run and then use it for broader constrained search rather than manual parameter twiddling
+
+- autoresearch generalized beyond portfolio runs:
+  - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_strategy_autoresearch.py`
+    - run-dir discovery now supports any backtest directory ending with `_{tag}`, not only `portfolio_*`
+    - recorded metrics in `results.csv` / `ranked_results.csv` now use mapped/scaled values, so non-portfolio summaries no longer show misleading zeroes
+  - new specs added:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v1.json`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_early_flip_v1.json`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_dynamic_router_v1.json`
+  - first equities smoke run through the unified harness succeeded:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/equities_monthly_research_20260313_194523_equities_monthly_v1_r001/summary.csv`
+    - `39` trades, `56.41%` winrate, `54.94%` compounded return, `-11.74%` max monthly DD
+  - implication:
+- autoresearch can now be attached to BTC, flat-family, and equities under one research loop
+  - future obvious expansions: `funding/carry`, broader flat-router scorer sweeps, and more selective BTC add-on searches
+
+- latest late-night status (`2026-03-13 22:35 UTC`):
+  - fixed `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_strategy_autoresearch.py` to prefer repo `.venv/bin/python3`; this was necessary because system Python launches were crashing on missing `numpy`
+  - rejected broad flat `slope-bias` router tweak after honest `180d` failure:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260313_222536_asc1_dynamic_router12_slopebias_180d/summary.csv`
+    - result: `-1.48`, PF `0.888`, winrate `37.1%`
+  - two new overnight autoresearch specs were queued:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_dynamic_router_v2.json`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_sloped_addon_v1.json`
+  - next morning check:
+    - inspect fresh `backtest_runs/autoresearch_*flat_dynamic_router_v2/`
+    - inspect fresh `backtest_runs/autoresearch_*btc_sloped_addon_v1/`
+    - if `flat_dynamic_router_v2` beats or nearly matches the current `LINK+ATOM+BNB` seed basket, promote it as the new broad-router benchmark
+    - if `btc_sloped_addon_v1` finds no viable island, stop spending time on BTC sloped reclaim as a near-term add-on and mine a different BTC family instead
+
+- latest morning status (`2026-03-14 05:35 UTC`):
+  - `btc_sloped_addon_v1` finished as a rejection:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260313_204337_btc_sloped_addon_v1/ranked_results.csv`
+    - no passing candidate
+    - best island only ~`+1.57`, `18` trades, PF `1.47`, winrate `61.1%`, DD `1.34`
+    - implication:
+      - BTC sloped reclaim should not be the near-term third add-on family
+  - `flat_dynamic_router_v2` early results are weak:
+    - best completed candidate so far is only around `+1.43`, PF `1.076`, DD `4.29`
+    - implication:
+      - current broad-router v2 direction is weaker than both the fixed seed basket and the earlier `rej065_top2` broad run
+  - `flat_slope_family_v2` early partial results are more promising:
+    - completed early leaders include:
+      - `r013`: `+8.71`, `28` trades, PF `2.121`, winrate `57.1%`, DD `2.89`
+      - `r014`: `+8.33`, `25` trades, PF `2.158`, winrate `56.0%`, DD `2.37`
+      - `r015`: `+8.14`, `24` trades, PF `2.240`, winrate `58.3%`, DD `2.40`
+    - all three use a tighter slope cap `1.8` and stronger reject-depth `0.75` than the older seed baseline
+    - implication:
+      - the next step for flat is not only broader routing; seed-family entry quality is still improving materially
+  - live `ws` fix was deployed to the server:
+    - helper added locally:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/apply_live_ws_env_patch.py`
+    - server `.env` now uses:
+      - `TOP_N_BYBIT=60`
+      - `BYBIT_WS_SHARD_SIZE=30`
+      - `BYBIT_WS_BATCH_SIZE=5`
+      - `BYBIT_WS_BATCH_DELAY=2.2`
+      - `BYBIT_WS_START_STAGGER=2.5`
+      - `BYBIT_WS_PING_INTERVAL=25`
+      - `BYBIT_WS_PING_TIMEOUT=75`
+      - `BYBIT_WS_OPEN_TIMEOUT=75`
+      - `BYBIT_WS_CLOSE_TIMEOUT=15`
+      - `BYBIT_WS_RECONNECT_MIN_SEC=8`
+      - `BYBIT_WS_RECONNECT_MAX_SEC=90`
+      - `BYBIT_WS_RECONNECT_JITTER_SEC=3.0`
+    - bybot was restarted and the first `15 min` post-restart pulse looked materially calmer:
+      - `breakout_try=274`
+      - `midterm_try=5`
+      - `ws_connect=0`
+      - `ws_disconnect=0`
+      - `ws_handshake_timeout=0`
+      - message count still increased, so the bot was alive
+    - implication:
+      - this is only a short-window smoke, but it is the first immediate post-fix window with zero reconnect churn; next chat should re-check a longer `2h` pulse before declaring the live `ws` issue solved
+  - two fresh focused searches are now running:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_family_exit_v1.json`
+      - tunes `TP1_FRAC`, `TP2_BUFFER_PCT`, and `TIME_STOP_BARS_5M` on the current best slope-short seed basket
+      - purpose:
+        - try to improve winrate / monthly smoothness via exit logic, not only entry filters
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_continuation_addon_v1.json`
+      - systematic search for a BTC continuation-family add-on using `btc_cycle_continuation_v1` next to the pinned BTC winner stack
+      - purpose:
+        - search for a genuinely different third BTC add-on family after sloped reclaim failed
+
+- latest update (`2026-03-14 07:15 UTC`):
+  - live:
+    - user chose to pause further live work for roughly 24 hours after the ws fix
+    - latest user-pasted alert was a recovery:
+      - `status=OK`, `ws=3/1`, `hs=0`
+      - implication:
+        - do not spend more time on live today unless something clearly regresses
+  - flat:
+    - current strongest seed-family benchmark is now `flat_slope_family_v2 r035`:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260314_051557_flat_slope_family_v2/ranked_results.csv`
+      - `+10.48`, `25` trades, PF `2.721`, winrate `64.0%`, DD `1.7367`
+      - params:
+        - `ASC1_MAX_ABS_SLOPE_PCT=2.0`
+        - `ASC1_SHORT_MIN_REJECT_DEPTH_ATR=0.75`
+        - `ASC1_SHORT_MIN_RSI=60`
+        - `ASC1_MIN_RANGE_R2=0.25`
+    - exit-only sweep did not beat the stronger entry-quality family:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260314_052238_flat_slope_family_exit_v1/ranked_results.csv`
+      - best stayed around the old `+8.71`, `32` trades, winrate `56.2%`
+      - implication:
+        - main edge gain is still coming from cleaner entries, not earlier exits
+    - new structure/prototorgovka filter is a real improvement:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260314_062602_flat_slope_family_structure_v1/ranked_results.csv`
+      - best variants match the new top line (`+10.48`, PF `2.721`, winrate `64.0%`, DD `1.7367`)
+      - useful settings:
+        - `ASC1_SHORT_MAX_NEAR_UPPER_BARS=2 or 3`
+        - `ASC1_SHORT_NEAR_UPPER_ATR=0.15`
+        - `ASC1_SHORT_MIN_REJECT_VOL_MULT=0.0`
+      - implication:
+        - limiting prolonged “hovering” near the upper boundary helps
+        - rejection-volume filter did not help yet
+    - broad dynamic router is still the weak link:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260314_053638_flat_dynamic_router_v3/ranked_results.csv`
+      - no passing candidate
+      - best only about `+3.52`, PF `1.161`, DD `4.84`
+      - implication:
+        - seed-family is strong; router/scorer still needs work before wide autonomous flat deployment
+    - new command-driven basket search was added:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_symbol_baskets_v1.json`
+      - smoke already found a very clean first basket:
+        - `LINKUSDT,ATOMUSDT`
+        - `+11.14`, `20` trades, PF `3.744`, winrate `70.0%`, DD `1.7185`
+      - implication:
+        - systematic basket search may be a faster route to family expansion than only improving the broad router
+    - note on monthly behavior:
+      - earlier top seed (`r031`) still had a weak cluster of negative months around `2025-07..09` plus `2026-02`
+      - this is not catastrophic concentration, but smoothing that cluster remains a real target
+  - BTC:
+    - pinned benchmark remains unchanged:
+      - `winner` and `winner + early_flip` are still the baseline to beat
+    - `btc_sloped_addon_v1` is rejected and should stay rejected
+    - `btc_level_target_addon_v1` and `btc_continuation_addon_v1` were still not showing a new edge as of the last completed candidates; they were mostly repeating the same weak profile around `+1.57`, PF `1.47`
+    - a new regime-focused early-flip search was added instead of widening pullbacks:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_early_flip_regime_v2.json`
+      - purpose:
+        - vary `regime gap/slope ceilings`, `breakout buffer`, and `hold_above_ema`
+        - search for a cleaner BTC add-on family without loosening the winner itself
+      - status:
+        - smoke run was still computing at handoff time
+  - autoresearch engine:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_strategy_autoresearch.py` now supports interpolating grid overrides directly into `command` specs, not only `{tag}`
+    - practical implication:
+      - we can now use the same runner for real CLI sweeps, not only env-based backtests
+      - this is especially useful for equities / Alpaca-style research and symbol-basket searches
+    - new spec added for richer monthly equities search:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v2.json`
+      - smoke already succeeded:
+        - about `+48.53%` compounded return
+        - `52.5%` winrate
+        - `9.25%` max monthly DD
+      - full long run is in progress
+  - current long runs to check next:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v2.json`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_symbol_baskets_v1.json`
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_early_flip_regime_v2.json`
+
+- latest update (`2026-03-14 08:20 UTC`):
+  - autoresearch runner:
+    - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_strategy_autoresearch.py` now also records:
+      - `negative_months`
+      - `positive_months`
+      - `max_negative_streak`
+      - `worst_month_pnl`
+    - implementation:
+      - reads `monthly.csv` when present
+      - otherwise derives month totals from `trades.csv` exit timestamps
+    - implication:
+      - future searches can explicitly optimize for smoother monthly behavior, not just raw net/PF/DD
+  - flat:
+    - new smoothness-aware basket search spec added:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_symbol_baskets_v2.json`
+    - smoke already confirmed the current best basket stays strong even under monthly-smoothness constraints:
+      - `LINKUSDT,ATOMUSDT`
+      - `+11.14`, `20` trades, PF `3.744`, winrate `70.0%`, DD `1.7185`
+      - `negative_months=1`
+      - `positive_months=8`
+      - `max_negative_streak=1`
+      - `worst_month_pnl≈-0.4645`
+    - full `flat_slope_symbol_baskets_v2` run is now in progress
+    - key insight:
+      - `LINK+ATOM` is currently not just the highest-return clean basket, but also the smoothest monthly profile among tested slope-short baskets
+  - equities / Alpaca research:
+    - `equities_monthly_v2` full run has now completed and materially improved over the old smoke:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260314_070641_equities_monthly_v2/ranked_results.csv`
+      - current best:
+        - about `+82.66%` compounded return
+        - `51` trades
+        - `60.8%` winrate
+        - `10.10%` max monthly DD
+        - best region:
+          - `TOP_N=3`
+          - `LOOKBACK_DAYS=70`
+          - `MAX_HOLD_DAYS=20`
+          - `MIN_MOM_LOOKBACK_PCT=2.0`
+          - `POSITION_WEIGHT_MODE=score_inv_vol`
+      - implication:
+        - yes, this research loop can materially improve Alpaca/equities settings, not just tidy the workflow
+    - new smoothness-aware equities spec added:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v3_smooth.json`
+      - purpose:
+        - keep the improved returns search, but penalize too many negative months / long negative streaks
+  - BTC:
+    - `btc_early_flip_regime_v2` smoke completed:
+      - best first candidate:
+        - `+2.85`
+        - `16` trades
+        - PF `2.385`
+        - winrate `68.8%`
+        - DD `1.32`
+      - this is promising as a family search, but still needs the full run before deciding whether it truly upgrades the pinned BTC stack
+  - future research branch explicitly requested by user:
+    - revisit pump-dump / post-pump decay as a dedicated large-data cross-asset study
+    - reason:
+      - likely one of the places where systematic large-sample analysis can outperform manual pattern reading
+  - latest readout (`2026-03-14 13:45 UTC`):
+    - flat:
+      - strongest current candidate is still the smooth `LINKUSDT + ATOMUSDT` basket
+      - see:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260314_081801_flat_slope_symbol_baskets_v2/ranked_results.csv`
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260314_113008_flat_slope_core_link_atom_v2_refine/ranked_results.csv`
+      - headline metrics:
+        - `+11.14`
+        - `20` trades
+        - PF `3.744`
+        - winrate `70.0%`
+        - DD `1.7185`
+        - `negative_months=1`
+        - `max_negative_streak=1`
+        - `worst_month≈-0.4645`
+      - interpretation:
+        - this is currently the cleanest and smoothest strategy family we have
+    - BTC:
+      - best current add-on search is still `btc_early_flip_regime_v2`
+      - see:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260314_081905_btc_early_flip_regime_v2/ranked_results.csv`
+      - best island so far:
+        - `+2.85`
+        - `16` trades
+        - PF `2.385`
+        - winrate `68.8%`
+        - DD `1.32`
+        - `negative_months=1`
+      - useful regime settings:
+        - `BTCRF1_REGIME_MIN_GAP_PCT=0.45`
+        - `BTCRF1_REGIME_MAX_GAP_PCT=3.2`
+        - `BTCRF1_HOLD_ABOVE_EMA_PCT=-0.1`
+      - warning:
+        - this is an improved add-on, not yet a “deploy new BTC sleeve now” result
+    - equities / Alpaca:
+      - high-return search:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260314_070641_equities_monthly_v2/ranked_results.csv`
+        - best around `+82.66%`, `51` trades, winrate `60.8%`, DD `10.10%`
+        - but manual month count still shows `7` negative months out of `21`
+    - smoother search:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260314_081905_equities_monthly_v3_smooth/ranked_results.csv`
+        - best around `+78.24%`, winrate `62.5%`, `4` negative months, `max_negative_streak=2`
+      - interpretation:
+        - equities benefits a lot from autoresearch, but still needs more smoothing if the goal is “almost no red months”
+  - latest queue (`2026-03-14 14:05 UTC`):
+    - new focused long runs launched:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_core_link_atom_exit_v1.json`
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_early_flip_regime_v4_focus.json`
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v6_refine_targets.json`
+    - supporting narrow smoke specs also added and already read:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_core_link_atom_v2_refine.json`
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v5_smooth_narrow.json`
+    - current interpretation:
+      - flat leader looks stable, not accidental
+      - BTC still needs another add-on improvement before any live/canary push
+      - equities still benefits from narrowing and monthly-aware penalties, but smoothness remains the bottleneck
+  - newest queue (`2026-03-14 15:45 UTC`):
+    - newly added and launched:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_symbol_baskets_v3_expand.json`
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_early_flip_regime_v5_exits.json`
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v7_low_red_months.json`
+    - new market-wide miner branch started:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/scan_crypto_large_moves.py`
+    - why this wave matters:
+      - `btc_early_flip_regime_v4_focus` largely plateaued, so the next BTC lever is likely exit geometry rather than more regime/buffer micro-tuning
+      - flat needs to prove it can spread from `LINK+ATOM` to a broader compatible family without losing smoothness
+      - equities still needs fewer red months, so `TOP_N` / hold / lookback / correlation are now being emphasized more than target tweaks
+      - the new crypto move miner is the first concrete step toward analyzing the full local crypto cache for the biggest trend bursts and their precursor features
+    - important implementation note:
+      - the move miner already survived one real-format bug hunt: local crypto cache files exist in both `list[list]` and `list[dict]` shapes; support for both formats is now built in, and the CSV export mismatch was fixed too
+  - latest checkpoint (`2026-03-15 08:40 UTC`):
+    - live:
+      - 12h window is materially calmer now: `ws_connect=1`, `ws_disconnect=1`, `handshake_timeout=0`, status only `WARN`
+      - 2h window is effectively clean: `ws_connect=0`, `ws_disconnect=0`, `handshake_timeout=0`
+      - no entries still primarily due to weak market (`impulse_weak` dominates), not due to a broken live stack
+    - flat:
+      - `flat_slope_symbol_baskets_v3_expand` confirmed the same winning island repeats across larger baskets, but added symbols mostly do **not** create extra trades; the filter is blocking them
+      - `flat_slope_symbol_singletons_v1` now shows the core family explicitly:
+        - `ATOMUSDT` alone is strong and very smooth (`+7.75`, PF `4.05`, winrate `69.2%`, `0` negative months)
+        - `LINKUSDT` alone is positive (`+3.82`, PF `3.513`, winrate `71.4%`) but still has `2` negative months
+        - most other tested symbols under the same rules produced `0` trades
+      - interpretation:
+        - current flat family is real
+        - it does generalize by *rejecting* non-matching assets
+        - but it has not yet found a meaningful third/fourth compatible symbol
+    - BTC:
+      - `btc_early_flip_regime_v5_exits` was worse than the best signal island (`~+3.23`, PF `2.525`)
+      - `btc_early_flip_regime_v6_signal_plus_exits` only marginally improved the already-good best island:
+        - `+3.89`, PF `4.759`, winrate `73.3%`, `1` negative month
+      - interpretation:
+        - BTC add-on is clean
+        - but still on a plateau
+        - likely next real improvement needs a new family, not another tiny early-flip tweak
+    - equities / Alpaca:
+      - `equities_monthly_v8_regime_smooth` is the first smooth branch to reduce red months from `4` to `3`
+      - best region:
+        - `+84.40%`
+        - `33` trades
+        - winrate `63.6%`
+        - max monthly DD `8.67%`
+        - `negative_months=3`
+        - `max_negative_streak=2`
+        - `worst_month≈-4.65`
+      - interpretation:
+        - best lever is now benchmark/universe regime gating, not more stop/target fiddling
+    - market-wide crypto move miner:
+      - smoke output exists:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/research/crypto_large_moves_smoke/top_events.csv`
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/research/crypto_large_moves_smoke/symbol_summary.csv`
+      - early clue:
+        - biggest BTC 6h bursts in smoke often start after short-term weakness / negative MA gap, not after already-clean expansion
+      - full rerun was launched into:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/research/crypto_large_moves_full_v2`
+    - newest active queue:
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_slope_symbol_singletons_v1.json`
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/btc_early_flip_regime_v6_signal_plus_exits.json`
+      - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v8_regime_smooth.json`
+  - newest checkpoint (`2026-03-15 16:05 UTC`):
+    - flat canary readiness:
+      - pair candidate `LINKUSDT+ATOMUSDT` is now explicitly verified with the current winning settings
+      - base:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260315_155657_asc1_link_atom_canary_base_v1/summary.csv`
+        - `+11.56`, `20` trades, PF `3.849`, winrate `70.0%`, DD `1.7859`
+      - cost-stress:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260315_155657_asc1_link_atom_canary_coststress_v1/summary.csv`
+        - `+10.02`, `20` trades, PF `3.209`, winrate `65.0%`, DD `2.0077`
+      - trade split remains genuine:
+        - `ATOMUSDT` drives most of the PnL, but `LINKUSDT` still contributes real trades and positive net
+      - single-symbol micro-sleeve also verified:
+        - base `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260315_155817_asc1_atom_canary_base_v1/summary.csv` -> `+7.75`, PF `4.050`, winrate `69.2%`, DD `0.9811`
+        - cost-stress `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260315_155817_asc1_atom_canary_coststress_v1/summary.csv` -> `+6.75`, PF `3.359`, winrate `61.5%`, DD `1.1097`
+      - practical interpretation:
+        - the first realistic canary candidate is now the sloped short family, either as `LINK+ATOM` pair sleeve or a very tight `ATOM` micro-sleeve
+    - second flat family search:
+      - `flat_horizontal_resistance_singletons_v1` is alive but immature
+      - best raw quality:
+        - `SUIUSDT` -> `+3.12`, PF `6.255`, `3` trades, `1` negative month
+      - more active but less smooth:
+        - `LINKUSDT` -> `+4.13`, `9` trades, PF `2.697`, `2` negative months
+        - `LTCUSDT` -> `+2.41`, `5` trades, PF `3.235`, `2` negative months
+      - `flat_depressed_reclaim_singletons_v1` is effectively dead right now (`0` trades almost everywhere)
+      - next active refine:
+        - `/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_horizontal_core_v2_refine.json`
+      - current interpretation:
+        - second flat family candidate exists
+        - but it is not yet close to canary quality
+    - Alpaca:
+      - `equities_monthly_v9_red_month_push` is active to try pushing `3` red months down to `2`
+      - if it fails, likely next step should be universe/ticker expansion or a stronger benchmark gate, not more parameter polishing inside the same island

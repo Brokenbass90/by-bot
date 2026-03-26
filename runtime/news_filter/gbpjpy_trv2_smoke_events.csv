@@ -1,0 +1,4 @@
+event_id,ts_utc,country,currency,instrument_scope,title,impact,source,blackout_before_min,blackout_after_min,notes
+evt_smoke_gbpjpy_20241122,1732272300,JP,JPY,FX:JPY,JPY smoke event 2024-11-22,high,smoke,20,30,synthetic_smoke_only
+evt_smoke_gbpjpy_20241220,1734694800,JP,JPY,FX:JPY,JPY smoke event 2024-12-20,high,smoke,20,30,synthetic_smoke_only
+evt_smoke_gbpjpy_20250130,1738229100,JP,JPY,FX:JPY,JPY smoke event 2025-01-30,high,smoke,20,30,synthetic_smoke_only

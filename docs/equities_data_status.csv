@@ -1,0 +1,11 @@
+ticker,path,exists,rows,first_ts,last_ts,span_days,median_step_sec,looks_like_m5
+AAPL,data_cache/equities/AAPL_M5.csv,1,4644,1765290600,1772830500,87.27,300.0,1
+MSFT,data_cache/equities/MSFT_M5.csv,1,4643,1765290600,1772830500,87.27,300.0,1
+NVDA,data_cache/equities/NVDA_M5.csv,1,4642,1765290600,1772830500,87.27,300.0,1
+AMZN,data_cache/equities/AMZN_M5.csv,1,4642,1765290600,1772830500,87.27,300.0,1
+META,data_cache/equities/META_M5.csv,1,4644,1765290600,1772830500,87.27,300.0,1
+TSLA,data_cache/equities/TSLA_M5.csv,1,4644,1765290600,1772830500,87.27,300.0,1
+GOOGL,data_cache/equities/GOOGL_M5.csv,1,4643,1765290600,1772830500,87.27,300.0,1
+AMD,data_cache/equities/AMD_M5.csv,1,4642,1765290600,1772830500,87.27,300.0,1
+JPM,data_cache/equities/JPM_M5.csv,1,4642,1765290600,1772830500,87.27,300.0,1
+XOM,data_cache/equities/XOM_M5.csv,1,4642,1765290600,1772830500,87.27,300.0,1

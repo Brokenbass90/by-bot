@@ -1,0 +1,9 @@
+event_id,ts_utc,country,currency,instrument_scope,title,impact,source,blackout_before_min,blackout_after_min,notes
+fomc_2025_mar19,1742407200,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-03-19 18:00 UTC
+fomc_2025_may07,1746640800,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-05-07 18:00 UTC
+fomc_2025_jun18,1750269600,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-06-18 18:00 UTC
+fomc_2025_jul30,1753898400,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-07-30 18:00 UTC
+fomc_2025_sep17,1758132000,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-09-17 18:00 UTC
+fomc_2025_oct29,1761760800,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-10-29 18:00 UTC
+fomc_2025_dec10,1765393200,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2025-12-10 19:00 UTC
+fomc_2026_jan28,1769626800,US,USD,CRYPTO,FOMC Rate Decision,high,federalreserve.gov,60,120,2026-01-28 19:00 UTC

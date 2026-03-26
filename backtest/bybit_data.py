@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import os
 import time
+import random
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
@@ -23,6 +24,10 @@ from typing import Any, Dict, List, Optional, Tuple
 DEFAULT_BYBIT_BASE = os.getenv("BYBIT_BASE", "https://api.bybit.com")
 CACHE_DIR = os.getenv("BYBIT_DATA_CACHE_DIR", "data_cache")
 DEFAULT_POLITE_SLEEP_SEC = float(os.getenv("BYBIT_DATA_POLITE_SLEEP_SEC", "0.60"))
+DEFAULT_MAX_RETRIES = int(os.getenv("BYBIT_DATA_MAX_RETRIES", "12"))
+DEFAULT_BACKOFF_MAX_SEC = float(os.getenv("BYBIT_DATA_BACKOFF_MAX_SEC", "25.0"))
+DEFAULT_BACKOFF_MULT = float(os.getenv("BYBIT_DATA_BACKOFF_MULT", "1.7"))
+DEFAULT_RETRY_JITTER_SEC = float(os.getenv("BYBIT_DATA_RETRY_JITTER_SEC", "0.35"))
 
 
 @dataclass(frozen=True)
@@ -67,6 +72,10 @@ def fetch_klines_public(
     limit: int = 1000,
     cache: bool = True,
     polite_sleep_sec: float = DEFAULT_POLITE_SLEEP_SEC,
+    max_retries: int = DEFAULT_MAX_RETRIES,
+    backoff_max_sec: float = DEFAULT_BACKOFF_MAX_SEC,
+    backoff_mult: float = DEFAULT_BACKOFF_MULT,
+    retry_jitter_sec: float = DEFAULT_RETRY_JITTER_SEC,
 ) -> List[Kline]:
     """Fetch klines from Bybit v5 and return *oldest-first* list of Kline.
 
@@ -99,16 +108,18 @@ def fetch_klines_public(
             "end": cursor_end,
             "limit": limit,
         }
-        # Fetch with basic rate-limit backoff (retCode 10006 = Too many visits)
+        # Fetch with configurable rate-limit backoff (retCode 10006 = Too many visits)
         backoff = max(0.6, float(polite_sleep_sec))
         js = None
-        for attempt in range(10):
+        retries = max(1, int(max_retries))
+        for attempt in range(retries):
+            jitter = random.uniform(0.0, max(0.0, float(retry_jitter_sec)))
             try:
                 js = _req_json(url, params)
             except Exception as e:
                 # network hiccup / transient Bybit edge
-                time.sleep(min(15.0, backoff))
-                backoff = min(15.0, backoff * 1.7)
+                time.sleep(min(float(backoff_max_sec), backoff) + jitter)
+                backoff = min(float(backoff_max_sec), backoff * float(backoff_mult))
                 continue
 
             rc = js.get("retCode")
@@ -121,14 +132,17 @@ def fetch_klines_public(
                 rc_i = -1
 
             if rc_i == 10006:
-                time.sleep(min(15.0, backoff))
-                backoff = min(15.0, backoff * 1.7)
+                time.sleep(min(float(backoff_max_sec), backoff) + jitter)
+                backoff = min(float(backoff_max_sec), backoff * float(backoff_mult))
                 continue
 
             raise RuntimeError(f"Bybit error {rc}: {js.get('retMsg')}")
 
         else:
-            raise RuntimeError(f"Bybit error 10006: Too many visits (rate limit) after retries")
+            raise RuntimeError(
+                f"Bybit error 10006: Too many visits (rate limit) after retries "
+                f"(symbol={symbol} interval={interval} start_ms={start_ms} end_ms={end_ms} retries={retries})"
+            )
 
         lst = (((js.get("result") or {}).get("list")) or [])
         if not lst:

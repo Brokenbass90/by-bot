@@ -1,0 +1,32 @@
+# ================================================================
+# Server .env patch — apply on 64.226.73.119
+# Backtest basis: ATOM+LINK sloped 15 trades WR 80% PF 8.94,
+#                 0 red months. LINK/LTC/SUI/DOT flat ~17 trades.
+# ================================================================
+
+# 1. CHANGE this existing line:
+#    ASC1_SYMBOL_ALLOWLIST=ATOMUSDT
+# TO:
+ASC1_SYMBOL_ALLOWLIST=ATOMUSDT,LINKUSDT
+
+# 2. ADD these new lines (append to .env):
+ASC1_CONFIRM_5M_BARS=6
+
+ENABLE_FLAT_TRADING=1
+ARF1_SYMBOL_ALLOWLIST=LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT
+FLAT_RISK_MULT=0.10
+FLAT_MAX_OPEN_TRADES=1
+
+# ================================================================
+# Quick one-liner to apply (run inside /root/bybit-bot-clean-v28):
+#
+#   sed -i 's/^ASC1_SYMBOL_ALLOWLIST=.*/ASC1_SYMBOL_ALLOWLIST=ATOMUSDT,LINKUSDT/' .env && \
+#   grep -q '^ASC1_CONFIRM_5M_BARS=' .env || echo 'ASC1_CONFIRM_5M_BARS=6' >> .env && \
+#   grep -q '^ENABLE_FLAT_TRADING=' .env   || echo 'ENABLE_FLAT_TRADING=1' >> .env && \
+#   grep -q '^ARF1_SYMBOL_ALLOWLIST=' .env || echo 'ARF1_SYMBOL_ALLOWLIST=LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT' >> .env && \
+#   grep -q '^FLAT_RISK_MULT=' .env        || echo 'FLAT_RISK_MULT=0.10' >> .env && \
+#   grep -q '^FLAT_MAX_OPEN_TRADES=' .env  || echo 'FLAT_MAX_OPEN_TRADES=1' >> .env
+#
+# Verify with:
+#   grep -E 'ASC1_SYMBOL|ASC1_CONFIRM|ENABLE_FLAT|ARF1_SYMBOL|FLAT_RISK|FLAT_MAX' .env
+# ================================================================

@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "impact_levels_blocked": ["high"],
+  "default_before_min": 30,
+  "default_after_min": 45,
+  "strategies": {
+    "btc_cycle_pullback_v1": {
+      "markets": ["CRYPTO"]
+    },
+    "btc_regime_retest_v1": {
+      "markets": ["CRYPTO"]
+    }
+  }
+}

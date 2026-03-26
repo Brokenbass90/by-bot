@@ -54,9 +54,13 @@ ACTIVE_HEADERS = [
 
 BASE_STRATEGIES = {
     "trend_retest_session_v1",
+    "trend_retest_session_v2",
     "range_bounce_session_v1",
     "breakout_continuation_session_v1",
+    "asia_range_reversion_session_v1",
+    "failure_reclaim_session_v1",
     "grid_reversion_session_v1",
+    "liquidity_sweep_bounce_session_v1",
     "trend_pullback_rebound_v1",
 }
 

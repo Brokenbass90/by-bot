@@ -81,9 +81,12 @@ def _plot_equity(rows: List[Tuple[int, float]], out_path: str) -> Optional[str]:
 
 def generate_report(db_path: str, since_ts: int, out_dir: str, tag: str) -> ReportResult:
     rows = _fetch_closes(db_path, since_ts)
+    now_ts = int(time.time())
+    since_iso = time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime(int(since_ts)))
+    as_of_iso = time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime(now_ts))
     if not rows:
         return ReportResult(
-            text=f"{tag}: нет сделок за период.",
+            text=f"{tag} report\nsince={since_iso}\nas_of={as_of_iso}\nнет сделок за период.",
             csv_path=None,
             png_path=None,
         )
@@ -105,6 +108,7 @@ def generate_report(db_path: str, since_ts: int, out_dir: str, tag: str) -> Repo
 
     txt = (
         f"{tag} report\n"
+        f"since={since_iso} | as_of={as_of_iso}\n"
         f"trades={total} winrate={winrate:.1f}% pf={pf:.2f}\n"
         f"net_pnl={net:+.2f} USDT"
     )
