@@ -1696,3 +1696,9 @@ server_clean.env updated:
 - This patch does **not** change any trading logic or risk settings; it only makes the next live window diagnosable instead of ambiguous.
 - Verified syntax cleanly with:
   - `python3 -m py_compile smart_pump_reversal_bot.py bot/diagnostics.py`
+- Committed and pushed the diagnostics patch as `23701cd` (`Add live sleeve gate diagnostics`).
+- Deployed the patch to the live server on `64.226.73.119` by copying:
+  - `smart_pump_reversal_bot.py`
+  - `bot/diagnostics.py`
+- Restarted `bybot.service`; service returned `active` after restart.
+- Immediate post-restart journal check confirmed the bot came back up cleanly, but a fresh new pulse with the added counters had not yet printed in the observed window.
