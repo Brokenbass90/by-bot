@@ -1,0 +1,85 @@
+{
+  "_comment": "Micro Scalper V1 optimization: find optimal ATR multiples for SL/TP, volume filter, and trailing. Test across symbol universes.",
+  "name": "micro_scalper_v1_opt",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "micro_scalper_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--tag",
+    "{tag}"
+  ],
+  "base_env": {
+    "MSCALP_TREND_TF": "15",
+    "MSCALP_TREND_EMA": "20",
+    "MSCALP_TREND_LOOKBACK": "30",
+    "MSCALP_TREND_MIN_SLOPE_PCT": "0.04",
+    "MSCALP_ENTRY_LOOKBACK": "50",
+    "MSCALP_ENTRY_EMA": "9",
+    "MSCALP_ATR_PERIOD": "14",
+    "MSCALP_PULLBACK_ATR": "0.35",
+    "MSCALP_MIN_BODY_ATR": "0.22",
+    "MSCALP_RR": "1.5",
+    "MSCALP_SL_BUFFER_ATR": "0.15",
+    "MSCALP_MAX_SIGNALS_PER_DAY": "5",
+    "MSCALP_COOLDOWN_BARS": "3",
+    "MSCALP_SESSION_START_UTC": "7",
+    "MSCALP_SESSION_END_UTC": "17",
+    "MSCALP_MIN_SL_ATR": "0.15",
+    "MSCALP_MAX_SL_ATR": "1.5",
+    "MSCALP_TIME_STOP_BARS": "16",
+    "MSCALP_ALLOW_LONGS": "1",
+    "MSCALP_ALLOW_SHORTS": "1"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "BTCUSDT,ETHUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT"
+    ],
+    "MSCALP_VOL_MULT": [
+      "0.0",
+      "1.2",
+      "1.5"
+    ],
+    "MSCALP_RR": [
+      "1.5",
+      "2.0",
+      "2.5"
+    ],
+    "MSCALP_SL_BUFFER_ATR": [
+      "0.1",
+      "0.15",
+      "0.2"
+    ],
+    "MSCALP_PULLBACK_ATR": [
+      "0.25",
+      "0.35",
+      "0.45"
+    ]
+  },
+  "constraints": {
+    "min_trades": 80,
+    "min_profit_factor": 1.3,
+    "max_drawdown_pct": 6.0,
+    "min_net_pnl": 10.0,
+    "max_negative_months": 4
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 4.0,
+    "winrate": 8.0,
+    "max_drawdown": 1.5
+  }
+}

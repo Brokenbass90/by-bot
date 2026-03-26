@@ -42,6 +42,8 @@ except ImportError:
 from midterm_live import MidtermLiveEngine
 from retest_live import RetestEngine
 from strategies.breakdown_live import BreakdownLiveEngine
+from strategies.micro_scalper_live import MicroScalperLiveEngine
+from strategies.support_reclaim_live import SupportReclaimLiveEngine
 from trade_reporting import generate_report, since_days
 
 from sr_range import RangeRegistry, RangeScanner
@@ -322,6 +324,24 @@ BREAKDOWN_TRY_EVERY_SEC = int(os.getenv("BREAKDOWN_TRY_EVERY_SEC", "60"))
 BREAKDOWN_RISK_MULT = max(0.05, float(os.getenv("BREAKDOWN_RISK_MULT", "0.10")))
 BREAKDOWN_MAX_OPEN_TRADES = int(os.getenv("BREAKDOWN_MAX_OPEN_TRADES", "1"))
 BREAKDOWN_ENGINE = None
+
+# ===== MICRO SCALPER (live) =====
+ENABLE_MICRO_SCALPER_TRADING = os.getenv("ENABLE_MICRO_SCALPER_TRADING", "0").strip() == "1"
+MICRO_SCALPER_TRY_EVERY_SEC = int(os.getenv("MICRO_SCALPER_TRY_EVERY_SEC", "30"))
+MICRO_SCALPER_RISK_MULT = max(0.05, float(os.getenv("MICRO_SCALPER_RISK_MULT", "0.10")))
+MICRO_SCALPER_MAX_OPEN_TRADES = int(os.getenv("MICRO_SCALPER_MAX_OPEN_TRADES", "2"))
+MICRO_SCALPER_SYMBOL_ALLOWLIST: set[str] = {s.strip().upper() for s in str(os.getenv("MICRO_SCALPER_SYMBOL_ALLOWLIST", "BTCUSDT,ETHUSDT,SOLUSDT")).split(",") if s.strip()}
+MICRO_SCALPER_ENGINE = None
+_MICRO_SCALPER_LAST_TRY: dict[str, float] = {}
+
+# ===== SUPPORT RECLAIM LONGS (live) =====
+ENABLE_SUPPORT_RECLAIM_TRADING = os.getenv("ENABLE_SUPPORT_RECLAIM_TRADING", "0").strip() == "1"
+SUPPORT_RECLAIM_TRY_EVERY_SEC = int(os.getenv("SUPPORT_RECLAIM_TRY_EVERY_SEC", "60"))
+SUPPORT_RECLAIM_RISK_MULT = max(0.05, float(os.getenv("SUPPORT_RECLAIM_RISK_MULT", "0.10")))
+SUPPORT_RECLAIM_MAX_OPEN_TRADES = int(os.getenv("SUPPORT_RECLAIM_MAX_OPEN_TRADES", "1"))
+SUPPORT_RECLAIM_SYMBOL_ALLOWLIST: set[str] = {s.strip().upper() for s in str(os.getenv("SUPPORT_RECLAIM_SYMBOL_ALLOWLIST", "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT")).split(",") if s.strip()}
+SUPPORT_RECLAIM_ENGINE = None
+_SUPPORT_RECLAIM_LAST_TRY: dict[str, float] = {}
 
 # ===== TRIPLE SCREEN v132 (live) =====
 ENABLE_TS132_TRADING = os.getenv("ENABLE_TS132_TRADING", "0").strip() == "1"
@@ -1465,6 +1485,8 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "inplay": bool(ENABLE_INPLAY_TRADING),
             "retest": bool(ENABLE_RETEST_TRADING),
             "range": bool(ENABLE_RANGE_TRADING),
+            "micro_scalper": bool(ENABLE_MICRO_SCALPER_TRADING),
+            "support_reclaim": bool(ENABLE_SUPPORT_RECLAIM_TRADING),
         },
         "diag": {
             "ws_connect": int(_diag_get_int("ws_connect")),
@@ -2010,7 +2032,10 @@ def _handle_tg_command(text: str):
             "  /ai_code <файл> [вопрос] — AI читает файл\n"
             "  /ai_budget — расход AI токенов\n"
             "  /ai_reset — сбросить историю диалога\n"
-            "  /ai_server — статус сервера и процессов"
+            "  /ai_server — статус сервера и процессов\n"
+            "  /ai_diff — показать pending изменения от AI\n"
+            "  /ai_rollback — откатить последнее изменение env\n"
+            "  /ai_shadow — последние AI рекомендации (shadow log)"
         )
         return
 
@@ -2146,7 +2171,14 @@ def _handle_tg_command(text: str):
             except Exception as exc:
                 print(f"[AI] exception: {exc}")
                 answer = f"❌ AI ошибка: {exc}"
-            tg_send(answer)
+            # Split long answers into ≤4000-char chunks (Telegram limit = 4096)
+            _CHUNK = 4000
+            if len(answer) <= _CHUNK:
+                tg_send(answer)
+            else:
+                parts = [answer[i:i + _CHUNK] for i in range(0, len(answer), _CHUNK)]
+                for idx, part in enumerate(parts, 1):
+                    tg_send(f"[{idx}/{len(parts)}]\n{part}")
             print(f"[AI] tg_send done")
         threading.Thread(target=_run_ai, daemon=True).start()
         return
@@ -4599,6 +4631,24 @@ def _ensure_breakdown_engine() -> bool:
         _log_engine_lazy_init_fail("BREAKDOWN", e)
         return False
 
+# ===== MICRO SCALPER ENGINE =====
+if ENABLE_MICRO_SCALPER_TRADING:
+    try:
+        MICRO_SCALPER_ENGINE = MicroScalperLiveEngine(fetch_klines)
+        print("[MICRO_SCALPER] engine initialised")
+    except Exception as _e:
+        log_error(f"[MICRO_SCALPER] engine init fail: {_e}")
+        MICRO_SCALPER_ENGINE = None
+
+# ===== SUPPORT RECLAIM LONGS ENGINE =====
+if ENABLE_SUPPORT_RECLAIM_TRADING:
+    try:
+        SUPPORT_RECLAIM_ENGINE = SupportReclaimLiveEngine(fetch_klines)
+        print("[SUPPORT_RECLAIM] engine initialised")
+    except Exception as _e:
+        log_error(f"[SUPPORT_RECLAIM] engine init fail: {_e}")
+        SUPPORT_RECLAIM_ENGINE = None
+
 # ===== TRIPLE SCREEN v132 ENGINE =====
 if ENABLE_TS132_TRADING:
     try:
@@ -6381,6 +6431,212 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         )
 
 
+async def try_micro_scalper_entry_async(symbol: str, price: float):
+    """Try micro scalper entry for a symbol (micro_scalper_v1)."""
+    if not ENABLE_MICRO_SCALPER_TRADING:
+        return
+    if MICRO_SCALPER_ENGINE is None:
+        return
+    if not TRADE_ON or DRY_RUN:
+        return
+    if TRADE_CLIENT is None:
+        return
+    if symbol not in MICRO_SCALPER_SYMBOL_ALLOWLIST:
+        return
+    if get_trade("Bybit", symbol) is not None:
+        return
+    if MICRO_SCALPER_MAX_OPEN_TRADES > 0:
+        open_ms = sum(
+            1 for tr in TRADES.values()
+            if getattr(tr, "strategy", "") == "micro_scalper_v1"
+            and str(getattr(tr, "status", "")).upper() not in {"CLOSED", "ERROR"}
+        )
+        if open_ms >= MICRO_SCALPER_MAX_OPEN_TRADES:
+            _diag_inc("micro_scalper_skip_max_open")
+            return
+    if not portfolio_can_open():
+        _diag_inc("micro_scalper_skip_portfolio")
+        return
+
+    now = now_s()
+    last = float(_MICRO_SCALPER_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < MICRO_SCALPER_TRY_EVERY_SEC:
+        return
+    _MICRO_SCALPER_LAST_TRY[symbol] = now
+    _diag_inc("micro_scalper_try")
+
+    try:
+        sig = MICRO_SCALPER_ENGINE.signal(symbol, int(now * 1000), price)
+    except Exception as e:
+        log_error(f"micro_scalper signal error {symbol}: {e}")
+        return
+    if not sig:
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=MICRO_SCALPER_RISK_MULT)
+    if dyn_usd <= 0:
+        return
+
+    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0:
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:micro_scalper:{symbol}",
+            f"🟡 MICRO_SCALPER SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
+
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        return
+    async with entry_lock:
+        if get_trade("Bybit", symbol) is not None:
+            return
+        if not portfolio_can_open():
+            return
+        ensure_leverage(symbol, BYBIT_LEVERAGE)
+        _diag_inc("micro_scalper_entry")
+        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        tr = TradeState(symbol=symbol, side=side, qty=q, entry_price_req=float(entry), entry_ts=now)
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "micro_scalper_v1"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r)
+        tr.sl_price = float(sl_r)
+        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+        tr.time_stop_sec = int(ts_bars * 300)
+        TRADES[("Bybit", symbol)] = tr
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        tg_trade(
+            f"⚡ MICRO ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_r:.6f} SL={sl_r:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
+
+
+async def try_support_reclaim_entry_async(symbol: str, price: float):
+    """Try support reclaim long entry for a symbol (alt_support_reclaim_v1)."""
+    if not ENABLE_SUPPORT_RECLAIM_TRADING:
+        return
+    if SUPPORT_RECLAIM_ENGINE is None:
+        return
+    if not TRADE_ON or DRY_RUN:
+        return
+    if TRADE_CLIENT is None:
+        return
+    if symbol not in SUPPORT_RECLAIM_SYMBOL_ALLOWLIST:
+        return
+    if get_trade("Bybit", symbol) is not None:
+        return
+    if SUPPORT_RECLAIM_MAX_OPEN_TRADES > 0:
+        open_sr = sum(
+            1 for tr in TRADES.values()
+            if getattr(tr, "strategy", "") == "alt_support_reclaim_v1"
+            and str(getattr(tr, "status", "")).upper() not in {"CLOSED", "ERROR"}
+        )
+        if open_sr >= SUPPORT_RECLAIM_MAX_OPEN_TRADES:
+            _diag_inc("support_reclaim_skip_max_open")
+            return
+    if not portfolio_can_open():
+        _diag_inc("support_reclaim_skip_portfolio")
+        return
+
+    now = now_s()
+    last = float(_SUPPORT_RECLAIM_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < SUPPORT_RECLAIM_TRY_EVERY_SEC:
+        return
+    _SUPPORT_RECLAIM_LAST_TRY[symbol] = now
+    _diag_inc("support_reclaim_try")
+
+    try:
+        sig = SUPPORT_RECLAIM_ENGINE.signal(symbol, int(now * 1000), price)
+    except Exception as e:
+        log_error(f"support_reclaim signal error {symbol}: {e}")
+        return
+    if not sig:
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=SUPPORT_RECLAIM_RISK_MULT)
+    if dyn_usd <= 0:
+        return
+
+    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0:
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:support_reclaim:{symbol}",
+            f"🟡 SUPPORT_RECLAIM SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
+
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        return
+    async with entry_lock:
+        if get_trade("Bybit", symbol) is not None:
+            return
+        if not portfolio_can_open():
+            return
+        ensure_leverage(symbol, BYBIT_LEVERAGE)
+        _diag_inc("support_reclaim_entry")
+        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        tr = TradeState(symbol=symbol, side=side, qty=q, entry_price_req=float(entry), entry_ts=now)
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "alt_support_reclaim_v1"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r)
+        tr.sl_price = float(sl_r)
+        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+        TRADES[("Bybit", symbol)] = tr
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        tg_trade(
+            f"🟢 SUPPORT RECLAIM [{TRADE_CLIENT.name}] {symbol} LONG\n"
+            f"entry≈{entry:.6f} TP={tp_r:.6f} SL={sl_r:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
+
+
 class _TS132Store:
     """Minimal store that TripleScreenV132Strategy expects for fetch_klines."""
     def __init__(self, symbol: str):
@@ -6951,6 +7207,26 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     asyncio.create_task(try_breakdown_entry_async(sym, p1))
                 except Exception as _e:
                     log_error(f"try_breakdown_entry schedule fail {sym}: {_e}")
+
+        # ===== MICRO SCALPER ENTRY =====
+        if ENABLE_MICRO_SCALPER_TRADING and sym in MICRO_SCALPER_SYMBOL_ALLOWLIST:
+            last = float(_MICRO_SCALPER_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= MICRO_SCALPER_TRY_EVERY_SEC:
+                try:
+                    _diag_inc("micro_scalper_sched")
+                    asyncio.create_task(try_micro_scalper_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_micro_scalper_entry schedule fail {sym}: {_e}")
+
+        # ===== SUPPORT RECLAIM LONGS ENTRY =====
+        if ENABLE_SUPPORT_RECLAIM_TRADING and sym in SUPPORT_RECLAIM_SYMBOL_ALLOWLIST:
+            last = float(_SUPPORT_RECLAIM_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= SUPPORT_RECLAIM_TRY_EVERY_SEC:
+                try:
+                    _diag_inc("support_reclaim_sched")
+                    asyncio.create_task(try_support_reclaim_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_support_reclaim_entry schedule fail {sym}: {_e}")
 
         # ===== TRIPLE SCREEN v132 ENTRY =====
         if ENABLE_TS132_TRADING:

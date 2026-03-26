@@ -1,0 +1,57 @@
+{
+  "_comment": "Support reclaim v1 longs expansion: test various coin combinations and ATR multiples for long bounces from support.",
+  "name": "support_reclaim_v1",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_support_reclaim_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--tag",
+    "{tag}"
+  ],
+  "base_env": {
+    "ASR1_ALLOW_LONGS": "1",
+    "ASR1_ALLOW_SHORTS": "0",
+    "ASR1_MAX_RSI": "50",
+    "ASR1_CONFIRM_5M_BARS": "6",
+    "ASR1_BOUNCE_ABOVE_SUP_ATR": "0.12",
+    "ASR1_TRAIL_ATR_MULT": "0.0"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "BTCUSDT,ETHUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT",
+      "LINKUSDT,ATOMUSDT,DOTUSDT",
+      "SOLUSDT,AVAXUSDT,LINKUSDT"
+    ],
+    "ASR1_SL_ATR_MULT": [1.0, 1.5, 2.0],
+    "ASR1_TP_ATR_MULT": [2.0, 3.0, 4.0],
+    "ASR1_REGIME_LOOKBACK": [20, 30],
+    "ASR1_SIGNAL_LOOKBACK": [10, 15, 20]
+  },
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 1.3,
+    "max_drawdown_pct": 5.0,
+    "min_net_pnl": 10.0,
+    "max_negative_months": 3
+  },
+  "score_weights": {
+    "net_pnl_pct": 0.30,
+    "profit_factor": 0.40,
+    "winrate": 0.15,
+    "max_drawdown": 0.15
+  }
+}
