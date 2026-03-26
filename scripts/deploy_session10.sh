@@ -39,6 +39,7 @@ echo ""
 echo "[1/5] Syntax check..."
 python3 -m py_compile "$LOCAL/smart_pump_reversal_bot.py" && echo "  ✅ smart_pump_reversal_bot.py"
 python3 -m py_compile "$LOCAL/strategies/breakdown_live.py" && echo "  ✅ strategies/breakdown_live.py"
+python3 -m py_compile "$LOCAL/bot/deepseek_overlay.py" && echo "  ✅ bot/deepseek_overlay.py"
 
 # ── 2. Copy bot files ─────────────────────────────────────────────
 echo ""
@@ -51,6 +52,10 @@ scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
     "$LOCAL/strategies/breakdown_live.py" \
     "$SERVER:/root/by-bot/strategies/"
 echo "  ✅ strategies/breakdown_live.py"
+scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
+    "$LOCAL/bot/deepseek_overlay.py" \
+    "$SERVER:/root/by-bot/bot/"
+echo "  ✅ bot/deepseek_overlay.py"
 
 # ── 3. Patch .env with DeepSeek API key ─────────────────────────
 echo ""
