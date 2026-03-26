@@ -47,11 +47,13 @@ python3 -m py_compile "$LOCAL/bot/deepseek_action_executor.py" && echo "  ✅ bo
 echo ""
 echo "[2/5] Copying bot files..."
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
-    "$LOCAL/bot/diagnostics.py" \
     "$LOCAL/smart_pump_reversal_bot.py" \
     "$SERVER:/root/by-bot/"
-echo "  ✅ bot/diagnostics.py"
 echo "  ✅ smart_pump_reversal_bot.py"
+scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
+    "$LOCAL/bot/diagnostics.py" \
+    "$SERVER:/root/by-bot/bot/"
+echo "  ✅ bot/diagnostics.py"
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
     "$LOCAL/strategies/breakdown_live.py" \
     "$SERVER:/root/by-bot/strategies/"
