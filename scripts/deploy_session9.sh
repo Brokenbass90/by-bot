@@ -1,4 +1,6 @@
 #!/bin/bash
+# HISTORICAL ONE-OFF DEPLOY.
+# Keep for reproduction/reference only; prefer scripts/deploy_session10.sh for current live work.
 # ===================================================================
 # deploy_session9.sh — Финальный деплой сессий 8-9
 #

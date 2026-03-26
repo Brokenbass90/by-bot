@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# HISTORICAL ONE-OFF DEPLOY.
+# Keep for reference only; this script documents the original sloped canary rollout.
 set -euo pipefail
 
 BRANCH="codex/dynamic-symbol-filters"

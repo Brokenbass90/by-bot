@@ -1612,3 +1612,10 @@ server_clean.env updated:
   - `flat_try/flat_entry` and `breakdown_try/breakdown_entry` are now visible in pulse output
   - both remain `0` in the latest short window
   - this is now an honest visibility result, not a logging blind spot
+- Started the first no-risk cleanup change-set on historical deploy helpers:
+  - `scripts/deploy_session9.sh`
+  - `scripts/deploy_full_20260318.sh`
+  - `scripts/deploy_live_evening_20260319.sh`
+  - `scripts/deploy_sloped_atom_canary_20260318.sh`
+  - `scripts/deploy_to_server.sh`
+- These files were marked as `historical/reference` only; no delete and no live behavior change was made in this step.

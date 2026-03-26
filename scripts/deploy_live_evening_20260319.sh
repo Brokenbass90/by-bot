@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# HISTORICAL ONE-OFF DEPLOY.
+# Keep for reference only; use current deploy scripts for live changes.
 set -euo pipefail
 
 BRANCH="codex/dynamic-symbol-filters"

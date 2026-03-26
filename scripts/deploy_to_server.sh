@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# HISTORICAL / GENERIC DEPLOY HELPER.
+# Not the preferred live path for the current stack; keep only as reference until cleanup phase removes or archives it.
 # ─────────────────────────────────────────────────────────────────
 # deploy_to_server.sh
 # Run this on your LOCAL machine (not the server) to:

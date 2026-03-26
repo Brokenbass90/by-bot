@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# HISTORICAL ONE-OFF DEPLOY.
+# Keep for reference only; this is not the default live deploy path anymore.
 # ─────────────────────────────────────────────────────────────────
 # FULL DEPLOY — 2026-03-18
 # Run this on your Mac from the project root:
@@ -6,11 +8,18 @@
 #   bash scripts/deploy_full_20260318.sh
 #
 # What it does:
-#   1. Pushes latest commits to GitHub
-#   2. SSHs into the server
+#   1. Pushes latest commits to GitHub (via HTTPS token)
+#   2. SSHs into the DigitalOcean server
 #   3. Pulls latest code
 #   4. Updates .env (BREAKOUT_QUALITY_MIN_SCORE=0.0)
 #   5. Restarts the bot
+#
+# SETUP (one-time):
+#   1. Create a GitHub Fine-grained token at https://github.com/settings/tokens
+#      - Repository access: Only select repositories → by-bot
+#      - Permissions → Contents: Read and write
+#   2. Run: bash scripts/deploy_full_20260318.sh
+#      It will ask for your token on first run and save it.
 # ─────────────────────────────────────────────────────────────────
 set -euo pipefail
 
@@ -19,12 +28,34 @@ SERVER_IP="64.226.73.119"
 SERVER_USER="root"
 BOT_DIR="/root/by-bot"
 SSH_KEY="$HOME/.ssh/by-bot"
+GITHUB_USER="Brokenbass90"
+GITHUB_REPO="by-bot"
+TOKEN_FILE="$HOME/.by-bot-github-token"
 
-# Check if SSH key exists in default location, try project .ssh too
+# ── Get/save GitHub token ────────────────────────────────────
+if [ -f "$TOKEN_FILE" ]; then
+    GITHUB_TOKEN=$(cat "$TOKEN_FILE")
+    echo "  Using saved GitHub token from $TOKEN_FILE"
+else
+    echo ""
+    echo "  GitHub token not found. Create one at:"
+    echo "  https://github.com/settings/tokens"
+    echo "  (Fine-grained → Only 'by-bot' repo → Contents: Read+Write)"
+    echo ""
+    read -r -p "  Paste your GitHub token: " GITHUB_TOKEN
+    if [ -z "$GITHUB_TOKEN" ]; then
+        echo "  ❌ No token provided. Aborting."
+        exit 1
+    fi
+    echo "$GITHUB_TOKEN" > "$TOKEN_FILE"
+    chmod 600 "$TOKEN_FILE"
+    echo "  ✅ Token saved to $TOKEN_FILE"
+fi
+
+# Check SSH key for server
 if [ ! -f "$SSH_KEY" ]; then
     SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
     PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-    # Try common locations
     for K in "$PROJECT_ROOT/.ssh/by-bot" "$HOME/.ssh/id_ed25519" "$HOME/.ssh/id_rsa"; do
         if [ -f "$K" ]; then
             SSH_KEY="$K"
@@ -34,20 +65,18 @@ if [ ! -f "$SSH_KEY" ]; then
 fi
 
 SSH_CMD="ssh -i $SSH_KEY -o StrictHostKeyChecking=no"
+HTTPS_URL="https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_USER}/${GITHUB_REPO}.git"
 
+echo ""
 echo "══════════════════════════════════════════════"
 echo "  FULL DEPLOY — $(date '+%Y-%m-%d %H:%M:%S')"
 echo "  branch=$BRANCH  server=$SERVER_IP"
-echo "  ssh_key=$SSH_KEY"
 echo "══════════════════════════════════════════════"
 
-# ── 1. Push to GitHub ──────────────────────────────────────
+# ── 1. Push to GitHub via HTTPS ──────────────────────────────
 echo ""
-echo "→ [1/4] Pushing to GitHub..."
-GIT_SSH_COMMAND="$SSH_CMD" git push origin "$BRANCH" 2>&1 || {
-    echo "  ⚠️  Push failed. Trying with default SSH..."
-    git push origin "$BRANCH" 2>&1
-}
+echo "→ [1/4] Pushing to GitHub (HTTPS)..."
+git push "$HTTPS_URL" "$BRANCH" 2>&1
 echo "  ✅ Pushed to GitHub"
 
 # ── 2. SSH: Pull code ─────────────────────────────────────
