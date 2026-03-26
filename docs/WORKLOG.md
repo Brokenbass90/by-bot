@@ -1768,3 +1768,5 @@ server_clean.env updated:
 - Fixed these init paths by replacing the non-existent `log()` success calls with safe `print()` logging in both:
   - startup engine init
   - lazy engine re-init
+
+- 2026-03-26 19:00 UTC | tg universe visibility | added flat and breakdown universe lines to startup/status notifications so crypto live stack is fully visible in Telegram; clarified Alpaca remains separate from crypto live process | done

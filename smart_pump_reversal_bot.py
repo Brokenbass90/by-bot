@@ -7157,6 +7157,18 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
                 tg_trade(f"🧩 sloped-universe: using={len(sloped_symbols)} ({','.join(sloped_symbols)})")
             else:
                 tg_trade("🧩 sloped-universe: using=dynamic (allowlist unset)")
+        if ENABLE_FLAT_TRADING:
+            flat_symbols = sorted(_parse_symbol_csv(os.getenv("ARF1_SYMBOL_ALLOWLIST", "")))
+            if flat_symbols:
+                tg_trade(f"🧩 flat-universe: using={len(flat_symbols)} ({','.join(flat_symbols)})")
+            else:
+                tg_trade("🧩 flat-universe: using=dynamic (allowlist unset)")
+        if ENABLE_BREAKDOWN_TRADING:
+            breakdown_symbols = sorted(_parse_symbol_csv(os.getenv("BREAKDOWN_SYMBOL_ALLOWLIST", "")))
+            if breakdown_symbols:
+                tg_trade(f"🧩 breakdown-universe: using={len(breakdown_symbols)} ({','.join(breakdown_symbols)})")
+            else:
+                tg_trade("🧩 breakdown-universe: using=dynamic (allowlist unset)")
         if ENABLE_RANGE_TRADING and BOUNCE_TG_LOGS:
             tg_trade(f"🧩 bounce-universe: using={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
 
