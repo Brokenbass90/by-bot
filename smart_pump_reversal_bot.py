@@ -1788,7 +1788,9 @@ def _handle_tg_command(text: str):
             "     /ai какие стратегии сейчас активны?\n"
             "  /ai_backtest — быстрый бэктест 90d\n"
             "  /ai_results [strat] — топ autoresearch кандидаты\n"
+            "     strat: breakout | flat | asc1 | breakdown | midterm | alpaca | portfolio\n"
             "  /ai_tune [strat] — AI предложит новые параметры\n"
+            "     strat: breakout | flat | asc1 | breakdown | midterm | alpaca\n"
             "  /ai_audit — полный аудит бота (код+конфиг)\n"
             "  /ai_code <файл> [вопрос] — AI читает файл\n"
             "  /ai_budget — расход AI токенов\n"
@@ -2010,7 +2012,6 @@ def _handle_tg_command(text: str):
                 "Примеры:\n"
                 "  /ai_code strategies/alt_sloped_channel_v1.py\n"
                 "  /ai_code bot/deepseek_autoresearch_agent.py как работает аудит?\n"
-                "  /ai_code .env что тут можно оптимизировать?\n"
                 "  /ai_code configs/server.env.example что у нас включено в live?"
             )
             return

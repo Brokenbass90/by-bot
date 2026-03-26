@@ -67,6 +67,25 @@ scp -i ~/.ssh/by-bot -r \
 
 ### Что сделано
 
+**DeepSeek research context refresh (актуализация AI-памяти)**
+- `bot/deepseek_autoresearch_agent.py` обновлён с учётом текущего стека:
+  - добавлены новые strategy-hints для `/ai_results` и `/ai_tune`: `breakdown`, `midterm`, `alpaca`, `portfolio`
+  - `build_research_context()` теперь знает текущий лучший `5-sleeve` stack (`new_5strat_final`) вместо старого `combined_4strat_best`
+  - в `known_best_params` добавлены актуальные данные по:
+    - `breakdown`
+    - `ARF1 6 coins`
+    - `ASC1 + DOT`
+    - `Alpaca v21`
+    - текущему `midterm` repair frontier
+  - `pending_autoresearch` теперь собирается не из старых `/tmp/*.log`, а из `progress.json` свежих autoresearch run'ов
+  - `recent_autoresearch_tops` теперь включает актуальные run'ы: `breakdown_expansion_v1`, `asc1_expansion_v1`, `breakout_live_bridge_v3_density`, `midterm_eth_repair_v1`, `equities_monthly_v21_red_month_push`
+- `/ai_results midterm` теперь показывает не только PASS-кандидатов, но и лучший `raw` pocket, если PASS пока нет.
+- `/ai_results portfolio` теперь даёт честную summary текущего лучшего 5-рукавного стека.
+
+**UX cleanup для AI-команд**
+- `/help` обновлён: явно перечислены поддерживаемые `strat` для `/ai_results` и `/ai_tune`.
+- Убрана ошибочная подсказка `/ai_code .env` — чтение `.env` намеренно запрещено из-за секретов.
+
 **Autoresearch: breakout_expansion_v1 (24 кандидата)**
 - Цель: найти оптимальный фиксированный набор монет для inplay_breakout вместо dynamic TOP_N.
 - Спека: `configs/autoresearch/breakout_expansion_v1.json` — 12 SYMBOLS × 2 quality scores (0.48, 0.54).
