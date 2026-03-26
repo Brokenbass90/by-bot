@@ -87,17 +87,47 @@ grep "DEEPSEEK" "\$ENV"
 REMOTE_EOF
 fi
 
+# ── 3b. Patch .env with expansion results ────────────────────────
+echo ""
+echo "[3b/5] Patching .env (expansion best settings)..."
+ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" bash << 'EXPAND_EOF'
+ENV="/root/by-bot/.env"
+
+patch_or_add() {
+    local key="$1" val="$2"
+    if grep -q "^${key}=" "$ENV"; then
+        sed -i "s|^${key}=.*|${key}=${val}|" "$ENV"
+        echo "  updated: ${key}=${val}"
+    else
+        echo "" >> "$ENV"
+        echo "${key}=${val}" >> "$ENV"
+        echo "  added:   ${key}=${val}"
+    fi
+}
+
+# ASC1 expansion: ATOM+LINK+DOT best (asc1_expansion_v1, 2026-03-26)
+patch_or_add "ASC1_SYMBOL_ALLOWLIST" "ATOMUSDT,LINKUSDT,DOTUSDT"
+
+# Breakdown expansion: 6 coins best (breakdown_expansion_v1, 2026-03-26)
+patch_or_add "BREAKDOWN_SYMBOL_ALLOWLIST" "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,LTCUSDT"
+
+echo "--- Updated strategy allowlists ---"
+grep -E "^(ASC1_SYMBOL_ALLOWLIST|BREAKDOWN_SYMBOL_ALLOWLIST)=" "$ENV"
+EXPAND_EOF
+
 # ── 4. Restart bot ───────────────────────────────────────────────
 echo ""
-echo "[4/5] Verifying breakdown strategy on server..."
+echo "[4/6] Verifying breakdown strategy on server..."
 ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" \
     "python3 -c 'from strategies.breakdown_live import BreakdownLiveEngine; print(\"  ✅ breakdown_live import OK\")' 2>&1 || echo '  ❌ import failed'"
 
 echo ""
-echo "[5/5] Restarting bybot service..."
+echo "[5/6] Restarting bybot service..."
 ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" \
     "systemctl restart bybot && sleep 3 && systemctl status bybot --no-pager | head -15"
 
+echo ""
+echo "[6/6] Done."
 echo ""
 echo "╔══════════════════════════════════════════╗"
 echo "║           Deploy complete! ✅             ║"
