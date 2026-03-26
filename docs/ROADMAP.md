@@ -1,5 +1,41 @@
 # Trading Bot Development Roadmap
-> Last updated: 2026-03-18
+> Last updated: 2026-03-26
+
+## Current Operational Focus (2026-03-26)
+
+This block is the current source of truth. Older sections below remain useful as history, but they no longer describe the live stack accurately.
+
+### Immediate Priorities
+1. Finish env/deploy cleanup so `.env` and `/root/by-bot/.env` are the only operational sources of truth.
+2. Keep the 5-sleeve live stack stable and observable:
+   - `breakout`
+   - `midterm`
+   - `sloped`
+   - `flat`
+   - `breakdown`
+3. Verify live counters for `flat` and `breakdown` over a real post-deploy window.
+4. Reduce deploy confusion before any bigger rollout or cleanup delete pass.
+
+### Best Current Strategic Result
+- `portfolio_20260325_172613_new_5strat_final`
+- `+100.93%`
+- `PF 2.078`
+- `WR 55.8%`
+- `446 trades`
+- `DD 3.65%`
+- `0` red months by raw trade aggregation
+
+### Current Research Order
+1. `breakout side-split` as the most promising core improvement
+2. `midterm` repair as the weakest live sleeve
+3. `TS132 / Elder` via symbol pockets, not one setup for all coins
+4. `Alpaca` red-month repair before any real-money rollout
+5. `micro scalper` only after the minute-level backtest path is honest
+
+### Cleanup Rule
+- No blind deletes.
+- First classify active vs legacy vs historical-oneoff.
+- Then remove or archive in small reversible batches.
 
 ## Current State (March 2026)
 

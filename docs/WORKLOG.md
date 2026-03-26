@@ -1596,3 +1596,14 @@ server_clean.env updated:
 - Restarted `bybot.service` successfully; service is `active (running)` after restart.
 - Verified deploy integrity by matching local/server SHA1 for all three files after copy.
 - This deploy was intentionally limited to observability + env/deploy cleanup path; no strategy logic or live risk settings were changed.
+
+### Cleanup roadmap continuation — 2026-03-26
+
+- Synced local working secrets into [`.env`](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/.env) and confirmed it is now the canonical local env file.
+- Updated `/ai_code` usage examples in [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) to prefer `.env` and `configs/server.env.example` instead of suggesting `configs/server_clean.env`.
+- Updated [bot/deepseek_autoresearch_agent.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/deepseek_autoresearch_agent.py) so redacted config reads now prefer:
+  1. `.env`
+  2. `configs/server.env.example`
+  3. legacy `configs/server_clean.env`
+- Added [docs/DEPLOY_SURFACE_INVENTORY_20260326.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/DEPLOY_SURFACE_INVENTORY_20260326.md) to classify active vs historical deploy scripts before any deletion pass.
+- Refreshed the top of [docs/ROADMAP.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/ROADMAP.md) so the current 5-sleeve cleanup/stabilization phase is documented as the live operational focus.

@@ -2010,7 +2010,8 @@ def _handle_tg_command(text: str):
                 "Примеры:\n"
                 "  /ai_code strategies/alt_sloped_channel_v1.py\n"
                 "  /ai_code bot/deepseek_autoresearch_agent.py как работает аудит?\n"
-                "  /ai_code configs/server_clean.env что тут можно оптимизировать?"
+                "  /ai_code .env что тут можно оптимизировать?\n"
+                "  /ai_code configs/server.env.example что у нас включено в live?"
             )
             return
         filename = cmd[1]

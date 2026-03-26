@@ -388,6 +388,7 @@ def read_env_config_redacted(max_lines: int = 120) -> str:
     """Read the bot .env file with secrets redacted — safe for DeepSeek context."""
     candidates = [
         _ROOT / ".env",
+        _ROOT / "configs" / "server.env.example",
         _ROOT / "configs" / "server_clean.env",
     ]
     for path in candidates:
