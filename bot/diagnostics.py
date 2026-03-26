@@ -70,6 +70,10 @@ def _runtime_diag_snapshot() -> str:
         "breakout_ns_range", "breakout_ns_post", "breakout_ns_other",
         "midterm_try", "midterm_no_signal", "midterm_entry",
         "midterm_skip_minqty",
+        "sloped_try", "sloped_entry",
+        "flat_try", "flat_entry",
+        "breakdown_try", "breakdown_entry",
+        "ts132_try", "ts132_entry",
     ]
     parts = [f"{k}={int(RUNTIME_COUNTER.get(k, 0))}" for k in keys]
     return "diag " + " ".join(parts)

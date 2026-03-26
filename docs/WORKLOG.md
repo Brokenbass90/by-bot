@@ -1573,3 +1573,9 @@ server_clean.env updated:
 2. Redact it into an example-only file and rotate exposed credentials.
 3. Keep using the 5-sleeve live stack, but add honest live observability for `flat` and `breakdown`.
 4. Next research priority for core crypto remains `breakout side-split`, not breakout basket expansion.
+
+### Config hygiene follow-up
+
+- Added [configs/server.env.example](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/server.env.example) as the first redacted reference for the main live bot.
+- It mirrors the current 5-sleeve production stack shape (`breakout + midterm + sloped + flat + breakdown`) without embedding live secrets.
+- Next cleanup step is still to rotate leaked secrets and stop relying on tracked `configs/server_clean.env` as an operational file.
