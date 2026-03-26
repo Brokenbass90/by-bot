@@ -1564,6 +1564,7 @@ server_clean.env updated:
   2. repo `.env` (preferred, gitignored)
   3. legacy fallback `configs/server_clean.env`
 - Remote deploy target is now configurable via `DEEPSEEK_EXECUTOR_REMOTE_ENV_PATH` and defaults to `/root/by-bot/.env`, matching `bybot.service`.
+- Fixed `scripts/deploy_session10.sh` to prefer local gitignored `.env` for `DEEPSEEK_API_KEY`, with `configs/server_clean.env` kept only as an explicit legacy fallback warning path.
 - Syntax check passed for `bot/deepseek_action_executor.py`.
 
 ### Immediate recommendations

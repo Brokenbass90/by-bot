@@ -60,12 +60,29 @@ echo "  ✅ bot/deepseek_overlay.py"
 # ── 3. Patch .env with DeepSeek API key ─────────────────────────
 echo ""
 echo "[3/5] Patching .env (DeepSeek)..."
-# Read API key from local server_clean.env
-DSKEY=$(grep "^DEEPSEEK_API_KEY=" "$LOCAL/configs/server_clean.env" | cut -d= -f2- | tr -d '[:space:]')
-if [ -z "$DSKEY" ]; then
-    echo "  ⚠️  DEEPSEEK_API_KEY not found in server_clean.env, skipping"
+# Prefer local gitignored .env; keep server_clean.env only as legacy fallback.
+LOCAL_ENV_PRIMARY="$LOCAL/.env"
+LOCAL_ENV_LEGACY="$LOCAL/configs/server_clean.env"
+if [ -f "$LOCAL_ENV_PRIMARY" ]; then
+    DSKEY_SOURCE="$LOCAL_ENV_PRIMARY"
+elif [ -f "$LOCAL_ENV_LEGACY" ]; then
+    DSKEY_SOURCE="$LOCAL_ENV_LEGACY"
 else
-    echo "  Found DEEPSEEK_API_KEY in server_clean.env"
+    DSKEY_SOURCE=""
+fi
+
+DSKEY=""
+if [ -n "$DSKEY_SOURCE" ]; then
+    DSKEY=$(grep "^DEEPSEEK_API_KEY=" "$DSKEY_SOURCE" | cut -d= -f2- | tr -d '[:space:]')
+fi
+
+if [ -z "$DSKEY" ]; then
+    echo "  ⚠️  DEEPSEEK_API_KEY not found in local .env / legacy server_clean.env, skipping"
+else
+    echo "  Found DEEPSEEK_API_KEY in $(basename "$DSKEY_SOURCE")"
+    if [ "$DSKEY_SOURCE" = "$LOCAL_ENV_LEGACY" ]; then
+        echo "  ⚠️  Legacy fallback in use: configs/server_clean.env"
+    fi
     ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" bash << REMOTE_EOF
 ENV="/root/by-bot/.env"
 
