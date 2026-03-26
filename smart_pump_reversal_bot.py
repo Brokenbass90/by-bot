@@ -1904,24 +1904,24 @@ def _handle_tg_command(text: str):
             )
             return
         _tg_reply("🤖 AI думает...")
-        # Run in background thread to avoid blocking the asyncio event loop
+        # Run entirely in background thread — snapshot + ask + reply
+        # IMPORTANT: snapshot is taken inside the thread so any failure
+        # is caught by the thread's own try/except and reported to TG.
         import threading
-        snap = _deepseek_snapshot()
+        _ai_prompt = prompt  # capture before thread
         def _run_ai():
-            print(f"[AI] thread started, prompt={prompt[:60]!r}")
+            print(f"[AI] thread started, prompt={_ai_prompt[:60]!r}")
             try:
-                answer = DEEPSEEK_OVERLAY.ask(prompt, snap)
+                snap = _deepseek_snapshot()
+                answer = DEEPSEEK_OVERLAY.ask(_ai_prompt, snap)
                 print(f"[AI] ask() returned {len(answer) if answer else 0} chars")
                 if not answer or not answer.strip():
                     answer = "❓ AI вернул пустой ответ. Попробуй ещё раз."
             except Exception as exc:
-                print(f"[AI] ask() exception: {exc}")
+                print(f"[AI] exception: {exc}")
                 answer = f"❌ AI ошибка: {exc}"
-            try:
-                tg_send(answer)
-                print(f"[AI] tg_send done")
-            except Exception as te:
-                print(f"[AI] tg_send failed: {te}")
+            tg_send(answer)
+            print(f"[AI] tg_send done")
         threading.Thread(target=_run_ai, daemon=True).start()
         return
 
