@@ -1412,7 +1412,7 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "sloped": bool(ENABLE_SLOPED_TRADING),
             "flat": bool(ENABLE_FLAT_TRADING),
             "ts132": bool(ENABLE_TS132_TRADING),
-            "pump_fade": bool(ENABLE_PUMP_STRATEGY),
+            "pump_fade": bool(ENABLE_PUMP_FADE_TRADING),
             "inplay": bool(ENABLE_INPLAY_TRADING),
             "retest": bool(ENABLE_RETEST_TRADING),
             "range": bool(ENABLE_RANGE_TRADING),
