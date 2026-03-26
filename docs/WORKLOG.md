@@ -1541,3 +1541,34 @@ server_clean.env updated:
 - `DEEPSEEK_TIMEOUT_SEC=20` (was 15)
 - `DEEPSEEK_HISTORY_MAX_MESSAGES=16` (was 10)
 
+## Session 13 — 2026-03-26
+
+### Full-stack audit after fresh deploy
+
+- Проведён полный локальный + серверный аудит после нового деплоя.
+- Подтверждено: strongest portfolio result remains `portfolio_20260325_172613_new_5strat_final`
+  with `+100.93%`, `PF 2.078`, `WR 55.8%`, `446` trades, `DD 3.65%`.
+- По `trades.csv` у этого стека `0` отрицательных месяцев; худший месяц остаётся положительным (`2025-12`, about `+3.08`).
+- На live-сервере сейчас реально включены `breakout + midterm + sloped + flat + breakdown`, `TS132=0`.
+- Но live still has deploy reproducibility drift:
+  - systemd reads `/root/by-bot/.env`
+  - local AI executor previously patched `configs/server_clean.env`
+  - server git SHA (`75de6bd`) does not fully describe actual copied files on disk
+- Security finding: `configs/server_clean.env` still contains real Telegram / Bybit / DeepSeek secrets and must be redacted + rotated in a controlled follow-up.
+
+### DeepSeek deploy safety fix
+
+- Fixed `bot/deepseek_action_executor.py` so it now patches the active local env file instead of hardcoding `configs/server_clean.env`.
+- New default resolution order:
+  1. `DEEPSEEK_EXECUTOR_ENV_PATH`
+  2. repo `.env` (preferred, gitignored)
+  3. legacy fallback `configs/server_clean.env`
+- Remote deploy target is now configurable via `DEEPSEEK_EXECUTOR_REMOTE_ENV_PATH` and defaults to `/root/by-bot/.env`, matching `bybot.service`.
+- Syntax check passed for `bot/deepseek_action_executor.py`.
+
+### Immediate recommendations
+
+1. Stop treating tracked `configs/server_clean.env` as the source of truth for real secrets.
+2. Redact it into an example-only file and rotate exposed credentials.
+3. Keep using the 5-sleeve live stack, but add honest live observability for `flat` and `breakdown`.
+4. Next research priority for core crypto remains `breakout side-split`, not breakout basket expansion.

@@ -3,13 +3,13 @@ deepseek_action_executor.py
 ============================
 Executes approved DeepSeek proposals:
   - Reads "changes" list from approval queue item
-  - Patches configs/server_clean.env
-  - Optionally deploys to server via SSH
+  - Patches the active local env file
+  - Optionally deploys it to the server via SSH
 
 Telegram commands:
   /ai_deploy <id>   – execute an approved proposal (patch env + push to server)
   /ai_diff          – show what would change if all approved proposals were applied
-  /ai_rollback      – revert server_clean.env to the last backup
+  /ai_rollback      – revert the active env file to the last backup
 """
 from __future__ import annotations
 
@@ -24,7 +24,6 @@ from typing import Any
 _HERE = Path(__file__).resolve().parent
 _ROOT = _HERE.parent
 
-_SERVER_ENV = _ROOT / "configs" / "server_clean.env"
 _ENV_BACKUP_DIR = _ROOT / "configs" / "env_backups"
 
 
@@ -32,16 +31,45 @@ def _env(name: str, default: str = "") -> str:
     return str(os.getenv(name, default) or default).strip()
 
 
+def _active_local_env() -> Path:
+    """
+    Resolve which local env file should be patched.
+
+    Default priority:
+      1. DEEPSEEK_EXECUTOR_ENV_PATH
+      2. repo/.env   (gitignored, preferred for live-aligned local ops)
+      3. configs/server_clean.env (legacy fallback)
+    """
+    raw = _env("DEEPSEEK_EXECUTOR_ENV_PATH", "")
+    candidates = []
+    if raw:
+        candidates.append(Path(raw).expanduser())
+    candidates.append(_ROOT / ".env")
+    candidates.append(_ROOT / "configs" / "server_clean.env")
+    for path in candidates:
+        if path.exists():
+            return path
+    return candidates[0]
+
+
+def _remote_env_path() -> str:
+    return _env("DEEPSEEK_EXECUTOR_REMOTE_ENV_PATH", f"{_SERVER_BOT_DIR}/.env")
+
+
+def _backup_name(active_env: Path) -> str:
+    return f"{active_env.stem}_{time.strftime('%Y%m%d_%H%M%S')}{active_env.suffix or '.env'}"
+
+
 # ── env patching ──────────────────────────────────────────────────────────────
 
 def _backup_env() -> Path:
-    """Save a timestamped copy of server_clean.env before patching."""
+    """Save a timestamped copy of the active env file before patching."""
+    active_env = _active_local_env()
     _ENV_BACKUP_DIR.mkdir(exist_ok=True)
-    stamp = time.strftime("%Y%m%d_%H%M%S")
-    dest = _ENV_BACKUP_DIR / f"server_clean_{stamp}.env"
-    shutil.copy2(_SERVER_ENV, dest)
+    dest = _ENV_BACKUP_DIR / _backup_name(active_env)
+    shutil.copy2(active_env, dest)
     # keep last 20 backups
-    backups = sorted(_ENV_BACKUP_DIR.glob("server_clean_*.env"))
+    backups = sorted(_ENV_BACKUP_DIR.glob(f"{active_env.stem}_*{active_env.suffix or '.env'}"))
     for old in backups[:-20]:
         old.unlink(missing_ok=True)
     return dest
@@ -49,12 +77,13 @@ def _backup_env() -> Path:
 
 def patch_env_file(changes: list[dict[str, Any]]) -> list[str]:
     """
-    Apply a list of {env_key, new_value} changes to server_clean.env.
+    Apply a list of {env_key, new_value} changes to the active env file.
     Returns list of applied change descriptions.
     """
-    if not _SERVER_ENV.exists():
-        raise FileNotFoundError(f"Config not found: {_SERVER_ENV}")
-    content = _SERVER_ENV.read_text(encoding="utf-8")
+    active_env = _active_local_env()
+    if not active_env.exists():
+        raise FileNotFoundError(f"Config not found: {active_env}")
+    content = active_env.read_text(encoding="utf-8")
     applied: list[str] = []
     for ch in changes:
         key = str(ch.get("env_key") or "").strip()
@@ -73,15 +102,16 @@ def patch_env_file(changes: list[dict[str, Any]]) -> list[str]:
             # Append at end
             content = content.rstrip("\n") + f"\n{new_line}\n"
             applied.append(f"  {key}={val}  (added)")
-    _SERVER_ENV.write_text(content, encoding="utf-8")
+    active_env.write_text(content, encoding="utf-8")
     return applied
 
 
 def diff_pending_changes(pending_items: list[dict[str, Any]]) -> str:
     """Show what env changes would be applied if all pending items were deployed."""
-    if not _SERVER_ENV.exists():
-        return "server_clean.env не найден."
-    content = _SERVER_ENV.read_text(encoding="utf-8")
+    active_env = _active_local_env()
+    if not active_env.exists():
+        return f"env не найден: {active_env}"
+    content = active_env.read_text(encoding="utf-8")
     lines: list[str] = ["Предполагаемые изменения:"]
     for item in pending_items:
         changes = (item.get("payload") or {}).get("changes") or []
@@ -149,17 +179,18 @@ def _scp(local_path: Path, remote_path: str, timeout: int = 30) -> tuple[str, in
 
 def deploy_env_to_server() -> str:
     """
-    Push server_clean.env to server and restart the bot.
+    Push the active env file to the server and restart the bot.
     Returns a status message for Telegram.
     """
     lines: list[str] = []
+    active_env = _active_local_env()
+    remote_env = _remote_env_path()
 
     # 1. SCP the file
-    remote_env = f"{_SERVER_BOT_DIR}/configs/server_clean.env"
-    out, rc = _scp(_SERVER_ENV, remote_env)
+    out, rc = _scp(active_env, remote_env)
     if rc != 0:
         return f"❌ SCP failed (rc={rc}):\n{out}"
-    lines.append(f"✅ server_clean.env скопирован на сервер")
+    lines.append(f"✅ {active_env.name} скопирован на сервер → {remote_env}")
 
     # 2. Restart service
     out, rc = _ssh("systemctl restart bybot && sleep 3 && systemctl is-active bybot")
@@ -237,12 +268,13 @@ def execute_proposal(
 # ── rollback ─────────────────────────────────────────────────────────────────
 
 def rollback_env() -> str:
-    """Restore the most recent backup of server_clean.env."""
-    backups = sorted(_ENV_BACKUP_DIR.glob("server_clean_*.env"))
+    """Restore the most recent backup of the active env file."""
+    active_env = _active_local_env()
+    backups = sorted(_ENV_BACKUP_DIR.glob(f"{active_env.stem}_*{active_env.suffix or '.env'}"))
     if not backups:
         return "Нет бэкапов для отката."
     latest = backups[-1]
-    shutil.copy2(latest, _SERVER_ENV)
+    shutil.copy2(latest, active_env)
     return (
         f"↩️ Откат выполнен.\n"
         f"  Восстановлен: {latest.name}\n"
