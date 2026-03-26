@@ -18,6 +18,7 @@ import os
 import time, json, statistics, asyncio, requests, collections, re, csv, traceback, random, math
 import sqlite3
 import subprocess
+from pathlib import Path
 from typing import Dict, Tuple, List, Optional, Any
 import websockets
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK, InvalidStatus
@@ -704,7 +705,8 @@ def _flush_breakout_skip_digest(force: bool = False) -> bool:
 # =========================== TELEGRAM UI ===========================
 TG_KB = {
     "keyboard": [
-        ["📊 /status", "✅ /ping"],
+        ["📊 /status", "🧾 /status_full"],
+        ["✅ /ping"],
         ["⏸ /pause", "▶ /resume"],
         ["ℹ /help", "🤖 /ai"],
     ],
@@ -714,6 +716,7 @@ TG_KB = {
 
 BUTTON_MAP = {
     "📊 /status": "/status",
+    "🧾 /status_full": "/status_full",
     "✅ /ping": "/ping",
     "⏸ /pause": "/pause",
     "▶ /resume": "/resume",
@@ -1507,6 +1510,163 @@ def _deepseek_snapshot() -> dict[str, Any]:
         },
     }
 
+
+_BOT_ROOT = Path(__file__).resolve().parent
+
+
+def _parse_csv_items_keep_case(raw: str) -> list[str]:
+    return [p.strip() for p in str(raw or "").replace(";", ",").split(",") if p.strip()]
+
+
+def _fmt_list_compact(items: list[str], max_items: int = 6) -> str:
+    if not items:
+        return "-"
+    items = [str(x) for x in items if str(x).strip()]
+    if not items:
+        return "-"
+    if len(items) <= max_items:
+        return ",".join(items)
+    return ",".join(items[:max_items]) + f",+{len(items) - max_items}"
+
+
+def _safe_read_csv_first(path: Path) -> Optional[dict[str, str]]:
+    try:
+        with path.open(newline="", encoding="utf-8") as f:
+            return next(csv.DictReader(f), None)
+    except Exception:
+        return None
+
+
+def _find_best_equities_summary_patterns(glob_patterns: list[str]) -> tuple[Optional[Path], Optional[dict[str, str]]]:
+    best_path: Optional[Path] = None
+    best_row: Optional[dict[str, str]] = None
+    best_score: Optional[float] = None
+    for glob_pattern in glob_patterns:
+        for path in _BOT_ROOT.glob(glob_pattern):
+            row = _safe_read_csv_first(path)
+            if not row:
+                continue
+            try:
+                ret = float(row.get("compounded_return_pct") or 0.0)
+                dd = abs(float(row.get("max_monthly_dd_pct") or 0.0))
+                pos = float(row.get("positive_months") or 0.0)
+                score = ret - dd * 0.25 + pos * 0.2
+            except Exception:
+                continue
+            if best_score is None or score > best_score:
+                best_score = score
+                best_path = path
+                best_row = row
+    return best_path, best_row
+
+
+def _status_full_text() -> str:
+    eq = _get_effective_equity()
+    lines: list[str] = []
+
+    lines.append("📋 status_full")
+    lines.append(
+        f"crypto_live: {'ON' if TRADE_ON else 'OFF'} | disabled={PORTFOLIO_STATE.get('disabled')} | "
+        f"equity≈{eq:.2f} USDT | open={len(TRADES)}"
+    )
+    lines.append(
+        f"risk={RISK_PER_TRADE_PCT:.2f}% | max_positions={MAX_POSITIONS} | capital={BOT_CAPITAL_USD}"
+    )
+    lines.append(
+        "strategies: "
+        f"breakout={ENABLE_BREAKOUT_TRADING}, midterm={ENABLE_MIDTERM_TRADING}, "
+        f"sloped={ENABLE_SLOPED_TRADING}, flat={ENABLE_FLAT_TRADING}, "
+        f"breakdown={ENABLE_BREAKDOWN_TRADING}, ts132={ENABLE_TS132_TRADING}"
+    )
+
+    if ENABLE_BREAKOUT_TRADING:
+        lines.append(f"breakout-universe: {len(BREAKOUT_SYMBOLS)} (top {BREAKOUT_TOP_N})")
+    if ENABLE_MIDTERM_TRADING:
+        lines.append(f"midterm-universe: {len(MIDTERM_ACTIVE_SYMBOLS)} ({_fmt_list_compact(sorted(MIDTERM_ACTIVE_SYMBOLS), 8)})")
+    if ENABLE_SLOPED_TRADING:
+        sloped_symbols = sorted(_parse_symbol_csv(os.getenv('ASC1_SYMBOL_ALLOWLIST', '')))
+        lines.append(f"sloped-universe: {len(sloped_symbols)} ({_fmt_list_compact(sloped_symbols, 8) if sloped_symbols else 'dynamic'})")
+    if ENABLE_FLAT_TRADING:
+        flat_symbols = sorted(_parse_symbol_csv(os.getenv('ARF1_SYMBOL_ALLOWLIST', '')))
+        lines.append(f"flat-universe: {len(flat_symbols)} ({_fmt_list_compact(flat_symbols, 8) if flat_symbols else 'dynamic'})")
+    if ENABLE_BREAKDOWN_TRADING:
+        breakdown_symbols = sorted(_parse_symbol_csv(os.getenv('BREAKDOWN_SYMBOL_ALLOWLIST', '')))
+        lines.append(f"breakdown-universe: {len(breakdown_symbols)} ({_fmt_list_compact(breakdown_symbols, 8) if breakdown_symbols else 'dynamic'})")
+
+    if LAST_UNIVERSE_REFRESH_TS:
+        age_min = max(0, int((time.time() - int(LAST_UNIVERSE_REFRESH_TS)) // 60))
+        lines.append(f"universe_refresh_age_min={age_min}")
+
+    regime = _deepseek_local_regime_hint()
+    lines.append(
+        f"regime_hint: {regime.get('label','n/a')} "
+        f"(conf={float(regime.get('confidence', 0.0)):.2f}) — {regime.get('reason','')}"
+    )
+    lines.append(
+        "live_diag: "
+        f"ws={int(_diag_get_int('ws_connect'))}/{int(_diag_get_int('ws_disconnect'))} | "
+        f"breakout_try={int(_diag_get_int('breakout_try'))} entry={int(_diag_get_int('breakout_entry'))} | "
+        f"midterm_try={int(_diag_get_int('midterm_try'))} entry={int(_diag_get_int('midterm_entry'))} | "
+        f"sloped_try={int(_diag_get_int('sloped_try'))} | flat_try={int(_diag_get_int('flat_try'))} | "
+        f"breakdown_try={int(_diag_get_int('breakdown_try'))}"
+    )
+
+    crypto_best_path = _BOT_ROOT / "backtest_runs" / "portfolio_20260325_172613_new_5strat_final" / "summary.csv"
+    crypto_best = _safe_read_csv_first(crypto_best_path)
+    if crypto_best:
+        lines.append(
+            "research_crypto_best: "
+            f"+{float(crypto_best.get('net_pnl') or 0.0):.2f}% | "
+            f"PF={float(crypto_best.get('profit_factor') or 0.0):.3f} | "
+            f"trades={int(float(crypto_best.get('trades') or 0.0))} | "
+            f"DD={float(crypto_best.get('max_drawdown') or 0.0):.2f}"
+        )
+
+    alpaca_path, alpaca_row = _find_best_equities_summary_patterns([
+        "backtest_runs/*equities_monthly_v21_red_month_push*/summary.csv",
+        "backtest_runs/*equities_monthly_v23_breadth_exit_cluster*/summary.csv",
+    ])
+    if alpaca_row:
+        months = int(float(alpaca_row.get("months") or 0))
+        pos_months = int(float(alpaca_row.get("positive_months") or 0))
+        neg_months = max(0, months - pos_months)
+        lines.append(
+            "alpaca_paper: active separate stack | "
+            f"best≈+{float(alpaca_row.get('compounded_return_pct') or 0.0):.2f}% | "
+            f"trades={int(float(alpaca_row.get('trades') or 0.0))} | "
+            f"WR={float(alpaca_row.get('winrate_pct') or 0.0):.1f}% | "
+            f"red_months={neg_months} | "
+            f"max_month_dd={float(alpaca_row.get('max_monthly_dd_pct') or 0.0):.2f}%"
+        )
+    else:
+        lines.append("alpaca_paper: separate stack | no local summary found")
+
+    forex_env = _BOT_ROOT / "docs" / "forex_live_filter_latest.env"
+    if forex_env.exists():
+        env_map: dict[str, str] = {}
+        try:
+            for raw in forex_env.read_text(encoding="utf-8", errors="ignore").splitlines():
+                line = raw.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                k, v = line.split("=", 1)
+                env_map[k.strip()] = v.strip()
+        except Exception:
+            env_map = {}
+        active_pairs = _parse_csv_items_keep_case(env_map.get("FOREX_ACTIVE_PAIRS", ""))
+        canary_pairs = _parse_csv_items_keep_case(env_map.get("FOREX_CANARY_PAIRS", ""))
+        active_combos = _parse_csv_items_keep_case(env_map.get("FOREX_ACTIVE_COMBOS", ""))
+        lines.append(
+            "forex_pilot: "
+            f"active_pairs={_fmt_list_compact(active_pairs, 6)} | "
+            f"canary_pairs={_fmt_list_compact(canary_pairs, 6)} | "
+            f"active_combos={_fmt_list_compact(active_combos, 3)}"
+        )
+    else:
+        lines.append("forex_pilot: no latest filter artifact")
+
+    return "\n".join(lines)
+
 def _parse_float(s: str) -> float | None:
     try:
         return float(s)
@@ -1807,6 +1967,7 @@ def _handle_tg_command(text: str):
             "🤖 *Bybit Bot — Команды*\n\n"
             "📊 *Статус и мониторинг*\n"
             "  /status — баланс, риск, открытые позиции\n"
+            "  /status_full — полный свод crypto + research stacks\n"
             "  /ping — время работы бота\n"
             "  /stats 7|30|90|365 — отчёт за период\n"
             "  /health — фильтр символов, killers/winners\n\n"
@@ -1849,6 +2010,10 @@ def _handle_tg_command(text: str):
             f"Equity≈{eq:.2f} USDT | open={len(TRADES)}\n"
             f"risk={RISK_PER_TRADE_PCT:.2f}% | max_positions={MAX_POSITIONS} | capital={BOT_CAPITAL_USD}"
         )
+        return
+
+    if name == "/status_full":
+        _tg_reply(_status_full_text())
         return
 
     if name == "/ping":
