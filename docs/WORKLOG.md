@@ -1606,4 +1606,9 @@ server_clean.env updated:
   2. `configs/server.env.example`
   3. legacy `configs/server_clean.env`
 - Added [docs/DEPLOY_SURFACE_INVENTORY_20260326.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/DEPLOY_SURFACE_INVENTORY_20260326.md) to classify active vs historical deploy scripts before any deletion pass.
+- Added [docs/CLEANUP_NEXT_BATCH_20260326.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/CLEANUP_NEXT_BATCH_20260326.md) to define the next safe cleanup batches without any blind deletes.
 - Refreshed the top of [docs/ROADMAP.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/ROADMAP.md) so the current 5-sleeve cleanup/stabilization phase is documented as the live operational focus.
+- Fresh `2h` live diagnostics after the observability deploy confirm that:
+  - `flat_try/flat_entry` and `breakdown_try/breakdown_entry` are now visible in pulse output
+  - both remain `0` in the latest short window
+  - this is now an honest visibility result, not a logging blind spot
