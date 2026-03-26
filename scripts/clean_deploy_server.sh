@@ -52,18 +52,26 @@ git pull origin "$BRANCH"
 echo "    ✓ Code updated — $(git log --oneline -1)"
 
 # -------------------------------------------------------
-# Step 3: Backup old .env and write clean one
+# Step 3: Validate / keep live .env
 # -------------------------------------------------------
 echo ""
-echo ">>> [3/6] Replacing .env with clean config..."
+echo ">>> [3/6] Validating live .env..."
 BACKUP_NAME=".env.backup_$(date +%Y%m%d_%H%M%S)"
 if [ -f .env ]; then
     cp .env "$BACKUP_NAME"
     echo "    Old .env backed up to: $BACKUP_NAME"
 fi
 
-cp configs/server_clean.env .env
-echo "    ✓ Fresh .env written"
+if [ -n "$SERVER_ENV_SOURCE" ]; then
+    cp "$SERVER_ENV_SOURCE" .env
+    echo "    ✓ .env replaced from SERVER_ENV_SOURCE=$SERVER_ENV_SOURCE"
+elif [ -f .env ]; then
+    echo "    ✓ Existing .env kept in place (default safe mode)"
+else
+    echo "    ✗ .env is missing and no SERVER_ENV_SOURCE was provided."
+    echo "      Create /root/by-bot/.env manually or pass SERVER_ENV_SOURCE=/path/to/env"
+    exit 1
+fi
 
 # Show what's active
 echo ""

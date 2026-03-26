@@ -16,12 +16,16 @@ echo ""
 echo "[1/5] Bot core files..."
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
   "$LOCAL_DIR/bot/deepseek_overlay.py" \
+  "$LOCAL_DIR/bot/deepseek_action_executor.py" \
   "$LOCAL_DIR/bot/deepseek_autoresearch_agent.py" \
+  "$LOCAL_DIR/bot/diagnostics.py" \
   "$LOCAL_DIR/smart_pump_reversal_bot.py" \
   "$SERVER:$REMOTE_DIR/bot/" 2>/dev/null || \
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
   "$LOCAL_DIR/bot/deepseek_overlay.py" \
+  "$LOCAL_DIR/bot/deepseek_action_executor.py" \
   "$LOCAL_DIR/bot/deepseek_autoresearch_agent.py" \
+  "$LOCAL_DIR/bot/diagnostics.py" \
   "$SERVER:$REMOTE_DIR/bot/"
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
   "$LOCAL_DIR/smart_pump_reversal_bot.py" \
@@ -71,7 +75,9 @@ echo "[5/5] Syntax check & restart..."
 ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" "
   cd $REMOTE_DIR
   python3 -m py_compile bot/deepseek_overlay.py && echo 'deepseek_overlay: OK'
+  python3 -m py_compile bot/deepseek_action_executor.py && echo 'deepseek_action_executor: OK'
   python3 -m py_compile bot/deepseek_autoresearch_agent.py && echo 'deepseek_autoresearch_agent: OK'
+  python3 -m py_compile bot/diagnostics.py && echo 'diagnostics: OK'
   python3 -m py_compile smart_pump_reversal_bot.py && echo 'smart_pump_reversal_bot: OK'
   python3 -m py_compile strategies/alt_sloped_channel_v1.py && echo 'asc1: OK'
   python3 -m py_compile strategies/alt_resistance_fade_v1.py && echo 'arf1: OK'

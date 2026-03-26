@@ -38,15 +38,19 @@ ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no -o ConnectTimeout=10 "$SERVER" "ec
 echo ""
 echo "[1/5] Syntax check..."
 python3 -m py_compile "$LOCAL/smart_pump_reversal_bot.py" && echo "  ✅ smart_pump_reversal_bot.py"
+python3 -m py_compile "$LOCAL/bot/diagnostics.py" && echo "  ✅ bot/diagnostics.py"
 python3 -m py_compile "$LOCAL/strategies/breakdown_live.py" && echo "  ✅ strategies/breakdown_live.py"
 python3 -m py_compile "$LOCAL/bot/deepseek_overlay.py" && echo "  ✅ bot/deepseek_overlay.py"
+python3 -m py_compile "$LOCAL/bot/deepseek_action_executor.py" && echo "  ✅ bot/deepseek_action_executor.py"
 
 # ── 2. Copy bot files ─────────────────────────────────────────────
 echo ""
 echo "[2/5] Copying bot files..."
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
+    "$LOCAL/bot/diagnostics.py" \
     "$LOCAL/smart_pump_reversal_bot.py" \
     "$SERVER:/root/by-bot/"
+echo "  ✅ bot/diagnostics.py"
 echo "  ✅ smart_pump_reversal_bot.py"
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
     "$LOCAL/strategies/breakdown_live.py" \
@@ -54,8 +58,10 @@ scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
 echo "  ✅ strategies/breakdown_live.py"
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
     "$LOCAL/bot/deepseek_overlay.py" \
+    "$LOCAL/bot/deepseek_action_executor.py" \
     "$SERVER:/root/by-bot/bot/"
 echo "  ✅ bot/deepseek_overlay.py"
+echo "  ✅ bot/deepseek_action_executor.py"
 
 # ── 3. Patch .env with DeepSeek API key ─────────────────────────
 echo ""

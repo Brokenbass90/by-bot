@@ -1579,3 +1579,6 @@ server_clean.env updated:
 - Added [configs/server.env.example](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/server.env.example) as the first redacted reference for the main live bot.
 - It mirrors the current 5-sleeve production stack shape (`breakout + midterm + sloped + flat + breakdown`) without embedding live secrets.
 - Next cleanup step is still to rotate leaked secrets and stop relying on tracked `configs/server_clean.env` as an operational file.
+- Synced local gitignored [`.env`](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/.env) from the current working legacy config and saved a backup in [`.env.bak_20260326_local_sync`](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/.env.bak_20260326_local_sync).
+- Updated `scripts/deploy_session10.sh` and `scripts/deploy_all_latest.sh` so future deploys also carry `bot/diagnostics.py` and `bot/deepseek_action_executor.py`.
+- Updated `scripts/clean_deploy_server.sh` so it no longer overwrites live `.env` from tracked config by default; it now keeps the existing server `.env` unless `SERVER_ENV_SOURCE` is passed explicitly.
