@@ -1,0 +1,78 @@
+{
+  "_comment": "Breakout coin expansion v1 — test different symbol families for inplay_breakout. Best known params fixed (quality=0.48/0.54, v2_focus results). Goal: find optimal coin basket beyond top-N dynamic selection.",
+  "name": "breakout_expansion_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "inplay_breakout",
+    "--days",
+    "360",
+    "--end",
+    "2026-02-24",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "10",
+    "--slippage_bps",
+    "10"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "BTCUSDT,ETHUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,AVAXUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,AVAXUSDT,LINKUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,AVAXUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,LTCUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,DOTUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,AVAXUSDT,LINKUSDT,ATOMUSDT,DOTUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,AVAXUSDT,LINKUSDT,ATOMUSDT,LTCUSDT,DOTUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,AVAXUSDT,LINKUSDT,ATOMUSDT,LTCUSDT,DOTUSDT,ADAUSDT,XRPUSDT"
+    ],
+    "BT_BREAKOUT_QUALITY_MIN_SCORE": [0.48, 0.54],
+    "BREAKOUT_ALLOW_SHORTS": ["0"]
+  },
+  "base_env": {
+    "BT_BREAKOUT_QUALITY_ENABLE": "1",
+    "BREAKOUT_BUFFER_ATR": "0.12",
+    "BREAKOUT_IMPULSE_ATR_MULT": "1.0",
+    "BREAKOUT_MAX_CHASE_PCT": "0.11",
+    "BREAKOUT_MAX_DIST_ATR": "1.4",
+    "BREAKOUT_MAX_LATE_VS_REF_PCT": "0.35",
+    "BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT": "0.06",
+    "BREAKOUT_RECLAIM_ATR": "0.12",
+    "BACKTEST_CACHE_ONLY": "1"
+  },
+  "constraints": {
+    "min_trades": 50,
+    "min_profit_factor": 1.3,
+    "max_drawdown": 5.0,
+    "min_net_pnl": 12.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 5.0,
+    "winrate": 15.0,
+    "max_drawdown": 1.5,
+    "trades": 0.04,
+    "trades_cap": 400,
+    "negative_months": 3.0,
+    "max_negative_streak": 2.5
+  }
+}

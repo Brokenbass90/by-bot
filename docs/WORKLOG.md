@@ -2,15 +2,13 @@
 
 ## ROADMAP (приоритеты на следующие сессии)
 
-### 🔥 Приоритет 1 — Breakout expansion по монетам
-Autoresearch по семействам монет для inplay_breakout (как делали для breakdown).
-Цель: +30-50% к количеству входов без ухудшения качества.
-Файл спеки: `configs/autoresearch/breakout_expansion_v1.json` (создать).
+### ✅ Приоритет 1 — Breakout expansion по монетам (ЗАВЕРШЕНО, сессия 12)
+Autoresearch `breakout_expansion_v1.json` — все 24 кандидата FAIL.
+**Вывод**: dynamic TOP_N=10 лучше любого фиксированного набора. Изменений нет.
 
-### 🔥 Приоритет 2 — ASC1 long режим (готово к тесту!)
-`ASC1_ALLOW_LONGS=1` уже есть в коде — покупка от нижней границы канала.
-Сейчас `ASC1_ALLOW_LONGS=0`. Нужен autoresearch с longs на развороте рынка.
-Backtest скорее всего покажет хороший результат — ASC1 умеет работать в обе стороны.
+### ✅ Приоритет 2 — ASC1 long режим (ЗАВЕРШЕНО, сессия 12)
+`asc1_longs_v1.json` — 16/24 PASS. Лонги работают, но снижают PF в медвежий период.
+**Вывод**: держим ALLOW_LONGS=0 сейчас. При развороте → переключить в .env.
 
 ### 🔥 Приоритет 3 — Midterm pullback improvement
 WR 46%, PF 1.3 — слабейшая стратегия. Autoresearch на параметрах.
@@ -62,6 +60,63 @@ scp -i ~/.ssh/by-bot -r \
     root@64.226.73.119:/root/by-bot/backtest_runs/autoresearch_*elder_v11* \
     backtest_runs/
 ```
+
+---
+
+## 2026-03-26 (session 12) — Breakout expansion, ASC1 longs autoresearch, /ai full fix
+
+### Что сделано
+
+**Autoresearch: breakout_expansion_v1 (24 кандидата)**
+- Цель: найти оптимальный фиксированный набор монет для inplay_breakout вместо dynamic TOP_N.
+- Спека: `configs/autoresearch/breakout_expansion_v1.json` — 12 SYMBOLS × 2 quality scores (0.48, 0.54).
+- Результат: **все 24 FAIL** по constraints (min_net_pnl=12%, min_pf=1.3).
+  - Лучший: BTC+ETH+SOL+AVAX+LINK+ATOM+LTC+DOT (8 монет), quality=0.48 → net=8.65%, PF=1.382, WR=72.2%, DD=2.31%
+- **Вывод**: фиксированный набор монет уступает динамическому TOP_N=10. Изменений в live не вносим.
+- Dynamic breakout с TOP_N=10 остаётся лучшим подходом для текущего медвежьего рынка.
+
+**Autoresearch: asc1_longs_v1 (24 кандидата)**
+- Цель: проверить, стоит ли включать ALLOW_LONGS=1 для ASC1 (покупка от нижней границы канала).
+- Спека: `configs/autoresearch/asc1_longs_v1.json` — 6 SYMBOLS × 2 ALLOW_LONGS (0,1) × 2 BARS (4,6).
+- Результат: **16/24 PASS**.
+  - Лучший без лонгов: ATOM+LINK, ALLOW_LONGS=0, BARS=4 → net=+14.23%, PF=2.861, WR=61.1%, DD=2.33%
+  - Лучший с лонгами: ATOM+LINK, ALLOW_LONGS=1, BARS=4 → net=+15.40%, PF=1.677, DD=2.33%
+- **Вывод**: лонговая логика ASC1 работает (+1.17% net), но снижает PF с 2.86 до 1.68 в медвежий период.
+  - Решение: **держим ALLOW_LONGS=0** сейчас. При развороте рынка → переключить на 1 (одна строка в .env).
+
+**Исправление /ai (финальные 2 бага)**
+- Баг 3: `float(BOT_CAPITAL_USD)` где `BOT_CAPITAL_USD=None` при старте → `float() argument must be...NoneType`
+  - Фикс: `float(BOT_CAPITAL_USD or 0)` в `_deepseek_snapshot()`
+- Баг 4: `ENABLE_PUMP_STRATEGY` не существует → NameError
+  - Фикс: `bool(ENABLE_PUMP_FADE_TRADING)` (правильное имя переменной)
+- Итого: все 4 бага в цепочке `/ai` исправлены. DeepSeek свободно общается на любые темы.
+
+**DeepSeek system prompt — свободный разговор**
+- Переписан system prompt в `bot/deepseek_overlay.py`: AI теперь ведёт диалог как senior партнёр.
+- Отвечает на вопросы о стратегиях, рынке, риск-менеджменте, предлагает улучшения.
+- Перестал требовать специальных команд — `/ai привет!` работает.
+
+**Анализ long-готовности стратегий**
+- inplay_breakout: ✅ лонги уже работают (основная стратегия)
+- btc_eth_midterm: ✅ и лонги и шорты
+- ASC1: ✅ код готов, достаточно поменять ALLOW_LONGS=0 → 1 при развороте
+- ARF1: ❌ шорты only, long логики в коде нет → Priority 4: alt_support_reclaim_v1
+- Breakdown: ❌ шорты only (по логике стратегии — это нормально)
+
+### Статус приоритетов
+
+| Приоритет | Задача | Статус |
+|---|---|---|
+| 1 | Breakout expansion | ✅ Завершено — dynamic TOP_N=10 лучше |
+| 2 | ASC1 long режим | ✅ Протестировано — ALLOW_LONGS=0 оптимально сейчас |
+| 3 | Midterm improvement | 🔜 Следующая сессия |
+| 4 | Long от поддержки | 🔜 После midterm |
+| 5 | AI апрув человеческий | 🔜 Отложено |
+| 7 | Autoresearch на сервере | 🔜 Elder v11 (1024 комбо) запустить на сервере |
+
+### Коммиты (ветка codex/dynamic-symbol-filters)
+- `breakout_expansion_v1.json`, `asc1_longs_v1.json` — новые autoresearch спеки
+- WORKLOG обновлён с результатами сессий 10-12
 
 ---
 
