@@ -1908,13 +1908,20 @@ def _handle_tg_command(text: str):
         import threading
         snap = _deepseek_snapshot()
         def _run_ai():
+            print(f"[AI] thread started, prompt={prompt[:60]!r}")
             try:
                 answer = DEEPSEEK_OVERLAY.ask(prompt, snap)
+                print(f"[AI] ask() returned {len(answer) if answer else 0} chars")
                 if not answer or not answer.strip():
                     answer = "❓ AI вернул пустой ответ. Попробуй ещё раз."
             except Exception as exc:
+                print(f"[AI] ask() exception: {exc}")
                 answer = f"❌ AI ошибка: {exc}"
-            tg_send(answer)
+            try:
+                tg_send(answer)
+                print(f"[AI] tg_send done")
+            except Exception as te:
+                print(f"[AI] tg_send failed: {te}")
         threading.Thread(target=_run_ai, daemon=True).start()
         return
 
