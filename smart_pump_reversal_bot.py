@@ -489,6 +489,17 @@ KLINE_STALE_GRACE_SEC = int(os.getenv("KLINE_STALE_GRACE_SEC", "90"))
 KLINE_STALE_MAX_BARS = float(os.getenv("KLINE_STALE_MAX_BARS", "2.5"))
 
 
+def _kline_cache_ttl_sec(interval: str) -> float:
+    interval_sec = _interval_to_seconds(interval)
+    if interval_sec <= 5 * 60:
+        return 20.0
+    if interval_sec <= 15 * 60:
+        return 45.0
+    if interval_sec <= 60 * 60:
+        return 120.0
+    return 300.0
+
+
 def _interval_to_seconds(interval: str) -> int:
     iv = str(interval).strip().upper()
     if iv.isdigit():
@@ -532,8 +543,14 @@ def fetch_klines(symbol: str, interval: str, limit: int):
     key = (symbol, str(interval), limit)
     now = time.time()
     hit = _KLINE_RAW_CACHE.get(key)
-    if hit and (now - hit[0] < 15) and _klines_are_fresh(hit[1], interval):
+    ttl_sec = _kline_cache_ttl_sec(interval)
+    if hit and (now - hit[0] < ttl_sec) and _klines_are_fresh(hit[1], interval):
         return hit[1]
+    global PUBLIC_RL_UNTIL
+    if PUBLIC_RL_UNTIL > now:
+        if hit and _klines_are_fresh(hit[1], interval):
+            return hit[1]
+        raise RuntimeError(f"Bybit public RL backoff active for {max(0.0, PUBLIC_RL_UNTIL - now):.1f}s")
 
     r = requests.get(
         f"{base}/v5/market/kline",
@@ -543,6 +560,10 @@ def fetch_klines(symbol: str, interval: str, limit: int):
     r.raise_for_status()
     j = r.json()
     if str(j.get("retCode")) != "0":
+        if str(j.get("retCode")) == "10006":
+            PUBLIC_RL_UNTIL = max(PUBLIC_RL_UNTIL, now + float(PUBLIC_RL_BACKOFF_SEC))
+            if hit and _klines_are_fresh(hit[1], interval):
+                return hit[1]
         raise RuntimeError(f"Bybit kline error: {j}")
 
     rows = ((j.get("result") or {}).get("list") or [])
