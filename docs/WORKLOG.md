@@ -1,5 +1,55 @@
 # Bybit bot (v28) — worklog / reminders
 
+## 2026-03-27 — DeepSeek timeout follow-up + skip-noise cleanup + midterm v3
+
+### DeepSeek timeout clarification
+- `/ai` timeout looked like API/network latency, not token exhaustion.
+- No persistent DeepSeek failures were found in `logs/errors.log` on the server.
+- Updated `bot/deepseek_overlay.py`:
+  - default timeout raised from `20s` to `30s`
+  - added one retry on `requests.exceptions.Timeout`
+  - short backoff between attempts
+
+### Telegram skip-noise cleanup
+- Found that repeated `notional too small` / `BELOW_MIN_QTY` alerts were sent directly with `tg_trade(...)`.
+- Added shared throttled helper in `smart_pump_reversal_bot.py`:
+  - `tg_skip_throttled(strategy_key, symbol, bucket, msg)`
+- Applied it to:
+  - `range`
+  - `inplay`
+  - `retest`
+  - `midterm`
+  - `sloped`
+  - `flat`
+  - `breakdown`
+  - `ts132`
+- Goal:
+  - keep operator visibility
+  - stop flooding Telegram with repeated skip alerts for the same symbol/reason
+
+### Midterm follow-up
+- `midterm_pullback_v2_focus` finished all `576/576` combinations.
+- Best near-pass still sits just below the hard net threshold:
+  - `net=7.78`
+  - `PF=1.574`
+  - `WR=54.1%`
+  - `DD=1.82%`
+  - `negative_months=2`
+- Created:
+  - `configs/autoresearch/midterm_pullback_v3_tiny_focus.json`
+- Purpose:
+  - tiny sweep around the only real near-pass region
+  - try to push net above `+8%` without reopening DD or red-month count
+- Started live local research run:
+  - `midterm_pullback_v3_tiny_focus`
+
+### Server rollout
+- Deployed:
+  - `smart_pump_reversal_bot.py`
+  - `bot/deepseek_overlay.py`
+- Restarted `bybot.service`
+- Service returned `active`
+
 ## 2026-03-26 — live sleeve recovery + operator roadmap + entry-safety follow-up
 
 ### Live sleeve reality confirmed

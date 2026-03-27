@@ -22,6 +22,8 @@ class DeepSeekConfig:
     base_url: str
     model: str
     timeout_sec: float
+    timeout_retries: int
+    retry_backoff_sec: float
     history_path: Path
     audit_log_path: Path
     approval_queue_path: Path
@@ -39,7 +41,9 @@ def _load_config() -> DeepSeekConfig:
         api_key=str(os.getenv("DEEPSEEK_API_KEY", "") or "").strip(),
         base_url=str(os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com") or "https://api.deepseek.com").strip(),
         model=str(os.getenv("DEEPSEEK_MODEL", "deepseek-chat") or "deepseek-chat").strip(),
-        timeout_sec=float(os.getenv("DEEPSEEK_TIMEOUT_SEC", "20") or 20),
+        timeout_sec=float(os.getenv("DEEPSEEK_TIMEOUT_SEC", "30") or 30),
+        timeout_retries=max(0, int(os.getenv("DEEPSEEK_TIMEOUT_RETRIES", "1") or 1)),
+        retry_backoff_sec=max(0.0, float(os.getenv("DEEPSEEK_RETRY_BACKOFF_SEC", "1.5") or 1.5)),
         history_path=Path(str(os.getenv("DEEPSEEK_CHAT_STATE_PATH", "/root/by-bot/data/deepseek_chat.json") or "/root/by-bot/data/deepseek_chat.json")),
         audit_log_path=Path(str(os.getenv("DEEPSEEK_AUDIT_LOG_PATH", "/root/by-bot/data/deepseek_audit.jsonl") or "/root/by-bot/data/deepseek_audit.jsonl")),
         approval_queue_path=Path(str(os.getenv("DEEPSEEK_APPROVAL_QUEUE_PATH", "/root/by-bot/data/deepseek_approval_queue.json") or "/root/by-bot/data/deepseek_approval_queue.json")),
@@ -395,7 +399,22 @@ class DeepSeekOverlay:
             "Content-Type": "application/json",
         }
         try:
-            resp = requests.post(url, headers=headers, json=payload, timeout=self.cfg.timeout_sec)
+            last_timeout_exc: Exception | None = None
+            resp = None
+            for attempt in range(self.cfg.timeout_retries + 1):
+                try:
+                    resp = requests.post(url, headers=headers, json=payload, timeout=self.cfg.timeout_sec)
+                    break
+                except requests.exceptions.Timeout as e:
+                    last_timeout_exc = e
+                    if attempt >= self.cfg.timeout_retries:
+                        raise
+                    if self.cfg.retry_backoff_sec > 0:
+                        time.sleep(self.cfg.retry_backoff_sec * float(attempt + 1))
+            if resp is None and last_timeout_exc is not None:
+                raise last_timeout_exc
+            if resp is None:
+                raise RuntimeError("DeepSeek request returned no response object")
             resp.raise_for_status()
             data = resp.json() or {}
             choices = data.get("choices") or []

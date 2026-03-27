@@ -679,6 +679,7 @@ def tg_trade(msg: str):
 
 _TG_ALERT_THROTTLE_TS: dict[str, int] = {}
 BREAKOUT_SKIP_ALERT_COOLDOWN_SEC = int(os.getenv("BREAKOUT_SKIP_ALERT_COOLDOWN_SEC", "14400") or 14400)
+TG_SKIP_ALERT_COOLDOWN_SEC = max(300, int(os.getenv("TG_SKIP_ALERT_COOLDOWN_SEC", "3600") or 3600))
 BREAKOUT_SKIP_DIGEST_ENABLE = _env_bool("BREAKOUT_SKIP_DIGEST_ENABLE", True)
 BREAKOUT_SKIP_DIGEST_EVERY_SEC = max(300, int(os.getenv("BREAKOUT_SKIP_DIGEST_EVERY_SEC", "14400") or 14400))
 BREAKOUT_SKIP_DIGEST_TOP_N = max(1, int(os.getenv("BREAKOUT_SKIP_DIGEST_TOP_N", "8") or 8))
@@ -698,6 +699,14 @@ def tg_trade_throttled(key: str, msg: str, cooldown_sec: int) -> bool:
     _TG_ALERT_THROTTLE_TS[key] = now
     tg_trade(msg)
     return True
+
+
+def tg_skip_throttled(strategy_key: str, symbol: str, bucket: str, msg: str) -> bool:
+    return tg_trade_throttled(
+        f"skip:{strategy_key}:{bucket}:{symbol}",
+        msg,
+        TG_SKIP_ALERT_COOLDOWN_SEC,
+    )
 
 
 def _record_breakout_skip(symbol: str, reason_key: str) -> None:
@@ -5309,12 +5318,12 @@ async def try_range_entry_async(symbol: str, price: float):
     stop_pct = abs((float(sl_r) - float(price)) / max(1e-12, float(price))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
     if dyn_usd <= 0:
-        tg_trade(f"🟡 RANGE SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        tg_skip_throttled("range", symbol, "notional_small", f"🟡 RANGE SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0:
-        tg_trade(f"🟡 RANGE SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        tg_skip_throttled("range", symbol, f"minqty:{reason}", f"🟡 RANGE SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(price) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
@@ -5403,12 +5412,12 @@ async def try_inplay_entry_async(symbol: str, price: float):
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
     if dyn_usd <= 0:
-        tg_trade(f"🟡 INPLAY SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        tg_skip_throttled("inplay", symbol, "notional_small", f"🟡 INPLAY SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
     if qty_floor <= 0:
-        tg_trade(f"🟡 INPLAY SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        tg_skip_throttled("inplay", symbol, f"minqty:{reason}", f"🟡 INPLAY SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
@@ -5853,12 +5862,12 @@ async def try_retest_entry_async(symbol: str, price: float):
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
     if dyn_usd <= 0:
-        tg_trade(f"🟡 RETEST SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        tg_skip_throttled("retest", symbol, "notional_small", f"🟡 RETEST SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
     if qty_floor <= 0:
-        tg_trade(f"🟡 RETEST SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        tg_skip_throttled("retest", symbol, f"minqty:{reason}", f"🟡 RETEST SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
@@ -5949,7 +5958,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
     alloc_mult = live_allocator_multiplier("midterm", _live_regime_from_state(st))
     dyn_usd *= float(MIDTERM_NOTIONAL_MULT) * float(alloc_mult)
     if dyn_usd <= 0:
-        tg_trade(f"🟡 MIDTERM SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        tg_skip_throttled("midterm", symbol, "notional_small", f"🟡 MIDTERM SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
@@ -5967,7 +5976,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
                     reason = reason2
     if qty_floor <= 0:
         _diag_inc("midterm_skip_minqty")
-        tg_trade(f"🟡 MIDTERM SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        tg_skip_throttled("midterm", symbol, f"minqty:{reason}", f"🟡 MIDTERM SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
@@ -6106,12 +6115,12 @@ async def try_sloped_entry_async(symbol: str, price: float):
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=SLOPED_RISK_MULT)
     if dyn_usd <= 0:
-        tg_trade(f"🟡 SLOPED SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        tg_skip_throttled("sloped", symbol, "notional_small", f"🟡 SLOPED SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0:
-        tg_trade(f"🟡 SLOPED SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        tg_skip_throttled("sloped", symbol, f"minqty:{reason}", f"🟡 SLOPED SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
@@ -6242,12 +6251,12 @@ async def try_flat_entry_async(symbol: str, price: float):
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=FLAT_RISK_MULT)
     if dyn_usd <= 0:
-        tg_trade(f"🟡 FLAT SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        tg_skip_throttled("flat", symbol, "notional_small", f"🟡 FLAT SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0:
-        tg_trade(f"🟡 FLAT SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        tg_skip_throttled("flat", symbol, f"minqty:{reason}", f"🟡 FLAT SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
@@ -6378,12 +6387,12 @@ async def try_breakdown_entry_async(symbol: str, price: float):
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=BREAKDOWN_RISK_MULT)
     if dyn_usd <= 0:
-        tg_trade(f"🟡 BREAKDOWN SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        tg_skip_throttled("breakdown", symbol, "notional_small", f"🟡 BREAKDOWN SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0:
-        tg_trade(f"🟡 BREAKDOWN SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        tg_skip_throttled("breakdown", symbol, f"minqty:{reason}", f"🟡 BREAKDOWN SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
@@ -6719,12 +6728,12 @@ async def try_ts132_entry_async(symbol: str, price: float):
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
     if dyn_usd <= 0:
-        tg_trade(f"🟡 TS132 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        tg_skip_throttled("ts132", symbol, "notional_small", f"🟡 TS132 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
     qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0:
-        tg_trade(f"🟡 TS132 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        tg_skip_throttled("ts132", symbol, f"minqty:{reason}", f"🟡 TS132 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
