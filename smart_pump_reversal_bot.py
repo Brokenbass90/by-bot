@@ -78,6 +78,7 @@ from bot.deepseek_autoresearch_agent import (
     results_report_text,
     tune_strategy,
     trigger_mini_backtest,
+    trigger_named_backtest,
     build_research_context,
     audit_bot_full,
     ask_about_file,
@@ -2282,7 +2283,7 @@ def _handle_tg_command(text: str):
             "     /ai почему бот не входил сегодня?\n"
             "     /ai запусти autoresearch на breakdown\n"
             "     /ai какие стратегии сейчас активны?\n"
-            "  /ai_backtest — быстрый бэктест 90d\n"
+            "  /ai_backtest [preset] [days] — быстрый bounded бэктест\n"
             "  /ai_results [strat] — топ autoresearch кандидаты\n"
             "     strat: breakout | flat | asc1 | breakdown | midterm | alpaca | portfolio\n"
             "  /ai_tune [strat] — AI предложит новые параметры\n"
@@ -2537,7 +2538,20 @@ def _handle_tg_command(text: str):
         return
 
     if name == "/ai_backtest":
-        _tg_reply(trigger_mini_backtest())
+        preset = "portfolio"
+        days = 90
+        if len(cmd) >= 2:
+            if str(cmd[1]).strip().isdigit():
+                days = int(float(cmd[1]))
+            else:
+                preset = str(cmd[1]).strip().lower()
+        if len(cmd) >= 3 and str(cmd[2]).strip().isdigit():
+            days = int(float(cmd[2]))
+        _tg_reply(
+            "🧪 Запускаю bounded backtest...\n"
+            "presets: portfolio/full_stack, breakout, midterm, flat/arf1, asc1/sloped, breakdown, pump"
+        )
+        _tg_reply(trigger_named_backtest(preset=preset, days=days))
         return
 
     if name == "/ai_diff":

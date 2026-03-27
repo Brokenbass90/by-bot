@@ -885,6 +885,154 @@ def ask_about_file(filename: str, question: str | None, snapshot: dict[str, Any]
 
 # ── quick mini-backtest trigger ───────────────────────────────────────────────
 
+
+def _csv_unique(*chunks: str) -> str:
+    out: list[str] = []
+    seen: set[str] = set()
+    for chunk in chunks:
+        for raw in str(chunk or "").split(","):
+            item = raw.strip().upper()
+            if not item or item in seen:
+                continue
+            seen.add(item)
+            out.append(item)
+    return ",".join(out)
+
+
+def _read_simple_env_file(path: Path) -> dict[str, str]:
+    if not path.exists():
+        return {}
+    out: dict[str, str] = {}
+    try:
+        for raw in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            out[k.strip()] = v.strip()
+    except Exception:
+        return {}
+    return out
+
+
+def _midterm_live_candidate_overrides() -> dict[str, str]:
+    path = _ROOT / "configs" / "midterm_live_candidate_20260327.env"
+    data = _read_simple_env_file(path)
+    keep = {
+        "MTPB_ALLOW_LONGS",
+        "MTPB_ALLOW_SHORTS",
+        "MTPB_TREND_MIN_GAP_PCT",
+        "MTPB_TREND_SLOPE_MIN_PCT",
+        "MTPB_LONG_RECLAIM_PCT",
+        "MTPB_SHORT_RECLAIM_PCT",
+        "MTPB_LONG_TOUCH_TOL_PCT",
+        "MTPB_SHORT_TOUCH_TOL_PCT",
+        "MTPB_RR",
+        "MTPB_COOLDOWN_BARS_5M",
+        "MTPB_TIME_STOP_BARS_5M",
+        "MTPB_LONG_MAX_PULLBACK_PCT",
+        "MTPB_SHORT_MAX_PULLBACK_PCT",
+        "MTPB_LONG_MAX_ATR_PCT_1H",
+        "MTPB_SHORT_MAX_ATR_PCT_1H",
+        "MTPB_TP1_RR",
+        "MTPB_TP2_RR",
+        "MTPB_TP1_FRAC",
+        "MTPB_USE_RUNNER_EXITS",
+        "MTPB_TRAIL_ATR_MULT",
+        "MTPB_MAX_SIGNALS_PER_DAY",
+    }
+    return {k: v for k, v in data.items() if k in keep}
+
+
+def _backtest_preset(preset: str) -> dict[str, Any]:
+    p = str(preset or "portfolio").strip().lower()
+    base_full_symbols = _csv_unique(
+        _env("ASC1_SYMBOL_ALLOWLIST", "ATOMUSDT,LINKUSDT,DOTUSDT"),
+        _env("ARF1_SYMBOL_ALLOWLIST", "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ADAUSDT,BCHUSDT"),
+        _env("BREAKDOWN_SYMBOL_ALLOWLIST", "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,LTCUSDT"),
+        _env("MIDTERM_SYMBOLS", "BTCUSDT,ETHUSDT"),
+        "DOGEUSDT,AVAXUSDT",
+    )
+    full_stack = {
+        "label": "full_stack",
+        "strategies": "inplay_breakout,btc_eth_midterm_pullback,alt_resistance_fade_v1,alt_sloped_channel_v1,alt_inplay_breakdown_v1",
+        "symbols": base_full_symbols,
+        "overrides": _midterm_live_candidate_overrides(),
+    }
+    presets: dict[str, dict[str, Any]] = {
+        "portfolio": full_stack,
+        "full_stack": full_stack,
+        "stack": full_stack,
+        "breakout": {
+            "label": "breakout",
+            "strategies": "inplay_breakout",
+            "symbols": _csv_unique("BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,LTCUSDT,DOGEUSDT,AVAXUSDT,SUIUSDT,ADAUSDT,BCHUSDT"),
+            "overrides": {},
+        },
+        "midterm": {
+            "label": "midterm",
+            "strategies": "btc_eth_midterm_pullback",
+            "symbols": _csv_unique(_env("MIDTERM_SYMBOLS", "BTCUSDT,ETHUSDT")),
+            "overrides": _midterm_live_candidate_overrides(),
+        },
+        "flat": {
+            "label": "flat",
+            "strategies": "alt_resistance_fade_v1",
+            "symbols": _csv_unique(_env("ARF1_SYMBOL_ALLOWLIST", "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ADAUSDT,BCHUSDT")),
+            "overrides": {},
+        },
+        "arf1": {
+            "label": "flat",
+            "strategies": "alt_resistance_fade_v1",
+            "symbols": _csv_unique(_env("ARF1_SYMBOL_ALLOWLIST", "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ADAUSDT,BCHUSDT")),
+            "overrides": {},
+        },
+        "asc1": {
+            "label": "asc1",
+            "strategies": "alt_sloped_channel_v1",
+            "symbols": _csv_unique(_env("ASC1_SYMBOL_ALLOWLIST", "ATOMUSDT,LINKUSDT,DOTUSDT")),
+            "overrides": {},
+        },
+        "sloped": {
+            "label": "asc1",
+            "strategies": "alt_sloped_channel_v1",
+            "symbols": _csv_unique(_env("ASC1_SYMBOL_ALLOWLIST", "ATOMUSDT,LINKUSDT,DOTUSDT")),
+            "overrides": {},
+        },
+        "breakdown": {
+            "label": "breakdown",
+            "strategies": "alt_inplay_breakdown_v1",
+            "symbols": _csv_unique(_env("BREAKDOWN_SYMBOL_ALLOWLIST", "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ATOMUSDT,LTCUSDT")),
+            "overrides": {},
+        },
+        "pump": {
+            "label": "pump_fade_simple",
+            "strategies": "pump_fade_simple",
+            "symbols": _csv_unique("MYXUSDT,RIVERUSDT,AZTECUSDT,ENSOUSDT,PIPPINUSDT,VVVUSDT,DOGEUSDT,1000PEPEUSDT"),
+            "overrides": {},
+        },
+        "pump_fade": {
+            "label": "pump_fade_simple",
+            "strategies": "pump_fade_simple",
+            "symbols": _csv_unique("MYXUSDT,RIVERUSDT,AZTECUSDT,ENSOUSDT,PIPPINUSDT,VVVUSDT,DOGEUSDT,1000PEPEUSDT"),
+            "overrides": {},
+        },
+    }
+    if p not in presets:
+        available = ", ".join(sorted(presets))
+        raise ValueError(f"unknown preset '{preset}'. available: {available}")
+    return presets[p]
+
+
+def _parse_backtest_days(raw: str | int | None, default: int = 90) -> int:
+    if raw is None or not str(raw).strip():
+        return default
+    try:
+        days = int(float(str(raw).strip()))
+    except Exception:
+        return default
+    return max(30, min(365, days))
+
 def trigger_mini_backtest(
     overrides: dict[str, str] | None = None,
     strategies: str = "alt_sloped_channel_v1,alt_resistance_fade_v1,inplay_breakout,btc_eth_midterm_pullback",
@@ -936,3 +1084,16 @@ def trigger_mini_backtest(
         )
     except Exception as e:
         return f"Ошибка запуска бэктеста: {e}"
+
+
+def trigger_named_backtest(preset: str = "portfolio", days: int = 90) -> str:
+    try:
+        cfg = _backtest_preset(preset)
+    except ValueError as exc:
+        return f"Ошибка: {exc}"
+    return trigger_mini_backtest(
+        overrides=dict(cfg.get("overrides") or {}),
+        strategies=str(cfg.get("strategies") or ""),
+        symbols=str(cfg.get("symbols") or ""),
+        days=_parse_backtest_days(days, default=90),
+    )
