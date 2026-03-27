@@ -68,6 +68,25 @@ STRATEGY_TAGS = {
 }
 
 _PORTFOLIO_HINTS = {"combined", "full_stack", "portfolio", "stack"}
+_EQUITIES_HINTS = {"alpaca", "equities"}
+_EQUITIES_AUTORESEARCH_TAGS = (
+    "equities_monthly_v23_breadth_exit_cluster",
+    "equities_monthly_v21_red_month_push",
+)
+
+
+def _safe_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except Exception:
+        return default
+
+
+def _safe_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(float(value))
+    except Exception:
+        return default
 
 
 def find_latest_run_dirs(
@@ -97,6 +116,24 @@ def find_latest_autoresearch_dirs(
 ) -> list[Path]:
     """Return the most recently modified autoresearch run dirs matching tag."""
     return find_latest_run_dirs(tag_filter, limit=limit, prefixes=("autoresearch_",))
+
+
+def find_latest_autoresearch_dirs_multi(
+    tag_filters: list[str] | tuple[str, ...], limit: int = 3
+) -> list[Path]:
+    """Return latest autoresearch dirs across multiple tag filters."""
+    runs_root = _ROOT / "backtest_runs"
+    if not runs_root.exists():
+        return []
+    tag_filters_lc = [str(t).lower() for t in tag_filters if str(t).strip()]
+    dirs = [
+        d for d in runs_root.iterdir()
+        if d.is_dir()
+        and d.name.startswith("autoresearch_")
+        and any(tag in d.name.lower() for tag in tag_filters_lc)
+    ]
+    dirs.sort(key=lambda d: d.stat().st_mtime, reverse=True)
+    return dirs[:limit]
 
 
 def read_best_candidates(
@@ -181,6 +218,70 @@ def read_progress_snapshot(run_dir: Path) -> dict[str, Any] | None:
     }
 
 
+def _read_csv_first(path: Path) -> dict[str, str] | None:
+    if not path.exists():
+        return None
+    try:
+        with path.open(newline="", encoding="utf-8") as f:
+            return next(csv.DictReader(f), None)
+    except Exception:
+        return None
+
+
+def _equities_summary_score(row: dict[str, str]) -> float:
+    ret = _safe_float(row.get("compounded_return_pct"), float("-inf"))
+    trades = _safe_int(row.get("trades"))
+    dd = abs(_safe_float(row.get("max_monthly_dd_pct")))
+    months = _safe_int(row.get("months"), -1)
+    pos_months = _safe_int(row.get("positive_months"), -1)
+    neg_months = max(0, months - pos_months) if months > 0 and pos_months >= 0 else 0
+    dd_penalty = max(0.0, dd - 8.0) * 1.5
+    neg_penalty = float(neg_months) * 4.0
+    return ret - neg_penalty - dd_penalty + trades * 0.02
+
+
+def _find_best_equities_summary_patterns(glob_patterns: list[str]) -> tuple[Path | None, dict[str, str] | None]:
+    best_path: Path | None = None
+    best_row: dict[str, str] | None = None
+    best_score = float("-inf")
+    for pattern in glob_patterns:
+        for path in _ROOT.glob(pattern):
+            row = _read_csv_first(path)
+            if not row:
+                continue
+            score = _equities_summary_score(row)
+            if score > best_score:
+                best_score = score
+                best_path = path
+                best_row = row
+    return best_path, best_row
+
+
+def _latest_equities_picks_preview(glob_patterns: list[str], limit: int = 5) -> dict[str, Any] | None:
+    latest_csv: Path | None = None
+    for pattern in glob_patterns:
+        for path in _ROOT.glob(pattern):
+            if latest_csv is None or path.stat().st_mtime > latest_csv.stat().st_mtime:
+                latest_csv = path
+    if latest_csv is None or not latest_csv.exists():
+        return None
+    try:
+        with latest_csv.open(newline="", encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+    except Exception:
+        return None
+    if not rows:
+        return None
+    latest_month = max(str(r.get("month") or "").strip() for r in rows)
+    picks = [r for r in rows if str(r.get("month") or "").strip() == latest_month]
+    picks.sort(key=lambda r: _safe_float(r.get("score")), reverse=True)
+    return {
+        "path": str(latest_csv),
+        "month": latest_month,
+        "tickers": [str(r.get("ticker") or "").strip().upper() for r in picks[:limit] if str(r.get("ticker") or "").strip()],
+    }
+
+
 def summarize_run(run_dir: Path) -> str:
     """One-line text summary of a run (for Telegram)."""
     bests = read_best_candidates(run_dir, top_n=1)
@@ -231,6 +332,69 @@ def results_report_text(strategy_hint: str | None = None, top_n: int = 3) -> str
             f"dd={summary['max_drawdown']:.2f}%\n"
             f"sleeves={sleeves}"
         )
+
+    if normalized_hint in _EQUITIES_HINTS:
+        lines = ["📊 Equities / Alpaca research:\n"]
+        confirmed_path, confirmed = _find_best_equities_summary_patterns([
+            "backtest_runs/*equities_monthly_v21_red_month_push*/summary.csv",
+        ])
+        if confirmed:
+            months = _safe_int(confirmed.get("months"))
+            pos_months = _safe_int(confirmed.get("positive_months"))
+            neg_months = max(0, months - pos_months) if months > 0 else 0
+            lines.append(
+                "✅ confirmed frontier\n"
+                f"run={confirmed_path.parent.name if confirmed_path else 'n/a'}\n"
+                f"return={_safe_float(confirmed.get('compounded_return_pct')):.2f}%  "
+                f"trades={_safe_int(confirmed.get('trades'))}  "
+                f"WR={_safe_float(confirmed.get('winrate_pct')):.2f}%\n"
+                f"red_months={neg_months}  max_month_dd={_safe_float(confirmed.get('max_monthly_dd_pct')):.2f}%"
+            )
+        repair_path, repair = _find_best_equities_summary_patterns([
+            "backtest_runs/*equities_monthly_v23_breadth_exit_cluster*/summary.csv",
+        ])
+        if repair:
+            lines.append(
+                "\n🧪 latest repair frontier\n"
+                f"run={repair_path.parent.name if repair_path else 'n/a'}\n"
+                f"return={_safe_float(repair.get('compounded_return_pct')):.2f}%  "
+                f"trades={_safe_int(repair.get('trades'))}  "
+                f"WR={_safe_float(repair.get('winrate_pct')):.2f}%\n"
+                f"max_month_dd={_safe_float(repair.get('max_monthly_dd_pct')):.2f}%"
+            )
+        dirs = find_latest_autoresearch_dirs_multi(_EQUITIES_AUTORESEARCH_TAGS, limit=3)
+        if dirs:
+            progress = read_progress_snapshot(dirs[0])
+            if progress:
+                lines.append(
+                    "\n⏱ latest autoresearch\n"
+                    f"run={progress['run']}  {progress['current']}/{progress['total']}  "
+                    f"last_net={progress['last_net_pnl']:.2f}%  "
+                    f"last_pf={progress['last_profit_factor']:.3f}"
+                )
+            freshest = dirs[0]
+            bests = read_best_candidates(freshest, top_n=top_n)
+            if not bests:
+                bests = read_best_candidates(freshest, top_n=top_n, passed_only=False)
+            if bests:
+                lines.append(f"\n🏆 best recent rows from {freshest.name}:")
+                for i, b in enumerate(bests[:top_n], 1):
+                    pf_text = f"{b['profit_factor']:.3f}" if b["profit_factor"] == b["profit_factor"] else "n/a"
+                    lines.append(
+                        f"#{i} pnl={b['net_pnl']:.1f}% pf={pf_text} "
+                        f"trades={b['trades']} dd={b['max_drawdown']:.2f}% "
+                        f"red_months={b['negative_months']}"
+                    )
+        picks = _latest_equities_picks_preview([
+            "backtest_runs/*equities_monthly_v23_breadth_exit_cluster*/picks.csv",
+            "backtest_runs/*equities_monthly_v21_red_month_push*/picks.csv",
+        ])
+        if picks and picks["tickers"]:
+            lines.append(
+                "\n🧺 latest picks preview\n"
+                f"month={picks['month']}  tickers={', '.join(picks['tickers'])}"
+            )
+        return "\n".join(lines)
 
     tag_filter = STRATEGY_TAGS.get(normalized_hint, normalized_hint)
     dirs = find_latest_autoresearch_dirs(tag_filter=tag_filter or None, limit=5)
@@ -327,6 +491,13 @@ def _build_tune_prompt(strategy: str, bests: list[dict[str, Any]]) -> tuple[str,
         "по сравнению с текущим продакшн конфигом. "
         "Отвечай только JSON-объектом, без лишнего текста."
     )
+    if strategy in _EQUITIES_HINTS:
+        user += (
+            "\n\nДля equities обязательно оценивай не только return, но и "
+            "breadth/regime gates, max_hold_days, TOP_N, UNIVERSE_TOP_K, "
+            "cluster/correlation controls и worst-month smoothness. "
+            "Не предлагай ослабления, которые просто раздувают universe без контроля качества."
+        )
     return system, user
 
 
@@ -387,15 +558,20 @@ def build_research_context() -> dict[str, Any]:
             },
             "equities_monthly_v21": {
                 "TOP_N": "3",
-                "UNIVERSE_TOP_K": "7",
+                "UNIVERSE_TOP_K": "8",
                 "MAX_HOLD_DAYS": "8",
                 "STOP_ATR_MULT": "1.3",
                 "TARGET_ATR_MULT": "4.0",
                 "REGIME_MIN_BREADTH_MOM_PCT": "60-62",
                 "REGIME_MIN_AVG_MOM_PCT": "2.0-2.3",
                 "BENCH_MIN_AVG_MOM_PCT": "0.8-1.0",
-                "source": "equities_monthly_v21_red_month_push",
-                "result": "63.30% net, 43 trades, WR 55.8%, DD 7.55%, 4 red months, worst month -4.15",
+                "source": "equities_monthly_v21_red_month_push confirmed frontier",
+                "result": "≈63.20% net, 46 trades, WR 58.7%, max month DD ≈-8.08%, 4 red months",
+            },
+            "equities_monthly_repair": {
+                "current_focus": "breadth stricter + earlier exits + cluster/correlation discipline",
+                "latest_repair_run": "equities_monthly_v23_breadth_exit_cluster",
+                "result": "latest repair peaked around 55.79% / 42 trades / WR 57.1%, smoother than weak baselines but still below confirmed v21 frontier",
             },
         },
         "current_portfolio_best": current_stack_best or {},
@@ -413,6 +589,7 @@ def build_research_context() -> dict[str, Any]:
         "breakdown_expansion_v1",
         "asc1_expansion_v1",
         "equities_monthly_v21_red_month_push",
+        "equities_monthly_v23_breadth_exit_cluster",
     ]:
         dirs = find_latest_autoresearch_dirs(tag_filter=tag, limit=1)
         if not dirs:
@@ -430,6 +607,7 @@ def build_research_context() -> dict[str, Any]:
         "breakout_live_bridge_v3_density",
         "midterm_eth_repair_v1",
         "equities_monthly_v21_red_month_push",
+        "equities_monthly_v23_breadth_exit_cluster",
     ]:
         dirs = find_latest_autoresearch_dirs(tag_filter=tag, limit=1)
         if not dirs:
@@ -468,8 +646,11 @@ def tune_strategy(
         )
 
     # Find relevant results
-    tag_filter = STRATEGY_TAGS.get(strategy, strategy)
-    dirs = find_latest_autoresearch_dirs(tag_filter=tag_filter, limit=2)
+    if strategy in _EQUITIES_HINTS:
+        dirs = find_latest_autoresearch_dirs_multi(_EQUITIES_AUTORESEARCH_TAGS, limit=2)
+    else:
+        tag_filter = STRATEGY_TAGS.get(strategy, strategy)
+        dirs = find_latest_autoresearch_dirs(tag_filter=tag_filter, limit=2)
     if not dirs:
         return f"Нет данных autoresearch для стратегии '{strategy}'."
 

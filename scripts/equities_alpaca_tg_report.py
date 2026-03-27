@@ -23,6 +23,7 @@ import json
 import os
 import ssl
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -47,11 +48,28 @@ def _env(name: str, default: str = "") -> str:
     return str(val).strip() if val is not None else default
 
 
+def _env_bool(name: str, default: bool) -> bool:
+    raw = _env(name, "1" if default else "0").lower()
+    return raw in {"1", "true", "yes", "on"}
+
+
+def _env_int(name: str, default: int) -> int:
+    try:
+        return int(_env(name, str(default)))
+    except Exception:
+        return default
+
+
 TG_TOKEN   = _env("TG_TOKEN")
 TG_CHAT_ID = _env("TG_CHAT_ID")
 ALPACA_KEY    = _env("ALPACA_API_KEY_ID")
 ALPACA_SECRET = _env("ALPACA_API_SECRET_KEY")
 ALPACA_URL    = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
+DEEPSEEK_KEY  = _env("DEEPSEEK_API_KEY")
+DEEPSEEK_URL  = _env("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+DEEPSEEK_MODEL = _env("DEEPSEEK_MODEL", "deepseek-chat")
+ALPACA_DEEPSEEK_NOTE_ENABLE = _env_bool("ALPACA_DEEPSEEK_NOTE_ENABLE", True)
+ALPACA_DEEPSEEK_NOTE_MAX_CHARS = max(180, _env_int("ALPACA_DEEPSEEK_NOTE_MAX_CHARS", 420))
 IS_PAPER = "paper" in ALPACA_URL.lower()
 MODE_LABEL = "📄 PAPER" if IS_PAPER else "💰 LIVE"
 RUNTIME_REPORT_DIR = Path(os.getenv("ALPACA_REPORT_RUNTIME_DIR", str(ROOT / "runtime" / "alpaca_reports")))
@@ -145,6 +163,194 @@ def _tg_send_photo(path: Path, caption: str = "") -> bool:
     except Exception as exc:
         print(f"TG photo send failed: {exc}", file=sys.stderr)
         return False
+
+
+def _safe_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except Exception:
+        return default
+
+
+def _safe_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(float(value))
+    except Exception:
+        return default
+
+
+def _read_csv_first(path: Path) -> dict[str, str] | None:
+    if not path.exists():
+        return None
+    try:
+        import csv
+        with path.open(newline="", encoding="utf-8") as f:
+            return next(csv.DictReader(f), None)
+    except Exception:
+        return None
+
+
+def _equities_summary_score(row: dict[str, str]) -> float:
+    ret = _safe_float(row.get("compounded_return_pct"), float("-inf"))
+    trades = _safe_int(row.get("trades"))
+    dd = abs(_safe_float(row.get("max_monthly_dd_pct")))
+    months = _safe_int(row.get("months"), -1)
+    pos_months = _safe_int(row.get("positive_months"), -1)
+    neg_months = max(0, months - pos_months) if months > 0 and pos_months >= 0 else 0
+    dd_penalty = max(0.0, dd - 8.0) * 1.5
+    neg_penalty = float(neg_months) * 4.0
+    return ret - neg_penalty - dd_penalty + trades * 0.02
+
+
+def _find_best_equities_summary_patterns(glob_patterns: list[str]) -> tuple[Path | None, dict[str, str] | None]:
+    best_path: Path | None = None
+    best_row: dict[str, str] | None = None
+    best_score = float("-inf")
+    for pattern in glob_patterns:
+        for path in ROOT.glob(pattern):
+            row = _read_csv_first(path)
+            if not row:
+                continue
+            score = _equities_summary_score(row)
+            if score > best_score:
+                best_score = score
+                best_path = path
+                best_row = row
+    return best_path, best_row
+
+
+def _latest_equities_picks_preview(glob_patterns: list[str], limit: int = 5) -> dict[str, Any] | None:
+    latest_csv: Path | None = None
+    for pattern in glob_patterns:
+        for path in ROOT.glob(pattern):
+            if latest_csv is None or path.stat().st_mtime > latest_csv.stat().st_mtime:
+                latest_csv = path
+    if latest_csv is None:
+        return None
+    try:
+        import csv
+        with latest_csv.open(newline="", encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+    except Exception:
+        return None
+    if not rows:
+        return None
+    latest_month = max(str(r.get("month") or "").strip() for r in rows)
+    picks = [r for r in rows if str(r.get("month") or "").strip() == latest_month]
+    picks.sort(key=lambda r: _safe_float(r.get("score")), reverse=True)
+    return {
+        "path": str(latest_csv),
+        "month": latest_month,
+        "tickers": [str(r.get("ticker") or "").strip().upper() for r in picks[:limit] if str(r.get("ticker") or "").strip()],
+    }
+
+
+def _deepseek_chat(system: str, user: str) -> str:
+    if not DEEPSEEK_KEY:
+        return ""
+    url = DEEPSEEK_URL.rstrip("/") + "/chat/completions"
+    payload = {
+        "model": DEEPSEEK_MODEL,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+        "temperature": 0.15,
+        "max_tokens": 220,
+    }
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {DEEPSEEK_KEY}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, context=_SSL, timeout=12) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+        data = json.loads(raw) if raw else {}
+        choices = data.get("choices") or []
+        if not choices:
+            return ""
+        return str(choices[0].get("message", {}).get("content", "")).strip()
+    except (urllib.error.URLError, TimeoutError, RuntimeError, ValueError):
+        return ""
+    except Exception:
+        return ""
+
+
+def _alpaca_ai_note(*, monthly: bool, equity: float, cash: float, positions: list[dict[str, Any]]) -> str:
+    if not ALPACA_DEEPSEEK_NOTE_ENABLE or not DEEPSEEK_KEY:
+        return ""
+    confirmed_path, confirmed = _find_best_equities_summary_patterns([
+        "backtest_runs/*equities_monthly_v21_red_month_push*/summary.csv",
+    ])
+    repair_path, repair = _find_best_equities_summary_patterns([
+        "backtest_runs/*equities_monthly_v23_breadth_exit_cluster*/summary.csv",
+    ])
+    picks = _latest_equities_picks_preview([
+        "backtest_runs/*equities_monthly_v23_breadth_exit_cluster*/picks.csv",
+        "backtest_runs/*equities_monthly_v21_red_month_push*/picks.csv",
+    ])
+    pos_lines = []
+    for pos in sorted(positions, key=lambda p: float(p.get("market_value") or 0), reverse=True)[:5]:
+        sym = str(pos.get("symbol") or "?")
+        mv = _safe_float(pos.get("market_value"))
+        upnl = _safe_float(pos.get("unrealized_pl"))
+        upct = _safe_float(pos.get("unrealized_plpc")) * 100.0
+        pos_lines.append(f"{sym}: ${mv:.0f}, pnl={upnl:+.2f} ({upct:+.1f}%)")
+    pos_text = "; ".join(pos_lines) if pos_lines else "no open positions"
+    confirmed_text = "n/a"
+    if confirmed:
+        months = _safe_int(confirmed.get("months"))
+        pos_months = _safe_int(confirmed.get("positive_months"))
+        neg_months = max(0, months - pos_months) if months > 0 else 0
+        confirmed_text = (
+            f"{confirmed_path.parent.name if confirmed_path else 'confirmed'}: "
+            f"ret={_safe_float(confirmed.get('compounded_return_pct')):.2f}% "
+            f"trades={_safe_int(confirmed.get('trades'))} "
+            f"wr={_safe_float(confirmed.get('winrate_pct')):.1f}% "
+            f"red_months={neg_months}"
+        )
+    repair_text = "n/a"
+    if repair:
+        repair_text = (
+            f"{repair_path.parent.name if repair_path else 'repair'}: "
+            f"ret={_safe_float(repair.get('compounded_return_pct')):.2f}% "
+            f"trades={_safe_int(repair.get('trades'))} "
+            f"wr={_safe_float(repair.get('winrate_pct')):.1f}% "
+            f"max_month_dd={_safe_float(repair.get('max_monthly_dd_pct')):.2f}%"
+        )
+    picks_text = "n/a"
+    if picks and picks["tickers"]:
+        picks_text = f"{picks['month']}: {', '.join(picks['tickers'])}"
+
+    system = (
+        "Ты аккуратный equities risk/advisory analyst для monthly momentum sleeve. "
+        "Дай краткую практичную записку на русском максимум в 3 коротких строках. "
+        "Не пиши дисклеймеры, не повторяй входные данные целиком."
+    )
+    user = (
+        f"mode={'monthly' if monthly else 'daily'} {MODE_LABEL}\n"
+        f"equity={equity:.2f} cash={cash:.2f}\n"
+        f"positions={pos_text}\n"
+        f"confirmed_frontier={confirmed_text}\n"
+        f"latest_repair={repair_text}\n"
+        f"latest_picks={picks_text}\n\n"
+        "Скажи:\n"
+        "1) что по режиму/качеству equities sleeve,\n"
+        "2) есть ли warning по концентрации/застаиванию,\n"
+        "3) next action: hold / refresh / trim-watch."
+    )
+    note = _deepseek_chat(system, user)
+    if not note:
+        return ""
+    note = note.strip()
+    if len(note) > ALPACA_DEEPSEEK_NOTE_MAX_CHARS:
+        note = note[: ALPACA_DEEPSEEK_NOTE_MAX_CHARS - 1].rstrip() + "…"
+    return note
 
 
 def _build_progress_chart(*, monthly: bool) -> Path | None:
@@ -244,6 +450,10 @@ def daily_report() -> str:
                 f"P&amp;L: <b>{upnl:+.2f} ({upct:+.1f}%)</b>  ${mv:.0f}"
             )
 
+    ai_note = _alpaca_ai_note(monthly=False, equity=equity, cash=cash, positions=positions)
+    if ai_note:
+        lines += ["", "🧠 <b>AI note</b>", ai_note]
+
     return "\n".join(lines)
 
 
@@ -309,6 +519,9 @@ def monthly_report() -> str:
         "💡 <i>Next action: refresh equities research picks for next month</i>",
         f"   Run: python3 scripts/equities_monthly_research_sim.py",
     ]
+    ai_note = _alpaca_ai_note(monthly=True, equity=end_equity, cash=cash, positions=positions)
+    if ai_note:
+        lines += ["", "🧠 <b>AI note</b>", ai_note]
     return "\n".join(lines)
 
 
