@@ -50,6 +50,21 @@
 - Restarted `bybot.service`
 - Service returned `active`
 
+### Small-account execution follow-up
+- Investigated repeated `BREAKDOWN SKIP ... notional too small` alerts.
+- Root cause was not a one-hour cooldown; it was small-account sizing:
+  - `RISK_PER_TRADE_PCT=1.0`
+  - `BREAKDOWN_RISK_MULT=0.10`
+  - `MIN_NOTIONAL_USD=10`
+- Added controlled min-qty fallback scaffolding for:
+  - `sloped`
+  - `flat`
+  - `breakdown`
+- Goal:
+  - allow these sleeves to stretch gently up to the minimum executable size
+  - only within capped multipliers
+  - improve tradeability on a small account without blindly lifting global risk
+
 ## 2026-03-26 — live sleeve recovery + operator roadmap + entry-safety follow-up
 
 ### Live sleeve reality confirmed

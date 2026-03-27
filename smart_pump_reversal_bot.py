@@ -308,6 +308,8 @@ RETEST_ENGINE = None
 ENABLE_SLOPED_TRADING = os.getenv("ENABLE_SLOPED_TRADING", "0").strip() == "1"
 SLOPED_TRY_EVERY_SEC = int(os.getenv("SLOPED_TRY_EVERY_SEC", "60"))
 SLOPED_RISK_MULT = max(0.05, float(os.getenv("SLOPED_RISK_MULT", "1.0")))
+SLOPED_ALLOW_MINQTY_FALLBACK = _env_bool("SLOPED_ALLOW_MINQTY_FALLBACK", True)
+SLOPED_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("SLOPED_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 SLOPED_MAX_OPEN_TRADES = int(os.getenv("SLOPED_MAX_OPEN_TRADES", "1"))
 SLOPED_ENGINE = None
 
@@ -315,6 +317,8 @@ SLOPED_ENGINE = None
 ENABLE_FLAT_TRADING = os.getenv("ENABLE_FLAT_TRADING", "0").strip() == "1"
 FLAT_TRY_EVERY_SEC = int(os.getenv("FLAT_TRY_EVERY_SEC", "60"))
 FLAT_RISK_MULT = max(0.05, float(os.getenv("FLAT_RISK_MULT", "1.0")))
+FLAT_ALLOW_MINQTY_FALLBACK = _env_bool("FLAT_ALLOW_MINQTY_FALLBACK", True)
+FLAT_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("FLAT_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 FLAT_MAX_OPEN_TRADES = int(os.getenv("FLAT_MAX_OPEN_TRADES", "1"))
 FLAT_ENGINE = None
 
@@ -322,6 +326,8 @@ FLAT_ENGINE = None
 ENABLE_BREAKDOWN_TRADING = os.getenv("ENABLE_BREAKDOWN_TRADING", "0").strip() == "1"
 BREAKDOWN_TRY_EVERY_SEC = int(os.getenv("BREAKDOWN_TRY_EVERY_SEC", "60"))
 BREAKDOWN_RISK_MULT = max(0.05, float(os.getenv("BREAKDOWN_RISK_MULT", "0.10")))
+BREAKDOWN_ALLOW_MINQTY_FALLBACK = _env_bool("BREAKDOWN_ALLOW_MINQTY_FALLBACK", True)
+BREAKDOWN_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("BREAKDOWN_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 BREAKDOWN_MAX_OPEN_TRADES = int(os.getenv("BREAKDOWN_MAX_OPEN_TRADES", "1"))
 BREAKDOWN_ENGINE = None
 
@@ -4229,13 +4235,10 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                         tr.tpsl_last_set_ts = now_s()
                         tr.last_runner_action_ts = now
 
-def calc_notional_usd_from_stop_pct(stop_pct: float, risk_mult: float = 1.0) -> float:
+def calc_notional_usd_candidate_from_stop_pct(stop_pct: float, risk_mult: float = 1.0) -> float:
     """
-    Риск-модель:
-      risk_usd = equity * RISK_PER_TRADE_PCT
-      notional = risk_usd / (stop_pct/100)
-    Затем cap по max_notional_allowed().
-    Если notional < MIN_NOTIONAL_USD -> 0 (пропуск).
+    Base risk model without the hard MIN_NOTIONAL_USD gate.
+    Useful for controlled min-qty fallback logic on small accounts.
     """
     if stop_pct is None or stop_pct <= 0:
         return 0.0
@@ -4254,11 +4257,54 @@ def calc_notional_usd_from_stop_pct(stop_pct: float, risk_mult: float = 1.0) -> 
     if fill < MIN_NOTIONAL_FILL_FRAC:
         return 0.0
 
-
-    if notional < MIN_NOTIONAL_USD:
-        return 0.0
-
     return float(notional)
+
+
+def calc_notional_usd_from_stop_pct(stop_pct: float, risk_mult: float = 1.0) -> float:
+    """
+    Риск-модель:
+      risk_usd = equity * RISK_PER_TRADE_PCT
+      notional = risk_usd / (stop_pct/100)
+    Затем cap по max_notional_allowed().
+    Если notional < MIN_NOTIONAL_USD -> 0 (пропуск).
+    """
+    candidate = calc_notional_usd_candidate_from_stop_pct(stop_pct, risk_mult=risk_mult)
+    if candidate < MIN_NOTIONAL_USD:
+        return 0.0
+    return float(candidate)
+
+
+def try_minqty_notional_fallback(
+    *,
+    symbol: str,
+    price: float,
+    stop_pct: float,
+    risk_mult: float,
+    max_mult: float,
+) -> tuple[float, float, float, str]:
+    """
+    Try to stretch a risk-sized notional up to the minimum executable size,
+    but only within a capped multiplier.
+    Returns: (fallback_notional_usd, qty_floor, notional_real, reason)
+    """
+    candidate = calc_notional_usd_candidate_from_stop_pct(stop_pct, risk_mult=risk_mult)
+    if candidate <= 0:
+        return 0.0, 0.0, 0.0, "FALLBACK_NO_CANDIDATE"
+
+    need_min = min_notional_for_min_qty(symbol, price)
+    if need_min <= 0:
+        return 0.0, 0.0, 0.0, "FALLBACK_NO_MINQTY"
+
+    dyn_max = candidate * max(1.0, float(max_mult or 1.0))
+    dyn_fallback = min(need_min, dyn_max)
+    if dyn_fallback < MIN_NOTIONAL_USD or dyn_fallback <= candidate + 1e-9:
+        return 0.0, 0.0, 0.0, "FALLBACK_CAP_TOO_LOW"
+
+    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_fallback, price)
+    if qty_floor <= 0:
+        return 0.0, 0.0, float(notional_real), reason or "FALLBACK_QTY_FAIL"
+
+    return float(dyn_fallback), float(qty_floor), float(notional_real), ""
 
 
 def breakout_quality_score(
@@ -6114,11 +6160,27 @@ async def try_sloped_entry_async(symbol: str, price: float):
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=SLOPED_RISK_MULT)
-    if dyn_usd <= 0:
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0 and SLOPED_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=price,
+            stop_pct=stop_pct,
+            risk_mult=SLOPED_RISK_MULT,
+            max_mult=SLOPED_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            dyn_usd = fallback_usd
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = ""
+        elif not reason:
+            reason = fallback_reason
+    if dyn_usd <= 0 and qty_floor <= 0:
         tg_skip_throttled("sloped", symbol, "notional_small", f"🟡 SLOPED SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
-
-    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0:
         tg_skip_throttled("sloped", symbol, f"minqty:{reason}", f"🟡 SLOPED SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
@@ -6250,11 +6312,27 @@ async def try_flat_entry_async(symbol: str, price: float):
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=FLAT_RISK_MULT)
-    if dyn_usd <= 0:
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0 and FLAT_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=price,
+            stop_pct=stop_pct,
+            risk_mult=FLAT_RISK_MULT,
+            max_mult=FLAT_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            dyn_usd = fallback_usd
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = ""
+        elif not reason:
+            reason = fallback_reason
+    if dyn_usd <= 0 and qty_floor <= 0:
         tg_skip_throttled("flat", symbol, "notional_small", f"🟡 FLAT SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
-
-    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0:
         tg_skip_throttled("flat", symbol, f"minqty:{reason}", f"🟡 FLAT SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
@@ -6386,11 +6464,27 @@ async def try_breakdown_entry_async(symbol: str, price: float):
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=BREAKDOWN_RISK_MULT)
-    if dyn_usd <= 0:
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0 and BREAKDOWN_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=price,
+            stop_pct=stop_pct,
+            risk_mult=BREAKDOWN_RISK_MULT,
+            max_mult=BREAKDOWN_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            dyn_usd = fallback_usd
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = ""
+        elif not reason:
+            reason = fallback_reason
+    if dyn_usd <= 0 and qty_floor <= 0:
         tg_skip_throttled("breakdown", symbol, "notional_small", f"🟡 BREAKDOWN SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
-
-    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0:
         tg_skip_throttled("breakdown", symbol, f"minqty:{reason}", f"🟡 BREAKDOWN SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
