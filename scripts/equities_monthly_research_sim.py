@@ -44,6 +44,8 @@ class Candidate:
     momentum20_pct: float
     momentum60_pct: float
     pullback60_pct: float
+    base_score: float = float("nan")
+    overlay_score: float = 0.0
     universe_score: float = float("nan")
     selection_score: float = float("nan")
     corr_penalty: float = 0.0
@@ -92,6 +94,42 @@ def _load_earnings_blackouts(csv_path: str, days_before: int, days_after: int) -
             for offset in range(-max(0, days_before), max(0, days_after) + 1):
                 out[ticker].add((dt + timedelta(days=offset)).strftime("%Y-%m-%d"))
     return out
+
+
+def _load_overlay_scores(csv_path: str) -> dict[tuple[str, str], float]:
+    out: dict[tuple[str, str], float] = {}
+    if not csv_path:
+        return out
+    path = Path(csv_path)
+    if not path.exists():
+        return out
+    with path.open(newline="", encoding="utf-8") as f:
+        rd = csv.DictReader(f)
+        for row in rd:
+            ticker = (row.get("ticker") or row.get("symbol") or "").strip().upper()
+            day = (row.get("day") or row.get("date") or row.get("snapshot_day") or row.get("month") or "").strip()
+            raw_score = row.get("score") or row.get("overlay_score") or row.get("bonus") or ""
+            if not ticker or not day or not str(raw_score).strip():
+                continue
+            try:
+                out[(day, ticker)] = float(raw_score)
+            except Exception:
+                continue
+    return out
+
+
+def _overlay_score_for_snapshot(overlay_scores: dict[tuple[str, str], float], snapshot_day: str, ticker: str) -> float:
+    if not overlay_scores:
+        return 0.0
+    ticker = (ticker or "").strip().upper()
+    snapshot_day = (snapshot_day or "").strip()
+    if not snapshot_day:
+        return 0.0
+    return float(
+        overlay_scores.get((snapshot_day, ticker))
+        or overlay_scores.get((snapshot_day[:7], ticker))
+        or 0.0
+    )
 
 
 def _parse_forbid_pairs(raw: str) -> set[tuple[str, str]]:
@@ -343,6 +381,8 @@ def _candidate_from_snapshot(
         momentum20_pct=mom20 * 100.0,
         momentum60_pct=mom60 * 100.0,
         pullback60_pct=pullback60 * 100.0,
+        base_score=score,
+        overlay_score=0.0,
     )
 
 
@@ -463,6 +503,8 @@ def main() -> int:
     ap.add_argument("--stop-atr-mult", type=float, default=1.5)
     ap.add_argument("--target-atr-mult", type=float, default=2.5)
     ap.add_argument("--position-weight-mode", default="equal")
+    ap.add_argument("--overlay-csv", default="")
+    ap.add_argument("--overlay-score-mult", type=float, default=0.0)
     ap.add_argument("--tag", default="equities_monthly_research")
     args = ap.parse_args()
 
@@ -485,6 +527,7 @@ def main() -> int:
         int(args.earnings_blackout_days_before),
         int(args.earnings_blackout_days_after),
     )
+    overlay_scores = _load_overlay_scores(str(args.overlay_csv))
     forbid_pairs = _parse_forbid_pairs(args.forbid_pairs)
     cluster_groups = _parse_cluster_groups(args.cluster_groups)
 
@@ -560,6 +603,9 @@ def main() -> int:
                 continue
             if cand.entry_day in earnings_blackouts.get(ticker, set()):
                 continue
+            cand.overlay_score = _overlay_score_for_snapshot(overlay_scores, cand.snapshot_day, ticker)
+            if float(args.overlay_score_mult) != 0.0 and cand.overlay_score != 0.0:
+                cand.score = float(cand.base_score) + float(args.overlay_score_mult) * float(cand.overlay_score)
             cand.universe_score = universe_scores.get(ticker, float("nan"))
             candidates.append((cand, idx + 1, daily))
         picks: list[tuple[Candidate, int, list[DailyBar]]] = []
@@ -661,6 +707,8 @@ def main() -> int:
                     month,
                     cand.ticker,
                     cand.entry_day,
+                    f"{cand.base_score:.6f}" if math.isfinite(cand.base_score) else "",
+                    f"{cand.overlay_score:.6f}",
                     f"{cand.score:.6f}",
                     f"{cand.atr20_pct:.3f}",
                     f"{cand.momentum20_pct:.3f}",
@@ -697,6 +745,8 @@ def main() -> int:
                     f"{exit_price:.4f}",
                     f"{cand.stop_price:.4f}",
                     f"{cand.target_price:.4f}",
+                    f"{cand.base_score:.6f}" if math.isfinite(cand.base_score) else "",
+                    f"{cand.overlay_score:.6f}",
                     f"{cand.score:.6f}",
                     f"{cand.momentum20_pct:.3f}",
                     f"{cand.momentum60_pct:.3f}",
@@ -733,6 +783,8 @@ def main() -> int:
                 "exit_price",
                 "stop_price",
                 "target_price",
+                "base_score",
+                "overlay_score",
                 "score",
                 "momentum20_pct",
                 "momentum60_pct",
@@ -762,6 +814,8 @@ def main() -> int:
                 "month",
                 "ticker",
                 "entry_day",
+                "base_score",
+                "overlay_score",
                 "score",
                 "atr20_pct",
                 "momentum20_pct",
@@ -818,6 +872,8 @@ def main() -> int:
                 "universe_top_k",
                 "universe_score_lookback_days",
                 "position_weight_mode",
+                "overlay_csv",
+                "overlay_score_mult",
             ]
         )
         w.writerow(
@@ -846,6 +902,8 @@ def main() -> int:
                 int(args.universe_top_k),
                 int(args.universe_score_lookback_days),
                 args.position_weight_mode,
+                str(args.overlay_csv),
+                float(args.overlay_score_mult),
             ]
         )
 

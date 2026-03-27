@@ -1899,14 +1899,34 @@ async def _maybe_run_ai_operator_tick(
     breakout_impulse_weak = int(_diag_get_int("breakout_ns_impulse_weak"))
     breakout_no_break = int(_diag_get_int("breakout_ns_no_break"))
     regime = _deepseek_local_regime_hint()
+    quiet_try_safe = max(1, quiet_try)
+    breakout_no_signal_safe = max(1, breakout_no_signal)
+    quiet_cooldown_ratio = quiet_skip_cooldown / float(quiet_try_safe)
+    breakout_weakish = (
+        breakout_no_signal >= 60
+        and (breakout_impulse_weak + breakout_no_break) / float(breakout_no_signal_safe) >= 0.65
+    )
     explainable_market_pause = (
         ws_status == "OK"
         and quiet_skip_tech == 0
-        and regime.get("label") in {"weak_chop", "mixed", "late_extended"}
+        and quiet_skip_capacity == 0
+        and regime.get("label") in {"weak_chop", "mixed", "late_extended", "insufficient_data"}
         and (
-            quiet_skip_cooldown >= max(200, int(0.35 * max(1, quiet_try)))
-            or breakout_impulse_weak >= max(100, int(0.45 * max(1, breakout_no_signal)))
-            or breakout_no_break >= max(80, int(0.30 * max(1, breakout_no_signal)))
+            quiet_skip_cooldown >= max(200, int(0.35 * quiet_try_safe))
+            or quiet_cooldown_ratio >= 0.45
+            or breakout_weakish
+            or breakout_impulse_weak >= max(100, int(0.45 * breakout_no_signal_safe))
+            or breakout_no_break >= max(80, int(0.30 * breakout_no_signal_safe))
+        )
+    )
+    operator_attention_needed = (
+        ws_status != "OK"
+        or quiet_skip_tech > 0
+        or quiet_skip_capacity >= max(50, int(0.15 * quiet_try_safe))
+        or (
+            quiet_try >= DEEPSEEK_OPERATOR_QUIET_SCAN_MIN
+            and quiet_entry == 0
+            and regime.get("label") not in {"weak_chop", "mixed", "late_extended", "insufficient_data"}
         )
     )
 
@@ -1914,6 +1934,7 @@ async def _maybe_run_ai_operator_tick(
     if (
         len(TRADES) == 0
         and closed_cnt == 0
+        and operator_attention_needed
         and not explainable_market_pause
         and _throttle_gate("aiop:no_trades", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC)
     ):
@@ -1961,6 +1982,7 @@ async def _maybe_run_ai_operator_tick(
     if (
         quiet_try >= DEEPSEEK_OPERATOR_QUIET_SCAN_MIN
         and quiet_entry == 0
+        and operator_attention_needed
         and not explainable_market_pause
         and _throttle_gate("aiop:quiet_scan_zero", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC)
     ):
