@@ -413,10 +413,11 @@ class DeepSeekOverlay:
                     "status": "empty",
                 })
                 return answer
-            answer = content[: self.cfg.max_answer_chars].strip()
+            answer = content.strip()
+            history_answer = answer[: self.cfg.max_answer_chars].strip()
             history.extend([
                 {"role": "user", "content": q},
-                {"role": "assistant", "content": answer},
+                {"role": "assistant", "content": history_answer},
             ])
             self._save_history(history)
             self.append_shadow_recommendation(
