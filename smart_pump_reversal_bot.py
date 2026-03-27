@@ -695,14 +695,8 @@ _BREAKOUT_SKIP_DIGEST_LAST_SENT_TS = int(time.time())
 
 
 def tg_trade_throttled(key: str, msg: str, cooldown_sec: int) -> bool:
-    if cooldown_sec <= 0:
-        tg_trade(msg)
-        return True
-    now = int(time.time())
-    last_ts = int(_TG_ALERT_THROTTLE_TS.get(key, 0) or 0)
-    if last_ts > 0 and (now - last_ts) < int(cooldown_sec):
+    if not _throttle_gate(key, cooldown_sec):
         return False
-    _TG_ALERT_THROTTLE_TS[key] = now
     tg_trade(msg)
     return True
 
@@ -713,6 +707,17 @@ def tg_skip_throttled(strategy_key: str, symbol: str, bucket: str, msg: str) -> 
         msg,
         TG_SKIP_ALERT_COOLDOWN_SEC,
     )
+
+
+def _throttle_gate(key: str, cooldown_sec: int) -> bool:
+    if cooldown_sec <= 0:
+        return True
+    now = int(time.time())
+    last_ts = int(_TG_ALERT_THROTTLE_TS.get(key, 0) or 0)
+    if last_ts > 0 and (now - last_ts) < int(cooldown_sec):
+        return False
+    _TG_ALERT_THROTTLE_TS[key] = now
+    return True
 
 
 def _record_breakout_skip(symbol: str, reason_key: str) -> None:
@@ -1136,6 +1141,14 @@ WS_HEALTH_WARN_DISC_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_WARN_DISC_CON
 WS_HEALTH_CRIT_DISC_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_CRIT_DISC_CONN_PCT", "250")))
 WS_HEALTH_WARN_HANDSHAKE_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_WARN_HANDSHAKE_CONN_PCT", "30")))
 WS_HEALTH_CRIT_HANDSHAKE_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_CRIT_HANDSHAKE_CONN_PCT", "80")))
+DEEPSEEK_OPERATOR_ENABLE = _env_bool("DEEPSEEK_OPERATOR_ENABLE", True)
+DEEPSEEK_OPERATOR_USE_API = _env_bool("DEEPSEEK_OPERATOR_USE_API", True)
+DEEPSEEK_OPERATOR_PROACTIVE_ENABLE = _env_bool("DEEPSEEK_OPERATOR_PROACTIVE_ENABLE", True)
+DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE = _env_bool("DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE", True)
+DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC = max(300, int(os.getenv("DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC", "3600")))
+DEEPSEEK_OPERATOR_NO_TRADES_HOURS = max(1, int(os.getenv("DEEPSEEK_OPERATOR_NO_TRADES_HOURS", "24")))
+DEEPSEEK_OPERATOR_QUIET_SCAN_MIN = max(100, int(os.getenv("DEEPSEEK_OPERATOR_QUIET_SCAN_MIN", "1500")))
+DEEPSEEK_OPERATOR_MSG_MAX_CHARS = max(300, int(os.getenv("DEEPSEEK_OPERATOR_MSG_MAX_CHARS", "1100")))
 TRADE_CHARTS_ENABLE = os.getenv("TRADE_CHARTS_ENABLE", "1").strip() == "1"
 TRADE_CHARTS_SEND_ON_ENTRY = os.getenv("TRADE_CHARTS_SEND_ON_ENTRY", "1").strip() == "1"
 TRADE_CHARTS_SEND_ON_CLOSE = os.getenv("TRADE_CHARTS_SEND_ON_CLOSE", "1").strip() == "1"
@@ -1736,6 +1749,195 @@ def _status_full_text() -> str:
 
     return "\n".join(lines)
 
+
+def _ai_operator_trim(text: str, limit: int | None = None) -> str:
+    lim = int(limit or DEEPSEEK_OPERATOR_MSG_MAX_CHARS)
+    txt = str(text or "").strip()
+    if len(txt) <= lim:
+        return txt
+    return txt[: max(0, lim - 1)].rstrip() + "…"
+
+
+def _build_trade_review_summary(tr, sym: str, pnl_closed: float, fee_sum: float | None, exit_px: float | None) -> tuple[str, dict[str, Any]]:
+    entry_px = float(getattr(tr, "entry_price", getattr(tr, "avg", 0.0) or 0.0) or 0.0)
+    sl_px = getattr(tr, "sl_price", None)
+    qty = float(getattr(tr, "qty", 0.0) or 0.0)
+    entry_fill_ts = int(getattr(tr, "entry_fill_ts", 0) or 0)
+    hold_sec = int(time.time()) - entry_fill_ts if entry_fill_ts > 0 else 0
+    risk_usd = 0.0
+    if entry_px > 0 and sl_px is not None and qty > 0:
+        try:
+            risk_usd = qty * abs(float(entry_px) - float(sl_px))
+        except Exception:
+            risk_usd = 0.0
+    r_mult = (float(pnl_closed) / risk_usd) if risk_usd > 1e-9 else None
+    reason = str(getattr(tr, "close_reason", "") or "UNKNOWN")
+    verdict = "clean_tp" if float(pnl_closed) > 0 and "TP" in reason.upper() else (
+        "controlled_sl" if float(pnl_closed) < 0 and "SL" in reason.upper() else (
+            "time_stop" if "TIME_STOP" in reason.upper() else ("small_win" if float(pnl_closed) > 0 else "loss_review")
+        )
+    )
+    summary = (
+        f"{sym} {getattr(tr, 'strategy', '')} {getattr(tr, 'side', '')}: "
+        f"PnL {float(pnl_closed):+.4f} USDT, reason={reason}, "
+        f"hold≈{hold_sec}s"
+    )
+    payload = {
+        "symbol": str(sym),
+        "strategy": str(getattr(tr, "strategy", "") or ""),
+        "side": str(getattr(tr, "side", "") or ""),
+        "pnl_closed": float(pnl_closed),
+        "fees": float(fee_sum or 0.0),
+        "entry_price": float(entry_px),
+        "exit_price": float(exit_px) if exit_px is not None else None,
+        "sl_price": float(sl_px) if sl_px is not None else None,
+        "qty": float(qty),
+        "risk_usd": float(risk_usd),
+        "r_mult": float(r_mult) if r_mult is not None else None,
+        "hold_sec": int(max(0, hold_sec)),
+        "close_reason": reason,
+        "verdict": verdict,
+    }
+    return summary, payload
+
+
+async def _ai_operator_emit(
+    *,
+    kind: str,
+    fallback_text: str,
+    payload: dict[str, Any],
+    prompt: str | None = None,
+    tg_prefix: str = "🧠 AI operator",
+) -> None:
+    if not DEEPSEEK_OPERATOR_ENABLE:
+        return
+    try:
+        DEEPSEEK_OVERLAY.append_shadow_recommendation(
+            summary=_ai_operator_trim(fallback_text, 240),
+            payload=payload,
+            source="ai_operator",
+            recommendation_type=kind,
+        )
+    except Exception as e:
+        log_error(f"ai operator shadow append fail: {e}")
+
+    msg = f"{tg_prefix}\n{_ai_operator_trim(fallback_text)}"
+    if DEEPSEEK_OPERATOR_USE_API and DEEPSEEK_OVERLAY.is_ready() and prompt:
+        try:
+            answer = await asyncio.to_thread(DEEPSEEK_OVERLAY.ask, prompt, _deepseek_snapshot())
+            if answer and not str(answer).startswith("DeepSeek request failed"):
+                msg = f"{tg_prefix}\n{_ai_operator_trim(answer)}"
+        except Exception as e:
+            log_error(f"ai operator ask fail: {e}")
+    tg_trade(msg)
+
+
+def _maybe_schedule_ai_trade_review(tr, sym: str, pnl_closed: float, fee_sum: float | None, exit_px: float | None) -> None:
+    if not (DEEPSEEK_OPERATOR_ENABLE and DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE):
+        return
+    summary, payload = _build_trade_review_summary(tr, sym, pnl_closed, fee_sum, exit_px)
+    prompt = (
+        "Кратко разберись с только что закрытой сделкой. "
+        "Нужно 3-5 коротких строк по-русски: verdict, что было хорошо/плохо, "
+        "нужна ли корректировка фильтра/таймстопа/риска. Без воды.\n"
+        f"Сделка: {json.dumps(payload, ensure_ascii=False)}"
+    )
+    try:
+        loop = asyncio.get_running_loop()
+        loop.create_task(
+            _ai_operator_emit(
+                kind="trade_review",
+                fallback_text=f"trade review: {summary}",
+                payload=payload,
+                prompt=prompt,
+                tg_prefix="🧠 AI trade review",
+            )
+        )
+    except RuntimeError:
+        pass
+
+
+async def _maybe_run_ai_operator_tick(
+    *,
+    now: int,
+    ws_status: str,
+    d_connect: int,
+    d_disconnect: int,
+    d_handshake: int,
+) -> None:
+    if not (DEEPSEEK_OPERATOR_ENABLE and DEEPSEEK_OPERATOR_PROACTIVE_ENABLE):
+        return
+
+    closed_cnt, pnl_sum, _last_close_ts = _db_recent_close_stats(DEEPSEEK_OPERATOR_NO_TRADES_HOURS)
+    if len(TRADES) == 0 and closed_cnt == 0 and _throttle_gate("aiop:no_trades", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC):
+        regime = _deepseek_local_regime_hint()
+        fallback = (
+            f"За последние {DEEPSEEK_OPERATOR_NO_TRADES_HOURS}h нет закрытых сделок. "
+            f"regime={regime.get('label')} conf={regime.get('confidence')} "
+            f"reason={regime.get('reason')}"
+        )
+        prompt = (
+            f"За последние {DEEPSEEK_OPERATOR_NO_TRADES_HOURS} часов у бота нет закрытых сделок и нет открытых позиций. "
+            "Кратко оцени: это нормальная пауза или признак слишком жёстких фильтров? "
+            "Дай 3-5 строк по-русски с конкретными следующими шагами."
+        )
+        asyncio.create_task(
+            _ai_operator_emit(
+                kind="proactive_no_trades",
+                fallback_text=fallback,
+                payload={"hours": DEEPSEEK_OPERATOR_NO_TRADES_HOURS, "closed_trades": closed_cnt, "pnl_sum": pnl_sum},
+                prompt=prompt,
+            )
+        )
+
+    if ws_status in {"WARN", "CRITICAL", "CRITICAL_NO_CONNECT"} and _throttle_gate(
+        f"aiop:ws:{ws_status}", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC
+    ):
+        fallback = (
+            f"WS health={ws_status}: connect={d_connect} disconnect={d_disconnect} "
+            f"handshake_timeout={d_handshake}"
+        )
+        prompt = (
+            "У бота деградация websocket-качества в текущем окне. "
+            f"status={ws_status}, connect={d_connect}, disconnect={d_disconnect}, handshake_timeout={d_handshake}. "
+            "Кратко оцени риск для live и что проверить первым."
+        )
+        asyncio.create_task(
+            _ai_operator_emit(
+                kind="proactive_ws_health",
+                fallback_text=fallback,
+                payload={"status": ws_status, "connect": d_connect, "disconnect": d_disconnect, "handshake_timeout": d_handshake},
+                prompt=prompt,
+            )
+        )
+
+    quiet_try = int(_diag_get_int("sloped_try")) + int(_diag_get_int("flat_try")) + int(_diag_get_int("breakdown_try"))
+    quiet_entry = int(_diag_get_int("sloped_entry")) + int(_diag_get_int("flat_entry")) + int(_diag_get_int("breakdown_entry"))
+    regime = _deepseek_local_regime_hint()
+    if (
+        quiet_try >= DEEPSEEK_OPERATOR_QUIET_SCAN_MIN
+        and quiet_entry == 0
+        and regime.get("label") in {"weak_chop", "mixed", "late_extended"}
+        and _throttle_gate("aiop:quiet_scan_zero", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC)
+    ):
+        fallback = (
+            f"Quiet-market sleeves scanned {quiet_try} times with 0 entries. "
+            f"regime={regime.get('label')} reason={regime.get('reason')}"
+        )
+        prompt = (
+            f"Quiet-market sleeves (sloped/flat/breakdown) already made {quiet_try} checks and 0 entries. "
+            f"Local regime hint={regime.get('label')}, reason={regime.get('reason')}. "
+            "Кратко скажи, это нормальная рыночная пауза или стоит смягчить фильтры/ротировать символы."
+        )
+        asyncio.create_task(
+            _ai_operator_emit(
+                kind="proactive_quiet_market",
+                fallback_text=fallback,
+                payload={"quiet_try": quiet_try, "quiet_entry": quiet_entry, "regime": regime},
+                prompt=prompt,
+            )
+        )
+
 def _parse_float(s: str) -> float | None:
     try:
         return float(s)
@@ -1920,6 +2122,27 @@ def _get_last_open_entry_event(symbol: str, side: str | None = None) -> dict | N
     except Exception as e:
         log_error(f"open entry query failed {symbol}: {e}")
         return None
+
+
+def _db_recent_close_stats(hours: int = 24) -> tuple[int, float, int]:
+    if not os.path.exists(TRADE_DB_PATH):
+        return 0, 0.0, 0
+    since_ts = int(time.time()) - max(1, int(hours)) * 3600
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            cur = con.execute(
+                """
+                SELECT COUNT(*), COALESCE(SUM(pnl), 0.0), COALESCE(MAX(ts), 0)
+                FROM trade_events
+                WHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=?
+                """,
+                (since_ts,),
+            )
+            row = cur.fetchone() or (0, 0.0, 0)
+            return int(row[0] or 0), float(row[1] or 0.0), int(row[2] or 0)
+    except Exception as e:
+        log_error(f"recent close stats failed: {e}")
+        return 0, 0.0, 0
 
 
 def _list_unmatched_open_entry_events(limit: int = 50) -> list[dict]:
@@ -4054,6 +4277,7 @@ def _finalize_and_report_closed(tr, sym: str):
     tg_trade(msg)
     _db_log_event("CLOSE", tr, sym, pnl=pnl_closed, fees=fee_sum, exit_px=exit_px)
     _db_log_ml_close(tr, sym, pnl=pnl_closed, fees=fee_sum)
+    _maybe_schedule_ai_trade_review(tr, sym, pnl_closed, fee_sum, exit_px)
     # Cooldown after breakout SL to reduce repeated entries in noisy chop.
     try:
         if str(getattr(tr, "strategy", "")) == "inplay_breakout":
@@ -8231,6 +8455,13 @@ async def pulse():
                         )
                         last_ws_alert_ts = now
                         last_ws_alert_status = status
+                await _maybe_run_ai_operator_tick(
+                    now=now,
+                    ws_status=status,
+                    d_connect=d_connect,
+                    d_disconnect=d_disconnect,
+                    d_handshake=d_handshake,
+                )
                 last_ws_counters = cur_ws
                 last_bybit_msg_count = cur_bybit_msg_count
                 last_ws_health_check_ts = now

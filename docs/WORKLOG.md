@@ -65,6 +65,30 @@
   - only within capped multipliers
   - improve tradeability on a small account without blindly lifting global risk
 
+### Midterm breakout from near-pass -> real pass
+- `midterm_pullback_v3_tiny_focus` moved from near-pass to real passing region.
+- Current best compact pass:
+  - `net=8.19`
+  - `PF=1.629`
+  - `WR=55.7%`
+  - `DD=1.48`
+  - `negative_months=3`
+  - `trades=61`
+- Created explicit live bridge candidate file:
+  - `configs/midterm_live_candidate_20260327.env`
+
+### DeepSeek operator freedom (safe mode)
+- Added first real operator layer in `smart_pump_reversal_bot.py`:
+  - proactive no-trades alert
+  - proactive websocket-health alert
+  - proactive quiet-market scan/no-entry alert
+  - auto trade review on closed trades
+- Operator flow stays safe:
+  - advisory only
+  - writes shadow recommendations
+  - can call DeepSeek for a short comment
+  - does not mutate live config or deploy anything by itself
+
 ## 2026-03-26 — live sleeve recovery + operator roadmap + entry-safety follow-up
 
 ### Live sleeve reality confirmed
