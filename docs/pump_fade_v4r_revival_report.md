@@ -1,4 +1,4 @@
-# pump_fade v4 Revival — Research Report
+# pump_fade Revival — Research Report
 **Date:** 2026-03-27 | **Branch:** codex/dynamic-symbol-filters (research-only)
 
 ---
@@ -21,36 +21,79 @@ The edge is real but low-frequency (~1 trade/13 days per 25-symbol universe).
 
 ### v3 — Peak momentum loss + re-entry
 **Logic:** pump → RSI overbought at peak (≥74) → RSI fades to <60 → bearish reversal bars + volume fade.
-**Assessment:** Moderate complexity. The RSI-peak detection via historical slice is fragile (can give NaN if history too short). More filters than v4, but the entry trigger (RSI drop + bearish bars) is less precise than a wick signature. Not the baseline winner.
+**Assessment:** Moderate complexity. The RSI-peak detection via historical slice is fragile. Not the baseline winner.
 
-### v4 — Climax exhaustion wick ✅ **CHOSEN**
+### v4 — Climax exhaustion wick ✅ Initially chosen, then invalidated
 **Logic:** pump → peak candle must have large upper wick (≥32% of range) + small body (≤55% of range) + volume climax → price breaks below exhaustion candle's low.
-**Assessment:** The most mechanically clean pattern. The wick shape is a concrete, visual exhaustion signal (institutional sellers absorbing retail buy pressure). The fail-break confirmation (price closes below the exhaustion low) adds a second gate. v4_rsi_max=58 ensures cooling has begun. This is why the baseline used v4.
+**Assessment:** Mechanically clean pattern, but **wrong mode for this baseline**. See below.
 
 ### v5 — Dump → lower-high bounce → support break
 **Logic:** pump → initial dump → bounce retraces 25-80% → lower high forms → support break.
-**Assessment:** More complete distribution structure, but requires 3 phases to play out on 5m bars. For alt-coin pumps (which can fully collapse in 1-2 hours), by the time v5 confirms, the move is often over. Too slow for pumpy alts. Better suited for BTC/ETH on larger timeframes.
+**Assessment:** Too slow for pumpy alts. Better suited for BTC/ETH on larger timeframes.
 
 ### v6 — v5 on 15m aggregated bars + 5m trigger
-**Logic:** v5 structure on 3×5m=15m bars, then 5m break-of-support trigger candle.
-**Assessment:** Clever multi-timeframe approach. But the 15m aggregation from 5m raw bars introduces edge artifacts (bar boundaries don't align with natural 15m opens). For pumpy alts, volume patterns in the aggregated bars can be misleading. Too experimental for a first autoresearch pass.
+**Assessment:** Multi-timeframe approach with edge artifacts from 5m→15m aggregation. Too experimental.
+
+---
+
+## Critical Finding: Baseline Was BASE Mode, Not v4
+
+### What We Thought
+- Baseline used `pf_v4c_240d` tag → assumed v4 (climax wick mode)
+- Launched 243-combo v4 autoresearch on liquid alts (DOGE, PEPE, SOL, SUI, etc.)
+
+### What Baseline Actually Was
+Inspection of `baselines/pump_fade_v4c_240d/trades.csv` trade reasons:
+```
+"pump 21.3%/120m then reversal"   ← BASE mode format, NOT v4
+"pump 8.9%/120m then reversal"
+"pump 6.4%/120m then reversal"
+```
+The `v4` in `pf_v4c_240d` referred to a *commit tag*, not the v4 strategy variant.
+
+**The baseline used BASE mode with 120m pump window on micro-cap meme coins.**
+
+### Autoresearch v4r Result
+- **243/243 combos completed, 0 passing** (best: PF=0.247, 2 trades)
+- Correct diagnosis: exhaustion wick is too rare on liquid alts in this period
+- v4 is correct pattern for select conditions but not the source of the baseline edge
 
 ---
 
 ## Structural Bugs Found
 
-### Bug 1 (FIXED): Cooldown non-functional for v4/v5/v6 modes
+### Bug 1 (FIXED in pump_fade_v4r.py): Cooldown non-functional for v4/v5/v6 modes
 In `archive/strategies_retired/pump_fade.py`, the cooldown decrement at line 1045 is placed **after** the v3/v4/v5/v6 dispatch. Since v4 returns early at line 1038, the cooldown counter was set by `_emit_short_signal` but **never decremented**, making post-trade cooldown completely skip for v4.
-
-**Impact:** In the baseline test (19 trades over 240 days), this probably didn't matter much because pump conditions naturally prevent re-entry. But in softer parameter combos it could cause double-entries.
 
 **Fix in `pump_fade_v4r.py`:** Moved cooldown check to before the v3/v4/v5/v6 dispatch.
 
 ### Bug 2 (FIXED): Dead code — unreachable `return None`
 Line 1177 in archive: `return None` after `return sig`. Unreachable. Removed.
 
-### Non-issue: bearish confirmation direction check (line 1158)
-Initially suspicious: `if i > 1 and self._closes[-i] < self._closes[-(i-1)]: bearish_ok = False`. This correctly checks that closes are descending over time (older bar below newer → price going up → fail). Not a bug.
+### Discovery: Archive BASE Mode ≠ Baseline Code
+The archive version (`archive/strategies_retired/pump_fade.py`, 1191 lines) has many additional filters added after the baseline commit:
+- `PF_USE_EXHAUSTION_FILTER` — extra gate that didn't exist in baseline
+- `PF_CONFIRM_BARS` — multi-bar reversal confirmation (baseline was single-bar)
+- `PF_REVERSAL_BODY_MIN_FRAC` — body fraction check (not in baseline)
+- `ENTRY_TOO_EARLY` gate — min drop from peak (not in baseline)
+- `leg_pct` computation — shortleg momentum gate (not in baseline)
+- `move_ref = max(c, window_high)` — archive uses max of close vs window high; baseline used only close
+
+The baseline was the simple 190-line `strategies/pump_fade.py` at commit `e341055e`.
+
+---
+
+## Correct Approach: pump_fade_simple
+
+Created `strategies/pump_fade_simple.py` — **exact verbatim copy of the baseline code** (commit e341055e), with class renamed from `PumpFadeStrategy` → `PumpFadeSimpleStrategy` to avoid collisions with the archive.
+
+**Logic (190 lines):**
+1. Pump detection: `(c / base_close_24bars_ago) >= pump_threshold_pct`
+2. `_pumped_flag` stays True until trade or >8% drop from recent peak
+3. Entry gate: RSI ≥ rsi_overbought (default 75) at the reversal bar
+4. Reversal trigger: `c < EMA9 AND c < prev_close`
+5. Stop: `peak_high * (1 + stop_buffer_pct)`
+6. TP: `entry - rr * risk`
 
 ---
 
@@ -59,50 +102,59 @@ Initially suspicious: `if i > 1 and self._closes[-i] < self._closes[-(i-1)]: bea
 | File | Action | Note |
 |------|--------|------|
 | `strategies/pump_fade_v4r.py` | **CREATED** | Revival copy with v4_enable=True default, cooldown fix, dead code removed |
-| `backtest/run_portfolio.py` | **MODIFIED** | Registered `pump_fade_v4r` (import, allowed, dict, signal loop) |
-| `configs/autoresearch/pump_fade_v4r_alts.json` | **CREATED** | 243-combo spec, pumpy alts, cache_only=true |
+| `strategies/pump_fade_simple.py` | **CREATED** | Exact baseline logic (commit e341055e), renamed class |
+| `backtest/run_portfolio.py` | **MODIFIED** | Registered `pump_fade_v4r` and `pump_fade_simple` (import, allowed, dict, signal loop) |
+| `configs/autoresearch/pump_fade_v4r_alts.json` | **CREATED** | 243-combo spec, pumpy alts, completed — 0 passing combos |
+| `configs/autoresearch/pump_fade_base_meme.json` | **CREATED** | 486-combo spec for archive BASE mode — invalidated (archive ≠ baseline code) |
+| `configs/autoresearch/pump_fade_simple_meme.json` | **CREATED** | ✅ Correct spec: 486 combos using pump_fade_simple on meme coins |
 | `archive/strategies_retired/pump_fade.py` | **NOT TOUCHED** | Historical record preserved |
 | Live bot files | **NOT TOUCHED** | Research-only branch |
 
 ---
 
-## Autoresearch Spec Summary
+## Autoresearch Spec to Run
 
-**File:** `configs/autoresearch/pump_fade_v4r_alts.json`
-**Strategy:** `pump_fade_v4r` (v4 only, cooldown fixed)
-**Symbols:** DOGEUSDT, 1000PEPEUSDT, SOLUSDT, SUIUSDT, ADAUSDT, LINKUSDT, ARBUSDT, XRPUSDT, ENAUSDT, TAOUSDT
-**Period:** 270 days ending 2026-02-24 (~Sep 2025 – Feb 2026)
-**Combos:** 243 (3^5 grid)
+**File:** `configs/autoresearch/pump_fade_simple_meme.json`
+**Strategy:** `pump_fade_simple` (exact baseline code)
+**Symbols basket 1:** MYXUSDT, RIVERUSDT, AZTECUSDT, ENSOUSDT, PIPPINUSDT, VVVUSDT, DOGEUSDT, 1000PEPEUSDT
+**Symbols basket 2:** MYXUSDT, RIVERUSDT, AZTECUSDT, ENSOUSDT, PIPPINUSDT, VVVUSDT, ARBUSDT, ENAUSDT
+**Period:** 240 days ending 2026-02-24
+**Combos:** 486 (2 baskets × 3^4 grid)
 
 Grid parameters:
-- `PF_V4_PUMP_THRESHOLD_PCT`: 0.07, 0.10, 0.13 — pump strength gate
-- `PF_V4_EXHAUSTION_WICK_MIN_FRAC`: 0.25, 0.32, 0.42 — wick quality
-- `PF_V4_PEAK_RECENT_BARS`: 6, 10, 16 — peak freshness
-- `PF_V4_RSI_MAX`: 50, 58, 66 — entry RSI ceiling
-- `PF_V4_RR`: 1.8, 2.1, 2.5 — reward/risk ratio
+- `PF_PUMP_WINDOW_MIN`: 90, 120, 150 — pump lookback (baseline: 120m)
+- `PF_PUMP_THRESHOLD_PCT`: 0.06, 0.08, 0.10 — pump strength (baseline: 0.08)
+- `PF_RSI_OVERBOUGHT`: 70, 75, 80 — RSI gate at entry (baseline: 75)
+- `PF_RR`: 1.4, 1.7, 2.1 — reward/risk ratio (baseline: 1.6)
 
-Fixed: `PF_V4_ENABLE=1`, `PF_COOLDOWN_BARS=20`, `cache_only=true`
-Constraints: min_trades=8, min_PF=1.40, max_DD=8.0%, min_net=+3.0%
+Fixed: cooldown=24 bars, stop_buffer=0.25%, cache_only=true
+Constraints: min_trades=10, min_PF=1.50, max_DD=7.0%, min_net=+3.0%
 
 **To run (from your local terminal):**
 ```bash
 cd ~/Documents/Work/bot-new/bybit-bot-clean-v28
 nohup python3 scripts/run_strategy_autoresearch.py \
-  --spec configs/autoresearch/pump_fade_v4r_alts.json \
-  > /tmp/pf_v4r_autoresearch.log 2>&1 &
+  --spec configs/autoresearch/pump_fade_simple_meme.json \
+  > /tmp/pf_simple_autoresearch.log 2>&1 &
 echo "PID: $!"
 ```
 
+> **Note:** Must run from your local machine — the VM's `.cache/klines/` is incomplete
+> (files contain only the most recent ~11 days per symbol, not full 240-day history).
+> Autoresearch will use your local cache with full historical data.
+
 ---
 
-## Should You Continue This Branch?
+## Decisions
 
-**Yes — conditionally.** The edge is real (PF=1.88 in baseline). Key questions autoresearch will answer:
+### v4r
+- **Result: FAILED.** 0/243 combos pass. Archive v4 is correct logic but wrong universe for this period (requires more liquid coins, different time window).
+- **Verdict: Archive.** Keep `pump_fade_v4r.py` for future research on different universes/periods.
 
-1. **Does the cooldown fix change things?** If yes, the baseline trade count and PF may shift. We'll know from comparing autoresearch results to the v4c baseline.
-2. **Is the edge from the wick gate or the pump strength?** The `PF_V4_EXHAUSTION_WICK_MIN_FRAC` sweep will show if loosening the wick requirement increases trades without killing PF.
-3. **Is DOGE/PEPE the real source?** With 10 symbols, if 80% of wins come from 2-3 coins, you may want a tighter allowlist.
+### pump_fade_simple (baseline resurrection)
+- **Status: Ready to run.** Strategy created, registered, autoresearch spec ready.
+- **Deploy condition:** ≥5 combos passing + at least 1 with trades ≥15 and PF ≥1.6
+- **Stop condition:** <3 combos passing → edge too narrow, archive this revival
 
-**Stop condition:** If autoresearch finds <3 parameter sets meeting constraints, the edge is too narrow to deploy. Archive the revival and move on.
-
-**Deploy condition:** ≥5 combos passing constraints + at least 1 with trades ≥15 and PF ≥1.6 → write deploy spec + enable `ENABLE_PUMP_FADE_TRADING=1`.
+### Key open question
+The baseline got 5 trades from AZTECUSDT. In all our VM runs, AZTECUSDT shows 0 trades because the `.cache/klines/` file only has the last 11 days of data (Feb 12-23, 2026) with no pre-pump history. The full autoresearch on your local machine should resolve this — AZTECUSDT had multiple strong pump-revert events in Q3-Q4 2025 (pre-listing period where data was cached).

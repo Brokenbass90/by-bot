@@ -1,0 +1,56 @@
+{
+  "name": "pump_fade_simple_meme",
+  "description": "pump_fade_simple (exact baseline logic) on meme/micro-cap alts. Sweeps key params around baseline optimum.",
+  "_diagnosis": [
+    "Baseline (commit e341055e, pump_fade_v4c_240d): PF=1.883, 19 trades, DD=3.77%, WR=42.1%.",
+    "Baseline code = 190-line strategies/pump_fade.py (BASE mode only, no exhaustion filter,",
+    "no confirm_bars, no RSI override, single-bar reversal: c<EMA9 AND c<prev_close).",
+    "Baseline edge symbols: MYXUSDT (5), AZTECUSDT (5), ENSOUSDT (4), RIVERUSDT (3) = micro-cap memes.",
+    "pump_fade_simple.py = exact replica of baseline code, renamed class to avoid archive collision.",
+    "Grid: 5 params × 3 levels = 243 combos × 2 symbol baskets = 486 combos.",
+    "PF_PUMP_WINDOW_MIN: 90/120/150 (baseline was 120)",
+    "PF_PUMP_THRESHOLD_PCT: 0.06/0.08/0.10 (baseline was 0.08)",
+    "PF_RSI_OVERBOUGHT: 70/75/80 (baseline was 75)",
+    "PF_ENTRY_MAX_DROP_PCT is hardcoded 0.08 in baseline — not in this strategy.",
+    "PF_RR: 1.4/1.7/2.1 (baseline was 1.6)"
+  ],
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "{SYMBOLS}",
+    "--strategies", "pump_fade_simple",
+    "--days", "240",
+    "--end", "2026-02-24",
+    "--starting_equity", "100",
+    "--risk_pct", "0.005",
+    "--cap_notional", "20",
+    "--leverage", "1.0",
+    "--max_positions", "3",
+    "--fee_bps", "6.0",
+    "--slippage_bps", "3.0",
+    "--tag", "{tag}"
+  ],
+  "env": {
+    "PF_COOLDOWN_BARS": "24",
+    "PF_STOP_BUFFER_PCT": "0.0025"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "MYXUSDT,RIVERUSDT,AZTECUSDT,ENSOUSDT,PIPPINUSDT,VVVUSDT,DOGEUSDT,1000PEPEUSDT",
+      "MYXUSDT,RIVERUSDT,AZTECUSDT,ENSOUSDT,PIPPINUSDT,VVVUSDT,ARBUSDT,ENAUSDT"
+    ],
+    "PF_PUMP_WINDOW_MIN": ["90", "120", "150"],
+    "PF_PUMP_THRESHOLD_PCT": ["0.06", "0.08", "0.10"],
+    "PF_RSI_OVERBOUGHT": ["70", "75", "80"],
+    "PF_RR": ["1.4", "1.7", "2.1"]
+  },
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.50,
+    "max_drawdown": 7.0,
+    "min_net_pnl": 3.0
+  },
+  "top_n": 15,
+  "sort_by": "profit_factor"
+}

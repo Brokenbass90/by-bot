@@ -124,6 +124,7 @@ AltInplayBreakdownV1Strategy = _import_strategy_class("alt_inplay_breakdown_v1",
 MicroScalperV1Strategy = _import_strategy_class("micro_scalper_v1", "MicroScalperV1Strategy")
 AltSupportReclaimV1Strategy = _import_strategy_class("alt_support_reclaim_v1", "AltSupportReclaimV1Strategy")
 PumpFadeV4RStrategy = _import_strategy_class("pump_fade_v4r", "PumpFadeV4RStrategy")
+PumpFadeSimpleStrategy = _import_strategy_class("pump_fade_simple", "PumpFadeSimpleStrategy")
 
 
 def _ema(values: List[float], period: int) -> float:
@@ -810,7 +811,7 @@ def main():
         raise SystemExit("No symbols selected. Provide --symbols or relax --min_volume_usd/--top_n.")
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
-    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_pullback_be_trail", "sr_break_retest_volume_v1", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "smart_grid_v2", "smart_grid_v3", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow", "trendline_break_retest_v2", "flat_bounce_v2", "flat_bounce_v3", "btc_eth_trend_follow_v2", "trendline_break_retest_v3", "trendline_break_retest_v4", "structure_shift_v1", "structure_shift_v2", "tv_atr_trend_v1", "tv_atr_trend_v2", "triple_screen_v132", "triple_screen_v132b", "btc_regime_retest_v1", "btc_cycle_pullback_v1", "btc_macro_cycle_v1", "btc_cycle_continuation_v1", "btc_cycle_level_target_v2", "btc_daily_level_reclaim_v1", "btc_swing_zone_reclaim_v1", "btc_weekly_zone_reclaim_v2", "btc_regime_flip_continuation_v1", "btc_sloped_reclaim_v1", "alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1", "alt_inplay_breakdown_v1", "micro_scalper_v1", "alt_support_reclaim_v1", "pump_fade_v4r"}
+    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_pullback_be_trail", "sr_break_retest_volume_v1", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "smart_grid_v2", "smart_grid_v3", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow", "trendline_break_retest_v2", "flat_bounce_v2", "flat_bounce_v3", "btc_eth_trend_follow_v2", "trendline_break_retest_v3", "trendline_break_retest_v4", "structure_shift_v1", "structure_shift_v2", "tv_atr_trend_v1", "tv_atr_trend_v2", "triple_screen_v132", "triple_screen_v132b", "btc_regime_retest_v1", "btc_cycle_pullback_v1", "btc_macro_cycle_v1", "btc_cycle_continuation_v1", "btc_cycle_level_target_v2", "btc_daily_level_reclaim_v1", "btc_swing_zone_reclaim_v1", "btc_weekly_zone_reclaim_v2", "btc_regime_flip_continuation_v1", "btc_sloped_reclaim_v1", "alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1", "alt_inplay_breakdown_v1", "micro_scalper_v1", "alt_support_reclaim_v1", "pump_fade_v4r", "pump_fade_simple"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -983,6 +984,7 @@ def main():
     micro_scalper_v1 = {sym: MicroScalperV1Strategy() for sym in symbols} if "micro_scalper_v1" in strategies else {}
     alt_support_reclaim_v1 = {sym: AltSupportReclaimV1Strategy() for sym in symbols} if "alt_support_reclaim_v1" in strategies else {}
     pump_fade_v4r = {sym: PumpFadeV4RStrategy() for sym in symbols} if "pump_fade_v4r" in strategies else {}
+    pump_fade_simple = {sym: PumpFadeSimpleStrategy() for sym in symbols} if "pump_fade_simple" in strategies else {}
     flat_archetype_router_enable = str(os.getenv("FLAT_ARCHETYPE_ROUTER_ENABLE", "0")).strip().lower() in {"1", "true", "yes", "on"}
     flat_archetype_long_min_score = float(os.getenv("ARR1_BAR_MIN_SCORE", "0.40"))
     flat_archetype_short_min_score = float(os.getenv("ARF1_BAR_MIN_SCORE", "0.08"))
@@ -1089,6 +1091,12 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = pump_fade_v4r[sym].maybe_signal(sym, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "pump_fade_simple":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = pump_fade_simple[sym].maybe_signal(sym, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "retest_levels":
                 sig = retest[sym].signal(store, ts_ms, last_price)
             elif st == "momentum":

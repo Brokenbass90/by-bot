@@ -1,0 +1,69 @@
+{
+  "name": "pump_fade_base_meme",
+  "description": "pump_fade BASE mode revival on meme/micro-cap alts. Baseline pf_v4c_240d showed edge came from MYXUSDT/RIVERUSDT/AZTECUSDT/ENSOUSDT (not BTC/ETH/DOGE). Baseline used 120m pump window, base mode (no vX_enable).",
+  "_diagnosis": [
+    "v4r autoresearch (243 combos) found 0 passing combos — v4 exhaustion wick is too rare on liquid alts in this period.",
+    "Root cause: baseline trades show 'pump X%/120m then reversal' = BASE mode, not v4.",
+    "Baseline edge symbols: MYXUSDT (5 trades), AZTECUSDT (5 trades), ENSOUSDT (4 trades), RIVERUSDT (3 trades).",
+    "These are thin micro-cap/meme coins that pump hard and revert predictably.",
+    "Correct approach: BASE mode, 120m window, meme coin universe.",
+    "PF_PUMP_THRESHOLD_PCT=0.08 default fires when price hits +8% at any point in the window,",
+    "then stays flagged until reversal conditions met — so reported pump% at entry can be lower (2-5%).",
+    "CRITICAL FIX (v2): Baseline commit e341055e had 190-line pump_fade.py — NO exhaustion filter,",
+    "NO rsi_override, NO confirm_bars, single-bar reversal (c < ema AND c < prev_close).",
+    "PF_USE_EXHAUSTION_FILTER=1 was blocking ALL trades in initial run. Fixed to 0.",
+    "PF_CONFIRM_BARS set to 1, PF_REVERSAL_BODY_MIN_FRAC set to 0 to match baseline logic.",
+    "Diagnostic: 5 symbols + exhaustion_off + RSI=75 → 15 trades PF=1.22 (vs baseline 19 PF=1.88).",
+    "10-symbol universe expected to yield ~25-35 trades in best combos."
+  ],
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "{SYMBOLS}",
+    "--strategies", "pump_fade",
+    "--days", "240",
+    "--end", "2026-02-24",
+    "--starting_equity", "100",
+    "--risk_pct", "0.005",
+    "--cap_notional", "20",
+    "--leverage", "1.0",
+    "--max_positions", "3",
+    "--fee_bps", "6.0",
+    "--slippage_bps", "3.0",
+    "--tag", "{tag}"
+  ],
+  "env": {
+    "PF_V3_ENABLE": "0",
+    "PF_V4_ENABLE": "0",
+    "PF_V5_ENABLE": "0",
+    "PF_V6_ENABLE": "0",
+    "PF_USE_EXHAUSTION_FILTER": "0",
+    "PF_RSI_OVERRIDE_ENABLE": "0",
+    "PF_SPIKE_ONLY": "0",
+    "PF_COOLDOWN_BARS": "24",
+    "PF_CONFIRM_BARS": "1",
+    "PF_REVERSAL_BODY_MIN_FRAC": "0.0",
+    "PF_STOP_BUFFER_PCT": "0.0025",
+    "PF_TIME_STOP_BARS": "48"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "MYXUSDT,RIVERUSDT,AZTECUSDT,ENSOUSDT,PIPPINUSDT,VVVUSDT,ARBUSDT,ENAUSDT,TAOUSDT,OPUSDT",
+      "MYXUSDT,RIVERUSDT,AZTECUSDT,ENSOUSDT,PIPPINUSDT,VVVUSDT,DOGEUSDT,1000PEPEUSDT,SNXUSDT,ADAUSDT"
+    ],
+    "PF_PUMP_WINDOW_MIN": ["90", "120", "150"],
+    "PF_PUMP_THRESHOLD_PCT": ["0.06", "0.08", "0.10"],
+    "PF_RSI_OVERBOUGHT": ["65", "70", "75"],
+    "PF_ENTRY_MAX_DROP_PCT": ["0.05", "0.08", "0.12"],
+    "PF_RR": ["1.4", "1.7", "2.1"]
+  },
+  "constraints": {
+    "min_trades": 8,
+    "min_profit_factor": 1.50,
+    "max_drawdown": 7.0,
+    "min_net_pnl": 3.0
+  },
+  "top_n": 15,
+  "sort_by": "profit_factor"
+}
