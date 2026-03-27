@@ -1,0 +1,70 @@
+{
+  "name": "pump_fade_v4r_alts",
+  "description": "Focused revival sweep for the repaired pump_fade v4 logic on pumpy alts only.",
+  "_comment": "pump_fade_v4r revival autoresearch — pumpy alts only, v4 pattern focused.",
+  "_description": [
+    "Baseline edge: pf_v4c_240d → +7.81%, PF=1.883, 19 trades, DD=3.77%.",
+    "Strategy: pump + climax exhaustion wick (large upper wick, small body)",
+    "         + volume climax at peak + price breaks below exhaustion low.",
+    "Universe: 10 pumpy alts with high intraday volatility (excl BTC/ETH/BNB which don't pump the same way).",
+    "Grid: 5 params × 3 levels = 243 combos.",
+    "  PF_V4_PUMP_THRESHOLD_PCT  — how strong the pump must be (short window)",
+    "  PF_V4_EXHAUSTION_WICK_MIN_FRAC — minimum upper wick fraction for exhaustion candle",
+    "  PF_V4_PEAK_RECENT_BARS — how fresh the peak must be (staleness gate)",
+    "  PF_V4_RSI_MAX — RSI ceiling at entry (must be losing momentum)",
+    "  PF_V4_RR — reward/risk ratio",
+    "Expected trades per combo: ~8-20 over 270 days across 10 symbols.",
+    "Cooldown bug fixed in pump_fade_v4r.py (was non-functional in archive version for v4 mode)."
+  ],
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "{SYMBOLS}",
+    "--strategies", "pump_fade_v4r",
+    "--days", "270",
+    "--end", "2026-02-24",
+    "--starting_equity", "100",
+    "--risk_pct", "0.005",
+    "--cap_notional", "25",
+    "--leverage", "1.0",
+    "--max_positions", "3",
+    "--fee_bps", "6.0",
+    "--slippage_bps", "3.0",
+    "--tag", "{tag}"
+  ],
+  "env": {
+    "PF_V4_ENABLE": "1",
+    "PF_V3_ENABLE": "0",
+    "PF_V5_ENABLE": "0",
+    "PF_V6_ENABLE": "0",
+    "PF_V4_PEAK_VOL_MULT": "1.20",
+    "PF_V4_EXHAUSTION_BODY_MAX_FRAC": "0.55",
+    "PF_V4_FAIL_BREAK_PCT": "0.0005",
+    "PF_V4_MIN_ATR_PCT": "0.25",
+    "PF_V4_MAX_ATR_PCT": "3.50",
+    "PF_V4_SL_BUFFER_PCT": "0.0018",
+    "PF_COOLDOWN_BARS": "20",
+    "PF_PUMP_WINDOW_MIN": "60",
+    "PF_V4_LONG_WINDOW_MULT": "3",
+    "PF_V4_LONG_PUMP_THRESHOLD_PCT": "0.14"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "DOGEUSDT,1000PEPEUSDT,SOLUSDT,SUIUSDT,ADAUSDT,LINKUSDT,ARBUSDT,XRPUSDT,ENAUSDT,TAOUSDT"
+    ],
+    "PF_V4_PUMP_THRESHOLD_PCT": ["0.07", "0.10", "0.13"],
+    "PF_V4_EXHAUSTION_WICK_MIN_FRAC": ["0.25", "0.32", "0.42"],
+    "PF_V4_PEAK_RECENT_BARS": ["6", "10", "16"],
+    "PF_V4_RSI_MAX": ["50", "58", "66"],
+    "PF_V4_RR": ["1.8", "2.1", "2.5"]
+  },
+  "constraints": {
+    "min_trades": 8,
+    "min_profit_factor": 1.40,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 3.0
+  },
+  "top_n": 15,
+  "sort_by": "profit_factor"
+}
