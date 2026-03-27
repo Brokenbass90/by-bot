@@ -3170,9 +3170,11 @@ class BybitClient:
         rc = str(j.get("retCode"))
 
         if rc != "0":
-            log_error(f"[{self.name}] POST {path} failed. Body={js}  Resp={j}")
-
             msg = (str(j.get("retMsg") or "")).lower()
+            # Benign Bybit no-op replies are handled by callers as success and should not pollute errors.log.
+            if rc not in ("34040", "110043") and ("not modified" not in msg):
+                log_error(f"[{self.name}] POST {path} failed. Body={js}  Resp={j}")
+
             if rc in ("33004", "10002", "10003", "10004", "10005") or ("api key" in msg) or ("expired" in msg) or ("invalid" in msg) or ("sign" in msg):
                 err = RuntimeError(f"[{self.name}] Bybit AUTH error: {j}")
                 mark_auth_fail(self.name, err, cooldown_sec=600)
