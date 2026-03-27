@@ -1869,9 +1869,54 @@ async def _maybe_run_ai_operator_tick(
     if not (DEEPSEEK_OPERATOR_ENABLE and DEEPSEEK_OPERATOR_PROACTIVE_ENABLE):
         return
 
+    quiet_try = int(_diag_get_int("sloped_try")) + int(_diag_get_int("flat_try")) + int(_diag_get_int("breakdown_try"))
+    quiet_entry = int(_diag_get_int("sloped_entry")) + int(_diag_get_int("flat_entry")) + int(_diag_get_int("breakdown_entry"))
+    quiet_skip_cooldown = (
+        int(_diag_get_int("sloped_skip_cooldown"))
+        + int(_diag_get_int("flat_skip_cooldown"))
+        + int(_diag_get_int("breakdown_skip_cooldown"))
+    )
+    quiet_skip_tech = (
+        int(_diag_get_int("sloped_skip_no_engine"))
+        + int(_diag_get_int("flat_skip_no_engine"))
+        + int(_diag_get_int("breakdown_skip_no_engine"))
+        + int(_diag_get_int("sloped_skip_no_client"))
+        + int(_diag_get_int("flat_skip_no_client"))
+        + int(_diag_get_int("breakdown_skip_no_client"))
+    )
+    quiet_skip_capacity = (
+        int(_diag_get_int("sloped_skip_open_trade"))
+        + int(_diag_get_int("flat_skip_open_trade"))
+        + int(_diag_get_int("breakdown_skip_open_trade"))
+        + int(_diag_get_int("sloped_skip_max_open"))
+        + int(_diag_get_int("flat_skip_max_open"))
+        + int(_diag_get_int("breakdown_skip_max_open"))
+        + int(_diag_get_int("sloped_skip_portfolio"))
+        + int(_diag_get_int("flat_skip_portfolio"))
+        + int(_diag_get_int("breakdown_skip_portfolio"))
+    )
+    breakout_no_signal = int(_diag_get_int("breakout_no_signal"))
+    breakout_impulse_weak = int(_diag_get_int("breakout_ns_impulse_weak"))
+    breakout_no_break = int(_diag_get_int("breakout_ns_no_break"))
+    regime = _deepseek_local_regime_hint()
+    explainable_market_pause = (
+        ws_status == "OK"
+        and quiet_skip_tech == 0
+        and regime.get("label") in {"weak_chop", "mixed", "late_extended"}
+        and (
+            quiet_skip_cooldown >= max(200, int(0.35 * max(1, quiet_try)))
+            or breakout_impulse_weak >= max(100, int(0.45 * max(1, breakout_no_signal)))
+            or breakout_no_break >= max(80, int(0.30 * max(1, breakout_no_signal)))
+        )
+    )
+
     closed_cnt, pnl_sum, _last_close_ts = _db_recent_close_stats(DEEPSEEK_OPERATOR_NO_TRADES_HOURS)
-    if len(TRADES) == 0 and closed_cnt == 0 and _throttle_gate("aiop:no_trades", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC):
-        regime = _deepseek_local_regime_hint()
+    if (
+        len(TRADES) == 0
+        and closed_cnt == 0
+        and not explainable_market_pause
+        and _throttle_gate("aiop:no_trades", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC)
+    ):
         fallback = (
             f"За последние {DEEPSEEK_OPERATOR_NO_TRADES_HOURS}h нет закрытых сделок. "
             f"regime={regime.get('label')} conf={regime.get('confidence')} "
@@ -1879,7 +1924,8 @@ async def _maybe_run_ai_operator_tick(
         )
         prompt = (
             f"За последние {DEEPSEEK_OPERATOR_NO_TRADES_HOURS} часов у бота нет закрытых сделок и нет открытых позиций. "
-            "Кратко оцени: это нормальная пауза или признак слишком жёстких фильтров? "
+            "Не используй слова вроде 'критично' без явных технических сбоев. "
+            "Сначала оцени, есть ли реальные признаки поломки, а не просто слабый рынок. "
             "Дай 3-5 строк по-русски с конкретными следующими шагами."
         )
         asyncio.create_task(
@@ -1912,23 +1958,25 @@ async def _maybe_run_ai_operator_tick(
             )
         )
 
-    quiet_try = int(_diag_get_int("sloped_try")) + int(_diag_get_int("flat_try")) + int(_diag_get_int("breakdown_try"))
-    quiet_entry = int(_diag_get_int("sloped_entry")) + int(_diag_get_int("flat_entry")) + int(_diag_get_int("breakdown_entry"))
-    regime = _deepseek_local_regime_hint()
     if (
         quiet_try >= DEEPSEEK_OPERATOR_QUIET_SCAN_MIN
         and quiet_entry == 0
-        and regime.get("label") in {"weak_chop", "mixed", "late_extended"}
+        and not explainable_market_pause
         and _throttle_gate("aiop:quiet_scan_zero", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC)
     ):
         fallback = (
             f"Quiet-market sleeves scanned {quiet_try} times with 0 entries. "
-            f"regime={regime.get('label')} reason={regime.get('reason')}"
+            f"regime={regime.get('label')} reason={regime.get('reason')} "
+            f"cooldown_skips={quiet_skip_cooldown} tech_skips={quiet_skip_tech} "
+            f"capacity_skips={quiet_skip_capacity}"
         )
         prompt = (
             f"Quiet-market sleeves (sloped/flat/breakdown) already made {quiet_try} checks and 0 entries. "
             f"Local regime hint={regime.get('label')}, reason={regime.get('reason')}. "
-            "Кратко скажи, это нормальная рыночная пауза или стоит смягчить фильтры/ротировать символы."
+            f"Cooldown skips={quiet_skip_cooldown}, technical skips={quiet_skip_tech}, capacity skips={quiet_skip_capacity}. "
+            f"Breakout no_signal={breakout_no_signal}, impulse_weak={breakout_impulse_weak}, no_break={breakout_no_break}. "
+            "Если технических сбоев нет и рынок просто слабый, не называй это критической поломкой. "
+            "Кратко скажи, это рыночная пауза, параметрная неадаптивность или реальный сбой, и что делать дальше."
         )
         asyncio.create_task(
             _ai_operator_emit(
