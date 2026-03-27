@@ -40,6 +40,10 @@ echo "[1/5] Syntax check..."
 python3 -m py_compile "$LOCAL/smart_pump_reversal_bot.py" && echo "  ✅ smart_pump_reversal_bot.py"
 python3 -m py_compile "$LOCAL/bot/diagnostics.py" && echo "  ✅ bot/diagnostics.py"
 python3 -m py_compile "$LOCAL/strategies/breakdown_live.py" && echo "  ✅ strategies/breakdown_live.py"
+python3 -m py_compile "$LOCAL/strategies/micro_scalper_v1.py" && echo "  ✅ strategies/micro_scalper_v1.py"
+python3 -m py_compile "$LOCAL/strategies/micro_scalper_live.py" && echo "  ✅ strategies/micro_scalper_live.py"
+python3 -m py_compile "$LOCAL/strategies/alt_support_reclaim_v1.py" && echo "  ✅ strategies/alt_support_reclaim_v1.py"
+python3 -m py_compile "$LOCAL/strategies/support_reclaim_live.py" && echo "  ✅ strategies/support_reclaim_live.py"
 python3 -m py_compile "$LOCAL/bot/deepseek_overlay.py" && echo "  ✅ bot/deepseek_overlay.py"
 python3 -m py_compile "$LOCAL/bot/deepseek_action_executor.py" && echo "  ✅ bot/deepseek_action_executor.py"
 
@@ -58,6 +62,16 @@ scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
     "$LOCAL/strategies/breakdown_live.py" \
     "$SERVER:/root/by-bot/strategies/"
 echo "  ✅ strategies/breakdown_live.py"
+scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
+    "$LOCAL/strategies/micro_scalper_v1.py" \
+    "$LOCAL/strategies/micro_scalper_live.py" \
+    "$LOCAL/strategies/alt_support_reclaim_v1.py" \
+    "$LOCAL/strategies/support_reclaim_live.py" \
+    "$SERVER:/root/by-bot/strategies/"
+echo "  ✅ strategies/micro_scalper_v1.py"
+echo "  ✅ strategies/micro_scalper_live.py"
+echo "  ✅ strategies/alt_support_reclaim_v1.py"
+echo "  ✅ strategies/support_reclaim_live.py"
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
     "$LOCAL/bot/deepseek_overlay.py" \
     "$LOCAL/bot/deepseek_action_executor.py" \
@@ -150,6 +164,8 @@ echo ""
 echo "[4/6] Verifying breakdown strategy on server..."
 ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" \
     "python3 -c 'from strategies.breakdown_live import BreakdownLiveEngine; print(\"  ✅ breakdown_live import OK\")' 2>&1 || echo '  ❌ import failed'"
+ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" \
+    "python3 -c 'from strategies.micro_scalper_live import MicroScalperLiveEngine; from strategies.support_reclaim_live import SupportReclaimLiveEngine; print(\"  ✅ micro/support imports OK\")' 2>&1 || echo '  ❌ micro/support import failed'"
 
 echo ""
 echo "[5/6] Restarting bybot service..."

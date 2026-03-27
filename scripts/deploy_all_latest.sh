@@ -37,8 +37,12 @@ scp -i "$SSH_KEY" -o StrictHostKeyChecking=no \
   "$LOCAL_DIR/strategies/alt_sloped_channel_v1.py" \
   "$LOCAL_DIR/strategies/alt_resistance_fade_v1.py" \
   "$LOCAL_DIR/strategies/alt_inplay_breakdown_v1.py" \
+  "$LOCAL_DIR/strategies/alt_support_reclaim_v1.py" \
   "$LOCAL_DIR/strategies/inplay_breakout.py" \
   "$LOCAL_DIR/strategies/btc_eth_midterm_pullback.py" \
+  "$LOCAL_DIR/strategies/micro_scalper_v1.py" \
+  "$LOCAL_DIR/strategies/micro_scalper_live.py" \
+  "$LOCAL_DIR/strategies/support_reclaim_live.py" \
   "$SERVER:$REMOTE_DIR/strategies/"
 
 # --- 3. Конфиги autoresearch ---
@@ -81,6 +85,10 @@ ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$SERVER" "
   python3 -m py_compile smart_pump_reversal_bot.py && echo 'smart_pump_reversal_bot: OK'
   python3 -m py_compile strategies/alt_sloped_channel_v1.py && echo 'asc1: OK'
   python3 -m py_compile strategies/alt_resistance_fade_v1.py && echo 'arf1: OK'
+  python3 -m py_compile strategies/micro_scalper_v1.py && echo 'micro_scalper: OK'
+  python3 -m py_compile strategies/micro_scalper_live.py && echo 'micro_scalper_live: OK'
+  python3 -m py_compile strategies/alt_support_reclaim_v1.py && echo 'support_reclaim: OK'
+  python3 -m py_compile strategies/support_reclaim_live.py && echo 'support_reclaim_live: OK'
   echo ''
   systemctl restart bybot
   sleep 3
