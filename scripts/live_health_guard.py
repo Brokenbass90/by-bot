@@ -31,6 +31,7 @@ ALERT_REPEAT = max(1, int(os.getenv("LIVE_GUARD_ALERT_REPEAT", "2") or "2"))
 ALERT_ON_WARN = str(os.getenv("LIVE_GUARD_ALERT_ON_WARN", "0")).strip().lower() in {"1", "true", "yes", "on"}
 SEND_RECOVERY = str(os.getenv("LIVE_GUARD_SEND_RECOVERY", "1")).strip().lower() in {"1", "true", "yes", "on"}
 TEST_INPUT = (os.getenv("LIVE_GUARD_TEST_INPUT", "") or "").strip()
+MIN_CONNECT_DELTA = max(1, int(os.getenv("LIVE_GUARD_MIN_CONNECT_DELTA", "3") or "3"))
 AUTO_RESTART = _bool_env("LIVE_GUARD_AUTO_RESTART", False)
 AUTO_RESTART_REPEAT = max(1, int(os.getenv("LIVE_GUARD_AUTO_RESTART_REPEAT", str(ALERT_REPEAT)) or str(ALERT_REPEAT)))
 AUTO_RESTART_COOLDOWN_SEC = max(60, int(os.getenv("LIVE_GUARD_AUTO_RESTART_COOLDOWN_SEC", "1800") or "1800"))
@@ -224,6 +225,12 @@ def main() -> int:
     state = _load_state()
 
     status = diag["status"]
+    # Keep the standalone health guard aligned with the in-bot WS alerting logic:
+    # tiny connect samples can produce absurd ratios and page as CRITICAL even when
+    # the transport noise is not yet operationally actionable.
+    if status in {"WARN", "CRITICAL"} and int(diag.get("ws_connect", 0) or 0) < MIN_CONNECT_DELTA:
+        status = "LOW_SAMPLE"
+        diag["status"] = status
     critical_like = status in {"CRITICAL", "CRITICAL_NO_CONNECT", "NO_DATA"}
     warn_like = status == "WARN"
 

@@ -164,6 +164,11 @@ def _atr_from_rows(rows: List[list], period: int = 14) -> float:
     return sum(trs) / float(period) if trs else float("nan")
 
 
+def _env_csv_set(name: str) -> set[str]:
+    raw = os.getenv(name, "") or ""
+    return {str(x).strip().upper() for x in str(raw).replace(";", ",").split(",") if str(x).strip()}
+
+
 def _rsi(values: List[float], period: int = 14) -> float:
     if period <= 0 or len(values) < period + 1:
         return float("nan")
@@ -985,6 +990,8 @@ def main():
     alt_support_reclaim_v1 = {sym: AltSupportReclaimV1Strategy() for sym in symbols} if "alt_support_reclaim_v1" in strategies else {}
     pump_fade_v4r = {sym: PumpFadeV4RStrategy() for sym in symbols} if "pump_fade_v4r" in strategies else {}
     pump_fade_simple = {sym: PumpFadeSimpleStrategy() for sym in symbols} if "pump_fade_simple" in strategies else {}
+    ts132_symbols_allow = _env_csv_set("TS132_SYMBOLS")
+    ts132b_symbols_allow = _env_csv_set("TS132B_SYMBOLS")
     flat_archetype_router_enable = str(os.getenv("FLAT_ARCHETYPE_ROUTER_ENABLE", "0")).strip().lower() in {"1", "true", "yes", "on"}
     flat_archetype_long_min_score = float(os.getenv("ARR1_BAR_MIN_SCORE", "0.40"))
     flat_archetype_short_min_score = float(os.getenv("ARF1_BAR_MIN_SCORE", "0.08"))
@@ -1360,12 +1367,16 @@ def main():
                 bar = store.c5[int(i)]
                 sig = tv_atr_trend_v2[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "triple_screen_v132":
+                if ts132_symbols_allow and sym not in ts132_symbols_allow:
+                    continue
                 i = getattr(store, 'i5', getattr(store, 'i', None))
                 if i is None:
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = triple_screen_v132[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "triple_screen_v132b":
+                if ts132b_symbols_allow and sym not in ts132b_symbols_allow:
+                    continue
                 i = getattr(store, 'i5', getattr(store, 'i', None))
                 if i is None:
                     raise AttributeError('KlineStore missing current index (expected i5)')

@@ -1919,12 +1919,13 @@ async def _maybe_run_ai_operator_tick(
             or breakout_no_break >= max(80, int(0.30 * breakout_no_signal_safe))
         )
     )
-    operator_attention_needed = (
-        ws_status != "OK"
-        or quiet_skip_tech > 0
+    transport_issue = ws_status != "OK"
+    quiet_operator_attention_needed = (
+        quiet_skip_tech > 0
         or quiet_skip_capacity >= max(50, int(0.15 * quiet_try_safe))
         or (
-            quiet_try >= DEEPSEEK_OPERATOR_QUIET_SCAN_MIN
+            not transport_issue
+            and quiet_try >= DEEPSEEK_OPERATOR_QUIET_SCAN_MIN
             and quiet_entry == 0
             and regime.get("label") not in {"weak_chop", "mixed", "late_extended", "insufficient_data"}
         )
@@ -1934,7 +1935,7 @@ async def _maybe_run_ai_operator_tick(
     if (
         len(TRADES) == 0
         and closed_cnt == 0
-        and operator_attention_needed
+        and quiet_operator_attention_needed
         and not explainable_market_pause
         and _throttle_gate("aiop:no_trades", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC)
     ):
@@ -1946,6 +1947,7 @@ async def _maybe_run_ai_operator_tick(
         prompt = (
             f"За последние {DEEPSEEK_OPERATOR_NO_TRADES_HOURS} часов у бота нет закрытых сделок и нет открытых позиций. "
             "Не используй слова вроде 'критично' без явных технических сбоев. "
+            "Если websocket/transport сейчас деградировал, не советуй менять фильтры, cooldown или allowlist до стабилизации соединения. "
             "Сначала оцени, есть ли реальные признаки поломки, а не просто слабый рынок. "
             "Дай 3-5 строк по-русски с конкретными следующими шагами."
         )
@@ -1968,7 +1970,8 @@ async def _maybe_run_ai_operator_tick(
         prompt = (
             "У бота деградация websocket-качества в текущем окне. "
             f"status={ws_status}, connect={d_connect}, disconnect={d_disconnect}, handshake_timeout={d_handshake}. "
-            "Кратко оцени риск для live и что проверить первым."
+            "Кратко оцени риск для live и что проверить первым. "
+            "Не советуй пока менять фильтры стратегий, cooldown или allowlist: сначала нужно стабилизировать transport."
         )
         asyncio.create_task(
             _ai_operator_emit(
@@ -1982,8 +1985,9 @@ async def _maybe_run_ai_operator_tick(
     if (
         quiet_try >= DEEPSEEK_OPERATOR_QUIET_SCAN_MIN
         and quiet_entry == 0
-        and operator_attention_needed
+        and quiet_operator_attention_needed
         and not explainable_market_pause
+        and not transport_issue
         and _throttle_gate("aiop:quiet_scan_zero", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC)
     ):
         fallback = (
@@ -5860,10 +5864,12 @@ async def try_breakout_entry_async(symbol: str, price: float):
     if KILLER_GUARD_ENABLE:
         banned = _refresh_killer_guard_cache()
         if symbol in banned:
-            last_log = int(_KILLER_GUARD_LOG_TS.get(symbol, 0) or 0)
-            if now - last_log >= max(30, int(KILLER_GUARD_LOG_EVERY_SEC)):
-                tg_trade(f"🟡 BREAKOUT SKIP {symbol}: killer-guard (recent net<= {KILLER_GUARD_MAX_NET_PNL})")
-                _KILLER_GUARD_LOG_TS[symbol] = now
+            tg_skip_throttled(
+                "breakout",
+                symbol,
+                "killer_guard",
+                f"🟡 BREAKOUT SKIP {symbol}: killer-guard (recent net<= {KILLER_GUARD_MAX_NET_PNL})",
+            )
             return
 
     last = int(_BREAKOUT_LAST_TRY.get(symbol, 0) or 0)
