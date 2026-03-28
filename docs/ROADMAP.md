@@ -1,203 +1,248 @@
-# Trading Bot Development Roadmap
-> Last updated: 2026-03-26
+# Project Roadmap — Trading Bot
 
-## Current Operational Focus (2026-03-26)
+> Last updated: 2026-03-28 | Author: Claude (architect)
+> Living document — update after each major session.
 
-This block is the current source of truth. Older sections below remain useful as history, but they no longer describe the live stack accurately.
+---
 
-### Immediate Priorities
-1. Finish env/deploy cleanup so `.env` and `/root/by-bot/.env` are the only operational sources of truth.
-2. Keep the 5-sleeve live stack stable and observable:
-   - `breakout`
-   - `midterm`
-   - `sloped`
-   - `flat`
-   - `breakdown`
-3. Lock in the recent live sleeve fixes:
-   - `sloped/flat/breakdown` engine init now recovers correctly
-   - sleeve counters now show real scheduling and try activity
-   - next target is safer entry flow, not basic engine survival
-4. Add operator/control-plane maturity without giving AI unsafe authority:
-   - evidence-first proposals
-   - approval-gated changes
-   - bounded research launch
-   - dynamic symbol/family rotation with operator review, not blind auto-rollout
-   - later add internet/news context as advisory filter for crypto and equities
-5. Reduce deploy confusion before any bigger rollout or cleanup delete pass.
+## Vision
 
-### Best Current Strategic Result
-- `portfolio_20260325_172613_new_5strat_final`
-- `+100.93%`
-- `PF 2.078`
-- `WR 55.8%`
-- `446 trades`
-- `DD 3.65%`
-- `0` red months by raw trade aggregation
+A self-improving, multi-market trading system where three AIs (Claude, GPT, DeepSeek) have
+clearly defined roles, each part of the bot adapts dynamically to market conditions, and the
+human owner spends minimal time on maintenance while retaining full control over capital decisions.
 
-### Current Research Order
-1. `breakout side-split` as the most promising core improvement
-2. `midterm` repair as the weakest live sleeve
-3. `support reclaim` as the long-side mirror for quiet-market fade families
-4. `TS132 / Elder` via symbol pockets, not one setup for all coins
-5. `Alpaca` red-month repair before any real-money rollout
-6. `micro scalper` only after the minute-level backtest path is honest and the first live wrapper sweeps show a real edge
-7. `trendline break/retest` as separate long and short sleeves after current live stack is safer
-8. add dynamic weak-market / quiet-asset sleeves:
-   - auto-find symbols and families for flat/chop conditions
-   - keep new listings under watchlist/canary flow before live enable
-   - do not forget breakout extensions and low-activity asset logic
+**Two income streams:**
+- Bybit perpetual futures (crypto) — active, 5–8 intraday strategies
+- Alpaca paper → live (US equities) — monthly rotation + intraday validated combos
 
-### Cleanup Rule
-- No blind deletes.
-- First classify active vs legacy vs historical-oneoff.
-- Then remove or archive in small reversible batches.
+**Three AI roles:**
+- **Claude** — architecture, research specs, code, diagnosis
+- **GPT** — deployment, ops, quick patches, server management
+- **DeepSeek** — live signal audit, weekly trade analysis, parameter suggestions
+
+---
 
 ## Current State (March 2026)
 
-### Revenue Streams
-| Stream | Status | Strategy | Capital | Expected Monthly |
-|--------|--------|----------|---------|-----------------|
-| Crypto Breakout | LIVE (blocked) | inplay_breakout | $100 | ~5.9% ($5.90) |
-| Crypto Sloped | READY | alt_sloped_channel_v1 (ATOM) | $100 shared | ~0.7% ($0.70) |
-| Crypto Triple Screen | IN DEVELOPMENT | triple_screen_v132 | $100 shared | TBD |
-| US Equities | PAPER TRADING | monthly swing (5 stocks) | $500 paper | ~3.1% ($15.50) |
-| Forex | PLANNING | sloped channel adaptation | $0 | Future |
+### Crypto (Bybit) ✅ Working
+| Component | Status |
+|-----------|--------|
+| 5 live strategies (breakout, ASC1, ARF1, BREAKDOWN, midterm) | ✅ Live |
+| Golden portfolio backtest +100.93% | ✅ Baseline locked |
+| dynamic_allowlist.py (weekly symbol refresh) | ✅ Built, ready for dry-run review |
+| pump_fade_simple (baseline replica) | ✅ Built, autoresearch pending |
+| pump_fade_v4r (archive revival) | ✅ Built, 0 combos pass (archived) |
+| DeepSeek signal audit | ✅ Live |
 
-### Blocking Issues
-1. **BREAKOUT_QUALITY_MIN_SCORE=0.52** blocks ALL crypto trades → FIX: set to 0.0
-2. Triple Screen needs per-coin autoresearch before deployment
-3. Equities limited to 5 stocks, needs expansion
-
----
-
-## Phase 1: Unblock Revenue (This Week)
-- [ ] Deploy `BREAKOUT_QUALITY_MIN_SCORE=0.0` to server
-- [ ] Run `bash scripts/deploy_full_20260318.sh` from Mac terminal
-- [ ] Monitor breakout trades for 1 week via Telegram
-- [ ] Verify dynamic symbol filter is rotating coins
-
-**Expected outcome:** Bot starts trading crypto breakouts (~60 trades/month)
-
-## Phase 2: Multi-Strategy Crypto (Weeks 1-2)
-- [ ] Enable `ENABLE_SLOPED_TRADING=1` on server (ATOM only, shorts only)
-- [ ] Run autoresearch for Triple Screen: `python3 scripts/run_strategy_autoresearch.py configs/autoresearch/triple_screen_adaptive_v1.json`
-- [ ] Run autoresearch for sloped channel families: `python3 scripts/run_strategy_autoresearch.py configs/autoresearch/flat_slope_adaptive_families_v1.json`
-- [ ] Review autoresearch results, deploy winning configs
-
-**Expected outcome:** 2 active crypto strategies (breakout + sloped ATOM)
-
-## Phase 3: Expand Equities (Weeks 2-4)
-- [ ] Fetch extended universe data: `python3 scripts/equities_fetch_extended_universe.py --years 4`
-- [ ] Run equities autoresearch with 20 stocks: `python3 scripts/run_strategy_autoresearch.py configs/autoresearch/equities_monthly_v10_extended_universe.json`
-- [ ] Set up mid-month cron: `0 15 * * 3 cd /root/by-bot && bash scripts/run_equities_midmonth_check.sh >> logs/alpaca_midmonth.log 2>&1`
-- [ ] Switch from 5 to 20 stocks in Alpaca config
-- [ ] Add dynamic regime to monthly refresh
-
-**Expected outcome:** 20-stock equities with weekly monitoring, higher WR
-
-## Phase 4: Automation & Intelligence (Month 2)
-- [ ] Set up weekly autoresearch cron for crypto strategies
-- [ ] Implement auto-config-reload from autoresearch winners
-- [ ] DeepSeek AI overlay prototype (API scoring for trade decisions)
-- [ ] Test BTC strategies via dedicated autoresearch runs
-- [ ] If Triple Screen finds winning configs → enable `ENABLE_TS132_TRADING=1`
-
-**Expected outcome:** Self-tuning strategies, AI-assisted decisions
-
-## Phase 5: Scale & Diversify (Month 3+)
-- [ ] Increase crypto capital ($100 → $500 → $1000+) based on live track record
-- [ ] Transition Alpaca from paper to real ($500 → $2000+)
-- [ ] Adapt sloped channel for Forex (MT5 demo first)
-- [ ] Add more equities strategies (sector rotation, earnings momentum)
-- [ ] Portfolio-level risk management across all streams
-- [ ] Weekly automated performance reports
-
-**Expected outcome:** Multi-asset portfolio generating consistent monthly income
+### Alpaca (Equities) ⚠️ Paper, needs fixes
+| Component | Status |
+|-----------|--------|
+| Monthly momentum picker | ⚠️ 1 trade only — hit stop (XOM -3.79% March 2026) |
+| WF-validated intraday strategies | ✅ Backtested (TSLA/GOOGL/JPM) |
+| Regime filter (SPY SMA gate) | ❌ Missing — critical fix needed |
+| Bridge WF intraday → paper execution | ❌ Not connected yet |
 
 ---
 
-## Key Commands Reference
+## Alpaca Diagnosis
 
-### Deploy to Server
+**Root cause of red months:** The monthly momentum strategy picks stocks at month-end
+and enters at month-start. March 2026 was a macro risk-off month (tariff fears, SPY sold off).
+XOM bought March 2 → stopped out same day at -3.79%. Zero regime awareness.
+
+**What walkforward testing already proved works:**
+
+| Strategy | Symbol | WF Segments | Both+ | Net (cents) |
+|----------|--------|-------------|-------|-------------|
+| breakout_continuation + quality_guard | TSLA | 15 | 10/15 (67%) | +6200 |
+| grid_reversion + safe_winrate | GOOGL | 15 | 10/15 (67%) | +2270 |
+| grid_reversion | JPM | 15 | 10/15 (67%) | +1542 |
+| trend_retest + quality_guard | AAPL | 15 | 9/15 (60%) | +1349 |
+
+These intraday strategies are **already validated** but not yet connected to live execution.
+The fix is to bridge them — not to rebuild the monthly strategy from scratch.
+
+---
+
+## Priority Queue
+
+### 🔴 P0 — Do This Week
+
+**1. Run pump_fade_simple autoresearch locally**
 ```bash
-cd /Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28
-bash scripts/deploy_full_20260318.sh
+nohup python3 scripts/run_strategy_autoresearch.py \
+  --spec configs/autoresearch/pump_fade_simple_meme.json \
+  > /tmp/pf_simple.log 2>&1 &
 ```
+Expected runtime: 2–4 hours. Goal: ≥5 combos with PF ≥1.5 and trades ≥15.
 
-### Run Autoresearch (on server)
+**2. Test dynamic_allowlist.py dry-run**
 ```bash
-# Triple Screen per-coin optimization
-python3 scripts/run_strategy_autoresearch.py configs/autoresearch/triple_screen_adaptive_v1.json
-
-# Sloped channel family search
-python3 scripts/run_strategy_autoresearch.py configs/autoresearch/flat_slope_adaptive_families_v1.json
-
-# Equities extended universe
-python3 scripts/run_strategy_autoresearch.py configs/autoresearch/equities_monthly_v10_extended_universe.json
+python3 scripts/dynamic_allowlist.py --dry-run
 ```
+Compare output to current static lists. If sensible → write file → apply.
 
-### Server Cron Jobs (add via `crontab -e`)
-```cron
-# Monthly equities autopilot (1st of month, market open)
-30 9 1 * * cd /root/by-bot && bash scripts/run_equities_alpaca_monthly_autopilot.sh >> logs/alpaca_monthly.log 2>&1
+**3. Test SPY regime filter for Alpaca monthly strategy**
+One-line logic in `equities_monthly_research_sim.py`:
+only enter longs when SPY close > SPY 50-day SMA.
+If SPY below 50 SMA → stay flat, don't buy picks that month.
+This would likely have avoided that specific March 2026 entry; it is a first repair, not the full solution.
 
-# Weekly mid-month check (Wednesday 15:00 UTC)
-0 15 * * 3 cd /root/by-bot && bash scripts/run_equities_midmonth_check.sh >> logs/alpaca_midmonth.log 2>&1
+---
 
-# Weekly autoresearch for crypto (Sunday 02:00 UTC)
-0 2 * * 0 cd /root/by-bot && python3 scripts/run_strategy_autoresearch.py configs/autoresearch/triple_screen_adaptive_v1.json >> logs/autoresearch.log 2>&1
-```
+### 🟡 P1 — This Month
 
-### Key .env Changes for Server
+**4. Connect WF-validated intraday strategies to Alpaca paper**
+TSLA breakout_continuation, GOOGL grid_reversion, JPM grid_reversion are WF-validated.
+Need execution bridge for intraday paper trading — same pattern as
+equities_alpaca_paper_bridge.py but for intraday signals (5m bars, session-aware).
+
+**5. Deploy pump_fade_simple to live (after autoresearch)**
+- Start at risk_pct = 0.3% (very small)
+- Top 5 symbols from passing combos
+- Monitor 30 days before increasing size
+
+**6. Set up dynamic_allowlist cron (weekly, Sunday night)**
 ```bash
-# Phase 1 (NOW)
-BREAKOUT_QUALITY_MIN_SCORE=0.0
-
-# Phase 2 (after 1-2 weeks observation)
-ENABLE_SLOPED_TRADING=1
-ASC1_ALLOW_LONGS=0
-ASC1_ALLOW_SHORTS=1
-ASC1_SYMBOL_ALLOWLIST=ATOMUSDT
-
-# Phase 4 (after autoresearch finds winners)
-ENABLE_TS132_TRADING=1
-TS132_SYMBOLS=<from_autoresearch>
+# crontab -e
+0 22 * * 0 cd ~/bot && python3 scripts/dynamic_allowlist.py \
+  --quiet --out-env configs/dynamic_allowlist_latest.env
 ```
 
 ---
 
-## Architecture
+### 🟢 P2 — Next Month
+
+**7. DeepSeek weekly analysis script**
+File: `scripts/deepseek_weekly_report.py`
+- Reads last 7 days of live trades
+- Sends to DeepSeek API: "Analyze these trades. Which symbols underperform?
+  What parameter drift do you see? What should be tested next?"
+- Saves response → `docs/deepseek_weekly_YYYYMMDD.md`
+- Sends Telegram summary to owner
+
+**8. Alpaca equity universe expansion**
+Current: 10 stocks (AAPL, AMD, AMZN, GOOGL, JPM, META, MSFT, NVDA, TSLA, XOM)
+Add: sector ETFs (XLK, XLF, XLE, QQQ, IWM) for regime monitoring.
+Use `scripts/equities_universe_refresh.py` as base.
+
+**9. Backtest-gated allowlist (market scan + performance)**
+```bash
+python3 scripts/dynamic_allowlist.py \
+  --trades-csv backtest_runs/latest_portfolio/trades.csv \
+  --bt-min-pf 1.2 --bt-min-trades 10
+```
+Run monthly after each backtest. Let performance gate influence the allowlist.
+
+**10. Portfolio-level risk monitor**
+When daily PnL < -3% of account: automatically halve position sizes for the next 24h.
+When 3 consecutive losing days: send Telegram alert + pause new entries until manual review.
+
+---
+
+### 🔵 P3 — Quarter
+
+**11. Funding rate capture strategy**
+Long spot + short perp on high-funding coins.
+Expected: ~4–6% annualized, near-zero directional risk.
+Requires separate risk bucket and capital allocation.
+
+**12. Volatility compression breakout (4h)**
+After ATR contracts below 30-day average → trade breakout of the range.
+Works on different symbols than 5m breakout, fewer signals but higher R:R.
+
+**13. Full AI handoff protocol**
+File: `docs/ai_handoff.json` — machine-readable state:
+- Active strategies and their current configs
+- Last backtest results (PF, trades, date)
+- Open tasks with priority
+- Known issues / anomalies
+Any AI reads this at session start instead of needing Markdown summaries.
+
+**14. Telegram morning report bot**
+Daily at 07:00 UTC:
+- PnL last 24h (crypto + equity separately)
+- Active positions
+- Flags: strategy with 3+ consecutive losses, allowlist staleness
+- DeepSeek weekly summary if available
+
+---
+
+## Architecture Blueprint (12-month target)
 
 ```
-                    ┌─────────────────┐
-                    │   Telegram Bot   │
-                    │   (alerts/logs)  │
-                    └────────┬────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              │              │              │
-    ┌─────────▼───┐  ┌──────▼──────┐  ┌───▼──────────┐
-    │  Bybit Bot  │  │ Alpaca Bot  │  │ Forex (MT5)  │
-    │ (crypto)    │  │ (equities)  │  │ (future)     │
-    └──────┬──────┘  └──────┬──────┘  └──────────────┘
-           │                │
-    ┌──────┴──────┐  ┌──────┴──────┐
-    │ Strategies  │  │ Monthly Sim │
-    │ - breakout  │  │ + midmonth  │
-    │ - sloped    │  │ + autopilot │
-    │ - ts132     │  │ + earnings  │
-    └──────┬──────┘  └─────────────┘
-           │
-    ┌──────┴──────┐
-    │ Autoresearch│ ← weekly cron
-    │ (Karpathy)  │
-    └─────────────┘
+┌─────────────────────────────────────────────────┐
+│                  YOU (owner)                     │
+│  Weekly: read Telegram digest, approve changes   │
+└──────────────────┬──────────────────────────────┘
+                   │
+      ┌────────────▼─────────────┐
+      │        AI Team           │
+      │  Claude   → architecture │
+      │  GPT      → ops/deploy   │
+      │  DeepSeek → optimization │
+      └────────────┬─────────────┘
+                   │
+      ┌────────────▼───────────────────────────────┐
+      │          Weekly Cycle (automated)           │
+      │  Sun:  dynamic_allowlist → new .env         │
+      │        deepseek_weekly_report → analysis    │
+      │        health_check → flag anomalies        │
+      │  Mon:  Telegram digest to you               │
+      └────────┬───────────────────────────────────┘
+               │
+      ┌─────────▼────────────────────────────────────┐
+      │             Execution Layer                   │
+      │                                               │
+      │  Bybit (server 64.226.73.119)               │
+      │  ├── breakout        (15–20 symbols)         │
+      │  ├── ASC1            (8 symbols, dynamic)    │
+      │  ├── ARF1            (10 symbols, dynamic)   │
+      │  ├── BREAKDOWN       (12 symbols, dynamic)   │
+      │  ├── midterm         (BTC/ETH)               │
+      │  └── pump_fade_simple (5–8 meme coins) [NEW] │
+      │                                               │
+      │  Alpaca (paper → live)                       │
+      │  ├── Monthly picks + SPY regime gate [FIX]   │
+      │  ├── TSLA breakout_continuation (intra) [NEW]│
+      │  ├── GOOGL grid_reversion (intra) [NEW]      │
+      │  └── JPM  grid_reversion (intra) [NEW]       │
+      │                                               │
+      │  Passive                                      │
+      │  └── Funding rate capture [FUTURE]            │
+      └───────────────────────────────────────────────┘
 ```
 
-## Notes for Other AI Assistants
-If you're another AI continuing this project, read these files in order:
-1. `docs/SESSION_CACHE.md` — current state, what's done, what's next
-2. `docs/WORKLOG.md` — detailed session history
-3. `docs/ROADMAP.md` — this file
-4. `.env` — current configuration (gitignored, check server)
-5. `smart_pump_reversal_bot.py` — main bot (6500+ lines)
+---
+
+## Key Metrics to Track
+
+| Metric | Target | Current |
+|--------|--------|---------|
+| Crypto annual return | > +80% | +100.93% (golden portfolio) |
+| Crypto max drawdown | < 15% | ~8% |
+| Crypto profit factor | > 1.8 | 2.078 |
+| Alpaca monthly win rate | > 55% | 0% (1 trade only) |
+| Dynamic allowlist freshness | < 7 days | Not yet running |
+| DeepSeek weekly reports | weekly | Not yet |
+| pump_fade_simple (after deploy) | PF > 1.5 | Pending autoresearch |
+
+---
+
+## File Index
+
+| File | Purpose |
+|------|---------|
+| `strategies/pump_fade_simple.py` | Baseline pump/fade strategy (exact replica) |
+| `strategies/pump_fade_v4r.py` | Archive v4 revival (0 combos, archived) |
+| `scripts/dynamic_allowlist.py` | Weekly symbol scanner, per-strategy profiles |
+| `scripts/universe_scan.py` | Base market scanner |
+| `scripts/build_breakout_allowlist.py` | Backtest-performance-based allowlist builder |
+| `scripts/equities_alpaca_paper_bridge.py` | Monthly picks executor (Alpaca) |
+| `scripts/equities_monthly_research_sim.py` | Monthly backtest simulator |
+| `configs/autoresearch/pump_fade_simple_meme.json` | 486-combo autoresearch spec |
+| `configs/alpaca_paper_local.env` | Alpaca paper trading config |
+| `docs/pump_fade_v4r_revival_report.md` | Full pump_fade diagnosis |
+| `docs/session_handoff_20260328.md` | Latest session summary |
+| `docs/ROADMAP.md` | This file |
+| `docs/JOURNAL.md` | Session-by-session work log |
