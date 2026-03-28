@@ -1,0 +1,45 @@
+{
+    "_comment": "ASR1 (alt_support_reclaim_v1) rescue spec. Previous autoresearch got 0 trades everywhere — regime filter + RSI cap too strict. This spec: (1) loosens RSI max from 50 to 60, (2) tries broader symbol universe, (3) loosens confirm bars from 6 to 2-4, (4) disables TRAIL (set to 0) to simplify exit. Goal: find ANY combo that generates 15+ trades with PF > 1.3. If still 0 trades → strategy is not viable on this universe/period.",
+    "name": "asr1_rescue_v1",
+    "cache_only": true,
+    "command": [
+        "{python}",
+        "backtest/run_portfolio.py",
+        "--symbols", "{SYMBOLS}",
+        "--strategies", "alt_support_reclaim_v1",
+        "--days", "360",
+        "--end", "2026-02-24",
+        "--tag", "{tag}",
+        "--starting_equity", "100",
+        "--risk_pct", "0.005",
+        "--leverage", "3",
+        "--max_positions", "2",
+        "--fee_bps", "6",
+        "--slippage_bps", "2"
+    ],
+    "base_env": {
+        "ASR1_ALLOW_LONGS": "1",
+        "ASR1_ALLOW_SHORTS": "0",
+        "ASR1_TRAIL_ATR_MULT": "0.0",
+        "ASR1_BOUNCE_ABOVE_SUP_ATR": "0.08"
+    },
+    "grid": {
+        "SYMBOLS": [
+            "LINKUSDT,ATOMUSDT,DOTUSDT,ADAUSDT",
+            "LINKUSDT,ATOMUSDT,DOTUSDT,ADAUSDT,LTCUSDT,SOLUSDT",
+            "SOLUSDT,AVAXUSDT,SUIUSDT,ADAUSDT,NEARUSDT,ARBUSDT",
+            "BTCUSDT,ETHUSDT,SOLUSDT,AVAXUSDT,LINKUSDT,ADAUSDT"
+        ],
+        "ASR1_MAX_RSI": ["50", "55", "60"],
+        "ASR1_CONFIRM_5M_BARS": ["2", "4", "6"],
+        "ASR1_SIGNAL_LOOKBACK": ["10", "20", "30"],
+        "ASR1_SL_ATR_MULT": ["1.0", "1.3", "1.6"],
+        "ASR1_TP_ATR_MULT": ["1.8", "2.2", "2.8"]
+    },
+    "constraints": {
+        "min_trades": 15,
+        "min_profit_factor": 1.30,
+        "max_drawdown": 10.0,
+        "min_net_pnl": 5.0
+    }
+}

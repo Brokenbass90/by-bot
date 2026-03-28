@@ -1,0 +1,39 @@
+{
+    "_comment": "btc_eth_midterm_pullback_v2 first grid search. Tests sloped channel filter + dynamic TP vs v1 baseline. Grid: channel R2, channel position thresholds, SL mult, TP1 ratio. BTC+ETH only.",
+    "name": "midterm_pullback_v2_btceth_v1",
+    "cache_only": true,
+    "command": [
+        "{python}",
+        "backtest/run_portfolio.py",
+        "--symbols", "BTCUSDT,ETHUSDT",
+        "--strategies", "btc_eth_midterm_pullback_v2",
+        "--days", "360",
+        "--end", "2026-02-24",
+        "--tag", "{tag}",
+        "--starting_equity", "100",
+        "--risk_pct", "0.005",
+        "--leverage", "3",
+        "--max_positions", "2",
+        "--fee_bps", "6",
+        "--slippage_bps", "2"
+    ],
+    "base_env": {
+        "MTPB2_ALLOW_LONGS": "1",
+        "MTPB2_ALLOW_SHORTS": "1",
+        "MTPB2_CHANNEL_USE_AS_TP": "1",
+        "MTPB2_USE_RUNNER_EXITS": "1"
+    },
+    "grid": {
+        "MTPB2_CHANNEL_MIN_R2": ["0.20", "0.30", "0.40"],
+        "MTPB2_CHANNEL_LONG_MAX_POS": ["0.35", "0.45", "0.55"],
+        "MTPB2_SL_ATR_MULT": ["1.0", "1.2", "1.5"],
+        "MTPB2_TP1_RR": ["1.0", "1.2", "1.6"],
+        "MTPB2_TREND_SLOPE_MIN_PCT": ["0.30", "0.40", "0.55"]
+    },
+    "constraints": {
+        "min_trades": 15,
+        "min_profit_factor": 1.40,
+        "max_drawdown": 8.0,
+        "min_net_pnl": 8.0
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "_comment": "pump_fade_simple expanded universe v1. Previous run (pump_fade_simple_meme) got 2 PASS combos with only 10-12 trades — too thin. This spec adds more high-volume alt coins alongside the meme basket to increase signal frequency. Grid is identical to meme spec so results are comparable.",
+    "name": "pump_fade_simple_expanded_v1",
+    "cache_only": true,
+    "command": [
+        "{python}",
+        "backtest/run_portfolio.py",
+        "--symbols", "{SYMBOLS}",
+        "--strategies", "pump_fade_simple",
+        "--days", "360",
+        "--end", "2026-02-24",
+        "--tag", "{tag}",
+        "--starting_equity", "100",
+        "--risk_pct", "0.005",
+        "--leverage", "3",
+        "--max_positions", "1",
+        "--fee_bps", "6",
+        "--slippage_bps", "2"
+    ],
+    "base_env": {
+        "PF_COOLDOWN_BARS": "24",
+        "PF_STOP_BUFFER_PCT": "0.0025"
+    },
+    "grid": {
+        "SYMBOLS": [
+            "SOLUSDT,SUIUSDT,AVAXUSDT,ADAUSDT,DOGEUSDT,1000PEPEUSDT,APTUSDT,SEIUSDT",
+            "SOLUSDT,SUIUSDT,AVAXUSDT,ADAUSDT,ARBUSDT,ENAUSDT,APTUSDT,NEARUSDT",
+            "BTCUSDT,ETHUSDT,SOLUSDT,AVAXUSDT,DOGEUSDT,1000PEPEUSDT,ADAUSDT,SUIUSDT",
+            "DOGEUSDT,1000PEPEUSDT,SEIUSDT,ARBUSDT,ENAUSDT,APTUSDT,SUIUSDT,NEARUSDT"
+        ],
+        "PF_PUMP_WINDOW_MIN": ["90", "120", "150"],
+        "PF_PUMP_THRESHOLD_PCT": ["0.06", "0.08", "0.10"],
+        "PF_RSI_OVERBOUGHT": ["70", "75", "80"],
+        "PF_RR": ["1.4", "1.7", "2.1"]
+    },
+    "constraints": {
+        "min_trades": 15,
+        "min_profit_factor": 1.50,
+        "max_drawdown": 7.0,
+        "min_net_pnl": 3.0
+    }
+}
