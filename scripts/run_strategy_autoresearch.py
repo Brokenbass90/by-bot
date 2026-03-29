@@ -202,7 +202,15 @@ def _extract_metrics(summary: dict, spec: dict) -> dict:
         "max_drawdown": "max_drawdown",
     }
     field_map.update(spec.get("field_map", {}))
+    if "field_map" not in spec and "compounded_return_pct" in summary:
+        # Equities summaries use different field names than the crypto portfolio runs.
+        # Auto-detect the common schema so new specs do not silently degrade into NaNs.
+        field_map["net_pnl"] = "compounded_return_pct"
+        field_map["winrate"] = "winrate_pct"
+        field_map["max_drawdown"] = "max_monthly_dd_pct"
     scales = spec.get("field_scales", {})
+    if "field_scales" not in spec and field_map.get("winrate") == "winrate_pct":
+        scales = {**scales, "winrate": 0.01}
 
     metrics: dict[str, float] = {}
     for key, src in field_map.items():
@@ -222,11 +230,20 @@ def _score_candidate(summary: dict, spec: dict) -> tuple[bool, str, float]:
     weights = spec.get("score_weights", {})
     metrics = _extract_metrics(summary, spec)
 
-    trades = int(float(metrics.get("trades") or 0))
+    trades_raw = float(metrics.get("trades") or 0.0)
+    trades = int(trades_raw) if math.isfinite(trades_raw) else 0
     net_pnl = float(metrics.get("net_pnl") or 0.0)
+    if not math.isfinite(net_pnl):
+        net_pnl = float("-inf")
     profit_factor = float(metrics.get("profit_factor") or 0.0)
+    if not math.isfinite(profit_factor):
+        profit_factor = float("nan")
     winrate = float(metrics.get("winrate") or 0.0)
+    if not math.isfinite(winrate):
+        winrate = float("nan")
     max_drawdown = float(metrics.get("max_drawdown") or 0.0)
+    if not math.isfinite(max_drawdown):
+        max_drawdown = float("inf")
 
     fail_reasons: List[str] = []
     if trades < int(constraints.get("min_trades", 0)):
@@ -240,9 +257,9 @@ def _score_candidate(summary: dict, spec: dict) -> tuple[bool, str, float]:
 
     score = (
         float(weights.get("net_pnl", 1.0)) * net_pnl
-        + float(weights.get("profit_factor", 3.0)) * max(0.0, profit_factor - 1.0)
-        + float(weights.get("winrate", 8.0)) * max(0.0, winrate - 0.5)
-        - float(weights.get("max_drawdown", 1.0)) * max_drawdown
+        + float(weights.get("profit_factor", 3.0)) * (max(0.0, profit_factor - 1.0) if math.isfinite(profit_factor) else 0.0)
+        + float(weights.get("winrate", 8.0)) * (max(0.0, winrate - 0.5) if math.isfinite(winrate) else 0.0)
+        - float(weights.get("max_drawdown", 1.0)) * (max_drawdown if math.isfinite(max_drawdown) else 0.0)
         + float(weights.get("trades", 0.05)) * min(trades, int(weights.get("trades_cap", 40)))
     )
     passed = not fail_reasons
