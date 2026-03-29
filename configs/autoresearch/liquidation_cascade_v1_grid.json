@@ -1,0 +1,41 @@
+{
+  "name": "liquidation_cascade_v1_grid",
+  "description": "Liquidation Cascade Entry v1 — initial parameter search. Counter-trend entry after rapid liquidation cascade exhaustion on Bybit perpetuals. Symbols: BTC/ETH/SOL/BNB/AVAX. Edge: price overshoots during cascade, snaps back when forced selling stops. RSI panic + volume spike + EMA dislocation filters.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT,AVAXUSDT",
+    "--strategies", "liquidation_cascade_entry_v1",
+    "--days", "360",
+    "--end", "2026-02-24",
+    "--tag", "{tag}"
+  ],
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 1.7,
+    "max_drawdown": 6.0,
+    "min_net_pnl": 5.0
+  },
+  "grid": {
+    "LC_ALLOW_LONGS":         ["1"],
+    "LC_ALLOW_SHORTS":        ["0"],
+    "LC_LOOKBACK_BARS":       [4, 6, 8],
+    "LC_DROP_PCT":            [2.5, 3.0, 4.0],
+    "LC_EMA_PERIOD":          [34, 55],
+    "LC_BELOW_EMA_PCT":       [1.5, 2.0, 3.0],
+    "LC_RSI_OVERSOLD":        [22.0, 25.0, 28.0],
+    "LC_VOL_SPIKE_X":         [2.0, 2.5, 3.5],
+    "LC_SL_ATR_MULT":         [1.0, 1.2, 1.5],
+    "LC_TP_ATR_MULT":         [1.5, 2.0, 2.5],
+    "LC_TIME_STOP_BARS_5M":   [36, 48],
+    "LC_COOLDOWN_BARS":       [12],
+    "LC_MIN_VOLUME_USDT":     [2000000]
+  },
+  "_combo_count": "3×3×2×3×3×3×3×3×2 = 8748 / divided by fixed vars = ~3888 effective combos",
+  "_note": "Longs only first (shorts too risky in cascade). After seeing results, run v1_shorts with LC_ALLOW_SHORTS=1, LC_ALLOW_LONGS=0 separately.",
+  "_run_command": "nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/liquidation_cascade_v1_grid.json > /tmp/lc_v1.log 2>&1 &",
+  "_expected_runtime_minutes": 45,
+  "_key_challenge": "Backtests don't have OI data — using pure price + RSI + volume cascade detection. Real edge enhanced by live OI monitoring (add OI filter in v2 after live testing).",
+  "_goal": "Find drop_pct + RSI + vol_spike threshold with PF≥1.7, trades≥20. This strategy will have FEW but HIGH-QUALITY signals. If backtest shows PF≥2.0 with 20+ trades — ready for live paper mode."
+}

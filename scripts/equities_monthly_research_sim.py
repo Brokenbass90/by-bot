@@ -457,6 +457,103 @@ def _benchmark_stats_for_snapshot(
     )
 
 
+def _simulate_trades_portfolio_stop(
+    picks_info: list[tuple["Candidate", int, list["DailyBar"]]],
+    weights: list[float],
+    max_hold_days: int,
+    portfolio_stop_pct: float,
+) -> list[tuple[int, float, str]]:
+    """
+    Simulate N concurrent trades with a portfolio-level intramonth stop.
+
+    If the weighted-average portfolio drawdown from month-start reaches
+    `portfolio_stop_pct` (e.g. 0.04 = 4%), all remaining positions are
+    force-closed at that day's close ('portfolio_stop').
+
+    Falls back to independent simulation when portfolio_stop_pct <= 0.
+    """
+    n = len(picks_info)
+    if n == 0:
+        return []
+
+    # Independent results (used when portfolio_stop disabled or as fallback)
+    indep_results: list[tuple[int, float, str]] = []
+    for cand, entry_idx, daily in picks_info:
+        indep_results.append(
+            _simulate_trade(daily, entry_idx, cand.stop_price, cand.target_price, max_hold_days)
+        )
+    if portfolio_stop_pct <= 0.0:
+        return indep_results
+
+    total_weight = sum(max(0.0, w) for w in weights)
+    if total_weight <= 0.0:
+        total_weight = float(n)
+
+    # Day range: first entry → last possible exit
+    first_entry = min(entry_idx for _, entry_idx, _ in picks_info)
+    last_exit_bound = max(entry_idx + max_hold_days for _, entry_idx, _ in picks_info)
+
+    exit_results: list[tuple[int, float, str] | None] = [None] * n
+    active = [True] * n
+    entry_prices = [cand.entry_price for cand, _, _ in picks_info]
+
+    for day_i in range(first_entry, last_exit_bound + 1):
+        # --- 1. resolve individual SL/TP/time for each active trade this day ---
+        for i, (cand, entry_idx, daily) in enumerate(picks_info):
+            if not active[i] or exit_results[i] is not None:
+                continue
+            if day_i < entry_idx:
+                continue  # not yet entered
+            if day_i >= len(daily):
+                exit_results[i] = (len(daily) - 1, daily[-1].c, "time")
+                active[i] = False
+                continue
+            if day_i > entry_idx + max_hold_days:
+                exit_results[i] = (day_i - 1, daily[day_i - 1].c, "time")
+                active[i] = False
+                continue
+            bar = daily[day_i]
+            if bar.l <= cand.stop_price:
+                exit_results[i] = (day_i, cand.stop_price, "stop")
+                active[i] = False
+            elif bar.h >= cand.target_price:
+                exit_results[i] = (day_i, cand.target_price, "target")
+                active[i] = False
+
+        if not any(active):
+            break
+
+        # --- 2. compute current portfolio return (mix of closed + open MTM) ---
+        port_ret = 0.0
+        for i, (cand, entry_idx, daily) in enumerate(picks_info):
+            w = max(0.0, weights[i]) / total_weight
+            if exit_results[i] is not None:
+                # already closed
+                ret = exit_results[i][1] / entry_prices[i] - 1.0
+            elif day_i < entry_idx or day_i >= len(daily):
+                ret = 0.0
+            else:
+                ret = daily[day_i].c / entry_prices[i] - 1.0
+            port_ret += ret * w
+
+        # --- 3. portfolio stop triggered? close remaining open positions ---
+        if port_ret <= -portfolio_stop_pct:
+            for i, (cand, entry_idx, daily) in enumerate(picks_info):
+                if active[i] and exit_results[i] is None:
+                    close_idx = min(day_i, len(daily) - 1)
+                    exit_results[i] = (close_idx, daily[close_idx].c, "portfolio_stop")
+                    active[i] = False
+            break
+
+    # fill any positions that never got an exit (edge case)
+    for i, (cand, entry_idx, daily) in enumerate(picks_info):
+        if exit_results[i] is None:
+            last = min(entry_idx + max_hold_days, len(daily) - 1)
+            exit_results[i] = (last, daily[last].c, "time")
+
+    return exit_results  # type: ignore[return-value]
+
+
 def _simulate_trade(daily: list[DailyBar], entry_idx: int, stop: float, target: float, max_hold_days: int) -> tuple[int, float, str]:
     last_idx = min(len(daily) - 1, entry_idx + max_hold_days)
     for i in range(entry_idx, last_idx + 1):
@@ -505,6 +602,10 @@ def main() -> int:
     ap.add_argument("--position-weight-mode", default="equal")
     ap.add_argument("--overlay-csv", default="")
     ap.add_argument("--overlay-score-mult", type=float, default=0.0)
+    ap.add_argument("--intramonth-portfolio-stop-pct", type=float, default=0.0,
+                    help="If >0: exit ALL positions when portfolio drops this %% from month-start. "
+                         "E.g. 0.04 = exit everything if portfolio down 4%% in the month. "
+                         "Reduces red-month severity at cost of some missed recoveries.")
     ap.add_argument("--tag", default="equities_monthly_research")
     args = ap.parse_args()
 
@@ -700,8 +801,12 @@ def main() -> int:
         month_returns: list[float] = []
         month_weights: list[float] = []
         pick_labels: list[str] = []
-        for cand, entry_idx, daily in picks:
-            weight = _position_weight(cand, args.position_weight_mode)
+        # ── simulate trades (with optional portfolio-level intramonth stop) ──
+        pick_weights_raw = [_position_weight(cand, args.position_weight_mode) for cand, _, _ in picks]
+        portfolio_stop = float(args.intramonth_portfolio_stop_pct)
+        sim_results = _simulate_trades_portfolio_stop(picks, pick_weights_raw, int(args.max_hold_days), portfolio_stop)
+
+        for (cand, entry_idx, daily), weight, (exit_idx, exit_price, reason) in zip(picks, pick_weights_raw, sim_results):
             picks_rows.append(
                 [
                     month,
@@ -724,23 +829,17 @@ def main() -> int:
                     f"{weight:.6f}",
                 ]
             )
-            exit_idx, exit_price, reason = _simulate_trade(
-                daily,
-                entry_idx=entry_idx,
-                stop=cand.stop_price,
-                target=cand.target_price,
-                max_hold_days=int(args.max_hold_days),
-            )
             ret = exit_price / cand.entry_price - 1.0
             month_returns.append(ret)
             month_weights.append(weight)
             pick_labels.append(cand.ticker)
+            exit_day_str = daily[exit_idx].day if exit_idx < len(daily) else daily[-1].day
             trades_rows.append(
                 [
                     cand.snapshot_day,
                     cand.ticker,
                     cand.entry_day,
-                    daily[exit_idx].day,
+                    exit_day_str,
                     f"{cand.entry_price:.4f}",
                     f"{exit_price:.4f}",
                     f"{cand.stop_price:.4f}",
@@ -835,8 +934,13 @@ def main() -> int:
 
     returns = [float(r[-2]) for r in trades_rows]
     wins = [r for r in returns if r > 0]
+    losses = [r for r in returns if r < 0]
+    sum_wins = sum(wins) if wins else 0.0
+    sum_losses = abs(sum(losses)) if losses else 0.0
+    profit_factor_val = (sum_wins / sum_losses) if sum_losses > 0 else float("nan")
     month_returns_pct = [float(r[3]) for r in monthly_rows]
     positive_months = [x for x in month_returns_pct if x > 0]
+    negative_months = [x for x in month_returns_pct if x < 0]
     max_eq = monthly_curve[0]
     max_dd = 0.0
     for eq in monthly_curve:
@@ -852,11 +956,14 @@ def main() -> int:
                 "trades",
                 "winrate_pct",
                 "avg_trade_return_pct",
+                "profit_factor",
                 "positive_months",
+                "negative_months",
                 "positive_months_pct",
                 "avg_month_return_pct",
                 "compounded_return_pct",
                 "max_monthly_dd_pct",
+                "intramonth_portfolio_stop_pct",
                 "tickers",
                 "top_n",
                 "max_hold_days",
@@ -882,11 +989,14 @@ def main() -> int:
                 len(trades_rows),
                 f"{(100.0 * len(wins) / max(1, len(returns))):.2f}",
                 f"{(sum(returns) / max(1, len(returns))):.4f}",
+                f"{profit_factor_val:.4f}" if math.isfinite(profit_factor_val) else "nan",
                 len(positive_months),
+                len(negative_months),
                 f"{(100.0 * len(positive_months) / max(1, len(month_returns_pct))):.2f}",
                 f"{(sum(month_returns_pct) / max(1, len(month_returns_pct))):.4f}",
                 f"{(monthly_equity - 1.0) * 100.0:.4f}",
                 f"{max_dd * 100.0:.4f}",
+                f"{float(args.intramonth_portfolio_stop_pct):.4f}",
                 ";".join(tickers),
                 int(args.top_n),
                 int(args.max_hold_days),
