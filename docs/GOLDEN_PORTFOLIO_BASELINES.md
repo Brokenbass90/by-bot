@@ -17,14 +17,16 @@ golden reference on an apples-to-apples annual run.
 
 ## Current Reproducible Golden Candidate
 
-- Snapshot: [full_stack_baseline_20260325_reconstructed_v2.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/full_stack_baseline_20260325_reconstructed_v2.env)
-- Run: [portfolio_20260328_122413_full_stack_baseline_20260325_reconstructed_v2_annual](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260328_122413_full_stack_baseline_20260325_reconstructed_v2_annual/summary.csv)
-- Result: `+66.34%`, PF `1.508`, DD `5.1793`, `629` trades
+- Snapshot: [full_stack_baseline_20260325_reconstructed_v5_dynamic_allowlist_probe.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/full_stack_baseline_20260325_reconstructed_v5_dynamic_allowlist_probe.env)
+- Historical-window run: [portfolio_20260328_225413_full_stack_baseline_20260325_reconstructed_v5_dynamic_allowlist_probe_annual](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260328_225413_full_stack_baseline_20260325_reconstructed_v5_dynamic_allowlist_probe_annual/summary.csv)
+- Recent-window run: [portfolio_20260328_233022_full_stack_baseline_20260328_v5_dynamic_allowlist_recent_annual](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260328_233022_full_stack_baseline_20260328_v5_dynamic_allowlist_recent_annual/summary.csv)
+- Result:
+  - historical window: `+94.76%`, PF `2.141`, DD `2.8926`, `420` trades
+  - recent window: `+89.65%`, PF `2.121`, DD `2.8821`, `427` trades
 - Notes:
-  - best current deployable reconstruction of the historical winner
-  - clearly better than the weaker transient live-mirror iterations
-  - still under the historical anchor because breakout became too loose and
-    overtraded
+  - strongest fully reproducible stack we currently have
+  - validated on both the older anchor-like window and a fresher window
+  - already promoted to live as the current full-stack overlay
 
 ## Promotion Rules
 
@@ -41,10 +43,12 @@ golden reference on an apples-to-apples annual run.
   - the historical research anchor
   - the current reproducible golden candidate
 
-## Current Next Candidate
+## Current Improvement Frontier
 
-- Snapshot: [full_stack_baseline_20260325_reconstructed_v3_breakout_rebalanced.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/full_stack_baseline_20260325_reconstructed_v3_breakout_rebalanced.env)
-- Purpose:
-  - keep the successful `v2` reconstruction base
-  - replace only the breakout execution shape with the stronger bounded
-    `breakout_live_bridge_v3_density` frontier so breakout stops overtrading
+- `v5` is the operational baseline.
+- New candidates should now beat `v5`, not `v2` or `v3`.
+- Current open research fronts:
+  - `Elder/TS132` zoom and 6-strategy portfolio validation
+  - `Funding Rate Reversion` as a new Bybit-specific sleeve
+  - dynamic family profiles / health-gated autonomy
+  - Alpaca monthly smoothness repair
