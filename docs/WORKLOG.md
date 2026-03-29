@@ -1,5 +1,105 @@
 # Bybit bot (v28) — worklog / reminders
 
+## 2026-03-29 — v5 server verification + Alpaca v27 start + liquidation prototype repair
+
+### Server verification
+- Re-checked the real live server over SSH.
+- Confirmed:
+  - `bybot.service` is `active`
+  - weekly crons are installed and live:
+    - `dynamic_allowlist_weekly`
+    - `deepseek_weekly_cron`
+  - live env still matches the `v5` core rollout:
+    - `ASC1_SYMBOL_ALLOWLIST=ADAUSDT,LINKUSDT,ATOMUSDT`
+    - `ARF1_SYMBOL_ALLOWLIST=ADAUSDT,SUIUSDT,LINKUSDT,DOTUSDT,LTCUSDT`
+    - `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT`
+    - `BREAKOUT_QUALITY_MIN_SCORE=0.53`
+    - `ENABLE_TS132_TRADING=0`
+
+### News filter sanity check
+- Re-verified that the project still has a real news blackout layer.
+- `smart_pump_reversal_bot.py` imports and uses `news_filter` with:
+  - `runtime/news_filter/events.csv`
+  - `runtime/news_filter/policy.json`
+- Important clarification:
+  - the news filter exists in the codebase
+  - it is not currently the main reason `Alpaca` monthly is weak
+  - `Alpaca` still needs regime/smoothness repair, not just a generic blackout toggle
+
+### Alpaca v27
+- Started new repair run:
+  - `configs/autoresearch/equities_monthly_v27_intramonth_stop.json`
+  - run dir: `backtest_runs/autoresearch_20260329_153115_equities_monthly_v27_intramonth_stop`
+- Early signal is meaningful:
+  - parser path is healthy
+  - no `NaN`/schema failure
+  - early rows show PF `~2.15–2.58`
+  - intramonth stop is helping worst-month modestly (`-5.42 -> -4.68`)
+- By the time the first 57 rows were in, the run already produced real PASS candidates.
+- Best early PASS so far:
+  - `net=69.80`
+  - `PF=2.633`
+  - `WR=56.3%`
+  - `DD=10.74`
+  - `negative_months=5`
+  - `TARGET_ATR_MULT=3.5`
+  - `STOP_ATR_MULT=1.7`
+  - `TOP_N=2`
+  - `UNIVERSE_TOP_K=7`
+  - `INTRAMONTH_STOP=0.05`
+- Updated verdict:
+  - `v27` is the first Alpaca repair run in this cycle that clearly produces PASS rows
+  - this is still not enough for paper/live promotion
+  - but it confirms the new repair direction is materially better than `v23`
+
+### Funding Rate Reversion
+- Full grid is running:
+  - `configs/autoresearch/funding_rate_reversion_v1_grid.json`
+- Early frontier:
+  - best seen so far around `net=12.76`, `PF=1.209`, `DD=5.09`, `229 trades`
+- Current verdict:
+  - backtest-ready prototype
+  - not near live promotion yet
+
+### Elder
+- `Elder v13 zoom` is still running.
+- Early rows are poor and sparse (`3 trades`, `PF=0`), so no positive verdict yet.
+- `Elder` as 6th sleeve test is also running.
+- Early combined results are negative (`PF<1`, negative net), so no case for live promotion yet.
+- Investigated the mismatch against older passing runs.
+- Root cause:
+  - `v13` was zooming around the wrong subspace
+  - it missed key settings from the actual v12 PASS cluster:
+    - `TS132_BE_PCT=1.0`
+    - `TS132_MAX_SIGNALS_PER_DAY=3`
+    - `TS132_TIME_STOP_BARS_5M=216/288`
+    - `TS132_EXEC_MODE=eth/optimistic`
+    - `TS132_ALLOW_SHORTS=1`
+- Created:
+  - `configs/autoresearch/triple_screen_elder_v14_recovery.json`
+- Goal:
+  - recover the real `v12` winning pocket instead of continuing the misguided `v13` zoom
+- Started local run:
+  - `triple_screen_elder_v14_recovery`
+
+### Liquidation Cascade Entry
+- Found a concrete integration bug:
+  - strategy was imported and instantiated in `backtest/run_portfolio.py`
+  - but missing from the `allowed` strategy whitelist
+- Fixed whitelist entry locally.
+- After the fix:
+  - direct smoke-run no longer crashes
+  - `backtest_runs/portfolio_20260329_183117_lc_smoke_direct/summary.csv`
+  - first smoke-run produced `0` trades over `360` days on `BTC,ETH,SOL,BNB,AVAX`
+- Verdict:
+  - prototype wiring is now real
+  - but signal density is currently too low to justify a full 8748-combo run yet
+
+### Coordination
+- Updated:
+  - `docs/AGENT_SYNC.md`
+- Goal:
+  - keep Claude/Codex aligned on what is confirmed live, what is only research, and which autonomy pieces are already wired
 ## 2026-03-27 — DeepSeek timeout follow-up + skip-noise cleanup + midterm v3
 
 ### DeepSeek timeout clarification

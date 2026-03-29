@@ -1,0 +1,48 @@
+{
+  "name": "triple_screen_elder_v14_recovery",
+  "description": "Elder Triple Screen v14 — recovery zoom around the actual v12 PASS cluster. Fixed winning pocket: BTC/ETH/AVAX, shorts enabled, 4H trend, EMA 45, stoch(6), active mode. Searches only the parameters that separated the true PASS rows from the dead v13 branch.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "BTCUSDT,ETHUSDT,AVAXUSDT",
+    "--strategies", "triple_screen_v132",
+    "--days", "360",
+    "--end", "2026-02-24",
+    "--tag", "{tag}"
+  ],
+  "constraints": {
+    "min_trades": 24,
+    "min_profit_factor": 2.5,
+    "max_drawdown": 3.0,
+    "min_net_pnl": 10.0,
+    "max_negative_months": 4
+  },
+  "grid": {
+    "TS132_ALLOW_LONGS": ["1"],
+    "TS132_ALLOW_SHORTS": ["1"],
+    "TS132_TRADE_MODE": ["active"],
+    "TS132_TREND_TF": ["240"],
+    "TS132_TREND_EMA_LEN": [45],
+    "TS132_EVAL_TF_MIN": [60],
+    "TS132_OSC_TYPE": ["stoch"],
+    "TS132_OSC_PERIOD": [6],
+    "TS132_OSC_OB": [68],
+    "TS132_SL_ATR_MULT": [1.8, 2.0, 2.2],
+    "TS132_TP_ATR_MULT": [6.0, 7.5, 9.0],
+    "TS132_BE_PCT": [0.8, 1.0],
+    "TS132_TIME_STOP_BARS_5M": [216, 288, 432],
+    "TS132_MAX_SIGNALS_PER_DAY": [2, 3],
+    "TS132_TRAIL_ATR_MULT_LONG": [1.2, 1.5],
+    "TS132_TRAIL_ACTIVATE_LONG_ATR": [2.0],
+    "TS132_TRAIL_ATR_MULT_SHORT": [1.6, 2.0],
+    "TS132_TRAIL_ACTIVATE_SHORT_ATR": [3.0],
+    "TS132_USE_VOL_FILTER": ["0"],
+    "TS132_VOL_MULT": [0.5],
+    "TS132_EXEC_MODE": ["eth", "optimistic"]
+  },
+  "_combo_count": "3×3×2×3×2×2×2×2 = 864 combos",
+  "_run_command": "nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/triple_screen_elder_v14_recovery.json > /tmp/elder_v14.log 2>&1 &",
+  "_expected_runtime_minutes": 20,
+  "_goal": "Recover the real Elder winning pocket after the misguided v13 zoom. If this produces PASS rows near or above the old v12 cluster, only then rerun the combined 6-strategy portfolio test."
+}
