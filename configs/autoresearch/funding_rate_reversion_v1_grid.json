@@ -1,0 +1,45 @@
+{
+  "name": "funding_rate_reversion_v1_grid",
+  "description": "Funding Rate Reversion v1 — parameter search with simulated constant funding rate via env var. Edge: Bybit funding extremes → mean reversion SHORT/LONG. This backtest simulates a scenario where funding is always at threshold (i.e., tests SL/TP/RSI/EMA parameters assuming signal fires). Use historical funding rate data (scripts/funding_rate_fetcher.py --history) for realistic replay once data is downloaded.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT,AVAXUSDT",
+    "--strategies", "funding_rate_reversion_v1",
+    "--days", "360",
+    "--end", "2026-02-24",
+    "--tag", "{tag}"
+  ],
+  "constraints": {
+    "min_trades": 15,
+    "min_profit_factor": 1.6,
+    "max_drawdown": 5.0,
+    "min_net_pnl": 4.0
+  },
+  "grid": {
+    "FR_ALLOW_LONGS":          ["1"],
+    "FR_ALLOW_SHORTS":         ["1"],
+    "FR_LATEST_BTCUSDT":       ["0.0008"],
+    "FR_LATEST_ETHUSDT":       ["0.0008"],
+    "FR_LATEST_SOLUSDT":       ["0.0008"],
+    "FR_LATEST_BNBUSDT":       ["0.0008"],
+    "FR_LATEST_AVAXUSDT":      ["0.0008"],
+    "FR_THRESHOLD":            [0.0006, 0.0008],
+    "FR_EMA_PERIOD":           [34, 55, 89],
+    "FR_EXT_PCT":              [0.003, 0.005, 0.008],
+    "FR_RSI_OB":               [62.0, 65.0, 70.0],
+    "FR_RSI_OS":               [30.0, 35.0, 38.0],
+    "FR_SL_ATR_MULT":          [1.2, 1.5, 2.0],
+    "FR_TP_ATR_MULT":          [2.0, 2.5, 3.5],
+    "FR_TIME_STOP_BARS_5M":    [48, 72],
+    "FR_COOLDOWN_BARS":        [24],
+    "FR_MIN_VOLUME_USDT":      [500000]
+  },
+  "_combo_count": "2×3×3×3×3×3×3×2 = 2916 combos",
+  "_backtest_limitation": "FR_LATEST_* env vars inject a fixed constant funding rate for all bars. This means the strategy always sees an 'extreme' rate — the RSI/EMA/price-extension filters do the real work of gating entries. Real-world signals will be rarer (only at actual 8h funding windows with extreme rates). Treat this backtest as a parameter search for the entry/exit logic, not as a frequency estimate.",
+  "_realistic_backtest": "For realistic frequency: download historical funding rates with 'python3 scripts/funding_rate_fetcher.py --history --symbol BTCUSDT --days 360 --out data/funding_rates/BTCUSDT.csv', then replay will inject correct rates at each 8h window.",
+  "_run_command": "nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/funding_rate_reversion_v1_grid.json > /tmp/fr_reversion_v1.log 2>&1 &",
+  "_expected_runtime_minutes": 30,
+  "_goal": "Find RSI/EMA/SL/TP combo with PF≥1.6, trades≥15, DD≤5%. Then run realistic replay with historical funding rate CSV."
+}
