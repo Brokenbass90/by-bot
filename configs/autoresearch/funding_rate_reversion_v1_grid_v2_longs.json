@@ -1,0 +1,41 @@
+{
+  "name": "funding_rate_reversion_v1_grid_v2_longs",
+  "description": "Funding Rate Reversion v2 longs mirror. Test extreme negative funding as a contrarian long signal, mirroring the earlier shorts-only v2 sweep.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT,AVAXUSDT",
+    "--strategies", "funding_rate_reversion_v1",
+    "--days", "360",
+    "--end", "2026-02-24",
+    "--tag", "{tag}"
+  ],
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.4,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 3.0
+  },
+  "grid": {
+    "FR_ALLOW_LONGS":          ["1"],
+    "FR_ALLOW_SHORTS":         ["0"],
+    "FR_LATEST_BTCUSDT":       ["-0.003"],
+    "FR_LATEST_ETHUSDT":       ["-0.003"],
+    "FR_LATEST_SOLUSDT":       ["-0.003"],
+    "FR_LATEST_BNBUSDT":       ["-0.003"],
+    "FR_LATEST_AVAXUSDT":      ["-0.003"],
+    "FR_THRESHOLD":            [0.001, 0.002],
+    "FR_EMA_PERIOD":           [34, 55, 89],
+    "FR_EXT_PCT":              [0.003, 0.007, 0.012],
+    "FR_RSI_OS":               [40.0, 35.0, 30.0],
+    "FR_SL_ATR_MULT":          [1.0, 1.5, 2.0],
+    "FR_TP_ATR_MULT":          [1.5, 2.5, 3.5],
+    "FR_TIME_STOP_BARS_5M":    [48, 96],
+    "FR_COOLDOWN_BARS":        [24],
+    "FR_MIN_VOLUME_USDT":      [500000]
+  },
+  "_combo_count": "972 combos (longs only)",
+  "_expected_runtime_minutes": 20,
+  "_goal": "Check whether extreme negative funding creates a cleaner contrarian long sleeve than the shorts-only mirror."
+}
