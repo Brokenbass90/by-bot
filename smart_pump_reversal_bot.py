@@ -85,6 +85,7 @@ from bot.deepseek_autoresearch_agent import (
     audit_bot_full,
     ask_about_file,
 )
+from bot.trade_learning_loop import trade_learning
 from bot.deepseek_action_executor import (
     execute_proposal,
     rollback_env,
@@ -1894,6 +1895,23 @@ def _maybe_schedule_ai_trade_review(tr, sym: str, pnl_closed: float, fee_sum: fl
     if not (DEEPSEEK_OPERATOR_ENABLE and DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE):
         return
     summary, payload = _build_trade_review_summary(tr, sym, pnl_closed, fee_sum, exit_px)
+    try:
+        learning_result = trade_learning.record(payload)
+        learning_proposal = (learning_result or {}).get("proposal") if isinstance(learning_result, dict) else None
+        if learning_proposal:
+            DEEPSEEK_OVERLAY.append_shadow_recommendation(
+                summary=_ai_operator_trim(str(learning_proposal.get("summary") or ""), 240),
+                payload=dict(learning_proposal.get("payload") or {}),
+                source="trade_learning_loop",
+                recommendation_type="trade_learning",
+            )
+            DEEPSEEK_OVERLAY.submit_proposal(
+                str(learning_proposal.get("summary") or ""),
+                payload=dict(learning_proposal.get("payload") or {}),
+                kind="trade_learning",
+            )
+    except Exception as e:
+        log_error(f"trade learning loop fail: {e}")
     prompt = (
         "Кратко разберись с только что закрытой сделкой. "
         "Нужно 3-5 коротких строк по-русски: verdict, что было хорошо/плохо, "

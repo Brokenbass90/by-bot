@@ -160,6 +160,7 @@ Expected runtime: 2–4 hours. Goal: ≥5 combos with PF ≥1.5 and trades ≥15
   - every closed trade gets classified by regime, entry quality, exit quality, and preventable mistake tags
   - repeated failure patterns should spawn bounded research proposals automatically
   - repeated success patterns should influence family profiles / symbol pockets, not rewrite live blindly
+  - status: initial implementation now live in code via `bot/trade_learning_loop.py`; next step is validating proposal quality and avoiding noisy over-triggering
 
 **2b. Prepare the autonomy bundle for safe server deployment**
 - Local files now exist:
@@ -417,6 +418,7 @@ Daily at 07:00 UTC:
 | `bot/health_gate.py` | Blocks entries for degraded strategies via `strategy_health.json` |
 | `bot/allowlist_watcher.py` | Hot-reloads allowlists without full bot restart |
 | `bot/deepseek_research_gate.py` | Approval-gated bounded autonomy for DeepSeek research |
+| `bot/trade_learning_loop.py` | Per-trade critic and bounded learning proposal generator |
 | `bot/family_profiles.py` | Per-family runtime parameter scaling |
 | `scripts/equity_curve_autopilot.py` | Weekly equity-curve degradation monitor |
 | `scripts/setup_server_crons.sh` | Safe server-side cron installer for autonomy bundle |
