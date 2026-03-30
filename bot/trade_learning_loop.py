@@ -177,5 +177,31 @@ class TradeLearningLoop:
             return _build_proposal(strategy, tag, count, samples)
         return None
 
+    def status_text(self) -> str:
+        recent = _iter_recent_entries()
+        if not recent:
+            return "Trade learning: пока нет закрытых сделок после включения модуля."
+        recent = recent[-MAX_RECENT_SCAN:]
+        tag_counts = Counter()
+        strat_counts = Counter()
+        for item in recent:
+            strat = str(item.get("strategy") or "")
+            if strat:
+                strat_counts[strat] += 1
+            for tag in list(item.get("tags") or []):
+                tag_counts[str(tag)] += 1
+        lines = [
+            "Trade learning status:",
+            f"- logged trades: {len(recent)}",
+        ]
+        if strat_counts:
+            lines.append("- strategies: " + ", ".join(f"{k}={v}" for k, v in strat_counts.most_common(5)))
+        if tag_counts:
+            lines.append("- top tags: " + ", ".join(f"{k}={v}" for k, v in tag_counts.most_common(6)))
+        state = _load_state().get("last_proposals", {})
+        if state:
+            lines.append(f"- proposal cooldown entries: {len(state)}")
+        return "\n".join(lines)
+
 
 trade_learning = TradeLearningLoop()

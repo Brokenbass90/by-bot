@@ -2615,6 +2615,10 @@ def _handle_tg_command(text: str):
         _tg_reply(DEEPSEEK_OVERLAY.pending_actions_text())
         return
 
+    if name == "/ai_learning":
+        _tg_reply(trade_learning.status_text())
+        return
+
     if name == "/ai_shadow":
         _tg_reply(DEEPSEEK_OVERLAY.shadow_status_text())
         return
