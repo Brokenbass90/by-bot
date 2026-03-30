@@ -81,6 +81,18 @@ def _stoch(c: List[float], h: List[float], l: List[float], period: int) -> float
     return 100.0 * (c[-1] - ll) / (hh - ll)
 
 
+def _stoch_sma(c: List[float], h: List[float], l: List[float], period: int, smooth: int = 3) -> float:
+    if smooth <= 1:
+        return _stoch(c, h, l, period)
+    vals = []
+    for off in range(smooth):
+        if len(c) - off < period:
+            break
+        end = None if off == 0 else -off
+        vals.append(_stoch(c[:end], h[:end], l[:end], period))
+    return sum(vals) / float(len(vals)) if vals else float("nan")
+
+
 def _cci(c: List[float], h: List[float], l: List[float], period: int) -> float:
     if period <= 0 or len(c) < period:
         return float("nan")
@@ -93,12 +105,25 @@ def _cci(c: List[float], h: List[float], l: List[float], period: int) -> float:
     return (tp[-1] - sma_tp) / (0.015 * md)
 
 
+def _osc_value_for_series(osc_type: str, c: List[float], h: List[float], l: List[float], period: int) -> float:
+    if osc_type == "rsi":
+        return _rsi(c, period)
+    if osc_type == "cci":
+        return _cci(c, h, l, max(5, period))
+    return _stoch_sma(c, h, l, period, smooth=3)
+
+
 @dataclass
 class TripleScreenV132Config:
     trade_mode: str = "active"  # conservative|active|aggressive
     trend_tf: str = "60"
     eval_tf_min: int = 60
+    use_eval_tf_osc: bool = False
     trend_ema_len: int = 45
+    use_trend_strength_filter: bool = False
+    trend_slope_lookback: int = 8
+    trend_min_gap_pct: float = 0.10
+    trend_min_slope_pct: float = 0.05
     osc_type: str = "stoch"  # stoch|rsi|cci
     osc_period: int = 8
     osc_ob: float = 70.0
@@ -132,7 +157,12 @@ class TripleScreenV132Strategy:
         self.cfg.trade_mode = str(os.getenv("TS132_TRADE_MODE", self.cfg.trade_mode)).strip().lower()
         self.cfg.trend_tf = os.getenv("TS132_TREND_TF", self.cfg.trend_tf)
         self.cfg.eval_tf_min = _env_int("TS132_EVAL_TF_MIN", self.cfg.eval_tf_min)
+        self.cfg.use_eval_tf_osc = str(os.getenv("TS132_USE_EVAL_TF_OSC", "0")).strip().lower() in {"1", "true", "yes", "on"}
         self.cfg.trend_ema_len = _env_int("TS132_TREND_EMA_LEN", self.cfg.trend_ema_len)
+        self.cfg.use_trend_strength_filter = str(os.getenv("TS132_USE_TREND_STRENGTH_FILTER", "0")).strip().lower() in {"1", "true", "yes", "on"}
+        self.cfg.trend_slope_lookback = _env_int("TS132_TREND_SLOPE_LOOKBACK", self.cfg.trend_slope_lookback)
+        self.cfg.trend_min_gap_pct = _env_float("TS132_TREND_MIN_GAP_PCT", self.cfg.trend_min_gap_pct)
+        self.cfg.trend_min_slope_pct = _env_float("TS132_TREND_MIN_SLOPE_PCT", self.cfg.trend_min_slope_pct)
         self.cfg.osc_type = str(os.getenv("TS132_OSC_TYPE", self.cfg.osc_type)).strip().lower()
         self.cfg.osc_period = _env_int("TS132_OSC_PERIOD", self.cfg.osc_period)
         self.cfg.osc_ob = _env_float("TS132_OSC_OB", self.cfg.osc_ob)
@@ -180,21 +210,6 @@ class TripleScreenV132Strategy:
             return 0.0006
         return 0.0
 
-    def _osc_value(self) -> float:
-        if self.cfg.osc_type == "rsi":
-            return _rsi(self._c, self.cfg.osc_period)
-        if self.cfg.osc_type == "cci":
-            return _cci(self._c, self._h, self._l, max(5, self.cfg.osc_period))
-        # stoch + 3 sma
-        vals = []
-        for i in range(-3, 0):
-            if len(self._c) + i < self.cfg.osc_period:
-                continue
-            vals.append(_stoch(self._c[:i if i != 0 else None], self._h[:i if i != 0 else None], self._l[:i if i != 0 else None], self.cfg.osc_period))
-        if not vals:
-            return float("nan")
-        return sum(vals) / float(len(vals))
-
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = o
         self._c.append(float(c))
@@ -223,7 +238,11 @@ class TripleScreenV132Strategy:
         self._last_eval_bucket = bucket
 
         # Trend screen on higher TF EMA
-        rows_t = store.fetch_klines(store.symbol, self.cfg.trend_tf, max(self.cfg.trend_ema_len + 20, 120)) or []
+        rows_t = store.fetch_klines(
+            store.symbol,
+            self.cfg.trend_tf,
+            max(self.cfg.trend_ema_len + self.cfg.trend_slope_lookback + 20, 120),
+        ) or []
         if len(rows_t) < self.cfg.trend_ema_len + 3:
             return None
         t_closes = [float(r[4]) for r in rows_t]
@@ -232,14 +251,32 @@ class TripleScreenV132Strategy:
             return None
         trend_up = self._c[-1] > trend_ema
         trend_down = self._c[-1] < trend_ema
+        if self.cfg.use_trend_strength_filter:
+            if len(t_closes) < self.cfg.trend_ema_len + self.cfg.trend_slope_lookback + 3:
+                return None
+            ema_prev = _ema(t_closes[:-self.cfg.trend_slope_lookback], self.cfg.trend_ema_len)
+            if not math.isfinite(ema_prev):
+                return None
+            px = self._c[-1]
+            if px <= 0:
+                return None
+            trend_gap_pct = abs(px - trend_ema) / px * 100.0
+            trend_slope_pct = (trend_ema - ema_prev) / max(1e-12, abs(ema_prev)) * 100.0
+            trend_up = trend_up and trend_gap_pct >= self.cfg.trend_min_gap_pct and trend_slope_pct >= self.cfg.trend_min_slope_pct
+            trend_down = trend_down and trend_gap_pct >= self.cfg.trend_min_gap_pct and trend_slope_pct <= -self.cfg.trend_min_slope_pct
 
-        # Oscillator screen on local TF
-        osc = self._osc_value()
-        osc_prev = self._osc_value() if len(self._c) < 2 else (
-            _rsi(self._c[:-1], self.cfg.osc_period) if self.cfg.osc_type == "rsi"
-            else (_cci(self._c[:-1], self._h[:-1], self._l[:-1], max(5, self.cfg.osc_period)) if self.cfg.osc_type == "cci"
-                  else _stoch(self._c[:-1], self._h[:-1], self._l[:-1], self.cfg.osc_period))
-        )
+        # Oscillator screen on local TF or the intermediate eval TF.
+        osc_c, osc_h, osc_l = self._c, self._h, self._l
+        if self.cfg.use_eval_tf_osc:
+            rows_e = store.fetch_klines(store.symbol, str(self.cfg.eval_tf_min), max(self.cfg.osc_period + 10, 60)) or []
+            if len(rows_e) < max(self.cfg.osc_period + 4, 12):
+                return None
+            osc_c = [float(r[4]) for r in rows_e]
+            osc_h = [float(r[2]) for r in rows_e]
+            osc_l = [float(r[3]) for r in rows_e]
+
+        osc = _osc_value_for_series(self.cfg.osc_type, osc_c, osc_h, osc_l, self.cfg.osc_period)
+        osc_prev = _osc_value_for_series(self.cfg.osc_type, osc_c[:-1], osc_h[:-1], osc_l[:-1], self.cfg.osc_period)
         if not (math.isfinite(osc) and math.isfinite(osc_prev)):
             return None
 

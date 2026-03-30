@@ -1,6 +1,6 @@
 # Agent Sync
 
-Last updated: 2026-03-29 15:45 UTC
+Last updated: 2026-03-30 15:45 UTC
 
 Purpose:
 - keep Claude and Codex aligned on what is real, what is live, and what is still only research
@@ -60,23 +60,32 @@ Shared rules:
 ## Current Research Status
 
 Running:
-- `Elder v13 zoom`
-  - [triple_screen_elder_v13_zoom.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_elder_v13_zoom.json)
-- `Elder v14 recovery`
-  - [triple_screen_elder_v14_recovery.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_elder_v14_recovery.json)
-  - built because `v13` missed the real v12 PASS pocket (`BE=1.0`, `MAX_SIGNALS_PER_DAY=3`, `TIME_STOP=216/288`, `EXEC_MODE=eth/optimistic`, shorts enabled)
-- `Funding Rate Reversion` full grid
-  - [funding_rate_reversion_v1_grid.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/funding_rate_reversion_v1_grid.json)
-- `Elder` as 6th strategy portfolio test
-  - [portfolio_elder_6strat_test.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/portfolio_elder_6strat_test.json)
-- `Alpaca v27` repair run
-  - [equities_monthly_v27_intramonth_stop.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v27_intramonth_stop.json)
-  - early frontier already produced PASS rows; best seen so far:
-    - `net=69.80`
-    - `PF=2.633`
-    - `WR=56.3%`
-    - `DD=10.74`
-    - `negative_months=5`
+- `Elder v15 short-bias`
+  - [triple_screen_elder_v15_short_bias.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_elder_v15_short_bias.json)
+  - this is the only research branch we are intentionally keeping alive right now
+  - purpose: verify whether the short-only / tighter-exit Elder branch can hold `4` negative months instead of `5-6`
+- `Elder v16 short-density`
+  - [triple_screen_elder_v16_short_density.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_elder_v16_short_density.json)
+  - launched once `v15` lost momentum; purpose is to recover density/net on top of the smoother short-only shape
+- `micro_scalper_v2 weak-chop density`
+  - [micro_scalper_v2_weak_chop_density.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/micro_scalper_v2_weak_chop_density.json)
+  - next candidate for monetizing the quiet `impulse_weak / tradable_impulse` regime where the core live stack often sits idle
+- `Alpaca v30 regime concentration proxy`
+  - [equities_monthly_v30_regime_concentration_proxy.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v30_regime_concentration_proxy.json)
+  - next real Alpaca repair step after `v29`; approximates dynamic concentration using benchmark/breadth/correlation controls
+
+Prepared next, but not launched yet:
+- `Elder v17 structural repair`
+  - [triple_screen_elder_v17_structural_repair.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_elder_v17_structural_repair.json)
+  - code-level repair path over [triple_screen_v132.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/archive/strategies_retired/triple_screen_v132.py)
+  - smoke-tested only; not promoted to a full grid because the first strict canonical run came back too dry/negative
+
+Finished / superseded / not worth more heat right now:
+- `Elder v13 zoom` — superseded
+- `Elder v14 recovery` — useful diagnosis, but superseded by `v15`
+- `portfolio_elder_6strat_test` — premature before Elder itself is fixed
+- `breakout_weak_chop_probe_v1` — isolated idea looked fine, but full-stack compare lost to `v5`
+- `liquidation_cascade_v1_grid` — integration/logical density still too weak
 
 Backtest-ready but not live-ready:
 - `Funding Rate Reversion`
@@ -94,6 +103,8 @@ Known weak / not promoted:
 - `midterm_pullback_v2_btceth_v1` → `0 PASS`
 - `pump_fade_simple_expanded_v1` → `0 PASS`
 - `equities_monthly_v23_spy_regime_gate` → parser fixed, still `0 PASS`
+- `breakout weak-chop overlay` → loses badly to `v5` at full-stack level
+- `Elder v17 strict canonical smoke` → syntactically healthy, strategically too dry (`13 trades`, `net=-0.56`, `PF=0.708`)
 
 ## Claude Changes (session 19c/19d) — 2026-03-29
 
@@ -134,27 +145,37 @@ Done by Claude (do not revert without checking):
 Do NOT re-add gate import to deepseek_weekly_cron.py — already there.
 Do NOT remove gate status block from report — it shows pending proposals to Telegram.
 
+## Claude Changes (session 19f) — 2026-03-29
+
+### Bugs fixed:
+
+**`strategies/liquidation_cascade_entry_v1.py`** — TradeSignal constructor was broken:
+- Was: `TradeSignal()` no-arg → TypeError; then `TradeSignal(direction=...)` → also fails (wrong kwarg + missing `symbol`)
+- Fix: `from .signals import TradeSignal` (same as FR Reversion) + correct args: `symbol` from `store.symbol`, `side=direction`, `be_trigger_rr` instead of absolute `be_trigger`
+- This caused CalledProcessError in LC autoresearch (0-trade run → empty summary → runner crash)
+
+**`configs/autoresearch/funding_rate_reversion_v1_grid_v2.json`** (NEW) — FR grid v2:
+- v1 bug: `FR_LATEST=0.0008` ≤ both tested thresholds → FR filter always-on → tested RSI+EMA only → max PF 1.21, 0/2916 passed
+- v2: `FR_LATEST=+0.003` (extreme positive), threshold=[0.001, 0.002] → filter fires selectively for shorts
+- Shorts-only pass, relaxed constraints PF≥1.4, 972 combos, ~15 min
+
+### Run commands (restart on your machine):
+```bash
+# LC grid — restart from scratch (old run was broken, safe to overwrite)
+nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/liquidation_cascade_v1_grid.json > /tmp/lc_v1.log 2>&1 &
+
+# FR Reversion v2 — new shorts-only pass
+nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/funding_rate_reversion_v1_grid_v2.json > /tmp/fr_v2_shorts.log 2>&1 &
+```
+
 ## Immediate Next Steps
 
-1. **SR Break Retest — resume** (run on local machine, was at 449/12288):
-   ```
-   nohup python3 scripts/run_strategy_autoresearch.py \
-     --spec configs/autoresearch/sr_break_retest_volume_v1_revival_v1.json \
-     > /tmp/sr_revival.log 2>&1 &
-   ```
-2. Run on server (all can run in parallel):
-   ```
-   python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/equities_monthly_v27_intramonth_stop.json
-   python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/funding_rate_reversion_v1_grid.json
-   python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/liquidation_cascade_v1_grid.json
-   ```
-3. Finish `Elder v13` → run `configs/autoresearch/triple_screen_elder_v13_zoom.json`
-4. **Bot restart on server** to activate health_gate + allowlist_watcher (code is in bot, restart needed):
-   ```
-   systemctl restart bybit-bot   # or: pkill -f smart_pump_reversal_bot && nohup python3 smart_pump_reversal_bot.py &
-   ```
-5. **Family profiles** — integrate `profiles.scale()` calls into live strategies once backtests confirm gain
-6. **Regime allocator / cross-strategy correlation layer** — not started yet
+1. **Finish `Elder v15` first.** Do not start a new heavy queue while it is still the only branch with a live diagnosis value.
+2. **If `v15` holds `4` negative months**, launch [triple_screen_elder_v16_short_density.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_elder_v16_short_density.json) next.
+3. **If `v15` falls back to `5-6` negative months**, freeze Elder as research-only and move the next strategy cycle to Funding / Alpaca instead of burning more time on it.
+4. **Autonomy bundle reality check** — do **not** assume server restart enables `health_gate + allowlist_watcher`. Those files exist locally, but were not yet deployed to `/root/by-bot`; current server restart only restarts the existing `v5` bot.
+5. **Family profiles** — integrate `profiles.scale()` calls into live strategies only after backtests show gain.
+6. **Regime allocator / cross-strategy correlation layer** — not started yet.
 
 ## Server Reality Check — 2026-03-29
 
@@ -168,3 +189,31 @@ Do NOT remove gate status block from report — it shows pending proposals to Te
   - `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT`
   - `BREAKOUT_QUALITY_MIN_SCORE=0.53`
   - `ENABLE_TS132_TRADING=0`
+- autonomy files are **not** on the server yet:
+  - `bot/allowlist_watcher.py`
+  - `bot/health_gate.py`
+  - `bot/deepseek_research_gate.py`
+- related scripts also not confirmed on server:
+  - `scripts/equity_curve_autopilot.py`
+  - `bot/family_profiles.py`
+- therefore a simple bot restart does **not** activate those features yet
+
+## Autonomy Reality Check — 2026-03-29
+
+- locally, [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) already imports and uses:
+  - `bot.health_gate`
+  - `bot.allowlist_watcher`
+- locally, [scripts/deepseek_weekly_cron.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deepseek_weekly_cron.py) already imports:
+  - `bot.deepseek_research_gate`
+- local syntax check passed for:
+  - `smart_pump_reversal_bot.py`
+  - `scripts/deepseek_weekly_cron.py`
+  - `bot/allowlist_watcher.py`
+  - `bot/health_gate.py`
+  - `bot/deepseek_research_gate.py`
+  - `bot/family_profiles.py`
+  - `scripts/equity_curve_autopilot.py`
+- `family_profiles` is only partially integrated right now:
+  - active in `strategies/alt_sloped_channel_v1.py`
+  - active in `strategies/micro_scalper_v1.py`
+  - not yet wired into the rest of the live core sleeves

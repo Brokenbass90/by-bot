@@ -1,6 +1,6 @@
 # Project Roadmap — Trading Bot
 
-> Last updated: 2026-03-29 | Author: Claude + GPT
+> Last updated: 2026-03-30 | Author: Claude + GPT
 > Living document — update after each major session.
 
 ---
@@ -127,6 +127,13 @@ The fix is to bridge them — not to rebuild the monthly strategy from scratch.
 - Do not replace it with new sleeves unless they beat `v5` in apples-to-apples annual compare.
 - Treat `v5` as the new operational baseline until disproven.
 
+**0b. Do not let Elder absorb the whole week**
+- Current best Elder insight is useful, but not enough for live.
+- Decision rule:
+  - if `v15` finishes with repeated `4` negative-month rows, continue into `v16`
+  - if `v15` falls back to `5-6` negative months, freeze Elder and redirect attention to the next sleeve
+- This prevents the project from stalling on one half-working strategy.
+
 **1. Run pump_fade_simple autoresearch locally**
 ```bash
 nohup python3 scripts/run_strategy_autoresearch.py \
@@ -143,6 +150,15 @@ Expected runtime: 2–4 hours. Goal: ≥5 combos with PF ≥1.5 and trades ≥15
   - Monday: review diff vs current live
   - apply only if annual compare / bounded backtest agrees
 
+**2b. Prepare the autonomy bundle for safe server deployment**
+- Local files now exist:
+  - `bot/health_gate.py`
+  - `bot/allowlist_watcher.py`
+  - `bot/deepseek_research_gate.py`
+  - `bot/family_profiles.py`
+- Next engineering task is a clean deploy bundle + smoke verification on server.
+- Goal: move from "advisor autonomy exists locally" to "bounded autonomy is actually live".
+
 **3. Fix equities autoresearch parser path**
 `equities_monthly_v23_spy_regime_gate` did not fail strategically; the generic wrapper failed to parse the equities summary format.
 - Repair the shared wrapper or add a dedicated equities-autoresearch path.
@@ -158,30 +174,81 @@ This would likely have avoided that specific March 2026 entry; it is a first rep
 
 ### 🟡 P1 — This Month
 
-**5. Connect WF-validated intraday strategies to Alpaca paper**
-TSLA breakout_continuation, GOOGL grid_reversion, JPM grid_reversion are WF-validated.
-Need execution bridge for intraday paper trading — same pattern as
-equities_alpaca_paper_bridge.py but for intraday signals (5m bars, session-aware).
-Important: do not arm the server cron with `--live` until the bridge is observed in repeated dry-run sessions.
+**5. Connect WF-validated intraday strategies to Alpaca paper ✅ DONE**
+`scripts/equities_alpaca_intraday_bridge.py` — built with 3-layer protection:
+- L1: SPY regime gate (SMA50 — today correctly blocked entries, SPY $670 < SMA50 $687)
+- L2: Daily loss limit (2% of equity)
+- L3: Equity curve filter (20d rolling P&L)
+Run daily dry-run, observe Telegram signals → switch to `--live` after 2+ weeks.
 
-**6. Deploy pump_fade_simple to live (after autoresearch)**
+**5b. Alpaca v30 — regime-adaptive concentration instead of naive diversification**
+`v29` showed that simply forcing `TOP_N=3/4` does not beat the strong `TOP_N=2` frontier.
+The next repair direction is therefore smarter portfolio logic, not "just more names":
+- keep concentration tight in weak / risk-off conditions
+- allow broader selection only in stronger benchmark/breadth regimes
+- prefer smoother worst-month profile over squeezing a few extra raw return points
+- test this as a bounded research branch before touching paper/live
+
+**6. Elder Triple Screen revival — 6th strategy candidate**
+`triple_screen_v132.py` (archive) is still the active Elder core, but the branch has been narrowed substantially.
+What we learned:
+- old symmetric long+short `v13/v14` paths were too noisy by month
+- `v15` short-bias reduces negative months, but loses density
+- strict canonical `v17` repair is too dry unless we re-open it carefully
+Current next steps:
+- finish `v15`
+- if smoother months hold, run `v16`
+- only after a real isolated PASS should we re-open the 6-strategy portfolio compare
+
+**6b. Trend + trailing family evaluation**
+We already have trend/trailing behavior in the codebase, but not yet as a proven live upgrade:
+- `TS132 / Elder` is the clearest dedicated trend-following + trailing candidate
+- `alt_sloped_channel_v1` also supports trailing logic in code, but current live `v5` keeps that trail disabled
+- next step is to compare "strict trend-following with trail" against the current mean-reverting/sloped mix, not to assume trailing is automatically better
+
+**7. Deploy pump_fade_simple to live (after autoresearch)**
 - Start at risk_pct = 0.3% (very small)
 - Top 5 symbols from passing combos
 - Monitor 30 days before increasing size
 
-**7. Wire crypto equity autopilot into live gates**
-- `scripts/equity_curve_autopilot.py` already writes `configs/strategy_health.json`
-- main bot still does **not** read it before entries
-- safest next version:
-  - `WATCH` = advisory only
+**8. Wire equity autopilot into live entry gates**
+- `scripts/equity_curve_autopilot.py` writes `configs/strategy_health.json`
+- Main bot still does NOT read it before entries
+- Next: add health check hook in main trading loop
+  - `WATCH` = advisory + Telegram only
   - `PAUSE/KILL` = block new entries for that strategy family
-  - Telegram alert on status transition
 
 ---
 
 ### 🟢 P2 — Next Month
 
-**8. DeepSeek weekly cron — move from advisory to bounded research operator**
+**9. Dual-AI architecture: Claude as monthly strategic analyst**
+`scripts/claude_monthly_analyst.py` — skeleton ready, awaiting API key.
+Activate when bot P&L consistently > $200/month.
+
+Role split:
+| Task | AI | Frequency | Est. cost |
+|---|---|---|---|
+| Param tuning, signal audit | DeepSeek | Weekly | ~$2/month |
+| Universe expansion | DeepSeek | Weekly | included |
+| Portfolio health analysis | Claude Sonnet | Monthly | ~$5/month |
+| New strategy design | Claude Sonnet | On demand | ~$0.50/call |
+| Deep code review | Claude Opus | Quarterly | ~$3/call |
+
+Usage when active:
+```bash
+python3 scripts/claude_monthly_analyst.py --report
+python3 scripts/claude_monthly_analyst.py --strategy-idea "funding rate reversion"
+python3 scripts/claude_monthly_analyst.py --diagnose alt_resistance_fade_v1
+```
+
+**10. New strategy: Funding Rate Reversion (Bybit-specific)**
+Bybit pays/receives funding every 8h. When |funding_rate| > 0.08% → market is overextended.
+Edge: counter-trend entry after extreme funding → mean reversion within 1-3 candles.
+Uncorrelated with existing 5 strategies (different signal source).
+Implement: `strategies/funding_rate_reversion_v1.py` + autoresearch spec.
+
+**11. DeepSeek weekly cron — move from advisory to bounded research operator**
 - already active on server
 - next step: let it launch only pre-approved bounded research jobs, not arbitrary tune ideas
 - keep live changes behind approval
@@ -207,6 +274,19 @@ When 3 consecutive losing days: send Telegram alert + pause new entries until ma
 - start simple: ADX/ATR/range-compression regime classes
 - map sleeves to regimes (`breakout/sloped` in trend, `flat` in range, reduced risk in transition)
 - only later escalate to HMM/GMM if the simple regime layer proves useful
+
+**12c. Reuse winning structure across strategies**
+- This is now a real design principle, not a side note:
+  - side asymmetry from `breakdown` → Elder short-bias
+  - symbol pockets from `v5` → family-restricted research, not full-market sweeps
+  - bounded compares before live → mandatory for every candidate sleeve
+- Use this as the default design pattern for future repairs and new sleeves.
+
+**12b. Breakout weak-chop adaptation**
+- live diagnostics show `impulse_weak` dominates breakout no-signal reasons in quieter sessions
+- treat this as a bounded research problem, not a panic live tweak
+- test a softer breakout profile only if annual quality survives
+- if quality collapses, leave breakout strict and solve the gap later with the regime allocator
 
 ---
 

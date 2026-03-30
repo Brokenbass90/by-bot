@@ -1,0 +1,51 @@
+{
+  "name": "triple_screen_elder_v16_short_density",
+  "description": "Elder Triple Screen v16 — follow-up to v15. Keeps the short-only / smoothness improvements and now tries to recover trade density and net without giving back the reduced negative-month profile.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "{SYMBOLS}",
+    "--strategies", "triple_screen_v132",
+    "--days", "360",
+    "--end", "2026-02-24",
+    "--tag", "{tag}"
+  ],
+  "constraints": {
+    "min_trades": 24,
+    "min_profit_factor": 2.3,
+    "max_drawdown": 3.0,
+    "min_net_pnl": 10.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "grid": {
+    "SYMBOLS": [
+      "BTCUSDT,ETHUSDT,AVAXUSDT",
+      "ETHUSDT,AVAXUSDT"
+    ],
+    "TS132_ALLOW_LONGS": ["0"],
+    "TS132_ALLOW_SHORTS": ["1"],
+    "TS132_TRADE_MODE": ["active"],
+    "TS132_TREND_TF": ["240"],
+    "TS132_TREND_EMA_LEN": [45],
+    "TS132_EVAL_TF_MIN": [60],
+    "TS132_OSC_TYPE": ["stoch"],
+    "TS132_OSC_PERIOD": [6],
+    "TS132_OSC_OB": [64, 68],
+    "TS132_SL_ATR_MULT": [1.8, 2.0],
+    "TS132_TP_ATR_MULT": [3.5, 4.5],
+    "TS132_BE_PCT": [0.8],
+    "TS132_TIME_STOP_BARS_5M": [216, 288, 432],
+    "TS132_MAX_SIGNALS_PER_DAY": [2, 3, 4],
+    "TS132_TRAIL_ATR_MULT_SHORT": [1.2, 1.4, 1.6],
+    "TS132_TRAIL_ACTIVATE_SHORT_ATR": [2.0, 2.5],
+    "TS132_USE_VOL_FILTER": ["0"],
+    "TS132_VOL_MULT": [0.5],
+    "TS132_EXEC_MODE": ["eth", "optimistic"]
+  },
+  "_combo_count": "2×2×2×3×3×3×2 = 432 combos",
+  "_run_command": "nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/triple_screen_elder_v16_short_density.json > /tmp/elder_v16.log 2>&1 &",
+  "_expected_runtime_minutes": 12,
+  "_goal": "Recover the scale that v15 lost while keeping its smoother short-only monthly profile. If v15 proves that 4 negative months is reachable, v16 should be the next bounded step."
+}

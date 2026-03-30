@@ -1,5 +1,148 @@
 # Bybit bot (v28) — worklog / reminders
 
+## 2026-03-30 — weak-chop compare verdict + Elder short-bias next step
+
+### Breakout weak-chop overlay
+- Finished the full-stack annual compare for the weak-chop breakout candidate.
+- Candidate env:
+  - `configs/full_stack_baseline_20260330_v5_breakout_weak_chop_overlay.env`
+- Result:
+  - `backtest_runs/portfolio_20260330_122529_full_stack_baseline_20260330_v5_breakout_weak_chop_overlay_recent_annual/summary.csv`
+  - `net=60.79`
+  - `PF=1.548`
+  - `DD=4.22`
+  - `558 trades`
+- Important conclusion:
+  - the isolated breakout probe looked healthy
+  - but the full portfolio result is clearly worse than current `v5 recent`
+  - so this weak-chop breakout variant is **not** a live promotion candidate
+
+### Elder diagnostic refinement
+- Re-checked the best `v14` Elder run directly.
+- Best row:
+  - `run_id=297`
+  - `net=10.82`
+  - `PF=3.278`
+  - `negative_months=5`
+  - `trades=43`
+- Trade breakdown of the best run:
+  - `36` shorts
+  - `7` longs
+- Symbol contribution of the best run:
+  - `AVAXUSDT` carries the bulk of the edge
+  - `ETHUSDT` helps
+  - `BTCUSDT` contributes only modestly
+- Main interpretation:
+  - Elder is not failing because it has no edge
+  - Elder is failing because it is too noisy by month
+  - the strongest current edge is short-side, not symmetric long+short
+
+### Next Elder branch
+- Created new bounded repair spec:
+  - `configs/autoresearch/triple_screen_elder_v15_short_bias.json`
+- Purpose:
+  - test the most evidence-backed next hypothesis
+  - `short-only`
+  - restricted family (`BTC/ETH/AVAX` or `ETH/AVAX`)
+  - lower TP (`4.5–6.0 ATR`)
+  - bounded runtime (`144` combos)
+- This replaces another broad symmetric zoom with a tighter and more defensible Elder repair step.
+- Started the run and confirmed that real rows are now arriving.
+- Early best row so far:
+  - `run_id=15`
+  - `net=5.93`
+  - `PF=3.259`
+  - `trades=24`
+  - `negative_months=5`
+  - `WR=37.5%`
+- Current interpretation:
+  - short-only did not instantly solve the monthly smoothness problem
+  - but it preserved the high-PF character while using a much tighter and more explainable design
+  - the next question is whether later rows can lift net without keeping the same five red months
+- Early shape became clearer after the first 26 rows:
+  - several short-only rows already reduced `negative_months` from `5-6` down to `4`
+  - but they did so by becoming too sparse (`18-19` trades, `net≈3.9-4.8`)
+- Practical takeaway:
+  - the short-only idea is directionally right for smoothness
+  - but the branch still needs more density / scale after smoothing improves
+- Cleaned up stale local research processes to stop pretending old branches were still useful.
+- Stopped:
+  - `triple_screen_elder_v13_zoom`
+  - `portfolio_elder_6strat_test`
+  - `triple_screen_elder_v14_recovery`
+  - `breakout_weak_chop_probe_v1`
+  - `liquidation_cascade_v1_grid`
+- Kept alive:
+  - `triple_screen_elder_v15_short_bias`
+- Reason:
+  - those older runs were already either superseded, rejected by compare, or clearly too weak to justify more heat
+  - keeping only the active Elder repair branch makes the next decision path much clearer
+- Prepared the next bounded follow-up spec:
+  - `configs/autoresearch/triple_screen_elder_v16_short_density.json`
+- Purpose of `v16`:
+  - keep the short-only / smoother-month shape from `v15`
+  - then recover density by testing:
+    - slightly softer short trigger (`OSC_OB 64/68`)
+    - lower TP (`3.5/4.5`)
+    - more signal capacity (`2/3/4 per day`)
+    - shorter/faster short trail activation
+- Applied a code-level structural repair to:
+  - `archive/strategies_retired/triple_screen_v132.py`
+- What changed:
+  - fixed the stochastic smoothing path so the current value actually includes the latest bar instead of averaging stale slices
+  - fixed `osc_prev` so it is calculated through the same oscillator path as `osc`
+  - added optional `TS132_USE_EVAL_TF_OSC=1` to calculate the oscillator from the intermediate timeframe instead of the raw local stream
+  - added optional `TS132_USE_TREND_STRENGTH_FILTER=1` with EMA slope/gap gating borrowed from the stricter `v132b` family
+- Built the first structural follow-up spec:
+  - `configs/autoresearch/triple_screen_elder_v17_structural_repair.json`
+- Ran a direct smoke test for the new structural path:
+  - `backtest_runs/portfolio_20260330_153939_ts132_v17_smoke/summary.csv`
+- Smoke settings:
+  - `short-only`
+  - `ETH/AVAX`
+  - intermediate-timeframe oscillator enabled
+  - trend-strength filter enabled
+  - lower TP / faster trail
+- Smoke result:
+  - `13` trades
+  - `net=-0.56`
+  - `PF=0.708`
+  - `DD=1.59`
+- Interpretation:
+  - the code-level repair is syntactically and functionally healthy
+  - but this exact “canonicalized + strict” setting over-tightened the strategy too much and starved it into a negative low-density profile
+  - so the structural ideas are still valid, but they should not replace the current `v15/v16` path blindly
+- Prepared the next Alpaca repair branch as a real spec, not just a roadmap note:
+  - `configs/autoresearch/equities_monthly_v30_regime_concentration_proxy.json`
+- Important clarification:
+  - the current simulator still cannot change `TOP_N` dynamically within a single month
+  - so `v30` approximates regime-adaptive concentration through stronger benchmark/breadth gates and correlation pressure instead of pretending full dynamic allocation already exists
+- Re-reviewed `micro_scalper_v1` as the next likely weak-chop candidate.
+- Useful conclusions from the external critique:
+  - the "needs async/await" claim is not the main blocker in our current architecture — both backtest and current live integration call it synchronously
+  - the density critique *is* valid: the original optimization spec is too conservative for a sleeve we want to monetize quiet tradable-impulse conditions
+  - fee/slippage awareness and stricter no-trade filtering in dead chop should matter a lot for this family
+- Built the next bounded scalper spec:
+  - `configs/autoresearch/micro_scalper_v2_weak_chop_density.json`
+- Purpose:
+  - more trade density than the original micro scalper spec
+  - still bounded and session-limited
+  - explicitly aimed at the regime where the current live core says `impulse_weak` and mostly skips
+- With `Elder v15` no longer showing a path to real promotion, launched the next queued branches:
+  - `triple_screen_elder_v16_short_density`
+  - `micro_scalper_v2_weak_chop_density`
+  - `equities_monthly_v30_regime_concentration_proxy`
+- Early live read:
+  - `micro_scalper_v2` immediately produced real rows; first two are still FAILs, but one already showed `PF=1.261`, `WR=60.7%`, `DD=0.90`, which is enough to keep the branch alive
+  - `v30` started strongly and hit a real early PASS by `r010`:
+    - `net=69.80`
+    - `PF=2.633`
+    - `WR=56.2%`
+    - `DD=10.74`
+- Practical takeaway:
+  - the next wave is now genuinely running, not just written down
+  - `v30` already looks like a valid continuation of the Alpaca repair line
+
 ## 2026-03-29 — v5 server verification + Alpaca v27 start + liquidation prototype repair
 
 ### Server verification
@@ -81,6 +224,15 @@
   - recover the real `v12` winning pocket instead of continuing the misguided `v13` zoom
 - Started local run:
   - `triple_screen_elder_v14_recovery`
+- Early `v14` pulse is already healthier than `v13`:
+  - no longer stuck at `3` trades / `PF=0`
+  - first rows are near-pass quality:
+    - `net≈6.6–7.2`
+    - `PF≈3.1–4.1`
+    - `DD≈1.0–1.24`
+- Current interpretation:
+  - `v14` looks like the right recovery branch
+  - still needs more net / trades before any portfolio decision
 
 ### Liquidation Cascade Entry
 - Found a concrete integration bug:
@@ -2015,3 +2167,13 @@ server_clean.env updated:
 - 2026-03-29 08:05 UTC | equities v23 verdict + Elder v13 zoom launched | the repaired [equities_monthly_v23_spy_regime_gate](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v23_spy_regime_gate.json) sweep finished cleanly after the parser fix and confirmed the result is strategic, not technical: `108/108`, `0 PASS`, with the best row [r011](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/equities_monthly_research_20260328_213043_equities_monthly_v23_spy_regime_gate_r011/summary.csv) around `net=58.79`, `wr=51.5%`, `dd=8.12`, still failing mainly on too many negative months (`7`). Notably, `BENCHMARK_MIN_ABOVE_SMA=0` remained best, so this specific SPY gate variant did not solve the red-month problem in its current form. With Alpaca back on a clean evidence path but not yet upgraded, focus shifted back to crypto: launched [triple_screen_elder_v13_zoom.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_elder_v13_zoom.json) in PTY session `94167` to zoom into the already-passing Elder/TS132 pocket on `BTC/ETH/AVAX` and test whether the standalone PF/DD edge can be sharpened enough for a serious 6-strategy portfolio compare. | running
 - 2026-03-29 08:52 UTC | funding-rate reversion moved from broken draft to backtest-ready prototype | reviewed Claude's new funding-rate branch and found it was not yet runnable end-to-end. The good news: the core files exist and compile — [strategies/funding_rate_reversion_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/funding_rate_reversion_v1.py), [configs/autoresearch/funding_rate_reversion_v1_grid.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/funding_rate_reversion_v1_grid.json), and [scripts/funding_rate_fetcher.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/funding_rate_fetcher.py). But the first smoke run crashed because `funding_rate_reversion_v1` was missing from the `allowed` set in [backtest/run_portfolio.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py), and the second smoke run crashed because the strategy returned `TradeSignal` without the required `symbol`. Fixed both issues; after that a one-candidate autoresearch smoke run completed normally and produced a real FAIL verdict (`net≈-0.84`, `PF≈0.99`, `DD≈11.17`) instead of crashing. Conclusion: the strategy is now backtest-ready as a prototype, but not yet live-ready — `scripts/funding_rate_fetcher.py` writes `FR_LATEST_*` env vars inside its own process and a JSON file, while the main live bot does not yet consume that JSON or inject funding into per-symbol stores. | done
 - 2026-03-29 09:05 UTC | coordination file added + focused 5h run pack launched | created [AGENT_SYNC.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/AGENT_SYNC.md) as a dedicated coordination note for Claude + Codex: live source of truth, current baseline (`v5`), ownership split, current active research, and guardrails against mixing Alpaca repair results with crypto baseline regressions. Also updated [GOLDEN_PORTFOLIO_BASELINES.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/GOLDEN_PORTFOLIO_BASELINES.md) so it now reflects `v5` as the current reproducible golden candidate instead of the older `v2`/`v3` context. To keep the next 5h productive but avoid another machine-overload incident, left exactly three strategy research lanes running: (1) ongoing [triple_screen_elder_v13_zoom.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/triple_screen_elder_v13_zoom.json) in PTY `94167`, (2) full [funding_rate_reversion_v1_grid.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/funding_rate_reversion_v1_grid.json) in PTY `31619`, and (3) [portfolio_elder_6strat_test.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/portfolio_elder_6strat_test.json) in PTY `39305`. | running
+- 2026-03-29 16:20 UTC | Alpaca v27 finished with first credible repair frontier; v28 refine launched and sync corrected | the full [equities_monthly_v27_intramonth_stop](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v27_intramonth_stop.json) run completed `288/288` and produced the first credible PASS cluster in this Alpaca repair cycle: best row `r036` finished around `net=69.80`, `PF=2.633`, `WR=56.3%`, `DD=10.74`, `negative_months=5` with `TOP_N=2`, `UNIVERSE_TOP_K=7`, `STOP_ATR_MULT=1.7`, `TARGET_ATR_MULT=3.5`, `INTRAMONTH_STOP=0.05`, `BENCHMARK_MIN_ABOVE_SMA=1`. Built the narrower follow-up [equities_monthly_v28_frontier_refine.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v28_frontier_refine.json) to refine only around that plateau instead of restarting a wide search, and launched it in PTY session `78253`; early rows already show the expected shape (`PF > 2` frontier exists, but DD is still brushing the limit and net is not yet over the new target). Also rechecked server reality against Claude's autonomy notes: `/root/by-bot` does **not** yet contain `bot/allowlist_watcher.py`, `bot/health_gate.py`, or `bot/deepseek_research_gate.py`, so a simple restart would not activate those features. Updated [AGENT_SYNC.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/AGENT_SYNC.md) accordingly to prevent a false deploy assumption. | running
+- 2026-03-29 17:45 UTC | Alpaca v28 finished stronger than v27; new crypto probes launched | [equities_monthly_v28_frontier_refine](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v28_frontier_refine.json) finished `216/216` and confirmed the v27 plateau was real rather than a one-off. Best row `r018` improved the frontier to `net=78.54`, `PF=2.757`, `WR=53.1%`, `DD=10.74` with `TOP_N=2`, `UNIVERSE_TOP_K=7`, `STOP_ATR_MULT=1.7`, `TARGET_ATR_MULT=4.0`, `INTRAMONTH_STOP=0.05`, `BENCHMARK_MIN_ABOVE_SMA=1`; additional PASS rows kept appearing in the same neighborhood (`r012`, `r015`, `r021`, `r207`), which is a healthier sign than one isolated cell. In parallel, started the two next crypto research lanes requested for continuation: [funding_rate_reversion_v1_grid_v2.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/funding_rate_reversion_v1_grid_v2.json) in PTY `37410` and [liquidation_cascade_v1_grid.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/liquidation_cascade_v1_grid.json) in PTY `23937`. Early signal on funding v2 is still weak (`r001 net=-6.99, PF=0.903, DD=12.96`), so treat it as exploratory for now, not as an upgrade path. | running
+- 2026-03-29 18:05 UTC | autonomy status re-verified against local code and server reality | rechecked Claude's autonomy summary directly instead of trusting the table. Locally, [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) already imports and uses `bot.health_gate` plus `bot.allowlist_watcher`, and [scripts/deepseek_weekly_cron.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deepseek_weekly_cron.py) imports `bot.deepseek_research_gate`. Local syntax validation passed for `smart_pump_reversal_bot.py`, `scripts/deepseek_weekly_cron.py`, `bot/allowlist_watcher.py`, `bot/health_gate.py`, `bot/deepseek_research_gate.py`, `bot/family_profiles.py`, and `scripts/equity_curve_autopilot.py`. But the server still does **not** have `bot/allowlist_watcher.py`, `bot/health_gate.py`, `bot/deepseek_research_gate.py`, `bot/family_profiles.py`, or `scripts/equity_curve_autopilot.py`, so the current production bot is still the `v5` core without those autonomy layers. Also verified that `family_profiles` is only partially wired locally so far: active in [strategies/alt_sloped_channel_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_sloped_channel_v1.py) and [strategies/micro_scalper_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/micro_scalper_v1.py), but not yet across the whole live core. | done
+- 2026-03-30 06:40 UTC | overnight verdict: v28 held, funding v2 found a real foothold, liquidation cascade still weak | morning check over the last 12h of live diagnostics showed the bot stayed stable and active on the current `v5` core: one fresh breakout entry was recorded, WebSocket had `19` connects / `19` clean closes with `0` handshake timeouts, and the no-entry pressure remains mostly a market-shape issue (`impulse_weak` dominates breakout no-signal reasons). Overnight research resolved into a clearer hierarchy. [equities_monthly_v28_frontier_refine](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260329_173428_equities_monthly_v28_frontier_refine/ranked_results.csv) held its best result at `net=78.54`, `PF=2.757`, `WR=53.1%`, `DD=10.74`, `negative_months=5`, confirming `v27` was not a fluke. More interestingly, [funding_rate_reversion_v1_grid_v2](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260329_200418_funding_rate_reversion_v1_grid_v2/ranked_results.csv) produced real PASS rows after the weak first impression: best seen so far `net=12.3`, `PF=1.828`, `WR=52.6%`, `DD=3.94`, `negative_months=4`, which is still too small to matter portfolio-wise but enough to keep the branch alive. By contrast, [liquidation_cascade_v1_grid](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260329_153000_liquidation_cascade_v1_grid/ranked_results.csv) remains effectively empty/weak at the top (`0 trades` on the first ranked row), so it is still a logic-density problem rather than an integration problem. | done
+- 2026-03-30 06:55 UTC | Alpaca diversification hypothesis promoted into a real run | built [equities_monthly_v29_diversify_refine.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v29_diversify_refine.json) as the next targeted Alpaca repair step. Instead of another narrow stop/target tweak, `v29` explicitly tests whether modestly broader diversification (`TOP_N=3/4`, `UNIVERSE_TOP_K=7/10/12`) can smooth the monthly sleeve better than the strong but concentrated `v28` `TOP_N=2` winner. Launched the 72-combo run in PTY `93081`. This keeps the user's capital/diversification concern on an evidence path instead of treating it as a theory question. | running
+- 2026-03-30 07:05 UTC | v29 finished; diversification alone did not beat the concentrated Alpaca winner, breakout weak-chop probe launched | [equities_monthly_v29_diversify_refine](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/equities_monthly_v29_diversify_refine.json) finished quickly and gave a clean answer: broader diversification by itself did **not** beat the concentrated `v28` winner. Best row `r004` simply rediscovered the same `TOP_N=2 / UNIVERSE_TOP_K=7 / STOP_ATR=1.7 / TARGET_ATR=4.0 / INTRAMONTH_STOP=0.05` pocket at `net=78.54`, `PF=2.757`, `WR=53.1%`, `DD=10.74`; a few `TOP_N=3/4` rows passed, but weaker. So the user's diversification hypothesis was useful, but the answer on this dataset is: more names alone do not automatically smooth or improve the sleeve. On the crypto side, translated the live `impulse_weak` pressure into a bounded next step by creating [breakout_weak_chop_probe_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/breakout_weak_chop_probe_v1.json) and launching it in PTY `15667`. This tests whether slightly softer impulse gating can reclaim more breakout entries in weak/choppy conditions without damaging the annual profile; it is explicitly a research probe, not a live parameter change. | running
+- 2026-03-30 07:15 UTC | roadmap aligned to the new direction without spinning up more heat | with the machine already hot, avoided launching extra work and instead locked the next design direction in [ROADMAP.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/ROADMAP.md): Alpaca should move toward regime-adaptive concentration (`v30` direction) rather than naive diversification, and crypto should continue evaluating `Elder` / trend+trailing as a distinct family while breakout weak-chop adaptation stays bounded and research-only until proven. This keeps the project moving even when we intentionally pause new heavy runs. | done
+- 2026-03-30 09:05 UTC | fresh morning slice: breakout weak-chop is the most promising new thread right now | the bounded [breakout_weak_chop_probe_v1](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/breakout_weak_chop_probe_v1.json) is already giving strong early rows in [results.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260330_064618_breakout_weak_chop_probe_v1/results.csv): `371-416` trades, `net≈20.9-23.8`, `PF≈1.38-1.41`, `WR≈65.8-67.0%`, `DD≈2.96-3.12`, `negative_months=2`. This does not mean "ship it live immediately", but it is a materially more encouraging answer than the earlier hand-wringing around `impulse_weak`. `funding_rate_reversion_v1_grid_v2` remains alive with small but real PASS rows (`net=12.3`, `PF=1.828`, `57` trades), so that sleeve is still exploratory but no longer dead. By contrast, `liquidation_cascade_v1_grid` is currently not yielding useful evidence because its latest run still surfaces a runner `CalledProcessError`; that branch needs a focused fix before more compute. Live diagnostics over the last 2h showed no new entries, but also no transport failure: `3/3` clean ws reconnect cycles, `0` handshakes timed out, and breakout no-signal reasons are still dominated by `impulse_weak` (`~90%`). | done
+- 2026-03-30 09:20 UTC | next live-candidate gate launched: v5 + weak-chop breakout annual compare | extracted the strongest weak-chop breakout pocket from [breakout_weak_chop_probe_v1/results.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260330_064618_breakout_weak_chop_probe_v1/results.csv): `BT_BREAKOUT_QUALITY_MIN_SCORE=0.50`, `BREAKOUT_IMPULSE_ATR_MULT=0.85`, `BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT=0.03`, `BREAKOUT_RECLAIM_ATR=0.10`, `BREAKOUT_MAX_DIST_ATR=1.5`, `BREAKOUT_BUFFER_ATR=0.12`. Built [full_stack_baseline_20260330_v5_breakout_weak_chop_overlay.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/full_stack_baseline_20260330_v5_breakout_weak_chop_overlay.env) so only the breakout sleeve changes while the rest of `v5` stays intact, and launched a fresh full-stack annual compare in PTY `51776` tagged `full_stack_baseline_20260330_v5_breakout_weak_chop_overlay_recent_annual`. This is the first real answer path to the user's "if it is so good, do we upload it to the server?" question. In parallel, diagnosed `Elder v14` more precisely: it is not "always losing", but it repeatedly fails on monthly smoothness and scale rather than raw signal quality. In [triple_screen_elder_v14_recovery/results.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260329_154200_triple_screen_elder_v14_recovery/results.csv), the dominant fail reasons are `neg_months>4` (`508` rows) and `net<10.0` (`500` rows), while `pf<2.5` is rare. Best net row `r297` reached `43` trades, `net=10.82`, `PF=3.278`, but still had `5` negative months. Conclusion: Elder is not broken at detecting trend; it is currently too uneven month-to-month to justify live inclusion. | running
+- 2026-03-30 09:35 UTC | weak-chop breakout does not beat v5 at full-stack level; Elder weakness localized further | the full-stack compare [portfolio_20260330_122529_full_stack_baseline_20260330_v5_breakout_weak_chop_overlay_recent_annual/summary.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260330_122529_full_stack_baseline_20260330_v5_breakout_weak_chop_overlay_recent_annual/summary.csv) finished and answered the release question cleanly: `ending_equity=160.79`, `net=60.79`, `PF=1.548`, `DD=4.22`, `558` trades. That is respectable in isolation, but still materially worse than the current `v5` recent-window baseline (`+89.65%`, PF `2.121`, DD `2.88`), so this weak-chop breakout profile is **not** a live promotion candidate yet. It remains a useful research branch, not a server rollout. The deeper Elder diagnosis now also has a directional clue: for the best-net `v14` row `r297`, trade attribution is almost entirely short-driven (`36` shorts vs `7` longs; short PnL strongly positive, long PnL slightly negative). Symbol attribution is led by `AVAXUSDT`, then `ETHUSDT`, then `BTCUSDT`; monthly decomposition shows multiple tiny red months rather than one catastrophic blow-up, which matches the earlier `neg_months>4` pattern. So the next Elder idea, if revisited, should be short-biased / family-restricted rather than another broad symmetric long+short revival. | done
