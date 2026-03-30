@@ -1,0 +1,67 @@
+{
+  "_doc": "Per-symbol-family parameter multipliers. Edit here — reloaded every hour without bot restart. See bot/family_profiles.py for full documentation.",
+  "_last_updated": "2026-03-29",
+
+  "families": {
+    "BTC_ETH": [
+      "BTCUSDT", "ETHUSDT"
+    ],
+    "LARGE_ALTS": [
+      "SOLUSDT", "BNBUSDT", "AVAXUSDT",
+      "LINKUSDT", "DOTUSDT", "MATICUSDT",
+      "ADAUSDT", "XRPUSDT", "TRXUSDT", "LTCUSDT",
+      "NEARUSDT", "ATOMUSDT", "UNIUSDT", "FTMUSDT"
+    ]
+  },
+
+  "multipliers": {
+    "_doc": "Values multiply the strategy's BASE parameter. 1.0 = no change. See examples below.",
+
+    "BTC_ETH": {
+      "_doc": "BTC/ETH: deep liquidity, slow trends, tight spreads. Tighter stops OK.",
+      "sl_atr_mult":    0.85,
+      "tp_atr_mult":    1.10,
+      "cooldown_bars":  0.80,
+      "vol_spike_x":    1.20,
+      "rsi_os":         1.05,
+      "rsi_ob":         0.95,
+      "ext_pct":        0.80,
+      "drop_pct":       0.90,
+      "be_pct":         0.90,
+      "time_stop_bars": 0.80
+    },
+
+    "LARGE_ALTS": {
+      "_doc": "SOL/BNB/AVAX/etc: volatile but liquid. Wider stops, lower vol-spike bar.",
+      "sl_atr_mult":    1.25,
+      "tp_atr_mult":    1.15,
+      "cooldown_bars":  1.00,
+      "vol_spike_x":    0.90,
+      "rsi_os":         0.95,
+      "rsi_ob":         1.05,
+      "ext_pct":        1.10,
+      "drop_pct":       1.10,
+      "be_pct":         1.00,
+      "time_stop_bars": 1.00
+    },
+
+    "MID_ALTS": {
+      "_doc": "Everything else: thin books, noisy, but big moves when they happen. Widest stops + longest cooldown.",
+      "sl_atr_mult":    1.40,
+      "tp_atr_mult":    1.30,
+      "cooldown_bars":  1.50,
+      "vol_spike_x":    0.80,
+      "rsi_os":         0.90,
+      "rsi_ob":         1.10,
+      "ext_pct":        1.20,
+      "drop_pct":       1.20,
+      "be_pct":         1.10,
+      "time_stop_bars": 1.25
+    }
+  },
+
+  "_example_overrides": {
+    "_doc": "To force a symbol into a specific family without changing this file, set env var: FAMILY_OVERRIDE_SOLUSDT=BTC_ETH",
+    "_note": "Symbols not listed in any family go to MID_ALTS automatically"
+  }
+}

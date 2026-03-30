@@ -23,6 +23,14 @@ from typing import List, Optional
 
 from .signals import TradeSignal
 
+# Family-profile scaling (BTC_ETH tighter SL, MID_ALTS wider SL/TP/cooldown)
+try:
+    from bot.family_profiles import profiles as _fp
+    _FP_ENABLED = True
+except ImportError:
+    _fp = None  # type: ignore[assignment]
+    _FP_ENABLED = False
+
 
 # ---------------------------------------------------------------------------
 # helpers
@@ -318,13 +326,20 @@ class MicroScalperV1Strategy:
 
         entry_price = bar_c
 
+        # Family-profile param scaling (BTC/ETH tighter, MID_ALTS wider)
+        fp_sl_mult  = _fp.scale(sym, "sl",      1.0) if _FP_ENABLED else 1.0
+        fp_tp_mult  = _fp.scale(sym, "tp",      1.0) if _FP_ENABLED else 1.0
+        fp_cd_mult  = _fp.scale(sym, "cooldown", 1.0) if _FP_ENABLED else 1.0
+        sl_buf      = self.cfg.sl_buffer_atr * fp_sl_mult
+        rr_scaled   = self.cfg.rr * fp_tp_mult
+
         if trend == "long":
             swing_low = min(bar_l, prev_l)
-            sl = swing_low - self.cfg.sl_buffer_atr * atr
+            sl = swing_low - sl_buf * atr
             sl_dist = entry_price - sl
         else:
             swing_high = max(bar_h, prev_h)
-            sl = swing_high + self.cfg.sl_buffer_atr * atr
+            sl = swing_high + sl_buf * atr
             sl_dist = sl - entry_price
 
         # Validate SL distance
@@ -340,9 +355,9 @@ class MicroScalperV1Strategy:
             return None
 
         if trend == "long":
-            tp = entry_price + self.cfg.rr * sl_dist
+            tp = entry_price + rr_scaled * sl_dist
         else:
-            tp = entry_price - self.cfg.rr * sl_dist
+            tp = entry_price - rr_scaled * sl_dist
 
         sig = TradeSignal(
             strategy=self.NAME,
@@ -355,6 +370,7 @@ class MicroScalperV1Strategy:
             reason=(
                 f"scalp_{trend}|ema9={ema9:.2f}|atr={atr:.4f}"
                 f"|slope={slope_pct:+.3f}%|body_atr={abs_body/atr:.2f}"
+                + (f"|fp={_fp.family_name(sym)}" if _FP_ENABLED else "")
             ),
         )
 
@@ -362,7 +378,7 @@ class MicroScalperV1Strategy:
             self.last_no_signal_reason = "validate_fail"
             return None
 
-        self._cooldown = self.cfg.cooldown_bars
+        self._cooldown = max(1, round(self.cfg.cooldown_bars * fp_cd_mult))
         self._day_signals += 1
         self.last_no_signal_reason = ""
         return sig

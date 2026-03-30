@@ -378,9 +378,9 @@ Daily at 07:00 UTC:
 | Crypto annual return | > +80% | +100.93% (golden portfolio) |
 | Crypto max drawdown | < 15% | ~8% |
 | Crypto profit factor | > 1.8 | 2.078 |
-| Alpaca monthly win rate | > 55% | 0% (1 trade only) |
-| Dynamic allowlist freshness | < 7 days | Not yet running |
-| DeepSeek weekly reports | weekly | Not yet |
+| Alpaca monthly win rate | > 55% | frontier repaired, `v30` now active |
+| Dynamic allowlist freshness | < 7 days | Weekly cron active, advisory flow live |
+| DeepSeek weekly reports | weekly | Weekly cron active |
 | pump_fade_simple (after deploy) | PF > 1.5 | Pending autoresearch |
 
 ---
@@ -392,6 +392,12 @@ Daily at 07:00 UTC:
 | `strategies/pump_fade_simple.py` | Baseline pump/fade strategy (exact replica) |
 | `strategies/pump_fade_v4r.py` | Archive v4 revival (0 combos, archived) |
 | `scripts/dynamic_allowlist.py` | Weekly symbol scanner, per-strategy profiles |
+| `bot/health_gate.py` | Blocks entries for degraded strategies via `strategy_health.json` |
+| `bot/allowlist_watcher.py` | Hot-reloads allowlists without full bot restart |
+| `bot/deepseek_research_gate.py` | Approval-gated bounded autonomy for DeepSeek research |
+| `bot/family_profiles.py` | Per-family runtime parameter scaling |
+| `scripts/equity_curve_autopilot.py` | Weekly equity-curve degradation monitor |
+| `scripts/setup_server_crons.sh` | Safe server-side cron installer for autonomy bundle |
 | `scripts/universe_scan.py` | Base market scanner |
 | `scripts/build_breakout_allowlist.py` | Backtest-performance-based allowlist builder |
 | `scripts/equities_alpaca_paper_bridge.py` | Monthly picks executor (Alpaca) |

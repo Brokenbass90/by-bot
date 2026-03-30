@@ -7,6 +7,14 @@ from typing import Dict, List, Optional, Tuple
 
 from .signals import TradeSignal
 
+# Family-profile scaling (BTC_ETH tighter SL, MID_ALTS wider SL/TP/cooldown)
+try:
+    from bot.family_profiles import profiles as _fp
+    _FP_ENABLED = True
+except ImportError:
+    _fp = None  # type: ignore[assignment]
+    _FP_ENABLED = False
+
 
 def _env_float(name: str, default: float) -> float:
     v = os.getenv(name)
@@ -252,28 +260,52 @@ class AltSlopedChannelV1Strategy:
 
             if confirmed:
                 # Build the signal with current 5m price as entry
-                entry = float(c)
-                sl = p["sl"] + (entry - p["entry_ref"]) if p["side"] == "long" else p["sl"] + (entry - p["entry_ref"])
-                tp2 = p["tp2"]
-                tp1 = p["tp1"] + (entry - p["entry_ref"])
+                entry  = float(c)
+                sym_fp = str(getattr(store, "symbol", "")).upper()
+
+                # Family-profile scaling: adjust SL dist and TP dist by multiplier
+                fp_sl_mult = _fp.scale(sym_fp, "sl",      1.0) if _FP_ENABLED else 1.0
+                fp_tp_mult = _fp.scale(sym_fp, "tp",      1.0) if _FP_ENABLED else 1.0
+                fp_cd_mult = _fp.scale(sym_fp, "cooldown", 1.0) if _FP_ENABLED else 1.0
+
+                # Recompute SL/TP around the new entry, applying family multipliers
+                base_sl = float(p["sl"]) + (entry - p["entry_ref"])
+                sl_dist_base = abs(entry - base_sl)
+                sl_dist_fp   = sl_dist_base * fp_sl_mult
+                tp_dist_base = abs(float(p["tp2"]) - p["entry_ref"])
+                tp_dist_fp   = tp_dist_base * fp_tp_mult
+                tp1_dist_base = abs(float(p["tp1"]) - p["entry_ref"])
+                tp1_dist_fp   = tp1_dist_base * fp_tp_mult
+
+                if p["side"] == "long":
+                    sl_fp  = entry - sl_dist_fp
+                    tp2_fp = entry + tp_dist_fp
+                    tp1_fp = entry + tp1_dist_fp
+                else:
+                    sl_fp  = entry + sl_dist_fp
+                    tp2_fp = entry - tp_dist_fp
+                    tp1_fp = entry - tp1_dist_fp
+
                 self._pending = None
                 self._pending_bars_left = 0
-                self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
+                self._cooldown = max(1, round(self.cfg.cooldown_bars_5m * fp_cd_mult))
+
+                fp_label = f"|fp={_fp.family_name(sym_fp)}" if _FP_ENABLED else ""
                 sig = TradeSignal(
                     strategy="alt_sloped_channel_v1",
                     symbol=store.symbol,
                     side=p["side"],
                     entry=entry,
-                    sl=float(p["sl"]),
-                    tp=float(tp2),
-                    tps=[float(tp1), float(tp2)],
+                    sl=sl_fp,
+                    tp=tp2_fp,
+                    tps=[tp1_fp, tp2_fp],
                     tp_fracs=[min(0.9, max(0.1, self.cfg.tp1_frac)), max(0.0, 1.0 - min(0.9, max(0.1, self.cfg.tp1_frac)))],
                     be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
                     be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
                     trailing_atr_mult=max(0.0, float(self.cfg.trail_atr_mult)),
                     trailing_atr_period=max(5, int(self.cfg.trail_atr_period)),
                     time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
-                    reason=f"asc1_sloped_channel_{p['side']}_5m_confirm",
+                    reason=f"asc1_sloped_channel_{p['side']}_5m_confirm{fp_label}",
                 )
                 if sig.validate():
                     return sig

@@ -52,6 +52,13 @@ if str(ROOT) not in sys.path:
 if str(BOT_DIR) not in sys.path:
     sys.path.insert(0, str(BOT_DIR))
 
+try:
+    from bot.deepseek_research_gate import gate as _research_gate
+    _GATE_AVAILABLE = True
+except ImportError:
+    _research_gate = None  # type: ignore[assignment]
+    _GATE_AVAILABLE = False
+
 
 # ---------------------------------------------------------------------------
 # Env helpers
@@ -69,13 +76,15 @@ def _env_bool(name: str, default: bool = False) -> bool:
 # Telegram
 # ---------------------------------------------------------------------------
 
-def _tg_send(token: str, chat_id: str, text: str) -> None:
-    if not token or not chat_id:
-        return
+_TG_CHUNK = 3900  # safe below Telegram 4096 hard limit
+
+
+def _tg_send_chunk(token: str, chat_id: str, text: str) -> None:
+    """Send a single chunk (caller must ensure len ≤ 4096)."""
     import urllib.request, ssl, json as _json
     payload = _json.dumps({
         "chat_id": chat_id,
-        "text": text[:4096],
+        "text": text,
         "parse_mode": "HTML",
     }).encode()
     req = urllib.request.Request(
@@ -89,6 +98,38 @@ def _tg_send(token: str, chat_id: str, text: str) -> None:
             pass
     except Exception as e:
         print(f"[tg] send failed: {e}", file=sys.stderr)
+
+
+def _tg_send(token: str, chat_id: str, text: str) -> None:
+    """Send message with automatic chunking for messages > 3900 chars."""
+    if not token or not chat_id or not text:
+        return
+    text = str(text)
+    if len(text) <= _TG_CHUNK:
+        _tg_send_chunk(token, chat_id, text)
+        return
+    # Split on newlines, fall back to hard cut
+    lines = text.split("\n")
+    chunk = ""
+    chunks: list = []
+    for line in lines:
+        candidate = (chunk + "\n" + line) if chunk else line
+        if len(candidate) > _TG_CHUNK:
+            if chunk:
+                chunks.append(chunk)
+                chunk = line
+            else:
+                while line:
+                    chunks.append(line[:_TG_CHUNK])
+                    line = line[_TG_CHUNK:]
+        else:
+            chunk = candidate
+    if chunk:
+        chunks.append(chunk)
+    total = len(chunks)
+    for i, ch in enumerate(chunks, 1):
+        prefix = f"[{i}/{total}]\n" if total > 1 else ""
+        _tg_send_chunk(token, chat_id, f"{prefix}{ch}")
 
 
 # ---------------------------------------------------------------------------
@@ -382,7 +423,18 @@ def main() -> int:
         f"🤖 <b>DeepSeek Weekly Report</b>\n📅 {now_str}"
     ]
 
+    # ── Phase 0: Research gate status ────────────────────────────────────────
+    if _GATE_AVAILABLE and not args.dry_run:
+        gate_status_text = _research_gate.status_report()  # type: ignore[union-attr]
+        pending_proposals = _research_gate.list_proposals("pending")  # type: ignore[union-attr]
+        if pending_proposals and not args.quiet:
+            print(f"[gate] {len(pending_proposals)} pending research proposal(s) awaiting approval")
+    else:
+        gate_status_text = ""
+        pending_proposals = []
+
     # ── Phase 1: Audit ────────────────────────────────────────────────────────
+    audit: dict[str, Any] = {}
     if "audit" in phases:
         if not args.quiet:
             print("[1/5] Running strategy audit...")
@@ -391,6 +443,32 @@ def main() -> int:
         report_sections.append(section)
         if not args.quiet:
             print(section)
+
+    # ── Gate: auto-trigger check ──────────────────────────────────────────────
+    # Fires after audit so we have strategy stats to evaluate WR / health status
+    if _GATE_AVAILABLE and not args.dry_run and "audit" in phases:
+        # Build winrate proxy from audit stats (avg_pf as signal quality proxy)
+        # Real live winrate would come from trade logs; PF >= 1.5 = rough OK threshold
+        strat_stats_for_gate: dict[str, dict] = {}
+        for st, s in audit.get("strategies", {}).items():
+            # Approx WR from PF: WR ≈ 1 - 1/(1 + PF*R), assume R≈1.5 avg winner/loser
+            avg_pf = s.get("avg_pf", 1.0)
+            approx_wr = avg_pf / (avg_pf + 1.0)           # crude but directionally correct
+            strat_stats_for_gate[st] = {"winrate_30d": approx_wr}
+
+        triggered_specs = _research_gate.check_triggers(  # type: ignore[union-attr]
+            strategy_stats=strat_stats_for_gate or None,
+        )
+        if triggered_specs:
+            if not args.quiet:
+                print(f"[gate] {len(triggered_specs)} auto-trigger(s) fired → queuing proposals")
+            for spec in triggered_specs:
+                pid = _research_gate.propose(  # type: ignore[union-attr]
+                    spec,
+                    reason="Auto-trigger: weekly audit (low WR or equity curve degradation)",
+                )
+                if not args.quiet:
+                    print(f"  [gate] Proposal queued: {Path(spec).name} → id={pid}")
 
     # ── Phase 2: Tune ─────────────────────────────────────────────────────────
     if "tune" in phases:
@@ -432,15 +510,30 @@ def main() -> int:
 
     # ── Phase 5: Report ───────────────────────────────────────────────────────
     if "report" in phases:
+        # Append research gate status block
+        if gate_status_text:
+            report_sections.append(gate_status_text)
+
         # Footer with next actions
+        approve_hint = ""
+        if pending_proposals:
+            approve_hint = (
+                "\n\n⚠️ <b>Research proposals waiting:</b>\n"
+                + "\n".join(
+                    f"  /approve {p['id'][:20]}…  — {p.get('spec_name','?')}"
+                    for p in pending_proposals[:3]
+                )
+            )
         report_sections.append(
             "─────────────────────\n"
             "💡 <b>Следующие шаги</b>\n"
-            "  /ai_approve &lt;id&gt; — применить предложение DeepSeek\n"
-            "  /ai_reject &lt;id&gt;  — отклонить\n"
-            "  /ai_results        — посмотреть последние autoresearch\n"
-            "  /ai_tune breakout  — запустить tune вручную\n"
-            "  dynamic_allowlist.py --dry-run  — обновить список монет"
+            "  /ai_approve &lt;id&gt;     — применить предложение DeepSeek\n"
+            "  /ai_reject &lt;id&gt;      — отклонить\n"
+            "  /ai_results            — последние autoresearch\n"
+            "  /ai_tune breakout      — tune вручную\n"
+            "  /research_status       — статус research gate\n"
+            "  dynamic_allowlist.py --dry-run  — обновить монеты"
+            + approve_hint
         )
 
     full_report = "\n\n".join(report_sections)

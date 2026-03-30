@@ -60,6 +60,8 @@ from indicators import (
 # ── Phase 1: bot/ package imports ────────────────────────────────────────────
 from bot.env_helpers import _env_bool, _csv_lower_set, _csv_upper_set, _session_name_utc
 from bot.utils import now_s, _to_float_safe, _today_ymd, base_from_usdt, dist_pct
+from bot.health_gate import gate as _health_gate  # equity-curve live entry gate
+from bot.allowlist_watcher import AllowlistWatcher as _AllowlistWatcher  # dynamic allowlist hot-reload
 from bot.auth import (
     AUTH_DISABLED_UNTIL, AUTH_LAST_ERROR, BOT_START_TS,
     auth_cooldown_remaining,
@@ -672,16 +674,8 @@ PORTFOLIO_STATE = {
 
 def tg_trade(msg: str):
     # шлём только важное — вход/выход/ошибки по торговле
-    if not (TG_TOKEN and TG_CHAT):
-        return
-    try:
-        requests.post(
-            f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
-            json={"chat_id": TG_CHAT, "text": msg},
-            timeout=10
-        )
-    except Exception:
-        pass
+    # Uses tg_send which handles chunking automatically (Telegram 4096 char limit)
+    tg_send(msg)
 
 
 _TG_ALERT_THROTTLE_TS: dict[str, int] = {}
@@ -849,29 +843,92 @@ RANGE_ALLOW_SHORT = os.getenv("RANGE_ALLOW_SHORT", "1").strip() == "1"
 _bybit_sym_re = re.compile(r'publicTrade\.([A-Z0-9]+USDT)\b')
 
 # =========================== УТИЛИТЫ ===========================
-def tg_send(t: str):
+_TG_CHUNK_SIZE = 3900  # safe margin below Telegram 4096 hard limit
+
+
+def _tg_send_raw(text: str, extra_json: dict | None = None) -> None:
+    """Send one chunk (must be ≤4096 chars). Internal helper — do not call directly."""
     if not (TG_TOKEN and TG_CHAT):
         return
+    payload: dict = {"chat_id": TG_CHAT, "text": text}
+    if extra_json:
+        payload.update(extra_json)
     try:
         requests.post(
             f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
-            json={"chat_id": TG_CHAT, "text": t},
-            timeout=10
+            json=payload,
+            timeout=10,
         )
     except Exception:
         pass
 
-def tg_send_kb(t: str):
-    if not (TG_TOKEN and TG_CHAT):
+
+def tg_send(t: str) -> None:
+    """Send message to Telegram, splitting automatically if longer than 3900 chars."""
+    if not (TG_TOKEN and TG_CHAT) or not t:
         return
-    try:
-        requests.post(
-            f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
-            json={"chat_id": TG_CHAT, "text": t, "reply_markup": TG_KB},
-            timeout=10
-        )
-    except Exception:
-        pass
+    t = str(t)
+    if len(t) <= _TG_CHUNK_SIZE:
+        _tg_send_raw(t)
+        return
+    # Split on newlines where possible, hard-cut otherwise
+    lines = t.split("\n")
+    chunk = ""
+    total_chunks = -(-len(t) // _TG_CHUNK_SIZE)  # ceiling division
+    part = 1
+    for line in lines:
+        candidate = (chunk + "\n" + line) if chunk else line
+        if len(candidate) > _TG_CHUNK_SIZE:
+            if chunk:
+                _tg_send_raw(f"[{part}/{total_chunks}]\n{chunk}")
+                part += 1
+                chunk = line
+            else:
+                # Single line longer than chunk size — hard cut
+                while line:
+                    _tg_send_raw(f"[{part}/{total_chunks}]\n{line[:_TG_CHUNK_SIZE]}")
+                    part += 1
+                    line = line[_TG_CHUNK_SIZE:]
+        else:
+            chunk = candidate
+    if chunk:
+        prefix = f"[{part}/{total_chunks}]\n" if part > 1 else ""
+        _tg_send_raw(f"{prefix}{chunk}")
+
+
+def tg_send_kb(t: str) -> None:
+    """Send message with keyboard. Keyboard only on last chunk if message is long."""
+    if not (TG_TOKEN and TG_CHAT) or not t:
+        return
+    t = str(t)
+    if len(t) <= _TG_CHUNK_SIZE:
+        _tg_send_raw(t, extra_json={"reply_markup": TG_KB})
+        return
+    # Send leading chunks without keyboard, last chunk with keyboard
+    lines = t.split("\n")
+    chunk = ""
+    chunks: list[str] = []
+    for line in lines:
+        candidate = (chunk + "\n" + line) if chunk else line
+        if len(candidate) > _TG_CHUNK_SIZE:
+            if chunk:
+                chunks.append(chunk)
+                chunk = line
+            else:
+                while line:
+                    chunks.append(line[:_TG_CHUNK_SIZE])
+                    line = line[_TG_CHUNK_SIZE:]
+        else:
+            chunk = candidate
+    if chunk:
+        chunks.append(chunk)
+    total = len(chunks)
+    for i, ch in enumerate(chunks, 1):
+        prefix = f"[{i}/{total}]\n" if total > 1 else ""
+        if i == total:
+            _tg_send_raw(f"{prefix}{ch}", extra_json={"reply_markup": TG_KB})
+        else:
+            _tg_send_raw(f"{prefix}{ch}")
 
 def tg_send_doc(path: str, caption: str | None = None):
     if not (TG_TOKEN and TG_CHAT) or not path or not os.path.exists(path):
@@ -7619,7 +7676,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_retest_entry schedule fail {sym}: {_e}")
 
         # ===== SLOPED CHANNEL ENTRY =====
-        if ENABLE_SLOPED_TRADING:
+        if ENABLE_SLOPED_TRADING and _health_gate.allow_entry("alt_sloped_channel_v1", sym):
             last = int(_SLOPED_LAST_TRY.get(sym, 0) or 0)
             if now - last >= SLOPED_TRY_EVERY_SEC:
                 try:
@@ -7629,7 +7686,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_sloped_entry schedule fail {sym}: {_e}")
 
         # ===== FLAT RESISTANCE FADE ENTRY =====
-        if ENABLE_FLAT_TRADING:
+        if ENABLE_FLAT_TRADING and _health_gate.allow_entry("alt_resistance_fade_v1", sym):
             last = int(_FLAT_LAST_TRY.get(sym, 0) or 0)
             if now - last >= FLAT_TRY_EVERY_SEC:
                 try:
@@ -7639,7 +7696,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_flat_entry schedule fail {sym}: {_e}")
 
         # ===== BREAKDOWN SHORTS ENTRY =====
-        if ENABLE_BREAKDOWN_TRADING:
+        if ENABLE_BREAKDOWN_TRADING and _health_gate.allow_entry("alt_inplay_breakdown_v1", sym):
             last = int(_BREAKDOWN_LAST_TRY.get(sym, 0) or 0)
             if now - last >= BREAKDOWN_TRY_EVERY_SEC:
                 try:
@@ -7649,7 +7706,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_breakdown_entry schedule fail {sym}: {_e}")
 
         # ===== MICRO SCALPER ENTRY =====
-        if ENABLE_MICRO_SCALPER_TRADING and sym in MICRO_SCALPER_SYMBOL_ALLOWLIST:
+        if ENABLE_MICRO_SCALPER_TRADING and sym in MICRO_SCALPER_SYMBOL_ALLOWLIST and _health_gate.allow_entry("micro_scalper_v1", sym):
             last = float(_MICRO_SCALPER_LAST_TRY.get(sym, 0) or 0)
             if now - last >= MICRO_SCALPER_TRY_EVERY_SEC:
                 try:
@@ -7659,7 +7716,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_micro_scalper_entry schedule fail {sym}: {_e}")
 
         # ===== SUPPORT RECLAIM LONGS ENTRY =====
-        if ENABLE_SUPPORT_RECLAIM_TRADING and sym in SUPPORT_RECLAIM_SYMBOL_ALLOWLIST:
+        if ENABLE_SUPPORT_RECLAIM_TRADING and sym in SUPPORT_RECLAIM_SYMBOL_ALLOWLIST and _health_gate.allow_entry("alt_support_reclaim_v1", sym):
             last = float(_SUPPORT_RECLAIM_LAST_TRY.get(sym, 0) or 0)
             if now - last >= SUPPORT_RECLAIM_TRY_EVERY_SEC:
                 try:
@@ -7669,7 +7726,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_support_reclaim_entry schedule fail {sym}: {_e}")
 
         # ===== TRIPLE SCREEN v132 ENTRY =====
-        if ENABLE_TS132_TRADING:
+        if ENABLE_TS132_TRADING and _health_gate.allow_entry("triple_screen_v132", sym):
             last = int(_TS132_LAST_TRY.get(sym, 0) or 0)
             if now - last >= TS132_TRY_EVERY_SEC:
                 try:
@@ -8596,6 +8653,9 @@ async def main_async():
 
 def main():
     _db_init()
+    # Start dynamic allowlist watcher (hot-reloads ASC1/ARF1 without bot restart)
+    _allowlist_watcher = _AllowlistWatcher()
+    _allowlist_watcher.start()
     print("Starting real-time pump detector…")
     print(f"Sources: Bybit={ENABLE_BYBIT}, Binance={ENABLE_BINANCE}, MEXC={ENABLE_MEXC}")
     print(f"Trading: {'ON' if TRADE_ON else 'OFF'} (Bybit short fade); DRY_RUN={'ON' if DRY_RUN else 'OFF'}")
