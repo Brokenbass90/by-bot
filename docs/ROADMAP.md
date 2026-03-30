@@ -57,6 +57,13 @@ What exists vs. what's needed to reach full autonomy:
 - `deepseek_weekly_cron.py` now sends/records weekly analysis and queues proposals, but those proposals still require `/ai_approve`.
 - This reduces regime drift risk and maintenance burden; it does **not** guarantee the bot cannot degrade.
 
+**Target operating model:** governed autonomy, not blind autonomy.
+- `DeepSeek` watches live behavior, reviews trades, and accumulates bounded research ideas.
+- `GPT/Codex` acts as the second safety layer: challenge proposals, reject overfit ideas, and require objective compares vs the frozen baseline.
+- Human remains capital owner and final approval point for meaningful live changes.
+- Promotion path stays strict: `observe -> propose -> bounded backtest -> recent-window holdout -> portfolio compare -> approval -> deploy`.
+- This is the intended long-term answer to "how do we let the bot learn without letting it self-destroy?"
+
 **Phases run each Sunday:**
 1. `audit` — health check of recent runs (PF, DD trend per strategy)
 2. `tune` — DeepSeek proposes param changes for each strategy → approval queue
@@ -149,6 +156,10 @@ Expected runtime: 2–4 hours. Goal: ≥5 combos with PF ≥1.5 and trades ≥15
   - Sunday: auto-generate candidate allowlist and AI proposals
   - Monday: review diff vs current live
   - apply only if annual compare / bounded backtest agrees
+- Next missing module after that: `per-trade critic + learning log`
+  - every closed trade gets classified by regime, entry quality, exit quality, and preventable mistake tags
+  - repeated failure patterns should spawn bounded research proposals automatically
+  - repeated success patterns should influence family profiles / symbol pockets, not rewrite live blindly
 
 **2b. Prepare the autonomy bundle for safe server deployment**
 - Local files now exist:
@@ -156,8 +167,10 @@ Expected runtime: 2–4 hours. Goal: ≥5 combos with PF ≥1.5 and trades ≥15
   - `bot/allowlist_watcher.py`
   - `bot/deepseek_research_gate.py`
   - `bot/family_profiles.py`
-- Next engineering task is a clean deploy bundle + smoke verification on server.
-- Goal: move from "advisor autonomy exists locally" to "bounded autonomy is actually live".
+- Bundle is now packaged, pushed, and point-deployed to the server with backup + compile check.
+- `bybot.service` restarted successfully after deploy.
+- Next engineering task is not packaging anymore, but making the review/promotion loop tighter and more automatic without removing approval.
+- Goal: move from "bounded autonomy is live" to "bounded autonomy learns from each trade safely".
 
 **3. Fix equities autoresearch parser path**
 `equities_monthly_v23_spy_regime_gate` did not fail strategically; the generic wrapper failed to parse the equities summary format.
@@ -253,6 +266,15 @@ Implement: `strategies/funding_rate_reversion_v1.py` + autoresearch spec.
 - next step: let it launch only pre-approved bounded research jobs, not arbitrary tune ideas
 - keep live changes behind approval
 - desired flow: `observe -> propose -> run bounded compare -> queue diff -> approve`
+
+**11b. Dual-AI governed autonomy**
+- `DeepSeek` = cheap continuous operator: trade review, weekly scans, proposal generation
+- `GPT/Codex` = slower senior reviewer: overfit defense, portfolio compare, deployment approval
+- desired future flow:
+  - DeepSeek sends proposal package
+  - GPT/Codex critiques it against baseline, recent window, and risk budget
+  - human receives a short decision memo: `approve / reject / postpone`
+- this is the path to a self-maintaining system that still keeps capital decisions legible
 
 **9. Alpaca equity universe expansion**
 Current: 10 stocks (AAPL, AMD, AMZN, GOOGL, JPM, META, MSFT, NVDA, TSLA, XOM)
