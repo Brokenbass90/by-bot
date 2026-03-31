@@ -1,0 +1,65 @@
+{
+  "name": "micro_scalper_breakout_v2_bias_probe",
+  "description": "Breakout scalper v2: keep the trend-aligned 5m break logic, but require session VWAP confirmation and minimum projected edge so false impulse bars stop dominating the sleeve.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "{SYMBOLS}",
+    "--strategies", "micro_scalper_breakout_v1",
+    "--days", "360",
+    "--end", "2026-02-24",
+    "--starting_equity", "100",
+    "--risk_pct", "0.005",
+    "--tag", "{tag}"
+  ],
+  "base_env": {
+    "MSBRK_TREND_TF": "15",
+    "MSBRK_TREND_EMA": "20",
+    "MSBRK_TREND_LOOKBACK": "30",
+    "MSBRK_ENTRY_LOOKBACK": "50",
+    "MSBRK_ATR_PERIOD": "14",
+    "MSBRK_VOL_MULT": "0.0",
+    "MSBRK_MAX_SIGNALS_PER_DAY": "8",
+    "MSBRK_SESSION_START_UTC": "7",
+    "MSBRK_SESSION_END_UTC": "17",
+    "MSBRK_MIN_SL_ATR": "0.12",
+    "MSBRK_MAX_SL_ATR": "1.0",
+    "MSBRK_TIME_STOP_BARS": "8",
+    "MSBRK_USE_VWAP_BIAS": "1",
+    "MSBRK_ALLOW_LONGS": "1",
+    "MSBRK_ALLOW_SHORTS": "1"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "BTCUSDT,ETHUSDT,SOLUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT"
+    ],
+    "MSBRK_TREND_MIN_SLOPE_PCT": ["0.05", "0.08"],
+    "MSBRK_BREAKOUT_LOOKBACK": ["4", "6"],
+    "MSBRK_BREAKOUT_BUFFER_ATR": ["0.03", "0.06"],
+    "MSBRK_MIN_BODY_ATR": ["0.18", "0.24"],
+    "MSBRK_MIN_CLOSE_FRAC": ["0.60", "0.72"],
+    "MSBRK_MIN_VWAP_DIST_ATR": ["0.03", "0.06", "0.10"],
+    "MSBRK_MIN_TP_ATR": ["0.25", "0.35", "0.45"],
+    "MSBRK_RR": ["1.05", "1.20", "1.35"],
+    "MSBRK_SL_BUFFER_ATR": ["0.08", "0.12"],
+    "MSBRK_COOLDOWN_BARS": ["1", "2"]
+  },
+  "_combo_count": "864 combos",
+  "constraints": {
+    "min_trades": 90,
+    "min_profit_factor": 1.20,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 6.0,
+    "max_negative_months": 4
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 4.0,
+    "winrate": 8.0,
+    "max_drawdown": 1.5
+  },
+  "_expected_runtime_minutes": 16,
+  "_goal": "Measure whether breakout scalps survive much better once momentum bars must also live on the correct side of session VWAP and clear a minimum projected edge threshold."
+}

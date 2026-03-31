@@ -939,6 +939,9 @@ def main() -> int:
     sum_losses = abs(sum(losses)) if losses else 0.0
     profit_factor_val = (sum_wins / sum_losses) if sum_losses > 0 else float("nan")
     month_returns_pct = [float(r[3]) for r in monthly_rows]
+    active_months = len(monthly_rows)
+    calendar_months = len(month_keys)
+    inactive_months = max(0, calendar_months - active_months)
     positive_months = [x for x in month_returns_pct if x > 0]
     negative_months = [x for x in month_returns_pct if x < 0]
     max_eq = monthly_curve[0]
@@ -953,6 +956,8 @@ def main() -> int:
         w.writerow(
             [
                 "months",
+                "calendar_months",
+                "inactive_months",
                 "trades",
                 "winrate_pct",
                 "avg_trade_return_pct",
@@ -986,6 +991,8 @@ def main() -> int:
         w.writerow(
             [
                 len(monthly_rows),
+                calendar_months,
+                inactive_months,
                 len(trades_rows),
                 f"{(100.0 * len(wins) / max(1, len(returns))):.2f}",
                 f"{(sum(returns) / max(1, len(returns))):.4f}",
