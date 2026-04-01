@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import bisect
 import math
 import os
 from dataclasses import dataclass, field
@@ -40,40 +41,124 @@ def aggregate_candles(base: List[Candle], group_n: int) -> List[Candle]:
     return out
 
 
+def aggregate_candles_to_interval(base: List[Candle], interval_min: int) -> List[Candle]:
+    """Aggregate candles into real time buckets based on candle timestamps.
+
+    This avoids misaligned buckets when the loaded slice does not begin exactly
+    on a 5m/15m/1h boundary.
+    """
+    if interval_min <= 0:
+        return []
+    if not base:
+        return []
+
+    bucket_ms = int(interval_min) * 60_000
+    out: List[Candle] = []
+    bucket_start: Optional[int] = None
+    chunk: List[Candle] = []
+    for candle in base:
+        cur_bucket = (int(candle.ts) // bucket_ms) * bucket_ms
+        if bucket_start is None:
+            bucket_start = cur_bucket
+        if cur_bucket != bucket_start:
+            if chunk:
+                out.append(
+                    Candle(
+                        ts=int(bucket_start),
+                        o=chunk[0].o,
+                        h=max(c.h for c in chunk),
+                        l=min(c.l for c in chunk),
+                        c=chunk[-1].c,
+                        v=sum(c.v for c in chunk),
+                    )
+                )
+            chunk = [candle]
+            bucket_start = cur_bucket
+        else:
+            chunk.append(candle)
+
+    if chunk and bucket_start is not None:
+        out.append(
+            Candle(
+                ts=int(bucket_start),
+                o=chunk[0].o,
+                h=max(c.h for c in chunk),
+                l=min(c.l for c in chunk),
+                c=chunk[-1].c,
+                v=sum(c.v for c in chunk),
+            )
+        )
+    return out
+
+
 class KlineStore:
     """Provides local kline slices in the same shape strategies expect."""
 
-    def __init__(self, symbol: str, candles_5m: List[Candle]):
+    def __init__(self, symbol: str, candles_5m: List[Candle], base_interval_min: int = 5):
         self.symbol = symbol
-        self.c5 = candles_5m
-        self.c15 = aggregate_candles(candles_5m, 3)
-        self.c1h = aggregate_candles(candles_5m, 12)
-        self.c4h = aggregate_candles(candles_5m, 48)
+        self.base_interval_min = 1 if int(base_interval_min) == 1 else 5
+        self.exec_candles = candles_5m
+        self.c1 = candles_5m[:] if self.base_interval_min == 1 else []
+        self.c3 = aggregate_candles_to_interval(candles_5m, 3) if self.base_interval_min == 1 else []
+        self.c5 = aggregate_candles_to_interval(candles_5m, 5)
+        self.c15 = aggregate_candles_to_interval(candles_5m, 15)
+        self.c1h = aggregate_candles_to_interval(candles_5m, 60)
+        self.c4h = aggregate_candles_to_interval(candles_5m, 240)
+        self._interval_map: Dict[str, Tuple[int, List[Candle], List[int]]] = {
+            "5": (5, self.c5, [int(c.ts) for c in self.c5]),
+            "15": (15, self.c15, [int(c.ts) for c in self.c15]),
+            "60": (60, self.c1h, [int(c.ts) for c in self.c1h]),
+            "240": (240, self.c4h, [int(c.ts) for c in self.c4h]),
+        }
+        if self.base_interval_min == 1:
+            self._interval_map["1"] = (1, self.c1, [int(c.ts) for c in self.c1])
+            self._interval_map["3"] = (3, self.c3, [int(c.ts) for c in self.c3])
+            self.i1 = -1
+            self.i3 = -1
+        else:
+            self.i1 = -1
+            self.i3 = -1
+        self.i_base = -1
+        self.i = -1
         self.i5 = -1
 
-    def set_index(self, i5: int) -> None:
-        self.i5 = i5
+    def set_index(self, i_base: int) -> None:
+        self.i_base = i_base
+        self.i = i_base
+        if self.base_interval_min == 1:
+            self.i1 = i_base
+            self.i3 = self._completed_index(3)
+        self.i5 = self._completed_index(5)
+
+    def _current_exec_end_ts(self) -> Optional[int]:
+        if self.i_base < 0 or self.i_base >= len(self.exec_candles):
+            return None
+        return int(self.exec_candles[self.i_base].ts) + self.base_interval_min * 60_000
+
+    def _completed_end(self, interval_min: int, arr: List[Candle], arr_ts: List[int]) -> int:
+        cur_end_ts = self._current_exec_end_ts()
+        if cur_end_ts is None or not arr:
+            return 0
+        threshold = cur_end_ts - interval_min * 60_000
+        if threshold < arr_ts[0]:
+            return 0
+        return bisect.bisect_right(arr_ts, threshold)
+
+    def _completed_index(self, interval_min: int) -> int:
+        meta = self._interval_map.get(str(interval_min))
+        if meta is None:
+            return -1
+        end = self._completed_end(meta[0], meta[1], meta[2])
+        return end - 1
 
     def _slice(self, interval: str, limit: int) -> List[Candle]:
-        if interval == "5":
-            arr = self.c5
-            i = self.i5
-        elif interval == "15":
-            arr = self.c15
-            i = self.i5 // 3
-            step = 3
-        elif interval == "60":
-            arr = self.c1h
-            i = self.i5 // 12
-        elif interval == "240":
-            arr = self.c4h
-            i = self.i5 // 48
-        else:
-            raise ValueError(f"Unsupported interval {interval}; expected 5/15/60/240")
-
-        if i < 0:
+        meta = self._interval_map.get(str(interval))
+        if meta is None:
+            raise ValueError(f"Unsupported interval {interval}; expected 1/3/5/15/60/240")
+        interval_min, arr, arr_ts = meta
+        end = self._completed_end(interval_min, arr, arr_ts)
+        if end <= 0:
             return []
-        end = min(len(arr), i + 1)
         start = max(0, end - max(0, int(limit)))
         return arr[start:end]
 
@@ -88,6 +173,11 @@ class KlineStore:
 
     def candles_1h_ohlc(self) -> List[Tuple[float, float, float, float]]:
         return [(c.o, c.h, c.l, c.c) for c in self._slice("60", 10**9)]
+
+    def current_bar(self) -> Optional[Candle]:
+        if self.i_base < 0 or self.i_base >= len(self.exec_candles):
+            return None
+        return self.exec_candles[self.i_base]
 
     def last_5m_ohlc(self) -> Tuple[float, float, float, float]:
         if self.i5 < 0:
@@ -272,7 +362,7 @@ def run_symbol_backtest(
     signal_fn: SignalFn,
     params: BacktestParams,
 ) -> Tuple[List[Trade], List[float]]:
-    """Run a 5m backtest for a single symbol.
+    """Run a single-symbol backtest on the store execution timeframe.
 
     Note: `backtest.run_month` constructs a :class:`KlineStore` per symbol and
     passes it in. We accept the store as the first positional argument to keep
@@ -280,7 +370,7 @@ def run_symbol_backtest(
     """
 
     symbol = store.symbol
-    candles_5m = store.c5
+    exec_candles = store.exec_candles
     equity = float(params.starting_equity)
     curve: List[float] = [equity]
     trades: List[Trade] = []
@@ -291,7 +381,7 @@ def run_symbol_backtest(
         p = int(max(2, period))
         s = atr_cache.get(p)
         if s is None:
-            s = _compute_atr_series(candles_5m, p)
+            s = _compute_atr_series(exec_candles, p)
             atr_cache[p] = s
         return s
 
@@ -325,7 +415,7 @@ def run_symbol_backtest(
 
     pos: Optional[Position] = None
 
-    for i, bar in enumerate(candles_5m):
+    for i, bar in enumerate(exec_candles):
         store.set_index(i)
 
         # -------------------- Manage open position --------------------
@@ -518,8 +608,8 @@ def run_symbol_backtest(
         curve.append(equity)
 
     # End-of-period: force close if any position remains.
-    if pos is not None and pos.remaining_qty > 0 and candles_5m:
-        last = candles_5m[-1]
+    if pos is not None and pos.remaining_qty > 0 and exec_candles:
+        last = exec_candles[-1]
         exit_qty = pos.remaining_qty
         raw_exit = float(last.c)
         exit_px = _apply_slippage(raw_exit, pos.side, is_entry=False, slippage_bps=params.slippage_bps)

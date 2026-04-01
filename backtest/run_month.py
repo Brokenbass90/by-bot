@@ -98,14 +98,14 @@ def _write_trades_csv(path: str, trades) -> None:
 
 
 
-def _write_equity_curve_csv(path: str, candles_5m: List[Candle], curve: List[float]) -> None:
-    # curve is per 5m bar; length typically equals len(candles_5m)
-    n = min(len(candles_5m), len(curve))
+def _write_equity_curve_csv(path: str, exec_candles: List[Candle], curve: List[float]) -> None:
+    # curve is per execution bar; length typically equals len(exec_candles)
+    n = min(len(exec_candles), len(curve))
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["ts", "iso", "equity"])
         w.writeheader()
         for i in range(n):
-            ts = int(candles_5m[i].ts)
+            ts = int(exec_candles[i].ts)
             iso = datetime.fromtimestamp(ts / 1000.0, tz=timezone.utc).isoformat()
             w.writerow({"ts": ts, "iso": iso, "equity": f"{float(curve[i]):.10g}"})
 
@@ -212,6 +212,13 @@ def main() -> int:
     )
     ap.add_argument("--bybit_base", type=str, default=DEFAULT_BYBIT_BASE)
     ap.add_argument("--cache", action="store_true", default=True)
+    ap.add_argument(
+        "--base_interval_min",
+        type=int,
+        default=int(os.getenv("BACKTEST_BASE_INTERVAL_MIN", "5") or 5),
+        choices=[1, 5],
+        help="Execution timeframe base used by the backtester. Use 1 to enable honest 1m/3m slices.",
+    )
     args = ap.parse_args()
 
     # Many strategy components were originally written as async (they fetch klines via REST).
@@ -295,19 +302,20 @@ def main() -> int:
 
     # Output directory is created later (after run folder resolution)
 
-    # Preload 5m klines per symbol
-    candles_5m: Dict[str, List[Candle]] = {}
+    # Preload execution candles per symbol.
+    exec_candles_by_symbol: Dict[str, List[Candle]] = {}
+    base_interval = "1" if int(args.base_interval_min) == 1 else "5"
     for sym in symbols:
         kl = fetch_klines_public(
             sym,
-            interval="5",
+            interval=base_interval,
             start_ms=start_ms,
             end_ms=end_ms,
             base=args.bybit_base,
             cache=args.cache,
         )
-        candles_5m[sym] = [Candle(ts=k.ts, o=k.o, h=k.h, l=k.l, c=k.c, v=k.v) for k in kl]
-        print(f"  {sym}: {len(candles_5m[sym])} x 5m candles")
+        exec_candles_by_symbol[sym] = [Candle(ts=k.ts, o=k.o, h=k.h, l=k.l, c=k.c, v=k.v) for k in kl]
+        print(f"  {sym}: {len(exec_candles_by_symbol[sym])} x {base_interval}m candles")
 
     results_rows: List[Tuple[str, PerformanceSummary]] = []
 
@@ -416,11 +424,12 @@ def main() -> int:
             per_symbol_summaries: List[PerformanceSummary] = []
 
             for sym in symbols:
-                c5 = candles_5m.get(sym) or []
-                if len(c5) < 300:
+                exec_candles = exec_candles_by_symbol.get(sym) or []
+                min_bars = 300 if int(args.base_interval_min) == 5 else 1500
+                if len(exec_candles) < min_bars:
                     continue
 
-                store = KlineStore(sym, c5)
+                store = KlineStore(sym, exec_candles, base_interval_min=args.base_interval_min)
                 try:
                     if strat_name == "range":
                         strat = RangeWrapper(store.fetch_klines, RangeWrapperConfig())
@@ -506,7 +515,7 @@ def main() -> int:
                     os.makedirs(eq_dir, exist_ok=True)
                     eq_path = os.path.join(eq_dir, f"equity_{strat_name}_{sym}.csv")
                     try:
-                        _write_equity_curve_csv(eq_path, c5, equity_curve)
+                        _write_equity_curve_csv(eq_path, exec_candles, equity_curve)
                     except Exception as e:
                         print(f"WARNING: failed to write equity curve for {strat_name}/{sym}: {e}")
 

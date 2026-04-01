@@ -118,6 +118,7 @@ class TripleScreenV132Config:
     trade_mode: str = "active"  # conservative|active|aggressive
     trend_tf: str = "60"
     eval_tf_min: int = 60
+    signal_eval_tf_min: int = 0
     use_eval_tf_osc: bool = False
     trend_ema_len: int = 45
     use_trend_strength_filter: bool = False
@@ -157,6 +158,7 @@ class TripleScreenV132Strategy:
         self.cfg.trade_mode = str(os.getenv("TS132_TRADE_MODE", self.cfg.trade_mode)).strip().lower()
         self.cfg.trend_tf = os.getenv("TS132_TREND_TF", self.cfg.trend_tf)
         self.cfg.eval_tf_min = _env_int("TS132_EVAL_TF_MIN", self.cfg.eval_tf_min)
+        self.cfg.signal_eval_tf_min = _env_int("TS132_SIGNAL_EVAL_TF_MIN", self.cfg.signal_eval_tf_min)
         self.cfg.use_eval_tf_osc = str(os.getenv("TS132_USE_EVAL_TF_OSC", "0")).strip().lower() in {"1", "true", "yes", "on"}
         self.cfg.trend_ema_len = _env_int("TS132_TREND_EMA_LEN", self.cfg.trend_ema_len)
         self.cfg.use_trend_strength_filter = str(os.getenv("TS132_USE_TREND_STRENGTH_FILTER", "0")).strip().lower() in {"1", "true", "yes", "on"}
@@ -232,7 +234,10 @@ class TripleScreenV132Strategy:
             self._day_signals = 0
         if self._day_signals >= self.cfg.max_signals_per_day:
             return None
-        bucket = ts_sec // max(1, int(self.cfg.eval_tf_min * 60))
+        # Historically TS132 only evaluated once per eval_tf bucket. Keep that as the
+        # default, but allow faster signal cadence without forcing a different osc TF.
+        signal_eval_tf_min = self.cfg.signal_eval_tf_min if self.cfg.signal_eval_tf_min > 0 else self.cfg.eval_tf_min
+        bucket = ts_sec // max(1, int(signal_eval_tf_min * 60))
         if self._last_eval_bucket == bucket:
             return None
         self._last_eval_bucket = bucket

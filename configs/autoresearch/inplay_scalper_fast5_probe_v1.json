@@ -1,0 +1,72 @@
+{
+  "name": "inplay_scalper_fast5_probe_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT",
+    "--strategies",
+    "inplay_breakout",
+    "--days",
+    "60",
+    "--end",
+    "2026-03-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "1",
+    "--fee_bps",
+    "10",
+    "--slippage_bps",
+    "10"
+  ],
+  "grid": {
+    "BREAKOUT_TF_BREAK": [15, 30],
+    "BREAKOUT_TF_ENTRY": [5],
+    "BREAKOUT_LOOKBACK_H": [6, 8, 12],
+    "BREAKOUT_IMPULSE_ATR_MULT": [0.75, 0.9],
+    "BREAKOUT_RETEST_TOUCH_ATR": [0.20, 0.30],
+    "BREAKOUT_RECLAIM_ATR": [0.08, 0.12],
+    "BREAKOUT_MAX_DIST_ATR": [0.6, 0.8],
+    "BREAKOUT_RR": [0.8, 1.0]
+  },
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "BREAKOUT_ALLOW_LONGS": "1",
+    "BREAKOUT_ALLOW_SHORTS": "1",
+    "BREAKOUT_BUFFER_ATR": "0.05",
+    "BREAKOUT_SL_ATR": "0.30",
+    "BREAKOUT_MIN_HOLD_BARS": "0",
+    "BREAKOUT_MAX_RETEST_BARS": "12",
+    "BREAKOUT_MIN_BREAK_BARS": "1",
+    "BREAKOUT_RANGE_ATR_MAX": "4.0",
+    "BREAKOUT_REGIME_MODE": "off"
+  },
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 1.05,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 2.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2,
+    "min_worst_month_pnl": -2.5
+  },
+  "score_weights": {
+    "net_pnl": 1.4,
+    "profit_factor": 2.5,
+    "winrate": 10.0,
+    "max_drawdown": 1.6,
+    "trades": 0.18,
+    "trades_cap": 120,
+    "negative_months": 3.5,
+    "max_negative_streak": 2.5,
+    "worst_month_pnl": 2.5
+  }
+}

@@ -10,7 +10,7 @@ This is a *simple* portfolio simulator designed for our workflow:
 
 Assumptions / current limitations (intentional for speed and safety):
 - One open position per symbol.
-- Entry/exit are simulated on 5m candles with conservative intrabar rules.
+- Entry/exit are simulated on the store execution timeframe with conservative intrabar rules.
 - When multiple strategies signal on the same bar for a symbol, we take the
   first one per the provided strategy order.
 """
@@ -84,15 +84,15 @@ def run_portfolio_backtest(
 ) -> PortfolioResult:
     """Run a combined portfolio backtest across multiple symbols.
 
-    `stores` must all contain 5m candles aligned in time (as produced by
-    `run_month.py` loader). We iterate by index up to the minimum length.
+    `stores` must all contain execution candles aligned in time. We iterate by
+    index up to the minimum length of the execution series.
     """
 
     if not stores:
         return PortfolioResult(trades=[], equity_curve=[float(params.starting_equity)])
 
     syms = symbols_order or list(stores.keys())
-    min_len = min(len(stores[s].c5) for s in syms)
+    min_len = min(len(stores[s].exec_candles) for s in syms)
 
     equity = float(params.starting_equity)
     curve: List[float] = [equity]
@@ -112,7 +112,7 @@ def run_portfolio_backtest(
     def _atr(sym: str, period: int) -> List[float]:
         cache = atr_cache[sym]
         if period not in cache:
-            cache[period] = _compute_atr_series(stores[sym].c5, period)
+            cache[period] = _compute_atr_series(stores[sym].exec_candles, period)
         return cache[period]
 
     def _close(sym: str, p: Position, exit_ts: int, reason: str):
@@ -163,7 +163,7 @@ def run_portfolio_backtest(
         # 1) Manage exits for all open positions first.
         for sym in list(pos_by_sym.keys()):
             p = pos_by_sym[sym]
-            bar = stores[sym].c5[i]
+            bar = stores[sym].exec_candles[i]
 
             # Update extremes
             p.hh_since_entry = max(p.hh_since_entry, bar.h)
@@ -303,7 +303,7 @@ def run_portfolio_backtest(
                     continue
 
                 store = stores[sym]
-                bar = store.c5[i]
+                bar = store.exec_candles[i]
                 sig = selector(sym, store, bar.ts, bar.c)
                 if inspect.isawaitable(sig):
                     sig = _run_awaitable(sig)

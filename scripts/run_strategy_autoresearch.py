@@ -244,6 +244,9 @@ def _score_candidate(summary: dict, spec: dict) -> tuple[bool, str, float]:
     max_drawdown = float(metrics.get("max_drawdown") or 0.0)
     if not math.isfinite(max_drawdown):
         max_drawdown = float("inf")
+    latest_entry_age_days = float(metrics.get("latest_entry_age_days") or 0.0)
+    if not math.isfinite(latest_entry_age_days):
+        latest_entry_age_days = float("inf")
 
     fail_reasons: List[str] = []
     if trades < int(constraints.get("min_trades", 0)):
@@ -254,12 +257,15 @@ def _score_candidate(summary: dict, spec: dict) -> tuple[bool, str, float]:
         fail_reasons.append(f"dd>{constraints['max_drawdown']}")
     if net_pnl < float(constraints.get("min_net_pnl", -math.inf)):
         fail_reasons.append(f"net<{constraints['min_net_pnl']}")
+    if "max_latest_entry_age_days" in constraints and latest_entry_age_days > float(constraints.get("max_latest_entry_age_days", math.inf)):
+        fail_reasons.append(f"entry_age>{constraints['max_latest_entry_age_days']}")
 
     score = (
         float(weights.get("net_pnl", 1.0)) * net_pnl
         + float(weights.get("profit_factor", 3.0)) * (max(0.0, profit_factor - 1.0) if math.isfinite(profit_factor) else 0.0)
         + float(weights.get("winrate", 8.0)) * (max(0.0, winrate - 0.5) if math.isfinite(winrate) else 0.0)
         - float(weights.get("max_drawdown", 1.0)) * (max_drawdown if math.isfinite(max_drawdown) else 0.0)
+        - float(weights.get("latest_entry_age_days", 0.0)) * (latest_entry_age_days if math.isfinite(latest_entry_age_days) else 0.0)
         + float(weights.get("trades", 0.05)) * min(trades, int(weights.get("trades_cap", 40)))
     )
     passed = not fail_reasons

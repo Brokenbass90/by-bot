@@ -950,6 +950,19 @@ def main() -> int:
         max_eq = max(max_eq, eq)
         max_dd = min(max_dd, eq / max_eq - 1.0)
 
+    last_data_day = max((bar.day for rows in daily_map.values() for bar in rows), default="")
+    latest_pick_month = ""
+    latest_entry_day = ""
+    latest_entry_age_days = ""
+    if picks_rows:
+        latest_pick = max(picks_rows, key=lambda row: ((row[2] or ""), (row[0] or ""), (row[1] or "")))
+        latest_pick_month = str(latest_pick[0] or "")
+        latest_entry_day = str(latest_pick[2] or "")
+        latest_entry_dt = _parse_iso_date(latest_entry_day)
+        last_data_dt = _parse_iso_date(last_data_day)
+        if latest_entry_dt is not None and last_data_dt is not None:
+            latest_entry_age_days = str((last_data_dt - latest_entry_dt).days)
+
     summary_csv = out_dir / "summary.csv"
     with summary_csv.open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
@@ -968,6 +981,10 @@ def main() -> int:
                 "avg_month_return_pct",
                 "compounded_return_pct",
                 "max_monthly_dd_pct",
+                "last_data_day",
+                "latest_pick_month",
+                "latest_entry_day",
+                "latest_entry_age_days",
                 "intramonth_portfolio_stop_pct",
                 "tickers",
                 "top_n",
@@ -1003,6 +1020,10 @@ def main() -> int:
                 f"{(sum(month_returns_pct) / max(1, len(month_returns_pct))):.4f}",
                 f"{(monthly_equity - 1.0) * 100.0:.4f}",
                 f"{max_dd * 100.0:.4f}",
+                last_data_day,
+                latest_pick_month,
+                latest_entry_day,
+                latest_entry_age_days,
                 f"{float(args.intramonth_portfolio_stop_pct):.4f}",
                 ";".join(tickers),
                 int(args.top_n),

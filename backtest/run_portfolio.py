@@ -124,6 +124,8 @@ AltResistanceFadeV1Strategy = _import_strategy_class("alt_resistance_fade_v1", "
 AltSlopedChannelV1Strategy = _import_strategy_class("alt_sloped_channel_v1", "AltSlopedChannelV1Strategy")
 AltInplayBreakdownV1Strategy = _import_strategy_class("alt_inplay_breakdown_v1", "AltInplayBreakdownV1Strategy")
 MicroScalperV1Strategy = _import_strategy_class("micro_scalper_v1", "MicroScalperV1Strategy")
+MicroScalperBounceV1Strategy = _import_strategy_class("micro_scalper_bounce_v1", "MicroScalperBounceV1Strategy")
+MicroScalperBreakoutV1Strategy = _import_strategy_class("micro_scalper_breakout_v1", "MicroScalperBreakoutV1Strategy")
 AltSupportReclaimV1Strategy = _import_strategy_class("alt_support_reclaim_v1", "AltSupportReclaimV1Strategy")
 PumpFadeV4RStrategy = _import_strategy_class("pump_fade_v4r", "PumpFadeV4RStrategy")
 PumpFadeSimpleStrategy = _import_strategy_class("pump_fade_simple", "PumpFadeSimpleStrategy")
@@ -481,8 +483,16 @@ def _parse_end(s: Optional[str]) -> int:
     return int(dt.timestamp())
 
 
-def _load_symbol_5m(symbol: str, start_ts: int, end_ts: int, *, bybit_base: str, cache_dir: Path) -> List[Candle]:
-    """Load 5m candles for [start_ts, end_ts) in *seconds*.
+def _load_symbol_base(
+    symbol: str,
+    start_ts: int,
+    end_ts: int,
+    *,
+    bybit_base: str,
+    cache_dir: Path,
+    base_interval_min: int = 5,
+) -> List[Candle]:
+    """Load base candles for [start_ts, end_ts) in *seconds*.
 
     NOTE: fetch_klines_public() works in milliseconds and returns a list[Kline].
     Portfolio backtest engine expects a list[Candle].
@@ -491,14 +501,15 @@ def _load_symbol_5m(symbol: str, start_ts: int, end_ts: int, *, bybit_base: str,
     repeatedly hitting Bybit REST when iterating.
     """
 
+    interval = "1" if int(base_interval_min) == 1 else "5"
     cache_dir.mkdir(parents=True, exist_ok=True)
     start_ms = int(start_ts) * 1000
     end_ms = int(end_ts) * 1000
-    fname = cache_dir / f"{symbol}_5_{start_ms}_{end_ms}.json"
+    fname = cache_dir / f"{symbol}_{interval}_{start_ms}_{end_ms}.json"
 
     def _pick_best_cached_rows() -> tuple[Optional[Path], Optional[list]]:
         candidates = sorted(
-            cache_dir.glob(f"{symbol}_5_*.json"),
+            cache_dir.glob(f"{symbol}_{interval}_*.json"),
             key=lambda p: p.stat().st_mtime,
             reverse=True,
         )
@@ -547,7 +558,7 @@ def _load_symbol_5m(symbol: str, start_ts: int, end_ts: int, *, bybit_base: str,
         rows = best_rows
     else:
         try:
-            kl = fetch_klines_public(symbol, interval="5", start_ms=start_ms, end_ms=end_ms, base=bybit_base, cache=True)
+            kl = fetch_klines_public(symbol, interval=interval, start_ms=start_ms, end_ms=end_ms, base=bybit_base, cache=True)
             # backtest.bybit_data.Kline uses `ts` (ms). Older/alternate Kline objects may use
             # `start_ms` / `startTime` / `start_time`. Be defensive.
             def _k_ts_ms(k):
@@ -771,8 +782,8 @@ def main():
                     help="Comma-separated symbols to exclude from the auto universe.")
     ap.add_argument(
         "--strategies",
-        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_pullback_be_trail,sr_break_retest_volume_v1,sloped_break_retest_v1,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,smart_grid_v2,smart_grid_v3,range_bounce,donchian_breakout,btc_eth_midterm_pullback,btc_eth_vol_expansion,btc_eth_trend_rsi_reentry,trendline_break_retest,btc_eth_trend_follow,trendline_break_retest_v2,flat_bounce_v2,flat_bounce_v3,btc_eth_trend_follow_v2,trendline_break_retest_v3,trendline_break_retest_v4,structure_shift_v1,structure_shift_v2,tv_atr_trend_v1,tv_atr_trend_v2,triple_screen_v132,triple_screen_v132b,btc_regime_retest_v1,btc_cycle_pullback_v1,btc_macro_cycle_v1,btc_cycle_continuation_v1,btc_cycle_level_target_v2,btc_daily_level_reclaim_v1,btc_swing_zone_reclaim_v1,btc_weekly_zone_reclaim_v2,btc_regime_flip_continuation_v1,btc_sloped_reclaim_v1,alt_range_reclaim_v1,alt_resistance_fade_v1,alt_sloped_channel_v1,alt_inplay_breakdown_v1,micro_scalper_v1,alt_support_reclaim_v1,funding_rate_reversion_v1,liquidation_cascade_entry_v1",
-        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_pullback_be_trail,sr_break_retest_volume_v1,sloped_break_retest_v1,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,smart_grid_v2,smart_grid_v3,range_bounce,donchian_breakout,btc_eth_midterm_pullback,btc_eth_vol_expansion,btc_eth_trend_rsi_reentry,trendline_break_retest,btc_eth_trend_follow,trendline_break_retest_v2,flat_bounce_v2,flat_bounce_v3,btc_eth_trend_follow_v2,trendline_break_retest_v3,trendline_break_retest_v4,structure_shift_v1,structure_shift_v2,tv_atr_trend_v1,tv_atr_trend_v2,triple_screen_v132,triple_screen_v132b,btc_regime_retest_v1,btc_cycle_pullback_v1,btc_macro_cycle_v1,btc_cycle_continuation_v1,btc_cycle_level_target_v2,btc_daily_level_reclaim_v1,btc_swing_zone_reclaim_v1,btc_weekly_zone_reclaim_v2,btc_regime_flip_continuation_v1,btc_sloped_reclaim_v1,alt_range_reclaim_v1,alt_resistance_fade_v1,alt_sloped_channel_v1,alt_inplay_breakdown_v1,micro_scalper_v1,alt_support_reclaim_v1,funding_rate_reversion_v1",
+        default="bounce,bounce_v2,range,inplay,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_pullback_be_trail,sr_break_retest_volume_v1,sloped_break_retest_v1,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,smart_grid_v2,smart_grid_v3,range_bounce,donchian_breakout,btc_eth_midterm_pullback,btc_eth_vol_expansion,btc_eth_trend_rsi_reentry,trendline_break_retest,btc_eth_trend_follow,trendline_break_retest_v2,flat_bounce_v2,flat_bounce_v3,btc_eth_trend_follow_v2,trendline_break_retest_v3,trendline_break_retest_v4,structure_shift_v1,structure_shift_v2,tv_atr_trend_v1,tv_atr_trend_v2,triple_screen_v132,triple_screen_v132b,btc_regime_retest_v1,btc_cycle_pullback_v1,btc_macro_cycle_v1,btc_cycle_continuation_v1,btc_cycle_level_target_v2,btc_daily_level_reclaim_v1,btc_swing_zone_reclaim_v1,btc_weekly_zone_reclaim_v2,btc_regime_flip_continuation_v1,btc_sloped_reclaim_v1,alt_range_reclaim_v1,alt_resistance_fade_v1,alt_sloped_channel_v1,alt_inplay_breakdown_v1,micro_scalper_v1,micro_scalper_bounce_v1,micro_scalper_breakout_v1,alt_support_reclaim_v1,funding_rate_reversion_v1,liquidation_cascade_entry_v1",
+        help="Comma-separated strategies (priority order): bounce,bounce_v2,range,inplay,inplay_pullback,inplay_breakout,pump_fade,retest_levels,momentum,trend_pullback,trend_pullback_be_trail,sr_break_retest_volume_v1,sloped_break_retest_v1,trend_breakout,vol_breakout,adaptive_range_short,smart_grid,smart_grid_v2,smart_grid_v3,range_bounce,donchian_breakout,btc_eth_midterm_pullback,btc_eth_vol_expansion,btc_eth_trend_rsi_reentry,trendline_break_retest,btc_eth_trend_follow,trendline_break_retest_v2,flat_bounce_v2,flat_bounce_v3,btc_eth_trend_follow_v2,trendline_break_retest_v3,trendline_break_retest_v4,structure_shift_v1,structure_shift_v2,tv_atr_trend_v1,tv_atr_trend_v2,triple_screen_v132,triple_screen_v132b,btc_regime_retest_v1,btc_cycle_pullback_v1,btc_macro_cycle_v1,btc_cycle_continuation_v1,btc_cycle_level_target_v2,btc_daily_level_reclaim_v1,btc_swing_zone_reclaim_v1,btc_weekly_zone_reclaim_v2,btc_regime_flip_continuation_v1,btc_sloped_reclaim_v1,alt_range_reclaim_v1,alt_resistance_fade_v1,alt_sloped_channel_v1,alt_inplay_breakdown_v1,micro_scalper_v1,micro_scalper_bounce_v1,micro_scalper_breakout_v1,alt_support_reclaim_v1,funding_rate_reversion_v1",
     )
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--end", default="", help="YYYY-MM-DD (UTC)")
@@ -785,6 +796,13 @@ def main():
     ap.add_argument("--slippage_bps", type=float, default=2.0)
     ap.add_argument("--bybit_base", default=os.getenv("BYBIT_BASE", "https://api.bybit.com"))
     ap.add_argument("--cache", default=".cache/klines")
+    ap.add_argument(
+        "--base_interval_min",
+        type=int,
+        default=int(os.getenv("BACKTEST_BASE_INTERVAL_MIN", "5") or 5),
+        choices=[1, 5],
+        help="Execution timeframe base used by the backtester. Use 1 for honest 1m/3m support.",
+    )
     ap.add_argument("--tag", default="portfolio")
     ap.add_argument("--news-events-csv", default="", help="Optional normalized news events CSV for deterministic macro blackout gating")
     ap.add_argument("--news-policy-json", default="", help="Optional news policy JSON")
@@ -820,7 +838,7 @@ def main():
         raise SystemExit("No symbols selected. Provide --symbols or relax --min_volume_usd/--top_n.")
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
-    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_pullback_be_trail", "sr_break_retest_volume_v1", "sloped_break_retest_v1", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "smart_grid_v2", "smart_grid_v3", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow", "trendline_break_retest_v2", "flat_bounce_v2", "flat_bounce_v3", "btc_eth_trend_follow_v2", "trendline_break_retest_v3", "trendline_break_retest_v4", "structure_shift_v1", "structure_shift_v2", "tv_atr_trend_v1", "tv_atr_trend_v2", "triple_screen_v132", "triple_screen_v132b", "btc_regime_retest_v1", "btc_cycle_pullback_v1", "btc_macro_cycle_v1", "btc_cycle_continuation_v1", "btc_cycle_level_target_v2", "btc_daily_level_reclaim_v1", "btc_swing_zone_reclaim_v1", "btc_weekly_zone_reclaim_v2", "btc_regime_flip_continuation_v1", "btc_sloped_reclaim_v1", "alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1", "alt_inplay_breakdown_v1", "micro_scalper_v1", "alt_support_reclaim_v1", "pump_fade_v4r", "pump_fade_simple", "btc_eth_midterm_pullback_v2", "funding_rate_reversion_v1", "liquidation_cascade_entry_v1"}
+    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_pullback_be_trail", "sr_break_retest_volume_v1", "sloped_break_retest_v1", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "smart_grid_v2", "smart_grid_v3", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow", "trendline_break_retest_v2", "flat_bounce_v2", "flat_bounce_v3", "btc_eth_trend_follow_v2", "trendline_break_retest_v3", "trendline_break_retest_v4", "structure_shift_v1", "structure_shift_v2", "tv_atr_trend_v1", "tv_atr_trend_v2", "triple_screen_v132", "triple_screen_v132b", "btc_regime_retest_v1", "btc_cycle_pullback_v1", "btc_macro_cycle_v1", "btc_cycle_continuation_v1", "btc_cycle_level_target_v2", "btc_daily_level_reclaim_v1", "btc_swing_zone_reclaim_v1", "btc_weekly_zone_reclaim_v2", "btc_regime_flip_continuation_v1", "btc_sloped_reclaim_v1", "alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1", "alt_inplay_breakdown_v1", "micro_scalper_v1", "micro_scalper_bounce_v1", "micro_scalper_breakout_v1", "alt_support_reclaim_v1", "pump_fade_v4r", "pump_fade_simple", "btc_eth_midterm_pullback_v2", "funding_rate_reversion_v1", "liquidation_cascade_entry_v1"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -831,8 +849,15 @@ def main():
     cache_dir = Path(args.cache)
     stores: Dict[str, KlineStore] = {}
     for sym in symbols:
-        c5 = _load_symbol_5m(sym, start_ts, end_ts, bybit_base=args.bybit_base, cache_dir=cache_dir)
-        stores[sym] = KlineStore(sym, c5)
+        base_candles = _load_symbol_base(
+            sym,
+            start_ts,
+            end_ts,
+            bybit_base=args.bybit_base,
+            cache_dir=cache_dir,
+            base_interval_min=args.base_interval_min,
+        )
+        stores[sym] = KlineStore(sym, base_candles, base_interval_min=args.base_interval_min)
 
     if any(s in strategies for s in ("alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1")):
         min_cov_frac = float(os.getenv("FLAT_MIN_COVERAGE_FRAC", "0.85"))
@@ -993,6 +1018,8 @@ def main():
     alt_sloped_channel_v1 = {sym: AltSlopedChannelV1Strategy() for sym in symbols} if "alt_sloped_channel_v1" in strategies else {}
     alt_inplay_breakdown_v1 = {sym: AltInplayBreakdownV1Strategy() for sym in symbols} if "alt_inplay_breakdown_v1" in strategies else {}
     micro_scalper_v1 = {sym: MicroScalperV1Strategy() for sym in symbols} if "micro_scalper_v1" in strategies else {}
+    micro_scalper_bounce_v1 = {sym: MicroScalperBounceV1Strategy() for sym in symbols} if "micro_scalper_bounce_v1" in strategies else {}
+    micro_scalper_breakout_v1 = {sym: MicroScalperBreakoutV1Strategy() for sym in symbols} if "micro_scalper_breakout_v1" in strategies else {}
     alt_support_reclaim_v1 = {sym: AltSupportReclaimV1Strategy() for sym in symbols} if "alt_support_reclaim_v1" in strategies else {}
     pump_fade_v4r = {sym: PumpFadeV4RStrategy() for sym in symbols} if "pump_fade_v4r" in strategies else {}
     pump_fade_simple = {sym: PumpFadeSimpleStrategy() for sym in symbols} if "pump_fade_simple" in strategies else {}
@@ -1296,6 +1323,18 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = micro_scalper_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "micro_scalper_bounce_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = micro_scalper_bounce_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "micro_scalper_breakout_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = micro_scalper_breakout_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "alt_support_reclaim_v1":
                 i = getattr(store, 'i5', getattr(store, 'i', None))
                 if i is None:

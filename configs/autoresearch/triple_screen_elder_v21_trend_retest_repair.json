@@ -1,0 +1,58 @@
+{
+  "name": "triple_screen_elder_v21_trend_retest_repair",
+  "description": "Elder Triple Screen v21 — keep cadence repaired, force separate eval-timeframe oscillator, extend hold for multi-day trend rides, and search a narrower trend-friendly short basket.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "{SYMBOLS}",
+    "--strategies", "triple_screen_v132",
+    "--days", "360",
+    "--end", "2026-02-24",
+    "--tag", "{tag}"
+  ],
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 1.6,
+    "max_drawdown": 3.0,
+    "min_net_pnl": 6.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "grid": {
+    "SYMBOLS": [
+      "BTCUSDT,ETHUSDT,SOLUSDT",
+      "ETHUSDT,SOLUSDT,AVAXUSDT",
+      "BTCUSDT,ETHUSDT,AVAXUSDT"
+    ],
+    "TS132_ALLOW_LONGS": ["0"],
+    "TS132_ALLOW_SHORTS": ["1"],
+    "TS132_TRADE_MODE": ["active"],
+    "TS132_TREND_TF": ["240"],
+    "TS132_TREND_EMA_LEN": [45],
+    "TS132_EVAL_TF_MIN": [60],
+    "TS132_SIGNAL_EVAL_TF_MIN": [5],
+    "TS132_USE_EVAL_TF_OSC": ["1"],
+    "TS132_OSC_TYPE": ["stoch"],
+    "TS132_OSC_PERIOD": [6, 8],
+    "TS132_OSC_OB": [55, 60],
+    "TS132_OSC_OS": [40, 45],
+    "TS132_SL_ATR_MULT": [1.8],
+    "TS132_TP_ATR_MULT": [4.0],
+    "TS132_BE_PCT": [1.0],
+    "TS132_TIME_STOP_BARS_5M": [864, 1152],
+    "TS132_MAX_SIGNALS_PER_DAY": [2],
+    "TS132_TRAIL_ATR_MULT_SHORT": [1.8, 2.0],
+    "TS132_TRAIL_ACTIVATE_SHORT_ATR": [3.5, 4.5],
+    "TS132_TRAIL_ATR_MULT_LONG": [1.6],
+    "TS132_TRAIL_ACTIVATE_LONG_ATR": [3.0],
+    "TS132_USE_TREND_STRENGTH_FILTER": ["1"],
+    "TS132_TREND_SLOPE_LOOKBACK": [6],
+    "TS132_TREND_MIN_GAP_PCT": [0.08, 0.10],
+    "TS132_TREND_MIN_SLOPE_PCT": [0.04, 0.05],
+    "TS132_USE_VOL_FILTER": ["0"],
+    "TS132_EXEC_MODE": ["optimistic"]
+  },
+  "_combo_count": "192 combos",
+  "_goal": "Find whether TS132 improves when it rides cleaner multi-day short trends with softer oscillator gates but still avoids chop."
+}
