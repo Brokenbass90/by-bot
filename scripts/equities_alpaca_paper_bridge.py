@@ -87,6 +87,191 @@ def _env_bool(name: str, default: bool) -> bool:
     return raw in {"1", "true", "yes", "on"}
 
 
+def _safe_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except Exception:
+        return default
+
+
+def _safe_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(float(value))
+    except Exception:
+        return default
+
+
+def _latest_summary_path(picks_csv: Path) -> Path | None:
+    env_path = _env("EQ_LATEST_SUMMARY_CSV", "")
+    if env_path:
+        path = Path(env_path)
+        if path.exists():
+            return path
+    candidate = picks_csv.parent / "summary.csv"
+    return candidate if candidate.exists() else None
+
+
+def _load_summary_row(path: Path | None) -> dict[str, str]:
+    if path is None or not path.exists():
+        return {}
+    try:
+        with path.open(newline="", encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+        return rows[0] if rows else {}
+    except Exception:
+        return {}
+
+
+def _deepseek_chat(system: str, user: str) -> str:
+    api_key = _env("DEEPSEEK_API_KEY")
+    if not api_key:
+        return ""
+    url = _env("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/") + "/chat/completions"
+    payload = {
+        "model": _env("DEEPSEEK_MODEL", "deepseek-chat"),
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+        "temperature": 0.1,
+        "max_tokens": 220,
+    }
+    req = request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with request.urlopen(req, context=ssl.create_default_context(), timeout=float(_env("DEEPSEEK_TIMEOUT_SEC", "12") or 12)) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+        data = json.loads(raw) if raw else {}
+        choices = data.get("choices") or []
+        if not choices:
+            return ""
+        return str(choices[0].get("message", {}).get("content", "")).strip()
+    except Exception:
+        return ""
+
+
+def _extract_json(raw: str) -> dict[str, Any]:
+    text = str(raw or "").strip()
+    if not text:
+        return {}
+    try:
+        parsed = json.loads(text)
+        return parsed if isinstance(parsed, dict) else {}
+    except Exception:
+        pass
+    start = text.find("{")
+    end = text.rfind("}")
+    if start >= 0 and end > start:
+        try:
+            parsed = json.loads(text[start:end + 1])
+            return parsed if isinstance(parsed, dict) else {}
+        except Exception:
+            return {}
+    return {}
+
+
+def _alpaca_advisory_path(picks_csv: Path) -> Path:
+    raw = _env("ALPACA_DEEPSEEK_ADVISORY_PATH", "")
+    if raw:
+        return Path(raw)
+    runtime_dir = (
+        _env("ALPACA_AUTOPILOT_RUNTIME_DIR", "")
+        or _env("EQ_V35_RUNTIME_DIR", "")
+        or _env("EQ_BASELINE_RUNTIME_DIR", "")
+    )
+    if runtime_dir:
+        return Path(runtime_dir) / "latest_advisory.json"
+    return picks_csv.parent / "latest_advisory.json"
+
+
+def _alpaca_ai_advisory(
+    *,
+    report: dict[str, Any],
+    summary_row: dict[str, str],
+    picks_csv: Path,
+) -> dict[str, Any]:
+    enabled = _env_bool("ALPACA_DEEPSEEK_ADVISORY_ENABLE", _env_bool("ALPACA_DEEPSEEK_NOTE_ENABLE", False))
+    if not enabled:
+        return {}
+    if not _env("DEEPSEEK_API_KEY"):
+        return {}
+
+    max_chars = max(240, _env_int("ALPACA_DEEPSEEK_ADVISORY_MAX_CHARS", _env_int("ALPACA_DEEPSEEK_NOTE_MAX_CHARS", 420)))
+    positions = report.get("positions_before") or []
+    selected = report.get("selected") or []
+    pos_lines = []
+    for pos in positions[:5]:
+        sym = str(pos.get("ticker") or "?")
+        mv = _safe_float(pos.get("market_value"))
+        pos_lines.append(f"{sym}:${mv:.0f}")
+    sel_lines = []
+    for row in selected[:5]:
+        sym = str(row.get("ticker") or "?")
+        score = _safe_float(row.get("score"))
+        mom60 = _safe_float(row.get("momentum60_pct"))
+        pb60 = _safe_float(row.get("pullback60_pct"))
+        sel_lines.append(f"{sym}(score={score:.3f},mom60={mom60:.1f},pb60={pb60:.1f})")
+
+    cycle_reason = str(report.get("cycle_reason") or "")
+    summary_bits = (
+        f"ret={_safe_float(summary_row.get('compounded_return_pct')):.2f}% "
+        f"trades={_safe_int(summary_row.get('trades'))} "
+        f"pf={_safe_float(summary_row.get('profit_factor')):.3f} "
+        f"winrate={_safe_float(summary_row.get('winrate_pct')):.1f}% "
+        f"active_months={_safe_int(summary_row.get('months'))} "
+        f"calendar_months={_safe_int(summary_row.get('calendar_months'))} "
+        f"inactive_months={_safe_int(summary_row.get('inactive_months'))} "
+        f"neg_months={_safe_int(summary_row.get('negative_months'))} "
+        f"max_month_dd={_safe_float(summary_row.get('max_monthly_dd_pct')):.2f}%"
+    )
+
+    system = (
+        "Ты аккуратный equities monthly sleeve advisor. "
+        "Верни только JSON-объект с ключами verdict, next_action, note. "
+        "verdict: one of hold_flat, close_stale, keep_positions, buy_selected, refresh_watch. "
+        "next_action: one short snake_case phrase. "
+        "note: short Russian explanation <= 220 chars, practical, no disclaimers."
+    )
+    user = (
+        f"status={report.get('status')}\n"
+        f"cycle_reason={cycle_reason}\n"
+        f"month={report.get('month')}\n"
+        f"picks_csv={picks_csv}\n"
+        f"latest_entry_day={report.get('latest_entry_day')}\n"
+        f"pick_age_days={report.get('pick_age_days')}\n"
+        f"refresh_age_hours={report.get('refresh_age_hours')}\n"
+        f"stale_positions={','.join(report.get('stale_positions') or []) or 'none'}\n"
+        f"hold_positions={','.join(report.get('hold_positions') or []) or 'none'}\n"
+        f"new_buy_symbols={','.join(report.get('new_buy_symbols') or []) or 'none'}\n"
+        f"positions={'; '.join(pos_lines) or 'none'}\n"
+        f"selected={'; '.join(sel_lines) or 'none'}\n"
+        f"summary={summary_bits}\n"
+        "Дай advisory verdict для paper monthly sleeve: что делать сейчас и почему."
+    )
+    raw = _deepseek_chat(system, user)
+    if not raw:
+        return {}
+    parsed = _extract_json(raw)
+    note = str(parsed.get("note") or raw).strip()
+    if len(note) > max_chars:
+        note = note[: max_chars - 1].rstrip() + "…"
+    advisory = {
+        "source": "deepseek",
+        "verdict": str(parsed.get("verdict") or "refresh_watch").strip() or "refresh_watch",
+        "next_action": str(parsed.get("next_action") or "manual_review").strip() or "manual_review",
+        "note": note,
+        "raw": raw[:1000],
+    }
+    return advisory
+
+
 class AlpacaClient:
     def __init__(self, base_url: str, key_id: str, secret_key: str):
         self.base_url = base_url.rstrip("/")
@@ -311,6 +496,13 @@ def main() -> int:
         if selected
         else 0.0
     )
+    summary_path = _latest_summary_path(picks_csv)
+    summary_row = _load_summary_row(summary_path)
+    cycle_reason = (
+        "no_current_cycle_after_refresh" if no_current_cycle
+        else "selected_current_cycle" if selected
+        else "filtered_to_zero_candidates"
+    )
 
     report = {
         "status": (
@@ -333,6 +525,19 @@ def main() -> int:
         "refresh_utc": refresh_utc_raw,
         "refresh_age_hours": None if refresh_age_hours is None else round(refresh_age_hours, 2),
         "no_current_cycle": no_current_cycle,
+        "cycle_reason": cycle_reason,
+        "summary_csv": str(summary_path) if summary_path else "",
+        "summary_metrics": {
+            "compounded_return_pct": round(_safe_float(summary_row.get("compounded_return_pct")), 4),
+            "trades": _safe_int(summary_row.get("trades")),
+            "profit_factor": round(_safe_float(summary_row.get("profit_factor")), 4),
+            "winrate_pct": round(_safe_float(summary_row.get("winrate_pct")), 4),
+            "months": _safe_int(summary_row.get("months")),
+            "calendar_months": _safe_int(summary_row.get("calendar_months")),
+            "inactive_months": _safe_int(summary_row.get("inactive_months")),
+            "negative_months": _safe_int(summary_row.get("negative_months")),
+            "max_monthly_dd_pct": round(_safe_float(summary_row.get("max_monthly_dd_pct")), 4),
+        },
         "positions_before": [
             {
                 "ticker": sym,
@@ -389,6 +594,24 @@ def main() -> int:
                     "notional": per_position_notional,
                 }
             )
+
+    advisory = _alpaca_ai_advisory(report=report, summary_row=summary_row, picks_csv=picks_csv)
+    if advisory:
+        report["advisory"] = advisory
+        advisory_path = _alpaca_advisory_path(picks_csv)
+        advisory_path.parent.mkdir(parents=True, exist_ok=True)
+        advisory_payload = {
+            "updated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "picks_csv": str(picks_csv),
+            "summary_csv": str(summary_path) if summary_path else "",
+            "report": report,
+        }
+        advisory_path.write_text(
+            json.dumps(advisory_payload, ensure_ascii=True, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        report["advisory_path"] = str(advisory_path)
+
     print(json.dumps(report, ensure_ascii=True, separators=(",", ":")))
 
     # ── Telegram notification ─────────────────────────────────────────────────
@@ -406,6 +629,7 @@ def main() -> int:
         ]
         if earnings_blocked:
             lines.append(f"🚫 Earnings blocked: {', '.join(sorted(earnings_blocked))}")
+        lines.append(f"🧭 Cycle: {cycle_reason}")
         for r in report["results"]:
             ticker = r.get("ticker", "?")
             action = r.get("action", "?")
@@ -418,6 +642,8 @@ def main() -> int:
                 lines.append(f"  🟡 HOLD {ticker}")
         if not report["results"]:
             lines.append("  — No actions taken —")
+        if advisory:
+            lines += ["", "🧠 <b>AI advisory</b>", str(advisory.get("note") or "").strip()]
         _tg_send(tg_token, tg_chat_id, "\n".join(lines))
 
     return 0
