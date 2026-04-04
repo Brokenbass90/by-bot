@@ -1,0 +1,76 @@
+{
+  "name": "core3_range_additivity_current90_v1",
+  "description": "Tests whether alt_range_scalp_v1 becomes additive to the current core2 portfolio when it gets tuned params, slightly more max_positions, and a semi-disjoint symbol basket instead of competing for the exact same sleeve slots.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ATOMUSDT",
+    "--strategies",
+    "alt_inplay_breakdown_v1,alt_resistance_fade_v1,alt_range_scalp_v1",
+    "--days",
+    "90",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "{MAX_POSITIONS}",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "BREAKDOWN_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT",
+    "ARF1_SYMBOL_ALLOWLIST": "ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "ARF1_SIGNAL_LOOKBACK": "48",
+    "ARF1_MIN_RANGE_PCT": "4.5",
+    "ARF1_COOLDOWN_BARS_5M": "48",
+    "ARS1_BB_PERIOD": "20",
+    "ARS1_BB_STD": "2.0",
+    "ARS1_MIN_BAND_WIDTH_PCT": "2.5",
+    "ARS1_RSI_LONG_MAX": "35",
+    "ARS1_RSI_SHORT_MIN": "65",
+    "ARS1_SL_ATR_MULT": "0.8",
+    "ARS1_ALLOW_LONGS": "1",
+    "ARS1_ALLOW_SHORTS": "1",
+    "ARS1_SYMBOL_ALLOWLIST": "DOTUSDT,LTCUSDT,SUIUSDT,ATOMUSDT"
+  },
+  "grid": {
+    "MAX_POSITIONS": [3, 4, 5],
+    "ARS1_SYMBOL_ALLOWLIST": [
+      "DOTUSDT,LTCUSDT,SUIUSDT,ATOMUSDT",
+      "DOTUSDT,LTCUSDT,SUIUSDT,ATOMUSDT,ADAUSDT",
+      "DOTUSDT,LTCUSDT,SUIUSDT,ATOMUSDT,LINKUSDT"
+    ],
+    "ARS1_TIME_STOP_BARS_5M": [144, 216]
+  },
+  "constraints": {
+    "min_trades": 35,
+    "min_profit_factor": 1.35,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 10.0,
+    "max_negative_months": 1,
+    "max_negative_streak": 1
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 6.0,
+    "winrate": 4.0,
+    "max_drawdown": 2.0,
+    "trades": 0.15,
+    "trades_cap": 120,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.0
+  },
+  "_combo_count": "3x3x2 = 18 combos",
+  "_goal": "Find out whether range_scalp is a real third sleeve once it stops fighting core2 for exactly the same symbols and position slots."
+}

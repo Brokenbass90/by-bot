@@ -1,0 +1,71 @@
+{
+  "name": "pump_momentum_v1_current90_zoom_v1",
+  "description": "Current90 zoom sweep for pump_momentum_v1. Tests the no-retest continuation hypothesis directly on the recent pump-and-fade market instead of waiting for classic breakout reclaim structures.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "SOLUSDT,DOGEUSDT,1000PEPEUSDT,SUIUSDT,ADAUSDT,TAOUSDT,HYPEUSDT",
+    "--strategies",
+    "pump_momentum_v1",
+    "--days",
+    "90",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "PM_REQUIRE_BULLISH": "1",
+    "PM_MIN_BODY_FRAC": "0.25",
+    "PM_VOL_PERIOD": "20",
+    "PM_ATR_PERIOD": "14",
+    "PM_MAX_PUMP_PCT": "0.25",
+    "PM_MIN_STOP_PCT": "0.010",
+    "PM_MAX_STOP_PCT": "0.080",
+    "PM_TRAIL_ATR_MULT": "1.4",
+    "PM_COOLDOWN_BARS": "12",
+    "PM_SYMBOL_ALLOWLIST": "SOLUSDT,DOGEUSDT,1000PEPEUSDT,SUIUSDT,ADAUSDT,TAOUSDT,HYPEUSDT"
+  },
+  "grid": {
+    "PM_LOOKBACK_BARS": [6, 9],
+    "PM_MIN_PUMP_PCT": [0.04, 0.06],
+    "PM_VOL_MULT": [1.4, 1.8],
+    "PM_SL_ATR_MULT": [1.0, 1.4],
+    "PM_RR": [1.2, 1.6],
+    "PM_TRAIL_ACTIVATE_RR": [0.6, 0.9]
+  },
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 4.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 6.0,
+    "winrate": 4.0,
+    "max_drawdown": 2.0,
+    "trades": 0.20,
+    "trades_cap": 80,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.0
+  },
+  "_combo_count": "2x2x2x2x2x2 = 64 combos",
+  "_goal": "Find out whether current-market pumps are tradable via direct momentum continuation even when breakout-retest longs stay starved."
+}
