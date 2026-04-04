@@ -14,6 +14,7 @@ Typical env config:
     ETS2_TREND_TF=240
     ETS2_WAVE_TF=60
     ETS2_ENTRY_TF=15
+    ETS2_RISK_TF=60
     ETS2_TREND_EMA=13
     ETS2_OSC_PERIOD=8
     ETS2_SL_ATR_MULT=2.0
@@ -143,6 +144,7 @@ class ElderTripleScreenV2Config:
     # Screen 3: Entry (15m)
     entry_tf: str = "15"
     entry_lookback: int = 5
+    risk_tf: str = ""
 
     # Exit management
     sl_atr_mult: float = 2.0
@@ -173,6 +175,7 @@ class ElderTripleScreenV2Strategy:
 
         self.cfg.entry_tf = os.getenv("ETS2_ENTRY_TF", self.cfg.entry_tf)
         self.cfg.entry_lookback = _env_int("ETS2_ENTRY_LOOKBACK", self.cfg.entry_lookback)
+        self.cfg.risk_tf = os.getenv("ETS2_RISK_TF", self.cfg.risk_tf).strip()
 
         self.cfg.sl_atr_mult = _env_float("ETS2_SL_ATR_MULT", self.cfg.sl_atr_mult)
         self.cfg.tp_atr_mult = _env_float("ETS2_TP_ATR_MULT", self.cfg.tp_atr_mult)
@@ -324,10 +327,11 @@ class ElderTripleScreenV2Strategy:
             return None
 
         # Calculate ATR for stops
-        rows_full = store.fetch_klines(store.symbol, self.cfg.entry_tf, 50) or []
+        risk_tf = self.cfg.risk_tf or self.cfg.entry_tf
+        rows_full = store.fetch_klines(store.symbol, risk_tf, 50) or []
         atr = _atr_from_rows(rows_full, 14)
         if not math.isfinite(atr) or atr <= 0:
-            self.last_no_signal_reason = "atr_invalid"
+            self.last_no_signal_reason = f"atr_invalid_{risk_tf}"
             return None
 
         entry_price = float(c)

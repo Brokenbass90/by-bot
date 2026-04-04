@@ -123,9 +123,53 @@ class AltInplayBreakdownV1Config:
     sl_atr: float = 1.8
     rr: float = 2.0
     tp1_frac: float = 0.50
+    next_level_tp_enable: bool = True
+    next_level_lookback_mult: float = 2.0
+    next_level_buffer_atr: float = 0.30
     time_stop_bars_5m: int = 288
     cooldown_bars_5m: int = 48
     max_wait_bars_5m: int = 30
+
+
+def _find_next_support_below(
+    lows: List[float],
+    current_level: float,
+    atr: float,
+    min_gap_atr: float = 1.0,
+) -> Optional[float]:
+    if not lows or not math.isfinite(current_level) or not math.isfinite(atr) or atr <= 0:
+        return None
+    threshold = current_level - max(0.5, float(min_gap_atr)) * atr
+    candidates = sorted((float(x) for x in lows if math.isfinite(float(x)) and float(x) < threshold), reverse=True)
+    if not candidates:
+        return None
+
+    clusters: List[List[float]] = [[candidates[0]]]
+    cluster_gap = 0.5 * atr
+    for val in candidates[1:]:
+        if clusters[-1][-1] - val <= cluster_gap:
+            clusters[-1].append(val)
+        else:
+            clusters.append([val])
+
+    ranked = sorted(
+        (
+            {
+                "upper": max(cluster),
+                "count": len(cluster),
+            }
+            for cluster in clusters
+        ),
+        key=lambda x: (x["count"], x["upper"]),
+        reverse=True,
+    )
+    if not ranked:
+        return None
+
+    best_count = ranked[0]["count"]
+    nearest = sorted((item for item in ranked if item["count"] >= max(2, best_count)), key=lambda x: x["upper"], reverse=True)
+    chosen = nearest[0] if nearest else ranked[0]
+    return float(chosen["upper"])
 
 
 class AltInplayBreakdownV1Strategy:
@@ -171,6 +215,9 @@ class AltInplayBreakdownV1Strategy:
         self.cfg.sl_atr = _env_float("BREAKDOWN_SL_ATR", self.cfg.sl_atr)
         self.cfg.rr = _env_float("BREAKDOWN_RR", self.cfg.rr)
         self.cfg.tp1_frac = _env_float("BREAKDOWN_TP1_FRAC", self.cfg.tp1_frac)
+        self.cfg.next_level_tp_enable = _env_bool("BREAKDOWN_NEXT_LEVEL_TP_ENABLE", self.cfg.next_level_tp_enable)
+        self.cfg.next_level_lookback_mult = _env_float("BREAKDOWN_NEXT_LEVEL_LOOKBACK_MULT", self.cfg.next_level_lookback_mult)
+        self.cfg.next_level_buffer_atr = _env_float("BREAKDOWN_NEXT_LEVEL_BUFFER_ATR", self.cfg.next_level_buffer_atr)
         self.cfg.time_stop_bars_5m = _env_int("BREAKDOWN_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
         self.cfg.cooldown_bars_5m = _env_int("BREAKDOWN_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
         self.cfg.max_wait_bars_5m = _env_int("BREAKDOWN_MAX_RETEST_BARS", self.cfg.max_wait_bars_5m)
@@ -259,8 +306,17 @@ class AltInplayBreakdownV1Strategy:
             self.last_no_signal_reason = f"break_too_extended_{dist_atr:.2f}atr"
             return
 
+        next_support = None
+        if self.cfg.next_level_tp_enable:
+            wider_lookback = max(lookback + 10, int(math.ceil(float(lookback) * max(1.0, float(self.cfg.next_level_lookback_mult))))) 
+            rows_wide = store.fetch_klines(store.symbol, self.cfg.structure_tf, wider_lookback + 10) or []
+            if rows_wide:
+                all_lows = [float(r[3]) for r in rows_wide[:-1]] if len(rows_wide) > 1 else [float(r[3]) for r in rows_wide]
+                next_support = _find_next_support_below(all_lows, support, atr)
+
         self._armed = {
             "level": support,
+            "next_support": next_support,
             "atr": atr,
             "break_close": last_close,
             "break_high": last_high,
@@ -339,13 +395,29 @@ class AltInplayBreakdownV1Strategy:
             return None
 
         risk = sl - entry
-        tp2 = entry - self.cfg.rr * risk
+        atr_tp2 = entry - self.cfg.rr * risk
+        tp2 = atr_tp2
         if tp2 >= entry:
             self.last_no_signal_reason = "tp_invalid"
             return None
         tp1_rr = max(0.8, float(self.cfg.rr) * min(0.8, max(0.1, float(self.cfg.tp1_frac))))
         tp1 = entry - tp1_rr * risk
         tp1_frac = min(0.9, max(0.1, float(self.cfg.tp1_frac)))
+        level_tp_applied = False
+
+        next_support = self._armed.get("next_support") if self._armed else None
+        if (
+            self.cfg.next_level_tp_enable
+            and next_support is not None
+            and math.isfinite(float(next_support))
+            and float(next_support) < entry
+            and float(next_support) > atr_tp2
+        ):
+            level_tp = float(next_support) + max(0.05, float(self.cfg.next_level_buffer_atr)) * atr
+            if atr_tp2 < level_tp < entry:
+                tp2 = level_tp
+                tp1 = entry - (entry - tp2) * 0.5
+                level_tp_applied = True
 
         self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
         self._armed = None
@@ -359,7 +431,7 @@ class AltInplayBreakdownV1Strategy:
             tps=[tp1, tp2],
             tp_fracs=[tp1_frac, max(0.0, 1.0 - tp1_frac)],
             time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
-            reason=reason,
+            reason=f"{reason}+level_tp" if level_tp_applied else reason,
         )
         return sig if sig.validate() else None
 

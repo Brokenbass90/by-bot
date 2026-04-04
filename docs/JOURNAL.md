@@ -2011,3 +2011,56 @@ So the active queue is cleaner now:
 - running: `pump_fade_v2`
 - completed earlier and available for reading: `ARF1 density`, `breakdown focus`, `range_scalp`
 - stopped/deprioritized: `VWAP`, `ASC1`
+
+2026-04-04 11:30 UTC
+
+Two concrete architecture fixes landed, and one of them is already validated.
+
+First, `breakdown` no longer has to trade blind into the next support.
+
+In [alt_inplay_breakdown_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_inplay_breakdown_v1.py) the strategy now:
+
+- scans for the next lower support cluster
+- stores it at arm time
+- moves TP up in front of that level when it would otherwise overshoot it
+
+This is not just theoretical. The smoke run:
+
+- [summary.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260404_112212_breakdown_level_tp_smoke_90d/summary.csv)
+  - `+10.20%`
+  - `39` trades
+  - PF `2.345`
+  - WR `59.0%`
+  - DD `3.48%`
+
+And the trade reasons confirm the new path is active:
+
+- `bd1_failed_reclaim+level_tp+TP1+TP2`
+
+Second, `elder` now has a cleaner risk model.
+
+In [elder_triple_screen_v2.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/elder_triple_screen_v2.py) I added:
+
+- `ETS2_RISK_TF`
+
+That means stop/target ATR can come from a slower timeframe than the raw entry trigger. The new sweep:
+
+- [elder_ts_v2_sweep_v2.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/elder_ts_v2_sweep_v2.json)
+
+now fixes risk ATR on `60m` while still comparing `15m` vs `60m` entry timing honestly.
+
+Early result is still bad:
+
+- `r001-r004` all fail badly
+
+So `elder` is still research, not promotion.
+
+Finally, the active queue is narrower and healthier:
+
+- running: `core2 walk-forward` with overlay-bound env
+- running: `elder v2`
+- stopped: `VWAP`
+- stopped: `pump_fade_v2`
+- stopped: `breakout repair current sweep`
+
+That is a much cleaner place to leave the machine for the next hour.

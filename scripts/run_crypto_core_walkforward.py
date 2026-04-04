@@ -5,6 +5,7 @@ import argparse
 import csv
 import datetime as dt
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -49,6 +50,21 @@ def _load_summary(run_dir: Path) -> dict:
 def _default_output_dir(tag: str) -> Path:
     ts = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d_%H%M%S")
     return BACKTEST_RUNS / f"walkforward_{ts}_{tag}"
+
+
+def _load_env_file(path: Path) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for raw in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[len("export ") :].strip()
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        out[key.strip()] = value.strip()
+    return out
 
 
 def _build_windows(*, end_date: dt.date, total_days: int, window_days: int, step_days: int) -> List[tuple[dt.date, dt.date]]:
@@ -208,6 +224,7 @@ def main() -> int:
     ap.add_argument("--max_dd", type=float, default=12.0)
     ap.add_argument("--tag", default="crypto_core_walkforward")
     ap.add_argument("--out_dir", default="", help="Optional explicit output dir")
+    ap.add_argument("--env-file", action="append", default=[], help="Optional KEY=VALUE env overlay file(s)")
     args = ap.parse_args()
 
     end_date = _parse_date(args.end)
@@ -219,10 +236,15 @@ def main() -> int:
     )
     out_dir = Path(args.out_dir) if args.out_dir else _default_output_dir(args.tag)
 
-    env = {
-        **dict(),
-        "PYTHONDONTWRITEBYTECODE": "1",
-    }
+    env = dict(os.environ)
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    for env_file in args.env_file:
+        env_path = Path(env_file)
+        if not env_path.is_absolute():
+            env_path = (REPO_DIR / env_path).resolve()
+        if not env_path.exists():
+            raise FileNotFoundError(f"Missing env file: {env_path}")
+        env.update(_load_env_file(env_path))
 
     results: List[dict] = []
     for idx, (window_start, window_end) in enumerate(windows, start=1):
