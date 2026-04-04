@@ -600,6 +600,8 @@ def _load_symbol_base(
         if not isinstance(r, (list, tuple)) or len(r) < 5:
             continue
         ts = int(float(r[0]))
+        if ts < start_ms or ts >= end_ms:
+            continue
         o = float(r[1]); h = float(r[2]); l = float(r[3]); c = float(r[4])
         v = float(r[5]) if len(r) > 5 else 0.0
         out.append(Candle(ts=ts, o=o, h=h, l=l, c=c, v=v))

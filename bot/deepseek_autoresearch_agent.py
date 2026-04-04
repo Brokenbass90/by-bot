@@ -508,7 +508,12 @@ def build_research_context() -> dict[str, Any]:
     historical knowledge when answering /ai questions.
     """
     current_stack_dirs = find_latest_run_dirs("new_5strat_final", limit=1, prefixes=("portfolio_",))
-    current_stack_best = read_portfolio_summary(current_stack_dirs[0]) if current_stack_dirs else None
+    historical_stack_best = read_portfolio_summary(current_stack_dirs[0]) if current_stack_dirs else None
+    core2_current90_dir = _ROOT / "backtest_runs" / "portfolio_20260404_003719_overnight_current90_core2_fade_breakdown"
+    core2_recent180_dir = _ROOT / "backtest_runs" / "portfolio_20260404_004652_overnight_recent180_core2_fade_breakdown"
+    core2_current90 = read_portfolio_summary(core2_current90_dir) if core2_current90_dir.exists() else None
+    core2_recent180 = read_portfolio_summary(core2_recent180_dir) if core2_recent180_dir.exists() else None
+    current_stack_best = core2_current90 or historical_stack_best
     ctx: dict[str, Any] = {
         "known_best_params": {
             "inplay_breakout": {
@@ -575,6 +580,25 @@ def build_research_context() -> dict[str, Any]:
             },
         },
         "current_portfolio_best": current_stack_best or {},
+        "current_crypto_core_candidate": {
+            "overlay_env": "configs/live_candidate_core2_breakdown_arf1_20260404.env",
+            "strategies": [
+                "alt_resistance_fade_v1",
+                "alt_inplay_breakdown_v1",
+            ],
+            "current90": core2_current90 or {},
+            "recent180": core2_recent180 or {},
+            "notes": (
+                "Current live canary candidate is the narrow core2 stack "
+                "(ARF1 + rewritten breakdown). Prefer this over stale historical 5-sleeve claims."
+            ),
+        },
+        "historical_portfolio_reference": historical_stack_best or {},
+        "truth_notes": [
+            "Prefer snapshot.strategies/live_params over historical prompt memory.",
+            "Current live canary is a narrow core, not the old broad 5-sleeve portfolio.",
+            "Walk-forward tooling was patched on 2026-04-04 to trim cache-fallback candles to the requested time window.",
+        ],
         "combined_4strat_best": {
             "deprecated_alias": "historical name kept for backward compatibility; now points to the current 5-sleeve stack",
             **(current_stack_best or {}),

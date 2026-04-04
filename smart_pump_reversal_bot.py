@@ -1727,6 +1727,17 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "DRY_RUN": os.getenv("DRY_RUN", ""),
             "ENABLE_BREAKDOWN_TRADING": os.getenv("ENABLE_BREAKDOWN_TRADING", "0"),
         },
+        "system_truth": {
+            "current_live_candidate": "core2_breakdown_arf1_20260404",
+            "current_live_candidate_strategies": [
+                "alt_resistance_fade_v1",
+                "alt_inplay_breakdown_v1",
+            ],
+            "tpsl_hard_fail_close": str(os.getenv("TPSL_HARD_FAIL_CLOSE", "0")),
+            "tpsl_hard_fail_grace_sec": str(os.getenv("TPSL_HARD_FAIL_GRACE_SEC", "")),
+            "router_regime": str(os.getenv("ROUTER_REGIME", "")),
+            "orch_global_risk_mult": str(os.getenv("ORCH_GLOBAL_RISK_MULT", "")),
+        },
     }
 
 
