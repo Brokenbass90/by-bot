@@ -1966,3 +1966,48 @@ Current honest shortlist:
 - repair candidate: `breakout`
 - still-unproven secondary sleeve: `ASC1`
 - research-only/no-promotion: `VWAP`
+
+2026-04-04 10:45 UTC
+
+I cleaned up the active queue and replaced one stale tool with a current one.
+
+The old generic walk-forward script is not trustworthy for the current crypto stack:
+
+- it imports archived/dead strategies
+- it fails before execution
+- it is not the right foundation for evaluating the current `ARF1 + breakdown` core
+
+So instead of trying to salvage it blindly, I added a dedicated runner:
+
+- [run_crypto_core_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_crypto_core_walkforward.py)
+
+This new runner:
+
+- uses the real `.venv`
+- calls the live [run_portfolio.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py)
+- runs rolling windows
+- writes CSV + Markdown + JSON summaries
+
+It is now running on the current core:
+
+- symbols: `ADA,SUI,LINK,DOT,LTC,BTC,ETH,SOL`
+- strategies: `alt_resistance_fade_v1 + alt_inplay_breakdown_v1`
+- horizon: `180d`
+- windows: `30d`
+- step: `15d`
+
+I also explicitly stopped the `VWAP` sweep.
+
+That was the right call:
+
+- the sweep had already shown extreme persistent weakness
+- it was consuming process budget
+- it had not produced a single credible rescue signal
+
+So the active queue is cleaner now:
+
+- running: `core2 walk-forward`
+- running: `breakout repair`
+- running: `pump_fade_v2`
+- completed earlier and available for reading: `ARF1 density`, `breakdown focus`, `range_scalp`
+- stopped/deprioritized: `VWAP`, `ASC1`
