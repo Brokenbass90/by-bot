@@ -167,6 +167,30 @@ def _summary_line(diag: dict) -> str:
     )
 
 
+def _bot_process_alive() -> bool:
+    proc = subprocess.run(
+        ["pgrep", "-fal", "smart_pump_reversal_bot.py"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    return proc.returncode == 0 and bool((proc.stdout or "").strip())
+
+
+def _is_empty_diag_window(diag: dict) -> bool:
+    return (
+        int(diag.get("breakout_try", 0) or 0) == 0
+        and int(diag.get("breakout_entry", 0) or 0) == 0
+        and int(diag.get("breakout_no_signal", 0) or 0) == 0
+        and int(diag.get("midterm_try", 0) or 0) == 0
+        and int(diag.get("midterm_entry", 0) or 0) == 0
+        and int(diag.get("ws_connect", 0) or 0) == 0
+        and int(diag.get("ws_disconnect", 0) or 0) == 0
+        and int(diag.get("ws_handshake_timeout", 0) or 0) == 0
+        and int(diag.get("open_trades", 0) or 0) == 0
+    )
+
+
 def _maybe_auto_restart(diag: dict, state: dict) -> str:
     status = str(diag.get("status") or "").upper()
     if not AUTO_RESTART or status not in AUTO_RESTART_ON or not AUTO_RESTART_CMD:
@@ -225,6 +249,9 @@ def main() -> int:
     state = _load_state()
 
     status = diag["status"]
+    if status == "NO_DATA" and _is_empty_diag_window(diag) and _bot_process_alive():
+        status = "LOW_SAMPLE"
+        diag["status"] = status
     # Keep the standalone health guard aligned with the in-bot WS alerting logic:
     # tiny connect samples can produce absurd ratios and page as CRITICAL even when
     # the transport noise is not yet operationally actionable.
