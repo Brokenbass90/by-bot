@@ -56,6 +56,25 @@ from typing import Dict, List, Optional, Tuple
 
 import requests
 
+DEFAULT_HTTP_TIMEOUT_SEC = float(os.getenv("ALLOWLIST_HTTP_TIMEOUT_SEC", "8"))
+DEFAULT_KLINE_MAX_RETRIES = int(os.getenv("ALLOWLIST_KLINES_MAX_RETRIES", "3"))
+DEFAULT_KLINE_BACKOFF_MAX_SEC = float(os.getenv("ALLOWLIST_KLINES_BACKOFF_MAX_SEC", "5.0"))
+
+# Strategy-state scorer (optional — degrades gracefully if import fails)
+try:
+    from scripts.strategy_scorer import score_for_strategy, explain_score
+    _HAS_SCORER = True
+except ImportError:
+    try:
+        from strategy_scorer import score_for_strategy, explain_score  # type: ignore
+        _HAS_SCORER = True
+    except ImportError:
+        _HAS_SCORER = False
+        def score_for_strategy(env_key, closes, highs, lows):  # type: ignore
+            return 0.5
+        def explain_score(env_key, closes, highs, lows):  # type: ignore
+            return "scorer_unavailable"
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
@@ -86,15 +105,15 @@ def _safe_float(v, default: float = 0.0) -> float:
         return default
 
 
-def _get_tickers(base: str) -> List[dict]:
+def _get_tickers(base: str, *, timeout_sec: float = DEFAULT_HTTP_TIMEOUT_SEC) -> List[dict]:
     url = f"{base.rstrip('/')}/v5/market/tickers"
-    js = requests.get(url, params={"category": "linear"}, timeout=20).json()
+    js = requests.get(url, params={"category": "linear"}, timeout=timeout_sec).json()
     if js.get("retCode") != 0:
         raise RuntimeError(f"Bybit tickers error {js.get('retCode')}: {js.get('retMsg')}")
     return (js.get("result") or {}).get("list") or []
 
 
-def _get_instruments_info(base: str) -> Dict[str, dict]:
+def _get_instruments_info(base: str, *, timeout_sec: float = DEFAULT_HTTP_TIMEOUT_SEC) -> Dict[str, dict]:
     url = f"{base.rstrip('/')}/v5/market/instruments-info"
     out: Dict[str, dict] = {}
     cursor = None
@@ -102,7 +121,7 @@ def _get_instruments_info(base: str) -> Dict[str, dict]:
         params: dict = {"category": "linear"}
         if cursor:
             params["cursor"] = cursor
-        js = requests.get(url, params=params, timeout=20).json()
+        js = requests.get(url, params=params, timeout=timeout_sec).json()
         if js.get("retCode") != 0:
             raise RuntimeError(f"Bybit instruments error {js.get('retCode')}: {js.get('retMsg')}")
         lst = (js.get("result") or {}).get("list") or []
@@ -116,10 +135,23 @@ def _get_instruments_info(base: str) -> Dict[str, dict]:
     return out
 
 
-def _atr_pct_1h(symbol: str, *, base: str, lookback_days: int, sleep_sec: float) -> float:
-    """Fetch 1h klines and return ATR% (requires backtest libs)."""
+def _fetch_1h_data(
+    symbol: str,
+    *,
+    base: str,
+    lookback_days: int,
+    sleep_sec: float,
+    max_retries: int,
+    backoff_max_sec: float,
+) -> tuple:
+    """
+    Fetch 1h klines and return (atr_pct, closes, highs, lows).
+    All four values are needed by strategy_scorer — fetching once avoids
+    extra API calls per symbol.
+    Returns (0.0, [], [], []) on failure or insufficient data.
+    """
     if not _HAS_BACKTEST_LIBS:
-        return 0.0
+        return 0.0, [], [], []
     end_ms = _now_ms()
     start_ms = end_ms - int(lookback_days) * 86_400_000
     try:
@@ -131,15 +163,18 @@ def _atr_pct_1h(symbol: str, *, base: str, lookback_days: int, sleep_sec: float)
             base=base,
             cache=True,
             polite_sleep_sec=sleep_sec,
+            max_retries=max_retries,
+            backoff_max_sec=backoff_max_sec,
         )
     except Exception:
-        return 0.0
+        return 0.0, [], [], []
     if len(kl) < 20:
-        return 0.0
+        return 0.0, [], [], []
     h = [float(k.h) for k in kl]
     l = [float(k.l) for k in kl]
     c = [float(k.c) for k in kl]
-    return float(atr_pct_from_ohlc(h, l, c, period=14, fallback=0.0))
+    atr_pct = float(atr_pct_from_ohlc(h, l, c, period=14, fallback=0.0))
+    return atr_pct, c, h, l
 
 
 # ---------------------------------------------------------------------------
@@ -222,46 +257,134 @@ class StrategyProfile:
     anchor_symbols: List[str] = field(default_factory=list)
 
 
-# Default profiles — tuned to each strategy's mechanics
+# Default profiles — tuned to each strategy's mechanics.
+# NOTE: These are fallback defaults used by dynamic_allowlist.py standalone mode
+# and by build_symbol_router.py when no matching registry profile exists.
+# The authoritative per-regime profiles live in configs/strategy_profile_registry.json.
 _DEFAULT_PROFILES: List[StrategyProfile] = [
     StrategyProfile(
         name="ASC1 (sloped channel)",
         env_key="ASC1_SYMBOL_ALLOWLIST",
-        strategy_tags=["alt_sloped_channel_v1", "sloped_channel", "asc1", "flat_slope_asc1"],
+        strategy_tags=["alt_sloped_channel_v1", "sloped_channel", "asc1"],
         min_turnover=30_000_000.0,
         min_atr_pct=0.28,
-        max_atr_pct=0.90,   # avoid highly volatile coins — strategy needs structure
+        max_atr_pct=0.95,
         min_listing_days=120,
-        top_n=8,
+        top_n=6,
         bt_min_trades=5,
         bt_min_net=0.0,
         bt_min_pf=1.0,
-        anchor_symbols=["LINKUSDT", "ATOMUSDT"],  # historical core
+        anchor_symbols=["LINKUSDT", "ATOMUSDT", "DOTUSDT"],
     ),
     StrategyProfile(
         name="ARF1 (flat resistance fade)",
         env_key="ARF1_SYMBOL_ALLOWLIST",
-        strategy_tags=["alt_resistance_fade_v1", "flat_resistance_fade", "arf1", "flat_arf1"],
+        strategy_tags=["alt_resistance_fade_v1", "arf1"],
         min_turnover=20_000_000.0,
         min_atr_pct=0.28,
         max_atr_pct=1.10,
         min_listing_days=90,
-        top_n=10,
+        top_n=8,
         bt_min_trades=5,
         bt_min_net=0.0,
         bt_min_pf=1.0,
-        anchor_symbols=["LINKUSDT", "LTCUSDT"],
+        anchor_symbols=["LINKUSDT", "LTCUSDT", "SUIUSDT"],
     ),
     StrategyProfile(
-        name="BREAKDOWN (breakdown shorts)",
+        name="BREAKDOWN v1 (breakdown shorts)",
         env_key="BREAKDOWN_SYMBOL_ALLOWLIST",
-        strategy_tags=["alt_inplay_breakdown_v1", "inplay_breakdown", "breakdown", "breakdown_short"],
+        strategy_tags=["alt_inplay_breakdown_v1", "inplay_breakdown", "breakdown"],
         min_turnover=50_000_000.0,
         min_atr_pct=0.30,
-        max_atr_pct=3.00,   # breakdown tolerates volatility
+        max_atr_pct=3.00,
         min_listing_days=90,
-        top_n=12,
+        top_n=8,
         bt_min_trades=5,
+        bt_min_net=0.0,
+        bt_min_pf=1.0,
+        anchor_symbols=["BTCUSDT", "ETHUSDT", "SOLUSDT"],
+    ),
+    # ── New strategies ──────────────────────────────────────────────────────
+    StrategyProfile(
+        name="BREAKDOWN v2 (1h breakdown shorts)",
+        env_key="BREAKDOWN2_SYMBOL_ALLOWLIST",
+        strategy_tags=["alt_inplay_breakdown_v2"],
+        min_turnover=20_000_000.0,
+        min_atr_pct=0.28,
+        max_atr_pct=2.50,
+        min_listing_days=90,
+        top_n=8,
+        bt_min_trades=3,
+        bt_min_net=0.0,
+        bt_min_pf=1.0,
+        anchor_symbols=["ADAUSDT", "LINKUSDT", "DOTUSDT", "LTCUSDT"],
+    ),
+    StrategyProfile(
+        name="ASB1 (support bounce longs)",
+        env_key="ASB1_SYMBOL_ALLOWLIST",
+        strategy_tags=["alt_support_bounce_v1"],
+        min_turnover=20_000_000.0,
+        min_atr_pct=0.28,
+        max_atr_pct=1.20,
+        min_listing_days=90,
+        top_n=8,
+        bt_min_trades=3,
+        bt_min_net=0.0,
+        bt_min_pf=1.0,
+        anchor_symbols=["ADAUSDT", "LINKUSDT", "SUIUSDT", "DOTUSDT"],
+    ),
+    StrategyProfile(
+        name="ARS1 (range scalp BB)",
+        env_key="ARS1_SYMBOL_ALLOWLIST",
+        strategy_tags=["alt_range_scalp_v1"],
+        min_turnover=50_000_000.0,
+        min_atr_pct=0.25,
+        max_atr_pct=1.50,
+        min_listing_days=90,
+        top_n=6,
+        bt_min_trades=3,
+        bt_min_net=0.0,
+        bt_min_pf=1.0,
+        anchor_symbols=["BTCUSDT", "ETHUSDT", "SOLUSDT"],
+    ),
+    StrategyProfile(
+        name="AVW1 (VWAP mean reversion)",
+        env_key="AVW1_SYMBOL_ALLOWLIST",
+        strategy_tags=["alt_vwap_mean_reversion_v1"],
+        min_turnover=50_000_000.0,
+        min_atr_pct=0.20,
+        max_atr_pct=1.40,
+        min_listing_days=90,
+        top_n=6,
+        bt_min_trades=3,
+        bt_min_net=0.0,
+        bt_min_pf=1.0,
+        anchor_symbols=["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT"],
+    ),
+    StrategyProfile(
+        name="PF2 (pump/dump fade)",
+        env_key="PF2_SYMBOL_ALLOWLIST",
+        strategy_tags=["pump_fade_v2"],
+        min_turnover=50_000_000.0,
+        min_atr_pct=0.30,
+        max_atr_pct=5.00,
+        min_listing_days=60,
+        top_n=8,
+        bt_min_trades=3,
+        bt_min_net=0.0,
+        bt_min_pf=1.0,
+        anchor_symbols=["BTCUSDT", "ETHUSDT", "SOLUSDT", "XRPUSDT"],
+    ),
+    StrategyProfile(
+        name="ETS2 (Elder Triple Screen)",
+        env_key="ETS2_SYMBOL_ALLOWLIST",
+        strategy_tags=["elder_triple_screen_v2"],
+        min_turnover=30_000_000.0,
+        min_atr_pct=0.28,
+        max_atr_pct=2.00,
+        min_listing_days=90,
+        top_n=6,
+        bt_min_trades=3,
         bt_min_net=0.0,
         bt_min_pf=1.0,
         anchor_symbols=["BTCUSDT", "ETHUSDT", "SOLUSDT"],
@@ -281,6 +404,11 @@ class CandidateRow:
     listing_age_days: float
     passes_market: bool = False
     bt_perf: Optional[SymPerf] = None
+    # 1h OHLC series stored here so strategy_scorer can use them
+    # without triggering extra API calls (fetched once in run_scan)
+    closes_1h: List[float] = field(default_factory=list)
+    highs_1h: List[float] = field(default_factory=list)
+    lows_1h: List[float] = field(default_factory=list)
 
     def market_summary(self) -> str:
         return (
@@ -302,16 +430,19 @@ def run_scan(
     max_scan_symbols: int,
     atr_lookback_days: int,
     polite_sleep_sec: float,
+    http_timeout_sec: float = DEFAULT_HTTP_TIMEOUT_SEC,
+    kline_max_retries: int = DEFAULT_KLINE_MAX_RETRIES,
+    kline_backoff_max_sec: float = DEFAULT_KLINE_BACKOFF_MAX_SEC,
     quiet: bool,
 ) -> Dict[str, CandidateRow]:
     """Fetch tickers, instruments, and ATR% for every USDT perp candidate."""
     if not quiet:
         print("[scan] Fetching Bybit tickers...")
-    tickers = _get_tickers(bybit_base)
+    tickers = _get_tickers(bybit_base, timeout_sec=http_timeout_sec)
 
     if not quiet:
         print("[scan] Fetching instruments info...")
-    instruments = _get_instruments_info(bybit_base)
+    instruments = _get_instruments_info(bybit_base, timeout_sec=http_timeout_sec)
 
     now_ms = _now_ms()
     pre_rows: List[Tuple[float, str, dict]] = []  # (turnover, symbol, ticker)
@@ -340,13 +471,23 @@ def run_scan(
             launch_ms = 0
         age_days = (now_ms - launch_ms) / 86_400_000.0 if launch_ms else -1.0
 
-        atr_pct = _atr_pct_1h(sym, base=bybit_base, lookback_days=atr_lookback_days, sleep_sec=polite_sleep_sec)
+        atr_pct, closes_1h, highs_1h, lows_1h = _fetch_1h_data(
+            sym,
+            base=bybit_base,
+            lookback_days=atr_lookback_days,
+            sleep_sec=polite_sleep_sec,
+            max_retries=kline_max_retries,
+            backoff_max_sec=kline_backoff_max_sec,
+        )
 
         out[sym] = CandidateRow(
             symbol=sym,
             turnover24h=turn,
             atr_pct=atr_pct,
             listing_age_days=age_days,
+            closes_1h=closes_1h,
+            highs_1h=highs_1h,
+            lows_1h=lows_1h,
         )
         if not quiet and idx % 20 == 0:
             print(f"[scan]   {idx}/{len(pre_rows)} done ({sym} ATR%={atr_pct:.3f})")
@@ -418,15 +559,12 @@ def select_for_profile(
             continue
 
         # ---- Backtest gate (optional) ----
+        # Only reject if this symbol has backtest data AND it fails the gate.
+        # Symbols with NO backtest data are allowed through — this lets the
+        # scanner explore new coins rather than being permanently locked to
+        # the set that happened to trade in the reference run.
         if backtest and sym not in profile.anchor_symbols:
-            if bt_perf is None:
-                # No backtest data for this symbol+strategy — skip only if we
-                # have backtest data for at least some symbols (meaning the file
-                # had relevant strategy trades). If file is empty/unrelated, skip gate.
-                if bt_by_sym:
-                    rejected_bt.append(sym)
-                    continue
-            else:
+            if bt_perf is not None:
                 bt_ok = (
                     bt_perf.trades >= profile.bt_min_trades
                     and bt_perf.net >= profile.bt_min_net
@@ -435,11 +573,35 @@ def select_for_profile(
                 if not bt_ok:
                     rejected_bt.append(sym)
                     continue
+            # bt_perf is None → no history for this symbol → allow through
+            # (new candidate, give it a chance)
 
-        # Score = turnover (primary) + ATR% bonus for mid-range
+        # ── Market fit: ATR profile + liquidity ───────────────────────────
+        # ATR fit: Gaussian score — peaks at 1.0 when ATR is at ideal midpoint
+        import math as _math
         atr_mid = (profile.min_atr_pct + profile.max_atr_pct) / 2.0
-        atr_score = 1.0 - abs(row.atr_pct - atr_mid) / max(atr_mid, 0.01)
-        score = row.turnover24h / 1e9 + atr_score * 0.1
+        atr_half_width = max((profile.max_atr_pct - profile.min_atr_pct) / 2.0, 0.01)
+        atr_fit = max(0.0, 1.0 - ((row.atr_pct - atr_mid) / atr_half_width) ** 2)
+        # Liquidity: log-scaled so $5B and $500M aren't miles apart (~0.6–1.0)
+        liq_score = _math.log10(max(row.turnover24h, 1_000_000.0)) / 10.0
+        market_score = atr_fit * 0.70 + liq_score * 0.30
+
+        # ── Strategy fit: current price state for this specific strategy ───
+        strategy_score = score_for_strategy(
+            profile.env_key,
+            row.closes_1h,
+            row.highs_1h,
+            row.lows_1h,
+        )
+
+        # ── Combined: strategy state matters more than generic market fit ──
+        # Anchors always get a neutral strategy score (0.5) to avoid being
+        # penalised when they're not currently in the ideal setup zone.
+        if sym in profile.anchor_symbols:
+            score = market_score * 0.70 + 0.5 * 0.30  # anchors: market-weighted
+        else:
+            score = market_score * 0.40 + strategy_score * 0.60
+
         candidates.append((score, sym))
 
     # Sort by score desc, take top_n
@@ -489,6 +651,18 @@ def main() -> int:
         "--polite-sleep-sec", type=float,
         default=float(os.getenv("BYBIT_DATA_POLITE_SLEEP_SEC", "0.6")),
         help="Delay between ATR kline fetches to avoid rate-limits.",
+    )
+    ap.add_argument(
+        "--http-timeout-sec", type=float, default=DEFAULT_HTTP_TIMEOUT_SEC,
+        help="Timeout for Bybit public REST requests (default from ALLOWLIST_HTTP_TIMEOUT_SEC or 8).",
+    )
+    ap.add_argument(
+        "--kline-max-retries", type=int, default=DEFAULT_KLINE_MAX_RETRIES,
+        help="Max retries per ATR kline fetch (default from ALLOWLIST_KLINES_MAX_RETRIES or 3).",
+    )
+    ap.add_argument(
+        "--kline-backoff-max-sec", type=float, default=DEFAULT_KLINE_BACKOFF_MAX_SEC,
+        help="Max backoff for ATR kline retries (default from ALLOWLIST_KLINES_BACKOFF_MAX_SEC or 5).",
     )
     ap.add_argument(
         "--out-env", default="",
@@ -561,6 +735,9 @@ def main() -> int:
         max_scan_symbols=args.max_scan_symbols,
         atr_lookback_days=args.atr_lookback_days,
         polite_sleep_sec=args.polite_sleep_sec,
+        http_timeout_sec=args.http_timeout_sec,
+        kline_max_retries=args.kline_max_retries,
+        kline_backoff_max_sec=args.kline_backoff_max_sec,
         quiet=args.quiet,
     )
 

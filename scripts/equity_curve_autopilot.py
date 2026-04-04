@@ -64,6 +64,7 @@ import argparse
 import csv
 import json
 import os
+import re
 import ssl
 import sys
 from dataclasses import asdict, dataclass, field
@@ -76,6 +77,8 @@ ROOT = Path(__file__).resolve().parent.parent
 ENV_FILE    = ROOT / "configs" / "alpaca_paper_local.env"
 HEALTH_FILE = ROOT / "configs" / "strategy_health.json"
 REPORTS_DIR = ROOT / "docs" / "weekly_reports"
+CONTROL_PLANE_DIR = ROOT / "runtime" / "control_plane"
+BASELINE_REPORT = CONTROL_PLANE_DIR / "baseline_regression_latest.json"
 
 # ── Thresholds ──────────────────────────────────────────────────────────────────
 WATCH_THRESHOLD_MA  = 0.0    # curve below its own MA → WATCH
@@ -175,11 +178,86 @@ class StrategyHealth:
     notes: str = ""
 
 # ── Load trades ──────────────────────────────────────────────────────────────────
-def _find_latest_run() -> Optional[Path]:
-    """Find the most recent portfolio backtest run directory."""
-    runs = sorted(ROOT.glob("backtest_runs/portfolio_*/trades.csv"),
-                  key=lambda p: p.parent.name, reverse=True)
-    return runs[0].parent if runs else None
+def _summary_row(run_dir: Path) -> Dict[str, str]:
+    path = run_dir / "summary.csv"
+    if not path.exists():
+        return {}
+    try:
+        with path.open(newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                return {str(k): str(v) for k, v in row.items()}
+    except Exception:
+        return {}
+    return {}
+
+
+def _is_exploratory_run(run_dir: Path) -> bool:
+    """
+    Reject research/probe/sweep style runs by default.
+    The autopilot should not silently promote or demote live sleeves based on
+    exploratory artifacts.
+    """
+    name = run_dir.name.lower()
+    summary = _summary_row(run_dir)
+    tag = str(summary.get("tag", "")).lower()
+    hay = f"{name} {tag}"
+    markers = (
+        "sweep",
+        "autoresearch",
+        "probe",
+        "compare",
+        "smoke",
+        "debug",
+        "candidate",
+    )
+    if any(m in hay for m in markers):
+        return True
+    if re.search(r"_r\d+\b", hay):
+        return True
+    return False
+
+
+def _baseline_report_run() -> Optional[Path]:
+    if not BASELINE_REPORT.exists():
+        return None
+    try:
+        data = json.loads(BASELINE_REPORT.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    run_dir = str(data.get("run_dir", "") or "").strip()
+    if not run_dir:
+        return None
+    p = Path(run_dir)
+    return p if p.exists() else None
+
+
+def _find_latest_run(*, allow_exploratory: bool = False) -> Optional[Path]:
+    """
+    Find the most recent trusted portfolio run directory.
+
+    We prefer the latest validated baseline regression artifact. Fallback to
+    archived baseline-like runs only; do not silently pick exploratory sweep
+    outputs.
+    """
+    report_run = _baseline_report_run()
+    if report_run is not None and (allow_exploratory or not _is_exploratory_run(report_run)):
+        return report_run
+
+    candidates: List[Path] = []
+    patterns = [
+        "backtest_runs/portfolio_*validated_baseline_regression*/trades.csv",
+        "backtest_archive/portfolio_*baseline*/trades.csv",
+        "backtest_runs/portfolio_*current90_true/trades.csv",
+        "backtest_runs/portfolio_*180d_true/trades.csv",
+    ]
+    for pat in patterns:
+        candidates.extend(ROOT.glob(pat))
+    runs = sorted(candidates, key=lambda p: p.parent.stat().st_mtime, reverse=True)
+    for csv_path in runs:
+        run_dir = csv_path.parent
+        if allow_exploratory or not _is_exploratory_run(run_dir):
+            return run_dir
+    return None
 
 def _load_trades(run_dir: Path) -> List[Trade]:
     csv_path = run_dir / "trades.csv"
@@ -397,6 +475,8 @@ def main() -> None:
 
     ap = argparse.ArgumentParser(description="Equity Curve Autopilot")
     ap.add_argument("--run-dir", default="", help="Specific backtest run dir to analyse")
+    ap.add_argument("--allow-exploratory", action="store_true",
+                    help="Allow exploratory/probe/sweep runs. Default is to reject them.")
     ap.add_argument("--no-tg",   action="store_true", help="Skip Telegram")
     ap.add_argument("--quiet",   action="store_true", help="Minimal output (just write files)")
     ap.add_argument("--days",    type=int, default=0,
@@ -415,8 +495,12 @@ def main() -> None:
         run_dir = Path(args.run_dir)
         if not run_dir.is_absolute():
             run_dir = ROOT / run_dir
+        if run_dir.exists() and (not args.allow_exploratory) and _is_exploratory_run(run_dir):
+            print(f"ERROR: Refusing exploratory run by default: {run_dir.name}")
+            print("       Pass --allow-exploratory only for explicit research use.")
+            sys.exit(1)
     else:
-        run_dir = _find_latest_run()
+        run_dir = _find_latest_run(allow_exploratory=args.allow_exploratory)
 
     if not run_dir or not run_dir.exists():
         print("ERROR: No backtest run found. Run a portfolio backtest first.")

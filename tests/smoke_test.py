@@ -108,7 +108,14 @@ def test_diagnostics():
 # 4. bot/symbol_state — SymState, update_5m_bar, trim
 # ─────────────────────────────────────────────────────────────────────────────
 def test_symbol_state():
+    import bot.symbol_state as symbol_state
     from bot.symbol_state import SymState, S, update_5m_bar, trim, STATE
+
+    if os.getenv("ALLOW_INDICATOR_FALLBACK", "0").strip() not in {"1", "true", "yes", "on"}:
+        assert symbol_state._INDICATORS_OK is True, (
+            "bot.symbol_state is running on fallback indicators. "
+            "Use the project .venv or install numpy/indicator deps before trusting smoke tests."
+        )
 
     # Clean registry for test
     STATE.clear()

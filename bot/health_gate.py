@@ -56,6 +56,8 @@ STRATEGY_ENV_MAP: Dict[str, str] = {
     "btc_eth_midterm_pullback":  "ENABLE_MIDTERM_TRADING",
     "btc_eth_midterm_pullback_v2": "ENABLE_MIDTERM_TRADING",
     "inplay_breakout":           "ENABLE_INPLAY_TRADING",
+    "micro_scalper_v1":          "ENABLE_MICRO_SCALPER_TRADING",
+    "alt_support_reclaim_v1":    "ENABLE_SUPPORT_RECLAIM_TRADING",
     "triple_screen_v132":        "ENABLE_TS132_TRADING",
     "pump_fade_simple":          "ENABLE_PUMP_FADE_TRADING",
     "sr_break_retest_volume_v1": "ENABLE_RETEST_TRADING",
@@ -121,10 +123,21 @@ class HealthGate:
 
     # ── Status query ────────────────────────────────────────────────────────────
     def get_status(self, strategy_name: str) -> str:
-        """Returns OK / WATCH / PAUSE / KILL. Defaults to OK if no data."""
+        """
+        Returns OK / WATCH / PAUSE / KILL.
+
+        For known live sleeves that are missing from the health file, default to
+        WATCH instead of silently returning OK. This keeps uncovered sleeves
+        visible without unexpectedly hard-blocking them.
+        """
         self._reload_if_stale()
         info = self._cache.get(strategy_name, {})
-        return str(info.get("status", "OK"))
+        if info:
+            return str(info.get("status", "OK"))
+        missing_default = str(os.getenv("HEALTH_GATE_MISSING_STATUS", "WATCH")).strip().upper() or "WATCH"
+        if strategy_name in STRATEGY_ENV_MAP:
+            return missing_default
+        return "OK"
 
     def allow_entry(self, strategy_name: str, symbol: str = "") -> bool:
         """

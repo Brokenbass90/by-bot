@@ -89,6 +89,7 @@ class InPlayBreakoutConfig:
     breakout_sl_atr: float = 0.40
     retest_touch_atr: float = 0.35
     reclaim_atr: float = 0.15
+    entry_body_min_frac: float = 0.0
     min_hold_bars: int = 0
     max_retest_bars: int = 30
     min_break_bars: int = 1
@@ -133,6 +134,7 @@ class InPlayBreakoutWrapper:
         self.cfg.breakout_sl_atr = _env_float(f"{p}_SL_ATR", self.cfg.breakout_sl_atr)
         self.cfg.retest_touch_atr = _env_float(f"{p}_RETEST_TOUCH_ATR", self.cfg.retest_touch_atr)
         self.cfg.reclaim_atr = _env_float(f"{p}_RECLAIM_ATR", self.cfg.reclaim_atr)
+        self.cfg.entry_body_min_frac = _env_float(f"{p}_ENTRY_BODY_MIN_FRAC", self.cfg.entry_body_min_frac)
         self.cfg.min_hold_bars = _env_int(f"{p}_MIN_HOLD_BARS", self.cfg.min_hold_bars)
         self.cfg.max_retest_bars = _env_int(f"{p}_MAX_RETEST_BARS", self.cfg.max_retest_bars)
         self.cfg.min_break_bars = _env_int(f"{p}_MIN_BREAK_BARS", self.cfg.min_break_bars)
@@ -159,6 +161,12 @@ class InPlayBreakoutWrapper:
         self.cfg.chop_in_range_only = _env_bool(f"{p}_CHOP_IN_RANGE_ONLY", self.cfg.chop_in_range_only)
 
         self.impl: Optional[InPlayBreakoutStrategy] = None
+        self._impl_by_symbol: Dict[str, InPlayBreakoutStrategy] = {}
+
+    def _refresh_runtime_allowlists(self) -> None:
+        p = getattr(self, "_prefix", "BREAKOUT")
+        self._allow = _env_csv_set(f"{p}_SYMBOL_ALLOWLIST")
+        self._deny = _env_csv_set(f"{p}_SYMBOL_DENYLIST")
 
     @staticmethod
     def _bar_value(bar: Any, key: str) -> Optional[float]:
@@ -180,7 +188,8 @@ class InPlayBreakoutWrapper:
         p = getattr(self, "_prefix", "BREAKOUT")
         max_late_pct = _env_float(f"{p}_MAX_LATE_VS_REF_PCT", 0.0)
         min_pullback_pct = _env_float(f"{p}_MIN_PULLBACK_FROM_EXTREME_PCT", 0.0)
-        if max_late_pct <= 0 and min_pullback_pct <= 0:
+        entry_body_min_frac = _env_float(f"{p}_ENTRY_BODY_MIN_FRAC", float(self.cfg.entry_body_min_frac))
+        if max_late_pct <= 0 and min_pullback_pct <= 0 and entry_body_min_frac <= 0:
             return True
 
         bars = getattr(store, "c5", None)
@@ -196,6 +205,23 @@ class InPlayBreakoutWrapper:
         seg = list(bars[lo:i])
         if len(seg) < 3:
             return True
+
+        if entry_body_min_frac > 0:
+            entry_bar = seg[-1]
+            o = self._bar_value(entry_bar, "o")
+            h = self._bar_value(entry_bar, "h")
+            l = self._bar_value(entry_bar, "l")
+            c = self._bar_value(entry_bar, "c")
+            if None not in (o, h, l, c):
+                rng = max(0.0, float(h) - float(l))
+                body = float(c) - float(o)
+                body_frac = (abs(body) / rng) if rng > 0 else 0.0
+                if side == "long":
+                    if body <= 0 or body_frac < entry_body_min_frac:
+                        return False
+                else:
+                    if body >= 0 or body_frac < entry_body_min_frac:
+                        return False
 
         highs = [self._bar_value(b, "h") for b in seg]
         lows = [self._bar_value(b, "l") for b in seg]
@@ -239,7 +265,11 @@ class InPlayBreakoutWrapper:
         return max(10, bars)
 
     def _ensure_impl(self, store) -> None:
-        if self.impl is not None:
+        symbol = str(getattr(store, "symbol", "") or "").upper()
+        if symbol and symbol in self._impl_by_symbol:
+            self.impl = self._impl_by_symbol[symbol]
+            return
+        if not symbol and self.impl is not None:
             return
 
         tf_break = self.cfg.tf_break
@@ -331,7 +361,10 @@ class InPlayBreakoutWrapper:
         accepted = set(sig.parameters.keys()) - {"self", "fetch_klines"}
         filtered = {k: v for k, v in candidate.items() if k in accepted}
 
-        self.impl = InPlayBreakoutStrategy(_fetch_klines, **filtered)
+        impl = InPlayBreakoutStrategy(_fetch_klines, **filtered)
+        if symbol:
+            self._impl_by_symbol[symbol] = impl
+        self.impl = impl
 
     def signal(self, store, ts_ms: int, last_price: float) -> Optional[TradeSignal]:
         return _run_coro_sync(self.maybe_signal(store, ts_ms, last_price))
@@ -339,6 +372,7 @@ class InPlayBreakoutWrapper:
     async def maybe_signal(self, store, ts_ms: int, last_price: float) -> Optional[TradeSignal]:
         self._ensure_impl(store)
         assert self.impl is not None
+        self._refresh_runtime_allowlists()
 
         symbol = store.symbol
         sym_u = str(symbol or "").upper()
@@ -409,6 +443,9 @@ class InPlayBreakoutWrapper:
                 )
 
         self.last_no_signal_reason = ""
+        # Allow a configurable time-stop in fixed mode (default 0 = disabled).
+        # Set e.g. BREAKOUT_TIME_STOP_BARS=96 to cap trades at 8h on 5m bars.
+        time_stop = _env_int(f"{p}_TIME_STOP_BARS", 0)
         return TradeSignal(
             strategy="inplay_breakout",
             symbol=symbol,
@@ -416,5 +453,6 @@ class InPlayBreakoutWrapper:
             entry=entry,
             sl=sl,
             tp=tp,
+            time_stop_bars=time_stop,
             reason=base_reason,
         )

@@ -6,8 +6,14 @@ Runs weekly (or on-demand) to check:
   2. Should we exit early? (stop breach, thesis break)
   3. Regime health update
 
-Sends Telegram alerts on issues. Does NOT auto-close positions
-(that's the user's decision), but flags problems clearly.
+Sends Telegram alerts on issues.
+
+Auto-exit mode (ALPACA_AUTO_EXIT_ENABLED=1):
+  - Automatically submits market sell orders for positions flagged
+    as STOP_BREACHED, CRITICAL_STOP, or DEEP_LOSS (>-8%).
+  - ALPACA_AUTO_EXIT_MIN_LOSS_PCT (default -8.0): deep-loss threshold for auto-exit.
+  - ALPACA_AUTO_EXIT_DRY_RUN=1: log what would be closed, but do not submit orders.
+  - Default: disabled (ALPACA_AUTO_EXIT_ENABLED=0) — safe for manual operation.
 
 Usage:
   # Load .env first
@@ -62,20 +68,36 @@ def _tg_send(token: str, chat_id: str, msg: str) -> None:
         print(msg)
 
 
-def _alpaca_request(base_url: str, key_id: str, secret: str, method: str, path: str) -> Any:
+def _alpaca_request(base_url: str, key_id: str, secret: str, method: str, path: str, body: Any = None) -> Any:
     url = f"{base_url.rstrip('/')}{path}"
     headers = {
         "APCA-API-KEY-ID": key_id,
         "APCA-API-SECRET-KEY": secret,
         "Content-Type": "application/json",
     }
-    req = request.Request(url, headers=headers, method=method)
+    data = json.dumps(body).encode() if body is not None else None
+    req = request.Request(url, data=data, headers=headers, method=method)
     ctx = ssl.create_default_context()
     try:
         with request.urlopen(req, context=ctx, timeout=20) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except error.HTTPError as e:
         return {"error": e.code, "detail": e.read().decode("utf-8", errors="replace")}
+
+
+def _close_position(base_url: str, key_id: str, secret: str, symbol: str, qty: float, dry_run: bool = False) -> dict:
+    """Submit a market sell order to close a long position."""
+    if dry_run:
+        print(f"[DRY_RUN] Would close {symbol} qty={qty}")
+        return {"dry_run": True, "symbol": symbol}
+    body = {
+        "symbol": symbol,
+        "qty": str(abs(qty)),
+        "side": "sell",
+        "type": "market",
+        "time_in_force": "day",
+    }
+    return _alpaca_request(base_url, key_id, secret, "POST", "/v2/orders", body=body)
 
 
 def _fetch_quote(ticker: str) -> dict | None:
@@ -172,6 +194,9 @@ def main() -> int:
     base_url = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
     tg_token = _env("TG_TOKEN")
     tg_chat_id = _env("TG_CHAT_ID")
+    auto_exit_enabled = _env("ALPACA_AUTO_EXIT_ENABLED", "0").lower() in {"1", "true", "yes"}
+    auto_exit_dry_run = _env("ALPACA_AUTO_EXIT_DRY_RUN", "0").lower() in {"1", "true", "yes"}
+    auto_exit_min_loss = float(_env("ALPACA_AUTO_EXIT_MIN_LOSS_PCT", "-8.0"))
 
     if not key_id or not secret:
         print("error=missing_alpaca_keys")
@@ -191,6 +216,7 @@ def main() -> int:
 
     # Position health
     alerts = []
+    auto_closed = []
     position_reports = []
 
     for pos in positions:
@@ -208,17 +234,32 @@ def main() -> int:
 
         # Health assessment
         health = "OK"
-        if stop_1_5atr and current_price < stop_1_5atr:
-            health = "STOP_BREACHED"
-            alerts.append(f"STOP BREACHED: {sym} at ${current_price:.2f} below 1.5xATR stop ${stop_1_5atr:.2f}")
-        elif stop_2atr and current_price < stop_2atr:
+        auto_exit_reason = None
+        if stop_2atr and current_price < stop_2atr:
             health = "CRITICAL_STOP"
             alerts.append(f"CRITICAL: {sym} at ${current_price:.2f} below 2xATR stop ${stop_2atr:.2f}")
-        elif unrealized_plpc < -8.0:
+            auto_exit_reason = "critical_stop_2atr"
+        elif stop_1_5atr and current_price < stop_1_5atr:
+            health = "STOP_BREACHED"
+            alerts.append(f"STOP BREACHED: {sym} at ${current_price:.2f} below 1.5xATR stop ${stop_1_5atr:.2f}")
+            auto_exit_reason = "stop_breached_1.5atr"
+        elif unrealized_plpc < auto_exit_min_loss:
             health = "DEEP_LOSS"
             alerts.append(f"DEEP LOSS: {sym} at {unrealized_plpc:.1f}%")
+            auto_exit_reason = f"deep_loss_{unrealized_plpc:.1f}pct"
         elif unrealized_plpc > 15.0:
             health = "CONSIDER_PARTIAL_TP"
+
+        # Auto-exit if enabled and position is critical
+        exit_result = None
+        if auto_exit_enabled and auto_exit_reason and qty > 0:
+            exit_result = _close_position(base_url, key_id, secret, sym, qty, dry_run=auto_exit_dry_run)
+            prefix = "[DRY_RUN] " if auto_exit_dry_run else ""
+            if "error" in (exit_result or {}):
+                auto_closed.append(f"{prefix}CLOSE FAILED {sym}: {exit_result.get('detail', 'unknown')}")
+            else:
+                auto_closed.append(f"{prefix}CLOSED {sym} qty={qty} reason={auto_exit_reason}")
+            health = health + "_AUTO_CLOSED"
 
         position_reports.append({
             "ticker": sym,
@@ -230,6 +271,8 @@ def main() -> int:
             "atr": round(atr, 4) if atr else None,
             "stop_1_5atr": round(stop_1_5atr, 2) if stop_1_5atr else None,
             "health": health,
+            "auto_exit_reason": auto_exit_reason,
+            "exit_result": exit_result,
         })
 
     # Build Telegram message
@@ -264,6 +307,17 @@ def main() -> int:
         lines.append("<b>⚠️ ALERTS:</b>")
         for a in alerts:
             lines.append(f"  • {a}")
+
+    # Auto-exit actions
+    if auto_exit_enabled and auto_closed:
+        lines.append("")
+        tag = "[DRY RUN] " if auto_exit_dry_run else ""
+        lines.append(f"<b>🤖 {tag}Auto-Exit Actions:</b>")
+        for ac in auto_closed:
+            lines.append(f"  • {ac}")
+    elif auto_exit_enabled:
+        lines.append("")
+        lines.append("🤖 Auto-exit: enabled — no positions triggered")
 
     msg = "\n".join(lines)
     _tg_send(tg_token, tg_chat_id, msg)

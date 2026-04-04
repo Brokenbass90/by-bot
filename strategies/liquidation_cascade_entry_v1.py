@@ -63,14 +63,24 @@ import os
 from dataclasses import dataclass, field
 from typing import Optional
 
-# ── shared types (same pattern as other strategies in this repo) ────────────
+# ── shared types (match the pattern used by other strategies in this repo) ──
 try:
-    from backtest.engine import TradeSignal, KlineStore
+    from .signals import TradeSignal  # package import (backtest / live)
 except ImportError:
-    # Fallback stubs for import in live bot context
+    try:
+        from strategies.signals import TradeSignal  # absolute import fallback
+    except ImportError:
+        try:
+            from backtest.engine import TradeSignal  # legacy engine fallback
+        except ImportError:
+            from typing import Any
+            TradeSignal = Any  # type: ignore[assignment,misc]
+
+try:
+    from backtest.engine import KlineStore
+except ImportError:
     from typing import Any
-    TradeSignal = Any
-    KlineStore = Any
+    KlineStore = Any  # type: ignore[assignment,misc]
 
 
 # ── Config ──────────────────────────────────────────────────────────────────
@@ -259,6 +269,9 @@ class LiquidationCascadeEntryV1:
         # ── 10. Build signal ──────────────────────────────────────────────────
         self._last_signal_bar = i
 
+        # Get symbol from store (same pattern as funding_rate_reversion_v1)
+        symbol = str(getattr(store, "symbol", "") or "").upper()
+
         sl_dist = atr * cfg.sl_atr_mult
         tp_dist = atr * cfg.tp_atr_mult
 
@@ -269,34 +282,20 @@ class LiquidationCascadeEntryV1:
             sl_price = close + sl_dist
             tp_price = close - tp_dist
 
-        be_trigger = close * (1 + cfg.be_pct / 100.0) if direction == "long" else close * (1 - cfg.be_pct / 100.0)
+        be_trigger_rr = cfg.be_pct / (sl_dist / close * 100.0) if sl_dist > 0 else 0.0
 
-        try:
-            sig = TradeSignal()
-            sig.strategy   = "liquidation_cascade_entry_v1"
-            sig.direction  = direction
-            sig.entry      = close
-            sig.sl         = sl_price
-            sig.tp         = tp_price
-            sig.be_trigger = be_trigger
-            sig.time_stop_bars = cfg.time_stop_bars
-            sig.reason     = entry_reason
-            sig.ts_ms      = ts_ms
-            return sig
-        except Exception:
-            # Some backtest versions use positional constructor
-            pass
-
-        # Fallback: try keyword-only constructor pattern used by older engine
         try:
             return TradeSignal(
                 strategy="liquidation_cascade_entry_v1",
-                direction=direction,
+                symbol=symbol,
+                side=direction,           # TradeSignal uses "side", not "direction"
                 entry=close,
                 sl=sl_price,
                 tp=tp_price,
+                be_trigger_rr=be_trigger_rr,
+                trailing_atr_mult=0.0,
+                time_stop_bars=cfg.time_stop_bars,
                 reason=entry_reason,
-                ts_ms=ts_ms,
             )
         except Exception:
             return None

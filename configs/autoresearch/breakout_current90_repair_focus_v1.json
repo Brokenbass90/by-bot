@@ -1,0 +1,80 @@
+{
+  "name": "breakout_current90_repair_focus_v1",
+  "description": "Focused 90d repair sweep for inplay_breakout. Goal: improve setup quality and reduce immediate stop-outs on marginal retests instead of blindly chasing more trades.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "SOLUSDT,ADAUSDT,LINKUSDT,SUIUSDT,LTCUSDT,DOTUSDT,ATOMUSDT,AVAXUSDT,DOGEUSDT,XRPUSDT",
+    "--strategies",
+    "inplay_breakout",
+    "--days",
+    "90",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "2",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "BREAKOUT_SYMBOL_ALLOWLIST": [
+      "SOLUSDT,ADAUSDT,LINKUSDT,SUIUSDT,LTCUSDT",
+      "SOLUSDT,ADAUSDT,LINKUSDT,SUIUSDT,LTCUSDT,DOTUSDT,ATOMUSDT"
+    ],
+    "BT_BREAKOUT_QUALITY_MIN_SCORE": [0.53, 0.56, 0.60],
+    "BREAKOUT_ENTRY_BODY_MIN_FRAC": [0.25, 0.35, 0.45],
+    "BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT": [0.07, 0.10, 0.15],
+    "BREAKOUT_MAX_LATE_VS_REF_PCT": [0.20, 0.30, 0.35],
+    "BREAKOUT_MAX_RETEST_BARS": [8, 12, 16],
+    "BREAKOUT_MAX_DIST_ATR": [0.8, 1.0, 1.2],
+    "BREAKOUT_RR": [0.9, 1.1, 1.3]
+  },
+  "base_env": {
+    "BREAKOUT_ALLOW_LONGS": "1",
+    "BREAKOUT_ALLOW_SHORTS": "0",
+    "BREAKOUT_CHOP_ER_MIN": "0.20",
+    "BREAKOUT_IMPULSE_ATR_MULT": "1.00",
+    "BREAKOUT_IMPULSE_BODY_MIN_FRAC": "0.35",
+    "BREAKOUT_IMPULSE_VOL_MULT": "0.0",
+    "BREAKOUT_BUFFER_ATR": "0.12",
+    "BREAKOUT_SL_ATR": "0.40",
+    "BREAKOUT_RETEST_TOUCH_ATR": "0.35",
+    "BREAKOUT_RECLAIM_ATR": "0.12",
+    "BREAKOUT_MIN_HOLD_BARS": "0",
+    "BREAKOUT_REGIME_MODE": "off",
+    "BREAKOUT_REGIME_STRICT": "1",
+    "BT_BREAKOUT_QUALITY_ENABLE": "1"
+  },
+  "constraints": {
+    "min_trades": 4,
+    "min_profit_factor": 1.05,
+    "max_drawdown": 6.0,
+    "min_net_pnl": 1.0,
+    "max_negative_months": 1,
+    "max_negative_streak": 1
+  },
+  "score_weights": {
+    "net_pnl": 1.8,
+    "profit_factor": 5.0,
+    "winrate": 7.0,
+    "max_drawdown": 2.0,
+    "trades": 0.25,
+    "trades_cap": 60,
+    "negative_months": 3.0,
+    "max_negative_streak": 3.0
+  },
+  "_combo_count": "2x3x3x3x3x3x3x3 = 4374 combos",
+  "_goal": "Check whether breakout can be repaired on the current market by demanding cleaner reclaim bars, less-late retests, and slightly tighter take-profit geometry."
+}

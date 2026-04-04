@@ -1,0 +1,72 @@
+{
+  "_comment": "Short-side mirror of the breakout entry-quality repair. Test whether tighter entry-bar quality and distance-to-level improve recent bear-window performance of alt_inplay_breakdown_v1.",
+  "name": "breakdown_recent_bear_window_v2_entry_quality",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,AVAXUSDT,DOGEUSDT,XRPUSDT,ADAUSDT,LTCUSDT",
+    "--strategies",
+    "alt_inplay_breakdown_v1",
+    "--days",
+    "120",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "2",
+    "--fee_bps",
+    "10",
+    "--slippage_bps",
+    "10"
+  ],
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "BYBIT_DATA_POLITE_SLEEP_SEC": "1.5",
+    "BREAKDOWN_ALLOW_LONGS": "0",
+    "BREAKDOWN_ALLOW_SHORTS": "1",
+    "BREAKDOWN_REGIME_TF": "4h",
+    "BREAKDOWN_REGIME_EMA_FAST": "21",
+    "BREAKDOWN_REGIME_EMA_SLOW": "55",
+    "BREAKDOWN_REGIME_STRICT": "1",
+    "BREAKDOWN_LOOKBACK_H": "48",
+    "BREAKDOWN_RR": "2.0",
+    "BREAKDOWN_SL_ATR": "1.8",
+    "BREAKDOWN_BUFFER_ATR": "0.10",
+    "BREAKDOWN_RECLAIM_ATR": "0.12",
+    "BREAKDOWN_RANGE_ATR_MAX": "4.0",
+    "BREAKDOWN_CHOP_ER_MIN": "0.15",
+    "BREAKDOWN_MIN_PULLBACK_FROM_EXTREME_PCT": "0.07",
+    "BREAKDOWN_MAX_OPEN_TRADES": "1"
+  },
+  "grid": {
+    "BREAKDOWN_REGIME_MODE": ["off", "ema"],
+    "BREAKDOWN_MAX_DIST_ATR": [2.0, 1.4, 1.0],
+    "BREAKDOWN_ENTRY_BODY_MIN_FRAC": [0.0, 0.25, 0.35],
+    "BREAKDOWN_MIN_HOLD_BARS": [0, 2]
+  },
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.1,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 0.0
+  },
+  "score_weights": {
+    "net_pnl": 1.5,
+    "profit_factor": 4.5,
+    "winrate": 7.0,
+    "max_drawdown": 2.0,
+    "trades": 0.2,
+    "trades_cap": 70
+  },
+  "_combo_count": "2x3x3x2 = 36 combos",
+  "_goal": "Find whether the dedicated short sleeve can be improved on the recent bear/chop window through stricter entry quality instead of broad random retuning."
+}

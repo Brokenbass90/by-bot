@@ -1,18 +1,16 @@
 """
 bot/allowlist_watcher.py — Dynamic Allowlist Hot-Reload
 ========================================================
-Watches configs/dynamic_allowlist_latest.env and applies changes to os.environ
+Watches a generated allowlist env file and applies changes to os.environ
 WITHOUT restarting the bot process.
 
 How it works:
   1. Background thread polls the .env file every POLL_INTERVAL seconds
   2. When file changes (mtime check) → re-parses and updates os.environ
-  3. Strategies that re-read os.environ on each cycle pick up new symbols:
-       - ASC1_SYMBOL_ALLOWLIST  (re-read each cycle ✅ line 8148 in main bot)
-       - ARF1_SYMBOL_ALLOWLIST  (re-read each cycle ✅ line 8154)
-  4. Module-level vars (BREAKOUT_SYMBOL_ALLOWLIST) need a controlled restart:
-       - Watcher writes configs/allowlist_restart_needed.flag
-       - Bot operator (or separate script) handles restart at safe moment
+  3. Strategies / bot components that re-read os.environ on each cycle pick up
+     new symbols directly.
+  4. For symbol lists that still require a restart or engine rebuild, the watcher
+     writes configs/allowlist_restart_needed.flag
   5. Sends Telegram digest of changes
 
 Usage — add to smart_pump_reversal_bot.py startup:
@@ -28,8 +26,9 @@ Integration points:
             logger.warning("Allowlist updated — restart when safe")
 
 Config:
-    ALLOWLIST_WATCHER_INTERVAL=300   # poll every 5 min (default)
-    ALLOWLIST_WATCHER_ENABLED=1      # set 0 to disable
+    ALLOWLIST_WATCHER_INTERVAL=300               # poll every 5 min (default)
+    ALLOWLIST_WATCHER_ENABLED=1                  # set 0 to disable
+    ALLOWLIST_WATCHER_FILE=configs/dynamic_allowlist_latest.env
 """
 from __future__ import annotations
 
@@ -46,19 +45,30 @@ from urllib import request
 logger = logging.getLogger(__name__)
 
 ROOT            = Path(__file__).resolve().parent.parent
-ALLOWLIST_FILE  = ROOT / "configs" / "dynamic_allowlist_latest.env"
 RESTART_FLAG    = ROOT / "configs" / "allowlist_restart_needed.flag"
 CHANGE_LOG      = ROOT / "configs" / "allowlist_change_log.json"
 
-# Which env vars can be hot-reloaded (re-read from os.environ each cycle)
+
+def _resolve_allowlist_file() -> Path:
+    return Path(
+        os.getenv(
+            "ALLOWLIST_WATCHER_FILE",
+            str(ROOT / "configs" / "dynamic_allowlist_latest.env"),
+        )
+    ).expanduser()
+
+# Which env vars can be hot-reloaded (strategies/bot re-read them at runtime)
 HOT_RELOAD_VARS: Set[str] = {
     "ASC1_SYMBOL_ALLOWLIST",
     "ARF1_SYMBOL_ALLOWLIST",
+    "BREAKDOWN_SYMBOL_ALLOWLIST",
+    "BREAKOUT_SYMBOL_ALLOWLIST",
+    "BREAKOUT_SYMBOL_DENYLIST",
+    "MIDTERM_SYMBOLS",
 }
 
-# Which vars need a restart (module-level in bot)
+# Which vars still need a restart or explicit operator intervention
 RESTART_REQUIRED_VARS: Set[str] = {
-    "BREAKOUT_SYMBOL_ALLOWLIST",
     "MICRO_SCALPER_SYMBOL_ALLOWLIST",
     "SUPPORT_RECLAIM_SYMBOL_ALLOWLIST",
 }
@@ -115,8 +125,9 @@ class AllowlistWatcher:
     def __init__(self, poll_interval: Optional[int] = None) -> None:
         self._interval  = poll_interval or int(os.getenv("ALLOWLIST_WATCHER_INTERVAL", "300"))
         self._enabled   = os.getenv("ALLOWLIST_WATCHER_ENABLED", "1").strip() == "1"
+        self._file      = _resolve_allowlist_file()
         self._tg_token  = os.getenv("TG_TOKEN", "")
-        self._tg_chat   = os.getenv("TG_CHAT_ID", "")
+        self._tg_chat   = os.getenv("TG_CHAT_ID", "") or os.getenv("TG_CHAT", "")
         self._last_mtime: float = 0.0
         self._last_values: Dict[str, str] = {}
         self._thread: Optional[threading.Thread] = None
@@ -126,13 +137,13 @@ class AllowlistWatcher:
         if not self._enabled:
             logger.info("[AllowlistWatcher] Disabled via ALLOWLIST_WATCHER_ENABLED=0")
             return
-        if not ALLOWLIST_FILE.exists():
-            logger.info(f"[AllowlistWatcher] File not found: {ALLOWLIST_FILE} — waiting")
+        if not self._file.exists():
+            logger.info(f"[AllowlistWatcher] File not found: {self._file} — waiting")
         self._thread = threading.Thread(
             target=self._run, name="allowlist-watcher", daemon=True
         )
         self._thread.start()
-        logger.info(f"[AllowlistWatcher] Started (poll={self._interval}s, file={ALLOWLIST_FILE})")
+        logger.info(f"[AllowlistWatcher] Started (poll={self._interval}s, file={self._file})")
 
     def stop(self) -> None:
         self._stop_event.set()
@@ -141,25 +152,25 @@ class AllowlistWatcher:
 
     def _run(self) -> None:
         # Load initial state without sending alerts
-        if ALLOWLIST_FILE.exists():
-            self._last_mtime  = ALLOWLIST_FILE.stat().st_mtime
-            self._last_values = _parse_env_file(ALLOWLIST_FILE)
+        if self._file.exists():
+            self._last_mtime  = self._file.stat().st_mtime
+            self._last_values = _parse_env_file(self._file)
             self._apply(self._last_values, silent=True)
 
         while not self._stop_event.wait(self._interval):
             self._check()
 
     def _check(self) -> None:
-        if not ALLOWLIST_FILE.exists():
+        if not self._file.exists():
             return
         try:
-            mtime = ALLOWLIST_FILE.stat().st_mtime
+            mtime = self._file.stat().st_mtime
         except OSError:
             return
         if mtime <= self._last_mtime:
             return  # file unchanged
 
-        new_values = _parse_env_file(ALLOWLIST_FILE)
+        new_values = _parse_env_file(self._file)
         self._apply(new_values, silent=False)
         self._last_mtime  = mtime
         self._last_values = new_values
@@ -266,11 +277,12 @@ def apply_now(dry_run: bool = False) -> None:
     Apply current dynamic_allowlist_latest.env to os.environ immediately.
     Useful for testing. Prints diff without starting background thread.
     """
-    values = _parse_env_file(ALLOWLIST_FILE)
+    allowlist_file = _resolve_allowlist_file()
+    values = _parse_env_file(allowlist_file)
     if not values:
-        print(f"No values found in {ALLOWLIST_FILE}")
+        print(f"No values found in {allowlist_file}")
         return
-    print(f"Loaded {len(values)} vars from {ALLOWLIST_FILE.name}")
+    print(f"Loaded {len(values)} vars from {allowlist_file.name}")
     for var, new_val in sorted(values.items()):
         old_val = os.environ.get(var, "(not set)")
         if old_val == new_val:

@@ -1,0 +1,71 @@
+{
+  "name": "support_bounce_v1_bull_sweep_v1",
+  "description": "Parameter sweep for alt_support_bounce_v1 — LONG counterpart to resistance_fade. Best in bull/chop markets. Test on 360d annual + 180d recent subwindow to find stable params.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "ADAUSDT,LINKUSDT,SUIUSDT,DOTUSDT,LTCUSDT,ATOMUSDT,SOLUSDT",
+    "--strategies",
+    "alt_support_bounce_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-27",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "ASB1_SYMBOL_ALLOWLIST": [
+      "ADAUSDT,LINKUSDT,SUIUSDT,DOTUSDT",
+      "ADAUSDT,LINKUSDT,SUIUSDT,DOTUSDT,LTCUSDT,ATOMUSDT",
+      "ADAUSDT,LINKUSDT,SUIUSDT,DOTUSDT,LTCUSDT,ATOMUSDT,SOLUSDT"
+    ],
+    "ASB1_MAX_RSI": [38, 42, 46],
+    "ASB1_SIGNAL_LOOKBACK": [48, 72, 96],
+    "ASB1_SL_ATR_MULT": [0.70, 0.85, 1.00],
+    "ASB1_TP1_FRAC": [0.50, 0.60, 0.70],
+    "ASB1_MIN_RANGE_PCT": [4.0, 5.0, 6.5]
+  },
+  "base_env": {
+    "ASB1_REGIME_TF": "240",
+    "ASB1_MIN_RSI": "30",
+    "ASB1_TIME_STOP_BARS_5M": "576",
+    "ASB1_COOLDOWN_BARS_5M": "72",
+    "ASB1_TP2_BUFFER_PCT": "0.45",
+    "ASB1_TRAIL_ATR_MULT": "0.0"
+  },
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 1.3,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.5,
+    "profit_factor": 5.0,
+    "winrate": 8.0,
+    "max_drawdown": 1.5,
+    "trades": 0.06,
+    "trades_cap": 70,
+    "negative_months": 2.5,
+    "worst_month_pnl": 2.0
+  },
+  "_combo_count": "3×3×3×3×3×3 = 729 combos",
+  "_goal": "Build the long mirror of ARF1. Target: 40-80 longs/year, PF > 1.4, WR > 50%. This becomes the bull-market primary sleeve replacing the empty breakout slot."
+}

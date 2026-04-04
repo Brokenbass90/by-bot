@@ -1,0 +1,67 @@
+{
+  "name": "pump_fade_v4r_bear_window",
+  "description": "Tests pump_fade_v4r (short-after-pump) specifically on the recent bear/choppy window (Oct 2025 – Apr 2026). The strategy has a known 360d baseline of PF=1.883, but that includes the 2025 bull run. This run isolates its bear-market performance — the most relevant regime right now. Goal: confirm whether dump-fading still works when pumps are less powerful and more frequent.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,AVAXUSDT,DOGEUSDT,XRPUSDT,ADAUSDT",
+    "--strategies",
+    "pump_fade_v4r",
+    "--days",
+    "180",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "2",
+    "--fee_bps",
+    "10",
+    "--slippage_bps",
+    "15"
+  ],
+  "grid": {
+    "PF_PUMP_THRESHOLD_PCT": [0.08, 0.12, 0.15],
+    "PF_RSI_OVERBOUGHT": [70.0, 75.0, 80.0],
+    "PF_RR": [1.5, 2.0, 2.5],
+    "PF_PEAK_LOOKBACK_MIN": [20, 30, 45]
+  },
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "BYBIT_DATA_POLITE_SLEEP_SEC": "2.0",
+    "PF_INTERVAL_MIN": "5",
+    "PF_PUMP_WINDOW_MIN": "60",
+    "PF_EMA_PERIOD": "9",
+    "PF_STOP_BUFFER_PCT": "0.003",
+    "PF_COOLDOWN_BARS": "24"
+  },
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.2,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 2.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 5.0,
+    "winrate": 10.0,
+    "max_drawdown": 2.0,
+    "trades": 0.08,
+    "trades_cap": 60,
+    "negative_months": 3.0,
+    "max_negative_streak": 2.0,
+    "worst_month_pnl": 2.5
+  },
+  "_combo_count": "3×3×3×3 = 81 combos",
+  "_goal": "Determine if dump-fading (pump_fade_v4r) is a viable bear-market sleeve. If PF>1.2 on the Oct25–Apr26 window, this becomes the primary short-side strategy to deploy alongside pump_momentum_v1 on the long side — completing the full pump+dump system."
+}

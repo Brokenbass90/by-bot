@@ -1,0 +1,80 @@
+{
+  "name": "breakdown_v1_bear_failed_reclaim_sweep_v1",
+  "description": "Fresh sweep for rewritten alt_inplay_breakdown_v1. The short side is no longer a mirrored inplay wrapper; it now tests real 1h support breaks with 5m failed reclaim or bearish continuation confirmation.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,DOTUSDT,LTCUSDT,ATOMUSDT",
+    "--strategies",
+    "alt_inplay_breakdown_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-27",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "BREAKDOWN_SYMBOL_ALLOWLIST": [
+      "BTCUSDT,ETHUSDT,SOLUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,DOTUSDT,LTCUSDT"
+    ],
+    "BREAKDOWN_LOOKBACK_H": [24, 48, 72],
+    "BREAKDOWN_MIN_BREAK_ATR": [0.15, 0.25, 0.35],
+    "BREAKDOWN_RSI_MAX": [48, 52, 55],
+    "BREAKDOWN_SL_ATR": [1.2, 1.6, 2.0],
+    "BREAKDOWN_RR": [1.5, 2.0, 2.5]
+  },
+  "base_env": {
+    "BREAKDOWN_ALLOW_LONGS": "0",
+    "BREAKDOWN_ALLOW_SHORTS": "1",
+    "BREAKDOWN_ALLOW_CONTINUATION": "1",
+    "BREAKDOWN_ALLOW_FAILED_RECLAIM": "1",
+    "BREAKDOWN_BUFFER_ATR": "0.10",
+    "BREAKDOWN_IMPULSE_BODY_MIN_FRAC": "0.35",
+    "BREAKDOWN_RETEST_TOUCH_ATR": "0.35",
+    "BREAKDOWN_RECLAIM_ATR": "0.12",
+    "BREAKDOWN_ENTRY_BODY_MIN_FRAC": "0.18",
+    "BREAKDOWN_MAX_DIST_ATR": "2.0",
+    "BREAKDOWN_TIME_STOP_BARS_5M": "288",
+    "BREAKDOWN_COOLDOWN_BARS_5M": "48",
+    "BREAKDOWN_TP1_FRAC": "0.50",
+    "BREAKDOWN_REGIME_MODE": "off",
+    "BREAKDOWN_REJECT_VOL_MULT": "0.0"
+  },
+  "constraints": {
+    "min_trades": 24,
+    "min_profit_factor": 1.20,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.5,
+    "profit_factor": 5.0,
+    "winrate": 7.0,
+    "max_drawdown": 2.0,
+    "trades": 0.06,
+    "trades_cap": 120,
+    "negative_months": 2.5,
+    "worst_month_pnl": 2.0
+  },
+  "_combo_count": "3×3×3×3×3×3 = 729 combos",
+  "_goal": "Validate the new bearish failed-reclaim / continuation thesis and find a usable short sleeve that does not depend on mirrored long inplay logic."
+}

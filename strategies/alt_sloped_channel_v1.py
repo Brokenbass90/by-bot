@@ -109,10 +109,20 @@ class AltSlopedChannelV1Config:
     touch_buffer_atr: float = 0.40
     reclaim_atr: float = 0.12
     reject_atr: float = 0.12
-    min_range_r2: float = 0.25
+    min_range_r2: float = 0.40
     rsi_period: int = 14
     long_max_rsi: float = 46.0
     short_min_rsi: float = 56.0
+    # Slope direction guards — separate logic for longs vs shorts.
+    # Expressed as max slope magnitude in %/day (relative to price).
+    # Longs: channel is allowed to slope DOWN at most this much per day.
+    #   0.0 → only take longs in flat/rising channels (recommended for bear regimes).
+    #   0.80 → allow up to -0.8%/day decline in channel (default: permissive).
+    # Shorts: channel is allowed to slope UP at most this much per day.
+    #   0.0 → only take shorts in flat/falling channels.
+    #   0.80 → allow up to +0.8%/day rise (default: permissive).
+    long_max_neg_slope_pct: float = 0.80
+    short_max_pos_slope_pct: float = 0.80
     short_min_reject_depth_atr: float = 0.0
     short_min_upper_wick_frac: float = 0.0
     touch_count_lookback_bars: int = 24
@@ -137,8 +147,8 @@ class AltSlopedChannelV1Config:
     cooldown_bars_5m: int = 72
     # 5m entry confirmation: wait N 5m bars after 1h setup for confirming candle
     # 0 = disabled (fire immediately on 1h close, old behavior)
-    # 3-6 = wait 15-30 min for bearish/bullish 5m confirmation candle
-    confirm_5m_bars: int = 0
+    # 2-6 = wait 10-30 min for confirming 5m candle in signal direction
+    confirm_5m_bars: int = 2
 
 
 class AltSlopedChannelV1Strategy:
@@ -162,6 +172,12 @@ class AltSlopedChannelV1Strategy:
         self.cfg.rsi_period = _env_int("ASC1_RSI_PERIOD", self.cfg.rsi_period)
         self.cfg.long_max_rsi = _env_float("ASC1_LONG_MAX_RSI", self.cfg.long_max_rsi)
         self.cfg.short_min_rsi = _env_float("ASC1_SHORT_MIN_RSI", self.cfg.short_min_rsi)
+        self.cfg.long_max_neg_slope_pct = _env_float(
+            "ASC1_LONG_MAX_NEG_SLOPE_PCT", self.cfg.long_max_neg_slope_pct
+        )
+        self.cfg.short_max_pos_slope_pct = _env_float(
+            "ASC1_SHORT_MAX_POS_SLOPE_PCT", self.cfg.short_max_pos_slope_pct
+        )
         self.cfg.short_min_reject_depth_atr = _env_float(
             "ASC1_SHORT_MIN_REJECT_DEPTH_ATR",
             self.cfg.short_min_reject_depth_atr,
@@ -224,8 +240,16 @@ class AltSlopedChannelV1Strategy:
         self._pending: Optional[Dict] = None
         self._pending_bars_left: int = 0
 
+    def _refresh_runtime_allowlists(self) -> None:
+        self._allow = _env_csv_set(
+            "ASC1_SYMBOL_ALLOWLIST",
+            "ADAUSDT,DOGEUSDT,LINKUSDT,LTCUSDT,BCHUSDT,ATOMUSDT,BNBUSDT,ETCUSDT",
+        )
+        self._deny = _env_csv_set("ASC1_SYMBOL_DENYLIST")
+
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (o, h, l, c, v)
+        self._refresh_runtime_allowlists()
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
             return None
@@ -407,8 +431,14 @@ class AltSlopedChannelV1Strategy:
         touched_upper = high_now >= upper - self.cfg.touch_buffer_atr * atr
         rejected_upper = cur <= upper - self.cfg.reject_atr * atr and cur < prev
 
-        long_bias_ok = slope >= -abs(fit_now) * 0.00025
-        short_bias_ok = slope <= abs(fit_now) * 0.00025
+        # Slope guards: convert %/day → per-bar threshold (1 bar = 1H = 1/24 day).
+        # long_max_neg_slope_pct=0.0 → require flat/rising channel for longs.
+        # short_max_pos_slope_pct=0.0 → require flat/falling channel for shorts.
+        _price_ref = max(1e-12, abs(fit_now))
+        long_slope_thresh = _price_ref * max(0.0, self.cfg.long_max_neg_slope_pct) / 100.0 / 24.0
+        short_slope_thresh = _price_ref * max(0.0, self.cfg.short_max_pos_slope_pct) / 100.0 / 24.0
+        long_bias_ok = slope >= -long_slope_thresh
+        short_bias_ok = slope <= short_slope_thresh
 
         if self.cfg.allow_longs and long_bias_ok and touched_lower and reclaimed_lower and rsi <= self.cfg.long_max_rsi:
             sl = min(low_now, lower) - self.cfg.sl_atr_mult * atr

@@ -102,6 +102,83 @@ from bot.symbol_state import (
 # Load .env before any module-level os.getenv(...) settings below are evaluated.
 load_dotenv()
 
+REGIME_OVERLAY_ENABLE = _env_bool("REGIME_OVERLAY_ENABLE", True)
+REGIME_OVERLAY_PATH = Path(
+    os.getenv(
+        "REGIME_OVERLAY_PATH",
+        str(Path(__file__).resolve().parent / "configs" / "regime_orchestrator_latest.env"),
+    )
+).expanduser()
+REGIME_OVERLAY_RELOAD_SEC = max(30, int(os.getenv("REGIME_OVERLAY_RELOAD_SEC", "300") or 300))
+REGIME_OVERLAY_MAX_AGE_SEC = max(
+    REGIME_OVERLAY_RELOAD_SEC * 3,
+    int(os.getenv("REGIME_OVERLAY_MAX_AGE_SEC", "10800") or 10800),
+)
+REGIME_OVERLAY_STALE_ALERT_COOLDOWN_SEC = max(
+    300, int(os.getenv("REGIME_OVERLAY_STALE_ALERT_COOLDOWN_SEC", "1800") or 1800)
+)
+ORCH_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ORCH_GLOBAL_RISK_MULT", "1.0") or 1.0))
+BASE_RISK_PER_TRADE_PCT = 0.0
+REGIME_OVERLAY_LAST_MTIME = 0.0
+REGIME_OVERLAY_LAST_APPLY_TS = 0
+REGIME_OVERLAY_LAST_APPLIED_REGIME = str(os.getenv("ORCH_REGIME", "") or "").strip()
+REGIME_OVERLAY_LAST_STALE_ALERT_TS = 0
+REGIME_OVERLAY_LAST_MISSING_ALERT_TS = 0
+ROUTER_HEALTH_ENABLE = _env_bool("ROUTER_HEALTH_ENABLE", False)
+ROUTER_OVERLAY_PATH = Path(
+    os.getenv(
+        "ALLOWLIST_WATCHER_FILE",
+        str(Path(__file__).resolve().parent / "configs" / "dynamic_allowlist_latest.env"),
+    )
+).expanduser()
+ROUTER_STATE_PATH = Path(
+    os.getenv(
+        "ROUTER_STATE_PATH",
+        str(Path(__file__).resolve().parent / "runtime" / "router" / "symbol_router_state.json"),
+    )
+).expanduser()
+ROUTER_OVERLAY_MAX_AGE_SEC = max(
+    900, int(os.getenv("ROUTER_OVERLAY_MAX_AGE_SEC", "43200") or 43200)
+)
+ROUTER_STATE_MAX_AGE_SEC = max(
+    900, int(os.getenv("ROUTER_STATE_MAX_AGE_SEC", "43200") or 43200)
+)
+ROUTER_ALERT_COOLDOWN_SEC = max(
+    300, int(os.getenv("ROUTER_ALERT_COOLDOWN_SEC", "1800") or 1800)
+)
+ROUTER_LAST_ALERT_TS = 0
+PORTFOLIO_ALLOCATOR_ENABLE = _env_bool("PORTFOLIO_ALLOCATOR_ENABLE", False)
+PORTFOLIO_ALLOCATOR_PATH = Path(
+    os.getenv(
+        "PORTFOLIO_ALLOCATOR_PATH",
+        str(Path(__file__).resolve().parent / "configs" / "portfolio_allocator_latest.env"),
+    )
+).expanduser()
+PORTFOLIO_ALLOCATOR_STATE_PATH = Path(
+    os.getenv(
+        "PORTFOLIO_ALLOCATOR_STATE_PATH",
+        str(Path(__file__).resolve().parent / "runtime" / "control_plane" / "portfolio_allocator_state.json"),
+    )
+).expanduser()
+PORTFOLIO_ALLOCATOR_RELOAD_SEC = max(
+    30, int(os.getenv("PORTFOLIO_ALLOCATOR_RELOAD_SEC", "300") or 300)
+)
+PORTFOLIO_ALLOCATOR_MAX_AGE_SEC = max(
+    PORTFOLIO_ALLOCATOR_RELOAD_SEC * 3,
+    int(os.getenv("PORTFOLIO_ALLOCATOR_MAX_AGE_SEC", "43200") or 43200),
+)
+PORTFOLIO_ALLOCATOR_ALERT_COOLDOWN_SEC = max(
+    300, int(os.getenv("PORTFOLIO_ALLOCATOR_ALERT_COOLDOWN_SEC", "1800") or 1800)
+)
+PORTFOLIO_ALLOCATOR_LAST_ALERT_TS = 0
+PORTFOLIO_ALLOCATOR_LAST_MTIME = 0.0
+PORTFOLIO_ALLOCATOR_LAST_APPLY_TS = 0
+PORTFOLIO_ALLOCATOR_LAST_STATUS = str(os.getenv("PORTFOLIO_ALLOCATOR_STATUS", "") or "").strip()
+ALLOCATOR_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ALLOCATOR_GLOBAL_RISK_MULT", "1.0") or 1.0))
+ALLOCATOR_HARD_BLOCK_NEW_ENTRIES = _env_bool("ALLOCATOR_HARD_BLOCK_NEW_ENTRIES", False)
+ALLOCATOR_SAFE_MODE = _env_bool("PORTFOLIO_ALLOCATOR_SAFE_MODE", False)
+ALLOCATOR_SAFE_MODE_REASON = str(os.getenv("ALLOCATOR_SAFE_MODE_REASON", "") or "").strip()
+
 # Минимальная доля "желательного" notional (по риск-сайзингу), которую нужно уметь разместить.
 # Если меньше — пропускаем сделку (иначе комиссии/проскальзывание убивают ожидание).
 MIN_NOTIONAL_FILL_FRAC = float(os.getenv("MIN_NOTIONAL_FILL_FRAC", "0.40"))
@@ -247,6 +324,7 @@ INPLAY_ENGINE = None
 ENABLE_BREAKOUT_TRADING = os.getenv("ENABLE_BREAKOUT_TRADING", "0").strip() == "1"
 ENABLE_PUMP_FADE_TRADING = os.getenv("ENABLE_PUMP_FADE_TRADING", "0").strip() == "1"
 ENABLE_MIDTERM_TRADING = os.getenv("ENABLE_MIDTERM_TRADING", "0").strip() == "1"
+BREAKOUT_RISK_MULT = max(0.05, float(os.getenv("BREAKOUT_RISK_MULT", "1.0") or 1.0))
 BREAKOUT_TRY_EVERY_SEC = int(os.getenv("BREAKOUT_TRY_EVERY_SEC", "30"))
 BREAKOUT_TOP_N = int(os.getenv("BREAKOUT_TOP_N", "60"))
 BREAKOUT_MAX_SPREAD_PCT = float(os.getenv("BREAKOUT_MAX_SPREAD_PCT", "0.20"))
@@ -286,6 +364,7 @@ _NEWS_CACHE_TTL: int = 300   # reload events every 5 minutes
 
 MIDTERM_TRY_EVERY_SEC = int(os.getenv("MIDTERM_TRY_EVERY_SEC", "90"))
 MIDTERM_NOTIONAL_MULT = max(0.05, min(1.0, float(os.getenv("MIDTERM_NOTIONAL_MULT", "0.35"))))
+MIDTERM_RISK_MULT = max(0.05, float(os.getenv("MIDTERM_RISK_MULT", "1.0") or 1.0))
 MIDTERM_ALLOW_MINQTY_FALLBACK = _env_bool("MIDTERM_ALLOW_MINQTY_FALLBACK", True)
 MIDTERM_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("MIDTERM_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 MIDTERM_SYMBOLS = {s.strip().upper() for s in str(os.getenv("MIDTERM_SYMBOLS", "BTCUSDT,ETHUSDT")).split(",") if s.strip()}
@@ -399,6 +478,8 @@ ALWAYS_SET_TPSL_ON_EXCHANGE = True
 TPSL_RETRY_ATTEMPTS = 5
 TPSL_RETRY_DELAY_SEC = 0.8
 TPSL_ENSURE_EVERY_SEC = 20  
+TPSL_HARD_FAIL_CLOSE = _env_bool("TPSL_HARD_FAIL_CLOSE", True)
+TPSL_HARD_FAIL_GRACE_SEC = int(os.getenv("TPSL_HARD_FAIL_GRACE_SEC", "15") or 15)
 
 # === Manual TP/SL override (если поменял руками на бирже — бот не перезатирает) ===
 RESPECT_MANUAL_TPSL = True          # главный переключатель
@@ -688,6 +769,12 @@ BREAKOUT_SKIP_DIGEST_TOP_N = max(1, int(os.getenv("BREAKOUT_SKIP_DIGEST_TOP_N", 
 BREAKOUT_SKIP_TG_IMMEDIATE = _env_bool("BREAKOUT_SKIP_TG_IMMEDIATE", False)
 _BREAKOUT_SKIP_DIGEST_COUNTS: dict[tuple[str, str], int] = {}
 _BREAKOUT_SKIP_DIGEST_LAST_SENT_TS = int(time.time())
+UNTRACKED_EXCHANGE_SCAN_SEC = max(5, int(os.getenv("UNTRACKED_EXCHANGE_SCAN_SEC", "15") or 15))
+UNTRACKED_EXCHANGE_ALERT_COOLDOWN_SEC = max(
+    60, int(os.getenv("UNTRACKED_EXCHANGE_ALERT_COOLDOWN_SEC", "300") or 300)
+)
+_LAST_UNTRACKED_EXCHANGE_SCAN_TS = 0
+_UNTRACKED_EXCHANGE_POS_ALERTS: dict[tuple[str, str], int] = {}
 
 
 def tg_trade_throttled(key: str, msg: str, cooldown_sec: int) -> bool:
@@ -1720,6 +1807,21 @@ def _status_full_text() -> str:
         f"breakdown={ENABLE_BREAKDOWN_TRADING}, ts132={ENABLE_TS132_TRADING}"
     )
 
+    router_regime = str(os.getenv("ROUTER_REGIME", "") or "").strip()
+    router_status = str(os.getenv("ROUTER_STATUS", "") or "").strip()
+    if router_regime or router_status:
+        lines.append(
+            f"router: regime={router_regime or 'n/a'} | status={router_status or 'n/a'}"
+        )
+        router_profiles = [
+            f"breakout={os.getenv('ROUTER_PROFILE_BREAKOUT', '') or 'n/a'}",
+            f"breakdown={os.getenv('ROUTER_PROFILE_BREAKDOWN', '') or 'n/a'}",
+            f"flat={os.getenv('ROUTER_PROFILE_ARF1', '') or 'n/a'}",
+            f"sloped={os.getenv('ROUTER_PROFILE_ASC1', '') or 'n/a'}",
+            f"midterm={os.getenv('ROUTER_PROFILE_MIDTERM', '') or 'n/a'}",
+        ]
+        lines.append("router-profiles: " + " | ".join(router_profiles))
+
     if ENABLE_BREAKOUT_TRADING:
         lines.append(f"breakout-universe: {len(BREAKOUT_SYMBOLS)} (top {BREAKOUT_TOP_N})")
     if ENABLE_MIDTERM_TRADING:
@@ -2397,7 +2499,7 @@ def reconcile_stale_db_entries_with_exchange(open_rows: list[dict]) -> None:
             log_error(f"startup reconcile sync fail: {e}")
 
 def _handle_tg_command(text: str):
-    global TRADE_ON, RISK_PER_TRADE_PCT, BOT_CAPITAL_USD, MAX_POSITIONS
+    global TRADE_ON, RISK_PER_TRADE_PCT, BOT_CAPITAL_USD, MAX_POSITIONS, BASE_RISK_PER_TRADE_PCT
 
     cmd = text.strip().split()
     if not cmd:
@@ -2444,6 +2546,7 @@ def _handle_tg_command(text: str):
             "  /ai_server — статус сервера и процессов\n"
             "  /ai_diff — показать pending изменения от AI\n"
             "  /ai_rollback — откатить последнее изменение env\n"
+            "  /ai_monthly [report|idea <текст>|diagnose <стратегия>] — Claude глубокий анализ\n"
             "  /ai_shadow — последние AI рекомендации (shadow log)"
         )
         return
@@ -2491,7 +2594,8 @@ def _handle_tg_command(text: str):
             _tg_reply("Usage: /risk 0.5  (percent)")
             return
         # treat as percent
-        RISK_PER_TRADE_PCT = float(v)
+        BASE_RISK_PER_TRADE_PCT = float(v)
+        RISK_PER_TRADE_PCT = float(v) * float(ORCH_GLOBAL_RISK_MULT or 1.0)
         _tg_reply(f"Risk set to {RISK_PER_TRADE_PCT:.2f}%")
         return
 
@@ -2728,6 +2832,67 @@ def _handle_tg_command(text: str):
     if name == "/ai_rollback":
         result = rollback_env()
         _tg_reply(result)
+        return
+
+    if name == "/ai_monthly":
+        # /ai_monthly                          → full monthly report
+        # /ai_monthly report                   → same
+        # /ai_monthly idea funding rate revert → design new strategy
+        # /ai_monthly diagnose alt_sloped_channel_v1
+        try:
+            import importlib.util as _ilu
+            _spec = _ilu.spec_from_file_location(
+                "claude_monthly_analyst",
+                str(ROOT / "scripts" / "claude_monthly_analyst.py"),
+            )
+            _cma = _ilu.module_from_spec(_spec)  # type: ignore[arg-type]
+            _spec.loader.exec_module(_cma)  # type: ignore[union-attr]
+
+            api_key = os.getenv("ANTHROPIC_API_KEY", "")
+            if not api_key:
+                _tg_reply(
+                    "⚠️ Claude Monthly Analyst не активирован.\n"
+                    "Добавь ANTHROPIC_API_KEY в configs/claude_analyst.env\n"
+                    "Шаблон: configs/claude_analyst.env.template"
+                )
+                return
+
+            model   = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-6")
+            client  = _cma.ClaudeClient(api_key, model)
+            sub     = cmd[1].lower() if len(cmd) >= 2 else "report"
+
+            if sub in ("report", "отчёт"):
+                _tg_reply("🤖 Claude формирует ежемесячный отчёт, подожди ~30 сек...")
+                result = _cma.run_monthly_report(client)
+
+            elif sub in ("idea", "идея") and len(cmd) >= 3:
+                idea_text = " ".join(cmd[2:])
+                _tg_reply(f"🤖 Claude проектирует стратегию: «{idea_text}»...")
+                result = _cma.run_strategy_idea(client, idea_text)
+
+            elif sub in ("diagnose", "диагноз") and len(cmd) >= 3:
+                strat_name = cmd[2]
+                _tg_reply(f"🤖 Claude диагностирует {strat_name}...")
+                result = _cma.run_diagnose(client, strat_name)
+
+            else:
+                _tg_reply(
+                    "Использование:\n"
+                    "  /ai_monthly               — полный ежемесячный отчёт\n"
+                    "  /ai_monthly report        — то же самое\n"
+                    "  /ai_monthly idea <текст>  — спроектировать новую стратегию\n"
+                    "  /ai_monthly diagnose <имя_стратегии>"
+                )
+                return
+
+            # Send result in chunks (TG limit 4096)
+            prefix = f"🤖 <b>Claude Analyst — {datetime.now(timezone.utc).strftime('%Y-%m-%d')}</b>\n\n"
+            full = prefix + result
+            for chunk in [full[i:i+4000] for i in range(0, len(full), 4000)]:
+                _tg_reply(chunk)
+
+        except Exception as _e:
+            _tg_reply(f"❌ Claude Analyst ошибка: {_e}")
         return
 
     if name == "/ai_server":
@@ -3810,6 +3975,14 @@ def sync_trades_with_exchange():
                             sl_raw = tr.avg * (1.0 - SL_PCT / 100.0)
                         tr.tp_price, tr.sl_price = round_tp_sl_prices(sym, tr.side, tr.avg, tp_raw, sl_raw)
 
+                    rr_after_fill = _rr_from_levels(tr.side, float(tr.avg or 0.0), tr.tp_price, tr.sl_price)
+                    feats = getattr(tr, "ml_features", None)
+                    if isinstance(feats, dict):
+                        planned_rr = feats.get("planned_rr")
+                        feats["post_fill_rr"] = float(rr_after_fill) if rr_after_fill is not None else None
+                        if planned_rr is not None and rr_after_fill is not None:
+                            feats["rr_drift"] = float(rr_after_fill) - float(planned_rr)
+
                 # поставить TP/SL, когда позиция реально появилась
                 if not (RESPECT_MANUAL_TPSL and getattr(tr, "tpsl_manual_lock", False)):
                     if tr.tp_price is not None or tr.sl_price is not None:
@@ -3818,6 +3991,11 @@ def sync_trades_with_exchange():
                         tr.tpsl_last_set_ts = now_s()
                         if ok:
                             tr.tpsl_manual_lock = False
+                            _clear_tpsl_failsafe(tr)
+                        else:
+                            _arm_tpsl_failsafe(sym, tr, "initial_post_fill_set_failed")
+                            if TPSL_HARD_FAIL_CLOSE and int(TPSL_HARD_FAIL_GRACE_SEC) <= 0:
+                                _close_unprotected_position(sym, tr, "initial_post_fill_set_failed")
 
                 if not getattr(tr, "entry_confirm_sent", False):
                     tr.entry_confirm_sent = True
@@ -3829,10 +4007,20 @@ def sync_trades_with_exchange():
                         lat_parts.append(f"sig→send={send_ts - sig_ts}s")
                     if send_ts > 0 and fill_ts >= send_ts:
                         lat_parts.append(f"send→fill={fill_ts - send_ts}s")
+                    rr_parts = []
+                    feats = getattr(tr, "ml_features", None)
+                    if isinstance(feats, dict):
+                        planned_rr = feats.get("planned_rr")
+                        post_fill_rr = feats.get("post_fill_rr")
+                        if planned_rr is not None:
+                            rr_parts.append(f"plannedRR={float(planned_rr):.2f}")
+                        if post_fill_rr is not None:
+                            rr_parts.append(f"fillRR={float(post_fill_rr):.2f}")
                     lat_txt = ("\nLatency: " + " | ".join(lat_parts)) if lat_parts else ""
+                    rr_txt = ("\n" + " | ".join(rr_parts)) if rr_parts else ""
                     tg_trade(
                         f"✅ ENTRY FILLED {sym} {tr.side} qty={tr.qty} avg={float(getattr(tr,'avg',0) or 0):.6f}"
-                        f"{lat_txt}"
+                        f"{lat_txt}{rr_txt}"
                     )
                     _db_log_event("ENTRY", tr, sym)
                     _db_log_ml_entry(tr, sym)
@@ -3875,6 +4063,9 @@ def sync_trades_with_exchange():
             tr.qty = float(size)
             if side in ("Buy", "Sell"):
                 tr.side = side
+            if tp_ex is not None or sl_ex is not None:
+                tr.tpsl_on_exchange = True
+                _clear_tpsl_failsafe(tr)
 
             # manual TP/SL lock — оставляем как у тебя
             if RESPECT_MANUAL_TPSL:
@@ -3887,6 +4078,135 @@ def sync_trades_with_exchange():
                         tr.tpsl_manual_lock = True
                         tr.tpsl_on_exchange = True
                         tg_trade(f"🧷 MANUAL TPSL LOCK {sym}: TP={tp_ex} SL={sl_ex}")
+
+    _scan_untracked_exchange_positions()
+
+
+def _scan_untracked_exchange_positions() -> None:
+    """
+    Во время работы бота проверяет, не появилась ли на бирже открытая позиция,
+    которой нет в локальном TRADES.
+
+    Это безопаснее, чем молча импортировать такую позицию: сначала поднимаем тревогу,
+    чтобы не скрыть ручной/внешний вход под видом бот-трейда.
+    """
+    global _LAST_UNTRACKED_EXCHANGE_SCAN_TS
+
+    if DRY_RUN or TRADE_CLIENT is None:
+        return
+
+    now = now_s()
+    if (now - int(_LAST_UNTRACKED_EXCHANGE_SCAN_TS or 0)) < UNTRACKED_EXCHANGE_SCAN_SEC:
+        return
+    _LAST_UNTRACKED_EXCHANGE_SCAN_TS = now
+
+    try:
+        rows = TRADE_CLIENT.list_open_positions()
+    except Exception as e:
+        log_error(f"scan untracked exchange positions fail: {e}")
+        return
+
+    tracked_keys = {
+        (exch, sym)
+        for (exch, sym), tr in TRADES.items()
+        if exch == "Bybit" and getattr(tr, "status", "") != "CLOSED"
+    }
+
+    for row in rows:
+        sym = str(row.get("symbol") or "").upper().strip()
+        if not sym:
+            continue
+
+        qty = _pos_size_abs(row)
+        if qty <= 0:
+            continue
+
+        key = ("Bybit", sym)
+        if key in tracked_keys:
+            continue
+
+        side = str(row.get("side") or "Buy").strip() or "Buy"
+        if _restore_trade_state_from_exchange_row(row, source="runtime", require_db_entry=True):
+            continue
+        alert_key = (sym, side)
+        last_alert_ts = int(_UNTRACKED_EXCHANGE_POS_ALERTS.get(alert_key, 0) or 0)
+        if last_alert_ts > 0 and (now - last_alert_ts) < UNTRACKED_EXCHANGE_ALERT_COOLDOWN_SEC:
+            continue
+
+        _UNTRACKED_EXCHANGE_POS_ALERTS[alert_key] = now
+
+        avg = _pos_avg_price(row)
+        tp_raw = row.get("takeProfit")
+        sl_raw = row.get("stopLoss")
+        tp_txt = str(tp_raw) if tp_raw not in (None, "", "0") else "-"
+        sl_txt = str(sl_raw) if sl_raw not in (None, "", "0") else "-"
+
+        tg_trade(
+            f"🚨 UNTRACKED EXCHANGE POSITION [{TRADE_CLIENT.name}] {sym} {side} "
+            f"qty={qty:.6f} avg={avg:.6f} TP={tp_txt} SL={sl_txt}\n"
+            f"На бирже есть открытая позиция, которой нет в локальном state бота. "
+            f"Это manual/внешний вход или потеря синхронизации. Проверь позицию немедленно."
+        )
+
+
+def _restore_trade_state_from_exchange_row(
+    row: dict,
+    *,
+    source: str,
+    require_db_entry: bool = False,
+) -> bool:
+    sym = str(row.get("symbol") or "").upper().strip()
+    if not sym:
+        return False
+
+    key = ("Bybit", sym)
+    if key in TRADES:
+        return False
+
+    qty = _pos_size_abs(row)
+    if qty <= 0:
+        return False
+
+    side = str(row.get("side") or "Buy").strip() or "Buy"
+    avg_raw = row.get("avgPrice")
+    tp_raw = row.get("takeProfit")
+    sl_raw = row.get("stopLoss")
+    avg_ex = float(avg_raw) if avg_raw not in (None, "", "0") else 0.0
+    tp_ex = float(tp_raw) if tp_raw not in (None, "", "0") else None
+    sl_ex = float(sl_raw) if sl_raw not in (None, "", "0") else None
+
+    ev = _get_last_open_entry_event(sym, side=side)
+    if require_db_entry and not ev:
+        return False
+
+    strategy = str((ev or {}).get("strategy") or "bootstrap")
+    entry_ts = int((ev or {}).get("entry_ts") or int(time.time()))
+    entry_px = float((ev or {}).get("entry_price") or avg_ex or 0.0)
+    tp_px = tp_ex if tp_ex is not None else (ev or {}).get("tp_price")
+    sl_px = sl_ex if sl_ex is not None else (ev or {}).get("sl_price")
+
+    tr = TradeState(symbol=sym, side=side, strategy=strategy)
+    tr.qty = float(qty)
+    tr.status = "OPEN"
+    tr.entry_ts = entry_ts
+    tr.entry_fill_ts = entry_ts
+    tr.entry_confirm_sent = True
+    tr.avg = float(avg_ex or entry_px or 0.0)
+    tr.entry_price = float(avg_ex or entry_px or 0.0)
+    tr.entry_price_req = float(entry_px or avg_ex or 0.0)
+    tr.tp_price = float(tp_px) if tp_px not in (None, "") else None
+    tr.sl_price = float(sl_px) if sl_px not in (None, "") else None
+    tr.tpsl_on_exchange = bool(tp_ex is not None or sl_ex is not None)
+    tr.tpsl_manual_lock = bool(tp_ex is not None or sl_ex is not None)
+    tr.tpsl_last_set_ts = now_s()
+    TRADES[key] = tr
+
+    src = str(source or "runtime").upper()
+    tg_trade(
+        f"🔁 {src} RESTORED [{TRADE_CLIENT.name}] {sym} {side} qty={qty:.6f} "
+        f"avg={float(tr.avg or 0.0):.6f} strategy={strategy}"
+    )
+    return True
 
 # =========================== КЛИЕНТЫ ===========================
 BYBIT_CLIENTS: List[BybitClient] = []
@@ -3925,6 +4245,8 @@ try:
         RISK_PER_TRADE_PCT *= 100.0
 except Exception:
     pass
+
+BASE_RISK_PER_TRADE_PCT = float(RISK_PER_TRADE_PCT or 0.0)
 
 try:
     CAP_NOTIONAL_TO_EQUITY = bool(_trade_cfg.get("cap_notional_to_equity", CAP_NOTIONAL_TO_EQUITY))
@@ -4245,6 +4567,23 @@ def round_tp_sl_prices(symbol: str, side: str, entry: float,
     return tp, sl
 
 
+def _rr_from_levels(side: str, entry: float, tp: float | None, sl: float | None) -> float | None:
+    try:
+        if entry <= 0 or tp is None or sl is None:
+            return None
+        if side == "Buy":
+            risk = float(entry) - float(sl)
+            reward = float(tp) - float(entry)
+        else:
+            risk = float(sl) - float(entry)
+            reward = float(entry) - float(tp)
+        if risk <= 0:
+            return None
+        return float(reward) / float(risk)
+    except Exception:
+        return None
+
+
 def _prepare_exchange_tpsl(
     symbol: str,
     side: str,
@@ -4505,6 +4844,61 @@ def set_tp_sl_retry(symbol: str, side: str, tp: Optional[float], sl: Optional[fl
             time.sleep(TPSL_RETRY_DELAY_SEC * i)
 
     return False
+
+
+def _arm_tpsl_failsafe(symbol: str, tr, reason: str) -> None:
+    now = now_s()
+    first_ts = int(getattr(tr, "tpsl_fail_first_ts", 0) or 0)
+    if first_ts <= 0:
+        tr.tpsl_fail_first_ts = now
+        tg_trade(
+            f"⚠️ TP/SL not on exchange {symbol}\n"
+            f"Reason: {reason}\n"
+            f"Failsafe armed for {int(TPSL_HARD_FAIL_GRACE_SEC)}s"
+        )
+    tr.tpsl_last_fail_ts = now
+    tr.tpsl_fail_reason = str(reason)
+
+
+def _clear_tpsl_failsafe(tr) -> None:
+    tr.tpsl_fail_first_ts = 0
+    tr.tpsl_last_fail_ts = 0
+    tr.tpsl_fail_reason = ""
+
+
+def _close_unprotected_position(symbol: str, tr, note: str) -> bool:
+    if TRADE_CLIENT is None:
+        return False
+    if getattr(tr, "close_requested", False):
+        return False
+
+    try:
+        size_now, _, _, _, _, _ = TRADE_CLIENT.get_position_summary(symbol)
+    except Exception as e:
+        log_error(f"failsafe get_position_summary fail {symbol}: {e}")
+        return False
+
+    if size_now <= 0:
+        return False
+
+    tr.close_requested = True
+    tr.exit_req_ts = now_s()
+    tr.close_reason = f"TPSL_FAILSAFE_CLOSE::{note}"
+    try:
+        close_market(symbol, tr.side, float(size_now))
+    except Exception as e:
+        tr.close_requested = False
+        log_error(f"failsafe close fail {symbol}: {e}")
+        tg_trade(f"🛑 FAILSAFE CLOSE FAIL {symbol}: {e}")
+        return False
+
+    tg_trade(
+        f"🛑 FAILSAFE CLOSE SENT {symbol}\n"
+        f"Unprotected position after TP/SL failure\n"
+        f"Reason: {note}\n"
+        f"Size={float(size_now):.6f}"
+    )
+    return True
 
 
 def max_notional_allowed(equity: float) -> float:
@@ -4798,10 +5192,21 @@ def ensure_open_positions_have_tpsl():
             tr.tpsl_on_exchange = True
             tr.tpsl_last_set_ts = now_s()
             tr.tpsl_manual_lock = False
+            _clear_tpsl_failsafe(tr)
 
             # уведомляем только если раньше считали, что TP/SL на бирже НЕ было
             if not was_on:
                 tg_trade(f"🧷 TP/SL ensured {sym}: TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}")
+        else:
+            tr.tpsl_on_exchange = False
+            _arm_tpsl_failsafe(sym, tr, "periodic_ensure_failed")
+            fail_since = int(getattr(tr, "tpsl_fail_first_ts", 0) or 0)
+            if (
+                TPSL_HARD_FAIL_CLOSE
+                and fail_since > 0
+                and now - fail_since >= max(0, int(TPSL_HARD_FAIL_GRACE_SEC))
+            ):
+                _close_unprotected_position(sym, tr, str(getattr(tr, "tpsl_fail_reason", "") or "periodic_ensure_failed"))
 
 
 def bootstrap_open_trades_from_exchange():
@@ -4820,56 +5225,8 @@ def bootstrap_open_trades_from_exchange():
 
     restored = 0
     for row in rows:
-        sym = str(row.get("symbol") or "").upper().strip()
-        if not sym:
-            continue
-        key = ("Bybit", sym)
-        if key in TRADES:
-            continue
-
-        try:
-            qty = abs(float(row.get("size") or 0.0))
-        except Exception:
-            qty = 0.0
-        if qty <= 0:
-            continue
-
-        side = str(row.get("side") or "Buy").strip() or "Buy"
-        avg_raw = row.get("avgPrice")
-        tp_raw = row.get("takeProfit")
-        sl_raw = row.get("stopLoss")
-        avg_ex = float(avg_raw) if avg_raw not in (None, "", "0") else 0.0
-        tp_ex = float(tp_raw) if tp_raw not in (None, "", "0") else None
-        sl_ex = float(sl_raw) if sl_raw not in (None, "", "0") else None
-
-        ev = _get_last_open_entry_event(sym, side=side)
-        strategy = str((ev or {}).get("strategy") or "bootstrap")
-        entry_ts = int((ev or {}).get("entry_ts") or int(time.time()))
-        entry_px = float((ev or {}).get("entry_price") or avg_ex or 0.0)
-        tp_px = tp_ex if tp_ex is not None else (ev or {}).get("tp_price")
-        sl_px = sl_ex if sl_ex is not None else (ev or {}).get("sl_price")
-
-        tr = TradeState(symbol=sym, side=side, strategy=strategy)
-        tr.qty = float(qty)
-        tr.status = "OPEN"
-        tr.entry_ts = entry_ts
-        tr.entry_fill_ts = entry_ts
-        tr.entry_confirm_sent = True
-        tr.avg = float(avg_ex or entry_px or 0.0)
-        tr.entry_price = float(avg_ex or entry_px or 0.0)
-        tr.entry_price_req = float(entry_px or avg_ex or 0.0)
-        tr.tp_price = float(tp_px) if tp_px not in (None, "") else None
-        tr.sl_price = float(sl_px) if sl_px not in (None, "") else None
-        tr.tpsl_on_exchange = bool(tp_ex is not None or sl_ex is not None)
-        tr.tpsl_manual_lock = bool(tp_ex is not None or sl_ex is not None)
-        tr.tpsl_last_set_ts = now_s()
-        TRADES[key] = tr
-        restored += 1
-
-        tg_trade(
-            f"🔁 RESTORED [{TRADE_CLIENT.name}] {sym} {side} qty={qty:.6f} "
-            f"avg={float(tr.avg or 0.0):.6f} strategy={strategy}"
-        )
+        if _restore_trade_state_from_exchange_row(row, source="startup", require_db_entry=False):
+            restored += 1
 
     if restored > 0:
         tg_trade(f"🔁 Startup restore complete: restored_open_positions={restored}")
@@ -5269,6 +5626,8 @@ def portfolio_init_if_needed():
 
 def portfolio_can_open() -> bool:
     portfolio_init_if_needed()
+    if ALLOCATOR_HARD_BLOCK_NEW_ENTRIES:
+        return False
     if PORTFOLIO_STATE["disabled"]:
         return False
     open_pos = len(TRADES)
@@ -5847,6 +6206,7 @@ async def try_inplay_entry_async(symbol: str, price: float):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    planned_rr = _rr_from_levels(side, float(entry), tp_r, sl_r)
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
     if dyn_usd <= 0:
         tg_skip_throttled("inplay", symbol, "notional_small", f"🟡 INPLAY SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
@@ -6157,7 +6517,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
     size_mult = breakout_sizeup_multiplier_from_score(quality_score)
     quality_boost_mult = breakout_quality_boost_multiplier(quality_score)
     st_alloc = live_allocator_multiplier("breakout", _live_regime_from_state(st))
-    risk_mult = float(size_mult) * float(quality_boost_mult) * float(st_alloc)
+    risk_mult = float(size_mult) * float(quality_boost_mult) * float(st_alloc) * float(BREAKOUT_RISK_MULT)
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=risk_mult)
     if dyn_usd <= 0:
         _breakout_skip_alert(
@@ -6224,6 +6584,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
             "alloc_mult": float(st_alloc),
             "risk_mult": float(risk_mult),
             "stop_pct": float(stop_pct),
+            "planned_rr": float(planned_rr) if planned_rr is not None else None,
             "session": str(_session_name_utc(now)),
             "symbol_family": "alt",
         }
@@ -6395,7 +6756,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
     st = S("Bybit", symbol)
     alloc_mult = live_allocator_multiplier("midterm", _live_regime_from_state(st))
-    dyn_usd *= float(MIDTERM_NOTIONAL_MULT) * float(alloc_mult)
+    dyn_usd *= float(MIDTERM_NOTIONAL_MULT) * float(alloc_mult) * float(MIDTERM_RISK_MULT)
     if dyn_usd <= 0:
         tg_skip_throttled("midterm", symbol, "notional_small", f"🟡 MIDTERM SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
@@ -8200,17 +8561,20 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
     bounce_filtered = _apply_symbol_filters(base_filtered, strategy="bounce")
     inplay_filtered = _apply_symbol_filters(base_filtered, strategy="inplay")
     breakout_filtered = _apply_symbol_filters(base_filtered, strategy="breakout")
-    if BREAKOUT_SYMBOL_ALLOWLIST:
-        breakout_filtered = [s for s in breakout_filtered if s in BREAKOUT_SYMBOL_ALLOWLIST]
-    if BREAKOUT_SYMBOL_DENYLIST:
-        breakout_filtered = [s for s in breakout_filtered if s not in BREAKOUT_SYMBOL_DENYLIST]
+    breakout_allowlist = _csv_upper_set("BREAKOUT_SYMBOL_ALLOWLIST")
+    breakout_denylist = _csv_upper_set("BREAKOUT_SYMBOL_DENYLIST")
+    if breakout_allowlist:
+        breakout_filtered = [s for s in breakout_filtered if s in breakout_allowlist]
+    if breakout_denylist:
+        breakout_filtered = [s for s in breakout_filtered if s not in breakout_denylist]
     retest_filtered = _apply_symbol_filters(base_filtered, strategy="retest")
+    midterm_symbols = _csv_upper_set("MIDTERM_SYMBOLS")
 
     BOUNCE_SYMBOLS = set(bounce_filtered[:BOUNCE_TOP_N])
     INPLAY_SYMBOLS = set(inplay_filtered[:max(1, int(INPLAY_TOP_N))])
     BREAKOUT_SYMBOLS = set(breakout_filtered[:max(1, int(BREAKOUT_TOP_N))])
     RETEST_SYMBOLS = set(retest_filtered[:max(1, int(RETEST_TOP_N))])
-    MIDTERM_ACTIVE_SYMBOLS = {s for s in base_filtered if s in MIDTERM_SYMBOLS}
+    MIDTERM_ACTIVE_SYMBOLS = {s for s in base_filtered if s in midterm_symbols}
     LAST_UNIVERSE_REFRESH_TS = int(time.time())
 
     print(f"[filters] cap≈{cap:.2f} | eligible={len(eligible)}/{len(syms)} | base={len(base_filtered)} | breakout={len(BREAKOUT_SYMBOLS)}")
@@ -8243,6 +8607,309 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
                 tg_trade("🧩 breakdown-universe: using=dynamic (allowlist unset)")
         if ENABLE_RANGE_TRADING and BOUNCE_TG_LOGS:
             tg_trade(f"🧩 bounce-universe: using={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
+
+
+def _read_simple_env_file(path: Path) -> dict[str, str]:
+    out: dict[str, str] = {}
+    try:
+        for raw in path.read_text(encoding="utf-8").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            out[k.strip()] = v.strip()
+    except Exception as e:
+        log_error(f"regime overlay read fail: {e}")
+        return {}
+    return out
+
+
+def _recompute_effective_risk_pct() -> None:
+    global RISK_PER_TRADE_PCT
+    if float(BASE_RISK_PER_TRADE_PCT or 0.0) <= 0:
+        return
+    eff = float(BASE_RISK_PER_TRADE_PCT) * float(ORCH_GLOBAL_RISK_MULT or 1.0) * float(ALLOCATOR_GLOBAL_RISK_MULT or 1.0)
+    RISK_PER_TRADE_PCT = max(0.01, float(eff))
+
+
+def _check_regime_overlay_health(*, notify: bool = True) -> bool:
+    global REGIME_OVERLAY_LAST_STALE_ALERT_TS, REGIME_OVERLAY_LAST_MISSING_ALERT_TS
+
+    if not REGIME_OVERLAY_ENABLE:
+        return True
+
+    path = REGIME_OVERLAY_PATH
+    now = int(time.time())
+
+    if not path.exists():
+        if int(REGIME_OVERLAY_LAST_APPLY_TS or 0) <= 0:
+            return False
+        if notify and (now - int(REGIME_OVERLAY_LAST_MISSING_ALERT_TS or 0)) >= int(REGIME_OVERLAY_STALE_ALERT_COOLDOWN_SEC):
+            REGIME_OVERLAY_LAST_MISSING_ALERT_TS = now
+            msg = f"⚠️ Regime overlay missing: {path}"
+            log_error(msg)
+            tg_trade(msg)
+        return False
+
+    try:
+        age_sec = max(0, now - int(path.stat().st_mtime))
+    except Exception as e:
+        log_error(f"regime overlay health stat fail: {e}")
+        return False
+
+    if age_sec > int(REGIME_OVERLAY_MAX_AGE_SEC):
+        if notify and (now - int(REGIME_OVERLAY_LAST_STALE_ALERT_TS or 0)) >= int(REGIME_OVERLAY_STALE_ALERT_COOLDOWN_SEC):
+            REGIME_OVERLAY_LAST_STALE_ALERT_TS = now
+            msg = (
+                f"⚠️ Regime overlay stale: age={age_sec}s > {int(REGIME_OVERLAY_MAX_AGE_SEC)}s "
+                f"path={path}"
+            )
+            log_error(msg)
+            tg_trade(msg)
+        return False
+
+    return True
+
+
+def _check_portfolio_allocator_health(*, notify: bool = True) -> bool:
+    global PORTFOLIO_ALLOCATOR_LAST_ALERT_TS
+
+    if not PORTFOLIO_ALLOCATOR_ENABLE:
+        return True
+
+    now = int(time.time())
+    problems: list[str] = []
+    for label, path, max_age in (
+        ("allocator overlay", PORTFOLIO_ALLOCATOR_PATH, int(PORTFOLIO_ALLOCATOR_MAX_AGE_SEC)),
+        ("allocator state", PORTFOLIO_ALLOCATOR_STATE_PATH, int(PORTFOLIO_ALLOCATOR_MAX_AGE_SEC)),
+    ):
+        if not path.exists():
+            problems.append(f"{label} missing: {path}")
+            continue
+        try:
+            age_sec = max(0, now - int(path.stat().st_mtime))
+        except Exception as e:
+            problems.append(f"{label} stat fail: {e}")
+            continue
+        if age_sec > max_age:
+            problems.append(f"{label} stale: age={age_sec}s > {max_age}s path={path}")
+
+    if problems and notify and (now - int(PORTFOLIO_ALLOCATOR_LAST_ALERT_TS or 0)) >= int(PORTFOLIO_ALLOCATOR_ALERT_COOLDOWN_SEC):
+        PORTFOLIO_ALLOCATOR_LAST_ALERT_TS = now
+        msg = "⚠️ Portfolio allocator degraded:\n" + "\n".join(problems[:4])
+        log_error(msg)
+        tg_trade(msg)
+    return not problems
+
+
+def _check_router_control_plane_health(*, notify: bool = True) -> bool:
+    global ROUTER_LAST_ALERT_TS
+
+    if not ROUTER_HEALTH_ENABLE:
+        return True
+
+    now = int(time.time())
+    problems: list[str] = []
+
+    for label, path, max_age in (
+        ("router overlay", ROUTER_OVERLAY_PATH, int(ROUTER_OVERLAY_MAX_AGE_SEC)),
+        ("router state", ROUTER_STATE_PATH, int(ROUTER_STATE_MAX_AGE_SEC)),
+    ):
+        if not path.exists():
+            problems.append(f"{label} missing: {path}")
+            continue
+        try:
+            age_sec = max(0, now - int(path.stat().st_mtime))
+        except Exception as e:
+            problems.append(f"{label} stat fail: {e}")
+            continue
+        if age_sec > max_age:
+            problems.append(f"{label} stale: age={age_sec}s > {max_age}s path={path}")
+
+    if problems and notify and (now - int(ROUTER_LAST_ALERT_TS or 0)) >= int(ROUTER_ALERT_COOLDOWN_SEC):
+        ROUTER_LAST_ALERT_TS = now
+        msg = "⚠️ Symbol router degraded:\n" + "\n".join(problems[:4])
+        log_error(msg)
+        tg_trade(msg)
+
+    return not problems
+
+
+def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
+    global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
+    global ENABLE_SLOPED_TRADING, BREAKOUT_SYMBOL_ALLOWLIST, BREAKOUT_SYMBOL_DENYLIST
+    global BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE
+    global RISK_PER_TRADE_PCT, ORCH_GLOBAL_RISK_MULT, REGIME_OVERLAY_LAST_MTIME
+    global REGIME_OVERLAY_LAST_APPLY_TS, REGIME_OVERLAY_LAST_APPLIED_REGIME, LAST_UNIVERSE_REFRESH_TS
+
+    if not REGIME_OVERLAY_ENABLE:
+        return False
+    path = REGIME_OVERLAY_PATH
+    if not path.exists():
+        return False
+
+    try:
+        st = path.stat()
+    except Exception as e:
+        log_error(f"regime overlay stat fail: {e}")
+        return False
+
+    now = int(time.time())
+    if not force and st.st_mtime <= float(REGIME_OVERLAY_LAST_MTIME or 0.0):
+        if (now - int(REGIME_OVERLAY_LAST_APPLY_TS or 0)) < int(REGIME_OVERLAY_RELOAD_SEC):
+            return False
+
+    env_map = _read_simple_env_file(path)
+    if not env_map:
+        return False
+
+    for k, v in env_map.items():
+        os.environ[k] = v
+
+    old_regime = str(REGIME_OVERLAY_LAST_APPLIED_REGIME or "").strip()
+
+    ENABLE_BREAKOUT_TRADING = _env_bool("ENABLE_BREAKOUT_TRADING", ENABLE_BREAKOUT_TRADING)
+    ENABLE_MIDTERM_TRADING = _env_bool("ENABLE_MIDTERM_TRADING", ENABLE_MIDTERM_TRADING)
+    ENABLE_FLAT_TRADING = _env_bool("ENABLE_FLAT_TRADING", ENABLE_FLAT_TRADING)
+    ENABLE_BREAKDOWN_TRADING = _env_bool("ENABLE_BREAKDOWN_TRADING", ENABLE_BREAKDOWN_TRADING)
+    ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
+    BREAKOUT_SYMBOL_ALLOWLIST = _csv_upper_set("BREAKOUT_SYMBOL_ALLOWLIST")
+    BREAKOUT_SYMBOL_DENYLIST = _csv_upper_set("BREAKOUT_SYMBOL_DENYLIST")
+
+    try:
+        ORCH_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ORCH_GLOBAL_RISK_MULT", "1.0") or 1.0))
+    except Exception:
+        ORCH_GLOBAL_RISK_MULT = 1.0
+    _recompute_effective_risk_pct()
+
+    BREAKOUT_ENGINE = BreakoutLiveEngine(fetch_klines) if ENABLE_BREAKOUT_TRADING else None
+    BREAKDOWN_ENGINE = BreakdownLiveEngine(fetch_klines) if ENABLE_BREAKDOWN_TRADING else None
+    if not ENABLE_FLAT_TRADING:
+        FLAT_ENGINE = None
+    if not ENABLE_SLOPED_TRADING:
+        SLOPED_ENGINE = None
+    LAST_UNIVERSE_REFRESH_TS = 0
+
+    REGIME_OVERLAY_LAST_MTIME = st.st_mtime
+    REGIME_OVERLAY_LAST_APPLY_TS = now
+    REGIME_OVERLAY_LAST_APPLIED_REGIME = str(os.getenv("ORCH_REGIME", "") or "").strip()
+
+    print(
+        "[regime] applied "
+        f"regime={REGIME_OVERLAY_LAST_APPLIED_REGIME or 'n/a'} "
+        f"risk_mult={ORCH_GLOBAL_RISK_MULT:.2f} "
+        f"breakout={ENABLE_BREAKOUT_TRADING} breakdown={ENABLE_BREAKDOWN_TRADING} "
+        f"flat={ENABLE_FLAT_TRADING} midterm={ENABLE_MIDTERM_TRADING}"
+    )
+    if notify and REGIME_OVERLAY_LAST_APPLIED_REGIME != old_regime and REGIME_OVERLAY_LAST_APPLIED_REGIME:
+        tg_trade(
+            f"🧠 Regime overlay applied: {old_regime or 'none'} → {REGIME_OVERLAY_LAST_APPLIED_REGIME} | "
+            f"risk×{ORCH_GLOBAL_RISK_MULT:.2f} | breakout={int(ENABLE_BREAKOUT_TRADING)} "
+            f"breakdown={int(ENABLE_BREAKDOWN_TRADING)} flat={int(ENABLE_FLAT_TRADING)} "
+            f"midterm={int(ENABLE_MIDTERM_TRADING)}"
+        )
+    return True
+
+
+def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = False) -> bool:
+    global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
+    global ENABLE_SLOPED_TRADING, BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE
+    global RISK_PER_TRADE_PCT, PORTFOLIO_ALLOCATOR_LAST_MTIME, PORTFOLIO_ALLOCATOR_LAST_APPLY_TS
+    global PORTFOLIO_ALLOCATOR_LAST_STATUS, ALLOCATOR_GLOBAL_RISK_MULT, ALLOCATOR_HARD_BLOCK_NEW_ENTRIES
+    global ALLOCATOR_SAFE_MODE, ALLOCATOR_SAFE_MODE_REASON, BREAKOUT_RISK_MULT, MIDTERM_RISK_MULT
+    global SLOPED_RISK_MULT, FLAT_RISK_MULT, BREAKDOWN_RISK_MULT, LAST_UNIVERSE_REFRESH_TS
+
+    if not PORTFOLIO_ALLOCATOR_ENABLE:
+        return False
+    path = PORTFOLIO_ALLOCATOR_PATH
+    if not path.exists():
+        return False
+
+    try:
+        st = path.stat()
+    except Exception as e:
+        log_error(f"allocator overlay stat fail: {e}")
+        return False
+
+    now = int(time.time())
+    if not force and st.st_mtime <= float(PORTFOLIO_ALLOCATOR_LAST_MTIME or 0.0):
+        if (now - int(PORTFOLIO_ALLOCATOR_LAST_APPLY_TS or 0)) < int(PORTFOLIO_ALLOCATOR_RELOAD_SEC):
+            return False
+
+    env_map = _read_simple_env_file(path)
+    if not env_map:
+        return False
+
+    for k, v in env_map.items():
+        os.environ[k] = v
+
+    old_status = str(PORTFOLIO_ALLOCATOR_LAST_STATUS or "").strip()
+
+    ENABLE_BREAKOUT_TRADING = _env_bool("ENABLE_BREAKOUT_TRADING", ENABLE_BREAKOUT_TRADING)
+    ENABLE_MIDTERM_TRADING = _env_bool("ENABLE_MIDTERM_TRADING", ENABLE_MIDTERM_TRADING)
+    ENABLE_FLAT_TRADING = _env_bool("ENABLE_FLAT_TRADING", ENABLE_FLAT_TRADING)
+    ENABLE_BREAKDOWN_TRADING = _env_bool("ENABLE_BREAKDOWN_TRADING", ENABLE_BREAKDOWN_TRADING)
+    ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
+
+    try:
+        ALLOCATOR_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ALLOCATOR_GLOBAL_RISK_MULT", "1.0") or 1.0))
+    except Exception:
+        ALLOCATOR_GLOBAL_RISK_MULT = 1.0
+    ALLOCATOR_HARD_BLOCK_NEW_ENTRIES = _env_bool("ALLOCATOR_HARD_BLOCK_NEW_ENTRIES", ALLOCATOR_HARD_BLOCK_NEW_ENTRIES)
+    ALLOCATOR_SAFE_MODE = _env_bool("PORTFOLIO_ALLOCATOR_SAFE_MODE", ALLOCATOR_SAFE_MODE)
+    ALLOCATOR_SAFE_MODE_REASON = str(os.getenv("ALLOCATOR_SAFE_MODE_REASON", "") or "").strip()
+    PORTFOLIO_ALLOCATOR_LAST_STATUS = str(os.getenv("PORTFOLIO_ALLOCATOR_STATUS", "") or "").strip()
+
+    try:
+        BREAKOUT_RISK_MULT = max(0.05, float(os.getenv("BREAKOUT_RISK_MULT", str(BREAKOUT_RISK_MULT)) or BREAKOUT_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        MIDTERM_RISK_MULT = max(0.05, float(os.getenv("MIDTERM_RISK_MULT", str(MIDTERM_RISK_MULT)) or MIDTERM_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        SLOPED_RISK_MULT = max(0.05, float(os.getenv("SLOPED_RISK_MULT", str(SLOPED_RISK_MULT)) or SLOPED_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        FLAT_RISK_MULT = max(0.05, float(os.getenv("FLAT_RISK_MULT", str(FLAT_RISK_MULT)) or FLAT_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        BREAKDOWN_RISK_MULT = max(0.05, float(os.getenv("BREAKDOWN_RISK_MULT", str(BREAKDOWN_RISK_MULT)) or BREAKDOWN_RISK_MULT))
+    except Exception:
+        pass
+
+    _recompute_effective_risk_pct()
+
+    BREAKOUT_ENGINE = BreakoutLiveEngine(fetch_klines) if ENABLE_BREAKOUT_TRADING else None
+    BREAKDOWN_ENGINE = BreakdownLiveEngine(fetch_klines) if ENABLE_BREAKDOWN_TRADING else None
+    if not ENABLE_FLAT_TRADING:
+        FLAT_ENGINE = None
+    if not ENABLE_SLOPED_TRADING:
+        SLOPED_ENGINE = None
+    LAST_UNIVERSE_REFRESH_TS = 0
+
+    PORTFOLIO_ALLOCATOR_LAST_MTIME = st.st_mtime
+    PORTFOLIO_ALLOCATOR_LAST_APPLY_TS = now
+
+    print(
+        "[allocator] applied "
+        f"status={PORTFOLIO_ALLOCATOR_LAST_STATUS or 'n/a'} "
+        f"risk_mult={ALLOCATOR_GLOBAL_RISK_MULT:.2f} "
+        f"hard_block={ALLOCATOR_HARD_BLOCK_NEW_ENTRIES} "
+        f"breakout={ENABLE_BREAKOUT_TRADING} breakdown={ENABLE_BREAKDOWN_TRADING} "
+        f"flat={ENABLE_FLAT_TRADING} midterm={ENABLE_MIDTERM_TRADING}"
+    )
+    if notify and PORTFOLIO_ALLOCATOR_LAST_STATUS != old_status:
+        tg_trade(
+            f"🛡️ Allocator overlay applied: {old_status or 'none'} → {PORTFOLIO_ALLOCATOR_LAST_STATUS or 'n/a'} | "
+            f"risk×{ALLOCATOR_GLOBAL_RISK_MULT:.2f} | hard_block={int(ALLOCATOR_HARD_BLOCK_NEW_ENTRIES)} | "
+            f"breakout={int(ENABLE_BREAKOUT_TRADING)} breakdown={int(ENABLE_BREAKDOWN_TRADING)} "
+            f"flat={int(ENABLE_FLAT_TRADING)} midterm={int(ENABLE_MIDTERM_TRADING)}"
+        )
+    return True
 
 
 async def symbol_filters_loop():
@@ -8546,6 +9213,8 @@ async def range_rescan_loop():
 # =========================== PULSE ===========================
 async def pulse():
     last_stats_sent = 0
+    last_regime_overlay_check_ts = 0
+    last_allocator_overlay_check_ts = 0
     last_ws_health_check_ts = 0
     last_ws_alert_ts = 0
     last_ws_alert_status = ""
@@ -8573,6 +9242,24 @@ async def pulse():
         )
         try:
             now = int(time.time())
+            if REGIME_OVERLAY_ENABLE:
+                _check_regime_overlay_health(notify=True)
+            if ROUTER_HEALTH_ENABLE:
+                _check_router_control_plane_health(notify=True)
+            if PORTFOLIO_ALLOCATOR_ENABLE:
+                _check_portfolio_allocator_health(notify=True)
+            if REGIME_OVERLAY_ENABLE and (now - last_regime_overlay_check_ts) >= int(REGIME_OVERLAY_RELOAD_SEC):
+                try:
+                    _apply_regime_overlay(force=False, notify=True)
+                except Exception as e:
+                    log_error(f"regime overlay reload fail: {e}")
+                last_regime_overlay_check_ts = now
+            if PORTFOLIO_ALLOCATOR_ENABLE and (now - last_allocator_overlay_check_ts) >= int(PORTFOLIO_ALLOCATOR_RELOAD_SEC):
+                try:
+                    _apply_portfolio_allocator_overlay(force=False, notify=True)
+                except Exception as e:
+                    log_error(f"allocator overlay reload fail: {e}")
+                last_allocator_overlay_check_ts = now
             if STRATEGY_STATS_TG_EVERY_SEC > 0 and (now - last_stats_sent) >= int(STRATEGY_STATS_TG_EVERY_SEC):
                 tg_trade(_strategy_runtime_stats_text(STRATEGY_STATS_LOOKBACK_H))
                 last_stats_sent = now
@@ -8678,6 +9365,14 @@ def main():
     # Start dynamic allowlist watcher (hot-reloads ASC1/ARF1 without bot restart)
     _allowlist_watcher = _AllowlistWatcher()
     _allowlist_watcher.start()
+    try:
+        _apply_regime_overlay(force=True, notify=False)
+    except Exception as e:
+        log_error(f"startup regime overlay apply fail: {e}")
+    try:
+        _apply_portfolio_allocator_overlay(force=True, notify=False)
+    except Exception as e:
+        log_error(f"startup allocator overlay apply fail: {e}")
     print("Starting real-time pump detector…")
     print(f"Sources: Bybit={ENABLE_BYBIT}, Binance={ENABLE_BINANCE}, MEXC={ENABLE_MEXC}")
     print(f"Trading: {'ON' if TRADE_ON else 'OFF'} (Bybit short fade); DRY_RUN={'ON' if DRY_RUN else 'OFF'}")
@@ -8687,6 +9382,10 @@ def main():
         f"Account: {TRADE_ACCOUNT_NAME} | leverage={BYBIT_LEVERAGE} | max_positions={MAX_POSITIONS} | "
         f"risk={RISK_PER_TRADE_PCT:.2f}% | cap_notional_to_equity={CAP_NOTIONAL_TO_EQUITY} | "
         f"reserve={RESERVE_EQUITY_FRAC:.2f} | min_notional={MIN_NOTIONAL_USD}"
+    )
+    print(
+        f"Control-plane: orch_risk={ORCH_GLOBAL_RISK_MULT:.2f} allocator_risk={ALLOCATOR_GLOBAL_RISK_MULT:.2f} "
+        f"hard_block={ALLOCATOR_HARD_BLOCK_NEW_ENTRIES} safe_mode={ALLOCATOR_SAFE_MODE}"
     )
     print(
         f"Strategies: breakout={ENABLE_BREAKOUT_TRADING} inplay={ENABLE_INPLAY_TRADING} "

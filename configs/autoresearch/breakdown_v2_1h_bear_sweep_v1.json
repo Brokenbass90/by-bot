@@ -1,0 +1,73 @@
+{
+  "name": "breakdown_v2_1h_bear_sweep_v1",
+  "description": "Parameter sweep for alt_inplay_breakdown_v2 — uses 1h structure instead of 4h, should generate 5-10× more signals in honest engine. Run over 360d annual window to find optimal config.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,DOTUSDT,LTCUSDT,ATOMUSDT",
+    "--strategies",
+    "alt_inplay_breakdown_v2",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-27",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "BREAKDOWN2_SYMBOL_ALLOWLIST": [
+      "BTCUSDT,ETHUSDT,SOLUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,DOTUSDT,LTCUSDT"
+    ],
+    "BREAKDOWN2_LOOKBACK_H": [12, 24, 36],
+    "BREAKDOWN2_SL_ATR": [1.2, 1.5, 1.8],
+    "BREAKDOWN2_RR": [1.5, 2.0, 2.5],
+    "BREAKDOWN2_RSI_MAX": [48, 52, 55],
+    "BREAKDOWN2_REGIME_MODE": ["ema", "off"]
+  },
+  "base_env": {
+    "BREAKDOWN2_ALLOW_LONGS": "0",
+    "BREAKDOWN2_ALLOW_SHORTS": "1",
+    "BREAKDOWN2_MIN_BREAK_ATR": "0.15",
+    "BREAKDOWN2_MAX_DIST_ATR": "2.0",
+    "BREAKDOWN2_TP1_FRAC": "0.50",
+    "BREAKDOWN2_TIME_STOP_BARS_5M": "288",
+    "BREAKDOWN2_COOLDOWN_BARS_5M": "48",
+    "BREAKDOWN2_VOL_MULT": "0.0"
+  },
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 1.3,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.5,
+    "profit_factor": 5.0,
+    "winrate": 8.0,
+    "max_drawdown": 2.0,
+    "trades": 0.05,
+    "trades_cap": 80,
+    "negative_months": 3.0,
+    "worst_month_pnl": 2.0
+  },
+  "_combo_count": "3×3×3×3×3×2 = 486 combos",
+  "_goal": "Find breakdown_v2 params that generate 60-120 trades/year with PF > 1.4 using honest 1h-based engine. Compare to old v1 that had 0 viable configs."
+}

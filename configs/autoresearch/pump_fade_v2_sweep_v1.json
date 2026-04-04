@@ -1,0 +1,67 @@
+{
+  "name": "pump_fade_v2_sweep_v1",
+  "description": "Parameter sweep for pump_fade_v2 — improved multi-bar pump/dump detection. Tests both short (fade pumps) and long (fade dumps). Run on 360d to capture many pump events.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,SUIUSDT,DOTUSDT,LTCUSDT,ATOMUSDT",
+    "--strategies",
+    "pump_fade_v2",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-27",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "PF2_MIN_PUMP_PCT": [0.05, 0.07, 0.09, 0.12],
+    "PF2_RSI_OB": [68, 72, 76],
+    "PF2_RSI_OS": [24, 28, 32],
+    "PF2_SL_ATR_MULT": [1.2, 1.5, 1.8],
+    "PF2_RR": [1.5, 1.8, 2.2],
+    "PF2_PUMP_WINDOW_BARS": [8, 12, 18]
+  },
+  "base_env": {
+    "PF2_ALLOW_SHORTS": "1",
+    "PF2_ALLOW_LONGS": "1",
+    "PF2_CONFIRM_BARS": "1",
+    "PF2_TIME_STOP_BARS": "96",
+    "PF2_COOLDOWN_BARS": "20",
+    "PF2_VOL_EXHAUST_MULT": "0.0",
+    "PF2_SYMBOL_ALLOWLIST": ""
+  },
+  "constraints": {
+    "min_trades": 15,
+    "min_profit_factor": 1.2,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 3.0,
+    "max_negative_months": 3
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 5.0,
+    "winrate": 7.0,
+    "max_drawdown": 1.5,
+    "trades": 0.05,
+    "trades_cap": 80,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "4×3×3×3×3×3 = 972 combos",
+  "_goal": "Find viable pump fade params after engine fix. Target: 30-60 trades/year, PF > 1.3. Both directions (pumps AND dumps)."
+}

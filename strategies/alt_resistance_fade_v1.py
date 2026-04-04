@@ -88,10 +88,10 @@ class AltResistanceFadeV1Config:
     max_rebound_from_low_pct: float = 65.0
 
     signal_tf: str = "60"
-    signal_lookback: int = 72
+    signal_lookback: int = 48
     signal_ema_period: int = 20
     signal_atr_period: int = 14
-    min_range_pct: float = 6.0
+    min_range_pct: float = 4.5
     max_range_pct: float = 30.0
     resistance_touch_buffer_atr: float = 0.35
     reject_below_res_atr: float = 0.12
@@ -108,7 +108,7 @@ class AltResistanceFadeV1Config:
     trail_atr_mult: float = 0.0
     trail_atr_period: int = 14
     time_stop_bars_5m: int = 576
-    cooldown_bars_5m: int = 72
+    cooldown_bars_5m: int = 48
 
 
 class AltResistanceFadeV1Strategy:
@@ -156,6 +156,10 @@ class AltResistanceFadeV1Strategy:
         self._last_regime_tf_ts: Optional[int] = None
         self._last_regime_ok: Optional[bool] = None
 
+    def _refresh_runtime_allowlists(self) -> None:
+        self._allow = _env_csv_set("ARF1_SYMBOL_ALLOWLIST", "BCHUSDT")
+        self._deny = _env_csv_set("ARF1_SYMBOL_DENYLIST")
+
     def _regime_ok(self, store) -> bool:
         rows = store.fetch_klines(store.symbol, self.cfg.regime_tf, max(self.cfg.regime_lookback, self.cfg.regime_ema_slow + 8)) or []
         if len(rows) < self.cfg.regime_ema_slow + 8:
@@ -196,6 +200,7 @@ class AltResistanceFadeV1Strategy:
 
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (o, h, l, v)
+        self._refresh_runtime_allowlists()
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
             return None
@@ -259,12 +264,16 @@ class AltResistanceFadeV1Strategy:
             return None
 
         sl = resistance + self.cfg.sl_atr_mult * atr
-        if sl <= cur:
+        # Use live tick price c (actual entry) for geometry validation, not cur (last kline close).
+        # Previously used cur — if price moved between kline close and tick, sl/tp geometry
+        # could be inverted at entry (sl below entry for short, tp above entry for short).
+        entry_price = float(c)
+        if sl <= entry_price:
             return None
         tp2 = support * (1.0 + self.cfg.tp2_buffer_pct / 100.0)
-        if tp2 >= cur:
+        if tp2 >= entry_price:
             return None
-        tp1 = cur - (cur - tp2) * 0.55
+        tp1 = entry_price - (entry_price - tp2) * 0.55
         tp1_frac = min(0.9, max(0.1, self.cfg.tp1_frac))
 
         self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))

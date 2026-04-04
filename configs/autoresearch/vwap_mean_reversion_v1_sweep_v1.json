@@ -1,0 +1,72 @@
+{
+  "name": "vwap_mean_reversion_v1_sweep_v1",
+  "description": "Parameter sweep for alt_vwap_mean_reversion_v1 — 15m session VWAP mean reversion sleeve for chop/range markets. Goal: increase trade density with controlled DD while complementing ARF1 and breakdown.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,DOTUSDT,LTCUSDT",
+    "--strategies",
+    "alt_vwap_mean_reversion_v1",
+    "--days",
+    "180",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "4",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "AVW1_MIN_VWAP_DEV_ATR": [0.80, 0.95, 1.10],
+    "AVW1_LONG_RSI_MAX": [35, 39, 43],
+    "AVW1_SHORT_RSI_MIN": [57, 61, 65],
+    "AVW1_SL_ATR_MULT": [0.70, 0.90, 1.10],
+    "AVW1_MAX_ER": [0.28, 0.38, 0.48],
+    "AVW1_TP2_ATR": [0.10, 0.20, 0.35]
+  },
+  "base_env": {
+    "AVW1_SIGNAL_TF": "15",
+    "AVW1_SIGNAL_LOOKBACK": "72",
+    "AVW1_RSI_PERIOD": "14",
+    "AVW1_ATR_PERIOD": "14",
+    "AVW1_TP1_FRAC": "0.65",
+    "AVW1_TIME_STOP_BARS_5M": "144",
+    "AVW1_COOLDOWN_BARS_5M": "36",
+    "AVW1_ALLOW_LONGS": "1",
+    "AVW1_ALLOW_SHORTS": "1",
+    "AVW1_SESSION_BARS_MIN": "12",
+    "AVW1_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,DOTUSDT,LTCUSDT"
+  },
+  "constraints": {
+    "min_trades": 40,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 9.0,
+    "min_net_pnl": 3.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 6.0,
+    "winrate": 5.0,
+    "max_drawdown": 2.0,
+    "trades": 0.12,
+    "trades_cap": 220,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "3×3×3×3×3×3 = 729 combos",
+  "_goal": "Find a chop/range VWAP sleeve that adds 40+ trades per 180d with PF > 1.15 and controlled drawdown."
+}

@@ -1,0 +1,81 @@
+{
+  "name": "breakdown_v1_current90_focus_v1",
+  "description": "Focused 90d sweep around the rewritten alt_inplay_breakdown_v1 after the strong current90 portfolio probe. Searches only near the working breakdown defaults used in the positive April 1 holdout.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT",
+    "--strategies",
+    "alt_inplay_breakdown_v1",
+    "--days",
+    "90",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "BREAKDOWN_SYMBOL_ALLOWLIST": [
+      "BTCUSDT,ETHUSDT,SOLUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT"
+    ],
+    "BREAKDOWN_LOOKBACK_H": [36, 48, 60],
+    "BREAKDOWN_MIN_BREAK_ATR": [0.15, 0.20, 0.25],
+    "BREAKDOWN_RSI_MAX": [50, 55, 60],
+    "BREAKDOWN_SL_ATR": [1.4, 1.8, 2.2],
+    "BREAKDOWN_RR": [1.6, 2.0, 2.4]
+  },
+  "base_env": {
+    "BREAKDOWN_ALLOW_LONGS": "0",
+    "BREAKDOWN_ALLOW_SHORTS": "1",
+    "BREAKDOWN_ALLOW_CONTINUATION": "1",
+    "BREAKDOWN_ALLOW_FAILED_RECLAIM": "1",
+    "BREAKDOWN_TF_BREAK": "60",
+    "BREAKDOWN_TF_ENTRY": "5",
+    "BREAKDOWN_BUFFER_ATR": "0.10",
+    "BREAKDOWN_IMPULSE_BODY_MIN_FRAC": "0.35",
+    "BREAKDOWN_RETEST_TOUCH_ATR": "0.35",
+    "BREAKDOWN_RECLAIM_ATR": "0.12",
+    "BREAKDOWN_ENTRY_BODY_MIN_FRAC": "0.18",
+    "BREAKDOWN_MAX_DIST_ATR": "2.0",
+    "BREAKDOWN_TIME_STOP_BARS_5M": "288",
+    "BREAKDOWN_COOLDOWN_BARS_5M": "48",
+    "BREAKDOWN_TP1_FRAC": "0.50",
+    "BREAKDOWN_REGIME_MODE": "off",
+    "BREAKDOWN_REJECT_VOL_MULT": "0.0"
+  },
+  "constraints": {
+    "min_trades": 12,
+    "min_profit_factor": 1.25,
+    "max_drawdown": 6.0,
+    "min_net_pnl": 6.0,
+    "max_negative_months": 1,
+    "max_negative_streak": 1
+  },
+  "score_weights": {
+    "net_pnl": 2.0,
+    "profit_factor": 6.0,
+    "winrate": 6.0,
+    "max_drawdown": 2.5,
+    "trades": 0.08,
+    "trades_cap": 80,
+    "negative_months": 3.0,
+    "worst_month_pnl": 2.5
+  },
+  "_combo_count": "2×3×3×3×3×3 = 486 combos",
+  "_goal": "Tighten the new breakdown short family specifically for the current regime and preserve the current90 portfolio edge."
+}

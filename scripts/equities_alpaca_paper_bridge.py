@@ -191,6 +191,48 @@ def _alpaca_advisory_path(picks_csv: Path) -> Path:
     return picks_csv.parent / "latest_advisory.json"
 
 
+def _load_offline_snapshot(picks_csv: Path) -> tuple[dict[str, Any], list[dict[str, Any]], str]:
+    snapshot_raw = _env("ALPACA_OFFLINE_SNAPSHOT_JSON", "")
+    candidates: list[Path] = []
+    if snapshot_raw:
+        candidates.append(Path(snapshot_raw))
+    candidates.append(_alpaca_advisory_path(picks_csv))
+
+    for path in candidates:
+        if not path.exists():
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        report = payload.get("report") if isinstance(payload, dict) else None
+        report = report if isinstance(report, dict) else payload if isinstance(payload, dict) else {}
+        buying_power = _safe_float(report.get("buying_power"), _env_float("ALPACA_OFFLINE_BUYING_POWER", 0.0))
+        cash = _safe_float(report.get("cash"), _env_float("ALPACA_OFFLINE_CASH", buying_power))
+        positions_raw = report.get("positions_before") or []
+        positions: list[dict[str, Any]] = []
+        if isinstance(positions_raw, list):
+            for pos in positions_raw:
+                if not isinstance(pos, dict):
+                    continue
+                positions.append(
+                    {
+                        "symbol": str(pos.get("ticker") or pos.get("symbol") or "").strip().upper(),
+                        "qty": str(pos.get("qty") or ""),
+                        "market_value": str(pos.get("market_value") or ""),
+                    }
+                )
+        account = {
+            "buying_power": buying_power,
+            "cash": cash,
+        }
+        return account, positions, str(path)
+
+    buying_power = _env_float("ALPACA_OFFLINE_BUYING_POWER", 0.0)
+    cash = _env_float("ALPACA_OFFLINE_CASH", buying_power)
+    return {"buying_power": buying_power, "cash": cash}, [], ""
+
+
 def _alpaca_ai_advisory(
     *,
     report: dict[str, Any],
@@ -416,6 +458,7 @@ def main() -> int:
     min_dollar_order = max(1.0, _env_float("ALPACA_MIN_DOLLAR_ORDER", 50.0))
     send_orders = _env_bool("ALPACA_SEND_ORDERS", False)
     close_stale_positions = _env_bool("ALPACA_CLOSE_STALE_POSITIONS", False)
+    offline_dry_run = _env_bool("ALPACA_OFFLINE_DRY_RUN", False) and not send_orders
     capital_override_usd = max(0.0, _env_float("ALPACA_CAPITAL_OVERRIDE_USD", 0.0))
     allow_stale_picks = _env_bool("ALPACA_ALLOW_STALE_PICKS", False)
     max_pick_age_days = max(1, _env_int("ALPACA_MAX_PICK_AGE_DAYS", 45))
@@ -436,16 +479,21 @@ def main() -> int:
     key_id = _env("ALPACA_API_KEY_ID")
     secret_key = _env("ALPACA_API_SECRET_KEY")
     base_url = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
-    if not key_id or not secret_key:
+    if (not key_id or not secret_key) and not offline_dry_run:
         print("error=missing_alpaca_keys", file=sys.stderr)
         return 4
 
-    client = AlpacaClient(base_url, key_id, secret_key)
-    account = client.get_account()
+    snapshot_path = ""
+    if offline_dry_run:
+        account, positions, snapshot_path = _load_offline_snapshot(picks_csv)
+        client = None
+    else:
+        client = AlpacaClient(base_url, key_id, secret_key)
+        account = client.get_account()
+        positions = client.list_positions()
     buying_power = float(account.get("buying_power") or account.get("cash") or 0.0)
     cash = float(account.get("cash") or 0.0)
     effective_capital = min(buying_power, capital_override_usd) if capital_override_usd > 0 else buying_power
-    positions = client.list_positions()
     current_positions = {str(p.get("symbol") or "").strip().upper(): p for p in positions if str(p.get("symbol") or "").strip()}
     latest_entry_day, pick_age_days = _pick_age_days(picks)
     stale_guard_triggered = (
@@ -506,7 +554,9 @@ def main() -> int:
 
     report = {
         "status": (
-            "dry_run_no_current_cycle" if (no_current_cycle and not send_orders)
+            "offline_dry_run_no_current_cycle" if (no_current_cycle and offline_dry_run)
+            else "offline_dry_run" if offline_dry_run
+            else "dry_run_no_current_cycle" if (no_current_cycle and not send_orders)
             else "send_orders_no_current_cycle" if no_current_cycle
             else "dry_run" if not send_orders
             else "send_orders"
@@ -524,6 +574,7 @@ def main() -> int:
         "max_pick_age_days": max_pick_age_days,
         "refresh_utc": refresh_utc_raw,
         "refresh_age_hours": None if refresh_age_hours is None else round(refresh_age_hours, 2),
+        "offline_snapshot_path": snapshot_path,
         "no_current_cycle": no_current_cycle,
         "cycle_reason": cycle_reason,
         "summary_csv": str(summary_path) if summary_path else "",

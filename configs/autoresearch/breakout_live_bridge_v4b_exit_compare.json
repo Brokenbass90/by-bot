@@ -1,0 +1,72 @@
+{
+  "_comment": "Bounded compare on top of the two historically best live-breakout profiles. Only test exit geometry (RR/time-stop) and the exact weak-chop vs density entry pockets that have already passed on 360d.",
+  "name": "breakout_live_bridge_v4b_exit_compare",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,DOGEUSDT,LTCUSDT,BCHUSDT,ATOMUSDT,AVAXUSDT",
+    "--strategies",
+    "inplay_breakout,btc_eth_midterm_pullback",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "10",
+    "--slippage_bps",
+    "10"
+  ],
+  "grid": {
+    "BT_BREAKOUT_QUALITY_ENABLE": ["1"],
+    "BT_BREAKOUT_QUALITY_MIN_SCORE": [0.50, 0.53],
+    "BREAKOUT_IMPULSE_ATR_MULT": [0.85, 1.00],
+    "BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT": [0.05, 0.07],
+    "BREAKOUT_RECLAIM_ATR": [0.10, 0.12],
+    "BREAKOUT_MAX_DIST_ATR": [1.4, 1.5],
+    "BREAKOUT_RR": [1.20, 1.35, 1.50],
+    "BREAKOUT_TIME_STOP_BARS": [0, 96]
+  },
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "BYBIT_DATA_POLITE_SLEEP_SEC": "2.0",
+    "BREAKOUT_ALLOW_SHORTS": "0",
+    "BREAKOUT_REGIME_MODE": "off",
+    "BREAKOUT_BUFFER_ATR": "0.12",
+    "BREAKOUT_MAX_CHASE_PCT": "0.13",
+    "BREAKOUT_MAX_LATE_VS_REF_PCT": "0.35"
+  },
+  "constraints": {
+    "min_trades": 320,
+    "min_profit_factor": 1.34,
+    "max_drawdown": 4.0,
+    "min_net_pnl": 20.5,
+    "max_negative_months": 2,
+    "max_negative_streak": 1,
+    "min_worst_month_pnl": -1.5
+  },
+  "score_weights": {
+    "net_pnl": 1.1,
+    "profit_factor": 5.0,
+    "winrate": 15.0,
+    "max_drawdown": 1.9,
+    "trades": 0.07,
+    "trades_cap": 520,
+    "negative_months": 5.0,
+    "max_negative_streak": 4.0,
+    "worst_month_pnl": 5.0
+  },
+  "_combo_count": "2x2x2x2x2x3x2 = 192 combos",
+  "_goal": "Improve the already-working live breakout sleeve by testing only exit geometry and max-hold against the two historically strongest entry profiles."
+}

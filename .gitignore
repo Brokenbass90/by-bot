@@ -8,11 +8,13 @@ bounce_debug.csv
 data_cache/
 backtest_runs/
 backtest_results/
+backtest_archive/
 .cache/
 .venv/
 .DS_Store
 
 .env.bak.*
+.env.bak_*
 
 # Generated operator snapshots.
 docs/*_latest.csv
@@ -30,3 +32,14 @@ configs/alpaca_paper_local.env
 backtest_runs_old_*.tgz
 share_main_strategy/
 share_main_strategy.tar.gz
+
+# Generated runtime/control-plane state.
+runtime/
+trades.db
+
+# Generated control-plane overlays/state.
+configs/dynamic_allowlist_latest.env
+configs/regime_orchestrator_latest.env
+configs/health_gate_alerts.json
+configs/strategy_health.json
+configs/intraday_state.json

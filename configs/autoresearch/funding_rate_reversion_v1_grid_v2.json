@@ -1,0 +1,45 @@
+{
+  "name": "funding_rate_reversion_v1_grid_v2",
+  "description": "FR Reversion v1 — v2 grid. Fixes v1 problem: constant FR=0.0008 was below both tested thresholds, so threshold had no effect. Fix: use FR_LATEST=+0.003 (extreme positive funding) for shorts test and tighten threshold so it always fires. Goal: find RSI/EMA/extension/SL/TP params that outperform RSI-only baseline (PF≥1.4). Separate longs pass TBD after this shorts pass.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT,AVAXUSDT",
+    "--strategies", "funding_rate_reversion_v1",
+    "--days", "360",
+    "--end", "2026-02-24",
+    "--tag", "{tag}"
+  ],
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.4,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 3.0
+  },
+  "grid": {
+    "FR_ALLOW_LONGS":          ["0"],
+    "FR_ALLOW_SHORTS":         ["1"],
+    "FR_LATEST_BTCUSDT":       ["0.003"],
+    "FR_LATEST_ETHUSDT":       ["0.003"],
+    "FR_LATEST_SOLUSDT":       ["0.003"],
+    "FR_LATEST_BNBUSDT":       ["0.003"],
+    "FR_LATEST_AVAXUSDT":      ["0.003"],
+    "FR_THRESHOLD":            [0.001, 0.002],
+    "FR_EMA_PERIOD":           [34, 55, 89],
+    "FR_EXT_PCT":              [0.003, 0.007, 0.012],
+    "FR_RSI_OB":               [60.0, 65.0, 72.0],
+    "FR_SL_ATR_MULT":          [1.0, 1.5, 2.0],
+    "FR_TP_ATR_MULT":          [1.5, 2.5, 3.5],
+    "FR_TIME_STOP_BARS_5M":    [48, 96],
+    "FR_COOLDOWN_BARS":        [24],
+    "FR_MIN_VOLUME_USDT":      [500000]
+  },
+  "_combo_count": "2×3×3×3×3×3×2 = 972 combos (shorts only)",
+  "_v2_fix": "v1 used FR_LATEST=0.0008 and FR_THRESHOLD=[0.0006,0.0008] — threshold always <= FR so filter was always-on. v2 uses FR_LATEST=0.003 (extreme positive rate, simulates peak bull funding) and threshold=[0.001,0.002], both < 0.003 so filter fires. SHORTS run only: extreme positive funding → longs are overextended → fade via short.",
+  "_next_step_longs": "After shorts run, create _v2_longs with FR_LATEST=-0.003, FR_ALLOW_LONGS=1, FR_ALLOW_SHORTS=0, FR_RSI_OS instead of FR_RSI_OB grid.",
+  "_realistic_note": "Constant FR still means signal fires on EVERY bar that meets RSI/EMA conditions — not just at real 8h funding windows. This tests EXIT parameters (SL/TP/EMA extension) assuming signal quality is given. Treat PF from this backtest as conservative floor. Live FR events are rarer → higher PF expected in live paper.",
+  "_run_command": "nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/funding_rate_reversion_v1_grid_v2.json > /tmp/fr_v2_shorts.log 2>&1 &",
+  "_expected_runtime_minutes": 15,
+  "_goal": "Find SHORT params with PF≥1.4, trades≥10, DD≤8%. Then run longs. Then combine best params for live paper mode."
+}

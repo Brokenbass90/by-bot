@@ -22,10 +22,10 @@
     "MSBNC_ENTRY_EMA": "9",
     "MSBNC_ATR_PERIOD": "14",
     "MSBNC_VOL_MULT": "0.0",
-    "MSBNC_MAX_SIGNALS_PER_DAY": "8",
-    "MSBNC_COOLDOWN_BARS": "1",
+    "MSBNC_MAX_SIGNALS_PER_DAY": "6",
+    "MSBNC_COOLDOWN_BARS": "3",
     "MSBNC_SESSION_START_UTC": "7",
-    "MSBNC_SESSION_END_UTC": "17",
+    "MSBNC_SESSION_END_UTC": "22",
     "MSBNC_MIN_SL_ATR": "0.12",
     "MSBNC_MAX_SL_ATR": "1.2",
     "MSBNC_TIME_STOP_BARS": "12",
@@ -44,9 +44,9 @@
     "MSBNC_MIN_WICK_ATR": ["0.08", "0.12"],
     "MSBNC_MIN_VWAP_DIST_ATR": ["0.02", "0.05", "0.08"],
     "MSBNC_MIN_TP_ATR": ["0.30", "0.40", "0.50"],
-    "MSBNC_RR": ["1.20", "1.35"],
+    "MSBNC_RR": ["1.35", "1.50"],
     "MSBNC_SL_BUFFER_ATR": ["0.08", "0.12"],
-    "MSBNC_COOLDOWN_BARS": ["1", "2"]
+    "MSBNC_COOLDOWN_BARS": ["2", "3"]
   },
   "_combo_count": "576 combos",
   "constraints": {

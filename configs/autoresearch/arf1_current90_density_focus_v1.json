@@ -1,0 +1,83 @@
+{
+  "name": "arf1_current90_density_focus_v1",
+  "description": "Focused 90d density sweep for alt_resistance_fade_v1. Goal: preserve the strong fade edge while increasing trade count on the current bear-chop window.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "ADAUSDT,SUIUSDT,LINKUSDT,DOTUSDT,LTCUSDT,SOLUSDT,XRPUSDT,AVAXUSDT",
+    "--strategies",
+    "alt_resistance_fade_v1",
+    "--days",
+    "90",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "ARF1_SYMBOL_ALLOWLIST": [
+      "ADAUSDT,SUIUSDT,LINKUSDT,DOTUSDT,LTCUSDT",
+      "ADAUSDT,SUIUSDT,LINKUSDT,DOTUSDT,LTCUSDT,SOLUSDT,XRPUSDT",
+      "ADAUSDT,SUIUSDT,LINKUSDT,DOTUSDT,LTCUSDT,SOLUSDT,XRPUSDT,AVAXUSDT"
+    ],
+    "ARF1_SIGNAL_LOOKBACK": [48, 60, 72],
+    "ARF1_MIN_RANGE_PCT": [4.5, 5.25, 6.0],
+    "ARF1_REGIME_MAX_GAP_PCT": [3.2, 4.0, 4.5],
+    "ARF1_REGIME_MAX_SLOPE_PCT": [1.8, 2.2, 2.5],
+    "ARF1_COOLDOWN_BARS_5M": [48, 60, 72]
+  },
+  "base_env": {
+    "ARF1_SIGNAL_TF": "60",
+    "ARF1_SIGNAL_EMA_PERIOD": "20",
+    "ARF1_SIGNAL_ATR_PERIOD": "14",
+    "ARF1_MAX_RANGE_PCT": "30.0",
+    "ARF1_RES_TOUCH_BUFFER_ATR": "0.35",
+    "ARF1_REJECT_BELOW_RES_ATR": "0.12",
+    "ARF1_MIN_BODY_FRAC": "0.22",
+    "ARF1_MAX_DIST_FROM_RES_PCT": "1.4",
+    "ARF1_RSI_PERIOD": "14",
+    "ARF1_MIN_RSI": "58",
+    "ARF1_MAX_CLOSE_VS_EMA_PCT": "1.2",
+    "ARF1_SL_ATR_MULT": "0.85",
+    "ARF1_TP1_FRAC": "0.60",
+    "ARF1_TP2_BUFFER_PCT": "0.45",
+    "ARF1_TIME_STOP_BARS_5M": "576",
+    "ARF1_REGIME_MIN_ATR_PCT": "0.8",
+    "ARF1_REGIME_MAX_ATR_PCT": "6.5",
+    "ARF1_MAX_REBOUND_FROM_LOW_PCT": "65.0"
+  },
+  "constraints": {
+    "min_trades": 12,
+    "min_profit_factor": 1.35,
+    "max_drawdown": 5.0,
+    "min_net_pnl": 4.0,
+    "max_negative_months": 1,
+    "max_negative_streak": 1
+  },
+  "score_weights": {
+    "net_pnl": 1.7,
+    "profit_factor": 5.5,
+    "winrate": 8.0,
+    "max_drawdown": 2.3,
+    "trades": 0.18,
+    "trades_cap": 90,
+    "negative_months": 3.5,
+    "max_negative_streak": 3.0
+  },
+  "_combo_count": "3x3x3x3x3x3 = 729 combos",
+  "_goal": "Test whether a slightly wider symbol universe, shorter level lookback, and looser regime gating can lift ARF1 from 9 trades to a more useful current-window cadence without killing the WR/PF profile."
+}

@@ -57,6 +57,7 @@ import copy
 import json
 import os
 import ssl
+import subprocess
 import sys
 import time
 from dataclasses import asdict, dataclass, field
@@ -81,10 +82,11 @@ from forex.strategies.grid_reversion_session_v1 import (
 from forex.types import Candle, Signal
 
 # ── File paths ──────────────────────────────────────────────────────────────────
-ALPACA_DATA_URL  = "https://data.alpaca.markets"
-STATE_FILE       = ROOT / "configs" / "intraday_state.json"
-EQUITY_LOG_FILE  = ROOT / "configs" / "intraday_equity_log.json"
-ENV_FILE         = ROOT / "configs" / "alpaca_paper_local.env"
+ALPACA_DATA_URL    = "https://data.alpaca.markets"
+STATE_FILE         = ROOT / "configs" / "intraday_state.json"
+EQUITY_LOG_FILE    = ROOT / "configs" / "intraday_equity_log.json"
+ENV_FILE           = ROOT / "configs" / "alpaca_paper_local.env"
+INTRADAY_CFG_FILE  = ROOT / "configs" / "intraday_config.json"   # hot-reloadable symbol + strategy config
 
 # US market session in UTC (EDT: +4h, EST: +5h). Wide window handles DST.
 US_SESSION_UTC_START = 14   # 10:00 AM ET (EDT safety buffer)
@@ -211,6 +213,65 @@ def _load_strategy_map_from_env() -> Dict[str, str]:
     return out
 
 
+def _load_intraday_config() -> dict:
+    """Load optional intraday_config.json. Returns empty dict if missing or malformed.
+
+    Expected format:
+    {
+      "symbols": ["TSLA", "GOOGL", "NVDA", ...],        # override symbol list
+      "strategy_map": {"TSLA": "breakout_continuation", "NVDA": "breakout_continuation"},
+      "max_symbols": 10
+    }
+    """
+    cfg_file = Path(_env("INTRADAY_CONFIG_FILE", str(INTRADAY_CFG_FILE))).expanduser()
+    if not cfg_file.exists():
+        return {}
+    try:
+        raw = json.loads(cfg_file.read_text(encoding="utf-8"))
+        return raw if isinstance(raw, dict) else {}
+    except Exception as exc:
+        print(f"[intraday_bridge] warning: failed to load {cfg_file}: {exc}")
+        return {}
+
+
+def _maybe_refresh_intraday_config() -> None:
+    if not _env_bool("INTRADAY_DYNAMIC_BUILD", False):
+        return
+    builder = Path(_env("INTRADAY_DYNAMIC_BUILDER", str(ROOT / "scripts" / "build_equities_intraday_watchlist.py"))).expanduser()
+    if not builder.exists():
+        print(f"[intraday_bridge] warning: dynamic builder not found: {builder}")
+        return
+
+    out_json = Path(_env("INTRADAY_CONFIG_FILE", str(INTRADAY_CFG_FILE))).expanduser()
+    cmd = [
+        sys.executable,
+        str(builder),
+        "--data-dir",
+        _env("INTRADAY_DATA_DIR", str(ROOT / "data_cache" / "equities_1h")),
+        "--max-symbols",
+        str(max(1, _env_int("INTRADAY_DYNAMIC_MAX_SYMBOLS", _env_int("INTRADAY_MAX_SYMBOLS", 12)))),
+        "--breakout-target",
+        str(max(0, _env_int("INTRADAY_DYNAMIC_BREAKOUT_TARGET", 6))),
+        "--reversion-target",
+        str(max(0, _env_int("INTRADAY_DYNAMIC_REVERSION_TARGET", 6))),
+        "--min-avg-dollar-vol",
+        str(max(0.0, _env_float("INTRADAY_DYNAMIC_MIN_AVG_DOLLAR_VOL", 25_000_000.0))),
+        "--out-json",
+        str(out_json),
+    ]
+    symbol_pool = _env("INTRADAY_DYNAMIC_SYMBOL_POOL", "")
+    if symbol_pool:
+        cmd.extend(["--symbols", symbol_pool])
+
+    try:
+        res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=True)
+        first_line = (res.stdout or "").strip().splitlines()
+        if first_line:
+            print(f"[intraday_bridge] dynamic watchlist refreshed: {first_line[0]}")
+    except Exception as exc:
+        print(f"[intraday_bridge] warning: dynamic watchlist refresh failed: {exc}")
+
+
 def _discover_intraday_symbols(data_dir: Path, limit: int) -> List[str]:
     symbols: List[str] = []
     if not data_dir.exists():
@@ -229,13 +290,22 @@ def _discover_intraday_symbols(data_dir: Path, limit: int) -> List[str]:
 
 
 def _build_runtime_catalog() -> tuple[Dict[str, dict], Dict[str, Path]]:
+    _maybe_refresh_intraday_config()
     data_dir = Path(_env("INTRADAY_DATA_DIR", str(ROOT / "data_cache" / "equities_1h"))).expanduser()
     max_symbols = max(1, _env_int("INTRADAY_MAX_SYMBOLS", 30))
     explicit_symbols = _env_csv("INTRADAY_SYMBOLS")
-    autodiscover = _env_bool("INTRADAY_AUTODISCOVER_FROM_CACHE", False)
+    autodiscover = _env_bool("INTRADAY_AUTODISCOVER_FROM_CACHE", True)   # changed default: True enables dynamic discovery
 
+    # Load optional hot-reloadable config file
+    file_cfg = _load_intraday_config()
+    if file_cfg.get("max_symbols"):
+        max_symbols = max(1, int(file_cfg["max_symbols"]))
+
+    # Symbol resolution priority: env > config file > autodiscover > legacy defaults
     if explicit_symbols:
         symbols = explicit_symbols[:max_symbols]
+    elif file_cfg.get("symbols"):
+        symbols = [s.strip().upper() for s in file_cfg["symbols"] if s.strip()][:max_symbols]
     elif autodiscover:
         discovered = _discover_intraday_symbols(data_dir, max_symbols)
         symbols = discovered if discovered else list(LEGACY_STRATEGIES.keys())
@@ -243,6 +313,10 @@ def _build_runtime_catalog() -> tuple[Dict[str, dict], Dict[str, Path]]:
         symbols = list(LEGACY_STRATEGIES.keys())
 
     strategy_map = _load_strategy_map_from_env()
+    # Merge strategy_map from config file (lower priority than env)
+    for sym, cls in file_cfg.get("strategy_map", {}).items():
+        if sym.strip().upper() not in strategy_map:
+            strategy_map[sym.strip().upper()] = str(cls).strip()
     default_class = _env("INTRADAY_DEFAULT_CLASS", "grid_reversion").strip() or "grid_reversion"
     if default_class not in DEFAULT_CLASS_CONFIGS:
         default_class = "grid_reversion"
@@ -760,11 +834,9 @@ def main() -> None:
         sys.exit(1)
 
     client = AlpacaClient(base_url, key_id, secret)
-    strategy_specs, csv_paths = _build_runtime_catalog()
 
     print(f"Alpaca Intraday Bridge v2 (3-Layer Protection)")
     print(f"  Mode: {'DRY-RUN' if dry_run else 'LIVE PAPER'}")
-    print(f"  Watchlist ({len(strategy_specs)}): {', '.join(strategy_specs)}")
     print(f"  Filters: SPY={_env_bool('INTRADAY_SPY_GATE', True)} | "
           f"DailyLoss={_env_float('INTRADAY_MAX_DAILY_LOSS_PCT', 2.0)}% | "
           f"EqCurve={_env_bool('INTRADAY_EQUITY_CURVE_GATE', True)}")
@@ -773,6 +845,8 @@ def main() -> None:
         print(f"  Daemon mode (interval={args.interval}s) — Ctrl+C to stop")
         while True:
             try:
+                strategy_specs, csv_paths = _build_runtime_catalog()
+                print(f"  Watchlist ({len(strategy_specs)}): {', '.join(strategy_specs)}")
                 run_once(client, dry_run=dry_run, strategy_specs=strategy_specs, csv_paths=csv_paths)
             except KeyboardInterrupt:
                 print("\nStopped.")
@@ -781,6 +855,8 @@ def main() -> None:
                 print(f"[ERROR] {exc}")
             time.sleep(args.interval)
     else:
+        strategy_specs, csv_paths = _build_runtime_catalog()
+        print(f"  Watchlist ({len(strategy_specs)}): {', '.join(strategy_specs)}")
         run_once(client, dry_run=dry_run, strategy_specs=strategy_specs, csv_paths=csv_paths)
 
 

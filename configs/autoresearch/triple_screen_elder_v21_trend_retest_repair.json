@@ -1,14 +1,14 @@
 {
   "name": "triple_screen_elder_v21_trend_retest_repair",
-  "description": "Elder Triple Screen v21 — keep cadence repaired, force separate eval-timeframe oscillator, extend hold for multi-day trend rides, and search a narrower trend-friendly short basket.",
+  "description": "Elder Triple Screen v21 — fixed: longs+shorts, test period includes 2024 bear legs, narrower trend-friendly basket. Previous version was shorts-only over a pure bull period → 0/768 pass.",
   "cache_only": true,
   "command": [
     "{python}",
     "backtest/run_portfolio.py",
     "--symbols", "{SYMBOLS}",
     "--strategies", "triple_screen_v132",
-    "--days", "360",
-    "--end", "2026-02-24",
+    "--days", "{DAYS}",
+    "--end", "{END_DATE}",
     "--tag", "{tag}"
   ],
   "constraints": {
@@ -25,7 +25,9 @@
       "ETHUSDT,SOLUSDT,AVAXUSDT",
       "BTCUSDT,ETHUSDT,AVAXUSDT"
     ],
-    "TS132_ALLOW_LONGS": ["0"],
+    "DAYS": [360, 540],
+    "END_DATE": ["2026-02-24", "2025-01-01"],
+    "TS132_ALLOW_LONGS": ["0", "1"],
     "TS132_ALLOW_SHORTS": ["1"],
     "TS132_TRADE_MODE": ["active"],
     "TS132_TREND_TF": ["240"],
@@ -53,6 +55,6 @@
     "TS132_USE_VOL_FILTER": ["0"],
     "TS132_EXEC_MODE": ["optimistic"]
   },
-  "_combo_count": "192 combos",
-  "_goal": "Find whether TS132 improves when it rides cleaner multi-day short trends with softer oscillator gates but still avoids chop."
+  "_combo_count": "~768 combos (4× prev due to DAYS×END_DATE×LONGS expansion)",
+  "_goal": "Find whether TS132 works when tested over periods that include genuine bear legs (2024 Q2 drop, late 2024 correction). Previous v21 was shorts-only over bull period → structurally impossible to pass."
 }

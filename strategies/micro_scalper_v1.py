@@ -142,7 +142,7 @@ class MicroScalperV1Config:
 
     # Time filter (UTC hours, inclusive)
     session_start_utc: int = 7    # 07:00 UTC  (London open)
-    session_end_utc: int = 17     # 17:00 UTC  (NY mid-session)
+    session_end_utc: int = 22     # 22:00 UTC  (EU+NY, matches bounce/breakout)
 
     # Risk controls
     min_sl_atr: float = 0.15      # reject signal if SL dist < this * ATR (noise)

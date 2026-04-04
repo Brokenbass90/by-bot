@@ -1,434 +1,326 @@
-# Project Roadmap — Trading Bot
+# Project Roadmap - 2026-04-02 Reset
 
-> Last updated: 2026-03-30 | Author: Claude + GPT
-> Living document — update after each major session.
+## Purpose
 
----
+Turn the bot from a fragile collection of strategies into a controlled adaptive system.
 
-## Vision
+Order of work:
+- truth and validation first
+- control plane second
+- live strategy repair third
+- new strategies and new markets only after the core is stable
 
-A self-improving, multi-market trading system where three AIs (Claude, GPT, DeepSeek) have
-clearly defined roles, each part of the bot adapts dynamically to market conditions, and the
-human owner spends minimal time on maintenance while retaining full control over capital decisions.
+## Current Reality
 
-**Two income streams:**
-- Bybit perpetual futures (crypto) — active, 5–8 intraday strategies
-- Alpaca paper → live (US equities) — monthly rotation + intraday validated combos
+- Historical `v5` annual crypto results were real and strong on the validated stack.
+- Fresh exact-overlay holdouts are weaker and show regime degradation.
+- The main current damage on fresh crypto windows comes from:
+  - `inplay_breakout`
+  - `alt_inplay_breakdown_v1`
+- `alt_resistance_fade_v1`, `alt_sloped_channel_v1`, and `btc_eth_midterm_pullback` are not the main source of damage on the fresh window.
+- Crypto live still does not have a real portfolio-level regime controller.
+- Crypto dynamic allowlists exist in pieces, but they are not yet a full live control-plane.
 
-**Three AI roles:**
-- **Claude** — architecture, research specs, code, diagnosis
-- **GPT** — deployment, ops, quick patches, server management
-- **DeepSeek** — live signal audit, weekly param tuning, universe expansion, autonomous research proposals
+## Source of Truth
 
----
+Only the following result classes may drive decisions:
 
-## DeepSeek Autonomy Architecture
+1. `validated_baseline`
+- frozen stack
+- frozen symbols
+- frozen env overlay
+- frozen fees and slippage
 
-DeepSeek is already deeply integrated (3 modules, Telegram commands, approval queue).
-What exists vs. what's needed to reach full autonomy:
+2. `exact_holdout`
+- same stack and overlay as the validated baseline
+- different recent window
+- used to test robustness
 
-| Capability | Status |
-|-----------|--------|
-| Signal audit (per-trade sanity check) | ✅ Live on server |
-| `/ai_tune <strategy>` manual analysis | ✅ Works via Telegram |
-| Approval queue + `/ai_approve` safe deploy | ✅ Works |
-| `/ai_rollback` env revert | ✅ Works |
-| Automated weekly sweep (all strategies) | ✅ Built and active on server |
-| Universe expansion (new symbols suggestions) | ✅ Built and weekly `dynamic_allowlist` advisory cron active |
-| Autoresearch result scanner | ✅ Built → weekly cron phase 3 |
-| New strategy research (propose spec files) | ⚠️ Partial — advisory only |
-| Auto-trigger autoresearch based on analysis | ❌ Future — P2/P3 |
-| Cross-strategy correlation analysis | ❌ Future — P3 |
-| Auto-apply live parameter changes | ❌ Intentionally disabled — approval required |
+3. `fresh_server_rerun`
+- rerun from cleaned cache and current server-side data
+- used to confirm the result is reproducible on fresh data
 
-**Current server cadence:**
-```bash
-# Already active on server:
-30 21 * * 0 /bin/bash -lc 'cd /root/by-bot && source .venv/bin/activate && \
-  python3 scripts/dynamic_allowlist.py --quiet --out-env configs/dynamic_allowlist_latest.env \
-  >> /root/by-bot/logs/dynamic_allowlist.log 2>&1'
+The following are not promotion evidence:
+- exploratory sweeps
+- cache-dirty runs
+- broken runs
+- partial env reconstructions
+- manual "close enough" comparisons
 
-0 22 * * 0 /bin/bash -lc 'cd /root/by-bot && source .venv/bin/activate && \
-  python3 scripts/deepseek_weekly_cron.py --quiet >> /root/by-bot/logs/deepseek_weekly.log 2>&1'
-```
+## Working Rules
 
-**Reality check:** this is protective autonomy, not full autonomy yet.
-- `dynamic_allowlist` now refreshes a weekly symbol candidate file on the server, but does **not** auto-apply it to live.
-- `deepseek_weekly_cron.py` now sends/records weekly analysis and queues proposals, but those proposals still require `/ai_approve`.
-- This reduces regime drift risk and maintenance burden; it does **not** guarantee the bot cannot degrade.
+Before every new task:
+- read this roadmap
+- confirm the task belongs to the highest active priority
+- avoid starting a lower-priority front unless it unblocks the current one
 
-**Target operating model:** governed autonomy, not blind autonomy.
-- `DeepSeek` watches live behavior, reviews trades, and accumulates bounded research ideas.
-- `GPT/Codex` acts as the second safety layer: challenge proposals, reject overfit ideas, and require objective compares vs the frozen baseline.
-- Human remains capital owner and final approval point for meaningful live changes.
-- Promotion path stays strict: `observe -> propose -> bounded backtest -> recent-window holdout -> portfolio compare -> approval -> deploy`.
-- This is the intended long-term answer to "how do we let the bot learn without letting it self-destroy?"
+After every material step:
+- update `docs/WORKLOG.md`
+- update `docs/JOURNAL.md`
+- record what changed, what was learned, and what is next
 
-**Phases run each Sunday:**
-1. `audit` — health check of recent runs (PF, DD trend per strategy)
-2. `tune` — DeepSeek proposes param changes for each strategy → approval queue
-3. `research` — flags finished autoresearch with PASS combos
-4. `universe` — DeepSeek suggests new symbols to test per strategy family
-5. `report` — full digest sent to Telegram
-
-**Human interaction remains minimal** — you only:
-- Read Sunday Telegram digest
-- `/ai_approve <id>` or `/ai_reject <id>` for param changes
-- Manually decide to deploy after reviewing
-
----
-
-## Current State (March 2026)
-
-### Crypto (Bybit) ✅ Working
-| Component | Status |
-|-----------|--------|
-| 5 live strategies (breakout, ASC1, ARF1, BREAKDOWN, midterm) | ✅ Live |
-| Golden portfolio backtest +100.93% | ✅ Baseline locked |
-| Strongest reproducible candidate `v5` | ✅ Promoted to live (`~+94.8% / +89.7%` annual validations) |
-| dynamic_allowlist.py (weekly symbol refresh) | ✅ Built and active as weekly advisory cron |
-| pump_fade_simple (baseline replica) | ✅ Built, autoresearch pending |
-| pump_fade_v4r (archive revival) | ✅ Built, 0 combos pass (archived) |
-| DeepSeek signal audit + trade review | ✅ Live |
-| DeepSeek weekly research cron | ✅ Active on server |
-| Equity-curve autopilot for crypto sleeves | ⚠️ Script exists, not yet wired into live entry gating |
-| Regime detector / capital allocator | ❌ Not built yet |
-
-### Alpaca (Equities) ⚠️ Paper, needs fixes
-| Component | Status |
-|-----------|--------|
-| Monthly momentum picker | ⚠️ 1 trade only — hit stop (XOM -3.79% March 2026) |
-| WF-validated intraday strategies | ✅ Backtested (TSLA/GOOGL/JPM) |
-| Regime filter (SPY SMA gate) | ⚠️ Exists in research/intraday code, not yet proven in paper workflow |
-| Bridge WF intraday → paper execution | ⚠️ Script exists, not yet safely armed on server |
-| Daily loss / equity-curve filters for intraday | ⚠️ Scripted, not yet production-armed |
-
----
-
-## Alpaca Diagnosis
-
-**Root cause of red months:** The monthly momentum strategy picks stocks at month-end
-and enters at month-start. March 2026 was a macro risk-off month (tariff fears, SPY sold off).
-XOM bought March 2 → stopped out same day at -3.79%. Zero regime awareness.
-
-**What walkforward testing already proved works:**
-
-| Strategy | Symbol | WF Segments | Both+ | Net (cents) |
-|----------|--------|-------------|-------|-------------|
-| breakout_continuation + quality_guard | TSLA | 15 | 10/15 (67%) | +6200 |
-| grid_reversion + safe_winrate | GOOGL | 15 | 10/15 (67%) | +2270 |
-| grid_reversion | JPM | 15 | 10/15 (67%) | +1542 |
-| trend_retest + quality_guard | AAPL | 15 | 9/15 (60%) | +1349 |
-
-These intraday strategies are **already validated** but not yet connected to live execution.
-The fix is to bridge them — not to rebuild the monthly strategy from scratch.
-
----
+General rules:
+- prefer fresh data over old cache if there is any doubt
+- prefer exact overlays over reconstructed env
+- no live promotion from a single lucky run
+- no self-retuning live parameters without offline validation and promotion
 
 ## Priority Queue
 
-### 🔴 P0 — Do This Week
+### P0 - Validation Discipline and Live Damage Control
 
-**0. Keep the live bot on the strongest verified stack**
-- `v5` is now the live full-stack overlay.
-- Do not replace it with new sleeves unless they beat `v5` in apples-to-apples annual compare.
-- Treat `v5` as the new operational baseline until disproven.
+Goal:
+- stop making decisions from mixed or low-trust evidence
+- reduce live damage while we rebuild the control plane
 
-**0b. Do not let Elder absorb the whole week**
-- Current best Elder insight is useful, but not enough for live.
-- Decision rule:
-  - if `v15` finishes with repeated `4` negative-month rows, continue into `v16`
-  - if `v15` falls back to `5-6` negative months, freeze Elder and redirect attention to the next sleeve
-- This prevents the project from stalling on one half-working strategy.
+Tasks:
+1. Keep validation labels strict:
+   - `validated_baseline`
+   - `exact_holdout`
+   - `fresh_server_rerun`
+   - `exploratory`
+   - `broken`
+2. Keep archived high-trust runs and clean working directories.
+3. Compare live env against the last trusted overlay before each deploy.
+4. Apply temporary live damage control if fresh exact holdouts still show the same result:
+   - reduce or disable `breakout`
+   - reduce or disable `breakdown`
+   - keep `flat`, `sloped`, `midterm` alive at reduced overall risk
+5. Require exact base-candle coverage for trusted annual regression:
+   - exact cache audit for the full symbol union
+   - no "best cached slice" fallback inside `validated_baseline`
+   - run the regression under project `.venv`, not system Python
 
-**1. Run pump_fade_simple autoresearch locally**
-```bash
-nohup python3 scripts/run_strategy_autoresearch.py \
-  --spec configs/autoresearch/pump_fade_simple_meme.json \
-  > /tmp/pf_simple.log 2>&1 &
-```
-Expected runtime: 2–4 hours. Goal: ≥5 combos with PF ≥1.5 and trades ≥15.
+Exit criteria:
+- fresh reruns are clearly labeled and reproducible
+- live config drift is documented
+- temporary live damage-control decision is documented
 
-**2. Turn weekly autonomy into a closed advisory loop**
-- Weekly `dynamic_allowlist` cron is active — inspect `configs/dynamic_allowlist_latest.env` after Sundays.
-- Weekly `DeepSeek` cron is active — inspect `logs/deepseek_weekly.log` and `/ai_pending`.
-- Next missing step is not “more cron”, but a clean review workflow:
-  - Sunday: auto-generate candidate allowlist and AI proposals
-  - Monday: review diff vs current live
-  - apply only if annual compare / bounded backtest agrees
-- Next missing module after that: `per-trade critic + learning log`
-  - every closed trade gets classified by regime, entry quality, exit quality, and preventable mistake tags
-  - repeated failure patterns should spawn bounded research proposals automatically
-  - repeated success patterns should influence family profiles / symbol pockets, not rewrite live blindly
-  - status: initial implementation now live in code via `bot/trade_learning_loop.py`; next step is validating proposal quality and avoiding noisy over-triggering
+### P1 - Regime Orchestrator
 
-**2b. Prepare the autonomy bundle for safe server deployment**
-- Local files now exist:
-  - `bot/health_gate.py`
-  - `bot/allowlist_watcher.py`
-  - `bot/deepseek_research_gate.py`
-  - `bot/family_profiles.py`
-- Bundle is now packaged, pushed, and point-deployed to the server with backup + compile check.
-- `bybot.service` restarted successfully after deploy.
-- Next engineering task is not packaging anymore, but making the review/promotion loop tighter and more automatic without removing approval.
-- Goal: move from "bounded autonomy is live" to "bounded autonomy learns from each trade safely".
+Goal:
+- give the bot a deterministic portfolio brain
 
-**3. Fix equities autoresearch parser path**
-`equities_monthly_v23_spy_regime_gate` did not fail strategically; the generic wrapper failed to parse the equities summary format.
-- Repair the shared wrapper or add a dedicated equities-autoresearch path.
-- Only then judge whether `SPY/QQQ` regime gate really improves red months.
+What it must do:
+- classify market regime on a fixed schedule
+- apply hysteresis so the regime does not flip too easily
+- write a JSON state and env overlay
+- enable or disable sleeves:
+  - breakout
+  - breakdown
+  - flat/fade
+  - midterm
+- apply a global risk multiplier
+- send alerts on regime changes
+- fail safe if state is missing, stale, or malformed
 
-**4. Test SPY regime filter for Alpaca monthly strategy**
-One-line logic in `equities_monthly_research_sim.py`:
-only enter longs when SPY close > SPY 50-day SMA.
-If SPY below 50 SMA → stay flat, don't buy picks that month.
-This would likely have avoided that specific March 2026 entry; it is a first repair, not the full solution.
+Immediate tasks:
+1. Finalize local integration into the live bot.
+2. Isolate orchestrator changes into a clean commit/branch.
+3. Add control-plane audit trail:
+   - orchestrator history
+   - router history
+4. Add a validated-baseline regression gate before server rollout.
+5. Run local dry-run and one real run.
+6. Deploy to server in dry-run mode.
+7. Add cron only after dry-run output is sane.
+8. Confirm live bot actually reloads and applies the overlay.
 
----
+Exit criteria:
+- orchestrator runs cleanly on schedule
+- live bot consumes the overlay
+- bad state does not break trading
 
-### 🟡 P1 — This Month
+### P2 - Dynamic Symbol Router and Strategy Profiles
 
-**5. Connect WF-validated intraday strategies to Alpaca paper ✅ DONE**
-`scripts/equities_alpaca_intraday_bridge.py` — built with 3-layer protection:
-- L1: SPY regime gate (SMA50 — today correctly blocked entries, SPY $670 < SMA50 $687)
-- L2: Daily loss limit (2% of equity)
-- L3: Equity curve filter (20d rolling P&L)
-Run daily dry-run, observe Telegram signals → switch to `--live` after 2+ weeks.
+Goal:
+- stop treating symbol selection as static and manual
+- centralize symbol picking instead of duplicating it inside every strategy
 
-**5b. Alpaca v30 — regime-adaptive concentration instead of naive diversification**
-`v29` showed that simply forcing `TOP_N=3/4` does not beat the strong `TOP_N=2` frontier.
-The next repair direction is therefore smarter portfolio logic, not "just more names":
-- keep concentration tight in weak / risk-off conditions
-- allow broader selection only in stronger benchmark/breadth regimes
-- prefer smoother worst-month profile over squeezing a few extra raw return points
-- test this as a bounded research branch before touching paper/live
+What it must do:
+- build per-strategy allowlists
+- support multiple profiles for the same strategy
+- map strategy profiles to symbol families
+- refresh safely on a fixed cadence
+- output env overlays that the bot can hot-reload safely
 
-**6. Elder Triple Screen revival — 6th strategy candidate**
-`triple_screen_v132.py` (archive) is still the active Elder core, but the branch has been narrowed substantially.
-What we learned:
-- old symmetric long+short `v13/v14` paths were too noisy by month
-- `v15` short-bias reduces negative months, but loses density
-- strict canonical `v17` repair is too dry unless we re-open it carefully
-Current next steps:
-- finish `v15`
-- if smoother months hold, run `v16`
-- only after a real isolated PASS should we re-open the 6-strategy portfolio compare
+Design rules:
+- dynamic:
+  - active sleeves
+  - allowlists
+  - profile choice
+- not dynamic in live:
+  - uncontrolled self-retuning of core strategy parameters
 
-**6b. Trend + trailing family evaluation**
-We already have trend/trailing behavior in the codebase, but not yet as a proven live upgrade:
-- `TS132 / Elder` is the clearest dedicated trend-following + trailing candidate
-- `alt_sloped_channel_v1` also supports trailing logic in code, but current live `v5` keeps that trail disabled
-- next step is to compare "strict trend-following with trail" against the current mean-reverting/sloped mix, not to assume trailing is automatically better
+Immediate tasks:
+1. Audit current pieces:
+   - `scripts/dynamic_allowlist.py`
+   - `bot/allowlist_watcher.py`
+   - `configs/dynamic_allowlist_latest.env`
+2. Define a profile registry:
+   - strategy name
+   - profile name
+   - eligible symbol family
+   - active regimes
+3. Connect router output to orchestrator decisions.
+4. Add safe reload and logging.
 
-**7. Deploy pump_fade_simple to live (after autoresearch)**
-- Start at risk_pct = 0.3% (very small)
-- Top 5 symbols from passing combos
-- Monitor 30 days before increasing size
+Exit criteria:
+- router writes usable per-strategy allowlists
+- live bot can consume them without restart loops
+- profile selection is documented and reproducible
 
-**8. Wire equity autopilot into live entry gates**
-- `scripts/equity_curve_autopilot.py` writes `configs/strategy_health.json`
-- Main bot still does NOT read it before entries
-- Next: add health check hook in main trading loop
-  - `WATCH` = advisory + Telegram only
-  - `PAUSE/KILL` = block new entries for that strategy family
+### P3 - Repair Current Live Crypto Sleeves
 
----
+Goal:
+- rebuild a crypto stack that survives fresh recent windows
 
-### 🟢 P2 — Next Month
+Order:
+1. `inplay_breakout`
+2. `alt_inplay_breakdown_v1`
+3. `alt_resistance_fade_v1`
+4. `alt_sloped_channel_v1`
+5. `btc_eth_midterm_pullback`
 
-**9. Dual-AI architecture: Claude as monthly strategic analyst**
-`scripts/claude_monthly_analyst.py` — skeleton ready, awaiting API key.
-Activate when bot P&L consistently > $200/month.
+Repair rules:
+- start from fresh data only
+- use exact holdouts
+- test strategy alone and in portfolio context
+- do not trust isolated wins that fail inside the stack
 
-Role split:
-| Task | AI | Frequency | Est. cost |
-|---|---|---|---|
-| Param tuning, signal audit | DeepSeek | Weekly | ~$2/month |
-| Universe expansion | DeepSeek | Weekly | included |
-| Portfolio health analysis | Claude Sonnet | Monthly | ~$5/month |
-| New strategy design | Claude Sonnet | On demand | ~$0.50/call |
-| Deep code review | Claude Opus | Quarterly | ~$3/call |
+Current expectations:
+- `breakout` needs tighter quality filters and regime/context repair
+- `breakdown` needs both bug cleanup and logic repair
+- `fade` should be treated as a regime sleeve, not always-on
+- `sloped` may stay a lower-frequency geometry sleeve
+- `midterm` is a stabilizer, not the main engine
 
-Usage when active:
-```bash
-python3 scripts/claude_monthly_analyst.py --report
-python3 scripts/claude_monthly_analyst.py --strategy-idea "funding rate reversion"
-python3 scripts/claude_monthly_analyst.py --diagnose alt_resistance_fade_v1
-```
+Promotion gate for a repaired live sleeve:
+- recent 90d standalone result above breakeven
+- acceptable drawdown
+- does not destroy portfolio-level recent holdout
+- configuration documented and reproducible
 
-**10. New strategy: Funding Rate Reversion (Bybit-specific)**
-Bybit pays/receives funding every 8h. When |funding_rate| > 0.08% → market is overextended.
-Edge: counter-trend entry after extreme funding → mean reversion within 1-3 candles.
-Uncorrelated with existing 5 strategies (different signal source).
-Implement: `strategies/funding_rate_reversion_v1.py` + autoresearch spec.
+Stop conditions:
+- if `breakout` still fails after two more bounded repair cycles, move it to research-only
+- if `breakdown` still fails after bugfix plus two bounded repair cycles, move it to research-only
 
-**11. DeepSeek weekly cron — move from advisory to bounded research operator**
-- already active on server
-- next step: let it launch only pre-approved bounded research jobs, not arbitrary tune ideas
-- keep live changes behind approval
-- desired flow: `observe -> propose -> run bounded compare -> queue diff -> approve`
+### P4 - Promote New or Repaired Strategy Families
 
-**11b. Dual-AI governed autonomy**
-- `DeepSeek` = cheap continuous operator: trade review, weekly scans, proposal generation
-- `GPT/Codex` = slower senior reviewer: overfit defense, portfolio compare, deployment approval
-- desired future flow:
-  - DeepSeek sends proposal package
-  - GPT/Codex critiques it against baseline, recent window, and risk budget
-  - human receives a short decision memo: `approve / reject / postpone`
-- this is the path to a self-maintaining system that still keeps capital decisions legible
+Goal:
+- only promote new sleeves after the control plane is in place
 
-**9. Alpaca equity universe expansion**
-Current: 10 stocks (AAPL, AMD, AMZN, GOOGL, JPM, META, MSFT, NVDA, TSLA, XOM)
-Add: sector ETFs (XLK, XLF, XLE, QQQ, IWM) for regime monitoring.
-Use `scripts/equities_universe_refresh.py` as base.
+Current candidates:
+1. `pump_momentum_v1`
+2. `pump_fade_v4r`
+3. `alt_inplay_breakdown_v2`
+4. `pump_fade_v2`
+5. `alt_support_bounce_v1`
+6. `alt_range_scalp_v1`
+7. `elder_triple_screen_v2`
+8. `ts132` / Elder family
+9. future support-bounce or sweep-reclaim families
+10. `funding carry / funding harvest`
 
-**10. Backtest-gated allowlist on the server**
-The current weekly server cron generates a market-driven candidate.
-The stronger long-term version is:
-- refresh latest golden trades/per-strategy attribution on server
-- run `dynamic_allowlist.py` with backtest gate
-- compare candidate vs current live pockets before applying
+Rules:
+- no live promotion before P1 and P2 are functioning
+- every candidate must pass:
+  - smoke
+  - fresh recent-window test
+  - portfolio interaction test
 
-**11. Portfolio-level risk monitor**
-When daily PnL < -3% of account: automatically halve position sizes for the next 24h.
-When 3 consecutive losing days: send Telegram alert + pause new entries until manual review.
+Funding-specific note:
+- `funding carry` is the first non-directional sleeve worth pursuing after P1/P2, because it complements chop periods when directional momentum is weak
+- but it still needs:
+  - a clean runnable backtest path
+  - symbol-selection validation
+  - execution/venue safety review
 
-**12. Regime detector + allocator**
-- start simple: ADX/ATR/range-compression regime classes
-- map sleeves to regimes (`breakout/sloped` in trend, `flat` in range, reduced risk in transition)
-- only later escalate to HMM/GMM if the simple regime layer proves useful
+Current-market research order after baseline reproducibility is explained:
+1. `alt_range_scalp_v1`
+2. `alt_inplay_breakdown_v2`
+3. `alt_support_bounce_v1`
+4. `pump_fade_v2`
+5. `elder_triple_screen_v2`
 
-**12c. Reuse winning structure across strategies**
-- This is now a real design principle, not a side note:
-  - side asymmetry from `breakdown` → Elder short-bias
-  - symbol pockets from `v5` → family-restricted research, not full-market sweeps
-  - bounded compares before live → mandatory for every candidate sleeve
-- Use this as the default design pattern for future repairs and new sleeves.
+### P4b - Capital-Efficient and Non-Directional Income Sleeves
 
-**12b. Breakout weak-chop adaptation**
-- live diagnostics show `impulse_weak` dominates breakout no-signal reasons in quieter sessions
-- treat this as a bounded research problem, not a panic live tweak
-- test a softer breakout profile only if annual quality survives
-- if quality collapses, leave breakout strict and solve the gap later with the regime allocator
+Goal:
+- add lower-correlation yield/carry sleeves after crypto control-plane is stable
 
----
+Priority order:
+1. Bybit funding harvest / delta-neutral carry
+2. Hyperliquid as second perp venue
+3. treasury deployment for idle stablecoin cash:
+   - CEX Earn
+   - Aave / similar lending
+4. later:
+   - cross-venue basis / perp arb
+   - stable LP / DeFi automation
 
-### 🔵 P3 — Quarter
+Rules:
+- these sleeves must not bypass the same validation discipline
+- simple APY claims are not enough; we need:
+  - realistic fees
+  - venue / borrow assumptions
+  - cash lock-up assumptions
+  - correlation to existing crypto sleeves
+- funding carry may progress earlier than other expansion ideas because it is closer to existing infrastructure and can help during chop regimes
 
-**13. Funding rate capture strategy**
-Long spot + short perp on high-funding coins.
-Expected: ~4–6% annualized, near-zero directional risk.
-Requires separate risk bucket and capital allocation.
+### P5 - Multi-Market Expansion
 
-**14. Volatility compression breakout (4h)**
-After ATR contracts below 30-day average → trade breakout of the range.
-Works on different symbols than 5m breakout, fewer signals but higher R:R.
+Goal:
+- expand only after crypto core is stable
 
-**15. Full AI handoff protocol**
-File: `docs/ai_handoff.json` — machine-readable state:
-- Active strategies and their current configs
-- Last backtest results (PF, trades, date)
-- Open tasks with priority
-- Known issues / anomalies
-Any AI reads this at session start instead of needing Markdown summaries.
+Markets:
+1. Alpaca equities
+2. OANDA forex/CFD
+3. later:
+   - Hyperliquid / second venue perps
+   - DeFi automation
+   - arbitrage-like systems
 
-**16. Telegram morning report bot**
-Daily at 07:00 UTC:
-- PnL last 24h (crypto + equity separately)
-- Active positions
-- Flags: strategy with 3+ consecutive losses, allowlist staleness
-- DeepSeek weekly summary if available
+Rule:
+- no major expansion while crypto control-plane is unfinished
 
-**17. Split-brain optimizer stack**
-- LLMs propose structure and bounded hypotheses
-- numeric optimizer / autoresearch finds the numbers
-- archive only parameter islands that survive rolling windows
-- this is the right path to “self-improving” without letting any one model freewheel the live bot
+## Acceptance Gates
 
----
+The crypto core is considered healthy only if all of the following are true:
 
-## Architecture Blueprint (12-month target)
+1. control-plane
+- regime orchestrator is live and reliable
+- dynamic symbol router is live and reliable
+- portfolio allocator is live and reliable
+- safe mode / hard-block is live and reliable
 
-```
-┌─────────────────────────────────────────────────┐
-│                  YOU (owner)                     │
-│  Weekly: read Telegram digest, approve changes   │
-└──────────────────┬──────────────────────────────┘
-                   │
-      ┌────────────▼─────────────┐
-      │        AI Team           │
-      │  Claude   → architecture │
-      │  GPT      → ops/deploy   │
-      │  DeepSeek → optimization │
-      └────────────┬─────────────┘
-                   │
-      ┌────────────▼───────────────────────────────┐
-      │          Weekly Cycle (automated)           │
-      │  Sun:  dynamic_allowlist → new .env         │
-      │        deepseek_weekly_report → analysis    │
-      │        health_check → flag anomalies        │
-      │  Mon:  Telegram digest to you               │
-      └────────┬───────────────────────────────────┘
-               │
-      ┌─────────▼────────────────────────────────────┐
-      │             Execution Layer                   │
-      │                                               │
-      │  Bybit (server 64.226.73.119)               │
-      │  ├── breakout        (15–20 symbols)         │
-      │  ├── ASC1            (8 symbols, dynamic)    │
-      │  ├── ARF1            (10 symbols, dynamic)   │
-      │  ├── BREAKDOWN       (12 symbols, dynamic)   │
-      │  ├── midterm         (BTC/ETH)               │
-      │  └── pump_fade_simple (5–8 meme coins) [NEW] │
-      │                                               │
-      │  Alpaca (paper → live)                       │
-      │  ├── Monthly picks + SPY regime gate [FIX]   │
-      │  ├── TSLA breakout_continuation (intra) [NEW]│
-      │  ├── GOOGL grid_reversion (intra) [NEW]      │
-      │  └── JPM  grid_reversion (intra) [NEW]       │
-      │                                               │
-      │  Passive                                      │
-      │  └── Funding rate capture [FUTURE]            │
-      └───────────────────────────────────────────────┘
-```
+2. validation
+- exact-overlay fresh reruns are reproducible
+- no important decisions depend on cache-dirty or broken runs
 
----
+3. portfolio quality
+- recent 90d portfolio result is above breakeven
+- holdout 180d portfolio result is above breakeven
+- drawdown is controlled
+- no single sleeve is causing most of the damage without being flagged
+- mirror-short momentum logic is retired; short-side momentum must stand on its own thesis
 
-## Key Metrics to Track
+4. operational safety
+- live state, overlays, and allowlists are auditable
+- bot alerts on regime changes and tracking mismatches
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Crypto annual return | > +80% | +100.93% (golden portfolio) |
-| Crypto max drawdown | < 15% | ~8% |
-| Crypto profit factor | > 1.8 | 2.078 |
-| Alpaca monthly win rate | > 55% | frontier repaired, `v30` now active |
-| Dynamic allowlist freshness | < 7 days | Weekly cron active, advisory flow live |
-| DeepSeek weekly reports | weekly | Weekly cron active |
-| pump_fade_simple (after deploy) | PF > 1.5 | Pending autoresearch |
+## Deferred Until Core Is Stable
 
----
+These stay deferred unless they directly unblock P0-P3:
+- fully autonomous LLM-driven live parameter changes
+- copy trading expansion
+- DeFi automation
+- arbitrage systems
+- large new market rollouts
 
-## File Index
+## Session Rule
 
-| File | Purpose |
-|------|---------|
-| `strategies/pump_fade_simple.py` | Baseline pump/fade strategy (exact replica) |
-| `strategies/pump_fade_v4r.py` | Archive v4 revival (0 combos, archived) |
-| `scripts/dynamic_allowlist.py` | Weekly symbol scanner, per-strategy profiles |
-| `bot/health_gate.py` | Blocks entries for degraded strategies via `strategy_health.json` |
-| `bot/allowlist_watcher.py` | Hot-reloads allowlists without full bot restart |
-| `bot/deepseek_research_gate.py` | Approval-gated bounded autonomy for DeepSeek research |
-| `bot/trade_learning_loop.py` | Per-trade critic and bounded learning proposal generator |
-| `bot/family_profiles.py` | Per-family runtime parameter scaling |
-| `scripts/equity_curve_autopilot.py` | Weekly equity-curve degradation monitor |
-| `scripts/setup_server_crons.sh` | Safe server-side cron installer for autonomy bundle |
-| `scripts/universe_scan.py` | Base market scanner |
-| `scripts/build_breakout_allowlist.py` | Backtest-performance-based allowlist builder |
-| `scripts/equities_alpaca_paper_bridge.py` | Monthly picks executor (Alpaca) |
-| `scripts/equities_monthly_research_sim.py` | Monthly backtest simulator |
-| `configs/autoresearch/pump_fade_simple_meme.json` | 486-combo autoresearch spec |
-| `configs/alpaca_paper_local.env` | Alpaca paper trading config |
-| `docs/pump_fade_v4r_revival_report.md` | Full pump_fade diagnosis |
-| `docs/session_handoff_20260328.md` | Latest session summary |
-| `docs/ROADMAP.md` | This file |
-| `docs/JOURNAL.md` | Session-by-session work log |
+For the next sessions:
+- start from this roadmap
+- work the highest active priority
+- write the result to `WORKLOG` and `JOURNAL`
+- do not let side experiments replace core repair

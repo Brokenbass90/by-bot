@@ -122,12 +122,12 @@ class MicroScalperBounceV1Config:
     min_body_atr: float = 0.16
     min_wick_atr: float = 0.08
     vol_mult: float = 0.0
-    rr: float = 1.25
+    rr: float = 1.50          # was 1.25 — sub-breakeven after 20bps fees; minimum viable ~1.4
     sl_buffer_atr: float = 0.10
-    max_signals_per_day: int = 8
-    cooldown_bars: int = 1
+    max_signals_per_day: int = 6
+    cooldown_bars: int = 3    # was 1 — prevents immediate re-entry noise; grid will tune further
     session_start_utc: int = 7
-    session_end_utc: int = 17
+    session_end_utc: int = 22   # was 17 — restored to match breakout; crypto moves in EU/US evening
     min_sl_atr: float = 0.12
     max_sl_atr: float = 1.2
     time_stop_bars: int = 12

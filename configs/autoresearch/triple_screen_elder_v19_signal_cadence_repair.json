@@ -1,0 +1,55 @@
+{
+  "name": "triple_screen_elder_v19_signal_cadence_repair",
+  "description": "Elder Triple Screen v19 — test whether TS132 is being choked by hourly signal evaluation cadence rather than by trend logic alone. Keep the proven narrow pocket, search faster signal evaluation, and optionally re-enable the intermediate oscillator without going fully loose.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols", "{SYMBOLS}",
+    "--strategies", "triple_screen_v132",
+    "--days", "360",
+    "--end", "2026-02-24",
+    "--tag", "{tag}"
+  ],
+  "constraints": {
+    "min_trades": 24,
+    "min_profit_factor": 2.1,
+    "max_drawdown": 3.0,
+    "min_net_pnl": 10.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "grid": {
+    "SYMBOLS": [
+      "BTCUSDT,ETHUSDT,AVAXUSDT",
+      "ETHUSDT,AVAXUSDT"
+    ],
+    "TS132_ALLOW_LONGS": ["0", "1"],
+    "TS132_ALLOW_SHORTS": ["1"],
+    "TS132_TRADE_MODE": ["active", "aggressive"],
+    "TS132_TREND_TF": ["240"],
+    "TS132_TREND_EMA_LEN": [45],
+    "TS132_EVAL_TF_MIN": [60],
+    "TS132_SIGNAL_EVAL_TF_MIN": [5, 15],
+    "TS132_USE_EVAL_TF_OSC": ["0", "1"],
+    "TS132_OSC_TYPE": ["stoch"],
+    "TS132_OSC_PERIOD": [6, 8],
+    "TS132_OSC_OB": [65],
+    "TS132_OSC_OS": [35],
+    "TS132_SL_ATR_MULT": [1.8],
+    "TS132_TP_ATR_MULT": [4.5],
+    "TS132_BE_PCT": [1.0],
+    "TS132_TIME_STOP_BARS_5M": [432, 576],
+    "TS132_MAX_SIGNALS_PER_DAY": [3, 4],
+    "TS132_TRAIL_ATR_MULT_SHORT": [1.8],
+    "TS132_TRAIL_ACTIVATE_SHORT_ATR": [3.0],
+    "TS132_TRAIL_ATR_MULT_LONG": [1.6],
+    "TS132_TRAIL_ACTIVATE_LONG_ATR": [2.5],
+    "TS132_USE_VOL_FILTER": ["0"],
+    "TS132_EXEC_MODE": ["optimistic"]
+  },
+  "_combo_count": "512 combos",
+  "_run_command": "nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/triple_screen_elder_v19_signal_cadence_repair.json > /tmp/elder_v19.log 2>&1 &",
+  "_expected_runtime_minutes": 18,
+  "_goal": "Separate signal frequency from oscillator timeframe and test whether TS132 can recover density and trend capture without immediately turning into a noisy overtrader."
+}

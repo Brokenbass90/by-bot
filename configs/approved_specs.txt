@@ -1,0 +1,38 @@
+# approved_specs.txt
+# DeepSeek Research Gate — TIER 1 AUTO specs (run immediately, no human approval)
+# Format: one spec name per line (without .json extension)
+# Lines starting with # are comments.
+# Updated: 2026-04-01
+#
+# These are specs that have been manually reviewed and are safe to re-run
+# automatically when triggered by weekly audit or pattern thresholds.
+
+# ── Equities monthly (stable, well-tested) ────────────────────────────────────
+equities_monthly_v36_current_cycle_activation
+
+# ── InPlay breakout (core strategy, approved grid) ────────────────────────────
+inplay_scalper_minute_probe_v2
+
+# ── Alt Sloped Channel (ASC1, core live strategy) ─────────────────────────────
+asc1_expansion_v1
+asc1_longs_v1
+asc1_trailing_v1
+
+# ── Alt Resistance Fade (ARF1, core live strategy) ────────────────────────────
+flat_arf1_expansion_v2
+arf1_trailing_v1
+
+# ── Breakdown shorts (core live strategy) ────────────────────────────────────
+breakdown_expansion_v1
+breakdown_shorts_v1
+
+# ── BTC/ETH midterm pullback (core live strategy) ────────────────────────────
+midterm_pullback_v2_btceth_v1
+midterm_pullback_v3_tiny_focus
+
+# ── Triple Screen Elder (approved for re-test after repair) ───────────────────
+triple_screen_elder_v21_trend_retest_repair
+
+# ── Funding Rate Reversion (v2 fixes FR_LATEST bug) ──────────────────────────
+funding_rate_reversion_v1_grid_v2
+funding_rate_reversion_v1_grid_v3_refine

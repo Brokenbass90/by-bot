@@ -1,0 +1,34 @@
+{
+  "_doc": "Hot-reloadable config for equities_alpaca_intraday_bridge.py. Edit and save — takes effect on next run cycle, no restart needed.",
+  "_updated": "2026-04-01",
+
+  "max_symbols": 10,
+
+  "symbols": [
+    "TSLA", "GOOGL", "JPM",
+    "NVDA", "META", "MSFT",
+    "AMZN", "AAPL", "AMD",
+    "PLTR"
+  ],
+
+  "strategy_map": {
+    "TSLA":  "breakout_continuation",
+    "NVDA":  "breakout_continuation",
+    "AMD":   "breakout_continuation",
+    "PLTR":  "breakout_continuation",
+    "GOOGL": "grid_reversion",
+    "JPM":   "grid_reversion",
+    "META":  "grid_reversion",
+    "MSFT":  "grid_reversion",
+    "AMZN":  "grid_reversion",
+    "AAPL":  "grid_reversion"
+  },
+
+  "_notes": {
+    "adding_symbols": "Add ticker to 'symbols' list AND 'strategy_map'. Cache M5 data first: python3 scripts/download_equity_m5.py --tickers NVDA,META",
+    "breakout_continuation": "Works best on high-momentum trending names (TSLA, NVDA, AMD, PLTR)",
+    "grid_reversion": "Works best on range-bound / institutional flow names (GOOGL, JPM, META, MSFT)",
+    "max_symbols": "Keep ≤10 to stay within notional limits. Adjust INTRADAY_NOTIONAL_USD accordingly.",
+    "disabling_symbol": "Remove it from 'symbols' list — strategy_map entry can stay for future use"
+  }
+}

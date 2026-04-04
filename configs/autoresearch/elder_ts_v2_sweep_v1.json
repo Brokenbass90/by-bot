@@ -1,0 +1,72 @@
+{
+  "name": "elder_ts_v2_sweep_v1",
+  "description": "Parameter sweep for elder_triple_screen_v2 — clean 3-TF Elder implementation (4h trend, 1h oscillator, 15m entry). Tests on BTC/ETH/SOL + top alts.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT",
+    "--strategies",
+    "elder_triple_screen_v2",
+    "--days",
+    "360",
+    "--end",
+    "2026-03-27",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "ETS2_TREND_EMA": [8, 13, 21],
+    "ETS2_OSC_OS": [28, 32, 36],
+    "ETS2_OSC_OB": [64, 68, 72],
+    "ETS2_SL_ATR_MULT": [1.5, 2.0, 2.5],
+    "ETS2_TP_ATR_MULT": [5.0, 7.0, 9.0],
+    "ETS2_OSC_TYPE": ["rsi", "stoch"]
+  },
+  "base_env": {
+    "ETS2_ALLOW_LONGS": "1",
+    "ETS2_ALLOW_SHORTS": "1",
+    "ETS2_TREND_TF": "240",
+    "ETS2_WAVE_TF": "60",
+    "ETS2_ENTRY_TF": "15",
+    "ETS2_OSC_PERIOD": "8",
+    "ETS2_TRAIL_ATR_MULT": "1.5",
+    "ETS2_TIME_STOP_BARS_5M": "576",
+    "ETS2_COOLDOWN_BARS_5M": "60",
+    "ETS2_MAX_SIGNALS_PER_DAY": "3",
+    "ETS2_TREND_SLOPE_BARS": "3",
+    "ETS2_SYMBOL_ALLOWLIST": ""
+  },
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 1.25,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 3
+  },
+  "score_weights": {
+    "net_pnl": 1.5,
+    "profit_factor": 5.0,
+    "winrate": 5.0,
+    "max_drawdown": 2.0,
+    "trades": 0.04,
+    "trades_cap": 100,
+    "negative_months": 2.5,
+    "worst_month_pnl": 2.0
+  },
+  "_combo_count": "3×3×3×3×3×2 = 486 combos",
+  "_goal": "Build the first viable Elder Triple Screen version on this codebase. Target: 40-80 trades/year, PF > 1.3, works on both BTC and alts."
+}

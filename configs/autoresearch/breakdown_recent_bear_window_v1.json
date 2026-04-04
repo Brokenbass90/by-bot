@@ -1,0 +1,80 @@
+{
+  "name": "breakdown_recent_bear_window_v1",
+  "description": "Bounded recent-window repair for alt_inplay_breakdown_v1 on the current bearish/choppy regime. Goal: find a short sleeve that actually trades on the last ~4 months instead of relying on older 2025 trend structure.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,AVAXUSDT,DOGEUSDT,XRPUSDT,ADAUSDT",
+    "--strategies",
+    "alt_inplay_breakdown_v1",
+    "--days",
+    "120",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "3",
+    "--max_positions",
+    "2",
+    "--fee_bps",
+    "10",
+    "--slippage_bps",
+    "10"
+  ],
+  "grid": {
+    "BREAKDOWN_SYMBOL_ALLOWLIST": [
+      "BTCUSDT,ETHUSDT,SOLUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,AVAXUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,AVAXUSDT,DOGEUSDT,XRPUSDT"
+    ],
+    "BREAKDOWN_REGIME_MODE": ["ema", "off"],
+    "BREAKDOWN_LOOKBACK_H": [48, 72],
+    "BREAKDOWN_RR": [1.5, 2.0],
+    "BREAKDOWN_MIN_PULLBACK_FROM_EXTREME_PCT": [0.03, 0.07],
+    "BREAKDOWN_CHOP_ER_MIN": [0.0, 0.15, 0.20]
+  },
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "BYBIT_DATA_POLITE_SLEEP_SEC": "2.0",
+    "BREAKDOWN_ALLOW_LONGS": "0",
+    "BREAKDOWN_ALLOW_SHORTS": "1",
+    "BREAKDOWN_REGIME_TF": "4h",
+    "BREAKDOWN_REGIME_EMA_FAST": "21",
+    "BREAKDOWN_REGIME_EMA_SLOW": "55",
+    "BREAKDOWN_MIN_BREAK_BARS": "3",
+    "BREAKDOWN_SL_ATR": "1.8",
+    "BREAKDOWN_BUFFER_ATR": "0.10",
+    "BREAKDOWN_RECLAIM_ATR": "0.12",
+    "BREAKDOWN_MAX_DIST_ATR": "2.0",
+    "BREAKDOWN_RANGE_ATR_MAX": "4.0",
+    "BREAKDOWN_MAX_OPEN_TRADES": "1"
+  },
+  "constraints": {
+    "min_trades": 12,
+    "min_profit_factor": 1.2,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 2.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 4.0,
+    "winrate": 10.0,
+    "max_drawdown": 1.5,
+    "trades": 0.08,
+    "trades_cap": 60,
+    "negative_months": 2.5,
+    "max_negative_streak": 2.0,
+    "worst_month_pnl": 2.0
+  },
+  "_combo_count": "3×2×2×2×2×3 = 144 combos",
+  "_goal": "Decide whether breakdown can become a real bear-market sleeve on recent data, not just a decorative side strategy with a handful of old trades."
+}

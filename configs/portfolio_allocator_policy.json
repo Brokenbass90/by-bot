@@ -1,0 +1,199 @@
+{
+  "version": 1,
+  "policy_version": "2026-04-04-allocator-v2",
+  "updated_utc": "2026-04-04T00:00:00Z",
+  "allocator_global_risk_by_regime": {
+    "bull_trend": 1.0,
+    "bull_chop": 0.9,
+    "bear_chop": 0.8,
+    "bear_trend": 0.7
+  },
+  "degraded_global_risk_mult": 0.75,
+  "safe_mode_global_risk_mult": 0.25,
+  "staleness_seconds": {
+    "orchestrator": 14400,
+    "router": 43200,
+    "health": 691200
+  },
+  "health_status_multipliers": {
+    "OK": 1.0,
+    "WATCH": 0.75,
+    "PAUSE": 0.0,
+    "KILL": 0.0
+  },
+  "symbol_count_multipliers": [
+    {
+      "max_count": 0,
+      "mult": 0.0
+    },
+    {
+      "max_count": 2,
+      "mult": 0.75
+    },
+    {
+      "max_count": 4,
+      "mult": 0.9
+    },
+    {
+      "max_count": 8,
+      "mult": 1.0
+    },
+    {
+      "max_count": 999,
+      "mult": 1.05
+    }
+  ],
+  "sleeves": [
+    {
+      "name": "breakout",
+      "enable_env": "ENABLE_BREAKOUT_TRADING",
+      "symbol_env_key": "BREAKOUT_SYMBOL_ALLOWLIST",
+      "risk_env": "BREAKOUT_RISK_MULT",
+      "strategy_names": [
+        "inplay_breakout"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 1.15,
+        "bull_chop": 0.7,
+        "bear_chop": 0.0,
+        "bear_trend": 0.0
+      }
+    },
+    {
+      "name": "breakdown",
+      "enable_env": "ENABLE_BREAKDOWN_TRADING",
+      "symbol_env_key": "BREAKDOWN_SYMBOL_ALLOWLIST",
+      "risk_env": "BREAKDOWN_RISK_MULT",
+      "strategy_names": [
+        "alt_inplay_breakdown_v1"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.35,
+        "bull_chop": 0.6,
+        "bear_chop": 0.95,
+        "bear_trend": 1.1
+      }
+    },
+    {
+      "name": "flat",
+      "enable_env": "ENABLE_FLAT_TRADING",
+      "symbol_env_key": "ARF1_SYMBOL_ALLOWLIST",
+      "risk_env": "FLAT_RISK_MULT",
+      "strategy_names": [
+        "alt_resistance_fade_v1"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.55,
+        "bull_chop": 1.0,
+        "bear_chop": 1.05,
+        "bear_trend": 0.7
+      }
+    },
+    {
+      "name": "sloped",
+      "enable_env": "ENABLE_SLOPED_TRADING",
+      "symbol_env_key": "ASC1_SYMBOL_ALLOWLIST",
+      "risk_env": "SLOPED_RISK_MULT",
+      "strategy_names": [
+        "alt_sloped_channel_v1"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.75,
+        "bull_chop": 0.95,
+        "bear_chop": 0.9,
+        "bear_trend": 0.65
+      }
+    },
+    {
+      "name": "midterm",
+      "enable_env": "ENABLE_MIDTERM_TRADING",
+      "symbol_env_key": "MIDTERM_SYMBOLS",
+      "risk_env": "MIDTERM_RISK_MULT",
+      "strategy_names": [
+        "btc_eth_midterm_pullback",
+        "btc_eth_midterm_pullback_v2"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 1.0,
+        "bull_chop": 0.85,
+        "bear_chop": 0.8,
+        "bear_trend": 0.6
+      }
+    },
+    {
+      "name": "range_scalp",
+      "enable_env": "ENABLE_RANGE_TRADING",
+      "symbol_env_key": "ARS1_SYMBOL_ALLOWLIST",
+      "risk_env": "RANGE_RISK_MULT",
+      "strategy_names": [
+        "alt_range_scalp_v1"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.4,
+        "bull_chop": 0.95,
+        "bear_chop": 1.0,
+        "bear_trend": 0.5
+      }
+    },
+    {
+      "name": "support_bounce",
+      "enable_env": "ENABLE_BOUNCE_TRADING",
+      "symbol_env_key": "ASB1_SYMBOL_ALLOWLIST",
+      "risk_env": "BOUNCE_RISK_MULT",
+      "strategy_names": [
+        "alt_support_bounce_v1"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 1.1,
+        "bull_chop": 0.9,
+        "bear_chop": 0.0,
+        "bear_trend": 0.0
+      }
+    },
+    {
+      "name": "pump_fade",
+      "enable_env": "ENABLE_PUMP_FADE_TRADING",
+      "symbol_env_key": "PF2_SYMBOL_ALLOWLIST",
+      "risk_env": "PUMP_FADE_RISK_MULT",
+      "strategy_names": [
+        "pump_fade_v2"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.7,
+        "bull_chop": 0.85,
+        "bear_chop": 0.9,
+        "bear_trend": 0.8
+      }
+    },
+    {
+      "name": "elder_ts",
+      "enable_env": "ENABLE_ELDER_TRADING",
+      "symbol_env_key": "ETS2_SYMBOL_ALLOWLIST",
+      "risk_env": "ELDER_RISK_MULT",
+      "strategy_names": [
+        "elder_triple_screen_v2"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 1.05,
+        "bull_chop": 0.6,
+        "bear_chop": 0.65,
+        "bear_trend": 1.0
+      }
+    },
+    {
+      "name": "vwap_mr",
+      "enable_env": "ENABLE_VWAP_TRADING",
+      "symbol_env_key": "AVW1_SYMBOL_ALLOWLIST",
+      "risk_env": "VWAP_RISK_MULT",
+      "strategy_names": [
+        "alt_vwap_mean_reversion_v1"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.3,
+        "bull_chop": 0.7,
+        "bear_chop": 0.75,
+        "bear_trend": 0.3
+      }
+    }
+  ]
+}
