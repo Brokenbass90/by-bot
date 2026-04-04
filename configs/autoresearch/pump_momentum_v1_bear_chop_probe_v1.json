@@ -1,0 +1,72 @@
+{
+  "name": "pump_momentum_v1_bear_chop_probe_v1",
+  "description": "Momentum-continuation probe for pump_momentum_v1. Tests the hypothesis that current market rewards abnormal pump continuation more than classic breakout-retest longs.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "SOLUSDT,DOGEUSDT,1000PEPEUSDT,SUIUSDT,ADAUSDT,TAOUSDT,HYPEUSDT",
+    "--strategies",
+    "pump_momentum_v1",
+    "--days",
+    "180",
+    "--end",
+    "2026-03-27",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "PM_LOOKBACK_BARS": [9, 12, 18],
+    "PM_MIN_PUMP_PCT": [0.05, 0.08, 0.12],
+    "PM_VOL_MULT": [1.8, 2.2, 2.8],
+    "PM_SL_ATR_MULT": [1.2, 1.8, 2.4],
+    "PM_RR": [1.5, 2.0],
+    "PM_TRAIL_ACTIVATE_RR": [0.8, 1.2]
+  },
+  "base_env": {
+    "PM_REQUIRE_BULLISH": "1",
+    "PM_MIN_BODY_FRAC": "0.30",
+    "PM_VOL_PERIOD": "20",
+    "PM_ATR_PERIOD": "14",
+    "PM_MAX_PUMP_PCT": "0.35",
+    "PM_MIN_STOP_PCT": "0.015",
+    "PM_MAX_STOP_PCT": "0.10",
+    "PM_TRAIL_ATR_MULT": "1.8",
+    "PM_TIME_STOP_BARS": "72",
+    "PM_COOLDOWN_BARS": "18",
+    "PM_SYMBOL_ALLOWLIST": "SOLUSDT,DOGEUSDT,1000PEPEUSDT,SUIUSDT,ADAUSDT,TAOUSDT,HYPEUSDT"
+  },
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 1.20,
+    "max_drawdown": 12.0,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 6.0,
+    "winrate": 4.0,
+    "max_drawdown": 2.0,
+    "trades": 0.15,
+    "trades_cap": 120,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.0
+  },
+  "_combo_count": "3x3x3x3x2x2 = 324 combos",
+  "_goal": "Find out whether pump continuation works better than breakout-retest longs in the current pump-and-fade market."
+}
