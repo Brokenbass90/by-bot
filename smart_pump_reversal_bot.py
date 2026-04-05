@@ -941,6 +941,17 @@ _bybit_sym_re = re.compile(r'publicTrade\.([A-Z0-9]+USDT)\b')
 
 # =========================== УТИЛИТЫ ===========================
 _TG_CHUNK_SIZE = 3900  # safe margin below Telegram 4096 hard limit
+TG_CHART_INBOX_DIR = Path(
+    os.getenv(
+        "TG_CHART_INBOX_DIR",
+        str(Path(__file__).resolve().parent / "runtime" / "tg_chart_inbox"),
+    )
+).expanduser()
+TG_CHART_INBOX_LATEST = TG_CHART_INBOX_DIR / "latest.json"
+TG_CHART_INBOX_MAX_FILES = max(5, int(os.getenv("TG_CHART_INBOX_MAX_FILES", "40") or 40))
+CHART_VISION_ENABLE = _env_bool("CHART_VISION_ENABLE", False)
+CHART_VISION_PROVIDER = str(os.getenv("CHART_VISION_PROVIDER", "none") or "none").strip()
+CHART_VISION_MODEL = str(os.getenv("CHART_VISION_MODEL", "") or "").strip()
 
 
 def _tg_send_raw(text: str, extra_json: dict | None = None) -> None:
@@ -1054,6 +1065,149 @@ def tg_send_photo(path: str, caption: str | None = None):
             )
     except Exception:
         pass
+
+
+def _chart_inbox_trim() -> None:
+    try:
+        if not TG_CHART_INBOX_DIR.exists():
+            return
+        files = sorted(
+            [
+                p for p in TG_CHART_INBOX_DIR.iterdir()
+                if p.is_file() and p.name != TG_CHART_INBOX_LATEST.name
+            ],
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )
+        for old in files[TG_CHART_INBOX_MAX_FILES:]:
+            try:
+                old.unlink()
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+
+def _chart_inbox_load_latest() -> dict | None:
+    try:
+        if not TG_CHART_INBOX_LATEST.exists():
+            return None
+        return json.loads(TG_CHART_INBOX_LATEST.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def _chart_inbox_save_latest(payload: dict) -> None:
+    try:
+        TG_CHART_INBOX_DIR.mkdir(parents=True, exist_ok=True)
+        TG_CHART_INBOX_LATEST.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        _chart_inbox_trim()
+    except Exception:
+        pass
+
+
+def _chart_inbox_status_text() -> str:
+    latest = _chart_inbox_load_latest()
+    lines = [
+        "Chart inbox:",
+        f"dir={TG_CHART_INBOX_DIR}",
+        f"vision={'ON' if CHART_VISION_ENABLE else 'OFF'}",
+        f"provider={CHART_VISION_PROVIDER or 'none'}",
+        f"model={CHART_VISION_MODEL or 'n/a'}",
+    ]
+    if not latest:
+        lines.append("latest=none")
+        return "\n".join(lines)
+    ts = int(latest.get("ts") or 0)
+    stamp = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime(ts)) if ts else "unknown"
+    lines.extend(
+        [
+            f"latest_ts={stamp}",
+            f"latest_symbol_hint={latest.get('symbol_hint') or '-'}",
+            f"latest_caption={latest.get('caption') or '-'}",
+            f"latest_path={latest.get('local_path') or '-'}",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def _download_tg_file(file_id: str, dst: Path) -> tuple[bool, str]:
+    if not (TG_TOKEN and file_id):
+        return False, "tg_token_or_file_id_missing"
+    try:
+        r = requests.get(
+            f"https://api.telegram.org/bot{TG_TOKEN}/getFile",
+            params={"file_id": file_id},
+            timeout=15,
+        )
+        js = r.json() if r is not None else {}
+        file_path = ((js.get("result") or {}) if isinstance(js, dict) else {}).get("file_path")
+        if not file_path:
+            return False, "tg_getfile_no_path"
+        file_url = f"https://api.telegram.org/file/bot{TG_TOKEN}/{file_path}"
+        blob = requests.get(file_url, timeout=30)
+        blob.raise_for_status()
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_bytes(blob.content)
+        return True, str(file_path)
+    except Exception as e:
+        return False, str(e)
+
+
+def _extract_symbol_hint(text: str) -> str:
+    if not text:
+        return ""
+    m = re.search(r"\b([A-Z0-9]{2,12})(USDT|USD)?\b", str(text).upper())
+    return m.group(0) if m else ""
+
+
+def _handle_tg_photo_message(msg: dict) -> None:
+    photos = msg.get("photo") or []
+    if not photos:
+        return
+    try:
+        best = max(photos, key=lambda x: int(x.get("file_size") or 0))
+    except Exception:
+        best = photos[-1]
+    file_id = str(best.get("file_id") or "").strip()
+    if not file_id:
+        return
+    ts = int(msg.get("date") or time.time())
+    caption = str(msg.get("caption") or "").strip()
+    symbol_hint = _extract_symbol_hint(caption)
+    suffix = ".jpg"
+    local_name = f"{time.strftime('%Y%m%d_%H%M%S', time.gmtime(ts))}_{file_id[:12]}{suffix}"
+    local_path = TG_CHART_INBOX_DIR / local_name
+    ok, file_path_or_err = _download_tg_file(file_id, local_path)
+    if not ok:
+        _tg_reply(f"❌ chart save failed: {file_path_or_err}")
+        return
+    payload = {
+        "ts": ts,
+        "message_id": int(msg.get("message_id") or 0),
+        "caption": caption,
+        "symbol_hint": symbol_hint,
+        "file_id": file_id,
+        "telegram_file_path": file_path_or_err,
+        "local_path": str(local_path),
+        "width": int(best.get("width") or 0),
+        "height": int(best.get("height") or 0),
+    }
+    _chart_inbox_save_latest(payload)
+    ack = (
+        "📥 Chart saved\n"
+        f"symbol_hint={symbol_hint or '-'}\n"
+        f"caption={caption or '-'}\n"
+        "Use /chart_last to inspect the latest chart."
+    )
+    if CHART_VISION_ENABLE:
+        ack += "\nVision layer is enabled."
+    else:
+        ack += "\nVision layer is not enabled yet."
+    _tg_reply(ack)
 
 # =========================== TRADE DB (SQLite) ===========================
 TRADE_DB_PATH = os.getenv("TRADE_DB_PATH", "trades.db")
@@ -2662,6 +2816,7 @@ def _handle_tg_command(text: str):
             "  /unban BTC,ETH — убрать из бана\n\n"
             "📈 *Графики*\n"
             "  /plotlast [SYM] — график последней сделки\n\n"
+            "  /chart_last — последний присланный в TG график\n\n"
             "🤖 *AI / DeepSeek*\n"
             "  /ai <вопрос> — задать вопрос AI-партнёру\n"
             "     Примеры:\n"
@@ -3070,6 +3225,27 @@ def _handle_tg_command(text: str):
         tg_send_photo(png, caption=cap)
         return
 
+    if name == "/chart_last":
+        latest = _chart_inbox_load_latest()
+        if not latest:
+            _tg_reply("Chart inbox пуст. Просто пришли в чат скрин графика с подписью или без.")
+            return
+        local_path = str(latest.get("local_path") or "").strip()
+        if not local_path or not os.path.exists(local_path):
+            _tg_reply("Последний chart snapshot не найден на диске.\n" + _chart_inbox_status_text())
+            return
+        ts = int(latest.get("ts") or 0)
+        stamp = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime(ts)) if ts else "unknown"
+        caption = (
+            "📥 Last chart snapshot\n"
+            f"time={stamp}\n"
+            f"symbol_hint={latest.get('symbol_hint') or '-'}\n"
+            f"caption={latest.get('caption') or '-'}\n"
+            f"vision={'ON' if CHART_VISION_ENABLE else 'OFF'}"
+        )
+        tg_send_photo(local_path, caption=caption)
+        return
+
     if name == "/plotts":
         if len(cmd) < 3:
             _tg_reply("Usage: /plotts SYMBOL CLOSE_TS")
@@ -3191,6 +3367,9 @@ async def tg_cmd_loop():
                         text = mapped
                 if text.startswith("/"):
                     _handle_tg_command(text)
+                    continue
+                if msg.get("photo"):
+                    _handle_tg_photo_message(msg)
         except Exception as e:
             log_error(f"tg cmd loop error: {e}")
         await asyncio.sleep(1)

@@ -2183,3 +2183,15 @@ That is a much cleaner place to leave the machine for the next hour.
   - [core2_breakdown_fresh_flat_probe_90d](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260405_125802_core2_breakdown_fresh_flat_probe_90d/summary.csv)
   - `+4.44%`, PF `1.369`, DD `3.95`
   - это не новый финальный baseline, а просто первый чек, что guardrail-фикс не убил стратегию сразу
+- По `core3 + impulse` картина стала наконец-то честно трёхслойной, а не только “есть красивый solo-run”:
+  - [recent180 package probe](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260405_134236_core3_impulse_best_recent180_probe/summary.csv): `+28.65%`, PF `1.356`, DD `9.32`
+  - там [impulse_volume_breakout_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/impulse_volume_breakout_v1.py) реально добавила edge (`102` trades, about `+7.80%`)
+  - [current90 package probe](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260405_135423_core3_impulse_best_current90_probe/summary.csv): `+16.30%`, PF `1.462`, DD `3.74`
+  - но на `90d` `impulse` сама дала почти flat contribution (about `-0.09%`), то есть promotion ещё рано
+  - [annual package probe](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260405_140930_core3_impulse_best_annual_probe/summary.csv): только `+2.26%`, PF `1.029`, DD `16.35`
+  - это хороший разворот в research, но пока не live-ready 3rd sleeve
+- Закрыл ещё один старый пробел в tooling: в [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) теперь есть первый `chart inbox` путь для Telegram-графиков:
+  - входящие фото сохраняются в `runtime/chart_inbox`
+  - сохраняется `latest.json` с метаданными
+  - появился `/chart_last`
+  - это ещё не полноценное vision/CV, но теперь бот хотя бы умеет принять живой скрин графика и держать его как structured input для следующего визуального слоя
