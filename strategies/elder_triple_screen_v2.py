@@ -145,6 +145,9 @@ class ElderTripleScreenV2Config:
     entry_tf: str = "15"
     entry_lookback: int = 5
     risk_tf: str = ""
+    entry_retest_bars: int = 2
+    entry_touch_atr_mult: float = 0.25
+    entry_min_body_frac: float = 0.30
 
     # Exit management
     sl_atr_mult: float = 2.0
@@ -176,6 +179,9 @@ class ElderTripleScreenV2Strategy:
         self.cfg.entry_tf = os.getenv("ETS2_ENTRY_TF", self.cfg.entry_tf)
         self.cfg.entry_lookback = _env_int("ETS2_ENTRY_LOOKBACK", self.cfg.entry_lookback)
         self.cfg.risk_tf = os.getenv("ETS2_RISK_TF", self.cfg.risk_tf).strip()
+        self.cfg.entry_retest_bars = _env_int("ETS2_ENTRY_RETEST_BARS", self.cfg.entry_retest_bars)
+        self.cfg.entry_touch_atr_mult = _env_float("ETS2_ENTRY_TOUCH_ATR_MULT", self.cfg.entry_touch_atr_mult)
+        self.cfg.entry_min_body_frac = _env_float("ETS2_ENTRY_MIN_BODY_FRAC", self.cfg.entry_min_body_frac)
 
         self.cfg.sl_atr_mult = _env_float("ETS2_SL_ATR_MULT", self.cfg.sl_atr_mult)
         self.cfg.tp_atr_mult = _env_float("ETS2_TP_ATR_MULT", self.cfg.tp_atr_mult)
@@ -244,27 +250,50 @@ class ElderTripleScreenV2Strategy:
             return osc > self.cfg.osc_ob
 
     def _screen3_entry(self, store, trend: str) -> Optional[str]:
-        """Screen 3: Entry signal on entry TF.
-        Returns: "long", "short", or None if no breakout."""
-        rows = store.fetch_klines(store.symbol, self.cfg.entry_tf, max(10, self.cfg.entry_lookback + 2)) or []
-        if len(rows) < self.cfg.entry_lookback + 1:
+        """Screen 3: entry via retest/reclaim, not raw breakout.
+
+        Classic crypto failure mode for Elder here was entering on the first poke
+        through a local high/low. We now require a recent touch back into the level
+        zone and a directional reclaim candle with acceptable body quality.
+        """
+        need = max(12, self.cfg.entry_lookback + self.cfg.entry_retest_bars + 4)
+        rows = store.fetch_klines(store.symbol, self.cfg.entry_tf, need) or []
+        if len(rows) < need:
             return None
 
+        opens = [float(r[1]) for r in rows]
         highs = [float(r[2]) for r in rows]
         lows = [float(r[3]) for r in rows]
+        closes = [float(r[4]) for r in rows]
 
+        entry_atr = _atr_from_rows(rows, 14)
+        if not math.isfinite(entry_atr) or entry_atr <= 0:
+            return None
+
+        lookback = max(2, self.cfg.entry_lookback)
+        retest_bars = max(1, self.cfg.entry_retest_bars)
+        touch_buf = max(0.0, self.cfg.entry_touch_atr_mult) * entry_atr
+
+        cur_open = opens[-1]
         cur_high = highs[-1]
         cur_low = lows[-1]
-        prev_high = max(highs[:-1])
-        prev_low = min(lows[:-1])
+        cur_close = closes[-1]
+        cur_range = max(1e-9, cur_high - cur_low)
+        cur_body_frac = abs(cur_close - cur_open) / cur_range
+        if cur_body_frac < max(0.0, self.cfg.entry_min_body_frac):
+            return None
 
         if trend == "bullish":
-            # Breakout above previous high
-            if cur_high > prev_high:
+            level = max(highs[-(lookback + retest_bars + 1):-retest_bars-1])
+            recent_touch = min(lows[-(retest_bars + 1):-1]) <= (level + touch_buf)
+            reclaimed = cur_close > level and cur_close > cur_open and cur_low >= (level - touch_buf)
+            if recent_touch and reclaimed:
                 return "long"
-        else:  # bearish
-            # Breakout below previous low
-            if cur_low < prev_low:
+        else:
+            level = min(lows[-(lookback + retest_bars + 1):-retest_bars-1])
+            recent_touch = max(highs[-(retest_bars + 1):-1]) >= (level - touch_buf)
+            reclaimed = cur_close < level and cur_close < cur_open and cur_high <= (level + touch_buf)
+            if recent_touch and reclaimed:
                 return "short"
 
         return None

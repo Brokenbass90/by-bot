@@ -2147,3 +2147,26 @@ That is a much cleaner place to leave the machine for the next hour.
 - Честный промежуточный вывод остаётся таким:
   - на latest `90d` проблема уже не в старом gate и не в старых Alpaca-висяках;
   - проблема в том, что текущие equity session combos пока не дают положительный recent-window edge.
+
+## 2026-04-05 | Codex (session 24e — annual Alpaca verdict + crypto Elder logic repair)
+
+- Honest annual Alpaca segmented dry-runs завершились:
+  - [alpaca_annual_seg_relaxed](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/equities_intraday_dynamic_annual_20260405_091048_alpaca_annual_seg_relaxed)
+  - [alpaca_annual_seg_wide](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/equities_intraday_dynamic_annual_20260405_091048_alpaca_annual_seg_wide)
+- Жёсткая, но полезная правда:
+  - все `4/4` сегмента по `90d` в обеих annual-ветках закончились без validated candidates
+  - соответствующие `raw_walkforward.csv` пустые
+  - значит **честного долгого Alpaca return % к депозиту сейчас нет**, потому что нет ни одного кандидата, который прошёл наш годовой validation path
+- При этом raw scan внутри сегментов не совсем мёртвый:
+  - в latest quarter есть положительные low-trade pockets вроде `AAPL trend_pullback_rebound_v1`, `TSLA trend_pullback_rebound_v1`
+  - в oldest segment живее смотрится `AVGO breakout_continuation_session_v1`
+  - но это ещё не годится для promotion, потому что trade count и stability пока слишком слабые
+- На сервере Alpaca теперь чище:
+  - old monthly trading cron снят
+  - legacy duplicate intraday cron снят
+  - осталась одна новая dynamic dry-run lane + TG reports
+- После этого фокус снова переведён в crypto:
+  - [elder_triple_screen_v2.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/elder_triple_screen_v2.py) получил реальную logic repair в `Screen 3`
+  - вместо raw breakout теперь entry идёт через entry-TF retest/reclaim с `touch ATR buffer` и `minimum body fraction`
+  - под это запущен новый rescue-run:
+    - [elder_ts_v2_retest_reclaim_v4.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/elder_ts_v2_retest_reclaim_v4.json)
