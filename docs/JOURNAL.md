@@ -2100,3 +2100,28 @@ That is a much cleaner place to leave the machine for the next hour.
   - remote one-shot run succeeded
   - cron installed: `*/5 14-21 Mon-Fri -> run_equities_alpaca_intraday_dynamic_v1.sh --once`
 - Итог: Alpaca снова не “старый paper-призрак”, а отдельная живая dynamic lane с honest gates и понятным operational path. Следующий шаг по equities — либо ослабить/модифицировать long-only intraday gate под bear regimes, либо добавить отдельный short/reversion sleeve на equities, если хотим активность даже в risk-off.
+
+## 2026-04-05 | Codex (session 24c — Alpaca dynamic research truth layer)
+
+- Чтобы не принимать решения по Alpaca “на глаз”, добавил честный recent-window research path:
+  - [scripts/run_forex_backtest.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_forex_backtest.py) теперь умеет `--start-date/--end-date`
+  - [scripts/run_forex_combo_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_forex_combo_walkforward.py) тоже режет окна по датам
+  - [scripts/run_equities_strategy_scan.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_equities_strategy_scan.sh) и [scripts/run_equities_walkforward_gate.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_equities_walkforward_gate.sh) получили env-управление recent-window диапазоном и безопасные `RUN_SUFFIX`, чтобы параллельные dry-run не били друг другу out-dir.
+- Для этого добавил новый orchestrator:
+  - [scripts/run_equities_intraday_dynamic_research.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_equities_intraday_dynamic_research.sh)
+  - он сам:
+    - rebuild-ит dynamic watchlist,
+    - вычисляет recent окно (`EQ_RECENT_DAYS`),
+    - запускает scan,
+    - потом сразу walkforward gate.
+- Первые честные front’ы показали неприятную, но полезную правду:
+  - [equities_scan_20260405_085619_alpaca_dyn90/summary.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/equities_scan_20260405_085619_alpaca_dyn90/summary.csv)
+  - [equities_scan_20260405_085619_alpaca_dyn180/summary.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/equities_scan_20260405_085619_alpaca_dyn180/summary.csv)
+  - [equities_wf_gate_20260405_085646_alpaca_dyn90/raw_walkforward.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/equities_wf_gate_20260405_085646_alpaca_dyn90/raw_walkforward.csv)
+  - dynamic watchlist выглядит разумно, но current gate слишком жёсткий для `90d`: `No candidates from scan passed prefilter`.
+- Поэтому сразу открыл четыре новые dry-run ветки с более реалистичным recent-window gate:
+  - `alpaca_dyn90_relaxed`
+  - `alpaca_dyn90_wide_relaxed`
+  - `alpaca_dyn90_breakout_bias`
+  - `alpaca_dyn90_reversion_bias`
+- Логика простая: сначала честно доказать, что dynamic equities вообще дают устойчивые recent-window кандидаты под более реалистичный trade-count, и только потом думать о promotion или о включении ордеров.

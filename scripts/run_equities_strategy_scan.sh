@@ -12,8 +12,16 @@ BASE_SPREAD_CENTS="${EQ_BASE_SPREAD_CENTS:-2.0}"
 STRESS_SPREAD_CENTS="${EQ_STRESS_SPREAD_CENTS:-3.5}"
 PIP_SIZE="${EQ_PIP_SIZE:-0.01}"        # 1 pip = 1 cent
 MIN_TRADES="${EQ_MIN_TRADES:-20}"
+START_DATE="${EQ_START_DATE:-}"
+END_DATE="${EQ_END_DATE:-}"
+RUN_SUFFIX="${EQ_RUN_SUFFIX:-}"
 
-OUT_DIR="backtest_runs/equities_scan_$(date -u +%Y%m%d_%H%M%S)"
+STAMP="$(date -u +%Y%m%d_%H%M%S)"
+if [[ -n "${RUN_SUFFIX}" ]]; then
+  OUT_DIR="backtest_runs/equities_scan_${STAMP}_${RUN_SUFFIX}"
+else
+  OUT_DIR="backtest_runs/equities_scan_${STAMP}"
+fi
 mkdir -p "$OUT_DIR"
 SUMMARY="$OUT_DIR/summary.csv"
 echo "ticker,strategy,base_status,stress_status,base_trades,stress_trades,base_net_cents,stress_net_cents,base_dd_cents,stress_dd_cents,base_run,stress_run,error" > "$SUMMARY"
@@ -41,6 +49,8 @@ run_one() {
     --csv "$csv_path" \
     --tag "$base_tag" \
     --strategy "$strategy" \
+    ${START_DATE:+--start-date "$START_DATE"} \
+    ${END_DATE:+--end-date "$END_DATE"} \
     --spread_pips "$BASE_SPREAD_CENTS" \
     --swap_long "0" \
     --swap_short "0" \
@@ -53,6 +63,8 @@ run_one() {
     --csv "$csv_path" \
     --tag "$stress_tag" \
     --strategy "$strategy" \
+    ${START_DATE:+--start-date "$START_DATE"} \
+    ${END_DATE:+--end-date "$END_DATE"} \
     --spread_pips "$STRESS_SPREAD_CENTS" \
     --swap_long "0" \
     --swap_short "0" \
@@ -102,6 +114,7 @@ echo "equities strategy scan start: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 echo "tickers=${TICKERS_CSV}"
 echo "data_dir=${DATA_DIR}"
 echo "session_utc=[${SESSION_START},${SESSION_END})"
+echo "date_range=${START_DATE:-full}..${END_DATE:-full}"
 echo "out_dir=${OUT_DIR}"
 
 IFS=',' read -r -a TICKERS <<< "$TICKERS_CSV"

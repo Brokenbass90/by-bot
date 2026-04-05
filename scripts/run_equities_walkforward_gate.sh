@@ -30,8 +30,16 @@ TOP_N="${EQ_WF_TOP_N:-8}"
 MIN_SEGMENTS="${EQ_WF_MIN_SEGMENTS:-5}"
 MIN_BOTH_POS_PCT="${EQ_WF_MIN_BOTH_POS_PCT:-55}"
 MIN_STRESS_TOTAL="${EQ_WF_MIN_STRESS_TOTAL:-0}"
+START_DATE="${EQ_WF_START_DATE:-${EQ_START_DATE:-}}"
+END_DATE="${EQ_WF_END_DATE:-${EQ_END_DATE:-}}"
+RUN_SUFFIX="${EQ_WF_RUN_SUFFIX:-${EQ_RUN_SUFFIX:-}}"
 
-OUT_DIR="backtest_runs/equities_wf_gate_$(date -u +%Y%m%d_%H%M%S)"
+STAMP="$(date -u +%Y%m%d_%H%M%S)"
+if [[ -n "${RUN_SUFFIX}" ]]; then
+  OUT_DIR="backtest_runs/equities_wf_gate_${STAMP}_${RUN_SUFFIX}"
+else
+  OUT_DIR="backtest_runs/equities_wf_gate_${STAMP}"
+fi
 mkdir -p "${OUT_DIR}"
 RAW_CSV="${OUT_DIR}/raw_walkforward.csv"
 PASS_CSV="${OUT_DIR}/gated_walkforward.csv"
@@ -41,6 +49,7 @@ CANDIDATES=()
 echo "equities walkforward gate start: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 echo "scan_summary=${SCAN_SUMMARY}"
 echo "data_dir=${DATA_DIR}"
+echo "date_range=${START_DATE:-full}..${END_DATE:-full}"
 
 while IFS= read -r line; do
   [[ -n "${line}" ]] && CANDIDATES+=("${line}")
@@ -93,6 +102,8 @@ for item in "${CANDIDATES[@]}"; do
       --csv "${csv_path}" \
       --strategy "${strategy}" \
       --tag "${tag}" \
+      ${START_DATE:+--start-date "$START_DATE"} \
+      ${END_DATE:+--end-date "$END_DATE"} \
       --mode rolling \
       --window_days 14 \
       --step_days 5 \

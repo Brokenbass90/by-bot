@@ -155,12 +155,34 @@ def main() -> int:
     ap.add_argument("--stress_swap_mult", type=float, default=1.5)
     ap.add_argument("--news-events-csv", default="", help="Optional normalized news events CSV for deterministic blackout gating")
     ap.add_argument("--news-policy-json", default="", help="Optional news policy JSON")
+    ap.add_argument("--start-date", default="", help="Optional UTC start date YYYY-MM-DD (inclusive)")
+    ap.add_argument("--end-date", default="", help="Optional UTC end date YYYY-MM-DD (inclusive)")
     args = ap.parse_args()
 
     symbol = args.symbol.strip().upper()
     candles = load_m5_csv(args.csv)
     if not candles:
         raise SystemExit(f"No candles loaded from {args.csv}")
+
+    def _parse_ymd(s: str) -> int | None:
+        raw = str(s or "").strip()
+        if not raw:
+            return None
+        dt = datetime.strptime(raw, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        return int(dt.timestamp())
+
+    start_ts = _parse_ymd(args.start_date)
+    end_ts = _parse_ymd(args.end_date)
+    if end_ts is not None:
+        end_ts += 86400
+    if start_ts is not None or end_ts is not None:
+        candles = [
+            c
+            for c in candles
+            if (start_ts is None or c.ts >= start_ts) and (end_ts is None or c.ts < end_ts)
+        ]
+    if not candles:
+        raise SystemExit("No candles remain after date filter")
 
     if args.mode == "rolling":
         segments = _rolling_segments(

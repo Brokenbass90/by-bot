@@ -6,6 +6,7 @@ import csv
 import sys
 from pathlib import Path
 from typing import Optional
+from datetime import datetime, timezone
 
 # Ensure project root is importable when script is launched as "python scripts/..."
 ROOT = Path(__file__).resolve().parent.parent
@@ -227,11 +228,33 @@ def main() -> int:
     ap.add_argument("--cooldown_bars", type=int, default=24)
     ap.add_argument("--news-events-csv", default="", help="Optional normalized news events CSV for deterministic blackout gating")
     ap.add_argument("--news-policy-json", default="", help="Optional news policy JSON")
+    ap.add_argument("--start-date", default="", help="Optional UTC start date YYYY-MM-DD (inclusive)")
+    ap.add_argument("--end-date", default="", help="Optional UTC end date YYYY-MM-DD (inclusive)")
     args = ap.parse_args()
 
     candles = load_m5_csv(args.csv)
     if not candles:
         raise SystemExit(f"No candles loaded from {args.csv}")
+
+    def _parse_ymd(s: str) -> int | None:
+        raw = str(s or "").strip()
+        if not raw:
+            return None
+        dt = datetime.strptime(raw, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        return int(dt.timestamp())
+
+    start_ts = _parse_ymd(args.start_date)
+    end_ts = _parse_ymd(args.end_date)
+    if end_ts is not None:
+        end_ts += 86400
+    if start_ts is not None or end_ts is not None:
+        candles = [
+            c
+            for c in candles
+            if (start_ts is None or c.ts >= start_ts) and (end_ts is None or c.ts < end_ts)
+        ]
+    if not candles:
+        raise SystemExit("No candles remain after date filter")
 
     pip_size = float(args.pip_size) if float(args.pip_size) > 0 else _default_pip_size(args.symbol)
     cfg = EngineConfig(
