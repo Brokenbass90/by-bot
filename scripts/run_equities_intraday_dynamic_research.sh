@@ -62,6 +62,7 @@ python3 scripts/build_equities_intraday_watchlist.py \
   --breakout-target "${INTRADAY_DYNAMIC_BREAKOUT_TARGET:-5}" \
   --reversion-target "${INTRADAY_DYNAMIC_REVERSION_TARGET:-5}" \
   --min-avg-dollar-vol "${INTRADAY_DYNAMIC_MIN_AVG_DOLLAR_VOL:-25000000}" \
+  --end-date "${END_DATE}" \
   ${INTRADAY_DYNAMIC_SYMBOL_POOL:+--symbols "${INTRADAY_DYNAMIC_SYMBOL_POOL}"} \
   --out-json "${INTRADAY_CONFIG_FILE:-configs/intraday_config.json}"
 

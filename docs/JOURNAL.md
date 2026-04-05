@@ -2125,3 +2125,25 @@ That is a much cleaner place to leave the machine for the next hour.
   - `alpaca_dyn90_breakout_bias`
   - `alpaca_dyn90_reversion_bias`
 - Логика простая: сначала честно доказать, что dynamic equities вообще дают устойчивые recent-window кандидаты под более реалистичный trade-count, и только потом думать о promotion или о включении ордеров.
+
+## 2026-04-05 | Codex (session 24d — Alpaca annual truth without watchlist lookahead)
+
+- Нашёл ещё одну важную дыру в честности Alpaca research: [build_equities_intraday_watchlist.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_equities_intraday_watchlist.py) до этого ранжировал symbols по самым свежим cached M5 барам, даже если сам backtest запускался на историческом окне. Это означало скрытый lookahead на уровне выбора watchlist.
+- Исправил это:
+  - builder теперь принимает `--start-date/--end-date`
+  - перед расчётом metrics режет candles по историческому окну
+  - [run_equities_intraday_dynamic_research.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_equities_intraday_dynamic_research.sh) теперь передаёт `EQ_END_DATE` в watchlist build
+- Это ещё не “идеальный daily-rolling annual sim”, но уже убирает самый грубый вид lookahead и делает recent-window dynamic research честнее.
+- Чтобы получить годовую правду без этой дырки, добавил:
+  - [run_equities_intraday_dynamic_annual_segments.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_equities_intraday_dynamic_annual_segments.sh)
+- Он запускает 4 non-overlapping сегмента по `90d`, каждый раз:
+  - rebuild-ит dynamic watchlist на историческую дату конца сегмента,
+  - запускает scan,
+  - затем walkforward gate,
+  - и пишет manifest по всем сегментам.
+- Уже запущены 2 honest annual dry-run фронта:
+  - `alpaca_annual_seg_relaxed`
+  - `alpaca_annual_seg_wide`
+- Честный промежуточный вывод остаётся таким:
+  - на latest `90d` проблема уже не в старом gate и не в старых Alpaca-висяках;
+  - проблема в том, что текущие equity session combos пока не дают положительный recent-window edge.

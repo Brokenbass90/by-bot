@@ -78,8 +78,22 @@ def _efficiency_ratio(closes: list[float], bars: int) -> float:
     return net / path
 
 
-def _load_metrics(csv_path: Path) -> SymbolMetrics | None:
+def _parse_ymd(raw: str) -> int | None:
+    s = str(raw or "").strip()
+    if not s:
+        return None
+    dt = datetime.strptime(s, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    return int(dt.timestamp())
+
+
+def _load_metrics(csv_path: Path, *, start_ts: int | None = None, end_ts_exclusive: int | None = None) -> SymbolMetrics | None:
     candles = load_m5_csv(str(csv_path))
+    if start_ts is not None or end_ts_exclusive is not None:
+        candles = [
+            c
+            for c in candles
+            if (start_ts is None or c.ts >= start_ts) and (end_ts_exclusive is None or c.ts < end_ts_exclusive)
+        ]
     if len(candles) < 78 * 6:
         return None
 
@@ -216,6 +230,8 @@ def main() -> int:
     ap.add_argument("--breakout-target", type=int, default=6)
     ap.add_argument("--reversion-target", type=int, default=6)
     ap.add_argument("--min-avg-dollar-vol", type=float, default=25_000_000.0)
+    ap.add_argument("--start-date", default="", help="Optional UTC start date YYYY-MM-DD (inclusive)")
+    ap.add_argument("--end-date", default="", help="Optional UTC end date YYYY-MM-DD (inclusive)")
     ap.add_argument("--out-json", default="configs/intraday_config.json")
     args = ap.parse_args()
 
@@ -229,12 +245,17 @@ def main() -> int:
     else:
         candidates = _discover_symbols(data_dir)
 
+    start_ts = _parse_ymd(args.start_date)
+    end_ts_exclusive = _parse_ymd(args.end_date)
+    if end_ts_exclusive is not None:
+        end_ts_exclusive += 86400
+
     metrics: list[SymbolMetrics] = []
     for symbol in candidates:
         csv_path = data_dir / f"{symbol}_M5.csv"
         if not csv_path.exists():
             continue
-        row = _load_metrics(csv_path)
+        row = _load_metrics(csv_path, start_ts=start_ts, end_ts_exclusive=end_ts_exclusive)
         if row is not None:
             metrics.append(row)
 
@@ -255,6 +276,8 @@ def main() -> int:
             "ranked_count": len(metrics),
             "selected_count": len(symbols),
             "min_avg_dollar_vol": float(args.min_avg_dollar_vol),
+            "start_date": args.start_date or "",
+            "end_date": args.end_date or "",
         },
         "max_symbols": max(1, int(args.max_symbols)),
         "symbols": symbols,
