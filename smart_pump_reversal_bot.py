@@ -412,6 +412,14 @@ BREAKDOWN_RISK_MULT = max(0.05, float(os.getenv("BREAKDOWN_RISK_MULT", "0.10")))
 BREAKDOWN_ALLOW_MINQTY_FALLBACK = _env_bool("BREAKDOWN_ALLOW_MINQTY_FALLBACK", True)
 BREAKDOWN_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("BREAKDOWN_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 BREAKDOWN_MAX_OPEN_TRADES = int(os.getenv("BREAKDOWN_MAX_OPEN_TRADES", "1"))
+BREAKDOWN_BREAKER_ENABLE = _env_bool("BREAKDOWN_BREAKER_ENABLE", True)
+BREAKDOWN_BREAKER_LOOKBACK_DAYS = max(3, int(os.getenv("BREAKDOWN_BREAKER_LOOKBACK_DAYS", "30") or 30))
+BREAKDOWN_BREAKER_MIN_TRADES = max(1, int(os.getenv("BREAKDOWN_BREAKER_MIN_TRADES", "6") or 6))
+BREAKDOWN_BREAKER_SOFT_NET_PNL = float(os.getenv("BREAKDOWN_BREAKER_SOFT_NET_PNL", "-2.0") or -2.0)
+BREAKDOWN_BREAKER_SOFT_MULT = max(0.05, min(1.0, float(os.getenv("BREAKDOWN_BREAKER_SOFT_MULT", "0.50") or 0.50)))
+BREAKDOWN_BREAKER_HARD_NET_PNL = float(os.getenv("BREAKDOWN_BREAKER_HARD_NET_PNL", "-4.5") or -4.5)
+BREAKDOWN_BREAKER_ALERT_COOLDOWN_SEC = max(300, int(os.getenv("BREAKDOWN_BREAKER_ALERT_COOLDOWN_SEC", "1800") or 1800))
+BREAKDOWN_BREAKER_LAST_ALERT_TS = 0
 BREAKDOWN_ENGINE = None
 
 # ===== MICRO SCALPER (live) =====
@@ -441,6 +449,7 @@ TS132_ENGINE = None
 LOG_SIGNALS = True
 SIGNALS_CSV = "signals.csv"
 ERRORS_LOG = "errors.log"
+LIVE_TRADE_EVENTS_JSONL = os.getenv("LIVE_TRADE_EVENTS_JSONL", "runtime/live_trade_events.jsonl").strip() or "runtime/live_trade_events.jsonl"
 
 # =========================== ПАРАМЕТРЫ ТОРГОВЛИ ===========================
 TRADE_ON = True
@@ -1051,6 +1060,9 @@ TRADE_DB_PATH = os.getenv("TRADE_DB_PATH", "trades.db")
 
 def _db_init():
     try:
+        db_path = Path(TRADE_DB_PATH).expanduser()
+        if db_path.parent and str(db_path.parent) not in ("", "."):
+            db_path.parent.mkdir(parents=True, exist_ok=True)
         with sqlite3.connect(TRADE_DB_PATH) as con:
             con.execute(
                 """
@@ -1102,7 +1114,42 @@ def _db_init():
     except Exception as e:
         log_error(f"db init fail: {e}")
 
-def _db_log_event(event: str, tr, sym: str, *, pnl: float | None = None, fees: float | None = None, exit_px: float | None = None):
+def _append_live_trade_event(event: str, sym: str, tr=None, **extra) -> None:
+    try:
+        payload = {
+            "ts": int(time.time()),
+            "ts_utc": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+            "event": str(event or "").strip(),
+            "exchange": "Bybit",
+            "symbol": str(sym or "").upper(),
+        }
+        if tr is not None:
+            payload.update({
+                "strategy": str(getattr(tr, "strategy", "") or ""),
+                "side": str(getattr(tr, "side", "") or ""),
+                "status": str(getattr(tr, "status", "") or ""),
+                "qty": float(getattr(tr, "qty", 0.0) or 0.0),
+                "entry_price": float(getattr(tr, "entry_price", getattr(tr, "avg", 0.0) or 0.0) or 0.0),
+                "tp_price": float(getattr(tr, "tp_price", 0.0) or 0.0) if getattr(tr, "tp_price", None) is not None else None,
+                "sl_price": float(getattr(tr, "sl_price", 0.0) or 0.0) if getattr(tr, "sl_price", None) is not None else None,
+                "entry_notional_usd": float(getattr(tr, "entry_notional_usd", 0.0) or 0.0),
+                "entry_order_id": str(getattr(tr, "entry_order_id", "") or ""),
+                "signal_reason": str(getattr(tr, "signal_reason", "") or ""),
+                "close_reason": str(getattr(tr, "close_reason", "") or ""),
+            })
+        for k, v in extra.items():
+            if isinstance(v, (Path,)):
+                payload[k] = str(v)
+            else:
+                payload[k] = v
+        out_path = Path(LIVE_TRADE_EVENTS_JSONL).expanduser()
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with out_path.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(payload, ensure_ascii=True, sort_keys=True) + "\n")
+    except Exception as e:
+        log_error(f"live trade event log fail: {e}")
+
+def _db_log_event(event: str, tr, sym: str, *, pnl: float | None = None, fees: float | None = None, exit_px: float | None = None, reason: str | None = None):
     try:
         with sqlite3.connect(TRADE_DB_PATH) as con:
             con.execute(
@@ -1125,7 +1172,7 @@ def _db_log_event(event: str, tr, sym: str, *, pnl: float | None = None, fees: f
                     float(getattr(tr, "sl_price", 0) or 0) if getattr(tr, "sl_price", None) is not None else None,
                     float(pnl) if pnl is not None else None,
                     float(fees) if fees is not None else None,
-                    str(getattr(tr, "close_reason", "") or getattr(tr, "reason_close", "") or ""),
+                    str(reason if reason is not None else (getattr(tr, "close_reason", "") or getattr(tr, "signal_reason", "") or getattr(tr, "reason_close", "") or "")),
                 ),
             )
             con.commit()
@@ -1586,6 +1633,80 @@ def _refresh_killer_guard_cache(force: bool = False) -> set[str]:
     KILLER_GUARD_CACHE_TS = now
     return set(KILLER_GUARD_BANNED)
 
+
+def _strategy_recent_close_stats(strategy: str, lookback_days: int) -> dict[str, float]:
+    stats = {
+        "trades": 0.0,
+        "wins": 0.0,
+        "net_pnl": 0.0,
+        "winrate": 0.0,
+    }
+    if not strategy or not os.path.exists(TRADE_DB_PATH):
+        return stats
+    since_ts = int(time.time()) - int(max(1, lookback_days)) * 86400
+    try:
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            row = con.execute(
+                """
+                SELECT COUNT(*) AS trades,
+                       SUM(CASE WHEN pnl > 0 THEN 1 ELSE 0 END) AS wins,
+                       SUM(COALESCE(pnl, 0.0)) AS net_pnl
+                  FROM trade_events
+                 WHERE event='CLOSE'
+                   AND strategy=?
+                   AND pnl IS NOT NULL
+                   AND ts>=?
+                """,
+                (str(strategy), since_ts),
+            ).fetchone()
+        if not row:
+            return stats
+        trades = int(row[0] or 0)
+        wins = int(row[1] or 0)
+        net_pnl = float(row[2] or 0.0)
+        stats["trades"] = float(trades)
+        stats["wins"] = float(wins)
+        stats["net_pnl"] = float(net_pnl)
+        stats["winrate"] = (100.0 * wins / trades) if trades > 0 else 0.0
+    except Exception as e:
+        log_error(f"strategy recent close stats fail [{strategy}]: {e}")
+    return stats
+
+
+def _breakdown_breaker_state() -> dict[str, Any]:
+    stats = _strategy_recent_close_stats("alt_inplay_breakdown_v1", BREAKDOWN_BREAKER_LOOKBACK_DAYS)
+    lookback_days = int(BREAKDOWN_BREAKER_LOOKBACK_DAYS)
+    trades = int(stats["trades"] or 0)
+    net_pnl = float(stats["net_pnl"] or 0.0)
+    state = {
+        "enabled": bool(BREAKDOWN_BREAKER_ENABLE),
+        "lookback_days": lookback_days,
+        "min_trades": int(BREAKDOWN_BREAKER_MIN_TRADES),
+        "trades": trades,
+        "net_pnl": net_pnl,
+        "winrate": round(float(stats["winrate"] or 0.0), 2),
+        "blocked": False,
+        "risk_mult": 1.0,
+        "reason": "",
+    }
+    if not BREAKDOWN_BREAKER_ENABLE or trades < int(BREAKDOWN_BREAKER_MIN_TRADES):
+        return state
+    if net_pnl <= float(BREAKDOWN_BREAKER_HARD_NET_PNL):
+        state["blocked"] = True
+        state["risk_mult"] = 0.0
+        state["reason"] = (
+            f"{lookback_days}d net {net_pnl:+.2f} <= hard {float(BREAKDOWN_BREAKER_HARD_NET_PNL):+.2f} "
+            f"over {trades} closes"
+        )
+        return state
+    if net_pnl <= float(BREAKDOWN_BREAKER_SOFT_NET_PNL):
+        state["risk_mult"] = float(BREAKDOWN_BREAKER_SOFT_MULT)
+        state["reason"] = (
+            f"{lookback_days}d net {net_pnl:+.2f} <= soft {float(BREAKDOWN_BREAKER_SOFT_NET_PNL):+.2f} "
+            f"over {trades} closes"
+        )
+    return state
+
 def _tg_reply(msg: str):
     tg_send(msg)
 
@@ -1737,6 +1858,8 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "tpsl_hard_fail_grace_sec": str(os.getenv("TPSL_HARD_FAIL_GRACE_SEC", "")),
             "router_regime": str(os.getenv("ROUTER_REGIME", "")),
             "orch_global_risk_mult": str(os.getenv("ORCH_GLOBAL_RISK_MULT", "")),
+            "breakdown_breaker": _breakdown_breaker_state(),
+            "live_trade_events_jsonl": str(Path(LIVE_TRADE_EVENTS_JSONL).expanduser()),
         },
     }
 
@@ -4033,7 +4156,15 @@ def sync_trades_with_exchange():
                         f"✅ ENTRY FILLED {sym} {tr.side} qty={tr.qty} avg={float(getattr(tr,'avg',0) or 0):.6f}"
                         f"{lat_txt}{rr_txt}"
                     )
-                    _db_log_event("ENTRY", tr, sym)
+                    _append_live_trade_event(
+                        "entry_filled",
+                        sym,
+                        tr,
+                        fill_price=float(getattr(tr, "avg", 0.0) or 0.0),
+                        latency_sig_to_send_sec=(send_ts - sig_ts) if sig_ts > 0 and send_ts >= sig_ts else None,
+                        latency_send_to_fill_sec=(fill_ts - send_ts) if send_ts > 0 and fill_ts >= send_ts else None,
+                    )
+                    _db_log_event("ENTRY", tr, sym, reason=str(getattr(tr, "signal_reason", "") or ""))
                     _db_log_ml_entry(tr, sym)
                     if TRADE_CHARTS_SEND_ON_ENTRY:
                         p = _make_trade_chart(sym, tr, stage="entry")
@@ -4792,6 +4923,14 @@ def _finalize_and_report_closed(tr, sym: str):
     if hold_txt:
         msg += "\nTiming: " + " | ".join(hold_txt)
     tg_trade(msg)
+    _append_live_trade_event(
+        "close",
+        sym,
+        tr,
+        pnl=float(pnl_closed or 0.0),
+        fees=float(fee_sum or 0.0),
+        exit_price=float(exit_px) if exit_px is not None else None,
+    )
     _db_log_event("CLOSE", tr, sym, pnl=pnl_closed, fees=fee_sum, exit_px=exit_px)
     _db_log_ml_close(tr, sym, pnl=pnl_closed, fees=fee_sum)
     _maybe_schedule_ai_trade_review(tr, sym, pnl_closed, fee_sum, exit_px)
@@ -4908,6 +5047,13 @@ def _close_unprotected_position(symbol: str, tr, note: str) -> bool:
         f"Unprotected position after TP/SL failure\n"
         f"Reason: {note}\n"
         f"Size={float(size_now):.6f}"
+    )
+    _append_live_trade_event(
+        "failsafe_close_sent",
+        symbol,
+        tr,
+        close_qty=float(size_now),
+        note=str(note or ""),
     )
     return True
 
@@ -7137,6 +7283,7 @@ async def try_flat_entry_async(symbol: str, price: float):
         tr.entry_order_id = oid
         tr.status = "PENDING_ENTRY"
         tr.strategy = "flat_resistance_fade"
+        tr.signal_reason = str(getattr(sig, "reason", "") or "")
         tr.avg = float(entry)
         tr.entry_price = float(entry)
         tr.entry_notional_usd = float(notional_real)
@@ -7160,6 +7307,16 @@ async def try_flat_entry_async(symbol: str, price: float):
         tr.tpsl_last_set_ts = now_s()
         if ok:
             tr.tpsl_manual_lock = False
+
+        _append_live_trade_event(
+            "order_submitted",
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=float(tp_r) if tp_r is not None else None,
+            request_sl=float(sl_r) if sl_r is not None else None,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
 
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
@@ -7228,7 +7385,26 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
-    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=BREAKDOWN_RISK_MULT)
+    breaker = _breakdown_breaker_state()
+    if breaker.get("blocked"):
+        _diag_inc("breakdown_skip_breaker")
+        tg_trade_throttled(
+            f"breakdown_breaker:block:{symbol}",
+            f"🛑 BREAKDOWN BLOCKED {symbol}: {breaker.get('reason', 'breaker')}",
+            BREAKDOWN_BREAKER_ALERT_COOLDOWN_SEC,
+        )
+        return
+    breaker_mult = float(breaker.get("risk_mult", 1.0) or 1.0)
+    if breaker_mult < 0.999:
+        tg_trade_throttled(
+            f"breakdown_breaker:soft:{symbol}",
+            f"🟡 BREAKDOWN RISK CUT {symbol}: x{breaker_mult:.2f} | {breaker.get('reason', 'soft breaker')}",
+            BREAKDOWN_BREAKER_ALERT_COOLDOWN_SEC,
+        )
+    dyn_usd = calc_notional_usd_from_stop_pct(
+        stop_pct,
+        risk_mult=float(BREAKDOWN_RISK_MULT) * breaker_mult,
+    )
     qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
     if dyn_usd > 0:
         qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
@@ -7289,9 +7465,11 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         tr.entry_order_id = oid
         tr.status = "PENDING_ENTRY"
         tr.strategy = "alt_inplay_breakdown_v1"
+        tr.signal_reason = str(getattr(sig, "reason", "") or "")
         tr.avg = float(entry)
         tr.entry_price = float(entry)
         tr.entry_notional_usd = float(notional_real)
+        tr.breakdown_breaker_mult = float(breaker_mult)
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
         tr.runner_enabled = bool(use_runner)
@@ -7313,12 +7491,24 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         if ok:
             tr.tpsl_manual_lock = False
 
+        _append_live_trade_event(
+            "order_submitted",
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=float(tp_r) if tp_r is not None else None,
+            request_sl=float(sl_r) if sl_r is not None else None,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+            breaker_mult=float(breaker_mult),
+            breaker_reason=str(breaker.get("reason", "") or ""),
+        )
+
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
             f"🔻 BREAKDOWN ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
             f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
             f"notional≈{notional_real:.2f}$ qty≈{q}\n"
-            f"reason={sig.reason}"
+            f"reason={sig.reason} breaker={breaker_mult:.2f}"
         )
 
 
