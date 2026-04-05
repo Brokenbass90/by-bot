@@ -2170,3 +2170,16 @@ That is a much cleaner place to leave the machine for the next hour.
   - вместо raw breakout теперь entry идёт через entry-TF retest/reclaim с `touch ATR buffer` и `minimum body fraction`
   - под это запущен новый rescue-run:
     - [elder_ts_v2_retest_reclaim_v4.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/elder_ts_v2_retest_reclaim_v4.json)
+- Разбор сегодняшнего live breakdown-шорта оказался полезным не как “ой, стоп словили”, а как логический сигнал:
+  - это был скорее stale breakdown / возврат в диапазон, а не missed long
+  - под это я усилил [alt_inplay_breakdown_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_inplay_breakdown_v1.py)
+  - добавлены:
+    - `BREAKDOWN_FRESH_BREAK_BARS_5M`
+    - `BREAKDOWN_FLAT_FILTER_BARS_5M`
+    - `BREAKDOWN_FLAT_FILTER_MAX_RANGE_ATR`
+    - `BREAKDOWN_FLAT_FILTER_LEVEL_BAND_ATR`
+  - смысл простой: не шортить слишком поздно и не шортить, когда пробой уже умер и превратился в пилу вокруг уровня
+- Быстрый sanity-probe на узком core2-баскете после этого остался положительным:
+  - [core2_breakdown_fresh_flat_probe_90d](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260405_125802_core2_breakdown_fresh_flat_probe_90d/summary.csv)
+  - `+4.44%`, PF `1.369`, DD `3.95`
+  - это не новый финальный baseline, а просто первый чек, что guardrail-фикс не убил стратегию сразу

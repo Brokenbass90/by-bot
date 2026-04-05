@@ -129,6 +129,10 @@ class AltInplayBreakdownV1Config:
     time_stop_bars_5m: int = 288
     cooldown_bars_5m: int = 48
     max_wait_bars_5m: int = 30
+    fresh_break_bars_5m: int = 18
+    flat_filter_bars_5m: int = 6
+    flat_filter_max_range_atr: float = 0.90
+    flat_filter_level_band_atr: float = 0.35
 
 
 def _find_next_support_below(
@@ -221,6 +225,16 @@ class AltInplayBreakdownV1Strategy:
         self.cfg.time_stop_bars_5m = _env_int("BREAKDOWN_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
         self.cfg.cooldown_bars_5m = _env_int("BREAKDOWN_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
         self.cfg.max_wait_bars_5m = _env_int("BREAKDOWN_MAX_RETEST_BARS", self.cfg.max_wait_bars_5m)
+        self.cfg.fresh_break_bars_5m = _env_int("BREAKDOWN_FRESH_BREAK_BARS_5M", self.cfg.fresh_break_bars_5m)
+        self.cfg.flat_filter_bars_5m = _env_int("BREAKDOWN_FLAT_FILTER_BARS_5M", self.cfg.flat_filter_bars_5m)
+        self.cfg.flat_filter_max_range_atr = _env_float(
+            "BREAKDOWN_FLAT_FILTER_MAX_RANGE_ATR",
+            self.cfg.flat_filter_max_range_atr,
+        )
+        self.cfg.flat_filter_level_band_atr = _env_float(
+            "BREAKDOWN_FLAT_FILTER_LEVEL_BAND_ATR",
+            self.cfg.flat_filter_level_band_atr,
+        )
 
         self._allow = _env_csv_set("BREAKDOWN_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set("BREAKDOWN_SYMBOL_DENYLIST")
@@ -332,12 +346,19 @@ class AltInplayBreakdownV1Strategy:
         level = float(self._armed["level"])
         atr = float(self._armed["atr"])
         break_close = float(self._armed["break_close"])
+        armed_ts = int(self._armed.get("entry_armed_ts") or rows_5m[-1][0])
 
         open_5m = float(rows_5m[-1][1])
         high_5m = float(rows_5m[-1][2])
         low_5m = float(rows_5m[-1][3])
         close_5m = float(rows_5m[-1][4])
         prev_close = float(rows_5m[-2][4]) if len(rows_5m) >= 2 else close_5m
+
+        age_bars = max(0, int((int(float(rows_5m[-1][0])) - armed_ts) // (5 * 60_000)))
+        if age_bars > max(1, int(self.cfg.fresh_break_bars_5m)):
+            self._armed = None
+            self.last_no_signal_reason = f"stale_break_{age_bars}bars"
+            return None
 
         body = abs(close_5m - open_5m)
         bar_range = max(1e-12, high_5m - low_5m)
@@ -350,6 +371,21 @@ class AltInplayBreakdownV1Strategy:
             base = sum(float(r[5]) for r in tail) / float(len(tail))
             cur_vol = float(rows_5m[-1][5])
             vol_ok = base > 0 and cur_vol >= self.cfg.reject_vol_mult * base
+
+        flat_bars = max(0, int(self.cfg.flat_filter_bars_5m))
+        if flat_bars > 1 and len(rows_5m) >= flat_bars:
+            recent = rows_5m[-flat_bars:]
+            recent_high = max(float(r[2]) for r in recent)
+            recent_low = min(float(r[3]) for r in recent)
+            recent_range_atr = (recent_high - recent_low) / max(1e-12, atr)
+            recent_mid = 0.5 * (recent_high + recent_low)
+            if (
+                recent_range_atr <= max(0.1, float(self.cfg.flat_filter_max_range_atr))
+                and abs(recent_mid - level) <= max(0.05, float(self.cfg.flat_filter_level_band_atr)) * atr
+            ):
+                self._armed = None
+                self.last_no_signal_reason = f"flat_after_break_{recent_range_atr:.2f}atr"
+                return None
 
         touched_reclaim_zone = high_5m >= level - self.cfg.retest_touch_atr * atr
         reclaimed_below = close_5m <= level - self.cfg.reclaim_atr * atr
