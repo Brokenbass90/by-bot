@@ -48,6 +48,7 @@ Config env vars (or configs/alpaca_paper_local.env):
   INTRADAY_MAX_DAILY_LOSS_PCT=2.0    # halt if down X% today
   INTRADAY_EQUITY_CURVE_GATE=1       # 1=enabled, 0=disabled
   INTRADAY_EQUITY_CURVE_DAYS=20      # rolling window for equity filter
+  INTRADAY_CLOSE_UNKNOWN_REMOTE_POSITIONS=0  # close paper leftovers not tracked in intraday_state
   TG_TOKEN, TG_CHAT_ID               # Telegram alerts
 """
 from __future__ import annotations
@@ -505,25 +506,33 @@ def _spy_regime_ok(client: AlpacaClient, dry_run: bool,
     ok=False → SPY below SMA{sma_period}, bearish regime, no new longs.
     In dry-run mode: tries to use cached SPY CSV, falls back to ok=True.
     """
+    def _cached_spy_closes() -> List[float]:
+        spy_csv = ROOT / "data_cache" / "equities_1h" / "SPY_M5.csv"
+        if not spy_csv.exists():
+            return []
+        m5 = load_m5_csv(str(spy_csv))
+        daily: Dict[str, float] = {}
+        for c in m5:
+            d = datetime.fromtimestamp(c.ts, tz=timezone.utc).strftime("%Y-%m-%d")
+            daily[d] = c.c
+        return [v for v in list(daily.values())[-(sma_period + 5):]]
+
     closes: List[float] = []
 
     if not dry_run:
         try:
             closes = client.get_daily_closes("SPY", limit=sma_period + 5)
         except Exception as exc:
-            return True, f"SPY fetch failed ({exc}) — allowing by default"
+            closes = _cached_spy_closes()
+            if not closes:
+                return True, f"SPY fetch failed ({exc}) and no cache — allowing by default"
+        if len(closes) < sma_period:
+            cached = _cached_spy_closes()
+            if cached:
+                closes = cached
     else:
-        # Try cached SPY M5 CSV → downsample to daily
-        spy_csv = ROOT / "data_cache" / "equities_1h" / "SPY_M5.csv"
-        if spy_csv.exists():
-            m5 = load_m5_csv(str(spy_csv))
-            # Group by day → take last close of each day
-            daily: Dict[str, float] = {}
-            for c in m5:
-                d = datetime.fromtimestamp(c.ts, tz=timezone.utc).strftime("%Y-%m-%d")
-                daily[d] = c.c
-            closes = [v for v in list(daily.values())[-( sma_period + 5):]]
-        else:
+        closes = _cached_spy_closes()
+        if not closes:
             return True, "SPY CSV not found — allowing by default (dry-run)"
 
     if len(closes) < sma_period:
@@ -710,11 +719,33 @@ def run_once(client: AlpacaClient, dry_run: bool,
                 f"Entry=${ps.entry_price:.2f} | SL=${ps.sl_price:.2f} | TP=${ps.tp_price:.2f}\n"
                 f"Est. P&L: ${realized:.2f}")
         _save_state(state)
+
+        remote_only_symbols = sorted(sym for sym in open_positions.keys() if sym not in state)
+        close_unknown_remote = _env_bool("INTRADAY_CLOSE_UNKNOWN_REMOTE_POSITIONS", False)
+        if remote_only_symbols:
+            print(f"\n  [WARN] Remote paper positions not tracked by intraday state: {', '.join(remote_only_symbols)}")
+            if close_unknown_remote:
+                for sym in remote_only_symbols:
+                    try:
+                        result = client.close_position(sym)
+                        print(f"    → Close sent for unknown remote position {sym}: {result.get('status') or result.get('id') or 'submitted'}")
+                        _tg(
+                            tg_token,
+                            tg_chat,
+                            f"🧹 <b>Intraday cleanup</b>\nClosed stale remote Alpaca paper position: <b>{sym}</b>\n{now_str}",
+                        )
+                    except Exception as exc:
+                        print(f"    ✗ Failed to close unknown remote position {sym}: {exc}")
+                        _tg(tg_token, tg_chat, f"⚠️ <b>Intraday cleanup</b> failed for {sym}: {exc}")
+            else:
+                print("    → Keeping them as occupied slots for this cycle")
     else:
         open_positions = {}
+        remote_only_symbols = []
 
-    open_count = len(state)
-    print(f"\n  Open positions: {open_count}/{max_positions} — {list(state.keys()) or 'none'}")
+    occupied_symbols = sorted(set(state.keys()) | set(remote_only_symbols))
+    open_count = len(occupied_symbols)
+    print(f"\n  Open positions: {open_count}/{max_positions} — {occupied_symbols or 'none'}")
 
     # ── Signal scan ────────────────────────────────────────────────
     for symbol in strategy_specs:
@@ -725,6 +756,10 @@ def run_once(client: AlpacaClient, dry_run: bool,
             held_min = (now_ts - ps.entry_ts) // 60
             print(f"    → In position {held_min}m | "
                   f"entry=${ps.entry_price:.2f} SL=${ps.sl_price:.2f} TP=${ps.tp_price:.2f}")
+            continue
+
+        if symbol in remote_only_symbols:
+            print(f"    → Remote Alpaca position exists outside intraday state — skip")
             continue
 
         if entries_blocked:
