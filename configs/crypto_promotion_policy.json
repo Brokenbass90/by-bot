@@ -1,0 +1,41 @@
+{
+  "policy_version": "2026-04-08-promotion-v1",
+  "updated_utc": "2026-04-08T00:00:00Z",
+  "annual_gate": {
+    "min_net_pnl": 0.0,
+    "min_profit_factor": 1.15,
+    "max_drawdown_pct": 15.0,
+    "min_trades": 100
+  },
+  "walkforward_gate": {
+    "min_windows": 8,
+    "min_pass_ratio": 0.45,
+    "min_avg_pf": 1.1,
+    "min_avg_net_pnl": 0.0,
+    "max_avg_drawdown_pct": 8.0
+  },
+  "portfolio_compare": {
+    "reject_if": {
+      "max_return_drop_pct": 5.0,
+      "max_pf_drop": 0.15,
+      "max_dd_mult": 1.5
+    },
+    "improvement_paths": [
+      {
+        "name": "net_up_dd_ok",
+        "min_return_delta_pct": 3.0,
+        "max_dd_mult": 1.25
+      },
+      {
+        "name": "pf_up_return_near",
+        "min_pf_delta": 0.08,
+        "min_return_ratio": 0.95
+      },
+      {
+        "name": "dd_down_return_near",
+        "max_dd_ratio": 0.8,
+        "min_return_ratio": 0.9
+      }
+    ]
+  }
+}

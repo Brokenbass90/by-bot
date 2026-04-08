@@ -59,13 +59,16 @@ FILES=(
   "scripts/check_control_plane_health.sh"
   "scripts/apply_live_control_plane_env_patch.py"
   "scripts/control_plane_watchdog.py"
+  "scripts/build_regime_state.py"
   "scripts/build_symbol_router.py"
   "scripts/build_portfolio_allocator.py"
   "scripts/build_geometry_state.py"
   "scripts/build_operator_snapshot.py"
   "scripts/build_strategy_health_timeline.py"
+  "scripts/evaluate_crypto_promotion.py"
   "scripts/setup_server_crons.sh"
   "scripts/deploy_foundation.sh"
+  "configs/crypto_promotion_policy.json"
   "configs/portfolio_allocator_policy.json"
 )
 

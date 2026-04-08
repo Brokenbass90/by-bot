@@ -1,5 +1,49 @@
 # Bybit bot (v28) - worklog / reminders
 
+## 2026-04-08 - weak bull-trend flat softener + explicit promotion gate
+
+### What was closed
+
+- Found the real reason `flat` was off in live `bull_trend`:
+  - not overlap haircuts
+  - not allocator safe mode
+  - the regime decision table itself forced `ENABLE_FLAT_TRADING=0`
+- Added a weak-trend softener in [scripts/build_regime_state.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_regime_state.py):
+  - if `bull_trend` confidence is only modest (`ER <= 0.55`)
+  - `flat` is re-enabled in reduced mode
+  - regime state now records `softeners`
+- Extended [scripts/apply_live_control_plane_env_patch.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/apply_live_control_plane_env_patch.py) so the live server keeps the same explicit threshold.
+- Synced the updated regime builder to server and rebuilt control-plane state manually.
+- Verified on live server:
+  - `softeners=['weak_bull_trend_flat_on']`
+  - `ENABLE_FLAT_TRADING=1`
+  - allocator now enables `flat`
+  - `flat_risk=0.55`
+- Added explicit crypto promotion gate artifacts:
+  - [configs/crypto_promotion_policy.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/crypto_promotion_policy.json)
+  - [scripts/evaluate_crypto_promotion.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/evaluate_crypto_promotion.py)
+  - [docs/PROMOTION_RULES.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/PROMOTION_RULES.md)
+
+### Important truth
+
+- The market filter was not “wrong everywhere”.
+- External market context on `2026-04-08` was genuinely risk-on:
+  - stocks up hard
+  - Bitcoin near `71.5k`
+- So disabling `breakdown` was sensible.
+- The bad part was the binary rule:
+  - `bull_trend => flat off`
+- That was too blunt for a weak / borderline trend and was suppressing a sleeve with `OK` health.
+
+### Promotion truth
+
+- The new evaluator shows current `core3` still does not qualify:
+  - annual gate fails on DD
+  - walk-forward gate fails on pass ratio
+  - portfolio compare fails hard against the golden baseline
+- This is exactly why the explicit promotion gate matters:
+  - it stops us from promoting a candidate because it “feels close”
+
 ## 2026-04-08 - geometry-aware router + overlap haircuts + live deploy cleanup
 
 ### What was closed

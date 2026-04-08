@@ -5,6 +5,58 @@
 
 ---
 
+## 2026-04-08 | Codex (session 31 - weak-bull flat softener + explicit promotion policy)
+
+**Done:**
+
+- Traced the live `flat` suppression to the actual source:
+  - it was not allocator overlap logic
+  - it was the regime decision table in [build_regime_state.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_regime_state.py)
+  - `bull_trend` hard-disabled `ENABLE_FLAT_TRADING`
+- Added a deterministic softener in [build_regime_state.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_regime_state.py):
+  - weak `bull_trend` now re-enables `flat` in reduced mode when `ER <= 0.55`
+  - state now records `softeners`
+  - server env patch now also writes `ORCH_BULL_TREND_FLAT_ER_MAX=0.55`
+- Synced the updated regime builder to the live server and rebuilt:
+  - regime
+  - router
+  - allocator
+- Verified live result:
+  - server regime stayed `bull_trend`
+  - `softeners = ['weak_bull_trend_flat_on']`
+  - `ENABLE_FLAT_TRADING = 1`
+  - allocator now shows:
+    - `flat_enabled = True`
+    - `flat_risk = 0.55`
+    - `flat_health = OK`
+- Added explicit promotion policy artifacts:
+  - [crypto_promotion_policy.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/crypto_promotion_policy.json)
+  - [evaluate_crypto_promotion.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/evaluate_crypto_promotion.py)
+  - [PROMOTION_RULES.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/PROMOTION_RULES.md)
+- Linked the new promotion source-of-truth from:
+  - [GOLDEN_PORTFOLIO_BASELINES.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/GOLDEN_PORTFOLIO_BASELINES.md)
+
+**Key findings:**
+
+- The filter was partly right and partly too blunt.
+- External market context today is genuinely risk-on:
+  - [Investopedia market open note](https://www.investopedia.com/5-things-to-know-before-the-stock-market-opens-april-8-2026-11945258) says S&P 500 futures were up more than `2.5%` and Bitcoin was nearing `71,500`
+- That supports:
+  - `breakdown` staying suppressed
+  - momentum sleeves being allowed
+- But it does **not** justify hard-killing `flat` when the regime confidence is only around `0.50`.
+- New promotion evaluator already gives a clean example:
+  - current `core3` candidate fails on:
+    - annual DD
+    - walk-forward pass ratio
+    - portfolio compare vs live golden baseline
+
+**Next:**
+
+- Keep this softer weak-bull flat rule unless live evidence says it over-trades.
+- Use [evaluate_crypto_promotion.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/evaluate_crypto_promotion.py) as the required gate before any crypto package promotion discussion.
+- Then return to sleeve work on top of the now-stronger foundation.
+
 ## 2026-04-08 | Codex (session 30 - geometry-aware router + exposure layer + live foundation deploy)
 
 **Done:**

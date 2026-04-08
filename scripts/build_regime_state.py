@@ -43,6 +43,7 @@ Env vars:
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import logging
 import os
@@ -88,6 +89,7 @@ log = logging.getLogger("regime_orchestrator")
 MIN_HOLD_CYCLES  = int(os.getenv("ORCH_MIN_HOLD_CYCLES", "3"))
 ER_TREND_THRESH  = float(os.getenv("ORCH_ER_TREND_THRESH", "0.35"))
 FETCH_BARS       = int(os.getenv("ORCH_BARS", "120"))
+BULL_TREND_FLAT_ER_MAX = float(os.getenv("ORCH_BULL_TREND_FLAT_ER_MAX", "0.55"))
 TG_TOKEN         = os.getenv("TG_TOKEN", "")
 TG_CHAT_ID       = os.getenv("TG_CHAT_ID", os.getenv("TG_CHAT", ""))
 
@@ -412,6 +414,25 @@ _REGIME_DECISIONS = {
     },
 }
 
+
+def _apply_decision_softeners(regime: str, indicators: Dict[str, Any]) -> Dict[str, Any]:
+    decision = copy.deepcopy(_REGIME_DECISIONS[regime])
+    softeners: List[str] = []
+    er = float(indicators.get("er") or 0.0)
+
+    # A weak bull trend can still behave like directional chop where ARF1 has edge.
+    # Keep momentum active, but do not force mean-reversion fully off on borderline ER.
+    if regime == REGIME_BULL_TREND and er <= BULL_TREND_FLAT_ER_MAX:
+        decision["overrides"]["ENABLE_FLAT_TRADING"] = "1"
+        decision["sleeves"]["mean_reversion"] = "reduced"
+        decision["notes"] = list(decision.get("notes") or []) + [
+            f"Weak bull trend (ER={er:.3f}) — flat re-enabled in reduced mode"
+        ]
+        softeners.append("weak_bull_trend_flat_on")
+
+    decision["softeners"] = softeners
+    return decision
+
 # ---------------------------------------------------------------------------
 # State persistence (for hysteresis)
 # ---------------------------------------------------------------------------
@@ -513,7 +534,7 @@ def compute_and_apply(dry_run: bool = False) -> Dict[str, Any]:
         log.info(f"New pending regime '{pending_regime}' started (1/{MIN_HOLD_CYCLES})")
 
     # 5. Build decision
-    decision = _REGIME_DECISIONS[new_regime]
+    decision = _apply_decision_softeners(new_regime, indicators)
     overrides = decision["overrides"].copy()
     overrides["ORCH_CONFIDENCE"] = str(round(indicators.get("er", 0.5), 3))
     overrides["ORCH_RAW_REGIME"] = raw_regime
@@ -537,6 +558,7 @@ def compute_and_apply(dry_run: bool = False) -> Dict[str, Any]:
         "risk_level":      decision["risk_level"],
         "global_risk_mult": decision["global_risk_mult"],
         "sleeves":         decision["sleeves"],
+        "softeners":       decision.get("softeners", []),
         "strategy_overrides": overrides,
         "indicators":      indicators,
         "notes":           decision["notes"],

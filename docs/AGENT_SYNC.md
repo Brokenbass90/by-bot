@@ -1,6 +1,6 @@
 # Agent Sync
 
-Last updated: 2026-04-08 12:31 UTC
+Last updated: 2026-04-08 12:45 UTC
 
 ## 2026-04-08 refresh note
 
@@ -24,6 +24,8 @@ Current live foundation truth now also includes:
   - historical health timeline metadata
 - live router code now includes deterministic geometry-aware symbol scoring / filtering
 - live allocator code now includes portfolio overlap / exposure haircuts
+- live regime builder now includes a weak bull-trend softener:
+  - `flat` can be re-enabled when bull-trend confidence is only modest
 - local/offline control-plane replay now also has historical health context:
   - `runtime/control_plane/strategy_health_timeline.json`
   - replay no longer has to reuse one current `configs/strategy_health.json` across the whole year
@@ -36,6 +38,9 @@ Current live foundation truth now also includes:
   - allocator
   - geometry
   - operator snapshot
+- live server now also has the explicit promotion artifacts:
+  - `configs/crypto_promotion_policy.json`
+  - `scripts/evaluate_crypto_promotion.py`
 - duplicate control-plane health cron was removed; the live server now keeps one:
   - `# bybot_cp_health`
 

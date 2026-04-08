@@ -35,6 +35,9 @@ Order of work:
   - router can score symbols against sleeve-specific geometry context
   - router state records geometry reasons / keep flags
   - weak symbols can be filtered before they reach live sleeves
+- Weak-trend softeners now also exist in the regime layer:
+  - `flat` is no longer hard-disabled in every `bull_trend`
+  - weak `bull_trend` can re-enable `flat` in reduced mode
 - AI/operator context is stronger than before:
   - live `/ai` snapshot now includes compact operator context
   - weekly AI cron can consume the same compact operator context
@@ -43,10 +46,12 @@ Order of work:
   - local replay can now consume a real `strategy_health_timeline.json`
   - operator truth pack now includes current health summary plus timeline metadata
 - Portfolio overlap / exposure haircuts now exist inside the allocator.
-- Crypto live still needs promotion discipline on top of the rebuilt control plane:
+- Explicit promotion gate now exists as policy + evaluator:
   - annual
   - walk-forward
   - portfolio compare
+- Crypto live still needs promotion discipline on top of the rebuilt control plane:
+  - now enforce it through the explicit policy artifacts instead of only docs language
 - Websocket transport remains a real live risk:
   - recent `12h` diagnostic windows still show degraded reconnect / handshake quality
   - the bot now has a transport guard, but the transport itself still needs hardening

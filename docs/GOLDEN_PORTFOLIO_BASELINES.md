@@ -30,6 +30,10 @@ golden reference on an apples-to-apples annual run.
 
 ## Promotion Rules
 
+- The explicit policy now lives in:
+  - [PROMOTION_RULES.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/PROMOTION_RULES.md)
+  - [crypto_promotion_policy.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/crypto_promotion_policy.json)
+  - [evaluate_crypto_promotion.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/evaluate_crypto_promotion.py)
 - Do not change live crypto deployment unless the candidate stack is compared on
   a matching annual window and symbol union.
 - Prefer promoting a stack only when it improves the current reproducible
