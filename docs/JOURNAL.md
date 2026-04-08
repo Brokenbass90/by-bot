@@ -2715,3 +2715,36 @@ That is a much cleaner place to leave the machine for the next hour.
     - DD
     - bad months
     - sleeve contribution | done
+
+## Codex Session 27e - 2026-04-08
+
+Summary:
+- The first full `360d` stitched dynamic system run is now complete, so we have the first honest annual result for the rebuilt stack instead of only smoke runs and control-plane replays.
+- I also launched the next validation set immediately:
+  - `core2_honest_wf_360d_20260408`
+  - `ivb1_ema_wf_360d_20260408`
+  - `ivb1_off_wf_360d_20260408`
+  - `pump_fade_v4r_bear_window`
+
+Key findings:
+- Full stitched annual result:
+  - [dynamic_system_annual_v1 summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_133825_dynamic_system_annual_v1/summary.json)
+  - `+2.97%`
+  - PF `1.0636`
+  - WR `46.89%`
+  - DD `8.6842%`
+  - `6` negative months
+- Window truth:
+  - [dynamic_windows.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_133825_dynamic_system_annual_v1/dynamic_windows.csv)
+  - the system stayed mostly in applied `bull_chop`
+  - enabled sleeves were dominated by `breakout + sloped + flat`
+  - weak summer windows (`2025-04 .. 2025-08`) are still the main drag
+- Early IVB1 regime-gating signal:
+  - `ema` is not an instant win; first windows are still weak/negative
+  - `off` is also weak in the same early window, with even more trades and larger loss
+- Practical meaning:
+  - the rebuilt base is now honest enough to show that the system survives the year, but it does **not** yet produce promotion-quality annual numbers
+  - next decisions must come from:
+    - honest `core2` walk-forward
+    - honest `IVB1 off vs ema` walk-forward
+    - fresh `pump_fade_v4r` bear-window research

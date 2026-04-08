@@ -322,3 +322,35 @@ nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/f
   - static legacy package
   - control-plane replay only
 - only after that reopen promotion discussion for new sleeves
+
+## Codex Changes (session 27e) — 2026-04-08
+
+### Full annual stitched truth:
+
+- [dynamic_system_annual_v1 summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_133825_dynamic_system_annual_v1/summary.json)
+  - `+2.97%`
+  - PF `1.0636`
+  - WR `46.89%`
+  - DD `8.6842%`
+  - `6` negative months
+- [dynamic_windows.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_133825_dynamic_system_annual_v1/dynamic_windows.csv)
+  - most windows stayed in applied `bull_chop`
+  - active sleeves were mainly `breakout`, `sloped`, `flat`
+  - the new foundation is honest enough to expose weak months instead of smoothing them away
+
+### What is running now:
+
+- `core2_honest_wf_360d_20260408`
+- `ivb1_ema_wf_360d_20260408`
+- `ivb1_off_wf_360d_20260408`
+- `pump_fade_v4r_bear_window`
+
+### Important truth:
+
+- `CODEX_TASK_next_steps.md` is directionally useful, but stale on IVB1 implementation:
+  - `IVB1_REGIME_MODE` already exists in [strategies/impulse_volume_breakout_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/impulse_volume_breakout_v1.py)
+  - the real next step is not “add the flag”, but long-horizon `off vs ema` comparison with the repaired base
+- Do not call IVB1 live-ready until:
+  - `ema` vs `off` walk-forward is complete
+  - stitched annual system truth is acceptable
+  - portfolio compare is not worse than the honest core2 backbone

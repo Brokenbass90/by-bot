@@ -367,6 +367,30 @@ Rules:
   - correlation to existing crypto sleeves
 - funding carry may progress earlier than other expansion ideas because it is closer to existing infrastructure and can help during chop regimes
 
+### P4c - Capital Router (Regime-Aware Capital Allocation)
+
+Goal:
+- maximize capital utilization across regimes by shifting allocation between directional and non-directional sleeves
+
+Concept:
+- `bear_chop`: `funding_carry_weight=0.25`, `directional_weight=0.75`
+- `bear_trend`: `funding_carry_weight=0.10`, `breakdown_weight=0.90`
+- `bull_trend`: `funding_carry_weight=0.00`, `impulse_weight=1.00`
+
+Implementation:
+1. extend [build_portfolio_allocator.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_portfolio_allocator.py) with a `funding_carry` sleeve
+2. output `CARRY_POSITION_USD` into [portfolio_allocator_latest.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/portfolio_allocator_latest.env)
+3. `funding_carry_executor.py` reads `CARRY_POSITION_USD`
+4. run it on the same allocator cadence
+
+Prerequisites:
+- funding carry validated on `365d`
+- regime router stable in production
+- capital large enough that carry has a meaningful absolute contribution
+
+Rule:
+- platform stays Bybit-first; no cross-platform capital router until the single-venue version is stable
+
 ### P5 - Multi-Market Expansion
 
 Goal:
