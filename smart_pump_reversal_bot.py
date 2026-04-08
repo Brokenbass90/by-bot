@@ -2527,6 +2527,7 @@ def _status_full_text() -> str:
             f"breakdown={os.getenv('ROUTER_PROFILE_BREAKDOWN', '') or 'n/a'}",
             f"flat={os.getenv('ROUTER_PROFILE_ARF1', '') or 'n/a'}",
             f"sloped={os.getenv('ROUTER_PROFILE_ASC1', '') or 'n/a'}",
+            f"impulse={os.getenv('ROUTER_PROFILE_IVB1', '') or 'n/a'}",
             f"midterm={os.getenv('ROUTER_PROFILE_MIDTERM', '') or 'n/a'}",
         ]
         lines.append("router-profiles: " + " | ".join(router_profiles))
@@ -2544,6 +2545,9 @@ def _status_full_text() -> str:
     if ENABLE_BREAKDOWN_TRADING:
         breakdown_symbols = sorted(_parse_symbol_csv(os.getenv('BREAKDOWN_SYMBOL_ALLOWLIST', '')))
         lines.append(f"breakdown-universe: {len(breakdown_symbols)} ({_fmt_list_compact(breakdown_symbols, 8) if breakdown_symbols else 'dynamic'})")
+    if ENABLE_IVB1_TRADING:
+        ivb1_symbols = sorted(_parse_symbol_csv(os.getenv('IVB1_SYMBOL_ALLOWLIST', '')))
+        lines.append(f"impulse-universe: {len(ivb1_symbols)} ({_fmt_list_compact(ivb1_symbols, 8) if ivb1_symbols else 'dynamic'})")
 
     if LAST_UNIVERSE_REFRESH_TS:
         age_min = max(0, int((time.time() - int(LAST_UNIVERSE_REFRESH_TS)) // 60))
@@ -3884,6 +3888,7 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
         f"sloped={ENABLE_SLOPED_TRADING}",
         f"flat={ENABLE_FLAT_TRADING}",
         f"breakdown={ENABLE_BREAKDOWN_TRADING}",
+        f"ivb1={ENABLE_IVB1_TRADING}",
         f"ts132={ENABLE_TS132_TRADING}",
     ]
     lines = [
@@ -9635,6 +9640,12 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
                 tg_trade(f"🧩 breakdown-universe: using={len(breakdown_symbols)} ({','.join(breakdown_symbols)})")
             else:
                 tg_trade("🧩 breakdown-universe: using=dynamic (allowlist unset)")
+        if ENABLE_IVB1_TRADING:
+            ivb1_symbols = sorted(_parse_symbol_csv(os.getenv("IVB1_SYMBOL_ALLOWLIST", "")))
+            if ivb1_symbols:
+                tg_trade(f"🧩 impulse-universe: using={len(ivb1_symbols)} ({','.join(ivb1_symbols)})")
+            else:
+                tg_trade("🧩 impulse-universe: using=dynamic (allowlist unset)")
         if ENABLE_RANGE_TRADING and BOUNCE_TG_LOGS:
             tg_trade(f"🧩 bounce-universe: using={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
 

@@ -2811,3 +2811,57 @@ Practical meaning:
 - The earlier `+2.97% annual` stitched result should no longer be treated as the final truth for the rebuilt system.
 - It was honest about the old stack it actually ran, but it was **not** yet the honest result for the intended modern stack.
 - After the router/profile repair, stitched research must be rerun before making any judgement like “systems made everything worse.”
+
+## Codex Session 28 - 2026-04-08
+
+Summary:
+- Tightened live observability around `IVB1`/impulse so the bot stops looking artificially “dead” when the control-plane has actually enabled the sleeve.
+- Opened the next focused annual repair frontier around `alt_range_scalp_v1`, because the repaired dynamic stack is now directionally alive but still suffers from too many red months.
+
+Key findings:
+- A real visibility gap remained after the live IVB1 wiring:
+  - [bot/diagnostics.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/diagnostics.py) still did **not** emit any `ivb1_*` counters in the compact runtime snapshot, even though the live bot was incrementing:
+    - `ivb1_sched`
+    - `ivb1_try`
+    - `ivb1_entry`
+    - `ivb1_skip_*`
+- [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) also lacked an explicit `impulse-universe` line in status/universe notifications, so Telegram could still make the stack look narrower than it really was.
+- After the dynamic routing repair, the stitched annual result for the intended stack is materially better than the stale-stack benchmark:
+  - [dynamic_core3_impulse_candidate_annual_v2 summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_161044_dynamic_core3_impulse_candidate_annual_v2/summary.json)
+  - `+13.17%`
+  - PF `1.2182`
+  - DD `5.2386`
+  - but still `6` negative months
+- This means the immediate annual problem is no longer “system dead” but “red-month control still too weak.”
+
+Changes made:
+- Added IVB1 counters to the compact runtime snapshot in [bot/diagnostics.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/diagnostics.py):
+  - `ivb1_sched`
+  - `ivb1_try`
+  - `ivb1_entry`
+  - `ivb1_skip_max_open`
+  - `ivb1_skip_portfolio`
+  - `ivb1_skip_symbol_lock`
+- Extended [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) so:
+  - strategy runtime stats include `ivb1=...`
+  - `status_full` shows the `impulse` router profile
+  - `status_full` shows `impulse-universe`
+  - universe refresh notifications now emit `🧩 impulse-universe: ...`
+- Added new focused frontier spec [range_scalp_v1_annual_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/range_scalp_v1_annual_repair_v1.json):
+  - based on the already strong recent-180 package
+  - now explicitly optimized for fewer negative months / shorter negative streaks
+  - includes stricter `ARS1` annual repair grid:
+    - `MAX_POSITIONS`
+    - symbol basket
+    - `ARS1_TIME_STOP_BARS_5M`
+    - `ARS1_ALLOW_LONGS`
+    - `ARS1_RSI_LONG_MAX`
+    - `ARS1_RSI_SHORT_MIN`
+    - `ARS1_SL_ATR_MULT`
+- Updated [run_crypto_foundation_frontier.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_crypto_foundation_frontier.sh) so future batch launches include the new annual range repair too.
+
+Practical meaning:
+- The next bottleneck is clearer than before:
+  - not “connect another sleeve at random”
+  - but “reduce red months without lying about annual truth”
+- `range_scalp` is currently the best candidate for that repair pass because it already proved strong additivity on recent windows without needing a brand-new strategy family.

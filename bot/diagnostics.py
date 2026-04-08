@@ -86,6 +86,8 @@ def _runtime_diag_snapshot() -> str:
         "breakdown_skip_no_client", "breakdown_skip_open_trade",
         "breakdown_skip_max_open", "breakdown_skip_portfolio",
         "breakdown_skip_cooldown", "breakdown_skip_symbol_lock",
+        "ivb1_sched", "ivb1_try", "ivb1_entry",
+        "ivb1_skip_max_open", "ivb1_skip_portfolio", "ivb1_skip_symbol_lock",
         "ts132_try", "ts132_entry",
     ]
     parts = [f"{k}={int(RUNTIME_COUNTER.get(k, 0))}" for k in keys]

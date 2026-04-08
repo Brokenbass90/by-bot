@@ -469,3 +469,6 @@ New foundation rules:
   - `IVB1 off` is a stronger candidate than `IVB1 ema`
   - next portfolio compare should focus on `core2` vs `core2 + IVB1 off`
   - stitched `dynamic_system_annual_v1` should now be treated as a stale-stack benchmark, not the final annual answer for the repaired stack
+  - after the repaired stack truth (`+13.17%`, PF `1.2182`, DD `5.24`, but `6` red months), the next repair focus is annual consistency rather than raw activation
+  - `range_scalp_v1_annual_repair_v1` is now the active frontier for reducing red months / negative streaks without inventing a new sleeve family
+  - live observability must treat `impulse/IVB1` as a first-class sleeve in pulse/status output, otherwise the stack keeps looking artificially narrower than it is

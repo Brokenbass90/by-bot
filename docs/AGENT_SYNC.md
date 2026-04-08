@@ -456,3 +456,35 @@ nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/f
 
 - Do not keep quoting `dynamic_system_annual_v1 = +2.97%` as the final annual truth for the intended rebuilt stack.
 - It remains useful as an honest result for the **old routed stack**, but not for the newly repaired one.
+
+### New current focus:
+
+- The repaired stitched annual result is now directionally useful but still not promotion-grade:
+  - [dynamic_core3_impulse_candidate_annual_v2 summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_161044_dynamic_core3_impulse_candidate_annual_v2/summary.json)
+  - `+13.17%`
+  - PF `1.2182`
+  - DD `5.2386`
+  - `6` negative months
+- So the next bottleneck is **red-month control**, not “is the system alive at all?”
+
+### New observability truth:
+
+- [bot/diagnostics.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/diagnostics.py) now exposes impulse/IVB1 counters in the compact diag snapshot:
+  - `ivb1_sched`
+  - `ivb1_try`
+  - `ivb1_entry`
+  - `ivb1_skip_max_open`
+  - `ivb1_skip_portfolio`
+  - `ivb1_skip_symbol_lock`
+- [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) now surfaces:
+  - `ivb1` inside runtime strategy stats
+  - `impulse` router profile in `status_full`
+  - `impulse-universe` in status/universe notifications
+
+### New research state:
+
+- Launched [range_scalp_v1_annual_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/range_scalp_v1_annual_repair_v1.json)
+- This frontier is the current best additive annual repair candidate because:
+  - recent-180 range package was already strong
+  - annual weakness is mostly too many red months / too long negative streaks
+  - the new grid explicitly attacks those failure modes instead of only chasing higher net pnl
