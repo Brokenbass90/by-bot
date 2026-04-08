@@ -1,6 +1,6 @@
 # Agent Sync
 
-Last updated: 2026-04-08 10:50 UTC
+Last updated: 2026-04-08 11:05 UTC
 
 ## 2026-04-08 refresh note
 
@@ -19,6 +19,12 @@ Current live foundation truth now also includes:
 - compact operator truth pack exists and runs hourly on server:
   - `/root/by-bot/runtime/operator/operator_snapshot.json`
   - `/root/by-bot/runtime/operator/operator_snapshot.txt`
+- live operator snapshot now also includes:
+  - current `strategy_health` summary
+  - historical health timeline metadata
+- local/offline control-plane replay now also has historical health context:
+  - `runtime/control_plane/strategy_health_timeline.json`
+  - replay no longer has to reuse one current `configs/strategy_health.json` across the whole year
 
 When in doubt, prefer:
 - [docs/ROADMAP.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/ROADMAP.md)

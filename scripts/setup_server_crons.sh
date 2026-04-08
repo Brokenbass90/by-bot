@@ -14,9 +14,10 @@
 #   4. Control-plane watchdog — freshness check + self-heal
 #   5. Geometry state builder — deterministic chart context from cached OHLCV
 #   6. Operator snapshot builder — compact truth pack for AI/operator context
-#   7. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
-#   8. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
-#   9. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
+#   7. Strategy health timeline — weekly historical health context for replay/operator
+#   8. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
+#   9. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
+#  10. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -60,7 +61,9 @@ for req in \
     "$BOT_DIR/scripts/control_plane_watchdog.py" \
     "$BOT_DIR/scripts/build_geometry_state.py" \
     "$BOT_DIR/scripts/build_operator_snapshot.py" \
+    "$BOT_DIR/scripts/build_strategy_health_timeline.py" \
     "$BOT_DIR/scripts/dynamic_allowlist.py" \
+    "$BOT_DIR/bot/strategy_health_timeline.py" \
     "$BOT_DIR/scripts/run_equities_alpaca_intraday_dynamic_v1.sh" \
     "$BOT_DIR/configs/strategy_profile_registry.json" \
     "$BOT_DIR/configs/portfolio_allocator_policy.json" \
@@ -100,6 +103,7 @@ CURRENT=$(
         | grep -v "scripts/control_plane_watchdog.py --repair --quiet >> logs/control_plane_watchdog.log" \
         | grep -v "scripts/build_geometry_state.py --quiet >> logs/geometry_state.log" \
         | grep -v "scripts/build_operator_snapshot.py --quiet >> logs/operator_snapshot.log" \
+        | grep -v "scripts/build_strategy_health_timeline.py --quiet >> logs/strategy_health_timeline.log" \
         | grep -v "scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> /root/by-bot/logs/alpaca_intraday_dynamic_v1.log" \
         | grep -v "^# 1\\. Dynamic allowlist" \
         | grep -v "^# 2\\. DeepSeek weekly cron" \
@@ -130,13 +134,16 @@ NEW_CRONS=$(cat << CRONEOF
 # 6. Operator snapshot builder — compact truth pack for AI/operator context
 14 * * * * cd $BOT_DIR && $PYTHON scripts/build_operator_snapshot.py --quiet >> logs/operator_snapshot.log 2>&1 $CRON_TAG
 #
-# 7. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
+# 7. Strategy health timeline — historical health context for replay/operator
+5 23 * * 0 cd $BOT_DIR && $PYTHON scripts/build_strategy_health_timeline.py --quiet >> logs/strategy_health_timeline.log 2>&1 $CRON_TAG
+#
+# 8. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
 30 22 * * 0 cd $BOT_DIR && $PYTHON scripts/deepseek_weekly_cron.py --quiet >> logs/deepseek_weekly.log 2>&1 $CRON_TAG
 #
-# 8. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
+# 9. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
 0 23 * * 0 cd $BOT_DIR && $PYTHON scripts/equity_curve_autopilot.py >> logs/equity_autopilot.log 2>&1 $CRON_TAG
 #
-# 9. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
+# 10. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
 # Safe default: dry-run only. Promote to --live only after paper validation.
 */5 14-21 * * 1-5 /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> logs/alpaca_intraday_dynamic_v1.log 2>&1' $CRON_TAG
 #
@@ -181,11 +188,15 @@ echo "[6] Geometry state builder:"
 cd "$BOT_DIR" && $PYTHON scripts/build_geometry_state.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[7] Operator snapshot builder:"
+echo "[7] Strategy health timeline builder:"
+cd "$BOT_DIR" && $PYTHON scripts/build_strategy_health_timeline.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
+
+echo ""
+echo "[8] Operator snapshot builder:"
 cd "$BOT_DIR" && $PYTHON scripts/build_operator_snapshot.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[8] Intraday bridge (live paper once):"
+echo "[9] Intraday bridge (live paper once):"
 cd "$BOT_DIR" && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""

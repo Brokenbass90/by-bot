@@ -1,5 +1,46 @@
 # Bybit bot (v28) - worklog / reminders
 
+## 2026-04-08 - historical health timeline + richer operator truth
+
+### What was closed
+
+- Added [bot/strategy_health_timeline.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/strategy_health_timeline.py) so strategy health can be reconstructed across history instead of only read from one current file.
+- Added [scripts/build_strategy_health_timeline.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_strategy_health_timeline.py).
+- Built [runtime/control_plane/strategy_health_timeline.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/control_plane/strategy_health_timeline.json) locally from the trusted validated baseline run.
+- Upgraded [scripts/run_control_plane_replay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_control_plane_replay.py) to consume historical health snapshots by checkpoint date.
+- Upgraded [bot/operator_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/operator_snapshot.py) so operator truth now includes:
+  - current `strategy_health` overall state
+  - status counts
+  - health-timeline existence / age / snapshot count / date range
+- Updated deployment scripts so the same layer can be pushed to server and scheduled weekly.
+
+### Important truth
+
+- This removes a major distortion from control-plane replay.
+- Before this, constrained annual replay stayed degraded mainly because it reused the present-day `strategy_health.json` across the whole year.
+- After switching to historical health timeline:
+  - allocator moved from “degraded almost everywhere” to mostly `ok`
+  - this makes replay much closer to what the portfolio brain would actually have seen at each date
+- This is not a “green paint” change:
+  - annual replay still shows weak checkpoints
+  - but now those weaknesses are attached to their own historical health, not today’s file
+
+### What this means
+
+- The next foundation gap is now clearer:
+  1. geometry-aware router / advisory
+  2. correlation / exposure layer
+  3. then sleeve promotion / new strategies
+
+### Server follow-up
+
+- Uploaded the new timeline/operator files to server.
+- Refreshed [scripts/setup_server_crons.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_server_crons.sh) remotely.
+- Seeded the current historical timeline onto server because the live host does not keep the same trusted research run inventory as local.
+- Verified live server operator snapshot now includes:
+  - current health summary
+  - historical health timeline metadata
+
 ## 2026-04-08 - live heartbeat + external watchdog + geometry state
 
 ### What was closed

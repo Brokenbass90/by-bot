@@ -5,6 +5,59 @@
 
 ---
 
+## 2026-04-08 | Codex (session 29 - historical health timeline + operator health context)
+
+**Done:**
+
+- Added reusable historical health-timeline layer:
+  - [bot/strategy_health_timeline.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/strategy_health_timeline.py)
+  - [scripts/build_strategy_health_timeline.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_strategy_health_timeline.py)
+- Built a real local health timeline artifact:
+  - [strategy_health_timeline.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/control_plane/strategy_health_timeline.json)
+  - it currently contains `25` checkpoint snapshots from `2025-04-07` to `2026-03-25`
+- Upgraded [run_control_plane_replay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_control_plane_replay.py):
+  - can now load historical health timeline
+  - picks health by checkpoint date instead of replaying one current `strategy_health.json`
+  - writes `overall_health` and `health_source` into replay timeline output
+- Extended [operator_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/operator_snapshot.py):
+  - current `strategy_health` summary is now included
+  - operator snapshot now also reports timeline existence, age, count, and covered date range
+- Extended foundation deployment scripts:
+  - [setup_server_crons.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_server_crons.sh)
+  - [deploy_foundation.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deploy_foundation.sh)
+  - the server can now build health timeline weekly after autopilot
+
+**Key findings:**
+
+- This closed one of the most misleading parts of the old replay story.
+- Earlier constrained annual replay was degraded on all `25/25` checkpoints mainly because it kept using the current live `strategy_health.json` for the whole year.
+- After switching replay to historical health:
+  - [summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/control_plane_replay_20260408_105734_annual_cp_hist_timeline_20260408/summary.json)
+  - allocator states became:
+    - `ok = 21`
+    - `degraded = 4`
+  - average global risk increased to `0.861`
+  - health sources were `timeline = 25`
+- This is a truth improvement, not a beauty pass:
+  - the control-plane is no longer being unfairly judged by one stale present-day health file
+  - but the annual replay still shows plenty of `WATCH / PAUSE / KILL` checkpoints, so the system is not “fixed by one layer”
+
+**Next:**
+
+- Deployed the new health-timeline + operator-health layer to server:
+  - uploaded the new modules/scripts
+  - refreshed server crons
+  - verified live [operator_snapshot.txt](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/operator/operator_snapshot.txt)-style output on server now shows:
+    - heartbeat
+    - transport guard
+    - control-plane
+    - current health summary
+    - historical health timeline metadata
+- Then move to the next real foundation gap:
+  - geometry-aware router / advisory
+  - then correlation / exposure layer
+- Only after that, return to aggressive sleeve promotion work.
+
 ## 2026-04-08 | Codex (session 26 - server parity audit, WS guard, annual truth)
 
 **Done:**

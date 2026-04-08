@@ -35,6 +35,9 @@ Order of work:
   - live `/ai` snapshot now includes compact operator context
   - weekly AI cron can consume the same compact operator context
   - server now writes a compact `runtime/operator/operator_snapshot.*` truth pack hourly
+- Historical strategy health is no longer just one frozen current file:
+  - local replay can now consume a real `strategy_health_timeline.json`
+  - operator truth pack now includes current health summary plus timeline metadata
 - Crypto live still does not have a fully backtested portfolio-level regime router / allocator loop.
 - Websocket transport remains a real live risk:
   - recent `12h` diagnostic windows still show degraded reconnect / handshake quality
@@ -165,7 +168,7 @@ Immediate tasks:
    - frozen-router profile replay
    - allocator decision timeline
 10. After the first replay:
-   - add historical health timeline support
+   - keep historical health timeline support in the loop
    - replace frozen-router replay with historical symbol selection
    - compare control-plane timelines against portfolio annual windows
 11. Feed deterministic geometry state into advisory / routing decisions:

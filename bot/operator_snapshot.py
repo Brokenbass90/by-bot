@@ -184,6 +184,39 @@ def _geometry_block(root: Path, *, max_highlights: int = 6) -> Dict[str, Any]:
     }
 
 
+def _health_block(root: Path) -> Dict[str, Any]:
+    path = root / "configs" / "strategy_health.json"
+    timeline_path = root / "runtime" / "control_plane" / "strategy_health_timeline.json"
+    payload = _load_json(path, {})
+    timeline = _load_json(timeline_path, {})
+    strategies = dict(payload.get("strategies") or {})
+    status_counts: Dict[str, int] = {}
+    for info in strategies.values():
+        status = str((info or {}).get("status") or "OK").upper()
+        status_counts[status] = int(status_counts.get(status, 0)) + 1
+    snapshots = list(timeline.get("snapshots") or [])
+    return {
+        "path": _path_text(path),
+        "exists": bool(path.exists()),
+        "age_sec": _file_age_sec(path),
+        "timestamp": str(payload.get("timestamp") or ""),
+        "overall_health": str(payload.get("overall_health") or ""),
+        "run_dir": str(payload.get("run_dir") or ""),
+        "strategy_count": len(strategies),
+        "status_counts": status_counts,
+        "timeline": {
+            "path": _path_text(timeline_path),
+            "exists": bool(timeline_path.exists()),
+            "age_sec": _file_age_sec(timeline_path),
+            "snapshot_count": len(snapshots),
+            "run_dir": str(timeline.get("run_dir") or ""),
+            "step_days": _safe_int(timeline.get("step_days"), 0),
+            "first_checkpoint_date_utc": str((snapshots[0] or {}).get("checkpoint_date_utc") if snapshots else ""),
+            "last_checkpoint_date_utc": str((snapshots[-1] or {}).get("checkpoint_date_utc") if snapshots else ""),
+        },
+    }
+
+
 def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
     base = Path(root or ROOT)
     return {
@@ -191,6 +224,7 @@ def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
         "heartbeat": _heartbeat_block(base),
         "ws_transport_guard": _ws_guard_block(base),
         "control_plane": _control_plane_block(base),
+        "health": _health_block(base),
         "geometry": _geometry_block(base),
     }
 
@@ -199,11 +233,13 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     hb = dict(snapshot.get("heartbeat") or {})
     ws = dict(snapshot.get("ws_transport_guard") or {})
     cp = dict(snapshot.get("control_plane") or {})
+    health = dict(snapshot.get("health") or {})
     geo = dict(snapshot.get("geometry") or {})
     regime = dict(cp.get("regime") or {})
     router = dict(cp.get("router") or {})
     allocator = dict(cp.get("allocator") or {})
     watchdog = dict(cp.get("watchdog") or {})
+    health_timeline = dict(health.get("timeline") or {})
 
     lines = [
         "operator snapshot",
@@ -223,6 +259,12 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         f"router_profiles={router.get('profile_count')} router_symbols_total={router.get('symbols_total')} router_age_sec={router.get('age_sec')}",
         f"allocator_status={allocator.get('status')} global_risk_mult={allocator.get('global_risk_mult')} hard_block={int(bool(allocator.get('hard_block_new_entries')))}",
         f"degraded_sleeves={','.join(allocator.get('degraded_sleeves') or []) or '-'}",
+        "",
+        "[health]",
+        f"exists={int(bool(health.get('exists')))} age_sec={health.get('age_sec')} overall_health={health.get('overall_health')} strategy_count={health.get('strategy_count')}",
+        f"status_counts={json.dumps(health.get('status_counts') or {}, ensure_ascii=True)}",
+        f"timeline_exists={int(bool(health_timeline.get('exists')))} timeline_age_sec={health_timeline.get('age_sec')} snapshot_count={health_timeline.get('snapshot_count')}",
+        f"timeline_range={health_timeline.get('first_checkpoint_date_utc') or '-'}..{health_timeline.get('last_checkpoint_date_utc') or '-'} step_days={health_timeline.get('step_days')}",
         "",
         "[geometry]",
         f"exists={int(bool(geo.get('exists')))} age_sec={geo.get('age_sec')} symbols_analyzed={geo.get('symbols_analyzed')} snapshots_built={geo.get('snapshots_built')}",

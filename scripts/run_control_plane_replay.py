@@ -49,6 +49,10 @@ from scripts.build_regime_state import (  # noqa: E402
     _classify_regime,
     _fetch_4h,
 )
+from bot.strategy_health_timeline import (  # noqa: E402
+    load_strategy_health_timeline,
+    select_health_snapshot,
+)
 from indicators import atr_pct_from_ohlc  # noqa: E402
 
 
@@ -56,6 +60,7 @@ DEFAULT_BASE_OVERLAY = ROOT / "configs" / "dynamic_allowlist_latest.env"
 DEFAULT_REGISTRY = ROOT / "configs" / "strategy_profile_registry.json"
 DEFAULT_POLICY = ROOT / "configs" / "portfolio_allocator_policy.json"
 DEFAULT_HEALTH = ROOT / "configs" / "strategy_health.json"
+DEFAULT_HEALTH_TIMELINE = ROOT / "runtime" / "control_plane" / "strategy_health_timeline.json"
 OUT_ROOT = ROOT / "backtest_runs"
 DATA_CACHE_DIR = ROOT / "data_cache"
 
@@ -71,6 +76,8 @@ class ReplayPoint:
     confidence: float
     global_risk_mult: float
     allocator_status: str
+    overall_health: str
+    health_source: str
     hard_block_new_entries: bool
     sleeves_enabled: int
     sleeves_active: str
@@ -579,6 +586,8 @@ def _summarize(points: List[ReplayPoint], out_dir: Path, meta: Dict[str, Any]) -
     regime_counts = Counter(p.applied_regime for p in points)
     raw_counts = Counter(p.raw_regime for p in points)
     allocator_counts = Counter(p.allocator_status for p in points)
+    health_counts = Counter(p.overall_health for p in points)
+    health_source_counts = Counter(p.health_source for p in points)
     sleeve_enable_counts = Counter()
     for p in points:
         if p.breakout_enabled:
@@ -602,6 +611,8 @@ def _summarize(points: List[ReplayPoint], out_dir: Path, meta: Dict[str, Any]) -
         "regime_counts": dict(regime_counts),
         "raw_regime_counts": dict(raw_counts),
         "allocator_status_counts": dict(allocator_counts),
+        "overall_health_counts": dict(health_counts),
+        "health_source_counts": dict(health_source_counts),
         "sleeve_enable_counts": dict(sleeve_enable_counts),
         "avg_global_risk_mult": round(avg_global_risk, 4),
         "regime_change_count": changed_count,
@@ -630,6 +641,8 @@ def _summarize(points: List[ReplayPoint], out_dir: Path, meta: Dict[str, Any]) -
         f"hard_block_count={hard_block_count}",
         "regime_counts=" + json.dumps(summary["regime_counts"], ensure_ascii=True),
         "allocator_status_counts=" + json.dumps(summary["allocator_status_counts"], ensure_ascii=True),
+        "overall_health_counts=" + json.dumps(summary["overall_health_counts"], ensure_ascii=True),
+        "health_source_counts=" + json.dumps(summary["health_source_counts"], ensure_ascii=True),
         "sleeve_enable_counts=" + json.dumps(summary["sleeve_enable_counts"], ensure_ascii=True),
         f"router_mode={summary['router_mode']}",
         "limitations=" + "; ".join(summary["limitations"]),
@@ -652,6 +665,7 @@ def main() -> int:
     ap.add_argument("--registry-path", default=str(DEFAULT_REGISTRY))
     ap.add_argument("--policy-path", default=str(DEFAULT_POLICY))
     ap.add_argument("--health-path", default=str(DEFAULT_HEALTH))
+    ap.add_argument("--health-timeline-path", default=str(DEFAULT_HEALTH_TIMELINE))
     ap.add_argument("--tag", default="control_plane_replay")
     ap.add_argument("--cache-only", action="store_true", help="Use cached data only for historical BTC fetch.")
     ap.add_argument(
@@ -676,6 +690,7 @@ def main() -> int:
     registry_path = Path(args.registry_path).expanduser()
     policy_path = Path(args.policy_path).expanduser()
     health_path = Path(args.health_path).expanduser()
+    health_timeline_path = Path(args.health_timeline_path).expanduser()
     if not base_overlay_path.is_absolute():
         base_overlay_path = ROOT / base_overlay_path
     if not registry_path.is_absolute():
@@ -684,13 +699,17 @@ def main() -> int:
         policy_path = ROOT / policy_path
     if not health_path.is_absolute():
         health_path = ROOT / health_path
+    if not health_timeline_path.is_absolute():
+        health_timeline_path = ROOT / health_timeline_path
 
     base_overlay = _parse_env(base_overlay_path)
     registry = _load_json(registry_path, {})
     policy = _load_json(policy_path, {})
     health = _load_json(health_path, {})
+    health_timeline = load_strategy_health_timeline(health_timeline_path)
     if args.neutral_health:
         health = {"overall_health": "OK", "strategies": {}}
+        health_timeline = {}
 
     run_ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     tag = str(args.tag).strip() or "control_plane_replay"
@@ -730,10 +749,21 @@ def main() -> int:
             router_mode=args.router_mode,
             historical_scan=scan,
         )
+        checkpoint_health = health
+        health_source = "static_health"
+        if health_timeline:
+            checkpoint_health = select_health_snapshot(
+                health_timeline,
+                int(checkpoint_dt.timestamp()),
+                fallback_health=health,
+            )
+            health_source = str(checkpoint_health.get("health_source") or "timeline")
+        elif args.neutral_health:
+            health_source = "neutral_health"
         allocator = _compute_allocator_snapshot(
             regime=applied_regime,
             router_state=router_state,
-            health=health,
+            health=checkpoint_health,
             policy=policy,
         )
         sleeves = allocator.get("sleeves", {})
@@ -750,6 +780,8 @@ def main() -> int:
                 confidence=float(indicators.get("er", 0.0) or 0.0),
                 global_risk_mult=float(allocator.get("allocator_global_risk_mult", 0.0) or 0.0),
                 allocator_status=str(allocator.get("status") or "unknown"),
+                overall_health=str(allocator.get("overall_health") or "unknown"),
+                health_source=health_source,
                 hard_block_new_entries=bool(allocator.get("hard_block_new_entries")),
                 sleeves_enabled=len(active_names),
                 sleeves_active=",".join(active_names),
@@ -779,8 +811,10 @@ def main() -> int:
         "registry_path": str(registry_path),
         "policy_path": str(policy_path),
         "health_path": str(health_path),
+        "health_timeline_path": str(health_timeline_path),
         "cache_only": bool(args.cache_only),
         "neutral_health": bool(args.neutral_health),
+        "timeline_health_loaded": bool(health_timeline),
         "router_mode": str(args.router_mode),
         "max_scan_symbols": int(args.max_scan_symbols),
     }
@@ -798,6 +832,8 @@ def main() -> int:
                 "regime_changed",
                 "confidence_er",
                 "allocator_status",
+                "overall_health",
+                "health_source",
                 "global_risk_mult",
                 "hard_block_new_entries",
                 "sleeves_enabled",
@@ -825,6 +861,8 @@ def main() -> int:
                     int(p.regime_changed),
                     f"{p.confidence:.4f}",
                     p.allocator_status,
+                    p.overall_health,
+                    p.health_source,
                     f"{p.global_risk_mult:.4f}",
                     int(p.hard_block_new_entries),
                     p.sleeves_enabled,

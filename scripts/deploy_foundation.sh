@@ -46,6 +46,7 @@ FILES=(
   "bot/chart_geometry.py"
   "bot/geometry_cache.py"
   "bot/operator_snapshot.py"
+  "bot/strategy_health_timeline.py"
   "scripts/setup_systemd_bot.sh"
   "scripts/bot_health_watchdog.sh"
   "scripts/setup_watchdog_cron.sh"
@@ -54,6 +55,7 @@ FILES=(
   "scripts/control_plane_watchdog.py"
   "scripts/build_geometry_state.py"
   "scripts/build_operator_snapshot.py"
+  "scripts/build_strategy_health_timeline.py"
   "scripts/setup_server_crons.sh"
   "scripts/deploy_foundation.sh"
 )
