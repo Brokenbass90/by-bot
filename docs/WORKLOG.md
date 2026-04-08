@@ -1,5 +1,56 @@
 # Bybit bot (v28) - worklog / reminders
 
+## 2026-04-08 - live heartbeat + external watchdog + geometry state
+
+### What was closed
+
+- Promoted heartbeat from local code into live server behaviour:
+  - uploaded the heartbeat-capable [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py)
+  - restarted `bybot.service`
+  - confirmed `/root/by-bot/runtime/bot_heartbeat.json` updates every pulse cycle
+- Installed external observability around the existing live systemd unit:
+  - [scripts/bot_health_watchdog.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/bot_health_watchdog.sh)
+  - [scripts/setup_watchdog_cron.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_watchdog_cron.sh)
+  - [scripts/check_control_plane_health.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/check_control_plane_health.sh)
+- Adapted those scripts to the real service name `bybot`, so they no longer assume a legacy `bybit-bot` unit.
+- Verified live checks manually:
+  - heartbeat watchdog returns `OK`
+  - control-plane health checker returns all files fresh
+  - control-plane repair watchdog state still reports `ok`
+- Added a reusable deterministic geometry cache layer:
+  - [bot/geometry_cache.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/geometry_cache.py)
+- Added server-side geometry state builder:
+  - [scripts/build_geometry_state.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_geometry_state.py)
+  - writes [runtime/geometry/geometry_state.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/geometry/geometry_state.json)
+  - history goes to [runtime/geometry/geometry_history.jsonl](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/geometry/geometry_history.jsonl)
+- Updated [scripts/setup_server_crons.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_server_crons.sh) so live server now builds geometry state hourly.
+
+### Important truth
+
+- We now have a real answer to “can the bot do graphical analysis without APIs?”:
+  - yes, for deterministic chart structure it can
+  - no, this is not pixel-VLM magic
+  - the current layer works from cached OHLCV and is therefore safer for live foundations
+- This does not replace strategy logic.
+- It gives us a reusable context layer that future sleeves can query:
+  - trend / range / transition hints
+  - compression state
+  - nearest support / resistance
+  - channel slope and channel position
+
+### What this means
+
+- The server is less blind than before.
+- We can now debug:
+  - “is the bot alive?”
+  - “is the control plane stale?”
+  - “what structural chart context did the bot have?”
+- The next foundation gap is no longer observability.
+- The next real foundation gap is decision quality:
+  1. historical strategy health timeline
+  2. geometry-aware router/advisory
+  3. correlation/exposure layer
+
 ## 2026-04-08 - server parity + websocket guard
 
 ### What was closed

@@ -18,10 +18,17 @@ set -euo pipefail
 SERVER_IP="${SERVER_IP:-64.226.73.119}"
 SERVER_USER="${SERVER_USER:-root}"
 BOT_DIR="${BOT_DIR:-/root/by-bot}"
+SERVICE_NAME="${SERVICE_NAME:-bybot}"
+SSH_KEY="${SSH_KEY:-}"
 LOCAL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-SSH_CMD="ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
-SCP_CMD="scp -o StrictHostKeyChecking=no"
+if [[ -n "$SSH_KEY" ]]; then
+  SSH_CMD="ssh -i $SSH_KEY -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
+  SCP_CMD="scp -i $SSH_KEY -o StrictHostKeyChecking=no"
+else
+  SSH_CMD="ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
+  SCP_CMD="scp -o StrictHostKeyChecking=no"
+fi
 
 echo "══════════════════════════════════════════"
 echo "  FOUNDATION DEPLOY"
@@ -40,6 +47,9 @@ FILES=(
   "scripts/bot_health_watchdog.sh"
   "scripts/setup_watchdog_cron.sh"
   "scripts/check_control_plane_health.sh"
+  "scripts/apply_live_control_plane_env_patch.py"
+  "scripts/control_plane_watchdog.py"
+  "scripts/setup_server_crons.sh"
   "scripts/deploy_foundation.sh"
 )
 
@@ -54,15 +64,16 @@ echo "   ✅ files uploaded"
 
 # ── 2. Install systemd service ────────────────────────────────────
 echo ""
-echo "→ [2/5] Installing systemd service..."
-$SSH_CMD "BOT_DIR=$BOT_DIR bash $BOT_DIR/scripts/setup_systemd_bot.sh"
+echo "→ [2/5] Installing/updating systemd service..."
+$SSH_CMD "BOT_DIR=$BOT_DIR SERVICE_NAME=$SERVICE_NAME bash $BOT_DIR/scripts/setup_systemd_bot.sh"
 echo "   ✅ systemd service installed"
 
-# ── 3. Install watchdog cron ──────────────────────────────────────
+# ── 3. Install/update control-plane and watchdog crons ────────────
 echo ""
-echo "→ [3/5] Installing watchdog cron (every 2 min)..."
+echo "→ [3/5] Installing control-plane crons + watchdog cron..."
+$SSH_CMD "cd $BOT_DIR && .venv/bin/python scripts/apply_live_control_plane_env_patch.py && bash scripts/setup_server_crons.sh >/tmp/foundation_crons.log 2>&1 && tail -n 20 /tmp/foundation_crons.log"
 $SSH_CMD "BOT_DIR=$BOT_DIR bash $BOT_DIR/scripts/setup_watchdog_cron.sh"
-echo "   ✅ watchdog cron installed"
+echo "   ✅ control-plane + watchdog crons installed"
 
 # ── 4. Install control-plane health check cron ───────────────────
 echo ""
@@ -85,16 +96,16 @@ echo "   ✅ control-plane health cron installed"
 echo ""
 echo "→ [5/5] Verifying bot status..."
 sleep 3
-$SSH_CMD "systemctl status bybit-bot --no-pager -l | head -15"
+$SSH_CMD "systemctl status $SERVICE_NAME --no-pager -l | head -15"
 
 echo ""
 echo "══════════════════════════════════════════"
 echo "  FOUNDATION DEPLOY COMPLETE"
 echo ""
 echo "  Bot is now managed by systemd:"
-echo "    systemctl status bybit-bot"
-echo "    systemctl restart bybit-bot"
-echo "    journalctl -u bybit-bot -f"
+echo "    systemctl status $SERVICE_NAME"
+echo "    systemctl restart $SERVICE_NAME"
+echo "    journalctl -u $SERVICE_NAME -f"
 echo ""
 echo "  Watchdog runs every 2 minutes:"
 echo "    tail -f $BOT_DIR/runtime/watchdog.log"

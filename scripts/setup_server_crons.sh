@@ -12,9 +12,10 @@
 #   2. Symbol router — 6h per-strategy basket rebuild
 #   3. Portfolio allocator — hourly risk / sleeve overlay rebuild
 #   4. Control-plane watchdog — freshness check + self-heal
-#   5. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
-#   6. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
-#   7. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
+#   5. Geometry state builder — deterministic chart context from cached OHLCV
+#   6. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
+#   7. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
+#   8. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -56,6 +57,7 @@ for req in \
     "$BOT_DIR/scripts/build_symbol_router.py" \
     "$BOT_DIR/scripts/build_portfolio_allocator.py" \
     "$BOT_DIR/scripts/control_plane_watchdog.py" \
+    "$BOT_DIR/scripts/build_geometry_state.py" \
     "$BOT_DIR/scripts/dynamic_allowlist.py" \
     "$BOT_DIR/scripts/run_equities_alpaca_intraday_dynamic_v1.sh" \
     "$BOT_DIR/configs/strategy_profile_registry.json" \
@@ -94,6 +96,7 @@ CURRENT=$(
         | grep -v "scripts/deepseek_weekly_cron.py >> logs/deepseek_weekly.log" \
         | grep -v "scripts/equity_curve_autopilot.py >> logs/equity_curve.log" \
         | grep -v "scripts/control_plane_watchdog.py --repair --quiet >> logs/control_plane_watchdog.log" \
+        | grep -v "scripts/build_geometry_state.py --quiet >> logs/geometry_state.log" \
         | grep -v "scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> /root/by-bot/logs/alpaca_intraday_dynamic_v1.log" \
         | grep -v "^# 1\\. Dynamic allowlist" \
         | grep -v "^# 2\\. DeepSeek weekly cron" \
@@ -118,13 +121,16 @@ NEW_CRONS=$(cat << CRONEOF
 # 4. Control-plane watchdog — catch stale state and self-heal in dependency order
 */15 * * * * cd $BOT_DIR && $PYTHON scripts/control_plane_watchdog.py --repair --quiet >> logs/control_plane_watchdog.log 2>&1 $CRON_TAG
 #
-# 5. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
+# 5. Geometry state builder — deterministic levels / channels / compression for active symbols
+12 * * * * cd $BOT_DIR && $PYTHON scripts/build_geometry_state.py --quiet >> logs/geometry_state.log 2>&1 $CRON_TAG
+#
+# 6. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
 30 22 * * 0 cd $BOT_DIR && $PYTHON scripts/deepseek_weekly_cron.py --quiet >> logs/deepseek_weekly.log 2>&1 $CRON_TAG
 #
-# 6. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
+# 7. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
 0 23 * * 0 cd $BOT_DIR && $PYTHON scripts/equity_curve_autopilot.py >> logs/equity_autopilot.log 2>&1 $CRON_TAG
 #
-# 7. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
+# 8. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
 # Safe default: dry-run only. Promote to --live only after paper validation.
 */5 14-21 * * 1-5 /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> logs/alpaca_intraday_dynamic_v1.log 2>&1' $CRON_TAG
 #
@@ -165,7 +171,11 @@ echo "[5] Control-plane watchdog (dry-run):"
 cd "$BOT_DIR" && $PYTHON scripts/control_plane_watchdog.py 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[6] Intraday bridge (live paper once):"
+echo "[6] Geometry state builder:"
+cd "$BOT_DIR" && $PYTHON scripts/build_geometry_state.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
+
+echo ""
+echo "[7] Intraday bridge (live paper once):"
 cd "$BOT_DIR" && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""

@@ -17,9 +17,9 @@ TG_TOKEN="${TG_TOKEN:-}"
 TG_CHAT="${TG_CHAT_ID:-${TG_CHAT:-}}"
 
 # Max allowed ages (seconds)
-REGIME_MAX_AGE="${CP_REGIME_MAX_AGE_SEC:-7200}"       # 2 hours — runs hourly
-ROUTER_MAX_AGE="${CP_ROUTER_MAX_AGE_SEC:-90000}"       # 25 hours — runs daily
-ALLOCATOR_MAX_AGE="${CP_ALLOCATOR_MAX_AGE_SEC:-90000}" # 25 hours — runs daily
+REGIME_MAX_AGE="${CP_REGIME_MAX_AGE_SEC:-7200}"         # 2 hours — runs hourly
+ROUTER_MAX_AGE="${CP_ROUTER_MAX_AGE_SEC:-28800}"        # 8 hours — router now every 6h
+ALLOCATOR_MAX_AGE="${CP_ALLOCATOR_MAX_AGE_SEC:-10800}"  # 3 hours — runs hourly
 
 send_tg() {
   local msg="$1"
@@ -75,6 +75,16 @@ check_file \
   "$BOT_DIR/configs/dynamic_allowlist_latest.env" \
   "$ROUTER_MAX_AGE"
 
+check_file \
+  "Regime overlay env" \
+  "$BOT_DIR/configs/regime_orchestrator_latest.env" \
+  "$REGIME_MAX_AGE"
+
+check_file \
+  "Allocator overlay env" \
+  "$BOT_DIR/configs/portfolio_allocator_latest.env" \
+  "$ALLOCATOR_MAX_AGE"
+
 # ── Report results ────────────────────────────────────────────────
 if (( ${#PROBLEMS[@]} > 0 )); then
   echo "[cp_health $(date -u '+%H:%M:%S')] PROBLEMS FOUND:"
@@ -93,7 +103,7 @@ if (( ${#PROBLEMS[@]} > 0 )); then
 $(printf '%s\n' "${PROBLEMS[@]}")
 
 Control-plane may not be running on schedule.
-Check cron: crontab -l | grep build_regime"
+Check cron: crontab -l | egrep 'build_regime_state|build_symbol_router|build_portfolio_allocator|control_plane_watchdog'"
     send_tg "$MSG"
     echo "$NOW" > "$COOLDOWN_FILE"
   fi

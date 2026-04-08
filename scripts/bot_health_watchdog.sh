@@ -12,6 +12,7 @@
 set -euo pipefail
 
 BOT_DIR="${BOT_DIR:-/root/by-bot}"
+SERVICE_NAME="${SERVICE_NAME:-bybot}"
 HEARTBEAT_FILE="$BOT_DIR/runtime/bot_heartbeat.json"
 MAX_AGE_SEC="${WATCHDOG_MAX_AGE_SEC:-90}"        # alert if heartbeat > 90s old
 ALERT_COOLDOWN_SEC="${WATCHDOG_COOLDOWN_SEC:-600}"  # don't spam — max 1 alert per 10 min
@@ -48,12 +49,12 @@ cooldown_ok=$(( NOW - last_alert >= ALERT_COOLDOWN_SEC ))
 if [[ ! -f "$HEARTBEAT_FILE" ]]; then
   echo "[watchdog $(date -u '+%H:%M:%S')] MISSING heartbeat file"
   if (( cooldown_ok )); then
-    send_tg "🚨 <b>BOT DEAD</b>: heartbeat file missing entirely. Bot likely never started or crashed badly."
+    send_tg "🚨 <b>BOT DEAD</b>: heartbeat file missing entirely. Service=<b>${SERVICE_NAME}</b>. Bot likely never started or crashed badly."
     python3 -c "import json,time; json.dump({'last_alert_ts': int(time.time()), 'reason': 'missing_file'}, open('$ALERT_STATE_FILE','w'))" 2>/dev/null || true
   fi
   if [[ "$AUTO_RESTART" == "1" ]]; then
     echo "[watchdog] Attempting systemd restart..."
-    systemctl restart bybit-bot && echo "[watchdog] Restart issued."
+    systemctl restart "$SERVICE_NAME" && echo "[watchdog] Restart issued."
   fi
   exit 0
 fi
@@ -74,13 +75,13 @@ print(f\"open_trades={d.get('open_trades','?')} ws_guard={d.get('ws_guard_active
 " 2>/dev/null || echo "parse error")
     send_tg "🚨 <b>BOT UNRESPONSIVE</b>: heartbeat is ${AGE}s old (limit=${MAX_AGE_SEC}s).
 Last known state: ${INFO}
-$(if [[ '$AUTO_RESTART' == '1' ]]; then echo 'Auto-restart triggered.'; else echo 'Manual restart needed: systemctl restart bybit-bot'; fi)"
+$(if [[ '$AUTO_RESTART' == '1' ]]; then echo 'Auto-restart triggered.'; else echo "Manual restart needed: systemctl restart ${SERVICE_NAME}"; fi)"
     python3 -c "import json,time; json.dump({'last_alert_ts': int(time.time()), 'reason': 'stale', 'age_s': $AGE}, open('$ALERT_STATE_FILE','w'))" 2>/dev/null || true
   fi
 
   if [[ "$AUTO_RESTART" == "1" ]]; then
     echo "[watchdog] Attempting systemd restart..."
-    systemctl restart bybit-bot && echo "[watchdog] Restart issued."
+    systemctl restart "$SERVICE_NAME" && echo "[watchdog] Restart issued."
   fi
 else
   echo "[watchdog $(date -u '+%H:%M:%S')] OK — heartbeat age=${AGE}s"

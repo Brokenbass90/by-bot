@@ -22,6 +22,15 @@ Order of work:
   - regime overlay
   - symbol router output
   - portfolio allocator overlay
+- Crypto live now also has external observability / self-heal layers:
+  - bot heartbeat file
+  - heartbeat watchdog cron
+  - control-plane freshness alert cron
+  - control-plane repair watchdog cron
+- Deterministic chart-geometry is now active without any image API:
+  - reusable cache loader
+  - geometry state builder
+  - hourly server-side geometry snapshots for active symbols
 - Crypto live still does not have a fully backtested portfolio-level regime router / allocator loop.
 - Websocket transport remains a real live risk:
   - recent `12h` diagnostic windows still show degraded reconnect / handshake quality
@@ -155,6 +164,11 @@ Immediate tasks:
    - add historical health timeline support
    - replace frozen-router replay with historical symbol selection
    - compare control-plane timelines against portfolio annual windows
+11. Feed deterministic geometry state into advisory / routing decisions:
+   - levels
+   - channels
+   - compression
+   - near-support / near-resistance context
 
 Exit criteria:
 - orchestrator runs cleanly on schedule

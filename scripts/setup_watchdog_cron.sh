@@ -5,8 +5,9 @@
 set -euo pipefail
 
 BOT_DIR="${BOT_DIR:-/root/by-bot}"
+SERVICE_NAME="${SERVICE_NAME:-bybot}"
 LOG_DIR="$BOT_DIR/runtime"
-CRON_COMMENT="bybit_bot_watchdog"
+CRON_COMMENT="${SERVICE_NAME}_watchdog"
 SCRIPT="$BOT_DIR/scripts/bot_health_watchdog.sh"
 
 mkdir -p "$LOG_DIR"
@@ -17,7 +18,7 @@ CRON_LINE="*/2 * * * * /bin/bash -lc 'BOT_DIR=$BOT_DIR $SCRIPT >> $LOG_DIR/watch
 # Remove old entry and add new
 (crontab -l 2>/dev/null | grep -v "$CRON_COMMENT" || true; echo "$CRON_LINE") | crontab -
 
-echo "✅ Watchdog cron installed (runs every 2 minutes):"
+echo "✅ Watchdog cron installed for $SERVICE_NAME (runs every 2 minutes):"
 crontab -l | grep "$CRON_COMMENT"
 echo ""
 echo "To enable auto-restart (use with caution — requires systemd):"

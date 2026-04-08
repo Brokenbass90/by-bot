@@ -16,8 +16,9 @@ set -euo pipefail
 
 BOT_DIR="${BOT_DIR:-/root/by-bot}"
 BOT_USER="${BOT_USER:-root}"
+SERVICE_NAME="${SERVICE_NAME:-bybot}"
 VENV_PYTHON="$BOT_DIR/.venv/bin/python3"
-SERVICE_FILE="/etc/systemd/system/bybit-bot.service"
+SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
 
 echo "══════════════════════════════════════════"
 echo "  Installing bybit-bot systemd service"
@@ -52,9 +53,6 @@ WorkingDirectory=$BOT_DIR
 ExecStart=$VENV_PYTHON -u smart_pump_reversal_bot.py
 Restart=on-failure
 RestartSec=10
-# Exponential backoff: wait longer after repeated crashes
-RestartSteps=5
-RestartMaxDelaySec=120
 
 # Log settings
 StandardOutput=append:$BOT_DIR/runtime/live.out
@@ -81,8 +79,13 @@ echo "✅ Service file written to $SERVICE_FILE"
 
 # Reload systemd and enable
 systemctl daemon-reload
-systemctl enable bybit-bot
+systemctl enable "$SERVICE_NAME"
 echo "✅ Service enabled (will start on boot)"
+
+# If an old alternative service exists, stop it to avoid duplicate bots.
+if [[ "$SERVICE_NAME" != "bybit-bot" ]] && systemctl list-unit-files | grep -q '^bybit-bot.service'; then
+  systemctl disable --now bybit-bot >/dev/null 2>&1 || true
+fi
 
 # Check if already running via screen and offer migration
 if screen -list 2>/dev/null | grep -q "\.bot"; then
@@ -94,22 +97,22 @@ if screen -list 2>/dev/null | grep -q "\.bot"; then
 fi
 
 # Start the service
-systemctl start bybit-bot
+systemctl restart "$SERVICE_NAME" >/dev/null 2>&1 || systemctl start "$SERVICE_NAME"
 sleep 5
 
 # Verify
-if systemctl is-active --quiet bybit-bot; then
-  echo "✅ bybit-bot is running via systemd"
-  systemctl status bybit-bot --no-pager -l | head -20
+if systemctl is-active --quiet "$SERVICE_NAME"; then
+  echo "✅ $SERVICE_NAME is running via systemd"
+  systemctl status "$SERVICE_NAME" --no-pager -l | head -20
 else
-  echo "❌ bybit-bot failed to start — check: journalctl -u bybit-bot -n 50"
+  echo "❌ $SERVICE_NAME failed to start — check: journalctl -u $SERVICE_NAME -n 50"
   exit 1
 fi
 
 echo ""
 echo "Done. Useful commands:"
-echo "  systemctl status bybit-bot       — status"
-echo "  systemctl restart bybit-bot      — restart"
-echo "  systemctl stop bybit-bot         — stop"
-echo "  journalctl -u bybit-bot -f       — follow logs"
-echo "  journalctl -u bybit-bot -n 100   — last 100 lines"
+echo "  systemctl status $SERVICE_NAME       — status"
+echo "  systemctl restart $SERVICE_NAME      — restart"
+echo "  systemctl stop $SERVICE_NAME         — stop"
+echo "  journalctl -u $SERVICE_NAME -f       — follow logs"
+echo "  journalctl -u $SERVICE_NAME -n 100   — last 100 lines"

@@ -91,6 +91,68 @@
   - regime-router backtest
   - only then more sleeves / promotions
 
+## 2026-04-08 | Codex (session 27 - live heartbeat, watchdog, geometry state)
+
+**Done:**
+
+- Adapted the new self-healing foundation scripts to the real live service name `bybot` instead of the older `bybit-bot` naming:
+  - [scripts/setup_systemd_bot.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_systemd_bot.sh)
+  - [scripts/bot_health_watchdog.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/bot_health_watchdog.sh)
+  - [scripts/check_control_plane_health.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/check_control_plane_health.sh)
+  - [scripts/setup_watchdog_cron.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_watchdog_cron.sh)
+  - [scripts/deploy_foundation.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deploy_foundation.sh)
+- Verified locally:
+  - shell syntax for all touched foundation scripts
+  - Python syntax for heartbeat / control-plane / geometry scripts
+- Deployed the safe subset to the server without replacing the existing working unit:
+  - new [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py)
+  - external heartbeat watchdog
+  - control-plane freshness check cron
+- Confirmed live heartbeat now exists and updates on server:
+  - `/root/by-bot/runtime/bot_heartbeat.json`
+  - includes `ts`, `uptime_s`, `open_trades`, `ws_guard_active`, `bybit_msgs`, `regime`
+- Confirmed watchdog stack on the server:
+  - `bot_health_watchdog.sh` runs and reports `OK`
+  - `check_control_plane_health.sh` runs and reports all files fresh
+  - `control_plane_watchdog.py` state remains `ok`
+- Promoted the first real no-API “vision under the hood” layer from local toy to live foundation:
+  - added [bot/geometry_cache.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/geometry_cache.py)
+  - refactored [scripts/run_geometry_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_geometry_snapshot.py) to reuse shared cache loading
+  - added [scripts/build_geometry_state.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_geometry_state.py)
+  - updated [scripts/setup_server_crons.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_server_crons.sh) so server now builds deterministic geometry state hourly
+- Verified live geometry state on server:
+  - `/root/by-bot/runtime/geometry/geometry_state.json`
+  - active symbol snapshots built successfully from current router output
+
+**Key findings:**
+
+- The operator / advisory model can still be stale even when the repo is better wired:
+  - it only sees the prompt + snapshot we pass into it
+  - it does not “see the whole IDE + server” the way we do
+  - this is why it remains helpful as an analyst but not as source-of-truth
+- Heartbeat + external watchdog closes a real observability gap:
+  - before, a hung bot could look “quiet” from Telegram
+  - now the server has a file-based liveness signal plus external alarm path
+- Deterministic geometry is already useful without any image API:
+  - levels
+  - channels
+  - compression
+  - near-support / near-resistance context
+- This geometry layer is the right base for future chart-based strategies because it is:
+  - cheap
+  - reproducible
+  - backtestable
+  - safe to run on server continuously
+
+**Next:**
+
+- Add historical strategy-health timeline support so replay no longer depends on one current `strategy_health.json`.
+- Start consuming geometry-state in advisory / regime-routing logic instead of leaving it as passive state only.
+- Keep promotion strict:
+  - annual
+  - walk-forward
+  - portfolio compare
+
 ## 2026-04-03 | Codex (session 24 - breakout chop ER guard check on trusted current90)
 
 **Done:**
