@@ -1,5 +1,43 @@
 # Bybit bot (v28) - worklog / reminders
 
+## 2026-04-08 - server parity + websocket guard
+
+### What was closed
+
+- Server control-plane drift was reduced:
+  - real server cron now runs regime, router, allocator, and Alpaca dynamic lane
+  - generated overlays/state now exist on server instead of only locally
+- Added a real WS transport guard to live bot:
+  - persistent runtime state
+  - multi-window critical streak detection
+  - new-entry block during sustained transport degradation
+  - optional controlled restart path kept opt-in only
+- Added better runtime visibility:
+  - `ws_guard` appears in status output
+  - startup log now exposes WS guard settings
+
+### Important truth
+
+- The transport problem was not "timeout too low".
+- The missing safety layer was:
+  - detect sustained degradation
+  - stop opening new positions
+  - recover only after calmer windows
+- The `core3` annual weakness is also real:
+  - weak months in early/mid 2025
+  - losses concentrated in `alt_inplay_breakdown_v1`
+  - old probes were less diversified than expected because `ARF1` did not trade
+
+### What this means
+
+- We should not promote sleeves from `180d` alone.
+- We need annual and walk-forward truth before promotion.
+- The next foundation steps are still:
+  1. transport stability
+  2. historical regime-router / allocator replay
+  3. geometry engine
+  4. only then more sleeves and more markets
+
 ## 2026-04-02 - Roadmap reset / control-plane first
 
 ### Why the roadmap was reset

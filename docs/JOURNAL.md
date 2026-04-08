@@ -5,6 +5,62 @@
 
 ---
 
+## 2026-04-08 | Codex (session 26 - server parity audit, WS guard, annual truth)
+
+**Done:**
+
+- Audited local repo vs live server and pushed the missing control-plane pieces into real server operation:
+  - regime overlay build
+  - symbol router build
+  - portfolio allocator build
+  - live cron wiring for those layers
+- Added transport self-healing guard in [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py):
+  - tracks sustained websocket degradation
+  - writes runtime state to `runtime/control_plane/ws_transport_guard_state.json`
+  - blocks new entries during sustained critical transport conditions
+  - supports controlled restart as an opt-in layer, not as default unsafe behaviour
+- Extended bot observability:
+  - runtime status now shows `ws_guard`
+  - control-plane startup print now includes WS guard settings
+- Continued chart-analysis work:
+  - `/chart_ai` is now in bot code
+  - chart analysis persistence is wired
+  - server activation is still blocked until an image-capable API key is supplied
+- Re-audited the old `core3 impulse` annual vs `180d` discrepancy from actual trade files.
+
+**Key findings:**
+
+- The old `core3` discrepancy was real, not a reporting glitch:
+  - `180d`: strong
+  - `360d`: weak
+- Root cause of the weak annual was mostly:
+  - bad `2025-04..2025-09` months
+  - `alt_inplay_breakdown_v1` carrying the losses
+  - much less real diversification than expected, because `ARF1` did not trade in those old probes
+- Websocket degradation is real enough to justify a live guard:
+  - recent `12h` and `1h` windows showed too many disconnects / handshakes
+  - simply increasing timeout is not the main fix
+  - the missing piece was a stateful safe-mode between "we noticed a problem" and "the bot still opens trades anyway"
+- Alpaca remains operationally alive, but not validated as a money sleeve yet:
+  - dynamic lane runs
+  - long-only protection can block entries
+  - annual validated package is still missing
+
+**Next:**
+
+- Deploy the new WS guard to server and verify that live runtime now exposes `ws_transport_guard_state.json`.
+- Harden transport itself:
+  - revisit shard/batch/stagger settings
+  - measure next live breakdown latencies with the newer timestamps
+- Move from partial control-plane to historical annual replay:
+  - regime router
+  - allocator
+  - full-year portfolio truth
+- After the transport layer is calmer, continue the foundation work:
+  - geometry engine
+  - regime-router backtest
+  - only then more sleeves / promotions
+
 ## 2026-04-03 | Codex (session 24 - breakout chop ER guard check on trusted current90)
 
 **Done:**

@@ -181,6 +181,41 @@ ALLOCATOR_HARD_BLOCK_NEW_ENTRIES = _env_bool("ALLOCATOR_HARD_BLOCK_NEW_ENTRIES",
 ALLOCATOR_SAFE_MODE = _env_bool("PORTFOLIO_ALLOCATOR_SAFE_MODE", False)
 ALLOCATOR_SAFE_MODE_REASON = str(os.getenv("ALLOCATOR_SAFE_MODE_REASON", "") or "").strip()
 
+WS_SELF_HEAL_ENABLE = _env_bool("WS_SELF_HEAL_ENABLE", True)
+WS_SELF_HEAL_BLOCK_NEW_ENTRIES = _env_bool("WS_SELF_HEAL_BLOCK_NEW_ENTRIES", True)
+WS_SELF_HEAL_TRIGGER_STATUSES = {
+    x.strip().upper()
+    for x in (os.getenv("WS_SELF_HEAL_TRIGGER_STATUSES", "CRITICAL,CRITICAL_NO_CONNECT") or "").split(",")
+    if x.strip()
+}
+WS_SELF_HEAL_RECOVERY_STATUSES = {
+    x.strip().upper()
+    for x in (os.getenv("WS_SELF_HEAL_RECOVERY_STATUSES", "OK,NO_ACTIVITY,NO_DATA,NO_CONNECT_TRANSIENT") or "").split(",")
+    if x.strip()
+}
+WS_SELF_HEAL_TRIGGER_STREAK = max(1, int(os.getenv("WS_SELF_HEAL_TRIGGER_STREAK", "2") or 2))
+WS_SELF_HEAL_RECOVERY_STREAK = max(1, int(os.getenv("WS_SELF_HEAL_RECOVERY_STREAK", "2") or 2))
+WS_SELF_HEAL_ALERT_COOLDOWN_SEC = max(60, int(os.getenv("WS_SELF_HEAL_ALERT_COOLDOWN_SEC", "900") or 900))
+WS_SELF_HEAL_RESTART_ENABLE = _env_bool("WS_SELF_HEAL_RESTART_ENABLE", False)
+WS_SELF_HEAL_RESTART_ON = {
+    x.strip().upper()
+    for x in (os.getenv("WS_SELF_HEAL_RESTART_ON", "CRITICAL_NO_CONNECT") or "").split(",")
+    if x.strip()
+}
+WS_SELF_HEAL_RESTART_STREAK = max(1, int(os.getenv("WS_SELF_HEAL_RESTART_STREAK", "3") or 3))
+WS_SELF_HEAL_RESTART_COOLDOWN_SEC = max(
+    300, int(os.getenv("WS_SELF_HEAL_RESTART_COOLDOWN_SEC", "1800") or 1800)
+)
+WS_SELF_HEAL_RESTART_REQUIRE_NO_OPEN_TRADES = _env_bool(
+    "WS_SELF_HEAL_RESTART_REQUIRE_NO_OPEN_TRADES", True
+)
+WS_SELF_HEAL_STATE_PATH = Path(
+    os.getenv(
+        "WS_SELF_HEAL_STATE_PATH",
+        str(Path(__file__).resolve().parent / "runtime" / "control_plane" / "ws_transport_guard_state.json"),
+    )
+).expanduser()
+
 # Минимальная доля "желательного" notional (по риск-сайзингу), которую нужно уметь разместить.
 # Если меньше — пропускаем сделку (иначе комиссии/проскальзывание убивают ожидание).
 MIN_NOTIONAL_FILL_FRAC = float(os.getenv("MIN_NOTIONAL_FILL_FRAC", "0.40"))
@@ -195,6 +230,144 @@ MIN_NOTIONAL_FILL_FRAC = float(os.getenv("MIN_NOTIONAL_FILL_FRAC", "0.40"))
 # (all imported at the top of this file)
 
 DEBUG_WINDOWS = True
+
+WS_TRANSPORT_GUARD = {
+    "active": False,
+    "reason": "",
+    "trigger_status": "",
+    "critical_streak": 0,
+    "recovery_streak": 0,
+    "last_status": "INIT",
+    "last_updated_at": "",
+    "activated_at": "",
+    "recovered_at": "",
+    "last_alert_ts": 0,
+    "last_restart_ts": 0,
+    "last_restart_action": "never",
+    "last_window": {
+        "connect": 0,
+        "disconnect": 0,
+        "handshake_timeout": 0,
+        "bybit_msgs": 0,
+    },
+}
+
+
+def _utc_now_iso() -> str:
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
+def _write_json_atomic(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+    tmp.replace(path)
+
+
+def _persist_ws_transport_guard_state() -> None:
+    try:
+        _write_json_atomic(WS_SELF_HEAL_STATE_PATH, dict(WS_TRANSPORT_GUARD))
+    except Exception as e:
+        log_error(f"ws guard state write fail: {e}")
+
+
+def _ws_transport_guard_active() -> bool:
+    return WS_SELF_HEAL_ENABLE and bool(WS_TRANSPORT_GUARD.get("active"))
+
+
+def _ws_transport_guard_reason() -> str:
+    return str(WS_TRANSPORT_GUARD.get("reason") or "").strip()
+
+
+def _ws_transport_guard_update(
+    *,
+    now: int,
+    status: str,
+    d_connect: int,
+    d_disconnect: int,
+    d_handshake: int,
+    d_bybit_msgs: int,
+) -> Optional[str]:
+    if not WS_SELF_HEAL_ENABLE:
+        return None
+
+    prev_active = bool(WS_TRANSPORT_GUARD.get("active"))
+    status_up = str(status or "").strip().upper()
+    is_trigger = status_up in WS_SELF_HEAL_TRIGGER_STATUSES
+    is_recovery = status_up in WS_SELF_HEAL_RECOVERY_STATUSES
+
+    if is_trigger:
+        WS_TRANSPORT_GUARD["critical_streak"] = int(WS_TRANSPORT_GUARD.get("critical_streak", 0)) + 1
+        WS_TRANSPORT_GUARD["recovery_streak"] = 0
+    elif prev_active and is_recovery:
+        WS_TRANSPORT_GUARD["recovery_streak"] = int(WS_TRANSPORT_GUARD.get("recovery_streak", 0)) + 1
+        WS_TRANSPORT_GUARD["critical_streak"] = 0
+    else:
+        WS_TRANSPORT_GUARD["critical_streak"] = 0
+        WS_TRANSPORT_GUARD["recovery_streak"] = 0
+
+    reason = (
+        f"status={status_up} connect={int(d_connect)} disconnect={int(d_disconnect)} "
+        f"handshake_timeout={int(d_handshake)} bybit_msgs={int(d_bybit_msgs)}"
+    )
+    WS_TRANSPORT_GUARD["last_status"] = status_up
+    WS_TRANSPORT_GUARD["last_updated_at"] = _utc_now_iso()
+    WS_TRANSPORT_GUARD["last_window"] = {
+        "connect": int(d_connect),
+        "disconnect": int(d_disconnect),
+        "handshake_timeout": int(d_handshake),
+        "bybit_msgs": int(d_bybit_msgs),
+    }
+
+    if not prev_active and is_trigger and int(WS_TRANSPORT_GUARD.get("critical_streak", 0)) >= int(WS_SELF_HEAL_TRIGGER_STREAK):
+        WS_TRANSPORT_GUARD["active"] = True
+        WS_TRANSPORT_GUARD["reason"] = reason
+        WS_TRANSPORT_GUARD["trigger_status"] = status_up
+        WS_TRANSPORT_GUARD["activated_at"] = _utc_now_iso()
+        WS_TRANSPORT_GUARD["recovered_at"] = ""
+        last_alert_ts = int(WS_TRANSPORT_GUARD.get("last_alert_ts", 0) or 0)
+        if (now - last_alert_ts) >= int(WS_SELF_HEAL_ALERT_COOLDOWN_SEC):
+            tg_trade(
+                "🛡️ WS transport guard ACTIVE: "
+                f"{reason} | new_entries_blocked={int(WS_SELF_HEAL_BLOCK_NEW_ENTRIES)} "
+                f"| streak={int(WS_TRANSPORT_GUARD.get('critical_streak', 0))}"
+            )
+            WS_TRANSPORT_GUARD["last_alert_ts"] = now
+
+    elif prev_active and is_recovery and int(WS_TRANSPORT_GUARD.get("recovery_streak", 0)) >= int(WS_SELF_HEAL_RECOVERY_STREAK):
+        WS_TRANSPORT_GUARD["active"] = False
+        WS_TRANSPORT_GUARD["reason"] = ""
+        WS_TRANSPORT_GUARD["trigger_status"] = ""
+        WS_TRANSPORT_GUARD["recovered_at"] = _utc_now_iso()
+        WS_TRANSPORT_GUARD["critical_streak"] = 0
+        tg_trade(
+            "✅ WS transport guard RECOVERED: "
+            f"status={status_up} connect={int(d_connect)} disconnect={int(d_disconnect)} "
+            f"handshake_timeout={int(d_handshake)} bybit_msgs={int(d_bybit_msgs)}"
+        )
+
+    elif bool(WS_TRANSPORT_GUARD.get("active")) and is_trigger:
+        WS_TRANSPORT_GUARD["reason"] = reason
+        WS_TRANSPORT_GUARD["trigger_status"] = status_up
+
+    restart_requested = False
+    if (
+        bool(WS_TRANSPORT_GUARD.get("active"))
+        and WS_SELF_HEAL_RESTART_ENABLE
+        and status_up in WS_SELF_HEAL_RESTART_ON
+        and int(WS_TRANSPORT_GUARD.get("critical_streak", 0)) >= int(WS_SELF_HEAL_RESTART_STREAK)
+    ):
+        last_restart_ts = int(WS_TRANSPORT_GUARD.get("last_restart_ts", 0) or 0)
+        no_open_trade_block = WS_SELF_HEAL_RESTART_REQUIRE_NO_OPEN_TRADES and len(TRADES) > 0
+        if not no_open_trade_block and (now - last_restart_ts) >= int(WS_SELF_HEAL_RESTART_COOLDOWN_SEC):
+            WS_TRANSPORT_GUARD["last_restart_ts"] = now
+            WS_TRANSPORT_GUARD["last_restart_action"] = "requested"
+            restart_requested = True
+
+    _persist_ws_transport_guard_state()
+    if restart_requested:
+        return "restart"
+    return None
 
 
 def _ws_health_from_delta(connect_delta: int, disconnect_delta: int, handshake_delta: int) -> tuple[str, float, float]:
@@ -2363,6 +2536,15 @@ def _status_full_text() -> str:
         f"sloped_try={int(_diag_get_int('sloped_try'))} | flat_try={int(_diag_get_int('flat_try'))} | "
         f"breakdown_try={int(_diag_get_int('breakdown_try'))}"
     )
+    if WS_SELF_HEAL_ENABLE:
+        lines.append(
+            "ws_guard: "
+            f"active={int(_ws_transport_guard_active())} "
+            f"status={WS_TRANSPORT_GUARD.get('last_status', 'n/a')} "
+            f"crit_streak={int(WS_TRANSPORT_GUARD.get('critical_streak', 0) or 0)} "
+            f"recover_streak={int(WS_TRANSPORT_GUARD.get('recovery_streak', 0) or 0)} "
+            f"reason={_ws_transport_guard_reason() or 'n/a'}"
+        )
 
     crypto_best_path = _BOT_ROOT / "backtest_runs" / "portfolio_20260325_172613_new_5strat_final" / "summary.csv"
     crypto_best = _safe_read_csv_first(crypto_best_path)
@@ -6205,6 +6387,8 @@ def portfolio_can_open() -> bool:
     portfolio_init_if_needed()
     if ALLOCATOR_HARD_BLOCK_NEW_ENTRIES:
         return False
+    if _ws_transport_guard_active() and WS_SELF_HEAL_BLOCK_NEW_ENTRIES:
+        return False
     if PORTFOLIO_STATE["disabled"]:
         return False
     open_pos = len(TRADES)
@@ -9864,7 +10048,8 @@ async def pulse():
 
         print(
             f"[pulse] Bybit msgs={MSG_COUNTER.get('Bybit', 0)}  open_trades={len(TRADES)}  "
-            f"disabled={PORTFOLIO_STATE.get('disabled')} | {_runtime_diag_snapshot()}"
+            f"disabled={PORTFOLIO_STATE.get('disabled')} ws_guard={int(_ws_transport_guard_active())} "
+            f"| {_runtime_diag_snapshot()}"
         )
         try:
             now = int(time.time())
@@ -9911,6 +10096,14 @@ async def pulse():
                     ws_no_connect_streak += 1
                 else:
                     ws_no_connect_streak = 0
+                ws_guard_action = _ws_transport_guard_update(
+                    now=now,
+                    status=status,
+                    d_connect=d_connect,
+                    d_disconnect=d_disconnect,
+                    d_handshake=d_handshake,
+                    d_bybit_msgs=d_bybit_msgs,
+                )
                 if d_connect >= WS_HEALTH_MIN_CONNECT_DELTA and status in {"WARN", "CRITICAL"}:
                     if (now - last_ws_alert_ts) >= int(WS_HEALTH_ALERT_COOLDOWN_SEC) or status != last_ws_alert_status:
                         tg_trade(
@@ -9944,6 +10137,14 @@ async def pulse():
                     d_disconnect=d_disconnect,
                     d_handshake=d_handshake,
                 )
+                if ws_guard_action == "restart":
+                    tg_trade(
+                        "♻️ WS transport guard requested controlled restart: "
+                        f"{_ws_transport_guard_reason() or status}"
+                    )
+                    raise RuntimeError(
+                        "WS transport self-heal restart requested after sustained critical degradation"
+                    )
                 last_ws_counters = cur_ws
                 last_bybit_msg_count = cur_bybit_msg_count
                 last_ws_health_check_ts = now
@@ -10011,7 +10212,8 @@ def main():
     )
     print(
         f"Control-plane: orch_risk={ORCH_GLOBAL_RISK_MULT:.2f} allocator_risk={ALLOCATOR_GLOBAL_RISK_MULT:.2f} "
-        f"hard_block={ALLOCATOR_HARD_BLOCK_NEW_ENTRIES} safe_mode={ALLOCATOR_SAFE_MODE}"
+        f"hard_block={ALLOCATOR_HARD_BLOCK_NEW_ENTRIES} safe_mode={ALLOCATOR_SAFE_MODE} "
+        f"ws_guard={int(WS_SELF_HEAL_ENABLE)} ws_block={int(WS_SELF_HEAL_BLOCK_NEW_ENTRIES)}"
     )
     print(
         f"Strategies: breakout={ENABLE_BREAKOUT_TRADING} inplay={ENABLE_INPLAY_TRADING} "

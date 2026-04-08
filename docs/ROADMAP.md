@@ -18,8 +18,22 @@ Order of work:
   - `inplay_breakout`
   - `alt_inplay_breakdown_v1`
 - `alt_resistance_fade_v1`, `alt_sloped_channel_v1`, and `btc_eth_midterm_pullback` are not the main source of damage on the fresh window.
-- Crypto live still does not have a real portfolio-level regime controller.
-- Crypto dynamic allowlists exist in pieces, but they are not yet a full live control-plane.
+- Crypto live now has the basic control-plane artifacts deployed on server:
+  - regime overlay
+  - symbol router output
+  - portfolio allocator overlay
+- Crypto live still does not have a fully backtested portfolio-level regime router / allocator loop.
+- Websocket transport remains a real live risk:
+  - recent `12h` diagnostic windows still show degraded reconnect / handshake quality
+  - the bot now has a transport guard, but the transport itself still needs hardening
+- The current `core3 impulse` candidate is promising on `180d`, but the old `360d` probe stayed weak because:
+  - early `2025-04..2025-09` months hurt badly
+  - `alt_inplay_breakdown_v1` was the main loser
+  - `ARF1` did not actually participate in those old `core3` probes
+- Chart vision is partially wired:
+  - Telegram chart inbox exists
+  - `/chart_ai` exists in code
+  - server-side image analysis still needs an image-capable API key
 
 ## Source of Truth
 
@@ -90,11 +104,19 @@ Tasks:
    - exact cache audit for the full symbol union
    - no "best cached slice" fallback inside `validated_baseline`
    - run the regression under project `.venv`, not system Python
+6. Keep websocket transport guarded:
+   - block new entries when WS health stays critical across multiple windows
+   - persist WS guard state in runtime
+   - only allow controlled restart when no open trades or an explicit rule says it is safe
+7. Use full-year probes as mandatory truth for promotion:
+   - no promotion from `180d` only
+   - explain bad months instead of hiding them
 
 Exit criteria:
 - fresh reruns are clearly labeled and reproducible
 - live config drift is documented
 - temporary live damage-control decision is documented
+- transport degradation no longer results in blind new entries
 
 ### P1 - Regime Orchestrator
 
@@ -130,6 +152,7 @@ Exit criteria:
 - orchestrator runs cleanly on schedule
 - live bot consumes the overlay
 - bad state does not break trading
+- router / allocator behaviour can be replayed historically on annual windows
 
 ### P2 - Dynamic Symbol Router and Strategy Profiles
 
