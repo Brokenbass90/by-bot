@@ -1,6 +1,6 @@
 # Agent Sync
 
-Last updated: 2026-04-08 12:45 UTC
+Last updated: 2026-04-08 13:05 UTC
 
 ## 2026-04-08 refresh note
 
@@ -26,6 +26,9 @@ Current live foundation truth now also includes:
 - live allocator code now includes portfolio overlap / exposure haircuts
 - live regime builder now includes a weak bull-trend softener:
   - `flat` can be re-enabled when bull-trend confidence is only modest
+- `alt_support_bounce_v1` regime logic now respects its configured gap threshold:
+  - old hard-coded `gap_pct <= 1.0` was removed
+  - support-bounce research should no longer be judged off a partially false regime gate
 - local/offline control-plane replay now also has historical health context:
   - `runtime/control_plane/strategy_health_timeline.json`
   - replay no longer has to reuse one current `configs/strategy_health.json` across the whole year
@@ -38,11 +41,22 @@ Current live foundation truth now also includes:
   - allocator
   - geometry
   - operator snapshot
+- current live allocator outcome at last direct check:
+  - `regime=bull_trend`
+  - `breakdown=False`
+  - `flat=True`
+  - `midterm=False`
+  - allocator status still `degraded`, but now for health/risk reasons, not because the old flat hard-disable path survived
 - live server now also has the explicit promotion artifacts:
   - `configs/crypto_promotion_policy.json`
   - `scripts/evaluate_crypto_promotion.py`
 - duplicate control-plane health cron was removed; the live server now keeps one:
   - `# bybot_cp_health`
+- active local research frontier now includes:
+  - `core3_range_additivity_recent180_v2`
+  - `core3_range_additivity_annual_v1`
+  - `support_bounce_v1_regime_gap_repair_v1`
+  - `impulse_volume_breakout_v1_annual_repair_v1`
 
 When in doubt, prefer:
 - [docs/ROADMAP.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/ROADMAP.md)

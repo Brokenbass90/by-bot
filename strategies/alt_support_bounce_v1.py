@@ -225,8 +225,12 @@ class AltSupportBounceV1Strategy:
         slope_pct = abs((ema_slow - ema_slow_prev) / max(1e-12, abs(ema_slow_prev))) * 100.0
         atr_pct = atr / cur * 100.0
 
-        # Bullish: EMA20 > EMA50 OR gap very small (flat)
-        ok = (ema_fast >= ema_slow or gap_pct <= 1.0) and slope_pct <= self.cfg.regime_max_slope_pct and self.cfg.regime_min_atr_pct <= atr_pct <= self.cfg.regime_max_atr_pct
+        # Bullish: EMA20 > EMA50 OR configured gap is small enough to treat as flat/early trend.
+        ok = (
+            (ema_fast >= ema_slow or gap_pct <= self.cfg.regime_max_gap_pct)
+            and slope_pct <= self.cfg.regime_max_slope_pct
+            and self.cfg.regime_min_atr_pct <= atr_pct <= self.cfg.regime_max_atr_pct
+        )
 
         self._last_regime_tf_ts = tf_ts
         self._last_regime_ok = bool(ok)

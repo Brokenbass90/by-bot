@@ -5,6 +5,55 @@
 
 ---
 
+## 2026-04-08 | Codex (session 32 - support_bounce regime fix + crypto foundation frontier)
+
+**Done:**
+
+- Found and fixed a real logic bug in [alt_support_bounce_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_support_bounce_v1.py):
+  - the strategy exposed `ASB1_REGIME_MAX_GAP_PCT`
+  - but `_regime_ok()` still hard-coded `gap_pct <= 1.0`
+  - the regime gate now correctly respects the configured threshold
+- Added a reusable crypto research launcher:
+  - [run_crypto_foundation_frontier.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_crypto_foundation_frontier.sh)
+- Added four focused foundation-era research fronts:
+  - [core3_range_additivity_recent180_v2.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/core3_range_additivity_recent180_v2.json)
+  - [core3_range_additivity_annual_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/core3_range_additivity_annual_v1.json)
+  - [support_bounce_v1_regime_gap_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/support_bounce_v1_regime_gap_repair_v1.json)
+  - [impulse_volume_breakout_v1_annual_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/impulse_volume_breakout_v1_annual_repair_v1.json)
+- Launched the new long-running frontier locally via project tooling.
+  Live processes at launch time:
+  - `core3_range_additivity_recent180_v2`
+  - `core3_range_additivity_annual_v1`
+  - `support_bounce_v1_regime_gap_repair_v1`
+  - `impulse_volume_breakout_v1_annual_repair_v1`
+
+**Key findings:**
+
+- `range_scalp` still looks more alive than its reputation:
+  - earlier package probe [core3_range_additivity_recent180_bestprobe](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260404_134600_core3_range_additivity_recent180_bestprobe/summary.csv)
+    already showed `+21.78%`, PF `1.696`, `128` trades
+  - so the right next question is annual truth and repeatability, not “is the idea dead?”
+- `support_bounce` deserved another look because the regime filter itself was partially lying.
+- The foundation is now strong enough that new strategy work can happen on top of:
+  - live control plane
+  - geometry-aware router
+  - exposure-aware allocator
+  - explicit promotion gate
+  instead of on shifting ground.
+
+**Next:**
+
+- Let the new frontier keep running.
+- First readout priority:
+  1. `core3_range_additivity_recent180_v2`
+  2. `core3_range_additivity_annual_v1`
+  3. `impulse_volume_breakout_v1_annual_repair_v1`
+  4. `support_bounce_v1_regime_gap_repair_v1`
+- After the first stable readout, decide whether the next package front is:
+  - `range_scalp` as the first true frequency sleeve
+  - `impulse` as the best long continuation sleeve
+  - or both, but only through annual + walk-forward + portfolio compare
+
 ## 2026-04-08 | Codex (session 31 - weak-bull flat softener + explicit promotion policy)
 
 **Done:**

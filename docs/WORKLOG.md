@@ -1,5 +1,36 @@
 # Bybit bot (v28) - worklog / reminders
 
+## 2026-04-08 - support_bounce regime-gap fix + focused crypto frontier
+
+### What was closed
+
+- Fixed a real regime bug in [strategies/alt_support_bounce_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_support_bounce_v1.py):
+  - strategy config already had `ASB1_REGIME_MAX_GAP_PCT`
+  - code still hard-coded `gap_pct <= 1.0`
+  - the regime gate now respects the configured threshold
+- Added a reusable research launcher:
+  - [scripts/run_crypto_foundation_frontier.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_crypto_foundation_frontier.sh)
+- Added focused research specs:
+  - [configs/autoresearch/core3_range_additivity_recent180_v2.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/core3_range_additivity_recent180_v2.json)
+  - [configs/autoresearch/core3_range_additivity_annual_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/core3_range_additivity_annual_v1.json)
+  - [configs/autoresearch/support_bounce_v1_regime_gap_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/support_bounce_v1_regime_gap_repair_v1.json)
+  - [configs/autoresearch/impulse_volume_breakout_v1_annual_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/impulse_volume_breakout_v1_annual_repair_v1.json)
+- Launched the new queue and verified live local processes:
+  - `26779` annual range additivity
+  - `26780` recent180 range additivity
+  - `26799` support-bounce repair
+  - `26804` impulse annual repair
+
+### Important truth
+
+- Foundation is now good enough that strategy work is finally happening on a non-fragile base.
+- That does **not** mean the hard part is over.
+- The next real truth test is whether `range_scalp` and/or repaired `impulse` survive:
+  - annual windows
+  - package comparison
+  - promotion discipline
+- `support_bounce` also deserves a fresh chance because the old regime gate was stricter than the config claimed.
+
 ## 2026-04-08 - weak bull-trend flat softener + explicit promotion gate
 
 ### What was closed

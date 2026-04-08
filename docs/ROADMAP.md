@@ -38,6 +38,13 @@ Order of work:
 - Weak-trend softeners now also exist in the regime layer:
   - `flat` is no longer hard-disabled in every `bull_trend`
   - weak `bull_trend` can re-enable `flat` in reduced mode
+- Server foundation is now close to a real single-live-truth loop:
+  - systemd service
+  - heartbeat
+  - watchdog
+  - control-plane health checks
+  - geometry snapshots
+  - operator truth pack
 - AI/operator context is stronger than before:
   - live `/ai` snapshot now includes compact operator context
   - weekly AI cron can consume the same compact operator context
@@ -55,6 +62,10 @@ Order of work:
 - Websocket transport remains a real live risk:
   - recent `12h` diagnostic windows still show degraded reconnect / handshake quality
   - the bot now has a transport guard, but the transport itself still needs hardening
+- Strategy work has now restarted on top of the rebuilt base:
+  - `range_scalp` additivity truth fronts reopened on `recent180` and `annual`
+  - `support_bounce` got a real regime-filter repair instead of more blind sweeps
+  - `impulse` now has a dedicated annual-repair research front
 - The current `core3 impulse` candidate is promising on `180d`, but the old `360d` probe stayed weak because:
   - early `2025-04..2025-09` months hurt badly
   - `alt_inplay_breakdown_v1` was the main loser
@@ -107,6 +118,23 @@ General rules:
 - prefer exact overlays over reconstructed env
 - no live promotion from a single lucky run
 - no self-retuning live parameters without offline validation and promotion
+
+Long-horizon hardening still worth adding:
+- append-only event / decision ledger for runtime truth
+- config schema versioning + migration checks before deploy
+- singleton job locks for cron / repair tasks
+- off-host backup + bare-metal restore drill
+- automatic canary rollback rules after promotion
+- latency / fill-quality histograms as first-class health signals
+- shadow mode for every sleeve before canary
+- explicit strategy lifecycle states:
+  - `research`
+  - `candidate`
+  - `shadow`
+  - `canary`
+  - `live`
+  - `watch`
+  - `banned`
 
 ## Priority Queue
 
