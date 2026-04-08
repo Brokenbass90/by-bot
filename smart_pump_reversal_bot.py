@@ -15,6 +15,8 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 import os
+import base64
+import mimetypes
 import time, json, statistics, asyncio, requests, collections, re, csv, traceback, random, math
 import sqlite3
 import subprocess
@@ -948,10 +950,15 @@ TG_CHART_INBOX_DIR = Path(
     )
 ).expanduser()
 TG_CHART_INBOX_LATEST = TG_CHART_INBOX_DIR / "latest.json"
+TG_CHART_INBOX_ANALYSIS = TG_CHART_INBOX_DIR / "latest_analysis.json"
 TG_CHART_INBOX_MAX_FILES = max(5, int(os.getenv("TG_CHART_INBOX_MAX_FILES", "40") or 40))
 CHART_VISION_ENABLE = _env_bool("CHART_VISION_ENABLE", False)
 CHART_VISION_PROVIDER = str(os.getenv("CHART_VISION_PROVIDER", "none") or "none").strip()
 CHART_VISION_MODEL = str(os.getenv("CHART_VISION_MODEL", "") or "").strip()
+CHART_VISION_ENV_FILES = [
+    Path(__file__).resolve().parent / "configs" / "chart_vision.env",
+    Path(__file__).resolve().parent / "configs" / "claude_analyst.env",
+]
 
 
 def _tg_send_raw(text: str, extra_json: dict | None = None) -> None:
@@ -1131,7 +1138,222 @@ def _chart_inbox_status_text() -> str:
             f"latest_path={latest.get('local_path') or '-'}",
         ]
     )
+    if TG_CHART_INBOX_ANALYSIS.exists():
+        try:
+            analysis = json.loads(TG_CHART_INBOX_ANALYSIS.read_text(encoding="utf-8"))
+            lines.append(f"last_analysis_ts={analysis.get('generated_at_utc') or '-'}")
+            lines.append(f"last_analysis_provider={analysis.get('provider') or '-'}")
+        except Exception:
+            lines.append("last_analysis=corrupt")
     return "\n".join(lines)
+
+
+def _chart_vision_detect_provider() -> str:
+    provider = str(CHART_VISION_PROVIDER or "").strip().lower()
+    if provider and provider not in {"", "none", "auto"}:
+        return provider
+    if _chart_vision_env("ANTHROPIC_API_KEY"):
+        return "anthropic"
+    if _chart_vision_env("OPENAI_API_KEY"):
+        return "openai"
+    return "none"
+
+
+def _chart_vision_env(name: str, default: str = "") -> str:
+    raw = str(os.getenv(name, "") or "").strip()
+    if raw:
+        return raw
+    for path in CHART_VISION_ENV_FILES:
+        try:
+            if not path.exists():
+                continue
+            for line in path.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, _, val = line.partition("=")
+                if key.strip() != name:
+                    continue
+                return val.split("#")[0].strip().strip('"').strip("'")
+        except Exception:
+            continue
+    return str(default or "").strip()
+
+
+def _chart_vision_encode_image(path: str) -> tuple[str, str]:
+    mime = mimetypes.guess_type(path)[0] or "image/jpeg"
+    if mime not in {"image/jpeg", "image/png", "image/webp", "image/gif"}:
+        mime = "image/jpeg"
+    blob = Path(path).read_bytes()
+    return mime, base64.b64encode(blob).decode("ascii")
+
+
+def _chart_vision_build_prompt(latest: dict[str, Any], user_prompt: str | None = None) -> tuple[str, str]:
+    symbol_hint = str(latest.get("symbol_hint") or "").strip().upper() or "-"
+    caption = str(latest.get("caption") or "").strip() or "-"
+    local_regime = _deepseek_local_regime_hint()
+    snapshot = _deepseek_snapshot()
+    live_params = snapshot.get("live_params") if isinstance(snapshot, dict) else {}
+    user_tail = str(user_prompt or "").strip()
+    system = (
+        "Ты анализируешь трейдинговый график как discretionary intraday/swing trader.\n"
+        "Отвечай по-русски, кратко, структурно и без воды.\n"
+        "Нельзя придумывать то, чего не видно на графике. Если что-то неразличимо, так и скажи.\n"
+        "Нужно искать:\n"
+        "1. горизонтальные уровни,\n"
+        "2. наклонные уровни / каналы,\n"
+        "3. поджатие / compression,\n"
+        "4. ложный пробой / возврат в диапазон,\n"
+        "5. acceptance / rejection уровня,\n"
+        "6. 2-3 сценария: breakout long, rejection short/long, no-trade.\n"
+        "Всегда указывай invalidation.\n"
+        "Если пользователь прислал идею, оцени именно её, а не абстрактный рынок."
+    )
+    user = (
+        f"symbol_hint={symbol_hint}\n"
+        f"caption={caption}\n"
+        f"local_regime_label={local_regime.get('label')}\n"
+        f"local_regime_confidence={local_regime.get('confidence')}\n"
+        f"live_breakout_enabled={live_params.get('enable_breakout_trading')}\n"
+        f"live_breakdown_enabled={live_params.get('enable_breakdown_trading')}\n"
+        f"live_flat_enabled={live_params.get('enable_flat_trading')}\n"
+        f"user_request={user_tail or '-'}\n\n"
+        "Сделай ответ ровно в таком формате:\n"
+        "1. Pattern: что происходит на графике сейчас.\n"
+        "2. Levels: 2-4 ключевых горизонтальных/наклонных уровня.\n"
+        "3. Bias: bullish / bearish / range / mixed и почему.\n"
+        "4. Scenarios:\n"
+        "   - breakout\n"
+        "   - rejection\n"
+        "   - no-trade\n"
+        "5. Bot fit: какие семейства стратегий здесь подходят из набора approach/reject/accept/breakdown.\n"
+        "6. Invalidation: что сломает сценарий.\n"
+        "7. Confidence: low/medium/high."
+    )
+    return system, user
+
+
+def _chart_vision_save_analysis(payload: dict[str, Any]) -> None:
+    try:
+        TG_CHART_INBOX_DIR.mkdir(parents=True, exist_ok=True)
+        TG_CHART_INBOX_ANALYSIS.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except Exception:
+        pass
+
+
+def _chart_vision_analyze_with_anthropic(image_path: str, latest: dict[str, Any], user_prompt: str | None = None) -> str:
+    api_key = _chart_vision_env("ANTHROPIC_API_KEY")
+    if not api_key:
+        return "❌ CHART_VISION provider=anthropic, но ANTHROPIC_API_KEY не задан."
+    model = CHART_VISION_MODEL or _chart_vision_env("CLAUDE_MODEL", "claude-sonnet-4-6")
+    mime, b64 = _chart_vision_encode_image(image_path)
+    system, user = _chart_vision_build_prompt(latest, user_prompt=user_prompt)
+    payload = {
+        "model": model,
+        "max_tokens": 900,
+        "system": system,
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image", "source": {"type": "base64", "media_type": mime, "data": b64}},
+                    {"type": "text", "text": user},
+                ],
+            }
+        ],
+    }
+    r = requests.post(
+        "https://api.anthropic.com/v1/messages",
+        headers={
+            "x-api-key": api_key,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        },
+        json=payload,
+        timeout=60,
+    )
+    r.raise_for_status()
+    js = r.json() if r is not None else {}
+    blocks = js.get("content") or []
+    text = "\n".join(str(x.get("text") or "").strip() for x in blocks if isinstance(x, dict) and x.get("type") == "text").strip()
+    if not text:
+        raise RuntimeError("vision_empty_response")
+    return text
+
+
+def _chart_vision_analyze_with_openai(image_path: str, latest: dict[str, Any], user_prompt: str | None = None) -> str:
+    api_key = _chart_vision_env("OPENAI_API_KEY")
+    if not api_key:
+        return "❌ CHART_VISION provider=openai, но OPENAI_API_KEY не задан."
+    model = CHART_VISION_MODEL or _chart_vision_env("OPENAI_VISION_MODEL", "gpt-4.1-mini")
+    mime, b64 = _chart_vision_encode_image(image_path)
+    system, user = _chart_vision_build_prompt(latest, user_prompt=user_prompt)
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "system", "content": system},
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": user},
+                    {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{b64}"}},
+                ],
+            },
+        ],
+        "temperature": 0.2,
+        "max_tokens": 900,
+    }
+    base_url = _chart_vision_env("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
+    r = requests.post(
+        f"{base_url}/chat/completions",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        json=payload,
+        timeout=60,
+    )
+    r.raise_for_status()
+    js = r.json() if r is not None else {}
+    choices = js.get("choices") or []
+    if not choices:
+        raise RuntimeError("vision_no_choices")
+    text = str((((choices[0] or {}).get("message") or {}).get("content")) or "").strip()
+    if not text:
+        raise RuntimeError("vision_empty_response")
+    return text
+
+
+def _chart_vision_analyze(latest: dict[str, Any], user_prompt: str | None = None) -> str:
+    if not CHART_VISION_ENABLE:
+        return "❌ Vision layer выключен. Включи CHART_VISION_ENABLE=1."
+    image_path = str(latest.get("local_path") or "").strip()
+    if not image_path or not os.path.exists(image_path):
+        return "❌ Последний chart snapshot не найден."
+    provider = _chart_vision_detect_provider()
+    if provider in {"none", ""}:
+        return "❌ Vision provider не настроен. Поддерживаются anthropic/openai."
+    if provider == "anthropic":
+        text = _chart_vision_analyze_with_anthropic(image_path, latest, user_prompt=user_prompt)
+    elif provider == "openai":
+        text = _chart_vision_analyze_with_openai(image_path, latest, user_prompt=user_prompt)
+    else:
+        return f"❌ Unsupported CHART_VISION_PROVIDER={provider}"
+    _chart_vision_save_analysis(
+        {
+            "generated_at_utc": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+            "provider": provider,
+            "model": CHART_VISION_MODEL or provider,
+            "local_path": image_path,
+            "symbol_hint": latest.get("symbol_hint") or "",
+            "caption": latest.get("caption") or "",
+            "analysis": text,
+        }
+    )
+    return text
 
 
 def _download_tg_file(file_id: str, dst: Path) -> tuple[bool, str]:
@@ -2817,6 +3039,7 @@ def _handle_tg_command(text: str):
             "📈 *Графики*\n"
             "  /plotlast [SYM] — график последней сделки\n\n"
             "  /chart_last — последний присланный в TG график\n\n"
+            "  /chart_ai [вопрос] — AI-разбор последнего графика\n\n"
             "🤖 *AI / DeepSeek*\n"
             "  /ai <вопрос> — задать вопрос AI-партнёру\n"
             "     Примеры:\n"
@@ -3244,6 +3467,23 @@ def _handle_tg_command(text: str):
             f"vision={'ON' if CHART_VISION_ENABLE else 'OFF'}"
         )
         tg_send_photo(local_path, caption=caption)
+        return
+
+    if name == "/chart_ai":
+        latest = _chart_inbox_load_latest()
+        if not latest:
+            _tg_reply("Chart inbox пуст. Сначала пришли скрин графика в Telegram.")
+            return
+        user_prompt = text.partition(" ")[2].strip() or None
+        _tg_reply("👁️ AI разбирает последний график, подожди ~15-60 сек...")
+        import threading
+        def _run_chart_ai() -> None:
+            try:
+                answer = _chart_vision_analyze(latest, user_prompt=user_prompt)
+            except Exception as exc:
+                answer = f"❌ Chart vision error: {exc}"
+            tg_send(answer)
+        threading.Thread(target=_run_chart_ai, daemon=True).start()
         return
 
     if name == "/plotts":
