@@ -354,3 +354,12 @@ nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/f
   - `ema` vs `off` walk-forward is complete
   - stitched annual system truth is acceptable
   - portfolio compare is not worse than the honest core2 backbone
+
+### Additional 27e truth:
+
+- [pump_fade_v4r_bear_window results.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260408_141723_pump_fade_v4r_bear_window/results.csv)
+  - finished `81/81`
+  - every row failed
+  - best row still `net=-0.27`, `PF=0.000`
+  - verdict: do not treat `pump_fade_v4r` as an active bear-window answer
+- `core2_honest_wf_360d_20260408` needed a cache-only restart because the first attempt wandered into a stuck network-backed portfolio subprocess; the honest backbone run is now `core2_honest_wf_360d_cache_20260408`

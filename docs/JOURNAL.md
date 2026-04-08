@@ -2748,3 +2748,6 @@ Key findings:
     - honest `core2` walk-forward
     - honest `IVB1 off vs ema` walk-forward
     - fresh `pump_fade_v4r` bear-window research
+- Fresh follow-up truth:
+  - `pump_fade_v4r_bear_window` finished `81/81` and every row failed with the same weak outcome (`net=-0.27`, `PF=0.000`), so this sleeve is not a hidden bear-market savior right now
+  - `core2_honest_wf_360d_20260408` had to be restarted as cache-only because the first version drifted into a stuck network-backed run instead of clean offline validation
