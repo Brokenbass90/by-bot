@@ -475,4 +475,14 @@ New foundation rules:
   - stitched annual truth must no longer inherit live-style regime stickiness by accident:
     - mixed-sign monthly checkpoints now need their own bias scoring instead of falling through to broad `bull_chop`
     - historical `hold=1` must mean immediate stitched switching, not “still wait another month”
-  - until [dynamic_core3_impulse_candidate_annual_v3_hold1](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_172157_dynamic_core3_impulse_candidate_annual_v3_hold1) finishes, treat `annual_v2` as a useful repaired baseline but not yet the final annual answer on the new foundation
+  - [dynamic_core3_impulse_candidate_annual_v3_hold1](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_172157_dynamic_core3_impulse_candidate_annual_v3_hold1) finished at `+7.27%`, PF `1.1074`, `5` red months:
+    - better annual honesty
+    - slightly better red-month count
+    - worse raw return than `annual_v2`
+  - current interpretation:
+    - protection/routing layers were not “useless”
+    - but the stack is still missing enough sleeve quality to translate cleaner routing into strong annual economics
+  - immediate repair focus stays on:
+    - fewer red months
+    - better flat/range activation quality
+    - stronger annual behaviour from `impulse`

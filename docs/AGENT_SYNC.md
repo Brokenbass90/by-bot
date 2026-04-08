@@ -526,3 +526,26 @@ nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/f
 Practical meaning:
 - `dynamic_core3_impulse_candidate_annual_v2` is still useful as the “first repaired stack” baseline.
 - But the next verdict on whether protection layers help or suffocate the bot should come from `annual_v3_hold1`, because the stitched regime logic is now materially closer to the intended historical behaviour.
+
+### Corrected annual verdict:
+
+- [dynamic_core3_impulse_candidate_annual_v3_hold1 summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_172157_dynamic_core3_impulse_candidate_annual_v3_hold1/summary.json)
+  - `+7.27%`
+  - PF `1.1074`
+  - `5` negative months
+- This is lower than `annual_v2` (`+13.17%`, PF `1.2182`, `6` negative months), which means:
+  - the old repaired annual was still partially flattering the stack
+  - the new annual truth is more honest, not “more broken”
+  - router truth alone is not enough to get us back to the old headline numbers
+
+### New immediate focus:
+
+- Keep annual repair centered on red-month control, not only raw return.
+- `flat` is now the most obvious active sleeve candidate for repair:
+  - huge live scan activity historically
+  - little realized activation
+  - early rows in [flat_horizontal_core_v3_frontier.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_horizontal_core_v3_frontier.json) are alive but not yet promotable
+- Next strategy truth should come from:
+  - ongoing `range_scalp` annual repair
+  - ongoing `flat_horizontal_core_v3_frontier`
+  - ongoing `impulse` annual repair

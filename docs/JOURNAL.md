@@ -2936,3 +2936,22 @@ Practical meaning:
 - We now have a concrete reason to rerun stitched annual before judging whether the new protective layers “help” or “suffocate” the bot.
 - If annual v3 improves regime diversity and red-month behaviour, that confirms the previous annual harness was understating the repaired stack.
 - If annual v3 still looks weak after this fix, the next bottleneck is sleeve logic / promotion truth, not router stickiness.
+
+Final result:
+- [dynamic_core3_impulse_candidate_annual_v3_hold1 summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_172157_dynamic_core3_impulse_candidate_annual_v3_hold1/summary.json)
+  - `+7.27%`
+  - PF `1.1074`
+  - `5` negative months
+  - `historical_hold_cycles=1`
+- Compared with [dynamic_core3_impulse_candidate_annual_v2 summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_161044_dynamic_core3_impulse_candidate_annual_v2/summary.json):
+  - returns fell from `+13.17%` to `+7.27%`
+  - negative months improved from `6` to `5`
+
+What that means:
+- The previous annual truth was indeed partially inflated by stitched regime stickiness.
+- The repair did not kill the system; it made the annual stack more honest.
+- But it also proved that router truth alone will not get us back to the old “big numbers.”
+- The next repair focus should stay on:
+  - reducing red months
+  - improving sleeve quality inside real bear/bull windows
+  - especially `flat`/`range` frequency-quality tradeoffs and `impulse` annual consistency
