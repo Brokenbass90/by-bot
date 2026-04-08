@@ -431,3 +431,5 @@ New foundation rules:
 - historical router/allocator replay must reconstruct symbol baskets from cached history, not only from frozen overlays
 - deterministic geometry engine comes before heavy vision work
 - vision may assist analysis later, but level-building and regime/routing truth must stay reproducible without external model calls
+- stitched annual validation must stay offline/cache-reproducible; no hidden live fetches in “honest” system tests
+- dynamic system promotion must use the new stitched harness, not only sleeve-level probes or brain-only replay

@@ -2670,3 +2670,48 @@ That is a much cleaner place to leave the machine for the next hour.
   - control-plane now genuinely lives on the server, not only in docs or local tooling
   - router/allocator freshness is enforced in live
   - the system can self-heal stale control-plane artifacts instead of waiting silently for manual intervention | done
+
+## 2026-04-08 | Codex (session 27d — dynamic annual harness now exists and passed first stitched smoke)
+
+- Added a real end-to-end dynamic system harness in [run_dynamic_crypto_annual.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_annual.py).
+- This is different from the earlier control-plane replay:
+  - replay validated the *brain* (`regime -> router -> allocator`)
+  - the new harness validates the *whole dynamic package* over sequential windows by actually running [backtest/run_portfolio.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py) on each window with:
+    - historical regime state
+    - historical symbol baskets
+    - historical health snapshot
+    - allocator-driven enabled sleeves
+    - allocator/orchestrator risk multipliers
+- Also upgraded [backtest/run_portfolio.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py) so allocator backtests can read per-sleeve risk envs (`BREAKDOWN_RISK_MULT`, `FLAT_RISK_MULT`, `SLOPED_RISK_MULT`, `MIDTERM_RISK_MULT`, etc.) instead of only the old simplified breakout/midterm flat-vs-trend risk shim.
+- Important honesty hardening:
+  - the first smoke run exposed a structural handoff bug (`router -> allocator -> harness` lost symbol baskets), which is now fixed
+  - the second smoke run exposed a reproducibility problem (`run_portfolio` could still drift into live fetches), so the harness now forces `BACKTEST_CACHE_ONLY=1`
+  - a final smoke pass then completed fully offline and produced the first real stitched result for the new system
+- First stitched dynamic result:
+  - [dynamic_system_smoke90_v4 summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_133617_dynamic_system_smoke90_v4/summary.json)
+  - `90d`
+  - `+11.54%`
+  - PF `2.2167`
+  - winrate `58.89%`
+  - max DD `1.8463%`
+  - negative months `0`
+- Window-level truth:
+  - [dynamic_windows.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_133617_dynamic_system_smoke90_v4/dynamic_windows.csv)
+  - all three windows classified into applied `bear_chop`
+  - window 1: `breakdown + flat + sloped`, `+9.40`, PF `2.515`
+  - window 2: `flat + sloped`, `-0.15`, PF `0.939`
+  - window 3: `breakdown + flat`, `+2.29`, PF `3.712`
+- Monthly stitched profile:
+  - [stitched_monthly_returns.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_133617_dynamic_system_smoke90_v4/stitched_monthly_returns.csv)
+  - `2026-01 +5.21%`
+  - `2026-02 +3.72%`
+  - `2026-03 +1.13%`
+  - `2026-04 +1.07%`
+- Practical meaning:
+  - the new foundation is now strong enough to generate a *real* dynamic stitched PnL result, not only static sleeve probes
+  - next correct step is full `360d` stitched validation, then compare:
+    - dynamic system vs old static package
+    - return
+    - DD
+    - bad months
+    - sleeve contribution | done

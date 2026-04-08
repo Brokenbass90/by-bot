@@ -279,3 +279,46 @@ nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/f
   - active in `strategies/alt_sloped_channel_v1.py`
   - active in `strategies/micro_scalper_v1.py`
   - not yet wired into the rest of the live core sleeves
+
+## Codex Changes (session 27d) — 2026-04-08
+
+### Foundation truth updated:
+
+- There is now a true stitched system harness:
+  - [scripts/run_dynamic_crypto_annual.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_annual.py)
+- This is the new honest path for “is the rebuilt dynamic system actually better?” because it:
+  - rebuilds historical regime
+  - rebuilds historical router baskets
+  - selects historical strategy health snapshot
+  - applies allocator enable/risk outcome
+  - runs actual portfolio backtests window by window with carried equity
+- [backtest/run_portfolio.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py) now respects live-style sleeve risk envs when `ALLOCATOR_ENABLE=1`, so stitched tests can use per-sleeve allocator multipliers instead of the old breakout/midterm-only shim.
+
+### First stitched result:
+
+- [dynamic_system_smoke90_v4 summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_133617_dynamic_system_smoke90_v4/summary.json)
+  - `+11.54%`
+  - PF `2.2167`
+  - WR `58.89%`
+  - DD `1.8463%`
+  - `0` negative months
+- Windows:
+  - w01 `bear_chop` → `breakdown + flat + sloped` → `+9.40`, PF `2.515`
+  - w02 `bear_chop` → `flat + sloped` → `-0.15`, PF `0.939`
+  - w03 `bear_chop` → `breakdown + flat` → `+2.29`, PF `3.712`
+
+### Important implementation notes:
+
+- The harness already caught and fixed two honesty bugs:
+  - router/allocator handoff lost symbol baskets
+  - `run_portfolio` could still drift into live fetch instead of pure cached replay
+- The harness now forces `BACKTEST_CACHE_ONLY=1` for reproducible stitched tests.
+
+### Immediate next step:
+
+- launch and read a full `360d` stitched dynamic run
+- compare:
+  - stitched dynamic system
+  - static legacy package
+  - control-plane replay only
+- only after that reopen promotion discussion for new sleeves
