@@ -4219,6 +4219,7 @@ def sync_trades_with_exchange():
         return
 
     now = now_s()
+    signal_ts = int(now)
 
     for (exch, sym), tr in list(TRADES.items()):
         if exch != "Bybit":
@@ -7632,7 +7633,9 @@ async def try_breakdown_entry_async(symbol: str, price: float):
 
         ensure_leverage(symbol, BYBIT_LEVERAGE)
         _diag_inc("breakdown_entry")
+        order_send_ts = int(now_s())
         oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        order_ack_ts = int(now_s())
 
         tr = TradeState(
             symbol=symbol,
@@ -7651,6 +7654,9 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         tr.breakdown_breaker_mult = float(breaker_mult)
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
+        tr.signal_ts = int(signal_ts)
+        tr.order_send_ts = int(order_send_ts)
+        tr.order_ack_ts = int(order_ack_ts)
         tr.runner_enabled = bool(use_runner)
         if tr.runner_enabled:
             tr.tps = [float(x) for x in (sig.tps or [])]

@@ -88,6 +88,8 @@ STATE_FILE         = ROOT / "configs" / "intraday_state.json"
 EQUITY_LOG_FILE    = ROOT / "configs" / "intraday_equity_log.json"
 ENV_FILE           = ROOT / "configs" / "alpaca_paper_local.env"
 INTRADAY_CFG_FILE  = ROOT / "configs" / "intraday_config.json"   # hot-reloadable symbol + strategy config
+ADVISORY_DIR       = ROOT / "runtime" / "equities_intraday_dynamic_v1"
+ADVISORY_FILE      = ADVISORY_DIR / "latest_advisory.json"
 
 # US market session in UTC (EDT: +4h, EST: +5h). Wide window handles DST.
 US_SESSION_UTC_START = 14   # 10:00 AM ET (EDT safety buffer)
@@ -478,6 +480,13 @@ def _save_equity_log(log: List[DailyPnL]) -> None:
     EQUITY_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     EQUITY_LOG_FILE.write_text(json.dumps([asdict(e) for e in log], indent=2))
 
+
+def _write_json_atomic(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    tmp.replace(path)
+
 def _record_daily_pnl(pnl_usd: float) -> None:
     """Add today's P&L to the equity log (accumulates intraday)."""
     today = date.today().isoformat()
@@ -643,6 +652,19 @@ def run_once(client: AlpacaClient, dry_run: bool,
     now_utc = datetime.now(timezone.utc)
     now_ts  = int(now_utc.timestamp())
     now_str = now_utc.strftime("%Y-%m-%d %H:%M UTC")
+    advisory: Dict[str, Any] = {
+        "generated_at_utc": now_str,
+        "generated_ts": now_ts,
+        "mode": "DRY_RUN" if dry_run else "LIVE_PAPER",
+        "entries_blocked": False,
+        "protection": {},
+        "account": {},
+        "watchlist": list(strategy_specs.keys()),
+        "open_positions": [],
+        "remote_only_positions": [],
+        "symbols": [],
+        "today_pnl_usd": 0.0,
+    }
 
     print(f"\n{'='*62}")
     print(f"  Intraday Bridge — {now_str} {'[DRY-RUN]' if dry_run else '[LIVE PAPER]'}")
@@ -654,8 +676,10 @@ def run_once(client: AlpacaClient, dry_run: bool,
         acct   = client.get_account()
         equity = float(acct.get("equity") or acct.get("portfolio_value") or 0)
         cash   = float(acct.get("cash") or 0)
+        advisory["account"] = {"equity": equity, "cash": cash}
         print(f"  Account: equity=${equity:.2f}  cash=${cash:.2f}")
     except Exception as exc:
+        advisory["account_error"] = str(exc)
         print(f"  [WARN] Account fetch failed: {exc}")
 
     # ── 3-Layer filter check ───────────────────────────────────────
@@ -667,12 +691,14 @@ def run_once(client: AlpacaClient, dry_run: bool,
     if spy_gate_on:
         spy_ok, spy_msg = _spy_regime_ok(client, dry_run, spy_sma_period)
     print(f"  [L1-SPY]    {spy_msg}")
+    advisory["protection"]["spy"] = {"enabled": spy_gate_on, "ok": spy_ok, "message": spy_msg}
     if not spy_ok:
         entries_blocked = True
 
     # Layer 2: Daily loss limit
     daily_ok, daily_msg = _daily_loss_ok(equity, max_daily_loss)
     print(f"  [L2-DAILY]  {daily_msg}")
+    advisory["protection"]["daily_loss"] = {"enabled": True, "ok": daily_ok, "message": daily_msg}
     if not daily_ok:
         entries_blocked = True
 
@@ -681,10 +707,12 @@ def run_once(client: AlpacaClient, dry_run: bool,
     if eq_curve_on:
         curve_ok, curve_msg = _equity_curve_ok(eq_curve_days)
     print(f"  [L3-CURVE]  {curve_msg}")
+    advisory["protection"]["equity_curve"] = {"enabled": eq_curve_on, "ok": curve_ok, "message": curve_msg}
     if not curve_ok:
         entries_blocked = True
 
     if entries_blocked:
+        advisory["entries_blocked"] = True
         print(f"\n  ⛔ NEW ENTRIES BLOCKED by protection filter(s)")
         _tg(tg_token, tg_chat,
             f"⛔ <b>Intraday Bridge — entries blocked</b>\n"
@@ -721,6 +749,7 @@ def run_once(client: AlpacaClient, dry_run: bool,
         _save_state(state)
 
         remote_only_symbols = sorted(sym for sym in open_positions.keys() if sym not in state)
+        advisory["remote_only_positions"] = list(remote_only_symbols)
         close_unknown_remote = _env_bool("INTRADAY_CLOSE_UNKNOWN_REMOTE_POSITIONS", False)
         if remote_only_symbols:
             print(f"\n  [WARN] Remote paper positions not tracked by intraday state: {', '.join(remote_only_symbols)}")
@@ -745,34 +774,50 @@ def run_once(client: AlpacaClient, dry_run: bool,
 
     occupied_symbols = sorted(set(state.keys()) | set(remote_only_symbols))
     open_count = len(occupied_symbols)
+    advisory["open_positions"] = list(occupied_symbols)
     print(f"\n  Open positions: {open_count}/{max_positions} — {occupied_symbols or 'none'}")
 
     # ── Signal scan ────────────────────────────────────────────────
     for symbol in strategy_specs:
+        symbol_status: Dict[str, Any] = {
+            "symbol": symbol,
+            "strategy_class": str(strategy_specs.get(symbol, {}).get("class", "")),
+            "status": "unknown",
+        }
         print(f"\n  [{symbol}]")
 
         if symbol in state:
             ps = state[symbol]
             held_min = (now_ts - ps.entry_ts) // 60
+            symbol_status.update({"status": "already_open", "held_min": held_min})
+            advisory["symbols"].append(symbol_status)
             print(f"    → In position {held_min}m | "
                   f"entry=${ps.entry_price:.2f} SL=${ps.sl_price:.2f} TP=${ps.tp_price:.2f}")
             continue
 
         if symbol in remote_only_symbols:
+            symbol_status["status"] = "remote_only_position"
+            advisory["symbols"].append(symbol_status)
             print(f"    → Remote Alpaca position exists outside intraday state — skip")
             continue
 
         if entries_blocked:
+            symbol_status["status"] = "blocked_by_protection"
+            advisory["symbols"].append(symbol_status)
             print(f"    → Skipped (protection filter active)")
             continue
 
         if open_count >= max_positions:
+            symbol_status["status"] = "max_positions_reached"
+            advisory["symbols"].append(symbol_status)
             print(f"    → Max positions ({max_positions}) reached — skip")
             continue
 
         # Load candles (historical seed + live)
         candles = _load_candles(symbol, client, dry_run, csv_paths)
         if len(candles) < 250:
+            symbol_status.update({"status": "not_enough_candles", "candles": len(candles)})
+            advisory["symbols"].append(symbol_status)
             print(f"    → Not enough candles ({len(candles)}) — skip")
             continue
         last_dt = datetime.fromtimestamp(candles[-1].ts, tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -781,12 +826,16 @@ def run_once(client: AlpacaClient, dry_run: bool,
         # Session check
         last_hour = (candles[-1].ts // 3600) % 24
         if not (US_SESSION_UTC_START <= last_hour < US_SESSION_UTC_END):
+            symbol_status.update({"status": "outside_session", "last_hour_utc": last_hour})
+            advisory["symbols"].append(symbol_status)
             print(f"    → Outside session (hour={last_hour} UTC) — skip")
             continue
 
         # Strategy signal
         sig = _check_signal_last(candles, symbol, strategy_specs)
         if sig is None:
+            symbol_status["status"] = "no_signal"
+            advisory["symbols"].append(symbol_status)
             print(f"    → No signal")
             continue
 
@@ -795,10 +844,14 @@ def run_once(client: AlpacaClient, dry_run: bool,
         sl_price, tp_price = sig.sl, sig.tp
         if sig.side == "long":
             if not (sl_price < entry_price < tp_price):
+                symbol_status.update({"status": "invalid_geometry", "side": sig.side})
+                advisory["symbols"].append(symbol_status)
                 print(f"    → Geometry invalid (long): SL={sl_price:.2f} e={entry_price:.2f} TP={tp_price:.2f}")
                 continue
         else:
             if not (tp_price < entry_price < sl_price):
+                symbol_status.update({"status": "invalid_geometry", "side": sig.side})
+                advisory["symbols"].append(symbol_status)
                 print(f"    → Geometry invalid (short): TP={tp_price:.2f} e={entry_price:.2f} SL={sl_price:.2f}")
                 continue
 
@@ -812,6 +865,17 @@ def run_once(client: AlpacaClient, dry_run: bool,
         print(f"      qty={qty} | notional=${actual_notional:.2f} | risk≈${risk_usd:.2f}")
 
         if dry_run:
+            symbol_status.update({
+                "status": "dry_run_signal",
+                "side": sig.side,
+                "entry_price": round(entry_price, 4),
+                "sl_price": round(sl_price, 4),
+                "tp_price": round(tp_price, 4),
+                "qty": qty,
+                "rr_label": rr_label,
+                "reason": sig.reason or "",
+            })
+            advisory["symbols"].append(symbol_status)
             print(f"    → [DRY-RUN] Would submit bracket order")
             _tg(tg_token, tg_chat,
                 f"🔍 <b>[DRY-RUN] {symbol}</b> {sig.side.upper()}\n"
@@ -833,17 +897,34 @@ def run_once(client: AlpacaClient, dry_run: bool,
                 )
                 open_count += 1
                 _save_state(state)
+                symbol_status.update({
+                    "status": "order_submitted",
+                    "side": sig.side,
+                    "entry_price": round(entry_price, 4),
+                    "sl_price": round(sl_price, 4),
+                    "tp_price": round(tp_price, 4),
+                    "qty": qty,
+                    "rr_label": rr_label,
+                    "reason": sig.reason or "",
+                    "order_id": order_id,
+                })
+                advisory["symbols"].append(symbol_status)
                 _tg(tg_token, tg_chat,
                     f"📈 <b>{symbol}</b> {sig.side.upper()} entry\n"
                     f"Price≈${entry_price:.2f} | SL=${sl_price:.2f} | TP=${tp_price:.2f} | {rr_label}\n"
                     f"Qty={qty} | Notional≈${actual_notional:.2f} | Risk≈${risk_usd:.2f}\n"
                     f"Reason: {sig.reason or 'strategy signal'} | {now_str}")
             except Exception as exc:
+                symbol_status.update({"status": "order_failed", "error": str(exc)})
+                advisory["symbols"].append(symbol_status)
                 print(f"    ✗ Order failed: {exc}")
                 _tg(tg_token, tg_chat, f"⚠️ <b>{symbol}</b> order error: {exc}")
 
     print(f"\n  Done. Open: {list(state.keys()) or 'none'}")
     print(f"  Today P&L: ${_get_today_pnl():.2f}")
+    advisory["today_pnl_usd"] = _get_today_pnl()
+    advisory["open_positions"] = sorted(set(state.keys()) | set(remote_only_symbols))
+    _write_json_atomic(ADVISORY_FILE, advisory)
 
 # ── CLI ─────────────────────────────────────────────────────────────────────────
 def main() -> None:

@@ -8,11 +8,12 @@
 #   bash scripts/setup_server_crons.sh
 #
 # What it sets up:
-#   1. Dynamic allowlist — weekly coin scanner (Sunday 22:00 UTC)
-#   2. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
-#   3. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
-#   4. Alpaca intraday bridge — 5-min signal check, Mon-Fri market hours
-#   5. Alpaca monthly autopilot — 1st of month refresh (already configured)
+#   1. Regime orchestrator — hourly BTC regime classifier
+#   2. Symbol router — daily per-strategy basket rebuild
+#   3. Portfolio allocator — hourly risk / sleeve overlay rebuild
+#   4. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
+#   5. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
+#   6. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -49,6 +50,22 @@ if [ ! -x "$PYTHON" ]; then
     err "Python venv not found: $PYTHON"
     exit 1
 fi
+for req in \
+    "$BOT_DIR/scripts/build_regime_state.py" \
+    "$BOT_DIR/scripts/build_symbol_router.py" \
+    "$BOT_DIR/scripts/build_portfolio_allocator.py" \
+    "$BOT_DIR/scripts/dynamic_allowlist.py" \
+    "$BOT_DIR/scripts/run_equities_alpaca_intraday_dynamic_v1.sh" \
+    "$BOT_DIR/configs/strategy_profile_registry.json" \
+    "$BOT_DIR/configs/portfolio_allocator_policy.json" \
+    "$BOT_DIR/configs/strategy_health.json"
+do
+    if [ ! -f "$req" ]; then
+        err "Required file not found: $req"
+        exit 1
+    fi
+done
+
 if [ ! -f "$BOT_DIR/scripts/dynamic_allowlist.py" ]; then
     err "dynamic_allowlist.py not found — pull latest code first"
     exit 1
@@ -68,24 +85,42 @@ mkdir -p "$BOT_DIR/logs"
 ok "Logs dir: $BOT_DIR/logs"
 
 # ── Build new cron entries ─────────────────────────────────────────────────────
-# Remove existing managed entries, then append new ones
-CURRENT=$(crontab -l 2>/dev/null | grep -v "$CRON_TAG" || true)
+# Remove existing managed entries plus known legacy autonomous duplicates.
+CURRENT=$(
+    crontab -l 2>/dev/null \
+        | grep -v "$CRON_TAG" \
+        | grep -v "scripts/deepseek_weekly_cron.py >> logs/deepseek_weekly.log" \
+        | grep -v "scripts/equity_curve_autopilot.py >> logs/equity_curve.log" \
+        | grep -v "scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> /root/by-bot/logs/alpaca_intraday_dynamic_v1.log" \
+        | grep -v "^# 1\\. Dynamic allowlist" \
+        | grep -v "^# 2\\. DeepSeek weekly cron" \
+        | grep -v "^# 3\\. Equity curve autopilot" \
+        | grep -v "^# 4\\. Alpaca intraday bridge" \
+        | grep -v "^# Safe default: dry-run only\\. Promote to --live only after paper validation\\." \
+        || true
+)
 
 NEW_CRONS=$(cat << CRONEOF
 # ── Bybit Bot Autonomous Operations ── $CRON_TAG
 #
-# 1. Dynamic allowlist — scan best coins per strategy (Sunday 22:00 UTC)
-0 22 * * 0 cd $BOT_DIR && $PYTHON scripts/dynamic_allowlist.py --quiet --out-env configs/dynamic_allowlist_latest.env >> logs/dynamic_allowlist.log 2>&1 $CRON_TAG
+# 1. Regime orchestrator — hourly regime snapshot / live overlay
+0 * * * * cd $BOT_DIR && $PYTHON scripts/build_regime_state.py >> logs/regime_orchestrator.log 2>&1 $CRON_TAG
 #
-# 2. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
+# 2. Symbol router — rebuild per-strategy symbol baskets once per day
+3 0 * * * cd $BOT_DIR && $PYTHON scripts/build_symbol_router.py --quiet >> logs/symbol_router.log 2>&1 $CRON_TAG
+#
+# 3. Portfolio allocator — hourly sleeve/risk overlay from regime + router + health
+5 * * * * cd $BOT_DIR && $PYTHON scripts/build_portfolio_allocator.py >> logs/portfolio_allocator.log 2>&1 $CRON_TAG
+#
+# 4. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
 30 22 * * 0 cd $BOT_DIR && $PYTHON scripts/deepseek_weekly_cron.py --quiet >> logs/deepseek_weekly.log 2>&1 $CRON_TAG
 #
-# 3. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
+# 5. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
 0 23 * * 0 cd $BOT_DIR && $PYTHON scripts/equity_curve_autopilot.py >> logs/equity_autopilot.log 2>&1 $CRON_TAG
 #
-# 4. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
+# 6. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
 # Safe default: dry-run only. Promote to --live only after paper validation.
-*/5 14-21 * * 1-5 cd $BOT_DIR && $PYTHON scripts/equities_alpaca_intraday_bridge.py --dry-run --once >> logs/intraday_bridge.log 2>&1 $CRON_TAG
+*/5 14-21 * * 1-5 /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> logs/alpaca_intraday_dynamic_v1.log 2>&1' $CRON_TAG
 #
 CRONEOF
 )
@@ -104,27 +139,38 @@ echo ""
 echo "Running quick sanity checks..."
 
 echo ""
-echo "[1] Dynamic allowlist (dry-run):"
-cd "$BOT_DIR" && $PYTHON scripts/dynamic_allowlist.py --dry-run --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
+echo "[1] Regime orchestrator (dry-run):"
+cd "$BOT_DIR" && $PYTHON scripts/build_regime_state.py --dry-run 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[2] Equity autopilot (no-tg):"
+echo "[2] Symbol router (dry-run):"
+cd "$BOT_DIR" && $PYTHON scripts/build_symbol_router.py --dry-run --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
+
+echo ""
+echo "[3] Portfolio allocator (dry-run):"
+cd "$BOT_DIR" && $PYTHON scripts/build_portfolio_allocator.py --dry-run 2>&1 | tail -5 && ok "OK" || warn "Check logs"
+
+echo ""
+echo "[4] Equity autopilot (no-tg):"
 cd "$BOT_DIR" && $PYTHON scripts/equity_curve_autopilot.py --no-tg --quiet 2>&1 | tail -3 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[3] Intraday bridge (dry-run):"
-cd "$BOT_DIR" && $PYTHON scripts/equities_alpaca_intraday_bridge.py --dry-run --once 2>&1 | tail -5 && ok "OK" || warn "Check logs"
+echo "[5] Intraday bridge (live paper once):"
+cd "$BOT_DIR" && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
 echo "================================================"
 echo "  Setup complete!"
 echo ""
 echo "  NEXT STEPS:"
-echo "  1. Wait until Sunday 22:00 UTC for first auto-run"
+echo "  1. Regime/allocator now rebuild hourly; router rebuilds daily at 00:03 UTC"
 echo "  2. OR test manually:"
+echo "     python3 scripts/build_regime_state.py"
+echo "     python3 scripts/build_symbol_router.py --quiet"
+echo "     python3 scripts/build_portfolio_allocator.py"
 echo "     python3 scripts/deepseek_weekly_cron.py"
 echo "     python3 scripts/equity_curve_autopilot.py"
-echo "  3. Intraday bridge stays in DRY-RUN during Mon-Fri market hours"
-echo "     Promote to --live only after paper validation"
-echo "  4. Check logs: tail -f logs/dynamic_allowlist.log"
+echo "  3. Check logs: tail -f logs/regime_orchestrator.log"
+echo "     tail -f logs/symbol_router.log"
+echo "     tail -f logs/portfolio_allocator.log"
 echo "================================================"
