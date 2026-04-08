@@ -71,6 +71,7 @@ FILES=(
   "scripts/deploy_foundation.sh"
   "configs/crypto_promotion_policy.json"
   "configs/portfolio_allocator_policy.json"
+  "configs/strategy_profile_registry.json"
 )
 
 for f in "${FILES[@]}"; do

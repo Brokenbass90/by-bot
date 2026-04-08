@@ -83,8 +83,8 @@
         "inplay_breakout"
       ],
       "base_risk_mult_by_regime": {
-        "bull_trend": 1.15,
-        "bull_chop": 0.7,
+        "bull_trend": 0.0,
+        "bull_chop": 0.0,
         "bear_chop": 0.0,
         "bear_trend": 0.0
       }

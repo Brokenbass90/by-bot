@@ -462,7 +462,10 @@ New foundation rules:
   - live bot imports and schedules them
   - allocator policy contains them
   - server deploy copies the actual strategy module
+- router truth matters as much as policy truth:
+  - a sleeve is still effectively disconnected if the registry has no matching symbol-router profile
 - current strategy direction after the latest honest truth:
   - `pump_fade` stays de-prioritized
   - `IVB1 off` is a stronger candidate than `IVB1 ema`
   - next portfolio compare should focus on `core2` vs `core2 + IVB1 off`
+  - stitched `dynamic_system_annual_v1` should now be treated as a stale-stack benchmark, not the final annual answer for the repaired stack

@@ -412,3 +412,47 @@ nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/f
   - treat `IVB1 off` as the better candidate than `IVB1 ema`
   - keep `pump_fade` out of focus
   - compare `core2` vs `core2 + IVB1 off` under honest annual / portfolio criteria
+
+## Codex Changes (session 27g) — 2026-04-08
+
+### Important truth correction:
+
+- The old stitched annual `dynamic_system_annual_v1` was not yet testing the intended modern stack.
+- It still routed:
+  - `inplay_breakout`
+  - `alt_sloped_channel_v1`
+  - `alt_resistance_fade_v1`
+  because `breakout` had historically survived in the policy and `IVB1` had no router profile.
+
+### What was fixed:
+
+- [configs/strategy_profile_registry.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/strategy_profile_registry.json) now includes:
+  - `ivb1_bull_core`
+  - `ivb1_chop_reduced`
+  - `ivb1_bear_off`
+- [scripts/deploy_foundation.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deploy_foundation.sh) now deploys the profile registry too
+- server-side router + allocator were rebuilt after pushing the new registry
+
+### New live control-plane truth:
+
+- `impulse` is no longer `count=0`
+- current server allocator snapshot now shows:
+  - `impulse: enabled=1`
+  - `risk=1.00`
+  - `count=8`
+  - `health=OK`
+  in `bull_trend`
+
+### New stitched research state:
+
+- Relaunched:
+  - `dynamic_core3_impulse_candidate_recent180_v2`
+  - `dynamic_core3_impulse_candidate_annual_v2`
+- First repaired window signals:
+  - `recent180_v2 w01`: sleeves `flat,sloped,impulse` → `+0.87`, PF `1.188`
+  - `annual_v2 w01`: sleeves `sloped,impulse` → `-0.71`, PF `0.852`
+
+### What not to do:
+
+- Do not keep quoting `dynamic_system_annual_v1 = +2.97%` as the final annual truth for the intended rebuilt stack.
+- It remains useful as an honest result for the **old routed stack**, but not for the newly repaired one.

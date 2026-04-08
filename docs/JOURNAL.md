@@ -2775,3 +2775,39 @@ Key findings:
 - Practical meaning:
   - the useful result is not “IVB1 is ready”, but “the current EMA regime gate hurts IVB1 more than it helps”
   - live `IVB1` is now wired and allocator-aware, but still intentionally not enabled in production because promotion truth is not there yet
+
+## Codex Session 27g - 2026-04-08
+
+Summary:
+- Confirmed the user's suspicion that the old stitched annual truth was still contaminated by a stale strategy mix: it was running `inplay_breakout` even after that sleeve had effectively been retired from the real direction of the project.
+- Closed the missing router leg for `IVB1`, refreshed live router/allocator state on the server, and restarted honest stitched compares with the repaired profile registry.
+
+Key findings:
+- The stale Telegram `BOT UNRESPONSIVE` alert at `15:44/15:46 UTC` was not a mysterious hang in a healthy bot; it happened during the broken deploy / restart window. After recovery, watchdog returned to a clean cadence with repeated `OK` lines and fresh heartbeat age.
+- The previous stitched annual run [dynamic_system_annual_v1/dynamic_windows.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_133825_dynamic_system_annual_v1/dynamic_windows.csv) really did use:
+  - `inplay_breakout`
+  - `alt_sloped_channel_v1`
+  - `alt_resistance_fade_v1`
+  instead of the intended modern `core2 + impulse` direction.
+- The policy itself was already partly repaired (`breakout` base risk now `0.0` in every regime), but the router registry still had **no `IVB1` profile at all**, so `impulse` could not receive symbols in dynamic routing.
+- Added new `IVB1_SYMBOL_ALLOWLIST` profiles to [strategy_profile_registry.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/strategy_profile_registry.json):
+  - `ivb1_bull_core`
+  - `ivb1_chop_reduced`
+  - `ivb1_bear_off`
+- After pushing that registry to the server and rebuilding router+allocator, live control-plane now shows:
+  - `impulse: enabled=1`
+  - `risk=1.00`
+  - `count=8`
+  - health `OK`
+  in `bull_trend`
+- Fresh stitched compare reruns are now active:
+  - `dynamic_core3_impulse_candidate_recent180_v2`
+  - `dynamic_core3_impulse_candidate_annual_v2`
+- First repaired window is directionally sane:
+  - `recent180_v2 w01`: sleeves `flat, sloped, impulse`, PF `1.188`, net `+0.87`
+  - `annual_v2 w01`: sleeves `sloped, impulse`, PF `0.852`, net `-0.71`
+
+Practical meaning:
+- The earlier `+2.97% annual` stitched result should no longer be treated as the final truth for the rebuilt system.
+- It was honest about the old stack it actually ran, but it was **not** yet the honest result for the intended modern stack.
+- After the router/profile repair, stitched research must be rerun before making any judgement like “systems made everything worse.”

@@ -265,6 +265,47 @@
     },
 
     {
+      "profile_id": "ivb1_bull_core",
+      "env_key": "IVB1_SYMBOL_ALLOWLIST",
+      "default": true,
+      "active_regimes": ["bull_trend"],
+      "strategy_tags": ["impulse_volume_breakout_v1"],
+      "exclude_symbols": ["BTCUSDT", "ETHUSDT"],
+      "min_turnover": 40000000.0,
+      "min_atr_pct": 0.35,
+      "max_atr_pct": 4.5,
+      "min_listing_days": 90,
+      "top_n": 8,
+      "bt_min_trades": 5,
+      "bt_min_net": 0.0,
+      "bt_min_pf": 1.0,
+      "anchor_symbols": ["SOLUSDT", "LINKUSDT", "DOGEUSDT", "TAOUSDT"]
+    },
+    {
+      "profile_id": "ivb1_chop_reduced",
+      "env_key": "IVB1_SYMBOL_ALLOWLIST",
+      "active_regimes": ["bull_chop"],
+      "strategy_tags": ["impulse_volume_breakout_v1"],
+      "exclude_symbols": ["BTCUSDT", "ETHUSDT"],
+      "min_turnover": 50000000.0,
+      "min_atr_pct": 0.40,
+      "max_atr_pct": 3.2,
+      "min_listing_days": 120,
+      "top_n": 5,
+      "bt_min_trades": 5,
+      "bt_min_net": 0.0,
+      "bt_min_pf": 1.0,
+      "anchor_symbols": ["SOLUSDT", "LINKUSDT", "DOGEUSDT"]
+    },
+    {
+      "profile_id": "ivb1_bear_off",
+      "env_key": "IVB1_SYMBOL_ALLOWLIST",
+      "active_regimes": ["bear_chop", "bear_trend"],
+      "strategy_tags": ["impulse_volume_breakout_v1"],
+      "fixed_symbols": []
+    },
+
+    {
       "profile_id": "pf2_all_regimes",
       "env_key": "PF2_SYMBOL_ALLOWLIST",
       "default": true,
