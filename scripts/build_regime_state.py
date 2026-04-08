@@ -67,7 +67,7 @@ ENV_PATH   = ROOT / "configs" / "regime_orchestrator_latest.env"
 LOG_PATH   = ROOT / "logs" / "regime_orchestrator.log"
 CONTROL_PLANE_DIR = ROOT / "runtime" / "control_plane"
 HISTORY_PATH = CONTROL_PLANE_DIR / "orchestrator_history.jsonl"
-STATE_VERSION = "1"
+STATE_VERSION = "2"
 
 # ---------------------------------------------------------------------------
 # Logging
@@ -90,6 +90,9 @@ MIN_HOLD_CYCLES  = int(os.getenv("ORCH_MIN_HOLD_CYCLES", "3"))
 ER_TREND_THRESH  = float(os.getenv("ORCH_ER_TREND_THRESH", "0.35"))
 FETCH_BARS       = int(os.getenv("ORCH_BARS", "120"))
 BULL_TREND_FLAT_ER_MAX = float(os.getenv("ORCH_BULL_TREND_FLAT_ER_MAX", "0.55"))
+MIXED_SIGN_PRICE_WEIGHT = float(os.getenv("ORCH_MIXED_SIGN_PRICE_WEIGHT", "1.0"))
+MIXED_SIGN_EMA_WEIGHT = float(os.getenv("ORCH_MIXED_SIGN_EMA_WEIGHT", "0.5"))
+MIXED_SIGN_EDGE_PCT = float(os.getenv("ORCH_MIXED_SIGN_EDGE_PCT", "0.15"))
 TG_TOKEN         = os.getenv("TG_TOKEN", "")
 TG_CHAT_ID       = os.getenv("TG_CHAT_ID", os.getenv("TG_CHAT", ""))
 
@@ -289,6 +292,23 @@ def _efficiency_ratio(closes: List[float], period: int) -> float:
     path  = sum(abs(closes[i] - closes[i - 1]) for i in range(len(closes) - period, len(closes)))
     return net / path if path > 0 else 1.0
 
+
+def _mixed_sign_bias(ema_gap_pct: float, close_gap_pct: float) -> Tuple[str, Dict[str, float]]:
+    bull_strength = max(0.0, float(ema_gap_pct)) * MIXED_SIGN_EMA_WEIGHT + max(0.0, float(close_gap_pct)) * MIXED_SIGN_PRICE_WEIGHT
+    bear_strength = max(0.0, -float(ema_gap_pct)) * MIXED_SIGN_EMA_WEIGHT + max(0.0, -float(close_gap_pct)) * MIXED_SIGN_PRICE_WEIGHT
+    edge = float(bull_strength - bear_strength)
+    if edge >= MIXED_SIGN_EDGE_PCT:
+        bias = "bull"
+    elif edge <= -MIXED_SIGN_EDGE_PCT:
+        bias = "bear"
+    else:
+        bias = "bull" if float(close_gap_pct) >= 0.0 else "bear"
+    return bias, {
+        "bull_strength": round(float(bull_strength), 4),
+        "bear_strength": round(float(bear_strength), 4),
+        "bias_edge_pct": round(edge, 4),
+    }
+
 # ---------------------------------------------------------------------------
 # Regime classification
 # ---------------------------------------------------------------------------
@@ -316,19 +336,25 @@ def _classify_regime(candles: List[Dict]) -> Tuple[str, Dict[str, float]]:
     close = closes[-1]
     atr   = _atr(candles, 14)
     er    = _efficiency_ratio(closes, 20)
+    ema_gap_pct = ((ema21 - ema55) / ema55 * 100.0) if abs(ema55) > 1e-12 else 0.0
+    close_gap_pct = ((close - ema55) / ema55 * 100.0) if abs(ema55) > 1e-12 else 0.0
 
     bull_ema  = ema21 > ema55
     above_55  = close > ema55
     trending  = er >= ER_TREND_THRESH
+    mixed_bias = ""
+    mixed_meta = {"bull_strength": 0.0, "bear_strength": 0.0, "bias_edge_pct": 0.0}
 
-    if bull_ema and above_55 and trending:
-        regime = REGIME_BULL_TREND
-    elif bull_ema or above_55:
-        regime = REGIME_BULL_CHOP
-    elif trending:           # bearish + trending
-        regime = REGIME_BEAR_TREND
-    else:                    # bearish + choppy
-        regime = REGIME_BEAR_CHOP
+    if bull_ema and above_55:
+        regime = REGIME_BULL_TREND if trending else REGIME_BULL_CHOP
+    elif (not bull_ema) and (not above_55):
+        regime = REGIME_BEAR_TREND if trending else REGIME_BEAR_CHOP
+    else:
+        mixed_bias, mixed_meta = _mixed_sign_bias(ema_gap_pct, close_gap_pct)
+        if mixed_bias == "bull":
+            regime = REGIME_BULL_TREND if trending and above_55 else REGIME_BULL_CHOP
+        else:
+            regime = REGIME_BEAR_TREND if trending and (not above_55) else REGIME_BEAR_CHOP
 
     indicators = {
         "ema21": round(ema21, 6),
@@ -336,9 +362,13 @@ def _classify_regime(candles: List[Dict]) -> Tuple[str, Dict[str, float]]:
         "close": round(close, 6),
         "atr":   round(atr, 6) if atr == atr else 0.0,
         "er":    round(er, 4),
+        "ema_gap_pct": round(ema_gap_pct, 4),
+        "close_vs_ema55_pct": round(close_gap_pct, 4),
         "bull_ema": int(bull_ema),
         "above_55": int(above_55),
         "trending": int(trending),
+        "mixed_bias": mixed_bias,
+        **mixed_meta,
     }
     return regime, indicators
 

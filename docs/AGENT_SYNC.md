@@ -500,3 +500,29 @@ nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/f
   - [runtime/ai_operator/memory.jsonl](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/ai_operator/memory.jsonl)
   - exposed via [bot/operator_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/operator_snapshot.py)
   - `/ai_reset` now clears both overlay history and operator memory
+
+### New stitched-annual truth repair:
+
+- The next real bottleneck turned out not to be only sleeve quality, but annual regime truth itself.
+- Repaired [scripts/build_regime_state.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_regime_state.py):
+  - mixed-sign windows no longer collapse too easily into `bull_chop`
+  - added weighted bias scoring and richer diagnostics:
+    - `ema_gap_pct`
+    - `close_vs_ema55_pct`
+    - `mixed_bias`
+    - `bull_strength`
+    - `bear_strength`
+    - `bias_edge_pct`
+- Repaired [scripts/run_control_plane_replay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_control_plane_replay.py):
+  - historical `min_hold_cycles=1` now truly allows immediate regime switching
+- Extended [scripts/run_dynamic_crypto_annual.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_annual.py):
+  - added `--historical-hold-cycles`
+  - stitched reports now record that value explicitly
+- New corrected stitched annual is now running:
+  - [dynamic_core3_impulse_candidate_annual_v3_hold1](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_172157_dynamic_core3_impulse_candidate_annual_v3_hold1)
+- First signal from the corrected stack:
+  - `w01`: `regime=bull_chop`, sleeves `sloped,impulse`, `net=-3.03`, PF `0.148`
+
+Practical meaning:
+- `dynamic_core3_impulse_candidate_annual_v2` is still useful as the “first repaired stack” baseline.
+- But the next verdict on whether protection layers help or suffocate the bot should come from `annual_v3_hold1`, because the stitched regime logic is now materially closer to the intended historical behaviour.

@@ -208,18 +208,22 @@ def _advance_hysteresis(
     pending_count: int,
     min_hold_cycles: int,
 ) -> tuple[str, str, int, bool]:
+    hold_cycles = max(1, int(min_hold_cycles))
     if applied_regime is None:
         return raw_regime, raw_regime, 0, True
 
     if raw_regime == applied_regime:
         return applied_regime, raw_regime, 0, False
 
+    if hold_cycles <= 1:
+        return raw_regime, raw_regime, 0, raw_regime != applied_regime
+
     if pending_regime is None:
         return applied_regime, raw_regime, 1, False
 
     if raw_regime == pending_regime:
         next_count = int(pending_count) + 1
-        if next_count >= int(min_hold_cycles):
+        if next_count >= hold_cycles:
             return raw_regime, raw_regime, 0, raw_regime != applied_regime
         return applied_regime, pending_regime, next_count, False
 

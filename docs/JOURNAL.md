@@ -2891,3 +2891,48 @@ Changes made:
 Practical meaning:
 - The operator is now less likely to keep repeating stale partial audits because it can see a short persistent trail of its own recent verdicts.
 - Telegram should stop silently cutting operator reasoning down to a misleading one-message fragment.
+
+## Codex Session 30 - 2026-04-08
+
+Summary:
+- Found and repaired a deeper distortion in the stitched annual truth itself: the historical regime layer was over-sticky and was biasing too many monthly windows toward `bull_chop`, which made the repaired dynamic annual stack look flatter and less context-aware than it really was.
+
+Key findings:
+- The mixed-sign part of the regime classifier in [build_regime_state.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_regime_state.py) was too broad:
+  - `bull_ema or above_55` was enough to classify many ambiguous windows as `bull_chop`
+  - this hid bear-chop / bear-trend pockets inside the stitched annual replay
+- Historical stitched validation was also inheriting live-style hysteresis too literally:
+  - monthly windows were effectively behaving as if they needed multiple disagreeing checkpoints before a regime could switch
+  - this was especially misleading when `historical_hold_cycles=1` should have meant “switch immediately on the next stitched window”
+
+Changes made:
+- [scripts/build_regime_state.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_regime_state.py):
+  - added mixed-sign bias scoring using:
+    - `ORCH_MIXED_SIGN_PRICE_WEIGHT`
+    - `ORCH_MIXED_SIGN_EMA_WEIGHT`
+    - `ORCH_MIXED_SIGN_EDGE_PCT`
+  - now emits:
+    - `ema_gap_pct`
+    - `close_vs_ema55_pct`
+    - `mixed_bias`
+    - `bull_strength`
+    - `bear_strength`
+    - `bias_edge_pct`
+  - bumped regime state version to `2`
+- [scripts/run_control_plane_replay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_control_plane_replay.py):
+  - fixed `_advance_hysteresis(...)` so `min_hold_cycles=1` truly allows an immediate regime switch in historical replay
+- [scripts/run_dynamic_crypto_annual.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_annual.py):
+  - added explicit `--historical-hold-cycles`
+  - writes `historical_hold_cycles` into stitched annual outputs
+
+Observed effect:
+- Raw regime distribution across the annual stitched checkpoints is no longer almost all `bull_chop`; it now includes real `bear_chop`, `bear_trend`, and `bull_trend` windows.
+- A new corrected stitched run is now active:
+  - [dynamic_core3_impulse_candidate_annual_v3_hold1](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_172157_dynamic_core3_impulse_candidate_annual_v3_hold1)
+- The first corrected window already diverged materially from the stale truth:
+  - `w01`: `regime=bull_chop`, sleeves `sloped,impulse`, `net=-3.03`, PF `0.148`
+
+Practical meaning:
+- We now have a concrete reason to rerun stitched annual before judging whether the new protective layers “help” or “suffocate” the bot.
+- If annual v3 improves regime diversity and red-month behaviour, that confirms the previous annual harness was understating the repaired stack.
+- If annual v3 still looks weak after this fix, the next bottleneck is sleeve logic / promotion truth, not router stickiness.

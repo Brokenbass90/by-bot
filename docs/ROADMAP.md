@@ -472,3 +472,7 @@ New foundation rules:
   - after the repaired stack truth (`+13.17%`, PF `1.2182`, DD `5.24`, but `6` red months), the next repair focus is annual consistency rather than raw activation
   - `range_scalp_v1_annual_repair_v1` is now the active frontier for reducing red months / negative streaks without inventing a new sleeve family
   - live observability must treat `impulse/IVB1` as a first-class sleeve in pulse/status output, otherwise the stack keeps looking artificially narrower than it is
+  - stitched annual truth must no longer inherit live-style regime stickiness by accident:
+    - mixed-sign monthly checkpoints now need their own bias scoring instead of falling through to broad `bull_chop`
+    - historical `hold=1` must mean immediate stitched switching, not “still wait another month”
+  - until [dynamic_core3_impulse_candidate_annual_v3_hold1](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/dynamic_annual_20260408_172157_dynamic_core3_impulse_candidate_annual_v3_hold1) finishes, treat `annual_v2` as a useful repaired baseline but not yet the final annual answer on the new foundation

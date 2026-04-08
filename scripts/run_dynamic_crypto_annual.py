@@ -21,7 +21,6 @@ if str(ROOT) not in sys.path:
 from backtest.metrics import Trade, summarize_trades  # noqa: E402
 from bot.strategy_health_timeline import load_strategy_health_timeline, select_health_snapshot  # noqa: E402
 from scripts.build_regime_state import (  # noqa: E402
-    MIN_HOLD_CYCLES,
     _apply_decision_softeners,
     _classify_regime,
     _fetch_4h,
@@ -419,6 +418,7 @@ def _write_outputs(
         "end": args.end,
         "total_days": int(args.total_days),
         "window_days": int(args.window_days),
+        "historical_hold_cycles": int(args.historical_hold_cycles),
         "windows": len(window_rows),
         "starting_equity": round(float(starting_equity), 4),
         "ending_equity": round(float(ending_equity), 4),
@@ -444,6 +444,7 @@ def _write_outputs(
         f.write(f"- End date: `{args.end}`\n")
         f.write(f"- Horizon: `{args.total_days}` days\n")
         f.write(f"- Window size: `{args.window_days}` days\n")
+        f.write(f"- Historical hold cycles: `{int(args.historical_hold_cycles)}`\n")
         f.write(f"- Windows: `{len(window_rows)}`\n")
         f.write(f"- Starting equity: `{starting_equity:.2f}`\n")
         f.write(f"- Ending equity: `{ending_equity:.2f}`\n")
@@ -486,6 +487,12 @@ def main() -> int:
     ap.add_argument("--slippage_bps", type=float, default=2.0)
     ap.add_argument("--tag", default="dynamic_crypto_annual")
     ap.add_argument("--out-dir", default="")
+    ap.add_argument(
+        "--historical-hold-cycles",
+        type=int,
+        default=1,
+        help="Hysteresis cycles for stitched historical windows. Default 1 because monthly windows should not inherit live hourly hold=3.",
+    )
     args = ap.parse_args()
 
     end_date = _parse_date(args.end)
@@ -532,7 +539,7 @@ def main() -> int:
             applied_regime=applied_regime,
             pending_regime=pending_regime,
             pending_count=pending_count,
-            min_hold_cycles=int(MIN_HOLD_CYCLES),
+            min_hold_cycles=max(1, int(args.historical_hold_cycles)),
         )
         decision = _apply_decision_softeners(applied_regime, indicators)
         scan = _historical_scan(checkpoint_ms, max_scan_symbols=int(args.max_scan_symbols))
