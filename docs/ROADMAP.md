@@ -457,3 +457,12 @@ New foundation rules:
 - vision may assist analysis later, but level-building and regime/routing truth must stay reproducible without external model calls
 - stitched annual validation must stay offline/cache-reproducible; no hidden live fetches in “honest” system tests
 - dynamic system promotion must use the new stitched harness, not only sleeve-level probes or brain-only replay
+- live foundation deploy must remain resilient even if the first `systemd` start fails; env patching, cron repair, and final restart must still happen
+- new sleeves are not considered “connected” until all three are true:
+  - live bot imports and schedules them
+  - allocator policy contains them
+  - server deploy copies the actual strategy module
+- current strategy direction after the latest honest truth:
+  - `pump_fade` stays de-prioritized
+  - `IVB1 off` is a stronger candidate than `IVB1 ema`
+  - next portfolio compare should focus on `core2` vs `core2 + IVB1 off`

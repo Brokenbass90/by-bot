@@ -2751,3 +2751,27 @@ Key findings:
 - Fresh follow-up truth:
   - `pump_fade_v4r_bear_window` finished `81/81` and every row failed with the same weak outcome (`net=-0.27`, `PF=0.000`), so this sleeve is not a hidden bear-market savior right now
   - `core2_honest_wf_360d_20260408` had to be restarted as cache-only because the first version drifted into a stuck network-backed run instead of clean offline validation
+
+## Codex Session 27f - 2026-04-08
+
+Summary:
+- Closed a real live bug instead of debating it abstractly: `IVB1` was indeed not wired into the live bot, and the server foundation deploy initially broke because the new bot import landed before the actual strategy file was copied to `/root/by-bot/strategies`.
+- Repaired the live path, patched the watchdog/env gap, and refreshed the honest research verdicts.
+
+Key findings:
+- Live wiring:
+  - [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) now imports and schedules `impulse_volume_breakout_v1`
+  - [configs/portfolio_allocator_policy.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/portfolio_allocator_policy.json) now contains an `impulse` sleeve
+  - minimum notional is now env-driven via `MIN_NOTIONAL_USD`, default `5.0`
+- Foundation repair:
+  - [scripts/bot_health_watchdog.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/bot_health_watchdog.sh) and [scripts/check_control_plane_health.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/check_control_plane_health.sh) now source live `.env`, so `WATCHDOG_AUTO_RESTART=1` actually works under cron
+  - [scripts/deploy_foundation.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deploy_foundation.sh) now uploads [strategies/impulse_volume_breakout_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/impulse_volume_breakout_v1.py) and is resilient if the first `systemd` start fails
+  - server status is green again: `systemd RUNNING`, heartbeat fresh, control-plane files fresh, watchdog cron installed, `WATCHDOG_AUTO_RESTART=1`, `MIN_NOTIONAL_USD=5.0`
+- Honest strategy truth at this point:
+  - `pump_fade_v4r_bear_window`: still dead, `81/81` fail
+  - `ivb1_ema_wf_360d_20260408`: weak, cumulative `net=-0.93`, positive windows `7/23`
+  - `ivb1_off_wf_360d_20260408`: materially better, cumulative `net=+13.78`, positive windows `18/23`
+  - `core2_honest_wf_360d_cache_20260408`: mixed but alive, cumulative `net=+12.79`, positive windows `11/23`
+- Practical meaning:
+  - the useful result is not “IVB1 is ready”, but “the current EMA regime gate hurts IVB1 more than it helps”
+  - live `IVB1` is now wired and allocator-aware, but still intentionally not enabled in production because promotion truth is not there yet

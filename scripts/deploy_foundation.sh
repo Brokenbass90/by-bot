@@ -53,6 +53,7 @@ FILES=(
   "bot/operator_snapshot.py"
   "bot/router_geometry.py"
   "bot/strategy_health_timeline.py"
+  "strategies/impulse_volume_breakout_v1.py"
   "scripts/setup_systemd_bot.sh"
   "scripts/bot_health_watchdog.sh"
   "scripts/setup_watchdog_cron.sh"
@@ -84,8 +85,13 @@ echo "   ✅ files uploaded"
 # ── 2. Install systemd service ────────────────────────────────────
 echo ""
 echo "→ [2/5] Installing/updating systemd service..."
-$SSH_CMD "BOT_DIR=$BOT_DIR SERVICE_NAME=$SERVICE_NAME bash $BOT_DIR/scripts/setup_systemd_bot.sh"
-echo "   ✅ systemd service installed"
+SYSTEMD_INSTALL_OK=1
+if ! $SSH_CMD "BOT_DIR=$BOT_DIR SERVICE_NAME=$SERVICE_NAME bash $BOT_DIR/scripts/setup_systemd_bot.sh"; then
+  SYSTEMD_INSTALL_OK=0
+  echo "   ⚠️ systemd service install/start reported failure; continuing with env+cron repair"
+else
+  echo "   ✅ systemd service installed"
+fi
 
 # ── 3. Install/update control-plane and watchdog crons ────────────
 echo ""
@@ -117,7 +123,7 @@ echo "   ✅ control-plane health cron installed"
 echo ""
 echo "→ [5/5] Verifying bot status..."
 sleep 3
-$SSH_CMD "systemctl status $SERVICE_NAME --no-pager -l | head -15"
+$SSH_CMD "systemctl reset-failed $SERVICE_NAME >/dev/null 2>&1 || true; systemctl restart $SERVICE_NAME >/dev/null 2>&1 || systemctl start $SERVICE_NAME >/dev/null 2>&1 || true; sleep 5; systemctl status $SERVICE_NAME --no-pager -l | head -15"
 
 echo ""
 echo "══════════════════════════════════════════"
@@ -133,4 +139,10 @@ echo "    tail -f $BOT_DIR/runtime/watchdog.log"
 echo ""
 echo "  Control-plane check runs every 30 minutes:"
 echo "    tail -f $BOT_DIR/runtime/cp_health.log"
+if [[ "$SYSTEMD_INSTALL_OK" -ne 1 ]]; then
+  echo ""
+  echo "  NOTE:"
+  echo "    systemd failed on the first install/start attempt,"
+  echo "    but env patch + cron repair still completed and final restart was attempted."
+fi
 echo "══════════════════════════════════════════"

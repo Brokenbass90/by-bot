@@ -16,6 +16,15 @@ PROBLEMS=()
 TG_TOKEN="${TG_TOKEN:-}"
 TG_CHAT="${TG_CHAT_ID:-${TG_CHAT:-}}"
 
+if [[ -f "$BOT_DIR/.env" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$BOT_DIR/.env"
+  set +a
+  TG_TOKEN="${TG_TOKEN:-}"
+  TG_CHAT="${TG_CHAT_ID:-${TG_CHAT:-}}"
+fi
+
 # Max allowed ages (seconds)
 REGIME_MAX_AGE="${CP_REGIME_MAX_AGE_SEC:-7200}"         # 2 hours — runs hourly
 ROUTER_MAX_AGE="${CP_ROUTER_MAX_AGE_SEC:-28800}"        # 8 hours — router now every 6h

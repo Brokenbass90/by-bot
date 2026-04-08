@@ -22,6 +22,16 @@ AUTO_RESTART="${WATCHDOG_AUTO_RESTART:-0}"        # set to 1 to enable auto-rest
 TG_TOKEN="${TG_TOKEN:-}"
 TG_CHAT="${TG_CHAT_ID:-${TG_CHAT:-}}"
 
+if [[ -f "$BOT_DIR/.env" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$BOT_DIR/.env"
+  set +a
+  AUTO_RESTART="${WATCHDOG_AUTO_RESTART:-${AUTO_RESTART:-0}}"
+  TG_TOKEN="${TG_TOKEN:-}"
+  TG_CHAT="${TG_CHAT_ID:-${TG_CHAT:-}}"
+fi
+
 NOW=$(date +%s)
 
 # ── Telegram send helper ──────────────────────────────────────────

@@ -181,6 +181,21 @@
       }
     },
     {
+      "name": "impulse",
+      "enable_env": "ENABLE_IVB1_TRADING",
+      "symbol_env_key": "IVB1_SYMBOL_ALLOWLIST",
+      "risk_env": "IVB1_RISK_MULT",
+      "strategy_names": [
+        "impulse_volume_breakout_v1"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 1.0,
+        "bull_chop": 0.7,
+        "bear_chop": 0.0,
+        "bear_trend": 0.0
+      }
+    },
+    {
       "name": "pump_fade",
       "enable_env": "ENABLE_PUMP_FADE_TRADING",
       "symbol_env_key": "PF2_SYMBOL_ALLOWLIST",

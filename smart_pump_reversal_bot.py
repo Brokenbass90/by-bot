@@ -46,6 +46,7 @@ from retest_live import RetestEngine
 from strategies.breakdown_live import BreakdownLiveEngine
 from strategies.micro_scalper_live import MicroScalperLiveEngine
 from strategies.support_reclaim_live import SupportReclaimLiveEngine
+from strategies.impulse_volume_breakout_v1 import ImpulseVolumeBreakoutV1Strategy
 from trade_reporting import generate_report, since_days
 
 from sr_range import RangeRegistry, RangeScanner
@@ -598,6 +599,21 @@ BREAKDOWN_BREAKER_ALERT_COOLDOWN_SEC = max(300, int(os.getenv("BREAKDOWN_BREAKER
 BREAKDOWN_BREAKER_LAST_ALERT_TS = 0
 BREAKDOWN_ENGINE = None
 
+# ===== IMPULSE VOLUME BREAKOUT V1 (live) =====
+ENABLE_IVB1_TRADING = os.getenv("ENABLE_IVB1_TRADING", "0").strip() == "1"
+IVB1_TRY_EVERY_SEC = int(os.getenv("IVB1_TRY_EVERY_SEC", "60"))
+IVB1_RISK_MULT = max(0.05, float(os.getenv("IVB1_RISK_MULT", "1.0") or 1.0))
+IVB1_ALLOW_MINQTY_FALLBACK = _env_bool("IVB1_ALLOW_MINQTY_FALLBACK", True)
+IVB1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("IVB1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
+IVB1_MAX_OPEN_TRADES = int(os.getenv("IVB1_MAX_OPEN_TRADES", "1"))
+IVB1_SYMBOL_ALLOWLIST: set[str] = {
+    s.strip().upper()
+    for s in str(os.getenv("IVB1_SYMBOL_ALLOWLIST", "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT")).split(",")
+    if s.strip()
+}
+IVB1_ENGINE: dict[str, ImpulseVolumeBreakoutV1Strategy] | None = {}
+_IVB1_LAST_TRY: dict[str, float] = {}
+
 # ===== MICRO SCALPER (live) =====
 ENABLE_MICRO_SCALPER_TRADING = os.getenv("ENABLE_MICRO_SCALPER_TRADING", "0").strip() == "1"
 MICRO_SCALPER_TRY_EVERY_SEC = int(os.getenv("MICRO_SCALPER_TRY_EVERY_SEC", "30"))
@@ -630,7 +646,7 @@ LIVE_TRADE_EVENTS_JSONL = os.getenv("LIVE_TRADE_EVENTS_JSONL", "runtime/live_tra
 # =========================== ПАРАМЕТРЫ ТОРГОВЛИ ===========================
 TRADE_ON = True
 BYBIT_LEVERAGE = 3               
-MIN_NOTIONAL_USD = 10.0
+MIN_NOTIONAL_USD = float(os.getenv("MIN_NOTIONAL_USD", "5.0") or 5.0)
 BOT_CAPITAL_USD = None
 
 USE_HALF_EQUITY_PER_TRADE = False
@@ -2346,6 +2362,7 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "sloped": bool(ENABLE_SLOPED_TRADING),
             "flat": bool(ENABLE_FLAT_TRADING),
             "breakdown": bool(ENABLE_BREAKDOWN_TRADING),
+            "ivb1": bool(ENABLE_IVB1_TRADING),
             "ts132": bool(ENABLE_TS132_TRADING),
             "pump_fade": bool(ENABLE_PUMP_FADE_TRADING),
             "inplay": bool(ENABLE_INPLAY_TRADING),
@@ -2372,6 +2389,8 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "flat_entry": int(_diag_get_int("flat_entry")),
             "breakdown_try": int(_diag_get_int("breakdown_try")),
             "breakdown_entry": int(_diag_get_int("breakdown_entry")),
+            "ivb1_try": int(_diag_get_int("ivb1_try")),
+            "ivb1_entry": int(_diag_get_int("ivb1_entry")),
             "ts132_try": int(_diag_get_int("ts132_try")),
             "ts132_entry": int(_diag_get_int("ts132_entry")),
         },
@@ -2396,14 +2415,19 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "RISK_PER_TRADE_PCT": os.getenv("RISK_PER_TRADE_PCT", ""),
             "SLOPED_RISK_MULT": os.getenv("SLOPED_RISK_MULT", ""),
             "FLAT_RISK_MULT": os.getenv("FLAT_RISK_MULT", ""),
+            "IVB1_RISK_MULT": os.getenv("IVB1_RISK_MULT", ""),
+            "IVB1_REGIME_MODE": os.getenv("IVB1_REGIME_MODE", ""),
+            "IVB1_SYMBOL_ALLOWLIST": os.getenv("IVB1_SYMBOL_ALLOWLIST", ""),
             "DRY_RUN": os.getenv("DRY_RUN", ""),
             "ENABLE_BREAKDOWN_TRADING": os.getenv("ENABLE_BREAKDOWN_TRADING", "0"),
+            "ENABLE_IVB1_TRADING": os.getenv("ENABLE_IVB1_TRADING", "0"),
         },
         "system_truth": {
-            "current_live_candidate": "core2_breakdown_arf1_20260404",
+            "current_live_candidate": "foundation_router_health_20260408",
             "current_live_candidate_strategies": [
                 "alt_resistance_fade_v1",
                 "alt_inplay_breakdown_v1",
+                "impulse_volume_breakout_v1",
             ],
             "tpsl_hard_fail_close": str(os.getenv("TPSL_HARD_FAIL_CLOSE", "0")),
             "tpsl_hard_fail_grace_sec": str(os.getenv("TPSL_HARD_FAIL_GRACE_SEC", "")),
@@ -2489,7 +2513,7 @@ def _status_full_text() -> str:
         "strategies: "
         f"breakout={ENABLE_BREAKOUT_TRADING}, midterm={ENABLE_MIDTERM_TRADING}, "
         f"sloped={ENABLE_SLOPED_TRADING}, flat={ENABLE_FLAT_TRADING}, "
-        f"breakdown={ENABLE_BREAKDOWN_TRADING}, ts132={ENABLE_TS132_TRADING}"
+        f"breakdown={ENABLE_BREAKDOWN_TRADING}, ivb1={ENABLE_IVB1_TRADING}, ts132={ENABLE_TS132_TRADING}"
     )
 
     router_regime = str(os.getenv("ROUTER_REGIME", "") or "").strip()
@@ -6236,6 +6260,15 @@ if ENABLE_SUPPORT_RECLAIM_TRADING:
         log_error(f"[SUPPORT_RECLAIM] engine init fail: {_e}")
         SUPPORT_RECLAIM_ENGINE = None
 
+# ===== IVB1 ENGINE =====
+if ENABLE_IVB1_TRADING:
+    try:
+        IVB1_ENGINE = {}
+        print("[IVB1] engine initialised (per-symbol lazy)")
+    except Exception as _e:
+        log_error(f"[IVB1] engine init fail: {_e}")
+        IVB1_ENGINE = None
+
 # ===== TRIPLE SCREEN v132 ENGINE =====
 if ENABLE_TS132_TRADING:
     try:
@@ -8337,6 +8370,181 @@ class _TS132Store:
         return fetch_klines(symbol, interval, limit)
 
 
+class _IVB1Store:
+    """Minimal store that ImpulseVolumeBreakoutV1Strategy expects for fetch_klines."""
+    def __init__(self, symbol: str):
+        self.symbol = symbol
+    def fetch_klines(self, symbol: str, interval: str, limit: int):
+        return fetch_klines(symbol, interval, limit)
+
+
+async def try_ivb1_entry_async(symbol: str, price: float):
+    """Try live IVB1 entry for a symbol (impulse_volume_breakout_v1)."""
+    if not ENABLE_IVB1_TRADING:
+        return
+    if IVB1_ENGINE is None:
+        return
+    if not TRADE_ON or DRY_RUN:
+        return
+    if TRADE_CLIENT is None:
+        return
+    if symbol not in IVB1_SYMBOL_ALLOWLIST:
+        return
+    if get_trade("Bybit", symbol) is not None:
+        return
+    if IVB1_MAX_OPEN_TRADES > 0:
+        open_ivb1 = sum(
+            1 for tr in TRADES.values()
+            if getattr(tr, "strategy", "") == "impulse_volume_breakout_v1"
+            and str(getattr(tr, "status", "")).upper() not in {"CLOSED", "ERROR"}
+        )
+        if open_ivb1 >= IVB1_MAX_OPEN_TRADES:
+            _diag_inc("ivb1_skip_max_open")
+            return
+    if not portfolio_can_open():
+        _diag_inc("ivb1_skip_portfolio")
+        return
+
+    now = now_s()
+    last = float(_IVB1_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < IVB1_TRY_EVERY_SEC:
+        return
+    _IVB1_LAST_TRY[symbol] = now
+    _diag_inc("ivb1_try")
+
+    if symbol not in IVB1_ENGINE:
+        IVB1_ENGINE[symbol] = ImpulseVolumeBreakoutV1Strategy()
+    strat = IVB1_ENGINE[symbol]
+    store = _IVB1Store(symbol)
+
+    try:
+        sig = strat.maybe_signal(store, int(now * 1000), price, price, price, price, 0.0)
+    except Exception as e:
+        log_error(f"ivb1 signal error {symbol}: {e}")
+        return
+    if not sig:
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=IVB1_RISK_MULT)
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
+    if qty_floor <= 0 and IVB1_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=entry,
+            stop_pct=stop_pct,
+            risk_mult=IVB1_RISK_MULT,
+            max_mult=IVB1_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            dyn_usd = fallback_usd
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = ""
+        elif not reason:
+            reason = fallback_reason
+    if dyn_usd <= 0 and qty_floor <= 0:
+        tg_skip_throttled("ivb1", symbol, "notional_small", f"🟡 IVB1 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+    if qty_floor <= 0:
+        tg_skip_throttled("ivb1", symbol, f"minqty:{reason}", f"🟡 IVB1 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:ivb1:{symbol}",
+            f"🟡 IVB1 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
+
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("ivb1_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if get_trade("Bybit", symbol) is not None:
+            return
+        if not portfolio_can_open():
+            return
+        ensure_leverage(symbol, BYBIT_LEVERAGE)
+        _diag_inc("ivb1_entry")
+        order_send_ts = int(now_s())
+        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        order_ack_ts = int(now_s())
+
+        tr = TradeState(
+            symbol=symbol,
+            side=side,
+            qty=q,
+            entry_price_req=float(entry),
+            entry_ts=now,
+        )
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "impulse_volume_breakout_v1"
+        tr.signal_reason = str(getattr(sig, "reason", "") or "")
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        tr.order_send_ts = int(order_send_ts)
+        tr.order_ack_ts = int(order_ack_ts)
+        tr.runner_enabled = bool(use_runner)
+        if tr.runner_enabled:
+            tr.tps = [float(x) for x in (sig.tps or [])]
+            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
+            tr.tp_hit = [False for _ in tr.tps]
+            tr.initial_qty = float(q)
+            tr.remaining_qty = float(q)
+            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
+            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
+            tr.time_stop_sec = int(ts_bars * 300)
+            tr.trail_activate_rr = float(getattr(sig, "trail_activate_rr", 0.0) or 0.0)
+            tr.trail_armed = tr.trail_activate_rr <= 0.0
+        TRADES[("Bybit", symbol)] = tr
+
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        _append_live_trade_event(
+            "order_submitted",
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=float(tp_r) if tp_r is not None else None,
+            request_sl=float(sl_r) if sl_r is not None else None,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🟢 IVB1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
+
+
 async def try_ts132_entry_async(symbol: str, price: float):
     """Try Triple Screen v132 entry for a symbol."""
     if not ENABLE_TS132_TRADING:
@@ -8900,6 +9108,16 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                 except Exception as _e:
                     log_error(f"try_breakdown_entry schedule fail {sym}: {_e}")
 
+        # ===== IVB1 LONG IMPULSE ENTRY =====
+        if ENABLE_IVB1_TRADING and sym in IVB1_SYMBOL_ALLOWLIST and _health_gate.allow_entry("impulse_volume_breakout_v1", sym):
+            last = float(_IVB1_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= IVB1_TRY_EVERY_SEC:
+                try:
+                    _diag_inc("ivb1_sched")
+                    asyncio.create_task(try_ivb1_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_ivb1_entry schedule fail {sym}: {_e}")
+
         # ===== MICRO SCALPER ENTRY =====
         if ENABLE_MICRO_SCALPER_TRADING and sym in MICRO_SCALPER_SYMBOL_ALLOWLIST and _health_gate.allow_entry("micro_scalper_v1", sym):
             last = float(_MICRO_SCALPER_LAST_TRY.get(sym, 0) or 0)
@@ -8942,7 +9160,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
 
         # ===== INPLAY runner management (partials + trailing + time stop) =====
         if (tr
-            and getattr(tr, "strategy", "") in ("inplay", "inplay_breakout", "btc_eth_midterm_pullback", "alt_inplay_breakdown_v1")
+            and getattr(tr, "strategy", "") in ("inplay", "inplay_breakout", "btc_eth_midterm_pullback", "alt_inplay_breakdown_v1", "impulse_volume_breakout_v1")
             and getattr(tr, "status", None) == "OPEN"
             and getattr(tr, "runner_enabled", False)
             and p1 is not None
@@ -9549,6 +9767,7 @@ def _check_router_control_plane_health(*, notify: bool = True) -> bool:
 
 def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
+    global ENABLE_IVB1_TRADING
     global ENABLE_SLOPED_TRADING, BREAKOUT_SYMBOL_ALLOWLIST, BREAKOUT_SYMBOL_DENYLIST
     global BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE
     global RISK_PER_TRADE_PCT, ORCH_GLOBAL_RISK_MULT, REGIME_OVERLAY_LAST_MTIME
@@ -9584,6 +9803,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     ENABLE_MIDTERM_TRADING = _env_bool("ENABLE_MIDTERM_TRADING", ENABLE_MIDTERM_TRADING)
     ENABLE_FLAT_TRADING = _env_bool("ENABLE_FLAT_TRADING", ENABLE_FLAT_TRADING)
     ENABLE_BREAKDOWN_TRADING = _env_bool("ENABLE_BREAKDOWN_TRADING", ENABLE_BREAKDOWN_TRADING)
+    ENABLE_IVB1_TRADING = _env_bool("ENABLE_IVB1_TRADING", ENABLE_IVB1_TRADING)
     ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
     BREAKOUT_SYMBOL_ALLOWLIST = _csv_upper_set("BREAKOUT_SYMBOL_ALLOWLIST")
     BREAKOUT_SYMBOL_DENYLIST = _csv_upper_set("BREAKOUT_SYMBOL_DENYLIST")
@@ -9611,25 +9831,26 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
         f"regime={REGIME_OVERLAY_LAST_APPLIED_REGIME or 'n/a'} "
         f"risk_mult={ORCH_GLOBAL_RISK_MULT:.2f} "
         f"breakout={ENABLE_BREAKOUT_TRADING} breakdown={ENABLE_BREAKDOWN_TRADING} "
-        f"flat={ENABLE_FLAT_TRADING} midterm={ENABLE_MIDTERM_TRADING}"
+        f"flat={ENABLE_FLAT_TRADING} midterm={ENABLE_MIDTERM_TRADING} ivb1={ENABLE_IVB1_TRADING}"
     )
     if notify and REGIME_OVERLAY_LAST_APPLIED_REGIME != old_regime and REGIME_OVERLAY_LAST_APPLIED_REGIME:
         tg_trade(
             f"🧠 Regime overlay applied: {old_regime or 'none'} → {REGIME_OVERLAY_LAST_APPLIED_REGIME} | "
             f"risk×{ORCH_GLOBAL_RISK_MULT:.2f} | breakout={int(ENABLE_BREAKOUT_TRADING)} "
             f"breakdown={int(ENABLE_BREAKDOWN_TRADING)} flat={int(ENABLE_FLAT_TRADING)} "
-            f"midterm={int(ENABLE_MIDTERM_TRADING)}"
+            f"midterm={int(ENABLE_MIDTERM_TRADING)} ivb1={int(ENABLE_IVB1_TRADING)}"
         )
     return True
 
 
 def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
+    global ENABLE_IVB1_TRADING
     global ENABLE_SLOPED_TRADING, BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE
     global RISK_PER_TRADE_PCT, PORTFOLIO_ALLOCATOR_LAST_MTIME, PORTFOLIO_ALLOCATOR_LAST_APPLY_TS
     global PORTFOLIO_ALLOCATOR_LAST_STATUS, ALLOCATOR_GLOBAL_RISK_MULT, ALLOCATOR_HARD_BLOCK_NEW_ENTRIES
     global ALLOCATOR_SAFE_MODE, ALLOCATOR_SAFE_MODE_REASON, BREAKOUT_RISK_MULT, MIDTERM_RISK_MULT
-    global SLOPED_RISK_MULT, FLAT_RISK_MULT, BREAKDOWN_RISK_MULT, LAST_UNIVERSE_REFRESH_TS
+    global SLOPED_RISK_MULT, FLAT_RISK_MULT, BREAKDOWN_RISK_MULT, IVB1_RISK_MULT, LAST_UNIVERSE_REFRESH_TS
 
     if not PORTFOLIO_ALLOCATOR_ENABLE:
         return False
@@ -9661,6 +9882,7 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     ENABLE_MIDTERM_TRADING = _env_bool("ENABLE_MIDTERM_TRADING", ENABLE_MIDTERM_TRADING)
     ENABLE_FLAT_TRADING = _env_bool("ENABLE_FLAT_TRADING", ENABLE_FLAT_TRADING)
     ENABLE_BREAKDOWN_TRADING = _env_bool("ENABLE_BREAKDOWN_TRADING", ENABLE_BREAKDOWN_TRADING)
+    ENABLE_IVB1_TRADING = _env_bool("ENABLE_IVB1_TRADING", ENABLE_IVB1_TRADING)
     ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
 
     try:
@@ -9692,6 +9914,10 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         BREAKDOWN_RISK_MULT = max(0.05, float(os.getenv("BREAKDOWN_RISK_MULT", str(BREAKDOWN_RISK_MULT)) or BREAKDOWN_RISK_MULT))
     except Exception:
         pass
+    try:
+        IVB1_RISK_MULT = max(0.05, float(os.getenv("IVB1_RISK_MULT", str(IVB1_RISK_MULT)) or IVB1_RISK_MULT))
+    except Exception:
+        pass
 
     _recompute_effective_risk_pct()
 
@@ -9712,14 +9938,14 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         f"risk_mult={ALLOCATOR_GLOBAL_RISK_MULT:.2f} "
         f"hard_block={ALLOCATOR_HARD_BLOCK_NEW_ENTRIES} "
         f"breakout={ENABLE_BREAKOUT_TRADING} breakdown={ENABLE_BREAKDOWN_TRADING} "
-        f"flat={ENABLE_FLAT_TRADING} midterm={ENABLE_MIDTERM_TRADING}"
+        f"flat={ENABLE_FLAT_TRADING} midterm={ENABLE_MIDTERM_TRADING} ivb1={ENABLE_IVB1_TRADING}"
     )
     if notify and PORTFOLIO_ALLOCATOR_LAST_STATUS != old_status:
         tg_trade(
             f"🛡️ Allocator overlay applied: {old_status or 'none'} → {PORTFOLIO_ALLOCATOR_LAST_STATUS or 'n/a'} | "
             f"risk×{ALLOCATOR_GLOBAL_RISK_MULT:.2f} | hard_block={int(ALLOCATOR_HARD_BLOCK_NEW_ENTRIES)} | "
             f"breakout={int(ENABLE_BREAKOUT_TRADING)} breakdown={int(ENABLE_BREAKDOWN_TRADING)} "
-            f"flat={int(ENABLE_FLAT_TRADING)} midterm={int(ENABLE_MIDTERM_TRADING)}"
+            f"flat={int(ENABLE_FLAT_TRADING)} midterm={int(ENABLE_MIDTERM_TRADING)} ivb1={int(ENABLE_IVB1_TRADING)}"
         )
     return True
 
@@ -9986,6 +10212,7 @@ def auth_check_all_accounts():
         f"sloped={ENABLE_SLOPED_TRADING}, "
         f"flat={ENABLE_FLAT_TRADING}, "
         f"breakdown={ENABLE_BREAKDOWN_TRADING}, "
+        f"ivb1={ENABLE_IVB1_TRADING}, "
         f"ts132={ENABLE_TS132_TRADING}"
     )
 
@@ -10238,7 +10465,8 @@ def main():
     print(
         f"Strategies: breakout={ENABLE_BREAKOUT_TRADING} inplay={ENABLE_INPLAY_TRADING} "
         f"retest={ENABLE_RETEST_TRADING} range={ENABLE_RANGE_TRADING} pump_fade={ENABLE_PUMP_FADE_TRADING} "
-        f"midterm={ENABLE_MIDTERM_TRADING} sloped={ENABLE_SLOPED_TRADING} flat={ENABLE_FLAT_TRADING} breakdown={ENABLE_BREAKDOWN_TRADING} ts132={ENABLE_TS132_TRADING}"
+        f"midterm={ENABLE_MIDTERM_TRADING} sloped={ENABLE_SLOPED_TRADING} flat={ENABLE_FLAT_TRADING} "
+        f"breakdown={ENABLE_BREAKDOWN_TRADING} ivb1={ENABLE_IVB1_TRADING} ts132={ENABLE_TS132_TRADING}"
     )
     if BOT_CAPITAL_USD is not None:
         print(f"Bot capital cap: {BOT_CAPITAL_USD} USDT")

@@ -363,3 +363,52 @@ nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/f
   - best row still `net=-0.27`, `PF=0.000`
   - verdict: do not treat `pump_fade_v4r` as an active bear-window answer
 - `core2_honest_wf_360d_20260408` needed a cache-only restart because the first attempt wandered into a stuck network-backed portfolio subprocess; the honest backbone run is now `core2_honest_wf_360d_cache_20260408`
+
+## Codex Changes (session 27f) — 2026-04-08
+
+### Live repair / foundation truth:
+
+- `IVB1` is now wired into live code and policy:
+  - [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py)
+  - [configs/portfolio_allocator_policy.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/portfolio_allocator_policy.json)
+- `WATCHDOG_AUTO_RESTART` is no longer a dead env var under cron:
+  - [scripts/bot_health_watchdog.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/bot_health_watchdog.sh)
+  - [scripts/check_control_plane_health.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/check_control_plane_health.sh)
+  - both now source live `.env`
+- `MIN_NOTIONAL_USD` is now env-driven with live patch support:
+  - [scripts/apply_live_control_plane_env_patch.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/apply_live_control_plane_env_patch.py)
+  - current live `.env` was patched to `MIN_NOTIONAL_USD=5.0`
+- foundation deploy is now robust against first-start failure and uploads the IVB1 module:
+  - [scripts/deploy_foundation.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deploy_foundation.sh)
+
+### Current live server truth:
+
+- `bybot.service` is back to `RUNNING`
+- heartbeat is fresh again
+- control-plane files are fresh
+- `impulse` sleeve now exists in allocator state, but stays disabled because:
+  - `symbol_count=0`
+  - `degraded_mode`
+- live status line currently shows only `flat=True`; this is honest, not a wiring bug
+
+### Honest validation truth:
+
+- `pump_fade_v4r_bear_window`
+  - final verdict still `81/81 fail`
+- `ivb1_ema_wf_360d_20260408`
+  - cumulative `net=-0.93`
+  - positive windows `7/23`
+- `ivb1_off_wf_360d_20260408`
+  - cumulative `net=+13.78`
+  - positive windows `18/23`
+- `core2_honest_wf_360d_cache_20260408`
+  - cumulative `net=+12.79`
+  - positive windows `11/23`
+
+### Immediate implication:
+
+- The next good strategy step is **not** to promote IVB1 blindly.
+- The next good step is:
+  - treat `IVB1 off` as the better candidate than `IVB1 ema`
+  - keep `pump_fade` out of focus
+  - compare `core2` vs `core2 + IVB1 off` under honest annual / portfolio criteria
