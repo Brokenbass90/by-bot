@@ -51,6 +51,33 @@
   2. geometry-aware router/advisory
   3. correlation/exposure layer
 
+## 2026-04-08 - operator truth pack wired into AI
+
+### What was closed
+
+- Added [bot/operator_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/operator_snapshot.py) as a shared compact runtime/control-plane summary.
+- Added [scripts/build_operator_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_operator_snapshot.py).
+- Wired the same compact operator context into:
+  - live `/ai` path inside [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py)
+  - weekly AI cycle in [scripts/deepseek_weekly_cron.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deepseek_weekly_cron.py)
+- Updated [scripts/setup_server_crons.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_server_crons.sh) so the server now writes:
+  - [runtime/operator/operator_snapshot.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/operator/operator_snapshot.json)
+  - [runtime/operator/operator_snapshot.txt](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/operator/operator_snapshot.txt)
+- Deployed this to server and verified the live operator snapshot file exists and contains:
+  - heartbeat truth
+  - control-plane freshness truth
+  - geometry highlights for active symbols
+
+### Why it matters
+
+- External operator models still only know what we pass them.
+- Now what we pass them is materially better.
+- This reduces wasted operator cycles on already-answered questions like:
+  - is the bot alive
+  - is the router stale
+  - is allocator in degraded mode
+  - what regime / geometry context active symbols are in
+
 ## 2026-04-08 - server parity + websocket guard
 
 ### What was closed

@@ -31,6 +31,10 @@ Order of work:
   - reusable cache loader
   - geometry state builder
   - hourly server-side geometry snapshots for active symbols
+- AI/operator context is stronger than before:
+  - live `/ai` snapshot now includes compact operator context
+  - weekly AI cron can consume the same compact operator context
+  - server now writes a compact `runtime/operator/operator_snapshot.*` truth pack hourly
 - Crypto live still does not have a fully backtested portfolio-level regime router / allocator loop.
 - Websocket transport remains a real live risk:
   - recent `12h` diagnostic windows still show degraded reconnect / handshake quality

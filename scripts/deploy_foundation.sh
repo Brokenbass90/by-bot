@@ -43,12 +43,17 @@ echo "→ [1/5] Uploading files..."
 
 FILES=(
   "smart_pump_reversal_bot.py"
+  "bot/chart_geometry.py"
+  "bot/geometry_cache.py"
+  "bot/operator_snapshot.py"
   "scripts/setup_systemd_bot.sh"
   "scripts/bot_health_watchdog.sh"
   "scripts/setup_watchdog_cron.sh"
   "scripts/check_control_plane_health.sh"
   "scripts/apply_live_control_plane_env_patch.py"
   "scripts/control_plane_watchdog.py"
+  "scripts/build_geometry_state.py"
+  "scripts/build_operator_snapshot.py"
   "scripts/setup_server_crons.sh"
   "scripts/deploy_foundation.sh"
 )

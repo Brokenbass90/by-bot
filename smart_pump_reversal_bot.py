@@ -87,6 +87,7 @@ from bot.deepseek_autoresearch_agent import (
     audit_bot_full,
     ask_about_file,
 )
+from bot.operator_snapshot import build_operator_snapshot
 from bot.trade_learning_loop import trade_learning
 from bot.deepseek_action_executor import (
     execute_proposal,
@@ -2379,6 +2380,7 @@ def _deepseek_snapshot() -> dict[str, Any]:
         "health_30d": _health_summary_text(30),
         "filters": _symbol_filters_summary(),
         "research": build_research_context(),
+        "operator_context": build_operator_snapshot(),
         # Key live params — lets /ai answer questions about current settings
         "live_params": {
             "ASC1_SYMBOL_ALLOWLIST": os.getenv("ASC1_SYMBOL_ALLOWLIST", ""),

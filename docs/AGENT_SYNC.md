@@ -1,6 +1,30 @@
 # Agent Sync
 
-Last updated: 2026-03-30 15:45 UTC
+Last updated: 2026-04-08 10:50 UTC
+
+## 2026-04-08 refresh note
+
+The older sections below still contain useful history, but do not treat them as a full live-state description anymore.
+
+Current live foundation truth now also includes:
+- `bybot.service` is the real systemd service on server
+- live heartbeat exists:
+  - `/root/by-bot/runtime/bot_heartbeat.json`
+- external watchdogs exist:
+  - heartbeat watchdog cron
+  - control-plane freshness check cron
+  - control-plane repair watchdog cron
+- deterministic geometry exists and runs hourly on server:
+  - `/root/by-bot/runtime/geometry/geometry_state.json`
+- compact operator truth pack exists and runs hourly on server:
+  - `/root/by-bot/runtime/operator/operator_snapshot.json`
+  - `/root/by-bot/runtime/operator/operator_snapshot.txt`
+
+When in doubt, prefer:
+- [docs/ROADMAP.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/ROADMAP.md)
+- [docs/JOURNAL.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/JOURNAL.md)
+- [docs/WORKLOG.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/WORKLOG.md)
+over stale assumptions in older handoff notes.
 
 Purpose:
 - keep Claude and Codex aligned on what is real, what is live, and what is still only research

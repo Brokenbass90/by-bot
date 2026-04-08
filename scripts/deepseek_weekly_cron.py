@@ -59,6 +59,11 @@ except ImportError:
     _research_gate = None  # type: ignore[assignment]
     _GATE_AVAILABLE = False
 
+try:
+    from bot.operator_snapshot import build_operator_snapshot
+except ImportError:
+    build_operator_snapshot = None  # type: ignore[assignment]
+
 
 # ---------------------------------------------------------------------------
 # Env helpers
@@ -311,6 +316,8 @@ def _run_tune_phase(strategies: list[str], dry_run: bool, quiet: bool) -> list[s
         return ["[tune] DeepSeek не готов — проверь DEEPSEEK_ENABLE и DEEPSEEK_API_KEY"]
 
     snapshot = build_research_context()
+    if build_operator_snapshot is not None:
+        snapshot["operator_context"] = build_operator_snapshot(ROOT)
     results = []
     for st in strategies:
         if not quiet:

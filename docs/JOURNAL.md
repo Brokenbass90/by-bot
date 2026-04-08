@@ -153,6 +153,48 @@
   - walk-forward
   - portfolio compare
 
+## 2026-04-08 | Codex (session 28 - operator truth pack)
+
+**Done:**
+
+- Added a shared compact operator context layer:
+  - [bot/operator_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/operator_snapshot.py)
+  - it summarizes:
+    - heartbeat
+    - WS transport guard state
+    - control-plane freshness / watchdog state
+    - regime/router/allocator compact truth
+    - geometry highlights for active symbols
+- Added a saved runtime artifact builder:
+  - [scripts/build_operator_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_operator_snapshot.py)
+  - writes:
+    - `runtime/operator/operator_snapshot.json`
+    - `runtime/operator/operator_snapshot.txt`
+- Wired the same operator context into both AI entry points:
+  - [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) `/ai` snapshot now includes `operator_context`
+  - [scripts/deepseek_weekly_cron.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deepseek_weekly_cron.py) tune-phase snapshot now includes the same `operator_context`
+- Deployed the operator snapshot pieces to the server and updated managed crons:
+  - `build_operator_snapshot.py` now runs hourly after geometry build
+  - verified `/root/by-bot/runtime/operator/operator_snapshot.txt`
+
+**Key findings:**
+
+- The operator problem was not only “memory too short”.
+- The bigger problem was missing structured runtime truth:
+  - before, the AI mostly saw prompt text plus partial runtime snapshot
+  - now it gets a compact pack with the actual server/runtime/control-plane state
+- This will not make the external operator omniscient.
+- It does remove the most expensive blind spot:
+  - stale guesses about service health
+  - stale guesses about router/allocator freshness
+  - stale guesses about chart structure context
+
+**Next:**
+
+- Historical strategy-health timeline
+- geometry-aware routing/advisory
+- only then return to aggressive strategy promotion
+
 ## 2026-04-03 | Codex (session 24 - breakout chop ER guard check on trusted current90)
 
 **Done:**
