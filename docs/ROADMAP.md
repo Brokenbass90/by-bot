@@ -147,6 +147,14 @@ Immediate tasks:
 6. Deploy to server in dry-run mode.
 7. Add cron only after dry-run output is sane.
 8. Confirm live bot actually reloads and applies the overlay.
+9. Replay the control-plane historically on annual checkpoints:
+   - real BTC 4H regime timeline
+   - frozen-router profile replay
+   - allocator decision timeline
+10. After the first replay:
+   - add historical health timeline support
+   - replace frozen-router replay with historical symbol selection
+   - compare control-plane timelines against portfolio annual windows
 
 Exit criteria:
 - orchestrator runs cleanly on schedule

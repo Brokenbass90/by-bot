@@ -27,6 +27,19 @@
   - chart analysis persistence is wired
   - server activation is still blocked until an image-capable API key is supplied
 - Re-audited the old `core3 impulse` annual vs `180d` discrepancy from actual trade files.
+- Added the first historical control-plane replay harness:
+  - [run_control_plane_replay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_control_plane_replay.py)
+  - it replays:
+    - historical BTC 4H regime
+    - hysteresis
+    - frozen-router profile selection
+    - allocator decisions
+- Hardened historical BTC cache fallback in [build_regime_state.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_regime_state.py) so replay can assemble longer history from multiple cache slices instead of dying on a single late cache file.
+- Ran two first control-plane annual replays:
+  - constrained by current health:
+    - [summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/control_plane_replay_20260408_084604_annual_cp_replay_20260408/summary.json)
+  - neutral-health structural view:
+    - [summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/control_plane_replay_20260408_084802_annual_cp_replay_neutral_20260408/summary.json)
 
 **Key findings:**
 
@@ -45,6 +58,19 @@
   - dynamic lane runs
   - long-only protection can block entries
   - annual validated package is still missing
+- First control-plane replay truth:
+  - on the constrained annual replay, the allocator stayed `degraded` on all checkpoints because the current live `strategy_health.json` is already in `WATCH`
+  - applied regime over the annual timeline was mostly:
+    - `bull_chop`
+    - `bear_chop`
+  - average allocator global risk was about `0.645`
+  - regime changes were sparse (`3` on `25` checkpoints)
+- This is useful, not disappointing:
+  - we now have a repeatable harness for the portfolio brain
+  - but the first replay also proves the next missing layers are:
+    - historical health timeline
+    - historical symbol selection instead of frozen overlay replay
+    - later, portfolio PnL comparison using those control-plane decisions
 
 **Next:**
 
@@ -56,6 +82,10 @@
   - regime router
   - allocator
   - full-year portfolio truth
+- Extend the new replay harness instead of starting another parallel framework:
+  - neutral health vs constrained health
+  - historical router selection
+  - control-plane-aware portfolio regression
 - After the transport layer is calmer, continue the foundation work:
   - geometry engine
   - regime-router backtest

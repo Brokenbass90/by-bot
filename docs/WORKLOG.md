@@ -38,6 +38,27 @@
   3. geometry engine
   4. only then more sleeves and more markets
 
+### Same-day follow-up - first control-plane replay exists
+
+- Added:
+  - `scripts/run_control_plane_replay.py`
+- Purpose:
+  - replay the control-plane itself on a historical annual timeline
+  - not only sleeves, but:
+    - regime timeline
+    - hysteresis
+    - frozen-router profile choice
+    - allocator decisions
+- Also improved `build_regime_state.py` historical cache fallback:
+  - it can now merge multiple cache slices instead of trusting only the latest file
+- First annual replay verdict:
+  - average allocator global risk around `0.645`
+  - regime changes sparse (`3` across `25` checkpoints)
+  - constrained replay stayed degraded because the current `strategy_health.json` is already `WATCH`
+- Important limitation now documented:
+  - replay currently uses frozen overlay symbols, not full historical symbol scans
+  - next improvement is historical router selection + health timeline
+
 ## 2026-04-02 - Roadmap reset / control-plane first
 
 ### Why the roadmap was reset

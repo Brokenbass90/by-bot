@@ -115,7 +115,7 @@ def _tg_send(token: str, chat_id: str, text: str) -> None:
 # Data fetch
 # ---------------------------------------------------------------------------
 
-def _fetch_4h(symbol: str, bars: int) -> List[Dict[str, float]]:
+def _fetch_4h(symbol: str, bars: int, *, end_ms: int | None = None, cache_only: bool = False) -> List[Dict[str, float]]:
     """Fetch last `bars` 4H klines from Bybit v5, return oldest-first list of dicts.
 
     Fail-safe:
@@ -124,7 +124,7 @@ def _fetch_4h(symbol: str, bars: int) -> List[Dict[str, float]]:
     """
     try:
         from backtest.bybit_data import fetch_klines_public
-        end_ms   = int(time.time() * 1000)
+        end_ms = int(end_ms or int(time.time() * 1000))
         start_ms = end_ms - bars * 4 * 3600 * 1000
         common = {
             "symbol": symbol,
@@ -135,12 +135,13 @@ def _fetch_4h(symbol: str, bars: int) -> List[Dict[str, float]]:
             "max_retries": 3,
             "backoff_max_sec": 5.0,
         }
-        try:
-            klines = fetch_klines_public(cache=False, **common)
-            if klines:
-                return [{"o": k.o, "h": k.h, "l": k.l, "c": k.c, "v": k.v, "ts": k.ts} for k in klines]
-        except Exception as e:
-            log.warning(f"fetch_4h fresh failed for {symbol}: {e}")
+        if not cache_only:
+            try:
+                klines = fetch_klines_public(cache=False, **common)
+                if klines:
+                    return [{"o": k.o, "h": k.h, "l": k.l, "c": k.c, "v": k.v, "ts": k.ts} for k in klines]
+            except Exception as e:
+                log.warning(f"fetch_4h fresh failed for {symbol}: {e}")
 
         try:
             klines = fetch_klines_public(cache=True, **common)
@@ -149,7 +150,7 @@ def _fetch_4h(symbol: str, bars: int) -> List[Dict[str, float]]:
                 return [{"o": k.o, "h": k.h, "l": k.l, "c": k.c, "v": k.v, "ts": k.ts} for k in klines]
         except Exception as e:
             log.error(f"fetch_4h cached fallback failed for {symbol}: {e}")
-        cached_rows = _load_cached_lower_tf_fallback(symbol, bars)
+        cached_rows = _load_cached_lower_tf_fallback(symbol, bars, end_ms=end_ms)
         if cached_rows:
             log.warning(f"fetch_4h({symbol}) used lower-tf cache fallback ({len(cached_rows)} bars)")
             return cached_rows
@@ -159,7 +160,7 @@ def _fetch_4h(symbol: str, bars: int) -> List[Dict[str, float]]:
     return []
 
 
-def _load_cached_lower_tf_fallback(symbol: str, bars: int) -> List[Dict[str, float]]:
+def _load_cached_lower_tf_fallback(symbol: str, bars: int, *, end_ms: int | None = None) -> List[Dict[str, float]]:
     cache_dir = ROOT / "data_cache"
     if not cache_dir.exists():
         return []
@@ -184,6 +185,8 @@ def _load_cached_lower_tf_fallback(symbol: str, bars: int) -> List[Dict[str, flo
                 )
             except Exception:
                 continue
+        if end_ms is not None:
+            out = [row for row in out if int(row["ts"]) < int(end_ms)]
         out.sort(key=lambda x: x["ts"])
         return out
 
@@ -214,16 +217,31 @@ def _load_cached_lower_tf_fallback(symbol: str, bars: int) -> List[Dict[str, flo
                 slot["v"] += row["v"]
         return [buckets[ts] for ts in sorted(order)]
 
+    def _merge_rows(paths: List[Path], target_bars: int, target_interval: str) -> List[Dict[str, float]]:
+        merged: List[Dict[str, float]] = []
+        seen_ts: set[int] = set()
+        for path in sorted(paths, reverse=True):
+            rows = _load_rows(path)
+            if not rows:
+                continue
+            if target_interval != "240":
+                rows = _aggregate(rows, 240)
+            for row in reversed(rows):
+                ts = int(row["ts"])
+                if ts in seen_ts:
+                    continue
+                seen_ts.add(ts)
+                merged.append(row)
+            if len(merged) >= target_bars * 2:
+                break
+        merged.sort(key=lambda x: x["ts"])
+        return merged[-target_bars:]
+
     for interval in ("240", "60", "5", "1"):
         paths = sorted(cache_dir.glob(f"{symbol}_{interval}_*.json"))
         if not paths:
             continue
-        path = paths[-1]
-        rows = _load_rows(path)
-        if not rows:
-            continue
-        if interval != "240":
-            rows = _aggregate(rows, 240)
+        rows = _merge_rows(paths, max(60, bars), interval)
         if len(rows) >= max(60, bars):
             return rows[-bars:]
         if rows:
