@@ -2306,3 +2306,40 @@ That is a much cleaner place to leave the machine for the next hour.
   - `BTCUSDT 60m`: channel `r2=0.364`, width `3.42%`, compression ratio `0.392`, nearest resistance cluster around `67022.97`
   - `ETHUSDT 60m`: channel `r2=0.485`, width `5.04%`, compression ratio `0.424`, nearest resistance clusters around `2056.62` and `2060.56`
 - This gives us a real foundation for level-aware routing and future `approach / reject / accept` sleeves before we spend latency or tokens on vision.
+
+## 2026-04-08 | Codex (session 27c — live control-plane watchdog activated on the server)
+
+- Verified the production server state directly instead of trusting stale assumptions:
+  - live host `64.226.73.119`
+  - `bybot.service` is active
+  - server control-plane files are fresh on April 8:
+    - [configs/regime_orchestrator_latest.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/regime_orchestrator_latest.env)
+    - [configs/dynamic_allowlist_latest.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/dynamic_allowlist_latest.env)
+    - [configs/portfolio_allocator_latest.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/portfolio_allocator_latest.env)
+- Found one real live gap: `ROUTER_HEALTH_ENABLE` and `PORTFOLIO_ALLOCATOR_ENABLE` were not set in the server `.env`, so router/allocator guardrails were not actually enabled even though the files and cron jobs existed.
+- Closed that gap with two new scripts:
+  - [scripts/apply_live_control_plane_env_patch.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/apply_live_control_plane_env_patch.py)
+  - [scripts/control_plane_watchdog.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/control_plane_watchdog.py)
+- Also upgraded [scripts/setup_server_crons.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_server_crons.sh):
+  - router now rebuilds every `6h` instead of once per day
+  - a new watchdog runs every `15m`
+  - watchdog can rebuild `regime -> router -> allocator` in dependency order if freshness falls behind
+- After deploy on the server:
+  - `.env` now explicitly has:
+    - `REGIME_OVERLAY_ENABLE=1`
+    - `ROUTER_HEALTH_ENABLE=1`
+    - `PORTFOLIO_ALLOCATOR_ENABLE=1`
+    - `REGIME_OVERLAY_MAX_AGE_SEC=7200`
+    - `ROUTER_OVERLAY_MAX_AGE_SEC=28800`
+    - `ROUTER_STATE_MAX_AGE_SEC=28800`
+    - `PORTFOLIO_ALLOCATOR_MAX_AGE_SEC=10800`
+  - crontab now contains:
+    - hourly regime build
+    - `6h` router rebuild
+    - hourly allocator build
+    - `15m` control-plane watchdog repair
+  - watchdog status after repair is `ok` in `/root/by-bot/runtime/control_plane/control_plane_watchdog_state.json`
+- Practical meaning:
+  - control-plane now genuinely lives on the server, not only in docs or local tooling
+  - router/allocator freshness is enforced in live
+  - the system can self-heal stale control-plane artifacts instead of waiting silently for manual intervention | done

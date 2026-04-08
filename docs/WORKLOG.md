@@ -2459,3 +2459,33 @@ server_clean.env updated:
 - 2026-04-05 11:15 UTC | core3 impulse candidate now additive on 90d/180d but fails annual; first Telegram chart inbox wired for future vision layer | Closed the next decisive crypto check instead of talking about it abstractly. The package probe [core3_impulse_best_recent180_probe](./backtest_runs/portfolio_20260405_134236_core3_impulse_best_recent180_probe/summary.csv) came in at `+28.65%`, `438` trades, PF `1.356`, DD `9.32`, and the new sleeve [impulse_volume_breakout_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/impulse_volume_breakout_v1.py) was genuinely additive there (`102` trades, about `+7.80%`). The shorter [core3_impulse_best_current90_probe](./backtest_runs/portfolio_20260405_135423_core3_impulse_best_current90_probe/summary.csv) also stayed positive at `+16.30%`, PF `1.462`, but the sleeve itself contributed almost flat (`54` trades, about `-0.09%`), so current-market proof is still mixed. The honest annual probe [core3_impulse_best_annual_probe](./backtest_runs/portfolio_20260405_140930_core3_impulse_best_annual_probe/summary.csv) finished weak at only `+2.26%`, PF `1.029`, DD `16.35`, with breakdown turning negative over the full year, so `impulse` is the closest third sleeve we have had but is **not** ready for live promotion yet. In parallel, I wired the first real visual-analysis intake path into [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py): the Telegram command loop now saves incoming photo charts into `runtime/chart_inbox`, records the latest snapshot metadata, and exposes `/chart_last` so future vision/advisory layers can reason over real user-submitted charts instead of only bot-generated trade plots. This is intentionally only the inbox/foundation step, not full computer vision, but it removes a real tooling gap and makes a hybrid OHLCV+vision layer practical. | done
 - 2026-04-08 09:20 UTC | historical router replay moved from frozen overlays toward actual historical symbol selection | upgraded [scripts/run_control_plane_replay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_control_plane_replay.py) so replay can reconstruct symbol baskets from cached historical market data instead of only replaying frozen overlay symbols. Also fixed explicit `fixed_symbols: []` profiles to stay truly OFF in replay. Fresh annual replays now separate router truth from health throttling: constrained [summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/control_plane_replay_20260408_091552_annual_cp_hist_20260408/summary.json) stays degraded all year, while neutral-health [summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/control_plane_replay_20260408_091552_annual_cp_hist_neutral_20260408/summary.json) enables `breakout/sloped/midterm/flat` across the same checkpoints. | done
 - 2026-04-08 09:25 UTC | first deterministic geometry layer now works on cached market data | added [bot/chart_geometry.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/chart_geometry.py) and [scripts/run_geometry_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_geometry_snapshot.py). The new layer computes pivots, clustered horizontal levels, regression channel context, and compression from cached OHLCV without any image model. Verified live on `BTCUSDT` and `ETHUSDT` cached `60m` bars and got sane nearby level clusters plus channel/compression output. This is the intended base layer before slower chart-vision or AI annotation. | done
+- 2026-04-08 09:50 UTC | live control-plane now has explicit health flags plus a self-healing watchdog | audited the live server directly and found a real configuration gap: control-plane files and cron jobs existed, but `ROUTER_HEALTH_ENABLE` and `PORTFOLIO_ALLOCATOR_ENABLE` were not set in the server `.env`, so those safety layers were not actually active in the bot. Added [scripts/apply_live_control_plane_env_patch.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/apply_live_control_plane_env_patch.py) to patch the live `.env`, added [scripts/control_plane_watchdog.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/control_plane_watchdog.py) to verify freshness and rebuild stale `regime -> router -> allocator` outputs, and upgraded [scripts/setup_server_crons.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_server_crons.sh) so the router rebuilds every `6h` and the watchdog runs every `15m`. Deployed those pieces to `64.226.73.119`, reinstalled crons, repaired the control-plane once, restarted `bybot.service`, and confirmed the watchdog state is `ok` with all generated control-plane files currently inside freshness bounds. | done
+
+## 2026-04-08 - Foundation hardening (self-healing)
+
+### What was done
+
+- Added `runtime/bot_heartbeat.json` written by `pulse()` every 10s:
+  - ts, uptime_s, open_trades, ws_guard_active, bybit_msgs, regime
+- Created `scripts/setup_systemd_bot.sh` — installs bot as systemd service
+  - Replaces screen session with proper process supervisor
+  - Auto-restart on crash with exponential backoff (up to 120s)
+  - Auto-start on server reboot
+  - Logs to `runtime/live.out` via StandardOutput
+  - Graceful 30s shutdown window
+- Created `scripts/bot_health_watchdog.sh` — external heartbeat watchdog
+  - Runs every 2 minutes via cron
+  - Alerts Telegram if heartbeat is >90s old
+  - Optional WATCHDOG_AUTO_RESTART=1 for systemd-based auto-restart
+  - Cooldown 10 min to prevent spam
+- Created `scripts/setup_watchdog_cron.sh` — installs watchdog cron
+- Created `scripts/check_control_plane_health.sh` — control-plane freshness monitor
+  - Checks regime state (<2h old), router state (<25h), allocator state (<25h)
+  - Alerts Telegram if files are missing or stale
+  - Runs every 30 min via cron
+- Created `scripts/deploy_foundation.sh` — one-shot deploy of all above to server
+
+### What this changes operationally
+
+Before: bot runs in `screen` session. If server reboots or process dies → silent death.
+After: systemd restarts bot automatically. Watchdog cron alerts within 2 minutes of failure.
