@@ -488,3 +488,15 @@ nohup python3 scripts/run_strategy_autoresearch.py --spec configs/autoresearch/f
   - recent-180 range package was already strong
   - annual weakness is mostly too many red months / too long negative streaks
   - the new grid explicitly attacks those failure modes instead of only chasing higher net pnl
+
+### New operator-layer truth:
+
+- Telegram truncation of AI operator messages was not a Telegram platform limit problem.
+- The real culprit was [_ai_operator_emit()](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py) trimming answers before send.
+- This is now repaired:
+  - the operator stores a short summary for memory/shadow use
+  - but sends the full answer through `tg_send()`, which already knows how to split long messages
+- Added short persistent operator memory:
+  - [runtime/ai_operator/memory.jsonl](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/ai_operator/memory.jsonl)
+  - exposed via [bot/operator_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/operator_snapshot.py)
+  - `/ai_reset` now clears both overlay history and operator memory

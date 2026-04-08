@@ -88,7 +88,7 @@ from bot.deepseek_autoresearch_agent import (
     audit_bot_full,
     ask_about_file,
 )
-from bot.operator_snapshot import build_operator_snapshot
+from bot.operator_snapshot import build_operator_snapshot, append_operator_memory, MEMORY_PATH
 from bot.trade_learning_loop import trade_learning
 from bot.deepseek_action_executor import (
     execute_proposal,
@@ -2641,6 +2641,26 @@ def _ai_operator_trim(text: str, limit: int | None = None) -> str:
     return txt[: max(0, lim - 1)].rstrip() + "…"
 
 
+def _ai_operator_store_memory(
+    *,
+    kind: str,
+    source: str,
+    summary: str,
+    payload: dict[str, Any] | None = None,
+) -> None:
+    try:
+        append_operator_memory(
+            {
+                "kind": str(kind or ""),
+                "source": str(source or ""),
+                "summary": _ai_operator_trim(summary, 600),
+                "payload": dict(payload or {}),
+            }
+        )
+    except Exception as e:
+        log_error(f"ai operator memory append fail: {e}")
+
+
 def _build_trade_review_summary(tr, sym: str, pnl_closed: float, fee_sum: float | None, exit_px: float | None) -> tuple[str, dict[str, Any]]:
     entry_px = float(getattr(tr, "entry_price", getattr(tr, "avg", 0.0) or 0.0) or 0.0)
     sl_px = getattr(tr, "sl_price", None)
@@ -2694,6 +2714,8 @@ async def _ai_operator_emit(
 ) -> None:
     if not DEEPSEEK_OPERATOR_ENABLE:
         return
+    memory_source = "fallback"
+    body_text = str(fallback_text or "").strip()
     try:
         DEEPSEEK_OVERLAY.append_shadow_recommendation(
             summary=_ai_operator_trim(fallback_text, 240),
@@ -2704,15 +2726,23 @@ async def _ai_operator_emit(
     except Exception as e:
         log_error(f"ai operator shadow append fail: {e}")
 
-    msg = f"{tg_prefix}\n{_ai_operator_trim(fallback_text)}"
     if DEEPSEEK_OPERATOR_USE_API and DEEPSEEK_OVERLAY.is_ready() and prompt:
         try:
             answer = await asyncio.to_thread(DEEPSEEK_OVERLAY.ask, prompt, _deepseek_snapshot())
             if answer and not str(answer).startswith("DeepSeek request failed"):
-                msg = f"{tg_prefix}\n{_ai_operator_trim(answer)}"
+                body_text = str(answer).strip()
+                memory_source = "api"
         except Exception as e:
             log_error(f"ai operator ask fail: {e}")
-    tg_trade(msg)
+    if not body_text:
+        body_text = str(fallback_text or "").strip() or "AI operator: empty answer"
+    _ai_operator_store_memory(
+        kind=kind,
+        source=memory_source,
+        summary=body_text,
+        payload=payload,
+    )
+    tg_trade(f"{tg_prefix}\n{body_text}")
 
 
 def _maybe_schedule_ai_trade_review(tr, sym: str, pnl_closed: float, fee_sum: float | None, exit_px: float | None) -> None:
@@ -3422,6 +3452,11 @@ def _handle_tg_command(text: str):
 
     if name == "/ai_reset":
         DEEPSEEK_OVERLAY.reset_history()
+        try:
+            if MEMORY_PATH.exists():
+                MEMORY_PATH.unlink()
+        except Exception as e:
+            log_error(f"ai memory reset fail: {e}")
         _tg_reply("AI history reset.")
         return
 

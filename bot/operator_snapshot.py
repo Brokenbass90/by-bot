@@ -8,6 +8,8 @@ from typing import Any, Dict, List
 
 
 ROOT = Path(__file__).resolve().parent.parent
+MEMORY_DIR = ROOT / "runtime" / "ai_operator"
+MEMORY_PATH = MEMORY_DIR / "memory.jsonl"
 
 
 def _load_json(path: Path, default: Any) -> Any:
@@ -44,6 +46,43 @@ def _file_age_sec(path: Path) -> int | None:
 
 def _path_text(path: Path) -> str:
     return str(path.resolve())
+
+
+def _load_jsonl_tail(path: Path, limit: int = 12) -> list[dict[str, Any]]:
+    try:
+        if not path.exists():
+            return []
+        lines = path.read_text(encoding="utf-8").splitlines()
+        out: list[dict[str, Any]] = []
+        for raw in lines[-max(1, int(limit)):]:
+            raw = str(raw or "").strip()
+            if not raw:
+                continue
+            try:
+                item = json.loads(raw)
+            except Exception:
+                continue
+            if isinstance(item, dict):
+                out.append(item)
+        return out
+    except Exception:
+        return []
+
+
+def append_operator_memory(entry: Dict[str, Any], root: Path | None = None, *, keep_last: int = 200) -> None:
+    base = Path(root or ROOT)
+    path = base / "runtime" / "ai_operator" / "memory.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = dict(entry or {})
+    payload.setdefault("ts_utc", datetime.now(timezone.utc).isoformat())
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+        if len(lines) > max(keep_last * 2, keep_last + 50):
+            path.write_text("\n".join(lines[-keep_last:]) + "\n", encoding="utf-8")
+    except Exception:
+        pass
 
 
 def _heartbeat_block(root: Path) -> Dict[str, Any]:
@@ -217,6 +256,18 @@ def _health_block(root: Path) -> Dict[str, Any]:
     }
 
 
+def _memory_block(root: Path, *, limit: int = 12) -> Dict[str, Any]:
+    path = root / "runtime" / "ai_operator" / "memory.jsonl"
+    entries = _load_jsonl_tail(path, limit=limit)
+    return {
+        "path": _path_text(path),
+        "exists": bool(path.exists()),
+        "age_sec": _file_age_sec(path),
+        "count": len(entries),
+        "entries": entries,
+    }
+
+
 def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
     base = Path(root or ROOT)
     return {
@@ -226,6 +277,7 @@ def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
         "control_plane": _control_plane_block(base),
         "health": _health_block(base),
         "geometry": _geometry_block(base),
+        "memory": _memory_block(base),
     }
 
 
@@ -235,6 +287,7 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     cp = dict(snapshot.get("control_plane") or {})
     health = dict(snapshot.get("health") or {})
     geo = dict(snapshot.get("geometry") or {})
+    memory = dict(snapshot.get("memory") or {})
     regime = dict(cp.get("regime") or {})
     router = dict(cp.get("router") or {})
     allocator = dict(cp.get("allocator") or {})
@@ -280,4 +333,15 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
                 f"compressed={int(bool(block.get('is_compressed')))} r2={block.get('channel_r2')}"
             )
         lines.append(f"{symbol}: " + " | ".join(bits))
+    lines.extend(
+        [
+            "",
+            "[memory]",
+            f"exists={int(bool(memory.get('exists')))} age_sec={memory.get('age_sec')} count={memory.get('count')}",
+        ]
+    )
+    for item in list(memory.get("entries") or [])[-3:]:
+        lines.append(
+            f" - {str(item.get('kind') or 'event')}: {str(item.get('summary') or '-')[:180]}"
+        )
     return "\n".join(lines)

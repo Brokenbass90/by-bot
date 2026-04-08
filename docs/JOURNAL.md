@@ -2865,3 +2865,29 @@ Practical meaning:
   - not “connect another sleeve at random”
   - but “reduce red months without lying about annual truth”
 - `range_scalp` is currently the best candidate for that repair pass because it already proved strong additivity on recent windows without needing a brand-new strategy family.
+
+## Codex Session 29 - 2026-04-08
+
+Summary:
+- Repaired two operator-layer problems that were making the bot harder to trust in live Telegram use:
+  - operator answers were being hard-trimmed to one short message even though Telegram splitting already existed
+  - operator had effectively no persistent memory across restarts / long pauses beyond the immediate snapshot
+
+Key findings:
+- `tg_send()` was already able to split long Telegram messages safely, so the real bug was not Telegram itself.
+- The truncation came from [_ai_operator_emit()](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py), which was always passing its final answer through `_ai_operator_trim(...)` before sending.
+- Operator context also had no rolling persistent journal. [build_operator_snapshot()](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/operator_snapshot.py) could report live state, geometry, and health, but not “what the operator itself recently concluded.”
+
+Changes made:
+- [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py):
+  - `_ai_operator_emit()` now stores a trimmed summary for memory, but sends the **full** answer to Telegram so `tg_send()` can split it into multiple messages as designed
+  - `/ai_reset` now clears both overlay history and the new operator memory file
+- [bot/operator_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/operator_snapshot.py):
+  - added persistent operator memory at `runtime/ai_operator/memory.jsonl`
+  - added `append_operator_memory(...)`
+  - added snapshot exposure of recent memory entries
+  - added memory summary to `format_operator_snapshot_text(...)`
+
+Practical meaning:
+- The operator is now less likely to keep repeating stale partial audits because it can see a short persistent trail of its own recent verdicts.
+- Telegram should stop silently cutting operator reasoning down to a misleading one-message fragment.
