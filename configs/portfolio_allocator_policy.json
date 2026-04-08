@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "policy_version": "2026-04-04-allocator-v2",
-  "updated_utc": "2026-04-04T00:00:00Z",
+  "policy_version": "2026-04-08-allocator-v3",
+  "updated_utc": "2026-04-08T00:00:00Z",
   "allocator_global_risk_by_regime": {
     "bull_trend": 1.0,
     "bull_chop": 0.9,
@@ -43,6 +43,36 @@
       "mult": 1.05
     }
   ],
+  "exposure_controls": {
+    "portfolio_overlap_global_haircuts": [
+      {
+        "min_overlap_ratio": 0.25,
+        "mult": 0.93
+      },
+      {
+        "min_overlap_ratio": 0.4,
+        "mult": 0.85
+      },
+      {
+        "min_overlap_ratio": 0.55,
+        "mult": 0.75
+      }
+    ],
+    "sleeve_overlap_haircuts": [
+      {
+        "min_overlap_ratio": 0.34,
+        "mult": 0.9
+      },
+      {
+        "min_overlap_ratio": 0.5,
+        "mult": 0.8
+      },
+      {
+        "min_overlap_ratio": 0.75,
+        "mult": 0.65
+      }
+    ]
+  },
   "sleeves": [
     {
       "name": "breakout",

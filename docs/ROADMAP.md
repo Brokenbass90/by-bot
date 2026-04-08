@@ -31,6 +31,10 @@ Order of work:
   - reusable cache loader
   - geometry state builder
   - hourly server-side geometry snapshots for active symbols
+- Geometry-aware routing now exists:
+  - router can score symbols against sleeve-specific geometry context
+  - router state records geometry reasons / keep flags
+  - weak symbols can be filtered before they reach live sleeves
 - AI/operator context is stronger than before:
   - live `/ai` snapshot now includes compact operator context
   - weekly AI cron can consume the same compact operator context
@@ -38,7 +42,11 @@ Order of work:
 - Historical strategy health is no longer just one frozen current file:
   - local replay can now consume a real `strategy_health_timeline.json`
   - operator truth pack now includes current health summary plus timeline metadata
-- Crypto live still does not have a fully backtested portfolio-level regime router / allocator loop.
+- Portfolio overlap / exposure haircuts now exist inside the allocator.
+- Crypto live still needs promotion discipline on top of the rebuilt control plane:
+  - annual
+  - walk-forward
+  - portfolio compare
 - Websocket transport remains a real live risk:
   - recent `12h` diagnostic windows still show degraded reconnect / handshake quality
   - the bot now has a transport guard, but the transport itself still needs hardening
@@ -176,6 +184,9 @@ Immediate tasks:
    - channels
    - compression
    - near-support / near-resistance context
+12. Feed portfolio overlap / exposure into allocator decisions:
+   - global overlap haircut
+   - per-sleeve overlap haircut
 
 Exit criteria:
 - orchestrator runs cleanly on schedule
@@ -216,6 +227,10 @@ Immediate tasks:
    - active regimes
 3. Connect router output to orchestrator decisions.
 4. Add safe reload and logging.
+5. Keep sleeve selection explainable:
+   - record geometry reasons
+   - record fallback reasons
+   - avoid silent empty sleeves unless the strategy is truly off
 
 Exit criteria:
 - router writes usable per-strategy allowlists

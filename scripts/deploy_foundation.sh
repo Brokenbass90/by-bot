@@ -21,6 +21,11 @@ BOT_DIR="${BOT_DIR:-/root/by-bot}"
 SERVICE_NAME="${SERVICE_NAME:-bybot}"
 SSH_KEY="${SSH_KEY:-}"
 LOCAL_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DEFAULT_KEY="$HOME/.ssh/by-bot"
+
+if [[ -z "$SSH_KEY" && -f "$DEFAULT_KEY" ]]; then
+  SSH_KEY="$DEFAULT_KEY"
+fi
 
 if [[ -n "$SSH_KEY" ]]; then
   SSH_CMD="ssh -i $SSH_KEY -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
@@ -46,6 +51,7 @@ FILES=(
   "bot/chart_geometry.py"
   "bot/geometry_cache.py"
   "bot/operator_snapshot.py"
+  "bot/router_geometry.py"
   "bot/strategy_health_timeline.py"
   "scripts/setup_systemd_bot.sh"
   "scripts/bot_health_watchdog.sh"
@@ -53,11 +59,14 @@ FILES=(
   "scripts/check_control_plane_health.sh"
   "scripts/apply_live_control_plane_env_patch.py"
   "scripts/control_plane_watchdog.py"
+  "scripts/build_symbol_router.py"
+  "scripts/build_portfolio_allocator.py"
   "scripts/build_geometry_state.py"
   "scripts/build_operator_snapshot.py"
   "scripts/build_strategy_health_timeline.py"
   "scripts/setup_server_crons.sh"
   "scripts/deploy_foundation.sh"
+  "configs/portfolio_allocator_policy.json"
 )
 
 for f in "${FILES[@]}"; do
@@ -88,12 +97,14 @@ echo "→ [4/5] Installing control-plane health check cron (every 30 min)..."
 $SSH_CMD bash <<ENDSSH
 BOT_DIR=$BOT_DIR
 LOG_DIR=\$BOT_DIR/runtime
-CRON_COMMENT="bybit_cp_health"
+SERVICE_NAME=$SERVICE_NAME
+CRON_COMMENT="\${SERVICE_NAME}_cp_health"
+LEGACY_CRON_COMMENT="bybit_cp_health"
 SCRIPT="\$BOT_DIR/scripts/check_control_plane_health.sh"
 mkdir -p "\$LOG_DIR"
 chmod +x "\$SCRIPT"
 CRON_LINE="*/30 * * * * /bin/bash -lc 'BOT_DIR=\$BOT_DIR \$SCRIPT >> \$LOG_DIR/cp_health.log 2>&1' # \$CRON_COMMENT"
-(crontab -l 2>/dev/null | grep -v "\$CRON_COMMENT" || true; echo "\$CRON_LINE") | crontab -
+(crontab -l 2>/dev/null | grep -v "\$CRON_COMMENT" | grep -v "\$LEGACY_CRON_COMMENT" || true; echo "\$CRON_LINE") | crontab -
 echo "Installed:"
 crontab -l | grep "\$CRON_COMMENT"
 ENDSSH

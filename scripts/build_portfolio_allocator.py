@@ -126,6 +126,34 @@ def _sleeve_health_status(sleeve: Dict[str, Any], health_map: Dict[str, Any]) ->
     return _max_health_status(statuses), notes
 
 
+def _pair_overlap_ratio(a: set[str], b: set[str]) -> float:
+    if not a or not b:
+        return 0.0
+    denom = float(max(1, min(len(a), len(b))))
+    return float(len(a & b) / denom)
+
+
+def _portfolio_overlap_ratio(symbol_sets: List[set[str]]) -> float:
+    filtered = [s for s in symbol_sets if s]
+    if not filtered:
+        return 0.0
+    total = sum(len(s) for s in filtered)
+    unique = len(set().union(*filtered))
+    if total <= 0:
+        return 0.0
+    return float(max(0.0, 1.0 - (unique / float(total))))
+
+
+def _haircut_from_ratio(ratio: float, tiers: List[Dict[str, Any]]) -> float:
+    mult = 1.0
+    ordered = sorted(tiers, key=lambda item: _safe_float(item.get("min_overlap_ratio"), 0.0))
+    for item in ordered:
+        threshold = _safe_float(item.get("min_overlap_ratio"), 0.0)
+        if float(ratio) >= threshold:
+            mult = max(0.0, _safe_float(item.get("mult"), mult))
+    return float(mult)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Build deterministic portfolio allocator overlay.")
     ap.add_argument("--orchestrator-state", default=str(ORCH_STATE_PATH))
@@ -227,6 +255,23 @@ def main() -> int:
         for k, v in dict(policy.get("health_status_multipliers") or {}).items()
     }
     count_tiers = list(policy.get("symbol_count_multipliers") or [])
+    exposure_controls = dict(policy.get("exposure_controls") or {})
+    portfolio_overlap_tiers = list(
+        exposure_controls.get("portfolio_overlap_global_haircuts")
+        or [
+            {"min_overlap_ratio": 0.25, "mult": 0.93},
+            {"min_overlap_ratio": 0.40, "mult": 0.85},
+            {"min_overlap_ratio": 0.55, "mult": 0.75},
+        ]
+    )
+    sleeve_overlap_tiers = list(
+        exposure_controls.get("sleeve_overlap_haircuts")
+        or [
+            {"min_overlap_ratio": 0.34, "mult": 0.90},
+            {"min_overlap_ratio": 0.50, "mult": 0.80},
+            {"min_overlap_ratio": 0.75, "mult": 0.65},
+        ]
+    )
 
     sleeve_states: Dict[str, Any] = {}
     for sleeve in list(policy.get("sleeves") or []):
@@ -238,6 +283,7 @@ def main() -> int:
         symbol_env_key = str(sleeve.get("symbol_env_key") or "").strip()
         base_enable = str(strategy_overrides.get(enable_env, "1")).strip() == "1"
         router_info = dict(router_profiles.get(symbol_env_key) or {})
+        sleeve_symbols = [str(sym).strip().upper() for sym in (router_info.get("symbols") or []) if str(sym).strip()]
         symbol_count = _safe_int(router_info.get("count"), 0)
         health_status, health_notes = _sleeve_health_status(sleeve, health_map)
         health_mult = status_multipliers.get(health_status, 1.0)
@@ -258,30 +304,69 @@ def main() -> int:
         if degraded and not safe_mode:
             notes.append("degraded_mode")
 
-        lines.extend(
-            [
-                f"{enable_env}={_bool_to_env(enabled)}",
-                f"{risk_env}={final_risk:.4f}",
-                f"ALLOCATOR_STATUS_{name.upper()}={health_status}",
-                f"ALLOCATOR_COUNT_{name.upper()}={symbol_count}",
-                ""
-            ]
-        )
-
         sleeve_states[name] = {
             "enable_env": enable_env,
             "risk_env": risk_env,
             "symbol_env_key": symbol_env_key,
             "enabled": enabled,
             "symbol_count": symbol_count,
+            "symbols": sleeve_symbols,
             "health_status": health_status,
             "base_risk_mult": base_risk,
             "count_mult": count_mult,
             "health_mult": health_mult,
             "final_risk_mult": final_risk,
+            "overlap_mult": 1.0,
+            "max_overlap_ratio": 0.0,
+            "overlap_with": {},
             "notes": notes,
         }
-        issues.extend(f"{name}:{note}" for note in notes if note)
+
+    enabled_symbol_sets = {
+        name: set(state.get("symbols") or [])
+        for name, state in sleeve_states.items()
+        if bool(state.get("enabled")) and state.get("symbols")
+    }
+    portfolio_overlap_ratio = _portfolio_overlap_ratio(list(enabled_symbol_sets.values()))
+    portfolio_overlap_mult = _haircut_from_ratio(portfolio_overlap_ratio, portfolio_overlap_tiers)
+    if portfolio_overlap_mult < 1.0:
+        global_mult *= portfolio_overlap_mult
+        degraded = True
+        degraded_reasons.append(f"portfolio_overlap:{portfolio_overlap_ratio:.2f}")
+
+    for name, state in sleeve_states.items():
+        if not bool(state.get("enabled")):
+            continue
+        base_set = set(state.get("symbols") or [])
+        overlap_with: Dict[str, float] = {}
+        max_overlap_ratio = 0.0
+        for other_name, other_set in enabled_symbol_sets.items():
+            if other_name == name:
+                continue
+            ratio = _pair_overlap_ratio(base_set, other_set)
+            if ratio > 0.0:
+                overlap_with[other_name] = round(ratio, 4)
+                max_overlap_ratio = max(max_overlap_ratio, ratio)
+        overlap_mult = _haircut_from_ratio(max_overlap_ratio, sleeve_overlap_tiers)
+        state["overlap_with"] = overlap_with
+        state["max_overlap_ratio"] = round(max_overlap_ratio, 4)
+        state["overlap_mult"] = round(overlap_mult, 4)
+        state["final_risk_mult"] = float(state.get("final_risk_mult", 0.0) or 0.0) * overlap_mult
+        if overlap_mult < 1.0:
+            state["notes"].append(f"overlap_haircut:{max_overlap_ratio:.2f}")
+
+    for name, state in sleeve_states.items():
+        lines.extend(
+            [
+                f"{state['enable_env']}={_bool_to_env(state['enabled'])}",
+                f"{state['risk_env']}={float(state['final_risk_mult']):.4f}",
+                f"ALLOCATOR_STATUS_{name.upper()}={state['health_status']}",
+                f"ALLOCATOR_COUNT_{name.upper()}={int(state['symbol_count'])}",
+                f"ALLOCATOR_OVERLAP_{name.upper()}={float(state.get('max_overlap_ratio', 0.0)):.4f}",
+                ""
+            ]
+        )
+        issues.extend(f"{name}:{note}" for note in state.get("notes") or [] if note)
 
     allocator_status = "safe_mode" if safe_mode else ("degraded" if degraded else "ok")
     lines.extend(
@@ -290,6 +375,8 @@ def main() -> int:
             f"PORTFOLIO_ALLOCATOR_SAFE_MODE={_bool_to_env(safe_mode)}",
             f"PORTFOLIO_ALLOCATOR_DEGRADED={_bool_to_env(degraded)}",
             f"ALLOCATOR_GLOBAL_RISK_MULT={global_mult:.4f}",
+            f"ALLOCATOR_PORTFOLIO_OVERLAP_RATIO={portfolio_overlap_ratio:.4f}",
+            f"ALLOCATOR_PORTFOLIO_OVERLAP_MULT={portfolio_overlap_mult:.4f}",
             f"ALLOCATOR_HARD_BLOCK_NEW_ENTRIES={_bool_to_env(safe_mode)}",
             f"ALLOCATOR_SAFE_MODE_REASON={json.dumps(';'.join(safe_mode_reasons[:6]))}",
             "",
@@ -308,6 +395,8 @@ def main() -> int:
         "overall_health": overall_health,
         "allocator_global_risk_mult": global_mult,
         "base_global_risk_mult": base_global_mult,
+        "portfolio_overlap_ratio": round(portfolio_overlap_ratio, 4),
+        "portfolio_overlap_mult": round(portfolio_overlap_mult, 4),
         "degraded_reasons": degraded_reasons,
         "safe_mode_reasons": safe_mode_reasons,
         "issues": issues,
@@ -322,6 +411,13 @@ def main() -> int:
             "env_path": str(out_env),
             "state_path": str(out_state),
             "history_path": str(HISTORY_PATH),
+        },
+        "exposure": {
+            "enabled_sleeves": sorted(enabled_symbol_sets.keys()),
+            "portfolio_overlap_ratio": round(portfolio_overlap_ratio, 4),
+            "portfolio_overlap_mult": round(portfolio_overlap_mult, 4),
+            "portfolio_overlap_tiers": portfolio_overlap_tiers,
+            "sleeve_overlap_tiers": sleeve_overlap_tiers,
         },
         "sleeves": sleeve_states,
     }

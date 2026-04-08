@@ -13,8 +13,18 @@ SERVER_USER="${SERVER_USER:-root}"
 BOT_DIR="${BOT_DIR:-/root/by-bot}"
 SERVICE_NAME="${SERVICE_NAME:-bybot}"
 LOCAL_MODE="${1:-}"
+SSH_KEY="${SSH_KEY:-}"
+DEFAULT_KEY="$HOME/.ssh/by-bot"
 
-SSH_CMD="ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
+if [[ -z "$SSH_KEY" && -f "$DEFAULT_KEY" ]]; then
+  SSH_KEY="$DEFAULT_KEY"
+fi
+
+if [[ -n "$SSH_KEY" ]]; then
+  SSH_CMD="ssh -i $SSH_KEY -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
+else
+  SSH_CMD="ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP"
+fi
 [[ "$LOCAL_MODE" == "--local" ]] && SSH_CMD="bash"
 
 run() {

@@ -1,5 +1,59 @@
 # Bybit bot (v28) - worklog / reminders
 
+## 2026-04-08 - geometry-aware router + overlap haircuts + live deploy cleanup
+
+### What was closed
+
+- Added [bot/router_geometry.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/router_geometry.py) as the first reusable bridge between deterministic chart geometry and the live symbol router.
+- Upgraded [scripts/build_symbol_router.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_symbol_router.py):
+  - router now scores selected symbols by geometry context
+  - weak symbols can be filtered out per sleeve
+  - geometry reasons / flags are written into router state
+  - if all symbols are weak, router keeps the best one or two instead of collapsing the sleeve to empty
+- Upgraded [scripts/build_portfolio_allocator.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_portfolio_allocator.py):
+  - adds symbol-overlap measurements across enabled sleeves
+  - adds global overlap haircut and per-sleeve overlap haircut
+  - writes overlap metrics into allocator env/state
+- Updated [configs/portfolio_allocator_policy.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/portfolio_allocator_policy.json) with first exposure-control tiers.
+- Fixed the operator-facing one-liners:
+  - [scripts/deploy_foundation.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deploy_foundation.sh)
+  - [scripts/server_status.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/server_status.sh)
+  - both now automatically use `~/.ssh/by-bot` if no `SSH_KEY` is passed
+- Deployed foundation to live server and manually rebuilt:
+  - regime
+  - router
+  - allocator
+  - geometry
+  - operator snapshot
+- Removed duplicate `cp_health` cron entry on server and left one clean `bybot_cp_health`.
+
+### Important truth
+
+- The foundation is now materially closer to "single live truth" than before:
+  - code deployed
+  - state rebuilt
+  - status verified from the server after rebuild
+- The current annual control-plane replay is stronger than the earlier frozen / constrained story:
+  - [summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/control_plane_replay_20260408_122726_annual_cp_geom_exposure_20260408/summary.json)
+  - `25` checkpoints
+  - allocator `ok=21`, `degraded=4`
+  - `avg_global_risk_mult=0.861`
+- This is still not direct trading proof.
+- It is proof that the portfolio brain is now much less blind:
+  - historical health
+  - historical router reconstruction
+  - geometry-aware symbol filtering
+  - exposure haircuting
+
+### What this means
+
+- The remaining foundation gap is no longer “missing router / missing geometry / missing exposure”.
+- The next key gate is promotion discipline:
+  1. annual
+  2. walk-forward
+  3. portfolio compare
+- After that, returning to strategy repair / promotion makes much more sense than before.
+
 ## 2026-04-08 - historical health timeline + richer operator truth
 
 ### What was closed

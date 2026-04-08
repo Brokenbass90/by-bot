@@ -5,6 +5,75 @@
 
 ---
 
+## 2026-04-08 | Codex (session 30 - geometry-aware router + exposure layer + live foundation deploy)
+
+**Done:**
+
+- Added geometry-aware routing layer:
+  - [bot/router_geometry.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/router_geometry.py)
+  - [scripts/build_symbol_router.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_symbol_router.py) now:
+    - scores selected symbols with deterministic geometry context
+    - records per-symbol geometry reasons / keep flags
+    - filters weak symbols when geometry disagrees with the sleeve
+    - keeps best fallback symbols instead of emptying a sleeve blindly
+- Added first real portfolio overlap / exposure layer:
+  - [scripts/build_portfolio_allocator.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_portfolio_allocator.py)
+  - [configs/portfolio_allocator_policy.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/portfolio_allocator_policy.json)
+  - allocator now:
+    - measures symbol overlap across enabled sleeves
+    - applies per-sleeve overlap haircuts
+    - applies global portfolio overlap haircut
+    - writes overlap metrics into env/state
+- Hardened one-line server operations:
+  - [scripts/deploy_foundation.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deploy_foundation.sh)
+  - [scripts/server_status.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/server_status.sh)
+  - both now auto-pick `~/.ssh/by-bot` when available
+- Deployed the updated foundation to live server `64.226.73.119`.
+- Manually rebuilt live control-plane state after deploy:
+  - regime
+  - router
+  - allocator
+  - geometry
+  - operator snapshot
+- Removed duplicate live `cp_health` cron and left one clean entry:
+  - `# bybot_cp_health`
+
+**Key findings:**
+
+- Local annual control-plane replay with the new stack:
+  - [summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/control_plane_replay_20260408_122726_annual_cp_geom_exposure_20260408/summary.json)
+  - `25` checkpoints
+  - allocator states:
+    - `ok = 21`
+    - `degraded = 4`
+  - `avg_global_risk_mult = 0.861`
+  - sleeve enable counts:
+    - `sloped = 22`
+    - `flat = 20`
+    - `breakout = 17`
+    - `breakdown = 2`
+- This replay still validates control-plane decisions, not direct trading PnL.
+- Live server truth after deploy + rebuild:
+  - heartbeat fresh
+  - regime/router/allocator files fresh
+  - `bybot.service` active under systemd
+  - watchdog cron installed
+  - control-plane health cron installed once, without duplicates
+  - recent WS pulse right after restart showed:
+    - `ws_connect = 2`
+    - `ws_disconnect = 0`
+    - `ws_handshake_timeout = 0`
+
+**Next:**
+
+- Keep promotion strict:
+  - `annual`
+  - `walk-forward`
+  - portfolio compare
+- The remaining foundation work is now much narrower:
+  - make promotion rules explicit in the portfolio path
+  - then return to sleeve repair / promotion with a much cleaner base
+
 ## 2026-04-08 | Codex (session 29 - historical health timeline + operator health context)
 
 **Done:**

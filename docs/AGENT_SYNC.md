@@ -1,6 +1,6 @@
 # Agent Sync
 
-Last updated: 2026-04-08 11:05 UTC
+Last updated: 2026-04-08 12:31 UTC
 
 ## 2026-04-08 refresh note
 
@@ -22,9 +22,22 @@ Current live foundation truth now also includes:
 - live operator snapshot now also includes:
   - current `strategy_health` summary
   - historical health timeline metadata
+- live router code now includes deterministic geometry-aware symbol scoring / filtering
+- live allocator code now includes portfolio overlap / exposure haircuts
 - local/offline control-plane replay now also has historical health context:
   - `runtime/control_plane/strategy_health_timeline.json`
   - replay no longer has to reuse one current `configs/strategy_health.json` across the whole year
+- foundation one-liners now work with default SSH key discovery:
+  - `scripts/deploy_foundation.sh`
+  - `scripts/server_status.sh`
+- live control-plane state was manually rebuilt after the latest deploy:
+  - regime
+  - router
+  - allocator
+  - geometry
+  - operator snapshot
+- duplicate control-plane health cron was removed; the live server now keeps one:
+  - `# bybot_cp_health`
 
 When in doubt, prefer:
 - [docs/ROADMAP.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/ROADMAP.md)

@@ -43,6 +43,10 @@ from scripts.dynamic_allowlist import (  # noqa: E402
     select_for_profile,
     StrategyProfile,
 )
+from bot.router_geometry import (  # noqa: E402
+    geometry_flags_from_series,
+    geometry_score_for_env,
+)
 
 STATE_PATH = ROOT / "runtime" / "regime" / "orchestrator_state.json"
 ROUTER_STATE_PATH = ROOT / "runtime" / "router" / "symbol_router_state.json"
@@ -194,6 +198,7 @@ def _router_state_entry(
     fixed_symbols: bool,
     source: str,
     notes: List[str],
+    geometry: Dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
     return {
         "env_key": env_key,
@@ -204,7 +209,57 @@ def _router_state_entry(
         "fixed_symbols": fixed_symbols,
         "source": source,
         "notes": notes,
+        "geometry": dict(geometry or {}),
     }
+
+
+def _apply_geometry_router_layer(
+    *,
+    env_key: str,
+    symbols: List[str],
+    scan: Dict[str, Any],
+    fixed_symbols: bool,
+) -> tuple[List[str], Dict[str, Any], List[str]]:
+    if fixed_symbols or not symbols:
+        return symbols, {"used": False, "reason": "fixed_or_empty", "symbol_scores": []}, []
+
+    ranked: List[tuple[float, str, Dict[str, Any]]] = []
+    notes: List[str] = []
+    for sym in symbols:
+        row = scan.get(sym)
+        if row is None or not getattr(row, "closes_1h", None):
+            ranked.append((0.50, sym, {"score": 0.50, "keep": True, "reasons": ["no_geometry_data"], "flags": {}}))
+            continue
+        flags = geometry_flags_from_series(row.closes_1h, row.highs_1h, row.lows_1h)
+        scored = geometry_score_for_env(env_key, flags)
+        ranked.append((float(scored["score"]), sym, scored))
+
+    ranked.sort(key=lambda item: (-item[0], item[1]))
+    kept = [sym for _, sym, info in ranked if bool(info.get("keep"))]
+    removed = [sym for _, sym, info in ranked if not bool(info.get("keep"))]
+    if kept:
+        symbols = kept
+        if removed:
+            notes.append(f"geometry_filtered:{len(removed)}")
+    else:
+        symbols = [sym for _, sym, _ in ranked[: max(1, min(2, len(ranked)))]]
+        notes.append("geometry_fallback_kept_best")
+
+    geometry_meta = {
+        "used": True,
+        "symbol_scores": [
+            {
+                "symbol": sym,
+                "score": round(float(info.get("score", 0.5)), 4),
+                "keep": bool(info.get("keep")),
+                "min_keep_score": round(float(info.get("min_keep_score", 0.0)), 4),
+                "reasons": list(info.get("reasons") or []),
+                "flags": dict(info.get("flags") or {}),
+            }
+            for _, sym, info in ranked
+        ],
+    }
+    return symbols, geometry_meta, notes
 
 
 def _fallback_symbols(
@@ -327,6 +382,7 @@ def main() -> int:
         source = "fixed_profile" if fixed_symbols else "scan_profile"
         notes: List[str] = []
         fixed = bool(fixed_symbols)
+        geometry_meta: Dict[str, Any] = {"used": False, "reason": "not_applied", "symbol_scores": []}
 
         if fixed_symbols:
             symbols = fixed_symbols
@@ -374,6 +430,13 @@ def main() -> int:
                     fallback_reasons.append(f"{env_key}:post_exclude_empty")
 
         symbols = _dedupe_keep_order(symbols)
+        symbols, geometry_meta, geometry_notes = _apply_geometry_router_layer(
+            env_key=env_key,
+            symbols=symbols,
+            scan=scan,
+            fixed_symbols=fixed,
+        )
+        notes.extend(geometry_notes)
         results[env_key] = symbols
         router_profiles[env_key] = _router_state_entry(
             env_key=env_key,
@@ -383,6 +446,7 @@ def main() -> int:
             fixed_symbols=fixed,
             source=source,
             notes=notes,
+            geometry=geometry_meta,
         )
 
     now_utc = datetime.now(timezone.utc)
