@@ -41,5 +41,4 @@ trades.db
 configs/dynamic_allowlist_latest.env
 configs/regime_orchestrator_latest.env
 configs/health_gate_alerts.json
-configs/strategy_health.json
 configs/intraday_state.json
