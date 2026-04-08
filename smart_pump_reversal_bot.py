@@ -10150,6 +10150,24 @@ async def pulse():
                 last_ws_health_check_ts = now
         except Exception as e:
             log_error(f"strategy-stats pulse fail: {e}")
+        # ── Heartbeat file (external watchdog reads this) ──────────────────────
+        try:
+            _hb_path = Path(__file__).resolve().parent / "runtime" / "bot_heartbeat.json"
+            _hb_path.parent.mkdir(parents=True, exist_ok=True)
+            _write_json_atomic(
+                _hb_path,
+                {
+                    "ts": int(time.time()),
+                    "uptime_s": int(time.time() - int(BOT_START_TS)),
+                    "open_trades": len(TRADES),
+                    "ws_guard_active": int(_ws_transport_guard_active()),
+                    "bybit_msgs": int(MSG_COUNTER.get("Bybit", 0)),
+                    "regime": str(os.getenv("ORCH_REGIME", "unknown")),
+                },
+            )
+        except Exception as _hb_err:
+            log_error(f"heartbeat write fail: {_hb_err}")
+
         await asyncio.sleep(10)
 
 # =========================== RUNNER ===========================
