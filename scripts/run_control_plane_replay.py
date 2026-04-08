@@ -10,14 +10,13 @@ Purpose:
 Current scope:
   - historical regime classification on BTC 4H
   - hysteresis replay across checkpoints
-  - frozen-symbol router replay using the current profile registry plus a
-    frozen base overlay
+  - historical or frozen-symbol router replay using the profile registry
   - allocator decisions per checkpoint
 
 Important limitation:
-  This is a control-plane replay, not a portfolio PnL simulator. Symbol
-  selection is replayed from profile rules against a frozen overlay/anchors,
-  not from a full historical market scan yet.
+  This is a control-plane replay, not a portfolio PnL simulator. Even in
+  historical-scan mode, symbol selection is reconstructed from cached market
+  data and profile rules, not from a perfect historical live snapshot.
 """
 
 from __future__ import annotations
@@ -25,7 +24,6 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-import os
 import sys
 from collections import Counter
 from dataclasses import dataclass
@@ -51,6 +49,7 @@ from scripts.build_regime_state import (  # noqa: E402
     _classify_regime,
     _fetch_4h,
 )
+from indicators import atr_pct_from_ohlc  # noqa: E402
 
 
 DEFAULT_BASE_OVERLAY = ROOT / "configs" / "dynamic_allowlist_latest.env"
@@ -58,6 +57,7 @@ DEFAULT_REGISTRY = ROOT / "configs" / "strategy_profile_registry.json"
 DEFAULT_POLICY = ROOT / "configs" / "portfolio_allocator_policy.json"
 DEFAULT_HEALTH = ROOT / "configs" / "strategy_health.json"
 OUT_ROOT = ROOT / "backtest_runs"
+DATA_CACHE_DIR = ROOT / "data_cache"
 
 
 @dataclass
@@ -84,6 +84,17 @@ class ReplayPoint:
     flat_risk_mult: float
     sloped_risk_mult: float
     midterm_risk_mult: float
+
+
+@dataclass
+class HistoricalScanRow:
+    symbol: str
+    turnover24h: float
+    atr_pct: float
+    listing_age_days: float
+    closes_1h: List[float]
+    highs_1h: List[float]
+    lows_1h: List[float]
 
 
 def _load_json(path: Path, default: Any) -> Any:
@@ -208,25 +219,222 @@ def _advance_hysteresis(
     return applied_regime, raw_regime, 1, False
 
 
-def _build_frozen_router_state(
+def _load_cache_rows(symbol: str, interval: str, *, end_ms: int) -> List[Dict[str, float]]:
+    paths = sorted(DATA_CACHE_DIR.glob(f"{symbol}_{interval}_*.json"), reverse=True)
+    merged: List[Dict[str, float]] = []
+    seen_ts: set[int] = set()
+    for path in paths:
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        for item in reversed(raw):
+            try:
+                ts = int(item["ts"])
+                if ts >= int(end_ms) or ts in seen_ts:
+                    continue
+                row = {
+                    "ts": ts,
+                    "o": float(item["o"]),
+                    "h": float(item["h"]),
+                    "l": float(item["l"]),
+                    "c": float(item["c"]),
+                    "v": float(item["v"]),
+                }
+            except Exception:
+                continue
+            seen_ts.add(ts)
+            merged.append(row)
+    merged.sort(key=lambda x: x["ts"])
+    return merged
+
+
+def _aggregate_rows(rows: List[Dict[str, float]], target_min: int) -> List[Dict[str, float]]:
+    if not rows:
+        return []
+    bucket_ms = int(target_min) * 60 * 1000
+    buckets: Dict[int, Dict[str, float]] = {}
+    order: List[int] = []
+    for row in rows:
+        bucket_ts = int(row["ts"] // bucket_ms) * bucket_ms
+        slot = buckets.get(bucket_ts)
+        if slot is None:
+            slot = {
+                "ts": bucket_ts,
+                "o": float(row["o"]),
+                "h": float(row["h"]),
+                "l": float(row["l"]),
+                "c": float(row["c"]),
+                "v": float(row["v"]),
+            }
+            buckets[bucket_ts] = slot
+            order.append(bucket_ts)
+        else:
+            slot["h"] = max(float(slot["h"]), float(row["h"]))
+            slot["l"] = min(float(slot["l"]), float(row["l"]))
+            slot["c"] = float(row["c"])
+            slot["v"] = float(slot["v"]) + float(row["v"])
+    return [buckets[ts] for ts in sorted(order)]
+
+
+def _load_historical_1h_rows(symbol: str, *, end_ms: int) -> List[Dict[str, float]]:
+    rows_60 = _load_cache_rows(symbol, "60", end_ms=end_ms)
+    if rows_60:
+        return rows_60
+    rows_5 = _load_cache_rows(symbol, "5", end_ms=end_ms)
+    if rows_5:
+        return _aggregate_rows(rows_5, 60)
+    return []
+
+
+def _historical_scan(end_ms: int, *, max_scan_symbols: int) -> Dict[str, HistoricalScanRow]:
+    scan: Dict[str, HistoricalScanRow] = {}
+    symbols: set[str] = set()
+    for path in DATA_CACHE_DIR.glob("*_60_*.json"):
+        name = path.name
+        if "_60_" not in name:
+            continue
+        sym = name.split("_60_", 1)[0].strip().upper()
+        if sym.endswith("USDT"):
+            symbols.add(sym)
+    for path in DATA_CACHE_DIR.glob("*_5_*.json"):
+        name = path.name
+        if "_5_" not in name:
+            continue
+        sym = name.split("_5_", 1)[0].strip().upper()
+        if sym.endswith("USDT"):
+            symbols.add(sym)
+
+    rows_ranked: List[tuple[float, str, HistoricalScanRow]] = []
+    for symbol in sorted(symbols):
+        rows = _load_historical_1h_rows(symbol, end_ms=end_ms)
+        if len(rows) < 48:
+            continue
+        closes = [float(r["c"]) for r in rows]
+        highs = [float(r["h"]) for r in rows]
+        lows = [float(r["l"]) for r in rows]
+        vols = [float(r["v"]) for r in rows]
+        atr_pct = float(atr_pct_from_ohlc(highs, lows, closes, period=14, fallback=0.0))
+        last24 = rows[-24:] if len(rows) >= 24 else rows
+        turnover24h = sum(float(r["v"]) * float(r["c"]) for r in last24)
+        earliest_ts = int(rows[0]["ts"])
+        listing_age_days = max(0.0, (int(end_ms) - earliest_ts) / 86_400_000.0)
+        row = HistoricalScanRow(
+            symbol=symbol,
+            turnover24h=float(turnover24h),
+            atr_pct=float(atr_pct),
+            listing_age_days=float(listing_age_days),
+            closes_1h=closes,
+            highs_1h=highs,
+            lows_1h=lows,
+        )
+        rows_ranked.append((row.turnover24h, symbol, row))
+
+    rows_ranked.sort(reverse=True)
+    for _, symbol, row in rows_ranked[: max(1, int(max_scan_symbols))]:
+        scan[symbol] = row
+    return scan
+
+
+def _select_historical_symbols_for_profile(
+    entry: Dict[str, Any],
+    scan: Dict[str, HistoricalScanRow],
+    fallback_symbols: List[str],
+) -> tuple[List[str], str]:
+    fixed_defined = "fixed_symbols" in entry
+    fixed_symbols = _dedupe([str(x) for x in entry.get("fixed_symbols", []) if str(x).strip()])
+    anchor_symbols = _dedupe([str(x) for x in entry.get("anchor_symbols", []) if str(x).strip()])
+    excluded = {str(x).strip().upper() for x in entry.get("exclude_symbols", []) if str(x).strip()}
+    if fixed_defined:
+        return fixed_symbols, ("fixed_profile" if fixed_symbols else "fixed_profile_off")
+
+    min_turnover = float(entry.get("min_turnover") or 0.0)
+    min_atr_pct = float(entry.get("min_atr_pct") or 0.0)
+    max_atr_pct = float(entry.get("max_atr_pct") or 9999.0)
+    min_listing_days = int(entry.get("min_listing_days") or 0)
+    top_n = max(1, int(entry.get("top_n") or 6))
+
+    candidates: List[tuple[float, str]] = []
+    for sym, row in scan.items():
+        if sym in excluded:
+            continue
+        market_ok = True
+        if row.turnover24h < min_turnover:
+            market_ok = False
+        if row.atr_pct < min_atr_pct or row.atr_pct > max_atr_pct:
+            market_ok = False
+        if row.listing_age_days < min_listing_days:
+            market_ok = False
+        if not market_ok and sym not in anchor_symbols:
+            continue
+
+        atr_mid = (min_atr_pct + max_atr_pct) / 2.0
+        atr_half_width = max((max_atr_pct - min_atr_pct) / 2.0, 0.01)
+        atr_fit = max(0.0, 1.0 - ((row.atr_pct - atr_mid) / atr_half_width) ** 2)
+        liq_score = max(0.0, min(1.0, (row.turnover24h / max(min_turnover, 1_000_000.0)) ** 0.25))
+        age_score = max(0.0, min(1.0, row.listing_age_days / max(float(min_listing_days or 1), 1.0)))
+        anchor_bonus = 0.10 if sym in anchor_symbols else 0.0
+        score = atr_fit * 0.55 + liq_score * 0.35 + age_score * 0.10 + anchor_bonus
+        candidates.append((score, sym))
+
+    candidates.sort(reverse=True)
+    selected = [sym for _, sym in candidates[:top_n]]
+    if selected:
+        return selected, "historical_scan"
+    if fallback_symbols:
+        return fallback_symbols, "frozen_overlay_fallback"
+    if anchor_symbols:
+        return anchor_symbols, "anchor_fallback"
+    return [], "empty"
+
+
+def _build_router_state(
     *,
     regime: str,
     registry: Dict[str, Any],
     base_overlay: Dict[str, str],
+    router_mode: str,
+    historical_scan: Dict[str, HistoricalScanRow] | None = None,
 ) -> Dict[str, Any]:
     chosen = _pick_profiles(regime, registry)
     profiles: Dict[str, Any] = {}
     notes: List[str] = []
     degraded = False
+    scan_ok = True
+    mode = str(router_mode or "historical_scan").strip().lower()
+    if mode not in {"historical_scan", "frozen_overlay"}:
+        raise ValueError(f"Unsupported router replay mode: {router_mode}")
+    if mode == "historical_scan" and historical_scan is None:
+        historical_scan = {}
+    if mode == "historical_scan" and not historical_scan:
+        scan_ok = False
+        degraded = True
+        notes.append("historical_scan:empty")
 
     for env_key, entry in chosen.items():
+        fixed_defined = "fixed_symbols" in entry
         fixed_symbols = _dedupe([str(x) for x in entry.get("fixed_symbols", []) if str(x).strip()])
         anchor_symbols = _dedupe([str(x) for x in entry.get("anchor_symbols", []) if str(x).strip()])
         frozen_symbols = _csv_symbols(base_overlay.get(env_key, ""))
+        entry_notes: List[str] = []
 
-        if fixed_symbols:
+        if fixed_defined:
             symbols = fixed_symbols
-            source = "fixed_profile"
+            source = "fixed_profile" if fixed_symbols else "fixed_profile_off"
+        elif mode == "historical_scan":
+            symbols, source = _select_historical_symbols_for_profile(
+                entry=entry,
+                scan=historical_scan or {},
+                fallback_symbols=frozen_symbols,
+            )
+            if source == "frozen_overlay_fallback":
+                entry_notes.append("historical scan found no stronger match; used frozen overlay")
+            elif source == "anchor_fallback":
+                entry_notes.append("historical scan fell back to anchor symbols")
+            elif source == "empty":
+                degraded = True
+                entry_notes.append("historical scan produced no symbols")
+                notes.append(f"{env_key}:no_symbols")
         elif frozen_symbols:
             symbols = frozen_symbols
             source = "frozen_overlay"
@@ -235,6 +443,7 @@ def _build_frozen_router_state(
             source = "anchor_fallback"
             if not symbols:
                 degraded = True
+                entry_notes.append("no frozen overlay or anchors available")
                 notes.append(f"{env_key}:no_symbols")
 
         profiles[env_key] = {
@@ -243,17 +452,18 @@ def _build_frozen_router_state(
             "symbols": symbols,
             "count": len(symbols),
             "source": source,
-            "fixed_symbols": bool(fixed_symbols),
+            "fixed_symbols": bool(fixed_defined),
+            "notes": entry_notes,
         }
 
     return {
         "status": "ok" if not degraded else "degraded",
         "degraded": degraded,
-        "scan_ok": True,
+        "scan_ok": scan_ok,
         "profile_version": str(registry.get("profile_version") or registry.get("version") or "unknown"),
         "profiles": profiles,
         "notes": notes,
-        "router_mode": "frozen_overlay_replay",
+        "router_mode": f"{mode}_replay",
     }
 
 
@@ -396,13 +606,21 @@ def _summarize(points: List[ReplayPoint], out_dir: Path, meta: Dict[str, Any]) -
         "avg_global_risk_mult": round(avg_global_risk, 4),
         "regime_change_count": changed_count,
         "hard_block_count": hard_block_count,
-        "router_mode": "frozen_overlay_replay",
-        "limitations": [
+        "router_mode": str(meta.get("router_mode") or "unknown"),
+        "limitations": [],
+    }
+    if str(meta.get("router_mode")) == "historical_scan":
+        summary["limitations"] = [
+            "Historical regime is real.",
+            "Router reconstructs symbol baskets from cached historical market data and profile rules.",
+            "This output validates control-plane decisions, not direct trading PnL.",
+        ]
+    else:
+        summary["limitations"] = [
             "Historical regime is real.",
             "Router is replayed from profile rules against frozen overlay symbols and anchor fallbacks.",
             "This output validates control-plane decisions, not direct trading PnL.",
-        ],
-    }
+        ]
 
     lines = [
         f"tag={meta['tag']}",
@@ -413,8 +631,8 @@ def _summarize(points: List[ReplayPoint], out_dir: Path, meta: Dict[str, Any]) -
         "regime_counts=" + json.dumps(summary["regime_counts"], ensure_ascii=True),
         "allocator_status_counts=" + json.dumps(summary["allocator_status_counts"], ensure_ascii=True),
         "sleeve_enable_counts=" + json.dumps(summary["sleeve_enable_counts"], ensure_ascii=True),
-        "router_mode=frozen_overlay_replay",
-        "limitations=historical regime real; router frozen from overlay; not a PnL simulation",
+        f"router_mode={summary['router_mode']}",
+        "limitations=" + "; ".join(summary["limitations"]),
     ]
 
     _write_text(out_dir / "summary.json", json.dumps(summary, indent=2) + "\n")
@@ -436,6 +654,13 @@ def main() -> int:
     ap.add_argument("--health-path", default=str(DEFAULT_HEALTH))
     ap.add_argument("--tag", default="control_plane_replay")
     ap.add_argument("--cache-only", action="store_true", help="Use cached data only for historical BTC fetch.")
+    ap.add_argument(
+        "--router-mode",
+        default="historical_scan",
+        choices=["historical_scan", "frozen_overlay"],
+        help="How to replay symbol routing on each checkpoint.",
+    )
+    ap.add_argument("--max-scan-symbols", type=int, default=60)
     ap.add_argument(
         "--neutral-health",
         action="store_true",
@@ -495,10 +720,15 @@ def main() -> int:
             min_hold_cycles=int(args.min_hold_cycles),
         )
 
-        router_state = _build_frozen_router_state(
+        scan = None
+        if args.router_mode == "historical_scan":
+            scan = _historical_scan(checkpoint_ms, max_scan_symbols=int(args.max_scan_symbols))
+        router_state = _build_router_state(
             regime=applied_regime,
             registry=registry,
             base_overlay=base_overlay,
+            router_mode=args.router_mode,
+            historical_scan=scan,
         )
         allocator = _compute_allocator_snapshot(
             regime=applied_regime,
@@ -551,6 +781,8 @@ def main() -> int:
         "health_path": str(health_path),
         "cache_only": bool(args.cache_only),
         "neutral_health": bool(args.neutral_health),
+        "router_mode": str(args.router_mode),
+        "max_scan_symbols": int(args.max_scan_symbols),
     }
 
     timeline_path = out_dir / "timeline.csv"

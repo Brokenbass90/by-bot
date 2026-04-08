@@ -2281,3 +2281,28 @@ That is a much cleaner place to leave the machine for the next hour.
   - сохраняется `latest.json` с метаданными
   - появился `/chart_last`
   - это ещё не полноценное vision/CV, но теперь бот хотя бы умеет принять живой скрин графика и держать его как structured input для следующего визуального слоя
+
+## 2026-04-08 | Codex (session 27a — historical control-plane replay now uses historical symbol scans)
+
+- Finished the next real control-plane step in [run_control_plane_replay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_control_plane_replay.py): replay can now run in `historical_scan` mode instead of only replaying frozen overlay symbols.
+- The historical router now reconstructs candidate baskets from cached `60m` bars or aggregated `5m` bars, scores them against registry thresholds (`turnover`, `ATR%`, `listing age`, excludes, `top_n`), and falls back to frozen overlay / anchors only when that is genuinely necessary.
+- Also fixed an important truth bug: registry entries with explicit `fixed_symbols: []` are now treated as intentional `OFF` profiles instead of silently falling through into fallback symbols.
+- Honest replay outputs after this upgrade:
+  - smoke neutral replay: [summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/control_plane_replay_20260408_091552_smoke_cp_hist_20260408/summary.json) → `7` checkpoints, allocator `ok=7`, average global risk `0.8429`
+  - annual constrained replay: [summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/control_plane_replay_20260408_091552_annual_cp_hist_20260408/summary.json) → allocator `degraded=25`, mainly `flat=22` and `breakdown=4`, average global risk `0.672`
+  - annual neutral-health replay: [summary.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/control_plane_replay_20260408_091552_annual_cp_hist_neutral_20260408/summary.json) → allocator `ok=25`, enabled sleeves `breakout=21`, `sloped=25`, `midterm=25`, `flat=22`, `breakdown=4`, average global risk `0.896`
+- This is a useful truth milestone: the historical router itself is no longer the obvious bottleneck; the next structural question is how strict live `strategy_health` should be versus what annual replay says the system *could* have run.
+
+## 2026-04-08 | Codex (session 27b — deterministic geometry engine landed)
+
+- Added [bot/chart_geometry.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/chart_geometry.py) as the first reusable pre-vision geometry layer.
+- It currently provides:
+  - pivot highs/lows
+  - clustered horizontal levels
+  - regression channel with `r2`, width, and position-in-channel
+  - short-vs-long range compression state
+- Added [run_geometry_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_geometry_snapshot.py) so we can inspect symbol geometry directly from cache without any image model or external API key.
+- Verified on cached data:
+  - `BTCUSDT 60m`: channel `r2=0.364`, width `3.42%`, compression ratio `0.392`, nearest resistance cluster around `67022.97`
+  - `ETHUSDT 60m`: channel `r2=0.485`, width `5.04%`, compression ratio `0.424`, nearest resistance clusters around `2056.62` and `2060.56`
+- This gives us a real foundation for level-aware routing and future `approach / reject / accept` sleeves before we spend latency or tokens on vision.

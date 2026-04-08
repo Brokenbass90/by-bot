@@ -355,3 +355,10 @@ For the next sessions:
 - work the highest active priority
 - write the result to `WORKLOG` and `JOURNAL`
 - do not let side experiments replace core repair
+
+## 2026-04-08 Addendum
+
+New foundation rules:
+- historical router/allocator replay must reconstruct symbol baskets from cached history, not only from frozen overlays
+- deterministic geometry engine comes before heavy vision work
+- vision may assist analysis later, but level-building and regime/routing truth must stay reproducible without external model calls
