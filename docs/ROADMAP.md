@@ -486,3 +486,4 @@ New foundation rules:
     - fewer red months
     - better flat/range activation quality
     - stronger annual behaviour from `impulse`
+    - an honest annual answer on whether `sloped` is additive or just noisy context

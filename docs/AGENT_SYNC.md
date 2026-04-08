@@ -549,3 +549,16 @@ Practical meaning:
   - ongoing `range_scalp` annual repair
   - ongoing `flat_horizontal_core_v3_frontier`
   - ongoing `impulse` annual repair
+  - newly opened `asc1_annual_repair_v1` for the sloped sleeve
+
+### Overnight repair queue:
+
+- The current useful annual-repair queue is now:
+  - `impulse_volume_breakout_v1_annual_repair_v1`
+  - `range_scalp_v1_annual_repair_v1`
+  - `flat_horizontal_core_v3_frontier`
+  - `asc1_annual_repair_v1`
+- `support_bounce_v1_regime_gap_repair_v1` has already finished and did **not** become a live candidate:
+  - full run completed
+  - still failed on PF / DD / negative month constraints
+- This means the next bot revival effort is concentrated on the sleeves that still have plausible annual upside, not on already disproven side paths

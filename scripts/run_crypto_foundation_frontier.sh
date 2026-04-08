@@ -16,6 +16,7 @@ SPECS=(
   "configs/autoresearch/core3_range_additivity_recent180_v2.json"
   "configs/autoresearch/core3_range_additivity_annual_v1.json"
   "configs/autoresearch/range_scalp_v1_annual_repair_v1.json"
+  "configs/autoresearch/asc1_annual_repair_v1.json"
   "configs/autoresearch/support_bounce_v1_regime_gap_repair_v1.json"
   "configs/autoresearch/impulse_volume_breakout_v1_annual_repair_v1.json"
 )

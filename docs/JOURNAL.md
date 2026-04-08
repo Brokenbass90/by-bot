@@ -2955,3 +2955,15 @@ What that means:
   - reducing red months
   - improving sleeve quality inside real bear/bull windows
   - especially `flat`/`range` frequency-quality tradeoffs and `impulse` annual consistency
+
+Overnight research state:
+- Existing annual-repair fronts still running:
+  - [impulse_volume_breakout_v1_annual_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/impulse_volume_breakout_v1_annual_repair_v1.json)
+  - [range_scalp_v1_annual_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/range_scalp_v1_annual_repair_v1.json)
+  - [flat_horizontal_core_v3_frontier.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_horizontal_core_v3_frontier.json)
+- Added a new sloped annual-repair frontier:
+  - [asc1_annual_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/asc1_annual_repair_v1.json)
+- Why this was added:
+  - `alt_sloped_channel_v1` appears repeatedly inside corrected stitched annual windows
+  - it is still research-only and often treated as a contextual near-miss
+  - we need an honest yearly answer on whether it reduces portfolio weakness or only adds more noisy months
