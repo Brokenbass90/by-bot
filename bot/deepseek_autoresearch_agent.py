@@ -448,23 +448,57 @@ def _ds_chat(system: str, user: str, model: str | None = None) -> str:
             {"role": "user", "content": user},
         ],
         "temperature": 0.15,
-        "max_tokens": 700,
+        "max_tokens": max(200, int(_env("DEEPSEEK_COMPLETION_MAX_TOKENS", "700") or 700)),
     }
+    max_parts = max(1, int(_env("DEEPSEEK_CONTINUATION_MAX_PARTS", "4") or 4))
     try:
-        resp = requests.post(
-            url,
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            },
-            json=payload,
-            timeout=timeout,
-        )
-        resp.raise_for_status()
-        choices = resp.json().get("choices") or []
-        if choices:
-            return str(choices[0].get("message", {}).get("content", "")).strip()
-        return "DeepSeek вернул пустой ответ."
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
+        messages = list(payload["messages"])
+        parts: list[str] = []
+        continuation_count = 0
+        finish_reason = ""
+
+        while True:
+            resp = requests.post(
+                url,
+                headers=headers,
+                json={**payload, "messages": messages},
+                timeout=timeout,
+            )
+            resp.raise_for_status()
+            choices = resp.json().get("choices") or []
+            if not choices:
+                break
+            choice0 = choices[0] or {}
+            content = str(choice0.get("message", {}).get("content", "")).strip()
+            finish_reason = str(choice0.get("finish_reason") or "").strip().lower()
+            if not content:
+                break
+            parts.append(content)
+            if finish_reason != "length":
+                break
+            continuation_count += 1
+            if continuation_count >= max_parts:
+                break
+            messages.extend([
+                {"role": "assistant", "content": content},
+                {
+                    "role": "user",
+                    "content": (
+                        "Продолжи ответ с того места, где остановился. "
+                        "Не повторяй уже сказанное и не начинай заново."
+                    ),
+                },
+            ])
+        if not parts:
+            return "DeepSeek вернул пустой ответ."
+        answer = "\n\n".join([p for p in parts if p.strip()]).strip()
+        if finish_reason == "length" and continuation_count >= max_parts:
+            answer += "\n\n[auto-continue limit reached; answer may still be truncated]"
+        return answer
     except Exception as e:
         return f"DeepSeek error: {e}"
 

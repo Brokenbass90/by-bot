@@ -658,3 +658,19 @@ Practical meaning:
   - this closes the “silent degraded fallback” issue
   - it does not yet solve the second router weakness: strategy-aware symbol scoring is still too generic for messy `bear_chop`
   - next router-quality step after current runs: add per-sleeve symbol memory / penalties for repeat whipsaw symbols
+
+### 2026-04-09 09:50 UTC sync update
+
+- Operator Telegram UX was still incomplete even after chunking work:
+  - outgoing Telegram already split long text
+  - but DeepSeek/API answers could still stop early at the model layer
+  - this created the user-visible pattern “ask for audit -> get first part -> manually ask for the rest”
+- Fixed now:
+  - [bot/deepseek_overlay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/deepseek_overlay.py) auto-continues on `finish_reason=length`
+  - [bot/deepseek_autoresearch_agent.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/deepseek_autoresearch_agent.py) now does the same for `/ai_audit` and code/file analysis helpers
+  - [scripts/deploy_foundation.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deploy_foundation.sh) now uploads both DeepSeek modules, so future foundation deploys will actually carry this fix to prod
+- Intended behavior now:
+  - one Telegram request
+  - zero manual `/next`-style nudges
+  - DeepSeek auto-continues until the answer is complete or the continuation cap is hit
+  - Telegram emits all chunks automatically in sequence

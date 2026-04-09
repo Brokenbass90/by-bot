@@ -50,6 +50,8 @@ FILES=(
   "smart_pump_reversal_bot.py"
   "bot/chart_geometry.py"
   "bot/diagnostics.py"
+  "bot/deepseek_overlay.py"
+  "bot/deepseek_autoresearch_agent.py"
   "bot/geometry_cache.py"
   "bot/operator_snapshot.py"
   "bot/router_geometry.py"

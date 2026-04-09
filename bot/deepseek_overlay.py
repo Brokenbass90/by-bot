@@ -31,6 +31,8 @@ class DeepSeekConfig:
     shadow_log_path: Path
     max_history_messages: int
     max_answer_chars: int
+    completion_max_tokens: int
+    continuation_max_parts: int
     daily_request_cap: int
     shadow_max_items: int
 
@@ -51,6 +53,8 @@ def _load_config() -> DeepSeekConfig:
         shadow_log_path=Path(str(os.getenv("DEEPSEEK_SHADOW_LOG_PATH", "/root/by-bot/data/deepseek_shadow.json") or "/root/by-bot/data/deepseek_shadow.json")),
         max_history_messages=max(0, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "16") or 16)),
         max_answer_chars=max(600, int(os.getenv("DEEPSEEK_MAX_ANSWER_CHARS", "3500") or 3500)),
+        completion_max_tokens=max(200, int(os.getenv("DEEPSEEK_COMPLETION_MAX_TOKENS", "700") or 700)),
+        continuation_max_parts=max(1, int(os.getenv("DEEPSEEK_CONTINUATION_MAX_PARTS", "4") or 4)),
         daily_request_cap=max(1, int(os.getenv("DEEPSEEK_DAILY_REQUEST_CAP", "60") or 60)),
         shadow_max_items=max(10, int(os.getenv("DEEPSEEK_SHADOW_MAX_ITEMS", "200") or 200)),
     )
@@ -306,6 +310,46 @@ class DeepSeekOverlay:
             return f"Proposal {proposal_id} {'approved' if approve else 'rejected'}."
         return f"Proposal {proposal_id} not found."
 
+    def _request_chat_completion(self, messages: list[dict[str, str]]) -> tuple[str, str]:
+        url = self.cfg.base_url.rstrip("/") + "/chat/completions"
+        payload = {
+            "model": self.cfg.model,
+            "messages": messages,
+            "temperature": 0.2,
+            "stream": False,
+            "max_tokens": self.cfg.completion_max_tokens,
+        }
+        headers = {
+            "Authorization": f"Bearer {self.cfg.api_key}",
+            "Content-Type": "application/json",
+        }
+        last_timeout_exc: Exception | None = None
+        resp = None
+        for attempt in range(self.cfg.timeout_retries + 1):
+            try:
+                resp = requests.post(url, headers=headers, json=payload, timeout=self.cfg.timeout_sec)
+                break
+            except requests.exceptions.Timeout as e:
+                last_timeout_exc = e
+                if attempt >= self.cfg.timeout_retries:
+                    raise
+                if self.cfg.retry_backoff_sec > 0:
+                    time.sleep(self.cfg.retry_backoff_sec * float(attempt + 1))
+        if resp is None and last_timeout_exc is not None:
+            raise last_timeout_exc
+        if resp is None:
+            raise RuntimeError("DeepSeek request returned no response object")
+        resp.raise_for_status()
+        data = resp.json() or {}
+        choices = data.get("choices") or []
+        if not choices:
+            return "", ""
+        choice0 = choices[0] or {}
+        msg = choice0.get("message") or {}
+        content = str(msg.get("content") or "").strip()
+        finish_reason = str(choice0.get("finish_reason") or "").strip().lower()
+        return content, finish_reason
+
     def ask(self, question: str, snapshot: dict[str, Any]) -> str:
         self.reload()
         q = str(question or "").strip()
@@ -365,42 +409,31 @@ class DeepSeekOverlay:
         messages.extend(history)
         messages.append({"role": "user", "content": q})
 
-        url = self.cfg.base_url.rstrip("/") + "/chat/completions"
-        payload = {
-            "model": self.cfg.model,
-            "messages": messages,
-            "temperature": 0.2,
-            "stream": False,
-            "max_tokens": 500,
-        }
-        headers = {
-            "Authorization": f"Bearer {self.cfg.api_key}",
-            "Content-Type": "application/json",
-        }
         try:
-            last_timeout_exc: Exception | None = None
-            resp = None
-            for attempt in range(self.cfg.timeout_retries + 1):
-                try:
-                    resp = requests.post(url, headers=headers, json=payload, timeout=self.cfg.timeout_sec)
+            parts: list[str] = []
+            continuation_count = 0
+            finish_reason = ""
+            while True:
+                content, finish_reason = self._request_chat_completion(messages)
+                if not content:
                     break
-                except requests.exceptions.Timeout as e:
-                    last_timeout_exc = e
-                    if attempt >= self.cfg.timeout_retries:
-                        raise
-                    if self.cfg.retry_backoff_sec > 0:
-                        time.sleep(self.cfg.retry_backoff_sec * float(attempt + 1))
-            if resp is None and last_timeout_exc is not None:
-                raise last_timeout_exc
-            if resp is None:
-                raise RuntimeError("DeepSeek request returned no response object")
-            resp.raise_for_status()
-            data = resp.json() or {}
-            choices = data.get("choices") or []
-            content = ""
-            if choices:
-                msg = choices[0].get("message") or {}
-                content = str(msg.get("content") or "").strip()
+                parts.append(content.strip())
+                if finish_reason != "length":
+                    break
+                continuation_count += 1
+                if continuation_count >= self.cfg.continuation_max_parts:
+                    break
+                messages.extend([
+                    {"role": "assistant", "content": content},
+                    {
+                        "role": "user",
+                        "content": (
+                            "Продолжи ответ с того места, где остановился. "
+                            "Не повторяй уже сказанное, не начинай заново и не добавляй новое вступление."
+                        ),
+                    },
+                ])
+            content = "\n\n".join([p for p in parts if p.strip()]).strip()
             if not content:
                 answer = "DeepSeek не вернул содержательный ответ."
                 self._append_audit({
@@ -412,6 +445,11 @@ class DeepSeekOverlay:
                 })
                 return answer
             answer = content.strip()
+            if finish_reason == "length" and continuation_count >= self.cfg.continuation_max_parts:
+                answer = (
+                    answer.rstrip()
+                    + "\n\n[auto-continue limit reached; answer may still be truncated]"
+                )
             history_answer = answer[: self.cfg.max_answer_chars].strip()
             history.extend([
                 {"role": "user", "content": q},
@@ -430,6 +468,7 @@ class DeepSeekOverlay:
                 "question": q,
                 "answer": answer,
                 "status": "ok",
+                "continuations": continuation_count,
             })
             return answer
         except Exception as e:
