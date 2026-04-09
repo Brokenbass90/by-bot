@@ -155,6 +155,7 @@ class AltResistanceFadeV1Strategy:
         self._last_tf_ts: Optional[int] = None
         self._last_regime_tf_ts: Optional[int] = None
         self._last_regime_ok: Optional[bool] = None
+        self.last_no_signal_reason = ""
 
     def _refresh_runtime_allowlists(self) -> None:
         self._allow = _env_csv_set("ARF1_SYMBOL_ALLOWLIST", "BCHUSDT")
@@ -163,6 +164,7 @@ class AltResistanceFadeV1Strategy:
     def _regime_ok(self, store) -> bool:
         rows = store.fetch_klines(store.symbol, self.cfg.regime_tf, max(self.cfg.regime_lookback, self.cfg.regime_ema_slow + 8)) or []
         if len(rows) < self.cfg.regime_ema_slow + 8:
+            self.last_no_signal_reason = "regime_history_short"
             return False
         tf_ts = int(float(rows[-1][0]))
         if self._last_regime_tf_ts is not None and tf_ts == self._last_regime_tf_ts and self._last_regime_ok is not None:
@@ -180,6 +182,7 @@ class AltResistanceFadeV1Strategy:
         es_prev = _ema(closes[:-6], self.cfg.regime_ema_slow)
         atr = _atr_from_rows(rows, 14)
         if not all(math.isfinite(x) for x in (ef, es, es_prev, atr)) or atr <= 0:
+            self.last_no_signal_reason = "regime_invalid"
             return False
 
         gap_pct = abs(ef - es) / cur * 100.0
@@ -194,20 +197,35 @@ class AltResistanceFadeV1Strategy:
             and self.cfg.regime_min_atr_pct <= atr_pct <= self.cfg.regime_max_atr_pct
             and rebound_from_low <= self.cfg.max_rebound_from_low_pct
         )
+        if not ok:
+            if gap_pct > self.cfg.regime_max_gap_pct:
+                self.last_no_signal_reason = f"regime_gap_high_{gap_pct:.2f}"
+            elif slope_pct > self.cfg.regime_max_slope_pct:
+                self.last_no_signal_reason = f"regime_slope_high_{slope_pct:.2f}"
+            elif atr_pct < self.cfg.regime_min_atr_pct:
+                self.last_no_signal_reason = f"regime_atr_low_{atr_pct:.2f}"
+            elif atr_pct > self.cfg.regime_max_atr_pct:
+                self.last_no_signal_reason = f"regime_atr_high_{atr_pct:.2f}"
+            else:
+                self.last_no_signal_reason = f"regime_rebound_high_{rebound_from_low:.2f}"
         self._last_regime_tf_ts = tf_ts
         self._last_regime_ok = bool(ok)
         return bool(ok)
 
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (o, h, l, v)
+        self.last_no_signal_reason = ""
         self._refresh_runtime_allowlists()
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
+            self.last_no_signal_reason = "symbol_not_allowed"
             return None
         if sym in self._deny:
+            self.last_no_signal_reason = "symbol_denied"
             return None
         if self._cooldown > 0:
             self._cooldown -= 1
+            self.last_no_signal_reason = "cooldown"
             return None
         if not self._regime_ok(store):
             return None
@@ -215,13 +233,16 @@ class AltResistanceFadeV1Strategy:
         need = max(self.cfg.signal_lookback, self.cfg.signal_ema_period + self.cfg.rsi_period + 5)
         rows = store.fetch_klines(store.symbol, self.cfg.signal_tf, need) or []
         if len(rows) < need:
+            self.last_no_signal_reason = "signal_history_short"
             return None
 
         tf_ts = int(float(rows[-1][0]))
         if self._last_tf_ts is None:
             self._last_tf_ts = tf_ts
+            self.last_no_signal_reason = "first_signal_bar"
             return None
         if tf_ts == self._last_tf_ts:
+            self.last_no_signal_reason = "same_signal_bar"
             return None
         self._last_tf_ts = tf_ts
 
@@ -236,12 +257,17 @@ class AltResistanceFadeV1Strategy:
         atr = _atr_from_rows(rows, self.cfg.signal_atr_period)
         rsi = _rsi(closes, self.cfg.rsi_period)
         if not all(math.isfinite(x) for x in (ema, atr, rsi)) or cur <= 0 or atr <= 0:
+            self.last_no_signal_reason = "signal_invalid"
             return None
 
         support = min(lows[-self.cfg.signal_lookback:-1])
         resistance = max(highs[-self.cfg.signal_lookback:-1])
         range_pct = (resistance - support) / max(1e-12, cur) * 100.0
-        if range_pct < self.cfg.min_range_pct or range_pct > self.cfg.max_range_pct:
+        if range_pct < self.cfg.min_range_pct:
+            self.last_no_signal_reason = f"range_too_narrow_{range_pct:.2f}"
+            return None
+        if range_pct > self.cfg.max_range_pct:
+            self.last_no_signal_reason = f"range_too_wide_{range_pct:.2f}"
             return None
 
         high_now = highs[-1]
@@ -253,14 +279,23 @@ class AltResistanceFadeV1Strategy:
         dist_from_res_pct = (resistance - cur) / max(1e-12, resistance) * 100.0
         close_vs_ema_pct = (cur - ema) / max(1e-12, ema) * 100.0
 
-        if not (
-            touched_res
-            and rejected_back
-            and body_frac >= self.cfg.min_body_frac
-            and dist_from_res_pct <= self.cfg.max_dist_from_res_pct
-            and rsi >= self.cfg.min_rsi
-            and close_vs_ema_pct <= self.cfg.max_close_vs_ema_pct
-        ):
+        if not touched_res:
+            self.last_no_signal_reason = f"no_res_touch_{dist_from_res_pct:.2f}"
+            return None
+        if not rejected_back:
+            self.last_no_signal_reason = "no_reject_back"
+            return None
+        if body_frac < self.cfg.min_body_frac:
+            self.last_no_signal_reason = f"body_weak_{body_frac:.2f}"
+            return None
+        if dist_from_res_pct > self.cfg.max_dist_from_res_pct:
+            self.last_no_signal_reason = f"dist_too_far_{dist_from_res_pct:.2f}"
+            return None
+        if rsi < self.cfg.min_rsi:
+            self.last_no_signal_reason = f"rsi_too_low_{rsi:.2f}"
+            return None
+        if close_vs_ema_pct > self.cfg.max_close_vs_ema_pct:
+            self.last_no_signal_reason = f"ema_extension_high_{close_vs_ema_pct:.2f}"
             return None
 
         sl = resistance + self.cfg.sl_atr_mult * atr
@@ -269,9 +304,11 @@ class AltResistanceFadeV1Strategy:
         # could be inverted at entry (sl below entry for short, tp above entry for short).
         entry_price = float(c)
         if sl <= entry_price:
+            self.last_no_signal_reason = "sl_below_entry"
             return None
         tp2 = support * (1.0 + self.cfg.tp2_buffer_pct / 100.0)
         if tp2 >= entry_price:
+            self.last_no_signal_reason = "tp_above_entry"
             return None
         tp1 = entry_price - (entry_price - tp2) * 0.55
         tp1_frac = min(0.9, max(0.1, self.cfg.tp1_frac))
@@ -291,4 +328,7 @@ class AltResistanceFadeV1Strategy:
             time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
             reason="arf1_alt_resistance_fade",
         )
-        return sig if sig.validate() else None
+        if not sig.validate():
+            self.last_no_signal_reason = "signal_invalid_post"
+            return None
+        return sig

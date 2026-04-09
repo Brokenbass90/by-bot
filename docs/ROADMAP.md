@@ -503,3 +503,8 @@ New foundation rules:
     - [run_dynamic_crypto_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_walkforward.py) replays `regime -> router -> allocator -> health timeline` on each walk-forward window
     - this becomes the preferred validator for any future promotion decision once a stitched annual candidate looks good
     - the old static-symbol walk-forward remains useful only as a simpler baseline, not as the final truth layer
+  - live observability next focus:
+    - `flat` and `IVB1` no longer get treated as opaque `try up / entry zero` sleeves
+    - future pulses should break `flat` down by `same_bar / regime / range / touch / reject / RSI / EMA / risk`
+    - future pulses should break `IVB1` down by `no_breakout / impulse quality / retrace / stop / regime`
+    - only after we see those live blockers clearly should we relax filters or lower timeframes

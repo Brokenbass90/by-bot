@@ -63,3 +63,9 @@ class FlatResistanceFadeLiveEngine:
         store = self._stores[symbol]
         strat = self._strategies[symbol]
         return strat.maybe_signal(store, ts_ms, o, h, l, c, v)
+
+    def last_no_signal_reason(self, symbol: str) -> str:
+        strat = self._strategies.get(symbol)
+        if strat is None:
+            return ""
+        return str(getattr(strat, "last_no_signal_reason", "") or "")

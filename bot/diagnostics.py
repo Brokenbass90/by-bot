@@ -77,10 +77,16 @@ def _runtime_diag_snapshot() -> str:
         "sloped_skip_max_open", "sloped_skip_portfolio",
         "sloped_skip_cooldown", "sloped_skip_symbol_lock",
         "flat_sched", "flat_try", "flat_entry",
+        "flat_no_signal",
         "flat_skip_no_engine", "flat_skip_trade_off",
         "flat_skip_no_client", "flat_skip_open_trade",
         "flat_skip_max_open", "flat_skip_portfolio",
         "flat_skip_cooldown", "flat_skip_symbol_lock",
+        "flat_ns_symbol", "flat_ns_cooldown", "flat_ns_regime",
+        "flat_ns_history", "flat_ns_same_bar", "flat_ns_range",
+        "flat_ns_touch", "flat_ns_reject", "flat_ns_body",
+        "flat_ns_dist", "flat_ns_rsi", "flat_ns_ema",
+        "flat_ns_risk", "flat_ns_other",
         "breakdown_sched", "breakdown_try", "breakdown_entry",
         "breakdown_skip_no_engine", "breakdown_skip_trade_off",
         "breakdown_skip_no_client", "breakdown_skip_open_trade",
@@ -89,7 +95,8 @@ def _runtime_diag_snapshot() -> str:
         "ivb1_sched", "ivb1_try", "ivb1_no_signal", "ivb1_entry",
         "ivb1_skip_max_open", "ivb1_skip_portfolio", "ivb1_skip_symbol_lock",
         "ivb1_ns_history", "ivb1_ns_regime", "ivb1_ns_cooldown",
-        "ivb1_ns_atr", "ivb1_ns_volume", "ivb1_ns_impulse_small",
+        "ivb1_ns_atr", "ivb1_ns_volume", "ivb1_ns_no_breakout",
+        "ivb1_ns_impulse_small",
         "ivb1_ns_impulse_vol", "ivb1_ns_impulse_body", "ivb1_ns_impulse_range",
         "ivb1_ns_armed", "ivb1_ns_retrace_wait", "ivb1_ns_retrace_expired",
         "ivb1_ns_lost_level", "ivb1_ns_stop", "ivb1_ns_other",
@@ -154,6 +161,10 @@ def _ivb1_no_signal_diag_key(reason: str) -> str:
         return "ivb1_ns_other"
     if "history_short" in r or "not_enough_5m_bars" in r:
         return "ivb1_ns_history"
+    if "bar_not_bullish" in r:
+        return "ivb1_ns_impulse_body"
+    if "no_breakout" in r:
+        return "ivb1_ns_no_breakout"
     if "regime_" in r:
         return "ivb1_ns_regime"
     if "cooldown" in r:
@@ -181,6 +192,40 @@ def _ivb1_no_signal_diag_key(reason: str) -> str:
     if "stop_too_" in r or "sl_at_or_above_entry" in r:
         return "ivb1_ns_stop"
     return "ivb1_ns_other"
+
+
+def _flat_no_signal_diag_key(reason: str) -> str:
+    """Map flat sleeve no-signal reasons to grouped diagnostic keys."""
+    r = str(reason or "").strip().lower()
+    if not r:
+        return "flat_ns_other"
+    if "symbol_" in r:
+        return "flat_ns_symbol"
+    if "cooldown" in r:
+        return "flat_ns_cooldown"
+    if "regime_" in r:
+        return "flat_ns_regime"
+    if "history_short" in r or "signal_invalid" in r:
+        return "flat_ns_history"
+    if "first_signal_bar" in r or "same_signal_bar" in r:
+        return "flat_ns_same_bar"
+    if "range_too_" in r:
+        return "flat_ns_range"
+    if "no_res_touch" in r:
+        return "flat_ns_touch"
+    if "no_reject_back" in r:
+        return "flat_ns_reject"
+    if "body_weak" in r:
+        return "flat_ns_body"
+    if "dist_too_far" in r:
+        return "flat_ns_dist"
+    if "rsi_too_low" in r:
+        return "flat_ns_rsi"
+    if "ema_extension" in r:
+        return "flat_ns_ema"
+    if "sl_below_entry" in r or "tp_above_entry" in r or "signal_invalid_post" in r:
+        return "flat_ns_risk"
+    return "flat_ns_other"
 
 
 def _elder_no_signal_diag_key(reason: str) -> str:

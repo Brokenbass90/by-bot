@@ -78,6 +78,7 @@ from bot.diagnostics import (
     RUNTIME_DIAG_ENABLE, RUNTIME_COUNTER, MSG_COUNTER,
     _diag_inc, _diag_get_int, _runtime_diag_snapshot,
     _breakout_no_signal_diag_key, _ivb1_no_signal_diag_key, _elder_no_signal_diag_key,
+    _flat_no_signal_diag_key,
 )
 from bot.deepseek_overlay import DeepSeekOverlay
 from bot.deepseek_autoresearch_agent import (
@@ -7932,6 +7933,12 @@ async def try_flat_entry_async(symbol: str, price: float):
         log_error(f"flat signal error {symbol}: {e}")
         return
     if not sig:
+        _diag_inc("flat_no_signal")
+        try:
+            ns_reason = FLAT_ENGINE.last_no_signal_reason(symbol)
+        except Exception:
+            ns_reason = ""
+        _diag_inc(_flat_no_signal_diag_key(ns_reason))
         return
 
     side = "Buy" if sig.side == "long" else "Sell"

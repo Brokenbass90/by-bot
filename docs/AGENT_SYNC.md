@@ -610,6 +610,14 @@ Practical meaning:
   - [run_dynamic_crypto_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_walkforward.py) now exists and should replace static walk-forward whenever we want a promotion-grade answer
   - it uses historical `regime + router + allocator + health timeline`, not a frozen symbol list
   - first window on `dynamic_core3_flat_impulse_nosloped_wf360_v1` came back `+1.58`, PF `inf`, DD `0.02`, `3` trades, `pass=False`
+- New live-debug truth:
+  - `flat` and `IVB1` were still too opaque in production because `flat` had no reason-level no-signal telemetry and most `IVB1` misses collapsed into `other`
+  - this is now fixed in code and deployed
+  - current server params still explain why the next likely blockers are strict `flat` conditions rather than “bot is dead”:
+    - `ARF1_SIGNAL_TF=60m`
+    - `ARF1_MIN_RSI=58`
+    - `ARF1_REJECT_BELOW_RES_ATR=0.12`
+  - wait for the next production pulses before changing thresholds blindly; the new counters should tell us whether the main blocker is `same_bar`, `RSI`, `touch/reject`, or `IVB1` breakout quality
 - Current package hierarchy is unchanged until the new rolling run finishes:
   - near-term core candidate remains `breakdown + flat + impulse`
   - `sloped` stays out of the near-term core unless new evidence overturns the no-sloped advantage
