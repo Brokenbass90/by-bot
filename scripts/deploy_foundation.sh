@@ -66,6 +66,7 @@ FILES=(
   "scripts/control_plane_watchdog.py"
   "scripts/build_regime_state.py"
   "scripts/build_symbol_router.py"
+  "scripts/dynamic_allowlist.py"
   "scripts/build_portfolio_allocator.py"
   "scripts/build_geometry_state.py"
   "scripts/build_operator_snapshot.py"

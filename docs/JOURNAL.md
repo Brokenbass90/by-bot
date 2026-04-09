@@ -18,10 +18,29 @@
   - [run_dynamic_crypto_annual.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_annual.py)
   - [run_dynamic_crypto_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_walkforward.py)
 - Synced the allocator repair to the live server and rebuilt control-plane state without restarting the bot.
+- Added repeated-issue throttling to [check_control_plane_health.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/check_control_plane_health.sh):
+  - first occurrence still alerts immediately
+  - identical control-plane issues now repeat at most once every `12h`
+  - recovery sends a single resolved message instead of endless duplicates
+- Re-verified the live server after the allocator repair:
+  - allocator is currently `ok`, not degraded
+  - `router_status=ok`, `scan_ok=1`, `fallbacks=0`
+  - repeated Telegram `overall_health_watch` alerts are now treated as alerting noise to suppress, not as current allocator truth
+- Seeded live router symbol memory and rebuilt server control-plane:
+  - live router now shows `symbol_memory_loaded=1`
+  - backtest gate remains on
+  - the new degraded mode after the rebuild is overlap-only (`portfolio_overlap:0.25`), not a stale health-file failure
+- Tightened control-plane alert semantics one step further:
+  - overlap-only allocator degradation is now logged as `INFO`
+  - it no longer qualifies as a Telegram-worthy control-plane failure
 - Armed Alpaca monthly paper lane:
   - switched [alpaca_paper_v36_candidate.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/alpaca_paper_v36_candidate.env) to `ALPACA_SEND_ORDERS=1`
   - fixed [run_equities_alpaca_v36_candidate.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_equities_alpaca_v36_candidate.sh) so manual `--once` usage does not break the monthly bridge
   - installed monthly cron on the server via [setup_cron_alpaca.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_cron_alpaca.sh)
+- Confirmed the next real Alpaca bottleneck:
+  - refresh is live and produces fresh runtime files
+  - monthly paper still lands in `send_orders_no_current_cycle`
+  - current blocker is stale historical `picks.csv` semantics, not a dead cron or disabled send-orders flag
 - Restarted top-level crypto validators on the new allocator truth:
   - `dynamic_core3_flat_impulse_nosloped_wf360_memoryfix_v1`
   - `dynamic_core3_flat_impulse_nosloped_annual_memoryfix_v1`

@@ -14,6 +14,7 @@ NOW=$(date +%s)
 PROBLEMS=()
 SCHEDULE_PROBLEMS=()
 STATE_PROBLEMS=()
+STATE_FILE="$BOT_DIR/runtime/cp_health_alert_state.json"
 
 TG_TOKEN="${TG_TOKEN:-}"
 TG_CHAT="${TG_CHAT_ID:-${TG_CHAT:-}}"
@@ -40,6 +41,82 @@ send_tg() {
     -d text="$msg" \
     -d parse_mode="HTML" \
     --max-time 10 > /dev/null || true
+}
+
+json_state_get() {
+  local field="$1"
+  python3 - <<'PY' "$STATE_FILE" "$field" 2>/dev/null || true
+import json, sys
+from pathlib import Path
+path = Path(sys.argv[1])
+field = sys.argv[2]
+if not path.exists():
+    raise SystemExit(0)
+try:
+    data = json.loads(path.read_text(encoding="utf-8"))
+except Exception:
+    raise SystemExit(0)
+value = data.get(field, "")
+if isinstance(value, bool):
+    print("1" if value else "0")
+elif value is None:
+    print("")
+else:
+    print(value)
+PY
+}
+
+json_state_write() {
+  local active="$1"
+  local fingerprint="$2"
+  local count="$3"
+  local first_seen="$4"
+  local last_seen="$5"
+  local last_sent="$6"
+  local status="$7"
+  local note="$8"
+  python3 - <<'PY' "$STATE_FILE" "$active" "$fingerprint" "$count" "$first_seen" "$last_seen" "$last_sent" "$status" "$note"
+import json, sys
+from pathlib import Path
+path = Path(sys.argv[1])
+payload = {
+    "active": sys.argv[2] == "1",
+    "fingerprint": sys.argv[3],
+    "count": int(sys.argv[4] or 0),
+    "first_seen": int(sys.argv[5] or 0),
+    "last_seen": int(sys.argv[6] or 0),
+    "last_sent": int(sys.argv[7] or 0),
+    "status": sys.argv[8],
+    "note": sys.argv[9],
+}
+path.parent.mkdir(parents=True, exist_ok=True)
+tmp = path.with_suffix(path.suffix + ".tmp")
+tmp.write_text(json.dumps(payload, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
+tmp.replace(path)
+PY
+}
+
+make_fingerprint() {
+  python3 - <<'PY' "$@"
+import hashlib, sys
+parts = sys.argv[1:]
+joined = "\n".join(p for p in parts if p)
+print(hashlib.sha1(joined.encode("utf-8")).hexdigest())
+PY
+}
+
+format_utc_ts() {
+  local ts="$1"
+  python3 - <<'PY' "$ts" 2>/dev/null || true
+from datetime import datetime, timezone
+import sys
+try:
+    ts = int(sys.argv[1] or 0)
+except Exception:
+    ts = 0
+if ts > 0:
+    print(datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))
+PY
 }
 
 check_file() {
@@ -167,6 +244,26 @@ PY
   fi
 
   IFS='|' read -r ALLOC_STATUS ALLOC_SAFE ALLOC_DEGRADED ALLOC_REASON_TEXT <<< "$allocator_meta"
+  local alloc_reason_lower="${ALLOC_REASON_TEXT,,}"
+  local overlap_only=0
+  if [[ "$ALLOC_SAFE" != "1" && "$ALLOC_DEGRADED" == "1" && "$ALLOC_STATUS" == "degraded" ]]; then
+    if [[ -n "${alloc_reason_lower:-}" ]]; then
+      overlap_only=1
+      IFS=';' read -r -a _alloc_reason_parts <<< "$alloc_reason_lower"
+      for _reason in "${_alloc_reason_parts[@]}"; do
+        _reason="${_reason// /}"
+        [[ -z "$_reason" ]] && continue
+        if [[ "$_reason" != portfolio_overlap:* ]]; then
+          overlap_only=0
+          break
+        fi
+      done
+    fi
+  fi
+  if (( overlap_only == 1 )); then
+    echo "[cp_health $(date -u '+%H:%M:%S')] INFO allocator overlap-only degraded (${ALLOC_REASON_TEXT:-unknown})"
+    return
+  fi
   if [[ "$ALLOC_SAFE" == "1" || "$ALLOC_DEGRADED" == "1" || "$ALLOC_STATUS" != "ok" ]]; then
     local msg="⚠️ Portfolio allocator: DEGRADED (status=${ALLOC_STATUS:-?}, safe_mode=${ALLOC_SAFE:-0}, degraded=${ALLOC_DEGRADED:-0}"
     if [[ -n "${ALLOC_REASON_TEXT:-}" ]]; then
@@ -188,31 +285,89 @@ if (( ${#PROBLEMS[@]} > 0 )); then
     echo "  $p"
   done
 
-  # Check cooldown (don't spam)
-  COOLDOWN_FILE="$BOT_DIR/runtime/cp_health_alert_ts.txt"
-  LAST_ALERT=0
-  [[ -f "$COOLDOWN_FILE" ]] && LAST_ALERT=$(cat "$COOLDOWN_FILE" 2>/dev/null || echo 0)
-  COOLDOWN="${CP_ALERT_COOLDOWN_SEC:-1800}"
+  FINGERPRINT="$(make_fingerprint "$(printf '%s\n' "${PROBLEMS[@]}")" "$(printf '%s\n' "${SCHEDULE_PROBLEMS[@]}")" "$(printf '%s\n' "${STATE_PROBLEMS[@]}")")"
+  PREV_ACTIVE="$(json_state_get active)"
+  PREV_FINGERPRINT="$(json_state_get fingerprint)"
+  PREV_COUNT="$(json_state_get count)"
+  PREV_FIRST_SEEN="$(json_state_get first_seen)"
+  PREV_LAST_SENT="$(json_state_get last_sent)"
+  REPEAT_SEC="${CP_ALERT_REPEAT_SEC:-43200}"
+  SEND_RECOVERY="${CP_ALERT_SEND_RECOVERY:-1}"
 
-  if (( NOW - LAST_ALERT >= COOLDOWN )); then
-    MSG="⚙️ <b>Control-plane health issues:</b>
-$(printf '%s\n' "${PROBLEMS[@]}")"
+  if [[ -z "$PREV_COUNT" ]]; then PREV_COUNT=0; fi
+  if [[ -z "$PREV_FIRST_SEEN" ]]; then PREV_FIRST_SEEN=$NOW; fi
+  if [[ -z "$PREV_LAST_SENT" ]]; then PREV_LAST_SENT=0; fi
+
+  COUNT=1
+  FIRST_SEEN="$NOW"
+  LAST_SENT="$PREV_LAST_SENT"
+  SEND_NOW=0
+  SEND_KIND="new"
+
+  if [[ "$PREV_ACTIVE" == "1" && "$PREV_FINGERPRINT" == "$FINGERPRINT" ]]; then
+    COUNT=$(( PREV_COUNT + 1 ))
+    FIRST_SEEN="$PREV_FIRST_SEEN"
+    if (( NOW - PREV_LAST_SENT >= REPEAT_SEC )); then
+      SEND_NOW=1
+      SEND_KIND="repeat"
+      LAST_SENT="$NOW"
+    fi
+  else
+    SEND_NOW=1
+    SEND_KIND="new"
+    LAST_SENT="$NOW"
+  fi
+
+  if (( SEND_NOW == 1 )); then
+    MSG=$'⚙️ <b>Control-plane health issues:</b>\n'
+    MSG+="$(printf '%s\n' "${PROBLEMS[@]}")"
+    if [[ "$SEND_KIND" == "repeat" ]]; then
+      FIRST_SEEN_TXT="$(format_utc_ts "$FIRST_SEEN")"
+      if [[ -z "$FIRST_SEEN_TXT" ]]; then
+        FIRST_SEEN_TXT="unknown start"
+      fi
+      MSG+=$'\n\n'
+      MSG+="Repeat count: ${COUNT} identical occurrences since ${FIRST_SEEN_TXT}."
+    fi
     if (( ${#SCHEDULE_PROBLEMS[@]} > 0 )); then
-      MSG="$MSG
-
-Likely scheduler / cron freshness issue.
-Check cron: crontab -l | egrep 'build_regime_state|build_symbol_router|build_portfolio_allocator|control_plane_watchdog'"
+      MSG+=$'\n\n'
+      MSG+="Likely scheduler / cron freshness issue."
+      MSG+=$'\n'
+      MSG+="Check cron: crontab -l | egrep 'build_regime_state|build_symbol_router|build_portfolio_allocator|control_plane_watchdog'"
     else
-      MSG="$MSG
-
-Schedule looks fresh; issue is in live control-plane state, not missing cron.
-Check allocator/router reasons in:
-$BOT_DIR/runtime/control_plane/portfolio_allocator_state.json
-$BOT_DIR/runtime/router/symbol_router_state.json"
+      MSG+=$'\n\n'
+      MSG+="Schedule looks fresh; issue is in live control-plane state, not missing cron."
+      MSG+=$'\n'
+      MSG+="Check allocator/router reasons in:"
+      MSG+=$'\n'
+      MSG+="$BOT_DIR/runtime/control_plane/portfolio_allocator_state.json"
+      MSG+=$'\n'
+      MSG+="$BOT_DIR/runtime/router/symbol_router_state.json"
     fi
     send_tg "$MSG"
-    echo "$NOW" > "$COOLDOWN_FILE"
+  else
+    echo "[cp_health $(date -u '+%H:%M:%S')] duplicate issue suppressed count=$COUNT fingerprint=$FINGERPRINT"
   fi
+
+  json_state_write "1" "$FINGERPRINT" "$COUNT" "$FIRST_SEEN" "$NOW" "$LAST_SENT" "problem" "$(printf '%s | ' "${PROBLEMS[@]}")"
 else
   echo "[cp_health $(date -u '+%H:%M:%S')] All control-plane files OK"
+  PREV_ACTIVE="$(json_state_get active)"
+  PREV_COUNT="$(json_state_get count)"
+  PREV_FIRST_SEEN="$(json_state_get first_seen)"
+  PREV_LAST_SENT="$(json_state_get last_sent)"
+  SEND_RECOVERY="${CP_ALERT_SEND_RECOVERY:-1}"
+  if [[ "$PREV_ACTIVE" == "1" ]]; then
+    if [[ "$SEND_RECOVERY" == "1" && -n "$PREV_LAST_SENT" && "$PREV_LAST_SENT" != "0" ]]; then
+      DURATION=$(( NOW - ${PREV_FIRST_SEEN:-NOW} ))
+      MSG=$'✅ <b>Control-plane recovered</b>\n\n'
+      MSG+="The previous issue is no longer active."
+      MSG+=$'\n'
+      MSG+="Occurrences: ${PREV_COUNT:-1}"
+      MSG+=$'\n'
+      MSG+="Duration: ${DURATION}s"
+      send_tg "$MSG"
+    fi
+    json_state_write "0" "" "0" "0" "$NOW" "${PREV_LAST_SENT:-0}" "ok" "resolved"
+  fi
 fi
