@@ -1,0 +1,96 @@
+{
+  "name": "flat_frequency_repair_v1",
+  "description": "Annual ARF1 frequency probe. Goal: increase trade frequency without blowing up the clean annual shape by testing fresher resistance windows, softer RSI thresholds, and a broader but still liquid alt basket.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_resistance_fade_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "LINKUSDT,LTCUSDT,SUIUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT",
+      "ADAUSDT,LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT"
+    ],
+    "ARF1_SIGNAL_TF": [
+      "30",
+      "60"
+    ],
+    "ARF1_SIGNAL_LOOKBACK": [
+      24,
+      36,
+      48
+    ],
+    "ARF1_REJECT_BELOW_RES_ATR": [
+      0.08,
+      0.10,
+      0.12
+    ],
+    "ARF1_MIN_RSI": [
+      54,
+      56,
+      58,
+      60
+    ],
+    "ARF1_MAX_CLOSE_VS_EMA_PCT": [
+      1.1,
+      1.2
+    ]
+  },
+  "base_env": {
+    "ARF1_SYMBOL_ALLOWLIST": "LINKUSDT,LTCUSDT,SUIUSDT",
+    "ARF1_REGIME_MAX_GAP_PCT": "3.2",
+    "ARF1_REGIME_MAX_SLOPE_PCT": "1.8",
+    "ARF1_MIN_RANGE_PCT": "6.0",
+    "ARF1_MAX_RANGE_PCT": "30.0",
+    "ARF1_RES_TOUCH_BUFFER_ATR": "0.35",
+    "ARF1_MIN_BODY_FRAC": "0.22",
+    "ARF1_TP1_FRAC": "0.60",
+    "ARF1_TP2_BUFFER_PCT": "0.45",
+    "ARF1_SL_ATR_MULT": "0.85",
+    "ARF1_TIME_STOP_BARS_5M": "576"
+  },
+  "constraints": {
+    "min_trades": 12,
+    "min_profit_factor": 1.20,
+    "max_drawdown": 5.0,
+    "min_net_pnl": 3.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 3.5,
+    "winrate": 9.0,
+    "max_drawdown": 1.2,
+    "trades": 0.12,
+    "trades_cap": 60,
+    "negative_months": 2.8,
+    "max_negative_streak": 3.0,
+    "worst_month_pnl": 1.8
+  },
+  "_combo_count": "3x2x3x3x4x2 = 432 combos",
+  "_goal": "Decide whether ARF1 can be made materially more active on a full year without losing its high-quality annual behavior."
+}

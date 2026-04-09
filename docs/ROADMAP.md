@@ -515,3 +515,9 @@ New foundation rules:
   - new active frontiers:
     - [bear_chop_core_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/bear_chop_core_repair_v1.json)
     - [asc1_bidirectional_annual_probe_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/asc1_bidirectional_annual_probe_v1.json)
+    - [flat_frequency_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_frequency_repair_v1.json)
+  - new dynamic portfolio test:
+    - [core4_flat_impulse_bounce_candidate_20260409.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/core4_flat_impulse_bounce_candidate_20260409.env)
+    - `dynamic_core4_flat_impulse_bounce_annual_v1`
+  - interpretation:
+    - if `support_bounce` stays mostly absent even in the new core4 annual run, the next fix is not “invent another long strategy” but loosen the router/health path that lets the bounce sleeve activate in bull-trend / bull-chop windows

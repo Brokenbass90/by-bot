@@ -627,6 +627,12 @@ Practical meaning:
 - New active repair runs:
   - `bear_chop_core_repair_v1`
   - `asc1_bidirectional_annual_probe_v1`
+  - `flat_frequency_repair_v1`
+  - `dynamic_core4_flat_impulse_bounce_annual_v1`
+- New interpretation update:
+  - the missing long-horizontal quadrant is no longer hypothetical
+  - `support_bounce` already has standalone annual candidates around `+16%` with `3` red months
+  - the next question is portfolio additivity, not whether the idea itself exists
 - Current package hierarchy is unchanged until the new rolling run finishes:
   - near-term core candidate remains `breakdown + flat + impulse`
   - `sloped` stays out of the near-term core unless new evidence overturns the no-sloped advantage
