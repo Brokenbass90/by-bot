@@ -2967,3 +2967,39 @@ Overnight research state:
   - `alt_sloped_channel_v1` appears repeatedly inside corrected stitched annual windows
   - it is still research-only and often treated as a contextual near-miss
   - we need an honest yearly answer on whether it reduces portfolio weakness or only adds more noisy months
+
+Morning verdict:
+- `impulse` is no longer only a “promising recent180 story”:
+  - [impulse annual repair results.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260408_130107_impulse_volume_breakout_v1_annual_repair_v1/results.csv)
+  - strong annual PASS rows already exist
+  - current best-score row:
+    - `+12.85%`
+    - PF `1.978`
+    - WR `0.642`
+    - DD `2.2835`
+    - `3` negative months
+- `flat` also produced real yearly PASS rows instead of only “almost there” scans:
+  - [flat frontier results.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260408_172507_flat_horizontal_core_v3_frontier/results.csv)
+  - current best-score row:
+    - `+7.08%`
+    - PF `5.523`
+    - WR `0.818`
+    - DD `0.8048`
+    - `0` negative months
+    - best basket: `LINKUSDT,LTCUSDT,SUIUSDT`
+- `sloped` did not convert into an annual candidate:
+  - [asc1 annual repair results.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260408_174815_asc1_annual_repair_v1/results.csv)
+  - no PASS rows
+  - best rows still fail on annual red-month / streak criteria
+- `Elder` remains structurally broken rather than under-tuned:
+  - `elder_ts_v2_retest_reclaim_v4` = effectively `0` trades across the whole sweep
+  - `elder_ts_v2_recent180_focus_v3` = many trades but PF only around `0.5`
+
+Immediate action taken:
+- Created a new repaired candidate overlay:
+  - [core3_flat_impulse_candidate_20260409.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/core3_flat_impulse_candidate_20260409.env)
+- Created a no-sloped comparison policy:
+  - [portfolio_allocator_policy_no_sloped_20260409.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/portfolio_allocator_policy_no_sloped_20260409.json)
+- Launched two new stitched annual compares:
+  - `dynamic_core3_flat_impulse_annual_v1`
+  - `dynamic_core3_flat_impulse_nosloped_annual_v1`

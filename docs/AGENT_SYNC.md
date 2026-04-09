@@ -562,3 +562,28 @@ Practical meaning:
   - full run completed
   - still failed on PF / DD / negative month constraints
 - This means the next bot revival effort is concentrated on the sleeves that still have plausible annual upside, not on already disproven side paths
+
+### Morning strategy truth:
+
+- `impulse` annual repair is now materially successful:
+  - many PASS rows already exist
+  - best current annual row is roughly `+12.85%`, PF `1.978`, WR `0.642`, DD `2.2835`, `3` red months
+- `flat` annual frontier also broke through:
+  - best current yearly row is roughly `+7.08%`, PF `5.523`, WR `0.818`, DD `0.8048`, `0` red months
+  - strongest basket is `LINKUSDT,LTCUSDT,SUIUSDT`
+- `sloped` annual repair failed to promote:
+  - no PASS rows
+  - still too many negative months / streaks
+- `Elder` is currently a logic problem, not a trailing problem:
+  - `elder_ts_v2_retest_reclaim_v4` = effectively zero-trade sweep
+  - `elder_ts_v2_recent180_focus_v3` = many trades but PF around `0.5`
+
+### New active compare state:
+
+- Promoted the first annual winners into:
+  - [core3_flat_impulse_candidate_20260409.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/core3_flat_impulse_candidate_20260409.env)
+- Opened a no-sloped policy compare:
+  - [portfolio_allocator_policy_no_sloped_20260409.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/portfolio_allocator_policy_no_sloped_20260409.json)
+- Running now:
+  - `dynamic_core3_flat_impulse_annual_v1`
+  - `dynamic_core3_flat_impulse_nosloped_annual_v1`

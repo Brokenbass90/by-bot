@@ -487,3 +487,11 @@ New foundation rules:
     - better flat/range activation quality
     - stronger annual behaviour from `impulse`
     - an honest annual answer on whether `sloped` is additive or just noisy context
+  - morning update changed the strategy hierarchy:
+    - `impulse` now has real annual PASS rows
+    - `flat` now has real annual PASS rows
+    - `sloped` failed its first honest annual repair
+    - `Elder` remains a rewrite candidate, not a tuning candidate
+  - current top comparison task:
+    - test the first promoted `flat + impulse` annual winners in stitched system form
+    - compare with and without `sloped` before deciding whether `sloped` stays in the core package
