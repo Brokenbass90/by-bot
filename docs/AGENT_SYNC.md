@@ -618,6 +618,15 @@ Practical meaning:
     - `ARF1_MIN_RSI=58`
     - `ARF1_REJECT_BELOW_RES_ATR=0.12`
   - wait for the next production pulses before changing thresholds blindly; the new counters should tell us whether the main blocker is `same_bar`, `RSI`, `touch/reject`, or `IVB1` breakout quality
+- New annual-repair truth:
+  - the big stitched weakness is not generic; it is concentrated in noisy `bear_chop`
+  - current evidence says:
+    - `breakdown` loses money in that quadrant
+    - `flat` helps there, but not enough yet
+  - current sloped annual verdict was also incomplete because the first annual repair was short-only
+- New active repair runs:
+  - `bear_chop_core_repair_v1`
+  - `asc1_bidirectional_annual_probe_v1`
 - Current package hierarchy is unchanged until the new rolling run finishes:
   - near-term core candidate remains `breakdown + flat + impulse`
   - `sloped` stays out of the near-term core unless new evidence overturns the no-sloped advantage

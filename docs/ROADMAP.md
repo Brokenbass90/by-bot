@@ -508,3 +508,10 @@ New foundation rules:
     - future pulses should break `flat` down by `same_bar / regime / range / touch / reject / RSI / EMA / risk`
     - future pulses should break `IVB1` down by `no_breakout / impulse quality / retrace / stop / regime`
     - only after we see those live blockers clearly should we relax filters or lower timeframes
+  - annual repair focus refined again:
+    - the dominant weak quadrant is now explicit: `bear_chop`
+    - current evidence says `breakdown` is overfiring in noisy down-chop while `flat` only partly offsets it
+    - sloped research must no longer be judged only on a short-only annual run; it needs a bidirectional probe
+  - new active frontiers:
+    - [bear_chop_core_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/bear_chop_core_repair_v1.json)
+    - [asc1_bidirectional_annual_probe_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/asc1_bidirectional_annual_probe_v1.json)
