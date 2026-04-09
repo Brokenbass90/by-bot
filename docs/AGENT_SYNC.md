@@ -587,3 +587,26 @@ Practical meaning:
 - Running now:
   - `dynamic_core3_flat_impulse_annual_v1`
   - `dynamic_core3_flat_impulse_nosloped_annual_v1`
+
+### 2026-04-09 06:55 UTC sync update
+
+- Server truth after laptop reopen:
+  - `systemd` running
+  - heartbeat fresh
+  - current regime = `bull_chop`
+  - control-plane files fresh
+- Important code truth:
+  - `IVB1` is wired and trying in live; problem is now entry filtering, not missing integration
+  - `Elder` had allocator support but was still missing from live bot wiring
+- Fixed now:
+  - wired `elder_triple_screen_v2` into [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py)
+  - added live env/risk plumbing, per-symbol engine, scheduler hook, and status/universe visibility
+  - upgraded [bot/diagnostics.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/diagnostics.py) with grouped `IVB1` and `Elder` no-signal reason counters
+  - softened [elder_triple_screen_v2.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/elder_triple_screen_v2.py) defaults toward crypto-realistic values (`OSC 42/58`, `retest=5`, `TP=2.5 ATR`, `cooldown=18`, `daily cap=20`)
+- New active runs:
+  - `elder_ts_v2_live_repair_v1`
+  - `core3_flat_impulse_nosloped_wf360_v1`
+- Current package hierarchy is unchanged until the new rolling run finishes:
+  - near-term core candidate remains `breakdown + flat + impulse`
+  - `sloped` stays out of the near-term core unless new evidence overturns the no-sloped advantage
+  - `Elder` is no longer “not wired”, but it still needs fresh evidence before any promotion talk

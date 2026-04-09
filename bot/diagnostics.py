@@ -86,8 +86,17 @@ def _runtime_diag_snapshot() -> str:
         "breakdown_skip_no_client", "breakdown_skip_open_trade",
         "breakdown_skip_max_open", "breakdown_skip_portfolio",
         "breakdown_skip_cooldown", "breakdown_skip_symbol_lock",
-        "ivb1_sched", "ivb1_try", "ivb1_entry",
+        "ivb1_sched", "ivb1_try", "ivb1_no_signal", "ivb1_entry",
         "ivb1_skip_max_open", "ivb1_skip_portfolio", "ivb1_skip_symbol_lock",
+        "ivb1_ns_history", "ivb1_ns_regime", "ivb1_ns_cooldown",
+        "ivb1_ns_atr", "ivb1_ns_volume", "ivb1_ns_impulse_small",
+        "ivb1_ns_impulse_vol", "ivb1_ns_impulse_body", "ivb1_ns_impulse_range",
+        "ivb1_ns_armed", "ivb1_ns_retrace_wait", "ivb1_ns_retrace_expired",
+        "ivb1_ns_lost_level", "ivb1_ns_stop", "ivb1_ns_other",
+        "elder_sched", "elder_try", "elder_no_signal", "elder_entry",
+        "elder_skip_max_open", "elder_skip_portfolio", "elder_skip_symbol_lock",
+        "elder_ns_history", "elder_ns_limit", "elder_ns_trend",
+        "elder_ns_wave", "elder_ns_entry", "elder_ns_atr", "elder_ns_other",
         "ts132_try", "ts132_entry",
     ]
     parts = [f"{k}={int(RUNTIME_COUNTER.get(k, 0))}" for k in keys]
@@ -136,3 +145,59 @@ def _breakout_no_signal_diag_key(reason: str) -> str:
     if "impulse" in r:
         return "breakout_ns_impulse"
     return "breakout_ns_other"
+
+
+def _ivb1_no_signal_diag_key(reason: str) -> str:
+    """Map IVB1 no-signal reasons to grouped diagnostic keys."""
+    r = str(reason or "").strip().lower()
+    if not r:
+        return "ivb1_ns_other"
+    if "history_short" in r or "not_enough_5m_bars" in r:
+        return "ivb1_ns_history"
+    if "regime_" in r:
+        return "ivb1_ns_regime"
+    if "cooldown" in r:
+        return "ivb1_ns_cooldown"
+    if "atr_invalid" in r:
+        return "ivb1_ns_atr"
+    if "volume_baseline_invalid" in r:
+        return "ivb1_ns_volume"
+    if "impulse_too_small" in r:
+        return "ivb1_ns_impulse_small"
+    if "impulse_vol_weak" in r:
+        return "ivb1_ns_impulse_vol"
+    if "impulse_body_weak" in r:
+        return "ivb1_ns_impulse_body"
+    if "impulse_range_weak" in r:
+        return "ivb1_ns_impulse_range"
+    if "armed_impulse_breakout" in r:
+        return "ivb1_ns_armed"
+    if "armed_waiting_retrace" in r:
+        return "ivb1_ns_retrace_wait"
+    if "armed_expired" in r:
+        return "ivb1_ns_retrace_expired"
+    if "armed_lost_breakout_level" in r:
+        return "ivb1_ns_lost_level"
+    if "stop_too_" in r or "sl_at_or_above_entry" in r:
+        return "ivb1_ns_stop"
+    return "ivb1_ns_other"
+
+
+def _elder_no_signal_diag_key(reason: str) -> str:
+    """Map Elder no-signal reasons to grouped diagnostic keys."""
+    r = str(reason or "").strip().lower()
+    if not r:
+        return "elder_ns_other"
+    if "not_enough_entry_bars" in r:
+        return "elder_ns_history"
+    if "max_signals_per_day" in r or "cooldown" in r:
+        return "elder_ns_limit"
+    if "screen1" in r:
+        return "elder_ns_trend"
+    if "screen2" in r:
+        return "elder_ns_wave"
+    if "screen3" in r:
+        return "elder_ns_entry"
+    if "atr_invalid" in r:
+        return "elder_ns_atr"
+    return "elder_ns_other"

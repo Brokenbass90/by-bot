@@ -495,3 +495,7 @@ New foundation rules:
   - current top comparison task:
     - test the first promoted `flat + impulse` annual winners in stitched system form
     - compare with and without `sloped` before deciding whether `sloped` stays in the core package
+  - next truth tasks now active:
+    - validate `core3_flat_impulse_nosloped` on rolling `360d` walk-forward, not stitched annual only
+    - use the new `IVB1` reason diagnostics to see whether live entry blockers are mostly regime, impulse quality, or retrace logic
+    - re-test `Elder` only after live wiring and crypto-realistic defaults, so the next verdict is about actual sleeve quality instead of a missing integration

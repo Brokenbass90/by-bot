@@ -17,8 +17,11 @@ Typical env config:
     ETS2_RISK_TF=60
     ETS2_TREND_EMA=13
     ETS2_OSC_PERIOD=8
+    ETS2_OSC_OB=58
+    ETS2_OSC_OS=42
+    ETS2_ENTRY_RETEST_BARS=5
     ETS2_SL_ATR_MULT=2.0
-    ETS2_TP_ATR_MULT=6.0
+    ETS2_TP_ATR_MULT=2.5
     ETS2_ALLOW_LONGS=1
     ETS2_ALLOW_SHORTS=1
 """
@@ -138,26 +141,26 @@ class ElderTripleScreenV2Config:
     wave_tf: str = "60"
     osc_type: str = "rsi"  # "rsi" or "stoch"
     osc_period: int = 8
-    osc_ob: float = 65.0
-    osc_os: float = 35.0
+    osc_ob: float = 58.0
+    osc_os: float = 42.0
 
     # Screen 3: Entry (15m)
     entry_tf: str = "15"
     entry_lookback: int = 5
     risk_tf: str = ""
-    entry_retest_bars: int = 2
+    entry_retest_bars: int = 5
     entry_touch_atr_mult: float = 0.25
     entry_min_body_frac: float = 0.30
 
     # Exit management
     sl_atr_mult: float = 2.0
-    tp_atr_mult: float = 6.0
-    trail_atr_mult: float = 1.5
+    tp_atr_mult: float = 2.5
+    trail_atr_mult: float = 1.0
     allow_longs: bool = True
     allow_shorts: bool = True
     time_stop_bars_5m: int = 576
-    cooldown_bars_5m: int = 60
-    max_signals_per_day: int = 3
+    cooldown_bars_5m: int = 18
+    max_signals_per_day: int = 20
 
 
 class ElderTripleScreenV2Strategy:
