@@ -70,6 +70,7 @@ FILES=(
   "scripts/build_geometry_state.py"
   "scripts/build_operator_snapshot.py"
   "scripts/build_router_symbol_memory.py"
+  "scripts/refresh_router_backtest_gate.py"
   "scripts/run_nightly_research_queue.py"
   "scripts/router_quality_audit.py"
   "scripts/build_strategy_health_timeline.py"

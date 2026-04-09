@@ -9,6 +9,7 @@ UPDATES = {
     "REGIME_OVERLAY_ENABLE": "1",
     "ROUTER_HEALTH_ENABLE": "1",
     "PORTFOLIO_ALLOCATOR_ENABLE": "1",
+    "ROUTER_TRADES_CSV": "runtime/control_plane/router_trades_baseline.csv",
     "REGIME_OVERLAY_MAX_AGE_SEC": "7200",
     "ROUTER_OVERLAY_MAX_AGE_SEC": "28800",
     "ROUTER_STATE_MAX_AGE_SEC": "28800",
