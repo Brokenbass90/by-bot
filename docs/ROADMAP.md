@@ -533,3 +533,8 @@ New foundation rules:
     - ops visibility must treat `fresh but degraded` router state as a problem:
       - `check_control_plane_health.sh` should alert on `router_status != ok` or `scan_ok=0`
       - `server_status.sh` should show router fallback count and allocator degraded/safe-mode state
+  - safe self-improvement path:
+    - automatic nightly autoresearch should run only through a bounded queue with hard process caps
+    - the queue should live on a research host or a narrow quiet window, not on the live trading server
+    - approved specs may auto-run, but unapproved specs must still go through the research gate / human approval path
+    - queue runtime state should be written explicitly so operator and cron can distinguish `idle`, `busy_skip`, `proposed`, and `launched`

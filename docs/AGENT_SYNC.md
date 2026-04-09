@@ -715,3 +715,16 @@ Practical meaning:
 - Smoke checks:
   - cache-only control-plane replay passed on a short `90d` horizon
   - a short memory-aware dynamic annual smoke is now running on the current `core3 flat+impulse` candidate
+
+### 2026-04-09 14:05 UTC sync update
+
+- Added a safe nightly-research scaffold:
+  - [run_nightly_research_queue.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_nightly_research_queue.py)
+  - [research_nightly_queue.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/research_nightly_queue.json)
+- Expected behavior:
+  - bounded by `max_active_processes` and `max_launches_per_run`
+  - writes queue status/history into `runtime/research_nightly/`
+  - sends non-approved specs through [deepseek_research_gate.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/deepseek_research_gate.py)
+- Operational stance:
+  - use on a research host or in a narrow quiet window
+  - do **not** run broad sweeps on the live trading server

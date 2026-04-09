@@ -1,0 +1,29 @@
+{
+  "enabled": true,
+  "max_active_processes": 1,
+  "max_launches_per_run": 1,
+  "default_min_interval_hours": 24,
+  "log_dir": "logs/research_nightly",
+  "status_path": "runtime/research_nightly/status.json",
+  "history_path": "runtime/research_nightly/history.jsonl",
+  "tasks": [
+    {
+      "name": "bear_chop_core",
+      "spec": "configs/autoresearch/bear_chop_core_repair_v1.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "flat_frequency",
+      "spec": "configs/autoresearch/flat_frequency_repair_v1.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "impulse_annual_repair",
+      "spec": "configs/autoresearch/impulse_volume_breakout_v1_annual_repair_v1.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    }
+  ]
+}
