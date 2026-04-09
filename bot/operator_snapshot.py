@@ -268,6 +268,31 @@ def _memory_block(root: Path, *, limit: int = 12) -> Dict[str, Any]:
     }
 
 
+def _nightly_research_block(root: Path) -> Dict[str, Any]:
+    status_path = root / "runtime" / "research_nightly" / "status.json"
+    history_path = root / "runtime" / "research_nightly" / "history.jsonl"
+    status = _load_json(status_path, {})
+    history = _load_jsonl_tail(history_path, limit=6)
+    tasks = dict(status.get("tasks") or {})
+    states: Dict[str, int] = {}
+    for item in tasks.values():
+        state = str((item or {}).get("state") or "unknown")
+        states[state] = int(states.get(state, 0)) + 1
+    return {
+        "status_path": _path_text(status_path),
+        "history_path": _path_text(history_path),
+        "exists": bool(status_path.exists()),
+        "age_sec": _file_age_sec(status_path),
+        "state": str(status.get("state") or ""),
+        "active_process_count": _safe_int(status.get("active_process_count"), 0),
+        "launched_count": len(list(status.get("launched") or [])),
+        "proposed_count": len(list(status.get("proposed") or [])),
+        "blocked_count": len(list(status.get("blocked") or [])),
+        "task_state_counts": states,
+        "recent_history": history,
+    }
+
+
 def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
     base = Path(root or ROOT)
     return {
@@ -278,6 +303,7 @@ def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
         "health": _health_block(base),
         "geometry": _geometry_block(base),
         "memory": _memory_block(base),
+        "nightly_research": _nightly_research_block(base),
     }
 
 
@@ -288,6 +314,7 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     health = dict(snapshot.get("health") or {})
     geo = dict(snapshot.get("geometry") or {})
     memory = dict(snapshot.get("memory") or {})
+    nightly = dict(snapshot.get("nightly_research") or {})
     regime = dict(cp.get("regime") or {})
     router = dict(cp.get("router") or {})
     allocator = dict(cp.get("allocator") or {})
@@ -343,5 +370,18 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     for item in list(memory.get("entries") or [])[-3:]:
         lines.append(
             f" - {str(item.get('kind') or 'event')}: {str(item.get('summary') or '-')[:180]}"
+        )
+    lines.extend(
+        [
+            "",
+            "[nightly_research]",
+            f"exists={int(bool(nightly.get('exists')))} age_sec={nightly.get('age_sec')} state={nightly.get('state') or '-'} active_process_count={nightly.get('active_process_count')}",
+            f"launched={nightly.get('launched_count')} proposed={nightly.get('proposed_count')} blocked={nightly.get('blocked_count')}",
+            f"task_state_counts={json.dumps(nightly.get('task_state_counts') or {}, ensure_ascii=True)}",
+        ]
+    )
+    for item in list(nightly.get("recent_history") or [])[-3:]:
+        lines.append(
+            f" - history: state={item.get('state')} active={item.get('active_process_count')} launched={item.get('launched')} proposed={item.get('proposed')}"
         )
     return "\n".join(lines)

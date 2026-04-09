@@ -12,6 +12,8 @@ set -euo pipefail
 BOT_DIR="${BOT_DIR:-/root/by-bot}"
 NOW=$(date +%s)
 PROBLEMS=()
+SCHEDULE_PROBLEMS=()
+STATE_PROBLEMS=()
 
 TG_TOKEN="${TG_TOKEN:-}"
 TG_CHAT="${TG_CHAT_ID:-${TG_CHAT:-}}"
@@ -48,6 +50,7 @@ check_file() {
 
   if [[ ! -f "$filepath" ]]; then
     PROBLEMS+=("❌ $label: FILE MISSING ($filepath)")
+    SCHEDULE_PROBLEMS+=("$label missing")
     return
   fi
 
@@ -57,6 +60,7 @@ check_file() {
 
   if (( AGE > max_age )); then
     PROBLEMS+=("⚠️ $label: STALE (age=${AGE}s, max=${max_age}s)")
+    SCHEDULE_PROBLEMS+=("$label stale age=${AGE}s")
   else
     echo "[cp_health $(date -u '+%H:%M:%S')] OK $label — age=${AGE}s"
   fi
@@ -126,6 +130,7 @@ PY
   IFS='|' read -r ROUTER_STATUS ROUTER_SCAN_OK ROUTER_FALLBACKS <<< "$router_meta"
   if [[ "$ROUTER_STATUS" != "ok" || "$ROUTER_SCAN_OK" != "1" ]]; then
     PROBLEMS+=("⚠️ Symbol router: DEGRADED (status=${ROUTER_STATUS:-?}, scan_ok=${ROUTER_SCAN_OK:-?}, fallbacks=${ROUTER_FALLBACKS:-0})")
+    STATE_PROBLEMS+=("router degraded status=${ROUTER_STATUS:-?} scan_ok=${ROUTER_SCAN_OK:-?} fallbacks=${ROUTER_FALLBACKS:-0}")
   fi
 }
 
@@ -145,7 +150,10 @@ except Exception:
 status = str(data.get("status") or "")
 safe_mode = bool(data.get("safe_mode", False))
 degraded = bool(data.get("degraded", False))
-print(f"{status}|{int(safe_mode)}|{int(degraded)}")
+reasons = list(data.get("degraded_reasons") or [])
+safe_reasons = list(data.get("safe_mode_reasons") or [])
+reason_text = ";".join(str(x) for x in (reasons[:3] + safe_reasons[:3]))
+print(f"{status}|{int(safe_mode)}|{int(degraded)}|{reason_text}")
 PY
 )
 
@@ -158,9 +166,15 @@ PY
     return
   fi
 
-  IFS='|' read -r ALLOC_STATUS ALLOC_SAFE ALLOC_DEGRADED <<< "$allocator_meta"
+  IFS='|' read -r ALLOC_STATUS ALLOC_SAFE ALLOC_DEGRADED ALLOC_REASON_TEXT <<< "$allocator_meta"
   if [[ "$ALLOC_SAFE" == "1" || "$ALLOC_DEGRADED" == "1" || "$ALLOC_STATUS" != "ok" ]]; then
-    PROBLEMS+=("⚠️ Portfolio allocator: DEGRADED (status=${ALLOC_STATUS:-?}, safe_mode=${ALLOC_SAFE:-0}, degraded=${ALLOC_DEGRADED:-0})")
+    local msg="⚠️ Portfolio allocator: DEGRADED (status=${ALLOC_STATUS:-?}, safe_mode=${ALLOC_SAFE:-0}, degraded=${ALLOC_DEGRADED:-0}"
+    if [[ -n "${ALLOC_REASON_TEXT:-}" ]]; then
+      msg="$msg, reason=${ALLOC_REASON_TEXT}"
+    fi
+    msg="$msg)"
+    PROBLEMS+=("$msg")
+    STATE_PROBLEMS+=("allocator degraded status=${ALLOC_STATUS:-?} reason=${ALLOC_REASON_TEXT:-unknown}")
   fi
 }
 
@@ -182,10 +196,20 @@ if (( ${#PROBLEMS[@]} > 0 )); then
 
   if (( NOW - LAST_ALERT >= COOLDOWN )); then
     MSG="⚙️ <b>Control-plane health issues:</b>
-$(printf '%s\n' "${PROBLEMS[@]}")
+$(printf '%s\n' "${PROBLEMS[@]}")"
+    if (( ${#SCHEDULE_PROBLEMS[@]} > 0 )); then
+      MSG="$MSG
 
-Control-plane may not be running on schedule.
+Likely scheduler / cron freshness issue.
 Check cron: crontab -l | egrep 'build_regime_state|build_symbol_router|build_portfolio_allocator|control_plane_watchdog'"
+    else
+      MSG="$MSG
+
+Schedule looks fresh; issue is in live control-plane state, not missing cron.
+Check allocator/router reasons in:
+$BOT_DIR/runtime/control_plane/portfolio_allocator_state.json
+$BOT_DIR/runtime/router/symbol_router_state.json"
+    fi
     send_tg "$MSG"
     echo "$NOW" > "$COOLDOWN_FILE"
   fi

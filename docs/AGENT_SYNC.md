@@ -728,3 +728,19 @@ Practical meaning:
 - Operational stance:
   - use on a research host or in a narrow quiet window
   - do **not** run broad sweeps on the live trading server
+
+### 2026-04-09 14:50 UTC sync update
+
+- Control-plane alert wording is now less misleading:
+  - [check_control_plane_health.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/check_control_plane_health.sh) distinguishes:
+    - stale/missing control-plane files -> likely scheduler issue
+    - fresh files but degraded allocator/router -> live state-quality issue
+  - allocator alerts now include `degraded_reasons` / `safe_mode_reasons`
+- Verified on live server without restarting the bot:
+  - heartbeat fresh
+  - regime/router/allocator files fresh
+  - `router_status=ok`
+  - current allocator degradation reason is only `overall_health_watch`
+- Operator truth pack now has a place for nightly-research queue state:
+  - [operator_snapshot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/operator_snapshot.py)
+  - once the queue runs on the chosen host, snapshot/Telegram can surface it as plain text

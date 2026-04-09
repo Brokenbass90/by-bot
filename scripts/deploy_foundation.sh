@@ -70,6 +70,7 @@ FILES=(
   "scripts/build_geometry_state.py"
   "scripts/build_operator_snapshot.py"
   "scripts/build_router_symbol_memory.py"
+  "scripts/run_nightly_research_queue.py"
   "scripts/router_quality_audit.py"
   "scripts/build_strategy_health_timeline.py"
   "scripts/evaluate_crypto_promotion.py"
@@ -77,6 +78,7 @@ FILES=(
   "scripts/deploy_foundation.sh"
   "configs/crypto_promotion_policy.json"
   "configs/portfolio_allocator_policy.json"
+  "configs/research_nightly_queue.json"
   "configs/strategy_profile_registry.json"
 )
 

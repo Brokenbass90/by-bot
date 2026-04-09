@@ -120,6 +120,27 @@ else
 fi
 "
 
+echo ""
+echo "▶ NIGHTLY RESEARCH"
+run "
+NR=$BOT_DIR/runtime/research_nightly/status.json
+if [ -f \"\$NR\" ]; then
+  python3 -c \"
+import json
+d = json.load(open('\$NR'))
+tasks = d.get('tasks') or {}
+counts = {}
+for item in tasks.values():
+    state = str((item or {}).get('state') or 'unknown')
+    counts[state] = counts.get(state, 0) + 1
+print(f\\\"  state={d.get('state','?')} active_process_count={d.get('active_process_count','?')} launched={len(d.get('launched') or [])} proposed={len(d.get('proposed') or [])}\\\")
+print(f\\\"  task_state_counts={counts}\\\")
+\" 2>/dev/null || echo '  nightly research: parse error'
+else
+  echo '  nightly research: not configured yet'
+fi
+"
+
 # ── 4. Current regime ─────────────────────────────────────────────
 echo ""
 echo "▶ CURRENT REGIME"
