@@ -358,6 +358,31 @@ def _tg(token: str, chat_id: str, msg: str) -> None:
     except Exception:
         pass
 
+
+def _fmt_usd_compact(value: float) -> str:
+    amount = float(value or 0.0)
+    if abs(amount) >= 1.0:
+        return f"${amount:.2f}"
+    if abs(amount) >= 0.01:
+        return f"${amount:.3f}"
+    return f"${amount:.4f}"
+
+
+def _humanize_reason(reason: str) -> str:
+    raw = str(reason or "").strip()
+    if not raw:
+        return "strategy signal"
+    mapping = {
+        "fx_grid_reversion_long": "grid reversion long",
+        "fx_grid_reversion_short": "grid reversion short",
+        "fx_breakout_continuation_long": "breakout continuation long",
+        "fx_breakout_continuation_short": "breakout continuation short",
+    }
+    if raw in mapping:
+        return mapping[raw]
+    cleaned = raw.replace("fx_", "").replace("_", " ").strip()
+    return cleaned or raw
+
 # ── Alpaca client ───────────────────────────────────────────────────────────────
 class AlpacaClient:
     def __init__(self, base_url: str, key_id: str, secret_key: str):
@@ -740,12 +765,13 @@ def run_once(client: AlpacaClient, dry_run: bool,
             realized = float(alp_pos.get("unrealized_pl", 0))  # fallback estimate
             _record_daily_pnl(realized)
 
+            realized_label = _fmt_usd_compact(realized)
             print(f"\n  [{sym}] ✓ Position closed (SL/TP) after {held_min}m "
-                  f"| est. P&L=${realized:.2f}")
+                  f"| est. P&L={realized_label}")
             _tg(tg_token, tg_chat,
                 f"📊 <b>{sym}</b> closed (SL/TP) after {held_min}m\n"
                 f"Entry=${ps.entry_price:.2f} | SL=${ps.sl_price:.2f} | TP=${ps.tp_price:.2f}\n"
-                f"Est. P&L: ${realized:.2f}")
+                f"Est. P&L: {realized_label}")
         _save_state(state)
 
         remote_only_symbols = sorted(sym for sym in open_positions.keys() if sym not in state)
@@ -909,11 +935,12 @@ def run_once(client: AlpacaClient, dry_run: bool,
                     "order_id": order_id,
                 })
                 advisory["symbols"].append(symbol_status)
+                reason_label = _humanize_reason(sig.reason)
                 _tg(tg_token, tg_chat,
                     f"📈 <b>{symbol}</b> {sig.side.upper()} entry\n"
                     f"Price≈${entry_price:.2f} | SL=${sl_price:.2f} | TP=${tp_price:.2f} | {rr_label}\n"
                     f"Qty={qty} | Notional≈${actual_notional:.2f} | Risk≈${risk_usd:.2f}\n"
-                    f"Reason: {sig.reason or 'strategy signal'} | {now_str}")
+                    f"Reason: {reason_label} | {now_str}")
             except Exception as exc:
                 symbol_status.update({"status": "order_failed", "error": str(exc)})
                 advisory["symbols"].append(symbol_status)
