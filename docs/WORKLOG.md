@@ -1,5 +1,35 @@
 # Bybit bot (v28) - worklog / reminders
 
+## 2026-04-09 - flat live diagnostics + Alpaca current-cycle rescue
+
+### What was closed
+
+- Fixed a real live-diagnostics blind spot in [strategies/alt_resistance_fade_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_resistance_fade_v1.py):
+  - regime `False` results were cached
+  - but the cached no-signal reason was not preserved
+  - so live `flat_no_signal` counts mostly collapsed into `flat_ns_other`
+  - the strategy now preserves cached regime reasons so live telemetry can show what actually blocks entries
+- Improved Alpaca monthly live-cycle recovery:
+  - [scripts/build_equities_monthly_live_cycle.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_equities_monthly_live_cycle.py)
+  - [scripts/run_equities_monthly_v36_refresh.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_equities_monthly_v36_refresh.sh)
+  - monthly refresh now tries:
+    - strict current-cycle selection first
+    - then one relaxed current-cycle retry for paper mode
+  - if both fail, runtime current-cycle files are cleared cleanly instead of leaving stale state behind
+- Added reason-level diagnostics to the current-cycle builder:
+  - when monthly selection fails, the builder now reports the top reject buckets instead of only `no current-cycle picks`
+- Added short-window startup notification dedupe in [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py):
+  - rapid restarts no longer need to spray identical startup auth/universe blocks into Telegram
+- Synced the relevant bot / Alpaca files to the live server and restarted `bybot`.
+
+### Important truth
+
+- Crypto live is not “dead”, but it is still too quiet:
+  - `flat` and `ivb1` are trying
+  - they are still not reaching real entries often enough
+- Alpaca intraday paper is genuinely trading.
+- Alpaca monthly is no longer stuck on the old stale-picks bug, but current-cycle selection is still too strict on real server data and needs one more tuning pass based on the new reject diagnostics.
+
 ## 2026-04-08 - support_bounce regime-gap fix + focused crypto frontier
 
 ### What was closed

@@ -169,6 +169,13 @@ PORTFOLIO_ALLOCATOR_STATE_PATH = Path(
 PORTFOLIO_ALLOCATOR_RELOAD_SEC = max(
     30, int(os.getenv("PORTFOLIO_ALLOCATOR_RELOAD_SEC", "300") or 300)
 )
+STARTUP_NOTIFY_STATE_PATH = Path(
+    os.getenv(
+        "STARTUP_NOTIFY_STATE_PATH",
+        str(Path(__file__).resolve().parent / "runtime" / "startup_notify_state.json"),
+    )
+)
+STARTUP_NOTIFY_DEDUPE_SEC = max(30, int(os.getenv("STARTUP_NOTIFY_DEDUPE_SEC", "180") or 180))
 PORTFOLIO_ALLOCATOR_MAX_AGE_SEC = max(
     PORTFOLIO_ALLOCATOR_RELOAD_SEC * 3,
     int(os.getenv("PORTFOLIO_ALLOCATOR_MAX_AGE_SEC", "43200") or 43200),
@@ -3911,6 +3918,43 @@ def _save_report_state(state: Dict[str, int]) -> None:
             json.dump(state, f)
     except Exception:
         pass
+
+
+def _load_startup_notify_state() -> Dict[str, Any]:
+    try:
+        if not STARTUP_NOTIFY_STATE_PATH.exists():
+            return {}
+        with STARTUP_NOTIFY_STATE_PATH.open("r", encoding="utf-8") as f:
+            return json.load(f) or {}
+    except Exception:
+        return {}
+
+
+def _save_startup_notify_state(state: Dict[str, Any]) -> None:
+    try:
+        STARTUP_NOTIFY_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with STARTUP_NOTIFY_STATE_PATH.open("w", encoding="utf-8") as f:
+            json.dump(state, f)
+    except Exception:
+        pass
+
+
+def _startup_notify_allowed(kind: str, text: str) -> bool:
+    """Suppress duplicate startup Telegram bursts during rapid restarts."""
+    now = int(time.time())
+    key = str(kind or "").strip() or "default"
+    state = _load_startup_notify_state()
+    bucket = state.get(key) if isinstance(state, dict) else None
+    if isinstance(bucket, dict):
+        prev_text = str(bucket.get("text") or "")
+        prev_ts = int(bucket.get("ts") or 0)
+        if prev_text == str(text or "") and prev_ts > 0 and now - prev_ts < STARTUP_NOTIFY_DEDUPE_SEC:
+            return False
+    if not isinstance(state, dict):
+        state = {}
+    state[key] = {"ts": now, "text": str(text or "")}
+    _save_startup_notify_state(state)
+    return True
 
 
 def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
@@ -9891,45 +9935,65 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
     print(f"[filters] cap≈{cap:.2f} | eligible={len(eligible)}/{len(syms)} | base={len(base_filtered)} | breakout={len(BREAKOUT_SYMBOLS)}")
     if notify:
         if ENABLE_BREAKOUT_TRADING:
-            tg_trade(f"🧩 breakout-universe: using={len(BREAKOUT_SYMBOLS)} (top {BREAKOUT_TOP_N})")
+            msg = f"🧩 breakout-universe: using={len(BREAKOUT_SYMBOLS)} (top {BREAKOUT_TOP_N})"
+            if _startup_notify_allowed("startup_breakout_universe", msg):
+                tg_trade(msg)
         if ENABLE_INPLAY_TRADING:
-            tg_trade(f"🧩 inplay-universe: using={len(INPLAY_SYMBOLS)} (top {INPLAY_TOP_N})")
+            msg = f"🧩 inplay-universe: using={len(INPLAY_SYMBOLS)} (top {INPLAY_TOP_N})"
+            if _startup_notify_allowed("startup_inplay_universe", msg):
+                tg_trade(msg)
         if ENABLE_RETEST_TRADING:
-            tg_trade(f"🧩 retest-universe: using={len(RETEST_SYMBOLS)} (top {RETEST_TOP_N})")
+            msg = f"🧩 retest-universe: using={len(RETEST_SYMBOLS)} (top {RETEST_TOP_N})"
+            if _startup_notify_allowed("startup_retest_universe", msg):
+                tg_trade(msg)
         if ENABLE_MIDTERM_TRADING:
-            tg_trade(f"🧩 midterm-universe: using={len(MIDTERM_ACTIVE_SYMBOLS)} ({','.join(sorted(MIDTERM_ACTIVE_SYMBOLS))})")
+            msg = f"🧩 midterm-universe: using={len(MIDTERM_ACTIVE_SYMBOLS)} ({','.join(sorted(MIDTERM_ACTIVE_SYMBOLS))})"
+            if _startup_notify_allowed("startup_midterm_universe", msg):
+                tg_trade(msg)
         if ENABLE_SLOPED_TRADING:
             sloped_symbols = sorted(_parse_symbol_csv(os.getenv("ASC1_SYMBOL_ALLOWLIST", "")))
             if sloped_symbols:
-                tg_trade(f"🧩 sloped-universe: using={len(sloped_symbols)} ({','.join(sloped_symbols)})")
+                msg = f"🧩 sloped-universe: using={len(sloped_symbols)} ({','.join(sloped_symbols)})"
             else:
-                tg_trade("🧩 sloped-universe: using=dynamic (allowlist unset)")
+                msg = "🧩 sloped-universe: using=dynamic (allowlist unset)"
+            if _startup_notify_allowed("startup_sloped_universe", msg):
+                tg_trade(msg)
         if ENABLE_FLAT_TRADING:
             flat_symbols = sorted(_parse_symbol_csv(os.getenv("ARF1_SYMBOL_ALLOWLIST", "")))
             if flat_symbols:
-                tg_trade(f"🧩 flat-universe: using={len(flat_symbols)} ({','.join(flat_symbols)})")
+                msg = f"🧩 flat-universe: using={len(flat_symbols)} ({','.join(flat_symbols)})"
             else:
-                tg_trade("🧩 flat-universe: using=dynamic (allowlist unset)")
+                msg = "🧩 flat-universe: using=dynamic (allowlist unset)"
+            if _startup_notify_allowed("startup_flat_universe", msg):
+                tg_trade(msg)
         if ENABLE_BREAKDOWN_TRADING:
             breakdown_symbols = sorted(_parse_symbol_csv(os.getenv("BREAKDOWN_SYMBOL_ALLOWLIST", "")))
             if breakdown_symbols:
-                tg_trade(f"🧩 breakdown-universe: using={len(breakdown_symbols)} ({','.join(breakdown_symbols)})")
+                msg = f"🧩 breakdown-universe: using={len(breakdown_symbols)} ({','.join(breakdown_symbols)})"
             else:
-                tg_trade("🧩 breakdown-universe: using=dynamic (allowlist unset)")
+                msg = "🧩 breakdown-universe: using=dynamic (allowlist unset)"
+            if _startup_notify_allowed("startup_breakdown_universe", msg):
+                tg_trade(msg)
         if ENABLE_IVB1_TRADING:
             ivb1_symbols = sorted(_parse_symbol_csv(os.getenv("IVB1_SYMBOL_ALLOWLIST", "")))
             if ivb1_symbols:
-                tg_trade(f"🧩 impulse-universe: using={len(ivb1_symbols)} ({','.join(ivb1_symbols)})")
+                msg = f"🧩 impulse-universe: using={len(ivb1_symbols)} ({','.join(ivb1_symbols)})"
             else:
-                tg_trade("🧩 impulse-universe: using=dynamic (allowlist unset)")
+                msg = "🧩 impulse-universe: using=dynamic (allowlist unset)"
+            if _startup_notify_allowed("startup_impulse_universe", msg):
+                tg_trade(msg)
         if ENABLE_ELDER_TRADING:
             elder_symbols = sorted(_parse_symbol_csv(os.getenv("ETS2_SYMBOL_ALLOWLIST", "")))
             if elder_symbols:
-                tg_trade(f"🧩 elder-universe: using={len(elder_symbols)} ({','.join(elder_symbols)})")
+                msg = f"🧩 elder-universe: using={len(elder_symbols)} ({','.join(elder_symbols)})"
             else:
-                tg_trade("🧩 elder-universe: using=dynamic (allowlist unset)")
+                msg = "🧩 elder-universe: using=dynamic (allowlist unset)"
+            if _startup_notify_allowed("startup_elder_universe", msg):
+                tg_trade(msg)
         if ENABLE_RANGE_TRADING and BOUNCE_TG_LOGS:
-            tg_trade(f"🧩 bounce-universe: using={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})")
+            msg = f"🧩 bounce-universe: using={len(BOUNCE_SYMBOLS)} (top {BOUNCE_TOP_N})"
+            if _startup_notify_allowed("startup_bounce_universe", msg):
+                tg_trade(msg)
 
 
 def _read_simple_env_file(path: Path) -> dict[str, str]:
@@ -10491,7 +10555,9 @@ async def binance_ws():
 def auth_check_all_accounts():
     if not BYBIT_CLIENTS:
         msg = "⚠️ Bybit аккаунты не заданы: приватные вызовы отключены."
-        print(msg); tg_send(msg)
+        print(msg)
+        if _startup_notify_allowed("startup_auth_missing", msg):
+            tg_send(msg)
         return
 
     lines = []
@@ -10532,7 +10598,8 @@ def auth_check_all_accounts():
 
     text = "\n".join(lines)
     print(text)
-    tg_send(text)
+    if _startup_notify_allowed("startup_auth", text):
+        tg_send(text)
 
 
 async def range_rescan_loop():
