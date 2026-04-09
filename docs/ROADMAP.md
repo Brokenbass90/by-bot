@@ -499,3 +499,7 @@ New foundation rules:
     - validate `core3_flat_impulse_nosloped` on rolling `360d` walk-forward, not stitched annual only
     - use the new `IVB1` reason diagnostics to see whether live entry blockers are mostly regime, impulse quality, or retrace logic
     - re-test `Elder` only after live wiring and crypto-realistic defaults, so the next verdict is about actual sleeve quality instead of a missing integration
+  - rolling validation has now been upgraded to the same truth standard as stitched annual:
+    - [run_dynamic_crypto_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_walkforward.py) replays `regime -> router -> allocator -> health timeline` on each walk-forward window
+    - this becomes the preferred validator for any future promotion decision once a stitched annual candidate looks good
+    - the old static-symbol walk-forward remains useful only as a simpler baseline, not as the final truth layer

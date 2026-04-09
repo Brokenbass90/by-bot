@@ -606,6 +606,10 @@ Practical meaning:
 - New active runs:
   - `elder_ts_v2_live_repair_v1`
   - `core3_flat_impulse_nosloped_wf360_v1`
+- New validator truth:
+  - [run_dynamic_crypto_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_walkforward.py) now exists and should replace static walk-forward whenever we want a promotion-grade answer
+  - it uses historical `regime + router + allocator + health timeline`, not a frozen symbol list
+  - first window on `dynamic_core3_flat_impulse_nosloped_wf360_v1` came back `+1.58`, PF `inf`, DD `0.02`, `3` trades, `pass=False`
 - Current package hierarchy is unchanged until the new rolling run finishes:
   - near-term core candidate remains `breakdown + flat + impulse`
   - `sloped` stays out of the near-term core unless new evidence overturns the no-sloped advantage
