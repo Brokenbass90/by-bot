@@ -276,6 +276,7 @@ def main() -> int:
             router_state=router_state,
             health=health_snapshot,
             policy=policy,
+            base_env=base_env,
         )
         enabled_sleeves, strategies, symbols = _active_package(policy, allocator_state, router_state)
         env_map = _build_window_env(

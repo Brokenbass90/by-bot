@@ -50,4 +50,12 @@ fi
 export ALPACA_AUTOPILOT_LOCAL_ENV="$CANDIDATE_ENV"
 
 source .venv/bin/activate
-bash scripts/run_equities_alpaca_monthly_autopilot.sh "$@"
+FORWARD_ARGS=()
+for arg in "$@"; do
+  if [[ "$arg" == "--once" ]]; then
+    continue
+  fi
+  FORWARD_ARGS+=("$arg")
+done
+
+bash scripts/run_equities_alpaca_monthly_autopilot.sh "${FORWARD_ARGS[@]}"

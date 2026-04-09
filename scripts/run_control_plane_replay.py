@@ -145,6 +145,11 @@ def _csv_symbols(raw: str) -> List[str]:
     return out
 
 
+def _env_enabled(env_map: Dict[str, str], key: str, default: bool = True) -> bool:
+    raw = str(env_map.get(key, "1" if default else "0")).strip().lower()
+    return raw not in {"0", "false", "no", "off", ""}
+
+
 def _dedupe(values: List[str]) -> List[str]:
     out: List[str] = []
     seen: set[str] = set()
@@ -566,10 +571,12 @@ def _compute_allocator_snapshot(
     router_state: Dict[str, Any],
     health: Dict[str, Any],
     policy: Dict[str, Any],
+    base_env: Dict[str, str] | None = None,
 ) -> Dict[str, Any]:
     health_map = dict(health.get("strategies") or {})
     overall_health = str(health.get("overall_health", "OK")).upper()
     strategy_overrides = dict((_REGIME_DECISIONS.get(regime) or {}).get("overrides") or {})
+    base_env = dict(base_env or {})
 
     degraded_reasons: List[str] = []
     safe_mode_reasons: List[str] = []
@@ -577,9 +584,6 @@ def _compute_allocator_snapshot(
         safe_mode_reasons.append("unknown_regime")
     if bool(router_state.get("degraded")) or str(router_state.get("status") or "").strip().lower() != "ok":
         degraded_reasons.append(f"router_status={router_state.get('status')}")
-    if str(overall_health).upper() == "WATCH":
-        degraded_reasons.append("overall_health_watch")
-
     global_risk_map = dict(policy.get("allocator_global_risk_by_regime") or {})
     base_global_mult = max(0.0, _safe_float(global_risk_map.get(regime), 1.0))
     safe_mode = bool(safe_mode_reasons)
@@ -604,7 +608,9 @@ def _compute_allocator_snapshot(
         enable_env = str(sleeve.get("enable_env") or "").strip()
         risk_env = str(sleeve.get("risk_env") or "").strip()
         symbol_env_key = str(sleeve.get("symbol_env_key") or "").strip()
-        base_enable = str(strategy_overrides.get(enable_env, "1")).strip() == "1"
+        base_enable_env = _env_enabled(base_env, enable_env, True)
+        regime_enable = str(strategy_overrides.get(enable_env, "1")).strip() == "1"
+        base_enable = bool(base_enable_env and regime_enable)
         router_info = dict((router_state.get("profiles") or {}).get(symbol_env_key) or {})
         symbol_count = _safe_int(router_info.get("count"), 0)
         health_status, health_notes = _sleeve_health_status(sleeve, health_map)
@@ -630,6 +636,7 @@ def _compute_allocator_snapshot(
             "enable_env": enable_env,
             "risk_env": risk_env,
             "symbol_env_key": symbol_env_key,
+            "base_enabled": base_enable,
             "enabled": enabled,
             "symbol_count": symbol_count,
             "health_status": health_status,
@@ -640,6 +647,21 @@ def _compute_allocator_snapshot(
             "notes": notes,
         }
 
+    active_health_states = [
+        str(state.get("health_status") or "OK").upper()
+        for state in sleeve_states.values()
+        if bool(state.get("base_enabled")) and float(state.get("base_risk_mult", 0.0) or 0.0) > 0.0
+    ]
+    active_watch_sleeves = sorted(
+        name
+        for name, state in sleeve_states.items()
+        if bool(state.get("base_enabled"))
+        and float(state.get("base_risk_mult", 0.0) or 0.0) > 0.0
+        and str(state.get("health_status") or "OK").upper() == "WATCH"
+    )
+    if active_watch_sleeves:
+        degraded_reasons.append("overall_health_watch")
+
     allocator_status = "safe_mode" if safe_mode else ("degraded" if degraded else "ok")
     return {
         "status": allocator_status,
@@ -648,6 +670,16 @@ def _compute_allocator_snapshot(
         "hard_block_new_entries": safe_mode,
         "regime": regime,
         "overall_health": overall_health,
+        "health_summary": {
+            "overall_health_file": overall_health,
+            "active_watch_sleeves": active_watch_sleeves,
+            "active_status_counts": {
+                "OK": sum(1 for st in active_health_states if st == "OK"),
+                "WATCH": sum(1 for st in active_health_states if st == "WATCH"),
+                "PAUSE": sum(1 for st in active_health_states if st == "PAUSE"),
+                "KILL": sum(1 for st in active_health_states if st == "KILL"),
+            },
+        },
         "allocator_global_risk_mult": global_mult,
         "base_global_risk_mult": base_global_mult,
         "degraded_reasons": degraded_reasons,
@@ -845,6 +877,7 @@ def main() -> int:
             router_state=router_state,
             health=checkpoint_health,
             policy=policy,
+            base_env=base_overlay,
         )
         sleeves = allocator.get("sleeves", {})
         active_names = [name for name, state in sleeves.items() if bool(state.get("enabled"))]

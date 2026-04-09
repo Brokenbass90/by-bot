@@ -5,6 +5,58 @@
 
 ---
 
+## 2026-04-09 | Codex (session 34 - allocator health gate repair + Alpaca paper arming)
+
+**Done:**
+
+- Repaired allocator truth in [build_portfolio_allocator.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_portfolio_allocator.py):
+  - allocator now respects the base env toggle for each sleeve instead of only regime overrides
+  - `overall_health=WATCH` now degrades the allocator only when the watch belongs to a sleeve that is actually active in the current regime
+  - allocator state now records `health_summary` with active watch sleeves and active status counts
+- Repaired the same base-env / health-gating truth in replay validators:
+  - [run_control_plane_replay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_control_plane_replay.py)
+  - [run_dynamic_crypto_annual.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_annual.py)
+  - [run_dynamic_crypto_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_walkforward.py)
+- Synced the allocator repair to the live server and rebuilt control-plane state without restarting the bot.
+- Armed Alpaca monthly paper lane:
+  - switched [alpaca_paper_v36_candidate.env](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/alpaca_paper_v36_candidate.env) to `ALPACA_SEND_ORDERS=1`
+  - fixed [run_equities_alpaca_v36_candidate.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_equities_alpaca_v36_candidate.sh) so manual `--once` usage does not break the monthly bridge
+  - installed monthly cron on the server via [setup_cron_alpaca.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/setup_cron_alpaca.sh)
+- Restarted top-level crypto validators on the new allocator truth:
+  - `dynamic_core3_flat_impulse_nosloped_wf360_memoryfix_v1`
+  - `dynamic_core3_flat_impulse_nosloped_annual_memoryfix_v1`
+
+**Key findings:**
+
+- The repeated live `Portfolio allocator: DEGRADED ... overall_health_watch` alert was real, but the gating rule was too blunt:
+  - live `overall_health_file` stayed `WATCH`
+  - but the watch came from `breakdown`, which is not active in current `bull_chop`
+  - after the repair, live allocator rebuilt to:
+    - `status=ok`
+    - `degraded_reasons=[]`
+    - `global_risk=0.90`
+- This means the control-plane was not “broken”; it was over-throttling capital because it trusted a non-active watch sleeve too much.
+- `sloped` leak root cause was also real:
+  - validators were not respecting base env sleeve disables
+  - the repaired allocator smoke now shows `ENABLE_SLOPED_TRADING=0` truly stays off in replay truth
+- Alpaca monthly is now armed but not yet trading because the refreshed monthly candidate still resolves to:
+  - `status=send_orders_no_current_cycle`
+  - `latest_entry_day=2025-11-03`
+  - `pick_age_days=157`
+  - so the lane is correctly staying flat instead of buying stale picks
+- The completed annual repair fronts now separate signal from noise:
+  - `flat_frequency_repair_v1` is alive (`63/432` PASS; best row about `+10.78`, PF `2.106`, DD `2.40`, `3` negative months)
+  - `range_scalp_v1_annual_repair_v1` did not pass (`0/432` PASS; best rows still failed on negative months / DD)
+
+**Next:**
+
+- Let the repaired `360d` walk-forward and annual validators finish on the new allocator truth.
+- Use those outputs to judge whether `core3 flat + impulse` actually improved after the allocator repair.
+- Keep monthly Alpaca armed, but shift immediate equities attention to intraday if monthly remains stuck in `no_current_cycle`.
+- Next live-quality step after validators:
+  - decide whether server-side symbol memory should be deployed into live router state
+  - and whether `ARF1` frequency tweaks deserve a promoted live candidate overlay.
+
 ## 2026-04-09 | Codex (session 33 - router symbol memory + quality audit)
 
 **Done:**

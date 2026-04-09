@@ -35,6 +35,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+ENV_PATH = ROOT / ".env"
 ORCH_STATE_PATH = ROOT / "runtime" / "regime" / "orchestrator_state.json"
 ROUTER_STATE_PATH = ROOT / "runtime" / "router" / "symbol_router_state.json"
 HEALTH_PATH = ROOT / "configs" / "strategy_health.json"
@@ -80,6 +81,27 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return float(value)
     except Exception:
         return default
+
+
+def _parse_env(path: Path) -> Dict[str, str]:
+    out: Dict[str, str] = {}
+    try:
+        if not path.exists():
+            return out
+        for raw in path.read_text(encoding="utf-8").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            out[key.strip()] = value.strip()
+    except Exception:
+        return {}
+    return out
+
+
+def _env_enabled(env_map: Dict[str, str], key: str, default: bool = True) -> bool:
+    raw = str(env_map.get(key, "1" if default else "0")).strip().lower()
+    return raw not in {"0", "false", "no", "off", ""}
 
 
 def _bool_to_env(value: bool) -> str:
@@ -156,6 +178,7 @@ def _haircut_from_ratio(ratio: float, tiers: List[Dict[str, Any]]) -> float:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Build deterministic portfolio allocator overlay.")
+    ap.add_argument("--base-env", default=str(ENV_PATH))
     ap.add_argument("--orchestrator-state", default=str(ORCH_STATE_PATH))
     ap.add_argument("--router-state", default=str(ROUTER_STATE_PATH))
     ap.add_argument("--health-path", default=str(HEALTH_PATH))
@@ -165,6 +188,7 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
+    base_env_path = Path(args.base_env).expanduser()
     orch_path = Path(args.orchestrator_state).expanduser()
     router_path = Path(args.router_state).expanduser()
     health_path = Path(args.health_path).expanduser()
@@ -172,6 +196,7 @@ def main() -> int:
     out_env = Path(args.out_env).expanduser()
     out_state = Path(args.out_state).expanduser()
 
+    base_env = _parse_env(base_env_path)
     orch = _load_json(orch_path, {})
     router = _load_json(router_path, {})
     health = _load_json(health_path, {})
@@ -216,8 +241,6 @@ def main() -> int:
         degraded_reasons.append(f"router_status={router.get('status')}")
     if not bool(router.get("scan_ok", True)):
         degraded_reasons.append("router_scan_not_ok")
-    if str(health.get("overall_health", "OK")).upper() == "WATCH":
-        degraded_reasons.append("overall_health_watch")
     if health_age is None:
         degraded_reasons.append("health_file_missing")
     elif health_age > health_max_age:
@@ -281,7 +304,9 @@ def main() -> int:
         enable_env = str(sleeve.get("enable_env") or "").strip()
         risk_env = str(sleeve.get("risk_env") or "").strip()
         symbol_env_key = str(sleeve.get("symbol_env_key") or "").strip()
-        base_enable = str(strategy_overrides.get(enable_env, "1")).strip() == "1"
+        base_enable_env = _env_enabled(base_env, enable_env, True)
+        regime_enable = str(strategy_overrides.get(enable_env, "1")).strip() == "1"
+        base_enable = bool(base_enable_env and regime_enable)
         router_info = dict(router_profiles.get(symbol_env_key) or {})
         sleeve_symbols = [str(sym).strip().upper() for sym in (router_info.get("symbols") or []) if str(sym).strip()]
         symbol_count = _safe_int(router_info.get("count"), 0)
@@ -308,6 +333,7 @@ def main() -> int:
             "enable_env": enable_env,
             "risk_env": risk_env,
             "symbol_env_key": symbol_env_key,
+            "base_enabled": base_enable,
             "enabled": enabled,
             "symbol_count": symbol_count,
             "symbols": sleeve_symbols,
@@ -321,6 +347,22 @@ def main() -> int:
             "overlap_with": {},
             "notes": notes,
         }
+
+    active_health_states = [
+        str(state.get("health_status") or "OK").upper()
+        for state in sleeve_states.values()
+        if bool(state.get("base_enabled")) and float(state.get("base_risk_mult", 0.0) or 0.0) > 0.0
+    ]
+    active_watch_sleeves = sorted(
+        name
+        for name, state in sleeve_states.items()
+        if bool(state.get("base_enabled"))
+        and float(state.get("base_risk_mult", 0.0) or 0.0) > 0.0
+        and str(state.get("health_status") or "OK").upper() == "WATCH"
+    )
+    if active_watch_sleeves:
+        degraded_reasons.append("overall_health_watch")
+        issues.append(f"active_health_watch:{','.join(active_watch_sleeves)}")
 
     enabled_symbol_sets = {
         name: set(state.get("symbols") or [])
@@ -369,6 +411,16 @@ def main() -> int:
         issues.extend(f"{name}:{note}" for note in state.get("notes") or [] if note)
 
     allocator_status = "safe_mode" if safe_mode else ("degraded" if degraded else "ok")
+    health_summary = {
+        "overall_health_file": overall_health,
+        "active_watch_sleeves": active_watch_sleeves,
+        "active_status_counts": {
+            "OK": sum(1 for st in active_health_states if st == "OK"),
+            "WATCH": sum(1 for st in active_health_states if st == "WATCH"),
+            "PAUSE": sum(1 for st in active_health_states if st == "PAUSE"),
+            "KILL": sum(1 for st in active_health_states if st == "KILL"),
+        },
+    }
     lines.extend(
         [
             f"PORTFOLIO_ALLOCATOR_STATUS={allocator_status}",
@@ -399,6 +451,7 @@ def main() -> int:
         "portfolio_overlap_mult": round(portfolio_overlap_mult, 4),
         "degraded_reasons": degraded_reasons,
         "safe_mode_reasons": safe_mode_reasons,
+        "health_summary": health_summary,
         "issues": issues,
         "orchestrator_age_sec": orch_age,
         "router_age_sec": router_age,
@@ -408,6 +461,7 @@ def main() -> int:
             "router_state": str(router_path),
             "health_file": str(health_path),
             "policy_file": str(policy_path),
+            "base_env_file": str(base_env_path),
             "env_path": str(out_env),
             "state_path": str(out_state),
             "history_path": str(HISTORY_PATH),
