@@ -55,6 +55,7 @@ OUT_ENV_PATH = ROOT / "configs" / "dynamic_allowlist_latest.env"
 REGISTRY_PATH = ROOT / "configs" / "strategy_profile_registry.json"
 CONTROL_PLANE_DIR = ROOT / "runtime" / "control_plane"
 HISTORY_PATH = CONTROL_PLANE_DIR / "symbol_router_history.jsonl"
+MEMORY_PATH = CONTROL_PLANE_DIR / "router_symbol_memory.json"
 STATE_VERSION = "1"
 
 
@@ -94,6 +95,11 @@ def _parse_env_file(path: Path) -> Dict[str, str]:
     except Exception:
         return {}
     return out
+
+
+def _load_symbol_memory(path: Path) -> Dict[str, Any]:
+    raw = _load_json(path, {})
+    return raw if isinstance(raw, dict) else {}
 
 
 def _csv_symbols(raw: str) -> List[str]:
@@ -201,6 +207,8 @@ def _router_state_entry(
     source: str,
     notes: List[str],
     geometry: Dict[str, Any] | None = None,
+    memory: Dict[str, Any] | None = None,
+    ranking: List[Dict[str, Any]] | None = None,
 ) -> Dict[str, Any]:
     return {
         "env_key": env_key,
@@ -212,6 +220,8 @@ def _router_state_entry(
         "source": source,
         "notes": notes,
         "geometry": dict(geometry or {}),
+        "memory": dict(memory or {}),
+        "ranking": list(ranking or []),
     }
 
 
@@ -264,6 +274,44 @@ def _apply_geometry_router_layer(
     return symbols, geometry_meta, notes
 
 
+def _memory_for_profile(memory: Dict[str, Any], *, env_key: str, regime: str) -> Dict[str, Dict[str, Any]]:
+    profiles = dict(memory.get("profiles") or {})
+    env_block = dict(profiles.get(env_key) or {})
+    out: Dict[str, Dict[str, Any]] = {}
+    for regime_key in ("all", regime):
+        symbols = dict((env_block.get(regime_key) or {}).get("symbols") or {})
+        for sym, info in symbols.items():
+            sym_u = str(sym or "").strip().upper()
+            if not sym_u:
+                continue
+            row = dict(info or {})
+            row["memory_source"] = regime_key
+            prev = out.get(sym_u)
+            if prev is None or float(row.get("penalty", 0.0) or 0.0) >= float(prev.get("penalty", 0.0) or 0.0):
+                out[sym_u] = row
+    return out
+
+
+def _selected_memory_meta(symbols: List[str], profile_memory: Dict[str, Dict[str, Any]], *, memory_loaded: bool) -> Dict[str, Any]:
+    items: List[Dict[str, Any]] = []
+    penalized = 0
+    for sym in symbols:
+        info = dict(profile_memory.get(sym) or {})
+        penalty = float(info.get("penalty", 0.0) or 0.0)
+        if penalty > 0.0:
+            penalized += 1
+        items.append(
+            {
+                "symbol": sym,
+                "penalty": round(penalty, 4),
+                "reason": str(info.get("reason") or ""),
+                "trades": int(info.get("trades") or 0),
+                "memory_source": str(info.get("memory_source") or ""),
+            }
+        )
+    return {"used": bool(memory_loaded), "penalized_selected": penalized, "symbols": items}
+
+
 def _fallback_symbols(
     *,
     env_key: str,
@@ -298,6 +346,7 @@ def main() -> int:
     ap.add_argument("--state-path", default=str(STATE_PATH), help="Path to orchestrator JSON state.")
     ap.add_argument("--registry-path", default=str(REGISTRY_PATH), help="Path to strategy profile registry JSON.")
     ap.add_argument("--trades-csv", default="", help="Optional trades.csv for per-symbol backtest gate.")
+    ap.add_argument("--symbol-memory", default=str(MEMORY_PATH), help="Optional router symbol memory JSON path.")
     ap.add_argument("--out-env", default=str(OUT_ENV_PATH), help="Output env overlay path.")
     ap.add_argument("--out-json", default=str(ROUTER_STATE_PATH), help="Output router state JSON path.")
     ap.add_argument("--bybit-base", default="https://api.bybit.com", help="Bybit API base.")
@@ -325,6 +374,9 @@ def main() -> int:
     out_json = Path(args.out_json).expanduser()
     if not out_json.is_absolute():
         out_json = ROOT / out_json
+    symbol_memory_path = Path(args.symbol_memory).expanduser()
+    if not symbol_memory_path.is_absolute():
+        symbol_memory_path = ROOT / symbol_memory_path
 
     state = _load_json(state_path, {})
     raw_regime = str(state.get("raw_regime") or "").strip()
@@ -337,6 +389,8 @@ def main() -> int:
     default_profiles = _default_profile_map()
     previous_overlay = _parse_env_file(out_env)
     root_env = _parse_env_file(ROOT / ".env")
+    symbol_memory = _load_symbol_memory(symbol_memory_path)
+    memory_loaded = bool(symbol_memory.get("profiles"))
 
     backtest: Dict[Tuple[str, str], Any] = {}
     backtest_path: str = ""
@@ -397,12 +451,23 @@ def main() -> int:
         if fixed_symbols:
             symbols = fixed_symbols
             notes.append("used fixed_symbols from registry")
+            ranked_rows: List[Dict[str, Any]] = []
         else:
             profile = _build_profile(entry, default_profiles)
             fallback_mode = str(entry.get("fallback_mode") or "").strip()
+            profile_memory = _memory_for_profile(symbol_memory, env_key=env_key, regime=regime)
+            ranked_rows = []
             if scan_ok:
                 try:
-                    symbols = select_for_profile(profile, scan, backtest, quiet=args.quiet)
+                    selected = select_for_profile(
+                        profile,
+                        scan,
+                        backtest,
+                        symbol_penalties=profile_memory,
+                        return_ranked=True,
+                        quiet=args.quiet,
+                    )
+                    symbols, ranked_rows = selected
                 except Exception as e:
                     scan_ok = False
                     scan_error = f"profile selection failed for {env_key}: {e}"
@@ -443,6 +508,10 @@ def main() -> int:
                     fallback_reasons.append(f"{env_key}:post_exclude_empty")
 
         symbols = _dedupe_keep_order(symbols)
+        profile_memory = _memory_for_profile(symbol_memory, env_key=env_key, regime=regime)
+        memory_meta = _selected_memory_meta(symbols, profile_memory, memory_loaded=memory_loaded)
+        if int(memory_meta.get("penalized_selected") or 0) > 0:
+            notes.append(f"symbol_memory_penalized:{int(memory_meta['penalized_selected'])}")
         symbols, geometry_meta, geometry_notes = _apply_geometry_router_layer(
             env_key=env_key,
             symbols=symbols,
@@ -460,6 +529,8 @@ def main() -> int:
             source=source,
             notes=notes,
             geometry=geometry_meta,
+            memory=memory_meta,
+            ranking=ranked_rows[: min(12, len(ranked_rows))],
         )
 
     now_utc = datetime.now(timezone.utc)
@@ -479,6 +550,7 @@ def main() -> int:
         f"ROUTER_SCAN_OK={int(scan_ok)}",
         f"ROUTER_STATE_PATH={out_json}",
         f"ROUTER_HISTORY_PATH={HISTORY_PATH}",
+        f"ROUTER_SYMBOL_MEMORY_PATH={symbol_memory_path}",
         f"ALLOWLIST_WATCHER_FILE={out_env}",
     ]
     if confidence is not None:
@@ -515,6 +587,9 @@ def main() -> int:
         "env_path": str(out_env),
         "state_path": str(out_json),
         "history_path": str(HISTORY_PATH),
+        "symbol_memory_path": str(symbol_memory_path),
+        "symbol_memory_loaded": memory_loaded,
+        "symbol_memory_generated_at_utc": symbol_memory.get("generated_at_utc"),
         "profiles": router_profiles,
     }
 

@@ -38,6 +38,10 @@ Order of work:
 - Weak-trend softeners now also exist in the regime layer:
   - `flat` is no longer hard-disabled in every `bull_trend`
   - weak `bull_trend` can re-enable `flat` in reduced mode
+- Router symbol-quality truth is now stronger locally:
+  - per-symbol memory can be built from real `trades.csv` history
+  - router can consume soft symbol penalties per sleeve and regime
+  - router-quality audit can now flag currently selected symbols that already look toxic by historical evidence
 - Server foundation is now close to a real single-live-truth loop:
   - systemd service
   - heartbeat

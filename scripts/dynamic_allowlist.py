@@ -52,7 +52,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 
@@ -507,8 +507,10 @@ def select_for_profile(
     scan: Dict[str, CandidateRow],
     backtest: Dict[Tuple[str, str], SymPerf],
     *,
+    symbol_penalties: Optional[Dict[str, Any]] = None,
+    return_ranked: bool = False,
     quiet: bool,
-) -> List[str]:
+) -> List[str] | Tuple[List[str], List[Dict[str, Any]]]:
     """Return ordered list of symbols for this strategy family."""
 
     selected: List[str] = []
@@ -530,6 +532,7 @@ def select_for_profile(
 
     # Score candidates
     candidates: List[Tuple[float, str]] = []  # (score, symbol)
+    ranked_rows: List[Dict[str, Any]] = []
 
     # All known symbols = scan union anchor_symbols union bt symbols
     all_symbols = set(scan.keys()) | set(profile.anchor_symbols) | set(bt_by_sym.keys())
@@ -545,6 +548,19 @@ def select_for_profile(
                 # Always keep anchors even if market data is missing
                 score = -999.0
                 candidates.append((score, sym))
+                ranked_rows.append(
+                    {
+                        "symbol": sym,
+                        "anchor": True,
+                        "market_score": None,
+                        "strategy_score": None,
+                        "memory_penalty": 0.0,
+                        "memory_note": "anchor_missing_scan",
+                        "final_score": score,
+                        "market_summary": None,
+                        "bt_summary": "no-bt-data",
+                    }
+                )
             continue
 
         market_ok = True
@@ -601,16 +617,53 @@ def select_for_profile(
         # ── Combined: strategy state matters more than generic market fit ──
         # Anchors always get a neutral strategy score (0.5) to avoid being
         # penalised when they're not currently in the ideal setup zone.
-        if sym in profile.anchor_symbols:
+        is_anchor = sym in profile.anchor_symbols
+        if is_anchor:
             score = market_score * 0.70 + 0.5 * 0.30  # anchors: market-weighted
         else:
             score = market_score * 0.40 + strategy_score * 0.60
 
+        memory_penalty = 0.0
+        memory_note = ""
+        if symbol_penalties:
+            raw_penalty = symbol_penalties.get(sym)
+            if isinstance(raw_penalty, dict):
+                memory_penalty = float(raw_penalty.get("penalty", 0.0) or 0.0)
+                memory_note = str(raw_penalty.get("reason") or "")
+            elif raw_penalty is not None:
+                memory_penalty = float(raw_penalty or 0.0)
+            if is_anchor:
+                memory_penalty *= 0.50
+            score -= 0.25 * max(0.0, min(1.0, memory_penalty))
+
         candidates.append((score, sym))
+        if bt_perf is None:
+            bt_summary = "no-bt-data"
+        else:
+            bt_summary = (
+                f"bt_trades={bt_perf.trades} "
+                f"bt_net={bt_perf.net:+.4f} "
+                f"bt_pf={bt_perf.profit_factor:.2f}"
+            )
+
+        ranked_rows.append(
+            {
+                "symbol": sym,
+                "anchor": bool(is_anchor),
+                "market_score": round(float(market_score), 4),
+                "strategy_score": round(float(strategy_score), 4),
+                "memory_penalty": round(float(memory_penalty), 4),
+                "memory_note": memory_note,
+                "final_score": round(float(score), 4),
+                "market_summary": row.market_summary(),
+                "bt_summary": bt_summary,
+            }
+        )
 
     # Sort by score desc, take top_n
     candidates.sort(reverse=True)
     selected = [sym for _, sym in candidates[: profile.top_n]]
+    ranked_rows.sort(key=lambda item: (-float(item["final_score"]), item["symbol"]))
 
     if not quiet:
         print(f"\n[{profile.name}]")
@@ -620,6 +673,8 @@ def select_for_profile(
         if rejected_bt:
             print(f"  Rejected by backtest gate: {len(rejected_bt)} symbols")
 
+    if return_ranked:
+        return selected, ranked_rows
     return selected
 
 

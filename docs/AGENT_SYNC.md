@@ -674,3 +674,29 @@ Practical meaning:
   - zero manual `/next`-style nudges
   - DeepSeek auto-continues until the answer is complete or the continuation cap is hit
   - Telegram emits all chunks automatically in sequence
+
+### 2026-04-09 13:05 UTC sync update
+
+- Added a new offline-first router hardening layer:
+  - [build_router_symbol_memory.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_router_symbol_memory.py)
+  - [router_quality_audit.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/router_quality_audit.py)
+- What it does:
+  - builds per-symbol penalties from real historical `trades.csv`
+  - groups them by:
+    - sleeve env key
+    - BTC `4h` regime
+    - symbol
+  - exposes current toxic symbols through [router_quality_audit.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/control_plane/router_quality_audit.json)
+- Router integration now exists locally:
+  - [dynamic_allowlist.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/dynamic_allowlist.py) can rank with soft symbol penalties
+  - [build_symbol_router.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_symbol_router.py) now loads optional symbol memory and records memory metadata in router state
+- First local memory build:
+  - `120` trade files
+  - `13,073` trade rows
+  - router-quality audit immediately flags:
+    - `BREAKDOWN` carrying toxic `BTC/ETH` in `bear_chop`
+    - `ARF1` carrying toxic `ADA`
+    - `ASC1` carrying toxic `DOGE`
+- Important rollout note:
+  - current strategy research runs did **not** need immediate restart just because this layer was added
+  - but the next full-stack annual / walk-forward validation should be rerun on the memory-aware router stack once we decide to promote this layer into the active path

@@ -5,6 +5,61 @@
 
 ---
 
+## 2026-04-09 | Codex (session 33 - router symbol memory + quality audit)
+
+**Done:**
+
+- Added a new offline router-memory builder:
+  - [build_router_symbol_memory.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_router_symbol_memory.py)
+  - it builds per-symbol penalties from real historical [trades.csv](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs) files
+  - grouping is by:
+    - sleeve env key
+    - BTC 4H regime bucket
+    - symbol
+- Added a router-quality audit helper:
+  - [router_quality_audit.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/router_quality_audit.py)
+  - it compares the current router selection against the new symbol-memory truth
+- Extended [dynamic_allowlist.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/dynamic_allowlist.py):
+  - candidate ranking can now accept soft symbol penalties
+  - ranking rows now expose:
+    - market score
+    - strategy score
+    - memory penalty
+    - final score
+- Extended [build_symbol_router.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_symbol_router.py):
+  - loads optional router symbol memory
+  - applies soft symbol penalties during scan-based ranking
+  - exposes selected-symbol memory metadata in router state
+  - writes memory path truth into the overlay/state
+- Updated [deploy_foundation.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/deploy_foundation.sh) so future foundation deploys also carry the new router-memory scripts.
+
+**Key findings:**
+
+- The new memory was built from `120` real trade files and `13,073` trade rows.
+- It immediately confirms the user’s router suspicion in a machine-readable way:
+  - `BREAKDOWN_SYMBOL_ALLOWLIST` in `bear_chop` shows very high penalties on:
+    - `BTCUSDT`
+    - `ETHUSDT`
+    - `LINKUSDT`
+  - `ARF1_SYMBOL_ALLOWLIST` shows `ADAUSDT` as historically toxic
+  - `ASC1_SYMBOL_ALLOWLIST` currently over-trusts `DOGEUSDT`
+- Current local audit output in [router_quality_audit.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/runtime/control_plane/router_quality_audit.json) already flags:
+  - `BREAKDOWN` carrying toxic `BTC/ETH`
+  - `ARF1` carrying toxic `ADA`
+  - `ASC1` carrying toxic `DOGE`
+- This layer is intentionally soft and offline-first:
+  - current research runs did **not** need to be restarted just because the memory layer was added
+  - but any future full-stack annual / walk-forward promotion check should be rerun on the new router truth once we decide to turn it on in the active stack
+
+**Next:**
+
+- Let the active strategy research keep running.
+- Use the new memory + audit truth to decide:
+  - whether `breakdown` needs a smaller `bear_chop` basket
+  - whether `ARF1` should stop carrying `ADA`
+  - whether `ASC1` should stay out of core until symbol quality improves
+- After the current research wave settles, rerun the dynamic annual / walk-forward validator on the memory-aware router stack.
+
 ## 2026-04-08 | Codex (session 32 - support_bounce regime fix + crypto foundation frontier)
 
 **Done:**

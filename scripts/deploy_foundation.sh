@@ -69,6 +69,8 @@ FILES=(
   "scripts/build_portfolio_allocator.py"
   "scripts/build_geometry_state.py"
   "scripts/build_operator_snapshot.py"
+  "scripts/build_router_symbol_memory.py"
+  "scripts/router_quality_audit.py"
   "scripts/build_strategy_health_timeline.py"
   "scripts/evaluate_crypto_promotion.py"
   "scripts/setup_server_crons.sh"
