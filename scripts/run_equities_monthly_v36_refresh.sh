@@ -72,6 +72,35 @@ python3 scripts/equities_monthly_research_sim.py \
   --intramonth-portfolio-stop-pct 0.04 \
   --tag "$TAG"
 
+if ! python3 scripts/build_equities_monthly_live_cycle.py \
+  --tickers "$TICKERS" \
+  --data-dir "$DATA_DIR" \
+  --top-n 3 \
+  --lookback-days 28 \
+  --min-mom-lookback-pct 2.5 \
+  --pullback-min-pct -12.0 \
+  --pullback-max-pct -1.5 \
+  --benchmark-tickers "$BENCH_TICKERS" \
+  --benchmark-data-dir "$DATA_DIR" \
+  --benchmark-lookback-days 60 \
+  --benchmark-min-above-sma-count 1 \
+  --corr-lookback-days 60 \
+  --max-pair-corr 0.75 \
+  --corr-penalty-mult 2.5 \
+  --corr-penalty-threshold 0.5 \
+  --universe-top-k 14 \
+  --universe-score-lookback-days 80 \
+  --position-weight-mode score_inv_vol \
+  --cluster-groups "$CLUSTER_GROUPS" \
+  --max-per-cluster 1 \
+  --stop-atr-mult 1.7 \
+  --target-atr-mult 4.0 \
+  --out-picks-csv "$RUNTIME_DIR/current_cycle_picks.csv" \
+  --out-summary-csv "$RUNTIME_DIR/current_cycle_summary.csv"; then
+  echo "warn: current-cycle builder produced no fresh picks"
+  rm -f "$RUNTIME_DIR/current_cycle_picks.csv" "$RUNTIME_DIR/current_cycle_summary.csv"
+fi
+
 mkdir -p "$RUNTIME_DIR"
 LATEST_RUN_DIR="$(ls -1dt backtest_runs/equities_monthly_research_*_"$TAG" 2>/dev/null | head -n 1)"
 if [[ -z "${LATEST_RUN_DIR:-}" ]]; then
@@ -88,6 +117,8 @@ cat > "$RUNTIME_DIR/latest_refresh.env" <<EOF
 EQ_LATEST_RUN_DIR=$LATEST_RUN_DIR
 EQ_LATEST_PICKS_CSV=$LATEST_PICKS_CSV
 EQ_LATEST_SUMMARY_CSV=$LATEST_SUMMARY_CSV
+EQ_CURRENT_CYCLE_PICKS_CSV=$RUNTIME_DIR/current_cycle_picks.csv
+EQ_CURRENT_CYCLE_SUMMARY_CSV=$RUNTIME_DIR/current_cycle_summary.csv
 EQ_LATEST_REFRESH_UTC=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
 EQ_V36_ACTIVE_TICKERS=$TICKERS
 EOF

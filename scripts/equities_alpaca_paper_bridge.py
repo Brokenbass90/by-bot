@@ -102,11 +102,20 @@ def _safe_int(value: Any, default: int = 0) -> int:
 
 
 def _latest_summary_path(picks_csv: Path) -> Path | None:
+    current_cycle_summary = _env("ALPACA_CURRENT_CYCLE_SUMMARY_CSV", "")
+    if current_cycle_summary:
+        path = Path(current_cycle_summary)
+        if path.exists() and picks_csv.name == "current_cycle_picks.csv":
+            return path
     env_path = _env("EQ_LATEST_SUMMARY_CSV", "")
     if env_path:
         path = Path(env_path)
         if path.exists():
             return path
+    if picks_csv.name == "current_cycle_picks.csv":
+        runtime_candidate = picks_csv.parent / "current_cycle_summary.csv"
+        if runtime_candidate.exists():
+            return runtime_candidate
     candidate = picks_csv.parent / "summary.csv"
     return candidate if candidate.exists() else None
 
@@ -398,6 +407,21 @@ def _default_picks_csv() -> Path | None:
     return runs[-1] if runs else None
 
 
+def _current_cycle_picks_path(picks_csv: Path) -> Path | None:
+    raw = _env("ALPACA_CURRENT_CYCLE_PICKS_CSV", "")
+    if raw:
+        path = Path(raw)
+        if path.exists():
+            return path
+    runtime_dir = _env("ALPACA_AUTOPILOT_RUNTIME_DIR", "")
+    if runtime_dir:
+        path = Path(runtime_dir) / "current_cycle_picks.csv"
+        if path.exists():
+            return path
+    candidate = picks_csv.parent / "current_cycle_picks.csv"
+    return candidate if candidate.exists() else None
+
+
 def _parse_date_ymd(text: str) -> date | None:
     s = str(text or "").strip()
     if not s:
@@ -501,6 +525,17 @@ def main() -> int:
         and pick_age_days > max_pick_age_days
         and not allow_stale_picks
     )
+    if stale_guard_triggered and refreshed_recently:
+        current_cycle_csv = _current_cycle_picks_path(picks_csv)
+        if current_cycle_csv is not None:
+            current_cycle_picks = _load_picks(current_cycle_csv, None)
+            current_entry_day, current_pick_age_days = _pick_age_days(current_cycle_picks)
+            if current_cycle_picks and current_pick_age_days is not None and current_pick_age_days <= max_pick_age_days:
+                picks_csv = current_cycle_csv
+                picks = current_cycle_picks
+                latest_entry_day = current_entry_day
+                pick_age_days = current_pick_age_days
+                stale_guard_triggered = False
     if stale_guard_triggered and not refreshed_recently:
         print(
             json.dumps(
