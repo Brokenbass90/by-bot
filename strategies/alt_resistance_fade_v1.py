@@ -155,6 +155,7 @@ class AltResistanceFadeV1Strategy:
         self._last_tf_ts: Optional[int] = None
         self._last_regime_tf_ts: Optional[int] = None
         self._last_regime_ok: Optional[bool] = None
+        self._last_regime_reason: str = ""
         self.last_no_signal_reason = ""
 
     def _refresh_runtime_allowlists(self) -> None:
@@ -165,9 +166,11 @@ class AltResistanceFadeV1Strategy:
         rows = store.fetch_klines(store.symbol, self.cfg.regime_tf, max(self.cfg.regime_lookback, self.cfg.regime_ema_slow + 8)) or []
         if len(rows) < self.cfg.regime_ema_slow + 8:
             self.last_no_signal_reason = "regime_history_short"
+            self._last_regime_reason = self.last_no_signal_reason
             return False
         tf_ts = int(float(rows[-1][0]))
         if self._last_regime_tf_ts is not None and tf_ts == self._last_regime_tf_ts and self._last_regime_ok is not None:
+            self.last_no_signal_reason = self._last_regime_reason
             return bool(self._last_regime_ok)
 
         closes = [float(r[4]) for r in rows]
@@ -183,6 +186,7 @@ class AltResistanceFadeV1Strategy:
         atr = _atr_from_rows(rows, 14)
         if not all(math.isfinite(x) for x in (ef, es, es_prev, atr)) or atr <= 0:
             self.last_no_signal_reason = "regime_invalid"
+            self._last_regime_reason = self.last_no_signal_reason
             return False
 
         gap_pct = abs(ef - es) / cur * 100.0
@@ -208,8 +212,11 @@ class AltResistanceFadeV1Strategy:
                 self.last_no_signal_reason = f"regime_atr_high_{atr_pct:.2f}"
             else:
                 self.last_no_signal_reason = f"regime_rebound_high_{rebound_from_low:.2f}"
+        else:
+            self.last_no_signal_reason = ""
         self._last_regime_tf_ts = tf_ts
         self._last_regime_ok = bool(ok)
+        self._last_regime_reason = self.last_no_signal_reason
         return bool(ok)
 
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:

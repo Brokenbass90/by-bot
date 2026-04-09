@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import csv
 import math
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -204,16 +204,16 @@ def _candidate_latest(
     stop_atr_mult: float,
     target_atr_mult: float,
     universe_score: float,
-) -> Candidate | None:
+) -> tuple[Candidate | None, str]:
     hist_need = max(lookback_days + 5, 25)
     if len(daily) < hist_need:
-        return None
+        return None, "history_short"
     closes = [x.c for x in daily]
     close = closes[-1]
     sma20 = _sma(closes, 20)
     sma60 = _sma(closes, lookback_days)
     if not (math.isfinite(sma20) and math.isfinite(sma60) and close > 0):
-        return None
+        return None, "sma_invalid"
     mom20 = close / closes[-20] - 1.0
     mom60 = close / closes[-lookback_days] - 1.0
     high60 = max(x.h for x in daily[-lookback_days:])
@@ -226,13 +226,13 @@ def _candidate_latest(
     vol20 = pstdev(rets20) if len(rets20) >= 5 else 0.0
     atr20 = _atr(daily, 20)
     if not math.isfinite(atr20) or atr20 <= 0:
-        return None
+        return None, "atr_invalid"
     if close < sma60:
-        return None
+        return None, "below_sma60"
     if mom60 <= min_mom60:
-        return None
+        return None, "mom60_low"
     if not (pullback_min <= pullback60 <= pullback_max):
-        return None
+        return None, "pullback_outside"
 
     score = (
         1.20 * mom60
@@ -244,7 +244,7 @@ def _candidate_latest(
     stop = close - stop_atr_mult * atr20
     target = close + target_atr_mult * atr20
     if stop <= 0 or target <= close:
-        return None
+        return None, "stop_target_invalid"
     return Candidate(
         ticker=ticker,
         entry_day=daily[-1].day,
@@ -257,7 +257,7 @@ def _candidate_latest(
         entry_price=close,
         stop_price=stop,
         target_price=target,
-    )
+    ), "ok"
 
 
 def main() -> int:
@@ -347,10 +347,12 @@ def main() -> int:
         allowed_universe = {ticker for ticker, _ in scored[: max(1, int(args.universe_top_k))]}
 
     candidates: list[tuple[Candidate, list[DailyBar]]] = []
+    reject_counts: Counter[str] = Counter()
     for ticker, daily in daily_map.items():
         if allowed_universe is not None and ticker not in allowed_universe:
+            reject_counts["outside_universe_top_k"] += 1
             continue
-        cand = _candidate_latest(
+        cand, reason = _candidate_latest(
             ticker,
             daily,
             lookback_days=int(args.lookback_days),
@@ -363,6 +365,8 @@ def main() -> int:
         )
         if cand is not None:
             candidates.append((cand, daily))
+        else:
+            reject_counts[str(reason or "unknown")] += 1
 
     clusters = _parse_cluster_groups(args.cluster_groups)
     corr_cache: dict[tuple[str, str], float | None] = {}
@@ -376,6 +380,7 @@ def main() -> int:
             corr_cache[key] = _pair_corr(left[1], right[1], int(args.corr_lookback_days))
         return corr_cache[key]
 
+    selection_rejects: Counter[str] = Counter()
     while remaining and len(picks) < max(1, int(args.top_n)):
         best_idx = None
         best_selection_score = float("-inf")
@@ -386,6 +391,7 @@ def main() -> int:
             blocked = False
             for cluster_id in _clusters_for_ticker(cand.ticker, clusters):
                 if cluster_counts.get(cluster_id, 0) >= int(args.max_per_cluster):
+                    selection_rejects["cluster_limit"] += 1
                     blocked = True
                     break
             if blocked:
@@ -399,6 +405,7 @@ def main() -> int:
                 if not math.isfinite(max_corr_existing) or corr > max_corr_existing:
                     max_corr_existing = corr
                 if float(args.max_pair_corr) <= 1.0 and corr >= float(args.max_pair_corr):
+                    selection_rejects["pair_corr_block"] += 1
                     blocked = True
                     break
                 total_corr_penalty += max(0.0, corr - float(args.corr_penalty_threshold))
@@ -421,6 +428,12 @@ def main() -> int:
             cluster_counts[cluster_id] += 1
 
     if not picks:
+        if reject_counts:
+            print("reject_counts=" + ",".join(f"{k}:{v}" for k, v in reject_counts.most_common(8)))
+        if candidates:
+            print(f"candidate_count={len(candidates)}")
+        if selection_rejects:
+            print("selection_rejects=" + ",".join(f"{k}:{v}" for k, v in selection_rejects.most_common(8)))
         raise SystemExit("no current-cycle picks")
 
     weights = [_position_weight(cand, args.position_weight_mode) for cand, _ in picks]

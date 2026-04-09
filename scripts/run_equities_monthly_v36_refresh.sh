@@ -20,6 +20,57 @@ EARNINGS_LIMIT="${EQ_V36_EARNINGS_LIMIT:-24}"
 TAG="${EQ_V36_TAG:-equities_monthly_v36_candidate_refresh}"
 RUNTIME_DIR="${EQ_V36_RUNTIME_DIR:-runtime/equities_monthly_v36}"
 
+CURRENT_TOP_N="${EQ_V36_CURRENT_TOP_N:-3}"
+CURRENT_LOOKBACK_DAYS="${EQ_V36_CURRENT_LOOKBACK_DAYS:-28}"
+CURRENT_MIN_MOM_LOOKBACK_PCT="${EQ_V36_CURRENT_MIN_MOM_LOOKBACK_PCT:-2.5}"
+CURRENT_PULLBACK_MIN_PCT="${EQ_V36_CURRENT_PULLBACK_MIN_PCT:-12.0}"
+CURRENT_PULLBACK_MAX_PCT="${EQ_V36_CURRENT_PULLBACK_MAX_PCT:-1.5}"
+CURRENT_BENCHMARK_MIN_ABOVE_SMA_COUNT="${EQ_V36_CURRENT_BENCHMARK_MIN_ABOVE_SMA_COUNT:-1}"
+CURRENT_CORR_LOOKBACK_DAYS="${EQ_V36_CURRENT_CORR_LOOKBACK_DAYS:-60}"
+CURRENT_MAX_PAIR_CORR="${EQ_V36_CURRENT_MAX_PAIR_CORR:-0.75}"
+CURRENT_CORR_PENALTY_MULT="${EQ_V36_CURRENT_CORR_PENALTY_MULT:-2.5}"
+CURRENT_CORR_PENALTY_THRESHOLD="${EQ_V36_CURRENT_CORR_PENALTY_THRESHOLD:-0.5}"
+CURRENT_UNIVERSE_TOP_K="${EQ_V36_CURRENT_UNIVERSE_TOP_K:-14}"
+CURRENT_UNIVERSE_SCORE_LOOKBACK_DAYS="${EQ_V36_CURRENT_UNIVERSE_SCORE_LOOKBACK_DAYS:-80}"
+CURRENT_POSITION_WEIGHT_MODE="${EQ_V36_CURRENT_POSITION_WEIGHT_MODE:-score_inv_vol}"
+CURRENT_MAX_PER_CLUSTER="${EQ_V36_CURRENT_MAX_PER_CLUSTER:-1}"
+CURRENT_STOP_ATR_MULT="${EQ_V36_CURRENT_STOP_ATR_MULT:-1.7}"
+CURRENT_TARGET_ATR_MULT="${EQ_V36_CURRENT_TARGET_ATR_MULT:-4.0}"
+
+CURRENT_RELAXED_MIN_MOM_LOOKBACK_PCT="${EQ_V36_CURRENT_RELAXED_MIN_MOM_LOOKBACK_PCT:-1.0}"
+CURRENT_RELAXED_PULLBACK_MIN_PCT="${EQ_V36_CURRENT_RELAXED_PULLBACK_MIN_PCT:-18.0}"
+CURRENT_RELAXED_PULLBACK_MAX_PCT="${EQ_V36_CURRENT_RELAXED_PULLBACK_MAX_PCT:-0.0}"
+CURRENT_RELAXED_MAX_PAIR_CORR="${EQ_V36_CURRENT_RELAXED_MAX_PAIR_CORR:-0.85}"
+CURRENT_RELAXED_UNIVERSE_TOP_K="${EQ_V36_CURRENT_RELAXED_UNIVERSE_TOP_K:-20}"
+
+run_current_cycle_builder() {
+  python3 scripts/build_equities_monthly_live_cycle.py \
+    --tickers "$TICKERS" \
+    --data-dir "$DATA_DIR" \
+    --top-n "$1" \
+    --lookback-days "$2" \
+    --min-mom-lookback-pct "$3" \
+    --pullback-min-pct "$4" \
+    --pullback-max-pct "$5" \
+    --benchmark-tickers "$BENCH_TICKERS" \
+    --benchmark-data-dir "$DATA_DIR" \
+    --benchmark-lookback-days 60 \
+    --benchmark-min-above-sma-count "$6" \
+    --corr-lookback-days "$7" \
+    --max-pair-corr "$8" \
+    --corr-penalty-mult "$9" \
+    --corr-penalty-threshold "${10}" \
+    --universe-top-k "${11}" \
+    --universe-score-lookback-days "${12}" \
+    --position-weight-mode "${13}" \
+    --cluster-groups "$CLUSTER_GROUPS" \
+    --max-per-cluster "${14}" \
+    --stop-atr-mult "${15}" \
+    --target-atr-mult "${16}" \
+    --out-picks-csv "$RUNTIME_DIR/current_cycle_picks.csv" \
+    --out-summary-csv "$RUNTIME_DIR/current_cycle_summary.csv"
+}
+
 echo "equities monthly v36 refresh start: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 echo "tickers=${TICKERS}"
 echo "bench_tickers=${BENCH_TICKERS}"
@@ -72,33 +123,45 @@ python3 scripts/equities_monthly_research_sim.py \
   --intramonth-portfolio-stop-pct 0.04 \
   --tag "$TAG"
 
-if ! python3 scripts/build_equities_monthly_live_cycle.py \
-  --tickers "$TICKERS" \
-  --data-dir "$DATA_DIR" \
-  --top-n 3 \
-  --lookback-days 28 \
-  --min-mom-lookback-pct 2.5 \
-  --pullback-min-pct -12.0 \
-  --pullback-max-pct -1.5 \
-  --benchmark-tickers "$BENCH_TICKERS" \
-  --benchmark-data-dir "$DATA_DIR" \
-  --benchmark-lookback-days 60 \
-  --benchmark-min-above-sma-count 1 \
-  --corr-lookback-days 60 \
-  --max-pair-corr 0.75 \
-  --corr-penalty-mult 2.5 \
-  --corr-penalty-threshold 0.5 \
-  --universe-top-k 14 \
-  --universe-score-lookback-days 80 \
-  --position-weight-mode score_inv_vol \
-  --cluster-groups "$CLUSTER_GROUPS" \
-  --max-per-cluster 1 \
-  --stop-atr-mult 1.7 \
-  --target-atr-mult 4.0 \
-  --out-picks-csv "$RUNTIME_DIR/current_cycle_picks.csv" \
-  --out-summary-csv "$RUNTIME_DIR/current_cycle_summary.csv"; then
-  echo "warn: current-cycle builder produced no fresh picks"
-  rm -f "$RUNTIME_DIR/current_cycle_picks.csv" "$RUNTIME_DIR/current_cycle_summary.csv"
+if ! run_current_cycle_builder \
+  "$CURRENT_TOP_N" \
+  "$CURRENT_LOOKBACK_DAYS" \
+  "$CURRENT_MIN_MOM_LOOKBACK_PCT" \
+  "$CURRENT_PULLBACK_MIN_PCT" \
+  "$CURRENT_PULLBACK_MAX_PCT" \
+  "$CURRENT_BENCHMARK_MIN_ABOVE_SMA_COUNT" \
+  "$CURRENT_CORR_LOOKBACK_DAYS" \
+  "$CURRENT_MAX_PAIR_CORR" \
+  "$CURRENT_CORR_PENALTY_MULT" \
+  "$CURRENT_CORR_PENALTY_THRESHOLD" \
+  "$CURRENT_UNIVERSE_TOP_K" \
+  "$CURRENT_UNIVERSE_SCORE_LOOKBACK_DAYS" \
+  "$CURRENT_POSITION_WEIGHT_MODE" \
+  "$CURRENT_MAX_PER_CLUSTER" \
+  "$CURRENT_STOP_ATR_MULT" \
+  "$CURRENT_TARGET_ATR_MULT"; then
+  echo "warn: strict current-cycle builder produced no fresh picks"
+  echo "info: retrying current-cycle builder with relaxed profile"
+  if ! run_current_cycle_builder \
+    "$CURRENT_TOP_N" \
+    "$CURRENT_LOOKBACK_DAYS" \
+    "$CURRENT_RELAXED_MIN_MOM_LOOKBACK_PCT" \
+    "$CURRENT_RELAXED_PULLBACK_MIN_PCT" \
+    "$CURRENT_RELAXED_PULLBACK_MAX_PCT" \
+    "$CURRENT_BENCHMARK_MIN_ABOVE_SMA_COUNT" \
+    "$CURRENT_CORR_LOOKBACK_DAYS" \
+    "$CURRENT_RELAXED_MAX_PAIR_CORR" \
+    "$CURRENT_CORR_PENALTY_MULT" \
+    "$CURRENT_CORR_PENALTY_THRESHOLD" \
+    "$CURRENT_RELAXED_UNIVERSE_TOP_K" \
+    "$CURRENT_UNIVERSE_SCORE_LOOKBACK_DAYS" \
+    "$CURRENT_POSITION_WEIGHT_MODE" \
+    "$CURRENT_MAX_PER_CLUSTER" \
+    "$CURRENT_STOP_ATR_MULT" \
+    "$CURRENT_TARGET_ATR_MULT"; then
+    echo "warn: current-cycle builder produced no fresh picks even after relaxed retry"
+    rm -f "$RUNTIME_DIR/current_cycle_picks.csv" "$RUNTIME_DIR/current_cycle_summary.csv"
+  fi
 fi
 
 mkdir -p "$RUNTIME_DIR"
