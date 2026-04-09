@@ -538,3 +538,7 @@ New foundation rules:
     - the queue should live on a research host or a narrow quiet window, not on the live trading server
     - approved specs may auto-run, but unapproved specs must still go through the research gate / human approval path
     - queue runtime state should be written explicitly so operator and cron can distinguish `idle`, `busy_skip`, `proposed`, and `launched`
+  - research infrastructure direction:
+    - short bounded nightly jobs may run on the live server only inside a tight quiet UTC window
+    - long sweeps / frontier research should move to a second always-on machine
+    - that second machine may be a home/desktop box, but it should be treated as the dedicated research host rather than the primary live trading node

@@ -101,6 +101,7 @@ import json
 d = json.load(open('\$ROUTER'))
 fallbacks = list(d.get('fallback_reasons') or [])
 print(f\\\"  router_status={d.get('status','?')}  scan_ok={int(bool(d.get('scan_ok', True)))}  fallbacks={len(fallbacks)}\\\")
+print(f\\\"  router_backtest_gate={'on' if d.get('backtest_path') else 'off'}  symbol_memory_loaded={int(bool(d.get('symbol_memory_loaded', False)))}\\\")
 if fallbacks:
     preview = '; '.join(fallbacks[:3])
     print(f\\\"  router_fallback_preview={preview}\\\")

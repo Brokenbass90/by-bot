@@ -80,6 +80,25 @@ def _active_research_lines() -> list[str]:
     return [line.strip() for line in out.splitlines() if line.strip()]
 
 
+def _within_quiet_window(config: dict[str, Any], now: datetime) -> tuple[bool, str]:
+    window = dict(config.get("quiet_window_utc") or {})
+    if not bool(window.get("enabled", False)):
+        return True, "disabled"
+    try:
+        start_hour = int(window.get("start_hour", 0))
+        end_hour = int(window.get("end_hour", 0))
+    except Exception:
+        return True, "invalid_config"
+    hour = int(now.hour)
+    if start_hour == end_hour:
+        return True, "full_day"
+    if start_hour < end_hour:
+        ok = start_hour <= hour < end_hour
+    else:
+        ok = hour >= start_hour or hour < end_hour
+    return ok, f"{start_hour:02d}:00-{end_hour:02d}:00"
+
+
 def _task_active(task: dict[str, Any], active_lines: list[str]) -> bool:
     spec_name = Path(str(task.get("spec") or "")).name
     return any(spec_name in line for line in active_lines)
@@ -142,6 +161,31 @@ def main() -> int:
         "skipped": [],
         "tasks": {},
     }
+
+    in_window, window_label = _within_quiet_window(config, now)
+    run_status["quiet_window_utc"] = {
+        "enabled": bool(dict(config.get("quiet_window_utc") or {}).get("enabled", False)),
+        "window": window_label,
+        "in_window": bool(in_window),
+        "current_hour_utc": int(now.hour),
+    }
+
+    if not in_window:
+        run_status["state"] = "outside_window"
+        _write_json(status_path, run_status)
+        _append_jsonl(
+            history_path,
+            {
+                "ts": now.isoformat(),
+                "state": "outside_window",
+                "active_process_count": active_count,
+                "window": window_label,
+                "current_hour_utc": int(now.hour),
+            },
+        )
+        if not args.quiet:
+            print(f"skip: outside quiet window {window_label} UTC")
+        return 0
 
     if active_count >= max_active:
         run_status["state"] = "busy_skip"
