@@ -90,6 +90,35 @@ check 'Allocator state    ' $BOT_DIR/runtime/control_plane/portfolio_allocator_s
 check 'Allocator env      ' $BOT_DIR/configs/portfolio_allocator_latest.env 10800
 "
 
+echo ""
+echo "▶ ROUTER / ALLOCATOR QUALITY"
+run "
+ROUTER=$BOT_DIR/runtime/router/symbol_router_state.json
+ALLOC=$BOT_DIR/runtime/control_plane/portfolio_allocator_state.json
+if [ -f \"\$ROUTER\" ]; then
+  python3 -c \"
+import json
+d = json.load(open('\$ROUTER'))
+fallbacks = list(d.get('fallback_reasons') or [])
+print(f\\\"  router_status={d.get('status','?')}  scan_ok={int(bool(d.get('scan_ok', True)))}  fallbacks={len(fallbacks)}\\\")
+if fallbacks:
+    preview = '; '.join(fallbacks[:3])
+    print(f\\\"  router_fallback_preview={preview}\\\")
+\" 2>/dev/null || echo '  router: parse error'
+else
+  echo '  router: missing'
+fi
+if [ -f \"\$ALLOC\" ]; then
+  python3 -c \"
+import json
+d = json.load(open('\$ALLOC'))
+print(f\\\"  allocator_status={d.get('status','?')}  degraded={int(bool(d.get('degraded', False)))}  safe_mode={int(bool(d.get('safe_mode', False)))}  global_risk={d.get('global_risk_mult','?')}\\\")
+\" 2>/dev/null || echo '  allocator: parse error'
+else
+  echo '  allocator: missing'
+fi
+"
+
 # ── 4. Current regime ─────────────────────────────────────────────
 echo ""
 echo "▶ CURRENT REGIME"

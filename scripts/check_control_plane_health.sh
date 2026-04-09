@@ -94,6 +94,79 @@ check_file \
   "$BOT_DIR/configs/portfolio_allocator_latest.env" \
   "$ALLOCATOR_MAX_AGE"
 
+check_router_content() {
+  local filepath="$1"
+  [[ ! -f "$filepath" ]] && return
+
+  local router_meta
+  router_meta=$(python3 - <<'PY' "$filepath" 2>/dev/null || true
+import json, sys
+path = sys.argv[1]
+try:
+    data = json.load(open(path, "r", encoding="utf-8"))
+except Exception:
+    print("parse_error")
+    raise SystemExit(0)
+status = str(data.get("status") or "")
+scan_ok = bool(data.get("scan_ok", True))
+fallback_count = len(list(data.get("fallback_reasons") or []))
+print(f"{status}|{int(scan_ok)}|{fallback_count}")
+PY
+)
+
+  if [[ -z "$router_meta" ]]; then
+    PROBLEMS+=("⚠️ Symbol router: PARSE ERROR ($filepath)")
+    return
+  fi
+  if [[ "$router_meta" == "parse_error" ]]; then
+    PROBLEMS+=("⚠️ Symbol router: PARSE ERROR ($filepath)")
+    return
+  fi
+
+  IFS='|' read -r ROUTER_STATUS ROUTER_SCAN_OK ROUTER_FALLBACKS <<< "$router_meta"
+  if [[ "$ROUTER_STATUS" != "ok" || "$ROUTER_SCAN_OK" != "1" ]]; then
+    PROBLEMS+=("⚠️ Symbol router: DEGRADED (status=${ROUTER_STATUS:-?}, scan_ok=${ROUTER_SCAN_OK:-?}, fallbacks=${ROUTER_FALLBACKS:-0})")
+  fi
+}
+
+check_allocator_content() {
+  local filepath="$1"
+  [[ ! -f "$filepath" ]] && return
+
+  local allocator_meta
+  allocator_meta=$(python3 - <<'PY' "$filepath" 2>/dev/null || true
+import json, sys
+path = sys.argv[1]
+try:
+    data = json.load(open(path, "r", encoding="utf-8"))
+except Exception:
+    print("parse_error")
+    raise SystemExit(0)
+status = str(data.get("status") or "")
+safe_mode = bool(data.get("safe_mode", False))
+degraded = bool(data.get("degraded", False))
+print(f"{status}|{int(safe_mode)}|{int(degraded)}")
+PY
+)
+
+  if [[ -z "$allocator_meta" ]]; then
+    PROBLEMS+=("⚠️ Portfolio allocator: PARSE ERROR ($filepath)")
+    return
+  fi
+  if [[ "$allocator_meta" == "parse_error" ]]; then
+    PROBLEMS+=("⚠️ Portfolio allocator: PARSE ERROR ($filepath)")
+    return
+  fi
+
+  IFS='|' read -r ALLOC_STATUS ALLOC_SAFE ALLOC_DEGRADED <<< "$allocator_meta"
+  if [[ "$ALLOC_SAFE" == "1" || "$ALLOC_DEGRADED" == "1" || "$ALLOC_STATUS" != "ok" ]]; then
+    PROBLEMS+=("⚠️ Portfolio allocator: DEGRADED (status=${ALLOC_STATUS:-?}, safe_mode=${ALLOC_SAFE:-0}, degraded=${ALLOC_DEGRADED:-0})")
+  fi
+}
+
+check_router_content "$BOT_DIR/runtime/router/symbol_router_state.json"
+check_allocator_content "$BOT_DIR/runtime/control_plane/portfolio_allocator_state.json"
+
 # ── Report results ────────────────────────────────────────────────
 if (( ${#PROBLEMS[@]} > 0 )); then
   echo "[cp_health $(date -u '+%H:%M:%S')] PROBLEMS FOUND:"

@@ -637,3 +637,24 @@ Practical meaning:
   - near-term core candidate remains `breakdown + flat + impulse`
   - `sloped` stays out of the near-term core unless new evidence overturns the no-sloped advantage
   - `Elder` is no longer “not wired”, but it still needs fresh evidence before any promotion talk
+
+### 2026-04-09 09:25 UTC sync update
+
+- Router critique from the user was valid in one important way:
+  - a fresh router file could still be operating in `degraded_fallback`
+  - older fallback behavior could reuse stale overlay baskets too freely in no-scan conditions
+- Fixed now:
+  - [scripts/dynamic_allowlist.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/dynamic_allowlist.py) supports stricter `bt_require_history`
+  - [scripts/build_symbol_router.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_symbol_router.py) supports profile-level `fallback_mode`
+  - [scripts/build_symbol_router.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/build_symbol_router.py) now reads `ROUTER_TRADES_CSV` from project `.env` as well as process env
+  - [strategy_profile_registry.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/strategy_profile_registry.json) now hardens core sleeves to `anchor_only` degraded fallback, and core breakdown/breakout families exclude `FARTCOINUSDT`, `HYPEUSDT`, `1000PEPEUSDT`
+- Dry-run proof:
+  - in current offline/local degraded mode, `BREAKOUT`, `BREAKDOWN`, and `BREAKDOWN2` now fall back to anchor baskets instead of stale overlay symbols
+  - `IVB1` remaining empty in `bear_chop` is still by design, not a regression
+- Ops visibility also improved:
+  - [check_control_plane_health.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/check_control_plane_health.sh) now alerts on degraded router/allocator content, not only stale files
+  - [server_status.sh](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/server_status.sh) now shows `router_status`, `scan_ok`, fallback count, and allocator degraded/safe-mode state
+- Interpretation:
+  - this closes the “silent degraded fallback” issue
+  - it does not yet solve the second router weakness: strategy-aware symbol scoring is still too generic for messy `bear_chop`
+  - next router-quality step after current runs: add per-sleeve symbol memory / penalties for repeat whipsaw symbols

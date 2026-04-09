@@ -253,6 +253,7 @@ class StrategyProfile:
     bt_min_trades: int = 5
     bt_min_net: float = 0.0
     bt_min_pf: float = 1.0
+    bt_require_history: bool = False
     # Fixed always-include symbols (never removed by market filter)
     anchor_symbols: List[str] = field(default_factory=list)
 
@@ -573,8 +574,11 @@ def select_for_profile(
                 if not bt_ok:
                     rejected_bt.append(sym)
                     continue
+            elif profile.bt_require_history:
+                rejected_bt.append(sym)
+                continue
             # bt_perf is None → no history for this symbol → allow through
-            # (new candidate, give it a chance)
+            # unless the profile explicitly requires historical evidence.
 
         # ── Market fit: ATR profile + liquidity ───────────────────────────
         # ATR fit: Gaussian score — peaks at 1.0 when ATR is at ideal midpoint

@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -173,6 +174,7 @@ def _build_profile(entry: Dict[str, Any], defaults: Dict[str, StrategyProfile]) 
         "bt_min_trades",
         "bt_min_net",
         "bt_min_pf",
+        "bt_require_history",
         "anchor_symbols",
     }
     for key in field_names:
@@ -268,14 +270,16 @@ def _fallback_symbols(
     profile: StrategyProfile,
     previous_overlay: Dict[str, str],
     fixed_symbols: List[str],
+    fallback_mode: str = "",
 ) -> tuple[List[str], str, List[str]]:
     notes: List[str] = []
+    mode = str(fallback_mode or "").strip().lower() or "existing_then_anchor"
 
     if fixed_symbols:
         notes.append("used fixed_symbols from profile registry")
         return _dedupe_keep_order(fixed_symbols), "fixed_profile", notes
 
-    previous = _csv_symbols(previous_overlay.get(env_key, ""))
+    previous = [] if mode == "anchor_only" else _csv_symbols(previous_overlay.get(env_key, ""))
     if previous:
         notes.append("used last-known-good symbols from existing overlay")
         return previous, "fallback_existing_env", notes
@@ -332,11 +336,17 @@ def main() -> int:
     selected_profiles = _pick_profiles(regime, registry)
     default_profiles = _default_profile_map()
     previous_overlay = _parse_env_file(out_env)
+    root_env = _parse_env_file(ROOT / ".env")
 
     backtest: Dict[Tuple[str, str], Any] = {}
     backtest_path: str = ""
-    if args.trades_csv:
-        trades_path = Path(args.trades_csv).expanduser()
+    trades_csv_raw = str(
+        args.trades_csv
+        or os.getenv("ROUTER_TRADES_CSV", "")
+        or root_env.get("ROUTER_TRADES_CSV", "")
+    ).strip()
+    if trades_csv_raw:
+        trades_path = Path(trades_csv_raw).expanduser()
         if not trades_path.is_absolute():
             trades_path = ROOT / trades_path
         if not trades_path.exists():
@@ -389,6 +399,7 @@ def main() -> int:
             notes.append("used fixed_symbols from registry")
         else:
             profile = _build_profile(entry, default_profiles)
+            fallback_mode = str(entry.get("fallback_mode") or "").strip()
             if scan_ok:
                 try:
                     symbols = select_for_profile(profile, scan, backtest, quiet=args.quiet)
@@ -404,6 +415,7 @@ def main() -> int:
                     profile=profile,
                     previous_overlay=previous_overlay,
                     fixed_symbols=fixed_symbols,
+                    fallback_mode=fallback_mode,
                 )
                 degraded = True
                 reason = f"{env_key}:{source}"
@@ -424,6 +436,7 @@ def main() -> int:
                         profile=profile,
                         previous_overlay=previous_overlay,
                         fixed_symbols=fixed_symbols,
+                        fallback_mode=fallback_mode,
                     )
                     notes.extend(fallback_notes)
                     degraded = True

@@ -521,3 +521,10 @@ New foundation rules:
     - `dynamic_core4_flat_impulse_bounce_annual_v1`
   - interpretation:
     - if `support_bounce` stays mostly absent even in the new core4 annual run, the next fix is not “invent another long strategy” but loosen the router/health path that lets the bounce sleeve activate in bull-trend / bull-chop windows
+  - router hardening priority update:
+    - degraded fallback must no longer reuse stale overlay baskets for core sleeves
+    - core router profiles should prefer `anchor_only` fallback plus explicit meme-symbol exclusions in degraded mode
+    - symbol-level backtest gating should be plumbed through `ROUTER_TRADES_CSV` from `.env` so server cron can enforce historical evidence, not just local manual runs
+    - ops visibility must treat `fresh but degraded` router state as a problem:
+      - `check_control_plane_health.sh` should alert on `router_status != ok` or `scan_ok=0`
+      - `server_status.sh` should show router fallback count and allocator degraded/safe-mode state
