@@ -112,7 +112,8 @@ if [ -f \"\$ALLOC\" ]; then
   python3 -c \"
 import json
 d = json.load(open('\$ALLOC'))
-print(f\\\"  allocator_status={d.get('status','?')}  degraded={int(bool(d.get('degraded', False)))}  safe_mode={int(bool(d.get('safe_mode', False)))}  global_risk={d.get('global_risk_mult','?')}\\\")
+global_risk = d.get('allocator_global_risk_mult', d.get('global_risk_mult', '?'))
+print(f\\\"  allocator_status={d.get('status','?')}  degraded={int(bool(d.get('degraded', False)))}  safe_mode={int(bool(d.get('safe_mode', False)))}  global_risk={global_risk}\\\")
 \" 2>/dev/null || echo '  allocator: parse error'
 else
   echo '  allocator: missing'
