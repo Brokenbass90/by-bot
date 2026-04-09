@@ -30,6 +30,7 @@ from scripts.run_control_plane_replay import (  # noqa: E402
     DEFAULT_HEALTH_TIMELINE,
     DEFAULT_POLICY,
     DEFAULT_REGISTRY,
+    DEFAULT_SYMBOL_MEMORY,
     _advance_hysteresis,
     _build_router_state,
     _compute_allocator_snapshot,
@@ -478,6 +479,7 @@ def main() -> int:
     ap.add_argument("--policy", default=str(DEFAULT_POLICY))
     ap.add_argument("--health", default=str(DEFAULT_HEALTH))
     ap.add_argument("--health-timeline", default=str(DEFAULT_HEALTH_TIMELINE))
+    ap.add_argument("--symbol-memory", default=str(DEFAULT_SYMBOL_MEMORY))
     ap.add_argument("--max-scan-symbols", type=int, default=80)
     ap.add_argument("--starting_equity", type=float, default=100.0)
     ap.add_argument("--base_risk_pct", type=float, default=0.01)
@@ -511,6 +513,7 @@ def main() -> int:
     policy = _load_json(_resolve_path(args.policy), {})
     fallback_health = _load_json(_resolve_path(args.health), {})
     health_timeline = load_strategy_health_timeline(_resolve_path(args.health_timeline))
+    symbol_memory = _load_json(_resolve_path(args.symbol_memory), {})
 
     if not VENV_PYTHON.exists():
         raise FileNotFoundError(f"Missing virtualenv python: {VENV_PYTHON}")
@@ -549,6 +552,7 @@ def main() -> int:
             base_overlay=base_env,
             router_mode="historical_scan",
             historical_scan=scan,
+            symbol_memory=symbol_memory,
         )
         health_snapshot = select_health_snapshot(health_timeline, checkpoint_ts, fallback_health=fallback_health)
         allocator_state = _compute_allocator_snapshot(

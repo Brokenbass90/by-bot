@@ -58,7 +58,8 @@
   - whether `breakdown` needs a smaller `bear_chop` basket
   - whether `ARF1` should stop carrying `ADA`
   - whether `ASC1` should stay out of core until symbol quality improves
-- After the current research wave settles, rerun the dynamic annual / walk-forward validator on the memory-aware router stack.
+- Rewired [run_control_plane_replay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_control_plane_replay.py), [run_dynamic_crypto_annual.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_annual.py), and [run_dynamic_crypto_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_walkforward.py) so the next validation wave can run on the memory-aware router stack instead of the older simpler replay router.
+- Then rerun the dynamic annual / walk-forward validator on the memory-aware router stack.
 
 ## 2026-04-08 | Codex (session 32 - support_bounce regime fix + crypto foundation frontier)
 

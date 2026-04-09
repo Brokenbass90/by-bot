@@ -54,6 +54,7 @@ from bot.strategy_health_timeline import (  # noqa: E402
     select_health_snapshot,
 )
 from indicators import atr_pct_from_ohlc  # noqa: E402
+from scripts.strategy_scorer import score_for_strategy  # noqa: E402
 
 
 DEFAULT_BASE_OVERLAY = ROOT / "configs" / "dynamic_allowlist_latest.env"
@@ -61,6 +62,7 @@ DEFAULT_REGISTRY = ROOT / "configs" / "strategy_profile_registry.json"
 DEFAULT_POLICY = ROOT / "configs" / "portfolio_allocator_policy.json"
 DEFAULT_HEALTH = ROOT / "configs" / "strategy_health.json"
 DEFAULT_HEALTH_TIMELINE = ROOT / "runtime" / "control_plane" / "strategy_health_timeline.json"
+DEFAULT_SYMBOL_MEMORY = ROOT / "runtime" / "control_plane" / "router_symbol_memory.json"
 OUT_ROOT = ROOT / "backtest_runs"
 DATA_CACHE_DIR = ROOT / "data_cache"
 
@@ -198,6 +200,24 @@ def _build_checkpoints(end_dt: datetime, total_days: int, step_days: int) -> Lis
     if not points or points[-1] != end_dt:
         points.append(end_dt)
     return points
+
+
+def _symbol_memory_for_profile(memory: Dict[str, Any], *, env_key: str, regime: str) -> Dict[str, Dict[str, Any]]:
+    profiles = dict(memory.get("profiles") or {})
+    env_block = dict(profiles.get(env_key) or {})
+    out: Dict[str, Dict[str, Any]] = {}
+    for regime_key in ("all", regime):
+        symbols = dict((env_block.get(regime_key) or {}).get("symbols") or {})
+        for sym, info in symbols.items():
+            sym_u = str(sym or "").strip().upper()
+            if not sym_u:
+                continue
+            row = dict(info or {})
+            row["memory_source"] = regime_key
+            prev = out.get(sym_u)
+            if prev is None or float(row.get("penalty", 0.0) or 0.0) >= float(prev.get("penalty", 0.0) or 0.0):
+                out[sym_u] = row
+    return out
 
 
 def _advance_hysteresis(
@@ -351,13 +371,15 @@ def _select_historical_symbols_for_profile(
     entry: Dict[str, Any],
     scan: Dict[str, HistoricalScanRow],
     fallback_symbols: List[str],
-) -> tuple[List[str], str]:
+    *,
+    profile_memory: Dict[str, Dict[str, Any]] | None = None,
+) -> tuple[List[str], str, List[Dict[str, Any]], Dict[str, Any]]:
     fixed_defined = "fixed_symbols" in entry
     fixed_symbols = _dedupe([str(x) for x in entry.get("fixed_symbols", []) if str(x).strip()])
     anchor_symbols = _dedupe([str(x) for x in entry.get("anchor_symbols", []) if str(x).strip()])
     excluded = {str(x).strip().upper() for x in entry.get("exclude_symbols", []) if str(x).strip()}
     if fixed_defined:
-        return fixed_symbols, ("fixed_profile" if fixed_symbols else "fixed_profile_off")
+        return fixed_symbols, ("fixed_profile" if fixed_symbols else "fixed_profile_off"), [], {"used": False, "symbols": []}
 
     min_turnover = float(entry.get("min_turnover") or 0.0)
     min_atr_pct = float(entry.get("min_atr_pct") or 0.0)
@@ -366,6 +388,8 @@ def _select_historical_symbols_for_profile(
     top_n = max(1, int(entry.get("top_n") or 6))
 
     candidates: List[tuple[float, str]] = []
+    ranking: List[Dict[str, Any]] = []
+    profile_memory = dict(profile_memory or {})
     for sym, row in scan.items():
         if sym in excluded:
             continue
@@ -386,17 +410,53 @@ def _select_historical_symbols_for_profile(
         age_score = max(0.0, min(1.0, row.listing_age_days / max(float(min_listing_days or 1), 1.0)))
         anchor_bonus = 0.10 if sym in anchor_symbols else 0.0
         score = atr_fit * 0.55 + liq_score * 0.35 + age_score * 0.10 + anchor_bonus
+        strategy_score = score_for_strategy(
+            str(entry.get("env_key") or ""),
+            row.closes_1h,
+            row.highs_1h,
+            row.lows_1h,
+        )
+        score = score * 0.40 + float(strategy_score) * 0.60
+        mem = dict(profile_memory.get(sym) or {})
+        memory_penalty = float(mem.get("penalty", 0.0) or 0.0)
+        if sym in anchor_symbols:
+            memory_penalty *= 0.50
+        score -= 0.25 * max(0.0, min(1.0, memory_penalty))
         candidates.append((score, sym))
+        ranking.append(
+            {
+                "symbol": sym,
+                "final_score": round(float(score), 4),
+                "market_score": round(float(atr_fit * 0.55 + liq_score * 0.35 + age_score * 0.10 + anchor_bonus), 4),
+                "strategy_score": round(float(strategy_score), 4),
+                "memory_penalty": round(float(memory_penalty), 4),
+                "memory_reason": str(mem.get("reason") or ""),
+            }
+        )
 
     candidates.sort(reverse=True)
     selected = [sym for _, sym in candidates[:top_n]]
+    ranking.sort(key=lambda item: (-float(item["final_score"]), item["symbol"]))
+    memory_meta = {
+        "used": bool(profile_memory),
+        "symbols": [
+            {
+                "symbol": sym,
+                "penalty": round(float((profile_memory.get(sym) or {}).get("penalty", 0.0) or 0.0), 4),
+                "reason": str((profile_memory.get(sym) or {}).get("reason") or ""),
+                "trades": int((profile_memory.get(sym) or {}).get("trades") or 0),
+                "memory_source": str((profile_memory.get(sym) or {}).get("memory_source") or ""),
+            }
+            for sym in selected
+        ],
+    }
     if selected:
-        return selected, "historical_scan"
+        return selected, "historical_scan", ranking, memory_meta
     if fallback_symbols:
-        return fallback_symbols, "frozen_overlay_fallback"
+        return fallback_symbols, "frozen_overlay_fallback", ranking, memory_meta
     if anchor_symbols:
-        return anchor_symbols, "anchor_fallback"
-    return [], "empty"
+        return anchor_symbols, "anchor_fallback", ranking, memory_meta
+    return [], "empty", ranking, memory_meta
 
 
 def _build_router_state(
@@ -406,6 +466,7 @@ def _build_router_state(
     base_overlay: Dict[str, str],
     router_mode: str,
     historical_scan: Dict[str, HistoricalScanRow] | None = None,
+    symbol_memory: Dict[str, Any] | None = None,
 ) -> Dict[str, Any]:
     chosen = _pick_profiles(regime, registry)
     profiles: Dict[str, Any] = {}
@@ -432,11 +493,14 @@ def _build_router_state(
         if fixed_defined:
             symbols = fixed_symbols
             source = "fixed_profile" if fixed_symbols else "fixed_profile_off"
+            ranking: List[Dict[str, Any]] = []
+            memory_meta = {"used": False, "symbols": []}
         elif mode == "historical_scan":
-            symbols, source = _select_historical_symbols_for_profile(
+            symbols, source, ranking, memory_meta = _select_historical_symbols_for_profile(
                 entry=entry,
                 scan=historical_scan or {},
                 fallback_symbols=frozen_symbols,
+                profile_memory=_symbol_memory_for_profile(dict(symbol_memory or {}), env_key=env_key, regime=regime),
             )
             if source == "frozen_overlay_fallback":
                 entry_notes.append("historical scan found no stronger match; used frozen overlay")
@@ -449,9 +513,13 @@ def _build_router_state(
         elif frozen_symbols:
             symbols = frozen_symbols
             source = "frozen_overlay"
+            ranking = []
+            memory_meta = {"used": False, "symbols": []}
         else:
             symbols = anchor_symbols
             source = "anchor_fallback"
+            ranking = []
+            memory_meta = {"used": False, "symbols": []}
             if not symbols:
                 degraded = True
                 entry_notes.append("no frozen overlay or anchors available")
@@ -465,6 +533,8 @@ def _build_router_state(
             "source": source,
             "fixed_symbols": bool(fixed_defined),
             "notes": entry_notes,
+            "ranking": ranking[: min(12, len(ranking))],
+            "memory": memory_meta,
         }
 
     return {
@@ -670,6 +740,7 @@ def main() -> int:
     ap.add_argument("--policy-path", default=str(DEFAULT_POLICY))
     ap.add_argument("--health-path", default=str(DEFAULT_HEALTH))
     ap.add_argument("--health-timeline-path", default=str(DEFAULT_HEALTH_TIMELINE))
+    ap.add_argument("--symbol-memory-path", default=str(DEFAULT_SYMBOL_MEMORY))
     ap.add_argument("--tag", default="control_plane_replay")
     ap.add_argument("--cache-only", action="store_true", help="Use cached data only for historical BTC fetch.")
     ap.add_argument(
@@ -705,12 +776,16 @@ def main() -> int:
         health_path = ROOT / health_path
     if not health_timeline_path.is_absolute():
         health_timeline_path = ROOT / health_timeline_path
+    symbol_memory_path = Path(args.symbol_memory_path).expanduser()
+    if not symbol_memory_path.is_absolute():
+        symbol_memory_path = ROOT / symbol_memory_path
 
     base_overlay = _parse_env(base_overlay_path)
     registry = _load_json(registry_path, {})
     policy = _load_json(policy_path, {})
     health = _load_json(health_path, {})
     health_timeline = load_strategy_health_timeline(health_timeline_path)
+    symbol_memory = _load_json(symbol_memory_path, {})
     if args.neutral_health:
         health = {"overall_health": "OK", "strategies": {}}
         health_timeline = {}
@@ -752,6 +827,7 @@ def main() -> int:
             base_overlay=base_overlay,
             router_mode=args.router_mode,
             historical_scan=scan,
+            symbol_memory=symbol_memory,
         )
         checkpoint_health = health
         health_source = "static_health"
@@ -816,6 +892,7 @@ def main() -> int:
         "policy_path": str(policy_path),
         "health_path": str(health_path),
         "health_timeline_path": str(health_timeline_path),
+        "symbol_memory_path": str(symbol_memory_path),
         "cache_only": bool(args.cache_only),
         "neutral_health": bool(args.neutral_health),
         "timeline_health_loaded": bool(health_timeline),

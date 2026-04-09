@@ -700,3 +700,18 @@ Practical meaning:
 - Important rollout note:
   - current strategy research runs did **not** need immediate restart just because this layer was added
   - but the next full-stack annual / walk-forward validation should be rerun on the memory-aware router stack once we decide to promote this layer into the active path
+
+### 2026-04-09 13:26 UTC sync update
+
+- Historical validators are no longer stuck on the older simpler replay router:
+  - [run_control_plane_replay.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_control_plane_replay.py) now accepts `--symbol-memory-path`
+  - [run_dynamic_crypto_annual.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_annual.py) now forwards the same symbol-memory layer
+  - [run_dynamic_crypto_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_walkforward.py) now forwards the same symbol-memory layer
+- Replay/router behavior is now closer to the live router:
+  - historical symbol selection now uses:
+    - market fit
+    - strategy-fit score
+    - soft symbol-memory penalty
+- Smoke checks:
+  - cache-only control-plane replay passed on a short `90d` horizon
+  - a short memory-aware dynamic annual smoke is now running on the current `core3 flat+impulse` candidate
