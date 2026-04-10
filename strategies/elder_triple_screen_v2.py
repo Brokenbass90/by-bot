@@ -19,6 +19,7 @@ Typical env config:
     ETS2_OSC_PERIOD=8
     ETS2_OSC_OB=58
     ETS2_OSC_OS=42
+    ETS2_WAVE_LOOKBACK=3
     ETS2_ENTRY_RETEST_BARS=5
     ETS2_SL_ATR_MULT=2.0
     ETS2_TP_ATR_MULT=2.5
@@ -143,6 +144,7 @@ class ElderTripleScreenV2Config:
     osc_period: int = 8
     osc_ob: float = 58.0
     osc_os: float = 42.0
+    wave_lookback: int = 3  # check if RSI was in pullback zone within this many recent bars
 
     # Screen 3: Entry (15m)
     entry_tf: str = "15"
@@ -178,6 +180,7 @@ class ElderTripleScreenV2Strategy:
         self.cfg.osc_period = _env_int("ETS2_OSC_PERIOD", self.cfg.osc_period)
         self.cfg.osc_ob = _env_float("ETS2_OSC_OB", self.cfg.osc_ob)
         self.cfg.osc_os = _env_float("ETS2_OSC_OS", self.cfg.osc_os)
+        self.cfg.wave_lookback = _env_int("ETS2_WAVE_LOOKBACK", self.cfg.wave_lookback)
 
         self.cfg.entry_tf = os.getenv("ETS2_ENTRY_TF", self.cfg.entry_tf)
         self.cfg.entry_lookback = _env_int("ETS2_ENTRY_LOOKBACK", self.cfg.entry_lookback)
@@ -245,12 +248,26 @@ class ElderTripleScreenV2Strategy:
         if not math.isfinite(osc):
             return False
 
-        # In bullish trend: want RSI < OS (pullback)
-        # In bearish trend: want RSI > OB (pullback)
+        # In bullish trend: want RSI to have recently been in pullback zone (< OS).
+        # Check current bar AND up to wave_lookback bars back, so we catch bounce setups
+        # where the pullback happened 1-N hours ago and price is already recovering.
+        # This is the classic Elder entry: Screen 3 fires on the RECLAIM candle,
+        # not at the exact oversold extreme — so Screen 2 must look back in time.
+        lookback = max(0, self.cfg.wave_lookback)
         if trend == "bullish":
-            return osc < self.cfg.osc_os
+            for offset in range(lookback + 1):
+                sub = closes[: len(closes) - offset] if offset > 0 else closes
+                rsi_i = _rsi(sub, self.cfg.osc_period)
+                if math.isfinite(rsi_i) and rsi_i < self.cfg.osc_os:
+                    return True
+            return False
         else:  # bearish
-            return osc > self.cfg.osc_ob
+            for offset in range(lookback + 1):
+                sub = closes[: len(closes) - offset] if offset > 0 else closes
+                rsi_i = _rsi(sub, self.cfg.osc_period)
+                if math.isfinite(rsi_i) and rsi_i > self.cfg.osc_ob:
+                    return True
+            return False
 
     def _screen3_entry(self, store, trend: str) -> Optional[str]:
         """Screen 3: entry via retest/reclaim, not raw breakout.
