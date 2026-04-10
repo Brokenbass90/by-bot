@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import json
 import time
 from datetime import datetime, timezone
@@ -65,6 +66,16 @@ def _load_jsonl_tail(path: Path, limit: int = 12) -> list[dict[str, Any]]:
             if isinstance(item, dict):
                 out.append(item)
         return out
+    except Exception:
+        return []
+
+
+def _load_csv_rows(path: Path) -> list[dict[str, str]]:
+    try:
+        if not path.exists():
+            return []
+        with path.open("r", encoding="utf-8", newline="") as f:
+            return list(csv.DictReader(f))
     except Exception:
         return []
 
@@ -295,6 +306,69 @@ def _nightly_research_block(root: Path) -> Dict[str, Any]:
     }
 
 
+def _alpaca_block(root: Path) -> Dict[str, Any]:
+    monthly_dir = root / "runtime" / "equities_monthly_v36"
+    monthly_cycle_summary = _load_csv_rows(monthly_dir / "current_cycle_summary.csv")
+    monthly_cycle_picks = _load_csv_rows(monthly_dir / "current_cycle_picks.csv")
+    monthly_latest_advisory = _load_json(monthly_dir / "latest_advisory.json", {})
+    monthly_latest_summary = _load_csv_rows(monthly_dir / "latest_summary.csv")
+
+    monthly_cycle = monthly_cycle_summary[0] if monthly_cycle_summary else {}
+    monthly_metrics = monthly_latest_summary[0] if monthly_latest_summary else {}
+    monthly_report = dict((monthly_latest_advisory or {}).get("report") or {})
+
+    intraday_dir = root / "runtime" / "equities_intraday_dynamic_v1"
+    intraday_advisory = _load_json(intraday_dir / "latest_advisory.json", {})
+    intraday_symbols = list((intraday_advisory.get("symbols") or []))
+    intraday_open = list(intraday_advisory.get("open_positions") or [])
+    intraday_remote_only = list(intraday_advisory.get("remote_only_positions") or [])
+
+    return {
+        "monthly": {
+            "runtime_dir": _path_text(monthly_dir),
+            "exists": bool(monthly_dir.exists()),
+            "age_sec": _file_age_sec(monthly_dir / "current_cycle_summary.csv"),
+            "current_cycle_mode": str(monthly_cycle.get("mode") or ""),
+            "current_cycle_month": str(monthly_cycle.get("latest_pick_month") or ""),
+            "current_cycle_entry_day": str(monthly_cycle.get("latest_entry_day") or ""),
+            "current_cycle_entry_age_days": _safe_int(monthly_cycle.get("latest_entry_age_days"), -1),
+            "current_cycle_selected": _safe_int(monthly_cycle.get("selected"), 0),
+            "current_cycle_tickers": str(monthly_cycle.get("tickers") or ""),
+            "current_cycle_pick_rows": len(monthly_cycle_picks),
+            "advisory_status": str(monthly_report.get("status") or ""),
+            "cycle_reason": str(monthly_report.get("cycle_reason") or ""),
+            "effective_capital": _safe_float(monthly_report.get("effective_capital"), 0.0),
+            "per_position_notional": _safe_float(monthly_report.get("per_position_notional"), 0.0),
+            "earnings_blocked": sorted((monthly_report.get("earnings_blocked") or {}).keys()),
+            "new_buy_symbols": list(monthly_report.get("new_buy_symbols") or []),
+            "selected_symbols": list(monthly_report.get("selected") or []),
+            "latest_summary_profit_factor": _safe_float(monthly_metrics.get("profit_factor"), 0.0),
+            "latest_summary_compounded_return_pct": _safe_float(monthly_metrics.get("compounded_return_pct"), 0.0),
+            "latest_summary_max_monthly_dd_pct": _safe_float(monthly_metrics.get("max_monthly_dd_pct"), 0.0),
+        },
+        "intraday": {
+            "runtime_dir": _path_text(intraday_dir),
+            "exists": bool(intraday_dir.exists()),
+            "age_sec": _file_age_sec(intraday_dir / "latest_advisory.json"),
+            "generated_at_utc": str(intraday_advisory.get("generated_at_utc") or ""),
+            "mode": str(intraday_advisory.get("mode") or ""),
+            "equity": _safe_float(((intraday_advisory.get("account") or {}).get("equity")), 0.0),
+            "cash": _safe_float(((intraday_advisory.get("account") or {}).get("cash")), 0.0),
+            "entries_blocked": bool(intraday_advisory.get("entries_blocked")),
+            "today_pnl_usd": _safe_float(intraday_advisory.get("today_pnl_usd"), 0.0),
+            "open_positions": intraday_open,
+            "remote_only_positions": intraday_remote_only,
+            "watchlist_count": len(list(intraday_advisory.get("watchlist") or [])),
+            "watchlist_preview": list(intraday_advisory.get("watchlist") or [])[:10],
+            "signal_state_counts": {
+                "entry": sum(1 for item in intraday_symbols if str((item or {}).get("status") or "") == "entry"),
+                "no_signal": sum(1 for item in intraday_symbols if str((item or {}).get("status") or "") == "no_signal"),
+                "remote_only_position": sum(1 for item in intraday_symbols if str((item or {}).get("status") or "") == "remote_only_position"),
+            },
+        },
+    }
+
+
 def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
     base = Path(root or ROOT)
     return {
@@ -306,6 +380,7 @@ def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
         "geometry": _geometry_block(base),
         "memory": _memory_block(base),
         "nightly_research": _nightly_research_block(base),
+        "alpaca": _alpaca_block(base),
     }
 
 
@@ -317,11 +392,14 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     geo = dict(snapshot.get("geometry") or {})
     memory = dict(snapshot.get("memory") or {})
     nightly = dict(snapshot.get("nightly_research") or {})
+    alpaca = dict(snapshot.get("alpaca") or {})
     regime = dict(cp.get("regime") or {})
     router = dict(cp.get("router") or {})
     allocator = dict(cp.get("allocator") or {})
     watchdog = dict(cp.get("watchdog") or {})
     health_timeline = dict(health.get("timeline") or {})
+    alpaca_monthly = dict(alpaca.get("monthly") or {})
+    alpaca_intraday = dict(alpaca.get("intraday") or {})
 
     lines = [
         "operator snapshot",
@@ -387,4 +465,20 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         lines.append(
             f" - history: state={item.get('state')} active={item.get('active_process_count')} launched={item.get('launched')} proposed={item.get('proposed')}"
         )
+    lines.extend(
+        [
+            "",
+            "[alpaca_monthly]",
+            f"exists={int(bool(alpaca_monthly.get('exists')))} age_sec={alpaca_monthly.get('age_sec')} cycle_mode={alpaca_monthly.get('current_cycle_mode') or '-'} cycle_month={alpaca_monthly.get('current_cycle_month') or '-'}",
+            f"selected={alpaca_monthly.get('current_cycle_selected')} tickers={alpaca_monthly.get('current_cycle_tickers') or '-'} advisory_status={alpaca_monthly.get('advisory_status') or '-'}",
+            f"capital={alpaca_monthly.get('effective_capital')} per_position={alpaca_monthly.get('per_position_notional')} earnings_blocked={','.join(alpaca_monthly.get('earnings_blocked') or []) or '-'}",
+            "",
+            "[alpaca_intraday]",
+            f"exists={int(bool(alpaca_intraday.get('exists')))} age_sec={alpaca_intraday.get('age_sec')} mode={alpaca_intraday.get('mode') or '-'} entries_blocked={int(bool(alpaca_intraday.get('entries_blocked')))}",
+            f"equity={alpaca_intraday.get('equity')} cash={alpaca_intraday.get('cash')} today_pnl_usd={alpaca_intraday.get('today_pnl_usd')}",
+            f"open_positions={','.join(alpaca_intraday.get('open_positions') or []) or '-'} remote_only={','.join(alpaca_intraday.get('remote_only_positions') or []) or '-'}",
+            f"watchlist_count={alpaca_intraday.get('watchlist_count')} watchlist_preview={','.join(alpaca_intraday.get('watchlist_preview') or []) or '-'}",
+            f"signal_state_counts={json.dumps(alpaca_intraday.get('signal_state_counts') or {}, ensure_ascii=True)}",
+        ]
+    )
     return "\n".join(lines)

@@ -104,12 +104,20 @@ def _task_active(task: dict[str, Any], active_lines: list[str]) -> bool:
     return any(spec_name in line for line in active_lines)
 
 
-def _launch_task(spec_path: Path, log_dir: Path) -> int:
+def _launch_task(spec_path: Path, log_dir: Path, *, nice_level: int = 10) -> int:
     log_dir.mkdir(parents=True, exist_ok=True)
     stamp = _utc_now().strftime("%Y%m%d_%H%M%S")
     log_path = log_dir / f"{spec_path.stem}_{stamp}.log"
     log_file = log_path.open("a", encoding="utf-8")
-    cmd = [_repo_python(), "scripts/run_strategy_autoresearch.py", "--spec", str(spec_path)]
+    cmd = [
+        "nice",
+        "-n",
+        str(max(0, int(nice_level))),
+        _repo_python(),
+        "scripts/run_strategy_autoresearch.py",
+        "--spec",
+        str(spec_path),
+    ]
     proc = subprocess.Popen(
         cmd,
         cwd=str(ROOT),
@@ -142,6 +150,7 @@ def main() -> int:
     default_min_interval = float(config.get("default_min_interval_hours") or 24)
     max_active = int(config.get("max_active_processes") or 1)
     max_launches = int(config.get("max_launches_per_run") or 1)
+    nice_level = int(config.get("nice_level") or 10)
     tasks = list(config.get("tasks") or [])
 
     prev_status = _load_json(status_path, {})
@@ -252,7 +261,7 @@ def main() -> int:
                 task_status["last_checked_at"] = now.isoformat()
                 run_status["launched"].append({"name": name, "spec": spec_rel, "dry_run": True})
             else:
-                pid = _launch_task(spec_path, log_dir)
+                pid = _launch_task(spec_path, log_dir, nice_level=nice_level)
                 task_status["state"] = "launched"
                 task_status["pid"] = pid
                 task_status["last_launched_at"] = now.isoformat()

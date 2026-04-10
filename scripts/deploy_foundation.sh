@@ -82,6 +82,9 @@ FILES=(
   "configs/portfolio_allocator_policy.json"
   "configs/research_nightly_queue.json"
   "configs/strategy_profile_registry.json"
+  "configs/autoresearch/bear_chop_plus_range_probe_v1.json"
+  "configs/autoresearch/range_scalp_v1_annual_focus_v2.json"
+  "configs/autoresearch/ivb1_live_canary_annual_focus_v1.json"
 )
 
 for f in "${FILES[@]}"; do

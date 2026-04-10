@@ -105,6 +105,7 @@ CURRENT=$(
         | grep -v "scripts/build_operator_snapshot.py --quiet >> logs/operator_snapshot.log" \
         | grep -v "scripts/build_strategy_health_timeline.py --quiet >> logs/strategy_health_timeline.log" \
         | grep -v "scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> /root/by-bot/logs/alpaca_intraday_dynamic_v1.log" \
+        | grep -v "scripts/bot_health_watchdog.sh" \
         | grep -v "^# 1\\. Dynamic allowlist" \
         | grep -v "^# 2\\. DeepSeek weekly cron" \
         | grep -v "^# 3\\. Equity curve autopilot" \
@@ -116,16 +117,19 @@ CURRENT=$(
 NEW_CRONS=$(cat << CRONEOF
 # ── Bybit Bot Autonomous Operations ── $CRON_TAG
 #
+# 0. Bot health watchdog — every 2 min: heartbeat check + auto-restart + router recovery
+*/2 * * * * WATCHDOG_AUTO_RESTART=1 BOT_DIR=$BOT_DIR /bin/bash -lc 'cd $BOT_DIR && bash scripts/bot_health_watchdog.sh >> runtime/watchdog.log 2>&1' $CRON_TAG
+#
 # 1. Regime orchestrator — hourly regime snapshot / live overlay
 0 * * * * cd $BOT_DIR && $PYTHON scripts/build_regime_state.py >> logs/regime_orchestrator.log 2>&1 $CRON_TAG
 #
-# 2. Symbol router — rebuild per-strategy symbol baskets every 6 hours
-3 */6 * * * cd $BOT_DIR && $PYTHON scripts/build_symbol_router.py --quiet >> logs/symbol_router.log 2>&1 $CRON_TAG
+# 2. Symbol router — rebuild per-strategy symbol baskets every 4 hours (with 3-retry auto-recovery)
+3 */4 * * * cd $BOT_DIR && $PYTHON scripts/build_symbol_router.py --quiet --scan-retries 3 --scan-retry-delay-sec 30 >> logs/symbol_router.log 2>&1 $CRON_TAG
 #
 # 3. Portfolio allocator — hourly sleeve/risk overlay from regime + router + health
 5 * * * * cd $BOT_DIR && $PYTHON scripts/build_portfolio_allocator.py >> logs/portfolio_allocator.log 2>&1 $CRON_TAG
 #
-# 4. Control-plane watchdog — catch stale state and self-heal in dependency order
+# 4. Control-plane watchdog — detect degraded/stale state and self-heal every 15 min
 */15 * * * * cd $BOT_DIR && $PYTHON scripts/control_plane_watchdog.py --repair --quiet >> logs/control_plane_watchdog.log 2>&1 $CRON_TAG
 #
 # 5. Geometry state builder — deterministic levels / channels / compression for active symbols
@@ -134,17 +138,19 @@ NEW_CRONS=$(cat << CRONEOF
 # 6. Operator snapshot builder — compact truth pack for AI/operator context
 14 * * * * cd $BOT_DIR && $PYTHON scripts/build_operator_snapshot.py --quiet >> logs/operator_snapshot.log 2>&1 $CRON_TAG
 #
-# 7. Strategy health timeline — historical health context for replay/operator
+# 7. Slow bounded research queue — one low-priority research process at a time
+17 * * * * cd $BOT_DIR && $PYTHON scripts/run_nightly_research_queue.py --quiet >> logs/research_nightly.log 2>&1 $CRON_TAG
+#
+# 8. Strategy health timeline — historical health context for replay/operator
 5 23 * * 0 cd $BOT_DIR && $PYTHON scripts/build_strategy_health_timeline.py --quiet >> logs/strategy_health_timeline.log 2>&1 $CRON_TAG
 #
-# 8. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
+# 9. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
 30 22 * * 0 cd $BOT_DIR && $PYTHON scripts/deepseek_weekly_cron.py --quiet >> logs/deepseek_weekly.log 2>&1 $CRON_TAG
 #
-# 9. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
+# 10. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
 0 23 * * 0 cd $BOT_DIR && $PYTHON scripts/equity_curve_autopilot.py >> logs/equity_autopilot.log 2>&1 $CRON_TAG
 #
-# 10. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
-# Safe default: dry-run only. Promote to --live only after paper validation.
+# 11. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
 */5 14-21 * * 1-5 /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> logs/alpaca_intraday_dynamic_v1.log 2>&1' $CRON_TAG
 #
 CRONEOF
