@@ -48,6 +48,7 @@ echo "→ [1/5] Uploading files..."
 
 FILES=(
   "smart_pump_reversal_bot.py"
+  "bot/allowlist_watcher.py"
   "bot/chart_geometry.py"
   "bot/diagnostics.py"
   "bot/deepseek_overlay.py"
@@ -71,6 +72,7 @@ FILES=(
   "scripts/build_geometry_state.py"
   "scripts/build_operator_snapshot.py"
   "scripts/build_router_symbol_memory.py"
+  "scripts/auto_apply_research_winner.py"
   "scripts/refresh_router_backtest_gate.py"
   "scripts/run_nightly_research_queue.py"
   "scripts/router_quality_audit.py"

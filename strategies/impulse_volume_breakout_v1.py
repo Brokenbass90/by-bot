@@ -127,7 +127,13 @@ class ImpulseVolumeBreakoutV1Strategy:
 
     def __init__(self, cfg: Optional[ImpulseVolumeBreakoutV1Config] = None):
         self.cfg = cfg or ImpulseVolumeBreakoutV1Config()
+        self._load_runtime_config()
+        self._cooldown = 0
+        self._last_entry_ts: Optional[int] = None
+        self._armed: Optional[dict] = None
+        self.last_no_signal_reason = ""
 
+    def _load_runtime_config(self) -> None:
         self.cfg.entry_tf = os.getenv("IVB1_ENTRY_TF", self.cfg.entry_tf)
         self.cfg.regime_tf = os.getenv("IVB1_REGIME_TF", self.cfg.regime_tf)
         self.cfg.atr_period = _env_int("IVB1_ATR_PERIOD", self.cfg.atr_period)
@@ -162,14 +168,9 @@ class ImpulseVolumeBreakoutV1Strategy:
 
         self._allow = _env_csv_set("IVB1_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set("IVB1_SYMBOL_DENYLIST")
-        self._cooldown = 0
-        self._last_entry_ts: Optional[int] = None
-        self._armed: Optional[dict] = None
-        self.last_no_signal_reason = ""
 
-    def _refresh_runtime_allowlists(self) -> None:
-        self._allow = _env_csv_set("IVB1_SYMBOL_ALLOWLIST")
-        self._deny = _env_csv_set("IVB1_SYMBOL_DENYLIST")
+    def _refresh_runtime_config(self) -> None:
+        self._load_runtime_config()
 
     def _regime_ok(self, store) -> bool:
         if str(self.cfg.regime_mode).strip().lower() != "ema":
@@ -244,12 +245,15 @@ class ImpulseVolumeBreakoutV1Strategy:
 
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (ts_ms, o, h, l, c, v)
-        self._refresh_runtime_allowlists()
+        self.last_no_signal_reason = ""
+        self._refresh_runtime_config()
 
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
+            self.last_no_signal_reason = "symbol_not_allowed"
             return None
         if sym in self._deny:
+            self.last_no_signal_reason = "symbol_denied"
             return None
 
         rows_5m = store.fetch_klines(store.symbol, self.cfg.entry_tf, max(160, self.cfg.breakout_lookback_bars + self.cfg.impulse_lookback_bars + self.cfg.vol_period + self.cfg.atr_period + 20)) or []
@@ -260,6 +264,7 @@ class ImpulseVolumeBreakoutV1Strategy:
 
         bar_ts = int(float(rows_5m[-1][0]))
         if self._last_entry_ts is not None and bar_ts == self._last_entry_ts:
+            self.last_no_signal_reason = "same_entry_bar"
             return None
         self._last_entry_ts = bar_ts
 

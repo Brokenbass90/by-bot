@@ -106,13 +106,17 @@ from bot.symbol_state import (
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Load .env before any module-level os.getenv(...) settings below are evaluated.
+ROOT_DIR = Path(__file__).resolve().parent
 load_dotenv()
+AUTO_APPLY_PARAMS_PATH = ROOT_DIR / "configs" / "auto_apply_params.env"
+if AUTO_APPLY_PARAMS_PATH.exists():
+    load_dotenv(AUTO_APPLY_PARAMS_PATH, override=True)
 
 REGIME_OVERLAY_ENABLE = _env_bool("REGIME_OVERLAY_ENABLE", True)
 REGIME_OVERLAY_PATH = Path(
     os.getenv(
         "REGIME_OVERLAY_PATH",
-        str(Path(__file__).resolve().parent / "configs" / "regime_orchestrator_latest.env"),
+        str(ROOT_DIR / "configs" / "regime_orchestrator_latest.env"),
     )
 ).expanduser()
 REGIME_OVERLAY_RELOAD_SEC = max(30, int(os.getenv("REGIME_OVERLAY_RELOAD_SEC", "300") or 300))
@@ -134,13 +138,13 @@ ROUTER_HEALTH_ENABLE = _env_bool("ROUTER_HEALTH_ENABLE", False)
 ROUTER_OVERLAY_PATH = Path(
     os.getenv(
         "ALLOWLIST_WATCHER_FILE",
-        str(Path(__file__).resolve().parent / "configs" / "dynamic_allowlist_latest.env"),
+        str(ROOT_DIR / "configs" / "dynamic_allowlist_latest.env"),
     )
 ).expanduser()
 ROUTER_STATE_PATH = Path(
     os.getenv(
         "ROUTER_STATE_PATH",
-        str(Path(__file__).resolve().parent / "runtime" / "router" / "symbol_router_state.json"),
+        str(ROOT_DIR / "runtime" / "router" / "symbol_router_state.json"),
     )
 ).expanduser()
 ROUTER_OVERLAY_MAX_AGE_SEC = max(
@@ -157,13 +161,13 @@ PORTFOLIO_ALLOCATOR_ENABLE = _env_bool("PORTFOLIO_ALLOCATOR_ENABLE", False)
 PORTFOLIO_ALLOCATOR_PATH = Path(
     os.getenv(
         "PORTFOLIO_ALLOCATOR_PATH",
-        str(Path(__file__).resolve().parent / "configs" / "portfolio_allocator_latest.env"),
+        str(ROOT_DIR / "configs" / "portfolio_allocator_latest.env"),
     )
 ).expanduser()
 PORTFOLIO_ALLOCATOR_STATE_PATH = Path(
     os.getenv(
         "PORTFOLIO_ALLOCATOR_STATE_PATH",
-        str(Path(__file__).resolve().parent / "runtime" / "control_plane" / "portfolio_allocator_state.json"),
+        str(ROOT_DIR / "runtime" / "control_plane" / "portfolio_allocator_state.json"),
     )
 ).expanduser()
 PORTFOLIO_ALLOCATOR_RELOAD_SEC = max(
@@ -172,7 +176,7 @@ PORTFOLIO_ALLOCATOR_RELOAD_SEC = max(
 STARTUP_NOTIFY_STATE_PATH = Path(
     os.getenv(
         "STARTUP_NOTIFY_STATE_PATH",
-        str(Path(__file__).resolve().parent / "runtime" / "startup_notify_state.json"),
+        str(ROOT_DIR / "runtime" / "startup_notify_state.json"),
     )
 )
 STARTUP_NOTIFY_DEDUPE_SEC = max(30, int(os.getenv("STARTUP_NOTIFY_DEDUPE_SEC", "180") or 180))

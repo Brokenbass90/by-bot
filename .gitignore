@@ -42,3 +42,6 @@ configs/dynamic_allowlist_latest.env
 configs/regime_orchestrator_latest.env
 configs/health_gate_alerts.json
 configs/intraday_state.json
+configs/auto_apply_params.env
+runtime/auto_apply_log.jsonl
+runtime/auto_apply_current_params.json

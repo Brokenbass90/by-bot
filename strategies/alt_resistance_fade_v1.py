@@ -116,7 +116,15 @@ class AltResistanceFadeV1Strategy:
 
     def __init__(self, cfg: Optional[AltResistanceFadeV1Config] = None):
         self.cfg = cfg or AltResistanceFadeV1Config()
+        self._load_runtime_config()
+        self._cooldown = 0
+        self._last_tf_ts: Optional[int] = None
+        self._last_regime_tf_ts: Optional[int] = None
+        self._last_regime_ok: Optional[bool] = None
+        self._last_regime_reason: str = ""
+        self.last_no_signal_reason = ""
 
+    def _load_runtime_config(self) -> None:
         self.cfg.regime_tf = os.getenv("ARF1_REGIME_TF", self.cfg.regime_tf)
         self.cfg.regime_lookback = _env_int("ARF1_REGIME_LOOKBACK", self.cfg.regime_lookback)
         self.cfg.regime_ema_fast = _env_int("ARF1_REGIME_EMA_FAST", self.cfg.regime_ema_fast)
@@ -151,16 +159,9 @@ class AltResistanceFadeV1Strategy:
 
         self._allow = _env_csv_set("ARF1_SYMBOL_ALLOWLIST", "BCHUSDT")
         self._deny = _env_csv_set("ARF1_SYMBOL_DENYLIST")
-        self._cooldown = 0
-        self._last_tf_ts: Optional[int] = None
-        self._last_regime_tf_ts: Optional[int] = None
-        self._last_regime_ok: Optional[bool] = None
-        self._last_regime_reason: str = ""
-        self.last_no_signal_reason = ""
 
-    def _refresh_runtime_allowlists(self) -> None:
-        self._allow = _env_csv_set("ARF1_SYMBOL_ALLOWLIST", "BCHUSDT")
-        self._deny = _env_csv_set("ARF1_SYMBOL_DENYLIST")
+    def _refresh_runtime_config(self) -> None:
+        self._load_runtime_config()
 
     def _regime_ok(self, store) -> bool:
         rows = store.fetch_klines(store.symbol, self.cfg.regime_tf, max(self.cfg.regime_lookback, self.cfg.regime_ema_slow + 8)) or []
@@ -222,7 +223,7 @@ class AltResistanceFadeV1Strategy:
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (o, h, l, v)
         self.last_no_signal_reason = ""
-        self._refresh_runtime_allowlists()
+        self._refresh_runtime_config()
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
             self.last_no_signal_reason = "symbol_not_allowed"

@@ -170,7 +170,14 @@ class ElderTripleScreenV2Strategy:
 
     def __init__(self, cfg: Optional[ElderTripleScreenV2Config] = None):
         self.cfg = cfg or ElderTripleScreenV2Config()
+        self._load_runtime_config()
+        self._cooldown = 0
+        self._last_entry_ts: Optional[int] = None
+        self._signals_today = 0
+        self._last_day: Optional[int] = None
+        self.last_no_signal_reason = ""
 
+    def _load_runtime_config(self) -> None:
         self.cfg.trend_tf = os.getenv("ETS2_TREND_TF", self.cfg.trend_tf)
         self.cfg.trend_ema = _env_int("ETS2_TREND_EMA", self.cfg.trend_ema)
         self.cfg.trend_slope_bars = _env_int("ETS2_TREND_SLOPE_BARS", self.cfg.trend_slope_bars)
@@ -200,15 +207,9 @@ class ElderTripleScreenV2Strategy:
 
         self._allow = _env_csv_set("ETS2_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set("ETS2_SYMBOL_DENYLIST")
-        self._cooldown = 0
-        self._last_entry_ts: Optional[int] = None
-        self._signals_today = 0
-        self._last_day: Optional[int] = None
-        self.last_no_signal_reason = ""
 
-    def _refresh_runtime_allowlists(self) -> None:
-        self._allow = _env_csv_set("ETS2_SYMBOL_ALLOWLIST")
-        self._deny = _env_csv_set("ETS2_SYMBOL_DENYLIST")
+    def _refresh_runtime_config(self) -> None:
+        self._load_runtime_config()
 
     def _screen1_trend(self, store) -> Optional[str]:
         """Screen 1: Trend determination via EMA slope on trend TF.
@@ -333,15 +334,19 @@ class ElderTripleScreenV2Strategy:
 
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (o, v)
-        self._refresh_runtime_allowlists()
+        self.last_no_signal_reason = ""
+        self._refresh_runtime_config()
 
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
+            self.last_no_signal_reason = "symbol_not_allowed"
             return None
         if sym in self._deny:
+            self.last_no_signal_reason = "symbol_denied"
             return None
         if self._cooldown > 0:
             self._cooldown -= 1
+            self.last_no_signal_reason = "cooldown"
             return None
 
         # Check daily signal limit
