@@ -86,7 +86,7 @@ def _runtime_diag_snapshot() -> str:
         "flat_ns_history", "flat_ns_same_bar", "flat_ns_range",
         "flat_ns_touch", "flat_ns_reject", "flat_ns_body",
         "flat_ns_dist", "flat_ns_rsi", "flat_ns_ema",
-        "flat_ns_risk", "flat_ns_other",
+        "flat_ns_risk", "flat_ns_blank", "flat_ns_unknown", "flat_ns_other",
         "breakdown_sched", "breakdown_try", "breakdown_entry",
         "breakdown_skip_no_engine", "breakdown_skip_trade_off",
         "breakdown_skip_no_client", "breakdown_skip_open_trade",
@@ -198,7 +198,7 @@ def _flat_no_signal_diag_key(reason: str) -> str:
     """Map flat sleeve no-signal reasons to grouped diagnostic keys."""
     r = str(reason or "").strip().lower()
     if not r:
-        return "flat_ns_other"
+        return "flat_ns_blank"
     if "symbol_" in r:
         return "flat_ns_symbol"
     if "cooldown" in r:
@@ -225,7 +225,7 @@ def _flat_no_signal_diag_key(reason: str) -> str:
         return "flat_ns_ema"
     if "sl_below_entry" in r or "tp_above_entry" in r or "signal_invalid_post" in r:
         return "flat_ns_risk"
-    return "flat_ns_other"
+    return "flat_ns_unknown"
 
 
 def _elder_no_signal_diag_key(reason: str) -> str:
