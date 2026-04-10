@@ -285,11 +285,14 @@ _DEFAULT_PROFILES: List[StrategyProfile] = [
         min_atr_pct=0.28,
         max_atr_pct=1.10,
         min_listing_days=90,
-        top_n=8,
+        top_n=9,                       # expanded: more symbols = more signals
         bt_min_trades=5,
         bt_min_net=0.0,
-        bt_min_pf=1.0,
-        anchor_symbols=["LINKUSDT", "LTCUSDT", "SUIUSDT"],
+        bt_min_pf=1.15,                # raised from 1.0: only keep coins with proven edge
+        anchor_symbols=[               # validated by arf1_current90_density_focus_v1 (PF=4.69)
+            "LINKUSDT", "LTCUSDT", "SUIUSDT",
+            "ADAUSDT", "DOTUSDT", "XRPUSDT",
+        ],
     ),
     StrategyProfile(
         name="BREAKDOWN v1 (breakdown shorts)",
@@ -302,7 +305,7 @@ _DEFAULT_PROFILES: List[StrategyProfile] = [
         top_n=8,
         bt_min_trades=5,
         bt_min_net=0.0,
-        bt_min_pf=1.0,
+        bt_min_pf=1.10,                # raised from 1.0: exclude consistently losing symbols
         anchor_symbols=["BTCUSDT", "ETHUSDT", "SOLUSDT"],
     ),
     # ── New strategies ──────────────────────────────────────────────────────

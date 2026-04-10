@@ -153,6 +153,9 @@ NEW_CRONS=$(cat << CRONEOF
 # 11. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
 */5 14-21 * * 1-5 /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> logs/alpaca_intraday_dynamic_v1.log 2>&1' $CRON_TAG
 #
+# 12. Auto-apply research winners — daily at 06:00 UTC, after nightly research completes
+0 6 * * * cd $BOT_DIR && $PYTHON scripts/auto_apply_research_winner.py >> logs/auto_apply.log 2>&1 $CRON_TAG
+#
 CRONEOF
 )
 
