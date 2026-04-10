@@ -487,7 +487,7 @@ def main() -> int:
     allow_stale_picks = _env_bool("ALPACA_ALLOW_STALE_PICKS", False)
     max_pick_age_days = max(1, _env_int("ALPACA_MAX_PICK_AGE_DAYS", 45))
     refresh_grace_hours = max(1, _env_int("ALPACA_REFRESH_GRACE_HOURS", 48))
-    refresh_utc_raw = _env("ALPACA_REFRESH_UTC")
+    refresh_utc_raw = _env("ALPACA_REFRESH_UTC") or _env("EQ_LATEST_REFRESH_UTC")
     refresh_utc = _parse_iso_utc(refresh_utc_raw)
     refresh_age_hours: float | None = None
     refreshed_recently = False
