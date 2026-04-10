@@ -1,5 +1,81 @@
 # Bybit bot (v28) - worklog / reminders
 
+## 2026-04-10 - live flat universe repair + Alpaca monthly/intraday separation
+
+### What was closed
+
+- Verified that the live server is no longer in the old “allocator risk zero / orchestrator frozen” state:
+  - `allocator_status=ok`
+  - `global_risk=1.0`
+  - `router_status=ok`
+  - `router_backtest_gate=on`
+  - `symbol_memory_loaded=1`
+  - current live regime is fresh and updates on schedule
+- Found the real local failure mode in the first `flat_live_universe_repair` annual run:
+  - the weak branch was not the fade logic itself
+  - the bad branch was the expanded universe path that included `BNBUSDT`
+  - local cache coverage for that symbol path was incomplete, which poisoned the run quality
+- Added a clean rerun spec without the bad branch:
+  - [flat_live_universe_repair_v2.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_live_universe_repair_v2.json)
+  - validated focus universe is now:
+    - `LINKUSDT`
+    - `LTCUSDT`
+    - `SUIUSDT`
+    - `ADAUSDT`
+    - `DOTUSDT`
+- Verified first passing rows from the repaired annual `flat` run:
+  - early passing cluster uses:
+    - `ARF1_MIN_RSI=52`
+    - `ARF1_REJECT_BELOW_RES_ATR=0.08..0.10`
+    - narrow live-like alt universe
+- Synced a looser `ARF1` live canary to the server:
+  - `ARF1_MIN_RSI=52`
+  - `ARF1_REJECT_BELOW_RES_ATR=0.08`
+  - `ARF1_SIGNAL_LOOKBACK=60`
+- Reduced fake live `flat` noise:
+  - live scheduler now only queues `flat` on its own allowlist instead of asking it to reject the whole symbol universe
+- Fixed a real Alpaca coordination bug:
+  - [equities_alpaca_intraday_bridge.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/equities_alpaca_intraday_bridge.py) now protects monthly-managed paper positions from intraday cleanup
+- Hardened monthly Alpaca stale-close handling:
+  - [equities_alpaca_paper_bridge.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/equities_alpaca_paper_bridge.py) no longer crashes the whole monthly pass when Alpaca returns `held_for_orders`
+- Re-ran server monthly Alpaca autopilot after the fixes:
+  - monthly current cycle now resolves to `AMD / AMZN / BAC`
+  - `BAC` is blocked by earnings guard
+  - runtime reaches `status=send_orders`
+  - `AMD` and `AMZN` now move to `market_buy -> pending_new`
+
+### Important truth
+
+- The live blocker is no longer “allocator at zero” or “orchestrator dead”.
+- The current crypto blocker is much narrower:
+  - `flat` is now mostly gated by live timing / decision cadence, not by symbol mismatch
+  - `ivb1` still dies mainly inside its own breakout / impulse pattern
+- `range_scalp` is now the strongest additive new sleeve candidate:
+  - [bear_chop_plus_range_probe_v1](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/bear_chop_plus_range_probe_v1.json) is still producing strong annual rows around:
+    - `+24.8% .. +25.4%`
+    - PF around `1.90`
+    - DD around `3.5% .. 4.1%`
+- `Elder` is moving the opposite direction:
+  - after the latest wave/lookback repair pass, current annual rows are still either:
+    - zero trades
+    - or severe overtrading / collapse
+  - treat it as a rewrite candidate, not a live promotion candidate
+- Alpaca is now in a healthier split state:
+  - intraday paper genuinely trades
+  - monthly paper now reaches fresh-cycle `send_orders`
+  - the remaining gap is confirmation of clean fills and steady multi-cycle behaviour, not stale-cycle rescue
+
+### Next
+
+- Let `flat_live_universe_repair_v2` continue so the validated `flat` cluster is not based on just one early pass.
+- Let `bear_chop_plus_range_probe_v1` continue; it is currently the best promotion candidate for the next crypto package.
+- Keep `elder_wave_lookback_v1` running only until the verdict is fully obvious, then stop spending more slot time on it.
+- Next live-quality check:
+  - re-read server counters after the looser `ARF1` canary has had time to accumulate fresh pulses
+  - confirm whether `flat_entry` finally wakes up or whether the next bottleneck is pure `same_bar` timing
+- Next platform-quality step:
+  - sync selected local research outputs into server `runtime/research_import` so server-side `auto_apply` can consume trusted laptop research instead of waiting only on slow server research.
+
 ## 2026-04-09 - flat live diagnostics + Alpaca current-cycle rescue
 
 ### What was closed

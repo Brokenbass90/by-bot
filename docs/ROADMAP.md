@@ -518,6 +518,35 @@ New foundation rules:
     - current evidence says `breakdown` is overfiring in noisy down-chop while `flat` only partly offsets it
     - sloped research must no longer be judged only on a short-only annual run; it needs a bidirectional probe
   - new active frontiers:
+
+## 2026-04-10 Addendum
+
+Current truth changed in a few important ways:
+
+- `orchestrator stale for 7 days` is no longer an active live diagnosis:
+  - current server regime state is fresh
+  - allocator is currently `ok`
+  - router is currently `ok`
+- the next crypto bottleneck is now mostly sleeve-level:
+  - `flat` entry-rate and live timing
+  - `ivb1` breakout / impulse quality
+- `range_scalp` moved up materially in priority:
+  - it is no longer just a standalone curiosity
+  - current `bear_chop + range` portfolio probe is stronger than the older `bear_chop` core alone
+- `Elder` moved down materially in priority:
+  - the wave/lookback repair did not turn it into a healthy sleeve
+  - treat `elder_triple_screen_v2` as a rewrite candidate unless a later bounded probe proves otherwise
+- Alpaca monthly also moved up in maturity:
+  - fresh-cycle builder is now working in runtime
+  - monthly autopilot reaches `send_orders`
+  - remaining work is execution stability across cycles, not stale-pick rescue
+
+Immediate next practical priorities:
+1. Finish validating `flat_live_universe_repair_v2`.
+2. Finish validating `bear_chop_plus_range_probe_v1`.
+3. Re-read live `flat/ivb1` counters after the looser `ARF1` canary has had time to accumulate.
+4. Build a safe sync/import path so server `auto_apply` can consume trusted local research.
+5. Only then open the next new sleeve family (`AVEF1` or `inplay_breakout_v2`).
     - [bear_chop_core_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/bear_chop_core_repair_v1.json)
     - [asc1_bidirectional_annual_probe_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/asc1_bidirectional_annual_probe_v1.json)
     - [flat_frequency_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_frequency_repair_v1.json)

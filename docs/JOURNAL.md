@@ -5,6 +5,59 @@
 
 ---
 
+## 2026-04-10 | Codex (session 35 - flat universe repair + Alpaca contour separation)
+
+**Done:**
+
+- Re-validated live server truth:
+  - allocator is `ok`
+  - router is `ok`
+  - backtest gate is on
+  - symbol memory is loaded
+  - current regime is fresh, not a 7-day stale orchestrator corpse
+- Found the real failure mode inside the first annual `flat` repair:
+  - the poison branch was the expanded `BNBUSDT` path
+  - not the fade thesis itself
+  - not the allocator
+- Added [flat_live_universe_repair_v2.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_live_universe_repair_v2.json) without the bad branch and launched it.
+- Verified immediate passing rows on the repaired `flat` universe using the narrow alt basket and looser `ARF1` thresholds.
+- Synced a looser `ARF1` live canary to the server:
+  - `MIN_RSI=52`
+  - `REJECT_BELOW_RES_ATR=0.08`
+  - `SIGNAL_LOOKBACK=60`
+- Patched Alpaca bridge coordination:
+  - intraday cleanup now skips monthly-managed symbols
+  - monthly stale-close no longer crashes on `held_for_orders`
+- Ran server monthly Alpaca autopilot after the fixes and confirmed:
+  - fresh current cycle exists
+  - picks are `AMD / AMZN / BAC`
+  - `BAC` is blocked by earnings
+  - `AMD` and `AMZN` advance to `pending_new` market buys
+
+**Key findings:**
+
+- Current crypto paralysis is not primarily a foundation failure anymore.
+- `flat` is no longer dying on `symbol` mismatch; after the latest server fix it is mostly a timing problem (`same_bar` / decision cadence).
+- `range_scalp` is now the best additive candidate to the strong `bear_chop` package:
+  - recent portfolio probe rows are around `+24.8% .. +25.4%`
+  - PF around `1.90`
+  - DD around `3.5% .. 4.1%`
+- `Elder` keeps confirming the negative thesis:
+  - after wave/lookback repair it still alternates between no trades and catastrophic overtrading
+  - this is rewrite territory, not promotion territory
+- Alpaca state is materially better:
+  - intraday paper is real
+  - monthly now reaches `send_orders` on a fresh cycle
+  - remaining uncertainty is fill stability and multi-cycle behaviour, not stale-pick paralysis
+
+**Next:**
+
+- Continue `flat_live_universe_repair_v2`.
+- Continue `bear_chop_plus_range_probe_v1`.
+- Let `elder_wave_lookback_v1` finish the current bounded run, then likely retire it from active priority.
+- Re-check server live counters after the `ARF1` canary has had time to breathe.
+- Add a sync path from local `backtest_runs` into server `runtime/research_import` so server-side `auto_apply` can consume laptop research safely.
+
 ## 2026-04-09 | Codex (session 34 - allocator health gate repair + Alpaca paper arming)
 
 **Done:**
