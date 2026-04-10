@@ -357,6 +357,9 @@ class AlpacaClient:
     def list_positions(self) -> list[dict[str, Any]]:
         return list(self._request("GET", "/v2/positions"))
 
+    def list_orders(self, *, status: str = "open", limit: int = 100) -> list[dict[str, Any]]:
+        return list(self._request("GET", f"/v2/orders?status={status}&direction=desc&limit={int(limit)}"))
+
     def submit_market_buy(self, symbol: str, notional: float) -> dict[str, Any]:
         payload = {
             "symbol": symbol,
@@ -369,6 +372,9 @@ class AlpacaClient:
 
     def close_position(self, symbol: str) -> dict[str, Any]:
         return self._request("DELETE", f"/v2/positions/{symbol}")
+
+    def cancel_order(self, order_id: str) -> dict[str, Any]:
+        return self._request("DELETE", f"/v2/orders/{order_id}")
 
 
 def _load_picks(csv_path: Path, month: str | None) -> list[Pick]:
@@ -510,15 +516,27 @@ def main() -> int:
     snapshot_path = ""
     if offline_dry_run:
         account, positions, snapshot_path = _load_offline_snapshot(picks_csv)
+        open_orders: list[dict[str, Any]] = []
         client = None
     else:
         client = AlpacaClient(base_url, key_id, secret_key)
         account = client.get_account()
         positions = client.list_positions()
+        open_orders = client.list_orders(status="open", limit=100)
     buying_power = float(account.get("buying_power") or account.get("cash") or 0.0)
     cash = float(account.get("cash") or 0.0)
     effective_capital = min(buying_power, capital_override_usd) if capital_override_usd > 0 else buying_power
     current_positions = {str(p.get("symbol") or "").strip().upper(): p for p in positions if str(p.get("symbol") or "").strip()}
+    pending_buy_orders: dict[str, list[dict[str, Any]]] = {}
+    for order in open_orders:
+        symbol = str(order.get("symbol") or "").strip().upper()
+        side = str(order.get("side") or "").strip().lower()
+        status = str(order.get("status") or "").strip().lower()
+        if not symbol or side != "buy":
+            continue
+        if status in {"accepted", "new", "pending_new", "partially_filled", "accepted_for_bidding"}:
+            pending_buy_orders.setdefault(symbol, []).append(order)
+    occupied_symbols = set(current_positions.keys()) | set(pending_buy_orders.keys())
     latest_entry_day, pick_age_days = _pick_age_days(picks)
     stale_guard_triggered = (
         pick_age_days is not None
@@ -572,8 +590,9 @@ def main() -> int:
     selected = [] if no_current_cycle else [p for p in picks if p.ticker not in earnings_blocked][:max_positions]
     selected_symbols = {p.ticker for p in selected}
     stale_symbols = sorted(sym for sym in current_positions.keys() if sym not in selected_symbols)
-    hold_symbols = sorted(sym for sym in current_positions.keys() if sym in selected_symbols)
-    new_buy_symbols = [p.ticker for p in selected if p.ticker not in current_positions]
+    stale_order_symbols = sorted(sym for sym in pending_buy_orders.keys() if sym not in selected_symbols)
+    hold_symbols = sorted(sym for sym in occupied_symbols if sym in selected_symbols)
+    new_buy_symbols = [p.ticker for p in selected if p.ticker not in occupied_symbols]
     per_position_notional = (
         max(min_dollar_order, effective_capital * target_alloc_pct / max(1, len(selected)))
         if selected
@@ -633,7 +652,17 @@ def main() -> int:
             for sym, pos in sorted(current_positions.items())
         ],
         "stale_positions": stale_symbols,
+        "stale_pending_orders": stale_order_symbols,
         "hold_positions": hold_symbols,
+        "pending_buy_orders": [
+            {
+                "ticker": sym,
+                "count": len(orders),
+                "order_ids": [str(o.get("id") or "") for o in orders if str(o.get("id") or "").strip()],
+                "notionals": [str(o.get("notional") or "") for o in orders],
+            }
+            for sym, orders in sorted(pending_buy_orders.items())
+        ],
         "new_buy_symbols": new_buy_symbols,
         "selected": [
             {
@@ -660,6 +689,20 @@ def main() -> int:
                         "status": result.get("status"),
                     }
                 )
+            for symbol in stale_order_symbols:
+                for order in pending_buy_orders.get(symbol, []):
+                    order_id = str(order.get("id") or "").strip()
+                    if not order_id:
+                        continue
+                    result = client.cancel_order(order_id)
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "cancel_pending_buy",
+                            "order_id": order_id,
+                            "status": result.get("status", "canceled"),
+                        }
+                    )
         for pick in selected:
             if pick.ticker in current_positions:
                 report["results"].append(
@@ -667,6 +710,15 @@ def main() -> int:
                         "ticker": pick.ticker,
                         "action": "hold_existing",
                         "status": "skipped_existing_position",
+                    }
+                )
+                continue
+            if pick.ticker in pending_buy_orders:
+                report["results"].append(
+                    {
+                        "ticker": pick.ticker,
+                        "action": "hold_pending_buy",
+                        "status": "skipped_existing_open_order",
                     }
                 )
                 continue
@@ -724,8 +776,12 @@ def main() -> int:
                 lines.append(f"  🟢 BUY {ticker} ${round(per_position_notional,0):.0f} — {status}")
             elif action == "close_position":
                 lines.append(f"  🔴 CLOSE {ticker}")
+            elif action == "cancel_pending_buy":
+                lines.append(f"  🟠 CANCEL pending {ticker}")
             elif action == "hold_existing":
                 lines.append(f"  🟡 HOLD {ticker}")
+            elif action == "hold_pending_buy":
+                lines.append(f"  🟡 HOLD pending {ticker}")
         if not report["results"]:
             lines.append("  — No actions taken —")
         if advisory:
