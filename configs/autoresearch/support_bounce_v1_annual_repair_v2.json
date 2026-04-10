@@ -1,0 +1,73 @@
+{
+  "name": "support_bounce_v1_annual_repair_v2",
+  "description": "Annual repair for alt_support_bounce_v1 after the first core4 experiments showed the sleeve still rarely activates. Push the bull/chop long family toward more realistic crypto pullbacks and less restrictive regime gates.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,SUIUSDT,DOTUSDT,LTCUSDT",
+    "--strategies",
+    "alt_support_bounce_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "ASB1_REGIME_TF": "240",
+    "ASB1_MIN_RSI": "30",
+    "ASB1_TIME_STOP_BARS_5M": "576",
+    "ASB1_COOLDOWN_BARS_5M": "72",
+    "ASB1_TP2_BUFFER_PCT": "0.45",
+    "ASB1_TRAIL_ATR_MULT": "0.0",
+    "ASB1_MAX_CLOSE_VS_EMA_PCT": "1.4",
+    "ASB1_MIN_RANGE_PCT": "4.0"
+  },
+  "grid": {
+    "ASB1_SYMBOL_ALLOWLIST": [
+      "ADAUSDT,LINKUSDT,SUIUSDT,DOTUSDT",
+      "ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,SUIUSDT",
+      "ETHUSDT,SOLUSDT,LINKUSDT,LTCUSDT"
+    ],
+    "ASB1_REGIME_MAX_GAP_PCT": [2.6, 3.2, 4.0],
+    "ASB1_REGIME_MAX_SLOPE_PCT": [1.8, 2.4, 3.0],
+    "ASB1_MAX_RSI": [46, 50, 54],
+    "ASB1_SIGNAL_LOOKBACK": [48, 72, 96],
+    "ASB1_SL_ATR_MULT": [0.85, 1.0]
+  },
+  "constraints": {
+    "min_trades": 25,
+    "min_profit_factor": 1.20,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 4.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.4,
+    "profit_factor": 5.0,
+    "winrate": 5.0,
+    "max_drawdown": 1.8,
+    "trades": 0.10,
+    "trades_cap": 120,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "3x3x3x3x2 = 162 combos",
+  "_goal": "Test whether a looser slope cap and a wider RSI pullback window turn support_bounce into a real annual-grade long sleeve for bull/chop crypto."
+}
