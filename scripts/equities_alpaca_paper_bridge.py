@@ -428,6 +428,11 @@ def _current_cycle_picks_path(picks_csv: Path) -> Path | None:
     return candidate if candidate.exists() else None
 
 
+def _is_held_for_orders_conflict(exc: Exception) -> bool:
+    text = str(exc).lower()
+    return "held_for_orders" in text or "insufficient qty available for order" in text
+
+
 def _parse_date_ymd(text: str) -> date | None:
     s = str(text or "").strip()
     if not s:
@@ -680,15 +685,28 @@ def main() -> int:
     if send_orders:
         if close_stale_positions:
             for symbol in stale_symbols:
-                result = client.close_position(symbol)
-                report["results"].append(
-                    {
-                        "ticker": symbol,
-                        "action": "close_position",
-                        "order_id": result.get("id"),
-                        "status": result.get("status"),
-                    }
-                )
+                try:
+                    result = client.close_position(symbol)
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "close_position",
+                            "order_id": result.get("id"),
+                            "status": result.get("status"),
+                        }
+                    )
+                except RuntimeError as exc:
+                    if _is_held_for_orders_conflict(exc):
+                        report["results"].append(
+                            {
+                                "ticker": symbol,
+                                "action": "close_position",
+                                "status": "deferred_held_for_orders",
+                                "error": str(exc),
+                            }
+                        )
+                        continue
+                    raise
             for symbol in stale_order_symbols:
                 for order in pending_buy_orders.get(symbol, []):
                     order_id = str(order.get("id") or "").strip()

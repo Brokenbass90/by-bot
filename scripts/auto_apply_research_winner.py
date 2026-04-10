@@ -3,12 +3,12 @@
 """
 auto_apply_research_winner.py — Self-optimization module (Phase 3.1)
 
-Scans all autoresearch ranked_results.csv files, finds runs that passed
+Scans autoresearch ranked_results.csv files, finds runs that passed
 all constraints and have a score above the threshold, and automatically
 applies their parameters to the live config override file.
 
 Flow:
-  1. Scan backtest_runs/ for all ranked_results.csv
+  1. Scan one or more research roots for all ranked_results.csv
   2. Find passed=True rows with score >= AUTOAPPLY_MIN_SCORE
   3. Group by strategy family (ARF1, IVB1, BREAKDOWN, etc.)
   4. For each family: if best winner is better than current live params
@@ -30,6 +30,7 @@ Env vars:
   AUTOAPPLY_MIN_PF=1.15         # Min profit factor
   AUTOAPPLY_COOLDOWN_H=20       # Hours between applying same strategy
   AUTOAPPLY_LOOKBACK_DAYS=14    # How far back to search for runs (days)
+  AUTOAPPLY_SCAN_ROOTS=...      # Optional comma-separated roots to scan
   TG_TOKEN                      # Telegram bot token
   TG_CHAT                       # Telegram chat ID
 """
@@ -48,7 +49,6 @@ import urllib.request
 import urllib.parse
 
 ROOT = Path(__file__).resolve().parent.parent
-BACKTEST_RUNS_DIR  = ROOT / "backtest_runs"
 AUTO_APPLY_ENV     = ROOT / "configs" / "auto_apply_params.env"
 LOG_PATH           = ROOT / "runtime" / "auto_apply_log.jsonl"
 CURRENT_PARAMS_LOG = ROOT / "runtime" / "auto_apply_current_params.json"
@@ -84,6 +84,37 @@ COOLDOWN_H       = _env_float("AUTOAPPLY_COOLDOWN_H", 20.0)
 LOOKBACK_DAYS    = _env_int("AUTOAPPLY_LOOKBACK_DAYS", 14)
 TG_TOKEN         = _env("TG_TOKEN")
 TG_CHAT          = _env("TG_CHAT") or _env("TG_CHAT_ID")
+
+
+def _scan_roots() -> List[Path]:
+    raw = _env("AUTOAPPLY_SCAN_ROOTS", "")
+    roots: List[Path] = []
+    if raw:
+        for part in raw.split(","):
+            part = part.strip()
+            if not part:
+                continue
+            p = Path(part)
+            if not p.is_absolute():
+                p = ROOT / part
+            roots.append(p)
+    if not roots:
+        roots = [
+            ROOT / "backtest_runs",
+            ROOT / "runtime" / "research_import",
+        ]
+    seen = set()
+    ordered: List[Path] = []
+    for root in roots:
+        key = str(root.resolve()) if root.exists() else str(root)
+        if key in seen:
+            continue
+        seen.add(key)
+        ordered.append(root)
+    return ordered
+
+
+SCAN_ROOTS = _scan_roots()
 
 # Strategy families: which env keys belong to which family
 STRATEGY_FAMILIES: Dict[str, List[str]] = {
@@ -188,16 +219,17 @@ def find_recent_autoresearch_runs(lookback_days: int) -> List[Path]:
     """Return paths to ranked_results.csv for autoresearch runs within lookback window."""
     cutoff = time.time() - lookback_days * 86400
     results = []
-    if not BACKTEST_RUNS_DIR.exists():
-        return results
-    for d in BACKTEST_RUNS_DIR.iterdir():
-        if not d.is_dir() or not d.name.startswith("autoresearch_"):
+    for root in SCAN_ROOTS:
+        if not root.exists():
             continue
-        ranked = d / "ranked_results.csv"
-        if not ranked.exists():
-            continue
-        if ranked.stat().st_mtime >= cutoff:
-            results.append(ranked)
+        for d in root.iterdir():
+            if not d.is_dir() or not d.name.startswith("autoresearch_"):
+                continue
+            ranked = d / "ranked_results.csv"
+            if not ranked.exists():
+                continue
+            if ranked.stat().st_mtime >= cutoff:
+                results.append(ranked)
     results.sort(key=lambda p: p.stat().st_mtime, reverse=True)
     return results
 
@@ -377,7 +409,9 @@ def main() -> int:
     dry_run  = args.dry_run
     strategy = args.strategy.strip().upper() or None
 
+    roots_str = ", ".join(str(p) for p in SCAN_ROOTS)
     print(f"[auto_apply] Starting — dry_run={dry_run}, lookback={args.lookback_days}d, min_score={args.min_score}")
+    print(f"[auto_apply] Scan roots: {roots_str}")
 
     # Step 1: Find recent autoresearch runs
     runs = find_recent_autoresearch_runs(args.lookback_days)

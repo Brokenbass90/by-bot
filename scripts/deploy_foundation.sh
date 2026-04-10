@@ -73,6 +73,7 @@ FILES=(
   "scripts/build_operator_snapshot.py"
   "scripts/build_router_symbol_memory.py"
   "scripts/auto_apply_research_winner.py"
+  "scripts/equities_alpaca_paper_bridge.py"
   "scripts/refresh_router_backtest_gate.py"
   "scripts/run_nightly_research_queue.py"
   "scripts/router_quality_audit.py"
