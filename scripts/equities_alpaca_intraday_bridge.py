@@ -821,7 +821,7 @@ def run_once(client: AlpacaClient, dry_run: bool,
         open_positions = {}
         remote_only_symbols = []
 
-    occupied_symbols = sorted(set(state.keys()) | set(remote_only_symbols))
+    occupied_symbols = sorted(set(state.keys()) | set(remote_only_symbols) | set(protected_remote_symbols))
     open_count = len(occupied_symbols)
     advisory["open_positions"] = list(occupied_symbols)
     print(f"\n  Open positions: {open_count}/{max_positions} — {occupied_symbols or 'none'}")
@@ -848,6 +848,12 @@ def run_once(client: AlpacaClient, dry_run: bool,
             symbol_status["status"] = "remote_only_position"
             advisory["symbols"].append(symbol_status)
             print(f"    → Remote Alpaca position exists outside intraday state — skip")
+            continue
+
+        if symbol in protected_remote_symbols:
+            symbol_status["status"] = "monthly_managed_position"
+            advisory["symbols"].append(symbol_status)
+            print(f"    → Monthly-managed Alpaca position exists — preserve and skip")
             continue
 
         if entries_blocked:
