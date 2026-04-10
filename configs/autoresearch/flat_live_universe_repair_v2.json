@@ -1,0 +1,64 @@
+{
+  "name": "flat_live_universe_repair_v2",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_resistance_fade_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "1",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "LINKUSDT,LTCUSDT,SUIUSDT,ADAUSDT,DOTUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,ADAUSDT,DOTUSDT,ATOMUSDT"
+    ],
+    "ARF1_SIGNAL_LOOKBACK": [48, 60],
+    "ARF1_MIN_RSI": [52, 54],
+    "ARF1_REJECT_BELOW_RES_ATR": [0.08, 0.10, 0.12],
+    "ARF1_MAX_CLOSE_VS_EMA_PCT": [1.1, 1.3]
+  },
+  "base_env": {
+    "ARF1_SYMBOL_ALLOWLIST": "LINKUSDT,LTCUSDT,SUIUSDT,ADAUSDT,DOTUSDT,ATOMUSDT",
+    "ARF1_SIGNAL_TF": "60",
+    "ARF1_TIME_STOP_BARS_5M": "576"
+  },
+  "constraints": {
+    "min_trades": 18,
+    "min_profit_factor": 1.45,
+    "max_drawdown": 6.0,
+    "min_net_pnl": 8.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 5.0,
+    "winrate": 10.0,
+    "max_drawdown": 2.0,
+    "trades": 0.08,
+    "trades_cap": 80,
+    "negative_months": 2.0,
+    "max_negative_streak": 3.0
+  },
+  "_goal": "Repeat the live-universe annual repair without the broken BNB cache branch and test whether 60-bar resistance memory improves annual quality."
+}
