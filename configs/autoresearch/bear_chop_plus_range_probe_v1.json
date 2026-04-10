@@ -1,0 +1,72 @@
+{
+  "name": "bear_chop_plus_range_probe_v1",
+  "description": "Portfolio probe for whether range_scalp adds useful annual value on top of the strongest bear-chop core cluster (breakdown + ARF1).",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ADAUSDT,ATOMUSDT",
+    "--strategies",
+    "alt_inplay_breakdown_v1,alt_resistance_fade_v1,alt_range_scalp_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "{MAX_POSITIONS}",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "BREAKDOWN_ALLOW_CONTINUATION": "0"
+  },
+  "grid": {
+    "ARF1_MIN_RSI": [58],
+    "ARF1_REJECT_BELOW_RES_ATR": [0.08, 0.10],
+    "ARF1_SYMBOL_ALLOWLIST": [
+      "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT"
+    ],
+    "BREAKDOWN_FLAT_FILTER_MAX_RANGE_ATR": [0.9, 1.3],
+    "BREAKDOWN_FRESH_BREAK_BARS_5M": [12, 18],
+    "BREAKDOWN_MIN_BREAK_ATR": [0.35, 0.45],
+    "BREAKDOWN_SYMBOL_ALLOWLIST": [
+      "BTCUSDT,SOLUSDT,LINKUSDT,LTCUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,LTCUSDT"
+    ],
+    "ARS1_MIN_BAND_WIDTH_PCT": [3.0, 4.0],
+    "ARS1_RSI_LONG_MAX": [38],
+    "ARS1_RSI_SHORT_MIN": [65, 68],
+    "MAX_POSITIONS": [3]
+  },
+  "constraints": {
+    "min_trades": 96,
+    "min_profit_factor": 1.35,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 12.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.2,
+    "profit_factor": 5.5,
+    "winrate": 4.0,
+    "max_drawdown": 2.0,
+    "trades": 0.08,
+    "trades_cap": 180,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "1x2x1x2x2x2x2x2x2x1x2x1 = 128 combos",
+  "_goal": "Validate whether range_scalp genuinely improves the strongest bear-chop portfolio truth instead of only showing standalone annual pockets."
+}
