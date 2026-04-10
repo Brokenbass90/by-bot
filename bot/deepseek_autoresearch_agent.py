@@ -440,6 +440,8 @@ def _ds_chat(system: str, user: str, model: str | None = None) -> str:
     base_url = _env("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
     m = model or _env("DEEPSEEK_MODEL", "deepseek-chat")
     timeout = float(_env("DEEPSEEK_TIMEOUT_SEC", "15") or 15)
+    timeout_retries = max(0, int(_env("DEEPSEEK_TIMEOUT_RETRIES", "2") or 2))
+    retry_backoff_sec = max(0.0, float(_env("DEEPSEEK_RETRY_BACKOFF_SEC", "1.5") or 1.5))
     url = base_url.rstrip("/") + "/chat/completions"
     payload = {
         "model": m,
@@ -462,12 +464,27 @@ def _ds_chat(system: str, user: str, model: str | None = None) -> str:
         finish_reason = ""
 
         while True:
-            resp = requests.post(
-                url,
-                headers=headers,
-                json={**payload, "messages": messages},
-                timeout=timeout,
-            )
+            resp = None
+            last_timeout_exc: Exception | None = None
+            for attempt in range(timeout_retries + 1):
+                try:
+                    resp = requests.post(
+                        url,
+                        headers=headers,
+                        json={**payload, "messages": messages},
+                        timeout=timeout,
+                    )
+                    break
+                except requests.exceptions.Timeout as exc:
+                    last_timeout_exc = exc
+                    if attempt >= timeout_retries:
+                        raise
+                    if retry_backoff_sec > 0:
+                        time.sleep(retry_backoff_sec * float(attempt + 1))
+            if resp is None and last_timeout_exc is not None:
+                raise last_timeout_exc
+            if resp is None:
+                raise RuntimeError("DeepSeek request returned no response object")
             resp.raise_for_status()
             choices = resp.json().get("choices") or []
             if not choices:
