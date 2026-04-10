@@ -1,0 +1,69 @@
+{
+  "name": "flat_live_canary_annual_focus_v1",
+  "description": "Focused annual validation for ARF1 around the current live-canary frequency cluster. Goal: find the safest way to push flat entry rate higher without breaking annual quality.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_resistance_fade_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "ARF1_SIGNAL_TF": "60",
+    "ARF1_SIGNAL_LOOKBACK": "48",
+    "ARF1_SL_ATR_MULT": "0.85",
+    "ARF1_TIME_STOP_BARS_5M": "576"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "LINKUSDT,LTCUSDT,SUIUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT",
+      "ADAUSDT,LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT",
+      "BNBUSDT,LINKUSDT,XRPUSDT"
+    ],
+    "ARF1_MIN_RSI": [52, 54],
+    "ARF1_REJECT_BELOW_RES_ATR": [0.08, 0.10, 0.12],
+    "ARF1_MAX_CLOSE_VS_EMA_PCT": [1.1, 1.2],
+    "ARF1_SIGNAL_LOOKBACK": [36, 48]
+  },
+  "constraints": {
+    "min_trades": 36,
+    "min_profit_factor": 1.25,
+    "max_drawdown": 6.0,
+    "min_net_pnl": 6.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.3,
+    "profit_factor": 6.0,
+    "winrate": 4.5,
+    "max_drawdown": 2.0,
+    "trades": 0.14,
+    "trades_cap": 120,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "4x2x3x2x2 = 96 combos",
+  "_goal": "Promote a more active ARF1 cluster for live by exploring only the annual-safe neighborhood around the current canary params."
+}
