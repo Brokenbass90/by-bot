@@ -77,7 +77,17 @@ def _active_research_lines() -> list[str]:
         )
     except subprocess.CalledProcessError:
         return []
-    return [line.strip() for line in out.splitlines() if line.strip()]
+    lines: list[str] = []
+    for raw in out.splitlines():
+        line = str(raw or "").strip()
+        if not line:
+            continue
+        if "pgrep -fal run_strategy_autoresearch.py" in line:
+            continue
+        if "run_nightly_research_queue.py" in line:
+            continue
+        lines.append(line)
+    return lines
 
 
 def _within_quiet_window(config: dict[str, Any], now: datetime) -> tuple[bool, str]:

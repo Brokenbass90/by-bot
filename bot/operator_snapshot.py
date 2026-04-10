@@ -189,7 +189,10 @@ def _control_plane_block(root: Path) -> Dict[str, Any]:
             "exists": bool(allocator_path.exists()),
             "age_sec": _file_age_sec(allocator_path),
             "status": str(allocator.get("status") or ""),
-            "global_risk_mult": _safe_float(allocator.get("global_risk_mult"), 0.0),
+            "global_risk_mult": _safe_float(
+                allocator.get("allocator_global_risk_mult", allocator.get("global_risk_mult")),
+                0.0,
+            ),
             "hard_block_new_entries": bool(allocator.get("hard_block_new_entries")),
             "degraded_sleeves": degraded_sleeves,
         },
