@@ -287,15 +287,28 @@ class ElderTripleScreenV2Strategy:
             return None
 
         if trend == "bullish":
-            level = max(highs[-(lookback + retest_bars + 1):-retest_bars-1])
+            # Wave pullback is already asking for weakness inside an uptrend.
+            # Entry should therefore come from reclaiming a recent support zone,
+            # not from re-breaking a local resistance shelf from below.
+            level = min(lows[-(lookback + retest_bars + 1):-retest_bars-1])
             recent_touch = min(lows[-(retest_bars + 1):-1]) <= (level + touch_buf)
-            reclaimed = cur_close > level and cur_close > cur_open and cur_low >= (level - touch_buf)
+            reclaimed = (
+                cur_close > (level + touch_buf)
+                and cur_close > cur_open
+                and cur_low >= (level - touch_buf)
+            )
             if recent_touch and reclaimed:
                 return "long"
         else:
-            level = min(lows[-(lookback + retest_bars + 1):-retest_bars-1])
+            # Mirror logic for bearish pullbacks: rally back into resistance,
+            # then fail and reclaim below that resistance zone.
+            level = max(highs[-(lookback + retest_bars + 1):-retest_bars-1])
             recent_touch = max(highs[-(retest_bars + 1):-1]) >= (level - touch_buf)
-            reclaimed = cur_close < level and cur_close < cur_open and cur_high <= (level + touch_buf)
+            reclaimed = (
+                cur_close < (level - touch_buf)
+                and cur_close < cur_open
+                and cur_high <= (level + touch_buf)
+            )
             if recent_touch and reclaimed:
                 return "short"
 
