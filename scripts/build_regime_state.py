@@ -87,7 +87,8 @@ log = logging.getLogger("regime_orchestrator")
 # Config from env
 # ---------------------------------------------------------------------------
 MIN_HOLD_CYCLES  = int(os.getenv("ORCH_MIN_HOLD_CYCLES", "3"))
-ER_TREND_THRESH  = float(os.getenv("ORCH_ER_TREND_THRESH", "0.35"))
+ER_TREND_THRESH  = float(os.getenv("ORCH_ER_TREND_THRESH", "0.28"))   # was 0.35 — lowered for crypto
+ER_PERIOD        = int(os.getenv("ORCH_ER_PERIOD", "30"))              # was hardcoded 20 — lengthened for stability
 FETCH_BARS       = int(os.getenv("ORCH_BARS", "120"))
 BULL_TREND_FLAT_ER_MAX = float(os.getenv("ORCH_BULL_TREND_FLAT_ER_MAX", "0.55"))
 MIXED_SIGN_PRICE_WEIGHT = float(os.getenv("ORCH_MIXED_SIGN_PRICE_WEIGHT", "1.0"))
@@ -335,7 +336,7 @@ def _classify_regime(candles: List[Dict]) -> Tuple[str, Dict[str, float]]:
     ema55 = es_series[-1]
     close = closes[-1]
     atr   = _atr(candles, 14)
-    er    = _efficiency_ratio(closes, 20)
+    er    = _efficiency_ratio(closes, ER_PERIOD)
     ema_gap_pct = ((ema21 - ema55) / ema55 * 100.0) if abs(ema55) > 1e-12 else 0.0
     close_gap_pct = ((close - ema55) / ema55 * 100.0) if abs(ema55) > 1e-12 else 0.0
 

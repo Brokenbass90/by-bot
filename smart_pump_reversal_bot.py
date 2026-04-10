@@ -9408,7 +9408,8 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_sloped_entry schedule fail {sym}: {_e}")
 
         # ===== FLAT RESISTANCE FADE ENTRY =====
-        if ENABLE_FLAT_TRADING and _health_gate.allow_entry("alt_resistance_fade_v1", sym):
+        flat_allowlist = _csv_upper_set("ARF1_SYMBOL_ALLOWLIST")
+        if ENABLE_FLAT_TRADING and (not flat_allowlist or sym in flat_allowlist) and _health_gate.allow_entry("alt_resistance_fade_v1", sym):
             last = int(_FLAT_LAST_TRY.get(sym, 0) or 0)
             if now - last >= FLAT_TRY_EVERY_SEC:
                 try:

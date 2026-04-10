@@ -96,3 +96,60 @@ $(if [[ '$AUTO_RESTART' == '1' ]]; then echo 'Auto-restart triggered.'; else ech
 else
   echo "[watchdog $(date -u '+%H:%M:%S')] OK — heartbeat age=${AGE}s"
 fi
+
+# ── Router degraded_fallback auto-recovery ────────────────────────
+# If router is in degraded_fallback, try to rebuild it (with retry logic).
+# Cooldown: max 1 rebuild attempt per 30 minutes to avoid hammering the API.
+ROUTER_STATE_FILE="$BOT_DIR/runtime/router/symbol_router_state.json"
+ROUTER_REPAIR_STATE="$BOT_DIR/runtime/watchdog_router_repair_state.json"
+ROUTER_REPAIR_COOLDOWN="${WATCHDOG_ROUTER_REPAIR_COOLDOWN_SEC:-1800}"  # 30 min
+
+router_status=""
+if [[ -f "$ROUTER_STATE_FILE" ]]; then
+  router_status=$(python3 -c "
+import json
+try:
+    d = json.load(open('$ROUTER_STATE_FILE'))
+    print(d.get('status',''))
+except Exception:
+    print('')
+" 2>/dev/null || echo "")
+fi
+
+if [[ "$router_status" == "degraded_fallback" ]]; then
+  last_repair=0
+  if [[ -f "$ROUTER_REPAIR_STATE" ]]; then
+    last_repair=$(python3 -c "import json; d=json.load(open('$ROUTER_REPAIR_STATE')); print(d.get('last_repair_ts',0))" 2>/dev/null || echo 0)
+  fi
+  repair_ok=$(( NOW - last_repair >= ROUTER_REPAIR_COOLDOWN ))
+
+  if (( repair_ok )); then
+    echo "[watchdog $(date -u '+%H:%M:%S')] Router DEGRADED — attempting auto-repair..."
+    cd "$BOT_DIR"
+    if [[ -f ".venv/bin/activate" ]]; then source .venv/bin/activate; fi
+
+    # Run with retry (3 attempts, 30s each — built into build_symbol_router.py)
+    python3 scripts/build_symbol_router.py --quiet \
+      --scan-retries 3 --scan-retry-delay-sec 30 \
+      >> "$BOT_DIR/runtime/watchdog_router_repair.log" 2>&1
+    RC=$?
+
+    python3 -c "import json,time; json.dump({'last_repair_ts': int(time.time()), 'rc': $RC}, open('$ROUTER_REPAIR_STATE','w'))" 2>/dev/null || true
+
+    if [[ $RC -eq 0 ]]; then
+      echo "[watchdog] Router repair OK"
+      if (( cooldown_ok )); then
+        send_tg "✅ <b>Router recovered</b>: degraded_fallback → ok after auto-repair."
+      fi
+    else
+      echo "[watchdog] Router repair FAILED (rc=$RC) — will retry in ${ROUTER_REPAIR_COOLDOWN}s"
+      if (( cooldown_ok )); then
+        send_tg "⚠️ <b>Router still degraded</b>: auto-repair attempt failed. Check logs: runtime/watchdog_router_repair.log"
+      fi
+    fi
+  else
+    echo "[watchdog $(date -u '+%H:%M:%S')] Router degraded but repair cooldown active ($(( NOW - last_repair ))s ago)"
+  fi
+else
+  echo "[watchdog $(date -u '+%H:%M:%S')] Router status=${router_status:-unknown}"
+fi

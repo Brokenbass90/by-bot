@@ -393,6 +393,38 @@ _DEFAULT_PROFILES: List[StrategyProfile] = [
         bt_min_pf=1.0,
         anchor_symbols=["BTCUSDT", "ETHUSDT", "SOLUSDT"],
     ),
+    StrategyProfile(
+        # IVB1: impulse volume breakout — needs high volume and strong momentum
+        # Prefers alts with big intraday moves; BTC/ETH as anchors for liquidity
+        name="IVB1 (impulse volume breakout)",
+        env_key="IVB1_SYMBOL_ALLOWLIST",
+        strategy_tags=["impulse_volume_breakout_v1", "ivb1"],
+        min_turnover=30_000_000.0,
+        min_atr_pct=0.30,
+        max_atr_pct=3.00,
+        min_listing_days=90,
+        top_n=7,
+        bt_min_trades=3,
+        bt_min_net=0.0,
+        bt_min_pf=1.0,
+        anchor_symbols=["BTCUSDT", "ETHUSDT", "SOLUSDT", "DOGEUSDT", "LINKUSDT"],
+    ),
+    StrategyProfile(
+        # ARS1: range scalp BB — needs tight, liquid range coins
+        # Validated in bear_chop_plus_range_probe_v1: BTC/ETH work best for tight BB ranges
+        name="ARS1 (range scalp BB)",
+        env_key="ARS1_SYMBOL_ALLOWLIST",
+        strategy_tags=["alt_range_scalp_v1", "ars1"],
+        min_turnover=50_000_000.0,
+        min_atr_pct=0.20,
+        max_atr_pct=1.20,
+        min_listing_days=120,
+        top_n=5,
+        bt_min_trades=3,
+        bt_min_net=0.0,
+        bt_min_pf=1.0,
+        anchor_symbols=["BTCUSDT", "ETHUSDT"],
+    ),
 ]
 
 

@@ -97,23 +97,40 @@ def main() -> int:
         "allocator_state": ALLOCATOR_STATE_PATH,
     }
 
+    # ── Detect router degraded_fallback status ────────────────────────
+    # If router is in degraded_fallback, treat as stale regardless of file age.
+    # This triggers an immediate rebuild attempt on next --repair run.
+    router_degraded = False
+    try:
+        if ROUTER_STATE_PATH.exists():
+            _rs = json.loads(ROUTER_STATE_PATH.read_text(encoding="utf-8"))
+            if str(_rs.get("status") or "").strip().lower() == "degraded_fallback":
+                router_degraded = True
+    except Exception:
+        pass
+
     checks: Dict[str, Dict[str, Any]] = {}
     stale_groups = {"regime": False, "router": False, "allocator": False}
     problems: List[str] = []
     for label, path in files.items():
         age = _state_age_sec(path, now_ts)
         stale = age is None or age > int(max_age[label])
+        # Also treat router as stale if it's in degraded_fallback
+        if label.startswith("router") and router_degraded:
+            stale = True
         checks[label] = {
             "path": str(path),
             "exists": bool(path.exists()),
             "age_sec": age,
             "max_age_sec": int(max_age[label]),
             "stale": stale,
+            "degraded": router_degraded if label.startswith("router") else False,
         }
         if stale:
             group = label.split("_", 1)[0]
             stale_groups[group] = True
-            problems.append(f"{label}: age={age} max={max_age[label]} path={path}")
+            reason = "degraded_fallback" if (label.startswith("router") and router_degraded) else f"age={age}"
+            problems.append(f"{label}: {reason} max={max_age[label]} path={path}")
 
     actions: List[Dict[str, Any]] = []
     repaired = False

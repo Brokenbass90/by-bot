@@ -90,6 +90,7 @@ ENV_FILE           = ROOT / "configs" / "alpaca_paper_local.env"
 INTRADAY_CFG_FILE  = ROOT / "configs" / "intraday_config.json"   # hot-reloadable symbol + strategy config
 ADVISORY_DIR       = ROOT / "runtime" / "equities_intraday_dynamic_v1"
 ADVISORY_FILE      = ADVISORY_DIR / "latest_advisory.json"
+MONTHLY_RUNTIME_DIR = ROOT / "runtime" / "equities_monthly_v36"
 
 # US market session in UTC (EDT: +4h, EST: +5h). Wide window handles DST.
 US_SESSION_UTC_START = 14   # 10:00 AM ET (EDT safety buffer)
@@ -357,6 +358,22 @@ def _tg(token: str, chat_id: str, msg: str) -> None:
             pass
     except Exception:
         pass
+
+
+def _load_monthly_managed_symbols() -> set[str]:
+    symbols: set[str] = set()
+    csv_path = MONTHLY_RUNTIME_DIR / "current_cycle_picks.csv"
+    if not csv_path.exists():
+        return symbols
+    try:
+        with csv_path.open(newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                sym = str(row.get("ticker") or "").strip().upper()
+                if sym:
+                    symbols.add(sym)
+    except Exception:
+        return set()
+    return symbols
 
 
 def _fmt_usd_compact(value: float) -> str:
@@ -774,9 +791,15 @@ def run_once(client: AlpacaClient, dry_run: bool,
                 f"Est. P&L: {realized_label}")
         _save_state(state)
 
+        monthly_managed_symbols = _load_monthly_managed_symbols()
         remote_only_symbols = sorted(sym for sym in open_positions.keys() if sym not in state)
+        protected_remote_symbols = sorted(sym for sym in remote_only_symbols if sym in monthly_managed_symbols)
+        remote_only_symbols = sorted(sym for sym in remote_only_symbols if sym not in monthly_managed_symbols)
         advisory["remote_only_positions"] = list(remote_only_symbols)
+        advisory["monthly_managed_positions"] = list(protected_remote_symbols)
         close_unknown_remote = _env_bool("INTRADAY_CLOSE_UNKNOWN_REMOTE_POSITIONS", False)
+        if protected_remote_symbols:
+            print(f"\n  [INFO] Monthly-managed remote paper positions preserved: {', '.join(protected_remote_symbols)}")
         if remote_only_symbols:
             print(f"\n  [WARN] Remote paper positions not tracked by intraday state: {', '.join(remote_only_symbols)}")
             if close_unknown_remote:

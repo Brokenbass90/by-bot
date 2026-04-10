@@ -29,6 +29,7 @@ import copy
 import json
 import os
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -356,6 +357,10 @@ def main() -> int:
     ap.add_argument("--http-timeout-sec", type=float, default=8.0)
     ap.add_argument("--kline-max-retries", type=int, default=3)
     ap.add_argument("--kline-backoff-max-sec", type=float, default=5.0)
+    ap.add_argument("--scan-retries", type=int, default=3,
+                    help="Retry full market scan N times before falling back to degraded (default 3).")
+    ap.add_argument("--scan-retry-delay-sec", type=float, default=30.0,
+                    help="Seconds to wait between scan retries (default 30).")
     ap.add_argument("--regime-override", default="", help="Force regime instead of reading orchestrator state.")
     ap.add_argument("--strict", action="store_true", help="Fail instead of falling back to previous overlay.")
     ap.add_argument("--dry-run", action="store_true")
@@ -412,23 +417,40 @@ def main() -> int:
     scan: Dict[str, Any] = {}
     scan_ok = False
     scan_error = ""
-    try:
-        scan = run_scan(
-        bybit_base=args.bybit_base,
-        max_scan_symbols=args.max_scan_symbols,
-        atr_lookback_days=args.atr_lookback_days,
-        polite_sleep_sec=args.polite_sleep_sec,
-        http_timeout_sec=args.http_timeout_sec,
-        kline_max_retries=args.kline_max_retries,
-        kline_backoff_max_sec=args.kline_backoff_max_sec,
-        quiet=args.quiet,
-    )
-        scan_ok = bool(scan)
-        if not scan_ok:
+    _scan_attempts = max(1, args.scan_retries)
+    for _attempt in range(1, _scan_attempts + 1):
+        try:
+            scan = run_scan(
+                bybit_base=args.bybit_base,
+                max_scan_symbols=args.max_scan_symbols,
+                atr_lookback_days=args.atr_lookback_days,
+                polite_sleep_sec=args.polite_sleep_sec,
+                http_timeout_sec=args.http_timeout_sec,
+                kline_max_retries=args.kline_max_retries,
+                kline_backoff_max_sec=args.kline_backoff_max_sec,
+                quiet=args.quiet,
+            )
+            scan_ok = bool(scan)
+            if scan_ok:
+                scan_error = ""
+                break
             scan_error = "market scan returned zero candidates"
-    except Exception as e:
-        scan_error = str(e)
-        scan_ok = False
+        except Exception as e:
+            scan_error = str(e)
+            scan_ok = False
+        if not scan_ok and _attempt < _scan_attempts:
+            print(
+                f"[router] scan attempt {_attempt}/{_scan_attempts} failed: {scan_error[:120]} "
+                f"— retrying in {args.scan_retry_delay_sec:.0f}s",
+                file=sys.stderr,
+            )
+            time.sleep(args.scan_retry_delay_sec)
+    if not scan_ok:
+        print(
+            f"[router] all {_scan_attempts} scan attempts failed — using degraded fallback. "
+            f"Last error: {scan_error[:200]}",
+            file=sys.stderr,
+        )
         if args.strict:
             print(f"ERROR: market scan failed: {scan_error}", file=sys.stderr)
             return 1
