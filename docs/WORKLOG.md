@@ -36,6 +36,9 @@
   - live scheduler now only queues `flat` on its own allowlist instead of asking it to reject the whole symbol universe
 - Fixed a real Alpaca coordination bug:
   - [equities_alpaca_intraday_bridge.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/equities_alpaca_intraday_bridge.py) now protects monthly-managed paper positions from intraday cleanup
+- Hardened that same Alpaca split one step further:
+  - intraday now also reserves monthly current-cycle symbols even before they appear as remote-only positions
+  - this prevents intraday from reclaiming monthly slots or trying to trade the same names while monthly orders are still pending
 - Hardened monthly Alpaca stale-close handling:
   - [equities_alpaca_paper_bridge.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/equities_alpaca_paper_bridge.py) no longer crashes the whole monthly pass when Alpaca returns `held_for_orders`
 - Re-ran server monthly Alpaca autopilot after the fixes:
@@ -70,11 +73,17 @@
 - Let `flat_live_universe_repair_v2` continue so the validated `flat` cluster is not based on just one early pass.
 - Let `bear_chop_plus_range_probe_v1` continue; it is currently the best promotion candidate for the next crypto package.
 - Keep `elder_wave_lookback_v1` running only until the verdict is fully obvious, then stop spending more slot time on it.
+- The verdict became obvious:
+  - `elder_wave_lookback_v1` was retired from the overnight slot
+  - that slot is now used by [ivb1_wider_universe_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/ivb1_wider_universe_v1.json)
 - Next live-quality check:
   - re-read server counters after the looser `ARF1` canary has had time to accumulate fresh pulses
   - confirm whether `flat_entry` finally wakes up or whether the next bottleneck is pure `same_bar` timing
 - Next platform-quality step:
   - sync selected local research outputs into server `runtime/research_import` so server-side `auto_apply` can consume trusted laptop research instead of waiting only on slow server research.
+- Server slow research queue was also updated:
+  - `flat_live_universe_repair_v1` -> `flat_live_universe_repair_v2`
+  - added `ivb1_wider_universe_v1`
 
 ## 2026-04-09 - flat live diagnostics + Alpaca current-cycle rescue
 

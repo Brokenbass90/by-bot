@@ -796,6 +796,7 @@ def run_once(client: AlpacaClient, dry_run: bool,
         protected_remote_symbols = sorted(sym for sym in remote_only_symbols if sym in monthly_managed_symbols)
         remote_only_symbols = sorted(sym for sym in remote_only_symbols if sym not in monthly_managed_symbols)
         advisory["remote_only_positions"] = list(remote_only_symbols)
+        advisory["monthly_managed_symbols"] = sorted(monthly_managed_symbols)
         advisory["monthly_managed_positions"] = list(protected_remote_symbols)
         close_unknown_remote = _env_bool("INTRADAY_CLOSE_UNKNOWN_REMOTE_POSITIONS", False)
         if protected_remote_symbols:
@@ -820,8 +821,16 @@ def run_once(client: AlpacaClient, dry_run: bool,
     else:
         open_positions = {}
         remote_only_symbols = []
+        monthly_managed_symbols = _load_monthly_managed_symbols()
+        protected_remote_symbols = []
+        advisory["monthly_managed_symbols"] = sorted(monthly_managed_symbols)
 
-    occupied_symbols = sorted(set(state.keys()) | set(remote_only_symbols) | set(protected_remote_symbols))
+    occupied_symbols = sorted(
+        set(state.keys())
+        | set(remote_only_symbols)
+        | set(protected_remote_symbols)
+        | set(monthly_managed_symbols)
+    )
     open_count = len(occupied_symbols)
     advisory["open_positions"] = list(occupied_symbols)
     print(f"\n  Open positions: {open_count}/{max_positions} — {occupied_symbols or 'none'}")
@@ -854,6 +863,12 @@ def run_once(client: AlpacaClient, dry_run: bool,
             symbol_status["status"] = "monthly_managed_position"
             advisory["symbols"].append(symbol_status)
             print(f"    → Monthly-managed Alpaca position exists — preserve and skip")
+            continue
+
+        if symbol in monthly_managed_symbols:
+            symbol_status["status"] = "monthly_managed_symbol"
+            advisory["symbols"].append(symbol_status)
+            print(f"    → Reserved by monthly Alpaca cycle — skip")
             continue
 
         if entries_blocked:

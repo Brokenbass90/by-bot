@@ -27,6 +27,7 @@
   - `SIGNAL_LOOKBACK=60`
 - Patched Alpaca bridge coordination:
   - intraday cleanup now skips monthly-managed symbols
+  - intraday now also treats monthly current-cycle symbols as reserved slots even before they become remote-only paper positions
   - monthly stale-close no longer crashes on `held_for_orders`
 - Ran server monthly Alpaca autopilot after the fixes and confirmed:
   - fresh current cycle exists
@@ -54,7 +55,8 @@
 
 - Continue `flat_live_universe_repair_v2`.
 - Continue `bear_chop_plus_range_probe_v1`.
-- Let `elder_wave_lookback_v1` finish the current bounded run, then likely retire it from active priority.
+- `elder_wave_lookback_v1` was retired from the active overnight slot after the negative verdict stayed consistent.
+- The reclaimed overnight slot now runs `ivb1_wider_universe_v1`.
 - Re-check server live counters after the `ARF1` canary has had time to breathe.
 - Add a sync path from local `backtest_runs` into server `runtime/research_import` so server-side `auto_apply` can consume laptop research safely.
 

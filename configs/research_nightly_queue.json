@@ -27,7 +27,13 @@
     },
     {
       "name": "flat_live_universe_repair",
-      "spec": "configs/autoresearch/flat_live_universe_repair_v1.json",
+      "spec": "configs/autoresearch/flat_live_universe_repair_v2.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "ivb1_wider_universe",
+      "spec": "configs/autoresearch/ivb1_wider_universe_v1.json",
       "enabled": true,
       "min_interval_hours": 24
     }
