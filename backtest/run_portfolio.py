@@ -140,6 +140,8 @@ PumpMomentumV1Strategy = _import_strategy_class("pump_momentum_v1", "PumpMomentu
 ImpulseVolumeBreakoutV1Strategy = _import_strategy_class("impulse_volume_breakout_v1", "ImpulseVolumeBreakoutV1Strategy")
 FundingRateReversionV1Strategy = _import_strategy_class("funding_rate_reversion_v1", "FundingRateReversionV1")
 LiquidationCascadeEntryV1Strategy = _import_strategy_class("liquidation_cascade_entry_v1", "LiquidationCascadeEntryV1")
+AltTrendlineTouchV1Strategy = _import_strategy_class("alt_trendline_touch_v1", "AltTrendlineTouchV1Strategy")
+AltSlopedMomentumV1Strategy = _import_strategy_class("alt_sloped_momentum_v1", "AltSlopedMomentumV1Strategy")
 
 
 def _ema(values: List[float], period: int) -> float:
@@ -871,7 +873,8 @@ def main():
         raise SystemExit("No symbols selected. Provide --symbols or relax --min_volume_usd/--top_n.")
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
-    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_pullback_be_trail", "sr_break_retest_volume_v1", "sloped_break_retest_v1", "sloped_resistance_choch_v1", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "smart_grid_v2", "smart_grid_v3", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow", "trendline_break_retest_v2", "flat_bounce_v2", "flat_bounce_v3", "btc_eth_trend_follow_v2", "trendline_break_retest_v3", "trendline_break_retest_v4", "structure_shift_v1", "structure_shift_v2", "tv_atr_trend_v1", "tv_atr_trend_v2", "triple_screen_v132", "triple_screen_v132b", "btc_regime_retest_v1", "btc_cycle_pullback_v1", "btc_macro_cycle_v1", "btc_cycle_continuation_v1", "btc_cycle_level_target_v2", "btc_daily_level_reclaim_v1", "btc_swing_zone_reclaim_v1", "btc_weekly_zone_reclaim_v2", "btc_regime_flip_continuation_v1", "btc_sloped_reclaim_v1", "alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1", "alt_inplay_breakdown_v1", "alt_inplay_breakdown_v2", "alt_support_bounce_v1", "alt_range_scalp_v1", "alt_vwap_mean_reversion_v1", "micro_scalper_v1", "micro_scalper_bounce_v1", "micro_scalper_breakout_v1", "alt_support_reclaim_v1", "pump_fade_v4r", "pump_fade_simple", "pump_fade_v2", "btc_eth_midterm_pullback_v2", "funding_rate_reversion_v1", "liquidation_cascade_entry_v1", "pump_momentum_v1", "elder_triple_screen_v2", "impulse_volume_breakout_v1"}
+    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_pullback_be_trail", "sr_break_retest_volume_v1", "sloped_break_retest_v1", "sloped_resistance_choch_v1", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "smart_grid_v2", "smart_grid_v3", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow", "trendline_break_retest_v2", "flat_bounce_v2", "flat_bounce_v3", "btc_eth_trend_follow_v2", "trendline_break_retest_v3", "trendline_break_retest_v4", "structure_shift_v1", "structure_shift_v2", "tv_atr_trend_v1", "tv_atr_trend_v2", "triple_screen_v132", "triple_screen_v132b", "btc_regime_retest_v1", "btc_cycle_pullback_v1", "btc_macro_cycle_v1", "btc_cycle_continuation_v1", "btc_cycle_level_target_v2", "btc_daily_level_reclaim_v1", "btc_swing_zone_reclaim_v1", "btc_weekly_zone_reclaim_v2", "btc_regime_flip_continuation_v1", "btc_sloped_reclaim_v1", "alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1", "alt_inplay_breakdown_v1", "alt_inplay_breakdown_v2", "alt_support_bounce_v1", "alt_range_scalp_v1", "alt_vwap_mean_reversion_v1", "micro_scalper_v1", "micro_scalper_bounce_v1", "micro_scalper_breakout_v1", "alt_support_reclaim_v1", "pump_fade_v4r", "pump_fade_simple", "pump_fade_v2", "btc_eth_midterm_pullback_v2", "funding_rate_reversion_v1", "liquidation_cascade_entry_v1", "pump_momentum_v1", "elder_triple_screen_v2", "impulse_volume_breakout_v1",
+        "alt_trendline_touch_v1", "alt_sloped_momentum_v1"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -1067,6 +1070,8 @@ def main():
     impulse_volume_breakout_v1 = {sym: ImpulseVolumeBreakoutV1Strategy() for sym in symbols} if "impulse_volume_breakout_v1" in strategies else {}
     funding_rate_reversion_v1 = {sym: FundingRateReversionV1Strategy() for sym in symbols} if "funding_rate_reversion_v1" in strategies else {}
     liquidation_cascade_entry_v1 = {sym: LiquidationCascadeEntryV1Strategy() for sym in symbols} if "liquidation_cascade_entry_v1" in strategies else {}
+    alt_trendline_touch_v1 = {sym: AltTrendlineTouchV1Strategy() for sym in symbols} if "alt_trendline_touch_v1" in strategies else {}
+    alt_sloped_momentum_v1 = {sym: AltSlopedMomentumV1Strategy() for sym in symbols} if "alt_sloped_momentum_v1" in strategies else {}
     ts132_symbols_allow = _env_csv_set("TS132_SYMBOLS")
     ts132b_symbols_allow = _env_csv_set("TS132B_SYMBOLS")
     flat_archetype_router_enable = str(os.getenv("FLAT_ARCHETYPE_ROUTER_ENABLE", "0")).strip().lower() in {"1", "true", "yes", "on"}
@@ -1549,6 +1554,18 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = liquidation_cascade_entry_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "alt_trendline_touch_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = alt_trendline_touch_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "alt_sloped_momentum_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = alt_sloped_momentum_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             else:
                 sig = None
             if sig is not None:
