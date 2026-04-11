@@ -1,0 +1,94 @@
+{
+  "name": "flat_live_frequency_v3",
+  "description": "Annual ARF1 frequency repair on the cleaned live-like alt universe. Goal: test whether 30m signal TF and softer RSI gates increase live entry opportunity without breaking annual quality.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_resistance_fade_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "1",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT",
+      "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ADAUSDT"
+    ],
+    "ARF1_SIGNAL_TF": [
+      "60"
+    ],
+    "ARF1_SIGNAL_LOOKBACK": [
+      36,
+      48,
+      60
+    ],
+    "ARF1_MIN_RSI": [
+      50,
+      52,
+      54,
+      56,
+      58
+    ],
+    "ARF1_REJECT_BELOW_RES_ATR": [
+      0.08,
+      0.10
+    ],
+    "ARF1_MAX_CLOSE_VS_EMA_PCT": [
+      1.1,
+      1.2
+    ]
+  },
+  "base_env": {
+    "ARF1_SYMBOL_ALLOWLIST": "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ADAUSDT",
+    "ARF1_REGIME_MAX_GAP_PCT": "3.2",
+    "ARF1_REGIME_MAX_SLOPE_PCT": "1.8",
+    "ARF1_MIN_RANGE_PCT": "6.0",
+    "ARF1_MAX_RANGE_PCT": "30.0",
+    "ARF1_RES_TOUCH_BUFFER_ATR": "0.35",
+    "ARF1_MIN_BODY_FRAC": "0.22",
+    "ARF1_TP1_FRAC": "0.60",
+    "ARF1_TP2_BUFFER_PCT": "0.45",
+    "ARF1_SL_ATR_MULT": "0.85",
+    "ARF1_TIME_STOP_BARS_5M": "576"
+  },
+  "constraints": {
+    "min_trades": 18,
+    "min_profit_factor": 1.25,
+    "max_drawdown": 6.0,
+    "min_net_pnl": 6.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 3.8,
+    "winrate": 9.0,
+    "max_drawdown": 1.5,
+    "trades": 0.14,
+    "trades_cap": 90,
+    "negative_months": 2.6,
+    "max_negative_streak": 3.0,
+    "worst_month_pnl": 1.6
+  },
+  "_combo_count": "2x1x3x5x2x2 = 120 combos",
+  "_goal": "Find a live-usable ARF1 cluster that trades more often than the current strict 60m setup while staying annual-positive on the validated alt universe."
+}
