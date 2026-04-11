@@ -1,0 +1,45 @@
+{
+  "name": "att1_focused_pivot_sweep_v1",
+  "description": "ATT1 focused sweep: larger pivot windows (left=3,4) that were NOT covered in first sweep. Hypothesis: cleaner pivots → better PF. Based on insight that PIVOT_LEFT=2 caps out at PF=1.28.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,LTCUSDT,ADAUSDT,DOTUSDT,SUIUSDT",
+    "--strategies",
+    "alt_trendline_touch_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {},
+  "grid": {
+    "ATT1_PIVOT_LEFT": [3, 4],
+    "ATT1_PIVOT_RIGHT": [2, 3],
+    "ATT1_MIN_PIVOTS": [2, 3],
+    "ATT1_MAX_PIVOT_AGE": [12, 20],
+    "ATT1_MIN_R2": [0.80, 0.90],
+    "ATT1_TOUCH_ATR": [0.25, 0.35],
+    "ATT1_RSI_LONG_MAX": [52, 55],
+    "ATT1_RSI_SHORT_MIN": [40, 45]
+  },
+  "filters": {
+    "min_trades": 20,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 15.0
+  }
+}

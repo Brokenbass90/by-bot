@@ -1,0 +1,43 @@
+{
+  "name": "asm1_initial_sweep_v1",
+  "description": "ASM1 parameter sweep to find optimal params. Baseline: PF=1.360, 150 trades, +17.0%, DD=6.8%. Priority sweep - PF already above 1.30.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,LTCUSDT,ADAUSDT,DOTUSDT,SUIUSDT,XRPUSDT",
+    "--strategies",
+    "alt_sloped_momentum_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {},
+  "grid": {
+    "ASM1_MIN_R2": [0.25, 0.35, 0.45],
+    "ASM1_BREAKOUT_EXT_ATR": [0.10, 0.15, 0.25],
+    "ASM1_MIN_BODY_FRAC": [0.25, 0.35, 0.45],
+    "ASM1_VOL_MULT": [1.20, 1.50, 2.00],
+    "ASM1_MIN_SLOPE_PCT": [0.05, 0.10, 0.20],
+    "ASM1_USE_TREND_FILTER": ["0", "1"]
+  },
+  "filters": {
+    "min_trades": 30,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 12.0
+  }
+}

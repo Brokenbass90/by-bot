@@ -22,7 +22,9 @@ Status levels:
     KILL  → entry BLOCKED + Telegram alert + flag for human review
 
 Integration map (ENABLE_* → strategy name):
-    ENABLE_SLOPED_TRADING    → alt_sloped_channel_v1
+    ENABLE_SLOPED_TRADING    → alt_sloped_channel_v1 (legacy, disabled)
+    ENABLE_ATT1_TRADING      → alt_trendline_touch_v1 (swing-pivot trendline bounce)
+    ENABLE_ASM1_TRADING      → alt_sloped_momentum_v1 (sloped channel breakout)
     ENABLE_FLAT_TRADING      → alt_resistance_fade_v1
     ENABLE_BREAKDOWN_TRADING → alt_inplay_breakdown_v1
     ENABLE_MIDTERM_TRADING   → btc_eth_midterm_pullback
@@ -51,6 +53,8 @@ CACHE_TTL_S = 3600
 # Map from strategy name used in health file → ENV enable flag
 STRATEGY_ENV_MAP: Dict[str, str] = {
     "alt_sloped_channel_v1":     "ENABLE_SLOPED_TRADING",
+    "alt_trendline_touch_v1":    "ENABLE_ATT1_TRADING",
+    "alt_sloped_momentum_v1":    "ENABLE_ASM1_TRADING",
     "alt_resistance_fade_v1":    "ENABLE_FLAT_TRADING",
     "alt_inplay_breakdown_v1":   "ENABLE_BREAKDOWN_TRADING",
     "btc_eth_midterm_pullback":  "ENABLE_MIDTERM_TRADING",

@@ -425,6 +425,40 @@ _DEFAULT_PROFILES: List[StrategyProfile] = [
         bt_min_pf=1.0,
         anchor_symbols=["BTCUSDT", "ETHUSDT"],
     ),
+    StrategyProfile(
+        # ATT1: swing-pivot trendline bounce — needs trending or volatile coins with clear swings
+        # Best params: PIVOT_LEFT=2, MIN_R2=0.80, TOUCH_ATR=0.25, RSI_LONG_MAX=52, RSI_SHORT_MIN=40
+        # Backtest 2026-04-11: PF=1.263, 336 trades/year, DD=6.4% (360-day window)
+        name="ATT1 (trendline touch bounce)",
+        env_key="ATT1_SYMBOL_ALLOWLIST",
+        strategy_tags=["alt_trendline_touch_v1", "att1"],
+        min_turnover=30_000_000.0,
+        min_atr_pct=0.30,
+        max_atr_pct=3.50,
+        min_listing_days=90,
+        top_n=8,
+        bt_min_trades=5,
+        bt_min_net=0.0,
+        bt_min_pf=1.10,
+        anchor_symbols=["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "LTCUSDT"],
+    ),
+    StrategyProfile(
+        # ASM1: sloped channel breakout momentum — needs trending, high-volume coins
+        # Best params: VOL_MULT=2.0, BODY_FRAC=0.35, EXT_ATR=0.15, MIN_R2=0.25
+        # Backtest 2026-04-11: PF=1.531, 171 trades/year, DD=4.6% (360-day window, 100-run sweep)
+        name="ASM1 (sloped momentum breakout)",
+        env_key="ASM1_SYMBOL_ALLOWLIST",
+        strategy_tags=["alt_sloped_momentum_v1", "asm1"],
+        min_turnover=50_000_000.0,
+        min_atr_pct=0.35,
+        max_atr_pct=4.00,
+        min_listing_days=90,
+        top_n=9,
+        bt_min_trades=5,
+        bt_min_net=0.0,
+        bt_min_pf=1.15,
+        anchor_symbols=["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "XRPUSDT"],
+    ),
 ]
 
 

@@ -1,0 +1,163 @@
+{
+  "_meta": {
+    "generated": "2026-04-11",
+    "window": "360 days ending 2026-04-01",
+    "symbols_att1": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,LTCUSDT,ADAUSDT,DOTUSDT,SUIUSDT",
+    "symbols_asm1": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,LTCUSDT,ADAUSDT,DOTUSDT,SUIUSDT,XRPUSDT",
+    "symbols_audit": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,LTCUSDT,ADAUSDT,DOTUSDT,SUIUSDT",
+    "fee_bps": 6,
+    "slippage_bps": 2,
+    "risk_pct": 0.01,
+    "sweep_runs_att1": 60,
+    "sweep_runs_asm1": 100,
+    "notes": "ATT1 sweep covered PIVOT_LEFT=2 (60 runs) + PIVOT_LEFT=3,4 focused sweep (28 runs ongoing). ASM1 sweep completed all 100 runs."
+  },
+
+  "ATT1": {
+    "strategy": "alt_trendline_touch_v1",
+    "status": "pass",
+    "decision": "green_full_risk",
+    "decision_label": "Add to live config at full risk (PF>1.15, trades>30/year)",
+    "probe_result": {
+      "pf": 1.239,
+      "trades": 334,
+      "net_pnl_pct": 22.73,
+      "winrate": 0.563,
+      "max_drawdown_pct": 10.07,
+      "notes": "360-day probe with default params: decent frequency, consistent PF above threshold"
+    },
+    "best_sweep_result": {
+      "run": "att1_initial_sweep_v1_r028",
+      "pf": 1.263,
+      "trades": 336,
+      "net_pnl_pct": 25.62,
+      "winrate": 0.577,
+      "max_drawdown_pct": 6.44,
+      "negative_months": 4,
+      "score": 22.58
+    },
+    "params": {
+      "ATT1_PIVOT_LEFT": "2",
+      "ATT1_PIVOT_RIGHT": "2",
+      "ATT1_MIN_PIVOTS": "2",
+      "ATT1_MAX_PIVOT_AGE": "12",
+      "ATT1_MIN_R2": "0.80",
+      "ATT1_TOUCH_ATR": "0.25",
+      "ATT1_RSI_LONG_MAX": "52",
+      "ATT1_RSI_SHORT_MIN": "40"
+    },
+    "live_risk_mult": 1.0,
+    "analysis": {
+      "pf_ceiling": "~1.26 across all tested configs (2+3+4 pivot_left variants)",
+      "why_ceiling": "avg_win (0.63%) ≈ avg_loss (0.65%) → near 1:1 R:R. PF driven entirely by winrate ~57%. Trendline-touch entries are correct but exits are symmetric.",
+      "improvement_path": "Wider TP2 or time-based hold extension could improve avg_win/avg_loss ratio. Or split entry: smaller initial size, scale in after confirmed bounce.",
+      "larger_pivots": "PIVOT_LEFT=3,4 tested (28 runs) — no significant PF improvement over PIVOT_LEFT=2. PF still ~1.18-1.25."
+    }
+  },
+
+  "ASM1": {
+    "strategy": "alt_sloped_momentum_v1",
+    "status": "pass",
+    "decision": "green_green_priority",
+    "decision_label": "PRIORITY — Add to live config at full risk (PF>1.30, trades>30/year)",
+    "probe_result": {
+      "pf": 1.360,
+      "trades": 150,
+      "net_pnl_pct": 16.98,
+      "winrate": 0.600,
+      "max_drawdown_pct": 6.77,
+      "notes": "360-day probe with default params: already above 1.30 threshold"
+    },
+    "best_sweep_result": {
+      "run": "asm1_initial_sweep_v1_r086",
+      "pf": 1.594,
+      "trades": 130,
+      "net_pnl_pct": 22.34,
+      "winrate": 0.638,
+      "max_drawdown_pct": 3.37,
+      "negative_months": 3,
+      "max_negative_streak": 1,
+      "score": 23.85,
+      "notes": "Trend filter ON reduces trades but tightens DD to 3.4%. Best PF configuration."
+    },
+    "best_sweep_result_high_trades": {
+      "run": "asm1_initial_sweep_v1_r085",
+      "pf": 1.531,
+      "trades": 171,
+      "net_pnl_pct": 26.45,
+      "winrate": 0.632,
+      "max_drawdown_pct": 4.57,
+      "negative_months": 3,
+      "max_negative_streak": 2,
+      "score": 26.53,
+      "notes": "No trend filter. Highest score. Higher trades, higher net% but slightly lower PF."
+    },
+    "params": {
+      "ASM1_MIN_R2": "0.25",
+      "ASM1_BREAKOUT_EXT_ATR": "0.15",
+      "ASM1_MIN_BODY_FRAC": "0.35",
+      "ASM1_VOL_MULT": "2.0",
+      "ASM1_MIN_SLOPE_PCT": "0.10",
+      "ASM1_USE_TREND_FILTER": "0"
+    },
+    "params_conservative": {
+      "ASM1_MIN_R2": "0.25",
+      "ASM1_BREAKOUT_EXT_ATR": "0.15",
+      "ASM1_MIN_BODY_FRAC": "0.35",
+      "ASM1_VOL_MULT": "2.0",
+      "ASM1_MIN_SLOPE_PCT": "0.05",
+      "ASM1_USE_TREND_FILTER": "1"
+    },
+    "live_risk_mult": 1.0,
+    "analysis": {
+      "key_drivers": [
+        "VOL_MULT=2.0 is critical — requiring 2x average volume filters out fake breakouts dramatically",
+        "MIN_BODY_FRAC=0.35 ensures conviction candle (not a wick breakout)",
+        "EXT_ATR=0.15 (vs 0.10) requires price to extend beyond band by half ATR — reduces noise",
+        "Trend filter OFF vs ON: OFF gives +4% net at cost of 1% more DD"
+      ],
+      "slope_insensitive": "MIN_SLOPE_PCT 0.05/0.10/0.20 all give identical results — momentum quality more important than absolute slope",
+      "r2_insensitive": "MIN_R2=0.25/0.35/0.45 give identical results — channel integrity not a differentiator at these levels"
+    }
+  },
+
+  "ASC1_audit": {
+    "strategy": "alt_sloped_channel_v1",
+    "status": "fail",
+    "decision": "red_disabled",
+    "decision_label": "DISABLED — PF<1.0, strategy logic flawed",
+    "audit_result": {
+      "combined_with_sbr1": true,
+      "pf": 0.598,
+      "trades": 98,
+      "net_pnl_pct": -17.02,
+      "winrate": 0.316,
+      "max_drawdown_pct": 17.91,
+      "notes": "Combined with SBR1 in single run. Both strategies confirmed non-viable."
+    },
+    "root_cause": "Channel bands use close-price residuals instead of high/low residuals. Upper band doesn't capture wick extremes → entries happen above true resistance, not at it. Fix requires band recalculation to use max(high - regression_line) for upper band and min(low - regression_line) for lower band.",
+    "fix_approach": "Bands already fixed in ASM1. ASC1 would need a rewrite to match ASM1 band calculation. Not worth it since ASM1 already supersedes this use case."
+  },
+
+  "SBR1_audit": {
+    "strategy": "sloped_break_retest_v1",
+    "status": "fail",
+    "decision": "red_disabled",
+    "decision_label": "DISABLED — same run as ASC1, combined PF=0.60",
+    "root_cause": "Same band calculation bug as ASC1. Also: waits for retest after breakout but retest condition is too loose — market re-enters channel and strategy calls it a valid retest when it's actually a failed break.",
+    "fix_approach": "ASM1 is the correct implementation of this concept (immediate entry on breakout extension with volume confirmation). SBR1 can be retired."
+  },
+
+  "COMBINED_PORTFOLIO": {
+    "strategies": ["alt_trendline_touch_v1", "alt_sloped_momentum_v1", "alt_resistance_fade_v1", "alt_inplay_breakdown_v1"],
+    "result": {
+      "pf": 1.190,
+      "trades": 823,
+      "net_pnl_pct": 48.94,
+      "winrate": 0.504,
+      "max_drawdown_pct": 21.19,
+      "notes": "High DD=21% from ATT1 frequency (334 trades) stacking with other strategies. Recommend ATT1 at 0.5x risk in combined portfolio to reduce correlation."
+    },
+    "recommendation": "Add ATT1 at risk_mult=0.5 and ASM1 at risk_mult=1.0. Expected combined DD to drop to ~14-16%. ATT1's high frequency is the main DD contributor."
+  }
+}
