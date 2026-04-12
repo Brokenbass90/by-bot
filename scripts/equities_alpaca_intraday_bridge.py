@@ -80,6 +80,14 @@ from forex.strategies.grid_reversion_session_v1 import (
     GridReversionSessionV1,
     Config as GridReversionConfig,
 )
+from forex.strategies.trend_pullback_rebound_v1 import (
+    TrendPullbackReboundV1,
+    Config as TrendPullbackConfig,
+)
+from forex.strategies.trend_retest_session_v1 import (
+    TrendRetestSessionV1,
+    Config as TrendRetestConfig,
+)
 from forex.types import Candle, Signal
 
 # ── File paths ──────────────────────────────────────────────────────────────────
@@ -138,11 +146,51 @@ DEFAULT_CLASS_CONFIGS = {
         min_ema_gap_atr=0.35, min_slow_slope_atr=0.10,
         min_range_width_atr=1.2, max_atr_pct=0.45,
     ),
+    "breakout_continuation:quality_guard": BreakoutConfig(
+        ema_fast=34, ema_slow=144, breakout_lookback=24, breakout_atr=0.10,
+        min_body_atr=0.14, max_chase_atr=0.55, sl_atr_mult=1.2, rr=1.9,
+        cooldown_bars=18, session_utc_start=US_SESSION_UTC_START,
+        session_utc_end=US_SESSION_UTC_END, trend_slope_bars=8,
+        min_ema_gap_atr=0.35, min_slow_slope_atr=0.10,
+        min_range_width_atr=1.2, max_atr_pct=0.45,
+    ),
     "grid_reversion": GridReversionConfig(
         ema_mid=100, ema_slow=220, grid_step_atr=0.9, trend_guard_atr=0.8,
         rsi_long_max=40.0, rsi_short_min=60.0, tp_to_ema_buffer_atr=0.03,
         sl_atr_mult=1.15, rr_cap=1.5, cooldown_bars=14,
         session_utc_start=US_SESSION_UTC_START, session_utc_end=US_SESSION_UTC_END,
+    ),
+    "grid_reversion:safe_winrate": GridReversionConfig(
+        ema_mid=100, ema_slow=220, grid_step_atr=0.9, trend_guard_atr=0.8,
+        rsi_long_max=40.0, rsi_short_min=60.0, tp_to_ema_buffer_atr=0.03,
+        sl_atr_mult=1.15, rr_cap=1.5, cooldown_bars=14,
+        session_utc_start=US_SESSION_UTC_START, session_utc_end=US_SESSION_UTC_END,
+    ),
+    "trend_retest": TrendRetestConfig(
+        ema_fast=55, ema_slow=220, breakout_lookback=42, retest_window_bars=8,
+        sl_atr_mult=1.4, rr=2.5, cooldown_bars=32,
+        session_utc_start=US_SESSION_UTC_START, session_utc_end=US_SESSION_UTC_END,
+    ),
+    "trend_retest:quality_guard": TrendRetestConfig(
+        ema_fast=48, ema_slow=220, breakout_lookback=36, retest_window_bars=8,
+        sl_atr_mult=1.2, rr=1.8, cooldown_bars=28,
+        session_utc_start=US_SESSION_UTC_START, session_utc_end=US_SESSION_UTC_END,
+        trend_slope_bars=8, min_ema_gap_atr=0.35, min_slow_slope_atr=0.10,
+        max_atr_pct=0.35, min_breakout_body_atr=0.10, max_entry_extension_atr=0.35,
+    ),
+    "trend_pullback_rebound": TrendPullbackConfig(
+        pullback_zone_atr=0.30, reclaim_atr=0.05,
+        rsi_long_max=52.0, rsi_short_min=48.0,
+        sl_atr_mult=1.35, rr=2.0, cooldown_bars=16,
+        session_utc_start=US_SESSION_UTC_START, session_utc_end=US_SESSION_UTC_END,
+    ),
+    "trend_pullback_rebound:quality_guard": TrendPullbackConfig(
+        pullback_zone_atr=0.24, reclaim_atr=0.07,
+        rsi_long_max=50.0, rsi_short_min=50.0,
+        sl_atr_mult=1.25, rr=2.0, cooldown_bars=20,
+        session_utc_start=US_SESSION_UTC_START, session_utc_end=US_SESSION_UTC_END,
+        trend_slope_bars=8, min_ema_gap_atr=0.30, min_slow_slope_atr=0.08,
+        max_atr_pct=0.45, min_rebound_body_atr=0.06, max_pullthrough_slow_atr=0.15,
     ),
 }
 
@@ -394,6 +442,10 @@ def _humanize_reason(reason: str) -> str:
         "fx_grid_reversion_short": "grid reversion short",
         "fx_breakout_continuation_long": "breakout continuation long",
         "fx_breakout_continuation_short": "breakout continuation short",
+        "fx_trend_retest_long": "trend retest long",
+        "fx_trend_retest_short": "trend retest short",
+        "fx_trend_pullback_rebound_long": "trend pullback rebound long",
+        "fx_trend_pullback_rebound_short": "trend pullback rebound short",
     }
     if raw in mapping:
         return mapping[raw]
@@ -639,10 +691,15 @@ def _equity_curve_ok(window_days: int = 20) -> tuple[bool, str]:
 # ── Strategy helpers ────────────────────────────────────────────────────────────
 def _build_strategy(symbol: str, strategy_specs: Dict[str, dict]):
     spec = strategy_specs[symbol]
-    if spec["class"] == "breakout_continuation":
+    class_name = spec["class"]
+    if class_name.startswith("breakout_continuation"):
         return BreakoutContinuationSessionV1(cfg=spec["config"])
-    elif spec["class"] == "grid_reversion":
+    elif class_name.startswith("grid_reversion"):
         return GridReversionSessionV1(cfg=spec["config"])
+    elif class_name.startswith("trend_retest"):
+        return TrendRetestSessionV1(cfg=spec["config"])
+    elif class_name.startswith("trend_pullback_rebound"):
+        return TrendPullbackReboundV1(cfg=spec["config"])
     raise ValueError(f"Unknown strategy class: {spec['class']}")
 
 def _load_candles(symbol: str, client: AlpacaClient, dry_run: bool,
