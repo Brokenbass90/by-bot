@@ -39,6 +39,7 @@ from scripts.run_dynamic_crypto_annual import (  # noqa: E402
     _find_run_dir,
     _fmt_date,
     _load_summary,
+    _merge_runtime_env_overrides,
     _resolve_path,
     _run_window,
 )
@@ -229,7 +230,7 @@ def main() -> int:
         step_days=int(args.step_days),
     )
 
-    base_env = _parse_env(_resolve_path(args.base_env_file))
+    base_env = _merge_runtime_env_overrides(_parse_env(_resolve_path(args.base_env_file)))
     registry = _load_json(_resolve_path(args.registry), {})
     policy = _load_json(_resolve_path(args.policy), {})
     fallback_health = _load_json(_resolve_path(args.health), {})

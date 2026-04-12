@@ -67,6 +67,49 @@ def _resolve_path(raw: str) -> Path:
     return path
 
 
+_RUNTIME_OVERRIDE_PREFIXES = (
+    "ENABLE_",
+    "BREAKDOWN_",
+    "ARF1_",
+    "BREAKOUT_",
+    "IVB1_",
+    "ARS1_",
+    "ASC1_",
+    "ATT1_",
+    "ASM1_",
+    "ASB1_",
+    "ETS2_",
+    "ORCH_",
+    "ALLOCATOR_",
+    "PORTFOLIO_ALLOCATOR_",
+    "TPSL_",
+)
+_RUNTIME_OVERRIDE_SUFFIXES = (
+    "_SYMBOL_ALLOWLIST",
+    "_SYMBOLS",
+    "_RISK_MULT",
+    "_MAX_OPEN_TRADES",
+)
+_RUNTIME_OVERRIDE_EXACT_KEYS = {
+    "RISK_PER_TRADE_PCT",
+    "BYBIT_LEVERAGE",
+    "MIN_NOTIONAL_USD",
+}
+
+
+def _merge_runtime_env_overrides(base_env: Dict[str, str]) -> Dict[str, str]:
+    merged = dict(base_env)
+    for key, value in os.environ.items():
+        if (
+            key in merged
+            or key in _RUNTIME_OVERRIDE_EXACT_KEYS
+            or key.startswith(_RUNTIME_OVERRIDE_PREFIXES)
+            or key.endswith(_RUNTIME_OVERRIDE_SUFFIXES)
+        ):
+            merged[str(key)] = str(value)
+    return merged
+
+
 def _build_windows(*, end_date: dt.date, total_days: int, window_days: int, step_days: int) -> List[tuple[dt.date, dt.date]]:
     if total_days < window_days:
         raise ValueError("total_days must be >= window_days")
@@ -507,7 +550,7 @@ def main() -> int:
     )
 
     base_env_path = _resolve_path(args.base_env_file)
-    base_env = _parse_env(base_env_path)
+    base_env = _merge_runtime_env_overrides(_parse_env(base_env_path))
 
     registry = _load_json(_resolve_path(args.registry), {})
     policy = _load_json(_resolve_path(args.policy), {})
