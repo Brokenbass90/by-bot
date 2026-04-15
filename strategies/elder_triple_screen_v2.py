@@ -1,10 +1,11 @@
 """
 elder_triple_screen_v2 — Three-timeframe Elder trading system
 
-Classic Elder Triple Screen using three independent filters:
-1. Screen 1 (4h tide): EMA(13) slope on 4h bars determines direction
-2. Screen 2 (1h wave): RSI(8) oscillator on 1h bars (pullback levels)
-3. Screen 3 (15m entry): Breakout signal on 15m bars in direction of tide
+Canonical Elder Triple Screen uses three independent filters:
+1. Screen 1 (4h tide): long-term trend, typically MACD histogram slope
+2. Screen 2 (1h wave): pullback oscillator against the tide, classically Force Index
+3. Screen 3 (15m entry): trailing stop above/below the previous bar
+   to catch the trend re-assertion after the pullback
 
 All three must agree for entry. Proper timeframe hierarchy (4h → 1h → 15m)
 ensures multiple confirmations before committing capital.
@@ -78,6 +79,19 @@ def _ema(values: List[float], period: int) -> float:
     return e
 
 
+def _ema_series(values: List[float], period: int) -> List[float]:
+    if not values or period <= 0:
+        return []
+    k = 2.0 / (period + 1.0)
+    out: List[float] = []
+    e = float(values[0])
+    out.append(e)
+    for v in values[1:]:
+        e = float(v) * k + e * (1.0 - k)
+        out.append(e)
+    return out
+
+
 def _atr_from_rows(rows: List[list], period: int) -> float:
     if len(rows) < period + 1:
         return float("nan")
@@ -131,38 +145,80 @@ def _stoch_rsi(values: List[float], rsi_period: int = 14, stoch_period: int = 14
     return 100.0 * (cur - lo) / (hi - lo)
 
 
+def _macd_hist_series(values: List[float], fast: int, slow: int, signal: int) -> List[float]:
+    if len(values) < max(fast, slow, signal) + 5 or fast <= 0 or slow <= 0 or signal <= 0:
+        return []
+    fast_ema = _ema_series(values, fast)
+    slow_ema = _ema_series(values, slow)
+    macd = [f - s for f, s in zip(fast_ema, slow_ema)]
+    sig = _ema_series(macd, signal)
+    return [m - s for m, s in zip(macd, sig)]
+
+
+def _force_index_ema(rows: List[list], period: int) -> float:
+    if period <= 0 or len(rows) < period + 2:
+        return float("nan")
+    closes = [float(r[4]) for r in rows]
+    vols = [float(r[5]) if len(r) > 5 and str(r[5]).strip() else 0.0 for r in rows]
+    raw = [(closes[i] - closes[i - 1]) * vols[i] for i in range(1, len(rows))]
+    if len(raw) < period + 1:
+        return float("nan")
+    series = _ema_series(raw, period)
+    return series[-1] if series else float("nan")
+
+
 @dataclass
 class ElderTripleScreenV2Config:
-    # Screen 1: Trend (4h)
+    # Screen 1: Trend (4h) — canonical Elder uses MACD histogram slope
     trend_tf: str = "240"
+    trend_mode: str = "macd_hist"  # canonical = "macd_hist"; "ema_slope" for legacy
     trend_ema: int = 13
-    trend_slope_bars: int = 3
+    trend_slope_bars: int = 2      # slope over 2 bars (current vs 2 bars ago)
+    macd_fast: int = 12
+    macd_slow: int = 26
+    macd_signal: int = 9
+    # Trend strength filters (critical for avoiding choppy/reversal markets):
+    # - trend_require_hist_sign: histogram must be on correct side of zero
+    #   (e.g. bullish requires hist > 0, not just rising). Prevents "rising from -100" false signals.
+    # - trend_consec_bars: N most recent hist bars must all agree with trend direction
+    #   (all positive for bullish, all negative for bearish). Filters one-bar flickers.
+    # - trend_ema_gate: price must be on correct side of trend_ema for side to be valid.
+    #   Long only when 4h close > 13-EMA; Short only when 4h close < 13-EMA.
+    #   This prevents counter-trend entries: e.g. MACD hist ticks down in a strong bull
+    #   market and we short — price is still above EMA so gate blocks it.
+    trend_require_hist_sign: bool = False  # histogram must be above/below zero line
+    trend_consec_bars: int = 1             # require N consecutive hist bars same sign
+    trend_ema_gate: bool = True            # price must be on correct EMA side for direction
 
-    # Screen 2: Wave (1h)
+    # Screen 2: Wave (1h) — canonical Elder uses 2-bar EMA of Force Index
     wave_tf: str = "60"
-    osc_type: str = "rsi"  # "rsi" or "stoch"
-    osc_period: int = 8
-    osc_ob: float = 58.0
-    osc_os: float = 42.0
-    wave_lookback: int = 3  # check if RSI was in pullback zone within this many recent bars
+    osc_type: str = "force"  # canonical Elder = "force"; "rsi" and "stoch" also available
+    osc_period: int = 2      # canonical Elder uses 2-period EMA of Force Index
+    osc_ob: float = 58.0     # only used for rsi/stoch modes
+    osc_os: float = 42.0     # only used for rsi/stoch modes
+    wave_lookback: int = 1   # check current + 1 previous bar (force index turns fast)
 
     # Screen 3: Entry (15m)
     entry_tf: str = "15"
     entry_lookback: int = 5
-    risk_tf: str = ""
-    entry_retest_bars: int = 5
+    risk_tf: str = "60"            # use 1h ATR for SL/TP sizing (wider, less noise)
+    entry_retest_bars: int = 3     # look back 3 × 15m bars for breakout trigger
     entry_touch_atr_mult: float = 0.25
-    entry_min_body_frac: float = 0.30
+    entry_min_body_frac: float = 0.30  # stronger bar confirmation (was 0.15)
+    entry_break_atr_mult: float = 0.05
 
     # Exit management
-    sl_atr_mult: float = 2.0
-    tp_atr_mult: float = 2.5
-    trail_atr_mult: float = 1.0
+    sl_atr_mult: float = 1.5           # 1.5 × 1h ATR (≈1.2% on BTC) — survivable
+    tp_atr_mult: float = 3.0           # TP2 at 3 × 1h ATR = 2R
+    tp1_atr_mult: float = 1.5          # TP1 at 1.5 × 1h ATR = 1R (50% close)
+    tp1_frac: float = 0.50             # 50% at TP1
+    trail_atr_mult: float = 0.0        # disabled — TP1/TP2 structure handles exits
+    trail_activate_rr: float = 0.0    # n/a when trail disabled
     allow_longs: bool = True
     allow_shorts: bool = True
-    time_stop_bars_5m: int = 576
-    cooldown_bars_5m: int = 18
-    max_signals_per_day: int = 20
+    time_stop_bars_5m: int = 288       # 24h time stop (288 × 5m = 24h)
+    cooldown_bars_5m: int = 36         # 3h cooldown per symbol
+    max_signals_per_day: int = 6       # max 6/day per symbol
 
 
 class ElderTripleScreenV2Strategy:
@@ -179,8 +235,15 @@ class ElderTripleScreenV2Strategy:
 
     def _load_runtime_config(self) -> None:
         self.cfg.trend_tf = os.getenv("ETS2_TREND_TF", self.cfg.trend_tf)
+        self.cfg.trend_mode = os.getenv("ETS2_TREND_MODE", self.cfg.trend_mode).strip().lower()
         self.cfg.trend_ema = _env_int("ETS2_TREND_EMA", self.cfg.trend_ema)
         self.cfg.trend_slope_bars = _env_int("ETS2_TREND_SLOPE_BARS", self.cfg.trend_slope_bars)
+        self.cfg.trend_require_hist_sign = _env_bool("ETS2_TREND_REQUIRE_HIST_SIGN", self.cfg.trend_require_hist_sign)
+        self.cfg.trend_consec_bars = _env_int("ETS2_TREND_CONSEC_BARS", self.cfg.trend_consec_bars)
+        self.cfg.trend_ema_gate = _env_bool("ETS2_TREND_EMA_GATE", self.cfg.trend_ema_gate)
+        self.cfg.macd_fast = _env_int("ETS2_MACD_FAST", self.cfg.macd_fast)
+        self.cfg.macd_slow = _env_int("ETS2_MACD_SLOW", self.cfg.macd_slow)
+        self.cfg.macd_signal = _env_int("ETS2_MACD_SIGNAL", self.cfg.macd_signal)
 
         self.cfg.wave_tf = os.getenv("ETS2_WAVE_TF", self.cfg.wave_tf)
         self.cfg.osc_type = os.getenv("ETS2_OSC_TYPE", self.cfg.osc_type).lower()
@@ -195,10 +258,14 @@ class ElderTripleScreenV2Strategy:
         self.cfg.entry_retest_bars = _env_int("ETS2_ENTRY_RETEST_BARS", self.cfg.entry_retest_bars)
         self.cfg.entry_touch_atr_mult = _env_float("ETS2_ENTRY_TOUCH_ATR_MULT", self.cfg.entry_touch_atr_mult)
         self.cfg.entry_min_body_frac = _env_float("ETS2_ENTRY_MIN_BODY_FRAC", self.cfg.entry_min_body_frac)
+        self.cfg.entry_break_atr_mult = _env_float("ETS2_ENTRY_BREAK_ATR_MULT", self.cfg.entry_break_atr_mult)
 
         self.cfg.sl_atr_mult = _env_float("ETS2_SL_ATR_MULT", self.cfg.sl_atr_mult)
         self.cfg.tp_atr_mult = _env_float("ETS2_TP_ATR_MULT", self.cfg.tp_atr_mult)
+        self.cfg.tp1_atr_mult = _env_float("ETS2_TP1_ATR_MULT", self.cfg.tp1_atr_mult)
+        self.cfg.tp1_frac = _env_float("ETS2_TP1_FRAC", self.cfg.tp1_frac)
         self.cfg.trail_atr_mult = _env_float("ETS2_TRAIL_ATR_MULT", self.cfg.trail_atr_mult)
+        self.cfg.trail_activate_rr = _env_float("ETS2_TRAIL_ACTIVATE_RR", self.cfg.trail_activate_rr)
         self.cfg.allow_longs = _env_bool("ETS2_ALLOW_LONGS", self.cfg.allow_longs)
         self.cfg.allow_shorts = _env_bool("ETS2_ALLOW_SHORTS", self.cfg.allow_shorts)
         self.cfg.time_stop_bars_5m = _env_int("ETS2_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
@@ -212,74 +279,140 @@ class ElderTripleScreenV2Strategy:
         self._load_runtime_config()
 
     def _screen1_trend(self, store) -> Optional[str]:
-        """Screen 1: Trend determination via EMA slope on trend TF.
-        Returns: "bullish", "bearish", or None if indeterminate."""
-        rows = store.fetch_klines(store.symbol, self.cfg.trend_tf, max(50, self.cfg.trend_ema + self.cfg.trend_slope_bars + 5)) or []
-        if len(rows) < self.cfg.trend_ema + self.cfg.trend_slope_bars + 2:
+        """Screen 1: long-term tide.
+
+        Canonical Elder uses the slope of MACD histogram; EMA slope remains
+        available as a fallback mode for older experiments.
+
+        Trend strength filters:
+          - trend_require_hist_sign: histogram above zero for bullish, below for bearish
+          - trend_consec_bars: N recent hist bars must share the same sign
+          - trend_ema_gate: price must be on the correct side of the 4h EMA
+            (long only when close > EMA; short only when close < EMA). This is the
+            most impactful filter — it blocks counter-trend entries in strong trends.
+            Example: MACD hist ticks down during a BTC bull run → bearish candidate,
+            but price is still above EMA → blocked. Prevents shorting into strength.
+        """
+        if self.cfg.trend_mode == "macd_hist":
+            consec = max(1, self.cfg.trend_consec_bars)
+            ema_len = max(self.cfg.trend_ema, 13)
+            need = max(80, self.cfg.macd_slow + self.cfg.macd_signal + self.cfg.trend_slope_bars + consec + ema_len + 10)
+            rows = store.fetch_klines(store.symbol, self.cfg.trend_tf, need) or []
+            closes = [float(r[4]) for r in rows]
+            hist = _macd_hist_series(closes, self.cfg.macd_fast, self.cfg.macd_slow, self.cfg.macd_signal)
+            if len(hist) < self.cfg.trend_slope_bars + consec + 2:
+                return None
+            cur = hist[-1]
+            prev = hist[-1 - max(1, self.cfg.trend_slope_bars)]
+            if not all(math.isfinite(x) for x in (cur, prev)):
+                return None
+            slope = cur - prev
+            # Slope direction (rising or falling)
+            if slope > 0:
+                candidate = "bullish"
+            elif slope < 0:
+                candidate = "bearish"
+            else:
+                return None
+            # Optional: histogram must be on correct side of zero line
+            if self.cfg.trend_require_hist_sign:
+                if candidate == "bullish" and cur <= 0:
+                    return None
+                if candidate == "bearish" and cur >= 0:
+                    return None
+            # Optional: N consecutive hist bars same sign
+            if consec > 1:
+                check_bars = hist[-consec:]
+                if candidate == "bullish" and not all(v > 0 for v in check_bars):
+                    return None
+                if candidate == "bearish" and not all(v < 0 for v in check_bars):
+                    return None
+            # EMA gate: price must be on the correct side of trend_ema for direction.
+            # This blocks counter-trend trades when price structure disagrees with the
+            # short-term MACD tick. Most impactful filter for avoiding reversal trades.
+            if self.cfg.trend_ema_gate and len(closes) >= ema_len:
+                cur_ema = _ema(closes, ema_len)
+                cur_price = closes[-1]
+                if math.isfinite(cur_ema):
+                    if candidate == "bullish" and cur_price < cur_ema:
+                        return None
+                    if candidate == "bearish" and cur_price > cur_ema:
+                        return None
+            return candidate
+        else:
+            rows = store.fetch_klines(store.symbol, self.cfg.trend_tf, max(50, self.cfg.trend_ema + self.cfg.trend_slope_bars + 5)) or []
+            if len(rows) < self.cfg.trend_ema + self.cfg.trend_slope_bars + 2:
+                return None
+            closes = [float(r[4]) for r in rows]
+            ema = _ema(closes, self.cfg.trend_ema)
+            ema_prev = _ema(closes[: -(self.cfg.trend_slope_bars)], self.cfg.trend_ema)
+            if not all(math.isfinite(x) for x in (ema, ema_prev)):
+                return None
+            slope = ema - ema_prev
+            if slope > 0:
+                return "bullish"
+            if slope < 0:
+                return "bearish"
             return None
-
-        closes = [float(r[4]) for r in rows]
-        ema = _ema(closes, self.cfg.trend_ema)
-        ema_prev = _ema(closes[: -(self.cfg.trend_slope_bars)], self.cfg.trend_ema)
-
-        if not all(math.isfinite(x) for x in (ema, ema_prev)):
-            return None
-
-        # Slope > 0 = bullish, < 0 = bearish
-        slope = ema - ema_prev
-        if slope > 0:
-            return "bullish"
-        elif slope < 0:
-            return "bearish"
-        return None
 
     def _screen2_wave(self, store, trend: str) -> bool:
-        """Screen 2: Oscillator pullback check on wave TF.
-        Returns True if oscillator is in pullback zone for the trend."""
-        rows = store.fetch_klines(store.symbol, self.cfg.wave_tf, max(50, self.cfg.osc_period + 5)) or []
-        if len(rows) < self.cfg.osc_period + 2:
+        """Screen 2: pullback against the tide.
+
+        Canonical Elder uses the 2-period EMA of Force Index crossing through
+        zero. RSI/Stoch remain available for compatibility, but the canonical
+        rewrite should generally run with `ETS2_OSC_TYPE=force`.
+        """
+        rows = store.fetch_klines(store.symbol, self.cfg.wave_tf, max(50, self.cfg.osc_period + self.cfg.wave_lookback + 8)) or []
+        if len(rows) < self.cfg.osc_period + 3:
             return False
 
-        closes = [float(r[4]) for r in rows]
-        if self.cfg.osc_type == "stoch":
-            osc = _stoch_rsi(closes, self.cfg.osc_period)
-        else:  # default: rsi
-            osc = _rsi(closes, self.cfg.osc_period)
-
-        if not math.isfinite(osc):
-            return False
-
-        # In bullish trend: want RSI to have recently been in pullback zone (< OS).
-        # Check current bar AND up to wave_lookback bars back, so we catch bounce setups
-        # where the pullback happened 1-N hours ago and price is already recovering.
-        # This is the classic Elder entry: Screen 3 fires on the RECLAIM candle,
-        # not at the exact oversold extreme — so Screen 2 must look back in time.
         lookback = max(0, self.cfg.wave_lookback)
-        if trend == "bullish":
-            for offset in range(lookback + 1):
-                sub = closes[: len(closes) - offset] if offset > 0 else closes
-                rsi_i = _rsi(sub, self.cfg.osc_period)
-                if math.isfinite(rsi_i) and rsi_i < self.cfg.osc_os:
+        closes = [float(r[4]) for r in rows]
+
+        for offset in range(lookback + 1):
+            sub_rows = rows[: len(rows) - offset] if offset > 0 else rows
+            sub_closes = closes[: len(closes) - offset] if offset > 0 else closes
+            if self.cfg.osc_type == "force":
+                osc = _force_index_ema(sub_rows, self.cfg.osc_period)
+                if not math.isfinite(osc):
+                    continue
+                if trend == "bullish" and osc < 0:
                     return True
-            return False
-        else:  # bearish
-            for offset in range(lookback + 1):
-                sub = closes[: len(closes) - offset] if offset > 0 else closes
-                rsi_i = _rsi(sub, self.cfg.osc_period)
-                if math.isfinite(rsi_i) and rsi_i > self.cfg.osc_ob:
+                if trend == "bearish" and osc > 0:
                     return True
-            return False
+            elif self.cfg.osc_type == "stoch":
+                osc = _stoch_rsi(sub_closes, self.cfg.osc_period)
+                if not math.isfinite(osc):
+                    continue
+                if trend == "bullish" and osc < self.cfg.osc_os:
+                    return True
+                if trend == "bearish" and osc > self.cfg.osc_ob:
+                    return True
+            else:
+                osc = _rsi(sub_closes, self.cfg.osc_period)
+                if not math.isfinite(osc):
+                    continue
+                if trend == "bullish" and osc < self.cfg.osc_os:
+                    return True
+                if trend == "bearish" and osc > self.cfg.osc_ob:
+                    return True
+        return False
 
     def _screen3_entry(self, store, trend: str) -> Optional[str]:
-        """Screen 3: entry via retest/reclaim, not raw breakout.
+        """Screen 3: trailing stop above/below the previous entry bar.
 
-        Classic crypto failure mode for Elder here was entering on the first poke
-        through a local high/low. We now require a recent touch back into the level
-        zone and a directional reclaim candle with acceptable body quality.
+        Canonical Elder Screen 3: place a BUY STOP just above the HIGH of the
+        most recent completed 15m bar. The trade fires when that level is
+        TOUCHED intraday — no requirement for close above it.
+
+        We look back `entry_retest_bars` 15m bars and require that EACH of
+        those bars moved in the tide direction (higher closes for bullish tide),
+        confirming the momentum is real before we put on the stop.
         """
-        need = max(12, self.cfg.entry_lookback + self.cfg.entry_retest_bars + 4)
+        n_look = max(1, self.cfg.entry_retest_bars)
+        need = max(16, n_look + 8)
         rows = store.fetch_klines(store.symbol, self.cfg.entry_tf, need) or []
-        if len(rows) < need:
+        if len(rows) < n_look + 3:
             return None
 
         opens = [float(r[1]) for r in rows]
@@ -291,10 +424,6 @@ class ElderTripleScreenV2Strategy:
         if not math.isfinite(entry_atr) or entry_atr <= 0:
             return None
 
-        lookback = max(2, self.cfg.entry_lookback)
-        retest_bars = max(1, self.cfg.entry_retest_bars)
-        touch_buf = max(0.0, self.cfg.entry_touch_atr_mult) * entry_atr
-
         cur_open = opens[-1]
         cur_high = highs[-1]
         cur_low = lows[-1]
@@ -304,30 +433,38 @@ class ElderTripleScreenV2Strategy:
         if cur_body_frac < max(0.0, self.cfg.entry_min_body_frac):
             return None
 
+        break_buf = max(0.0, self.cfg.entry_break_atr_mult) * entry_atr
+
+        # Trigger: BUY STOP above the most recent bar's high (or SELL STOP below low)
+        prev_high = highs[-2]
+        prev_low = lows[-2]
+
+        # Confirm trend momentum: recent bars should agree with the tide direction.
+        # At least (n_look - 1) of the last n_look bars before current must be in
+        # the trend direction (bullish bars for long, bearish bars for short).
+        ref_bars_ok = 0
+        for j in range(-1 - n_look, -1):
+            if trend == "bullish" and closes[j] > opens[j]:
+                ref_bars_ok += 1
+            elif trend == "bearish" and closes[j] < opens[j]:
+                ref_bars_ok += 1
+        min_agree = max(1, n_look - 2)  # at least n_look-2 bars must agree
+        if ref_bars_ok < min_agree:
+            return None
+
+        # Classic Screen 3: intraday touch of prev bar's extremity
+        # (no close-above requirement — that's a stop order, not a limit order)
         if trend == "bullish":
-            # Wave pullback is already asking for weakness inside an uptrend.
-            # Entry should therefore come from reclaiming a recent support zone,
-            # not from re-breaking a local resistance shelf from below.
-            level = min(lows[-(lookback + retest_bars + 1):-retest_bars-1])
-            recent_touch = min(lows[-(retest_bars + 1):-1]) <= (level + touch_buf)
-            reclaimed = (
-                cur_close > (level + touch_buf)
-                and cur_close > cur_open
-                and cur_low >= (level - touch_buf)
-            )
-            if recent_touch and reclaimed:
+            trigger = prev_high + break_buf
+            close_rank = (cur_close - cur_low) / cur_range if cur_range > 1e-9 else 0.5
+            # Current bar touched trigger AND closed in upper 40% of range
+            if cur_high >= trigger and close_rank >= 0.40 and cur_close > cur_open:
                 return "long"
         else:
-            # Mirror logic for bearish pullbacks: rally back into resistance,
-            # then fail and reclaim below that resistance zone.
-            level = max(highs[-(lookback + retest_bars + 1):-retest_bars-1])
-            recent_touch = max(highs[-(retest_bars + 1):-1]) >= (level - touch_buf)
-            reclaimed = (
-                cur_close < (level - touch_buf)
-                and cur_close < cur_open
-                and cur_high <= (level + touch_buf)
-            )
-            if recent_touch and reclaimed:
+            trigger = prev_low - break_buf
+            close_rank = (cur_close - cur_low) / cur_range if cur_range > 1e-9 else 0.5
+            # Current bar touched trigger AND closed in lower 40% of range
+            if cur_low <= trigger and close_rank <= 0.60 and cur_close < cur_open:
                 return "short"
 
         return None
@@ -401,40 +538,53 @@ class ElderTripleScreenV2Strategy:
             self.last_no_signal_reason = f"atr_invalid_{risk_tf}"
             return None
 
-        entry_price = float(c)
+        entry_price = float(rows_entry[-1][4])
+        prev_entry_high = float(rows_entry[-2][2])
+        prev_entry_low = float(rows_entry[-2][3])
+        cur_entry_high = float(rows_entry[-1][2])
+        cur_entry_low = float(rows_entry[-1][3])
 
         # Calculate stops and targets
         if side == "long":
-            sl = entry_price - self.cfg.sl_atr_mult * atr
+            struct_sl = min(prev_entry_low, cur_entry_low) - 0.05 * atr
+            sl = min(entry_price - self.cfg.sl_atr_mult * atr, struct_sl)
             if sl >= entry_price:
                 self.last_no_signal_reason = "long_sl_invalid"
                 return None
-            tp = entry_price + self.cfg.tp_atr_mult * atr
-            if tp <= entry_price:
+            tp1 = entry_price + self.cfg.tp1_atr_mult * atr
+            tp2 = entry_price + self.cfg.tp_atr_mult * atr
+            if tp2 <= entry_price or tp1 <= entry_price or tp1 >= tp2:
                 self.last_no_signal_reason = "long_tp_invalid"
                 return None
         else:  # short
-            sl = entry_price + self.cfg.sl_atr_mult * atr
+            struct_sl = max(prev_entry_high, cur_entry_high) + 0.05 * atr
+            sl = max(entry_price + self.cfg.sl_atr_mult * atr, struct_sl)
             if sl <= entry_price:
                 self.last_no_signal_reason = "short_sl_invalid"
                 return None
-            tp = entry_price - self.cfg.tp_atr_mult * atr
-            if tp >= entry_price:
+            tp1 = entry_price - self.cfg.tp1_atr_mult * atr
+            tp2 = entry_price - self.cfg.tp_atr_mult * atr
+            if tp2 >= entry_price or tp1 >= entry_price or tp1 <= tp2:
                 self.last_no_signal_reason = "short_tp_invalid"
                 return None
 
         self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
         self._signals_today += 1
+        frac1 = max(0.01, min(0.99, float(self.cfg.tp1_frac)))
         sig = TradeSignal(
             strategy="elder_triple_screen_v2",
             symbol=store.symbol,
             side=side,
             entry=entry_price,
             sl=sl,
-            tp=tp,
+            tp=tp2,
             trailing_atr_mult=max(0.0, float(self.cfg.trail_atr_mult)),
             trailing_atr_period=14,
+            trail_activate_rr=max(0.0, float(self.cfg.trail_activate_rr)),
             time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
             reason=f"ets2_{trend}_{side}",
         )
+        # Multi-TP: 50% at TP1 (1.5 ATR = 1R), 50% at TP2 (3.0 ATR = 2R)
+        sig.tps = [tp1, tp2]
+        sig.tp_fracs = [frac1, 1.0 - frac1]
         return sig if sig.validate() else None
