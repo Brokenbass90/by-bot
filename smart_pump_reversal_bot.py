@@ -22,6 +22,8 @@ import sqlite3
 import subprocess
 from pathlib import Path
 from typing import Dict, Tuple, List, Optional, Any
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 import websockets
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK, InvalidStatus
 from dotenv import load_dotenv
@@ -98,6 +100,8 @@ from bot.deepseek_action_executor import (
     check_server_status,
     diff_pending_changes,
 )
+from bot.entry_guard import EntryCircuitBreaker
+from bot.runner_state import apply_runner_state
 from bot.symbol_state import (
     SymState, STATE,
     S, update_5m_bar, trim,
@@ -111,6 +115,27 @@ load_dotenv()
 AUTO_APPLY_PARAMS_PATH = ROOT_DIR / "configs" / "auto_apply_params.env"
 if AUTO_APPLY_PARAMS_PATH.exists():
     load_dotenv(AUTO_APPLY_PARAMS_PATH, override=True)
+
+
+def _build_http_session() -> requests.Session:
+    sess = requests.Session()
+    retry = Retry(
+        total=max(0, int(os.getenv("HTTP_GET_RETRIES", "3") or 3)),
+        connect=max(0, int(os.getenv("HTTP_GET_RETRIES", "3") or 3)),
+        read=max(0, int(os.getenv("HTTP_GET_RETRIES", "3") or 3)),
+        backoff_factor=max(0.0, float(os.getenv("HTTP_GET_BACKOFF_SEC", "0.35") or 0.35)),
+        status_forcelist=(429, 500, 502, 503, 504),
+        allowed_methods=("GET",),
+        raise_on_status=False,
+    )
+    pool = max(16, int(os.getenv("HTTP_POOL_SIZE", "64") or 64))
+    adapter = HTTPAdapter(max_retries=retry, pool_connections=pool, pool_maxsize=pool)
+    sess.mount("https://", adapter)
+    sess.mount("http://", adapter)
+    return sess
+
+
+_HTTP = _build_http_session()
 
 REGIME_OVERLAY_ENABLE = _env_bool("REGIME_OVERLAY_ENABLE", True)
 REGIME_OVERLAY_PATH = Path(
@@ -586,6 +611,28 @@ SLOPED_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("SLOPED_MINQTY_FALLBA
 SLOPED_MAX_OPEN_TRADES = int(os.getenv("SLOPED_MAX_OPEN_TRADES", "1"))
 SLOPED_ENGINE = None
 
+# ===== ATT1 TRENDLINE TOUCH (live) =====
+ENABLE_ATT1_TRADING = os.getenv("ENABLE_ATT1_TRADING", "0").strip() == "1"
+ATT1_TRY_EVERY_SEC = int(os.getenv("ATT1_TRY_EVERY_SEC", "60"))
+ATT1_RISK_MULT = max(0.05, float(os.getenv("ATT1_RISK_MULT", "1.0")))
+ATT1_ALLOW_MINQTY_FALLBACK = _env_bool("ATT1_ALLOW_MINQTY_FALLBACK", True)
+ATT1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("ATT1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
+ATT1_MAX_OPEN_TRADES = int(os.getenv("ATT1_MAX_OPEN_TRADES", "2"))
+ATT1_SYMBOL_ALLOWLIST: set[str] = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
+ATT1_ENGINE = None
+_ATT1_LAST_TRY: dict[str, float] = {}
+
+# ===== ASM1 SLOPED MOMENTUM (live) =====
+ENABLE_ASM1_TRADING = os.getenv("ENABLE_ASM1_TRADING", "0").strip() == "1"
+ASM1_TRY_EVERY_SEC = int(os.getenv("ASM1_TRY_EVERY_SEC", "60"))
+ASM1_RISK_MULT = max(0.05, float(os.getenv("ASM1_RISK_MULT", "1.0")))
+ASM1_ALLOW_MINQTY_FALLBACK = _env_bool("ASM1_ALLOW_MINQTY_FALLBACK", True)
+ASM1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("ASM1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
+ASM1_MAX_OPEN_TRADES = int(os.getenv("ASM1_MAX_OPEN_TRADES", "2"))
+ASM1_SYMBOL_ALLOWLIST: set[str] = _csv_upper_set("ASM1_SYMBOL_ALLOWLIST")
+ASM1_ENGINE = None
+_ASM1_LAST_TRY: dict[str, float] = {}
+
 # ===== FLAT RESISTANCE FADE (live) =====
 ENABLE_FLAT_TRADING = os.getenv("ENABLE_FLAT_TRADING", "0").strip() == "1"
 FLAT_TRY_EVERY_SEC = int(os.getenv("FLAT_TRY_EVERY_SEC", "60"))
@@ -766,7 +813,7 @@ def fetch_kline(symbol: str, interval: str, limit: int = 200, base_url: Optional
     """
     base = (base_url or (TRADE_CLIENT.base if TRADE_CLIENT else BYBIT_BASE_DEFAULT)).rstrip("/")
 
-    r = requests.get(
+    r = _HTTP.get(
         f"{base}/v5/market/kline",
         params={"category": "linear", "symbol": symbol, "interval": str(interval), "limit": int(limit)},
         timeout=10,
@@ -872,7 +919,7 @@ def fetch_klines(symbol: str, interval: str, limit: int):
             return hit[1]
         raise RuntimeError(f"Bybit public RL backoff active for {max(0.0, PUBLIC_RL_UNTIL - now):.1f}s")
 
-    r = requests.get(
+    r = _HTTP.get(
         f"{base}/v5/market/kline",
         params={"category": "linear", "symbol": symbol, "interval": str(interval), "limit": limit},
         timeout=10,
@@ -2388,6 +2435,8 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "breakout": bool(ENABLE_BREAKOUT_TRADING),
             "midterm": bool(ENABLE_MIDTERM_TRADING),
             "sloped": bool(ENABLE_SLOPED_TRADING),
+            "att1": bool(ENABLE_ATT1_TRADING),
+            "asm1": bool(ENABLE_ASM1_TRADING),
             "flat": bool(ENABLE_FLAT_TRADING),
             "breakdown": bool(ENABLE_BREAKDOWN_TRADING),
             "ivb1": bool(ENABLE_IVB1_TRADING),
@@ -2552,7 +2601,8 @@ def _status_full_text() -> str:
     lines.append(
         "strategies: "
         f"breakout={ENABLE_BREAKOUT_TRADING}, midterm={ENABLE_MIDTERM_TRADING}, "
-        f"sloped={ENABLE_SLOPED_TRADING}, flat={ENABLE_FLAT_TRADING}, "
+        f"sloped={ENABLE_SLOPED_TRADING}, att1={ENABLE_ATT1_TRADING}, asm1={ENABLE_ASM1_TRADING}, "
+        f"flat={ENABLE_FLAT_TRADING}, "
         f"breakdown={ENABLE_BREAKDOWN_TRADING}, ivb1={ENABLE_IVB1_TRADING}, "
         f"elder={ENABLE_ELDER_TRADING}, ts132={ENABLE_TS132_TRADING}"
     )
@@ -4507,7 +4557,7 @@ class BybitClient:
                 except Exception:
                     px = None
                 if not px:
-                    r = requests.get(
+                    r = _HTTP.get(
                         f"{self.base}/v5/market/tickers",
                         params={"category":"linear","symbol":symbol},
                         timeout=7
@@ -4587,7 +4637,7 @@ class BybitClient:
         url = f"{self.base}{path}"
         if qs:
             url += f"?{qs}"
-        r = requests.get(url, headers=headers, timeout=timeout)
+        r = _HTTP.get(url, headers=headers, timeout=timeout)
         r.raise_for_status()
         j = r.json()
 
@@ -4619,7 +4669,7 @@ class BybitClient:
         ts = self._ts()
         headers = self._headers(ts, "5000", js)
         url = f"{self.base}{path}"
-        r = requests.post(url, headers=headers, data=js, timeout=timeout)
+        r = _HTTP.post(url, headers=headers, data=js, timeout=timeout)
         r.raise_for_status()
         j = r.json()        
         rc = str(j.get("retCode"))
@@ -5218,7 +5268,7 @@ def bybit_symbols(top_n:int)->List[str]:
         syms = _BYBIT_CACHE["syms"]
         return syms if top_n is None else syms[:top_n]
 
-    r1 = requests.get(f"{base_url}/v5/market/instruments-info",
+    r1 = _HTTP.get(f"{base_url}/v5/market/instruments-info",
                       params={"category":"linear"}, timeout=15)
     r1.raise_for_status()
     inst = [x for x in r1.json()["result"]["list"]
@@ -5239,7 +5289,7 @@ def bybit_symbols(top_n:int)->List[str]:
             "tickSize": _to_float_safe(pf.get("tickSize", "0.000001"), 0.000001),  # шаг цены (важно для TP/SL)
         }
 
-    t = requests.get(
+    t = _HTTP.get(
         f"{base_url}/v5/market/tickers",
         params={"category":"linear"},
         timeout=15
@@ -5308,7 +5358,7 @@ def _get_meta(symbol: str) -> dict:
         return m
     try:
         base_url = (TRADE_CLIENT.base if TRADE_CLIENT else BYBIT_BASE_DEFAULT)
-        r = requests.get(f"{base_url}/v5/market/instruments-info",
+        r = _HTTP.get(f"{base_url}/v5/market/instruments-info",
                          params={"category":"linear","symbol":symbol}, timeout=7)
         j = r.json()
         lst = ((j.get("result") or {}).get("list") or [])
@@ -6155,7 +6205,7 @@ class OrderBookAnalyzer:
 
     def get_sell_pressure(self, symbol: str) -> float:
         try:
-            j = requests.get(
+            j = _HTTP.get(
                 f"{self.base_url}/v5/market/orderbook",
                 params={"category":"linear","symbol":symbol,"limit":50},
                 timeout=3
@@ -6178,7 +6228,7 @@ class OrderBookAnalyzer:
 
     def get_spread_pct(self, symbol: str) -> float:
         try:
-            j = requests.get(
+            j = _HTTP.get(
                 f"{self.base_url}/v5/market/orderbook",
                 params={"category":"linear","symbol":symbol,"limit":1},
                 timeout=3
@@ -6285,6 +6335,26 @@ if ENABLE_SLOPED_TRADING:
         log_error(f"[SLOPED] engine init fail: {_e}")
         SLOPED_ENGINE = None
 
+# ===== ATT1 ENGINE =====
+if ENABLE_ATT1_TRADING:
+    try:
+        from strategies.att1_live import ATT1LiveEngine
+        ATT1_ENGINE = ATT1LiveEngine(fetch_klines)
+        print("[ATT1] engine initialised")
+    except Exception as _e:
+        log_error(f"[ATT1] engine init fail: {_e}")
+        ATT1_ENGINE = None
+
+# ===== ASM1 ENGINE =====
+if ENABLE_ASM1_TRADING:
+    try:
+        from strategies.asm1_live import ASM1LiveEngine
+        ASM1_ENGINE = ASM1LiveEngine(fetch_klines)
+        print("[ASM1] engine initialised")
+    except Exception as _e:
+        log_error(f"[ASM1] engine init fail: {_e}")
+        ASM1_ENGINE = None
+
 # ===== FLAT RESISTANCE FADE ENGINE =====
 if ENABLE_FLAT_TRADING:
     try:
@@ -6331,6 +6401,40 @@ def _ensure_sloped_engine() -> bool:
     except Exception as e:
         SLOPED_ENGINE = None
         _log_engine_lazy_init_fail("SLOPED", e)
+        return False
+
+
+def _ensure_att1_engine() -> bool:
+    global ATT1_ENGINE
+    if ATT1_ENGINE is not None:
+        return True
+    if not ENABLE_ATT1_TRADING:
+        return False
+    try:
+        from strategies.att1_live import ATT1LiveEngine
+        ATT1_ENGINE = ATT1LiveEngine(fetch_klines)
+        print("[ATT1] engine lazy-init ok")
+        return True
+    except Exception as e:
+        ATT1_ENGINE = None
+        _log_engine_lazy_init_fail("ATT1", e)
+        return False
+
+
+def _ensure_asm1_engine() -> bool:
+    global ASM1_ENGINE
+    if ASM1_ENGINE is not None:
+        return True
+    if not ENABLE_ASM1_TRADING:
+        return False
+    try:
+        from strategies.asm1_live import ASM1LiveEngine
+        ASM1_ENGINE = ASM1LiveEngine(fetch_klines)
+        print("[ASM1] engine lazy-init ok")
+        return True
+    except Exception as e:
+        ASM1_ENGINE = None
+        _log_engine_lazy_init_fail("ASM1", e)
         return False
 
 
@@ -6557,6 +6661,8 @@ def portfolio_can_open() -> bool:
         return False
     if _ws_transport_guard_active() and WS_SELF_HEAL_BLOCK_NEW_ENTRIES:
         return False
+    if _entry_circuit_active():
+        return False
     if PORTFOLIO_STATE["disabled"]:
         return False
     open_pos = len(TRADES)
@@ -6579,6 +6685,9 @@ def _trade_open_risk_usd(tr: TradeState) -> float:
         status = str(getattr(tr, "status", "") or "").upper()
         if status in {"CLOSED", "FAILED", "CANCELLED", "ERROR"}:
             return 0.0
+        if status == "PLACING_ENTRY":
+            reserved = float(getattr(tr, "reserved_risk_usd", 0.0) or 0.0)
+            return max(0.0, reserved)
         qty = float(getattr(tr, "remaining_qty", 0.0) or getattr(tr, "qty", 0.0) or 0.0)
         entry = float(
             getattr(tr, "entry_price", 0.0)
@@ -6622,6 +6731,111 @@ def portfolio_reg_pnl(notional_usd: float, pnl_pct: float):
 
 TRADES: Dict[Tuple[str,str], TradeState] = {}
 _SYMBOL_ENTRY_LOCKS: Dict[Tuple[str, str], asyncio.Lock] = {}
+_ENTRY_RESERVATION_LOCK = asyncio.Lock()
+ENTRY_CIRCUIT_ENABLE = _env_bool("ENTRY_CIRCUIT_ENABLE", True)
+ENTRY_CIRCUIT_FAILURES = max(1, int(os.getenv("ENTRY_CIRCUIT_FAILURES", "3") or 3))
+ENTRY_CIRCUIT_COOLDOWN_SEC = max(10, int(os.getenv("ENTRY_CIRCUIT_COOLDOWN_SEC", "90") or 90))
+ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC = max(30, int(os.getenv("ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC", "300") or 300))
+_ENTRY_CIRCUIT = EntryCircuitBreaker(
+    failure_threshold=ENTRY_CIRCUIT_FAILURES,
+    cooldown_sec=ENTRY_CIRCUIT_COOLDOWN_SEC,
+)
+
+
+def _entry_circuit_active() -> bool:
+    if not ENTRY_CIRCUIT_ENABLE:
+        return False
+    return _ENTRY_CIRCUIT.is_open(time.time())
+
+
+def _entry_circuit_reason() -> str:
+    snap = _ENTRY_CIRCUIT.snapshot()
+    if not snap.open:
+        return ""
+    reason = f"entry breaker open {snap.remaining_sec}s"
+    if snap.reason:
+        reason += f" | last={snap.reason}"
+    return reason
+
+
+async def _reserve_entry_slot(symbol: str, side: str, *, reserved_risk_usd: float = 0.0) -> bool:
+    key = ("Bybit", symbol)
+    async with _ENTRY_RESERVATION_LOCK:
+        if key in TRADES:
+            return False
+        if not portfolio_can_open():
+            return False
+        cap_pct = float(MAX_OPEN_PORTFOLIO_RISK_PCT or 0.0)
+        if cap_pct > 0.0:
+            eq = float(_get_effective_equity() or 0.0)
+            if eq <= 0.0:
+                return False
+            total_usd = current_open_portfolio_risk_usd() + max(0.0, float(reserved_risk_usd or 0.0))
+            total_pct = (total_usd / max(1e-12, eq)) * 100.0
+            if total_pct > cap_pct + 1e-9:
+                _diag_inc("entry_reserve_risk_blocked")
+                tg_trade_throttled(
+                    f"portfolio_risk:reserve:{symbol}",
+                    f"🟡 ENTRY RESERVE BLOCK {symbol}: open-risk {total_pct:.2f}% > cap {cap_pct:.2f}%",
+                    3600,
+                )
+                return False
+        tr = TradeState(symbol=symbol, side=side)
+        tr.status = "PLACING_ENTRY"
+        tr.strategy = "__entry_reservation__"
+        tr.entry_ts = now_s()
+        tr.reserved_risk_usd = max(0.0, float(reserved_risk_usd or 0.0))
+        TRADES[key] = tr
+        return True
+
+
+def _clear_entry_slot(symbol: str) -> None:
+    key = ("Bybit", symbol)
+    tr = TRADES.get(key)
+    if tr is None:
+        return
+    if str(getattr(tr, "status", "") or "").upper() == "PLACING_ENTRY":
+        try:
+            del TRADES[key]
+        except Exception:
+            pass
+
+
+def _submit_entry_order_guarded(symbol: str, side: str, qty_floor: float) -> tuple[str, float] | None:
+    if TRADE_CLIENT is None:
+        return None
+    if _entry_circuit_active():
+        _diag_inc("entry_circuit_blocked")
+        tg_trade_throttled(
+            f"entry_circuit:{symbol}",
+            f"🛑 ENTRY BLOCKED {symbol}: {_entry_circuit_reason()}",
+            ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC,
+        )
+        return None
+    try:
+        ensure_leverage(symbol, BYBIT_LEVERAGE)
+        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        if ENTRY_CIRCUIT_ENABLE:
+            _ENTRY_CIRCUIT.note_success()
+        _diag_inc("entry_submit_ok")
+        return oid, q
+    except Exception as e:
+        snap = _ENTRY_CIRCUIT.note_failure(str(e), time.time()) if ENTRY_CIRCUIT_ENABLE else None
+        _diag_inc("entry_submit_fail")
+        log_error(f"entry submit fail {symbol} {side}: {e}")
+        tg_trade_throttled(
+            f"entry_submit_fail:{symbol}",
+            (
+                f"⚠️ ENTRY SUBMIT FAIL {symbol} {side}: {e}"
+                + (
+                    f"\nBreaker: failures={snap.failures} open={int(snap.open)} rem={snap.remaining_sec}s"
+                    if snap is not None
+                    else ""
+                )
+            ),
+            ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC,
+        )
+        return None
 
 
 def _entry_lock_key(exch: str, sym: str) -> Tuple[str, str]:
@@ -6650,7 +6864,7 @@ def place_market(symbol: str, side: str, usd_amount: float) -> Tuple[str, float]
     base_url = (TRADE_CLIENT.base if TRADE_CLIENT else BYBIT_BASE_DEFAULT)
 
     if not price:
-        j = requests.get(
+        j = _HTTP.get(
             f"{base_url}/v5/market/tickers",
             params={"category":"linear","symbol":symbol},
             timeout=10
@@ -7060,10 +7274,13 @@ async def try_range_entry_async(symbol: str, price: float):
         )
         return
 
-    ensure_leverage(symbol, BYBIT_LEVERAGE)
-
-    # для range так же запрещаем quoteCoin fallback
-    oid, q = TRADE_CLIENT.place_market(symbol, sig.side, qty_floor, allow_quote_fallback=False)
+    if not await _reserve_entry_slot(symbol, sig.side, reserved_risk_usd=proposed_risk_usd):
+        return
+    submitted = _submit_entry_order_guarded(symbol, sig.side, qty_floor)
+    if not submitted:
+        _clear_entry_slot(symbol)
+        return
+    oid, q = submitted
 
     tr = TradeState(
         symbol=symbol,
@@ -7155,9 +7372,13 @@ async def try_inplay_entry_async(symbol: str, price: float):
         )
         return
 
-    ensure_leverage(symbol, BYBIT_LEVERAGE)
-
-    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+    if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+        return
+    submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+    if not submitted:
+        _clear_entry_slot(symbol)
+        return
+    oid, q = submitted
 
     tr = TradeState(
         symbol=symbol,
@@ -7173,17 +7394,7 @@ async def try_inplay_entry_async(symbol: str, price: float):
     tr.entry_price = float(entry)
     tr.tp_price = float(tp_r) if tp_r is not None else None
     tr.sl_price = float(sl_r)
-    tr.runner_enabled = bool(use_runner)
-    if tr.runner_enabled:
-        tr.tps = [float(x) for x in (sig.tps or [])]
-        tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-        tr.tp_hit = [False for _ in tr.tps]
-        tr.initial_qty = float(q)
-        tr.remaining_qty = float(q)
-        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-        tr.time_stop_sec = int(ts_bars * 300)
+    apply_runner_state(tr, sig, q, use_runner=use_runner)
     TRADES[("Bybit", symbol)] = tr
 
     ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -7477,15 +7688,16 @@ async def try_breakout_entry_async(symbol: str, price: float):
         _diag_inc("breakout_skip_symbol_lock")
         return
     async with entry_lock:
-        if get_trade("Bybit", symbol) is not None:
-            return
-        if not portfolio_can_open():
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
             return
 
-        ensure_leverage(symbol, BYBIT_LEVERAGE)
         _diag_inc("breakout_entry")
         order_send_ts = int(now_s())
-        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
         order_ack_ts = int(now_s())
 
         tr = TradeState(
@@ -7522,17 +7734,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
         tr.signal_ts = int(signal_ts)
         tr.order_send_ts = int(order_send_ts)
         tr.order_ack_ts = int(order_ack_ts)
-        tr.runner_enabled = bool(use_runner)
-        if tr.runner_enabled:
-            tr.tps = [float(x) for x in (sig.tps or [])]
-            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-            tr.tp_hit = [False for _ in tr.tps]
-            tr.initial_qty = float(q)
-            tr.remaining_qty = float(q)
-            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-            tr.time_stop_sec = int(ts_bars * 300)
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
         TRADES[("Bybit", symbol)] = tr
 
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -7608,8 +7810,13 @@ async def try_retest_entry_async(symbol: str, price: float):
         )
         return
 
-    ensure_leverage(symbol, BYBIT_LEVERAGE)
-    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+    if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+        return
+    submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+    if not submitted:
+        _clear_entry_slot(symbol)
+        return
+    oid, q = submitted
 
     tr = TradeState(
         symbol=symbol,
@@ -7722,14 +7929,15 @@ async def try_midterm_entry_async(symbol: str, price: float):
         _diag_inc("midterm_skip_symbol_lock")
         return
     async with entry_lock:
-        if get_trade("Bybit", symbol) is not None:
-            return
-        if not portfolio_can_open():
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
             return
 
-        ensure_leverage(symbol, BYBIT_LEVERAGE)
         _diag_inc("midterm_entry")
-        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
 
         tr = TradeState(
             symbol=symbol,
@@ -7754,17 +7962,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
         }
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
-        tr.runner_enabled = bool(use_runner)
-        if tr.runner_enabled:
-            tr.tps = [float(x) for x in (sig.tps or [])]
-            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-            tr.tp_hit = [False for _ in tr.tps]
-            tr.initial_qty = float(q)
-            tr.remaining_qty = float(q)
-            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-            tr.time_stop_sec = int(ts_bars * 300)
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
         TRADES[("Bybit", symbol)] = tr
 
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -7882,16 +8080,15 @@ async def try_sloped_entry_async(symbol: str, price: float):
         _diag_inc("sloped_skip_symbol_lock")
         return
     async with entry_lock:
-        if get_trade("Bybit", symbol) is not None:
-            _diag_inc("sloped_skip_open_trade")
-            return
-        if not portfolio_can_open():
-            _diag_inc("sloped_skip_portfolio")
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
             return
 
-        ensure_leverage(symbol, BYBIT_LEVERAGE)
         _diag_inc("sloped_entry")
-        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
 
         tr = TradeState(
             symbol=symbol,
@@ -7908,17 +8105,7 @@ async def try_sloped_entry_async(symbol: str, price: float):
         tr.entry_notional_usd = float(notional_real)
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
-        tr.runner_enabled = bool(use_runner)
-        if tr.runner_enabled:
-            tr.tps = [float(x) for x in (sig.tps or [])]
-            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-            tr.tp_hit = [False for _ in tr.tps]
-            tr.initial_qty = float(q)
-            tr.remaining_qty = float(q)
-            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-            tr.time_stop_sec = int(ts_bars * 300)
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
         TRADES[("Bybit", symbol)] = tr
 
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -7930,6 +8117,290 @@ async def try_sloped_entry_async(symbol: str, price: float):
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
             f"🟪 SLOPED ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
+
+
+async def try_att1_entry_async(symbol: str, price: float):
+    """Try ATT1 trendline-touch entry for a symbol."""
+    if not ENABLE_ATT1_TRADING:
+        return
+    if not _ensure_att1_engine():
+        _diag_inc("att1_skip_no_engine")
+        return
+    if not TRADE_ON or DRY_RUN:
+        _diag_inc("att1_skip_trade_off")
+        return
+    if TRADE_CLIENT is None:
+        _diag_inc("att1_skip_no_client")
+        return
+    if get_trade("Bybit", symbol) is not None:
+        _diag_inc("att1_skip_open_trade")
+        return
+    if ATT1_MAX_OPEN_TRADES > 0:
+        open_att1 = 0
+        for tr in TRADES.values():
+            if getattr(tr, "strategy", "") != "att1_trendline_touch":
+                continue
+            if str(getattr(tr, "status", "") or "").upper() in {"CLOSED", "ERROR"}:
+                continue
+            open_att1 += 1
+        if open_att1 >= ATT1_MAX_OPEN_TRADES:
+            _diag_inc("att1_skip_max_open")
+            return
+    if not portfolio_can_open():
+        _diag_inc("att1_skip_portfolio")
+        return
+
+    now = now_s()
+    last = int(_ATT1_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < ATT1_TRY_EVERY_SEC:
+        _diag_inc("att1_skip_cooldown")
+        return
+    _ATT1_LAST_TRY[symbol] = now
+    _diag_inc("att1_try")
+
+    try:
+        sig = ATT1_ENGINE.signal(symbol, int(now * 1000), 0, 0, 0, price, 0)
+    except Exception as e:
+        log_error(f"att1 signal error {symbol}: {e}")
+        return
+    if not sig:
+        _diag_inc("att1_no_signal")
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=ATT1_RISK_MULT)
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0 and ATT1_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=price,
+            stop_pct=stop_pct,
+            risk_mult=ATT1_RISK_MULT,
+            max_mult=ATT1_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            dyn_usd = fallback_usd
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = ""
+        elif not reason:
+            reason = fallback_reason
+    if dyn_usd <= 0 and qty_floor <= 0:
+        tg_skip_throttled("att1", symbol, "notional_small", f"🟡 ATT1 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+    if qty_floor <= 0:
+        tg_skip_throttled("att1", symbol, f"minqty:{reason}", f"🟡 ATT1 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:att1:{symbol}",
+            f"🟡 ATT1 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
+
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("att1_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            return
+
+        _diag_inc("att1_entry")
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
+
+        tr = TradeState(
+            symbol=symbol,
+            side=side,
+            qty=q,
+            entry_price_req=float(entry),
+            entry_ts=now,
+        )
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "att1_trendline_touch"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
+        TRADES[("Bybit", symbol)] = tr
+
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🔷 ATT1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
+
+
+async def try_asm1_entry_async(symbol: str, price: float):
+    """Try ASM1 sloped-momentum entry for a symbol."""
+    if not ENABLE_ASM1_TRADING:
+        return
+    if not _ensure_asm1_engine():
+        _diag_inc("asm1_skip_no_engine")
+        return
+    if not TRADE_ON or DRY_RUN:
+        _diag_inc("asm1_skip_trade_off")
+        return
+    if TRADE_CLIENT is None:
+        _diag_inc("asm1_skip_no_client")
+        return
+    if get_trade("Bybit", symbol) is not None:
+        _diag_inc("asm1_skip_open_trade")
+        return
+    if ASM1_MAX_OPEN_TRADES > 0:
+        open_asm1 = 0
+        for tr in TRADES.values():
+            if getattr(tr, "strategy", "") != "asm1_sloped_momentum":
+                continue
+            if str(getattr(tr, "status", "") or "").upper() in {"CLOSED", "ERROR"}:
+                continue
+            open_asm1 += 1
+        if open_asm1 >= ASM1_MAX_OPEN_TRADES:
+            _diag_inc("asm1_skip_max_open")
+            return
+    if not portfolio_can_open():
+        _diag_inc("asm1_skip_portfolio")
+        return
+
+    now = now_s()
+    last = int(_ASM1_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < ASM1_TRY_EVERY_SEC:
+        _diag_inc("asm1_skip_cooldown")
+        return
+    _ASM1_LAST_TRY[symbol] = now
+    _diag_inc("asm1_try")
+
+    try:
+        sig = ASM1_ENGINE.signal(symbol, int(now * 1000), 0, 0, 0, price, 0)
+    except Exception as e:
+        log_error(f"asm1 signal error {symbol}: {e}")
+        return
+    if not sig:
+        _diag_inc("asm1_no_signal")
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=ASM1_RISK_MULT)
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0 and ASM1_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=price,
+            stop_pct=stop_pct,
+            risk_mult=ASM1_RISK_MULT,
+            max_mult=ASM1_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            dyn_usd = fallback_usd
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = ""
+        elif not reason:
+            reason = fallback_reason
+    if dyn_usd <= 0 and qty_floor <= 0:
+        tg_skip_throttled("asm1", symbol, "notional_small", f"🟡 ASM1 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+    if qty_floor <= 0:
+        tg_skip_throttled("asm1", symbol, f"minqty:{reason}", f"🟡 ASM1 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:asm1:{symbol}",
+            f"🟡 ASM1 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
+
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("asm1_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            return
+
+        _diag_inc("asm1_entry")
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
+
+        tr = TradeState(
+            symbol=symbol,
+            side=side,
+            qty=q,
+            entry_price_req=float(entry),
+            entry_ts=now,
+        )
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "asm1_sloped_momentum"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
+        TRADES[("Bybit", symbol)] = tr
+
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🟦 ASM1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
             f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
             f"notional≈{notional_real:.2f}$ qty≈{q}\n"
             f"reason={sig.reason}"
@@ -8040,16 +8511,15 @@ async def try_flat_entry_async(symbol: str, price: float):
         _diag_inc("flat_skip_symbol_lock")
         return
     async with entry_lock:
-        if get_trade("Bybit", symbol) is not None:
-            _diag_inc("flat_skip_open_trade")
-            return
-        if not portfolio_can_open():
-            _diag_inc("flat_skip_portfolio")
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
             return
 
-        ensure_leverage(symbol, BYBIT_LEVERAGE)
         _diag_inc("flat_entry")
-        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
 
         tr = TradeState(
             symbol=symbol,
@@ -8067,17 +8537,7 @@ async def try_flat_entry_async(symbol: str, price: float):
         tr.entry_notional_usd = float(notional_real)
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
-        tr.runner_enabled = bool(use_runner)
-        if tr.runner_enabled:
-            tr.tps = [float(x) for x in (sig.tps or [])]
-            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-            tr.tp_hit = [False for _ in tr.tps]
-            tr.initial_qty = float(q)
-            tr.remaining_qty = float(q)
-            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-            tr.time_stop_sec = int(ts_bars * 300)
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
         TRADES[("Bybit", symbol)] = tr
 
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -8222,17 +8682,16 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         _diag_inc("breakdown_skip_symbol_lock")
         return
     async with entry_lock:
-        if get_trade("Bybit", symbol) is not None:
-            _diag_inc("breakdown_skip_open_trade")
-            return
-        if not portfolio_can_open():
-            _diag_inc("breakdown_skip_portfolio")
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
             return
 
-        ensure_leverage(symbol, BYBIT_LEVERAGE)
         _diag_inc("breakdown_entry")
         order_send_ts = int(now_s())
-        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
         order_ack_ts = int(now_s())
 
         tr = TradeState(
@@ -8255,17 +8714,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         tr.signal_ts = int(signal_ts)
         tr.order_send_ts = int(order_send_ts)
         tr.order_ack_ts = int(order_ack_ts)
-        tr.runner_enabled = bool(use_runner)
-        if tr.runner_enabled:
-            tr.tps = [float(x) for x in (sig.tps or [])]
-            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-            tr.tp_hit = [False for _ in tr.tps]
-            tr.initial_qty = float(q)
-            tr.remaining_qty = float(q)
-            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-            tr.time_stop_sec = int(ts_bars * 300)
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
         TRADES[("Bybit", symbol)] = tr
 
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -8367,13 +8816,14 @@ async def try_micro_scalper_entry_async(symbol: str, price: float):
     if entry_lock.locked():
         return
     async with entry_lock:
-        if get_trade("Bybit", symbol) is not None:
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
             return
-        if not portfolio_can_open():
-            return
-        ensure_leverage(symbol, BYBIT_LEVERAGE)
         _diag_inc("micro_scalper_entry")
-        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
         tr = TradeState(symbol=symbol, side=side, qty=q, entry_price_req=float(entry), entry_ts=now)
         tr.entry_order_id = oid
         tr.status = "PENDING_ENTRY"
@@ -8383,10 +8833,7 @@ async def try_micro_scalper_entry_async(symbol: str, price: float):
         tr.entry_notional_usd = float(notional_real)
         tr.tp_price = float(tp_r)
         tr.sl_price = float(sl_r)
-        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-        tr.time_stop_sec = int(ts_bars * 300)
+        apply_runner_state(tr, sig, q, use_runner=False)
         TRADES[("Bybit", symbol)] = tr
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
         tr.tpsl_on_exchange = bool(ok)
@@ -8471,13 +8918,14 @@ async def try_support_reclaim_entry_async(symbol: str, price: float):
     if entry_lock.locked():
         return
     async with entry_lock:
-        if get_trade("Bybit", symbol) is not None:
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
             return
-        if not portfolio_can_open():
-            return
-        ensure_leverage(symbol, BYBIT_LEVERAGE)
         _diag_inc("support_reclaim_entry")
-        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
         tr = TradeState(symbol=symbol, side=side, qty=q, entry_price_req=float(entry), entry_ts=now)
         tr.entry_order_id = oid
         tr.status = "PENDING_ENTRY"
@@ -8487,8 +8935,7 @@ async def try_support_reclaim_entry_async(symbol: str, price: float):
         tr.entry_notional_usd = float(notional_real)
         tr.tp_price = float(tp_r)
         tr.sl_price = float(sl_r)
-        tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
+        apply_runner_state(tr, sig, q, use_runner=False)
         TRADES[("Bybit", symbol)] = tr
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
         tr.tpsl_on_exchange = bool(ok)
@@ -8626,14 +9073,15 @@ async def try_ivb1_entry_async(symbol: str, price: float):
         _diag_inc("ivb1_skip_symbol_lock")
         return
     async with entry_lock:
-        if get_trade("Bybit", symbol) is not None:
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
             return
-        if not portfolio_can_open():
-            return
-        ensure_leverage(symbol, BYBIT_LEVERAGE)
         _diag_inc("ivb1_entry")
         order_send_ts = int(now_s())
-        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
         order_ack_ts = int(now_s())
 
         tr = TradeState(
@@ -8654,19 +9102,7 @@ async def try_ivb1_entry_async(symbol: str, price: float):
         tr.sl_price = float(sl_r)
         tr.order_send_ts = int(order_send_ts)
         tr.order_ack_ts = int(order_ack_ts)
-        tr.runner_enabled = bool(use_runner)
-        if tr.runner_enabled:
-            tr.tps = [float(x) for x in (sig.tps or [])]
-            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [])]
-            tr.tp_hit = [False for _ in tr.tps]
-            tr.initial_qty = float(q)
-            tr.remaining_qty = float(q)
-            tr.trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-            tr.time_stop_sec = int(ts_bars * 300)
-            tr.trail_activate_rr = float(getattr(sig, "trail_activate_rr", 0.0) or 0.0)
-            tr.trail_armed = tr.trail_activate_rr <= 0.0
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
         TRADES[("Bybit", symbol)] = tr
 
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -8795,14 +9231,15 @@ async def try_elder_entry_async(symbol: str, price: float):
         _diag_inc("elder_skip_symbol_lock")
         return
     async with entry_lock:
-        if get_trade("Bybit", symbol) is not None:
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
             return
-        if not portfolio_can_open():
-            return
-        ensure_leverage(symbol, BYBIT_LEVERAGE)
         _diag_inc("elder_entry")
         order_send_ts = int(now_s())
-        oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
         order_ack_ts = int(now_s())
 
         tr = TradeState(
@@ -8823,20 +9260,7 @@ async def try_elder_entry_async(symbol: str, price: float):
         tr.sl_price = float(sl_r)
         tr.order_send_ts = int(order_send_ts)
         tr.order_ack_ts = int(order_ack_ts)
-        trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-        tr.runner_enabled = bool(use_runner or trail_mult > 0.0)
-        if tr.runner_enabled:
-            tr.tps = [float(x) for x in (sig.tps or [tp])]
-            tr.tp_fracs = [float(x) for x in (sig.tp_fracs or [1.0])]
-            tr.tp_hit = [False for _ in tr.tps]
-            tr.initial_qty = float(q)
-            tr.remaining_qty = float(q)
-            tr.trail_mult = trail_mult
-            tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-            ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-            tr.time_stop_sec = int(ts_bars * 300)
-            tr.trail_activate_rr = float(getattr(sig, "trail_activate_rr", 0.0) or 0.0)
-            tr.trail_armed = tr.trail_activate_rr <= 0.0
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
         TRADES[("Bybit", symbol)] = tr
 
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -8932,9 +9356,14 @@ async def try_ts132_entry_async(symbol: str, price: float):
         )
         return
 
-    ensure_leverage(symbol, BYBIT_LEVERAGE)
+    if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+        return
     _diag_inc("ts132_entry")
-    oid, q = TRADE_CLIENT.place_market(symbol, side, qty_floor, allow_quote_fallback=False)
+    submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+    if not submitted:
+        _clear_entry_slot(symbol)
+        return
+    oid, q = submitted
 
     tr = TradeState(
         symbol=symbol,
@@ -8951,23 +9380,7 @@ async def try_ts132_entry_async(symbol: str, price: float):
     tr.entry_notional_usd = float(notional_real)
     tr.tp_price = float(tp_r)
     tr.sl_price = float(sl_r)
-    tr.initial_sl_price = float(sl_r)
-    tr.be_trigger_rr = float(getattr(sig, "be_trigger_rr", 0.0) or 0.0)
-    tr.be_lock_rr = float(getattr(sig, "be_lock_rr", 0.0) or 0.0)
-    tr.trail_activate_rr = float(getattr(sig, "trail_activate_rr", 0.0) or 0.0)
-    tr.trail_armed = tr.trail_activate_rr <= 0.0
-    trail_mult = float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0)
-    if trail_mult > 0:
-        tr.runner_enabled = True
-        tr.tps = [float(tp)]
-        tr.tp_fracs = [1.0]
-        tr.tp_hit = [False]
-        tr.initial_qty = float(q)
-        tr.remaining_qty = float(q)
-        tr.trail_mult = trail_mult
-        tr.trail_period = int(getattr(sig, "trailing_atr_period", 14) or 14)
-        ts_bars = int(getattr(sig, "time_stop_bars", 0) or 0)
-        tr.time_stop_sec = int(ts_bars * 300)
+    apply_runner_state(tr, sig, q, use_runner=False)
     TRADES[("Bybit", symbol)] = tr
 
     ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
@@ -9407,6 +9820,26 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                 except Exception as _e:
                     log_error(f"try_sloped_entry schedule fail {sym}: {_e}")
 
+        # ===== ATT1 TRENDLINE TOUCH ENTRY =====
+        if ENABLE_ATT1_TRADING and (not ATT1_SYMBOL_ALLOWLIST or sym in ATT1_SYMBOL_ALLOWLIST) and _health_gate.allow_entry("alt_trendline_touch_v1", sym):
+            last = int(_ATT1_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= ATT1_TRY_EVERY_SEC:
+                try:
+                    _diag_inc("att1_sched")
+                    asyncio.create_task(try_att1_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_att1_entry schedule fail {sym}: {_e}")
+
+        # ===== ASM1 SLOPED MOMENTUM ENTRY =====
+        if ENABLE_ASM1_TRADING and (not ASM1_SYMBOL_ALLOWLIST or sym in ASM1_SYMBOL_ALLOWLIST) and _health_gate.allow_entry("alt_sloped_momentum_v1", sym):
+            last = int(_ASM1_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= ASM1_TRY_EVERY_SEC:
+                try:
+                    _diag_inc("asm1_sched")
+                    asyncio.create_task(try_asm1_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_asm1_entry schedule fail {sym}: {_e}")
+
         # ===== FLAT RESISTANCE FADE ENTRY =====
         flat_allowlist = _csv_upper_set("ARF1_SYMBOL_ALLOWLIST")
         if ENABLE_FLAT_TRADING and (not flat_allowlist or sym in flat_allowlist) and _health_gate.allow_entry("alt_resistance_fade_v1", sym):
@@ -9490,7 +9923,21 @@ def detect(exch: str, sym: str, st: SymState, now: int):
 
         # ===== INPLAY runner management (partials + trailing + time stop) =====
         if (tr
-            and getattr(tr, "strategy", "") in ("inplay", "inplay_breakout", "btc_eth_midterm_pullback", "alt_inplay_breakdown_v1", "impulse_volume_breakout_v1")
+            and getattr(tr, "strategy", "") in (
+                "inplay",
+                "inplay_breakout",
+                "btc_eth_midterm_pullback",
+                "sloped_channel",
+                "att1_trendline_touch",
+                "asm1_sloped_momentum",
+                "flat_resistance_fade",
+                "alt_inplay_breakdown_v1",
+                "impulse_volume_breakout_v1",
+                "elder_triple_screen_v2",
+                "micro_scalper_v1",
+                "alt_support_reclaim_v1",
+                "triple_screen_v132",
+            )
             and getattr(tr, "status", None) == "OPEN"
             and getattr(tr, "runner_enabled", False)
             and p1 is not None
@@ -9963,6 +10410,22 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
                 msg = "🧩 sloped-universe: using=dynamic (allowlist unset)"
             if _startup_notify_allowed("startup_sloped_universe", msg):
                 tg_trade(msg)
+        if ENABLE_ATT1_TRADING:
+            att1_symbols = sorted(_parse_symbol_csv(os.getenv("ATT1_SYMBOL_ALLOWLIST", "")))
+            if att1_symbols:
+                msg = f"🧩 att1-universe: using={len(att1_symbols)} ({','.join(att1_symbols)})"
+            else:
+                msg = "🧩 att1-universe: using=dynamic (allowlist unset)"
+            if _startup_notify_allowed("startup_att1_universe", msg):
+                tg_trade(msg)
+        if ENABLE_ASM1_TRADING:
+            asm1_symbols = sorted(_parse_symbol_csv(os.getenv("ASM1_SYMBOL_ALLOWLIST", "")))
+            if asm1_symbols:
+                msg = f"🧩 asm1-universe: using={len(asm1_symbols)} ({','.join(asm1_symbols)})"
+            else:
+                msg = "🧩 asm1-universe: using=dynamic (allowlist unset)"
+            if _startup_notify_allowed("startup_asm1_universe", msg):
+                tg_trade(msg)
         if ENABLE_FLAT_TRADING:
             flat_symbols = sorted(_parse_symbol_csv(os.getenv("ARF1_SYMBOL_ALLOWLIST", "")))
             if flat_symbols:
@@ -10129,9 +10592,10 @@ def _check_router_control_plane_health(*, notify: bool = True) -> bool:
 
 def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
-    global ENABLE_IVB1_TRADING, ENABLE_ELDER_TRADING
+    global ENABLE_IVB1_TRADING, ENABLE_ELDER_TRADING, ENABLE_ATT1_TRADING, ENABLE_ASM1_TRADING
     global ENABLE_SLOPED_TRADING, BREAKOUT_SYMBOL_ALLOWLIST, BREAKOUT_SYMBOL_DENYLIST
     global BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE, ELDER_ENGINE, ELDER_SYMBOL_ALLOWLIST
+    global ATT1_ENGINE, ASM1_ENGINE, ATT1_SYMBOL_ALLOWLIST, ASM1_SYMBOL_ALLOWLIST
     global RISK_PER_TRADE_PCT, ORCH_GLOBAL_RISK_MULT, REGIME_OVERLAY_LAST_MTIME
     global REGIME_OVERLAY_LAST_APPLY_TS, REGIME_OVERLAY_LAST_APPLIED_REGIME, LAST_UNIVERSE_REFRESH_TS
 
@@ -10167,10 +10631,14 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     ENABLE_BREAKDOWN_TRADING = _env_bool("ENABLE_BREAKDOWN_TRADING", ENABLE_BREAKDOWN_TRADING)
     ENABLE_IVB1_TRADING = _env_bool("ENABLE_IVB1_TRADING", ENABLE_IVB1_TRADING)
     ENABLE_ELDER_TRADING = _env_bool("ENABLE_ELDER_TRADING", ENABLE_ELDER_TRADING)
+    ENABLE_ATT1_TRADING = _env_bool("ENABLE_ATT1_TRADING", ENABLE_ATT1_TRADING)
+    ENABLE_ASM1_TRADING = _env_bool("ENABLE_ASM1_TRADING", ENABLE_ASM1_TRADING)
     ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
     BREAKOUT_SYMBOL_ALLOWLIST = _csv_upper_set("BREAKOUT_SYMBOL_ALLOWLIST")
     BREAKOUT_SYMBOL_DENYLIST = _csv_upper_set("BREAKOUT_SYMBOL_DENYLIST")
     ELDER_SYMBOL_ALLOWLIST = _csv_upper_set("ETS2_SYMBOL_ALLOWLIST")
+    ATT1_SYMBOL_ALLOWLIST = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
+    ASM1_SYMBOL_ALLOWLIST = _csv_upper_set("ASM1_SYMBOL_ALLOWLIST")
 
     try:
         ORCH_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ORCH_GLOBAL_RISK_MULT", "1.0") or 1.0))
@@ -10182,6 +10650,10 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     BREAKDOWN_ENGINE = BreakdownLiveEngine(fetch_klines) if ENABLE_BREAKDOWN_TRADING else None
     if ENABLE_ELDER_TRADING and ELDER_ENGINE is None:
         ELDER_ENGINE = {}
+    if not ENABLE_ATT1_TRADING:
+        ATT1_ENGINE = None
+    if not ENABLE_ASM1_TRADING:
+        ASM1_ENGINE = None
     if not ENABLE_FLAT_TRADING:
         FLAT_ENGINE = None
     if not ENABLE_SLOPED_TRADING:
@@ -10200,7 +10672,8 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
         f"risk_mult={ORCH_GLOBAL_RISK_MULT:.2f} "
         f"breakout={ENABLE_BREAKOUT_TRADING} breakdown={ENABLE_BREAKDOWN_TRADING} "
         f"flat={ENABLE_FLAT_TRADING} midterm={ENABLE_MIDTERM_TRADING} "
-        f"ivb1={ENABLE_IVB1_TRADING} elder={ENABLE_ELDER_TRADING}"
+        f"ivb1={ENABLE_IVB1_TRADING} elder={ENABLE_ELDER_TRADING} "
+        f"att1={ENABLE_ATT1_TRADING} asm1={ENABLE_ASM1_TRADING}"
     )
     if notify and REGIME_OVERLAY_LAST_APPLIED_REGIME != old_regime and REGIME_OVERLAY_LAST_APPLIED_REGIME:
         tg_trade(
@@ -10208,19 +10681,21 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
             f"risk×{ORCH_GLOBAL_RISK_MULT:.2f} | breakout={int(ENABLE_BREAKOUT_TRADING)} "
             f"breakdown={int(ENABLE_BREAKDOWN_TRADING)} flat={int(ENABLE_FLAT_TRADING)} "
             f"midterm={int(ENABLE_MIDTERM_TRADING)} ivb1={int(ENABLE_IVB1_TRADING)} "
-            f"elder={int(ENABLE_ELDER_TRADING)}"
+            f"elder={int(ENABLE_ELDER_TRADING)} att1={int(ENABLE_ATT1_TRADING)} asm1={int(ENABLE_ASM1_TRADING)}"
         )
     return True
 
 
 def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
-    global ENABLE_IVB1_TRADING, ENABLE_ELDER_TRADING
+    global ENABLE_IVB1_TRADING, ENABLE_ELDER_TRADING, ENABLE_ATT1_TRADING, ENABLE_ASM1_TRADING
     global ENABLE_SLOPED_TRADING, BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE, ELDER_ENGINE, ELDER_SYMBOL_ALLOWLIST
+    global ATT1_ENGINE, ASM1_ENGINE, ATT1_SYMBOL_ALLOWLIST, ASM1_SYMBOL_ALLOWLIST
     global RISK_PER_TRADE_PCT, PORTFOLIO_ALLOCATOR_LAST_MTIME, PORTFOLIO_ALLOCATOR_LAST_APPLY_TS
     global PORTFOLIO_ALLOCATOR_LAST_STATUS, ALLOCATOR_GLOBAL_RISK_MULT, ALLOCATOR_HARD_BLOCK_NEW_ENTRIES
     global ALLOCATOR_SAFE_MODE, ALLOCATOR_SAFE_MODE_REASON, BREAKOUT_RISK_MULT, MIDTERM_RISK_MULT
-    global SLOPED_RISK_MULT, FLAT_RISK_MULT, BREAKDOWN_RISK_MULT, IVB1_RISK_MULT, ELDER_RISK_MULT, LAST_UNIVERSE_REFRESH_TS
+    global SLOPED_RISK_MULT, FLAT_RISK_MULT, BREAKDOWN_RISK_MULT, IVB1_RISK_MULT, ELDER_RISK_MULT
+    global ATT1_RISK_MULT, ASM1_RISK_MULT, LAST_UNIVERSE_REFRESH_TS
 
     if not PORTFOLIO_ALLOCATOR_ENABLE:
         return False
@@ -10254,8 +10729,12 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     ENABLE_BREAKDOWN_TRADING = _env_bool("ENABLE_BREAKDOWN_TRADING", ENABLE_BREAKDOWN_TRADING)
     ENABLE_IVB1_TRADING = _env_bool("ENABLE_IVB1_TRADING", ENABLE_IVB1_TRADING)
     ENABLE_ELDER_TRADING = _env_bool("ENABLE_ELDER_TRADING", ENABLE_ELDER_TRADING)
+    ENABLE_ATT1_TRADING = _env_bool("ENABLE_ATT1_TRADING", ENABLE_ATT1_TRADING)
+    ENABLE_ASM1_TRADING = _env_bool("ENABLE_ASM1_TRADING", ENABLE_ASM1_TRADING)
     ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
     ELDER_SYMBOL_ALLOWLIST = _csv_upper_set("ETS2_SYMBOL_ALLOWLIST")
+    ATT1_SYMBOL_ALLOWLIST = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
+    ASM1_SYMBOL_ALLOWLIST = _csv_upper_set("ASM1_SYMBOL_ALLOWLIST")
 
     try:
         ALLOCATOR_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ALLOCATOR_GLOBAL_RISK_MULT", "1.0") or 1.0))
@@ -10294,6 +10773,14 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         ELDER_RISK_MULT = max(0.05, float(os.getenv("ELDER_RISK_MULT", str(ELDER_RISK_MULT)) or ELDER_RISK_MULT))
     except Exception:
         pass
+    try:
+        ATT1_RISK_MULT = max(0.05, float(os.getenv("ATT1_RISK_MULT", str(ATT1_RISK_MULT)) or ATT1_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        ASM1_RISK_MULT = max(0.05, float(os.getenv("ASM1_RISK_MULT", str(ASM1_RISK_MULT)) or ASM1_RISK_MULT))
+    except Exception:
+        pass
 
     _recompute_effective_risk_pct()
 
@@ -10301,6 +10788,10 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     BREAKDOWN_ENGINE = BreakdownLiveEngine(fetch_klines) if ENABLE_BREAKDOWN_TRADING else None
     if ENABLE_ELDER_TRADING and ELDER_ENGINE is None:
         ELDER_ENGINE = {}
+    if not ENABLE_ATT1_TRADING:
+        ATT1_ENGINE = None
+    if not ENABLE_ASM1_TRADING:
+        ASM1_ENGINE = None
     if not ENABLE_FLAT_TRADING:
         FLAT_ENGINE = None
     if not ENABLE_SLOPED_TRADING:
@@ -10319,7 +10810,8 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         f"hard_block={ALLOCATOR_HARD_BLOCK_NEW_ENTRIES} "
         f"breakout={ENABLE_BREAKOUT_TRADING} breakdown={ENABLE_BREAKDOWN_TRADING} "
         f"flat={ENABLE_FLAT_TRADING} midterm={ENABLE_MIDTERM_TRADING} "
-        f"ivb1={ENABLE_IVB1_TRADING} elder={ENABLE_ELDER_TRADING}"
+        f"ivb1={ENABLE_IVB1_TRADING} elder={ENABLE_ELDER_TRADING} "
+        f"att1={ENABLE_ATT1_TRADING} asm1={ENABLE_ASM1_TRADING}"
     )
     if notify and PORTFOLIO_ALLOCATOR_LAST_STATUS != old_status:
         tg_trade(
@@ -10327,7 +10819,8 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
             f"risk×{ALLOCATOR_GLOBAL_RISK_MULT:.2f} | hard_block={int(ALLOCATOR_HARD_BLOCK_NEW_ENTRIES)} | "
             f"breakout={int(ENABLE_BREAKOUT_TRADING)} breakdown={int(ENABLE_BREAKDOWN_TRADING)} "
             f"flat={int(ENABLE_FLAT_TRADING)} midterm={int(ENABLE_MIDTERM_TRADING)} "
-            f"ivb1={int(ENABLE_IVB1_TRADING)} elder={int(ENABLE_ELDER_TRADING)}"
+            f"ivb1={int(ENABLE_IVB1_TRADING)} elder={int(ENABLE_ELDER_TRADING)} "
+            f"att1={int(ENABLE_ATT1_TRADING)} asm1={int(ENABLE_ASM1_TRADING)}"
         )
     return True
 
@@ -10495,11 +10988,11 @@ async def bybit_ws():
 
 # =========================== BINANCE WS ===========================
 def binance_symbols(top_n: int) -> List[str]:
-    ei = requests.get("https://fapi.binance.com/fapi/v1/exchangeInfo", timeout=15)
+    ei = _HTTP.get("https://fapi.binance.com/fapi/v1/exchangeInfo", timeout=15)
     ei.raise_for_status()
     lst = [s for s in ei.json()["symbols"]
            if s.get("quoteAsset")=="USDT" and s.get("contractType")=="PERPETUAL" and s.get("status")=="TRADING"]
-    t = requests.get("https://fapi.binance.com/fapi/v1/ticker/24hr", timeout=15).json()
+    t = _HTTP.get("https://fapi.binance.com/fapi/v1/ticker/24hr", timeout=15).json()
     t24 = {x["symbol"]: float(x.get("quoteVolume",0) or 0) for x in t}
     lst = [s for s in lst if t24.get(s["symbol"],0) >= MIN_24H_TURNOVER]
     lst.sort(key=lambda s: t24.get(s["symbol"],0), reverse=True)
@@ -10594,6 +11087,8 @@ def auth_check_all_accounts():
         f"retest={ENABLE_RETEST_TRADING}, "
         f"range={ENABLE_RANGE_TRADING}, "
         f"sloped={ENABLE_SLOPED_TRADING}, "
+        f"att1={ENABLE_ATT1_TRADING}, "
+        f"asm1={ENABLE_ASM1_TRADING}, "
         f"flat={ENABLE_FLAT_TRADING}, "
         f"breakdown={ENABLE_BREAKDOWN_TRADING}, "
         f"ivb1={ENABLE_IVB1_TRADING}, "
@@ -10851,7 +11346,8 @@ def main():
     print(
         f"Strategies: breakout={ENABLE_BREAKOUT_TRADING} inplay={ENABLE_INPLAY_TRADING} "
         f"retest={ENABLE_RETEST_TRADING} range={ENABLE_RANGE_TRADING} pump_fade={ENABLE_PUMP_FADE_TRADING} "
-        f"midterm={ENABLE_MIDTERM_TRADING} sloped={ENABLE_SLOPED_TRADING} flat={ENABLE_FLAT_TRADING} "
+        f"midterm={ENABLE_MIDTERM_TRADING} sloped={ENABLE_SLOPED_TRADING} att1={ENABLE_ATT1_TRADING} "
+        f"asm1={ENABLE_ASM1_TRADING} flat={ENABLE_FLAT_TRADING} "
         f"breakdown={ENABLE_BREAKDOWN_TRADING} ivb1={ENABLE_IVB1_TRADING} "
         f"elder={ENABLE_ELDER_TRADING} ts132={ENABLE_TS132_TRADING}"
     )

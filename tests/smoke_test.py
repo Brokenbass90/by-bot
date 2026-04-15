@@ -320,6 +320,84 @@ def test_diagnostics_snapshot():
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# 9. entry_guard — circuit breaker opens and recovers
+# ─────────────────────────────────────────────────────────────────────────────
+def test_entry_guard():
+    from bot.entry_guard import EntryCircuitBreaker
+
+    br = EntryCircuitBreaker(failure_threshold=2, cooldown_sec=30)
+    assert br.is_open(now=100.0) is False
+
+    snap1 = br.note_failure("first", now=100.0)
+    assert snap1.open is False
+    assert snap1.failures == 1
+
+    snap2 = br.note_failure("second", now=101.0)
+    assert snap2.open is True
+    assert snap2.remaining_sec >= 29
+    assert br.is_open(now=110.0) is True
+    assert br.is_open(now=132.0) is False
+
+    br.note_success()
+    snap3 = br.snapshot(now=132.0)
+    assert snap3.open is False
+    assert snap3.failures == 0
+    assert snap3.reason == ""
+
+    print("  ✓ entry_guard.EntryCircuitBreaker — open/recover cycle")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 10. runner_state — hydrates live runner fields consistently
+# ─────────────────────────────────────────────────────────────────────────────
+def test_runner_state():
+    from trade_state import TradeState
+    from bot.runner_state import apply_runner_state
+
+    class _Sig:
+        tps = [101.0, 102.5]
+        tp_fracs = [0.4, 0.6]
+        trailing_atr_mult = 1.25
+        trailing_atr_period = 21
+        trail_activate_rr = 1.1
+        be_trigger_rr = 0.8
+        be_lock_rr = 0.1
+        time_stop_bars = 6
+
+    tr = TradeState(symbol="BTCUSDT", side="Buy")
+    tr.sl_price = 95.0
+    enabled = apply_runner_state(tr, _Sig(), 0.75, use_runner=True)
+    assert enabled is True
+    assert tr.runner_enabled is True
+    assert tr.initial_qty == 0.75
+    assert tr.remaining_qty == 0.75
+    assert tr.initial_sl_price == 95.0
+    assert tr.tps == [101.0, 102.5]
+    assert tr.tp_fracs == [0.4, 0.6]
+    assert tr.tp_hit == [False, False]
+    assert tr.trail_mult == 1.25
+    assert tr.trail_period == 21
+    assert tr.trail_activate_rr == 1.1
+    assert tr.be_trigger_rr == 0.8
+    assert tr.be_lock_rr == 0.1
+    assert tr.time_stop_sec == 1800
+
+    tr2 = TradeState(symbol="ETHUSDT", side="Sell")
+    tr2.sl_price = 2050.0
+    enabled_dynamic = apply_runner_state(tr2, _Sig(), 1.0, use_runner=False)
+    assert enabled_dynamic is True
+    assert tr2.runner_enabled is True
+    assert tr2.initial_qty == 1.0
+    assert tr2.remaining_qty == 1.0
+    assert tr2.tps == []
+    assert tr2.initial_sl_price == 2050.0
+    assert tr2.be_trigger_rr == 0.8
+    assert tr2.time_stop_sec == 1800
+
+    print("  ✓ runner_state.apply_runner_state — shared hydration")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Runner
 # ─────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
@@ -332,6 +410,8 @@ if __name__ == "__main__":
         test_trade_state,
         test_news_filter,
         test_diagnostics_snapshot,
+        test_entry_guard,
+        test_runner_state,
     ]
     print(f"\n{'─' * 55}")
     print("  smoke_test.py — running all tests")

@@ -738,7 +738,8 @@ def _check_signal_last(candles: List[Candle], symbol: str,
 def run_once(client: AlpacaClient, dry_run: bool,
              strategy_specs: Dict[str, dict], csv_paths: Dict[str, Path],
              verbose: bool = True) -> None:
-    notional_usd   = _env_float("INTRADAY_NOTIONAL_USD", 200.0)
+    notional_usd      = _env_float("INTRADAY_NOTIONAL_USD", 200.0)
+    fractional_shares = _env_bool("ALPACA_FRACTIONAL_SHARES", False)
     max_positions  = _env_int("INTRADAY_MAX_POSITIONS", 3)
     spy_gate_on    = _env_bool("INTRADAY_SPY_GATE", True)
     spy_sma_period = _env_int("INTRADAY_SPY_SMA_PERIOD", 50)
@@ -982,7 +983,16 @@ def run_once(client: AlpacaClient, dry_run: bool,
                 print(f"    → Geometry invalid (short): TP={tp_price:.2f} e={entry_price:.2f} SL={sl_price:.2f}")
                 continue
 
-        qty             = max(1, int(notional_usd / entry_price))
+        if fractional_shares:
+            # Fractional qty: up to 3 decimal places (Alpaca supports this)
+            qty_raw = notional_usd / max(1e-6, entry_price)
+            qty = round(max(0.001, qty_raw), 3)
+        else:
+            # Integer shares only: enforce at least 1 but warn if oversized
+            qty = max(1, int(notional_usd / entry_price))
+            if qty * entry_price > notional_usd * 2.0:
+                print(f"    ⚠ Stock price ${entry_price:.2f} >> notional ${notional_usd:.0f}; "
+                      f"consider ALPACA_FRACTIONAL_SHARES=1")
         actual_notional = qty * entry_price
         risk_usd        = abs(entry_price - sl_price) * qty
         rr_label        = f"RR≈{abs(tp_price-entry_price)/max(1e-6,abs(entry_price-sl_price)):.1f}"
