@@ -982,18 +982,28 @@ sudo journalctl -u bybit-bot | grep -E "ASB1|HZBO1|engine init"
 # pump_fade_v4r — запустить после появления данных 1000PEPE/SUI/ARB
 # TS132 — проверить наличие файла strategies/triple_screen_v132.py
 
-# === ОПЦИОНАЛЬНЫЙ ШАГ 9: Запустить оркестратор как демон ===
-# (пока бот не умеет читать regime.json — только для мониторинга)
+# === ШАГ 9: Запустить оркестратор как демон ===
+# --env-out пишет configs/regime_orchestrator_latest.env, который бот горячо перечитывает
+# (REGIME_OVERLAY_RELOAD_SEC=300 по дефолту — каждые 5 минут)
 nohup python3 bot/regime_orchestrator.py --symbol BTCUSDT \
-      --out runtime/regime.json --loop --interval 900 \
+      --out runtime/regime.json \
+      --env-out configs/regime_orchestrator_latest.env \
+      --loop --interval 900 \
       >> logs/regime_orchestrator.log 2>&1 &
+
+# === ШАГ 10: Проверить что бот подхватил env оверлей ===
+# Через ~5 минут в логах должно появиться:
+# [regime] applied regime=BEAR_TREND risk_mult=1.00 ...
+tail -f logs/regime_orchestrator.log
 ```
 
 ### Что ещё НЕ подключено (технический долг)
 
-1. **Бот не читает `runtime/regime.json`** — оркестратор пишет файл, но бот его не потребляет.
-   Следующая задача Codex: добавить `_apply_regime_overrides()` в бот, читать файл при старте
-   и через `asyncio.create_task()` каждые 15 минут.
+1. **Оркестратор подключён через существующий механизм env-оверлея** ✅
+   - Запускается с `--env-out configs/regime_orchestrator_latest.env`
+   - Бот уже читает этот файл каждые 5 минут (`REGIME_OVERLAY_RELOAD_SEC=300`)
+   - Стратегии подхватывают `ETS2_ALLOW_LONGS=0`, `IVB1_ALLOW_LONGS=0` и т.д. при следующем signal()
+   - Нужно только: запустить оркестратор как демон на сервере (шаг 9 выше)
 
 2. **`alt_support_bounce_v1` нет ENABLE флага в боте** — WF-22 viable (AvgPF=1.421),
    добавлен в конфиг, но `try_bounce_entry_async()` ещё не написан в `smart_pump_reversal_bot.py`.
