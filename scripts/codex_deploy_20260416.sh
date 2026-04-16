@@ -48,6 +48,9 @@ step "[1/8] git pull"
 
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 echo "  Branch: $BRANCH"
+if [ -n "$(git status --porcelain)" ]; then
+    fail "Worktree is dirty; refusing git pull over live changes. Use targeted copy/scp deploy or clean the tree first."
+fi
 git pull origin "$BRANCH"
 
 # Check key new files landed
@@ -109,7 +112,7 @@ ENABLE_IVB1_TRADING=0
 
 # Elder v2: PF=1.098 is marginal, 6 red months/12, too many trades (250/yr)
 # Risk reduced 0.60 → 0.40 to limit drawdown contribution
-ELDER_V2_RISK_MULT=0.40
+ELDER_RISK_MULT=0.40
 
 # ASB1 + HZBO1: already ENABLED above — confirmed VIABLE by annual backtest
 # ASB1: +18.6%/yr, PF=1.397, 43 trades
@@ -121,7 +124,7 @@ fi
 
 echo ""
 echo "  Key values in effect:"
-grep -E "ENABLE_IVB1|ELDER_V2_RISK_MULT|ENABLE_ASB1|ENABLE_HZBO1" "$LIVE_ENV" | tail -10
+grep -E "ENABLE_IVB1|ELDER_RISK_MULT|ENABLE_ASB1|ENABLE_HZBO1" "$LIVE_ENV" | tail -10
 
 # ── 4. SYNTAX CHECK ──────────────────────────────────────────────────────────
 step "[4/8] Syntax check"

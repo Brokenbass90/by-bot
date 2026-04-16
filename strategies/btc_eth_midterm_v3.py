@@ -243,6 +243,14 @@ class BTCETHMidtermV3Strategy:
 
     def _load_env(self) -> None:
         c = self.cfg
+        legacy_hist_sign = os.getenv("MTPB3_REQUIRE_HIST_SIGN")
+        if legacy_hist_sign is not None and str(legacy_hist_sign).strip():
+            hist_sign_default_shorts = _env_bool("MTPB3_REQUIRE_HIST_SIGN", c.macro_require_hist_sign_shorts)
+            hist_sign_default_longs = _env_bool("MTPB3_REQUIRE_HIST_SIGN", c.macro_require_hist_sign_longs)
+        else:
+            hist_sign_default_shorts = c.macro_require_hist_sign_shorts
+            hist_sign_default_longs = c.macro_require_hist_sign_longs
+
         c.trend_tf = os.getenv("MTPB3_TREND_TF", c.trend_tf)
         c.signal_tf = os.getenv("MTPB3_SIGNAL_TF", c.signal_tf)
         c.eval_tf_min = _env_int("MTPB3_EVAL_TF_MIN", c.eval_tf_min)
@@ -254,8 +262,8 @@ class BTCETHMidtermV3Strategy:
         c.macro_macd_fast = _env_int("MTPB3_MACD_FAST", c.macro_macd_fast)
         c.macro_macd_slow = _env_int("MTPB3_MACD_SLOW", c.macro_macd_slow)
         c.macro_macd_signal = _env_int("MTPB3_MACD_SIGNAL", c.macro_macd_signal)
-        c.macro_require_hist_sign_shorts = _env_bool("MTPB3_REQUIRE_HIST_SIGN_SHORTS", c.macro_require_hist_sign_shorts)
-        c.macro_require_hist_sign_longs = _env_bool("MTPB3_REQUIRE_HIST_SIGN_LONGS", c.macro_require_hist_sign_longs)
+        c.macro_require_hist_sign_shorts = _env_bool("MTPB3_REQUIRE_HIST_SIGN_SHORTS", hist_sign_default_shorts)
+        c.macro_require_hist_sign_longs = _env_bool("MTPB3_REQUIRE_HIST_SIGN_LONGS", hist_sign_default_longs)
         c.macro_consec_bars = _env_int("MTPB3_MACD_CONSEC_BARS", c.macro_consec_bars)
         c.signal_ema_period = _env_int("MTPB3_SIGNAL_EMA_PERIOD", c.signal_ema_period)
         c.atr_period = _env_int("MTPB3_ATR_PERIOD", c.atr_period)

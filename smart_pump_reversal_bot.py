@@ -64,7 +64,15 @@ from indicators import (
 )
 
 # ── Phase 1: bot/ package imports ────────────────────────────────────────────
-from bot.env_helpers import _env_bool, _csv_lower_set, _csv_upper_set, _session_name_utc
+from bot.env_helpers import (
+    _env_bool,
+    _env_bool_any,
+    _env_float_any,
+    _csv_lower_set,
+    _csv_upper_set,
+    _session_name_utc,
+    _mirror_env_aliases,
+)
 from bot.utils import now_s, _to_float_safe, _today_ymd, base_from_usdt, dist_pct
 from bot.health_gate import gate as _health_gate  # equity-curve live entry gate
 from bot.allowlist_watcher import AllowlistWatcher as _AllowlistWatcher  # dynamic allowlist hot-reload
@@ -116,6 +124,12 @@ load_dotenv()
 AUTO_APPLY_PARAMS_PATH = ROOT_DIR / "configs" / "auto_apply_params.env"
 if AUTO_APPLY_PARAMS_PATH.exists():
     load_dotenv(AUTO_APPLY_PARAMS_PATH, override=True)
+
+_ENV_ALIAS_MAP = {
+    "ENABLE_ELDER_TRADING": "ENABLE_ELDER_V2_TRADING",
+    "ELDER_RISK_MULT": "ELDER_V2_RISK_MULT",
+}
+_mirror_env_aliases(_ENV_ALIAS_MAP)
 
 
 def _build_http_session() -> requests.Session:
@@ -698,9 +712,9 @@ IVB1_ENGINE: dict[str, ImpulseVolumeBreakoutV1Strategy] | None = {}
 _IVB1_LAST_TRY: dict[str, float] = {}
 
 # ===== ELDER TRIPLE SCREEN V2 (live) =====
-ENABLE_ELDER_TRADING = os.getenv("ENABLE_ELDER_TRADING", "0").strip() == "1"
+ENABLE_ELDER_TRADING = _env_bool_any("ENABLE_ELDER_TRADING", "ENABLE_ELDER_V2_TRADING", default=False)
 ELDER_TRY_EVERY_SEC = int(os.getenv("ELDER_TRY_EVERY_SEC", "60"))
-ELDER_RISK_MULT = max(0.05, float(os.getenv("ELDER_RISK_MULT", "1.0") or 1.0))
+ELDER_RISK_MULT = max(0.05, _env_float_any("ELDER_RISK_MULT", "ELDER_V2_RISK_MULT", default=1.0))
 ELDER_ALLOW_MINQTY_FALLBACK = _env_bool("ELDER_ALLOW_MINQTY_FALLBACK", True)
 ELDER_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("ELDER_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 ELDER_MAX_OPEN_TRADES = int(os.getenv("ELDER_MAX_OPEN_TRADES", "1"))
@@ -11024,6 +11038,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
 
     for k, v in env_map.items():
         os.environ[k] = v
+    _mirror_env_aliases(_ENV_ALIAS_MAP)
 
     old_regime = str(REGIME_OVERLAY_LAST_APPLIED_REGIME or "").strip()
 
@@ -11032,7 +11047,11 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     ENABLE_FLAT_TRADING = _env_bool("ENABLE_FLAT_TRADING", ENABLE_FLAT_TRADING)
     ENABLE_BREAKDOWN_TRADING = _env_bool("ENABLE_BREAKDOWN_TRADING", ENABLE_BREAKDOWN_TRADING)
     ENABLE_IVB1_TRADING = _env_bool("ENABLE_IVB1_TRADING", ENABLE_IVB1_TRADING)
-    ENABLE_ELDER_TRADING = _env_bool("ENABLE_ELDER_TRADING", ENABLE_ELDER_TRADING)
+    ENABLE_ELDER_TRADING = _env_bool_any(
+        "ENABLE_ELDER_TRADING",
+        "ENABLE_ELDER_V2_TRADING",
+        default=ENABLE_ELDER_TRADING,
+    )
     ENABLE_ATT1_TRADING = _env_bool("ENABLE_ATT1_TRADING", ENABLE_ATT1_TRADING)
     ENABLE_ASM1_TRADING = _env_bool("ENABLE_ASM1_TRADING", ENABLE_ASM1_TRADING)
     ENABLE_ASB1_TRADING = _env_bool("ENABLE_ASB1_TRADING", ENABLE_ASB1_TRADING)
@@ -11130,6 +11149,7 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
 
     for k, v in env_map.items():
         os.environ[k] = v
+    _mirror_env_aliases(_ENV_ALIAS_MAP)
 
     old_status = str(PORTFOLIO_ALLOCATOR_LAST_STATUS or "").strip()
 
@@ -11138,7 +11158,11 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     ENABLE_FLAT_TRADING = _env_bool("ENABLE_FLAT_TRADING", ENABLE_FLAT_TRADING)
     ENABLE_BREAKDOWN_TRADING = _env_bool("ENABLE_BREAKDOWN_TRADING", ENABLE_BREAKDOWN_TRADING)
     ENABLE_IVB1_TRADING = _env_bool("ENABLE_IVB1_TRADING", ENABLE_IVB1_TRADING)
-    ENABLE_ELDER_TRADING = _env_bool("ENABLE_ELDER_TRADING", ENABLE_ELDER_TRADING)
+    ENABLE_ELDER_TRADING = _env_bool_any(
+        "ENABLE_ELDER_TRADING",
+        "ENABLE_ELDER_V2_TRADING",
+        default=ENABLE_ELDER_TRADING,
+    )
     ENABLE_ATT1_TRADING = _env_bool("ENABLE_ATT1_TRADING", ENABLE_ATT1_TRADING)
     ENABLE_ASM1_TRADING = _env_bool("ENABLE_ASM1_TRADING", ENABLE_ASM1_TRADING)
     ENABLE_ASB1_TRADING = _env_bool("ENABLE_ASB1_TRADING", ENABLE_ASB1_TRADING)
@@ -11184,7 +11208,10 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     except Exception:
         pass
     try:
-        ELDER_RISK_MULT = max(0.05, float(os.getenv("ELDER_RISK_MULT", str(ELDER_RISK_MULT)) or ELDER_RISK_MULT))
+        ELDER_RISK_MULT = max(
+            0.05,
+            _env_float_any("ELDER_RISK_MULT", "ELDER_V2_RISK_MULT", default=ELDER_RISK_MULT),
+        )
     except Exception:
         pass
     try:

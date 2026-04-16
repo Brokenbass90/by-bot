@@ -99,6 +99,16 @@ def _parse_env(path: Path) -> Dict[str, str]:
     return out
 
 
+def _mirror_env_dict_aliases(env_map: Dict[str, str], alias_map: Dict[str, str]) -> None:
+    for canonical, alias in alias_map.items():
+        canonical_value = str(env_map.get(canonical, "")).strip()
+        if canonical_value:
+            continue
+        alias_value = str(env_map.get(alias, "")).strip()
+        if alias_value:
+            env_map[canonical] = alias_value
+
+
 def _env_enabled(env_map: Dict[str, str], key: str, default: bool = True) -> bool:
     raw = str(env_map.get(key, "1" if default else "0")).strip().lower()
     return raw not in {"0", "false", "no", "off", ""}
@@ -197,6 +207,10 @@ def main() -> int:
     out_state = Path(args.out_state).expanduser()
 
     base_env = _parse_env(base_env_path)
+    _mirror_env_dict_aliases(base_env, {
+        "ENABLE_ELDER_TRADING": "ENABLE_ELDER_V2_TRADING",
+        "ELDER_RISK_MULT": "ELDER_V2_RISK_MULT",
+    })
     orch = _load_json(orch_path, {})
     router = _load_json(router_path, {})
     health = _load_json(health_path, {})

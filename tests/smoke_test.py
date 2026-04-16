@@ -25,7 +25,7 @@ if _ROOT not in sys.path:
 # 1. bot/env_helpers — _env_bool
 # ─────────────────────────────────────────────────────────────────────────────
 def test_env_bool():
-    from bot.env_helpers import _env_bool
+    from bot.env_helpers import _env_bool, _env_bool_any, _env_float_any, _mirror_env_aliases
 
     # Defaults
     assert _env_bool("__NONEXISTENT_VAR__", True)  is True
@@ -41,7 +41,22 @@ def test_env_bool():
         os.environ["_TEST_BOOL"] = val
         assert _env_bool("_TEST_BOOL", True) is False, f"expected False for {val!r}"
 
+    os.environ.pop("_TEST_ALIAS_BOOL", None)
+    os.environ.pop("_TEST_ALIAS_FLOAT", None)
+    os.environ["_TEST_ALIAS_BOOL"] = "1"
+    os.environ["_TEST_ALIAS_FLOAT"] = "0.60"
+    assert _env_bool_any("_TEST_MISSING_BOOL", "_TEST_ALIAS_BOOL", default=False) is True
+    assert abs(_env_float_any("_TEST_MISSING_FLOAT", "_TEST_ALIAS_FLOAT", default=1.0) - 0.60) < 1e-9
+    _mirror_env_aliases({"_TEST_CANON_BOOL": "_TEST_ALIAS_BOOL"})
+    assert os.environ.get("_TEST_CANON_BOOL") == "1"
+    os.environ["_TEST_CANON_BOOL"] = "0"
+    _mirror_env_aliases({"_TEST_CANON_BOOL": "_TEST_ALIAS_BOOL"})
+    assert os.environ.get("_TEST_CANON_BOOL") == "0", "canonical env must win over alias"
+
     os.environ.pop("_TEST_BOOL", None)
+    os.environ.pop("_TEST_ALIAS_BOOL", None)
+    os.environ.pop("_TEST_ALIAS_FLOAT", None)
+    os.environ.pop("_TEST_CANON_BOOL", None)
     print("  ✓ env_helpers._env_bool")
 
 
@@ -397,6 +412,38 @@ def test_runner_state():
     print("  ✓ runner_state.apply_runner_state — shared hydration")
 
 
+def test_midterm_v3_legacy_hist_sign():
+    from strategies.btc_eth_midterm_v3 import BTCETHMidtermV3Strategy
+
+    saved = {k: os.environ.get(k) for k in (
+        "MTPB3_REQUIRE_HIST_SIGN",
+        "MTPB3_REQUIRE_HIST_SIGN_SHORTS",
+        "MTPB3_REQUIRE_HIST_SIGN_LONGS",
+    )}
+    try:
+        os.environ["MTPB3_REQUIRE_HIST_SIGN"] = "1"
+        os.environ.pop("MTPB3_REQUIRE_HIST_SIGN_SHORTS", None)
+        os.environ.pop("MTPB3_REQUIRE_HIST_SIGN_LONGS", None)
+        strat = BTCETHMidtermV3Strategy()
+        assert strat.cfg.macro_require_hist_sign_shorts is True
+        assert strat.cfg.macro_require_hist_sign_longs is True
+
+        os.environ["MTPB3_REQUIRE_HIST_SIGN"] = "1"
+        os.environ["MTPB3_REQUIRE_HIST_SIGN_SHORTS"] = "1"
+        os.environ["MTPB3_REQUIRE_HIST_SIGN_LONGS"] = "0"
+        strat_explicit = BTCETHMidtermV3Strategy()
+        assert strat_explicit.cfg.macro_require_hist_sign_shorts is True
+        assert strat_explicit.cfg.macro_require_hist_sign_longs is False
+    finally:
+        for key, value in saved.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+
+    print("  ✓ btc_eth_midterm_v3 legacy MACD env fallback")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Runner
 # ─────────────────────────────────────────────────────────────────────────────
@@ -412,6 +459,7 @@ if __name__ == "__main__":
         test_diagnostics_snapshot,
         test_entry_guard,
         test_runner_state,
+        test_midterm_v3_legacy_hist_sign,
     ]
     print(f"\n{'─' * 55}")
     print("  smoke_test.py — running all tests")
