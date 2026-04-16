@@ -622,6 +622,28 @@ ATT1_SYMBOL_ALLOWLIST: set[str] = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
 ATT1_ENGINE = None
 _ATT1_LAST_TRY: dict[str, float] = {}
 
+# ===== ASB1 SLOPE BREAKOUT (live) =====
+ENABLE_ASB1_TRADING = os.getenv("ENABLE_ASB1_TRADING", "0").strip() == "1"
+ASB1_TRY_EVERY_SEC = int(os.getenv("ASB1_TRY_EVERY_SEC", "60"))
+ASB1_RISK_MULT = max(0.05, float(os.getenv("ASB1_RISK_MULT", "0.50")))
+ASB1_ALLOW_MINQTY_FALLBACK = _env_bool("ASB1_ALLOW_MINQTY_FALLBACK", True)
+ASB1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("ASB1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
+ASB1_MAX_OPEN_TRADES = int(os.getenv("ASB1_MAX_OPEN_TRADES", "1"))
+ASB1_SYMBOL_ALLOWLIST: set[str] = _csv_upper_set("ASB1_SYMBOL_ALLOWLIST")
+ASB1_ENGINE = None
+_ASB1_LAST_TRY: dict[str, float] = {}
+
+# ===== HZBO1 HORIZONTAL ZONE BREAKOUT (live) =====
+ENABLE_HZBO1_TRADING = os.getenv("ENABLE_HZBO1_TRADING", "0").strip() == "1"
+HZBO1_TRY_EVERY_SEC = int(os.getenv("HZBO1_TRY_EVERY_SEC", "60"))
+HZBO1_RISK_MULT = max(0.05, float(os.getenv("HZBO1_RISK_MULT", "0.40")))
+HZBO1_ALLOW_MINQTY_FALLBACK = _env_bool("HZBO1_ALLOW_MINQTY_FALLBACK", True)
+HZBO1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("HZBO1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
+HZBO1_MAX_OPEN_TRADES = int(os.getenv("HZBO1_MAX_OPEN_TRADES", "1"))
+HZBO1_SYMBOL_ALLOWLIST: set[str] = _csv_upper_set("HZBO1_SYMBOL_ALLOWLIST")
+HZBO1_ENGINE = None
+_HZBO1_LAST_TRY: dict[str, float] = {}
+
 # ===== ASM1 SLOPED MOMENTUM (live) =====
 ENABLE_ASM1_TRADING = os.getenv("ENABLE_ASM1_TRADING", "0").strip() == "1"
 ASM1_TRY_EVERY_SEC = int(os.getenv("ASM1_TRY_EVERY_SEC", "60"))
@@ -6345,6 +6367,26 @@ if ENABLE_ATT1_TRADING:
         log_error(f"[ATT1] engine init fail: {_e}")
         ATT1_ENGINE = None
 
+# ===== ASB1 ENGINE =====
+if ENABLE_ASB1_TRADING:
+    try:
+        from strategies.asb1_live import ASB1LiveEngine
+        ASB1_ENGINE = ASB1LiveEngine(fetch_klines)
+        print("[ASB1] engine initialised")
+    except Exception as _e:
+        log_error(f"[ASB1] engine init fail: {_e}")
+        ASB1_ENGINE = None
+
+# ===== HZBO1 ENGINE =====
+if ENABLE_HZBO1_TRADING:
+    try:
+        from strategies.hzbo1_live import HZBO1LiveEngine
+        HZBO1_ENGINE = HZBO1LiveEngine(fetch_klines)
+        print("[HZBO1] engine initialised")
+    except Exception as _e:
+        log_error(f"[HZBO1] engine init fail: {_e}")
+        HZBO1_ENGINE = None
+
 # ===== ASM1 ENGINE =====
 if ENABLE_ASM1_TRADING:
     try:
@@ -6418,6 +6460,40 @@ def _ensure_att1_engine() -> bool:
     except Exception as e:
         ATT1_ENGINE = None
         _log_engine_lazy_init_fail("ATT1", e)
+        return False
+
+
+def _ensure_asb1_engine() -> bool:
+    global ASB1_ENGINE
+    if ASB1_ENGINE is not None:
+        return True
+    if not ENABLE_ASB1_TRADING:
+        return False
+    try:
+        from strategies.asb1_live import ASB1LiveEngine
+        ASB1_ENGINE = ASB1LiveEngine(fetch_klines)
+        print("[ASB1] engine lazy-init ok")
+        return True
+    except Exception as e:
+        ASB1_ENGINE = None
+        _log_engine_lazy_init_fail("ASB1", e)
+        return False
+
+
+def _ensure_hzbo1_engine() -> bool:
+    global HZBO1_ENGINE
+    if HZBO1_ENGINE is not None:
+        return True
+    if not ENABLE_HZBO1_TRADING:
+        return False
+    try:
+        from strategies.hzbo1_live import HZBO1LiveEngine
+        HZBO1_ENGINE = HZBO1LiveEngine(fetch_klines)
+        print("[HZBO1] engine lazy-init ok")
+        return True
+    except Exception as e:
+        HZBO1_ENGINE = None
+        _log_engine_lazy_init_fail("HZBO1", e)
         return False
 
 
@@ -8407,6 +8483,290 @@ async def try_asm1_entry_async(symbol: str, price: float):
         )
 
 
+async def try_asb1_entry_async(symbol: str, price: float):
+    """Try ASB1 sloped trendline breakdown short entry for a symbol."""
+    if not ENABLE_ASB1_TRADING:
+        return
+    if not _ensure_asb1_engine():
+        _diag_inc("asb1_skip_no_engine")
+        return
+    if not TRADE_ON or DRY_RUN:
+        _diag_inc("asb1_skip_trade_off")
+        return
+    if TRADE_CLIENT is None:
+        _diag_inc("asb1_skip_no_client")
+        return
+    if get_trade("Bybit", symbol) is not None:
+        _diag_inc("asb1_skip_open_trade")
+        return
+    if ASB1_MAX_OPEN_TRADES > 0:
+        open_asb1 = 0
+        for tr in TRADES.values():
+            if getattr(tr, "strategy", "") != "asb1_slope_break":
+                continue
+            if str(getattr(tr, "status", "") or "").upper() in {"CLOSED", "ERROR"}:
+                continue
+            open_asb1 += 1
+        if open_asb1 >= ASB1_MAX_OPEN_TRADES:
+            _diag_inc("asb1_skip_max_open")
+            return
+    if not portfolio_can_open():
+        _diag_inc("asb1_skip_portfolio")
+        return
+
+    now = now_s()
+    last = int(_ASB1_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < ASB1_TRY_EVERY_SEC:
+        _diag_inc("asb1_skip_cooldown")
+        return
+    _ASB1_LAST_TRY[symbol] = now
+    _diag_inc("asb1_try")
+
+    try:
+        sig = ASB1_ENGINE.signal(symbol, int(now * 1000), 0, 0, 0, price, 0)
+    except Exception as e:
+        log_error(f"asb1 signal error {symbol}: {e}")
+        return
+    if not sig:
+        _diag_inc("asb1_no_signal")
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=ASB1_RISK_MULT)
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0 and ASB1_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=price,
+            stop_pct=stop_pct,
+            risk_mult=ASB1_RISK_MULT,
+            max_mult=ASB1_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            dyn_usd = fallback_usd
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = ""
+        elif not reason:
+            reason = fallback_reason
+    if dyn_usd <= 0 and qty_floor <= 0:
+        tg_skip_throttled("asb1", symbol, "notional_small", f"🟡 ASB1 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+    if qty_floor <= 0:
+        tg_skip_throttled("asb1", symbol, f"minqty:{reason}", f"🟡 ASB1 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:asb1:{symbol}",
+            f"🟡 ASB1 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
+
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("asb1_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            return
+
+        _diag_inc("asb1_entry")
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
+
+        tr = TradeState(
+            symbol=symbol,
+            side=side,
+            qty=q,
+            entry_price_req=float(entry),
+            entry_ts=now,
+        )
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "asb1_slope_break"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
+        TRADES[("Bybit", symbol)] = tr
+
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"📉 ASB1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
+
+
+async def try_hzbo1_entry_async(symbol: str, price: float):
+    """Try HZBO1 horizontal zone breakdown short entry for a symbol."""
+    if not ENABLE_HZBO1_TRADING:
+        return
+    if not _ensure_hzbo1_engine():
+        _diag_inc("hzbo1_skip_no_engine")
+        return
+    if not TRADE_ON or DRY_RUN:
+        _diag_inc("hzbo1_skip_trade_off")
+        return
+    if TRADE_CLIENT is None:
+        _diag_inc("hzbo1_skip_no_client")
+        return
+    if get_trade("Bybit", symbol) is not None:
+        _diag_inc("hzbo1_skip_open_trade")
+        return
+    if HZBO1_MAX_OPEN_TRADES > 0:
+        open_hzbo1 = 0
+        for tr in TRADES.values():
+            if getattr(tr, "strategy", "") != "hzbo1_zone_break":
+                continue
+            if str(getattr(tr, "status", "") or "").upper() in {"CLOSED", "ERROR"}:
+                continue
+            open_hzbo1 += 1
+        if open_hzbo1 >= HZBO1_MAX_OPEN_TRADES:
+            _diag_inc("hzbo1_skip_max_open")
+            return
+    if not portfolio_can_open():
+        _diag_inc("hzbo1_skip_portfolio")
+        return
+
+    now = now_s()
+    last = int(_HZBO1_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < HZBO1_TRY_EVERY_SEC:
+        _diag_inc("hzbo1_skip_cooldown")
+        return
+    _HZBO1_LAST_TRY[symbol] = now
+    _diag_inc("hzbo1_try")
+
+    try:
+        sig = HZBO1_ENGINE.signal(symbol, int(now * 1000), 0, 0, 0, price, 0)
+    except Exception as e:
+        log_error(f"hzbo1 signal error {symbol}: {e}")
+        return
+    if not sig:
+        _diag_inc("hzbo1_no_signal")
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=HZBO1_RISK_MULT)
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0 and HZBO1_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=price,
+            stop_pct=stop_pct,
+            risk_mult=HZBO1_RISK_MULT,
+            max_mult=HZBO1_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            dyn_usd = fallback_usd
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = ""
+        elif not reason:
+            reason = fallback_reason
+    if dyn_usd <= 0 and qty_floor <= 0:
+        tg_skip_throttled("hzbo1", symbol, "notional_small", f"🟡 HZBO1 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+    if qty_floor <= 0:
+        tg_skip_throttled("hzbo1", symbol, f"minqty:{reason}", f"🟡 HZBO1 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:hzbo1:{symbol}",
+            f"🟡 HZBO1 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
+
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("hzbo1_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            return
+
+        _diag_inc("hzbo1_entry")
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
+
+        tr = TradeState(
+            symbol=symbol,
+            side=side,
+            qty=q,
+            entry_price_req=float(entry),
+            entry_ts=now,
+        )
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "hzbo1_zone_break"
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
+        TRADES[("Bybit", symbol)] = tr
+
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🟥 HZBO1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
+
+
 async def try_flat_entry_async(symbol: str, price: float):
     """Try flat resistance fade entry for a symbol."""
     if not ENABLE_FLAT_TRADING:
@@ -9830,6 +10190,26 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                 except Exception as _e:
                     log_error(f"try_att1_entry schedule fail {sym}: {_e}")
 
+        # ===== ASB1 SLOPE BREAKOUT ENTRY =====
+        if ENABLE_ASB1_TRADING and (not ASB1_SYMBOL_ALLOWLIST or sym in ASB1_SYMBOL_ALLOWLIST) and _health_gate.allow_entry("alt_slope_break_v1", sym):
+            last = int(_ASB1_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= ASB1_TRY_EVERY_SEC:
+                try:
+                    _diag_inc("asb1_sched")
+                    asyncio.create_task(try_asb1_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_asb1_entry schedule fail {sym}: {_e}")
+
+        # ===== HZBO1 HORIZONTAL ZONE BREAKOUT ENTRY =====
+        if ENABLE_HZBO1_TRADING and (not HZBO1_SYMBOL_ALLOWLIST or sym in HZBO1_SYMBOL_ALLOWLIST) and _health_gate.allow_entry("alt_horizontal_break_v1", sym):
+            last = int(_HZBO1_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= HZBO1_TRY_EVERY_SEC:
+                try:
+                    _diag_inc("hzbo1_sched")
+                    asyncio.create_task(try_hzbo1_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_hzbo1_entry schedule fail {sym}: {_e}")
+
         # ===== ASM1 SLOPED MOMENTUM ENTRY =====
         if ENABLE_ASM1_TRADING and (not ASM1_SYMBOL_ALLOWLIST or sym in ASM1_SYMBOL_ALLOWLIST) and _health_gate.allow_entry("alt_sloped_momentum_v1", sym):
             last = int(_ASM1_LAST_TRY.get(sym, 0) or 0)
@@ -10593,9 +10973,11 @@ def _check_router_control_plane_health(*, notify: bool = True) -> bool:
 def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
     global ENABLE_IVB1_TRADING, ENABLE_ELDER_TRADING, ENABLE_ATT1_TRADING, ENABLE_ASM1_TRADING
+    global ENABLE_ASB1_TRADING, ENABLE_HZBO1_TRADING
     global ENABLE_SLOPED_TRADING, BREAKOUT_SYMBOL_ALLOWLIST, BREAKOUT_SYMBOL_DENYLIST
     global BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE, ELDER_ENGINE, ELDER_SYMBOL_ALLOWLIST
     global ATT1_ENGINE, ASM1_ENGINE, ATT1_SYMBOL_ALLOWLIST, ASM1_SYMBOL_ALLOWLIST
+    global ASB1_ENGINE, HZBO1_ENGINE, ASB1_SYMBOL_ALLOWLIST, HZBO1_SYMBOL_ALLOWLIST
     global RISK_PER_TRADE_PCT, ORCH_GLOBAL_RISK_MULT, REGIME_OVERLAY_LAST_MTIME
     global REGIME_OVERLAY_LAST_APPLY_TS, REGIME_OVERLAY_LAST_APPLIED_REGIME, LAST_UNIVERSE_REFRESH_TS
 
@@ -10633,12 +11015,16 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     ENABLE_ELDER_TRADING = _env_bool("ENABLE_ELDER_TRADING", ENABLE_ELDER_TRADING)
     ENABLE_ATT1_TRADING = _env_bool("ENABLE_ATT1_TRADING", ENABLE_ATT1_TRADING)
     ENABLE_ASM1_TRADING = _env_bool("ENABLE_ASM1_TRADING", ENABLE_ASM1_TRADING)
+    ENABLE_ASB1_TRADING = _env_bool("ENABLE_ASB1_TRADING", ENABLE_ASB1_TRADING)
+    ENABLE_HZBO1_TRADING = _env_bool("ENABLE_HZBO1_TRADING", ENABLE_HZBO1_TRADING)
     ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
     BREAKOUT_SYMBOL_ALLOWLIST = _csv_upper_set("BREAKOUT_SYMBOL_ALLOWLIST")
     BREAKOUT_SYMBOL_DENYLIST = _csv_upper_set("BREAKOUT_SYMBOL_DENYLIST")
     ELDER_SYMBOL_ALLOWLIST = _csv_upper_set("ETS2_SYMBOL_ALLOWLIST")
     ATT1_SYMBOL_ALLOWLIST = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
     ASM1_SYMBOL_ALLOWLIST = _csv_upper_set("ASM1_SYMBOL_ALLOWLIST")
+    ASB1_SYMBOL_ALLOWLIST = _csv_upper_set("ASB1_SYMBOL_ALLOWLIST")
+    HZBO1_SYMBOL_ALLOWLIST = _csv_upper_set("HZBO1_SYMBOL_ALLOWLIST")
 
     try:
         ORCH_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ORCH_GLOBAL_RISK_MULT", "1.0") or 1.0))
@@ -10654,6 +11040,10 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
         ATT1_ENGINE = None
     if not ENABLE_ASM1_TRADING:
         ASM1_ENGINE = None
+    if not ENABLE_ASB1_TRADING:
+        ASB1_ENGINE = None
+    if not ENABLE_HZBO1_TRADING:
+        HZBO1_ENGINE = None
     if not ENABLE_FLAT_TRADING:
         FLAT_ENGINE = None
     if not ENABLE_SLOPED_TRADING:
@@ -10731,10 +11121,14 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     ENABLE_ELDER_TRADING = _env_bool("ENABLE_ELDER_TRADING", ENABLE_ELDER_TRADING)
     ENABLE_ATT1_TRADING = _env_bool("ENABLE_ATT1_TRADING", ENABLE_ATT1_TRADING)
     ENABLE_ASM1_TRADING = _env_bool("ENABLE_ASM1_TRADING", ENABLE_ASM1_TRADING)
+    ENABLE_ASB1_TRADING = _env_bool("ENABLE_ASB1_TRADING", ENABLE_ASB1_TRADING)
+    ENABLE_HZBO1_TRADING = _env_bool("ENABLE_HZBO1_TRADING", ENABLE_HZBO1_TRADING)
     ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
     ELDER_SYMBOL_ALLOWLIST = _csv_upper_set("ETS2_SYMBOL_ALLOWLIST")
     ATT1_SYMBOL_ALLOWLIST = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
     ASM1_SYMBOL_ALLOWLIST = _csv_upper_set("ASM1_SYMBOL_ALLOWLIST")
+    ASB1_SYMBOL_ALLOWLIST = _csv_upper_set("ASB1_SYMBOL_ALLOWLIST")
+    HZBO1_SYMBOL_ALLOWLIST = _csv_upper_set("HZBO1_SYMBOL_ALLOWLIST")
 
     try:
         ALLOCATOR_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ALLOCATOR_GLOBAL_RISK_MULT", "1.0") or 1.0))
@@ -10781,6 +11175,14 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         ASM1_RISK_MULT = max(0.05, float(os.getenv("ASM1_RISK_MULT", str(ASM1_RISK_MULT)) or ASM1_RISK_MULT))
     except Exception:
         pass
+    try:
+        ASB1_RISK_MULT = max(0.05, float(os.getenv("ASB1_RISK_MULT", str(ASB1_RISK_MULT)) or ASB1_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        HZBO1_RISK_MULT = max(0.05, float(os.getenv("HZBO1_RISK_MULT", str(HZBO1_RISK_MULT)) or HZBO1_RISK_MULT))
+    except Exception:
+        pass
 
     _recompute_effective_risk_pct()
 
@@ -10792,6 +11194,10 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         ATT1_ENGINE = None
     if not ENABLE_ASM1_TRADING:
         ASM1_ENGINE = None
+    if not ENABLE_ASB1_TRADING:
+        ASB1_ENGINE = None
+    if not ENABLE_HZBO1_TRADING:
+        HZBO1_ENGINE = None
     if not ENABLE_FLAT_TRADING:
         FLAT_ENGINE = None
     if not ENABLE_SLOPED_TRADING:

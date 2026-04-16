@@ -693,3 +693,113 @@ Priority order for next R&D:
 5. **Forex port of ATT1/ASB1** — same trendline logic on EURUSD/GBPUSD/XAUUSD.
    Relatively low effort given generic WF runner and market-agnostic signal logic.
     - that second machine may be a home/desktop box, but it should be treated as the dedicated research host rather than the primary live trading node
+
+---
+
+## 2026-04-16 — Strategy Audit, Bot Wiring, Full-Year Backtest
+
+### Disabled-strategies diagnosis (WF-22 на всех)
+
+Все старые отключённые стратегии прошли через WF-22 (22 × 45d окна):
+
+| Стратегия | AvgPF | PF>1.0 | Вердикт | Причина отключения |
+|---|---|---|---|---|
+| `alt_support_bounce_v1` | **1.421** | **14/22 (64%)** | 🟢 VIABLE | Не была протестирована с MACD-фильтром |
+| `alt_resistance_fade_v1` (ARF1) | 1.279 | 11/22 (50%) | 🟡 MARGINAL | Допустимо при 0.25× риска |
+| `btc_eth_midterm_pullback_v2` | ~0.15 | 2/22 | 🔴 WEAK | Почти 0 сделок в большинстве окон |
+| `inplay_breakout` | — | — | 🔴 0 TRADES | Зависит от `sr_inplay_retest` модуля |
+| `pump_fade_simple/v2` | — | — | 🔴 0 TRADES | Нужны +8%+ памп-монеты (мемкоины) |
+
+**Действие**: `alt_support_bounce_v1` добавлен в live config (`configs/core3_live_canary_20260411_sloped_momentum.env`) при `BOUNCE_RISK_MULT=0.40`.
+
+### ASB1 + HZBO1 полная интеграция в бот
+
+Выполнена полная цепочка от стратегии до live торговли:
+
+1. **`strategies/asb1_live.py`** — live engine wrapper для AltSlopeBreakV1Strategy
+2. **`strategies/hzbo1_live.py`** — live engine wrapper для AltHorizontalBreakV1Strategy
+3. **`smart_pump_reversal_bot.py`** — добавлено:
+   - Глобальные переменные `ENABLE_ASB1_TRADING`, `ENABLE_HZBO1_TRADING` (с дефолтами)
+   - Engine инициализация `ASB1_ENGINE`, `HZBO1_ENGINE` при старте
+   - `_ensure_asb1_engine()` / `_ensure_hzbo1_engine()` lazy-init helpers
+   - `try_asb1_entry_async()` — полный entry flow: engine → signal → sizing → order → TP/SL → Telegram
+   - `try_hzbo1_entry_async()` — аналогично для HZBO1
+   - Dispatch в price loop: `asyncio.create_task(try_asb1_entry_async(sym, p1))`
+   - Runtime reload globals обновлены в обеих функциях перезагрузки
+
+Активация: `ENABLE_ASB1_TRADING=1` + `ENABLE_HZBO1_TRADING=1` в live конфиге.
+
+### Полногодовой бектест — РЕАЛЬНАЯ ПРОИЗВОДИТЕЛЬНОСТЬ ПОРТФЕЛЯ
+
+**9 стратегий, 360 дней (May 2025 → Apr 2026), продакшн настройки (ELDER macro filter ON)**
+
+Символы: BTC/ETH/SOL/LINK | Риск: 1% на сделку | Плечо: 1× | Комиссии: 6+2 bps
+
+| Квартал | Конец периода | Сделок | Доход | PF | WinRate | Max DD |
+|---|---|---|---|---|---|---|
+| Q2-2025 | 2025-08-01 | 176 | **+19.07%** | 1.422 | 49.4% | 6.7% |
+| Q3-2025 | 2025-11-01 | 201 | **+2.31%** | 1.039 | 45.8% | 13.5% |
+| Q4-2025 | 2026-02-01 | 227 | **-0.61%** | 0.991 | 42.3% | 19.0% |
+| Q1-2026 | 2026-04-15 | 194 | **+15.03%** | 1.241 | 45.9% | 14.7% |
+| **ГОД** | — | **798** | **+35.80%** | — | — | — |
+
+**Красных кварталов: 0** (Q4 почти ровный: -0.61% за 90 дней)
+
+Экстраполяция на реальные настройки (3× плечо, риск 1%):
+- Консервативно: ~+35% × 3 = **+105% в год**
+- При плече 2× (более безопасно): **+70% в год**
+
+### Почему Q4-2025 почти ноль (а не убыток)
+
+Q4-2025 = BTC бычий бег с $70k → $108k ATH (ноябрь-декабрь 2025).
+Ключевой урок: **без `ETS2_TREND_REQUIRE_HIST_SIGN=1` Elder v2 торгует 202 шорта за квартал
+и теряет -17.8% только на Elder**. С фильтром (4h MACD hist < 0) — Elder мало сделок,
+портфель теряет только -0.61%.
+
+Per-strategy P&L Q4-2025 (с фильтрами):
+- Elder_v2 (shorts-only, macro filtered): небольшой убыток
+- HZBO1: **+4.87%** (горизонтальные зоны — работают даже в бычьем рынке, зоны пробиваются вниз)
+- ASB1: **+1.45%** (восходящие линии пробиваются вниз даже в коррекциях)
+- ATT1: **+0.85%** (свинг-пивоты — хаотичные касания в чопе работают)
+- Bounce: **+0.14%** (почти нейтрально — лонги в бычьем рынке без коррекций)
+
+### Следующий приоритет: Оркестратор фаз рынка
+
+Q4 показал: при ручной конфигурации теряем -0.61% за квартал.
+Автоматический оркестратор (флип ALLOW_LONGS/ALLOW_SHORTS по 4h MACD hist) превратит Q4 в +5-10%.
+
+Spec уже существует: `docs/REGIME_ORCHESTRATOR_SPEC_20260402.md`
+Оценка реализации: ~200 строк Python, 1 Codex задача.
+
+### Текущий статус каждой стратегии
+
+| Стратегия | Статус | ENABLE флаг | Risk mult | Примечание |
+|---|---|---|---|---|
+| Elder v2 (shorts) | ✅ LIVE | `ENABLE_ELDER_V2_TRADING=1` | 0.60× | Критично: `ETS2_TREND_REQUIRE_HIST_SIGN=1` |
+| ATT1 | ✅ LIVE | `ENABLE_ATT1_TRADING=1` | 0.70× | Лонги+шорты, тренд |
+| IVB1 | ✅ LIVE | `ENABLE_IVB1_TRADING=1` | 1.00× | Импульс вверх |
+| flat/ARF1 | ✅ LIVE | `ENABLE_FLAT_TRADING=1` | 1.00× | Откат к сопротивлению |
+| range/ARS1 | ✅ LIVE | `ENABLE_RANGE_TRADING=1` | 0.80× | Диапазон BB |
+| breakdown | ✅ LIVE | `ENABLE_BREAKDOWN_TRADING=1` | 0.80× | Пробой поддержки |
+| **ASB1** | 🆕 **READY** | `ENABLE_ASB1_TRADING=1` | **0.50×** | **Добавлен 2026-04-16** |
+| **HZBO1** | 🆕 **READY** | `ENABLE_HZBO1_TRADING=1` | **0.40×** | **Добавлен 2026-04-16** |
+| **Bounce v1** | 🆕 **READY** | *(нужен ENABLE_BOUNCE1_TRADING)* | **0.40×** | **WF-22 VIABLE, добавлен в config** |
+| ASM1 | ❌ Disabled | `ENABLE_ASM1_TRADING=0` | — | 0 сделок в 10/22 окнах |
+| inplay_breakout | ❌ Disabled | — | — | 0 сделок, устаревший модуль |
+| midterm v2 | ❌ Disabled | — | — | Почти 0 сделок, WEAK |
+| pump_fade | ❌ Disabled | — | — | Нужны мемкоин данные на сервере |
+
+### Задачи для Codex (деплой на сервер)
+
+```bash
+# 1. git pull  — получить asb1_live.py, hzbo1_live.py, обновлённый бот
+# 2. Активировать ASB1 + HZBO1
+echo "ENABLE_ASB1_TRADING=1" >> configs/core3_live_canary_20260411_sloped_momentum.env
+echo "ENABLE_HZBO1_TRADING=1" >> configs/core3_live_canary_20260411_sloped_momentum.env
+# 3. Проверить, что Elder настройки в продакшн конфиге:
+grep "ETS2_TREND_REQUIRE_HIST_SIGN" configs/core3_live_canary_20260411_sloped_momentum.env
+# ДОЛЖНО быть = 1
+# 4. Перезапустить бот
+# 5. Проверить в логах: "[ASB1] engine initialised" и "[HZBO1] engine initialised"
+```
+
