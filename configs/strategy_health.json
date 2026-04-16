@@ -120,7 +120,7 @@
       "notes": "Research only; not promoted to live allocator."
     },
     "elder_triple_screen_v2": {
-      "status": "PAUSE",
+      "status": "WATCH",
       "total_pnl": 0.0,
       "rolling_30d_pnl": 0.0,
       "rolling_60d_pnl": 0.0,
@@ -130,7 +130,7 @@
       "winrate_total": 0.0,
       "winrate_30d": 0.0,
       "pf_30d": 0.0,
-      "notes": "Rescue sweep failed; logic rewrite still pending."
+      "notes": "WF-22 shorts-only validation passed; promoted to live allocator at 0.40x while monitoring current-month drift."
     },
     "alt_vwap_mean_reversion_v1": {
       "status": "PAUSE",
