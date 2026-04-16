@@ -218,6 +218,35 @@ Immediate tasks:
    - replace frozen-router replay with historical symbol selection
    - compare control-plane timelines against portfolio annual windows
 11. Feed deterministic geometry state into advisory / routing decisions:
+
+### P1.5 - Operator Intelligence Upgrade
+
+Goal:
+- turn the operator from a snapshot explainer into a real decision-support layer
+
+Immediate tasks:
+1. Add richer live truth to the snapshot:
+   - flat / ivb1 / att1 / asm1 reason counters
+   - latest research winners
+   - alpaca monthly order-state summary
+   - intraday open/fill/close summary
+2. Add a web-aware operator sidecar:
+   - market breadth / earnings / major macro calendar context
+   - top risk events for the next 24h
+   - “what changed since last report” summary
+3. Add an operator action queue:
+   - proposed repairs
+   - proposed candidate promotions
+   - proposed research runs
+4. Keep operator output bounded:
+   - top findings
+   - top actions
+   - confidence / freshness labels
+
+Exit criteria:
+- operator stops repeating stale allocator / Alpaca diagnoses
+- operator can explain both internal bot state and external market context
+- operator becomes useful for hourly triage instead of only after manual prompting
    - levels
    - channels
    - compression
@@ -547,6 +576,11 @@ Immediate next practical priorities:
 3. Re-read live `flat/ivb1` counters after the looser `ARF1` canary has had time to accumulate.
 4. Build a safe sync/import path so server `auto_apply` can consume trusted local research.
 5. Only then open the next new sleeve family (`AVEF1` or `inplay_breakout_v2`).
+6. Run a broad-market Alpaca intraday experiment from full-cache discovery before considering any live expansion beyond the current bounded pool.
+7. Treat “web-aware operator” as a real subsystem, not a vague wish:
+   - fetch market context from external sources in a bounded way
+   - merge that context with self-audit/runtime truth
+   - present suggested actions, not just observations
     - [bear_chop_core_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/bear_chop_core_repair_v1.json)
     - [asc1_bidirectional_annual_probe_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/asc1_bidirectional_annual_probe_v1.json)
     - [flat_frequency_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/flat_frequency_repair_v1.json)
@@ -570,4 +604,92 @@ Immediate next practical priorities:
   - research infrastructure direction:
     - short bounded nightly jobs may run on the live server only inside a tight quiet UTC window
     - long sweeps / frontier research should move to a second always-on machine
+
+---
+
+## 2026-04-16 — Sloped/Horizontal Breakout Stack (Bear Phase)
+
+### Completed WF-22 validated strategies (new bear-phase stack)
+
+All four strategies validated on 22-window WF across Apr 2025 – Apr 2026.
+Key macro filter: 4h MACD histogram < 0 required for shorts (same principle across all).
+
+| Strategy | File | WF-22 AvgPF | PF>1.0 | Trades/win | Deploy risk |
+|---|---|---|---|---|---|
+| ATT1 — trendline bounce | alt_trendline_touch_v1.py | 1.35 | 14/22 | ~1/day | 0.70× ✅ LIVE |
+| Elder v2 — MACD shorts | elder_triple_screen_v2.py | 1.127 | 13/22 | ~1.7/day | 0.60× 🟢 READY |
+| ASB1 — sloped breakdown | alt_slope_break_v1.py | 1.228 | 13/22 | ~0.9/day | 0.50× 🟢 READY |
+| HZBO1 — horiz. breakout | alt_horizontal_break_v1.py | 1.647 | 13/22 | ~0.3/day | 0.40× 🟢 READY |
+
+**Portfolio 90-day results (Jan–Apr 2026, bear/mixed, $1000 base):**
+- Net: +$11.42 (+1.14%) — conservative 1% risk / leverage=1 / 4 symbols
+- PF: 1.196 | WR: 51% | Max DD: 1.98%
+- Green months: Jan (+$10.71), Mar (+$5.53) | Red: Feb (−$4.83, BTC rally)
+- By strategy: ASB1 best (+$4.49), ATT1 +$3.18, Elder +$2.46, HZBO1 +$1.30
+
+**Scaling context:**
+- Returns scale linearly with risk_pct and symbols
+- To get ~30%/year: increase risk_pct to 2-3%, add 8 symbols, leverage=2
+- The "golden baseline" (5-sleeve portfolio) produced +89-94%/year at higher risk settings
+
+### DeepSeek operator (already scaffolded, needs activation)
+
+- Code: `bot/deepseek_overlay.py` + `/ai` Telegram command
+- Activate on server: `DEEPSEEK_ENABLE=1` + `DEEPSEEK_API_KEY=<key>`
+- Phase 1 (safe): reads closed trades, provides advisory analysis via Telegram
+- Phase 2: hourly regime supervisor (spec in `docs/DEEPSEEK_AND_RISK_PLAN_20260319.md`)
+- What DeepSeek can auto-delegate today: post-trade pattern analysis, macro context summary
+- What it cannot safely do yet: change live risk, enable/disable sleeves without operator approval
+
+### Server quality hardening backlog
+
+- [ ] WebSocket watchdog: auto-reconnect if no ping within 30s (currently guard exists, watchdog needed)
+- [ ] Activate DeepSeek Phase 1 (just needs API key + DEEPSEEK_ENABLE=1 on server)
+- [ ] ASB1 bot integration: write `try_asb1_entry_async()` in smart_pump_reversal_bot.py
+- [ ] HZBO1 bot integration: write `try_hzbo1_entry_async()` in smart_pump_reversal_bot.py
+- [ ] Elder bot integration: confirm `try_elder_v2_entry_async()` is wired and tested
+- [ ] Nightly autoresearch queue: bounded 2-3 job queue running UTC 02:00–05:00 on server
+- [ ] Supervisor process restart: add `StartLimitIntervalSec=60 Restart=on-failure` in systemd
+
+### Pending WF-22 / research
+
+- **TS132** (triple_screen_v132): file missing locally, needs `git pull` on server. Known
+  historical baseline +89-94%/year in golden portfolio context. WF-22 pending.
+- **pump_fade_v4r**: needs meme-coin data cache (1000PEPE, SUI, ARB, ENA). Run on server
+  where data is cached. Autoresearch spec: `configs/autoresearch/pump_fade_v4r_alts.json`.
+- **alt_sloped_momentum_v1 (ASM1)**: WF-22 already run. Include in portfolio comparison.
+- **alt_resistance_fade_v1 (ARF1)**: WF-22 already run. Check current status.
+
+### Forex / CFD adaptation (planned)
+
+- MT5 infrastructure already exists: `docs/FOREX_MT5_DEMO_SETUP.md`, `forex_*.csv`
+- ATT1, ASB1, HZBO1, Elder signal logic is market-agnostic (trendline/pivot math)
+- Adaptation work needed:
+  - [ ] Forex data layer: fetch MT5 OHLCV into KlineStore format
+  - [ ] Session filter: skip Asian session for EURUSD/GBPUSD (worst signal quality)
+  - [ ] Symbol mapping: EURUSD, GBPUSD, USDJPY, XAUUSD, US30
+  - [ ] WF-22 on major FX pairs (same generic runner `scripts/run_generic_wf.py`)
+  - [ ] Sizing: FX uses pip-value sizing instead of USDT notional
+- Timeline: after ASB1/HZBO1 integration into live bot is confirmed stable
+
+### Next strategy candidates (after current stack deployed)
+
+Priority order for next R&D:
+
+1. **Market phase auto-switcher** — orchestrator that reads 4h MACD histogram and
+   automatically flips Elder/ASB1/HZBO1 between shorts-only ↔ longs-only.
+   Currently this is manual via env config. Automate it.
+
+2. **pump_fade_v4r** — volatile altcoin pump-fade on meme coins. Needs data cache.
+   Run via `run_generic_wf.py` on server when PEPE/SUI/ARB data is available.
+
+3. **TS132 (triple_screen_v132)** — higher-frequency multi-screen strategy.
+   Validated in golden portfolio. WF-22 needed on current bear window.
+
+4. **Retest entry for broken zones (HZBO1-RT)** — instead of entering on the break,
+   wait for price to pull back to the broken zone (now resistance) and reject.
+   More reliable than immediate breakout entries, especially for horizontal zones.
+
+5. **Forex port of ATT1/ASB1** — same trendline logic on EURUSD/GBPUSD/XAUUSD.
+   Relatively low effort given generic WF runner and market-agnostic signal logic.
     - that second machine may be a home/desktop box, but it should be treated as the dedicated research host rather than the primary live trading node
