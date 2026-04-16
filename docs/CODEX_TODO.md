@@ -73,6 +73,22 @@ CB_PEAK_HALT_PCT=0.12
 CB_HALT_COOLDOWN_HOURS=24" >> configs/core3_live_canary_20260411_sloped_momentum.env
 ```
 
+### Bounce v1 ✅ WIRED (закоммичено, нужна активация)
+
+`strategies/bounce1_live.py` создан. `try_bounce1_entry_async()` подключён в бот.
+
+Двойной режимный шлюз:
+- Аллокатор даёт `0×` в BEAR_TREND и BEAR_CHOP → автоматически неактивна сейчас
+- Стратегия имеет внутренний EMA20/EMA50 чек → второй уровень защиты
+
+**Активировать при переходе в BULL:** добавить в live config:
+```bash
+echo "ENABLE_BOUNCE1_TRADING=1
+BOUNCE1_RISK_MULT=0.40
+BOUNCE1_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT
+BOUNCE1_MAX_OPEN_TRADES=1" >> configs/core3_live_canary_20260411_sloped_momentum.env
+```
+
 ### Решение C: Volatility-adjusted sizing (ИССЛЕДОВАТЬ)
 
 Когда ATR BTC за 4h > 2× нормы (паника/ATH):
@@ -147,23 +163,21 @@ EOF
 
 ## 🟡 ПРИОРИТЕТ 3 — Доработка существующих стратегий
 
-### IVB1 — исправить или заменить (ОТКЛЮЧЕНА ПОСЛЕ ДЕПЛОЯ)
+### IVB1 — RR/SL исправлен ✅, нужен WF-22 (ОТКЛЮЧЕНА)
 
-**Проблема:** avg_win $0.39 < avg_loss $0.58, всего 11 сделок за год.
+**Проблема:** avg_win $0.39 < avg_loss $0.58 → структурная проблема RR.
+**Исправлено:** `sl_atr: 1.0→0.75`, `rr: 1.8→2.2`, `tp1_rr: 0.9→1.1`
+**Дополнительно:** MACD 4h macro filter уже есть (блокирует в BEAR)
 
-**Гипотезы:**
-1. Поднять RR: 1.4 → 2.0+
-2. Сузить SL: 0.8 ATR → 0.5 ATR
-3. Расширить символы на BTC/ETH
-
-**WF-22 для IVB1 (запустить локально или на сервере):**
+**Нужно WF-22 валидация на сервере перед включением:**
 ```bash
 python3 scripts/run_generic_wf.py \
   --strategy impulse_volume_breakout_v1 \
   --symbols BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT \
   --windows 22 --window-days 45 \
-  --sweep IVB1_RR=1.8,2.0,2.5 IVB1_SL_ATR=0.5,0.8
+  --sweep IVB1_RR=2.0,2.2,2.5 IVB1_SL_ATR=0.6,0.75,1.0
 ```
+Критерий: AvgPF ≥ 1.05, PF>1.0 в 55%+ окнах → включить в bull config.
 
 ### Bounce v1 — подключить к боту (СТРАТЕГИЯ ГОТОВА, НУЖНО ИНТЕГРИРОВАТЬ)
 
@@ -209,27 +223,23 @@ BOUNCE1_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT
 BOUNCE1_MAX_OPEN_TRADES=1
 ```
 
-### Elder v2 — объёмный фильтр (МАЛЕНЬКИЙ ПАТЧ)
+### Elder v2 — объёмный фильтр ✅ РЕАЛИЗОВАН (нужен бектест)
 
-Добавить в `strategies/elder_triple_screen_v2.py`:
-```python
-self.require_vol_confirm = _env_bool("ETS2_REQUIRE_VOL_CONFIRM", False)
-self.vol_mult_confirm = _env_float("ETS2_VOL_CONFIRM_MULT", 1.5)
+Добавлено в `strategies/elder_triple_screen_v2.py`:
+- Поля: `vol_confirm`, `vol_confirm_mult=1.3`, `vol_confirm_bars=20`
+- ENV: `ETS2_VOL_CONFIRM=1`, `ETS2_VOL_CONFIRM_MULT=1.3`
+- По умолчанию ВЫКЛЮЧЕН — нужна валидация WF-22
 
-# В generate_signal():
-if self.require_vol_confirm:
-    avg_vol = mean(bar.volume for bar in bars[-20:])
-    if bars[-1].volume < self.vol_mult_confirm * avg_vol:
-        return None  # слабый объём — пропускаем
+**Проверить эффект на сервере:**
+```bash
+env ETS2_VOL_CONFIRM=1 ETS2_VOL_CONFIRM_MULT=1.3 \
+python3 backtest/run_portfolio.py \
+  --strategies elder_triple_screen_v2 \
+  --symbols BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT \
+  --days 365 --end 2026-03-31 \
+  --tag elder_vol_filter_test
 ```
-
-Добавить в live config:
-```
-ETS2_REQUIRE_VOL_CONFIRM=1
-ETS2_VOL_CONFIRM_MULT=1.5
-```
-
-Цель: сократить сделки с 250 → ~150, улучшить PF с 1.098 → 1.25+.
+Если PF > 1.15 → добавить `ETS2_VOL_CONFIRM=1` в live config.
 
 ---
 
@@ -298,7 +308,7 @@ python3 scripts/run_generic_wf.py \
 | IVB1 | ❌ DISABLED | 0 |
 | Regime Orchestrator | ✅ DAEMON | — |
 | Circuit Breaker | ✅ WIRED (needs CB_ENABLED=1 in env) | — |
-| Bounce v1 | ❌ NOT WIRED | — |
+| Bounce v1 | ✅ WIRED (needs ENABLE_BOUNCE1_TRADING=1, inactive in BEAR) | — |
 | Midterm v3 (MTPB3) | ⏳ AWAITING SERVER BACKTEST | — |
 
 ### Ожидаемые годовые результаты (после деплоя)
