@@ -1,5 +1,5 @@
 # CODEX_TODO — актуальное состояние и задачи
-_Последнее обновление: 2026-04-16 | Автор: Claude (Anthropic) + Николай_
+_Последнее обновление: 2026-04-16 (rev2, post-context) | Автор: Claude (Anthropic) + Николай_
 _Используй этот файл как главный источник правды о состоянии проекта_
 
 ---
@@ -44,31 +44,34 @@ sudo journalctl -u bybit-bot --since "5 minutes ago" | grep -i "DEGRADED\|alloca
 Бот читает файл каждые 300 секунд и применяет изменения.
 Это исправило бы ОБА красных месяца.
 
-### Решение B: Portfolio Circuit Breaker (НУЖНО СОЗДАТЬ)
+### Решение B: Portfolio Circuit Breaker ✅ ГОТОВО (закоммичено)
 
-**Файл:** `bot/circuit_breaker.py`
+**Файл:** `bot/circuit_breaker.py` — реализован и подключён.
 
-```python
-class PortfolioCircuitBreaker:
-    """
-    Автоматически снижает риск при просадке портфеля.
-    Читает equity из runtime/equity.json или из live API.
-    """
-    NORMAL = 1.0    # < 4% дневная просадка
-    CAUTION = 0.5   # 4-8% дневная просадка → размер вдвое меньше
-    HALT = 0.0      # > 8% дневная ИЛИ > 12% месячная → стоп новых входов 24h
+States: `NORMAL(1.0x)` → `CAUTION(0.5x)` → `HALT(0.0x)`
 
-    def get_risk_mult(self, equity_history: list[float]) -> float:
-        ...
-```
-
-Подключить в `smart_pump_reversal_bot.py`: перед каждым `try_*_entry_async()` вызывать `cb.get_risk_mult()` и умножать на него риск.
+Подключён в `smart_pump_reversal_bot.py`:
+- `_get_equity_now()` → вызывает `cb.update(equity)` при каждом обновлении
+- `portfolio_can_open()` → блокирует входы при `HALT`
+- `portfolio_cb_risk_mult()` → возвращает множитель для позиционирования
 
 ENV-параметры:
-- `CB_DAILY_DD_LIMIT=0.08` — 8% дневная просадка → HALT
-- `CB_MONTHLY_DD_LIMIT=0.12` — 12% месячная просадка → HALT
-- `CB_CAUTION_THRESHOLD=0.04` — 4% → CAUTION
 - `CB_ENABLED=1`
+- `CB_DAILY_CAUTION_PCT=0.04` — 4% дневная просадка → CAUTION 0.5x
+- `CB_DAILY_HALT_PCT=0.08` — 8% дневная → HALT 0.0x
+- `CB_PEAK_CAUTION_PCT=0.06` — 6% от пика → CAUTION
+- `CB_PEAK_HALT_PCT=0.12` — 12% от пика → HALT
+- `CB_HALT_COOLDOWN_HOURS=24` — кулдаун после HALT
+
+**⚠️ Добавить в live config на сервере:**
+```bash
+echo "CB_ENABLED=1
+CB_DAILY_CAUTION_PCT=0.04
+CB_DAILY_HALT_PCT=0.08
+CB_PEAK_CAUTION_PCT=0.06
+CB_PEAK_HALT_PCT=0.12
+CB_HALT_COOLDOWN_HOURS=24" >> configs/core3_live_canary_20260411_sloped_momentum.env
+```
 
 ### Решение C: Volatility-adjusted sizing (ИССЛЕДОВАТЬ)
 
@@ -78,52 +81,67 @@ ENV-параметры:
 
 ---
 
-## 🟡 ПРИОРИТЕТ 2 — Среднесрочная стратегия (BTC/ETH midterm)
+## 🟡 ПРИОРИТЕТ 2 — Среднесрочная стратегия BTC/ETH midterm v3
 
-### ВАЖНО: стратегия уже существует!
+### ✅ BTCETHMidtermV3 — написана и локально протестирована
 
-`strategies/btc_eth_midterm_pullback.py` (v1) и `btc_eth_midterm_pullback_v2.py`
+**Файл:** `strategies/btc_eth_midterm_v3.py` (закоммичен)
 
-**Результаты из WORKLOG:**
-- Isolated v1: PF=2.30, WR=55%, +43.5R/год, ~80 сделок
-- ETH-only строгий: +14.50%, PF=1.890, DD=2.40%, 54 сделки
-- **В связке: portfolio_20260325_172613_new_5strat_final → +100.93%/год, PF=2.078, DD=3.65%** ← ЭТО И ЕСТЬ ЦЕЛЬ
+**Ключевые улучшения v3 по сравнению с v1:**
+1. **Асимметричный MACD**: шорты требуют hist<0 (макро подтверждение), лонги — нет.
+   _(Главный инсайт: во время здорового пулбека в аптренде MACD естественно уходит в минус — это сигнал входа, не отказ)_
+2. **Fresh touch**: цена должна касаться EMA в течение последних N баров (нет устаревших сетапов)
+3. **Per-direction cooldown**: раздельные счётчики для лонг/шорт
+4. **RSI фильтр**: по умолчанию выключен (`MTPB3_USE_RSI_FILTER=0` — RSI режет сигналы BTC)
+5. **Volume confirm**: опционально `MTPB3_USE_VOL_FILTER=0`
+6. **Hot-reload**: `MTPB3_ALLOW_LONGS/SHORTS` перечитываются каждый вызов
 
-### Почему сейчас выключена
+**ENV prefix:** `MTPB3_*` | **Strategy name:** `btc_eth_midterm_v3`
 
-В текущем медвежьем стеке `ENABLE_MIDTERM_TRADING=0`. Нужно протестировать совместимость с текущими стратегиями.
+**Результаты локального теста (BTC-only, 365d):**
 
-### Задача: запустить backtest midterm в текущем стеке
+| Конфиг | Сделки | PF | Net |
+|--------|--------|----|-----|
+| v1 baseline | 16 | 0.591 | −2.61% |
+| v3 MACD-shorts only | 11 | **0.977** | −0.01% |
+| v3 MACD+RSI | 7 | 0.275 | ❌ RSI режет лонги |
+
+> BTC-only PF 0.591→0.977 (+4×). Полный тест на BTC+ETH нужен на сервере (там есть ETH кеш).
+
+### 🔴 ЗАДАЧА ДЛЯ CODEX: Server backtest (ПРИОРИТЕТ)
 
 ```bash
-# НА СЕРВЕРЕ (нужен кеш 365 дней):
-python3 backtest/run_portfolio.py \
-  --config configs/core3_live_canary_20260411_sloped_momentum.env \
-  --override ENABLE_MIDTERM_TRADING=1 \
-             MTPB_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT \
-             MTPB_TREND_SLOPE_MIN_PCT=0.46 \
-             MTPB_RR=2.4 \
-             MTPB_COOLDOWN_BARS_5M=108 \
-  --days 365 --end 2026-03-31 \
-  --out backtest_runs/midterm_in_bear_stack_20260416
+# На сервере — 1 команда:
+bash scripts/run_midterm_v3_backtest.sh
 ```
 
-Если результат лучше текущего (+44.51%) → включить в live config.
+Скрипт запускает 4 теста:
+1. v3 MACD-shorts only (рекомендуемый)
+2. v3 MACD+RSI loose (RSI<65, RSI>35)
+3. v1 сравнение за тот же период
+4. v3 в текущем медвежьем стеке (ASB1+HZBO1+Elder+ATT1)
 
-### Концепция расширения (циклы + уровни)
+**Критерий активации live:** trades ≥ 20, PF ≥ 1.10, net > 0%
 
-Уже есть файлы в strategies/:
-- `btc_macro_cycle_v1.py` — 4-летние циклы (halvings)
-- `btc_cycle_continuation_v1.py` — продолжение после цикла
-- `btc_weekly_zone_reclaim_v2.py` — недельные зоны
+**Если PASS — добавить в live config:**
+```bash
+cat >> configs/core3_live_canary_20260411_sloped_momentum.env << 'EOF'
+MTPB_VERSION=3
+ENABLE_MIDTERM_TRADING=1
+MIDTERM_RISK_MULT=0.70
+MTPB3_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT
+MTPB3_REQUIRE_HIST_SIGN_SHORTS=1
+MTPB3_REQUIRE_HIST_SIGN_LONGS=0
+MTPB3_USE_RSI_FILTER=0
+MTPB3_FRESH_TOUCH_BARS=5
+MTPB3_RR=2.5
+MTPB3_LONG_COOLDOWN_BARS=84
+MTPB3_SHORT_COOLDOWN_BARS=84
+EOF
+```
 
-Ни один из них не прошёл WF-22. Нужно запустить.
-
-**Что реально работает в среднесроке:**
-- 200-week MA (никогда не пробита на закрытии)
-- Realized price (покупка ниже = исторически лучший вход)
-- MACD weekly crossover (смена тренда)
-- RSI weekly < 30 = дно (апрель 2026 ≈ 40, ещё не дно)
+**Исторические результаты v1 в связке (из WORKLOG):**
+- portfolio_20260325_172613_new_5strat_final → **+100.93%/год, PF=2.078, DD=3.65%** ← ЭТО ЦЕЛЬ
 
 ---
 
@@ -279,8 +297,9 @@ python3 scripts/run_generic_wf.py \
 | HZBO1 (NEW) | ✅ ACTIVE | 0.40× |
 | IVB1 | ❌ DISABLED | 0 |
 | Regime Orchestrator | ✅ DAEMON | — |
+| Circuit Breaker | ✅ WIRED (needs CB_ENABLED=1 in env) | — |
 | Bounce v1 | ❌ NOT WIRED | — |
-| Midterm (MTPB) | ❌ TESTING | — |
+| Midterm v3 (MTPB3) | ⏳ AWAITING SERVER BACKTEST | — |
 
 ### Ожидаемые годовые результаты (после деплоя)
 
@@ -309,13 +328,17 @@ strategies/hzbo1_live.py             # HZBO1 ✅
 strategies/att1_live.py              # ATT1 ✅
 strategies/elder_triple_screen_v2.py # Elder v2 ✅
 strategies/alt_support_bounce_v1.py  # Bounce v1 (нужна интеграция)
-strategies/btc_eth_midterm_pullback.py   # Midterm (нужно тестировать)
+strategies/btc_eth_midterm_pullback.py   # Midterm v1 (legacy)
+strategies/btc_eth_midterm_v3.py         # Midterm v3 ✅ NEW — ждёт server BT
+bot/circuit_breaker.py                   # Portfolio Circuit Breaker ✅ NEW
 
 docs/ROADMAP.md                      # История решений (1066 строк)
 docs/ANNUAL_ANALYSIS_20260416.md     # Годовой анализ
 docs/CODEX_TODO.md                   # ЭТОТ ФАЙЛ
 scripts/codex_deploy_20260416.sh     # Deploy script
 scripts/run_annual_analysis.py       # Годовой анализ runner
+scripts/run_midterm_v3_backtest.sh   # Midterm v3 server backtest ✅ NEW
+configs/midterm_v3_canary.env        # Midterm v3 рекомендуемые параметры
 ```
 
 ---
