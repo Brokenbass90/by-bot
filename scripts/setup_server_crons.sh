@@ -14,10 +14,11 @@
 #   4. Control-plane watchdog — freshness check + self-heal
 #   5. Geometry state builder — deterministic chart context from cached OHLCV
 #   6. Operator snapshot builder — compact truth pack for AI/operator context
-#   7. Strategy health timeline — weekly historical health context for replay/operator
-#   8. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
-#   9. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
-#  10. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
+#   7. Self-audit report — slow evidence-driven diagnosis of current blockers
+#   8. Strategy health timeline — weekly historical health context for replay/operator
+#   9. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
+#  10. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
+#  11. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -61,6 +62,7 @@ for req in \
     "$BOT_DIR/scripts/control_plane_watchdog.py" \
     "$BOT_DIR/scripts/build_geometry_state.py" \
     "$BOT_DIR/scripts/build_operator_snapshot.py" \
+    "$BOT_DIR/scripts/build_self_audit_report.py" \
     "$BOT_DIR/scripts/build_strategy_health_timeline.py" \
     "$BOT_DIR/scripts/dynamic_allowlist.py" \
     "$BOT_DIR/bot/strategy_health_timeline.py" \
@@ -103,6 +105,7 @@ CURRENT=$(
         | grep -v "scripts/control_plane_watchdog.py --repair --quiet >> logs/control_plane_watchdog.log" \
         | grep -v "scripts/build_geometry_state.py --quiet >> logs/geometry_state.log" \
         | grep -v "scripts/build_operator_snapshot.py --quiet >> logs/operator_snapshot.log" \
+        | grep -v "scripts/build_self_audit_report.py --quiet >> logs/self_audit.log" \
         | grep -v "scripts/build_strategy_health_timeline.py --quiet >> logs/strategy_health_timeline.log" \
         | grep -v "scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> /root/by-bot/logs/alpaca_intraday_dynamic_v1.log" \
         | grep -v "scripts/bot_health_watchdog.sh" \
@@ -141,19 +144,24 @@ NEW_CRONS=$(cat << CRONEOF
 # 7. Slow bounded research queue — one low-priority research process at a time
 17 * * * * cd $BOT_DIR && $PYTHON scripts/run_nightly_research_queue.py --quiet >> logs/research_nightly.log 2>&1 $CRON_TAG
 #
-# 8. Strategy health timeline — historical health context for replay/operator
+# 8. Self-audit report — slow diagnosis of live blockers every 2 hours
+20 */2 * * * cd $BOT_DIR && $PYTHON scripts/build_self_audit_report.py --quiet >> logs/self_audit.log 2>&1 $CRON_TAG
+#
+# 9. Strategy health timeline — historical health context for replay/operator
 5 23 * * 0 cd $BOT_DIR && $PYTHON scripts/build_strategy_health_timeline.py --quiet >> logs/strategy_health_timeline.log 2>&1 $CRON_TAG
 #
-# 9. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
+# 10. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
 30 22 * * 0 cd $BOT_DIR && $PYTHON scripts/deepseek_weekly_cron.py --quiet >> logs/deepseek_weekly.log 2>&1 $CRON_TAG
 #
-# 10. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
+# 11. Equity curve autopilot — degradation monitor (Wednesday 03:00 + Sunday 23:00 UTC)
+# Runs TWICE weekly so health file never goes stale (threshold = 14 days, but 3.5d is safe margin)
+0 3 * * 3 cd $BOT_DIR && $PYTHON scripts/equity_curve_autopilot.py --no-tg --quiet >> logs/equity_autopilot.log 2>&1 $CRON_TAG
 0 23 * * 0 cd $BOT_DIR && $PYTHON scripts/equity_curve_autopilot.py >> logs/equity_autopilot.log 2>&1 $CRON_TAG
 #
-# 11. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
+# 12. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
 */5 14-21 * * 1-5 /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> logs/alpaca_intraday_dynamic_v1.log 2>&1' $CRON_TAG
 #
-# 12. Auto-apply research winners — daily at 06:00 UTC, after nightly research completes
+# 13. Auto-apply research winners — daily at 06:00 UTC, after nightly research completes
 0 6 * * * cd $BOT_DIR && $PYTHON scripts/auto_apply_research_winner.py >> logs/auto_apply.log 2>&1 $CRON_TAG
 #
 CRONEOF
@@ -197,15 +205,19 @@ echo "[6] Geometry state builder:"
 cd "$BOT_DIR" && $PYTHON scripts/build_geometry_state.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[7] Strategy health timeline builder:"
+echo "[7] Self-audit report:"
+cd "$BOT_DIR" && $PYTHON scripts/build_self_audit_report.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
+
+echo ""
+echo "[8] Strategy health timeline builder:"
 cd "$BOT_DIR" && $PYTHON scripts/build_strategy_health_timeline.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[8] Operator snapshot builder:"
+echo "[9] Operator snapshot builder:"
 cd "$BOT_DIR" && $PYTHON scripts/build_operator_snapshot.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[9] Intraday bridge (live paper once):"
+echo "[10] Intraday bridge (live paper once):"
 cd "$BOT_DIR" && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""

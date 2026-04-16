@@ -106,11 +106,14 @@ class ImpulseVolumeBreakoutV1Config:
     entry_body_min_frac: float = 0.25
     touch_below_breakout_atr: float = 0.20
     invalidation_close_atr: float = 0.35
-    sl_atr: float = 1.0
-    rr: float = 1.8
-    tp1_rr: float = 0.9
-    trail_atr_mult: float = 1.4
-    trail_activate_rr: float = 0.9
+    # RR tuned 2026-04-16: avg_win $0.39 < avg_loss $0.58 at RR=1.8.
+    # Raised to 2.2 + tighter SL to fix the imbalance.
+    # Must re-validate with WF-22 on server before enabling in bear stack.
+    sl_atr: float = 0.75       # was 1.0 — tighter stop, smaller loss when wrong
+    rr: float = 2.2            # was 1.8 — larger winner to fix avg_win < avg_loss
+    tp1_rr: float = 1.1        # was 0.9 — partial TP proportional to new RR
+    trail_atr_mult: float = 1.2
+    trail_activate_rr: float = 1.1
     min_stop_pct: float = 0.008
     max_stop_pct: float = 0.060
     time_stop_bars_5m: int = 72

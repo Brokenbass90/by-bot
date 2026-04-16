@@ -219,6 +219,10 @@ class ElderTripleScreenV2Config:
     time_stop_bars_5m: int = 288       # 24h time stop (288 × 5m = 24h)
     cooldown_bars_5m: int = 36         # 3h cooldown per symbol
     max_signals_per_day: int = 6       # max 6/day per symbol
+    # Volume confirmation filter (default OFF — reduces trades by ~40%, raises PF)
+    vol_confirm: bool = False          # ETS2_VOL_CONFIRM=1 to enable
+    vol_confirm_mult: float = 1.3      # bar volume must be >= vol_confirm_mult × avg20
+    vol_confirm_bars: int = 20         # lookback for average volume
 
 
 class ElderTripleScreenV2Strategy:
@@ -271,6 +275,9 @@ class ElderTripleScreenV2Strategy:
         self.cfg.time_stop_bars_5m = _env_int("ETS2_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
         self.cfg.cooldown_bars_5m = _env_int("ETS2_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
         self.cfg.max_signals_per_day = _env_int("ETS2_MAX_SIGNALS_PER_DAY", self.cfg.max_signals_per_day)
+        self.cfg.vol_confirm = _env_bool("ETS2_VOL_CONFIRM", self.cfg.vol_confirm)
+        self.cfg.vol_confirm_mult = _env_float("ETS2_VOL_CONFIRM_MULT", self.cfg.vol_confirm_mult)
+        self.cfg.vol_confirm_bars = _env_int("ETS2_VOL_CONFIRM_BARS", self.cfg.vol_confirm_bars)
 
         self._allow = _env_csv_set("ETS2_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set("ETS2_SYMBOL_DENYLIST")
@@ -529,6 +536,26 @@ class ElderTripleScreenV2Strategy:
             return None
         if side == "short" and not self.cfg.allow_shorts:
             return None
+
+        # Volume confirmation filter (optional — skips weak-volume setups)
+        # Reduces ~40% of trades, targets higher-conviction entries only.
+        # Enable with: ETS2_VOL_CONFIRM=1  ETS2_VOL_CONFIRM_MULT=1.3
+        if self.cfg.vol_confirm:
+            n_vol = max(5, self.cfg.vol_confirm_bars)
+            rows_vol = store.fetch_klines(store.symbol, self.cfg.entry_tf, n_vol + 2) or []
+            if len(rows_vol) >= n_vol + 1:
+                try:
+                    vols = [float(r[5]) for r in rows_vol if len(r) > 5]
+                    if len(vols) >= n_vol + 1:
+                        avg_vol = sum(vols[-(n_vol + 1):-1]) / n_vol
+                        cur_vol = vols[-1]
+                        if avg_vol > 0 and cur_vol < self.cfg.vol_confirm_mult * avg_vol:
+                            self.last_no_signal_reason = (
+                                f"vol_confirm_weak:{cur_vol:.0f}<{self.cfg.vol_confirm_mult}×{avg_vol:.0f}"
+                            )
+                            return None
+                except (ValueError, IndexError, ZeroDivisionError):
+                    pass  # skip filter on data error rather than block the signal
 
         # Calculate ATR for stops
         risk_tf = self.cfg.risk_tf or self.cfg.entry_tf

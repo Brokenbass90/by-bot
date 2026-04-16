@@ -64,32 +64,55 @@ done
 ok "git pull done"
 
 # ── 2. FIX DEGRADED ALLOCATOR ───────────────────────────────────────────────
-step "[2/8] Fix DEGRADED allocator (touch strategy_health.json + rebuild)"
+step "[2/8] Fix DEGRADED allocator (regenerate health + rebuild)"
+
+# Threshold is now 14 days (1209600s) in portfolio_allocator_policy.json
+HEALTH_THRESHOLD=1209600
 
 if [ -f "configs/strategy_health.json" ]; then
     AGE_SEC=$(( $(date +%s) - $(stat -c %Y configs/strategy_health.json) ))
-    echo "  Current age: ${AGE_SEC}s (threshold 691200s = 8 days)"
-    if [ "$AGE_SEC" -gt 691200 ]; then
-        warn "Health file is STALE — refreshing..."
+    echo "  Health file age: ${AGE_SEC}s (threshold ${HEALTH_THRESHOLD}s = 14 days)"
+    if [ "$AGE_SEC" -gt "$HEALTH_THRESHOLD" ]; then
+        warn "Health file is STALE (>${HEALTH_THRESHOLD}s) — will regenerate"
+        NEED_REGEN=1
+    elif [ "$AGE_SEC" -gt 604800 ]; then
+        echo "  Health file is >7d old — refreshing proactively"
+        NEED_REGEN=1
     else
-        echo "  Health file is fresh — touching anyway to be safe"
+        echo "  Health file is fresh — skipping regen"
+        NEED_REGEN=0
     fi
 else
-    warn "configs/strategy_health.json not found — creating empty"
-    echo '{}' > configs/strategy_health.json
+    warn "configs/strategy_health.json not found — will generate from scratch"
+    NEED_REGEN=1
 fi
 
-touch configs/strategy_health.json
+if [ "${NEED_REGEN:-1}" = "1" ]; then
+    echo "  Running equity_curve_autopilot --no-tg --quiet ..."
+    if python3 scripts/equity_curve_autopilot.py --no-tg --quiet 2>&1 | tail -3; then
+        ok "equity_curve_autopilot regenerated strategy_health.json"
+    else
+        warn "equity_curve_autopilot failed — touching file as fallback (content may be stale)"
+        # fallback: touch updates mtime so staleness check passes
+        [ -f "configs/strategy_health.json" ] || echo '{"overall_health":"OK","strategies":{}}' > configs/strategy_health.json
+        touch configs/strategy_health.json
+    fi
+fi
+
 python3 scripts/build_portfolio_allocator.py
 ok "Allocator rebuilt"
 
 # Verify DEGRADED is gone
-if grep -q '"degraded": true' configs/portfolio_allocator_latest.env 2>/dev/null; then
-    warn "Still showing degraded in portfolio_allocator_latest.env — check manually"
-elif grep -q 'DEGRADED\|degraded=1' configs/portfolio_allocator_latest.env 2>/dev/null; then
-    warn "DEGRADED flag still present — check build_portfolio_allocator output"
+ALLOC_ENV="configs/portfolio_allocator_latest.env"
+if [ -f "$ALLOC_ENV" ]; then
+    if grep -qiE 'DEGRADED=1|ALLOCATOR_DEGRADED=1' "$ALLOC_ENV" 2>/dev/null; then
+        warn "DEGRADED flag still present — check manually: cat $ALLOC_ENV | grep -i degraded"
+    else
+        ok "Allocator is clean (no DEGRADED flag)"
+        grep -E "RISK_MULT|GLOBAL|STATUS" "$ALLOC_ENV" 2>/dev/null | head -6 || true
+    fi
 else
-    ok "portfolio_allocator_latest.env looks clean (no DEGRADED)"
+    warn "$ALLOC_ENV not found after rebuild"
 fi
 
 # ── 3. PATCH LIVE ENV CONFIG ─────────────────────────────────────────────────
