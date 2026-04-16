@@ -356,6 +356,9 @@ class AltHorizontalBreakV1Config:
     macro_macd_fast: int = 12
     macro_macd_slow: int = 26
     macro_macd_signal: int = 9
+    macro_consec_bars: int = 1     # require N consecutive 4h bars with hist same sign
+                                   # 1=standard (default). Override with
+                                   # HZBO1_MACRO_CONSEC_BARS=2 if needed.
 
     # EMA trend gate (4h price position filter)
     # Horizontal breakouts are unreliable in choppy/ranging markets.
@@ -447,6 +450,7 @@ class AltHorizontalBreakV1Strategy:
         c.macro_macd_fast = _env_int("HZBO1_MACRO_MACD_FAST", c.macro_macd_fast)
         c.macro_macd_slow = _env_int("HZBO1_MACRO_MACD_SLOW", c.macro_macd_slow)
         c.macro_macd_signal = _env_int("HZBO1_MACRO_MACD_SIGNAL", c.macro_macd_signal)
+        c.macro_consec_bars = _env_int("HZBO1_MACRO_CONSEC_BARS", c.macro_consec_bars)
         c.macro_ema_gate = _env_bool("HZBO1_MACRO_EMA_GATE", c.macro_ema_gate)
         c.macro_ema_period = _env_int("HZBO1_MACRO_EMA_PERIOD", c.macro_ema_period)
         c.signal_ema_gate = _env_bool("HZBO1_SIGNAL_EMA_GATE", c.signal_ema_gate)
@@ -475,21 +479,32 @@ class AltHorizontalBreakV1Strategy:
         if side == "long" and not c.macro_require_bullish:
             return True
 
-        need = max(80, c.macro_macd_slow + c.macro_macd_signal + 10)
+        consec = max(1, c.macro_consec_bars)
+        need = max(80, c.macro_macd_slow + c.macro_macd_signal + consec + 10)
         rows = store.fetch_klines(store.symbol, c.macro_tf, need) or []
         if len(rows) < need // 2:
             return True  # not enough data — don't block
 
         closes = [float(r[4]) for r in rows]
-        hist = _macd_hist_last(closes, c.macro_macd_fast, c.macro_macd_slow, c.macro_macd_signal)
-        if not math.isfinite(hist):
+
+        # Check last `consec` histogram bars — all must agree with direction
+        def _last_hists(n: int) -> list:
+            hists = []
+            for offset in range(n, 0, -1):
+                sub = closes[:-offset] if offset > 0 else closes
+                h = _macd_hist_last(sub, c.macro_macd_fast, c.macro_macd_slow, c.macro_macd_signal)
+                hists.append(h)
+            return hists
+
+        hists = _last_hists(consec)
+        if not all(math.isfinite(h) for h in hists):
             return True
 
         if side == "short" and c.macro_require_bearish:
-            if hist >= 0:
+            if not all(h < 0 for h in hists):
                 return False
         if side == "long" and c.macro_require_bullish:
-            if hist <= 0:
+            if not all(h > 0 for h in hists):
                 return False
 
         # Optional EMA gate: price must be on correct side of trend EMA

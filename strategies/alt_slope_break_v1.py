@@ -266,9 +266,11 @@ class AltSlopeBreakV1Config:
     max_slope_pct: float = 5.0    # filter extreme/spike lines
 
     # Trendline quality
-    min_r2: float = 0.70          # WF-22 optimal: 0.70 (macro_mid config). Slightly more
-                                  # forgiving than ATT1's 0.80 — breakout validity is
-                                  # confirmed by the break itself, not just pivot alignment.
+    min_r2: float = 0.80          # raised 0.70→0.80 (2026-04-16): tighter trendline fit
+                                  # required. Q3-2025 analysis: weak trendlines (R²=0.7-0.8)
+                                  # in bull markets produce false breakdowns that reverse
+                                  # immediately. Requiring R²≥0.80 filters out low-quality
+                                  # ascending lines that aren't true trendlines.
 
     # Breakout confirmation
     break_atr: float = 0.30       # close must be ≥ break_atr × ATR beyond the line
@@ -292,6 +294,9 @@ class AltSlopeBreakV1Config:
     macro_macd_fast: int = 12
     macro_macd_slow: int = 26
     macro_macd_signal: int = 9
+    macro_consec_bars: int = 1     # require N consecutive bars with hist same sign
+                                   # 1 = standard (just last bar). Override with
+                                   # ASB1_MACRO_CONSEC_BARS=2 for stricter filter.
 
     # Trade management
     sl_atr_mult: float = 0.80     # SL just beyond broken trendline (tight — line = new S/R)
@@ -362,6 +367,7 @@ class AltSlopeBreakV1Strategy:
         c.macro_macd_fast = _env_int("ASB1_MACRO_MACD_FAST", c.macro_macd_fast)
         c.macro_macd_slow = _env_int("ASB1_MACRO_MACD_SLOW", c.macro_macd_slow)
         c.macro_macd_signal = _env_int("ASB1_MACRO_MACD_SIGNAL", c.macro_macd_signal)
+        c.macro_consec_bars = _env_int("ASB1_MACRO_CONSEC_BARS", c.macro_consec_bars)
 
     def _refresh_lists(self) -> None:
         self._allow = _env_csv_set(
@@ -390,18 +396,39 @@ class AltSlopeBreakV1Strategy:
         if side == "long" and not c.macro_require_bullish:
             return True
 
-        need = max(80, c.macro_macd_slow + c.macro_macd_signal + 10)
+        consec = max(1, c.macro_consec_bars)
+        need = max(80, c.macro_macd_slow + c.macro_macd_signal + consec + 10)
         rows = store.fetch_klines(store.symbol, c.macro_tf, need) or []
         if len(rows) < need // 2:
             return True  # not enough data — don't block
         closes = [float(r[4]) for r in rows]
-        hist = _macd_hist_last(closes, c.macro_macd_fast, c.macro_macd_slow, c.macro_macd_signal)
-        if not math.isfinite(hist):
-            return True
-        if side == "short" and c.macro_require_bearish:
-            return hist < 0   # 4h histogram must be below zero for shorts
-        if side == "long" and c.macro_require_bullish:
-            return hist > 0   # 4h histogram must be above zero for longs
+
+        # Build last `consec` histogram values to check stability
+        def _hist_series(closes_: list, n: int) -> list:
+            """Return last n MACD histogram values."""
+            hists = []
+            for offset in range(n, 0, -1):
+                sub = closes_[:-offset] if offset > 0 else closes_
+                h = _macd_hist_last(sub, c.macro_macd_fast, c.macro_macd_slow, c.macro_macd_signal)
+                hists.append(h)
+            return hists
+
+        if consec <= 1:
+            hist = _macd_hist_last(closes, c.macro_macd_fast, c.macro_macd_slow, c.macro_macd_signal)
+            if not math.isfinite(hist):
+                return True
+            if side == "short" and c.macro_require_bearish:
+                return hist < 0
+            if side == "long" and c.macro_require_bullish:
+                return hist > 0
+        else:
+            hists = _hist_series(closes, consec)
+            if not all(math.isfinite(h) for h in hists):
+                return True
+            if side == "short" and c.macro_require_bearish:
+                return all(h < 0 for h in hists)   # ALL last N bars must be bearish
+            if side == "long" and c.macro_require_bullish:
+                return all(h > 0 for h in hists)   # ALL last N bars must be bullish
         return True
 
     def _slope_pct_per_day(self, slope: float, price_ref: float, bars_per_day: int = 24) -> float:

@@ -120,6 +120,17 @@ class ImpulseVolumeBreakoutV1Config:
     regime_mode: str = "off"
     regime_ema_fast: int = 20
     regime_ema_slow: int = 50
+    # ── 4h MACD macro filter (added 2026-04-16) ──────────────────────────
+    # IVB1 is a LONG-ONLY momentum strategy. In bear markets it has 0% WR
+    # (Q1-2026: 9 trades, 0 wins, -5.71%). Adding a 4h MACD histogram check
+    # blocks entries when macro is bearish.
+    # IVB1_MACRO_REQUIRE_BULL=1 (default): only enter longs when 4h MACD hist > 0
+    # IVB1_MACRO_REQUIRE_BULL=0: disable filter (old behaviour)
+    macro_require_bull: bool = True   # block longs when 4h hist <= 0
+    macro_tf: str = "240"             # timeframe for MACD check
+    macro_macd_fast: int = 12
+    macro_macd_slow: int = 26
+    macro_macd_signal: int = 9
 
 
 class ImpulseVolumeBreakoutV1Strategy:
@@ -165,12 +176,56 @@ class ImpulseVolumeBreakoutV1Strategy:
         self.cfg.regime_mode = os.getenv("IVB1_REGIME_MODE", self.cfg.regime_mode)
         self.cfg.regime_ema_fast = _env_int("IVB1_REGIME_EMA_FAST", self.cfg.regime_ema_fast)
         self.cfg.regime_ema_slow = _env_int("IVB1_REGIME_EMA_SLOW", self.cfg.regime_ema_slow)
+        self.cfg.macro_require_bull = _env_bool("IVB1_MACRO_REQUIRE_BULL", self.cfg.macro_require_bull)
+        self.cfg.macro_tf = os.getenv("IVB1_MACRO_TF", self.cfg.macro_tf)
+        self.cfg.macro_macd_fast = _env_int("IVB1_MACRO_MACD_FAST", self.cfg.macro_macd_fast)
+        self.cfg.macro_macd_slow = _env_int("IVB1_MACRO_MACD_SLOW", self.cfg.macro_macd_slow)
+        self.cfg.macro_macd_signal = _env_int("IVB1_MACRO_MACD_SIGNAL", self.cfg.macro_macd_signal)
 
         self._allow = _env_csv_set("IVB1_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set("IVB1_SYMBOL_DENYLIST")
 
     def _refresh_runtime_config(self) -> None:
         self._load_runtime_config()
+
+    def _macro_ok(self, store) -> bool:
+        """4h MACD histogram check — block longs when macro is bearish.
+
+        Returns True if longs are allowed:
+          - macro_require_bull=False → always OK (old behaviour)
+          - macro_require_bull=True  → only OK when 4h MACD hist > 0
+
+        Uses standard MACD(12,26,9). Mirrors the filter in elder_triple_screen_v2
+        so all momentum strategies share the same macro gate.
+        """
+        if not self.cfg.macro_require_bull:
+            return True
+        needed = self.cfg.macro_macd_slow + self.cfg.macro_macd_signal + 5
+        rows_4h = store.fetch_klines(store.symbol, self.cfg.macro_tf, needed + 10) or []
+        if len(rows_4h) < needed:
+            self.last_no_signal_reason = "macro_history_short"
+            return False
+        closes = [float(r[4]) for r in rows_4h]
+        # EMA helpers
+        def _ema_seq(vals: List[float], period: int) -> List[float]:
+            k = 2.0 / (period + 1.0)
+            e = vals[0]
+            out = [e]
+            for v in vals[1:]:
+                e = v * k + e * (1.0 - k)
+                out.append(e)
+            return out
+        fast_seq = _ema_seq(closes, self.cfg.macro_macd_fast)
+        slow_seq = _ema_seq(closes, self.cfg.macro_macd_slow)
+        # align (fast_seq is longer, trim to slow length)
+        offset = len(fast_seq) - len(slow_seq)
+        macd_line = [fast_seq[i + offset] - slow_seq[i] for i in range(len(slow_seq))]
+        signal_line = _ema_seq(macd_line, self.cfg.macro_macd_signal)
+        hist = macd_line[-1] - signal_line[-1]
+        if hist <= 0:
+            self.last_no_signal_reason = f"macro_bearish_hist={hist:.6f}"
+            return False
+        return True
 
     def _regime_ok(self, store) -> bool:
         if str(self.cfg.regime_mode).strip().lower() != "ema":
@@ -271,6 +326,8 @@ class ImpulseVolumeBreakoutV1Strategy:
         if self._cooldown > 0:
             self._cooldown -= 1
             self.last_no_signal_reason = "cooldown"
+            return None
+        if not self._macro_ok(store):
             return None
         if not self._regime_ok(store):
             return None
