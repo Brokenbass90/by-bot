@@ -101,6 +101,7 @@ from bot.deepseek_action_executor import (
     diff_pending_changes,
 )
 from bot.entry_guard import EntryCircuitBreaker
+from bot.circuit_breaker import get_circuit_breaker as _get_cb
 from bot.runner_state import apply_runner_state
 from bot.symbol_state import (
     SymState, STATE,
@@ -6676,6 +6677,11 @@ def _get_equity_now() -> float:
 
     EQUITY_CACHE["val"] = float(eq)
     EQUITY_CACHE["ts"] = now
+    # Feed circuit breaker with fresh equity
+    try:
+        _get_cb().update(float(eq))
+    except Exception:
+        pass
     return float(eq)
 
 def _get_effective_equity() -> float:
@@ -6753,7 +6759,21 @@ def portfolio_can_open() -> bool:
     if eq_day and cur_eq < eq_day * (1 - DAILY_LOSS_LIMIT_PCT/100.0):
         PORTFOLIO_STATE["disabled"] = True
         return False
+    # Portfolio circuit breaker: HALT state blocks new entries
+    try:
+        if _get_cb().get_risk_mult() == 0.0:
+            return False
+    except Exception:
+        pass
     return True
+
+
+def portfolio_cb_risk_mult() -> float:
+    """Return the circuit breaker risk multiplier (1.0, 0.5, or 0.0)."""
+    try:
+        return float(_get_cb().get_risk_mult())
+    except Exception:
+        return 1.0
 
 
 def _trade_open_risk_usd(tr: TradeState) -> float:
