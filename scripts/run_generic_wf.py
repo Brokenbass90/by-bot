@@ -93,7 +93,11 @@ def _run_window(args: Tuple) -> Optional[Dict]:
             "status": f"TIMEOUT>{timeout_sec}s",
         }
 
-    for line in r.stdout.splitlines():
+    stdout_text = str(r.stdout or "")
+    stderr_text = str(r.stderr or "")
+    combined_lines = stdout_text.splitlines() + stderr_text.splitlines()
+
+    for line in combined_lines:
         if "summary:" in line:
             summary_path = line.split("summary:")[-1].strip()
             try:
@@ -108,7 +112,22 @@ def _run_window(args: Tuple) -> Optional[Dict]:
             except Exception as e:
                 return {"end": end_date_str, "pf": None, "trades": 0, "net": None, "status": f"ERR:{e}"}
 
-    return {"end": end_date_str, "pf": None, "trades": 0, "net": None, "status": f"NO_SUMMARY:{r.stdout[-300:]}"}
+    tail = (stderr_text or stdout_text)[-300:]
+    if r.returncode != 0:
+        return {
+            "end": end_date_str,
+            "pf": None,
+            "trades": 0,
+            "net": None,
+            "status": f"EXIT{r.returncode}:{tail}",
+        }
+    return {
+        "end": end_date_str,
+        "pf": None,
+        "trades": 0,
+        "net": None,
+        "status": f"NO_SUMMARY:{tail}",
+    }
 
 
 def print_wf_summary(strategy: str, rows: List[Dict], window_days: int) -> None:

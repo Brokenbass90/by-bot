@@ -29,7 +29,7 @@ END="${END:-2026-04-01}"
 WF_TOTAL_DAYS="${WF_TOTAL_DAYS:-360}"
 WF_WINDOW_DAYS="${WF_WINDOW_DAYS:-45}"
 WF_STEP_DAYS="${WF_STEP_DAYS:-15}"
-WF_WORKERS="${WF_WORKERS:-2}"
+WF_WORKERS="${WF_WORKERS:-1}"
 WF_TIMEOUT_SEC="${WF_TIMEOUT_SEC:-900}"
 
 echo "═══════════════════════════════════════════════"
