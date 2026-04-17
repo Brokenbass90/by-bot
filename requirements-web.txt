@@ -1,0 +1,14 @@
+# Web interface dependencies
+# Install with: pip install -r requirements-web.txt
+#
+# Or add to your venv:
+#   source .venv/bin/activate
+#   pip install -r requirements-web.txt
+
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9      # form data
+python-jose[cryptography]>=3.3.0  # JWT
+passlib[bcrypt]>=1.7.4       # password hashing
+pyotp>=2.9.0                 # TOTP / Google Authenticator
+anthropic>=0.28.0            # AI chat
