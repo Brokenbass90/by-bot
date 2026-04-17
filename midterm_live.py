@@ -21,12 +21,21 @@ class LiveKlineStore:
 
 
 # Strategy version selection via env:
-#   MTPB_VERSION=3  → uses btc_eth_midterm_v3.BTCETHMidtermV3Strategy (recommended)
-#   MTPB_VERSION=1  → uses btc_eth_midterm_pullback.BTCETHMidtermPullbackStrategy (legacy)
+#   MTPB_VERSION=3        → uses btc_eth_midterm_v3.BTCETHMidtermV3Strategy (default, recommended)
+#   MTPB_VERSION=2        → uses btc_eth_midterm_pullback_v2.BTCETHMidtermPullbackV2Strategy
+#   MTPB_VERSION=1        → uses btc_eth_midterm_pullback.BTCETHMidtermPullbackStrategy (legacy)
+#   MTPB_VERSION=short_v1 → uses btc_eth_midterm_short_v1 (SHORT-ONLY, daily trend + 4h signal)
+#                            Designed for bear regimes.  Requires ENABLE_MTSV1_TRADING=1.
 # Default: v3 (if available), fallback to v1.
 
 def _make_strategy():
     version = os.getenv("MTPB_VERSION", "3").strip()
+    if version == "short_v1":
+        try:
+            from strategies.btc_eth_midterm_short_v1 import BTCETHMidtermShortV1Strategy
+            return BTCETHMidtermShortV1Strategy()
+        except ImportError:
+            pass
     if version == "3":
         try:
             from strategies.btc_eth_midterm_v3 import BTCETHMidtermV3Strategy
@@ -49,9 +58,11 @@ class MidtermLiveEngine:
     Creates per-symbol midterm strategy instances and returns TradeSignal.
 
     Strategy version is selected by MTPB_VERSION env var:
-      3 = btc_eth_midterm_v3  (default, recommended — MACD filter + RSI + fresh touch)
-      1 = btc_eth_midterm_pullback  (legacy v1)
-      2 = btc_eth_midterm_pullback_v2  (channel version, experimental)
+      3        = btc_eth_midterm_v3       (default — MACD filter + RSI + fresh touch)
+      2        = btc_eth_midterm_pullback_v2  (channel version, experimental)
+      1        = btc_eth_midterm_pullback  (legacy v1)
+      short_v1 = btc_eth_midterm_short_v1 (SHORT-ONLY, daily trend + 4h signal,
+                                           bear-market optimised — set via ENABLE_MTSV1_TRADING=1)
     """
 
     def __init__(self, fetch_klines: Callable[[str, str, int], Any]):

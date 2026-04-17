@@ -183,6 +183,22 @@
       }
     },
     {
+      "name": "midterm_short",
+      "enable_env": "ENABLE_MTSV1_TRADING",
+      "symbol_env_key": "MTSV1_SYMBOL_ALLOWLIST",
+      "risk_env": "MTSV1_RISK_MULT",
+      "strategy_names": [
+        "btc_eth_midterm_short_v1"
+      ],
+      "_comment": "SHORT-ONLY bear strategy. daily trend + 4h signal. Disable in bull via 0.0 mults. Requires WF-22 before enabling live (ENABLE_MTSV1_TRADING=1). Switch with MTPB_VERSION=short_v1.",
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.0,
+        "bull_chop": 0.0,
+        "bear_chop": 0.65,
+        "bear_trend": 0.9
+      }
+    },
+    {
       "name": "range_scalp",
       "enable_env": "ENABLE_RANGE_TRADING",
       "symbol_env_key": "ARS1_SYMBOL_ALLOWLIST",
