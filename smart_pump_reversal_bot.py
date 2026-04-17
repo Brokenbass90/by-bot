@@ -5421,13 +5421,14 @@ POS_IS_ONEWAY = (BYBIT_POS_MODE != "hedge")
 _BYBIT_LAST = {}  # symbol -> lastPrice (float), кеш из /market/tickers
 _BYBIT_CACHE = {"syms": [], "ts": 0}
 _BYBIT_META = {}
+_BYBIT_UNSUPPORTED = set()
 
 
 def bybit_symbols(top_n:int)->List[str]:
     base_url = (TRADE_CLIENT.base if (TRADE_CLIENT is not None) else BYBIT_BASE_DEFAULT)
     now = int(time.time())
     if _BYBIT_CACHE["syms"] and now - _BYBIT_CACHE["ts"] < 600:
-        syms = _BYBIT_CACHE["syms"]
+        syms = [s for s in _BYBIT_CACHE["syms"] if s not in _BYBIT_UNSUPPORTED]
         return syms if top_n is None else syms[:top_n]
 
     r1 = _HTTP.get(f"{base_url}/v5/market/instruments-info",
@@ -5474,7 +5475,7 @@ def bybit_symbols(top_n:int)->List[str]:
 
     inst = [x for x in inst if t24.get(x["symbol"],0) >= MIN_24H_TURNOVER]
     inst.sort(key=lambda x: t24.get(x["symbol"],0), reverse=True)
-    syms = [x["symbol"] for x in inst]
+    syms = [x["symbol"] for x in inst if x["symbol"] not in _BYBIT_UNSUPPORTED]
 
     _BYBIT_CACHE["syms"] = syms
     _BYBIT_CACHE["ts"] = now
@@ -7162,6 +7163,10 @@ def _clear_entry_slot(symbol: str) -> None:
 def _submit_entry_order_guarded(symbol: str, side: str, qty_floor: float) -> tuple[str, float] | None:
     if TRADE_CLIENT is None:
         return None
+    if symbol in _BYBIT_UNSUPPORTED:
+        _diag_inc("entry_submit_unsupported_symbol")
+        log_error(f"entry submit skipped unsupported symbol {symbol}")
+        return None
     if _entry_circuit_active():
         _diag_inc("entry_circuit_blocked")
         tg_trade_throttled(
@@ -7178,6 +7183,13 @@ def _submit_entry_order_guarded(symbol: str, side: str, qty_floor: float) -> tup
         _diag_inc("entry_submit_ok")
         return oid, q
     except Exception as e:
+        err_text = str(e)
+        if "symbol is not supported" in err_text.lower():
+            _BYBIT_UNSUPPORTED.add(symbol)
+            try:
+                _BYBIT_CACHE["syms"] = [s for s in _BYBIT_CACHE.get("syms", []) if s != symbol]
+            except Exception:
+                pass
         snap = _ENTRY_CIRCUIT.note_failure(str(e), time.time()) if ENTRY_CIRCUIT_ENABLE else None
         _diag_inc("entry_submit_fail")
         log_error(f"entry submit fail {symbol} {side}: {e}")
