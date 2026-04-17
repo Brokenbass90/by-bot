@@ -91,7 +91,7 @@ Environment variables (HZBO1_ prefix)
   HZBO1_ALLOW_SHORTS          bool   enable short entries [1]
   HZBO1_MACRO_TF              str    macro filter timeframe [240]
   HZBO1_MACRO_REQUIRE_BEARISH bool   short only when 4h hist < 0 [1]
-  HZBO1_MACRO_REQUIRE_BULLISH bool   long only when 4h hist > 0 [0]
+  HZBO1_MACRO_REQUIRE_BULLISH bool   long only when 4h hist > 0 [1]
   HZBO1_MACRO_MACD_FAST       int    [12]
   HZBO1_MACRO_MACD_SLOW       int    [26]
   HZBO1_MACRO_MACD_SIGNAL     int    [9]
@@ -352,7 +352,8 @@ class AltHorizontalBreakV1Config:
     # Macro trend filter (4h MACD histogram)
     macro_tf: str = "240"
     macro_require_bearish: bool = True    # short only when 4h hist < 0
-    macro_require_bullish: bool = False   # long only when 4h hist > 0
+    macro_require_bullish: bool = True    # long only when 4h hist > 0 (ON by default)
+                                          # Override with HZBO1_MACRO_REQUIRE_BULLISH=0 to disable
     macro_macd_fast: int = 12
     macro_macd_slow: int = 26
     macro_macd_signal: int = 9

@@ -2044,6 +2044,30 @@ TRADE_CHARTS_SEND_ON_CLOSE = os.getenv("TRADE_CHARTS_SEND_ON_CLOSE", "1").strip(
 # trade closes with a realized loss exceeding this amount in USDT.
 # Set BIG_LOSS_ALERT_USD=0 to disable.
 BIG_LOSS_ALERT_USD = float(os.getenv("BIG_LOSS_ALERT_USD", "40"))
+
+# ── Volatility-adjusted position sizing ───────────────────────────────────────
+# When BTC 4h ATR% exceeds VOLADJ_ATR_THRESHOLD_PCT, position sizes are reduced
+# by VOLADJ_HIGH_MULT. This protects against over-sizing during volatile periods.
+# ATR% is read from runtime/geometry/geometry_state.json (built hourly by cron).
+#
+# ENV vars:
+#   VOLADJ_ENABLED=1                   (default: 1 — enabled)
+#   VOLADJ_ATR_THRESHOLD_PCT=3.0       (4h ATR% above this → reduce size)
+#   VOLADJ_ATR_EXTREME_PCT=5.0         (4h ATR% above this → extreme reduce)
+#   VOLADJ_HIGH_MULT=0.60              (size multiplier in high-vol regime)
+#   VOLADJ_EXTREME_MULT=0.30           (size multiplier in extreme-vol regime)
+#   VOLADJ_SYMBOL=BTCUSDT              (reference symbol for ATR)
+#   VOLADJ_TF=240                      (reference timeframe in minutes)
+VOLADJ_ENABLED          = os.getenv("VOLADJ_ENABLED", "1").strip() == "1"
+VOLADJ_ATR_THRESHOLD_PCT = float(os.getenv("VOLADJ_ATR_THRESHOLD_PCT", "3.0"))
+VOLADJ_ATR_EXTREME_PCT   = float(os.getenv("VOLADJ_ATR_EXTREME_PCT",   "5.0"))
+VOLADJ_HIGH_MULT         = float(os.getenv("VOLADJ_HIGH_MULT",         "0.60"))
+VOLADJ_EXTREME_MULT      = float(os.getenv("VOLADJ_EXTREME_MULT",      "0.30"))
+VOLADJ_SYMBOL            = os.getenv("VOLADJ_SYMBOL", "BTCUSDT").strip().upper()
+VOLADJ_TF                = os.getenv("VOLADJ_TF",    "240").strip()
+
+# Cache: (_atr_pct, _mult, _ts)
+_voladj_cache: tuple[float, float, float] = (0.0, 1.0, 0.0)
 TRADE_CHARTS_PAD_BARS = int(os.getenv("TRADE_CHARTS_PAD_BARS", "80"))
 TRADE_CHARTS_OUT_DIR = os.getenv("TRADE_CHARTS_OUT_DIR", "/tmp/bybot_trade_charts").strip() or "/tmp/bybot_trade_charts"
 
@@ -6142,6 +6166,68 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                         tr.tpsl_last_set_ts = now_s()
                         tr.last_runner_action_ts = now
 
+def _get_vol_adj_mult() -> float:
+    """
+    Returns a position-size multiplier based on current BTC 4h ATR%.
+    Reads runtime/geometry/geometry_state.json (built hourly by cron).
+    Caches the result for 15 minutes to avoid repeated file I/O.
+
+    Returns:
+      1.0  — normal vol  (ATR% ≤ VOLADJ_ATR_THRESHOLD_PCT)
+      0.60 — high vol    (ATR% > VOLADJ_ATR_THRESHOLD_PCT)
+      0.30 — extreme vol (ATR% > VOLADJ_ATR_EXTREME_PCT)
+    """
+    global _voladj_cache
+
+    if not VOLADJ_ENABLED:
+        return 1.0
+
+    # Use cached value if <15 min old
+    cached_atr_pct, cached_mult, cached_ts = _voladj_cache
+    if now_s() - cached_ts < 900:
+        return cached_mult
+
+    # Read geometry state
+    geo_path = pathlib.Path("runtime/geometry/geometry_state.json")
+    try:
+        with geo_path.open() as f:
+            geo = json.loads(f.read())
+        sym_data = geo.get("symbols", {}).get(VOLADJ_SYMBOL, {})
+        tf_data  = sym_data.get(str(VOLADJ_TF), {})
+        atr      = float(tf_data.get("atr", 0) or 0)
+        price    = float(tf_data.get("current_price", 0) or 0)
+        if atr > 0 and price > 0:
+            atr_pct = atr / price * 100.0
+        else:
+            atr_pct = 0.0
+    except Exception:
+        # File not found or parse error — don't penalise
+        _voladj_cache = (0.0, 1.0, now_s())
+        return 1.0
+
+    # Compute mult
+    if atr_pct >= VOLADJ_ATR_EXTREME_PCT:
+        mult = VOLADJ_EXTREME_MULT
+        label = f"EXTREME ({atr_pct:.2f}% ≥ {VOLADJ_ATR_EXTREME_PCT:.1f}%)"
+    elif atr_pct >= VOLADJ_ATR_THRESHOLD_PCT:
+        mult = VOLADJ_HIGH_MULT
+        label = f"HIGH ({atr_pct:.2f}% ≥ {VOLADJ_ATR_THRESHOLD_PCT:.1f}%)"
+    else:
+        mult = 1.0
+        label = None
+
+    # Log & alert on first entry into high-vol state
+    prev_mult = _voladj_cache[1]
+    if mult != prev_mult:
+        if mult < 1.0:
+            log.warning("[VOLADJ] %s vol detected: %s → sizing ×%.2f", VOLADJ_SYMBOL, label, mult)
+        else:
+            log.info("[VOLADJ] %s vol normalised (ATR=%.2f%%) → sizing ×1.0", VOLADJ_SYMBOL, atr_pct)
+
+    _voladj_cache = (atr_pct, mult, now_s())
+    return mult
+
+
 def calc_notional_usd_candidate_from_stop_pct(stop_pct: float, risk_mult: float = 1.0) -> float:
     """
     Base risk model without the hard MIN_NOTIONAL_USD gate.
@@ -6154,7 +6240,7 @@ def calc_notional_usd_candidate_from_stop_pct(stop_pct: float, risk_mult: float 
     if equity <= 0:
         return 0.0
 
-    mult = max(0.1, float(risk_mult or 1.0))
+    mult = max(0.1, float(risk_mult or 1.0)) * _get_vol_adj_mult()
     risk_usd = equity * (RISK_PER_TRADE_PCT / 100.0) * mult
 
     notional_raw = risk_usd / (stop_pct / 100.0)
@@ -11420,6 +11506,17 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     HZBO1_SYMBOL_ALLOWLIST = _csv_upper_set("HZBO1_SYMBOL_ALLOWLIST")
     BOUNCE1_SYMBOL_ALLOWLIST = _csv_upper_set("BOUNCE1_SYMBOL_ALLOWLIST")
 
+    # ── Vol-adjust hot-reload ─────────────────────────────────────────────────
+    global VOLADJ_ENABLED, VOLADJ_ATR_THRESHOLD_PCT, VOLADJ_ATR_EXTREME_PCT
+    global VOLADJ_HIGH_MULT, VOLADJ_EXTREME_MULT, VOLADJ_SYMBOL, VOLADJ_TF
+    VOLADJ_ENABLED           = os.getenv("VOLADJ_ENABLED", "1").strip() == "1"
+    VOLADJ_ATR_THRESHOLD_PCT = float(os.getenv("VOLADJ_ATR_THRESHOLD_PCT", "3.0"))
+    VOLADJ_ATR_EXTREME_PCT   = float(os.getenv("VOLADJ_ATR_EXTREME_PCT",   "5.0"))
+    VOLADJ_HIGH_MULT         = float(os.getenv("VOLADJ_HIGH_MULT",         "0.60"))
+    VOLADJ_EXTREME_MULT      = float(os.getenv("VOLADJ_EXTREME_MULT",      "0.30"))
+    VOLADJ_SYMBOL            = os.getenv("VOLADJ_SYMBOL", "BTCUSDT").strip().upper()
+    VOLADJ_TF                = os.getenv("VOLADJ_TF", "240").strip()
+
     try:
         ORCH_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ORCH_GLOBAL_RISK_MULT", "1.0") or 1.0))
     except Exception:
@@ -11541,6 +11638,17 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     ASB1_SYMBOL_ALLOWLIST = _csv_upper_set("ASB1_SYMBOL_ALLOWLIST")
     HZBO1_SYMBOL_ALLOWLIST = _csv_upper_set("HZBO1_SYMBOL_ALLOWLIST")
     BOUNCE1_SYMBOL_ALLOWLIST = _csv_upper_set("BOUNCE1_SYMBOL_ALLOWLIST")
+
+    # ── Vol-adjust hot-reload ─────────────────────────────────────────────────
+    global VOLADJ_ENABLED, VOLADJ_ATR_THRESHOLD_PCT, VOLADJ_ATR_EXTREME_PCT
+    global VOLADJ_HIGH_MULT, VOLADJ_EXTREME_MULT, VOLADJ_SYMBOL, VOLADJ_TF
+    VOLADJ_ENABLED           = os.getenv("VOLADJ_ENABLED", "1").strip() == "1"
+    VOLADJ_ATR_THRESHOLD_PCT = float(os.getenv("VOLADJ_ATR_THRESHOLD_PCT", "3.0"))
+    VOLADJ_ATR_EXTREME_PCT   = float(os.getenv("VOLADJ_ATR_EXTREME_PCT",   "5.0"))
+    VOLADJ_HIGH_MULT         = float(os.getenv("VOLADJ_HIGH_MULT",         "0.60"))
+    VOLADJ_EXTREME_MULT      = float(os.getenv("VOLADJ_EXTREME_MULT",      "0.30"))
+    VOLADJ_SYMBOL            = os.getenv("VOLADJ_SYMBOL", "BTCUSDT").strip().upper()
+    VOLADJ_TF                = os.getenv("VOLADJ_TF", "240").strip()
 
     try:
         ALLOCATOR_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ALLOCATOR_GLOBAL_RISK_MULT", "1.0") or 1.0))
@@ -12099,6 +12207,7 @@ async def pulse():
         try:
             _hb_path = Path(__file__).resolve().parent / "runtime" / "bot_heartbeat.json"
             _hb_path.parent.mkdir(parents=True, exist_ok=True)
+            _va_pct, _va_mult, _ = _voladj_cache
             _write_json_atomic(
                 _hb_path,
                 {
@@ -12108,6 +12217,8 @@ async def pulse():
                     "ws_guard_active": int(_ws_transport_guard_active()),
                     "bybit_msgs": int(MSG_COUNTER.get("Bybit", 0)),
                     "regime": str(os.getenv("ORCH_REGIME", "unknown")),
+                    "voladj_atr_pct": round(_va_pct, 3),
+                    "voladj_mult": round(_va_mult, 2),
                 },
             )
         except Exception as _hb_err:

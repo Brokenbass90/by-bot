@@ -76,6 +76,8 @@ Environment variables (ASB1_ prefix)
   ASB1_COOLDOWN_BARS_5M     int    cooldown in 5m bars [72]
   ASB1_ALLOW_LONGS          bool   enable long entries [1]
   ASB1_ALLOW_SHORTS         bool   enable short entries [1]
+  ASB1_MACRO_REQUIRE_BULLISH bool  long only when 4h MACD hist > 0 [1]
+  ASB1_MACRO_REQUIRE_BEARISH bool  short only when 4h MACD hist < 0 [1]
 """
 from __future__ import annotations
 
@@ -290,7 +292,8 @@ class AltSlopeBreakV1Config:
     # Set macro_tf="" to disable the check (default off for backwards compat).
     macro_tf: str = "240"          # 4h MACD histogram check timeframe
     macro_require_bearish: bool = True   # enabled by default — blocks Nov-Dec 2025 bull shorts
-    macro_require_bullish: bool = False  # disabled — longs off anyway in current regime
+    macro_require_bullish: bool = True   # enabled by default — longs only when 4h MACD hist > 0
+                                         # Override with ASB1_MACRO_REQUIRE_BULLISH=0 to disable
     macro_macd_fast: int = 12
     macro_macd_slow: int = 26
     macro_macd_signal: int = 9

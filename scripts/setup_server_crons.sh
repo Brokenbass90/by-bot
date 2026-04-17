@@ -19,6 +19,9 @@
 #   9. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
 #  10. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
 #  11. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
+#  12. Auto-apply research winners — daily 06:00 UTC
+#  13. Daily Telegram health digest — 08:00 UTC every day
+#  14. Alpaca monthly autopilot — 1st of month 09:30 UTC
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -163,6 +166,13 @@ NEW_CRONS=$(cat << CRONEOF
 #
 # 13. Auto-apply research winners — daily at 06:00 UTC, after nightly research completes
 0 6 * * * cd $BOT_DIR && $PYTHON scripts/auto_apply_research_winner.py >> logs/auto_apply.log 2>&1 $CRON_TAG
+#
+# 14. Daily Telegram health digest — every morning at 08:00 UTC
+# Reports: CB state, regime, allocator, open trades, Alpaca P&L + picks
+0 8 * * * /bin/bash -lc 'cd $BOT_DIR && source .venv/bin/activate && python3 scripts/tg_daily_digest.py >> logs/tg_daily_digest.log 2>&1' $CRON_TAG
+#
+# 15. Alpaca monthly autopilot — 1st of each month at 09:30 UTC (after market open)
+30 9 1 * * /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_monthly_autopilot.sh >> logs/alpaca_monthly.log 2>&1' $CRON_TAG
 #
 CRONEOF
 )
