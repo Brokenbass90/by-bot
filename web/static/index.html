@@ -867,16 +867,350 @@ function JournalPage() {
   );
 }
 
+// ── AI Chat page ───────────────────────────────────────────────────────────
+
+function AIChatPage() {
+  const [messages, setMessages] = useState([
+    { role: 'assistant', content: '👋 Привет! Я знаю всё о твоём боте — текущий режим, стратегии, сделки, Alpaca. Могу анализировать производительность, объяснять что происходит и предлагать действия (включить/выключить рукав, safe mode и т.д.). Что хочешь узнать?' }
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [pendingCmd, setPendingCmd] = useState(null);
+  const [cmdConfirm, setCmdConfirm] = useState(false);
+  const bottomRef = useRef(null);
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+
+  async function send(executeCmd = null) {
+    const text = input.trim();
+    if (!text && !executeCmd) return;
+    const userMsg = { role: 'user', content: text };
+    const newMsgs = text ? [...messages, userMsg] : messages;
+    if (text) { setMessages(newMsgs); setInput(''); }
+    setLoading(true);
+    try {
+      const body = { messages: newMsgs.filter(m => m.role !== 'system') };
+      if (executeCmd) body.execute_command = executeCmd;
+      const res = await post('/api/ai/chat', body);
+      const replies = [];
+      if (res.command_result) replies.push({ role: 'system', content: `⚙️ ${res.command_result}` });
+      if (res.reply) replies.push({ role: 'assistant', content: res.reply });
+      setMessages(prev => [...prev, ...replies]);
+      if (res.suggested_command) { setPendingCmd(res.suggested_command); setCmdConfirm(true); }
+      else { setPendingCmd(null); setCmdConfirm(false); }
+    } catch (e) {
+      setMessages(prev => [...prev, { role: 'assistant', content: `❌ Error: ${e.message}` }]);
+    } finally { setLoading(false); }
+  }
+
+  function confirmCmd() {
+    setCmdConfirm(false);
+    send(pendingCmd);
+    setPendingCmd(null);
+  }
+
+  function rejectCmd() {
+    setCmdConfirm(false); setPendingCmd(null);
+    setMessages(prev => [...prev, { role: 'system', content: '❌ Command cancelled.' }]);
+  }
+
+  const quickBtns = [
+    'Как работает бот прямо сейчас?',
+    'Какой режим рынка и что активно?',
+    'Покажи performance по стратегиям',
+    'Есть ли проблемы которые надо починить?',
+    'Что делает Alpaca?',
+  ];
+
+  return React.createElement('div', { style: { display: 'flex', flexDirection: 'column', height: '100%' } },
+    React.createElement('div', { className: 'section-title' }, '🤖 AI Assistant'),
+
+    // Chat window
+    React.createElement('div', { className: 'card', style: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 } },
+      React.createElement('div', { style: { flex: 1, overflowY: 'auto', padding: '4px 0', minHeight: '320px', maxHeight: '500px' } },
+        messages.map((m, i) => React.createElement('div', {
+          key: i,
+          style: {
+            display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start',
+            marginBottom: '12px',
+          }
+        },
+          React.createElement('div', {
+            style: {
+              maxWidth: '80%', padding: '10px 14px', borderRadius: m.role === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
+              background: m.role === 'user' ? 'var(--blue-dim)' : m.role === 'system' ? 'var(--bg4)' : 'var(--bg3)',
+              border: `1px solid ${m.role === 'user' ? 'var(--blue)' : m.role === 'system' ? 'var(--border2)' : 'var(--border)'}`,
+              color: m.role === 'system' ? 'var(--text2)' : 'var(--text)',
+              fontSize: '13px', lineHeight: '1.6', whiteSpace: 'pre-wrap',
+            }
+          }, m.content)
+        )),
+        loading && React.createElement('div', { style: { display: 'flex', gap: '4px', padding: '10px 14px' } },
+          [0,1,2].map(i => React.createElement('div', { key: i, style: {
+            width: '6px', height: '6px', borderRadius: '50%', background: 'var(--text3)',
+            animation: `pulse 1.2s ease-in-out ${i*0.2}s infinite`
+          } }))
+        ),
+        React.createElement('div', { ref: bottomRef })
+      ),
+
+      // Pending command confirmation
+      cmdConfirm && pendingCmd && React.createElement('div', {
+        style: { background: 'var(--yellow-dim)', border: '1px solid var(--yellow)', borderRadius: 'var(--radius)', padding: '12px 14px', margin: '8px 0' }
+      },
+        React.createElement('div', { style: { fontSize: '12px', color: 'var(--yellow)', fontWeight: 600, marginBottom: '6px' } }, '⚠️ AI suggests this action — confirm?'),
+        React.createElement('code', { style: { fontSize: '12px', color: 'var(--text)' } }, JSON.stringify(pendingCmd)),
+        React.createElement('div', { style: { display: 'flex', gap: '8px', marginTop: '10px' } },
+          React.createElement('button', { className: 'auth-btn', style: { width: 'auto', padding: '6px 16px', background: 'var(--green)', fontSize: '13px' }, onClick: confirmCmd }, '✓ Execute'),
+          React.createElement('button', { className: 'auth-btn', style: { width: 'auto', padding: '6px 16px', background: 'var(--red-dim)', border: '1px solid var(--red)', fontSize: '13px' }, onClick: rejectCmd }, '✗ Cancel')
+        )
+      ),
+
+      // Quick buttons
+      React.createElement('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap', padding: '10px 0 6px' } },
+        quickBtns.map(q => React.createElement('button', {
+          key: q, onClick: () => { setInput(q); },
+          style: { background: 'var(--bg4)', border: '1px solid var(--border2)', color: 'var(--text2)', padding: '4px 10px', borderRadius: '14px', cursor: 'pointer', fontSize: '11px' }
+        }, q))
+      ),
+
+      // Input
+      React.createElement('div', { style: { display: 'flex', gap: '8px', marginTop: '8px' } },
+        React.createElement('input', {
+          value: input,
+          onChange: e => setInput(e.target.value),
+          onKeyDown: e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } },
+          placeholder: 'Спроси что угодно о боте…',
+          disabled: loading,
+          style: {
+            flex: 1, background: 'var(--bg3)', border: '1px solid var(--border2)', color: 'var(--text)',
+            padding: '10px 14px', borderRadius: 'var(--radius)', fontSize: '13px', outline: 'none',
+          }
+        }),
+        React.createElement('button', {
+          onClick: () => send(), disabled: loading || !input.trim(),
+          style: { background: 'var(--blue)', border: 'none', color: '#fff', padding: '10px 16px', borderRadius: 'var(--radius)', cursor: 'pointer', fontSize: '13px', fontWeight: 600, opacity: loading || !input.trim() ? 0.5 : 1 }
+        }, '→')
+      )
+    )
+  );
+}
+
+// ── P&L Journal page ───────────────────────────────────────────────────────
+
+function PnLJournal() {
+  const { data: daily, loading: dl } = useFetch('/api/admin/stats/daily', []);
+  const { data: monthly, loading: ml } = useFetch('/api/admin/stats/monthly', []);
+  const [view, setView] = useState('daily');
+  if (dl || ml) return React.createElement(Loader);
+
+  const rows = view === 'daily' ? (daily?.days || []) : (monthly?.months || []);
+  const summary = daily || {};
+
+  return React.createElement('div', null,
+    React.createElement('div', { className: 'page-hdr' },
+      React.createElement('div', { className: 'section-title' }, 'P&L Journal'),
+      React.createElement('div', { style: { display: 'flex', gap: '6px' } },
+        ['daily','monthly'].map(v => React.createElement('button', {
+          key: v, onClick: () => setView(v),
+          style: { background: view === v ? 'var(--blue-dim)' : 'var(--bg3)', border: `1px solid ${view === v ? 'var(--blue)' : 'var(--border2)'}`, color: view === v ? 'var(--blue)' : 'var(--text2)', padding: '5px 14px', borderRadius: 'var(--radius)', cursor: 'pointer', fontSize: '12px' }
+        }, v.charAt(0).toUpperCase() + v.slice(1)))
+      )
+    ),
+
+    // Summary cards
+    view === 'daily' && React.createElement('div', { className: 'grid4', style: { marginBottom: '16px' } },
+      React.createElement('div', { className: 'stat-box' },
+        React.createElement('div', { className: 'stat-label' }, 'Total Net'),
+        React.createElement('div', { className: `stat-value ${(summary.total_net || 0) >= 0 ? 'green' : 'red'}` }, fmt(summary.total_net))
+      ),
+      React.createElement('div', { className: 'stat-box' },
+        React.createElement('div', { className: 'stat-label' }, 'Green Days'),
+        React.createElement('div', { className: 'stat-value green' }, summary.green_days || 0),
+        React.createElement('div', { className: 'stat-sub' }, `of ${summary.total_days || 0} days`)
+      ),
+      React.createElement('div', { className: 'stat-box' },
+        React.createElement('div', { className: 'stat-label' }, 'Red Days'),
+        React.createElement('div', { className: 'stat-value red' }, summary.red_days || 0)
+      ),
+      React.createElement('div', { className: 'stat-box' },
+        React.createElement('div', { className: 'stat-label' }, 'Win Rate'),
+        React.createElement('div', { className: 'stat-value blue' },
+          summary.total_days ? `${((summary.green_days / summary.total_days) * 100).toFixed(0)}%` : '—')
+      )
+    ),
+
+    React.createElement('div', { className: 'card' },
+      React.createElement('div', { className: 'tbl-wrap tbl-scroll' },
+        React.createElement('table', null,
+          React.createElement('thead', null,
+            React.createElement('tr', null,
+              [view === 'daily' ? 'Date' : 'Month', 'Net P&L', 'Cumulative', 'Trades', 'W', 'L', 'By Strategy'].map(h =>
+                React.createElement('th', { key: h }, h))
+            )
+          ),
+          React.createElement('tbody', null,
+            rows.length === 0
+              ? React.createElement('tr', null, React.createElement('td', { colSpan: 7, className: 'empty' }, 'No data yet'))
+              : rows.map((r, i) => {
+                  const net = r.net || 0;
+                  const strats = Object.entries(r.by_strategy || {})
+                    .sort((a,b) => Math.abs(b[1]) - Math.abs(a[1]))
+                    .slice(0, 3)
+                    .map(([k,v]) => `${k.replace('alt_','').replace('_v1','')}: ${v >= 0 ? '+' : ''}${v.toFixed(3)}`)
+                    .join(' · ');
+                  return React.createElement('tr', { key: i },
+                    React.createElement('td', { style: { fontWeight: 600, color: 'var(--text2)', fontFamily: 'monospace' } }, r.date || r.month),
+                    React.createElement('td', { className: net >= 0 ? 'pos' : 'neg', style: { fontWeight: 700 } },
+                      (net >= 0 ? '+' : '') + net.toFixed(4)),
+                    React.createElement('td', { className: (r.cumulative || 0) >= 0 ? 'pos' : 'neg' },
+                      fmt(r.cumulative, 4)),
+                    React.createElement('td', null, r.trades),
+                    React.createElement('td', { className: 'pos' }, r.wins),
+                    React.createElement('td', { className: 'neg' }, r.losses),
+                    React.createElement('td', { style: { fontSize: '11px', color: 'var(--text3)', maxWidth: '280px' } }, strats || '—')
+                  );
+                })
+          )
+        )
+      )
+    )
+  );
+}
+
+// ── Users page ─────────────────────────────────────────────────────────────
+
+function UsersPage() {
+  const [users, setUsers] = useState(null);
+  const [newEmail, setNewEmail] = useState('');
+  const [msg, setMsg] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function load() {
+    api('/api/admin/users').then(d => setUsers(d.users)).catch(() => {});
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function addUser() {
+    if (!newEmail.includes('@')) return;
+    setLoading(true); setMsg('');
+    try {
+      const r = await post('/api/admin/users', { email: newEmail });
+      setMsg(r.message);
+      setNewEmail('');
+      load();
+    } catch(e) { setMsg('Error: ' + e.message); }
+    finally { setLoading(false); }
+  }
+
+  async function removeUser(email) {
+    if (!confirm(`Remove ${email}?`)) return;
+    try {
+      await api(`/api/admin/users/${encodeURIComponent(email)}`, { method: 'DELETE' });
+      load();
+    } catch(e) { alert(e.message); }
+  }
+
+  async function toggleUser(email) {
+    try {
+      await post(`/api/admin/users/${encodeURIComponent(email)}/toggle`, {});
+      load();
+    } catch(e) { alert(e.message); }
+  }
+
+  return React.createElement('div', null,
+    React.createElement('div', { className: 'section-title' }, '👥 User Management'),
+
+    // Add user
+    React.createElement('div', { className: 'card', style: { marginBottom: '16px' } },
+      React.createElement('div', { className: 'card-title' }, 'Add User'),
+      React.createElement('p', { style: { fontSize: '12px', color: 'var(--text3)', marginBottom: '12px' } },
+        'Creates an access slot. User must run ', React.createElement('code', { style: { color: 'var(--blue)', background: 'var(--bg3)', padding: '1px 6px', borderRadius: '4px' } }, 'python3 web/setup_totp.py --email their@email.com'), ' on the server to activate with password + TOTP.'),
+      React.createElement('div', { style: { display: 'flex', gap: '8px' } },
+        React.createElement('input', {
+          className: 'filter-input', style: { flex: 1 },
+          placeholder: 'friend@email.com', value: newEmail,
+          onChange: e => setNewEmail(e.target.value),
+          onKeyDown: e => e.key === 'Enter' && addUser(),
+        }),
+        React.createElement('button', {
+          onClick: addUser, disabled: loading || !newEmail.includes('@'),
+          style: { background: 'var(--blue)', border: 'none', color: '#fff', padding: '8px 16px', borderRadius: 'var(--radius)', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }
+        }, '+ Add')
+      ),
+      msg && React.createElement('p', { style: { marginTop: '10px', fontSize: '12px', color: 'var(--yellow)' } }, msg)
+    ),
+
+    // Users list
+    users && React.createElement('div', { className: 'card' },
+      React.createElement('div', { className: 'card-title' }, `${users.length} user${users.length !== 1 ? 's' : ''}`),
+      users.length === 0
+        ? React.createElement('div', { className: 'empty' }, 'No users yet')
+        : React.createElement('table', { style: { width: '100%', borderCollapse: 'collapse' } },
+            React.createElement('thead', null,
+              React.createElement('tr', null,
+                ['Email','TOTP','Password','Status','Actions'].map(h =>
+                  React.createElement('th', { key: h, style: { padding: '8px 12px', textAlign: 'left', borderBottom: '1px solid var(--border)', color: 'var(--text3)', fontSize: '11px', textTransform: 'uppercase' } }, h)
+                )
+              )
+            ),
+            React.createElement('tbody', null,
+              users.map(u => React.createElement('tr', { key: u.email },
+                React.createElement('td', { style: { padding: '10px 12px', color: 'var(--text)', fontWeight: 500 } }, u.email),
+                React.createElement('td', { style: { padding: '10px 12px' } },
+                  React.createElement('span', { className: `badge ${u.has_totp ? 'badge-ok' : 'badge-warn'}` }, u.has_totp ? '✓' : 'pending')),
+                React.createElement('td', { style: { padding: '10px 12px' } },
+                  React.createElement('span', { className: `badge ${u.has_password ? 'badge-ok' : 'badge-warn'}` }, u.has_password ? '✓' : 'pending')),
+                React.createElement('td', { style: { padding: '10px 12px' } },
+                  React.createElement('span', { className: `badge ${u.enabled ? 'badge-ok' : 'badge-off'}` }, u.enabled ? 'active' : 'disabled')),
+                React.createElement('td', { style: { padding: '10px 12px', display: 'flex', gap: '6px' } },
+                  React.createElement('button', {
+                    onClick: () => toggleUser(u.email),
+                    style: { background: 'none', border: '1px solid var(--border2)', color: 'var(--text2)', padding: '3px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }
+                  }, u.enabled ? 'Disable' : 'Enable'),
+                  React.createElement('button', {
+                    onClick: () => removeUser(u.email),
+                    style: { background: 'none', border: '1px solid var(--red)', color: 'var(--red)', padding: '3px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }
+                  }, 'Remove')
+                )
+              ))
+            )
+          )
+    )
+  );
+}
+
 // ── Main App ───────────────────────────────────────────────────────────────
 
-const PAGES = [
-  { id: 'dashboard', label: 'Dashboard',   icon: '◈' },
-  { id: 'trades',    label: 'Trades',       icon: '⇄' },
-  { id: 'strategies',label: 'Strategies',   icon: '◎' },
-  { id: 'alpaca',    label: 'Alpaca',        icon: '📊' },
-  { id: 'regime',    label: 'Regime',        icon: '⬡' },
-  { id: 'journal',   label: 'Journal',       icon: '◻' },
+const NAV_GROUPS = [
+  {
+    label: 'Overview',
+    pages: [
+      { id: 'dashboard',  label: 'Dashboard',  icon: '◈' },
+      { id: 'pnl',        label: 'P&L Journal', icon: '📅' },
+      { id: 'trades',     label: 'Trades',      icon: '⇄' },
+      { id: 'strategies', label: 'Strategies',  icon: '◎' },
+    ]
+  },
+  {
+    label: 'Systems',
+    pages: [
+      { id: 'alpaca',  label: 'Alpaca',   icon: '📊' },
+      { id: 'regime',  label: 'Regime',   icon: '⬡' },
+      { id: 'journal', label: 'Journal',  icon: '◻' },
+    ]
+  },
+  {
+    label: 'Tools',
+    pages: [
+      { id: 'ai',    label: 'AI Chat',  icon: '🤖' },
+      { id: 'users', label: 'Users',    icon: '👥' },
+    ]
+  }
 ];
+
+const ALL_PAGES = NAV_GROUPS.flatMap(g => g.pages);
 
 function App() {
   const [stage, setStage] = useState('init');
@@ -884,13 +1218,11 @@ function App() {
   const [page, setPage] = useState('dashboard');
   const [status, setStatus] = useState(null);
 
-  // Check existing session
   useEffect(() => {
     api('/auth/me').then(d => { setEmail(d.email); setStage('authed'); })
                   .catch(() => setStage('login'));
   }, []);
 
-  // Poll bot status every 30s
   useEffect(() => {
     if (stage !== 'authed') return;
     const load = () => api('/api/status').then(setStatus).catch(() => {});
@@ -912,15 +1244,19 @@ function App() {
 
   const PageComponent = {
     dashboard:  Dashboard,
+    pnl:        PnLJournal,
     trades:     Trades,
     strategies: StrategiesPage,
     alpaca:     AlpacaPage,
     regime:     RegimePage,
     journal:    JournalPage,
+    ai:         AIChatPage,
+    users:      UsersPage,
   }[page] || Dashboard;
 
+  const currentPage = ALL_PAGES.find(p => p.id === page);
+
   return React.createElement('div', { className: 'shell' },
-    // Sidebar
     React.createElement('aside', { className: 'sidebar' },
       React.createElement('div', { className: 'sidebar-logo' },
         React.createElement('span', { className: 'logo-icon' }, '📈'),
@@ -929,45 +1265,38 @@ function App() {
           React.createElement('div', { className: 'logo-sub' }, 'Journal')
         )
       ),
-      React.createElement('div', { className: 'nav-section' }, 'Overview'),
-      PAGES.slice(0, 3).map(p =>
-        React.createElement('div', { key: p.id, className: `nav-item ${page === p.id ? 'active' : ''}`, onClick: () => setPage(p.id) },
-          React.createElement('span', { className: 'icon' }, p.icon),
-          React.createElement('span', null, p.label))
-      ),
-      React.createElement('div', { className: 'nav-section' }, 'Systems'),
-      PAGES.slice(3).map(p =>
-        React.createElement('div', { key: p.id, className: `nav-item ${page === p.id ? 'active' : ''}`, onClick: () => setPage(p.id) },
-          React.createElement('span', { className: 'icon' }, p.icon),
-          React.createElement('span', null, p.label))
+      NAV_GROUPS.map(g =>
+        React.createElement('div', { key: g.label },
+          React.createElement('div', { className: 'nav-section' }, g.label),
+          g.pages.map(p =>
+            React.createElement('div', { key: p.id, className: `nav-item ${page === p.id ? 'active' : ''}`, onClick: () => setPage(p.id) },
+              React.createElement('span', { className: 'icon' }, p.icon),
+              React.createElement('span', null, p.label))
+          )
+        )
       ),
       React.createElement('div', { className: 'sidebar-bottom' },
         React.createElement('div', { className: 'user-info' },
           React.createElement('div', { className: 'user-avatar' }, email[0]?.toUpperCase() || '?'),
-          React.createElement('div', { className: 'user-email' }, email)
+          React.createElement('div', { className: 'user-email', title: email }, email)
         ),
         React.createElement('button', { className: 'logout-btn', onClick: logout }, 'Sign out')
       )
     ),
 
-    // Main content
     React.createElement('div', { className: 'main' },
-      // Topbar
       React.createElement('div', { className: 'topbar' },
-        React.createElement('div', { className: 'topbar-title' },
-          PAGES.find(p => p.id === page)?.label || 'Dashboard'
-        ),
+        React.createElement('div', { className: 'topbar-title' }, currentPage?.label || 'Dashboard'),
         React.createElement('div', { className: 'topbar-right' },
           React.createElement('div', { className: `status-dot ${alive ? 'alive pulse' : alive === false ? 'dead' : 'unknown'}` }),
           React.createElement('span', { className: 'status-label' },
             status
-              ? `${alive ? 'Bot live' : 'Bot offline'} · ${(status.regime || 'unknown').replace(/_/g,' ')} · ${status.open_trades} open`
-              : 'Checking bot…'
+              ? `${alive ? 'Live' : 'Offline'} · ${(status.regime || 'unknown').replace(/_/g,' ')} · ${status.open_trades} open`
+              : 'Checking…'
           )
         )
       ),
-      // Page content
-      React.createElement('div', { className: 'page' },
+      React.createElement('div', { className: 'page', style: page === 'ai' ? { display: 'flex', flexDirection: 'column', overflow: 'hidden' } : {} },
         React.createElement(PageComponent, null)
       )
     )

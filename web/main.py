@@ -19,6 +19,8 @@ from fastapi.staticfiles import StaticFiles
 
 from .routes.auth_routes import router as auth_router
 from .routes.data_routes import router as data_router
+from .routes.ai_routes import router as ai_router
+from .routes.admin_routes import router as admin_router
 
 # ── app setup ─────────────────────────────────────────────────────────────────
 
@@ -51,6 +53,8 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(data_router)
+app.include_router(ai_router)
+app.include_router(admin_router)
 
 # ── static frontend ───────────────────────────────────────────────────────────
 
