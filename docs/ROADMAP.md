@@ -97,6 +97,7 @@ Order of work:
 - `btc_eth_midterm_short_v1` is no longer blocked by backtest tooling: the portfolio engine now supports `1440m` aggregation and the annual + WF queue is running again on the repaired harness.
 - `btc_eth_midterm_short_v1` is now resolved, not pending: annual and WF both failed badly, so it is paused rather than promoted.
 - Bounded AI autonomy is now partially real instead of conceptual: operator snapshot exposes the allowlisted capabilities, and AI-driven server deploy is blocked by default unless explicitly enabled.
+- Runtime reporting truth still needed one more cleanup pass: strategy flags, allocator-active sleeves, and runtime counters were being mixed into one misleading operator/TG message, especially after restarts.
 - Immediate objective is not "invent more strategies", but restore truthful allocator health first, then run the next promotion queue on a stable live base.
 - `IVB1` walk-forward needs the repaired harness, not another false rejection: the first all-timeout result was caused by a hard-coded `300s` subprocess limit in `run_generic_wf.py`, which is now replaced by a configurable timeout for slow-but-valid windows.
 
@@ -106,6 +107,8 @@ Order of work:
 2. Then run the first aggregated annual pass for the current crypto portfolio.
 3. Keep Alpaca paper under observation for one month, but do not wait passively: track fills/PnL while monthly and intraday coexist on the shared demo account.
 4. Expand the safe operator mode around the new bounded capability layer instead of giving it arbitrary shell access.
+5. Repair noisy runtime reporting so Telegram/operator surfaces show allocator truth and "since restart" diagnostics instead of fake "24h" counters.
+6. Design the first read-only web UI slice now, before implementation, so auth, audit trail, multi-account isolation, and future control-panel needs are baked into the foundation.
 
 ## Source of Truth
 
@@ -167,6 +170,15 @@ Long-horizon hardening still worth adding:
   - `live`
   - `watch`
   - `banned`
+- staged web control plane:
+  - read-only dashboard first
+  - safe control actions second
+  - multi-tenant / multi-account isolation third
+  - 2FA + RBAC + audit log from day one
+- bounded AI bug-hunt lane:
+  - self-audit reports
+  - whitelist research tasks only
+  - proposal-only changes unless explicitly approved
 
 ## Priority Queue
 

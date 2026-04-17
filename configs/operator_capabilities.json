@@ -11,6 +11,11 @@
       "mode": "read_only",
       "summary": "Inspect bounded server logs and summarize health, errors, and latency symptoms."
     },
+    "read_self_audit": {
+      "enabled": true,
+      "mode": "read_only",
+      "summary": "Read the bounded self-audit report and surface current bug-hunt priorities without changing the server."
+    },
     "launch_whitelist_research": {
       "enabled": true,
       "mode": "bounded_exec",

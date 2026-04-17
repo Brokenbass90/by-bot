@@ -2727,6 +2727,88 @@ def _find_best_equities_summary_patterns(glob_patterns: list[str]) -> tuple[Opti
     return best_path, best_row
 
 
+def _strategy_flag_pairs() -> list[tuple[str, bool]]:
+    return [
+        ("breakout", ENABLE_BREAKOUT_TRADING),
+        ("pump_fade", ENABLE_PUMP_FADE_TRADING),
+        ("midterm", ENABLE_MIDTERM_TRADING),
+        ("inplay", ENABLE_INPLAY_TRADING),
+        ("retest", ENABLE_RETEST_TRADING),
+        ("range", ENABLE_RANGE_TRADING),
+        ("sloped", ENABLE_SLOPED_TRADING),
+        ("att1", ENABLE_ATT1_TRADING),
+        ("asb1", ENABLE_ASB1_TRADING),
+        ("hzbo1", ENABLE_HZBO1_TRADING),
+        ("bounce1", ENABLE_BOUNCE1_TRADING),
+        ("asm1", ENABLE_ASM1_TRADING),
+        ("flat", ENABLE_FLAT_TRADING),
+        ("breakdown", ENABLE_BREAKDOWN_TRADING),
+        ("ivb1", ENABLE_IVB1_TRADING),
+        ("elder", ENABLE_ELDER_TRADING),
+        ("ts132", ENABLE_TS132_TRADING),
+    ]
+
+
+def _strategy_flags_text() -> str:
+    return " | ".join(f"{name}={enabled}" for name, enabled in _strategy_flag_pairs())
+
+
+def _load_json_dict(path: Path) -> dict[str, Any]:
+    try:
+        if not path.exists():
+            return {}
+        with path.open("r", encoding="utf-8") as f:
+            data = json.load(f) or {}
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _allocator_state_summary() -> dict[str, Any]:
+    state = _load_json_dict(PORTFOLIO_ALLOCATOR_STATE_PATH)
+    enabled = [str(x) for x in (state.get("enabled_sleeves") or []) if str(x).strip()]
+    degraded = [str(x) for x in (state.get("degraded_sleeves") or []) if str(x).strip()]
+    status = str(
+        state.get("status")
+        or PORTFOLIO_ALLOCATOR_LAST_STATUS
+        or os.getenv("PORTFOLIO_ALLOCATOR_STATUS", "")
+        or "n/a"
+    ).strip() or "n/a"
+    try:
+        risk_mult = float(state.get("global_risk_mult", ALLOCATOR_GLOBAL_RISK_MULT))
+    except Exception:
+        try:
+            risk_mult = float(ALLOCATOR_GLOBAL_RISK_MULT)
+        except Exception:
+            risk_mult = None
+    return {
+        "status": status,
+        "enabled_sleeves": enabled,
+        "degraded_sleeves": degraded,
+        "global_risk_mult": risk_mult,
+    }
+
+
+def _allocator_state_text() -> str:
+    allocator = _allocator_state_summary()
+    risk_mult = allocator.get("global_risk_mult")
+    risk_txt = f"{float(risk_mult):.2f}" if risk_mult is not None else "n/a"
+    active_txt = ",".join(allocator.get("enabled_sleeves") or []) or "-"
+    degraded_txt = ",".join(allocator.get("degraded_sleeves") or []) or "-"
+    return (
+        f"allocator: status={allocator.get('status') or 'n/a'} | "
+        f"active={active_txt} | degraded={degraded_txt} | risk×={risk_txt}"
+    )
+
+
+def _runtime_diag_since_restart_text() -> str:
+    up = max(0, int(time.time()) - int(BOT_START_TS))
+    h = up // 3600
+    m = (up % 3600) // 60
+    s = up % 60
+    return f"🧪 runtime-diag (since restart {h:02d}:{m:02d}:{s:02d}): {_runtime_diag_snapshot()}"
+
+
 def _status_full_text() -> str:
     eq = _get_effective_equity()
     lines: list[str] = []
@@ -2739,15 +2821,8 @@ def _status_full_text() -> str:
     lines.append(
         f"risk={RISK_PER_TRADE_PCT:.2f}% | max_positions={MAX_POSITIONS} | capital={_display_capital_text()}"
     )
-    lines.append(
-        "strategies: "
-        f"breakout={ENABLE_BREAKOUT_TRADING}, midterm={ENABLE_MIDTERM_TRADING}, "
-        f"sloped={ENABLE_SLOPED_TRADING}, att1={ENABLE_ATT1_TRADING}, asb1={ENABLE_ASB1_TRADING}, "
-        f"hzbo1={ENABLE_HZBO1_TRADING}, bounce1={ENABLE_BOUNCE1_TRADING}, asm1={ENABLE_ASM1_TRADING}, "
-        f"flat={ENABLE_FLAT_TRADING}, "
-        f"breakdown={ENABLE_BREAKDOWN_TRADING}, ivb1={ENABLE_IVB1_TRADING}, "
-        f"elder={ENABLE_ELDER_TRADING}, ts132={ENABLE_TS132_TRADING}"
-    )
+    lines.append(_allocator_state_text())
+    lines.append("strategy-flags: " + _strategy_flags_text())
 
     router_regime = str(os.getenv("ROUTER_REGIME", "") or "").strip()
     router_status = str(os.getenv("ROUTER_STATUS", "") or "").strip()
@@ -4204,31 +4279,19 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
         if getattr(tr, "status", "") in ("OPEN", "PENDING_ENTRY"):
             slot["open"] += 1
 
-    enabled = [
-        f"breakout={ENABLE_BREAKOUT_TRADING}",
-        f"pump_fade={ENABLE_PUMP_FADE_TRADING}",
-        f"midterm={ENABLE_MIDTERM_TRADING}",
-        f"inplay={ENABLE_INPLAY_TRADING}",
-        f"retest={ENABLE_RETEST_TRADING}",
-        f"range={ENABLE_RANGE_TRADING}",
-        f"sloped={ENABLE_SLOPED_TRADING}",
-        f"att1={ENABLE_ATT1_TRADING}",
-        f"asb1={ENABLE_ASB1_TRADING}",
-        f"hzbo1={ENABLE_HZBO1_TRADING}",
-        f"bounce1={ENABLE_BOUNCE1_TRADING}",
-        f"flat={ENABLE_FLAT_TRADING}",
-        f"breakdown={ENABLE_BREAKDOWN_TRADING}",
-        f"ivb1={ENABLE_IVB1_TRADING}",
-        f"elder={ENABLE_ELDER_TRADING}",
-        f"ts132={ENABLE_TS132_TRADING}",
-    ]
+    allocator = _allocator_state_summary()
+    active_txt = ",".join(allocator.get("enabled_sleeves") or []) or "-"
+    degraded_txt = ",".join(allocator.get("degraded_sleeves") or []) or "-"
+    risk_mult = allocator.get("global_risk_mult")
+    risk_txt = f"{float(risk_mult):.2f}" if risk_mult is not None else "n/a"
     lines = [
-        "🧠 strategies: " + " | ".join(enabled),
-        f"📊 stats ({max(1, int(lookback_hours))}h):",
-        f"🧪 {_runtime_diag_snapshot()}",
+        "🧠 strategy-flags: " + _strategy_flags_text(),
+        f"🎛 allocator-active: {active_txt} | degraded={degraded_txt} | status={allocator.get('status') or 'n/a'} | risk×={risk_txt}",
+        f"📊 trade-events ({max(1, int(lookback_hours))}h):",
+        _runtime_diag_since_restart_text(),
     ]
     if not by_strategy:
-        lines.append(" - no events")
+        lines.append(" - no trade events in lookback window")
         return "\n".join(lines)
 
     def _score(item: tuple[str, dict]) -> tuple[float, int]:
@@ -12030,26 +12093,7 @@ def auth_check_all_accounts():
         lines.append(f"🤖 Торговый аккаунт: {TRADE_CLIENT.name}")
     else:
         lines.append("🤖 Торговый аккаунт: не выбран/нет ключей")
-    lines.append(
-        "🧠 strategies: "
-        f"breakout={ENABLE_BREAKOUT_TRADING}, "
-        f"pump_fade={ENABLE_PUMP_FADE_TRADING}, "
-        f"midterm={ENABLE_MIDTERM_TRADING}, "
-        f"inplay={ENABLE_INPLAY_TRADING}, "
-        f"retest={ENABLE_RETEST_TRADING}, "
-        f"range={ENABLE_RANGE_TRADING}, "
-        f"sloped={ENABLE_SLOPED_TRADING}, "
-        f"att1={ENABLE_ATT1_TRADING}, "
-        f"asb1={ENABLE_ASB1_TRADING}, "
-        f"hzbo1={ENABLE_HZBO1_TRADING}, "
-        f"bounce1={ENABLE_BOUNCE1_TRADING}, "
-        f"asm1={ENABLE_ASM1_TRADING}, "
-        f"flat={ENABLE_FLAT_TRADING}, "
-        f"breakdown={ENABLE_BREAKDOWN_TRADING}, "
-        f"ivb1={ENABLE_IVB1_TRADING}, "
-        f"elder={ENABLE_ELDER_TRADING}, "
-        f"ts132={ENABLE_TS132_TRADING}"
-    )
+    lines.append("🧠 strategy-flags: " + _strategy_flags_text())
 
     text = "\n".join(lines)
     print(text)

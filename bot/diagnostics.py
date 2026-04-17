@@ -21,6 +21,72 @@ RUNTIME_DIAG_ENABLE: bool = os.getenv("RUNTIME_DIAG_ENABLE", "1").strip().lower(
 RUNTIME_COUNTER = collections.Counter()
 MSG_COUNTER: dict = {"Bybit": 0, "Binance": 0}
 
+DIAG_KEYS = [
+    "ws_connect", "ws_disconnect", "ws_handshake_timeout",
+    "ws_disconnect_timeout", "ws_disconnect_invalid_status",
+    "ws_disconnect_closed", "ws_disconnect_oserror", "ws_disconnect_other",
+    "breakout_try", "breakout_no_signal", "breakout_entry",
+    "breakout_skip_liq", "breakout_skip_pullback",
+    "breakout_skip_quality", "breakout_skip_minqty", "breakout_skip_news",
+    "breakout_skip_symbol_lock",
+    "breakout_ns_no_break", "breakout_ns_regime", "breakout_ns_retest",
+    "breakout_ns_hold", "breakout_ns_dist", "breakout_ns_impulse",
+    "breakout_ns_impulse_weak", "breakout_ns_impulse_body",
+    "breakout_ns_impulse_vol",
+    "breakout_ns_impulse_q1", "breakout_ns_impulse_q2",
+    "breakout_ns_impulse_q3", "breakout_ns_impulse_q4",
+    "breakout_ns_entry_timing",
+    "breakout_ns_invalid_risk", "breakout_ns_history",
+    "breakout_ns_symbol", "breakout_ns_stop", "breakout_ns_atr",
+    "breakout_ns_range", "breakout_ns_post", "breakout_ns_other",
+    "midterm_try", "midterm_no_signal", "midterm_entry",
+    "midterm_skip_minqty", "midterm_skip_symbol_lock",
+    "sloped_sched", "sloped_try", "sloped_entry",
+    "sloped_skip_no_engine", "sloped_skip_trade_off",
+    "sloped_skip_no_client", "sloped_skip_open_trade",
+    "sloped_skip_max_open", "sloped_skip_portfolio",
+    "sloped_skip_cooldown", "sloped_skip_symbol_lock",
+    "att1_sched", "att1_try", "att1_entry",
+    "att1_no_signal", "att1_skip_no_engine", "att1_skip_trade_off",
+    "att1_skip_no_client", "att1_skip_open_trade",
+    "att1_skip_max_open", "att1_skip_portfolio",
+    "att1_skip_cooldown", "att1_skip_symbol_lock",
+    "asm1_sched", "asm1_try", "asm1_entry",
+    "asm1_no_signal", "asm1_skip_no_engine", "asm1_skip_trade_off",
+    "asm1_skip_no_client", "asm1_skip_open_trade",
+    "asm1_skip_max_open", "asm1_skip_portfolio",
+    "asm1_skip_cooldown", "asm1_skip_symbol_lock",
+    "flat_sched", "flat_try", "flat_entry",
+    "flat_no_signal",
+    "flat_skip_no_engine", "flat_skip_trade_off",
+    "flat_skip_no_client", "flat_skip_open_trade",
+    "flat_skip_max_open", "flat_skip_portfolio",
+    "flat_skip_cooldown", "flat_skip_symbol_lock",
+    "flat_ns_symbol", "flat_ns_cooldown", "flat_ns_regime",
+    "flat_ns_history", "flat_ns_same_bar", "flat_ns_range",
+    "flat_ns_touch", "flat_ns_reject", "flat_ns_body",
+    "flat_ns_dist", "flat_ns_rsi", "flat_ns_ema",
+    "flat_ns_risk", "flat_ns_blank", "flat_ns_unknown", "flat_ns_other",
+    "breakdown_sched", "breakdown_try", "breakdown_entry",
+    "breakdown_skip_no_engine", "breakdown_skip_trade_off",
+    "breakdown_skip_no_client", "breakdown_skip_open_trade",
+    "breakdown_skip_max_open", "breakdown_skip_portfolio",
+    "breakdown_skip_cooldown", "breakdown_skip_symbol_lock",
+    "ivb1_sched", "ivb1_try", "ivb1_no_signal", "ivb1_entry",
+    "ivb1_skip_max_open", "ivb1_skip_portfolio", "ivb1_skip_symbol_lock",
+    "ivb1_ns_history", "ivb1_ns_regime", "ivb1_ns_cooldown",
+    "ivb1_ns_atr", "ivb1_ns_volume", "ivb1_ns_no_breakout",
+    "ivb1_ns_impulse_small",
+    "ivb1_ns_impulse_vol", "ivb1_ns_impulse_body", "ivb1_ns_impulse_range",
+    "ivb1_ns_armed", "ivb1_ns_retrace_wait", "ivb1_ns_retrace_expired",
+    "ivb1_ns_lost_level", "ivb1_ns_stop", "ivb1_ns_other",
+    "elder_sched", "elder_try", "elder_no_signal", "elder_entry",
+    "elder_skip_max_open", "elder_skip_portfolio", "elder_skip_symbol_lock",
+    "elder_ns_history", "elder_ns_limit", "elder_ns_trend",
+    "elder_ns_wave", "elder_ns_entry", "elder_ns_atr", "elder_ns_other",
+    "ts132_try", "ts132_entry",
+]
+
 
 # ─── Increment / read ────────────────────────────────────────────────────────
 
@@ -47,76 +113,24 @@ def _diag_reset() -> None:
 
 # ─── Snapshot ────────────────────────────────────────────────────────────────
 
-def _runtime_diag_snapshot() -> str:
-    """Return a compact string of key counters for Telegram/logging."""
+def _runtime_diag_snapshot(*, include_zero: bool = False, max_items: int = 40) -> str:
+    """Return a compact string of key counters for Telegram/logging.
+
+    By default this hides zero-valued counters so restart-fresh reports do not
+    masquerade as "24h" operational truth. Pass include_zero=True for full dumps.
+    """
     if not RUNTIME_DIAG_ENABLE:
         return "diag=off"
-    keys = [
-        "ws_connect", "ws_disconnect", "ws_handshake_timeout",
-        "ws_disconnect_timeout", "ws_disconnect_invalid_status",
-        "ws_disconnect_closed", "ws_disconnect_oserror", "ws_disconnect_other",
-        "breakout_try", "breakout_no_signal", "breakout_entry",
-        "breakout_skip_liq", "breakout_skip_pullback",
-        "breakout_skip_quality", "breakout_skip_minqty", "breakout_skip_news",
-        "breakout_skip_symbol_lock",
-        "breakout_ns_no_break", "breakout_ns_regime", "breakout_ns_retest",
-        "breakout_ns_hold", "breakout_ns_dist", "breakout_ns_impulse",
-        "breakout_ns_impulse_weak", "breakout_ns_impulse_body",
-        "breakout_ns_impulse_vol",
-        "breakout_ns_impulse_q1", "breakout_ns_impulse_q2",
-        "breakout_ns_impulse_q3", "breakout_ns_impulse_q4",
-        "breakout_ns_entry_timing",
-        "breakout_ns_invalid_risk", "breakout_ns_history",
-        "breakout_ns_symbol", "breakout_ns_stop", "breakout_ns_atr",
-        "breakout_ns_range", "breakout_ns_post", "breakout_ns_other",
-        "midterm_try", "midterm_no_signal", "midterm_entry",
-        "midterm_skip_minqty", "midterm_skip_symbol_lock",
-        "sloped_sched", "sloped_try", "sloped_entry",
-        "sloped_skip_no_engine", "sloped_skip_trade_off",
-        "sloped_skip_no_client", "sloped_skip_open_trade",
-        "sloped_skip_max_open", "sloped_skip_portfolio",
-        "sloped_skip_cooldown", "sloped_skip_symbol_lock",
-        "att1_sched", "att1_try", "att1_entry",
-        "att1_no_signal", "att1_skip_no_engine", "att1_skip_trade_off",
-        "att1_skip_no_client", "att1_skip_open_trade",
-        "att1_skip_max_open", "att1_skip_portfolio",
-        "att1_skip_cooldown", "att1_skip_symbol_lock",
-        "asm1_sched", "asm1_try", "asm1_entry",
-        "asm1_no_signal", "asm1_skip_no_engine", "asm1_skip_trade_off",
-        "asm1_skip_no_client", "asm1_skip_open_trade",
-        "asm1_skip_max_open", "asm1_skip_portfolio",
-        "asm1_skip_cooldown", "asm1_skip_symbol_lock",
-        "flat_sched", "flat_try", "flat_entry",
-        "flat_no_signal",
-        "flat_skip_no_engine", "flat_skip_trade_off",
-        "flat_skip_no_client", "flat_skip_open_trade",
-        "flat_skip_max_open", "flat_skip_portfolio",
-        "flat_skip_cooldown", "flat_skip_symbol_lock",
-        "flat_ns_symbol", "flat_ns_cooldown", "flat_ns_regime",
-        "flat_ns_history", "flat_ns_same_bar", "flat_ns_range",
-        "flat_ns_touch", "flat_ns_reject", "flat_ns_body",
-        "flat_ns_dist", "flat_ns_rsi", "flat_ns_ema",
-        "flat_ns_risk", "flat_ns_blank", "flat_ns_unknown", "flat_ns_other",
-        "breakdown_sched", "breakdown_try", "breakdown_entry",
-        "breakdown_skip_no_engine", "breakdown_skip_trade_off",
-        "breakdown_skip_no_client", "breakdown_skip_open_trade",
-        "breakdown_skip_max_open", "breakdown_skip_portfolio",
-        "breakdown_skip_cooldown", "breakdown_skip_symbol_lock",
-        "ivb1_sched", "ivb1_try", "ivb1_no_signal", "ivb1_entry",
-        "ivb1_skip_max_open", "ivb1_skip_portfolio", "ivb1_skip_symbol_lock",
-        "ivb1_ns_history", "ivb1_ns_regime", "ivb1_ns_cooldown",
-        "ivb1_ns_atr", "ivb1_ns_volume", "ivb1_ns_no_breakout",
-        "ivb1_ns_impulse_small",
-        "ivb1_ns_impulse_vol", "ivb1_ns_impulse_body", "ivb1_ns_impulse_range",
-        "ivb1_ns_armed", "ivb1_ns_retrace_wait", "ivb1_ns_retrace_expired",
-        "ivb1_ns_lost_level", "ivb1_ns_stop", "ivb1_ns_other",
-        "elder_sched", "elder_try", "elder_no_signal", "elder_entry",
-        "elder_skip_max_open", "elder_skip_portfolio", "elder_skip_symbol_lock",
-        "elder_ns_history", "elder_ns_limit", "elder_ns_trend",
-        "elder_ns_wave", "elder_ns_entry", "elder_ns_atr", "elder_ns_other",
-        "ts132_try", "ts132_entry",
-    ]
-    parts = [f"{k}={int(RUNTIME_COUNTER.get(k, 0))}" for k in keys]
+    parts = []
+    for key in DIAG_KEYS:
+        val = int(RUNTIME_COUNTER.get(key, 0))
+        if include_zero or val != 0:
+            parts.append(f"{key}={val}")
+    if not parts:
+        return "diag idle"
+    if max_items > 0 and len(parts) > max_items:
+        extra = len(parts) - max_items
+        return "diag " + " ".join(parts[:max_items]) + f" ...(+{extra} more)"
     return "diag " + " ".join(parts)
 
 

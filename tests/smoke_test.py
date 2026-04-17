@@ -100,7 +100,7 @@ def test_auth_disabled():
 # 3. bot/diagnostics — _diag_inc shared counter
 # ─────────────────────────────────────────────────────────────────────────────
 def test_diagnostics():
-    from bot.diagnostics import _diag_inc, _diag_get_int, _diag_reset, RUNTIME_COUNTER
+    from bot.diagnostics import _diag_inc, _diag_get_int, _diag_reset, RUNTIME_COUNTER, _runtime_diag_snapshot
 
     _diag_reset()
     assert _diag_get_int("smoke_key") == 0
@@ -118,6 +118,17 @@ def test_diagnostics():
     # Graceful handling of bad input
     _diag_inc(None)       # should not raise
     _diag_inc("x", "bad")  # should not raise
+
+    compact = _runtime_diag_snapshot()
+    assert compact == "diag idle", f"expected idle snapshot, got {compact!r}"
+    _diag_inc("ws_connect", 2)
+    _diag_inc("att1_try", 5)
+    compact = _runtime_diag_snapshot()
+    assert "ws_connect=2" in compact
+    assert "att1_try=5" in compact
+    assert "ws_disconnect=0" not in compact, "zero counters should be hidden by default"
+    verbose = _runtime_diag_snapshot(include_zero=True)
+    assert "ws_disconnect=0" in verbose
 
     print("  ✓ diagnostics._diag_inc / _diag_get_int / _diag_reset")
 
@@ -649,11 +660,12 @@ def test_overlay_handlers_cover_live_sleeves():
     regime_start = text.index("def _apply_regime_overlay")
     alloc_start = text.index("def _apply_portfolio_allocator_overlay")
     symbol_loop_start = text.index("async def symbol_filters_loop")
-    startup_line_start = text.index('        "🧠 strategies: "')
+    flags_start = text.index("def _strategy_flag_pairs()")
+    flags_end = text.index("def _strategy_flags_text()", flags_start)
 
     regime_text = text[regime_start:alloc_start]
     alloc_text = text[alloc_start:symbol_loop_start]
-    startup_text = text[startup_line_start:text.index("text = \"\\n\".join(lines)", startup_line_start)]
+    startup_text = text[flags_start:flags_end]
 
     for token in (
         "ENABLE_RANGE_TRADING",
@@ -674,7 +686,7 @@ def test_overlay_handlers_cover_live_sleeves():
         assert token in alloc_text, f"allocator overlay missing risk sync for {token}"
 
     for token in ("asb1", "hzbo1", "bounce1"):
-        assert f"{token}={{ENABLE_" in startup_text or token in startup_text, f"startup summary missing {token}"
+        assert token in startup_text, f"startup summary missing {token}"
 
     print("  ✓ overlay handlers cover range/asb1/hzbo1/bounce1")
 
