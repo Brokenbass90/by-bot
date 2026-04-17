@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -349,6 +350,38 @@ def _nightly_research_block(root: Path) -> Dict[str, Any]:
     }
 
 
+def _operator_controls_block(root: Path) -> Dict[str, Any]:
+    capabilities_path = root / "configs" / "operator_capabilities.json"
+    capabilities_cfg = _load_json(capabilities_path, {})
+    research_cfg = _load_json(root / "configs" / "research_nightly_queue.json", {})
+    approval_queue_path = root / "runtime" / "ai_operator" / "approval_queue.json"
+    approval_queue = _load_json(approval_queue_path, [])
+
+    capabilities = dict(capabilities_cfg.get("capabilities") or {})
+    enabled_caps = sorted(
+        name for name, meta in capabilities.items()
+        if bool((meta or {}).get("enabled", False))
+    )
+    pending_approval = 0
+    for item in approval_queue if isinstance(approval_queue, list) else []:
+        if str((item or {}).get("status") or "").strip().lower() == "pending":
+            pending_approval += 1
+
+    return {
+        "path": _path_text(capabilities_path),
+        "exists": bool(capabilities_path.exists()),
+        "version": _safe_int(capabilities_cfg.get("version"), 0),
+        "enabled_count": len(enabled_caps),
+        "enabled_capabilities": enabled_caps,
+        "server_deploy_allowed": str(os.getenv("DEEPSEEK_EXECUTOR_ALLOW_SERVER_DEPLOY", "0")).strip().lower() in {"1", "true", "yes", "on"},
+        "nightly_queue_enabled": bool(research_cfg.get("enabled", True)),
+        "nightly_task_count": len(list(research_cfg.get("tasks") or [])),
+        "nightly_enabled_tasks": sum(1 for task in list(research_cfg.get("tasks") or []) if bool((task or {}).get("enabled", True))),
+        "approval_queue_exists": bool(approval_queue_path.exists()),
+        "approval_queue_pending": pending_approval,
+    }
+
+
 def _self_audit_block(root: Path) -> Dict[str, Any]:
     path = root / "runtime" / "self_audit" / "latest.json"
     payload = _load_json(path, {})
@@ -492,6 +525,7 @@ def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
         "geometry": _geometry_block(base),
         "memory": _memory_block(base),
         "nightly_research": _nightly_research_block(base),
+        "operator_controls": _operator_controls_block(base),
         "self_audit": _self_audit_block(base),
         "alpaca": _alpaca_block(base),
     }
@@ -505,6 +539,7 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     geo = dict(snapshot.get("geometry") or {})
     memory = dict(snapshot.get("memory") or {})
     nightly = dict(snapshot.get("nightly_research") or {})
+    operator_controls = dict(snapshot.get("operator_controls") or {})
     self_audit = dict(snapshot.get("self_audit") or {})
     alpaca = dict(snapshot.get("alpaca") or {})
     regime = dict(cp.get("regime") or {})
@@ -589,6 +624,16 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         lines.append(
             f" - history: state={item.get('state')} active={item.get('active_process_count')} launched={item.get('launched')} proposed={item.get('proposed')}"
         )
+    lines.extend(
+        [
+            "",
+            "[operator_controls]",
+            f"exists={int(bool(operator_controls.get('exists')))} version={operator_controls.get('version')} enabled_count={operator_controls.get('enabled_count')}",
+            f"nightly_queue_enabled={int(bool(operator_controls.get('nightly_queue_enabled')))} nightly_tasks={operator_controls.get('nightly_enabled_tasks')}/{operator_controls.get('nightly_task_count')}",
+            f"server_deploy_allowed={int(bool(operator_controls.get('server_deploy_allowed')))} approval_queue_pending={operator_controls.get('approval_queue_pending')}",
+            f"enabled_capabilities={','.join(operator_controls.get('enabled_capabilities') or []) or '-'}",
+        ]
+    )
     lines.extend(
         [
             "",

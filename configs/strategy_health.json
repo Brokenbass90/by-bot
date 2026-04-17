@@ -198,7 +198,7 @@
       "notes": "Server BTC+ETH 365d validation on 2026-04-17 passed the minimum gate only in macd_shorts mode (31 trades, PF 1.115). Keep WATCH until canary decision."
     },
     "btc_eth_midterm_short_v1": {
-      "status": "WATCH",
+      "status": "PAUSE",
       "total_pnl": 0.0,
       "rolling_30d_pnl": 0.0,
       "rolling_60d_pnl": 0.0,
@@ -208,7 +208,7 @@
       "winrate_total": 0.0,
       "winrate_30d": 0.0,
       "pf_30d": 0.0,
-      "notes": "Bear-market midterm short candidate. Queue annual + WF validation before any live allocator promotion."
+      "notes": "Rejected after server annual + WF validation on 2026-04-17. Annual BTC+ETH result was 43 trades, PF 0.163, net -1.79; WF-22 produced 0/22 profitable windows and 0 trades/window."
     },
     "impulse_volume_breakout_v1": {
       "status": "PAUSE",

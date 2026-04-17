@@ -31,6 +31,11 @@ def _env(name: str, default: str = "") -> str:
     return str(os.getenv(name, default) or default).strip()
 
 
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw = _env(name, "1" if default else "0").lower()
+    return raw in {"1", "true", "yes", "on"}
+
+
 def _active_local_env() -> Path:
     """
     Resolve which local env file should be patched.
@@ -135,6 +140,11 @@ _SERVER_BOT_DIR = "/root/by-bot"
 _SSH_KEY = str(Path.home() / ".ssh" / "by-bot")
 
 
+def _server_deploy_allowed() -> bool:
+    """AI-driven server deploy stays off unless explicitly enabled."""
+    return _env_bool("DEEPSEEK_EXECUTOR_ALLOW_SERVER_DEPLOY", False)
+
+
 def _ssh(cmd: str, timeout: int = 30) -> tuple[str, int]:
     """Run a command on the server via SSH. Returns (output, returncode)."""
     full_cmd = [
@@ -182,6 +192,12 @@ def deploy_env_to_server() -> str:
     Push the active env file to the server and restart the bot.
     Returns a status message for Telegram.
     """
+    if not _server_deploy_allowed():
+        return (
+            "⛔ Server deploy disabled for AI executor.\n"
+            "Set DEEPSEEK_EXECUTOR_ALLOW_SERVER_DEPLOY=1 only for explicit supervised deploy windows."
+        )
+
     lines: list[str] = []
     active_env = _active_local_env()
     remote_env = _remote_env_path()
@@ -255,6 +271,11 @@ def execute_proposal(
     if not deploy:
         lines.append("\n⚠️ deploy=False — изменения только локальны.")
         lines.append("Запусти /ai_deploy вручную, когда будешь готов.")
+        return "\n".join(lines)
+
+    if not _server_deploy_allowed():
+        lines.append("\n⛔ Server deploy disabled for AI executor.")
+        lines.append("Изменения сохранены локально, но сервер не изменялся.")
         return "\n".join(lines)
 
     # Deploy to server

@@ -95,15 +95,17 @@ Order of work:
   - real portfolio overlap haircut when too many sleeves trade the same coins at once
 - `Elder` is no longer a live candidate in its current implementation. Server retests failed in both `2024` and `2023`, so it has been moved back to research-only and removed from the allocator live set.
 - `btc_eth_midterm_short_v1` is no longer blocked by backtest tooling: the portfolio engine now supports `1440m` aggregation and the annual + WF queue is running again on the repaired harness.
+- `btc_eth_midterm_short_v1` is now resolved, not pending: annual and WF both failed badly, so it is paused rather than promoted.
+- Bounded AI autonomy is now partially real instead of conceptual: operator snapshot exposes the allowlisted capabilities, and AI-driven server deploy is blocked by default unless explicitly enabled.
 - Immediate objective is not "invent more strategies", but restore truthful allocator health first, then run the next promotion queue on a stable live base.
 - `IVB1` walk-forward needs the repaired harness, not another false rejection: the first all-timeout result was caused by a hard-coded `300s` subprocess limit in `run_generic_wf.py`, which is now replaced by a configurable timeout for slow-but-valid windows.
 
 ### Next 72h
 
-1. Let the repaired `btc_eth_midterm_short_v1` annual + WF queue finish and decide whether it deserves promotion work.
-2. Open `TS132 WF-22` once the midterm short slot frees up, then move to the first aggregated annual pass for the current crypto portfolio.
+1. Open `TS132 WF-22` in the next free server slot.
+2. Then run the first aggregated annual pass for the current crypto portfolio.
 3. Keep Alpaca paper under observation for one month, but do not wait passively: track fills/PnL while monthly and intraday coexist on the shared demo account.
-4. Only after `midterm_short_v1` and `TS132` have honest reads, open the full-year portfolio pass for the whole crypto stack.
+4. Expand the safe operator mode around the new bounded capability layer instead of giving it arbitrary shell access.
 
 ## Source of Truth
 

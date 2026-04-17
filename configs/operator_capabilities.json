@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "capabilities": {
+    "read_snapshot_summary": {
+      "enabled": true,
+      "mode": "read_only",
+      "summary": "Read operator snapshot, allocator state, regime, and live heartbeat."
+    },
+    "read_log_summaries": {
+      "enabled": true,
+      "mode": "read_only",
+      "summary": "Inspect bounded server logs and summarize health, errors, and latency symptoms."
+    },
+    "launch_whitelist_research": {
+      "enabled": true,
+      "mode": "bounded_exec",
+      "summary": "Launch only allowlisted research tasks from research_nightly_queue.json."
+    },
+    "compare_backtest_results": {
+      "enabled": true,
+      "mode": "analysis",
+      "summary": "Collect and compare annual and WF summaries from completed research runs."
+    },
+    "propose_env_changes": {
+      "enabled": true,
+      "mode": "proposal_only",
+      "summary": "Suggest env/config changes through approval queues or safe param overlays."
+    },
+    "server_deploy": {
+      "enabled": false,
+      "mode": "blocked_by_default",
+      "summary": "Server deploy remains disabled for AI unless DEEPSEEK_EXECUTOR_ALLOW_SERVER_DEPLOY=1 is explicitly set."
+    }
+  }
+}

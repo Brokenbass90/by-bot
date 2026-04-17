@@ -582,6 +582,65 @@ def test_operator_snapshot_alpaca_monthly_fallback():
     print("  ✓ operator_snapshot Alpaca monthly fallback uses runtime/env truth")
 
 
+def test_operator_controls_snapshot():
+    from pathlib import Path
+    from bot.operator_snapshot import build_operator_snapshot
+
+    saved = os.environ.get("DEEPSEEK_EXECUTOR_ALLOW_SERVER_DEPLOY")
+    try:
+        os.environ["DEEPSEEK_EXECUTOR_ALLOW_SERVER_DEPLOY"] = "0"
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            cfg = root / "configs"
+            runtime_ai = root / "runtime" / "ai_operator"
+            cfg.mkdir(parents=True, exist_ok=True)
+            runtime_ai.mkdir(parents=True, exist_ok=True)
+            (cfg / "operator_capabilities.json").write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "capabilities": {
+                            "read_snapshot_summary": {"enabled": True},
+                            "launch_whitelist_research": {"enabled": True},
+                            "server_deploy": {"enabled": False},
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (cfg / "research_nightly_queue.json").write_text(
+                json.dumps(
+                    {
+                        "enabled": True,
+                        "tasks": [{"name": "a", "enabled": True}, {"name": "b", "enabled": False}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (runtime_ai / "approval_queue.json").write_text(
+                json.dumps(
+                    [
+                        {"id": 1, "status": "pending"},
+                        {"id": 2, "status": "approved"},
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            snapshot = build_operator_snapshot(root)
+            controls = snapshot["operator_controls"]
+            assert controls["enabled_count"] == 2
+            assert controls["nightly_enabled_tasks"] == 1
+            assert controls["approval_queue_pending"] == 1
+            assert controls["server_deploy_allowed"] is False
+    finally:
+        if saved is None:
+            os.environ.pop("DEEPSEEK_EXECUTOR_ALLOW_SERVER_DEPLOY", None)
+        else:
+            os.environ["DEEPSEEK_EXECUTOR_ALLOW_SERVER_DEPLOY"] = saved
+
+    print("  ✓ operator_snapshot exposes bounded operator controls")
+
+
 def test_overlay_handlers_cover_live_sleeves():
     bot_path = os.path.join(_ROOT, "smart_pump_reversal_bot.py")
     with open(bot_path, "r", encoding="utf-8") as fh:
@@ -640,6 +699,7 @@ if __name__ == "__main__":
         test_trade_reporting_breakdown,
         test_backtest_store_supports_daily_interval,
         test_operator_snapshot_alpaca_monthly_fallback,
+        test_operator_controls_snapshot,
         test_overlay_handlers_cover_live_sleeves,
     ]
     print(f"\n{'─' * 55}")
