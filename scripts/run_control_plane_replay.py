@@ -696,16 +696,10 @@ def _summarize(points: List[ReplayPoint], out_dir: Path, meta: Dict[str, Any]) -
     health_source_counts = Counter(p.health_source for p in points)
     sleeve_enable_counts = Counter()
     for p in points:
-        if p.breakout_enabled:
-            sleeve_enable_counts["breakout"] += 1
-        if p.breakdown_enabled:
-            sleeve_enable_counts["breakdown"] += 1
-        if p.flat_enabled:
-            sleeve_enable_counts["flat"] += 1
-        if p.sloped_enabled:
-            sleeve_enable_counts["sloped"] += 1
-        if p.midterm_enabled:
-            sleeve_enable_counts["midterm"] += 1
+        for sleeve_name in str(p.sleeves_active or "").split(","):
+            sleeve = sleeve_name.strip()
+            if sleeve:
+                sleeve_enable_counts[sleeve] += 1
 
     avg_global_risk = sum(p.global_risk_mult for p in points) / max(1, len(points))
     changed_count = sum(1 for p in points if p.regime_changed)

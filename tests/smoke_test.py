@@ -14,6 +14,8 @@ from __future__ import annotations
 import sys
 import os
 import time
+import sqlite3
+import tempfile
 
 # ── Path setup ────────────────────────────────────────────────────────────────
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -444,6 +446,107 @@ def test_midterm_v3_legacy_hist_sign():
     print("  ✓ btc_eth_midterm_v3 legacy MACD env fallback")
 
 
+def test_allocator_missing_health_watch():
+    from scripts.build_portfolio_allocator import _csv_symbols, _sleeve_health_status
+
+    assert _csv_symbols("btcusdt;ETHUSDT,btcusdt") == ["BTCUSDT", "ETHUSDT"]
+    sleeve = {"strategy_names": ["alt_slope_break_v1"]}
+    status, notes = _sleeve_health_status(sleeve, {}, missing_status="WATCH")
+    assert status == "WATCH"
+    assert any("missing->WATCH" in note for note in notes)
+
+    print("  ✓ build_portfolio_allocator missing-health fallback")
+
+
+def test_trade_reporting_breakdown():
+    from trade_reporting import generate_report
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        db_path = os.path.join(tmpdir, "trades.db")
+        out_dir = os.path.join(tmpdir, "reports")
+        now_ts = int(time.time())
+        with sqlite3.connect(db_path) as con:
+            con.execute(
+                """
+                CREATE TABLE trade_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    ts INTEGER,
+                    event TEXT,
+                    exchange TEXT,
+                    symbol TEXT,
+                    side TEXT,
+                    strategy TEXT,
+                    qty REAL,
+                    entry_price REAL,
+                    exit_price REAL,
+                    tp_price REAL,
+                    sl_price REAL,
+                    pnl REAL,
+                    fees REAL,
+                    reason TEXT
+                )
+                """
+            )
+            con.executemany(
+                """
+                INSERT INTO trade_events
+                (ts, event, exchange, symbol, side, strategy, qty, entry_price, exit_price, tp_price, sl_price, pnl, fees, reason)
+                VALUES (?, 'CLOSE', 'Bybit', ?, 'Buy', ?, 1, 100, 101, 0, 0, ?, 0, 'tp')
+                """,
+                [
+                    (now_ts - 60, "BTCUSDT", "elder_triple_screen_v2", 10.0),
+                    (now_ts - 30, "ETHUSDT", "elder_triple_screen_v2", -4.0),
+                    (now_ts - 10, "SOLUSDT", "asb1_slope_break", 7.5),
+                ],
+            )
+            con.commit()
+
+        report = generate_report(db_path, now_ts - 3600, out_dir, "smoke")
+        assert "by_strategy:" in report.text
+        assert "elder_triple_screen_v2" in report.text
+        assert "asb1_slope_break" in report.text
+
+    print("  ✓ trade_reporting strategy breakdown")
+
+
+def test_overlay_handlers_cover_live_sleeves():
+    bot_path = os.path.join(_ROOT, "smart_pump_reversal_bot.py")
+    with open(bot_path, "r", encoding="utf-8") as fh:
+        text = fh.read()
+
+    regime_start = text.index("def _apply_regime_overlay")
+    alloc_start = text.index("def _apply_portfolio_allocator_overlay")
+    symbol_loop_start = text.index("async def symbol_filters_loop")
+    startup_line_start = text.index('        "🧠 strategies: "')
+
+    regime_text = text[regime_start:alloc_start]
+    alloc_text = text[alloc_start:symbol_loop_start]
+    startup_text = text[startup_line_start:text.index("text = \"\\n\".join(lines)", startup_line_start)]
+
+    for token in (
+        "ENABLE_RANGE_TRADING",
+        "ENABLE_ASB1_TRADING",
+        "ENABLE_HZBO1_TRADING",
+        "ENABLE_BOUNCE1_TRADING",
+        "BOUNCE1_ENGINE",
+        "BOUNCE1_SYMBOL_ALLOWLIST",
+    ):
+        assert token in regime_text, f"regime overlay missing {token}"
+        assert token in alloc_text, f"allocator overlay missing {token}"
+
+    for token in (
+        "ASB1_RISK_MULT",
+        "HZBO1_RISK_MULT",
+        "BOUNCE1_RISK_MULT",
+    ):
+        assert token in alloc_text, f"allocator overlay missing risk sync for {token}"
+
+    for token in ("asb1", "hzbo1", "bounce1"):
+        assert f"{token}={{ENABLE_" in startup_text or token in startup_text, f"startup summary missing {token}"
+
+    print("  ✓ overlay handlers cover range/asb1/hzbo1/bounce1")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Runner
 # ─────────────────────────────────────────────────────────────────────────────
@@ -460,6 +563,9 @@ if __name__ == "__main__":
         test_entry_guard,
         test_runner_state,
         test_midterm_v3_legacy_hist_sign,
+        test_allocator_missing_health_watch,
+        test_trade_reporting_breakdown,
+        test_overlay_handlers_cover_live_sleeves,
     ]
     print(f"\n{'─' * 55}")
     print("  smoke_test.py — running all tests")

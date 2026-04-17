@@ -464,19 +464,22 @@ def _allocator_risk_mult(strategy_name: str, regime: str) -> float:
         "btc_eth_midterm_pullback_v2": "MIDTERM_RISK_MULT",
         "btc_eth_midterm_v3": "MIDTERM_RISK_MULT",
         "alt_range_scalp_v1": "RANGE_RISK_MULT",
-        "alt_support_bounce_v1": "BOUNCE_RISK_MULT",
+        "alt_support_bounce_v1": ("BOUNCE1_RISK_MULT", "BOUNCE_RISK_MULT"),
         "pump_fade_v2": "PUMP_FADE_RISK_MULT",
-        "elder_triple_screen_v2": "ELDER_RISK_MULT",
+        "elder_triple_screen_v2": ("ELDER_RISK_MULT", "ELDER_V2_RISK_MULT"),
         "alt_vwap_mean_reversion_v1": "VWAP_RISK_MULT",
     }
-    env_key = env_overrides.get(st)
-    if env_key:
-        raw = str(os.getenv(env_key, "") or "").strip()
-        if raw:
-            try:
-                return float(raw)
-            except Exception:
-                pass
+    env_keys = env_overrides.get(st)
+    if env_keys:
+        if isinstance(env_keys, str):
+            env_keys = (env_keys,)
+        for env_key in env_keys:
+            raw = str(os.getenv(env_key, "") or "").strip()
+            if raw:
+                try:
+                    return float(raw)
+                except Exception:
+                    pass
     if st == "impulse_volume_breakout_v1":
         for env_key in ("IVB1_RISK_MULT", "IMPULSE_RISK_MULT"):
             raw = str(os.getenv(env_key, "") or "").strip()

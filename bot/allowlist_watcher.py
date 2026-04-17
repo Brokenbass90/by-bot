@@ -70,6 +70,8 @@ def _resolve_auto_apply_file() -> Path:
 # Which env vars can be hot-reloaded (strategies/bot re-read them at runtime)
 HOT_RELOAD_VARS: Set[str] = {
     "ASC1_SYMBOL_ALLOWLIST",
+    "ATT1_SYMBOL_ALLOWLIST",
+    "ASM1_SYMBOL_ALLOWLIST",
     "ARF1_SYMBOL_ALLOWLIST",
     "BREAKDOWN_SYMBOL_ALLOWLIST",
     "BREAKOUT_SYMBOL_ALLOWLIST",
@@ -84,6 +86,8 @@ HOT_RELOAD_PREFIXES: tuple[str, ...] = (
     "ARS1_",
     "ASB1_",
     "ASC1_",
+    "ATT1_",
+    "ASM1_",
     "BREAKDOWN_",
 )
 

@@ -10,11 +10,15 @@
 # =============================================================================
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+PYTHON_BIN=".venv/bin/python"
+[ -x "$PYTHON_BIN" ] || PYTHON_BIN="$(command -v python3)"
 
 TAG="midterm_v3_btceth_$(date +%Y%m%d)"
 SYMBOLS="BTCUSDT,ETHUSDT"
 DAYS=365
 END="2026-03-31"
+BACKTEST_CACHE_ONLY="${BACKTEST_CACHE_ONLY:-0}"
+CACHE_ONLY="${CACHE_ONLY:-$BACKTEST_CACHE_ONLY}"
 
 echo "═══════════════════════════════════════════════"
 echo "  BTCETHMidtermV3 Backtest — $TAG"
@@ -37,8 +41,8 @@ MTPB3_LONG_COOLDOWN_BARS=84 \
 MTPB3_SHORT_COOLDOWN_BARS=84 \
 MTPB3_MAX_SIGNALS_PER_DAY=1 \
 MIDTERM_RISK_MULT=1.0 \
-BACKTEST_CACHE_ONLY=1 CACHE_ONLY=1 \
-python3 backtest/run_portfolio.py \
+BACKTEST_CACHE_ONLY="$BACKTEST_CACHE_ONLY" CACHE_ONLY="$CACHE_ONLY" \
+"$PYTHON_BIN" backtest/run_portfolio.py \
   --strategies btc_eth_midterm_v3 \
   --symbols "$SYMBOLS" \
   --days $DAYS --end $END \
@@ -66,8 +70,8 @@ MTPB3_LONG_COOLDOWN_BARS=84 \
 MTPB3_SHORT_COOLDOWN_BARS=84 \
 MTPB3_MAX_SIGNALS_PER_DAY=1 \
 MIDTERM_RISK_MULT=1.0 \
-BACKTEST_CACHE_ONLY=1 CACHE_ONLY=1 \
-python3 backtest/run_portfolio.py \
+BACKTEST_CACHE_ONLY="$BACKTEST_CACHE_ONLY" CACHE_ONLY="$CACHE_ONLY" \
+"$PYTHON_BIN" backtest/run_portfolio.py \
   --strategies btc_eth_midterm_v3 \
   --symbols "$SYMBOLS" \
   --days $DAYS --end $END \
@@ -82,8 +86,8 @@ echo "────────────────────────�
 echo "▶ Test 3: v1 comparison baseline (same period)"
 MIDTERM_RISK_MULT=1.0 \
 MTPB_SYMBOL_ALLOWLIST="$SYMBOLS" \
-BACKTEST_CACHE_ONLY=1 CACHE_ONLY=1 \
-python3 backtest/run_portfolio.py \
+BACKTEST_CACHE_ONLY="$BACKTEST_CACHE_ONLY" CACHE_ONLY="$CACHE_ONLY" \
+"$PYTHON_BIN" backtest/run_portfolio.py \
   --strategies btc_eth_midterm_pullback \
   --symbols "$SYMBOLS" \
   --days $DAYS --end $END \
@@ -107,8 +111,8 @@ MTPB3_FRESH_TOUCH_BARS=5 \
 MTPB3_RR=2.5 \
 MIDTERM_RISK_MULT=0.70 \
 MTPB_VERSION=3 \
-BACKTEST_CACHE_ONLY=1 CACHE_ONLY=1 \
-python3 backtest/run_portfolio.py \
+BACKTEST_CACHE_ONLY="$BACKTEST_CACHE_ONLY" CACHE_ONLY="$CACHE_ONLY" \
+"$PYTHON_BIN" backtest/run_portfolio.py \
   --config configs/core3_live_canary_20260411_sloped_momentum.env \
   --strategies btc_eth_midterm_v3,elder_triple_screen_v2,alt_slope_break_v1,alt_horizontal_break_v1,alt_trendline_touch_v1 \
   --symbols BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT \

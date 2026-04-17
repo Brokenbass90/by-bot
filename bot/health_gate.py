@@ -24,6 +24,8 @@ Status levels:
 Integration map (ENABLE_* → strategy name):
     ENABLE_SLOPED_TRADING    → alt_sloped_channel_v1 (legacy, disabled)
     ENABLE_ATT1_TRADING      → alt_trendline_touch_v1 (swing-pivot trendline bounce)
+    ENABLE_ASB1_TRADING      → alt_slope_break_v1
+    ENABLE_HZBO1_TRADING     → alt_horizontal_break_v1
     ENABLE_ASM1_TRADING      → alt_sloped_momentum_v1 (sloped channel breakout)
     ENABLE_FLAT_TRADING      → alt_resistance_fade_v1
     ENABLE_BREAKDOWN_TRADING → alt_inplay_breakdown_v1
@@ -54,16 +56,24 @@ CACHE_TTL_S = 3600
 STRATEGY_ENV_MAP: Dict[str, str] = {
     "alt_sloped_channel_v1":     "ENABLE_SLOPED_TRADING",
     "alt_trendline_touch_v1":    "ENABLE_ATT1_TRADING",
+    "alt_slope_break_v1":        "ENABLE_ASB1_TRADING",
+    "alt_horizontal_break_v1":   "ENABLE_HZBO1_TRADING",
     "alt_sloped_momentum_v1":    "ENABLE_ASM1_TRADING",
     "alt_resistance_fade_v1":    "ENABLE_FLAT_TRADING",
+    "alt_range_scalp_v1":        "ENABLE_RANGE_TRADING",
+    "alt_support_bounce_v1":     "ENABLE_BOUNCE1_TRADING",
     "alt_inplay_breakdown_v1":   "ENABLE_BREAKDOWN_TRADING",
     "btc_eth_midterm_pullback":  "ENABLE_MIDTERM_TRADING",
     "btc_eth_midterm_pullback_v2": "ENABLE_MIDTERM_TRADING",
+    "btc_eth_midterm_v3":        "ENABLE_MIDTERM_TRADING",
     "inplay_breakout":           "ENABLE_INPLAY_TRADING",
     "micro_scalper_v1":          "ENABLE_MICRO_SCALPER_TRADING",
     "alt_support_reclaim_v1":    "ENABLE_SUPPORT_RECLAIM_TRADING",
     "triple_screen_v132":        "ENABLE_TS132_TRADING",
+    "elder_triple_screen_v2":    "ENABLE_ELDER_TRADING",
+    "impulse_volume_breakout_v1": "ENABLE_IVB1_TRADING",
     "pump_fade_simple":          "ENABLE_PUMP_FADE_TRADING",
+    "pump_fade_v2":              "ENABLE_PUMP_FADE_TRADING",
     "sr_break_retest_volume_v1": "ENABLE_RETEST_TRADING",
 }
 

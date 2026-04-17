@@ -83,6 +83,18 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return default
 
 
+def _csv_symbols(raw: str) -> List[str]:
+    seen: set[str] = set()
+    out: List[str] = []
+    for item in str(raw or "").replace(";", ",").split(","):
+        sym = str(item or "").strip().upper()
+        if not sym or sym in seen:
+            continue
+        seen.add(sym)
+        out.append(sym)
+    return out
+
+
 def _parse_env(path: Path) -> Dict[str, str]:
     out: Dict[str, str] = {}
     try:
@@ -146,12 +158,22 @@ def _symbol_count_mult(count: int, tiers: List[Dict[str, Any]]) -> float:
     return 1.0
 
 
-def _sleeve_health_status(sleeve: Dict[str, Any], health_map: Dict[str, Any]) -> Tuple[str, List[str]]:
+def _sleeve_health_status(
+    sleeve: Dict[str, Any],
+    health_map: Dict[str, Any],
+    *,
+    missing_status: str = "WATCH",
+) -> Tuple[str, List[str]]:
     statuses: List[str] = []
     notes: List[str] = []
+    fallback = str(missing_status or "WATCH").strip().upper() or "WATCH"
     for strategy_name in sleeve.get("strategy_names", []):
         info = health_map.get(str(strategy_name), {})
-        status = str(info.get("status", "OK")).upper()
+        if info:
+            status = str(info.get("status", "OK")).upper()
+        else:
+            status = fallback
+            notes.append(f"{strategy_name}=missing->{status}")
         statuses.append(status)
         if status != "OK":
             notes.append(f"{strategy_name}={status}")
@@ -293,6 +315,10 @@ def main() -> int:
     }
     count_tiers = list(policy.get("symbol_count_multipliers") or [])
     exposure_controls = dict(policy.get("exposure_controls") or {})
+    missing_health_status = str(
+        policy.get("missing_strategy_health_status")
+        or os.getenv("HEALTH_GATE_MISSING_STATUS", "WATCH")
+    ).strip().upper() or "WATCH"
     portfolio_overlap_tiers = list(
         exposure_controls.get("portfolio_overlap_global_haircuts")
         or [
@@ -324,7 +350,18 @@ def main() -> int:
         router_info = dict(router_profiles.get(symbol_env_key) or {})
         sleeve_symbols = [str(sym).strip().upper() for sym in (router_info.get("symbols") or []) if str(sym).strip()]
         symbol_count = _safe_int(router_info.get("count"), 0)
-        health_status, health_notes = _sleeve_health_status(sleeve, health_map)
+        used_base_env_symbols = False
+        if (not sleeve_symbols or symbol_count <= 0) and symbol_env_key:
+            env_symbols = _csv_symbols(base_env.get(symbol_env_key, ""))
+            if env_symbols:
+                sleeve_symbols = env_symbols
+                symbol_count = len(env_symbols)
+                used_base_env_symbols = True
+        health_status, health_notes = _sleeve_health_status(
+            sleeve,
+            health_map,
+            missing_status=missing_health_status,
+        )
         health_mult = status_multipliers.get(health_status, 1.0)
         count_mult = _symbol_count_mult(symbol_count, count_tiers)
         base_risk = max(
@@ -335,6 +372,8 @@ def main() -> int:
         enabled = bool(base_enable and base_risk > 0 and symbol_count > 0 and health_mult > 0 and not safe_mode)
         final_risk = base_risk * count_mult * health_mult if enabled else 0.0
         notes = []
+        if used_base_env_symbols:
+            notes.append("base_env_symbols")
         if not base_enable:
             notes.append("orchestrator_disabled")
         if symbol_count <= 0:
@@ -428,6 +467,7 @@ def main() -> int:
     health_summary = {
         "overall_health_file": overall_health,
         "active_watch_sleeves": active_watch_sleeves,
+        "missing_strategy_health_status": missing_health_status,
         "active_status_counts": {
             "OK": sum(1 for st in active_health_states if st == "OK"),
             "WATCH": sum(1 for st in active_health_states if st == "WATCH"),

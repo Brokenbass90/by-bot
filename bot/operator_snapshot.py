@@ -80,6 +80,22 @@ def _load_csv_rows(path: Path) -> list[dict[str, str]]:
         return []
 
 
+def _load_env_map(path: Path) -> dict[str, str]:
+    out: dict[str, str] = {}
+    try:
+        if not path.exists():
+            return out
+        for raw in path.read_text(encoding="utf-8").splitlines():
+            line = str(raw or "").strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            out[key.strip()] = value.strip()
+    except Exception:
+        return {}
+    return out
+
+
 def append_operator_memory(entry: Dict[str, Any], root: Path | None = None, *, keep_last: int = 200) -> None:
     base = Path(root or ROOT)
     path = base / "runtime" / "ai_operator" / "memory.jsonl"
@@ -145,13 +161,35 @@ def _control_plane_block(root: Path) -> Dict[str, Any]:
         router_symbols_total += len(item.get("symbols") or [])
 
     sleeve_states = allocator.get("sleeves") or {}
+    enabled_sleeves = sorted(
+        [
+            str(name)
+            for name, state in sleeve_states.items()
+            if bool((state or {}).get("enabled"))
+            and _safe_float((state or {}).get("final_risk_mult"), 0.0) > 0.0
+        ]
+    )
     degraded_sleeves = sorted(
         [
             str(name)
             for name, state in sleeve_states.items()
-            if str((state or {}).get("status") or "").strip().lower() in {"watch", "degraded", "kill", "paused"}
+            if str((state or {}).get("health_status") or (state or {}).get("status") or "").strip().lower()
+            in {"watch", "degraded", "kill", "pause", "paused"}
         ]
     )
+    sleeve_summary: List[Dict[str, Any]] = []
+    for name, state in sorted(sleeve_states.items()):
+        block = dict(state or {})
+        sleeve_summary.append(
+            {
+                "name": str(name),
+                "enabled": bool(block.get("enabled")),
+                "health_status": str(block.get("health_status") or block.get("status") or "").upper(),
+                "symbol_count": _safe_int(block.get("symbol_count"), 0),
+                "final_risk_mult": _safe_float(block.get("final_risk_mult"), 0.0),
+                "notes": list(block.get("notes") or [])[:3],
+            }
+        )
 
     return {
         "watchdog": {
@@ -194,7 +232,9 @@ def _control_plane_block(root: Path) -> Dict[str, Any]:
                 0.0,
             ),
             "hard_block_new_entries": bool(allocator.get("hard_block_new_entries")),
+            "enabled_sleeves": enabled_sleeves,
             "degraded_sleeves": degraded_sleeves,
+            "sleeve_summary": sleeve_summary[:16],
         },
     }
 
@@ -309,21 +349,69 @@ def _nightly_research_block(root: Path) -> Dict[str, Any]:
     }
 
 
+def _self_audit_block(root: Path) -> Dict[str, Any]:
+    path = root / "runtime" / "self_audit" / "latest.json"
+    payload = _load_json(path, {})
+    findings = list(payload.get("findings") or [])
+    actions = list(payload.get("actions") or [])
+    highest = "ok"
+    rank = {"ok": 0, "info": 1, "warn": 2, "critical": 3}
+    for item in findings:
+        severity = str((item or {}).get("severity") or "info").strip().lower()
+        if rank.get(severity, 0) > rank.get(highest, 0):
+            highest = severity
+    return {
+        "path": _path_text(path),
+        "exists": bool(path.exists()),
+        "age_sec": _file_age_sec(path),
+        "highest_severity": highest,
+        "headline": str(payload.get("headline") or ""),
+        "finding_count": len(findings),
+        "action_count": len(actions),
+        "top_findings": findings[:3],
+        "top_actions": actions[:3],
+    }
+
+
 def _alpaca_block(root: Path) -> Dict[str, Any]:
     monthly_dir = root / "runtime" / "equities_monthly_v36"
     monthly_cycle_summary = _load_csv_rows(monthly_dir / "current_cycle_summary.csv")
     monthly_cycle_picks = _load_csv_rows(monthly_dir / "current_cycle_picks.csv")
     monthly_latest_advisory = _load_json(monthly_dir / "latest_advisory.json", {})
     monthly_latest_summary = _load_csv_rows(monthly_dir / "latest_summary.csv")
+    monthly_refresh_env = _load_env_map(monthly_dir / "latest_refresh.env")
 
     monthly_cycle = monthly_cycle_summary[0] if monthly_cycle_summary else {}
     monthly_metrics = monthly_latest_summary[0] if monthly_latest_summary else {}
     monthly_report = dict((monthly_latest_advisory or {}).get("report") or {})
+    monthly_cycle_symbols = [str(row.get("ticker") or "").strip() for row in monthly_cycle_picks if str(row.get("ticker") or "").strip()]
+    monthly_selected = list(monthly_report.get("selected") or monthly_cycle_symbols)
+    monthly_new_buys = list(monthly_report.get("new_buy_symbols") or monthly_cycle_symbols)
+    monthly_status = str(monthly_report.get("status") or "")
+    if not monthly_status and monthly_cycle_symbols:
+        monthly_status = "selected_current_cycle"
+    monthly_cycle_reason = str(monthly_report.get("cycle_reason") or "")
+    if not monthly_cycle_reason and monthly_cycle_symbols:
+        monthly_cycle_reason = "current_cycle_from_summary"
+    monthly_capital = _safe_float(monthly_report.get("effective_capital"), 0.0)
+    if monthly_capital <= 0:
+        monthly_capital = _safe_float(
+            monthly_refresh_env.get("ALPACA_CAPITAL_OVERRIDE_USD")
+            or monthly_refresh_env.get("CAPITAL_OVERRIDE_USD"),
+            0.0,
+        )
+    monthly_per_position = _safe_float(monthly_report.get("per_position_notional"), 0.0)
+    if monthly_per_position <= 0 and monthly_capital > 0:
+        top_n = max(1, _safe_int(monthly_cycle.get("top_n"), 0))
+        monthly_per_position = round(monthly_capital * 0.675 / top_n, 2)
 
     intraday_dir = root / "runtime" / "equities_intraday_dynamic_v1"
     intraday_advisory = _load_json(intraday_dir / "latest_advisory.json", {})
+    intraday_state = _load_json(root / "configs" / "intraday_state.json", {})
     intraday_symbols = list((intraday_advisory.get("symbols") or []))
     intraday_open = list(intraday_advisory.get("open_positions") or [])
+    if not intraday_open and isinstance(intraday_state, dict):
+        intraday_open = sorted(str(sym) for sym in intraday_state.keys())
     intraday_remote_only = list(intraday_advisory.get("remote_only_positions") or [])
 
     return {
@@ -338,13 +426,13 @@ def _alpaca_block(root: Path) -> Dict[str, Any]:
             "current_cycle_selected": _safe_int(monthly_cycle.get("selected"), 0),
             "current_cycle_tickers": str(monthly_cycle.get("tickers") or ""),
             "current_cycle_pick_rows": len(monthly_cycle_picks),
-            "advisory_status": str(monthly_report.get("status") or ""),
-            "cycle_reason": str(monthly_report.get("cycle_reason") or ""),
-            "effective_capital": _safe_float(monthly_report.get("effective_capital"), 0.0),
-            "per_position_notional": _safe_float(monthly_report.get("per_position_notional"), 0.0),
+            "advisory_status": monthly_status,
+            "cycle_reason": monthly_cycle_reason,
+            "effective_capital": monthly_capital,
+            "per_position_notional": monthly_per_position,
             "earnings_blocked": sorted((monthly_report.get("earnings_blocked") or {}).keys()),
-            "new_buy_symbols": list(monthly_report.get("new_buy_symbols") or []),
-            "selected_symbols": list(monthly_report.get("selected") or []),
+            "new_buy_symbols": monthly_new_buys,
+            "selected_symbols": monthly_selected,
             "latest_summary_profit_factor": _safe_float(monthly_metrics.get("profit_factor"), 0.0),
             "latest_summary_compounded_return_pct": _safe_float(monthly_metrics.get("compounded_return_pct"), 0.0),
             "latest_summary_max_monthly_dd_pct": _safe_float(monthly_metrics.get("max_monthly_dd_pct"), 0.0),
@@ -383,6 +471,7 @@ def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
         "geometry": _geometry_block(base),
         "memory": _memory_block(base),
         "nightly_research": _nightly_research_block(base),
+        "self_audit": _self_audit_block(base),
         "alpaca": _alpaca_block(base),
     }
 
@@ -395,6 +484,7 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     geo = dict(snapshot.get("geometry") or {})
     memory = dict(snapshot.get("memory") or {})
     nightly = dict(snapshot.get("nightly_research") or {})
+    self_audit = dict(snapshot.get("self_audit") or {})
     alpaca = dict(snapshot.get("alpaca") or {})
     regime = dict(cp.get("regime") or {})
     router = dict(cp.get("router") or {})
@@ -422,6 +512,7 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         f"router_profiles={router.get('profile_count')} router_symbols_total={router.get('symbols_total')} router_age_sec={router.get('age_sec')}",
         f"router_backtest_gate={'on' if router.get('backtest_path') else 'off'} symbol_memory_loaded={int(bool(router.get('symbol_memory_loaded')))}",
         f"allocator_status={allocator.get('status')} global_risk_mult={allocator.get('global_risk_mult')} hard_block={int(bool(allocator.get('hard_block_new_entries')))}",
+        f"enabled_sleeves={','.join(allocator.get('enabled_sleeves') or []) or '-'}",
         f"degraded_sleeves={','.join(allocator.get('degraded_sleeves') or []) or '-'}",
         "",
         "[health]",
@@ -434,6 +525,15 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         f"exists={int(bool(geo.get('exists')))} age_sec={geo.get('age_sec')} symbols_analyzed={geo.get('symbols_analyzed')} snapshots_built={geo.get('snapshots_built')}",
         f"intervals={','.join(str(x) for x in (geo.get('intervals') or [])) or '-'}",
     ]
+    for item in list(allocator.get("sleeve_summary") or []):
+        if not item.get("enabled") and str(item.get("health_status") or "") == "OK":
+            continue
+        lines.append(
+            f" - sleeve[{item.get('name')}]: enabled={int(bool(item.get('enabled')))} "
+            f"risk={_safe_float(item.get('final_risk_mult'), 0.0):.2f} "
+            f"count={_safe_int(item.get('symbol_count'), 0)} "
+            f"health={item.get('health_status') or '-'}"
+        )
     for item in geo.get("highlights") or []:
         symbol = str(item.get("symbol") or "")
         bits: List[str] = []
@@ -468,6 +568,18 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         lines.append(
             f" - history: state={item.get('state')} active={item.get('active_process_count')} launched={item.get('launched')} proposed={item.get('proposed')}"
         )
+    lines.extend(
+        [
+            "",
+            "[self_audit]",
+            f"exists={int(bool(self_audit.get('exists')))} age_sec={self_audit.get('age_sec')} highest_severity={self_audit.get('highest_severity') or '-'} finding_count={self_audit.get('finding_count')}",
+            f"headline={self_audit.get('headline') or '-'}",
+        ]
+    )
+    for item in list(self_audit.get("top_findings") or [])[:2]:
+        lines.append(f" - finding[{item.get('severity') or 'info'}]: {str(item.get('summary') or '-')[:180]}")
+    for item in list(self_audit.get("top_actions") or [])[:2]:
+        lines.append(f" - action: {str(item.get('summary') or '-')[:180]}")
     lines.extend(
         [
             "",
