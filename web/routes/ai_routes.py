@@ -336,39 +336,71 @@ async def chat(body: ChatRequest, email: str = Depends(require_auth)):
         params = body.execute_command.get("params", {})
         cmd_result = execute_command(action, params, email)
 
-    # Get Anthropic API key
-    api_key = os.getenv("ANTHROPIC_API_KEY") or os.getenv("AI_API_KEY")
-    if not api_key:
+    # ── pick AI provider: DeepSeek > Anthropic ───────────────────────────────
+    deepseek_key  = os.getenv("DEEPSEEK_API_KEY", "").strip()
+    anthropic_key = (os.getenv("ANTHROPIC_API_KEY") or os.getenv("AI_API_KEY", "")).strip()
+
+    if not deepseek_key and not anthropic_key:
         return ChatResponse(
-            reply="⚠️ ANTHROPIC_API_KEY not set on server. Add it to your .env config and restart the web server.",
+            reply=(
+                "⚠️ AI не настроен. Добавь в .env файл:\n"
+                "  DEEPSEEK_API_KEY=sk-...    (дешевле, рекомендуется)\n"
+                "  или ANTHROPIC_API_KEY=sk-ant-...\n"
+                "Затем перезапусти сервер."
+            ),
             command_result=cmd_result,
         )
 
+    system_prompt = (
+        "You are an AI assistant embedded in a cryptocurrency + equities trading bot dashboard. "
+        "You help the operator understand performance, diagnose issues, and manage the system. "
+        "You have access to live bot data (injected below). "
+        "Be concise and precise. When you spot issues, say so directly. "
+        "When suggesting control commands, emit a ```command JSON block. "
+        "Never suggest actions that could cause significant losses without clear justification. "
+        "Always explain the reason for any control command you suggest.\n\n"
+        + _build_context()
+    )
+    messages_payload = [{"role": m.role, "content": m.content} for m in body.messages[-20:]]
+
     try:
-        import anthropic
-        client = anthropic.Anthropic(api_key=api_key)
+        if deepseek_key:
+            # ── DeepSeek (OpenAI-compatible API) ─────────────────────────────
+            import urllib.request as _urllib_req
+            import ssl as _ssl
 
-        system_prompt = (
-            "You are an AI assistant embedded in a cryptocurrency + equities trading bot dashboard. "
-            "You help the operator understand performance, diagnose issues, and manage the system. "
-            "You have access to live bot data (injected below). "
-            "Be concise and precise. When you spot issues, say so directly. "
-            "When suggesting control commands, emit a ```command JSON block. "
-            "Never suggest actions that could cause significant losses without clear justification. "
-            "Always explain the reason for any control command you suggest.\n\n"
-            + _build_context()
-        )
+            model = os.getenv("WEB_AI_MODEL", "deepseek-chat")
+            payload = json.dumps({
+                "model": model,
+                "max_tokens": 1500,
+                "temperature": 0.4,
+                "messages": [{"role": "system", "content": system_prompt}] + messages_payload,
+            }).encode()
+            req = _urllib_req.Request(
+                "https://api.deepseek.com/chat/completions",
+                data=payload,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {deepseek_key}",
+                },
+            )
+            ctx = _ssl.create_default_context()
+            with _urllib_req.urlopen(req, context=ctx, timeout=60) as resp:
+                js = json.loads(resp.read().decode())
+            reply_text = js["choices"][0]["message"]["content"].strip()
 
-        messages = [{"role": m.role, "content": m.content} for m in body.messages[-20:]]
-
-        response = client.messages.create(
-            model=os.getenv("WEB_AI_MODEL", "claude-sonnet-4-6"),
-            max_tokens=1500,
-            system=system_prompt,
-            messages=messages,
-        )
-
-        reply_text = response.content[0].text
+        else:
+            # ── Anthropic Claude ──────────────────────────────────────────────
+            import anthropic
+            client = anthropic.Anthropic(api_key=anthropic_key)
+            model = os.getenv("WEB_AI_MODEL", "claude-sonnet-4-6")
+            response = client.messages.create(
+                model=model,
+                max_tokens=1500,
+                system=system_prompt,
+                messages=messages_payload,
+            )
+            reply_text = response.content[0].text
 
         # Parse suggested command from reply if any
         suggested_cmd = None

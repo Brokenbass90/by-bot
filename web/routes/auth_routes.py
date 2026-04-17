@@ -9,7 +9,10 @@ Flow:
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+import os
+from datetime import datetime, timezone
+
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from pydantic import BaseModel
 
 from ..auth import (
@@ -20,6 +23,25 @@ from ..auth import (
     verify_totp,
 )
 from ..deps import require_auth, require_partial_auth
+
+
+def _tg_notify(text: str) -> None:
+    """Fire-and-forget Telegram message. Silent if TG_TOKEN not set."""
+    token = os.getenv("TG_TOKEN", "").strip()
+    chat  = (os.getenv("TG_CHAT_ID", "") or os.getenv("TG_CHAT", "")).strip()
+    if not token or not chat:
+        return
+    try:
+        import urllib.request, json as _json, ssl
+        payload = _json.dumps({"chat_id": chat, "text": text, "parse_mode": "HTML"}).encode()
+        req = urllib.request.Request(
+            f"https://api.telegram.org/bot{token}/sendMessage",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+        )
+        urllib.request.urlopen(req, context=ssl.create_default_context(), timeout=5)
+    except Exception:
+        pass  # never block auth on TG failure
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -70,6 +92,7 @@ async def login(body: LoginRequest, response: Response):
 @router.post("/totp")
 async def totp(
     body: TOTPRequest,
+    request: Request,
     response: Response,
     email: str = Depends(require_partial_auth),
 ):
@@ -90,6 +113,17 @@ async def totp(
         httponly=True, samesite="lax", secure=_COOKIE_SECURE,
         max_age=8 * 3600,
     )
+
+    # ── security: notify via Telegram ────────────────────────────────────────
+    ts  = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    ip  = request.headers.get("X-Forwarded-For", request.client.host if request.client else "?")
+    _tg_notify(
+        f"🔐 <b>Web login</b>\n"
+        f"User: <code>{email}</code>\n"
+        f"IP: <code>{ip}</code>\n"
+        f"Time: {ts}"
+    )
+
     return {"authenticated": True, "email": email}
 
 

@@ -401,31 +401,62 @@ function Dashboard({ onNavigate }) {
     const values = points.map(p => p.equity);
 
     if (chartInstance.current) chartInstance.current.destroy();
+    const isPos = equity.final_equity >= 0;
     chartInstance.current = new Chart(chartRef.current, {
       type: 'line',
       data: {
         labels,
         datasets: [{
           data: values,
-          borderColor: equity.final_equity >= 0 ? '#3fb950' : '#f85149',
-          backgroundColor: (equity.final_equity >= 0 ? '#3fb950' : '#f85149') + '18',
+          borderColor: isPos ? '#3fb950' : '#f85149',
+          backgroundColor: (isPos ? '#3fb950' : '#f85149') + '18',
           borderWidth: 2,
           fill: true,
           tension: 0.3,
-          pointRadius: 0,
-          pointHoverRadius: 4,
+          pointRadius: 2,
+          pointHoverRadius: 6,
+          pointBackgroundColor: points.map(p => {
+            if (!p.pnl) return '#8b949e';
+            return p.pnl > 0 ? '#3fb950' : '#f85149';
+          }),
+          pointBorderWidth: 0,
         }]
       },
       options: {
         responsive: true, maintainAspectRatio: false, animation: false,
-        plugins: { legend: { display: false }, tooltip: {
-          callbacks: {
-            title: (items) => { const p = points[items[0].dataIndex]; return p?.t || ''; },
-            label: (item) => ` Equity: ${item.raw >= 0 ? '+' : ''}${item.raw.toFixed(4)}`
-          },
-          backgroundColor: '#161b22', titleColor: '#8b949e', bodyColor: '#e6edf3',
-          borderColor: '#30363d', borderWidth: 1,
-        }},
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: (items) => {
+                const p = points[items[0].dataIndex];
+                return p?.t ? p.t.slice(0, 16) : 'Start';
+              },
+              label: (item) => {
+                const p = points[item.dataIndex];
+                const lines = [` Equity: ${item.raw >= 0 ? '+' : ''}${item.raw.toFixed(4)}`];
+                if (p?.pnl !== undefined && p.pnl !== 0) {
+                  const sign = p.pnl > 0 ? '+' : '';
+                  lines.push(` Trade: ${sign}${p.pnl.toFixed(4)}`);
+                }
+                if (p?.strategy && p.strategy !== '?') {
+                  const strat = p.strategy.replace(/^(alt_|btc_eth_|inplay_)/g, '');
+                  lines.push(` Strategy: ${strat}`);
+                }
+                if (p?.symbol && p.symbol !== '?') lines.push(` Symbol: ${p.symbol}`);
+                return lines;
+              },
+            },
+            backgroundColor: '#161b22',
+            titleColor: '#8b949e',
+            bodyColor: '#e6edf3',
+            borderColor: '#30363d',
+            borderWidth: 1,
+            padding: 10,
+            displayColors: false,
+          }
+        },
         scales: {
           x: { display: false },
           y: {
