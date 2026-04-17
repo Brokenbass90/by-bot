@@ -8,7 +8,7 @@
 #    bash scripts/codex_deploy_20260416.sh
 #
 #  What it does:
-#    1. git pull (new files: asb1_live.py, hzbo1_live.py, regime_orchestrator.py)
+#    1. git pull (new files: att1/asb1/hzbo1/bounce1 live wrappers, regime_orchestrator.py)
 #    2. Fix DEGRADED allocator (touch + rebuild)
 #    3. Patch live env: disable IVB1, lower Elder risk
 #    4. Syntax-check Python files
@@ -21,6 +21,8 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
+PYTHON_BIN=".venv/bin/python"
+[ -x "$PYTHON_BIN" ] || PYTHON_BIN="$(command -v python3)"
 
 LIVE_ENV="configs/core3_live_canary_20260411_sloped_momentum.env"
 LOG_DIR="logs"
@@ -54,7 +56,16 @@ fi
 git pull origin "$BRANCH"
 
 # Check key new files landed
-for f in strategies/asb1_live.py strategies/hzbo1_live.py bot/regime_orchestrator.py; do
+for f in \
+    strategies/att1_live.py \
+    strategies/asb1_live.py \
+    strategies/hzbo1_live.py \
+    strategies/bounce1_live.py \
+    strategies/alt_trendline_touch_v1.py \
+    strategies/alt_slope_break_v1.py \
+    strategies/alt_horizontal_break_v1.py \
+    strategies/alt_support_bounce_v1.py \
+    bot/regime_orchestrator.py; do
     if [ -f "$f" ]; then
         ok "$f present"
     else
@@ -89,7 +100,7 @@ fi
 
 if [ "${NEED_REGEN:-1}" = "1" ]; then
     echo "  Running equity_curve_autopilot --no-tg --quiet ..."
-    if python3 scripts/equity_curve_autopilot.py --no-tg --quiet 2>&1 | tail -3; then
+    if "$PYTHON_BIN" scripts/equity_curve_autopilot.py --no-tg --quiet 2>&1 | tail -3; then
         ok "equity_curve_autopilot regenerated strategy_health.json"
     else
         warn "equity_curve_autopilot failed — touching file as fallback (content may be stale)"
@@ -99,7 +110,7 @@ if [ "${NEED_REGEN:-1}" = "1" ]; then
     fi
 fi
 
-python3 scripts/build_portfolio_allocator.py
+"$PYTHON_BIN" scripts/build_portfolio_allocator.py
 ok "Allocator rebuilt"
 
 # Verify DEGRADED is gone
@@ -152,21 +163,44 @@ grep -E "ENABLE_IVB1|ELDER_RISK_MULT|ENABLE_ASB1|ENABLE_HZBO1" "$LIVE_ENV" | tai
 # ── 4. SYNTAX CHECK ──────────────────────────────────────────────────────────
 step "[4/8] Syntax check"
 
-python3 -m py_compile smart_pump_reversal_bot.py \
+"$PYTHON_BIN" -m py_compile smart_pump_reversal_bot.py \
     && ok "smart_pump_reversal_bot.py: OK" \
     || fail "smart_pump_reversal_bot.py: SYNTAX ERROR"
 
-python3 -m py_compile bot/regime_orchestrator.py \
+"$PYTHON_BIN" -m py_compile bot/regime_orchestrator.py \
     && ok "bot/regime_orchestrator.py: OK" \
     || fail "bot/regime_orchestrator.py: SYNTAX ERROR"
 
-python3 -m py_compile strategies/asb1_live.py 2>/dev/null \
+"$PYTHON_BIN" -m py_compile strategies/asb1_live.py 2>/dev/null \
     && ok "strategies/asb1_live.py: OK" \
     || warn "strategies/asb1_live.py: not found or syntax error"
 
-python3 -m py_compile strategies/hzbo1_live.py 2>/dev/null \
+"$PYTHON_BIN" -m py_compile strategies/att1_live.py 2>/dev/null \
+    && ok "strategies/att1_live.py: OK" \
+    || warn "strategies/att1_live.py: not found or syntax error"
+
+"$PYTHON_BIN" -m py_compile strategies/hzbo1_live.py 2>/dev/null \
     && ok "strategies/hzbo1_live.py: OK" \
     || warn "strategies/hzbo1_live.py: not found or syntax error"
+
+"$PYTHON_BIN" -m py_compile strategies/bounce1_live.py 2>/dev/null \
+    && ok "strategies/bounce1_live.py: OK" \
+    || warn "strategies/bounce1_live.py: not found or syntax error"
+
+"$PYTHON_BIN" - <<'PY'
+import importlib
+
+mods = [
+    "strategies.att1_live",
+    "strategies.asb1_live",
+    "strategies.hzbo1_live",
+    "strategies.bounce1_live",
+]
+for mod in mods:
+    importlib.import_module(mod)
+print("live-wrapper import check: OK")
+PY
+ok "Live wrapper imports resolved"
 
 # ── 5. RESTART BOT ───────────────────────────────────────────────────────────
 step "[5/8] Restart live bot"
