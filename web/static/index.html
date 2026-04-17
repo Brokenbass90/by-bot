@@ -531,6 +531,21 @@ function Dashboard({ onNavigate }) {
 
 // ── Trades page ────────────────────────────────────────────────────────────
 
+// outcome badge: sl → red, tp → green, time → yellow, manual → grey
+function OutcomeBadge({ outcome, reason }) {
+  if (!outcome && !reason) return React.createElement('span', { className: 'dim' }, '—');
+  const o = (outcome || reason || '').toLowerCase();
+  const isTP = o.includes('tp') || o.includes('take');
+  const isSL = o.includes('sl') || o.includes('stop') || o.includes('liq');
+  const isTime = o.includes('time') || o.includes('expire');
+  const color = isTP ? '#3fb950' : isSL ? '#f85149' : isTime ? '#e3b341' : '#8b949e';
+  const label = isTP ? 'TP ✓' : isSL ? 'SL ✗' : isTime ? 'TIME' : (outcome || '—').toUpperCase();
+  return React.createElement('span', {
+    style: { color, fontWeight: 600, fontSize: '11px', whiteSpace: 'nowrap' },
+    title: reason || outcome,
+  }, label);
+}
+
 function Trades() {
   const [page, setPage] = useState(1);
   const [strategy, setStrategy] = useState('');
@@ -552,6 +567,8 @@ function Trades() {
 
   const handleFilter = (setter) => (e) => { setter(e.target.value); setPage(1); };
 
+  const COLS = ['Strategy','Symbol','Side','Outcome','Entry','Exit','PnL $','PnL %','Fees','Open','Close'];
+
   return React.createElement('div', null,
     React.createElement('div', { className: 'section-title' }, 'Trade Log'),
     React.createElement('div', { className: 'filters' },
@@ -569,33 +586,50 @@ function Trades() {
       React.createElement('div', { className: 'tbl-wrap tbl-scroll' },
         React.createElement('table', null,
           React.createElement('thead', null,
-            React.createElement('tr', null,
-              ['Strategy','Symbol','Side','Entry','Exit','PnL','SL','Open','Close'].map(h =>
-                React.createElement('th', { key: h }, h))
-            )
+            React.createElement('tr', null, COLS.map(h => React.createElement('th', { key: h }, h)))
           ),
           React.createElement('tbody', null,
             data.trades.length === 0
               ? React.createElement('tr', null,
-                  React.createElement('td', { colSpan: 9, className: 'empty' }, 'No trades found'))
+                  React.createElement('td', { colSpan: COLS.length, className: 'empty' }, 'No trades found'))
               : data.trades.map((t, i) => {
-                  const pnl = parseFloat(t.pnl);
-                  const entry = parseFloat(t.entry);
-                  const exit = parseFloat(t.exit);
+                  const pnl   = parseFloat(t.pnl);
+                  const pnlPct = parseFloat(t.pnl_pct);
+                  const entry = parseFloat(t.entry || t.entry_price);
+                  const exit  = parseFloat(t.exit  || t.exit_price);
+                  const fees  = parseFloat(t.fees);
+                  const pnlClass = !isNaN(pnl) ? (pnl >= 0 ? 'pos' : 'neg') : '';
                   return React.createElement('tr', { key: i },
-                    React.createElement('td', { style: { color: '#58a6ff', fontWeight: 500, maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
-                      (t.strategy || '—').replace('alt_','').replace('btc_eth_','')),
+                    // Strategy
+                    React.createElement('td', { style: { color: '#58a6ff', fontWeight: 500, maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
+                      (t.strategy || '—').replace(/^(alt_|btc_eth_|inplay_)/g, '')),
+                    // Symbol
                     React.createElement('td', { style: { fontWeight: 600 } }, t.symbol || '—'),
+                    // Side badge
                     React.createElement('td', null,
-                      t.side ? React.createElement('span', { className: `badge badge-${t.side}` }, t.side) : '—'
-                    ),
-                    React.createElement('td', null, isNaN(entry) ? (t.entry || '—') : entry.toFixed(2)),
-                    React.createElement('td', null, isNaN(exit) ? (t.exit || '—') : exit.toFixed(2)),
-                    React.createElement('td', { className: !isNaN(pnl) ? (pnl >= 0 ? 'pos' : 'neg') : '' },
-                      !isNaN(pnl) ? (pnl >= 0 ? '+' : '') + pnl.toFixed(4) : (t.pnl || '—')),
-                    React.createElement('td', { className: 'dim' }, t.sl ? parseFloat(t.sl).toFixed(2) : '—'),
-                    React.createElement('td', { className: 'dim', style: { fontSize: '11px' } }, (t.open_time || t.time || '—').slice(0, 16)),
-                    React.createElement('td', { className: 'dim', style: { fontSize: '11px' } }, (t.close_time || '—').slice(0, 16))
+                      t.side ? React.createElement('span', { className: `badge badge-${t.side}` }, t.side) : '—'),
+                    // Outcome (TP ✓ / SL ✗ / TIME)
+                    React.createElement('td', null,
+                      React.createElement(OutcomeBadge, { outcome: t.outcome, reason: t.reason })),
+                    // Entry price
+                    React.createElement('td', null, isNaN(entry) ? '—' : entry.toFixed(4)),
+                    // Exit price
+                    React.createElement('td', null, isNaN(exit)  ? '—' : exit.toFixed(4)),
+                    // PnL $
+                    React.createElement('td', { className: pnlClass },
+                      !isNaN(pnl) ? (pnl >= 0 ? '+' : '') + pnl.toFixed(4) : '—'),
+                    // PnL %
+                    React.createElement('td', { className: pnlClass },
+                      !isNaN(pnlPct) ? (pnlPct >= 0 ? '+' : '') + (pnlPct * 100).toFixed(3) + '%' : '—'),
+                    // Fees
+                    React.createElement('td', { className: 'dim' },
+                      !isNaN(fees) ? fees.toFixed(4) : '—'),
+                    // Open time
+                    React.createElement('td', { className: 'dim', style: { fontSize: '11px', whiteSpace: 'nowrap' } },
+                      (t.open_time || t.time || '—').slice(0, 16)),
+                    // Close time
+                    React.createElement('td', { className: 'dim', style: { fontSize: '11px', whiteSpace: 'nowrap' } },
+                      (t.close_time || '—').slice(0, 16))
                   );
                 })
           )

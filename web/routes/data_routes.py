@@ -64,23 +64,85 @@ def _find_trades_csvs() -> List[Path]:
     return found[:5]  # up to 5 most recent
 
 
+def _normalise_trade(row: Dict[str, str]) -> Dict[str, Any]:
+    """Normalise CSV row to a consistent field set regardless of CSV schema version.
+
+    New format (live bot): entry_ts, exit_ts, entry_price, exit_price, qty, pnl_pct_equity, outcome, reason, fees
+    Old format:            open_time, close_time, entry, exit, size, pnl_pct, sl, tp
+    We map new → canonical and keep both so nothing breaks.
+    """
+    t: Dict[str, Any] = dict(row)
+
+    # ── time fields ──────────────────────────────────────────────────────────
+    if "entry_ts" in t and "open_time" not in t:
+        # entry_ts may be ms epoch (int) or ISO string
+        raw = t["entry_ts"]
+        if raw and raw.isdigit():
+            from datetime import datetime, timezone
+            try:
+                t["open_time"] = datetime.fromtimestamp(int(raw) / 1000, tz=timezone.utc).strftime("%Y-%m-%d %H:%M")
+            except Exception:
+                t["open_time"] = raw
+        else:
+            t["open_time"] = raw
+
+    if "exit_ts" in t and "close_time" not in t:
+        raw = t["exit_ts"]
+        if raw and raw.isdigit():
+            from datetime import datetime, timezone
+            try:
+                t["close_time"] = datetime.fromtimestamp(int(raw) / 1000, tz=timezone.utc).strftime("%Y-%m-%d %H:%M")
+            except Exception:
+                t["close_time"] = raw
+        else:
+            t["close_time"] = raw
+
+    # ── price fields ─────────────────────────────────────────────────────────
+    if "entry_price" in t and "entry" not in t:
+        t["entry"] = t["entry_price"]
+    if "exit_price" in t and "exit" not in t:
+        t["exit"] = t["exit_price"]
+
+    # ── size ─────────────────────────────────────────────────────────────────
+    if "qty" in t and "size" not in t:
+        t["size"] = t["qty"]
+
+    # ── pnl% ─────────────────────────────────────────────────────────────────
+    if "pnl_pct_equity" in t and "pnl_pct" not in t:
+        t["pnl_pct"] = t["pnl_pct_equity"]
+
+    # ── parse numerics ───────────────────────────────────────────────────────
+    for f in ("entry", "exit", "pnl", "pnl_pct", "size", "risk", "sl", "tp", "fees"):
+        if f in t and t[f]:
+            try:
+                t[f] = float(t[f])
+            except (ValueError, TypeError):
+                pass
+
+    return t
+
+
 def _load_all_trades() -> List[Dict[str, Any]]:
     seen: set = set()
     trades: List[Dict[str, Any]] = []
     for csv_path in _find_trades_csvs():
         for row in _read_csv(csv_path):
-            key = (row.get("strategy"), row.get("symbol"), row.get("open_time"), row.get("entry"))
+            # dedup on either key format
+            key = (
+                row.get("strategy"),
+                row.get("symbol"),
+                row.get("open_time") or row.get("entry_ts"),
+                row.get("entry") or row.get("entry_price"),
+            )
             if key in seen:
                 continue
             seen.add(key)
-            for f in ("entry", "exit", "pnl", "pnl_pct", "size", "risk", "sl", "tp"):
-                if f in row and row[f]:
-                    try:
-                        row[f] = float(row[f])
-                    except ValueError:
-                        pass
-            trades.append(dict(row))
-    trades.sort(key=lambda t: str(t.get("close_time", t.get("open_time", ""))), reverse=True)
+            trades.append(_normalise_trade(row))
+
+    trades.sort(
+        key=lambda t: str(t.get("close_time") or t.get("exit_ts") or t.get("open_time") or ""),
+        reverse=True,
+    )
     return trades
 
 
@@ -202,18 +264,19 @@ async def get_summary(_: str = Depends(require_auth)):
 async def get_equity(_: str = Depends(require_auth)):
     """Cumulative equity curve from all closed trades (sorted by close_time)."""
     trades = _load_all_trades()
-    timed = [
-        t for t in trades
-        if isinstance(t.get("pnl"), float) and t.get("close_time", t.get("time"))
-    ]
-    timed.sort(key=lambda t: str(t.get("close_time", t.get("time", ""))))
+
+    def _t(trade: dict) -> str:
+        return str(trade.get("close_time") or trade.get("exit_ts") or trade.get("time") or "")
+
+    timed = [t for t in trades if isinstance(t.get("pnl"), float) and _t(t)]
+    timed.sort(key=_t)
 
     equity = 0.0
     points = [{"t": "start", "equity": 0.0, "pnl": 0.0}]
     for t in timed:
         equity += t["pnl"]
         points.append({
-            "t": str(t.get("close_time", t.get("time", ""))),
+            "t": _t(t),
             "equity": round(equity, 4),
             "pnl": t["pnl"],
             "strategy": t.get("strategy", "?"),

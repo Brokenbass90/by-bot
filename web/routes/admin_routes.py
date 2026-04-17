@@ -101,7 +101,18 @@ async def toggle_user(target_email: str, email: str = Depends(require_auth)):
 
 # ── Daily P&L stats ───────────────────────────────────────────────────────────
 
+def _normalise_ts(raw: str) -> str:
+    """Convert ms-epoch or ISO timestamp to YYYY-MM-DD HH:MM string."""
+    if raw and str(raw).isdigit():
+        try:
+            return datetime.fromtimestamp(int(raw) / 1000, tz=timezone.utc).strftime("%Y-%m-%d %H:%M")
+        except Exception:
+            pass
+    return str(raw)
+
+
 def _load_all_trades() -> List[Dict[str, Any]]:
+    """Load trades, normalising both old and new CSV schemas to canonical field names."""
     seen: set = set()
     trades: List[Dict[str, Any]] = []
     paths = sorted(
@@ -117,17 +128,33 @@ def _load_all_trades() -> List[Dict[str, Any]]:
         try:
             with open(csv_path, newline="") as f:
                 for row in csv.DictReader(f):
-                    key = (row.get("strategy"), row.get("symbol"), row.get("open_time"), row.get("entry"))
+                    t = dict(row)
+                    # new schema → canonical
+                    if "exit_ts" in t and "close_time" not in t:
+                        t["close_time"] = _normalise_ts(t["exit_ts"])
+                    if "entry_ts" in t and "open_time" not in t:
+                        t["open_time"] = _normalise_ts(t["entry_ts"])
+                    if "entry_price" in t and "entry" not in t:
+                        t["entry"] = t["entry_price"]
+                    if "exit_price" in t and "exit" not in t:
+                        t["exit"] = t["exit_price"]
+                    if "qty" in t and "size" not in t:
+                        t["size"] = t["qty"]
+                    if "pnl_pct_equity" in t and "pnl_pct" not in t:
+                        t["pnl_pct"] = t["pnl_pct_equity"]
+
+                    key = (t.get("strategy"), t.get("symbol"), t.get("open_time"), t.get("entry"))
                     if key in seen:
                         continue
                     seen.add(key)
-                    for field in ("pnl", "entry", "exit", "size"):
-                        if row.get(field):
+
+                    for field in ("pnl", "entry", "exit", "size", "fees", "pnl_pct"):
+                        if t.get(field):
                             try:
-                                row[field] = float(row[field])
-                            except ValueError:
+                                t[field] = float(t[field])
+                            except (ValueError, TypeError):
                                 pass
-                    trades.append(dict(row))
+                    trades.append(t)
         except Exception:
             pass
 
