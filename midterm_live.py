@@ -26,10 +26,19 @@ class LiveKlineStore:
 #   MTPB_VERSION=1        → uses btc_eth_midterm_pullback.BTCETHMidtermPullbackStrategy (legacy)
 #   MTPB_VERSION=short_v1 → uses btc_eth_midterm_short_v1 (SHORT-ONLY, daily trend + 4h signal)
 #                            Designed for bear regimes.  Requires ENABLE_MTSV1_TRADING=1.
+#   MTPB_VERSION=short_v2 → uses btc_eth_midterm_short_v2 (SHORT-ONLY, 3-TF hierarchy:
+#                            weekly→daily→4h, MACD+RSI daily filter, 4h RSI pullback gate)
+#                            Requires ENABLE_MTSV2_TRADING=1.
 # Default: v3 (if available), fallback to v1.
 
 def _make_strategy():
     version = os.getenv("MTPB_VERSION", "3").strip()
+    if version == "short_v2":
+        try:
+            from strategies.btc_eth_midterm_short_v2 import BTCETHMidtermShortV2Strategy
+            return BTCETHMidtermShortV2Strategy()
+        except ImportError:
+            pass
     if version == "short_v1":
         try:
             from strategies.btc_eth_midterm_short_v1 import BTCETHMidtermShortV1Strategy
@@ -63,6 +72,9 @@ class MidtermLiveEngine:
       1        = btc_eth_midterm_pullback  (legacy v1)
       short_v1 = btc_eth_midterm_short_v1 (SHORT-ONLY, daily trend + 4h signal,
                                            bear-market optimised — set via ENABLE_MTSV1_TRADING=1)
+      short_v2 = btc_eth_midterm_short_v2 (SHORT-ONLY, 3-TF weekly→daily→4h,
+                                           MACD histogram + RSI daily filter, 4h RSI pullback gate
+                                           requires WF-22 pass before live — ENABLE_MTSV2_TRADING=1)
     """
 
     def __init__(self, fetch_klines: Callable[[str, str, int], Any]):

@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "policy_version": "2026-04-16-allocator-v4",
-  "updated_utc": "2026-04-16T00:00:00Z",
+  "policy_version": "2026-04-17-allocator-v5",
+  "updated_utc": "2026-04-17T00:00:00Z",
   "allocator_global_risk_by_regime": {
     "bull_trend": 1.0,
     "bull_chop": 0.9,
@@ -190,12 +190,28 @@
       "strategy_names": [
         "btc_eth_midterm_short_v1"
       ],
-      "_comment": "SHORT-ONLY bear strategy. daily trend + 4h signal. Disable in bull via 0.0 mults. Requires WF-22 before enabling live (ENABLE_MTSV1_TRADING=1). Switch with MTPB_VERSION=short_v1.",
+      "_comment": "REJECTED. v1 failed WF-22: only 2-TF hierarchy, no MACD/RSI daily filter, too many false signals in choppy bear. Replaced by midterm_short_v2 sleeve. Set to 0.0 permanently.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.0,
         "bull_chop": 0.0,
-        "bear_chop": 0.65,
-        "bear_trend": 0.9
+        "bear_chop": 0.0,
+        "bear_trend": 0.0
+      }
+    },
+    {
+      "name": "midterm_short_v2",
+      "enable_env": "ENABLE_MTSV2_TRADING",
+      "symbol_env_key": "MTSV2_SYMBOL_ALLOWLIST",
+      "risk_env": "MTSV2_RISK_MULT",
+      "strategy_names": [
+        "btc_eth_midterm_short_v2"
+      ],
+      "_comment": "RESEARCH-ONLY. 3-TF hierarchy: weekly(10080)→daily(1440)→4h(240). MACD histogram consec≥3, daily RSI<55, min_trend_days=5, 4h RSI>50 on pullback touch. Requires WF-22 PF>1.20 DD<30%. Switch with MTPB_VERSION=short_v2.",
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.0,
+        "bull_chop": 0.0,
+        "bear_chop": 0.0,
+        "bear_trend": 0.0
       }
     },
     {
@@ -296,7 +312,23 @@
       "strategy_names": [
         "elder_triple_screen_v2"
       ],
-      "_comment": "Paused from live allocator. Server retests failed hard in both 2024 and 2023, so Elder stays research-only until a meaningful rewrite lands.",
+      "_comment": "REJECTED. v2 failed hard 2024 PF=0.853 DD=62%, 2023 PF=0.715 DD=83%. Root causes: no daily macro gate, hist_sign=False, consec_bars=1. Stays 0.0 permanently. Use elder_ts_v3 sleeve instead after WF-22.",
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.0,
+        "bull_chop": 0.0,
+        "bear_chop": 0.0,
+        "bear_trend": 0.0
+      }
+    },
+    {
+      "name": "elder_ts_v3",
+      "enable_env": "ENABLE_ETS3_TRADING",
+      "symbol_env_key": "ETS3_SYMBOL_ALLOWLIST",
+      "risk_env": "ETS3_RISK_MULT",
+      "strategy_names": [
+        "elder_triple_screen_v3"
+      ],
+      "_comment": "RESEARCH-ONLY. Full rewrite: Screen0 daily EMA50/200, hist_sign=True, consec_bars=3, ATR quality gate, FI+RSI dual Screen2, 50% body Screen3. Requires WF-22 PF>1.20 DD<25% before enabling. Set ENABLE_ETS3_TRADING=1 only after passing gate.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.0,
         "bull_chop": 0.0,
