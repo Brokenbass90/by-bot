@@ -105,6 +105,19 @@ def _load_env_file(path: Path) -> None:
 def _env(name: str, default: str = "") -> str:
     return str(os.getenv(name, default)).strip()
 
+
+def _load_existing_health(path: Path) -> Dict[str, object]:
+    if not path.exists():
+        return {}
+    try:
+        with path.open(encoding="utf-8") as f:
+            payload = json.load(f)
+        if isinstance(payload, dict):
+            return payload
+    except Exception:
+        return {}
+    return {}
+
 # ── Telegram ─────────────────────────────────────────────────────────────────────
 _TG_CHUNK = 3900
 
@@ -349,7 +362,11 @@ def _analyze_strategy(name: str, trades: List[Trade], now_ts: int) -> StrategyHe
     status = "OK"
     reasons = []
 
-    if h.curve_vs_ma20 < WATCH_THRESHOLD_MA and len(cumulative) >= MA_PERIOD_LONG:
+    if (
+        h.trades_30d >= MIN_TRADES_FOR_EVAL
+        and h.curve_vs_ma20 < WATCH_THRESHOLD_MA
+        and len(cumulative) >= MA_PERIOD_LONG
+    ):
         status = "WATCH"
         reasons.append(f"curve below MA{MA_PERIOD_LONG}")
 
@@ -548,28 +565,40 @@ def main() -> None:
     if not args.quiet:
         print(f"\nOverall: {STATUS_EMOJI.get(overall, '?')} {overall}")
 
+    existing_health = _load_existing_health(HEALTH_FILE)
+    existing_strategies = dict(existing_health.get("strategies") or {})
+    merged_strategies = dict(existing_strategies)
+    analyzed_payload = {}
+    for h in healths:
+        analyzed_payload[h.name] = {
+            "status": h.status,
+            "total_pnl": round(h.total_pnl, 4),
+            "rolling_30d_pnl": round(h.rolling_30d_pnl, 4),
+            "rolling_60d_pnl": round(h.rolling_60d_pnl, 4),
+            "curve_vs_ma20": round(h.curve_vs_ma20, 4),
+            "trades_total": h.trades_total,
+            "trades_30d": h.trades_30d,
+            "winrate_total": round(h.winrate_total, 3),
+            "winrate_30d": round(h.winrate_30d, 3),
+            "pf_30d": round(h.pf_30d, 3),
+            "notes": h.notes,
+        }
+    merged_strategies.update(analyzed_payload)
+
     # Write health JSON
     health_data = {
         "timestamp": now_utc.isoformat(),
         "run_dir": run_dir.name,
-        "strategies": {
-            h.name: {
-                "status": h.status,
-                "total_pnl": round(h.total_pnl, 4),
-                "rolling_30d_pnl": round(h.rolling_30d_pnl, 4),
-                "rolling_60d_pnl": round(h.rolling_60d_pnl, 4),
-                "curve_vs_ma20": round(h.curve_vs_ma20, 4),
-                "trades_total": h.trades_total,
-                "trades_30d": h.trades_30d,
-                "winrate_total": round(h.winrate_total, 3),
-                "winrate_30d": round(h.winrate_30d, 3),
-                "pf_30d": round(h.pf_30d, 3),
-                "notes": h.notes,
-            }
-            for h in healths
-        },
-        "paused_strategies": [h.name for h in healths if h.status in ("PAUSE", "KILL")],
+        "strategies": merged_strategies,
+        "paused_strategies": sorted(
+            name
+            for name, item in merged_strategies.items()
+            if isinstance(item, dict) and str(item.get("status") or "").upper() in ("PAUSE", "KILL")
+        ),
         "overall_health": overall,
+        "preserved_existing_entries": sorted(
+            name for name in existing_strategies.keys() if name not in analyzed_payload
+        ),
     }
     HEALTH_FILE.parent.mkdir(parents=True, exist_ok=True)
     HEALTH_FILE.write_text(json.dumps(health_data, indent=2))

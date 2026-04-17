@@ -708,6 +708,21 @@ def test_dynamic_annual_filters_uncached_symbols():
     print("  ✓ dynamic annual filters uncached router symbols")
 
 
+def test_equity_autopilot_does_not_watch_on_low_recent_activity():
+    from scripts.equity_curve_autopilot import Trade, _analyze_strategy
+
+    now_ts = int(time.time())
+    old_trade_ts = now_ts - 90 * 86400
+    trades = [
+        Trade(strategy="alt_trendline_touch_v1", symbol="BTCUSDT", exit_ts=old_trade_ts + i * 60, pnl=(-0.05 if i < 12 else 0.04), outcome="sl")
+        for i in range(24)
+    ]
+    health = _analyze_strategy("alt_trendline_touch_v1", trades, now_ts)
+    assert health.trades_30d == 0
+    assert health.status == "OK", f"low recent activity should stay neutral, got {health.status}"
+    print("  ✓ equity autopilot keeps low-activity sleeves neutral")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Runner
 # ─────────────────────────────────────────────────────────────────────────────
@@ -731,6 +746,7 @@ if __name__ == "__main__":
         test_operator_controls_snapshot,
         test_overlay_handlers_cover_live_sleeves,
         test_dynamic_annual_filters_uncached_symbols,
+        test_equity_autopilot_does_not_watch_on_low_recent_activity,
     ]
     print(f"\n{'─' * 55}")
     print("  smoke_test.py — running all tests")

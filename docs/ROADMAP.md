@@ -96,6 +96,29 @@ Order of work:
 - `Elder` is no longer a live candidate in its current implementation. Server retests failed in both `2024` and `2023`, so it has been moved back to research-only and removed from the allocator live set.
 - `btc_eth_midterm_short_v1` is no longer blocked by backtest tooling: the portfolio engine now supports `1440m` aggregation and the annual + WF queue is running again on the repaired harness.
 - `btc_eth_midterm_short_v1` is now resolved, not pending: annual and WF both failed badly, so it is paused rather than promoted.
+
+## Crypto Rehab Queue — 2026-04-17
+
+Immediate priority is no longer “add more sleeves”, but repair and revalidate the surviving crypto core with honest stitched annuals.
+
+1. `ATT1 + flat + range_scalp` live-core validation
+   - run stitched annual on the current live core only
+   - then run isolated annuals per sleeve so we stop guessing which leg is carrying or dragging
+2. `ASB1` re-promotion lane
+   - keep it out of live `bull_trend` for now
+   - if live-core annual is acceptable, test `+ASB1` as the first expansion layer
+3. `HZBO1` re-promotion lane
+   - same policy as `ASB1`; validate as an additive sleeve, not as an assumption
+4. `ATT1` quality hardening
+   - tighten symbol set / regime gating if isolated annual shows it is the noisy part of the core
+5. `flat / ARF1` quality hardening
+   - preserve its stabilizer role while checking whether a less idle bull-trend profile exists
+6. `range_scalp` quality hardening
+   - keep as additive only if isolated annual stays positive after live-core validation
+7. `ASM1` return-to-live candidate
+   - revisit only after the current core is understood; do not mix this with live-core diagnosis
+8. `Elder`, `IVB1`, `TS132`, `midterm_short_v1`, `VWAP_MR`
+   - remain research-only / paused until materially rewritten
 - Bounded AI autonomy is now partially real instead of conceptual: operator snapshot exposes the allowlisted capabilities, and AI-driven server deploy is blocked by default unless explicitly enabled.
 - Runtime reporting truth still needed one more cleanup pass: strategy flags, allocator-active sleeves, and runtime counters were being mixed into one misleading operator/TG message, especially after restarts.
 - Immediate objective is not "invent more strategies", but restore truthful allocator health first, then run the next promotion queue on a stable live base.

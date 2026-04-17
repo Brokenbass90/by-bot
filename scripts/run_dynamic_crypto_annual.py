@@ -389,31 +389,31 @@ def _write_outputs(
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     windows_csv = out_dir / "dynamic_windows.csv"
+    windows_fieldnames = [
+        "window_index",
+        "window_start",
+        "window_end",
+        "regime",
+        "raw_regime",
+        "allocator_status",
+        "enabled_sleeves",
+        "strategies",
+        "symbols",
+        "requested_symbols",
+        "dropped_uncached_symbols",
+        "risk_pct_effective",
+        "starting_equity",
+        "ending_equity",
+        "trades",
+        "net_pnl",
+        "profit_factor",
+        "winrate",
+        "max_drawdown",
+        "hard_block",
+        "run_dir",
+    ]
     with windows_csv.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(
-            f,
-            fieldnames=[
-                "window_index",
-                "window_start",
-                "window_end",
-                "regime",
-                "raw_regime",
-                "allocator_status",
-                "enabled_sleeves",
-                "strategies",
-                "symbols",
-                "risk_pct_effective",
-                "starting_equity",
-                "ending_equity",
-                "trades",
-                "net_pnl",
-                "profit_factor",
-                "winrate",
-                "max_drawdown",
-                "hard_block",
-                "run_dir",
-            ],
-        )
+        writer = csv.DictWriter(f, fieldnames=windows_fieldnames)
         writer.writeheader()
         for row in window_rows:
             writer.writerow(row)
