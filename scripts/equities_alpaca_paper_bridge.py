@@ -413,19 +413,66 @@ def _default_picks_csv() -> Path | None:
     return runs[-1] if runs else None
 
 
+def _monthly_runtime_dirs() -> list[Path]:
+    root = Path(__file__).resolve().parent.parent
+    candidates: list[Path] = []
+    for raw in (
+        _env("ALPACA_AUTOPILOT_RUNTIME_DIR", ""),
+        _env("EQ_V35_RUNTIME_DIR", ""),
+        _env("EQ_BASELINE_RUNTIME_DIR", ""),
+    ):
+        if not raw:
+            continue
+        path = Path(raw)
+        if path.exists():
+            candidates.append(path)
+    runtime_root = root / "runtime"
+    if runtime_root.exists():
+        for path in sorted(runtime_root.glob("equities_monthly*")):
+            if path.is_dir():
+                candidates.append(path)
+    deduped: list[Path] = []
+    seen: set[str] = set()
+    for path in candidates:
+        key = str(path.resolve())
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(path)
+    return deduped
+
+
 def _current_cycle_picks_path(picks_csv: Path) -> Path | None:
     raw = _env("ALPACA_CURRENT_CYCLE_PICKS_CSV", "")
     if raw:
         path = Path(raw)
         if path.exists():
             return path
-    runtime_dir = _env("ALPACA_AUTOPILOT_RUNTIME_DIR", "")
-    if runtime_dir:
-        path = Path(runtime_dir) / "current_cycle_picks.csv"
+    for runtime_dir in _monthly_runtime_dirs():
+        path = runtime_dir / "current_cycle_picks.csv"
         if path.exists():
             return path
     candidate = picks_csv.parent / "current_cycle_picks.csv"
     return candidate if candidate.exists() else None
+
+
+def _load_intraday_managed_symbols() -> set[str]:
+    raw = _env("ALPACA_INTRADAY_STATE_PATH", "")
+    state_path = Path(raw) if raw else (Path(__file__).resolve().parent.parent / "configs" / "intraday_state.json")
+    if not state_path.exists():
+        return set()
+    try:
+        data = json.loads(state_path.read_text())
+    except Exception:
+        return set()
+    if not isinstance(data, dict):
+        return set()
+    symbols: set[str] = set()
+    for sym in data.keys():
+        token = str(sym or "").strip().upper()
+        if token:
+            symbols.add(token)
+    return symbols
 
 
 def _is_held_for_orders_conflict(exc: Exception) -> bool:
@@ -543,22 +590,36 @@ def main() -> int:
             pending_buy_orders.setdefault(symbol, []).append(order)
     occupied_symbols = set(current_positions.keys()) | set(pending_buy_orders.keys())
     latest_entry_day, pick_age_days = _pick_age_days(picks)
+    current_cycle_csv = _current_cycle_picks_path(picks_csv)
+    current_cycle_picks: list[Pick] = []
+    current_entry_day = ""
+    current_pick_age_days: int | None = None
+    if current_cycle_csv is not None:
+        current_cycle_picks = _load_picks(current_cycle_csv, None)
+        current_entry_day, current_pick_age_days = _pick_age_days(current_cycle_picks)
+        current_cycle_is_fresh = bool(
+            current_cycle_picks
+            and current_pick_age_days is not None
+            and current_pick_age_days <= max_pick_age_days
+        )
+        if current_cycle_is_fresh:
+            picks_csv = current_cycle_csv
+            picks = current_cycle_picks
+            latest_entry_day = current_entry_day
+            pick_age_days = current_pick_age_days
+
     stale_guard_triggered = (
         pick_age_days is not None
         and pick_age_days > max_pick_age_days
         and not allow_stale_picks
     )
     if stale_guard_triggered and refreshed_recently:
-        current_cycle_csv = _current_cycle_picks_path(picks_csv)
-        if current_cycle_csv is not None:
-            current_cycle_picks = _load_picks(current_cycle_csv, None)
-            current_entry_day, current_pick_age_days = _pick_age_days(current_cycle_picks)
-            if current_cycle_picks and current_pick_age_days is not None and current_pick_age_days <= max_pick_age_days:
-                picks_csv = current_cycle_csv
-                picks = current_cycle_picks
-                latest_entry_day = current_entry_day
-                pick_age_days = current_pick_age_days
-                stale_guard_triggered = False
+        if current_cycle_picks and current_pick_age_days is not None and current_pick_age_days <= max_pick_age_days:
+            picks_csv = current_cycle_csv if current_cycle_csv is not None else picks_csv
+            picks = current_cycle_picks
+            latest_entry_day = current_entry_day
+            pick_age_days = current_pick_age_days
+            stale_guard_triggered = False
     if stale_guard_triggered and not refreshed_recently:
         print(
             json.dumps(
@@ -594,8 +655,17 @@ def main() -> int:
     # Select only picks not blocked by earnings, up to max_positions
     selected = [] if no_current_cycle else [p for p in picks if p.ticker not in earnings_blocked][:max_positions]
     selected_symbols = {p.ticker for p in selected}
-    stale_symbols = sorted(sym for sym in current_positions.keys() if sym not in selected_symbols)
-    stale_order_symbols = sorted(sym for sym in pending_buy_orders.keys() if sym not in selected_symbols)
+    intraday_managed_symbols = _load_intraday_managed_symbols()
+    protected_intraday_symbols = sorted(sym for sym in current_positions.keys() if sym in intraday_managed_symbols)
+    protected_intraday_orders = sorted(sym for sym in pending_buy_orders.keys() if sym in intraday_managed_symbols)
+    stale_symbols = sorted(
+        sym for sym in current_positions.keys()
+        if sym not in selected_symbols and sym not in intraday_managed_symbols
+    )
+    stale_order_symbols = sorted(
+        sym for sym in pending_buy_orders.keys()
+        if sym not in selected_symbols and sym not in intraday_managed_symbols
+    )
     hold_symbols = sorted(sym for sym in occupied_symbols if sym in selected_symbols)
     new_buy_symbols = [p.ticker for p in selected if p.ticker not in occupied_symbols]
     per_position_notional = (
@@ -656,6 +726,9 @@ def main() -> int:
             }
             for sym, pos in sorted(current_positions.items())
         ],
+        "intraday_managed_symbols": sorted(intraday_managed_symbols),
+        "protected_intraday_positions": protected_intraday_symbols,
+        "protected_intraday_pending_orders": protected_intraday_orders,
         "stale_positions": stale_symbols,
         "stale_pending_orders": stale_order_symbols,
         "hold_positions": hold_symbols,

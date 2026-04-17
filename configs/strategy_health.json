@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-04-08T07:55:00+00:00",
-  "run_dir": "mixed_baseline_plus_live_promotion_guard_20260408",
+  "timestamp": "2026-04-17T07:25:00+00:00",
+  "run_dir": "live_allocator_reconcile_20260417",
   "strategies": {
     "alt_inplay_breakdown_v1": {
       "status": "WATCH",
@@ -81,7 +81,7 @@
       "notes": "Not promoted to live allocator."
     },
     "alt_range_scalp_v1": {
-      "status": "PAUSE",
+      "status": "OK",
       "total_pnl": 0.0,
       "rolling_30d_pnl": 0.0,
       "rolling_60d_pnl": 0.0,
@@ -91,7 +91,7 @@
       "winrate_total": 0.0,
       "winrate_30d": 0.0,
       "pf_30d": 0.0,
-      "notes": "Research only; solo promise but not validated as live sleeve."
+      "notes": "Promoted live sleeve; allocator should no longer treat ARS1 as research-only."
     },
     "alt_support_bounce_v1": {
       "status": "PAUSE",
@@ -104,7 +104,7 @@
       "winrate_total": 0.0,
       "winrate_30d": 0.0,
       "pf_30d": 0.0,
-      "notes": "Bull sleeve not yet validated."
+      "notes": "Bull-only sleeve; keep paused until bull regime activation and dedicated validation pass."
     },
     "pump_fade_v2": {
       "status": "PAUSE",
@@ -120,6 +120,71 @@
       "notes": "Research only; not promoted to live allocator."
     },
     "elder_triple_screen_v2": {
+      "status": "OK",
+      "total_pnl": 0.0,
+      "rolling_30d_pnl": 0.0,
+      "rolling_60d_pnl": 0.0,
+      "curve_vs_ma20": 0.0,
+      "trades_total": 0,
+      "trades_30d": 0,
+      "winrate_total": 0.0,
+      "winrate_30d": 0.0,
+      "pf_30d": 0.0,
+      "notes": "WF-22 shorts-only validation passed; promoted to live canary at 0.40x. Volume-filter follow-up stays a separate research task."
+    },
+    "alt_trendline_touch_v1": {
+      "status": "OK",
+      "total_pnl": 0.0,
+      "rolling_30d_pnl": 0.0,
+      "rolling_60d_pnl": 0.0,
+      "curve_vs_ma20": 0.0,
+      "trades_total": 0,
+      "trades_30d": 0,
+      "winrate_total": 0.0,
+      "winrate_30d": 0.0,
+      "pf_30d": 0.0,
+      "notes": "Live ATT1 sleeve; explicit health entry added to remove stale missing->WATCH allocator drift."
+    },
+    "alt_slope_break_v1": {
+      "status": "OK",
+      "total_pnl": 0.0,
+      "rolling_30d_pnl": 0.0,
+      "rolling_60d_pnl": 0.0,
+      "curve_vs_ma20": 0.0,
+      "trades_total": 0,
+      "trades_30d": 0,
+      "winrate_total": 0.0,
+      "winrate_30d": 0.0,
+      "pf_30d": 0.0,
+      "notes": "Live ASB1 short sleeve; explicit health entry added to align allocator with current deployment."
+    },
+    "alt_horizontal_break_v1": {
+      "status": "OK",
+      "total_pnl": 0.0,
+      "rolling_30d_pnl": 0.0,
+      "rolling_60d_pnl": 0.0,
+      "curve_vs_ma20": 0.0,
+      "trades_total": 0,
+      "trades_30d": 0,
+      "winrate_total": 0.0,
+      "winrate_30d": 0.0,
+      "pf_30d": 0.0,
+      "notes": "Live HZBO1 short sleeve; explicit health entry added to align allocator with current deployment."
+    },
+    "alt_sloped_momentum_v1": {
+      "status": "PAUSE",
+      "total_pnl": 0.0,
+      "rolling_30d_pnl": 0.0,
+      "rolling_60d_pnl": 0.0,
+      "curve_vs_ma20": 0.0,
+      "trades_total": 0,
+      "trades_30d": 0,
+      "winrate_total": 0.0,
+      "winrate_30d": 0.0,
+      "pf_30d": 0.0,
+      "notes": "Not part of the current live package; keep paused until a fresh annual/WF promotion pass exists."
+    },
+    "btc_eth_midterm_v3": {
       "status": "WATCH",
       "total_pnl": 0.0,
       "rolling_30d_pnl": 0.0,
@@ -130,7 +195,20 @@
       "winrate_total": 0.0,
       "winrate_30d": 0.0,
       "pf_30d": 0.0,
-      "notes": "WF-22 shorts-only validation passed; promoted to live allocator at 0.40x while monitoring current-month drift."
+      "notes": "Server BTC+ETH 365d validation on 2026-04-17 passed the minimum gate only in macd_shorts mode (31 trades, PF 1.115). Keep WATCH until canary decision."
+    },
+    "impulse_volume_breakout_v1": {
+      "status": "PAUSE",
+      "total_pnl": 0.0,
+      "rolling_30d_pnl": 0.0,
+      "rolling_60d_pnl": 0.0,
+      "curve_vs_ma20": 0.0,
+      "trades_total": 0,
+      "trades_30d": 0,
+      "winrate_total": 0.0,
+      "winrate_30d": 0.0,
+      "pf_30d": 0.0,
+      "notes": "WF-22 validation still pending after RR/SL repair; keep paused until annual and walk-forward gates are met."
     },
     "alt_vwap_mean_reversion_v1": {
       "status": "PAUSE",
@@ -147,5 +225,5 @@
     }
   },
   "paused_strategies": [],
-  "overall_health": "WATCH"
+  "overall_health": "OK"
 }

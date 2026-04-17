@@ -27,4 +27,16 @@ if [[ $# -eq 0 ]]; then
   set -- --once
 fi
 
-python3 scripts/equities_alpaca_intraday_bridge.py --live "$@"
+MODE_SET=0
+for arg in "$@"; do
+  if [[ "$arg" == "--dry-run" || "$arg" == "--live" ]]; then
+    MODE_SET=1
+    break
+  fi
+done
+
+if [[ "$MODE_SET" -eq 0 ]]; then
+  set -- --live "$@"
+fi
+
+python3 scripts/equities_alpaca_intraday_bridge.py "$@"

@@ -80,6 +80,33 @@ Order of work:
   - `/chart_ai` exists in code
   - server-side image analysis still needs an image-capable API key
 
+## Current Checkpoint - 2026-04-17
+
+- The live crypto server is deployed and trading under `systemd`, with allocator/router/orchestrator hot-reload and circuit-breaker wiring already in place.
+- The most recent live control-plane inconsistency is no longer missing code on server; it is stale strategy-health truth versus the actually deployed sleeves.
+- `midterm_v3` now has a real server-side annual readout on `BTCUSDT,ETHUSDT`:
+  - `macd_shorts`: `31` trades, PF `1.115` -> minimal canary pass
+  - `macd_rsi`: PF `0.509` -> reject
+  - legacy `v1` compare still stronger at PF `1.279`
+- Alpaca paper is no longer "pending infrastructure": both branches are running on the shared demo account, monthly now protects intraday-managed positions, and the first manual monthly autopilot run has already submitted `AMD` + `AMZN` paper orders.
+- The allocator can still show `degraded`, but there are now two different reasons and they must not be confused:
+  - fake/stale `WATCH` statuses from an outdated `strategy_health.json`
+  - real portfolio overlap haircut when too many sleeves trade the same coins at once
+- Immediate objective is not "invent more strategies", but restore truthful allocator health first, then run the next promotion queue on a stable live base.
+- `IVB1` walk-forward needs the repaired harness, not another false rejection: the first all-timeout result was caused by a hard-coded `300s` subprocess limit in `run_generic_wf.py`, which is now replaced by a configurable timeout for slow-but-valid windows.
+
+### Next 72h
+
+1. Reconcile `strategy_health.json` with the actually deployed live sleeves and rebuild allocator state on server.
+2. Confirm allocator degradation, if still present, is only the intentional overlap haircut and not stale/missing health drift.
+3. Decide whether `btc_eth_midterm_v3` deserves a small live canary or another repair pass before activation.
+4. Run the next required server validations:
+   - `elder_triple_screen_v2` volume filter
+   - `impulse_volume_breakout_v1` WF-22
+   - `triple_screen_v132` WF-22
+5. Keep Alpaca paper under observation for one month, but do not wait passively: track fills/PnL while monthly and intraday coexist on the shared demo account.
+6. Only after allocator truth is clean and `IVB1/TS132` have honest reads, open the full-year portfolio pass for the whole crypto stack.
+
 ## Source of Truth
 
 Only the following result classes may drive decisions:
@@ -1063,4 +1090,3 @@ bash scripts/codex_deploy_20260416.sh
 ```
 
 Скрипт выполняет 8 шагов: git pull → fix DEGRADED → patch env → syntax check → restart bot → verify init → start orchestrator → status report.
-

@@ -101,6 +101,7 @@ FILES=(
   "scripts/build_strategy_health_timeline.py"
   "scripts/evaluate_crypto_promotion.py"
   "scripts/run_midterm_v3_backtest.sh"
+  "scripts/run_generic_wf.py"
   "scripts/setup_server_crons.sh"
   "backtest/run_portfolio.py"
   "tests/smoke_test.py"

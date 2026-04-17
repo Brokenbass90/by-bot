@@ -58,7 +58,7 @@ def _build_windows(end: dt.date, total: int, window: int, step: int) -> List[dt.
 
 
 def _run_window(args: Tuple) -> Optional[Dict]:
-    strategy_name, symbols, end_date_str, window_days, tag_prefix, extra_env = args
+    strategy_name, symbols, end_date_str, window_days, tag_prefix, extra_env, timeout_sec = args
 
     tag = f"{tag_prefix}_{end_date_str.replace('-', '')}"
     env = os.environ.copy()
@@ -82,10 +82,16 @@ def _run_window(args: Tuple) -> Optional[Dict]:
 
     try:
         r = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=300, env=env, cwd=str(ROOT)
+            cmd, capture_output=True, text=True, timeout=timeout_sec, env=env, cwd=str(ROOT)
         )
     except subprocess.TimeoutExpired:
-        return {"end": end_date_str, "pf": None, "trades": 0, "net": None, "status": "TIMEOUT"}
+        return {
+            "end": end_date_str,
+            "pf": None,
+            "trades": 0,
+            "net": None,
+            "status": f"TIMEOUT>{timeout_sec}s",
+        }
 
     for line in r.stdout.splitlines():
         if "summary:" in line:
@@ -157,6 +163,7 @@ def main() -> None:
     ap.add_argument("--window_days", type=int, default=45)
     ap.add_argument("--step_days", type=int, default=15)
     ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument("--timeout_sec", type=int, default=int(os.getenv("WF_TIMEOUT_SEC", "900") or 900))
     ap.add_argument(
         "--extra_env",
         nargs="*",
@@ -180,7 +187,15 @@ def main() -> None:
         print(f"Extra env: {extra_env}")
 
     tasks = [
-        (args.strategy, args.symbols, w.strftime("%Y-%m-%d"), args.window_days, args.tag, extra_env)
+        (
+            args.strategy,
+            args.symbols,
+            w.strftime("%Y-%m-%d"),
+            args.window_days,
+            args.tag,
+            extra_env,
+            args.timeout_sec,
+        )
         for w in windows
     ]
 
