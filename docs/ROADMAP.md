@@ -89,23 +89,21 @@ Order of work:
   - `macd_rsi`: PF `0.509` -> reject
   - legacy `v1` compare still stronger at PF `1.279`
 - Alpaca paper is no longer "pending infrastructure": both branches are running on the shared demo account, monthly now protects intraday-managed positions, and the first manual monthly autopilot run has already submitted `AMD` + `AMZN` paper orders.
+- Alpaca operator truth is now aligned with the live paper config: the monthly snapshot reports the real `500 USD` override and `150 USD` per-position sizing for the strengthened `AMD/AMZN/BAC` cycle instead of stale zeroes.
 - The allocator can still show `degraded`, but there are now two different reasons and they must not be confused:
   - fake/stale `WATCH` statuses from an outdated `strategy_health.json`
   - real portfolio overlap haircut when too many sleeves trade the same coins at once
+- `Elder` is no longer a live candidate in its current implementation. Server retests failed in both `2024` and `2023`, so it has been moved back to research-only and removed from the allocator live set.
+- `btc_eth_midterm_short_v1` is no longer blocked by backtest tooling: the portfolio engine now supports `1440m` aggregation and the annual + WF queue is running again on the repaired harness.
 - Immediate objective is not "invent more strategies", but restore truthful allocator health first, then run the next promotion queue on a stable live base.
 - `IVB1` walk-forward needs the repaired harness, not another false rejection: the first all-timeout result was caused by a hard-coded `300s` subprocess limit in `run_generic_wf.py`, which is now replaced by a configurable timeout for slow-but-valid windows.
 
 ### Next 72h
 
-1. Reconcile `strategy_health.json` with the actually deployed live sleeves and rebuild allocator state on server.
-2. Confirm allocator degradation, if still present, is only the intentional overlap haircut and not stale/missing health drift.
-3. Decide whether `btc_eth_midterm_v3` deserves a small live canary or another repair pass before activation.
-4. Run the next required server validations:
-   - `elder_triple_screen_v2` volume filter
-   - `impulse_volume_breakout_v1` WF-22
-   - `triple_screen_v132` WF-22
-5. Keep Alpaca paper under observation for one month, but do not wait passively: track fills/PnL while monthly and intraday coexist on the shared demo account.
-6. Only after allocator truth is clean and `IVB1/TS132` have honest reads, open the full-year portfolio pass for the whole crypto stack.
+1. Let the repaired `btc_eth_midterm_short_v1` annual + WF queue finish and decide whether it deserves promotion work.
+2. Open `TS132 WF-22` once the midterm short slot frees up, then move to the first aggregated annual pass for the current crypto portfolio.
+3. Keep Alpaca paper under observation for one month, but do not wait passively: track fills/PnL while monthly and intraday coexist on the shared demo account.
+4. Only after `midterm_short_v1` and `TS132` have honest reads, open the full-year portfolio pass for the whole crypto stack.
 
 ## Source of Truth
 

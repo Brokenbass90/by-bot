@@ -16,6 +16,7 @@ import os
 import time
 import sqlite3
 import tempfile
+import json
 
 # ── Path setup ────────────────────────────────────────────────────────────────
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -509,6 +510,78 @@ def test_trade_reporting_breakdown():
     print("  ✓ trade_reporting strategy breakdown")
 
 
+def test_backtest_store_supports_daily_interval():
+    from backtest.engine import Candle, KlineStore
+
+    candles = []
+    ts0 = 1700000000000
+    for i in range(24 * 12 * 2):  # 2 full days of 5m candles
+        px = 100.0 + i * 0.01
+        candles.append(Candle(ts=ts0 + i * 300_000, o=px, h=px + 0.1, l=px - 0.1, c=px + 0.02, v=1.0))
+
+    store = KlineStore("BTCUSDT", candles, base_interval_min=5)
+    store.set_index(len(candles) - 1)
+    rows = store.fetch_klines("BTCUSDT", "1440", 2)
+    assert len(rows) >= 1, "daily interval should be available from 5m base candles"
+
+    print("  ✓ backtest.engine KlineStore supports 1440m aggregation")
+
+
+def test_operator_snapshot_alpaca_monthly_fallback():
+    from pathlib import Path
+    from bot.operator_snapshot import build_operator_snapshot
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        root = Path(tmpdir)
+        monthly = root / "runtime" / "equities_monthly_v36"
+        intraday = root / "runtime" / "equities_intraday_dynamic_v1"
+        operator = root / "runtime" / "operator"
+        monthly.mkdir(parents=True, exist_ok=True)
+        intraday.mkdir(parents=True, exist_ok=True)
+        operator.mkdir(parents=True, exist_ok=True)
+
+        (monthly / "current_cycle_summary.csv").write_text(
+            "mode,selected,latest_pick_month,latest_entry_day,latest_entry_age_days,tickers,top_n\n"
+            "current_cycle,3,2026-04,2026-04-16,0,AMD;AMZN;BAC,3\n",
+            encoding="utf-8",
+        )
+        (monthly / "current_cycle_picks.csv").write_text(
+            "rank,ticker,score\n1,AMD,1.0\n2,AMZN,0.8\n3,BAC,0.7\n",
+            encoding="utf-8",
+        )
+        (monthly / "latest_refresh.env").write_text(
+            "ALPACA_REFRESH_UTC=2026-04-17T11:41:44Z\n",
+            encoding="utf-8",
+        )
+        (monthly / "latest_summary.csv").write_text(
+            "profit_factor,compounded_return_pct,max_monthly_dd_pct\n4.5,71.0,-4.7\n",
+            encoding="utf-8",
+        )
+        configs = root / "configs"
+        configs.mkdir(parents=True, exist_ok=True)
+        (configs / "alpaca_paper_local.env").write_text(
+            "ALPACA_CAPITAL_OVERRIDE_USD=500\nALPACA_TARGET_ALLOC_PCT=0.90\n",
+            encoding="utf-8",
+        )
+        (intraday / "latest_advisory.json").write_text(
+            json.dumps({
+                "mode": "LIVE_PAPER",
+                "account": {"equity": 1000, "cash": 800},
+                "watchlist": ["AMD", "NVDA"],
+            }),
+            encoding="utf-8",
+        )
+
+        snapshot = build_operator_snapshot(root)
+        monthly_block = snapshot["alpaca"]["monthly"]
+        assert monthly_block["current_cycle_selected"] == 3
+        assert monthly_block["effective_capital"] == 500.0
+        assert monthly_block["per_position_notional"] == 150.0
+        assert monthly_block["selected_symbols"] == ["AMD", "AMZN", "BAC"]
+
+    print("  ✓ operator_snapshot Alpaca monthly fallback uses runtime/env truth")
+
+
 def test_overlay_handlers_cover_live_sleeves():
     bot_path = os.path.join(_ROOT, "smart_pump_reversal_bot.py")
     with open(bot_path, "r", encoding="utf-8") as fh:
@@ -565,6 +638,8 @@ if __name__ == "__main__":
         test_midterm_v3_legacy_hist_sign,
         test_allocator_missing_health_watch,
         test_trade_reporting_breakdown,
+        test_backtest_store_supports_daily_interval,
+        test_operator_snapshot_alpaca_monthly_fallback,
         test_overlay_handlers_cover_live_sleeves,
     ]
     print(f"\n{'─' * 55}")

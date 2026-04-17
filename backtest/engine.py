@@ -104,11 +104,13 @@ class KlineStore:
         self.c15 = aggregate_candles_to_interval(candles_5m, 15)
         self.c1h = aggregate_candles_to_interval(candles_5m, 60)
         self.c4h = aggregate_candles_to_interval(candles_5m, 240)
+        self.c1d = aggregate_candles_to_interval(candles_5m, 1440)
         self._interval_map: Dict[str, Tuple[int, List[Candle], List[int]]] = {
             "5": (5, self.c5, [int(c.ts) for c in self.c5]),
             "15": (15, self.c15, [int(c.ts) for c in self.c15]),
             "60": (60, self.c1h, [int(c.ts) for c in self.c1h]),
             "240": (240, self.c4h, [int(c.ts) for c in self.c4h]),
+            "1440": (1440, self.c1d, [int(c.ts) for c in self.c1d]),
         }
         if self.base_interval_min == 1:
             self._interval_map["1"] = (1, self.c1, [int(c.ts) for c in self.c1])
@@ -154,7 +156,7 @@ class KlineStore:
     def _slice(self, interval: str, limit: int) -> List[Candle]:
         meta = self._interval_map.get(str(interval))
         if meta is None:
-            raise ValueError(f"Unsupported interval {interval}; expected 1/3/5/15/60/240")
+            raise ValueError(f"Unsupported interval {interval}; expected 1/3/5/15/60/240/1440")
         interval_min, arr, arr_ts = meta
         end = self._completed_end(interval_min, arr, arr_ts)
         if end <= 0:

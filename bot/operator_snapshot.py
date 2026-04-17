@@ -374,12 +374,26 @@ def _self_audit_block(root: Path) -> Dict[str, Any]:
 
 
 def _alpaca_block(root: Path) -> Dict[str, Any]:
-    monthly_dir = root / "runtime" / "equities_monthly_v36"
+    monthly_candidates = [
+        root / "runtime" / "equities_monthly_v36",
+        root / "runtime" / "equities_monthly",
+    ]
+    monthly_dir = monthly_candidates[0]
+    for candidate in monthly_candidates:
+        if (candidate / "current_cycle_summary.csv").exists():
+            monthly_dir = candidate
+            break
+    else:
+        for candidate in monthly_candidates:
+            if (candidate / "latest_refresh.env").exists() or (candidate / "latest_summary.csv").exists():
+                monthly_dir = candidate
+                break
     monthly_cycle_summary = _load_csv_rows(monthly_dir / "current_cycle_summary.csv")
     monthly_cycle_picks = _load_csv_rows(monthly_dir / "current_cycle_picks.csv")
     monthly_latest_advisory = _load_json(monthly_dir / "latest_advisory.json", {})
     monthly_latest_summary = _load_csv_rows(monthly_dir / "latest_summary.csv")
     monthly_refresh_env = _load_env_map(monthly_dir / "latest_refresh.env")
+    monthly_config_env = _load_env_map(root / "configs" / "alpaca_paper_local.env")
 
     monthly_cycle = monthly_cycle_summary[0] if monthly_cycle_summary else {}
     monthly_metrics = monthly_latest_summary[0] if monthly_latest_summary else {}
@@ -397,13 +411,20 @@ def _alpaca_block(root: Path) -> Dict[str, Any]:
     if monthly_capital <= 0:
         monthly_capital = _safe_float(
             monthly_refresh_env.get("ALPACA_CAPITAL_OVERRIDE_USD")
-            or monthly_refresh_env.get("CAPITAL_OVERRIDE_USD"),
+            or monthly_refresh_env.get("CAPITAL_OVERRIDE_USD")
+            or monthly_config_env.get("ALPACA_CAPITAL_OVERRIDE_USD")
+            or monthly_config_env.get("CAPITAL_OVERRIDE_USD"),
             0.0,
         )
     monthly_per_position = _safe_float(monthly_report.get("per_position_notional"), 0.0)
     if monthly_per_position <= 0 and monthly_capital > 0:
         top_n = max(1, _safe_int(monthly_cycle.get("top_n"), 0))
-        monthly_per_position = round(monthly_capital * 0.675 / top_n, 2)
+        target_alloc_pct = _safe_float(monthly_refresh_env.get("ALPACA_TARGET_ALLOC_PCT"), 0.0)
+        if target_alloc_pct <= 0:
+            target_alloc_pct = _safe_float(monthly_config_env.get("ALPACA_TARGET_ALLOC_PCT"), 0.0)
+        if target_alloc_pct <= 0:
+            target_alloc_pct = 0.675
+        monthly_per_position = round(monthly_capital * target_alloc_pct / top_n, 2)
 
     intraday_dir = root / "runtime" / "equities_intraday_dynamic_v1"
     intraday_advisory = _load_json(intraday_dir / "latest_advisory.json", {})

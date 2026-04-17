@@ -120,7 +120,7 @@
       "notes": "Research only; not promoted to live allocator."
     },
     "elder_triple_screen_v2": {
-      "status": "OK",
+      "status": "PAUSE",
       "total_pnl": 0.0,
       "rolling_30d_pnl": 0.0,
       "rolling_60d_pnl": 0.0,
@@ -130,7 +130,7 @@
       "winrate_total": 0.0,
       "winrate_30d": 0.0,
       "pf_30d": 0.0,
-      "notes": "WF-22 shorts-only validation passed; promoted to live canary at 0.40x. Volume-filter follow-up stays a separate research task."
+      "notes": "Paused after server retests failed in both 2024 and 2023. Keep out of live allocator until the strategy is materially rewritten."
     },
     "alt_trendline_touch_v1": {
       "status": "OK",
