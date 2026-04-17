@@ -409,18 +409,57 @@ def _tg(token: str, chat_id: str, msg: str) -> None:
 
 
 def _load_monthly_managed_symbols() -> set[str]:
+    """Return the set of symbols owned by the monthly Alpaca sleeve.
+
+    Checks multiple paths so the protection works regardless of which
+    runtime directory the monthly autopilot is using.  Also honours the
+    explicit ``INTRADAY_PROTECT_SYMBOLS`` env var as a hard override —
+    set it to a comma-separated list to always protect those symbols even
+    if no CSV is found.
+    """
     symbols: set[str] = set()
-    csv_path = MONTHLY_RUNTIME_DIR / "current_cycle_picks.csv"
-    if not csv_path.exists():
-        return symbols
-    try:
-        with csv_path.open(newline="", encoding="utf-8") as f:
-            for row in csv.DictReader(f):
-                sym = str(row.get("ticker") or "").strip().upper()
-                if sym:
-                    symbols.add(sym)
-    except Exception:
-        return set()
+
+    # 1. Explicit hard-override (highest priority, never fails silently)
+    explicit = os.getenv("INTRADAY_PROTECT_SYMBOLS", "")
+    for tok in str(explicit).replace(";", ",").split(","):
+        s = tok.strip().upper()
+        if s:
+            symbols.add(s)
+
+    # 2. Env-specified current-cycle CSV
+    explicit_csv = os.getenv("ALPACA_CURRENT_CYCLE_PICKS_CSV", "")
+    if explicit_csv:
+        candidate_paths = [Path(explicit_csv)]
+    else:
+        candidate_paths = []
+
+    # 3. Known runtime dirs (check all of them)
+    for env_key in ("ALPACA_AUTOPILOT_RUNTIME_DIR", "EQ_V35_RUNTIME_DIR", "EQ_BASELINE_RUNTIME_DIR"):
+        raw = os.getenv(env_key, "")
+        if raw:
+            candidate_paths.append(Path(raw) / "current_cycle_picks.csv")
+
+    # 4. Hardcoded default
+    candidate_paths.append(MONTHLY_RUNTIME_DIR / "current_cycle_picks.csv")
+
+    # 5. Walk up from ROOT looking for any runtime/equities_monthly* dir
+    for d in sorted(ROOT.glob("runtime/equities_monthly*")):
+        if d.is_dir():
+            candidate_paths.append(d / "current_cycle_picks.csv")
+
+    for csv_path in candidate_paths:
+        if not csv_path.exists():
+            continue
+        try:
+            with csv_path.open(newline="", encoding="utf-8") as f:
+                for row in csv.DictReader(f):
+                    sym = str(row.get("ticker") or "").strip().upper()
+                    if sym:
+                        symbols.add(sym)
+            break  # Use the first CSV that loads successfully
+        except Exception:
+            continue
+
     return symbols
 
 
