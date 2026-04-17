@@ -227,7 +227,12 @@ PORTFOLIO_ALLOCATOR_MAX_AGE_SEC = max(
 PORTFOLIO_ALLOCATOR_ALERT_COOLDOWN_SEC = max(
     300, int(os.getenv("PORTFOLIO_ALLOCATOR_ALERT_COOLDOWN_SEC", "1800") or 1800)
 )
+PORTFOLIO_ALLOCATOR_REPEAT_ALERT_SEC = max(
+    PORTFOLIO_ALLOCATOR_ALERT_COOLDOWN_SEC,
+    int(os.getenv("PORTFOLIO_ALLOCATOR_REPEAT_ALERT_SEC", "21600") or 21600),
+)
 PORTFOLIO_ALLOCATOR_LAST_ALERT_TS = 0
+PORTFOLIO_ALLOCATOR_LAST_ALERT_FINGERPRINT = ""
 PORTFOLIO_ALLOCATOR_LAST_MTIME = 0.0
 PORTFOLIO_ALLOCATOR_LAST_APPLY_TS = 0
 PORTFOLIO_ALLOCATOR_LAST_STATUS = str(os.getenv("PORTFOLIO_ALLOCATOR_STATUS", "") or "").strip()
@@ -2034,6 +2039,11 @@ DEEPSEEK_OPERATOR_MSG_MAX_CHARS = max(300, int(os.getenv("DEEPSEEK_OPERATOR_MSG_
 TRADE_CHARTS_ENABLE = os.getenv("TRADE_CHARTS_ENABLE", "1").strip() == "1"
 TRADE_CHARTS_SEND_ON_ENTRY = os.getenv("TRADE_CHARTS_SEND_ON_ENTRY", "1").strip() == "1"
 TRADE_CHARTS_SEND_ON_CLOSE = os.getenv("TRADE_CHARTS_SEND_ON_CLOSE", "1").strip() == "1"
+
+# Big-loss alert threshold — sends a distinct 🚨 Telegram alert when a single
+# trade closes with a realized loss exceeding this amount in USDT.
+# Set BIG_LOSS_ALERT_USD=0 to disable.
+BIG_LOSS_ALERT_USD = float(os.getenv("BIG_LOSS_ALERT_USD", "40"))
 TRADE_CHARTS_PAD_BARS = int(os.getenv("TRADE_CHARTS_PAD_BARS", "80"))
 TRADE_CHARTS_OUT_DIR = os.getenv("TRADE_CHARTS_OUT_DIR", "/tmp/bybot_trade_charts").strip() or "/tmp/bybot_trade_charts"
 
@@ -2467,6 +2477,40 @@ def _deepseek_local_regime_hint() -> dict[str, Any]:
     }
 
 
+def _midterm_live_strategy_name() -> str:
+    version = str(os.getenv("MTPB_VERSION", "3") or "3").strip()
+    if version == "3":
+        return "btc_eth_midterm_v3"
+    if version == "2":
+        return "btc_eth_midterm_pullback_v2"
+    return "btc_eth_midterm_pullback"
+
+
+def _current_live_candidate_strategy_names() -> list[str]:
+    out: list[str] = []
+    candidates = [
+        (ENABLE_BREAKOUT_TRADING, "inplay_breakout"),
+        (ENABLE_MIDTERM_TRADING, _midterm_live_strategy_name()),
+        (ENABLE_SLOPED_TRADING, "alt_sloped_channel_v1"),
+        (ENABLE_ATT1_TRADING, "alt_trendline_touch_v1"),
+        (ENABLE_ASB1_TRADING, "alt_slope_break_v1"),
+        (ENABLE_HZBO1_TRADING, "alt_horizontal_break_v1"),
+        (ENABLE_BOUNCE1_TRADING, "alt_support_bounce_v1"),
+        (ENABLE_ASM1_TRADING, "alt_sloped_momentum_v1"),
+        (ENABLE_FLAT_TRADING, "alt_resistance_fade_v1"),
+        (ENABLE_BREAKDOWN_TRADING, "alt_inplay_breakdown_v1"),
+        (ENABLE_IVB1_TRADING, "impulse_volume_breakout_v1"),
+        (ENABLE_ELDER_TRADING, "elder_triple_screen_v2"),
+        (ENABLE_TS132_TRADING, "triple_screen_v132"),
+        (ENABLE_PUMP_FADE_TRADING, "pump_fade_v2"),
+        (ENABLE_RANGE_TRADING, "alt_range_scalp_v1"),
+    ]
+    for enabled, strategy_name in candidates:
+        if enabled:
+            out.append(str(strategy_name))
+    return out
+
+
 def _deepseek_snapshot() -> dict[str, Any]:
     return {
         "ts_utc": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
@@ -2484,6 +2528,9 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "midterm": bool(ENABLE_MIDTERM_TRADING),
             "sloped": bool(ENABLE_SLOPED_TRADING),
             "att1": bool(ENABLE_ATT1_TRADING),
+            "asb1": bool(ENABLE_ASB1_TRADING),
+            "hzbo1": bool(ENABLE_HZBO1_TRADING),
+            "bounce1": bool(ENABLE_BOUNCE1_TRADING),
             "asm1": bool(ENABLE_ASM1_TRADING),
             "flat": bool(ENABLE_FLAT_TRADING),
             "breakdown": bool(ENABLE_BREAKDOWN_TRADING),
@@ -2509,6 +2556,17 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "breakout_ns_dist": int(_diag_get_int("breakout_ns_dist")),
             "midterm_try": int(_diag_get_int("midterm_try")),
             "midterm_entry": int(_diag_get_int("midterm_entry")),
+            "att1_try": int(_diag_get_int("att1_try")),
+            "att1_entry": int(_diag_get_int("att1_entry")),
+            "asb1_try": int(_diag_get_int("asb1_try")),
+            "asb1_no_signal": int(_diag_get_int("asb1_no_signal")),
+            "asb1_entry": int(_diag_get_int("asb1_entry")),
+            "hzbo1_try": int(_diag_get_int("hzbo1_try")),
+            "hzbo1_no_signal": int(_diag_get_int("hzbo1_no_signal")),
+            "hzbo1_entry": int(_diag_get_int("hzbo1_entry")),
+            "bounce1_try": int(_diag_get_int("bounce1_try")),
+            "bounce1_no_signal": int(_diag_get_int("bounce1_no_signal")),
+            "bounce1_entry": int(_diag_get_int("bounce1_entry")),
             "sloped_try": int(_diag_get_int("sloped_try")),
             "sloped_entry": int(_diag_get_int("sloped_entry")),
             "flat_try": int(_diag_get_int("flat_try")),
@@ -2544,28 +2602,39 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "BT_BREAKOUT_QUALITY_MIN_SCORE": os.getenv("BT_BREAKOUT_QUALITY_MIN_SCORE", ""),
             "RISK_PER_TRADE_PCT": os.getenv("RISK_PER_TRADE_PCT", ""),
             "SLOPED_RISK_MULT": os.getenv("SLOPED_RISK_MULT", ""),
+            "ATT1_RISK_MULT": os.getenv("ATT1_RISK_MULT", ""),
+            "ATT1_SYMBOL_ALLOWLIST": os.getenv("ATT1_SYMBOL_ALLOWLIST", ""),
+            "ASB1_RISK_MULT": os.getenv("ASB1_RISK_MULT", ""),
+            "ASB1_SYMBOL_ALLOWLIST": os.getenv("ASB1_SYMBOL_ALLOWLIST", ""),
+            "HZBO1_RISK_MULT": os.getenv("HZBO1_RISK_MULT", ""),
+            "HZBO1_SYMBOL_ALLOWLIST": os.getenv("HZBO1_SYMBOL_ALLOWLIST", ""),
+            "BOUNCE1_RISK_MULT": os.getenv("BOUNCE1_RISK_MULT", ""),
+            "BOUNCE1_SYMBOL_ALLOWLIST": os.getenv("BOUNCE1_SYMBOL_ALLOWLIST", ""),
             "FLAT_RISK_MULT": os.getenv("FLAT_RISK_MULT", ""),
             "IVB1_RISK_MULT": os.getenv("IVB1_RISK_MULT", ""),
             "IVB1_REGIME_MODE": os.getenv("IVB1_REGIME_MODE", ""),
             "IVB1_SYMBOL_ALLOWLIST": os.getenv("IVB1_SYMBOL_ALLOWLIST", ""),
             "ELDER_RISK_MULT": os.getenv("ELDER_RISK_MULT", ""),
+            "MIDTERM_RISK_MULT": os.getenv("MIDTERM_RISK_MULT", ""),
+            "MTPB_VERSION": os.getenv("MTPB_VERSION", ""),
             "ETS2_SYMBOL_ALLOWLIST": os.getenv("ETS2_SYMBOL_ALLOWLIST", ""),
             "ETS2_OSC_OS": os.getenv("ETS2_OSC_OS", ""),
             "ETS2_OSC_OB": os.getenv("ETS2_OSC_OB", ""),
             "ETS2_ENTRY_RETEST_BARS": os.getenv("ETS2_ENTRY_RETEST_BARS", ""),
             "ETS2_TP_ATR_MULT": os.getenv("ETS2_TP_ATR_MULT", ""),
+            "CB_ENABLED": os.getenv("CB_ENABLED", ""),
             "DRY_RUN": os.getenv("DRY_RUN", ""),
             "ENABLE_BREAKDOWN_TRADING": os.getenv("ENABLE_BREAKDOWN_TRADING", "0"),
+            "ENABLE_ATT1_TRADING": os.getenv("ENABLE_ATT1_TRADING", "0"),
+            "ENABLE_ASB1_TRADING": os.getenv("ENABLE_ASB1_TRADING", "0"),
+            "ENABLE_HZBO1_TRADING": os.getenv("ENABLE_HZBO1_TRADING", "0"),
+            "ENABLE_BOUNCE1_TRADING": os.getenv("ENABLE_BOUNCE1_TRADING", "0"),
             "ENABLE_IVB1_TRADING": os.getenv("ENABLE_IVB1_TRADING", "0"),
             "ENABLE_ELDER_TRADING": os.getenv("ENABLE_ELDER_TRADING", "0"),
         },
         "system_truth": {
             "current_live_candidate": "foundation_router_health_20260408",
-            "current_live_candidate_strategies": [
-                "alt_resistance_fade_v1",
-                "alt_inplay_breakdown_v1",
-                "impulse_volume_breakout_v1",
-            ],
+            "current_live_candidate_strategies": _current_live_candidate_strategy_names(),
             "tpsl_hard_fail_close": str(os.getenv("TPSL_HARD_FAIL_CLOSE", "0")),
             "tpsl_hard_fail_grace_sec": str(os.getenv("TPSL_HARD_FAIL_GRACE_SEC", "")),
             "router_regime": str(os.getenv("ROUTER_REGIME", "")),
@@ -2649,7 +2718,8 @@ def _status_full_text() -> str:
     lines.append(
         "strategies: "
         f"breakout={ENABLE_BREAKOUT_TRADING}, midterm={ENABLE_MIDTERM_TRADING}, "
-        f"sloped={ENABLE_SLOPED_TRADING}, att1={ENABLE_ATT1_TRADING}, asm1={ENABLE_ASM1_TRADING}, "
+        f"sloped={ENABLE_SLOPED_TRADING}, att1={ENABLE_ATT1_TRADING}, asb1={ENABLE_ASB1_TRADING}, "
+        f"hzbo1={ENABLE_HZBO1_TRADING}, bounce1={ENABLE_BOUNCE1_TRADING}, asm1={ENABLE_ASM1_TRADING}, "
         f"flat={ENABLE_FLAT_TRADING}, "
         f"breakdown={ENABLE_BREAKDOWN_TRADING}, ivb1={ENABLE_IVB1_TRADING}, "
         f"elder={ENABLE_ELDER_TRADING}, ts132={ENABLE_TS132_TRADING}"
@@ -2678,6 +2748,18 @@ def _status_full_text() -> str:
     if ENABLE_SLOPED_TRADING:
         sloped_symbols = sorted(_parse_symbol_csv(os.getenv('ASC1_SYMBOL_ALLOWLIST', '')))
         lines.append(f"sloped-universe: {len(sloped_symbols)} ({_fmt_list_compact(sloped_symbols, 8) if sloped_symbols else 'dynamic'})")
+    if ENABLE_ATT1_TRADING:
+        att1_symbols = sorted(_parse_symbol_csv(os.getenv("ATT1_SYMBOL_ALLOWLIST", "")))
+        lines.append(f"att1-universe: {len(att1_symbols)} ({_fmt_list_compact(att1_symbols, 8) if att1_symbols else 'dynamic'})")
+    if ENABLE_ASB1_TRADING:
+        asb1_symbols = sorted(_parse_symbol_csv(os.getenv("ASB1_SYMBOL_ALLOWLIST", "")))
+        lines.append(f"asb1-universe: {len(asb1_symbols)} ({_fmt_list_compact(asb1_symbols, 8) if asb1_symbols else 'dynamic'})")
+    if ENABLE_HZBO1_TRADING:
+        hzbo1_symbols = sorted(_parse_symbol_csv(os.getenv("HZBO1_SYMBOL_ALLOWLIST", "")))
+        lines.append(f"hzbo1-universe: {len(hzbo1_symbols)} ({_fmt_list_compact(hzbo1_symbols, 8) if hzbo1_symbols else 'dynamic'})")
+    if ENABLE_BOUNCE1_TRADING:
+        bounce1_symbols = sorted(_parse_symbol_csv(os.getenv("BOUNCE1_SYMBOL_ALLOWLIST", "")))
+        lines.append(f"bounce1-universe: {len(bounce1_symbols)} ({_fmt_list_compact(bounce1_symbols, 8) if bounce1_symbols else 'dynamic'})")
     if ENABLE_FLAT_TRADING:
         flat_symbols = sorted(_parse_symbol_csv(os.getenv('ARF1_SYMBOL_ALLOWLIST', '')))
         lines.append(f"flat-universe: {len(flat_symbols)} ({_fmt_list_compact(flat_symbols, 8) if flat_symbols else 'dynamic'})")
@@ -2705,6 +2787,10 @@ def _status_full_text() -> str:
         f"ws={int(_diag_get_int('ws_connect'))}/{int(_diag_get_int('ws_disconnect'))} | "
         f"breakout_try={int(_diag_get_int('breakout_try'))} entry={int(_diag_get_int('breakout_entry'))} | "
         f"midterm_try={int(_diag_get_int('midterm_try'))} entry={int(_diag_get_int('midterm_entry'))} | "
+        f"att1_try={int(_diag_get_int('att1_try'))} entry={int(_diag_get_int('att1_entry'))} | "
+        f"asb1_try={int(_diag_get_int('asb1_try'))} entry={int(_diag_get_int('asb1_entry'))} | "
+        f"hzbo1_try={int(_diag_get_int('hzbo1_try'))} entry={int(_diag_get_int('hzbo1_entry'))} | "
+        f"bounce1_try={int(_diag_get_int('bounce1_try'))} entry={int(_diag_get_int('bounce1_entry'))} | "
         f"sloped_try={int(_diag_get_int('sloped_try'))} | flat_try={int(_diag_get_int('flat_try'))} | "
         f"breakdown_try={int(_diag_get_int('breakdown_try'))} | "
         f"ivb1_try={int(_diag_get_int('ivb1_try'))} entry={int(_diag_get_int('ivb1_entry'))} | "
@@ -4102,6 +4188,10 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
         f"retest={ENABLE_RETEST_TRADING}",
         f"range={ENABLE_RANGE_TRADING}",
         f"sloped={ENABLE_SLOPED_TRADING}",
+        f"att1={ENABLE_ATT1_TRADING}",
+        f"asb1={ENABLE_ASB1_TRADING}",
+        f"hzbo1={ENABLE_HZBO1_TRADING}",
+        f"bounce1={ENABLE_BOUNCE1_TRADING}",
         f"flat={ENABLE_FLAT_TRADING}",
         f"breakdown={ENABLE_BREAKDOWN_TRADING}",
         f"ivb1={ENABLE_IVB1_TRADING}",
@@ -5773,6 +5863,31 @@ def _finalize_and_report_closed(tr, sym: str):
     if hold_txt:
         msg += "\nTiming: " + " | ".join(hold_txt)
     tg_trade(msg)
+
+    # ── Big-loss alert ────────────────────────────────────────────────────────
+    # Separate high-visibility alert when a single trade loses more than the threshold.
+    # The normal CLOSED message above is sent regardless; this is an ADDITIONAL alert.
+    try:
+        _bla_threshold = float(BIG_LOSS_ALERT_USD or 0)
+        _pnl_val = float(pnl_closed or 0.0)
+        if _bla_threshold > 0 and _pnl_val < -_bla_threshold:
+            _strategy = str(getattr(tr, "strategy", "") or "unknown")
+            _hold_sec = 0
+            _fill_ts = int(getattr(tr, "entry_fill_ts", 0) or 0)
+            if _fill_ts > 0:
+                _hold_sec = max(0, int(time.time()) - _fill_ts)
+            _hold_txt = f"{_hold_sec // 3600}h{(_hold_sec % 3600) // 60}m" if _hold_sec else "?"
+            _fee_txt = f" (fees {float(fee_sum or 0):.2f})" if fee_sum else ""
+            _close_r = str(getattr(tr, "close_reason", "") or "").upper()
+            tg_send(
+                f"🚨 BIG LOSS: {sym} [{_strategy}]\n"
+                f"PnL: {_pnl_val:+.4f} USDT{_fee_txt}\n"
+                f"Reason: {_close_r or 'unknown'} | Hold: {_hold_txt}\n"
+                f"CB state: {_get_cb().get_state()}"
+            )
+    except Exception:
+        pass
+
     _append_live_trade_event(
         "close",
         sym,
@@ -6422,6 +6537,15 @@ if ENABLE_BOUNCE1_TRADING:
     except Exception as _e:
         log_error(f"[BOUNCE1] engine init fail: {_e}")
         BOUNCE1_ENGINE = None
+
+# ===== CIRCUIT BREAKER — wire Telegram notifications =====
+# Must be done after tg_send is defined (it's defined above in this file).
+# CB only logs to Python logger by default; set_notify_func() adds Telegram.
+try:
+    _get_cb().set_notify_func(tg_send)
+    print("[CB] Telegram notify wired")
+except Exception as _e:
+    log_error(f"[CB] notify wire fail: {_e}")
 
 # ===== ASM1 ENGINE =====
 if ENABLE_ASM1_TRADING:
@@ -8096,12 +8220,13 @@ async def try_midterm_entry_async(symbol: str, price: float):
         )
         tr.entry_order_id = oid
         tr.status = "PENDING_ENTRY"
-        tr.strategy = "btc_eth_midterm_pullback"
+        midterm_strategy_name = _midterm_live_strategy_name()
+        tr.strategy = midterm_strategy_name
         tr.avg = float(entry)
         tr.entry_price = float(entry)
         tr.entry_notional_usd = float(notional_real)
         tr.ml_features = {
-            "signal": "btc_eth_midterm_pullback",
+            "signal": midterm_strategy_name,
             "stop_pct": float(stop_pct),
             "alloc_mult": float(MIDTERM_NOTIONAL_MULT),
             "regime_alloc_mult": float(alloc_mult),
@@ -11136,7 +11261,7 @@ def _check_regime_overlay_health(*, notify: bool = True) -> bool:
 
 
 def _check_portfolio_allocator_health(*, notify: bool = True) -> bool:
-    global PORTFOLIO_ALLOCATOR_LAST_ALERT_TS
+    global PORTFOLIO_ALLOCATOR_LAST_ALERT_TS, PORTFOLIO_ALLOCATOR_LAST_ALERT_FINGERPRINT
 
     if not PORTFOLIO_ALLOCATOR_ENABLE:
         return True
@@ -11158,12 +11283,44 @@ def _check_portfolio_allocator_health(*, notify: bool = True) -> bool:
         if age_sec > max_age:
             problems.append(f"{label} stale: age={age_sec}s > {max_age}s path={path}")
 
-    if problems and notify and (now - int(PORTFOLIO_ALLOCATOR_LAST_ALERT_TS or 0)) >= int(PORTFOLIO_ALLOCATOR_ALERT_COOLDOWN_SEC):
+    # Also check the actual allocator STATUS from the env file (not just file age).
+    # If the allocator itself reports "degraded" or "safe_mode", alert separately.
+    _alloc_status = ""
+    try:
+        if PORTFOLIO_ALLOCATOR_PATH.exists():
+            for _line in PORTFOLIO_ALLOCATOR_PATH.read_text(encoding="utf-8").splitlines():
+                _line = _line.strip()
+                if _line.startswith("PORTFOLIO_ALLOCATOR_STATUS="):
+                    _alloc_status = _line.split("=", 1)[1].strip().lower()
+                    break
+    except Exception:
+        pass
+    if _alloc_status in ("degraded", "safe_mode") and not problems:
+        # File is fresh but allocator itself is in degraded/safe_mode state
+        problems.append(f"allocator status={_alloc_status} (risk reduced)")
+
+    if not problems:
+        PORTFOLIO_ALLOCATOR_LAST_ALERT_FINGERPRINT = ""
+        return True
+
+    fingerprint = hashlib.sha1(
+        ("|".join([_alloc_status] + problems)).encode("utf-8", errors="ignore")
+    ).hexdigest()
+    should_notify = False
+    if notify:
+        if fingerprint != str(PORTFOLIO_ALLOCATOR_LAST_ALERT_FINGERPRINT or ""):
+            should_notify = True
+        elif (now - int(PORTFOLIO_ALLOCATOR_LAST_ALERT_TS or 0)) >= int(PORTFOLIO_ALLOCATOR_REPEAT_ALERT_SEC):
+            should_notify = True
+
+    if should_notify:
         PORTFOLIO_ALLOCATOR_LAST_ALERT_TS = now
-        msg = "⚠️ Portfolio allocator degraded:\n" + "\n".join(problems[:4])
+        PORTFOLIO_ALLOCATOR_LAST_ALERT_FINGERPRINT = fingerprint
+        emoji = "🔴" if _alloc_status == "safe_mode" else "⚠️"
+        msg = f"{emoji} Portfolio allocator {_alloc_status or 'degraded'}:\n" + "\n".join(problems[:4])
         log_error(msg)
         tg_trade(msg)
-    return not problems
+    return False
 
 
 def _check_router_control_plane_health(*, notify: bool = True) -> bool:
@@ -11202,11 +11359,11 @@ def _check_router_control_plane_health(*, notify: bool = True) -> bool:
 def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
     global ENABLE_IVB1_TRADING, ENABLE_ELDER_TRADING, ENABLE_ATT1_TRADING, ENABLE_ASM1_TRADING
-    global ENABLE_ASB1_TRADING, ENABLE_HZBO1_TRADING
+    global ENABLE_ASB1_TRADING, ENABLE_HZBO1_TRADING, ENABLE_BOUNCE1_TRADING, ENABLE_RANGE_TRADING
     global ENABLE_SLOPED_TRADING, BREAKOUT_SYMBOL_ALLOWLIST, BREAKOUT_SYMBOL_DENYLIST
     global BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE, ELDER_ENGINE, ELDER_SYMBOL_ALLOWLIST
     global ATT1_ENGINE, ASM1_ENGINE, ATT1_SYMBOL_ALLOWLIST, ASM1_SYMBOL_ALLOWLIST
-    global ASB1_ENGINE, HZBO1_ENGINE, ASB1_SYMBOL_ALLOWLIST, HZBO1_SYMBOL_ALLOWLIST
+    global ASB1_ENGINE, HZBO1_ENGINE, BOUNCE1_ENGINE, ASB1_SYMBOL_ALLOWLIST, HZBO1_SYMBOL_ALLOWLIST, BOUNCE1_SYMBOL_ALLOWLIST
     global RISK_PER_TRADE_PCT, ORCH_GLOBAL_RISK_MULT, REGIME_OVERLAY_LAST_MTIME
     global REGIME_OVERLAY_LAST_APPLY_TS, REGIME_OVERLAY_LAST_APPLIED_REGIME, LAST_UNIVERSE_REFRESH_TS
 
@@ -11252,6 +11409,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     ENABLE_ASB1_TRADING = _env_bool("ENABLE_ASB1_TRADING", ENABLE_ASB1_TRADING)
     ENABLE_HZBO1_TRADING = _env_bool("ENABLE_HZBO1_TRADING", ENABLE_HZBO1_TRADING)
     ENABLE_BOUNCE1_TRADING = _env_bool("ENABLE_BOUNCE1_TRADING", ENABLE_BOUNCE1_TRADING)
+    ENABLE_RANGE_TRADING = _env_bool("ENABLE_RANGE_TRADING", ENABLE_RANGE_TRADING)
     ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
     BREAKOUT_SYMBOL_ALLOWLIST = _csv_upper_set("BREAKOUT_SYMBOL_ALLOWLIST")
     BREAKOUT_SYMBOL_DENYLIST = _csv_upper_set("BREAKOUT_SYMBOL_DENYLIST")
@@ -11280,6 +11438,8 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
         ASB1_ENGINE = None
     if not ENABLE_HZBO1_TRADING:
         HZBO1_ENGINE = None
+    if not ENABLE_BOUNCE1_TRADING:
+        BOUNCE1_ENGINE = None
     if not ENABLE_FLAT_TRADING:
         FLAT_ENGINE = None
     if not ENABLE_SLOPED_TRADING:
@@ -11298,16 +11458,22 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
         f"risk_mult={ORCH_GLOBAL_RISK_MULT:.2f} "
         f"breakout={ENABLE_BREAKOUT_TRADING} breakdown={ENABLE_BREAKDOWN_TRADING} "
         f"flat={ENABLE_FLAT_TRADING} midterm={ENABLE_MIDTERM_TRADING} "
+        f"range={ENABLE_RANGE_TRADING} "
         f"ivb1={ENABLE_IVB1_TRADING} elder={ENABLE_ELDER_TRADING} "
-        f"att1={ENABLE_ATT1_TRADING} asm1={ENABLE_ASM1_TRADING}"
+        f"att1={ENABLE_ATT1_TRADING} asb1={ENABLE_ASB1_TRADING} "
+        f"hzbo1={ENABLE_HZBO1_TRADING} bounce1={ENABLE_BOUNCE1_TRADING} "
+        f"asm1={ENABLE_ASM1_TRADING}"
     )
     if notify and REGIME_OVERLAY_LAST_APPLIED_REGIME != old_regime and REGIME_OVERLAY_LAST_APPLIED_REGIME:
         tg_trade(
             f"🧠 Regime overlay applied: {old_regime or 'none'} → {REGIME_OVERLAY_LAST_APPLIED_REGIME} | "
             f"risk×{ORCH_GLOBAL_RISK_MULT:.2f} | breakout={int(ENABLE_BREAKOUT_TRADING)} "
             f"breakdown={int(ENABLE_BREAKDOWN_TRADING)} flat={int(ENABLE_FLAT_TRADING)} "
-            f"midterm={int(ENABLE_MIDTERM_TRADING)} ivb1={int(ENABLE_IVB1_TRADING)} "
-            f"elder={int(ENABLE_ELDER_TRADING)} att1={int(ENABLE_ATT1_TRADING)} asm1={int(ENABLE_ASM1_TRADING)}"
+            f"midterm={int(ENABLE_MIDTERM_TRADING)} range={int(ENABLE_RANGE_TRADING)} "
+            f"ivb1={int(ENABLE_IVB1_TRADING)} elder={int(ENABLE_ELDER_TRADING)} "
+            f"att1={int(ENABLE_ATT1_TRADING)} asb1={int(ENABLE_ASB1_TRADING)} "
+            f"hzbo1={int(ENABLE_HZBO1_TRADING)} bounce1={int(ENABLE_BOUNCE1_TRADING)} "
+            f"asm1={int(ENABLE_ASM1_TRADING)}"
         )
     return True
 
@@ -11315,13 +11481,15 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
 def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
     global ENABLE_IVB1_TRADING, ENABLE_ELDER_TRADING, ENABLE_ATT1_TRADING, ENABLE_ASM1_TRADING
+    global ENABLE_ASB1_TRADING, ENABLE_HZBO1_TRADING, ENABLE_BOUNCE1_TRADING, ENABLE_RANGE_TRADING
     global ENABLE_SLOPED_TRADING, BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE, ELDER_ENGINE, ELDER_SYMBOL_ALLOWLIST
     global ATT1_ENGINE, ASM1_ENGINE, ATT1_SYMBOL_ALLOWLIST, ASM1_SYMBOL_ALLOWLIST
+    global ASB1_ENGINE, HZBO1_ENGINE, BOUNCE1_ENGINE, ASB1_SYMBOL_ALLOWLIST, HZBO1_SYMBOL_ALLOWLIST, BOUNCE1_SYMBOL_ALLOWLIST
     global RISK_PER_TRADE_PCT, PORTFOLIO_ALLOCATOR_LAST_MTIME, PORTFOLIO_ALLOCATOR_LAST_APPLY_TS
     global PORTFOLIO_ALLOCATOR_LAST_STATUS, ALLOCATOR_GLOBAL_RISK_MULT, ALLOCATOR_HARD_BLOCK_NEW_ENTRIES
     global ALLOCATOR_SAFE_MODE, ALLOCATOR_SAFE_MODE_REASON, BREAKOUT_RISK_MULT, MIDTERM_RISK_MULT
     global SLOPED_RISK_MULT, FLAT_RISK_MULT, BREAKDOWN_RISK_MULT, IVB1_RISK_MULT, ELDER_RISK_MULT
-    global ATT1_RISK_MULT, ASM1_RISK_MULT, LAST_UNIVERSE_REFRESH_TS
+    global ATT1_RISK_MULT, ASM1_RISK_MULT, ASB1_RISK_MULT, HZBO1_RISK_MULT, BOUNCE1_RISK_MULT, LAST_UNIVERSE_REFRESH_TS
 
     if not PORTFOLIO_ALLOCATOR_ENABLE:
         return False
@@ -11362,14 +11530,17 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     )
     ENABLE_ATT1_TRADING = _env_bool("ENABLE_ATT1_TRADING", ENABLE_ATT1_TRADING)
     ENABLE_ASM1_TRADING = _env_bool("ENABLE_ASM1_TRADING", ENABLE_ASM1_TRADING)
+    ENABLE_RANGE_TRADING = _env_bool("ENABLE_RANGE_TRADING", ENABLE_RANGE_TRADING)
     ENABLE_ASB1_TRADING = _env_bool("ENABLE_ASB1_TRADING", ENABLE_ASB1_TRADING)
     ENABLE_HZBO1_TRADING = _env_bool("ENABLE_HZBO1_TRADING", ENABLE_HZBO1_TRADING)
+    ENABLE_BOUNCE1_TRADING = _env_bool("ENABLE_BOUNCE1_TRADING", ENABLE_BOUNCE1_TRADING)
     ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
     ELDER_SYMBOL_ALLOWLIST = _csv_upper_set("ETS2_SYMBOL_ALLOWLIST")
     ATT1_SYMBOL_ALLOWLIST = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
     ASM1_SYMBOL_ALLOWLIST = _csv_upper_set("ASM1_SYMBOL_ALLOWLIST")
     ASB1_SYMBOL_ALLOWLIST = _csv_upper_set("ASB1_SYMBOL_ALLOWLIST")
     HZBO1_SYMBOL_ALLOWLIST = _csv_upper_set("HZBO1_SYMBOL_ALLOWLIST")
+    BOUNCE1_SYMBOL_ALLOWLIST = _csv_upper_set("BOUNCE1_SYMBOL_ALLOWLIST")
 
     try:
         ALLOCATOR_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ALLOCATOR_GLOBAL_RISK_MULT", "1.0") or 1.0))
@@ -11427,6 +11598,10 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         HZBO1_RISK_MULT = max(0.05, float(os.getenv("HZBO1_RISK_MULT", str(HZBO1_RISK_MULT)) or HZBO1_RISK_MULT))
     except Exception:
         pass
+    try:
+        BOUNCE1_RISK_MULT = max(0.05, float(os.getenv("BOUNCE1_RISK_MULT", str(BOUNCE1_RISK_MULT)) or BOUNCE1_RISK_MULT))
+    except Exception:
+        pass
 
     _recompute_effective_risk_pct()
 
@@ -11442,6 +11617,8 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         ASB1_ENGINE = None
     if not ENABLE_HZBO1_TRADING:
         HZBO1_ENGINE = None
+    if not ENABLE_BOUNCE1_TRADING:
+        BOUNCE1_ENGINE = None
     if not ENABLE_FLAT_TRADING:
         FLAT_ENGINE = None
     if not ENABLE_SLOPED_TRADING:
@@ -11460,8 +11637,11 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         f"hard_block={ALLOCATOR_HARD_BLOCK_NEW_ENTRIES} "
         f"breakout={ENABLE_BREAKOUT_TRADING} breakdown={ENABLE_BREAKDOWN_TRADING} "
         f"flat={ENABLE_FLAT_TRADING} midterm={ENABLE_MIDTERM_TRADING} "
+        f"range={ENABLE_RANGE_TRADING} "
         f"ivb1={ENABLE_IVB1_TRADING} elder={ENABLE_ELDER_TRADING} "
-        f"att1={ENABLE_ATT1_TRADING} asm1={ENABLE_ASM1_TRADING}"
+        f"att1={ENABLE_ATT1_TRADING} asb1={ENABLE_ASB1_TRADING} "
+        f"hzbo1={ENABLE_HZBO1_TRADING} bounce1={ENABLE_BOUNCE1_TRADING} "
+        f"asm1={ENABLE_ASM1_TRADING}"
     )
     if notify and PORTFOLIO_ALLOCATOR_LAST_STATUS != old_status:
         tg_trade(
@@ -11469,8 +11649,10 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
             f"risk×{ALLOCATOR_GLOBAL_RISK_MULT:.2f} | hard_block={int(ALLOCATOR_HARD_BLOCK_NEW_ENTRIES)} | "
             f"breakout={int(ENABLE_BREAKOUT_TRADING)} breakdown={int(ENABLE_BREAKDOWN_TRADING)} "
             f"flat={int(ENABLE_FLAT_TRADING)} midterm={int(ENABLE_MIDTERM_TRADING)} "
-            f"ivb1={int(ENABLE_IVB1_TRADING)} elder={int(ENABLE_ELDER_TRADING)} "
-            f"att1={int(ENABLE_ATT1_TRADING)} asm1={int(ENABLE_ASM1_TRADING)}"
+            f"range={int(ENABLE_RANGE_TRADING)} ivb1={int(ENABLE_IVB1_TRADING)} "
+            f"elder={int(ENABLE_ELDER_TRADING)} att1={int(ENABLE_ATT1_TRADING)} "
+            f"asb1={int(ENABLE_ASB1_TRADING)} hzbo1={int(ENABLE_HZBO1_TRADING)} "
+            f"bounce1={int(ENABLE_BOUNCE1_TRADING)} asm1={int(ENABLE_ASM1_TRADING)}"
         )
     return True
 
@@ -11738,6 +11920,9 @@ def auth_check_all_accounts():
         f"range={ENABLE_RANGE_TRADING}, "
         f"sloped={ENABLE_SLOPED_TRADING}, "
         f"att1={ENABLE_ATT1_TRADING}, "
+        f"asb1={ENABLE_ASB1_TRADING}, "
+        f"hzbo1={ENABLE_HZBO1_TRADING}, "
+        f"bounce1={ENABLE_BOUNCE1_TRADING}, "
         f"asm1={ENABLE_ASM1_TRADING}, "
         f"flat={ENABLE_FLAT_TRADING}, "
         f"breakdown={ENABLE_BREAKDOWN_TRADING}, "

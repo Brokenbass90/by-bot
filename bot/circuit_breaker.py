@@ -41,7 +41,7 @@ import os
 import time
 import json
 import logging
-from typing import Optional
+from typing import Callable, Optional
 
 log = logging.getLogger(__name__)
 
@@ -71,6 +71,12 @@ class PortfolioCircuitBreaker:
         self._day_key: Optional[int] = None
         self._halt_until: float = 0.0    # epoch seconds
         self._last_log_state = CBState.NORMAL
+
+        # Optional Telegram / notification callback.
+        # Set via set_notify_func() in smart_pump_reversal_bot.py at startup.
+        # Signature: func(message: str) -> None
+        # Kept out of __init__ args to avoid circular imports.
+        self._notify_func: Optional[Callable[[str], None]] = None
 
         # Load thresholds from env
         self._reload_config()
@@ -199,9 +205,8 @@ class PortfolioCircuitBreaker:
         )
         if new_state == CBState.HALT:
             log.warning(msg)
-            # Also write to runtime file for external monitoring
+            # Write runtime state file for external monitoring / Codex audit
             try:
-                import json
                 with open("runtime/circuit_breaker.json", "w") as f:
                     json.dump({
                         "state": new_state,
@@ -213,10 +218,70 @@ class PortfolioCircuitBreaker:
                     }, f, indent=2)
             except Exception:
                 pass
+            # Telegram alert for HALT — highest urgency
+            tg_msg = (
+                f"🚨 CIRCUIT BREAKER HALT 🚨\n"
+                f"New entries BLOCKED for {self.halt_cooldown_hours:.0f}h\n"
+                f"Equity: {equity:.2f} USDT\n"
+                f"Daily DD: {daily_dd*100:.1f}% (limit {self.daily_halt_pct*100:.0f}%)\n"
+                f"Peak DD: {peak_dd*100:.1f}% (limit {self.peak_halt_pct*100:.0f}%)\n"
+                f"Resumes after cooldown (CAUTION mode first)"
+            )
+            if self._notify_func:
+                try:
+                    self._notify_func(tg_msg)
+                except Exception:
+                    pass
         elif new_state == CBState.CAUTION:
             log.warning(msg)
+            # Telegram alert for CAUTION — moderate urgency
+            prev = self._state
+            if prev == CBState.NORMAL:
+                tg_msg = (
+                    f"⚠️ CIRCUIT BREAKER CAUTION\n"
+                    f"Position sizes halved (0.5×)\n"
+                    f"Equity: {equity:.2f} USDT\n"
+                    f"Daily DD: {daily_dd*100:.1f}% (limit {self.daily_caution_pct*100:.0f}%)\n"
+                    f"Peak DD: {peak_dd*100:.1f}% (limit {self.peak_caution_pct*100:.0f}%)"
+                )
+            else:
+                # Recovering from HALT → CAUTION
+                tg_msg = (
+                    f"🟡 CIRCUIT BREAKER → CAUTION (recovering from HALT)\n"
+                    f"Position sizes at 0.5× | Equity: {equity:.2f} USDT"
+                )
+            if self._notify_func:
+                try:
+                    self._notify_func(tg_msg)
+                except Exception:
+                    pass
+        elif new_state == CBState.NORMAL and self._state in (CBState.CAUTION, CBState.HALT):
+            log.info(msg)
+            # Notify recovery to NORMAL
+            tg_msg = (
+                f"✅ CIRCUIT BREAKER → NORMAL\n"
+                f"Full position sizes restored | Equity: {equity:.2f} USDT"
+            )
+            if self._notify_func:
+                try:
+                    self._notify_func(tg_msg)
+                except Exception:
+                    pass
         else:
             log.info(msg)
+
+    def set_notify_func(self, func: Callable[[str], None]) -> None:
+        """Register a notification callback (e.g. tg_send from the main bot).
+
+        Called on every state transition with a human-readable message.
+        Must be set externally to avoid circular imports.
+
+        Example (in smart_pump_reversal_bot.py)::
+
+            from bot.circuit_breaker import get_circuit_breaker
+            get_circuit_breaker().set_notify_func(tg_send)
+        """
+        self._notify_func = func
 
     def reset_for_testing(self) -> None:
         """Reset state — useful in unit tests and backtests."""
@@ -225,6 +290,7 @@ class PortfolioCircuitBreaker:
         self._day_start_equity = None
         self._day_key = None
         self._halt_until = 0.0
+        self._notify_func = None
 
 
 # ─── Singleton (used by bot) ─────────────────────────────────────────────────
