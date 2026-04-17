@@ -490,6 +490,82 @@ def _parse_date_ymd(text: str) -> date | None:
         return None
 
 
+def _hwm_state_path(picks_csv: Path) -> Path:
+    raw = _env("MONTHLY_HWM_STATE_PATH", "")
+    if raw:
+        return Path(raw)
+    root = picks_csv.resolve().parent
+    for _ in range(5):
+        if (root / "runtime").is_dir():
+            return root / "runtime" / "alpaca_monthly_hwm.json"
+        root = root.parent
+    return picks_csv.parent / "alpaca_monthly_hwm.json"
+
+
+def _load_hwm_state(path: Path) -> dict[str, dict[str, Any]]:
+    """Load {symbol: {hwm, entry_price, entry_date}} from disk."""
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _save_hwm_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(state, indent=2), encoding="utf-8")
+
+
+def _update_hwm(
+    state: dict[str, dict[str, Any]],
+    positions: dict[str, dict[str, Any]],
+    now_str: str,
+) -> dict[str, dict[str, Any]]:
+    """Update high-water mark for every live position."""
+    for sym, pos in positions.items():
+        cur = _safe_float(pos.get("current_price"), 0.0)
+        entry = _safe_float(pos.get("avg_entry_price"), 0.0)
+        if cur <= 0:
+            continue
+        rec = state.get(sym, {})
+        old_hwm = _safe_float(rec.get("hwm"), cur)
+        state[sym] = {
+            "hwm": max(old_hwm, cur),
+            "entry_price": entry if entry > 0 else _safe_float(rec.get("entry_price"), cur),
+            "entry_date": rec.get("entry_date") or now_str,
+            "updated": now_str,
+        }
+    # Drop symbols no longer in positions
+    for sym in list(state.keys()):
+        if sym not in positions:
+            del state[sym]
+    return state
+
+
+def _trail_stop_triggered(
+    state: dict[str, dict[str, Any]],
+    sym: str,
+    pos: dict[str, Any],
+    trail_pct: float,
+    min_gain_pct: float,
+) -> tuple[bool, float, float]:
+    """Return (triggered, gain_from_entry_pct, drop_from_hwm_pct)."""
+    rec = state.get(sym)
+    if not rec:
+        return False, 0.0, 0.0
+    cur = _safe_float(pos.get("current_price"), 0.0)
+    entry = _safe_float(rec.get("entry_price"), 0.0)
+    hwm = _safe_float(rec.get("hwm"), cur)
+    if cur <= 0 or entry <= 0 or hwm <= 0:
+        return False, 0.0, 0.0
+    gain_pct = (cur - entry) / entry * 100.0
+    drop_pct = (hwm - cur) / hwm * 100.0
+    triggered = gain_pct >= min_gain_pct and drop_pct >= trail_pct * 100.0
+    return triggered, round(gain_pct, 2), round(drop_pct, 2)
+
+
 def _position_loss_pct(pos: dict[str, Any]) -> float:
     """Return how far below entry a position is (positive = loss).
 
@@ -579,6 +655,19 @@ def main() -> int:
     tg_chat_id = _env("TG_CHAT_ID")
     earnings_days = max(1, _env_int("EARNINGS_DAYS_GUARD", 5))
     use_earnings_filter = _env_bool("ALPACA_EARNINGS_FILTER", _EARNINGS_FILTER_OK)
+
+    # ── Enhancement: trailing stop (high-water mark) ─────────────────────────
+    # Once a position gains >= MONTHLY_TRAIL_MIN_GAIN_PCT, start trailing.
+    # If it then drops MONTHLY_TRAIL_PCT% from its peak → close to lock profit.
+    enable_trail_stop = _env_bool("MONTHLY_TRAIL_ENABLE", True)
+    trail_pct = max(0.01, _env_float("MONTHLY_TRAIL_PCT", 0.06))       # 6% drop from peak
+    trail_min_gain_pct = max(0.0, _env_float("MONTHLY_TRAIL_MIN_GAIN_PCT", 8.0))  # only trail after +8%
+    hwm_path = _hwm_state_path(picks_csv)
+
+    # ── Enhancement: ATR-adjusted position sizing ─────────────────────────────
+    # Low-volatility picks get more capital; high-volatility picks get less.
+    # Combined weight = score / sqrt(atr20_pct) so it balances momentum vs risk.
+    atr_adjusted_sizing = _env_bool("MONTHLY_ATR_SIZING", True)
 
     # ── Enhancement: individual stop-loss per position ────────────────────────
     # Close any position down more than MONTHLY_SL_PCT from entry.
@@ -721,6 +810,28 @@ def main() -> int:
                 sl_triggered_symbols.append(sym)
                 sl_details[sym] = round(loss * 100, 2)
 
+    # ── Trailing stop detection ───────────────────────────────────────────────
+    # Load/update HWM state BEFORE checking trailing stops
+    hwm_state: dict[str, dict[str, Any]] = {}
+    trail_triggered_symbols: list[str] = []
+    trail_details: dict[str, dict[str, float]] = {}
+    now_utc_str = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if enable_trail_stop and not offline_dry_run:
+        hwm_state = _load_hwm_state(hwm_path)
+        hwm_state = _update_hwm(hwm_state, current_positions, now_utc_str)
+        for sym in list(current_positions.keys()):
+            if sym in intraday_managed_symbols:
+                continue
+            if sym in sl_triggered_symbols:
+                continue  # SL already handles this one
+            pos = current_positions[sym]
+            fired, gain, drop = _trail_stop_triggered(
+                hwm_state, sym, pos, trail_pct, trail_min_gain_pct
+            )
+            if fired:
+                trail_triggered_symbols.append(sym)
+                trail_details[sym] = {"gain_pct": gain, "drop_from_hwm_pct": drop}
+
     # Symbols freed by stop-loss may become new buy candidates
     # (we'll try to fill with next-best picks after closing)
     sl_freed_slots = len(sl_triggered_symbols)
@@ -743,45 +854,46 @@ def main() -> int:
 
     # Symbols being rotated out are treated as stale for buy purposes
     rotated_out = set(rotation_symbols)
+    trail_out = set(trail_triggered_symbols)
+    closed_out = set(sl_triggered_symbols) | rotated_out | trail_out
 
-    # Extend new_buy_symbols: after SL + rotation closes, fill with next picks
+    # Extend new_buy_symbols: after SL + rotation + trail closes, fill with next picks
     extended_candidates = [p.ticker for p in picks if p.ticker not in earnings_blocked]
-    # Picks that are neither currently held (after removals) nor already queued
     already_handled = (
-        set(hold_symbols) - rotated_out - set(sl_triggered_symbols)
+        (set(hold_symbols) - closed_out)
         | set(new_buy_symbols)
-        | set(sl_triggered_symbols)
-        | rotated_out
+        | closed_out
     )
     replacement_picks = [t for t in extended_candidates if t not in already_handled]
-    replacement_slots = sl_freed_slots + len(rotation_symbols)
+    replacement_slots = len(closed_out) - len([s for s in closed_out if s not in current_positions])
     replacement_buys = replacement_picks[:replacement_slots] if replacement_slots > 0 else []
 
-    # ── Score-weighted position sizing ────────────────────────────────────────
-    # Allocate proportional to momentum score; fallback to equal weight.
+    # ── Score-weighted + ATR-adjusted position sizing ─────────────────────────
+    # Combined weight = score × (1 / sqrt(atr20_pct)) so high-volatility picks
+    # get less capital automatically.  Fallback: equal weight.
     all_buy_tickers = new_buy_symbols + replacement_buys
     all_buy_set = set(all_buy_tickers)
-    # Include hold positions in weighting if weighted_sizing is on
     all_active = [p for p in picks if p.ticker in (selected_symbols | all_buy_set)]
 
-    if weighted_sizing and all_active:
-        total_score = sum(p.score for p in all_active)
-        if total_score > 0:
-            score_weights = {p.ticker: p.score / total_score for p in all_active}
-        else:
-            n = max(1, len(all_active))
-            score_weights = {p.ticker: 1.0 / n for p in all_active}
-        # Clamp: no single position gets more than 60% of allocation
-        max_weight = min(0.60, max(score_weights.values()) if score_weights else 0.60)
-        score_weights = {t: min(w, max_weight) for t, w in score_weights.items()}
-        # Re-normalise after clamping
+    def _raw_weight(p: Pick) -> float:
+        base = max(0.001, p.score)
+        if atr_adjusted_sizing and p.atr20_pct > 0:
+            base = base / max(0.5, math.sqrt(p.atr20_pct))
+        return base
+
+    if (weighted_sizing or atr_adjusted_sizing) and all_active:
+        raw = {p.ticker: _raw_weight(p) for p in all_active}
+        total_raw = sum(raw.values()) or 1.0
+        score_weights = {t: w / total_raw for t, w in raw.items()}
+        # Clamp: no single position > 60% of allocation
+        max_w = min(0.60, max(score_weights.values()) if score_weights else 0.60)
+        score_weights = {t: min(w, max_w) for t, w in score_weights.items()}
         sw_total = sum(score_weights.values()) or 1.0
         score_weights = {t: w / sw_total for t, w in score_weights.items()}
         per_ticker_notional: dict[str, float] = {
             t: max(min_dollar_order, effective_capital * target_alloc_pct * w)
             for t, w in score_weights.items()
         }
-        # Fallback for tickers not in active picks (shouldn't happen, but safe)
         per_position_notional = max(
             min_dollar_order,
             effective_capital * target_alloc_pct / max(1, len(all_active)),
@@ -857,6 +969,11 @@ def main() -> int:
         "stop_loss_enabled": enable_stop_loss,
         "sl_triggered": sl_triggered_symbols,
         "sl_loss_pct": sl_details,
+        "trail_stop_enabled": enable_trail_stop,
+        "trail_pct": round(trail_pct * 100, 2),
+        "trail_min_gain_pct": trail_min_gain_pct,
+        "trail_triggered": trail_triggered_symbols,
+        "trail_details": trail_details,
         "midmonth_rotation_enabled": midmonth_rotation,
         "midmonth_day_threshold": midmonth_day_threshold,
         "midmonth_dd_pct": round(midmonth_dd_pct * 100, 2),
@@ -864,6 +981,7 @@ def main() -> int:
         "rotation_loss_pct": rotation_details,
         "replacement_buys": replacement_buys,
         "weighted_sizing": weighted_sizing,
+        "atr_adjusted_sizing": atr_adjusted_sizing,
         "score_weights": {t: round(w, 4) for t, w in score_weights.items()},
         "pending_buy_orders": [
             {
@@ -914,6 +1032,32 @@ def main() -> int:
                             "error": str(exc),
                         }
                     )
+
+        # ── 1b. Trailing stop closes (lock-in profits) ────────────────────────
+        if enable_trail_stop:
+            for symbol in trail_triggered_symbols:
+                if symbol not in current_positions:
+                    continue
+                det = trail_details.get(symbol, {})
+                try:
+                    result = client.close_position(symbol)
+                    report["results"].append({
+                        "ticker": symbol,
+                        "action": "trail_stop_close",
+                        "gain_pct": det.get("gain_pct", 0.0),
+                        "drop_from_hwm_pct": det.get("drop_from_hwm_pct", 0.0),
+                        "order_id": result.get("id"),
+                        "status": result.get("status"),
+                    })
+                except RuntimeError as exc:
+                    report["results"].append({
+                        "ticker": symbol,
+                        "action": "trail_stop_close",
+                        "status": "error",
+                        "error": str(exc),
+                    })
+            # Persist updated HWM state
+            _save_hwm_state(hwm_path, hwm_state)
 
         # ── 2. Mid-month rotation closes ──────────────────────────────────────
         if midmonth_rotation and rotation_symbols:
@@ -1092,6 +1236,10 @@ def main() -> int:
             elif action == "replacement_buy":
                 notional = r.get("notional", per_position_notional)
                 lines.append(f"  🔄 REPLACE-BUY {ticker} ${round(notional,0):.0f} — {r.get('status','?')}")
+            elif action == "trail_stop_close":
+                gain = r.get("gain_pct", 0.0)
+                drop = r.get("drop_from_hwm_pct", 0.0)
+                lines.append(f"  🔒 TRAIL-CLOSE {ticker} +{gain:.1f}% from entry, -{drop:.1f}% from peak")
             elif action == "stop_loss_close":
                 loss = r.get("loss_pct", 0.0)
                 lines.append(f"  🛑 STOP-LOSS {ticker} -{loss:.1f}% — {r.get('status','?')}")

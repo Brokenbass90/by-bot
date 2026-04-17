@@ -296,11 +296,12 @@
       "strategy_names": [
         "elder_triple_screen_v2"
       ],
+      "_comment": "Elder works in trending markets. Volume filter (ETS2_VOL_CONFIRM=1) failed hard (PF=0.895, DD=50%). Bear regime mults corrected to 0.0 — Elder must not run in bear_trend.",
       "base_risk_mult_by_regime": {
         "bull_trend": 1.05,
-        "bull_chop": 0.6,
-        "bear_chop": 0.65,
-        "bear_trend": 1.0
+        "bull_chop": 0.70,
+        "bear_chop": 0.30,
+        "bear_trend": 0.0
       }
     },
     {
