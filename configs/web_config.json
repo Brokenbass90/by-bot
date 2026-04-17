@@ -1,0 +1,4 @@
+{
+  "_comment": "Trading Journal web auth config. Add users with: python3 web/setup_totp.py --email you@example.com",
+  "users": {}
+}

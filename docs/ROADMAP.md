@@ -1125,3 +1125,186 @@ bash scripts/codex_deploy_20260416.sh
 ```
 
 Скрипт выполняет 8 шагов: git pull → fix DEGRADED → patch env → syntax check → restart bot → verify init → start orchestrator → status report.
+
+---
+
+## 2026-04-17 — Strategy Rejects, v3 Candidates, Web Interface Plan
+
+### Strategy verdict summary (as of 2026-04-17)
+
+| Strategy | Verdict | File | Notes |
+|---|---|---|---|
+| `elder_triple_screen_v2` | 🔴 REJECTED | strategies/ | 2024 PF=0.853 DD=62%, 2023 PF=0.715 DD=83%. Root: no daily gate, hist_sign=False, consec_bars=1. Allocator zeroed permanently. |
+| `elder_triple_screen_v3` | 🔬 RESEARCH | strategies/ | Full rewrite: daily Screen 0, hist_sign=True, consec_bars=3, ATR quality gate, FI+RSI dual Screen 2. WF-22 required before any live allocation. |
+| `btc_eth_midterm_short_v1` | 🔴 REJECTED | strategies/ | Failed WF-22. Only 2-TF hierarchy, no MACD/RSI daily filter. Allocator zeroed. |
+| `btc_eth_midterm_short_v2` | 🔬 RESEARCH | strategies/ | 3-TF: weekly(10080)→daily(1440)→4h(240). MACD hist consec≥3, daily RSI<55, min_trend_days=5, 4h RSI>50 on pullback. WF-22 required. |
+| `impulse_volume_breakout_v1` (IVB1) | 🔴 REJECTED | strategies/ | avg_win < avg_loss, -2.5% on annual even after macro filter. Fundamental TP/SL problem. |
+| `triple_screen_v132` (TS132) | 🔴 REJECTED | strategies/ | WF-22 AvgPF=0.094, PF>1: 0/22. WEAK verdict. |
+| `flat/att1/range_scalp` | ✅ LIVE CORE | strategies/ | Current active live stack in bull_trend. |
+| `asb1/hzbo1` | 🟡 LIVE (off in bull_trend) | strategies/ | Enabled in bear_chop/bear_trend via policy. |
+
+### Promotion gates (unchanged)
+
+For any RESEARCH strategy to become LIVE:
+- WF-22: AvgPF > 1.20 AND PF>1.0 in at least 13/22 windows
+- Standalone annual DD < 25% (30% for short-only)
+- Does not destroy portfolio-level annual when added to live core
+- Documented in JOURNAL.md with run IDs
+
+### Crypto annual first window (2026-04-17)
+
+New aggregated annual stitched pass started. First window result:
+- PF: 0.674, net -11.89%, DD 12.90%, 196 trades
+- Active sleeves: flat, att1, range_scalp, asb1, vwap_mr
+- This is window 1/12. Do not draw conclusions until ≥ 6 windows are done.
+- Next steps: let it run, review full result before changing anything.
+
+---
+
+## Web Interface — Architecture and Security Spec (2026-04-17)
+
+### Goals
+
+Build a read-only trading journal web interface first, then add safe control actions later. Web is NOT a replacement for Telegram — Telegram stays as the primary ops channel. Web is for reviewing trades, strategy performance, and account state without having to SSH to the server.
+
+### Security requirements (non-negotiable)
+
+1. **Email whitelist only** — hardcoded list of allowed emails in server config. No registration, no public sign-up, no password reset flow. If your email is not in the list you cannot enter regardless of any other credential.
+2. **Google Authenticator TOTP (2FA mandatory)** — every session requires a valid TOTP code after email/password. No SMS, no email codes. Google Authenticator or any RFC 6238 app only.
+3. **No other entry path** — no API key bypass, no IP whitelisting as an alternative to 2FA, no remember-me that skips TOTP.
+4. **HTTPS only** — TLS via Let's Encrypt. HTTP redirects to HTTPS. No mixed content.
+5. **Session tokens** — short-lived JWT (8h), stored in httpOnly cookie. No localStorage.
+6. **Telegram as second channel** — OTP code for 2FA recovery can optionally be sent to the registered Telegram chat as a backup, but the primary path is always Google Authenticator.
+
+### Stack
+
+```
+Backend  : FastAPI (Python) — already in project venv
+Database : SQLite (single file, append-only trade log)
+Frontend : React (single-page, served by FastAPI static files)
+Auth     : fastapi-users or custom; pyotp for TOTP; passlib[bcrypt] for passwords
+TLS      : nginx reverse proxy + Let's Encrypt (certbot)
+```
+
+All backend in `web/` directory. No new dependencies outside what pip can install into `.venv`.
+
+### Phase 1 — Read-only journal (build this first)
+
+**Backend endpoints:**
+
+```
+POST /auth/login          — email + password → session token (no TOTP yet)
+POST /auth/totp           — TOTP code → session promoted to full access
+GET  /auth/me             — current session info
+DELETE /auth/logout       — invalidate session
+
+GET  /api/trades          — paginated trade log from trades.csv / SQLite
+GET  /api/trades/summary  — per-strategy PF, WR, net, DD aggregated
+GET  /api/account         — current Bybit / Alpaca account balance snapshot
+GET  /api/regime          — current regime.json
+GET  /api/allocator       — current allocator state
+GET  /api/health          — strategy health timeline
+GET  /api/journal         — parsed JOURNAL.md entries (date-indexed)
+```
+
+**Frontend pages:**
+
+```
+/ (login)          — email + password form → redirect to /totp
+/totp              — 6-digit TOTP entry
+/trades            — trade table with filters (strategy, date, symbol, side)
+/summary           — strategy performance cards
+/account           — balance + open positions
+/regime            — current regime + history chart
+/journal           — JOURNAL.md rendered as timeline
+```
+
+**Data sources (Phase 1 reads existing files, no new DB writes):**
+
+```
+runtime/operator/operator_snapshot.json  → account + regime + health
+runtime/regime.json                      → regime state
+configs/portfolio_allocator_latest.env   → allocator state
+trades.csv  (or runtime/**/trades.csv)   → trade log
+docs/JOURNAL.md                          → journal timeline
+```
+
+### Phase 2 — Safe control actions (after Phase 1 is stable for 2 weeks)
+
+```
+POST /api/control/reload_env     — trigger hot-reload on server (same as SIGHUP)
+POST /api/control/safe_mode      — enable safe mode (risk_mult=0.25)
+POST /api/control/disable_sleeve — disable a named sleeve (writes to overlay env)
+```
+
+All control actions require:
+1. Full 2FA session (not just password)
+2. Audit log entry (who, what, when, from which IP)
+3. Telegram confirmation message sent to ops chat
+
+### Phase 3 — AI chat (after Phase 2 is stable)
+
+```
+POST /api/ai/chat    — send message + current runtime context → LLM response
+```
+
+Context injected automatically:
+- operator_snapshot.json
+- regime.json
+- last 50 trades
+- current open positions
+
+LLM: Anthropic API (claude-sonnet). Rate-limited to 20 requests/hour per session.
+
+### File layout
+
+```
+web/
+  __init__.py
+  main.py               — FastAPI app + static file mount
+  auth.py               — login, TOTP, session management
+  models.py             — SQLite ORM (SQLAlchemy or raw sqlite3)
+  routes/
+    trades.py
+    account.py
+    regime.py
+    control.py          — Phase 2 only
+    ai.py               — Phase 3 only
+  static/               — compiled React bundle (or served via Vite dev server)
+  templates/            — optional Jinja2 for server-side fallback
+
+scripts/
+  run_web.sh            — starts uvicorn + sets env vars
+
+configs/
+  web_config.json       — ALLOWED_EMAILS list, TOTP secrets, session config
+```
+
+### TOTP setup flow (one-time, per user)
+
+1. Admin runs `python3 web/setup_totp.py --email user@example.com`
+2. Script generates TOTP secret, prints QR code URL
+3. User scans with Google Authenticator
+4. Secret stored hashed in `configs/web_config.json` (never in plaintext after setup)
+5. To add a new user: repeat. To revoke: remove from JSON.
+
+### Deployment
+
+```bash
+# First run
+pip install fastapi uvicorn pyotp passlib[bcrypt] python-jose --break-system-packages
+python3 web/setup_totp.py --email youremail@gmail.com
+bash scripts/run_web.sh   # uvicorn web.main:app --host 127.0.0.1 --port 8765
+
+# nginx config (reverse proxy):
+# location /trading { proxy_pass http://127.0.0.1:8765; }
+# + SSL cert via certbot
+```
+
+### What NOT to build in Phase 1
+
+- No live order placement
+- No strategy parameter editing
+- No user management UI (admin CLI only)
+- No public endpoints (everything behind /auth)
+- No WebSocket live feed (polling is fine for v1)

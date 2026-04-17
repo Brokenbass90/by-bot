@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trading Journal</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+           background: #0f1117; color: #e1e4e8; min-height: 100vh; }
+
+    /* Layout */
+    .app { display: flex; flex-direction: column; min-height: 100vh; }
+    .navbar { background: #161b22; border-bottom: 1px solid #30363d;
+              padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+    .navbar h1 { font-size: 18px; font-weight: 600; color: #f0f6fc; }
+    .nav-links { display: flex; gap: 4px; flex: 1; margin-left: 24px; }
+    .nav-btn { background: none; border: none; color: #8b949e; cursor: pointer;
+               padding: 6px 12px; border-radius: 6px; font-size: 14px; }
+    .nav-btn:hover { background: #21262d; color: #e1e4e8; }
+    .nav-btn.active { background: #21262d; color: #f0f6fc; }
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .user-tag { font-size: 12px; color: #8b949e; }
+    .logout-btn { background: #21262d; border: 1px solid #30363d; color: #8b949e;
+                  cursor: pointer; padding: 4px 10px; border-radius: 6px; font-size: 12px; }
+    .logout-btn:hover { color: #e1e4e8; border-color: #8b949e; }
+
+    .content { flex: 1; padding: 24px; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+    /* Auth */
+    .auth-wrap { display: flex; align-items: center; justify-content: center;
+                 min-height: 100vh; background: #0f1117; }
+    .auth-box { background: #161b22; border: 1px solid #30363d; border-radius: 12px;
+                padding: 40px; width: 360px; }
+    .auth-box h2 { font-size: 22px; margin-bottom: 8px; color: #f0f6fc; }
+    .auth-box p { color: #8b949e; font-size: 14px; margin-bottom: 28px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; color: #8b949e; margin-bottom: 6px; }
+    .form-group input { width: 100%; background: #0d1117; border: 1px solid #30363d;
+                        border-radius: 6px; color: #f0f6fc; padding: 8px 12px; font-size: 14px; }
+    .form-group input:focus { outline: none; border-color: #58a6ff; }
+    .submit-btn { width: 100%; background: #238636; border: 1px solid #2ea043;
+                  color: #fff; cursor: pointer; padding: 10px; border-radius: 6px;
+                  font-size: 14px; font-weight: 500; margin-top: 8px; }
+    .submit-btn:hover { background: #2ea043; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .error-msg { background: #3d1f1f; border: 1px solid #f85149; color: #f85149;
+                 border-radius: 6px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+    .totp-hint { background: #1c2128; border: 1px solid #30363d; border-radius: 6px;
+                 padding: 14px; font-size: 13px; color: #8b949e; margin-bottom: 20px; }
+    .totp-hint strong { color: #e1e4e8; }
+
+    /* Cards */
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px;
+            padding: 20px; margin-bottom: 16px; }
+    .card h3 { font-size: 15px; font-weight: 600; color: #f0f6fc; margin-bottom: 12px; }
+
+    /* Regime badge */
+    .regime-badge { display: inline-block; padding: 4px 12px; border-radius: 20px;
+                    font-size: 13px; font-weight: 600; }
+    .regime-BULL_TREND { background: #1a3c2b; color: #3fb950; border: 1px solid #2ea043; }
+    .regime-BEAR_TREND { background: #3d1f1f; color: #f85149; border: 1px solid #da3633; }
+    .regime-NEUTRAL, .regime-UNKNOWN { background: #272d35; color: #8b949e; border: 1px solid #30363d; }
+    .regime-BEAR_CHOP { background: #3b2a1c; color: #e3b341; border: 1px solid #d29922; }
+    .regime-BULL_CHOP { background: #1c2f1e; color: #56d364; border: 1px solid #3fb950; }
+
+    /* Stats grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .stat-box { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 14px; }
+    .stat-box .label { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-box .value { font-size: 22px; font-weight: 600; color: #f0f6fc; margin-top: 4px; }
+    .stat-box .value.green { color: #3fb950; }
+    .stat-box .value.red { color: #f85149; }
+    .stat-box .value.yellow { color: #e3b341; }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { background: #161b22; color: #8b949e; padding: 10px 12px; text-align: left;
+         border-bottom: 1px solid #21262d; font-weight: 500; white-space: nowrap; }
+    td { padding: 9px 12px; border-bottom: 1px solid #161b22; color: #e1e4e8; }
+    tr:hover td { background: #161b22; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .badge-long { background: #1a3c2b; color: #3fb950; }
+    .badge-short { background: #3d1f1f; color: #f85149; }
+    .pnl-pos { color: #3fb950; }
+    .pnl-neg { color: #f85149; }
+
+    /* Pagination */
+    .pagination { display: flex; align-items: center; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+    .page-btn { background: #21262d; border: 1px solid #30363d; color: #8b949e;
+                cursor: pointer; padding: 5px 12px; border-radius: 6px; font-size: 13px; }
+    .page-btn:hover { border-color: #8b949e; color: #e1e4e8; }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .page-info { font-size: 13px; color: #8b949e; }
+
+    /* Loading */
+    .loading { color: #8b949e; font-size: 14px; padding: 40px; text-align: center; }
+
+    /* Journal */
+    .journal-entry { border-left: 3px solid #30363d; padding-left: 16px; margin-bottom: 24px; }
+    .journal-entry .date { font-size: 12px; color: #58a6ff; font-weight: 600; margin-bottom: 8px; }
+    .journal-entry pre { font-size: 13px; color: #c9d1d9; white-space: pre-wrap;
+                          word-break: break-word; font-family: inherit; line-height: 1.6; }
+
+    /* Strategy summary cards */
+    .strategy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+    .strat-card { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 16px; }
+    .strat-card .name { font-size: 13px; font-weight: 600; color: #58a6ff; margin-bottom: 10px; }
+    .strat-row { display: flex; justify-content: space-between; font-size: 12px;
+                  color: #8b949e; margin-bottom: 4px; }
+    .strat-row span:last-child { color: #e1e4e8; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const { useState, useEffect, useCallback } = React;
+
+// ── API helpers ────────────────────────────────────────────────────────────
+
+async function api(path, options = {}) {
+  const res = await fetch(path, { credentials: 'include', ...options });
+  if (res.status === 401) throw Object.assign(new Error('Unauthorized'), { status: 401 });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.detail || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+async function apiPost(path, body) {
+  return api(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
+// ── Auth screens ───────────────────────────────────────────────────────────
+
+function LoginScreen({ onPartialAuth }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError(''); setLoading(true);
+    try {
+      await apiPost('/auth/login', { email, password });
+      onPartialAuth(email);
+    } catch (err) {
+      setError(err.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return React.createElement('div', { className: 'auth-wrap' },
+    React.createElement('div', { className: 'auth-box' },
+      React.createElement('h2', null, '📈 Trading Journal'),
+      React.createElement('p', null, 'Enter your credentials to continue'),
+      error && React.createElement('div', { className: 'error-msg' }, error),
+      React.createElement('form', { onSubmit: handleSubmit },
+        React.createElement('div', { className: 'form-group' },
+          React.createElement('label', null, 'Email'),
+          React.createElement('input', {
+            type: 'email', value: email, onChange: e => setEmail(e.target.value),
+            placeholder: 'you@example.com', required: true, autoFocus: true
+          })
+        ),
+        React.createElement('div', { className: 'form-group' },
+          React.createElement('label', null, 'Password'),
+          React.createElement('input', {
+            type: 'password', value: password, onChange: e => setPassword(e.target.value),
+            placeholder: '••••••••', required: true
+          })
+        ),
+        React.createElement('button', {
+          type: 'submit', className: 'submit-btn', disabled: loading
+        }, loading ? 'Signing in…' : 'Continue →')
+      )
+    )
+  );
+}
+
+function TOTPScreen({ email, onAuth }) {
+  const [code, setCode] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError(''); setLoading(true);
+    try {
+      await apiPost('/auth/totp', { code });
+      onAuth(email);
+    } catch (err) {
+      setError(err.message || 'Invalid code');
+      setCode('');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return React.createElement('div', { className: 'auth-wrap' },
+    React.createElement('div', { className: 'auth-box' },
+      React.createElement('h2', null, '🔐 Two-Factor Auth'),
+      React.createElement('div', { className: 'totp-hint' },
+        React.createElement('strong', null, 'Open Google Authenticator'),
+        React.createElement('br'),
+        `Enter the 6-digit code for ${email}`
+      ),
+      error && React.createElement('div', { className: 'error-msg' }, error),
+      React.createElement('form', { onSubmit: handleSubmit },
+        React.createElement('div', { className: 'form-group' },
+          React.createElement('label', null, '6-Digit Code'),
+          React.createElement('input', {
+            type: 'text', value: code, onChange: e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6)),
+            placeholder: '000000', required: true, autoFocus: true,
+            inputMode: 'numeric', pattern: '[0-9]{6}',
+            style: { fontSize: '24px', letterSpacing: '8px', textAlign: 'center' }
+          })
+        ),
+        React.createElement('button', {
+          type: 'submit', className: 'submit-btn', disabled: loading || code.length !== 6
+        }, loading ? 'Verifying…' : 'Verify')
+      )
+    )
+  );
+}
+
+// ── Dashboard page ────────────────────────────────────────────────────────
+
+function DashboardPage() {
+  const [regime, setRegime] = useState(null);
+  const [summary, setSummary] = useState(null);
+  const [account, setAccount] = useState(null);
+
+  useEffect(() => {
+    api('/api/regime').then(setRegime).catch(() => {});
+    api('/api/trades/summary').then(setSummary).catch(() => {});
+    api('/api/account').then(setAccount).catch(() => {});
+  }, []);
+
+  const regimeKey = (regime?.regime || 'UNKNOWN').replace(' ', '_');
+
+  return React.createElement('div', null,
+    React.createElement('h2', { style: { fontSize: '20px', marginBottom: '20px', color: '#f0f6fc' } }, 'Dashboard'),
+
+    // Regime card
+    React.createElement('div', { className: 'card' },
+      React.createElement('h3', null, 'Market Regime'),
+      regime
+        ? React.createElement('div', null,
+            React.createElement('span', { className: `regime-badge regime-${regimeKey}` }, regime.regime || 'UNKNOWN'),
+            regime.reason && React.createElement('p', {
+              style: { marginTop: '10px', fontSize: '13px', color: '#8b949e' }
+            }, regime.reason),
+            regime.ts_utc && React.createElement('p', {
+              style: { marginTop: '4px', fontSize: '12px', color: '#6e7681' }
+            }, 'Updated: ' + regime.ts_utc)
+          )
+        : React.createElement('div', { className: 'loading' }, 'Loading…')
+    ),
+
+    // Summary stats
+    summary && React.createElement('div', { className: 'card' },
+      React.createElement('h3', null, 'Portfolio Overview'),
+      React.createElement('div', { className: 'stats-grid' },
+        React.createElement('div', { className: 'stat-box' },
+          React.createElement('div', { className: 'label' }, 'Total Trades'),
+          React.createElement('div', { className: 'value' }, summary.total_trades)
+        ),
+        React.createElement('div', { className: 'stat-box' },
+          React.createElement('div', { className: 'label' }, 'Strategies'),
+          React.createElement('div', { className: 'value' }, summary.strategies?.length || 0)
+        ),
+        ...(summary.strategies || []).slice(0, 4).map(s =>
+          React.createElement('div', { className: 'stat-box', key: s.strategy },
+            React.createElement('div', { className: 'label' }, s.strategy.replace('alt_', '').replace('_v1', '')),
+            React.createElement('div', {
+              className: `value ${s.net_pnl >= 0 ? 'green' : 'red'}`
+            }, (s.net_pnl >= 0 ? '+' : '') + s.net_pnl.toFixed(2))
+          )
+        )
+      )
+    ),
+
+    // Account
+    account && !account.error && React.createElement('div', { className: 'card' },
+      React.createElement('h3', null, 'Account Snapshot'),
+      React.createElement('pre', {
+        style: { fontSize: '12px', color: '#8b949e', whiteSpace: 'pre-wrap', lineHeight: '1.6' }
+      }, JSON.stringify(account, null, 2).slice(0, 2000))
+    )
+  );
+}
+
+// ── Trades page ───────────────────────────────────────────────────────────
+
+function TradesPage() {
+  const [trades, setTrades] = useState(null);
+  const [page, setPage] = useState(1);
+  const [strategy, setStrategy] = useState('');
+  const [symbol, setSymbol] = useState('');
+
+  const load = useCallback(() => {
+    let url = `/api/trades?page=${page}&page_size=50`;
+    if (strategy) url += `&strategy=${strategy}`;
+    if (symbol) url += `&symbol=${symbol}`;
+    api(url).then(setTrades).catch(() => setTrades({ trades: [], total: 0, pages: 1 }));
+  }, [page, strategy, symbol]);
+
+  useEffect(() => { load(); }, [load]);
+
+  return React.createElement('div', null,
+    React.createElement('h2', { style: { fontSize: '20px', marginBottom: '20px', color: '#f0f6fc' } }, 'Trade Log'),
+
+    // Filters
+    React.createElement('div', { style: { display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' } },
+      React.createElement('input', {
+        placeholder: 'Strategy filter…', value: strategy,
+        onChange: e => { setStrategy(e.target.value); setPage(1); },
+        style: { background: '#21262d', border: '1px solid #30363d', color: '#e1e4e8',
+                  padding: '6px 12px', borderRadius: '6px', fontSize: '13px', width: '200px' }
+      }),
+      React.createElement('input', {
+        placeholder: 'Symbol filter…', value: symbol,
+        onChange: e => { setSymbol(e.target.value.toUpperCase()); setPage(1); },
+        style: { background: '#21262d', border: '1px solid #30363d', color: '#e1e4e8',
+                  padding: '6px 12px', borderRadius: '6px', fontSize: '13px', width: '160px' }
+      })
+    ),
+
+    !trades
+      ? React.createElement('div', { className: 'loading' }, 'Loading trades…')
+      : React.createElement('div', { className: 'card' },
+          React.createElement('div', { className: 'table-wrap' },
+            React.createElement('table', null,
+              React.createElement('thead', null,
+                React.createElement('tr', null,
+                  ['Strategy', 'Symbol', 'Side', 'Entry', 'Exit', 'PnL', 'Date'].map(h =>
+                    React.createElement('th', { key: h }, h)
+                  )
+                )
+              ),
+              React.createElement('tbody', null,
+                trades.trades.length === 0
+                  ? React.createElement('tr', null,
+                      React.createElement('td', { colSpan: 7, style: { textAlign: 'center', color: '#8b949e', padding: '32px' } },
+                        'No trades found'))
+                  : trades.trades.map((t, i) =>
+                      React.createElement('tr', { key: i },
+                        React.createElement('td', { style: { color: '#58a6ff', fontSize: '12px' } },
+                          t.strategy || '—'),
+                        React.createElement('td', null, t.symbol || '—'),
+                        React.createElement('td', null,
+                          t.side
+                            ? React.createElement('span', { className: `badge badge-${t.side}` }, t.side)
+                            : '—'
+                        ),
+                        React.createElement('td', null, typeof t.entry === 'number' ? t.entry.toFixed(4) : (t.entry || '—')),
+                        React.createElement('td', null, typeof t.exit === 'number' ? t.exit.toFixed(4) : (t.exit || '—')),
+                        React.createElement('td', {
+                          className: typeof t.pnl === 'number' ? (t.pnl >= 0 ? 'pnl-pos' : 'pnl-neg') : ''
+                        }, typeof t.pnl === 'number' ? (t.pnl >= 0 ? '+' : '') + t.pnl.toFixed(4) : (t.pnl || '—')),
+                        React.createElement('td', { style: { fontSize: '12px', color: '#8b949e' } },
+                          t.close_time || t.time || '—')
+                      )
+                    )
+              )
+            )
+          ),
+          React.createElement('div', { className: 'pagination' },
+            React.createElement('span', { className: 'page-info' },
+              `${trades.total} trades · Page ${page} of ${trades.pages}`),
+            React.createElement('button', {
+              className: 'page-btn', disabled: page <= 1, onClick: () => setPage(p => p - 1)
+            }, '← Prev'),
+            React.createElement('button', {
+              className: 'page-btn', disabled: page >= trades.pages, onClick: () => setPage(p => p + 1)
+            }, 'Next →')
+          )
+        )
+  );
+}
+
+// ── Summary page ──────────────────────────────────────────────────────────
+
+function SummaryPage() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    api('/api/trades/summary').then(setData).catch(() => {});
+  }, []);
+
+  if (!data) return React.createElement('div', { className: 'loading' }, 'Loading…');
+
+  return React.createElement('div', null,
+    React.createElement('h2', { style: { fontSize: '20px', marginBottom: '20px', color: '#f0f6fc' } },
+      `Strategy Performance (${data.total_trades} trades)`),
+    React.createElement('div', { className: 'strategy-grid' },
+      (data.strategies || []).map(s =>
+        React.createElement('div', { className: 'strat-card', key: s.strategy },
+          React.createElement('div', { className: 'name' }, s.strategy),
+          React.createElement('div', { className: 'strat-row' },
+            React.createElement('span', null, 'Trades'), React.createElement('span', null, s.trades)),
+          React.createElement('div', { className: 'strat-row' },
+            React.createElement('span', null, 'Win Rate'), React.createElement('span', null, `${s.win_rate}%`)),
+          React.createElement('div', { className: 'strat-row' },
+            React.createElement('span', null, 'Profit Factor'),
+            React.createElement('span', { style: { color: s.profit_factor >= 1 ? '#3fb950' : '#f85149' } },
+              s.profit_factor != null ? s.profit_factor.toFixed(3) : 'N/A')),
+          React.createElement('div', { className: 'strat-row' },
+            React.createElement('span', null, 'Net PnL'),
+            React.createElement('span', { style: { color: s.net_pnl >= 0 ? '#3fb950' : '#f85149' } },
+              (s.net_pnl >= 0 ? '+' : '') + s.net_pnl.toFixed(4)))
+        )
+      )
+    )
+  );
+}
+
+// ── Journal page ──────────────────────────────────────────────────────────
+
+function JournalPage() {
+  const [data, setData] = useState(null);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    api(`/api/journal?page=${page}&page_size=10`).then(setData).catch(() => {});
+  }, [page]);
+
+  if (!data) return React.createElement('div', { className: 'loading' }, 'Loading journal…');
+
+  return React.createElement('div', null,
+    React.createElement('h2', { style: { fontSize: '20px', marginBottom: '20px', color: '#f0f6fc' } }, 'Journal'),
+    data.entries.map((e, i) =>
+      React.createElement('div', { className: 'journal-entry', key: i },
+        React.createElement('div', { className: 'date' }, e.date),
+        React.createElement('pre', null, e.content.slice(0, 1200) + (e.content.length > 1200 ? '\n…' : ''))
+      )
+    ),
+    React.createElement('div', { className: 'pagination' },
+      React.createElement('span', { className: 'page-info' },
+        `${data.total} entries · Page ${page} of ${data.pages}`),
+      React.createElement('button', {
+        className: 'page-btn', disabled: page <= 1, onClick: () => setPage(p => p - 1)
+      }, '← Prev'),
+      React.createElement('button', {
+        className: 'page-btn', disabled: page >= data.pages, onClick: () => setPage(p => p + 1)
+      }, 'Next →')
+    )
+  );
+}
+
+// ── Regime page ───────────────────────────────────────────────────────────
+
+function RegimePage() {
+  const [regime, setRegime] = useState(null);
+  const [allocator, setAllocator] = useState(null);
+  const [health, setHealth] = useState(null);
+
+  useEffect(() => {
+    api('/api/regime').then(setRegime).catch(() => {});
+    api('/api/allocator').then(setAllocator).catch(() => {});
+    api('/api/health').then(setHealth).catch(() => {});
+  }, []);
+
+  const regimeKey = (regime?.regime || 'UNKNOWN').replace(' ', '_');
+
+  return React.createElement('div', null,
+    React.createElement('h2', { style: { fontSize: '20px', marginBottom: '20px', color: '#f0f6fc' } }, 'Regime & Allocator'),
+
+    regime && React.createElement('div', { className: 'card' },
+      React.createElement('h3', null, 'Market Regime'),
+      React.createElement('span', { className: `regime-badge regime-${regimeKey}` },
+        regime.regime || 'UNKNOWN'),
+      regime.confidence != null && React.createElement('span', {
+        style: { marginLeft: '12px', fontSize: '13px', color: '#8b949e' }
+      }, `Confidence: ${(regime.confidence * 100).toFixed(0)}%`),
+      React.createElement('div', { style: { marginTop: '12px', display: 'flex', gap: '24px' } },
+        React.createElement('span', {
+          style: { fontSize: '13px', color: regime.allow_longs ? '#3fb950' : '#6e7681' }
+        }, regime.allow_longs ? '✓ Longs allowed' : '✗ Longs blocked'),
+        React.createElement('span', {
+          style: { fontSize: '13px', color: regime.allow_shorts ? '#3fb950' : '#6e7681' }
+        }, regime.allow_shorts ? '✓ Shorts allowed' : '✗ Shorts blocked')
+      ),
+      regime.reason && React.createElement('p', {
+        style: { marginTop: '10px', fontSize: '13px', color: '#8b949e' }
+      }, regime.reason)
+    ),
+
+    allocator?.policy && React.createElement('div', { className: 'card' },
+      React.createElement('h3', null, `Allocator Sleeves (policy v${allocator.policy.policy_version || '?'})`),
+      React.createElement('div', { className: 'table-wrap' },
+        React.createElement('table', null,
+          React.createElement('thead', null,
+            React.createElement('tr', null,
+              ['Sleeve', 'bull_trend', 'bull_chop', 'bear_chop', 'bear_trend', 'Enable Env'].map(h =>
+                React.createElement('th', { key: h }, h))
+            )
+          ),
+          React.createElement('tbody', null,
+            (allocator.policy.sleeves || []).map(s =>
+              React.createElement('tr', { key: s.name },
+                React.createElement('td', { style: { color: '#58a6ff' } }, s.name),
+                ...['bull_trend', 'bull_chop', 'bear_chop', 'bear_trend'].map(k => {
+                  const v = s.base_risk_mult_by_regime?.[k] ?? 0;
+                  return React.createElement('td', { key: k, style: { color: v > 0 ? '#3fb950' : '#6e7681' } },
+                    v > 0 ? v.toFixed(2) : '–');
+                }),
+                React.createElement('td', { style: { fontSize: '11px', color: '#8b949e' } },
+                  s.enable_env || '—')
+              )
+            )
+          )
+        )
+      )
+    )
+  );
+}
+
+// ── Main app ──────────────────────────────────────────────────────────────
+
+const PAGES = ['Dashboard', 'Trades', 'Summary', 'Journal', 'Regime'];
+
+function App() {
+  const [authStage, setAuthStage] = useState('unknown'); // unknown | login | totp | authed
+  const [userEmail, setUserEmail] = useState('');
+  const [activePage, setActivePage] = useState('Dashboard');
+
+  // Check if already logged in
+  useEffect(() => {
+    api('/auth/me')
+      .then(d => { setUserEmail(d.email); setAuthStage('authed'); })
+      .catch(err => {
+        if (err.status === 401) setAuthStage('login');
+        else setAuthStage('login');
+      });
+  }, []);
+
+  async function handleLogout() {
+    try { await fetch('/auth/logout', { method: 'DELETE', credentials: 'include' }); } catch (_) {}
+    setAuthStage('login');
+    setUserEmail('');
+  }
+
+  if (authStage === 'unknown') return React.createElement('div', { className: 'loading' }, 'Loading…');
+  if (authStage === 'login') return React.createElement(LoginScreen, {
+    onPartialAuth: email => { setUserEmail(email); setAuthStage('totp'); }
+  });
+  if (authStage === 'totp') return React.createElement(TOTPScreen, {
+    email: userEmail,
+    onAuth: email => { setUserEmail(email); setAuthStage('authed'); }
+  });
+
+  const pageComponent = {
+    'Dashboard': DashboardPage,
+    'Trades': TradesPage,
+    'Summary': SummaryPage,
+    'Journal': JournalPage,
+    'Regime': RegimePage,
+  }[activePage] || DashboardPage;
+
+  return React.createElement('div', { className: 'app' },
+    React.createElement('nav', { className: 'navbar' },
+      React.createElement('h1', null, '📈 Trading Journal'),
+      React.createElement('div', { className: 'nav-links' },
+        PAGES.map(p => React.createElement('button', {
+          key: p, className: `nav-btn ${activePage === p ? 'active' : ''}`,
+          onClick: () => setActivePage(p)
+        }, p))
+      ),
+      React.createElement('div', { className: 'nav-right' },
+        React.createElement('span', { className: 'user-tag' }, userEmail),
+        React.createElement('button', { className: 'logout-btn', onClick: handleLogout }, 'Sign out')
+      )
+    ),
+    React.createElement('main', { className: 'content' },
+      React.createElement(pageComponent, null)
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+</script>
+</body>
+</html>
