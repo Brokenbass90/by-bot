@@ -490,6 +490,28 @@ def _parse_date_ymd(text: str) -> date | None:
         return None
 
 
+def _position_loss_pct(pos: dict[str, Any]) -> float:
+    """Return how far below entry a position is (positive = loss).
+
+    Returns 0.0 when the position is flat or profitable.
+    Uses ``unrealized_plpc`` from the Alpaca API when available,
+    otherwise falls back to avg_entry_price vs current_price.
+    """
+    raw = pos.get("unrealized_plpc")
+    if raw is not None:
+        try:
+            plpc = float(raw)
+            return -plpc if plpc < 0 else 0.0
+        except Exception:
+            pass
+    avg_entry = _safe_float(pos.get("avg_entry_price"), 0.0)
+    cur = _safe_float(pos.get("current_price"), 0.0)
+    if avg_entry > 0 and cur > 0:
+        loss = (avg_entry - cur) / avg_entry
+        return loss if loss > 0 else 0.0
+    return 0.0
+
+
 def _pick_age_days(picks: list[Pick]) -> tuple[str, int | None]:
     latest_entry = ""
     latest_dt: date | None = None
@@ -535,7 +557,7 @@ def main() -> int:
         print("error=no_picks_for_month", file=sys.stderr)
         return 3
 
-    max_positions = max(1, _env_int("ALPACA_MAX_POSITIONS", 2))
+    max_positions = max(1, _env_int("ALPACA_MAX_POSITIONS", 3))
     target_alloc_pct = max(0.01, min(1.0, _env_float("ALPACA_TARGET_ALLOC_PCT", 0.45)))
     min_dollar_order = max(1.0, _env_float("ALPACA_MIN_DOLLAR_ORDER", 50.0))
     send_orders = _env_bool("ALPACA_SEND_ORDERS", False)
@@ -557,6 +579,23 @@ def main() -> int:
     tg_chat_id = _env("TG_CHAT_ID")
     earnings_days = max(1, _env_int("EARNINGS_DAYS_GUARD", 5))
     use_earnings_filter = _env_bool("ALPACA_EARNINGS_FILTER", _EARNINGS_FILTER_OK)
+
+    # ── Enhancement: individual stop-loss per position ────────────────────────
+    # Close any position down more than MONTHLY_SL_PCT from entry.
+    # Works for both held picks and stale positions.
+    enable_stop_loss = _env_bool("MONTHLY_SL_ENABLE", True)
+    stop_loss_pct = max(0.01, _env_float("MONTHLY_SL_PCT", 0.08))   # default 8%
+
+    # ── Enhancement: score-weighted position sizing ───────────────────────────
+    # Higher-momentum picks get a larger slice of the allocation.
+    weighted_sizing = _env_bool("MONTHLY_WEIGHTED_SIZING", True)
+
+    # ── Enhancement: mid-month rotation ──────────────────────────────────────
+    # After day N of the month, replace held picks that have lost momentum
+    # (lost > MONTHLY_MIDMONTH_DD_PCT) with next best candidates.
+    midmonth_rotation = _env_bool("MONTHLY_MIDMONTH_ROTATION", True)
+    midmonth_day_threshold = max(1, _env_int("MONTHLY_MIDMONTH_DAY", 14))
+    midmonth_dd_pct = max(0.01, _env_float("MONTHLY_MIDMONTH_DD_PCT", 0.05))  # 5%
 
     key_id = _env("ALPACA_API_KEY_ID")
     secret_key = _env("ALPACA_API_SECRET_KEY")
@@ -668,11 +707,93 @@ def main() -> int:
     )
     hold_symbols = sorted(sym for sym in occupied_symbols if sym in selected_symbols)
     new_buy_symbols = [p.ticker for p in selected if p.ticker not in occupied_symbols]
-    per_position_notional = (
-        max(min_dollar_order, effective_capital * target_alloc_pct / max(1, len(selected)))
-        if selected
-        else 0.0
+
+    # ── Stop-loss detection ───────────────────────────────────────────────────
+    # Any position (held or stale) that is down >= stop_loss_pct → force close.
+    sl_triggered_symbols: list[str] = []
+    sl_details: dict[str, float] = {}
+    if enable_stop_loss and not offline_dry_run:
+        for sym, pos in current_positions.items():
+            if sym in intraday_managed_symbols:
+                continue  # Never touch intraday-managed positions
+            loss = _position_loss_pct(pos)
+            if loss >= stop_loss_pct:
+                sl_triggered_symbols.append(sym)
+                sl_details[sym] = round(loss * 100, 2)
+
+    # Symbols freed by stop-loss may become new buy candidates
+    # (we'll try to fill with next-best picks after closing)
+    sl_freed_slots = len(sl_triggered_symbols)
+
+    # ── Mid-month rotation detection ─────────────────────────────────────────
+    today_day = datetime.now(timezone.utc).day
+    rotation_symbols: list[str] = []
+    rotation_details: dict[str, float] = {}
+    if midmonth_rotation and today_day > midmonth_day_threshold and not offline_dry_run:
+        for sym in list(hold_symbols):
+            if sym in sl_triggered_symbols:
+                continue  # Already being closed by SL
+            if sym in intraday_managed_symbols:
+                continue
+            pos = current_positions.get(sym, {})
+            loss = _position_loss_pct(pos)
+            if loss >= midmonth_dd_pct:
+                rotation_symbols.append(sym)
+                rotation_details[sym] = round(loss * 100, 2)
+
+    # Symbols being rotated out are treated as stale for buy purposes
+    rotated_out = set(rotation_symbols)
+
+    # Extend new_buy_symbols: after SL + rotation closes, fill with next picks
+    extended_candidates = [p.ticker for p in picks if p.ticker not in earnings_blocked]
+    # Picks that are neither currently held (after removals) nor already queued
+    already_handled = (
+        set(hold_symbols) - rotated_out - set(sl_triggered_symbols)
+        | set(new_buy_symbols)
+        | set(sl_triggered_symbols)
+        | rotated_out
     )
+    replacement_picks = [t for t in extended_candidates if t not in already_handled]
+    replacement_slots = sl_freed_slots + len(rotation_symbols)
+    replacement_buys = replacement_picks[:replacement_slots] if replacement_slots > 0 else []
+
+    # ── Score-weighted position sizing ────────────────────────────────────────
+    # Allocate proportional to momentum score; fallback to equal weight.
+    all_buy_tickers = new_buy_symbols + replacement_buys
+    all_buy_set = set(all_buy_tickers)
+    # Include hold positions in weighting if weighted_sizing is on
+    all_active = [p for p in picks if p.ticker in (selected_symbols | all_buy_set)]
+
+    if weighted_sizing and all_active:
+        total_score = sum(p.score for p in all_active)
+        if total_score > 0:
+            score_weights = {p.ticker: p.score / total_score for p in all_active}
+        else:
+            n = max(1, len(all_active))
+            score_weights = {p.ticker: 1.0 / n for p in all_active}
+        # Clamp: no single position gets more than 60% of allocation
+        max_weight = min(0.60, max(score_weights.values()) if score_weights else 0.60)
+        score_weights = {t: min(w, max_weight) for t, w in score_weights.items()}
+        # Re-normalise after clamping
+        sw_total = sum(score_weights.values()) or 1.0
+        score_weights = {t: w / sw_total for t, w in score_weights.items()}
+        per_ticker_notional: dict[str, float] = {
+            t: max(min_dollar_order, effective_capital * target_alloc_pct * w)
+            for t, w in score_weights.items()
+        }
+        # Fallback for tickers not in active picks (shouldn't happen, but safe)
+        per_position_notional = max(
+            min_dollar_order,
+            effective_capital * target_alloc_pct / max(1, len(all_active)),
+        )
+    else:
+        per_position_notional = (
+            max(min_dollar_order, effective_capital * target_alloc_pct / max(1, len(selected)))
+            if selected
+            else 0.0
+        )
+        per_ticker_notional = {p.ticker: per_position_notional for p in all_active}
+        score_weights = {}
     summary_path = _latest_summary_path(picks_csv)
     summary_row = _load_summary_row(summary_path)
     cycle_reason = (
@@ -732,6 +853,18 @@ def main() -> int:
         "stale_positions": stale_symbols,
         "stale_pending_orders": stale_order_symbols,
         "hold_positions": hold_symbols,
+        "stop_loss_pct": round(stop_loss_pct * 100, 2),
+        "stop_loss_enabled": enable_stop_loss,
+        "sl_triggered": sl_triggered_symbols,
+        "sl_loss_pct": sl_details,
+        "midmonth_rotation_enabled": midmonth_rotation,
+        "midmonth_day_threshold": midmonth_day_threshold,
+        "midmonth_dd_pct": round(midmonth_dd_pct * 100, 2),
+        "rotation_triggered": rotation_symbols,
+        "rotation_loss_pct": rotation_details,
+        "replacement_buys": replacement_buys,
+        "weighted_sizing": weighted_sizing,
+        "score_weights": {t: round(w, 4) for t, w in score_weights.items()},
         "pending_buy_orders": [
             {
                 "ticker": sym,
@@ -756,8 +889,63 @@ def main() -> int:
         "results": [],
     }
     if send_orders:
+        # ── 1. Stop-loss closes (highest priority) ────────────────────────────
+        if enable_stop_loss:
+            for symbol in sl_triggered_symbols:
+                if symbol not in current_positions:
+                    continue
+                try:
+                    result = client.close_position(symbol)
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "stop_loss_close",
+                            "loss_pct": sl_details.get(symbol, 0.0),
+                            "order_id": result.get("id"),
+                            "status": result.get("status"),
+                        }
+                    )
+                except RuntimeError as exc:
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "stop_loss_close",
+                            "status": "error",
+                            "error": str(exc),
+                        }
+                    )
+
+        # ── 2. Mid-month rotation closes ──────────────────────────────────────
+        if midmonth_rotation and rotation_symbols:
+            for symbol in rotation_symbols:
+                if symbol not in current_positions:
+                    continue
+                try:
+                    result = client.close_position(symbol)
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "rotation_close",
+                            "loss_pct": rotation_details.get(symbol, 0.0),
+                            "order_id": result.get("id"),
+                            "status": result.get("status"),
+                        }
+                    )
+                except RuntimeError as exc:
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "rotation_close",
+                            "status": "error",
+                            "error": str(exc),
+                        }
+                    )
+
+        # ── 3. Close stale positions (classic month-end rotation) ─────────────
         if close_stale_positions:
             for symbol in stale_symbols:
+                if symbol in sl_triggered_symbols or symbol in rotation_symbols:
+                    continue  # Already handled above
                 try:
                     result = client.close_position(symbol)
                     report["results"].append(
@@ -794,17 +982,20 @@ def main() -> int:
                             "status": result.get("status", "canceled"),
                         }
                     )
+
+        # ── 4. Buy new picks (main cycle) ─────────────────────────────────────
         for pick in selected:
-            if pick.ticker in current_positions:
+            if pick.ticker in current_positions and pick.ticker not in sl_triggered_symbols and pick.ticker not in rotation_symbols:
                 report["results"].append(
                     {
                         "ticker": pick.ticker,
                         "action": "hold_existing",
                         "status": "skipped_existing_position",
+                        "score_weight": round(score_weights.get(pick.ticker, 0.0), 4),
                     }
                 )
                 continue
-            if pick.ticker in pending_buy_orders:
+            if pick.ticker in pending_buy_orders and pick.ticker not in sl_triggered_symbols:
                 report["results"].append(
                     {
                         "ticker": pick.ticker,
@@ -813,16 +1004,47 @@ def main() -> int:
                     }
                 )
                 continue
-            result = client.submit_market_buy(pick.ticker, per_position_notional)
+            notional = per_ticker_notional.get(pick.ticker, per_position_notional)
+            result = client.submit_market_buy(pick.ticker, notional)
             report["results"].append(
                 {
                     "ticker": pick.ticker,
                     "action": "market_buy",
                     "order_id": result.get("id"),
                     "status": result.get("status"),
-                    "notional": per_position_notional,
+                    "notional": round(notional, 2),
+                    "score_weight": round(score_weights.get(pick.ticker, 0.0), 4),
                 }
             )
+
+        # ── 5. Buy replacement picks (after SL/rotation freed slots) ──────────
+        for ticker in replacement_buys:
+            if ticker in current_positions or ticker in pending_buy_orders:
+                continue
+            if ticker in earnings_blocked:
+                continue
+            notional = per_ticker_notional.get(ticker, per_position_notional)
+            try:
+                result = client.submit_market_buy(ticker, notional)
+                report["results"].append(
+                    {
+                        "ticker": ticker,
+                        "action": "replacement_buy",
+                        "order_id": result.get("id"),
+                        "status": result.get("status"),
+                        "notional": round(notional, 2),
+                        "score_weight": round(score_weights.get(ticker, 0.0), 4),
+                    }
+                )
+            except RuntimeError as exc:
+                report["results"].append(
+                    {
+                        "ticker": ticker,
+                        "action": "replacement_buy",
+                        "status": "error",
+                        "error": str(exc),
+                    }
+                )
 
     advisory = _alpaca_ai_advisory(report=report, summary_row=summary_row, picks_csv=picks_csv)
     if advisory:
@@ -863,14 +1085,27 @@ def main() -> int:
             ticker = r.get("ticker", "?")
             action = r.get("action", "?")
             if action == "market_buy":
-                status = r.get("status", "?")
-                lines.append(f"  🟢 BUY {ticker} ${round(per_position_notional,0):.0f} — {status}")
+                notional = r.get("notional", per_position_notional)
+                sw = r.get("score_weight", 0.0)
+                sw_str = f" w={sw:.2f}" if weighted_sizing and sw > 0 else ""
+                lines.append(f"  🟢 BUY {ticker} ${round(notional,0):.0f}{sw_str} — {r.get('status','?')}")
+            elif action == "replacement_buy":
+                notional = r.get("notional", per_position_notional)
+                lines.append(f"  🔄 REPLACE-BUY {ticker} ${round(notional,0):.0f} — {r.get('status','?')}")
+            elif action == "stop_loss_close":
+                loss = r.get("loss_pct", 0.0)
+                lines.append(f"  🛑 STOP-LOSS {ticker} -{loss:.1f}% — {r.get('status','?')}")
+            elif action == "rotation_close":
+                loss = r.get("loss_pct", 0.0)
+                lines.append(f"  🔁 ROTATE-OUT {ticker} -{loss:.1f}% (mid-month)")
             elif action == "close_position":
                 lines.append(f"  🔴 CLOSE {ticker}")
             elif action == "cancel_pending_buy":
                 lines.append(f"  🟠 CANCEL pending {ticker}")
             elif action == "hold_existing":
-                lines.append(f"  🟡 HOLD {ticker}")
+                sw = r.get("score_weight", 0.0)
+                sw_str = f" w={sw:.2f}" if weighted_sizing and sw > 0 else ""
+                lines.append(f"  🟡 HOLD {ticker}{sw_str}")
             elif action == "hold_pending_buy":
                 lines.append(f"  🟡 HOLD pending {ticker}")
         if not report["results"]:

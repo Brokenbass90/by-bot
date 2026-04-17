@@ -5,6 +5,62 @@
 
 ---
 
+## 2026-04-17 | Claude (session — Alpaca monthly upgrade + midterm short)
+
+**Done:**
+
+- **CRITICAL BUG FIX** — added `ALPACA_FRACTIONAL_SHARES=1` to `configs/alpaca_paper_local.env` (gitignored).  
+  Without this, NVDA at $880 with $150 notional got qty=1 whole share (~$880 order) instead of fractional.  
+  Written into `CODEX_TASK_alpaca_paper_launch_20260417.md` for server deploy.
+
+- **`scripts/alpaca_paper_launch_both.sh`** (NEW) — one-command deploy for both Alpaca branches:  
+  syntax checks → monthly dry-run → intraday dry-run → intraday cron → monthly cron → TG confirmation.
+
+- **`scripts/tg_daily_digest.py`** (NEW) — morning health report at 08:00 UTC:  
+  Bybit CB/regime/allocator/trades + Alpaca intraday P&L + monthly picks.  
+  Added as cron #14 in `setup_server_crons.sh`.
+
+- **VOLADJ** added to `smart_pump_reversal_bot.py`:  
+  reads BTC 4h ATR% from geometry state; ATR≥3% → ×0.60 positions; ATR≥5% → ×0.30.  
+  Cached 15 min, hot-reloadable, no API calls. Current ATR≈1.6% → mult=1.0 (no reduction).
+
+- **`macro_require_bullish=True`** set as default in `alt_slope_break_v1.py` and `alt_horizontal_break_v1.py`.  
+  ASB1/HZBO1 longs now require both ALLOW_LONGS=1 AND 4h MACD hist > 0.  
+  Regime orchestrator already auto-flips ALLOW_LONGS flags on BULL/BEAR transition.
+
+- **`strategies/btc_eth_midterm_short_v1.py`** (NEW) — SHORT-ONLY bear-market midterm strategy:  
+  - Trend TF: daily (1440) — EMA50/200 confirms macro downtrend  
+  - Signal TF: 4h (240) — pullback to EMA20, rejection entry  
+  - Runner exits: 50% off at 1.5R, 50% trails to 3.0R (12h time stop)  
+  - MTSV1_ env prefix; allowlist: BTCUSDT + ETHUSDT only  
+  - Added as `MTPB_VERSION=short_v1` to `midterm_live.py`  
+  - New `midterm_short` allocator sleeve: bear_trend=0.9, bear_chop=0.65, bull=0.0  
+  - **Disabled by default** (`ENABLE_MTSV1_TRADING=0`) — requires WF-22 before going live
+
+- **`scripts/equities_alpaca_paper_bridge.py`** (UPGRADED) — 4 major enhancements:  
+  1. **Individual stop-loss** (`MONTHLY_SL_PCT=8%`) — closes any position down >8% using `unrealized_plpc` from Alpaca API  
+  2. **Score-weighted sizing** (`MONTHLY_WEIGHTED_SIZING=1`) — higher momentum score → larger slice; max 60% cap per position  
+  3. **Mid-month rotation** (`MONTHLY_MIDMONTH_ROTATION=1`, day>14) — replaces positions down >5% with next-best pick  
+  4. **More picks** — default `ALPACA_MAX_POSITIONS` bumped 2 → 3; supports up to 5  
+
+**Key findings:**
+
+- Monthly Alpaca backtest: WR=62.5%, PF=4.68, +130.4% over 36 months (≈+32% CAGR).  
+  With improvements (stop-loss + weighted sizing) realistic target is +40-50% CAGR.  
+  100%/year would require leverage or fundamentally different strategy structure.
+
+- Intraday Alpaca: raw net is -$204/yr across all combos. WF-filtered top combos (GOOGL+trend_retest,  
+  NVDA+pullback, AVGO+breakout) sum to ≈+$255/yr. Paper test running to validate.
+
+- WF-22 still needed for: midterm_short_v1, IVB1 with RR=2.2, Midterm v3 longs.
+
+**Next:**
+- Server: run `CODEX_TASK_alpaca_paper_launch_20260417.md` steps  
+- Codex: WF-22 for btc_eth_midterm_short_v1  
+- Monitor monthly Alpaca paper for 1 month with new stop-loss / rotation active
+
+---
+
 ## 2026-04-10 | Codex (session 35 - flat universe repair + Alpaca contour separation)
 
 **Done:**
