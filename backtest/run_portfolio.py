@@ -93,6 +93,7 @@ BTCETHMidtermPullbackStrategy = _import_strategy_class("btc_eth_midterm_pullback
 BTCETHMidtermPullbackV2Strategy = _import_strategy_class("btc_eth_midterm_pullback_v2", "BTCETHMidtermPullbackV2Strategy")
 BTCETHMidtermV3Strategy = _import_strategy_class("btc_eth_midterm_v3", "BTCETHMidtermV3Strategy")
 BTCETHMidtermShortV1Strategy = _import_strategy_class("btc_eth_midterm_short_v1", "BTCETHMidtermShortV1Strategy")
+BTCETHMidtermShortV2Strategy = _import_strategy_class("btc_eth_midterm_short_v2", "BTCETHMidtermShortV2Strategy")
 BTCETHVolExpansionStrategy = _import_strategy_class("btc_eth_vol_expansion", "BTCETHVolExpansionStrategy")
 BTCETHTrendRSIReentryStrategy = _import_strategy_class("btc_eth_trend_rsi_reentry", "BTCETHTrendRSIReentryStrategy")
 TrendlineBreakRetestStrategy = _import_strategy_class("trendline_break_retest", "TrendlineBreakRetestStrategy")
@@ -132,6 +133,7 @@ AltRangeScalpV1Strategy = _import_strategy_class("alt_range_scalp_v1", "AltRange
 AltVWAPMeanReversionV1Strategy = _import_strategy_class("alt_vwap_mean_reversion_v1", "AltVWAPMeanReversionV1Strategy")
 PumpFadeV2Strategy = _import_strategy_class("pump_fade_v2", "PumpFadeV2Strategy")
 ElderTripleScreenV2Strategy = _import_strategy_class("elder_triple_screen_v2", "ElderTripleScreenV2Strategy")
+ElderTripleScreenV3Strategy = _import_strategy_class("elder_triple_screen_v3", "ElderTripleScreenV3Strategy")
 MicroScalperV1Strategy = _import_strategy_class("micro_scalper_v1", "MicroScalperV1Strategy")
 MicroScalperBounceV1Strategy = _import_strategy_class("micro_scalper_bounce_v1", "MicroScalperBounceV1Strategy")
 MicroScalperBreakoutV1Strategy = _import_strategy_class("micro_scalper_breakout_v1", "MicroScalperBreakoutV1Strategy")
@@ -895,7 +897,7 @@ def main():
         raise SystemExit("No symbols selected. Provide --symbols or relax --min_volume_usd/--top_n.")
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
-    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_pullback_be_trail", "sr_break_retest_volume_v1", "sloped_break_retest_v1", "sloped_resistance_choch_v1", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "smart_grid_v2", "smart_grid_v3", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow", "trendline_break_retest_v2", "flat_bounce_v2", "flat_bounce_v3", "btc_eth_trend_follow_v2", "trendline_break_retest_v3", "trendline_break_retest_v4", "structure_shift_v1", "structure_shift_v2", "tv_atr_trend_v1", "tv_atr_trend_v2", "triple_screen_v132", "triple_screen_v132b", "btc_regime_retest_v1", "btc_cycle_pullback_v1", "btc_macro_cycle_v1", "btc_cycle_continuation_v1", "btc_cycle_level_target_v2", "btc_daily_level_reclaim_v1", "btc_swing_zone_reclaim_v1", "btc_weekly_zone_reclaim_v2", "btc_regime_flip_continuation_v1", "btc_sloped_reclaim_v1", "alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1", "alt_inplay_breakdown_v1", "alt_inplay_breakdown_v2", "alt_support_bounce_v1", "alt_range_scalp_v1", "alt_vwap_mean_reversion_v1", "micro_scalper_v1", "micro_scalper_bounce_v1", "micro_scalper_breakout_v1", "alt_support_reclaim_v1", "pump_fade_v4r", "pump_fade_simple", "pump_fade_v2", "btc_eth_midterm_pullback_v2", "btc_eth_midterm_v3", "btc_eth_midterm_short_v1", "funding_rate_reversion_v1", "liquidation_cascade_entry_v1", "pump_momentum_v1", "elder_triple_screen_v2", "impulse_volume_breakout_v1",
+    allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_pullback_be_trail", "sr_break_retest_volume_v1", "sloped_break_retest_v1", "sloped_resistance_choch_v1", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "smart_grid_v2", "smart_grid_v3", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow", "trendline_break_retest_v2", "flat_bounce_v2", "flat_bounce_v3", "btc_eth_trend_follow_v2", "trendline_break_retest_v3", "trendline_break_retest_v4", "structure_shift_v1", "structure_shift_v2", "tv_atr_trend_v1", "tv_atr_trend_v2", "triple_screen_v132", "triple_screen_v132b", "btc_regime_retest_v1", "btc_cycle_pullback_v1", "btc_macro_cycle_v1", "btc_cycle_continuation_v1", "btc_cycle_level_target_v2", "btc_daily_level_reclaim_v1", "btc_swing_zone_reclaim_v1", "btc_weekly_zone_reclaim_v2", "btc_regime_flip_continuation_v1", "btc_sloped_reclaim_v1", "alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1", "alt_inplay_breakdown_v1", "alt_inplay_breakdown_v2", "alt_support_bounce_v1", "alt_range_scalp_v1", "alt_vwap_mean_reversion_v1", "micro_scalper_v1", "micro_scalper_bounce_v1", "micro_scalper_breakout_v1", "alt_support_reclaim_v1", "pump_fade_v4r", "pump_fade_simple", "pump_fade_v2", "btc_eth_midterm_pullback_v2", "btc_eth_midterm_v3", "btc_eth_midterm_short_v1", "btc_eth_midterm_short_v2", "funding_rate_reversion_v1", "liquidation_cascade_entry_v1", "pump_momentum_v1", "elder_triple_screen_v2", "elder_triple_screen_v3", "impulse_volume_breakout_v1",
         "alt_trendline_touch_v1", "alt_sloped_momentum_v1", "alt_volume_spike_momentum_v1",
         "alt_slope_break_v1",
         "alt_horizontal_break_v1"}
@@ -1050,6 +1052,7 @@ def main():
     btc_eth_midterm_pullback_v2 = {sym: BTCETHMidtermPullbackV2Strategy() for sym in symbols} if "btc_eth_midterm_pullback_v2" in strategies else {}
     btc_eth_midterm_v3 = {sym: BTCETHMidtermV3Strategy() for sym in symbols} if "btc_eth_midterm_v3" in strategies else {}
     btc_eth_midterm_short_v1 = {sym: BTCETHMidtermShortV1Strategy() for sym in symbols} if "btc_eth_midterm_short_v1" in strategies else {}
+    btc_eth_midterm_short_v2 = {sym: BTCETHMidtermShortV2Strategy() for sym in symbols} if "btc_eth_midterm_short_v2" in strategies else {}
     btc_eth_vol_expansion = {sym: BTCETHVolExpansionStrategy() for sym in symbols} if "btc_eth_vol_expansion" in strategies else {}
     btc_eth_trend_rsi_reentry = {sym: BTCETHTrendRSIReentryStrategy() for sym in symbols} if "btc_eth_trend_rsi_reentry" in strategies else {}
     trendline_break_retest = {sym: TrendlineBreakRetestStrategy() for sym in symbols} if "trendline_break_retest" in strategies else {}
@@ -1086,6 +1089,7 @@ def main():
     alt_vwap_mean_reversion_v1 = {sym: AltVWAPMeanReversionV1Strategy() for sym in symbols} if "alt_vwap_mean_reversion_v1" in strategies else {}
     pump_fade_v2 = {sym: PumpFadeV2Strategy() for sym in symbols} if "pump_fade_v2" in strategies else {}
     elder_triple_screen_v2 = {sym: ElderTripleScreenV2Strategy() for sym in symbols} if "elder_triple_screen_v2" in strategies else {}
+    elder_triple_screen_v3 = {sym: ElderTripleScreenV3Strategy() for sym in symbols} if "elder_triple_screen_v3" in strategies else {}
     micro_scalper_v1 = {sym: MicroScalperV1Strategy() for sym in symbols} if "micro_scalper_v1" in strategies else {}
     micro_scalper_bounce_v1 = {sym: MicroScalperBounceV1Strategy() for sym in symbols} if "micro_scalper_bounce_v1" in strategies else {}
     micro_scalper_breakout_v1 = {sym: MicroScalperBreakoutV1Strategy() for sym in symbols} if "micro_scalper_breakout_v1" in strategies else {}
@@ -1245,6 +1249,12 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = elder_triple_screen_v2[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "elder_triple_screen_v3":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = elder_triple_screen_v3[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "pump_fade_simple":
                 i = getattr(store, 'i5', getattr(store, 'i', None))
                 if i is None:
@@ -1373,6 +1383,12 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = btc_eth_midterm_short_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "btc_eth_midterm_short_v2":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = btc_eth_midterm_short_v2[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "btc_regime_retest_v1":
                 i = getattr(store, 'i5', getattr(store, 'i', None))
                 if i is None:

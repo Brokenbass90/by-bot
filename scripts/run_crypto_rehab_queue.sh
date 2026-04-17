@@ -11,7 +11,11 @@ WAIT_FOR_TAG="${WAIT_FOR_TAG:-current_crypto_livecore_20260417}"
 
 wait_for_tag() {
   local tag="$1"
-  while pgrep -f "$tag" >/dev/null 2>&1; do
+  if compgen -G "$ROOT/backtest_runs/dynamic_annual_*_${tag}" >/dev/null 2>&1; then
+    echo "[queue] found completed annual for $tag"
+    return 0
+  fi
+  while pgrep -fal "$tag" 2>/dev/null | grep -v "run_crypto_rehab_queue.sh" >/dev/null 2>&1; do
     echo "[queue] waiting for $tag ..."
     sleep 30
   done
@@ -20,7 +24,12 @@ wait_for_tag() {
 run_annual() {
   local tag="$1"
   shift
+  if compgen -G "$ROOT/backtest_runs/dynamic_annual_*_${tag}" >/dev/null 2>&1; then
+    echo "[queue] skip existing $tag"
+    return 0
+  fi
   echo "[queue] starting $tag"
+  set +e
   (
     cd "$ROOT"
     env "$@" "$PY" "$ANNUAL" \
@@ -32,7 +41,31 @@ run_annual() {
       --step_days 30 \
       --historical-hold-cycles 1
   )
+  local rc=$?
+  set -e
+  if [[ $rc -ne 0 ]]; then
+    echo "[queue] annual failed rc=$rc tag=$tag"
+    return 0
+  fi
   echo "[queue] finished $tag"
+}
+
+run_step() {
+  local name="$1"
+  shift
+  echo "[queue] starting $name"
+  set +e
+  (
+    cd "$ROOT"
+    "$@"
+  )
+  local rc=$?
+  set -e
+  if [[ $rc -ne 0 ]]; then
+    echo "[queue] step failed rc=$rc name=$name"
+    return 0
+  fi
+  echo "[queue] finished $name"
 }
 
 if [[ -n "${WAIT_FOR_TAG:-}" ]]; then
@@ -68,5 +101,8 @@ run_annual \
   ENABLE_ASB1_TRADING=0 ASB1_RISK_MULT=0 \
   ENABLE_HZBO1_TRADING=0 HZBO1_RISK_MULT=0 \
   ENABLE_VWAP_TRADING=0 VWAP_RISK_MULT=0
+
+run_step elder_v3_wf bash scripts/run_elder_v3_wf22.sh
+run_step midterm_short_v2 bash scripts/run_midterm_short_v2_backtests.sh
 
 echo "[queue] all rehab annuals finished"
