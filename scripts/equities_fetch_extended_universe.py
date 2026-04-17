@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch extended universe of US large-cap equities for monthly research.
+"""Fetch extended universe of US large-cap equities for intraday/monthly research.
 
 Downloads 1H candles from Yahoo Finance for a broad universe.
 Saves to data_cache/equities_1h/<TICKER>_M5.csv (M5 naming for compat).
@@ -18,6 +18,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+YF_1H_MAX_HISTORY_DAYS = 700
 
 # Extended large-cap universe (50 most liquid US stocks + benchmarks)
 EXTENDED_UNIVERSE = [
@@ -50,10 +51,13 @@ def fetch_yf_1h(ticker: str, years: int = 4) -> list[list]:
         import yfinance as yf
 
     end_dt = datetime.now(timezone.utc)
-    # YF limits 1h data to ~730 days per request, so we do multiple chunks
+    # Yahoo only exposes ~730 days of 1h data in total, not just per request.
+    # Cap the effective lookback so we do not ask for impossible historical ranges.
     all_rows = []
-    chunk_days = 700
-    start_dt = end_dt - timedelta(days=years * 365)
+    chunk_days = 350
+    requested_days = years * 365
+    effective_days = min(requested_days, YF_1H_MAX_HISTORY_DAYS)
+    start_dt = end_dt - timedelta(days=effective_days)
 
     current_start = start_dt
     while current_start < end_dt:
@@ -103,7 +107,8 @@ def main():
     out_dir = ROOT / args.out_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    min_rows_expected = args.years * 252 * 7  # ~7 hourly bars per trading day
+    effective_days = min(args.years * 365, YF_1H_MAX_HISTORY_DAYS)
+    min_rows_expected = int(effective_days * 7)  # ~7 hourly bars per trading day
 
     for i, ticker in enumerate(tickers, 1):
         csv_path = out_dir / f"{ticker}_M5.csv"
@@ -114,7 +119,11 @@ def main():
                 print(f"[{i}/{len(tickers)}] {ticker}: SKIP (already {existing_lines} rows)")
                 continue
 
-        print(f"[{i}/{len(tickers)}] {ticker}: fetching {args.years}y hourly data...")
+        effective_days = min(args.years * 365, YF_1H_MAX_HISTORY_DAYS)
+        print(
+            f"[{i}/{len(tickers)}] {ticker}: fetching ~{effective_days}d hourly data "
+            f"(requested {args.years}y)..."
+        )
         rows = fetch_yf_1h(ticker, args.years)
 
         if not rows:

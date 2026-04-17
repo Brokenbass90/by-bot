@@ -135,6 +135,36 @@
       }
     },
     {
+      "name": "att1",
+      "enable_env": "ENABLE_ATT1_TRADING",
+      "symbol_env_key": "ATT1_SYMBOL_ALLOWLIST",
+      "risk_env": "ATT1_RISK_MULT",
+      "strategy_names": [
+        "alt_trendline_touch_v1"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.75,
+        "bull_chop": 0.95,
+        "bear_chop": 0.75,
+        "bear_trend": 0.45
+      }
+    },
+    {
+      "name": "asm1",
+      "enable_env": "ENABLE_ASM1_TRADING",
+      "symbol_env_key": "ASM1_SYMBOL_ALLOWLIST",
+      "risk_env": "ASM1_RISK_MULT",
+      "strategy_names": [
+        "alt_sloped_momentum_v1"
+      ],
+      "base_risk_mult_by_regime": {
+        "bull_trend": 1.0,
+        "bull_chop": 0.85,
+        "bear_chop": 0.55,
+        "bear_trend": 0.9
+      }
+    },
+    {
       "name": "midterm",
       "enable_env": "ENABLE_MIDTERM_TRADING",
       "symbol_env_key": "MIDTERM_SYMBOLS",

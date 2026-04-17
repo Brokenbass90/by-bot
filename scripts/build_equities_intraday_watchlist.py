@@ -67,6 +67,18 @@ def _recent_returns(closes: list[float], bars: int) -> float:
     return _safe_pct(closes[-1], closes[-1 - bars])
 
 
+def _estimate_bars_per_day(candles: list) -> int:
+    counts: dict[str, int] = {}
+    for c in candles[-500:]:
+        day = datetime.fromtimestamp(c.ts, tz=timezone.utc).strftime("%Y-%m-%d")
+        counts[day] = counts.get(day, 0) + 1
+    vals = [v for v in counts.values() if v > 0]
+    if not vals:
+        return 1
+    avg = sum(vals) / float(len(vals))
+    return max(1, int(round(avg)))
+
+
 def _efficiency_ratio(closes: list[float], bars: int) -> float:
     if len(closes) <= bars or bars <= 1:
         return 0.0
@@ -94,7 +106,8 @@ def _load_metrics(csv_path: Path, *, start_ts: int | None = None, end_ts_exclusi
             for c in candles
             if (start_ts is None or c.ts >= start_ts) and (end_ts_exclusive is None or c.ts < end_ts_exclusive)
         ]
-    if len(candles) < 78 * 6:
+    bars_per_day = _estimate_bars_per_day(candles)
+    if len(candles) < bars_per_day * 6:
         return None
 
     closes = [float(c.c) for c in candles]
@@ -105,10 +118,10 @@ def _load_metrics(csv_path: Path, *, start_ts: int | None = None, end_ts_exclusi
     if close <= 0:
         return None
 
-    bars_1d = 78
-    bars_3d = 78 * 3
-    bars_5d = 78 * 5
-    bars_10d = 78 * 10
+    bars_1d = bars_per_day
+    bars_3d = bars_per_day * 3
+    bars_5d = bars_per_day * 5
+    bars_10d = bars_per_day * 10
 
     recent_closes = closes[-bars_1d:]
     recent_highs = highs[-bars_1d:]
@@ -180,6 +193,8 @@ def _rank_and_select(
     breakout_target: int,
     reversion_target: int,
     min_avg_dollar_vol: float,
+    breakout_class: str,
+    reversion_class: str,
 ) -> tuple[list[str], dict[str, str], list[SymbolMetrics]]:
     valid = [m for m in metrics if m.avg_dollar_vol_1d >= min_avg_dollar_vol]
     breakout = sorted(
@@ -218,7 +233,10 @@ def _rank_and_select(
 
     selected = selected[:max_symbols]
     symbols = [m.symbol for m in selected]
-    strategy_map = {m.symbol: m.strategy_class for m in selected}
+    strategy_map = {
+        m.symbol: (breakout_class if m.strategy_class == "breakout_continuation" else reversion_class)
+        for m in selected
+    }
     return symbols, strategy_map, selected
 
 
@@ -230,6 +248,8 @@ def main() -> int:
     ap.add_argument("--breakout-target", type=int, default=6)
     ap.add_argument("--reversion-target", type=int, default=6)
     ap.add_argument("--min-avg-dollar-vol", type=float, default=25_000_000.0)
+    ap.add_argument("--breakout-class", default="breakout_continuation")
+    ap.add_argument("--reversion-class", default="grid_reversion")
     ap.add_argument("--start-date", default="", help="Optional UTC start date YYYY-MM-DD (inclusive)")
     ap.add_argument("--end-date", default="", help="Optional UTC end date YYYY-MM-DD (inclusive)")
     ap.add_argument("--out-json", default="configs/intraday_config.json")
@@ -265,6 +285,8 @@ def main() -> int:
         breakout_target=max(0, int(args.breakout_target)),
         reversion_target=max(0, int(args.reversion_target)),
         min_avg_dollar_vol=float(args.min_avg_dollar_vol),
+        breakout_class=str(args.breakout_class).strip() or "breakout_continuation",
+        reversion_class=str(args.reversion_class).strip() or "grid_reversion",
     )
 
     payload = {
