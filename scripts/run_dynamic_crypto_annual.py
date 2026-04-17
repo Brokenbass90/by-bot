@@ -45,6 +45,7 @@ RUN_PORTFOLIO = ROOT / "backtest" / "run_portfolio.py"
 VENV_PYTHON = ROOT / ".venv" / "bin" / "python"
 BACKTEST_RUNS = ROOT / "backtest_runs"
 DEFAULT_BASE_ENV = ROOT / "configs" / "server_clean.env"
+DEFAULT_CACHE_DIR = ROOT / ".cache" / "klines"
 
 
 def _parse_date(value: str) -> dt.date:
@@ -65,6 +66,21 @@ def _resolve_path(raw: str) -> Path:
     if not path.is_absolute():
         path = (ROOT / path).resolve()
     return path
+
+
+def _cached_symbol_subset(symbols: List[str], *, cache_dir: Path, base_interval_min: int = 5) -> tuple[List[str], List[str]]:
+    interval = "1" if int(base_interval_min) == 1 else "5"
+    kept: List[str] = []
+    dropped: List[str] = []
+    for raw_symbol in symbols:
+        symbol = str(raw_symbol or "").strip().upper()
+        if not symbol:
+            continue
+        if any(cache_dir.glob(f"{symbol}_{interval}_*.json")):
+            kept.append(symbol)
+        else:
+            dropped.append(symbol)
+    return kept, dropped
 
 
 _RUNTIME_OVERRIDE_PREFIXES = (
@@ -523,6 +539,7 @@ def main() -> int:
     ap.add_argument("--health", default=str(DEFAULT_HEALTH))
     ap.add_argument("--health-timeline", default=str(DEFAULT_HEALTH_TIMELINE))
     ap.add_argument("--symbol-memory", default=str(DEFAULT_SYMBOL_MEMORY))
+    ap.add_argument("--cache-dir", default=str(DEFAULT_CACHE_DIR))
     ap.add_argument("--max-scan-symbols", type=int, default=80)
     ap.add_argument("--starting_equity", type=float, default=100.0)
     ap.add_argument("--base_risk_pct", type=float, default=0.01)
@@ -557,6 +574,7 @@ def main() -> int:
     fallback_health = _load_json(_resolve_path(args.health), {})
     health_timeline = load_strategy_health_timeline(_resolve_path(args.health_timeline))
     symbol_memory = _load_json(_resolve_path(args.symbol_memory), {})
+    cache_dir = _resolve_path(args.cache_dir)
 
     if not VENV_PYTHON.exists():
         raise FileNotFoundError(f"Missing virtualenv python: {VENV_PYTHON}")
@@ -612,6 +630,16 @@ def main() -> int:
             router_state=router_state,
             allocator_state=allocator_state,
         )
+        requested_symbols = list(symbols)
+        dropped_uncached_symbols: List[str] = []
+        cache_only = str(env_map.get("BACKTEST_CACHE_ONLY", "0")).strip().lower() in {"1", "true", "yes", "on"}
+        if cache_only:
+            symbols, dropped_uncached_symbols = _cached_symbol_subset(symbols, cache_dir=cache_dir)
+            if dropped_uncached_symbols:
+                print(
+                    f"[annual-cache] {window_end} dropped_uncached={','.join(dropped_uncached_symbols)} "
+                    f"kept={len(symbols)} requested={len(requested_symbols)}"
+                )
 
         risk_mult = _risk_multiplier_product(decision, allocator_state)
         risk_pct_eff = float(args.base_risk_pct) * float(risk_mult)
@@ -625,6 +653,8 @@ def main() -> int:
             "enabled_sleeves": ";".join(enabled_sleeves),
             "strategies": ";".join(strategies),
             "symbols": ";".join(symbols),
+            "requested_symbols": ";".join(requested_symbols),
+            "dropped_uncached_symbols": ";".join(dropped_uncached_symbols),
             "risk_pct_effective": round(risk_pct_eff, 6),
             "starting_equity": round(current_equity, 4),
             "ending_equity": round(current_equity, 4),

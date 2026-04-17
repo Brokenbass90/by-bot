@@ -17,6 +17,7 @@ import time
 import sqlite3
 import tempfile
 import json
+from pathlib import Path
 
 # ── Path setup ────────────────────────────────────────────────────────────────
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -691,6 +692,22 @@ def test_overlay_handlers_cover_live_sleeves():
     print("  ✓ overlay handlers cover range/asb1/hzbo1/bounce1")
 
 
+def test_dynamic_annual_filters_uncached_symbols():
+    from scripts.run_dynamic_crypto_annual import _cached_symbol_subset
+
+    with tempfile.TemporaryDirectory() as td:
+        cache_dir = Path(td)
+        (cache_dir / "BTCUSDT_5_1_2.json").write_text("[]", encoding="utf-8")
+        (cache_dir / "ETHUSDT_5_3_4.json").write_text("[]", encoding="utf-8")
+        kept, dropped = _cached_symbol_subset(
+            ["BTCUSDT", "LTCUSDT", "ETHUSDT", ""],
+            cache_dir=cache_dir,
+        )
+    assert kept == ["BTCUSDT", "ETHUSDT"], f"unexpected cached keep-set: {kept}"
+    assert dropped == ["LTCUSDT"], f"unexpected dropped set: {dropped}"
+    print("  ✓ dynamic annual filters uncached router symbols")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Runner
 # ─────────────────────────────────────────────────────────────────────────────
@@ -713,6 +730,7 @@ if __name__ == "__main__":
         test_operator_snapshot_alpaca_monthly_fallback,
         test_operator_controls_snapshot,
         test_overlay_handlers_cover_live_sleeves,
+        test_dynamic_annual_filters_uncached_symbols,
     ]
     print(f"\n{'─' * 55}")
     print("  smoke_test.py — running all tests")
