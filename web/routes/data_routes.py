@@ -149,11 +149,86 @@ def _load_all_trades() -> List[Dict[str, Any]]:
         key=lambda t: str(t.get("close_time") or t.get("exit_ts") or t.get("open_time") or ""),
         reverse=True,
     )
+    if trades:
+        return trades
+
+    live_jsonl = _rt("live_trade_events.jsonl")
+    if live_jsonl.exists():
+        buckets: Dict[str, Dict[str, Any]] = {}
+        try:
+            for raw in live_jsonl.read_text(errors="ignore").splitlines():
+                raw = raw.strip()
+                if not raw:
+                    continue
+                try:
+                    evt = json.loads(raw)
+                except Exception:
+                    continue
+                event_name = str(evt.get("event") or "").strip().lower()
+                if event_name not in {"order_submitted", "entry_filled", "close"}:
+                    continue
+                order_id = str(evt.get("entry_order_id") or "").strip()
+                if not order_id:
+                    order_id = "|".join(
+                        [
+                            str(evt.get("symbol") or ""),
+                            str(evt.get("strategy") or ""),
+                            str(evt.get("side") or ""),
+                            str(evt.get("ts") or ""),
+                        ]
+                    )
+                rec = buckets.setdefault(order_id, {})
+                rec.update({k: v for k, v in evt.items() if v not in (None, "")})
+                if event_name == "order_submitted":
+                    rec.setdefault("entry_ts", int(evt.get("ts") or 0))
+                elif event_name == "entry_filled":
+                    rec["entry_ts"] = int(evt.get("ts") or rec.get("entry_ts") or 0)
+                elif event_name == "close":
+                    rec["exit_ts"] = int(evt.get("ts") or 0)
+            for rec in buckets.values():
+                if not rec.get("exit_ts"):
+                    continue
+                side_raw = str(rec.get("side") or "").strip().lower()
+                side = "short" if side_raw in {"sell", "short"} else "long"
+                entry_ts = int(rec.get("entry_ts") or 0)
+                exit_ts = int(rec.get("exit_ts") or 0)
+                entry_notional = float(rec.get("entry_notional_usd") or 0.0)
+                pnl = float(rec.get("pnl") or 0.0)
+                trade = {
+                    "strategy": str(rec.get("strategy") or ""),
+                    "symbol": str(rec.get("symbol") or "").upper(),
+                    "side": side,
+                    "outcome": str(rec.get("close_reason") or "close"),
+                    "entry": float(rec.get("entry_price") or 0.0),
+                    "exit": float(rec.get("exit_price") or 0.0),
+                    "pnl": pnl,
+                    "fees": float(rec.get("fees") or 0.0),
+                    "sl": float(rec.get("sl_price") or 0.0) if rec.get("sl_price") is not None else None,
+                    "tp": float(rec.get("tp_price") or 0.0) if rec.get("tp_price") is not None else None,
+                    "entry_ts": entry_ts * 1000 if entry_ts else None,
+                    "exit_ts": exit_ts * 1000 if exit_ts else None,
+                    "open_time": datetime.fromtimestamp(entry_ts, tz=timezone.utc).strftime("%Y-%m-%d %H:%M") if entry_ts else "",
+                    "close_time": datetime.fromtimestamp(exit_ts, tz=timezone.utc).strftime("%Y-%m-%d %H:%M") if exit_ts else "",
+                    "pnl_pct": (pnl / entry_notional * 100.0) if entry_notional > 0 else None,
+                }
+                trades.append(trade)
+        except Exception:
+            pass
+        trades.sort(
+            key=lambda t: str(t.get("close_time") or t.get("exit_ts") or t.get("open_time") or ""),
+            reverse=True,
+        )
     return trades
 
 
 def _trade_sources() -> List[str]:
-    return [str(p.relative_to(_ROOT)) for p in _find_trades_csvs()]
+    paths = _find_trades_csvs()
+    if paths:
+        return [str(p.relative_to(_ROOT)) for p in paths]
+    live_jsonl = _rt("live_trade_events.jsonl")
+    if live_jsonl.exists():
+        return [str(live_jsonl.relative_to(_ROOT))]
+    return []
 
 
 # ── bot status (fast heartbeat check) ────────────────────────────────────────

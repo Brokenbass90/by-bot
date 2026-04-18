@@ -218,6 +218,14 @@ Long-horizon hardening still worth adding:
   - `banned`
 - staged web control plane:
   - read-only dashboard first
+  - HTTPS reverse proxy only
+  - strong per-env `WEB_JWT_SECRET`
+  - `WEB_COOKIE_SECURE=1` in server mode
+  - admin-only AI/control actions until RBAC is real
+  - encrypted or otherwise hardened TOTP-secret storage at rest
+  - no root-facing web deploy path long-term
+  - explicit disk caps / retention for backtests, mirrors, logs, and charts
+  - audit log for auth, control actions, and user changes
   - safe control actions second
   - multi-tenant / multi-account isolation third
   - 2FA + RBAC + audit log from day one
@@ -1353,3 +1361,4 @@ bash scripts/run_web.sh   # uvicorn web.main:app --host 127.0.0.1 --port 8765
 - `funding_rate_reversion_v1` finally has an end-to-end live data path: `funding_rate_fetcher.py --once` writes `configs/funding_rates_latest.json`, the strategy reads that JSON as a fallback, and `setup_server_crons.sh` now includes a 5-minute refresh job.
 - Important scope check on allocator `v7`: the new sleeves are not equally live-ready. `micro_scalp` is already wired in the live bot, but `breakdown_v2`, `slope_choch`, `liq_cascade`, and `funding_rev` are still policy/backtest-only until their live integration points are added explicitly.
 - Local web is now in a better “Phase 1.5” state: it mirrors live server truth continuously, shows both Alpaca paper branches, persists shared AI chat history, and accepts long operator prompts cleanly. The remaining blockers before a server push are now concrete and ordered: consolidate a real live trade export for `Trades/Strategies/P&L`, decide whether to add strategy-geometry overlays in the trade modal, then harden the deploy path with HTTPS, a non-default `WEB_JWT_SECRET`, secure cookies, and stronger TOTP-secret storage.
+- The first live-trade export fallback is now in place: when no live `trades.csv` exists, the web reconstructs closed trades from `runtime/live_trade_events.jsonl`. That is enough to stop the dashboard from going blank, but it is still a transitional path; the long-term target remains a clean consolidated live trade feed rather than ad-hoc event reconstruction.

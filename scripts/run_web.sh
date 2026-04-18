@@ -41,6 +41,7 @@ export WEB_JWT_SECRET="${WEB_JWT_SECRET:-change-me-use-openssl-rand-hex-32}"
 
 # Optional: restrict to HTTPS cookies when behind nginx
 export WEB_COOKIE_SECURE="${WEB_COOKIE_SECURE:-0}"
+export DEEPSEEK_HISTORY_MAX_MESSAGES="${DEEPSEEK_HISTORY_MAX_MESSAGES:-15}"
 
 HOST="${WEB_HOST:-127.0.0.1}"
 PORT="${WEB_PORT:-8765}"
