@@ -1,8 +1,9 @@
 {
   "version": 1,
-  "policy_version": "2026-04-18-allocator-v6",
-  "updated_utc": "2026-04-18T00:00:00Z",
+  "policy_version": "2026-04-18-allocator-v7",
+  "updated_utc": "2026-04-18T06:00:00Z",
   "_comment_v6": "Fixed backwards ASB1/HZBO1 mults (were 0.0 in bull_trend — primary bull strategies!). Enabled breakout. Raised ATT1 bull mult. Better VWAP range allocation. All-market coverage: bull strategies active in bull, bear strategies in bear, range strategies in all.",
+  "_comment_v7": "Registered 5 new sleeves to fill long/short coverage gaps. breakdown_v2: improved SHORT (1h structure, faster than v1). slope_choch: SHORT at sloped resistance change-of-character (pairs with sloped LONG). liq_cascade: bidirectional panic/squeeze fade (all regimes, Bybit-unique). funding_rev: bidirectional funding-rate reversion (Bybit 8h funding edge). micro_scalp: bidirectional EMA pullback scalper (both sides, all regimes, increases trade count). Market coverage matrix now: BULL longs ×7, BEAR shorts ×4, RANGE both ×7, FUNDING edge ×1.",
   "allocator_global_risk_by_regime": {
     "bull_trend": 1.0,
     "bull_chop": 0.9,
@@ -297,6 +298,76 @@
         "bull_chop": 0.85,
         "bear_chop": 0.85,
         "bear_trend": 0.5
+      }
+    },
+    {
+      "name": "breakdown_v2",
+      "enable_env": "ENABLE_BREAKDOWN2_TRADING",
+      "symbol_env_key": "BREAKDOWN2_SYMBOL_ALLOWLIST",
+      "risk_env": "BREAKDOWN2_RISK_MULT",
+      "strategy_names": ["alt_inplay_breakdown_v2"],
+      "_comment": "v7 NEW. Improved SHORT breakdown — uses 1h structure (vs 4h in v1), 2× faster signal. RSI<50 filter + volume confirmation. Pairs with breakout (bull LONG). Run alongside breakdown v1 initially, then promote to replace if WF-22 shows better PF.",
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.0,
+        "bull_chop": 0.0,
+        "bear_chop": 0.85,
+        "bear_trend": 1.05
+      }
+    },
+    {
+      "name": "slope_choch",
+      "enable_env": "ENABLE_SLOPE_CHOCH_TRADING",
+      "symbol_env_key": "SRC1_SYMBOL_ALLOWLIST",
+      "risk_env": "SLOPE_CHOCH_RISK_MULT",
+      "strategy_names": ["sloped_resistance_choch_v1"],
+      "_comment": "v7 NEW. SHORT at sloped-resistance change-of-character (CHOCH). Bears break a recent swing-low below a sloped resistance zone. Counterpart to sloped (LONG channel bounces). Activated in bear regimes; conservative in bull.",
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.0,
+        "bull_chop": 0.2,
+        "bear_chop": 0.75,
+        "bear_trend": 1.0
+      }
+    },
+    {
+      "name": "liq_cascade",
+      "enable_env": "ENABLE_LC_TRADING",
+      "symbol_env_key": "LC_SYMBOL_ALLOWLIST",
+      "risk_env": "LC_RISK_MULT",
+      "strategy_names": ["liquidation_cascade_entry_v1"],
+      "_comment": "v7 NEW. Bidirectional liquidation-cascade fade. LONG after long-liquidation panic dip; SHORT after short-squeeze spike (LC_ALLOW_SHORTS=1). Bybit perpetuals unique edge — liquidation engines create mechanical overshoot. Works in ALL regimes. Slightly reduced in calm chop. Pairs with impulse (chases breakouts, liq_cascade fades the exhaustion).",
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.75,
+        "bull_chop": 0.6,
+        "bear_chop": 0.6,
+        "bear_trend": 0.8
+      }
+    },
+    {
+      "name": "funding_rev",
+      "enable_env": "ENABLE_FR_TRADING",
+      "symbol_env_key": "FR_SYMBOL_ALLOWLIST",
+      "risk_env": "FR_RISK_MULT",
+      "strategy_names": ["funding_rate_reversion_v1"],
+      "_comment": "v7 NEW. Bybit 8h funding-rate mean reversion. Positive extreme → SHORT (longs overpaying, market exhausted). Negative extreme → LONG (shorts overpaying, snapback likely). Requires funding_rate_fetcher.py cron injecting live rates. Works in ANY regime — edge is structural, not directional. Slight reduction in strong trends (trend can overwhelm reversion).",
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.65,
+        "bull_chop": 0.85,
+        "bear_chop": 0.85,
+        "bear_trend": 0.65
+      }
+    },
+    {
+      "name": "micro_scalp",
+      "enable_env": "ENABLE_MSCALP_TRADING",
+      "symbol_env_key": "MSCALP_SYMBOL_ALLOWLIST",
+      "risk_env": "MSCALP_RISK_MULT",
+      "strategy_names": ["micro_scalper_v1"],
+      "_comment": "v7 NEW. 5m EMA pullback scalper. 15m EMA20 slope sets direction (long/short/flat), enters on 5m pullback to EMA9 zone with momentum reclaim candle. Session-gated: 07:00–17:00 UTC (London+NY). Bidirectional — direct counterpart to every trend sleeve. Expected 400–600 trades/year on 8-symbol universe, dramatically improving statistical significance. Conservative mults to start — raise after WF-22.",
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.7,
+        "bull_chop": 0.8,
+        "bear_chop": 0.8,
+        "bear_trend": 0.7
       }
     }
   ]

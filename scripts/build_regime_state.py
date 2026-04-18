@@ -533,6 +533,15 @@ _REGIME_DECISIONS = {
             # Bearish/range strategies OFF
             "ENABLE_BREAKDOWN_TRADING":  "0",
             "ENABLE_FLAT_TRADING":       "0",   # flat = range, off in trending bull
+            # v7 new sleeves
+            "ENABLE_BREAKDOWN2_TRADING": "0",   # SHORT breakdown — off in bull trend
+            "ENABLE_SLOPE_CHOCH_TRADING":"0",   # SHORT CHOCH — off in bull trend
+            "ENABLE_LC_TRADING":         "1",   # liq_cascade longs (panic dip buys)
+            "LC_ALLOW_SHORTS":           "0",   # no short fades in bull trend
+            "ENABLE_FR_TRADING":         "1",   # funding reversion — any regime
+            "ENABLE_MSCALP_TRADING":     "1",   # micro scalper longs
+            "MSCALP_ALLOW_LONGS":        "1",
+            "MSCALP_ALLOW_SHORTS":       "0",
             "ORCH_REGIME":               REGIME_BULL_TREND,
         },
         "notes": [
@@ -568,6 +577,16 @@ _REGIME_DECISIONS = {
             "ENABLE_VWAP_TRADING":       "1",   # VWAP mean reversion active in chop
             # Bear strategies still off
             "ENABLE_BREAKDOWN_TRADING":  "0",
+            # v7 new sleeves
+            "ENABLE_BREAKDOWN2_TRADING": "0",   # SHORT — off in bull territory
+            "ENABLE_SLOPE_CHOCH_TRADING":"1",   # slope CHOCH conservative — mild bear signals possible in chop
+            "SRC1_ALLOW_SHORTS":         "1",
+            "ENABLE_LC_TRADING":         "1",   # liq_cascade both (chop has cascade risk)
+            "LC_ALLOW_SHORTS":           "1",   # allow squeeze fades in chop
+            "ENABLE_FR_TRADING":         "1",   # funding reversion active
+            "ENABLE_MSCALP_TRADING":     "1",   # micro scalper both sides in chop
+            "MSCALP_ALLOW_LONGS":        "1",
+            "MSCALP_ALLOW_SHORTS":       "1",
             "ORCH_REGIME":               REGIME_BULL_CHOP,
         },
         "notes": [
@@ -601,6 +620,16 @@ _REGIME_DECISIONS = {
             "ENABLE_FLAT_TRADING":       "1",   # flat range is best in chop
             "ENABLE_VWAP_TRADING":       "1",
             "ENABLE_MIDTERM_TRADING":    "1",
+            # v7 new sleeves
+            "ENABLE_BREAKDOWN2_TRADING": "1",   # improved SHORT breakdown ON in bear chop
+            "ENABLE_SLOPE_CHOCH_TRADING":"1",   # CHOCH shorts active in bear chop
+            "SRC1_ALLOW_SHORTS":         "1",
+            "ENABLE_LC_TRADING":         "1",   # liq_cascade both sides
+            "LC_ALLOW_SHORTS":           "1",
+            "ENABLE_FR_TRADING":         "1",   # funding reversion active
+            "ENABLE_MSCALP_TRADING":     "1",   # micro scalper both sides
+            "MSCALP_ALLOW_LONGS":        "1",
+            "MSCALP_ALLOW_SHORTS":       "1",
             "ORCH_REGIME":               REGIME_BEAR_CHOP,
         },
         "notes": [
@@ -633,6 +662,16 @@ _REGIME_DECISIONS = {
             "ENABLE_FLAT_TRADING":       "1",   # fade bounces
             "ENABLE_VWAP_TRADING":       "1",
             "ENABLE_MIDTERM_TRADING":    "0",   # midterm longs off in bear trend
+            # v7 new sleeves
+            "ENABLE_BREAKDOWN2_TRADING": "1",   # improved SHORT — primary in bear trend
+            "ENABLE_SLOPE_CHOCH_TRADING":"1",   # CHOCH shorts — primary in bear trend
+            "SRC1_ALLOW_SHORTS":         "1",
+            "ENABLE_LC_TRADING":         "1",   # liq_cascade (panic longs + squeeze shorts)
+            "LC_ALLOW_SHORTS":           "1",
+            "ENABLE_FR_TRADING":         "1",   # funding reversion active
+            "ENABLE_MSCALP_TRADING":     "1",   # micro scalper — short-biased
+            "MSCALP_ALLOW_LONGS":        "0",   # no longs in bear trend
+            "MSCALP_ALLOW_SHORTS":       "1",
             "ORCH_REGIME":               REGIME_BEAR_TREND,
         },
         "notes": [
