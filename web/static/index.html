@@ -486,7 +486,10 @@ function Dashboard({ onNavigate }) {
           React.createElement('div', { className: `status-dot ${alive ? 'alive pulse' : alive === false ? 'dead' : 'unknown'}` }),
           alive ? 'LIVE' : alive === false ? 'OFFLINE' : 'UNKNOWN'
         ),
-        React.createElement('div', { className: 'stat-sub' }, status ? `${status.open_trades} open trades` : 'checking…')
+        React.createElement('div', { className: 'stat-sub' },
+          status
+            ? `${status.open_trades} open trades · ${status.data_mode === 'live_mirror' ? 'live mirror' : 'local runtime'}`
+            : 'checking…')
       ),
       React.createElement('div', { className: 'stat-box' },
         React.createElement('div', { className: 'stat-label' }, 'Regime'),
@@ -519,6 +522,8 @@ function Dashboard({ onNavigate }) {
     // Equity curve
     equity && equity.points.length > 2 && React.createElement('div', { className: 'card', style: { marginBottom: '16px' } },
       React.createElement('div', { className: 'card-title' }, `Equity Curve — ${equity.points.length - 1} closed trades`),
+      equity.sources && equity.sources.length > 0 && React.createElement('div', { className: 'section-sub', style: { marginBottom: '8px' } },
+        `Source: ${equity.sources[0]}`),
       React.createElement('div', { className: 'chart-wrap' },
         React.createElement('canvas', { ref: chartRef }))
     ),
@@ -817,6 +822,8 @@ function RegimePage() {
     // Sleeves table
     allocator && React.createElement('div', { className: 'card' },
       React.createElement('div', { className: 'card-title' }, `Allocator Sleeves — policy ${allocator.policy_version || '?'}`),
+      React.createElement('div', { className: 'section-sub', style: { marginBottom: '10px' } },
+        'Multipliers are policy. Runtime column shows what is actually active now.'),
       React.createElement('div', { style: { overflowX: 'auto' } },
         // Header
         React.createElement('div', { className: 'sleeve-row', style: { borderBottom: '1px solid var(--border)', paddingBottom: '8px', marginBottom: '2px' } },
@@ -825,11 +832,18 @@ function RegimePage() {
           React.createElement('div', { className: 'sleeve-hdr' }, 'bull~'),
           React.createElement('div', { className: 'sleeve-hdr' }, 'bear~'),
           React.createElement('div', { className: 'sleeve-hdr' }, 'bear↓'),
-          React.createElement('div', { className: 'sleeve-hdr', style: { textAlign: 'left' } }, 'Status')
+          React.createElement('div', { className: 'sleeve-hdr', style: { textAlign: 'left' } }, 'Runtime')
         ),
         (allocator.sleeves || []).map(s => {
           const m = s.mults || {};
           const anyOn = s.policy_active;
+          const isRejected = !!(s.comment && s.comment.includes('REJECTED'));
+          const isLive = !!s.runtime_enabled && (s.runtime_final_risk_mult || 0) > 0;
+          const runtimeLabel = isRejected
+            ? 'REJECTED'
+            : isLive
+              ? `LIVE ${s.runtime_final_risk_mult.toFixed(2)}×`
+              : (s.runtime_health || (anyOn ? 'POLICY' : 'OFF'));
           const cell = (v) => {
             if (v == null || v === 0) return React.createElement('div', { className: 'mult-cell mult-off' }, '—');
             return React.createElement('div', { className: 'mult-cell mult-on' }, v.toFixed(2));
@@ -838,10 +852,9 @@ function RegimePage() {
             React.createElement('div', { className: 'sleeve-name', style: { color: anyOn ? 'var(--text)' : 'var(--text3)' } }, s.name),
             cell(m.bull_trend), cell(m.bull_chop), cell(m.bear_chop), cell(m.bear_trend),
             React.createElement('div', null,
-              React.createElement('span', { className: `badge ${anyOn ? 'badge-ok' : 'badge-off'}` },
-                anyOn ? 'ACTIVE' : 'OFF'),
-              !anyOn && s.comment && s.comment.includes('REJECTED') &&
-                React.createElement('span', { style: { fontSize: '10px', color: 'var(--red)', marginLeft: '6px' } }, 'rejected')
+              React.createElement('span', {
+                className: `badge ${isRejected ? 'badge-dead' : isLive ? 'badge-ok' : anyOn ? 'badge-warn' : 'badge-off'}`
+              }, runtimeLabel)
             )
           );
         })
@@ -865,6 +878,8 @@ function StrategiesPage() {
         ` · Total trades: `, React.createElement('strong', null, data.total_trades)
       )
     ),
+    data.sources && data.sources.length > 0 && React.createElement('div', { className: 'section-sub', style: { marginBottom: '10px' } },
+      `Trades source: ${data.sources[0]}`),
     React.createElement('div', { className: 'tbl-wrap' },
       React.createElement('table', null,
         React.createElement('thead', null,
@@ -883,7 +898,7 @@ function StrategiesPage() {
               React.createElement('td', null, `${s.win_rate}%`),
               React.createElement('td', { className: (s.profit_factor || 0) >= 1 ? 'pos' : 'neg' }, fmtPF(s.profit_factor)),
               React.createElement('td', { className: s.net_pnl >= 0 ? 'pos' : 'neg', style: { fontWeight: 600 } }, fmt(s.net_pnl, 4)),
-              React.createElement('td', null,
+              React.createElement('td', { title: 'Sparkline of the last 20 trade PnL values for this strategy' },
                 s.pnl_series && s.pnl_series.length > 2
                   ? React.createElement(Sparkline, { data: s.pnl_series, color: s.net_pnl >= 0 ? '#3fb950' : '#f85149', width: 70, height: 26 })
                   : React.createElement('span', { className: 'dim' }, '—')
@@ -907,7 +922,7 @@ function JournalPage() {
 
   return React.createElement('div', null,
     React.createElement('div', { className: 'page-hdr' },
-      React.createElement('div', { className: 'section-title' }, 'Session Journal',
+      React.createElement('div', { className: 'section-title' }, 'Project Log',
         React.createElement('span', { className: 'section-sub' }, `${data.total} entries`))
     ),
     React.createElement('div', { className: 'card' },
@@ -1263,7 +1278,7 @@ const NAV_GROUPS = [
     pages: [
       { id: 'alpaca',  label: 'Alpaca',   icon: '📊' },
       { id: 'regime',  label: 'Regime',   icon: '⬡' },
-      { id: 'journal', label: 'Journal',  icon: '◻' },
+      { id: 'journal', label: 'Project Log',  icon: '◻' },
     ]
   },
   {

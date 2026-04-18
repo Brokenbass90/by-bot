@@ -21,10 +21,12 @@ router = APIRouter(prefix="/api", tags=["data"])
 # ── project root & path helpers ───────────────────────────────────────────────
 
 _ROOT = Path(__file__).parent.parent.parent
+_RUNTIME_ROOT = Path(os.getenv("WEB_RUNTIME_ROOT", str(_ROOT / "runtime")))
+_INCLUDE_BACKTEST_TRADES = os.getenv("WEB_INCLUDE_BACKTEST_TRADES", "0").strip().lower() in {"1", "true", "yes"}
 
 
 def _rt(*p: str) -> Path:
-    return _ROOT / "runtime" / Path(*p)
+    return _RUNTIME_ROOT / Path(*p)
 
 
 def _cfg(*p: str) -> Path:
@@ -53,12 +55,13 @@ def _read_csv(p: Path) -> List[Dict[str, str]]:
 # ── find trades.csv files ─────────────────────────────────────────────────────
 
 def _find_trades_csvs() -> List[Path]:
-    found = sorted(
-        list(_ROOT.glob("runtime/**/trades.csv")) + list(_ROOT.glob("backtest_runs/**/trades.csv")),
-        key=lambda p: p.stat().st_mtime,
-        reverse=True,
-    )
-    root_csv = _ROOT / "trades.csv"
+    found = list(_RUNTIME_ROOT.glob("**/trades.csv"))
+    if _INCLUDE_BACKTEST_TRADES:
+        found += list(_ROOT.glob("backtest_runs/**/trades.csv"))
+    found = sorted(found, key=lambda p: p.stat().st_mtime, reverse=True)
+    root_csv = _RUNTIME_ROOT / "trades.csv"
+    if not root_csv.exists():
+        root_csv = _ROOT / "trades.csv"
     if root_csv.exists():
         found.insert(0, root_csv)
     return found[:5]  # up to 5 most recent
@@ -146,6 +149,10 @@ def _load_all_trades() -> List[Dict[str, Any]]:
     return trades
 
 
+def _trade_sources() -> List[str]:
+    return [str(p.relative_to(_ROOT)) for p in _find_trades_csvs()]
+
+
 # ── bot status (fast heartbeat check) ────────────────────────────────────────
 
 @router.get("/status")
@@ -173,6 +180,8 @@ async def get_status(_: str = Depends(require_auth)):
         "global_risk_mult": (regime_data or {}).get("global_risk_mult"),
         "control_plane_status": (cp or {}).get("status", "unknown"),
         "ws_guard_active": (hb or {}).get("ws_guard_active", False),
+        "runtime_root": str(_RUNTIME_ROOT),
+        "data_mode": "live_mirror" if _RUNTIME_ROOT != (_ROOT / "runtime") else "local",
         "ts_utc": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -203,6 +212,7 @@ async def get_trades(
         "page": page,
         "page_size": page_size,
         "pages": max(1, math.ceil(total / page_size)),
+        "sources": _trade_sources(),
         "trades": trades[s: s + page_size],
     }
 
@@ -257,6 +267,7 @@ async def get_summary(_: str = Depends(require_auth)):
         "portfolio_net": round(sum(
             t.get("pnl", 0) for t in trades if isinstance(t.get("pnl"), float)
         ), 4),
+        "sources": _trade_sources(),
     }
 
 
@@ -282,7 +293,7 @@ async def get_equity(_: str = Depends(require_auth)):
             "strategy": t.get("strategy", "?"),
             "symbol": t.get("symbol", "?"),
         })
-    return {"points": points, "final_equity": round(equity, 4)}
+    return {"points": points, "final_equity": round(equity, 4), "sources": _trade_sources()}
 
 
 # ── account ───────────────────────────────────────────────────────────────────
@@ -370,6 +381,7 @@ async def get_allocator(_: str = Depends(require_auth)):
             state.get("allocator_global_risk_mult", state.get("global_risk_mult") or 0.0) or 0.0
         ),
         "degraded_reasons": list(state.get("degraded_reasons") or []),
+        "runtime_root": str(_RUNTIME_ROOT),
         "sleeves": sleeves_status,
         "env": env_vals,
     }

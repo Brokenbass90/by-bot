@@ -56,6 +56,12 @@ app.include_router(data_router)
 app.include_router(ai_router)
 app.include_router(admin_router)
 
+# ── health check (no auth required) ──────────────────────────────────────────
+
+@app.get("/ping", include_in_schema=False)
+async def ping():
+    return {"pong": True}
+
 # ── static frontend ───────────────────────────────────────────────────────────
 
 _STATIC_DIR = Path(__file__).parent / "static"
@@ -79,10 +85,3 @@ else:
             "message": "Trading Journal API. Frontend not yet built.",
             "docs": "Set WEB_ENABLE_DOCS=1 to access /docs",
         }
-
-
-# ── health check (no auth required) ──────────────────────────────────────────
-
-@app.get("/ping", include_in_schema=False)
-async def ping():
-    return {"pong": True}

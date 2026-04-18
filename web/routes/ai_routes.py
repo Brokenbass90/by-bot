@@ -33,6 +33,7 @@ from ..deps import require_admin
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
 _ROOT = Path(__file__).parent.parent.parent
+_RUNTIME_ROOT = Path(os.getenv("WEB_RUNTIME_ROOT", str(_ROOT / "runtime")))
 _AUDIT_LOG = _ROOT / "runtime" / "web_audit_log.jsonl"
 _OVERLAY_ENV = _ROOT / "configs" / "web_control_overlay.env"
 _CHAT_RATE: Dict[str, List[float]] = {}  # email → list of timestamps
@@ -40,7 +41,7 @@ _MAX_RPM = 20  # requests per minute per user
 
 
 def _rt(*p: str) -> Path:
-    return _ROOT / "runtime" / Path(*p)
+    return _RUNTIME_ROOT / Path(*p)
 
 
 def _cfg(*p: str) -> Path:
@@ -138,7 +139,7 @@ def _build_context() -> str:
 
     # Recent trades summary
     trades_path = None
-    for p in sorted(_ROOT.glob("runtime/**/trades.csv"), key=lambda x: x.stat().st_mtime, reverse=True):
+    for p in sorted(_RUNTIME_ROOT.glob("**/trades.csv"), key=lambda x: x.stat().st_mtime, reverse=True):
         trades_path = p
         break
     if trades_path:
