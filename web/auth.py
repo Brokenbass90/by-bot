@@ -28,7 +28,9 @@ _ALGORITHM = "HS256"
 _ACCESS_TOKEN_EXPIRE_SECONDS = 8 * 3600   # 8 hours
 _PARTIAL_TOKEN_EXPIRE_SECONDS = 5 * 60    # 5 minutes to complete TOTP
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Default to pbkdf2_sha256 for portability. Keep bcrypt as a legacy verifier
+# so older hashes still work if they already exist in config.
+pwd_context = CryptContext(schemes=["pbkdf2_sha256", "bcrypt"], deprecated="auto")
 
 
 # ── config loader ─────────────────────────────────────────────────────────────

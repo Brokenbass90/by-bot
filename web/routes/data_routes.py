@@ -328,6 +328,8 @@ async def get_regime(_: str = Depends(require_auth)):
 @router.get("/allocator")
 async def get_allocator(_: str = Depends(require_auth)):
     policy = _json(_cfg("portfolio_allocator_policy.json"))
+    state = _json(_rt("control_plane", "portfolio_allocator_state.json")) or {}
+    sleeve_states: Dict[str, Any] = dict(state.get("sleeves") or {})
 
     env_vals: Dict[str, str] = {}
     lenv = _cfg("portfolio_allocator_latest.env")
@@ -343,6 +345,7 @@ async def get_allocator(_: str = Depends(require_auth)):
 
     sleeves_status = []
     for s in (policy or {}).get("sleeves", []):
+        runtime = dict(sleeve_states.get(s["name"]) or {})
         mults = s.get("base_risk_mult_by_regime", {})
         policy_active = any(v > 0 for v in mults.values())
         env_enabled = s.get("enable_env", "") in enabled_envs
@@ -350,6 +353,11 @@ async def get_allocator(_: str = Depends(require_auth)):
             "name": s["name"],
             "policy_active": policy_active,
             "env_enabled": env_enabled,
+            "runtime_enabled": bool(runtime.get("enabled")),
+            "runtime_health": str(runtime.get("health_status") or runtime.get("status") or "").upper(),
+            "runtime_final_risk_mult": float(runtime.get("final_risk_mult") or 0.0),
+            "runtime_symbol_count": int(runtime.get("symbol_count") or 0),
+            "runtime_notes": list(runtime.get("notes") or [])[:3],
             "enable_env": s.get("enable_env"),
             "mults": mults,
             "comment": s.get("_comment", ""),
@@ -357,6 +365,11 @@ async def get_allocator(_: str = Depends(require_auth)):
 
     return {
         "policy_version": (policy or {}).get("policy_version"),
+        "allocator_status": str(state.get("status") or ""),
+        "allocator_global_risk_mult": float(
+            state.get("allocator_global_risk_mult", state.get("global_risk_mult") or 0.0) or 0.0
+        ),
+        "degraded_reasons": list(state.get("degraded_reasons") or []),
         "sleeves": sleeves_status,
         "env": env_vals,
     }

@@ -102,17 +102,32 @@ def _build_context() -> str:
             f"longs={'Y' if reg.get('allow_longs') else 'N'} shorts={'Y' if reg.get('allow_shorts') else 'N'}\n"
         )
 
-    # Allocator sleeves
-    policy = _json(_cfg("portfolio_allocator_policy.json"))
-    env_vals = _read_env(_cfg("portfolio_allocator_latest.env"))
-    if policy:
-        enabled_envs = {k for k, v in env_vals.items() if v == "1"}
-        active = []
-        inactive = []
-        for s in policy.get("sleeves", []):
-            mults = s.get("base_risk_mult_by_regime", {})
-            on = any(v > 0 for v in mults.values())
-            (active if on else inactive).append(s["name"])
+    # Allocator sleeves: always prefer runtime control-plane truth over static policy.
+    allocator = _json(_rt("control_plane", "portfolio_allocator_state.json")) or {}
+    sleeve_states = dict(allocator.get("sleeves") or {})
+    if sleeve_states:
+        active = sorted(
+            [
+                str(name)
+                for name, state in sleeve_states.items()
+                if bool((state or {}).get("enabled"))
+                and float((state or {}).get("final_risk_mult") or 0.0) > 0.0
+            ]
+        )
+        inactive = sorted(
+            [
+                str(name)
+                for name, state in sleeve_states.items()
+                if not (
+                    bool((state or {}).get("enabled"))
+                    and float((state or {}).get("final_risk_mult") or 0.0) > 0.0
+                )
+            ]
+        )
+        parts.append(
+            f"ALLOCATOR: status={allocator.get('status','?')} "
+            f"global_risk={allocator.get('allocator_global_risk_mult', allocator.get('global_risk_mult','?'))}\n"
+        )
         parts.append(f"SLEEVES ACTIVE: {', '.join(active) or 'none'}\n")
         parts.append(f"SLEEVES OFF: {', '.join(inactive[:8]) or 'none'}\n")
 
@@ -426,7 +441,7 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
 
 
 @router.get("/audit")
-async def get_audit(email: str = Depends(require_auth)):
+async def get_audit(email: str = Depends(require_admin)):
     """Recent command audit log."""
     if not _AUDIT_LOG.exists():
         return {"entries": []}
@@ -440,6 +455,6 @@ async def get_audit(email: str = Depends(require_auth)):
 
 
 @router.get("/context")
-async def get_context(email: str = Depends(require_auth)):
+async def get_context(email: str = Depends(require_admin)):
     """Return the current context that gets injected into AI. Useful for debugging."""
     return {"context": _build_context()}

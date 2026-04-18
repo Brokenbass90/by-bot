@@ -1316,3 +1316,10 @@ bash scripts/run_web.sh   # uvicorn web.main:app --host 127.0.0.1 --port 8765
 - Overnight queue target order is now explicit and durable: `flat-only` → `range-only` → `elder_v3 WF-22` → `midterm_short_v2 annual+WF`.
 - Research harness now recognizes `elder_triple_screen_v3` and `btc_eth_midterm_short_v2` directly in [backtest/run_portfolio.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py), so their overnight results will be comparable to the rest of the portfolio instead of living in a side path.
 - Web UI remains Phase 1 / read-only-first. Security foundations stay non-negotiable: hard-coded allowlist, TOTP, RBAC/audit log path, no live order placement in v1.
+
+### 2026-04-18 Morning Checkpoint
+
+- `midterm_short_v2` is no longer blocked by missing weekly support; after the `10080m` engine repair it completed honestly and is a clean reject (`0` annual trades, `0/22` productive WF windows, `AvgPF 0.000`).
+- Local web Phase 1 is now operator-smokeable: login + TOTP + authenticated reads work at `http://127.0.0.1:8765`, and AI/admin endpoints are behind admin auth instead of generic session auth.
+- Web truth is materially better than yesterday: allocator and AI context now read `runtime/control_plane/portfolio_allocator_state.json` instead of inferring sleeve activity from static policy, so the dashboard no longer overstates what is actually active.
+- Immediate crypto focus stays narrow: finish reading `flat-only` / `range-only`, then decide whether `ASB1/HZBO1` or another historically strong sleeve should be the next alpha rehabilitation target. Do not burn more time on `Elder`/midterm rewrites until a new design can demonstrate real trade generation.
