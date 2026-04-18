@@ -6,7 +6,7 @@ import csv
 import math
 from collections import Counter, defaultdict
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, date, timedelta, timezone
 from pathlib import Path
 from statistics import pstdev
 from typing import Iterable
@@ -260,6 +260,66 @@ def _candidate_latest(
     ), "ok"
 
 
+def _load_earnings_blackouts(
+    csv_path: str,
+    days_before: int,
+    days_after: int,
+) -> dict[str, set[str]]:
+    """Return {ticker: set_of_blackout_date_strings} from an earnings CSV.
+
+    CSV must have columns: ticker (or symbol), date (or earnings_date/report_date).
+    Any entry day falling inside [report_date - days_before, report_date + days_after]
+    is considered blacked out.
+    """
+    result: dict[str, set[str]] = defaultdict(set)
+    if not csv_path or not Path(csv_path).exists():
+        return result
+
+    def _parse_date(s: str) -> date | None:
+        for fmt in ("%Y-%m-%d", "%m/%d/%Y", "%Y/%m/%d"):
+            try:
+                return datetime.strptime(s.strip(), fmt).date()
+            except ValueError:
+                continue
+        return None
+
+    with open(csv_path, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            ticker = (row.get("ticker") or row.get("symbol") or "").strip().upper()
+            date_raw = (
+                row.get("date") or row.get("earnings_date") or row.get("report_date") or ""
+            ).strip()
+            if not ticker or not date_raw:
+                continue
+            report_dt = _parse_date(date_raw)
+            if report_dt is None:
+                continue
+            for delta in range(-days_before, days_after + 1):
+                blackout_day = (report_dt + timedelta(days=delta)).isoformat()
+                result[ticker].add(blackout_day)
+    return dict(result)
+
+
+# ── Sector / cluster cap helpers ──────────────────────────────────────────────
+
+def _parse_sector_map(raw: str) -> dict[str, str]:
+    """Parse 'AAPL:Tech,MSFT:Tech,XOM:Energy' → {ticker: sector}."""
+    result: dict[str, str] = {}
+    if not raw:
+        return result
+    for item in str(raw).split(","):
+        item = item.strip()
+        if ":" not in item:
+            continue
+        ticker, _, sector = item.partition(":")
+        t = ticker.strip().upper()
+        s = sector.strip()
+        if t and s:
+            result[t] = s
+    return result
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Build live/current-cycle equities picks from latest cached data")
     ap.add_argument("--tickers", required=True)
@@ -286,6 +346,17 @@ def main() -> int:
     ap.add_argument("--max-per-cluster", type=int, default=999)
     ap.add_argument("--stop-atr-mult", type=float, default=1.7)
     ap.add_argument("--target-atr-mult", type=float, default=4.0)
+    # earnings blackout
+    ap.add_argument("--earnings-csv", default="", help="CSV with ticker,date columns")
+    ap.add_argument("--earnings-blackout-days-before", type=int, default=3,
+                    help="Block picks N days before earnings (default 3)")
+    ap.add_argument("--earnings-blackout-days-after", type=int, default=1,
+                    help="Block picks N days after earnings (default 1)")
+    # sector cap
+    ap.add_argument("--sector-map", default="",
+                    help="Comma-separated TICKER:Sector pairs, e.g. AAPL:Tech,XOM:Energy")
+    ap.add_argument("--max-per-sector", type=int, default=999,
+                    help="Max picks from the same sector (default unlimited)")
     ap.add_argument("--out-picks-csv", required=True)
     ap.add_argument("--out-summary-csv", required=True)
     args = ap.parse_args()
@@ -346,11 +417,27 @@ def main() -> int:
         scored.sort(key=lambda x: x[1], reverse=True)
         allowed_universe = {ticker for ticker, _ in scored[: max(1, int(args.universe_top_k))]}
 
+    # ── Earnings blackout (NEW) ────────────────────────────────────────────────
+    earnings_blackouts = _load_earnings_blackouts(
+        args.earnings_csv,
+        int(args.earnings_blackout_days_before),
+        int(args.earnings_blackout_days_after),
+    )
+    today_str = datetime.now(timezone.utc).date().isoformat()
+
+    # ── Sector map (NEW) ──────────────────────────────────────────────────────
+    sector_map = _parse_sector_map(args.sector_map)
+
     candidates: list[tuple[Candidate, list[DailyBar]]] = []
     reject_counts: Counter[str] = Counter()
     for ticker, daily in daily_map.items():
         if allowed_universe is not None and ticker not in allowed_universe:
             reject_counts["outside_universe_top_k"] += 1
+            continue
+        # Earnings blackout filter
+        if today_str in earnings_blackouts.get(ticker, set()):
+            reject_counts["earnings_blackout"] += 1
+            print(f"  [earnings_blackout] {ticker} skipped (report near {today_str})")
             continue
         cand, reason = _candidate_latest(
             ticker,
@@ -372,6 +459,7 @@ def main() -> int:
     corr_cache: dict[tuple[str, str], float | None] = {}
     picks: list[tuple[Candidate, list[DailyBar]]] = []
     cluster_counts: dict[int, int] = defaultdict(int)
+    sector_counts: dict[str, int] = defaultdict(int)  # NEW: per-sector pick count
     remaining = sorted(candidates, key=lambda x: x[0].score, reverse=True)
 
     def _cached_pair_corr(left: tuple[Candidate, list[DailyBar]], right: tuple[Candidate, list[DailyBar]]) -> float | None:
@@ -389,12 +477,18 @@ def main() -> int:
         for idx, cand_triplet in enumerate(remaining):
             cand = cand_triplet[0]
             blocked = False
+            # cluster cap
             for cluster_id in _clusters_for_ticker(cand.ticker, clusters):
                 if cluster_counts.get(cluster_id, 0) >= int(args.max_per_cluster):
                     selection_rejects["cluster_limit"] += 1
                     blocked = True
                     break
             if blocked:
+                continue
+            # sector cap (NEW)
+            sector = sector_map.get(cand.ticker, "")
+            if sector and sector_counts.get(sector, 0) >= int(args.max_per_sector):
+                selection_rejects["sector_cap"] += 1
                 continue
             total_corr_penalty = 0.0
             max_corr_existing = float("nan")
@@ -426,6 +520,10 @@ def main() -> int:
         picks.append(picked)
         for cluster_id in _clusters_for_ticker(picked[0].ticker, clusters):
             cluster_counts[cluster_id] += 1
+        # count sector
+        picked_sector = sector_map.get(picked[0].ticker, "")
+        if picked_sector:
+            sector_counts[picked_sector] += 1
 
     if not picks:
         if reject_counts:

@@ -6,13 +6,23 @@ cd "$ROOT"
 
 source .venv/bin/activate
 
-TICKERS="${EQ_V36_TICKERS:-AAPL,ADBE,AMD,AMZN,AVGO,CRWD,GOOGL,JPM,META,MSFT,NFLX,NVDA,ORCL,PANW,PLTR,TSLA,UBER,XOM,CRM,COIN,SHOP,SQ,SNOW,NET,DDOG,MDB,ABNB,GS,V,MA,BAC,CVX,CAT,GE,LMT,UNH,LLY,ABBV,JNJ,MRK,COST,WMT,HD,NKE,SBUX}"
+# ── Universe (v37: expanded from 44 → 57 tickers) ─────────────────────────────
+# Added: TSM QCOM TXN (semis breadth), NOW INTU ADSK (enterprise SaaS),
+#        WFC SCHW (finance breadth), REGN ISRG (healthcare quality),
+#        PG KO (defensive consumer staples for bear-regime diversification)
+TICKERS="${EQ_V36_TICKERS:-AAPL,ADBE,AMD,AMZN,AVGO,CRWD,GOOGL,JPM,META,MSFT,NFLX,NVDA,ORCL,PANW,PLTR,TSLA,UBER,XOM,CRM,COIN,SHOP,SQ,SNOW,NET,DDOG,MDB,ABNB,GS,V,MA,BAC,CVX,CAT,GE,LMT,UNH,LLY,ABBV,JNJ,MRK,COST,WMT,HD,NKE,SBUX,TSM,QCOM,TXN,NOW,INTU,ADSK,WFC,SCHW,REGN,ISRG,PG,KO}"
 BENCH_TICKERS="${EQ_V36_BENCH_TICKERS:-SPY,QQQ}"
 ALL_FETCH_TICKERS="${EQ_V36_FETCH_TICKERS:-${TICKERS},${BENCH_TICKERS}}"
 DATA_DIR="${EQ_V36_DATA_DIR:-data_cache/equities_1h}"
 EARNINGS_CSV="${EQ_V36_EARNINGS_CSV:-data_cache/equities/earnings_dates.csv}"
-CLUSTER_GROUPS="${EQ_V36_CLUSTER_GROUPS:-AAPL,MSFT,GOOGL,AMZN,META;NVDA,AMD,AVGO,ADBE,CRM,ORCL;META,NFLX,ABNB;CRWD,PANW,NET,DDOG,SNOW,MDB;PLTR,UBER,SHOP,COIN,SQ;JPM,GS,BAC,V,MA;XOM,CVX;CAT,GE,LMT;UNH,LLY,ABBV,JNJ,MRK;COST,WMT,HD,NKE,SBUX}"
-FORBID_PAIRS="${EQ_V36_FORBID_PAIRS:-NVDA:AMD;CRWD:PANW;META:NFLX;V:MA}"
+# Sector map for sector-cap enforcement (max 1 pick from same sector by default)
+SECTOR_MAP="${EQ_V36_SECTOR_MAP:-AAPL:Tech,MSFT:Tech,GOOGL:Tech,AMZN:Tech,META:Tech,NVDA:Semis,AMD:Semis,AVGO:Semis,TSM:Semis,QCOM:Semis,TXN:Semis,ADBE:SaaS,CRM:SaaS,ORCL:SaaS,NOW:SaaS,INTU:SaaS,ADSK:SaaS,CRWD:Cyber,PANW:Cyber,NET:Cyber,DDOG:Cyber,SNOW:Cyber,MDB:Cyber,PLTR:GrowthTech,UBER:GrowthTech,SHOP:GrowthTech,COIN:GrowthTech,SQ:GrowthTech,NFLX:Media,ABNB:Media,JPM:Finance,GS:Finance,BAC:Finance,V:Finance,MA:Finance,WFC:Finance,SCHW:Finance,XOM:Energy,CVX:Energy,CAT:Industrial,GE:Industrial,LMT:Industrial,UNH:Health,LLY:Health,ABBV:Health,JNJ:Health,MRK:Health,REGN:Health,ISRG:Health,COST:Consumer,WMT:Consumer,HD:Consumer,NKE:Consumer,SBUX:Consumer,PG:Staples,KO:Staples,TSLA:Auto}"
+MAX_PER_SECTOR="${EQ_V36_MAX_PER_SECTOR:-2}"
+CLUSTER_GROUPS="${EQ_V36_CLUSTER_GROUPS:-AAPL,MSFT,GOOGL,AMZN,META;NVDA,AMD,AVGO,TSM,QCOM,TXN;ADBE,CRM,ORCL,NOW,INTU,ADSK;META,NFLX,ABNB;CRWD,PANW,NET,DDOG,SNOW,MDB;PLTR,UBER,SHOP,COIN,SQ;JPM,GS,BAC,V,MA,WFC,SCHW;XOM,CVX;CAT,GE,LMT;UNH,LLY,ABBV,JNJ,MRK,REGN,ISRG;COST,WMT,HD,NKE,SBUX,PG,KO;TSLA}"
+FORBID_PAIRS="${EQ_V36_FORBID_PAIRS:-NVDA:AMD;NVDA:TSM;CRWD:PANW;META:NFLX;V:MA;WFC:BAC;LLY:ABBV}"
+# Earnings blackout: skip picks 3 days before / 1 day after earnings report
+EARNINGS_BLACKOUT_DAYS_BEFORE="${EQ_V36_EARNINGS_BLACKOUT_DAYS_BEFORE:-3}"
+EARNINGS_BLACKOUT_DAYS_AFTER="${EQ_V36_EARNINGS_BLACKOUT_DAYS_AFTER:-1}"
 
 FETCH_PERIOD="${EQ_V36_YF_PERIOD:-730d}"
 FETCH_INTERVAL="${EQ_V36_YF_INTERVAL:-60m}"
@@ -67,6 +77,11 @@ run_current_cycle_builder() {
     --max-per-cluster "${14}" \
     --stop-atr-mult "${15}" \
     --target-atr-mult "${16}" \
+    --earnings-csv "$EARNINGS_CSV" \
+    --earnings-blackout-days-before "$EARNINGS_BLACKOUT_DAYS_BEFORE" \
+    --earnings-blackout-days-after "$EARNINGS_BLACKOUT_DAYS_AFTER" \
+    --sector-map "$SECTOR_MAP" \
+    --max-per-sector "$MAX_PER_SECTOR" \
     --out-picks-csv "$RUNTIME_DIR/current_cycle_picks.csv" \
     --out-summary-csv "$RUNTIME_DIR/current_cycle_summary.csv"
 }
