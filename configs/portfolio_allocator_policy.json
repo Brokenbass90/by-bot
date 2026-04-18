@@ -1,7 +1,8 @@
 {
   "version": 1,
-  "policy_version": "2026-04-17-allocator-v5",
-  "updated_utc": "2026-04-17T00:00:00Z",
+  "policy_version": "2026-04-18-allocator-v6",
+  "updated_utc": "2026-04-18T00:00:00Z",
+  "_comment_v6": "Fixed backwards ASB1/HZBO1 mults (were 0.0 in bull_trend — primary bull strategies!). Enabled breakout. Raised ATT1 bull mult. Better VWAP range allocation. All-market coverage: bull strategies active in bull, bear strategies in bear, range strategies in all.",
   "allocator_global_risk_by_regime": {
     "bull_trend": 1.0,
     "bull_chop": 0.9,
@@ -23,55 +24,22 @@
   },
   "missing_strategy_health_status": "WATCH",
   "symbol_count_multipliers": [
-    {
-      "max_count": 0,
-      "mult": 0.0
-    },
-    {
-      "max_count": 2,
-      "mult": 0.75
-    },
-    {
-      "max_count": 4,
-      "mult": 0.9
-    },
-    {
-      "max_count": 8,
-      "mult": 1.0
-    },
-    {
-      "max_count": 999,
-      "mult": 1.05
-    }
+    { "max_count": 0, "mult": 0.0 },
+    { "max_count": 2, "mult": 0.75 },
+    { "max_count": 4, "mult": 0.9 },
+    { "max_count": 8, "mult": 1.0 },
+    { "max_count": 999, "mult": 1.05 }
   ],
   "exposure_controls": {
     "portfolio_overlap_global_haircuts": [
-      {
-        "min_overlap_ratio": 0.25,
-        "mult": 0.93
-      },
-      {
-        "min_overlap_ratio": 0.4,
-        "mult": 0.85
-      },
-      {
-        "min_overlap_ratio": 0.55,
-        "mult": 0.75
-      }
+      { "min_overlap_ratio": 0.25, "mult": 0.93 },
+      { "min_overlap_ratio": 0.4,  "mult": 0.85 },
+      { "min_overlap_ratio": 0.55, "mult": 0.75 }
     ],
     "sleeve_overlap_haircuts": [
-      {
-        "min_overlap_ratio": 0.34,
-        "mult": 0.9
-      },
-      {
-        "min_overlap_ratio": 0.5,
-        "mult": 0.8
-      },
-      {
-        "min_overlap_ratio": 0.75,
-        "mult": 0.65
-      }
+      { "min_overlap_ratio": 0.34, "mult": 0.9 },
+      { "min_overlap_ratio": 0.5,  "mult": 0.8 },
+      { "min_overlap_ratio": 0.75, "mult": 0.65 }
     ]
   },
   "sleeves": [
@@ -80,13 +48,12 @@
       "enable_env": "ENABLE_BREAKOUT_TRADING",
       "symbol_env_key": "BREAKOUT_SYMBOL_ALLOWLIST",
       "risk_env": "BREAKOUT_RISK_MULT",
-      "strategy_names": [
-        "inplay_breakout"
-      ],
+      "strategy_names": ["inplay_breakout"],
+      "_comment": "Long-side breakout on momentum. Primary bull strategy. Off in bear_trend.",
       "base_risk_mult_by_regime": {
-        "bull_trend": 0.0,
-        "bull_chop": 0.0,
-        "bear_chop": 0.0,
+        "bull_trend": 1.05,
+        "bull_chop": 0.75,
+        "bear_chop": 0.25,
         "bear_trend": 0.0
       }
     },
@@ -95,9 +62,8 @@
       "enable_env": "ENABLE_BREAKDOWN_TRADING",
       "symbol_env_key": "BREAKDOWN_SYMBOL_ALLOWLIST",
       "risk_env": "BREAKDOWN_RISK_MULT",
-      "strategy_names": [
-        "alt_inplay_breakdown_v1"
-      ],
+      "strategy_names": ["alt_inplay_breakdown_v1"],
+      "_comment": "Short-side breakdown. Primary bear strategy. Reduced in bull regimes.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.0,
         "bull_chop": 0.0,
@@ -110,9 +76,8 @@
       "enable_env": "ENABLE_FLAT_TRADING",
       "symbol_env_key": "ARF1_SYMBOL_ALLOWLIST",
       "risk_env": "FLAT_RISK_MULT",
-      "strategy_names": [
-        "alt_resistance_fade_v1"
-      ],
+      "strategy_names": ["alt_resistance_fade_v1"],
+      "_comment": "Range fade at resistance. Best in chop/neutral, works in all regimes.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.55,
         "bull_chop": 1.0,
@@ -125,9 +90,8 @@
       "enable_env": "ENABLE_SLOPED_TRADING",
       "symbol_env_key": "ASC1_SYMBOL_ALLOWLIST",
       "risk_env": "SLOPED_RISK_MULT",
-      "strategy_names": [
-        "alt_sloped_channel_v1"
-      ],
+      "strategy_names": ["alt_sloped_channel_v1"],
+      "_comment": "Sloped channel both-side trades. Active in all regimes.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.75,
         "bull_chop": 0.95,
@@ -140,11 +104,10 @@
       "enable_env": "ENABLE_ATT1_TRADING",
       "symbol_env_key": "ATT1_SYMBOL_ALLOWLIST",
       "risk_env": "ATT1_RISK_MULT",
-      "strategy_names": [
-        "alt_trendline_touch_v1"
-      ],
+      "strategy_names": ["alt_trendline_touch_v1"],
+      "_comment": "Trendline touch — works in all regimes, highest in bull_trend. Proven live positive.",
       "base_risk_mult_by_regime": {
-        "bull_trend": 0.75,
+        "bull_trend": 1.0,
         "bull_chop": 0.95,
         "bear_chop": 0.75,
         "bear_trend": 0.45
@@ -155,9 +118,8 @@
       "enable_env": "ENABLE_ASM1_TRADING",
       "symbol_env_key": "ASM1_SYMBOL_ALLOWLIST",
       "risk_env": "ASM1_RISK_MULT",
-      "strategy_names": [
-        "alt_sloped_momentum_v1"
-      ],
+      "strategy_names": ["alt_sloped_momentum_v1"],
+      "_comment": "Sloped momentum. Bull-biased but works in bear_trend on pullbacks.",
       "base_risk_mult_by_regime": {
         "bull_trend": 1.0,
         "bull_chop": 0.85,
@@ -175,6 +137,7 @@
         "btc_eth_midterm_pullback_v2",
         "btc_eth_midterm_v3"
       ],
+      "_comment": "BTC/ETH midterm pullback longs. Full in bull, halved in bear.",
       "base_risk_mult_by_regime": {
         "bull_trend": 1.0,
         "bull_chop": 0.85,
@@ -187,9 +150,7 @@
       "enable_env": "ENABLE_MTSV1_TRADING",
       "symbol_env_key": "MTSV1_SYMBOL_ALLOWLIST",
       "risk_env": "MTSV1_RISK_MULT",
-      "strategy_names": [
-        "btc_eth_midterm_short_v1"
-      ],
+      "strategy_names": ["btc_eth_midterm_short_v1"],
       "_comment": "REJECTED. v1 failed WF-22: only 2-TF hierarchy, no MACD/RSI daily filter, too many false signals in choppy bear. Replaced by midterm_short_v2 sleeve. Set to 0.0 permanently.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.0,
@@ -203,10 +164,8 @@
       "enable_env": "ENABLE_MTSV2_TRADING",
       "symbol_env_key": "MTSV2_SYMBOL_ALLOWLIST",
       "risk_env": "MTSV2_RISK_MULT",
-      "strategy_names": [
-        "btc_eth_midterm_short_v2"
-      ],
-      "_comment": "RESEARCH-ONLY. 3-TF hierarchy: weekly(10080)→daily(1440)→4h(240). MACD histogram consec≥3, daily RSI<55, min_trend_days=5, 4h RSI>50 on pullback touch. Requires WF-22 PF>1.20 DD<30%. Switch with MTPB_VERSION=short_v2.",
+      "strategy_names": ["btc_eth_midterm_short_v2"],
+      "_comment": "RESEARCH-ONLY. 3-TF hierarchy: weekly→daily→4h. 0/22 WF on current data — REJECTED until market conditions improve for shorts. Requires re-test after 6+ new windows.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.0,
         "bull_chop": 0.0,
@@ -219,9 +178,8 @@
       "enable_env": "ENABLE_RANGE_TRADING",
       "symbol_env_key": "ARS1_SYMBOL_ALLOWLIST",
       "risk_env": "RANGE_RISK_MULT",
-      "strategy_names": [
-        "alt_range_scalp_v1"
-      ],
+      "strategy_names": ["alt_range_scalp_v1"],
+      "_comment": "Range scalp — best in chop, active in all regimes.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.4,
         "bull_chop": 0.95,
@@ -234,14 +192,13 @@
       "enable_env": "ENABLE_ASB1_TRADING",
       "symbol_env_key": "ASB1_SYMBOL_ALLOWLIST",
       "risk_env": "ASB1_RISK_MULT",
-      "strategy_names": [
-        "alt_slope_break_v1"
-      ],
+      "strategy_names": ["alt_slope_break_v1"],
+      "_comment": "FIXED v6: support bounce/slope break — LONG strategy, primary in BULL. Was erroneously 0.0 in bull_trend (backwards). Now: max in bull_trend, off in bear_trend.",
       "base_risk_mult_by_regime": {
-        "bull_trend": 0.0,
-        "bull_chop": 0.45,
-        "bear_chop": 0.95,
-        "bear_trend": 1.05
+        "bull_trend": 1.1,
+        "bull_chop": 0.9,
+        "bear_chop": 0.3,
+        "bear_trend": 0.0
       }
     },
     {
@@ -249,13 +206,12 @@
       "enable_env": "ENABLE_HZBO1_TRADING",
       "symbol_env_key": "HZBO1_SYMBOL_ALLOWLIST",
       "risk_env": "HZBO1_RISK_MULT",
-      "strategy_names": [
-        "alt_horizontal_break_v1"
-      ],
+      "strategy_names": ["alt_horizontal_break_v1"],
+      "_comment": "FIXED v6: horizontal breakout — can do BOTH longs and shorts. Was 0.0 in bull_trend (wrong). Now: active in all regimes, direction set by orchestrator ALLOW_LONGS/ALLOW_SHORTS.",
       "base_risk_mult_by_regime": {
-        "bull_trend": 0.0,
-        "bull_chop": 0.35,
-        "bear_chop": 0.9,
+        "bull_trend": 0.95,
+        "bull_chop": 0.75,
+        "bear_chop": 0.85,
         "bear_trend": 1.0
       }
     },
@@ -264,9 +220,8 @@
       "enable_env": "ENABLE_BOUNCE1_TRADING",
       "symbol_env_key": "BOUNCE1_SYMBOL_ALLOWLIST",
       "risk_env": "BOUNCE1_RISK_MULT",
-      "strategy_names": [
-        "alt_support_bounce_v1"
-      ],
+      "strategy_names": ["alt_support_bounce_v1"],
+      "_comment": "Support bounce longs — bull-only. Off in bear regimes.",
       "base_risk_mult_by_regime": {
         "bull_trend": 1.1,
         "bull_chop": 0.9,
@@ -279,9 +234,8 @@
       "enable_env": "ENABLE_IVB1_TRADING",
       "symbol_env_key": "IVB1_SYMBOL_ALLOWLIST",
       "risk_env": "IVB1_RISK_MULT",
-      "strategy_names": [
-        "impulse_volume_breakout_v1"
-      ],
+      "strategy_names": ["impulse_volume_breakout_v1"],
+      "_comment": "Impulse volume breakout longs — bull-only momentum.",
       "base_risk_mult_by_regime": {
         "bull_trend": 1.0,
         "bull_chop": 0.7,
@@ -294,9 +248,8 @@
       "enable_env": "ENABLE_PUMP_FADE_TRADING",
       "symbol_env_key": "PF2_SYMBOL_ALLOWLIST",
       "risk_env": "PUMP_FADE_RISK_MULT",
-      "strategy_names": [
-        "pump_fade_v2"
-      ],
+      "strategy_names": ["pump_fade_v2"],
+      "_comment": "Fade pumps — works in all markets. Slightly reduced in bull_trend.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.7,
         "bull_chop": 0.85,
@@ -309,9 +262,7 @@
       "enable_env": "ENABLE_ELDER_TRADING",
       "symbol_env_key": "ETS2_SYMBOL_ALLOWLIST",
       "risk_env": "ELDER_RISK_MULT",
-      "strategy_names": [
-        "elder_triple_screen_v2"
-      ],
+      "strategy_names": ["elder_triple_screen_v2"],
       "_comment": "REJECTED. v2 failed hard 2024 PF=0.853 DD=62%, 2023 PF=0.715 DD=83%. Root causes: no daily macro gate, hist_sign=False, consec_bars=1. Stays 0.0 permanently. Use elder_ts_v3 sleeve instead after WF-22.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.0,
@@ -325,10 +276,8 @@
       "enable_env": "ENABLE_ETS3_TRADING",
       "symbol_env_key": "ETS3_SYMBOL_ALLOWLIST",
       "risk_env": "ETS3_RISK_MULT",
-      "strategy_names": [
-        "elder_triple_screen_v3"
-      ],
-      "_comment": "RESEARCH-ONLY. Full rewrite: Screen0 daily EMA50/200, hist_sign=True, consec_bars=3, ATR quality gate, FI+RSI dual Screen2, 50% body Screen3. Requires WF-22 PF>1.20 DD<25% before enabling. Set ENABLE_ETS3_TRADING=1 only after passing gate.",
+      "strategy_names": ["elder_triple_screen_v3"],
+      "_comment": "RESEARCH-ONLY. Full rewrite: Screen0 daily EMA50/200, hist_sign=True, consec_bars=3, ATR quality gate, FI+RSI dual Screen2, 50% body Screen3. 0 trades on last annual — over-constrained. Needs parameter relaxation + WF-22 PF>1.20 DD<25% before enabling.",
       "base_risk_mult_by_regime": {
         "bull_trend": 0.0,
         "bull_chop": 0.0,
@@ -341,14 +290,13 @@
       "enable_env": "ENABLE_VWAP_TRADING",
       "symbol_env_key": "AVW1_SYMBOL_ALLOWLIST",
       "risk_env": "VWAP_RISK_MULT",
-      "strategy_names": [
-        "alt_vwap_mean_reversion_v1"
-      ],
+      "strategy_names": ["alt_vwap_mean_reversion_v1"],
+      "_comment": "VWAP mean reversion — best in chop, active in all regimes. Raised bull_trend from 0.3 to 0.6.",
       "base_risk_mult_by_regime": {
-        "bull_trend": 0.3,
-        "bull_chop": 0.7,
-        "bear_chop": 0.75,
-        "bear_trend": 0.3
+        "bull_trend": 0.6,
+        "bull_chop": 0.85,
+        "bear_chop": 0.85,
+        "bear_trend": 0.5
       }
     }
   ]

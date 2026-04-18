@@ -1,27 +1,39 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-build_regime_state.py — Live Regime Orchestrator (V1)
+build_regime_state.py — Live Regime Orchestrator (V2)
 
 Classifies the current market regime and writes:
   1. runtime/regime/orchestrator_state.json  — full machine-readable state
   2. configs/regime_orchestrator_latest.env  — env overlay for live bot
 
-Regimes (4):
-  bull_trend   BTC 4H EMA21 > EMA55, close > EMA55, ER > threshold
-  bull_chop    BTC above EMA55 but low ER (choppy)
-  bear_chop    BTC 4H EMA21 < EMA55 but low ER (drift/chop)
-  bear_trend   BTC 4H EMA21 < EMA55, close < EMA55, ER > threshold
+ARCHITECTURE: two-layer regime
+  Layer 1 — MACRO (daily EMA50 vs EMA200):
+    MACRO_BULL       daily EMA50 > EMA200 by > 5%   (structural bull, e.g. 2024)
+    MACRO_WEAK_BULL  daily EMA50 > EMA200 by 1-5%
+    MACRO_NEUTRAL    daily EMA50 ≈ EMA200 within ±1%
+    MACRO_WEAK_BEAR  daily EMA50 < EMA200 by 1-5%
+    MACRO_BEAR       daily EMA50 < EMA200 by > 5%   (structural bear, e.g. 2022)
+
+  Layer 2 — INTERMEDIATE (4H EMA21 vs EMA55 + Efficiency Ratio):
+    bull_trend   4H EMA21 > EMA55, close > EMA55, ER > threshold
+    bull_chop    4H above EMA55 but low ER (choppy)
+    bear_chop    4H EMA21 < EMA55 but low ER (drift/chop)
+    bear_trend   4H EMA21 < EMA55, close < EMA55, ER > threshold
+
+  Final risk mult = base_4h_mult × macro_modifier
+  Example: bear_chop (0.70) × MACRO_BULL (+0.12) → 0.82 risk
+  This means: in 2024 bull year, even 4H pullbacks get less risk reduction
 
 Hysteresis (anti-flicker):
   A new regime is only applied after min_regime_hold_cycles consecutive
   re-computations agree (default 3). Prevents thrashing at regime boundaries.
 
-Sleeve decision table:
-  bull_trend  → breakout ON,  breakdown OFF, fade OFF, swing ON,  risk 1.00
-  bull_chop   → breakout RED, breakdown OFF, fade ON,  swing RED, risk 0.85
-  bear_chop   → breakout OFF, breakdown RED, fade ON,  swing ON,  risk 0.70
-  bear_trend  → breakout OFF, breakdown ON,  fade ON,  swing OFF, risk 0.50
+Sleeve decision table (4H layer drives ON/OFF; macro layer drives risk multiplier):
+  bull_trend  → breakout ON, asb1 ON, bounce ON, ivb1 ON, breakdown OFF, risk 1.00 × macro
+  bull_chop   → breakout REDUCED, asb1 ON, flat ON, swing REDUCED, risk 0.85 × macro
+  bear_chop   → breakdown ON, flat ON, swing ON, breakout OFF, risk 0.70 × macro
+  bear_trend  → breakdown ON, flat ON, bear-swing ON, momentum OFF, risk 0.50 × macro
 
 Usage:
   python3 scripts/build_regime_state.py            # one-shot
@@ -36,8 +48,11 @@ Env vars:
   TG_TOKEN                 Telegram bot token (optional)
   TG_CHAT_ID               Telegram chat ID (optional)
   ORCH_MIN_HOLD_CYCLES     Hysteresis cycles before regime change (default 3)
-  ORCH_ER_TREND_THRESH     ER threshold for "trending" (default 0.35)
+  ORCH_ER_TREND_THRESH     ER threshold for "trending" (default 0.28)
   ORCH_BARS                4H bars to fetch (default 120 = ~20 days)
+  ORCH_DAILY_BARS          Daily bars for macro overlay (default 220 = ~7 months)
+  ORCH_MACRO_BULL_PCT      EMA50/200 gap% to call MACRO_BULL (default 5.0)
+  ORCH_MACRO_BEAR_PCT      EMA50/200 gap% to call MACRO_BEAR (default -5.0)
 """
 
 from __future__ import annotations
@@ -87,13 +102,19 @@ log = logging.getLogger("regime_orchestrator")
 # Config from env
 # ---------------------------------------------------------------------------
 MIN_HOLD_CYCLES  = int(os.getenv("ORCH_MIN_HOLD_CYCLES", "3"))
-ER_TREND_THRESH  = float(os.getenv("ORCH_ER_TREND_THRESH", "0.28"))   # was 0.35 — lowered for crypto
-ER_PERIOD        = int(os.getenv("ORCH_ER_PERIOD", "30"))              # was hardcoded 20 — lengthened for stability
+ER_TREND_THRESH  = float(os.getenv("ORCH_ER_TREND_THRESH", "0.28"))
+ER_PERIOD        = int(os.getenv("ORCH_ER_PERIOD", "30"))
 FETCH_BARS       = int(os.getenv("ORCH_BARS", "120"))
 BULL_TREND_FLAT_ER_MAX = float(os.getenv("ORCH_BULL_TREND_FLAT_ER_MAX", "0.55"))
 MIXED_SIGN_PRICE_WEIGHT = float(os.getenv("ORCH_MIXED_SIGN_PRICE_WEIGHT", "1.0"))
 MIXED_SIGN_EMA_WEIGHT = float(os.getenv("ORCH_MIXED_SIGN_EMA_WEIGHT", "0.5"))
 MIXED_SIGN_EDGE_PCT = float(os.getenv("ORCH_MIXED_SIGN_EDGE_PCT", "0.15"))
+# ── Macro overlay (daily EMA50 vs EMA200) ────────────────────────────────────
+DAILY_BARS       = int(os.getenv("ORCH_DAILY_BARS", "220"))   # ~7 months of daily bars
+MACRO_BULL_PCT   = float(os.getenv("ORCH_MACRO_BULL_PCT", "5.0"))    # EMA gap% → MACRO_BULL
+MACRO_WEAK_BULL_PCT = float(os.getenv("ORCH_MACRO_WEAK_BULL_PCT", "1.0"))
+MACRO_WEAK_BEAR_PCT = float(os.getenv("ORCH_MACRO_WEAK_BEAR_PCT", "-1.0"))
+MACRO_BEAR_PCT   = float(os.getenv("ORCH_MACRO_BEAR_PCT", "-5.0"))   # EMA gap% → MACRO_BEAR
 TG_TOKEN         = os.getenv("TG_TOKEN", "")
 TG_CHAT_ID       = os.getenv("TG_CHAT_ID", os.getenv("TG_CHAT", ""))
 
@@ -254,6 +275,113 @@ def _load_cached_lower_tf_fallback(symbol: str, bars: int, *, end_ms: int | None
             return rows
     return []
 
+def _fetch_daily(symbol: str, bars: int, *, end_ms: int | None = None) -> List[Dict[str, float]]:
+    """Fetch `bars` daily (1440m) klines for macro overlay.
+
+    Strategy:
+      1. Fetch fresh 1440m klines from Bybit.
+      2. On failure, aggregate from cached 4H bars (6×4H = 1 daily).
+      3. On failure, return empty — macro overlay is skipped gracefully.
+    """
+    try:
+        from backtest.bybit_data import fetch_klines_public
+        end_ms = int(end_ms or int(time.time() * 1000))
+        start_ms = end_ms - bars * 24 * 3600 * 1000
+        try:
+            klines = fetch_klines_public(
+                symbol=symbol, interval="D",
+                start_ms=start_ms, end_ms=end_ms,
+                polite_sleep_sec=0.3, max_retries=3, backoff_max_sec=5.0,
+            )
+            if klines:
+                return [{"o": k.o, "h": k.h, "l": k.l, "c": k.c, "v": k.v, "ts": k.ts} for k in klines]
+        except Exception:
+            pass
+        # fallback: aggregate 4H bars into daily
+        bars_4h = bars * 6 + 20  # ~6 4H bars per day + buffer
+        rows_4h = _fetch_4h(symbol, bars_4h, end_ms=end_ms, cache_only=True)
+        if not rows_4h:
+            return []
+        daily: Dict[int, Dict[str, float]] = {}
+        order: List[int] = []
+        day_ms = 24 * 3600 * 1000
+        for r in rows_4h:
+            day_ts = int(r["ts"] // day_ms) * day_ms
+            slot = daily.get(day_ts)
+            if slot is None:
+                slot = {"ts": day_ts, "o": r["o"], "h": r["h"], "l": r["l"], "c": r["c"], "v": r["v"]}
+                daily[day_ts] = slot
+                order.append(day_ts)
+            else:
+                slot["h"] = max(slot["h"], r["h"])
+                slot["l"] = min(slot["l"], r["l"])
+                slot["c"] = r["c"]
+                slot["v"] += r["v"]
+        result = [daily[ts] for ts in sorted(order)]
+        return result[-bars:]
+    except Exception as e:
+        log.warning(f"_fetch_daily({symbol}) failed: {e}")
+        return []
+
+
+def _compute_macro_overlay(symbol: str = "BTCUSDT") -> Dict[str, Any]:
+    """Compute weekly macro context from daily EMA50 vs EMA200.
+
+    Returns a dict with macro_state and risk_modifier to apply on top of
+    the 4H regime risk multiplier.
+
+    Why this matters:
+      - 2024: BTC daily EMA50 >> EMA200 all year → MACRO_BULL → +0.12 to risk
+      - 2022: BTC daily EMA50 << EMA200 all year → MACRO_BEAR → -0.15 to risk
+      - This prevents the 4H signal from being overly cautious in structural bulls
+        and overly aggressive in structural bears.
+    """
+    candles = _fetch_daily(symbol, DAILY_BARS)
+    if len(candles) < 60:
+        log.warning(f"Macro overlay: only {len(candles)} daily bars — skipping (MACRO_NEUTRAL)")
+        return {
+            "state": "MACRO_NEUTRAL",
+            "risk_modifier": 0.0,
+            "ema50_daily": None,
+            "ema200_daily": None,
+            "gap_pct": 0.0,
+            "reason": f"insufficient_data ({len(candles)} bars)",
+        }
+
+    closes = [c["c"] for c in candles]
+    ema50_series  = _ema(closes, 50)
+    ema200_series = _ema(closes, min(200, len(closes)))
+
+    ema50  = ema50_series[-1]
+    ema200 = ema200_series[-1]
+    gap_pct = (ema50 - ema200) / max(abs(ema200), 1e-12) * 100.0
+
+    if gap_pct >= MACRO_BULL_PCT:
+        state, modifier = "MACRO_BULL", +0.12
+    elif gap_pct >= MACRO_WEAK_BULL_PCT:
+        state, modifier = "MACRO_WEAK_BULL", +0.06
+    elif gap_pct > MACRO_WEAK_BEAR_PCT:
+        state, modifier = "MACRO_NEUTRAL", 0.0
+    elif gap_pct > MACRO_BEAR_PCT:
+        state, modifier = "MACRO_WEAK_BEAR", -0.08
+    else:
+        state, modifier = "MACRO_BEAR", -0.15
+
+    log.info(
+        f"Macro overlay: {state} | daily EMA50={ema50:.1f} EMA200={ema200:.1f} "
+        f"gap={gap_pct:+.2f}% → risk_modifier={modifier:+.2f}"
+    )
+    return {
+        "state": state,
+        "risk_modifier": modifier,
+        "ema50_daily": round(ema50, 2),
+        "ema200_daily": round(ema200, 2),
+        "gap_pct": round(gap_pct, 3),
+        "reason": f"daily EMA50/EMA200 gap={gap_pct:+.2f}%",
+        "daily_bars_used": len(candles),
+    }
+
+
 # ---------------------------------------------------------------------------
 # Indicator helpers
 # ---------------------------------------------------------------------------
@@ -383,65 +511,135 @@ _REGIME_DECISIONS = {
         "risk_level": 1,
         "global_risk_mult": 1.00,
         "btc_bias": "long",
-        "sleeves": {"momentum": "active", "mean_reversion": "off", "swing": "active"},
+        "sleeves": {
+            "momentum": "active", "breakout": "active", "bounce": "active",
+            "mean_reversion": "off", "swing": "active", "breakdown": "off",
+        },
         "overrides": {
+            # Directional longs ON
             "ENABLE_BREAKOUT_TRADING":   "1",
             "BREAKOUT_ALLOW_LONGS":      "1",
             "BREAKOUT_ALLOW_SHORTS":     "0",
-            "ENABLE_BREAKDOWN_TRADING":  "0",
-            "ENABLE_FLAT_TRADING":       "0",
+            "ENABLE_ASB1_TRADING":       "1",   # support bounce — primary bull strategy
+            "ASB1_ALLOW_LONGS":          "1",
+            "ASB1_ALLOW_SHORTS":         "0",
+            "ENABLE_HZBO1_TRADING":      "1",   # horizontal breakout longs
+            "HZBO1_ALLOW_LONGS":         "1",
+            "HZBO1_ALLOW_SHORTS":        "0",
+            "ENABLE_BOUNCE_TRADING":     "1",   # bounce1 — longs at support
+            "ENABLE_IVB1_TRADING":       "1",   # impulse volume breakout — longs
             "ENABLE_MIDTERM_TRADING":    "1",
+            "ENABLE_ATT1_TRADING":       "1",   # trendline touch longs
+            # Bearish/range strategies OFF
+            "ENABLE_BREAKDOWN_TRADING":  "0",
+            "ENABLE_FLAT_TRADING":       "0",   # flat = range, off in trending bull
             "ORCH_REGIME":               REGIME_BULL_TREND,
         },
-        "notes": ["BTC 4H EMA21 > EMA55", "price above EMA55", "ER trending — momentum mode active"],
+        "notes": [
+            "BTC 4H EMA21 > EMA55, price above EMA55, ER trending",
+            "Bull momentum: breakout + ASB1 + bounce + IVB1 active",
+            "Bear strategies off — no shorts",
+        ],
     },
     REGIME_BULL_CHOP: {
         "risk_level": 2,
         "global_risk_mult": 0.85,
         "btc_bias": "neutral",
-        "sleeves": {"momentum": "reduced", "mean_reversion": "active", "swing": "reduced"},
+        "sleeves": {
+            "momentum": "reduced", "breakout": "reduced", "bounce": "active",
+            "mean_reversion": "active", "swing": "reduced", "breakdown": "off",
+        },
         "overrides": {
+            # Still in bull territory but choppy — keep longs, add range strategies
             "ENABLE_BREAKOUT_TRADING":   "1",
             "BREAKOUT_ALLOW_LONGS":      "1",
             "BREAKOUT_ALLOW_SHORTS":     "0",
-            "ENABLE_BREAKDOWN_TRADING":  "0",
-            "ENABLE_FLAT_TRADING":       "1",
+            "ENABLE_ASB1_TRADING":       "1",   # support bounce still active
+            "ASB1_ALLOW_LONGS":          "1",
+            "ASB1_ALLOW_SHORTS":         "0",
+            "ENABLE_HZBO1_TRADING":      "1",
+            "HZBO1_ALLOW_LONGS":         "1",
+            "HZBO1_ALLOW_SHORTS":        "0",
+            "ENABLE_BOUNCE_TRADING":     "1",
+            "ENABLE_IVB1_TRADING":       "1",
             "ENABLE_MIDTERM_TRADING":    "1",
+            "ENABLE_ATT1_TRADING":       "1",
+            "ENABLE_FLAT_TRADING":       "1",   # flat/range strategies ON in chop
+            "ENABLE_VWAP_TRADING":       "1",   # VWAP mean reversion active in chop
+            # Bear strategies still off
+            "ENABLE_BREAKDOWN_TRADING":  "0",
             "ORCH_REGIME":               REGIME_BULL_CHOP,
         },
-        "notes": ["BTC still above EMA55 but ER low", "choppy — reduce momentum, activate fade"],
+        "notes": [
+            "BTC above EMA55 but ER low — choppy bull",
+            "Longs still active, range strategies added (flat, VWAP)",
+            "Bear strategies off",
+        ],
     },
     REGIME_BEAR_CHOP: {
         "risk_level": 3,
         "global_risk_mult": 0.70,
         "btc_bias": "short",
-        "sleeves": {"momentum": "off", "mean_reversion": "active", "swing": "active"},
+        "sleeves": {
+            "momentum": "off", "breakout": "off", "bounce": "off",
+            "mean_reversion": "active", "swing": "active", "breakdown": "reduced",
+        },
         "overrides": {
+            # Range + breakdown strategies; longs off (EXCEPT if MACRO_BULL overlay)
             "ENABLE_BREAKOUT_TRADING":   "0",
             "BREAKOUT_ALLOW_LONGS":      "0",
             "BREAKOUT_ALLOW_SHORTS":     "0",
+            "ENABLE_ASB1_TRADING":       "0",   # no longs in bear chop
+            "ASB1_ALLOW_LONGS":          "0",
+            "ENABLE_HZBO1_TRADING":      "1",   # HZBO can do shorts
+            "HZBO1_ALLOW_LONGS":         "0",
+            "HZBO1_ALLOW_SHORTS":        "1",
+            "ENABLE_BOUNCE_TRADING":     "0",
+            "ENABLE_IVB1_TRADING":       "0",
+            "ENABLE_ATT1_TRADING":       "1",   # ATT1 handles both sides
             "ENABLE_BREAKDOWN_TRADING":  "1",
-            "ENABLE_FLAT_TRADING":       "1",
+            "ENABLE_FLAT_TRADING":       "1",   # flat range is best in chop
+            "ENABLE_VWAP_TRADING":       "1",
             "ENABLE_MIDTERM_TRADING":    "1",
             "ORCH_REGIME":               REGIME_BEAR_CHOP,
         },
-        "notes": ["BTC 4H EMA21 < EMA55", "low ER — choppy bear", "longs off, breakdown reduced, fade on"],
+        "notes": [
+            "BTC 4H below EMA55, low ER — choppy bear",
+            "Range + VWAP + breakdown active; longs off",
+            "Risk reduced to 0.70 base (macro modifier applied on top)",
+        ],
     },
     REGIME_BEAR_TREND: {
         "risk_level": 4,
         "global_risk_mult": 0.50,
         "btc_bias": "short",
-        "sleeves": {"momentum": "off", "mean_reversion": "active", "swing": "off"},
+        "sleeves": {
+            "momentum": "off", "breakout": "off", "bounce": "off",
+            "mean_reversion": "active", "swing": "off", "breakdown": "active",
+        },
         "overrides": {
+            # Strong bear — only shorts and range fade strategies
             "ENABLE_BREAKOUT_TRADING":   "0",
             "BREAKOUT_ALLOW_LONGS":      "0",
             "BREAKOUT_ALLOW_SHORTS":     "0",
+            "ENABLE_ASB1_TRADING":       "0",
+            "ENABLE_HZBO1_TRADING":      "1",   # horizontal breakdown shorts
+            "HZBO1_ALLOW_LONGS":         "0",
+            "HZBO1_ALLOW_SHORTS":        "1",
+            "ENABLE_BOUNCE_TRADING":     "0",
+            "ENABLE_IVB1_TRADING":       "0",
+            "ENABLE_ATT1_TRADING":       "0",   # ATT1 off in strong trend down
             "ENABLE_BREAKDOWN_TRADING":  "1",
-            "ENABLE_FLAT_TRADING":       "1",
-            "ENABLE_MIDTERM_TRADING":    "0",
+            "ENABLE_FLAT_TRADING":       "1",   # fade bounces
+            "ENABLE_VWAP_TRADING":       "1",
+            "ENABLE_MIDTERM_TRADING":    "0",   # midterm longs off in bear trend
             "ORCH_REGIME":               REGIME_BEAR_TREND,
         },
-        "notes": ["BTC 4H EMA21 < EMA55", "price below EMA55", "strong bear — breakdown + fade only"],
+        "notes": [
+            "BTC 4H EMA21 < EMA55, price below EMA55, ER trending",
+            "Strong bear: breakdown + fade only",
+            "All long momentum strategies off",
+        ],
     },
 }
 
@@ -519,17 +717,27 @@ def compute_and_apply(dry_run: bool = False) -> Dict[str, Any]:
     """Run one cycle. Returns the full state dict."""
 
     ts_utc = datetime.now(timezone.utc).isoformat()
-    log.info(f"=== Regime cycle start: {ts_utc} ===")
+    log.info(f"=== Regime cycle start (V2): {ts_utc} ===")
 
-    # 1. Fetch BTC 4H data
+    # 1a. Fetch BTC 4H data (intermediate regime)
     candles = _fetch_4h("BTCUSDT", FETCH_BARS)
     if len(candles) < 60:
         log.error(f"Insufficient BTC 4H data ({len(candles)} bars). Skipping cycle.")
         return {}
 
-    # 2. Classify raw regime
+    # 1b. Compute daily macro overlay (structural bull/bear context)
+    macro = _compute_macro_overlay("BTCUSDT")
+    log.info(f"Macro overlay: {macro['state']} | gap={macro.get('gap_pct',0):+.2f}% risk_mod={macro.get('risk_modifier',0):+.2f}")
+
+    # 2. Classify raw 4H regime
     raw_regime, indicators = _classify_regime(candles)
-    log.info(f"Raw regime: {raw_regime} | EMA21={indicators.get('ema21')} EMA55={indicators.get('ema55')} ER={indicators.get('er')}")
+    # Attach macro info to indicators for reporting
+    indicators["macro_state"] = macro["state"]
+    indicators["macro_risk_modifier"] = macro.get("risk_modifier", 0.0)
+    indicators["macro_gap_pct"] = macro.get("gap_pct", 0.0)
+    indicators["daily_ema50"] = macro.get("ema50_daily")
+    indicators["daily_ema200"] = macro.get("ema200_daily")
+    log.info(f"Raw 4H regime: {raw_regime} | EMA21={indicators.get('ema21')} EMA55={indicators.get('ema55')} ER={indicators.get('er')}")
 
     # 3. Load prior state for hysteresis
     prior = _load_state()
@@ -566,9 +774,24 @@ def compute_and_apply(dry_run: bool = False) -> Dict[str, Any]:
 
     # 5. Build decision
     decision = _apply_decision_softeners(new_regime, indicators)
+
+    # Apply macro overlay to global risk multiplier
+    # Example: bear_chop 0.70 + MACRO_BULL +0.12 = 0.82 (less cautious during structural bull year)
+    # Example: bull_chop 0.85 + MACRO_BEAR -0.15 = 0.70 (more cautious during structural bear year)
+    base_risk = decision["global_risk_mult"]
+    macro_modifier = macro.get("risk_modifier", 0.0)
+    macro_adjusted_risk = round(max(0.30, min(1.15, base_risk + macro_modifier)), 3)
+    decision["global_risk_mult"] = macro_adjusted_risk
+    decision["notes"] = list(decision.get("notes") or []) + [
+        f"Macro overlay: {macro['state']} → risk {base_risk:.2f}{macro_modifier:+.2f} = {macro_adjusted_risk:.2f}"
+    ]
+    log.info(f"Risk: base={base_risk:.2f} macro_mod={macro_modifier:+.2f} → final={macro_adjusted_risk:.2f}")
+
     overrides = decision["overrides"].copy()
     overrides["ORCH_CONFIDENCE"] = str(round(indicators.get("er", 0.5), 3))
     overrides["ORCH_RAW_REGIME"] = raw_regime
+    overrides["ORCH_MACRO_STATE"] = macro["state"]
+    overrides["ORCH_MACRO_RISK_MOD"] = str(macro_modifier)
     overrides["ORCH_PENDING_REGIME"] = pending_regime
     overrides["ORCH_PENDING_COUNT"] = str(pending_count)
     overrides["ORCH_GENERATED_AT_UTC"] = ts_utc
@@ -588,6 +811,8 @@ def compute_and_apply(dry_run: bool = False) -> Dict[str, Any]:
         "btc_bias":        decision["btc_bias"],
         "risk_level":      decision["risk_level"],
         "global_risk_mult": decision["global_risk_mult"],
+        "global_risk_base": base_risk,
+        "macro":           macro,
         "sleeves":         decision["sleeves"],
         "softeners":       decision.get("softeners", []),
         "strategy_overrides": overrides,
@@ -616,8 +841,9 @@ def compute_and_apply(dry_run: bool = False) -> Dict[str, Any]:
         msg = (
             f"🔄 <b>Regime changed</b>: {old} → <b>{new_regime}</b>\n"
             f"Risk: ×{decision['global_risk_mult']} (level {decision['risk_level']})\n"
+            f"Macro: {macro['state']} (EMA50/200 gap={macro.get('gap_pct',0):+.1f}%)\n"
             f"Sleeves: {sleeve_summary}\n"
-            f"EMA21={indicators.get('ema21')} EMA55={indicators.get('ema55')} ER={indicators.get('er')}"
+            f"4H: EMA21={indicators.get('ema21')} EMA55={indicators.get('ema55')} ER={indicators.get('er')}"
         )
         _tg_send(TG_TOKEN, TG_CHAT_ID, msg)
         log.info(f"REGIME CHANGE: {old} → {new_regime}")
