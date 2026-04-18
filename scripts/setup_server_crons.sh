@@ -164,14 +164,17 @@ NEW_CRONS=$(cat << CRONEOF
 # 12. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
 */5 14-21 * * 1-5 /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> logs/alpaca_intraday_dynamic_v1.log 2>&1' $CRON_TAG
 #
-# 13. Auto-apply research winners — daily at 06:00 UTC, after nightly research completes
+# 13. Funding-rate snapshot refresh — every 5 min for funding_rev sleeve
+*/5 * * * * cd $BOT_DIR && $PYTHON scripts/funding_rate_fetcher.py --once --symbols BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT,AVAXUSDT >> logs/funding_rate_fetcher.log 2>&1 $CRON_TAG
+#
+# 14. Auto-apply research winners — daily at 06:00 UTC, after nightly research completes
 0 6 * * * cd $BOT_DIR && $PYTHON scripts/auto_apply_research_winner.py >> logs/auto_apply.log 2>&1 $CRON_TAG
 #
-# 14. Daily Telegram health digest — every morning at 08:00 UTC
+# 15. Daily Telegram health digest — every morning at 08:00 UTC
 # Reports: CB state, regime, allocator, open trades, Alpaca P&L + picks
 0 8 * * * /bin/bash -lc 'cd $BOT_DIR && source .venv/bin/activate && python3 scripts/tg_daily_digest.py >> logs/tg_daily_digest.log 2>&1' $CRON_TAG
 #
-# 15. Alpaca monthly autopilot — 1st of each month at 09:30 UTC (after market open)
+# 16. Alpaca monthly autopilot — 1st of each month at 09:30 UTC (after market open)
 30 9 1 * * /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_monthly_autopilot.sh >> logs/alpaca_monthly.log 2>&1' $CRON_TAG
 #
 CRONEOF

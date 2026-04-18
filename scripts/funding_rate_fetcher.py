@@ -15,6 +15,11 @@ Usage (run in background alongside bot):
         --symbols BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT,AVAXUSDT \
         > /tmp/funding_rate_fetcher.log 2>&1 &
 
+MODE 1b: One-shot refresh — fetches current funding once and exits.
+Useful for cron:
+    python3 scripts/funding_rate_fetcher.py --once \
+        --symbols BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT,AVAXUSDT
+
 MODE 2: Historical download — downloads historical funding rates (every 8h) and
 saves to CSV files. Used to build realistic backtests of the FR Reversion strategy.
 
@@ -221,6 +226,24 @@ def live_loop(symbols: List[str]) -> None:
         time.sleep(FETCH_INTERVAL)
 
 
+def fetch_once(symbols: List[str]) -> int:
+    """Fetch current funding rates once and write JSON snapshot. Returns number of rates written."""
+    logger.info(f"Funding one-shot refresh | symbols={symbols}")
+    LATEST_FILE.parent.mkdir(parents=True, exist_ok=True)
+    rates = fetch_current_funding_rates(symbols)
+    if not rates:
+        logger.warning("No funding rates fetched in one-shot refresh")
+        return 0
+    payload = {
+        "updated_utc": datetime.now(timezone.utc).isoformat(),
+        "rates": {sym: fr for sym, fr in rates.items()},
+    }
+    LATEST_FILE.write_text(json.dumps(payload, indent=2))
+    rate_strs = ", ".join(f"{sym}={fr*100:.4f}%" for sym, fr in sorted(rates.items()))
+    logger.info(f"Funding one-shot saved: {rate_strs}")
+    return len(rates)
+
+
 # ── Historical download mode ────────────────────────────────────────────────────
 
 def download_history(symbol: str, days: int, out_path: Path) -> int:
@@ -306,6 +329,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Bybit funding rate fetcher / historical downloader")
     group = ap.add_mutually_exclusive_group(required=True)
     group.add_argument("--live",        action="store_true", help="Live injection loop (runs forever)")
+    group.add_argument("--once",        action="store_true", help="Fetch current rates once and write snapshot")
     group.add_argument("--status",      action="store_true", help="Print current rates + saved state")
     group.add_argument("--history",     action="store_true", help="Download history for --symbol")
     group.add_argument("--history-all", action="store_true", help="Download history for all default symbols")
@@ -320,6 +344,10 @@ def main() -> None:
 
     if args.live:
         live_loop(symbols)
+
+    elif args.once:
+        count = fetch_once(symbols)
+        print(f"\n✅ Saved {count} current funding rates to {LATEST_FILE}")
 
     elif args.status:
         print_status(symbols)

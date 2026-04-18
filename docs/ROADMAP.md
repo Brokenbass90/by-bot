@@ -1323,3 +1323,9 @@ bash scripts/run_web.sh   # uvicorn web.main:app --host 127.0.0.1 --port 8765
 - Local web Phase 1 is now operator-smokeable: login + TOTP + authenticated reads work at `http://127.0.0.1:8765`, and AI/admin endpoints are behind admin auth instead of generic session auth.
 - Web truth is materially better than yesterday: allocator and AI context now read `runtime/control_plane/portfolio_allocator_state.json` instead of inferring sleeve activity from static policy, so the dashboard no longer overstates what is actually active.
 - Immediate crypto focus stays narrow: finish reading `flat-only` / `range-only`, then decide whether `ASB1/HZBO1` or another historically strong sleeve should be the next alpha rehabilitation target. Do not burn more time on `Elder`/midterm rewrites until a new design can demonstrate real trade generation.
+
+### 2026-04-18 Morning Addendum
+
+- Web onboarding is now usable by a real operator: `web/setup_totp.py` saves a QR PNG into `runtime/web_totp_qr/` during setup, so the intended flow is scan QR in Google Authenticator first, then enter only the 6-digit TOTP code on the web screen.
+- `funding_rate_reversion_v1` finally has an end-to-end live data path: `funding_rate_fetcher.py --once` writes `configs/funding_rates_latest.json`, the strategy reads that JSON as a fallback, and `setup_server_crons.sh` now includes a 5-minute refresh job.
+- Important scope check on allocator `v7`: the new sleeves are not equally live-ready. `micro_scalp` is already wired in the live bot, but `breakdown_v2`, `slope_choch`, `liq_cascade`, and `funding_rev` are still policy/backtest-only until their live integration points are added explicitly.

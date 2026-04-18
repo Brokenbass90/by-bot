@@ -48,9 +48,39 @@ from __future__ import annotations
 import math
 import os
 from dataclasses import dataclass, field
+import json
+import time
+from pathlib import Path
 from typing import Dict, List, Optional
 
 from .signals import TradeSignal
+
+_ROOT = Path(__file__).resolve().parent.parent
+_FUNDING_LATEST_PATH = _ROOT / "configs" / "funding_rates_latest.json"
+_FUNDING_JSON_CACHE_TS = 0.0
+_FUNDING_JSON_CACHE: Dict[str, float] = {}
+_FUNDING_JSON_TTL_SEC = 30.0
+
+
+def _read_latest_funding_file() -> Dict[str, float]:
+    global _FUNDING_JSON_CACHE_TS, _FUNDING_JSON_CACHE
+    now = time.time()
+    if now - _FUNDING_JSON_CACHE_TS < _FUNDING_JSON_TTL_SEC:
+        return _FUNDING_JSON_CACHE
+    rates: Dict[str, float] = {}
+    try:
+        payload = json.loads(_FUNDING_LATEST_PATH.read_text())
+        raw_rates = dict(payload.get("rates") or {})
+        for sym, val in raw_rates.items():
+            try:
+                rates[str(sym).upper()] = float(val)
+            except Exception:
+                continue
+    except Exception:
+        rates = {}
+    _FUNDING_JSON_CACHE = rates
+    _FUNDING_JSON_CACHE_TS = now
+    return rates
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -191,6 +221,7 @@ class FundingRateReversionV1:
         Try to get funding rate from:
         1. store.funding_rate (injected by live bot's funding fetcher)
         2. Environment variable FR_LATEST_{SYMBOL} (for testing/override)
+        3. configs/funding_rates_latest.json (cron / sidecar process fallback)
         Returns None if unavailable.
         """
         # Priority 1: store attribute
@@ -208,6 +239,13 @@ class FundingRateReversionV1:
                 return float(env_val)
             except Exception:
                 pass
+        # Priority 3: latest JSON snapshot written by funding_rate_fetcher cron/sidecar
+        try:
+            rates = _read_latest_funding_file()
+            if symbol.upper() in rates:
+                return float(rates[symbol.upper()])
+        except Exception:
+            pass
         return None
 
     def maybe_signal(

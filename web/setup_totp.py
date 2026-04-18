@@ -30,6 +30,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from web.auth import hash_password, get_totp_uri, _CONFIG_PATH, _load_config, _save_config
 
 
+def _qr_png_path(email: str) -> Path:
+    safe = "".join(ch if ch.isalnum() else "_" for ch in email.strip().lower()).strip("_") or "user"
+    out_dir = Path(__file__).parent.parent / "runtime" / "web_totp_qr"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    return out_dir / f"{safe}.png"
+
+
 def setup_user(email: str) -> None:
     email = email.strip().lower()
     print(f"\n=== Setting up user: {email} ===\n")
@@ -51,6 +58,15 @@ def setup_user(email: str) -> None:
     print(f"\nScan this URI with Google Authenticator:")
     print(f"  {uri}")
     print()
+
+    # Save a scannable PNG QR so setup does not depend on copying the raw secret.
+    try:
+        png_path = _qr_png_path(email)
+        qrcode.make(uri).save(png_path)
+        print(f"QR image saved: {png_path}")
+        print("Open this PNG on your phone/laptop and scan it in Google Authenticator.\n")
+    except Exception as e:
+        print(f"(Could not save QR PNG automatically: {e})")
 
     # Try to show ASCII QR code if qrcode package is available
     try:
