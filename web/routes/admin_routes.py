@@ -19,10 +19,11 @@ from ..deps import require_admin
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
 _ROOT = Path(__file__).parent.parent.parent
+_RUNTIME_ROOT = Path(os.getenv("WEB_RUNTIME_ROOT", str(_ROOT / "runtime")))
 
 
 def _rt(*p: str) -> Path:
-    return _ROOT / "runtime" / Path(*p)
+    return _RUNTIME_ROOT / Path(*p)
 
 
 # ── User management ───────────────────────────────────────────────────────────
@@ -117,11 +118,13 @@ def _load_all_trades() -> List[Dict[str, Any]]:
     seen: set = set()
     trades: List[Dict[str, Any]] = []
     paths = sorted(
-        list(_ROOT.glob("runtime/**/trades.csv")),
+        list(_RUNTIME_ROOT.glob("**/trades.csv")),
         key=lambda p: p.stat().st_mtime,
         reverse=True,
     )
-    root_csv = _ROOT / "trades.csv"
+    root_csv = _RUNTIME_ROOT / "trades.csv"
+    if not root_csv.exists():
+        root_csv = _ROOT / "trades.csv"
     if root_csv.exists():
         paths.insert(0, root_csv)
 

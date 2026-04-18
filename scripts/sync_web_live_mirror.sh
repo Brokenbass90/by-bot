@@ -37,6 +37,7 @@ copy_if_exists "$BOT_DIR/runtime/operator/operator_snapshot.json" "$MIRROR_ROOT/
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/current_cycle_picks.csv" "$MIRROR_ROOT/equities_monthly_v36/current_cycle_picks.csv"
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/latest_summary.csv" "$MIRROR_ROOT/equities_monthly_v36/latest_summary.csv"
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/latest_advisory.json" "$MIRROR_ROOT/equities_monthly_v36/latest_advisory.json"
+copy_if_exists "$BOT_DIR/configs/intraday_state.json" "$MIRROR_ROOT/intraday_state.json"
 copy_if_exists "$BOT_DIR/trades.csv" "$MIRROR_ROOT/trades.csv"
 
 echo "[mirror] done root=$MIRROR_ROOT"

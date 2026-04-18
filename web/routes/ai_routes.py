@@ -36,6 +36,10 @@ _ROOT = Path(__file__).parent.parent.parent
 _RUNTIME_ROOT = Path(os.getenv("WEB_RUNTIME_ROOT", str(_ROOT / "runtime")))
 _AUDIT_LOG = _ROOT / "runtime" / "web_audit_log.jsonl"
 _OVERLAY_ENV = _ROOT / "configs" / "web_control_overlay.env"
+_SHARED_HISTORY_PATH = Path(
+    str(os.getenv("DEEPSEEK_CHAT_STATE_PATH", _ROOT / "runtime" / "web_ai_history.json"))
+)
+_HISTORY_MAX = max(1, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "16") or 16))
 _CHAT_RATE: Dict[str, List[float]] = {}  # email → list of timestamps
 _MAX_RPM = 20  # requests per minute per user
 
@@ -67,6 +71,55 @@ def _read_env(p: Path) -> Dict[str, str]:
             k, _, v = line.partition("=")
             result[k.strip()] = v.strip()
     return result
+
+
+def _load_shared_history() -> List[Dict[str, str]]:
+    if not _SHARED_HISTORY_PATH.exists():
+        return []
+    try:
+        payload = json.loads(_SHARED_HISTORY_PATH.read_text())
+    except Exception:
+        return []
+    if isinstance(payload, dict):
+        payload = payload.get("messages", [])
+    if not isinstance(payload, list):
+        return []
+    result: List[Dict[str, str]] = []
+    for item in payload[-_HISTORY_MAX:]:
+        if not isinstance(item, dict):
+            continue
+        role = str(item.get("role") or "").strip().lower()
+        content = str(item.get("content") or "").strip()
+        if role in {"user", "assistant", "system"} and content:
+            result.append({"role": role, "content": content})
+    return result
+
+
+def _save_shared_history(messages: List[Dict[str, str]]) -> None:
+    cleaned = []
+    for item in messages[-_HISTORY_MAX:]:
+        role = str(item.get("role") or "").strip().lower()
+        content = str(item.get("content") or "").strip()
+        if role in {"user", "assistant", "system"} and content:
+            cleaned.append({"role": role, "content": content})
+    _SHARED_HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
+    _SHARED_HISTORY_PATH.write_text(
+        json.dumps({"messages": cleaned, "updated_utc": datetime.now(timezone.utc).isoformat()}, ensure_ascii=False, indent=2)
+    )
+
+
+def _merge_history(current: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    shared = _load_shared_history()
+    merged = list(shared)
+    for item in current:
+        role = str(item.get("role") or "").strip().lower()
+        content = str(item.get("content") or "").strip()
+        if role not in {"user", "assistant", "system"} or not content:
+            continue
+        if merged and merged[-1].get("role") == role and merged[-1].get("content") == content:
+            continue
+        merged.append({"role": role, "content": content})
+    return merged[-_HISTORY_MAX:]
 
 
 # ── Rate limiter ──────────────────────────────────────────────────────────────
@@ -377,7 +430,8 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         "Always explain the reason for any control command you suggest.\n\n"
         + _build_context()
     )
-    messages_payload = [{"role": m.role, "content": m.content} for m in body.messages[-20:]]
+    current_messages = [{"role": m.role, "content": m.content} for m in body.messages[-20:]]
+    messages_payload = _merge_history(current_messages)
 
     try:
         if deepseek_key:
@@ -428,6 +482,8 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
             except Exception:
                 pass
 
+        _save_shared_history(messages_payload + [{"role": "assistant", "content": reply_text}])
+
         return ChatResponse(
             reply=reply_text,
             suggested_command=suggested_cmd,
@@ -459,3 +515,9 @@ async def get_audit(email: str = Depends(require_admin)):
 async def get_context(email: str = Depends(require_admin)):
     """Return the current context that gets injected into AI. Useful for debugging."""
     return {"context": _build_context()}
+
+
+@router.get("/history")
+async def get_history(email: str = Depends(require_admin)):
+    """Return shared AI history used by web chat."""
+    return {"messages": _load_shared_history()}

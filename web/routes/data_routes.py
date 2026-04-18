@@ -473,6 +473,7 @@ async def get_alpaca(_: str = Depends(require_auth)):
     picks = _read_csv(monthly_dir / "current_cycle_picks.csv")
     summary_rows = _read_csv(monthly_dir / "latest_summary.csv")
     advisory = _json(monthly_dir / "latest_advisory.json")
+    intraday_state = _json(_rt("intraday_state.json")) or _json(_cfg("intraday_state.json"))
 
     summary = summary_rows[0] if summary_rows else {}
     # Convert numeric fields
@@ -497,10 +498,20 @@ async def get_alpaca(_: str = Depends(require_auth)):
                     pass
         clean_picks.append(cp)
 
+    if isinstance(intraday_state, dict):
+        if isinstance(intraday_state.get("positions"), dict):
+            intraday_positions = list(intraday_state.get("positions", {}).values())
+        else:
+            intraday_positions = [v for v in intraday_state.values() if isinstance(v, dict) and v.get("symbol")]
+    else:
+        intraday_positions = []
+
     return {
         "current_picks": clean_picks,
         "summary": summary,
         "advisory": (advisory or {}).get("report", advisory),
+        "intraday_positions": intraday_positions,
+        "intraday_updated_utc": (intraday_state or {}).get("updated_utc"),
     }
 
 

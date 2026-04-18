@@ -953,10 +953,12 @@ function AlpacaPage() {
   const sum = data.summary || {};
   const picks = data.current_picks || [];
   const adv = data.advisory || {};
+  const intraday = data.intraday_positions || [];
 
   return React.createElement('div', null,
     React.createElement('div', { className: 'section-title' }, 'Alpaca Paper Trading',
-      React.createElement('span', { className: 'section-sub' }, 'Monthly Momentum Strategy')
+      React.createElement('span', { className: 'section-sub' },
+        intraday.length > 0 ? 'Monthly Momentum Strategy + Intraday Dynamic v1' : 'Monthly Momentum Strategy')
     ),
 
     // Summary stats
@@ -1015,6 +1017,39 @@ function AlpacaPage() {
               ' · ',
               React.createElement('span', null, `SL: $${parseFloat(p.stop_price || 0).toFixed(2)}`),
               p.target_price ? [' · ', React.createElement('span', { key: 't' }, `TP: $${parseFloat(p.target_price).toFixed(2)}`)] : null
+            )
+          )
+        )
+      )
+    ),
+
+    intraday.length > 0 && React.createElement('div', { style: { marginBottom: '16px' } },
+      React.createElement('div', { className: 'section-title', style: { fontSize: '14px', marginBottom: '12px' } },
+        'Intraday Paper Positions',
+        React.createElement('span', { className: 'section-sub' },
+          data.intraday_updated_utc ? `Updated: ${data.intraday_updated_utc.replace('T', ' ').slice(0, 19)} UTC` : '')
+      ),
+      React.createElement('div', { className: 'grid3' },
+        intraday.map((p, i) =>
+          React.createElement('div', { className: 'pick-card', key: `${p.symbol || 'pos'}-${i}` },
+            React.createElement('div', { className: 'pick-ticker' }, p.symbol || '—'),
+            React.createElement('div', { className: 'pick-month' },
+              `${String(p.side || '').toUpperCase()} · qty ${p.qty != null ? p.qty : '?'}`),
+            p.entry_price != null && React.createElement('div', { className: 'pick-metric' },
+              React.createElement('span', null, 'Entry'),
+              React.createElement('span', { className: 'v' }, `$${parseFloat(p.entry_price).toFixed(2)}`)
+            ),
+            p.last_price != null && React.createElement('div', { className: 'pick-metric' },
+              React.createElement('span', null, 'Last'),
+              React.createElement('span', { className: 'v' }, `$${parseFloat(p.last_price).toFixed(2)}`)
+            ),
+            (p.stop_price != null || p.sl_price != null) && React.createElement('div', { className: 'pick-metric' },
+              React.createElement('span', null, 'SL'),
+              React.createElement('span', { className: 'v' }, `$${parseFloat(p.stop_price != null ? p.stop_price : p.sl_price).toFixed(2)}`)
+            ),
+            (p.target_price != null || p.tp_price != null) && React.createElement('div', { className: 'pick-metric' },
+              React.createElement('span', null, 'TP'),
+              React.createElement('span', { className: 'v' }, `$${parseFloat(p.target_price != null ? p.target_price : p.tp_price).toFixed(2)}`)
             )
           )
         )
@@ -1221,8 +1256,23 @@ function AIChatPage() {
   const [pendingCmd, setPendingCmd] = useState(null);
   const [cmdConfirm, setCmdConfirm] = useState(false);
   const bottomRef = useRef(null);
+  const textareaRef = useRef(null);
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+  useEffect(() => {
+    api('/api/ai/history')
+      .then(res => {
+        const history = Array.isArray(res?.messages) ? res.messages : [];
+        if (history.length > 0) setMessages(history);
+      })
+      .catch(() => {});
+  }, []);
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = '0px';
+    el.style.height = `${Math.min(el.scrollHeight, 180)}px`;
+  }, [input]);
 
   async function send(executeCmd = null) {
     const text = input.trim();
@@ -1319,15 +1369,18 @@ function AIChatPage() {
 
       // Input
       React.createElement('div', { style: { display: 'flex', gap: '8px', marginTop: '8px' } },
-        React.createElement('input', {
+        React.createElement('textarea', {
+          ref: textareaRef,
           value: input,
           onChange: e => setInput(e.target.value),
           onKeyDown: e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } },
           placeholder: 'Спроси что угодно о боте…',
           disabled: loading,
+          rows: 1,
           style: {
             flex: 1, background: 'var(--bg3)', border: '1px solid var(--border2)', color: 'var(--text)',
             padding: '10px 14px', borderRadius: 'var(--radius)', fontSize: '13px', outline: 'none',
+            resize: 'none', minHeight: '42px', maxHeight: '180px', overflowY: 'auto', lineHeight: '1.45',
           }
         }),
         React.createElement('button', {
