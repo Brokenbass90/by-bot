@@ -138,6 +138,11 @@ def _run(cmd: List[str], env: Dict[str, str], log_path: Path) -> int:
         return int(proc.returncode)
 
 
+def _should_skip(step_key: str, completed: Dict[str, Any]) -> bool:
+    entry = dict(completed.get(step_key) or {})
+    return str(entry.get("status") or "") == "ok"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Run a resumable multiyear crypto rehab queue.")
     ap.add_argument("--config", default=str(DEFAULT_CONFIG))
@@ -180,7 +185,7 @@ def main() -> int:
             for window in windows:
                 window_name = str(window["name"])
                 step_key = f"{task_name}:{window_name}"
-                if step_key in completed:
+                if _should_skip(step_key, completed):
                     continue
                 start_s = str(window["start"])
                 end_s = str(window["end"])
@@ -206,6 +211,27 @@ def main() -> int:
 
                 _append_jsonl(history_path, {"ts": _utc_now(), "event": "start", "task": task_name, "window": window_name, "tag": tag, "cmd": cmd})
                 rc = _run(cmd, env, log_path)
+                notes = ""
+                if rc != 0 and str(base_env.get("BACKTEST_CACHE_ONLY", "")).strip() == "1":
+                    retry_env = dict(env)
+                    retry_env.pop("BACKTEST_CACHE_ONLY", None)
+                    retry_log_path = log_path.with_name(log_path.stem + "_retry_nocache.log")
+                    _append_jsonl(
+                        history_path,
+                        {
+                            "ts": _utc_now(),
+                            "event": "retry_without_cache_only",
+                            "task": task_name,
+                            "window": window_name,
+                            "tag": tag,
+                        },
+                    )
+                    retry_rc = _run(cmd, retry_env, retry_log_path)
+                    if retry_rc == 0:
+                        rc = 0
+                        notes = "retry_without_cache_only"
+                    else:
+                        notes = "retry_without_cache_only_failed"
                 summary_csv = _latest_summary_for_tag(tag)
                 row: Dict[str, Any] = {
                     "ts": _utc_now(),
@@ -227,7 +253,7 @@ def main() -> int:
                     "run_dir": "",
                     "summary_csv": "",
                     "status": "ok" if rc == 0 else f"rc={rc}",
-                    "notes": "",
+                    "notes": notes,
                 }
                 if summary_csv and summary_csv.exists():
                     summary = _read_summary(summary_csv)
@@ -242,7 +268,7 @@ def main() -> int:
                         "summary_csv": str(summary_csv),
                     })
                 else:
-                    row["notes"] = "summary_missing"
+                    row["notes"] = ",".join(x for x in [row.get("notes") or "", "summary_missing"] if x)
                 _append_result(results_path, row)
                 completed[step_key] = {"finished_utc": _utc_now(), "status": row["status"], "summary_csv": row["summary_csv"]}
                 state["completed"] = completed
@@ -254,7 +280,7 @@ def main() -> int:
             spec_rel = str(task["spec"])
             spec_path = (ROOT / spec_rel).resolve()
             step_key = f"{task_name}:autoresearch"
-            if step_key in completed:
+            if _should_skip(step_key, completed):
                 continue
             log_path = LOG_DIR / f"{_slug(task_name)}_{stamp}.log"
             cmd = [python, "scripts/run_strategy_autoresearch.py", "--spec", str(spec_path)]
