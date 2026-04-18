@@ -39,7 +39,7 @@ _OVERLAY_ENV = _ROOT / "configs" / "web_control_overlay.env"
 _SHARED_HISTORY_PATH = Path(
     str(os.getenv("DEEPSEEK_CHAT_STATE_PATH", _ROOT / "runtime" / "web_ai_history.json"))
 )
-_HISTORY_MAX = max(1, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "16") or 16))
+_HISTORY_MAX = max(1, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "20") or 20))
 _CHAT_RATE: Dict[str, List[float]] = {}  # email → list of timestamps
 _MAX_RPM = 20  # requests per minute per user
 
@@ -251,10 +251,13 @@ def _build_context() -> str:
 # ── Control command executor ──────────────────────────────────────────────────
 
 _VALID_SLEEVE_NAMES = {
+    # original sleeves
     "breakout", "breakdown", "flat", "sloped", "att1", "asm1",
     "midterm", "midterm_short", "midterm_short_v2", "range_scalp",
     "asb1", "hzbo1", "bounce1", "impulse", "pump_fade",
     "elder_ts", "elder_ts_v3", "vwap_mr",
+    # v7 new sleeves
+    "breakdown_v2", "slope_choch", "liq_cascade", "funding_rev", "micro_scalp",
 }
 
 _ENABLE_ENV_MAP = {
@@ -267,6 +270,12 @@ _ENABLE_ENV_MAP = {
     "bounce1": "ENABLE_BOUNCE1_TRADING", "impulse": "ENABLE_IVB1_TRADING",
     "pump_fade": "ENABLE_PUMP_FADE_TRADING", "elder_ts": "ENABLE_ELDER_TRADING",
     "elder_ts_v3": "ENABLE_ETS3_TRADING", "vwap_mr": "ENABLE_VWAP_TRADING",
+    # v7 new sleeves
+    "breakdown_v2": "ENABLE_BREAKDOWN2_TRADING",
+    "slope_choch":  "ENABLE_SLOPE_CHOCH_TRADING",
+    "liq_cascade":  "ENABLE_LC_TRADING",
+    "funding_rev":  "ENABLE_FR_TRADING",
+    "micro_scalp":  "ENABLE_MSCALP_TRADING",
 }
 
 
