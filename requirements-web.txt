@@ -11,4 +11,5 @@ python-multipart>=0.0.9      # form data
 python-jose[cryptography]>=3.3.0  # JWT
 passlib[bcrypt]>=1.7.4       # password hashing
 pyotp>=2.9.0                 # TOTP / Google Authenticator
+qrcode[pil]>=7.4.2          # QR PNG for TOTP onboarding
 anthropic>=0.28.0            # AI chat

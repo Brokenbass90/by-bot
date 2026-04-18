@@ -18,12 +18,11 @@ from __future__ import annotations
 
 import argparse
 import getpass
-import json
+import subprocess
 import sys
 from pathlib import Path
 
 import pyotp
-import qrcode  # optional — prints ascii QR if unavailable
 
 # Ensure we can import web.auth from project root
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -37,7 +36,7 @@ def _qr_png_path(email: str) -> Path:
     return out_dir / f"{safe}.png"
 
 
-def setup_user(email: str) -> None:
+def setup_user(email: str, *, is_admin: bool = False) -> None:
     email = email.strip().lower()
     print(f"\n=== Setting up user: {email} ===\n")
 
@@ -61,9 +60,14 @@ def setup_user(email: str) -> None:
 
     # Save a scannable PNG QR so setup does not depend on copying the raw secret.
     try:
+        import qrcode
         png_path = _qr_png_path(email)
         qrcode.make(uri).save(png_path)
         print(f"QR image saved: {png_path}")
+        try:
+            subprocess.run(["open", str(png_path)], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception:
+            pass
         print("Open this PNG on your phone/laptop and scan it in Google Authenticator.\n")
     except Exception as e:
         print(f"(Could not save QR PNG automatically: {e})")
@@ -100,10 +104,12 @@ def setup_user(email: str) -> None:
         "hashed_password": hashed,
         "totp_secret": secret,
         "enabled": True,
-        "is_admin": bool(existing.get("is_admin", is_first_user)),
+        "is_admin": bool(existing.get("is_admin", is_first_user or is_admin)),
     }
     _save_config(cfg)
     print(f"User '{email}' saved to {_CONFIG_PATH}")
+    role = "admin" if cfg["users"][email].get("is_admin") else "user"
+    print(f"Role: {role}")
     print("\nKeep the TOTP secret safe. If you lose access to Google Authenticator,")
     print("run this script again to regenerate a new secret.")
 
@@ -124,13 +130,14 @@ def revoke_user(email: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Manage web interface users (TOTP + password)")
     parser.add_argument("--email", required=True, help="User email address")
+    parser.add_argument("--admin", action="store_true", help="Grant admin role to this user")
     parser.add_argument("--revoke", action="store_true", help="Remove user instead of adding")
     args = parser.parse_args()
 
     if args.revoke:
         revoke_user(args.email)
     else:
-        setup_user(args.email)
+        setup_user(args.email, is_admin=args.admin)
 
 
 if __name__ == "__main__":

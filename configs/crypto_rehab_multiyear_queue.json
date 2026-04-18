@@ -1,0 +1,101 @@
+{
+  "name": "crypto_rehab_multiyear_queue_v1",
+  "description": "Sequential multi-year validation and targeted autoresearch for the strongest rehab sleeves. Runs 2022/2023/2024/2025/2026-YTD baseline annuals first, then selected autoresearch specs.",
+  "windows": [
+    { "name": "y2022", "start": "2022-01-01", "end": "2022-12-31" },
+    { "name": "y2023", "start": "2023-01-01", "end": "2023-12-31" },
+    { "name": "y2024", "start": "2024-01-01", "end": "2024-12-31" },
+    { "name": "y2025", "start": "2025-01-01", "end": "2025-12-31" },
+    { "name": "y2026_ytd", "start": "2026-01-01", "end": "2026-04-18" }
+  ],
+  "tasks": [
+    {
+      "name": "att1_matrix",
+      "kind": "annual_matrix",
+      "strategy": "alt_trendline_touch_v1",
+      "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "LTCUSDT", "ADAUSDT", "DOTUSDT", "SUIUSDT"],
+      "tag_prefix": "rehab_att1",
+      "args": ["--starting_equity", "100", "--risk_pct", "0.01", "--leverage", "1", "--fee_bps", "6", "--slippage_bps", "2"],
+      "env": { "BACKTEST_CACHE_ONLY": "1" }
+    },
+    {
+      "name": "asb1_matrix",
+      "kind": "annual_matrix",
+      "strategy": "alt_slope_break_v1",
+      "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "AVAXUSDT", "ADAUSDT", "SUIUSDT"],
+      "tag_prefix": "rehab_asb1",
+      "args": ["--starting_equity", "100", "--risk_pct", "0.01", "--leverage", "1", "--fee_bps", "6", "--slippage_bps", "2"],
+      "env": { "BACKTEST_CACHE_ONLY": "1" }
+    },
+    {
+      "name": "hzbo1_matrix",
+      "kind": "annual_matrix",
+      "strategy": "alt_horizontal_break_v1",
+      "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "AVAXUSDT", "ADAUSDT", "XRPUSDT"],
+      "tag_prefix": "rehab_hzbo1",
+      "args": ["--starting_equity", "100", "--risk_pct", "0.01", "--leverage", "1", "--fee_bps", "6", "--slippage_bps", "2"],
+      "env": { "BACKTEST_CACHE_ONLY": "1" }
+    },
+    {
+      "name": "breakout_matrix",
+      "kind": "annual_matrix",
+      "strategy": "inplay_breakout",
+      "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "XRPUSDT", "DOGEUSDT", "HYPEUSDT"],
+      "tag_prefix": "rehab_breakout",
+      "args": ["--starting_equity", "100", "--risk_pct", "0.01", "--leverage", "1", "--fee_bps", "6", "--slippage_bps", "2"],
+      "env": { "BACKTEST_CACHE_ONLY": "1" }
+    },
+    {
+      "name": "breakdown_v2_matrix",
+      "kind": "annual_matrix",
+      "strategy": "alt_inplay_breakdown_v2",
+      "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "XRPUSDT", "DOGEUSDT", "HYPEUSDT", "TAOUSDT"],
+      "tag_prefix": "rehab_breakdown_v2",
+      "args": ["--starting_equity", "100", "--risk_pct", "0.01", "--leverage", "1", "--fee_bps", "6", "--slippage_bps", "2"],
+      "env": { "BACKTEST_CACHE_ONLY": "1" }
+    },
+    {
+      "name": "support_bounce_matrix",
+      "kind": "annual_matrix",
+      "strategy": "alt_support_bounce_v1",
+      "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "AVAXUSDT", "ADAUSDT", "SUIUSDT"],
+      "tag_prefix": "rehab_bounce1",
+      "args": ["--starting_equity", "100", "--risk_pct", "0.01", "--leverage", "1", "--fee_bps", "6", "--slippage_bps", "2"],
+      "env": { "BACKTEST_CACHE_ONLY": "1" }
+    },
+    {
+      "name": "micro_scalper_matrix",
+      "kind": "annual_matrix",
+      "strategy": "micro_scalper_v1",
+      "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "AVAXUSDT"],
+      "tag_prefix": "rehab_mscalp",
+      "args": ["--starting_equity", "100", "--risk_pct", "0.01", "--leverage", "1", "--fee_bps", "6", "--slippage_bps", "2"],
+      "env": { "BACKTEST_CACHE_ONLY": "1" }
+    },
+    {
+      "name": "att1_autoresearch",
+      "kind": "autoresearch",
+      "spec": "configs/autoresearch/att1_initial_sweep_v1.json"
+    },
+    {
+      "name": "breakout_autoresearch",
+      "kind": "autoresearch",
+      "spec": "configs/autoresearch/breakout_live_bridge_v7_entry_quality_compare.json"
+    },
+    {
+      "name": "breakdown_v2_autoresearch",
+      "kind": "autoresearch",
+      "spec": "configs/autoresearch/breakdown_v2_1h_bear_sweep_v1.json"
+    },
+    {
+      "name": "support_bounce_autoresearch",
+      "kind": "autoresearch",
+      "spec": "configs/autoresearch/support_bounce_v1_annual_repair_v2.json"
+    },
+    {
+      "name": "micro_scalper_autoresearch",
+      "kind": "autoresearch",
+      "spec": "configs/autoresearch/micro_scalper_v1_opt.json"
+    }
+  ]
+}

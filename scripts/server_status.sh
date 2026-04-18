@@ -142,6 +142,38 @@ else
 fi
 "
 
+echo ""
+echo "▶ REHAB QUEUE"
+run "
+RQ_PROGRESS=$BOT_DIR/runtime/research_queue/crypto_rehab_multiyear_queue_v1_progress.json
+RQ_PID=$BOT_DIR/runtime/research_queue/crypto_rehab_multiyear_queue.pid
+if [ -f \"\$RQ_PID\" ]; then
+  PID=\$(cat \"\$RQ_PID\" 2>/dev/null || echo '')
+  if [ -n \"\$PID\" ] && kill -0 \"\$PID\" 2>/dev/null; then
+    echo \"  queue_process=running pid=\$PID\"
+  else
+    echo \"  queue_process=stale_pid\"
+  fi
+else
+  echo '  queue_process=absent'
+fi
+if [ -f \"\$RQ_PROGRESS\" ]; then
+  python3 -c \"
+import json
+d = json.load(open('\$RQ_PROGRESS'))
+completed = d.get('completed') or {}
+last = d.get('last_finished') or {}
+print(f\\\"  queue_completed_steps={len(completed)}\\\")
+if last:
+    print(f\\\"  queue_last_finished={last}\\\")
+if d.get('finished_utc'):
+    print(f\\\"  queue_finished_utc={d.get('finished_utc')}\\\")
+\" 2>/dev/null || echo '  rehab queue: parse error'
+else
+  echo '  rehab queue: no progress file yet'
+fi
+"
+
 # ── 4. Current regime ─────────────────────────────────────────────
 echo ""
 echo "▶ CURRENT REGIME"

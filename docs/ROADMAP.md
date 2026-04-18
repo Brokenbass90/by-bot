@@ -133,6 +133,29 @@ Immediate priority is no longer “add more sleeves”, but repair and revalidat
 5. Repair noisy runtime reporting so Telegram/operator surfaces show allocator truth and "since restart" diagnostics instead of fake "24h" counters.
 6. Design the first read-only web UI slice now, before implementation, so auth, audit trail, multi-account isolation, and future control-panel needs are baked into the foundation.
 
+## Current Checkpoint - 2026-04-18 Morning
+
+- The first honest stitched annual for the current crypto live core (`ATT1 + flat + range_scalp`) is now closed at `+3.44%`, PF `1.1318`, DD `5.59%`. That is a valid baseline, but it is far below the target return and cannot be treated as a finished portfolio.
+- The rehab focus has shifted from “find one miracle rewrite” to “measure every surviving sleeve across `2022/2023/2024/2025/2026 YTD`, then optimize only the ones that stay alive on all market types.”
+- `midterm_short_v2` is now a real reject after the weekly-timeframe engine repair; it no longer deserves queue time until materially rewritten.
+- Web onboarding now has a practical QR path instead of a manual TOTP-secret copy path, but the next real operator milestone is the user's own admin account plus removal of the temporary local admin.
+- `funding_rev` now has a real cron-friendly data path, but it is still a candidate sleeve, not a live sleeve, until the multiyear baseline and later integration pass say otherwise.
+- A resumable multiyear rehab queue now exists specifically for the next alpha-rebuild phase:
+  - annual matrix first on promising sleeves
+  - targeted autoresearch second
+  - no promotion from sweeps alone
+
+### Morning Priority Queue
+
+1. Create the real web admin account via QR and revoke the temporary local admin.
+2. Deploy the funding snapshot path and the multiyear rehab queue to the server.
+3. Launch the multiyear rehab queue on the server, not locally, so it uses the server's real cache/data surface.
+4. Use the resulting `2022..2026 YTD` matrix to rank sleeves into:
+   - keep/live-hardening
+   - rehab/autoresearch
+   - reject/archive
+5. Only after that matrix exists, open the next stitched candidate core with the best surviving sleeves (`ATT1`, likely `ASB1/HZBO1/breakout/breakdown_v2/micro_scalp` depending on evidence).
+
 ## Source of Truth
 
 Only the following result classes may drive decisions:
