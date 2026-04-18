@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastapi import Cookie, HTTPException, status
 from typing import Optional
 
-from .auth import get_email_from_token
+from .auth import get_email_from_token, is_admin_user
 
 
 def require_auth(
@@ -40,5 +40,18 @@ def require_partial_auth(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Session expired or invalid",
+        )
+    return email
+
+
+def require_admin(
+    access_token: Optional[str] = Cookie(default=None),
+) -> str:
+    """Require a full authenticated session and admin privileges."""
+    email = require_auth(access_token=access_token)
+    if not is_admin_user(email):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required",
         )
     return email

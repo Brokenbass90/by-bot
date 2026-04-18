@@ -64,6 +64,24 @@ def is_email_allowed(email: str) -> bool:
     return get_user(email) is not None
 
 
+def is_admin_user(email: str) -> bool:
+    """Return True only for explicit admins.
+
+    Migration-safe bootstrap rule:
+      - if `is_admin` is explicitly set on the user record, honor it
+      - otherwise, allow the sole configured user to act as bootstrap admin
+    """
+    cfg = _load_config()
+    users: dict = cfg.get("users", {})
+    email = email.strip().lower()
+    user = users.get(email)
+    if not user:
+        return False
+    if "is_admin" in user:
+        return bool(user.get("is_admin"))
+    return len(users) == 1
+
+
 # ── password helpers ──────────────────────────────────────────────────────────
 
 def verify_password(plain: str, hashed: str) -> bool:

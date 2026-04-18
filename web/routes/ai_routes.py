@@ -28,7 +28,7 @@ from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
-from ..deps import require_auth
+from ..deps import require_admin
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
@@ -322,7 +322,7 @@ class ChatResponse(BaseModel):
 # ── Endpoints ─────────────────────────────────────────────────────────────────
 
 @router.post("/chat", response_model=ChatResponse)
-async def chat(body: ChatRequest, email: str = Depends(require_auth)):
+async def chat(body: ChatRequest, email: str = Depends(require_admin)):
     """Send a message to the AI with full bot context.
 
     If body.execute_command is set, execute that command first, then send chat.

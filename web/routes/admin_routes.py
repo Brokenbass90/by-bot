@@ -14,7 +14,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
 from ..auth import _load_config, _save_config, hash_password
-from ..deps import require_auth
+from ..deps import require_admin
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -28,7 +28,7 @@ def _rt(*p: str) -> Path:
 # ── User management ───────────────────────────────────────────────────────────
 
 @router.get("/users")
-async def list_users(email: str = Depends(require_auth)):
+async def list_users(email: str = Depends(require_admin)):
     """List all users in web_config.json."""
     cfg = _load_config()
     users = []
@@ -49,7 +49,7 @@ class AddUserRequest(BaseModel):
 
 
 @router.post("/users")
-async def add_user(body: AddUserRequest, email: str = Depends(require_auth)):
+async def add_user(body: AddUserRequest, email: str = Depends(require_admin)):
     """Pre-create user slot (TOTP setup still required via CLI)."""
     target = body.email.strip().lower()
     if not target or "@" not in target:
@@ -58,6 +58,7 @@ async def add_user(body: AddUserRequest, email: str = Depends(require_auth)):
     cfg = _load_config()
     cfg.setdefault("users", {})[target] = {
         "enabled": False,
+        "is_admin": False,
         "note": body.note or "pending_totp_setup",
     }
     _save_config(cfg)
@@ -65,7 +66,7 @@ async def add_user(body: AddUserRequest, email: str = Depends(require_auth)):
 
 
 @router.delete("/users/{target_email}")
-async def remove_user(target_email: str, email: str = Depends(require_auth)):
+async def remove_user(target_email: str, email: str = Depends(require_admin)):
     target = target_email.strip().lower()
     if target == email:
         raise HTTPException(status_code=400, detail="Cannot remove yourself")
@@ -82,7 +83,7 @@ async def remove_user(target_email: str, email: str = Depends(require_auth)):
 
 
 @router.post("/users/{target_email}/toggle")
-async def toggle_user(target_email: str, email: str = Depends(require_auth)):
+async def toggle_user(target_email: str, email: str = Depends(require_admin)):
     target = target_email.strip().lower()
     if target == email:
         raise HTTPException(status_code=400, detail="Cannot disable yourself")
@@ -162,7 +163,7 @@ def _load_all_trades() -> List[Dict[str, Any]]:
 
 
 @router.get("/stats/daily")
-async def daily_stats(_: str = Depends(require_auth)):
+async def daily_stats(_: str = Depends(require_admin)):
     """P&L aggregated by day + strategy breakdown per day."""
     trades = _load_all_trades()
 
@@ -222,7 +223,7 @@ async def daily_stats(_: str = Depends(require_auth)):
 
 
 @router.get("/stats/monthly")
-async def monthly_stats(_: str = Depends(require_auth)):
+async def monthly_stats(_: str = Depends(require_admin)):
     """P&L aggregated by month."""
     trades = _load_all_trades()
 
@@ -259,7 +260,7 @@ async def monthly_stats(_: str = Depends(require_auth)):
 # ── Audit log ─────────────────────────────────────────────────────────────────
 
 @router.get("/audit")
-async def get_audit(_: str = Depends(require_auth)):
+async def get_audit(_: str = Depends(require_admin)):
     """Web command audit log."""
     audit_path = _rt("web_audit_log.jsonl")
     if not audit_path.exists():

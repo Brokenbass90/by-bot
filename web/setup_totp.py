@@ -77,10 +77,14 @@ def setup_user(email: str) -> None:
     cfg = _load_config()
     if "users" not in cfg:
         cfg["users"] = {}
+    users = cfg["users"]
+    existing = users.get(email, {})
+    is_first_user = len(users) == 0
     cfg["users"][email] = {
         "hashed_password": hashed,
         "totp_secret": secret,
         "enabled": True,
+        "is_admin": bool(existing.get("is_admin", is_first_user)),
     }
     _save_config(cfg)
     print(f"User '{email}' saved to {_CONFIG_PATH}")

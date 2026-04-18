@@ -539,6 +539,23 @@ def test_backtest_store_supports_daily_interval():
     print("  ✓ backtest.engine KlineStore supports 1440m aggregation")
 
 
+def test_backtest_store_supports_weekly_interval():
+    from backtest.engine import Candle, KlineStore
+
+    candles = []
+    ts0 = 1700000000000
+    for i in range(24 * 12 * 15):  # 15 full days of 5m candles
+        px = 100.0 + i * 0.01
+        candles.append(Candle(ts=ts0 + i * 300_000, o=px, h=px + 0.1, l=px - 0.1, c=px + 0.02, v=1.0))
+
+    store = KlineStore("BTCUSDT", candles, base_interval_min=5)
+    store.set_index(len(candles) - 1)
+    rows = store.fetch_klines("BTCUSDT", "10080", 2)
+    assert len(rows) >= 1, "weekly interval should be available from 5m base candles"
+
+    print("  ✓ backtest.engine KlineStore supports 10080m aggregation")
+
+
 def test_operator_snapshot_alpaca_monthly_fallback():
     from pathlib import Path
     from bot.operator_snapshot import build_operator_snapshot
@@ -742,6 +759,7 @@ if __name__ == "__main__":
         test_allocator_missing_health_watch,
         test_trade_reporting_breakdown,
         test_backtest_store_supports_daily_interval,
+        test_backtest_store_supports_weekly_interval,
         test_operator_snapshot_alpaca_monthly_fallback,
         test_operator_controls_snapshot,
         test_overlay_handlers_cover_live_sleeves,

@@ -47,7 +47,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 _COOKIE_NAME = "access_token"
 # secure=True must be set when running behind HTTPS nginx in production
-_COOKIE_SECURE = False  # override via WEB_COOKIE_SECURE=1 env at startup
+_COOKIE_SECURE = os.getenv("WEB_COOKIE_SECURE", "0").strip().lower() in {"1", "true", "yes", "on"}
 
 
 class LoginRequest(BaseModel):
