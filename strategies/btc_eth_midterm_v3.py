@@ -210,7 +210,12 @@ class MidtermV3Config:
     tp1_rr: float = 1.2
     tp1_frac: float = 0.50
     trail_atr_mult: float = 1.1
-    time_stop_bars_5m: int = 108  # 9h (was 7h in v1)
+    # trail_atr_period_5m: number of 5m bars used for trailing ATR.
+    # The initial SL uses 1H bars (atr_period × 60m), but the backtest engine
+    # manages trailing stops on 5m bars.  Multiply by 12 to keep the same
+    # ATR scale (14 × 60m = 14 × 12 × 5m = 168 bars of 5m data).
+    trail_atr_period_5m: int = 168  # default = atr_period(14) × 12 ≈ 14h of 5m bars
+    time_stop_bars_5m: int = 576   # 48h — midterm needs multi-day room (was 9h)
 
     # Flow control
     long_cooldown_bars: int = 72   # per-direction cooldown (NEW)
@@ -294,6 +299,7 @@ class BTCETHMidtermV3Strategy:
         c.tp1_rr = _env_float("MTPB3_TP1_RR", c.tp1_rr)
         c.tp1_frac = _env_float("MTPB3_TP1_FRAC", c.tp1_frac)
         c.trail_atr_mult = _env_float("MTPB3_TRAIL_ATR_MULT", c.trail_atr_mult)
+        c.trail_atr_period_5m = _env_int("MTPB3_TRAIL_ATR_PERIOD_5M", c.trail_atr_period_5m)
         c.time_stop_bars_5m = _env_int("MTPB3_TIME_STOP_BARS_5M", c.time_stop_bars_5m)
         c.long_cooldown_bars = _env_int("MTPB3_LONG_COOLDOWN_BARS", c.long_cooldown_bars)
         c.short_cooldown_bars = _env_int("MTPB3_SHORT_COOLDOWN_BARS", c.short_cooldown_bars)
@@ -560,7 +566,7 @@ class BTCETHMidtermV3Strategy:
                 sig.tps = [float(tp1), float(tp)]
                 sig.tp_fracs = [frac, max(0.0, 1.0 - frac)]
                 sig.trailing_atr_mult = max(0.0, float(self.cfg.trail_atr_mult))
-                sig.trailing_atr_period = max(5, int(self.cfg.atr_period))
+                sig.trailing_atr_period = max(5, int(self.cfg.trail_atr_period_5m))
                 sig.time_stop_bars = max(0, int(self.cfg.time_stop_bars_5m))
             return sig
 
@@ -640,7 +646,7 @@ class BTCETHMidtermV3Strategy:
                 sig.tps = [float(tp1), float(tp)]
                 sig.tp_fracs = [frac, max(0.0, 1.0 - frac)]
                 sig.trailing_atr_mult = max(0.0, float(self.cfg.trail_atr_mult))
-                sig.trailing_atr_period = max(5, int(self.cfg.atr_period))
+                sig.trailing_atr_period = max(5, int(self.cfg.trail_atr_period_5m))
                 sig.time_stop_bars = max(0, int(self.cfg.time_stop_bars_5m))
             return sig
 
