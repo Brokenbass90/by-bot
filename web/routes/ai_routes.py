@@ -103,9 +103,7 @@ def _save_shared_history(messages: List[Dict[str, str]]) -> None:
         if role in {"user", "assistant", "system"} and content:
             cleaned.append({"role": role, "content": content})
     _SHARED_HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
-    _SHARED_HISTORY_PATH.write_text(
-        json.dumps({"messages": cleaned, "updated_utc": datetime.now(timezone.utc).isoformat()}, ensure_ascii=False, indent=2)
-    )
+    _SHARED_HISTORY_PATH.write_text(json.dumps(cleaned, ensure_ascii=False, indent=2))
 
 
 def _merge_history(current: List[Dict[str, str]]) -> List[Dict[str, str]]:

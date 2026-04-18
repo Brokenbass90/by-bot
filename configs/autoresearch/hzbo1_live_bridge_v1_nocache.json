@@ -1,0 +1,63 @@
+{
+  "name": "hzbo1_live_bridge_v1_nocache",
+  "description": "First focused HZBO1 rehab on a recent 360d window. Goal: see whether bidirectional horizontal-break logic can stay alive beyond the single strong 2022 window.",
+  "cache_only": false,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,AVAXUSDT,ADAUSDT,XRPUSDT",
+    "--strategies",
+    "alt_horizontal_break_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-18",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.01",
+    "--leverage",
+    "1",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "BYBIT_DATA_POLITE_SLEEP_SEC": "1.5",
+    "HZBO1_SIGNAL_TF": "60",
+    "HZBO1_SIGNAL_LOOKBACK": "180",
+    "HZBO1_MAX_ZONE_AGE": "30",
+    "HZBO1_PIVOT_RIGHT": "3",
+    "HZBO1_SL_ATR_MULT": "0.50",
+    "HZBO1_TP1_RR": "1.50",
+    "HZBO1_TP2_RR": "3.00",
+    "HZBO1_ALLOW_SHORTS": "1",
+    "HZBO1_MACRO_REQUIRE_BEARISH": "1",
+    "HZBO1_MACRO_REQUIRE_BULLISH": "1"
+  },
+  "grid": {
+    "HZBO1_ALLOW_LONGS": [0, 1],
+    "HZBO1_MIN_TOUCHES": [2, 3],
+    "HZBO1_ZONE_ATR_WIDTH": [0.40, 0.60],
+    "HZBO1_BREAK_ATR": [0.20, 0.30],
+    "HZBO1_MIN_BODY_FRAC": [0.30, 0.40]
+  },
+  "constraints": {
+    "min_trades": 15,
+    "min_profit_factor": 1.10,
+    "max_drawdown": 18.0,
+    "min_net_pnl": 0.0
+  },
+  "score_weights": {
+    "net_pnl": 2.0,
+    "profit_factor": 5.5,
+    "winrate": 6.0,
+    "max_drawdown": 2.0,
+    "trades": 0.12,
+    "trades_cap": 90
+  }
+}

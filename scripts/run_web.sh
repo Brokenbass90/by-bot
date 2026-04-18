@@ -49,6 +49,7 @@ DEFAULT_RUNTIME_ROOT="$ROOT/runtime"
 
 if [[ -n "${WEB_RUNTIME_ROOT:-}" && "${WEB_RUNTIME_ROOT}" != "$DEFAULT_RUNTIME_ROOT" ]]; then
   export WEB_LIVE_SYNC="${WEB_LIVE_SYNC:-1}"
+  export DEEPSEEK_CHAT_STATE_PATH="${DEEPSEEK_CHAT_STATE_PATH:-$WEB_RUNTIME_ROOT/deepseek_chat.json}"
 fi
 
 SYNC_PID=""
