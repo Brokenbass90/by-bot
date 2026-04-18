@@ -12,7 +12,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Depends, Query
+import ssl
+import urllib.request
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from ..deps import require_auth
 
@@ -268,6 +271,69 @@ async def get_summary(_: str = Depends(require_auth)):
             t.get("pnl", 0) for t in trades if isinstance(t.get("pnl"), float)
         ), 4),
         "sources": _trade_sources(),
+    }
+
+
+@router.get("/trades/chart")
+async def trade_chart(
+    symbol: str,
+    entry_ts: int,
+    exit_ts: int,
+    interval: str = Query("5", regex=r"^(1|3|5|15|30|60|120|240|D)$"),
+    _: str = Depends(require_auth),
+):
+    """Fetch OHLCV candles from Bybit for a ±8h window around a trade.
+
+    Returns list of {time_ms, open, high, low, close, volume} dicts plus
+    entry/exit timestamps so the frontend can draw markers.
+    """
+    WINDOW_BEFORE_MS = 8 * 3_600_000   # 8 hours before entry
+    WINDOW_AFTER_MS  = 4 * 3_600_000   # 4 hours after exit
+
+    start_ms = entry_ts - WINDOW_BEFORE_MS
+    end_ms   = max(exit_ts, entry_ts) + WINDOW_AFTER_MS
+
+    BYBIT_URL = "https://api.bybit.com/v5/market/kline"
+    params = (
+        f"category=linear&symbol={symbol.upper()}"
+        f"&interval={interval}&start={start_ms}&end={end_ms}&limit=1000"
+    )
+    url = f"{BYBIT_URL}?{params}"
+
+    try:
+        ctx = ssl.create_default_context()
+        req = urllib.request.Request(url, headers={"User-Agent": "TradingJournal/1.0"})
+        with urllib.request.urlopen(req, context=ctx, timeout=10) as resp:
+            body = json.loads(resp.read().decode())
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Bybit API error: {exc}")
+
+    if body.get("retCode") != 0:
+        raise HTTPException(status_code=502, detail=body.get("retMsg", "Bybit error"))
+
+    # Bybit returns rows as [timestamp_ms, open, high, low, close, volume, turnover]
+    # newest first — reverse to chronological
+    raw = body.get("result", {}).get("list", [])
+    candles = []
+    for row in reversed(raw):
+        try:
+            candles.append({
+                "time_ms": int(row[0]),
+                "open":    float(row[1]),
+                "high":    float(row[2]),
+                "low":     float(row[3]),
+                "close":   float(row[4]),
+                "volume":  float(row[5]),
+            })
+        except (IndexError, ValueError):
+            continue
+
+    return {
+        "symbol":   symbol.upper(),
+        "interval": interval,
+        "entry_ts": entry_ts,
+        "exit_ts":  exit_ts,
+        "candles":  candles,
     }
 
 
