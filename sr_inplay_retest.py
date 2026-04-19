@@ -718,12 +718,20 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
         impulse_vol_period: int = 20,
         breakout_buffer_atr: float = 0.10,
         breakout_sl_atr: float = 0.40,
+        # When > 0: SL is placed at hh - breakout_sl_htf_mult * htf_atr (4H scale).
+        # This fixes the ATR-scale mismatch: default breakout_sl_atr uses 5m ATR which
+        # is ~10x too tight vs the 4H level noise. Set e.g. 1.0 to place SL 1×4H ATR below level.
+        breakout_sl_htf_mult: float = 0.0,
         retest_touch_atr: float = 0.35,
         reclaim_atr: float = 0.15,
         min_hold_bars: int = 0,
         max_retest_bars: int = 30,
         min_break_bars: int = 1,
         max_dist_atr: float = 1.2,
+        # When > 0: max_dist is measured in htf_atr units instead of ltf_atr.
+        # Fixes the issue where max_dist_atr=1.2 × 5m_ATR ($240) blocks valid entries
+        # that are $300-500 from the level after a normal 4H retest recovery.
+        max_dist_htf_mult: float = 0.0,
         rr: float = 1.2,
         allow_longs: bool = True,
         allow_shorts: bool = False,
@@ -771,12 +779,14 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
             chop_in_range_only=chop_in_range_only,
         )
         self.breakout_sl_atr = float(breakout_sl_atr)
+        self.breakout_sl_htf_mult = float(breakout_sl_htf_mult)
         self.retest_touch_atr = float(retest_touch_atr)
         self.reclaim_atr = float(reclaim_atr)
         self.min_hold_bars = int(min_hold_bars)
         self.max_retest_bars = int(max_retest_bars)
         self.min_break_bars = int(min_break_bars)
         self.max_dist_atr = float(max_dist_atr)
+        self.max_dist_htf_mult = float(max_dist_htf_mult)
         self.last_no_signal_reason: str = "init"
         # Ratio = impulse_size / threshold (< 1.0 means too weak). Updated each call.
         self.last_impulse_ratio: float = 0.0
@@ -844,8 +854,16 @@ class InPlayBreakoutStrategy(InPlayRetestStrategy):
 
         touch_buf = max(0.0, self.retest_touch_atr) * ltf_atr
         reclaim_buf = max(0.0, self.reclaim_atr) * ltf_atr
-        sl_buf = max(0.0, self.breakout_sl_atr) * ltf_atr
-        max_dist = max(0.0, self.max_dist_atr) * ltf_atr
+        # SL: prefer HTF scale if configured (fixes 5m ATR mismatch vs 4H level noise)
+        if self.breakout_sl_htf_mult > 0.0:
+            sl_buf = self.breakout_sl_htf_mult * atr  # uses 4H ATR
+        else:
+            sl_buf = max(0.0, self.breakout_sl_atr) * ltf_atr
+        # max_dist: prefer HTF scale if configured (fixes entries being filtered as "too far")
+        if self.max_dist_htf_mult > 0.0:
+            max_dist = self.max_dist_htf_mult * atr  # uses 4H ATR
+        else:
+            max_dist = max(0.0, self.max_dist_atr) * ltf_atr
 
         # If timestamps exist, use them to filter ltf bars after breakout bar
         b_ts = _get_num(last, "startTime", "ts")

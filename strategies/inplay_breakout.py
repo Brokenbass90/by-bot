@@ -87,6 +87,9 @@ class InPlayBreakoutConfig:
     impulse_vol_period: int = 20
     breakout_buffer_atr: float = 0.10
     breakout_sl_atr: float = 0.40
+    # When > 0: SL uses 4H ATR scale instead of 5m ATR. Recommended: 0.8–1.2.
+    # Fixes the critical mismatch where 5m-ATR SL ($80) gets hit by 4H-level noise ($500+).
+    breakout_sl_htf_mult: float = 0.0
     retest_touch_atr: float = 0.35
     reclaim_atr: float = 0.15
     entry_body_min_frac: float = 0.0
@@ -94,6 +97,9 @@ class InPlayBreakoutConfig:
     max_retest_bars: int = 30
     min_break_bars: int = 1
     max_dist_atr: float = 1.2
+    # When > 0: max_dist filter uses 4H ATR scale. Recommended: 1.0–2.0.
+    # Fixes valid entries being blocked as "too far" when measured in tiny 5m ATR units.
+    max_dist_htf_mult: float = 0.0
     rr: float = 1.2
 
     range_atr_max: float = 8.0
@@ -132,6 +138,7 @@ class InPlayBreakoutWrapper:
         self.cfg.impulse_vol_period = _env_int(f"{p}_IMPULSE_VOL_PERIOD", self.cfg.impulse_vol_period)
         self.cfg.breakout_buffer_atr = _env_float(f"{p}_BUFFER_ATR", self.cfg.breakout_buffer_atr)
         self.cfg.breakout_sl_atr = _env_float(f"{p}_SL_ATR", self.cfg.breakout_sl_atr)
+        self.cfg.breakout_sl_htf_mult = _env_float(f"{p}_SL_HTF_MULT", self.cfg.breakout_sl_htf_mult)
         self.cfg.retest_touch_atr = _env_float(f"{p}_RETEST_TOUCH_ATR", self.cfg.retest_touch_atr)
         self.cfg.reclaim_atr = _env_float(f"{p}_RECLAIM_ATR", self.cfg.reclaim_atr)
         self.cfg.entry_body_min_frac = _env_float(f"{p}_ENTRY_BODY_MIN_FRAC", self.cfg.entry_body_min_frac)
@@ -139,6 +146,7 @@ class InPlayBreakoutWrapper:
         self.cfg.max_retest_bars = _env_int(f"{p}_MAX_RETEST_BARS", self.cfg.max_retest_bars)
         self.cfg.min_break_bars = _env_int(f"{p}_MIN_BREAK_BARS", self.cfg.min_break_bars)
         self.cfg.max_dist_atr = _env_float(f"{p}_MAX_DIST_ATR", self.cfg.max_dist_atr)
+        self.cfg.max_dist_htf_mult = _env_float(f"{p}_MAX_DIST_HTF_MULT", self.cfg.max_dist_htf_mult)
         self.cfg.rr = _env_float(f"{p}_RR", self.cfg.rr)
         self.cfg.range_atr_max = _env_float(f"{p}_RANGE_ATR_MAX", self.cfg.range_atr_max)
 
@@ -333,6 +341,7 @@ class InPlayBreakoutWrapper:
             "impulse_vol_period": int(self.cfg.impulse_vol_period),
             "breakout_buffer_atr": float(self.cfg.breakout_buffer_atr),
             "breakout_sl_atr": float(self.cfg.breakout_sl_atr),
+            "breakout_sl_htf_mult": float(self.cfg.breakout_sl_htf_mult),
             "tf_entry": str(self.cfg.tf_entry),
             "retest_touch_atr": float(self.cfg.retest_touch_atr),
             "reclaim_atr": float(self.cfg.reclaim_atr),
@@ -340,6 +349,7 @@ class InPlayBreakoutWrapper:
             "max_retest_bars": int(self.cfg.max_retest_bars),
             "min_break_bars": int(self.cfg.min_break_bars),
             "max_dist_atr": float(self.cfg.max_dist_atr),
+            "max_dist_htf_mult": float(self.cfg.max_dist_htf_mult),
             "rr": float(self.cfg.rr),
             "range_atr_max": float(self.cfg.range_atr_max),
             "allow_longs": bool(self.cfg.allow_longs),
