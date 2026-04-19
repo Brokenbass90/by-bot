@@ -1,0 +1,46 @@
+{
+    "name": "elder_ts_v3_macro_relax_v1",
+    "description": "Elder v3 macro-filter relaxation sweep. Original strict settings (slope=0.05%, gap=0.30%) produce 0 trades. Smoke test shows relaxed (slope=0.01%, gap=0.05%) gives PF=2.715, WR=71% on 7 trades. This sweep explores the optimal relaxation range to balance quality vs frequency.",
+    "cache_only": true,
+    "command": [
+        "{python}",
+        "backtest/run_portfolio.py",
+        "--symbols",
+        "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,LTCUSDT",
+        "--strategies",
+        "elder_triple_screen_v3",
+        "--days",
+        "360",
+        "--end",
+        "2026-04-01",
+        "--tag",
+        "{tag}",
+        "--starting_equity",
+        "100",
+        "--risk_pct",
+        "0.01",
+        "--leverage",
+        "1",
+        "--max_positions",
+        "3",
+        "--fee_bps",
+        "6",
+        "--slippage_bps",
+        "2"
+    ],
+    "base_env": {
+        "ETS3_ALLOW_LONGS": "1",
+        "ETS3_ALLOW_SHORTS": "1"
+    },
+    "grid": {
+        "ETS3_MACRO_SLOPE_MIN_PCT": [0.005, 0.01, 0.02, 0.05],
+        "ETS3_MACRO_GAP_MIN_PCT":   [0.05,  0.10, 0.20, 0.30],
+        "ETS3_MACRO_SLOPE_BARS":    [3, 5],
+        "ETS3_RR":                  [2.0, 2.5, 3.0]
+    },
+    "filters": {
+        "min_trades": 5,
+        "min_profit_factor": 1.20,
+        "max_drawdown": 15.0
+    }
+}
