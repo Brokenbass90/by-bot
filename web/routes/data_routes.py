@@ -185,6 +185,12 @@ def _load_all_trades() -> List[Dict[str, Any]]:
                     rec["entry_ts"] = int(evt.get("ts") or rec.get("entry_ts") or 0)
                 elif event_name == "close":
                     rec["exit_ts"] = int(evt.get("ts") or 0)
+                    # Fallback: if no entry_ts yet (e.g. only a close event exists,
+                    # order_submitted was missed), estimate from exit - 1 min so
+                    # the chart modal gets a valid timestamp instead of "Missing symbol"
+                    if not rec.get("entry_ts"):
+                        exit_sec = int(evt.get("ts") or 0)
+                        rec["entry_ts"] = max(0, exit_sec - 60)
             for rec in buckets.values():
                 if not rec.get("exit_ts"):
                     continue
@@ -373,40 +379,84 @@ async def trade_chart(
     start_ms = entry_ts - WINDOW_BEFORE_MS
     end_ms   = max(exit_ts, entry_ts) + WINDOW_AFTER_MS
 
-    BYBIT_URL = "https://api.bybit.com/v5/market/kline"
-    params = (
-        f"category=linear&symbol={symbol.upper()}"
-        f"&interval={interval}&start={start_ms}&end={end_ms}&limit=1000"
-    )
-    url = f"{BYBIT_URL}?{params}"
-
-    try:
-        ctx = ssl.create_default_context()
-        req = urllib.request.Request(url, headers={"User-Agent": "TradingJournal/1.0"})
-        with urllib.request.urlopen(req, context=ctx, timeout=10) as resp:
-            body = json.loads(resp.read().decode())
-    except Exception as exc:
-        raise HTTPException(status_code=502, detail=f"Bybit API error: {exc}")
-
-    if body.get("retCode") != 0:
-        raise HTTPException(status_code=502, detail=body.get("retMsg", "Bybit error"))
-
-    # Bybit returns rows as [timestamp_ms, open, high, low, close, volume, turnover]
-    # newest first — reverse to chronological
-    raw = body.get("result", {}).get("list", [])
-    candles = []
-    for row in reversed(raw):
-        try:
-            candles.append({
-                "time_ms": int(row[0]),
-                "open":    float(row[1]),
-                "high":    float(row[2]),
-                "low":     float(row[3]),
-                "close":   float(row[4]),
-                "volume":  float(row[5]),
-            })
-        except (IndexError, ValueError):
+    # ── Try local kline cache first (fast, no network) ──────────────────────
+    candles: list = []
+    _cache_dirs = [
+        _ROOT / ".cache" / "klines",
+        _ROOT / "data_cache" / "klines",
+    ]
+    for _cache_dir in _cache_dirs:
+        if not _cache_dir.exists():
             continue
+        sym_u = symbol.upper()
+        for _f in sorted(_cache_dir.glob(f"{sym_u}_{interval}_*.json")):
+            try:
+                parts = _f.stem.split("_")
+                file_start = int(parts[2])
+                file_end   = int(parts[3])
+                # Use this file if it covers at least some of our window
+                if file_end < start_ms or file_start > end_ms:
+                    continue
+                raw_data = json.loads(_f.read_text())
+                rows = raw_data if isinstance(raw_data, list) else \
+                       raw_data.get("result", {}).get("list", raw_data.get("list", []))
+                for row in rows:
+                    try:
+                        ts_ms = int(row[0])
+                        if start_ms <= ts_ms <= end_ms:
+                            candles.append({
+                                "time_ms": ts_ms,
+                                "open":  float(row[1]),
+                                "high":  float(row[2]),
+                                "low":   float(row[3]),
+                                "close": float(row[4]),
+                                "volume": float(row[5]) if len(row) > 5 else 0.0,
+                            })
+                    except (IndexError, ValueError, TypeError):
+                        continue
+            except Exception:
+                continue
+        if candles:
+            break  # found data in this cache dir
+
+    # Remove duplicates and sort chronologically
+    if candles:
+        seen: set = set()
+        deduped = []
+        for c in sorted(candles, key=lambda x: x["time_ms"]):
+            if c["time_ms"] not in seen:
+                seen.add(c["time_ms"])
+                deduped.append(c)
+        candles = deduped
+
+    # ── Fall back to live Bybit API if cache miss ────────────────────────────
+    if not candles:
+        BYBIT_URL = "https://api.bybit.com/v5/market/kline"
+        params = (
+            f"category=linear&symbol={symbol.upper()}"
+            f"&interval={interval}&start={start_ms}&end={end_ms}&limit=1000"
+        )
+        url = f"{BYBIT_URL}?{params}"
+        try:
+            ctx = ssl.create_default_context()
+            req = urllib.request.Request(url, headers={"User-Agent": "TradingJournal/1.0"})
+            with urllib.request.urlopen(req, context=ctx, timeout=10) as resp:
+                body = json.loads(resp.read().decode())
+            if body.get("retCode") == 0:
+                for row in reversed(body.get("result", {}).get("list", [])):
+                    try:
+                        candles.append({
+                            "time_ms": int(row[0]),
+                            "open":    float(row[1]),
+                            "high":    float(row[2]),
+                            "low":     float(row[3]),
+                            "close":   float(row[4]),
+                            "volume":  float(row[5]),
+                        })
+                    except (IndexError, ValueError):
+                        continue
+        except Exception:
+            pass  # Network unavailable — return empty candles with no error
 
     return {
         "symbol":   symbol.upper(),

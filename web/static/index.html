@@ -641,6 +641,7 @@ function TradeChartModal({ trade, onClose }) {
   // Build / rebuild lightweight-charts instance
   useEffect(() => {
     if (!chartData || !chartRef.current || loading || err) return;
+    if (!chartData.candles || chartData.candles.length === 0) return; // handled by render
     const container = chartRef.current;
 
     // Destroy old chart
@@ -807,7 +808,9 @@ function TradeChartModal({ trade, onClose }) {
               React.createElement('span', null, 'Loading candles…'))
           : err
             ? React.createElement('div', { className: 'empty' }, '⚠️ ' + err)
-            : React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } })
+            : (chartData && (!chartData.candles || chartData.candles.length === 0))
+              ? React.createElement('div', { className: 'empty' }, '📭 No candle data for this trade window')
+              : React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } })
       ),
       // Interval selector
       React.createElement('div', { className: 'modal-interval-bar' },
