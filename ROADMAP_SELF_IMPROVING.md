@@ -3,219 +3,166 @@
 **Цель:** Полностью автономная система, которая сама обнаруживает возможности, оптимизирует стратегии, адаптируется к рынку и масштабирует прибыльные идеи — без ручного вмешательства.
 
 **Дата создания:** 2026-04-10  
-**Статус:** Фаза 2 → переход к Фазе 3
+**Обновлено:** 2026-04-20  
+**Статус:** Фаза 2 (финал) → переход к Фазе 3
 
 ---
 
 ## Фаза 1 — Инфраструктура (ЗАВЕРШЕНА ✅)
 
-Всё что нужно для стабильной работы и самовосстановления.
-
-- **4-режимный оркестратор**: bull_trend / bull_chop / bear_chop / bear_trend
-  - BTC 4H EMA21/EMA55 + Efficiency Ratio (порог 0.28) 
-- **Symbol Router**: динамический подбор монет per-strategy
-  - Retry-логика (3 попытки), деградация с авторесторингом
-- **Portfolio Allocator**: sleeve multipliers per-regime
-  - Критический фикс: breakdown=0.0 в bull-режимах
-- **Самовосстанавливающиеся watchdogs**:
-  - `bot_health_watchdog.sh` — каждые 2 мин, авторестарт через systemd
-  - `control_plane_watchdog.py` — каждые 30 мин, ребилд chain
-  - `setup_server_crons.sh` — мастер-инсталлер всех 10 cron-задач
+- **4-режимный оркестратор**: bull_trend / bull_chop / bear_chop / bear_trend (BTC 4H EMA21/55 + ER)
+- **Symbol Router**: динамический подбор монет per-strategy, retry + degrade
+- **Portfolio Allocator v8**: sleeve multipliers per-regime, 24 рукавов зарегистрировано
+- **Самовосстанавливающиеся watchdogs**: health_watchdog (2 мин), control_plane (30 мин)
 - **Nightly autoresearch queue**: автоматические backtest-запуски ночью
 - **DeepSeek оператор в Telegram**: `/ai`, `/ai_tune`, `/ai_results`
-- **Alpaca monthly rotation**: v36, PF=4.68, +130% compound
+- **Alpaca monthly rotation**: v37 sweep pending, текущий PF=4.68, +130% compound (paper)
+- **BTC Dominance Regime Filter**: `build_btc_dominance_state.py` → alt_bias overlay (4H cron)
 
 ---
 
-## Фаза 2 — Портфель стратегий (В ПРОЦЕССЕ 🔄)
+## Фаза 2 — Портфель стратегий (ФИНАЛ 🔄)
 
-Цель: 5-10 рабочих стратегий, покрывающих все режимы рынка.
+Цель: 8-10 рабочих стратегий с WF-22 подтверждением, покрывающих все режимы.
 
-### Активные (работают в продакшне)
-| Стратегия | Режим | Trades/год | PF | Статус |
+### ✅ Продакшн (WF-22 прошли)
+
+| Стратегия | Sleeve | Режим | PF | Сделок/год |
 |---|---|---|---|---|
-| alt_inplay_breakdown_v1 | все | ~157 | 1.3+ | ✅ Live |
-| alt_resistance_fade_v1 (ARF1) | chop | ~99→150+ | 1.4+ | ✅ Live (расширен) |
-| impulse_volume_breakout_v1 (IVB1) | bull | ~14→40+ | 1.48 | ✅ Live (расширен) |
+| alt_resistance_fade_v1 | flat | bear_chop (primary) | 1.4+ | ~150 |
+| alt_sloped_channel_v1 | sloped | все | 1.3+ | ~120 |
+| alt_support_bounce_v1 | bounce1 | bull_trend | 1.3+ | ~80 |
+| alt_range_scalp_v1 | range_scalp | все | 1.2+ | ~200 |
+| impulse_volume_breakout_v1 | impulse | bull | 1.48 | ~40 |
+| alt_inplay_breakdown_v1 | breakdown | bear (disabled — re-WF pending) | 4.3 sweep | ~60 |
 
-### Исправляются
-| Стратегия | Проблема | Фикс | Статус |
+### 🟡 Ожидают WF-22 (параметры найдены, на сервере сейчас)
+
+| Стратегия | Sleeve | Лучшие параметры | Статус |
 |---|---|---|---|
-| elder_triple_screen_v2 | Screen2 RSI временное смещение | wave_lookback=3 | 🔄 Backtest pending |
-| alt_range_scalp_v1 | 2 trades/year в портфеле | Требует standalone redesign | ⏳ Следующий приоритет |
+| alt_inplay_breakdown_v1 | breakdown | LOOKBACK_H=36, SL_ATR=1.4, RR=2.0 → sweep PF=4.3 | **Запущен WF-22 на сервере** |
+| elder_triple_screen_v3 | elder_ts_v3 | 96-combo macro-relax sweep | **Запущен sweep на сервере** |
+| alt_trendline_touch_v1 | att1 | PIVOT_LEFT=2, R=2.0, TOUCH_ATR=0.25 → PF=1.295 | **Запущен WF-22 на сервере** |
+| alt_horizontal_break_v1 | hzbo1 | sweep не запускался | Ждёт очереди |
+| inplay_breakout | breakout | HTF-scale SL fix (96cf4fd), нужен retune sweep | Ждёт sweep |
 
-### В разработке (spec готов)
-| Стратегия | Тип | Режим | Статус |
+### 🆕 Новые стратегии (написаны, нужен backtest)
+
+| Стратегия | Sleeve | Идея | Статус |
 |---|---|---|---|
-| alt_volume_exhaust_fade_v1 (VEF) | Fade volume spike | все | 📋 Codex task написан |
-| inplay_breakout_v2 | Breakout improvement | bull_trend | 📋 Codex task написан |
+| session_open_breakout_v1 | sob1 | London 08:00 / NY 13:30 — первая импульсная 15m свеча | ✅ Написана, зарегистрирована, **нужен WF-22** |
+| funding_rate_reversion_v1 | funding_rev | Bybit 8H funding extremes → reversion | Зарегистрирована, нужен backtest |
+| liquidation_cascade_entry_v1 | liq_cascade | Liquidation spike fade | Зарегистрирована, нужен backtest |
+| sloped_resistance_choch_v1 | slope_choch | CHOCH at sloped resistance | Зарегистрирована, нужен backtest |
+| micro_scalper_v1 | micro_scalp | 5m EMA pullback scalper | Зарегистрирована, нужен backtest |
 
-### Планируются (следующие)
-| Идея | Тип | Режим |
-|---|---|---|
-| Crypto momentum rotation | Midterm 7-10d hold | bull_trend |
-| Funding rate arbitrage | Market-neutral | любой |
-| Micro scalper (1m) | High-frequency | высокий ATR |
-| Support reclaim v2 | Bounce | bear_chop дно |
-| Opening range breakout | Session-based | лондон/нью-йорк открытие |
+### 🔴 Требуют фикса
 
-**Цель Фазы 2:** 8-10 стратегий × 5-10 монет каждая = 3-8 сделок в день по портфелю.
+| Стратегия | Проблема |
+|---|---|
+| alt_inplay_breakdown_v2 | 0 сделок в backtest — баг в коде (диагноз в Codex Task 3.4) |
+| btc_eth_midterm_v3 | SL-баг исправлен, нужен param sweep |
+| elder_triple_screen_v3 | 0 сделок при дефолтных параметрах — слишком строгие фильтры |
 
 ---
 
 ## Фаза 3 — Самооптимизация (СЛЕДУЮЩАЯ 🎯)
 
-Система сама улучшает параметры стратегий. Нужно дописать ~4 модуля.
-
 ### 3.1 Auto-Apply Winners (ПРИОРИТЕТ #1)
-**Что:** Когда autoresearch находит конфиг с PF > порога и DD < лимита — автоматически применяет его в live без ручного approve.
-
-**Как реализовать:**
 ```python
 # scripts/auto_apply_research_winner.py
-# Запускается после каждого autoresearch run
-# Проверяет: passed=True, score > AUTOAPPLY_MIN_SCORE (env), neg_months <= 3
-# Если всё ок → патчит dynamic_allowlist_latest.env + перезагружает allocator
-# Уведомляет в TG: "Авто-апдейт: ARF1 LOOKBACK 48→60, score=36.1"
+# Когда autoresearch находит WF-22 pass: автоматически патчит env + перезагружает allocator
+# Защита: ≥3 разных run с похожими params + тихое окно 02:00-04:00 UTC
 ```
 
-**Защиты:**
-- Применяет только если ≥ 3 разных run с похожими параметрами прошли
-- Не применяет в боевых условиях между 02:00-04:00 UTC (тихое окно)
-- Хранит историю применений в `runtime/auto_apply_log.jsonl`
-
 ### 3.2 Performance Degradation Detector (ПРИОРИТЕТ #2)
-**Что:** Отслеживает расхождение live P&L vs backtest-ожидания. Если стратегия "сдулась" — ставит её на паузу и запускает реоптимизацию.
-
-**Как реализовать:**
 ```python
-# scripts/live_vs_backtest_monitor.py  
-# Каждый день: считает rolling_pf_live_30d для каждой стратегии
-# Если rolling_pf < backtest_pf * DEGRADE_THRESHOLD (0.6):
-#   → SET STRATEGY_X_RISK_MULT=0.0 (пауза)
-#   → Добавляет strategy_x_reopt в research_nightly_queue.json
-#   → TG: "⚠️ ARF1 деградирует: live PF=0.9 vs backtest PF=1.4. Пауза + реопт."
+# scripts/live_vs_backtest_monitor.py
+# rolling_pf_live_30d < backtest_pf × 0.6 → пауза стратегии + добавить в reopt queue
+# TG: "⚠️ ARF1 деградирует: live PF=0.9 vs backtest PF=1.4"
 ```
 
 ### 3.3 Regime-Triggered Reoptimization (ПРИОРИТЕТ #3)
-**Что:** При смене рыночного режима автоматически запускает оптимизацию параметров под новый режим.
-
-**Как реализовать:**
 ```python
-# В control_plane_watchdog.py — добавить хук на смену applied_regime
-# При bull_trend → bear_chop: добавить в queue задачи для "chop-friendly" стратегий
-# При bear_chop → bull_trend: добавить задачи для "trend-following" стратегий
+# В control_plane_watchdog.py — хук на смену applied_regime
+# При смене режима → добавить в queue параметры под новый режим
 ```
 
 ### 3.4 Live Params Drift Tracker (ПРИОРИТЕТ #4)
-**Что:** Лог всех когда-либо применявшихся параметров с P&L-атрибуцией. Помогает DeepSeek-у видеть что работало исторически.
-
-**Как реализовать:**
 ```
-runtime/params_history.jsonl
-{
-  "ts": 1744200000,
-  "strategy": "arf1",
-  "params": {"ARF1_SIGNAL_LOOKBACK": 60, "ARF1_MIN_RSI": 54},
-  "source": "auto_apply",
-  "regime_at_apply": "bear_chop",
-  "live_pf_30d_after": null  # заполняется через 30 дней
-}
+runtime/params_history.jsonl — лог всех applied параметров с P&L атрибуцией
 ```
 
 ---
 
 ## Фаза 4 — Strategy Factory (БУДУЩЕЕ 🔮)
 
-Система сама порождает и тестирует новые идеи стратегий.
-
-### 4.1 Strategy Genome Engine
-Каждая стратегия = набор "генов": entry_condition + filter_set + exit_logic.
-При хороших результатах — "размножить" с мутациями:
-```
-ARF1 (fade от сопротивления) 
-  → мутация 1: fade от поддержки (support_bounce)
-  → мутация 2: fade от BB-верхней полосы (ARF2)
-  → мутация 3: ARF1 + volume filter (ARF1+VEF hybrid)
-```
-
-### 4.2 DeepSeek Research Proposals
-DeepSeek получает текущую рыночную статистику и предлагает:
-- "В последние 30 дней BTC показывает высокую внутридневную волатильность 06:00-10:00 UTC → предлагаю протестировать Opening Range Breakout"
-- Кодирует идею в spec.json → отправляет в autoresearch queue
-
-### 4.3 A/B Testing Framework
-Параллельный запуск 2 версий одной стратегии в live:
-- Версия A: текущий live (50% капитала)
-- Версия B: новый candidate (50% капитала)
-- Через 30 дней: автовыбор победителя
-
-### 4.4 Cross-Regime Learning
-Метастратегия: какие стратегии/параметры работают лучше в каком режиме — выученные из реальных данных, а не из backtest.
+- **Strategy Genome Engine**: мутации параметров от рабочих стратегий
+- **DeepSeek Research Proposals**: AI предлагает идеи на основе рыночной статистики
+- **A/B Testing Framework**: параллельный запуск 2 версий, автовыбор победителя
+- **Cross-Regime Learning**: выученные паттерны из реальных данных
 
 ---
 
 ## Фаза 5 — Масштабирование (БУДУЩЕЕ 🔮)
 
-Когда система стабильно прибыльна и самооптимизируется.
-
-- **Multi-account**: разные риск-профили (aggressive / conservative)
-- **Cross-exchange**: Bybit + Binance + OKX арбитраж возможностей
-- **Crypto + Equities**: единый оркестратор для Bybit + Alpaca
-- **Volatility-adjusted sizing**: позиции адаптируются к текущему VIX/BVIV
-- **Correlation-aware portfolio**: ограничение одновременных коррелированных позиций
+- Multi-account: aggressive / conservative risk profiles
+- Cross-exchange: Bybit + Binance + OKX
+- Crypto + Equities: единый оркестратор Bybit + Alpaca
+- Volatility-adjusted sizing: адаптация к BVIV/ATR percentile
+- Correlation-aware portfolio: лимит одновременных коррелированных позиций
 
 ---
 
-## Текущий стек технологий
+## Текущий стек
 
 ```
 LIVE BOT
 ├── smart_pump_reversal_bot.py        — главный loop
 ├── bot/deepseek_overlay.py           — TG оператор с AI
-├── bot/operator_snapshot.py          — сбор snapshot для AI
+├── bot/operator_snapshot.py          — snapshot для AI
 │
 ORCHESTRATION
 ├── scripts/build_regime_state.py     — 4-режимный детектор
-├── scripts/build_symbol_router.py    — динамический роутер монет
-├── scripts/build_portfolio_allocator.py — распределение рисков
+├── scripts/build_btc_dominance_state.py  — alt_bias overlay (NEW)
+├── scripts/build_symbol_router.py    — динамический роутер
+├── scripts/build_portfolio_allocator.py  — риск-распределение
 │
 SELF-HEALING
 ├── scripts/bot_health_watchdog.sh    — каждые 2 мин
 ├── scripts/control_plane_watchdog.py — каждые 30 мин
 ├── scripts/setup_server_crons.sh     — мастер-инсталлер
 │
-SELF-RESEARCH (ЕСТЬ)
+SELF-RESEARCH
 ├── backtest/run_portfolio.py         — портфельный backtest
 ├── scripts/run_nightly_research_queue.py — ночная очередь
-├── bot/deepseek_autoresearch_agent.py — AI анализ результатов
+├── bot/deepseek_autoresearch_agent.py    — AI анализ
 │
 SELF-OPTIMIZE (НЕТ — ФАЗА 3)
 ├── scripts/auto_apply_research_winner.py   — TODO
 ├── scripts/live_vs_backtest_monitor.py     — TODO
-├── scripts/regime_triggered_reopt.py       — TODO
 └── runtime/params_history.jsonl           — TODO
 ```
 
 ---
 
-## Приоритеты прямо сейчас
+## Приоритеты прямо сейчас (апрель 2026)
 
-1. **Elder backtest** — запустить `CODEX_TASK_elder_wave_lookback_backtest.md`
-2. **ARF1 wider universe** — уже в live конфиге (v2 обновление)
-3. **IVB1 wider universe** — добавлены LINKUSDT, DOGEUSDT в live конфиге
-4. **VEF стратегия** — Codex task написан, нужна реализация
-5. **auto_apply_research_winner.py** — первый модуль Фазы 3 (самооптимизация)
-6. **Range scalp redesign** — standalone backtest, переработка логики
+1. **Ждём серверных результатов**: breakdown_v1 WF-22 + elder_v3 sweep + att1 WF-22 — 3-4 дня
+2. **Когда вернётся Codex**: inplay_breakout retune sweep с HTF SL params
+3. **Добавить build_btc_dominance_state.py в cron**: `0 */4 * * * python3 scripts/build_btc_dominance_state.py`
+4. **Зарегистрировать SOB1 в режимах**: добавить `ENABLE_SOB1_TRADING=1` в bull/bear оверлеи
+5. **Alpaca paper trading**: ещё 3-4 недели paper → реальные деньги при положительных результатах
+6. **V7 sleeves risk reduction**: выставить `risk_mult=0.3` для всех 5 непроверенных рукавов до прохождения WF-22
 
 ---
 
-## KPI для оценки прогресса
+## KPI прогресса
 
-| Метрика | Сейчас | Цель Фаза 2 | Цель Фаза 3 |
+| Метрика | Сейчас (апр 2026) | Цель Фаза 2 | Цель Фаза 3 |
 |---|---|---|---|
-| Активных стратегий в live | 3 | 6-8 | 10+ |
-| Сделок в день | 0.5-1 | 3-5 | 5-10 |
+| Стратегий с WF-22 | 5 | 8-10 | 10+ |
+| Сделок в день | 1-3 | 3-8 | 5-12 |
 | Ручного вмешательства | много | редко | почти нет |
-| Auto-reopt coverage | 0% | 0% | 80% стратегий |
-| Стратегий в разработке | 2 | 5 | постоянный конвейер |
+| Auto-reopt coverage | 0% | 0% | 80% |
+| Конвейер стратегий | 5 в разработке | стабильный | автоматический |

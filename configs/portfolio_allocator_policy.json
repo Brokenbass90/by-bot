@@ -4,6 +4,7 @@
   "updated_utc": "2026-04-18T06:00:00Z",
   "_comment_v6": "Fixed backwards ASB1/HZBO1 mults (were 0.0 in bull_trend — primary bull strategies!). Enabled breakout. Raised ATT1 bull mult. Better VWAP range allocation. All-market coverage: bull strategies active in bull, bear strategies in bear, range strategies in all.",
   "_comment_v7": "Registered 5 new sleeves to fill long/short coverage gaps. breakdown_v2: improved SHORT (1h structure, faster than v1). slope_choch: SHORT at sloped resistance change-of-character (pairs with sloped LONG). liq_cascade: bidirectional panic/squeeze fade (all regimes, Bybit-unique). funding_rev: bidirectional funding-rate reversion (Bybit 8h funding edge). micro_scalp: bidirectional EMA pullback scalper (both sides, all regimes, increases trade count). Market coverage matrix now: BULL longs ×7, BEAR shorts ×4, RANGE both ×7, FUNDING edge ×1.",
+  "_comment_v8": "Added sob1 sleeve: session open breakout at London 08:00 UTC and NY 13:30 UTC. Fires on first 15m impulse candle after session open. Active in all regimes — institutional momentum edge is regime-independent. Also relies on build_btc_dominance_state.py (4H cron) for alt_bias overlay.",
   "allocator_global_risk_by_regime": {
     "bull_trend": 1.0,
     "bull_chop": 0.9,
@@ -368,6 +369,20 @@
         "bull_chop": 0.8,
         "bear_chop": 0.8,
         "bear_trend": 0.7
+      }
+    },
+    {
+      "name": "sob1",
+      "enable_env": "ENABLE_SOB1_TRADING",
+      "symbol_env_key": "SOB1_SYMBOL_ALLOWLIST",
+      "risk_env": "SOB1_RISK_MULT",
+      "strategy_names": ["session_open_breakout_v1"],
+      "_comment": "v8 NEW. Session open breakout at London (08:00 UTC) and NY (13:30 UTC). Fires once per session per symbol on first qualifying 15m impulse candle (body > SOB1_BODY_MIN_ATR × ATR14). Institutional momentum edge — session opens create directional displacement. Active in ALL regimes but reduced in bear (shorts still fire via SOB1_ALLOW_SHORTS). Needs WF-22 before raising mults above 0.5. Env vars: SOB1_SESSION_OPENS_UTC=8,13 SOB1_BODY_MIN_ATR=0.3 SOB1_SL_ATR=0.5 SOB1_RR=2.5 SOB1_VWAP_CONFIRM=0.",
+      "base_risk_mult_by_regime": {
+        "bull_trend": 0.5,
+        "bull_chop": 0.4,
+        "bear_chop": 0.4,
+        "bear_trend": 0.3
       }
     }
   ]
