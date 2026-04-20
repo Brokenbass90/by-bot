@@ -125,6 +125,14 @@ AUTO_APPLY_PARAMS_PATH = ROOT_DIR / "configs" / "auto_apply_params.env"
 if AUTO_APPLY_PARAMS_PATH.exists():
     load_dotenv(AUTO_APPLY_PARAMS_PATH, override=True)
 
+# Phase 3: strategy_pause.env — written by live_vs_backtest_monitor.py when a
+# strategy's rolling 30d PF drops below the degradation threshold.
+# Sets STRATEGY_X_RISK_MULT=0.0 for degraded strategies.
+# Loaded AFTER auto_apply so auto_apply params don't accidentally re-enable a paused strategy.
+STRATEGY_PAUSE_ENV = ROOT_DIR / "runtime" / "strategy_pause.env"
+if STRATEGY_PAUSE_ENV.exists():
+    load_dotenv(STRATEGY_PAUSE_ENV, override=True)
+
 _ENV_ALIAS_MAP = {
     "ENABLE_ELDER_TRADING": "ENABLE_ELDER_V2_TRADING",
     "ELDER_RISK_MULT": "ELDER_V2_RISK_MULT",

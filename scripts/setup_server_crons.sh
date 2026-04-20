@@ -20,8 +20,12 @@
 #  10. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
 #  11. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
 #  12. Auto-apply research winners — daily 06:00 UTC
-#  13. Daily Telegram health digest — 08:00 UTC every day
-#  14. Alpaca monthly autopilot — 1st of month 09:30 UTC
+#  13. Funding-rate snapshot refresh — every 5 min
+#  14. Daily Telegram health digest — 08:00 UTC every day
+#  15. Alpaca monthly autopilot — 1st of month 09:30 UTC
+#  16. BTC dominance overlay — every 4h (alt_bias / alt_risk_mult)
+#  17. Live vs backtest monitor — every 4h (Phase 3 degradation detector)
+#  18. Live vs backtest monitor — daily 07:00 UTC (with TG alert on degrade)
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -72,7 +76,11 @@ for req in \
     "$BOT_DIR/scripts/run_equities_alpaca_intraday_dynamic_v1.sh" \
     "$BOT_DIR/configs/strategy_profile_registry.json" \
     "$BOT_DIR/configs/portfolio_allocator_policy.json" \
-    "$BOT_DIR/configs/strategy_health.json"
+    "$BOT_DIR/configs/strategy_health.json" \
+    "$BOT_DIR/scripts/build_btc_dominance_state.py" \
+    "$BOT_DIR/scripts/live_vs_backtest_monitor.py" \
+    "$BOT_DIR/scripts/promote_wf22_winner.py" \
+    "$BOT_DIR/scripts/funding_rate_fetcher.py"
 do
     if [ ! -f "$req" ]; then
         err "Required file not found: $req"
@@ -176,6 +184,14 @@ NEW_CRONS=$(cat << CRONEOF
 #
 # 16. Alpaca monthly autopilot — 1st of each month at 09:30 UTC (after market open)
 30 9 1 * * /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_monthly_autopilot.sh >> logs/alpaca_monthly.log 2>&1' $CRON_TAG
+#
+# 17. BTC dominance overlay — every 4h (Phase 3: alt_bias / ALT_RISK_MULT for regime env)
+# Writes runtime/btc_dominance_state.json, read by build_regime_state.py next cycle
+10 */4 * * * cd $BOT_DIR && $PYTHON scripts/build_btc_dominance_state.py >> logs/btc_dominance.log 2>&1 $CRON_TAG
+#
+# 18. Live vs backtest monitor — every 4h (Phase 3: degrade detection, writes strategy_pause.env)
+# Bot loads strategy_pause.env on startup via load_dotenv(override=True)
+25 */4 * * * cd $BOT_DIR && $PYTHON scripts/live_vs_backtest_monitor.py >> logs/strategy_monitor.log 2>&1 $CRON_TAG
 #
 CRONEOF
 )
