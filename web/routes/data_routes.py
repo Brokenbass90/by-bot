@@ -192,6 +192,11 @@ def _load_all_trades() -> List[Dict[str, Any]]:
                 side = "short" if side_raw in {"sell", "short"} else "long"
                 entry_ts = int(rec.get("entry_ts") or 0)
                 exit_ts = int(rec.get("exit_ts") or 0)
+                # Some older close-only live events do not carry a stable entry_order_id,
+                # so we may never see the matching submitted/filled event in the same bucket.
+                # Fall back to exit_ts so the UI can still open the chart modal around the close.
+                if not entry_ts and exit_ts:
+                    entry_ts = exit_ts
                 entry_notional = float(rec.get("entry_notional_usd") or 0.0)
                 pnl = float(rec.get("pnl") or 0.0)
                 trade = {
