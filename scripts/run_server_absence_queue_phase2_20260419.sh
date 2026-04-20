@@ -16,21 +16,23 @@ wait_for_phase1() {
 run_breakdown_v1_wf22() {
   echo "[absence-queue-phase2] breakdown_v1 wf22 start utc=$(date -u +%FT%TZ)"
   source .venv/bin/activate
-  BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT \
-  BREAKDOWN_LOOKBACK_H=36 \
-  BREAKDOWN_MIN_BREAK_ATR=0.15 \
-  BREAKDOWN_RSI_MAX=50 \
-  BREAKDOWN_SL_ATR=1.4 \
-  BREAKDOWN_RR=2.0 \
-  BREAKDOWN_ALLOW_SHORTS=1 \
-  BREAKDOWN_ALLOW_LONGS=0 \
-  python3 scripts/run_crypto_core_walkforward.py \
+  python3 scripts/run_generic_wf.py \
+    --strategy alt_inplay_breakdown_v1 \
     --symbols BTCUSDT,ETHUSDT,SOLUSDT \
-    --strategies alt_inplay_breakdown_v1 \
     --end 2026-04-18 \
     --total_days 330 --window_days 15 --step_days 15 \
-    --min_pf 1.20 --min_net 0.0 --max_dd 25.0 \
     --tag breakdown_v1_wf22_best \
+    --workers 2 \
+    --timeout_sec 900 \
+    --extra_env \
+      BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT \
+      BREAKDOWN_LOOKBACK_H=36 \
+      BREAKDOWN_MIN_BREAK_ATR=0.15 \
+      BREAKDOWN_RSI_MAX=50 \
+      BREAKDOWN_SL_ATR=1.4 \
+      BREAKDOWN_RR=2.0 \
+      BREAKDOWN_ALLOW_SHORTS=1 \
+      BREAKDOWN_ALLOW_LONGS=0 \
     >> logs/research/breakdown_v1_wf22_best_20260419.log 2>&1
   echo "[absence-queue-phase2] breakdown_v1 wf22 done utc=$(date -u +%FT%TZ)"
 }

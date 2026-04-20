@@ -16,8 +16,8 @@ wait_for_rehab_batch() {
 run_elder_v3_sweep() {
   echo "[absence-queue] elder v3 sweep start utc=$(date -u +%FT%TZ)"
   source .venv/bin/activate
-  python3 scripts/run_dynamic_crypto_walkforward.py \
-    --config configs/autoresearch/elder_ts_v3_macro_relax_v1.json \
+  python3 scripts/run_strategy_autoresearch.py \
+    --spec configs/autoresearch/elder_ts_v3_macro_relax_v1.json \
     >> logs/research/elder_v3_sweep_20260419.log 2>&1
   echo "[absence-queue] elder v3 sweep done utc=$(date -u +%FT%TZ)"
 }
