@@ -686,3 +686,110 @@ async def get_journal(
         "pages": max(1, math.ceil(total / page_size)),
         "entries": entries[s: s + page_size],
     }
+
+
+# ── strategy analytics ────────────────────────────────────────────────────────
+
+def _compute_strategy_stats(
+    trades: List[Dict[str, Any]],
+    days: int = 30,
+) -> List[Dict[str, Any]]:
+    """Compute per-strategy stats for the last `days` days."""
+    from datetime import datetime, timezone, timedelta
+    cutoff_ms = (datetime.now(timezone.utc) - timedelta(days=days)).timestamp() * 1000
+
+    by_strategy: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+    for t in trades:
+        strat = str(t.get("strategy") or "").strip()
+        if not strat:
+            continue
+        # determine timestamp
+        ts = t.get("exit_ts") or t.get("entry_ts")
+        if ts and float(ts) < cutoff_ms:
+            continue
+        by_strategy[strat].append(t)
+
+    stats = []
+    for strat, strat_trades in sorted(by_strategy.items()):
+        n = len(strat_trades)
+        pnls = []
+        for t in strat_trades:
+            pnl_raw = t.get("pnl") or t.get("pnl_pct") or 0
+            try:
+                pnls.append(float(pnl_raw))
+            except (TypeError, ValueError):
+                pnls.append(0.0)
+
+        wins   = [p for p in pnls if p > 0]
+        losses = [p for p in pnls if p < 0]
+        gross_profit = sum(wins)
+        gross_loss   = abs(sum(losses))
+        pf           = round(gross_profit / gross_loss, 3) if gross_loss > 0 else (99.0 if gross_profit > 0 else 0.0)
+        wr           = round(len(wins) / n, 3) if n > 0 else 0.0
+        avg_win      = round(gross_profit / len(wins), 4) if wins else 0.0
+        avg_loss     = round(gross_loss / len(losses), 4) if losses else 0.0
+        total_pnl    = round(sum(pnls), 4)
+
+        # Symbol breakdown
+        symbol_counts: Dict[str, int] = defaultdict(int)
+        for t in strat_trades:
+            sym = str(t.get("symbol") or "")
+            if sym:
+                symbol_counts[sym] += 1
+        top_symbols = sorted(symbol_counts.items(), key=lambda x: -x[1])[:5]
+
+        stats.append({
+            "strategy":     strat,
+            "trades":       n,
+            "win_rate":     wr,
+            "profit_factor": pf,
+            "total_pnl":    total_pnl,
+            "avg_win":      avg_win,
+            "avg_loss":     avg_loss,
+            "gross_profit": round(gross_profit, 4),
+            "gross_loss":   round(gross_loss, 4),
+            "top_symbols":  [{"symbol": s, "trades": c} for s, c in top_symbols],
+        })
+
+    # Sort: by profit_factor desc
+    stats.sort(key=lambda x: x["profit_factor"], reverse=True)
+    return stats
+
+
+@router.get("/strategy-stats")
+async def get_strategy_stats(
+    days: int = Query(30, ge=1, le=365),
+    _: str = Depends(require_auth),
+):
+    """Per-strategy performance summary for the last `days` days."""
+    trades = _load_all_trades()
+    stats  = _compute_strategy_stats(trades, days=days)
+
+    # Attach live health status if available
+    health = _json(_rt("strategy_health.json")) or {}
+    health_by_strat: Dict[str, str] = {}
+    for k, v in (health.get("strategies") or {}).items():
+        health_by_strat[k] = str(v.get("status") or "ok")
+
+    for s in stats:
+        s["health_status"] = health_by_strat.get(s["strategy"], "ok")
+
+    # BTC dominance state
+    btc_dom = _json(_ROOT / "runtime" / "btc_dominance_state.json")
+
+    # Regime state
+    regime_state = _json(_rt("regime", "orchestrator_state.json"))
+
+    return {
+        "days": days,
+        "total_strategies": len(stats),
+        "strategies": stats,
+        "btc_dominance": btc_dom,
+        "regime": {
+            "regime":          (regime_state or {}).get("regime"),
+            "confidence":      (regime_state or {}).get("confidence"),
+            "global_risk_mult":(regime_state or {}).get("global_risk_mult"),
+            "macro_state":     (regime_state or {}).get("macro", {}).get("state") if regime_state else None,
+            "alt_bias":        (regime_state or {}).get("btc_dominance", {}).get("alt_bias") if regime_state else None,
+        } if regime_state else None,
+    }

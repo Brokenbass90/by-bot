@@ -1212,6 +1212,117 @@ function StrategiesPage() {
   );
 }
 
+// ── Strategy Analytics page ────────────────────────────────────────────────
+
+function StrategyAnalyticsPage() {
+  const [days, setDays] = React.useState(30);
+  const { data, loading, refresh } = useFetch(`/api/strategy-stats?days=${days}`, [days]);
+
+  const healthColor = s => ({ ok:'var(--green)', watch:'var(--yellow)', degraded:'var(--red)', insufficient_data:'var(--text3)' }[s] || 'var(--text2)');
+  const healthIcon  = s => ({ ok:'✅', watch:'👁', degraded:'🔴', insufficient_data:'⏳' }[s] || '?');
+
+  const regime = data?.regime;
+  const dom    = data?.btc_dominance;
+  const biasColor = b => b === 'strong' ? 'var(--green)' : b === 'weak' ? 'var(--red)' : 'var(--text2)';
+  const trendIcon = t => t === 'rising' ? '↑' : t === 'falling' ? '↓' : '→';
+
+  if (loading) return React.createElement(Loader);
+
+  return React.createElement('div', null,
+    React.createElement('div', { className: 'page-hdr' },
+      React.createElement('div', { className: 'section-title' }, 'Strategy Analytics'),
+      React.createElement('div', { className: 'topbar-right' },
+        ['7d','30d','90d'].map(d =>
+          React.createElement('button', {
+            key: d,
+            className: `refresh-btn${days === parseInt(d) ? ' active-tab' : ''}`,
+            style: days === parseInt(d) ? { background:'var(--blue-dim)', color:'var(--blue)', borderColor:'var(--blue)' } : {},
+            onClick: () => setDays(parseInt(d))
+          }, d)
+        ),
+        React.createElement('button', { className: 'refresh-btn', onClick: refresh }, '↺ Refresh')
+      )
+    ),
+
+    /* ── Regime + BTC dominance row ─── */
+    React.createElement('div', { className: 'grid2', style: { marginBottom: '14px' } },
+      React.createElement('div', { className: 'card' },
+        React.createElement('div', { className: 'card-title' }, 'Current Regime'),
+        regime ? React.createElement('div', null,
+          React.createElement('div', { style: { fontSize: '22px', fontWeight: 700, color: 'var(--blue)', marginBottom: '6px' } },
+            regime.regime || 'unknown'),
+          React.createElement('div', { style: { fontSize: '13px', color: 'var(--text2)', display: 'flex', flexWrap: 'wrap', gap: '16px' } },
+            React.createElement('span', null, 'Risk ×', React.createElement('strong', { style: { color: 'var(--text)' } }, regime.global_risk_mult ?? '—')),
+            React.createElement('span', null, 'ER ', React.createElement('strong', { style: { color: 'var(--text)' } }, regime.confidence ?? '—')),
+            React.createElement('span', null, 'Macro ', React.createElement('strong', { style: { color: 'var(--text)' } }, regime.macro_state || '—'))
+          )
+        ) : React.createElement('div', { className: 'empty' }, 'Regime data unavailable')
+      ),
+
+      React.createElement('div', { className: 'card' },
+        React.createElement('div', { className: 'card-title' }, 'BTC Dominance / Alt Bias'),
+        dom ? React.createElement('div', null,
+          React.createElement('div', { style: { display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '6px' } },
+            React.createElement('div', null,
+              React.createElement('div', { style: { fontSize: '11px', color: 'var(--text3)', textTransform: 'uppercase' } }, 'Alt Bias'),
+              React.createElement('div', { style: { fontSize: '20px', fontWeight: 700, color: biasColor(dom.alt_bias) } }, (dom.alt_bias || 'neutral').toUpperCase())
+            ),
+            React.createElement('div', null,
+              React.createElement('div', { style: { fontSize: '11px', color: 'var(--text3)', textTransform: 'uppercase' } }, 'Trend'),
+              React.createElement('div', { style: { fontSize: '20px', fontWeight: 700 } }, trendIcon(dom.btc_dominance_trend))
+            ),
+            React.createElement('div', null,
+              React.createElement('div', { style: { fontSize: '11px', color: 'var(--text3)', textTransform: 'uppercase' } }, 'BTC/ETH 48h'),
+              React.createElement('div', { style: { fontSize: '16px', fontWeight: 600, color: (dom.btc_eth_ratio_48h_change_pct || 0) > 0 ? 'var(--red)' : 'var(--green)' } },
+                `${(dom.btc_eth_ratio_48h_change_pct || 0) > 0 ? '+' : ''}${(dom.btc_eth_ratio_48h_change_pct || 0).toFixed(2)}%`)
+            ),
+            React.createElement('div', null,
+              React.createElement('div', { style: { fontSize: '11px', color: 'var(--text3)', textTransform: 'uppercase' } }, 'Alt Risk Mult'),
+              React.createElement('div', { style: { fontSize: '16px', fontWeight: 600, color: 'var(--purple)' } },
+                `×${(dom.recommended_alt_risk_mult || 1).toFixed(2)}`)
+            )
+          ),
+          dom.note && React.createElement('div', { style: { fontSize: '12px', color: 'var(--text2)', fontStyle: 'italic' } }, dom.note)
+        ) : React.createElement('div', { className: 'empty' }, 'BTC dominance data unavailable — run build_btc_dominance_state.py')
+      )
+    ),
+
+    /* ── Per-strategy table ─── */
+    React.createElement('div', { className: 'card' },
+      React.createElement('div', { className: 'card-title' }, `Strategy Performance — last ${days} days`),
+      !data || !data.strategies || data.strategies.length === 0
+        ? React.createElement('div', { className: 'empty' }, `No trades found in last ${days} days`)
+        : React.createElement('div', { className: 'tbl-wrap' },
+          React.createElement('table', null,
+            React.createElement('thead', null,
+              React.createElement('tr', null,
+                ['Health', 'Strategy', 'Trades', 'Win Rate', 'Profit Factor', 'Total PnL', 'Avg Win', 'Avg Loss', 'Top Symbol'].map(h =>
+                  React.createElement('th', { key: h }, h))
+              )
+            ),
+            React.createElement('tbody', null,
+              (data.strategies || []).map(s =>
+                React.createElement('tr', { key: s.strategy },
+                  React.createElement('td', { title: s.health_status },
+                    React.createElement('span', { title: s.health_status, style: { fontSize: '15px' } }, healthIcon(s.health_status))),
+                  React.createElement('td', { style: { color: 'var(--blue)', fontWeight: 500, whiteSpace: 'nowrap' } }, s.strategy),
+                  React.createElement('td', null, s.trades),
+                  React.createElement('td', { style: { color: (s.win_rate || 0) >= 0.5 ? 'var(--green)' : 'var(--red)' } }, `${((s.win_rate || 0) * 100).toFixed(0)}%`),
+                  React.createElement('td', { style: { fontWeight: 600, color: (s.profit_factor || 0) >= 1.2 ? 'var(--green)' : (s.profit_factor || 0) >= 1 ? 'var(--yellow)' : 'var(--red)' } }, (s.profit_factor || 0).toFixed(3)),
+                  React.createElement('td', { style: { color: (s.total_pnl || 0) >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: 600 } }, (s.total_pnl || 0).toFixed(4)),
+                  React.createElement('td', { className: 'pos' }, (s.avg_win || 0).toFixed(4)),
+                  React.createElement('td', { className: 'neg' }, (s.avg_loss || 0).toFixed(4)),
+                  React.createElement('td', { style: { color: 'var(--text2)', fontSize: '12px' } },
+                    s.top_symbols && s.top_symbols[0] ? `${s.top_symbols[0].symbol} (${s.top_symbols[0].trades})` : '—')
+                )
+              )
+            )
+          )
+        )
+    )
+  );
+}
+
 // ── Journal page ───────────────────────────────────────────────────────────
 
 function JournalPage() {
@@ -1590,6 +1701,7 @@ const NAV_GROUPS = [
       { id: 'pnl',        label: 'P&L Journal', icon: '📅' },
       { id: 'trades',     label: 'Trades',      icon: '⇄' },
       { id: 'strategies', label: 'Strategies',  icon: '◎' },
+      { id: 'analytics',  label: 'Analytics',   icon: '⚡' },
     ]
   },
   {
@@ -1646,6 +1758,7 @@ function App() {
     pnl:        PnLJournal,
     trades:     Trades,
     strategies: StrategiesPage,
+    analytics:  StrategyAnalyticsPage,
     alpaca:     AlpacaPage,
     regime:     RegimePage,
     journal:    JournalPage,

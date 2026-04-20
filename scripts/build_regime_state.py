@@ -118,6 +118,44 @@ MACRO_BEAR_PCT   = float(os.getenv("ORCH_MACRO_BEAR_PCT", "-5.0"))   # EMA gap% 
 TG_TOKEN         = os.getenv("TG_TOKEN", "")
 TG_CHAT_ID       = os.getenv("TG_CHAT_ID", os.getenv("TG_CHAT", ""))
 
+# BTC dominance state (written by build_btc_dominance_state.py every 4h)
+BTC_DOM_STATE_PATH = ROOT / "runtime" / "btc_dominance_state.json"
+
+# ---------------------------------------------------------------------------
+# BTC dominance helper
+# ---------------------------------------------------------------------------
+
+def _load_btc_dominance_state() -> Dict[str, Any]:
+    """Load alt_bias/alt_risk_mult from build_btc_dominance_state.py output.
+
+    Returns a minimal safe default if the file doesn't exist or is stale (>8h).
+    """
+    default: Dict[str, Any] = {
+        "alt_bias": "neutral",
+        "btc_dominance_trend": "flat",
+        "recommended_alt_risk_mult": 1.0,
+        "btc_eth_ratio_48h_change_pct": 0.0,
+    }
+    if not BTC_DOM_STATE_PATH.exists():
+        return default
+    try:
+        age_sec = time.time() - BTC_DOM_STATE_PATH.stat().st_mtime
+        if age_sec > 28800:  # 8 hours — stale, don't use
+            log.warning(f"btc_dominance_state.json is {age_sec/3600:.1f}h old — using neutral defaults")
+            return default
+        data = json.loads(BTC_DOM_STATE_PATH.read_text())
+        if not isinstance(data, dict):
+            return default
+        return {
+            "alt_bias": str(data.get("alt_bias") or "neutral"),
+            "btc_dominance_trend": str(data.get("btc_dominance_trend") or "flat"),
+            "recommended_alt_risk_mult": float(data.get("recommended_alt_risk_mult") or 1.0),
+            "btc_eth_ratio_48h_change_pct": float(data.get("btc_eth_ratio_48h_change_pct") or 0.0),
+        }
+    except Exception as e:
+        log.warning(f"Failed to load btc_dominance_state.json: {e}")
+        return default
+
 # ---------------------------------------------------------------------------
 # Telegram helper
 # ---------------------------------------------------------------------------
@@ -768,6 +806,12 @@ def compute_and_apply(dry_run: bool = False) -> Dict[str, Any]:
     macro = _compute_macro_overlay("BTCUSDT")
     log.info(f"Macro overlay: {macro['state']} | gap={macro.get('gap_pct',0):+.2f}% risk_mod={macro.get('risk_modifier',0):+.2f}")
 
+    # 1c. Load BTC dominance overlay (alt_bias / alt risk multiplier)
+    btc_dom = _load_btc_dominance_state()
+    log.info(f"BTC dominance: trend={btc_dom['btc_dominance_trend']} alt_bias={btc_dom['alt_bias']} "
+             f"alt_risk_mult={btc_dom['recommended_alt_risk_mult']} "
+             f"btc_eth_48h={btc_dom['btc_eth_ratio_48h_change_pct']:+.2f}%")
+
     # 2. Classify raw 4H regime
     raw_regime, indicators = _classify_regime(candles)
     # Attach macro info to indicators for reporting
@@ -835,6 +879,11 @@ def compute_and_apply(dry_run: bool = False) -> Dict[str, Any]:
     overrides["ORCH_PENDING_COUNT"] = str(pending_count)
     overrides["ORCH_GENERATED_AT_UTC"] = ts_utc
     overrides["ORCH_STATE_VERSION"] = STATE_VERSION
+    # BTC dominance / alt-season overlay
+    overrides["ALT_BIAS"] = btc_dom["alt_bias"]
+    overrides["BTC_DOMINANCE_TREND"] = btc_dom["btc_dominance_trend"]
+    overrides["ALT_RISK_MULT"] = str(btc_dom["recommended_alt_risk_mult"])
+    overrides["BTC_ETH_48H_CHANGE_PCT"] = str(btc_dom["btc_eth_ratio_48h_change_pct"])
 
     # 6. Write outputs
     state: Dict[str, Any] = {
@@ -857,6 +906,7 @@ def compute_and_apply(dry_run: bool = False) -> Dict[str, Any]:
         "strategy_overrides": overrides,
         "indicators":      indicators,
         "notes":           decision["notes"],
+        "btc_dominance":   btc_dom,
         "state_path":      str(STATE_PATH),
         "overlay_path":    str(ENV_PATH),
         "history_path":    str(HISTORY_PATH),
