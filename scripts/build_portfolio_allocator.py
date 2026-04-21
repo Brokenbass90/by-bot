@@ -208,6 +208,23 @@ def _haircut_from_ratio(ratio: float, tiers: List[Dict[str, Any]]) -> float:
     return float(mult)
 
 
+def _classify_degraded_kind(
+    *,
+    safe_mode_reasons: List[str],
+    degraded_reasons: List[str],
+) -> str:
+    if safe_mode_reasons:
+        return "broken"
+    reasons = [str(x or "").strip() for x in degraded_reasons if str(x or "").strip()]
+    if not reasons:
+        return "none"
+    if all(item.startswith("portfolio_overlap:") for item in reasons):
+        return "protective_overlap"
+    if all(item == "overall_health_watch" for item in reasons):
+        return "watch_only"
+    return "mixed"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Build deterministic portfolio allocator overlay.")
     ap.add_argument("--base-env", default=str(ENV_PATH))
@@ -488,6 +505,11 @@ def main() -> int:
             "",
         ]
     )
+    degraded_kind = _classify_degraded_kind(
+        safe_mode_reasons=safe_mode_reasons,
+        degraded_reasons=degraded_reasons,
+    )
+
     state_obj = {
         "version": STATE_VERSION,
         "policy_version": policy_version,
@@ -496,6 +518,7 @@ def main() -> int:
         "status": allocator_status,
         "safe_mode": safe_mode,
         "degraded": degraded,
+        "degraded_kind": degraded_kind,
         "hard_block_new_entries": safe_mode,
         "regime": regime,
         "overall_health": overall_health,

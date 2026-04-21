@@ -228,6 +228,7 @@ def _control_plane_block(root: Path) -> Dict[str, Any]:
             "exists": bool(allocator_path.exists()),
             "age_sec": _file_age_sec(allocator_path),
             "status": str(allocator.get("status") or ""),
+            "degraded_kind": str(allocator.get("degraded_kind") or ""),
             "global_risk_mult": _safe_float(
                 allocator.get("allocator_global_risk_mult", allocator.get("global_risk_mult")),
                 0.0,
@@ -567,7 +568,7 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         f"regime={regime.get('regime')} raw_regime={regime.get('raw_regime')} confidence={regime.get('confidence')} age_sec={regime.get('age_sec')}",
         f"router_profiles={router.get('profile_count')} router_symbols_total={router.get('symbols_total')} router_age_sec={router.get('age_sec')}",
         f"router_backtest_gate={'on' if router.get('backtest_path') else 'off'} symbol_memory_loaded={int(bool(router.get('symbol_memory_loaded')))}",
-        f"allocator_status={allocator.get('status')} global_risk_mult={allocator.get('global_risk_mult')} hard_block={int(bool(allocator.get('hard_block_new_entries')))}",
+        f"allocator_status={allocator.get('status')} degraded_kind={allocator.get('degraded_kind') or '-'} global_risk_mult={allocator.get('global_risk_mult')} hard_block={int(bool(allocator.get('hard_block_new_entries')))}",
         f"enabled_sleeves={','.join(allocator.get('enabled_sleeves') or []) or '-'}",
         f"degraded_sleeves={','.join(allocator.get('degraded_sleeves') or []) or '-'}",
         "",
