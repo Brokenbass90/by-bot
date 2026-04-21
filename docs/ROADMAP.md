@@ -129,6 +129,8 @@ Immediate priority is no longer “add more sleeves”, but repair and revalidat
 1. Open `TS132 WF-22` in the next free server slot.
 2. Then run the first aggregated annual pass for the current crypto portfolio.
 3. Keep Alpaca paper under observation for one month, but do not wait passively: track fills/PnL while monthly and intraday coexist on the shared demo account.
+   - if the next monthly cycle still behaves cleanly, move monthly to a real-money pilot at `$500`
+   - only raise that pilot toward `$1000` after another clean stretch without execution drift or ownership conflicts
 4. Expand the safe operator mode around the new bounded capability layer instead of giving it arbitrary shell access.
 5. Repair noisy runtime reporting so Telegram/operator surfaces show allocator truth and "since restart" diagnostics instead of fake "24h" counters.
 6. Design the first read-only web UI slice now, before implementation, so auth, audit trail, multi-account isolation, and future control-panel needs are baked into the foundation.
