@@ -515,9 +515,60 @@ def _alpaca_block(root: Path) -> Dict[str, Any]:
     }
 
 
+def _urgent_alerts(snapshot: Dict[str, Any]) -> List[Dict[str, str]]:
+    alerts: List[Dict[str, str]] = []
+    hb = dict(snapshot.get("heartbeat") or {})
+    ws = dict(snapshot.get("ws_transport_guard") or {})
+    cp = dict(snapshot.get("control_plane") or {})
+    allocator = dict(cp.get("allocator") or {})
+    watchdog = dict(cp.get("watchdog") or {})
+
+    hb_age = _safe_int(hb.get("age_sec"), -1)
+    if hb_age >= 0 and hb_age > 90:
+        alerts.append(
+            {
+                "level": "critical",
+                "kind": "heartbeat_stale",
+                "summary": f"Heartbeat stale: {hb_age}s old",
+            }
+        )
+
+    if bool(ws.get("active")):
+        reason = str(ws.get("reason") or ws.get("status") or "transport_guard_active")
+        alerts.append(
+            {
+                "level": "critical",
+                "kind": "ws_transport_guard",
+                "summary": f"WS guard active: {reason}",
+            }
+        )
+
+    allocator_status = str(allocator.get("status") or "").strip().lower()
+    degraded_kind = str(allocator.get("degraded_kind") or "").strip().lower()
+    if allocator_status == "degraded" and degraded_kind not in {"", "none", "protective_overlap"}:
+        alerts.append(
+            {
+                "level": "warn",
+                "kind": "allocator_degraded",
+                "summary": f"Allocator degraded ({degraded_kind or 'unknown'})",
+            }
+        )
+
+    if str(watchdog.get("status") or "").strip().lower() not in {"", "ok", "healthy"}:
+        alerts.append(
+            {
+                "level": "warn",
+                "kind": "control_plane_watchdog",
+                "summary": f"Control-plane watchdog status={watchdog.get('status')}",
+            }
+        )
+
+    return alerts
+
+
 def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
     base = Path(root or ROOT)
-    return {
+    snapshot = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "heartbeat": _heartbeat_block(base),
         "ws_transport_guard": _ws_guard_block(base),
@@ -530,6 +581,8 @@ def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
         "self_audit": _self_audit_block(base),
         "alpaca": _alpaca_block(base),
     }
+    snapshot["urgent_alerts"] = _urgent_alerts(snapshot)
+    return snapshot
 
 
 def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
@@ -543,6 +596,7 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     operator_controls = dict(snapshot.get("operator_controls") or {})
     self_audit = dict(snapshot.get("self_audit") or {})
     alpaca = dict(snapshot.get("alpaca") or {})
+    urgent_alerts = list(snapshot.get("urgent_alerts") or [])
     regime = dict(cp.get("regime") or {})
     router = dict(cp.get("router") or {})
     allocator = dict(cp.get("allocator") or {})
@@ -555,6 +609,16 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         "operator snapshot",
         f"generated_at_utc={snapshot.get('generated_at_utc','')}",
         "",
+        "[urgent_alerts]",
+        f"count={len(urgent_alerts)}",
+    ]
+    for item in urgent_alerts[:5]:
+        lines.append(
+            f" - {str(item.get('level') or 'info')}:{str(item.get('kind') or 'event')} {str(item.get('summary') or '-')[:180]}"
+        )
+    lines.extend(
+        [
+            "",
         "[heartbeat]",
         f"exists={int(bool(hb.get('exists')))} age_sec={hb.get('age_sec')} uptime_s={hb.get('uptime_s')} open_trades={hb.get('open_trades')}",
         f"ws_guard_active={int(bool(hb.get('ws_guard_active')))} bybit_msgs={hb.get('bybit_msgs')} regime={hb.get('regime')}",
@@ -581,7 +645,8 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         "[geometry]",
         f"exists={int(bool(geo.get('exists')))} age_sec={geo.get('age_sec')} symbols_analyzed={geo.get('symbols_analyzed')} snapshots_built={geo.get('snapshots_built')}",
         f"intervals={','.join(str(x) for x in (geo.get('intervals') or [])) or '-'}",
-    ]
+        ]
+    )
     for item in list(allocator.get("sleeve_summary") or []):
         if not item.get("enabled") and str(item.get("health_status") or "") == "OK":
             continue
