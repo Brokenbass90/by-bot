@@ -84,15 +84,21 @@ def _load_shared_history() -> List[Dict[str, str]]:
         payload = payload.get("messages", [])
     if not isinstance(payload, list):
         return []
-    result: List[Dict[str, str]] = []
+    user_msgs: List[Dict[str, str]] = []
+    last_assistant: Optional[Dict[str, str]] = None
     for item in payload[-_HISTORY_MAX:]:
         if not isinstance(item, dict):
             continue
         role = str(item.get("role") or "").strip().lower()
         content = str(item.get("content") or "").strip()
-        if role in {"user", "assistant", "system"} and content:
-            result.append({"role": role, "content": content})
-    return result
+        if role == "user" and content:
+            user_msgs.append({"role": role, "content": content})
+        elif role in {"assistant", "system"} and content:
+            last_assistant = {"role": role, "content": content}
+    result = user_msgs[-_HISTORY_MAX:]
+    if last_assistant:
+        result.append(last_assistant)
+    return result[-_HISTORY_MAX:]
 
 
 def _save_shared_history(messages: List[Dict[str, str]]) -> None:

@@ -107,14 +107,20 @@ class DeepSeekOverlay:
         try:
             with path.open("r", encoding="utf-8") as f:
                 data = json.load(f) or []
-            out: list[dict[str, str]] = []
+            user_msgs: list[dict[str, str]] = []
+            last_assistant: dict[str, str] | None = None
             for item in data:
                 if not isinstance(item, dict):
                     continue
                 role = str(item.get("role", "") or "").strip()
                 content = str(item.get("content", "") or "").strip()
-                if role in {"user", "assistant"} and content:
-                    out.append({"role": role, "content": content})
+                if role == "user" and content:
+                    user_msgs.append({"role": role, "content": content})
+                elif role == "assistant" and content:
+                    last_assistant = {"role": role, "content": content}
+            out = user_msgs[-self.cfg.max_history_messages :]
+            if last_assistant:
+                out.append(last_assistant)
             return out[-self.cfg.max_history_messages :]
         except Exception:
             return []
