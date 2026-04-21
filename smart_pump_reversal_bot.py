@@ -2485,15 +2485,13 @@ def _deepseek_local_regime_hint() -> dict[str, Any]:
     weak = int(_diag_get_int("breakout_ns_impulse_weak"))
     body = int(_diag_get_int("breakout_ns_impulse_body"))
     dist = int(_diag_get_int("breakout_ns_dist"))
-    ws_connect = int(_diag_get_int("ws_connect"))
-    ws_disconnect = int(_diag_get_int("ws_disconnect"))
-    ws_handshake_timeout = int(_diag_get_int("ws_handshake_timeout"))
-
-    if ws_handshake_timeout > 0:
+    ws_guard_active = _ws_transport_guard_active()
+    ws_guard_reason = str(_ws_transport_guard_reason() or "").lower()
+    if ws_guard_active and ("handshake" in ws_guard_reason or "timeout" in ws_guard_reason):
         return {
             "label": "infra_unstable",
             "confidence": 0.95,
-            "reason": "websocket handshake timeouts observed",
+            "reason": str(_ws_transport_guard_reason() or "websocket transport guard active"),
         }
 
     if breakout_entry > 0 and breakout_try > 0:
@@ -3221,7 +3219,9 @@ async def _maybe_run_ai_operator_tick(
             or breakout_no_break >= max(80, int(0.30 * breakout_no_signal_safe))
         )
     )
-    transport_issue = ws_status != "OK"
+    ws_guard_active = _ws_transport_guard_active()
+    ws_guard_reason = _ws_transport_guard_reason()
+    transport_issue = bool(ws_guard_active or ws_status in {"CRITICAL", "CRITICAL_NO_CONNECT"})
     quiet_operator_attention_needed = (
         quiet_skip_tech > 0
         or quiet_skip_capacity >= max(50, int(0.15 * quiet_try_safe))
@@ -3262,16 +3262,18 @@ async def _maybe_run_ai_operator_tick(
             )
         )
 
-    if ws_status in {"WARN", "CRITICAL", "CRITICAL_NO_CONNECT"} and _throttle_gate(
+    if (ws_guard_active or ws_status in {"CRITICAL", "CRITICAL_NO_CONNECT"}) and _throttle_gate(
         f"aiop:ws:{ws_status}", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC
     ):
         fallback = (
             f"WS health={ws_status}: connect={d_connect} disconnect={d_disconnect} "
-            f"handshake_timeout={d_handshake}"
+            f"handshake_timeout={d_handshake} guard_active={int(ws_guard_active)} "
+            f"reason={ws_guard_reason or '-'}"
         )
         prompt = (
-            "У бота деградация websocket-качества в текущем окне. "
-            f"status={ws_status}, connect={d_connect}, disconnect={d_disconnect}, handshake_timeout={d_handshake}. "
+            "У бота есть текущая деградация websocket-качества. "
+            f"status={ws_status}, guard_active={int(ws_guard_active)}, "
+            f"reason={ws_guard_reason or '-'}, connect={d_connect}, disconnect={d_disconnect}, handshake_timeout={d_handshake}. "
             "Кратко оцени риск для live и что проверить первым. "
             "Не советуй пока менять фильтры стратегий, cooldown или allowlist: сначала нужно стабилизировать transport."
         )
