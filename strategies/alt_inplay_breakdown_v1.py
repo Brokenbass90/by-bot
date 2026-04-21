@@ -123,6 +123,10 @@ class AltInplayBreakdownV1Config:
     sl_atr: float = 1.8
     rr: float = 2.0
     tp1_frac: float = 0.50
+    # Breakeven protection: after TP1 (≈1R), move SL to entry+lock so the runner
+    # can't give back the win. Set be_trigger_rr=0 to disable.
+    be_trigger_rr: float = 1.0        # arm BE when +1R reached (≈TP1 level)
+    be_lock_rr: float = 0.1           # lock SL at entry + 0.1R
     next_level_tp_enable: bool = True
     next_level_lookback_mult: float = 2.0
     next_level_buffer_atr: float = 0.30
@@ -219,6 +223,8 @@ class AltInplayBreakdownV1Strategy:
         self.cfg.sl_atr = _env_float("BREAKDOWN_SL_ATR", self.cfg.sl_atr)
         self.cfg.rr = _env_float("BREAKDOWN_RR", self.cfg.rr)
         self.cfg.tp1_frac = _env_float("BREAKDOWN_TP1_FRAC", self.cfg.tp1_frac)
+        self.cfg.be_trigger_rr = _env_float("BREAKDOWN_BE_TRIGGER_RR", self.cfg.be_trigger_rr)
+        self.cfg.be_lock_rr = _env_float("BREAKDOWN_BE_LOCK_RR", self.cfg.be_lock_rr)
         self.cfg.next_level_tp_enable = _env_bool("BREAKDOWN_NEXT_LEVEL_TP_ENABLE", self.cfg.next_level_tp_enable)
         self.cfg.next_level_lookback_mult = _env_float("BREAKDOWN_NEXT_LEVEL_LOOKBACK_MULT", self.cfg.next_level_lookback_mult)
         self.cfg.next_level_buffer_atr = _env_float("BREAKDOWN_NEXT_LEVEL_BUFFER_ATR", self.cfg.next_level_buffer_atr)
@@ -466,6 +472,8 @@ class AltInplayBreakdownV1Strategy:
             tp=tp2,
             tps=[tp1, tp2],
             tp_fracs=[tp1_frac, max(0.0, 1.0 - tp1_frac)],
+            be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
+            be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
             time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
             reason=f"{reason}+level_tp" if level_tp_applied else reason,
         )

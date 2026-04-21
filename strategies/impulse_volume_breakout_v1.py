@@ -134,6 +134,11 @@ class ImpulseVolumeBreakoutV1Config:
     macro_macd_fast: int = 12
     macro_macd_slow: int = 26
     macro_macd_signal: int = 9
+    # Breakeven protection — move SL to entry+lock after reaching be_trigger_rr.
+    # Default: arm BE at 1R, lock at +0.1R (small profit cushion).
+    # Set be_trigger_rr=0 to disable (old behaviour).
+    be_trigger_rr: float = 1.0        # arm BE when price moves +1R in our direction
+    be_lock_rr: float = 0.1           # lock SL at entry + 0.1R (not at exact entry)
 
 
 class ImpulseVolumeBreakoutV1Strategy:
@@ -184,6 +189,8 @@ class ImpulseVolumeBreakoutV1Strategy:
         self.cfg.macro_macd_fast = _env_int("IVB1_MACRO_MACD_FAST", self.cfg.macro_macd_fast)
         self.cfg.macro_macd_slow = _env_int("IVB1_MACRO_MACD_SLOW", self.cfg.macro_macd_slow)
         self.cfg.macro_macd_signal = _env_int("IVB1_MACRO_MACD_SIGNAL", self.cfg.macro_macd_signal)
+        self.cfg.be_trigger_rr = _env_float("IVB1_BE_TRIGGER_RR", self.cfg.be_trigger_rr)
+        self.cfg.be_lock_rr = _env_float("IVB1_BE_LOCK_RR", self.cfg.be_lock_rr)
 
         self._allow = _env_csv_set("IVB1_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set("IVB1_SYMBOL_DENYLIST")
@@ -410,6 +417,8 @@ class ImpulseVolumeBreakoutV1Strategy:
                         trailing_atr_mult=self.cfg.trail_atr_mult,
                         trailing_atr_period=self.cfg.atr_period,
                         trail_activate_rr=self.cfg.trail_activate_rr,
+                        be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
+                        be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
                         time_stop_bars=self.cfg.time_stop_bars_5m,
                         reason="impulse_retrace_long",
                     )

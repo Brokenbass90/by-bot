@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "profile_version": "2026-04-04-v3-new-strategies",
-  "updated_utc": "2026-04-04T00:00:00Z",
+  "profile_version": "2026-04-20-v4-sob1",
+  "updated_utc": "2026-04-20T00:00:00Z",
   "profiles": [
     {
       "profile_id": "breakout_bull_core",
@@ -450,6 +450,26 @@
       "default": true,
       "active_regimes": ["*"],
       "fixed_symbols": ["BTCUSDT", "ETHUSDT"]
+    },
+
+    {
+      "profile_id": "sob1_all_regimes",
+      "env_key": "SOB1_SYMBOL_ALLOWLIST",
+      "default": true,
+      "active_regimes": ["*"],
+      "strategy_tags": ["session_open_breakout_v1"],
+      "fallback_mode": "anchor_only",
+      "min_turnover": 50000000.0,
+      "min_atr_pct": 0.25,
+      "max_atr_pct": 3.00,
+      "min_listing_days": 90,
+      "top_n": 6,
+      "bt_min_trades": 3,
+      "bt_min_net": 0.0,
+      "bt_min_pf": 1.0,
+      "bt_require_history": true,
+      "anchor_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT"],
+      "_note": "Session opens work in all regimes; disabled via ENABLE_SOB1_TRADING=0 until WF-22 passes"
     }
   ]
 }

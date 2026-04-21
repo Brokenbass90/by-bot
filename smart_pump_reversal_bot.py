@@ -50,6 +50,7 @@ from strategies.micro_scalper_live import MicroScalperLiveEngine
 from strategies.support_reclaim_live import SupportReclaimLiveEngine
 from strategies.impulse_volume_breakout_v1 import ImpulseVolumeBreakoutV1Strategy
 from strategies.elder_triple_screen_v2 import ElderTripleScreenV2Strategy
+from strategies.session_open_breakout_v1 import SessionOpenBreakoutV1
 from trade_reporting import generate_report, since_days
 
 from sr_range import RangeRegistry, RangeScanner
@@ -750,6 +751,23 @@ ELDER_SYMBOL_ALLOWLIST: set[str] = {
 ELDER_ENGINE: dict[str, ElderTripleScreenV2Strategy] | None = {}
 _ELDER_LAST_TRY: dict[str, float] = {}
 
+# ===== SESSION OPEN BREAKOUT V1 (live) =====
+# Disabled by default until WF-22 walk-forward validation passes on server.
+# Enable via: ENABLE_SOB1_TRADING=1 (after WF-22 shows pass_ratio >= 0.55)
+ENABLE_SOB1_TRADING = os.getenv("ENABLE_SOB1_TRADING", "0").strip() == "1"
+SOB1_TRY_EVERY_SEC = int(os.getenv("SOB1_TRY_EVERY_SEC", "60"))
+SOB1_RISK_MULT = max(0.05, float(os.getenv("SOB1_RISK_MULT", "0.5") or "0.5"))
+SOB1_ALLOW_MINQTY_FALLBACK = _env_bool("SOB1_ALLOW_MINQTY_FALLBACK", True)
+SOB1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("SOB1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
+SOB1_MAX_OPEN_TRADES = int(os.getenv("SOB1_MAX_OPEN_TRADES", "1"))
+SOB1_SYMBOL_ALLOWLIST: set = {
+    s.strip().upper()
+    for s in str(os.getenv("SOB1_SYMBOL_ALLOWLIST", "BTCUSDT,ETHUSDT,SOLUSDT")).split(",")
+    if s.strip()
+}
+SOB1_ENGINE: dict = {}
+_SOB1_LAST_TRY: dict = {}
+
 # ===== MICRO SCALPER (live) =====
 ENABLE_MICRO_SCALPER_TRADING = os.getenv("ENABLE_MICRO_SCALPER_TRADING", "0").strip() == "1"
 MICRO_SCALPER_TRY_EVERY_SEC = int(os.getenv("MICRO_SCALPER_TRY_EVERY_SEC", "30"))
@@ -1081,8 +1099,26 @@ def log_bounce_debug(row: dict):
 
 # =========================== ПОРТФЕЛЬНЫЕ ЛИМИТЫ ===========================
 MAX_POSITIONS = 1
-DAILY_LOSS_LIMIT_PCT = 2.0      
+DAILY_LOSS_LIMIT_PCT = 2.0
 MAX_DRAWDOWN_PCT = 5.0           # от стартового equity бота
+
+# ── Dead-zone time filter ─────────────────────────────────────────────────────
+# Blocks ALL new entries during low-liquidity hours (default: 00:00-02:00 UTC).
+# Sunday open (00:00 UTC) and early Asia are historically noisy and thin.
+# Override via: NO_ENTRY_HOURS_UTC=0,1,2  (comma-separated 24h UTC hours).
+# Set to empty string to disable:  NO_ENTRY_HOURS_UTC=
+_NO_ENTRY_HOURS_RAW = os.getenv("NO_ENTRY_HOURS_UTC", "0,1,2")
+NO_ENTRY_HOURS_UTC: frozenset = frozenset(
+    int(h.strip()) for h in _NO_ENTRY_HOURS_RAW.split(",")
+    if h.strip().isdigit()
+)
+
+# ── Same-direction correlation cap ───────────────────────────────────────────
+# Blocks new entries when we already have N+ open positions in the same side.
+# Prevents over-betting on correlated crypto moves (e.g. 3× short BTC+ETH+SOL).
+# Default 0 = disabled (legacy behaviour).
+# Recommended: MAX_SAME_DIRECTION_POSITIONS=2
+MAX_SAME_DIRECTION_POSITIONS: int = int(os.getenv("MAX_SAME_DIRECTION_POSITIONS", "0") or "0")
 PORTFOLIO_STATE = {
     "start_equity": None,
     "day_equity_start": None,
@@ -7071,7 +7107,14 @@ def portfolio_init_if_needed():
         PORTFOLIO_STATE["daily_pnl_usd"] = 0.0
         PORTFOLIO_STATE["disabled"] = False
 
-def portfolio_can_open() -> bool:
+def portfolio_can_open(side: str = "") -> bool:
+    """Return True when a new entry is allowed.
+
+    Args:
+        side: Optional exchange side ("Buy" or "Sell").  When supplied, the
+              same-direction correlation cap (MAX_SAME_DIRECTION_POSITIONS) is
+              also checked.  Pass empty string to skip that check (legacy).
+    """
     portfolio_init_if_needed()
     if ALLOCATOR_HARD_BLOCK_NEW_ENTRIES:
         return False
@@ -7081,9 +7124,22 @@ def portfolio_can_open() -> bool:
         return False
     if PORTFOLIO_STATE["disabled"]:
         return False
+    # Dead-zone time filter: block entries during thin-liquidity hours.
+    if NO_ENTRY_HOURS_UTC and time.gmtime().tm_hour in NO_ENTRY_HOURS_UTC:
+        return False
     open_pos = len(TRADES)
     if open_pos >= MAX_POSITIONS:
         return False
+    # Same-direction correlation cap: prevent stacking correlated trades.
+    if side and MAX_SAME_DIRECTION_POSITIONS > 0:
+        same = sum(
+            1 for tr in TRADES.values()
+            if str(getattr(tr, "side", "")).strip().lower() == side.strip().lower()
+            and str(getattr(tr, "status", "")).upper()
+            not in {"CLOSED", "FAILED", "CANCELLED", "ERROR"}
+        )
+        if same >= MAX_SAME_DIRECTION_POSITIONS:
+            return False
     eq_start = PORTFOLIO_STATE["start_equity"]
     eq_day = PORTFOLIO_STATE["day_equity_start"]
     cur_eq = _get_effective_equity()
@@ -7100,6 +7156,25 @@ def portfolio_can_open() -> bool:
     except Exception:
         pass
     return True
+
+
+def portfolio_direction_allowed(side: str) -> bool:
+    """Return False when the same-direction cap would be breached.
+
+    Args:
+        side: "Buy" or "Sell" (exchange side string).
+
+    Uses MAX_SAME_DIRECTION_POSITIONS (0 = disabled).
+    """
+    cap = MAX_SAME_DIRECTION_POSITIONS
+    if cap <= 0:
+        return True
+    count = sum(
+        1 for tr in TRADES.values()
+        if str(getattr(tr, "side", "")).strip().lower() == side.strip().lower()
+        and str(getattr(tr, "status", "")).upper() not in {"CLOSED", "FAILED", "CANCELLED", "ERROR"}
+    )
+    return count < cap
 
 
 def portfolio_cb_risk_mult() -> float:
@@ -7782,6 +7857,9 @@ async def try_inplay_entry_async(symbol: str, price: float):
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
+    # Direction correlation cap: re-check now that we know the side.
+    if not portfolio_can_open(side):
+        return
     entry = float(sig.entry)
     tp = float(sig.tp)
     sl = float(sig.sl)
@@ -9486,6 +9564,10 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
+    # Direction correlation cap: re-check now that we know the side.
+    if not portfolio_can_open(side):
+        _diag_inc("breakdown_skip_direction_cap")
+        return
     entry = float(sig.entry)
     sl = float(sig.sl)
     tp = float(sig.tp)
@@ -9895,6 +9977,10 @@ async def try_ivb1_entry_async(symbol: str, price: float):
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
+    # Direction correlation cap: re-check now that we know the side.
+    if not portfolio_can_open(side):
+        _diag_inc("ivb1_skip_direction_cap")
+        return
     entry = float(sig.entry)
     sl = float(sig.sl)
     tp = float(sig.tp)
@@ -10053,6 +10139,10 @@ async def try_elder_entry_async(symbol: str, price: float):
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
+    # Direction correlation cap: re-check now that we know the side.
+    if not portfolio_can_open(side):
+        _diag_inc("elder_skip_direction_cap")
+        return
     entry = float(sig.entry)
     sl = float(sig.sl)
     tp = float(sig.tp)
@@ -10159,6 +10249,165 @@ async def try_elder_entry_async(symbol: str, price: float):
             f"notional≈{notional_real:.2f}$ qty≈{q}\n"
             f"reason={sig.reason}"
         )
+
+
+class _SOB1Store:
+    """Minimal store that SessionOpenBreakoutV1 expects for fetch_klines."""
+    def __init__(self, symbol: str):
+        self.symbol = symbol
+    def fetch_klines(self, symbol: str, interval: str, limit: int):
+        return fetch_klines(symbol, interval, limit)
+
+
+async def try_sob1_entry_async(symbol: str, price: float):
+    """Try Session Open Breakout v1 entry for a symbol.
+
+    Disabled by default (ENABLE_SOB1_TRADING=0) — enable only after
+    WF-22 walk-forward validation passes (pass_ratio >= 0.55, avg_pf >= 1.20).
+    """
+    if not ENABLE_SOB1_TRADING:
+        return
+    if not TRADE_ON or DRY_RUN:
+        return
+    if TRADE_CLIENT is None:
+        return
+    if SOB1_SYMBOL_ALLOWLIST and symbol not in SOB1_SYMBOL_ALLOWLIST:
+        return
+    if get_trade("Bybit", symbol) is not None:
+        return
+    if SOB1_MAX_OPEN_TRADES > 0:
+        open_sob1 = sum(
+            1 for tr in TRADES.values()
+            if getattr(tr, "strategy", "") == "session_open_breakout_v1"
+            and str(getattr(tr, "status", "")).upper() not in {"CLOSED", "ERROR"}
+        )
+        if open_sob1 >= SOB1_MAX_OPEN_TRADES:
+            _diag_inc("sob1_skip_max_open")
+            return
+    if not portfolio_can_open():
+        _diag_inc("sob1_skip_portfolio")
+        return
+
+    now = now_s()
+    last = float(_SOB1_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < SOB1_TRY_EVERY_SEC:
+        return
+    _SOB1_LAST_TRY[symbol] = now
+    _diag_inc("sob1_try")
+
+    if symbol not in SOB1_ENGINE:
+        SOB1_ENGINE[symbol] = SessionOpenBreakoutV1()
+    strat = SOB1_ENGINE[symbol]
+    store = _SOB1Store(symbol)
+
+    try:
+        sig = strat.maybe_signal(store, int(now * 1000), price)
+    except Exception as e:
+        log_error(f"sob1 signal error {symbol}: {e}")
+        return
+    if not sig:
+        _diag_inc("sob1_no_signal")
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    # Direction correlation cap.
+    if not portfolio_can_open(side):
+        _diag_inc("sob1_skip_direction_cap")
+        return
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=SOB1_RISK_MULT)
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
+    if qty_floor <= 0 and SOB1_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=entry,
+            stop_pct=stop_pct,
+            risk_mult=SOB1_RISK_MULT,
+            max_mult=SOB1_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = fallback_reason
+    if qty_floor <= 0:
+        tg_skip_throttled("sob1", symbol, f"minqty:{reason}", f"🟡 SOB1 SKIP {symbol}: {reason}")
+        return
+
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:sob1:{symbol}",
+            f"🟡 SOB1 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
+
+    if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+        return
+    order_send_ts = now_s()
+    submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+    order_ack_ts = now_s()
+    if not submitted:
+        _clear_entry_slot(symbol)
+        return
+    oid, q = submitted
+
+    tr = TradeState(
+        symbol=symbol,
+        side=side,
+        qty=q,
+        entry_price_req=float(entry),
+        entry_ts=now,
+    )
+    tr.entry_order_id = oid
+    tr.status = "PENDING_ENTRY"
+    tr.strategy = "session_open_breakout_v1"
+    tr.signal_reason = str(getattr(sig, "reason", "") or "")
+    tr.avg = float(entry)
+    tr.entry_price = float(entry)
+    tr.entry_notional_usd = float(notional_real)
+    tr.tp_price = float(tp_r) if tp_r is not None else None
+    tr.sl_price = float(sl_r)
+    tr.order_send_ts = int(order_send_ts)
+    tr.order_ack_ts = int(order_ack_ts)
+    apply_runner_state(tr, sig, q, use_runner=use_runner)
+    TRADES[("Bybit", symbol)] = tr
+
+    ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+    tr.tpsl_on_exchange = bool(ok)
+    tr.tpsl_last_set_ts = now_s()
+    if ok:
+        tr.tpsl_manual_lock = False
+
+    _append_live_trade_event(
+        "order_submitted",
+        symbol,
+        tr,
+        request_price=float(entry),
+        request_tp=float(tp_r) if tp_r is not None else None,
+        request_sl=float(sl_r) if sl_r is not None else None,
+        signal_reason=str(getattr(sig, "reason", "") or ""),
+    )
+
+    tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+    tg_trade(
+        f"🌅 SOB1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+        f"reason={sig.reason}"
+    )
 
 
 async def try_ts132_entry_async(symbol: str, price: float):
@@ -10783,6 +11032,16 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     asyncio.create_task(try_elder_entry_async(sym, p1))
                 except Exception as _e:
                     log_error(f"try_elder_entry schedule fail {sym}: {_e}")
+
+        # ===== SESSION OPEN BREAKOUT V1 ENTRY =====
+        if ENABLE_SOB1_TRADING and (not SOB1_SYMBOL_ALLOWLIST or sym in SOB1_SYMBOL_ALLOWLIST) and _health_gate.allow_entry("session_open_breakout_v1", sym):
+            last = float(_SOB1_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= SOB1_TRY_EVERY_SEC:
+                try:
+                    _diag_inc("sob1_sched")
+                    asyncio.create_task(try_sob1_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_sob1_entry schedule fail {sym}: {_e}")
 
         # ===== MICRO SCALPER ENTRY =====
         if ENABLE_MICRO_SCALPER_TRADING and sym in MICRO_SCALPER_SYMBOL_ALLOWLIST and _health_gate.allow_entry("micro_scalper_v1", sym):

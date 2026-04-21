@@ -223,6 +223,11 @@ class ElderTripleScreenV2Config:
     vol_confirm: bool = False          # ETS2_VOL_CONFIRM=1 to enable
     vol_confirm_mult: float = 1.3      # bar volume must be >= vol_confirm_mult × avg20
     vol_confirm_bars: int = 20         # lookback for average volume
+    # Breakeven protection — arm BE at TP1 hit (≈1R), lock small profit cushion.
+    # Prevents TP1-then-full-stop-out losses; after TP1 the runner is free.
+    # Set be_trigger_rr=0 to disable.
+    be_trigger_rr: float = 1.0         # arm BE when +1R reached
+    be_lock_rr: float = 0.1            # lock SL at entry + 0.1R
 
 
 class ElderTripleScreenV2Strategy:
@@ -278,6 +283,8 @@ class ElderTripleScreenV2Strategy:
         self.cfg.vol_confirm = _env_bool("ETS2_VOL_CONFIRM", self.cfg.vol_confirm)
         self.cfg.vol_confirm_mult = _env_float("ETS2_VOL_CONFIRM_MULT", self.cfg.vol_confirm_mult)
         self.cfg.vol_confirm_bars = _env_int("ETS2_VOL_CONFIRM_BARS", self.cfg.vol_confirm_bars)
+        self.cfg.be_trigger_rr = _env_float("ETS2_BE_TRIGGER_RR", self.cfg.be_trigger_rr)
+        self.cfg.be_lock_rr = _env_float("ETS2_BE_LOCK_RR", self.cfg.be_lock_rr)
 
         self._allow = _env_csv_set("ETS2_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set("ETS2_SYMBOL_DENYLIST")
@@ -608,6 +615,8 @@ class ElderTripleScreenV2Strategy:
             trailing_atr_mult=max(0.0, float(self.cfg.trail_atr_mult)),
             trailing_atr_period=14,
             trail_activate_rr=max(0.0, float(self.cfg.trail_activate_rr)),
+            be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
+            be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
             time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
             reason=f"ets2_{trend}_{side}",
         )

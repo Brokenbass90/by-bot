@@ -38,7 +38,10 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Optional, List
 
-from backtest.bt_types import TradeSignal
+try:
+    from strategies.signals import TradeSignal
+except ImportError:
+    from backtest.bt_types import TradeSignal  # type: ignore[no-redef]
 
 
 def _env_bool(name: str, default: bool) -> bool:
