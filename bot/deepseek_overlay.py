@@ -30,6 +30,7 @@ class DeepSeekConfig:
     shadow_enabled: bool
     shadow_log_path: Path
     max_history_messages: int
+    history_ttl_sec: int
     max_answer_chars: int
     completion_max_tokens: int
     continuation_max_parts: int
@@ -52,6 +53,7 @@ def _load_config() -> DeepSeekConfig:
         shadow_enabled=_env_bool("DEEPSEEK_SHADOW_ENABLE", True),
         shadow_log_path=Path(str(os.getenv("DEEPSEEK_SHADOW_LOG_PATH", "/root/by-bot/data/deepseek_shadow.json") or "/root/by-bot/data/deepseek_shadow.json")),
         max_history_messages=max(0, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "16") or 16)),
+        history_ttl_sec=max(0, int(os.getenv("DEEPSEEK_HISTORY_TTL_SEC", "21600") or 21600)),
         max_answer_chars=max(600, int(os.getenv("DEEPSEEK_MAX_ANSWER_CHARS", "3500") or 3500)),
         completion_max_tokens=max(200, int(os.getenv("DEEPSEEK_COMPLETION_MAX_TOKENS", "700") or 700)),
         continuation_max_parts=max(1, int(os.getenv("DEEPSEEK_CONTINUATION_MAX_PARTS", "4") or 4)),
@@ -107,6 +109,8 @@ class DeepSeekOverlay:
         try:
             with path.open("r", encoding="utf-8") as f:
                 data = json.load(f) or []
+            now = time.time()
+            file_recent = (now - path.stat().st_mtime) <= float(self.cfg.history_ttl_sec or 0) if self.cfg.history_ttl_sec > 0 else True
             user_msgs: list[dict[str, str]] = []
             last_assistant: dict[str, str] | None = None
             for item in data:
@@ -114,10 +118,17 @@ class DeepSeekOverlay:
                     continue
                 role = str(item.get("role", "") or "").strip()
                 content = str(item.get("content", "") or "").strip()
+                ts = int(item.get("ts") or 0)
+                if self.cfg.history_ttl_sec > 0:
+                    if ts:
+                        if now - ts > float(self.cfg.history_ttl_sec):
+                            continue
+                    elif not file_recent:
+                        continue
                 if role == "user" and content:
-                    user_msgs.append({"role": role, "content": content})
+                    user_msgs.append({"role": role, "content": content, "ts": ts or int(now)})
                 elif role == "assistant" and content:
-                    last_assistant = {"role": role, "content": content}
+                    last_assistant = {"role": role, "content": content, "ts": ts or int(now)}
             out = user_msgs[-self.cfg.max_history_messages :]
             if last_assistant:
                 out.append(last_assistant)
@@ -127,9 +138,23 @@ class DeepSeekOverlay:
 
     def _save_history(self, messages: list[dict[str, str]]) -> None:
         try:
+            now = int(time.time())
             self.cfg.history_path.parent.mkdir(parents=True, exist_ok=True)
+            cleaned: list[dict[str, Any]] = []
+            for item in messages[-self.cfg.max_history_messages :]:
+                role = str(item.get("role", "") or "").strip()
+                content = str(item.get("content", "") or "").strip()
+                if not role or not content:
+                    continue
+                cleaned.append(
+                    {
+                        "role": role,
+                        "content": content,
+                        "ts": int(item.get("ts") or now),
+                    }
+                )
             with self.cfg.history_path.open("w", encoding="utf-8") as f:
-                json.dump(messages[-self.cfg.max_history_messages :], f, ensure_ascii=False, indent=2)
+                json.dump(cleaned[-self.cfg.max_history_messages :], f, ensure_ascii=False, indent=2)
         except Exception:
             pass
 
@@ -394,6 +419,10 @@ class DeepSeekOverlay:
             "Не говори, что стратегия активна в live, если она только в backtest/research.\n"
             "Если видишь stale контекст, прямо скажи, что он устарел, и опирайся на актуальный snapshot.\n"
             "Если данных не хватает, скажи честно, чего именно не хватает.\n\n"
+            "== ПРАВИЛА ДЛЯ ДЕЙСТВИЙ ==\n"
+            "Если предлагаешь действие, сначала объясни его человеческим языком: что именно не так, на каких фактах это основано, какой риск и какие предусловия.\n"
+            "Не предлагай reload/restart при открытых сделках, кроме явной аварии с доказательством из snapshot.\n"
+            "Если цифры в истории и в snapshot расходятся — назови историю устаревшей и не используй её как доказательство.\n\n"
             "== КАК ПОМОГАТЬ ==\n"
             "Можно обсуждать код, стратегии, риск-менеджмент, исследовательские планы, качество live-торговли,\n"
             "health-gate, allocator, symbol router и server operations.\n"
@@ -458,8 +487,8 @@ class DeepSeekOverlay:
                 )
             history_answer = answer[: self.cfg.max_answer_chars].strip()
             history.extend([
-                {"role": "user", "content": q},
-                {"role": "assistant", "content": history_answer},
+                {"role": "user", "content": q, "ts": int(time.time())},
+                {"role": "assistant", "content": history_answer, "ts": int(time.time())},
             ])
             self._save_history(history)
             self.append_shadow_recommendation(

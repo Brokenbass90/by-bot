@@ -158,6 +158,62 @@ Immediate priority is no longer “add more sleeves”, but repair and revalidat
    - reject/archive
 5. Only after that matrix exists, open the next stitched candidate core with the best surviving sleeves (`ATT1`, likely `ASB1/HZBO1/breakout/breakdown_v2/micro_scalp` depending on evidence).
 
+### Truth Hardening
+
+These are now first-class platform tasks, not “nice to have” cleanup:
+
+1. AI/operator freshness wall.
+   - Shared AI chat history must have a TTL and should never outrank current runtime files.
+   - Snapshot/runtime ages must be visible in the injected context for both Telegram and web AI.
+   - Old assistant claims must not be reused as current evidence.
+
+2. One alert feed, two surfaces.
+   - Telegram and web should read the same alert/event ledger instead of one showing state and the other showing stale chat leftovers.
+   - Web needs an alert inbox/history so “bot said X in Telegram” can be inspected in the dashboard.
+
+3. Evidence-first control suggestions.
+   - Any AI-proposed action (`enable_sleeve`, `set_safe_mode`, `reload_config`, risk changes) must include:
+     - human explanation
+     - current evidence
+     - risk level
+     - preconditions
+   - `reload/restart` should be blocked when open trades exist unless there is an active emergency backed by current runtime evidence.
+
+4. Control-plane freshness must be self-healing.
+   - If `regime`, `allocator`, or `operator snapshot` age past threshold, watchdog should rebuild them before sending stale/degraded alerts.
+   - Stale-file alerts are useful, but recurring stale alerts without a rebuild attempt are not acceptable.
+
+### Strategy Adaptation
+
+These belong to the next strategy-engine cycle and should not be forgotten:
+
+1. Quiet-market mode.
+   - Separate parameter regime for low-volatility / low-trend conditions.
+   - Not just “looser everything”, but explicit logic for when the bot should seek frequency instead of trend continuation.
+
+2. Adaptive cooldown.
+   - Cooldown should respond to signal quality / volatility / recent duplicate failures instead of staying fixed.
+   - Goal: reduce dead time in quiet markets without turning the bot into a churn machine.
+
+3. Weak-market regime policy.
+   - Explicit weak/quiet market layer in the control-plane, not only `bull/bear/chop`.
+   - This should drive sleeve preferences and parameter overlays instead of manual operator guesswork.
+
+### Validation Policy
+
+To balance speed with honesty, use two gates instead of one:
+
+1. Canary gate.
+   - `360d confirm`
+   - recent `WF-22`
+   - recent `~2 year` regime coverage (`2025 + 2026 YTD` or equivalent recent windows)
+   - enough to move a sleeve into low-risk canary/live testing
+
+2. Standard gate.
+   - `2022 / 2023 / 2024 / 2025 / 2026 YTD`
+   - `WF-22`
+   - needed before calling a sleeve “fully validated” or using it as a template for auto-promotion
+
 ## Source of Truth
 
 Only the following result classes may drive decisions:

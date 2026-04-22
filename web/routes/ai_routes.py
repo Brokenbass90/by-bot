@@ -40,6 +40,7 @@ _SHARED_HISTORY_PATH = Path(
     str(os.getenv("DEEPSEEK_CHAT_STATE_PATH", _ROOT / "runtime" / "web_ai_history.json"))
 )
 _HISTORY_MAX = max(1, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "20") or 20))
+_HISTORY_TTL_SEC = max(0, int(os.getenv("DEEPSEEK_HISTORY_TTL_SEC", "21600") or 21600))
 _CHAT_RATE: Dict[str, List[float]] = {}  # email → list of timestamps
 _MAX_RPM = 20  # requests per minute per user
 
@@ -84,6 +85,8 @@ def _load_shared_history() -> List[Dict[str, str]]:
         payload = payload.get("messages", [])
     if not isinstance(payload, list):
         return []
+    now = time.time()
+    file_recent = (now - _SHARED_HISTORY_PATH.stat().st_mtime) <= float(_HISTORY_TTL_SEC or 0) if _HISTORY_TTL_SEC > 0 else True
     user_msgs: List[Dict[str, str]] = []
     last_assistant: Optional[Dict[str, str]] = None
     for item in payload[-_HISTORY_MAX:]:
@@ -91,10 +94,17 @@ def _load_shared_history() -> List[Dict[str, str]]:
             continue
         role = str(item.get("role") or "").strip().lower()
         content = str(item.get("content") or "").strip()
+        ts = int(item.get("ts") or 0)
+        if _HISTORY_TTL_SEC > 0:
+            if ts:
+                if now - ts > float(_HISTORY_TTL_SEC):
+                    continue
+            elif not file_recent:
+                continue
         if role == "user" and content:
-            user_msgs.append({"role": role, "content": content})
+            user_msgs.append({"role": role, "content": content, "ts": ts or int(now)})
         elif role in {"assistant", "system"} and content:
-            last_assistant = {"role": role, "content": content}
+            last_assistant = {"role": role, "content": content, "ts": ts or int(now)}
     result = user_msgs[-_HISTORY_MAX:]
     if last_assistant:
         result.append(last_assistant)
@@ -103,11 +113,12 @@ def _load_shared_history() -> List[Dict[str, str]]:
 
 def _save_shared_history(messages: List[Dict[str, str]]) -> None:
     cleaned = []
+    now = int(time.time())
     for item in messages[-_HISTORY_MAX:]:
         role = str(item.get("role") or "").strip().lower()
         content = str(item.get("content") or "").strip()
         if role in {"user", "assistant", "system"} and content:
-            cleaned.append({"role": role, "content": content})
+            cleaned.append({"role": role, "content": content, "ts": int(item.get("ts") or now)})
     _SHARED_HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
     _SHARED_HISTORY_PATH.write_text(json.dumps(cleaned, ensure_ascii=False, indent=2))
 
@@ -115,6 +126,7 @@ def _save_shared_history(messages: List[Dict[str, str]]) -> None:
 def _merge_history(current: List[Dict[str, str]]) -> List[Dict[str, str]]:
     shared = _load_shared_history()
     merged = list(shared)
+    now = int(time.time())
     for item in current:
         role = str(item.get("role") or "").strip().lower()
         content = str(item.get("content") or "").strip()
@@ -122,7 +134,7 @@ def _merge_history(current: List[Dict[str, str]]) -> List[Dict[str, str]]:
             continue
         if merged and merged[-1].get("role") == role and merged[-1].get("content") == content:
             continue
-        merged.append({"role": role, "content": content})
+        merged.append({"role": role, "content": content, "ts": int(item.get("ts") or now)})
     return merged[-_HISTORY_MAX:]
 
 
@@ -148,22 +160,28 @@ def _build_context() -> str:
     # Bot liveness
     hb = _json(_rt("bot_heartbeat.json"))
     hb_path = _rt("bot_heartbeat.json")
-    alive = hb_path.exists() and (time.time() - hb_path.stat().st_mtime) < 120
-    parts.append(f"BOT: {'ALIVE' if alive else 'OFFLINE'} | open_trades={hb.get('open_trades',0) if hb else 0}\n")
+    hb_age = int(time.time() - hb_path.stat().st_mtime) if hb_path.exists() else -1
+    alive = hb_path.exists() and hb_age < 120
+    parts.append(f"BOT: {'ALIVE' if alive else 'OFFLINE'} | heartbeat_age_sec={hb_age} | open_trades={hb.get('open_trades',0) if hb else 0}\n")
 
     # Regime
     reg = _json(_rt("regime", "orchestrator_state.json")) or _json(_rt("regime.json"))
     if reg:
+        reg_state_path = _rt("regime", "orchestrator_state.json")
+        reg_age = int(time.time() - reg_state_path.stat().st_mtime) if reg_state_path.exists() else -1
         parts.append(
             f"REGIME: {reg.get('regime','?')} conf={reg.get('confidence','?')} "
             f"risk_mult={reg.get('global_risk_mult','?')} "
-            f"longs={'Y' if reg.get('allow_longs') else 'N'} shorts={'Y' if reg.get('allow_shorts') else 'N'}\n"
+            f"longs={'Y' if reg.get('allow_longs') else 'N'} shorts={'Y' if reg.get('allow_shorts') else 'N'} "
+            f"age_sec={reg_age}\n"
         )
 
     # Allocator sleeves: always prefer runtime control-plane truth over static policy.
     allocator = _json(_rt("control_plane", "portfolio_allocator_state.json")) or {}
     sleeve_states = dict(allocator.get("sleeves") or {})
     if sleeve_states:
+        alloc_state_path = _rt("control_plane", "portfolio_allocator_state.json")
+        alloc_age = int(time.time() - alloc_state_path.stat().st_mtime) if alloc_state_path.exists() else -1
         active = sorted(
             [
                 str(name)
@@ -184,7 +202,8 @@ def _build_context() -> str:
         )
         parts.append(
             f"ALLOCATOR: status={allocator.get('status','?')} "
-            f"global_risk={allocator.get('allocator_global_risk_mult', allocator.get('global_risk_mult','?'))}\n"
+            f"global_risk={allocator.get('allocator_global_risk_mult', allocator.get('global_risk_mult','?'))} "
+            f"age_sec={alloc_age}\n"
         )
         parts.append(f"SLEEVES ACTIVE: {', '.join(active) or 'none'}\n")
         parts.append(f"SLEEVES OFF: {', '.join(inactive[:8]) or 'none'}\n")
@@ -240,7 +259,8 @@ def _build_context() -> str:
     parts.append(
         "\n=== AVAILABLE CONTROL COMMANDS ===\n"
         "You can suggest control actions. The user will confirm before execution.\n"
-        "To suggest a command, include a JSON block: ```command\n{\"action\": \"...\", \"params\": {...}}\n```\n"
+        "If you suggest a command, first explain in plain language what is wrong, why the command helps, what evidence supports it, and what the risk/preconditions are.\n"
+        "To suggest a command, include a JSON block: ```command\n{\"action\": \"...\", \"params\": {...}, \"evidence\": [\"...\"], \"risk\": \"low|medium|high\", \"preconditions\": [\"...\"]}\n```\n"
         "Available actions:\n"
         "  enable_sleeve   {\"sleeve\": \"asb1\"}          — set sleeve multipliers active\n"
         "  disable_sleeve  {\"sleeve\": \"ivb1\"}          — zero out sleeve risk mults\n"
@@ -309,6 +329,8 @@ def _audit(email: str, action: str, params: dict, result: str) -> None:
 
 def execute_command(action: str, params: dict, email: str) -> str:
     """Execute a confirmed control command. Returns result message."""
+    hb = _json(_rt("bot_heartbeat.json")) or {}
+    open_trades = int(hb.get("open_trades", 0) or 0)
     if action == "enable_sleeve":
         sleeve = params.get("sleeve", "").lower()
         if sleeve not in _VALID_SLEEVE_NAMES:
@@ -340,6 +362,9 @@ def execute_command(action: str, params: dict, email: str) -> str:
         return "✓ Safe mode cleared — risk back to normal."
 
     elif action == "reload_config":
+        if open_trades > 0:
+            _audit(email, action, params, f"blocked open_trades={open_trades}")
+            return f"Reload blocked: bot has {open_trades} open trade(s). Close or reconcile them first."
         # Send SIGHUP to bot process if PID file exists
         pid_path = _rt("bot.pid")
         if pid_path.exists():
@@ -438,9 +463,10 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         "You help the operator understand performance, diagnose issues, and manage the system. "
         "You have access to live bot data (injected below). "
         "Be concise and precise. When you spot issues, say so directly. "
-        "When suggesting control commands, emit a ```command JSON block. "
+        "Never treat stale chat memory as a source of truth when current runtime ages disagree. "
+        "When suggesting control commands, explain the issue in human language first, cite current evidence from the injected context, state risk/preconditions, and only then emit a ```command JSON block. "
         "Never suggest actions that could cause significant losses without clear justification. "
-        "Always explain the reason for any control command you suggest.\n\n"
+        "Never suggest reload/restart while open trades exist unless the injected context proves an active emergency.\n\n"
         + _build_context()
     )
     current_messages = [{"role": m.role, "content": m.content} for m in body.messages[-20:]]
