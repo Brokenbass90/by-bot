@@ -594,9 +594,15 @@ def _load_symbol_base(
             last_ts = _row_ts_ms(cand_rows[-1])
             if first_ts <= 0 or last_ts <= 0:
                 continue
+            # Never reuse a cache slice that does not overlap the requested window.
+            # Returning future-only rows here produces an empty filtered set later
+            # and falsely looks like a "0 trades / 0 candles" strategy failure.
             overlap_ms = max(0, min(last_ts, end_ms) - max(first_ts, start_ms))
+            if overlap_ms <= 0:
+                continue
             coverage_ms = max(0, last_ts - first_ts)
-            key = (overlap_ms, coverage_ms, len(cand_rows), cand.stat().st_mtime)
+            contains_full_window = int(first_ts <= start_ms and last_ts >= end_ms)
+            key = (contains_full_window, overlap_ms, coverage_ms, len(cand_rows), cand.stat().st_mtime)
             if best_key is None or key > best_key:
                 best_key = key
                 best_path = cand
