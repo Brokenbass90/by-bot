@@ -27,10 +27,46 @@ _SECRET_KEY = os.getenv("WEB_JWT_SECRET", "change-me-in-production-use-openssl-r
 _ALGORITHM = "HS256"
 _ACCESS_TOKEN_EXPIRE_SECONDS = 8 * 3600   # 8 hours
 _PARTIAL_TOKEN_EXPIRE_SECONDS = 5 * 60    # 5 minutes to complete TOTP
+_DEFAULT_SECRET_MARKERS = {
+    "change-me-in-production-use-openssl-rand-hex-32",
+    "change-me-use-openssl-rand-hex-32",
+    "",
+}
 
 # Default to pbkdf2_sha256 for portability. Keep bcrypt as a legacy verifier
 # so older hashes still work if they already exist in config.
 pwd_context = CryptContext(schemes=["pbkdf2_sha256", "bcrypt"], deprecated="auto")
+
+
+def _looks_like_default_secret(secret: str) -> bool:
+    return secret.strip() in _DEFAULT_SECRET_MARKERS
+
+
+def _default_runtime_root() -> Path:
+    return Path(__file__).parent.parent / "runtime"
+
+
+def _looks_like_local_dev_runtime() -> bool:
+    host = os.getenv("WEB_HOST", "127.0.0.1").strip().lower()
+    dev_mode = os.getenv("WEB_DEV_MODE", "0").strip().lower() in {"1", "true", "yes", "on"}
+    cookie_secure = os.getenv("WEB_COOKIE_SECURE", "0").strip().lower() in {"1", "true", "yes", "on"}
+    runtime_root = Path(os.getenv("WEB_RUNTIME_ROOT", str(_default_runtime_root())))
+    local_host = host in {"127.0.0.1", "localhost", "::1"}
+    return dev_mode or (local_host and not cookie_secure and runtime_root == _default_runtime_root())
+
+
+def enforce_runtime_security() -> None:
+    """Fail fast if web auth is about to run with unsafe production settings."""
+    if _looks_like_local_dev_runtime():
+        return
+    if _looks_like_default_secret(_SECRET_KEY) or len(_SECRET_KEY.strip()) < 32:
+        raise RuntimeError(
+            "WEB_JWT_SECRET is still default/weak. Set a strong secret before starting web outside local dev."
+        )
+    if os.getenv("WEB_COOKIE_SECURE", "0").strip().lower() not in {"1", "true", "yes", "on"}:
+        raise RuntimeError(
+            "WEB_COOKIE_SECURE must be enabled before starting web outside local dev."
+        )
 
 
 # ── config loader ─────────────────────────────────────────────────────────────

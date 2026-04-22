@@ -12,11 +12,12 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from .auth import enforce_runtime_security
 from .routes.auth_routes import router as auth_router
 from .routes.data_routes import router as data_router
 from .routes.ai_routes import router as ai_router
@@ -55,6 +56,23 @@ app.include_router(auth_router)
 app.include_router(data_router)
 app.include_router(ai_router)
 app.include_router(admin_router)
+
+
+@app.on_event("startup")
+async def _startup_security_gate() -> None:
+    enforce_runtime_security()
+
+
+@app.middleware("http")
+async def _security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers.setdefault("X-Frame-Options", "DENY")
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("Referrer-Policy", "no-referrer")
+    response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+    if request.url.path.startswith("/auth") or request.url.path.startswith("/api"):
+        response.headers.setdefault("Cache-Control", "no-store")
+    return response
 
 # ── health check (no auth required) ──────────────────────────────────────────
 
