@@ -110,6 +110,8 @@ _RUNTIME_OVERRIDE_EXACT_KEYS = {
     "RISK_PER_TRADE_PCT",
     "BYBIT_LEVERAGE",
     "MIN_NOTIONAL_USD",
+    "BACKTEST_CACHE_ONLY",
+    "BACKTEST_CACHE_FALLBACK_ENABLE",
 }
 
 
@@ -276,8 +278,8 @@ def _build_window_env(
     env["PORTFOLIO_ALLOCATOR_ENABLE"] = "1"
     env["ALLOCATOR_ENABLE"] = "1"
     env["ALLOCATOR_HARD_BLOCK_NEW_ENTRIES"] = "1" if bool(allocator_state.get("hard_block_new_entries")) else "0"
-    env["BACKTEST_CACHE_ONLY"] = "1"
-    env["BACKTEST_CACHE_FALLBACK_ENABLE"] = "1"
+    env.setdefault("BACKTEST_CACHE_ONLY", "1")
+    env.setdefault("BACKTEST_CACHE_FALLBACK_ENABLE", "1")
     for env_key, info in dict(router_state.get("profiles") or {}).items():
         symbols = [str(sym).strip().upper() for sym in (info.get("symbols") or []) if str(sym).strip()]
         env[str(env_key)] = ",".join(symbols)

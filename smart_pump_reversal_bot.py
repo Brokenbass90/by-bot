@@ -2578,6 +2578,20 @@ def _current_live_candidate_strategy_names() -> list[str]:
 
 
 def _deepseek_snapshot() -> dict[str, Any]:
+    ws_window = dict(WS_TRANSPORT_GUARD.get("last_window") or {})
+    ws_transport = {
+        "guard_active": bool(_ws_transport_guard_active()),
+        "critical_streak": int(WS_TRANSPORT_GUARD.get("critical_streak", 0) or 0),
+        "recovery_streak": int(WS_TRANSPORT_GUARD.get("recovery_streak", 0) or 0),
+        "last_status": str(WS_TRANSPORT_GUARD.get("last_status") or ""),
+        "reason": str(_ws_transport_guard_reason() or ""),
+        "window": {
+            "connect": int(ws_window.get("connect", 0) or 0),
+            "disconnect": int(ws_window.get("disconnect", 0) or 0),
+            "handshake_timeout": int(ws_window.get("handshake_timeout", 0) or 0),
+            "bybit_msgs": int(ws_window.get("bybit_msgs", 0) or 0),
+        },
+    }
     return {
         "ts_utc": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
         "trade_on": bool(TRADE_ON),
@@ -2610,10 +2624,11 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "micro_scalper": bool(ENABLE_MICRO_SCALPER_TRADING),
             "support_reclaim": bool(ENABLE_SUPPORT_RECLAIM_TRADING),
         },
+        "ws_transport": ws_transport,
         "diag": {
-            "ws_connect": int(_diag_get_int("ws_connect")),
-            "ws_disconnect": int(_diag_get_int("ws_disconnect")),
-            "ws_handshake_timeout": int(_diag_get_int("ws_handshake_timeout")),
+            "ws_connect_since_restart": int(_diag_get_int("ws_connect")),
+            "ws_disconnect_since_restart": int(_diag_get_int("ws_disconnect")),
+            "ws_handshake_timeout_since_restart": int(_diag_get_int("ws_handshake_timeout")),
             "breakout_try": int(_diag_get_int("breakout_try")),
             "breakout_entry": int(_diag_get_int("breakout_entry")),
             "breakout_no_signal": int(_diag_get_int("breakout_no_signal")),

@@ -71,6 +71,18 @@ def _load_jsonl_tail(path: Path, limit: int = 12) -> list[dict[str, Any]]:
         return []
 
 
+def _parse_ts_utc(value: Any) -> int:
+    try:
+        raw = str(value or "").strip()
+        if not raw:
+            return 0
+        if raw.endswith("Z"):
+            raw = raw[:-1] + "+00:00"
+        return int(datetime.fromisoformat(raw).timestamp())
+    except Exception:
+        return 0
+
+
 def _load_csv_rows(path: Path) -> list[dict[str, str]]:
     try:
         if not path.exists():
@@ -316,12 +328,22 @@ def _health_block(root: Path) -> Dict[str, Any]:
 
 def _memory_block(root: Path, *, limit: int = 12) -> Dict[str, Any]:
     path = root / "runtime" / "ai_operator" / "memory.jsonl"
-    entries = _load_jsonl_tail(path, limit=limit)
+    raw_entries = _load_jsonl_tail(path, limit=max(limit * 6, limit))
+    ttl_sec = max(0, _safe_int(os.getenv("OPERATOR_MEMORY_TTL_SEC"), 7200))
+    now = int(time.time())
+    entries: list[dict[str, Any]] = []
+    for item in raw_entries:
+        ts = _parse_ts_utc(item.get("ts_utc"))
+        if ttl_sec > 0 and ts > 0 and now - ts > ttl_sec:
+            continue
+        entries.append(item)
+    entries = entries[-limit:]
     return {
         "path": _path_text(path),
         "exists": bool(path.exists()),
         "age_sec": _file_age_sec(path),
         "count": len(entries),
+        "ttl_sec": ttl_sec,
         "entries": entries,
     }
 
