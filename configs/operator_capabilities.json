@@ -16,6 +16,11 @@
       "mode": "read_only",
       "summary": "Read the bounded self-audit report and surface current bug-hunt priorities without changing the server."
     },
+    "read_project_doctor": {
+      "enabled": true,
+      "mode": "read_only",
+      "summary": "Read the structural project-doctor report across runtime, policy, strategy health, research backlog, and repo hygiene."
+    },
     "launch_whitelist_research": {
       "enabled": true,
       "mode": "bounded_exec",
