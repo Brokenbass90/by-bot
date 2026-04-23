@@ -644,7 +644,21 @@ function TradeChartModal({ trade, onClose }) {
   const loadChart = useCallback(() => {
     if (!trade.symbol || !entryTs) { setErr('Missing symbol or timestamp'); return; }
     setLoading(true); setErr(null);
-    api(`/api/trades/chart?symbol=${trade.symbol}&entry_ts=${entryTs}&exit_ts=${exitTs || entryTs + 3600000}&interval=${interval}`)
+    const q = new URLSearchParams({
+      symbol: trade.symbol,
+      entry_ts: String(entryTs),
+      exit_ts: String(exitTs || entryTs + 3600000),
+      interval,
+    });
+    const entryPrice = parseFloat(trade.entry || trade.entry_price);
+    const exitPrice = parseFloat(trade.exit || trade.exit_price);
+    const slPrice = parseFloat(trade.sl || trade.sl_price);
+    const tpPrice = parseFloat(trade.tp || trade.tp_price);
+    if (!isNaN(entryPrice)) q.set('entry_price', String(entryPrice));
+    if (!isNaN(exitPrice)) q.set('exit_price', String(exitPrice));
+    if (!isNaN(slPrice)) q.set('sl_price', String(slPrice));
+    if (!isNaN(tpPrice)) q.set('tp_price', String(tpPrice));
+    api(`/api/trades/chart?${q.toString()}`)
       .then(d => { setChartData(d); setLoading(false); })
       .catch(e => { setErr(e.message || 'Failed'); setLoading(false); });
   }, [trade.symbol, entryTs, exitTs, interval]);
@@ -823,7 +837,27 @@ function TradeChartModal({ trade, onClose }) {
             ? React.createElement('div', { className: 'empty' }, '⚠️ ' + err)
             : (chartData && (!chartData.candles || chartData.candles.length === 0))
               ? React.createElement('div', { className: 'empty' }, '📭 No candle data for this trade window')
-              : React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } })
+              : React.createElement(React.Fragment, null,
+                  chartData && chartData.warning
+                    ? React.createElement('div', {
+                        style: {
+                          position: 'absolute',
+                          left: '12px',
+                          top: '10px',
+                          zIndex: 2,
+                          maxWidth: '620px',
+                          padding: '8px 10px',
+                          borderRadius: '8px',
+                          background: 'rgba(187, 128, 9, .14)',
+                          border: '1px solid rgba(187, 128, 9, .35)',
+                          color: '#d29922',
+                          fontSize: '12px',
+                          lineHeight: '1.35',
+                        }
+                      }, 'Fallback: ' + chartData.warning)
+                    : null,
+                  React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } })
+                )
       ),
       // Interval selector
       React.createElement('div', { className: 'modal-interval-bar' },

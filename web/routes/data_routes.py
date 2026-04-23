@@ -500,6 +500,10 @@ async def trade_chart(
     entry_ts: int,
     exit_ts: int,
     interval: str = Query("5", regex=r"^(1|3|5|15|30|60|120|240|D)$"),
+    entry_price: Optional[float] = None,
+    exit_price: Optional[float] = None,
+    sl_price: Optional[float] = None,
+    tp_price: Optional[float] = None,
     _: str = Depends(require_auth),
 ):
     """Fetch OHLCV candles from Bybit for a ±8h window around a trade.
@@ -564,6 +568,9 @@ async def trade_chart(
         candles = deduped
 
     # ── Fall back to live Bybit API if cache miss ────────────────────────────
+    source = "cache" if candles else ""
+    warning = ""
+
     if not candles:
         BYBIT_URL = "https://api.bybit.com/v5/market/kline"
         params = (
@@ -589,8 +596,54 @@ async def trade_chart(
                         })
                     except (IndexError, ValueError):
                         continue
+                if candles:
+                    source = "bybit"
         except Exception:
             pass  # Network unavailable — return empty candles with no error
+
+    if not candles and entry_price and exit_price:
+        # Honest UI fallback: show the trade path and levels when market candles
+        # are unavailable for old/live-event-only records.
+        lo_candidates = [entry_price, exit_price]
+        hi_candidates = [entry_price, exit_price]
+        if sl_price:
+            lo_candidates.append(sl_price)
+            hi_candidates.append(sl_price)
+        if tp_price:
+            lo_candidates.append(tp_price)
+            hi_candidates.append(tp_price)
+        low = min(lo_candidates)
+        high = max(hi_candidates)
+        pad = max((high - low) * 0.08, abs(entry_price) * 0.0005, 1e-6)
+        mid_ts = max(entry_ts, min(exit_ts, (entry_ts + exit_ts) // 2))
+        candles = [
+            {
+                "time_ms": max(start_ms, entry_ts - 5 * 60_000),
+                "open": entry_price,
+                "high": max(entry_price, high) + pad,
+                "low": min(entry_price, low) - pad,
+                "close": entry_price,
+                "volume": 0.0,
+            },
+            {
+                "time_ms": mid_ts,
+                "open": entry_price,
+                "high": max(entry_price, exit_price, high) + pad,
+                "low": min(entry_price, exit_price, low) - pad,
+                "close": (entry_price + exit_price) / 2.0,
+                "volume": 0.0,
+            },
+            {
+                "time_ms": max(exit_ts, entry_ts + 60_000),
+                "open": (entry_price + exit_price) / 2.0,
+                "high": max(exit_price, high) + pad,
+                "low": min(exit_price, low) - pad,
+                "close": exit_price,
+                "volume": 0.0,
+            },
+        ]
+        source = "synthetic_trade_path"
+        warning = "Market candles were unavailable for this old trade window; showing entry/exit/SL/TP trade path instead."
 
     return {
         "symbol":   symbol.upper(),
@@ -598,6 +651,8 @@ async def trade_chart(
         "entry_ts": entry_ts,
         "exit_ts":  exit_ts,
         "candles":  candles,
+        "source": source,
+        "warning": warning,
     }
 
 
