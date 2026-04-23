@@ -133,9 +133,16 @@ def _allocator_human_summary(state: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _load_monthly_picks(runtime_dir: Path) -> List[Dict[str, str]]:
+    def _latest_month_only(rows: List[Dict[str, str]]) -> List[Dict[str, str]]:
+        months = sorted({str(r.get("month") or "").strip() for r in rows if str(r.get("month") or "").strip()})
+        if not months:
+            return rows
+        latest = months[-1]
+        return [r for r in rows if str(r.get("month") or "").strip() == latest]
+
     direct = _read_csv(runtime_dir / "current_cycle_picks.csv")
     if direct:
-        return direct
+        return _latest_month_only(direct)
 
     latest_refresh = _read_env(runtime_dir / "latest_refresh.env")
     for key in ("EQ_CURRENT_CYCLE_PICKS_CSV", "ALPACA_CURRENT_CYCLE_PICKS_CSV", "EQ_LATEST_PICKS_CSV"):
@@ -143,11 +150,11 @@ def _load_monthly_picks(runtime_dir: Path) -> List[Dict[str, str]]:
         if p:
             rows = _read_csv(p)
             if rows:
-                return rows
+                return _latest_month_only(rows)
 
     mirror_latest = _read_csv(runtime_dir / "latest_picks.csv")
     if mirror_latest:
-        return mirror_latest
+        return _latest_month_only(mirror_latest)
     return []
 
 
@@ -832,7 +839,7 @@ async def get_alpaca(_: str = Depends(require_auth)):
     monthly_cycle_summary = {
         "exists": monthly_dir.exists(),
         "age_sec": _file_age_sec(monthly_dir / "latest_summary.csv"),
-        "current_picks_missing": len(clean_picks) == 0,
+        "current_picks_missing": not (monthly_dir / "current_cycle_picks.csv").exists(),
         "latest_refresh_utc": monthly_refresh.get("EQ_LATEST_REFRESH_UTC") or monthly_refresh.get("ALPACA_REFRESH_UTC") or "",
     }
     variants = [
