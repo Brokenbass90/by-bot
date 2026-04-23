@@ -234,9 +234,22 @@ def _build_context() -> str:
         )
         parts.append(
             f"ALLOCATOR: status={allocator.get('status','?')} "
+            f"degraded_kind={allocator.get('degraded_kind','none') or 'none'} "
             f"global_risk={allocator.get('allocator_global_risk_mult', allocator.get('global_risk_mult','?'))} "
+            f"safe_mode={allocator.get('safe_mode', False)} "
+            f"hard_block={allocator.get('hard_block_new_entries', False)} "
+            f"overall_health={allocator.get('overall_health','?')} "
+            f"overlap_ratio={allocator.get('portfolio_overlap_ratio','?')} "
             f"age_sec={alloc_age}\n"
         )
+        if (
+            str(allocator.get("status") or "").lower() == "degraded"
+            and str(allocator.get("degraded_kind") or "").lower() == "protective_overlap"
+        ):
+            parts.append(
+                "ALLOCATOR HUMAN MEANING: protective risk haircut for overlapping sleeves; "
+                "not a broken allocator, not an emergency by itself.\n"
+            )
         parts.append(f"SLEEVES ACTIVE: {', '.join(active) or 'none'}\n")
         parts.append(f"SLEEVES OFF: {', '.join(inactive[:8]) or 'none'}\n")
 
@@ -488,6 +501,10 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         "You have access to live bot data (injected below). "
         "Be concise and precise. When you spot issues, say so directly. "
         "Never treat stale chat memory as a source of truth when current runtime ages disagree. "
+        "Do not claim you know everything; say what the injected live context shows. "
+        "If allocator status is degraded only because degraded_kind=protective_overlap, explain it as a protective overlap risk haircut, not a broken allocator or critical incident. "
+        "Do not recommend safe mode or reload solely for protective_overlap. "
+        "Do not convert websocket connect/disconnect counters into percent data loss unless the live context shows ws guard active, critical_streak/no_connect_streak, or stale/zero market messages. "
         "When suggesting control commands, explain the issue in human language first, cite current evidence from the injected context, state risk/preconditions, and only then emit a ```command JSON block. "
         "Never suggest actions that could cause significant losses without clear justification. "
         "Never suggest reload/restart while open trades exist unless the injected context proves an active emergency.\n\n"

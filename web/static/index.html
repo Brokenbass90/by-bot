@@ -1674,7 +1674,7 @@ function JournalPage() {
 
 function AIChatPage() {
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: '👋 Привет! Я знаю всё о твоём боте — текущий режим, стратегии, сделки, Alpaca. Могу анализировать производительность, объяснять что происходит и предлагать действия (включить/выключить рукав, safe mode и т.д.). Что хочешь узнать?' }
+    { role: 'assistant', content: 'Привет. Я вижу текущий snapshot бота: режим, рукава, сделки, Alpaca и health-состояние. Если данные старые или неполные, я должен сказать об этом прямо. Спроси, что проверить.' }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);

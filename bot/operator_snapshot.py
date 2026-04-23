@@ -37,6 +37,18 @@ def _safe_int(value: Any, default: int = 0) -> int:
         return int(default)
 
 
+def _allocator_meaning(allocator: Dict[str, Any]) -> str:
+    status = str(allocator.get("status") or "").strip().lower()
+    degraded_kind = str(allocator.get("degraded_kind") or "").strip().lower()
+    if status == "degraded" and degraded_kind == "protective_overlap":
+        return "protective risk haircut for overlapping sleeves; not a broken allocator"
+    if status == "degraded":
+        return "allocator degraded; inspect degraded_reasons before suggesting actions"
+    if status in {"ok", "healthy"}:
+        return "allocator ok"
+    return "allocator status unknown"
+
+
 def _file_age_sec(path: Path) -> int | None:
     try:
         if path.exists():
@@ -241,6 +253,11 @@ def _control_plane_block(root: Path) -> Dict[str, Any]:
             "age_sec": _file_age_sec(allocator_path),
             "status": str(allocator.get("status") or ""),
             "degraded_kind": str(allocator.get("degraded_kind") or ""),
+            "meaning": _allocator_meaning(allocator),
+            "safe_mode": bool(allocator.get("safe_mode")),
+            "overall_health": str(allocator.get("overall_health") or ""),
+            "portfolio_overlap_ratio": _safe_float(allocator.get("portfolio_overlap_ratio"), 0.0),
+            "portfolio_overlap_mult": _safe_float(allocator.get("portfolio_overlap_mult"), 1.0),
             "global_risk_mult": _safe_float(
                 allocator.get("allocator_global_risk_mult", allocator.get("global_risk_mult")),
                 0.0,
@@ -655,6 +672,7 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         f"router_profiles={router.get('profile_count')} router_symbols_total={router.get('symbols_total')} router_age_sec={router.get('age_sec')}",
         f"router_backtest_gate={'on' if router.get('backtest_path') else 'off'} symbol_memory_loaded={int(bool(router.get('symbol_memory_loaded')))}",
         f"allocator_status={allocator.get('status')} degraded_kind={allocator.get('degraded_kind') or '-'} global_risk_mult={allocator.get('global_risk_mult')} hard_block={int(bool(allocator.get('hard_block_new_entries')))}",
+        f"allocator_meaning={allocator.get('meaning') or '-'} safe_mode={int(bool(allocator.get('safe_mode')))} overall_health={allocator.get('overall_health') or '-'} overlap_ratio={allocator.get('portfolio_overlap_ratio')} overlap_mult={allocator.get('portfolio_overlap_mult')}",
         f"enabled_sleeves={','.join(allocator.get('enabled_sleeves') or []) or '-'}",
         f"degraded_sleeves={','.join(allocator.get('degraded_sleeves') or []) or '-'}",
         "",
