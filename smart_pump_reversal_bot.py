@@ -2852,8 +2852,12 @@ def _allocator_state_text() -> str:
     risk_txt = f"{float(risk_mult):.2f}" if risk_mult is not None else "n/a"
     active_txt = ",".join(allocator.get("enabled_sleeves") or []) or "-"
     degraded_txt = ",".join(allocator.get("degraded_sleeves") or []) or "-"
+    degraded_kind = str(allocator.get("degraded_kind") or "").strip().lower()
+    status = str(allocator.get("status") or "n/a")
+    if status == "degraded" and degraded_kind == "protective_overlap":
+        status = "risk_reduced_for_overlap"
     return (
-        f"allocator: status={allocator.get('status') or 'n/a'} | "
+        f"allocator: status={status} | "
         f"active={active_txt} | degraded={degraded_txt} | risk×={risk_txt}"
     )
 
@@ -4345,9 +4349,13 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
     degraded_txt = ",".join(allocator.get("degraded_sleeves") or []) or "-"
     risk_mult = allocator.get("global_risk_mult")
     risk_txt = f"{float(risk_mult):.2f}" if risk_mult is not None else "n/a"
+    alloc_status = str(allocator.get("status") or "n/a")
+    degraded_kind = str(allocator.get("degraded_kind") or "").strip().lower()
+    if alloc_status == "degraded" and degraded_kind == "protective_overlap":
+        alloc_status = "risk_reduced_for_overlap"
     lines = [
         "🧠 strategy-flags: " + _strategy_flags_text(),
-        f"🎛 allocator-active: {active_txt} | degraded={degraded_txt} | status={allocator.get('status') or 'n/a'} | risk×={risk_txt}",
+        f"🎛 allocator-active: {active_txt} | degraded={degraded_txt} | status={alloc_status} | risk×={risk_txt}",
         f"📊 trade-events ({max(1, int(lookback_hours))}h):",
         _runtime_diag_since_restart_text(),
     ]
@@ -11740,9 +11748,19 @@ def _check_portfolio_allocator_health(*, notify: bool = True) -> bool:
                     break
     except Exception:
         pass
+    _alloc_kind = ""
+    try:
+        if PORTFOLIO_ALLOCATOR_STATE_PATH.exists():
+            _alloc_state = json.loads(PORTFOLIO_ALLOCATOR_STATE_PATH.read_text(encoding="utf-8"))
+            _alloc_kind = str(_alloc_state.get("degraded_kind") or "").strip().lower()
+    except Exception:
+        _alloc_kind = ""
     if _alloc_status in ("degraded", "safe_mode") and not problems:
         # File is fresh but allocator itself is in degraded/safe_mode state
-        problems.append(f"allocator status={_alloc_status} (risk reduced)")
+        if _alloc_status == "degraded" and _alloc_kind == "protective_overlap":
+            problems.append("allocator status=risk_reduced_for_overlap (protective overlap haircut)")
+        else:
+            problems.append(f"allocator status={_alloc_status} (risk reduced)")
 
     if not problems:
         PORTFOLIO_ALLOCATOR_LAST_ALERT_FINGERPRINT = ""
@@ -11762,7 +11780,10 @@ def _check_portfolio_allocator_health(*, notify: bool = True) -> bool:
         PORTFOLIO_ALLOCATOR_LAST_ALERT_TS = now
         PORTFOLIO_ALLOCATOR_LAST_ALERT_FINGERPRINT = fingerprint
         emoji = "🔴" if _alloc_status == "safe_mode" else "⚠️"
-        msg = f"{emoji} Portfolio allocator {_alloc_status or 'degraded'}:\n" + "\n".join(problems[:4])
+        status_label = _alloc_status or "degraded"
+        if status_label == "degraded" and _alloc_kind == "protective_overlap":
+            status_label = "risk reduced for overlap"
+        msg = f"{emoji} Portfolio allocator {status_label}:\n" + "\n".join(problems[:4])
         log_error(msg)
         tg_trade(msg)
     return False

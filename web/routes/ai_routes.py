@@ -74,6 +74,38 @@ def _read_env(p: Path) -> Dict[str, str]:
     return result
 
 
+def _resolve_rooted_path(raw: str) -> Optional[Path]:
+    raw = str(raw or "").strip()
+    if not raw:
+        return None
+    p = Path(raw).expanduser()
+    if p.is_absolute():
+        return p
+    return (_ROOT / p).resolve()
+
+
+def _load_monthly_picks() -> List[str]:
+    import csv as _csv
+
+    candidates = [_rt("equities_monthly_v36", "current_cycle_picks.csv")]
+    latest_refresh = _read_env(_rt("equities_monthly_v36", "latest_refresh.env"))
+    for key in ("EQ_CURRENT_CYCLE_PICKS_CSV", "ALPACA_CURRENT_CYCLE_PICKS_CSV", "EQ_LATEST_PICKS_CSV"):
+        p = _resolve_rooted_path(latest_refresh.get(key, ""))
+        if p:
+            candidates.append(p)
+    for picks_path in candidates:
+        if not picks_path or not picks_path.exists():
+            continue
+        try:
+            with open(picks_path) as f:
+                rows = [r["ticker"] for r in _csv.DictReader(f) if r.get("ticker")]
+            if rows:
+                return rows
+        except Exception:
+            continue
+    return []
+
+
 def _load_shared_history() -> List[Dict[str, str]]:
     if not _SHARED_HISTORY_PATH.exists():
         return []
@@ -236,15 +268,7 @@ def _build_context() -> str:
             parts.append(f"ACTIVE STRATEGIES: {', '.join(strats)}\n")
 
     # Alpaca
-    import csv as _csv
-    alpaca_picks = []
-    picks_path = _rt("equities_monthly_v36", "current_cycle_picks.csv")
-    if picks_path.exists():
-        try:
-            with open(picks_path) as f:
-                alpaca_picks = [r["ticker"] for r in _csv.DictReader(f) if r.get("ticker")]
-        except Exception:
-            pass
+    alpaca_picks = _load_monthly_picks()
     if alpaca_picks:
         parts.append(f"ALPACA PICKS: {', '.join(alpaca_picks)}\n")
 

@@ -16,7 +16,7 @@ if [[ -n "${SSH_KEY:-}" && -f "${SSH_KEY}" ]]; then
   SSH_OPTS=(-i "$SSH_KEY" -o StrictHostKeyChecking=no)
 fi
 
-mkdir -p "$MIRROR_ROOT"/regime "$MIRROR_ROOT"/control_plane "$MIRROR_ROOT"/operator "$MIRROR_ROOT"/equities_monthly_v36
+mkdir -p "$MIRROR_ROOT"/regime "$MIRROR_ROOT"/control_plane "$MIRROR_ROOT"/operator "$MIRROR_ROOT"/equities_monthly_v36 "$MIRROR_ROOT"/equities_intraday_dynamic_v3_shadow
 
 copy_if_exists() {
   local remote_path="$1"
@@ -40,7 +40,10 @@ copy_if_exists "$BOT_DIR/runtime/operator/operator_snapshot.json" "$MIRROR_ROOT/
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/current_cycle_picks.csv" "$MIRROR_ROOT/equities_monthly_v36/current_cycle_picks.csv"
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/latest_summary.csv" "$MIRROR_ROOT/equities_monthly_v36/latest_summary.csv"
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/latest_advisory.json" "$MIRROR_ROOT/equities_monthly_v36/latest_advisory.json"
+copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/latest_refresh.env" "$MIRROR_ROOT/equities_monthly_v36/latest_refresh.env"
 copy_if_exists "$BOT_DIR/configs/intraday_state.json" "$MIRROR_ROOT/intraday_state.json"
+copy_if_exists "$BOT_DIR/runtime/equities_intraday_dynamic_v3_shadow/latest_advisory.json" "$MIRROR_ROOT/equities_intraday_dynamic_v3_shadow/latest_advisory.json"
+copy_if_exists "$BOT_DIR/configs/intraday_state_v3_shadow.json" "$MIRROR_ROOT/intraday_state_v3_shadow.json"
 copy_if_exists "$BOT_DIR/runtime/live_trade_events.jsonl" "$MIRROR_ROOT/live_trade_events.jsonl"
 copy_if_exists "$BOT_DIR/trades.csv" "$MIRROR_ROOT/trades.csv"
 

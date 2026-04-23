@@ -368,18 +368,31 @@ function TOTPScreen({ email, onAuth }) {
 
 // ── Shared hooks ───────────────────────────────────────────────────────────
 
-function useFetch(url, deps = []) {
+function useFetch(url, deps = [], pollMs = 0) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  useEffect(() => {
+
+  const load = React.useCallback(() => {
     let cancelled = false;
     setLoading(true);
     api(url).then(d => { if (!cancelled) { setData(d); setLoading(false); } })
             .catch(e => { if (!cancelled) { setError(e); setLoading(false); } });
     return () => { cancelled = true; };
-  }, deps);
-  return { data, loading, error };
+  }, [url]);
+
+  useEffect(() => {
+    const cancel = load();
+    return cancel;
+  }, [load, ...deps]);
+
+  useEffect(() => {
+    if (!pollMs || pollMs <= 0) return undefined;
+    const t = setInterval(() => load(), pollMs);
+    return () => clearInterval(t);
+  }, [load, pollMs]);
+
+  return { data, loading, error, refresh: load };
 }
 
 function Loader() {
@@ -949,7 +962,7 @@ function Trades() {
 // ── Alpaca page ────────────────────────────────────────────────────────────
 
 function AlpacaPage() {
-  const { data, loading } = useFetch('/api/alpaca', []);
+  const { data, loading, refresh } = useFetch('/api/alpaca', [], 15000);
   if (loading) return React.createElement(Loader);
   if (!data) return React.createElement('div', { className: 'empty' }, 'No Alpaca data');
 
@@ -957,11 +970,46 @@ function AlpacaPage() {
   const picks = data.current_picks || [];
   const adv = data.advisory || {};
   const intraday = data.intraday_positions || [];
+  const variants = data.variants || [];
+  const monthlyCycle = data.monthly_cycle || {};
 
   return React.createElement('div', null,
-    React.createElement('div', { className: 'section-title' }, 'Alpaca Paper Trading',
-      React.createElement('span', { className: 'section-sub' },
-        intraday.length > 0 ? 'Monthly Momentum Strategy + Intraday Dynamic v1' : 'Monthly Momentum Strategy')
+    React.createElement('div', { className: 'page-hdr' },
+      React.createElement('div', { className: 'section-title' }, 'Alpaca Paper Trading',
+        React.createElement('span', { className: 'section-sub' },
+          intraday.length > 0 ? 'Monthly Momentum Strategy + Intraday Dynamic v1' : 'Monthly Momentum Strategy')
+      ),
+      React.createElement('div', { className: 'topbar-right' },
+        React.createElement('button', { className: 'refresh-btn', onClick: refresh }, '↺ Refresh')
+      )
+    ),
+
+    variants.length > 0 && React.createElement('div', { className: 'grid3', style: { marginBottom: '16px' } },
+      variants.map(v =>
+        React.createElement('div', { className: 'card', key: v.id },
+          React.createElement('div', { className: 'card-title' }, v.label || v.id),
+          React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Status'),
+            React.createElement('span', { className: `value ${v.exists ? 'pos' : 'neg'}` }, v.exists ? 'tracked' : 'missing')
+          ),
+          v.current_picks_count != null && React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Current picks'),
+            React.createElement('span', { className: 'value' }, v.current_picks_count)
+          ),
+          v.open_positions && React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Open positions'),
+            React.createElement('span', { className: 'value' }, (v.open_positions || []).length)
+          ),
+          v.generated_at_utc && React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Updated'),
+            React.createElement('span', { className: 'value' }, v.generated_at_utc)
+          ),
+          v.latest_refresh_utc && React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Refresh'),
+            React.createElement('span', { className: 'value' }, v.latest_refresh_utc)
+          )
+        )
+      )
     ),
 
     // Summary stats
@@ -990,6 +1038,10 @@ function AlpacaPage() {
     ),
 
     // Current picks
+    monthlyCycle.current_picks_missing && React.createElement('div', { className: 'card', style: { marginBottom: '16px', borderColor: 'var(--yellow)' } },
+      React.createElement('div', { className: 'card-title' }, 'Monthly Picks Fallback Mode'),
+      React.createElement('div', { style: { color: 'var(--text2)', fontSize: '13px', lineHeight: 1.5 } },
+        'runtime/equities_monthly_v36/current_cycle_picks.csv is missing, so the UI is falling back to the latest refresh artifacts. Summary stays current, but this should be repaired on the server.')),
     picks.length > 0 && React.createElement('div', { style: { marginBottom: '16px' } },
       React.createElement('div', { className: 'section-title', style: { fontSize: '14px', marginBottom: '12px' } },
         `Current Picks — ${picks[0]?.month || ''}`),
@@ -1082,8 +1134,8 @@ function AlpacaPage() {
 // ── Regime page ────────────────────────────────────────────────────────────
 
 function RegimePage() {
-  const { data: regime, loading: rl } = useFetch('/api/regime', []);
-  const { data: allocator, loading: al } = useFetch('/api/allocator', []);
+  const { data: regime, loading: rl } = useFetch('/api/regime', [], 15000);
+  const { data: allocator, loading: al } = useFetch('/api/allocator', [], 15000);
   if (rl || al) return React.createElement(Loader);
 
   const regKey = (regime?.regime || 'unknown').toLowerCase();
@@ -1121,6 +1173,12 @@ function RegimePage() {
     ),
 
     // Sleeves table
+    allocator && React.createElement('div', { className: 'card', style: { marginBottom: '16px', borderColor: allocator.allocator_tone === 'danger' ? 'var(--red)' : allocator.allocator_tone === 'warn' ? 'var(--yellow)' : 'var(--border)' } },
+      React.createElement('div', { className: 'card-title' }, allocator.allocator_label || 'Allocator'),
+      React.createElement('div', { style: { color: 'var(--text2)', fontSize: '13px', lineHeight: 1.5 } },
+        allocator.allocator_detail || 'Allocator state unavailable.')
+    ),
+
     allocator && React.createElement('div', { className: 'card' },
       React.createElement('div', { className: 'card-title' }, `Allocator Sleeves — policy ${allocator.policy_version || '?'}`),
       React.createElement('div', { className: 'section-sub', style: { marginBottom: '10px' } },
@@ -1738,7 +1796,7 @@ function App() {
     if (stage !== 'authed') return;
     const load = () => api('/api/status').then(setStatus).catch(() => {});
     load();
-    const t = setInterval(load, 30000);
+    const t = setInterval(load, 10000);
     return () => clearInterval(t);
   }, [stage]);
 

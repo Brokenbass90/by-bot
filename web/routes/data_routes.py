@@ -55,6 +55,134 @@ def _read_csv(p: Path) -> List[Dict[str, str]]:
         return []
 
 
+def _read_env(p: Path) -> Dict[str, str]:
+    out: Dict[str, str] = {}
+    if not p.exists():
+        return out
+    try:
+        for raw in p.read_text().splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, _, v = line.partition("=")
+            out[k.strip()] = v.strip()
+    except Exception:
+        return {}
+    return out
+
+
+def _resolve_rooted_path(raw: str) -> Optional[Path]:
+    raw = str(raw or "").strip()
+    if not raw:
+        return None
+    p = Path(raw).expanduser()
+    if p.is_absolute():
+        return p
+    candidate = (_ROOT / p).resolve()
+    return candidate
+
+
+def _file_age_sec(p: Path) -> Optional[int]:
+    if not p.exists():
+        return None
+    try:
+        return int(datetime.now(timezone.utc).timestamp() - p.stat().st_mtime)
+    except Exception:
+        return None
+
+
+def _allocator_human_summary(state: Dict[str, Any]) -> Dict[str, Any]:
+    status = str(state.get("status") or "unknown").strip().lower()
+    degraded_kind = str(state.get("degraded_kind") or "").strip().lower()
+    risk = float(state.get("allocator_global_risk_mult", state.get("global_risk_mult") or 0.0) or 0.0)
+    reasons = list(state.get("degraded_reasons") or [])
+
+    label = status.upper()
+    tone = "neutral"
+    detail = ""
+    if status == "ok":
+        label = "Allocator OK"
+        tone = "ok"
+        detail = "Risk is fully open for the current sleeve mix."
+    elif status == "safe_mode":
+        label = "Safe Mode"
+        tone = "danger"
+        detail = "New entries are heavily restricted until control-plane health improves."
+    elif status == "degraded" and degraded_kind == "protective_overlap":
+        label = "Risk Reduced For Overlap"
+        tone = "warn"
+        detail = "Allocator is protecting the portfolio because active sleeves overlap too much. This is a haircut, not a broken allocator."
+    elif status == "degraded":
+        label = "Allocator Degraded"
+        tone = "danger"
+        detail = "Allocator is not fully healthy and is trimming risk."
+
+    if reasons:
+        detail = (detail + " Reasons: " + ", ".join(reasons)).strip()
+    if risk > 0:
+        detail = (detail + f" Current global risk ×{risk:.2f}.").strip()
+
+    return {
+        "status": status,
+        "degraded_kind": degraded_kind or "none",
+        "label": label,
+        "tone": tone,
+        "detail": detail,
+        "risk_mult": risk,
+    }
+
+
+def _load_monthly_picks(runtime_dir: Path) -> List[Dict[str, str]]:
+    direct = _read_csv(runtime_dir / "current_cycle_picks.csv")
+    if direct:
+        return direct
+
+    latest_refresh = _read_env(runtime_dir / "latest_refresh.env")
+    for key in ("EQ_CURRENT_CYCLE_PICKS_CSV", "ALPACA_CURRENT_CYCLE_PICKS_CSV", "EQ_LATEST_PICKS_CSV"):
+        p = _resolve_rooted_path(latest_refresh.get(key, ""))
+        if p:
+            rows = _read_csv(p)
+            if rows:
+                return rows
+
+    mirror_latest = _read_csv(runtime_dir / "latest_picks.csv")
+    if mirror_latest:
+        return mirror_latest
+    return []
+
+
+def _extract_intraday_positions(state: Any) -> List[Dict[str, Any]]:
+    if isinstance(state, dict):
+        if isinstance(state.get("positions"), dict):
+            return list(state.get("positions", {}).values())
+        return [v for v in state.values() if isinstance(v, dict) and v.get("symbol")]
+    return []
+
+
+def _load_alpaca_intraday_variant(runtime_name: str, *, label: str, state_cfg_name: Optional[str] = None) -> Dict[str, Any]:
+    runtime_dir = _rt(runtime_name)
+    advisory = _json(runtime_dir / "latest_advisory.json") or {}
+    report = (advisory or {}).get("report", advisory) or {}
+    state = _json(_cfg(state_cfg_name)) if state_cfg_name else None
+    positions = _extract_intraday_positions(state)
+    generated_at = str(advisory.get("generated_at_utc") or "")
+    account = dict(advisory.get("account") or {})
+    return {
+        "id": runtime_name,
+        "label": label,
+        "exists": runtime_dir.exists(),
+        "age_sec": _file_age_sec(runtime_dir / "latest_advisory.json"),
+        "generated_at_utc": generated_at,
+        "equity": account.get("equity"),
+        "cash": account.get("cash"),
+        "mode": advisory.get("mode") or report.get("mode") or "",
+        "entries_blocked": advisory.get("entries_blocked"),
+        "open_positions": list(advisory.get("open_positions") or []),
+        "watchlist": list(advisory.get("watchlist") or []),
+        "positions": positions,
+    }
+
+
 # ── find trades.csv files ─────────────────────────────────────────────────────
 
 def _find_trades_csvs() -> List[Path]:
@@ -252,6 +380,8 @@ async def get_status(_: str = Depends(require_auth)):
 
     regime_data = _json(_rt("regime", "orchestrator_state.json")) or _json(_rt("regime.json"))
     cp = _json(_rt("control_plane", "control_plane_watchdog_state.json"))
+    allocator_state = _json(_rt("control_plane", "portfolio_allocator_state.json")) or {}
+    allocator = _allocator_human_summary(allocator_state)
 
     now_ts = datetime.now(timezone.utc).timestamp()
     hb_age = None
@@ -269,6 +399,10 @@ async def get_status(_: str = Depends(require_auth)):
         "global_risk_mult": (regime_data or {}).get("global_risk_mult"),
         "control_plane_status": (cp or {}).get("status", "unknown"),
         "ws_guard_active": (hb or {}).get("ws_guard_active", False),
+        "allocator_status": allocator["status"],
+        "allocator_label": allocator["label"],
+        "allocator_tone": allocator["tone"],
+        "allocator_detail": allocator["detail"],
         "runtime_root": str(_RUNTIME_ROOT),
         "data_mode": "live_mirror" if _RUNTIME_ROOT != (_ROOT / "runtime") else "local",
         "ts_utc": datetime.now(timezone.utc).isoformat(),
@@ -503,7 +637,8 @@ async def get_account(_: str = Depends(require_auth)):
     # Simplify for frontend
     hb = snap.get("heartbeat", {})
     cp = snap.get("control_plane", {})
-    alloc = snap.get("allocator", {})
+    alloc = cp.get("allocator", {}) or snap.get("allocator", {})
+    alloc_summary = _allocator_human_summary(alloc)
 
     return {
         "generated_at_utc": snap.get("generated_at_utc"),
@@ -513,7 +648,9 @@ async def get_account(_: str = Depends(require_auth)):
         "regime": hb.get("regime", "unknown"),
         "ws_guard_active": hb.get("ws_guard_active", False),
         "control_plane_status": cp.get("watchdog", {}).get("status", "unknown"),
-        "allocator_status": alloc.get("status"),
+        "allocator_status": alloc_summary["status"],
+        "allocator_label": alloc_summary["label"],
+        "allocator_detail": alloc_summary["detail"],
         "raw": snap,
     }
 
@@ -537,6 +674,7 @@ async def get_allocator(_: str = Depends(require_auth)):
     policy = _json(_cfg("portfolio_allocator_policy.json"))
     state = _json(_rt("control_plane", "portfolio_allocator_state.json")) or {}
     sleeve_states: Dict[str, Any] = dict(state.get("sleeves") or {})
+    alloc_summary = _allocator_human_summary(state)
 
     env_vals: Dict[str, str] = {}
     lenv = _cfg("portfolio_allocator_latest.env")
@@ -572,7 +710,11 @@ async def get_allocator(_: str = Depends(require_auth)):
 
     return {
         "policy_version": (policy or {}).get("policy_version"),
-        "allocator_status": str(state.get("status") or ""),
+        "allocator_status": alloc_summary["status"],
+        "allocator_label": alloc_summary["label"],
+        "allocator_tone": alloc_summary["tone"],
+        "allocator_detail": alloc_summary["detail"],
+        "degraded_kind": alloc_summary["degraded_kind"],
         "allocator_global_risk_mult": float(
             state.get("allocator_global_risk_mult", state.get("global_risk_mult") or 0.0) or 0.0
         ),
@@ -600,10 +742,12 @@ async def get_health(_: str = Depends(require_auth)):
 async def get_alpaca(_: str = Depends(require_auth)):
     """Monthly picks, summary metrics, advisory."""
     monthly_dir = _rt("equities_monthly_v36")
-    picks = _read_csv(monthly_dir / "current_cycle_picks.csv")
+    picks = _load_monthly_picks(monthly_dir)
     summary_rows = _read_csv(monthly_dir / "latest_summary.csv")
     advisory = _json(monthly_dir / "latest_advisory.json")
     intraday_state = _json(_rt("intraday_state.json")) or _json(_cfg("intraday_state.json"))
+    intraday_v1 = _load_alpaca_intraday_variant("equities_intraday_dynamic_v1", label="Intraday Dynamic v1", state_cfg_name="intraday_state.json")
+    intraday_v3_shadow = _load_alpaca_intraday_variant("equities_intraday_dynamic_v3_shadow", label="Intraday Dynamic v3 Shadow", state_cfg_name="intraday_state_v3_shadow.json")
 
     summary = summary_rows[0] if summary_rows else {}
     # Convert numeric fields
@@ -628,13 +772,26 @@ async def get_alpaca(_: str = Depends(require_auth)):
                     pass
         clean_picks.append(cp)
 
-    if isinstance(intraday_state, dict):
-        if isinstance(intraday_state.get("positions"), dict):
-            intraday_positions = list(intraday_state.get("positions", {}).values())
-        else:
-            intraday_positions = [v for v in intraday_state.values() if isinstance(v, dict) and v.get("symbol")]
-    else:
-        intraday_positions = []
+    intraday_positions = _extract_intraday_positions(intraday_state)
+    monthly_refresh = _read_env(monthly_dir / "latest_refresh.env")
+    monthly_cycle_summary = {
+        "exists": monthly_dir.exists(),
+        "age_sec": _file_age_sec(monthly_dir / "latest_summary.csv"),
+        "current_picks_missing": len(clean_picks) == 0,
+        "latest_refresh_utc": monthly_refresh.get("EQ_LATEST_REFRESH_UTC") or monthly_refresh.get("ALPACA_REFRESH_UTC") or "",
+    }
+    variants = [
+        {
+            "id": "monthly_v36",
+            "label": "Monthly Momentum v36",
+            "exists": monthly_dir.exists(),
+            "age_sec": _file_age_sec(monthly_dir / "latest_summary.csv"),
+            "current_picks_count": len(clean_picks),
+            "latest_refresh_utc": monthly_cycle_summary["latest_refresh_utc"],
+        },
+        intraday_v1,
+        intraday_v3_shadow,
+    ]
 
     return {
         "current_picks": clean_picks,
@@ -642,6 +799,10 @@ async def get_alpaca(_: str = Depends(require_auth)):
         "advisory": (advisory or {}).get("report", advisory),
         "intraday_positions": intraday_positions,
         "intraday_updated_utc": (intraday_state or {}).get("updated_utc"),
+        "variants": variants,
+        "monthly_cycle": monthly_cycle_summary,
+        "intraday_v1": intraday_v1,
+        "intraday_v3_shadow": intraday_v3_shadow,
     }
 
 
