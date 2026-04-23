@@ -1,0 +1,29 @@
+{
+  "name": "crypto_repair_foundation_v1",
+  "entries": [
+    {
+      "id": "breakdown_recent180",
+      "label": "Breakdown v1 recent-180 focus",
+      "spec": "configs/autoresearch/breakdown_v1_recent180_focus_v1.json",
+      "why": "Most promising short-side repair lane right now; best candidate to turn into the next live canary if recent windows hold."
+    },
+    {
+      "id": "support_bounce_annual",
+      "label": "Support bounce annual repair",
+      "spec": "configs/autoresearch/support_bounce_v1_annual_repair_v2.json",
+      "why": "Bull-regime bounce lane; likely needs repair, but should stay in the battery so we do not abandon it."
+    },
+    {
+      "id": "elder_v3_macro_relax",
+      "label": "Elder v3 macro-relax",
+      "spec": "configs/autoresearch/elder_ts_v3_macro_relax_v1.json",
+      "why": "Checks whether relaxing the macro filter creates a tradeful Elder instead of a sparse PF mirage."
+    },
+    {
+      "id": "inplay_breakout_retest",
+      "label": "Inplay breakout retest",
+      "spec": "configs/autoresearch/inplay_breakout_retest_focus_v1.json",
+      "why": "Keeps the breakout lane in structured repair, but should be rejected if it keeps failing against the other logic branches."
+    }
+  ]
+}
