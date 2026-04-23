@@ -685,6 +685,101 @@ function SyntheticTradePath({ trade, chartData, note }) {
   );
 }
 
+function TradeCandlesSvg({ trade, chartData }) {
+  const candles = (chartData && chartData.candles) || [];
+  if (!candles || candles.length < 2) {
+    return React.createElement(SyntheticTradePath, { trade, chartData });
+  }
+
+  const entryTs = Number(chartData.entry_ts || trade.entry_ts || trade.open_time_ms || 0);
+  const exitTs = Number(chartData.exit_ts || trade.exit_ts || trade.close_time_ms || 0);
+  const entry = parseFloat(trade.entry || trade.entry_price);
+  const exit = parseFloat(trade.exit || trade.exit_price);
+  const sl = parseFloat(trade.sl || trade.sl_price);
+  const tp = parseFloat(trade.tp || trade.tp_price);
+  const side = String(trade.side || '').toLowerCase();
+  const pnl = parseFloat(trade.pnl);
+
+  const W = 920, H = 390;
+  const left = 54, right = 124, top = 26, bottom = 48;
+  const plotW = W - left - right;
+  const plotH = H - top - bottom;
+  const values = [];
+  candles.forEach(c => values.push(c.high, c.low, c.open, c.close));
+  [entry, exit, sl, tp].forEach(v => { if (!isNaN(v)) values.push(v); });
+  const minV = Math.min(...values);
+  const maxV = Math.max(...values);
+  const pad = Math.max((maxV - minV) * 0.12, Math.abs(entry || values[0] || 1) * 0.001, 1e-9);
+  const lo = minV - pad;
+  const hi = maxV + pad;
+  const y = v => top + (hi - v) / Math.max(1e-9, hi - lo) * plotH;
+  const x = i => left + (candles.length === 1 ? plotW / 2 : (i / (candles.length - 1)) * plotW);
+  const barW = Math.max(3, Math.min(14, plotW / candles.length * 0.58));
+  const closestIdx = ts => {
+    if (!ts) return 0;
+    let best = 0, bestD = Infinity;
+    candles.forEach((c, i) => {
+      const d = Math.abs(Number(c.time_ms) - ts);
+      if (d < bestD) { bestD = d; best = i; }
+    });
+    return best;
+  };
+  const entryIdx = closestIdx(entryTs);
+  const exitIdx = closestIdx(exitTs || entryTs);
+  const line = (price, stroke, label) => isNaN(price) ? null : React.createElement(React.Fragment, { key: label },
+    React.createElement('line', { x1: left, y1: y(price), x2: W - right + 18, y2: y(price), stroke, strokeDasharray: '6 6', strokeWidth: 1.4, opacity: 0.85 }),
+    React.createElement('text', { x: W - right + 24, y: y(price) + 4, fill: stroke, fontSize: 13, fontFamily: 'monospace' }, `${label} ${price.toFixed(4)}`)
+  );
+  const marker = (idx, price, color, label, above) => {
+    if (isNaN(price)) return null;
+    const cx = x(idx);
+    const cy = y(price);
+    const textY = above ? cy - 18 : cy + 28;
+    return React.createElement(React.Fragment, { key: label },
+      React.createElement('circle', { cx, cy, r: 6, fill: color, stroke: '#0d1117', strokeWidth: 2 }),
+      React.createElement('text', { x: cx, y: textY, fill: color, fontSize: 12, fontFamily: 'monospace', textAnchor: 'middle', fontWeight: 700 },
+        `${label} ${price.toFixed(4)}`)
+    );
+  };
+  const sourceText = chartData.source === 'bybit'
+    ? 'Свечной график загружен с Bybit. Маркеры входа/выхода, SL и TP взяты из журнала сделки.'
+    : chartData.source === 'cache'
+      ? 'Свечной график загружен из локального кэша. Маркеры входа/выхода, SL и TP взяты из журнала сделки.'
+      : 'Свечной график сделки. Маркеры входа/выхода, SL и TP взяты из журнала сделки.';
+
+  return React.createElement('div', { style: { width: '100%', height: '100%', padding: '14px 16px 8px', display: 'flex', flexDirection: 'column' } },
+    React.createElement('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', style: { flex: 1, minHeight: '340px' }, preserveAspectRatio: 'xMidYMid meet' },
+      React.createElement('rect', { x: left - 14, y: top - 10, width: plotW + 28, height: plotH + 20, rx: 12, fill: '#0d1117', stroke: '#21262d' }),
+      [0, 1, 2, 3, 4].map(i => React.createElement('line', {
+        key: `grid-${i}`,
+        x1: left,
+        y1: top + i * (plotH / 4),
+        x2: left + plotW,
+        y2: top + i * (plotH / 4),
+        stroke: '#161b22'
+      })),
+      candles.map((c, i) => {
+        const up = Number(c.close) >= Number(c.open);
+        const color = up ? '#3fb950' : '#f85149';
+        const cx = x(i);
+        const yOpen = y(Number(c.open));
+        const yClose = y(Number(c.close));
+        const bodyY = Math.min(yOpen, yClose);
+        const bodyH = Math.max(2, Math.abs(yOpen - yClose));
+        return React.createElement(React.Fragment, { key: `${c.time_ms}-${i}` },
+          React.createElement('line', { x1: cx, y1: y(Number(c.high)), x2: cx, y2: y(Number(c.low)), stroke: color, strokeWidth: 1.2, opacity: 0.9 }),
+          React.createElement('rect', { x: cx - barW / 2, y: bodyY, width: barW, height: bodyH, rx: 1.5, fill: color, opacity: 0.82 })
+        );
+      }),
+      line(sl, '#f85149', 'SL'),
+      line(tp, '#3fb950', 'TP'),
+      marker(entryIdx, entry, '#58a6ff', 'ENTRY', side !== 'short'),
+      marker(exitIdx, exit, (!isNaN(pnl) && pnl >= 0) ? '#3fb950' : '#f85149', 'EXIT', side === 'short'),
+      React.createElement('text', { x: left, y: H - 14, fill: '#8b949e', fontSize: 12 }, sourceText)
+    )
+  );
+}
+
 function TradeChartModal({ trade, onClose }) {
   const [interval, setInterval] = useState('5');
   const [chartData, setChartData] = useState(null);
@@ -922,7 +1017,9 @@ function TradeChartModal({ trade, onClose }) {
                     })
                   : React.createElement('div', { className: 'empty' }, '📭 No candle data for this trade window'))
               : (chartData && chartData.candles && chartData.candles.length > 0)
-                ? React.createElement(SyntheticTradePath, { trade, chartData })
+                ? (chartData.source === 'synthetic_trade_path'
+                    ? React.createElement(SyntheticTradePath, { trade, chartData })
+                    : React.createElement(TradeCandlesSvg, { trade, chartData }))
               : (hasTradePath
                   ? React.createElement(SyntheticTradePath, {
                       trade,
@@ -1078,6 +1175,8 @@ function AlpacaPage() {
   const intraday = data.intraday_positions || [];
   const variants = data.variants || [];
   const monthlyCycle = data.monthly_cycle || {};
+  const v1 = data.intraday_v1 || {};
+  const v3 = data.intraday_v3_shadow || {};
   const variantLabel = (v) => {
     const id = String(v.id || '');
     if (id === 'monthly_v36') return 'Основная месячная v36';
@@ -1086,6 +1185,62 @@ function AlpacaPage() {
     return v.label || id;
   };
   const statusLabel = (exists) => exists ? 'отслеживается' : 'нет данных';
+  const sleeveMeta = (id) => {
+    if (id === 'monthly_v36') return {
+      role: 'Главная кандидатная стратегия под реальные деньги',
+      mode: 'Месячный momentum: выбирает акции раз в цикл и держит позицию дольше intraday.',
+      decision: 'Сильнейшая ветка сейчас. Именно её рассматриваем для первого real pilot, но текущий файл пиков надо восстановить.'
+    };
+    if (id === 'intraday_dynamic_v1') return {
+      role: 'Текущий paper-интрадей',
+      mode: 'Открывает короткие paper-сделки внутри дня через Alpaca. Сейчас уже есть позиции.',
+      decision: 'Пока только наблюдение. Для real money нужна отдельная статистика по дням/неделям.'
+    };
+    if (id === 'intraday_dynamic_v3_shadow') return {
+      role: 'Новая shadow-ветка на $1000 paper',
+      mode: 'Ищет более динамичные intraday-входы рядом с v1, не заменяя основную месячную.',
+      decision: 'Не денежная пока. Нужен честный portfolio-backtest и отдельная статистика, не scan-сумма.'
+    };
+    return { role: 'Рукав', mode: 'Нет описания', decision: 'Нужно уточнить.' };
+  };
+  const renderPositionSection = (title, positions, updated) => {
+    const rows = positions || [];
+    return React.createElement('div', { style: { marginBottom: '16px' } },
+      React.createElement('div', { className: 'section-title', style: { fontSize: '14px', marginBottom: '12px' } },
+        title,
+        React.createElement('span', { className: 'section-sub' },
+          updated ? `Обновлено: ${String(updated).replace('T', ' ').slice(0, 19)} UTC` : '')
+      ),
+      rows.length === 0
+        ? React.createElement('div', { className: 'card', style: { color: 'var(--text2)', fontSize: '13px' } },
+            'Открытых позиций нет или runtime этого рукава пока не пишет отдельный список позиций.')
+        : React.createElement('div', { className: 'grid3' },
+            rows.map((p, i) =>
+              React.createElement('div', { className: 'pick-card', key: `${title}-${p.symbol || 'pos'}-${i}` },
+                React.createElement('div', { className: 'pick-ticker' }, p.symbol || '—'),
+                React.createElement('div', { className: 'pick-month' },
+                  `${String(p.side || '').toUpperCase()} · qty ${p.qty != null ? p.qty : '?'}`),
+                p.entry_price != null && React.createElement('div', { className: 'pick-metric' },
+                  React.createElement('span', null, 'Вход'),
+                  React.createElement('span', { className: 'v' }, `$${parseFloat(p.entry_price).toFixed(2)}`)
+                ),
+                p.last_price != null && React.createElement('div', { className: 'pick-metric' },
+                  React.createElement('span', null, 'Текущая цена'),
+                  React.createElement('span', { className: 'v' }, `$${parseFloat(p.last_price).toFixed(2)}`)
+                ),
+                (p.stop_price != null || p.sl_price != null) && React.createElement('div', { className: 'pick-metric' },
+                  React.createElement('span', null, 'SL'),
+                  React.createElement('span', { className: 'v' }, `$${parseFloat(p.stop_price != null ? p.stop_price : p.sl_price).toFixed(2)}`)
+                ),
+                (p.target_price != null || p.tp_price != null) && React.createElement('div', { className: 'pick-metric' },
+                  React.createElement('span', null, 'TP'),
+                  React.createElement('span', { className: 'v' }, `$${parseFloat(p.target_price != null ? p.target_price : p.tp_price).toFixed(2)}`)
+                )
+              )
+            )
+          )
+    );
+  };
 
   return React.createElement('div', null,
     React.createElement('div', { className: 'page-hdr' },
@@ -1100,11 +1255,25 @@ function AlpacaPage() {
 
     variants.length > 0 && React.createElement('div', { className: 'grid3', style: { marginBottom: '16px' } },
       variants.map(v =>
-        React.createElement('div', { className: 'card', key: v.id },
+        {
+          const meta = sleeveMeta(v.id);
+          return React.createElement('div', { className: 'card', key: v.id },
           React.createElement('div', { className: 'card-title' }, variantLabel(v)),
+          React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Роль'),
+            React.createElement('span', { className: 'value' }, meta.role)
+          ),
           React.createElement('div', { className: 'info-row' },
             React.createElement('span', { className: 'label' }, 'Статус'),
             React.createElement('span', { className: `value ${v.exists ? 'pos' : 'neg'}` }, statusLabel(v.exists))
+          ),
+          React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Как работает'),
+            React.createElement('span', { className: 'value' }, meta.mode)
+          ),
+          React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Решение'),
+            React.createElement('span', { className: 'value' }, meta.decision)
           ),
           v.current_picks_count != null && React.createElement('div', { className: 'info-row' },
             React.createElement('span', { className: 'label' }, 'Текущие пики'),
@@ -1122,7 +1291,7 @@ function AlpacaPage() {
             React.createElement('span', { className: 'label' }, 'Последний пересчёт'),
             React.createElement('span', { className: 'value' }, v.latest_refresh_utc)
           )
-        )
+        )}
       )
     ),
 
@@ -1192,38 +1361,8 @@ function AlpacaPage() {
       )
     ),
 
-    intraday.length > 0 && React.createElement('div', { style: { marginBottom: '16px' } },
-      React.createElement('div', { className: 'section-title', style: { fontSize: '14px', marginBottom: '12px' } },
-        'Открытые intraday paper-позиции',
-        React.createElement('span', { className: 'section-sub' },
-          data.intraday_updated_utc ? `Обновлено: ${data.intraday_updated_utc.replace('T', ' ').slice(0, 19)} UTC` : '')
-      ),
-      React.createElement('div', { className: 'grid3' },
-        intraday.map((p, i) =>
-          React.createElement('div', { className: 'pick-card', key: `${p.symbol || 'pos'}-${i}` },
-            React.createElement('div', { className: 'pick-ticker' }, p.symbol || '—'),
-            React.createElement('div', { className: 'pick-month' },
-              `${String(p.side || '').toUpperCase()} · qty ${p.qty != null ? p.qty : '?'}`),
-            p.entry_price != null && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'Вход'),
-              React.createElement('span', { className: 'v' }, `$${parseFloat(p.entry_price).toFixed(2)}`)
-            ),
-            p.last_price != null && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'Текущая цена'),
-              React.createElement('span', { className: 'v' }, `$${parseFloat(p.last_price).toFixed(2)}`)
-            ),
-            (p.stop_price != null || p.sl_price != null) && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'SL'),
-              React.createElement('span', { className: 'v' }, `$${parseFloat(p.stop_price != null ? p.stop_price : p.sl_price).toFixed(2)}`)
-            ),
-            (p.target_price != null || p.tp_price != null) && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'TP'),
-              React.createElement('span', { className: 'v' }, `$${parseFloat(p.target_price != null ? p.target_price : p.tp_price).toFixed(2)}`)
-            )
-          )
-        )
-      )
-    ),
+    renderPositionSection('Интрадей v1: открытые paper-позиции', v1.open_positions || intraday, v1.generated_at_utc || data.intraday_updated_utc),
+    renderPositionSection('Интрадей v3 Shadow: отдельный paper-тест', v3.open_positions || [], v3.generated_at_utc),
 
     // Advisory
     adv.summary_metrics && React.createElement('div', { className: 'card' },
