@@ -672,7 +672,10 @@ function SyntheticTradePath({ trade, chartData }) {
       React.createElement('circle', { cx: 450, cy: y(exit), r: 6, fill: color }),
       React.createElement('text', { x: 70, y: y(entry) - 14, textAnchor: 'middle', fill: '#58a6ff', fontSize: 12, fontFamily: 'monospace' }, `ENTRY ${isNaN(entry) ? '—' : entry.toFixed(4)}`),
       React.createElement('text', { x: 450, y: y(exit) - 14, textAnchor: 'middle', fill: color, fontSize: 12, fontFamily: 'monospace' }, `EXIT ${isNaN(exit) ? '—' : exit.toFixed(4)}`),
-      React.createElement('text', { x: 46, y: 318, fill: '#8b949e', fontSize: 12 }, 'Synthetic trade path because market candles are unavailable for this old live event.')
+      React.createElement('text', { x: 46, y: 318, fill: '#8b949e', fontSize: 12 },
+        chartData && chartData.source === 'synthetic_trade_path'
+          ? 'Synthetic trade path because market candles are unavailable for this old live event.'
+          : 'Simplified trade path view. Entry/exit/SL/TP are from the real trade record.')
     )
   );
 }
@@ -900,29 +903,9 @@ function TradeChartModal({ trade, onClose }) {
             ? React.createElement('div', { className: 'empty' }, '⚠️ ' + err)
             : (chartData && (!chartData.candles || chartData.candles.length === 0))
               ? React.createElement('div', { className: 'empty' }, '📭 No candle data for this trade window')
-              : (chartData && chartData.source === 'synthetic_trade_path')
+              : (chartData && chartData.candles && chartData.candles.length > 0)
                 ? React.createElement(SyntheticTradePath, { trade, chartData })
-              : React.createElement(React.Fragment, null,
-                  chartData && chartData.warning
-                    ? React.createElement('div', {
-                        style: {
-                          position: 'absolute',
-                          left: '12px',
-                          top: '10px',
-                          zIndex: 2,
-                          maxWidth: '620px',
-                          padding: '8px 10px',
-                          borderRadius: '8px',
-                          background: 'rgba(187, 128, 9, .14)',
-                          border: '1px solid rgba(187, 128, 9, .35)',
-                          color: '#d29922',
-                          fontSize: '12px',
-                          lineHeight: '1.35',
-                        }
-                      }, 'Fallback: ' + chartData.warning)
-                    : null,
-                  React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } })
-                )
+              : React.createElement('div', { className: 'empty' }, '📭 No chart data for this trade')
       ),
       // Interval selector
       React.createElement('div', { className: 'modal-interval-bar' },
