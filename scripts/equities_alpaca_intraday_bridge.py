@@ -92,13 +92,13 @@ from forex.types import Candle, Signal
 
 # ── File paths ──────────────────────────────────────────────────────────────────
 ALPACA_DATA_URL    = "https://data.alpaca.markets"
-STATE_FILE         = ROOT / "configs" / "intraday_state.json"
-EQUITY_LOG_FILE    = ROOT / "configs" / "intraday_equity_log.json"
+STATE_FILE         = Path(os.getenv("INTRADAY_STATE_FILE", str(ROOT / "configs" / "intraday_state.json"))).expanduser()
+EQUITY_LOG_FILE    = Path(os.getenv("INTRADAY_EQUITY_LOG_FILE", str(ROOT / "configs" / "intraday_equity_log.json"))).expanduser()
 ENV_FILE           = ROOT / "configs" / "alpaca_paper_local.env"
 INTRADAY_CFG_FILE  = ROOT / "configs" / "intraday_config.json"   # hot-reloadable symbol + strategy config
-ADVISORY_DIR       = ROOT / "runtime" / "equities_intraday_dynamic_v1"
+ADVISORY_DIR       = Path(os.getenv("INTRADAY_ADVISORY_DIR", str(ROOT / "runtime" / "equities_intraday_dynamic_v1"))).expanduser()
 ADVISORY_FILE      = ADVISORY_DIR / "latest_advisory.json"
-MONTHLY_RUNTIME_DIR = ROOT / "runtime" / "equities_monthly_v36"
+MONTHLY_RUNTIME_DIR = Path(os.getenv("INTRADAY_MONTHLY_RUNTIME_DIR", str(ROOT / "runtime" / "equities_monthly_v36"))).expanduser()
 
 # US market session in UTC (EDT: +4h, EST: +5h). Wide window handles DST.
 US_SESSION_UTC_START = 14   # 10:00 AM ET (EDT safety buffer)
