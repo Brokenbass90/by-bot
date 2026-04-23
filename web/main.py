@@ -72,6 +72,8 @@ async def _security_headers(request: Request, call_next):
     response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
     if request.url.path.startswith("/auth") or request.url.path.startswith("/api"):
         response.headers.setdefault("Cache-Control", "no-store")
+    else:
+        response.headers.setdefault("Cache-Control", "no-cache, must-revalidate")
     return response
 
 # ── health check (no auth required) ──────────────────────────────────────────

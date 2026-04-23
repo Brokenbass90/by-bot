@@ -372,12 +372,26 @@ function useFetch(url, deps = [], pollMs = 0) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const dataRef = useRef(null);
 
-  const load = React.useCallback(() => {
+  const load = React.useCallback((opts = {}) => {
     let cancelled = false;
-    setLoading(true);
-    api(url).then(d => { if (!cancelled) { setData(d); setLoading(false); } })
-            .catch(e => { if (!cancelled) { setError(e); setLoading(false); } });
+    const silent = !!opts.silent && dataRef.current !== null;
+    if (!silent) setLoading(true);
+    api(url).then(d => {
+              if (!cancelled) {
+                dataRef.current = d;
+                setData(d);
+                setError(null);
+                setLoading(false);
+              }
+            })
+            .catch(e => {
+              if (!cancelled) {
+                setError(e);
+                setLoading(false);
+              }
+            });
     return () => { cancelled = true; };
   }, [url]);
 
@@ -388,7 +402,7 @@ function useFetch(url, deps = [], pollMs = 0) {
 
   useEffect(() => {
     if (!pollMs || pollMs <= 0) return undefined;
-    const t = setInterval(() => load(), pollMs);
+    const t = setInterval(() => load({ silent: true }), pollMs);
     return () => clearInterval(t);
   }, [load, pollMs]);
 
@@ -615,6 +629,54 @@ function fmtTime(ms) {
   return new Date(ms).toISOString().slice(0, 16).replace('T', ' ');
 }
 
+function SyntheticTradePath({ trade, chartData }) {
+  const entry = parseFloat(trade.entry || trade.entry_price);
+  const exit = parseFloat(trade.exit || trade.exit_price);
+  const sl = parseFloat(trade.sl || trade.sl_price);
+  const tp = parseFloat(trade.tp || trade.tp_price);
+  const pnl = parseFloat(trade.pnl);
+  const vals = [entry, exit, sl, tp].filter(v => !isNaN(v));
+  const minV = Math.min(...vals);
+  const maxV = Math.max(...vals);
+  const pad = Math.max((maxV - minV) * 0.18, Math.abs(entry || 1) * 0.001);
+  const lo = minV - pad;
+  const hi = maxV + pad;
+  const y = v => 280 - ((v - lo) / Math.max(1e-9, hi - lo)) * 220;
+  const color = !isNaN(pnl) && pnl >= 0 ? '#3fb950' : '#f85149';
+  const points = `70,${y(entry)} 260,${y((entry + exit) / 2)} 450,${y(exit)}`;
+  const line = (price, stroke, label) => isNaN(price) ? null : React.createElement(React.Fragment, { key: label },
+    React.createElement('line', { x1: 46, y1: y(price), x2: 474, y2: y(price), stroke, strokeDasharray: '6 6', strokeWidth: 1.4, opacity: 0.9 }),
+    React.createElement('text', { x: 482, y: y(price) + 4, fill: stroke, fontSize: 12, fontFamily: 'monospace' }, `${label} ${price.toFixed(4)}`)
+  );
+  return React.createElement('div', { style: { width: '100%', height: '100%', padding: '18px 18px 10px' } },
+    chartData && chartData.warning
+      ? React.createElement('div', {
+          style: {
+            marginBottom: '10px',
+            padding: '8px 10px',
+            borderRadius: '8px',
+            background: 'rgba(187, 128, 9, .14)',
+            border: '1px solid rgba(187, 128, 9, .35)',
+            color: '#d29922',
+            fontSize: '12px',
+          }
+        }, 'Fallback: ' + chartData.warning)
+      : null,
+    React.createElement('svg', { viewBox: '0 0 560 330', width: '100%', height: 'calc(100% - 40px)', preserveAspectRatio: 'xMidYMid meet' },
+      React.createElement('rect', { x: 34, y: 26, width: 474, height: 270, rx: 12, fill: '#0d1117', stroke: '#21262d' }),
+      [0, 1, 2, 3].map(i => React.createElement('line', { key: i, x1: 46, y1: 70 + i * 55, x2: 496, y2: 70 + i * 55, stroke: '#161b22' })),
+      line(sl, '#f85149', 'SL'),
+      line(tp, '#3fb950', 'TP'),
+      React.createElement('polyline', { points, fill: 'none', stroke: color, strokeWidth: 3, strokeLinecap: 'round', strokeLinejoin: 'round' }),
+      React.createElement('circle', { cx: 70, cy: y(entry), r: 6, fill: '#58a6ff' }),
+      React.createElement('circle', { cx: 450, cy: y(exit), r: 6, fill: color }),
+      React.createElement('text', { x: 70, y: y(entry) - 14, textAnchor: 'middle', fill: '#58a6ff', fontSize: 12, fontFamily: 'monospace' }, `ENTRY ${isNaN(entry) ? '—' : entry.toFixed(4)}`),
+      React.createElement('text', { x: 450, y: y(exit) - 14, textAnchor: 'middle', fill: color, fontSize: 12, fontFamily: 'monospace' }, `EXIT ${isNaN(exit) ? '—' : exit.toFixed(4)}`),
+      React.createElement('text', { x: 46, y: 318, fill: '#8b949e', fontSize: 12 }, 'Synthetic trade path because market candles are unavailable for this old live event.')
+    )
+  );
+}
+
 function TradeChartModal({ trade, onClose }) {
   const [interval, setInterval] = useState('5');
   const [chartData, setChartData] = useState(null);
@@ -668,6 +730,7 @@ function TradeChartModal({ trade, onClose }) {
   // Build / rebuild lightweight-charts instance
   useEffect(() => {
     if (!chartData || !chartRef.current || loading || err) return;
+    if (chartData.source === 'synthetic_trade_path') return;
     if (!chartData.candles || chartData.candles.length === 0) return; // handled by render
     const container = chartRef.current;
 
@@ -837,6 +900,8 @@ function TradeChartModal({ trade, onClose }) {
             ? React.createElement('div', { className: 'empty' }, '⚠️ ' + err)
             : (chartData && (!chartData.candles || chartData.candles.length === 0))
               ? React.createElement('div', { className: 'empty' }, '📭 No candle data for this trade window')
+              : (chartData && chartData.source === 'synthetic_trade_path')
+                ? React.createElement(SyntheticTradePath, { trade, chartData })
               : React.createElement(React.Fragment, null,
                   chartData && chartData.warning
                     ? React.createElement('div', {
