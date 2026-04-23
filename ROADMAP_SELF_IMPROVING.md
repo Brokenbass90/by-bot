@@ -93,6 +93,18 @@
 runtime/params_history.jsonl — лог всех applied параметров с P&L атрибуцией
 ```
 
+### 3.5 Stack Comparison Gate (ПРИОРИТЕТ #5)
+```bash
+python3 scripts/run_stack_comparison_queue.py --config configs/stack_comparison_queue_20260423.json
+```
+
+Задача: больше не принимать красивые strategy-only цифры без проверки всего стека. Каждый кандидат сравнивается в двух режимах:
+
+- без control-plane: стратегия сама по себе;
+- с control-plane: orchestrator + router + allocator + health gate.
+
+Правило ремонта: если полный стек сильно режет сделки/доходность и не даёт сравнимого снижения просадки, чинить или ослаблять именно control-plane для этого рукава, а не списывать стратегию как "сломалась".
+
 ---
 
 ## Фаза 4 — Strategy Factory (БУДУЩЕЕ 🔮)

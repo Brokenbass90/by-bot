@@ -1,0 +1,68 @@
+{
+  "name": "stack_comparison_queue_20260423",
+  "description": "Paired overnight audit: compare best strategy-only research result with full-stack dynamic replay for the same candidate.",
+  "end": "2026-04-01",
+  "total_days": 360,
+  "window_days": 30,
+  "step_days": 30,
+  "max_scan_symbols": 80,
+  "health_mode": "only_candidate_ok",
+  "candidates": [
+    {
+      "id": "impulse_ivb1",
+      "label": "Impulse Volume Breakout v1",
+      "spec": "configs/autoresearch/impulse_volume_breakout_v1_annual_repair_v1.json",
+      "sleeves": ["impulse"],
+      "strategies": ["impulse_volume_breakout_v1"],
+      "notes": "Strong strategy-only result; first proof that the current stack cuts frequency hard."
+    },
+    {
+      "id": "breakdown_v1",
+      "label": "Breakdown v1",
+      "spec": "configs/autoresearch/breakdown_v1_recent180_focus_v1.json",
+      "sleeves": ["breakdown"],
+      "strategies": ["alt_inplay_breakdown_v1"],
+      "notes": "Best short-side breakdown candidate; check whether regime routing preserves the bear edge."
+    },
+    {
+      "id": "support_bounce",
+      "label": "Support Bounce v1",
+      "spec": "configs/autoresearch/support_bounce_v1_annual_repair_v2.json",
+      "sleeves": ["bounce1"],
+      "strategies": ["alt_support_bounce_v1"],
+      "notes": "Bull/chop long candidate near pass; check how much router/regime reduces it."
+    },
+    {
+      "id": "flat_arf1",
+      "label": "Flat Resistance Fade v1",
+      "spec": "configs/autoresearch/flat_live_universe_repair_v2.json",
+      "sleeves": ["flat"],
+      "strategies": ["alt_resistance_fade_v1"],
+      "notes": "Current flat-family candidate; useful control sample because the stack should help it in chop."
+    },
+    {
+      "id": "att1",
+      "label": "Trendline Touch ATT1",
+      "spec": "configs/autoresearch/att1_initial_sweep_v1.json",
+      "sleeves": ["att1"],
+      "strategies": ["alt_trendline_touch_v1"],
+      "notes": "High-frequency proven candidate; check if full stack still preserves the annual edge."
+    },
+    {
+      "id": "range_package",
+      "label": "Range Package",
+      "spec": "configs/autoresearch/range_scalp_v1_annual_repair_v1.json",
+      "sleeves": ["breakdown", "flat", "range_scalp"],
+      "strategies": ["alt_inplay_breakdown_v1", "alt_resistance_fade_v1", "alt_range_scalp_v1"],
+      "notes": "Package test, not pure range-only: this spec was researched as breakdown+flat+range."
+    },
+    {
+      "id": "elder_v3",
+      "label": "Elder Triple Screen v3",
+      "spec": "configs/autoresearch/elder_ts_v3_macro_relax_v1.json",
+      "sleeves": ["elder_ts_v3"],
+      "strategies": ["elder_triple_screen_v3"],
+      "notes": "Sparse high-PF candidate; current policy may block it completely, which is useful to prove."
+    }
+  ]
+}
