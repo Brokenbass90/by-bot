@@ -68,7 +68,14 @@ def _resolve_path(raw: str) -> Path:
     return path
 
 
-def _cached_symbol_subset(symbols: List[str], *, cache_dir: Path, base_interval_min: int = 5) -> tuple[List[str], List[str]]:
+def _cached_symbol_subset(
+    symbols: List[str],
+    *,
+    cache_dir: Path,
+    start_ms: int,
+    end_ms: int,
+    base_interval_min: int = 5,
+) -> tuple[List[str], List[str]]:
     interval = "1" if int(base_interval_min) == 1 else "5"
     kept: List[str] = []
     dropped: List[str] = []
@@ -76,7 +83,18 @@ def _cached_symbol_subset(symbols: List[str], *, cache_dir: Path, base_interval_
         symbol = str(raw_symbol or "").strip().upper()
         if not symbol:
             continue
-        if any(cache_dir.glob(f"{symbol}_{interval}_*.json")):
+        has_coverage = False
+        for cache_file in cache_dir.glob(f"{symbol}_{interval}_*.json"):
+            try:
+                parts = cache_file.stem.split("_")
+                file_start = int(parts[2])
+                file_end = int(parts[3])
+            except (IndexError, ValueError):
+                continue
+            if file_start <= start_ms and file_end >= end_ms:
+                has_coverage = True
+                break
+        if has_coverage:
             kept.append(symbol)
         else:
             dropped.append(symbol)
@@ -636,7 +654,14 @@ def main() -> int:
         dropped_uncached_symbols: List[str] = []
         cache_only = str(env_map.get("BACKTEST_CACHE_ONLY", "0")).strip().lower() in {"1", "true", "yes", "on"}
         if cache_only:
-            symbols, dropped_uncached_symbols = _cached_symbol_subset(symbols, cache_dir=cache_dir)
+            window_start_ms = int(dt.datetime.combine(window_start, dt.time.min, tzinfo=dt.timezone.utc).timestamp() * 1000)
+            window_end_ms = int(dt.datetime.combine(window_end, dt.time.min, tzinfo=dt.timezone.utc).timestamp() * 1000)
+            symbols, dropped_uncached_symbols = _cached_symbol_subset(
+                symbols,
+                cache_dir=cache_dir,
+                start_ms=window_start_ms,
+                end_ms=window_end_ms,
+            )
             if dropped_uncached_symbols:
                 print(
                     f"[annual-cache] {window_end} dropped_uncached={','.join(dropped_uncached_symbols)} "
