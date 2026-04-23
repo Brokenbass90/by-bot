@@ -629,13 +629,17 @@ function fmtTime(ms) {
   return new Date(ms).toISOString().slice(0, 16).replace('T', ' ');
 }
 
-function SyntheticTradePath({ trade, chartData }) {
+function SyntheticTradePath({ trade, chartData, note }) {
   const entry = parseFloat(trade.entry || trade.entry_price);
   const exit = parseFloat(trade.exit || trade.exit_price);
   const sl = parseFloat(trade.sl || trade.sl_price);
   const tp = parseFloat(trade.tp || trade.tp_price);
   const pnl = parseFloat(trade.pnl);
   const vals = [entry, exit, sl, tp].filter(v => !isNaN(v));
+  if (vals.length < 2) {
+    return React.createElement('div', { className: 'empty' },
+      'Нет цен входа/выхода, поэтому график сделки построить нельзя.');
+  }
   const minV = Math.min(...vals);
   const maxV = Math.max(...vals);
   const pad = Math.max((maxV - minV) * 0.18, Math.abs(entry || 1) * 0.001);
@@ -648,8 +652,9 @@ function SyntheticTradePath({ trade, chartData }) {
     React.createElement('line', { x1: 46, y1: y(price), x2: 474, y2: y(price), stroke, strokeDasharray: '6 6', strokeWidth: 1.4, opacity: 0.9 }),
     React.createElement('text', { x: 482, y: y(price) + 4, fill: stroke, fontSize: 12, fontFamily: 'monospace' }, `${label} ${price.toFixed(4)}`)
   );
-  return React.createElement('div', { style: { width: '100%', height: '100%', padding: '18px 18px 10px' } },
-    chartData && chartData.warning
+  const warning = note || (chartData && chartData.warning);
+  return React.createElement('div', { style: { width: '100%', height: '100%', padding: '18px 18px 10px', display: 'flex', flexDirection: 'column' } },
+    warning
       ? React.createElement('div', {
           style: {
             marginBottom: '10px',
@@ -660,9 +665,9 @@ function SyntheticTradePath({ trade, chartData }) {
             color: '#d29922',
             fontSize: '12px',
           }
-        }, 'Fallback: ' + chartData.warning)
+        }, warning)
       : null,
-    React.createElement('svg', { viewBox: '0 0 560 330', width: '100%', height: 'calc(100% - 40px)', preserveAspectRatio: 'xMidYMid meet' },
+    React.createElement('svg', { viewBox: '0 0 560 330', width: '100%', style: { flex: 1, minHeight: '300px' }, preserveAspectRatio: 'xMidYMid meet' },
       React.createElement('rect', { x: 34, y: 26, width: 474, height: 270, rx: 12, fill: '#0d1117', stroke: '#21262d' }),
       [0, 1, 2, 3].map(i => React.createElement('line', { key: i, x1: 46, y1: 70 + i * 55, x2: 496, y2: 70 + i * 55, stroke: '#161b22' })),
       line(sl, '#f85149', 'SL'),
@@ -674,8 +679,8 @@ function SyntheticTradePath({ trade, chartData }) {
       React.createElement('text', { x: 450, y: y(exit) - 14, textAnchor: 'middle', fill: color, fontSize: 12, fontFamily: 'monospace' }, `EXIT ${isNaN(exit) ? '—' : exit.toFixed(4)}`),
       React.createElement('text', { x: 46, y: 318, fill: '#8b949e', fontSize: 12 },
         chartData && chartData.source === 'synthetic_trade_path'
-          ? 'Synthetic trade path because market candles are unavailable for this old live event.'
-          : 'Simplified trade path view. Entry/exit/SL/TP are from the real trade record.')
+          ? 'Старые свечи не найдены, поэтому показан путь сделки по реальным ценам входа/выхода/SL/TP.'
+          : 'Упрощённый график сделки. Вход, выход, SL и TP взяты из реальной записи сделки.')
     )
   );
 }
@@ -831,6 +836,7 @@ function TradeChartModal({ trade, onClose }) {
   const exit  = parseFloat(trade.exit  || trade.exit_price);
   const dur   = (entryTs && exitTs) ? fmtDuration(exitTs - entryTs) : '—';
   const pnlColor = !isNaN(pnl) ? (pnl >= 0 ? '#3fb950' : '#f85149') : '#8b949e';
+  const hasTradePath = !isNaN(entry) && !isNaN(exit);
 
   const INTERVALS = [
     { v: '1', l: '1m' }, { v: '5', l: '5m' }, { v: '15', l: '15m' },
@@ -900,12 +906,30 @@ function TradeChartModal({ trade, onClose }) {
               React.createElement('div', { className: 'spinner' }),
               React.createElement('span', null, 'Loading candles…'))
           : err
-            ? React.createElement('div', { className: 'empty' }, '⚠️ ' + err)
+            ? (hasTradePath
+                ? React.createElement(SyntheticTradePath, {
+                    trade,
+                    chartData,
+                    note: 'Свечи не загрузились, поэтому показываю честный путь сделки по ценам из журнала: вход, выход, SL и TP.'
+                  })
+                : React.createElement('div', { className: 'empty' }, '⚠️ ' + err))
             : (chartData && (!chartData.candles || chartData.candles.length === 0))
-              ? React.createElement('div', { className: 'empty' }, '📭 No candle data for this trade window')
+              ? (hasTradePath
+                  ? React.createElement(SyntheticTradePath, {
+                      trade,
+                      chartData,
+                      note: 'Свечи для этого старого окна не найдены, поэтому показываю путь сделки по реальным ценам из журнала.'
+                    })
+                  : React.createElement('div', { className: 'empty' }, '📭 No candle data for this trade window'))
               : (chartData && chartData.candles && chartData.candles.length > 0)
                 ? React.createElement(SyntheticTradePath, { trade, chartData })
-              : React.createElement('div', { className: 'empty' }, '📭 No chart data for this trade')
+              : (hasTradePath
+                  ? React.createElement(SyntheticTradePath, {
+                      trade,
+                      chartData,
+                      note: 'Жду свечи, но уже могу показать путь сделки по ценам из журнала.'
+                    })
+                  : React.createElement('div', { className: 'empty' }, '📭 No chart data for this trade'))
       ),
       // Interval selector
       React.createElement('div', { className: 'modal-interval-bar' },
@@ -1054,40 +1078,48 @@ function AlpacaPage() {
   const intraday = data.intraday_positions || [];
   const variants = data.variants || [];
   const monthlyCycle = data.monthly_cycle || {};
+  const variantLabel = (v) => {
+    const id = String(v.id || '');
+    if (id === 'monthly_v36') return 'Основная месячная v36';
+    if (id === 'intraday_dynamic_v1') return 'Интрадей v1 (paper)';
+    if (id === 'intraday_dynamic_v3_shadow') return 'Интрадей v3 Shadow (новый тест)';
+    return v.label || id;
+  };
+  const statusLabel = (exists) => exists ? 'отслеживается' : 'нет данных';
 
   return React.createElement('div', null,
     React.createElement('div', { className: 'page-hdr' },
       React.createElement('div', { className: 'section-title' }, 'Alpaca Paper Trading',
         React.createElement('span', { className: 'section-sub' },
-          intraday.length > 0 ? 'Monthly Momentum Strategy + Intraday Dynamic v1' : 'Monthly Momentum Strategy')
+          'основная месячная + intraday paper + shadow-тест')
       ),
       React.createElement('div', { className: 'topbar-right' },
-        React.createElement('button', { className: 'refresh-btn', onClick: refresh }, '↺ Refresh')
+        React.createElement('button', { className: 'refresh-btn', onClick: refresh }, '↺ Обновить')
       )
     ),
 
     variants.length > 0 && React.createElement('div', { className: 'grid3', style: { marginBottom: '16px' } },
       variants.map(v =>
         React.createElement('div', { className: 'card', key: v.id },
-          React.createElement('div', { className: 'card-title' }, v.label || v.id),
+          React.createElement('div', { className: 'card-title' }, variantLabel(v)),
           React.createElement('div', { className: 'info-row' },
-            React.createElement('span', { className: 'label' }, 'Status'),
-            React.createElement('span', { className: `value ${v.exists ? 'pos' : 'neg'}` }, v.exists ? 'tracked' : 'missing')
+            React.createElement('span', { className: 'label' }, 'Статус'),
+            React.createElement('span', { className: `value ${v.exists ? 'pos' : 'neg'}` }, statusLabel(v.exists))
           ),
           v.current_picks_count != null && React.createElement('div', { className: 'info-row' },
-            React.createElement('span', { className: 'label' }, 'Current picks'),
+            React.createElement('span', { className: 'label' }, 'Текущие пики'),
             React.createElement('span', { className: 'value' }, v.current_picks_count)
           ),
           v.open_positions && React.createElement('div', { className: 'info-row' },
-            React.createElement('span', { className: 'label' }, 'Open positions'),
+            React.createElement('span', { className: 'label' }, 'Открытые позиции'),
             React.createElement('span', { className: 'value' }, (v.open_positions || []).length)
           ),
           v.generated_at_utc && React.createElement('div', { className: 'info-row' },
-            React.createElement('span', { className: 'label' }, 'Updated'),
+            React.createElement('span', { className: 'label' }, 'Обновлено'),
             React.createElement('span', { className: 'value' }, v.generated_at_utc)
           ),
           v.latest_refresh_utc && React.createElement('div', { className: 'info-row' },
-            React.createElement('span', { className: 'label' }, 'Refresh'),
+            React.createElement('span', { className: 'label' }, 'Последний пересчёт'),
             React.createElement('span', { className: 'value' }, v.latest_refresh_utc)
           )
         )
@@ -1097,47 +1129,47 @@ function AlpacaPage() {
     // Summary stats
     React.createElement('div', { className: 'grid4', style: { marginBottom: '16px' } },
       React.createElement('div', { className: 'stat-box' },
-        React.createElement('div', { className: 'stat-label' }, 'Compounded Return'),
+        React.createElement('div', { className: 'stat-label' }, 'Сложная доходность'),
         React.createElement('div', { className: `stat-value ${parseFloat(sum.compounded_return_pct || 0) >= 0 ? 'green' : 'red'}` },
           sum.compounded_return_pct ? `+${parseFloat(sum.compounded_return_pct).toFixed(1)}%` : '—'),
-        React.createElement('div', { className: 'stat-sub' }, `over ${sum.calendar_months || '?'} calendar months`)
+        React.createElement('div', { className: 'stat-sub' }, `за ${sum.calendar_months || '?'} календарных месяцев`)
       ),
       React.createElement('div', { className: 'stat-box' },
         React.createElement('div', { className: 'stat-label' }, 'Profit Factor'),
         React.createElement('div', { className: 'stat-value blue' }, sum.profit_factor ? parseFloat(sum.profit_factor).toFixed(2) : '—'),
-        React.createElement('div', { className: 'stat-sub' }, `${sum.trades || 0} trades total`)
+        React.createElement('div', { className: 'stat-sub' }, `${sum.trades || 0} сделок всего`)
       ),
       React.createElement('div', { className: 'stat-box' },
         React.createElement('div', { className: 'stat-label' }, 'Win Rate'),
         React.createElement('div', { className: 'stat-value blue' }, sum.winrate_pct ? `${parseFloat(sum.winrate_pct).toFixed(0)}%` : '—'),
-        React.createElement('div', { className: 'stat-sub' }, `${sum.negative_months || 0} negative months`)
+        React.createElement('div', { className: 'stat-sub' }, `${sum.negative_months || 0} красных месяцев`)
       ),
       React.createElement('div', { className: 'stat-box' },
-        React.createElement('div', { className: 'stat-label' }, 'Max Monthly DD'),
+        React.createElement('div', { className: 'stat-label' }, 'Макс. месячная просадка'),
         React.createElement('div', { className: 'stat-value red' }, sum.max_monthly_dd_pct ? `${parseFloat(sum.max_monthly_dd_pct).toFixed(2)}%` : '—'),
-        React.createElement('div', { className: 'stat-sub' }, 'drawdown')
+        React.createElement('div', { className: 'stat-sub' }, 'максимальная просадка')
       )
     ),
 
     // Current picks
     monthlyCycle.current_picks_missing && React.createElement('div', { className: 'card', style: { marginBottom: '16px', borderColor: 'var(--yellow)' } },
-      React.createElement('div', { className: 'card-title' }, 'Monthly Picks Fallback Mode'),
+      React.createElement('div', { className: 'card-title' }, 'Внимание: месячные пики показаны из fallback'),
       React.createElement('div', { style: { color: 'var(--text2)', fontSize: '13px', lineHeight: 1.5 } },
-        'runtime/equities_monthly_v36/current_cycle_picks.csv is missing, so the UI is falling back to the latest refresh artifacts. Summary stays current, but this should be repaired on the server.')),
+        'На сервере не найден runtime/equities_monthly_v36/current_cycle_picks.csv. Поэтому ниже показан последний найденный refresh-артефакт, а не гарантированно новая текущая подборка. Сводка по стратегии остаётся видимой, но refresh месячного цикла надо починить отдельно.')),
     picks.length > 0 && React.createElement('div', { style: { marginBottom: '16px' } },
       React.createElement('div', { className: 'section-title', style: { fontSize: '14px', marginBottom: '12px' } },
-        `Current Picks — ${picks[0]?.month || ''}`),
+        `Пики месячной стратегии — ${picks[0]?.month || ''}`),
       React.createElement('div', { className: 'grid3' },
         picks.map((p, i) =>
           React.createElement('div', { className: 'pick-card', key: i },
             React.createElement('div', { className: 'pick-ticker' }, p.ticker),
-            React.createElement('div', { className: 'pick-month' }, `Entry: ${p.entry_day || '?'}`),
+            React.createElement('div', { className: 'pick-month' }, `Дата входа: ${p.entry_day || '?'}`),
             p.score != null && React.createElement('div', { className: 'pick-metric' },
               React.createElement('span', null, 'Score'),
               React.createElement('span', { className: 'v' }, parseFloat(p.score).toFixed(4))
             ),
             p.momentum60_pct != null && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, '60d Momentum'),
+              React.createElement('span', null, 'Импульс 60д'),
               React.createElement('span', { className: `v ${parseFloat(p.momentum60_pct) >= 0 ? 'pos' : 'neg'}` },
                 fmt(parseFloat(p.momentum60_pct), 1) + '%')
             ),
@@ -1146,7 +1178,7 @@ function AlpacaPage() {
               React.createElement('span', { className: 'v' }, parseFloat(p.atr20_pct).toFixed(2) + '%')
             ),
             p.weight != null && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'Weight'),
+              React.createElement('span', null, 'Вес'),
               React.createElement('span', { className: 'v' }, (parseFloat(p.weight) * 100).toFixed(1) + '%')
             ),
             (p.entry_price || p.stop_price) && React.createElement('div', { className: 'pick-entry' },
@@ -1162,9 +1194,9 @@ function AlpacaPage() {
 
     intraday.length > 0 && React.createElement('div', { style: { marginBottom: '16px' } },
       React.createElement('div', { className: 'section-title', style: { fontSize: '14px', marginBottom: '12px' } },
-        'Intraday Paper Positions',
+        'Открытые intraday paper-позиции',
         React.createElement('span', { className: 'section-sub' },
-          data.intraday_updated_utc ? `Updated: ${data.intraday_updated_utc.replace('T', ' ').slice(0, 19)} UTC` : '')
+          data.intraday_updated_utc ? `Обновлено: ${data.intraday_updated_utc.replace('T', ' ').slice(0, 19)} UTC` : '')
       ),
       React.createElement('div', { className: 'grid3' },
         intraday.map((p, i) =>
@@ -1173,11 +1205,11 @@ function AlpacaPage() {
             React.createElement('div', { className: 'pick-month' },
               `${String(p.side || '').toUpperCase()} · qty ${p.qty != null ? p.qty : '?'}`),
             p.entry_price != null && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'Entry'),
+              React.createElement('span', null, 'Вход'),
               React.createElement('span', { className: 'v' }, `$${parseFloat(p.entry_price).toFixed(2)}`)
             ),
             p.last_price != null && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'Last'),
+              React.createElement('span', null, 'Текущая цена'),
               React.createElement('span', { className: 'v' }, `$${parseFloat(p.last_price).toFixed(2)}`)
             ),
             (p.stop_price != null || p.sl_price != null) && React.createElement('div', { className: 'pick-metric' },
