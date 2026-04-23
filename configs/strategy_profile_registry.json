@@ -267,8 +267,8 @@
     },
 
     {
-      "profile_id": "asb1_bull_core",
-      "env_key": "ASB1_SYMBOL_ALLOWLIST",
+      "profile_id": "bounce1_bull_core",
+      "env_key": "BOUNCE1_SYMBOL_ALLOWLIST",
       "default": true,
       "active_regimes": ["bull_trend", "bull_chop"],
       "strategy_tags": ["alt_support_bounce_v1"],
@@ -286,10 +286,54 @@
       "anchor_symbols": ["ADAUSDT", "LINKUSDT", "SUIUSDT", "DOTUSDT"]
     },
     {
-      "profile_id": "asb1_bear_off",
-      "env_key": "ASB1_SYMBOL_ALLOWLIST",
+      "profile_id": "bounce1_bear_off",
+      "env_key": "BOUNCE1_SYMBOL_ALLOWLIST",
       "active_regimes": ["bear_chop", "bear_trend"],
       "strategy_tags": ["alt_support_bounce_v1"],
+      "fixed_symbols": []
+    },
+    {
+      "profile_id": "asb1_bull_core",
+      "env_key": "ASB1_SYMBOL_ALLOWLIST",
+      "default": true,
+      "active_regimes": ["bull_trend", "bull_chop"],
+      "strategy_tags": ["alt_slope_break_v1", "asb1"],
+      "fallback_mode": "anchor_only",
+      "exclude_symbols": ["FARTCOINUSDT", "HYPEUSDT", "1000PEPEUSDT"],
+      "min_turnover": 30000000.0,
+      "min_atr_pct": 0.30,
+      "max_atr_pct": 3.50,
+      "min_listing_days": 90,
+      "top_n": 8,
+      "bt_min_trades": 5,
+      "bt_min_net": 0.0,
+      "bt_min_pf": 1.05,
+      "bt_require_history": true,
+      "anchor_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT"]
+    },
+    {
+      "profile_id": "asb1_bear_reduced",
+      "env_key": "ASB1_SYMBOL_ALLOWLIST",
+      "active_regimes": ["bear_chop"],
+      "strategy_tags": ["alt_slope_break_v1", "asb1"],
+      "fallback_mode": "anchor_only",
+      "exclude_symbols": ["FARTCOINUSDT", "HYPEUSDT", "1000PEPEUSDT"],
+      "min_turnover": 30000000.0,
+      "min_atr_pct": 0.30,
+      "max_atr_pct": 3.00,
+      "min_listing_days": 90,
+      "top_n": 5,
+      "bt_min_trades": 5,
+      "bt_min_net": 0.0,
+      "bt_min_pf": 1.05,
+      "bt_require_history": true,
+      "anchor_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT"]
+    },
+    {
+      "profile_id": "asb1_bear_trend_off",
+      "env_key": "ASB1_SYMBOL_ALLOWLIST",
+      "active_regimes": ["bear_trend"],
+      "strategy_tags": ["alt_slope_break_v1", "asb1"],
       "fixed_symbols": []
     },
 
