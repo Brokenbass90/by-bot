@@ -462,6 +462,8 @@ def _simulate_trades_portfolio_stop(
     weights: list[float],
     max_hold_days: int,
     portfolio_stop_pct: float,
+    be_trigger_r: float = 0.0,
+    trail_atr_mult: float = 0.0,
 ) -> list[tuple[int, float, str]]:
     """
     Simulate N concurrent trades with a portfolio-level intramonth stop.
@@ -479,8 +481,10 @@ def _simulate_trades_portfolio_stop(
     # Independent results (used when portfolio_stop disabled or as fallback)
     indep_results: list[tuple[int, float, str]] = []
     for cand, entry_idx, daily in picks_info:
+        atr_abs = cand.atr20_pct / 100.0 * cand.entry_price
         indep_results.append(
-            _simulate_trade(daily, entry_idx, cand.stop_price, cand.target_price, max_hold_days)
+            _simulate_trade(daily, entry_idx, cand.stop_price, cand.target_price, max_hold_days,
+                            be_trigger_r=be_trigger_r, trail_atr_mult=trail_atr_mult, atr=atr_abs)
         )
     if portfolio_stop_pct <= 0.0:
         return indep_results
@@ -496,6 +500,11 @@ def _simulate_trades_portfolio_stop(
     exit_results: list[tuple[int, float, str] | None] = [None] * n
     active = [True] * n
     entry_prices = [cand.entry_price for cand, _, _ in picks_info]
+    # Dynamic stop tracking for BE + trailing
+    current_stops = [cand.stop_price for cand, _, _ in picks_info]
+    running_highs = [cand.entry_price for cand, _, _ in picks_info]
+    be_triggered = [False] * n
+    atrs_abs = [cand.atr20_pct / 100.0 * cand.entry_price for cand, _, _ in picks_info]
 
     for day_i in range(first_entry, last_exit_bound + 1):
         # --- 1. resolve individual SL/TP/time for each active trade this day ---
@@ -513,8 +522,23 @@ def _simulate_trades_portfolio_stop(
                 active[i] = False
                 continue
             bar = daily[day_i]
-            if bar.l <= cand.stop_price:
-                exit_results[i] = (day_i, cand.stop_price, "stop")
+            running_highs[i] = max(running_highs[i], bar.h)
+
+            # BE protection
+            if be_trigger_r > 0 and not be_triggered[i]:
+                stop_dist = entry_prices[i] - cand.stop_price
+                if stop_dist > 0 and (running_highs[i] - entry_prices[i]) >= be_trigger_r * stop_dist:
+                    current_stops[i] = max(current_stops[i], entry_prices[i])
+                    be_triggered[i] = True
+
+            # Trailing stop (after BE)
+            if trail_atr_mult > 0 and be_triggered[i] and atrs_abs[i] > 0:
+                trail_level = running_highs[i] - trail_atr_mult * atrs_abs[i]
+                current_stops[i] = max(current_stops[i], trail_level)
+
+            if bar.l <= current_stops[i]:
+                reason = "trail_stop" if be_triggered[i] else "stop"
+                exit_results[i] = (day_i, current_stops[i], reason)
                 active[i] = False
             elif bar.h >= cand.target_price:
                 exit_results[i] = (day_i, cand.target_price, "target")
@@ -554,13 +578,52 @@ def _simulate_trades_portfolio_stop(
     return exit_results  # type: ignore[return-value]
 
 
-def _simulate_trade(daily: list[DailyBar], entry_idx: int, stop: float, target: float, max_hold_days: int) -> tuple[int, float, str]:
+def _simulate_trade(
+    daily: list[DailyBar],
+    entry_idx: int,
+    stop: float,
+    target: float,
+    max_hold_days: int,
+    be_trigger_r: float = 0.0,
+    trail_atr_mult: float = 0.0,
+    atr: float = 0.0,
+) -> tuple[int, float, str]:
+    """Simulate a single trade with optional breakeven and trailing-stop logic.
+
+    Args:
+        be_trigger_r:   Move SL to entry (breakeven) once price gains ≥ be_trigger_r × stop_dist.
+                        E.g. 1.0 = lock in BE after 1R gain.  0 = disabled.
+        trail_atr_mult: After BE is set, trail SL at (running_high - trail_atr_mult × atr).
+                        0 = no trailing (fixed stop after BE).
+        atr:            ATR value at entry (required when trail_atr_mult > 0).
+    """
+    entry_price = daily[entry_idx].o if entry_idx < len(daily) else stop
+    stop_dist = entry_price - stop  # always positive for longs
+    current_stop = stop
+    be_triggered = False
+    running_high = entry_price
+
     last_idx = min(len(daily) - 1, entry_idx + max_hold_days)
     for i in range(entry_idx, last_idx + 1):
         bar = daily[i]
+        running_high = max(running_high, bar.h)
+
+        # --- breakeven trigger ---
+        if be_trigger_r > 0 and not be_triggered and stop_dist > 0:
+            gain = running_high - entry_price
+            if gain >= be_trigger_r * stop_dist:
+                current_stop = max(current_stop, entry_price)
+                be_triggered = True
+
+        # --- trailing stop (only after BE is triggered) ---
+        if trail_atr_mult > 0 and atr > 0 and be_triggered:
+            trail_level = running_high - trail_atr_mult * atr
+            current_stop = max(current_stop, trail_level)
+
         # Conservative same-day ordering: stop first if both touched.
-        if bar.l <= stop:
-            return i, stop, "stop"
+        if bar.l <= current_stop:
+            reason = "trail_stop" if be_triggered else "stop"
+            return i, current_stop, reason
         if bar.h >= target:
             return i, target, "target"
     return last_idx, daily[last_idx].c, "time"
@@ -606,6 +669,14 @@ def main() -> int:
                     help="If >0: exit ALL positions when portfolio drops this %% from month-start. "
                          "E.g. 0.04 = exit everything if portfolio down 4%% in the month. "
                          "Reduces red-month severity at cost of some missed recoveries.")
+    ap.add_argument("--be-trigger-r", type=float, default=0.0,
+                    help="Move SL to breakeven once trade gains >= be_trigger_r × stop_dist. "
+                         "E.g. 1.0 = lock in BE after 1R gain. 0 = disabled.")
+    ap.add_argument("--trail-atr-mult", type=float, default=0.0,
+                    help="After BE triggered, trail SL at (running_high - trail_atr_mult × ATR20). "
+                         "E.g. 1.0 = trail 1 ATR below the peak. 0 = no trailing.")
+    ap.add_argument("--start-month", default="", help="Optional inclusive YYYY-MM month filter for replay.")
+    ap.add_argument("--end-month", default="", help="Optional inclusive YYYY-MM month filter for replay.")
     ap.add_argument("--tag", default="equities_monthly_research")
     args = ap.parse_args()
 
@@ -642,6 +713,10 @@ def main() -> int:
     monthly_curve: list[float] = [monthly_equity]
 
     month_keys = sorted({bar.day[:7] for rows in daily_map.values() for bar in rows})
+    if args.start_month:
+        month_keys = [m for m in month_keys if m >= str(args.start_month)]
+    if args.end_month:
+        month_keys = [m for m in month_keys if m <= str(args.end_month)]
     for month in month_keys:
         benchmark = _benchmark_stats_for_snapshot(
             benchmark_map,
@@ -804,7 +879,11 @@ def main() -> int:
         # ── simulate trades (with optional portfolio-level intramonth stop) ──
         pick_weights_raw = [_position_weight(cand, args.position_weight_mode) for cand, _, _ in picks]
         portfolio_stop = float(args.intramonth_portfolio_stop_pct)
-        sim_results = _simulate_trades_portfolio_stop(picks, pick_weights_raw, int(args.max_hold_days), portfolio_stop)
+        sim_results = _simulate_trades_portfolio_stop(
+            picks, pick_weights_raw, int(args.max_hold_days), portfolio_stop,
+            be_trigger_r=float(args.be_trigger_r),
+            trail_atr_mult=float(args.trail_atr_mult),
+        )
 
         for (cand, entry_idx, daily), weight, (exit_idx, exit_price, reason) in zip(picks, pick_weights_raw, sim_results):
             picks_rows.append(
