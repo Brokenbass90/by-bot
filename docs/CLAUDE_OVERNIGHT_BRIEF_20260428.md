@@ -49,8 +49,11 @@ Launcher:
   - `logs/overnight_income_research_launcher_20260428.log`
 - Current run directory:
   - `logs/overnight_income_research_20260428_172114/`
+- Remaining-sleeves run directory:
+  - `logs/overnight_income_research_20260428_172439/`
 - Manifest:
   - `logs/overnight_income_research_20260428_172114/manifest.tsv`
+  - `logs/overnight_income_research_20260428_172439/manifest.tsv`
 - Max parallel jobs: `3`
 - Cache mode: `BACKTEST_CACHE_ONLY=1`
 
@@ -75,8 +78,12 @@ Early read while jobs are running:
   - Best: PF `1.513`, WR `53.7%`, net `+11.78`, DD `3.40`.
   - This is a useful ARF1 improvement candidate, but it still needs portfolio
     additivity against canary v2 before any live change.
+- `range_scalp_v1_annual_focus_v2` already finished.
+  - Best: PF `1.849`, net `+18.89`, DD `4.54`.
+  - It is worth a portfolio additivity test, but do not promote directly:
+    standalone range was previously dangerous inside full stack.
 - `breakdown_v1_recent180_focus_v1` looked promising early.
-  - At check it had many PASS rows around PF `1.5-1.6`.
+  - Finished best: PF `1.833`, net `+21.73`, DD `8.69`.
   - This is the most interesting next repair lane if final ranked results hold.
 - `inplay_breakout_retest_focus_v1` looked weak early.
   - First checked rows were still FAIL around PF `0.51-0.52`.
