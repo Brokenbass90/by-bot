@@ -1,0 +1,60 @@
+{
+  "overall_health": "OK",
+  "timestamp": "2026-04-28T00:00:00Z",
+  "run_dir": "crypto_income_static_v1_dynamic_gate",
+  "strategies": {
+    "alt_trendline_touch_v1": {
+      "status": "OK",
+      "total_pnl": 39.05,
+      "rolling_30d_pnl": 0.0,
+      "rolling_60d_pnl": 0.0,
+      "curve_vs_ma20": 0.0,
+      "trades_total": 299,
+      "trades_30d": 0,
+      "winrate_total": 0.602,
+      "winrate_30d": 0.0,
+      "pf_30d": 0.0,
+      "notes": "Candidate gate: static 365d attribution positive; allow dynamic replay only."
+    },
+    "alt_resistance_fade_v1": {
+      "status": "OK",
+      "total_pnl": 7.61,
+      "rolling_30d_pnl": 0.0,
+      "rolling_60d_pnl": 0.0,
+      "curve_vs_ma20": 0.0,
+      "trades_total": 55,
+      "trades_30d": 0,
+      "winrate_total": 0.545,
+      "winrate_30d": 0.0,
+      "pf_30d": 0.0,
+      "notes": "Candidate gate: stabilizer sleeve; allow dynamic replay only."
+    },
+    "alt_inplay_breakdown_v1": {
+      "status": "OK",
+      "total_pnl": 16.42,
+      "rolling_30d_pnl": 0.0,
+      "rolling_60d_pnl": 0.0,
+      "curve_vs_ma20": 0.0,
+      "trades_total": 75,
+      "trades_30d": 0,
+      "winrate_total": 0.573,
+      "winrate_30d": 0.0,
+      "pf_30d": 0.0,
+      "notes": "Candidate gate: only with ER macro-quality parameters from crypto_income_static_v1."
+    },
+    "btc_eth_midterm_pullback": {
+      "status": "OK",
+      "total_pnl": 7.08,
+      "rolling_30d_pnl": 0.0,
+      "rolling_60d_pnl": 0.0,
+      "curve_vs_ma20": 0.0,
+      "trades_total": 16,
+      "trades_30d": 0,
+      "winrate_total": 0.5,
+      "winrate_30d": 0.0,
+      "pf_30d": 0.0,
+      "notes": "Candidate gate: sparse additive BTC/ETH sleeve."
+    }
+  },
+  "paused_strategies": []
+}

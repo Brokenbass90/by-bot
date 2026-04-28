@@ -1,0 +1,63 @@
+{
+  "profile_version": "2026-04-28-crypto-income-static-v1-fixed-router",
+  "generated_at_utc": "2026-04-28T00:00:00Z",
+  "_comment": "Fixed-symbol router registry for crypto_income_static_v1 dynamic replay. Keeps regime/allocator active while preventing dynamic symbol drift from changing the tested universe.",
+  "profiles": [
+    {
+      "profile_id": "att1_income_fixed",
+      "env_key": "ATT1_SYMBOL_ALLOWLIST",
+      "default": true,
+      "active_regimes": ["*"],
+      "strategy_tags": ["alt_trendline_touch_v1", "att1"],
+      "fixed_symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT",
+        "ADAUSDT",
+        "LINKUSDT",
+        "LTCUSDT",
+        "DOTUSDT",
+        "SUIUSDT"
+      ]
+    },
+    {
+      "profile_id": "arf1_income_fixed",
+      "env_key": "ARF1_SYMBOL_ALLOWLIST",
+      "default": true,
+      "active_regimes": ["*"],
+      "strategy_tags": ["alt_resistance_fade_v1"],
+      "fixed_symbols": [
+        "ADAUSDT",
+        "LINKUSDT",
+        "LTCUSDT",
+        "DOTUSDT",
+        "SUIUSDT"
+      ]
+    },
+    {
+      "profile_id": "breakdown_income_fixed",
+      "env_key": "BREAKDOWN_SYMBOL_ALLOWLIST",
+      "default": true,
+      "active_regimes": ["*"],
+      "strategy_tags": ["alt_inplay_breakdown_v1"],
+      "fixed_symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "SOLUSDT",
+        "LINKUSDT",
+        "ADAUSDT"
+      ]
+    },
+    {
+      "profile_id": "midterm_income_fixed",
+      "env_key": "MIDTERM_SYMBOLS",
+      "default": true,
+      "active_regimes": ["*"],
+      "strategy_tags": ["btc_eth_midterm_pullback"],
+      "fixed_symbols": [
+        "BTCUSDT",
+        "ETHUSDT"
+      ]
+    }
+  ]
+}
