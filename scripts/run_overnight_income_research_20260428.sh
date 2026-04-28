@@ -23,7 +23,7 @@ export CACHE_ONLY="${CACHE_ONLY:-$BACKTEST_CACHE_ONLY}"
 export PYTHONDONTWRITEBYTECODE=1
 
 active_jobs() {
-  jobs -pr | wc -l | tr -d ' '
+  jobs -r -p | wc -l | tr -d ' '
 }
 
 wait_for_slot() {
@@ -78,11 +78,13 @@ echo "Overnight income research started: $STAMP"
 echo "LOG_DIR=$LOG_DIR"
 echo "MAX_PARALLEL=$MAX_PARALLEL NICE_LEVEL=$NICE_LEVEL"
 
-# Current live canary improvement and regression repair.
-launch_autoresearch "configs/autoresearch/att1_focused_pivot_sweep_v2_nocache.json"
-launch_autoresearch "configs/autoresearch/flat_live_universe_repair_v2.json"
-launch_autoresearch "configs/autoresearch/breakdown_v1_recent180_focus_v1.json"
-launch_autoresearch "configs/autoresearch/inplay_breakout_retest_focus_v1.json"
+if [ "${OVERNIGHT_REMAINING_ONLY:-0}" != "1" ]; then
+  # Current live canary improvement and regression repair.
+  launch_autoresearch "configs/autoresearch/att1_focused_pivot_sweep_v2_nocache.json"
+  launch_autoresearch "configs/autoresearch/flat_live_universe_repair_v2.json"
+  launch_autoresearch "configs/autoresearch/breakdown_v1_recent180_focus_v1.json"
+  launch_autoresearch "configs/autoresearch/inplay_breakout_retest_focus_v1.json"
+fi
 
 # Sleeves that should become the next expansion candidates if they pass.
 launch_autoresearch "configs/autoresearch/support_bounce_v1_annual_repair_v2.json"
