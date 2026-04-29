@@ -55,6 +55,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import csv
 import json
 import os
 import ssl
@@ -461,12 +462,15 @@ def _load_monthly_managed_symbols() -> set[str]:
         if not csv_path.exists():
             continue
         try:
+            loaded_symbols: set[str] = set()
             with csv_path.open(newline="", encoding="utf-8") as f:
                 for row in csv.DictReader(f):
                     sym = str(row.get("ticker") or "").strip().upper()
                     if sym:
-                        symbols.add(sym)
-            break  # Use the first CSV that loads successfully
+                        loaded_symbols.add(sym)
+            if loaded_symbols:
+                symbols.update(loaded_symbols)
+                break  # Use the first non-empty CSV that loads successfully
         except Exception:
             continue
 
