@@ -8,6 +8,7 @@ import math
 import os
 import ssl
 import sys
+import time
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -61,6 +62,10 @@ class Pick:
     momentum60_pct: float
     pullback60_pct: float
     universe_score: float | None
+    entry_price: float | None = None
+    stop_price: float | None = None
+    target_price: float | None = None
+    weight: float | None = None
 
 
 def _env(name: str, default: str = "") -> str:
@@ -99,6 +104,27 @@ def _safe_int(value: Any, default: int = 0) -> int:
         return int(float(value))
     except Exception:
         return default
+
+
+def _optional_float(value: Any) -> float | None:
+    try:
+        text = str(value if value is not None else "").strip()
+        if not text:
+            return None
+        parsed = float(text)
+        return parsed if math.isfinite(parsed) else None
+    except Exception:
+        return None
+
+
+def _format_price(price: float) -> str:
+    if price < 1.0:
+        return f"{price:.4f}"
+    return f"{price:.2f}"
+
+
+def _format_qty(qty: float) -> str:
+    return f"{qty:.9f}".rstrip("0").rstrip(".")
 
 
 def _latest_summary_path(picks_csv: Path) -> Path | None:
@@ -360,6 +386,9 @@ class AlpacaClient:
     def list_orders(self, *, status: str = "open", limit: int = 100) -> list[dict[str, Any]]:
         return list(self._request("GET", f"/v2/orders?status={status}&direction=desc&limit={int(limit)}"))
 
+    def get_order(self, order_id: str) -> dict[str, Any]:
+        return self._request("GET", f"/v2/orders/{order_id}")
+
     def submit_market_buy(self, symbol: str, notional: float) -> dict[str, Any]:
         payload = {
             "symbol": symbol,
@@ -367,6 +396,54 @@ class AlpacaClient:
             "side": "buy",
             "type": "market",
             "time_in_force": "day",
+        }
+        return self._request("POST", "/v2/orders", payload)
+
+    def submit_market_buy_qty(self, symbol: str, qty: float) -> dict[str, Any]:
+        payload = {
+            "symbol": symbol,
+            "qty": _format_qty(qty),
+            "side": "buy",
+            "type": "market",
+            "time_in_force": "day",
+        }
+        return self._request("POST", "/v2/orders", payload)
+
+    def submit_bracket_buy(
+        self,
+        symbol: str,
+        *,
+        notional: float | None,
+        qty: float | None,
+        stop_loss_price: float,
+        take_profit_price: float,
+        time_in_force: str = "day",
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "symbol": symbol,
+            "side": "buy",
+            "type": "market",
+            "time_in_force": time_in_force,
+            "order_class": "bracket",
+            "take_profit": {"limit_price": _format_price(take_profit_price)},
+            "stop_loss": {"stop_price": _format_price(stop_loss_price)},
+        }
+        if qty is not None and qty > 0:
+            payload["qty"] = _format_qty(qty)
+        elif notional is not None and notional > 0:
+            payload["notional"] = f"{notional:.2f}"
+        else:
+            raise RuntimeError("bracket buy requires qty or notional")
+        return self._request("POST", "/v2/orders", payload)
+
+    def submit_stop_sell(self, symbol: str, *, qty: float, stop_price: float, time_in_force: str = "day") -> dict[str, Any]:
+        payload = {
+            "symbol": symbol,
+            "qty": _format_qty(qty),
+            "side": "sell",
+            "type": "stop",
+            "time_in_force": time_in_force,
+            "stop_price": _format_price(stop_price),
         }
         return self._request("POST", "/v2/orders", payload)
 
@@ -401,6 +478,10 @@ def _load_picks(csv_path: Path, month: str | None) -> list[Pick]:
                 momentum60_pct=float(row.get("momentum60_pct") or 0.0),
                 pullback60_pct=float(row.get("pullback60_pct") or 0.0),
                 universe_score=float(universe_score) if universe_score else None,
+                entry_price=_optional_float(row.get("entry_price")),
+                stop_price=_optional_float(row.get("stop_price")),
+                target_price=_optional_float(row.get("target_price")),
+                weight=_optional_float(row.get("weight")),
             )
         )
     out.sort(key=lambda x: x.score, reverse=True)
@@ -588,6 +669,65 @@ def _position_loss_pct(pos: dict[str, Any]) -> float:
     return 0.0
 
 
+def _build_bracket_buy_spec(
+    pick: Pick,
+    *,
+    notional: float,
+    stop_loss_pct: float,
+    target_pct: float,
+    size_mode: str,
+) -> tuple[dict[str, Any] | None, str]:
+    entry = pick.entry_price
+    stop = pick.stop_price
+    target = pick.target_price
+    if (stop is None or stop <= 0) and entry is not None and entry > 0:
+        stop = entry * (1.0 - stop_loss_pct)
+    if (target is None or target <= 0) and entry is not None and entry > 0 and target_pct > 0:
+        target = entry * (1.0 + target_pct)
+
+    if stop is None or stop <= 0:
+        return None, "missing_stop_price"
+    if target is None or target <= 0:
+        return None, "missing_target_price"
+    if target <= stop:
+        return None, "target_must_be_above_stop"
+
+    spec: dict[str, Any] = {
+        "stop_loss_price": stop,
+        "take_profit_price": target,
+        "notional": notional,
+        "qty": None,
+        "size_mode": size_mode,
+    }
+    if size_mode == "qty":
+        if entry is None or entry <= 0:
+            return None, "missing_entry_price_for_qty"
+        qty = notional / entry
+        if qty <= 0:
+            return None, "non_positive_qty"
+        spec["qty"] = qty
+        spec["notional"] = None
+    elif size_mode != "notional":
+        return None, f"unsupported_size_mode:{size_mode}"
+    return spec, ""
+
+
+def _wait_for_filled_qty(client: AlpacaClient, order: dict[str, Any], *, timeout_sec: float) -> tuple[float, str]:
+    order_id = str(order.get("id") or "").strip()
+    status = str(order.get("status") or "").strip().lower()
+    filled_qty = _safe_float(order.get("filled_qty"), 0.0)
+    deadline = time.time() + max(0.0, timeout_sec)
+    while order_id and filled_qty <= 0 and status not in {"canceled", "expired", "rejected"} and time.time() < deadline:
+        time.sleep(1.0)
+        try:
+            order = client.get_order(order_id)
+        except RuntimeError:
+            break
+        status = str(order.get("status") or "").strip().lower()
+        filled_qty = _safe_float(order.get("filled_qty"), 0.0)
+    return filled_qty, status
+
+
 def _pick_age_days(picks: list[Pick]) -> tuple[str, int | None]:
     latest_entry = ""
     latest_dt: date | None = None
@@ -675,6 +815,17 @@ def main() -> int:
     enable_stop_loss = _env_bool("MONTHLY_SL_ENABLE", True)
     stop_loss_pct = max(0.01, _env_float("MONTHLY_SL_PCT", 0.08))   # default 8%
 
+    # Broker-side entry protection. When enabled, new monthly buys use an
+    # Alpaca bracket order so a broker-hosted stop and target are queued as
+    # soon as the entry fills. The existing HWM trail remains software-managed.
+    broker_protection_enable = _env_bool("ALPACA_BROKER_PROTECTION_ENABLE", False)
+    broker_protection_required = _env_bool("ALPACA_BROKER_PROTECTION_REQUIRED", broker_protection_enable)
+    broker_protection_order_class = _env("ALPACA_BROKER_PROTECTION_ORDER_CLASS", "bracket").lower()
+    broker_protection_size_mode = _env("ALPACA_BROKER_PROTECTION_SIZE_MODE", "qty").lower()
+    broker_protection_tif = _env("ALPACA_BROKER_PROTECTION_TIF", "day").lower()
+    broker_target_pct = max(0.0, _env_float("ALPACA_BROKER_TARGET_PCT", 0.08))
+    broker_wait_fill_sec = max(1.0, _env_float("ALPACA_BROKER_PROTECTION_WAIT_FILL_SEC", 20.0))
+
     # ── Enhancement: score-weighted position sizing ───────────────────────────
     # Higher-momentum picks get a larger slice of the allocation.
     weighted_sizing = _env_bool("MONTHLY_WEIGHTED_SIZING", True)
@@ -708,14 +859,19 @@ def main() -> int:
     effective_capital = min(buying_power, capital_override_usd) if capital_override_usd > 0 else buying_power
     current_positions = {str(p.get("symbol") or "").strip().upper(): p for p in positions if str(p.get("symbol") or "").strip()}
     pending_buy_orders: dict[str, list[dict[str, Any]]] = {}
+    open_stop_sell_orders: dict[str, list[dict[str, Any]]] = {}
     for order in open_orders:
         symbol = str(order.get("symbol") or "").strip().upper()
         side = str(order.get("side") or "").strip().lower()
         status = str(order.get("status") or "").strip().lower()
-        if not symbol or side != "buy":
+        order_type = str(order.get("type") or "").strip().lower()
+        if not symbol:
             continue
         if status in {"accepted", "new", "pending_new", "partially_filled", "accepted_for_bidding"}:
-            pending_buy_orders.setdefault(symbol, []).append(order)
+            if side == "buy":
+                pending_buy_orders.setdefault(symbol, []).append(order)
+            elif side == "sell" and order_type in {"stop", "stop_limit", "trailing_stop"}:
+                open_stop_sell_orders.setdefault(symbol, []).append(order)
     occupied_symbols = set(current_positions.keys()) | set(pending_buy_orders.keys())
     latest_entry_day, pick_age_days = _pick_age_days(picks)
     current_cycle_csv = _current_cycle_picks_path(picks_csv)
@@ -974,6 +1130,13 @@ def main() -> int:
         "trail_min_gain_pct": trail_min_gain_pct,
         "trail_triggered": trail_triggered_symbols,
         "trail_details": trail_details,
+        "broker_protection_enabled": broker_protection_enable,
+        "broker_protection_required": broker_protection_required,
+        "broker_protection_order_class": broker_protection_order_class,
+        "broker_protection_size_mode": broker_protection_size_mode,
+        "broker_protection_tif": broker_protection_tif,
+        "broker_target_pct": round(broker_target_pct * 100, 2),
+        "broker_wait_fill_sec": broker_wait_fill_sec,
         "midmonth_rotation_enabled": midmonth_rotation,
         "midmonth_day_threshold": midmonth_day_threshold,
         "midmonth_dd_pct": round(midmonth_dd_pct * 100, 2),
@@ -992,6 +1155,15 @@ def main() -> int:
             }
             for sym, orders in sorted(pending_buy_orders.items())
         ],
+        "open_stop_sell_orders": [
+            {
+                "ticker": sym,
+                "count": len(orders),
+                "order_ids": [str(o.get("id") or "") for o in orders if str(o.get("id") or "").strip()],
+                "stop_prices": [str(o.get("stop_price") or "") for o in orders],
+            }
+            for sym, orders in sorted(open_stop_sell_orders.items())
+        ],
         "new_buy_symbols": new_buy_symbols,
         "selected": [
             {
@@ -1001,11 +1173,188 @@ def main() -> int:
                 "momentum60_pct": round(p.momentum60_pct, 3),
                 "pullback60_pct": round(p.pullback60_pct, 3),
                 "universe_score": None if p.universe_score is None else round(p.universe_score, 6),
+                "entry_price": None if p.entry_price is None else round(p.entry_price, 4),
+                "stop_price": None if p.stop_price is None else round(p.stop_price, 4),
+                "target_price": None if p.target_price is None else round(p.target_price, 4),
             }
             for p in selected
         ],
+        "planned_broker_orders": [],
         "results": [],
     }
+    picks_by_ticker = {p.ticker: p for p in picks}
+    for ticker in all_buy_tickers:
+        pick = picks_by_ticker.get(ticker)
+        if pick is None:
+            continue
+        notional = per_ticker_notional.get(ticker, per_position_notional)
+        spec, reason = _build_bracket_buy_spec(
+            pick,
+            notional=notional,
+            stop_loss_pct=stop_loss_pct,
+            target_pct=broker_target_pct,
+            size_mode=broker_protection_size_mode,
+        )
+        report["planned_broker_orders"].append(
+            {
+                "ticker": ticker,
+                "order_class": broker_protection_order_class if broker_protection_enable else "market",
+                "status": "ok" if (not broker_protection_enable or spec is not None) else "invalid",
+                "reason": reason,
+                "notional": round(notional, 2),
+                "qty": None if spec is None or spec.get("qty") is None else _format_qty(float(spec["qty"])),
+                "stop_price": None if spec is None else round(float(spec["stop_loss_price"]), 4),
+                "target_price": None if spec is None else round(float(spec["take_profit_price"]), 4),
+            }
+        )
+
+    def _submit_buy_action(pick: Pick, *, action: str, notional: float) -> None:
+        score_weight = round(score_weights.get(pick.ticker, 0.0), 4)
+        if broker_protection_enable:
+            if broker_protection_order_class not in {"bracket", "simple_stop"}:
+                reason = f"unsupported_broker_protection_order_class:{broker_protection_order_class}"
+                if broker_protection_required:
+                    report["results"].append(
+                        {
+                            "ticker": pick.ticker,
+                            "action": action,
+                            "status": "skipped_unprotected",
+                            "error": reason,
+                            "notional": round(notional, 2),
+                            "score_weight": score_weight,
+                        }
+                    )
+                    return
+
+            spec, reason = _build_bracket_buy_spec(
+                pick,
+                notional=notional,
+                stop_loss_pct=stop_loss_pct,
+                target_pct=broker_target_pct,
+                size_mode=broker_protection_size_mode,
+            )
+            if spec is None:
+                if broker_protection_required:
+                    report["results"].append(
+                        {
+                            "ticker": pick.ticker,
+                            "action": action,
+                            "status": "skipped_unprotected",
+                            "error": reason,
+                            "notional": round(notional, 2),
+                            "score_weight": score_weight,
+                        }
+                    )
+                    return
+            elif broker_protection_order_class == "simple_stop":
+                try:
+                    qty = float(spec.get("qty") or 0.0)
+                    if qty <= 0:
+                        raise RuntimeError("simple_stop requires qty sizing")
+                    entry_order = client.submit_market_buy_qty(pick.ticker, qty)  # type: ignore[union-attr]
+                    filled_qty, entry_status = _wait_for_filled_qty(
+                        client,  # type: ignore[arg-type]
+                        entry_order,
+                        timeout_sec=broker_wait_fill_sec,
+                    )
+                    if filled_qty <= 0:
+                        order_id = str(entry_order.get("id") or "").strip()
+                        if order_id:
+                            try:
+                                client.cancel_order(order_id)  # type: ignore[union-attr]
+                            except RuntimeError:
+                                pass
+                        raise RuntimeError(f"entry_not_filled_before_stop status={entry_status}")
+                    stop_order = client.submit_stop_sell(  # type: ignore[union-attr]
+                        pick.ticker,
+                        qty=filled_qty,
+                        stop_price=float(spec["stop_loss_price"]),
+                        time_in_force=broker_protection_tif,
+                    )
+                    report["results"].append(
+                        {
+                            "ticker": pick.ticker,
+                            "action": "protected_market_buy" if action == "market_buy" else "replacement_protected_market_buy",
+                            "entry_order_id": entry_order.get("id"),
+                            "entry_status": entry_status,
+                            "stop_order_id": stop_order.get("id"),
+                            "stop_status": stop_order.get("status"),
+                            "notional": round(notional, 2),
+                            "qty": _format_qty(filled_qty),
+                            "stop_price": round(float(spec["stop_loss_price"]), 4),
+                            "target_price": round(float(spec["take_profit_price"]), 4),
+                            "score_weight": score_weight,
+                        }
+                    )
+                    return
+                except RuntimeError as exc:
+                    if broker_protection_required:
+                        try:
+                            client.close_position(pick.ticker)  # type: ignore[union-attr]
+                        except RuntimeError:
+                            pass
+                        report["results"].append(
+                            {
+                                "ticker": pick.ticker,
+                                "action": "protected_market_buy" if action == "market_buy" else "replacement_protected_market_buy",
+                                "status": "error_closed_if_needed",
+                                "error": str(exc),
+                                "notional": round(notional, 2),
+                                "score_weight": score_weight,
+                            }
+                        )
+                        return
+            else:
+                try:
+                    result = client.submit_bracket_buy(  # type: ignore[union-attr]
+                        pick.ticker,
+                        notional=spec.get("notional"),
+                        qty=spec.get("qty"),
+                        stop_loss_price=float(spec["stop_loss_price"]),
+                        take_profit_price=float(spec["take_profit_price"]),
+                        time_in_force=broker_protection_tif,
+                    )
+                    report["results"].append(
+                        {
+                            "ticker": pick.ticker,
+                            "action": "bracket_buy" if action == "market_buy" else "replacement_bracket_buy",
+                            "order_id": result.get("id"),
+                            "status": result.get("status"),
+                            "notional": round(notional, 2),
+                            "qty": None if spec.get("qty") is None else _format_qty(float(spec["qty"])),
+                            "stop_price": round(float(spec["stop_loss_price"]), 4),
+                            "target_price": round(float(spec["take_profit_price"]), 4),
+                            "score_weight": score_weight,
+                        }
+                    )
+                    return
+                except RuntimeError as exc:
+                    if broker_protection_required:
+                        report["results"].append(
+                            {
+                                "ticker": pick.ticker,
+                                "action": "bracket_buy" if action == "market_buy" else "replacement_bracket_buy",
+                                "status": "error",
+                                "error": str(exc),
+                                "notional": round(notional, 2),
+                                "score_weight": score_weight,
+                            }
+                        )
+                        return
+
+        result = client.submit_market_buy(pick.ticker, notional)  # type: ignore[union-attr]
+        report["results"].append(
+            {
+                "ticker": pick.ticker,
+                "action": action,
+                "order_id": result.get("id"),
+                "status": result.get("status"),
+                "notional": round(notional, 2),
+                "score_weight": score_weight,
+                "broker_protection": False,
+            }
+        )
+
     if send_orders:
         # ── 1. Stop-loss closes (highest priority) ────────────────────────────
         if enable_stop_loss:
@@ -1127,6 +1476,75 @@ def main() -> int:
                         }
                     )
 
+        # ── 3b. Re-arm broker stop for existing monthly fractional positions ─
+        if broker_protection_enable and broker_protection_order_class == "simple_stop":
+            for symbol in hold_symbols:
+                if symbol in intraday_managed_symbols:
+                    continue
+                if symbol in closed_out:
+                    continue
+                if open_stop_sell_orders.get(symbol):
+                    continue
+                pos = current_positions.get(symbol)
+                pick = picks_by_ticker.get(symbol)
+                if not pos or not pick:
+                    continue
+                notional = per_ticker_notional.get(symbol, per_position_notional)
+                spec, reason = _build_bracket_buy_spec(
+                    pick,
+                    notional=notional,
+                    stop_loss_pct=stop_loss_pct,
+                    target_pct=broker_target_pct,
+                    size_mode="qty",
+                )
+                qty = abs(_safe_float(pos.get("qty"), 0.0))
+                if spec is None or qty <= 0:
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "rearm_stop_sell",
+                            "status": "skipped",
+                            "error": reason or "missing_qty",
+                        }
+                    )
+                    continue
+                stop_price = float(spec["stop_loss_price"])
+                cur = _safe_float(pos.get("current_price"), 0.0)
+                try:
+                    if cur > 0 and cur <= stop_price:
+                        result = client.close_position(symbol)
+                        report["results"].append(
+                            {
+                                "ticker": symbol,
+                                "action": "rearm_close_below_stop",
+                                "order_id": result.get("id"),
+                                "status": result.get("status"),
+                                "current_price": round(cur, 4),
+                                "stop_price": round(stop_price, 4),
+                            }
+                        )
+                    else:
+                        result = client.submit_stop_sell(symbol, qty=qty, stop_price=stop_price, time_in_force=broker_protection_tif)
+                        report["results"].append(
+                            {
+                                "ticker": symbol,
+                                "action": "rearm_stop_sell",
+                                "order_id": result.get("id"),
+                                "status": result.get("status"),
+                                "qty": _format_qty(qty),
+                                "stop_price": round(stop_price, 4),
+                            }
+                        )
+                except RuntimeError as exc:
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "rearm_stop_sell",
+                            "status": "error",
+                            "error": str(exc),
+                        }
+                    )
+
         # ── 4. Buy new picks (main cycle) ─────────────────────────────────────
         for pick in selected:
             if pick.ticker in current_positions and pick.ticker not in sl_triggered_symbols and pick.ticker not in rotation_symbols:
@@ -1149,17 +1567,7 @@ def main() -> int:
                 )
                 continue
             notional = per_ticker_notional.get(pick.ticker, per_position_notional)
-            result = client.submit_market_buy(pick.ticker, notional)
-            report["results"].append(
-                {
-                    "ticker": pick.ticker,
-                    "action": "market_buy",
-                    "order_id": result.get("id"),
-                    "status": result.get("status"),
-                    "notional": round(notional, 2),
-                    "score_weight": round(score_weights.get(pick.ticker, 0.0), 4),
-                }
-            )
+            _submit_buy_action(pick, action="market_buy", notional=notional)
 
         # ── 5. Buy replacement picks (after SL/rotation freed slots) ──────────
         for ticker in replacement_buys:
@@ -1169,17 +1577,19 @@ def main() -> int:
                 continue
             notional = per_ticker_notional.get(ticker, per_position_notional)
             try:
-                result = client.submit_market_buy(ticker, notional)
-                report["results"].append(
-                    {
-                        "ticker": ticker,
-                        "action": "replacement_buy",
-                        "order_id": result.get("id"),
-                        "status": result.get("status"),
-                        "notional": round(notional, 2),
-                        "score_weight": round(score_weights.get(ticker, 0.0), 4),
-                    }
-                )
+                pick = picks_by_ticker.get(ticker)
+                if pick is None:
+                    report["results"].append(
+                        {
+                            "ticker": ticker,
+                            "action": "replacement_buy",
+                            "status": "error",
+                            "error": "missing_pick_details",
+                            "notional": round(notional, 2),
+                        }
+                    )
+                    continue
+                _submit_buy_action(pick, action="replacement_buy", notional=notional)
             except RuntimeError as exc:
                 report["results"].append(
                     {
@@ -1233,9 +1643,37 @@ def main() -> int:
                 sw = r.get("score_weight", 0.0)
                 sw_str = f" w={sw:.2f}" if weighted_sizing and sw > 0 else ""
                 lines.append(f"  🟢 BUY {ticker} ${round(notional,0):.0f}{sw_str} — {r.get('status','?')}")
+            elif action == "bracket_buy":
+                notional = r.get("notional", per_position_notional)
+                sw = r.get("score_weight", 0.0)
+                sw_str = f" w={sw:.2f}" if weighted_sizing and sw > 0 else ""
+                lines.append(
+                    f"  🟢 BRACKET {ticker} ${round(notional,0):.0f}{sw_str} "
+                    f"SL {r.get('stop_price','?')} TP {r.get('target_price','?')} — {r.get('status','?')}"
+                )
             elif action == "replacement_buy":
                 notional = r.get("notional", per_position_notional)
                 lines.append(f"  🔄 REPLACE-BUY {ticker} ${round(notional,0):.0f} — {r.get('status','?')}")
+            elif action == "replacement_bracket_buy":
+                notional = r.get("notional", per_position_notional)
+                lines.append(
+                    f"  🔄 REPLACE-BRACKET {ticker} ${round(notional,0):.0f} "
+                    f"SL {r.get('stop_price','?')} TP {r.get('target_price','?')} — {r.get('status','?')}"
+                )
+            elif action == "protected_market_buy":
+                notional = r.get("notional", per_position_notional)
+                sw = r.get("score_weight", 0.0)
+                sw_str = f" w={sw:.2f}" if weighted_sizing and sw > 0 else ""
+                lines.append(
+                    f"  🟢 BUY+STOP {ticker} ${round(notional,0):.0f}{sw_str} "
+                    f"SL {r.get('stop_price','?')} — {r.get('stop_status', r.get('status','?'))}"
+                )
+            elif action == "replacement_protected_market_buy":
+                notional = r.get("notional", per_position_notional)
+                lines.append(
+                    f"  🔄 REPLACE BUY+STOP {ticker} ${round(notional,0):.0f} "
+                    f"SL {r.get('stop_price','?')} — {r.get('stop_status', r.get('status','?'))}"
+                )
             elif action == "trail_stop_close":
                 gain = r.get("gain_pct", 0.0)
                 drop = r.get("drop_from_hwm_pct", 0.0)
@@ -1250,6 +1688,10 @@ def main() -> int:
                 lines.append(f"  🔴 CLOSE {ticker}")
             elif action == "cancel_pending_buy":
                 lines.append(f"  🟠 CANCEL pending {ticker}")
+            elif action == "rearm_stop_sell":
+                lines.append(f"  🛡️ REARM STOP {ticker} SL {r.get('stop_price','?')} — {r.get('status','?')}")
+            elif action == "rearm_close_below_stop":
+                lines.append(f"  🛑 CLOSE {ticker}: current <= broker stop — {r.get('status','?')}")
             elif action == "hold_existing":
                 sw = r.get("score_weight", 0.0)
                 sw_str = f" w={sw:.2f}" if weighted_sizing and sw > 0 else ""
