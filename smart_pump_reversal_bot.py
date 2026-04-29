@@ -141,7 +141,7 @@ _ENV_ALIAS_MAP = {
 _mirror_env_aliases(_ENV_ALIAS_MAP)
 
 
-def _build_http_session() -> requests.Session:
+def _build_http_session(*, retry_post: bool = False) -> requests.Session:
     sess = requests.Session()
     retry = Retry(
         total=max(0, int(os.getenv("HTTP_GET_RETRIES", "3") or 3)),
@@ -149,7 +149,7 @@ def _build_http_session() -> requests.Session:
         read=max(0, int(os.getenv("HTTP_GET_RETRIES", "3") or 3)),
         backoff_factor=max(0.0, float(os.getenv("HTTP_GET_BACKOFF_SEC", "0.35") or 0.35)),
         status_forcelist=(429, 500, 502, 503, 504),
-        allowed_methods=("GET",),
+        allowed_methods=(("GET", "POST") if retry_post else ("GET",)),
         raise_on_status=False,
     )
     pool = max(16, int(os.getenv("HTTP_POOL_SIZE", "64") or 64))
@@ -160,6 +160,35 @@ def _build_http_session() -> requests.Session:
 
 
 _HTTP = _build_http_session()
+# POST retry is safe only for order/create payloads that carry deterministic
+# orderLinkId. Other private POST endpoints keep the normal GET-only session.
+_HTTP_ORDER_CREATE = _build_http_session(retry_post=True)
+
+
+# ─── orderLinkId / idempotency ─────────────────────────────────────────────────
+# Чистая логика вынесена в bot/order_link.py для отдельного юнит-тестирования.
+from bot.order_link import (
+    make_order_link_id as _make_order_link_id_pure,
+    log_order_link as _log_order_link_pure,
+)
+
+ORDER_LINK_ID_ENABLED = _env_bool("ORDER_LINK_ID_ENABLED", True)
+ORDER_LINK_LOG_PATH = ROOT_DIR / "runtime" / "order_link_id_log.jsonl"
+
+
+def _make_order_link_id(client_name: str, symbol: str, side: str, intent: str = "open") -> str:
+    """Wrapper над bot.order_link.make_order_link_id."""
+    return _make_order_link_id_pure(client_name, symbol, side, intent)
+
+
+def _log_order_link(client_name: str, link_id: str, order_id: str, body: dict, status: str) -> None:
+    """Wrapper: пишет в репо-локальный путь, ошибки уходят в log_error."""
+    _log_order_link_pure(
+        client_name, link_id, order_id, body, status,
+        log_path=ORDER_LINK_LOG_PATH,
+        error_logger=lambda m: log_error(m),
+    )
+
 
 REGIME_OVERLAY_ENABLE = _env_bool("REGIME_OVERLAY_ENABLE", True)
 REGIME_OVERLAY_PATH = Path(
@@ -4797,6 +4826,10 @@ class BybitClient:
         if DRY_RUN:
             return f"DRYRUN-{self.name}-{symbol}-{int(time.time())}", qty
 
+        # Per-(client,symbol,side,bar) idempotency для безопасных POST-retry.
+        link_id_open  = _make_order_link_id(self.name, symbol, side, "open") if ORDER_LINK_ID_ENABLED else ""
+        link_id_quote = _make_order_link_id(self.name, symbol, side, "open_quote") if ORDER_LINK_ID_ENABLED else ""
+
         def _mk_body_base(q):
             body = {
                 "category":   "linear",
@@ -4807,6 +4840,8 @@ class BybitClient:
                 "timeInForce":"IOC",
                 "marketUnit": "baseCoin",
             }
+            if link_id_open:
+                body["orderLinkId"] = link_id_open
             if not POS_IS_ONEWAY:
                 body["positionIdx"] = 1 if side == "Buy" else 2
             return body
@@ -4817,10 +4852,12 @@ class BybitClient:
                 "symbol":     symbol,
                 "side":       side,
                 "orderType":  "Market",
-                "qty":        fmt_amt(symbol, q_usd),   
+                "qty":        fmt_amt(symbol, q_usd),
                 "timeInForce":"IOC",
                 "marketUnit": "quoteCoin",
             }
+            if link_id_quote:
+                body["orderLinkId"] = link_id_quote
             if not POS_IS_ONEWAY:
                 body["positionIdx"] = 1 if side == "Buy" else 2
             return body
@@ -4828,8 +4865,11 @@ class BybitClient:
         # 1) baseCoin c жёстким округлением
         try:
             q_fixed = strict_round_qty(symbol, qty)
-            j = self.post("/v5/order/create", _mk_body_base(q_fixed))
+            body_base = _mk_body_base(q_fixed)
+            j = self.post("/v5/order/create", body_base)
             oid = j["result"]["orderId"]
+            if link_id_open and not str((j or {}).get("retMsg") or "").startswith("OK (recovered"):
+                _log_order_link(self.name, link_id_open, oid, body_base, "placed")
             return oid, q_fixed
         except Exception as e:
             err_txt = str(e)
@@ -4862,8 +4902,11 @@ class BybitClient:
                 approx_usd = max(MIN_NOTIONAL_USD, float(qty) * float(px))
 
                 usdt_q = strict_round_quote_amt(symbol, approx_usd)
-                j2 = self.post("/v5/order/create", _mk_body_quote(usdt_q))
+                body_quote = _mk_body_quote(usdt_q)
+                j2 = self.post("/v5/order/create", body_quote)
                 oid2 = j2["result"]["orderId"]
+                if link_id_quote and not str((j2 or {}).get("retMsg") or "").startswith("OK (recovered"):
+                    _log_order_link(self.name, link_id_quote, oid2, body_quote, "placed")
 
                 tg_trade(f"🟠 {self.name}: fallback→quoteCoin {symbol} {usdt_q} USDT")
                 base_equiv = float(usdt_q) / max(1e-9, float(px))
@@ -4963,13 +5006,60 @@ class BybitClient:
         ts = self._ts()
         headers = self._headers(ts, "5000", js)
         url = f"{self.base}{path}"
-        r = _HTTP.post(url, headers=headers, data=js, timeout=timeout)
+        can_retry_order_create = bool(
+            ORDER_LINK_ID_ENABLED
+            and path == "/v5/order/create"
+            and str((body or {}).get("orderLinkId") or "").strip()
+        )
+        session = _HTTP_ORDER_CREATE if can_retry_order_create else _HTTP
+        r = session.post(url, headers=headers, data=js, timeout=timeout)
         r.raise_for_status()
         j = r.json()        
         rc = str(j.get("retCode"))
 
         if rc != "0":
             msg = (str(j.get("retMsg") or "")).lower()
+
+            # 110007 = orderLinkId уже использован. Это означает, что предыдущая попытка
+            # (timeout / network glitch) реально дошла до Bybit и ордер размещён.
+            # Не падаем — лукапим существующий ордер по linkId и возвращаем его как success.
+            if rc == "110007" and path == "/v5/order/create":
+                link_id = (body or {}).get("orderLinkId", "")
+                bybit_symbol = (body or {}).get("symbol", "")
+                if link_id and bybit_symbol:
+                    try:
+                        lookup = self.get("/v5/order/realtime", {
+                            "category": "linear",
+                            "symbol": bybit_symbol,
+                            "orderLinkId": link_id,
+                            "limit": 1,
+                        }, timeout=10)
+                        existing = ((lookup.get("result") or {}).get("list") or [])
+                        if existing:
+                            existing_oid = existing[0].get("orderId", "")
+                            log_error(f"[{self.name}] 110007 recovered: link_id={link_id} → orderId={existing_oid}")
+                            try:
+                                tg_trade_throttled(
+                                    f"110007_{bybit_symbol}",
+                                    f"⚠️ {self.name}: дубль предотвращён для {bybit_symbol} "
+                                    f"(orderLinkId уже использован, нашёл orderId={existing_oid[:10]}…)",
+                                    cooldown_sec=300,
+                                )
+                            except Exception:
+                                pass
+                            try:
+                                _log_order_link(self.name, link_id, existing_oid, body, "duplicate_recovered")
+                            except Exception:
+                                pass
+                            # Подменяем response на success, чтобы caller получил orderId как обычно.
+                            j["retCode"] = 0
+                            j["retMsg"] = "OK (recovered from 110007)"
+                            j["result"] = {"orderId": existing_oid, "orderLinkId": link_id}
+                            return j
+                    except Exception as lookup_err:
+                        log_error(f"[{self.name}] 110007 recovery lookup failed for {link_id}: {lookup_err}")
+                # Если не смогли восстановить — падаем как раньше (raise ниже).
+
             # Benign Bybit no-op replies are handled by callers as success and should not pollute errors.log.
             if rc not in ("34040", "110043") and ("not modified" not in msg):
                 log_error(f"[{self.name}] POST {path} failed. Body={js}  Resp={j}")
@@ -5029,6 +5119,8 @@ class BybitClient:
             log_error(f"[{self.name}] close_market skip {symbol}: qty too small ({qty})")
             return
 
+        link_id_close = _make_order_link_id(self.name, symbol, opp, "close") if ORDER_LINK_ID_ENABLED else ""
+
         body = {
             "category":   "linear",
             "symbol":     symbol,
@@ -5039,9 +5131,14 @@ class BybitClient:
             "timeInForce":"IOC",
             "marketUnit": "baseCoin",
         }
+        if link_id_close:
+            body["orderLinkId"] = link_id_close
         if not POS_IS_ONEWAY:
             body["positionIdx"] = 2 if side == "Sell" else 1
-        self.post("/v5/order/create", body)
+        j = self.post("/v5/order/create", body)
+        if link_id_close and not str((j or {}).get("retMsg") or "").startswith("OK (recovered"):
+            oid_close = ((j or {}).get("result") or {}).get("orderId", "")
+            _log_order_link(self.name, link_id_close, oid_close, body, "placed")
 
     
     def get_position_summary(self, symbol: str) -> tuple[float, Optional[str], int, Optional[float], Optional[float], Optional[float]]:
@@ -6321,7 +6418,7 @@ def _get_vol_adj_mult() -> float:
         return cached_mult
 
     # Read geometry state
-    geo_path = pathlib.Path("runtime/geometry/geometry_state.json")
+    geo_path = Path("runtime/geometry/geometry_state.json")
     try:
         with geo_path.open() as f:
             geo = json.loads(f.read())
