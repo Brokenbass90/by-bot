@@ -9,6 +9,18 @@
 
 **Done:**
 
+- Rechecked server at `2026-04-30 09:04 UTC`: `bybot` active, heartbeat fresh, allocator/router OK, `safe_mode=0`, `global_risk=0.8`, `open_trades=0`.
+- Counted fresh crypto live trade events:
+  - since `2026-04-25`: one closed trade
+  - since `2026-04-28`: one closed trade
+  - result: `range` on `ALGOUSDT`, closed SL, `pnl=-0.922658`
+  - since `2026-04-30`: no closed crypto trades yet
+- Confirmed live canary v2 is scanning but not entering: ATT1/flat/midterm counters grow, but current market still resolves to `no_signal` / cooldown / filter skips.
+- Stopped the weak/stale research queue (`ASB1` bull-swap and `inplay_breakout` retest focus) after many failing early rows and no pass.
+- Launched two recovery research jobs on server:
+  - `support_bounce_v1_bull_sweep_v1` with fixed cache-mode runner
+  - `impulse_volume_breakout_v1_annual_repair_fetch_v2` with `cache_only=false`
+- Added [AUTONOMY_LOOP_20260430.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/AUTONOMY_LOOP_20260430.md) to define the non-chaotic AI/self-improvement loop.
 - Checked the live server after the overnight queue.
 - Confirmed Alpaca v38 paper still holds `AMD / UNH / XYZ` and the monthly bridge re-armed broker-side stop orders after close; the repeated intraday cleanup `DELETE position -> held_for_orders` spam was not present in the latest monthly gate tail.
 - Found that two overnight crypto research jobs were failing from data/harness problems rather than strategy verdicts:
@@ -25,14 +37,14 @@
 
 - Live crypto canary v2 should stay unchanged for now: `ATT1 + ARF1 + midterm` is still the cleanest proved live package.
 - Server is healthy after the restart: `systemd=active`, heartbeat fresh, `open_trades=0`, `ws_guard=0`, allocator/router OK.
+- Dynamic symbol selection is active: operator snapshot reports `router_profiles=16`, `router_symbols_total=61`, `router_backtest_gate=on`, `symbol_memory_loaded=1`.
 - Overnight results are not enough to expand the portfolio yet because the highest-value failures were cache coverage / runner problems.
 - `ASB1` bull-swap early rows were weak, and `inplay_breakout` early rows were weak. Continue only as research, not as deploy input.
 - The AI operator is correct that zero trades can be a quiet-market / filter issue, but its repeated Telegram prose was too noisy; suppressing duplicates is the right fix.
 
 **Next:**
 
-- Prewarm or relax cache handling for higher/missing symbols, then rerun `IVB1` and `support_bounce` jobs.
-- Let active `ASB1` and `inplay_breakout` jobs finish or stop them if they keep burning slots without passes.
+- Let `IVB1` fetch-enabled rerun and `support_bounce` rerun finish; promote nothing until annual/additivity/WF gates pass.
 - Run the wider liquidity-sweep reversal probe as a research job only after the current server slots free up; first smoke confirms the idea needs parameter/regime filtering before any promotion.
 - Keep Alpaca v38 paper under observation for 2 and 4 week checkpoints before any real `500 USD` deposit.
 

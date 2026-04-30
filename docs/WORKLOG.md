@@ -4,6 +4,30 @@
 
 ### What was closed
 
+- Rechecked live server at `2026-04-30 09:04 UTC`:
+  - `bybot.service=active`
+  - heartbeat fresh
+  - `open_trades=0`
+  - allocator/router OK
+  - `safe_mode=0`
+  - `global_risk=0.8`
+- Counted live crypto trade events:
+  - since `2026-04-25`: one closed trade
+  - since `2026-04-28`: one closed trade
+  - the trade was `range` / `ALGOUSDT`, closed by SL, `pnl=-0.922658`
+  - since `2026-04-30`: no closed trades yet
+- Verified dynamic symbol routing is not dead:
+  - operator snapshot reports `router_profiles=16`
+  - `router_symbols_total=61`
+  - `router_backtest_gate=on`
+  - `symbol_memory_loaded=1`
+- Stopped weak/stale active research from the overnight queue:
+  - `ASB1` bull-swap had many failing rows and DD often above gate
+  - `inplay_breakout` retest focus repeated weak early rows around `PF≈0.63`
+- Started two better recovery jobs on the server:
+  - `support_bounce_v1_bull_sweep_v1`
+  - `impulse_volume_breakout_v1_annual_repair_fetch_v2`
+- Added [AUTONOMY_LOOP_20260430.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/AUTONOMY_LOOP_20260430.md) so the AI/self-improvement loop has a written contract instead of ad hoc chatter.
 - Checked the server morning state after the overnight expansion queue.
 - Confirmed the Alpaca v38 paper monthly lane is not currently repeating the old intraday cleanup spam:
   - `AMD / UNH / XYZ` remain monthly-managed paper positions
@@ -46,12 +70,13 @@
   - `open_trades=0`
   - `ws_guard=0`
   - allocator/router OK
+- The active crypto canary is healthy but too quiet. ATT1/flat/midterm are scanning, yet current `bear_chop` conditions are not producing entries through the current filters.
 
 ### Next
 
-- Prewarm missing crypto cache symbols or let non-cache specs fetch data after the runner patch.
-- Rerun `IVB1` and `support_bounce` with valid data.
-- Keep `ASB1` and `inplay_breakout` in research only unless their final rows improve materially.
+- Let the new `IVB1` and `support_bounce` recovery jobs finish, then inspect ranked results.
+- If either passes annual constraints, run additivity versus canary v2 before any live change.
+- Keep `ASB1` and `inplay_breakout` in research only unless a future frontier materially improves.
 - Run the wider annual autoresearch for the liquidity hunter when server slots free up; evaluate it by side/regime before any additivity test.
 - Add live-vs-backtest/PnL context to the AI operator before trusting it as more than diagnostics.
 
