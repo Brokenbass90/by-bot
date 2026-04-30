@@ -18,10 +18,13 @@
 - Added duplicate suppression for proactive AI-operator Telegram messages so the same quiet-market/no-trades explanation is not repeated every hour when the facts have not changed.
 - Added research-only `alt_liquidity_sweep_reversal_v1` plus an autoresearch spec for a liquidity-sweep reversal probe. It is wired only into backtests, not live.
 - Ran local smoke backtests for the liquidity hunter: strict BTC/ETH 30d produced `0` trades; relaxed BTC/ETH/SOL 90d produced `49` trades but negative `PF=0.700`, `net=-2.53%`.
+- Pushed commit `8adb2ea` and deployed the committed files to the server.
+- Restarted `bybot` after confirming `open_trades=0`. The first restart exposed a missing server file from the earlier order-link patch (`bot/order_link.py`); copied it from the committed branch and brought `bybot` back to `active` with fresh heartbeat.
 
 **Key findings:**
 
 - Live crypto canary v2 should stay unchanged for now: `ATT1 + ARF1 + midterm` is still the cleanest proved live package.
+- Server is healthy after the restart: `systemd=active`, heartbeat fresh, `open_trades=0`, `ws_guard=0`, allocator/router OK.
 - Overnight results are not enough to expand the portfolio yet because the highest-value failures were cache coverage / runner problems.
 - `ASB1` bull-swap early rows were weak, and `inplay_breakout` early rows were weak. Continue only as research, not as deploy input.
 - The AI operator is correct that zero trades can be a quiet-market / filter issue, but its repeated Telegram prose was too noisy; suppressing duplicates is the right fix.

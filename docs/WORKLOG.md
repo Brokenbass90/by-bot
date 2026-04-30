@@ -23,6 +23,12 @@
   - [alt_liquidity_sweep_reversal_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_liquidity_sweep_reversal_v1.py)
   - [liquidity_sweep_reversal_v1_probe.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/liquidity_sweep_reversal_v1_probe.json)
   - [LIQUIDITY_HUNTER_V1_SPEC_20260430.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/LIQUIDITY_HUNTER_V1_SPEC_20260430.md)
+- Pushed commit `8adb2ea` to GitHub and deployed those committed files to `/root/by-bot`.
+- Restarted `bybot` to apply the AI-operator duplicate-suppression patch after confirming `open_trades=0`.
+- Fixed the deployment miss discovered by the restart:
+  - `smart_pump_reversal_bot.py` already depended on `bot/order_link.py` from the prior order-link/idempotency patch
+  - the server copy did not yet have that file
+  - copied `bot/order_link.py`, reset the failed service state, and verified `bybot` returned to `active`
 
 ### Important truth
 
@@ -34,6 +40,12 @@
 - Alpaca v38 is still the safest `500 USD` paper-to-real candidate, but the required decision clock is still two checkpoints:
   - 2 weeks: operational safety / stop handling / no cleanup conflict
   - 4 weeks: first real cycle quality
+- Current post-restart server truth:
+  - `systemd=active`
+  - heartbeat fresh
+  - `open_trades=0`
+  - `ws_guard=0`
+  - allocator/router OK
 
 ### Next
 
