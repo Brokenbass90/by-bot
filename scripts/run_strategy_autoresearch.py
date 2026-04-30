@@ -320,12 +320,19 @@ def _run_backtest(spec: dict, overrides: Dict[str, str], run_id: int) -> Candida
         )
 
     env = os.environ.copy()
+    # Parent launchers sometimes export BACKTEST_CACHE_ONLY=1 for deterministic
+    # nightly queues. Specs that explicitly set cache_only=false must be able to
+    # fetch missing slices instead of crashing every row on one uncached symbol.
+    if not bool(spec.get("cache_only", False)):
+        env.pop("BACKTEST_CACHE_ONLY", None)
+        env.pop("CACHE_ONLY", None)
     for k, v in spec.get("base_env", {}).items():
         env[str(k)] = str(v)
     for k, v in overrides.items():
         env[str(k)] = str(v)
     if spec.get("cache_only", False):
         env["BACKTEST_CACHE_ONLY"] = "1"
+        env["CACHE_ONLY"] = "1"
 
     if "command" in spec:
         fmt = _SafeFormatDict(_command_context(spec, overrides, tag))
@@ -346,7 +353,17 @@ def _run_backtest(spec: dict, overrides: Dict[str, str], run_id: int) -> Candida
             tag,
         ]
 
-    subprocess.run(cmd, cwd=ROOT, env=env, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    log_dir = BACKTEST_RUNS / "autoresearch_subprocess_logs" / name
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_path = log_dir / f"{tag}.log"
+    with log_path.open("w", encoding="utf-8", errors="ignore") as log_f:
+        log_f.write(f"cmd={' '.join(cmd)}\n")
+        log_f.write(f"cache_only={int(bool(spec.get('cache_only', False)))} BACKTEST_CACHE_ONLY={env.get('BACKTEST_CACHE_ONLY','')}\n")
+        log_f.write(f"overrides={json.dumps(overrides, sort_keys=True)}\n\n")
+        try:
+            subprocess.run(cmd, cwd=ROOT, env=env, check=True, stdout=log_f, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as exc:
+            raise RuntimeError(f"subprocess rc={exc.returncode} log={log_path}") from exc
     run_dir = _latest_run_dir(tag)
     if run_dir is None:
         raise RuntimeError(f"Missing run dir for tag={tag}")

@@ -1,5 +1,48 @@
 # Bybit bot (v28) - worklog / reminders
 
+## 2026-04-30 - overnight research triage + operator noise fix + liquidity hunter seed
+
+### What was closed
+
+- Checked the server morning state after the overnight expansion queue.
+- Confirmed the Alpaca v38 paper monthly lane is not currently repeating the old intraday cleanup spam:
+  - `AMD / UNH / XYZ` remain monthly-managed paper positions
+  - broker-side stop-sell orders were present again after the close re-arm pass
+- Found the real reason two overnight crypto jobs reported "all crashed":
+  - `IVB1` needs missing cached symbols such as `1000PEPEUSDT`
+  - `support_bounce` hit missing `ATOMUSDT`
+  - the overnight parent environment was forcing cache-only mode even for specs that asked for `cache_only=false`
+- Patched the autoresearch runner:
+  - spec `cache_only=true` explicitly enables cache-only mode
+  - spec `cache_only=false` clears inherited cache-only flags
+  - each candidate now writes its own subprocess log under `backtest_runs/autoresearch_subprocess_logs/`
+- Patched proactive AI-operator output:
+  - repeated no-trades / quiet-market / websocket-health messages now use a longer duplicate-suppression signature
+  - repeated facts should no longer produce the same Telegram paragraph every cycle
+- Added first research-only liquidity-hunter slice:
+  - [alt_liquidity_sweep_reversal_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_liquidity_sweep_reversal_v1.py)
+  - [liquidity_sweep_reversal_v1_probe.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/liquidity_sweep_reversal_v1_probe.json)
+  - [LIQUIDITY_HUNTER_V1_SPEC_20260430.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/LIQUIDITY_HUNTER_V1_SPEC_20260430.md)
+
+### Important truth
+
+- The live crypto portfolio should not be expanded from the overnight results yet.
+- The correct next step is to fix/retry the invalid crashed jobs, not to interpret them as bad strategies.
+- The liquidity hunter is a promising idea, but the first smoke checks do not prove edge:
+  - strict 30d BTC/ETH: `0` trades
+  - relaxed 90d BTC/ETH/SOL: `49` trades, `PF=0.700`, `net=-2.53%`
+- Alpaca v38 is still the safest `500 USD` paper-to-real candidate, but the required decision clock is still two checkpoints:
+  - 2 weeks: operational safety / stop handling / no cleanup conflict
+  - 4 weeks: first real cycle quality
+
+### Next
+
+- Prewarm missing crypto cache symbols or let non-cache specs fetch data after the runner patch.
+- Rerun `IVB1` and `support_bounce` with valid data.
+- Keep `ASB1` and `inplay_breakout` in research only unless their final rows improve materially.
+- Run the wider annual autoresearch for the liquidity hunter when server slots free up; evaluate it by side/regime before any additivity test.
+- Add live-vs-backtest/PnL context to the AI operator before trusting it as more than diagnostics.
+
 ## 2026-04-10 - live flat universe repair + Alpaca monthly/intraday separation
 
 ### What was closed

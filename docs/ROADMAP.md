@@ -80,6 +80,30 @@ Order of work:
   - `/chart_ai` exists in code
   - server-side image analysis still needs an image-capable API key
 
+## Current Checkpoint - 2026-04-30 Morning
+
+- Live crypto stays on the narrow canary v2 package:
+  - `ATT1`
+  - `ARF1 / flat`
+  - `btc_eth_midterm_pullback`
+  - v7 sleeves and unvalidated expansion sleeves remain disabled.
+- Overnight research did not produce a clean promotion yet. The important result was infrastructure truth:
+  - `IVB1` and `support_bounce` crashed from missing cache symbols / forced cache-only mode, so their verdict is invalid.
+  - `ASB1` bull-swap early rows are weak.
+  - `inplay_breakout` early rows are weak.
+- The research harness now has per-spec cache-mode ownership and per-candidate subprocess logs. This should stop silent "all crashed" verdicts from hiding the real blocker.
+- Alpaca v38 paper is still the best first real-money candidate, but only after paper observation:
+  - broker-side simple stop protection is active in paper
+  - v38 remains a slow compounder, not a fast income engine
+  - intraday/swing income lane is still research/paper, not deposit-ready
+- AI operator needs to become quieter and more factual:
+  - duplicate proactive Telegram messages are now suppressed by signature
+  - next operator upgrade should include fresh PnL, active backtest results, and live-vs-backtest drift.
+- New research front:
+  - `alt_liquidity_sweep_reversal_v1` tests stop/liquidity sweeps around rolling pools.
+  - First relaxed smoke produced trades but lost money (`49` trades, `PF=0.700`), so the next stage is side/regime research rather than promotion.
+  - It is research-only until annual sweep, additivity, and WF checks pass.
+
 ## Current Checkpoint - 2026-04-17
 
 - The live crypto server is deployed and trading under `systemd`, with allocator/router/orchestrator hot-reload and circuit-breaker wiring already in place.

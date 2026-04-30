@@ -2106,6 +2106,7 @@ DEEPSEEK_OPERATOR_USE_API = _env_bool("DEEPSEEK_OPERATOR_USE_API", True)
 DEEPSEEK_OPERATOR_PROACTIVE_ENABLE = _env_bool("DEEPSEEK_OPERATOR_PROACTIVE_ENABLE", True)
 DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE = _env_bool("DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE", True)
 DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC = max(300, int(os.getenv("DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC", "3600")))
+DEEPSEEK_OPERATOR_DUPLICATE_SUPPRESS_SEC = max(1800, int(os.getenv("DEEPSEEK_OPERATOR_DUPLICATE_SUPPRESS_SEC", "21600")))
 DEEPSEEK_OPERATOR_NO_TRADES_HOURS = max(1, int(os.getenv("DEEPSEEK_OPERATOR_NO_TRADES_HOURS", "24")))
 DEEPSEEK_OPERATOR_QUIET_SCAN_MIN = max(100, int(os.getenv("DEEPSEEK_OPERATOR_QUIET_SCAN_MIN", "1500")))
 DEEPSEEK_OPERATOR_MSG_MAX_CHARS = max(300, int(os.getenv("DEEPSEEK_OPERATOR_MSG_MAX_CHARS", "1100")))
@@ -3080,6 +3081,37 @@ def _ai_operator_store_memory(
         log_error(f"ai operator memory append fail: {e}")
 
 
+def _ai_operator_duplicate_signature(kind: str, payload: dict[str, Any] | None) -> str:
+    """Coarse signature for proactive messages.
+
+    Runtime counters can keep increasing while the actual situation is still the
+    same "quiet market / same blocker" story. Suppress those repeats for a
+    longer window so Telegram stays useful.
+    """
+    payload = dict(payload or {})
+    kind_s = str(kind or "").strip()
+    if kind_s in {"proactive_no_trades", "proactive_quiet_market"}:
+        regime = dict(payload.get("regime") or {})
+        skip_counts = dict(payload.get("skip_counts") or {})
+        dominant = "-"
+        if skip_counts:
+            dominant = max(skip_counts.items(), key=lambda kv: int(kv[1] or 0))[0]
+        return ":".join([
+            kind_s,
+            str(regime.get("label") or "-"),
+            str(regime.get("reason") or "-")[:80],
+            f"entry={int(payload.get('quiet_entry') or 0)}",
+            f"dominant={dominant}",
+        ])
+    if kind_s == "proactive_ws_health":
+        return ":".join([
+            kind_s,
+            str(payload.get("status") or "-"),
+            str(payload.get("reason") or "-")[:80],
+        ])
+    return ""
+
+
 def _build_trade_review_summary(tr, sym: str, pnl_closed: float, fee_sum: float | None, exit_px: float | None) -> tuple[str, dict[str, Any]]:
     entry_px = float(getattr(tr, "entry_price", getattr(tr, "avg", 0.0) or 0.0) or 0.0)
     sl_px = getattr(tr, "sl_price", None)
@@ -3132,6 +3164,15 @@ async def _ai_operator_emit(
     tg_prefix: str = "🧠 AI operator",
 ) -> None:
     if not DEEPSEEK_OPERATOR_ENABLE:
+        return
+    dup_sig = _ai_operator_duplicate_signature(kind, payload)
+    if dup_sig and not _throttle_gate(f"aiop:dup:{dup_sig}", DEEPSEEK_OPERATOR_DUPLICATE_SUPPRESS_SEC):
+        _ai_operator_store_memory(
+            kind=kind,
+            source="suppressed_duplicate",
+            summary=f"duplicate proactive message suppressed: {_ai_operator_trim(fallback_text, 240)}",
+            payload=payload,
+        )
         return
     memory_source = "fallback"
     body_text = str(fallback_text or "").strip()
@@ -3305,7 +3346,18 @@ async def _maybe_run_ai_operator_tick(
             _ai_operator_emit(
                 kind="proactive_no_trades",
                 fallback_text=fallback,
-                payload={"hours": DEEPSEEK_OPERATOR_NO_TRADES_HOURS, "closed_trades": closed_cnt, "pnl_sum": pnl_sum},
+                payload={
+                    "hours": DEEPSEEK_OPERATOR_NO_TRADES_HOURS,
+                    "closed_trades": closed_cnt,
+                    "pnl_sum": pnl_sum,
+                    "quiet_entry": quiet_entry,
+                    "regime": regime,
+                    "skip_counts": {
+                        "cooldown": quiet_skip_cooldown,
+                        "technical": quiet_skip_tech,
+                        "capacity": quiet_skip_capacity,
+                    },
+                },
                 prompt=prompt,
             )
         )
@@ -3329,7 +3381,13 @@ async def _maybe_run_ai_operator_tick(
             _ai_operator_emit(
                 kind="proactive_ws_health",
                 fallback_text=fallback,
-                payload={"status": ws_status, "connect": d_connect, "disconnect": d_disconnect, "handshake_timeout": d_handshake},
+                payload={
+                    "status": ws_status,
+                    "reason": ws_guard_reason or "",
+                    "connect": d_connect,
+                    "disconnect": d_disconnect,
+                    "handshake_timeout": d_handshake,
+                },
                 prompt=prompt,
             )
         )
@@ -3360,7 +3418,16 @@ async def _maybe_run_ai_operator_tick(
             _ai_operator_emit(
                 kind="proactive_quiet_market",
                 fallback_text=fallback,
-                payload={"quiet_try": quiet_try, "quiet_entry": quiet_entry, "regime": regime},
+                payload={
+                    "quiet_try": quiet_try,
+                    "quiet_entry": quiet_entry,
+                    "regime": regime,
+                    "skip_counts": {
+                        "cooldown": quiet_skip_cooldown,
+                        "technical": quiet_skip_tech,
+                        "capacity": quiet_skip_capacity,
+                    },
+                },
                 prompt=prompt,
             )
         )

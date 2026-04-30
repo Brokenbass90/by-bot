@@ -5,6 +5,36 @@
 
 ---
 
+## 2026-04-30 | Codex (morning - overnight triage + research harness hardening)
+
+**Done:**
+
+- Checked the live server after the overnight queue.
+- Confirmed Alpaca v38 paper still holds `AMD / UNH / XYZ` and the monthly bridge re-armed broker-side stop orders after close; the repeated intraday cleanup `DELETE position -> held_for_orders` spam was not present in the latest monthly gate tail.
+- Found that two overnight crypto research jobs were failing from data/harness problems rather than strategy verdicts:
+  - `impulse_volume_breakout_v1_annual_repair_v1` crashed on missing cached `1000PEPEUSDT`.
+  - `support_bounce_v1_bull_sweep_v1` crashed on missing cached `ATOMUSDT` because the global overnight environment forced cache-only mode even though the spec requested live fetch.
+- Hardened `scripts/run_strategy_autoresearch.py` so each spec owns its own cache mode and failed candidate logs point to a concrete subprocess log file.
+- Added duplicate suppression for proactive AI-operator Telegram messages so the same quiet-market/no-trades explanation is not repeated every hour when the facts have not changed.
+- Added research-only `alt_liquidity_sweep_reversal_v1` plus an autoresearch spec for a liquidity-sweep reversal probe. It is wired only into backtests, not live.
+- Ran local smoke backtests for the liquidity hunter: strict BTC/ETH 30d produced `0` trades; relaxed BTC/ETH/SOL 90d produced `49` trades but negative `PF=0.700`, `net=-2.53%`.
+
+**Key findings:**
+
+- Live crypto canary v2 should stay unchanged for now: `ATT1 + ARF1 + midterm` is still the cleanest proved live package.
+- Overnight results are not enough to expand the portfolio yet because the highest-value failures were cache coverage / runner problems.
+- `ASB1` bull-swap early rows were weak, and `inplay_breakout` early rows were weak. Continue only as research, not as deploy input.
+- The AI operator is correct that zero trades can be a quiet-market / filter issue, but its repeated Telegram prose was too noisy; suppressing duplicates is the right fix.
+
+**Next:**
+
+- Prewarm or relax cache handling for higher/missing symbols, then rerun `IVB1` and `support_bounce` jobs.
+- Let active `ASB1` and `inplay_breakout` jobs finish or stop them if they keep burning slots without passes.
+- Run the wider liquidity-sweep reversal probe as a research job only after the current server slots free up; first smoke confirms the idea needs parameter/regime filtering before any promotion.
+- Keep Alpaca v38 paper under observation for 2 and 4 week checkpoints before any real `500 USD` deposit.
+
+---
+
 ## 2026-04-17 | Claude (session — Alpaca monthly upgrade + midterm short)
 
 **Done:**
