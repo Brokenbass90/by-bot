@@ -1,0 +1,59 @@
+{
+  "name": "elder_v3_macro_off_full_relax_v1",
+  "description": "Elder v3: фильтр macro_enabled=0 + relax всех остальных параметров. Цель: понять, есть ли вообще edge у Elder в текущем рынке если убрать самый строгий filter (daily macro). Если 0 trades даже без macro — стратегия мертва. Если PF>1.3 — добавляем macro обратно постепенно.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT",
+    "--strategies",
+    "elder_triple_screen_v3",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-30",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "ETS3_MACRO_ENABLED": "0",
+    "ETS3_TREND_REQUIRE_HIST_SIGN": "1",
+    "ETS3_WAVE_REQUIRE_RSI": "1"
+  },
+  "grid": {
+    "ETS3_TREND_CONSEC_BARS": [1, 2, 3],
+    "ETS3_TREND_MIN_HIST_MAG": [0.0, 0.0001, 0.0002],
+    "ETS3_WAVE_RSI_OS": [38, 42, 45],
+    "ETS3_WAVE_RSI_OB": [55, 58, 62]
+  },
+  "constraints": {
+    "min_trades": 25,
+    "min_profit_factor": 1.20,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 4.0
+  },
+  "score_weights": {
+    "net_pnl": 1.2,
+    "profit_factor": 6.0,
+    "winrate": 4.0,
+    "max_drawdown": 2.0,
+    "trades": 0.14,
+    "trades_cap": 100,
+    "negative_months": 1.5,
+    "worst_month_pnl": 1.4
+  },
+  "_combo_count": "3x3x3x3 = 81 combos"
+}

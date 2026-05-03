@@ -1,0 +1,72 @@
+{
+  "name": "sloped_channel_short_only_v1",
+  "description": "Pair-2: ASC1 (alt_sloped_channel_v1) SHORT-only sweep. Companion to sloped_channel_long_only_v1. Сейчас в bear_chop overlay уже sloped shorts работают с конкретными params; этот sweep ищет ЛУЧШИЕ short params на 360d, без ограничений overlay. Если найдём существенно лучше — апдейтим bear_chop overlay.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_sloped_channel_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "ASC1_ALLOW_LONGS": "0",
+    "ASC1_ALLOW_SHORTS": "1",
+    "ASC1_TRAIL_ATR_MULT": "0.0",
+    "ASC1_TIME_STOP_BARS_5M": "480",
+    "ASC1_TP1_FRAC": "0.45",
+    "ASC1_TP2_BUFFER_PCT": "0.40"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "ADAUSDT,LINKUSDT,ATOMUSDT",
+      "ADAUSDT,LINKUSDT,DOTUSDT,LTCUSDT,ATOMUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,DOTUSDT"
+    ],
+    "ASC1_MIN_RANGE_R2": [0.50, 0.55, 0.65],
+    "ASC1_SHORT_MAX_POS_SLOPE_PCT": [0.0, 0.05],
+    "ASC1_SHORT_MIN_REJECT_DEPTH_ATR": [0.75, 0.90, 1.10],
+    "ASC1_SHORT_MIN_RSI": [58, 62, 65, 68],
+    "ASC1_CONFIRM_5M_BARS": [4, 6]
+  },
+  "constraints": {
+    "min_trades": 40,
+    "min_profit_factor": 1.25,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 6.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.3,
+    "profit_factor": 6.0,
+    "winrate": 4.5,
+    "max_drawdown": 2.0,
+    "trades": 0.14,
+    "trades_cap": 200,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "3x3x2x3x4x2 = 432 combos",
+  "_pair": "sloped_channel_long_only_v1.json",
+  "_baseline": "Текущие live params (regime_overlay_bear_chop.env): R²=0.50, slope=0.0, depth=0.75, RSI=60, confirm=6. Если sweep топ совпадает — оставляем как есть. Если выигрывает другая комбинация на ≥+15% net и DD не растёт — апдейтим overlay."
+}

@@ -1,0 +1,68 @@
+{
+  "name": "asb1_canary_v2_bull_swap_v1",
+  "description": "Pair-4: ASB1 (alt_support_bounce_v1) sweep targeting bull_chop and bull_trend regimes specifically. Goal: prove that ASB1 in bull regimes outperforms ARF1 in bull regimes (ARF1 caused the only red month in canary v2 — happened in bull_chop). If ASB1 wins, propose regime-split: ARF1 active in bear_chop/bear_trend, ASB1 active in bull_chop/bull_trend.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_support_bounce_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "ASB1_ALLOW_LONGS": "1",
+    "ASB1_ALLOW_SHORTS": "0",
+    "ASB1_TIME_STOP_BARS_5M": "576"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,DOTUSDT,LINKUSDT,LTCUSDT",
+      "ADAUSDT,LINKUSDT,DOTUSDT,LTCUSDT,SUIUSDT"
+    ],
+    "ASB1_MIN_RSI": [28, 30, 32],
+    "ASB1_MAX_RSI": [40, 42, 45],
+    "ASB1_SL_ATR_MULT": [0.7, 0.85, 1.0],
+    "ASB1_TP1_FRAC": [0.50, 0.60, 0.70]
+  },
+  "constraints": {
+    "min_trades": 50,
+    "min_profit_factor": 1.25,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 8.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.3,
+    "profit_factor": 6.0,
+    "winrate": 4.5,
+    "max_drawdown": 2.0,
+    "trades": 0.14,
+    "trades_cap": 200,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "3x3x3x3x3 = 243 combos",
+  "_goal": "Find ASB1 params that work specifically in bull-leaning conditions, to swap with ARF1 in bull_chop/bull_trend regimes via regime-overlay.",
+  "_pair_strategy": "If best ASB1 net > 8 with PF >= 1.30 — proceed to additivity test: replace flat→bounce1 in bull_chop overlay, run dynamic 360d canary v2 vs canary v2 + ASB1-bull-swap. Decision rule: keep swap if (a) red month gone or smaller, (b) net not lower than baseline, (c) DD no worse by more than +1.0pp."
+}

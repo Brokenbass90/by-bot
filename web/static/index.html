@@ -69,6 +69,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .status-dot.dead{background:var(--red)}
 .status-dot.unknown{background:var(--text3)}
 .status-label{font-size:12px;color:var(--text2)}
+/* ── 1-glance health pills (NEW 2026-05-03) ── */
+.pill{font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;letter-spacing:0.2px;white-space:nowrap;cursor:default}
+.pill-good{background:rgba(34,197,94,0.18);color:#4ade80;border:1px solid rgba(34,197,94,0.3)}
+.pill-bad{background:rgba(239,68,68,0.18);color:#f87171;border:1px solid rgba(239,68,68,0.3)}
+.pill-neutral{background:rgba(148,163,184,0.18);color:#94a3b8;border:1px solid rgba(148,163,184,0.25)}
+.pill-blink{animation:pillblink 1.4s ease-in-out infinite}
+@keyframes pillblink{0%,100%{opacity:1}50%{opacity:0.5}}
 .refresh-btn{background:none;border:1px solid var(--border2);color:var(--text2);padding:4px 10px;border-radius:var(--radius);cursor:pointer;font-size:12px}
 .refresh-btn:hover{background:var(--bg3);color:var(--text)}
 
@@ -2111,6 +2118,32 @@ function App() {
       React.createElement('div', { className: 'topbar' },
         React.createElement('div', { className: 'topbar-title' }, currentPage?.label || 'Dashboard'),
         React.createElement('div', { className: 'topbar-right' },
+          // ── 1-glance health summary (NEW 2026-05-03) ──────────────────
+          // Today PnL: цвет зависит от знака
+          status && (function () {
+            const v = Number(status.today_pnl_total || 0);
+            const sign = v >= 0 ? '+' : '';
+            const cls = v > 0 ? 'pill pill-good' : v < 0 ? 'pill pill-bad' : 'pill pill-neutral';
+            return React.createElement('span', { className: cls, title: `Today: ${status.today_trades_count} trades` },
+              `Today ${sign}${v.toFixed(2)}$ · ${status.today_trades_count}t`);
+          })(),
+          // Last trade age — красный если abnormal_no_trades
+          status && (function () {
+            const age = status.last_trade_age_sec;
+            const abnormal = !!status.abnormal_no_trades;
+            let label = 'no trades';
+            if (age !== null && age !== undefined) {
+              const h = age / 3600;
+              if (h < 1) label = `last: ${Math.round(age / 60)}m`;
+              else if (h < 24) label = `last: ${h.toFixed(1)}h`;
+              else label = `last: ${(h / 24).toFixed(1)}d`;
+            }
+            const cls = abnormal ? 'pill pill-bad pill-blink' : 'pill pill-neutral';
+            const tip = status.last_trade_strategy
+              ? `${status.last_trade_strategy} ${status.last_trade_symbol}` + (status.last_trade_pnl != null ? ` (${status.last_trade_pnl >= 0 ? '+' : ''}${status.last_trade_pnl.toFixed(2)}$)` : '')
+              : 'No trades found';
+            return React.createElement('span', { className: cls, title: tip }, label);
+          })(),
           React.createElement('div', { className: `status-dot ${alive ? 'alive pulse' : alive === false ? 'dead' : 'unknown'}` }),
           React.createElement('span', { className: 'status-label' },
             status

@@ -1,0 +1,63 @@
+{
+  "name": "liquidity_sweep_reversal_v2_param_sweep_v1",
+  "description": "Sweep params для alt_liquidity_sweep_reversal_v1 — Codex'овский liquidity hunter. Smoke 90d дал PF 0.7 на default. Нужно найти params где edge живой. См. LIQUIDITY_HUNTER_V1_REVIEW_20260503.md — 6 замечаний, главные: min_pool_touches=3+, max_sweep_atr расширить.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT",
+    "--strategies",
+    "alt_liquidity_sweep_reversal_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-30",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "LQH_ALLOW_LONGS": "1",
+    "LQH_ALLOW_SHORTS": "1",
+    "LQH_RR": "2.0",
+    "LQH_TIME_STOP_BARS": "144",
+    "LQH_COOLDOWN_BARS_5M": "12"
+  },
+  "grid": {
+    "LQH_LOOKBACK_BARS": [24, 36, 48],
+    "LQH_MIN_POOL_TOUCHES": [3, 4],
+    "LQH_MIN_POOL_WIDTH_ATR": [1.0, 1.5, 2.0],
+    "LQH_MIN_SWEEP_ATR": [0.10, 0.20, 0.30],
+    "LQH_MAX_SWEEP_ATR": [0.9, 1.2, 1.5],
+    "LQH_MIN_VOL_MULT": [1.5, 2.0, 2.5]
+  },
+  "constraints": {
+    "min_trades": 30,
+    "min_profit_factor": 1.18,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 3.0
+  },
+  "score_weights": {
+    "net_pnl": 1.2,
+    "profit_factor": 6.0,
+    "winrate": 4.5,
+    "max_drawdown": 2.0,
+    "trades": 0.14,
+    "trades_cap": 200,
+    "negative_months": 1.8,
+    "worst_month_pnl": 1.4
+  },
+  "_combo_count": "3x2x3x3x3x3 = 486 combos"
+}

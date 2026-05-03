@@ -397,6 +397,60 @@ async def get_status(_: str = Depends(require_auth)):
         hb_age = int(now_ts - hb_path.stat().st_mtime)
         bot_alive = hb_age < 120  # alive if heartbeat < 2 min old
 
+    # ── last trade summary + abnormal-no-trades warning (NEW 2026-05-03) ─────
+    # Top-bar 1-glance UX: чтобы пользователь увидел "0 trades 5 days" сразу.
+    last_trade_age_sec: Optional[int] = None
+    last_trade_strategy: Optional[str] = None
+    last_trade_symbol: Optional[str] = None
+    last_trade_pnl: Optional[float] = None
+    today_pnl_total: float = 0.0
+    today_trades_count: int = 0
+    abnormal_no_trades: bool = False
+
+    def _ts_to_epoch(raw):
+        if raw is None or raw == "":
+            return None
+        try:
+            if isinstance(raw, (int, float)):
+                v = float(raw)
+                return v / 1000.0 if v > 1e12 else v
+            return datetime.fromisoformat(str(raw).replace("Z", "+00:00")).timestamp()
+        except Exception:
+            return None
+
+    try:
+        trades = _load_all_trades()
+        if trades:
+            latest = trades[0]  # _load_all_trades returns desc-sorted
+            cts = _ts_to_epoch(latest.get("close_time") or latest.get("exit_ts"))
+            if cts is not None:
+                last_trade_age_sec = int(now_ts - cts)
+            last_trade_strategy = latest.get("strategy")
+            last_trade_symbol = latest.get("symbol")
+            try:
+                last_trade_pnl = float(latest.get("pnl") or latest.get("pnl_usd") or 0.0)
+            except Exception:
+                last_trade_pnl = None
+
+        today_start = datetime.now(timezone.utc).replace(
+            hour=0, minute=0, second=0, microsecond=0
+        ).timestamp()
+        for t in trades:
+            cts2 = _ts_to_epoch(t.get("close_time") or t.get("exit_ts"))
+            if cts2 is not None and cts2 >= today_start:
+                today_trades_count += 1
+                try:
+                    today_pnl_total += float(t.get("pnl") or t.get("pnl_usd") or 0.0)
+                except Exception:
+                    pass
+
+        warn_threshold = int(os.getenv("WEB_NO_TRADES_WARN_HOURS", "24") or 24) * 3600
+        if bot_alive and (last_trade_age_sec is None or last_trade_age_sec > warn_threshold):
+            abnormal_no_trades = True
+    except Exception:
+        # never fail /status because of trade-loading issues
+        pass
+
     return {
         "bot_alive": bot_alive,
         "heartbeat_age_sec": hb_age,
@@ -410,6 +464,14 @@ async def get_status(_: str = Depends(require_auth)):
         "allocator_label": allocator["label"],
         "allocator_tone": allocator["tone"],
         "allocator_detail": allocator["detail"],
+        # NEW (2026-05-03): top-bar 1-glance summary
+        "last_trade_age_sec": last_trade_age_sec,
+        "last_trade_strategy": last_trade_strategy,
+        "last_trade_symbol": last_trade_symbol,
+        "last_trade_pnl": last_trade_pnl,
+        "today_pnl_total": round(today_pnl_total, 4),
+        "today_trades_count": today_trades_count,
+        "abnormal_no_trades": abnormal_no_trades,
         "runtime_root": str(_RUNTIME_ROOT),
         "data_mode": "live_mirror" if _RUNTIME_ROOT != (_ROOT / "runtime") else "local",
         "ts_utc": datetime.now(timezone.utc).isoformat(),

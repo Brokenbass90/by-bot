@@ -1,0 +1,63 @@
+{
+  "name": "att1_density_v3_more_pivots_v1",
+  "description": "ATT1 frequency repair: текущий live ATT1 за 5 дней дал 0 сделок в bull_chop. Это связано с тугими params (R²=0.7, pivot_age=20, RSI<52). Этот sweep ищет более частую ATT1 версию для bull_chop с защитой по WR/DD.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "--strategies",
+    "alt_trendline_touch_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-30",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "ATT1_ALLOW_LONGS": "1",
+    "ATT1_ALLOW_SHORTS": "1"
+  },
+  "grid": {
+    "ATT1_PIVOT_LEFT": [2, 3],
+    "ATT1_PIVOT_RIGHT": [2, 3],
+    "ATT1_MIN_PIVOTS": [2, 3],
+    "ATT1_MAX_PIVOT_AGE": [12, 16, 20, 24],
+    "ATT1_MIN_R2": [0.55, 0.65, 0.75],
+    "ATT1_TOUCH_ATR": [0.30, 0.40, 0.50],
+    "ATT1_RSI_LONG_MAX": [52, 55, 58]
+  },
+  "constraints": {
+    "min_trades": 80,
+    "min_profit_factor": 1.20,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 6.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.3,
+    "profit_factor": 5.5,
+    "winrate": 5.0,
+    "max_drawdown": 2.0,
+    "trades": 0.16,
+    "trades_cap": 350,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "2x2x2x4x3x3x3 = 864 combos"
+}
