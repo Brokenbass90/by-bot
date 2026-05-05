@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import concurrent.futures
 import csv
 import itertools
 import json
@@ -450,6 +451,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Systematic autoresearch-style sweep for pinned backtest windows.")
     ap.add_argument("--spec", required=True, help="Path to autoresearch JSON spec.")
     ap.add_argument("--limit", type=int, default=0, help="Optional cap on number of grid candidates.")
+    ap.add_argument("--jobs", type=int, default=1, help="Parallel subprocess workers. Use 1 for sequential mode.")
     args = ap.parse_args()
 
     spec_path = Path(args.spec)
@@ -487,45 +489,71 @@ def main() -> int:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
 
-    results: List[CandidateResult] = []
     total_candidates = _grid_size(spec.get("grid", {}))
+
+    candidates: List[tuple[int, Dict[str, str]]] = []
     for idx, overrides in enumerate(_iter_grid(spec.get("grid", {})), start=1):
         if args.limit and idx > args.limit:
             break
+        candidates.append((idx, overrides))
+
+    results: List[CandidateResult] = []
+
+    def _failed_result(idx: int, overrides: Dict[str, str], exc: Exception) -> CandidateResult:
         tag = f"{_slug(spec['name'])}_r{idx:03d}"
-        try:
-            result = _run_backtest(spec, overrides, idx)
-        except Exception as exc:
-            result = CandidateResult(
-                run_id=idx,
-                tag=tag,
-                run_dir="",
-                passed=False,
-                fail_reasons=f"runner:{type(exc).__name__}:{exc}",
-                score=-1000000.0,
-                trades=0,
-                net_pnl=0.0,
-                profit_factor=0.0,
-                winrate=0.0,
-                max_drawdown=0.0,
-                negative_months=0,
-                positive_months=0,
-                max_negative_streak=0,
-                worst_month_pnl=0.0,
-                overrides_json=json.dumps(overrides, ensure_ascii=True, sort_keys=True),
-            )
-            print(f"[{idx}/{total_candidates}] {tag} CRASH {result.fail_reasons}", flush=True)
-        else:
-            status = "PASS" if result.passed else "FAIL"
-            print(
-                f"[{idx}/{total_candidates}] {result.tag} {status} "
-                f"net={result.net_pnl:.2f} pf={result.profit_factor:.3f} "
-                f"wr={result.winrate:.3f} dd={result.max_drawdown:.3f}",
-                flush=True,
-            )
+        return CandidateResult(
+            run_id=idx,
+            tag=tag,
+            run_dir="",
+            passed=False,
+            fail_reasons=f"runner:{type(exc).__name__}:{exc}",
+            score=-1000000.0,
+            trades=0,
+            net_pnl=0.0,
+            profit_factor=0.0,
+            winrate=0.0,
+            max_drawdown=0.0,
+            negative_months=0,
+            positive_months=0,
+            max_negative_streak=0,
+            worst_month_pnl=0.0,
+            overrides_json=json.dumps(overrides, ensure_ascii=True, sort_keys=True),
+        )
+
+    def _record_result(done_count: int, result: CandidateResult) -> None:
+        status = "PASS" if result.passed else "FAIL"
+        print(
+            f"[{done_count}/{total_candidates}] {result.tag} {status} "
+            f"net={result.net_pnl:.2f} pf={result.profit_factor:.3f} "
+            f"wr={result.winrate:.3f} dd={result.max_drawdown:.3f}"
+            + (f" reasons={result.fail_reasons}" if result.fail_reasons else ""),
+            flush=True,
+        )
         results.append(result)
         _append_result_row(results_path, fields, result)
-        _write_progress(progress_path, spec_path=spec_path, current=idx, total=total_candidates, result=result)
+        _write_progress(progress_path, spec_path=spec_path, current=done_count, total=total_candidates, result=result)
+
+    jobs = max(1, int(args.jobs or 1))
+    if jobs == 1 or len(candidates) <= 1:
+        for done_count, (idx, overrides) in enumerate(candidates, start=1):
+            try:
+                result = _run_backtest(spec, overrides, idx)
+            except Exception as exc:
+                result = _failed_result(idx, overrides, exc)
+            _record_result(done_count, result)
+    else:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=min(jobs, len(candidates))) as pool:
+            future_map = {
+                pool.submit(_run_backtest, spec, overrides, idx): (idx, overrides)
+                for idx, overrides in candidates
+            }
+            for done_count, future in enumerate(concurrent.futures.as_completed(future_map), start=1):
+                idx, overrides = future_map[future]
+                try:
+                    result = future.result()
+                except Exception as exc:
+                    result = _failed_result(idx, overrides, exc)
+                _record_result(done_count, result)
 
     ranked = _write_ranked(ranked_path, fields, results)
 
