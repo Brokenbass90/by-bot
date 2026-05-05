@@ -10,6 +10,40 @@ Order of work:
 - live strategy repair third
 - new strategies and new markets only after the core is stable
 
+## Current Checkpoint - 2026-05-05
+
+- Live crypto is healthy operationally but too quiet commercially:
+  - `bybot.service` active
+  - heartbeat fresh
+  - websocket guard inactive
+  - control-plane watchdog OK
+  - active sleeves: `att1 + flat + midterm`
+  - `0` closed crypto trades over the last 5 days
+- The current server canary v2 remains narrow and should stay live until a stronger candidate clears a longer gate.
+- Claude's literal `crypto_income_live_canary_v2_1.env` is not deploy-safe as-is:
+  - the "as-live merge" adds no performance over current v2 on the 60d acceptance test
+  - some env flag names do not match the live bot's real sleeve keys
+  - enabling regime overlays blindly can re-open unvalidated v7 sleeves
+- The intended v2.1 idea is promising but not yet promoted:
+  - 60d intended set: `+7.70`, PF `1.431`, DD `3.592`
+  - current v2 baseline on the same server window: `+1.93`, PF `1.109`, DD `5.779`
+  - attribution: `ATT1` carries most of the edge; `support_bounce` is small-positive; `IVB1` is barely additive; `flat/midterm` hurt in that window
+  - a 180d acceptance queue is running after current server research completes
+- Alpaca v38 remains the first real-money paper candidate, but it is a slow compounder rather than an income engine:
+  - historical 24-month backtest shown in web is positive
+  - current paper holds monthly `UNH + GOOGL`; `AMD` is earnings-blocked
+  - intraday v1 paper also has positions on the shared paper account
+  - before real `$500`, require the 2-week paper check and broker-side stop/protection sanity
+- Web truth has improved but the product still needs a redesign:
+  - active live sleeves are now shown separately from historical closed trade PnL
+  - the old `range/inplay_breakdown` losses are historical, not the current active live set
+  - next web slice should separate `Live`, `Paper Alpaca`, `Research`, and `Backtest` evidence more clearly
+- AI operator is being moved from chat toy toward supervised operator:
+  - prompt now treats `open_trades=0` as flat/no open positions, not offline
+  - weekly DeepSeek cron now loads `.env` and can use `TG_CHAT`
+  - Friday live-vs-backtest comparison cron is installed
+  - next: safe approved-spec backtest endpoint, not arbitrary shell access
+
 ## Current Reality
 
 - Historical `v5` annual crypto results were real and strong on the validated stack.
