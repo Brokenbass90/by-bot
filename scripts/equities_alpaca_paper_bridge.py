@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 import os
@@ -49,6 +50,53 @@ def _tg_send(token: str, chat_id: str, msg: str) -> None:
             pass
     except Exception:
         pass
+
+
+def _tg_dedupe_state_path() -> Path:
+    raw = _env("ALPACA_TG_DEDUPE_STATE", "")
+    if raw:
+        return Path(raw)
+    return Path(__file__).resolve().parent.parent / "runtime" / "alpaca_tg_dedupe.json"
+
+
+def _is_actionable_equities_report(report: dict[str, Any]) -> bool:
+    passive_actions = {"hold_existing", "hold_pending_buy"}
+    results = report.get("results") or []
+    if not results:
+        return False
+    return any(str(r.get("action") or "") not in passive_actions for r in results if isinstance(r, dict))
+
+
+def _tg_send_equities_report(token: str, chat_id: str, msg: str, report: dict[str, Any]) -> None:
+    """Suppress repeated HOLD-only reports while preserving BUY/CLOSE/STOP alerts."""
+    if _is_actionable_equities_report(report) or not _env_bool("ALPACA_TG_DEDUPE_HOLD_ONLY", True):
+        _tg_send(token, chat_id, msg)
+        return
+
+    window_sec = max(0, _env_int("ALPACA_TG_DEDUPE_HOLD_SEC", 21600))
+    if window_sec <= 0:
+        _tg_send(token, chat_id, msg)
+        return
+
+    digest = hashlib.sha256(msg.encode("utf-8", errors="replace")).hexdigest()
+    path = _tg_dedupe_state_path()
+    now = time.time()
+    try:
+        state = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    except Exception:
+        state = {}
+    previous = state.get("equities_hold_only") if isinstance(state, dict) else {}
+    if (
+        isinstance(previous, dict)
+        and previous.get("digest") == digest
+        and now - float(previous.get("ts") or 0.0) < window_sec
+    ):
+        return
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    state["equities_hold_only"] = {"digest": digest, "ts": now}
+    path.write_text(json.dumps(state, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
+    _tg_send(token, chat_id, msg)
 
 
 @dataclass
@@ -1702,7 +1750,7 @@ def main() -> int:
             lines.append("  — No actions taken —")
         if advisory:
             lines += ["", "🧠 <b>AI advisory</b>", str(advisory.get("note") or "").strip()]
-        _tg_send(tg_token, tg_chat_id, "\n".join(lines))
+        _tg_send_equities_report(tg_token, tg_chat_id, "\n".join(lines), report)
 
     return 0
 
