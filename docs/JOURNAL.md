@@ -5,6 +5,48 @@
 
 ---
 
+## 2026-05-05 | Codex (return triage - server truth + Claude review)
+
+**Done:**
+
+- Reviewed Claude handoff/final report from `2026-05-04`.
+- Explained Alpaca maintenance window: `2026-05-09 07:00-09:00 EDT` = `11:00-13:00 UTC` = `14:00-16:00 Asia/Nicosia`; current Alpaca equity crons run weekdays, so this Saturday maintenance should not trade through the window.
+- Checked live server:
+  - `bybot` active with fresh heartbeat and roughly `120h` uptime.
+  - control-plane fresh, allocator/router OK, `safe_mode=0`.
+  - current regime `bull_trend`, allocator `global_risk=1.0`.
+  - active live sleeves still only `att1`, `flat`, `midterm`.
+  - `live_trade_events.jsonl` has `0` crypto trade events over the latest `1d/5d/7d/14d` windows.
+- Confirmed `8447d00` was local-only, removed stale git locks, pushed it to GitHub.
+- Deployed the candidate/config/spec files from `8447d00` to the server for testing only; did not replace live `.env` and did not restart `bybot`.
+- Found issues in Claude `crypto_income_live_canary_v2_1.env`:
+  - it uses `ENABLE_BOUNCE_TRADING` / `ENABLE_IMPULSE_TRADING`, while the live bot reads `ENABLE_ASB1_TRADING` / `ENABLE_IVB1_TRADING`.
+  - it enables `ENABLE_BREAKOUT_TRADING=1`, but the suggested acceptance command did not test `inplay_breakout`.
+  - it is a merge overlay, not a safe standalone `.env`.
+- Started server acceptance test `v2` vs `v2.1` variants in `logs/acceptance_20260505/canary_v2_acceptance.log`; live config unchanged.
+- Reviewed uncommitted Claude scaffolds and pushed commit `d1bca68`:
+  - `bot/deepseek_signal_gate.py` with invalid mode falling back to `shadow`.
+  - OANDA REST/bridge skeleton, dry-run by default.
+  - `alt_liquidity_sweep_reversal_v2` plus autoresearch spec.
+  - `pump_fade_v3` research strategy.
+  - wired `alt_liquidity_sweep_reversal_v2` into `backtest/run_portfolio.py`.
+- Ran local smoke for `alt_liquidity_sweep_reversal_v2`: technical pass, `0` trades on BTC/ETH 30d; research only, not live.
+
+**Key findings:**
+
+- Claude's work is useful, but `v2.1` is not safe to deploy as-is. It needs corrected live env keys and a real acceptance/additivity result before live swap.
+- The AI/operator message "bot offline" is misleading; server was active. It should distinguish "service offline" from "no open trades".
+- The recent `skip_portfolio` counters appear historical/stale in the pulse tail; they were not increasing in the latest sampled lines. Current blocker is mostly no-signal/cooldown/filter strictness plus too-narrow active sleeve set.
+- `support_bounce_v1_bull_sweep_v1` is near complete but still failing gates; `impulse_volume_breakout_v1_annual_repair_fetch_v2` is still running and has no winner yet.
+- Alpaca v38 paper is alive with broker-side stops on `UNH`/`GOOGL`; old `XYZ` held-for-order cleanup spam disappeared from the fresh May 4 log tail.
+
+**Next:**
+
+- Wait for `canary_v2_acceptance_20260505` to finish, then compare summaries before any live config change.
+- If `v2.1` loses or only wins by adding untested breakout, build a corrected `v2.1-safe` candidate rather than deploying Claude's file.
+- Let IVB1/support_bounce finish; only then run additivity against canary.
+- Deploy `d1bca68` research files to the server after current CPU-heavy backtests free up, then schedule liquidity v2 as a research-only job.
+
 ## 2026-04-30 | Codex (morning - overnight triage + research harness hardening)
 
 **Done:**

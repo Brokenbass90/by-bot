@@ -1,5 +1,52 @@
 # Bybit bot (v28) - worklog / reminders
 
+## 2026-05-05 - return triage, Claude review, acceptance started
+
+### What was closed
+
+- Checked Alpaca maintenance notice:
+  - window is Saturday `2026-05-09 07:00-09:00 EDT`
+  - equals `11:00-13:00 UTC` / `14:00-16:00 Asia/Nicosia`
+  - current Alpaca equity paper crons are weekday-only, so no special Saturday trading action is needed.
+- Checked live server:
+  - `bybot` active, heartbeat fresh, uptime about `120h`
+  - control-plane fresh, allocator/router OK, `safe_mode=0`
+  - current regime `bull_trend`, allocator `global_risk=1.0`
+  - active live sleeves: `att1`, `flat`, `midterm`
+  - no crypto trade events over latest `1d/5d/7d/14d`
+- Pushed Claude's local-only commit `8447d00` to GitHub.
+- Deployed only candidate/spec files from `8447d00` to server for testing. Live `.env` was not changed and `bybot` was not restarted.
+- Found `canary_v2_1` issues:
+  - wrong live env keys for ASB1/IVB1 (`ENABLE_BOUNCE_TRADING` / `ENABLE_IMPULSE_TRADING` are not what the bot reads)
+  - breakout is enabled but not covered by Claude's suggested acceptance command
+  - file is not safe as a standalone `.env`
+- Started server acceptance test:
+  - current canary v2 baseline
+  - v2.1 as it would actually behave under merge
+  - v2.1 as Claude intended with ASB1/IVB1/breakout
+  - log: `logs/acceptance_20260505/canary_v2_acceptance.log`
+- Reviewed and committed `d1bca68`:
+  - DeepSeek signal gate scaffold, disabled by default and safe fallback to shadow on invalid mode
+  - OANDA dry-run client/bridge scaffold
+  - liquidity hunter v2 strategy + research spec
+  - `pump_fade_v3` research strategy
+  - `backtest/run_portfolio.py` wiring for liquidity v2
+- Smoke-tested liquidity v2 wiring locally on BTC/ETH 30d: run completes, `0` trades.
+
+### Important truth
+
+- Do not deploy Claude `canary_v2_1` as-is.
+- The bot was not "offline"; it was online with no open trades. The operator language needs to be tightened.
+- Current live silence is real: no crypto trades in the latest checked 14d event window.
+- Alpaca v38 paper is still the best first `$500` candidate, but still in paper observation until the already scheduled `2026-05-13` and `2026-05-27` checkpoints.
+
+### Next
+
+- Read acceptance summaries when the server run finishes.
+- Build a corrected `v2.1-safe` only if the numbers justify expansion.
+- Let current server research jobs finish before adding new long queues.
+- Deploy `d1bca68` research files to server after CPU-heavy jobs clear.
+
 ## 2026-04-30 - overnight research triage + operator noise fix + liquidity hunter seed
 
 ### What was closed
