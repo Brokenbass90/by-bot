@@ -27,6 +27,7 @@
 #  17. Live vs backtest monitor — every 4h (Phase 3 degradation detector)
 #  18. Live vs backtest monitor — daily 07:00 UTC (with TG alert on degrade)
 #  19. Weekly live-vs-backtest report — Friday 07:30 UTC
+#  20. Weekly trade-forensics AI report — Friday 07:45 UTC
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -81,6 +82,7 @@ for req in \
     "$BOT_DIR/scripts/build_btc_dominance_state.py" \
     "$BOT_DIR/scripts/live_vs_backtest_monitor.py" \
     "$BOT_DIR/scripts/weekly_live_vs_backtest_report.py" \
+    "$BOT_DIR/scripts/weekly_trade_forensics_ai_report.py" \
     "$BOT_DIR/scripts/promote_wf22_winner.py" \
     "$BOT_DIR/scripts/funding_rate_fetcher.py"
 do
@@ -197,6 +199,10 @@ NEW_CRONS=$(cat << CRONEOF
 #
 # 19. Weekly live-vs-backtest comparison report — Friday 07:30 UTC
 30 7 * * 5 cd $BOT_DIR && $PYTHON scripts/weekly_live_vs_backtest_report.py --telegram >> logs/weekly_live_vs_backtest.log 2>&1 $CRON_TAG
+#
+# 20. Weekly trade-forensics AI report — Friday 07:45 UTC
+# Reads live/backtest trades, classifies stop/entry/exit quality, and asks DeepSeek for a short interpretation when enabled.
+45 7 * * 5 cd $BOT_DIR && $PYTHON scripts/weekly_trade_forensics_ai_report.py --telegram --ai >> logs/weekly_trade_forensics_ai.log 2>&1 $CRON_TAG
 #
 CRONEOF
 )
