@@ -826,6 +826,7 @@ async def get_allocator(_: str = Depends(require_auth)):
             "runtime_health": str(runtime.get("health_status") or runtime.get("status") or "").upper(),
             "runtime_final_risk_mult": float(runtime.get("final_risk_mult") or 0.0),
             "runtime_symbol_count": int(runtime.get("symbol_count") or 0),
+            "runtime_symbols": list(runtime.get("symbols") or [])[:24],
             "runtime_notes": list(runtime.get("notes") or [])[:3],
             "enable_env": s.get("enable_env"),
             "mults": mults,

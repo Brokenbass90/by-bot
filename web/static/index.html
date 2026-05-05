@@ -585,7 +585,9 @@ function Dashboard({ onNavigate }) {
 
     // Strategy performance grid
     summary && React.createElement('div', { className: 'card' },
-      React.createElement('div', { className: 'card-title' }, 'Strategy Performance'),
+      React.createElement('div', { className: 'card-title' }, 'Closed Trade Performance'),
+      React.createElement('div', { className: 'section-sub', style: { marginBottom: '10px' } },
+        'Historical closed trades only; active live sleeves are shown on the Strategies page.'),
       React.createElement('div', { className: 'strat-grid' },
         (summary.strategies || []).slice(0, 12).map(s =>
           React.createElement('div', { className: 'strat-card', key: s.strategy },
@@ -1486,19 +1488,56 @@ function RegimePage() {
 
 function StrategiesPage() {
   const { data, loading } = useFetch('/api/trades/summary', []);
-  if (loading) return React.createElement(Loader);
+  const { data: allocator, loading: allocatorLoading } = useFetch('/api/allocator', [], 15000);
+  if (loading || allocatorLoading) return React.createElement(Loader);
   if (!data) return React.createElement('div', { className: 'empty' }, 'No data');
+  const liveSleeves = ((allocator && allocator.sleeves) || [])
+    .filter(s => s.runtime_enabled || s.env_enabled || (s.runtime_final_risk_mult || 0) > 0)
+    .sort((a, b) => (b.runtime_final_risk_mult || 0) - (a.runtime_final_risk_mult || 0));
 
   return React.createElement('div', null,
     React.createElement('div', { className: 'page-hdr' },
-      React.createElement('div', { className: 'section-title' }, 'Strategy Performance'),
+      React.createElement('div', { className: 'section-title' }, 'Strategies'),
       React.createElement('div', { style: { fontSize: '13px', color: 'var(--text2)' } },
         `Portfolio PF: `, React.createElement('strong', { style: { color: (data.portfolio_pf || 0) >= 1 ? 'var(--green)' : 'var(--red)' } }, fmtPF(data.portfolio_pf)),
         ` · Total trades: `, React.createElement('strong', null, data.total_trades)
       )
     ),
+    allocator && React.createElement('div', { className: 'card', style: { marginBottom: '16px' } },
+      React.createElement('div', { className: 'card-title' }, 'Active Live Sleeves'),
+      React.createElement('div', { className: 'section-sub', style: { marginBottom: '10px' } },
+        `Runtime allocator: ${allocator.allocator_label || allocator.allocator_status || 'unknown'} · policy ${allocator.policy_version || '?'}`),
+      liveSleeves.length === 0
+        ? React.createElement('div', { className: 'empty' }, 'No runtime sleeves are enabled.')
+        : React.createElement('div', { className: 'tbl-wrap' },
+            React.createElement('table', null,
+              React.createElement('thead', null,
+                React.createElement('tr', null,
+                  ['Sleeve','Runtime','Risk mult','Health','Symbols','Notes'].map(h =>
+                    React.createElement('th', { key: h }, h))
+                )
+              ),
+              React.createElement('tbody', null,
+                liveSleeves.map(s =>
+                  React.createElement('tr', { key: s.name },
+                    React.createElement('td', { style: { color: 'var(--blue)', fontWeight: 500 } }, s.name),
+                    React.createElement('td', null,
+                      React.createElement('span', { className: `badge ${s.runtime_enabled ? 'badge-ok' : s.env_enabled ? 'badge-warn' : 'badge-off'}` },
+                        s.runtime_enabled ? 'active' : s.env_enabled ? 'env on' : 'policy')
+                    ),
+                    React.createElement('td', null, fmt(s.runtime_final_risk_mult || 0, 3)),
+                    React.createElement('td', null, s.runtime_health || '—'),
+                    React.createElement('td', null, ((s.runtime_symbols || []).slice(0, 8).join(', ') || `${s.runtime_symbol_count || 0} symbols`)),
+                    React.createElement('td', { className: 'dim' }, (s.runtime_notes || []).join('; ') || '—')
+                  )
+                )
+              )
+            )
+          )
+    ),
     data.sources && data.sources.length > 0 && React.createElement('div', { className: 'section-sub', style: { marginBottom: '10px' } },
-      `Trades source: ${data.sources[0]}`),
+      `Closed trades source: ${data.sources[0]}`),
+    React.createElement('div', { className: 'section-title', style: { marginTop: '18px', marginBottom: '10px' } }, 'Closed Trade Performance'),
     React.createElement('div', { className: 'tbl-wrap' },
       React.createElement('table', null,
         React.createElement('thead', null,

@@ -26,6 +26,7 @@
 #  16. BTC dominance overlay — every 4h (alt_bias / alt_risk_mult)
 #  17. Live vs backtest monitor — every 4h (Phase 3 degradation detector)
 #  18. Live vs backtest monitor — daily 07:00 UTC (with TG alert on degrade)
+#  19. Weekly live-vs-backtest report — Friday 07:30 UTC
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -79,6 +80,7 @@ for req in \
     "$BOT_DIR/configs/strategy_health.json" \
     "$BOT_DIR/scripts/build_btc_dominance_state.py" \
     "$BOT_DIR/scripts/live_vs_backtest_monitor.py" \
+    "$BOT_DIR/scripts/weekly_live_vs_backtest_report.py" \
     "$BOT_DIR/scripts/promote_wf22_winner.py" \
     "$BOT_DIR/scripts/funding_rate_fetcher.py"
 do
@@ -192,6 +194,9 @@ NEW_CRONS=$(cat << CRONEOF
 # 18. Live vs backtest monitor — every 4h (Phase 3: degrade detection, writes strategy_pause.env)
 # Bot loads strategy_pause.env on startup via load_dotenv(override=True)
 25 */4 * * * cd $BOT_DIR && $PYTHON scripts/live_vs_backtest_monitor.py >> logs/strategy_monitor.log 2>&1 $CRON_TAG
+#
+# 19. Weekly live-vs-backtest comparison report — Friday 07:30 UTC
+30 7 * * 5 cd $BOT_DIR && $PYTHON scripts/weekly_live_vs_backtest_report.py --telegram >> logs/weekly_live_vs_backtest.log 2>&1 $CRON_TAG
 #
 CRONEOF
 )

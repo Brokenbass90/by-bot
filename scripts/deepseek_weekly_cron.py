@@ -77,6 +77,24 @@ def _env_bool(name: str, default: bool = False) -> bool:
     return _env(name, "1" if default else "0").lower() in {"1", "true", "yes", "y", "on"}
 
 
+def _load_env_file(path: Path) -> None:
+    """Load KEY=VALUE pairs from .env without overriding process env."""
+    if not path.exists():
+        return
+    try:
+        for raw in path.read_text(encoding="utf-8").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = value
+    except OSError as exc:
+        print(f"[env] failed to load {path}: {exc}", file=sys.stderr)
+
+
 # ---------------------------------------------------------------------------
 # Telegram
 # ---------------------------------------------------------------------------
@@ -417,10 +435,13 @@ def main() -> int:
                     help="Skip universe expansion suggestions (saves API tokens).")
     args = ap.parse_args()
 
+    _load_env_file(ROOT / ".env")
+    _load_env_file(ROOT / "configs" / "server.env")
+
     phases = {p.strip() for p in args.phases.split(",") if p.strip()}
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
     tg_token = _env("TG_TOKEN")
-    tg_chat_id = _env("TG_CHAT_ID")
+    tg_chat_id = _env("TG_CHAT_ID") or _env("TG_CHAT")
     api_key = _env("DEEPSEEK_API_KEY")
     base_url = _env("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
     model = _env("DEEPSEEK_MODEL", "deepseek-chat")

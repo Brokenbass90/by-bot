@@ -194,7 +194,12 @@ def _build_context() -> str:
     hb_path = _rt("bot_heartbeat.json")
     hb_age = int(time.time() - hb_path.stat().st_mtime) if hb_path.exists() else -1
     alive = hb_path.exists() and hb_age < 120
-    parts.append(f"BOT: {'ALIVE' if alive else 'OFFLINE'} | heartbeat_age_sec={hb_age} | open_trades={hb.get('open_trades',0) if hb else 0}\n")
+    open_trades = hb.get("open_trades", 0) if hb else 0
+    flat_note = "flat/no open positions" if alive and int(open_trades or 0) == 0 else "has open positions"
+    parts.append(
+        f"BOT: {'ALIVE' if alive else 'OFFLINE'} | heartbeat_age_sec={hb_age} | "
+        f"open_trades={open_trades} ({flat_note})\n"
+    )
 
     # Regime
     reg = _json(_rt("regime", "orchestrator_state.json")) or _json(_rt("regime.json"))
@@ -502,6 +507,8 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         "Be concise and precise. When you spot issues, say so directly. "
         "Never treat stale chat memory as a source of truth when current runtime ages disagree. "
         "Do not claim you know everything; say what the injected live context shows. "
+        "open_trades=0 means flat/no open positions, not offline, when BOT is ALIVE. "
+        "The server has a backtest infrastructure, but this chat may not have a direct safe execution endpoint yet; propose an approved/spec-based backtest instead of saying the project has no backtester. "
         "If allocator status is degraded only because degraded_kind=protective_overlap, explain it as a protective overlap risk haircut, not a broken allocator or critical incident. "
         "Do not recommend safe mode or reload solely for protective_overlap. "
         "Do not convert websocket connect/disconnect counters into percent data loss unless the live context shows ws guard active, critical_streak/no_connect_streak, or stale/zero market messages. "
