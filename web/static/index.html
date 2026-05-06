@@ -1778,6 +1778,20 @@ function AIChatPage() {
     setMessages(prev => [...prev, { role: 'system', content: '❌ Command cancelled.' }]);
   }
 
+  function commandPreview(cmd) {
+    if (!cmd) return { title: 'AI command', summary: '', errors: [], risk: 'unknown', evidence: [], preconditions: [] };
+    return {
+      title: cmd.title || `Command: ${cmd.action || 'unknown'}`,
+      summary: cmd.summary || JSON.stringify({ action: cmd.action, params: cmd.params || {} }),
+      errors: Array.isArray(cmd.validation_errors) ? cmd.validation_errors : [],
+      risk: cmd.risk || 'unknown',
+      evidence: Array.isArray(cmd.evidence) ? cmd.evidence : [],
+      preconditions: Array.isArray(cmd.preconditions) ? cmd.preconditions : [],
+      blocked: !!cmd.blocked,
+      raw: JSON.stringify({ action: cmd.action, params: cmd.params || {} }),
+    };
+  }
+
   const quickBtns = [
     'Как работает бот прямо сейчас?',
     'Какой режим рынка и что активно?',
@@ -1822,11 +1836,33 @@ function AIChatPage() {
       cmdConfirm && pendingCmd && React.createElement('div', {
         style: { background: 'var(--yellow-dim)', border: '1px solid var(--yellow)', borderRadius: 'var(--radius)', padding: '12px 14px', margin: '8px 0' }
       },
-        React.createElement('div', { style: { fontSize: '12px', color: 'var(--yellow)', fontWeight: 600, marginBottom: '6px' } }, '⚠️ AI suggests this action — confirm?'),
-        React.createElement('code', { style: { fontSize: '12px', color: 'var(--text)' } }, JSON.stringify(pendingCmd)),
+        (() => {
+          const p = commandPreview(pendingCmd);
+          return React.createElement(React.Fragment, null,
+            React.createElement('div', { style: { fontSize: '12px', color: 'var(--yellow)', fontWeight: 700, marginBottom: '6px' } },
+              p.blocked ? 'AI предложил действие, но оно заблокировано проверкой' : 'AI предлагает действие — подтверждать только если понятна причина'),
+            React.createElement('div', { style: { fontSize: '14px', color: 'var(--text)', fontWeight: 700, marginBottom: '4px' } }, p.title),
+            React.createElement('div', { style: { fontSize: '12px', color: 'var(--text2)', marginBottom: '8px', lineHeight: 1.45 } }, p.summary),
+            p.errors.length > 0 && React.createElement('div', { style: { color: 'var(--red)', fontSize: '12px', marginBottom: '8px', lineHeight: 1.45 } },
+              'Почему нельзя выполнить: ' + p.errors.join('; ')),
+            p.evidence.length > 0 && React.createElement('div', { style: { color: 'var(--text2)', fontSize: '12px', marginBottom: '6px', lineHeight: 1.45 } },
+              'Доказательства: ' + p.evidence.join('; ')),
+            p.preconditions.length > 0 && React.createElement('div', { style: { color: 'var(--text2)', fontSize: '12px', marginBottom: '6px', lineHeight: 1.45 } },
+              'Перед выполнением: ' + p.preconditions.join('; ')),
+            React.createElement('details', { style: { marginTop: '8px' } },
+              React.createElement('summary', { style: { cursor: 'pointer', color: 'var(--text3)', fontSize: '11px' } }, 'Показать raw JSON'),
+              React.createElement('code', { style: { display: 'block', marginTop: '6px', fontSize: '11px', color: 'var(--text2)', whiteSpace: 'pre-wrap' } }, p.raw)
+            )
+          );
+        })(),
         React.createElement('div', { style: { display: 'flex', gap: '8px', marginTop: '10px' } },
-          React.createElement('button', { className: 'auth-btn', style: { width: 'auto', padding: '6px 16px', background: 'var(--green)', fontSize: '13px' }, onClick: confirmCmd }, '✓ Execute'),
-          React.createElement('button', { className: 'auth-btn', style: { width: 'auto', padding: '6px 16px', background: 'var(--red-dim)', border: '1px solid var(--red)', fontSize: '13px' }, onClick: rejectCmd }, '✗ Cancel')
+          React.createElement('button', {
+            className: 'auth-btn',
+            disabled: !!pendingCmd.blocked,
+            style: { width: 'auto', padding: '6px 16px', background: pendingCmd.blocked ? 'var(--bg4)' : 'var(--green)', fontSize: '13px', opacity: pendingCmd.blocked ? 0.55 : 1 },
+            onClick: confirmCmd
+          }, pendingCmd.blocked ? 'Выполнение заблокировано' : 'Выполнить'),
+          React.createElement('button', { className: 'auth-btn', style: { width: 'auto', padding: '6px 16px', background: 'var(--red-dim)', border: '1px solid var(--red)', fontSize: '13px' }, onClick: rejectCmd }, 'Отменить')
         )
       ),
 

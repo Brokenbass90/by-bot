@@ -23,7 +23,7 @@ import os
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
@@ -104,6 +104,71 @@ def _load_monthly_picks() -> List[str]:
         except Exception:
             continue
     return []
+
+
+def _load_live_trade_event_closes(limit: int = 50) -> List[Dict[str, Any]]:
+    path = _rt("live_trade_events.jsonl")
+    if not path.exists():
+        return []
+    closes: List[Dict[str, Any]] = []
+    try:
+        for raw in path.read_text(errors="ignore").splitlines():
+            raw = raw.strip()
+            if not raw:
+                continue
+            try:
+                evt = json.loads(raw)
+            except Exception:
+                continue
+            if str(evt.get("event") or "").strip().lower() != "close":
+                continue
+            closes.append(evt)
+    except Exception:
+        return []
+    return closes[-limit:]
+
+
+def _append_operator_snapshot_context(parts: List[str]) -> None:
+    snap = _json(_rt("operator", "operator_snapshot.json"))
+    if not snap:
+        return
+    cp = dict(snap.get("control_plane") or {})
+    allocator = dict(cp.get("allocator") or {})
+    regime = dict(cp.get("regime") or {})
+    alpaca = dict(snap.get("alpaca") or {})
+    alpaca_monthly = dict(alpaca.get("monthly") or {})
+    alpaca_intraday = dict(alpaca.get("intraday") or {})
+    urgent = list(snap.get("urgent_alerts") or [])
+
+    if regime or allocator:
+        parts.append(
+            "OPERATOR SNAPSHOT: "
+            f"regime={regime.get('regime','?')} conf={regime.get('confidence','?')} "
+            f"allocator={allocator.get('status','?')} safe_mode={allocator.get('safe_mode', False)} "
+            f"enabled_sleeves={','.join(allocator.get('enabled_sleeves') or []) or '-'}\n"
+        )
+    if urgent:
+        parts.append(
+            "URGENT ALERTS: "
+            + "; ".join(str((x or {}).get("summary") or x)[:160] for x in urgent[:5])
+            + "\n"
+        )
+    if alpaca_monthly:
+        parts.append(
+            "ALPACA MONTHLY: "
+            f"selected={alpaca_monthly.get('current_cycle_tickers') or alpaca_monthly.get('selected_symbols') or '-'} "
+            f"capital={alpaca_monthly.get('effective_capital')} "
+            f"per_position={alpaca_monthly.get('per_position_notional')} "
+            f"backtest_pf={alpaca_monthly.get('latest_summary_profit_factor')} "
+            f"backtest_return_pct={alpaca_monthly.get('latest_summary_compounded_return_pct')}\n"
+        )
+    if alpaca_intraday:
+        parts.append(
+            "ALPACA INTRADAY PAPER: "
+            f"open_positions={','.join(alpaca_intraday.get('open_positions') or []) or '-'} "
+            f"today_pnl_usd={alpaca_intraday.get('today_pnl_usd')} "
+            f"entries_blocked={alpaca_intraday.get('entries_blocked')}\n"
+        )
 
 
 def _load_shared_history() -> List[Dict[str, str]]:
@@ -285,10 +350,39 @@ def _build_context() -> str:
             parts.append(f"LAST 50 TRADES: wins={wins} losses={losses} net={net:.4f}\n")
             parts.append(f"ACTIVE STRATEGIES: {', '.join(strats)}\n")
 
+    live_closes = _load_live_trade_event_closes(limit=50)
+    if live_closes:
+        wins = 0
+        losses = 0
+        net = 0.0
+        strats = set()
+        last = live_closes[-1]
+        for evt in live_closes:
+            pnl = float(evt.get("pnl") or evt.get("pnl_usd") or 0.0)
+            net += pnl
+            if pnl > 0:
+                wins += 1
+            elif pnl < 0:
+                losses += 1
+            if evt.get("strategy"):
+                strats.add(str(evt.get("strategy")))
+        parts.append(
+            f"LIVE CLOSED EVENTS LAST {len(live_closes)}: wins={wins} losses={losses} "
+            f"net={net:.4f} strategies={', '.join(sorted(strats)) or '-'}\n"
+        )
+        parts.append(
+            "LAST CLOSED EVENT: "
+            f"strategy={last.get('strategy','?')} symbol={last.get('symbol','?')} "
+            f"side={last.get('side','?')} pnl={float(last.get('pnl') or last.get('pnl_usd') or 0.0):.4f} "
+            f"reason={last.get('close_reason') or last.get('reason') or '-'}\n"
+        )
+
     # Alpaca
     alpaca_picks = _load_monthly_picks()
     if alpaca_picks:
         parts.append(f"ALPACA PICKS: {', '.join(alpaca_picks)}\n")
+
+    _append_operator_snapshot_context(parts)
 
     # Health
     health = _json(_rt("strategy_health.json"))
@@ -327,6 +421,143 @@ _VALID_SLEEVE_NAMES = {
     # v7 new sleeves
     "breakdown_v2", "slope_choch", "liq_cascade", "funding_rev", "micro_scalp",
 }
+
+_CRYPTO_SLEEVES = set(_VALID_SLEEVE_NAMES)
+_EQUITY_BACKTEST_SLEEVES = {
+    "alpaca_monthly",
+    "alpaca_intraday",
+    "alpaca_intraday_v1",
+    "alpaca_intraday_v3",
+    "equities_monthly",
+    "equities_intraday",
+}
+
+_COMMAND_TITLES = {
+    "enable_sleeve": "Включить крипто-рукав",
+    "disable_sleeve": "Выключить крипто-рукав",
+    "set_safe_mode": "Включить защитный режим",
+    "clear_safe_mode": "Выключить защитный режим",
+    "reload_config": "Перезагрузить конфиг бота",
+    "add_user": "Создать слот пользователя",
+    "remove_user": "Удалить пользователя",
+    "run_backtest": "Запросить бэктест",
+    "set_sleeve_params": "Предложить параметры рукава",
+    "set_global_params": "Предложить глобальные параметры",
+}
+
+
+def _symbol_market(symbol: str) -> str:
+    s = str(symbol or "").strip().upper()
+    if not s:
+        return "unknown"
+    if s.endswith(("USDT", "USDC", "USDTPERP")) or "/" in s or ":" in s:
+        return "crypto"
+    return "equities"
+
+
+def _params_symbols(params: dict) -> List[str]:
+    raw = params.get("symbols")
+    if raw is None:
+        raw = params.get("symbol")
+    if raw is None:
+        return []
+    if isinstance(raw, str):
+        return [x.strip().upper() for x in raw.replace(",", " ").split() if x.strip()]
+    if isinstance(raw, list):
+        return [str(x).strip().upper() for x in raw if str(x).strip()]
+    return []
+
+
+def _infer_command_market(action: str, params: dict) -> str:
+    sleeve = str(params.get("sleeve") or params.get("strategy") or "").strip().lower()
+    if sleeve in _CRYPTO_SLEEVES:
+        return "crypto"
+    if sleeve in _EQUITY_BACKTEST_SLEEVES:
+        return "equities"
+    symbols = _params_symbols(params)
+    markets = {_symbol_market(x) for x in symbols}
+    markets.discard("unknown")
+    if len(markets) == 1:
+        return next(iter(markets))
+    return "unknown"
+
+
+def _validate_command(action: str, params: dict) -> Tuple[bool, List[str], str]:
+    """Validate AI-suggested commands before the UI can execute them."""
+    action = str(action or "").strip()
+    params = dict(params or {})
+    reasons: List[str] = []
+
+    if action in {"enable_sleeve", "disable_sleeve"}:
+        sleeve = str(params.get("sleeve") or "").strip().lower()
+        if sleeve not in _VALID_SLEEVE_NAMES:
+            reasons.append(f"unknown crypto sleeve '{sleeve or '-'}'")
+        return (not reasons, reasons, "crypto")
+
+    if action == "run_backtest":
+        sleeve = str(params.get("sleeve") or params.get("strategy") or "").strip().lower()
+        symbols = _params_symbols(params)
+        market = _infer_command_market(action, params)
+        if not sleeve:
+            reasons.append("missing sleeve/strategy")
+        elif sleeve in _CRYPTO_SLEEVES:
+            bad = [s for s in symbols if _symbol_market(s) != "crypto"]
+            if bad:
+                reasons.append(
+                    f"market mismatch: '{sleeve}' is a crypto sleeve, but symbols are equities: {', '.join(bad)}"
+                )
+        elif sleeve in _EQUITY_BACKTEST_SLEEVES:
+            bad = [s for s in symbols if _symbol_market(s) != "equities"]
+            if bad:
+                reasons.append(
+                    f"market mismatch: '{sleeve}' is an equities sleeve, but symbols are crypto: {', '.join(bad)}"
+                )
+        else:
+            reasons.append(f"unknown backtest sleeve/strategy '{sleeve}'")
+        if not symbols:
+            reasons.append("missing symbols")
+        period = str(params.get("period") or params.get("days") or "").strip()
+        if not period:
+            reasons.append("missing period/days")
+        return (not reasons, reasons, market)
+
+    if action in {"set_sleeve_params", "set_global_params"}:
+        reasons.append("direct parameter mutation is not enabled; create a proposal + backtest first")
+        return (False, reasons, _infer_command_market(action, params))
+
+    if action in {"set_safe_mode", "clear_safe_mode", "reload_config", "add_user", "remove_user"}:
+        return (True, [], _infer_command_market(action, params))
+
+    reasons.append(f"unknown action '{action or '-'}'")
+    return (False, reasons, "unknown")
+
+
+def _decorate_command(raw: dict) -> dict:
+    """Add human-readable, validated metadata for the frontend approval box."""
+    cmd = dict(raw or {})
+    action = str(cmd.get("action") or "").strip()
+    params = dict(cmd.get("params") or {})
+    ok, reasons, market = _validate_command(action, params)
+    sleeve = str(params.get("sleeve") or params.get("strategy") or "").strip()
+    symbols = _params_symbols(params)
+    title = _COMMAND_TITLES.get(action, f"Команда: {action or '-'}")
+    summary_bits = []
+    if sleeve:
+        summary_bits.append(f"рукав/стратегия: {sleeve}")
+    if symbols:
+        summary_bits.append(f"символы: {', '.join(symbols[:12])}")
+    if params.get("period") or params.get("days"):
+        summary_bits.append(f"период: {params.get('period') or params.get('days')}")
+    summary = "; ".join(summary_bits) or "параметры не указаны"
+    cmd["title"] = title
+    cmd["summary"] = summary
+    cmd["market"] = market
+    cmd["blocked"] = not ok
+    cmd["validation_errors"] = reasons
+    cmd.setdefault("evidence", [])
+    cmd.setdefault("preconditions", [])
+    cmd.setdefault("risk", "unknown")
+    return cmd
 
 _ENABLE_ENV_MAP = {
     "breakout": "ENABLE_BREAKOUT_TRADING", "breakdown": "ENABLE_BREAKDOWN_TRADING",
@@ -371,6 +602,12 @@ def _audit(email: str, action: str, params: dict, result: str) -> None:
 
 def execute_command(action: str, params: dict, email: str) -> str:
     """Execute a confirmed control command. Returns result message."""
+    ok, reasons, _market = _validate_command(action, params)
+    if not ok:
+        result = "Blocked by command validator: " + "; ".join(reasons)
+        _audit(email, action, params, result)
+        return result
+
     hb = _json(_rt("bot_heartbeat.json")) or {}
     open_trades = int(hb.get("open_trades", 0) or 0)
     if action == "enable_sleeve":
@@ -445,6 +682,25 @@ def execute_command(action: str, params: dict, email: str) -> str:
             _audit(email, action, params, f"removed {target_email}")
             return f"✓ User {target_email} removed."
         return f"User {target_email} not found."
+
+    elif action == "run_backtest":
+        queue_path = _ROOT / "runtime" / "ai_operator" / "backtest_requests.jsonl"
+        queue_path.parent.mkdir(parents=True, exist_ok=True)
+        item = {
+            "ts": datetime.now(timezone.utc).isoformat(),
+            "user": email,
+            "action": action,
+            "params": params,
+            "status": "queued_for_operator",
+            "note": "Web AI can request validated backtests; execution is handled by the research runner, not by arbitrary shell.",
+        }
+        with open(queue_path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(item, ensure_ascii=False) + "\n")
+        _audit(email, action, params, "validated backtest request queued")
+        return (
+            "✓ Backtest request is valid and queued for the research runner. "
+            "It was not executed as an arbitrary shell command."
+        )
 
     else:
         return f"Unknown action: {action}"
@@ -565,7 +821,7 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         cmd_match = re.search(r"```command\s*\n(\{.*?\})\s*\n```", reply_text, re.DOTALL)
         if cmd_match:
             try:
-                suggested_cmd = json.loads(cmd_match.group(1))
+                suggested_cmd = _decorate_command(json.loads(cmd_match.group(1)))
             except Exception:
                 pass
 
