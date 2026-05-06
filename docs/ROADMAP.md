@@ -30,6 +30,9 @@ Order of work:
   - `spike_rejection` failed the fast gate (`0/48` pass)
   - `whale_print_follow` failed the partial fast gate (`0/60` pass before stop)
   - next promotion gates for BRC1: 180d/365d standalone, portfolio additivity, then live wiring/shadow
+- Server-side backtest performance is a new blocker:
+  - the same BRC1 fast rows timed out at `600s` per row on the droplet while passing locally
+  - do not schedule heavy server sweeps again until the cache/performance cause is found
 - Claude's literal `crypto_income_live_canary_v2_1.env` is not deploy-safe as-is:
   - the "as-live merge" adds no performance over current v2 on the 60d acceptance test
   - some env flag names do not match the live bot's real sleeve keys
