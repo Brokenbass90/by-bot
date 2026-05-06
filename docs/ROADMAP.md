@@ -25,6 +25,11 @@ Order of work:
   - fixed the new rescue sleeves' candle access against `KlineStore.c5`
   - bounded `spike_rejection` level-window work so one row cannot consume the night
   - started a safer 90d fast queue for `bear_regime_continuation`, `whale_print_follow`, and `spike_rejection`
+- First fixed-sweep verdict:
+  - `bear_regime_continuation` is the current best fresh-market candidate: 90d fast sweep `64/64` pass, best row `+6.15`, PF `4.800`, DD `0.398`
+  - `spike_rejection` failed the fast gate (`0/48` pass)
+  - `whale_print_follow` failed the partial fast gate (`0/60` pass before stop)
+  - next promotion gates for BRC1: 180d/365d standalone, portfolio additivity, then live wiring/shadow
 - Claude's literal `crypto_income_live_canary_v2_1.env` is not deploy-safe as-is:
   - the "as-live merge" adds no performance over current v2 on the 60d acceptance test
   - some env flag names do not match the live bot's real sleeve keys
