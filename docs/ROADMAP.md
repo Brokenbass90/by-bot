@@ -42,8 +42,11 @@ Order of work:
   - tempting recent-market `ATT1+BRC1` is better on `180d` but weaker annually: `365d +48.78`, PF `1.387`, DD `7.03`, `4` red months
   - decision: keep current annual core live; add BRC1 as shadow only; do not replace the core because of one pretty 180d chart
 - Foundation/choking question is now under a targeted layer audit:
-  - compare `fixed_all_regimes` vs `full_stack` for `att1`, `flat_arf1`, `breakdown_v1`, and `elder_v3`
-  - if full-stack retention is poor, relax the specific layer shown by the audit rather than weakening all safety logic at once
+  - completed `fixed_all_regimes` vs `full_stack` for `att1`, `flat_arf1`, `breakdown_v1`, and `elder_v3`
+  - `ATT1` is preserved well enough by full stack: `+34.90` fixed -> `+28.24` full stack, PF roughly stable and DD lower
+  - `flat_arf1` is cut but remains positive: `+11.41` fixed -> `+6.60` full stack; target careful frequency relaxation, not a global safety removal
+  - `breakdown_v1` is annual-negative even fixed: `-7.02` fixed and `-5.80` full stack; repair strategy logic/phase fit before any live promotion
+  - `elder_v3` produces zero trades in this audit; rebuild/calibrate Elder instead of deploying the current sparse implementation
 - Server-side backtest performance is a new blocker:
   - the same BRC1 fast rows timed out at `600s` per row on the droplet while passing locally
   - do not schedule heavy server sweeps again until the cache/performance cause is found
@@ -87,8 +90,8 @@ Order of work:
    - only lift BRC1 above `risk×0` after shadow evidence plus phase-specific control-plane rule
    - keep `spike_rejection` and `whale_print` research-only until rewritten
 3. Repair existing strategy families by phase:
-   - bear/chop: `breakdown_v1`, `inplay_breakdown`, `BRC1`
-   - bull/chop: `support_bounce`, `flat`, `ASB1`
+   - bear/chop: `BRC1` shadow first, then repaired `breakdown_v1` / `inplay_breakdown` after annual-positive phase proof
+   - bull/chop: careful `flat` frequency relaxation, then `support_bounce` / `ASB1` after annual additivity proof
    - momentum/panic: `IVB1`, pump-fade, liquidity/whale only after forensic proof
    - Elder remains research-only until it produces nonzero, additive annual evidence; external Triple Screen screenshots prove the concept can work, not that our current implementation is correct
 4. Web/operator:
