@@ -84,6 +84,16 @@ DIAG_KEYS = [
     "elder_skip_max_open", "elder_skip_portfolio", "elder_skip_symbol_lock",
     "elder_ns_history", "elder_ns_limit", "elder_ns_trend",
     "elder_ns_wave", "elder_ns_entry", "elder_ns_atr", "elder_ns_other",
+    "brc1_sched", "brc1_try", "brc1_no_signal", "brc1_signal",
+    "brc1_shadow_signal", "brc1_entry",
+    "brc1_skip_max_open", "brc1_skip_portfolio",
+    "brc1_skip_direction_cap", "brc1_skip_symbol_lock",
+    "brc1_ns_regime_not_bear", "brc1_ns_symbol_blocked",
+    "brc1_ns_not_enough_bars", "brc1_ns_cooldown",
+    "brc1_ns_htf_not_downtrend", "brc1_ns_5m_not_downtrend",
+    "brc1_ns_no_pullback", "brc1_ns_rsi_out_of_zone",
+    "brc1_ns_no_rejection_wick", "brc1_ns_volume_too_high",
+    "brc1_ns_other",
     "ts132_try", "ts132_entry",
 ]
 

@@ -10556,6 +10556,12 @@ async def try_brc1_entry_async(symbol: str, price: float):
         _diag_inc("brc1_no_signal")
         reason = str(getattr(strat, "last_no_signal_reason", "") or "other").lower()
         reason_key = re.sub(r"[^a-z0-9_]+", "_", reason)[:48] or "other"
+        if reason_key.startswith("regime_not_bear"):
+            reason_key = "regime_not_bear"
+        elif reason_key.startswith("cooldown"):
+            reason_key = "cooldown"
+        elif reason_key.startswith("rsi_out_of_zone"):
+            reason_key = "rsi_out_of_zone"
         _diag_inc(f"brc1_ns_{reason_key}")
         return
 
