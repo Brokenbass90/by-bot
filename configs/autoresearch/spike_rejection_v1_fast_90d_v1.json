@@ -1,0 +1,65 @@
+{
+  "name": "spike_rejection_v1_fast_90d_v1",
+  "description": "Fast recent-market sweep for SPR1 after fixing backtest candle access. Relaxes level/touch thresholds to see whether spike rejection can produce enough trades in quiet crypto.",
+  "cache_only": true,
+  "timeout_sec": 600,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,DOTUSDT,LTCUSDT,SUIUSDT",
+    "--strategies",
+    "alt_spike_rejection_v1",
+    "--days",
+    "90",
+    "--end",
+    "2026-04-30",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "SPR1_ALLOW_LONGS": "1",
+    "SPR1_ALLOW_SHORTS": "1",
+    "SPR1_ENABLE_FLIP": "1",
+    "SPR1_REGIME_MODE": "all",
+    "SPR1_TOUCH_TOL_ATR": "0.30",
+    "SPR1_RECLAIM_ATR": "0.05"
+  },
+  "grid": {
+    "SPR1_LOOKBACK_BARS": [24, 36, 48],
+    "SPR1_MIN_TOUCHES": [1, 2],
+    "SPR1_VOL_SPIKE_MULT": [1.5, 2.0],
+    "SPR1_MIN_WICK_PCT": [0.35, 0.45],
+    "SPR1_RR": [1.2, 1.6]
+  },
+  "constraints": {
+    "min_trades": 12,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 6.0,
+    "min_net_pnl": 1.0,
+    "max_negative_months": 2,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.4,
+    "profit_factor": 5.0,
+    "winrate": 4.0,
+    "max_drawdown": 2.0,
+    "trades": 0.12,
+    "trades_cap": 120,
+    "negative_months": 1.5,
+    "worst_month_pnl": 1.2
+  }
+}
