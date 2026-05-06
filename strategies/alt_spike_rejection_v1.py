@@ -88,6 +88,14 @@ def _env_csv_set(name: str, default_csv: str = "") -> set[str]:
     return {x.strip().upper() for x in str(raw).replace(";", ",").split(",") if x.strip()}
 
 
+def _candles_5m(store, symbol: str) -> list:
+    if hasattr(store, "c5"):
+        return getattr(store, "c5") or []
+    if hasattr(store, "candles"):
+        return store.candles(symbol)
+    return getattr(store, "rows", [])
+
+
 def _atr(candles: list, period: int) -> float:
     if len(candles) < period + 1:
         return float("nan")
@@ -163,7 +171,7 @@ class AltSpikeRejectionV1Strategy:
 
     def signal(self, store, symbol: str, i: int, regime: Optional[str] = None) -> Optional[TradeSignal]:
         cfg = self.cfg
-        candles = store.candles(symbol) if hasattr(store, "candles") else getattr(store, "rows", [])
+        candles = _candles_5m(store, symbol)
         need = max(cfg.lookback_bars + 3, cfg.atr_period + 2, cfg.vol_avg_bars + 2)
         if i < need:
             self.last_no_signal_reason = "not_enough_bars"
@@ -233,8 +241,9 @@ class AltSpikeRejectionV1Strategy:
             self.last_no_signal_reason = "no_volume_spike"
             return None
 
+        level_window = candles[max(0, i - cfg.lookback_bars): i]
         resistance, support = _detect_strong_levels(
-            candles[: i], cfg.lookback_bars, cfg.min_touches, cfg.touch_tol_atr, atr,
+            level_window, cfg.lookback_bars, cfg.min_touches, cfg.touch_tol_atr, atr,
         )
 
         bar_range = max(h - l, 1e-9)

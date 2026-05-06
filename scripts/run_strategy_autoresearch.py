@@ -362,9 +362,20 @@ def _run_backtest(spec: dict, overrides: Dict[str, str], run_id: int) -> Candida
         log_f.write(f"cache_only={int(bool(spec.get('cache_only', False)))} BACKTEST_CACHE_ONLY={env.get('BACKTEST_CACHE_ONLY','')}\n")
         log_f.write(f"overrides={json.dumps(overrides, sort_keys=True)}\n\n")
         try:
-            subprocess.run(cmd, cwd=ROOT, env=env, check=True, stdout=log_f, stderr=subprocess.STDOUT)
+            timeout_sec = int(float(spec.get("timeout_sec") or os.getenv("AUTORESEARCH_ROW_TIMEOUT_SEC", "1800") or 1800))
+            subprocess.run(
+                cmd,
+                cwd=ROOT,
+                env=env,
+                check=True,
+                stdout=log_f,
+                stderr=subprocess.STDOUT,
+                timeout=max(60, timeout_sec),
+            )
         except subprocess.CalledProcessError as exc:
             raise RuntimeError(f"subprocess rc={exc.returncode} log={log_path}") from exc
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError(f"subprocess timeout={timeout_sec}s log={log_path}") from exc
     run_dir = _latest_run_dir(tag)
     if run_dir is None:
         raise RuntimeError(f"Missing run dir for tag={tag}")
