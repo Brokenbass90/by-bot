@@ -27,10 +27,11 @@ Order of work:
   - started a safer 90d fast queue for `bear_regime_continuation`, `whale_print_follow`, and `spike_rejection`
 - First fixed-sweep verdict:
   - `bear_regime_continuation` is the current best fresh-market candidate: 90d fast sweep `64/64` pass, best row `+6.15`, PF `4.800`, DD `0.398`
+  - exact `BRC1 r005` longer validation: 180d passes (`+7.62`, PF `1.967`, DD `2.02`, `73` trades), but 365d is only marginal (`+4.44`, PF `1.239`, DD `4.96`, `8` red months)
   - `spike_rejection` failed the fast gate (`0/48` pass)
   - `whale_print_follow` failed the partial fast gate (`0/60` pass before stop)
   - BRC1 now has live/shadow wiring pushed in commit `5ae767d`, but defaults keep it off and at zero risk
-  - next promotion gates for BRC1: 180d/365d standalone, portfolio additivity, then shadow enable, then tiny-risk live only if shadow evidence agrees
+  - next promotion gates for BRC1: portfolio additivity and shadow only; real-risk live needs either stronger long-history filters or a phase-specific allocator rule
 - Server-side backtest performance is a new blocker:
   - the same BRC1 fast rows timed out at `600s` per row on the droplet while passing locally
   - do not schedule heavy server sweeps again until the cache/performance cause is found

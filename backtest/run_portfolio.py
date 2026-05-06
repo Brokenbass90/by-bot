@@ -433,9 +433,8 @@ def _regime_at_bar(store: KlineStore, i: int) -> str:
     """Classify regime at current bar index: 'flat' or 'trend'."""
     if i < 260:
         return "trend"
-    c = [float(x.c) for x in store.c5[: i + 1]]
-    h = [float(x.h) for x in store.c5[: i + 1]]
-    l = [float(x.l) for x in store.c5[: i + 1]]
+    window = store.c5[max(0, i - 190): i + 1]
+    c = [float(x.c) for x in window]
     cur = c[-1]
     if cur <= 0:
         return "trend"
@@ -460,7 +459,7 @@ def _directional_regime_at_bar(store: KlineStore, i: int) -> str:
     """Return live-style BULL/BEAR + CHOP/TREND for strategy gates."""
     base = _regime_at_bar(store, i)
     try:
-        c = [float(x.c) for x in store.c5[: i + 1]]
+        c = [float(x.c) for x in store.c5[max(0, i - 140): i + 1]]
         if len(c) < 80:
             direction = "BULL"
         else:

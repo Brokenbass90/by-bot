@@ -160,6 +160,7 @@ class AltBearRegimeContinuationV1Strategy:
     def __init__(self):
         self.cfg = BRC1Config()
         self._last_signal_i: dict[str, int] = {}
+        self._htf_downtrend_cache: dict[tuple[str, str, int, int, int], bool] = {}
         self.last_no_signal_reason = ""
 
     def signal(self, store, symbol: str, i: int, regime: Optional[str] = None) -> Optional[TradeSignal]:
@@ -192,15 +193,34 @@ class AltBearRegimeContinuationV1Strategy:
             return None
 
         # ── HTF trend filter — EMA20 < EMA50 на 1H (downtrend) ───────────────
-        htf_rows = store.fetch_klines(symbol, cfg.htf, max(cfg.ema_slow + 10, 80)) if hasattr(store, "fetch_klines") else []
-        if htf_rows and len(htf_rows) >= cfg.ema_slow + 5:
-            htf_closes = [float(r[4]) for r in htf_rows]  # bybit kline format
-            ema_fast_htf = _ema(htf_closes, cfg.ema_fast)
-            ema_slow_htf = _ema(htf_closes, cfg.ema_slow)
-            if math.isfinite(ema_fast_htf) and math.isfinite(ema_slow_htf):
-                if ema_fast_htf >= ema_slow_htf:
-                    self.last_no_signal_reason = "htf_not_downtrend"
-                    return None
+        htf_rows = []
+        htf_ok_cached = None
+        try:
+            htf_min = max(5, int(float(str(cfg.htf))))
+            htf_bucket = max(0, i // max(1, htf_min // 5))
+        except Exception:
+            htf_bucket = i
+        htf_cache_key = (symbol.upper(), str(cfg.htf), int(htf_bucket), int(cfg.ema_fast), int(cfg.ema_slow))
+        if htf_cache_key in self._htf_downtrend_cache:
+            htf_ok_cached = self._htf_downtrend_cache[htf_cache_key]
+        else:
+            htf_rows = store.fetch_klines(symbol, cfg.htf, max(cfg.ema_slow + 10, 80)) if hasattr(store, "fetch_klines") else []
+            if htf_rows and len(htf_rows) >= cfg.ema_slow + 5:
+                htf_closes = [float(r[4]) for r in htf_rows]  # bybit kline format
+                ema_fast_htf = _ema(htf_closes, cfg.ema_fast)
+                ema_slow_htf = _ema(htf_closes, cfg.ema_slow)
+                if math.isfinite(ema_fast_htf) and math.isfinite(ema_slow_htf):
+                    htf_ok_cached = bool(ema_fast_htf < ema_slow_htf)
+                    self._htf_downtrend_cache[htf_cache_key] = htf_ok_cached
+        if htf_ok_cached is not None:
+            if not htf_ok_cached:
+                self.last_no_signal_reason = "htf_not_downtrend"
+                return None
+        elif htf_rows and len(htf_rows) >= cfg.ema_slow + 5:
+            # Defensive fallback for malformed HTF rows: fail closed instead of
+            # silently treating an unusable high-timeframe filter as permissive.
+            self.last_no_signal_reason = "bad_htf"
+            return None
         # Если нет HTF данных — fallback на 5m EMA
         else:
             closes_5m = [float(x.c) for x in candles[max(0, i - cfg.ema_slow - 5): i + 1]]
