@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-tg_daily_digest.py — Morning health digest for both Bybit bot + Alpaca branches.
+tg_daily_digest.py — Russian morning health digest for Bybit + Alpaca branches.
 
 Sends a single Telegram message at 08:00 UTC with:
   • Bybit bot: CB state, regime, allocator status, open trades, recent closes
@@ -118,6 +118,15 @@ def _tg_send(token: str, chat_id: str, msg: str, dry_run: bool = False) -> bool:
         return False
 
 
+def _write_latest_digest(msg: str) -> None:
+    out = ROOT / "runtime" / "operator" / "daily_digest_latest.html"
+    try:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(msg, encoding="utf-8")
+    except Exception:
+        pass
+
+
 # ─── Alpaca API ───────────────────────────────────────────────────────────────
 
 def _alpaca_get(path: str) -> Any:
@@ -152,13 +161,14 @@ def _bybit_section() -> str:
     if hb and hb_age is not None and hb_age < 120:
         uptime_h = hb.get("uptime_s", 0) / 3600
         open_trades = hb.get("open_trades", 0)
-        bot_status = f"🟢 online ({uptime_h:.1f}h up, {open_trades} open)"
+        bot_status = f"🟢 работает {uptime_h:.1f}ч, открытых сделок: {open_trades}"
     elif hb_age is not None:
-        bot_status = f"🔴 offline (last seen {_age_str(hb_age)})"
+        bot_status = f"🔴 нет свежего heartbeat, последний был {_age_str(hb_age)}"
     else:
-        bot_status = "🔴 offline (no heartbeat file)"
+        bot_status = "🔴 нет файла heartbeat"
 
-    lines.append(f"<b>🤖 Bybit Bot:</b> {bot_status}")
+    lines.append(f"<b>🤖 Крипта Bybit:</b> {bot_status}")
+    lines.append("  ℹ️ Открытых 0 = бот жив, но сейчас вне позиции.")
 
     # ── Circuit Breaker ───────────────────────────────────────────────────────
     cb_path = ROOT / "runtime" / "circuit_breaker.json"
@@ -171,14 +181,14 @@ def _bybit_section() -> str:
         if cb_state == "HALT":
             halt_until = cb.get("halt_until_epoch", 0)
             remaining = max(0, halt_until - time.time())
-            cb_line = (f"🚨 CB: HALT (daily={daily_dd:.1f}% / peak={peak_dd:.1f}%, "
-                       f"clears in {remaining/3600:.1f}h)")
+            cb_line = (f"🚨 Защита счёта: HALT (день={daily_dd:.1f}% / пик={peak_dd:.1f}%, "
+                       f"снимется через {remaining/3600:.1f}ч)")
         elif cb_state == "CAUTION":
-            cb_line = f"⚠️ CB: CAUTION (daily={daily_dd:.1f}% / peak={peak_dd:.1f}%)"
+            cb_line = f"⚠️ Защита счёта: CAUTION (день={daily_dd:.1f}% / пик={peak_dd:.1f}%)"
         else:
-            cb_line = "✅ CB: NORMAL"
+            cb_line = "✅ Защита счёта: NORMAL"
     else:
-        cb_line = "✅ CB: NORMAL (no HALT event recorded)"
+        cb_line = "✅ Защита счёта: NORMAL (HALT не было)"
     lines.append(cb_line)
 
     # ── Regime ────────────────────────────────────────────────────────────────
@@ -190,10 +200,16 @@ def _bybit_section() -> str:
         conf = float(regime.get("confidence", 0))
         risk = float(regime.get("global_risk_mult", 1.0))
         regime_emoji = {"bear_trend": "🐻", "bear_chop": "🌫", "bull_chop": "🌤", "bull_trend": "🐂"}.get(r, "❓")
-        stale = " ⚠️stale" if (regime_age or 0) > 7200 else ""
-        lines.append(f"📊 Regime: {regime_emoji} <b>{r}</b> (conf={conf:.2f}, risk={risk:.2f}×){stale}")
+        regime_label = {
+            "bear_trend": "медвежий тренд",
+            "bear_chop": "медвежий боковик",
+            "bull_chop": "бычий боковик",
+            "bull_trend": "бычий тренд",
+        }.get(r, str(r))
+        stale = " ⚠️ устарело" if (regime_age or 0) > 7200 else ""
+        lines.append(f"📊 Режим рынка: {regime_emoji} <b>{regime_label}</b> (уверенность={conf:.2f}, риск={risk:.2f}×){stale}")
     else:
-        lines.append("📊 Regime: ❓ unknown")
+        lines.append("📊 Режим рынка: ❓ неизвестен")
 
     # ── Allocator ─────────────────────────────────────────────────────────────
     alloc_state_path = ROOT / "runtime" / "control_plane" / "portfolio_allocator_state.json"
@@ -205,15 +221,15 @@ def _bybit_section() -> str:
         risk_mult = alloc.get("allocator_global_risk_mult", 1.0)
         if safe_mode:
             reasons = alloc.get("safe_mode_reasons", [])
-            alloc_line = f"🔴 Allocator: SAFE_MODE ({risk_mult:.2f}×) — {', '.join(reasons[:2])}"
+            alloc_line = f"🔴 Аллокатор: SAFE_MODE ({risk_mult:.2f}×) — {', '.join(reasons[:2])}"
         elif degraded:
             reasons = alloc.get("degraded_reasons", [])
-            alloc_line = f"⚠️ Allocator: DEGRADED ({risk_mult:.2f}×) — {', '.join(reasons[:2])}"
+            alloc_line = f"⚠️ Аллокатор: DEGRADED ({risk_mult:.2f}×) — {', '.join(reasons[:2])}"
         else:
-            alloc_line = f"✅ Allocator: OK ({risk_mult:.2f}×)"
+            alloc_line = f"✅ Аллокатор: OK ({risk_mult:.2f}×)"
         lines.append(alloc_line)
     else:
-        lines.append("⚠️ Allocator: state file not found")
+        lines.append("⚠️ Аллокатор: файл состояния не найден")
 
     # ── Strategy health quick summary ─────────────────────────────────────────
     health_path = ROOT / "configs" / "strategy_health.json"
@@ -225,15 +241,17 @@ def _bybit_section() -> str:
         paused = [k for k, v in strats.items() if isinstance(v, dict) and v.get("status") in ("PAUSE", "KILL")]
         watch = [k for k, v in strats.items() if isinstance(v, dict) and v.get("status") == "WATCH"]
         health_emoji = "✅" if overall == "OK" else ("⚠️" if overall == "WATCH" else "🔴")
-        age_warn = f" [{_age_str(health_age)} old]" if (health_age or 0) > 604800 else ""
-        summary = f"active:{len(strats)-len(paused)-len(watch)}"
+        age_warn = f" ⚠️ файл старый: {_age_str(health_age)}" if (health_age or 0) > 604800 else ""
+        summary = f"активных по health-файлу:{len(strats)-len(paused)-len(watch)}"
         if watch:
             summary += f" watch:{len(watch)}"
         if paused:
-            summary += f" paused:{len(paused)}"
-        lines.append(f"{health_emoji} Strategy health: {overall} ({summary}){age_warn}")
+            summary += f" pause/kill:{len(paused)}"
+        lines.append(f"{health_emoji} Health стратегий: {overall} ({summary}){age_warn}")
+        if (health_age or 0) > 604800:
+            lines.append("  ℹ️ Это не список live-рукавов, а старый health-снимок; live-рукава берём из .env/allocator.")
     else:
-        lines.append("❓ Strategy health: file not found")
+        lines.append("❓ Health стратегий: файл не найден")
 
     # ── Recent closed trades (from logs) ──────────────────────────────────────
     log_dir = ROOT / "logs"
@@ -265,9 +283,9 @@ def _bybit_section() -> str:
             wins = sum(1 for t in trades_today if float(t.get("pnl", 0)) > 0)
             losses = sum(1 for t in trades_today if float(t.get("pnl", 0)) < 0)
             pnl_emoji = "📈" if pnl_sum > 0 else "📉"
-            lines.append(f"{pnl_emoji} Today's trades: {len(trades_today)} ({wins}W/{losses}L) = <b>{pnl_sum:+.2f} USDT</b>")
+            lines.append(f"{pnl_emoji} Сделки сегодня: {len(trades_today)} ({wins}W/{losses}L) = <b>{pnl_sum:+.2f} USDT</b>")
         else:
-            lines.append("💤 Today's trades: 0 (no closes yet)")
+            lines.append("💤 Сделки сегодня: 0 закрытых")
 
     return "\n".join(lines)
 
@@ -287,30 +305,30 @@ def _alpaca_intraday_section() -> str:
         entries_blocked = adv.get("entries_blocked", False)
         prot = adv.get("protection", {})
 
-        status = "🟢 running" if mode == "LIVE_PAPER" else "⚪ dry-run"
+        status = "🟢 paper работает" if mode == "LIVE_PAPER" else "⚪ dry-run"
         if entries_blocked:
             block_reason = adv.get("entries_blocked_reason", "unknown")
-            status = f"⛔ blocked ({block_reason})"
+            status = f"⛔ входы заблокированы ({block_reason})"
 
         lines.append(f"<b>📈 Alpaca Intraday ({mode}):</b> {status}")
 
         if today_pnl is not None:
             pnl_e = "📈" if today_pnl >= 0 else "📉"
-            lines.append(f"  {pnl_e} Today P&L: <b>${today_pnl:+.2f}</b>")
+            lines.append(f"  {pnl_e} P&L сегодня: <b>${today_pnl:+.2f}</b>")
 
         if open_pos:
-            lines.append(f"  📌 Open: {', '.join(str(p) for p in open_pos[:6])}")
+            lines.append(f"  📌 Открыто: {', '.join(str(p) for p in open_pos[:6])}")
         else:
-            lines.append("  💤 Open: none")
+            lines.append("  💤 Открытых позиций нет")
 
         # Protection layers
         spy_ok = prot.get("spy_gate_pass", "?")
         eq_ok = prot.get("equity_curve_pass", "?")
         dd_ok = prot.get("daily_loss_ok", "?")
-        lines.append(f"  🛡 SPY={spy_ok} | EqCurve={eq_ok} | DailyDD={dd_ok}")
+        lines.append(f"  🛡 Защиты: SPY={spy_ok} | EquityCurve={eq_ok} | DailyDD={dd_ok}")
     else:
         stale = f" (stale {_age_str(age)})" if age is not None else ""
-        lines.append(f"<b>📈 Alpaca Intraday:</b> ❓ no advisory{stale}")
+        lines.append(f"<b>📈 Alpaca Intraday:</b> ❓ нет свежего advisory{stale}")
 
     return "\n".join(lines)
 
@@ -351,15 +369,15 @@ def _alpaca_monthly_section() -> str:
         cash = float(account.get("cash", 0))
         buying_power = float(account.get("buying_power", 0))
         lines.append(f"<b>📅 Alpaca Monthly ({cycle_month}):</b>")
-        lines.append(f"  💰 Equity: <b>${equity:,.0f}</b> | Cash: ${cash:,.0f}")
+        lines.append(f"  💰 Демо equity: <b>${equity:,.0f}</b> | cash: ${cash:,.0f}")
     else:
         lines.append(f"<b>📅 Alpaca Monthly ({cycle_month}):</b>")
-        lines.append("  💰 Equity: API unavailable")
+        lines.append("  💰 Equity: API недоступен")
 
     if current_tickers:
-        lines.append(f"  📋 Picks: {', '.join(current_tickers)}")
+        lines.append(f"  📋 Выбранные акции: {', '.join(current_tickers)}")
     else:
-        lines.append("  📋 Picks: none found")
+        lines.append("  📋 Выбранных акций не найдено")
 
     # Show open positions with P&L
     if positions and isinstance(positions, list):
@@ -374,16 +392,17 @@ def _alpaca_monthly_section() -> str:
                 e = "📈" if unrealized >= 0 else "📉"
                 lines.append(f"  {e} {sym}: {unrealized_pct:+.1f}% ({unrealized:+.2f} USD)")
         else:
-            lines.append("  💤 No open positions yet")
+            lines.append("  💤 Открытых monthly-позиций пока нет")
     else:
-        lines.append("  💤 No positions / API unavailable")
+        lines.append("  💤 Позиций нет или API недоступен")
 
     stale_warn = ""
     if refresh_age is not None and refresh_age > 1209600:  # 14 days
-        stale_warn = f" ⚠️ picks {_age_str(refresh_age)} old — refresh on 1st!"
+        stale_warn = f" ⚠️ picks старые: {_age_str(refresh_age)} — обновить 1-го числа"
     elif refresh_age is not None:
-        stale_warn = f" (refreshed {_age_str(refresh_age)})"
-    lines.append(f"  🔄 Picks{stale_warn}")
+        stale_warn = f" (обновлены {_age_str(refresh_age)})"
+    lines.append(f"  🔄 Пики{stale_warn}")
+    lines.append("  ℹ️ Это paper-счёт; перед реальными $500 ждём контроль 2/4 недели и проверку broker-side защит.")
 
     return "\n".join(lines)
 
@@ -414,7 +433,7 @@ def main() -> int:
     now_utc = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     sections: list[str] = []
-    sections.append(f"☀️ <b>Daily Digest — {now_utc}</b>")
+    sections.append(f"☀️ <b>Ежедневный отчёт — {now_utc}</b>")
     sections.append("")
 
     if not args.alpaca_only:
@@ -427,6 +446,7 @@ def main() -> int:
         sections.append(_alpaca_monthly_section())
 
     msg = "\n".join(sections)
+    _write_latest_digest(msg)
     success = _tg_send(token, chat_id, msg, dry_run=args.dry_run)
     if not args.dry_run:
         print(f"[tg_digest] {'sent' if success else 'failed'} — {now_utc}")
