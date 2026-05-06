@@ -50,6 +50,7 @@ from strategies.micro_scalper_live import MicroScalperLiveEngine
 from strategies.support_reclaim_live import SupportReclaimLiveEngine
 from strategies.impulse_volume_breakout_v1 import ImpulseVolumeBreakoutV1Strategy
 from strategies.elder_triple_screen_v2 import ElderTripleScreenV2Strategy
+from strategies.alt_bear_regime_continuation_v1 import AltBearRegimeContinuationV1Strategy
 from strategies.session_open_breakout_v1 import SessionOpenBreakoutV1
 from trade_reporting import generate_report, since_days
 
@@ -779,6 +780,23 @@ ELDER_SYMBOL_ALLOWLIST: set[str] = {
 }
 ELDER_ENGINE: dict[str, ElderTripleScreenV2Strategy] | None = {}
 _ELDER_LAST_TRY: dict[str, float] = {}
+
+# ===== BRC1 BEAR REGIME CONTINUATION (live/shadow) =====
+# Disabled by default. Set ENABLE_BRC1_TRADING=1 and BRC1_RISK_MULT=0.0 for
+# signal-only shadow telemetry; positive risk requires annual/additivity gates.
+ENABLE_BRC1_TRADING = os.getenv("ENABLE_BRC1_TRADING", "0").strip() == "1"
+BRC1_TRY_EVERY_SEC = int(os.getenv("BRC1_TRY_EVERY_SEC", "60"))
+BRC1_RISK_MULT = max(0.0, float(os.getenv("BRC1_RISK_MULT", "0.0") or 0.0))
+BRC1_ALLOW_MINQTY_FALLBACK = _env_bool("BRC1_ALLOW_MINQTY_FALLBACK", True)
+BRC1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("BRC1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
+BRC1_MAX_OPEN_TRADES = int(os.getenv("BRC1_MAX_OPEN_TRADES", "1"))
+BRC1_SYMBOL_ALLOWLIST: set[str] = {
+    s.strip().upper()
+    for s in str(os.getenv("BRC1_SYMBOL_ALLOWLIST", "SOLUSDT,ADAUSDT,DOTUSDT,LINKUSDT,SUIUSDT,LTCUSDT")).split(",")
+    if s.strip()
+}
+BRC1_ENGINE: dict[str, AltBearRegimeContinuationV1Strategy] | None = {}
+_BRC1_LAST_TRY: dict[str, float] = {}
 
 # ===== SESSION OPEN BREAKOUT V1 (live) =====
 # Disabled by default until WF-22 walk-forward validation passes on server.
@@ -2597,6 +2615,7 @@ def _current_live_candidate_strategy_names() -> list[str]:
         (ENABLE_BREAKDOWN_TRADING, "alt_inplay_breakdown_v1"),
         (ENABLE_IVB1_TRADING, "impulse_volume_breakout_v1"),
         (ENABLE_ELDER_TRADING, "elder_triple_screen_v2"),
+        (ENABLE_BRC1_TRADING, "alt_bear_regime_continuation_v1"),
         (ENABLE_TS132_TRADING, "triple_screen_v132"),
         (ENABLE_PUMP_FADE_TRADING, "pump_fade_v2"),
         (ENABLE_RANGE_TRADING, "alt_range_scalp_v1"),
@@ -2646,6 +2665,7 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "breakdown": bool(ENABLE_BREAKDOWN_TRADING),
             "ivb1": bool(ENABLE_IVB1_TRADING),
             "elder": bool(ENABLE_ELDER_TRADING),
+            "brc1": bool(ENABLE_BRC1_TRADING),
             "ts132": bool(ENABLE_TS132_TRADING),
             "pump_fade": bool(ENABLE_PUMP_FADE_TRADING),
             "inplay": bool(ENABLE_INPLAY_TRADING),
@@ -2690,6 +2710,11 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "elder_try": int(_diag_get_int("elder_try")),
             "elder_no_signal": int(_diag_get_int("elder_no_signal")),
             "elder_entry": int(_diag_get_int("elder_entry")),
+            "brc1_try": int(_diag_get_int("brc1_try")),
+            "brc1_no_signal": int(_diag_get_int("brc1_no_signal")),
+            "brc1_signal": int(_diag_get_int("brc1_signal")),
+            "brc1_shadow_signal": int(_diag_get_int("brc1_shadow_signal")),
+            "brc1_entry": int(_diag_get_int("brc1_entry")),
             "ts132_try": int(_diag_get_int("ts132_try")),
             "ts132_entry": int(_diag_get_int("ts132_entry")),
         },
@@ -10116,6 +10141,43 @@ class _ElderStore:
         return fetch_klines(symbol, interval, limit)
 
 
+class _BRC1Candle:
+    __slots__ = ("ts", "o", "h", "l", "c", "v")
+
+    def __init__(self, ts: int, o: float, h: float, l: float, c: float, v: float):
+        self.ts = ts
+        self.o = o
+        self.h = h
+        self.l = l
+        self.c = c
+        self.v = v
+
+
+class _BRC1Store:
+    """Live store adapter for AltBearRegimeContinuationV1Strategy."""
+    def __init__(self, symbol: str):
+        self.symbol = symbol
+        st = S("Bybit", symbol)
+        out = []
+        for row in list(getattr(st, "bars5m", []) or []):
+            try:
+                ts = int(row.get("id", 0)) * 300_000
+                out.append(_BRC1Candle(
+                    ts=ts,
+                    o=float(row.get("o")),
+                    h=float(row.get("h")),
+                    l=float(row.get("l")),
+                    c=float(row.get("c")),
+                    v=float(row.get("quote", 0.0)) / max(float(row.get("c") or 0.0), 1e-12),
+                ))
+            except Exception:
+                continue
+        self.c5 = out
+
+    def fetch_klines(self, symbol: str, interval: str, limit: int):
+        return fetch_klines(symbol, interval, limit)
+
+
 async def try_ivb1_entry_async(symbol: str, price: float):
     """Try live IVB1 entry for a symbol (impulse_volume_breakout_v1)."""
     if not ENABLE_IVB1_TRADING:
@@ -10434,6 +10496,179 @@ async def try_elder_entry_async(symbol: str, price: float):
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
             f"🟢 ELDER ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={sig.reason}"
+        )
+
+
+async def try_brc1_entry_async(symbol: str, price: float):
+    """Try BRC1 bear-regime short-continuation entry.
+
+    If BRC1_RISK_MULT=0.0, this runs as signal-only shadow telemetry and never
+    submits an order. That is the intended first live step after backtest gates.
+    """
+    if not ENABLE_BRC1_TRADING:
+        return
+    if BRC1_ENGINE is None:
+        return
+    if not TRADE_ON or DRY_RUN:
+        return
+    if TRADE_CLIENT is None:
+        return
+    if BRC1_SYMBOL_ALLOWLIST and symbol not in BRC1_SYMBOL_ALLOWLIST:
+        return
+    if get_trade("Bybit", symbol) is not None:
+        return
+    if BRC1_MAX_OPEN_TRADES > 0:
+        open_brc1 = sum(
+            1 for tr in TRADES.values()
+            if getattr(tr, "strategy", "") == "alt_bear_regime_continuation_v1"
+            and str(getattr(tr, "status", "")).upper() not in {"CLOSED", "ERROR"}
+        )
+        if open_brc1 >= BRC1_MAX_OPEN_TRADES:
+            _diag_inc("brc1_skip_max_open")
+            return
+    if not portfolio_can_open():
+        _diag_inc("brc1_skip_portfolio")
+        return
+
+    now = now_s()
+    last = float(_BRC1_LAST_TRY.get(symbol, 0) or 0)
+    if now - last < BRC1_TRY_EVERY_SEC:
+        return
+    _BRC1_LAST_TRY[symbol] = now
+    _diag_inc("brc1_try")
+
+    if symbol not in BRC1_ENGINE:
+        BRC1_ENGINE[symbol] = AltBearRegimeContinuationV1Strategy()
+    strat = BRC1_ENGINE[symbol]
+    store = _BRC1Store(symbol)
+    i = len(store.c5) - 1
+    regime = str(REGIME_OVERLAY_LAST_APPLIED_REGIME or os.getenv("ORCH_REGIME", "") or "").upper()
+
+    try:
+        sig = strat.signal(store, symbol, i, regime=regime)
+    except Exception as e:
+        log_error(f"brc1 signal error {symbol}: {e}")
+        return
+    if not sig:
+        _diag_inc("brc1_no_signal")
+        reason = str(getattr(strat, "last_no_signal_reason", "") or "other").lower()
+        reason_key = re.sub(r"[^a-z0-9_]+", "_", reason)[:48] or "other"
+        _diag_inc(f"brc1_ns_{reason_key}")
+        return
+
+    _diag_inc("brc1_signal")
+    if BRC1_RISK_MULT <= 0:
+        _diag_inc("brc1_shadow_signal")
+        tg_trade_throttled(
+            f"brc1_shadow:{symbol}",
+            f"🧪 BRC1 SHADOW signal {symbol} {sig.side} entry≈{float(sig.entry):.6f} "
+            f"TP={float(sig.tp):.6f} SL={float(sig.sl):.6f} reason={sig.reason}",
+            21600,
+        )
+        return
+
+    side = "Buy" if sig.side == "long" else "Sell"
+    if not portfolio_can_open(side):
+        _diag_inc("brc1_skip_direction_cap")
+        return
+    entry = float(sig.entry)
+    sl = float(sig.sl)
+    tp = float(sig.tp)
+    use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
+    tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
+    if tp_r is None or sl_r is None:
+        return
+
+    stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=BRC1_RISK_MULT)
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, entry)
+    if qty_floor <= 0 and BRC1_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=entry,
+            stop_pct=stop_pct,
+            risk_mult=BRC1_RISK_MULT,
+            max_mult=BRC1_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            dyn_usd = fallback_usd
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = ""
+        elif not reason:
+            reason = fallback_reason
+    if dyn_usd <= 0 and qty_floor <= 0:
+        tg_skip_throttled("brc1", symbol, "notional_small", f"🟡 BRC1 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
+        return
+    if qty_floor <= 0:
+        tg_skip_throttled("brc1", symbol, f"minqty:{reason}", f"🟡 BRC1 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+
+    proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
+    can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
+    if not can_add:
+        tg_trade_throttled(
+            f"portfolio_risk:brc1:{symbol}",
+            f"🟡 BRC1 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
+            3600,
+        )
+        return
+
+    entry_lock = _get_symbol_entry_lock("Bybit", symbol)
+    if entry_lock.locked():
+        _diag_inc("brc1_skip_symbol_lock")
+        return
+    async with entry_lock:
+        if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            return
+        _diag_inc("brc1_entry")
+        order_send_ts = int(now_s())
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            _clear_entry_slot(symbol)
+            return
+        oid, q = submitted
+        order_ack_ts = int(now_s())
+
+        tr = TradeState(symbol=symbol, side=side, qty=q, entry_price_req=float(entry), entry_ts=now)
+        tr.entry_order_id = oid
+        tr.status = "PENDING_ENTRY"
+        tr.strategy = "alt_bear_regime_continuation_v1"
+        tr.signal_reason = str(getattr(sig, "reason", "") or "")
+        tr.avg = float(entry)
+        tr.entry_price = float(entry)
+        tr.entry_notional_usd = float(notional_real)
+        tr.tp_price = float(tp_r) if tp_r is not None else None
+        tr.sl_price = float(sl_r)
+        tr.order_send_ts = int(order_send_ts)
+        tr.order_ack_ts = int(order_ack_ts)
+        apply_runner_state(tr, sig, q, use_runner=use_runner)
+        TRADES[("Bybit", symbol)] = tr
+
+        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        _append_live_trade_event(
+            "order_submitted",
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=float(tp_r) if tp_r is not None else None,
+            request_sl=float(sl_r) if sl_r is not None else None,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🟢 BRC1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
             f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
             f"notional≈{notional_real:.2f}$ qty≈{q}\n"
             f"reason={sig.reason}"
@@ -11222,6 +11457,16 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                 except Exception as _e:
                     log_error(f"try_elder_entry schedule fail {sym}: {_e}")
 
+        # ===== BRC1 BEAR REGIME CONTINUATION ENTRY / SHADOW =====
+        if ENABLE_BRC1_TRADING and sym in BRC1_SYMBOL_ALLOWLIST and _health_gate.allow_entry("alt_bear_regime_continuation_v1", sym):
+            last = float(_BRC1_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= BRC1_TRY_EVERY_SEC:
+                try:
+                    _diag_inc("brc1_sched")
+                    asyncio.create_task(try_brc1_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_brc1_entry schedule fail {sym}: {_e}")
+
         # ===== SESSION OPEN BREAKOUT V1 ENTRY =====
         if ENABLE_SOB1_TRADING and (not SOB1_SYMBOL_ALLOWLIST or sym in SOB1_SYMBOL_ALLOWLIST) and _health_gate.allow_entry("session_open_breakout_v1", sym):
             last = float(_SOB1_LAST_TRY.get(sym, 0) or 0)
@@ -11989,6 +12234,7 @@ def _check_router_control_plane_health(*, notify: bool = True) -> bool:
 def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
     global ENABLE_IVB1_TRADING, ENABLE_ELDER_TRADING, ENABLE_ATT1_TRADING, ENABLE_ASM1_TRADING
+    global ENABLE_BRC1_TRADING, BRC1_ENGINE, BRC1_SYMBOL_ALLOWLIST, BRC1_RISK_MULT
     global ENABLE_ASB1_TRADING, ENABLE_HZBO1_TRADING, ENABLE_BOUNCE1_TRADING, ENABLE_RANGE_TRADING
     global ENABLE_SLOPED_TRADING, BREAKOUT_SYMBOL_ALLOWLIST, BREAKOUT_SYMBOL_DENYLIST
     global BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE, ELDER_ENGINE, ELDER_SYMBOL_ALLOWLIST
@@ -12041,6 +12287,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     ENABLE_BOUNCE1_TRADING = _env_bool("ENABLE_BOUNCE1_TRADING", ENABLE_BOUNCE1_TRADING)
     ENABLE_RANGE_TRADING = _env_bool("ENABLE_RANGE_TRADING", ENABLE_RANGE_TRADING)
     ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
+    ENABLE_BRC1_TRADING = _env_bool("ENABLE_BRC1_TRADING", ENABLE_BRC1_TRADING)
     BREAKOUT_SYMBOL_ALLOWLIST = _csv_upper_set("BREAKOUT_SYMBOL_ALLOWLIST")
     BREAKOUT_SYMBOL_DENYLIST = _csv_upper_set("BREAKOUT_SYMBOL_DENYLIST")
     ELDER_SYMBOL_ALLOWLIST = _csv_upper_set("ETS2_SYMBOL_ALLOWLIST")
@@ -12049,6 +12296,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     ASB1_SYMBOL_ALLOWLIST = _csv_upper_set("ASB1_SYMBOL_ALLOWLIST")
     HZBO1_SYMBOL_ALLOWLIST = _csv_upper_set("HZBO1_SYMBOL_ALLOWLIST")
     BOUNCE1_SYMBOL_ALLOWLIST = _csv_upper_set("BOUNCE1_SYMBOL_ALLOWLIST")
+    BRC1_SYMBOL_ALLOWLIST = _csv_upper_set("BRC1_SYMBOL_ALLOWLIST")
 
     # ── Vol-adjust hot-reload ─────────────────────────────────────────────────
     global VOLADJ_ENABLED, VOLADJ_ATR_THRESHOLD_PCT, VOLADJ_ATR_EXTREME_PCT
@@ -12065,12 +12313,18 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
         ORCH_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ORCH_GLOBAL_RISK_MULT", "1.0") or 1.0))
     except Exception:
         ORCH_GLOBAL_RISK_MULT = 1.0
+    try:
+        BRC1_RISK_MULT = max(0.0, float(os.getenv("BRC1_RISK_MULT", str(BRC1_RISK_MULT)) or BRC1_RISK_MULT))
+    except Exception:
+        pass
     _recompute_effective_risk_pct()
 
     BREAKOUT_ENGINE = BreakoutLiveEngine(fetch_klines) if ENABLE_BREAKOUT_TRADING else None
     BREAKDOWN_ENGINE = BreakdownLiveEngine(fetch_klines) if ENABLE_BREAKDOWN_TRADING else None
     if ENABLE_ELDER_TRADING and ELDER_ENGINE is None:
         ELDER_ENGINE = {}
+    if ENABLE_BRC1_TRADING and BRC1_ENGINE is None:
+        BRC1_ENGINE = {}
     if not ENABLE_ATT1_TRADING:
         ATT1_ENGINE = None
     if not ENABLE_ASM1_TRADING:
@@ -12087,6 +12341,8 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
         SLOPED_ENGINE = None
     if not ENABLE_ELDER_TRADING:
         ELDER_ENGINE = None
+    if not ENABLE_BRC1_TRADING:
+        BRC1_ENGINE = None
     LAST_UNIVERSE_REFRESH_TS = 0
 
     REGIME_OVERLAY_LAST_MTIME = st.st_mtime
@@ -12103,7 +12359,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
         f"ivb1={ENABLE_IVB1_TRADING} elder={ENABLE_ELDER_TRADING} "
         f"att1={ENABLE_ATT1_TRADING} asb1={ENABLE_ASB1_TRADING} "
         f"hzbo1={ENABLE_HZBO1_TRADING} bounce1={ENABLE_BOUNCE1_TRADING} "
-        f"asm1={ENABLE_ASM1_TRADING}"
+        f"asm1={ENABLE_ASM1_TRADING} brc1={ENABLE_BRC1_TRADING}"
     )
     if notify and REGIME_OVERLAY_LAST_APPLIED_REGIME != old_regime and REGIME_OVERLAY_LAST_APPLIED_REGIME:
         tg_trade(
@@ -12114,7 +12370,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
             f"ivb1={int(ENABLE_IVB1_TRADING)} elder={int(ENABLE_ELDER_TRADING)} "
             f"att1={int(ENABLE_ATT1_TRADING)} asb1={int(ENABLE_ASB1_TRADING)} "
             f"hzbo1={int(ENABLE_HZBO1_TRADING)} bounce1={int(ENABLE_BOUNCE1_TRADING)} "
-            f"asm1={int(ENABLE_ASM1_TRADING)}"
+            f"asm1={int(ENABLE_ASM1_TRADING)} brc1={int(ENABLE_BRC1_TRADING)}"
         )
     return True
 
@@ -12122,6 +12378,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
 def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
     global ENABLE_IVB1_TRADING, ENABLE_ELDER_TRADING, ENABLE_ATT1_TRADING, ENABLE_ASM1_TRADING
+    global ENABLE_BRC1_TRADING, BRC1_ENGINE, BRC1_SYMBOL_ALLOWLIST
     global ENABLE_ASB1_TRADING, ENABLE_HZBO1_TRADING, ENABLE_BOUNCE1_TRADING, ENABLE_RANGE_TRADING
     global ENABLE_SLOPED_TRADING, BREAKOUT_ENGINE, BREAKDOWN_ENGINE, FLAT_ENGINE, SLOPED_ENGINE, ELDER_ENGINE, ELDER_SYMBOL_ALLOWLIST
     global ATT1_ENGINE, ASM1_ENGINE, ATT1_SYMBOL_ALLOWLIST, ASM1_SYMBOL_ALLOWLIST
@@ -12130,7 +12387,7 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     global PORTFOLIO_ALLOCATOR_LAST_STATUS, ALLOCATOR_GLOBAL_RISK_MULT, ALLOCATOR_HARD_BLOCK_NEW_ENTRIES
     global ALLOCATOR_SAFE_MODE, ALLOCATOR_SAFE_MODE_REASON, BREAKOUT_RISK_MULT, MIDTERM_RISK_MULT
     global SLOPED_RISK_MULT, FLAT_RISK_MULT, BREAKDOWN_RISK_MULT, IVB1_RISK_MULT, ELDER_RISK_MULT
-    global ATT1_RISK_MULT, ASM1_RISK_MULT, ASB1_RISK_MULT, HZBO1_RISK_MULT, BOUNCE1_RISK_MULT, LAST_UNIVERSE_REFRESH_TS
+    global ATT1_RISK_MULT, ASM1_RISK_MULT, ASB1_RISK_MULT, HZBO1_RISK_MULT, BOUNCE1_RISK_MULT, BRC1_RISK_MULT, LAST_UNIVERSE_REFRESH_TS
 
     if not PORTFOLIO_ALLOCATOR_ENABLE:
         return False
@@ -12176,12 +12433,14 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     ENABLE_HZBO1_TRADING = _env_bool("ENABLE_HZBO1_TRADING", ENABLE_HZBO1_TRADING)
     ENABLE_BOUNCE1_TRADING = _env_bool("ENABLE_BOUNCE1_TRADING", ENABLE_BOUNCE1_TRADING)
     ENABLE_SLOPED_TRADING = _env_bool("ENABLE_SLOPED_TRADING", ENABLE_SLOPED_TRADING)
+    ENABLE_BRC1_TRADING = _env_bool("ENABLE_BRC1_TRADING", ENABLE_BRC1_TRADING)
     ELDER_SYMBOL_ALLOWLIST = _csv_upper_set("ETS2_SYMBOL_ALLOWLIST")
     ATT1_SYMBOL_ALLOWLIST = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
     ASM1_SYMBOL_ALLOWLIST = _csv_upper_set("ASM1_SYMBOL_ALLOWLIST")
     ASB1_SYMBOL_ALLOWLIST = _csv_upper_set("ASB1_SYMBOL_ALLOWLIST")
     HZBO1_SYMBOL_ALLOWLIST = _csv_upper_set("HZBO1_SYMBOL_ALLOWLIST")
     BOUNCE1_SYMBOL_ALLOWLIST = _csv_upper_set("BOUNCE1_SYMBOL_ALLOWLIST")
+    BRC1_SYMBOL_ALLOWLIST = _csv_upper_set("BRC1_SYMBOL_ALLOWLIST")
 
     # ── Vol-adjust hot-reload ─────────────────────────────────────────────────
     global VOLADJ_ENABLED, VOLADJ_ATR_THRESHOLD_PCT, VOLADJ_ATR_EXTREME_PCT
@@ -12254,6 +12513,10 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         BOUNCE1_RISK_MULT = max(0.05, float(os.getenv("BOUNCE1_RISK_MULT", str(BOUNCE1_RISK_MULT)) or BOUNCE1_RISK_MULT))
     except Exception:
         pass
+    try:
+        BRC1_RISK_MULT = max(0.0, float(os.getenv("BRC1_RISK_MULT", str(BRC1_RISK_MULT)) or BRC1_RISK_MULT))
+    except Exception:
+        pass
 
     _recompute_effective_risk_pct()
 
@@ -12261,6 +12524,8 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     BREAKDOWN_ENGINE = BreakdownLiveEngine(fetch_klines) if ENABLE_BREAKDOWN_TRADING else None
     if ENABLE_ELDER_TRADING and ELDER_ENGINE is None:
         ELDER_ENGINE = {}
+    if ENABLE_BRC1_TRADING and BRC1_ENGINE is None:
+        BRC1_ENGINE = {}
     if not ENABLE_ATT1_TRADING:
         ATT1_ENGINE = None
     if not ENABLE_ASM1_TRADING:
@@ -12277,6 +12542,8 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         SLOPED_ENGINE = None
     if not ENABLE_ELDER_TRADING:
         ELDER_ENGINE = None
+    if not ENABLE_BRC1_TRADING:
+        BRC1_ENGINE = None
     LAST_UNIVERSE_REFRESH_TS = 0
 
     PORTFOLIO_ALLOCATOR_LAST_MTIME = st.st_mtime
@@ -12293,7 +12560,7 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         f"ivb1={ENABLE_IVB1_TRADING} elder={ENABLE_ELDER_TRADING} "
         f"att1={ENABLE_ATT1_TRADING} asb1={ENABLE_ASB1_TRADING} "
         f"hzbo1={ENABLE_HZBO1_TRADING} bounce1={ENABLE_BOUNCE1_TRADING} "
-        f"asm1={ENABLE_ASM1_TRADING}"
+        f"asm1={ENABLE_ASM1_TRADING} brc1={ENABLE_BRC1_TRADING}"
     )
     if notify and PORTFOLIO_ALLOCATOR_LAST_STATUS != old_status:
         tg_trade(
@@ -12304,7 +12571,8 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
             f"range={int(ENABLE_RANGE_TRADING)} ivb1={int(ENABLE_IVB1_TRADING)} "
             f"elder={int(ENABLE_ELDER_TRADING)} att1={int(ENABLE_ATT1_TRADING)} "
             f"asb1={int(ENABLE_ASB1_TRADING)} hzbo1={int(ENABLE_HZBO1_TRADING)} "
-            f"bounce1={int(ENABLE_BOUNCE1_TRADING)} asm1={int(ENABLE_ASM1_TRADING)}"
+            f"bounce1={int(ENABLE_BOUNCE1_TRADING)} asm1={int(ENABLE_ASM1_TRADING)} "
+            f"brc1={int(ENABLE_BRC1_TRADING)}"
         )
     return True
 
