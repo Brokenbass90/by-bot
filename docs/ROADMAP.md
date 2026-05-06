@@ -29,10 +29,15 @@ Order of work:
   - `bear_regime_continuation` is the current best fresh-market candidate: 90d fast sweep `64/64` pass, best row `+6.15`, PF `4.800`, DD `0.398`
   - `spike_rejection` failed the fast gate (`0/48` pass)
   - `whale_print_follow` failed the partial fast gate (`0/60` pass before stop)
-  - next promotion gates for BRC1: 180d/365d standalone, portfolio additivity, then live wiring/shadow
+  - BRC1 now has live/shadow wiring pushed in commit `5ae767d`, but defaults keep it off and at zero risk
+  - next promotion gates for BRC1: 180d/365d standalone, portfolio additivity, then shadow enable, then tiny-risk live only if shadow evidence agrees
 - Server-side backtest performance is a new blocker:
   - the same BRC1 fast rows timed out at `600s` per row on the droplet while passing locally
   - do not schedule heavy server sweeps again until the cache/performance cause is found
+- Server deploy hygiene is now a blocker:
+  - `/root/by-bot` has many modified/untracked files, so ordinary `git pull` can overwrite live-local work
+  - next deploys must be either topic-by-topic with backups or after a server dirty-tree audit
+  - cleanup should archive handoff/task docs and keep secrets/runtime files out of Git
 - Claude's literal `crypto_income_live_canary_v2_1.env` is not deploy-safe as-is:
   - the "as-live merge" adds no performance over current v2 on the 60d acceptance test
   - some env flag names do not match the live bot's real sleeve keys
@@ -53,7 +58,33 @@ Order of work:
   - prompt now treats `open_trades=0` as flat/no open positions, not offline
   - weekly DeepSeek cron now loads `.env` and can use `TG_CHAT`
   - Friday live-vs-backtest comparison cron is installed
+  - Friday trade-forensics AI cron is installed
+  - Russian daily digest now explains the operational state instead of dumping cryptic English labels
   - next: safe approved-spec backtest endpoint, not arbitrary shell access
+
+## Next Operating Plan - 2026-05-06
+
+1. Stabilize process hygiene before more overnight sweeps:
+   - keep `research_process_guard.py` active on server
+   - add a small research-run registry before launching new long queues
+   - fix the server BRC1/backtest timeout cause before trusting server autoresearch again
+2. Crypto rescue promotion lane:
+   - validate `BRC1 r005` on 180d and 365d locally/server with timeout guard
+   - compare `ATT1 + BRC1`, `ATT1 + support_bounce + BRC1`, and current canary on portfolio additivity
+   - keep `spike_rejection` and `whale_print` research-only until rewritten
+3. Repair existing strategy families by phase:
+   - bear/chop: `breakdown_v1`, `inplay_breakdown`, `BRC1`
+   - bull/chop: `support_bounce`, `flat`, `ASB1`
+   - momentum/panic: `IVB1`, pump-fade, liquidity/whale only after forensic proof
+   - Elder remains research-only until it produces nonzero, additive annual evidence
+4. Web/operator:
+   - add a visible "Live / Paper / Research / Backtest" split
+   - surface enabled sleeves from runtime env + allocator, not only historical trade attribution
+   - render the Russian daily digest in web once auth/runtime plumbing is clean
+5. Alpaca:
+   - keep v38 monthly paper gate running
+   - use 2-week and 4-week Telegram checks before first real `$500`
+   - do not treat the monthly version as income; search an intraday/swing income lane separately
 
 ## Current Reality
 

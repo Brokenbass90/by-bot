@@ -76,6 +76,40 @@ Preferred cleanup:
 - They should stay out of commits unless a specific report is intentionally
   promoted into `docs/`.
 
+## Server Dirty Tree
+
+The server repo at `/root/by-bot` is also dirty. A normal `git pull` is unsafe
+until this is resolved because it could overwrite local server changes.
+
+Observed categories on 2026-05-06:
+
+- Core engine/backtest changes:
+  - `smart_pump_reversal_bot.py`
+  - `backtest/*.py`
+  - `trade_reporting.py`
+  - `tests/smoke_test.py`
+- Operator/foundation changes:
+  - `bot/deepseek_*`
+  - `bot/diagnostics.py`
+  - `bot/env_helpers.py`
+  - multiple untracked `bot/*` helper modules such as `order_link.py`,
+    `health_gate.py`, `operator_snapshot.py`, and `trade_learning_loop.py`
+- Runtime/server-specific files:
+  - `.env.bak*`, `.env.old`, config state files, tar deployment bundles
+- Research/config material:
+  - many `configs/autoresearch/*.json`
+  - canary env files
+  - Claude/Codex handoff docs in the repo root
+
+Server cleanup rule:
+
+1. Do not run a broad server `git pull` until this tree is audited.
+2. For urgent deployment, copy only specific files with backups.
+3. Move useful server-only docs into `docs/archive/` after confirming they are
+   not the only record of a task.
+4. Keep `.env*`, runtime state, generated tarballs, and account-specific config
+   out of Git.
+
 ## Current Recommendation
 
 1. Keep the dirty changes for now.
