@@ -10,25 +10,28 @@ Order of work:
 - live strategy repair third
 - new strategies and new markets only after the core is stable
 
-## Current Checkpoint - 2026-05-05
+## Current Checkpoint - 2026-05-06
 
-- Live crypto is healthy operationally but too quiet commercially:
+- Live crypto is healthy operationally but still too quiet commercially:
   - `bybot.service` active
   - heartbeat fresh
   - websocket guard inactive
   - control-plane watchdog OK
-  - active sleeves: `att1 + flat + midterm`
-  - `0` closed crypto trades over the last 5 days
-- The current server canary v2 remains narrow and should stay live until a stronger candidate clears a longer gate.
+  - active sleeves on server `.env`: `ATT1 + flat + midterm`
+  - `0` open trades and no new current-core closes after the old April `range/inplay_breakdown` losses
+- The current server canary remains narrow and should not be blindly expanded until a stronger candidate clears recent-market and annual gates.
+- The 2026-05-05 overnight rescue sweep did not produce winners because the first autoresearch row hung for ~11h:
+  - fixed the research runner with per-row timeout support
+  - fixed the new rescue sleeves' candle access against `KlineStore.c5`
+  - bounded `spike_rejection` level-window work so one row cannot consume the night
+  - started a safer 90d fast queue for `bear_regime_continuation`, `whale_print_follow`, and `spike_rejection`
 - Claude's literal `crypto_income_live_canary_v2_1.env` is not deploy-safe as-is:
   - the "as-live merge" adds no performance over current v2 on the 60d acceptance test
   - some env flag names do not match the live bot's real sleeve keys
   - enabling regime overlays blindly can re-open unvalidated v7 sleeves
-- The intended v2.1 idea is promising but not yet promoted:
-  - 60d intended set: `+7.70`, PF `1.431`, DD `3.592`
-  - current v2 baseline on the same server window: `+1.93`, PF `1.109`, DD `5.779`
-  - attribution: `ATT1` carries most of the edge; `support_bounce` is small-positive; `IVB1` is barely additive; `flat/midterm` hurt in that window
-  - a 180d acceptance queue is running after current server research completes
+- The intended v2.1/v2.2 rescue idea is not promoted:
+  - 180d `ATT1 + support_bounce` looked useful, but fresh 60d failed
+  - this means the missing sleeves must target the current phase directly: short continuation, whale/volume print, spike rejection, repaired pump-fade/breakdown/range
 - Alpaca v38 remains the first real-money paper candidate, but it is a slow compounder rather than an income engine:
   - historical 24-month backtest shown in web is positive
   - current paper holds monthly `UNH + GOOGL`; `AMD` is earnings-blocked
@@ -37,7 +40,7 @@ Order of work:
 - Web truth has improved but the product still needs a redesign:
   - active live sleeves are now shown separately from historical closed trade PnL
   - the old `range/inplay_breakdown` losses are historical, not the current active live set
-  - next web slice should separate `Live`, `Paper Alpaca`, `Research`, and `Backtest` evidence more clearly
+  - next web slice should separate `Live`, `Paper Alpaca`, `Research`, and `Backtest` evidence more clearly and show enabled sleeves from `.env`/allocator, not only trade attribution
 - AI operator is being moved from chat toy toward supervised operator:
   - prompt now treats `open_trades=0` as flat/no open positions, not offline
   - weekly DeepSeek cron now loads `.env` and can use `TG_CHAT`
