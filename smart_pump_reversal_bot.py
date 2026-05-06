@@ -2856,6 +2856,7 @@ def _strategy_flag_pairs() -> list[tuple[str, bool]]:
         ("flat", ENABLE_FLAT_TRADING),
         ("breakdown", ENABLE_BREAKDOWN_TRADING),
         ("ivb1", ENABLE_IVB1_TRADING),
+        ("brc1", ENABLE_BRC1_TRADING),
         ("elder", ENABLE_ELDER_TRADING),
         ("ts132", ENABLE_TS132_TRADING),
     ]
@@ -2984,6 +2985,14 @@ def _status_full_text() -> str:
     if ENABLE_IVB1_TRADING:
         ivb1_symbols = sorted(_parse_symbol_csv(os.getenv('IVB1_SYMBOL_ALLOWLIST', '')))
         lines.append(f"impulse-universe: {len(ivb1_symbols)} ({_fmt_list_compact(ivb1_symbols, 8) if ivb1_symbols else 'dynamic'})")
+    if ENABLE_BRC1_TRADING:
+        brc1_symbols = sorted(_parse_symbol_csv(os.getenv("BRC1_SYMBOL_ALLOWLIST", "")))
+        risk_txt = f"{BRC1_RISK_MULT:.2f}"
+        mode_txt = "shadow" if BRC1_RISK_MULT <= 0 else "live"
+        lines.append(
+            f"brc1-universe: {len(brc1_symbols)} ({_fmt_list_compact(brc1_symbols, 8) if brc1_symbols else 'dynamic'}) "
+            f"| mode={mode_txt} | risk×={risk_txt}"
+        )
     if ENABLE_ELDER_TRADING:
         elder_symbols = sorted(_parse_symbol_csv(os.getenv("ETS2_SYMBOL_ALLOWLIST", "")))
         lines.append(f"elder-universe: {len(elder_symbols)} ({_fmt_list_compact(elder_symbols, 8) if elder_symbols else 'dynamic'})")
@@ -3009,6 +3018,8 @@ def _status_full_text() -> str:
         f"sloped_try={int(_diag_get_int('sloped_try'))} | flat_try={int(_diag_get_int('flat_try'))} | "
         f"breakdown_try={int(_diag_get_int('breakdown_try'))} | "
         f"ivb1_try={int(_diag_get_int('ivb1_try'))} entry={int(_diag_get_int('ivb1_entry'))} | "
+        f"brc1_try={int(_diag_get_int('brc1_try'))} signal={int(_diag_get_int('brc1_signal'))} "
+        f"shadow={int(_diag_get_int('brc1_shadow_signal'))} entry={int(_diag_get_int('brc1_entry'))} | "
         f"elder_try={int(_diag_get_int('elder_try'))} entry={int(_diag_get_int('elder_entry'))}"
     )
     if WS_SELF_HEAL_ENABLE:

@@ -34,8 +34,16 @@ Order of work:
     - `ATT1+support_bounce+BRC1` improves 180d but worsens 365d DD/red months, so support_bounce is not promoted from this pass
   - `spike_rejection` failed the fast gate (`0/48` pass)
   - `whale_print_follow` failed the partial fast gate (`0/60` pass before stop)
-  - BRC1 now has live/shadow wiring pushed in commit `5ae767d`, but defaults keep it off and at zero risk
-  - next promotion gates for BRC1: shadow only first; real-risk live needs either stronger long-history filters or a phase-specific allocator rule
+  - BRC1 now has live/shadow wiring pushed and deployed topic-by-topic to the server with `BRC1_RISK_MULT=0.0`
+  - BRC1 is explicitly a zero-risk shadow sleeve for bear continuation telemetry, not a real-risk promotion yet
+  - next promotion gates for BRC1: live shadow signals first; real-risk live needs either stronger long-history filters or a phase-specific allocator rule
+- Final live-candidate sanity check before risk changes:
+  - current live core `ATT1+flat+midterm` remains the better annual base: `365d +52.99`, PF `1.376`, DD `5.30`, `521` trades, `1` red month
+  - tempting recent-market `ATT1+BRC1` is better on `180d` but weaker annually: `365d +48.78`, PF `1.387`, DD `7.03`, `4` red months
+  - decision: keep current annual core live; add BRC1 as shadow only; do not replace the core because of one pretty 180d chart
+- Foundation/choking question is now under a targeted layer audit:
+  - compare `fixed_all_regimes` vs `full_stack` for `att1`, `flat_arf1`, `breakdown_v1`, and `elder_v3`
+  - if full-stack retention is poor, relax the specific layer shown by the audit rather than weakening all safety logic at once
 - Server-side backtest performance is a new blocker:
   - the same BRC1 fast rows timed out at `600s` per row on the droplet while passing locally
   - do not schedule heavy server sweeps again until the cache/performance cause is found
@@ -74,14 +82,15 @@ Order of work:
    - add a small research-run registry before launching new long queues
    - fix the server BRC1/backtest timeout cause before trusting server autoresearch again
 2. Crypto rescue promotion lane:
-   - validate `BRC1 r005` on 180d and 365d locally/server with timeout guard
-   - compare `ATT1 + BRC1`, `ATT1 + support_bounce + BRC1`, and current canary on portfolio additivity
+   - keep current `ATT1+flat+midterm` as the real-risk annual core
+   - run BRC1 shadow and collect signal/no-signal counters by regime
+   - only lift BRC1 above `risk×0` after shadow evidence plus phase-specific control-plane rule
    - keep `spike_rejection` and `whale_print` research-only until rewritten
 3. Repair existing strategy families by phase:
    - bear/chop: `breakdown_v1`, `inplay_breakdown`, `BRC1`
    - bull/chop: `support_bounce`, `flat`, `ASB1`
    - momentum/panic: `IVB1`, pump-fade, liquidity/whale only after forensic proof
-   - Elder remains research-only until it produces nonzero, additive annual evidence
+   - Elder remains research-only until it produces nonzero, additive annual evidence; external Triple Screen screenshots prove the concept can work, not that our current implementation is correct
 4. Web/operator:
    - add a visible "Live / Paper / Research / Backtest" split
    - surface enabled sleeves from runtime env + allocator, not only historical trade attribution
