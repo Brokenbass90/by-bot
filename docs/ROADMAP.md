@@ -66,10 +66,14 @@ Order of work:
   - current paper holds monthly `UNH + GOOGL`; `AMD` is earnings-blocked
   - intraday v1 paper also has positions on the shared paper account
   - before real `$500`, require the 2-week paper check and broker-side stop/protection sanity
+  - product decision: keep v38 selective and protected; do not loosen it blindly to chase frequency
+  - income decision: build a separate active Alpaca income lane (`intraday_v3`/strict swing) and require broker-side stop coverage before any real-money pilot
 - Web truth has improved but the product still needs a redesign:
   - active live sleeves are now shown separately from historical closed trade PnL
   - the old `range/inplay_breakdown` losses are historical, not the current active live set
   - next web slice should separate `Live`, `Paper Alpaca`, `Research`, and `Backtest` evidence more clearly and show enabled sleeves from `.env`/allocator, not only trade attribution
+  - new web slice in progress: `Setup Scanner` should show level/channel/compression candidates with symbol, side, strategy, invalidation, router profiles, and runtime risk
+  - AI operator should use scanner cards as explainable context/ranking input, not as permission to bypass annual/OOS/additivity gates
 - AI operator is being moved from chat toy toward supervised operator:
   - prompt now treats `open_trades=0` as flat/no open positions, not offline
   - weekly DeepSeek cron now loads `.env` and can use `TG_CHAT`

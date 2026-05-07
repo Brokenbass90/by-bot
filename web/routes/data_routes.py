@@ -91,6 +91,223 @@ def _file_age_sec(p: Path) -> Optional[int]:
         return None
 
 
+def _as_float(value: Any, default: float = 0.0) -> float:
+    try:
+        out = float(value)
+    except (TypeError, ValueError):
+        return default
+    if not math.isfinite(out):
+        return default
+    return out
+
+
+def _profile_hits_by_symbol(router_state: Dict[str, Any]) -> Dict[str, List[Dict[str, Any]]]:
+    hits: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+    for env_key, profile in (router_state.get("profiles") or {}).items():
+        label = str(env_key or "").replace("_SYMBOL_ALLOWLIST", "")
+        score_by_symbol: Dict[str, Dict[str, Any]] = {}
+        geometry = profile.get("geometry") if isinstance(profile, dict) else None
+        for row in (geometry or {}).get("symbol_scores") or []:
+            sym = str(row.get("symbol") or "").strip()
+            if sym:
+                score_by_symbol[sym] = row
+        for sym in profile.get("symbols") or []:
+            symbol = str(sym or "").strip()
+            if not symbol:
+                continue
+            score_row = score_by_symbol.get(symbol, {})
+            hits[symbol].append({
+                "profile": label,
+                "score": round(_as_float(score_row.get("score"), 0.0), 3),
+                "reasons": list(score_row.get("reasons") or [])[:4],
+            })
+    for symbol in hits:
+        hits[symbol].sort(key=lambda x: x.get("score", 0.0), reverse=True)
+    return hits
+
+
+def _allocator_sleeve_map(allocator_state: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    sleeves = allocator_state.get("sleeves") or {}
+    if isinstance(sleeves, list):
+        return {str(s.get("name") or ""): s for s in sleeves if isinstance(s, dict)}
+    if isinstance(sleeves, dict):
+        return {str(k): v for k, v in sleeves.items() if isinstance(v, dict)}
+    return {}
+
+
+def _nearest_level(snapshot: Dict[str, Any], side: str) -> Optional[Dict[str, Any]]:
+    levels = (snapshot.get("nearest_levels") or {}).get(side) or []
+    return levels[0] if levels else None
+
+
+def _dist_atr(price: float, level_price: float, atr: float) -> Optional[float]:
+    if price <= 0 or level_price <= 0 or atr <= 0:
+        return None
+    return abs(level_price - price) / atr
+
+
+def _setup_card(
+    *,
+    symbol: str,
+    interval: str,
+    setup_type: str,
+    side: str,
+    strategy: str,
+    score: float,
+    price: float,
+    level: Optional[Dict[str, Any]],
+    atr: float,
+    invalidation: Optional[float],
+    reasons: List[str],
+    router_hits: List[Dict[str, Any]],
+    sleeve_map: Dict[str, Dict[str, Any]],
+) -> Dict[str, Any]:
+    level_price = _as_float((level or {}).get("price"), 0.0)
+    level_dist = _dist_atr(price, level_price, atr) if level_price else None
+    sleeve = sleeve_map.get(strategy) or {}
+    runtime_risk = _as_float(
+        sleeve.get("final_risk_mult", sleeve.get("runtime_final_risk_mult", 0.0)),
+        0.0,
+    )
+    return {
+        "symbol": symbol,
+        "interval": interval,
+        "setup_type": setup_type,
+        "side": side,
+        "strategy": strategy,
+        "score": round(score, 2),
+        "price": round(price, 8),
+        "level_price": round(level_price, 8) if level_price else None,
+        "level_touches": int(_as_float((level or {}).get("touches"), 0.0)),
+        "level_side": (level or {}).get("side_bias"),
+        "distance_atr": round(level_dist, 2) if level_dist is not None else None,
+        "invalidation": round(invalidation, 8) if invalidation else None,
+        "reasons": [r for r in reasons if r][:6],
+        "router_profiles": router_hits[:4],
+        "runtime": {
+            "enabled": bool(sleeve.get("enabled", sleeve.get("runtime_enabled", False))),
+            "risk_mult": round(runtime_risk, 3),
+            "health": str(sleeve.get("health_status") or sleeve.get("runtime_health") or "unknown"),
+        },
+    }
+
+
+def _build_setup_cards(
+    geometry_state: Dict[str, Any],
+    router_state: Dict[str, Any],
+    allocator_state: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    profile_hits = _profile_hits_by_symbol(router_state)
+    sleeve_map = _allocator_sleeve_map(allocator_state)
+    cards: List[Dict[str, Any]] = []
+
+    for symbol, intervals in (geometry_state.get("symbols") or {}).items():
+        if not isinstance(intervals, dict):
+            continue
+        for interval, snapshot in intervals.items():
+            if not isinstance(snapshot, dict) or snapshot.get("status") != "ok":
+                continue
+            price = _as_float(snapshot.get("current_price"), 0.0)
+            atr = _as_float(snapshot.get("atr"), 0.0)
+            if price <= 0 or atr <= 0:
+                continue
+            flags = snapshot.get("flags") or {}
+            channel = snapshot.get("channel") or {}
+            compression = snapshot.get("compression") or {}
+            trend = str(flags.get("trend_label") or "")
+            level_context = str(flags.get("level_context") or "")
+            channel_pos = _as_float(channel.get("position"), 0.5)
+            channel_r2 = _as_float(channel.get("r2"), 0.0)
+            is_compressed = bool(compression.get("is_compressed") or flags.get("is_compressed"))
+            compression_ratio = _as_float(compression.get("compression_ratio"), 1.0)
+            above = _nearest_level(snapshot, "above")
+            below = _nearest_level(snapshot, "below")
+            above_dist = _dist_atr(price, _as_float((above or {}).get("price"), 0.0), atr) if above else None
+            below_dist = _dist_atr(price, _as_float((below or {}).get("price"), 0.0), atr) if below else None
+            router_hits = profile_hits.get(str(symbol), [])
+            common_reasons = [
+                trend.replace("_", " ") if trend else "",
+                level_context.replace("_", " ") if level_context else "",
+                "compressed" if is_compressed else "",
+                f"channel r2 {channel_r2:.2f}" if channel_r2 else "",
+            ]
+
+            if above and above_dist is not None and above_dist <= 0.9:
+                touches = _as_float(above.get("touches"), 0.0)
+                score = 62 + touches * 3 + max(0, 0.9 - above_dist) * 18 + max(0, channel_pos - 0.65) * 18
+                cards.append(_setup_card(
+                    symbol=str(symbol), interval=str(interval), setup_type="resistance fade",
+                    side="SHORT", strategy="flat", score=score, price=price, level=above, atr=atr,
+                    invalidation=_as_float(above.get("price"), price) + atr * 0.35,
+                    reasons=common_reasons + ["near resistance", "candidate for ARF1/flat"],
+                    router_hits=router_hits, sleeve_map=sleeve_map,
+                ))
+                if is_compressed:
+                    breakout_score = 58 + touches * 2 + max(0, 0.9 - above_dist) * 16 + (1 - compression_ratio) * 18
+                    cards.append(_setup_card(
+                        symbol=str(symbol), interval=str(interval), setup_type="breakout watch",
+                        side="LONG", strategy="breakout", score=breakout_score, price=price, level=above, atr=atr,
+                        invalidation=_as_float(above.get("price"), price) - atr * 0.45,
+                        reasons=common_reasons + ["compressed below resistance", "wait for breakout + retest"],
+                        router_hits=router_hits, sleeve_map=sleeve_map,
+                    ))
+
+            if below and below_dist is not None and below_dist <= 0.9:
+                touches = _as_float(below.get("touches"), 0.0)
+                score = 62 + touches * 3 + max(0, 0.9 - below_dist) * 18 + max(0, 0.35 - channel_pos) * 18
+                cards.append(_setup_card(
+                    symbol=str(symbol), interval=str(interval), setup_type="support bounce",
+                    side="LONG", strategy="asb1", score=score, price=price, level=below, atr=atr,
+                    invalidation=_as_float(below.get("price"), price) - atr * 0.35,
+                    reasons=common_reasons + ["near support", "candidate for bounce/ASB1"],
+                    router_hits=router_hits, sleeve_map=sleeve_map,
+                ))
+                if is_compressed or trend == "trend_down":
+                    breakdown_score = 58 + touches * 2 + max(0, 0.9 - below_dist) * 16 + (1 - compression_ratio) * 18
+                    cards.append(_setup_card(
+                        symbol=str(symbol), interval=str(interval), setup_type="breakdown watch",
+                        side="SHORT", strategy="breakdown", score=breakdown_score, price=price, level=below, atr=atr,
+                        invalidation=_as_float(below.get("price"), price) + atr * 0.45,
+                        reasons=common_reasons + ["support pressure", "wait for breakdown + retest"],
+                        router_hits=router_hits, sleeve_map=sleeve_map,
+                    ))
+
+            if trend == "trend_down" and channel_pos >= 0.68:
+                ref_level = above or {"price": channel.get("upper"), "touches": 0, "side_bias": "channel"}
+                score = 60 + channel_r2 * 18 + max(0, channel_pos - 0.68) * 25
+                cards.append(_setup_card(
+                    symbol=str(symbol), interval=str(interval), setup_type="bear continuation",
+                    side="SHORT", strategy="brc1", score=score, price=price, level=ref_level, atr=atr,
+                    invalidation=price + atr * 1.2,
+                    reasons=common_reasons + ["down-channel upper half", "BRC1 shadow candidate"],
+                    router_hits=router_hits, sleeve_map=sleeve_map,
+                ))
+
+            if trend == "trend_up" and channel_pos <= 0.32:
+                ref_level = below or {"price": channel.get("lower"), "touches": 0, "side_bias": "channel"}
+                score = 60 + channel_r2 * 18 + max(0, 0.32 - channel_pos) * 25
+                cards.append(_setup_card(
+                    symbol=str(symbol), interval=str(interval), setup_type="trend pullback",
+                    side="LONG", strategy="att1", score=score, price=price, level=ref_level, atr=atr,
+                    invalidation=price - atr * 1.2,
+                    reasons=common_reasons + ["up-channel pullback", "ATT1/midterm candidate"],
+                    router_hits=router_hits, sleeve_map=sleeve_map,
+                ))
+
+            if is_compressed and (above_dist is None or above_dist > 0.9) and (below_dist is None or below_dist > 0.9):
+                score = 52 + (1 - compression_ratio) * 22 + channel_r2 * 8
+                cards.append(_setup_card(
+                    symbol=str(symbol), interval=str(interval), setup_type="volatility squeeze",
+                    side="BOTH", strategy="ivb1", score=score, price=price, level=None, atr=atr,
+                    invalidation=None,
+                    reasons=common_reasons + ["compressed away from nearest level", "needs trigger candle"],
+                    router_hits=router_hits, sleeve_map=sleeve_map,
+                ))
+
+    cards.sort(key=lambda x: x.get("score", 0.0), reverse=True)
+    return cards[:80]
+
+
 def _allocator_human_summary(state: Dict[str, Any]) -> Dict[str, Any]:
     status = str(state.get("status") or "unknown").strip().lower()
     degraded_kind = str(state.get("degraded_kind") or "").strip().lower()
@@ -1078,4 +1295,51 @@ async def get_strategy_stats(
             "macro_state":     (regime_state or {}).get("macro", {}).get("state") if regime_state else None,
             "alt_bias":        (regime_state or {}).get("btc_dominance", {}).get("alt_bias") if regime_state else None,
         } if regime_state else None,
+    }
+
+
+@router.get("/setup-scanner")
+async def get_setup_scanner(
+    _: str = Depends(require_auth),
+):
+    """Geometry/router driven setup candidates for the operator dashboard."""
+    geometry_path = _rt("geometry", "geometry_state.json")
+    router_path = _rt("router", "symbol_router_state.json")
+    allocator_path = _rt("control_plane", "portfolio_allocator_state.json")
+
+    geometry_state = _json(geometry_path) or {}
+    router_state = _json(router_path) or {}
+    allocator_state = _json(allocator_path) or {}
+    cards = _build_setup_cards(geometry_state, router_state, allocator_state) if geometry_state else []
+
+    active_sleeves = []
+    for name, sleeve in _allocator_sleeve_map(allocator_state).items():
+        if bool(sleeve.get("enabled", sleeve.get("runtime_enabled", False))) or _as_float(sleeve.get("final_risk_mult"), 0.0) > 0:
+            active_sleeves.append({
+                "name": name,
+                "risk_mult": round(_as_float(sleeve.get("final_risk_mult", sleeve.get("runtime_final_risk_mult", 0.0)), 0.0), 3),
+                "health": str(sleeve.get("health_status") or sleeve.get("runtime_health") or "unknown"),
+                "symbols": list(sleeve.get("symbols") or [])[:12],
+            })
+    active_sleeves.sort(key=lambda x: x.get("risk_mult", 0.0), reverse=True)
+
+    return {
+        "generated_at_utc": geometry_state.get("generated_at_utc"),
+        "geometry_age_sec": _file_age_sec(geometry_path),
+        "router_age_sec": _file_age_sec(router_path),
+        "allocator_age_sec": _file_age_sec(allocator_path),
+        "symbols_analyzed": geometry_state.get("symbols_analyzed") or len(geometry_state.get("symbols") or {}),
+        "snapshots_built": geometry_state.get("snapshots_built"),
+        "intervals": geometry_state.get("intervals") or [],
+        "regime": router_state.get("regime") or allocator_state.get("regime"),
+        "confidence": router_state.get("confidence"),
+        "allocator_status": allocator_state.get("status"),
+        "safe_mode": bool(allocator_state.get("safe_mode")),
+        "active_sleeves": active_sleeves,
+        "cards": cards,
+        "notes": [
+            "Scanner cards are candidates, not trade approvals.",
+            "Promotion still requires annual/OOS/additivity tests.",
+            "AI should rank and explain these setups, not bypass risk gates.",
+        ],
     }

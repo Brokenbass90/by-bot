@@ -1680,6 +1680,117 @@ function StrategyAnalyticsPage() {
   );
 }
 
+// ── Setup scanner page ─────────────────────────────────────────────────────
+
+function SetupScannerPage() {
+  const { data, loading, refresh } = useFetch('/api/setup-scanner', [], 60000);
+  if (loading) return React.createElement(Loader);
+  if (!data) return React.createElement('div', { className: 'empty' }, 'Нет данных сканера');
+
+  const ageLabel = sec => {
+    if (sec == null) return '—';
+    if (sec < 90) return `${sec}s`;
+    if (sec < 3600) return `${Math.round(sec / 60)}m`;
+    return `${(sec / 3600).toFixed(1)}h`;
+  };
+  const sideBadge = side => {
+    const s = String(side || '').toLowerCase();
+    if (s === 'long') return 'badge-long';
+    if (s === 'short') return 'badge-short';
+    return 'badge-warn';
+  };
+  const cards = data.cards || [];
+  const active = data.active_sleeves || [];
+
+  return React.createElement('div', null,
+    React.createElement('div', { className: 'page-hdr' },
+      React.createElement('div', null,
+        React.createElement('div', { className: 'section-title' }, 'Setup Scanner'),
+        React.createElement('div', { className: 'section-sub' },
+          'Геометрия уровней, наклонок и сжатия. Это кандидаты, не разрешение на сделку.')
+      ),
+      React.createElement('button', { className: 'refresh-btn', onClick: refresh }, '↺ Refresh')
+    ),
+
+    React.createElement('div', { className: 'grid4', style: { marginBottom: '14px' } },
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Режим'),
+        React.createElement('div', { className: 'metric-value', style: { color: 'var(--blue)' } }, regimeLabel(data.regime)),
+        React.createElement('div', { className: 'metric-sub' }, `conf ${data.confidence ?? '—'}`)
+      ),
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Сетапы'),
+        React.createElement('div', { className: 'metric-value' }, cards.length),
+        React.createElement('div', { className: 'metric-sub' }, `${data.symbols_analyzed || 0} монет · ${data.snapshots_built || 0} снимков`)
+      ),
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Данные'),
+        React.createElement('div', { className: 'metric-value', style: { color: (data.geometry_age_sec || 999999) < 7200 ? 'var(--green)' : 'var(--yellow)' } },
+          ageLabel(data.geometry_age_sec)),
+        React.createElement('div', { className: 'metric-sub' }, `router ${ageLabel(data.router_age_sec)}`)
+      ),
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Активные рукава'),
+        React.createElement('div', { className: 'metric-value' }, active.length),
+        React.createElement('div', { className: 'metric-sub' }, data.safe_mode ? 'safe mode' : (data.allocator_status || 'allocator'))
+      )
+    ),
+
+    active.length > 0 && React.createElement('div', { className: 'card', style: { marginBottom: '14px' } },
+      React.createElement('div', { className: 'card-title' }, 'Что реально в рынке сейчас'),
+      React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '8px' } },
+        active.map(s => React.createElement('span', { key: s.name, className: 'badge badge-ok', title: `${s.health} · ${(s.symbols || []).join(', ')}` },
+          `${s.name} ×${(s.risk_mult || 0).toFixed(2)}`))
+      )
+    ),
+
+    React.createElement('div', { className: 'card', style: { marginBottom: '14px' } },
+      React.createElement('div', { className: 'card-title' }, 'Как читать'),
+      React.createElement('div', { style: { color: 'var(--text2)', lineHeight: 1.55, fontSize: '13px' } },
+        'Сканер показывает, где бот видит уровень, наклонку, сжатие или фазовый сетап. ',
+        'AI может ранжировать и объяснять эти карточки, но включение в live всё равно идёт через годовой/OOS/additivity тест.')
+    ),
+
+    cards.length === 0
+      ? React.createElement('div', { className: 'empty' }, 'Сканер пока не нашёл сетапов или geometry state устарел.')
+      : React.createElement('div', { className: 'strat-grid', style: { gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))' } },
+        cards.map((c, idx) => React.createElement('div', { className: 'card', key: `${c.symbol}-${c.interval}-${c.setup_type}-${idx}`, style: { minHeight: '230px' } },
+          React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start', marginBottom: '12px' } },
+            React.createElement('div', null,
+              React.createElement('div', { style: { fontSize: '20px', fontWeight: 700 } }, c.symbol),
+              React.createElement('div', { className: 'section-sub' }, `${c.interval}m · score ${Number(c.score || 0).toFixed(1)}`)
+            ),
+            React.createElement('span', { className: `badge ${sideBadge(c.side)}` }, c.side || 'WATCH')
+          ),
+          React.createElement('div', { className: 'card-title', style: { marginBottom: '8px' } }, c.setup_type),
+          React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 14px', fontSize: '13px' } },
+            React.createElement('div', { className: 'dim' }, 'Стратегия'),
+            React.createElement('div', { style: { textAlign: 'right', color: 'var(--blue)', fontWeight: 600 } }, c.strategy),
+            React.createElement('div', { className: 'dim' }, 'Цена'),
+            React.createElement('div', { style: { textAlign: 'right' } }, c.price ?? '—'),
+            React.createElement('div', { className: 'dim' }, 'Уровень'),
+            React.createElement('div', { style: { textAlign: 'right' } }, c.level_price ? `${c.level_price} (${c.level_touches || 0} кас.)` : '—'),
+            React.createElement('div', { className: 'dim' }, 'Дистанция'),
+            React.createElement('div', { style: { textAlign: 'right' } }, c.distance_atr != null ? `${c.distance_atr} ATR` : '—'),
+            React.createElement('div', { className: 'dim' }, 'Инвалидация'),
+            React.createElement('div', { style: { textAlign: 'right' } }, c.invalidation ?? '—'),
+            React.createElement('div', { className: 'dim' }, 'Runtime'),
+            React.createElement('div', { style: { textAlign: 'right' } },
+              c.runtime && c.runtime.enabled
+                ? React.createElement('span', { className: 'badge badge-ok' }, `LIVE ×${Number(c.runtime.risk_mult || 0).toFixed(2)}`)
+                : React.createElement('span', { className: 'badge badge-off' }, c.runtime?.health || 'watch'))
+          ),
+          React.createElement('div', { style: { marginTop: '12px', color: 'var(--text2)', fontSize: '12px', lineHeight: 1.45 } },
+            (c.reasons || []).join(' · ') || 'no reasons'),
+          (c.router_profiles || []).length > 0 && React.createElement('div', { style: { marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '6px' } },
+            c.router_profiles.map(p => React.createElement('span', { key: `${c.symbol}-${c.setup_type}-${p.profile}`, className: 'badge badge-warn', title: (p.reasons || []).join(', ') },
+              p.profile))
+          )
+        ))
+      )
+  );
+}
+
 // ── Journal page ───────────────────────────────────────────────────────────
 
 function JournalPage() {
@@ -2092,11 +2203,12 @@ const NAV_GROUPS = [
     pages: [
       { id: 'dashboard',  label: 'Dashboard',  icon: '◈' },
       { id: 'pnl',        label: 'P&L Journal', icon: '📅' },
-      { id: 'trades',     label: 'Trades',      icon: '⇄' },
-      { id: 'strategies', label: 'Strategies',  icon: '◎' },
-      { id: 'analytics',  label: 'Analytics',   icon: '⚡' },
-    ]
-  },
+	      { id: 'trades',     label: 'Trades',      icon: '⇄' },
+	      { id: 'strategies', label: 'Strategies',  icon: '◎' },
+	      { id: 'analytics',  label: 'Analytics',   icon: '⚡' },
+	      { id: 'setups',     label: 'Setups',      icon: '⌁' },
+	    ]
+	  },
   {
     label: 'Systems',
     pages: [
@@ -2150,9 +2262,10 @@ function App() {
     dashboard:  Dashboard,
     pnl:        PnLJournal,
     trades:     Trades,
-    strategies: StrategiesPage,
-    analytics:  StrategyAnalyticsPage,
-    alpaca:     AlpacaPage,
+	    strategies: StrategiesPage,
+	    analytics:  StrategyAnalyticsPage,
+	    setups:     SetupScannerPage,
+	    alpaca:     AlpacaPage,
     regime:     RegimePage,
     journal:    JournalPage,
     ai:         AIChatPage,
