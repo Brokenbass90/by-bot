@@ -1187,6 +1187,9 @@ BREAKOUT_SKIP_DIGEST_ENABLE = _env_bool("BREAKOUT_SKIP_DIGEST_ENABLE", True)
 BREAKOUT_SKIP_DIGEST_EVERY_SEC = max(300, int(os.getenv("BREAKOUT_SKIP_DIGEST_EVERY_SEC", "14400") or 14400))
 BREAKOUT_SKIP_DIGEST_TOP_N = max(1, int(os.getenv("BREAKOUT_SKIP_DIGEST_TOP_N", "8") or 8))
 BREAKOUT_SKIP_TG_IMMEDIATE = _env_bool("BREAKOUT_SKIP_TG_IMMEDIATE", False)
+BREAKOUT_NEWS_BLACKOUT_TG_EVERY_SEC = max(
+    300, int(os.getenv("BREAKOUT_NEWS_BLACKOUT_TG_EVERY_SEC", "3600") or 3600)
+)
 _BREAKOUT_SKIP_DIGEST_COUNTS: dict[tuple[str, str], int] = {}
 _BREAKOUT_SKIP_DIGEST_LAST_SENT_TS = int(time.time())
 UNTRACKED_EXCHANGE_SCAN_SEC = max(5, int(os.getenv("UNTRACKED_EXCHANGE_SCAN_SEC", "15") or 15))
@@ -8214,7 +8217,15 @@ async def try_breakout_entry_async(symbol: str, price: float):
             )
             if blocked:
                 _diag_inc("breakout_skip_news")
-                tg_trade(f"📰 BREAKOUT SKIP {symbol}: news blackout — {reason}")
+                tg_trade_throttled(
+                    f"breakout:news_blackout:{reason}",
+                    (
+                        f"📰 BREAKOUT PAUSED: news blackout — {reason}\n"
+                        f"First skipped symbol: {symbol}\n"
+                        f"Similar blackout skips muted for {BREAKOUT_NEWS_BLACKOUT_TG_EVERY_SEC // 60}m."
+                    ),
+                    BREAKOUT_NEWS_BLACKOUT_TG_EVERY_SEC,
+                )
                 return
         except Exception as _nf_err:
             log_error(f"news_filter error: {_nf_err}")
