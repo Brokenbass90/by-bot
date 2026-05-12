@@ -5,6 +5,34 @@
 
 ---
 
+## 2026-05-12 | Codex (live env sync + support-bounce wiring + research queue repair)
+
+**Done:**
+
+- Verified live server truth after the key rotation/restart: `bybot.service` is alive, Bybit auth is OK, `DRY_RUN=false`, heartbeat is fresh, and no safe-mode hard block is active.
+- Fixed a real live wiring mismatch: bull regime overlays and `build_regime_state.py` now emit `ENABLE_BOUNCE1_TRADING=1`, the flag actually read by the live bot for `alt_support_bounce_v1`.
+- Rebuilt server `regime`, `symbol_router`, and `portfolio_allocator` state and restarted the bot.
+- Applied the live control-plane env patch on local/server `.env` so the router uses `runtime/control_plane/router_trades_baseline.csv` and rejects symbols by evidence instead of acting like a hand-picked list.
+- Fixed `deepseek_research_gate.py` so approved autoresearch specs remain approved across repeated queue checks.
+- Increased research guard timeouts to avoid killing long but healthy sweeps too early.
+- Added/activated an approved server research queue for support-bounce, breakdown, inplay, pump-fade, Elder, BRC1, spike rejection, whale print, and liquidity sweep research.
+- Reconciled `strategy_health.json` and promoted `alt_support_bounce_v1` to allocator `OK` based on positive 180d additivity evidence.
+- Wrote the compact handoff/status note in [CODEX_STATUS_20260512.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/CODEX_STATUS_20260512.md).
+
+**Key findings:**
+
+- Current `DEGRADED` allocator state is not the same as a trading block. `safe_mode=false` and `hard_block_new_entries=false`; the degradation is a risk-quality warning caused by enabled `WATCH` sleeves plus symbol overlap.
+- Core OK live sleeves are now `att1`, `bounce1`, `flat`, and `midterm`. Experimental `WATCH` sleeves still need annual/OOS/additivity proof.
+- Alpaca v38 monthly paper is active with broker-side simple stops on `AMD/UNH/GOOGL`; app-managed trailing is enabled, but native broker-side trailing execution is still a separate future task.
+- Alpaca intraday income is blocked by stale paper positions occupying capacity and needs cleanup/reconciliation before it can be judged.
+
+**Next:**
+
+- Commit/push only the safe scoped fixes; leave `.env`, secrets, and unreviewed Claude/user tails out of the commit.
+- Clean Alpaca intraday paper state and stop coverage before treating it as an income lane.
+- Decide whether to keep reduced-risk `WATCH` sleeves scanning for activity or disable them for a clean OK-only allocator state.
+- Let server research queue finish and promote only annual/additive winners.
+
 ## 2026-05-05 | Codex (return triage - server truth + Claude review)
 
 **Done:**

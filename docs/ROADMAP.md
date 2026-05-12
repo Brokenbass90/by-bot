@@ -10,7 +10,44 @@ Order of work:
 - live strategy repair third
 - new strategies and new markets only after the core is stable
 
-## Current Checkpoint - 2026-05-06
+## Current Checkpoint - 2026-05-12
+
+- Live server was rechecked after the Bybit key rotation:
+  - `bybot.service` is running
+  - heartbeat is fresh
+  - Bybit auth is OK
+  - `DRY_RUN=false`
+  - `open_trades=0`
+  - no hard safe-mode block is active
+- Current crypto issue is not "bot is offline"; the bot is scanning but has no live entries yet.
+- Fixed a live flag mismatch that could keep support-bounce from really participating:
+  - bull overlays now set `ENABLE_BOUNCE1_TRADING=1`
+  - `build_regime_state.py` emits `ENABLE_BOUNCE1_TRADING`
+  - legacy `ENABLE_BOUNCE_TRADING` is kept only as compatibility/documentation
+- Router evidence gating is restored on the live env:
+  - `ROUTER_TRADES_CSV=runtime/control_plane/router_trades_baseline.csv`
+  - router now rejects weak symbols by backtest-evidence gate before they reach live sleeves
+  - this is the dynamic selection path, not just manual symbol lists
+- Allocator truth after rebuild:
+  - core OK sleeves: `att1`, `bounce1`, `flat`, `midterm`
+  - watch/research sleeves: `breakout`, `impulse/ivb1`, `asb1`, `sloped`, `asm1`
+  - `degraded` remains because watch sleeves are active and symbol overlap is high
+  - `degraded` is currently a risk haircut/warning, not a hard stop
+- Product decision for live crypto:
+  - keep `att1 + bounce1 + flat + midterm` as the first real OK core
+  - allow watch sleeves only at reduced risk if the priority is activity
+  - if the priority is a clean allocator, disable watch sleeves until proof is complete
+- Research process is now server-owned again:
+  - fixed approved-spec cache bug in DeepSeek research gate
+  - raised process-guard limits so long sweeps are not killed too early
+  - active approved queue: support-bounce, breakdown, inplay, pump-fade, Elder, BRC1, spike rejection, whale print, liquidity sweep
+  - winners still cannot auto-deploy; they must pass annual/OOS/additivity gates
+- Alpaca:
+  - v38 monthly paper is active and protected by broker-side simple stops on current monthly positions
+  - app-managed trailing exists, but native broker-side trailing stop execution is still not implemented
+  - intraday income lane is blocked by stale paper positions and needs reconciliation before real-money consideration
+
+## Superseded Checkpoint - 2026-05-06
 
 - Live crypto is healthy operationally but still too quiet commercially:
   - `bybot.service` active

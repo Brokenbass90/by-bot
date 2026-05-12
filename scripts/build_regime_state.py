@@ -558,13 +558,14 @@ _REGIME_DECISIONS = {
             "ENABLE_BREAKOUT_TRADING":   "1",
             "BREAKOUT_ALLOW_LONGS":      "1",
             "BREAKOUT_ALLOW_SHORTS":     "0",
-            "ENABLE_ASB1_TRADING":       "1",   # support bounce — primary bull strategy
+            "ENABLE_ASB1_TRADING":       "1",   # ASB1 sloped-break sleeve
             "ASB1_ALLOW_LONGS":          "1",
             "ASB1_ALLOW_SHORTS":         "0",
             "ENABLE_HZBO1_TRADING":      "1",   # horizontal breakout longs
             "HZBO1_ALLOW_LONGS":         "1",
             "HZBO1_ALLOW_SHORTS":        "0",
-            "ENABLE_BOUNCE_TRADING":     "1",   # bounce1 — longs at support
+            "ENABLE_BOUNCE_TRADING":     "1",   # legacy alias only
+            "ENABLE_BOUNCE1_TRADING":    "1",   # support bounce — primary bull strategy
             "ENABLE_IVB1_TRADING":       "1",   # impulse volume breakout — longs
             "ENABLE_MIDTERM_TRADING":    "1",
             "ENABLE_ATT1_TRADING":       "1",   # trendline touch longs
@@ -584,7 +585,7 @@ _REGIME_DECISIONS = {
         },
         "notes": [
             "BTC 4H EMA21 > EMA55, price above EMA55, ER trending",
-            "Bull momentum: breakout + ASB1 + bounce + IVB1 active",
+            "Bull momentum: breakout + BOUNCE1 support bounce + IVB1 active",
             "Bear strategies off — no shorts",
         ],
     },
@@ -601,13 +602,14 @@ _REGIME_DECISIONS = {
             "ENABLE_BREAKOUT_TRADING":   "1",
             "BREAKOUT_ALLOW_LONGS":      "1",
             "BREAKOUT_ALLOW_SHORTS":     "0",
-            "ENABLE_ASB1_TRADING":       "1",   # support bounce still active
+            "ENABLE_ASB1_TRADING":       "1",   # ASB1 sloped-break sleeve
             "ASB1_ALLOW_LONGS":          "1",
             "ASB1_ALLOW_SHORTS":         "0",
             "ENABLE_HZBO1_TRADING":      "1",
             "HZBO1_ALLOW_LONGS":         "1",
             "HZBO1_ALLOW_SHORTS":        "0",
-            "ENABLE_BOUNCE_TRADING":     "1",
+            "ENABLE_BOUNCE_TRADING":     "1",   # legacy alias only
+            "ENABLE_BOUNCE1_TRADING":    "1",   # support bounce still active
             "ENABLE_IVB1_TRADING":       "1",
             "ENABLE_MIDTERM_TRADING":    "1",
             "ENABLE_ATT1_TRADING":       "1",
@@ -652,6 +654,7 @@ _REGIME_DECISIONS = {
             "HZBO1_ALLOW_LONGS":         "0",
             "HZBO1_ALLOW_SHORTS":        "1",
             "ENABLE_BOUNCE_TRADING":     "0",
+            "ENABLE_BOUNCE1_TRADING":    "0",
             "ENABLE_IVB1_TRADING":       "0",
             "ENABLE_ATT1_TRADING":       "1",   # ATT1 handles both sides
             "ENABLE_BREAKDOWN_TRADING":  "1",
@@ -694,6 +697,7 @@ _REGIME_DECISIONS = {
             "HZBO1_ALLOW_LONGS":         "0",
             "HZBO1_ALLOW_SHORTS":        "1",
             "ENABLE_BOUNCE_TRADING":     "0",
+            "ENABLE_BOUNCE1_TRADING":    "0",
             "ENABLE_IVB1_TRADING":       "0",
             "ENABLE_ATT1_TRADING":       "0",   # ATT1 off in strong trend down
             "ENABLE_BREAKDOWN_TRADING":  "1",

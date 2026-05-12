@@ -2,7 +2,7 @@
   "enabled": true,
   "max_active_processes": 1,
   "max_launches_per_run": 1,
-  "default_min_interval_hours": 24,
+  "default_min_interval_hours": 168,
   "nice_level": 15,
   "quiet_window_utc": {
     "enabled": false,
@@ -14,28 +14,58 @@
   "history_path": "runtime/research_nightly/history.jsonl",
   "tasks": [
     {
-      "name": "bear_chop_plus_range",
-      "spec": "configs/autoresearch/bear_chop_plus_range_probe_v1.json",
+      "name": "support_bounce_annual_repair",
+      "spec": "configs/autoresearch/support_bounce_v1_annual_repair_v2.json",
       "enabled": true,
-      "min_interval_hours": 24
+      "min_interval_hours": 168
     },
     {
-      "name": "range_scalp_annual_focus",
-      "spec": "configs/autoresearch/range_scalp_v1_annual_focus_v2.json",
+      "name": "breakdown_bear_entry_quality",
+      "spec": "configs/autoresearch/breakdown_recent_bear_window_v2_entry_quality.json",
       "enabled": true,
-      "min_interval_hours": 24
+      "min_interval_hours": 168
     },
     {
-      "name": "flat_live_universe_repair",
-      "spec": "configs/autoresearch/flat_live_universe_repair_v2.json",
+      "name": "inplay_retest_repair",
+      "spec": "configs/autoresearch/inplay_breakout_retest_focus_v1.json",
       "enabled": true,
-      "min_interval_hours": 24
+      "min_interval_hours": 168
     },
     {
-      "name": "ivb1_wider_universe",
-      "spec": "configs/autoresearch/ivb1_wider_universe_v1.json",
+      "name": "pump_fade_bear_window",
+      "spec": "configs/autoresearch/pump_fade_v5_bear_window_v1.json",
       "enabled": true,
-      "min_interval_hours": 24
+      "min_interval_hours": 168
+    },
+    {
+      "name": "elder_canonical_rewrite",
+      "spec": "configs/autoresearch/elder_canonical_rewrite_v1.json",
+      "enabled": true,
+      "min_interval_hours": 168
+    },
+    {
+      "name": "bear_regime_continuation_fast90",
+      "spec": "configs/autoresearch/bear_regime_continuation_v1_fast_90d_v1.json",
+      "enabled": true,
+      "min_interval_hours": 168
+    },
+    {
+      "name": "spike_rejection_fast90",
+      "spec": "configs/autoresearch/spike_rejection_v1_fast_90d_v1.json",
+      "enabled": true,
+      "min_interval_hours": 168
+    },
+    {
+      "name": "whale_print_fast90",
+      "spec": "configs/autoresearch/whale_print_follow_v1_fast_90d_v1.json",
+      "enabled": true,
+      "min_interval_hours": 168
+    },
+    {
+      "name": "liquidity_sweep_param_sweep",
+      "spec": "configs/autoresearch/liquidity_sweep_reversal_v2_param_sweep_v1.json",
+      "enabled": true,
+      "min_interval_hours": 168
     }
   ]
 }

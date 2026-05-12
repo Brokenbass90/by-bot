@@ -172,6 +172,7 @@ class ResearchGate:
                     if l.strip() and not l.strip().startswith("#")
                 }
                 self._approved_mtime = mtime
+            if self._approved_cache:
                 approved |= self._approved_cache
         return approved
 
