@@ -11,7 +11,7 @@ import ssl
 import sys
 import time
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib import error, request
@@ -653,6 +653,14 @@ def _hwm_state_path(picks_csv: Path) -> Path:
     return picks_csv.parent / "alpaca_monthly_hwm.json"
 
 
+def _reentry_block_state_path(picks_csv: Path) -> Path:
+    raw = _env("MONTHLY_REENTRY_BLOCK_STATE_PATH", "")
+    if raw:
+        return Path(raw)
+    root = Path(__file__).resolve().parent.parent
+    return root / "runtime" / "alpaca_monthly_reentry_block.json"
+
+
 def _load_hwm_state(path: Path) -> dict[str, dict[str, Any]]:
     """Load {symbol: {hwm, entry_price, entry_date}} from disk."""
     if not path.exists():
@@ -662,6 +670,55 @@ def _load_hwm_state(path: Path) -> dict[str, dict[str, Any]]:
         return data if isinstance(data, dict) else {}
     except Exception:
         return {}
+
+
+def _load_reentry_block_state(path: Path) -> dict[str, dict[str, Any]]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    if isinstance(data, dict) and isinstance(data.get("symbols"), dict):
+        return {str(k).upper(): v for k, v in data["symbols"].items() if isinstance(v, dict)}
+    return {}
+
+
+def _save_reentry_block_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"symbols": dict(sorted(state.items()))}
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def _active_reentry_blocks(
+    state: dict[str, dict[str, Any]],
+    now: datetime,
+) -> dict[str, dict[str, Any]]:
+    active: dict[str, dict[str, Any]] = {}
+    for sym, rec in state.items():
+        blocked_until = _parse_iso_utc(str(rec.get("blocked_until") or ""))
+        if blocked_until is None or blocked_until <= now:
+            continue
+        active[sym.upper()] = rec
+    return active
+
+
+def _add_reentry_block(
+    state: dict[str, dict[str, Any]],
+    symbol: str,
+    *,
+    now: datetime,
+    days: int,
+    reason: str,
+) -> None:
+    if days <= 0:
+        return
+    sym = symbol.strip().upper()
+    if not sym:
+        return
+    state[sym] = {
+        "reason": reason,
+        "created_at": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "blocked_until": (now + timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
 
 
 def _save_hwm_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
@@ -916,6 +973,9 @@ def main() -> int:
         _env_float("ALPACA_NATIVE_TRAIL_PERCENT", trail_pct * 100.0),
     )
     native_trailing_cancel_existing = _env_bool("ALPACA_NATIVE_TRAIL_CANCEL_EXISTING_STOPS", True)
+    reentry_block_enable = _env_bool("MONTHLY_REENTRY_BLOCK_ENABLE", True)
+    trail_reentry_block_days = max(0, _env_int("MONTHLY_TRAIL_REENTRY_BLOCK_DAYS", 14))
+    reentry_block_path = _reentry_block_state_path(picks_csv)
 
     # ── Enhancement: score-weighted position sizing ───────────────────────────
     # Higher-momentum picks get a larger slice of the allocation.
@@ -970,6 +1030,17 @@ def main() -> int:
                 if order_type == "trailing_stop":
                     open_trailing_sell_orders.setdefault(symbol, []).append(order)
     occupied_symbols = set(current_positions.keys()) | set(pending_buy_orders.keys())
+    now_utc = datetime.now(timezone.utc)
+    reentry_block_state: dict[str, dict[str, Any]] = {}
+    active_reentry_blocks: dict[str, dict[str, Any]] = {}
+    blocked_reentry_symbols: set[str] = set()
+    if reentry_block_enable:
+        reentry_block_state = _active_reentry_blocks(_load_reentry_block_state(reentry_block_path), now_utc)
+        blocked_reentry_symbols = set(reentry_block_state) - occupied_symbols
+        active_reentry_blocks = {
+            sym: rec for sym, rec in reentry_block_state.items()
+            if sym in blocked_reentry_symbols
+        }
     latest_entry_day, pick_age_days = _pick_age_days(picks)
     current_cycle_csv = _current_cycle_picks_path(picks_csv)
     current_cycle_picks: list[Pick] = []
@@ -1034,7 +1105,10 @@ def main() -> int:
     no_current_cycle = bool(stale_guard_triggered and refreshed_recently)
 
     # Select only picks not blocked by earnings, up to max_positions
-    selected = [] if no_current_cycle else [p for p in picks if p.ticker not in earnings_blocked][:max_positions]
+    selected = [] if no_current_cycle else [
+        p for p in picks
+        if p.ticker not in earnings_blocked and p.ticker not in blocked_reentry_symbols
+    ][:max_positions]
     selected_symbols = {p.ticker for p in selected}
     intraday_managed_symbols = _load_intraday_managed_symbols()
     protected_intraday_symbols = sorted(sym for sym in current_positions.keys() if sym in intraday_managed_symbols)
@@ -1131,7 +1205,10 @@ def main() -> int:
     closed_out = set(sl_triggered_symbols) | rotated_out | trail_out
 
     # Extend new_buy_symbols: after SL + rotation + trail closes, fill with next picks
-    extended_candidates = [p.ticker for p in picks if p.ticker not in earnings_blocked]
+    extended_candidates = [
+        p.ticker for p in picks
+        if p.ticker not in earnings_blocked and p.ticker not in blocked_reentry_symbols
+    ]
     already_handled = (
         (set(hold_symbols) - closed_out)
         | set(new_buy_symbols)
@@ -1255,6 +1332,10 @@ def main() -> int:
         "native_trailing_candidates": native_trailing_candidates,
         "native_trailing_details": native_trailing_details,
         "native_trailing_fractional_skips": native_trailing_fractional_skips,
+        "reentry_block_enabled": reentry_block_enable,
+        "trail_reentry_block_days": trail_reentry_block_days,
+        "reentry_blocked_symbols": sorted(active_reentry_blocks),
+        "reentry_block_details": active_reentry_blocks,
         "broker_protection_enabled": broker_protection_enable,
         "broker_protection_required": broker_protection_required,
         "broker_protection_order_class": broker_protection_order_class,
@@ -1548,6 +1629,14 @@ def main() -> int:
                     continue
                 try:
                     result = client.close_position(symbol)
+                    if reentry_block_enable:
+                        _add_reentry_block(
+                            reentry_block_state,
+                            symbol,
+                            now=now_utc,
+                            days=trail_reentry_block_days,
+                            reason="trail_stop_close",
+                        )
                     report["results"].append({
                         "ticker": symbol,
                         "action": "trail_stop_close",
@@ -1609,6 +1698,8 @@ def main() -> int:
                         })
             # Persist updated HWM state
             _save_hwm_state(hwm_path, hwm_state)
+            if reentry_block_enable:
+                _save_reentry_block_state(reentry_block_path, reentry_block_state)
 
         # ── 2. Mid-month rotation closes ──────────────────────────────────────
         if midmonth_rotation and rotation_symbols:

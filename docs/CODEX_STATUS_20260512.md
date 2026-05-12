@@ -30,6 +30,7 @@
 - Current v38 monthly picks/positions are `AMD`, `UNH`, `GOOGL`.
 - Broker-side simple stop orders are armed for these monthly positions.
 - Native Alpaca broker-side trailing-stop promotion is implemented for whole-share positions. Alpaca rejects native trailing stops on fractional shares, which is what a `$500` paper account currently uses for `AMD/UNH/GOOGL`; for those fractional positions the bridge now keeps broker-side fixed stop protection and uses software trailing with a safe cancel-then-close path so it does not hit the old `held_for_orders` loop.
+- A follow-up re-entry block is now deployed: after a software trailing close, the same monthly symbol is blocked from immediate rebuy for 21 days. `AMD` was backfilled into this block after its paper trail-close. Latest dry-run shows no planned AMD rebuy and fixed stop protection still present for `UNH`/`GOOGL`.
 - Intraday income lane is not ready for real money yet: stale paper positions (`COST`, `META`, `NFLX`) are occupying capacity and need a cleanup/reconcile pass with stop coverage checks.
 - Intraday cleanup now cancels open orders for a stale paper symbol before trying to close the position; this targets the known Alpaca `held_for_orders` cleanup loop.
 
