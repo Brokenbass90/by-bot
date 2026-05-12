@@ -17,6 +17,7 @@
 - Increased research guard timeouts to avoid killing long but healthy sweeps too early.
 - Added/activated an approved server research queue for support-bounce, breakdown, inplay, pump-fade, Elder, BRC1, spike rejection, whale print, and liquidity sweep research.
 - Reconciled `strategy_health.json` and promoted `alt_support_bounce_v1` to allocator `OK` based on positive 180d additivity evidence.
+- Patched Alpaca intraday cleanup so stale paper symbols first cancel open orders before `DELETE /v2/positions/{symbol}`; this targets the repeated `held_for_orders` cleanup failures.
 - Wrote the compact handoff/status note in [CODEX_STATUS_20260512.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/CODEX_STATUS_20260512.md).
 
 **Key findings:**
@@ -25,6 +26,7 @@
 - Core OK live sleeves are now `att1`, `bounce1`, `flat`, and `midterm`. Experimental `WATCH` sleeves still need annual/OOS/additivity proof.
 - Alpaca v38 monthly paper is active with broker-side simple stops on `AMD/UNH/GOOGL`; app-managed trailing is enabled, but native broker-side trailing execution is still a separate future task.
 - Alpaca intraday income is blocked by stale paper positions occupying capacity and needs cleanup/reconciliation before it can be judged.
+- The intraday cleanup path now handles the most common Alpaca blocker (`held_for_orders`) by canceling open orders first; a paper-only reconcile run is still needed.
 
 **Next:**
 

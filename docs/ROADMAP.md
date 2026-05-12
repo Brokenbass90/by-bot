@@ -46,6 +46,7 @@ Order of work:
   - v38 monthly paper is active and protected by broker-side simple stops on current monthly positions
   - app-managed trailing exists, but native broker-side trailing stop execution is still not implemented
   - intraday income lane is blocked by stale paper positions and needs reconciliation before real-money consideration
+  - intraday cleanup now cancels open orders before closing stale paper positions, preventing the known Alpaca `held_for_orders` cleanup loop
 
 ## Superseded Checkpoint - 2026-05-06
 

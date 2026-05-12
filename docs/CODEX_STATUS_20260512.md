@@ -31,6 +31,7 @@
 - Broker-side simple stop orders are armed for these monthly positions.
 - App-managed trailing logic is enabled for v38, but this is not the same as native Alpaca broker-side trailing-stop execution.
 - Intraday income lane is not ready for real money yet: stale paper positions (`COST`, `META`, `NFLX`) are occupying capacity and need a cleanup/reconcile pass with stop coverage checks.
+- Intraday cleanup now cancels open orders for a stale paper symbol before trying to close the position; this targets the known Alpaca `held_for_orders` cleanup loop.
 
 ## Research Queue
 

@@ -540,6 +540,22 @@ class AlpacaClient:
     def list_orders(self, status: str = "open") -> List[dict]:
         return list(self._req("GET", f"{self.base_url}/v2/orders?status={status}") or [])
 
+    def cancel_order(self, order_id: str) -> dict:
+        return self._req("DELETE", f"{self.base_url}/v2/orders/{order_id}")
+
+    def cancel_open_orders_for_symbol(self, symbol: str) -> int:
+        cancelled = 0
+        target = symbol.upper()
+        for order in self.list_orders(status="open"):
+            if str(order.get("symbol") or "").upper() != target:
+                continue
+            order_id = str(order.get("id") or "").strip()
+            if not order_id:
+                continue
+            self.cancel_order(order_id)
+            cancelled += 1
+        return cancelled
+
     def submit_bracket_order(self, symbol: str, side: str, qty: int,
                              stop_loss_price: float, take_profit_price: float) -> dict:
         payload: dict = {
@@ -917,12 +933,16 @@ def run_once(client: AlpacaClient, dry_run: bool,
             if close_unknown_remote:
                 for sym in remote_only_symbols:
                     try:
+                        cancelled = client.cancel_open_orders_for_symbol(sym)
+                        if cancelled:
+                            print(f"    → Cancelled {cancelled} open order(s) before closing unknown remote position {sym}")
                         result = client.close_position(sym)
                         print(f"    → Close sent for unknown remote position {sym}: {result.get('status') or result.get('id') or 'submitted'}")
                         _tg(
                             tg_token,
                             tg_chat,
-                            f"🧹 <b>Intraday cleanup</b>\nClosed stale remote Alpaca paper position: <b>{sym}</b>\n{now_str}",
+                            f"🧹 <b>Intraday cleanup</b>\nClosed stale remote Alpaca paper position: <b>{sym}</b>"
+                            f"\nCancelled open orders first: <b>{cancelled}</b>\n{now_str}",
                         )
                     except Exception as exc:
                         print(f"    ✗ Failed to close unknown remote position {sym}: {exc}")
