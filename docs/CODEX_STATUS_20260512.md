@@ -29,7 +29,7 @@
 - Alpaca v38 monthly paper is active and is the best protected compounder candidate.
 - Current v38 monthly picks/positions are `AMD`, `UNH`, `GOOGL`.
 - Broker-side simple stop orders are armed for these monthly positions.
-- App-managed trailing logic is enabled for v38, but this is not the same as native Alpaca broker-side trailing-stop execution.
+- Native Alpaca broker-side trailing-stop promotion is now implemented locally for v38: once a monthly position reaches the configured gain threshold, the bridge cancels fixed sell protection and submits a broker-hosted `trailing_stop`; if that fails, it attempts to restore the fixed stop. This fixes the known `held_for_orders` loop where software trailing tried to close a position already reserved by a stop order.
 - Intraday income lane is not ready for real money yet: stale paper positions (`COST`, `META`, `NFLX`) are occupying capacity and need a cleanup/reconcile pass with stop coverage checks.
 - Intraday cleanup now cancels open orders for a stale paper symbol before trying to close the position; this targets the known Alpaca `held_for_orders` cleanup loop.
 
@@ -43,7 +43,8 @@
 ## Next Moves
 
 1. Commit and push today’s safe fixes only; do not include `.env` or unreviewed Claude/user tails.
-2. Clean Alpaca intraday paper state so the dynamic income lane can actually test instead of being blocked by stale positions.
-3. Decide whether to keep watch sleeves scanning at reduced risk or switch to a clean OK-only live core to remove allocator `degraded`.
-4. Let the server research queue finish support-bounce/breakdown/inplay/pump-fade/Elder/BRC/spike/whale/liquidity and promote only proven annual/additive winners.
-5. Add a clearer web split: Live, Paper Alpaca, Research, Backtest Evidence.
+2. Deploy the native-trailing Alpaca bridge/configs to the server, then verify the next paper-gate run reports `native_trailing_enabled=true` and no longer spams `held_for_orders`.
+3. Clean Alpaca intraday paper state so the dynamic income lane can actually test instead of being blocked by stale positions.
+4. Decide whether to keep watch sleeves scanning at reduced risk or switch to a clean OK-only live core to remove allocator `degraded`.
+5. Let the server research queue finish support-bounce/breakdown/inplay/pump-fade/Elder/BRC/spike/whale/liquidity and promote only proven annual/additive winners.
+6. Add a clearer web split: Live, Paper Alpaca, Research, Backtest Evidence.

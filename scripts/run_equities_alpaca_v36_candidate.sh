@@ -50,7 +50,7 @@ fi
 export ALPACA_AUTOPILOT_LOCAL_ENV="$CANDIDATE_ENV"
 
 source .venv/bin/activate
-FORWARD_ARGS=()
+declare -a FORWARD_ARGS=()
 for arg in "$@"; do
   if [[ "$arg" == "--once" ]]; then
     continue
@@ -58,4 +58,8 @@ for arg in "$@"; do
   FORWARD_ARGS+=("$arg")
 done
 
-bash scripts/run_equities_alpaca_monthly_autopilot.sh "${FORWARD_ARGS[@]}"
+if [[ ${#FORWARD_ARGS[@]} -gt 0 ]]; then
+  bash scripts/run_equities_alpaca_monthly_autopilot.sh "${FORWARD_ARGS[@]}"
+else
+  bash scripts/run_equities_alpaca_monthly_autopilot.sh
+fi

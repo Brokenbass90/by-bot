@@ -495,6 +495,24 @@ class AlpacaClient:
         }
         return self._request("POST", "/v2/orders", payload)
 
+    def submit_trailing_stop_sell(
+        self,
+        symbol: str,
+        *,
+        qty: float,
+        trail_percent: float,
+        time_in_force: str = "day",
+    ) -> dict[str, Any]:
+        payload = {
+            "symbol": symbol,
+            "qty": _format_qty(qty),
+            "side": "sell",
+            "type": "trailing_stop",
+            "time_in_force": time_in_force,
+            "trail_percent": f"{trail_percent:.4f}".rstrip("0").rstrip("."),
+        }
+        return self._request("POST", "/v2/orders", payload)
+
     def close_position(self, symbol: str) -> dict[str, Any]:
         return self._request("DELETE", f"/v2/positions/{symbol}")
 
@@ -717,6 +735,15 @@ def _position_loss_pct(pos: dict[str, Any]) -> float:
     return 0.0
 
 
+def _position_gain_pct(pos: dict[str, Any], hwm_state: dict[str, dict[str, Any]], sym: str) -> float:
+    rec = hwm_state.get(sym, {})
+    cur = _safe_float(pos.get("current_price"), 0.0)
+    entry = _safe_float(rec.get("entry_price"), 0.0) or _safe_float(pos.get("avg_entry_price"), 0.0)
+    if cur <= 0 or entry <= 0:
+        return 0.0
+    return max(0.0, (cur - entry) / entry * 100.0)
+
+
 def _build_bracket_buy_spec(
     pick: Pick,
     *,
@@ -873,6 +900,18 @@ def main() -> int:
     broker_protection_tif = _env("ALPACA_BROKER_PROTECTION_TIF", "day").lower()
     broker_target_pct = max(0.0, _env_float("ALPACA_BROKER_TARGET_PCT", 0.08))
     broker_wait_fill_sec = max(1.0, _env_float("ALPACA_BROKER_PROTECTION_WAIT_FILL_SEC", 20.0))
+    native_trailing_enable = _env_bool("ALPACA_NATIVE_TRAIL_ENABLE", False)
+    native_trailing_required = _env_bool("ALPACA_NATIVE_TRAIL_REQUIRED", False)
+    native_trailing_tif = _env("ALPACA_NATIVE_TRAIL_TIF", broker_protection_tif).lower()
+    native_trailing_min_gain_pct = max(
+        0.0,
+        _env_float("ALPACA_NATIVE_TRAIL_MIN_GAIN_PCT", trail_min_gain_pct),
+    )
+    native_trailing_percent = max(
+        0.1,
+        _env_float("ALPACA_NATIVE_TRAIL_PERCENT", trail_pct * 100.0),
+    )
+    native_trailing_cancel_existing = _env_bool("ALPACA_NATIVE_TRAIL_CANCEL_EXISTING_STOPS", True)
 
     # ── Enhancement: score-weighted position sizing ───────────────────────────
     # Higher-momentum picks get a larger slice of the allocation.
@@ -907,7 +946,9 @@ def main() -> int:
     effective_capital = min(buying_power, capital_override_usd) if capital_override_usd > 0 else buying_power
     current_positions = {str(p.get("symbol") or "").strip().upper(): p for p in positions if str(p.get("symbol") or "").strip()}
     pending_buy_orders: dict[str, list[dict[str, Any]]] = {}
+    open_sell_orders: dict[str, list[dict[str, Any]]] = {}
     open_stop_sell_orders: dict[str, list[dict[str, Any]]] = {}
+    open_trailing_sell_orders: dict[str, list[dict[str, Any]]] = {}
     for order in open_orders:
         symbol = str(order.get("symbol") or "").strip().upper()
         side = str(order.get("side") or "").strip().lower()
@@ -918,8 +959,12 @@ def main() -> int:
         if status in {"accepted", "new", "pending_new", "partially_filled", "accepted_for_bidding"}:
             if side == "buy":
                 pending_buy_orders.setdefault(symbol, []).append(order)
-            elif side == "sell" and order_type in {"stop", "stop_limit", "trailing_stop"}:
-                open_stop_sell_orders.setdefault(symbol, []).append(order)
+            elif side == "sell":
+                open_sell_orders.setdefault(symbol, []).append(order)
+                if order_type in {"stop", "stop_limit", "trailing_stop"}:
+                    open_stop_sell_orders.setdefault(symbol, []).append(order)
+                if order_type == "trailing_stop":
+                    open_trailing_sell_orders.setdefault(symbol, []).append(order)
     occupied_symbols = set(current_positions.keys()) | set(pending_buy_orders.keys())
     latest_entry_day, pick_age_days = _pick_age_days(picks)
     current_cycle_csv = _current_cycle_picks_path(picks_csv)
@@ -1019,8 +1064,10 @@ def main() -> int:
     hwm_state: dict[str, dict[str, Any]] = {}
     trail_triggered_symbols: list[str] = []
     trail_details: dict[str, dict[str, float]] = {}
+    native_trailing_candidates: list[str] = []
+    native_trailing_details: dict[str, dict[str, float]] = {}
     now_utc_str = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    if enable_trail_stop and not offline_dry_run:
+    if (enable_trail_stop or native_trailing_enable) and not offline_dry_run:
         hwm_state = _load_hwm_state(hwm_path)
         hwm_state = _update_hwm(hwm_state, current_positions, now_utc_str)
         for sym in list(current_positions.keys()):
@@ -1028,13 +1075,26 @@ def main() -> int:
                 continue
             if sym in sl_triggered_symbols:
                 continue  # SL already handles this one
+            if native_trailing_enable and open_trailing_sell_orders.get(sym):
+                continue  # Broker-hosted trailing stop already owns this exit.
             pos = current_positions[sym]
-            fired, gain, drop = _trail_stop_triggered(
-                hwm_state, sym, pos, trail_pct, trail_min_gain_pct
-            )
-            if fired:
-                trail_triggered_symbols.append(sym)
-                trail_details[sym] = {"gain_pct": gain, "drop_from_hwm_pct": drop}
+            if native_trailing_enable:
+                gain = _position_gain_pct(pos, hwm_state, sym)
+                if gain >= native_trailing_min_gain_pct:
+                    native_trailing_candidates.append(sym)
+                    native_trailing_details[sym] = {
+                        "gain_pct": round(gain, 2),
+                        "trail_percent": round(native_trailing_percent, 4),
+                    }
+                    continue
+            if enable_trail_stop:
+                fired, gain, drop = _trail_stop_triggered(
+                    hwm_state, sym, pos, trail_pct, trail_min_gain_pct
+                )
+                if fired:
+                    trail_triggered_symbols.append(sym)
+                    trail_details[sym] = {"gain_pct": gain, "drop_from_hwm_pct": drop}
+                    continue
 
     # Symbols freed by stop-loss may become new buy candidates
     # (we'll try to fill with next-best picks after closing)
@@ -1178,6 +1238,13 @@ def main() -> int:
         "trail_min_gain_pct": trail_min_gain_pct,
         "trail_triggered": trail_triggered_symbols,
         "trail_details": trail_details,
+        "native_trailing_enabled": native_trailing_enable,
+        "native_trailing_required": native_trailing_required,
+        "native_trailing_tif": native_trailing_tif,
+        "native_trailing_min_gain_pct": native_trailing_min_gain_pct,
+        "native_trailing_percent": round(native_trailing_percent, 4),
+        "native_trailing_candidates": native_trailing_candidates,
+        "native_trailing_details": native_trailing_details,
         "broker_protection_enabled": broker_protection_enable,
         "broker_protection_required": broker_protection_required,
         "broker_protection_order_class": broker_protection_order_class,
@@ -1211,6 +1278,15 @@ def main() -> int:
                 "stop_prices": [str(o.get("stop_price") or "") for o in orders],
             }
             for sym, orders in sorted(open_stop_sell_orders.items())
+        ],
+        "open_trailing_sell_orders": [
+            {
+                "ticker": sym,
+                "count": len(orders),
+                "order_ids": [str(o.get("id") or "") for o in orders if str(o.get("id") or "").strip()],
+                "trail_percents": [str(o.get("trail_percent") or "") for o in orders],
+            }
+            for sym, orders in sorted(open_trailing_sell_orders.items())
         ],
         "new_buy_symbols": new_buy_symbols,
         "selected": [
@@ -1482,6 +1558,138 @@ def main() -> int:
                         }
                     )
 
+        # ── 2b. Promote profitable monthly positions to broker-native trail ──
+        if native_trailing_enable:
+            for symbol in native_trailing_candidates:
+                if symbol not in current_positions:
+                    continue
+                if symbol in closed_out:
+                    continue
+                if symbol in intraday_managed_symbols:
+                    continue
+                if open_trailing_sell_orders.get(symbol):
+                    continue
+                pos = current_positions.get(symbol, {})
+                qty = abs(_safe_float(pos.get("qty"), 0.0))
+                if qty <= 0:
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "native_trailing_stop_sell",
+                            "status": "skipped",
+                            "error": "missing_qty",
+                        }
+                    )
+                    continue
+
+                cancel_failed = False
+                if native_trailing_cancel_existing:
+                    for order in open_sell_orders.get(symbol, []):
+                        order_id = str(order.get("id") or "").strip()
+                        if not order_id:
+                            continue
+                        try:
+                            result = client.cancel_order(order_id)
+                            report["results"].append(
+                                {
+                                    "ticker": symbol,
+                                    "action": "native_trailing_cancel_sell_order",
+                                    "order_id": order_id,
+                                    "status": result.get("status", "canceled"),
+                                }
+                            )
+                        except RuntimeError as exc:
+                            cancel_failed = True
+                            report["results"].append(
+                                {
+                                    "ticker": symbol,
+                                    "action": "native_trailing_cancel_sell_order",
+                                    "order_id": order_id,
+                                    "status": "error",
+                                    "error": str(exc),
+                                }
+                            )
+                    if cancel_failed and native_trailing_required:
+                        continue
+
+                try:
+                    result = client.submit_trailing_stop_sell(
+                        symbol,
+                        qty=qty,
+                        trail_percent=native_trailing_percent,
+                        time_in_force=native_trailing_tif,
+                    )
+                    det = native_trailing_details.get(symbol, {})
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "native_trailing_stop_sell",
+                            "order_id": result.get("id"),
+                            "status": result.get("status"),
+                            "qty": _format_qty(qty),
+                            "gain_pct": det.get("gain_pct", 0.0),
+                            "trail_percent": native_trailing_percent,
+                        }
+                    )
+                except RuntimeError as exc:
+                    report["results"].append(
+                        {
+                            "ticker": symbol,
+                            "action": "native_trailing_stop_sell",
+                            "status": "error",
+                            "error": str(exc),
+                            "qty": _format_qty(qty),
+                            "trail_percent": native_trailing_percent,
+                        }
+                    )
+                    pick = picks_by_ticker.get(symbol)
+                    if not pick:
+                        continue
+                    notional = per_ticker_notional.get(symbol, per_position_notional)
+                    spec, reason = _build_bracket_buy_spec(
+                        pick,
+                        notional=notional,
+                        stop_loss_pct=stop_loss_pct,
+                        target_pct=broker_target_pct,
+                        size_mode="qty",
+                    )
+                    if spec is None:
+                        report["results"].append(
+                            {
+                                "ticker": symbol,
+                                "action": "native_trailing_fallback_stop",
+                                "status": "skipped",
+                                "error": reason,
+                            }
+                        )
+                        continue
+                    try:
+                        fallback = client.submit_stop_sell(
+                            symbol,
+                            qty=qty,
+                            stop_price=float(spec["stop_loss_price"]),
+                            time_in_force=broker_protection_tif,
+                        )
+                        report["results"].append(
+                            {
+                                "ticker": symbol,
+                                "action": "native_trailing_fallback_stop",
+                                "order_id": fallback.get("id"),
+                                "status": fallback.get("status"),
+                                "qty": _format_qty(qty),
+                                "stop_price": round(float(spec["stop_loss_price"]), 4),
+                            }
+                        )
+                    except RuntimeError as fallback_exc:
+                        report["results"].append(
+                            {
+                                "ticker": symbol,
+                                "action": "native_trailing_fallback_stop",
+                                "status": "error",
+                                "error": str(fallback_exc),
+                            }
+                        )
+
         # ── 3. Close stale positions (classic month-end rotation) ─────────────
         if close_stale_positions:
             for symbol in stale_symbols:
@@ -1740,6 +1948,15 @@ def main() -> int:
                 lines.append(f"  🛡️ REARM STOP {ticker} SL {r.get('stop_price','?')} — {r.get('status','?')}")
             elif action == "rearm_close_below_stop":
                 lines.append(f"  🛑 CLOSE {ticker}: current <= broker stop — {r.get('status','?')}")
+            elif action == "native_trailing_cancel_sell_order":
+                lines.append(f"  🟠 CANCEL fixed sell {ticker} before native trail — {r.get('status','?')}")
+            elif action == "native_trailing_stop_sell":
+                lines.append(
+                    f"  🧷 NATIVE TRAIL {ticker} trail {r.get('trail_percent','?')}% "
+                    f"after +{r.get('gain_pct', 0.0):.1f}% — {r.get('status','?')}"
+                )
+            elif action == "native_trailing_fallback_stop":
+                lines.append(f"  🛡️ FALLBACK STOP {ticker} SL {r.get('stop_price','?')} — {r.get('status','?')}")
             elif action == "hold_existing":
                 sw = r.get("score_weight", 0.0)
                 sw_str = f" w={sw:.2f}" if weighted_sizing and sw > 0 else ""
