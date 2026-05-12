@@ -29,7 +29,7 @@
 - Alpaca v38 monthly paper is active and is the best protected compounder candidate.
 - Current v38 monthly picks/positions are `AMD`, `UNH`, `GOOGL`.
 - Broker-side simple stop orders are armed for these monthly positions.
-- Native Alpaca broker-side trailing-stop promotion is now implemented locally for v38: once a monthly position reaches the configured gain threshold, the bridge cancels fixed sell protection and submits a broker-hosted `trailing_stop`; if that fails, it attempts to restore the fixed stop. This fixes the known `held_for_orders` loop where software trailing tried to close a position already reserved by a stop order.
+- Native Alpaca broker-side trailing-stop promotion is implemented for whole-share positions. Alpaca rejects native trailing stops on fractional shares, which is what a `$500` paper account currently uses for `AMD/UNH/GOOGL`; for those fractional positions the bridge now keeps broker-side fixed stop protection and uses software trailing with a safe cancel-then-close path so it does not hit the old `held_for_orders` loop.
 - Intraday income lane is not ready for real money yet: stale paper positions (`COST`, `META`, `NFLX`) are occupying capacity and need a cleanup/reconcile pass with stop coverage checks.
 - Intraday cleanup now cancels open orders for a stale paper symbol before trying to close the position; this targets the known Alpaca `held_for_orders` cleanup loop.
 

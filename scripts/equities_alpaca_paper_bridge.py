@@ -175,6 +175,10 @@ def _format_qty(qty: float) -> str:
     return f"{qty:.9f}".rstrip("0").rstrip(".")
 
 
+def _is_fractional_qty(qty: float) -> bool:
+    return abs(qty - round(qty)) > 1e-8
+
+
 def _latest_summary_path(picks_csv: Path) -> Path | None:
     current_cycle_summary = _env("ALPACA_CURRENT_CYCLE_SUMMARY_CSV", "")
     if current_cycle_summary:
@@ -1066,6 +1070,7 @@ def main() -> int:
     trail_details: dict[str, dict[str, float]] = {}
     native_trailing_candidates: list[str] = []
     native_trailing_details: dict[str, dict[str, float]] = {}
+    native_trailing_fractional_skips: list[str] = []
     now_utc_str = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     if (enable_trail_stop or native_trailing_enable) and not offline_dry_run:
         hwm_state = _load_hwm_state(hwm_path)
@@ -1079,14 +1084,18 @@ def main() -> int:
                 continue  # Broker-hosted trailing stop already owns this exit.
             pos = current_positions[sym]
             if native_trailing_enable:
-                gain = _position_gain_pct(pos, hwm_state, sym)
-                if gain >= native_trailing_min_gain_pct:
-                    native_trailing_candidates.append(sym)
-                    native_trailing_details[sym] = {
-                        "gain_pct": round(gain, 2),
-                        "trail_percent": round(native_trailing_percent, 4),
-                    }
-                    continue
+                qty = abs(_safe_float(pos.get("qty"), 0.0))
+                if qty > 0 and _is_fractional_qty(qty):
+                    native_trailing_fractional_skips.append(sym)
+                else:
+                    gain = _position_gain_pct(pos, hwm_state, sym)
+                    if gain >= native_trailing_min_gain_pct:
+                        native_trailing_candidates.append(sym)
+                        native_trailing_details[sym] = {
+                            "gain_pct": round(gain, 2),
+                            "trail_percent": round(native_trailing_percent, 4),
+                        }
+                        continue
             if enable_trail_stop:
                 fired, gain, drop = _trail_stop_triggered(
                     hwm_state, sym, pos, trail_pct, trail_min_gain_pct
@@ -1245,6 +1254,7 @@ def main() -> int:
         "native_trailing_percent": round(native_trailing_percent, 4),
         "native_trailing_candidates": native_trailing_candidates,
         "native_trailing_details": native_trailing_details,
+        "native_trailing_fractional_skips": native_trailing_fractional_skips,
         "broker_protection_enabled": broker_protection_enable,
         "broker_protection_required": broker_protection_required,
         "broker_protection_order_class": broker_protection_order_class,
@@ -1512,6 +1522,30 @@ def main() -> int:
                 if symbol not in current_positions:
                     continue
                 det = trail_details.get(symbol, {})
+                cancel_failed = False
+                for order in open_sell_orders.get(symbol, []):
+                    order_id = str(order.get("id") or "").strip()
+                    if not order_id:
+                        continue
+                    try:
+                        result = client.cancel_order(order_id)
+                        report["results"].append({
+                            "ticker": symbol,
+                            "action": "trail_stop_cancel_sell_order",
+                            "order_id": order_id,
+                            "status": result.get("status", "canceled"),
+                        })
+                    except RuntimeError as exc:
+                        cancel_failed = True
+                        report["results"].append({
+                            "ticker": symbol,
+                            "action": "trail_stop_cancel_sell_order",
+                            "order_id": order_id,
+                            "status": "error",
+                            "error": str(exc),
+                        })
+                if cancel_failed:
+                    continue
                 try:
                     result = client.close_position(symbol)
                     report["results"].append({
@@ -1529,6 +1563,50 @@ def main() -> int:
                         "status": "error",
                         "error": str(exc),
                     })
+                    pick = picks_by_ticker.get(symbol)
+                    if not pick:
+                        continue
+                    notional = per_ticker_notional.get(symbol, per_position_notional)
+                    spec, reason = _build_bracket_buy_spec(
+                        pick,
+                        notional=notional,
+                        stop_loss_pct=stop_loss_pct,
+                        target_pct=broker_target_pct,
+                        size_mode="qty",
+                    )
+                    if spec is None:
+                        report["results"].append({
+                            "ticker": symbol,
+                            "action": "trail_stop_fallback_stop",
+                            "status": "skipped",
+                            "error": reason,
+                        })
+                        continue
+                    qty = abs(_safe_float(current_positions.get(symbol, {}).get("qty"), 0.0))
+                    if qty <= 0:
+                        continue
+                    try:
+                        fallback = client.submit_stop_sell(
+                            symbol,
+                            qty=qty,
+                            stop_price=float(spec["stop_loss_price"]),
+                            time_in_force=broker_protection_tif,
+                        )
+                        report["results"].append({
+                            "ticker": symbol,
+                            "action": "trail_stop_fallback_stop",
+                            "order_id": fallback.get("id"),
+                            "status": fallback.get("status"),
+                            "qty": _format_qty(qty),
+                            "stop_price": round(float(spec["stop_loss_price"]), 4),
+                        })
+                    except RuntimeError as fallback_exc:
+                        report["results"].append({
+                            "ticker": symbol,
+                            "action": "trail_stop_fallback_stop",
+                            "status": "error",
+                            "error": str(fallback_exc),
+                        })
             # Persist updated HWM state
             _save_hwm_state(hwm_path, hwm_state)
 
