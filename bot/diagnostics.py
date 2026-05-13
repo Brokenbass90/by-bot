@@ -25,6 +25,8 @@ DIAG_KEYS = [
     "ws_connect", "ws_disconnect", "ws_handshake_timeout",
     "ws_disconnect_timeout", "ws_disconnect_invalid_status",
     "ws_disconnect_closed", "ws_disconnect_oserror", "ws_disconnect_other",
+    "detect_call", "detect_skip_same_second", "detect_skip_no_window",
+    "detect_gate_on", "detect_gate_off", "detect_sched_seen",
     "breakout_try", "breakout_no_signal", "breakout_entry",
     "breakout_skip_liq", "breakout_skip_pullback",
     "breakout_skip_quality", "breakout_skip_minqty", "breakout_skip_news",

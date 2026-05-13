@@ -11293,8 +11293,12 @@ def try_bounce_entry(exch: str, sym: str, st: SymState, now: int, price: float):
 
 
 def detect(exch: str, sym: str, st: SymState, now: int):
-    
+    if exch == "Bybit":
+        _diag_inc("detect_call")
+
     if st.last_eval_ts == now:
+        if exch == "Bybit":
+            _diag_inc("detect_skip_same_second")
         return
     st.last_eval_ts = now
 
@@ -11329,6 +11333,8 @@ def detect(exch: str, sym: str, st: SymState, now: int):
             w_low  = p if (w_low  is None or p < w_low) else w_low
 
     if p0 is None or p1 is None or p0 <= 0:
+        if exch == "Bybit":
+            _diag_inc("detect_skip_no_window")
         return
     # ===== BOUNCE ENTRY (отскоки от уровней 1h/4h) — запускать всегда, даже если дальше будут return =====
     try:
@@ -11340,6 +11346,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
     # Otherwise weak/flat market structure can return early and starve breakout,
     # midterm, sloped, and other independent sleeves.
     if exch == "Bybit" and TRADE_ON and (not DRY_RUN):
+        _diag_inc("detect_gate_on")
         # ===== RANGE ENTRY (flat/range) =====
         if ENABLE_RANGE_TRADING:
             last = int(_RANGE_LAST_TRY.get(sym, 0) or 0)
@@ -11534,6 +11541,9 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                 except Exception as _e:
                     log_error(f"try_ts132_entry schedule fail {sym}: {_e}")
 
+        _diag_inc("detect_sched_seen")
+    elif exch == "Bybit":
+        _diag_inc("detect_gate_off")
 
     # ✅ ВАЖНО: сопровождение открытых bounce-сделок должно работать даже когда фильтры пампа "молчат"
     if TRADE_ON and exch == "Bybit":
@@ -12922,6 +12932,7 @@ async def pulse():
 
         print(
             f"[pulse] Bybit msgs={MSG_COUNTER.get('Bybit', 0)}  open_trades={len(TRADES)}  "
+            f"trade_on={int(bool(TRADE_ON))} dry_run={int(bool(DRY_RUN))} "
             f"disabled={PORTFOLIO_STATE.get('disabled')} ws_guard={int(_ws_transport_guard_active())} "
             f"| {_runtime_diag_snapshot()}"
         )

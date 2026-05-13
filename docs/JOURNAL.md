@@ -5,6 +5,45 @@
 
 ---
 
+## 2026-05-13 | Codex (live scheduler truth + silence narrowed to strategy filters)
+
+**Done:**
+
+- Added live scheduler diagnostics to `smart_pump_reversal_bot.py` and `bot/diagnostics.py`:
+  - `detect_call`
+  - `detect_skip_same_second`
+  - `detect_skip_no_window`
+  - `detect_gate_on`
+  - `detect_gate_off`
+  - `detect_sched_seen`
+- Deployed those diagnostics to the server and restarted `bybot.service`.
+- Verified the fresh live log source: `runtime/live.out` is current; `logs/bot.log` is stale and should not be used for live-status verdicts.
+- Confirmed server runtime truth after restart:
+  - service active
+  - heartbeat fresh
+  - `TRADE_ON=1`
+  - `DRY_RUN=0`
+  - WebSocket messages flowing
+  - scheduler/detect counters increasing
+  - allocator degraded but not hard-blocking
+- Updated `docs/CODEX_STATUS_20260513.md` and `docs/ROADMAP.md` with the new evidence.
+
+**Key findings:**
+
+- The bot is not currently blocked by auth/offline/safe-mode. It is scanning and trying.
+- The practical blocker is strategy conversion/filtering:
+  - `breakout` mostly exits as `breakout_ns_symbol`, which points to a strategy/universe mismatch.
+  - `flat` exits as `flat_ns_same_bar` plus cooldown/no-signal.
+  - `att1`, `asm1`, `ivb1`, and `midterm` are alive but currently no-signal/cooldown.
+- The 7d live-effective parity report found replay entries, but the replay itself was weak (`net=-2.6963`, PF `0.463`, WR `33.3%`), so the recent market was not friendly to the current mix. The live/replay entry mismatch still needs targeted debugging.
+
+**Next:**
+
+- Debug `breakout_ns_symbol` first, then add daily/web top skip-reason summaries so silence becomes visible within hours.
+- Build scanner card chart overlays and AI setup explanations, but keep live trade actions user-approved.
+- Reconcile Alpaca paper/account/web truth and verify stop/trailing coverage before any real-money move.
+- Keep expanding through annual/OOS/additivity gates, with priority on phase-specific sleeves for bull/bear chop and short continuation.
+
 ## 2026-05-12 | Codex (live env sync + support-bounce wiring + research queue repair)
 
 **Done:**
@@ -3363,6 +3402,7 @@ Immediate action taken:
 
 - 2026-04-09 07:36 UTC — added the missing full-stack rolling validator so we can test strategies on a full year without falling back to static symbols or stitched-only optimism. New file: [run_dynamic_crypto_walkforward.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_dynamic_crypto_walkforward.py). It replays historical `regime -> router -> allocator -> health timeline` per window, builds the same sleeve/env package the live stack would see, and then runs [backtest/run_portfolio.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest/run_portfolio.py) on those live-style symbols and sleeves. This closes the biggest remaining truth gap between stitched annual and rolling validation. Immediately launched `dynamic_core3_flat_impulse_nosloped_wf360_v1` on the current best no-sloped core. First window already came back honest but not promotional: `bear_chop`, sleeve `flat` only, `+1.58`, PF `inf`, DD `0.02`, `3` trades, `pass=False` because the pass gate still requires enough trades and a real sample size. That is exactly the kind of answer we need now: the foundation is not auto-failing good windows anymore, but it is also not handing out fake PASS labels on tiny samples. 
 
+- 2026-05-13 06:25 UTC — converted the "бот молчит, но почему?" problem into a measurable live-vs-backtest drift check instead of another subjective argument about market quietness. Direct server inspection showed `bybot.service` active, current regime `bull_chop`, router `status=ok`, `scan_ok=true`, and allocator `degraded` but not hard-blocking (`safe_mode=false`, `hard_block_new_entries=false`, `allocator_global_risk_mult=0.765`). The degradation is currently a risk haircut caused by WATCH-quality sleeves plus portfolio overlap, not a full stop. I hardened [weekly_live_vs_backtest_report.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/weekly_live_vs_backtest_report.py) so it now uses the actual live-effective allocator/router universe by default through [run_live_effective_parity.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_live_effective_parity.py), runs with a warmup window, and reports recent backtest `Entries` as well as exits. This is the key guard against wasting another week: if live has no trades but the warmup-aware replay had fresh entries, we investigate auth/order/skip paths immediately; if both had no fresh entries, the portfolio is too sparse for the phase. Deployed both scripts to the server and ran a 1d smoke ending `2026-05-13`: live had `0` closes, the backtest had `0` recent entries and `3` exits from warmup positions, so the last 24h alone does not prove a missed-entry bug. A 7d live-effective parity run is now running on the server for the real verdict. I also wrote [CODEX_STATUS_20260513.md](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/docs/CODEX_STATUS_20260513.md) and updated the roadmap checkpoint so the next chat does not have to reconstruct this from memory.
 - 2026-04-09 08:00 UTC — shifted the next debugging step from “more ideas” to concrete live entry telemetry. I inspected the actual server status after the latest deploy and confirmed the current live shape: regime `bull_chop`, `flat=True`, `ivb1=True`, `elder=False`, heartbeat fresh, no open trades. Before this patch, `flat` exposed only `try/entry` counts and `IVB1` collapsed most no-signal outcomes into `other`, which made the bot look more mysterious than it really was. I upgraded [alt_resistance_fade_v1.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/alt_resistance_fade_v1.py) to emit explicit no-signal reasons (`regime`, `same bar`, `range`, `touch`, `reject`, `body`, `distance`, `RSI`, `EMA`, `risk`), added a `last_no_signal_reason()` accessor in [flat_resistance_fade_live.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/strategies/flat_resistance_fade_live.py), expanded [bot/diagnostics.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/bot/diagnostics.py) with grouped `flat_*` counters plus a more specific `IVB1` breakout bucket, and wired those counters into [smart_pump_reversal_bot.py](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/smart_pump_reversal_bot.py). Server-side live params also explain part of the current silence: `flat` is still running on `ARF1_SIGNAL_TF=60m`, `ARF1_MIN_RSI=58`, `ARF1_REJECT_BELOW_RES_ATR=0.12`, while `IVB1` is largely on defaults. This means many `flat_try` events were probably not real setups at all but repeated checks inside the same hourly bar, and many `IVB1` misses were hidden inside one coarse `other` bucket. The new counters are now deployed and should let the next Telegram/log pulses show actual blockers instead of only “try went up, entry stayed zero.” 
 
 - 2026-04-09 08:10 UTC — traced the annual weakness down to one concrete quadrant instead of blaming the whole stack. The `+21.31% / 3 red months` stitched annual is real progress versus the earlier repaired stack, but the weak point is now explicit: messy `bear_chop`. In [dynamic_core3_flat_impulse_nosloped_annual_v1 window 2025-05-13→2025-06-12](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260409_063414_dynamic_core3_flat_impulse_nosloped_annual_v1_w02_20250612/summary.csv), `breakdown + flat` lost `-2.77` with PF `0.678`. Breaking the trades down shows the real culprit: `alt_inplay_breakdown_v1` lost `-4.37` across `33` trades while `alt_resistance_fade_v1` actually added `+1.60`; the worst damage came from repeated short whipsaws on `ADA`, `ETH`, `SOL`, and `LINK`. This is the useful part of the analysis: we now know the current core is not “generally bad”, it is specifically over-firing the breakdown sleeve in noisy bear-chop. I also verified that our first sloped annual repair was not a complete verdict on sloped structure in general because [asc1_annual_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/asc1_annual_repair_v1.json) was explicitly `short-only` (`ASC1_ALLOW_LONGS=0`, `ASC1_ALLOW_SHORTS=1`). That means the right next step is not “give up on sloped levels”, but “test them honestly as a bidirectional structure and separately repair the exact bear-chop failure mode.” I translated that directly into two new frontiers: [bear_chop_core_repair_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/bear_chop_core_repair_v1.json) and [asc1_bidirectional_annual_probe_v1.json](/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/autoresearch/asc1_bidirectional_annual_probe_v1.json), and both are now running. 

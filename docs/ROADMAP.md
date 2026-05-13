@@ -10,7 +10,66 @@ Order of work:
 - live strategy repair third
 - new strategies and new markets only after the core is stable
 
-## Current Checkpoint - 2026-05-12
+## Current Checkpoint - 2026-05-13
+
+- Live server status after the latest checks:
+  - `bybot.service` is active.
+  - current regime is `bull_chop`.
+  - current open crypto trades: `0`.
+  - live log truth is `runtime/live.out`; `logs/bot.log` is stale and should not be used for fresh bot verdicts.
+  - `TRADE_ON=1`, `DRY_RUN=0`, WebSocket traffic is flowing, and live scheduler diagnostics prove `detect()`, gate, scheduler, and per-strategy try counters are increasing.
+  - router is fresh and dynamic: `status=ok`, `scan_ok=true`.
+  - allocator is `degraded`, but not hard-blocking: `safe_mode=false`, `hard_block_new_entries=false`, `allocator_global_risk_mult=0.765`.
+  - current degradation is a risk haircut from WATCH-quality sleeves and symbol overlap, not a full trade stop.
+  - the live blocker is now narrowed to strategy conversion/filtering, especially `breakout_ns_symbol`, `flat_ns_same_bar`, and no-signal/cooldown on the other active sleeves.
+- Current web truth:
+  - `Strategies` shows active live sleeves, not annual-proof status.
+  - `Setup Scanner` is a radar for candidate levels/support/resistance/geometry. Scanner cards are not orders.
+  - the scanner now proves that the bot sees potential setups; the remaining question is whether strategy entry filters are too strict or live is missing entries.
+- Current crypto validation baseline:
+  - the strongest annual-proven narrow base remains `ATT1 + flat + midterm`.
+  - 365d: `+52.99`, PF `1.376`, DD `5.30`, `521` trades, `1` red month.
+  - average historical cadence is about `43` trades/month, but live cadence depends on current regime and filters.
+  - the server currently has more sleeves active than that narrow base, so the old headline cannot be blindly assigned to the expanded live shape.
+- New protection against wasted weeks:
+  - `weekly_live_vs_backtest_report.py` now uses the actual live-effective allocator/router basket by default.
+  - it runs with warmup and reports recent backtest `Entries`, not only exits.
+  - this detects the dangerous case: live has zero trades while the live-effective backtest had fresh entries.
+  - 1d smoke ending `2026-05-13`: live had `0` closes; backtest had `0` recent entries and `3` warmup exits, so the last 24h alone does not prove a missed-entry bug.
+  - 7d live-effective parity completed: live had `0` closed trades; replay had `8` recent entries / `9` exits but lost money (`net=-2.6963`, PF `0.463`, WR `33.3%`). This says recent conditions were bad for the current live-effective mix, but the live/replay entry mismatch still needs a targeted explanation.
+- Alpaca:
+  - `v38_hybrid_top4` remains the best protected compounder candidate.
+  - native Alpaca trailing is only available for whole-share positions; the current `$500` fractional positions use broker fixed stops plus safe software trailing.
+  - intraday income remains paper-only until stale/capacity positions are reconciled and broker-side protection is verified.
+- AI operator:
+  - it now has some runtime/scanner/trade/Alpaca context, but not the full repo/backtest memory.
+  - next required product slice is an AI context bridge: code map, latest validated backtests, live server state, scanner cards, Alpaca orders/positions, and trade-forensics summaries.
+
+## Immediate 2026-05-13 Execution Priorities
+
+1. Fix observability before another silent week:
+   - keep live scheduler diagnostics in place;
+   - add daily/web summaries for top skip reasons by strategy;
+   - treat `breakout_ns_symbol` as the first concrete live mismatch to debug.
+2. Expand only through evidence:
+   - keep current active core scanning;
+   - run annual/OOS/additivity for support/bounce, repaired breakdown/bear continuation, spike/whale/liquidity, and Elder canonical;
+   - promote winners with phase-specific risk rules instead of globally loosening the whole bot.
+3. Build the setup scanner into a real operator surface:
+   - clickable setup card;
+   - candle chart with level/channel/invalidation overlays;
+   - AI explanation from the exact setup JSON plus latest backtest/live stats;
+   - user-approved action queue only, no autonomous live mutation.
+4. Alpaca:
+   - keep `v38_hybrid_top4` as the best protected compounder candidate;
+   - reconcile actual paper account PnL/orders/stops with the web;
+   - do not put real money into intraday until broker-side protection and stale position cleanup are verified.
+5. Project hygiene:
+   - commit only scoped safe fixes;
+   - archive unreviewed Claude/user tails separately;
+   - maintain this roadmap plus `docs/CODEX_STATUS_*.md` so chat resets do not erase the actual state.
+
+## Superseded Checkpoint - 2026-05-12
 
 - Live server was rechecked after the Bybit key rotation:
   - `bybot.service` is running
