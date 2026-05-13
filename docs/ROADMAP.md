@@ -51,6 +51,10 @@ Order of work:
   - this detects the dangerous case: live has zero trades while the live-effective backtest had fresh entries.
   - 1d smoke ending `2026-05-13`: live had `0` closes; backtest had `0` recent entries and `3` warmup exits, so the last 24h alone does not prove a missed-entry bug.
   - 7d live-effective parity completed: live had `0` closed trades; replay had `8` recent entries / `9` exits but lost money (`net=-2.6963`, PF `0.463`, WR `33.3%`). This says recent conditions were bad for the current live-effective mix, but the live/replay entry mismatch still needs a targeted explanation.
+- Research queue durability:
+  - `run_nightly_research_queue.py` now keeps persistent task memory in `runtime/research_nightly/task_state.json`;
+  - it also recovers cooldown from completed `logs/research_nightly/<spec>_*.log` files, so overwritten status files no longer erase prior work;
+  - server verification after deploy: support-bounce and breakdown are on week-long cooldown, and `inplay_retest_repair` launched next.
 - Alpaca:
   - `v38_hybrid_top4` remains the best protected compounder candidate.
   - native Alpaca trailing is only available for whole-share positions; the current `$500` fractional positions use broker fixed stops plus safe software trailing.

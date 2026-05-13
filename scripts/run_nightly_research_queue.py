@@ -68,6 +68,39 @@ def _hours_since(raw: str | None, now: datetime) -> float | None:
     return max(0.0, (now - dt).total_seconds() / 3600.0)
 
 
+def _latest_touch_iso(values: list[str | datetime | None]) -> str | None:
+    latest: datetime | None = None
+    for raw in values:
+        if raw is None:
+            continue
+        if isinstance(raw, datetime):
+            dt = raw
+        else:
+            dt = _parse_ts(str(raw))
+        if dt is None:
+            continue
+        if latest is None or dt > latest:
+            latest = dt
+    return latest.isoformat() if latest is not None else None
+
+
+def _latest_log_time_for_spec(log_dir: Path, spec_path: Path) -> datetime | None:
+    """Recover task cooldown from completed log files if status.json was overwritten."""
+    latest: datetime | None = None
+    try:
+        matches = list(log_dir.glob(f"{spec_path.stem}_*.log"))
+    except Exception:
+        return None
+    for path in matches:
+        try:
+            dt = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc)
+        except Exception:
+            continue
+        if latest is None or dt > latest:
+            latest = dt
+    return latest
+
+
 def _active_research_lines() -> list[str]:
     try:
         out = subprocess.check_output(
@@ -155,6 +188,7 @@ def main() -> int:
     gate = ResearchGate()
     now = _utc_now()
     status_path = ROOT / str(config.get("status_path") or "runtime/research_nightly/status.json")
+    task_state_path = ROOT / str(config.get("task_state_path") or "runtime/research_nightly/task_state.json")
     history_path = ROOT / str(config.get("history_path") or "runtime/research_nightly/history.jsonl")
     log_dir = ROOT / str(config.get("log_dir") or "logs/research_nightly")
     default_min_interval = float(config.get("default_min_interval_hours") or 24)
@@ -165,12 +199,22 @@ def main() -> int:
 
     prev_status = _load_json(status_path, {})
     prev_tasks = dict((prev_status.get("tasks") or {}).items()) if isinstance(prev_status, dict) else {}
+    raw_task_state = _load_json(task_state_path, {})
+    if isinstance(raw_task_state, dict) and isinstance(raw_task_state.get("tasks"), dict):
+        task_state = dict(raw_task_state["tasks"])
+    elif isinstance(raw_task_state, dict):
+        task_state = dict(raw_task_state)
+    else:
+        task_state = {}
+    if not task_state:
+        task_state = dict(prev_tasks)
     active_lines = _active_research_lines()
     active_count = len(active_lines)
 
     run_status: dict[str, Any] = {
         "ts": now.isoformat(),
         "config": str(config_path),
+        "task_state_path": str(task_state_path),
         "active_process_count": active_count,
         "active_processes": active_lines,
         "max_active_processes": max_active,
@@ -241,15 +285,23 @@ def main() -> int:
             continue
 
         min_interval = float(task.get("min_interval_hours") or default_min_interval)
-        prev_task = prev_tasks.get(name, {}) if isinstance(prev_tasks, dict) else {}
-        last_touch = (
-            prev_task.get("last_launched_at")
-            or prev_task.get("last_proposed_at")
-            or prev_task.get("last_checked_at")
+        prev_task = task_state.get(name, {}) if isinstance(task_state, dict) else {}
+        latest_log_time = _latest_log_time_for_spec(log_dir, spec_path)
+        if latest_log_time is not None:
+            task_status["latest_log_at"] = latest_log_time.isoformat()
+        last_touch = _latest_touch_iso(
+            [
+                prev_task.get("last_launched_at"),
+                prev_task.get("last_proposed_at"),
+                prev_task.get("last_checked_at"),
+                prev_task.get("latest_log_at"),
+                latest_log_time,
+            ]
         )
         elapsed = _hours_since(last_touch, now)
         if elapsed is not None and elapsed < min_interval:
             task_status["state"] = "cooldown"
+            task_status["last_touch_at"] = last_touch
             task_status["cooldown_hours_left"] = round(min_interval - elapsed, 2)
             run_status["skipped"].append({"name": name, "reason": "cooldown", "hours_left": task_status["cooldown_hours_left"]})
             continue
@@ -275,6 +327,7 @@ def main() -> int:
                 task_status["state"] = "launched"
                 task_status["pid"] = pid
                 task_status["last_launched_at"] = now.isoformat()
+                task_status["last_touch_at"] = now.isoformat()
                 run_status["launched"].append({"name": name, "spec": spec_rel, "pid": pid})
             launches += 1
             continue
@@ -288,10 +341,18 @@ def main() -> int:
             task_status["state"] = "proposed"
             task_status["proposal_id"] = proposal_id
             task_status["last_proposed_at"] = now.isoformat()
+            task_status["last_touch_at"] = now.isoformat()
             run_status["proposed"].append({"name": name, "spec": spec_rel, "proposal_id": proposal_id})
         launches += 1
 
     run_status["state"] = "ok"
+    if not args.dry_run:
+        for name, task_status in run_status["tasks"].items():
+            previous = dict(task_state.get(name, {})) if isinstance(task_state, dict) else {}
+            previous.update(task_status)
+            previous["last_seen_at"] = now.isoformat()
+            task_state[name] = previous
+        _write_json(task_state_path, {"ts": now.isoformat(), "tasks": task_state})
     _write_json(status_path, run_status)
     _append_jsonl(
         history_path,

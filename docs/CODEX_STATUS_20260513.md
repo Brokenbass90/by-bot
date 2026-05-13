@@ -8,6 +8,8 @@
 - Allocator is still `degraded`, but this is a risk haircut, not a full trade block. The core blocker remains strategy conversion/filtering and live/backtest entry mismatch.
 - Promotion rule added for the project: every strategy/backtest verdict must include both standalone/static evidence and full control-plane/live-effective evidence. A sleeve that only wins standalone is not live-ready.
 - Loss-analysis rule added: losing trades should be routed through `trade_forensics_report.py` / weekly AI forensics so fixes target the actual failure mode (`entry_failed_fast`, `stop_then_reversed`, `gave_back_profit`, etc.) instead of guessing.
+- Research queue durability fixed and deployed: cooldown memory now lives in `runtime/research_nightly/task_state.json` and can also be recovered from completed log files. This prevents the queue from re-running the same finished specs after `status.json` is overwritten.
+- Server queue advanced correctly after the fix: `support_bounce_annual_repair` and `breakdown_bear_entry_quality` are now on ~167h cooldown, and `inplay_retest_repair` launched as the next task (`pid=3845880`).
 
 ## Server Truth
 
@@ -126,8 +128,15 @@ Full `7d` warmup-aware parity verdict:
 ## Current Research State
 
 - Server research queue is active and server-owned, so it should continue even if the laptop sleeps.
-- Active research at this checkpoint:
-  - `support_bounce_v1_annual_repair_v2`.
+- Queue durability is now server-fixed:
+  - persistent task memory: `runtime/research_nightly/task_state.json`;
+  - fallback memory: latest `logs/research_nightly/<spec>_*.log` mtime;
+  - this is specifically to stop repeated runs after Codex/app restarts or laptop sleep.
+- Completed/recent:
+  - `support_bounce_v1_annual_repair_v2` reran and did not pass promotion gates despite positive net; DD/quality remains too weak for live promotion as-is.
+  - `breakdown_recent_bear_window_v2_entry_quality` reran and was weak/failed; do not promote that version blindly.
+- Active after the durability fix:
+  - `inplay_retest_repair` (`configs/autoresearch/inplay_breakout_retest_focus_v1.json`, server pid `3845880`).
 - The `7d` live-effective weekly parity report completed and showed weak recent-market results, so the next expansion should prioritize phase-specific sleeves rather than just loosening the current core.
 
 ## Immediate Next Moves

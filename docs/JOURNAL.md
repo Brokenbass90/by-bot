@@ -5,6 +5,35 @@
 
 ---
 
+## 2026-05-13 | Codex (research queue made durable + next candidate launched)
+
+**Done:**
+
+- Found the concrete reason overnight/day research could waste cycles: `run_nightly_research_queue.py` used `runtime/research_nightly/status.json` as both current-status output and cooldown memory. Because status is overwritten every queue tick, old task memory could disappear and the queue could re-run already-completed specs instead of advancing.
+- Patched `scripts/run_nightly_research_queue.py`:
+  - added persistent task memory in `runtime/research_nightly/task_state.json`;
+  - added recovery from real completed log files under `logs/research_nightly/<spec>_*.log`;
+  - kept dry-run from mutating persistent task memory.
+- Deployed the queue fix and updated `configs/research_nightly_queue.json` on the server.
+- Verified the fixed server queue:
+  - `support_bounce_annual_repair` is on cooldown for about `167.8h`;
+  - `breakdown_bear_entry_quality` is on cooldown for about `167.0h`;
+  - `inplay_retest_repair` launched next (`pid=3845880`).
+- Updated `docs/CODEX_STATUS_20260513.md` with the new research truth.
+
+**Key findings:**
+
+- The “прогоны идут, а утром опять то же самое” problem was real process debt, not user imagination.
+- Current `support_bounce` repair still has positive net but fails gates; current `breakdown` entry-quality sweep is weak. Neither should be promoted blindly.
+- The next useful evidence now comes from `inplay_retest_repair`, then pump-fade/Elder/BRC1/spike/whale/liquidity as the queue advances.
+
+**Next:**
+
+- Let `inplay_retest_repair` finish and read the ranked output.
+- Patch allocator health mapping so intended active sleeves are not marked `WATCH` only because `strategy_health.json` lacks entries.
+- Wire trade-forensics summaries and scanner cards into the AI operator context so it can diagnose with evidence instead of guessing.
+- Add scanner card chart overlays and AI setup explanations; live changes must stay approval-gated.
+
 ## 2026-05-13 | Codex (live scheduler truth + silence narrowed to strategy filters)
 
 **Done:**

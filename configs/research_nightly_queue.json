@@ -11,6 +11,7 @@
   },
   "log_dir": "logs/research_nightly",
   "status_path": "runtime/research_nightly/status.json",
+  "task_state_path": "runtime/research_nightly/task_state.json",
   "history_path": "runtime/research_nightly/history.jsonl",
   "tasks": [
     {
