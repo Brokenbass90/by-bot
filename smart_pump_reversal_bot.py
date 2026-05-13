@@ -2536,6 +2536,8 @@ def _deepseek_local_regime_hint() -> dict[str, Any]:
     weak = int(_diag_get_int("breakout_ns_impulse_weak"))
     body = int(_diag_get_int("breakout_ns_impulse_body"))
     dist = int(_diag_get_int("breakout_ns_dist"))
+    ws_connect = int(_diag_get_int("ws_connect"))
+    ws_disconnect = int(_diag_get_int("ws_disconnect"))
     ws_guard_active = _ws_transport_guard_active()
     ws_guard_reason = str(_ws_transport_guard_reason() or "").lower()
     if ws_guard_active and ("handshake" in ws_guard_reason or "timeout" in ws_guard_reason):

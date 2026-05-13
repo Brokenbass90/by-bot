@@ -12,9 +12,23 @@ Order of work:
 
 ## Current Checkpoint - 2026-05-13
 
+- Latest live delta:
+  - Telegram `/ai` crash is fixed and deployed; the issue was an undeclared `ws_connect/ws_disconnect` variable in the local regime hint helper.
+  - current server-applied regime after restart is `bear_chop`;
+  - active live sleeves after regime/allocator are `midterm`, `sloped`, `att1`, `asm1`, `flat`, and `breakdown`;
+  - allocator remains `degraded` but not hard-blocking, so the next trading blocker is still strategy conversion/filtering, not a dead bot.
+- Permanent validation rule:
+  - every candidate must be checked both as a strategy/static backtest and as a full control-plane/live-effective package;
+  - the report must say whether router/allocator/orchestrator improved, preserved, or damaged the edge;
+  - no sleeve goes live on standalone numbers alone.
+- Permanent loss-improvement rule:
+  - closed losing trades and backtest losers go through trade forensics before parameter changes;
+  - weekly AI forensics should classify whether losses came from bad entry, too-tight stop, reversal after stop, giveback after profit, or regime mismatch;
+  - fixes should be tied to those labels.
+
 - Live server status after the latest checks:
   - `bybot.service` is active.
-  - current regime is `bull_chop`.
+  - current regime at the latest restart is `bear_chop`; earlier May 13 checks were `bull_chop`, so the regime can flip intraday.
   - current open crypto trades: `0`.
   - live log truth is `runtime/live.out`; `logs/bot.log` is stale and should not be used for fresh bot verdicts.
   - `TRADE_ON=1`, `DRY_RUN=0`, WebSocket traffic is flowing, and live scheduler diagnostics prove `detect()`, gate, scheduler, and per-strategy try counters are increasing.

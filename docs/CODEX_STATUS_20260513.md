@@ -1,9 +1,18 @@
 # Codex Status - 2026-05-13
 
+## Latest Delta - 2026-05-13 15:55 UTC
+
+- Fixed the Telegram `/ai` crash: `_deepseek_local_regime_hint()` used `ws_connect/ws_disconnect` without reading them from diagnostics. The patch is deployed to the server and `bybot.service` restarted cleanly.
+- Fresh server state after restart: `Trading: ON`, `DRY_RUN=OFF`, Bybit auth OK, heartbeat fresh, `safe_mode=false`, `hard_block=false`.
+- Current applied regime is now `bear_chop`; live-enabled sleeves after regime/allocator are `midterm`, `sloped`, `att1`, `asm1`, `flat`, and `breakdown`.
+- Allocator is still `degraded`, but this is a risk haircut, not a full trade block. The core blocker remains strategy conversion/filtering and live/backtest entry mismatch.
+- Promotion rule added for the project: every strategy/backtest verdict must include both standalone/static evidence and full control-plane/live-effective evidence. A sleeve that only wins standalone is not live-ready.
+- Loss-analysis rule added: losing trades should be routed through `trade_forensics_report.py` / weekly AI forensics so fixes target the actual failure mode (`entry_failed_fast`, `stop_then_reversed`, `gave_back_profit`, etc.) instead of guessing.
+
 ## Server Truth
 
 - Server bot process is alive: `bybot.service` is active.
-- Current market state is `bull_chop`.
+- Current market state at the latest restart is `bear_chop` (earlier May 13 checks were `bull_chop`, so the regime has changed intraday).
 - Current open crypto trades: `0`.
 - Bybit live mode is still intended to be real mode, not dry-run, but any key values must stay in `.env` only and must not be committed.
 - Router is fresh and dynamic:
