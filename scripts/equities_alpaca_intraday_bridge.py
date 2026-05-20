@@ -49,6 +49,14 @@ Config env vars (or configs/alpaca_paper_local.env):
   INTRADAY_EQUITY_CURVE_GATE=1       # 1=enabled, 0=disabled
   INTRADAY_EQUITY_CURVE_DAYS=20      # rolling window for equity filter
   INTRADAY_CLOSE_UNKNOWN_REMOTE_POSITIONS=0  # close paper leftovers not tracked in intraday_state
+  INTRADAY_POSITION_MANAGER_ENABLE=1 # manage tracked open paper positions
+  INTRADAY_TRAIL_ENABLE=1            # software trailing for tracked positions
+  INTRADAY_TRAIL_MIN_GAIN_PCT=4.0    # start trailing after best gain >= X%
+  INTRADAY_TRAIL_DRAWDOWN_PCT=3.5    # close after pullback from best price >= X%
+  INTRADAY_TIME_STOP_MINUTES=2880    # close stale intraday positions after N minutes
+  INTRADAY_MISSING_POSITION_GRACE_MINUTES=10  # wait for broker fill/position sync before treating missing state as closed
+  INTRADAY_REENTRY_COOLDOWN_MINUTES=60
+  INTRADAY_BLOCK_ENTRIES_AFTER_MANAGER_CLOSE=1
   TG_TOKEN, TG_CHAT_ID               # Telegram alerts
 """
 from __future__ import annotations
@@ -219,6 +227,24 @@ def _env_float(name: str, default: float) -> float:
     except Exception:
         return default
 
+def _safe_float(value: Any, default: float = 0.0) -> float:
+    try:
+        if value is None or value == "":
+            return default
+        return float(value)
+    except Exception:
+        return default
+
+def _env_pct(name: str, default_pct: float) -> float:
+    """Read a percentage env var, accepting either 3.5 or 0.035 style input."""
+    raw = _env(name, "")
+    if not raw:
+        return default_pct
+    value = _safe_float(raw, default_pct)
+    if 0.0 < value <= 1.0:
+        return value * 100.0
+    return value
+
 def _env_int(name: str, default: int) -> int:
     try:
         return int(_env(name, str(default)))
@@ -234,6 +260,16 @@ def _env_csv(name: str, default: str = "") -> List[str]:
     if not raw:
         return []
     return [p.strip().upper() for p in raw.replace(";", ",").split(",") if p.strip()]
+
+
+def _format_qty(qty: float) -> str:
+    if abs(qty - round(qty)) < 1e-9:
+        return str(int(round(qty)))
+    return f"{qty:.3f}".rstrip("0").rstrip(".")
+
+
+def _is_fractional_qty(qty: float) -> bool:
+    return abs(qty - round(qty)) > 1e-9
 
 
 def _refresh_runtime_paths() -> None:
@@ -556,10 +592,22 @@ class AlpacaClient:
             cancelled += 1
         return cancelled
 
-    def submit_bracket_order(self, symbol: str, side: str, qty: int,
+    def submit_bracket_order(self, symbol: str, side: str, qty: float,
                              stop_loss_price: float, take_profit_price: float) -> dict:
+        qty_value = float(qty)
+        if _is_fractional_qty(qty_value):
+            # Alpaca rejects fractional bracket orders. For small paper accounts,
+            # enter with a simple market order and let the software manager own exits.
+            payload = {
+                "symbol": symbol, "qty": _format_qty(qty_value), "side": side,
+                "type": "market", "time_in_force": "day",
+            }
+            result = self._req("POST", f"{self.base_url}/v2/orders", payload)
+            if isinstance(result, dict):
+                result["_local_protection"] = "software_manager_fractional_fallback"
+            return result
         payload: dict = {
-            "symbol": symbol, "qty": str(qty), "side": side,
+            "symbol": symbol, "qty": _format_qty(qty_value), "side": side,
             "type": "market", "time_in_force": "day", "order_class": "bracket",
             "stop_loss":   {"stop_price":  f"{stop_loss_price:.2f}"},
             "take_profit": {"limit_price": f"{take_profit_price:.2f}"},
@@ -610,6 +658,9 @@ class PositionState:
     entry_ts: int
     alpaca_order_id: str = ""
     realized_pnl: float = 0.0   # filled on close
+    peak_price: float = 0.0      # high-water mark for longs
+    trough_price: float = 0.0    # low-water mark for shorts
+    last_management_ts: int = 0
 
 def _load_state() -> Dict[str, PositionState]:
     if not STATE_FILE.exists():
@@ -623,6 +674,221 @@ def _load_state() -> Dict[str, PositionState]:
 def _save_state(state: Dict[str, PositionState]) -> None:
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     STATE_FILE.write_text(json.dumps({k: asdict(v) for k, v in state.items()}, indent=2))
+
+
+def _reentry_block_file() -> Path:
+    explicit = _env("INTRADAY_REENTRY_BLOCK_FILE", "")
+    if explicit:
+        return Path(explicit).expanduser()
+    return STATE_FILE.with_name(f"{STATE_FILE.stem}_reentry_block.json")
+
+
+def _load_reentry_blocks(now_ts: int) -> Dict[str, dict]:
+    path = _reentry_block_file()
+    if not path.exists():
+        return {}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(raw, dict):
+            return {}
+        return {
+            str(sym).upper(): rec
+            for sym, rec in raw.items()
+            if _safe_float((rec or {}).get("blocked_until_ts"), 0.0) > now_ts
+        }
+    except Exception:
+        return {}
+
+
+def _save_reentry_blocks(blocks: Dict[str, dict]) -> None:
+    path = _reentry_block_file()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(blocks, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def _add_reentry_block(blocks: Dict[str, dict], symbol: str, reason: str,
+                       now_ts: int, cooldown_min: int) -> None:
+    if cooldown_min <= 0:
+        return
+    blocks[symbol.upper()] = {
+        "reason": reason,
+        "closed_at_ts": now_ts,
+        "blocked_until_ts": now_ts + cooldown_min * 60,
+    }
+
+
+def _remote_market_price(pos: dict, fallback: float) -> float:
+    return (
+        _safe_float(pos.get("current_price"), 0.0)
+        or _safe_float(pos.get("avg_entry_price"), 0.0)
+        or fallback
+    )
+
+
+def _is_short_position(ps: PositionState, remote_pos: dict) -> bool:
+    side = str(ps.side or remote_pos.get("side") or "").strip().lower()
+    return side in {"short", "sell"}
+
+
+def _refresh_position_extremes(ps: PositionState, remote_pos: dict) -> dict:
+    current = _remote_market_price(remote_pos, ps.entry_price)
+    if current <= 0 or ps.entry_price <= 0:
+        return {"current": current, "best_gain_pct": 0.0, "trail_drawdown_pct": 0.0}
+
+    short = _is_short_position(ps, remote_pos)
+    if short:
+        if ps.trough_price <= 0:
+            ps.trough_price = min(ps.entry_price, current)
+        ps.trough_price = min(ps.trough_price, current)
+        best_gain_pct = (ps.entry_price / max(1e-9, ps.trough_price) - 1.0) * 100.0
+        trail_drawdown_pct = (current / max(1e-9, ps.trough_price) - 1.0) * 100.0
+    else:
+        if ps.peak_price <= 0:
+            ps.peak_price = max(ps.entry_price, current)
+        ps.peak_price = max(ps.peak_price, current)
+        best_gain_pct = (ps.peak_price / max(1e-9, ps.entry_price) - 1.0) * 100.0
+        trail_drawdown_pct = (ps.peak_price - current) / max(1e-9, ps.peak_price) * 100.0
+
+    return {
+        "current": current,
+        "best_gain_pct": best_gain_pct,
+        "trail_drawdown_pct": max(0.0, trail_drawdown_pct),
+    }
+
+
+def _position_management_decision(ps: PositionState, remote_pos: dict, now_ts: int) -> dict:
+    stats = _refresh_position_extremes(ps, remote_pos)
+    entry_ts = int(ps.entry_ts if ps.entry_ts is not None else now_ts)
+    held_min = max(0, (now_ts - entry_ts) // 60)
+    trail_enable = _env_bool("INTRADAY_TRAIL_ENABLE", True)
+    trail_min_gain_pct = max(0.0, _env_pct("INTRADAY_TRAIL_MIN_GAIN_PCT", 4.0))
+    trail_drawdown_pct = max(0.01, _env_pct("INTRADAY_TRAIL_DRAWDOWN_PCT", _env_pct("INTRADAY_TRAIL_PCT", 3.5)))
+    time_stop_enable = _env_bool("INTRADAY_TIME_STOP_ENABLE", True)
+    time_stop_min = max(0, _env_int("INTRADAY_TIME_STOP_MINUTES", 2880))
+
+    decision = {
+        "symbol": ps.symbol,
+        "side": ps.side,
+        "held_min": held_min,
+        "current_price": round(float(stats["current"] or 0.0), 4),
+        "best_gain_pct": round(float(stats["best_gain_pct"] or 0.0), 4),
+        "trail_drawdown_pct": round(float(stats["trail_drawdown_pct"] or 0.0), 4),
+        "action": "hold",
+        "reason": "",
+    }
+    if (
+        trail_enable
+        and stats["best_gain_pct"] >= trail_min_gain_pct
+        and stats["trail_drawdown_pct"] >= trail_drawdown_pct
+    ):
+        decision["action"] = "close"
+        decision["reason"] = "software_trailing_stop"
+        return decision
+    if time_stop_enable and time_stop_min > 0 and held_min >= time_stop_min:
+        decision["action"] = "close"
+        decision["reason"] = "intraday_time_stop"
+        return decision
+    return decision
+
+
+def _pending_close_symbols(open_orders: List[dict], open_positions: Dict[str, dict]) -> set[str]:
+    pending: set[str] = set()
+    for order in open_orders:
+        symbol = str(order.get("symbol") or "").upper()
+        if not symbol or symbol not in open_positions:
+            continue
+        order_type = str(order.get("type") or "").lower()
+        if order_type != "market":
+            continue
+        order_side = str(order.get("side") or "").lower()
+        pos_side = str(open_positions.get(symbol, {}).get("side") or "").lower()
+        if (pos_side == "long" and order_side == "sell") or (pos_side == "short" and order_side == "buy"):
+            pending.add(symbol)
+    return pending
+
+
+def _manage_tracked_positions(client: AlpacaClient, state: Dict[str, PositionState],
+                              open_positions: Dict[str, dict], now_ts: int,
+                              dry_run: bool, tg_token: str, tg_chat: str,
+                              now_str: str, advisory: Dict[str, Any]) -> set[str]:
+    if not _env_bool("INTRADAY_POSITION_MANAGER_ENABLE", True):
+        advisory["position_management"] = {"enabled": False, "actions": []}
+        return set()
+
+    manager_dry_run = dry_run or _env_bool("INTRADAY_POSITION_MANAGER_DRY_RUN", False)
+    reentry_blocks = _load_reentry_blocks(now_ts)
+    actions: List[dict] = []
+    closed_symbols: set[str] = set()
+    state_changed = False
+    trail_cooldown = max(0, _env_int("INTRADAY_TRAIL_REENTRY_COOLDOWN_MINUTES", _env_int("INTRADAY_REENTRY_COOLDOWN_MINUTES", 60)))
+    time_stop_cooldown = max(0, _env_int("INTRADAY_TIME_STOP_REENTRY_COOLDOWN_MINUTES", _env_int("INTRADAY_REENTRY_COOLDOWN_MINUTES", 60)))
+
+    for sym, ps in list(state.items()):
+        remote = open_positions.get(sym.upper())
+        if not remote:
+            continue
+        decision = _position_management_decision(ps, remote, now_ts)
+        ps.last_management_ts = now_ts
+        actions.append(decision)
+        state_changed = True
+        if decision["action"] != "close":
+            continue
+
+        reason = str(decision["reason"])
+        realized = _safe_float(remote.get("unrealized_pl"), 0.0)
+        realized_label = _fmt_usd_compact(realized)
+        print(
+            f"\n  [{sym}] position manager → {reason} | held={decision['held_min']}m "
+            f"| best={decision['best_gain_pct']:.2f}% drawdown={decision['trail_drawdown_pct']:.2f}% "
+            f"| est. P&L={realized_label}"
+        )
+
+        if manager_dry_run:
+            decision["dry_run"] = True
+            print("    → [DRY-RUN] Would cancel open orders and close Alpaca paper position")
+            continue
+
+        try:
+            cancelled = client.cancel_open_orders_for_symbol(sym)
+            result = client.close_position(sym)
+            _record_daily_pnl(realized)
+            state.pop(sym, None)
+            closed_symbols.add(sym.upper())
+            state_changed = True
+            cooldown = trail_cooldown if reason == "software_trailing_stop" else time_stop_cooldown
+            _add_reentry_block(reentry_blocks, sym, reason, now_ts, cooldown)
+            decision.update({
+                "closed": True,
+                "cancelled_orders": cancelled,
+                "result": result.get("status") or result.get("id") or "submitted",
+                "realized_pnl_est_usd": round(realized, 4),
+                "reentry_cooldown_min": cooldown,
+            })
+            print(f"    ✅ Close sent | cancelled_orders={cancelled} | cooldown={cooldown}m")
+            _tg(
+                tg_token,
+                tg_chat,
+                f"🧭 <b>Alpaca intraday manager</b>\n"
+                f"{sym}: {reason}\n"
+                f"Held: {decision['held_min']}m | Best: {decision['best_gain_pct']:.2f}% "
+                f"| Pullback: {decision['trail_drawdown_pct']:.2f}%\n"
+                f"Est. P&L: {realized_label} | Re-entry cooldown: {cooldown}m\n{now_str}",
+            )
+        except Exception as exc:
+            decision.update({"closed": False, "error": str(exc)})
+            print(f"    ✗ Position manager close failed: {exc}")
+            _tg(tg_token, tg_chat, f"⚠️ <b>Alpaca intraday manager</b> failed for {sym}: {exc}")
+
+    _save_reentry_blocks(reentry_blocks)
+    if state_changed:
+        _save_state(state)
+    advisory["position_management"] = {
+        "enabled": True,
+        "dry_run": manager_dry_run,
+        "actions": actions,
+        "reentry_blocked_symbols": sorted(reentry_blocks),
+    }
+    return closed_symbols
 
 # ── Equity curve log ────────────────────────────────────────────────────────────
 @dataclass
@@ -779,7 +1045,8 @@ def _load_candles(symbol: str, client: AlpacaClient, dry_run: bool,
         historical = load_m5_csv(str(csv_path))[-1500:]
 
     live: List[Candle] = []
-    if not dry_run:
+    fetch_live_bars = (not dry_run) or _env_bool("INTRADAY_DRY_RUN_FETCH_LIVE_DATA", False)
+    if fetch_live_bars:
         try:
             live = client.get_bars(symbol, timeframe="5Min", limit=200)
         except Exception as exc:
@@ -891,15 +1158,56 @@ def run_once(client: AlpacaClient, dry_run: bool,
 
     # ── Load open position state ───────────────────────────────────
     state = _load_state()
+    reentry_blocks = _load_reentry_blocks(now_ts)
+    advisory["reentry_blocked_symbols"] = sorted(reentry_blocks)
 
     # ── Sync with Alpaca: detect SL/TP closes ─────────────────────
     if not dry_run:
         try:
-            open_positions = {p["symbol"]: p for p in client.list_positions()}
+            open_positions = {str(p.get("symbol") or "").upper(): p for p in client.list_positions()}
         except Exception:
             open_positions = {}
+        try:
+            open_orders = client.list_orders(status="open")
+        except Exception:
+            open_orders = []
 
-        closed = [sym for sym in list(state.keys()) if sym not in open_positions]
+        open_order_symbols = {
+            str(order.get("symbol") or "").strip().upper()
+            for order in open_orders
+            if str(order.get("symbol") or "").strip()
+        }
+        missing_position_grace_min = max(0, _env_int("INTRADAY_MISSING_POSITION_GRACE_MINUTES", 10))
+        closed: list[str] = []
+        pending_entry_sync: list[dict[str, Any]] = []
+        for sym in list(state.keys()):
+            if sym in open_positions:
+                continue
+            ps = state[sym]
+            held_min = max(0, (now_ts - int(ps.entry_ts or now_ts)) // 60)
+            if sym in open_order_symbols:
+                pending_entry_sync.append({
+                    "symbol": sym,
+                    "held_min": held_min,
+                    "reason": "open_order_without_position",
+                })
+                continue
+            if held_min < missing_position_grace_min:
+                pending_entry_sync.append({
+                    "symbol": sym,
+                    "held_min": held_min,
+                    "reason": "missing_position_grace",
+                    "grace_min": missing_position_grace_min,
+                })
+                continue
+            closed.append(sym)
+        if pending_entry_sync:
+            advisory["pending_entry_sync"] = pending_entry_sync
+            for item in pending_entry_sync:
+                print(
+                    f"\n  [{item['symbol']}] position not visible yet "
+                    f"({item['reason']}, held={item['held_min']}m) — keeping state"
+                )
         for sym in closed:
             ps = state.pop(sym)
             held_min = (now_ts - ps.entry_ts) // 60
@@ -918,11 +1226,32 @@ def run_once(client: AlpacaClient, dry_run: bool,
                 f"Est. P&L: {realized_label}")
         _save_state(state)
 
+        manager_closed_symbols = _manage_tracked_positions(
+            client, state, open_positions, now_ts, dry_run, tg_token, tg_chat, now_str, advisory
+        )
+        reentry_blocks = _load_reentry_blocks(now_ts)
+        advisory["reentry_blocked_symbols"] = sorted(reentry_blocks)
+        if manager_closed_symbols and _env_bool("INTRADAY_BLOCK_ENTRIES_AFTER_MANAGER_CLOSE", True):
+            entries_blocked = True
+            cleanup_msg = f"Position manager closed {len(manager_closed_symbols)} tracked position(s); entries paused until next tick"
+            advisory["protection"]["position_manager_cleanup"] = {
+                "enabled": True,
+                "ok": False,
+                "message": cleanup_msg,
+                "symbols": sorted(manager_closed_symbols),
+            }
+            print(f"\n  [PM-CLEANUP] {cleanup_msg}")
+
         monthly_managed_symbols = _load_monthly_managed_symbols()
-        remote_only_symbols = sorted(sym for sym in open_positions.keys() if sym not in state)
+        pending_close_symbols = _pending_close_symbols(open_orders, open_positions) - set(state.keys())
+        remote_only_symbols = sorted(
+            sym for sym in open_positions.keys()
+            if sym not in state and sym not in manager_closed_symbols and sym not in pending_close_symbols
+        )
         protected_remote_symbols = sorted(sym for sym in remote_only_symbols if sym in monthly_managed_symbols)
         remote_only_symbols = sorted(sym for sym in remote_only_symbols if sym not in monthly_managed_symbols)
         advisory["remote_only_positions"] = list(remote_only_symbols)
+        advisory["pending_close_positions"] = sorted(pending_close_symbols)
         advisory["monthly_managed_symbols"] = sorted(monthly_managed_symbols)
         advisory["monthly_managed_positions"] = list(protected_remote_symbols)
         close_unknown_remote = _env_bool("INTRADAY_CLOSE_UNKNOWN_REMOTE_POSITIONS", False)
@@ -951,16 +1280,18 @@ def run_once(client: AlpacaClient, dry_run: bool,
                 print("    → Keeping them as occupied slots for this cycle")
     else:
         open_positions = {}
+        pending_close_symbols = set()
         remote_only_symbols = []
         monthly_managed_symbols = _load_monthly_managed_symbols()
         protected_remote_symbols = []
+        advisory["position_management"] = {"enabled": _env_bool("INTRADAY_POSITION_MANAGER_ENABLE", True), "dry_run": True, "actions": []}
         advisory["monthly_managed_symbols"] = sorted(monthly_managed_symbols)
 
     occupied_symbols = sorted(
         set(state.keys())
         | set(remote_only_symbols)
         | set(protected_remote_symbols)
-        | set(monthly_managed_symbols)
+        | set(pending_close_symbols)
     )
     open_count = len(occupied_symbols)
     advisory["open_positions"] = list(occupied_symbols)
@@ -996,10 +1327,27 @@ def run_once(client: AlpacaClient, dry_run: bool,
             print(f"    → Monthly-managed Alpaca position exists — preserve and skip")
             continue
 
+        if symbol in pending_close_symbols:
+            symbol_status["status"] = "pending_close_order"
+            advisory["symbols"].append(symbol_status)
+            print(f"    → Pending close order exists — skip")
+            continue
+
         if symbol in monthly_managed_symbols:
             symbol_status["status"] = "monthly_managed_symbol"
             advisory["symbols"].append(symbol_status)
             print(f"    → Reserved by monthly Alpaca cycle — skip")
+            continue
+
+        if symbol in reentry_blocks:
+            remaining_min = max(0, int((_safe_float(reentry_blocks[symbol].get("blocked_until_ts"), now_ts) - now_ts) // 60))
+            symbol_status.update({
+                "status": "reentry_blocked",
+                "remaining_min": remaining_min,
+                "reason": reentry_blocks[symbol].get("reason", ""),
+            })
+            advisory["symbols"].append(symbol_status)
+            print(f"    → Re-entry cooldown active ({remaining_min}m) — skip")
             continue
 
         if entries_blocked:
@@ -1104,6 +1452,8 @@ def run_once(client: AlpacaClient, dry_run: bool,
                     symbol=symbol, side=sig.side, entry_price=entry_price,
                     sl_price=sl_price, tp_price=tp_price, qty=qty,
                     entry_ts=now_ts, alpaca_order_id=order_id,
+                    peak_price=entry_price, trough_price=entry_price,
+                    last_management_ts=now_ts,
                 )
                 open_count += 1
                 _save_state(state)
@@ -1117,6 +1467,7 @@ def run_once(client: AlpacaClient, dry_run: bool,
                     "rr_label": rr_label,
                     "reason": sig.reason or "",
                     "order_id": order_id,
+                    "local_protection": order.get("_local_protection") or "broker_bracket",
                 })
                 advisory["symbols"].append(symbol_status)
                 reason_label = _humanize_reason(sig.reason)
@@ -1134,7 +1485,10 @@ def run_once(client: AlpacaClient, dry_run: bool,
     print(f"\n  Done. Open: {list(state.keys()) or 'none'}")
     print(f"  Today P&L: ${_get_today_pnl():.2f}")
     advisory["today_pnl_usd"] = _get_today_pnl()
-    advisory["open_positions"] = sorted(set(state.keys()) | set(remote_only_symbols))
+    advisory["open_positions"] = sorted(
+        set(state.keys()) | set(remote_only_symbols) | set(protected_remote_symbols) | set(pending_close_symbols)
+    )
+    advisory["occupied_symbols"] = advisory["open_positions"]
     _write_json_atomic(ADVISORY_FILE, advisory)
 
 # ── CLI ─────────────────────────────────────────────────────────────────────────
