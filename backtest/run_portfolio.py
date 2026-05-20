@@ -49,6 +49,7 @@ from backtest.engine import BacktestParams, KlineStore, Candle
 from backtest.metrics import summarize_trades
 from backtest.portfolio_engine import run_portfolio_backtest
 from news_filter import is_news_blocked, load_news_events, load_news_policy
+from strategies.signals import TradeSignal
 
 
 def _import_strategy_class(module_name: str, class_name: str):
@@ -68,6 +69,13 @@ def _import_strategy_class(module_name: str, class_name: str):
         except AttributeError:
             continue
     raise ImportError(f"Cannot import {class_name} from strategies or archive for module '{module_name}'")
+
+
+def _optional_strategy_class(module_name: str, class_name: str):
+    try:
+        return _import_strategy_class(module_name, class_name)
+    except ImportError:
+        return None
 
 
 BounceBTStrategy = _import_strategy_class("bounce_bt", "BounceBTStrategy")
@@ -145,7 +153,7 @@ PumpMomentumV1Strategy = _import_strategy_class("pump_momentum_v1", "PumpMomentu
 ImpulseVolumeBreakoutV1Strategy = _import_strategy_class("impulse_volume_breakout_v1", "ImpulseVolumeBreakoutV1Strategy")
 FundingRateReversionV1Strategy = _import_strategy_class("funding_rate_reversion_v1", "FundingRateReversionV1")
 LiquidationCascadeEntryV1Strategy = _import_strategy_class("liquidation_cascade_entry_v1", "LiquidationCascadeEntryV1")
-AltLiquiditySweepReversalV1Strategy = _import_strategy_class("alt_liquidity_sweep_reversal_v1", "AltLiquiditySweepReversalV1Strategy")
+AltLiquiditySweepReversalV1Strategy = _optional_strategy_class("alt_liquidity_sweep_reversal_v1", "AltLiquiditySweepReversalV1Strategy")
 AltLiquiditySweepReversalV2Strategy = _import_strategy_class("alt_liquidity_sweep_reversal_v2", "AltLiquiditySweepReversalV2Strategy")
 AltSpikeRejectionV1Strategy = _import_strategy_class("alt_spike_rejection_v1", "AltSpikeRejectionV1Strategy")
 AltBearRegimeContinuationV1Strategy = _import_strategy_class("alt_bear_regime_continuation_v1", "AltBearRegimeContinuationV1Strategy")
@@ -155,6 +163,59 @@ AltSlopedMomentumV1Strategy = _import_strategy_class("alt_sloped_momentum_v1", "
 AltVolumeSpikeV1Strategy = _import_strategy_class("alt_volume_spike_momentum_v1", "AltVolumeSpikeV1Strategy")
 AltSlopeBreakV1Strategy = _import_strategy_class("alt_slope_break_v1", "AltSlopeBreakV1Strategy")
 AltHorizontalBreakV1Strategy = _import_strategy_class("alt_horizontal_break_v1", "AltHorizontalBreakV1Strategy")
+AltBearBreakdownV1Strategy = _import_strategy_class("alt_bear_breakdown_v1", "AltBearBreakdownV1")
+AltBearConsolidationShortV1Strategy = _import_strategy_class("alt_bear_consolidation_short_v1", "AltBearConsolidationShortV1")
+AltElderRevivedV1Strategy = _import_strategy_class("alt_elder_revived_v1", "AltElderRevivedV1")
+AltMomentumBreakoutV1Strategy = _import_strategy_class("alt_momentum_breakout_v1", "AltMomentumBreakoutV1")
+AltPullbackContinuationV1Strategy = _import_strategy_class("alt_pullback_continuation_v1", "AltPullbackContinuationV1")
+AltSqueezeBreakoutV1Strategy = _import_strategy_class("alt_squeeze_breakout_v1", "AltSqueezeBreakoutV1")
+
+
+def _bars_from_candles(candles: List[Candle]) -> List[dict]:
+    return [
+        {
+            "ts": c.ts,
+            "open": float(c.o),
+            "high": float(c.h),
+            "low": float(c.l),
+            "close": float(c.c),
+            "volume": float(c.v),
+        }
+        for c in candles
+    ]
+
+
+def _sliced_tf_bars(store: KlineStore, i5: int, attr: str) -> List[dict]:
+    candles = list(getattr(store, attr, []) or [])
+    if not candles:
+        return []
+    ratio = {"c5": 1, "c1h": 12, "c4h": 48}.get(attr, 1)
+    idx = min(len(candles) - 1, max(0, int(i5) // ratio))
+    return _bars_from_candles(candles[: idx + 1])
+
+
+def _adapt_eval_signal(raw: object, *, strategy: str, symbol: str, time_stop_bars: int = 0) -> Optional[TradeSignal]:
+    if raw is None:
+        return None
+    tps = [float(getattr(raw, "tp1", 0.0) or 0.0), float(getattr(raw, "tp2", 0.0) or 0.0)]
+    tps = [x for x in tps if x > 0]
+    if not tps:
+        return None
+    sig = TradeSignal(
+        strategy=strategy,
+        symbol=symbol,
+        side=str(getattr(raw, "side", "") or ""),
+        entry=float(getattr(raw, "entry", 0.0) or 0.0),
+        sl=float(getattr(raw, "sl", 0.0) or 0.0),
+        tp=float(tps[0]),
+        tps=tps,
+        tp_fracs=[0.4, 0.3][: len(tps)],
+        trailing_atr_mult=float(getattr(raw, "trail_atr_mult", 0.0) or 0.0),
+        be_trigger_rr=1.0,
+        time_stop_bars=max(0, int(time_stop_bars or 0)),
+        reason=str(getattr(raw, "rationale", "") or strategy),
+    )
+    return sig if sig.validate() else None
 
 
 def _ema(values: List[float], period: int) -> float:
@@ -482,6 +543,12 @@ def _allocator_risk_mult(strategy_name: str, regime: str) -> float:
         "alt_resistance_fade_v1": "FLAT_RISK_MULT",
         "alt_sloped_channel_v1": "SLOPED_RISK_MULT",
         "alt_trendline_touch_v1": "ATT1_RISK_MULT",
+        "alt_bear_breakdown_v1": "BBD1_RISK_MULT",
+        "alt_bear_consolidation_short_v1": "BCS1_RISK_MULT",
+        "alt_elder_revived_v1": "ELDER_REVIVED_RISK_MULT",
+        "alt_momentum_breakout_v1": "MBO1_RISK_MULT",
+        "alt_pullback_continuation_v1": "PBC1_RISK_MULT",
+        "alt_squeeze_breakout_v1": "SQB1_RISK_MULT",
         "alt_sloped_momentum_v1": "ASM1_RISK_MULT",
         "alt_slope_break_v1": "ASB1_RISK_MULT",
         "alt_horizontal_break_v1": "HZBO1_RISK_MULT",
@@ -932,6 +999,8 @@ def main():
 
     strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
     allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_pullback_be_trail", "sr_break_retest_volume_v1", "sloped_break_retest_v1", "sloped_resistance_choch_v1", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "smart_grid_v2", "smart_grid_v3", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow", "trendline_break_retest_v2", "flat_bounce_v2", "flat_bounce_v3", "btc_eth_trend_follow_v2", "trendline_break_retest_v3", "trendline_break_retest_v4", "structure_shift_v1", "structure_shift_v2", "tv_atr_trend_v1", "tv_atr_trend_v2", "triple_screen_v132", "triple_screen_v132b", "btc_regime_retest_v1", "btc_cycle_pullback_v1", "btc_macro_cycle_v1", "btc_cycle_continuation_v1", "btc_cycle_level_target_v2", "btc_daily_level_reclaim_v1", "btc_swing_zone_reclaim_v1", "btc_weekly_zone_reclaim_v2", "btc_regime_flip_continuation_v1", "btc_sloped_reclaim_v1", "alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1", "alt_inplay_breakdown_v1", "alt_inplay_breakdown_v2", "alt_support_bounce_v1", "alt_range_scalp_v1", "alt_vwap_mean_reversion_v1", "alt_liquidity_sweep_reversal_v1", "alt_liquidity_sweep_reversal_v2", "alt_spike_rejection_v1", "alt_bear_regime_continuation_v1", "alt_whale_print_follow_v1", "micro_scalper_v1", "micro_scalper_bounce_v1", "micro_scalper_breakout_v1", "alt_support_reclaim_v1", "pump_fade_v4r", "pump_fade_simple", "pump_fade_v2", "pump_fade_v3", "btc_eth_midterm_pullback_v2", "btc_eth_midterm_v3", "btc_eth_midterm_short_v1", "btc_eth_midterm_short_v2", "funding_rate_reversion_v1", "liquidation_cascade_entry_v1", "pump_momentum_v1", "elder_triple_screen_v2", "elder_triple_screen_v3", "impulse_volume_breakout_v1",
+        "alt_bear_breakdown_v1", "alt_bear_consolidation_short_v1", "alt_elder_revived_v1",
+        "alt_momentum_breakout_v1", "alt_pullback_continuation_v1", "alt_squeeze_breakout_v1",
         "alt_trendline_touch_v1", "alt_sloped_momentum_v1", "alt_volume_spike_momentum_v1",
         "alt_slope_break_v1",
         "alt_horizontal_break_v1"}
@@ -1135,12 +1204,20 @@ def main():
     impulse_volume_breakout_v1 = {sym: ImpulseVolumeBreakoutV1Strategy() for sym in symbols} if "impulse_volume_breakout_v1" in strategies else {}
     funding_rate_reversion_v1 = {sym: FundingRateReversionV1Strategy() for sym in symbols} if "funding_rate_reversion_v1" in strategies else {}
     liquidation_cascade_entry_v1 = {sym: LiquidationCascadeEntryV1Strategy() for sym in symbols} if "liquidation_cascade_entry_v1" in strategies else {}
+    if "alt_liquidity_sweep_reversal_v1" in strategies and AltLiquiditySweepReversalV1Strategy is None:
+        raise ImportError("alt_liquidity_sweep_reversal_v1 is retired/missing; use alt_liquidity_sweep_reversal_v2")
     alt_liquidity_sweep_reversal_v1 = {sym: AltLiquiditySweepReversalV1Strategy() for sym in symbols} if "alt_liquidity_sweep_reversal_v1" in strategies else {}
     alt_liquidity_sweep_reversal_v2 = {sym: AltLiquiditySweepReversalV2Strategy() for sym in symbols} if "alt_liquidity_sweep_reversal_v2" in strategies else {}
     alt_spike_rejection_v1 = {sym: AltSpikeRejectionV1Strategy() for sym in symbols} if "alt_spike_rejection_v1" in strategies else {}
     alt_bear_regime_continuation_v1 = {sym: AltBearRegimeContinuationV1Strategy() for sym in symbols} if "alt_bear_regime_continuation_v1" in strategies else {}
     alt_whale_print_follow_v1 = {sym: AltWhalePrintFollowV1Strategy() for sym in symbols} if "alt_whale_print_follow_v1" in strategies else {}
     alt_trendline_touch_v1 = {sym: AltTrendlineTouchV1Strategy() for sym in symbols} if "alt_trendline_touch_v1" in strategies else {}
+    alt_bear_breakdown_v1 = {sym: AltBearBreakdownV1Strategy() for sym in symbols} if "alt_bear_breakdown_v1" in strategies else {}
+    alt_bear_consolidation_short_v1 = {sym: AltBearConsolidationShortV1Strategy() for sym in symbols} if "alt_bear_consolidation_short_v1" in strategies else {}
+    alt_elder_revived_v1 = {sym: AltElderRevivedV1Strategy() for sym in symbols} if "alt_elder_revived_v1" in strategies else {}
+    alt_momentum_breakout_v1 = {sym: AltMomentumBreakoutV1Strategy() for sym in symbols} if "alt_momentum_breakout_v1" in strategies else {}
+    alt_pullback_continuation_v1 = {sym: AltPullbackContinuationV1Strategy() for sym in symbols} if "alt_pullback_continuation_v1" in strategies else {}
+    alt_squeeze_breakout_v1 = {sym: AltSqueezeBreakoutV1Strategy() for sym in symbols} if "alt_squeeze_breakout_v1" in strategies else {}
     alt_sloped_momentum_v1 = {sym: AltSlopedMomentumV1Strategy() for sym in symbols} if "alt_sloped_momentum_v1" in strategies else {}
     alt_volume_spike_momentum_v1 = {sym: AltVolumeSpikeV1Strategy() for sym in symbols} if "alt_volume_spike_momentum_v1" in strategies else {}
     alt_slope_break_v1 = {sym: AltSlopeBreakV1Strategy() for sym in symbols} if "alt_slope_break_v1" in strategies else {}
@@ -1705,6 +1782,79 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = alt_trendline_touch_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "alt_bear_breakdown_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                regime_hint = _directional_regime_at_bar(store, int(i)).lower()
+                raw = alt_bear_breakdown_v1[sym].evaluate(
+                    _bars_from_candles(store.c5[: int(i) + 1]),
+                    regime_hint,
+                    sym,
+                )
+                sig = _adapt_eval_signal(raw, strategy=st, symbol=sym, time_stop_bars=int(alt_bear_breakdown_v1[sym].params.get("TIME_STOP_BARS_5M", 0)))
+            elif st == "alt_bear_consolidation_short_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                regime_hint = _directional_regime_at_bar(store, int(i)).lower()
+                raw = alt_bear_consolidation_short_v1[sym].evaluate(
+                    _bars_from_candles(store.c5[: int(i) + 1]),
+                    regime_hint,
+                    sym,
+                    bar_index=int(i),
+                )
+                sig = _adapt_eval_signal(raw, strategy=st, symbol=sym, time_stop_bars=int(alt_bear_consolidation_short_v1[sym].params.get("TIME_STOP_BARS_5M", 0)))
+            elif st == "alt_elder_revived_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                regime_hint = _directional_regime_at_bar(store, int(i)).lower()
+                raw = alt_elder_revived_v1[sym].evaluate(
+                    _bars_from_candles(store.c5[: int(i) + 1]),
+                    _sliced_tf_bars(store, int(i), "c1h"),
+                    _sliced_tf_bars(store, int(i), "c4h"),
+                    regime_hint,
+                    sym,
+                )
+                sig = _adapt_eval_signal(raw, strategy=st, symbol=sym, time_stop_bars=int(alt_elder_revived_v1[sym].params.get("TIME_STOP_BARS_5M", 0)))
+            elif st == "alt_momentum_breakout_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                regime_hint = _directional_regime_at_bar(store, int(i)).lower()
+                raw = alt_momentum_breakout_v1[sym].evaluate(
+                    _bars_from_candles(store.c5[: int(i) + 1]),
+                    regime_hint,
+                    sym,
+                )
+                sig = _adapt_eval_signal(raw, strategy=st, symbol=sym, time_stop_bars=int(alt_momentum_breakout_v1[sym].params.get("TIME_STOP_BARS_5M", 0)))
+            elif st == "alt_pullback_continuation_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                regime_hint = _directional_regime_at_bar(store, int(i)).lower()
+                raw = alt_pullback_continuation_v1[sym].evaluate(
+                    _bars_from_candles(store.c5[: int(i) + 1]),
+                    _sliced_tf_bars(store, int(i), "c1h"),
+                    regime_hint,
+                    sym,
+                )
+                sig = _adapt_eval_signal(raw, strategy=st, symbol=sym, time_stop_bars=int(alt_pullback_continuation_v1[sym].params.get("TIME_STOP_BARS_5M", 0)))
+            elif st == "alt_squeeze_breakout_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                directional = _directional_regime_at_bar(store, int(i))
+                regime_hint = directional.lower()
+                htf_bias = "short" if directional.startswith("BEAR") else "long"
+                raw = alt_squeeze_breakout_v1[sym].evaluate(
+                    _bars_from_candles(store.c5[: int(i) + 1]),
+                    regime_hint,
+                    sym,
+                    htf_60m_bias=htf_bias,
+                )
+                sig = _adapt_eval_signal(raw, strategy=st, symbol=sym, time_stop_bars=int(alt_squeeze_breakout_v1[sym].params.get("TIME_STOP_BARS_5M", 0)))
             elif st == "alt_sloped_momentum_v1":
                 i = getattr(store, 'i5', getattr(store, 'i', None))
                 if i is None:
