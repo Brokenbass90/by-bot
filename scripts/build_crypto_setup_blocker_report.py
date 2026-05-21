@@ -73,9 +73,14 @@ def _setup_cards() -> tuple[list[dict[str, Any]], dict[str, Any]]:
     try:
         from web.routes.data_routes import _build_setup_cards  # type: ignore
     except Exception as exc:
-        meta["source"] = "import_failed"
+        op = _load_json(ROOT / "runtime" / "operator" / "operator_snapshot.json", {}) or {}
+        scanner = op.get("setup_scanner") if isinstance(op, dict) else {}
+        cards = list((scanner or {}).get("top_cards") or [])
+        meta["source"] = "operator_snapshot_import_failed_fallback"
         meta["error"] = f"{type(exc).__name__}: {exc}"
-        return [], meta
+        meta["fallback_card_count"] = (scanner or {}).get("card_count")
+        meta["fallback_top_cards"] = len(cards)
+        return cards, meta
 
     cards = _build_setup_cards(geometry_state, router_state, allocator_state)
     meta["source"] = "geometry_router_allocator"
