@@ -1,6 +1,6 @@
 # Backlog — приоритезированный список действий
 
-**Last updated:** 2026-05-20
+**Last updated:** 2026-05-22
 **Формат:** P0 (этой недели, блокирующее) → P1 (этого месяца) → P2 (когда выйдем в плюс)
 **Правило:** один пункт = 1 строка. Подробности — в спеках, не здесь.
 
@@ -8,11 +8,15 @@
 
 | # | Задача | Кто | Где спека | Acceptance |
 |---|---|---|---|---|
+| P0-NEW | **Crypto live-vs-static_v1 parity fix.** `crypto_income_static_v1` доказан в backtest, но текущий live-effective состав другой. Сравнить static_v1 vs live-effective на tradeful окнах, затем точечно чинить: symbol mismatch → router/allowlist, strategy mismatch → enable flags, allocator mismatch → policy. | Codex | `scripts/run_crypto_income_static_v1_candidate.sh`, `scripts/run_live_effective_parity.py`, `scripts/weekly_live_vs_backtest_report.py` | Live/test effective stack воспроизводит ≥80% decisions static_v1 на 7-30d tradeful окне; до этого новые стратегии не promoted |
 | P0-1 | **Same-bar guard fix.** Задеплоено 2026-05-19 11:13 UTC: ATT1/ASM1/FLAT планируются раз в 55m, MIDTERM раз в 235m. | Codex | `docs/STRATEGY_SET_PER_REGIME_20260519.md` §3.1 | Monitor 2-24h: `att1_ns_same_bar / att1_try ≤ 20 %` |
 | P0-2 | **Midterm grouped no-signal counters.** Deployed 2026-05-19 11:43 UTC: `midterm_ns_*`. | Codex | `docs/MIDTERM_GROUPED_COUNTERS_SPEC_20260519.md` | Monitor fresh sample |
 | P0-3 | **Skip-portfolio split.** Deployed 2026-05-19 11:43 UTC for active sleeves: max_positions / overlap / global_risk / other. | Codex | `docs/STRATEGY_SET_PER_REGIME_20260519.md` §3.2 | Monitor fresh sample |
 | P0-4 | **AI full-context + extras cron.** Done on server: `full_context.json` + `extras.json` every 5 min. | Codex | `scripts/build_ai_full_context.py`, `scripts/build_ai_extras.py` | Monitor freshness |
 | P0-5 | **DeepSeek/web prompt подключить runtime packs.** Deployed: setup cards, crypto blocker, deeper trade history, errors, indicators, top OHLC, memory lines. | Codex | `AI_CONTEXT_BRIDGE_SPEC_20260517.md` (ORACLE stage) | Ask AI: must cite setup cards / blocker counters / AI extras |
+| P0-6 | **Scheduler allowlist parity for active sleeves.** Done 2026-05-21: `ATT1`, `ASM1`, `sloped` scheduler now reads fresh env allowlists before scheduling. Added `sloped_ns_*` grouped counters. | Codex | `smart_pump_reversal_bot.py`, `strategies/alt_sloped_channel_v1.py`, `bot/diagnostics.py` | 30-60m sample: no `*_ns_symbol` domination from scheduler drift |
+| P0-7 | **Breakdown router geometry force-keep for validated ADA/ONDO.** Done 2026-05-22: `breakdown_bear_core` was selecting ADA/ONDO before geometry, then geometry removed them; now validated ADA/ONDO survive geometry only if already selected by router. | Codex | `scripts/build_symbol_router.py`, `configs/strategy_profile_registry.json` | 1-3h sample: ADA/ONDO no longer `blocked_by_symbol_allowlist`; next blocker must be real strategy filter (`support/rsi`) or entry |
+| P0-8 | **Sloped live 5m confirmation parity.** Done 2026-05-22: pending sloped setup now confirms against real closed 5m OHLC instead of zero OHLC from the live scheduler call. | Codex | `strategies/sloped_channel_live.py` | 1-3h sample: if sloped reaches pending state, no false invalidation from zero OHLC; next blockers must be real channel/filter reasons |
 
 ## P0.5 — параллельно (read-only research)
 
@@ -54,6 +58,7 @@
 | P1-8 | Alpaca v39 (если backtest v2 пройдёт): paper 14 дней с `ALPACA_DYN_V2_ENABLED=1`. | Codex | результаты P0.5-1 |
 | P1-8a | Alpaca market data freshness check: intraday dry-run 2026-05-19 видел last bar 2026-05-18 19:30 UTC. Проверить feed/cache перед active paper switch. | Codex | `scripts/equities_alpaca_intraday_bridge.py` |
 | P1-8b | Done 2026-05-20: `v3_shadow` defaults to dry-run; stale SCHW pending paper orders cancelled; no more shared-account order conflict expected. Next: verify today during US session. | Codex | `logs/alpaca_intraday_dynamic_v3_shadow.log` |
+| P1-8c | **Alpaca v39 event-based rebalance.** First research script done 2026-05-22. First run: `+34.47%`, PF `1.328`, WR `50.5%`, trades `222`, DD `24.07%`, red months `10/24`; verdict `REJECT`. Next: optimize offline/compact grid only, do not paper-promote. | Codex | `scripts/alpaca_v3_event_backtest.py`, `strategies/alpaca_dynamic_v3_event.py` |
 | P1-9 | **Депозит Фаза 1: $500 → Bybit** (если P0-1..P0-3 done + ≥ 10 trades + PnL ≥ −5 % 7 дней). | owner | `docs/PROJECT_STATUS.md` Финансовая фаза |
 | P1-10 | Champion-challenger v1 на одной sleeve (ASB1) — shadow only. | Codex | `CHAMPION_CHALLENGER_FRAMEWORK_20260517.md` |
 
@@ -116,6 +121,9 @@ Next: P0-2
 ```
 
 ## Изменения в backlog
+- 2026-05-22: P0-7 done. Rebuilt server router/allocator: `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,ADAUSDT,ONDOUSDT`, breakdown count 4, no hard block. Fresh compare after restart: stream alive, no portfolio/global block; sample too small, next check after 1-3h.
+- 2026-05-21 evening: P0-6 done. Found `sloped_ns_symbol=116/119` after grouped diagnostics; patched sloped scheduler allowlist. Earlier same session patched ATT1/ASM1 scheduler allowlist drift. Server stream fresh after controlled restart.
+- 2026-05-21: Добавлен P0-NEW live-vs-static_v1 parity fix. Главный recovery путь: не искать новые sleeves, а заставить live-effective stack повторить proven `crypto_income_static_v1` decisions ≥80% на торговом окне.
 - 2026-05-19: первая редакция. Все 22 спеки от 17 мая распределены по P1/P2/P3.
 - 2026-05-19: Codex update — AI extras pack deployed; flat fresh blocker пока internal no-signal; Alpaca fractional bracket 422 patched via simple-order fallback for fractional paper entries.
 - 2026-05-19: Codex applied approved breakdown ADA+ONDO router fix; ADA active, ONDO staged by registry but filtered by geometry at current market snapshot.

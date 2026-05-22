@@ -194,6 +194,12 @@ def _profile_excludes(entry: Dict[str, Any]) -> List[str]:
     return _dedupe_keep_order([str(x).upper() for x in entry.get("exclude_symbols", []) if str(x).strip()])
 
 
+def _profile_geometry_force_keep(entry: Dict[str, Any]) -> List[str]:
+    return _dedupe_keep_order(
+        [str(x).upper() for x in entry.get("geometry_force_keep_symbols", []) if str(x).strip()]
+    )
+
+
 def _profile_suffix(env_key: str) -> str:
     return env_key.replace("_SYMBOL_ALLOWLIST", "").replace("_SYMBOLS", "")
 
@@ -530,6 +536,7 @@ def main() -> int:
                     fallback_reasons.append(f"{env_key}:post_exclude_empty")
 
         symbols = _dedupe_keep_order(symbols)
+        pre_geometry_symbols = list(symbols)
         profile_memory = _memory_for_profile(symbol_memory, env_key=env_key, regime=regime)
         memory_meta = _selected_memory_meta(symbols, profile_memory, memory_loaded=memory_loaded)
         if int(memory_meta.get("penalized_selected") or 0) > 0:
@@ -541,6 +548,16 @@ def main() -> int:
             fixed_symbols=fixed,
         )
         notes.extend(geometry_notes)
+        force_keep = _profile_geometry_force_keep(entry)
+        if force_keep and not fixed:
+            selected_before_geometry = set(pre_geometry_symbols)
+            restored = [
+                sym for sym in force_keep
+                if sym in selected_before_geometry and sym not in set(symbols)
+            ]
+            if restored:
+                symbols = _dedupe_keep_order(symbols + restored)
+                notes.append(f"geometry_force_keep:{','.join(restored)}")
         results[env_key] = symbols
         router_profiles[env_key] = _router_state_entry(
             env_key=env_key,

@@ -1,11 +1,11 @@
 # Project Status — LIVE
 
-**Last updated:** 2026-05-20 midday (после P1-1b static-v1 shadow/parity)
+**Last updated:** 2026-05-22 midday (sloped live confirm + Alpaca v39 first research)
 **Update rhythm:** еженедельно или при критическом изменении
 **Источник правды:** этот файл + `docs/BACKLOG.md` + `docs/RESUME_AFTER_BREAK_20260519.md`
 
 ## Однострочник
-Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-20:** `crypto_income_static_v1` контрольный rerun дал `+70.17%` за 365d, PF `1.545`, 445 trades; control-plane replay дал `+42.31%` за 360d, PF `1.383`, MaxDD `5.87%`, 536 trades, 1 красный месяц. Edge пакета не исчез; live сейчас торгует другим составом/обвязкой. Regime = `bear_trend`, bybot active, open_trades=0. Свежий blocker: главный тормоз сейчас symbol allowlist/router, не отсутствие scanner setups.
+Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-22:** главный P0 остаётся `live-vs-static_v1 parity`: `crypto_income_static_v1` доказан (`+70.17%` за 365d, PF `1.545`, 445 trades), но current live-effective stack всё ещё торгует другим набором symbols/strategies. Закрыты два конкретных live mismatch: `breakdown_bear_core` теперь сохраняет validated ADA/ONDO после geometry, а `sloped` pending 5m confirmation больше не получает нулевые OHLC. Bybot active after restart, stream fresh, open_trades=0; следующий шаг — 1-3h counters после фиксов. Alpaca v39 event-based первый research-прогон: return выше static, но PF/neg months хуже, verdict `REJECT`.
 
 ## Numbers (на 2026-05-19 после рестарта)
 
@@ -82,14 +82,19 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - ✅ Alpaca paper intraday + monthly v38 hybrid
 - ✅ Alpaca v3_shadow DRY_RUN (больше не конфликтует с v38 monthly)
 - ✅ Disk hygiene: allocator trace выключен default
+- ✅ 2026-05-21 evening: scheduler теперь читает свежие allowlists для `ATT1`, `ASM1`, `sloped`; `sloped_ns_symbol` ушёл после патча, остался малый sample `same_bar/first_bar`.
+- ✅ 2026-05-22 morning: `breakdown_bear_core` router geometry over-filter fixed for validated ADA/ONDO only; ADA/ONDO now survive geometry if already selected by market/backtest router.
+- ✅ 2026-05-22 midday: `sloped_channel_live.py` now passes real closed 5m OHLC into pending confirmation instead of zero OHLC; this fixes live execution parity without loosening risk/filter thresholds.
+- ✅ 2026-05-22 midday: `scripts/alpaca_v3_event_backtest.py` + `strategies/alpaca_dynamic_v3_event.py` added and first server run completed. `V39_EVENT`: `+34.47%`, PF `1.328`, WR `50.5%`, trades `222`, DD `24.07%`, red months `10/24`; verdict `REJECT`, not paper/live.
 
 ## Что НЕ работает (top blockers)
+0. **P0-NEW: live-vs-static_v1 parity.** 7d окно до 2026-04-30 оказалось неторговым для static_v1, поэтому оно не подходит для acceptance. Запущена проверка на tradeful окне 30d до 2026-02-24, где static_v1 ранее дал 75 trades, `+9.76`, PF `1.664`.
 1. **Live-stack не совпадает с проверенным `crypto_income_static_v1`.** P1-1a/P1-1b показали: static-v1 policy сама по себе не включает ATT1/midterm в bear_trend, а текущие `flat+breakdown` получают слишком узкие symbol lists.
-2. **Symbol allowlist/router mismatch** — свежий symbol-aware blocker: 23 scanner cards вне allocator symbols.
-3. **breakdown_ns_symbol / flat range** — после ADA unlock breakdown всё ещё чаще режется по символу/no setup; flat реально имеет только 2 range-блока после symbol split.
+2. **Symbol allowlist/router mismatch** — частично закрыт для scheduler (`ATT1/ASM1/sloped`) и для `breakdown` ADA/ONDO. Остаются scanner cards вне allocator symbols, особенно `flat`.
+3. **Post-router-fix sample маленький.** После рестарта compare показывает `breakdown_try=4`, blocker уже не allowlist, а `support/rsi`; `flat/sloped` пока mostly `same_bar`/cooldown. Нужен 1-3h sample before next filter change.
 4. **direction-aware risk_mult** — long и short режутся одинаково в bear macro.
 5. **SAFETY Patch 1 SL/TP на брокере** — критично.
-6. **Alpaca v39 не написан** — dynamic_v1/v2 оба проиграли, v38 hybrid пока единственный paper-proven.
+6. **Alpaca v39 written but not accepted** — first event-based research run improves return vs simple static but fails PF/red-month quality; v38 hybrid пока единственный paper-proven.
 7. **Market data freshness Alpaca** — last bar 2026-05-18 19:30 UTC.
 
 ## Принятые архитектурные решения (НЕ менять без owner)
@@ -157,6 +162,9 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - `runtime/project_doctor/latest.json` — auto health
 
 ## История изменений
+- 2026-05-22 morning: Codex found overnight no-trade cause shifted from old scheduler mismatch to router geometry over-filter: `BREAKDOWN_SYMBOL_ALLOWLIST` was only `BTCUSDT,ETHUSDT` while scanner had ADA breakdown. Patched `scripts/build_symbol_router.py` + `configs/strategy_profile_registry.json` with `geometry_force_keep_symbols=["ADAUSDT","ONDOUSDT"]` for `breakdown_bear_core`. Rebuilt router/allocator on server: breakdown count 2→4, risk 0.7125→0.8550, `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,ADAUSDT,ONDOUSDT`. Controlled restart with `open_trades=0`; stream recovered, bybit msgs growing, first fresh counters show no portfolio/global block.
+- 2026-05-21 evening: Codex patched scheduler allowlist drift for `ATT1`, `ASM1`, `sloped`; added grouped `sloped_ns_*` diagnostics. Server restarted safely with `open_trades=0`; stream fresh, `bybit_msgs` growing. Fresh compare: allocator hard block false, `breakdown_ns_support`, `flat/sloped same_bar` with small post-restart sample, no `sloped_ns_symbol` domination.
+- 2026-05-21 morning: P0-NEW поднят выше всех задач: `live-vs-static_v1 parity fix`. Проверка 7d до 2026-04-30 отброшена как неторговое окно; стартовала 30d parity-проверка до 2026-02-24.
 - 2026-05-19 morning: первая редакция Claude. Снят старый baseline.
 - 2026-05-19 day: Codex закрыл весь P0, P0.5-1, AI context, Alpaca 422 fix.
 - 2026-05-19 evening: Claude добавил ohlc_and_logs.py + RESUME_AFTER_BREAK + NEW_CHAT_START_PROMPT + MINIMAL_VIABLE_STACK. Codex ночью: ADA/ONDO surgical unlock, allocator trace cleanup, v3_shadow DRY_RUN.

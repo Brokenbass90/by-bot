@@ -58,7 +58,8 @@
       "bt_min_net": 0.0,
       "bt_min_pf": 1.0,
       "bt_require_history": true,
-      "anchor_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT"]
+      "geometry_force_keep_symbols": ["ADAUSDT", "ONDOUSDT"],
+      "anchor_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "ONDOUSDT"]
     },
     {
       "profile_id": "breakdown_bull_guarded",
