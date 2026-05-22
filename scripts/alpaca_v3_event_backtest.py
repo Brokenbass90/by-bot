@@ -32,11 +32,25 @@ DEFAULT_UNIVERSE = [
 ]
 
 
-def _fetch(symbols: list[str], start: str, end: str) -> dict[str, object]:
+def _fetch(symbols: list[str], start: str, end: str, cache_dir: Path | None = None) -> dict[str, object]:
     out: dict[str, object] = {}
+    if cache_dir is not None:
+        cache_dir.mkdir(parents=True, exist_ok=True)
     for symbol in symbols:
+        cache_path = None
         try:
-            df = yf.download(symbol, start=start, end=end, progress=False, auto_adjust=True)
+            if cache_dir is not None:
+                safe_period = f"{start}_{end}".replace("-", "")
+                cache_path = cache_dir / f"{symbol}_{safe_period}.csv"
+            if cache_path is not None and cache_path.exists():
+                try:
+                    df = pd.read_csv(cache_path, parse_dates=["Date"], index_col="Date")
+                except ValueError:
+                    df = pd.read_csv(cache_path, header=[0, 1], index_col=0, parse_dates=True)
+                    if isinstance(df.columns, pd.MultiIndex):
+                        df.columns = df.columns.get_level_values(0)
+            else:
+                df = yf.download(symbol, start=start, end=end, progress=False, auto_adjust=True)
         except Exception as exc:
             print(f"  {symbol}: error {exc}")
             continue
@@ -45,6 +59,8 @@ def _fetch(symbols: list[str], start: str, end: str) -> dict[str, object]:
             continue
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = df.columns.get_level_values(0)
+        if cache_path is not None and df is not None and not df.empty:
+            df.to_csv(cache_path, index_label="Date")
         needed = {"Open", "High", "Low", "Close"}
         if not needed.issubset(set(df.columns)):
             print(f"  {symbol}: bad columns")
@@ -100,11 +116,16 @@ def main() -> int:
     ap.add_argument("--fee-bps", type=float, default=1.0)
     ap.add_argument("--tag", default="v39_event")
     ap.add_argument("--grid", action="store_true", help="Run a small parameter grid after the default run")
+    ap.add_argument("--wide-grid", action="store_true", help="Run a wider parameter grid")
+    ap.add_argument("--cache-dir", default="runtime/equities_yf_cache")
     args = ap.parse_args()
 
     symbols = [s.strip().upper() for s in args.symbols.split(",") if s.strip()]
     print(f"Fetching {len(symbols)} symbols for {args.start}..{args.end}")
-    data = _fetch(symbols, args.start, args.end)
+    cache_dir = Path(args.cache_dir).expanduser()
+    if not cache_dir.is_absolute():
+        cache_dir = ROOT / cache_dir
+    data = _fetch(symbols, args.start, args.end, cache_dir)
     if len(data) < args.max_positions:
         print(f"ERROR: only {len(data)} symbols with data", file=sys.stderr)
         return 2
@@ -123,11 +144,16 @@ def main() -> int:
     best_grid = None
 
     if args.grid:
-        for profit_trigger in (8.0, 10.0, 12.0):
-            for pullback in (2.5, 4.0):
-                for stop in (5.0, 7.0):
-                    for peer in (10.0, 15.0):
-                        for max_age in (14, 21):
+        profit_triggers = (6.0, 8.0, 10.0, 12.0, 15.0) if args.wide_grid else (8.0, 10.0, 12.0)
+        pullbacks = (1.5, 2.5, 4.0, 6.0) if args.wide_grid else (2.5, 4.0)
+        stops = (4.0, 5.0, 7.0, 9.0, 12.0) if args.wide_grid else (5.0, 7.0)
+        peers = (6.0, 10.0, 15.0, 20.0) if args.wide_grid else (10.0, 15.0)
+        ages = (7, 14, 21, 30, 45) if args.wide_grid else (14, 21)
+        for profit_trigger in profit_triggers:
+            for pullback in pullbacks:
+                for stop in stops:
+                    for peer in peers:
+                        for max_age in ages:
                             _, st = _run_event_once(
                                 data,
                                 args,
