@@ -79,6 +79,10 @@ class SlopedChannelLiveEngine:
             return self._row_ohlcv(rows[-2])
         return self._row_ohlcv(rows[-1])
 
+    def has_pending(self, symbol: str) -> bool:
+        strat = self._strategies.get(str(symbol).upper()) or self._strategies.get(str(symbol))
+        return bool(getattr(strat, "_pending", None)) if strat is not None else False
+
     def signal(
         self,
         symbol: str,

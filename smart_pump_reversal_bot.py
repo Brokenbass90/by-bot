@@ -90,7 +90,8 @@ from bot.diagnostics import (
     RUNTIME_DIAG_ENABLE, RUNTIME_COUNTER, MSG_COUNTER,
     _diag_inc, _diag_get_int, _runtime_diag_snapshot,
     _breakout_no_signal_diag_key, _ivb1_no_signal_diag_key, _elder_no_signal_diag_key,
-    _flat_no_signal_diag_key,
+    _flat_no_signal_diag_key, _sloped_no_signal_diag_key, _att1_no_signal_diag_key, _asm1_no_signal_diag_key,
+    _breakdown_no_signal_diag_key, _midterm_no_signal_diag_key,
 )
 from bot.deepseek_overlay import DeepSeekOverlay
 from bot.deepseek_autoresearch_agent import (
@@ -279,6 +280,14 @@ ALLOCATOR_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ALLOCATOR_GLOBAL_RISK_MU
 ALLOCATOR_HARD_BLOCK_NEW_ENTRIES = _env_bool("ALLOCATOR_HARD_BLOCK_NEW_ENTRIES", False)
 ALLOCATOR_SAFE_MODE = _env_bool("PORTFOLIO_ALLOCATOR_SAFE_MODE", False)
 ALLOCATOR_SAFE_MODE_REASON = str(os.getenv("ALLOCATOR_SAFE_MODE_REASON", "") or "").strip()
+ALLOCATOR_DECISION_TRACE_ENABLE = _env_bool("ALLOCATOR_DECISION_TRACE_ENABLE", False)
+ALLOCATOR_DECISION_TRACE_PATH = Path(
+    os.getenv(
+        "ALLOCATOR_DECISION_TRACE_PATH",
+        str(ROOT_DIR / "runtime" / "allocator_decisions.jsonl"),
+    )
+).expanduser()
+PORTFOLIO_LAST_DENY_REASON = ""
 
 WS_SELF_HEAL_ENABLE = _env_bool("WS_SELF_HEAL_ENABLE", True)
 WS_SELF_HEAL_BLOCK_NEW_ENTRIES = _env_bool("WS_SELF_HEAL_BLOCK_NEW_ENTRIES", True)
@@ -637,6 +646,10 @@ _NEWS_CACHE_TS: int = 0
 _NEWS_CACHE_TTL: int = 300   # reload events every 5 minutes
 
 MIDTERM_TRY_EVERY_SEC = int(os.getenv("MIDTERM_TRY_EVERY_SEC", "90"))
+MIDTERM_DECISION_EVERY_SEC = max(
+    MIDTERM_TRY_EVERY_SEC,
+    int(float(os.getenv("MIDTERM_DECISION_MIN_AGE_MIN", "235")) * 60),
+)
 MIDTERM_NOTIONAL_MULT = max(0.05, min(1.0, float(os.getenv("MIDTERM_NOTIONAL_MULT", "0.35"))))
 MIDTERM_RISK_MULT = max(0.05, float(os.getenv("MIDTERM_RISK_MULT", "1.0") or 1.0))
 MIDTERM_ALLOW_MINQTY_FALLBACK = _env_bool("MIDTERM_ALLOW_MINQTY_FALLBACK", True)
@@ -664,6 +677,11 @@ RETEST_ENGINE = None
 # ===== SLOPED CHANNEL (live) =====
 ENABLE_SLOPED_TRADING = os.getenv("ENABLE_SLOPED_TRADING", "0").strip() == "1"
 SLOPED_TRY_EVERY_SEC = int(os.getenv("SLOPED_TRY_EVERY_SEC", "60"))
+SLOPED_DECISION_EVERY_SEC = max(
+    SLOPED_TRY_EVERY_SEC,
+    int(float(os.getenv("SLOPED_DECISION_MIN_AGE_MIN", "55")) * 60),
+)
+SLOPED_CONFIRM_EVERY_SEC = max(60, int(os.getenv("SLOPED_CONFIRM_EVERY_SEC", "300")))
 SLOPED_RISK_MULT = max(0.05, float(os.getenv("SLOPED_RISK_MULT", "1.0")))
 SLOPED_ALLOW_MINQTY_FALLBACK = _env_bool("SLOPED_ALLOW_MINQTY_FALLBACK", True)
 SLOPED_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("SLOPED_MINQTY_FALLBACK_MAX_MULT", "1.80")))
@@ -673,6 +691,10 @@ SLOPED_ENGINE = None
 # ===== ATT1 TRENDLINE TOUCH (live) =====
 ENABLE_ATT1_TRADING = os.getenv("ENABLE_ATT1_TRADING", "0").strip() == "1"
 ATT1_TRY_EVERY_SEC = int(os.getenv("ATT1_TRY_EVERY_SEC", "60"))
+ATT1_DECISION_EVERY_SEC = max(
+    ATT1_TRY_EVERY_SEC,
+    int(float(os.getenv("ATT1_DECISION_MIN_AGE_MIN", "55")) * 60),
+)
 ATT1_RISK_MULT = max(0.05, float(os.getenv("ATT1_RISK_MULT", "1.0")))
 ATT1_ALLOW_MINQTY_FALLBACK = _env_bool("ATT1_ALLOW_MINQTY_FALLBACK", True)
 ATT1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("ATT1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
@@ -717,6 +739,10 @@ _BOUNCE1_LAST_TRY: dict[str, float] = {}
 # ===== ASM1 SLOPED MOMENTUM (live) =====
 ENABLE_ASM1_TRADING = os.getenv("ENABLE_ASM1_TRADING", "0").strip() == "1"
 ASM1_TRY_EVERY_SEC = int(os.getenv("ASM1_TRY_EVERY_SEC", "60"))
+ASM1_DECISION_EVERY_SEC = max(
+    ASM1_TRY_EVERY_SEC,
+    int(float(os.getenv("ASM1_DECISION_MIN_AGE_MIN", "55")) * 60),
+)
 ASM1_RISK_MULT = max(0.05, float(os.getenv("ASM1_RISK_MULT", "1.0")))
 ASM1_ALLOW_MINQTY_FALLBACK = _env_bool("ASM1_ALLOW_MINQTY_FALLBACK", True)
 ASM1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("ASM1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
@@ -728,6 +754,10 @@ _ASM1_LAST_TRY: dict[str, float] = {}
 # ===== FLAT RESISTANCE FADE (live) =====
 ENABLE_FLAT_TRADING = os.getenv("ENABLE_FLAT_TRADING", "0").strip() == "1"
 FLAT_TRY_EVERY_SEC = int(os.getenv("FLAT_TRY_EVERY_SEC", "60"))
+FLAT_DECISION_EVERY_SEC = max(
+    FLAT_TRY_EVERY_SEC,
+    int(float(os.getenv("FLAT_DECISION_MIN_AGE_MIN", "55")) * 60),
+)
 FLAT_RISK_MULT = max(0.05, float(os.getenv("FLAT_RISK_MULT", "1.0")))
 FLAT_ALLOW_MINQTY_FALLBACK = _env_bool("FLAT_ALLOW_MINQTY_FALLBACK", True)
 FLAT_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("FLAT_MINQTY_FALLBACK_MAX_MULT", "1.80")))
@@ -737,6 +767,10 @@ FLAT_ENGINE = None
 # ===== BREAKDOWN SHORTS (live) =====
 ENABLE_BREAKDOWN_TRADING = os.getenv("ENABLE_BREAKDOWN_TRADING", "0").strip() == "1"
 BREAKDOWN_TRY_EVERY_SEC = int(os.getenv("BREAKDOWN_TRY_EVERY_SEC", "60"))
+BREAKDOWN_DECISION_EVERY_SEC = max(
+    BREAKDOWN_TRY_EVERY_SEC,
+    int(os.getenv("BREAKDOWN_DECISION_EVERY_SEC", "280")),
+)
 BREAKDOWN_RISK_MULT = max(0.05, float(os.getenv("BREAKDOWN_RISK_MULT", "0.10")))
 BREAKDOWN_ALLOW_MINQTY_FALLBACK = _env_bool("BREAKDOWN_ALLOW_MINQTY_FALLBACK", True)
 BREAKDOWN_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("BREAKDOWN_MINQTY_FALLBACK_MAX_MULT", "1.80")))
@@ -2729,6 +2763,10 @@ def _deepseek_snapshot() -> dict[str, Any]:
         "filters": _symbol_filters_summary(),
         "research": build_research_context(),
         "operator_context": build_operator_snapshot(),
+        "ai_full_context": _compact_ai_full_context_for_deepseek(),
+        "ai_extras": _compact_ai_extras_for_deepseek(),
+        "ai_ohlc_and_logs": _compact_ai_ohlc_logs_for_deepseek(),
+        "crypto_blocker": _compact_crypto_blocker_for_deepseek(),
         # Key live params — lets /ai answer questions about current settings
         "live_params": {
             "ASC1_SYMBOL_ALLOWLIST": os.getenv("ASC1_SYMBOL_ALLOWLIST", ""),
@@ -2880,6 +2918,172 @@ def _load_json_dict(path: Path) -> dict[str, Any]:
         return data if isinstance(data, dict) else {}
     except Exception:
         return {}
+
+
+def _compact_ai_full_context_for_deepseek() -> dict[str, Any]:
+    ctx = _load_json_dict(ROOT_DIR / "runtime" / "ai_context" / "full_context.json")
+    if not ctx:
+        return {}
+    setup = ctx.get("setups_scanner") if isinstance(ctx.get("setups_scanner"), dict) else {}
+    raw_cards = list((setup or {}).get("cards_top") or [])
+    cards = []
+    for card in raw_cards[:12]:
+        if not isinstance(card, dict):
+            continue
+        runtime = card.get("runtime") if isinstance(card.get("runtime"), dict) else {}
+        cards.append({
+            "symbol": card.get("symbol"),
+            "interval": card.get("interval"),
+            "side": card.get("side"),
+            "setup_type": card.get("setup_type"),
+            "strategy": card.get("strategy"),
+            "score": card.get("score"),
+            "runtime_enabled": runtime.get("enabled"),
+            "runtime_risk": runtime.get("risk_mult"),
+            "reasons": list(card.get("reasons") or [])[:4],
+        })
+    sources = ctx.get("sources_used") if isinstance(ctx.get("sources_used"), dict) else {}
+    missing_sources = [str(k) for k, v in sources.items() if not v]
+    grouped = ctx.get("grouped_no_signal") if isinstance(ctx.get("grouped_no_signal"), dict) else {}
+    return {
+        "generated_at_utc": ctx.get("generated_at_utc"),
+        "missing_sources": missing_sources[:8],
+        "setup_card_count": (setup or {}).get("card_count"),
+        "setup_cards_top": cards,
+        "grouped_no_signal": grouped,
+    }
+
+
+def _compact_ai_extras_for_deepseek() -> dict[str, Any]:
+    extras = _load_json_dict(ROOT_DIR / "runtime" / "ai_context" / "extras.json")
+    if not extras:
+        return {}
+    trade_history = extras.get("trade_history") if isinstance(extras.get("trade_history"), dict) else {}
+    bot_errors = extras.get("bot_errors") if isinstance(extras.get("bot_errors"), dict) else {}
+    indicators = extras.get("indicators") if isinstance(extras.get("indicators"), dict) else {}
+    bybit_positions = extras.get("bybit_positions") if isinstance(extras.get("bybit_positions"), dict) else {}
+    ohlc = extras.get("ohlc") if isinstance(extras.get("ohlc"), dict) else {}
+
+    per_sleeve = trade_history.get("per_sleeve") if isinstance(trade_history.get("per_sleeve"), dict) else {}
+    sleeve_rows = []
+    for sleeve, row in sorted(
+        per_sleeve.items(),
+        key=lambda kv: -float((kv[1] or {}).get("n_closed") or 0),
+    )[:8]:
+        if not isinstance(row, dict):
+            continue
+        sleeve_rows.append({
+            "sleeve": sleeve,
+            "n_closed": row.get("n_closed"),
+            "profit_factor": row.get("profit_factor"),
+            "winrate_pct": row.get("winrate_pct"),
+            "avg_pnl": row.get("avg_pnl"),
+            "total_pnl": row.get("total_pnl"),
+        })
+
+    position_sections = [
+        str(k) for k in bybit_positions.keys()
+        if not str(k).startswith("_") and str(k) != "source"
+    ][:8]
+    ohlc_symbols = []
+    per_symbol = ohlc.get("per_symbol") if isinstance(ohlc.get("per_symbol"), dict) else {}
+    for symbol, row in list(per_symbol.items())[:5]:
+        if not isinstance(row, dict):
+            continue
+        bars = list(row.get("bars_tail") or [])
+        ohlc_symbols.append({
+            "symbol": symbol,
+            "bars_count": row.get("bars_count"),
+            "last_bar": str(bars[-1])[:220] if bars else None,
+        })
+
+    return {
+        "generated_at_utc": extras.get("generated_at_utc"),
+        "trade_history": {
+            "closed_in_tail": trade_history.get("closed_in_tail"),
+            "last_close_age_sec": trade_history.get("last_close_age_sec"),
+            "per_sleeve_top": sleeve_rows,
+        },
+        "bot_errors": {
+            "error_lines_total": bot_errors.get("error_lines_total"),
+            "top_patterns": list(bot_errors.get("top_patterns") or [])[:6],
+        },
+        "indicators": {
+            "n_symbols": indicators.get("n_symbols"),
+            "generated_at_utc": indicators.get("generated_at_utc"),
+        },
+        "bybit_positions": {
+            "sections": position_sections,
+        },
+        "ohlc": {
+            "timeframe_minutes": ohlc.get("timeframe_minutes"),
+            "n_symbols_found": ohlc.get("n_symbols_found"),
+            "symbols": ohlc_symbols,
+            "warning": ohlc.get("_warn"),
+        },
+        "memory_lines": list(extras.get("memory_lines") or [])[-10:],
+    }
+
+
+def _compact_ai_ohlc_logs_for_deepseek() -> dict[str, Any]:
+    pack = _load_json_dict(ROOT_DIR / "runtime" / "ai_context" / "ohlc_and_logs.json")
+    if not pack:
+        return {}
+    ohlc = pack.get("ohlc") if isinstance(pack.get("ohlc"), dict) else {}
+    candles = []
+    for symbol, data in list(ohlc.items())[:3]:
+        if not isinstance(data, dict):
+            continue
+        stats = data.get("stats") if isinstance(data.get("stats"), dict) else {}
+        bars = list(data.get("bars_tail_30") or [])
+        candles.append({
+            "symbol": symbol,
+            "timeframe": data.get("timeframe"),
+            "cache_age_sec": data.get("cache_age_sec"),
+            "stats": {
+                "last_close": stats.get("last_close"),
+                "rsi_14": stats.get("rsi_14"),
+                "atr_14_pct": stats.get("atr_14_pct"),
+                "dist_to_hi_20_pct": stats.get("dist_to_hi_20_pct"),
+                "dist_to_lo_20_pct": stats.get("dist_to_lo_20_pct"),
+            },
+            "last_bars": bars[-5:],
+        })
+    log_tail = pack.get("log_tail") if isinstance(pack.get("log_tail"), dict) else {}
+    return {
+        "generated_at_utc": pack.get("generated_at_utc"),
+        "top_symbols": list(pack.get("top_symbols") or [])[:3],
+        "candles": candles,
+        "log_tail": {
+            "source": log_tail.get("source"),
+            "age_sec": log_tail.get("log_file_age_sec"),
+            "lines": list(log_tail.get("lines") or [])[-12:],
+        },
+    }
+
+
+def _compact_crypto_blocker_for_deepseek() -> dict[str, Any]:
+    report = _load_json_dict(ROOT_DIR / "runtime" / "crypto_blocker" / "latest.json")
+    if not report:
+        return {}
+    sleeves = {}
+    for name, sleeve in ((report.get("sleeves") or {}).items() if isinstance(report.get("sleeves"), dict) else []):
+        if not isinstance(sleeve, dict):
+            continue
+        sleeves[str(name)] = {
+            "try": sleeve.get("try"),
+            "entry": sleeve.get("entry"),
+            "no_signal": sleeve.get("no_signal"),
+            "top_no_signal": list(sleeve.get("top_no_signal") or [])[:5],
+            "status": sleeve.get("status"),
+        }
+    return {
+        "generated_at_utc": report.get("generated_at_utc"),
+        "cards_analyzed": report.get("cards_analyzed"),
+        "classification_counts": report.get("classification_counts"),
+        "strategy_counts": report.get("strategy_counts"),
+        "sleeves": sleeves,
+    }
 
 
 def _allocator_state_summary() -> dict[str, Any]:
@@ -3453,6 +3657,7 @@ async def _maybe_run_ai_operator_tick(
             f"Cooldown skips={quiet_skip_cooldown}, technical skips={quiet_skip_tech}, capacity skips={quiet_skip_capacity}. "
             f"Breakout no_signal={breakout_no_signal}, impulse_weak={breakout_impulse_weak}, no_break={breakout_no_break}. "
             "Если технических сбоев нет и рынок просто слабый, не называй это критической поломкой. "
+            "Не советуй включать ASB1/long-bounce в bear_trend только по setup cards; нужна свежая research/backtest валидация. "
             "Кратко скажи, это рыночная пауза, параметрная неадаптивность или реальный сбой, и что делать дальше."
         )
         asyncio.create_task(
@@ -7337,6 +7542,46 @@ def portfolio_init_if_needed():
         PORTFOLIO_STATE["daily_pnl_usd"] = 0.0
         PORTFOLIO_STATE["disabled"] = False
 
+
+def _trace_allocator_decision(
+    check: str,
+    approved: bool,
+    reason: str,
+    *,
+    side: str = "",
+    extra: Optional[dict] = None,
+) -> None:
+    """Append a compact allocator/portfolio gate decision for diagnostics."""
+    if not ALLOCATOR_DECISION_TRACE_ENABLE:
+        return
+    try:
+        payload = {
+            "ts": time.time(),
+            "check": str(check or ""),
+            "approved": bool(approved),
+            "reason": str(reason or ""),
+            "side": str(side or ""),
+            "open_trades": len(TRADES),
+            "max_positions": int(MAX_POSITIONS),
+            "trade_on": bool(TRADE_ON),
+            "dry_run": bool(DRY_RUN),
+            "allocator_status": str(PORTFOLIO_ALLOCATOR_LAST_STATUS or ""),
+            "allocator_safe_mode": bool(ALLOCATOR_SAFE_MODE),
+            "allocator_hard_block": bool(ALLOCATOR_HARD_BLOCK_NEW_ENTRIES),
+            "allocator_global_risk_mult": float(ALLOCATOR_GLOBAL_RISK_MULT or 0.0),
+            "portfolio_disabled": bool(PORTFOLIO_STATE.get("disabled")),
+            "ws_guard": bool(_ws_transport_guard_active()),
+            "entry_circuit": bool(_entry_circuit_active()),
+        }
+        if extra:
+            payload.update(extra)
+        ALLOCATOR_DECISION_TRACE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with ALLOCATOR_DECISION_TRACE_PATH.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(payload, separators=(",", ":"), ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+
+
 def portfolio_can_open(side: str = "") -> bool:
     """Return True when a new entry is allowed.
 
@@ -7345,21 +7590,35 @@ def portfolio_can_open(side: str = "") -> bool:
               same-direction correlation cap (MAX_SAME_DIRECTION_POSITIONS) is
               also checked.  Pass empty string to skip that check (legacy).
     """
+    global PORTFOLIO_LAST_DENY_REASON
     portfolio_init_if_needed()
+
+    def deny(reason: str, **extra) -> bool:
+        global PORTFOLIO_LAST_DENY_REASON
+        PORTFOLIO_LAST_DENY_REASON = str(reason or "unknown")
+        _trace_allocator_decision("portfolio_can_open", False, reason, side=side, extra=extra or None)
+        return False
+
+    def allow(reason: str = "ok", **extra) -> bool:
+        global PORTFOLIO_LAST_DENY_REASON
+        PORTFOLIO_LAST_DENY_REASON = ""
+        _trace_allocator_decision("portfolio_can_open", True, reason, side=side, extra=extra or None)
+        return True
+
     if ALLOCATOR_HARD_BLOCK_NEW_ENTRIES:
-        return False
+        return deny("allocator_hard_block")
     if _ws_transport_guard_active() and WS_SELF_HEAL_BLOCK_NEW_ENTRIES:
-        return False
+        return deny("ws_transport_guard")
     if _entry_circuit_active():
-        return False
+        return deny("entry_circuit")
     if PORTFOLIO_STATE["disabled"]:
-        return False
+        return deny("portfolio_disabled")
     # Dead-zone time filter: block entries during thin-liquidity hours.
     if NO_ENTRY_HOURS_UTC and time.gmtime().tm_hour in NO_ENTRY_HOURS_UTC:
-        return False
+        return deny("no_entry_hour", hour=time.gmtime().tm_hour)
     open_pos = len(TRADES)
     if open_pos >= MAX_POSITIONS:
-        return False
+        return deny("max_positions", open_positions=open_pos)
     # Same-direction correlation cap: prevent stacking correlated trades.
     if side and MAX_SAME_DIRECTION_POSITIONS > 0:
         same = sum(
@@ -7369,23 +7628,64 @@ def portfolio_can_open(side: str = "") -> bool:
             not in {"CLOSED", "FAILED", "CANCELLED", "ERROR"}
         )
         if same >= MAX_SAME_DIRECTION_POSITIONS:
-            return False
+            return deny("same_direction_cap", same_direction=same, cap=MAX_SAME_DIRECTION_POSITIONS)
     eq_start = PORTFOLIO_STATE["start_equity"]
     eq_day = PORTFOLIO_STATE["day_equity_start"]
     cur_eq = _get_effective_equity()
     if eq_start and cur_eq < eq_start * (1 - MAX_DRAWDOWN_PCT/100.0):
         PORTFOLIO_STATE["disabled"] = True
-        return False
+        return deny("max_drawdown", equity=cur_eq, start_equity=eq_start)
     if eq_day and cur_eq < eq_day * (1 - DAILY_LOSS_LIMIT_PCT/100.0):
         PORTFOLIO_STATE["disabled"] = True
-        return False
+        return deny("daily_loss_limit", equity=cur_eq, day_equity_start=eq_day)
     # Portfolio circuit breaker: HALT state blocks new entries
     try:
         if _get_cb().get_risk_mult() == 0.0:
-            return False
+            return deny("circuit_breaker_halt")
     except Exception:
         pass
-    return True
+    return allow("ok", open_positions=open_pos)
+
+
+def portfolio_last_deny_reason() -> str:
+    return str(PORTFOLIO_LAST_DENY_REASON or "")
+
+
+def _portfolio_skip_bucket(reason: str) -> str:
+    r = str(reason or "").strip().lower()
+    if "disabled" in r:
+        return "disabled"
+    if "max_positions" in r:
+        return "max_positions"
+    if "same_direction" in r or "overlap" in r or "correlation" in r:
+        return "overlap"
+    if r in {
+        "allocator_hard_block",
+        "ws_transport_guard",
+        "entry_circuit",
+        "portfolio_disabled",
+        "no_entry_hour",
+        "max_drawdown",
+        "daily_loss_limit",
+        "circuit_breaker_halt",
+        "no_equity",
+        "portfolio_risk_cap",
+    }:
+        return "global_risk"
+    return "portfolio_other"
+
+
+def _diag_inc_portfolio_skip(sleeve: str, reason: str = "") -> None:
+    prefix = str(sleeve or "").strip().lower()
+    if not prefix:
+        return
+    _diag_inc(f"{prefix}_skip_portfolio")
+    raw_reason = str(reason or portfolio_last_deny_reason() or "unknown").strip().lower()
+    bucket = _portfolio_skip_bucket(raw_reason)
+    _diag_inc(f"{prefix}_skip_{bucket}")
+    reason_key = "".join(ch if ch.isalnum() else "_" for ch in raw_reason).strip("_")
+    if reason_key:
+        _diag_inc(f"{prefix}_skip_{reason_key}")
 
 
 def portfolio_direction_allowed(side: str) -> bool:
@@ -7448,13 +7748,36 @@ def current_open_portfolio_risk_usd() -> float:
 def portfolio_can_add_open_risk(additional_risk_usd: float = 0.0) -> tuple[bool, float, float]:
     cap_pct = float(MAX_OPEN_PORTFOLIO_RISK_PCT or 0.0)
     if cap_pct <= 0:
+        _trace_allocator_decision(
+            "portfolio_can_add_open_risk",
+            True,
+            "risk_cap_disabled",
+            extra={"additional_risk_usd": float(additional_risk_usd or 0.0)},
+        )
         return True, 0.0, 0.0
     eq = float(_get_effective_equity() or 0.0)
     if eq <= 0:
+        _trace_allocator_decision(
+            "portfolio_can_add_open_risk",
+            False,
+            "no_equity",
+            extra={"additional_risk_usd": float(additional_risk_usd or 0.0), "cap_risk_pct": cap_pct},
+        )
         return False, 0.0, cap_pct
     total_usd = current_open_portfolio_risk_usd() + max(0.0, float(additional_risk_usd or 0.0))
     total_pct = (total_usd / max(1e-12, eq)) * 100.0
-    return total_pct <= cap_pct + 1e-9, total_pct, cap_pct
+    approved = total_pct <= cap_pct + 1e-9
+    _trace_allocator_decision(
+        "portfolio_can_add_open_risk",
+        approved,
+        "ok" if approved else "portfolio_risk_cap",
+        extra={
+            "additional_risk_usd": float(additional_risk_usd or 0.0),
+            "total_risk_pct": total_pct,
+            "cap_risk_pct": cap_pct,
+        },
+    )
+    return approved, total_pct, cap_pct
 
 def portfolio_reg_pnl(notional_usd: float, pnl_pct: float):
     portfolio_init_if_needed()
@@ -8621,7 +8944,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
 
     now = now_s()
     last = int(_MIDTERM_LAST_TRY.get(symbol, 0) or 0)
-    if now - last < MIDTERM_TRY_EVERY_SEC:
+    if now - last < MIDTERM_DECISION_EVERY_SEC:
         return
     _MIDTERM_LAST_TRY[symbol] = now
     _diag_inc("midterm_try")
@@ -8633,6 +8956,10 @@ async def try_midterm_entry_async(symbol: str, price: float):
         return
     if not sig:
         _diag_inc("midterm_no_signal")
+        try:
+            _diag_inc(_midterm_no_signal_diag_key(MIDTERM_ENGINE.last_no_signal_reason(symbol)))
+        except Exception:
+            _diag_inc("midterm_ns_unknown")
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
@@ -8743,6 +9070,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
 async def try_sloped_entry_async(symbol: str, price: float):
     """Try sloped channel entry for a symbol."""
     if not ENABLE_SLOPED_TRADING:
+        _diag_inc("sloped_skip_disabled")
         return
     if not _ensure_sloped_engine():
         _diag_inc("sloped_skip_no_engine")
@@ -8768,12 +9096,14 @@ async def try_sloped_entry_async(symbol: str, price: float):
             _diag_inc("sloped_skip_max_open")
             return
     if not portfolio_can_open():
-        _diag_inc("sloped_skip_portfolio")
+        _diag_inc_portfolio_skip("sloped")
         return
 
     now = now_s()
     last = int(_SLOPED_LAST_TRY.get(symbol, 0) or 0)
-    if now - last < SLOPED_TRY_EVERY_SEC:
+    has_pending = bool(getattr(SLOPED_ENGINE, "has_pending", lambda _s: False)(symbol))
+    min_age = SLOPED_CONFIRM_EVERY_SEC if has_pending else SLOPED_DECISION_EVERY_SEC
+    if now - last < min_age:
         _diag_inc("sloped_skip_cooldown")
         return
     _SLOPED_LAST_TRY[symbol] = now
@@ -8783,8 +9113,14 @@ async def try_sloped_entry_async(symbol: str, price: float):
         sig = SLOPED_ENGINE.signal(symbol, int(now * 1000), 0, 0, 0, price, 0)
     except Exception as e:
         log_error(f"sloped signal error {symbol}: {e}")
+        _diag_inc("sloped_signal_error")
         return
     if not sig:
+        _diag_inc("sloped_no_signal")
+        try:
+            _diag_inc(_sloped_no_signal_diag_key(SLOPED_ENGINE.last_no_signal_reason(symbol)))
+        except Exception:
+            _diag_inc("sloped_ns_unknown")
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
@@ -8795,6 +9131,7 @@ async def try_sloped_entry_async(symbol: str, price: float):
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
+        _diag_inc("sloped_skip_rounding")
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -8818,14 +9155,17 @@ async def try_sloped_entry_async(symbol: str, price: float):
         elif not reason:
             reason = fallback_reason
     if dyn_usd <= 0 and qty_floor <= 0:
+        _diag_inc("sloped_skip_notional_small")
         tg_skip_throttled("sloped", symbol, "notional_small", f"🟡 SLOPED SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
     if qty_floor <= 0:
+        _diag_inc("sloped_skip_minqty")
         tg_skip_throttled("sloped", symbol, f"minqty:{reason}", f"🟡 SLOPED SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
     if not can_add:
+        _diag_inc("sloped_skip_open_risk")
         tg_trade_throttled(
             f"portfolio_risk:sloped:{symbol}",
             f"🟡 SLOPED SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
@@ -8839,11 +9179,13 @@ async def try_sloped_entry_async(symbol: str, price: float):
         return
     async with entry_lock:
         if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            _diag_inc("sloped_skip_reserve")
             return
 
         _diag_inc("sloped_entry")
         submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
         if not submitted:
+            _diag_inc("sloped_skip_submit")
             _clear_entry_slot(symbol)
             return
         oid, q = submitted
@@ -8884,6 +9226,7 @@ async def try_sloped_entry_async(symbol: str, price: float):
 async def try_att1_entry_async(symbol: str, price: float):
     """Try ATT1 trendline-touch entry for a symbol."""
     if not ENABLE_ATT1_TRADING:
+        _diag_inc("att1_skip_disabled")
         return
     if not _ensure_att1_engine():
         _diag_inc("att1_skip_no_engine")
@@ -8909,12 +9252,12 @@ async def try_att1_entry_async(symbol: str, price: float):
             _diag_inc("att1_skip_max_open")
             return
     if not portfolio_can_open():
-        _diag_inc("att1_skip_portfolio")
+        _diag_inc_portfolio_skip("att1")
         return
 
     now = now_s()
     last = int(_ATT1_LAST_TRY.get(symbol, 0) or 0)
-    if now - last < ATT1_TRY_EVERY_SEC:
+    if now - last < ATT1_DECISION_EVERY_SEC:
         _diag_inc("att1_skip_cooldown")
         return
     _ATT1_LAST_TRY[symbol] = now
@@ -8927,6 +9270,7 @@ async def try_att1_entry_async(symbol: str, price: float):
         return
     if not sig:
         _diag_inc("att1_no_signal")
+        _diag_inc(_att1_no_signal_diag_key(ATT1_ENGINE.last_no_signal_reason(symbol)))
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
@@ -9026,6 +9370,7 @@ async def try_att1_entry_async(symbol: str, price: float):
 async def try_asm1_entry_async(symbol: str, price: float):
     """Try ASM1 sloped-momentum entry for a symbol."""
     if not ENABLE_ASM1_TRADING:
+        _diag_inc("asm1_skip_disabled")
         return
     if not _ensure_asm1_engine():
         _diag_inc("asm1_skip_no_engine")
@@ -9051,12 +9396,12 @@ async def try_asm1_entry_async(symbol: str, price: float):
             _diag_inc("asm1_skip_max_open")
             return
     if not portfolio_can_open():
-        _diag_inc("asm1_skip_portfolio")
+        _diag_inc_portfolio_skip("asm1")
         return
 
     now = now_s()
     last = int(_ASM1_LAST_TRY.get(symbol, 0) or 0)
-    if now - last < ASM1_TRY_EVERY_SEC:
+    if now - last < ASM1_DECISION_EVERY_SEC:
         _diag_inc("asm1_skip_cooldown")
         return
     _ASM1_LAST_TRY[symbol] = now
@@ -9069,6 +9414,7 @@ async def try_asm1_entry_async(symbol: str, price: float):
         return
     if not sig:
         _diag_inc("asm1_no_signal")
+        _diag_inc(_asm1_no_signal_diag_key(ASM1_ENGINE.last_no_signal_reason(symbol)))
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
@@ -9599,6 +9945,7 @@ async def try_bounce1_entry_async(symbol: str, price: float):
 async def try_flat_entry_async(symbol: str, price: float):
     """Try flat resistance fade entry for a symbol."""
     if not ENABLE_FLAT_TRADING:
+        _diag_inc("flat_skip_disabled")
         return
     if not _ensure_flat_engine():
         _diag_inc("flat_skip_no_engine")
@@ -9624,12 +9971,12 @@ async def try_flat_entry_async(symbol: str, price: float):
             _diag_inc("flat_skip_max_open")
             return
     if not portfolio_can_open():
-        _diag_inc("flat_skip_portfolio")
+        _diag_inc_portfolio_skip("flat")
         return
 
     now = now_s()
     last = int(_FLAT_LAST_TRY.get(symbol, 0) or 0)
-    if now - last < FLAT_TRY_EVERY_SEC:
+    if now - last < FLAT_DECISION_EVERY_SEC:
         _diag_inc("flat_skip_cooldown")
         return
     _FLAT_LAST_TRY[symbol] = now
@@ -9757,6 +10104,7 @@ async def try_flat_entry_async(symbol: str, price: float):
 async def try_breakdown_entry_async(symbol: str, price: float):
     """Try breakdown short entry for a symbol (alt_inplay_breakdown_v1)."""
     if not ENABLE_BREAKDOWN_TRADING:
+        _diag_inc("breakdown_skip_disabled")
         return
     if not _ensure_breakdown_engine():
         _diag_inc("breakdown_skip_no_engine")
@@ -9782,12 +10130,12 @@ async def try_breakdown_entry_async(symbol: str, price: float):
             _diag_inc("breakdown_skip_max_open")
             return
     if not portfolio_can_open():
-        _diag_inc("breakdown_skip_portfolio")
+        _diag_inc_portfolio_skip("breakdown")
         return
 
     now = now_s()
     last = int(_BREAKDOWN_LAST_TRY.get(symbol, 0) or 0)
-    if now - last < BREAKDOWN_TRY_EVERY_SEC:
+    if now - last < BREAKDOWN_DECISION_EVERY_SEC:
         _diag_inc("breakdown_skip_cooldown")
         return
     _BREAKDOWN_LAST_TRY[symbol] = now
@@ -9799,6 +10147,12 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         log_error(f"breakdown signal error {symbol}: {e}")
         return
     if not sig:
+        try:
+            ns_reason = BREAKDOWN_ENGINE.last_no_signal_reason(symbol)
+        except Exception:
+            ns_reason = ""
+        _diag_inc("breakdown_no_signal")
+        _diag_inc(_breakdown_no_signal_diag_key(ns_reason))
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
@@ -10205,6 +10559,7 @@ class _BRC1Store:
 async def try_ivb1_entry_async(symbol: str, price: float):
     """Try live IVB1 entry for a symbol (impulse_volume_breakout_v1)."""
     if not ENABLE_IVB1_TRADING:
+        _diag_inc("ivb1_skip_disabled")
         return
     if IVB1_ENGINE is None:
         return
@@ -10226,7 +10581,7 @@ async def try_ivb1_entry_async(symbol: str, price: float):
             _diag_inc("ivb1_skip_max_open")
             return
     if not portfolio_can_open():
-        _diag_inc("ivb1_skip_portfolio")
+        _diag_inc_portfolio_skip("ivb1")
         return
 
     now = now_s()
@@ -10367,6 +10722,7 @@ async def try_ivb1_entry_async(symbol: str, price: float):
 async def try_elder_entry_async(symbol: str, price: float):
     """Try live Elder Triple Screen v2 entry for a symbol."""
     if not ENABLE_ELDER_TRADING:
+        _diag_inc("elder_skip_disabled")
         return
     if ELDER_ENGINE is None:
         return
@@ -10388,7 +10744,7 @@ async def try_elder_entry_async(symbol: str, price: float):
             _diag_inc("elder_skip_max_open")
             return
     if not portfolio_can_open():
-        _diag_inc("elder_skip_portfolio")
+        _diag_inc_portfolio_skip("elder")
         return
 
     now = now_s()
@@ -10533,6 +10889,7 @@ async def try_brc1_entry_async(symbol: str, price: float):
     submits an order. That is the intended first live step after backtest gates.
     """
     if not ENABLE_BRC1_TRADING:
+        _diag_inc("brc1_skip_disabled")
         return
     if BRC1_ENGINE is None:
         return
@@ -10554,7 +10911,7 @@ async def try_brc1_entry_async(symbol: str, price: float):
             _diag_inc("brc1_skip_max_open")
             return
     if not portfolio_can_open():
-        _diag_inc("brc1_skip_portfolio")
+        _diag_inc_portfolio_skip("brc1")
         return
 
     now = now_s()
@@ -11378,7 +11735,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
 
         if ENABLE_MIDTERM_TRADING:
             last = int(_MIDTERM_LAST_TRY.get(sym, 0) or 0)
-            if now - last >= MIDTERM_TRY_EVERY_SEC:
+            if now - last >= MIDTERM_DECISION_EVERY_SEC:
                 try:
                     asyncio.create_task(try_midterm_entry_async(sym, p1))
                 except Exception as _e:
@@ -11394,9 +11751,12 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_retest_entry schedule fail {sym}: {_e}")
 
         # ===== SLOPED CHANNEL ENTRY =====
-        if ENABLE_SLOPED_TRADING and _health_gate.allow_entry("alt_sloped_channel_v1", sym):
+        sloped_allowlist = _csv_upper_set("ASC1_SYMBOL_ALLOWLIST")
+        if ENABLE_SLOPED_TRADING and (not sloped_allowlist or sym in sloped_allowlist) and _health_gate.allow_entry("alt_sloped_channel_v1", sym):
             last = int(_SLOPED_LAST_TRY.get(sym, 0) or 0)
-            if now - last >= SLOPED_TRY_EVERY_SEC:
+            sloped_pending = bool(SLOPED_ENGINE and getattr(SLOPED_ENGINE, "has_pending", lambda _s: False)(sym))
+            sloped_min_age = SLOPED_CONFIRM_EVERY_SEC if sloped_pending else SLOPED_DECISION_EVERY_SEC
+            if now - last >= sloped_min_age:
                 try:
                     _diag_inc("sloped_sched")
                     asyncio.create_task(try_sloped_entry_async(sym, p1))
@@ -11404,9 +11764,10 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_sloped_entry schedule fail {sym}: {_e}")
 
         # ===== ATT1 TRENDLINE TOUCH ENTRY =====
-        if ENABLE_ATT1_TRADING and (not ATT1_SYMBOL_ALLOWLIST or sym in ATT1_SYMBOL_ALLOWLIST) and _health_gate.allow_entry("alt_trendline_touch_v1", sym):
+        att1_allowlist = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
+        if ENABLE_ATT1_TRADING and (not att1_allowlist or sym in att1_allowlist) and _health_gate.allow_entry("alt_trendline_touch_v1", sym):
             last = int(_ATT1_LAST_TRY.get(sym, 0) or 0)
-            if now - last >= ATT1_TRY_EVERY_SEC:
+            if now - last >= ATT1_DECISION_EVERY_SEC:
                 try:
                     _diag_inc("att1_sched")
                     asyncio.create_task(try_att1_entry_async(sym, p1))
@@ -11444,9 +11805,10 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_bounce1_entry schedule fail {sym}: {_e}")
 
         # ===== ASM1 SLOPED MOMENTUM ENTRY =====
-        if ENABLE_ASM1_TRADING and (not ASM1_SYMBOL_ALLOWLIST or sym in ASM1_SYMBOL_ALLOWLIST) and _health_gate.allow_entry("alt_sloped_momentum_v1", sym):
+        asm1_allowlist = _csv_upper_set("ASM1_SYMBOL_ALLOWLIST")
+        if ENABLE_ASM1_TRADING and (not asm1_allowlist or sym in asm1_allowlist) and _health_gate.allow_entry("alt_sloped_momentum_v1", sym):
             last = int(_ASM1_LAST_TRY.get(sym, 0) or 0)
-            if now - last >= ASM1_TRY_EVERY_SEC:
+            if now - last >= ASM1_DECISION_EVERY_SEC:
                 try:
                     _diag_inc("asm1_sched")
                     asyncio.create_task(try_asm1_entry_async(sym, p1))
@@ -11457,7 +11819,7 @@ def detect(exch: str, sym: str, st: SymState, now: int):
         flat_allowlist = _csv_upper_set("ARF1_SYMBOL_ALLOWLIST")
         if ENABLE_FLAT_TRADING and (not flat_allowlist or sym in flat_allowlist) and _health_gate.allow_entry("alt_resistance_fade_v1", sym):
             last = int(_FLAT_LAST_TRY.get(sym, 0) or 0)
-            if now - last >= FLAT_TRY_EVERY_SEC:
+            if now - last >= FLAT_DECISION_EVERY_SEC:
                 try:
                     _diag_inc("flat_sched")
                     asyncio.create_task(try_flat_entry_async(sym, p1))
@@ -11465,9 +11827,10 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_flat_entry schedule fail {sym}: {_e}")
 
         # ===== BREAKDOWN SHORTS ENTRY =====
-        if ENABLE_BREAKDOWN_TRADING and _health_gate.allow_entry("alt_inplay_breakdown_v1", sym):
+        breakdown_allowlist = _csv_upper_set("BREAKDOWN_SYMBOL_ALLOWLIST")
+        if ENABLE_BREAKDOWN_TRADING and (not breakdown_allowlist or sym in breakdown_allowlist) and _health_gate.allow_entry("alt_inplay_breakdown_v1", sym):
             last = int(_BREAKDOWN_LAST_TRY.get(sym, 0) or 0)
-            if now - last >= BREAKDOWN_TRY_EVERY_SEC:
+            if now - last >= BREAKDOWN_DECISION_EVERY_SEC:
                 try:
                     _diag_inc("breakdown_sched")
                     asyncio.create_task(try_breakdown_entry_async(sym, p1))
@@ -13040,8 +13403,43 @@ async def pulse():
         # ── Heartbeat file (external watchdog reads this) ──────────────────────
         try:
             _hb_path = Path(__file__).resolve().parent / "runtime" / "bot_heartbeat.json"
+            _diag_path = Path(__file__).resolve().parent / "runtime" / "runtime_diagnostics.json"
             _hb_path.parent.mkdir(parents=True, exist_ok=True)
             _va_pct, _va_mult, _ = _voladj_cache
+            _runtime_counters = {
+                str(k): int(v)
+                for k, v in RUNTIME_COUNTER.items()
+                if int(v) != 0
+            }
+            _diag_payload = {
+                "ts": int(time.time()),
+                "ts_iso": _utc_now_iso(),
+                "uptime_s": int(time.time() - int(BOT_START_TS)),
+                "trade_on": bool(TRADE_ON),
+                "dry_run": bool(DRY_RUN),
+                "open_trades": len(TRADES),
+                "bybit_msgs": int(MSG_COUNTER.get("Bybit", 0)),
+                "runtime_diag": _runtime_diag_snapshot(max_items=120),
+                "runtime_counters": _runtime_counters,
+                "portfolio": {
+                    "disabled": bool(PORTFOLIO_STATE.get("disabled")),
+                    "allocator_enable": bool(PORTFOLIO_ALLOCATOR_ENABLE),
+                    "allocator_safe_mode": bool(ALLOCATOR_SAFE_MODE),
+                    "allocator_hard_block": bool(ALLOCATOR_HARD_BLOCK_NEW_ENTRIES),
+                    "allocator_global_risk_mult": round(float(ALLOCATOR_GLOBAL_RISK_MULT), 6),
+                    "allocator_env_file": str(PORTFOLIO_ALLOCATOR_PATH),
+                    "allocator_state_file": str(PORTFOLIO_ALLOCATOR_STATE_PATH),
+                },
+                "control_plane": {
+                    "regime_overlay_enable": bool(REGIME_OVERLAY_ENABLE),
+                    "router_health_enable": bool(ROUTER_HEALTH_ENABLE),
+                    "ws_guard_active": int(_ws_transport_guard_active()),
+                    "regime": str(os.getenv("ORCH_REGIME", "unknown")),
+                    "voladj_atr_pct": round(_va_pct, 3),
+                    "voladj_mult": round(_va_mult, 2),
+                },
+            }
+            _write_json_atomic(_diag_path, _diag_payload)
             _write_json_atomic(
                 _hb_path,
                 {
@@ -13051,6 +13449,13 @@ async def pulse():
                     "ws_guard_active": int(_ws_transport_guard_active()),
                     "bybit_msgs": int(MSG_COUNTER.get("Bybit", 0)),
                     "regime": str(os.getenv("ORCH_REGIME", "unknown")),
+                    "trade_on": bool(TRADE_ON),
+                    "dry_run": bool(DRY_RUN),
+                    "allocator_safe_mode": bool(ALLOCATOR_SAFE_MODE),
+                    "allocator_hard_block": bool(ALLOCATOR_HARD_BLOCK_NEW_ENTRIES),
+                    "allocator_global_risk_mult": round(float(ALLOCATOR_GLOBAL_RISK_MULT), 6),
+                    "runtime_diag": _diag_payload["runtime_diag"],
+                    "runtime_counters": _runtime_counters,
                     "voladj_atr_pct": round(_va_pct, 3),
                     "voladj_mult": round(_va_mult, 2),
                 },
