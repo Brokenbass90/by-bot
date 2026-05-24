@@ -200,6 +200,12 @@ def _profile_geometry_force_keep(entry: Dict[str, Any]) -> List[str]:
     )
 
 
+def _profile_force_include(entry: Dict[str, Any]) -> List[str]:
+    return _dedupe_keep_order(
+        [str(x).upper() for x in entry.get("force_include_symbols", []) if str(x).strip()]
+    )
+
+
 def _profile_suffix(env_key: str) -> str:
     return env_key.replace("_SYMBOL_ALLOWLIST", "").replace("_SYMBOLS", "")
 
@@ -558,6 +564,13 @@ def main() -> int:
             if restored:
                 symbols = _dedupe_keep_order(symbols + restored)
                 notes.append(f"geometry_force_keep:{','.join(restored)}")
+        force_include = _profile_force_include(entry)
+        if force_include and not fixed:
+            before = set(symbols)
+            symbols = _dedupe_keep_order(symbols + force_include)
+            added = [sym for sym in force_include if sym not in before]
+            if added:
+                notes.append(f"force_include:{','.join(added)}")
         results[env_key] = symbols
         router_profiles[env_key] = _router_state_entry(
             env_key=env_key,

@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "profile_version": "2026-04-20-v4-sob1",
-  "updated_utc": "2026-04-20T00:00:00Z",
+  "profile_version": "2026-05-24-v5-static-core-pins",
+  "updated_utc": "2026-05-24T00:00:00Z",
   "profiles": [
     {
       "profile_id": "breakout_bull_core",
@@ -59,7 +59,8 @@
       "bt_min_pf": 1.0,
       "bt_require_history": true,
       "geometry_force_keep_symbols": ["ADAUSDT", "ONDOUSDT"],
-      "anchor_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "ONDOUSDT"]
+      "force_include_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "ADAUSDT"],
+      "anchor_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "ADAUSDT", "ONDOUSDT"]
     },
     {
       "profile_id": "breakdown_bull_guarded",
@@ -159,7 +160,8 @@
       "bt_min_trades": 5,
       "bt_min_net": 0.0,
       "bt_min_pf": 1.10,
-      "anchor_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "LTCUSDT"]
+      "force_include_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"],
+      "anchor_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"]
     },
     {
       "profile_id": "att1_trend_reduced",
@@ -264,7 +266,8 @@
       "bt_min_trades": 5,
       "bt_min_net": 0.0,
       "bt_min_pf": 1.0,
-      "anchor_symbols": ["LINKUSDT", "LTCUSDT", "SUIUSDT"]
+      "force_include_symbols": ["ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"],
+      "anchor_symbols": ["ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"]
     },
 
     {
