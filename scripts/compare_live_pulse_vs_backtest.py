@@ -60,6 +60,7 @@ SLEEVE_KEY_MAP = {
 class SleeveReport:
     sleeve: str
     enabled_env: str  # "yes" | "no" | "unknown"
+    sched_count: int
     try_count: int
     no_signal: int
     entries_est: int
@@ -200,6 +201,8 @@ def classify(sr: SleeveReport, regime: str | None) -> tuple[str, str]:
         return ("env_disabled", "disabled_in_env")
 
     if sr.try_count == 0:
+        if sr.sched_count > 0:
+            return ("scheduled_no_try_yet", "scheduled_waiting_engine_counters")
         return ("no_attempts", "no_attempts_check_scheduler")
 
     no_entry_hour = int(sr.skip_details.get("no_entry_hour", 0) or 0)
@@ -259,6 +262,7 @@ def build_sleeve_report(
     regime: str | None,
 ) -> SleeveReport:
     cfg = SLEEVE_KEY_MAP[sleeve]
+    sched_count = int(counters.get(f"{sleeve}_sched", 0) or 0)
     try_count = int(counters.get(cfg["try_key"], 0) or 0)
     no_signal = int(counters.get(cfg["no_signal_key"], 0) or 0)
     skip_portfolio = int(counters.get(f"{sleeve}_skip_portfolio", 0) or 0)
@@ -305,6 +309,7 @@ def build_sleeve_report(
     sr = SleeveReport(
         sleeve=sleeve,
         enabled_env=enabled_env,
+        sched_count=sched_count,
         try_count=try_count,
         no_signal=no_signal,
         entries_est=entries_est,
@@ -345,7 +350,7 @@ def build_sleeve_report(
 
 def format_table(reports: list[SleeveReport]) -> str:
     headers = [
-        "sleeve", "env", "try", "no_sig", "entry_est",
+        "sleeve", "env", "sched", "try", "no_sig", "entry_est",
         "skip_port", "skip_glob", "skip_max", "skip_ovr",
         "skip_cd", "bt_e7d", "bt_pf", "dominant", "class",
     ]
@@ -354,6 +359,7 @@ def format_table(reports: list[SleeveReport]) -> str:
         rows.append([
             r.sleeve,
             r.enabled_env,
+            str(r.sched_count),
             str(r.try_count),
             str(r.no_signal),
             str(r.entries_est),
@@ -480,6 +486,8 @@ def main() -> int:
             print(f"  {r.sleeve}: disabled in env — это намеренно? Если да, исключить из metric ожиданий.")
         elif cls == "no_attempts_check_scheduler":
             print(f"  {r.sleeve}: 0 attempts — проверить scheduler, universe, или sleeve scheduling.")
+        elif cls == "scheduled_waiting_engine_counters":
+            print(f"  {r.sleeve}: scheduler active ({r.sched_count}), но try/skip counters ещё не накопились — ждать следующую свечу/entry gate.")
         elif cls.startswith("portfolio_"):
             print(
                 f"  {r.sleeve}: portfolio blocker — total={r.skip_portfolio}, "

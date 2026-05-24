@@ -33,6 +33,27 @@ def _env(name: str, default: str = "") -> str:
     return str(v).strip() if v else default
 
 
+def _load_dotenv_if_needed(path: Path = ROOT / ".env") -> None:
+    """Load missing keys from .env without printing secret values."""
+    if not path.exists():
+        return
+    try:
+        for raw in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            if not key or key in os.environ:
+                continue
+            value = value.strip()
+            if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+                value = value[1:-1]
+            os.environ[key] = value
+    except Exception as exc:
+        print(f"ERROR: cannot load env file: {type(exc).__name__}")
+
+
 def _tg_send(token: str, chat_id: str, msg: str) -> None:
     if not token or not chat_id:
         print(f"[TG SKIP no creds] {msg}")
@@ -78,6 +99,7 @@ def _query_api_info(key: str, secret: str, base: str) -> dict:
 
 
 def main() -> int:
+    _load_dotenv_if_needed()
     accs_json = _env("BYBIT_ACCOUNTS_JSON")
     if not accs_json:
         print("ERROR: BYBIT_ACCOUNTS_JSON not set in env")
@@ -90,7 +112,7 @@ def main() -> int:
         return 1
 
     tg_token = _env("TG_TOKEN")
-    tg_chat = _env("TG_CHAT_ID")
+    tg_chat = _env("TG_CHAT_ID") or _env("TG_CHAT")
     now_ms = int(time.time() * 1000)
     any_warn = False
 
