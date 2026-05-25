@@ -608,21 +608,42 @@ def _current_cycle_picks_path(picks_csv: Path) -> Path | None:
 
 
 def _load_intraday_managed_symbols() -> set[str]:
+    symbols: set[str] = set()
     raw = _env("ALPACA_INTRADAY_STATE_PATH", "")
     state_path = Path(raw) if raw else (Path(__file__).resolve().parent.parent / "configs" / "intraday_state.json")
-    if not state_path.exists():
-        return set()
-    try:
-        data = json.loads(state_path.read_text())
-    except Exception:
-        return set()
-    if not isinstance(data, dict):
-        return set()
-    symbols: set[str] = set()
-    for sym in data.keys():
-        token = str(sym or "").strip().upper()
-        if token:
-            symbols.add(token)
+    if state_path.exists():
+        try:
+            data = json.loads(state_path.read_text())
+        except Exception:
+            data = {}
+        if isinstance(data, dict):
+            for sym in data.keys():
+                token = str(sym or "").strip().upper()
+                if token:
+                    symbols.add(token)
+
+    # Intraday removes owned state after submitting a close order, while the
+    # remote paper position can remain open until Alpaca fills it. Treat those
+    # in-flight closes as intraday-owned so monthly cleanup cannot close them.
+    advisory_raw = _env("ALPACA_INTRADAY_ADVISORY_PATH", "")
+    advisory_path = (
+        Path(advisory_raw)
+        if advisory_raw
+        else Path(__file__).resolve().parent.parent
+        / "runtime"
+        / "equities_intraday_dynamic_v1"
+        / "latest_advisory.json"
+    )
+    if advisory_path.exists():
+        try:
+            advisory = json.loads(advisory_path.read_text())
+        except Exception:
+            advisory = {}
+        if isinstance(advisory, dict):
+            for sym in advisory.get("pending_close_positions") or []:
+                token = str(sym or "").strip().upper()
+                if token:
+                    symbols.add(token)
     return symbols
 
 
