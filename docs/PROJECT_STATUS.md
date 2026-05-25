@@ -89,6 +89,7 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - ✅ 2026-05-22 midday: `scripts/alpaca_v3_event_backtest.py` + `strategies/alpaca_dynamic_v3_event.py` added and first server run completed. `V39_EVENT`: `+34.47%`, PF `1.328`, WR `50.5%`, trades `222`, DD `24.07%`, red months `10/24`; verdict `REJECT`, not paper/live.
 - ✅ 2026-05-25: AI full-context now carries dynamic `router_state` and compact `crypto_blocker_summary`; DeepSeek/web can see current symbol routing and blocked setup cards without write access to trading state.
 - ✅ 2026-05-25: DeepSeek weekly audit now attributes P&L/PF/DD only to a strategy's own trades; universe ideas are explicitly backtest-only and cannot be described as market-validated without supplied evidence.
+- ✅ 2026-05-25: Deployed read-only crypto entry-funnel counters (`try -> signal -> sizing/risk/order skip -> entry`) with controlled restart at `open_trades=0`. First live sample shows `signal=0` for all active sleeves, so current silence is inside strategy filters, before order submission.
 
 ## Что НЕ работает (top blockers)
 0. **P0-NEW: live-vs-static_v1 parity.** 7d окно до 2026-04-30 оказалось неторговым для static_v1, поэтому оно не подходит для acceptance. Запущена проверка на tradeful окне 30d до 2026-02-24, где static_v1 ранее дал 75 trades, `+9.76`, PF `1.664`.
@@ -96,10 +97,11 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 2. **Symbol allowlist/router mismatch** — частично закрыт для scheduler (`ATT1/ASM1/sloped`) и для `breakdown` ADA/ONDO. Остаются scanner cards вне allocator symbols, особенно `flat`.
 3. **Post-router-fix sample уже достаточен для следующего диагноза.** Live counters: `breakdown_try=729` with `support=589`, `rsi=92`, `same_bar=48`; `att1_try=95` with `trendline=58`; `flat_try=76` with `touch=52`. Control-plane больше не главный стоппер; нужен targeted replay/filter study, не расширение allowlist.
 4. **Signal parity ещё не закрыт.** Latest weekly replay нашёл 9 backtest entries при нуле real entries, но все они вне `NO_ENTRY_HOURS_UTC=0,1,2`, а сам replay применял новый config ретроспективно к периоду до завершения router fixes. Следующий честный тест нужен на стабильном post-fix окне.
-5. **direction-aware risk_mult** — long и short режутся одинаково в bear macro.
-6. **SAFETY Patch 1 SL/TP на брокере** — критично.
-7. **Alpaca v39 written but not accepted** — 24m best: `+88.05%`, PF `1.987`, DD `12.90%`, red months `6/24`; 4y stress best: `+140.20%`, PF `1.624`, DD `26.47%`, red months `16/52`, worse PF than static (`1.695`). v38 hybrid пока единственный paper-proven.
-8. **Market data freshness Alpaca** — проверить feed/cache на следующей открытой US-сессии.
+5. **Order-path blocker теперь измерим, но пока не проявился.** После deployment счётчиков новый sample: `breakdown signal=0/5`, `ATT1=0/7`, `flat=0/4`, `sloped=0/3`, `midterm=0/2`, `asm1=0/2`. До первого `signal>0` нельзя обвинять sizing/order/risk.
+6. **direction-aware risk_mult** — long и short режутся одинаково в bear macro.
+7. **SAFETY Patch 1 SL/TP на брокере** — критично.
+8. **Alpaca v39 written but not accepted** — 24m best: `+88.05%`, PF `1.987`, DD `12.90%`, red months `6/24`; 4y stress best: `+140.20%`, PF `1.624`, DD `26.47%`, red months `16/52`, worse PF than static (`1.695`). v38 hybrid пока единственный paper-proven.
+9. **Market data freshness Alpaca** — проверить feed/cache на следующей открытой US-сессии.
 
 ## Принятые архитектурные решения (НЕ менять без owner)
 - **Single live env:** `crypto_income_live_canary_v2_2_rescue.env`
@@ -170,6 +172,7 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - 2026-05-25: static-core router fix is active in live; fresh counters shift the crypto blocker from symbol/control-plane mismatch to internal filters (`breakdown_support`, `ATT1_trendline`, `flat_touch`). Fixed broken breakdown research TF and rejected its bear-window expansion; ATT1 360d sweep produced a positive challenger requiring DD repair. AI context deployed with router/blocker visibility. Alpaca v39 focused 4y stress remains research-only.
 - 2026-05-25: fixed DeepSeek weekly report attribution bug: a portfolio result was previously repeated as if it were each sleeve's own result. Reports now calculate per-sleeve trade evidence and mark universe suggestions as research-only. No live strategy or account settings changed.
 - 2026-05-25: weekly live-vs-backtest interpretation hardened: recent 9 replay entries were outside the live dead-zone, but the report used end-of-window config retrospectively over pre-fix days. Future reports expose dead-zone count and label this as counterfactual until the config has stayed stable through the measured window.
+- 2026-05-25: added live entry-funnel counters and blocker-report support for signals stopped after generation. Deployment was diagnostics-only with `open_trades=0`; fresh sample confirms active sleeves currently fail before signal generation, so the next evidence task is filter-level replay (`ATT1 trendline`, `flat touch`, `breakdown support`).
 - 2026-05-22 morning: Codex found overnight no-trade cause shifted from old scheduler mismatch to router geometry over-filter: `BREAKDOWN_SYMBOL_ALLOWLIST` was only `BTCUSDT,ETHUSDT` while scanner had ADA breakdown. Patched `scripts/build_symbol_router.py` + `configs/strategy_profile_registry.json` with `geometry_force_keep_symbols=["ADAUSDT","ONDOUSDT"]` for `breakdown_bear_core`. Rebuilt router/allocator on server: breakdown count 2→4, risk 0.7125→0.8550, `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,ADAUSDT,ONDOUSDT`. Controlled restart with `open_trades=0`; stream recovered, bybit msgs growing, first fresh counters show no portfolio/global block.
 - 2026-05-21 evening: Codex patched scheduler allowlist drift for `ATT1`, `ASM1`, `sloped`; added grouped `sloped_ns_*` diagnostics. Server restarted safely with `open_trades=0`; stream fresh, `bybit_msgs` growing. Fresh compare: allocator hard block false, `breakdown_ns_support`, `flat/sloped same_bar` with small post-restart sample, no `sloped_ns_symbol` domination.
 - 2026-05-21 morning: P0-NEW поднят выше всех задач: `live-vs-static_v1 parity fix`. Проверка 7d до 2026-04-30 отброшена как неторговое окно; стартовала 30d parity-проверка до 2026-02-24.

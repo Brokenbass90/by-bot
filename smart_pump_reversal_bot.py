@@ -8962,6 +8962,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
             _diag_inc("midterm_ns_unknown")
         return
 
+    _diag_inc("midterm_signal")
     side = "Buy" if sig.side == "long" else "Sell"
     entry = float(sig.entry)
     tp = float(sig.tp)
@@ -8970,6 +8971,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
+        _diag_inc("midterm_skip_rounding")
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -8978,6 +8980,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
     alloc_mult = live_allocator_multiplier("midterm", _live_regime_from_state(st))
     dyn_usd *= float(MIDTERM_NOTIONAL_MULT) * float(alloc_mult) * float(MIDTERM_RISK_MULT)
     if dyn_usd <= 0:
+        _diag_inc("midterm_skip_notional_small")
         tg_skip_throttled("midterm", symbol, "notional_small", f"🟡 MIDTERM SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
 
@@ -9001,6 +9004,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
     if not can_add:
+        _diag_inc("midterm_skip_open_risk")
         tg_trade_throttled(
             f"portfolio_risk:midterm:{symbol}",
             f"🟡 MIDTERM SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
@@ -9014,11 +9018,13 @@ async def try_midterm_entry_async(symbol: str, price: float):
         return
     async with entry_lock:
         if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            _diag_inc("midterm_skip_reserve")
             return
 
         _diag_inc("midterm_entry")
         submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
         if not submitted:
+            _diag_inc("midterm_skip_submit")
             _clear_entry_slot(symbol)
             return
         oid, q = submitted
@@ -9123,6 +9129,7 @@ async def try_sloped_entry_async(symbol: str, price: float):
             _diag_inc("sloped_ns_unknown")
         return
 
+    _diag_inc("sloped_signal")
     side = "Buy" if sig.side == "long" else "Sell"
     entry = float(sig.entry)
     sl = float(sig.sl)
@@ -9273,6 +9280,7 @@ async def try_att1_entry_async(symbol: str, price: float):
         _diag_inc(_att1_no_signal_diag_key(ATT1_ENGINE.last_no_signal_reason(symbol)))
         return
 
+    _diag_inc("att1_signal")
     side = "Buy" if sig.side == "long" else "Sell"
     entry = float(sig.entry)
     sl = float(sig.sl)
@@ -9281,6 +9289,7 @@ async def try_att1_entry_async(symbol: str, price: float):
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
+        _diag_inc("att1_skip_rounding")
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -9304,14 +9313,17 @@ async def try_att1_entry_async(symbol: str, price: float):
         elif not reason:
             reason = fallback_reason
     if dyn_usd <= 0 and qty_floor <= 0:
+        _diag_inc("att1_skip_notional_small")
         tg_skip_throttled("att1", symbol, "notional_small", f"🟡 ATT1 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
     if qty_floor <= 0:
+        _diag_inc("att1_skip_minqty")
         tg_skip_throttled("att1", symbol, f"minqty:{reason}", f"🟡 ATT1 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
     if not can_add:
+        _diag_inc("att1_skip_open_risk")
         tg_trade_throttled(
             f"portfolio_risk:att1:{symbol}",
             f"🟡 ATT1 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
@@ -9325,11 +9337,13 @@ async def try_att1_entry_async(symbol: str, price: float):
         return
     async with entry_lock:
         if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            _diag_inc("att1_skip_reserve")
             return
 
         _diag_inc("att1_entry")
         submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
         if not submitted:
+            _diag_inc("att1_skip_submit")
             _clear_entry_slot(symbol)
             return
         oid, q = submitted
@@ -9417,6 +9431,7 @@ async def try_asm1_entry_async(symbol: str, price: float):
         _diag_inc(_asm1_no_signal_diag_key(ASM1_ENGINE.last_no_signal_reason(symbol)))
         return
 
+    _diag_inc("asm1_signal")
     side = "Buy" if sig.side == "long" else "Sell"
     entry = float(sig.entry)
     sl = float(sig.sl)
@@ -9425,6 +9440,7 @@ async def try_asm1_entry_async(symbol: str, price: float):
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
+        _diag_inc("asm1_skip_rounding")
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -9448,14 +9464,17 @@ async def try_asm1_entry_async(symbol: str, price: float):
         elif not reason:
             reason = fallback_reason
     if dyn_usd <= 0 and qty_floor <= 0:
+        _diag_inc("asm1_skip_notional_small")
         tg_skip_throttled("asm1", symbol, "notional_small", f"🟡 ASM1 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
     if qty_floor <= 0:
+        _diag_inc("asm1_skip_minqty")
         tg_skip_throttled("asm1", symbol, f"minqty:{reason}", f"🟡 ASM1 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
     if not can_add:
+        _diag_inc("asm1_skip_open_risk")
         tg_trade_throttled(
             f"portfolio_risk:asm1:{symbol}",
             f"🟡 ASM1 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
@@ -9469,11 +9488,13 @@ async def try_asm1_entry_async(symbol: str, price: float):
         return
     async with entry_lock:
         if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            _diag_inc("asm1_skip_reserve")
             return
 
         _diag_inc("asm1_entry")
         submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
         if not submitted:
+            _diag_inc("asm1_skip_submit")
             _clear_entry_slot(symbol)
             return
         oid, q = submitted
@@ -9996,6 +10017,7 @@ async def try_flat_entry_async(symbol: str, price: float):
         _diag_inc(_flat_no_signal_diag_key(ns_reason))
         return
 
+    _diag_inc("flat_signal")
     side = "Buy" if sig.side == "long" else "Sell"
     entry = float(sig.entry)
     sl = float(sig.sl)
@@ -10004,6 +10026,7 @@ async def try_flat_entry_async(symbol: str, price: float):
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
+        _diag_inc("flat_skip_rounding")
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -10027,14 +10050,17 @@ async def try_flat_entry_async(symbol: str, price: float):
         elif not reason:
             reason = fallback_reason
     if dyn_usd <= 0 and qty_floor <= 0:
+        _diag_inc("flat_skip_notional_small")
         tg_skip_throttled("flat", symbol, "notional_small", f"🟡 FLAT SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
     if qty_floor <= 0:
+        _diag_inc("flat_skip_minqty")
         tg_skip_throttled("flat", symbol, f"minqty:{reason}", f"🟡 FLAT SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
     if not can_add:
+        _diag_inc("flat_skip_open_risk")
         tg_trade_throttled(
             f"portfolio_risk:flat:{symbol}",
             f"🟡 FLAT SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
@@ -10048,11 +10074,13 @@ async def try_flat_entry_async(symbol: str, price: float):
         return
     async with entry_lock:
         if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            _diag_inc("flat_skip_reserve")
             return
 
         _diag_inc("flat_entry")
         submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
         if not submitted:
+            _diag_inc("flat_skip_submit")
             _clear_entry_slot(symbol)
             return
         oid, q = submitted
@@ -10155,6 +10183,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         _diag_inc(_breakdown_no_signal_diag_key(ns_reason))
         return
 
+    _diag_inc("breakdown_signal")
     side = "Buy" if sig.side == "long" else "Sell"
     # Direction correlation cap: re-check now that we know the side.
     if not portfolio_can_open(side):
@@ -10167,6 +10196,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
+        _diag_inc("breakdown_skip_rounding")
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -10209,14 +10239,17 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         elif not reason:
             reason = fallback_reason
     if dyn_usd <= 0 and qty_floor <= 0:
+        _diag_inc("breakdown_skip_notional_small")
         tg_skip_throttled("breakdown", symbol, "notional_small", f"🟡 BREAKDOWN SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
     if qty_floor <= 0:
+        _diag_inc("breakdown_skip_minqty")
         tg_skip_throttled("breakdown", symbol, f"minqty:{reason}", f"🟡 BREAKDOWN SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
     if not can_add:
+        _diag_inc("breakdown_skip_open_risk")
         tg_trade_throttled(
             f"portfolio_risk:breakdown:{symbol}",
             f"🟡 BREAKDOWN SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
@@ -10230,12 +10263,14 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         return
     async with entry_lock:
         if not await _reserve_entry_slot(symbol, side, reserved_risk_usd=proposed_risk_usd):
+            _diag_inc("breakdown_skip_reserve")
             return
 
         _diag_inc("breakdown_entry")
         order_send_ts = int(now_s())
         submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
         if not submitted:
+            _diag_inc("breakdown_skip_submit")
             _clear_entry_slot(symbol)
             return
         oid, q = submitted

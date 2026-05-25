@@ -136,17 +136,35 @@ def _top_ns(counters: dict[str, int], prefix: str, limit: int = 6) -> list[dict[
     return rows[:limit]
 
 
+def _top_after_signal_skips(counters: dict[str, int], prefix: str, limit: int = 6) -> list[dict[str, Any]]:
+    names = {
+        "direction_cap", "breaker", "rounding", "notional_small", "minqty",
+        "open_risk", "symbol_lock", "reserve", "submit",
+    }
+    rows = []
+    for reason in names:
+        value = counters.get(f"{prefix}_skip_{reason}", 0)
+        if value > 0:
+            rows.append({"reason": reason, "count": value})
+    rows.sort(key=lambda x: -int(x["count"]))
+    return rows[:limit]
+
+
 def _sleeve_snapshot(counters: dict[str, int], prefix: str) -> dict[str, Any]:
     tries = counters.get(f"{prefix}_try", 0)
+    signals = counters.get(f"{prefix}_signal", 0)
     entries = counters.get(f"{prefix}_entry", 0)
     no_signal = counters.get(f"{prefix}_no_signal", 0)
     ns = _top_ns(counters, prefix)
+    post_signal_skips = _top_after_signal_skips(counters, prefix)
     top_reason = ns[0]["reason"] if ns else ""
     same_bar = sum(r["count"] for r in ns if r["reason"] in {"same_bar", "cooldown", "first_bar"})
     evaluated_ns = max(0, no_signal - same_bar)
     status = "no_recent_eval"
     if entries > 0:
         status = "entries_seen"
+    elif signals > 0:
+        status = "signal_blocked_after_generation"
     elif tries > 0 and no_signal > 0:
         status = "seen_but_no_signal"
     elif tries > 0:
@@ -154,10 +172,12 @@ def _sleeve_snapshot(counters: dict[str, int], prefix: str) -> dict[str, Any]:
     return {
         "prefix": prefix,
         "try": tries,
+        "signal": signals,
         "entry": entries,
         "no_signal": no_signal,
         "evaluated_no_signal_est": evaluated_ns,
         "top_no_signal": ns,
+        "post_signal_skips": post_signal_skips,
         "dominant_reason": top_reason,
         "status": status,
     }
@@ -182,6 +202,9 @@ def _classify_card(
         return "scanner_not_confirmed_by_live_counter"
     if sleeve["status"] == "entries_seen":
         return "live_entries_seen_for_sleeve"
+    if sleeve["status"] == "signal_blocked_after_generation":
+        top_skip = list(sleeve.get("post_signal_skips") or [])
+        return f"blocked_after_signal_{top_skip[0]['reason']}" if top_skip else "blocked_after_strategy_signal"
     top = str(sleeve.get("dominant_reason") or "")
     if top in {"same_bar", "cooldown", "first_bar"}:
         return "diagnostic_noise_same_bar_or_cooldown"
@@ -239,6 +262,7 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "This report is read-only and does not approve trades.",
             "If classification is diagnostic_noise_same_bar_or_cooldown, add per-symbol evaluated counters before changing strategy filters.",
             "If classification is blocked_runtime_disabled_or_zero_risk, check allocator/policy before strategy code.",
+            "If classification starts with blocked_after_signal_, inspect sizing/risk/order stages rather than loosening the strategy.",
         ],
     }
 
@@ -260,6 +284,8 @@ def _write_markdown(report: dict[str, Any], path: Path) -> None:
         sleeve = card.get("sleeve") or {}
         top = list(sleeve.get("top_no_signal") or [])[:3]
         top_txt = ", ".join(f"{x['reason']}={x['count']}" for x in top) or "-"
+        post = list(sleeve.get("post_signal_skips") or [])[:3]
+        post_txt = ", ".join(f"{x['reason']}={x['count']}" for x in post) or "-"
         runtime = card.get("runtime") or {}
         allocator_symbols = list(card.get("allocator_symbols") or [])
         symbol_status = "in" if card.get("symbol_in_allocator") else "out"
@@ -269,7 +295,8 @@ def _write_markdown(report: dict[str, Any], path: Path) -> None:
             f"class=`{card.get('classification')}` enabled=`{runtime.get('enabled')}` "
             f"risk=`{runtime.get('risk_mult')}` allocator_symbol=`{symbol_status}` "
             f"allocator_symbols=`{','.join(allocator_symbols[:10])}` sleeve_try=`{sleeve.get('try')}` "
-            f"sleeve_no_signal=`{sleeve.get('no_signal')}` top_ns=`{top_txt}`"
+            f"sleeve_signal=`{sleeve.get('signal')}` sleeve_entry=`{sleeve.get('entry')}` "
+            f"sleeve_no_signal=`{sleeve.get('no_signal')}` top_ns=`{top_txt}` post_signal_skip=`{post_txt}`"
         )
     lines.extend(["", "## Notes", ""])
     for note in report.get("notes") or []:
