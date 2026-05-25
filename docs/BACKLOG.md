@@ -26,7 +26,7 @@
 | P0.5-1 | Done 2026-05-19: `scripts/alpaca_dynamic_v2_backtest.py`; winner by script score = STATIC_BH, dynamic_v2 not promoted. | Codex | `runtime/alpaca_v2_backtest_report_20260519.json` |
 | P0.5-2 | Done 2026-05-20: `scripts/crypto_strategies_backtest.py` ASB1/ATT1/IVB1/RANGE_SCALP × 365d × 5 монет. Only IVB1_static was weak-positive (PF≈1.18); ASB1 not enough evidence for live. | Codex | `runtime/crypto_backtest_report_20260519.json` |
 | P0.5-3 | Подождать завершения ASB1 repair queue. Если все варианты FAIL — ASB1 → «redesign», не live. | Codex | runtime/research_nightly/ |
-| P0.5-4 | Current running 2026-05-20: `elder_v3_macro_off_full_relax_v1` autoresearch. После него — `att1_density_more_pivots`. | Codex | runtime/research_nightly/ |
+| P0.5-4 | Running 2026-05-25: local `att1_density_v3_more_pivots_v1` sweep (current PASS up to `+35.40`, PF `1.288`, DD `5.59%`); server `bear_regime_continuation_v1_initial_sweep` is active. ATT1 must still pass full-package replay before any promotion. | Codex | `logs/att1_density_v3_more_pivots_20260525.nohup.log`, `runtime/research_nightly/` |
 | P0.5-5 | Run 2026-05-20: `compare_live_pulse_vs_backtest.py` shows open_trades=0, flat true no-signal/range, breakdown symbol/no-setup, ATT1/midterm no attempts. Use symbol-aware blocker before touching filters. | Codex | `runtime/bot_heartbeat.json` |
 | P0.5-6 | Done 2026-05-19 17:24 UTC: approved breakdown router/profile patch applied for ADA+ONDO only; ENA excluded. Active router includes ADA now; ONDO staged but geometry-filtered until setup quality improves. | Codex | `backtest_runs/portfolio_20260519_170243_breakdown_new_symbols_180d_20260519/summary.csv` |
 | P0.5-7 | Done 2026-05-25: `flat_live_frequency_v3` standalone PASS (`+9.66%`, PF `2.232`, DD `1.76%`), but replacing ARF1 params in full `crypto_income_static_v1` worsened it to `+64.24%`, PF `1.491`, DD `7.31%`. Do not promote this flat override. | Codex | `backtest_runs/autoresearch_20260525_072703_flat_live_frequency_v3/`, `backtest_runs/portfolio_20260525_102913_codex_static_v1_arf1_r033_replay_20260525/` |
@@ -37,12 +37,13 @@
 | # | Задача | Кто | Acceptance |
 |---|---|---|---|
 | P0.9-1 | Удалить definite trash: `%s`, `.DS_Store`. | owner / любой | git clean |
-| P0.9-2 | Удалить с согласия owner'а: 27 старых `CODEX_TASK_*.md`, 3 `AUDIT_REPORT_2026040*.md`, 5 morning/night/status/recon docs, `alt_liquidity_sweep_reversal_v1.py`. ~36 файлов из корня. | owner→Codex | `git diff --stat` показывает только deletions |
+| P0.9-2 | Done 2026-05-25: 32 tracked legacy `AUDIT_REPORT` / `CLAUDE_*` / `CODEX_TASK_*` documents побайтно перенесены в `docs/archive/` (`git rename`, история сохранена). Удалённую `alt_liquidity_sweep_reversal_v1.py` не смешивать с cleanup до отдельного ревью. | Codex | commit `71fc5ca` |
 | P0.9-3 | Перенести 22 спеки от 17 мая в `docs/specs/` подпапку. | Codex | `ls docs/specs/*_20260517.md` |
 | P0.9-4 | Disk hygiene: rotate `backtest_runs/` (оставить 30 дней + best-of), архивировать остальное. | Codex | `du -sh backtest_runs/` ≤ 200 MB |
 | P0.9-5 | Подтвердить что Alpaca configs v35/v36/dynamic_v1/v2_broad/1000usd/small_cap не используются → удалить. | Codex (grep) | `grep -r alpaca_paper_v35` empty |
 | P0.9-6 | Done 2026-05-20: rotate noisy `runtime/allocator_decisions.jsonl` (~473 MB) and disable allocator decision trace by default. | Codex | `runtime/archive/allocator_decisions_20260520_0515.jsonl` |
 | P0.9-7 | Done 2026-05-20: deleted archived allocator trace on server and fixed cleanup fallout: `run_portfolio.py` no longer crashes when retired `alt_liquidity_sweep_reversal_v1` is absent. | Codex | `py_compile` local + server OK |
+| P0.9-8 | Done 2026-05-25: preserved compressed tail and truncated runaway server `runtime/live.out` (~202 MB); add persistent `logrotate` guard (`maxsize 20M`, compressed history). | Codex | `scripts/setup_systemd_bot.sh`, `/etc/logrotate.d/bybot-live` |
 
 ## P1 — этого месяца (после P0)
 

@@ -19,6 +19,7 @@ BOT_USER="${BOT_USER:-root}"
 SERVICE_NAME="${SERVICE_NAME:-bybot}"
 VENV_PYTHON="$BOT_DIR/.venv/bin/python3"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
+LOGROTATE_FILE="/etc/logrotate.d/${SERVICE_NAME}-live"
 
 echo "══════════════════════════════════════════"
 echo "  Installing bybit-bot systemd service"
@@ -76,6 +77,21 @@ WantedBy=multi-user.target
 EOF
 
 echo "✅ Service file written to $SERVICE_FILE"
+
+# Keep the stdout/stderr truth log readable without allowing it to grow forever.
+cat > "$LOGROTATE_FILE" <<EOF
+$BOT_DIR/runtime/live.out {
+    daily
+    maxsize 20M
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+}
+EOF
+echo "✅ Live log rotation written to $LOGROTATE_FILE"
 
 # Reload systemd and enable
 systemctl daemon-reload
