@@ -354,16 +354,23 @@ def _backup_env(reason: str) -> Path:
     if not _ENV_PATH.exists():
         raise HTTPException(status_code=500, detail=".env file not found")
     backups_dir = _ROOT / "state" / "env_backups"
-    backups_dir.mkdir(parents=True, exist_ok=True)
+    backups_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+    try:
+        backups_dir.chmod(0o700)
+    except OSError:
+        pass
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     bak = backups_dir / f".env.{ts}.{reason}.bak"
     bak.write_text(_ENV_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+    try:
+        bak.chmod(0o600)
+    except OSError:
+        pass
     return bak
 
 
 def _rotate_key_in_env(account_name: str, new_key: str, new_secret: str) -> Dict[str, Any]:
-    """Replace key+secret in BYBIT_ACCOUNTS_JSON for given account.
-    Returns dict with old_key_prefix (for audit) and new_key_prefix."""
+    """Replace key+secret in BYBIT_ACCOUNTS_JSON without exposing metadata."""
     import re
 
     text = _ENV_PATH.read_text(encoding="utf-8")
@@ -388,8 +395,6 @@ def _rotate_key_in_env(account_name: str, new_key: str, new_secret: str) -> Dict
     if target is None:
         raise HTTPException(status_code=404, detail=f"Account '{account_name}' not found")
 
-    old_key_prefix = (target.get("key", "") or "")[:6] + "..."
-    new_key_prefix = (new_key or "")[:6] + "..."
     target["key"] = new_key
     target["secret"] = new_secret
 
@@ -402,18 +407,22 @@ def _rotate_key_in_env(account_name: str, new_key: str, new_secret: str) -> Dict
         flags=re.MULTILINE,
     )
     _ENV_PATH.write_text(new_text, encoding="utf-8")
-    return {"old_key_prefix": old_key_prefix, "new_key_prefix": new_key_prefix, "account": account_name}
+    try:
+        _ENV_PATH.chmod(0o600)
+    except OSError:
+        pass
+    return {"account": account_name, "configured": True}
 
 
-def _audit_rotate(email: str, account: str, old_pref: str, new_pref: str, backup_path: str) -> None:
+def _audit_rotate(email: str, account: str) -> None:
     audit_path = _rt("web_audit_log.jsonl")
     audit_path.parent.mkdir(parents=True, exist_ok=True)
     rec = {
         "ts": datetime.now(timezone.utc).isoformat(),
         "user": email,
         "action": "rotate_bybit_key",
-        "params": {"account": account, "old_key_prefix": old_pref, "new_key_prefix": new_pref},
-        "result": f"backup={backup_path}",
+        "params": {"account": account},
+        "result": "credentials replaced; protected backup created; restart required",
     }
     try:
         with open(audit_path, "a", encoding="utf-8") as f:
@@ -431,7 +440,7 @@ async def rotate_bybit_key(body: RotateBybitKeyRequest, email: str = Depends(req
       2. Backup .env → state/env_backups/.env.<ts>.bybit_key_rotate.bak.
       3. Replace key+secret в BYBIT_ACCOUNTS_JSON для указанного account_name.
       4. Audit log в runtime/web_audit_log.jsonl.
-      5. Возвращает: backup_path + need_restart=True (бот должен перечитать .env).
+      5. Возвращает только статус + need_restart=True (бот должен перечитать .env).
 
     Бот сам не перезагружается — это решает админ через systemctl restart
     bybot.service либо через /api/admin/reload-bot endpoint (если есть).
@@ -444,20 +453,20 @@ async def rotate_bybit_key(body: RotateBybitKeyRequest, email: str = Depends(req
         raise HTTPException(status_code=400, detail="key/secret look too short")
 
     # 1. Backup
-    backup = _backup_env("bybit_key_rotate")
+    _backup_env("bybit_key_rotate")
 
     # 2. Rotate
     info = _rotate_key_in_env(body.account_name, body.new_key, body.new_secret)
 
     # 3. Audit
-    _audit_rotate(email, info["account"], info["old_key_prefix"], info["new_key_prefix"], str(backup))
+    _audit_rotate(email, info["account"])
 
     return {
         "status": "ok",
         "account": info["account"],
-        "old_key_prefix": info["old_key_prefix"],
-        "new_key_prefix": info["new_key_prefix"],
-        "backup_path": str(backup.relative_to(_ROOT)),
+        "configured": info["configured"],
+        "credential_values_returned": False,
+        "protected_backup_created": True,
         "need_restart": True,
         "restart_command": "systemctl restart bybot.service",
         "next_steps": [
@@ -470,8 +479,7 @@ async def rotate_bybit_key(body: RotateBybitKeyRequest, email: str = Depends(req
 
 @router.get("/bybit-key-info")
 async def get_bybit_key_info(_: str = Depends(require_admin)):
-    """Возвращает мета-информацию о текущих Bybit ключах (без самих секретов).
-    Помогает понять — какой аккаунт, какой prefix, чтобы выбрать что ротировать."""
+    """Return account configuration status without credential fragments."""
     if not _ENV_PATH.exists():
         return {"accounts": []}
     text = _ENV_PATH.read_text(encoding="utf-8")
@@ -483,18 +491,36 @@ async def get_bybit_key_info(_: str = Depends(require_admin)):
         accounts = json.loads(m.group(1).strip())
     except Exception as e:
         return {"accounts": [], "error": f"parse error: {e}"}
+    expiry_report: Dict[str, Any] = {}
+    expiry_by_account: Dict[str, Dict[str, Any]] = {}
+    status_path = _rt("bybit_api_key_expiry_status.json")
+    if status_path.exists():
+        try:
+            expiry_report = json.loads(status_path.read_text(encoding="utf-8"))
+            expiry_by_account = {
+                str(row.get("name")): row
+                for row in expiry_report.get("accounts", [])
+                if isinstance(row, dict) and row.get("name")
+            }
+        except Exception:
+            expiry_report = {}
     out = []
     for acc in accounts:
         if not isinstance(acc, dict): continue
+        name = str(acc.get("name", "?"))
         out.append({
-            "name": acc.get("name", "?"),
-            "key_prefix": (acc.get("key", "") or "")[:6] + "...",
-            "key_length": len(acc.get("key", "") or ""),
+            "name": name,
+            "configured": bool(acc.get("key") and acc.get("secret")),
             "trade_enabled": acc.get("trade", {}).get("enabled", False),
             "leverage": acc.get("trade", {}).get("leverage"),
             "risk_pct": acc.get("trade", {}).get("risk_pct"),
+            "expiry": expiry_by_account.get(name, {"status": "unknown"}),
         })
-    return {"accounts": out}
+    return {
+        "accounts": out,
+        "expiry_checked_at_utc": expiry_report.get("checked_at_utc"),
+        "note": "Credential values and fragments are never returned by this endpoint.",
+    }
 
 
 # ── Bot restart endpoint (NEW 2026-05-XX) ─────────────────────────────────────

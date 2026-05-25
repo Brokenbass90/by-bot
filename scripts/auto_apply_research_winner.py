@@ -3,9 +3,9 @@
 """
 auto_apply_research_winner.py — Self-optimization module (Phase 3.1)
 
-Scans autoresearch ranked_results.csv files, finds runs that passed
-all constraints and have a score above the threshold, and automatically
-applies their parameters to the live config override file.
+Scans autoresearch ranked_results.csv files and prepares proposals for runs
+that passed all constraints and have a score above the threshold. Writing to
+the live config override file requires explicit operator approval.
 
 Flow:
   1. Scan one or more research roots for all ranked_results.csv
@@ -17,8 +17,9 @@ Flow:
      → notify Telegram
 
 Usage:
-  python3 scripts/auto_apply_research_winner.py
+  python3 scripts/auto_apply_research_winner.py                # proposal-only
   python3 scripts/auto_apply_research_winner.py --dry-run
+  python3 scripts/auto_apply_research_winner.py --apply-approved
   python3 scripts/auto_apply_research_winner.py --strategy ARF1
   python3 scripts/auto_apply_research_winner.py --force   (skip cooldown)
 
@@ -399,6 +400,11 @@ def _write_auto_apply_env(params: Dict[str, str], source_info: str) -> None:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Auto-apply best autoresearch winners to live config.")
     ap.add_argument("--dry-run", action="store_true", help="Analyse only, do not write anything.")
+    ap.add_argument(
+        "--apply-approved",
+        action="store_true",
+        help="Write approved proposal parameters to the override file. Never use from unattended cron.",
+    )
     ap.add_argument("--force",   action="store_true", help="Skip cooldown check.")
     ap.add_argument("--strategy", default="", help="Only process this strategy family (e.g. ARF1).")
     ap.add_argument("--lookback-days", type=int, default=LOOKBACK_DAYS)
@@ -406,8 +412,11 @@ def main() -> int:
     ap.add_argument("--quiet",         action="store_true")
     args = ap.parse_args()
 
-    dry_run  = args.dry_run
+    dry_run = args.dry_run or not args.apply_approved
     strategy = args.strategy.strip().upper() or None
+
+    if not args.apply_approved and not args.dry_run:
+        print("[auto_apply] Proposal-only default: pass --apply-approved only after operator review.")
 
     roots_str = ", ".join(str(p) for p in SCAN_ROOTS)
     print(f"[auto_apply] Starting — dry_run={dry_run}, lookback={args.lookback_days}d, min_score={args.min_score}")

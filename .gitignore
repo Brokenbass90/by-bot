@@ -15,6 +15,12 @@ backtest_archive/
 
 .env.bak.*
 .env.bak_*
+.env.bak*
+.env.old
+.env.local
+.env.*.local
+!.env.example
+state/env_backups/
 
 # Generated operator snapshots.
 docs/*_latest.csv
