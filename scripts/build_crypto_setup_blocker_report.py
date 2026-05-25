@@ -33,6 +33,24 @@ def _load_json(path: Path, default: Any = None) -> Any:
         return {"_error": f"{type(exc).__name__}: {exc}"}
 
 
+def _tail_jsonl(path: Path, limit: int) -> list[dict[str, Any]]:
+    if not path.exists() or limit <= 0:
+        return []
+    try:
+        lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()[-limit:]
+    except Exception:
+        return []
+    rows: list[dict[str, Any]] = []
+    for line in lines:
+        try:
+            row = json.loads(line)
+        except Exception:
+            continue
+        if isinstance(row, dict):
+            rows.append(row)
+    return rows
+
+
 def _as_int(value: Any) -> int:
     try:
         return int(value or 0)
@@ -218,6 +236,25 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
     counters = _runtime_counters()
     allocator_sleeves = _allocator_sleeves()
     by_prefix = {prefix: _sleeve_snapshot(counters, prefix) for prefix in sorted(set(STRATEGY_PREFIX.values()))}
+    signal_decisions = _tail_jsonl(ROOT / "runtime" / "signal_decisions.jsonl", 80)
+    decision_counts: Counter[tuple[str, str, str, str]] = Counter()
+    for row in signal_decisions:
+        decision_counts[(
+            str(row.get("sleeve") or ""),
+            str(row.get("symbol") or ""),
+            str(row.get("outcome") or ""),
+            str(row.get("reason") or ""),
+        )] += 1
+    signal_decision_summary = [
+        {
+            "sleeve": sleeve,
+            "symbol": symbol,
+            "outcome": outcome,
+            "reason": reason,
+            "count": count,
+        }
+        for (sleeve, symbol, outcome, reason), count in decision_counts.most_common(30)
+    ]
 
     card_rows = []
     class_counts: Counter[str] = Counter()
@@ -251,15 +288,18 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
 
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "scanner": scanner_meta,
         "cards_analyzed": len(card_rows),
         "classification_counts": dict(class_counts),
         "strategy_counts": dict(strategy_counts),
         "sleeves": by_prefix,
         "cards": card_rows,
+        "recent_signal_decisions": signal_decisions[-40:],
+        "recent_signal_decision_summary": signal_decision_summary,
         "notes": [
             "This report is read-only and does not approve trades.",
+            "Recent signal decisions are bounded diagnostic events only; they do not change filters or orders.",
             "If classification is diagnostic_noise_same_bar_or_cooldown, add per-symbol evaluated counters before changing strategy filters.",
             "If classification is blocked_runtime_disabled_or_zero_risk, check allocator/policy before strategy code.",
             "If classification starts with blocked_after_signal_, inspect sizing/risk/order stages rather than loosening the strategy.",
@@ -297,6 +337,15 @@ def _write_markdown(report: dict[str, Any], path: Path) -> None:
             f"allocator_symbols=`{','.join(allocator_symbols[:10])}` sleeve_try=`{sleeve.get('try')}` "
             f"sleeve_signal=`{sleeve.get('signal')}` sleeve_entry=`{sleeve.get('entry')}` "
             f"sleeve_no_signal=`{sleeve.get('no_signal')}` top_ns=`{top_txt}` post_signal_skip=`{post_txt}`"
+        )
+    lines.extend(["", "## Recent Signal Decisions", ""])
+    summaries = list(report.get("recent_signal_decision_summary") or [])[:20]
+    if not summaries:
+        lines.append("- No decision trace rows captured yet.")
+    for row in summaries:
+        lines.append(
+            f"- `{row.get('sleeve')}` `{row.get('symbol')}` outcome=`{row.get('outcome')}` "
+            f"reason=`{row.get('reason') or '-'}` count=`{row.get('count')}`"
         )
     lines.extend(["", "## Notes", ""])
     for note in report.get("notes") or []:

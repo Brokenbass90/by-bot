@@ -883,6 +883,9 @@ LOG_SIGNALS = True
 SIGNALS_CSV = "signals.csv"
 ERRORS_LOG = "errors.log"
 LIVE_TRADE_EVENTS_JSONL = os.getenv("LIVE_TRADE_EVENTS_JSONL", "runtime/live_trade_events.jsonl").strip() or "runtime/live_trade_events.jsonl"
+SIGNAL_DECISION_TRACE_ENABLE = os.getenv("SIGNAL_DECISION_TRACE_ENABLE", "1").strip().lower() in ("1", "true", "yes", "on")
+SIGNAL_DECISION_TRACE_JSONL = os.getenv("SIGNAL_DECISION_TRACE_JSONL", "runtime/signal_decisions.jsonl").strip() or "runtime/signal_decisions.jsonl"
+SIGNAL_DECISION_TRACE_MAX_BYTES = max(262_144, int(os.getenv("SIGNAL_DECISION_TRACE_MAX_BYTES", "2000000") or 2_000_000))
 
 # =========================== ПАРАМЕТРЫ ТОРГОВЛИ ===========================
 TRADE_ON = True
@@ -1976,6 +1979,34 @@ def _append_live_trade_event(event: str, sym: str, tr=None, **extra) -> None:
             f.write(json.dumps(payload, ensure_ascii=True, sort_keys=True) + "\n")
     except Exception as e:
         log_error(f"live trade event log fail: {e}")
+
+def _append_signal_decision(sleeve: str, sym: str, outcome: str, reason: str = "", **extra) -> None:
+    """Write compact, bounded signal-stage evidence for live-vs-backtest parity."""
+    if not SIGNAL_DECISION_TRACE_ENABLE:
+        return
+    try:
+        payload = {
+            "ts": int(time.time()),
+            "ts_utc": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+            "sleeve": str(sleeve or "").strip().lower(),
+            "symbol": str(sym or "").upper(),
+            "outcome": str(outcome or "").strip().lower(),
+            "reason": str(reason or "").strip()[:160],
+            "regime": str(os.getenv("ORCH_REGIME", "unknown") or "unknown"),
+        }
+        for key, value in extra.items():
+            if isinstance(value, (str, int, float, bool)) or value is None:
+                payload[str(key)] = value
+        out_path = Path(SIGNAL_DECISION_TRACE_JSONL).expanduser()
+        if not out_path.is_absolute():
+            out_path = ROOT_DIR / out_path
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        if out_path.exists() and out_path.stat().st_size >= SIGNAL_DECISION_TRACE_MAX_BYTES:
+            out_path.replace(out_path.with_name(out_path.name + ".1"))
+        with out_path.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(payload, ensure_ascii=True, sort_keys=True) + "\n")
+    except Exception as e:
+        log_error(f"signal decision trace fail: {e}")
 
 def _db_log_event(event: str, tr, sym: str, *, pnl: float | None = None, fees: float | None = None, exit_px: float | None = None, reason: str | None = None):
     try:
@@ -3089,6 +3120,8 @@ def _compact_crypto_blocker_for_deepseek() -> dict[str, Any]:
         "classification_counts": report.get("classification_counts"),
         "strategy_counts": report.get("strategy_counts"),
         "sleeves": sleeves,
+        "recent_signal_decisions": list(report.get("recent_signal_decisions") or [])[-20:],
+        "recent_signal_decision_summary": list(report.get("recent_signal_decision_summary") or [])[:20],
     }
 
 
@@ -8963,12 +8996,16 @@ async def try_midterm_entry_async(symbol: str, price: float):
     if not sig:
         _diag_inc("midterm_no_signal")
         try:
-            _diag_inc(_midterm_no_signal_diag_key(MIDTERM_ENGINE.last_no_signal_reason(symbol)))
+            ns_reason = MIDTERM_ENGINE.last_no_signal_reason(symbol)
+            _diag_inc(_midterm_no_signal_diag_key(ns_reason))
         except Exception:
+            ns_reason = "unknown"
             _diag_inc("midterm_ns_unknown")
+        _append_signal_decision("midterm", symbol, "no_signal", ns_reason)
         return
 
     _diag_inc("midterm_signal")
+    _append_signal_decision("midterm", symbol, "signal", str(getattr(sig, "reason", "") or ""), side=str(sig.side))
     side = "Buy" if sig.side == "long" else "Sell"
     entry = float(sig.entry)
     tp = float(sig.tp)
@@ -8978,6 +9015,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
         _diag_inc("midterm_skip_rounding")
+        _append_signal_decision("midterm", symbol, "skip_rounding", "invalid_rounded_tp_sl", side=str(sig.side))
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -9283,10 +9321,13 @@ async def try_att1_entry_async(symbol: str, price: float):
         return
     if not sig:
         _diag_inc("att1_no_signal")
-        _diag_inc(_att1_no_signal_diag_key(ATT1_ENGINE.last_no_signal_reason(symbol)))
+        ns_reason = ATT1_ENGINE.last_no_signal_reason(symbol)
+        _diag_inc(_att1_no_signal_diag_key(ns_reason))
+        _append_signal_decision("att1", symbol, "no_signal", ns_reason)
         return
 
     _diag_inc("att1_signal")
+    _append_signal_decision("att1", symbol, "signal", str(getattr(sig, "reason", "") or ""), side=str(sig.side))
     side = "Buy" if sig.side == "long" else "Sell"
     entry = float(sig.entry)
     sl = float(sig.sl)
@@ -9296,6 +9337,7 @@ async def try_att1_entry_async(symbol: str, price: float):
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
         _diag_inc("att1_skip_rounding")
+        _append_signal_decision("att1", symbol, "skip_rounding", "invalid_rounded_tp_sl", side=str(sig.side))
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -10021,9 +10063,11 @@ async def try_flat_entry_async(symbol: str, price: float):
         except Exception:
             ns_reason = ""
         _diag_inc(_flat_no_signal_diag_key(ns_reason))
+        _append_signal_decision("flat", symbol, "no_signal", ns_reason or "unknown")
         return
 
     _diag_inc("flat_signal")
+    _append_signal_decision("flat", symbol, "signal", str(getattr(sig, "reason", "") or ""), side=str(sig.side))
     side = "Buy" if sig.side == "long" else "Sell"
     entry = float(sig.entry)
     sl = float(sig.sl)
@@ -10033,6 +10077,7 @@ async def try_flat_entry_async(symbol: str, price: float):
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
         _diag_inc("flat_skip_rounding")
+        _append_signal_decision("flat", symbol, "skip_rounding", "invalid_rounded_tp_sl", side=str(sig.side))
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -10187,9 +10232,11 @@ async def try_breakdown_entry_async(symbol: str, price: float):
             ns_reason = ""
         _diag_inc("breakdown_no_signal")
         _diag_inc(_breakdown_no_signal_diag_key(ns_reason))
+        _append_signal_decision("breakdown", symbol, "no_signal", ns_reason or "unknown")
         return
 
     _diag_inc("breakdown_signal")
+    _append_signal_decision("breakdown", symbol, "signal", str(getattr(sig, "reason", "") or ""), side=str(sig.side))
     side = "Buy" if sig.side == "long" else "Sell"
     # Direction correlation cap: re-check now that we know the side.
     if not portfolio_can_open(side):
@@ -10203,6 +10250,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if tp_r is None or sl_r is None:
         _diag_inc("breakdown_skip_rounding")
+        _append_signal_decision("breakdown", symbol, "skip_rounding", "invalid_rounded_tp_sl", side=str(sig.side))
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0

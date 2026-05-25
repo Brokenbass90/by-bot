@@ -4,6 +4,17 @@
 
 ---
 
+## Verified after Claude follow-up review
+
+- Server diagnostic at 2026-05-25 16:20 UTC: `bybot` healthy, `open_trades=0`, `bear_chop`, allocator `safe_mode=False`; static-v1/live input parity is now `100%`.
+- Current live blocker is internal signal conversion, not routing: `breakdown` is dominated by RSI/support, `flat` by touch, `ATT1` by trendline rejection with one signal reaching rounding.
+- The main bot already calls `AltBearRegimeContinuationV1Strategy.signal(...)` in its BRC1 live path. Claude's added `maybe_signal(...)` bridge is not a missing-interface live repair.
+- Claude's BRC1 indicator changes, ARF1 rewrite/filter flag, Elder rewrite and `btc_eth_midterm_pullback` runner-default change are local challenger code only. In particular, MTPB v1 is part of `crypto_income_static_v1`, so its exit-default change requires a new full-package baseline/challenger replay before any commit or deploy.
+- Leave the running server BRC1 sweep as a baseline run against the deployed implementation; do not interpret its results as validation of the local challenger rewrite.
+- Prepared diagnostics-only patch: bounded `runtime/signal_decisions.jsonl` for `midterm/att1/flat/breakdown`, summarized by `scripts/build_crypto_setup_blocker_report.py` and passed to onboard DeepSeek context. Deploy only this trace before loosening any filter; sample 2-24h.
+
+---
+
 ## P0 — Deploy gate (bot must trade before anything else matters)
 
 ### P0-1: Run ATT1 replay with sweep-winner params
@@ -33,6 +44,8 @@ This adds `ATT1_SHORT_MAX_POS_SLOPE` as a sweep dimension. 288 combos, ~40 min.
 - Tests `SHORT_MAX_POS_SLOPE` ∈ [0.5, 0.6, 0.7, 0.8, 1.0, 1.5]
 - Locked on optimal density params from v3 best result
 - If winner has slope > 0.5: include it in the P0-1 full-package replay. Promote only through reviewed approved-params config if the package baseline improves.
+
+**Queued**: local detached session `att1_slope_after_v3_20260525` waits for `att1_density_20260525` to end, then writes its output to `logs/att1_short_slope_after_v3_20260525.nohup.log`.
 
 ---
 
