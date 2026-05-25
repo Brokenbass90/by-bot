@@ -124,8 +124,14 @@ from bot.symbol_state import (
 # Load .env before any module-level os.getenv(...) settings below are evaluated.
 ROOT_DIR = Path(__file__).resolve().parent
 load_dotenv()
+APPROVED_STRATEGY_PARAMS_PATH = ROOT_DIR / "configs" / "approved_strategy_params.env"
+if APPROVED_STRATEGY_PARAMS_PATH.exists():
+    load_dotenv(APPROVED_STRATEGY_PARAMS_PATH, override=True)
 AUTO_APPLY_PARAMS_PATH = ROOT_DIR / "configs" / "auto_apply_params.env"
-if AUTO_APPLY_PARAMS_PATH.exists():
+# Research can produce proposals, but unattended output must never override
+# reviewed live parameters unless the operator deliberately enables it.
+ALLOW_AUTO_APPLY_OVERRIDES = os.getenv("ALLOW_AUTO_APPLY_OVERRIDES", "0").strip().lower() in ("1", "true", "yes", "on")
+if ALLOW_AUTO_APPLY_OVERRIDES and AUTO_APPLY_PARAMS_PATH.exists():
     load_dotenv(AUTO_APPLY_PARAMS_PATH, override=True)
 
 # Phase 3: strategy_pause.env — written by live_vs_backtest_monitor.py when a
