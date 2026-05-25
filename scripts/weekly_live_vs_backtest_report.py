@@ -238,6 +238,36 @@ def _read_backtest_window(run_dir: str, cutoff_ts: float) -> tuple[Stats, dict[s
     return total, by_strategy, entries
 
 
+def _entry_dead_zone_hours() -> set[int]:
+    raw = _env("NO_ENTRY_HOURS_UTC", "0,1,2")
+    hours: set[int] = set()
+    for part in raw.split(","):
+        try:
+            hour = int(part.strip())
+        except ValueError:
+            continue
+        if 0 <= hour <= 23:
+            hours.add(hour)
+    return hours
+
+
+def _count_dead_zone_entries(run_dir: str, cutoff_ts: float, hours: set[int]) -> int:
+    if not hours:
+        return 0
+    trades_path = ROOT / run_dir / "trades.csv"
+    if not trades_path.exists():
+        return 0
+    blocked = 0
+    with trades_path.open(newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            entry_ts = _parse_backtest_ts(row.get("entry_ts"))
+            if entry_ts < cutoff_ts:
+                continue
+            if datetime.fromtimestamp(entry_ts, tz=timezone.utc).hour in hours:
+                blocked += 1
+    return blocked
+
+
 def _run_live_effective_backtest(report_days: int, warmup_days: int, end_date: str, health_filter: str) -> tuple[
     dict[str, str],
     str,
@@ -379,6 +409,13 @@ def main() -> int:
     bt_pf = _fmt_pf(bt_window_total.pf)
     bt_wr = bt_window_total.wr
     bt_dd = float(bt_summary.get("max_drawdown") or 0.0)
+    window_cutoff = (
+        datetime.strptime(args.end, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        - timedelta(days=args.days)
+    ).timestamp()
+    dead_zone_hours = _entry_dead_zone_hours()
+    dead_zone_entries = _count_dead_zone_entries(bt_run, window_cutoff, dead_zone_hours)
+    dead_zone_label = ",".join(str(hour) for hour in sorted(dead_zone_hours)) or "disabled"
 
     md = [
         f"# Weekly Live vs Backtest — {stamp}",
@@ -389,6 +426,7 @@ def main() -> int:
         f"Warmup: `{args.warmup_days}d`; reported window: `{args.days}d`",
         f"Strategies: `{strategies}`",
         f"Symbols: `{symbols}`",
+        f"Live entry dead-zone hours UTC: `{dead_zone_label}`; replay entries in dead-zone: `{dead_zone_entries}/{bt_window_entries}`",
         "",
         "| Source | Exits | Entries | Net PnL | PF | Winrate | Max DD |",
         "|---|---:|---:|---:|---:|---:|---:|",
@@ -399,7 +437,8 @@ def main() -> int:
         "",
         "## Drift Read",
         "",
-        "- If live has `0` closes while backtest has recent entries, check auth/order placement/log skips immediately.",
+        "- Live-effective replay applies the allocator/router snapshot available when this report runs. If configuration changed during the window, this is a counterfactual challenger, not proof that historic live execution failed.",
+        "- If live has `0` closes while replay has entries after the same config was deployed, and those entries are not inside the live dead-zone, inspect signal-path/runtime skips before order placement.",
         "- If both live and backtest have `0` recent entries, the silence is probably strategy/opportunity scarcity for that window.",
         "",
         "## Live Strategy Breakdown",
@@ -431,6 +470,8 @@ def main() -> int:
         f"Mode: {'fixed legacy' if args.fixed_legacy else 'live-effective'}; health={args.health_filter if not args.fixed_legacy else 'n/a'}\n"
         f"Live: trades={live_total.trades}, pnl={live_total.net:.4f}, PF={_fmt_pf(live_total.pf)}\n"
         f"Backtest: exits={bt_trades}, entries={bt_window_entries}, pnl={bt_net:.4f}, PF={bt_pf}, DD={bt_dd:.2f}%\n"
+        f"Live dead-zone replay entries: {dead_zone_entries}/{bt_window_entries} (UTC {dead_zone_label})\n"
+        "Note: replay uses the config snapshot at report time; compare as execution evidence only after a stable-config window.\n"
         f"Report: {md_path.relative_to(ROOT)}"
     )
     print(message)
