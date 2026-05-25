@@ -1,6 +1,6 @@
 # Backlog — приоритезированный список действий
 
-**Last updated:** 2026-05-22
+**Last updated:** 2026-05-25
 **Формат:** P0 (этой недели, блокирующее) → P1 (этого месяца) → P2 (когда выйдем в плюс)
 **Правило:** один пункт = 1 строка. Подробности — в спеках, не здесь.
 
@@ -48,7 +48,8 @@
 | P1-1 | **Monitor approved bear router update.** Breakdown ADA+ONDO profile patch deployed; next decision after 24-72h counters/trades. Не включать ASB1. | Codex | `docs/STRATEGY_SET_PER_REGIME_20260519.md` §3.3 |
 | P1-1a | **Done 2026-05-20: restore proven crypto package via shadow/replay, not blind live.** Static rerun: +70.17%/365d, PF 1.545. Control-plane replay: +42.31%/360d, PF 1.383, DD 5.87, 536 trades, 1 red month. Current live approximation: +17.45%/365d, PF 1.211, DD 13.25. | Codex | `backtest_runs/dynamic_annual_20260520_100256_codex_p1_1a_static_v1_control_plane_replay_20260520/summary.json` |
 | P1-1b | **Done 2026-05-20: prepare static-v1 live parity/shadow, no live env edits.** Synced missing static-v1 policy/health/env artifacts to server. Dry-run shows static-v1 policy in current `bear_trend` enables `flat+breakdown` only; ATT1/midterm are blocked by orchestrator, not allocator policy. | Codex | Acceptance: no live restart/env edit |
-| P1-1c | **Backtest-driven symbol/router expansion for flat/breakdown.** 2026-05-24: static-v1 input parity was 50%; added router `force_include_symbols` support and pinned proven static-v1 symbols for `breakdown`, `ATT1`, `ARF1`. Not deployed live yet; needs explicit live-risk approval + rebuild router/allocator. | Codex | Acceptance: live-effective input parity >=80%, then 24-72h counters/trades |
+| P1-1c | **Done/monitor: backtest-driven symbol/router expansion for static core.** Owner-approved live deployment active; after adequate sample, allowlist mismatch is no longer dominant. Internal blockers now dominate: `breakdown_support`, `ATT1_trendline`, `flat_touch`. | Codex | Acceptance met for routing diagnosis; continue with targeted filter replay, no blind expansion |
+| P1-1d | **Targeted live-filter replay.** Reproduce current `breakdown_ns_support`, `att1_ns_trendline`, `flat_ns_touch` over a tradeful window and test one bounded relaxation/logic repair per sleeve. | Codex | Promote only if PF≥1.25, DD≤8%, trades≥30 and negative months do not worsen |
 | P1-2 | **SAFETY Patch 1 — SL/TP на брокере.** Bybit V5 `stopLoss`/`takeProfit` params в `place_market()`. Критично для защиты от flash crash. | Codex | `SAFETY_PATCHES_20260517.md` |
 | P1-3 | **SAFETY Patch 2 — TRADES race fix.** `threading.RLock` + persistent snapshot. | Codex | `SAFETY_PATCHES_20260517.md` |
 | P1-4 | **Funding carry DRY_RUN** через cron `*/30 * * * *` на неделю. | Codex | `FUNDING_CARRY_ACTIVATION_20260517.md` Phase 1 |
@@ -58,7 +59,7 @@
 | P1-8 | Alpaca v39 (если backtest v2 пройдёт): paper 14 дней с `ALPACA_DYN_V2_ENABLED=1`. | Codex | результаты P0.5-1 |
 | P1-8a | Alpaca market data freshness check: intraday dry-run 2026-05-19 видел last bar 2026-05-18 19:30 UTC. Проверить feed/cache перед active paper switch. | Codex | `scripts/equities_alpaca_intraday_bridge.py` |
 | P1-8b | Done 2026-05-20: `v3_shadow` defaults to dry-run; stale SCHW pending paper orders cancelled; no more shared-account order conflict expected. Next: verify today during US session. | Codex | `logs/alpaca_intraday_dynamic_v3_shadow.log` |
-| P1-8c | **Alpaca v39 event-based rebalance.** Wide-grid best saved 2026-05-24: `+88.05%/24m`, PF `1.987`, WR `62.0%`, trades `150`, DD `12.90%`, red months `6/24`; config `configs/alpaca_v39_event_best_research.env`. Still research-only: needs OOS/stress and 30d paper shadow before money. | Codex | `scripts/alpaca_v3_event_backtest.py`, `strategies/alpaca_dynamic_v3_event.py` |
+| P1-8c | **Alpaca v39 event-based rebalance.** 24m best saved: `+88.05%`, PF `1.987`, WR `62.0%`, DD `12.90%`, red months `6/24`. 4y focused stress: `+140.20%`, PF `1.624`, DD `26.47%`, red months `16/52`; return beats static, quality gate does not. Still research-only; next refine exits/regime before paper shadow. | Codex | `scripts/alpaca_v3_event_backtest.py`, `strategies/alpaca_dynamic_v3_event.py` |
 | P1-9 | **Депозит Фаза 1: $500 → Bybit** (если P0-1..P0-3 done + ≥ 10 trades + PnL ≥ −5 % 7 дней). | owner | `docs/PROJECT_STATUS.md` Финансовая фаза |
 | P1-10 | Champion-challenger v1 на одной sleeve (ASB1) — shadow only. | Codex | `CHAMPION_CHALLENGER_FRAMEWORK_20260517.md` |
 
@@ -121,6 +122,7 @@ Next: P0-2
 ```
 
 ## Изменения в backlog
+- 2026-05-25: Router/static-core live sample now shows internal strategy filters as the blocker; added P1-1d targeted filter replay. Fixed broken breakdown bear research TF; its 36 variants failed. ATT1 focused 360d sweep produced a challenger (`+23.97%`, PF `1.278`, DD `9.82%`) that needs DD repair. Alpaca v39 4y stress retained for research only.
 - 2026-05-24: Added P1-1c router static-core pins and saved Alpaca v39 best research config. Started local detached candidate matrix `candidate180_bear_flat_20260524` for BRC1/range/breakdown_v2/bear_breakdown on proven symbols.
 - 2026-05-22: P0-7 done. Rebuilt server router/allocator: `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,ADAUSDT,ONDOUSDT`, breakdown count 4, no hard block. Fresh compare after restart: stream alive, no portfolio/global block; sample too small, next check after 1-3h.
 - 2026-05-21 evening: P0-6 done. Found `sloped_ns_symbol=116/119` after grouped diagnostics; patched sloped scheduler allowlist. Earlier same session patched ATT1/ASM1 scheduler allowlist drift. Server stream fresh after controlled restart.

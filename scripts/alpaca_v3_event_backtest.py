@@ -117,6 +117,11 @@ def main() -> int:
     ap.add_argument("--tag", default="v39_event")
     ap.add_argument("--grid", action="store_true", help="Run a small parameter grid after the default run")
     ap.add_argument("--wide-grid", action="store_true", help="Run a wider parameter grid")
+    ap.add_argument(
+        "--focused-grid",
+        action="store_true",
+        help="Run a bounded refinement grid around the saved v39 event winner.",
+    )
     ap.add_argument("--cache-dir", default="runtime/equities_yf_cache")
     args = ap.parse_args()
 
@@ -144,11 +149,26 @@ def main() -> int:
     best_grid = None
 
     if args.grid:
-        profit_triggers = (6.0, 8.0, 10.0, 12.0, 15.0) if args.wide_grid else (8.0, 10.0, 12.0)
-        pullbacks = (1.5, 2.5, 4.0, 6.0) if args.wide_grid else (2.5, 4.0)
-        stops = (4.0, 5.0, 7.0, 9.0, 12.0) if args.wide_grid else (5.0, 7.0)
-        peers = (6.0, 10.0, 15.0, 20.0) if args.wide_grid else (10.0, 15.0)
-        ages = (7, 14, 21, 30, 45) if args.wide_grid else (14, 21)
+        if args.focused_grid:
+            # 12 combinations around the current winner. First isolate the
+            # exit mechanics causing red months before widening entry search.
+            profit_triggers = (8.0,)
+            pullbacks = (2.0, 2.5)
+            stops = (7.0, 9.0, 11.0)
+            peers = (15.0,)
+            ages = (21, 30)
+        elif args.wide_grid:
+            profit_triggers = (6.0, 8.0, 10.0, 12.0, 15.0)
+            pullbacks = (1.5, 2.5, 4.0, 6.0)
+            stops = (4.0, 5.0, 7.0, 9.0, 12.0)
+            peers = (6.0, 10.0, 15.0, 20.0)
+            ages = (7, 14, 21, 30, 45)
+        else:
+            profit_triggers = (8.0, 10.0, 12.0)
+            pullbacks = (2.5, 4.0)
+            stops = (5.0, 7.0)
+            peers = (10.0, 15.0)
+            ages = (14, 21)
         for profit_trigger in profit_triggers:
             for pullback in pullbacks:
                 for stop in stops:

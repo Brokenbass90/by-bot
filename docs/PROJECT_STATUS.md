@@ -1,11 +1,11 @@
 # Project Status — LIVE
 
-**Last updated:** 2026-05-22 midday (sloped live confirm + Alpaca v39 first research)
+**Last updated:** 2026-05-25 morning (live internal blockers + ATT1/Alpaca research)
 **Update rhythm:** еженедельно или при критическом изменении
 **Источник правды:** этот файл + `docs/BACKLOG.md` + `docs/RESUME_AFTER_BREAK_20260519.md`
 
 ## Однострочник
-Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-22:** главный P0 остаётся `live-vs-static_v1 parity`: `crypto_income_static_v1` доказан (`+70.17%` за 365d, PF `1.545`, 445 trades), но current live-effective stack всё ещё торгует другим набором symbols/strategies. Закрыты два конкретных live mismatch: `breakdown_bear_core` теперь сохраняет validated ADA/ONDO после geometry, а `sloped` pending 5m confirmation больше не получает нулевые OHLC. Bybot active after restart, stream fresh, open_trades=0; следующий шаг — 1-3h counters после фиксов. Alpaca v39 event-based первый research-прогон: return выше static, но PF/neg months хуже, verdict `REJECT`.
+Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-25:** router/static-core parity уже доведён до live, `bybot` active (`trade_on=True`, `dry_run=False`), но сделок всё ещё нет: теперь отказ происходит внутри стратегий, а не в allowlist/control-plane (`breakdown_ns_support=589/729`, `att1_ns_trendline=58/95`, `flat_ns_touch=52/76`). `crypto_income_static_v1` остаётся recovery benchmark (`+70.17%` за 365d, PF `1.545`, 445 trades). Alpaca v39 event-based даёт больше return, но 4y stress пока не проходит quality gate.
 
 ## Numbers (на 2026-05-19 после рестарта)
 
@@ -66,8 +66,8 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - **breakdown ONDO 180d**: PF 2.14 — **сильный, ждёт geometry unlock**.
 
 ### Active research queue
-- `elder_v3_macro_off_full_relax_v1` — running on server (`run_strategy_autoresearch.py`, r043 на момент проверки)
-- `att1_density_more_pivots` — queued/следующий research-кандидат
+- `ATT1 focused pivot sweep v2` — finished 2026-05-25: best `+23.97%`, PF `1.278`, WR `56.7%`, DD `9.82%` on 360d; promising challenger, not live because DD > 8% gate.
+- `breakdown_recent_bear_window_v2_entry_quality` — fixed broken `4h` backtest timeframe (`240`) and rerun; 36/36 failed, best `-6.25%`, PF `0.679`, DD `7.30%`. Do not extend live breakdown from this window.
 - `asb1_bull_chop_repair_v1` — не продвигать в live без repair acceptance
 
 ## Что работает прямо сейчас
@@ -86,15 +86,16 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - ✅ 2026-05-22 morning: `breakdown_bear_core` router geometry over-filter fixed for validated ADA/ONDO only; ADA/ONDO now survive geometry if already selected by market/backtest router.
 - ✅ 2026-05-22 midday: `sloped_channel_live.py` now passes real closed 5m OHLC into pending confirmation instead of zero OHLC; this fixes live execution parity without loosening risk/filter thresholds.
 - ✅ 2026-05-22 midday: `scripts/alpaca_v3_event_backtest.py` + `strategies/alpaca_dynamic_v3_event.py` added and first server run completed. `V39_EVENT`: `+34.47%`, PF `1.328`, WR `50.5%`, trades `222`, DD `24.07%`, red months `10/24`; verdict `REJECT`, not paper/live.
+- ✅ 2026-05-25: AI full-context now carries dynamic `router_state` and compact `crypto_blocker_summary`; DeepSeek/web can see current symbol routing and blocked setup cards without write access to trading state.
 
 ## Что НЕ работает (top blockers)
 0. **P0-NEW: live-vs-static_v1 parity.** 7d окно до 2026-04-30 оказалось неторговым для static_v1, поэтому оно не подходит для acceptance. Запущена проверка на tradeful окне 30d до 2026-02-24, где static_v1 ранее дал 75 trades, `+9.76`, PF `1.664`.
 1. **Live-stack не совпадает с проверенным `crypto_income_static_v1`.** P1-1a/P1-1b показали: static-v1 policy сама по себе не включает ATT1/midterm в bear_trend, а текущие `flat+breakdown` получают слишком узкие symbol lists.
 2. **Symbol allowlist/router mismatch** — частично закрыт для scheduler (`ATT1/ASM1/sloped`) и для `breakdown` ADA/ONDO. Остаются scanner cards вне allocator symbols, особенно `flat`.
-3. **Post-router-fix sample маленький.** После рестарта compare показывает `breakdown_try=4`, blocker уже не allowlist, а `support/rsi`; `flat/sloped` пока mostly `same_bar`/cooldown. Нужен 1-3h sample before next filter change.
+3. **Post-router-fix sample уже достаточен для следующего диагноза.** Live counters: `breakdown_try=729` with `support=589`, `rsi=92`, `same_bar=48`; `att1_try=95` with `trendline=58`; `flat_try=76` with `touch=52`. Control-plane больше не главный стоппер; нужен targeted replay/filter study, не расширение allowlist.
 4. **direction-aware risk_mult** — long и short режутся одинаково в bear macro.
 5. **SAFETY Patch 1 SL/TP на брокере** — критично.
-6. **Alpaca v39 written but not accepted** — first event-based research run improves return vs simple static but fails PF/red-month quality; v38 hybrid пока единственный paper-proven.
+6. **Alpaca v39 written but not accepted** — 24m best: `+88.05%`, PF `1.987`, DD `12.90%`, red months `6/24`; 4y stress best: `+140.20%`, PF `1.624`, DD `26.47%`, red months `16/52`, worse PF than static (`1.695`). v38 hybrid пока единственный paper-proven.
 7. **Market data freshness Alpaca** — last bar 2026-05-18 19:30 UTC.
 
 ## Принятые архитектурные решения (НЕ менять без owner)
@@ -163,6 +164,7 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 
 ## История изменений
 - 2026-05-24: after 51h uptime still no crypto open trades. Fresh blocker report: 80 setup cards, 44 blocked by disabled/zero-risk sleeves (mostly ASB1/BRC1), 27 by symbol allowlist; active-hour strategy blockers are `breakdown_ns_rsi/support`, `flat_ns_touch/range`, `sloped_ns_r2/channel`. Static-v1 input parity was only 50%; Codex added router `force_include_symbols` support and pinned proven static-v1 core symbols for `breakdown`, `ATT1`, and `ARF1` without touching live env. Alpaca v39 best event-grid candidate saved to `configs/alpaca_v39_event_best_research.env`; still research-only.
+- 2026-05-25: static-core router fix is active in live; fresh counters shift the crypto blocker from symbol/control-plane mismatch to internal filters (`breakdown_support`, `ATT1_trendline`, `flat_touch`). Fixed broken breakdown research TF and rejected its bear-window expansion; ATT1 360d sweep produced a positive challenger requiring DD repair. AI context deployed with router/blocker visibility. Alpaca v39 focused 4y stress remains research-only.
 - 2026-05-22 morning: Codex found overnight no-trade cause shifted from old scheduler mismatch to router geometry over-filter: `BREAKDOWN_SYMBOL_ALLOWLIST` was only `BTCUSDT,ETHUSDT` while scanner had ADA breakdown. Patched `scripts/build_symbol_router.py` + `configs/strategy_profile_registry.json` with `geometry_force_keep_symbols=["ADAUSDT","ONDOUSDT"]` for `breakdown_bear_core`. Rebuilt router/allocator on server: breakdown count 2→4, risk 0.7125→0.8550, `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,ADAUSDT,ONDOUSDT`. Controlled restart with `open_trades=0`; stream recovered, bybit msgs growing, first fresh counters show no portfolio/global block.
 - 2026-05-21 evening: Codex patched scheduler allowlist drift for `ATT1`, `ASM1`, `sloped`; added grouped `sloped_ns_*` diagnostics. Server restarted safely with `open_trades=0`; stream fresh, `bybit_msgs` growing. Fresh compare: allocator hard block false, `breakdown_ns_support`, `flat/sloped same_bar` with small post-restart sample, no `sloped_ns_symbol` domination.
 - 2026-05-21 morning: P0-NEW поднят выше всех задач: `live-vs-static_v1 parity fix`. Проверка 7d до 2026-04-30 отброшена как неторговое окно; стартовала 30d parity-проверка до 2026-02-24.
