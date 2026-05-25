@@ -28,6 +28,7 @@
 | P0.5-4 | Current running 2026-05-20: `elder_v3_macro_off_full_relax_v1` autoresearch. После него — `att1_density_more_pivots`. | Codex | runtime/research_nightly/ |
 | P0.5-5 | Run 2026-05-20: `compare_live_pulse_vs_backtest.py` shows open_trades=0, flat true no-signal/range, breakdown symbol/no-setup, ATT1/midterm no attempts. Use symbol-aware blocker before touching filters. | Codex | `runtime/bot_heartbeat.json` |
 | P0.5-6 | Done 2026-05-19 17:24 UTC: approved breakdown router/profile patch applied for ADA+ONDO only; ENA excluded. Active router includes ADA now; ONDO staged but geometry-filtered until setup quality improves. | Codex | `backtest_runs/portfolio_20260519_170243_breakdown_new_symbols_180d_20260519/summary.csv` |
+| P0.5-7 | Done 2026-05-25: `flat_live_frequency_v3` standalone PASS (`+9.66%`, PF `2.232`, DD `1.76%`), but replacing ARF1 params in full `crypto_income_static_v1` worsened it to `+64.24%`, PF `1.491`, DD `7.31%`. Do not promote this flat override. | Codex | `backtest_runs/autoresearch_20260525_072703_flat_live_frequency_v3/`, `backtest_runs/portfolio_20260525_102913_codex_static_v1_arf1_r033_replay_20260525/` |
 
 ## P0.9 — менеджерская чистка (low risk, high signal)
 
@@ -128,6 +129,7 @@ Next: P0-2
 - 2026-05-25: Corrected DeepSeek weekly attribution bug and gated universe proposals as backtest-only. Added P1-1e signal/timestamp/no-entry-hours parity and P1-7a read-only external market context; live settings unchanged.
 - 2026-05-25: Dead-zone did not explain the latest live/replay gap (`0/9` replay entries in UTC 0/1/2). Hardened weekly interpretation: current-config replay over pre-deployment days is counterfactual; require a stable post-fix window.
 - 2026-05-25: Deployed entry-funnel diagnostics for all active crypto sleeves and extended crypto blocker report with post-signal skip classification. New live sample shows `signal=0`, focusing the next work on targeted filter replay rather than allocator/order edits.
+- 2026-05-25: Tested a promising ARF1/flat frequency variant in isolation and in the full proven package; it harms package return/DD, so it is rejected for promotion. Next candidate repair stays `ATT1`, while BRC1 annual research continues.
 - 2026-05-25: Router/static-core live sample now shows internal strategy filters as the blocker; added P1-1d targeted filter replay. Fixed broken breakdown bear research TF; its 36 variants failed. ATT1 focused 360d sweep produced a challenger (`+23.97%`, PF `1.278`, DD `9.82%`) that needs DD repair. Alpaca v39 4y stress retained for research only.
 - 2026-05-24: Added P1-1c router static-core pins and saved Alpaca v39 best research config. Started local detached candidate matrix `candidate180_bear_flat_20260524` for BRC1/range/breakdown_v2/bear_breakdown on proven symbols.
 - 2026-05-22: P0-7 done. Rebuilt server router/allocator: `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,ADAUSDT,ONDOUSDT`, breakdown count 4, no hard block. Fresh compare after restart: stream alive, no portfolio/global block; sample too small, next check after 1-3h.

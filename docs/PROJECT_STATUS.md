@@ -5,7 +5,7 @@
 **Источник правды:** этот файл + `docs/BACKLOG.md` + `docs/RESUME_AFTER_BREAK_20260519.md`
 
 ## Однострочник
-Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-25:** router/static-core inputs уже совпадают с benchmark для обязательных symbols (`100% input parity`), `bybot` active (`trade_on=True`, `dry_run=False`), но свежих crypto trades всё ещё нет: активные попытки в основном режутся внутри sleeves (`breakdown_ns_support=593/739`, `att1_ns_trendline=61/101`, `flat_ns_touch=55/79`). Осталось отдельно проверить signal/timestamp parity и эффект `NO_ENTRY_HOURS_UTC`, поэтому блокеры ещё не считаются исчерпанными. `crypto_income_static_v1` остаётся recovery benchmark (`+70.17%` за 365d, PF `1.545`, 445 trades). Alpaca v39 event-based даёт больше return, но 4y stress пока не проходит quality gate.
+Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-25:** router/static-core inputs уже совпадают с benchmark для обязательных symbols (`100% input parity`), `bybot` active (`trade_on=True`, `dry_run=False`), но свежих crypto trades всё ещё нет: новые funnel counters показывают `signal=0` у активных sleeves, то есть текущий блокер находится внутри entry filters, до sizing/order. `NO_ENTRY_HOURS_UTC` уже исключён как причина последнего replay-gap. `crypto_income_static_v1` остаётся recovery benchmark (`+70.17%` за 365d, PF `1.545`, 445 trades). Alpaca v39 event-based даёт больше return, но 4y stress пока не проходит quality gate.
 
 ## Numbers (на 2026-05-19 после рестарта)
 
@@ -14,7 +14,7 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - **Last trade:** 2026-04-28 ALGOUSDT range −$0.92. После рестарта ждём первый entry.
 - **Alpaca paper:** $1000, open позиции DDOG + GOOGL (после Codex cleanup); stop по GOOGL
 - **Owner reserve:** $2000 в крипте, ждёт Фаза 1 trigger
-- **Regime:** `bear_trend`, MACRO_BEAR, EMA50/EMA200 daily gap ~−7 %
+- **Regime:** `bear_chop` на свежем server heartbeat 2026-05-25; прежний snapshot был `bear_trend`.
 - **Allocator:** global_risk=0.8, hard_block=False
 - **Service:** `bybot` active, рестарт прошёл чисто (open_trades=0 на момент рестарта)
 
@@ -69,6 +69,7 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - `ATT1 focused pivot sweep v2` — finished 2026-05-25: best `+23.97%`, PF `1.278`, WR `56.7%`, DD `9.82%` on 360d; promising challenger, not live because DD > 8% gate.
 - `breakdown_recent_bear_window_v2_entry_quality` — fixed broken `4h` backtest timeframe (`240`) and rerun; 36/36 failed, best `-6.25%`, PF `0.679`, DD `7.30%`. Do not extend live breakdown from this window.
 - `bear_regime_continuation_v1_initial_sweep` — running on server under bounded CPU/memory limits (486 annual variants); wait for completed 360d evidence before any BRC1 decision.
+- `flat_live_frequency_v3` — completed locally 2026-05-25: standalone best `+9.66%`, PF `2.232`, WR `59.4%`, DD `1.76%`, 32 trades, 3 negative months. Portfolio replacement test inside `crypto_income_static_v1` worsened benchmark to `+64.24%`, PF `1.491`, DD `7.31%` (vs `+70.17%`, PF `1.545`, DD `6.23%`); **reject for live promotion**.
 - `asb1_bull_chop_repair_v1` — не продвигать в live без repair acceptance
 
 ## Что работает прямо сейчас
@@ -173,6 +174,7 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - 2026-05-25: fixed DeepSeek weekly report attribution bug: a portfolio result was previously repeated as if it were each sleeve's own result. Reports now calculate per-sleeve trade evidence and mark universe suggestions as research-only. No live strategy or account settings changed.
 - 2026-05-25: weekly live-vs-backtest interpretation hardened: recent 9 replay entries were outside the live dead-zone, but the report used end-of-window config retrospectively over pre-fix days. Future reports expose dead-zone count and label this as counterfactual until the config has stayed stable through the measured window.
 - 2026-05-25: added live entry-funnel counters and blocker-report support for signals stopped after generation. Deployment was diagnostics-only with `open_trades=0`; fresh sample confirms active sleeves currently fail before signal generation, so the next evidence task is filter-level replay (`ATT1 trendline`, `flat touch`, `breakdown support`).
+- 2026-05-25: ran `flat_live_frequency_v3` and an additive portfolio replay. A standalone ARF1 variant passed, but substituting it into `crypto_income_static_v1` reduced return and increased drawdown; no flat live parameter promotion.
 - 2026-05-22 morning: Codex found overnight no-trade cause shifted from old scheduler mismatch to router geometry over-filter: `BREAKDOWN_SYMBOL_ALLOWLIST` was only `BTCUSDT,ETHUSDT` while scanner had ADA breakdown. Patched `scripts/build_symbol_router.py` + `configs/strategy_profile_registry.json` with `geometry_force_keep_symbols=["ADAUSDT","ONDOUSDT"]` for `breakdown_bear_core`. Rebuilt router/allocator on server: breakdown count 2→4, risk 0.7125→0.8550, `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,ADAUSDT,ONDOUSDT`. Controlled restart with `open_trades=0`; stream recovered, bybit msgs growing, first fresh counters show no portfolio/global block.
 - 2026-05-21 evening: Codex patched scheduler allowlist drift for `ATT1`, `ASM1`, `sloped`; added grouped `sloped_ns_*` diagnostics. Server restarted safely with `open_trades=0`; stream fresh, `bybit_msgs` growing. Fresh compare: allocator hard block false, `breakdown_ns_support`, `flat/sloped same_bar` with small post-restart sample, no `sloped_ns_symbol` domination.
 - 2026-05-21 morning: P0-NEW поднят выше всех задач: `live-vs-static_v1 parity fix`. Проверка 7d до 2026-04-30 отброшена как неторговое окно; стартовала 30d parity-проверка до 2026-02-24.
