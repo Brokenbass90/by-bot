@@ -848,7 +848,7 @@ async def trade_chart(
     symbol: str,
     entry_ts: int,
     exit_ts: int,
-    interval: str = Query("5", regex=r"^(1|3|5|15|30|60|120|240|D)$"),
+    interval: str = Query("5", pattern=r"^(1|3|5|15|30|60|120|240|D)$"),
     entry_price: Optional[float] = None,
     exit_price: Optional[float] = None,
     sl_price: Optional[float] = None,
@@ -1393,8 +1393,8 @@ async def get_setup_scanner(
 
 @router.get("/setup-scanner/chart")
 async def get_setup_scanner_chart(
-    symbol: str = Query(..., regex=r"^[A-Z0-9]{3,24}$"),
-    interval: str = Query("60", regex=r"^(1|3|5|15|30|60|120|240|D)$"),
+    symbol: str = Query(..., pattern=r"^[A-Z0-9]{3,24}$"),
+    interval: str = Query("60", pattern=r"^(1|3|5|15|30|60|120|240|D)$"),
     limit: int = Query(64, ge=20, le=120),
     _: str = Depends(require_auth),
 ):
