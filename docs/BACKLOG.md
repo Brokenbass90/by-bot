@@ -30,6 +30,7 @@
 | P0.5-5 | Run 2026-05-20: `compare_live_pulse_vs_backtest.py` shows open_trades=0, flat true no-signal/range, breakdown symbol/no-setup, ATT1/midterm no attempts. Use symbol-aware blocker before touching filters. | Codex | `runtime/bot_heartbeat.json` |
 | P0.5-6 | Done 2026-05-19 17:24 UTC: approved breakdown router/profile patch applied for ADA+ONDO only; ENA excluded. Active router includes ADA now; ONDO staged but geometry-filtered until setup quality improves. | Codex | `backtest_runs/portfolio_20260519_170243_breakdown_new_symbols_180d_20260519/summary.csv` |
 | P0.5-7 | Done 2026-05-25: `flat_live_frequency_v3` standalone PASS (`+9.66%`, PF `2.232`, DD `1.76%`), but replacing ARF1 params in full `crypto_income_static_v1` worsened it to `+64.24%`, PF `1.491`, DD `7.31%`. Do not promote this flat override. | Codex | `backtest_runs/autoresearch_20260525_072703_flat_live_frequency_v3/`, `backtest_runs/portfolio_20260525_102913_codex_static_v1_arf1_r033_replay_20260525/` |
+| P0.5-8 | Rejected quick probe 2026-05-25: resistance-zone attempt for `flat_ns_touch` failed its first bounded variants (`PF 1.130-1.137`, `DD 7.26-7.65%`). No live/code promotion and no full grid spend. | Codex | `backtest_runs/autoresearch_20260525_104946_flat_resistance_zone_v1/results.csv` |
 
 ## P0.9 — менеджерская чистка (low risk, high signal)
 
@@ -60,7 +61,7 @@
 | P1-5 | **direction-aware `global_risk_mult`.** Разделить на `long_risk_mult` / `short_risk_mult` в orchestrator. | Codex | `docs/STRATEGY_SET_PER_REGIME_20260519.md` §3.4 |
 | P1-6 | После P1-1 + P1-2: **активация 2-3 strategies** через acceptance gate (BRC1, alt_bear_breakdown_v1, alt_squeeze_breakout_v1). `base_mult=0.5` start. | Codex | `docs/STRATEGY_SET_PER_REGIME_20260519.md` §2 |
 | P1-7 | **DeepSeek reporting integrity.** Done 2026-05-25: weekly audit attributes metrics from each sleeve's own trades; universe proposals are backtest-only and evidence-bound. | Codex | `scripts/deepseek_weekly_cron.py --dry-run --phases audit,research,report --skip-universe` |
-| P1-7a | **Read-only market context for AI.** Feed cited/cached macro, earnings, sector/news headlines, Bybit liquidity/funding snapshots to `ai_context`; AI may propose research only. | Codex | No direct config/order writes; freshness + source URL required in every snapshot |
+| P1-7a | **Budgeted read-only AI analyst.** Feed cited/cached macro, earnings, sector/news headlines, Bybit liquidity/funding snapshots to `ai_context`; use a stronger analyst model only for queued stock/strategy reviews, DeepSeek for routine summaries. | Codex | No direct config/order writes; freshness + source URL + token/request budget required in every analyst run |
 | P1-8 | Alpaca v39 (если backtest v2 пройдёт): paper 14 дней с `ALPACA_DYN_V2_ENABLED=1`. | Codex | результаты P0.5-1 |
 | P1-8a | Alpaca market data freshness check: intraday dry-run 2026-05-19 видел last bar 2026-05-18 19:30 UTC. Проверить feed/cache перед active paper switch. | Codex | `scripts/equities_alpaca_intraday_bridge.py` |
 | P1-8b | Done 2026-05-20: `v3_shadow` defaults to dry-run; stale SCHW pending paper orders cancelled; no more shared-account order conflict expected. Next: verify today during US session. | Codex | `logs/alpaca_intraday_dynamic_v3_shadow.log` |
