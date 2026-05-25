@@ -93,6 +93,7 @@ def _run_event_once(data: dict, args: argparse.Namespace, **overrides) -> tuple[
         "stop_pct": args.stop_pct,
         "peer_outperform_pct": args.peer_outperform_pct,
         "max_age_days": args.max_age_days,
+        "hard_max_age_days": args.hard_max_age_days,
         "fee_bps": args.fee_bps,
     }
     params.update(overrides)
@@ -112,7 +113,13 @@ def main() -> int:
     ap.add_argument("--profit-pullback-pct", type=float, default=2.5)
     ap.add_argument("--stop-pct", type=float, default=5.0)
     ap.add_argument("--peer-outperform-pct", type=float, default=10.0)
-    ap.add_argument("--max-age-days", type=int, default=14)
+    ap.add_argument(
+        "--max-age-days",
+        type=int,
+        default=14,
+        help="Event review interval retained for compatibility with existing v39 reports.",
+    )
+    ap.add_argument("--hard-max-age-days", type=int, default=60, help="Absolute holding limit.")
     ap.add_argument("--fee-bps", type=float, default=1.0)
     ap.add_argument("--tag", default="v39_event")
     ap.add_argument("--grid", action="store_true", help="Run a small parameter grid after the default run")
@@ -157,42 +164,48 @@ def main() -> int:
             stops = (7.0, 9.0, 11.0)
             peers = (15.0,)
             ages = (21, 30)
+            hard_ages = (30, 45, 60)
         elif args.wide_grid:
             profit_triggers = (6.0, 8.0, 10.0, 12.0, 15.0)
             pullbacks = (1.5, 2.5, 4.0, 6.0)
             stops = (4.0, 5.0, 7.0, 9.0, 12.0)
             peers = (6.0, 10.0, 15.0, 20.0)
             ages = (7, 14, 21, 30, 45)
+            hard_ages = (args.hard_max_age_days,)
         else:
             profit_triggers = (8.0, 10.0, 12.0)
             pullbacks = (2.5, 4.0)
             stops = (5.0, 7.0)
             peers = (10.0, 15.0)
             ages = (14, 21)
+            hard_ages = (args.hard_max_age_days,)
         for profit_trigger in profit_triggers:
             for pullback in pullbacks:
                 for stop in stops:
                     for peer in peers:
                         for max_age in ages:
-                            _, st = _run_event_once(
-                                data,
-                                args,
-                                profit_trigger_pct=profit_trigger,
-                                profit_pullback_pct=pullback,
-                                stop_pct=stop,
-                                peer_outperform_pct=peer,
-                                max_age_days=max_age,
-                            )
-                            row = {
-                                "profit_trigger_pct": profit_trigger,
-                                "profit_pullback_pct": pullback,
-                                "stop_pct": stop,
-                                "peer_outperform_pct": peer,
-                                "max_age_days": max_age,
-                                "score": _score(st),
-                                **st,
-                            }
-                            grid_rows.append(row)
+                            for hard_age in hard_ages:
+                                _, st = _run_event_once(
+                                    data,
+                                    args,
+                                    profit_trigger_pct=profit_trigger,
+                                    profit_pullback_pct=pullback,
+                                    stop_pct=stop,
+                                    peer_outperform_pct=peer,
+                                    max_age_days=max_age,
+                                    hard_max_age_days=hard_age,
+                                )
+                                row = {
+                                    "profit_trigger_pct": profit_trigger,
+                                    "profit_pullback_pct": pullback,
+                                    "stop_pct": stop,
+                                    "peer_outperform_pct": peer,
+                                    "max_age_days": max_age,
+                                    "hard_max_age_days": hard_age,
+                                    "score": _score(st),
+                                    **st,
+                                }
+                                grid_rows.append(row)
         grid_rows.sort(key=lambda r: r["score"], reverse=True)
         best_grid = grid_rows[0] if grid_rows else None
 
@@ -221,7 +234,8 @@ def main() -> int:
                 f"WR={row['winrate_pct']:.1f}% trades={row['trades']} DD={row['max_dd_pct']:.2f}% "
                 f"neg={row['neg_months']}/{row['n_months']} "
                 f"pt={row['profit_trigger_pct']} pb={row['profit_pullback_pct']} "
-                f"stop={row['stop_pct']} peer={row['peer_outperform_pct']} age={row['max_age_days']}"
+                f"stop={row['stop_pct']} peer={row['peer_outperform_pct']} "
+                f"review={row['max_age_days']} hard_age={row['hard_max_age_days']}"
             )
 
     print(f"Verdict: {verdict}")

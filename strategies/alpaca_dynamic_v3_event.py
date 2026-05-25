@@ -18,6 +18,7 @@ class EventPosition:
     qty: float
     high_water: float
     age_days: int = 0
+    days_since_review: int = 0
 
 
 @dataclass
@@ -164,6 +165,7 @@ def run_event_v3(
     stop_pct: float = 5.0,
     peer_outperform_pct: float = 10.0,
     max_age_days: int = 14,
+    hard_max_age_days: int = 60,
     fee_bps: float = 1.0,
 ) -> dict:
     if pd is None:
@@ -173,6 +175,8 @@ def run_event_v3(
         raise ValueError("no dates")
 
     cash = float(initial_capital)
+    review_interval_days = max(1, int(max_age_days))
+    hard_holding_limit_days = max(1, int(hard_max_age_days))
     positions: Dict[str, EventPosition] = {}
     cooldown: Dict[str, int] = {}
     trades: List[EventTrade] = []
@@ -223,6 +227,7 @@ def run_event_v3(
             if price is None:
                 continue
             pos.age_days += 1
+            pos.days_since_review += 1
             pos.high_water = max(pos.high_water, price)
             gain_pct = (price / pos.entry_price - 1.0) * 100.0
             pullback_pct = (pos.high_water / price - 1.0) * 100.0 if price > 0 else 0.0
@@ -232,7 +237,9 @@ def run_event_v3(
                 reason = "stop_5pct"
             elif (pos.high_water / pos.entry_price - 1.0) * 100.0 >= profit_trigger_pct and pullback_pct >= profit_pullback_pct:
                 reason = "profit_lock_pullback"
-            elif pos.age_days >= max_age_days:
+            elif pos.age_days >= hard_holding_limit_days:
+                reason = "hard_max_age"
+            elif pos.days_since_review >= review_interval_days:
                 cur_score = float((rank_by_symbol.get(symbol) or {}).get("score", -999.0))
                 best_other = next((r for r in ranks if r["symbol"] not in positions and r["symbol"] not in cooldown), None)
                 if symbol not in top_symbols[:max_positions] or (
@@ -240,7 +247,7 @@ def run_event_v3(
                 ):
                     reason = "event_rebalance"
                 else:
-                    pos.age_days = 0
+                    pos.days_since_review = 0
             else:
                 cur_score = float((rank_by_symbol.get(symbol) or {}).get("score", -999.0))
                 best_other = next((r for r in ranks if r["symbol"] not in positions and r["symbol"] not in cooldown), None)
