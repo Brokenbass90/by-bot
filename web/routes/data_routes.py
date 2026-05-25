@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import ssl
+import urllib.parse
 import urllib.request
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -373,6 +374,68 @@ def _load_monthly_picks(runtime_dir: Path) -> List[Dict[str, str]]:
     if mirror_latest:
         return _latest_month_only(mirror_latest)
     return []
+
+
+_MONTHLY_NUMERIC_FIELDS = (
+    "compounded_return_pct", "profit_factor", "winrate_pct", "trades",
+    "months", "calendar_months", "negative_months", "max_monthly_dd_pct",
+    "positive_months", "inactive_months", "avg_trade_return_pct",
+    "avg_month_return_pct", "positive_months_pct",
+)
+
+
+def _coerce_monthly_summary(summary: Dict[str, Any]) -> Dict[str, Any]:
+    out = dict(summary or {})
+    for field in _MONTHLY_NUMERIC_FIELDS:
+        if field in out and out[field] not in ("", None):
+            try:
+                out[field] = float(out[field])
+            except (TypeError, ValueError):
+                pass
+    return out
+
+
+def _clean_monthly_picks(picks: List[Dict[str, str]]) -> List[Dict[str, Any]]:
+    clean_picks: List[Dict[str, Any]] = []
+    for pick in picks:
+        cp: Dict[str, Any] = dict(pick)
+        for field in (
+            "score", "base_score", "overlay_score", "selection_score",
+            "entry_price", "stop_price", "target_price", "weight",
+            "atr20_pct", "momentum20_pct", "momentum60_pct",
+            "pullback60_pct", "universe_score", "corr_penalty",
+            "max_corr_to_existing",
+        ):
+            if field in cp and cp[field] not in ("", None):
+                try:
+                    cp[field] = float(cp[field])
+                except (TypeError, ValueError):
+                    pass
+        clean_picks.append(cp)
+    return clean_picks
+
+
+def _load_alpaca_monthly_variant(runtime_name: str, *, label: str) -> Dict[str, Any]:
+    runtime_dir = _rt(runtime_name)
+    picks = _clean_monthly_picks(_load_monthly_picks(runtime_dir))
+    summary_rows = _read_csv(runtime_dir / "latest_summary.csv")
+    if not summary_rows:
+        summary_rows = _read_csv(runtime_dir / "summary.csv")
+    if not summary_rows:
+        summary_rows = _read_csv(runtime_dir / "current_cycle_summary.csv")
+    summary = _coerce_monthly_summary(summary_rows[0] if summary_rows else {})
+    refresh = _read_env(runtime_dir / "latest_refresh.env")
+    return {
+        "id": runtime_name,
+        "label": label,
+        "exists": runtime_dir.exists(),
+        "age_sec": _file_age_sec(runtime_dir / "latest_summary.csv"),
+        "current_picks_count": len(picks),
+        "current_picks": picks,
+        "summary": summary,
+        "latest_refresh_utc": refresh.get("EQ_LATEST_REFRESH_UTC") or refresh.get("ALPACA_REFRESH_UTC") or "",
+        "current_picks_missing": not (runtime_dir / "current_cycle_picks.csv").exists(),
+    }
 
 
 def _extract_intraday_positions(state: Any) -> List[Dict[str, Any]]:
@@ -1084,35 +1147,22 @@ async def get_health(_: str = Depends(require_auth)):
 async def get_alpaca(_: str = Depends(require_auth)):
     """Monthly picks, summary metrics, advisory."""
     monthly_dir = _rt("equities_monthly_v36")
-    picks = _load_monthly_picks(monthly_dir)
-    summary_rows = _read_csv(monthly_dir / "latest_summary.csv")
+    monthly_v38 = _load_alpaca_monthly_variant(
+        "equities_monthly_v36",
+        label="v38 Hybrid Monthly",
+    )
+    monthly_v38_active = _load_alpaca_monthly_variant(
+        "equities_monthly_v38_more_active_research",
+        label="v38-active Monthly Research",
+    )
+    picks = monthly_v38["current_picks"]
     advisory = _json(monthly_dir / "latest_advisory.json")
     intraday_state = _json(_rt("intraday_state.json")) or _json(_cfg("intraday_state.json"))
     intraday_v1 = _load_alpaca_intraday_variant("equities_intraday_dynamic_v1", label="Intraday Dynamic v1", state_cfg_name="intraday_state.json")
     intraday_v3_shadow = _load_alpaca_intraday_variant("equities_intraday_dynamic_v3_shadow", label="Intraday Dynamic v3 Shadow", state_cfg_name="intraday_state_v3_shadow.json")
 
-    summary = summary_rows[0] if summary_rows else {}
-    # Convert numeric fields
-    for f in ("compounded_return_pct", "profit_factor", "winrate_pct", "trades",
-              "months", "calendar_months", "negative_months", "max_monthly_dd_pct"):
-        if f in summary and summary[f]:
-            try:
-                summary[f] = float(summary[f])
-            except ValueError:
-                pass
-
-    # Parse picks with numeric fields
-    clean_picks = []
-    for p in picks:
-        cp = dict(p)
-        for f in ("score", "entry_price", "stop_price", "target_price", "weight",
-                  "atr20_pct", "momentum20_pct", "momentum60_pct"):
-            if f in cp and cp[f]:
-                try:
-                    cp[f] = float(cp[f])
-                except ValueError:
-                    pass
-        clean_picks.append(cp)
+    summary = monthly_v38["summary"]
+    clean_picks = picks
 
     intraday_positions = _extract_intraday_positions(intraday_state)
     monthly_refresh = _read_env(monthly_dir / "latest_refresh.env")
@@ -1123,14 +1173,8 @@ async def get_alpaca(_: str = Depends(require_auth)):
         "latest_refresh_utc": monthly_refresh.get("EQ_LATEST_REFRESH_UTC") or monthly_refresh.get("ALPACA_REFRESH_UTC") or "",
     }
     variants = [
-        {
-            "id": "monthly_v36",
-            "label": "Monthly Momentum v36",
-            "exists": monthly_dir.exists(),
-            "age_sec": _file_age_sec(monthly_dir / "latest_summary.csv"),
-            "current_picks_count": len(clean_picks),
-            "latest_refresh_utc": monthly_cycle_summary["latest_refresh_utc"],
-        },
+        monthly_v38,
+        monthly_v38_active,
         intraday_v1,
         intraday_v3_shadow,
     ]
@@ -1142,7 +1186,9 @@ async def get_alpaca(_: str = Depends(require_auth)):
         "intraday_positions": intraday_positions,
         "intraday_updated_utc": (intraday_state or {}).get("updated_utc"),
         "variants": variants,
+        "monthly_variants": [monthly_v38, monthly_v38_active],
         "monthly_cycle": monthly_cycle_summary,
+        "v38_active": monthly_v38_active,
         "intraday_v1": intraday_v1,
         "intraday_v3_shadow": intraday_v3_shadow,
     }
@@ -1342,4 +1388,48 @@ async def get_setup_scanner(
             "Promotion still requires annual/OOS/additivity tests.",
             "AI should rank and explain these setups, not bypass risk gates.",
         ],
+    }
+
+
+@router.get("/setup-scanner/chart")
+async def get_setup_scanner_chart(
+    symbol: str = Query(..., regex=r"^[A-Z0-9]{3,24}$"),
+    interval: str = Query("60", regex=r"^(1|3|5|15|30|60|120|240|D)$"),
+    limit: int = Query(64, ge=20, le=120),
+    _: str = Depends(require_auth),
+):
+    """Return recent public Bybit candles for an operator setup card."""
+    params = urllib.parse.urlencode({
+        "category": "linear",
+        "symbol": symbol.upper(),
+        "interval": interval,
+        "limit": limit,
+    })
+    url = f"https://api.bybit.com/v5/market/kline?{params}"
+    candles: List[Dict[str, Any]] = []
+    try:
+        ctx = ssl.create_default_context()
+        req = urllib.request.Request(url, headers={"User-Agent": "TradingJournal/1.0"})
+        with urllib.request.urlopen(req, context=ctx, timeout=10) as resp:
+            body = json.loads(resp.read().decode())
+        if body.get("retCode") == 0:
+            for row in reversed(body.get("result", {}).get("list", [])):
+                try:
+                    candles.append({
+                        "time_ms": int(row[0]),
+                        "open": float(row[1]),
+                        "high": float(row[2]),
+                        "low": float(row[3]),
+                        "close": float(row[4]),
+                        "volume": float(row[5]),
+                    })
+                except (IndexError, TypeError, ValueError):
+                    continue
+    except Exception:
+        pass
+    return {
+        "symbol": symbol.upper(),
+        "interval": interval,
+        "source": "bybit_public" if candles else "unavailable",
+        "candles": candles,
     }

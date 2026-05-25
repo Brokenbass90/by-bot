@@ -1184,21 +1184,28 @@ function AlpacaPage() {
   const intraday = data.intraday_positions || [];
   const variants = data.variants || [];
   const monthlyCycle = data.monthly_cycle || {};
+  const v38Active = data.v38_active || {};
   const v1 = data.intraday_v1 || {};
   const v3 = data.intraday_v3_shadow || {};
   const variantLabel = (v) => {
     const id = String(v.id || '');
-    if (id === 'monthly_v36') return 'Основная месячная v36';
+    if (id === 'equities_monthly_v36') return 'v38 Hybrid Monthly';
+    if (id === 'equities_monthly_v38_more_active_research') return 'v38-active Monthly';
     if (id === 'intraday_dynamic_v1') return 'Интрадей v1 (paper)';
     if (id === 'intraday_dynamic_v3_shadow') return 'Интрадей v3 Shadow (новый тест)';
     return v.label || id;
   };
   const statusLabel = (exists) => exists ? 'отслеживается' : 'нет данных';
   const sleeveMeta = (id) => {
-    if (id === 'monthly_v36') return {
-      role: 'Главная кандидатная стратегия под реальные деньги',
+    if (id === 'equities_monthly_v36') return {
+      role: 'Главная quality-ветка под первые реальные деньги',
       mode: 'Месячный momentum: выбирает акции раз в цикл и держит позицию дольше intraday.',
-      decision: 'Сильнейшая ветка сейчас. Именно её рассматриваем для первого real pilot, но текущий файл пиков надо восстановить.'
+      decision: 'Оставляем как устойчивый compounder-кандидат. Не ломать при экспериментах.'
+    };
+    if (id === 'equities_monthly_v38_more_active_research') return {
+      role: 'Более активный monthly-кандидат',
+      mode: 'Та же monthly-логика, но отдельный research/runtime с более частой ротацией и свежими picks.',
+      decision: 'Кандидат в paper/shadow тест. Нужна проверка текущего цикла и fills перед real.'
     };
     if (id === 'intraday_dynamic_v1') return {
       role: 'Текущий paper-интрадей',
@@ -1250,6 +1257,45 @@ function AlpacaPage() {
           )
     );
   };
+  const renderMonthlyPicksSection = (title, monthlyVariant) => {
+    const rows = monthlyVariant?.current_picks || [];
+    if (!rows.length) return null;
+    return React.createElement('div', { style: { marginBottom: '16px' } },
+      React.createElement('div', { className: 'section-title', style: { fontSize: '14px', marginBottom: '12px' } },
+        `${title} — ${rows[0]?.month || ''}`),
+      React.createElement('div', { className: 'grid3' },
+        rows.map((p, i) =>
+          React.createElement('div', { className: 'pick-card', key: `${title}-${p.ticker || i}` },
+            React.createElement('div', { className: 'pick-ticker' }, p.ticker),
+            React.createElement('div', { className: 'pick-month' }, `Дата входа: ${p.entry_day || '?'}`),
+            p.score != null && React.createElement('div', { className: 'pick-metric' },
+              React.createElement('span', null, 'Score'),
+              React.createElement('span', { className: 'v' }, parseFloat(p.score).toFixed(4))
+            ),
+            p.momentum60_pct != null && React.createElement('div', { className: 'pick-metric' },
+              React.createElement('span', null, 'Импульс 60д'),
+              React.createElement('span', { className: `v ${parseFloat(p.momentum60_pct) >= 0 ? 'pos' : 'neg'}` },
+                fmt(parseFloat(p.momentum60_pct), 1) + '%')
+            ),
+            p.atr20_pct != null && React.createElement('div', { className: 'pick-metric' },
+              React.createElement('span', null, 'ATR 20d'),
+              React.createElement('span', { className: 'v' }, parseFloat(p.atr20_pct).toFixed(2) + '%')
+            ),
+            p.weight != null && React.createElement('div', { className: 'pick-metric' },
+              React.createElement('span', null, 'Вес'),
+              React.createElement('span', { className: 'v' }, (parseFloat(p.weight) * 100).toFixed(1) + '%')
+            ),
+            (p.entry_price || p.stop_price) && React.createElement('div', { className: 'pick-entry' },
+              React.createElement('span', null, `Entry: $${parseFloat(p.entry_price || 0).toFixed(2)}`),
+              ' · ',
+              React.createElement('span', null, `SL: $${parseFloat(p.stop_price || 0).toFixed(2)}`),
+              p.target_price ? [' · ', React.createElement('span', { key: 't' }, `TP: $${parseFloat(p.target_price).toFixed(2)}`)] : null
+            )
+          )
+        )
+      )
+    );
+  };
 
   return React.createElement('div', null,
     React.createElement('div', { className: 'page-hdr' },
@@ -1299,6 +1345,16 @@ function AlpacaPage() {
           v.latest_refresh_utc && React.createElement('div', { className: 'info-row' },
             React.createElement('span', { className: 'label' }, 'Последний пересчёт'),
             React.createElement('span', { className: 'value' }, v.latest_refresh_utc)
+          ),
+          v.summary?.compounded_return_pct != null && React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, '24m return / PF'),
+            React.createElement('span', { className: 'value pos' },
+              `${parseFloat(v.summary.compounded_return_pct).toFixed(1)}% / ${parseFloat(v.summary.profit_factor || 0).toFixed(2)}`)
+          ),
+          v.summary?.winrate_pct != null && React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Winrate / trades'),
+            React.createElement('span', { className: 'value' },
+              `${parseFloat(v.summary.winrate_pct).toFixed(1)}% / ${parseFloat(v.summary.trades || 0).toFixed(0)}`)
           )
         )}
       )
@@ -1334,41 +1390,8 @@ function AlpacaPage() {
       React.createElement('div', { className: 'card-title' }, 'Внимание: месячные пики показаны из fallback'),
       React.createElement('div', { style: { color: 'var(--text2)', fontSize: '13px', lineHeight: 1.5 } },
         'На сервере не найден runtime/equities_monthly_v36/current_cycle_picks.csv. Поэтому ниже показан последний найденный refresh-артефакт, а не гарантированно новая текущая подборка. Сводка по стратегии остаётся видимой, но refresh месячного цикла надо починить отдельно.')),
-    picks.length > 0 && React.createElement('div', { style: { marginBottom: '16px' } },
-      React.createElement('div', { className: 'section-title', style: { fontSize: '14px', marginBottom: '12px' } },
-        `Пики месячной стратегии — ${picks[0]?.month || ''}`),
-      React.createElement('div', { className: 'grid3' },
-        picks.map((p, i) =>
-          React.createElement('div', { className: 'pick-card', key: i },
-            React.createElement('div', { className: 'pick-ticker' }, p.ticker),
-            React.createElement('div', { className: 'pick-month' }, `Дата входа: ${p.entry_day || '?'}`),
-            p.score != null && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'Score'),
-              React.createElement('span', { className: 'v' }, parseFloat(p.score).toFixed(4))
-            ),
-            p.momentum60_pct != null && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'Импульс 60д'),
-              React.createElement('span', { className: `v ${parseFloat(p.momentum60_pct) >= 0 ? 'pos' : 'neg'}` },
-                fmt(parseFloat(p.momentum60_pct), 1) + '%')
-            ),
-            p.atr20_pct != null && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'ATR 20d'),
-              React.createElement('span', { className: 'v' }, parseFloat(p.atr20_pct).toFixed(2) + '%')
-            ),
-            p.weight != null && React.createElement('div', { className: 'pick-metric' },
-              React.createElement('span', null, 'Вес'),
-              React.createElement('span', { className: 'v' }, (parseFloat(p.weight) * 100).toFixed(1) + '%')
-            ),
-            (p.entry_price || p.stop_price) && React.createElement('div', { className: 'pick-entry' },
-              React.createElement('span', null, `Entry: $${parseFloat(p.entry_price || 0).toFixed(2)}`),
-              ' · ',
-              React.createElement('span', null, `SL: $${parseFloat(p.stop_price || 0).toFixed(2)}`),
-              p.target_price ? [' · ', React.createElement('span', { key: 't' }, `TP: $${parseFloat(p.target_price).toFixed(2)}`)] : null
-            )
-          )
-        )
-      )
-    ),
+    renderMonthlyPicksSection('Пики v38 hybrid', { current_picks: picks }),
+    renderMonthlyPicksSection('Пики v38-active research', v38Active),
 
     renderPositionSection('Интрадей v1: открытые paper-позиции', v1.open_positions || intraday, v1.generated_at_utc || data.intraday_updated_utc),
     renderPositionSection('Интрадей v3 Shadow: отдельный paper-тест', v3.open_positions || [], v3.generated_at_utc),
@@ -1682,6 +1705,40 @@ function StrategyAnalyticsPage() {
 
 // ── Setup scanner page ─────────────────────────────────────────────────────
 
+function SetupCardChart({ card }) {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  function toggle() {
+    const next = !open;
+    setOpen(next);
+    if (!next || data || busy) return;
+    setBusy(true);
+    const q = new URLSearchParams({ symbol: card.symbol, interval: String(card.interval || '60'), limit: '64' });
+    api(`/api/setup-scanner/chart?${q.toString()}`)
+      .then(setData)
+      .catch(() => setData({ candles: [] }))
+      .finally(() => setBusy(false));
+  }
+
+  const closes = (data?.candles || []).map(c => Number(c.close)).filter(Number.isFinite);
+  const side = String(card.side || '').toLowerCase();
+  return React.createElement('div', { style: { marginTop: '10px' } },
+    React.createElement('button', { className: 'refresh-btn', onClick: toggle },
+      open ? 'Скрыть график' : 'График'),
+    open && React.createElement('div', {
+      style: { height: '72px', marginTop: '8px', padding: '6px 8px', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--bg3)' }
+    },
+      busy
+        ? React.createElement('div', { className: 'dim', style: { fontSize: '12px' } }, 'Загрузка...')
+        : closes.length > 1
+          ? React.createElement(Sparkline, { data: closes, color: side === 'short' ? '#f85149' : '#3fb950', width: 250, height: 54 })
+          : React.createElement('div', { className: 'dim', style: { fontSize: '12px' } }, 'Свечи недоступны')
+    )
+  );
+}
+
 function SetupScannerPage() {
   const { data, loading, refresh } = useFetch('/api/setup-scanner', [], 60000);
   if (loading) return React.createElement(Loader);
@@ -1785,7 +1842,8 @@ function SetupScannerPage() {
           (c.router_profiles || []).length > 0 && React.createElement('div', { style: { marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '6px' } },
             c.router_profiles.map(p => React.createElement('span', { key: `${c.symbol}-${c.setup_type}-${p.profile}`, className: 'badge badge-warn', title: (p.reasons || []).join(', ') },
               p.profile))
-          )
+          ),
+          React.createElement(SetupCardChart, { card: c })
         ))
       )
   );
@@ -2094,6 +2152,90 @@ function PnLJournal() {
 
 // ── Users page ─────────────────────────────────────────────────────────────
 
+function CredentialsPage() {
+  const [data, setData] = useState(null);
+  const [account, setAccount] = useState('main');
+  const [newKey, setNewKey] = useState('');
+  const [newSecret, setNewSecret] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState('');
+
+  function load() {
+    api('/api/admin/bybit-key-info').then(d => {
+      setData(d);
+      if (d.accounts && d.accounts.length && !d.accounts.some(a => a.name === account)) setAccount(d.accounts[0].name);
+    }).catch(e => setMessage(e.message));
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function rotate() {
+    if (!newKey || !newSecret) return;
+    if (!confirm(`Rotate Bybit credentials for ${account}?`)) return;
+    setBusy(true); setMessage('');
+    try {
+      const result = await post('/api/admin/rotate-bybit-key', {
+        account_name: account,
+        new_key: newKey,
+        new_secret: newSecret,
+        confirm_phrase: 'ROTATE BYBIT KEY',
+      });
+      setNewKey(''); setNewSecret('');
+      setMessage(result.need_restart ? 'Credentials replaced. Controlled bot restart required.' : 'Credentials replaced.');
+      load();
+    } catch (e) {
+      setMessage(`Error: ${e.message}`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return React.createElement('div', null,
+    React.createElement('div', { className: 'page-hdr' },
+      React.createElement('div', null,
+        React.createElement('div', { className: 'section-title' }, 'API Credentials'),
+        React.createElement('div', { className: 'section-sub' }, 'Bybit')
+      ),
+      React.createElement('button', { className: 'refresh-btn', onClick: load }, '↺ Refresh')
+    ),
+    React.createElement('div', { className: 'strat-grid', style: { marginBottom: '16px' } },
+      (data?.accounts || []).map(a => {
+        const expiry = a.expiry || {};
+        const days = expiry.days_left != null ? `${expiry.days_left} days` : '—';
+        const cls = ['critical', 'expired'].includes(expiry.status) ? 'badge-dead'
+          : ['warning', 'notice'].includes(expiry.status) ? 'badge-warn' : 'badge-ok';
+        return React.createElement('div', { className: 'card', key: a.name },
+          React.createElement('div', { className: 'card-title' }, a.name),
+          React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Configured'),
+            React.createElement('span', { className: `badge ${a.configured ? 'badge-ok' : 'badge-dead'}` }, a.configured ? 'yes' : 'missing')
+          ),
+          React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Expiry'),
+            React.createElement('span', { className: `badge ${cls}` }, `${expiry.expires_on || expiry.status || 'unknown'} · ${days}`)
+          ),
+          React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Trading'),
+            React.createElement('span', { className: `badge ${a.trade_enabled ? 'badge-warn' : 'badge-off'}` }, a.trade_enabled ? 'enabled' : 'off')
+          )
+        );
+      })
+    ),
+    React.createElement('div', { className: 'card', style: { maxWidth: '560px' } },
+      React.createElement('div', { className: 'card-title' }, 'Rotate Bybit Credentials'),
+      React.createElement('div', { style: { display: 'grid', gap: '10px' } },
+        React.createElement('select', { className: 'filter-input', value: account, onChange: e => setAccount(e.target.value) },
+          (data?.accounts || [{ name: 'main' }]).map(a => React.createElement('option', { key: a.name, value: a.name }, a.name))),
+        React.createElement('input', { className: 'filter-input', type: 'password', autoComplete: 'new-password', placeholder: 'New API key', value: newKey, onChange: e => setNewKey(e.target.value) }),
+        React.createElement('input', { className: 'filter-input', type: 'password', autoComplete: 'new-password', placeholder: 'New API secret', value: newSecret, onChange: e => setNewSecret(e.target.value) }),
+        React.createElement('button', { className: 'auth-btn', disabled: busy || !newKey || !newSecret, onClick: rotate },
+          busy ? 'Saving...' : 'Rotate credentials'),
+        message && React.createElement('div', { style: { fontSize: '12px', color: 'var(--yellow)' } }, message)
+      )
+    )
+  );
+}
+
 function UsersPage() {
   const [users, setUsers] = useState(null);
   const [newEmail, setNewEmail] = useState('');
@@ -2221,6 +2363,7 @@ const NAV_GROUPS = [
     label: 'Tools',
     pages: [
       { id: 'ai',    label: 'AI Chat',  icon: '🤖' },
+      { id: 'credentials', label: 'API Keys', icon: '⚿' },
       { id: 'users', label: 'Users',    icon: '👥' },
     ]
   }
@@ -2269,6 +2412,7 @@ function App() {
     regime:     RegimePage,
     journal:    JournalPage,
     ai:         AIChatPage,
+    credentials: CredentialsPage,
     users:      UsersPage,
   }[page] || Dashboard;
 
