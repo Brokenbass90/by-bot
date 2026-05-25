@@ -1,0 +1,75 @@
+{
+  "name": "att1_short_slope_v1",
+  "description": "Targeted sweep for ATT1_SHORT_MAX_POS_SLOPE. Diagnostic 2026-05-25 on 5 symbols x 270 bars identified short_slope_direction as a candidate blocker. This exploratory sweep locks interim density params and varies only implemented ATT1 short-side controls; final promotion still requires the completed v3 winner and full-package replay.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "--strategies",
+    "alt_trendline_touch_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-30",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "ATT1_ALLOW_LONGS": "1",
+    "ATT1_ALLOW_SHORTS": "1",
+    "ATT1_PIVOT_LEFT": "2",
+    "ATT1_PIVOT_RIGHT": "2",
+    "ATT1_MIN_PIVOTS": "2",
+    "ATT1_MAX_PIVOT_AGE": "24",
+    "ATT1_MIN_R2": "0.55",
+    "ATT1_TOUCH_ATR": "0.40",
+    "ATT1_RSI_LONG_MAX": "55"
+  },
+  "grid": {
+    "ATT1_SHORT_MAX_POS_SLOPE": [0.5, 0.6, 0.7, 0.8, 1.0, 1.5],
+    "ATT1_RSI_SHORT_MIN": [45, 50, 55]
+  },
+  "constraints": {
+    "min_trades": 40,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 12.0,
+    "min_net_pnl": 4.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.3,
+    "profit_factor": 5.5,
+    "winrate": 5.0,
+    "max_drawdown": 2.0,
+    "trades": 0.16,
+    "trades_cap": 200,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_notes": {
+    "diagnostic_source": "scripts/diagnose_strategy_filters.py run 2026-05-25; validate against full-package replay before promotion",
+    "top_blocker": "short_slope_direction — ascending resistance lines rejected for shorts",
+    "hypothesis": "Bear market bounces create ascending resistance (lower-high pattern still valid). Relaxing slope ceiling from 0.5 to 0.7-0.8 %/bar should unlock 10-20% more short setups without degrading PF if paired with RSI guard to filter overextended entries.",
+    "locked_from": "interim att1_density_v3_more_pivots_v1 result; not final while v3 is running",
+    "param_notes": {
+      "ATT1_SHORT_MAX_POS_SLOPE": "Max allowed positive slope (%/bar) for short-side resistance trendline. 0.5=current live. Bear bounces often show slope 0.5-1.0%/bar.",
+      "ATT1_RSI_SHORT_MIN": "Implemented minimum RSI required for short entry. Raises floor when slope is relaxed to avoid shorting already-exhausted moves."
+    },
+    "combo_count": "6x3 = 18 combos; exploratory only until v3 completes"
+  }
+}

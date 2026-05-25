@@ -1,0 +1,70 @@
+{
+  "name": "att1_density_v4_slope",
+  "description": "ATT1 combined density + slope research sweep. Extends v3 with ATT1_SHORT_MAX_POS_SLOPE as a grid dimension. Diagnostic 2026-05-25 identified short_slope_direction as a candidate blocker. The density range is an interim promising cluster while v3 is unfinished; no promotion is allowed without completed-v3 and full-package replay evidence.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "--strategies",
+    "alt_trendline_touch_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-30",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "ATT1_ALLOW_LONGS": "1",
+    "ATT1_ALLOW_SHORTS": "1",
+    "ATT1_PIVOT_LEFT": "2"
+  },
+  "grid": {
+    "ATT1_PIVOT_RIGHT": [2, 3],
+    "ATT1_MIN_PIVOTS": [2, 3],
+    "ATT1_MAX_PIVOT_AGE": [20, 24],
+    "ATT1_MIN_R2": [0.55, 0.65],
+    "ATT1_TOUCH_ATR": [0.35, 0.45],
+    "ATT1_RSI_LONG_MAX": [52, 55, 58],
+    "ATT1_SHORT_MAX_POS_SLOPE": [0.5, 0.7, 1.0]
+  },
+  "constraints": {
+    "min_trades": 60,
+    "min_profit_factor": 1.20,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.3,
+    "profit_factor": 5.5,
+    "winrate": 5.0,
+    "max_drawdown": 2.0,
+    "trades": 0.16,
+    "trades_cap": 300,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_notes": {
+    "vs_v3": "v3 has 864 combos and is running. v4 is 288 combos focused on the promising R2/PIVOT_AGE cluster with slope added as 3rd sweep axis.",
+    "diagnostic": "short_slope_direction dominated real blockers. Hypothesis: relaxing ATT1_SHORT_MAX_POS_SLOPE from 0.5→0.7 or 1.0 unlocks bear-bounce short setups without degrading PF if volume/RSI guards hold.",
+    "run_after": "att1_density_v3_more_pivots_v1 completes — can run both in parallel if server load allows",
+    "expected_time": "~35-45 min on server (288 combos)"
+  },
+  "_combo_count": "2x2x2x2x2x3x3 = 288 combos"
+}
