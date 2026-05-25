@@ -11,7 +11,7 @@
 - The main bot already calls `AltBearRegimeContinuationV1Strategy.signal(...)` in its BRC1 live path. Claude's added `maybe_signal(...)` bridge is not a missing-interface live repair.
 - Claude's BRC1 indicator changes, ARF1 rewrite/filter flag, Elder rewrite and `btc_eth_midterm_pullback` runner-default change are local challenger code only. In particular, MTPB v1 is part of `crypto_income_static_v1`, so its exit-default change requires a new full-package baseline/challenger replay before any commit or deploy.
 - Leave the running server BRC1 sweep as a baseline run against the deployed implementation; do not interpret its results as validation of the local challenger rewrite.
-- Prepared diagnostics-only patch: bounded `runtime/signal_decisions.jsonl` for `midterm/att1/flat/breakdown`, summarized by `scripts/build_crypto_setup_blocker_report.py` and passed to onboard DeepSeek context. Deploy only this trace before loosening any filter; sample 2-24h.
+- Deployed 2026-05-25 16:35 UTC: bounded `runtime/signal_decisions.jsonl` for `midterm/att1/flat/breakdown`, summarized by `scripts/build_crypto_setup_blocker_report.py` and passed to onboard DeepSeek context. Restart used `open_trades=0`; sample 2-24h before loosening any filter.
 
 ---
 
