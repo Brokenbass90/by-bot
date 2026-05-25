@@ -573,8 +573,16 @@ class AlpacaClient:
     def list_positions(self) -> List[dict]:
         return list(self._req("GET", f"{self.base_url}/v2/positions") or [])
 
-    def list_orders(self, status: str = "open") -> List[dict]:
-        return list(self._req("GET", f"{self.base_url}/v2/orders?status={status}") or [])
+    def list_orders(self, status: str = "open", after: str = "") -> List[dict]:
+        query: dict[str, str] = {
+            "status": status,
+            "limit": "100",
+            "direction": "desc",
+            "nested": "true",
+        }
+        if after:
+            query["after"] = after
+        return list(self._req("GET", f"{self.base_url}/v2/orders?{parse.urlencode(query)}") or [])
 
     def cancel_order(self, order_id: str) -> dict:
         return self._req("DELETE", f"{self.base_url}/v2/orders/{order_id}")
@@ -663,13 +671,17 @@ class PositionState:
     entry_price: float
     sl_price: float
     tp_price: float
-    qty: int
+    qty: float
     entry_ts: int
     alpaca_order_id: str = ""
     realized_pnl: float = 0.0   # filled on close
     peak_price: float = 0.0      # high-water mark for longs
     trough_price: float = 0.0    # low-water mark for shorts
     last_management_ts: int = 0
+    close_pending: bool = False
+    close_reason: str = ""
+    close_requested_ts: int = 0
+    close_order_id: str = ""
 
 def _load_state() -> Dict[str, PositionState]:
     if not STATE_FILE.exists():
@@ -683,6 +695,44 @@ def _load_state() -> Dict[str, PositionState]:
 def _save_state(state: Dict[str, PositionState]) -> None:
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
     STATE_FILE.write_text(json.dumps({k: asdict(v) for k, v in state.items()}, indent=2))
+
+
+def _confirmed_exit_pnl(client: AlpacaClient, ps: PositionState) -> Optional[dict[str, Any]]:
+    after_ts = max(0, int(ps.entry_ts or 0) - 60)
+    after = datetime.fromtimestamp(after_ts, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    try:
+        orders = client.list_orders(status="closed", after=after)
+    except Exception:
+        return None
+    target_side = "buy" if _is_short_position(ps, {}) else "sell"
+    candidates: list[dict[str, Any]] = []
+    for order in orders:
+        rows = [order] + [x for x in (order.get("legs") or []) if isinstance(x, dict)]
+        for row in rows:
+            if str(row.get("symbol") or "").upper() != ps.symbol.upper():
+                continue
+            if str(row.get("side") or "").lower() != target_side:
+                continue
+            if str(row.get("status") or "").lower() != "filled":
+                continue
+            price = _safe_float(row.get("filled_avg_price"), 0.0)
+            qty = _safe_float(row.get("filled_qty"), 0.0)
+            if price > 0 and qty > 0:
+                candidates.append(row)
+    if not candidates:
+        return None
+    filled = max(candidates, key=lambda x: str(x.get("filled_at") or ""))
+    exit_price = _safe_float(filled.get("filled_avg_price"), 0.0)
+    qty = min(_safe_float(filled.get("filled_qty"), 0.0), float(ps.qty or 0.0))
+    multiplier = -1.0 if _is_short_position(ps, {}) else 1.0
+    pnl = (exit_price - float(ps.entry_price)) * qty * multiplier
+    return {
+        "exit_price": exit_price,
+        "qty": qty,
+        "pnl_usd": pnl,
+        "filled_at": filled.get("filled_at"),
+        "order_id": filled.get("id") or "",
+    }
 
 
 def _reentry_block_file() -> Path:
@@ -819,7 +869,8 @@ def _pending_close_symbols(open_orders: List[dict], open_positions: Dict[str, di
 def _manage_tracked_positions(client: AlpacaClient, state: Dict[str, PositionState],
                               open_positions: Dict[str, dict], now_ts: int,
                               dry_run: bool, tg_token: str, tg_chat: str,
-                              now_str: str, advisory: Dict[str, Any]) -> set[str]:
+                              now_str: str, advisory: Dict[str, Any],
+                              broker_pending_close_symbols: set[str]) -> set[str]:
     if not _env_bool("INTRADAY_POSITION_MANAGER_ENABLE", True):
         advisory["position_management"] = {"enabled": False, "actions": []}
         return set()
@@ -836,6 +887,20 @@ def _manage_tracked_positions(client: AlpacaClient, state: Dict[str, PositionSta
         remote = open_positions.get(sym.upper())
         if not remote:
             continue
+        if ps.close_pending and sym.upper() in broker_pending_close_symbols:
+            actions.append({
+                "symbol": sym,
+                "action": "await_close_fill",
+                "reason": ps.close_reason,
+                "close_requested_ts": ps.close_requested_ts,
+            })
+            continue
+        if ps.close_pending:
+            ps.close_pending = False
+            ps.close_reason = ""
+            ps.close_requested_ts = 0
+            ps.close_order_id = ""
+            state_changed = True
         decision = _position_management_decision(ps, remote, now_ts)
         ps.last_management_ts = now_ts
         actions.append(decision)
@@ -860,20 +925,22 @@ def _manage_tracked_positions(client: AlpacaClient, state: Dict[str, PositionSta
         try:
             cancelled = client.cancel_open_orders_for_symbol(sym)
             result = client.close_position(sym)
-            _record_daily_pnl(realized)
-            state.pop(sym, None)
+            ps.close_pending = True
+            ps.close_reason = reason
+            ps.close_requested_ts = now_ts
+            ps.close_order_id = str(result.get("id") or "")
             closed_symbols.add(sym.upper())
             state_changed = True
             cooldown = trail_cooldown if reason == "software_trailing_stop" else time_stop_cooldown
             _add_reentry_block(reentry_blocks, sym, reason, now_ts, cooldown)
             decision.update({
-                "closed": True,
+                "close_submitted": True,
                 "cancelled_orders": cancelled,
                 "result": result.get("status") or result.get("id") or "submitted",
-                "realized_pnl_est_usd": round(realized, 4),
+                "unrealized_pnl_at_submission_usd": round(realized, 4),
                 "reentry_cooldown_min": cooldown,
             })
-            print(f"    ✅ Close sent | cancelled_orders={cancelled} | cooldown={cooldown}m")
+            print(f"    ✅ Close sent, awaiting fill | cancelled_orders={cancelled} | cooldown={cooldown}m")
             _tg(
                 tg_token,
                 tg_chat,
@@ -881,7 +948,7 @@ def _manage_tracked_positions(client: AlpacaClient, state: Dict[str, PositionSta
                 f"{sym}: {reason}\n"
                 f"Held: {decision['held_min']}m | Best: {decision['best_gain_pct']:.2f}% "
                 f"| Pullback: {decision['trail_drawdown_pct']:.2f}%\n"
-                f"Est. P&L: {realized_label} | Re-entry cooldown: {cooldown}m\n{now_str}",
+                f"Unrealized at close request: {realized_label} | Re-entry cooldown: {cooldown}m\n{now_str}",
             )
         except Exception as exc:
             decision.update({"closed": False, "error": str(exc)})
@@ -1180,6 +1247,7 @@ def run_once(client: AlpacaClient, dry_run: bool,
             open_orders = client.list_orders(status="open")
         except Exception:
             open_orders = []
+        broker_pending_close_symbols = _pending_close_symbols(open_orders, open_positions)
 
         open_order_symbols = {
             str(order.get("symbol") or "").strip().upper()
@@ -1221,22 +1289,28 @@ def run_once(client: AlpacaClient, dry_run: bool,
             ps = state.pop(sym)
             held_min = (now_ts - ps.entry_ts) // 60
 
-            # Estimate realized P&L from position data
-            alp_pos = open_positions.get(sym, {})
-            realized = float(alp_pos.get("unrealized_pl", 0))  # fallback estimate
-            _record_daily_pnl(realized)
-
-            realized_label = _fmt_usd_compact(realized)
-            print(f"\n  [{sym}] ✓ Position closed (SL/TP) after {held_min}m "
-                  f"| est. P&L={realized_label}")
-            _tg(tg_token, tg_chat,
-                f"📊 <b>{sym}</b> closed (SL/TP) after {held_min}m\n"
-                f"Entry=${ps.entry_price:.2f} | SL=${ps.sl_price:.2f} | TP=${ps.tp_price:.2f}\n"
-                f"Est. P&L: {realized_label}")
+            confirmed = _confirmed_exit_pnl(client, ps)
+            if confirmed:
+                realized = float(confirmed["pnl_usd"])
+                _record_daily_pnl(realized)
+                realized_label = _fmt_usd_compact(realized)
+                print(f"\n  [{sym}] ✓ Position close fill confirmed after {held_min}m "
+                      f"| realized P&L={realized_label}")
+                _tg(tg_token, tg_chat,
+                    f"📊 <b>{sym}</b> close filled after {held_min}m\n"
+                    f"Entry=${ps.entry_price:.2f} | Exit=${float(confirmed['exit_price']):.2f}\n"
+                    f"Realized P&L: {realized_label}")
+            else:
+                print(f"\n  [{sym}] ✓ Position no longer open after {held_min}m "
+                      "| fill not found; P&L not booked")
+                _tg(tg_token, tg_chat,
+                    f"📊 <b>{sym}</b> no longer open after {held_min}m\n"
+                    "Fill not found yet; realized P&L not booked.")
         _save_state(state)
 
         manager_closed_symbols = _manage_tracked_positions(
-            client, state, open_positions, now_ts, dry_run, tg_token, tg_chat, now_str, advisory
+            client, state, open_positions, now_ts, dry_run, tg_token, tg_chat, now_str, advisory,
+            broker_pending_close_symbols,
         )
         reentry_blocks = _load_reentry_blocks(now_ts)
         advisory["reentry_blocked_symbols"] = sorted(reentry_blocks)
@@ -1252,7 +1326,7 @@ def run_once(client: AlpacaClient, dry_run: bool,
             print(f"\n  [PM-CLEANUP] {cleanup_msg}")
 
         monthly_managed_symbols = _load_monthly_managed_symbols()
-        pending_close_symbols = _pending_close_symbols(open_orders, open_positions) - set(state.keys())
+        pending_close_symbols = broker_pending_close_symbols - set(state.keys())
         remote_only_symbols = sorted(
             sym for sym in open_positions.keys()
             if sym not in state and sym not in manager_closed_symbols and sym not in pending_close_symbols
