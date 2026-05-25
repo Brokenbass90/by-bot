@@ -71,10 +71,10 @@ import subprocess
 import sys
 import time
 from dataclasses import asdict, dataclass, field
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from urllib import error, request
+from urllib import error, parse, request
 
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
@@ -620,10 +620,19 @@ class AlpacaClient:
     def get_bars_raw(self, symbol: str, timeframe: str = "5Min",
                      limit: int = 500) -> List[dict]:
         """Returns raw bar dicts from Alpaca data API."""
-        url = (f"{ALPACA_DATA_URL}/v2/stocks/{symbol}/bars"
-               f"?timeframe={timeframe}&limit={limit}&adjustment=raw&feed=iex")
+        is_daily = timeframe.lower() in {"1day", "day", "1d"}
+        lookback_days = max(120, int(limit) * 3) if is_daily else max(14, int(limit // 50) + 14)
+        start = (datetime.now(timezone.utc) - timedelta(days=lookback_days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        query = parse.urlencode({
+            "timeframe": timeframe,
+            "start": start,
+            "limit": max(1000, int(limit)),
+            "adjustment": "raw",
+            "feed": "iex",
+        })
+        url = f"{ALPACA_DATA_URL}/v2/stocks/{symbol}/bars?{query}"
         data = self._req("GET", url)
-        return list(data.get("bars") or [])
+        return list(data.get("bars") or [])[-int(limit):]
 
     def get_bars(self, symbol: str, timeframe: str = "5Min",
                  limit: int = 500) -> List[Candle]:

@@ -151,8 +151,8 @@ hedge    = SHORT spot (нейтральная delta)
 2. Создать Paper Trading API ключи (бесплатно, сразу)
 3. Добавить в .env:
    ```
-   ALPACA_API_KEY_ID=ваш_ключ
-   ALPACA_API_SECRET_KEY=ваш_секрет
+   ALPACA_API_KEY_ID=<REDACTED>
+   ALPACA_API_SECRET_KEY=<REDACTED>
    ALPACA_BASE_URL=https://paper-api.alpaca.markets
    ALPACA_SEND_ORDERS=True
    ALPACA_MAX_POSITIONS=5
@@ -313,8 +313,8 @@ NEWS_POLICY_PATH=runtime/news_filter/policy.json
 # BREAKOUT_PARTIAL_FRACS=0.50,0.25,0.15
 
 # Alpaca paper trading
-ALPACA_API_KEY_ID=...
-ALPACA_API_SECRET_KEY=...
+ALPACA_API_KEY_ID=<REDACTED>
+ALPACA_API_SECRET_KEY=<REDACTED>
 ALPACA_BASE_URL=https://paper-api.alpaca.markets
 ALPACA_SEND_ORDERS=True
 ALPACA_MAX_POSITIONS=5

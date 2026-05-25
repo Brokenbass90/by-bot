@@ -51,7 +51,11 @@ for arg in "$@"; do
 done
 
 if [[ "$MODE_SET" -eq 0 ]]; then
-  set -- --live "$@"
+  if [[ "${ALPACA_V3_SHADOW_SEND_ORDERS:-0}" == "1" ]]; then
+    set -- --live "$@"
+  else
+    set -- --dry-run "$@"
+  fi
 fi
 
 python3 scripts/equities_alpaca_intraday_bridge.py "$@"
