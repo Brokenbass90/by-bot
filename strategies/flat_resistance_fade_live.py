@@ -10,6 +10,8 @@ from __future__ import annotations
 from typing import Optional, Dict
 
 from strategies.alt_resistance_fade_v1 import AltResistanceFadeV1Strategy
+from strategies.live_kline_utils import closed_kline_rows as _closed_kline_rows
+from strategies.live_kline_utils import fetch_closed_klines
 from strategies.signals import TradeSignal
 
 
@@ -21,7 +23,7 @@ class _FlatStore:
         self._fetch = fetch_klines
 
     def fetch_klines(self, symbol: str, interval: str, limit: int):
-        return self._fetch(symbol, interval, limit)
+        return fetch_closed_klines(self._fetch, symbol, interval, limit)
 
 
 class FlatResistanceFadeLiveEngine:

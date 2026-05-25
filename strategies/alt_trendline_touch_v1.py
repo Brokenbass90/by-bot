@@ -292,7 +292,11 @@ class AltTrendlineTouchV1Strategy:
         self._last_tf_ts: Optional[int] = None
         self._allow: set = set()
         self._deny: set = set()
+        self._last_no_signal_reason = ""
         self._refresh_lists()
+
+    def _no_signal(self, reason: str) -> None:
+        self._last_no_signal_reason = str(reason or "unknown")
 
     def _load_env(self) -> None:
         c = self.cfg
@@ -355,6 +359,7 @@ class AltTrendlineTouchV1Strategy:
 
         pivots = _find_swing_lows(lows, c.pivot_left, c.pivot_right)
         if len(pivots) < c.min_pivots:
+            self._no_signal("long_pivots_short")
             return None
 
         # Use last min_pivots pivot points (most recent history)
@@ -364,10 +369,12 @@ class AltTrendlineTouchV1Strategy:
 
         last_pivot_age = n - 1 - recent[-1][0]
         if last_pivot_age > c.max_pivot_age:
+            self._no_signal("long_pivot_stale")
             return None  # trendline is stale
 
         slope, intercept, r2 = _fit_line_points(recent)
         if not (math.isfinite(slope) and math.isfinite(intercept)):
+            self._no_signal("long_line_invalid")
             return None
 
         price_ref = max(1e-12, closes[-1])
@@ -375,12 +382,15 @@ class AltTrendlineTouchV1Strategy:
 
         # Slope constraints
         if slope_pct < c.min_slope_pct or slope_pct > c.max_slope_pct:
+            self._no_signal("long_slope_invalid")
             return None
         # Long trendline direction: support must be ascending or only slightly declining
         long_slope_min = -price_ref * c.long_max_neg_slope / 100.0 / 24.0
         if slope < long_slope_min:
+            self._no_signal("long_slope_direction")
             return None  # declining too fast
         if r2 < c.min_r2 and len(recent) > 2:
+            self._no_signal("long_r2_low")
             return None  # pivots not colinear enough (waived for 2-point line)
 
         tl_now = slope * (n - 1) + intercept
@@ -402,6 +412,16 @@ class AltTrendlineTouchV1Strategy:
         # The bar should have tested the trendline (low below or near) but closed above
         if touched and reclaimed and bullish and body_ok and rsi <= c.rsi_long_max:
             return (tl_now, slope)
+        if not touched:
+            self._no_signal("long_no_touch")
+        elif not reclaimed:
+            self._no_signal("long_no_reject")
+        elif not bullish:
+            self._no_signal("long_candle_not_bullish")
+        elif not body_ok:
+            self._no_signal("long_body_weak")
+        elif rsi > c.rsi_long_max:
+            self._no_signal("long_rsi_too_high")
         return None
 
     def _check_short_trendline(
@@ -421,6 +441,7 @@ class AltTrendlineTouchV1Strategy:
 
         pivots = _find_swing_highs(highs, c.pivot_left, c.pivot_right)
         if len(pivots) < c.min_pivots:
+            self._no_signal("short_pivots_short")
             return None
 
         recent = pivots[-max(c.min_pivots, 3):]
@@ -429,22 +450,27 @@ class AltTrendlineTouchV1Strategy:
 
         last_pivot_age = n - 1 - recent[-1][0]
         if last_pivot_age > c.max_pivot_age:
+            self._no_signal("short_pivot_stale")
             return None
 
         slope, intercept, r2 = _fit_line_points(recent)
         if not (math.isfinite(slope) and math.isfinite(intercept)):
+            self._no_signal("short_line_invalid")
             return None
 
         price_ref = max(1e-12, closes[-1])
         slope_pct = self._slope_pct_per_day(slope, price_ref)
 
         if slope_pct < c.min_slope_pct or slope_pct > c.max_slope_pct:
+            self._no_signal("short_slope_invalid")
             return None
         # Short trendline: resistance should be descending or only slightly rising
         short_slope_max = price_ref * c.short_max_pos_slope / 100.0 / 24.0
         if slope > short_slope_max:
+            self._no_signal("short_slope_direction")
             return None  # rising too fast
         if r2 < c.min_r2 and len(recent) > 2:
+            self._no_signal("short_r2_low")
             return None
 
         tl_now = slope * (n - 1) + intercept
@@ -466,6 +492,16 @@ class AltTrendlineTouchV1Strategy:
 
         if touched and rejected and bearish and body_ok and rsi >= c.rsi_short_min:
             return (tl_now, slope)
+        if not touched:
+            self._no_signal("short_no_touch")
+        elif not rejected:
+            self._no_signal("short_no_reject")
+        elif not bearish:
+            self._no_signal("short_candle_not_bearish")
+        elif not body_ok:
+            self._no_signal("short_body_weak")
+        elif rsi < c.rsi_short_min:
+            self._no_signal("short_rsi_too_low")
         return None
 
     def maybe_signal(
@@ -479,25 +515,32 @@ class AltTrendlineTouchV1Strategy:
         v: float = 0.0,
     ) -> Optional[TradeSignal]:
         _ = (o, h, l, c, v)
+        self._last_no_signal_reason = ""
         self._refresh_lists()
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
+            self._no_signal("symbol_not_allowed")
             return None
         if sym in self._deny:
+            self._no_signal("symbol_denied")
             return None
         if self._cooldown > 0:
             self._cooldown -= 1
+            self._no_signal("cooldown")
             return None
 
         rows = store.fetch_klines(store.symbol, self.cfg.signal_tf, self.cfg.signal_lookback) or []
         if len(rows) < self.cfg.signal_lookback:
+            self._no_signal("history_short")
             return None
 
         tf_ts = int(float(rows[-1][0]))
         if self._last_tf_ts is None:
             self._last_tf_ts = tf_ts
+            self._no_signal("first_signal_bar")
             return None
         if tf_ts == self._last_tf_ts:
+            self._no_signal("same_signal_bar")
             return None
         self._last_tf_ts = tf_ts
 
@@ -509,10 +552,12 @@ class AltTrendlineTouchV1Strategy:
         atr = _atr_from_rows(rows, self.cfg.atr_period)
         rsi = _rsi(closes, self.cfg.rsi_period)
         if not (math.isfinite(atr) and math.isfinite(rsi)) or atr <= 0:
+            self._no_signal("atr_or_rsi_invalid")
             return None
 
         cur = closes[-1]
         if cur <= 0:
+            self._no_signal("price_invalid")
             return None
 
         # ── LONG check ────────────────────────────────────────────────
@@ -553,6 +598,7 @@ class AltTrendlineTouchV1Strategy:
                     if sig.validate():
                         self._cooldown = max(0, self.cfg.cooldown_bars_5m)
                         return sig
+                self._no_signal("long_invalid_risk")
 
         # ── SHORT check ───────────────────────────────────────────────
         if self.cfg.allow_shorts:
@@ -593,5 +639,8 @@ class AltTrendlineTouchV1Strategy:
                         if sig.validate():
                             self._cooldown = max(0, self.cfg.cooldown_bars_5m)
                             return sig
+                self._no_signal("short_invalid_risk")
 
+        if not self._last_no_signal_reason:
+            self._no_signal("no_setup")
         return None
