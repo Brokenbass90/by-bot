@@ -50,12 +50,14 @@
 | P1-1b | **Done 2026-05-20: prepare static-v1 live parity/shadow, no live env edits.** Synced missing static-v1 policy/health/env artifacts to server. Dry-run shows static-v1 policy in current `bear_trend` enables `flat+breakdown` only; ATT1/midterm are blocked by orchestrator, not allocator policy. | Codex | Acceptance: no live restart/env edit |
 | P1-1c | **Done/monitor: backtest-driven symbol/router expansion for static core.** Owner-approved live deployment active; after adequate sample, allowlist mismatch is no longer dominant. Internal blockers now dominate: `breakdown_support`, `ATT1_trendline`, `flat_touch`. | Codex | Acceptance met for routing diagnosis; continue with targeted filter replay, no blind expansion |
 | P1-1d | **Targeted live-filter replay.** Reproduce current `breakdown_ns_support`, `att1_ns_trendline`, `flat_ns_touch` over a tradeful window and test one bounded relaxation/logic repair per sleeve. | Codex | Promote only if PF≥1.25, DD≤8%, trades≥30 and negative months do not worsen |
+| P1-1e | **Signal/timestamp parity after router fix.** Match replay entries against live evaluations and verify `NO_ENTRY_HOURS_UTC` is applied identically in replay/live. | Codex | Must explain why replay has entries while live has none before any filter relaxation |
 | P1-2 | **SAFETY Patch 1 — SL/TP на брокере.** Bybit V5 `stopLoss`/`takeProfit` params в `place_market()`. Критично для защиты от flash crash. | Codex | `SAFETY_PATCHES_20260517.md` |
 | P1-3 | **SAFETY Patch 2 — TRADES race fix.** `threading.RLock` + persistent snapshot. | Codex | `SAFETY_PATCHES_20260517.md` |
 | P1-4 | **Funding carry DRY_RUN** через cron `*/30 * * * *` на неделю. | Codex | `FUNDING_CARRY_ACTIVATION_20260517.md` Phase 1 |
 | P1-5 | **direction-aware `global_risk_mult`.** Разделить на `long_risk_mult` / `short_risk_mult` в orchestrator. | Codex | `docs/STRATEGY_SET_PER_REGIME_20260519.md` §3.4 |
 | P1-6 | После P1-1 + P1-2: **активация 2-3 strategies** через acceptance gate (BRC1, alt_bear_breakdown_v1, alt_squeeze_breakout_v1). `base_mult=0.5` start. | Codex | `docs/STRATEGY_SET_PER_REGIME_20260519.md` §2 |
-| P1-7 | **`scripts/ai_morning_brief.py` cron** `0 7 * * *`. | Codex | (готовый скрипт в репо) |
+| P1-7 | **DeepSeek reporting integrity.** Done 2026-05-25: weekly audit attributes metrics from each sleeve's own trades; universe proposals are backtest-only and evidence-bound. | Codex | `scripts/deepseek_weekly_cron.py --dry-run --phases audit,research,report --skip-universe` |
+| P1-7a | **Read-only market context for AI.** Feed cited/cached macro, earnings, sector/news headlines, Bybit liquidity/funding snapshots to `ai_context`; AI may propose research only. | Codex | No direct config/order writes; freshness + source URL required in every snapshot |
 | P1-8 | Alpaca v39 (если backtest v2 пройдёт): paper 14 дней с `ALPACA_DYN_V2_ENABLED=1`. | Codex | результаты P0.5-1 |
 | P1-8a | Alpaca market data freshness check: intraday dry-run 2026-05-19 видел last bar 2026-05-18 19:30 UTC. Проверить feed/cache перед active paper switch. | Codex | `scripts/equities_alpaca_intraday_bridge.py` |
 | P1-8b | Done 2026-05-20: `v3_shadow` defaults to dry-run; stale SCHW pending paper orders cancelled; no more shared-account order conflict expected. Next: verify today during US session. | Codex | `logs/alpaca_intraday_dynamic_v3_shadow.log` |
@@ -122,6 +124,7 @@ Next: P0-2
 ```
 
 ## Изменения в backlog
+- 2026-05-25: Corrected DeepSeek weekly attribution bug and gated universe proposals as backtest-only. Added P1-1e signal/timestamp/no-entry-hours parity and P1-7a read-only external market context; live settings unchanged.
 - 2026-05-25: Router/static-core live sample now shows internal strategy filters as the blocker; added P1-1d targeted filter replay. Fixed broken breakdown bear research TF; its 36 variants failed. ATT1 focused 360d sweep produced a challenger (`+23.97%`, PF `1.278`, DD `9.82%`) that needs DD repair. Alpaca v39 4y stress retained for research only.
 - 2026-05-24: Added P1-1c router static-core pins and saved Alpaca v39 best research config. Started local detached candidate matrix `candidate180_bear_flat_20260524` for BRC1/range/breakdown_v2/bear_breakdown on proven symbols.
 - 2026-05-22: P0-7 done. Rebuilt server router/allocator: `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,ADAUSDT,ONDOUSDT`, breakdown count 4, no hard block. Fresh compare after restart: stream alive, no portfolio/global block; sample too small, next check after 1-3h.

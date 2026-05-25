@@ -159,8 +159,50 @@ def _tg_send(token: str, chat_id: str, text: str) -> None:
 # Live performance audit (reads recent backtest runs as proxy)
 # ---------------------------------------------------------------------------
 
+def _attributed_trade_metrics(run_path: Path) -> dict[str, dict[str, float | int]]:
+    """Return per-strategy metrics from actual trades in a portfolio run."""
+    import csv
+
+    trades_path = run_path / "trades.csv"
+    if not trades_path.exists():
+        return {}
+    values: dict[str, list[tuple[float, float]]] = {}
+    with trades_path.open(newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            strategy = str(row.get("strategy") or "").strip()
+            if not strategy:
+                continue
+            try:
+                pnl = float(row.get("pnl") or 0.0)
+                pnl_return = float(row.get("pnl_pct_equity") or 0.0)
+            except (TypeError, ValueError):
+                continue
+            values.setdefault(strategy, []).append((pnl, pnl_return))
+
+    metrics: dict[str, dict[str, float | int]] = {}
+    for strategy, trades in values.items():
+        gross_win = sum(pnl for pnl, _ in trades if pnl > 0)
+        gross_loss = abs(sum(pnl for pnl, _ in trades if pnl < 0))
+        equity = 100.0
+        peak = equity
+        max_dd = 0.0
+        for _, pnl_return in trades:
+            equity *= 1.0 + pnl_return
+            peak = max(peak, equity)
+            if peak > 0:
+                max_dd = max(max_dd, (peak - equity) / peak * 100.0)
+        metrics[strategy] = {
+            "trades": len(trades),
+            "net": equity - 100.0,
+            "gross_win": gross_win,
+            "gross_loss": gross_loss,
+            "dd": max_dd,
+        }
+    return metrics
+
+
 def _audit_recent_runs(days_lookback: int = 14) -> dict[str, Any]:
-    """Scan backtest_runs for portfolio runs in last N days and aggregate per-strategy health."""
+    """Attribute recent portfolio-research outcomes to the sleeves that traded."""
     runs_dir = ROOT / "backtest_runs"
     cutoff = time.time() - days_lookback * 86400
     strategy_stats: dict[str, dict[str, Any]] = {}
@@ -184,33 +226,52 @@ def _audit_recent_runs(days_lookback: int = 14) -> dict[str, Any]:
                 continue
             row = rows[0]
             strats = [s.strip() for s in str(row.get("strategies") or "").split(";") if s.strip()]
-            pf = float(row.get("profit_factor") or 0.0)
-            dd = float(row.get("max_drawdown") or 0.0)
-            trades = int(row.get("trades") or 0)
-            net = float(row.get("net_pnl") or 0.0)
+            attributed = _attributed_trade_metrics(run_path)
             for st in strats:
                 if st not in strategy_stats:
-                    strategy_stats[st] = {"runs": 0, "pf_sum": 0.0, "dd_max": 0.0, "net_sum": 0.0, "trades_sum": 0}
+                    strategy_stats[st] = {
+                        "tested_runs": 0,
+                        "trade_runs": 0,
+                        "zero_trade_runs": 0,
+                        "gross_win": 0.0,
+                        "gross_loss": 0.0,
+                        "dd_max": 0.0,
+                        "net_sum": 0.0,
+                        "trades_sum": 0,
+                    }
                 s = strategy_stats[st]
-                s["runs"] += 1
-                s["pf_sum"] += pf
-                s["dd_max"] = max(s["dd_max"], dd)
-                s["net_sum"] += net
-                s["trades_sum"] += trades
+                s["tested_runs"] += 1
+                own = attributed.get(st)
+                if not own:
+                    s["zero_trade_runs"] += 1
+                    continue
+                s["trade_runs"] += 1
+                s["gross_win"] += float(own["gross_win"])
+                s["gross_loss"] += float(own["gross_loss"])
+                s["dd_max"] = max(s["dd_max"], float(own["dd"]))
+                s["net_sum"] += float(own["net"])
+                s["trades_sum"] += int(own["trades"])
             scanned += 1
         except Exception:
             continue
 
     summary: dict[str, Any] = {"scanned_runs": scanned, "strategies": {}}
     for st, s in strategy_stats.items():
-        r = s["runs"]
+        trade_runs = int(s["trade_runs"])
+        gross_loss = float(s["gross_loss"])
+        pf = float(s["gross_win"]) / gross_loss if gross_loss > 0 else (
+            float("inf") if float(s["gross_win"]) > 0 else 0.0
+        )
         summary["strategies"][st] = {
-            "runs": r,
-            "avg_pf": round(s["pf_sum"] / r, 3) if r else 0.0,
-            "avg_net": round(s["net_sum"] / r, 3) if r else 0.0,
+            "runs": int(s["tested_runs"]),
+            "trade_runs": trade_runs,
+            "zero_trade_runs": int(s["zero_trade_runs"]),
+            "avg_pf": round(pf, 3) if pf != float("inf") else float("inf"),
+            "avg_net": round(s["net_sum"] / trade_runs, 3) if trade_runs else 0.0,
             "max_dd": round(s["dd_max"], 3),
-            "avg_trades_per_run": round(s["trades_sum"] / r, 1) if r else 0,
-            "health": "OK" if (s["pf_sum"] / r >= 1.5 and s["dd_max"] < 10.0) else "WATCH",
+            "trades": int(s["trades_sum"]),
+            "avg_trades_per_run": round(s["trades_sum"] / trade_runs, 1) if trade_runs else 0,
+            "health": "OK" if trade_runs and pf >= 1.5 and s["dd_max"] < 10.0 else "WATCH",
         }
     return summary
 
@@ -262,7 +323,8 @@ def _scan_finished_autoresearch(days_lookback: int = 14) -> list[dict[str, Any]]
 # ---------------------------------------------------------------------------
 
 UNIVERSE_SYSTEM = """You are a quantitative trading research assistant for a Bybit perpetual futures bot.
-You analyse market conditions and suggest symbol universes for specific strategy families.
+You suggest symbol candidates for read-only backtest research, never for direct live activation.
+Do not claim current market, liquidity, news, or performance evidence unless it is explicitly supplied.
 Respond ONLY with a JSON object, no markdown."""
 
 def _build_universe_prompt(strategy_family: str, current_symbols: list[str], perf_summary: str) -> str:
@@ -271,8 +333,8 @@ Current symbols: {', '.join(current_symbols)}
 Recent performance summary: {perf_summary}
 
 Based on this strategy's mechanics, suggest:
-1. Up to 5 NEW symbols to ADD to the universe (Bybit USDT perps, liquid, >$30M daily volume)
-2. Up to 2 symbols to REMOVE if they look structurally wrong for this strategy
+1. Up to 5 NEW symbols to TEST in backtest (Bybit USDT perps; liquidity must be verified separately)
+2. Up to 2 current symbols to CHALLENGE in backtest if they look structurally wrong for this strategy
 3. One sentence explaining the rationale
 
 Reply with JSON:
@@ -354,18 +416,27 @@ def _run_tune_phase(strategies: list[str], dry_run: bool, quiet: bool) -> list[s
 # ---------------------------------------------------------------------------
 
 def _format_audit_section(audit: dict[str, Any]) -> str:
-    lines = ["📊 <b>Аудит стратегий (последние 14 дней)</b>"]
+    lines = [
+        "📊 <b>Аудит research-прогонов по своим сделкам стратегии (последние 14 дней)</b>",
+        "  Это backtest/research evidence, не live P&amp;L.",
+    ]
     strats = audit.get("strategies", {})
     if not strats:
         lines.append("  Нет данных по недавним прогонам")
         return "\n".join(lines)
     for st, s in sorted(strats.items()):
+        if not s.get("trade_runs"):
+            lines.append(
+                f"  ⚪ {st[:30]}: нет сделок "
+                f"({s['zero_trade_runs']}/{s['runs']} research runs)"
+            )
+            continue
         icon = "✅" if s["health"] == "OK" else "⚠️"
         lines.append(
-            f"  {icon} {st[:30]}: PF={s['avg_pf']:.2f} "
-            f"net={s['avg_net']:+.1f}% "
-            f"DD={s['max_dd']:.1f}% "
-            f"({s['runs']} runs)"
+            f"  {icon} {st[:30]}: PF(sample)={s['avg_pf']:.2f} "
+            f"avg_net/trade-run={s['avg_net']:+.1f}% "
+            f"DDmax={s['max_dd']:.1f}% trades={s['trades']} "
+            f"({s['trade_runs']}/{s['runs']} runs traded)"
         )
     return "\n".join(lines)
 
@@ -386,7 +457,10 @@ def _format_autoresearch_section(runs: list[dict[str, Any]]) -> str:
 def _format_universe_section(suggestions: dict[str, dict[str, Any]]) -> str:
     if not suggestions:
         return ""
-    lines = ["🌐 <b>DeepSeek: расширение universe</b>"]
+    lines = [
+        "🌐 <b>DeepSeek: universe-кандидаты только для backtest</b>",
+        "  Не применять к live без liquidity check + acceptance gate.",
+    ]
     for family, s in suggestions.items():
         if "error" in s:
             lines.append(f"  ❌ {family}: {s['error'][:80]}")
@@ -396,9 +470,9 @@ def _format_universe_section(suggestions: dict[str, dict[str, Any]]) -> str:
         rationale = s.get("rationale", "")[:120]
         lines.append(f"  <b>{family}</b>")
         if add:
-            lines.append(f"    ➕ Добавить: {add}")
+            lines.append(f"    🧪 Проверить: {add}")
         if rem:
-            lines.append(f"    ➖ Убрать: {rem}")
+            lines.append(f"    🧪 Challenge текущих: {rem}")
         if rationale:
             lines.append(f"    💡 {rationale}")
     return "\n".join(lines)
@@ -416,6 +490,11 @@ UNIVERSE_FAMILIES = {
     "ASC1 (sloped channel)": ["ATOMUSDT", "LINKUSDT", "DOTUSDT"],
     "ARF1 (flat fade)": ["LINKUSDT", "LTCUSDT", "SUIUSDT", "DOTUSDT", "ADAUSDT", "BCHUSDT"],
     "BREAKDOWN (shorts)": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "ATOMUSDT", "LTCUSDT"],
+}
+UNIVERSE_EVIDENCE_STRATEGIES = {
+    "ASC1 (sloped channel)": "alt_sloped_channel_v1",
+    "ARF1 (flat fade)": "alt_resistance_fade_v1",
+    "BREAKDOWN (shorts)": "alt_inplay_breakdown_v1",
 }
 
 ALL_PHASES = ["audit", "tune", "research", "universe", "report"]
@@ -525,7 +604,21 @@ def main() -> int:
             for family, symbols in UNIVERSE_FAMILIES.items():
                 if not args.quiet:
                     print(f"  Universe expand: {family}...")
-                perf = "recent autoresearch shows stable PF around 2.0"
+                evidence_name = UNIVERSE_EVIDENCE_STRATEGIES.get(family, "")
+                evidence = dict(audit.get("strategies", {}).get(evidence_name) or {})
+                if evidence.get("trade_runs"):
+                    perf = (
+                        f"Attributed research evidence only: strategy={evidence_name}; "
+                        f"PF(sample)={evidence.get('avg_pf')}; "
+                        f"avg_net_per_trade_run={evidence.get('avg_net')}%; "
+                        f"max_DD={evidence.get('max_dd')}%; trades={evidence.get('trades')}. "
+                        "All candidate symbols require separate backtest and liquidity validation."
+                    )
+                else:
+                    perf = (
+                        f"No attributed research trade evidence for {evidence_name or family} in this report. "
+                        "Suggest hypotheses for backtest only; do not infer current suitability."
+                    )
                 sugg = _ds_universe_suggest(family, symbols, perf, api_key, base_url, model)
                 universe_suggestions[family] = sugg
                 time.sleep(3)
