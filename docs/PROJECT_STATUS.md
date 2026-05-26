@@ -1,21 +1,21 @@
 # Project Status — LIVE
 
-**Last updated:** 2026-05-26 midday (Alpaca software trailing fix + active package research)
+**Last updated:** 2026-05-26 afternoon (strict live parity drift + Alpaca trail execution check)
 **Update rhythm:** еженедельно или при критическом изменении
 **Источник правды:** этот файл + `docs/BACKLOG.md` + `docs/RESUME_AFTER_BREAK_20260519.md`
 
 ## Однострочник
-Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-26:** router/static-core inputs совпадают с benchmark (`100% input parity`), `bybot` active, allocator healthy, но crypto entries по-прежнему отсутствуют: измеренные blockers находятся внутри filters (`breakdown support`, `flat range`, `ATT1 trendline`). Серверный `crypto_income_static_v1` является recovery benchmark (`+73.96%` за 365d, PF `1.591`, DD `5.16%`, 436 trades, 2 red months). Причина отличия от старого локального `+70.17% / PF 1.545` установлена: различался candle-cache; локальное изолированное зеркало на точном серверном cache воспроизвело `+73.96%` один в один. ATT1 density challenger ухудшил полный пакет и отклонён; breakdown package sweep идёт локально и уже дал малые interim PASS, но live не меняется до полного результата. Alpaca monthly reporting исправлен и найден/задеплоен paper-only software trailing bugfix: high-water должен вооружать выход по откату; v39/v40 остаются research-only.
+Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-26:** `bybot` active и не hard-blocked, но строгая проверка доказала, что live пока НЕ равен benchmark: required static-v1 inputs покрыты на `100%`, однако allocator добавляет sleeves `sloped, asm1` и дополнительные symbols в `att1/flat/breakdown`; live также не задаёт `MAX_POSITIONS`, поэтому действует code-default `1`, тогда как benchmark тестируется на `5`. Текущий ноль entries всё ещё возникает до order path, внутри filters (`breakdown RSI/support`, `flat same_bar/range`, `ATT1 trendline`). Recovery benchmark остаётся `crypto_income_static_v1` (`+73.96%` за 365d, PF `1.591`, DD `5.16%`, 436 trades, 2 red months); package ARF1 sweep имеет interim winner `+77.57% / PF 1.646 / DD 5.16%`, но live не меняется до финала и повторного replay. Alpaca v38 monthly paper: fixed HWM trailing сработал на GOOGL и отправил close; требуется подтвердить broker fill/cleanup на следующем gate. v39/v40 остаются research-only.
 
 ## Numbers (на 2026-05-19 после рестарта)
 
 ### Live state
 - **Bybit equity:** ~$123 USDT
 - **Last trade:** 2026-04-28 ALGOUSDT range −$0.92. После рестарта ждём первый entry.
-- **Alpaca paper:** monthly-owned `GOOGL` с broker stop; фактический HWM `$406.49` при entry `$382.03` (`+6.40%`) был потерян из-за software-trail bug. Fix `89c6f8d` задеплоен на paper bridge; server function-check теперь показывает `trail_triggered=True` для сохранённого состояния. На ближайшем market-hour tick проверить paper close/fill; `META/PANW` всё ещё требуют reconciliation; journal P&L `+$5.17` не считается realized до fills
+- **Alpaca paper:** trailing fix относится к `v38 hybrid top4 monthly`, не к v39. На run `2026-05-26 14:00 UTC` сохранённый HWM GOOGL `$406.49` при entry `$382.03` (`peak +6.40%`) вооружил software trail: при текущем `+1.19%` bridge отменил old stop, отправил `trail_stop_close` (`pending_new`) и записал re-entry block до `2026-06-16`. Нужна проверка broker fill и отсутствия cleanup conflict после следующего scheduled gate; `META/PANW` также ещё требуют reconciliation.
 - **Owner reserve:** $2000 в крипте, ждёт Фаза 1 trigger
 - **Regime:** `bear_chop` на свежем server heartbeat 2026-05-25; прежний snapshot был `bear_trend`.
-- **Allocator:** global_risk=0.8, hard_block=False
+- **Allocator:** global_risk=0.8, hard_block=False, но strict static-v1 parity `FAIL`: extra sleeves `sloped, asm1`; extra symbols в `att1`, `flat`, `breakdown`; live effective concurrency default `MAX_POSITIONS=1` против benchmark `5`.
 - **Service:** `bybot` active, рестарт прошёл чисто (open_trades=0 на момент рестарта)
 
 ### Что закрыто 2026-05-19
@@ -68,7 +68,8 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 
 ### Active research queue
 - `att1_density_v3_more_pivots_v1` — finished 2026-05-26, `864/864`: standalone best `r259` `+38.48%`, PF `1.384`, DD `3.97%`; full-package replay **rejected** it: `+58.50%`, PF `1.386`, DD `15.18%`, 539 trades, 3 red months versus baseline `+70.17%`, PF `1.545`, DD `6.23%`, 445 trades, 2 red months.
-- `package_breakdown_rsi_v1` → `package_arf1_flat_touch_v1` — running locally in detached `screen` session `crypto_package_sweeps_20260526` against mirrored server candle-cache. At `29/45` breakdown rows, interim package-safe results exist (`r004/r013/r022`: `+74.43%`, PF `1.596`, DD `5.16%`; `r009/r018/r027`: `+74.17%`, PF `1.600`, DD `5.16%`). No live promotion before all breakdown + ARF1 rows finish and the winner is replayed/inspected for negative months. These full-package jobs were moved off the 1 GB VPS after an initial server process left only ~63 MB available memory.
+- `package_breakdown_rsi_v1` — finished `45/45`: best accepted family `+74.43%`, PF `1.596`, DD `5.16%`, `1` negative month; improvement is small and not promoted alone.
+- `package_arf1_flat_touch_v1` — running locally in detached `screen` session `crypto_package_sweeps_20260526` against mirrored server candle-cache; at `41/48`, interim package winner remains `+77.57%`, PF `1.646`, DD `5.16%`. No live promotion before all rows finish, repeated replay passes, and slot/policy parity (`1/3/5` positions) is measured.
 - `breakdown_recent_bear_window_v2_entry_quality` — fixed broken `4h` backtest timeframe (`240`) and rerun; 36/36 failed, best `-6.25%`, PF `0.679`, DD `7.30%`. Do not extend live breakdown from this window.
 - `bear_regime_continuation_v1_initial_sweep` — pending/restart locally only: свежий server status показывает `active_process_count=0`; не считать BRC1 готовой без завершённого 360d результата.
 - `att1_short_slope_v1` — finished `18/18`; best `+15.44%`, PF `1.097`, DD `9.96%`, failed gate; reject/no promotion.
@@ -102,7 +103,7 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - ✅ 2026-05-26: full-package replay rejected ATT1 `r259`; extra frequency increased drawdown and reduced return/PF. No crypto live settings changed.
 
 ## Что НЕ работает (top blockers)
-0. **P0-NEW: decision parity after input parity.** Server check at 2026-05-25 16:20 UTC returned `input_symbol_parity_pct=100.0`, `verdict=PASS`, allocator `safe_mode=False`; therefore control-plane/allowlist are no longer the unexplained stop. Need match backtest entry timestamps to live filter outcomes on a stable post-fix window.
+0. **P0-NEW: strict live-vs-static parity.** Previous `input_symbol_parity_pct=100.0` measured coverage only and masked drift. Patched/deployed read-only check on 2026-05-26 now returns `verdict=FAIL`: extra live sleeves `sloped,asm1`, extra symbols in `att1/flat/breakdown`, and effective live concurrency defaults to `MAX_POSITIONS=1` while benchmark uses `5`. Need validate strict four-sleeve/slot policy in shadow, then change live only with explicit reviewed promotion.
 1. **Active internal blockers are measured.** Fresh counters: `breakdown_try=419`, `no_signal=419` (`rsi=320`, `support=80`); `flat_try=32`, `no_signal=32` (`touch=20`); `ATT1 try=57`, `signal=1`, `no_signal=56` (`trendline=24`), with the single signal stopped at rounding. This is targeted filter/replay work, not a server reset.
 2. **Claude candidate rewrites are not live fixes yet.** The live bot already calls `BRC1.signal(...)`, so adding `BRC1.maybe_signal(...)` does not repair a missing live interface. Changing BRC1 indicators, ARF1 filters or `MTPB_USE_RUNNER_EXITS` changes strategy semantics and invalidates existing baseline comparisons until challenger replay is complete.
 4. **Signal parity ещё не закрыт.** Latest weekly replay нашёл 9 backtest entries при нуле real entries, но все они вне `NO_ENTRY_HOURS_UTC=0,1,2`, а сам replay применял новый config ретроспективно к периоду до завершения router fixes. Следующий честный тест нужен на стабильном post-fix окне.
