@@ -1,6 +1,6 @@
 {
   "name": "package_breakdown_rsi_v1",
-  "description": "Full-package replay: vary BREAKDOWN RSI/lookback/ER-gate within crypto_income_static_v1 baseline. All ATT1, ARF1, MTPB params locked at baseline. Diagnostic 2026-05-25 identified breakdown RSI_MAX=55 as potential blocker in bear_chop — relaxing to 58-60 or tightening to 50-53 may improve selectivity or volume. Only combos that beat baseline PF 1.545 / DD 6.23% qualify for promotion.",
+  "description": "Full-package replay: vary BREAKDOWN RSI/lookback/ER-gate within the server-reproduced crypto_income_static_v1 baseline. All ATT1, ARF1, MTPB params locked at baseline. Server baseline rerun on 2026-05-26 produced +73.96%, PF 1.591, DD 5.16%, 436 trades; only combos that beat that same-runtime benchmark qualify for promotion.",
   "cache_only": true,
   "command": [
     "{python}",
@@ -76,9 +76,9 @@
   },
   "constraints": {
     "min_trades": 100,
-    "min_profit_factor": 1.546,
-    "max_drawdown": 6.5,
-    "min_net_pnl": 70.18,
+    "min_profit_factor": 1.592,
+    "max_drawdown": 5.17,
+    "min_net_pnl": 73.97,
     "max_negative_months": 2,
     "max_negative_streak": 1
   },
@@ -93,10 +93,10 @@
     "worst_month_pnl": 2.0
   },
   "_notes": {
-    "baseline": "crypto_income_static_v1: +70.17%, PF 1.545, DD 6.23% — promotion gate",
+    "baseline": "Server runtime crypto_income_static_v1 rerun 2026-05-26: +73.96%, PF 1.591, DD 5.16%, 436 trades, 2 negative months, streak 1 — promotion gate",
     "blocker": "BREAKDOWN_RSI_MAX=55 may be too loose for bear_chop (captures low-quality setups) or too tight for bear_trend (misses valid breakdowns). Lookback 48h and ER gate 0.15 are untested within the full package.",
     "hypothesis": "Tightening RSI to 50-53 improves PF by filtering rebound-short noise. Extending lookback 36→60h captures more confirmed structure. ER gate 0.10 vs 0.20 trades volume for selectivity.",
-    "promotion_gate": "Exact baseline protocol: 365d ending 2026-04-25, risk_pct=1%, max_positions=5, fees/slippage=6/2 bps. Must beat baseline net +70.17 and PF 1.545 with DD <= 6.5%, negative months <= 2, streak <= 1 before promotion.",
+    "promotion_gate": "Exact baseline protocol and same server runtime: 365d ending 2026-04-25, risk_pct=1%, max_positions=5, fees/slippage=6/2 bps. Must beat net +73.96 and PF 1.591 with DD <= 5.17%, negative months <= 2, streak <= 1 before promotion.",
     "run_after": "att1_density_v3_more_pivots_v1 completes — share server only if v3 is done",
     "expected_time": "Full-package annual runs are expensive; use bounded jobs and monitor resource load while running 45 combos."
   },

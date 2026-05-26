@@ -37,8 +37,9 @@ The old sparkline (72px, no real value) was replaced with a full-screen `Lightwe
 
 **Key design:** Both run ALL 4 strategies together (`alt_trendline_touch_v1,alt_resistance_fade_v1,alt_inplay_breakdown_v1,btc_eth_midterm_pullback`) with all non-varying params locked at `crypto_income_static_v1` baseline. This enforces the additivity test — only combos that improve the full package PF advance.
 
-**Baseline:** `crypto_income_static_v1`: +70.17%, PF 1.545, DD 6.23%
-**Promotion gate:** replay uses the exact proven baseline protocol (`365d`, `end=2026-04-25`, `risk_pct=0.01`, `max_positions=5`, `fees=6bps`, `slippage=2bps`) and must beat `+70.17% / PF 1.545` while keeping `DD <= 6.5%`, negative months `<= 2`, and negative-month streak `<= 1`.
+**Local historical baseline:** `crypto_income_static_v1`: +70.17%, PF 1.545, DD 6.23%
+**Server runtime baseline (2026-05-26 rerun):** +73.96%, PF 1.591, DD 5.16%, 436 trades, 2 red months, streak 1. The difference proves server/git runtime drift and must be reconciled separately.
+**Promotion gate:** replay uses the exact server protocol (`365d`, `end=2026-04-25`, `risk_pct=0.01`, `max_positions=5`, `fees=6bps`, `slippage=2bps`) and must beat `+73.96% / PF 1.591` while keeping `DD <= 5.17%`, negative months `<= 2`, and negative-month streak `<= 1`.
 
 **Breakdown RSI grid:**
 - `BREAKDOWN_RSI_MAX`: [50, 53, 55, 58, 60]
