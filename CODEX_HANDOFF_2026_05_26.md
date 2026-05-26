@@ -136,6 +136,7 @@ python3 scripts/monitor.py --json
 - Research result is now available: ARF1 `r002` improves the full proven package at five slots
 - Current-live-compatible result is now available: ARF1 `r002` improves the three-slot package while reducing DD and one red month; it is the conservative canary path, with no slot/leverage increase
 - Live safety gap found: `MAX_OPEN_PORTFOLIO_RISK_PCT` and `MAX_SAME_DIRECTION_POSITIONS` are unset/disabled in the running process; apply caps only as part of an explicitly approved canary
+- Clean next-sleeve queue started locally on server-mirrored code. `bear_regime_continuation_v1_fast_90d_v1` finished `64/64`: best `r005` `+6.15%`, PF `4.800`, WR `67.7%`, DD `0.40%`, 31 trades, 0 red months. Advance only to 365d and full-package additivity replay. `elder_canonical_rewrite_v1 --limit 256` is running; first 16 variants fail catastrophically, so do not promote Elder unless final ranked results reverse that conclusion.
 - Live env stays at current baseline until strict policy/symbol parity and aggregate risk sizing are explicitly reviewed
 - Keep Claude strategy-semantic changes such as `MTPB_USE_RUNNER_EXITS=1` in challenger/replay until measured as part of a full package
 
