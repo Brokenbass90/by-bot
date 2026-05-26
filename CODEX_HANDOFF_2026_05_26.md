@@ -8,7 +8,7 @@ This session completed 3 tasks + produced 2 new full-package sweep configs. Code
 
 - Deployed read-only strict parity check in commit `e339ee2`. The old coverage-only `PASS` masked live drift: effective allocator enables extra sleeves `sloped,asm1`, expands symbols in `att1/flat/breakdown`, and crypto process defaults to `MAX_POSITIONS=1` while the proven package research uses `5`. Fixed-cache sensitivity quantified this: `1` slot `+30.76% / PF 1.330 / DD 5.68%`; `3` slots `+62.79% / PF 1.478 / DD 5.36%`; `4` slots `+74.41% / PF 1.600 / DD 5.03%` but 3 red months; `5` baseline `+73.96% / PF 1.591 / DD 5.16%` with 2 red months.
 - This drift is not yet the direct cause of zero entries: fresh counters still reject before order generation (`breakdown RSI/support`, `flat same_bar/range`, `ATT1 trendline`). It will contaminate performance once signals begin, so any promotion must test strict four-sleeve and slot parity first.
-- `package_breakdown_rsi_v1` completed: best accepted `+74.43%`, PF `1.596`, DD `5.16%`, one negative month. `package_arf1_flat_touch_v1` was at `41/48` with interim leader `+77.57%`, PF `1.646`, DD `5.16%`. Do not alter live until final/replay.
+- `package_breakdown_rsi_v1` completed: best accepted `+74.43%`, PF `1.596`, DD `5.16%`, one negative month. `package_arf1_flat_touch_v1` finished `48/48`; winner `r002` (`ARF1_MIN_RSI=48`, `ARF1_REJECT_BELOW_RES_ATR=0.08`, `ARF1_RES_TOUCH_BUFFER_ATR=0.35`) replayed successfully: five slots `+77.57%`, PF `1.646`, DD `5.16%`, 419 trades, 2 negative months; four slots `+76.55%`, PF `1.636`, DD `5.00%`, 423 trades, but 3 negative months. Do not alter live until strict four-sleeve/fixed-symbol policy and capped total risk are reviewed.
 - Alpaca trailing fix is on `v38 hybrid top4 monthly paper`, not v39. At `2026-05-26 14:00 UTC`, GOOGL HWM trailing triggered a paper close submission and re-entry block; the `14:30 UTC` gate showed GOOGL absent and no duplicate cleanup while preserving intraday-owned NFLX. Still reconcile ledger/credentials/end-of-cycle before considering `$500`.
 - Alpaca intraday v3 is rejected as a capital candidate: 360d backtest `-5.78%`, PF `0.886`, DD `20.64%`, 98 trades.
 
@@ -102,10 +102,11 @@ python3 scripts/monitor.py --json
 
 ### P0 — Crypto unfreeze (needs Codex)
 
-1. **Full-package filters currently running locally** in detached `screen` session `crypto_package_sweeps_20260526`:
-   - `package_breakdown_rsi_v1.json` then `package_arf1_flat_touch_v1.json`
-   - First breakdown row already failed: `+69.34%`, PF `1.528`, DD `5.38%`, red months `>2`
-   - Only deploy if a full-package result beats `+73.96% / PF 1.591` with `DD <= 5.17%` and no extra red months
+1. **Full-package ARF1 challenger is validated in research, not deployed:**
+   - `package_breakdown_rsi_v1` best accepted: `+74.43%`, PF `1.596`, DD `5.16%`, 1 red month
+   - `package_arf1_flat_touch_v1` winner `r002` repeated at five slots: `+77.57%`, PF `1.646`, DD `5.16%`, 2 red months
+   - Four-slot replay: `+76.55%`, PF `1.636`, DD `5.00%`, but 3 red months; prefer five-slot challenger for the next shadow check
+   - Next step is a strict fixed-symbol/four-sleeve five-slot policy shadow with capped aggregate risk; do not change crypto live from research output alone
 
 2. **ATT1 short slope sweeps** — run after v3:
    - `att1_short_slope_v1.json` (18 combos, exploratory)
@@ -132,9 +133,9 @@ python3 scripts/monitor.py --json
 ### P3 — Live bot re-enablement decision
 
 - Current: `regime=bear_chop`, `open_trades=0`, bot is running but not trading
-- Waiting on: v3 sweep winner + full package replay confirming improvement
-- Live env stays at current baseline until additivity test passes
-- `MTPB_USE_RUNNER_EXITS=1` should be added to live `.env` (Codex confirmed safe)
+- Research result is now available: ARF1 `r002` improves the full proven package at five slots
+- Live env stays at current baseline until strict policy/symbol parity and aggregate risk sizing are explicitly reviewed
+- Keep Claude strategy-semantic changes such as `MTPB_USE_RUNNER_EXITS=1` in challenger/replay until measured as part of a full package
 
 ---
 
