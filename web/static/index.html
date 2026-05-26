@@ -1200,7 +1200,7 @@ function AlpacaPage() {
     if (id === 'equities_monthly_v36') return {
       role: 'Главная quality-ветка под первые реальные деньги',
       mode: 'Месячный momentum: выбирает акции раз в цикл и держит позицию дольше intraday.',
-      decision: 'Оставляем как устойчивый compounder-кандидат. Не ломать при экспериментах.'
+      decision: 'Оставляем как устойчивый compounder-кандидат. Метрики ниже — backtest, не текущий paper P&L.'
     };
     if (id === 'equities_monthly_v38_more_active_research') return {
       role: 'Более активный monthly-кандидат',
@@ -1209,8 +1209,8 @@ function AlpacaPage() {
     };
     if (id === 'intraday_dynamic_v1') return {
       role: 'Текущий paper-интрадей',
-      mode: 'Открывает короткие paper-сделки внутри дня через Alpaca. Сейчас уже есть позиции.',
-      decision: 'Пока только наблюдение. Для real money нужна отдельная статистика по дням/неделям.'
+      mode: 'Открывает paper-сделки и отдельно отмечает позиции, ожидающие исполнения закрытия.',
+      decision: 'Пока только наблюдение. P&L считается подтверждённым лишь после broker fill.'
     };
     if (id === 'intraday_dynamic_v3_shadow') return {
       role: 'Новая shadow-ветка на $1000 paper',
@@ -1220,7 +1220,7 @@ function AlpacaPage() {
     return { role: 'Рукав', mode: 'Нет описания', decision: 'Нужно уточнить.' };
   };
   const renderPositionSection = (title, positions, updated) => {
-    const rows = positions || [];
+    const rows = (positions || []).map(p => typeof p === 'string' ? { symbol: p } : p);
     return React.createElement('div', { style: { marginBottom: '16px' } },
       React.createElement('div', { className: 'section-title', style: { fontSize: '14px', marginBottom: '12px' } },
         title,
@@ -1234,8 +1234,8 @@ function AlpacaPage() {
             rows.map((p, i) =>
               React.createElement('div', { className: 'pick-card', key: `${title}-${p.symbol || 'pos'}-${i}` },
                 React.createElement('div', { className: 'pick-ticker' }, p.symbol || '—'),
-                React.createElement('div', { className: 'pick-month' },
-                  `${String(p.side || '').toUpperCase()} · qty ${p.qty != null ? p.qty : '?'}`),
+                (p.side || p.qty != null) && React.createElement('div', { className: 'pick-month' },
+                  `${String(p.side || '').toUpperCase()}${p.qty != null ? ` · qty ${p.qty}` : ''}`),
                 p.entry_price != null && React.createElement('div', { className: 'pick-metric' },
                   React.createElement('span', null, 'Вход'),
                   React.createElement('span', { className: 'v' }, `$${parseFloat(p.entry_price).toFixed(2)}`)
@@ -1335,8 +1335,12 @@ function AlpacaPage() {
             React.createElement('span', { className: 'value' }, v.current_picks_count)
           ),
           v.open_positions && React.createElement('div', { className: 'info-row' },
-            React.createElement('span', { className: 'label' }, 'Открытые позиции'),
+            React.createElement('span', { className: 'label' }, 'Broker occupied'),
             React.createElement('span', { className: 'value' }, (v.open_positions || []).length)
+          ),
+          v.today_pnl_usd != null && React.createElement('div', { className: 'info-row' },
+            React.createElement('span', { className: 'label' }, 'Paper journal P&L'),
+            React.createElement('span', { className: 'value' }, `$${parseFloat(v.today_pnl_usd).toFixed(2)} · verify fills`)
           ),
           v.generated_at_utc && React.createElement('div', { className: 'info-row' },
             React.createElement('span', { className: 'label' }, 'Обновлено'),
@@ -1359,6 +1363,9 @@ function AlpacaPage() {
         )}
       )
     ),
+
+    React.createElement('div', { className: 'section-title', style: { fontSize: '14px', marginBottom: '12px' } },
+      'Исторический backtest v38 Hybrid (не текущий paper P&L)'),
 
     // Summary stats
     React.createElement('div', { className: 'grid4', style: { marginBottom: '16px' } },
@@ -1393,8 +1400,10 @@ function AlpacaPage() {
     renderMonthlyPicksSection('Пики v38 hybrid', { current_picks: picks }),
     renderMonthlyPicksSection('Пики v38-active research', v38Active),
 
-    renderPositionSection('Интрадей v1: открытые paper-позиции', v1.open_positions || intraday, v1.generated_at_utc || data.intraday_updated_utc),
-    renderPositionSection('Интрадей v3 Shadow: отдельный paper-тест', v3.open_positions || [], v3.generated_at_utc),
+    renderPositionSection('Интрадей v1: tracked позиции', v1.positions || intraday, v1.generated_at_utc || data.intraday_updated_utc),
+    renderPositionSection('Интрадей v1: ожидают исполнения закрытия', v1.pending_close_positions || [], v1.generated_at_utc),
+    renderPositionSection('Monthly-owned позиции (не intraday)', v1.monthly_managed_positions || [], v1.generated_at_utc),
+    renderPositionSection('Интрадей v3 Shadow: отдельный dry-run тест', v3.positions || [], v3.generated_at_utc),
 
     // Advisory
     adv.summary_metrics && React.createElement('div', { className: 'card' },

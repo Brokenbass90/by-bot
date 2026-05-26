@@ -450,7 +450,7 @@ def _load_alpaca_intraday_variant(runtime_name: str, *, label: str, state_cfg_na
     runtime_dir = _rt(runtime_name)
     advisory = _json(runtime_dir / "latest_advisory.json") or {}
     report = (advisory or {}).get("report", advisory) or {}
-    state = _json(_cfg(state_cfg_name)) if state_cfg_name else None
+    state = (_json(_rt(state_cfg_name)) or _json(_cfg(state_cfg_name))) if state_cfg_name else None
     positions = _extract_intraday_positions(state)
     generated_at = str(advisory.get("generated_at_utc") or "")
     account = dict(advisory.get("account") or {})
@@ -465,6 +465,11 @@ def _load_alpaca_intraday_variant(runtime_name: str, *, label: str, state_cfg_na
         "mode": advisory.get("mode") or report.get("mode") or "",
         "entries_blocked": advisory.get("entries_blocked"),
         "open_positions": list(advisory.get("open_positions") or []),
+        "monthly_managed_positions": list(advisory.get("monthly_managed_positions") or []),
+        "pending_close_positions": list(advisory.get("pending_close_positions") or []),
+        "remote_only_positions": list(advisory.get("remote_only_positions") or []),
+        "today_pnl_usd": advisory.get("today_pnl_usd"),
+        "pnl_status": "paper_journal_verify_fills",
         "watchlist": list(advisory.get("watchlist") or []),
         "positions": positions,
     }

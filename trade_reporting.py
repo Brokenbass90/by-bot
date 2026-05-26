@@ -152,7 +152,13 @@ def generate_report(db_path: str, since_ts: int, out_dir: str, tag: str) -> Repo
     as_of_iso = time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime(now_ts))
     if not rows:
         return ReportResult(
-            text=f"{tag} report\nsince={since_iso}\nas_of={as_of_iso}\nнет сделок за период.",
+            text=(
+                f"Bybit crypto {tag} report\n"
+                f"since={since_iso}\n"
+                f"as_of={as_of_iso}\n"
+                "нет закрытых crypto-сделок за период.\n"
+                "Полный station digest (включая Alpaca paper) приходит отдельным утренним отчётом."
+            ),
             csv_path=None,
             png_path=None,
         )
@@ -174,7 +180,7 @@ def generate_report(db_path: str, since_ts: int, out_dir: str, tag: str) -> Repo
     strategy_lines = _format_strategy_breakdown(strategy_stats)
 
     txt = (
-        f"{tag} report\n"
+        f"Bybit crypto {tag} report\n"
         f"since={since_iso} | as_of={as_of_iso}\n"
         f"trades={total} winrate={winrate:.1f}% pf={pf:.2f}\n"
         f"net_pnl={net:+.2f} USDT"

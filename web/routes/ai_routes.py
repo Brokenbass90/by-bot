@@ -128,6 +128,33 @@ def _load_live_trade_event_closes(limit: int = 50) -> List[Dict[str, Any]]:
     return closes[-limit:]
 
 
+def _latest_report_files(rel_dir: str, *, limit: int = 8) -> List[Dict[str, Any]]:
+    root = _ROOT / rel_dir
+    if not root.exists():
+        return []
+    files: List[Dict[str, Any]] = []
+    for path in sorted(root.glob("*"), key=lambda x: x.stat().st_mtime if x.exists() else 0, reverse=True):
+        if not path.is_file():
+            continue
+        preview = ""
+        if path.suffix.lower() in {".md", ".txt", ".json", ".csv"}:
+            try:
+                preview = path.read_text(encoding="utf-8", errors="ignore")[:1200]
+            except Exception:
+                preview = ""
+        files.append(
+            {
+                "path": str(path.relative_to(_ROOT)),
+                "mtime": datetime.fromtimestamp(path.stat().st_mtime, timezone.utc).isoformat(),
+                "size_bytes": path.stat().st_size,
+                "preview": preview,
+            }
+        )
+        if len(files) >= limit:
+            break
+    return files
+
+
 def _append_operator_snapshot_context(parts: List[str]) -> None:
     snap = _json(_rt("operator", "operator_snapshot.json"))
     if not snap:
@@ -138,6 +165,11 @@ def _append_operator_snapshot_context(parts: List[str]) -> None:
     alpaca = dict(snap.get("alpaca") or {})
     alpaca_monthly = dict(alpaca.get("monthly") or {})
     alpaca_intraday = dict(alpaca.get("intraday") or {})
+    setup_scanner = dict(snap.get("setup_scanner") or {})
+    trade_forensics = dict(snap.get("trade_forensics") or {})
+    strategy_settings = dict(snap.get("strategy_settings") or {})
+    self_audit = dict(snap.get("self_audit") or {})
+    project_doctor = dict(snap.get("project_doctor") or {})
     urgent = list(snap.get("urgent_alerts") or [])
 
     if regime or allocator:
@@ -165,10 +197,250 @@ def _append_operator_snapshot_context(parts: List[str]) -> None:
     if alpaca_intraday:
         parts.append(
             "ALPACA INTRADAY PAPER: "
-            f"open_positions={','.join(alpaca_intraday.get('open_positions') or []) or '-'} "
-            f"today_pnl_usd={alpaca_intraday.get('today_pnl_usd')} "
+            f"tracked_positions={','.join(alpaca_intraday.get('tracked_positions') or []) or '-'} "
+            f"pending_close={','.join(alpaca_intraday.get('pending_close_positions') or []) or '-'} "
+            f"monthly_owned={','.join(alpaca_intraday.get('monthly_managed_positions') or []) or '-'} "
+            f"paper_journal_pnl_usd={alpaca_intraday.get('today_pnl_usd')} "
+            f"pnl_status={alpaca_intraday.get('pnl_status') or '-'} "
             f"entries_blocked={alpaca_intraday.get('entries_blocked')}\n"
         )
+    top_cards = list(setup_scanner.get("top_cards") or [])[:12]
+    if setup_scanner:
+        parts.append(
+            "SETUP SCANNER: "
+            f"regime={setup_scanner.get('regime','?')} cards={setup_scanner.get('card_count',0)} "
+            f"geometry_age_sec={setup_scanner.get('geometry_age_sec')} "
+            f"router_age_sec={setup_scanner.get('router_age_sec')} "
+            f"allocator_age_sec={setup_scanner.get('allocator_age_sec')}\n"
+        )
+        for card in top_cards[:8]:
+            runtime = dict(card.get("runtime") or {})
+            parts.append(
+                "SETUP CARD: "
+                f"{card.get('symbol')} {card.get('interval')} {card.get('side')} "
+                f"{card.get('setup_type')} strategy={card.get('strategy')} score={card.get('score')} "
+                f"level={card.get('level_price')} dist_atr={card.get('distance_atr')} "
+                f"runtime_enabled={runtime.get('enabled')} runtime_risk={runtime.get('risk_mult')} "
+                f"reasons={'; '.join(str(x) for x in (card.get('reasons') or [])[:4])}\n"
+            )
+    latest_reports = list(trade_forensics.get("latest_reports") or [])
+    if trade_forensics:
+        parts.append(
+            "TRADE FORENSICS: "
+            f"script_exists={trade_forensics.get('script_exists')} "
+            f"latest_reports={len(latest_reports)}\n"
+        )
+        for report in latest_reports[:2]:
+            parts.append(
+                "FORENSICS REPORT: "
+                f"{report.get('name')} age_sec={report.get('age_sec')} "
+                f"preview={str(report.get('preview') or '-')[:500]}\n"
+            )
+    if strategy_settings:
+        for source, block in strategy_settings.items():
+            if not isinstance(block, dict):
+                continue
+            settings = dict(block.get("settings") or {})
+            preview = []
+            for key in sorted(settings)[:18]:
+                value = settings[key]
+                if isinstance(value, dict):
+                    value = f"{value.get('count')} symbols: {','.join(value.get('preview') or [])}"
+                preview.append(f"{key}={value}")
+            parts.append(
+                f"STRATEGY SETTINGS [{source}]: "
+                f"exists={block.get('exists')} age_sec={block.get('age_sec')} "
+                f"{'; '.join(preview)[:900]}\n"
+            )
+    if self_audit:
+        parts.append(
+            "SELF AUDIT: "
+            f"highest={self_audit.get('highest_severity') or '-'} "
+            f"age_sec={self_audit.get('age_sec')} "
+            f"headline={self_audit.get('headline') or '-'}\n"
+        )
+        for item in list(self_audit.get("top_findings") or [])[:3]:
+            parts.append(
+                "SELF AUDIT FINDING: "
+                f"{item.get('severity') or 'info'} {str(item.get('summary') or '-')[:240]} "
+                f"detail={str(item.get('detail') or '-')[:300]}\n"
+            )
+    if project_doctor:
+        parts.append(
+            "PROJECT DOCTOR: "
+            f"highest={project_doctor.get('highest_severity') or '-'} "
+            f"age_sec={project_doctor.get('age_sec')} "
+            f"headline={project_doctor.get('headline') or '-'} "
+            f"live_ready={','.join(project_doctor.get('live_ready_sleeves') or []) or '-'} "
+            f"watch={','.join(project_doctor.get('watch_candidates') or []) or '-'} "
+            f"dirty_meaningful={project_doctor.get('meaningful_dirty_count')}\n"
+        )
+        for item in list(project_doctor.get("top_findings") or [])[:3]:
+            parts.append(
+                "PROJECT DOCTOR FINDING: "
+                f"{item.get('severity') or 'info'} {str(item.get('summary') or '-')[:240]} "
+                f"detail={str(item.get('detail') or '-')[:300]}\n"
+            )
+
+
+def _append_ai_runtime_packs_context(parts: List[str]) -> None:
+    full_ctx = _json(_rt("ai_context", "full_context.json")) or {}
+    if full_ctx:
+        setup = dict(full_ctx.get("setups_scanner") or {})
+        router_state = dict(full_ctx.get("router_state") or {})
+        sources = dict(full_ctx.get("sources_used") or {})
+        missing = [str(k) for k, v in sources.items() if not v]
+        parts.append(
+            "AI FULL CONTEXT PACK: "
+            f"generated={full_ctx.get('generated_at_utc')} "
+            f"setup_cards={setup.get('card_count')} "
+            f"missing_sources={','.join(missing[:6]) or '-'}\n"
+        )
+        if router_state:
+            profiles = dict(router_state.get("profiles") or {})
+            parts.append(
+                "AI DYNAMIC ROUTER: "
+                f"generated={router_state.get('timestamp_utc')} "
+                f"status={router_state.get('status')} regime={router_state.get('regime')} "
+                f"scan_ok={router_state.get('scan_ok')} profiles={len(profiles)}\n"
+            )
+            for key in ("BREAKDOWN_SYMBOL_ALLOWLIST", "ATT1_SYMBOL_ALLOWLIST", "ARF1_SYMBOL_ALLOWLIST"):
+                row = profiles.get(key)
+                if not isinstance(row, dict):
+                    continue
+                symbols = row.get("symbols") or row.get("selected_symbols") or []
+                parts.append(
+                    f"AI ROUTER PROFILE {key}: symbols={','.join(str(x) for x in list(symbols)[:15]) or '-'}\n"
+                )
+        grouped = dict(full_ctx.get("grouped_no_signal") or {})
+        for sleeve in ("att1", "asm1", "flat", "breakdown", "midterm"):
+            rows = grouped.get(sleeve)
+            if not isinstance(rows, dict):
+                continue
+            items = sorted(rows.items(), key=lambda kv: -int(kv[1] or 0))[:5]
+            if items:
+                parts.append(
+                    f"AI NO_SIGNAL {sleeve}: "
+                    + ", ".join(f"{k}={v}" for k, v in items)
+                    + "\n"
+                )
+        for card in list(setup.get("cards_top") or [])[:10]:
+            runtime = dict(card.get("runtime") or {})
+            parts.append(
+                "AI SETUP CARD: "
+                f"{card.get('symbol')} {card.get('interval')} {card.get('side')} "
+                f"{card.get('setup_type')} strategy={card.get('strategy')} score={card.get('score')} "
+                f"runtime_enabled={runtime.get('enabled')} risk={runtime.get('risk_mult')} "
+                f"reasons={'; '.join(str(x) for x in (card.get('reasons') or [])[:4])}\n"
+            )
+
+    extras = _json(_rt("ai_context", "extras.json")) or {}
+    if extras:
+        trade_history = dict(extras.get("trade_history") or {})
+        bot_errors = dict(extras.get("bot_errors") or {})
+        indicators = dict(extras.get("indicators") or {})
+        bybit_positions = dict(extras.get("bybit_positions") or {})
+        ohlc = dict(extras.get("ohlc") or {})
+        memory_lines = list(extras.get("memory_lines") or [])
+        parts.append(
+            "AI EXTRAS PACK: "
+            f"generated={extras.get('generated_at_utc')} "
+            f"closed_trades_tail={trade_history.get('closed_in_tail')} "
+            f"log_error_lines={bot_errors.get('error_lines_total')} "
+            f"indicator_symbols={indicators.get('n_symbols')} "
+            f"ohlc_symbols={ohlc.get('n_symbols_found')} "
+            f"memory_lines={len(memory_lines)}\n"
+        )
+        per_sleeve = trade_history.get("per_sleeve") if isinstance(trade_history.get("per_sleeve"), dict) else {}
+        for sleeve, row in sorted(
+            per_sleeve.items(),
+            key=lambda kv: -float((kv[1] or {}).get("n_closed") or 0),
+        )[:8]:
+            if not isinstance(row, dict):
+                continue
+            parts.append(
+                f"AI TRADE HISTORY {sleeve}: "
+                f"n={row.get('n_closed')} pf={row.get('profit_factor')} "
+                f"wr={row.get('winrate_pct')} avg_pnl={row.get('avg_pnl')} "
+                f"total_pnl={row.get('total_pnl')}\n"
+            )
+        for item in list(bot_errors.get("top_patterns") or [])[:6]:
+            if not isinstance(item, dict):
+                continue
+            parts.append(
+                "AI BOT ERROR PATTERN: "
+                f"{item.get('pattern')} count={item.get('count')} "
+                f"example={str(item.get('example') or '')[:220]}\n"
+            )
+        bybit_keys = [k for k in bybit_positions.keys() if not str(k).startswith("_") and k != "source"]
+        if bybit_keys:
+            parts.append("AI BYBIT POSITIONS/ORDERS: sections=" + ",".join(bybit_keys[:8]) + "\n")
+        per_symbol = ohlc.get("per_symbol") if isinstance(ohlc.get("per_symbol"), dict) else {}
+        for sym, row in list(per_symbol.items())[:5]:
+            if not isinstance(row, dict):
+                continue
+            bars = list(row.get("bars_tail") or [])
+            last_bar = bars[-1] if bars else None
+            parts.append(
+                f"AI OHLC {sym}: "
+                f"tf={ohlc.get('timeframe_minutes')} bars={row.get('bars_count')} "
+                f"last_bar={str(last_bar)[:220]}\n"
+            )
+        for mem in memory_lines[-8:]:
+            if not isinstance(mem, dict):
+                continue
+            parts.append(
+                "AI MEMORY LINE: "
+                f"{mem.get('ts_utc') or ''} {mem.get('author') or ''} "
+                f"{mem.get('topic') or ''}: {str(mem.get('text') or '')[:260]}\n"
+            )
+
+    ohlc_logs = _json(_rt("ai_context", "ohlc_and_logs.json")) or {}
+    if ohlc_logs:
+        log_tail = dict(ohlc_logs.get("log_tail") or {})
+        parts.append(
+            "AI OHLC/LOGS PACK: "
+            f"generated={ohlc_logs.get('generated_at_utc')} "
+            f"top_symbols={','.join(ohlc_logs.get('top_symbols') or []) or '-'} "
+            f"log_lines={log_tail.get('n_lines')} "
+            f"log_age_sec={log_tail.get('log_file_age_sec')}\n"
+        )
+        ohlc_pack = ohlc_logs.get("ohlc") if isinstance(ohlc_logs.get("ohlc"), dict) else {}
+        for sym, data in list(ohlc_pack.items())[:3]:
+            if not isinstance(data, dict):
+                continue
+            stats = dict(data.get("stats") or {})
+            parts.append(
+                f"AI CANDLE SNAPSHOT {sym}: "
+                f"tf={data.get('timeframe')} close={stats.get('last_close')} "
+                f"rsi14={stats.get('rsi_14')} atr14_pct={stats.get('atr_14_pct')} "
+                f"dist_hi20_pct={stats.get('dist_to_hi_20_pct')} "
+                f"dist_lo20_pct={stats.get('dist_to_lo_20_pct')} "
+                f"cache_age_sec={data.get('cache_age_sec')}\n"
+            )
+        for line in list(log_tail.get("lines") or [])[-12:]:
+            parts.append(f"AI RAW LOG TAIL: {str(line)[:260]}\n")
+
+    blocker = _json(_rt("crypto_blocker", "latest.json")) or {}
+    if blocker:
+        parts.append(
+            "CRYPTO BLOCKER REPORT: "
+            f"generated={blocker.get('generated_at_utc')} "
+            f"cards={blocker.get('cards_analyzed')} "
+            f"classifications={json.dumps(blocker.get('classification_counts') or {}, ensure_ascii=False)}\n"
+        )
+        sleeves = dict(blocker.get("sleeves") or {})
+        for sleeve_name in ("att1", "asm1", "flat", "breakdown", "brc1", "asb1"):
+            sleeve = dict(sleeves.get(sleeve_name) or {})
+            if not sleeve:
+                continue
+            top = list(sleeve.get("top_no_signal") or [])[:4]
+            top_txt = ", ".join(f"{x.get('reason')}={x.get('count')}" for x in top) or "-"
+            parts.append(
+                f"CRYPTO BLOCKER {sleeve_name}: "
+                f"try={sleeve.get('try')} entry={sleeve.get('entry')} "
+                f"no_signal={sleeve.get('no_signal')} status={sleeve.get('status')} top={top_txt}\n"
+            )
 
 
 def _load_shared_history() -> List[Dict[str, str]]:
@@ -383,6 +655,7 @@ def _build_context() -> str:
         parts.append(f"ALPACA PICKS: {', '.join(alpaca_picks)}\n")
 
     _append_operator_snapshot_context(parts)
+    _append_ai_runtime_packs_context(parts)
 
     # Health
     health = _json(_rt("strategy_health.json"))
@@ -765,6 +1038,8 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         "Do not claim you know everything; say what the injected live context shows. "
         "open_trades=0 means flat/no open positions, not offline, when BOT is ALIVE. "
         "The server has a backtest infrastructure, but this chat may not have a direct safe execution endpoint yet; propose an approved/spec-based backtest instead of saying the project has no backtester. "
+        "Do not recommend enabling a sleeve from setup cards alone. A setup card is only a candidate; live enablement requires regime fit plus backtest/research evidence from the injected context. "
+        "In bear_trend, do not recommend ASB1/long-bounce activation unless current injected research shows a validated pass; if evidence is missing or weak, recommend a backtest/proposal instead. "
         "If allocator status is degraded only because degraded_kind=protective_overlap, explain it as a protective overlap risk haircut, not a broken allocator or critical incident. "
         "Do not recommend safe mode or reload solely for protective_overlap. "
         "Do not convert websocket connect/disconnect counters into percent data loss unless the live context shows ws guard active, critical_streak/no_connect_streak, or stale/zero market messages. "
@@ -858,6 +1133,59 @@ async def get_audit(email: str = Depends(require_admin)):
 async def get_context(email: str = Depends(require_admin)):
     """Return the current context that gets injected into AI. Useful for debugging."""
     return {"context": _build_context()}
+
+
+@router.get("/full-context")
+async def get_full_context(email: str = Depends(require_admin)):
+    """Return AI ORACLE-stage context plus source runtime packs."""
+    return {
+        "context": _build_context(),
+        "operator_snapshot": _json(_rt("operator", "operator_snapshot.json")),
+        "ai_full_context": _json(_rt("ai_context", "full_context.json")),
+        "ai_extras": _json(_rt("ai_context", "extras.json")),
+        "ai_ohlc_and_logs": _json(_rt("ai_context", "ohlc_and_logs.json")),
+        "crypto_blocker": _json(_rt("crypto_blocker", "latest.json")),
+        "self_audit": _json(_rt("self_audit", "latest.json")),
+        "project_doctor": _json(_rt("project_doctor", "latest.json")),
+        "weekly_live_vs_backtest_reports": _latest_report_files("reports/weekly_live_vs_backtest", limit=8),
+        "trade_forensics_reports": _latest_report_files("reports/trade_forensics", limit=8),
+    }
+
+
+@router.get("/code-context")
+async def get_code_context(email: str = Depends(require_admin)):
+    """Return compact code/config health context for AI review without dumping secrets."""
+    important_files = [
+        "smart_pump_reversal_bot.py",
+        "bot/operator_snapshot.py",
+        "scripts/build_portfolio_allocator.py",
+        "scripts/allocator_diagnostic.py",
+        "scripts/build_project_doctor_report.py",
+        "scripts/setup_server_crons.sh",
+        "configs/portfolio_allocator_policy.json",
+        "configs/strategy_health.json",
+        "configs/strategy_profile_registry.json",
+    ]
+    files = []
+    for rel in important_files:
+        p = _ROOT / rel
+        files.append(
+            {
+                "path": rel,
+                "exists": p.exists(),
+                "mtime": datetime.fromtimestamp(p.stat().st_mtime, timezone.utc).isoformat() if p.exists() else None,
+                "size_bytes": p.stat().st_size if p.exists() else None,
+            }
+        )
+    return {
+        "project_doctor": _json(_rt("project_doctor", "latest.json")),
+        "self_audit": _json(_rt("self_audit", "latest.json")),
+        "operator_snapshot_age_sec": int(time.time() - _rt("operator", "operator_snapshot.json").stat().st_mtime)
+        if _rt("operator", "operator_snapshot.json").exists()
+        else None,
+        "important_files": files,
+        "note": "This endpoint is read-only and intentionally omits .env/secrets.",
+    }
 
 
 @router.get("/history")

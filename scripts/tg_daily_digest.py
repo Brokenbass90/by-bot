@@ -301,7 +301,11 @@ def _alpaca_intraday_section() -> str:
     if adv and age is not None and age < 86400:
         mode = adv.get("mode", "?")
         today_pnl = adv.get("today_pnl_usd", None)
-        open_pos = adv.get("open_positions", [])
+        pending_close = list(adv.get("pending_close_positions") or [])
+        monthly_positions = list(adv.get("monthly_managed_positions") or [])
+        remote_only = list(adv.get("remote_only_positions") or [])
+        state = _read_json(ROOT / "configs" / "intraday_state.json")
+        tracked_positions = sorted(str(symbol) for symbol in state.keys()) if isinstance(state, dict) else []
         entries_blocked = adv.get("entries_blocked", False)
         prot = adv.get("protection", {})
 
@@ -314,12 +318,18 @@ def _alpaca_intraday_section() -> str:
 
         if today_pnl is not None:
             pnl_e = "📈" if today_pnl >= 0 else "📉"
-            lines.append(f"  {pnl_e} P&L сегодня: <b>${today_pnl:+.2f}</b>")
+            lines.append(f"  {pnl_e} Paper journal P&L: <b>${today_pnl:+.2f}</b> (сверяем по fills)")
 
-        if open_pos:
-            lines.append(f"  📌 Открыто: {', '.join(str(p) for p in open_pos[:6])}")
+        if tracked_positions:
+            lines.append(f"  📌 Intraday tracked: {', '.join(tracked_positions[:6])}")
         else:
-            lines.append("  💤 Открытых позиций нет")
+            lines.append("  💤 Intraday tracked позиций нет")
+        if pending_close:
+            lines.append(f"  ⏳ Awaiting close fill: {', '.join(str(p) for p in pending_close[:6])}")
+        if monthly_positions:
+            lines.append(f"  📅 Monthly-owned (не intraday): {', '.join(str(p) for p in monthly_positions[:6])}")
+        if remote_only:
+            lines.append(f"  ⚠️ Неатрибутированные broker positions: {', '.join(str(p) for p in remote_only[:6])}")
 
         # Protection layers
         spy_ok = prot.get("spy_gate_pass", "?")
@@ -402,7 +412,7 @@ def _alpaca_monthly_section() -> str:
     elif refresh_age is not None:
         stale_warn = f" (обновлены {_age_str(refresh_age)})"
     lines.append(f"  🔄 Пики{stale_warn}")
-    lines.append("  ℹ️ Это paper-счёт; перед реальными $500 ждём контроль 2/4 недели и проверку broker-side защит.")
+    lines.append("  ℹ️ Это paper-счёт; перед реальными $500 ждём сверку fills, broker-side protection и итог текущего цикла.")
 
     return "\n".join(lines)
 

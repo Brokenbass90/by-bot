@@ -254,6 +254,11 @@ def _control_plane_block(root: Path) -> Dict[str, Any]:
             "status": str(allocator.get("status") or ""),
             "degraded_kind": str(allocator.get("degraded_kind") or ""),
             "meaning": _allocator_meaning(allocator),
+            "allocator_mode": str(allocator.get("allocator_mode") or ""),
+            "allocator_effective_mode": str(allocator.get("allocator_effective_mode") or ""),
+            "haircut_strength": _safe_float(allocator.get("haircut_strength"), 1.0),
+            "effective_equity_usd": allocator.get("effective_equity_usd"),
+            "equity_source": str(allocator.get("equity_source") or ""),
             "safe_mode": bool(allocator.get("safe_mode")),
             "overall_health": str(allocator.get("overall_health") or ""),
             "portfolio_overlap_ratio": _safe_float(allocator.get("portfolio_overlap_ratio"), 0.0),
@@ -308,6 +313,155 @@ def _geometry_block(root: Path, *, max_highlights: int = 6) -> Dict[str, Any]:
         "intervals": list(payload.get("intervals") or []),
         "highlights": highlights,
     }
+
+
+def _setup_scanner_block(root: Path, *, limit: int = 16) -> Dict[str, Any]:
+    geometry_path = root / "runtime" / "geometry" / "geometry_state.json"
+    router_path = root / "runtime" / "router" / "symbol_router_state.json"
+    allocator_path = root / "runtime" / "control_plane" / "portfolio_allocator_state.json"
+    geometry_state = _load_json(geometry_path, {})
+    router_state = _load_json(router_path, {})
+    allocator_state = _load_json(allocator_path, {})
+    cards: list[dict[str, Any]] = []
+    error = ""
+    if geometry_state:
+        try:
+            from web.routes.data_routes import _build_setup_cards  # type: ignore
+
+            cards = list(_build_setup_cards(geometry_state, router_state, allocator_state))
+        except Exception as exc:
+            error = str(exc)[:160]
+    compact_cards = []
+    for card in cards[: max(1, int(limit))]:
+        compact_cards.append(
+            {
+                "symbol": str(card.get("symbol") or ""),
+                "interval": str(card.get("interval") or ""),
+                "setup_type": str(card.get("setup_type") or ""),
+                "side": str(card.get("side") or ""),
+                "strategy": str(card.get("strategy") or ""),
+                "score": _safe_float(card.get("score"), 0.0),
+                "price": _safe_float(card.get("price"), 0.0),
+                "level_price": card.get("level_price"),
+                "distance_atr": card.get("distance_atr"),
+                "invalidation": card.get("invalidation"),
+                "runtime": dict(card.get("runtime") or {}),
+                "reasons": list(card.get("reasons") or [])[:5],
+                "router_profiles": list(card.get("router_profiles") or [])[:3],
+            }
+        )
+    return {
+        "geometry_path": _path_text(geometry_path),
+        "router_path": _path_text(router_path),
+        "allocator_path": _path_text(allocator_path),
+        "exists": bool(geometry_state),
+        "error": error,
+        "geometry_age_sec": _file_age_sec(geometry_path),
+        "router_age_sec": _file_age_sec(router_path),
+        "allocator_age_sec": _file_age_sec(allocator_path),
+        "regime": str(router_state.get("regime") or allocator_state.get("regime") or ""),
+        "confidence": _safe_float(router_state.get("confidence"), 0.0),
+        "card_count": len(cards),
+        "top_cards": compact_cards,
+        "notes": [
+            "Setup scanner cards are candidates, not trade approvals.",
+            "Live promotion still requires annual/OOS/additivity checks.",
+        ],
+    }
+
+
+def _latest_forensics_reports(root: Path, *, limit: int = 4) -> list[dict[str, Any]]:
+    reports: list[Path] = []
+    for base in [root / "reports", root / "runtime"]:
+        if not base.exists():
+            continue
+        for path in base.rglob("*forensics*"):
+            if path.is_file() and path.suffix.lower() in {".md", ".json", ".txt"}:
+                reports.append(path)
+    reports.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+    out: list[dict[str, Any]] = []
+    for path in reports[: max(1, int(limit))]:
+        preview = ""
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+            lines = [line.strip() for line in text.splitlines() if line.strip()]
+            preview = " | ".join(lines[:4])[:700]
+        except Exception:
+            pass
+        out.append(
+            {
+                "path": _path_text(path),
+                "age_sec": _file_age_sec(path),
+                "name": path.name,
+                "preview": preview,
+            }
+        )
+    return out
+
+
+def _trade_forensics_block(root: Path) -> Dict[str, Any]:
+    return {
+        "script_path": _path_text(root / "scripts" / "trade_forensics_report.py"),
+        "script_exists": bool((root / "scripts" / "trade_forensics_report.py").exists()),
+        "latest_reports": _latest_forensics_reports(root),
+    }
+
+
+def _safe_setting_value(key: str, value: str) -> Any:
+    raw = str(value or "").strip()
+    if "," in raw and ("ALLOWLIST" in key or key.endswith("SYMBOLS")):
+        symbols = [x.strip().upper() for x in raw.split(",") if x.strip()]
+        return {"count": len(symbols), "preview": symbols[:12]}
+    if len(raw) > 160:
+        return raw[:157] + "..."
+    return raw
+
+
+def _strategy_settings_block(root: Path) -> Dict[str, Any]:
+    sources = {
+        ".env": root / ".env",
+        "portfolio_allocator_latest.env": root / "configs" / "portfolio_allocator_latest.env",
+        "alpaca_paper_local.env": root / "configs" / "alpaca_paper_local.env",
+        "alpaca_v38_hybrid_top4_candidate.env": root / "configs" / "alpaca_v38_hybrid_top4_candidate.env",
+    }
+    allowed_fragments = (
+        "ENABLE_",
+        "ALLOWLIST",
+        "SYMBOLS",
+        "RISK",
+        "LEVERAGE",
+        "DRY_RUN",
+        "SL",
+        "STOP",
+        "TP",
+        "RR",
+        "TRAIL",
+        "MAX_OPEN",
+        "TRY_EVERY",
+        "TIME_STOP",
+        "CAPITAL",
+        "ALLOC",
+    )
+    secret_fragments = ("API", "SECRET", "TOKEN", "PASSWORD", "PRIVATE", "JWT", "KEY")
+    payload: dict[str, Any] = {}
+    for name, path in sources.items():
+        env_map = _load_env_map(path)
+        selected: dict[str, Any] = {}
+        for key, value in sorted(env_map.items()):
+            key_u = key.upper()
+            if any(secret in key_u for secret in secret_fragments):
+                continue
+            if not any(fragment in key_u for fragment in allowed_fragments):
+                continue
+            selected[key] = _safe_setting_value(key_u, value)
+        payload[name] = {
+            "path": _path_text(path),
+            "exists": bool(path.exists()),
+            "age_sec": _file_age_sec(path),
+            "setting_count": len(selected),
+            "settings": selected,
+        }
+    return payload
 
 
 def _health_block(root: Path) -> Dict[str, Any]:
@@ -446,6 +600,33 @@ def _self_audit_block(root: Path) -> Dict[str, Any]:
     }
 
 
+def _project_doctor_block(root: Path) -> Dict[str, Any]:
+    path = root / "runtime" / "project_doctor" / "latest.json"
+    payload = _load_json(path, {})
+    findings = list(payload.get("findings") or [])
+    actions = list(payload.get("actions") or [])
+    hygiene = dict(payload.get("project_hygiene") or {})
+    status = dict(payload.get("strategy_status") or {})
+    return {
+        "path": _path_text(path),
+        "exists": bool(path.exists()),
+        "age_sec": _file_age_sec(path),
+        "highest_severity": str(payload.get("highest_severity") or ""),
+        "headline": str(payload.get("headline") or ""),
+        "finding_count": len(findings),
+        "action_count": len(actions),
+        "top_findings": findings[:3],
+        "top_actions": actions[:3],
+        "meaningful_dirty_count": len(list(hygiene.get("meaningful_dirty_files") or [])),
+        "nightly_state": str(hygiene.get("nightly_research_state") or ""),
+        "nightly_active_process_count": _safe_int(hygiene.get("nightly_active_process_count"), 0),
+        "nightly_proposed_count": _safe_int(hygiene.get("nightly_proposed_count"), 0),
+        "live_ready_sleeves": list(status.get("live_ready_sleeves") or [])[:12],
+        "watch_candidates": list(status.get("watch_candidates") or [])[:12],
+        "policy_missing_health": list(status.get("policy_missing_health") or [])[:12],
+    }
+
+
 def _alpaca_block(root: Path) -> Dict[str, Any]:
     monthly_candidates = [
         root / "runtime" / "equities_monthly_v36",
@@ -503,9 +684,12 @@ def _alpaca_block(root: Path) -> Dict[str, Any]:
     intraday_advisory = _load_json(intraday_dir / "latest_advisory.json", {})
     intraday_state = _load_json(root / "configs" / "intraday_state.json", {})
     intraday_symbols = list((intraday_advisory.get("symbols") or []))
-    intraday_open = list(intraday_advisory.get("open_positions") or [])
-    if not intraday_open and isinstance(intraday_state, dict):
-        intraday_open = sorted(str(sym) for sym in intraday_state.keys())
+    broker_occupied = list(intraday_advisory.get("open_positions") or [])
+    tracked_intraday = sorted(str(sym) for sym in intraday_state.keys()) if isinstance(intraday_state, dict) else []
+    pending_close = list(intraday_advisory.get("pending_close_positions") or [])
+    monthly_owned = list(intraday_advisory.get("monthly_managed_positions") or [])
+    if not broker_occupied:
+        broker_occupied = list(tracked_intraday)
     intraday_remote_only = list(intraday_advisory.get("remote_only_positions") or [])
 
     return {
@@ -541,7 +725,12 @@ def _alpaca_block(root: Path) -> Dict[str, Any]:
             "cash": _safe_float(((intraday_advisory.get("account") or {}).get("cash")), 0.0),
             "entries_blocked": bool(intraday_advisory.get("entries_blocked")),
             "today_pnl_usd": _safe_float(intraday_advisory.get("today_pnl_usd"), 0.0),
-            "open_positions": intraday_open,
+            "pnl_status": "paper_journal_verify_fills",
+            "broker_occupied_positions": broker_occupied,
+            "tracked_positions": tracked_intraday,
+            "pending_close_positions": pending_close,
+            "monthly_managed_positions": monthly_owned,
+            "open_positions": broker_occupied,
             "remote_only_positions": intraday_remote_only,
             "watchlist_count": len(list(intraday_advisory.get("watchlist") or [])),
             "watchlist_preview": list(intraday_advisory.get("watchlist") or [])[:10],
@@ -614,10 +803,14 @@ def build_operator_snapshot(root: Path | None = None) -> Dict[str, Any]:
         "control_plane": _control_plane_block(base),
         "health": _health_block(base),
         "geometry": _geometry_block(base),
+        "setup_scanner": _setup_scanner_block(base),
+        "trade_forensics": _trade_forensics_block(base),
+        "strategy_settings": _strategy_settings_block(base),
         "memory": _memory_block(base),
         "nightly_research": _nightly_research_block(base),
         "operator_controls": _operator_controls_block(base),
         "self_audit": _self_audit_block(base),
+        "project_doctor": _project_doctor_block(base),
         "alpaca": _alpaca_block(base),
     }
     snapshot["urgent_alerts"] = _urgent_alerts(snapshot)
@@ -630,10 +823,14 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     cp = dict(snapshot.get("control_plane") or {})
     health = dict(snapshot.get("health") or {})
     geo = dict(snapshot.get("geometry") or {})
+    setup_scanner = dict(snapshot.get("setup_scanner") or {})
+    trade_forensics = dict(snapshot.get("trade_forensics") or {})
+    strategy_settings = dict(snapshot.get("strategy_settings") or {})
     memory = dict(snapshot.get("memory") or {})
     nightly = dict(snapshot.get("nightly_research") or {})
     operator_controls = dict(snapshot.get("operator_controls") or {})
     self_audit = dict(snapshot.get("self_audit") or {})
+    project_doctor = dict(snapshot.get("project_doctor") or {})
     alpaca = dict(snapshot.get("alpaca") or {})
     urgent_alerts = list(snapshot.get("urgent_alerts") or [])
     regime = dict(cp.get("regime") or {})
@@ -672,6 +869,7 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         f"router_profiles={router.get('profile_count')} router_symbols_total={router.get('symbols_total')} router_age_sec={router.get('age_sec')}",
         f"router_backtest_gate={'on' if router.get('backtest_path') else 'off'} symbol_memory_loaded={int(bool(router.get('symbol_memory_loaded')))}",
         f"allocator_status={allocator.get('status')} degraded_kind={allocator.get('degraded_kind') or '-'} global_risk_mult={allocator.get('global_risk_mult')} hard_block={int(bool(allocator.get('hard_block_new_entries')))}",
+        f"allocator_mode={allocator.get('allocator_mode') or '-'}->{allocator.get('allocator_effective_mode') or '-'} haircut_strength={allocator.get('haircut_strength')} equity={allocator.get('effective_equity_usd')} source={allocator.get('equity_source') or '-'}",
         f"allocator_meaning={allocator.get('meaning') or '-'} safe_mode={int(bool(allocator.get('safe_mode')))} overall_health={allocator.get('overall_health') or '-'} overlap_ratio={allocator.get('portfolio_overlap_ratio')} overlap_mult={allocator.get('portfolio_overlap_mult')}",
         f"enabled_sleeves={','.join(allocator.get('enabled_sleeves') or []) or '-'}",
         f"degraded_sleeves={','.join(allocator.get('degraded_sleeves') or []) or '-'}",
@@ -706,6 +904,55 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
                 f"compressed={int(bool(block.get('is_compressed')))} r2={block.get('channel_r2')}"
             )
         lines.append(f"{symbol}: " + " | ".join(bits))
+    lines.extend(
+        [
+            "",
+            "[setup_scanner]",
+            f"exists={int(bool(setup_scanner.get('exists')))} cards={setup_scanner.get('card_count', 0)} regime={setup_scanner.get('regime') or '-'} confidence={setup_scanner.get('confidence')}",
+            f"ages geometry={setup_scanner.get('geometry_age_sec')} router={setup_scanner.get('router_age_sec')} allocator={setup_scanner.get('allocator_age_sec')} error={setup_scanner.get('error') or '-'}",
+        ]
+    )
+    for card in list(setup_scanner.get("top_cards") or [])[:8]:
+        runtime = dict(card.get("runtime") or {})
+        level = card.get("level_price")
+        dist = card.get("distance_atr")
+        lines.append(
+            f" - setup[{card.get('strategy')}]: {card.get('symbol')} {card.get('interval')} "
+            f"{card.get('side')} {card.get('setup_type')} score={card.get('score')} "
+            f"level={level if level is not None else '-'} dist_atr={dist if dist is not None else '-'} "
+            f"runtime={'LIVE' if runtime.get('enabled') else 'WATCH'} risk={runtime.get('risk_mult')}"
+        )
+    lines.extend(
+        [
+            "",
+            "[trade_forensics]",
+            f"script_exists={int(bool(trade_forensics.get('script_exists')))} latest_reports={len(trade_forensics.get('latest_reports') or [])}",
+        ]
+    )
+    for report in list(trade_forensics.get("latest_reports") or [])[:2]:
+        lines.append(
+            f" - {report.get('name')} age_sec={report.get('age_sec')} preview={str(report.get('preview') or '-')[:240]}"
+        )
+    lines.extend(
+        [
+            "",
+            "[strategy_settings]",
+        ]
+    )
+    for source, block in strategy_settings.items():
+        if not isinstance(block, dict):
+            continue
+        settings = dict(block.get("settings") or {})
+        interesting = []
+        for key in sorted(settings)[:18]:
+            value = settings[key]
+            if isinstance(value, dict):
+                value = f"{value.get('count')} symbols"
+            interesting.append(f"{key}={value}")
+        lines.append(
+            f" - {source}: exists={int(bool(block.get('exists')))} age_sec={block.get('age_sec')} "
+            f"settings={block.get('setting_count')} preview={'; '.join(interesting)[:420] or '-'}"
+        )
     lines.extend(
         [
             "",
@@ -755,6 +1002,20 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     lines.extend(
         [
             "",
+            "[project_doctor]",
+            f"exists={int(bool(project_doctor.get('exists')))} age_sec={project_doctor.get('age_sec')} highest_severity={project_doctor.get('highest_severity') or '-'} finding_count={project_doctor.get('finding_count')}",
+            f"headline={project_doctor.get('headline') or '-'}",
+            f"live_ready={','.join(project_doctor.get('live_ready_sleeves') or []) or '-'} watch={','.join(project_doctor.get('watch_candidates') or []) or '-'}",
+            f"dirty_meaningful={project_doctor.get('meaningful_dirty_count')} nightly={project_doctor.get('nightly_state') or '-'} active={project_doctor.get('nightly_active_process_count')} proposed={project_doctor.get('nightly_proposed_count')}",
+        ]
+    )
+    for item in list(project_doctor.get("top_findings") or [])[:2]:
+        lines.append(f" - finding[{item.get('severity') or 'info'}]: {str(item.get('summary') or '-')[:180]}")
+    for item in list(project_doctor.get("top_actions") or [])[:2]:
+        lines.append(f" - action: {str(item.get('summary') or '-')[:180]}")
+    lines.extend(
+        [
+            "",
             "[alpaca_monthly]",
             f"exists={int(bool(alpaca_monthly.get('exists')))} age_sec={alpaca_monthly.get('age_sec')} cycle_mode={alpaca_monthly.get('current_cycle_mode') or '-'} cycle_month={alpaca_monthly.get('current_cycle_month') or '-'}",
             f"selected={alpaca_monthly.get('current_cycle_selected')} tickers={alpaca_monthly.get('current_cycle_tickers') or '-'} advisory_status={alpaca_monthly.get('advisory_status') or '-'}",
@@ -762,8 +1023,9 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
             "",
             "[alpaca_intraday]",
             f"exists={int(bool(alpaca_intraday.get('exists')))} age_sec={alpaca_intraday.get('age_sec')} mode={alpaca_intraday.get('mode') or '-'} entries_blocked={int(bool(alpaca_intraday.get('entries_blocked')))}",
-            f"equity={alpaca_intraday.get('equity')} cash={alpaca_intraday.get('cash')} today_pnl_usd={alpaca_intraday.get('today_pnl_usd')}",
-            f"open_positions={','.join(alpaca_intraday.get('open_positions') or []) or '-'} remote_only={','.join(alpaca_intraday.get('remote_only_positions') or []) or '-'}",
+            f"equity={alpaca_intraday.get('equity')} cash={alpaca_intraday.get('cash')} paper_journal_pnl_usd={alpaca_intraday.get('today_pnl_usd')} pnl_status={alpaca_intraday.get('pnl_status') or '-'}",
+            f"tracked_positions={','.join(alpaca_intraday.get('tracked_positions') or []) or '-'} pending_close={','.join(alpaca_intraday.get('pending_close_positions') or []) or '-'} monthly_owned={','.join(alpaca_intraday.get('monthly_managed_positions') or []) or '-'}",
+            f"broker_occupied={','.join(alpaca_intraday.get('broker_occupied_positions') or []) or '-'} remote_only={','.join(alpaca_intraday.get('remote_only_positions') or []) or '-'}",
             f"watchlist_count={alpaca_intraday.get('watchlist_count')} watchlist_preview={','.join(alpaca_intraday.get('watchlist_preview') or []) or '-'}",
             f"signal_state_counts={json.dumps(alpaca_intraday.get('signal_state_counts') or {}, ensure_ascii=True)}",
         ]
