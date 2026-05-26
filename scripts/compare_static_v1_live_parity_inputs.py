@@ -3,7 +3,9 @@
 
 This is read-only. It does not inspect or print secrets; it only reports which
 strategy sleeves and symbols differ between the recovery baseline and the
-currently effective allocator/router state.
+currently effective allocator/router state. Account-level position, leverage,
+and risk settings are deliberately outside this report and require a separate
+non-secret runtime check.
 """
 
 from __future__ import annotations
@@ -74,6 +76,8 @@ def main() -> int:
     print("STATIC_V1_VS_LIVE_EFFECTIVE_INPUT_PARITY")
     print(f"static_env={args.static_env}")
     print(f"health_filter={args.health_filter}")
+    print("scope=sleeves_and_symbols_only")
+    print("not_checked=max_positions,leverage,risk_pct,portfolio_risk_cap")
 
     total_static_symbols = 0
     total_matched_symbols = 0
@@ -130,6 +134,7 @@ def main() -> int:
     passed = score >= 80.0 and not hard_mismatches and not strict_extras
     print(f"required_input_coverage_pct={score:.1f}")
     print(f"strict_extra_input_check={'OFF' if args.allow_extra_live_inputs else 'ON'}")
+    print("account_limit_parity=NOT_CHECKED")
     print("verdict=" + ("PASS" if passed else "FAIL"))
     return 0 if passed else 1
 
