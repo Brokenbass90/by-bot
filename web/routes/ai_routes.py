@@ -28,7 +28,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
-from ..deps import require_admin
+from ..deps import require_admin, require_auth
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
@@ -1192,3 +1192,119 @@ async def get_code_context(email: str = Depends(require_admin)):
 async def get_history(email: str = Depends(require_admin)):
     """Return shared AI history used by web chat."""
     return {"messages": _load_shared_history()}
+
+
+# ── Setup Card AI Analysis ────────────────────────────────────────────────────
+
+class SetupAnalysisRequest(BaseModel):
+    symbol:   str
+    side:     str
+    setup_type: str
+    strategy: str
+    score:    Optional[float] = None
+    price:    Optional[float] = None
+    level_price: Optional[float] = None
+    distance_atr: Optional[float] = None
+    invalidation: Optional[float] = None
+    reasons:  List[str] = []
+    regime:   Optional[str] = None
+    interval: Optional[str] = None
+    runtime_status: Optional[str] = None  # "live" / "watch" / "pause" etc.
+    funding_rate_pct: Optional[float] = None  # e.g. +0.0120
+
+
+class SetupAnalysisResponse(BaseModel):
+    verdict:    str   # "strong" | "ok" | "weak" | "skip"
+    reasoning:  str   # 2-4 sentence plain text
+    risk_note:  str   # one sentence
+    model:      str   # model used
+
+
+@router.post("/analyze-setup", response_model=SetupAnalysisResponse)
+async def analyze_setup(body: SetupAnalysisRequest, _: str = Depends(require_auth)):
+    """
+    Fast AI analysis of a single setup card.
+    Uses claude-haiku for low latency. Returns verdict + reasoning in ~1-2s.
+    """
+    anthropic_key = os.getenv("ANTHROPIC_API_KEY", "").strip()
+    if not anthropic_key:
+        raise HTTPException(status_code=503, detail="ANTHROPIC_API_KEY not configured")
+
+    # ── Read current regime for context ──────────────────────────────────────
+    regime_label = body.regime or "unknown"
+    try:
+        _orch_path = _rt("regime", "orchestrator_state.json")
+        if _orch_path.exists():
+            _orch = json.loads(_orch_path.read_text())
+            regime_label = _orch.get("regime", regime_label)
+    except Exception:
+        pass
+
+    # ── Build concise prompt ──────────────────────────────────────────────────
+    fr_str = (
+        f"Funding rate: {body.funding_rate_pct:+.4f}% (8h)\n"
+        if body.funding_rate_pct is not None else ""
+    )
+    inval_str = f"Invalidation: {body.invalidation}\n" if body.invalidation else ""
+    level_str = f"Level: {body.level_price} ({body.distance_atr} ATR away)\n" if body.level_price else ""
+    reasons_str = " · ".join(body.reasons) if body.reasons else "none"
+
+    user_msg = f"""Analyze this crypto perpetual setup and give a verdict:
+
+Symbol: {body.symbol} | Side: {body.side.upper()} | Interval: {body.interval or "?"}
+Setup type: {body.setup_type} | Strategy: {body.strategy}
+Score: {body.score or "?"} | Regime: {regime_label}
+Price: {body.price} | {level_str}{inval_str}{fr_str}Reasons: {reasons_str}
+Runtime health: {body.runtime_status or "unknown"}
+
+Respond with ONLY this JSON (no markdown):
+{{"verdict":"strong|ok|weak|skip","reasoning":"2-4 sentences on why this setup is or isn't worth watching","risk_note":"one sentence on the key risk"}}"""
+
+    system_msg = (
+        "You are a senior crypto quant analyst reviewing algorithmic trading setup cards. "
+        "Be concise, data-driven, and honest about risks. "
+        "Use STRONG only when geometry, regime, and fundamentals all align. "
+        "Use SKIP when the setup conflicts with regime or has weak reasons."
+    )
+
+    try:
+        import anthropic as _ant
+        client = _ant.Anthropic(api_key=anthropic_key)
+        model = "claude-haiku-4-5-20251001"
+        resp = client.messages.create(
+            model=model,
+            max_tokens=400,
+            system=system_msg,
+            messages=[{"role": "user", "content": user_msg}],
+        )
+        raw = resp.content[0].text.strip()
+
+        # Strip markdown code fences if model adds them anyway
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+
+        parsed = json.loads(raw)
+        verdict   = str(parsed.get("verdict", "ok")).lower()
+        reasoning = str(parsed.get("reasoning", "")).strip()
+        risk_note = str(parsed.get("risk_note", "")).strip()
+
+        if verdict not in ("strong", "ok", "weak", "skip"):
+            verdict = "ok"
+
+        return SetupAnalysisResponse(
+            verdict=verdict,
+            reasoning=reasoning,
+            risk_note=risk_note,
+            model=model,
+        )
+
+    except json.JSONDecodeError as exc:
+        # Model didn't return valid JSON — return raw as reasoning
+        return SetupAnalysisResponse(
+            verdict="ok",
+            reasoning=raw[:300] if "raw" in dir() else "Parse error",
+            risk_note=str(exc)[:100],
+            model="claude-haiku-4-5-20251001",
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)[:200])

@@ -22,6 +22,7 @@ from .routes.auth_routes import router as auth_router
 from .routes.data_routes import router as data_router
 from .routes.ai_routes import router as ai_router
 from .routes.admin_routes import router as admin_router
+from .routes.tv_routes import router as tv_router
 
 # ── app setup ─────────────────────────────────────────────────────────────────
 
@@ -56,6 +57,7 @@ app.include_router(auth_router)
 app.include_router(data_router)
 app.include_router(ai_router)
 app.include_router(admin_router)
+app.include_router(tv_router)
 
 
 @app.on_event("startup")

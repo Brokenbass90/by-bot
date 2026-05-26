@@ -4039,6 +4039,10 @@ def _handle_tg_command(text: str):
             "📊 *Статус и мониторинг*\n"
             "  /status — баланс, риск, открытые позиции\n"
             "  /status_full — полный свод crypto + research stacks\n"
+            "  /trades — открытые позиции с unrealized PnL\n"
+            "  /sleeve — health gate по каждой стратегии (OK/WATCH/PAUSE/KILL)\n"
+            "  /brief — AI утренний брифинг (режим, позиции, сетапы, свипы)\n"
+            "  /sweep — статус autoresearch sweep очереди\n"
             "  /ping — время работы бота\n"
             "  /stats 7|30|90|365 — отчёт за период\n"
             "  /health — фильтр символов, killers/winners\n\n"
@@ -4185,6 +4189,320 @@ def _handle_tg_command(text: str):
 
     if name == "/health":
         _tg_reply(_health_summary_text())
+        return
+
+    # ── /sleeve — per-strategy health gate status + funding rates ──────────
+    if name == "/sleeve":
+        import json as _json
+        _hp = Path(__file__).resolve().parent / "configs" / "strategy_health.json"
+        _fp = Path(__file__).resolve().parent / "configs" / "funding_rates_latest.json"
+        try:
+            _hd = _json.loads(_hp.read_text())
+            _overall = _hd.get("overall_health", "?")
+            _ts = _hd.get("timestamp", "?")[:10]
+            _strats = _hd.get("strategies") or {}
+            # Load funding rates (optional, may not exist)
+            _fr_map: dict = {}
+            try:
+                _fr_raw = _json.loads(_fp.read_text())
+                _fr_map = _fr_raw.get("rates", {})
+            except Exception:
+                pass
+            STATUS_ICON = {"OK": "✅", "WATCH": "⚠️", "PAUSE": "🔴", "KILL": "💀"}
+            lines = [f"🛡 *Sleeve Health Gate* — {_ts}"]
+            lines.append(f"Overall: *{_overall}*")
+            for _sname, _sinfo in _strats.items():
+                _st = str(_sinfo.get("status", "?")).upper()
+                _icon = STATUS_ICON.get(_st, "❓")
+                _short = _sname.replace("alt_", "").replace("btc_eth_", "").replace("_v1", "")
+                # Append funding rate for symbols in this sleeve
+                _syms = list(_sinfo.get("symbols") or [])
+                _fr_parts = []
+                for _s in _syms[:3]:  # max 3 symbols shown
+                    _fr_val = _fr_map.get(_s)
+                    if _fr_val is not None:
+                        _fr_pct = _fr_val * 100
+                        _fr_sign = "+" if _fr_pct >= 0 else ""
+                        _tier_icon = "🟢" if abs(_fr_pct) < 0.01 else ("🟡" if abs(_fr_pct) < 0.05 else "🔴")
+                        _fr_parts.append(f"{_s.replace('USDT','')}={_tier_icon}{_fr_sign}{_fr_pct:.4f}%")
+                _fr_str = "  _" + " ".join(_fr_parts) + "_" if _fr_parts else ""
+                lines.append(f"{_icon} `{_short}` → {_st}{_fr_str}")
+            if _fr_map:
+                lines.append(f"\n📡 _Funding (8h) · {len(_fr_map)} symbols_")
+            _tg_reply("\n".join(lines), parse_mode="Markdown")
+        except Exception as _exc:
+            _tg_reply(f"❌ sleeve: {_exc}")
+        return
+
+    # ── /trades — open positions with unrealized PnL ───────────────────────
+    if name == "/trades":
+        if not TRADES:
+            _tg_reply("📭 No open positions")
+            return
+        lines = [f"📈 *Open positions* ({len(TRADES)})"]
+        for (_exch, _sym), _tr in TRADES.items():
+            _entry = float(getattr(_tr, "avg", None) or getattr(_tr, "entry_price", 0.0) or 0.0)
+            _cur   = float(_BYBIT_LAST.get(_sym) or 0.0)
+            _side  = str(getattr(_tr, "side", "") or "")
+            _strat = str(getattr(_tr, "strategy", "") or "").replace("alt_", "").replace("btc_eth_", "").replace("_v1", "")
+            _sl    = getattr(_tr, "sl_price", None)
+            if _entry > 0 and _cur > 0:
+                _pct = (_cur - _entry) / _entry * 100.0
+                if _side.lower() == "sell":
+                    _pct = -_pct
+                _pnl_icon = "🟢" if _pct >= 0 else "🔴"
+                _pnl_str = f"{_pct:+.2f}%"
+            else:
+                _pnl_icon = "⬜"
+                _pnl_str = "PnL N/A"
+            _side_icon = "🔴" if _side.lower() == "sell" else "🟢"
+            _sl_str = f"  SL={_sl:.4f}" if _sl else ""
+            lines.append(
+                f"{_pnl_icon} {_side_icon} `{_sym}` [{_strat}]\n"
+                f"   Entry={_entry:.4f} Cur={_cur:.4f} → *{_pnl_str}*{_sl_str}"
+            )
+        _tg_reply("\n".join(lines), parse_mode="Markdown")
+        return
+
+    # ── /brief — AI Morning Brief ──────────────────────────────────────────
+    if name == "/brief":
+        import json as _json
+        import time as _time
+        import urllib.request as _ureq
+        _ROOT_B = Path(__file__).resolve().parent
+        _tg_reply("⏳ Собираю данные...")
+
+        # ── Collect data ──────────────────────────────────────────────────
+        _b_parts = []
+
+        # Regime
+        try:
+            _orch = _json.loads((_ROOT_B / "runtime" / "regime" / "orchestrator_state.json").read_text())
+            _regime  = _orch.get("regime", "?")
+            _conf    = _orch.get("confidence", "?")
+            _risk_m  = _orch.get("global_risk_mult", 1.0)
+            _b_parts.append(f"REGIME: {_regime} | confidence={_conf} | risk_mult={_risk_m}")
+        except Exception:
+            _b_parts.append("REGIME: unknown")
+
+        # Strategy health
+        try:
+            _hd = _json.loads((_ROOT_B / "configs" / "strategy_health.json").read_text())
+            _overall = _hd.get("overall_health", "?")
+            _strats  = _hd.get("strategies") or {}
+            _paused  = [k for k, v in _strats.items() if str(v.get("status","")).upper() in ("PAUSE","KILL")]
+            _warn    = [k for k, v in _strats.items() if str(v.get("status","")).upper() == "WATCH"]
+            _b_parts.append(
+                f"HEALTH: overall={_overall} | "
+                f"paused={','.join(_paused) or 'none'} | "
+                f"watch={','.join(_warn) or 'none'}"
+            )
+        except Exception:
+            _b_parts.append("HEALTH: unavailable")
+
+        # Open positions
+        try:
+            _lp_path = _ROOT_B / "runtime" / "live_positions.json"
+            if _lp_path.exists():
+                _lp = _json.loads(_lp_path.read_text())
+                _poss = _lp.get("positions") or []
+                _upnl_total = sum(float(p.get("upnl_usd") or 0) for p in _poss)
+                _pos_lines = []
+                for _p in _poss[:5]:
+                    _sign = "+" if float(_p.get("upnl_pct") or 0) >= 0 else ""
+                    _pos_lines.append(f"  {_p['symbol']} {_p['side'].upper()} {_sign}{float(_p.get('upnl_pct',0)):.2f}% ({_sign}{float(_p.get('upnl_usd',0)):.1f}$)")
+                _b_parts.append(
+                    f"POSITIONS: {len(_poss)} open | uPnL_total={'+' if _upnl_total>=0 else ''}{_upnl_total:.2f}$\n"
+                    + "\n".join(_pos_lines)
+                )
+            else:
+                _b_parts.append("POSITIONS: live_positions.json not found (bot not running?)")
+        except Exception as _e:
+            _b_parts.append(f"POSITIONS: error={_e}")
+
+        # Funding rates
+        try:
+            _fr_path = _ROOT_B / "configs" / "funding_rates_latest.json"
+            if _fr_path.exists():
+                _fr_data = _json.loads(_fr_path.read_text())
+                _fr_rates = _fr_data.get("rates", {})
+                # Show top 5 by |rate|
+                _fr_sorted = sorted(_fr_rates.items(), key=lambda x: abs(x[1]), reverse=True)[:5]
+                _fr_strs = [f"{s}={r*100:+.4f}%" for s, r in _fr_sorted]
+                _b_parts.append(f"FUNDING (top by |rate|): {' | '.join(_fr_strs)}")
+            else:
+                _b_parts.append("FUNDING: no data")
+        except Exception:
+            _b_parts.append("FUNDING: unavailable")
+
+        # Setup scanner — top 3 setups by score
+        try:
+            _geo_path = _ROOT_B / "runtime" / "geometry" / "geometry_state.json"
+            if _geo_path.exists():
+                _geo = _json.loads(_geo_path.read_text())
+                _geo_age = round(_time.time() - _geo_path.stat().st_mtime)
+                _all_cards = []
+                for _sym, _ivs in (_geo.get("symbols") or {}).items():
+                    for _iv, _iv_data in _ivs.items():
+                        _flags = _iv_data.get("flags") or {}
+                        _score = (
+                            (2 if _flags.get("near_level") else 0) +
+                            (1 if _flags.get("compression") else 0) +
+                            (1 if _flags.get("channel") else 0)
+                        )
+                        if _score > 0:
+                            _all_cards.append((_score, _sym, _iv, _iv_data))
+                _all_cards.sort(key=lambda x: x[0], reverse=True)
+                _top_cards = []
+                for _sc, _sym, _iv, _iv_d in _all_cards[:3]:
+                    _pr = _iv_d.get("current_price", "?")
+                    _near = ", ".join(
+                        f"{lvl.get('price','?')} ({lvl.get('touches',0)}T)"
+                        for lvl in (_iv_d.get("nearest_levels") or [])[:2]
+                    )
+                    _top_cards.append(f"  {_sym} {_iv}m score={_sc} price={_pr} near={_near or '—'}")
+                _age_str = f"{_geo_age//60}m ago" if _geo_age < 7200 else f"{_geo_age//3600}h ago"
+                _b_parts.append(
+                    f"TOP SETUPS ({_age_str}):\n"
+                    + ("\n".join(_top_cards) if _top_cards else "  none found")
+                )
+            else:
+                _b_parts.append("SETUPS: geometry_state not found")
+        except Exception as _e:
+            _b_parts.append(f"SETUPS: error={_e}")
+
+        # Active sweeps
+        try:
+            import glob as _glob
+            _sweep_dirs = sorted(
+                [d for d in (_ROOT_B / "backtest_runs").iterdir() if d.is_dir() and d.name.startswith("autoresearch_")],
+                key=lambda d: d.stat().st_mtime, reverse=True
+            )[:3]
+            _sweep_lines = []
+            for _sd in _sweep_dirs:
+                _pp = _sd / "progress.json"
+                if _pp.exists():
+                    try:
+                        _pd = _json.loads(_pp.read_text())
+                        _cur, _tot = _pd.get("current", 0), _pd.get("total", 1)
+                        _pf = _pd.get("last_profit_factor")
+                        _age_sw = round(_time.time() - _pp.stat().st_mtime)
+                        _status = "🔄" if (_age_sw < 3600 and _cur < _tot) else ("✅" if _cur >= _tot else "⏸")
+                        _pf_str = f" PF={_pf:.3f}" if _pf else ""
+                        _sweep_lines.append(f"  {_status} {_sd.name[12:][:30]} {_cur}/{_tot}{_pf_str}")
+                    except Exception:
+                        pass
+            _b_parts.append("SWEEPS:\n" + ("\n".join(_sweep_lines) if _sweep_lines else "  none"))
+        except Exception as _e:
+            _b_parts.append(f"SWEEPS: error={_e}")
+
+        # Stale file warnings
+        _warnings = []
+        _stale_checks = [
+            ("regime", _ROOT_B / "runtime" / "regime" / "orchestrator_state.json", 3600),
+            ("geometry", _ROOT_B / "runtime" / "geometry" / "geometry_state.json", 14400),
+            ("live_pos", _ROOT_B / "runtime" / "live_positions.json", 120),
+        ]
+        for _lbl, _fpath, _max_age in _stale_checks:
+            try:
+                if not _fpath.exists():
+                    _warnings.append(f"{_lbl}: MISSING")
+                elif _time.time() - _fpath.stat().st_mtime > _max_age:
+                    _warnings.append(f"{_lbl}: STALE ({round((_time.time()-_fpath.stat().st_mtime)/60)}m)")
+            except Exception:
+                pass
+        if _warnings:
+            _b_parts.append("⚠️ WARNINGS: " + " | ".join(_warnings))
+
+        # ── Call Haiku ──────────────────────────────────────────────────────
+        _api_key = os.getenv("ANTHROPIC_API_KEY", "").strip()
+        _data_text = "\n".join(_b_parts)
+
+        if not _api_key:
+            # No AI — just send raw data
+            _tg_reply(f"📊 *Утренний брифинг* (без AI)\n\n{_data_text}", parse_mode="Markdown")
+            return
+
+        _sys_prompt = (
+            "You are a senior quant analyst assistant for a crypto algorithmic trading bot. "
+            "You receive a structured data snapshot and produce a concise morning brief in Russian. "
+            "Format: 4-6 short bullet points. Be direct, actionable, no fluff. "
+            "Highlight risks first. Use emojis sparingly. Max 300 words."
+        )
+        _usr_prompt = (
+            f"Сегодня {__import__('datetime').datetime.utcnow().strftime('%Y-%m-%d %H:%M')} UTC. "
+            f"Дай краткий утренний брифинг по состоянию системы:\n\n{_data_text}\n\n"
+            "Что важно знать прямо сейчас? Есть ли риски или возможности на сегодня?"
+        )
+
+        try:
+            import json as _jj
+            _payload = _jj.dumps({
+                "model": "claude-haiku-4-5-20251001",
+                "max_tokens": 600,
+                "system": _sys_prompt,
+                "messages": [{"role": "user", "content": _usr_prompt}],
+            }).encode()
+            _req = _ureq.Request(
+                "https://api.anthropic.com/v1/messages",
+                data=_payload,
+                headers={
+                    "x-api-key": _api_key,
+                    "anthropic-version": "2023-06-01",
+                    "content-type": "application/json",
+                },
+                method="POST",
+            )
+            with _ureq.urlopen(_req, timeout=30) as _resp:
+                _js = _jj.loads(_resp.read())
+            _ai_text = (_js.get("content") or [{}])[0].get("text", "").strip()
+            if not _ai_text:
+                raise RuntimeError("empty AI response")
+            _tg_reply(f"☀️ *Утренний брифинг*\n\n{_ai_text}", parse_mode="Markdown")
+        except Exception as _exc:
+            # Fallback to raw data if AI fails
+            _tg_reply(
+                f"☀️ *Утренний брифинг* (AI недоступен: {_exc})\n\n"
+                f"```\n{_data_text[:2000]}\n```",
+                parse_mode="Markdown"
+            )
+        return
+
+    # ── /sweep — autoresearch queue status ─────────────────────────────────
+    if name == "/sweep":
+        import json as _json, glob as _glob
+        _prog_dir = Path(__file__).resolve().parent / "runtime" / "research_queue"
+        _prog_files = sorted(_glob.glob(str(_prog_dir / "*_progress.json")))
+        if not _prog_files:
+            _tg_reply("📭 No active sweep queue found")
+            return
+        lines = ["🔬 *Sweep queue status*"]
+        for _pf in _prog_files[-2:]:
+            try:
+                _pd = _json.loads(Path(_pf).read_text())
+                _name = Path(_pf).stem.replace("_progress", "")
+                _done = len(_pd.get("completed") or {})
+                _fin_utc = _pd.get("finished_utc", "")
+                if _fin_utc:
+                    lines.append(f"✅ `{_name}` — finished {_fin_utc[:16]}")
+                else:
+                    _last = _pd.get("last_finished") or {}
+                    lines.append(f"🔄 `{_name}` — {_done} steps done")
+                    if _last:
+                        lines.append(f"   last: {str(_last)[:60]}")
+            except Exception:
+                lines.append(f"❓ {Path(_pf).name}")
+        # Also check autoresearch nightly status
+        _nr = Path(__file__).resolve().parent / "runtime" / "research_nightly" / "status.json"
+        if _nr.exists():
+            try:
+                _nrd = _json.loads(_nr.read_text())
+                _state = _nrd.get("state", "?")
+                _launched = len(_nrd.get("launched") or [])
+                lines.append(f"🌙 nightly: state={_state} launched={_launched}")
+            except Exception:
+                pass
+        _tg_reply("\n".join(lines), parse_mode="Markdown")
         return
 
     if name == "/ai":
@@ -13549,6 +13867,47 @@ async def pulse():
                     "voladj_mult": round(_va_mult, 2),
                 },
             )
+            # ── live_positions.json — per-position details for web UI ──────────
+            _pos_path = Path(__file__).resolve().parent / "runtime" / "live_positions.json"
+            _positions_list = []
+            for (_p_exch, _p_sym), _p_tr in TRADES.items():
+                _p_entry = float(getattr(_p_tr, "avg", None) or getattr(_p_tr, "entry_price", 0.0) or 0.0)
+                _p_cur   = float(_BYBIT_LAST.get(_p_sym) or 0.0)
+                _p_side  = str(getattr(_p_tr, "side", "") or "")
+                _p_qty   = float(getattr(_p_tr, "qty", 0.0) or 0.0)
+                _p_sl    = float(getattr(_p_tr, "sl_price", 0.0) or 0.0)
+                _p_tp    = float(getattr(_p_tr, "tp_price", 0.0) or 0.0)
+                _p_strat = str(getattr(_p_tr, "strategy", "") or "")
+                _p_ts    = int(getattr(_p_tr, "entry_ts", 0) or 0)
+                if _p_entry > 0 and _p_cur > 0:
+                    _p_pct = (_p_cur - _p_entry) / _p_entry * 100.0
+                    if _p_side.lower() == "sell":
+                        _p_pct = -_p_pct
+                    _p_upnl = _p_pct * _p_entry * _p_qty / 100.0 if _p_qty > 0 else 0.0
+                else:
+                    _p_pct = 0.0
+                    _p_upnl = 0.0
+                _positions_list.append({
+                    "symbol": _p_sym,
+                    "exchange": _p_exch,
+                    "side": _p_side,
+                    "strategy": _p_strat,
+                    "entry": round(_p_entry, 6),
+                    "current": round(_p_cur, 6),
+                    "qty": _p_qty,
+                    "sl": round(_p_sl, 6) if _p_sl else None,
+                    "tp": round(_p_tp, 6) if _p_tp else None,
+                    "upnl_pct": round(_p_pct, 3),
+                    "upnl_usd": round(_p_upnl, 4),
+                    "entry_ts": _p_ts,
+                })
+            _write_json_atomic(_pos_path, {
+                "ts": int(time.time()),
+                "positions": _positions_list,
+                "count": len(_positions_list),
+                "trade_on": bool(TRADE_ON),
+                "dry_run": bool(DRY_RUN),
+            })
         except Exception as _hb_err:
             log_error(f"heartbeat write fail: {_hb_err}")
 

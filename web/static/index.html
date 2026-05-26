@@ -445,6 +445,7 @@ function Dashboard({ onNavigate }) {
   const { data: summary } = useFetch('/api/trades/summary', []);
   const { data: regime } = useFetch('/api/regime', []);
   const { data: equity } = useFetch('/api/equity', []);
+  const { data: livePnl, refresh: refreshPnl } = useFetch('/api/live-pnl', null, 15000);
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -572,6 +573,108 @@ function Dashboard({ onNavigate }) {
           : React.createElement('div', { className: 'stat-value' }, '—'),
         React.createElement('div', { className: 'stat-sub' }, 'profit factor')
       )
+    ),
+
+    // ── Live P&L widget ────────────────────────────────────────────────────
+    React.createElement('div', { className: 'card', style: { marginBottom: '16px' } },
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' } },
+        React.createElement('div', { className: 'card-title', style: { marginBottom: 0 } }, '⚡ Live Positions'),
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: '12px' } },
+          livePnl && React.createElement('div', { style: { fontSize: '11px', color: 'var(--dim)' } },
+            livePnl.positions_stale ? '⚠️ stale' : `updated ${livePnl.positions_age_sec != null ? livePnl.positions_age_sec + 's ago' : '—'}`),
+          React.createElement('button', { className: 'refresh-btn', onClick: refreshPnl }, '↺')
+        )
+      ),
+
+      // Summary row
+      React.createElement('div', { className: 'grid4', style: { marginBottom: livePnl && livePnl.positions_count > 0 ? '14px' : 0 } },
+        React.createElement('div', { className: 'metric' },
+          React.createElement('div', { className: 'metric-label' }, 'Open Positions'),
+          React.createElement('div', { className: 'metric-value' }, livePnl ? livePnl.positions_count : '—'),
+          React.createElement('div', { className: 'metric-sub' },
+            livePnl ? (livePnl.trade_on ? (livePnl.dry_run ? 'dry-run' : 'live') : '⏸ paused') : '')
+        ),
+        React.createElement('div', { className: 'metric' },
+          React.createElement('div', { className: 'metric-label' }, 'Unrealized PnL'),
+          livePnl && livePnl.positions_count > 0
+            ? React.createElement('div', { className: 'metric-value', style: { color: livePnl.total_upnl_usd >= 0 ? 'var(--green)' : 'var(--red)' } },
+                (livePnl.total_upnl_usd >= 0 ? '+' : '') + livePnl.total_upnl_usd.toFixed(3) + ' USDT')
+            : React.createElement('div', { className: 'metric-value dim' }, '—')
+        ),
+        React.createElement('div', { className: 'metric' },
+          React.createElement('div', { className: 'metric-label' }, 'Today PnL'),
+          livePnl != null
+            ? React.createElement('div', { className: 'metric-value', style: { color: livePnl.today_pnl_usd >= 0 ? 'var(--green)' : 'var(--red)' } },
+                (livePnl.today_pnl_usd >= 0 ? '+' : '') + livePnl.today_pnl_usd.toFixed(3) + ' USDT')
+            : React.createElement('div', { className: 'metric-value dim' }, '—'),
+          React.createElement('div', { className: 'metric-sub' }, livePnl ? livePnl.today_trades + ' closed' : '')
+        ),
+        React.createElement('div', { className: 'metric' },
+          React.createElement('div', { className: 'metric-label' }, '7d PnL'),
+          livePnl != null
+            ? React.createElement('div', { className: 'metric-value', style: { color: livePnl.week_pnl_usd >= 0 ? 'var(--green)' : 'var(--red)' } },
+                (livePnl.week_pnl_usd >= 0 ? '+' : '') + livePnl.week_pnl_usd.toFixed(3) + ' USDT')
+            : React.createElement('div', { className: 'metric-value dim' }, '—'),
+          React.createElement('div', { className: 'metric-sub' }, livePnl ? livePnl.week_trades + ' trades' : '')
+        )
+      ),
+
+      // Sleeve health row
+      livePnl && Object.keys(livePnl.sleeve_health || {}).length > 0 && React.createElement('div', {
+        style: { display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: livePnl.positions_count > 0 ? '14px' : 0 }
+      },
+        Object.entries(livePnl.sleeve_health).map(([name, status]) => {
+          const color = status === 'OK' ? 'var(--green)' : status === 'WATCH' ? 'var(--yellow)' : 'var(--red)';
+          const icon  = status === 'OK' ? '✅' : status === 'WATCH' ? '⚠️' : status === 'PAUSE' ? '🔴' : '💀';
+          return React.createElement('div', {
+            key: name,
+            style: { fontSize: '11px', padding: '2px 8px', borderRadius: '4px', border: `1px solid ${color}`, color, background: 'var(--bg3)' }
+          }, `${icon} ${name}`);
+        })
+      ),
+
+      // Open positions table
+      livePnl && livePnl.positions_count > 0
+        ? React.createElement('div', { style: { overflowX: 'auto' } },
+            React.createElement('table', { className: 'tbl' },
+              React.createElement('thead', null,
+                React.createElement('tr', null,
+                  React.createElement('th', null, 'Symbol'),
+                  React.createElement('th', null, 'Side'),
+                  React.createElement('th', null, 'Strategy'),
+                  React.createElement('th', { style: { textAlign: 'right' } }, 'Entry'),
+                  React.createElement('th', { style: { textAlign: 'right' } }, 'Current'),
+                  React.createElement('th', { style: { textAlign: 'right' } }, 'uPnL %'),
+                  React.createElement('th', { style: { textAlign: 'right' } }, 'uPnL USDT'),
+                  React.createElement('th', { style: { textAlign: 'right' } }, 'SL')
+                )
+              ),
+              React.createElement('tbody', null,
+                livePnl.positions.map((p, i) => {
+                  const isLong  = (p.side || '').toLowerCase() !== 'sell';
+                  const pnlPos  = p.upnl_pct >= 0;
+                  const strat   = (p.strategy || '').replace(/^(alt_|btc_eth_)/,'').replace(/_v\d+$/,'');
+                  return React.createElement('tr', { key: i },
+                    React.createElement('td', null, React.createElement('strong', null, p.symbol)),
+                    React.createElement('td', null,
+                      React.createElement('span', { className: isLong ? 'badge badge-long' : 'badge badge-short' },
+                        isLong ? 'LONG' : 'SHORT')),
+                    React.createElement('td', { className: 'dim' }, strat),
+                    React.createElement('td', { style: { textAlign: 'right', fontFamily: 'monospace' } }, p.entry ? p.entry.toFixed(4) : '—'),
+                    React.createElement('td', { style: { textAlign: 'right', fontFamily: 'monospace' } }, p.current ? p.current.toFixed(4) : '—'),
+                    React.createElement('td', { style: { textAlign: 'right', color: pnlPos ? 'var(--green)' : 'var(--red)', fontWeight: 600 } },
+                      (p.upnl_pct >= 0 ? '+' : '') + p.upnl_pct.toFixed(2) + '%'),
+                    React.createElement('td', { style: { textAlign: 'right', color: pnlPos ? 'var(--green)' : 'var(--red)' } },
+                      (p.upnl_usd >= 0 ? '+' : '') + p.upnl_usd.toFixed(3)),
+                    React.createElement('td', { style: { textAlign: 'right', color: 'var(--red)', fontFamily: 'monospace', fontSize: '11px' } },
+                      p.sl ? p.sl.toFixed(4) : '—')
+                  );
+                })
+              )
+            )
+          )
+        : React.createElement('div', { className: 'empty', style: { padding: '12px 0' } },
+            livePnl ? '📭 No open positions' : '⏳ Loading…')
     ),
 
     // Equity curve
@@ -1926,8 +2029,118 @@ function SetupCardChart({ card }) {
   );
 }
 
+// ── Setup Card with AI analysis ───────────────────────────────────────────
+function SetupCard({ c, sideBadge, frRates, frColor }) {
+  const [aiState, setAiState] = useState(null);  // null | 'loading' | {verdict, reasoning, risk_note}
+
+  const VERDICT_COLOR = {
+    strong: 'var(--green)',
+    ok:     'var(--blue)',
+    weak:   'var(--yellow)',
+    skip:   'var(--red)',
+  };
+  const VERDICT_ICON = { strong: '🟢', ok: '🔵', weak: '🟡', skip: '🔴' };
+
+  const runAI = async () => {
+    setAiState('loading');
+    try {
+      const fr = frRates[c.symbol];
+      const body = {
+        symbol:           c.symbol,
+        side:             c.side || '',
+        setup_type:       c.setup_type || '',
+        strategy:         c.strategy || '',
+        score:            c.score,
+        price:            c.price,
+        level_price:      c.level_price,
+        distance_atr:     c.distance_atr,
+        invalidation:     c.invalidation,
+        reasons:          c.reasons || [],
+        interval:         String(c.interval || ''),
+        runtime_status:   c.runtime?.health || (c.runtime?.enabled ? 'live' : 'watch'),
+        funding_rate_pct: fr ? fr.rate_pct : null,
+      };
+      const token = localStorage.getItem('auth_token') || '';
+      const resp = await fetch('/api/ai/analyze-setup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(body),
+      });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      setAiState(data);
+    } catch (err) {
+      setAiState({ verdict: 'skip', reasoning: String(err), risk_note: 'Request failed' });
+    }
+  };
+
+  return React.createElement('div', { className: 'card', style: { minHeight: '230px' } },
+    React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start', marginBottom: '12px' } },
+      React.createElement('div', null,
+        React.createElement('div', { style: { fontSize: '20px', fontWeight: 700 } }, c.symbol),
+        React.createElement('div', { className: 'section-sub' }, `${c.interval}m · score ${Number(c.score || 0).toFixed(1)}`)
+      ),
+      React.createElement('div', { style: { display: 'flex', gap: '8px', alignItems: 'center' } },
+        React.createElement('span', { className: `badge ${sideBadge(c.side)}` }, c.side || 'WATCH'),
+        React.createElement('button', {
+          className: 'refresh-btn',
+          style: { fontSize: '12px', padding: '3px 8px', opacity: aiState === 'loading' ? 0.5 : 1 },
+          onClick: runAI,
+          disabled: aiState === 'loading',
+          title: 'AI анализ сетапа',
+        }, aiState === 'loading' ? '⏳' : '🤖 AI')
+      )
+    ),
+    React.createElement('div', { className: 'card-title', style: { marginBottom: '8px' } }, c.setup_type),
+    React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 14px', fontSize: '13px' } },
+      React.createElement('div', { className: 'dim' }, 'Стратегия'),
+      React.createElement('div', { style: { textAlign: 'right', color: 'var(--blue)', fontWeight: 600 } }, c.strategy),
+      React.createElement('div', { className: 'dim' }, 'Цена'),
+      React.createElement('div', { style: { textAlign: 'right' } }, c.price ?? '—'),
+      React.createElement('div', { className: 'dim' }, 'Уровень'),
+      React.createElement('div', { style: { textAlign: 'right' } }, c.level_price ? `${c.level_price} (${c.level_touches || 0} кас.)` : '—'),
+      React.createElement('div', { className: 'dim' }, 'Дистанция'),
+      React.createElement('div', { style: { textAlign: 'right' } }, c.distance_atr != null ? `${c.distance_atr} ATR` : '—'),
+      React.createElement('div', { className: 'dim' }, 'Инвалидация'),
+      React.createElement('div', { style: { textAlign: 'right' } }, c.invalidation ?? '—'),
+      React.createElement('div', { className: 'dim' }, 'Runtime'),
+      React.createElement('div', { style: { textAlign: 'right' } },
+        c.runtime && c.runtime.enabled
+          ? React.createElement('span', { className: 'badge badge-ok' }, `LIVE ×${Number(c.runtime.risk_mult || 0).toFixed(2)}`)
+          : React.createElement('span', { className: 'badge badge-off' }, c.runtime?.health || 'watch')),
+      React.createElement('div', { className: 'dim' }, 'Funding 8h'),
+      React.createElement('div', { style: { textAlign: 'right', color: frColor((frRates[c.symbol] || {}).tier), fontWeight: 600 } },
+        frRates[c.symbol]
+          ? `${(frRates[c.symbol].rate_pct > 0 ? '+' : '')}${frRates[c.symbol].rate_pct.toFixed(4)}%`
+          : '—')
+    ),
+    React.createElement('div', { style: { marginTop: '12px', color: 'var(--text2)', fontSize: '12px', lineHeight: 1.45 } },
+      (c.reasons || []).join(' · ') || 'no reasons'),
+    (c.router_profiles || []).length > 0 && React.createElement('div', { style: { marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '6px' } },
+      c.router_profiles.map(p => React.createElement('span', { key: `${c.symbol}-${c.setup_type}-${p.profile}`, className: 'badge badge-warn', title: (p.reasons || []).join(', ') },
+        p.profile))
+    ),
+    aiState && aiState !== 'loading' && React.createElement('div', {
+      style: {
+        marginTop: '12px', padding: '10px 12px', borderRadius: '8px',
+        background: 'var(--card2)', borderLeft: `3px solid ${VERDICT_COLOR[aiState.verdict] || 'var(--blue)'}`,
+        fontSize: '12px', lineHeight: 1.5,
+      }
+    },
+      React.createElement('div', { style: { fontWeight: 700, marginBottom: '4px', color: VERDICT_COLOR[aiState.verdict] } },
+        `${VERDICT_ICON[aiState.verdict] || '🔵'} ${(aiState.verdict || '').toUpperCase()}`),
+      React.createElement('div', { style: { color: 'var(--text)', marginBottom: '6px' } }, aiState.reasoning),
+      React.createElement('div', { style: { color: 'var(--text2)', fontStyle: 'italic' } }, `⚠️ ${aiState.risk_note}`)
+    ),
+    React.createElement(SetupCardChart, { card: c })
+  );
+}
+
 function SetupScannerPage() {
   const { data, loading, refresh } = useFetch('/api/setup-scanner', [], 60000);
+  const { data: frData } = useFetch('/api/funding-rates', {}, 120000);
+  const frRates = (frData && frData.rates) ? frData.rates : {};
+  const frColor = tier => tier === 'low' ? 'var(--green)' : tier === 'medium' ? 'var(--text)' : tier === 'high' ? 'var(--yellow)' : 'var(--red)';
   if (loading) return React.createElement(Loader);
   if (!data) return React.createElement('div', { className: 'empty' }, 'Нет данных сканера');
 
@@ -1998,40 +2211,10 @@ function SetupScannerPage() {
     cards.length === 0
       ? React.createElement('div', { className: 'empty' }, 'Сканер пока не нашёл сетапов или geometry state устарел.')
       : React.createElement('div', { className: 'strat-grid', style: { gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))' } },
-        cards.map((c, idx) => React.createElement('div', { className: 'card', key: `${c.symbol}-${c.interval}-${c.setup_type}-${idx}`, style: { minHeight: '230px' } },
-          React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start', marginBottom: '12px' } },
-            React.createElement('div', null,
-              React.createElement('div', { style: { fontSize: '20px', fontWeight: 700 } }, c.symbol),
-              React.createElement('div', { className: 'section-sub' }, `${c.interval}m · score ${Number(c.score || 0).toFixed(1)}`)
-            ),
-            React.createElement('span', { className: `badge ${sideBadge(c.side)}` }, c.side || 'WATCH')
-          ),
-          React.createElement('div', { className: 'card-title', style: { marginBottom: '8px' } }, c.setup_type),
-          React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 14px', fontSize: '13px' } },
-            React.createElement('div', { className: 'dim' }, 'Стратегия'),
-            React.createElement('div', { style: { textAlign: 'right', color: 'var(--blue)', fontWeight: 600 } }, c.strategy),
-            React.createElement('div', { className: 'dim' }, 'Цена'),
-            React.createElement('div', { style: { textAlign: 'right' } }, c.price ?? '—'),
-            React.createElement('div', { className: 'dim' }, 'Уровень'),
-            React.createElement('div', { style: { textAlign: 'right' } }, c.level_price ? `${c.level_price} (${c.level_touches || 0} кас.)` : '—'),
-            React.createElement('div', { className: 'dim' }, 'Дистанция'),
-            React.createElement('div', { style: { textAlign: 'right' } }, c.distance_atr != null ? `${c.distance_atr} ATR` : '—'),
-            React.createElement('div', { className: 'dim' }, 'Инвалидация'),
-            React.createElement('div', { style: { textAlign: 'right' } }, c.invalidation ?? '—'),
-            React.createElement('div', { className: 'dim' }, 'Runtime'),
-            React.createElement('div', { style: { textAlign: 'right' } },
-              c.runtime && c.runtime.enabled
-                ? React.createElement('span', { className: 'badge badge-ok' }, `LIVE ×${Number(c.runtime.risk_mult || 0).toFixed(2)}`)
-                : React.createElement('span', { className: 'badge badge-off' }, c.runtime?.health || 'watch'))
-          ),
-          React.createElement('div', { style: { marginTop: '12px', color: 'var(--text2)', fontSize: '12px', lineHeight: 1.45 } },
-            (c.reasons || []).join(' · ') || 'no reasons'),
-          (c.router_profiles || []).length > 0 && React.createElement('div', { style: { marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '6px' } },
-            c.router_profiles.map(p => React.createElement('span', { key: `${c.symbol}-${c.setup_type}-${p.profile}`, className: 'badge badge-warn', title: (p.reasons || []).join(', ') },
-              p.profile))
-          ),
-          React.createElement(SetupCardChart, { card: c })
-        ))
+        cards.map((c, idx) => React.createElement(SetupCard, {
+          key: `${c.symbol}-${c.interval}-${c.setup_type}-${idx}`,
+          c, sideBadge, frRates, frColor
+        }))
       )
   );
 }
@@ -2524,6 +2707,323 @@ function UsersPage() {
   );
 }
 
+
+
+// ── Sweep Watchdog page ─────────────────────────────────────────────────────
+
+function SweepProgressBar({ pct, status }) {
+  const color = status === 'running' ? 'var(--blue)' : status === 'done' ? 'var(--green)' : 'var(--dim)';
+  return React.createElement('div', { style: { background: 'var(--bg3)', borderRadius: '4px', height: '6px', overflow: 'hidden', margin: '6px 0' } },
+    React.createElement('div', { style: { width: `${Math.min(100, pct)}%`, height: '100%', background: color, transition: 'width 0.5s ease', borderRadius: '4px' } })
+  );
+}
+
+function SweepCard({ sweep }) {
+  const [expanded, setExpanded] = useState(false);
+  const STATUS_COLOR = { running: 'var(--blue)', done: 'var(--green)', recent: 'var(--yellow)', old: 'var(--dim)' };
+  const STATUS_ICON  = { running: '🔄', done: '✅', recent: '🕐', old: '📦' };
+  const color = STATUS_COLOR[sweep.status] || 'var(--dim)';
+  const icon  = STATUS_ICON[sweep.status]  || '❓';
+
+  const fmtAge = s => {
+    if (s < 60)   return `${s}s ago`;
+    if (s < 3600) return `${Math.round(s/60)}m ago`;
+    if (s < 86400) return `${Math.round(s/3600)}h ago`;
+    return `${Math.round(s/86400)}d ago`;
+  };
+
+  const hasWinners = sweep.winners && sweep.winners.some(w => w.passed);
+
+  return React.createElement('div', {
+    className: 'card',
+    style: { marginBottom: '12px', borderLeft: `3px solid ${color}` }
+  },
+    // Header row
+    React.createElement('div', {
+      style: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', cursor: 'pointer' },
+      onClick: () => setExpanded(!expanded)
+    },
+      React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' } },
+          React.createElement('span', null, icon),
+          React.createElement('span', { style: { fontWeight: 600, color: 'var(--fg)', fontSize: '14px' } },
+            sweep.spec_name || sweep.name),
+          sweep.status === 'running' && React.createElement('span', {
+            style: { fontSize: '10px', background: 'var(--blue)', color: '#fff', padding: '1px 6px', borderRadius: '10px' }
+          }, 'LIVE'),
+          hasWinners && React.createElement('span', {
+            style: { fontSize: '10px', background: 'var(--green)', color: '#000', padding: '1px 6px', borderRadius: '10px', fontWeight: 700 }
+          }, `${sweep.passed_count} WINNERS`)
+        ),
+        sweep.spec_desc && React.createElement('div', {
+          className: 'dim', style: { fontSize: '11px', marginBottom: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }
+        }, sweep.spec_desc)
+      ),
+      React.createElement('div', { style: { textAlign: 'right', flexShrink: 0 } },
+        React.createElement('div', { style: { fontSize: '13px', fontWeight: 600, color } },
+          sweep.total > 0 ? `${sweep.current}/${sweep.total}` : '—'),
+        React.createElement('div', { className: 'dim', style: { fontSize: '11px' } }, fmtAge(sweep.age_sec))
+      )
+    ),
+
+    // Progress bar
+    sweep.total > 0 && React.createElement(SweepProgressBar, { pct: sweep.pct, status: sweep.status }),
+
+    // Stats row
+    React.createElement('div', { style: { display: 'flex', gap: '16px', fontSize: '11px', color: 'var(--dim)', marginTop: '4px' } },
+      sweep.total > 0 && React.createElement('span', null, `${sweep.pct}% complete`),
+      sweep.last_pf != null && React.createElement('span', null,
+        'Last: PF ', React.createElement('span', { style: { color: sweep.last_passed ? 'var(--green)' : 'var(--red)' } },
+          sweep.last_pf.toFixed(3))),
+      sweep.last_pnl != null && React.createElement('span', null,
+        'PnL ', React.createElement('span', { style: { color: sweep.last_pnl >= 0 ? 'var(--green)' : 'var(--red)' } },
+          (sweep.last_pnl >= 0 ? '+' : '') + sweep.last_pnl.toFixed(2) + '%')),
+      React.createElement('span', null, sweep.stamp ? sweep.stamp.replace('_',' ') : '')
+    ),
+
+    // Expanded: top results table
+    expanded && sweep.winners && sweep.winners.length > 0 && React.createElement('div', { style: { marginTop: '12px' } },
+      React.createElement('div', { style: { fontSize: '12px', fontWeight: 600, marginBottom: '6px', color: 'var(--fg)' } },
+        'Top результаты'),
+      React.createElement('div', { style: { overflowX: 'auto' } },
+        React.createElement('table', { className: 'tbl', style: { fontSize: '11px' } },
+          React.createElement('thead', null,
+            React.createElement('tr', null,
+              React.createElement('th', null, '#'),
+              React.createElement('th', null, 'Статус'),
+              React.createElement('th', { style: { textAlign: 'right' } }, 'PF'),
+              React.createElement('th', { style: { textAlign: 'right' } }, 'PnL%'),
+              React.createElement('th', { style: { textAlign: 'right' } }, 'WR'),
+              React.createElement('th', { style: { textAlign: 'right' } }, 'DD'),
+              React.createElement('th', { style: { textAlign: 'right' } }, 'Trades'),
+              React.createElement('th', null, 'Параметры / причина блока')
+            )
+          ),
+          React.createElement('tbody', null,
+            sweep.winners.map((w, i) =>
+              React.createElement('tr', { key: i },
+                React.createElement('td', { className: 'dim' }, w.rank),
+                React.createElement('td', null,
+                  w.passed
+                    ? React.createElement('span', { style: { color: 'var(--green)', fontWeight: 700 } }, '✅ PASS')
+                    : React.createElement('span', { style: { color: 'var(--red)' } }, '✗')),
+                React.createElement('td', { style: { textAlign: 'right', color: (w.profit_factor||0) >= 1.2 ? 'var(--green)' : 'var(--dim)' } },
+                  w.profit_factor != null ? w.profit_factor.toFixed(3) : '—'),
+                React.createElement('td', { style: { textAlign: 'right', color: (w.net_pnl||0) >= 0 ? 'var(--green)' : 'var(--red)' } },
+                  w.net_pnl != null ? (w.net_pnl >= 0 ? '+' : '') + w.net_pnl.toFixed(2) + '%' : '—'),
+                React.createElement('td', { style: { textAlign: 'right' } },
+                  w.winrate != null ? (w.winrate * 100).toFixed(1) + '%' : '—'),
+                React.createElement('td', { style: { textAlign: 'right', color: (w.max_drawdown||0) > 10 ? 'var(--red)' : 'var(--dim)' } },
+                  w.max_drawdown != null ? w.max_drawdown.toFixed(2) + '%' : '—'),
+                React.createElement('td', { style: { textAlign: 'right' } }, w.trades ?? '—'),
+                React.createElement('td', { style: { maxWidth: '220px', overflow: 'hidden' } },
+                  w.passed
+                    ? React.createElement('span', { style: { color: 'var(--dim)', fontSize: '10px' } },
+                        Object.entries(w.overrides || {}).map(([k,v]) => `${k.replace(/^(ATT1_|ARF1_|BREAKDOWN_)/,'')}=${v}`).join(' · '))
+                    : React.createElement('span', { style: { color: 'var(--red)', fontSize: '10px' } }, w.fail_reasons || '—')
+                )
+              )
+            )
+          )
+        )
+      )
+    ),
+
+    // Expanded: no results yet
+    expanded && (!sweep.winners || sweep.winners.length === 0) && React.createElement('div', {
+      className: 'dim', style: { fontSize: '12px', marginTop: '8px' }
+    }, 'Результатов пока нет')
+  );
+}
+
+function SweepWatchdogPage() {
+  const { data, loading, refresh } = useFetch('/api/sweeps?limit=30', null, 15000);
+  const sweeps = data?.sweeps || [];
+  const running = sweeps.filter(s => s.status === 'running');
+  const done    = sweeps.filter(s => s.status === 'done');
+  const winners = sweeps.filter(s => s.passed_count > 0);
+
+  return React.createElement('div', null,
+    React.createElement('div', { className: 'page-hdr' },
+      React.createElement('div', null,
+        React.createElement('div', { className: 'section-title' }, '🔬 Sweep Watchdog'),
+        React.createElement('div', { className: 'section-sub' },
+          'Прогресс autoresearch sweep-ов. Обновляется каждые 15 секунд.')
+      ),
+      React.createElement('button', { className: 'refresh-btn', onClick: refresh }, '↺ Refresh')
+    ),
+
+    // Summary metrics
+    React.createElement('div', { className: 'grid4', style: { marginBottom: '16px' } },
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Активных'),
+        React.createElement('div', { className: 'metric-value', style: { color: running.length > 0 ? 'var(--blue)' : 'var(--dim)' } },
+          running.length),
+        React.createElement('div', { className: 'metric-sub' }, running.length > 0 ? running.map(s => s.spec_name || s.name).join(', ').slice(0,40) : 'нет')
+      ),
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Завершено'),
+        React.createElement('div', { className: 'metric-value' }, done.length)
+      ),
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Со winners'),
+        React.createElement('div', { className: 'metric-value', style: { color: winners.length > 0 ? 'var(--green)' : 'var(--dim)' } },
+          winners.length)
+      ),
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Всего sweep-ов'),
+        React.createElement('div', { className: 'metric-value' }, data?.total || 0)
+      )
+    ),
+
+    loading && React.createElement(Loader),
+
+    !loading && sweeps.length === 0 && React.createElement('div', { className: 'card' },
+      React.createElement('div', { className: 'empty' }, '📭 Sweep-ов не найдено. Запусти autoresearch через Codex.')
+    ),
+
+    // Running sweeps first
+    running.length > 0 && React.createElement('div', { style: { marginBottom: '8px' } },
+      React.createElement('div', { className: 'section-sub', style: { marginBottom: '8px' } }, '🔄 Выполняются'),
+      running.map(s => React.createElement(SweepCard, { key: s.dir, sweep: s }))
+    ),
+
+    // Recent / done
+    sweeps.filter(s => s.status !== 'running').length > 0 && React.createElement('div', null,
+      running.length > 0 && React.createElement('div', { className: 'section-sub', style: { margin: '12px 0 8px' } }, '📋 История'),
+      sweeps.filter(s => s.status !== 'running').map(s => React.createElement(SweepCard, { key: s.dir, sweep: s }))
+    )
+  );
+}
+
+// ── TradingView Signals page ────────────────────────────────────────────────
+
+function TVSignalsPage() {
+  const { data, loading, refresh } = useFetch('/api/tv-signals?limit=100', null, 30000);
+  const signals = (data?.signals) || [];
+
+  const fmtTime = ts => {
+    if (!ts) return '—';
+    const d = new Date(ts * 1000);
+    return d.toLocaleString('ru-RU', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+  };
+
+  return React.createElement('div', null,
+    React.createElement('div', { className: 'page-hdr' },
+      React.createElement('div', null,
+        React.createElement('div', { className: 'section-title' }, '📡 TradingView Signals'),
+        React.createElement('div', { className: 'section-sub' },
+          'Входящие сигналы от Pine Script алертов. Настрой Webhook URL в TradingView на ' +
+          window.location.origin + '/api/tv-signal')
+      ),
+      React.createElement('button', { className: 'refresh-btn', onClick: refresh }, '↺ Refresh')
+    ),
+
+    // Setup instructions card
+    React.createElement('div', { className: 'card', style: { marginBottom: '16px' } },
+      React.createElement('div', { className: 'card-title' }, '⚙️ Настройка в TradingView'),
+      React.createElement('div', { style: { fontSize: '12px', color: 'var(--dim)', lineHeight: '1.8' } },
+        React.createElement('p', null, '1. Создай алерт на любой индикатор → вкладка "Notifications" → включи "Webhook URL"'),
+        React.createElement('p', null,
+          '2. Webhook URL: ',
+          React.createElement('code', { style: { background: 'var(--bg3)', padding: '2px 6px', borderRadius: '4px', color: 'var(--blue)' } },
+            window.location.origin + '/api/tv-signal')),
+        React.createElement('p', null, '3. Message (JSON):'),
+        React.createElement('pre', {
+          style: { background: 'var(--bg3)', padding: '10px', borderRadius: '6px', fontSize: '11px', overflowX: 'auto', margin: '4px 0' }
+        },
+          JSON.stringify({
+            secret: "YOUR_TV_WEBHOOK_SECRET",
+            symbol: "{{ticker}}",
+            side: "{{strategy.order.action}}",
+            price: "{{close}}",
+            strategy: "supertrend_4h",
+            timeframe: "{{interval}}",
+            reason: "Signal fired"
+          }, null, 2)),
+        React.createElement('p', null,
+          '4. Установи ',
+          React.createElement('code', { style: { background: 'var(--bg3)', padding: '2px 6px', borderRadius: '4px' } }, 'TV_WEBHOOK_SECRET'),
+          ' в .env на сервере. ',
+          React.createElement('code', { style: { background: 'var(--bg3)', padding: '2px 6px', borderRadius: '4px' } }, 'TV_WEBHOOK_MODE'),
+          ': log | notify | auto')
+      )
+    ),
+
+    // Stats row
+    data && React.createElement('div', { className: 'grid4', style: { marginBottom: '16px' } },
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Всего сигналов'),
+        React.createElement('div', { className: 'metric-value' }, data.total || 0)
+      ),
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Прошли фильтр'),
+        React.createElement('div', { className: 'metric-value', style: { color: 'var(--green)' } },
+          signals.filter(s => !s.blocked).length)
+      ),
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Заблокированы'),
+        React.createElement('div', { className: 'metric-value', style: { color: 'var(--red)' } },
+          signals.filter(s => s.blocked).length)
+      ),
+      React.createElement('div', { className: 'metric' },
+        React.createElement('div', { className: 'metric-label' }, 'Режим'),
+        React.createElement('div', { className: 'metric-value', style: { color: 'var(--blue)', fontSize: '14px' } },
+          signals[0]?.mode || '—')
+      )
+    ),
+
+    // Signals table
+    React.createElement('div', { className: 'card' },
+      React.createElement('div', { className: 'card-title' }, `История сигналов (последние ${signals.length})`),
+      loading
+        ? React.createElement(Loader)
+        : signals.length === 0
+          ? React.createElement('div', { className: 'empty' }, '📭 Сигналов пока нет. Настрой Webhook в TradingView.')
+          : React.createElement('div', { style: { overflowX: 'auto' } },
+              React.createElement('table', { className: 'tbl' },
+                React.createElement('thead', null,
+                  React.createElement('tr', null,
+                    React.createElement('th', null, 'Время'),
+                    React.createElement('th', null, 'Symbol'),
+                    React.createElement('th', null, 'Side'),
+                    React.createElement('th', null, 'Strategy'),
+                    React.createElement('th', { style: { textAlign: 'right' } }, 'Price'),
+                    React.createElement('th', null, 'TF'),
+                    React.createElement('th', null, 'Статус'),
+                    React.createElement('th', null, 'Причина блока')
+                  )
+                ),
+                React.createElement('tbody', null,
+                  signals.map((s, i) => {
+                    const isLong   = s.side === 'long';
+                    const blocked  = s.blocked;
+                    return React.createElement('tr', { key: i },
+                      React.createElement('td', { className: 'dim', style: { fontSize: '11px', whiteSpace: 'nowrap' } }, fmtTime(s.ts)),
+                      React.createElement('td', null, React.createElement('strong', null, s.symbol)),
+                      React.createElement('td', null,
+                        React.createElement('span', { className: isLong ? 'badge badge-long' : 'badge badge-short' },
+                          isLong ? 'LONG' : 'SHORT')),
+                      React.createElement('td', { className: 'dim', style: { fontSize: '11px' } },
+                        (s.strategy || '—').replace(/^(alt_|btc_eth_)/,'')),
+                      React.createElement('td', { style: { textAlign: 'right', fontFamily: 'monospace', fontSize: '11px' } },
+                        s.price ? s.price.toLocaleString() : '—'),
+                      React.createElement('td', { className: 'dim', style: { fontSize: '11px' } }, s.timeframe || '—'),
+                      React.createElement('td', null,
+                        blocked
+                          ? React.createElement('span', { style: { color: 'var(--red)', fontSize: '11px' } }, '🚫 BLOCKED')
+                          : React.createElement('span', { style: { color: 'var(--green)', fontSize: '11px' } }, '✅ OK')),
+                      React.createElement('td', { className: 'dim', style: { fontSize: '11px' } },
+                        (s.block_reasons || []).join(', ') || '—')
+                    );
+                  })
+                )
+              )
+            )
+    )
+  );
+}
+
 // ── Main App ───────────────────────────────────────────────────────────────
 
 const NAV_GROUPS = [
@@ -2543,6 +3043,8 @@ const NAV_GROUPS = [
     pages: [
       { id: 'alpaca',  label: 'Alpaca',   icon: '📊' },
       { id: 'regime',  label: 'Regime',   icon: '⬡' },
+      { id: 'sweep',   label: 'Sweeps',     icon: '🔬' },
+      { id: 'tv',      label: 'TV Signals', icon: '📡' },
       { id: 'journal', label: 'Project Log',  icon: '◻' },
     ]
   },
@@ -2598,6 +3100,8 @@ function App() {
 	    alpaca:     AlpacaPage,
     regime:     RegimePage,
     journal:    JournalPage,
+    sweep:      SweepWatchdogPage,
+    tv:         TVSignalsPage,
     ai:         AIChatPage,
     credentials: CredentialsPage,
     users:      UsersPage,

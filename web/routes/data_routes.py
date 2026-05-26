@@ -1438,3 +1438,259 @@ async def get_setup_scanner_chart(
         "source": "bybit_public" if candles else "unavailable",
         "candles": candles,
     }
+
+
+# ── live-pnl ─────────────────────────────────────────────────────────────────
+
+@router.get("/live-pnl")
+async def get_live_pnl(_: str = Depends(require_auth)):
+    """
+    Live open positions with unrealized PnL.
+    Bot writes runtime/live_positions.json every 10 s in heartbeat loop.
+    Also returns today's closed PnL from trade journal.
+    """
+    pos_data = _json(_rt("live_positions.json")) or {}
+    positions = pos_data.get("positions") or []
+    pos_ts    = pos_data.get("ts")
+    pos_age   = int(datetime.now(timezone.utc).timestamp() - pos_ts) if pos_ts else None
+
+    # Today's closed PnL from journal
+    today_pnl   = 0.0
+    today_count = 0
+    week_pnl    = 0.0
+    week_count  = 0
+    try:
+        trades = _load_all_trades()
+        now_ts     = datetime.now(timezone.utc).timestamp()
+        today_start = now_ts - 86400
+        week_start  = now_ts - 7 * 86400
+
+        def _ts(t: dict) -> float | None:
+            raw = t.get("close_time") or t.get("exit_ts")
+            if raw is None:
+                return None
+            try:
+                if isinstance(raw, (int, float)):
+                    v = float(raw)
+                    return v / 1000.0 if v > 1e12 else v
+                return datetime.fromisoformat(str(raw).replace("Z", "+00:00")).timestamp()
+            except Exception:
+                return None
+
+        for t in trades:
+            cts = _ts(t)
+            if cts is None:
+                continue
+            try:
+                pnl = float(t.get("pnl") or t.get("pnl_usd") or 0.0)
+            except Exception:
+                continue
+            if cts >= today_start:
+                today_pnl += pnl
+                today_count += 1
+            if cts >= week_start:
+                week_pnl += pnl
+                week_count += 1
+    except Exception:
+        pass
+
+    # Health gate sleeve status
+    sleeve_health: dict = {}
+    try:
+        health_path = _ROOT / "configs" / "strategy_health.json"
+        hd = _json(health_path) or {}
+        for sname, sinfo in (hd.get("strategies") or {}).items():
+            short = sname.replace("alt_", "").replace("btc_eth_", "").replace("_v1", "")
+            sleeve_health[short] = str(sinfo.get("status", "OK")).upper()
+    except Exception:
+        pass
+
+    total_upnl = sum(p.get("upnl_usd", 0.0) for p in positions)
+
+    return {
+        "positions": positions,
+        "positions_count": len(positions),
+        "positions_age_sec": pos_age,
+        "positions_stale": pos_age is not None and pos_age > 60,
+        "trade_on": pos_data.get("trade_on", True),
+        "dry_run": pos_data.get("dry_run", False),
+        "total_upnl_usd": round(total_upnl, 4),
+        "today_pnl_usd": round(today_pnl, 4),
+        "today_trades": today_count,
+        "week_pnl_usd": round(week_pnl, 4),
+        "week_trades": week_count,
+        "sleeve_health": sleeve_health,
+        "ts_utc": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+# ── sweeps watchdog ───────────────────────────────────────────────────────────
+
+@router.get("/sweeps")
+async def get_sweeps(limit: int = 20, _: str = Depends(require_auth)):
+    """
+    Scan backtest_runs/autoresearch_* directories and return progress + top results.
+    """
+    import csv as _csv
+    import re as _re
+
+    backtest_root = _ROOT / "backtest_runs"
+    if not backtest_root.exists():
+        return {"sweeps": [], "total": 0}
+
+    dirs = sorted(
+        [d for d in backtest_root.iterdir() if d.is_dir() and d.name.startswith("autoresearch_")],
+        key=lambda d: d.stat().st_mtime,
+        reverse=True,
+    )[:limit]
+
+    sweeps = []
+    now_ts = datetime.now(timezone.utc).timestamp()
+
+    for d in dirs:
+        prog_path = d / "progress.json"
+        ranked_path = d / "ranked_results.csv"
+        spec_path   = d / "spec.json"
+
+        prog   = _json(prog_path) or {}
+        spec   = _json(spec_path) or {}
+        age_s  = int(now_ts - d.stat().st_mtime)
+
+        current = int(prog.get("current", 0))
+        total   = int(prog.get("total", 0))
+        updated = prog.get("updated_utc", "")
+
+        # Status detection
+        if total > 0 and current >= total:
+            run_status = "done"
+        elif age_s < 3600 and current > 0:
+            run_status = "running"
+        elif age_s < 7200:
+            run_status = "recent"
+        else:
+            run_status = "old"
+
+        # Parse name + stamp from dir name: autoresearch_STAMP_NAME
+        m = _re.match(r"autoresearch_(\d{8}_\d{6})_(.*)", d.name)
+        stamp = m.group(1) if m else ""
+        name  = m.group(2) if m else d.name
+
+        # Top winners from ranked_results.csv
+        winners = []
+        try:
+            if ranked_path.exists():
+                with open(ranked_path, newline="", encoding="utf-8") as f:
+                    reader = _csv.DictReader(f)
+                    for i, row in enumerate(reader):
+                        if i >= 5:
+                            break
+                        passed = str(row.get("passed", "")).lower() == "true"
+                        try:
+                            overrides = json.loads(row.get("overrides_json") or "{}")
+                        except Exception:
+                            overrides = {}
+                        winners.append({
+                            "rank":           i + 1,
+                            "tag":            row.get("tag", ""),
+                            "passed":         passed,
+                            "score":          _safe_float(row.get("score")),
+                            "net_pnl":        _safe_float(row.get("net_pnl")),
+                            "profit_factor":  _safe_float(row.get("profit_factor")),
+                            "winrate":        _safe_float(row.get("winrate")),
+                            "max_drawdown":   _safe_float(row.get("max_drawdown")),
+                            "trades":         _safe_int(row.get("trades")),
+                            "fail_reasons":   row.get("fail_reasons", ""),
+                            "overrides":      overrides,
+                        })
+        except Exception:
+            pass
+
+        passed_count = sum(1 for w in winners if w["passed"])
+
+        sweeps.append({
+            "dir":          d.name,
+            "name":         name,
+            "stamp":        stamp,
+            "status":       run_status,
+            "age_sec":      age_s,
+            "current":      current,
+            "total":        total,
+            "pct":          round(current / total * 100, 1) if total > 0 else 0,
+            "updated_utc":  updated,
+            "spec_name":    spec.get("name", name),
+            "spec_desc":    spec.get("description", "")[:120],
+            "last_passed":  prog.get("last_passed", False),
+            "last_pf":      prog.get("last_profit_factor"),
+            "last_pnl":     prog.get("last_net_pnl"),
+            "winners":      winners,
+            "passed_count": passed_count,
+        })
+
+    return {
+        "sweeps":    sweeps,
+        "total":     len(dirs),
+        "ts_utc":    datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def _safe_float(v) -> Optional[float]:
+    try:
+        return round(float(v), 4) if v not in (None, "", "None") else None
+    except Exception:
+        return None
+
+
+def _safe_int(v) -> Optional[int]:
+    try:
+        return int(float(v)) if v not in (None, "", "None") else None
+    except Exception:
+        return None
+
+
+# ── Funding rates ─────────────────────────────────────────────────────────────
+
+@router.get("/funding-rates")
+async def get_funding_rates(_: str = Depends(require_auth)):
+    """
+    Return latest funding rates from configs/funding_rates_latest.json.
+    Annotates each symbol with a tier: low / medium / high / extreme.
+    """
+    fr_path = _ROOT / "configs" / "funding_rates_latest.json"
+    data: dict = {}
+    updated_utc = None
+    age_sec = None
+
+    if fr_path.exists():
+        try:
+            raw = json.loads(fr_path.read_text())
+            data = raw.get("rates", {})
+            updated_utc = raw.get("updated_utc")
+            if updated_utc:
+                from datetime import datetime, timezone
+                ts = datetime.fromisoformat(updated_utc.replace("Z", "+00:00"))
+                age_sec = round((datetime.now(timezone.utc) - ts).total_seconds())
+        except Exception:
+            pass
+
+    def _tier(rate: float) -> str:
+        abs_r = abs(rate)
+        if abs_r < 0.0001:   return "low"
+        if abs_r < 0.0005:   return "medium"
+        if abs_r < 0.001:    return "high"
+        return "extreme"
+
+    annotated = {}
+    for sym, rate in data.items():
+        annotated[sym] = {
+            "rate":     rate,
+            "rate_pct": round(rate * 100, 5),
+            "tier":     _tier(rate),
+        }
+
+    return {
+        "rates":       annotated,
+        "updated_utc": updated_utc,
+        "age_sec":     age_sec,
+        "stale":       age_sec is not None and age_sec > 600,
+        "count":       len(annotated),
+    }
