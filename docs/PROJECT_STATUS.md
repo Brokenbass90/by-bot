@@ -1,18 +1,18 @@
 # Project Status — LIVE
 
-**Last updated:** 2026-05-25 evening (decision parity + Claude challenger review)
+**Last updated:** 2026-05-26 morning (Alpaca reporting truth + completed research)
 **Update rhythm:** еженедельно или при критическом изменении
 **Источник правды:** этот файл + `docs/BACKLOG.md` + `docs/RESUME_AFTER_BREAK_20260519.md`
 
 ## Однострочник
-Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-25:** router/static-core inputs совпадают с benchmark для обязательных symbols (`100% input parity`), `bybot` active (`trade_on=True`, `dry_run=False`), allocator healthy (`safe_mode=False`), но свежих crypto trades всё ещё нет: `breakdown`, `flat` и `ATT1` останавливаются внутри signal filters, до sizing/order. `crypto_income_static_v1` остаётся recovery benchmark (`+70.17%` за 365d, PF `1.545`, 445 trades). Claude-доработки ARF1/BRC1/MTPB/Elder рассматриваются как challenger research и не деплоятся без пакетного replay. Alpaca v39 event-based даёт больше return, но 4y stress пока не проходит quality gate; paper ownership race исправлен и должен пройти наблюдение полного цикла закрытия.
+Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-26:** router/static-core inputs совпадают с benchmark (`100% input parity`), `bybot` active, allocator healthy, но crypto entries по-прежнему отсутствуют: измеренные blockers находятся внутри filters (`breakdown RSI/support`, `flat touch`, `ATT1 trendline`). `crypto_income_static_v1` остаётся recovery benchmark (`+70.17%` за 365d, PF `1.545`, 445 trades). ATT1 sweep нашёл research-challenger, который теперь должен пройти replay в полном пакете. Alpaca reporting исправлен: monthly, intraday pending fills и historical backtest больше не смешиваются; v39 остаётся research-only после слабого bear stress.
 
 ## Numbers (на 2026-05-19 после рестарта)
 
 ### Live state
 - **Bybit equity:** ~$123 USDT
 - **Last trade:** 2026-04-28 ALGOUSDT range −$0.92. После рестарта ждём первый entry.
-- **Alpaca paper:** $1000, open позиции DDOG + GOOGL (после Codex cleanup); stop по GOOGL
+- **Alpaca paper:** monthly-owned `GOOGL` с broker protection; intraday tracked позиций сейчас нет; `META/PANW` ожидают подтверждения закрытия; journal P&L `+$5.17` не считается realized до fills
 - **Owner reserve:** $2000 в крипте, ждёт Фаза 1 trigger
 - **Regime:** `bear_chop` на свежем server heartbeat 2026-05-25; прежний snapshot был `bear_trend`.
 - **Allocator:** global_risk=0.8, hard_block=False
@@ -66,10 +66,10 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - **breakdown ONDO 180d**: PF 2.14 — **сильный, ждёт geometry unlock**.
 
 ### Active research queue
-- `ATT1 focused pivot sweep v2` — finished 2026-05-25: best `+23.97%`, PF `1.278`, WR `56.7%`, DD `9.82%` on 360d; promising challenger, not live because DD > 8% gate.
+- `att1_density_v3_more_pivots_v1` — finished 2026-05-26, `864/864`: best `r259` `+38.48%`, PF `1.384`, WR `59.6%`, DD `3.97%`; promising standalone challenger, **not live** until full `crypto_income_static_v1` replay improves the package.
 - `breakdown_recent_bear_window_v2_entry_quality` — fixed broken `4h` backtest timeframe (`240`) and rerun; 36/36 failed, best `-6.25%`, PF `0.679`, DD `7.30%`. Do not extend live breakdown from this window.
 - `bear_regime_continuation_v1_initial_sweep` — running on server under bounded CPU/memory limits (486 annual variants); wait for completed 360d evidence before any BRC1 decision.
-- `att1_short_slope_v1` — queued locally to start automatically after the active ATT1 v3 sweep; 18 parameter combinations, research-only and subject to full-package replay.
+- `att1_short_slope_v1` — finished `18/18`; best `+15.44%`, PF `1.097`, DD `9.96%`, failed gate; reject/no promotion.
 - `flat_live_frequency_v3` — completed locally 2026-05-25: standalone best `+9.66%`, PF `2.232`, WR `59.4%`, DD `1.76%`, 32 trades, 3 negative months. Portfolio replacement test inside `crypto_income_static_v1` worsened benchmark to `+64.24%`, PF `1.491`, DD `7.31%` (vs `+70.17%`, PF `1.545`, DD `6.23%`); **reject for live promotion**.
 - `asb1_bull_chop_repair_v1` — не продвигать в live без repair acceptance
 
@@ -96,6 +96,7 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - ✅ 2026-05-25: `signal_decisions` produced first live evidence immediately after deploy: `breakdown` rejects included `ADA RSI 74.8`, `LINK RSI 78.3`, `ETH RSI 84.8`, `BTC RSI 72.1`, and `ONDO no_real_break`; target next replay at RSI/support rather than router changes.
 - Alpaca intraday accounting audit: clean filled sample after the old cleanup incident is `DDOG +$3.43` and `UBER +$1.27` (`+$4.70` realized); `PANW/META` show approximately `+$5.17` but close orders are accepted/pending while the US market is closed on 2026-05-25, so they are not realized yet. Legacy `+$155.99` in the equity log is not acceptable as clean strategy performance.
 - Deployed Alpaca paper-ledger repair at `2026-05-25 16:57 UTC`: manager close now remains `close_pending` until broker fill confirmation and does not book submission-time estimates as realized P&L. It must still be observed through a complete filled close before any live funding decision.
+- ✅ 2026-05-26: deployed reporting ownership truth. Crypto periodic report is explicitly crypto-only; station digest, web and AI context distinguish monthly-owned `GOOGL`, pending intraday closes `META/PANW`, zero tracked intraday positions and unverified paper journal P&L.
 
 ## Что НЕ работает (top blockers)
 0. **P0-NEW: decision parity after input parity.** Server check at 2026-05-25 16:20 UTC returned `input_symbol_parity_pct=100.0`, `verdict=PASS`, allocator `safe_mode=False`; therefore control-plane/allowlist are no longer the unexplained stop. Need match backtest entry timestamps to live filter outcomes on a stable post-fix window.
@@ -105,8 +106,8 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 5. **Order-path blocker теперь измерим, но пока не проявился.** После deployment счётчиков новый sample: `breakdown signal=0/5`, `ATT1=0/7`, `flat=0/4`, `sloped=0/3`, `midterm=0/2`, `asm1=0/2`. До первого `signal>0` нельзя обвинять sizing/order/risk.
 6. **direction-aware risk_mult** — long и short режутся одинаково в bear macro.
 7. **Bybit broker-side TP/SL already exists.** Remaining safety task is a smoke assertion for the short interval between entry acceptance and confirmed exchange-side protection.
-8. **Alpaca v39 written but not accepted** — 24m best: `+88.05%`, PF `1.987`, DD `12.90%`, red months `6/24`; 4y stress best: `+140.20%`, PF `1.624`, DD `26.47%`, red months `16/52`, worse PF than static (`1.695`). v38 hybrid пока единственный paper-proven.
-9. **Market data freshness Alpaca** — confirmed bug: v3 shadow's Alpaca bars call without a recent `start` returned zero data and left it on `2026-05-18`; patch prepared to query a recent window before the next US session.
+8. **Alpaca v39 written but not accepted** — fee-stressed 24m: `+70.37%`, PF `1.850`, DD `13.29%`, red months `6/24`; OOS 12m `+26.15%`, PF `1.895`, DD `9.51%`; bear-2022 `-23.47%`, PF `0.415`, DD `27.66%`. v38 hybrid пока единственный paper-кандидат для deposit gate.
+9. **Market data freshness Alpaca** — fixed in paper bridge on 2026-05-25; v3 shadow remains `DRY_RUN`, verification after next US session is still required.
 10. **Alpaca deposit gate** — credential literals were present in a tracked legacy handoff/history and paper intraday ledger books estimates before fills. Redact current HEAD, rotate paper keys, and fix filled-PnL accounting before funding an Alpaca live account.
 
 ## Принятые архитектурные решения (НЕ менять без owner)
@@ -188,6 +189,7 @@ Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpac
 - 2026-05-25 16:35 UTC: deployed bounded per-decision trace for static-v1 live sleeves and `crypto_blocker` AI exposure with `open_trades=0`; awaiting the next scheduled evaluations for its first sample rather than blindly relaxing filters.
 - 2026-05-25 evening: first decision trace rows arrived and isolate breakdown rejections to high RSI/no real break. Alpaca audit separated clean intraday fills (`+$4.70`) from contaminated legacy ledger (`+$155.99`) and pending mark-to-market (`~+$5.17`); paper credentials exposed in legacy tracked material were redacted in current HEAD and rotation is now a deposit gate.
 - 2026-05-25 16:57 UTC: deployed paper-only Alpaca freshness and filled-PnL safeguards. v3 dry-run now reads recent bars (`2026-05-22 19:55 UTC` while the market is closed), and new manager exits are recorded as realized only after broker fill confirmation; pre-patch `PANW/META` require reconciliation on the next US session.
+- 2026-05-26 morning: corrected station reporting and AI/web ownership semantics for Alpaca paper. Digest now labels `$+5.17` as journal P&L awaiting fill reconciliation and separates monthly `GOOGL` from pending intraday closes `META/PANW`. Completed ATT1 density sweep yields `r259` as a replay candidate; ATT1 slope is rejected. Alpaca v39 remains research-only after bear stress failure.
 - 2026-05-22 morning: Codex found overnight no-trade cause shifted from old scheduler mismatch to router geometry over-filter: `BREAKDOWN_SYMBOL_ALLOWLIST` was only `BTCUSDT,ETHUSDT` while scanner had ADA breakdown. Patched `scripts/build_symbol_router.py` + `configs/strategy_profile_registry.json` with `geometry_force_keep_symbols=["ADAUSDT","ONDOUSDT"]` for `breakdown_bear_core`. Rebuilt router/allocator on server: breakdown count 2→4, risk 0.7125→0.8550, `BREAKDOWN_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,ADAUSDT,ONDOUSDT`. Controlled restart with `open_trades=0`; stream recovered, bybit msgs growing, first fresh counters show no portfolio/global block.
 - 2026-05-21 evening: Codex patched scheduler allowlist drift for `ATT1`, `ASM1`, `sloped`; added grouped `sloped_ns_*` diagnostics. Server restarted safely with `open_trades=0`; stream fresh, `bybit_msgs` growing. Fresh compare: allocator hard block false, `breakdown_ns_support`, `flat/sloped same_bar` with small post-restart sample, no `sloped_ns_symbol` domination.
 - 2026-05-21 morning: P0-NEW поднят выше всех задач: `live-vs-static_v1 parity fix`. Проверка 7d до 2026-04-30 отброшена как неторговое окно; стартовала 30d parity-проверка до 2026-02-24.
