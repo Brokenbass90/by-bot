@@ -1716,35 +1716,213 @@ function StrategyAnalyticsPage() {
 
 function SetupCardChart({ card }) {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState(null);
-  const [busy, setBusy] = useState(false);
+  const [interval, setInterval] = useState(String(card.interval || '60'));
+  const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const chartRef = useRef(null);
+  const lwChartRef = useRef(null);
 
-  function toggle() {
-    const next = !open;
-    setOpen(next);
-    if (!next || data || busy) return;
-    setBusy(true);
-    const q = new URLSearchParams({ symbol: card.symbol, interval: String(card.interval || '60'), limit: '64' });
-    api(`/api/setup-scanner/chart?${q.toString()}`)
-      .then(setData)
-      .catch(() => setData({ candles: [] }))
-      .finally(() => setBusy(false));
-  }
-
-  const closes = (data?.candles || []).map(c => Number(c.close)).filter(Number.isFinite);
   const side = String(card.side || '').toLowerCase();
-  return React.createElement('div', { style: { marginTop: '10px' } },
-    React.createElement('button', { className: 'refresh-btn', onClick: toggle },
-      open ? 'Скрыть график' : 'График'),
-    open && React.createElement('div', {
-      style: { height: '72px', marginTop: '8px', padding: '6px 8px', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--bg3)' }
-    },
-      busy
-        ? React.createElement('div', { className: 'dim', style: { fontSize: '12px' } }, 'Загрузка...')
-        : closes.length > 1
-          ? React.createElement(Sparkline, { data: closes, color: side === 'short' ? '#f85149' : '#3fb950', width: 250, height: 54 })
-          : React.createElement('div', { className: 'dim', style: { fontSize: '12px' } }, 'Свечи недоступны')
+  const levelColor = side === 'short' ? '#f85149' : '#3fb950';
+
+  const loadChart = useCallback(() => {
+    if (!card.symbol) return;
+    setLoading(true);
+    const q = new URLSearchParams({ symbol: card.symbol, interval, limit: '120' });
+    api(`/api/setup-scanner/chart?${q.toString()}`)
+      .then(d => { setChartData(d); setLoading(false); })
+      .catch(() => { setChartData({ candles: [] }); setLoading(false); });
+  }, [card.symbol, interval]);
+
+  // Load on open; reload when interval changes
+  useEffect(() => {
+    if (open) loadChart();
+  }, [open, loadChart]);
+
+  // Cleanup chart + reset data when modal closes
+  useEffect(() => {
+    if (!open) {
+      if (lwChartRef.current) { lwChartRef.current.remove(); lwChartRef.current = null; }
+      setChartData(null);
+    }
+  }, [open]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => { if (lwChartRef.current) { lwChartRef.current.remove(); lwChartRef.current = null; } };
+  }, []);
+
+  // Build / rebuild LightweightCharts when data arrives
+  useEffect(() => {
+    if (!chartData || !chartRef.current || loading) return;
+    const candles = (chartData.candles || []).map(c => ({
+      time: Math.floor(c.time_ms / 1000),
+      open: c.open, high: c.high, low: c.low, close: c.close,
+    }));
+    if (!candles.length) return;
+
+    const container = chartRef.current;
+    if (lwChartRef.current) { lwChartRef.current.remove(); lwChartRef.current = null; }
+
+    const chart = LightweightCharts.createChart(container, {
+      width: container.clientWidth,
+      height: container.clientHeight,
+      layout: { background: { color: '#0d1117' }, textColor: '#8b949e' },
+      grid: { vertLines: { color: '#161b22' }, horzLines: { color: '#161b22' } },
+      crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+      rightPriceScale: { borderColor: '#21262d' },
+      timeScale: { borderColor: '#21262d', timeVisible: true, secondsVisible: false },
+    });
+    lwChartRef.current = chart;
+
+    const cSeries = chart.addCandlestickSeries({
+      upColor: '#3fb950', downColor: '#f85149',
+      borderUpColor: '#3fb950', borderDownColor: '#f85149',
+      wickUpColor: '#3fb950', wickDownColor: '#f85149',
+    });
+    cSeries.setData(candles);
+
+    const firstT = candles[0].time;
+    const lastT  = candles[candles.length - 1].time;
+
+    // Level line (resistance for short = red, support for long = green)
+    const lvl = parseFloat(card.level_price);
+    if (!isNaN(lvl) && lvl > 0) {
+      const lvlLine = chart.addLineSeries({
+        color: levelColor, lineWidth: 2, lineStyle: 1,
+        lastValueVisible: true, priceLineVisible: false,
+        title: `Lvl ×${card.level_touches || 1}`,
+      });
+      lvlLine.setData([{ time: firstT, value: lvl }, { time: lastT, value: lvl }]);
+    }
+
+    // Invalidation line (yellow dashed)
+    const inv = parseFloat(card.invalidation);
+    if (!isNaN(inv) && inv > 0) {
+      const invLine = chart.addLineSeries({
+        color: '#e3b341', lineWidth: 1, lineStyle: 2,
+        lastValueVisible: true, priceLineVisible: false,
+        title: 'Inval',
+      });
+      invLine.setData([{ time: firstT, value: inv }, { time: lastT, value: inv }]);
+    }
+
+    chart.timeScale().fitContent();
+
+    const ro = new ResizeObserver(() => {
+      if (lwChartRef.current && container) {
+        lwChartRef.current.resize(container.clientWidth, container.clientHeight);
+      }
+    });
+    ro.observe(container);
+    return () => { ro.disconnect(); };
+  }, [chartData, loading, card.level_price, card.invalidation, levelColor]);
+
+  // Close on Escape
+  useEffect(() => {
+    if (!open) return;
+    const handler = e => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [open]);
+
+  const INTERVALS = [
+    { v: '5', l: '5m' }, { v: '15', l: '15m' },
+    { v: '60', l: '1h' }, { v: '240', l: '4h' },
+  ];
+
+  const lvl = parseFloat(card.level_price);
+  const inv = parseFloat(card.invalidation);
+  const dist = parseFloat(card.distance_atr);
+  const score = parseFloat(card.score);
+
+  const modal = React.createElement('div', {
+    className: 'modal-overlay',
+    onClick: e => { if (e.target === e.currentTarget) setOpen(false); },
+  },
+    React.createElement('div', { className: 'modal-box' },
+      // Header
+      React.createElement('div', { className: 'modal-header' },
+        React.createElement('div', { className: 'modal-title' },
+          React.createElement('span', { style: { color: '#58a6ff' } }, card.symbol || '—'),
+          ' · ',
+          React.createElement('span', { style: { color: '#8b949e', fontSize: '13px' } }, card.setup_type || card.strategy || '—'),
+          '  ',
+          React.createElement('span', {
+            className: side === 'short' ? 'badge badge-short' : 'badge badge-long',
+          }, side.toUpperCase() || '—')
+        ),
+        React.createElement('button', { className: 'modal-close', onClick: () => setOpen(false) }, '×')
+      ),
+      // Meta stats bar
+      React.createElement('div', { className: 'modal-meta' },
+        React.createElement('div', { className: 'modal-stat' },
+          React.createElement('span', { className: 'ms-label' }, 'Price'),
+          React.createElement('span', { className: 'ms-val' },
+            parseFloat(card.price) > 0 ? parseFloat(card.price).toFixed(4) : '—')
+        ),
+        React.createElement('div', { className: 'modal-stat' },
+          React.createElement('span', { className: 'ms-label' }, `Level (${card.level_touches || 1}×)`),
+          React.createElement('span', { className: 'ms-val', style: { color: levelColor } },
+            !isNaN(lvl) && lvl > 0 ? lvl.toFixed(4) : '—')
+        ),
+        React.createElement('div', { className: 'modal-stat' },
+          React.createElement('span', { className: 'ms-label' }, 'Dist ATR'),
+          React.createElement('span', { className: 'ms-val' }, !isNaN(dist) ? dist.toFixed(2) : '—')
+        ),
+        React.createElement('div', { className: 'modal-stat' },
+          React.createElement('span', { className: 'ms-label' }, 'Invalidation'),
+          React.createElement('span', { className: 'ms-val', style: { color: '#e3b341' } },
+            !isNaN(inv) && inv > 0 ? inv.toFixed(4) : '—')
+        ),
+        React.createElement('div', { className: 'modal-stat' },
+          React.createElement('span', { className: 'ms-label' }, 'Score'),
+          React.createElement('span', { className: 'ms-val' }, !isNaN(score) ? score.toFixed(2) : '—')
+        ),
+        React.createElement('div', { className: 'modal-stat' },
+          React.createElement('span', { className: 'ms-label' }, 'Strategy'),
+          React.createElement('span', { className: 'ms-val', style: { fontSize: '11px', fontWeight: 400 } },
+            (card.strategy || '—').replace(/^(alt_|btc_eth_|inplay_)/g, ''))
+        ),
+      ),
+      // Chart area
+      React.createElement('div', { className: 'modal-chart-wrap' },
+        loading
+          ? React.createElement('div', { className: 'loading' },
+              React.createElement('div', { className: 'spinner' }),
+              React.createElement('span', null, 'Загрузка свечей…'))
+          : (chartData && (!chartData.candles || chartData.candles.length === 0))
+            ? React.createElement('div', { className: 'empty' }, '📭 Свечи недоступны')
+            : React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } })
+      ),
+      // Reasons row
+      card.reasons && card.reasons.length > 0
+        ? React.createElement('div', {
+            style: { padding: '8px 20px', fontSize: '11px', color: '#8b949e', borderTop: '1px solid var(--border)', flexShrink: 0 }
+          },
+            React.createElement('span', { style: { color: '#58a6ff', marginRight: '6px' } }, 'Сигналы:'),
+            card.reasons.join(' · ')
+          )
+        : null,
+      // Interval selector
+      React.createElement('div', { className: 'modal-interval-bar' },
+        React.createElement('span', {
+          style: { fontSize: '11px', color: '#8b949e', marginRight: '4px', lineHeight: '24px' }
+        }, 'Интервал:'),
+        ...INTERVALS.map(({ v, l }) =>
+          React.createElement('button', {
+            key: v,
+            className: `interval-btn${interval === v ? ' active' : ''}`,
+            onClick: () => setInterval(v),
+          }, l)
+        )
+      )
     )
+  );
+
+  return React.createElement('div', { style: { marginTop: '10px' } },
+    React.createElement('button', { className: 'refresh-btn', onClick: () => setOpen(true) }, 'График'),
+    open ? modal : null
   );
 }
 
