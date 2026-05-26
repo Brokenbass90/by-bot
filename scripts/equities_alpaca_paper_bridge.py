@@ -779,20 +779,27 @@ def _trail_stop_triggered(
     pos: dict[str, Any],
     trail_pct: float,
     min_gain_pct: float,
-) -> tuple[bool, float, float]:
-    """Return (triggered, gain_from_entry_pct, drop_from_hwm_pct)."""
+) -> tuple[bool, float, float, float]:
+    """Return (triggered, current_gain_pct, drop_from_hwm_pct, peak_gain_pct).
+
+    The trail is armed by the recorded high-water mark, not the current mark.
+    Otherwise a position can cross the trailing threshold between polling runs
+    and become ineligible for the close once its remaining gain falls below
+    ``min_gain_pct``.
+    """
     rec = state.get(sym)
     if not rec:
-        return False, 0.0, 0.0
+        return False, 0.0, 0.0, 0.0
     cur = _safe_float(pos.get("current_price"), 0.0)
     entry = _safe_float(rec.get("entry_price"), 0.0)
     hwm = _safe_float(rec.get("hwm"), cur)
     if cur <= 0 or entry <= 0 or hwm <= 0:
-        return False, 0.0, 0.0
+        return False, 0.0, 0.0, 0.0
     gain_pct = (cur - entry) / entry * 100.0
+    peak_gain_pct = (hwm - entry) / entry * 100.0
     drop_pct = (hwm - cur) / hwm * 100.0
-    triggered = gain_pct >= min_gain_pct and drop_pct >= trail_pct * 100.0
-    return triggered, round(gain_pct, 2), round(drop_pct, 2)
+    triggered = peak_gain_pct >= min_gain_pct and drop_pct >= trail_pct * 100.0
+    return triggered, round(gain_pct, 2), round(drop_pct, 2), round(peak_gain_pct, 2)
 
 
 def _position_loss_pct(pos: dict[str, Any]) -> float:
@@ -1192,12 +1199,16 @@ def main() -> int:
                         }
                         continue
             if enable_trail_stop:
-                fired, gain, drop = _trail_stop_triggered(
+                fired, gain, drop, peak_gain = _trail_stop_triggered(
                     hwm_state, sym, pos, trail_pct, trail_min_gain_pct
                 )
                 if fired:
                     trail_triggered_symbols.append(sym)
-                    trail_details[sym] = {"gain_pct": gain, "drop_from_hwm_pct": drop}
+                    trail_details[sym] = {
+                        "gain_pct": gain,
+                        "peak_gain_pct": peak_gain,
+                        "drop_from_hwm_pct": drop,
+                    }
                     continue
 
     # Symbols freed by stop-loss may become new buy candidates
