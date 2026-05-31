@@ -40,6 +40,9 @@ SIM_TARGET_ATR_MULT="${EQ_V36_SIM_TARGET_ATR_MULT:-2.8}"
 SIM_INTRAMONTH_PORTFOLIO_STOP_PCT="${EQ_V36_SIM_INTRAMONTH_PORTFOLIO_STOP_PCT:-0.08}"
 SIM_BE_TRIGGER_R="${EQ_V36_SIM_BE_TRIGGER_R:-0.8}"
 SIM_TRAIL_ATR_MULT="${EQ_V36_SIM_TRAIL_ATR_MULT:-1.5}"
+SIM_REGIME_MIN_BREADTH_SMA_PCT="${EQ_V36_SIM_REGIME_MIN_BREADTH_SMA_PCT:-60}"
+SIM_REGIME_MIN_BREADTH_MOM_PCT="${EQ_V36_SIM_REGIME_MIN_BREADTH_MOM_PCT:-45}"
+SIM_REGIME_MIN_AVG_MOM_PCT="${EQ_V36_SIM_REGIME_MIN_AVG_MOM_PCT:-1.5}"
 
 CURRENT_TOP_N="${EQ_V36_CURRENT_TOP_N:-3}"
 CURRENT_LOOKBACK_DAYS="${EQ_V36_CURRENT_LOOKBACK_DAYS:-28}"
@@ -125,9 +128,9 @@ python3 scripts/equities_monthly_research_sim.py \
   --min-mom-lookback-pct "$SIM_MIN_MOM_LOOKBACK_PCT" \
   --pullback-min-pct -12.0 \
   --pullback-max-pct -1.5 \
-  --regime-min-breadth-sma-pct 60 \
-  --regime-min-breadth-mom-pct 45 \
-  --regime-min-avg-mom-pct 1.5 \
+  --regime-min-breadth-sma-pct "$SIM_REGIME_MIN_BREADTH_SMA_PCT" \
+  --regime-min-breadth-mom-pct "$SIM_REGIME_MIN_BREADTH_MOM_PCT" \
+  --regime-min-avg-mom-pct "$SIM_REGIME_MIN_AVG_MOM_PCT" \
   --earnings-csv "$EARNINGS_CSV" \
   --earnings-blackout-days-before 5 \
   --earnings-blackout-days-after 2 \
