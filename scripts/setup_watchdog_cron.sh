@@ -15,8 +15,14 @@ chmod +x "$SCRIPT"
 
 CRON_LINE="*/2 * * * * /bin/bash -lc 'BOT_DIR=$BOT_DIR $SCRIPT >> $LOG_DIR/watchdog.log 2>&1' # $CRON_COMMENT"
 
-# Remove old entry and add new
-(crontab -l 2>/dev/null | grep -v "$CRON_COMMENT" || true; echo "$CRON_LINE") | crontab -
+# Remove old watchdog entries and add exactly one new watchdog cron.
+(
+  crontab -l 2>/dev/null \
+    | grep -v "$CRON_COMMENT" \
+    | grep -v "scripts/bot_health_watchdog.sh" \
+    || true
+  echo "$CRON_LINE"
+) | crontab -
 
 echo "✅ Watchdog cron installed for $SERVICE_NAME (runs every 2 minutes):"
 crontab -l | grep "$CRON_COMMENT"

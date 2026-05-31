@@ -107,17 +107,32 @@ def _health_allowed(health: str, health_filter: str) -> bool:
     raise ValueError(f"Unsupported health_filter: {health_filter}")
 
 
-def build_live_effective_inputs(root: Path, health_filter: str = "all") -> tuple[list[str], list[str], dict[str, str], list[dict[str, Any]]]:
+def _resolve_repo_path(root: Path, value: str) -> Path:
+    path = Path(value).expanduser()
+    return path if path.is_absolute() else root / path
+
+
+def build_live_effective_inputs(
+    root: Path,
+    health_filter: str = "all",
+    *,
+    env_paths: list[str] | None = None,
+    allocator_state_path: str | None = None,
+) -> tuple[list[str], list[str], dict[str, str], list[dict[str, Any]]]:
     env: dict[str, str] = {}
-    for rel in (
+    paths = env_paths or [
         ".env",
         "configs/dynamic_allowlist_latest.env",
         "configs/regime_overlay_bull_chop.env",
         "runtime/control_plane/portfolio_allocator_latest.env",
-    ):
-        env.update(load_env_file(root / rel))
+    ]
+    for rel in paths:
+        env.update(load_env_file(_resolve_repo_path(root, rel)))
 
-    state_path = root / "runtime/control_plane/portfolio_allocator_state.json"
+    state_path = _resolve_repo_path(
+        root,
+        allocator_state_path or "runtime/control_plane/portfolio_allocator_state.json",
+    )
     state = json.loads(state_path.read_text())
     active = _active_sleeves(state)
 
@@ -180,11 +195,27 @@ def main() -> int:
     parser.add_argument("--slippage-bps", type=float, default=2.0)
     parser.add_argument("--tag", default="live_effective_parity")
     parser.add_argument("--health-filter", choices=["all", "ok", "ok-watch"], default=os.getenv("LIVE_EFFECTIVE_HEALTH_FILTER", "all"))
+    parser.add_argument(
+        "--env-path",
+        action="append",
+        dest="env_paths",
+        help="Env overlay path to load. Repeat to replace the default live env overlay list.",
+    )
+    parser.add_argument(
+        "--allocator-state",
+        default="runtime/control_plane/portfolio_allocator_state.json",
+        help="Allocator state JSON to use for sleeve/symbol inputs.",
+    )
     parser.add_argument("--print-only", action="store_true")
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
-    symbols, strategies, loaded_env, rows = build_live_effective_inputs(root, health_filter=args.health_filter)
+    symbols, strategies, loaded_env, rows = build_live_effective_inputs(
+        root,
+        health_filter=args.health_filter,
+        env_paths=args.env_paths,
+        allocator_state_path=args.allocator_state,
+    )
     if not symbols or not strategies:
         print("NO_ACTIVE_STRATEGIES_OR_SYMBOLS")
         return 2

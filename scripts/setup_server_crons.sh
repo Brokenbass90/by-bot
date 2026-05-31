@@ -16,19 +16,22 @@
 #   6. Operator snapshot builder — compact truth pack for AI/operator context
 #   7. Research process guard — kills stale autoresearch/backtest rows
 #   8. Self-audit report — slow evidence-driven diagnosis of current blockers
-#   9. Strategy health timeline — weekly historical health context for replay/operator
-#  10. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
-#  11. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
-#  12. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
-#  13. Auto-apply research winners — daily 06:00 UTC
-#  14. Funding-rate snapshot refresh — every 5 min
-#  15. Daily Telegram health digest — 08:00 UTC every day
-#  16. Alpaca monthly autopilot — 1st of month 09:30 UTC
-#  17. BTC dominance overlay — every 4h (alt_bias / alt_risk_mult)
-#  18. Live vs backtest monitor — every 4h (Phase 3 degradation detector)
-#  19. Live vs backtest monitor — daily 07:00 UTC (with TG alert on degrade)
-#  20. Weekly live-vs-backtest report — Friday 07:30 UTC
-#  21. Weekly trade-forensics AI report — Friday 07:45 UTC
+#   9. Project doctor report — structural project diagnosis for AI/operator
+#  10. Strategy health timeline — weekly historical health context for replay/operator
+#  11. DeepSeek weekly cron — analysis + tune + universe (Sunday 22:30 UTC)
+#  12. Equity curve autopilot — degradation monitor (Sunday 23:00 UTC)
+#  13. Alpaca intraday dynamic bridge — 5-min signal check, Mon-Fri market hours
+#  14. Auto-apply research winners — daily 06:00 UTC
+#  15. Funding-rate snapshot refresh — every 5 min
+#  16. Daily Telegram health digest — 08:00 UTC every day
+#  17. Alpaca monthly autopilot — 1st of month 09:30 UTC
+#  18. BTC dominance overlay — every 4h (alt_bias / alt_risk_mult)
+#  19. Live vs backtest monitor — every 4h (Phase 3 degradation detector)
+#  20. Live vs backtest monitor — daily 07:00 UTC (with TG alert on degrade)
+#  21. Weekly live-vs-backtest report — Friday 07:30 UTC
+#  22. Weekly trade-forensics AI report — Friday 07:45 UTC
+#  23. AI full-context pack — every 5 min
+#  24. Crypto setup blocker report — every 10 min
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -72,7 +75,12 @@ for req in \
     "$BOT_DIR/scripts/control_plane_watchdog.py" \
     "$BOT_DIR/scripts/build_geometry_state.py" \
     "$BOT_DIR/scripts/build_operator_snapshot.py" \
+    "$BOT_DIR/scripts/build_ai_full_context.py" \
+    "$BOT_DIR/scripts/build_ai_extras.py" \
+    "$BOT_DIR/scripts/build_ai_ohlc_and_logs.py" \
+    "$BOT_DIR/scripts/build_crypto_setup_blocker_report.py" \
     "$BOT_DIR/scripts/build_self_audit_report.py" \
+    "$BOT_DIR/scripts/build_project_doctor_report.py" \
     "$BOT_DIR/scripts/build_strategy_health_timeline.py" \
     "$BOT_DIR/scripts/research_process_guard.py" \
     "$BOT_DIR/scripts/dynamic_allowlist.py" \
@@ -122,7 +130,12 @@ CURRENT=$(
         | grep -v "scripts/control_plane_watchdog.py --repair --quiet >> logs/control_plane_watchdog.log" \
         | grep -v "scripts/build_geometry_state.py --quiet >> logs/geometry_state.log" \
         | grep -v "scripts/build_operator_snapshot.py --quiet >> logs/operator_snapshot.log" \
+        | grep -v "scripts/build_ai_full_context.py --quiet >> logs/ai_full_context.log" \
+        | grep -v "scripts/build_ai_extras.py --quiet >> logs/ai_extras.log" \
+        | grep -v "scripts/build_ai_ohlc_and_logs.py --quiet >> logs/ai_ohlc_and_logs.log" \
+        | grep -v "scripts/build_crypto_setup_blocker_report.py --quiet >> logs/crypto_blocker.log" \
         | grep -v "scripts/build_self_audit_report.py --quiet >> logs/self_audit.log" \
+        | grep -v "scripts/build_project_doctor_report.py --quiet >> logs/project_doctor.log" \
         | grep -v "scripts/build_strategy_health_timeline.py --quiet >> logs/strategy_health_timeline.log" \
         | grep -v "scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> /root/by-bot/logs/alpaca_intraday_dynamic_v1.log" \
         | grep -v "scripts/bot_health_watchdog.sh" \
@@ -137,7 +150,7 @@ CURRENT=$(
 NEW_CRONS=$(cat << CRONEOF
 # ── Bybit Bot Autonomous Operations ── $CRON_TAG
 #
-# 0. Bot health watchdog — every 2 min: heartbeat check + auto-restart + router recovery
+# 0. Bot health watchdog — every 2 min: heartbeat check + guarded auto-restart + router recovery
 */2 * * * * WATCHDOG_AUTO_RESTART=1 BOT_DIR=$BOT_DIR /bin/bash -lc 'cd $BOT_DIR && bash scripts/bot_health_watchdog.sh >> runtime/watchdog.log 2>&1' $CRON_TAG
 #
 # 1. Regime orchestrator — hourly regime snapshot / live overlay
@@ -158,6 +171,18 @@ NEW_CRONS=$(cat << CRONEOF
 # 6. Operator snapshot builder — compact truth pack for AI/operator context
 14 * * * * cd $BOT_DIR && $PYTHON scripts/build_operator_snapshot.py --quiet >> logs/operator_snapshot.log 2>&1 $CRON_TAG
 #
+# 6b. AI full-context pack — every 5 min: scanner cards + no-signal + trades + research status
+*/5 * * * * cd $BOT_DIR && $PYTHON scripts/build_ai_full_context.py --quiet >> logs/ai_full_context.log 2>&1 $CRON_TAG
+#
+# 6c. AI extras pack — every 5 min: deeper trades + errors + indicators + memory
+*/5 * * * * cd $BOT_DIR && $PYTHON scripts/build_ai_extras.py --quiet >> logs/ai_extras.log 2>&1 $CRON_TAG
+#
+# 6d. AI OHLC/logs pack — every 5 min: top setup candles + compact live log tail
+*/5 * * * * cd $BOT_DIR && $PYTHON scripts/build_ai_ohlc_and_logs.py --quiet >> logs/ai_ohlc_and_logs.log 2>&1 $CRON_TAG
+#
+# 6e. Crypto setup blocker report — every 10 min: scanner -> live sleeve blocker diagnosis
+*/10 * * * * cd $BOT_DIR && $PYTHON scripts/build_crypto_setup_blocker_report.py --quiet >> logs/crypto_blocker.log 2>&1 $CRON_TAG
+#
 # 7. Slow bounded research queue — one low-priority research process at a time
 17 * * * * cd $BOT_DIR && $PYTHON scripts/run_nightly_research_queue.py --quiet >> logs/research_nightly.log 2>&1 $CRON_TAG
 #
@@ -167,45 +192,48 @@ NEW_CRONS=$(cat << CRONEOF
 # 9. Self-audit report — slow diagnosis of live blockers every 2 hours
 20 */2 * * * cd $BOT_DIR && $PYTHON scripts/build_self_audit_report.py --quiet >> logs/self_audit.log 2>&1 $CRON_TAG
 #
-# 10. Strategy health timeline — historical health context for replay/operator
+# 10. Project doctor — structural diagnosis for AI/operator context
+22 */2 * * * cd $BOT_DIR && $PYTHON scripts/build_project_doctor_report.py --quiet >> logs/project_doctor.log 2>&1 $CRON_TAG
+#
+# 11. Strategy health timeline — historical health context for replay/operator
 5 23 * * 0 cd $BOT_DIR && $PYTHON scripts/build_strategy_health_timeline.py --quiet >> logs/strategy_health_timeline.log 2>&1 $CRON_TAG
 #
-# 11. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
+# 12. DeepSeek weekly cron — audit + tune + universe expansion (Sunday 22:30 UTC)
 30 22 * * 0 cd $BOT_DIR && $PYTHON scripts/deepseek_weekly_cron.py --quiet >> logs/deepseek_weekly.log 2>&1 $CRON_TAG
 #
-# 12. Equity curve autopilot — degradation monitor (Wednesday 03:00 + Sunday 23:00 UTC)
+# 13. Equity curve autopilot — degradation monitor (Wednesday 03:00 + Sunday 23:00 UTC)
 # Runs TWICE weekly so health file never goes stale (threshold = 14 days, but 3.5d is safe margin)
 0 3 * * 3 cd $BOT_DIR && $PYTHON scripts/equity_curve_autopilot.py --no-tg --quiet >> logs/equity_autopilot.log 2>&1 $CRON_TAG
 0 23 * * 0 cd $BOT_DIR && $PYTHON scripts/equity_curve_autopilot.py >> logs/equity_autopilot.log 2>&1 $CRON_TAG
 #
-# 13. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
+# 14. Alpaca intraday bridge — every 5 min, Mon-Fri, 14:00-21:00 UTC (US market hours)
 */5 14-21 * * 1-5 /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once >> logs/alpaca_intraday_dynamic_v1.log 2>&1' $CRON_TAG
 #
-# 14. Funding-rate snapshot refresh — every 5 min for funding_rev sleeve
+# 15. Funding-rate snapshot refresh — every 5 min for funding_rev sleeve
 */5 * * * * cd $BOT_DIR && $PYTHON scripts/funding_rate_fetcher.py --once --symbols BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT,AVAXUSDT >> logs/funding_rate_fetcher.log 2>&1 $CRON_TAG
 #
-# 15. Auto-apply research winners — daily at 06:00 UTC, after nightly research completes
+# 16. Auto-apply research winners — daily at 06:00 UTC, after nightly research completes
 0 6 * * * cd $BOT_DIR && $PYTHON scripts/auto_apply_research_winner.py >> logs/auto_apply.log 2>&1 $CRON_TAG
 #
-# 16. Daily Telegram health digest — every morning at 08:00 UTC
+# 17. Daily Telegram health digest — every morning at 08:00 UTC
 # Reports: CB state, regime, allocator, open trades, Alpaca P&L + picks
 0 8 * * * /bin/bash -lc 'cd $BOT_DIR && source .venv/bin/activate && python3 scripts/tg_daily_digest.py >> logs/tg_daily_digest.log 2>&1' $CRON_TAG
 #
-# 17. Alpaca monthly autopilot — 1st of each month at 09:30 UTC (after market open)
+# 18. Alpaca monthly autopilot — 1st of each month at 09:30 UTC (after market open)
 30 9 1 * * /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_monthly_autopilot.sh >> logs/alpaca_monthly.log 2>&1' $CRON_TAG
 #
-# 18. BTC dominance overlay — every 4h (Phase 3: alt_bias / ALT_RISK_MULT for regime env)
+# 19. BTC dominance overlay — every 4h (Phase 3: alt_bias / ALT_RISK_MULT for regime env)
 # Writes runtime/btc_dominance_state.json, read by build_regime_state.py next cycle
 10 */4 * * * cd $BOT_DIR && $PYTHON scripts/build_btc_dominance_state.py >> logs/btc_dominance.log 2>&1 $CRON_TAG
 #
-# 19. Live vs backtest monitor — every 4h (Phase 3: degrade detection, writes strategy_pause.env)
+# 20. Live vs backtest monitor — every 4h (Phase 3: degrade detection, writes strategy_pause.env)
 # Bot loads strategy_pause.env on startup via load_dotenv(override=True)
 25 */4 * * * cd $BOT_DIR && $PYTHON scripts/live_vs_backtest_monitor.py >> logs/strategy_monitor.log 2>&1 $CRON_TAG
 #
-# 20. Weekly live-vs-backtest comparison report — Friday 07:30 UTC
+# 21. Weekly live-vs-backtest comparison report — Friday 07:30 UTC
 30 7 * * 5 cd $BOT_DIR && $PYTHON scripts/weekly_live_vs_backtest_report.py --telegram >> logs/weekly_live_vs_backtest.log 2>&1 $CRON_TAG
 #
-# 21. Weekly trade-forensics AI report — Friday 07:45 UTC
+# 22. Weekly trade-forensics AI report — Friday 07:45 UTC
 # Reads live/backtest trades, classifies stop/entry/exit quality, and asks DeepSeek for a short interpretation when enabled.
 45 7 * * 5 cd $BOT_DIR && $PYTHON scripts/weekly_trade_forensics_ai_report.py --telegram --ai >> logs/weekly_trade_forensics_ai.log 2>&1 $CRON_TAG
 #
@@ -254,15 +282,27 @@ echo "[7] Self-audit report:"
 cd "$BOT_DIR" && $PYTHON scripts/build_self_audit_report.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[8] Strategy health timeline builder:"
+echo "[8] AI full-context pack:"
+cd "$BOT_DIR" && $PYTHON scripts/build_ai_full_context.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
+
+echo ""
+echo "[9] Crypto setup blocker report:"
+cd "$BOT_DIR" && $PYTHON scripts/build_crypto_setup_blocker_report.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
+
+echo ""
+echo "[8] Project doctor report:"
+cd "$BOT_DIR" && $PYTHON scripts/build_project_doctor_report.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
+
+echo ""
+echo "[9] Strategy health timeline builder:"
 cd "$BOT_DIR" && $PYTHON scripts/build_strategy_health_timeline.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[9] Operator snapshot builder:"
+echo "[10] Operator snapshot builder:"
 cd "$BOT_DIR" && $PYTHON scripts/build_operator_snapshot.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[10] Intraday bridge (live paper once):"
+echo "[11] Intraday bridge (live paper once):"
 cd "$BOT_DIR" && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""

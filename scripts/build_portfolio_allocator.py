@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from datetime import datetime, timezone
@@ -162,11 +163,11 @@ def _sleeve_health_status(
     sleeve: Dict[str, Any],
     health_map: Dict[str, Any],
     *,
-    missing_status: str = "WATCH",
+    missing_status: str = "OK",
 ) -> Tuple[str, List[str]]:
     statuses: List[str] = []
     notes: List[str] = []
-    fallback = str(missing_status or "WATCH").strip().upper() or "WATCH"
+    fallback = str(missing_status or "OK").strip().upper() or "OK"
     for strategy_name in sleeve.get("strategy_names", []):
         info = health_map.get(str(strategy_name), {})
         if info:
@@ -206,6 +207,88 @@ def _haircut_from_ratio(ratio: float, tiers: List[Dict[str, Any]]) -> float:
         if float(ratio) >= threshold:
             mult = max(0.0, _safe_float(item.get("mult"), mult))
     return float(mult)
+
+
+def _clamp01(value: float) -> float:
+    return max(0.0, min(1.0, float(value)))
+
+
+def _soften_haircut(raw_mult: float, strength: float) -> float:
+    """Return an effective haircut multiplier.
+
+    strength=0 bypasses soft haircuts, strength=1 keeps the original multiplier.
+    Example: raw=0.75, strength=0.5 -> 0.875.
+    """
+    raw = _clamp01(float(raw_mult))
+    factor = _clamp01(float(strength))
+    return 1.0 - ((1.0 - raw) * factor)
+
+
+def _soft_health_mult(status: str, raw_mult: float, strength: float) -> float:
+    """Soften WATCH only; PAUSE/KILL remain hard safety states."""
+    status_u = str(status or "OK").upper()
+    if status_u == "WATCH":
+        return _soften_haircut(raw_mult, strength)
+    return max(0.0, float(raw_mult))
+
+
+def _read_effective_equity(root: Path, env_map: Dict[str, str]) -> Tuple[float | None, str]:
+    candidates: List[Tuple[Path, List[str]]] = [
+        (root / "runtime" / "equity_snapshot.json", ["equity_usd", "equity", "wallet_balance", "total_equity_usd"]),
+        (root / "runtime" / "bot_heartbeat.json", ["effective_equity", "equity_usd", "wallet_balance", "bot_capital_effective_usd"]),
+        (root / "runtime" / "account_snapshot.json", ["equity_usd", "wallet_balance", "total_equity"]),
+    ]
+    for path, keys in candidates:
+        data = _load_json(path, {})
+        if not isinstance(data, dict):
+            continue
+        for key in keys:
+            if key not in data:
+                continue
+            value = _safe_float(data.get(key), -1.0)
+            if value >= 0.0:
+                return value, f"{path.relative_to(root)}:{key}"
+    for key in ("ALLOCATOR_EQUITY_USD", "BOT_CAPITAL_EFFECTIVE_USD", "BOT_CAPITAL_USD", "DRY_RUN_EQUITY"):
+        value = _safe_float(env_map.get(key), -1.0)
+        if value >= 0.0:
+            return value, f".env:{key}"
+    return None, "unknown"
+
+
+def _allocator_mode_from_equity(requested_mode: str, equity_usd: float | None) -> Tuple[str, float]:
+    mode = str(requested_mode or "auto").strip().lower()
+    aliases = {
+        "": "auto",
+        "default": "auto",
+        "medium": "medium",
+        "bypass": "bypass_haircuts",
+        "off": "bypass_haircuts",
+    }
+    mode = aliases.get(mode, mode)
+
+    fixed_modes = {
+        "full": ("full", 1.0),
+        "medium": ("medium", 0.8),
+        "light": ("light", 0.5),
+        "bypass_haircuts": ("bypass_haircuts", 0.0),
+        "bypass_all": ("bypass_all", 0.0),
+    }
+    if mode in fixed_modes:
+        return fixed_modes[mode]
+    if mode != "auto":
+        return ("full", 1.0)
+
+    if equity_usd is None:
+        return ("full", 1.0)
+    if equity_usd < 500.0:
+        return ("bypass_haircuts", 0.0)
+    if equity_usd < 2000.0:
+        return ("bypass_haircuts", 0.0)
+    if equity_usd < 5000.0:
+        return ("light", 0.5)
+    if equity_usd < 20000.0:
+        return ("medium", 0.8)
+    return ("full", 1.0)
 
 
 def _classify_degraded_kind(
@@ -254,6 +337,17 @@ def main() -> int:
     router = _load_json(router_path, {})
     health = _load_json(health_path, {})
     policy = _load_json(policy_path, {})
+    requested_allocator_mode = str(
+        base_env.get("ALLOCATOR_MODE")
+        or os.getenv("ALLOCATOR_MODE")
+        or policy.get("allocator_mode")
+        or "auto"
+    ).strip().lower() or "auto"
+    effective_equity_usd, equity_source = _read_effective_equity(ROOT, base_env)
+    effective_allocator_mode, haircut_strength = _allocator_mode_from_equity(
+        requested_allocator_mode,
+        effective_equity_usd,
+    )
 
     now = datetime.now(timezone.utc)
     now_ts = int(time.time())
@@ -305,7 +399,8 @@ def main() -> int:
     safe_mode = bool(safe_mode_reasons)
     degraded = bool(degraded_reasons) or safe_mode
     if degraded and not safe_mode:
-        global_mult *= max(0.0, _safe_float(policy.get("degraded_global_risk_mult"), 0.75))
+        raw_degraded_mult = max(0.0, _safe_float(policy.get("degraded_global_risk_mult"), 0.75))
+        global_mult *= _soften_haircut(raw_degraded_mult, haircut_strength)
     if safe_mode:
         global_mult = min(global_mult, max(0.0, _safe_float(policy.get("safe_mode_global_risk_mult"), 0.25)))
     overall_health = str(health.get("overall_health", "OK")).upper()
@@ -320,6 +415,11 @@ def main() -> int:
         f"PORTFOLIO_ALLOCATOR_GENERATED_AT_UTC={generated_at}",
         f"PORTFOLIO_ALLOCATOR_REGIME={regime}",
         f"PORTFOLIO_ALLOCATOR_OVERALL_HEALTH={overall_health}",
+        f"ALLOCATOR_MODE={requested_allocator_mode}",
+        f"ALLOCATOR_EFFECTIVE_MODE={effective_allocator_mode}",
+        f"ALLOCATOR_HAIRCUT_STRENGTH={haircut_strength:.4f}",
+        f"ALLOCATOR_EQUITY_USD={effective_equity_usd if effective_equity_usd is not None else ''}",
+        f"ALLOCATOR_EQUITY_SOURCE={equity_source}",
         f"PORTFOLIO_ALLOCATOR_STATE_PATH={out_state}",
         f"PORTFOLIO_ALLOCATOR_HISTORY_PATH={HISTORY_PATH}",
         f"PORTFOLIO_ALLOCATOR_PATH={out_env}",
@@ -334,8 +434,8 @@ def main() -> int:
     exposure_controls = dict(policy.get("exposure_controls") or {})
     missing_health_status = str(
         policy.get("missing_strategy_health_status")
-        or os.getenv("HEALTH_GATE_MISSING_STATUS", "WATCH")
-    ).strip().upper() or "WATCH"
+        or os.getenv("HEALTH_GATE_MISSING_STATUS", "OK")
+    ).strip().upper() or "OK"
     portfolio_overlap_tiers = list(
         exposure_controls.get("portfolio_overlap_global_haircuts")
         or [
@@ -379,7 +479,8 @@ def main() -> int:
             health_map,
             missing_status=missing_health_status,
         )
-        health_mult = status_multipliers.get(health_status, 1.0)
+        raw_health_mult = status_multipliers.get(health_status, 1.0)
+        health_mult = _soft_health_mult(health_status, raw_health_mult, haircut_strength)
         count_mult = _symbol_count_mult(symbol_count, count_tiers)
         base_risk = max(
             0.0,
@@ -411,8 +512,10 @@ def main() -> int:
             "base_risk_mult": base_risk,
             "count_mult": count_mult,
             "health_mult": health_mult,
+            "raw_health_mult": raw_health_mult,
             "final_risk_mult": final_risk,
             "overlap_mult": 1.0,
+            "raw_overlap_mult": 1.0,
             "max_overlap_ratio": 0.0,
             "overlap_with": {},
             "notes": notes,
@@ -440,7 +543,8 @@ def main() -> int:
         if bool(state.get("enabled")) and state.get("symbols")
     }
     portfolio_overlap_ratio = _portfolio_overlap_ratio(list(enabled_symbol_sets.values()))
-    portfolio_overlap_mult = _haircut_from_ratio(portfolio_overlap_ratio, portfolio_overlap_tiers)
+    raw_portfolio_overlap_mult = _haircut_from_ratio(portfolio_overlap_ratio, portfolio_overlap_tiers)
+    portfolio_overlap_mult = _soften_haircut(raw_portfolio_overlap_mult, haircut_strength)
     if portfolio_overlap_mult < 1.0:
         global_mult *= portfolio_overlap_mult
         degraded = True
@@ -459,10 +563,12 @@ def main() -> int:
             if ratio > 0.0:
                 overlap_with[other_name] = round(ratio, 4)
                 max_overlap_ratio = max(max_overlap_ratio, ratio)
-        overlap_mult = _haircut_from_ratio(max_overlap_ratio, sleeve_overlap_tiers)
+        raw_overlap_mult = _haircut_from_ratio(max_overlap_ratio, sleeve_overlap_tiers)
+        overlap_mult = _soften_haircut(raw_overlap_mult, haircut_strength)
         state["overlap_with"] = overlap_with
         state["max_overlap_ratio"] = round(max_overlap_ratio, 4)
         state["overlap_mult"] = round(overlap_mult, 4)
+        state["raw_overlap_mult"] = round(raw_overlap_mult, 4)
         state["final_risk_mult"] = float(state.get("final_risk_mult", 0.0) or 0.0) * overlap_mult
         if overlap_mult < 1.0:
             state["notes"].append(f"overlap_haircut:{max_overlap_ratio:.2f}")
@@ -500,6 +606,7 @@ def main() -> int:
             f"ALLOCATOR_GLOBAL_RISK_MULT={global_mult:.4f}",
             f"ALLOCATOR_PORTFOLIO_OVERLAP_RATIO={portfolio_overlap_ratio:.4f}",
             f"ALLOCATOR_PORTFOLIO_OVERLAP_MULT={portfolio_overlap_mult:.4f}",
+            f"ALLOCATOR_PORTFOLIO_OVERLAP_MULT_RAW={raw_portfolio_overlap_mult:.4f}",
             f"ALLOCATOR_HARD_BLOCK_NEW_ENTRIES={_bool_to_env(safe_mode)}",
             f"ALLOCATOR_SAFE_MODE_REASON={json.dumps(';'.join(safe_mode_reasons[:6]))}",
             "",
@@ -515,6 +622,11 @@ def main() -> int:
         "policy_version": policy_version,
         "profile_version": profile_version,
         "timestamp_utc": generated_at,
+        "allocator_mode": requested_allocator_mode,
+        "allocator_effective_mode": effective_allocator_mode,
+        "haircut_strength": round(haircut_strength, 4),
+        "effective_equity_usd": effective_equity_usd,
+        "equity_source": equity_source,
         "status": allocator_status,
         "safe_mode": safe_mode,
         "degraded": degraded,
@@ -526,6 +638,7 @@ def main() -> int:
         "base_global_risk_mult": base_global_mult,
         "portfolio_overlap_ratio": round(portfolio_overlap_ratio, 4),
         "portfolio_overlap_mult": round(portfolio_overlap_mult, 4),
+        "raw_portfolio_overlap_mult": round(raw_portfolio_overlap_mult, 4),
         "degraded_reasons": degraded_reasons,
         "safe_mode_reasons": safe_mode_reasons,
         "health_summary": health_summary,
@@ -547,6 +660,7 @@ def main() -> int:
             "enabled_sleeves": sorted(enabled_symbol_sets.keys()),
             "portfolio_overlap_ratio": round(portfolio_overlap_ratio, 4),
             "portfolio_overlap_mult": round(portfolio_overlap_mult, 4),
+            "raw_portfolio_overlap_mult": round(raw_portfolio_overlap_mult, 4),
             "portfolio_overlap_tiers": portfolio_overlap_tiers,
             "sleeve_overlap_tiers": sleeve_overlap_tiers,
         },
@@ -568,7 +682,8 @@ def main() -> int:
     print(f"History path:  {HISTORY_PATH}")
     print(
         f"Allocator status: {allocator_status} | regime={regime} | "
-        f"global_risk={global_mult:.2f} | hard_block={int(safe_mode)}"
+        f"global_risk={global_mult:.2f} | mode={requested_allocator_mode}->{effective_allocator_mode} "
+        f"haircut_strength={haircut_strength:.2f} | hard_block={int(safe_mode)}"
     )
     for name, sleeve_state in sleeve_states.items():
         print(

@@ -15,6 +15,24 @@
   "history_path": "runtime/research_nightly/history.jsonl",
   "tasks": [
     {
+      "name": "asb1_bull_chop_repair",
+      "spec": "configs/autoresearch/asb1_bull_chop_repair_v1.json",
+      "enabled": true,
+      "min_interval_hours": 168
+    },
+    {
+      "name": "att1_density_more_pivots",
+      "spec": "configs/autoresearch/att1_density_v3_more_pivots_v1.json",
+      "enabled": true,
+      "min_interval_hours": 168
+    },
+    {
+      "name": "elder_v3_macro_off_relax",
+      "spec": "configs/autoresearch/elder_v3_macro_off_full_relax_v1.json",
+      "enabled": true,
+      "min_interval_hours": 168
+    },
+    {
       "name": "support_bounce_annual_repair",
       "spec": "configs/autoresearch/support_bounce_v1_annual_repair_v2.json",
       "enabled": true,

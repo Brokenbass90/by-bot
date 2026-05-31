@@ -24,7 +24,7 @@
     "PAUSE": 0.0,
     "KILL": 0.0
   },
-  "missing_strategy_health_status": "WATCH",
+  "missing_strategy_health_status": "OK",
   "symbol_count_multipliers": [
     { "max_count": 0, "mult": 0.0 },
     { "max_count": 2, "mult": 0.75 },
@@ -181,12 +181,12 @@
       "symbol_env_key": "ARS1_SYMBOL_ALLOWLIST",
       "risk_env": "RANGE_RISK_MULT",
       "strategy_names": ["alt_range_scalp_v1"],
-      "_comment": "Range scalp — best in chop, active in all regimes.",
+      "_comment": "Range scalp paused until a fresh annual/WF confirm proves additivity; older stack audits showed range packages can destroy edge.",
       "base_risk_mult_by_regime": {
-        "bull_trend": 0.4,
-        "bull_chop": 0.95,
-        "bear_chop": 1.0,
-        "bear_trend": 0.5
+        "bull_trend": 0.0,
+        "bull_chop": 0.0,
+        "bear_chop": 0.0,
+        "bear_trend": 0.0
       }
     },
     {

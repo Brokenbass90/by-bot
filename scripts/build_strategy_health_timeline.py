@@ -43,10 +43,10 @@ def main() -> int:
     out_history.parent.mkdir(parents=True, exist_ok=True)
     try:
         timeline = build_strategy_health_timeline(run_dir, step_days=int(args.step_days))
-    except FileNotFoundError:
+    except (FileNotFoundError, RuntimeError) as exc:
         if out_path.exists():
             if not args.quiet:
-                print(f"kept_existing={out_path}")
+                print(f"kept_existing={out_path} reason={exc}")
             return 0
         raise
 

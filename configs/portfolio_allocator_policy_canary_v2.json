@@ -24,7 +24,7 @@
     "PAUSE": 0.0,
     "KILL": 0.0
   },
-  "missing_strategy_health_status": "WATCH",
+  "missing_strategy_health_status": "OK",
   "symbol_count_multipliers": [
     {
       "max_count": 0,

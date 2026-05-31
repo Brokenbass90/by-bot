@@ -10,3 +10,6 @@ bear_regime_continuation_v1_fast_90d_v1.json
 spike_rejection_v1_fast_90d_v1.json
 whale_print_follow_v1_fast_90d_v1.json
 liquidity_sweep_reversal_v2_param_sweep_v1.json
+asb1_bull_chop_repair_v1.json
+att1_density_v3_more_pivots_v1.json
+elder_v3_macro_off_full_relax_v1.json

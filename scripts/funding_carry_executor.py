@@ -9,24 +9,27 @@ Strategy:
   - NEGATIVE funding (< -threshold) → open LONG perp (shorts pay you)
   - POSITIVE funding (> +threshold) → open SHORT perp (longs pay you)
   - Close when funding reverts toward 0 or flips
+  - Stop-loss applied on price PnL to cap directional risk
 
-Risk management:
-  - Max 1 position per symbol
-  - Max total allocation = CARRY_MAX_CAPITAL_PCT of account
-  - Stop-loss = CARRY_SL_PCT of position
+IMPORTANT — This is a one-legged carry (perp only, no spot hedge).
+You have directional price exposure. The funding edge provides a yield
+premium, but a large adverse move will outweigh collected funding.
+Use small position sizes and tight stop-losses accordingly.
 
-ENV variables (can be in .env or runtime/funding_carry/):
+ENV variables:
+  BYBIT_ACCOUNTS_JSON    JSON array: [{"name":"main","key":"...","secret":"..."}]
+                         Falls back to BYBIT_API_KEY / BYBIT_API_SECRET if set.
+  CARRY_ACCOUNT_NAME     which account to use from JSON (default: main)
   CARRY_SYMBOLS          comma-separated symbols to watch (default: BTCUSDT,ETHUSDT,SOLUSDT)
-  CARRY_MIN_RATE_PCT     funding rate threshold to enter (abs, default: 0.05)  = 0.05%
-  CARRY_CLOSE_RATE_PCT   funding rate threshold to close (abs, default: 0.01) = 0.01%
+  CARRY_MIN_RATE_PCT     funding rate threshold to enter, abs % (default: 0.05)
+  CARRY_CLOSE_RATE_PCT   funding rate threshold to close, abs % (default: 0.01)
   CARRY_POSITION_USD     USD per position (default: 50)
   CARRY_MAX_POSITIONS    max simultaneous positions (default: 3)
-  CARRY_SL_PCT           stop loss as % of entry (default: 2.5)
-  CARRY_DRY_RUN          1 = log only, do not actually trade (default: 1)
-  CARRY_STATE_FILE       JSON file to track open carry positions
-
-  BYBIT_API_KEY, BYBIT_API_SECRET (same as main bot)
-  TG_TOKEN, TG_CHAT_ID (for Telegram alerts)
+  CARRY_SL_PCT           stop loss as % of entry price (default: 2.5)
+  CARRY_DRY_RUN          1 = log only, no real orders (default: 1)
+  CARRY_STATE_FILE       JSON state file path
+  TG_TOKEN               Telegram bot token
+  TG_CHAT                Telegram chat id (also accepts TG_CHAT_ID)
 """
 from __future__ import annotations
 
@@ -44,6 +47,15 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+# Load .env so all env vars are available
+try:
+    from dotenv import load_dotenv as _load_dotenv
+    _env_file = ROOT / ".env"
+    if _env_file.exists():
+        _load_dotenv(_env_file, override=False)
+except ImportError:
+    pass
+
 
 # ── ENV helpers ──────────────────────────────────────────────────────────────
 
@@ -60,6 +72,29 @@ def _env_int(name: str, default: int) -> int:
 
 def _env_bool(name: str, default: bool) -> bool:
     return _env(name, "1" if default else "0").lower() in {"1","true","yes","on"}
+
+
+def _load_api_keys(account_name: str = "main") -> tuple[str, str]:
+    """
+    Extract API key+secret from BYBIT_ACCOUNTS_JSON (multi-account format).
+    Falls back to BYBIT_API_KEY / BYBIT_API_SECRET if JSON not set.
+    Returns (key, secret) — both empty strings on failure.
+    """
+    accounts_raw = _env("BYBIT_ACCOUNTS_JSON")
+    if accounts_raw:
+        try:
+            accounts = json.loads(accounts_raw)
+            # Find by name, fall back to first account
+            target = next(
+                (a for a in accounts if a.get("name") == account_name),
+                accounts[0] if accounts else None
+            )
+            if target:
+                return str(target.get("key", "")), str(target.get("secret", ""))
+        except Exception as e:
+            print(f"[WARN] Could not parse BYBIT_ACCOUNTS_JSON: {e}", file=sys.stderr)
+    # Fallback
+    return _env("BYBIT_API_KEY"), _env("BYBIT_API_SECRET")
 
 
 # ── Telegram ──────────────────────────────────────────────────────────────────
@@ -105,6 +140,22 @@ class BybitClient:
         except error.HTTPError as e:
             raise RuntimeError(f"GET {path} failed: {e.code} {e.read()[:200]}")
 
+    def _get_signed(self, path: str, qs: str) -> dict:
+        import ssl as _ssl
+        ts = str(int(time.time() * 1000))
+        sig = hmac.new(self.secret.encode(), f"{ts}{self.key}5000{qs}".encode(), hashlib.sha256).hexdigest()
+        req = request.Request(
+            f"{self.BASE}{path}?{qs}",
+            headers={
+                "X-BAPI-API-KEY": self.key,
+                "X-BAPI-TIMESTAMP": ts,
+                "X-BAPI-SIGN": sig,
+                "X-BAPI-RECV-WINDOW": "5000",
+            },
+        )
+        with request.urlopen(req, context=_ssl.create_default_context(), timeout=10) as resp:
+            return json.loads(resp.read())
+
     def _post(self, path: str, body: dict) -> dict:
         import ssl as _ssl
         ts = str(int(time.time() * 1000))
@@ -136,23 +187,17 @@ class BybitClient:
             raise ValueError(f"No ticker data for {symbol}")
         return float(items[0].get("fundingRate") or 0.0)
 
+    def get_last_price(self, symbol: str) -> float:
+        """Return last traded price."""
+        data = self._get("/v5/market/tickers", {"category": "linear", "symbol": symbol})
+        items = (data.get("result") or {}).get("list") or []
+        if not items:
+            raise ValueError(f"No ticker data for {symbol}")
+        return float(items[0].get("lastPrice") or 0.0)
+
     def get_position(self, symbol: str) -> dict | None:
         """Return open position dict or None."""
-        ts = str(int(time.time() * 1000))
-        qs = f"category=linear&symbol={symbol}"
-        sig = hmac.new(self.secret.encode(), f"{ts}{self.key}5000{qs}".encode(), hashlib.sha256).hexdigest()
-        import ssl as _ssl
-        req = request.Request(
-            f"{self.BASE}/v5/position/list?{qs}",
-            headers={
-                "X-BAPI-API-KEY": self.key,
-                "X-BAPI-TIMESTAMP": ts,
-                "X-BAPI-SIGN": sig,
-                "X-BAPI-RECV-WINDOW": "5000",
-            },
-        )
-        with request.urlopen(req, context=_ssl.create_default_context(), timeout=10) as resp:
-            data = json.loads(resp.read())
+        data = self._get_signed("/v5/position/list", f"category=linear&symbol={symbol}")
         items = (data.get("result") or {}).get("list") or []
         for item in items:
             if float(item.get("size") or 0) != 0:
@@ -160,21 +205,7 @@ class BybitClient:
         return None
 
     def get_account_balance_usdt(self) -> float:
-        ts = str(int(time.time() * 1000))
-        qs = "accountType=UNIFIED"
-        sig = hmac.new(self.secret.encode(), f"{ts}{self.key}5000{qs}".encode(), hashlib.sha256).hexdigest()
-        import ssl as _ssl
-        req = request.Request(
-            f"{self.BASE}/v5/account/wallet-balance?{qs}",
-            headers={
-                "X-BAPI-API-KEY": self.key,
-                "X-BAPI-TIMESTAMP": ts,
-                "X-BAPI-SIGN": sig,
-                "X-BAPI-RECV-WINDOW": "5000",
-            },
-        )
-        with request.urlopen(req, context=_ssl.create_default_context(), timeout=10) as resp:
-            data = json.loads(resp.read())
+        data = self._get_signed("/v5/account/wallet-balance", "accountType=UNIFIED")
         coins = ((data.get("result") or {}).get("list") or [{}])[0].get("coin") or []
         for coin in coins:
             if coin.get("coin") == "USDT":
@@ -227,7 +258,8 @@ def _min_qty(symbol: str) -> float:
         "BTCUSDT": 0.001, "ETHUSDT": 0.01, "SOLUSDT": 0.1,
         "BNBUSDT": 0.01,  "XRPUSDT": 1.0,  "DOGEUSDT": 10.0,
         "LTCUSDT": 0.01,  "AVAXUSDT": 0.1, "DOTUSDT": 0.1,
-        "ADAUSDT": 1.0,   "MATICUSDT": 1.0,
+        "ADAUSDT": 1.0,   "MATICUSDT": 1.0, "LINKUSDT": 0.1,
+        "SUIUSDT": 1.0,   "BCHUSDT": 0.01,
     }
     return defaults.get(symbol.upper(), 0.1)
 
@@ -238,113 +270,132 @@ def run_once(client: BybitClient | None, cfg: dict, state: dict, dry_run: bool,
              tg_token: str, tg_chat_id: str) -> dict:
     """Scan symbols, manage positions. Returns updated state."""
     symbols        = [s.strip().upper() for s in cfg["symbols"]]
-    min_rate       = cfg["min_rate"]       # abs threshold to enter
-    close_rate     = cfg["close_rate"]     # abs threshold to close
+    min_rate       = cfg["min_rate"]
+    close_rate     = cfg["close_rate"]
     position_usd   = cfg["position_usd"]
     max_positions  = cfg["max_positions"]
-    sl_pct         = cfg["sl_pct"] / 100.0
+    sl_pct         = cfg["sl_pct"] / 100.0      # e.g. 0.025 for 2.5%
 
     positions: dict = state.get("positions", {})
-    actions = []
 
     for symbol in symbols:
+        # ── Fetch funding rate ───────────────────────────────────────
         try:
-            if client:
-                rate = client.get_funding_rate(symbol)
-            else:
-                # DRY_RUN with no keys: skip actual API
-                rate = 0.0
+            rate = client.get_funding_rate(symbol) if client else 0.0
         except Exception as e:
             print(f"  [{symbol}] funding rate fetch error: {e}")
             continue
 
         rate_pct = rate * 100.0
-        print(f"  [{symbol}] funding_rate={rate_pct:.4f}%", end="")
+        print(f"  [{symbol}] funding={rate_pct:.4f}%", end="")
 
         in_pos = symbol in positions
         pos = positions.get(symbol, {})
 
-        # ── Check exit conditions for existing positions ─────────────
+        # ── Manage existing position ─────────────────────────────────
         if in_pos:
-            entry_side = pos.get("side", "")
+            entry_side  = pos.get("side", "")
+            entry_price = float(pos.get("entry_price", 0) or 0)
+            qty         = str(pos.get("qty", "0"))
+
+            # Fetch current price for SL check
+            cur_price = 0.0
+            if client and entry_price > 0:
+                try:
+                    cur_price = client.get_last_price(symbol)
+                except Exception:
+                    pass
+
+            # ── Stop-loss check (price-based) ──────────────────────
+            sl_hit = False
+            if entry_price > 0 and cur_price > 0:
+                pnl_pct = (cur_price - entry_price) / entry_price
+                if entry_side == "Sell":
+                    pnl_pct = -pnl_pct      # short PnL flips sign
+                if pnl_pct < -sl_pct:
+                    sl_hit = True
+                    print(f" → SL HIT (price_pnl={pnl_pct*100:.2f}%, sl={sl_pct*100:.1f}%)", end="")
+
+            # ── Funding reversal check ─────────────────────────────
+            funding_exit = False
             abs_rate = abs(rate_pct)
-            # Close if funding has reduced significantly
-            should_close = abs_rate < close_rate
-            # Also close if direction flipped (funding now hurts us)
-            if entry_side == "Buy" and rate_pct > close_rate:
-                should_close = True   # funding now positive = paying for longs
-            if entry_side == "Sell" and rate_pct < -close_rate:
-                should_close = True   # funding now negative = paying for shorts
+            if abs_rate < close_rate:
+                funding_exit = True
+            elif entry_side == "Buy"  and rate_pct > close_rate:
+                funding_exit = True   # funding flipped positive = longs pay
+            elif entry_side == "Sell" and rate_pct < -close_rate:
+                funding_exit = True   # funding flipped negative = shorts pay
+
+            should_close = sl_hit or funding_exit
 
             if should_close:
-                qty = str(pos.get("qty", "0"))
+                reason = "SL" if sl_hit else f"funding_faded({rate_pct:.4f}%)"
                 if not dry_run and client:
                     try:
-                        result = client.close_position(symbol, entry_side, qty)
-                        print(f" → CLOSE {entry_side} (funding faded to {rate_pct:.4f}%)")
+                        client.close_position(symbol, entry_side, qty)
+                        print(f" → CLOSED {entry_side} [{reason}]")
                     except Exception as e:
                         print(f" → CLOSE FAILED: {e}")
                         continue
                 else:
-                    print(f" → [DRY_RUN] CLOSE {entry_side} (funding={rate_pct:.4f}%)")
+                    print(f" → [DRY_RUN] CLOSE {entry_side} [{reason}]")
                 del positions[symbol]
-                actions.append({"symbol": symbol, "action": "close", "rate_pct": rate_pct})
-                msg = f"💰 CARRY CLOSE {symbol} {entry_side}\nfunding={rate_pct:.4f}% (faded)"
+                msg = f"💰 CARRY CLOSE {symbol} {entry_side}\nreason={reason}"
                 _tg(tg_token, tg_chat_id, msg)
-                continue
             else:
-                print(f" → HOLD {entry_side} (funding={rate_pct:.4f}%)")
-                continue
+                pnl_str = f" pnl={((cur_price-entry_price)/entry_price*100 if entry_price else 0):.2f}%" if cur_price else ""
+                print(f" → HOLD {entry_side}{pnl_str}")
+            continue
 
-        # ── Check entry conditions ───────────────────────────────────
+        # ── Entry logic ──────────────────────────────────────────────
         if len(positions) >= max_positions:
-            print(f" → SKIP (max_positions={max_positions} reached)")
+            print(f" → SKIP (max_positions={max_positions})")
             continue
 
         entry_side = None
         if rate_pct < -min_rate:
-            entry_side = "Buy"   # negative funding → longs collect from shorts
+            entry_side = "Buy"
         elif rate_pct > min_rate:
-            entry_side = "Sell"  # positive funding → shorts collect from longs
+            entry_side = "Sell"
 
         if not entry_side:
             print(f" → no signal (|{rate_pct:.4f}%| < {min_rate:.3f}%)")
             continue
 
-        # Compute qty from USD position size
+        # Fetch price
         price = 0.0
         if client:
             try:
-                ticker = client._get("/v5/market/tickers", {"category": "linear", "symbol": symbol})
-                price = float((ticker.get("result", {}).get("list") or [{}])[0].get("lastPrice", 0) or 0)
+                price = client.get_last_price(symbol)
             except Exception:
                 pass
-        qty_raw = position_usd / max(price, 1.0) if price > 0 else 0
-        min_q = _min_qty(symbol)
-        qty = max(round(qty_raw / min_q) * min_q, min_q)
+
+        qty_raw = position_usd / max(price, 1.0) if price > 0 else 0.0
+        min_q   = _min_qty(symbol)
+        qty     = max(round(qty_raw / min_q) * min_q, min_q)
         qty_str = f"{qty:.4f}".rstrip("0").rstrip(".")
 
         if not dry_run and client and price > 0:
             try:
-                result = client.place_order(symbol, entry_side, qty_str)
+                client.place_order(symbol, entry_side, qty_str)
                 print(f" → ENTER {entry_side} qty={qty_str} (funding={rate_pct:.4f}%)")
             except Exception as e:
                 print(f" → ENTER FAILED: {e}")
                 continue
         else:
-            print(f" → [DRY_RUN] ENTER {entry_side} qty={qty_str} (funding={rate_pct:.4f}%, price≈{price:.2f})")
+            print(f" → [DRY_RUN] ENTER {entry_side} qty={qty_str} "
+                  f"(funding={rate_pct:.4f}%, price≈{price:.2f})")
 
         positions[symbol] = {
-            "side": entry_side,
-            "qty": qty_str,
-            "entry_price": price,
-            "entry_ts": int(time.time()),
-            "entry_rate_pct": rate_pct,
-            "sl_pct": sl_pct * 100,
+            "side":            entry_side,
+            "qty":             qty_str,
+            "entry_price":     price,
+            "entry_ts":        int(time.time()),
+            "entry_rate_pct":  rate_pct,
+            "sl_pct":          sl_pct * 100,
         }
-        actions.append({"symbol": symbol, "action": "enter", "side": entry_side, "rate_pct": rate_pct})
         msg = (f"💸 CARRY ENTER {symbol} {entry_side} qty={qty_str}\n"
-               f"funding={rate_pct:.4f}% → collecting carry\n"
+               f"funding={rate_pct:.4f}% | sl={sl_pct*100:.1f}%\n"
                f"{'⚠️ DRY RUN — no real order' if dry_run else '✅ Order placed'}")
         _tg(tg_token, tg_chat_id, msg)
 
@@ -355,29 +406,34 @@ def run_once(client: BybitClient | None, cfg: dict, state: dict, dry_run: bool,
 
 def main() -> int:
     import argparse
-    ap = argparse.ArgumentParser(description="Funding carry executor — scan rates and manage positions")
-    ap.add_argument("--dry-run", action="store_true", default=_env_bool("CARRY_DRY_RUN", True))
-    ap.add_argument("--symbols",    default=_env("CARRY_SYMBOLS", "BTCUSDT,ETHUSDT,SOLUSDT"))
-    ap.add_argument("--min-rate",   type=float, default=_env_float("CARRY_MIN_RATE_PCT", 0.05))
-    ap.add_argument("--close-rate", type=float, default=_env_float("CARRY_CLOSE_RATE_PCT", 0.01))
-    ap.add_argument("--position-usd", type=float, default=_env_float("CARRY_POSITION_USD", 50.0))
-    ap.add_argument("--max-positions", type=int, default=_env_int("CARRY_MAX_POSITIONS", 3))
-    ap.add_argument("--sl-pct",     type=float, default=_env_float("CARRY_SL_PCT", 2.5))
-    ap.add_argument("--state-file", default=_env("CARRY_STATE_FILE",
-                                                   "runtime/funding_carry/executor_state.json"))
+    ap = argparse.ArgumentParser(description="Funding carry executor — one-legged perp carry")
+    ap.add_argument("--dry-run",       action="store_true", default=_env_bool("CARRY_DRY_RUN", True))
+    ap.add_argument("--symbols",       default=_env("CARRY_SYMBOLS", "BTCUSDT,ETHUSDT,SOLUSDT"))
+    ap.add_argument("--min-rate",      type=float, default=_env_float("CARRY_MIN_RATE_PCT", 0.05))
+    ap.add_argument("--close-rate",    type=float, default=_env_float("CARRY_CLOSE_RATE_PCT", 0.01))
+    ap.add_argument("--position-usd",  type=float, default=_env_float("CARRY_POSITION_USD", 50.0))
+    ap.add_argument("--max-positions", type=int,   default=_env_int("CARRY_MAX_POSITIONS", 3))
+    ap.add_argument("--sl-pct",        type=float, default=_env_float("CARRY_SL_PCT", 2.5))
+    ap.add_argument("--account",       default=_env("CARRY_ACCOUNT_NAME", "main"))
+    ap.add_argument("--state-file",    default=_env("CARRY_STATE_FILE",
+                                                     "runtime/funding_carry/executor_state.json"))
     args = ap.parse_args()
 
-    api_key    = _env("BYBIT_API_KEY")
-    api_secret = _env("BYBIT_API_SECRET")
+    api_key, api_secret = _load_api_keys(args.account)
+    # TG_CHAT is the main bot's var; accept TG_CHAT_ID as alias
     tg_token   = _env("TG_TOKEN")
-    tg_chat_id = _env("TG_CHAT_ID")
+    tg_chat_id = _env("TG_CHAT") or _env("TG_CHAT_ID")
 
     client = None
     if api_key and api_secret:
         client = BybitClient(api_key, api_secret)
+        print(f"[auth] API key loaded (account={args.account}, key=present)")
     elif not args.dry_run:
-        print("ERROR: BYBIT_API_KEY / BYBIT_API_SECRET not set. Use --dry-run or set keys.", file=sys.stderr)
+        print("ERROR: No API keys found. Set BYBIT_ACCOUNTS_JSON or BYBIT_API_KEY/SECRET. "
+              "Use --dry-run for simulation.", file=sys.stderr)
         return 1
+    else:
+        print("[auth] No API keys — running in DRY_RUN mode without live data")
 
     cfg = {
         "symbols":       [s.strip().upper() for s in args.symbols.split(",") if s.strip()],
@@ -393,9 +449,10 @@ def main() -> int:
 
     print(f"\n{'─'*60}")
     print(f"Funding Carry Executor — {time.strftime('%Y-%m-%d %H:%M:%S UTC', time.gmtime())}")
-    print(f"dry_run={args.dry_run}  symbols={cfg['symbols']}")
-    print(f"entry_threshold={cfg['min_rate']:.3f}%  close_threshold={cfg['close_rate']:.3f}%")
-    print(f"position_usd=${cfg['position_usd']:.0f}  max_positions={cfg['max_positions']}")
+    print(f"dry_run={args.dry_run}  account={args.account}  symbols={cfg['symbols']}")
+    print(f"entry≥|{cfg['min_rate']:.3f}%|  close<|{cfg['close_rate']:.3f}%|  "
+          f"sl={cfg['sl_pct']:.1f}%  pos_usd=${cfg['position_usd']:.0f}")
+    print(f"NOTE: One-legged carry — directional price risk exists. Use small sizes + SL.")
     print(f"{'─'*60}")
 
     state = run_once(client, cfg, state, args.dry_run, tg_token, tg_chat_id)
@@ -404,7 +461,8 @@ def main() -> int:
     open_positions = state.get("positions", {})
     print(f"\nOpen carry positions: {len(open_positions)}")
     for sym, pos in open_positions.items():
-        print(f"  {sym}: {pos['side']} qty={pos['qty']} rate={pos.get('entry_rate_pct',0):.4f}%")
+        print(f"  {sym}: {pos['side']} qty={pos['qty']} "
+              f"entry_rate={pos.get('entry_rate_pct',0):.4f}% sl={pos.get('sl_pct',2.5):.1f}%")
     print()
     return 0
 

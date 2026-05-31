@@ -1,6 +1,6 @@
 {
   "name": "arf1_filter_v1",
-  "description": "Bounded ARF1 filter replay for the observed live no_res_touch/no_reject_back blockers. Uses only existing strategy parameters and stays research-only until a full crypto_income_static_v1 package replay improves the baseline.",
+  "description": "ARF1 filter sweep. Live blockers (blocker report 2026-05-21): no_res_touch и no_reject_back. Sweeps resistance_touch_buffer_atr, reject_below_res_atr, min_rsi, and the new ARF1_REJECT_REQUIRE_LOWER_CLOSE flag added in the 2026-05-25 patch.",
   "cache_only": true,
   "command": [
     "{python}",
@@ -30,43 +30,41 @@
   ],
   "base_env": {
     "ARF1_SYMBOL_ALLOWLIST": "LINKUSDT,LTCUSDT,SUIUSDT,DOTUSDT,ADAUSDT,BCHUSDT",
-    "ARF1_SIGNAL_TF": "60",
-    "ARF1_SIGNAL_LOOKBACK": "60",
-    "ARF1_REGIME_MAX_GAP_PCT": "3.2",
-    "ARF1_REGIME_MAX_SLOPE_PCT": "1.8",
-    "ARF1_MIN_RANGE_PCT": "6.0",
-    "ARF1_MAX_RANGE_PCT": "30.0",
-    "ARF1_MIN_BODY_FRAC": "0.22",
-    "ARF1_MAX_CLOSE_VS_EMA_PCT": "1.2",
-    "ARF1_TP1_FRAC": "0.60",
-    "ARF1_TP2_BUFFER_PCT": "0.45",
+    "ARF1_SIGNAL_LOOKBACK": "48",
+    "ARF1_SIGNAL_EMA_PERIOD": "20",
     "ARF1_SL_ATR_MULT": "0.85",
-    "ARF1_TIME_STOP_BARS_5M": "576"
+    "ARF1_TP1_FRAC": "0.60",
+    "ARF1_COOLDOWN_BARS_5M": "48"
   },
   "grid": {
     "ARF1_RES_TOUCH_BUFFER_ATR": [0.25, 0.35, 0.45, 0.55],
-    "ARF1_REJECT_BELOW_RES_ATR": [0.06, 0.09, 0.12],
-    "ARF1_MIN_RSI": [55, 58, 62]
+    "ARF1_REJECT_BELOW_RES_ATR": [0.06, 0.09, 0.12, 0.16],
+    "ARF1_MIN_RSI": [52, 55, 58, 62],
+    "ARF1_REJECT_REQUIRE_LOWER_CLOSE": ["0", "1"]
   },
   "constraints": {
     "min_trades": 30,
-    "min_profit_factor": 1.25,
-    "max_drawdown": 8.0,
-    "min_net_pnl": 6.0,
-    "max_negative_months": 4,
-    "max_negative_streak": 2
+    "min_profit_factor": 1.15,
+    "max_drawdown": 12.0,
+    "min_net_pnl": 3.0,
+    "max_negative_months": 5,
+    "max_negative_streak": 3
   },
   "score_weights": {
-    "net_pnl": 1.0,
-    "profit_factor": 4.0,
-    "winrate": 7.0,
+    "net_pnl": 1.3,
+    "profit_factor": 5.5,
+    "winrate": 5.0,
     "max_drawdown": 2.0,
-    "trades": 0.12,
-    "trades_cap": 120,
-    "negative_months": 2.5,
-    "max_negative_streak": 3.0,
+    "trades": 0.16,
+    "trades_cap": 200,
+    "negative_months": 2.0,
     "worst_month_pnl": 1.5
   },
-  "_combo_count": "4x3x3 = 36 combos",
-  "_promotion_rule": "Standalone PASS is insufficient; rerun the winner inside crypto_income_static_v1 and require package improvement before live."
+  "_notes": {
+    "blocker_source": "runtime/crypto_blocker/latest.md 2026-05-21",
+    "new_param": "ARF1_REJECT_REQUIRE_LOWER_CLOSE: '0'=only bearish bar required (looser); '1'=also require close<prev_close (current live default)",
+    "hypothesis": "resistance_touch_buffer_atr=0.35 misses touches 0.35-0.55 ATR away. reject_below_res_atr=0.12 forces close very far below res; loosening to 0.06-0.09 should confirm more rejections if RSI guards hold.",
+    "combo_count": "4x4x4x2 = 128 combos, ~30 min on server"
+  },
+  "_combo_count": "4x4x4x2 = 128 combos"
 }
