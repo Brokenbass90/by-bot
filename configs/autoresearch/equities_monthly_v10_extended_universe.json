@@ -1,5 +1,7 @@
 {
   "name": "equities_monthly_v10_extended_universe",
+  "validator_skip": true,
+  "validator_skip_reason": "legacy equities research spec; not consumed directly by scripts/run_strategy_autoresearch.py",
   "description": "Extended universe (20 stocks) with dynamic regime and correlation filters",
   "strategy": "equities_monthly_research",
   "runner": "scripts/equities_monthly_research_sim.py",

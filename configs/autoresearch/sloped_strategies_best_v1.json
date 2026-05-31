@@ -1,5 +1,7 @@
 {
   "_meta": {
+    "validator_skip": true,
+    "validator_skip_reason": "historical strategy audit snapshot; not a runnable autoresearch sweep spec",
     "generated": "2026-04-11",
     "window": "360 days ending 2026-04-01",
     "symbols_att1": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,LTCUSDT,ADAUSDT,DOTUSDT,SUIUSDT",
