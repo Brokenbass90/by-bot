@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # bot_health_watchdog.sh
 # External watchdog: runs via cron every 2 minutes.
-# Checks bot_heartbeat.json — if stale, sends Telegram alert and optionally restarts.
+# Checks bot_heartbeat.json — if stale, sends Telegram alert and optionally
+# restarts. Restarts are guarded by a lock + cooldown/window cap so a stale
+# heartbeat cannot create an infinite restart loop.
 #
 # Install on server:
 #   bash scripts/setup_watchdog_cron.sh
@@ -18,6 +20,11 @@ MAX_AGE_SEC="${WATCHDOG_MAX_AGE_SEC:-90}"        # alert if heartbeat > 90s old
 ALERT_COOLDOWN_SEC="${WATCHDOG_COOLDOWN_SEC:-600}"  # don't spam — max 1 alert per 10 min
 ALERT_STATE_FILE="$BOT_DIR/runtime/watchdog_alert_state.json"
 AUTO_RESTART="${WATCHDOG_AUTO_RESTART:-0}"        # set to 1 to enable auto-restart via systemd
+RESTART_STATE_FILE="$BOT_DIR/runtime/watchdog_restart_state.json"
+RESTART_LOCK_DIR="$BOT_DIR/runtime/watchdog_restart.lock"
+RESTART_COOLDOWN_SEC="${WATCHDOG_RESTART_COOLDOWN_SEC:-900}"  # max 1 restart per 15 min
+RESTART_WINDOW_SEC="${WATCHDOG_RESTART_WINDOW_SEC:-3600}"      # rolling window for loop guard
+RESTART_MAX_IN_WINDOW="${WATCHDOG_RESTART_MAX_IN_WINDOW:-3}"   # max restarts per window
 
 TG_TOKEN="${TG_TOKEN:-}"
 TG_CHAT="${TG_CHAT_ID:-${TG_CHAT:-}}"
@@ -28,11 +35,112 @@ if [[ -f "$BOT_DIR/.env" ]]; then
   source "$BOT_DIR/.env"
   set +a
   AUTO_RESTART="${WATCHDOG_AUTO_RESTART:-${AUTO_RESTART:-0}}"
+  RESTART_COOLDOWN_SEC="${WATCHDOG_RESTART_COOLDOWN_SEC:-${RESTART_COOLDOWN_SEC:-900}}"
+  RESTART_WINDOW_SEC="${WATCHDOG_RESTART_WINDOW_SEC:-${RESTART_WINDOW_SEC:-3600}}"
+  RESTART_MAX_IN_WINDOW="${WATCHDOG_RESTART_MAX_IN_WINDOW:-${RESTART_MAX_IN_WINDOW:-3}}"
   TG_TOKEN="${TG_TOKEN:-}"
   TG_CHAT="${TG_CHAT_ID:-${TG_CHAT:-}}"
 fi
 
 NOW=$(date +%s)
+
+# ── Guarded restart helper ────────────────────────────────────────
+attempt_restart() {
+  local reason="$1"
+  if [[ "$AUTO_RESTART" != "1" ]]; then
+    echo "[watchdog] Auto-restart disabled. reason=$reason"
+    return
+  fi
+
+  mkdir -p "$BOT_DIR/runtime"
+  if ! mkdir "$RESTART_LOCK_DIR" 2>/dev/null; then
+    echo "[watchdog] Restart suppressed: another watchdog instance holds restart lock. reason=$reason"
+    return
+  fi
+
+  local decision
+  decision=$(python3 - "$RESTART_STATE_FILE" "$NOW" "$RESTART_WINDOW_SEC" "$RESTART_MAX_IN_WINDOW" "$RESTART_COOLDOWN_SEC" "$reason" <<'PY' || echo "deny|restart guard error"
+import json
+import sys
+import time
+from pathlib import Path
+
+path = Path(sys.argv[1])
+now = int(sys.argv[2])
+window = max(1, int(sys.argv[3]))
+max_in_window = max(1, int(sys.argv[4]))
+cooldown = max(0, int(sys.argv[5]))
+reason = str(sys.argv[6])
+
+try:
+    data = json.loads(path.read_text())
+except Exception:
+    data = {}
+
+raw = data.get("restarts") or []
+events = []
+for item in raw:
+    if isinstance(item, dict):
+        ts = int(item.get("ts", 0) or 0)
+    else:
+        ts = int(item or 0)
+    if ts > 0 and now - ts <= window:
+        events.append({"ts": ts, "reason": str((item or {}).get("reason", "")) if isinstance(item, dict) else ""})
+
+last_ts = max([int(x.get("ts", 0) or 0) for x in events], default=0)
+if last_ts and now - last_ts < cooldown:
+    print(f"deny|cooldown active: last_restart_age={now - last_ts}s cooldown={cooldown}s recent={len(events)}/{max_in_window}")
+    sys.exit(0)
+
+if len(events) >= max_in_window:
+    data.update(
+        {
+            "last_denied_ts": now,
+            "last_denied_reason": reason,
+            "deny_kind": "restart_loop_guard",
+            "window_sec": window,
+            "max_in_window": max_in_window,
+            "restarts": events,
+            "updated_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(now)),
+        }
+    )
+    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+    print(f"deny|restart loop guard: recent={len(events)}/{max_in_window} window={window}s")
+    sys.exit(0)
+
+events.append({"ts": now, "reason": reason})
+data.update(
+    {
+        "last_restart_ts": now,
+        "last_restart_reason": reason,
+        "window_sec": window,
+        "max_in_window": max_in_window,
+        "cooldown_sec": cooldown,
+        "restarts": events,
+        "updated_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(now)),
+    }
+)
+path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+print(f"allow|recent={len(events)}/{max_in_window} window={window}s cooldown={cooldown}s")
+PY
+)
+
+  local action="${decision%%|*}"
+  local detail="${decision#*|}"
+  if [[ "$action" != "allow" ]]; then
+    echo "[watchdog] Restart suppressed: $detail reason=$reason"
+    rmdir "$RESTART_LOCK_DIR" 2>/dev/null || true
+    return
+  fi
+
+  echo "[watchdog] Restart allowed: $detail reason=$reason"
+  if systemctl restart "$SERVICE_NAME"; then
+    echo "[watchdog] Restart issued. reason=$reason"
+  else
+    echo "[watchdog] Restart FAILED. reason=$reason"
+  fi
+  rmdir "$RESTART_LOCK_DIR" 2>/dev/null || true
+}
 
 # ── Telegram send helper ──────────────────────────────────────────
 send_tg() {
@@ -62,10 +170,7 @@ if [[ ! -f "$HEARTBEAT_FILE" ]]; then
     send_tg "🚨 <b>BOT DEAD</b>: heartbeat file missing entirely. Service=<b>${SERVICE_NAME}</b>. Bot likely never started or crashed badly."
     python3 -c "import json,time; json.dump({'last_alert_ts': int(time.time()), 'reason': 'missing_file'}, open('$ALERT_STATE_FILE','w'))" 2>/dev/null || true
   fi
-  if [[ "$AUTO_RESTART" == "1" ]]; then
-    echo "[watchdog] Attempting systemd restart..."
-    systemctl restart "$SERVICE_NAME" && echo "[watchdog] Restart issued."
-  fi
+  attempt_restart "missing_heartbeat_file"
   exit 0
 fi
 
@@ -83,16 +188,18 @@ import json
 d = json.load(open('$HEARTBEAT_FILE'))
 print(f\"open_trades={d.get('open_trades','?')} ws_guard={d.get('ws_guard_active','?')} regime={d.get('regime','?')} uptime={d.get('uptime_s','?')}s\")
 " 2>/dev/null || echo "parse error")
+    if [[ "$AUTO_RESTART" == "1" ]]; then
+      RESTART_NOTE="Auto-restart enabled with cooldown=${RESTART_COOLDOWN_SEC}s, max=${RESTART_MAX_IN_WINDOW}/${RESTART_WINDOW_SEC}s."
+    else
+      RESTART_NOTE="Manual restart needed: systemctl restart ${SERVICE_NAME}"
+    fi
     send_tg "🚨 <b>BOT UNRESPONSIVE</b>: heartbeat is ${AGE}s old (limit=${MAX_AGE_SEC}s).
 Last known state: ${INFO}
-$(if [[ '$AUTO_RESTART' == '1' ]]; then echo 'Auto-restart triggered.'; else echo "Manual restart needed: systemctl restart ${SERVICE_NAME}"; fi)"
+${RESTART_NOTE}"
     python3 -c "import json,time; json.dump({'last_alert_ts': int(time.time()), 'reason': 'stale', 'age_s': $AGE}, open('$ALERT_STATE_FILE','w'))" 2>/dev/null || true
   fi
 
-  if [[ "$AUTO_RESTART" == "1" ]]; then
-    echo "[watchdog] Attempting systemd restart..."
-    systemctl restart "$SERVICE_NAME" && echo "[watchdog] Restart issued."
-  fi
+  attempt_restart "stale_heartbeat_age_${AGE}s"
 else
   echo "[watchdog $(date -u '+%H:%M:%S')] OK — heartbeat age=${AGE}s"
 fi

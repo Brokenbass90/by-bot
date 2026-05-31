@@ -1694,3 +1694,43 @@ async def get_funding_rates(_: str = Depends(require_auth)):
         "stale":       age_sec is not None and age_sec > 600,
         "count":       len(annotated),
     }
+
+
+@router.get("/coin-screener")
+async def coin_screener(
+    _: None = Depends(require_auth),
+):
+    """Latest output from scripts/crypto_coin_screener.py."""
+    import json
+    sc_path = _ROOT / "runtime" / "coin_screener_latest.json"
+    if not sc_path.exists():
+        return {
+            "available": False,
+            "message":   "Run: python3 scripts/crypto_coin_screener.py",
+            "updated_utc": None,
+        }
+    try:
+        data = json.loads(sc_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return {"available": False, "error": str(exc)}
+
+    # Compute staleness
+    updated_utc = data.get("updated_utc")
+    age_sec = None
+    if updated_utc:
+        from datetime import datetime, timezone
+        try:
+            ts = datetime.fromisoformat(updated_utc.replace("Z", "+00:00"))
+            age_sec = round((datetime.now(timezone.utc) - ts).total_seconds())
+        except Exception:
+            pass
+
+    return {
+        "available":   True,
+        "updated_utc": updated_utc,
+        "age_sec":     age_sec,
+        "stale":       age_sec is not None and age_sec > 25200,  # 7h
+        "scanned":     data.get("scanned", 0),
+        "elapsed_sec": data.get("elapsed_sec"),
+        "categories":  data.get("categories", {}),
+    }

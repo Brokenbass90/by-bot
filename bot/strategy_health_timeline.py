@@ -25,6 +25,11 @@ def _fallback_latest_portfolio_run() -> Path | None:
         if not base.exists():
             continue
         for csv_path in base.glob("portfolio_*/trades.csv"):
+            try:
+                if len(csv_path.read_text(encoding="utf-8", errors="ignore").splitlines()) <= 1:
+                    continue
+            except Exception:
+                continue
             run_dir = csv_path.parent
             name = run_dir.name.lower()
             if any(marker in name for marker in ("sweep", "probe", "smoke", "debug", "candidate", "autoresearch")):
@@ -34,6 +39,36 @@ def _fallback_latest_portfolio_run() -> Path | None:
         return None
     candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
     return candidates[0]
+
+
+def _alternate_tradeful_runs(*preferred: Path | None) -> List[Path]:
+    seen: set[str] = set()
+    candidates: List[Path] = []
+    for item in preferred:
+        if item is None:
+            continue
+        p = Path(item)
+        key = str(p.resolve()) if p.exists() else str(p)
+        if key not in seen:
+            seen.add(key)
+            candidates.append(p)
+    for base in [ROOT / "backtest_runs", ROOT / "backtest_archive"]:
+        if not base.exists():
+            continue
+        for csv_path in base.glob("portfolio_*/trades.csv"):
+            run_dir = csv_path.parent
+            key = str(run_dir.resolve())
+            if key in seen:
+                continue
+            try:
+                if len(csv_path.read_text(encoding="utf-8", errors="ignore").splitlines()) <= 1:
+                    continue
+            except Exception:
+                continue
+            seen.add(key)
+            candidates.append(run_dir)
+    candidates.sort(key=lambda p: p.stat().st_mtime if p.exists() else 0, reverse=True)
+    return candidates
 
 
 def _fallback_run_from_health() -> Path | None:
@@ -102,6 +137,15 @@ def build_strategy_health_timeline(run_dir: Path | None = None, *, step_days: in
         raise FileNotFoundError("No trusted run directory available for health timeline.")
 
     trades = _load_trades(chosen_run)
+    if not trades:
+        for candidate in _alternate_tradeful_runs(_fallback_run_from_health(), _fallback_latest_portfolio_run()):
+            if not candidate.exists() or candidate.resolve() == chosen_run.resolve():
+                continue
+            candidate_trades = _load_trades(candidate)
+            if candidate_trades:
+                chosen_run = candidate
+                trades = candidate_trades
+                break
     if not trades:
         raise RuntimeError(f"No trades found in {chosen_run}")
 

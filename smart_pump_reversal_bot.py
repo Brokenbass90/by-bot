@@ -613,7 +613,31 @@ INPLAY_ENGINE = None
 ENABLE_BREAKOUT_TRADING = os.getenv("ENABLE_BREAKOUT_TRADING", "0").strip() == "1"
 ENABLE_PUMP_FADE_TRADING = os.getenv("ENABLE_PUMP_FADE_TRADING", "0").strip() == "1"
 ENABLE_MIDTERM_TRADING = os.getenv("ENABLE_MIDTERM_TRADING", "0").strip() == "1"
-BREAKOUT_RISK_MULT = max(0.05, float(os.getenv("BREAKOUT_RISK_MULT", "1.0") or 1.0))
+
+# --- Risk-mult resolver (added 2026-05-27) -------------------------------
+# Convention: env value of "0" or "0.0" means EXPLICIT PAUSE (returns 0.0).
+# Any other value is clamped to `floor` (default 0.05) to keep the bot's
+# anti-fat-finger safety. This lets live_vs_backtest_monitor.py write
+# X_RISK_MULT=0.0 in strategy_pause.env and have it actually pause the strategy.
+def _risk_mult_or_pause(env_key: str, default_value: str, floor: float = 0.05) -> float:
+    raw = os.getenv(env_key, default_value)
+    if raw is None:
+        raw = default_value
+    raw_str = str(raw).strip()
+    if raw_str in ("0", "0.0", "0.00", "0.000"):
+        return 0.0
+    try:
+        v = float(raw_str)
+    except (ValueError, TypeError):
+        try:
+            v = float(default_value)
+        except (ValueError, TypeError):
+            v = floor
+    if not v > 0:
+        return 0.0
+    return max(floor, v)
+
+BREAKOUT_RISK_MULT = _risk_mult_or_pause("BREAKOUT_RISK_MULT", "1.0")
 BREAKOUT_TRY_EVERY_SEC = int(os.getenv("BREAKOUT_TRY_EVERY_SEC", "30"))
 BREAKOUT_TOP_N = int(os.getenv("BREAKOUT_TOP_N", "60"))
 BREAKOUT_MAX_SPREAD_PCT = float(os.getenv("BREAKOUT_MAX_SPREAD_PCT", "0.20"))
@@ -657,7 +681,7 @@ MIDTERM_DECISION_EVERY_SEC = max(
     int(float(os.getenv("MIDTERM_DECISION_MIN_AGE_MIN", "235")) * 60),
 )
 MIDTERM_NOTIONAL_MULT = max(0.05, min(1.0, float(os.getenv("MIDTERM_NOTIONAL_MULT", "0.35"))))
-MIDTERM_RISK_MULT = max(0.05, float(os.getenv("MIDTERM_RISK_MULT", "1.0") or 1.0))
+MIDTERM_RISK_MULT = _risk_mult_or_pause("MIDTERM_RISK_MULT", "1.0")
 MIDTERM_ALLOW_MINQTY_FALLBACK = _env_bool("MIDTERM_ALLOW_MINQTY_FALLBACK", True)
 MIDTERM_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("MIDTERM_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 MIDTERM_SYMBOLS = {s.strip().upper() for s in str(os.getenv("MIDTERM_SYMBOLS", "BTCUSDT,ETHUSDT")).split(",") if s.strip()}
@@ -688,7 +712,7 @@ SLOPED_DECISION_EVERY_SEC = max(
     int(float(os.getenv("SLOPED_DECISION_MIN_AGE_MIN", "55")) * 60),
 )
 SLOPED_CONFIRM_EVERY_SEC = max(60, int(os.getenv("SLOPED_CONFIRM_EVERY_SEC", "300")))
-SLOPED_RISK_MULT = max(0.05, float(os.getenv("SLOPED_RISK_MULT", "1.0")))
+SLOPED_RISK_MULT = _risk_mult_or_pause("SLOPED_RISK_MULT", "1.0")
 SLOPED_ALLOW_MINQTY_FALLBACK = _env_bool("SLOPED_ALLOW_MINQTY_FALLBACK", True)
 SLOPED_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("SLOPED_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 SLOPED_MAX_OPEN_TRADES = int(os.getenv("SLOPED_MAX_OPEN_TRADES", "1"))
@@ -701,7 +725,7 @@ ATT1_DECISION_EVERY_SEC = max(
     ATT1_TRY_EVERY_SEC,
     int(float(os.getenv("ATT1_DECISION_MIN_AGE_MIN", "55")) * 60),
 )
-ATT1_RISK_MULT = max(0.05, float(os.getenv("ATT1_RISK_MULT", "1.0")))
+ATT1_RISK_MULT = max(0.0, float(os.getenv("ATT1_RISK_MULT", "1.0")))
 ATT1_ALLOW_MINQTY_FALLBACK = _env_bool("ATT1_ALLOW_MINQTY_FALLBACK", True)
 ATT1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("ATT1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 ATT1_MAX_OPEN_TRADES = int(os.getenv("ATT1_MAX_OPEN_TRADES", "2"))
@@ -712,7 +736,7 @@ _ATT1_LAST_TRY: dict[str, float] = {}
 # ===== ASB1 SLOPE BREAKOUT (live) =====
 ENABLE_ASB1_TRADING = os.getenv("ENABLE_ASB1_TRADING", "0").strip() == "1"
 ASB1_TRY_EVERY_SEC = int(os.getenv("ASB1_TRY_EVERY_SEC", "60"))
-ASB1_RISK_MULT = max(0.05, float(os.getenv("ASB1_RISK_MULT", "0.50")))
+ASB1_RISK_MULT = _risk_mult_or_pause("ASB1_RISK_MULT", "0.50")
 ASB1_ALLOW_MINQTY_FALLBACK = _env_bool("ASB1_ALLOW_MINQTY_FALLBACK", True)
 ASB1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("ASB1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 ASB1_MAX_OPEN_TRADES = int(os.getenv("ASB1_MAX_OPEN_TRADES", "1"))
@@ -723,7 +747,7 @@ _ASB1_LAST_TRY: dict[str, float] = {}
 # ===== HZBO1 HORIZONTAL ZONE BREAKOUT (live) =====
 ENABLE_HZBO1_TRADING = os.getenv("ENABLE_HZBO1_TRADING", "0").strip() == "1"
 HZBO1_TRY_EVERY_SEC = int(os.getenv("HZBO1_TRY_EVERY_SEC", "60"))
-HZBO1_RISK_MULT = max(0.05, float(os.getenv("HZBO1_RISK_MULT", "0.40")))
+HZBO1_RISK_MULT = _risk_mult_or_pause("HZBO1_RISK_MULT", "0.40")
 HZBO1_ALLOW_MINQTY_FALLBACK = _env_bool("HZBO1_ALLOW_MINQTY_FALLBACK", True)
 HZBO1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("HZBO1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 HZBO1_MAX_OPEN_TRADES = int(os.getenv("HZBO1_MAX_OPEN_TRADES", "1"))
@@ -734,7 +758,7 @@ _HZBO1_LAST_TRY: dict[str, float] = {}
 # ===== BOUNCE1 SUPPORT BOUNCE (live) — long-only, bull/chop regime =====
 ENABLE_BOUNCE1_TRADING = os.getenv("ENABLE_BOUNCE1_TRADING", "0").strip() == "1"
 BOUNCE1_TRY_EVERY_SEC = int(os.getenv("BOUNCE1_TRY_EVERY_SEC", "60"))
-BOUNCE1_RISK_MULT = max(0.05, float(os.getenv("BOUNCE1_RISK_MULT", "0.40")))
+BOUNCE1_RISK_MULT = _risk_mult_or_pause("BOUNCE1_RISK_MULT", "0.40")
 BOUNCE1_ALLOW_MINQTY_FALLBACK = _env_bool("BOUNCE1_ALLOW_MINQTY_FALLBACK", True)
 BOUNCE1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("BOUNCE1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 BOUNCE1_MAX_OPEN_TRADES = int(os.getenv("BOUNCE1_MAX_OPEN_TRADES", "1"))
@@ -749,7 +773,7 @@ ASM1_DECISION_EVERY_SEC = max(
     ASM1_TRY_EVERY_SEC,
     int(float(os.getenv("ASM1_DECISION_MIN_AGE_MIN", "55")) * 60),
 )
-ASM1_RISK_MULT = max(0.05, float(os.getenv("ASM1_RISK_MULT", "1.0")))
+ASM1_RISK_MULT = _risk_mult_or_pause("ASM1_RISK_MULT", "1.0")
 ASM1_ALLOW_MINQTY_FALLBACK = _env_bool("ASM1_ALLOW_MINQTY_FALLBACK", True)
 ASM1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("ASM1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 ASM1_MAX_OPEN_TRADES = int(os.getenv("ASM1_MAX_OPEN_TRADES", "2"))
@@ -764,7 +788,7 @@ FLAT_DECISION_EVERY_SEC = max(
     FLAT_TRY_EVERY_SEC,
     int(float(os.getenv("FLAT_DECISION_MIN_AGE_MIN", "55")) * 60),
 )
-FLAT_RISK_MULT = max(0.05, float(os.getenv("FLAT_RISK_MULT", "1.0")))
+FLAT_RISK_MULT = _risk_mult_or_pause("FLAT_RISK_MULT", "1.0")
 FLAT_ALLOW_MINQTY_FALLBACK = _env_bool("FLAT_ALLOW_MINQTY_FALLBACK", True)
 FLAT_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("FLAT_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 FLAT_MAX_OPEN_TRADES = int(os.getenv("FLAT_MAX_OPEN_TRADES", "1"))
@@ -777,7 +801,7 @@ BREAKDOWN_DECISION_EVERY_SEC = max(
     BREAKDOWN_TRY_EVERY_SEC,
     int(os.getenv("BREAKDOWN_DECISION_EVERY_SEC", "280")),
 )
-BREAKDOWN_RISK_MULT = max(0.05, float(os.getenv("BREAKDOWN_RISK_MULT", "0.10")))
+BREAKDOWN_RISK_MULT = _risk_mult_or_pause("BREAKDOWN_RISK_MULT", "0.10")
 BREAKDOWN_ALLOW_MINQTY_FALLBACK = _env_bool("BREAKDOWN_ALLOW_MINQTY_FALLBACK", True)
 BREAKDOWN_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("BREAKDOWN_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 BREAKDOWN_MAX_OPEN_TRADES = int(os.getenv("BREAKDOWN_MAX_OPEN_TRADES", "1"))
@@ -794,7 +818,7 @@ BREAKDOWN_ENGINE = None
 # ===== IMPULSE VOLUME BREAKOUT V1 (live) =====
 ENABLE_IVB1_TRADING = os.getenv("ENABLE_IVB1_TRADING", "0").strip() == "1"
 IVB1_TRY_EVERY_SEC = int(os.getenv("IVB1_TRY_EVERY_SEC", "60"))
-IVB1_RISK_MULT = max(0.05, float(os.getenv("IVB1_RISK_MULT", "1.0") or 1.0))
+IVB1_RISK_MULT = _risk_mult_or_pause("IVB1_RISK_MULT", "1.0")
 IVB1_ALLOW_MINQTY_FALLBACK = _env_bool("IVB1_ALLOW_MINQTY_FALLBACK", True)
 IVB1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("IVB1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 IVB1_MAX_OPEN_TRADES = int(os.getenv("IVB1_MAX_OPEN_TRADES", "1"))
@@ -843,7 +867,7 @@ _BRC1_LAST_TRY: dict[str, float] = {}
 # Enable via: ENABLE_SOB1_TRADING=1 (after WF-22 shows pass_ratio >= 0.55)
 ENABLE_SOB1_TRADING = os.getenv("ENABLE_SOB1_TRADING", "0").strip() == "1"
 SOB1_TRY_EVERY_SEC = int(os.getenv("SOB1_TRY_EVERY_SEC", "60"))
-SOB1_RISK_MULT = max(0.05, float(os.getenv("SOB1_RISK_MULT", "0.5") or "0.5"))
+SOB1_RISK_MULT = _risk_mult_or_pause("SOB1_RISK_MULT", "0.5")
 SOB1_ALLOW_MINQTY_FALLBACK = _env_bool("SOB1_ALLOW_MINQTY_FALLBACK", True)
 SOB1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("SOB1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 SOB1_MAX_OPEN_TRADES = int(os.getenv("SOB1_MAX_OPEN_TRADES", "1"))
@@ -858,7 +882,7 @@ _SOB1_LAST_TRY: dict = {}
 # ===== MICRO SCALPER (live) =====
 ENABLE_MICRO_SCALPER_TRADING = os.getenv("ENABLE_MICRO_SCALPER_TRADING", "0").strip() == "1"
 MICRO_SCALPER_TRY_EVERY_SEC = int(os.getenv("MICRO_SCALPER_TRY_EVERY_SEC", "30"))
-MICRO_SCALPER_RISK_MULT = max(0.05, float(os.getenv("MICRO_SCALPER_RISK_MULT", "0.10")))
+MICRO_SCALPER_RISK_MULT = _risk_mult_or_pause("MICRO_SCALPER_RISK_MULT", "0.10")
 MICRO_SCALPER_MAX_OPEN_TRADES = int(os.getenv("MICRO_SCALPER_MAX_OPEN_TRADES", "2"))
 MICRO_SCALPER_SYMBOL_ALLOWLIST: set[str] = {s.strip().upper() for s in str(os.getenv("MICRO_SCALPER_SYMBOL_ALLOWLIST", "BTCUSDT,ETHUSDT,SOLUSDT")).split(",") if s.strip()}
 MICRO_SCALPER_ENGINE = None
@@ -867,7 +891,7 @@ _MICRO_SCALPER_LAST_TRY: dict[str, float] = {}
 # ===== SUPPORT RECLAIM LONGS (live) =====
 ENABLE_SUPPORT_RECLAIM_TRADING = os.getenv("ENABLE_SUPPORT_RECLAIM_TRADING", "0").strip() == "1"
 SUPPORT_RECLAIM_TRY_EVERY_SEC = int(os.getenv("SUPPORT_RECLAIM_TRY_EVERY_SEC", "60"))
-SUPPORT_RECLAIM_RISK_MULT = max(0.05, float(os.getenv("SUPPORT_RECLAIM_RISK_MULT", "0.10")))
+SUPPORT_RECLAIM_RISK_MULT = _risk_mult_or_pause("SUPPORT_RECLAIM_RISK_MULT", "0.10")
 SUPPORT_RECLAIM_MAX_OPEN_TRADES = int(os.getenv("SUPPORT_RECLAIM_MAX_OPEN_TRADES", "1"))
 SUPPORT_RECLAIM_SYMBOL_ALLOWLIST: set[str] = {s.strip().upper() for s in str(os.getenv("SUPPORT_RECLAIM_SYMBOL_ALLOWLIST", "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT")).split(",") if s.strip()}
 SUPPORT_RECLAIM_ENGINE = None
@@ -1316,6 +1340,7 @@ def _flush_breakout_skip_digest(force: bool = False) -> bool:
 TG_KB = {
     "keyboard": [
         ["📊 /status", "🧾 /status_full"],
+        ["🪙 /coins", "📋 /sleeve"],
         ["✅ /ping"],
         ["⏸ /pause", "▶ /resume"],
         ["ℹ /help", "🤖 /ai"],
@@ -4042,6 +4067,7 @@ def _handle_tg_command(text: str):
             "  /trades — открытые позиции с unrealized PnL\n"
             "  /sleeve — health gate по каждой стратегии (OK/WATCH/PAUSE/KILL)\n"
             "  /brief — AI утренний брифинг (режим, позиции, сетапы, свипы)\n"
+            "  /coins — live ranking монет: трендовые вверх/вниз, боковик\n"
             "  /sweep — статус autoresearch sweep очереди\n"
             "  /ping — время работы бота\n"
             "  /stats 7|30|90|365 — отчёт за период\n"
@@ -4912,6 +4938,147 @@ def _handle_tg_command(text: str):
             data["denylist"] = sorted(deny)
             _save_symbol_filters(data)
             _tg_reply("Убрал из бана: " + ",".join(symbols))
+        return
+
+    # ── /coins — live coin ranking by momentum / ATR / trend ──────────────
+    if name == "/coins":
+        import math as _math
+
+        def _coins_ema(closes: list, period: int) -> float:
+            if not closes:
+                return 0.0
+            k = 2.0 / (period + 1)
+            ema = sum(closes[:period]) / period if len(closes) >= period else closes[0]
+            for c in closes[period:]:
+                ema = c * k + ema * (1 - k)
+            return ema
+
+        def _coins_rsi(closes: list, period: int = 14) -> float:
+            if len(closes) < period + 1:
+                return 50.0
+            gains, losses = [], []
+            for i in range(1, len(closes)):
+                d = closes[i] - closes[i - 1]
+                gains.append(max(0.0, d))
+                losses.append(max(0.0, -d))
+            ag = sum(gains[-period:]) / period
+            al = sum(losses[-period:]) / period
+            if al == 0:
+                return 100.0
+            return 100.0 - 100.0 / (1.0 + ag / al)
+
+        def _coins_atr_pct(bars: list, period: int = 14) -> float:
+            trs = []
+            for i in range(1, len(bars)):
+                h = float(bars[i][2])
+                lo = float(bars[i][3])
+                pc = float(bars[i - 1][4])
+                trs.append(max(h - lo, abs(h - pc), abs(lo - pc)))
+            if not trs:
+                return 0.0
+            atr = sum(trs[-period:]) / min(period, len(trs))
+            last_c = float(bars[-1][4])
+            return (atr / last_c * 100.0) if last_c > 0 else 0.0
+
+        # Union of all strategy allowlists + BTC/ETH as anchors
+        _coins_env_keys = [
+            "ASC1_SYMBOL_ALLOWLIST", "ARF1_SYMBOL_ALLOWLIST",
+            "BREAKDOWN_SYMBOL_ALLOWLIST", "ATT1_SYMBOL_ALLOWLIST",
+            "BRC1_SYMBOL_ALLOWLIST", "ASB1_SYMBOL_ALLOWLIST",
+        ]
+        _all_syms: set = {"BTCUSDT", "ETHUSDT", "SOLUSDT"}
+        for _k in _coins_env_keys:
+            _raw = str(os.getenv(_k, "") or "")
+            for _s in _raw.split(","):
+                _s = _s.strip().upper()
+                if _s.endswith("USDT") and len(_s) >= 5:
+                    _all_syms.add(_s)
+        _all_syms = sorted(_all_syms)
+
+        _tg_reply(f"🔍 Сканирую {len(_all_syms)} монет...")
+
+        _coin_rows: list = []
+        for _sym in _all_syms:
+            try:
+                _bars = fetch_klines(_sym, "60", 52)  # 52 x 1h bars
+                if not _bars or len(_bars) < 26:
+                    continue
+                _closes = [float(b[4]) for b in _bars]
+                _cur = _closes[-1]
+                _c24 = _closes[-25] if len(_closes) >= 25 else _closes[0]
+                _mom24 = (_cur / _c24 - 1.0) * 100.0 if _c24 > 0 else 0.0
+                _rsi = _coins_rsi(_closes[-28:])
+                _atr = _coins_atr_pct(_bars[-20:])
+                _ema20 = _coins_ema(_closes, 20)
+                _ema50 = _coins_ema(_closes, 50)
+                _trend = "up" if _ema20 > _ema50 * 1.001 else ("dn" if _ema20 < _ema50 * 0.999 else "flat")
+                _coin_rows.append({
+                    "sym": _sym, "cur": _cur, "mom24": _mom24,
+                    "rsi": _rsi, "atr": _atr, "trend": _trend,
+                })
+            except Exception:
+                pass
+
+        if not _coin_rows:
+            _tg_reply("❌ Нет данных — Bybit API недоступен или все монеты заблокированы")
+            return
+
+        # Categorise
+        _trending_up = sorted(
+            [r for r in _coin_rows if r["trend"] == "up" and r["mom24"] > 0.5],
+            key=lambda r: r["mom24"], reverse=True,
+        )
+        _trending_dn = sorted(
+            [r for r in _coin_rows if r["trend"] == "dn" and r["mom24"] < -0.5],
+            key=lambda r: r["mom24"],
+        )
+        _ranging = sorted(
+            [r for r in _coin_rows if abs(r["mom24"]) <= 2.0 and r["atr"] < 0.8],
+            key=lambda r: r["atr"],
+        )
+
+        def _fmt_row(r: dict) -> str:
+            _s = r["sym"].replace("USDT", "")
+            _rsi_tag = "🔥" if r["rsi"] > 65 else ("❄️" if r["rsi"] < 35 else "  ")
+            return (
+                f"  `{_s:<6}` {r['mom24']:+.1f}% | ATR {r['atr']:.2f}% | RSI {r['rsi']:.0f} {_rsi_tag}"
+            )
+
+        _lines = ["🪙 *Live Coin Scan* — " + str(len(_coin_rows)) + " монет\n"]
+        if _trending_up:
+            _lines.append("📈 *Трендовые вверх* (лонги, ASC1/ATT1):")
+            for _r in _trending_up[:4]:
+                _lines.append(_fmt_row(_r))
+        else:
+            _lines.append("📈 _Нет явных up-трендов_")
+
+        _lines.append("")
+        if _trending_dn:
+            _lines.append("📉 *Трендовые вниз* (шорты, BRC1/Breakdown):")
+            for _r in _trending_dn[:4]:
+                _lines.append(_fmt_row(_r))
+        else:
+            _lines.append("📉 _Нет явных down-трендов_")
+
+        _lines.append("")
+        if _ranging:
+            _lines.append("🔁 *Боковик* (fade, ARF1/Flat):")
+            for _r in _ranging[:4]:
+                _lines.append(_fmt_row(_r))
+        else:
+            _lines.append("🔁 _Нет явного боковика_")
+
+        # Current regime context
+        _regime_path = Path(__file__).resolve().parent / "runtime" / "regime" / "orchestrator_state.json"
+        try:
+            import json as _json
+            _rs = _json.loads(_regime_path.read_text())
+            _regime_name = _rs.get("regime", "?")
+            _lines.append("\n🌡 Режим: *" + str(_regime_name) + "*")
+        except Exception:
+            pass
+
+        _tg_reply("\n".join(_lines), parse_mode="Markdown")
         return
 
     _tg_reply("Unknown command. /help")
@@ -9646,6 +9813,18 @@ async def try_att1_entry_async(symbol: str, price: float):
 
     _diag_inc("att1_signal")
     _append_signal_decision("att1", symbol, "signal", str(getattr(sig, "reason", "") or ""), side=str(sig.side))
+
+    # Shadow mode — log signal but never place order
+    if ATT1_RISK_MULT <= 0:
+        _diag_inc("att1_shadow_signal")
+        side_s = "long" if sig.side == "long" else "short"
+        tg_skip_throttled(
+            "att1", symbol, "shadow",
+            f"👻 ATT1 shadow: {symbol} {side_s} e={float(sig.entry):.4f} "
+            f"sl={float(sig.sl):.4f} tp={float(sig.tp):.4f}",
+        )
+        return
+
     side = "Buy" if sig.side == "long" else "Sell"
     entry = float(sig.entry)
     sl = float(sig.sl)
@@ -12893,6 +13072,85 @@ def _recompute_effective_risk_pct() -> None:
     RISK_PER_TRADE_PCT = max(0.01, float(eff))
 
 
+# Stale-regime auto-neutral threshold (24h). If regime file is older than this,
+# bot silently resets to neutral so strategies are never frozen by stale data.
+REGIME_STALE_NEUTRAL_SEC = int(os.getenv("REGIME_STALE_NEUTRAL_SEC", str(24 * 3600)))
+_REGIME_NEUTRAL_APPLIED_TS: float = 0.0
+
+
+def _apply_stale_regime_neutral() -> None:
+    """Write neutral regime env + JSON and immediately apply via _apply_regime_overlay.
+    Called automatically when regime file age exceeds REGIME_STALE_NEUTRAL_SEC.
+    """
+    global _REGIME_NEUTRAL_APPLIED_TS
+    import json as _json2
+    now = time.time()
+    # Only write once per hour to avoid thrashing
+    if now - _REGIME_NEUTRAL_APPLIED_TS < 3600:
+        return
+    _REGIME_NEUTRAL_APPLIED_TS = now
+
+    ts_str = datetime.now(timezone.utc).isoformat()
+    env_content = (
+        f"# Auto-neutral fallback — regime was stale > {REGIME_STALE_NEUTRAL_SEC}s\n"
+        f"ORCH_STATE_VERSION=1\n"
+        f"ORCH_GENERATED_AT_UTC={ts_str}\n"
+        f"ORCH_REGIME=neutral\n"
+        f"ORCH_RAW_REGIME=neutral\n"
+        f"ORCH_PENDING_REGIME=neutral\n"
+        f"ORCH_PENDING_COUNT=0\n"
+        f"ORCH_CONFIDENCE=0.5\n"
+        f"ORCH_GLOBAL_RISK_MULT=0.75\n"
+        f"ORCH_RISK_LEVEL=2\n"
+        f"ENABLE_BREAKOUT_TRADING=1\n"
+        f"BREAKOUT_ALLOW_LONGS=1\n"
+        f"BREAKOUT_ALLOW_SHORTS=1\n"
+        f"ENABLE_BREAKDOWN_TRADING=1\n"
+        f"ENABLE_FLAT_TRADING=1\n"
+        f"ENABLE_MIDTERM_TRADING=1\n"
+    )
+    try:
+        tmp = REGIME_OVERLAY_PATH.with_suffix(".env.tmp")
+        tmp.write_text(env_content)
+        tmp.replace(REGIME_OVERLAY_PATH)
+    except Exception as exc:
+        log_error(f"[REGIME] failed to write neutral fallback env: {exc}")
+        return
+
+    # Also update JSON state
+    json_path = ROOT_DIR / "runtime" / "regime" / "orchestrator_state.json"
+    try:
+        json_path.parent.mkdir(parents=True, exist_ok=True)
+        state = {
+            "version": 1, "timestamp_utc": ts_str, "ts_utc": ts_str,
+            "regime": "neutral", "raw_regime": "neutral",
+            "confidence": 0.5, "btc_bias": "neutral",
+            "risk_level": 2, "global_risk_mult": 0.75,
+            "notes": [f"Auto-neutral: regime was stale > {REGIME_STALE_NEUTRAL_SEC//3600}h"],
+            "strategy_overrides": {
+                "ORCH_REGIME": "neutral", "ORCH_CONFIDENCE": "0.5",
+                "ORCH_GENERATED_AT_UTC": ts_str, "ORCH_GLOBAL_RISK_MULT": "0.75",
+                "ENABLE_BREAKOUT_TRADING": "1", "BREAKOUT_ALLOW_LONGS": "1",
+                "BREAKOUT_ALLOW_SHORTS": "1", "ENABLE_BREAKDOWN_TRADING": "1",
+                "ENABLE_FLAT_TRADING": "1", "ENABLE_MIDTERM_TRADING": "1",
+            },
+        }
+        tmp_j = json_path.with_suffix(".json.tmp")
+        tmp_j.write_text(_json2.dumps(state, indent=2))
+        tmp_j.replace(json_path)
+    except Exception as exc:
+        log_error(f"[REGIME] failed to write neutral fallback JSON: {exc}")
+
+    _apply_regime_overlay(force=True, notify=False)
+    msg = (
+        f"⚠️ Режим-файл устарел > {REGIME_STALE_NEUTRAL_SEC//3600}h — "
+        f"автоматически сброшен в NEUTRAL (risk_mult=0.75, все стратегии включены). "
+        f"Запусти `python3 bot/regime_orchestrator.py` для обновления."
+    )
+    log_info(msg)
+    tg_trade(msg)
+
+
 def _check_regime_overlay_health(*, notify: bool = True) -> bool:
     global REGIME_OVERLAY_LAST_STALE_ALERT_TS, REGIME_OVERLAY_LAST_MISSING_ALERT_TS
 
@@ -12927,6 +13185,9 @@ def _check_regime_overlay_health(*, notify: bool = True) -> bool:
             )
             log_error(msg)
             tg_trade(msg)
+        # Auto-neutral fallback: if stale beyond threshold, reset to neutral
+        if age_sec > REGIME_STALE_NEUTRAL_SEC:
+            _apply_stale_regime_neutral()
         return False
 
     return True
@@ -13273,27 +13534,27 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     PORTFOLIO_ALLOCATOR_LAST_STATUS = str(os.getenv("PORTFOLIO_ALLOCATOR_STATUS", "") or "").strip()
 
     try:
-        BREAKOUT_RISK_MULT = max(0.05, float(os.getenv("BREAKOUT_RISK_MULT", str(BREAKOUT_RISK_MULT)) or BREAKOUT_RISK_MULT))
+        BREAKOUT_RISK_MULT = _risk_mult_or_pause("BREAKOUT_RISK_MULT", str(BREAKOUT_RISK_MULT))
     except Exception:
         pass
     try:
-        MIDTERM_RISK_MULT = max(0.05, float(os.getenv("MIDTERM_RISK_MULT", str(MIDTERM_RISK_MULT)) or MIDTERM_RISK_MULT))
+        MIDTERM_RISK_MULT = _risk_mult_or_pause("MIDTERM_RISK_MULT", str(MIDTERM_RISK_MULT))
     except Exception:
         pass
     try:
-        SLOPED_RISK_MULT = max(0.05, float(os.getenv("SLOPED_RISK_MULT", str(SLOPED_RISK_MULT)) or SLOPED_RISK_MULT))
+        SLOPED_RISK_MULT = _risk_mult_or_pause("SLOPED_RISK_MULT", str(SLOPED_RISK_MULT))
     except Exception:
         pass
     try:
-        FLAT_RISK_MULT = max(0.05, float(os.getenv("FLAT_RISK_MULT", str(FLAT_RISK_MULT)) or FLAT_RISK_MULT))
+        FLAT_RISK_MULT = _risk_mult_or_pause("FLAT_RISK_MULT", str(FLAT_RISK_MULT))
     except Exception:
         pass
     try:
-        BREAKDOWN_RISK_MULT = max(0.05, float(os.getenv("BREAKDOWN_RISK_MULT", str(BREAKDOWN_RISK_MULT)) or BREAKDOWN_RISK_MULT))
+        BREAKDOWN_RISK_MULT = _risk_mult_or_pause("BREAKDOWN_RISK_MULT", str(BREAKDOWN_RISK_MULT))
     except Exception:
         pass
     try:
-        IVB1_RISK_MULT = max(0.05, float(os.getenv("IVB1_RISK_MULT", str(IVB1_RISK_MULT)) or IVB1_RISK_MULT))
+        IVB1_RISK_MULT = _risk_mult_or_pause("IVB1_RISK_MULT", str(IVB1_RISK_MULT))
     except Exception:
         pass
     try:
@@ -13308,19 +13569,19 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     except Exception:
         pass
     try:
-        ASM1_RISK_MULT = max(0.05, float(os.getenv("ASM1_RISK_MULT", str(ASM1_RISK_MULT)) or ASM1_RISK_MULT))
+        ASM1_RISK_MULT = _risk_mult_or_pause("ASM1_RISK_MULT", str(ASM1_RISK_MULT))
     except Exception:
         pass
     try:
-        ASB1_RISK_MULT = max(0.05, float(os.getenv("ASB1_RISK_MULT", str(ASB1_RISK_MULT)) or ASB1_RISK_MULT))
+        ASB1_RISK_MULT = _risk_mult_or_pause("ASB1_RISK_MULT", str(ASB1_RISK_MULT))
     except Exception:
         pass
     try:
-        HZBO1_RISK_MULT = max(0.05, float(os.getenv("HZBO1_RISK_MULT", str(HZBO1_RISK_MULT)) or HZBO1_RISK_MULT))
+        HZBO1_RISK_MULT = _risk_mult_or_pause("HZBO1_RISK_MULT", str(HZBO1_RISK_MULT))
     except Exception:
         pass
     try:
-        BOUNCE1_RISK_MULT = max(0.05, float(os.getenv("BOUNCE1_RISK_MULT", str(BOUNCE1_RISK_MULT)) or BOUNCE1_RISK_MULT))
+        BOUNCE1_RISK_MULT = _risk_mult_or_pause("BOUNCE1_RISK_MULT", str(BOUNCE1_RISK_MULT))
     except Exception:
         pass
     try:
