@@ -48,8 +48,12 @@ FAMILY_PROFILES   = ROOT / "configs" / "family_profiles.json"
 INTRADAY_STATE    = ROOT / "configs" / "intraday_state.json"
 BACKTEST_RUNS_DIR = ROOT / "backtest_runs"
 
-ANTHROPIC_API = "https://api.anthropic.com/v1/messages"
+ANTHROPIC_API  = "https://api.anthropic.com/v1/messages"
 DEFAULT_MODEL  = "claude-sonnet-4-6"
+
+# ── DeepSeek backend (OpenAI-compatible) ─────────────────────────────────────────
+DEEPSEEK_API_DEFAULT = "https://api.deepseek.com"
+DEEPSEEK_MODEL       = "deepseek-chat"
 
 # ── Env helpers ──────────────────────────────────────────────────────────────────
 def _load_env_file(path: Path) -> None:
@@ -69,8 +73,10 @@ def _load_env_file(path: Path) -> None:
 def _env(name: str, default: str = "") -> str:
     return str(os.getenv(name, default)).strip()
 
-# ── Claude API client ─────────────────────────────────────────────────────────────
+# ── AI API clients ────────────────────────────────────────────────────────────────
+
 class ClaudeClient:
+    """Anthropic Claude API client."""
     def __init__(self, api_key: str, model: str = DEFAULT_MODEL):
         self.api_key = api_key
         self.model   = model
@@ -100,6 +106,77 @@ class ClaudeClient:
         except error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")
             raise RuntimeError(f"Claude API error {exc.code}: {detail}") from exc
+
+
+class DeepSeekClient:
+    """DeepSeek API client (OpenAI-compatible chat completions).
+
+    Activated when DEEPSEEK_API_KEY is set and ANTHROPIC_API_KEY is absent.
+    Supports the same .ask(system, user, max_tokens) interface as ClaudeClient
+    so the rest of the code is backend-agnostic.
+
+    Config env vars (in configs/claude_analyst.env or server.env):
+        DEEPSEEK_API_KEY=<key>
+        DEEPSEEK_BASE_URL=https://api.deepseek.com  (default)
+        DEEPSEEK_MODEL=deepseek-chat                 (default)
+    """
+    def __init__(self, api_key: str, base_url: str = DEEPSEEK_API_DEFAULT,
+                 model: str = DEEPSEEK_MODEL):
+        self.api_key  = api_key
+        self.base_url = base_url.rstrip("/")
+        self.model    = model
+        self._ssl     = ssl.create_default_context()
+
+    def ask(self, system: str, user: str, max_tokens: int = 2000) -> str:
+        payload = {
+            "model": self.model,
+            "max_tokens": max_tokens,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user",   "content": user},
+            ],
+        }
+        req = request.Request(
+            f"{self.base_url}/v1/chat/completions",
+            data=json.dumps(payload).encode(),
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type":  "application/json",
+            },
+            method="POST",
+        )
+        try:
+            with request.urlopen(req, context=self._ssl, timeout=90) as resp:
+                data = json.loads(resp.read().decode())
+                return data["choices"][0]["message"]["content"]
+        except error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")
+            raise RuntimeError(f"DeepSeek API error {exc.code}: {detail}") from exc
+
+
+def _make_client() -> "ClaudeClient | DeepSeekClient":
+    """Return the best available AI client.
+
+    Priority:
+      1. ANTHROPIC_API_KEY  → ClaudeClient  (best quality)
+      2. DEEPSEEK_API_KEY   → DeepSeekClient (cheap fallback)
+      3. Neither set        → raises SystemExit with instructions
+    """
+    anthropic_key = _env("ANTHROPIC_API_KEY")
+    deepseek_key  = _env("DEEPSEEK_API_KEY")
+
+    if anthropic_key:
+        model = _env("CLAUDE_MODEL", DEFAULT_MODEL)
+        print(f"[analyst] Using Claude backend ({model})")
+        return ClaudeClient(anthropic_key, model)
+
+    if deepseek_key:
+        base_url = _env("DEEPSEEK_BASE_URL", DEEPSEEK_API_DEFAULT)
+        model    = _env("DEEPSEEK_MODEL",    DEEPSEEK_MODEL)
+        print(f"[analyst] Using DeepSeek backend ({model}) — set ANTHROPIC_API_KEY for higher quality")
+        return DeepSeekClient(deepseek_key, base_url, model)
+
+    return None  # caller handles missing keys
 
 # ── Context builders ──────────────────────────────────────────────────────────────
 SYSTEM_PROMPT = """You are the senior architect of a self-improving crypto + equities trading bot.
@@ -347,26 +424,25 @@ def main() -> None:
     ap.add_argument("--no-tg",          action="store_true", help="Skip Telegram")
     args = ap.parse_args()
 
-    api_key = _env("ANTHROPIC_API_KEY")
-    if not api_key:
+    client = _make_client()
+    if client is None:
         print("=" * 60)
-        print("Claude Monthly Analyst — NOT YET ACTIVATED")
+        print("AI Analyst — NOT YET ACTIVATED")
         print("=" * 60)
         print()
-        print("This module is ready but waiting for API key.")
+        print("No API key found. Set one of:")
         print()
-        print("To activate:")
-        print("  1. Get key from: https://console.anthropic.com/")
-        print("  2. Create file: configs/claude_analyst.env")
-        print("     Contents: ANTHROPIC_API_KEY=sk-ant-...")
+        print("  Option A — DeepSeek (cheap, already in project):")
+        print("    File: configs/claude_analyst.env")
+        print("    Contents: DEEPSEEK_API_KEY=sk-...")
+        print("    Cost: ~$0.002/call (100x cheaper than Claude)")
+        print("    Activate: DEEPSEEK_ENABLE=1 already in server.env")
         print()
-        print("Cost estimate:")
-        print("  Monthly report    → ~$0.50 (claude-sonnet-4-6)")
-        print("  Strategy idea     → ~$0.30")
-        print("  Strategy diagnose → ~$0.25")
-        print("  Full month usage  → ~$5-10")
-        print()
-        print("Recommended activation threshold: bot P&L > $200/month")
+        print("  Option B — Anthropic Claude (higher quality):")
+        print("    File: configs/claude_analyst.env")
+        print("    Contents: ANTHROPIC_API_KEY=sk-ant-...")
+        print("    Cost: ~$5-10/month at moderate usage")
+        print("    Recommended when: bot P&L > $200/month")
         print()
         print("Current bot status (from strategy_health.json):")
         if HEALTH_FILE.exists():
@@ -380,9 +456,6 @@ def main() -> None:
         else:
             print("  (run equity_curve_autopilot.py first)")
         sys.exit(0)
-
-    model = _env("CLAUDE_MODEL", DEFAULT_MODEL)
-    client = ClaudeClient(api_key, model)
     tg_token = _env("TG_TOKEN")
     tg_chat  = _env("TG_CHAT_ID")
     now_str  = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
