@@ -1,0 +1,62 @@
+{
+  "name": "package_funding_harvest_v1",
+  "description": "Funding-rate harvest sweep. Baseline funding_baseline_fixed6_365d: net +$15.14 on $400 notional in 365d = 3.78% APR. Tests whether wider symbol coverage + dynamic positive-carry-only filter + receive threshold tuning lifts APR to 8-12% without blowing variance. Grid: 4*3*3*2 = 72 combos. Targets: APR >= 6%, max month <= -1.0%, sharpe >= 1.5.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "scripts/backtest_funding_capture.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--days",
+    "365",
+    "--notional",
+    "100",
+    "--mode",
+    "hold",
+    "--tag",
+    "{tag}"
+  ],
+  "base_env": {
+    "FUNDING_HOLD_MODE": "hold",
+    "FUNDING_FEE_BPS": "16",
+    "FUNDING_FLIP_FEE_BPS": "2",
+    "FUNDING_MIN_EVENTS_PER_SYMBOL": "60",
+    "FUNDING_MAX_TOP_SHARE": "0.45"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "BTCUSDT,ETHUSDT,XRPUSDT,DOGEUSDT",
+      "BTCUSDT,ETHUSDT,XRPUSDT,DOGEUSDT,SOLUSDT,LINKUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,DOGEUSDT,XRPUSDT,ADAUSDT,DOTUSDT",
+      "BTCUSDT,ETHUSDT,SOLUSDT,NEARUSDT,LINKUSDT,DOGEUSDT,XRPUSDT,ADAUSDT,DOTUSDT,LTCUSDT"
+    ],
+    "FUNDING_POSITIVE_CARRY_ONLY": ["1", "0"],
+    "FUNDING_MIN_RECEIVE_8H_PCT": ["0.003", "0.005", "0.01"],
+    "FUNDING_MIN_SYMBOL_NET_USD": ["0.0", "-0.5", "-1.0"]
+  },
+  "constraints": {
+    "min_trades": 1000,
+    "min_profit_factor": 1.2,
+    "max_drawdown": 4.0,
+    "min_net_pnl": 5.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.5,
+    "profit_factor": 4.0,
+    "winrate": 3.0,
+    "max_drawdown": 2.5,
+    "trades": 0.02,
+    "trades_cap": 5000,
+    "negative_months": 2.5,
+    "max_negative_streak": 1.5,
+    "worst_month_pnl": 2.0
+  },
+  "_notes": {
+    "history": "2026-05-28: written by Opus. Pulls from existing scripts/backtest_funding_capture.py harness + strategies/funding_hold_v1.py. Baseline 365d run from 2026-04-03 showed +$15.14 net on $400 / 4 majors (BTC/DOGE/ETH/XRP).",
+    "hypothesis": "Wider universe + tighter receive threshold should pick up alt funding without adding much variance. NEAR offered 10.95% annual in 2026-03 scan — but selection bias risk.",
+    "combo_count": "4*2*3*3 = 72 combos",
+    "deploy_action": "If winner APR >= 6%, max DD <= 4%, max neg month <= 1%: create sub-account on Bybit, transfer $300-500 to it, deploy as overlay layer (does NOT compete with main account margin)."
+  }
+}
