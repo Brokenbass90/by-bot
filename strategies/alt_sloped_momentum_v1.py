@@ -87,6 +87,13 @@ Environment variables (ASM1_ prefix)
   ASM1_TRAIL_ACTIVATE_RR    float  trailing activation R [1.00]
   ASM1_TIME_STOP_BARS_5M    int    time stop 5m bars [1440]
   ASM1_COOLDOWN_BARS_5M     int    cooldown 5m bars [72]
+  ASM1_ER_GATE_ENABLED      bool   enable Efficiency Ratio regime gate [1]
+  ASM1_ER_GATE_BARS         int    bars to compute ER over (1H) [80]
+  ASM1_ER_GATE_MIN          float  min ER to trade (0=off, 0.15=recommended) [0.15]
+
+  ER Gate: Efficiency Ratio = |net_move| / sum(|bar_moves|) over N bars.
+  ER~0.03 = pure chop; ER~0.35 = clean trend. Threshold 0.15 blocks choppy
+  sideways regimes (December-style chop) that cause false breakouts.
 """
 from __future__ import annotations
 
@@ -192,6 +199,24 @@ def _r_squared(values: List[float], slope: float, intercept: float) -> float:
     return max(0.0, 1.0 - ss_res / ss_tot)
 
 
+def _efficiency_ratio(closes: List[float], bars: int) -> float:
+    """Efficiency Ratio = |net_move| / sum(|bar_moves|) over last N bars.
+
+    Returns value in [0, 1]:
+      - Near 0 = choppy / mean-reverting (bad for breakout strategies)
+      - Near 1 = perfectly trending (ideal for ASM1)
+    Returns NaN if insufficient data.
+    """
+    n = min(bars, len(closes) - 1)
+    if n < 2:
+        return float("nan")
+    net_move = abs(closes[-1] - closes[-1 - n])
+    path = sum(abs(closes[-i] - closes[-i - 1]) for i in range(1, n + 1))
+    if path < 1e-12:
+        return 0.0
+    return net_move / path
+
+
 def _channel_bands(
     closes: List[float],
     highs: List[float],
@@ -242,6 +267,14 @@ class AltSlopedMomentumV1Config:
     trend_ema_fast: int = 20
     trend_ema_slow: int = 50
 
+    # Efficiency Ratio regime gate
+    # Blocks entries when market is choppy (ER too low = mean-reverting / sideways).
+    # ER = |price_now - price_N_bars_ago| / sum(|bar-to-bar moves|) over N bars.
+    # ER~0.03 = pure chop; ER~0.35 = clean trend; threshold 0.15 is the sweet spot.
+    er_gate_enabled: bool = True
+    er_gate_bars: int = 80       # ~80 × 1H = 3.3 days of context
+    er_gate_min: float = 0.15    # skip if ER < this (choppy market)
+
     # Trade management
     sl_atr_mult: float = 1.20    # SL below upper band (long) / above lower band (short)
     tp1_rr: float = 1.50
@@ -272,7 +305,11 @@ class AltSlopedMomentumV1Strategy:
         self._last_tf_ts: Optional[int] = None
         self._allow: set = set()
         self._deny: set = set()
+        self._last_no_signal_reason = ""
         self._refresh_lists()
+
+    def _no_signal(self, reason: str) -> None:
+        self._last_no_signal_reason = str(reason or "unknown")
 
     def _load_env(self) -> None:
         c = self.cfg
@@ -303,6 +340,9 @@ class AltSlopedMomentumV1Strategy:
         c.cooldown_bars_5m = _env_int("ASM1_COOLDOWN_BARS_5M", c.cooldown_bars_5m)
         c.allow_longs = _env_bool("ASM1_ALLOW_LONGS", c.allow_longs)
         c.allow_shorts = _env_bool("ASM1_ALLOW_SHORTS", c.allow_shorts)
+        c.er_gate_enabled = _env_bool("ASM1_ER_GATE_ENABLED", c.er_gate_enabled)
+        c.er_gate_bars = _env_int("ASM1_ER_GATE_BARS", c.er_gate_bars)
+        c.er_gate_min = _env_float("ASM1_ER_GATE_MIN", c.er_gate_min)
 
     def _refresh_lists(self) -> None:
         self._allow = _env_csv_set(
@@ -342,25 +382,32 @@ class AltSlopedMomentumV1Strategy:
         v: float = 0.0,
     ) -> Optional[TradeSignal]:
         _ = (o, h, l, c, v)
+        self._last_no_signal_reason = ""
         self._refresh_lists()
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
+            self._no_signal("symbol_not_allowed")
             return None
         if sym in self._deny:
+            self._no_signal("symbol_denied")
             return None
         if self._cooldown > 0:
             self._cooldown -= 1
+            self._no_signal("cooldown")
             return None
 
         rows = store.fetch_klines(store.symbol, self.cfg.signal_tf, self.cfg.signal_lookback) or []
         if len(rows) < self.cfg.signal_lookback:
+            self._no_signal("history_short")
             return None
 
         tf_ts = int(float(rows[-1][0]))
         if self._last_tf_ts is None:
             self._last_tf_ts = tf_ts
+            self._no_signal("first_signal_bar")
             return None
         if tf_ts == self._last_tf_ts:
+            self._no_signal("same_signal_bar")
             return None
         self._last_tf_ts = tf_ts
 
@@ -372,6 +419,7 @@ class AltSlopedMomentumV1Strategy:
 
         atr = _atr_from_rows(rows, self.cfg.atr_period)
         if not math.isfinite(atr) or atr <= 0:
+            self._no_signal("atr_invalid")
             return None
 
         cur = closes[-1]
@@ -380,10 +428,20 @@ class AltSlopedMomentumV1Strategy:
         cur_high = highs[-1]
         cur_low = lows[-1]
         if cur <= 0:
+            self._no_signal("price_invalid")
             return None
 
         bar_range = max(1e-12, cur_high - cur_low)
         body_frac = abs(cur - cur_open) / bar_range
+
+        # ── Efficiency Ratio regime gate ──────────────────────────────────────
+        # Skip choppy / sideways markets that generate false breakouts.
+        # December problem: ASM1 was firing into BTC range-chop with ER~0.03.
+        if self.cfg.er_gate_enabled and self.cfg.er_gate_min > 0:
+            er = _efficiency_ratio(closes, self.cfg.er_gate_bars)
+            if math.isfinite(er) and er < self.cfg.er_gate_min:
+                self._no_signal("er_gate_low")
+                return None
 
         # ── Volume check ─────────────────────────────────────────────────────
         hist_vols = [x for x in vols[-self.cfg.vol_period - 1:-1] if math.isfinite(x) and x > 0]
@@ -397,14 +455,17 @@ class AltSlopedMomentumV1Strategy:
         hist_lows = lows[:-1]
         n_hist = len(hist_closes)
         if n_hist < max(20, self.cfg.signal_lookback - 5):
+            self._no_signal("channel_history_short")
             return None
 
         slope, intercept = _linear_regression(hist_closes)
         if not (math.isfinite(slope) and math.isfinite(intercept)):
+            self._no_signal("regression_invalid")
             return None
 
         r2 = _r_squared(hist_closes, slope, intercept)
         if r2 < self.cfg.min_r2:
+            self._no_signal("r2_low")
             return None
 
         # Project channel to current bar (index = n_hist, since hist has n-1 bars)
@@ -417,6 +478,7 @@ class AltSlopedMomentumV1Strategy:
 
         width = upper_now - lower_now
         if width <= 0:
+            self._no_signal("channel_width_invalid")
             return None
         width_pct = width / max(1e-12, cur) * 100.0
 
@@ -425,8 +487,10 @@ class AltSlopedMomentumV1Strategy:
         slope_pct_day = abs(slope) / price_ref * 100.0 * 24.0
 
         if width_pct < self.cfg.min_channel_width_pct or width_pct > self.cfg.max_channel_width_pct:
+            self._no_signal("channel_width_out")
             return None
         if slope_pct_day < self.cfg.min_slope_pct or slope_pct_day > self.cfg.max_slope_pct:
+            self._no_signal("channel_slope_out")
             return None
 
         # ── LONG BREAKOUT ────────────────────────────────────────────────────
@@ -478,6 +542,19 @@ class AltSlopedMomentumV1Strategy:
                     if sig.validate():
                         self._cooldown = max(0, self.cfg.cooldown_bars_5m)
                         return sig
+                self._no_signal("long_invalid_risk")
+            elif not was_inside:
+                self._no_signal("long_not_inside")
+            elif not broke_up:
+                self._no_signal("long_no_breakout")
+            elif not bullish_candle:
+                self._no_signal("long_candle_not_bullish")
+            elif body_frac < self.cfg.min_body_frac:
+                self._no_signal("long_body_weak")
+            elif not vol_ok:
+                self._no_signal("long_volume_low")
+            else:
+                self._no_signal("long_trend_filter")
 
         # ── SHORT BREAKOUT ───────────────────────────────────────────────────
         if self.cfg.allow_shorts:
@@ -528,5 +605,20 @@ class AltSlopedMomentumV1Strategy:
                         if sig.validate():
                             self._cooldown = max(0, self.cfg.cooldown_bars_5m)
                             return sig
+                self._no_signal("short_invalid_risk")
+            elif not was_inside:
+                self._no_signal("short_not_inside")
+            elif not broke_down:
+                self._no_signal("short_no_breakout")
+            elif not bearish_candle:
+                self._no_signal("short_candle_not_bearish")
+            elif body_frac < self.cfg.min_body_frac:
+                self._no_signal("short_body_weak")
+            elif not vol_ok:
+                self._no_signal("short_volume_low")
+            else:
+                self._no_signal("short_trend_filter")
 
+        if not self._last_no_signal_reason:
+            self._no_signal("no_setup")
         return None

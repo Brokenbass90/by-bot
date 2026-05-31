@@ -109,24 +109,29 @@ def _atr(candles: list, period: int) -> float:
 
 
 def _ema(values: list[float], period: int) -> float:
+    """EMA seeded on SMA of first `period` bars (avoids cold-start bias)."""
     if len(values) < period or period <= 0: return float("nan")
+    cur = sum(float(x) for x in values[:period]) / period
     k = 2.0 / (period + 1.0)
-    e = float(values[0])
-    for v in values[1:]:
-        e = float(v) * k + e * (1.0 - k)
-    return e
+    for v in values[period:]:
+        cur = float(v) * k + cur * (1.0 - k)
+    return cur
 
 
 def _rsi(closes: list[float], period: int) -> float:
-    if len(closes) < period + 1: return float("nan")
-    gains, losses = 0.0, 0.0
-    for i in range(-period, 0):
-        diff = closes[i] - closes[i - 1]
-        if diff > 0: gains += diff
-        else: losses -= diff
-    if losses == 0: return 100.0
-    rs = gains / losses
-    return 100.0 - 100.0 / (1.0 + rs)
+    """Wilder-smoothed RSI. Seed = simple avg of first period gains/losses."""
+    need = period * 2 + 1
+    if len(closes) < need or period <= 0: return float("nan")
+    deltas = [closes[i] - closes[i-1] for i in range(1, len(closes))]
+    gains  = [max(0.0, d) for d in deltas]
+    losses = [max(0.0, -d) for d in deltas]
+    avg_g  = sum(gains[:period]) / period
+    avg_l  = sum(losses[:period]) / period
+    for i in range(period, len(gains)):
+        avg_g = (avg_g * (period - 1) + gains[i]) / period
+        avg_l = (avg_l * (period - 1) + losses[i]) / period
+    if avg_l < 1e-12: return 100.0
+    return 100.0 - 100.0 / (1.0 + avg_g / avg_l)
 
 
 @dataclass
@@ -176,7 +181,12 @@ class AltBearRegimeContinuationV1Strategy:
             return None
 
         candles = _candles_5m(store, symbol)
-        need = max(cfg.atr_period + 5, cfg.rsi_period + 5, cfg.vol_avg_bars + 2, cfg.pullback_bars + 5)
+        need = max(
+            cfg.atr_period + 5,
+            cfg.rsi_period * 2 + 1,
+            cfg.vol_avg_bars + 2,
+            cfg.pullback_bars + 5,
+        )
         if i < need:
             self.last_no_signal_reason = "not_enough_bars"
             return None
@@ -257,7 +267,8 @@ class AltBearRegimeContinuationV1Strategy:
             return None
 
         # RSI зона 50-70 (overbought minor pullback)
-        rsi_closes = [float(x.c) for x in candles[max(0, i - cfg.rsi_period - 2): i + 1]]
+        # Wilder RSI needs the seed window plus smoothing observations.
+        rsi_closes = [float(x.c) for x in candles[max(0, i - cfg.rsi_period * 2): i + 1]]
         rsi = _rsi(rsi_closes, cfg.rsi_period)
         if not math.isfinite(rsi):
             self.last_no_signal_reason = "bad_rsi"
@@ -311,4 +322,65 @@ class AltBearRegimeContinuationV1Strategy:
             tp1 = c - cfg.tp1_rr * risk
             sig.tps = [float(tp1), float(tp)]
             sig.tp_fracs = [cfg.tp1_frac, max(0.0, 1.0 - cfg.tp1_frac)]
+        return sig
+
+    def maybe_signal(
+        self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0
+    ) -> "Optional[TradeSignal]":
+        """
+        Standard live-runner interface. Bridges the index-based signal() to
+        the timestamp-based maybe_signal(). Reads regime from store if available.
+        """
+        # Regime from store (main bot sets store.regime) or env fallback
+        regime = str(getattr(store, "regime", "") or "").upper()
+        if not regime:
+            regime = str(os.getenv("LIVE_REGIME", "bear_trend")).upper()
+
+        # Fetch recent 5m rows and convert to minimal Candle-like objects
+        need = max(self.cfg.atr_period + 5, self.cfg.rsi_period + 5,
+                   self.cfg.vol_avg_bars + 2, self.cfg.pullback_bars + 10, 80)
+        raw_rows = []
+        if hasattr(store, "fetch_klines"):
+            raw_rows = store.fetch_klines(getattr(store, "symbol", ""), "5", need) or []
+
+        if not raw_rows:
+            self.last_no_signal_reason = "no_5m_data"
+            return None
+
+        class _C:
+            """Minimal candle object matching BRC1's _atr/_rsi access pattern."""
+            __slots__ = ("o", "h", "l", "c", "v")
+            def __init__(self, r):
+                self.o = float(r[1]); self.h = float(r[2])
+                self.l = float(r[3]); self.c = float(r[4])
+                self.v = float(r[5]) if len(r) > 5 else 0.0
+
+        candles_local = [_C(r) for r in raw_rows]
+
+        # Patch/append the live tick as the current bar
+        live_bar = _C([0, o, h, l, c, v])
+        bar_ms = (ts_ms // 300_000) * 300_000  # 5m bucket
+        last_bar_ms = int(float(raw_rows[-1][0]))
+        same_bucket = abs(bar_ms - last_bar_ms) < 300_000
+        if same_bucket:
+            candles_local[-1] = live_bar
+        else:
+            candles_local.append(live_bar)
+
+        i = len(candles_local) - 1
+
+        # Temporarily inject candles into store.c5 for signal()
+        orig_c5 = getattr(store, "c5", None)
+        store.c5 = candles_local
+        try:
+            sig = self.signal(store, getattr(store, "symbol", ""), i, regime=regime)
+        finally:
+            if orig_c5 is not None:
+                store.c5 = orig_c5
+            else:
+                try:
+                    del store.c5
+                except AttributeError:
+                    pass
+
         return sig

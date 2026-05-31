@@ -235,10 +235,15 @@ class AltSlopedChannelV1Strategy:
         self._deny = _env_csv_set("ASC1_SYMBOL_DENYLIST")
         self._cooldown = 0
         self._last_tf_ts: Optional[int] = None
+        self.last_no_signal_reason: str = ""
         # pending 5m confirmation state:
         # {side, sl, tp, tp1, upper_band, lower_band, atr, timeout_bars}
         self._pending: Optional[Dict] = None
         self._pending_bars_left: int = 0
+
+    def _no_signal(self, reason: str) -> None:
+        self.last_no_signal_reason = str(reason or "other")
+        return None
 
     def _refresh_runtime_allowlists(self) -> None:
         self._allow = _env_csv_set(
@@ -250,14 +255,15 @@ class AltSlopedChannelV1Strategy:
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (o, h, l, c, v)
         self._refresh_runtime_allowlists()
+        self.last_no_signal_reason = ""
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
-            return None
+            return self._no_signal("symbol_not_allowed")
         if sym in self._deny:
-            return None
+            return self._no_signal("symbol_denied")
         if self._cooldown > 0:
             self._cooldown -= 1
-            return None
+            return self._no_signal("cooldown")
 
         # ── 5m CONFIRMATION CHECK ─────────────────────────────────────
         # If we have a pending 1h setup, check each 5m bar for entry confirmation.
@@ -337,19 +343,20 @@ class AltSlopedChannelV1Strategy:
             if invalidated or self._pending_bars_left <= 0:
                 self._pending = None
                 self._pending_bars_left = 0
-            return None
+                return self._no_signal("pending_confirm_invalidated")
+            return self._no_signal("pending_confirm_wait")
         # ── END 5m CONFIRMATION CHECK ─────────────────────────────────
 
         rows = store.fetch_klines(store.symbol, self.cfg.signal_tf, self.cfg.signal_lookback) or []
         if len(rows) < self.cfg.signal_lookback:
-            return None
+            return self._no_signal("history_short")
 
         tf_ts = int(float(rows[-1][0]))
         if self._last_tf_ts is None:
             self._last_tf_ts = tf_ts
-            return None
+            return self._no_signal("first_signal_bar")
         if tf_ts == self._last_tf_ts:
-            return None
+            return self._no_signal("same_signal_bar")
         self._last_tf_ts = tf_ts
 
         highs = [float(r[2]) for r in rows]
@@ -363,11 +370,11 @@ class AltSlopedChannelV1Strategy:
         atr = _atr_from_rows(rows, self.cfg.atr_period)
         rsi = _rsi(closes, self.cfg.rsi_period)
         if not all(math.isfinite(x) for x in (atr, rsi)) or cur <= 0 or atr <= 0:
-            return None
+            return self._no_signal("atr_or_rsi_invalid")
 
         slope, intercept = _linear_regression(closes)
         if not (math.isfinite(slope) and math.isfinite(intercept)):
-            return None
+            return self._no_signal("regression_invalid")
         n = len(closes)
         fit = [slope * i + intercept for i in range(n)]
         residual_high = [h_i - f_i for h_i, f_i in zip(highs, fit)]
@@ -375,7 +382,7 @@ class AltSlopedChannelV1Strategy:
         upper_off = max(residual_high)
         lower_off = min(residual_low)
         if not (math.isfinite(upper_off) and math.isfinite(lower_off)):
-            return None
+            return self._no_signal("channel_invalid")
 
         fit_now = fit[-1]
         upper = fit_now + upper_off
@@ -384,18 +391,18 @@ class AltSlopedChannelV1Strategy:
         width_pct = width / max(1e-12, cur) * 100.0
         slope_pct = abs(slope) / max(1e-12, abs(fit_now)) * 100.0 * 24.0
         if width <= 0:
-            return None
+            return self._no_signal("channel_width_invalid")
         if width_pct < self.cfg.min_channel_width_pct or width_pct > self.cfg.max_channel_width_pct:
-            return None
+            return self._no_signal("channel_width_out_of_range")
         if slope_pct < self.cfg.min_abs_slope_pct or slope_pct > self.cfg.max_abs_slope_pct:
-            return None
+            return self._no_signal("slope_out_of_range")
 
         y_mean = sum(closes) / float(n)
         ss_tot = sum((x - y_mean) ** 2 for x in closes)
         ss_res = sum((x - f) ** 2 for x, f in zip(closes, fit))
         r2 = 1.0 - ss_res / max(1e-12, ss_tot)
         if r2 < self.cfg.min_range_r2:
-            return None
+            return self._no_signal("r2_too_low")
 
         low_now = lows[-1]
         high_now = highs[-1]
@@ -424,7 +431,7 @@ class AltSlopedChannelV1Strategy:
             short_vol_avg = sum(hist_vols) / float(len(hist_vols))
         reject_vol_mult = (vols[-1] / short_vol_avg) if short_vol_avg > 0 else 0.0
         if body_frac < self.cfg.min_body_frac:
-            return None
+            return self._no_signal("body_weak")
 
         touched_lower = low_now <= lower + self.cfg.touch_buffer_atr * atr
         reclaimed_lower = cur >= lower + self.cfg.reclaim_atr * atr and cur > prev
@@ -453,7 +460,7 @@ class AltSlopedChannelV1Strategy:
                         "upper_band": float(upper), "lower_band": float(lower), "atr": float(atr),
                     }
                     self._pending_bars_left = max(1, int(self.cfg.confirm_5m_bars))
-                    return None
+                    return self._no_signal("pending_long_confirm")
                 self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
                 sig = TradeSignal(
                     strategy="alt_sloped_channel_v1",
@@ -473,6 +480,7 @@ class AltSlopedChannelV1Strategy:
                 )
                 if sig.validate():
                     return sig
+                return self._no_signal("long_signal_invalid_post")
 
         if (
             self.cfg.allow_shorts
@@ -501,7 +509,7 @@ class AltSlopedChannelV1Strategy:
                         "upper_band": float(upper), "lower_band": float(lower), "atr": float(atr),
                     }
                     self._pending_bars_left = max(1, int(self.cfg.confirm_5m_bars))
-                    return None
+                    return self._no_signal("pending_short_confirm")
                 self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
                 sig = TradeSignal(
                     strategy="alt_sloped_channel_v1",
@@ -521,5 +529,35 @@ class AltSlopedChannelV1Strategy:
                 )
                 if sig.validate():
                     return sig
+                return self._no_signal("short_signal_invalid_post")
 
-        return None
+        if not (self.cfg.allow_longs or self.cfg.allow_shorts):
+            return self._no_signal("direction_disabled")
+        if not (touched_lower or touched_upper):
+            return self._no_signal("no_channel_touch")
+        if touched_lower and not reclaimed_lower:
+            return self._no_signal("no_lower_reclaim")
+        if touched_upper and not rejected_upper:
+            return self._no_signal("no_upper_reject")
+        if self.cfg.allow_longs and touched_lower and reclaimed_lower and not long_bias_ok:
+            return self._no_signal("long_slope_bias")
+        if self.cfg.allow_shorts and touched_upper and rejected_upper and not short_bias_ok:
+            return self._no_signal("short_slope_bias")
+        if self.cfg.allow_longs and touched_lower and reclaimed_lower and rsi > self.cfg.long_max_rsi:
+            return self._no_signal("long_rsi_too_high")
+        if self.cfg.allow_shorts and touched_upper and rejected_upper and rsi < self.cfg.short_min_rsi:
+            return self._no_signal("short_rsi_too_low")
+        if self.cfg.allow_shorts and touched_upper and rejected_upper:
+            if reject_depth_atr < self.cfg.short_min_reject_depth_atr:
+                return self._no_signal("short_reject_depth")
+            if upper_wick_frac < self.cfg.short_min_upper_wick_frac:
+                return self._no_signal("short_upper_wick")
+            if upper_touch_count < self.cfg.short_min_upper_touches:
+                return self._no_signal("short_touch_count")
+            if near_upper_count > self.cfg.short_max_near_upper_bars:
+                return self._no_signal("short_near_upper")
+            if self.cfg.short_min_reject_vol_mult > 0.0 and not (
+                short_vol_avg > 0 and reject_vol_mult >= self.cfg.short_min_reject_vol_mult
+            ):
+                return self._no_signal("short_volume")
+        return self._no_signal("no_setup")

@@ -106,6 +106,20 @@ def run_portfolio_backtest(
     sl_cooldown_bars = max(0, int(os.getenv("PORTFOLIO_SL_COOLDOWN_BARS", "0") or 0))
     sl_cooldown_strategies = _csv_set("PORTFOLIO_SL_COOLDOWN_STRATEGIES") or {"inplay_breakout"}
 
+    # Global strategy-level cooldown: after any SL in strategy X, ALL symbols
+    # of that strategy are blocked for PORTFOLIO_GLOBAL_SL_COOLDOWN_BARS bars.
+    # Env: PORTFOLIO_GLOBAL_SL_COOLDOWN_BARS=N, PORTFOLIO_GLOBAL_SL_STRATEGIES=csv
+    _global_sl_cooldown_bars = max(0, int(os.getenv("PORTFOLIO_GLOBAL_SL_COOLDOWN_BARS", "0") or 0))
+    # Supports both exact names ("alt_inplay_breakdown_v1") and short substrings ("breakdown").
+    # A strategy fires the cooldown if ANY keyword in the set is a substring of its full name.
+    _global_sl_strategies = _csv_set("PORTFOLIO_GLOBAL_SL_STRATEGIES")
+
+    def _strat_matches_global(name: str) -> bool:
+        n = name.lower()
+        return any(kw in n for kw in _global_sl_strategies)
+
+    _global_strat_cooldown_until_i: Dict[str, int] = {}  # keyed by full strategy name
+
     # ATR cache per symbol, keyed by period.
     atr_cache: Dict[str, Dict[int, List[float]]] = {s: {} for s in syms}
 
@@ -151,6 +165,14 @@ def run_portfolio_backtest(
             and (strat_name in sl_cooldown_strategies)
         ):
             cooldown_until_i[sym] = i + sl_cooldown_bars
+
+        # Global strategy cooldown: block ALL symbols of this strategy after any SL.
+        if (
+            _global_sl_cooldown_bars > 0
+            and ("SL" in str(reason or "").upper())
+            and _strat_matches_global(strat_name)
+        ):
+            _global_strat_cooldown_until_i[strat_name] = i + _global_sl_cooldown_bars
 
         pos_by_sym.pop(sym, None)
         pos_strat.pop(sym, None)
@@ -309,6 +331,14 @@ def run_portfolio_backtest(
                     sig = _run_awaitable(sig)
                 if sig is None:
                     continue
+
+                # Global strategy cooldown check: if this signal's strategy had a
+                # recent SL on any symbol, block all new entries for that strategy.
+                if _global_sl_cooldown_bars > 0 and _global_sl_strategies:
+                    sig_strat = str(getattr(sig, "strategy", "") or "").lower()
+                    if (_strat_matches_global(sig_strat) and
+                            _global_strat_cooldown_until_i.get(sig_strat, -1) > i):
+                        continue
 
                 # Duck-typed TradeSignal
                 try:

@@ -467,6 +467,9 @@ def test_allocator_missing_health_watch():
     status, notes = _sleeve_health_status(sleeve, {}, missing_status="WATCH")
     assert status == "WATCH"
     assert any("missing->WATCH" in note for note in notes)
+    status, notes = _sleeve_health_status(sleeve, {}, missing_status="OK")
+    assert status == "OK"
+    assert any("missing->OK" in note for note in notes)
 
     print("  ✓ build_portfolio_allocator missing-health fallback")
 
@@ -719,9 +722,11 @@ def test_dynamic_annual_filters_uncached_symbols():
         kept, dropped = _cached_symbol_subset(
             ["BTCUSDT", "LTCUSDT", "ETHUSDT", ""],
             cache_dir=cache_dir,
+            start_ms=1,
+            end_ms=2,
         )
-    assert kept == ["BTCUSDT", "ETHUSDT"], f"unexpected cached keep-set: {kept}"
-    assert dropped == ["LTCUSDT"], f"unexpected dropped set: {dropped}"
+    assert kept == ["BTCUSDT"], f"unexpected cached keep-set: {kept}"
+    assert dropped == ["LTCUSDT", "ETHUSDT"], f"unexpected dropped set: {dropped}"
     print("  ✓ dynamic annual filters uncached router symbols")
 
 
@@ -738,6 +743,104 @@ def test_equity_autopilot_does_not_watch_on_low_recent_activity():
     assert health.trades_30d == 0
     assert health.status == "OK", f"low recent activity should stay neutral, got {health.status}"
     print("  ✓ equity autopilot keeps low-activity sleeves neutral")
+
+
+def test_flat_live_store_uses_closed_klines():
+    from strategies.asm1_live import _ASM1Store
+    from strategies.att1_live import _ATT1Store
+    from strategies.flat_resistance_fade_live import _FlatStore
+    from strategies.live_kline_utils import closed_kline_rows
+
+    hour_ms = 60 * 60 * 1000
+    now_ms = int(time.time() * 1000)
+    base_ms = (now_ms // hour_ms) * hour_ms
+    rows = [
+        [base_ms - 2 * hour_ms, "1", "2", "0.5", "1.5", "100"],
+        [base_ms - hour_ms, "1", "2", "0.5", "1.5", "100"],
+        [base_ms, "1", "2", "0.5", "1.5", "100"],
+    ]
+
+    assert closed_kline_rows(rows, "60", now_ms=base_ms + 30 * 60 * 1000) == rows[:2]
+    assert closed_kline_rows(rows, "60", now_ms=base_ms + hour_ms + 1) == rows
+
+    calls = []
+
+    def fake_fetch(symbol, interval, limit):
+        calls.append((symbol, interval, limit))
+        return rows
+
+    for store_cls in (_FlatStore, _ATT1Store, _ASM1Store):
+        calls.clear()
+        store = store_cls("TESTUSDT", fake_fetch)
+        out = store.fetch_klines("TESTUSDT", "60", 2)
+        assert calls == [("TESTUSDT", "60", 3)]
+        assert out == rows[:2]
+    print("  ✓ bar-close live wrappers feed only closed klines")
+
+
+def test_alpaca_intraday_position_management_helpers():
+    from scripts.equities_alpaca_intraday_bridge import (
+        PositionState,
+        _pending_close_symbols,
+        _position_management_decision,
+    )
+
+    keys = [
+        "INTRADAY_TRAIL_ENABLE",
+        "INTRADAY_TRAIL_MIN_GAIN_PCT",
+        "INTRADAY_TRAIL_DRAWDOWN_PCT",
+        "INTRADAY_TIME_STOP_ENABLE",
+        "INTRADAY_TIME_STOP_MINUTES",
+    ]
+    saved = {k: os.environ.get(k) for k in keys}
+    try:
+        os.environ["INTRADAY_TRAIL_ENABLE"] = "1"
+        os.environ["INTRADAY_TRAIL_MIN_GAIN_PCT"] = "4.0"
+        os.environ["INTRADAY_TRAIL_DRAWDOWN_PCT"] = "3.5"
+        os.environ["INTRADAY_TIME_STOP_ENABLE"] = "1"
+        os.environ["INTRADAY_TIME_STOP_MINUTES"] = "2880"
+
+        long_ps = PositionState("XYZ", "long", 100.0, 95.0, 120.0, 1, 1_000, peak_price=110.0)
+        long_decision = _position_management_decision(long_ps, {"current_price": "105", "side": "long"}, 2_000)
+        assert long_decision["action"] == "close"
+        assert long_decision["reason"] == "software_trailing_stop"
+
+        short_ps = PositionState("ABC", "short", 100.0, 106.0, 85.0, 1, 1_000, trough_price=90.0)
+        short_decision = _position_management_decision(short_ps, {"current_price": "94", "side": "short"}, 2_000)
+        assert short_decision["action"] == "close"
+        assert short_decision["reason"] == "software_trailing_stop"
+
+        hold_ps = PositionState("HLD", "long", 100.0, 95.0, 120.0, 1, 1_000, peak_price=106.0)
+        hold_decision = _position_management_decision(hold_ps, {"current_price": "105", "side": "long"}, 2_000)
+        assert hold_decision["action"] == "hold"
+
+        stale_ps = PositionState("OLD", "long", 100.0, 95.0, 120.0, 1, 0)
+        stale_decision = _position_management_decision(stale_ps, {"current_price": "100", "side": "long"}, 2881 * 60)
+        assert stale_decision["action"] == "close"
+        assert stale_decision["reason"] == "intraday_time_stop"
+
+        pending = _pending_close_symbols(
+            [
+                {"symbol": "LONG", "side": "sell", "type": "market"},
+                {"symbol": "LONG", "side": "sell", "type": "stop"},
+                {"symbol": "SHORT", "side": "buy", "type": "market"},
+                {"symbol": "PROT", "side": "sell", "type": "stop"},
+            ],
+            {
+                "LONG": {"side": "long"},
+                "SHORT": {"side": "short"},
+                "PROT": {"side": "long"},
+            },
+        )
+        assert pending == {"LONG", "SHORT"}
+    finally:
+        for key, value in saved.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+
+    print("  ✓ alpaca intraday position manager — trailing/time-stop decisions")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -765,6 +868,8 @@ if __name__ == "__main__":
         test_overlay_handlers_cover_live_sleeves,
         test_dynamic_annual_filters_uncached_symbols,
         test_equity_autopilot_does_not_watch_on_low_recent_activity,
+        test_flat_live_store_uses_closed_klines,
+        test_alpaca_intraday_position_management_helpers,
     ]
     print(f"\n{'─' * 55}")
     print("  smoke_test.py — running all tests")

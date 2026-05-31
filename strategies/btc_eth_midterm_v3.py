@@ -245,6 +245,7 @@ class BTCETHMidtermV3Strategy:
         self._last_eval_bucket: Optional[int] = None
         self._day_key: Optional[int] = None
         self._day_signals = 0
+        self.last_no_signal_reason = ""
 
     def _load_env(self) -> None:
         c = self.cfg
@@ -306,6 +307,10 @@ class BTCETHMidtermV3Strategy:
         c.max_signals_per_day = _env_int("MTPB3_MAX_SIGNALS_PER_DAY", c.max_signals_per_day)
         # Re-read every call so orchestrator hot-reload works
         # (don't store in cfg — read fresh in maybe_signal)
+
+    def _no_signal(self, reason: str) -> None:
+        self.last_no_signal_reason = str(reason or "no_setup")
+        return None
 
     # ─── Screen 1: 4H trend bias (EMA50/200) ─────────────────────────────────
     def _trend_bias(self, store) -> Optional[int]:
@@ -405,18 +410,19 @@ class BTCETHMidtermV3Strategy:
         v: float = 0.0,
     ) -> Optional[TradeSignal]:
         _ = (o, h, l, v)
+        self.last_no_signal_reason = ""
 
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
-            return None
+            return self._no_signal("symbol_not_allowed")
         if sym in self._deny:
-            return None
+            return self._no_signal("symbol_denied")
 
         # Regime env vars — re-read every call for hot-reload
         allow_longs = _env_bool("MTPB3_ALLOW_LONGS", self.cfg.allow_longs)
         allow_shorts = _env_bool("MTPB3_ALLOW_SHORTS", self.cfg.allow_shorts)
         if not allow_longs and not allow_shorts:
-            return None
+            return self._no_signal("directions_disabled")
 
         # Per-direction cooldowns
         if self._long_cooldown > 0:
@@ -431,26 +437,28 @@ class BTCETHMidtermV3Strategy:
             self._day_key = day_key
             self._day_signals = 0
         if self._day_signals >= self.cfg.max_signals_per_day:
-            return None
+            return self._no_signal("day_cap")
 
         # Evaluation bucket throttle
         bucket = ts_sec // max(1, int(self.cfg.eval_tf_min * 60))
         if self._last_eval_bucket == bucket:
-            return None
+            return self._no_signal("same_signal_bar")
         self._last_eval_bucket = bucket
 
         # ── Screen 1: 4H trend ────────────────────────────────────────────────
         bias = self._trend_bias(store)
-        if bias is None or bias == 1:
-            return None  # neutral / no data
+        if bias is None:
+            return self._no_signal("trend_history_short")
+        if bias == 1:
+            return self._no_signal("trend_filter_block")
 
         # ── Screen 2: weekly gate (optional) ─────────────────────────────────
         wb = self._weekly_bias(store)
         # Weekly must not be OPPOSITE to trade direction
         if bias == 2 and wb == 0:
-            return None  # 4H bull but weekly bear — skip longs
+            return self._no_signal("weekly_gate_block")
         if bias == 0 and wb == 2:
-            return None  # 4H bear but weekly bull — skip shorts
+            return self._no_signal("weekly_gate_block")
 
         # ── Screen 3: 1H data + ATR + EMA + RSI + Volume ─────────────────────
         need_1h = max(
@@ -460,7 +468,7 @@ class BTCETHMidtermV3Strategy:
         rows_1h = store.fetch_klines(store.symbol, self.cfg.signal_tf, need_1h) or []
         min_bars = self.cfg.signal_ema_period + self.cfg.swing_lookback_bars + 3
         if len(rows_1h) < min_bars:
-            return None
+            return self._no_signal("insufficient_history")
 
         highs_1h  = [float(r[2]) for r in rows_1h]
         lows_1h   = [float(r[3]) for r in rows_1h]
@@ -470,7 +478,7 @@ class BTCETHMidtermV3Strategy:
         ema1h = _ema(closes_1h, self.cfg.signal_ema_period)
         atr1h = _atr_from_rows(rows_1h, self.cfg.atr_period)
         if not (math.isfinite(ema1h) and math.isfinite(atr1h) and atr1h > 0):
-            return None
+            return self._no_signal("atr_zero")
 
         cur_c  = closes_1h[-1]
         prev_c = closes_1h[-2]
@@ -491,21 +499,21 @@ class BTCETHMidtermV3Strategy:
         # ── LONG SETUP ────────────────────────────────────────────────────────
         if allow_longs and bias == 2 and self._long_cooldown == 0:
             if atr_pct_1h > self.cfg.long_max_atr_pct_1h:
-                return None
+                return self._no_signal(f"atr_too_high:{atr_pct_1h:.3f}")
 
             # MACD macro filter: longs need MACD hist > 0
             if not self._macd_ok_for_long(store):
-                return None
+                return self._no_signal("macro_filter_block")
 
             # RSI gate
             if self.cfg.use_rsi_filter and rsi_val is not None:
                 if not math.isfinite(rsi_val) or rsi_val > self.cfg.rsi_long_max:
-                    return None  # overbought — skip
+                    return self._no_signal(f"rsi_too_high:{rsi_val:.2f}")
 
             # Volume gate
             if self.cfg.use_vol_filter and avg_vol and cur_vol:
                 if cur_vol < self.cfg.vol_mult * avg_vol:
-                    return None  # weak volume — skip
+                    return self._no_signal("volume_weak")
 
             # FRESH touch in last N bars (NEW)
             look = max(3, min(len(rows_1h), int(self.cfg.swing_lookback_bars)))
@@ -521,26 +529,26 @@ class BTCETHMidtermV3Strategy:
                 for i in range(-fresh - 1, 0)
             )
             if not recently_touched or not fresh_touched:
-                return None
+                return self._no_signal("zone_too_close:no_fresh_touch")
 
             # Reclaim: prev bar BELOW EMA (strict), cur bar ABOVE EMA + reclaim_pct
             prev_was_below = prev_c <= ema1h * 1.001  # was below or at EMA
             cur_reclaimed = cur_c >= ema1h * (1.0 + self.cfg.long_reclaim_pct / 100.0)
             if not (prev_was_below and cur_reclaimed):
-                return None
+                return self._no_signal("trigger_absent")
 
             # Max pullback check
             swing_low = min(lows_1h[-look:])
             pullback_pct = max(0.0, (ema1h - swing_low) / max(1e-12, ema1h) * 100.0)
             if pullback_pct > self.cfg.long_max_pullback_pct:
-                return None
+                return self._no_signal(f"zone_too_far:{pullback_pct:.3f}")
 
             # Build signal
             swing_sl = swing_low - self.cfg.swing_sl_buffer_atr * atr1h
             atr_sl   = float(c) - self.cfg.sl_atr_mult * atr1h
             sl = min(swing_sl, atr_sl)
             if sl >= float(c):
-                return None
+                return self._no_signal("invalid_risk")
             risk = float(c) - sl
             tp   = float(c) + self.cfg.rr * risk
             tp1  = float(c) + self.cfg.tp1_rr * risk
@@ -573,21 +581,21 @@ class BTCETHMidtermV3Strategy:
         # ── SHORT SETUP ───────────────────────────────────────────────────────
         if allow_shorts and bias == 0 and self._short_cooldown == 0:
             if atr_pct_1h > self.cfg.short_max_atr_pct_1h:
-                return None
+                return self._no_signal(f"atr_too_high:{atr_pct_1h:.3f}")
 
             # MACD macro filter: shorts need MACD hist < 0
             if not self._macd_ok_for_short(store):
-                return None
+                return self._no_signal("macro_filter_block")
 
             # RSI gate
             if self.cfg.use_rsi_filter and rsi_val is not None:
                 if not math.isfinite(rsi_val) or rsi_val < self.cfg.rsi_short_min:
-                    return None  # oversold — skip
+                    return self._no_signal(f"rsi_too_low:{rsi_val:.2f}")
 
             # Volume gate
             if self.cfg.use_vol_filter and avg_vol and cur_vol:
                 if cur_vol < self.cfg.vol_mult * avg_vol:
-                    return None
+                    return self._no_signal("volume_weak")
 
             # FRESH touch at/above EMA in last N bars
             look = max(3, min(len(rows_1h), int(self.cfg.swing_lookback_bars)))
@@ -601,26 +609,26 @@ class BTCETHMidtermV3Strategy:
                 for i in range(-fresh - 1, 0)
             )
             if not recently_touched or not fresh_touched:
-                return None
+                return self._no_signal("zone_too_close:no_fresh_touch")
 
             # Reclaim: prev bar ABOVE EMA (strict), cur bar BELOW EMA - reclaim_pct
             prev_was_above = prev_c >= ema1h * 0.999  # was above or at EMA
             cur_reclaimed = cur_c <= ema1h * (1.0 - self.cfg.short_reclaim_pct / 100.0)
             if not (prev_was_above and cur_reclaimed):
-                return None
+                return self._no_signal("trigger_absent")
 
             # Max pullback check
             swing_high = max(highs_1h[-look:])
             pullback_pct = max(0.0, (swing_high - ema1h) / max(1e-12, ema1h) * 100.0)
             if pullback_pct > self.cfg.short_max_pullback_pct:
-                return None
+                return self._no_signal(f"zone_too_far:{pullback_pct:.3f}")
 
             # Build signal
             swing_sl = swing_high + self.cfg.swing_sl_buffer_atr * atr1h
             atr_sl   = float(c) + self.cfg.sl_atr_mult * atr1h
             sl = max(swing_sl, atr_sl)
             if sl <= float(c):
-                return None
+                return self._no_signal("invalid_risk")
             risk = sl - float(c)
             tp   = float(c) - self.cfg.rr * risk
             tp1  = float(c) - self.cfg.tp1_rr * risk
@@ -650,4 +658,8 @@ class BTCETHMidtermV3Strategy:
                 sig.time_stop_bars = max(0, int(self.cfg.time_stop_bars_5m))
             return sig
 
-        return None
+        if allow_longs and bias == 2 and self._long_cooldown > 0:
+            return self._no_signal("long_cooldown")
+        if allow_shorts and bias == 0 and self._short_cooldown > 0:
+            return self._no_signal("short_cooldown")
+        return self._no_signal("no_setup")

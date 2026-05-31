@@ -81,6 +81,7 @@ class MidtermLiveEngine:
         self._fetch = fetch_klines
         self._stores: Dict[str, LiveKlineStore] = {}
         self._strategies: Dict[str, Any] = {}
+        self._no_signal_reasons: Dict[str, str] = {}
         self._version = os.getenv("MTPB_VERSION", "3").strip()
 
     async def signal_async(self, symbol: str, price: float, ts_ms: int) -> Optional[TradeSignal]:
@@ -92,4 +93,16 @@ class MidtermLiveEngine:
 
         store = self._stores[symbol]
         strat = self._strategies[symbol]
-        return strat.maybe_signal(store, ts_ms, price, price, price, price, 0.0)
+        try:
+            sig = strat.maybe_signal(store, ts_ms, price, price, price, price, 0.0)
+        except Exception:
+            self._no_signal_reasons[symbol] = "exception"
+            raise
+        if sig is None:
+            self._no_signal_reasons[symbol] = str(getattr(strat, "last_no_signal_reason", "") or "")
+        else:
+            self._no_signal_reasons.pop(symbol, None)
+        return sig
+
+    def last_no_signal_reason(self, symbol: str) -> str:
+        return self._no_signal_reasons.get(symbol, "")

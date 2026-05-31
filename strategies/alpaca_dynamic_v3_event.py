@@ -69,6 +69,44 @@ def _momentum(df, i: int, lookback: int) -> float:
     return cur / prev - 1.0
 
 
+
+# Sector map — used to tag ranked output for diversity-aware selection
+_SECTOR_MAP: dict[str, str] = {
+    # Tech
+    "AAPL": "tech", "MSFT": "tech", "NVDA": "tech", "GOOGL": "tech",
+    "META": "tech", "AMZN": "tech", "AVGO": "tech", "AMD": "tech",
+    "QCOM": "tech", "MU": "tech", "AMAT": "tech", "LRCX": "tech",
+    "KLAC": "tech", "MRVL": "tech", "TXN": "tech", "ARM": "tech",
+    "CRM": "tech", "ADBE": "tech", "NOW": "tech", "ORCL": "tech",
+    "SNOW": "tech", "PLTR": "tech", "DDOG": "tech", "CRWD": "tech",
+    "PANW": "tech",
+    # Finance
+    "JPM": "finance", "GS": "finance", "BAC": "finance", "V": "finance",
+    "MA": "finance", "BLK": "finance", "SCHW": "finance", "MS": "finance",
+    "AXP": "finance", "SPGI": "finance", "ICE": "finance", "BRK-B": "finance",
+    # Healthcare
+    "UNH": "health", "LLY": "health", "ABBV": "health", "JNJ": "health",
+    "MRK": "health", "ISRG": "health", "TMO": "health", "ABT": "health",
+    "PFE": "health",
+    # Consumer
+    "WMT": "consumer", "COST": "consumer", "PG": "consumer", "KO": "consumer",
+    "PEP": "consumer", "MCD": "consumer", "SBUX": "consumer", "NKE": "consumer",
+    "TGT": "consumer", "TSLA": "consumer",
+    # Energy
+    "XOM": "energy", "CVX": "energy", "COP": "energy", "OXY": "energy",
+    "SLB": "energy",
+    # Industrial
+    "CAT": "industrial", "DE": "industrial", "HON": "industrial",
+    "GE": "industrial", "RTX": "industrial", "LMT": "industrial", "BA": "industrial",
+    # Telecom / Media
+    "NFLX": "media", "DIS": "media", "T": "telecom", "VZ": "telecom",
+    # Growth / Fintech
+    "UBER": "growth", "ABNB": "growth", "COIN": "growth",
+    "HOOD": "growth", "SOFI": "growth",
+    # Dividend
+    "O": "reit",
+}
+
 def rank_symbols(data: Dict[str, object], date, lookback: int = 60) -> List[dict]:
     rows: List[dict] = []
     for symbol, df in data.items():
@@ -89,6 +127,7 @@ def rank_symbols(data: Dict[str, object], date, lookback: int = 60) -> List[dict
             "mom20": mom20,
             "atr20": atr20,
             "close": close,
+            "sector": _SECTOR_MAP.get(symbol, "other"),
         })
     rows.sort(key=lambda r: r["score"], reverse=True)
     return rows

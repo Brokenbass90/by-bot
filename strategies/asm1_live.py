@@ -9,6 +9,7 @@ import os
 from typing import Optional, Dict
 
 from strategies.alt_sloped_momentum_v1 import AltSlopedMomentumV1Strategy
+from strategies.live_kline_utils import fetch_closed_klines
 from strategies.signals import TradeSignal
 
 
@@ -20,7 +21,7 @@ class _ASM1Store:
         self._fetch = fetch_klines
 
     def fetch_klines(self, symbol: str, interval: str, limit: int):
-        return self._fetch(symbol, interval, limit)
+        return fetch_closed_klines(self._fetch, symbol, interval, limit)
 
 
 class ASM1LiveEngine:

@@ -96,7 +96,7 @@ class BTCETHMidtermPullbackConfig:
     sl_atr_mult: float = 1.20
     swing_sl_buffer_atr: float = 0.15
     rr: float = 2.2
-    use_runner_exits: bool = False
+    use_runner_exits: bool = True   # enables TP ladder + time_stop in live runner
     tp1_rr: float = 1.2
     tp2_rr: float = 2.6
     tp1_frac: float = 0.50

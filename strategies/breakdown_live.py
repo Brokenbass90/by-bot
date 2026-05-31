@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import Optional, Dict, Any
 
 from strategies.alt_inplay_breakdown_v1 import AltInplayBreakdownV1Strategy
+from strategies.live_kline_utils import fetch_closed_klines
 from strategies.signals import TradeSignal
 
 
@@ -20,7 +21,7 @@ class _BreakdownStore:
         self._fetch = fetch_klines
 
     def fetch_klines(self, symbol: str, interval: str, limit: int):
-        return self._fetch(symbol, interval, limit)
+        return fetch_closed_klines(self._fetch, symbol, interval, limit)
 
 
 class BreakdownLiveEngine:
@@ -64,6 +65,12 @@ class BreakdownLiveEngine:
         store = self._stores[symbol]
         strat = self._strategies[symbol]
         return strat.signal(store, ts_ms, last_price)
+
+    def last_no_signal_reason(self, symbol: str) -> str:
+        strat = self._strategies.get(symbol)
+        if strat is None:
+            return ""
+        return str(getattr(strat, "last_no_signal_reason", "") or "")
 
     async def signal_async(
         self,

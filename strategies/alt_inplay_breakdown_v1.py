@@ -17,6 +17,7 @@ import os
 from dataclasses import dataclass
 from typing import List, Optional
 
+from .inplay_breakout import InPlayBreakoutConfig, InPlayBreakoutWrapper
 from .signals import TradeSignal
 
 
@@ -119,6 +120,12 @@ class AltInplayBreakdownV1Config:
     regime_tf: str = "240"
     regime_ema_fast: int = 21
     regime_ema_slow: int = 55
+    # Efficiency Ratio gate: require directional trend, not just bearish bias.
+    # ER = abs(net_move) / sum(abs(bar_moves)) over regime_er_bars lookback.
+    # bear_trend typically ER >= 0.12; bear_chop ER < 0.05.
+    # Set to 0.0 to disable (default). Recommended: 0.12 to block bear_chop entries.
+    regime_min_er: float = 0.0
+    regime_er_bars: int = 20
 
     sl_atr: float = 1.8
     rr: float = 2.0
@@ -192,6 +199,17 @@ class AltInplayBreakdownV1Strategy:
     STRATEGY_NAME = "alt_inplay_breakdown_v1"
 
     def __init__(self, cfg: Optional[AltInplayBreakdownV1Config] = None):
+        self._legacy_wrapper: Optional[InPlayBreakoutWrapper] = None
+        engine = str(os.getenv("BREAKDOWN_ENGINE", "modern") or "modern").strip().lower()
+        if engine in {"legacy", "legacy_wrapper", "wrapper", "inplay_wrapper"}:
+            legacy_cfg = InPlayBreakoutConfig()
+            legacy_cfg.allow_longs = False
+            legacy_cfg.allow_shorts = True
+            legacy_cfg.regime_mode = "ema"
+            self._legacy_wrapper = InPlayBreakoutWrapper(cfg=legacy_cfg, env_prefix="BREAKDOWN")
+            self.last_no_signal_reason = ""
+            return
+
         self.cfg = cfg or AltInplayBreakdownV1Config()
 
         self.cfg.structure_tf = os.getenv("BREAKDOWN_TF_BREAK", self.cfg.structure_tf)
@@ -219,6 +237,8 @@ class AltInplayBreakdownV1Strategy:
         self.cfg.regime_tf = os.getenv("BREAKDOWN_REGIME_TF", self.cfg.regime_tf)
         self.cfg.regime_ema_fast = _env_int("BREAKDOWN_REGIME_EMA_FAST", self.cfg.regime_ema_fast)
         self.cfg.regime_ema_slow = _env_int("BREAKDOWN_REGIME_EMA_SLOW", self.cfg.regime_ema_slow)
+        self.cfg.regime_min_er = _env_float("BREAKDOWN_REGIME_MIN_ER", self.cfg.regime_min_er)
+        self.cfg.regime_er_bars = _env_int("BREAKDOWN_REGIME_ER_BARS", self.cfg.regime_er_bars)
 
         self.cfg.sl_atr = _env_float("BREAKDOWN_SL_ATR", self.cfg.sl_atr)
         self.cfg.rr = _env_float("BREAKDOWN_RR", self.cfg.rr)
@@ -250,6 +270,24 @@ class AltInplayBreakdownV1Strategy:
         self._armed: Optional[dict] = None
         self.last_no_signal_reason = ""
 
+    def _legacy_signal(self, store, ts_ms: int, last_price: float) -> Optional[TradeSignal]:
+        if self._legacy_wrapper is None:
+            return None
+        sig = self._legacy_wrapper.signal(store, ts_ms, last_price)
+        self.last_no_signal_reason = self._legacy_wrapper.last_no_signal_reason
+        if sig is not None:
+            sig.strategy = self.STRATEGY_NAME
+        return sig
+
+    async def _legacy_maybe_signal(self, store, ts_ms: int, last_price: float) -> Optional[TradeSignal]:
+        if self._legacy_wrapper is None:
+            return None
+        sig = await self._legacy_wrapper.maybe_signal(store, ts_ms, last_price)
+        self.last_no_signal_reason = self._legacy_wrapper.last_no_signal_reason
+        if sig is not None:
+            sig.strategy = self.STRATEGY_NAME
+        return sig
+
     def _refresh_runtime_allowlists(self) -> None:
         self._allow = _env_csv_set("BREAKDOWN_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set("BREAKDOWN_SYMBOL_DENYLIST")
@@ -257,7 +295,8 @@ class AltInplayBreakdownV1Strategy:
     def _regime_ok(self, store) -> bool:
         if str(self.cfg.regime_mode).strip().lower() != "ema":
             return True
-        rows = store.fetch_klines(store.symbol, self.cfg.regime_tf, max(100, self.cfg.regime_ema_slow + 20)) or []
+        n_bars = max(100, self.cfg.regime_ema_slow + 20, self.cfg.regime_er_bars + 5)
+        rows = store.fetch_klines(store.symbol, self.cfg.regime_tf, n_bars) or []
         if len(rows) < self.cfg.regime_ema_slow + 20:
             self.last_no_signal_reason = "regime_history_short"
             return False
@@ -267,7 +306,21 @@ class AltInplayBreakdownV1Strategy:
         if not all(math.isfinite(x) for x in (ema_fast, ema_slow)):
             self.last_no_signal_reason = "regime_invalid"
             return False
-        return ema_fast < ema_slow
+        if ema_fast >= ema_slow:
+            self.last_no_signal_reason = "regime_not_bearish"
+            return False
+        # Optional Efficiency Ratio gate: distinguish bear_trend from bear_chop.
+        # ER = abs(price_start - price_end) / sum(abs(bar_to_bar_moves))
+        # bear_trend: ER >= 0.12; bear_chop: ER < 0.05.
+        if self.cfg.regime_min_er > 0 and self.cfg.regime_er_bars >= 2:
+            er_window = closes[-self.cfg.regime_er_bars:]
+            net = abs(er_window[-1] - er_window[0])
+            path = sum(abs(er_window[i] - er_window[i - 1]) for i in range(1, len(er_window)))
+            er = (net / path) if path > 1e-12 else 0.0
+            if er < self.cfg.regime_min_er:
+                self.last_no_signal_reason = f"regime_er_low_{er:.3f}"
+                return False
+        return True
 
     def _arm_structure(self, store, entry_ts: int) -> None:
         lookback = max(24, int(self.cfg.lookback_h))
@@ -278,6 +331,7 @@ class AltInplayBreakdownV1Strategy:
 
         structure_ts = int(float(rows[-1][0]))
         if self._last_structure_ts is not None and structure_ts == self._last_structure_ts:
+            self.last_no_signal_reason = "structure_unchanged"
             return
         self._last_structure_ts = structure_ts
 
@@ -480,9 +534,13 @@ class AltInplayBreakdownV1Strategy:
         return sig if sig.validate() else None
 
     def signal(self, store, ts_ms: int, last_price: float) -> Optional[TradeSignal]:
+        if self._legacy_wrapper is not None:
+            return self._legacy_signal(store, ts_ms, last_price)
         return self._run(store, ts_ms, last_price)
 
     async def maybe_signal(self, store, ts_ms: int, last_price: float) -> Optional[TradeSignal]:
+        if self._legacy_wrapper is not None:
+            return await self._legacy_maybe_signal(store, ts_ms, last_price)
         return self._run(store, ts_ms, last_price)
 
     def _run(self, store, ts_ms: int, last_price: float) -> Optional[TradeSignal]:
@@ -507,6 +565,7 @@ class AltInplayBreakdownV1Strategy:
             return None
         entry_ts = int(float(rows_5m[-1][0]))
         if self._last_entry_ts is not None and entry_ts == self._last_entry_ts:
+            self.last_no_signal_reason = "same_entry_bar"
             return None
         self._last_entry_ts = entry_ts
 

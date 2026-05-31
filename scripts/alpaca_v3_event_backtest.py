@@ -27,8 +27,28 @@ from strategies.alpaca_dynamic_v3_event import (
 
 
 DEFAULT_UNIVERSE = [
-    "UNH", "GOOGL", "AAPL", "MSFT", "NVDA", "META", "AMZN", "TSLA",
-    "AVGO", "ORCL", "JPM", "LLY", "V", "COST", "JNJ", "WMT", "PG", "KO",
+    # ── Mega-cap tech (core) ─────────────────────────────────────────────
+    "AAPL", "MSFT", "NVDA", "GOOGL", "META", "AMZN", "TSLA", "AVGO",
+    # ── Semiconductors ───────────────────────────────────────────────────
+    "AMD", "QCOM", "MU", "AMAT", "LRCX", "KLAC", "MRVL", "TXN", "ARM",
+    # ── Software / Cloud ─────────────────────────────────────────────────
+    "CRM", "ADBE", "NOW", "ORCL", "SNOW", "PLTR", "DDOG", "CRWD", "PANW",
+    # ── Financials ───────────────────────────────────────────────────────
+    "JPM", "GS", "BAC", "V", "MA", "BLK", "SCHW", "MS", "AXP",
+    # ── Healthcare / Pharma ──────────────────────────────────────────────
+    "UNH", "LLY", "ABBV", "JNJ", "MRK", "ISRG", "TMO", "ABT", "PFE",
+    # ── Consumer ─────────────────────────────────────────────────────────
+    "WMT", "COST", "PG", "KO", "PEP", "MCD", "SBUX", "NKE", "TGT",
+    # ── Energy ───────────────────────────────────────────────────────────
+    "XOM", "CVX", "COP", "OXY", "SLB",
+    # ── Industrials / Defence ────────────────────────────────────────────
+    "CAT", "DE", "HON", "GE", "RTX", "LMT", "BA",
+    # ── Telecom / Media ──────────────────────────────────────────────────
+    "NFLX", "DIS", "T", "VZ",
+    # ── High-momentum growth ─────────────────────────────────────────────
+    "UBER", "ABNB", "COIN", "HOOD", "SOFI",
+    # ── Dividend / Value anchors ─────────────────────────────────────────
+    "BRK-B", "O", "SPGI", "ICE",
 ]
 
 
