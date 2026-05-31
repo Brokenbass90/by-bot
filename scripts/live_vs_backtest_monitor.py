@@ -61,16 +61,23 @@ OUTPUT_HEALTH.parent.mkdir(parents=True, exist_ok=True)
 # Keep in sync with STRATEGY_STATUS_20260419.md
 # ---------------------------------------------------------------------------
 _DEFAULT_BACKTEST_PF: Dict[str, float] = {
+    # Production strategies (current portfolio baseline PF=1.591 — 2026-05-26 audit)
     "alt_resistance_fade_v1":     1.40,
     "alt_sloped_channel_v1":      1.30,
     "alt_support_bounce_v1":      1.30,
     "alt_range_scalp_v1":         1.25,
     "impulse_volume_breakout_v1": 1.48,
-    "alt_inplay_breakdown_v1":    1.35,   # conservative estimate (live params not yet optimal)
-    "inplay_breakout":            1.20,   # needs retune, conservative
+    "alt_inplay_breakdown_v1":    1.35,
+    "btc_eth_midterm_pullback":   1.30,
+    "btc_eth_midterm_v3":         1.30,
+    # Awaiting promotion via sweep (2026-05-27)
+    "alt_trendline_touch_v1":     1.25,
+    "alt_bear_regime_continuation_v1": 1.30,   # 90d showed PF 4.80, conservative ref
+    "alt_slope_break_v1":         1.25,
     "elder_triple_screen_v2":     1.20,
     "elder_triple_screen_v3":     1.20,
-    "alt_trendline_touch_v1":     1.25,
+    # Lower confidence (waiting for sweep validation)
+    "inplay_breakout":            1.20,
     "alt_horizontal_break_v1":    1.20,
     "session_open_breakout_v1":   1.20,
     "funding_rate_reversion_v1":  1.20,
@@ -83,24 +90,36 @@ _DEFAULT_BACKTEST_PF: Dict[str, float] = {
 # Risk env key per strategy name (what to zero-out when pausing)
 # ---------------------------------------------------------------------------
 _STRATEGY_RISK_KEY: Dict[str, str] = {
-    "alt_resistance_fade_v1":       "FLAT_RISK_MULT",
-    "alt_sloped_channel_v1":        "SLOPED_RISK_MULT",
-    "alt_support_bounce_v1":        "BOUNCE1_RISK_MULT",
-    "alt_range_scalp_v1":           "RANGE_RISK_MULT",
-    "impulse_volume_breakout_v1":   "IVB1_RISK_MULT",
-    "alt_inplay_breakdown_v1":      "BREAKDOWN_RISK_MULT",
-    "inplay_breakout":              "BREAKOUT_RISK_MULT",
-    "alt_inplay_breakdown_v2":      "BREAKDOWN2_RISK_MULT",
-    "elder_triple_screen_v2":       "ELDER_RISK_MULT",
-    "elder_triple_screen_v3":       "ETS3_RISK_MULT",
-    "alt_trendline_touch_v1":       "ATT1_RISK_MULT",
-    "alt_horizontal_break_v1":      "HZBO1_RISK_MULT",
-    "session_open_breakout_v1":     "SOB1_RISK_MULT",
-    "funding_rate_reversion_v1":    "FR_RISK_MULT",
-    "liquidation_cascade_entry_v1": "LC_RISK_MULT",
-    "sloped_resistance_choch_v1":   "SLOPE_CHOCH_RISK_MULT",
-    "micro_scalper_v1":             "MSCALP_RISK_MULT",
+    "alt_resistance_fade_v1":         "FLAT_RISK_MULT",
+    "alt_sloped_channel_v1":          "SLOPED_RISK_MULT",
+    "alt_support_bounce_v1":          "BOUNCE1_RISK_MULT",
+    "alt_range_scalp_v1":             "RANGE_RISK_MULT",
+    "impulse_volume_breakout_v1":     "IVB1_RISK_MULT",
+    "alt_inplay_breakdown_v1":        "BREAKDOWN_RISK_MULT",
+    "inplay_breakout":                "BREAKOUT_RISK_MULT",
+    "alt_inplay_breakdown_v2":        "BREAKDOWN2_RISK_MULT",
+    "elder_triple_screen_v2":         "ELDER_RISK_MULT",
+    "elder_triple_screen_v3":         "ETS3_RISK_MULT",
+    "alt_trendline_touch_v1":         "ATT1_RISK_MULT",
+    "alt_slope_break_v1":             "ASB1_RISK_MULT",        # added 2026-05-27
+    "alt_bear_regime_continuation_v1":"BRC1_RISK_MULT",        # added 2026-05-27
+    "btc_eth_midterm_pullback":       "MIDTERM_RISK_MULT",     # added 2026-05-27
+    "btc_eth_midterm_v3":             "MIDTERM_RISK_MULT",     # added 2026-05-27
+    "alt_horizontal_break_v1":        "HZBO1_RISK_MULT",
+    "session_open_breakout_v1":       "SOB1_RISK_MULT",
+    "funding_rate_reversion_v1":      "FR_RISK_MULT",
+    "liquidation_cascade_entry_v1":   "LC_RISK_MULT",
+    "sloped_resistance_choch_v1":     "SLOPE_CHOCH_RISK_MULT",
+    "micro_scalper_v1":               "MSCALP_RISK_MULT",
 }
+
+# IMPORTANT: bot has hard-floor max(0.05, X_RISK_MULT) for most strategies (line ~600-870
+# in smart_pump_reversal_bot.py). Setting X_RISK_MULT=0.0 in strategy_pause.env clamps
+# to 0.05, NOT zero. That's a 95% size reduction, not a true pause. Only ATT1 and BRC1
+# use max(0.0, ...) and can be truly paused.
+# Workaround for hard pause: use the bot's health gate (_health_gate.allow_entry) or
+# the ENABLE_*_TRADING flag (but enable flags are FORBIDDEN in auto_apply).
+# See OPUS_AUDIT_2026_05_27.md → Risk-mult floor discussion.
 
 # ---------------------------------------------------------------------------
 # Config

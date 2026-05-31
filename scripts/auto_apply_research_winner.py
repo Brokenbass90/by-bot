@@ -126,6 +126,9 @@ STRATEGY_FAMILIES: Dict[str, List[str]] = {
     "ARS1":      ["ARS1_"],
     "ASB1":      ["ASB1_"],
     "ASC1":      ["ASC1_"],
+    "ATT1":      ["ATT1_"],          # Trendline touch (added 2026-05-27 by Opus)
+    "BRC1":      ["BRC1_"],          # Bear regime continuation
+    "MTPB3":     ["MTPB3_"],         # BTC/ETH midterm pullback v3
 }
 
 # Params that are OK to auto-apply (whitelist — safety guard)
@@ -148,14 +151,48 @@ SAFE_PARAMS = {
     # ARS1
     "ARS1_BB_STD", "ARS1_RSI_SHORT_MIN", "ARS1_RSI_LONG_MAX",
     "ARS1_MIN_BAND_WIDTH_PCT", "ARS1_SYMBOL_ALLOWLIST",
+    # ATT1 (added 2026-05-27)
+    "ATT1_RSI_LONG_MAX", "ATT1_RSI_SHORT_MIN", "ATT1_SL_ATR_MULT",
+    "ATT1_RR", "ATT1_TOUCH_ATR", "ATT1_MIN_R2",
+    "ATT1_PIVOT_LEFT", "ATT1_PIVOT_RIGHT", "ATT1_MIN_PIVOTS",
+    "ATT1_MAX_PIVOT_AGE", "ATT1_SYMBOL_ALLOWLIST",
+    # BRC1
+    "BRC1_PULLBACK_MIN_PCT", "BRC1_RSI_MIN", "BRC1_RSI_MAX",
+    "BRC1_SL_ATR_MULT", "BRC1_RR", "BRC1_SYMBOL_ALLOWLIST",
+    # ASB1
+    "ASB1_BREAK_ATR", "ASB1_MIN_BODY_FRAC", "ASB1_RSI_SHORT_MAX",
+    "ASB1_RSI_LONG_MIN", "ASB1_SL_ATR_MULT", "ASB1_RR",
+    "ASB1_MIN_R2", "ASB1_SYMBOL_ALLOWLIST",
+    # ASC1 extras
+    "ASC1_ALLOW_LONGS", "ASC1_LONG_MAX_RSI", "ASC1_SHORT_MIN_RSI",
+    "ASC1_CHANNEL_LOOKBACK", "ASC1_SYMBOL_ALLOWLIST",
+    # ETS2 extras
+    "ETS2_TREND_MODE", "ETS2_TREND_TF", "ETS2_TREND_EMA",
+    "ETS2_TREND_REQUIRE_HIST_SIGN", "ETS2_OSC_LONG_MAX", "ETS2_OSC_SHORT_MIN",
+    # MTPB3
+    "MTPB3_ALLOW_LONGS", "MTPB3_ALLOW_SHORTS", "MTPB3_SYMBOL_ALLOWLIST",
+    "MTPB3_RSI_LONG_MAX", "MTPB3_RSI_SHORT_MIN",
 }
 
 # Params that are NEVER auto-applied (risk controls — require human review)
 FORBIDDEN_PARAMS = {
+    # Capital / risk
     "RISK_PER_TRADE_PCT", "BYBIT_LEVERAGE", "ORCH_GLOBAL_RISK_MULT",
     "BREAKDOWN_RISK_MULT", "FLAT_RISK_MULT", "IVB1_RISK_MULT",
+    "ATT1_RISK_MULT", "BRC1_RISK_MULT", "ASB1_RISK_MULT",
+    "ASC1_RISK_MULT", "ETS2_RISK_MULT", "MTPB3_RISK_MULT",
+    "SLOPED_RISK_MULT",
+    # Strategy global on/off — require explicit human approval
     "ENABLE_BREAKDOWN_TRADING", "ENABLE_FLAT_TRADING", "ENABLE_IVB1_TRADING",
-    "ENABLE_ELDER_TRADING", "BYBIT_ACCOUNTS_JSON", "DRY_RUN",
+    "ENABLE_ELDER_TRADING", "ENABLE_ATT1_TRADING", "ENABLE_BRC1_TRADING",
+    "ENABLE_ASB1_TRADING", "ENABLE_MIDTERM_TRADING", "ENABLE_BREAKOUT_TRADING",
+    "ENABLE_SLOPED_TRADING",
+    # Account / secrets — never
+    "BYBIT_ACCOUNTS_JSON", "DRY_RUN",
+    "TG_TOKEN", "TG_CHAT", "TG_CHAT_ID", "TG_ADMIN_USER_ID",
+    "ANTHROPIC_API_KEY", "DEEPSEEK_API_KEY",
+    # Template/meta variables that should never become env
+    "SYMBOLS",
 }
 
 # ---------------------------------------------------------------------------
