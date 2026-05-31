@@ -376,6 +376,7 @@ function TOTPScreen({ email, onAuth }) {
 // ── Shared hooks ───────────────────────────────────────────────────────────
 
 function useFetch(url, deps = [], pollMs = 0) {
+  const _deps = Array.isArray(deps) ? deps : [];
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -405,7 +406,7 @@ function useFetch(url, deps = [], pollMs = 0) {
   useEffect(() => {
     const cancel = load();
     return cancel;
-  }, [load, ...deps]);
+  }, [load, ..._deps]);
 
   useEffect(() => {
     if (!pollMs || pollMs <= 0) return undefined;
@@ -445,7 +446,7 @@ function Dashboard({ onNavigate }) {
   const { data: summary } = useFetch('/api/trades/summary', []);
   const { data: regime } = useFetch('/api/regime', []);
   const { data: equity } = useFetch('/api/equity', []);
-  const { data: livePnl, refresh: refreshPnl } = useFetch('/api/live-pnl', null, 15000);
+  const { data: livePnl, refresh: refreshPnl } = useFetch('/api/live-pnl', [], 15000);
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -2138,7 +2139,7 @@ function SetupCard({ c, sideBadge, frRates, frColor }) {
 
 function SetupScannerPage() {
   const { data, loading, refresh } = useFetch('/api/setup-scanner', [], 60000);
-  const { data: frData } = useFetch('/api/funding-rates', {}, 120000);
+  const { data: frData } = useFetch('/api/funding-rates', [], 120000);
   const frRates = (frData && frData.rates) ? frData.rates : {};
   const frColor = tier => tier === 'low' ? 'var(--green)' : tier === 'medium' ? 'var(--text)' : tier === 'high' ? 'var(--yellow)' : 'var(--red)';
   if (loading) return React.createElement(Loader);
@@ -2837,7 +2838,7 @@ function SweepCard({ sweep }) {
 }
 
 function SweepWatchdogPage() {
-  const { data, loading, refresh } = useFetch('/api/sweeps?limit=30', null, 15000);
+  const { data, loading, refresh } = useFetch('/api/sweeps?limit=30', [], 15000);
   const sweeps = data?.sweeps || [];
   const running = sweeps.filter(s => s.status === 'running');
   const done    = sweeps.filter(s => s.status === 'done');
@@ -2899,7 +2900,7 @@ function SweepWatchdogPage() {
 // ── TradingView Signals page ────────────────────────────────────────────────
 
 function TVSignalsPage() {
-  const { data, loading, refresh } = useFetch('/api/tv-signals?limit=100', null, 30000);
+  const { data, loading, refresh } = useFetch('/api/tv-signals?limit=100', [], 30000);
   const signals = (data?.signals) || [];
 
   const fmtTime = ts => {
