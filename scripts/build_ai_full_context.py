@@ -37,6 +37,7 @@ import json
 import os
 import re
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -272,12 +273,15 @@ def collect_active_configs() -> dict[str, Any]:
         return {"_warn": "configs/ not found"}
     canary = sorted(cfg_dir.glob("crypto_income_live_canary_*.env"),
                     key=lambda p: p.stat().st_mtime, reverse=True)
+    approved = cfg_dir / "approved_strategy_params.env"
     overlays = sorted(cfg_dir.glob("regime_overlay_*.env"),
                       key=lambda p: p.stat().st_mtime, reverse=True)
     policy = sorted(cfg_dir.glob("portfolio_allocator_policy*.json"),
                     key=lambda p: p.stat().st_mtime, reverse=True)
     return {
         "latest_canary_env": canary[0].name if canary else None,
+        "approved_strategy_params_env": approved.name if approved.exists() else None,
+        "approved_strategy_params_age_sec": round(time.time() - approved.stat().st_mtime, 1) if approved.exists() else None,
         "regime_overlays": [p.name for p in overlays],
         "latest_policy_json": policy[0].name if policy else None,
     }

@@ -420,6 +420,7 @@ def _safe_setting_value(key: str, value: str) -> Any:
 def _strategy_settings_block(root: Path) -> Dict[str, Any]:
     sources = {
         ".env": root / ".env",
+        "approved_strategy_params.env": root / "configs" / "approved_strategy_params.env",
         "portfolio_allocator_latest.env": root / "configs" / "portfolio_allocator_latest.env",
         "alpaca_paper_local.env": root / "configs" / "alpaca_paper_local.env",
         "alpaca_v38_hybrid_top4_candidate.env": root / "configs" / "alpaca_v38_hybrid_top4_candidate.env",
