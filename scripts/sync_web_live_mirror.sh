@@ -65,6 +65,7 @@ copy_if_exists "$BOT_DIR/runtime/ai_context/ohlc_and_logs.json" "$MIRROR_ROOT/ai
 copy_if_exists "$BOT_DIR/runtime/ai_context/memory_lines.jsonl" "$MIRROR_ROOT/ai_context/memory_lines.jsonl"
 copy_if_exists "$BOT_DIR/runtime/crypto_blocker/latest.json" "$MIRROR_ROOT/crypto_blocker/latest.json"
 copy_if_exists "$BOT_DIR/runtime/crypto_blocker/latest.md" "$MIRROR_ROOT/crypto_blocker/latest.md"
+copy_if_exists "$BOT_DIR/runtime/bybit_api_key_expiry_status.json" "$MIRROR_ROOT/bybit_api_key_expiry_status.json"
 copy_if_exists "$BOT_DIR/trades.csv" "$MIRROR_ROOT/trades.csv"
 
 sync_chat_history() {
