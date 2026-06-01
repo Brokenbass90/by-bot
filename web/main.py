@@ -12,6 +12,18 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+try:
+    from dotenv import load_dotenv
+except Exception:  # pragma: no cover - optional dependency in minimal installs
+    load_dotenv = None
+
+# Load runtime credentials for local/web runs before route modules inspect env.
+# The bot already does this; the web app should behave the same way.
+if load_dotenv is not None:
+    _ROOT = Path(__file__).parent.parent
+    load_dotenv(_ROOT / ".env", override=False)
+    load_dotenv(_ROOT / ".env.local", override=False)
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse

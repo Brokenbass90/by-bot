@@ -1823,6 +1823,7 @@ function SetupCardChart({ card }) {
   const [interval, setInterval] = useState(String(card.interval || '60'));
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [chartError, setChartError] = useState('');
   const chartRef = useRef(null);
   const lwChartRef = useRef(null);
 
@@ -1832,10 +1833,11 @@ function SetupCardChart({ card }) {
   const loadChart = useCallback(() => {
     if (!card.symbol) return;
     setLoading(true);
+    setChartError('');
     const q = new URLSearchParams({ symbol: card.symbol, interval, limit: '120' });
     api(`/api/setup-scanner/chart?${q.toString()}`)
       .then(d => { setChartData(d); setLoading(false); })
-      .catch(() => { setChartData({ candles: [] }); setLoading(false); });
+      .catch(e => { setChartData({ candles: [], error: e.message || 'chart_fetch_failed' }); setChartError(e.message || 'chart_fetch_failed'); setLoading(false); });
   }, [card.symbol, interval]);
 
   // Load on open; reload when interval changes
@@ -1848,6 +1850,7 @@ function SetupCardChart({ card }) {
     if (!open) {
       if (lwChartRef.current) { lwChartRef.current.remove(); lwChartRef.current = null; }
       setChartData(null);
+      setChartError('');
     }
   }, [open]);
 
@@ -1864,19 +1867,29 @@ function SetupCardChart({ card }) {
       open: c.open, high: c.high, low: c.low, close: c.close,
     }));
     if (!candles.length) return;
+    if (!window.LightweightCharts || !LightweightCharts.createChart) {
+      setChartError('chart_library_unavailable');
+      return;
+    }
 
     const container = chartRef.current;
     if (lwChartRef.current) { lwChartRef.current.remove(); lwChartRef.current = null; }
 
-    const chart = LightweightCharts.createChart(container, {
-      width: container.clientWidth,
-      height: container.clientHeight,
-      layout: { background: { color: '#0d1117' }, textColor: '#8b949e' },
-      grid: { vertLines: { color: '#161b22' }, horzLines: { color: '#161b22' } },
-      crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-      rightPriceScale: { borderColor: '#21262d' },
-      timeScale: { borderColor: '#21262d', timeVisible: true, secondsVisible: false },
-    });
+    let chart;
+    try {
+      chart = LightweightCharts.createChart(container, {
+        width: Math.max(320, container.clientWidth || 0),
+        height: Math.max(260, container.clientHeight || 0),
+        layout: { background: { color: '#0d1117' }, textColor: '#8b949e' },
+        grid: { vertLines: { color: '#161b22' }, horzLines: { color: '#161b22' } },
+        crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+        rightPriceScale: { borderColor: '#21262d' },
+        timeScale: { borderColor: '#21262d', timeVisible: true, secondsVisible: false },
+      });
+    } catch (err) {
+      setChartError(err?.message || 'chart_render_failed');
+      return;
+    }
     lwChartRef.current = chart;
 
     const cSeries = chart.addCandlestickSeries({
@@ -1939,6 +1952,51 @@ function SetupCardChart({ card }) {
   const inv = parseFloat(card.invalidation);
   const dist = parseFloat(card.distance_atr);
   const score = parseFloat(card.score);
+  const fallbackCandles = chartData && Array.isArray(chartData.candles) ? chartData.candles : [];
+
+  function renderFallbackChart() {
+    if (!fallbackCandles.length) return null;
+    const W = 1000, H = 330, pad = 28;
+    const rows = fallbackCandles.slice(-90);
+    const highs = rows.map(c => Number(c.high)).filter(Number.isFinite);
+    const lows = rows.map(c => Number(c.low)).filter(Number.isFinite);
+    const prices = highs.concat(lows);
+    if (!prices.length) return null;
+    const extra = Math.max(1e-9, (Math.max(...prices) - Math.min(...prices)) * 0.08);
+    const minP = Math.min(...prices, !isNaN(lvl) ? lvl : Infinity, !isNaN(inv) ? inv : Infinity) - extra;
+    const maxP = Math.max(...prices, !isNaN(lvl) ? lvl : -Infinity, !isNaN(inv) ? inv : -Infinity) + extra;
+    const y = p => pad + (maxP - p) / Math.max(1e-9, maxP - minP) * (H - pad * 2);
+    const xStep = (W - pad * 2) / Math.max(1, rows.length - 1);
+    const candleW = Math.max(3, Math.min(8, xStep * 0.55));
+    const line = (price, color, dash) => isNaN(price) || price <= 0 ? null :
+      React.createElement('line', { x1: pad, y1: y(price), x2: W - pad, y2: y(price), stroke: color, strokeWidth: 2, strokeDasharray: dash || '' });
+    return React.createElement('div', { style: { width: '100%', height: '100%', padding: '10px 12px' } },
+      React.createElement('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', height: '100%', preserveAspectRatio: 'none' },
+        [0, .25, .5, .75, 1].map(t => React.createElement('line', {
+          key: `g-${t}`, x1: pad, x2: W - pad, y1: pad + t * (H - pad * 2), y2: pad + t * (H - pad * 2),
+          stroke: '#161b22', strokeWidth: 1,
+        })),
+        rows.map((c, i) => {
+          const o = Number(c.open), h = Number(c.high), l = Number(c.low), cl = Number(c.close);
+          if (![o, h, l, cl].every(Number.isFinite)) return null;
+          const x = pad + i * xStep;
+          const up = cl >= o;
+          const color = up ? '#3fb950' : '#f85149';
+          const top = Math.min(y(o), y(cl));
+          const height = Math.max(1, Math.abs(y(o) - y(cl)));
+          return React.createElement('g', { key: `${c.time_ms || i}` },
+            React.createElement('line', { x1: x, y1: y(h), x2: x, y2: y(l), stroke: color, strokeWidth: 1.5 }),
+            React.createElement('rect', { x: x - candleW / 2, y: top, width: candleW, height, fill: color, rx: 1 })
+          );
+        }),
+        line(lvl, levelColor, ''),
+        line(inv, '#e3b341', '8 6')
+      ),
+      chartError ? React.createElement('div', {
+        style: { position: 'absolute', left: 20, bottom: 14, color: 'var(--yellow)', fontSize: '11px' }
+      }, `Fallback chart: ${chartError}`) : null
+    );
+  }
 
   const modal = React.createElement('div', {
     className: 'modal-overlay',
@@ -1996,8 +2054,10 @@ function SetupCardChart({ card }) {
               React.createElement('div', { className: 'spinner' }),
               React.createElement('span', null, 'Загрузка свечей…'))
           : (chartData && (!chartData.candles || chartData.candles.length === 0))
-            ? React.createElement('div', { className: 'empty' }, '📭 Свечи недоступны')
-            : React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } })
+            ? React.createElement('div', { className: 'empty' }, chartError ? `📭 Свечи недоступны: ${chartError}` : '📭 Свечи недоступны')
+            : chartError
+              ? renderFallbackChart()
+              : React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } })
       ),
       // Reasons row
       card.reasons && card.reasons.length > 0
