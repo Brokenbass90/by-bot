@@ -1826,6 +1826,7 @@ function SetupCardChart({ card }) {
   const [chartError, setChartError] = useState('');
   const chartRef = useRef(null);
   const lwChartRef = useRef(null);
+  const USE_LIGHTWEIGHT_SETUP_CHART = false; // SVG fallback is deterministic and does not depend on CDN canvas quirks.
 
   const side = String(card.side || '').toLowerCase();
   const levelColor = side === 'short' ? '#f85149' : '#3fb950';
@@ -1862,6 +1863,7 @@ function SetupCardChart({ card }) {
   // Build / rebuild LightweightCharts when data arrives
   useEffect(() => {
     if (!chartData || !chartRef.current || loading) return;
+    if (!USE_LIGHTWEIGHT_SETUP_CHART) return;
     const candles = (chartData.candles || []).map(c => ({
       time: Math.floor(c.time_ms / 1000),
       open: c.open, high: c.high, low: c.low, close: c.close,
@@ -2055,7 +2057,7 @@ function SetupCardChart({ card }) {
               React.createElement('span', null, 'Загрузка свечей…'))
           : (chartData && (!chartData.candles || chartData.candles.length === 0))
             ? React.createElement('div', { className: 'empty' }, chartError ? `📭 Свечи недоступны: ${chartError}` : '📭 Свечи недоступны')
-            : chartError
+            : (chartError || !USE_LIGHTWEIGHT_SETUP_CHART)
               ? renderFallbackChart()
               : React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } })
       ),
@@ -2600,6 +2602,17 @@ function CredentialsPage() {
 
   useEffect(() => { load(); }, []);
 
+  function fmtExpiry(expiry) {
+    const status = String(expiry?.status || 'unknown');
+    const rawDays = expiry?.days_left;
+    const days = rawDays != null && Number.isFinite(Number(rawDays)) ? Number(rawDays) : null;
+    const dayLabel = days == null ? 'no expiry data' : days < 0 ? `expired ${Math.abs(days).toFixed(1)}d ago` : `${days.toFixed(1)}d left`;
+    const date = expiry?.expires_on ? `expires ${expiry.expires_on}` : status;
+    const cls = ['critical', 'expired'].includes(status) || (days != null && days <= 1) ? 'badge-dead'
+      : ['warning', 'notice'].includes(status) || (days != null && days <= 7) ? 'badge-warn' : 'badge-ok';
+    return { cls, label: `${date} · ${dayLabel}` };
+  }
+
   async function rotate() {
     if (!newKey || !newSecret) return;
     if (!confirm(`Rotate Bybit credentials for ${account}?`)) return;
@@ -2632,9 +2645,7 @@ function CredentialsPage() {
     React.createElement('div', { className: 'strat-grid', style: { marginBottom: '16px' } },
       (data?.accounts || []).map(a => {
         const expiry = a.expiry || {};
-        const days = expiry.days_left != null ? `${expiry.days_left} days` : '—';
-        const cls = ['critical', 'expired'].includes(expiry.status) ? 'badge-dead'
-          : ['warning', 'notice'].includes(expiry.status) ? 'badge-warn' : 'badge-ok';
+        const exp = fmtExpiry(expiry);
         return React.createElement('div', { className: 'card', key: a.name },
           React.createElement('div', { className: 'card-title' }, a.name),
           React.createElement('div', { className: 'info-row' },
@@ -2643,7 +2654,7 @@ function CredentialsPage() {
           ),
           React.createElement('div', { className: 'info-row' },
             React.createElement('span', { className: 'label' }, 'Expiry'),
-            React.createElement('span', { className: `badge ${cls}` }, `${expiry.expires_on || expiry.status || 'unknown'} · ${days}`)
+            React.createElement('span', { className: `badge ${exp.cls}` }, exp.label)
           ),
           React.createElement('div', { className: 'info-row' },
             React.createElement('span', { className: 'label' }, 'Trading'),
@@ -2651,6 +2662,34 @@ function CredentialsPage() {
           )
         );
       })
+    ),
+    data?.expiry_checked_at_utc && React.createElement('div', {
+      className: 'section-sub',
+      style: { marginBottom: '16px' },
+    }, `Bybit expiry check: ${data.expiry_checked_at_utc}. Alerts should fire at 7/3/1 days before expiry.`),
+    React.createElement('div', { className: 'card', style: { maxWidth: '760px', marginBottom: '16px' } },
+      React.createElement('div', { className: 'card-title' }, 'Cross-exchange arbitrage keys'),
+      React.createElement('div', { className: 'section-sub', style: { marginBottom: '12px' } },
+        'Public scanner works without keys. Binance/Bitget keys are needed later for read-only balances, then dry-run, then tiny live with caps.'),
+      React.createElement('div', { className: 'tbl-wrap' },
+        React.createElement('table', null,
+          React.createElement('thead', null,
+            React.createElement('tr', null,
+              ['Exchange', 'Keys', 'Stage', 'Trading'].map(h => React.createElement('th', { key: h }, h))
+            )
+          ),
+          React.createElement('tbody', null,
+            (data?.arb_exchanges || []).map(x =>
+              React.createElement('tr', { key: x.name },
+                React.createElement('td', { style: { fontWeight: 700 } }, x.name.toUpperCase()),
+                React.createElement('td', null, React.createElement('span', { className: `badge ${x.configured ? 'badge-ok' : 'badge-off'}` }, x.configured ? 'configured' : 'not set')),
+                React.createElement('td', null, React.createElement('span', { className: 'badge badge-warn' }, x.stage || 'planned')),
+                React.createElement('td', null, React.createElement('span', { className: 'badge badge-off' }, 'locked'))
+              )
+            )
+          )
+        )
+      )
     ),
     React.createElement('div', { className: 'card', style: { maxWidth: '560px' } },
       React.createElement('div', { className: 'card-title' }, 'Rotate Bybit Credentials'),

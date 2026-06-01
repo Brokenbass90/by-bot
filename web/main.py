@@ -17,12 +17,33 @@ try:
 except Exception:  # pragma: no cover - optional dependency in minimal installs
     load_dotenv = None
 
+
+def _load_env_file(path: Path) -> None:
+    """Small fallback loader so web AI keys work even without python-dotenv."""
+    if not path.exists():
+        return
+    if load_dotenv is not None:
+        load_dotenv(path, override=False)
+        return
+    try:
+        for raw in path.read_text(encoding="utf-8").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = value
+    except Exception:
+        return
+
+
 # Load runtime credentials for local/web runs before route modules inspect env.
 # The bot already does this; the web app should behave the same way.
-if load_dotenv is not None:
-    _ROOT = Path(__file__).parent.parent
-    load_dotenv(_ROOT / ".env", override=False)
-    load_dotenv(_ROOT / ".env.local", override=False)
+_ROOT = Path(__file__).parent.parent
+_load_env_file(_ROOT / ".env")
+_load_env_file(_ROOT / ".env.local")
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware

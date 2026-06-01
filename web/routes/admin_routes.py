@@ -26,6 +26,15 @@ def _rt(*p: str) -> Path:
     return _RUNTIME_ROOT / Path(*p)
 
 
+def _env_text_value(text: str, key: str) -> str:
+    prefix = f"{key}="
+    for raw in text.splitlines():
+        line = raw.strip()
+        if line.startswith(prefix):
+            return line[len(prefix):].strip().strip('"').strip("'")
+    return ""
+
+
 # ── User management ───────────────────────────────────────────────────────────
 
 @router.get("/users")
@@ -516,8 +525,32 @@ async def get_bybit_key_info(_: str = Depends(require_admin)):
             "risk_pct": acc.get("trade", {}).get("risk_pct"),
             "expiry": expiry_by_account.get(name, {"status": "unknown"}),
         })
+    other_exchanges = [
+        {
+            "name": "binance",
+            "configured": bool(_env_text_value(text, "BINANCE_API_KEY") and _env_text_value(text, "BINANCE_API_SECRET")),
+            "role": "cross_exchange_funding",
+            "stage": "planned_readonly_then_dry_run",
+            "trading_enabled": False,
+        },
+        {
+            "name": "bitget",
+            "configured": bool(_env_text_value(text, "BITGET_API_KEY") and _env_text_value(text, "BITGET_API_SECRET")),
+            "role": "cross_exchange_funding",
+            "stage": "planned_readonly_then_dry_run",
+            "trading_enabled": False,
+        },
+        {
+            "name": "okx",
+            "configured": bool(_env_text_value(text, "OKX_API_KEY") and _env_text_value(text, "OKX_API_SECRET")),
+            "role": "cross_exchange_funding",
+            "stage": "optional_later",
+            "trading_enabled": False,
+        },
+    ]
     return {
         "accounts": out,
+        "arb_exchanges": other_exchanges,
         "expiry_checked_at_utc": expiry_report.get("checked_at_utc"),
         "note": "Credential values and fragments are never returned by this endpoint.",
     }
