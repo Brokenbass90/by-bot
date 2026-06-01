@@ -61,6 +61,7 @@ SOURCES = {
     "self_audit": "runtime/self_audit/latest.json",
     "research_status": "runtime/research_nightly/status.json",
     "funding_carry_latest_plan": "runtime/funding_carry/latest_plan.json",
+    "cross_exchange_funding": "runtime/arb/cross_exchange_funding_latest.json",
     "router_quality": "runtime/control_plane/router_quality_audit.json",
     "crypto_blocker": "runtime/crypto_blocker/latest.json",
 }
@@ -408,6 +409,19 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
     fc_path = source_path("funding_carry_latest_plan")
     ctx["sources_used"]["funding_carry_latest_plan"] = str(fc_path.relative_to(REPO_ROOT)) if fc_path.exists() else None
     ctx["funding_carry_latest_plan"] = load_json(fc_path)
+
+    xfund_path = source_path("cross_exchange_funding")
+    ctx["sources_used"]["cross_exchange_funding"] = (
+        str(xfund_path.relative_to(REPO_ROOT)) if xfund_path.exists() else None
+    )
+    xfund = load_json(xfund_path)
+    if isinstance(xfund, dict) and isinstance(xfund.get("opportunities"), list):
+        ctx["cross_exchange_funding"] = {
+            **{k: v for k, v in xfund.items() if k != "opportunities"},
+            "opportunities": xfund["opportunities"][:10],
+        }
+    else:
+        ctx["cross_exchange_funding"] = xfund
 
     # ---- Static inventory ----
     ctx["strategies_inventory"] = collect_strategies_inventory()
