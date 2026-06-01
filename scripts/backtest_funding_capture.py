@@ -350,13 +350,31 @@ def main() -> int:
     used_symbols = [str(r.get("symbol", "")) for r in rows_symbol]
 
     by_month_gross: Dict[str, float] = {}
+    total_receive_events = 0
+    total_pay_events = 0
     for r in rows_symbol:
         sym = str(r.get("symbol", ""))
         total_events += int(r.get("funding_events", 0) or 0)
+        total_receive_events += int(r.get("receive_events", 0) or 0)
+        total_pay_events += int(r.get("pay_events", 0) or 0)
         total_gross += float(r.get("gross_funding_usd", 0.0) or 0.0)
         total_net += float(r.get("net_usd", 0.0) or 0.0)
         for ym, pnl in (by_symbol_month.get(sym) or {}).items():
             by_month_gross[ym] = by_month_gross.get(ym, 0.0) + float(pnl)
+
+    monthly_values = [by_month_gross[k] for k in sorted(by_month_gross)]
+    positive_sum = sum(x for x in monthly_values if x > 0.0)
+    negative_sum = abs(sum(x for x in monthly_values if x < 0.0))
+    profit_factor = (positive_sum / negative_sum) if negative_sum > 1e-12 else (999.0 if positive_sum > 0.0 else 0.0)
+    winrate = (total_receive_events / total_events) if total_events > 0 else 0.0
+    total_notional = max(1e-12, notional * max(1, len(rows_symbol)))
+    equity = 0.0
+    peak = 0.0
+    max_drawdown_pct = 0.0
+    for pnl in monthly_values:
+        equity += float(pnl)
+        peak = max(peak, equity)
+        max_drawdown_pct = max(max_drawdown_pct, ((peak - equity) / total_notional) * 100.0)
 
     with per_symbol_csv.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(
@@ -390,6 +408,15 @@ def main() -> int:
         for ym in sorted(by_month_gross.keys()):
             w.writerow([ym, f"{by_month_gross[ym]:.6f}"])
 
+    # Autoresearch runners expect a generic monthly.csv with a PnL-like field.
+    # Keep the funding-specific monthly_pnl.csv above, but also emit this alias.
+    monthly_alias_csv = out_dir / "monthly.csv"
+    with monthly_alias_csv.open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["month", "month_pnl"])
+        for ym in sorted(by_month_gross.keys()):
+            w.writerow([ym, f"{by_month_gross[ym]:.6f}"])
+
     with summary_csv.open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(
@@ -410,10 +437,15 @@ def main() -> int:
                 "max_top_symbol_share",
                 "min_symbol_net_usd",
                 "funding_events",
+                "trades",
                 "gross_funding_total_usd",
                 "flip_fees_total_usd",
                 "fees_total_usd",
                 "net_total_usd",
+                "net_pnl",
+                "profit_factor",
+                "winrate",
+                "max_drawdown",
                 "top_symbol_share_net",
             ]
         )
@@ -441,10 +473,15 @@ def main() -> int:
                 f"{float(args.max_top_symbol_share):.3f}",
                 f"{float(args.min_symbol_net_usd):.3f}",
                 int(total_events),
+                int(total_events),
                 f"{total_gross:.6f}",
                 f"{sum(float(r.get('flip_fees_usd', 0.0)) for r in rows_symbol):.6f}",
                 f"{(len(rows_symbol) * fee_total_usd):.6f}",
                 f"{total_net:.6f}",
+                f"{total_net:.6f}",
+                f"{profit_factor:.6f}",
+                f"{winrate:.6f}",
+                f"{max_drawdown_pct:.6f}",
                 f"{top_share:.4f}",
             ]
         )
