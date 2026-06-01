@@ -1,11 +1,19 @@
 # Project Status — LIVE
 
-**Last updated:** 2026-05-31 evening (strict3 canary deployed + web black-screen fixed)
+**Last updated:** 2026-06-01 morning (Alpaca June refresh pending + crypto/funding research running)
 **Update rhythm:** еженедельно или при критическом изменении
 **Источник правды:** этот файл + `docs/BACKLOG.md` + `docs/RESUME_AFTER_BREAK_20260519.md`
 
 ## Однострочник
 Bybit perpetuals bot + Alpaca equities. Live equity ≈ $123 Bybit + $1000 Alpaca paper. **2026-05-31:** reviewed strict-three-slot crypto canary is now deployed on the server with caps: only `ATT1 + ARF1/flat + breakdown + midterm`, overlays/allocator disabled for this canary, `global risk 0.55`, `allocator risk 0.80`, `MAX_OPEN_PORTFOLIO_RISK_PCT=1.50`, `MAX_SAME_DIRECTION_POSITIONS=2`. Bot restart was done at `open_trades=0`; logs confirm disabled sleeves are off. The local and server web black-screen bug was fixed by making `useFetch` dependency handling null-safe and correcting new hook callsites. Next evidence gate is not more broad strategy activation: watch whether strict3 produces live entries and update operator/AI context so it reports actual runtime canary flags instead of stale allocator snapshots. Alpaca v38 monthly paper: fixed HWM trailing belongs to `v38 hybrid top4`, not v39; v39/v40 remain research-only.
+
+## 2026-06-01 Morning Session
+- **Alpaca v38:** May paper cycle already ran; June refresh is due at `09:30 UTC / 12:30 Cyprus` today, not "wait another month". A heartbeat check is scheduled for `12:50 Cyprus` to verify fresh picks, paper orders/fills, broker protection, software/native trailing and cleanup conflicts before any `$500` real deposit decision.
+- **Crypto live:** server is thawed (`trade_on=True`, `safe_mode=False`, `hard_block_new_entries=False`) but still has no real Bybit trades since `2026-04-28`. Current evidence says the remaining blocker is strategy conversion (`flat/breakdown same_bar/range/cooldown`, `ATT1 trendline`) rather than exchange connectivity.
+- **Crypto research running:** `crypto_package_research_20260601` is active on the server. Early BRC1 package rows are not yet better than the fixed baseline (`PF 1.591`, DD `5.16%`), so no BRC1 live promotion yet.
+- **Arbitrage research:** `package_funding_harvest_v1` completed after a metrics compatibility fix. Best current Bybit-only funding result is about `3% APR` (`~0.25%/month`) on the tested basket: useful as a stable cash-yield layer, not enough for the target `2-3%/month`. Basis-arb threshold grid was restarted with correct shell quoting to test softer spread thresholds.
+- **Committed today:** `aa0f1ee Fix funding harvest autoresearch metrics` — makes funding backtests emit generic `trades/net_pnl/profit_factor/winrate/max_drawdown/monthly.csv` fields so autoresearch can rank them correctly.
+- **Capital policy for now:** do not split the `$2000` until gates pass. Tentative first deployment remains `$500 Alpaca v38` after June refresh validation, `$300-500 Bybit crypto` only after first live-entry evidence, and arbitrage only after a shadow result materially better than simple funding `3% APR`.
 
 ## Numbers (на 2026-05-19 после рестарта)
 
