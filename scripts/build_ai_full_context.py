@@ -63,6 +63,7 @@ SOURCES = {
     "funding_carry_latest_plan": "runtime/funding_carry/latest_plan.json",
     "cross_exchange_funding": "runtime/arb/cross_exchange_funding_latest.json",
     "cross_exchange_funding_validated": "runtime/arb/cross_exchange_funding_validated.json",
+    "cross_exchange_funding_shadow": "runtime/arb/cross_exchange_funding_shadow.json",
     "router_quality": "runtime/control_plane/router_quality_audit.json",
     "crypto_blocker": "runtime/crypto_blocker/latest.json",
 }
@@ -436,6 +437,20 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         }
     else:
         ctx["cross_exchange_funding_validated"] = xfund_valid
+
+    xfund_shadow_path = source_path("cross_exchange_funding_shadow")
+    ctx["sources_used"]["cross_exchange_funding_shadow"] = (
+        str(xfund_shadow_path.relative_to(REPO_ROOT)) if xfund_shadow_path.exists() else None
+    )
+    xfund_shadow = load_json(xfund_shadow_path)
+    if isinstance(xfund_shadow, dict):
+        ctx["cross_exchange_funding_shadow"] = {
+            **{k: v for k, v in xfund_shadow.items() if k not in {"open", "closed"}},
+            "open": (xfund_shadow.get("open") or [])[:10],
+            "closed": (xfund_shadow.get("closed") or [])[-10:],
+        }
+    else:
+        ctx["cross_exchange_funding_shadow"] = xfund_shadow
 
     # ---- Static inventory ----
     ctx["strategies_inventory"] = collect_strategies_inventory()
