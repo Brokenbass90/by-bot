@@ -221,10 +221,17 @@ def classify(sr: SleeveReport, regime: str | None) -> tuple[str, str]:
 
     # если no_signal ≈ try_count → конверсия 0
     if sr.no_signal and sr.try_count and sr.no_signal >= sr.try_count * 0.95:
-        # смотрим какой ns_* доминирует
+        # смотрим какой ns_* доминирует.
+        # same_bar/first_bar are mostly scheduler artifacts: the bot re-checks the
+        # same candle many times. Prefer the next real rejection reason when one
+        # exists, otherwise operators keep chasing a diagnostics artifact.
         if sr.ns_breakdown:
-            top = max(sr.ns_breakdown.items(), key=lambda kv: kv[1])
-            reason_key, reason_count = top
+            def _technical_reason(key: str) -> bool:
+                return "same_bar" in key or "first_bar" in key
+
+            ordered = sorted(sr.ns_breakdown.items(), key=lambda kv: kv[1], reverse=True)
+            real_reasons = [(k, v) for k, v in ordered if not _technical_reason(k)]
+            reason_key, reason_count = (real_reasons[0] if real_reasons else ordered[0])
             if "same_bar" in reason_key:
                 return (reason_key, "same_bar_artifact")
             if "first_bar" in reason_key:
