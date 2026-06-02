@@ -134,7 +134,7 @@ DIAG_KEYS = [
     "breakdown_skip_minqty", "breakdown_skip_open_risk",
     "breakdown_skip_reserve", "breakdown_skip_submit",
     "breakdown_no_signal", "breakdown_ns_symbol", "breakdown_ns_cooldown",
-    "breakdown_ns_history", "breakdown_ns_same_bar", "breakdown_ns_regime",
+    "breakdown_ns_history", "breakdown_ns_same_bar", "breakdown_ns_structure_idle", "breakdown_ns_regime",
     "breakdown_ns_rsi", "breakdown_ns_support", "breakdown_ns_impulse",
     "breakdown_ns_dist", "breakdown_ns_flat", "breakdown_ns_reclaim",
     "breakdown_ns_entry_timing", "breakdown_ns_entry_confirm",
@@ -506,7 +506,13 @@ def _breakdown_no_signal_diag_key(reason: str) -> str:
         return "breakdown_ns_cooldown"
     if "history" in r or "invalid" in r and ("structure" in r or "entry" in r):
         return "breakdown_ns_history"
-    if "same_" in r or "structure_unchanged" in r:
+    # 2026-06-02: split overloaded same_bar bucket.
+    # `structure_unchanged` is the normal "same setup re-evaluated each bar" state
+    # and dominated the bucket (~89% of live no_signal). Bucket it separately so
+    # the real same-bar guard and the routine idle state are visible.
+    if "structure_unchanged" in r:
+        return "breakdown_ns_structure_idle"
+    if "same_" in r:
         return "breakdown_ns_same_bar"
     if "regime_" in r:
         return "breakdown_ns_regime"
