@@ -2,7 +2,7 @@
   "name": "package_breakdown_regime_bounded_v1",
   "description": "Bounded diagnostic replay for current live blocker breakdown_ns_regime. Tests whether relaxing BREAKDOWN_REGIME_MIN_ER restores entries without destroying package quality. Research-only: do not auto-apply to live.",
   "cache_only": false,
-  "timeout_sec": 900,
+  "timeout_sec": 2400,
   "command": [
     "{python}",
     "backtest/run_portfolio.py",
