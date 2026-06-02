@@ -6740,6 +6740,15 @@ def round_tp_sl_prices(symbol: str, side: str, entry: float,
     return tp, sl
 
 
+def _invalid_rounded_tpsl(use_runner: bool, tp_r: float | None, sl_r: float | None) -> bool:
+    """Runner exits intentionally have no fixed TP on the exchange; SL is still mandatory."""
+    if sl_r is None:
+        return True
+    if use_runner:
+        return False
+    return tp_r is None
+
+
 def _rr_from_levels(side: str, entry: float, tp: float | None, sl: float | None) -> float | None:
     try:
         if entry <= 0 or tp is None or sl is None:
@@ -8944,7 +8953,7 @@ async def try_inplay_entry_async(symbol: str, price: float):
     # If runner plan exists, we only place SL on exchange (TPs handled by runner)
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -9211,7 +9220,7 @@ async def try_breakout_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         return
 
     if BREAKOUT_MAX_SPREAD_PCT > 0:
@@ -9498,7 +9507,7 @@ async def try_midterm_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         _diag_inc("midterm_skip_rounding")
         _append_signal_decision("midterm", symbol, "skip_rounding", "invalid_rounded_tp_sl", side=str(sig.side))
         return
@@ -9666,7 +9675,7 @@ async def try_sloped_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         _diag_inc("sloped_skip_rounding")
         return
 
@@ -9832,7 +9841,7 @@ async def try_att1_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         _diag_inc("att1_skip_rounding")
         _append_signal_decision("att1", symbol, "skip_rounding", "invalid_rounded_tp_sl", side=str(sig.side))
         return
@@ -9984,7 +9993,7 @@ async def try_asm1_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         _diag_inc("asm1_skip_rounding")
         return
 
@@ -10132,7 +10141,7 @@ async def try_asb1_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -10274,7 +10283,7 @@ async def try_hzbo1_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -10421,7 +10430,7 @@ async def try_bounce1_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -10572,7 +10581,7 @@ async def try_flat_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         _diag_inc("flat_skip_rounding")
         _append_signal_decision("flat", symbol, "skip_rounding", "invalid_rounded_tp_sl", side=str(sig.side))
         return
@@ -10745,7 +10754,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         _diag_inc("breakdown_skip_rounding")
         _append_signal_decision("breakdown", symbol, "skip_rounding", "invalid_rounded_tp_sl", side=str(sig.side))
         return
@@ -11203,7 +11212,7 @@ async def try_ivb1_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -11366,7 +11375,7 @@ async def try_elder_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -11552,7 +11561,7 @@ async def try_brc1_entry_async(symbol: str, price: float):
     tp = float(sig.tp)
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
@@ -11717,7 +11726,7 @@ async def try_sob1_entry_async(symbol: str, price: float):
 
     use_runner = bool(getattr(sig, "tps", None)) and bool(getattr(sig, "tp_fracs", None))
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
-    if tp_r is None or sl_r is None:
+    if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
