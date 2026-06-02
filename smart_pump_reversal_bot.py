@@ -8327,6 +8327,8 @@ ENTRY_CIRCUIT_ENABLE = _env_bool("ENTRY_CIRCUIT_ENABLE", True)
 ENTRY_CIRCUIT_FAILURES = max(1, int(os.getenv("ENTRY_CIRCUIT_FAILURES", "3") or 3))
 ENTRY_CIRCUIT_COOLDOWN_SEC = max(10, int(os.getenv("ENTRY_CIRCUIT_COOLDOWN_SEC", "90") or 90))
 ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC = max(30, int(os.getenv("ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC", "300") or 300))
+ENTRY_RESERVATION_TTL_SEC = max(30, int(os.getenv("ENTRY_RESERVATION_TTL_SEC", "180") or 180))
+ENTRY_RESERVATION_CLEAR_ON_REMOTE_ERROR = _env_bool("ENTRY_RESERVATION_CLEAR_ON_REMOTE_ERROR", False)
 _ENTRY_CIRCUIT = EntryCircuitBreaker(
     failure_threshold=ENTRY_CIRCUIT_FAILURES,
     cooldown_sec=ENTRY_CIRCUIT_COOLDOWN_SEC,
@@ -8349,9 +8351,72 @@ def _entry_circuit_reason() -> str:
     return reason
 
 
+def _is_entry_reservation(tr) -> bool:
+    return (
+        str(getattr(tr, "status", "") or "").upper() == "PLACING_ENTRY"
+        and str(getattr(tr, "strategy", "") or "") == "__entry_reservation__"
+    )
+
+
+def _remote_position_size(symbol: str) -> float | None:
+    if DRY_RUN or TRADE_CLIENT is None:
+        return 0.0
+    try:
+        size, _, _, _, _, _ = TRADE_CLIENT.get_position_summary(symbol)
+        return abs(float(size or 0.0))
+    except Exception as e:
+        log_error(f"entry reservation remote position check fail {symbol}: {e}")
+        return None
+
+
+def _clear_stale_entry_reservations(symbol: str | None = None, *, now: int | None = None) -> int:
+    ts_now = int(now or now_s())
+    cleared = 0
+    for (exch, sym), tr in list(TRADES.items()):
+        if exch != "Bybit":
+            continue
+        if symbol is not None and sym != symbol:
+            continue
+        if not _is_entry_reservation(tr):
+            continue
+        age = ts_now - int(getattr(tr, "entry_ts", ts_now) or ts_now)
+        if age < ENTRY_RESERVATION_TTL_SEC:
+            continue
+        remote_size = _remote_position_size(sym)
+        if remote_size is None and not ENTRY_RESERVATION_CLEAR_ON_REMOTE_ERROR:
+            _diag_inc("entry_reservation_stale_remote_unknown")
+            tg_trade_throttled(
+                f"entry_reservation_stale_remote_unknown:{sym}",
+                f"⚠️ ENTRY RESERVATION STALE {sym}: age={age}s, remote position check failed. Keeping block for safety.",
+                1800,
+            )
+            continue
+        if remote_size is not None and remote_size > 0:
+            _diag_inc("entry_reservation_stale_remote_open")
+            tg_trade_throttled(
+                f"entry_reservation_stale_remote_open:{sym}",
+                f"⚠️ ENTRY RESERVATION STALE {sym}: age={age}s, but remote position size={remote_size}. Keeping block for safety.",
+                1800,
+            )
+            continue
+        try:
+            del TRADES[(exch, sym)]
+            cleared += 1
+            _diag_inc("entry_reservation_stale_cleared")
+            tg_trade_throttled(
+                f"entry_reservation_stale_cleared:{sym}",
+                f"🧹 ENTRY RESERVATION CLEARED {sym}: stale {age}s, no remote position found.",
+                1800,
+            )
+        except Exception:
+            pass
+    return cleared
+
+
 async def _reserve_entry_slot(symbol: str, side: str, *, reserved_risk_usd: float = 0.0) -> bool:
     key = ("Bybit", symbol)
     async with _ENTRY_RESERVATION_LOCK:
+        _clear_stale_entry_reservations(symbol)
         if key in TRADES:
             return False
         if not portfolio_can_open():
@@ -8458,6 +8523,8 @@ def _update_avg(avg: float, q_old: float, px_new: float, q_new: float) -> float:
     return (avg*q_old + px_new*q_new) / (q_old + q_new)
 
 def get_trade(exch:str, sym:str) -> Optional[TradeState]:
+    if str(exch or "") == "Bybit":
+        _clear_stale_entry_reservations(str(sym or "").upper().strip())
     return TRADES.get((exch, sym))
 
 def place_market(symbol: str, side: str, usd_amount: float) -> Tuple[str, float]:
@@ -10719,6 +10786,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         return
 
     now = now_s()
+    signal_ts = int(now)
     last = int(_BREAKDOWN_LAST_TRY.get(symbol, 0) or 0)
     if now - last < BREAKDOWN_DECISION_EVERY_SEC:
         _diag_inc("breakdown_skip_cooldown")
@@ -14079,6 +14147,7 @@ async def pulse():
             log_error(f"strategy-stats pulse fail: {e}")
         # ── Heartbeat file (external watchdog reads this) ──────────────────────
         try:
+            _clear_stale_entry_reservations()
             _hb_path = Path(__file__).resolve().parent / "runtime" / "bot_heartbeat.json"
             _diag_path = Path(__file__).resolve().parent / "runtime" / "runtime_diagnostics.json"
             _hb_path.parent.mkdir(parents=True, exist_ok=True)
