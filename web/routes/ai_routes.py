@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -150,6 +151,95 @@ def _local_setup_analysis(body: "SetupAnalysisRequest", *, reason: str = "") -> 
         risk_note=risks[0],
         model="local-setup-fallback",
     )
+
+
+def _has_cyrillic(text: str) -> bool:
+    return bool(re.search(r"[А-Яа-яЁё]", text or ""))
+
+
+def _as_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _append_cross_exchange_context(parts: List[str], full_ctx: Dict[str, Any]) -> None:
+    raw = full_ctx.get("cross_exchange_funding")
+    validated = full_ctx.get("cross_exchange_funding_validated")
+    shadow = full_ctx.get("cross_exchange_funding_shadow")
+
+    if isinstance(raw, dict):
+        rows = list(raw.get("opportunities") or [])[:5]
+        top = []
+        for item in rows:
+            if not isinstance(item, dict):
+                continue
+            top.append(
+                f"{item.get('symbol')} {item.get('long_exchange')}→{item.get('short_exchange')} "
+                f"monthly={item.get('spread_monthly_pct')}%"
+            )
+        parts.append(
+            "AI CROSS-EXCHANGE RAW: "
+            f"generated={raw.get('generated_at_utc')} rows={raw.get('rows')} "
+            f"opportunities={len(raw.get('opportunities') or [])} top={'; '.join(top) or '-'}\n"
+        )
+
+    if isinstance(validated, dict):
+        items = list(validated.get("items") or [])[:6]
+        parts.append(
+            "AI CROSS-EXCHANGE VALIDATED: "
+            f"generated={validated.get('generated_at_utc')} "
+            f"count={validated.get('validated_count')} "
+            f"notional_per_leg={validated.get('notional_usd_per_leg')} "
+            f"hold_h={validated.get('hold_hours')}\n"
+        )
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            parts.append(
+                "AI ARB VALIDATED ITEM: "
+                f"{item.get('pair_key') or (str(item.get('symbol')) + ':' + str(item.get('long_exchange')) + '→' + str(item.get('short_exchange')))} "
+                f"net_24h={item.get('estimated_net_pct_for_hold')}% "
+                f"persistence={item.get('persistence_count_in_window')} "
+                f"error={item.get('error') or '-'}\n"
+            )
+
+    if isinstance(shadow, dict):
+        open_rows = list(shadow.get("open") or shadow.get("open_positions") or [])
+        closed_rows = list(shadow.get("closed") or shadow.get("closed_positions") or [])
+        latest_open = []
+        equal_weight_values = []
+        for item in open_rows[:6]:
+            if not isinstance(item, dict):
+                continue
+            updates = item.get("updates") if isinstance(item.get("updates"), list) else []
+            last = updates[-1] if updates and isinstance(updates[-1], dict) else item
+            pct = _as_float(
+                last.get("total_estimated_pct_total_capital")
+                if isinstance(last, dict)
+                else item.get("estimated_total_capital_pct")
+            )
+            equal_weight_values.append(pct)
+            latest_open.append(
+                f"{item.get('pair_key') or item.get('symbol')} age_h={_as_float(last.get('age_hours') if isinstance(last, dict) else item.get('age_hours')):.1f} "
+                f"pnl={pct:.3f}% valid={last.get('current_validated') if isinstance(last, dict) else item.get('current_validated')}"
+            )
+        equal_weight_pct = (
+            sum(equal_weight_values) / len(equal_weight_values)
+            if equal_weight_values
+            else 0.0
+        )
+        parts.append(
+            "AI CROSS-EXCHANGE SHADOW: "
+            f"generated={shadow.get('generated_at_utc')} open={shadow.get('open_count')} "
+            f"closed={shadow.get('closed_count')} "
+            f"sum_pct={shadow.get('open_estimated_total_capital_pct')} "
+            f"equal_weight_basket_pct={equal_weight_pct:.3f} "
+            f"closed_items={len(closed_rows)}\n"
+        )
+        for row in latest_open:
+            parts.append(f"AI ARB SHADOW OPEN: {row}\n")
 
 
 def _read_env(p: Path) -> Dict[str, str]:
@@ -423,6 +513,7 @@ def _append_ai_runtime_packs_context(parts: List[str]) -> None:
                 f"runtime_enabled={runtime.get('enabled')} risk={runtime.get('risk_mult')} "
                 f"reasons={'; '.join(str(x) for x in (card.get('reasons') or [])[:4])}\n"
             )
+        _append_cross_exchange_context(parts, full_ctx)
 
     extras = _json(_rt("ai_context", "extras.json")) or {}
     if extras:
@@ -1411,6 +1502,8 @@ Respond with ONLY this JSON (no markdown):
 
         if verdict not in ("strong", "ok", "weak", "skip"):
             verdict = "ok"
+        if not _has_cyrillic(reasoning + " " + risk_note):
+            return _local_setup_analysis(body, reason="external AI returned non-Russian text")
 
         return SetupAnalysisResponse(
             verdict=verdict,

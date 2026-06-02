@@ -116,7 +116,7 @@ tr:hover td{background:var(--bg3)}
 tr:last-child td{border-bottom:none}
 
 /* ── Badges ── */
-.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;line-height:1.25;text-align:center;max-width:100%}
 .badge-long{background:var(--green-dim);color:var(--green)}
 .badge-short{background:var(--red-dim);color:var(--red)}
 .badge-ok{background:var(--green-dim);color:var(--green)}
@@ -2654,7 +2654,7 @@ function CredentialsPage() {
           ),
           React.createElement('div', { className: 'info-row' },
             React.createElement('span', { className: 'label' }, 'Expiry'),
-            React.createElement('span', { className: `badge ${exp.cls}` }, exp.label)
+          React.createElement('span', { className: `badge ${exp.cls}`, style: { whiteSpace: 'normal', lineHeight: 1.35, textAlign: 'right', maxWidth: '180px' } }, exp.label)
           ),
           React.createElement('div', { className: 'info-row' },
             React.createElement('span', { className: 'label' }, 'Trading'),
