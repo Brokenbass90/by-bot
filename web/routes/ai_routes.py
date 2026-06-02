@@ -168,6 +168,18 @@ def _append_cross_exchange_context(parts: List[str], full_ctx: Dict[str, Any]) -
     raw = full_ctx.get("cross_exchange_funding")
     validated = full_ctx.get("cross_exchange_funding_validated")
     shadow = full_ctx.get("cross_exchange_funding_shadow")
+    account_status = full_ctx.get("exchange_account_readonly_status")
+
+    if isinstance(account_status, dict):
+        binance = account_status.get("binance") if isinstance(account_status.get("binance"), dict) else {}
+        bitget = account_status.get("bitget") if isinstance(account_status.get("bitget"), dict) else {}
+        parts.append(
+            "AI CROSS-EXCHANGE ACCOUNT READONLY: "
+            f"generated={account_status.get('generated_at_utc')} "
+            f"binance_ok={binance.get('ok')} binance_usdt_available={((binance.get('usdt_balance') or {}).get('available_balance'))} "
+            f"bitget_ok={bitget.get('ok')} bitget_usdt_available={((bitget.get('usdt_account') or {}).get('available'))} "
+            "trading_locked_until_explicit_canary=true\n"
+        )
 
     if isinstance(raw, dict):
         rows = list(raw.get("opportunities") or [])[:5]

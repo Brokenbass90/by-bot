@@ -65,6 +65,7 @@ SOURCES = {
     "cross_exchange_funding": "runtime/arb/cross_exchange_funding_latest.json",
     "cross_exchange_funding_validated": "runtime/arb/cross_exchange_funding_validated.json",
     "cross_exchange_funding_shadow": "runtime/arb/cross_exchange_funding_shadow.json",
+    "exchange_account_readonly_status": "runtime/arb/exchange_account_readonly_status.json",
     "router_quality": "runtime/control_plane/router_quality_audit.json",
     "crypto_blocker": "runtime/crypto_blocker/latest.json",
 }
@@ -455,6 +456,12 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         }
     else:
         ctx["cross_exchange_funding_shadow"] = xfund_shadow
+
+    account_status_path = source_path("exchange_account_readonly_status")
+    ctx["sources_used"]["exchange_account_readonly_status"] = (
+        str(account_status_path.relative_to(REPO_ROOT)) if account_status_path.exists() else None
+    )
+    ctx["exchange_account_readonly_status"] = load_json(account_status_path)
 
     # ---- Static inventory ----
     ctx["strategies_inventory"] = collect_strategies_inventory()
