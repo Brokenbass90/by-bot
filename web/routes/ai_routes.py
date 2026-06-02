@@ -62,6 +62,96 @@ def _json(p: Path) -> Optional[dict]:
         return None
 
 
+def _http_error_summary(exc: Exception) -> str:
+    code = getattr(exc, "code", None) or getattr(exc, "status", None)
+    if code == 402:
+        return "AI provider returned 402 Payment Required"
+    if code:
+        return f"AI provider returned HTTP {code}"
+    return str(exc)[:160] or exc.__class__.__name__
+
+
+def _local_chat_fallback(command_result: Optional[str] = None, reason: str = "") -> "ChatResponse":
+    hb = _json(_rt("bot_heartbeat.json")) or {}
+    alloc = _json(_rt("control_plane", "portfolio_allocator_state.json")) or {}
+    op = _json(_rt("operator", "operator_snapshot.json")) or {}
+    cp_alloc = dict((op.get("control_plane") or {}).get("allocator") or {})
+    alpaca = dict(op.get("alpaca") or {})
+    monthly = dict(alpaca.get("monthly") or {})
+    enabled = alloc.get("exposure", {}).get("enabled_sleeves") or cp_alloc.get("enabled_sleeves") or []
+    reason_line = f" External AI недоступен: {reason}." if reason else ""
+    reply = (
+        "Работаю в локальном fallback-режиме без внешней LLM."
+        f"{reason_line}\n\n"
+        f"Серверный снимок: open_trades={hb.get('open_trades')}, dry_run={hb.get('dry_run')}, "
+        f"regime={hb.get('regime') or 'unknown'}.\n"
+        f"Control-plane: status={alloc.get('status') or cp_alloc.get('status')}, "
+        f"hard_block={bool(alloc.get('hard_block_new_entries') or cp_alloc.get('hard_block_new_entries'))}, "
+        f"enabled_sleeves={','.join(enabled) or '-'}.\n"
+        f"Alpaca monthly: selected={monthly.get('current_cycle_tickers') or monthly.get('current_cycle_selected') or '-'}.\n\n"
+        "Следующий лучший шаг: если crypto за 24 часа после strict3 всё ещё не даёт входов, "
+        "строим setup-to-entry blocker report по каждому sleeve и чиним конкретный фильтр."
+    )
+    return ChatResponse(reply=reply, command_result=command_result)
+
+
+def _local_setup_analysis(body: "SetupAnalysisRequest", *, reason: str = "") -> "SetupAnalysisResponse":
+    side = str(body.side or "").lower()
+    strategy = str(body.strategy or "").lower()
+    setup_type = str(body.setup_type or "").lower()
+    runtime = str(body.runtime_status or "").lower()
+    regime = str(body.regime or "").lower()
+    score = float(body.score or 0.0)
+    dist = float(body.distance_atr or 999.0)
+    funding = body.funding_rate_pct
+    reasons = [str(x).lower() for x in (body.reasons or [])]
+
+    verdict = "ok"
+    notes: List[str] = []
+    risks: List[str] = []
+
+    if runtime in {"pause", "watch", "false", "disabled"}:
+        verdict = "weak"
+        notes.append(f"runtime status is {runtime}; this is a watch candidate, not an execution approval")
+    if "bear" in regime and side == "long" and strategy in {"asb1", "bounce1", "support_bounce"}:
+        verdict = "skip"
+        notes.append("long bounce conflicts with bear regime unless fresh research explicitly validates it")
+    if side == "short" and strategy in {"flat", "breakdown", "arf1"} and "bear" in regime:
+        notes.append("short setup direction is compatible with current bear regime")
+        if verdict == "ok" and score >= 90 and dist <= 0.8:
+            verdict = "strong"
+    if strategy in {"flat", "arf1"} and ("near resistance" in reasons or "resistance" in setup_type):
+        notes.append("resistance context fits flat/fade logic")
+    if strategy == "breakdown" and dist <= 0.5:
+        notes.append("price is close enough to the level to keep watching for a clean trigger")
+    if funding is not None and side == "short" and funding > 0.03:
+        notes.append("positive funding supports short carry")
+    if funding is not None and side == "short" and funding < -0.03:
+        risks.append("negative funding makes short carry expensive")
+        if verdict == "strong":
+            verdict = "ok"
+    if score < 75:
+        verdict = "weak" if verdict != "skip" else verdict
+        risks.append("score is not high enough for promotion without backtest evidence")
+    if dist > 1.5:
+        verdict = "weak" if verdict != "skip" else verdict
+        risks.append("setup is far from level, entry quality may be poor")
+
+    if not notes:
+        notes.append("setup needs live strategy confirmation before it is tradable")
+    if reason:
+        notes.append(f"external AI unavailable: {reason}")
+    if not risks:
+        risks.append("main risk is setup-to-entry mismatch: scanner card does not guarantee strategy entry")
+
+    return SetupAnalysisResponse(
+        verdict=verdict,
+        reasoning=". ".join(notes[:4]) + ".",
+        risk_note=risks[0],
+        model="local-setup-fallback",
+    )
+
+
 def _read_env(p: Path) -> Dict[str, str]:
     result = {}
     if not p.exists():
@@ -1109,9 +1199,9 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         )
 
     except Exception as e:
-        return ChatResponse(
-            reply=f"AI error: {str(e)[:200]}",
+        return _local_chat_fallback(
             command_result=cmd_result,
+            reason=_http_error_summary(e),
         )
 
 
@@ -1227,8 +1317,7 @@ async def analyze_setup(body: SetupAnalysisRequest, _: str = Depends(require_aut
     Uses claude-haiku for low latency. Returns verdict + reasoning in ~1-2s.
     """
     anthropic_key = os.getenv("ANTHROPIC_API_KEY", "").strip()
-    if not anthropic_key:
-        raise HTTPException(status_code=503, detail="ANTHROPIC_API_KEY not configured")
+    deepseek_key = os.getenv("DEEPSEEK_API_KEY", "").strip()
 
     # ── Read current regime for context ──────────────────────────────────────
     regime_label = body.regime or "unknown"
@@ -1268,16 +1357,45 @@ Respond with ONLY this JSON (no markdown):
     )
 
     try:
-        import anthropic as _ant
-        client = _ant.Anthropic(api_key=anthropic_key)
-        model = "claude-haiku-4-5-20251001"
-        resp = client.messages.create(
-            model=model,
-            max_tokens=400,
-            system=system_msg,
-            messages=[{"role": "user", "content": user_msg}],
-        )
-        raw = resp.content[0].text.strip()
+        model = "local-setup-fallback"
+        if anthropic_key:
+            import anthropic as _ant
+            client = _ant.Anthropic(api_key=anthropic_key)
+            model = os.getenv("WEB_SETUP_AI_MODEL", "claude-haiku-4-5-20251001")
+            resp = client.messages.create(
+                model=model,
+                max_tokens=400,
+                system=system_msg,
+                messages=[{"role": "user", "content": user_msg}],
+            )
+            raw = resp.content[0].text.strip()
+        elif deepseek_key:
+            import ssl as _ssl
+            import urllib.request as _urllib_req
+
+            model = os.getenv("WEB_SETUP_AI_MODEL", os.getenv("WEB_AI_MODEL", "deepseek-chat"))
+            payload = json.dumps({
+                "model": model,
+                "max_tokens": 400,
+                "temperature": 0.2,
+                "messages": [
+                    {"role": "system", "content": system_msg},
+                    {"role": "user", "content": user_msg},
+                ],
+            }).encode()
+            req = _urllib_req.Request(
+                "https://api.deepseek.com/chat/completions",
+                data=payload,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {deepseek_key}",
+                },
+            )
+            with _urllib_req.urlopen(req, context=_ssl.create_default_context(), timeout=30) as resp:
+                js = json.loads(resp.read().decode())
+            raw = js["choices"][0]["message"]["content"].strip()
+        else:
+            return _local_setup_analysis(body, reason="no AI API key configured")
 
         # Strip markdown code fences if model adds them anyway
         if raw.startswith("```"):
@@ -1304,7 +1422,7 @@ Respond with ONLY this JSON (no markdown):
             verdict="ok",
             reasoning=raw[:300] if "raw" in dir() else "Parse error",
             risk_note=str(exc)[:100],
-            model="claude-haiku-4-5-20251001",
+            model=model,
         )
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc)[:200])
+        return _local_setup_analysis(body, reason=_http_error_summary(exc))
