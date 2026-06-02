@@ -432,6 +432,10 @@ class AlpacaClient:
     def get_account(self) -> dict[str, Any]:
         return self._request("GET", "/v2/account")
 
+    def get_clock(self) -> dict[str, Any]:
+        """Return Alpaca market clock: {is_open, next_open, next_close, timestamp}."""
+        return self._request("GET", "/v2/clock")
+
     def list_positions(self) -> list[dict[str, Any]]:
         return list(self._request("GET", "/v2/positions"))
 
@@ -1033,6 +1037,22 @@ def main() -> int:
         account = client.get_account()
         positions = client.list_positions()
         open_orders = client.list_orders(status="open", limit=100)
+        # 2026-06-02: pre-flight market clock check.
+        # New BUY orders submitted while market is closed end with
+        # status=accepted and never fill within broker_wait_fill_sec,
+        # causing every pick to be canceled. Skip submission if closed,
+        # let next run during market hours actually fill.
+        try:
+            _clock = client.get_clock()
+        except Exception as _exc:
+            _clock = {"is_open": True, "_clock_error": str(_exc)}
+        _market_is_open = bool(_clock.get("is_open"))
+        if not _market_is_open:
+            _next_open = _clock.get("next_open")
+            print(
+                f"[paper_bridge] market closed (next_open={_next_open}); skipping new BUY submissions this run",
+                flush=True,
+            )
     buying_power = float(account.get("buying_power") or account.get("cash") or 0.0)
     cash = float(account.get("cash") or 0.0)
     effective_capital = min(buying_power, capital_override_usd) if capital_override_usd > 0 else buying_power
@@ -1457,6 +1477,19 @@ def main() -> int:
 
     def _submit_buy_action(pick: Pick, *, action: str, notional: float) -> None:
         score_weight = round(score_weights.get(pick.ticker, 0.0), 4)
+        # 2026-06-02: skip BUY submissions while market is closed.
+        if not offline_dry_run and not _market_is_open:
+            report["results"].append(
+                {
+                    "ticker": pick.ticker,
+                    "action": action,
+                    "status": "skipped_market_closed",
+                    "error": "alpaca_clock_is_open_false",
+                    "notional": round(notional, 2),
+                    "score_weight": score_weight,
+                }
+            )
+            return
         if broker_protection_enable:
             if broker_protection_order_class not in {"bracket", "simple_stop"}:
                 reason = f"unsupported_broker_protection_order_class:{broker_protection_order_class}"
@@ -1602,11 +1635,43 @@ def main() -> int:
             }
         )
 
+    def _cancel_open_sell_orders(symbol: str, *, action: str) -> bool:
+        """Cancel existing protective sell orders so Alpaca releases held qty."""
+        cancel_failed = False
+        for order in open_sell_orders.get(symbol, []):
+            order_id = str(order.get("id") or "").strip()
+            if not order_id:
+                continue
+            try:
+                result = client.cancel_order(order_id)
+                report["results"].append(
+                    {
+                        "ticker": symbol,
+                        "action": action,
+                        "order_id": order_id,
+                        "status": result.get("status", "canceled"),
+                    }
+                )
+            except RuntimeError as exc:
+                cancel_failed = True
+                report["results"].append(
+                    {
+                        "ticker": symbol,
+                        "action": action,
+                        "order_id": order_id,
+                        "status": "error",
+                        "error": str(exc),
+                    }
+                )
+        return not cancel_failed
+
     if send_orders:
         # ── 1. Stop-loss closes (highest priority) ────────────────────────────
         if enable_stop_loss:
             for symbol in sl_triggered_symbols:
                 if symbol not in current_positions:
+                    continue
+                if not _cancel_open_sell_orders(symbol, action="stop_loss_cancel_sell_order"):
                     continue
                 try:
                     result = client.close_position(symbol)
@@ -1635,29 +1700,7 @@ def main() -> int:
                 if symbol not in current_positions:
                     continue
                 det = trail_details.get(symbol, {})
-                cancel_failed = False
-                for order in open_sell_orders.get(symbol, []):
-                    order_id = str(order.get("id") or "").strip()
-                    if not order_id:
-                        continue
-                    try:
-                        result = client.cancel_order(order_id)
-                        report["results"].append({
-                            "ticker": symbol,
-                            "action": "trail_stop_cancel_sell_order",
-                            "order_id": order_id,
-                            "status": result.get("status", "canceled"),
-                        })
-                    except RuntimeError as exc:
-                        cancel_failed = True
-                        report["results"].append({
-                            "ticker": symbol,
-                            "action": "trail_stop_cancel_sell_order",
-                            "order_id": order_id,
-                            "status": "error",
-                            "error": str(exc),
-                        })
-                if cancel_failed:
+                if not _cancel_open_sell_orders(symbol, action="trail_stop_cancel_sell_order"):
                     continue
                 try:
                     result = client.close_position(symbol)
@@ -1896,6 +1939,8 @@ def main() -> int:
             for symbol in stale_symbols:
                 if symbol in sl_triggered_symbols or symbol in rotation_symbols:
                     continue  # Already handled above
+                if not _cancel_open_sell_orders(symbol, action="close_position_cancel_sell_order"):
+                    continue
                 try:
                     result = client.close_position(symbol)
                     report["results"].append(
