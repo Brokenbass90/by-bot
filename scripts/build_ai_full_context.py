@@ -66,6 +66,8 @@ SOURCES = {
     "cross_exchange_funding_validated": "runtime/arb/cross_exchange_funding_validated.json",
     "cross_exchange_funding_shadow": "runtime/arb/cross_exchange_funding_shadow.json",
     "exchange_account_readonly_status": "runtime/arb/exchange_account_readonly_status.json",
+    "exchange_account_status": "runtime/arb/exchange_account_status.json",
+    "cross_exchange_arb_dry_run": "runtime/arb/dry_run/latest.json",
     "router_quality": "runtime/control_plane/router_quality_audit.json",
     "crypto_blocker": "runtime/crypto_blocker/latest.json",
 }
@@ -462,6 +464,18 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         str(account_status_path.relative_to(REPO_ROOT)) if account_status_path.exists() else None
     )
     ctx["exchange_account_readonly_status"] = load_json(account_status_path)
+
+    arb_account_status_path = source_path("exchange_account_status")
+    ctx["sources_used"]["exchange_account_status"] = (
+        str(arb_account_status_path.relative_to(REPO_ROOT)) if arb_account_status_path.exists() else None
+    )
+    ctx["exchange_account_status"] = load_json(arb_account_status_path)
+
+    arb_dry_run_path = source_path("cross_exchange_arb_dry_run")
+    ctx["sources_used"]["cross_exchange_arb_dry_run"] = (
+        str(arb_dry_run_path.relative_to(REPO_ROOT)) if arb_dry_run_path.exists() else None
+    )
+    ctx["cross_exchange_arb_dry_run"] = load_json(arb_dry_run_path)
 
     # ---- Static inventory ----
     ctx["strategies_inventory"] = collect_strategies_inventory()

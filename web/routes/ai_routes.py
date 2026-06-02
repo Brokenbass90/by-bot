@@ -169,6 +169,8 @@ def _append_cross_exchange_context(parts: List[str], full_ctx: Dict[str, Any]) -
     validated = full_ctx.get("cross_exchange_funding_validated")
     shadow = full_ctx.get("cross_exchange_funding_shadow")
     account_status = full_ctx.get("exchange_account_readonly_status")
+    arb_account_status = full_ctx.get("exchange_account_status")
+    arb_dry_run = full_ctx.get("cross_exchange_arb_dry_run")
 
     if isinstance(account_status, dict):
         binance = account_status.get("binance") if isinstance(account_status.get("binance"), dict) else {}
@@ -180,6 +182,41 @@ def _append_cross_exchange_context(parts: List[str], full_ctx: Dict[str, Any]) -
             f"bitget_ok={bitget.get('ok')} bitget_usdt_available={((bitget.get('usdt_account') or {}).get('available'))} "
             "trading_locked_until_explicit_canary=true\n"
         )
+
+    if isinstance(arb_account_status, dict):
+        exch = arb_account_status.get("exchanges") if isinstance(arb_account_status.get("exchanges"), dict) else {}
+        summary = []
+        for name in ("bybit", "binance", "bitget"):
+            row = exch.get(name) if isinstance(exch.get(name), dict) else {}
+            summary.append(
+                f"{name}:ok={row.get('ok')},available={row.get('available_usdt')},equity={row.get('equity_usdt')}"
+            )
+        parts.append(
+            "AI CROSS-EXCHANGE ACCOUNT STATUS: "
+            f"generated={arb_account_status.get('generated_at_utc')} "
+            f"validated_pairs={arb_account_status.get('validated_pair_count')} "
+            f"{'; '.join(summary)} "
+            "trading_locked_until_explicit_canary=true\n"
+        )
+
+    if isinstance(arb_dry_run, dict):
+        plans = list(arb_dry_run.get("plans") or [])[:6]
+        parts.append(
+            "AI CROSS-EXCHANGE DRY RUN: "
+            f"generated={arb_dry_run.get('generated_at_utc')} "
+            f"validated={arb_dry_run.get('validated_count')} ready={arb_dry_run.get('ready_count')} "
+            f"mode={arb_dry_run.get('mode')} trading_locked={arb_dry_run.get('trading_locked')}\n"
+        )
+        for plan in plans:
+            if not isinstance(plan, dict):
+                continue
+            parts.append(
+                "AI ARB DRY RUN PLAN: "
+                f"{plan.get('pair_key')} ready={plan.get('ready_for_order_dry_run')} "
+                f"net_24h={plan.get('estimated_net_pct_for_hold')}% "
+                f"notional={plan.get('planned_notional_usdt_per_leg')} "
+                f"blockers={'; '.join(plan.get('blockers') or []) or '-'}\n"
+            )
 
     if isinstance(raw, dict):
         rows = list(raw.get("opportunities") or [])[:5]
