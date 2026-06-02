@@ -112,37 +112,37 @@ def _local_setup_analysis(body: "SetupAnalysisRequest", *, reason: str = "") -> 
 
     if runtime in {"pause", "watch", "false", "disabled"}:
         verdict = "weak"
-        notes.append(f"runtime status is {runtime}; this is a watch candidate, not an execution approval")
+        notes.append(f"runtime={runtime}: это кандидат для наблюдения, а не разрешение на вход")
     if "bear" in regime and side == "long" and strategy in {"asb1", "bounce1", "support_bounce"}:
         verdict = "skip"
-        notes.append("long bounce conflicts with bear regime unless fresh research explicitly validates it")
+        notes.append("лонговый отскок конфликтует с медвежьим режимом без свежего успешного исследования")
     if side == "short" and strategy in {"flat", "breakdown", "arf1"} and "bear" in regime:
-        notes.append("short setup direction is compatible with current bear regime")
+        notes.append("направление SHORT совпадает с текущим медвежьим режимом")
         if verdict == "ok" and score >= 90 and dist <= 0.8:
             verdict = "strong"
     if strategy in {"flat", "arf1"} and ("near resistance" in reasons or "resistance" in setup_type):
-        notes.append("resistance context fits flat/fade logic")
+        notes.append("контекст сопротивления подходит для логики flat/fade")
     if strategy == "breakdown" and dist <= 0.5:
-        notes.append("price is close enough to the level to keep watching for a clean trigger")
+        notes.append("цена достаточно близко к уровню, можно ждать чистый триггер стратегии")
     if funding is not None and side == "short" and funding > 0.03:
-        notes.append("positive funding supports short carry")
+        notes.append("положительный funding дополнительно поддерживает SHORT carry")
     if funding is not None and side == "short" and funding < -0.03:
-        risks.append("negative funding makes short carry expensive")
+        risks.append("отрицательный funding делает удержание SHORT дороже")
         if verdict == "strong":
             verdict = "ok"
     if score < 75:
         verdict = "weak" if verdict != "skip" else verdict
-        risks.append("score is not high enough for promotion without backtest evidence")
+        risks.append("score недостаточно высокий для продвижения без подтверждения бэктестом")
     if dist > 1.5:
         verdict = "weak" if verdict != "skip" else verdict
-        risks.append("setup is far from level, entry quality may be poor")
+        risks.append("setup далеко от уровня, качество входа может быть слабым")
 
     if not notes:
-        notes.append("setup needs live strategy confirmation before it is tradable")
+        notes.append("setup требует подтверждения live-стратегией, сама карточка ещё не сделка")
     if reason:
-        notes.append(f"external AI unavailable: {reason}")
+        notes.append(f"внешний AI недоступен: {reason}")
     if not risks:
-        risks.append("main risk is setup-to-entry mismatch: scanner card does not guarantee strategy entry")
+        risks.append("главный риск: scanner card не гарантирует, что стратегия реально даст вход")
 
     return SetupAnalysisResponse(
         verdict=verdict,
@@ -1121,6 +1121,7 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
 
     system_prompt = (
         "You are an AI assistant embedded in a cryptocurrency + equities trading bot dashboard. "
+        "Always answer the operator in Russian unless the operator explicitly asks for another language. "
         "You help the operator understand performance, diagnose issues, and manage the system. "
         "You have access to live bot data (injected below). "
         "Be concise and precise. When you spot issues, say so directly. "
@@ -1338,7 +1339,8 @@ async def analyze_setup(body: SetupAnalysisRequest, _: str = Depends(require_aut
     level_str = f"Level: {body.level_price} ({body.distance_atr} ATR away)\n" if body.level_price else ""
     reasons_str = " · ".join(body.reasons) if body.reasons else "none"
 
-    user_msg = f"""Analyze this crypto perpetual setup and give a verdict:
+    user_msg = f"""Проанализируй setup crypto perpetual и дай вердикт.
+Ответ должен быть строго на русском языке.
 
 Symbol: {body.symbol} | Side: {body.side.upper()} | Interval: {body.interval or "?"}
 Setup type: {body.setup_type} | Strategy: {body.strategy}
@@ -1347,10 +1349,11 @@ Price: {body.price} | {level_str}{inval_str}{fr_str}Reasons: {reasons_str}
 Runtime health: {body.runtime_status or "unknown"}
 
 Respond with ONLY this JSON (no markdown):
-{{"verdict":"strong|ok|weak|skip","reasoning":"2-4 sentences on why this setup is or isn't worth watching","risk_note":"one sentence on the key risk"}}"""
+{{"verdict":"strong|ok|weak|skip","reasoning":"2-4 коротких предложения на русском, почему setup стоит или не стоит внимания","risk_note":"одно короткое предложение на русском с главным риском"}}"""
 
     system_msg = (
         "You are a senior crypto quant analyst reviewing algorithmic trading setup cards. "
+        "Always answer in Russian, including JSON field values. "
         "Be concise, data-driven, and honest about risks. "
         "Use STRONG only when geometry, regime, and fundamentals all align. "
         "Use SKIP when the setup conflicts with regime or has weak reasons."

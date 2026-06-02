@@ -680,7 +680,9 @@ async def get_status(_: str = Depends(require_auth)):
     bot_alive = False
     if hb_path.exists():
         hb_age = int(now_ts - hb_path.stat().st_mtime)
-        bot_alive = hb_age < 120  # alive if heartbeat < 2 min old
+        default_alive_sec = "300" if _RUNTIME_ROOT != (_ROOT / "runtime") else "120"
+        alive_threshold_sec = int(os.getenv("WEB_HEARTBEAT_ALIVE_SEC", default_alive_sec) or default_alive_sec)
+        bot_alive = hb_age < alive_threshold_sec
 
     # ── last trade summary + abnormal-no-trades warning (NEW 2026-05-03) ─────
     # Top-bar 1-glance UX: чтобы пользователь увидел "0 trades 5 days" сразу.
@@ -739,6 +741,7 @@ async def get_status(_: str = Depends(require_auth)):
     return {
         "bot_alive": bot_alive,
         "heartbeat_age_sec": hb_age,
+        "heartbeat_alive_threshold_sec": alive_threshold_sec if hb_path.exists() else None,
         "open_trades": hb.get("open_trades", 0) if hb else 0,
         "regime": (regime_data or {}).get("regime", "unknown"),
         "regime_confidence": (regime_data or {}).get("confidence"),
