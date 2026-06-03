@@ -11,6 +11,7 @@ Per-exchange keys are read from environment variables (server `.env` only):
     BYBIT_API_KEY / BYBIT_API_SECRET                  (already used by bot)
     BINANCE_API_KEY / BINANCE_API_SECRET
     BITGET_API_KEY / BITGET_API_SECRET / BITGET_API_PASSPHRASE
+    MEXC_API_KEY   / MEXC_API_SECRET                          (added 2026-06-03)
 
 If any of the keys is missing, that exchange is reported with ok=false and a
 reason="missing_keys". The script never fails the whole run because of one
@@ -195,6 +196,62 @@ def fetch_bitget() -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# MEXC — USDT-M perpetual futures
+# ---------------------------------------------------------------------------
+
+MEXC_FAPI = "https://contract.mexc.com"
+
+
+def _mexc_signed_get(path: str, key: str, secret: str, params: dict[str, Any] | None = None) -> Any:
+    params = dict(params or {})
+    ts = str(int(time.time() * 1000))
+    param_str = urllib.parse.urlencode(sorted(params.items())) if params else ""
+    # MEXC futures signature: HMAC_SHA256(secret, apiKey + timestamp + paramStr)
+    sign_src = f"{key}{ts}{param_str}"
+    sign = hmac.new(secret.encode(), sign_src.encode(), hashlib.sha256).hexdigest()
+    url = f"{MEXC_FAPI}{path}" + (f"?{param_str}" if param_str else "")
+    headers = {
+        "ApiKey": key,
+        "Request-Time": ts,
+        "Signature": sign,
+        "Content-Type": "application/json",
+    }
+    return _http_get(url, headers=headers)
+
+
+def fetch_mexc() -> dict[str, Any]:
+    key = (os.getenv("MEXC_API_KEY") or "").strip()
+    secret = (os.getenv("MEXC_API_SECRET") or "").strip()
+    if not (key and secret):
+        return {"ok": False, "reason": "missing_keys"}
+
+    try:
+        body = _mexc_signed_get("/api/v1/private/account/assets", key, secret)
+    except RuntimeError as exc:
+        return {"ok": False, "reason": str(exc)}
+
+    if not isinstance(body, dict) or not body.get("success", False):
+        msg = body.get("message") if isinstance(body, dict) else "bad_response_shape"
+        return {"ok": False, "reason": f"api_error: {msg}"}
+
+    rows = body.get("data") or []
+    usdt = next((r for r in rows if str(r.get("currency") or "").upper() == "USDT"), None)
+    if usdt is None:
+        return {"ok": True, "equity_usdt": 0.0, "available_usdt": 0.0, "permissions": {}}
+
+    return {
+        "ok": True,
+        "equity_usdt": round(_f(usdt.get("equity")), 4),
+        "available_usdt": round(_f(usdt.get("availableBalance") or usdt.get("availableCash")), 4),
+        "permissions": {
+            "api_key_scope": "read_only_balance_check_only",
+            "account_can_trade_flag": None,
+            "account_can_withdraw_flag": None,
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
 # Bybit — v5 unified
 # ---------------------------------------------------------------------------
 
@@ -333,6 +390,7 @@ def main() -> int:
         "bybit": fetch_bybit(account_name="main"),
         "binance": fetch_binance(),
         "bitget": fetch_bitget(),
+        "mexc": fetch_mexc(),
     }
     pairs = _load_validated_pairs()
     readiness = _readiness_summary(exchanges, pairs, args.min_leg_usdt)
@@ -354,7 +412,7 @@ def main() -> int:
         ready_n = sum(1 for r in readiness if r["ready_for_dry_run"])
         ok_n = sum(1 for v in exchanges.values() if v.get("ok"))
         print(
-            f"[exchange_status] exchanges_ok={ok_n}/3 pairs={len(pairs)} ready={ready_n} -> {out_path}",
+            f"[exchange_status] exchanges_ok={ok_n}/4 pairs={len(pairs)} ready={ready_n} -> {out_path}",
             flush=True,
         )
     return 0

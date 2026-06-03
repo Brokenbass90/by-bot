@@ -1501,7 +1501,33 @@ Respond with ONLY this JSON (no markdown):
 
     try:
         model = "local-setup-fallback"
-        if anthropic_key:
+        prefer_anthropic = os.getenv("WEB_SETUP_AI_PROVIDER", "deepseek").strip().lower() == "anthropic"
+        if deepseek_key and not prefer_anthropic:
+            import ssl as _ssl
+            import urllib.request as _urllib_req
+
+            model = os.getenv("WEB_SETUP_AI_MODEL", os.getenv("WEB_AI_MODEL", "deepseek-chat"))
+            payload = json.dumps({
+                "model": model,
+                "max_tokens": 400,
+                "temperature": 0.2,
+                "messages": [
+                    {"role": "system", "content": system_msg},
+                    {"role": "user", "content": user_msg},
+                ],
+            }).encode()
+            req = _urllib_req.Request(
+                "https://api.deepseek.com/chat/completions",
+                data=payload,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {deepseek_key}",
+                },
+            )
+            with _urllib_req.urlopen(req, context=_ssl.create_default_context(), timeout=30) as resp:
+                js = json.loads(resp.read().decode())
+            raw = js["choices"][0]["message"]["content"].strip()
+        elif anthropic_key:
             import anthropic as _ant
             client = _ant.Anthropic(api_key=anthropic_key)
             model = os.getenv("WEB_SETUP_AI_MODEL", "claude-haiku-4-5-20251001")

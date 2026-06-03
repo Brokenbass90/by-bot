@@ -13523,6 +13523,22 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     return True
 
 
+def _current_regime_label_for_status() -> str:
+    """Status/UI regime label without forcing live overlay trading changes."""
+    env_regime = str(os.getenv("ORCH_REGIME", "") or "").strip()
+    if env_regime and env_regime.lower() != "unknown":
+        return env_regime
+    try:
+        p = ROOT_DIR / "runtime" / "regime" / "orchestrator_state.json"
+        data = json.loads(p.read_text(encoding="utf-8"))
+        file_regime = str(data.get("regime") or "").strip()
+        if file_regime:
+            return file_regime
+    except Exception:
+        pass
+    return "unknown"
+
+
 def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ENABLE_BREAKOUT_TRADING, ENABLE_MIDTERM_TRADING, ENABLE_FLAT_TRADING, ENABLE_BREAKDOWN_TRADING
     global ENABLE_IVB1_TRADING, ENABLE_ELDER_TRADING, ENABLE_ATT1_TRADING, ENABLE_ASM1_TRADING
@@ -14157,6 +14173,7 @@ async def pulse():
                 for k, v in RUNTIME_COUNTER.items()
                 if int(v) != 0
             }
+            _status_regime = _current_regime_label_for_status()
             _diag_payload = {
                 "ts": int(time.time()),
                 "ts_iso": _utc_now_iso(),
@@ -14180,7 +14197,7 @@ async def pulse():
                     "regime_overlay_enable": bool(REGIME_OVERLAY_ENABLE),
                     "router_health_enable": bool(ROUTER_HEALTH_ENABLE),
                     "ws_guard_active": int(_ws_transport_guard_active()),
-                    "regime": str(os.getenv("ORCH_REGIME", "unknown")),
+                    "regime": _status_regime,
                     "voladj_atr_pct": round(_va_pct, 3),
                     "voladj_mult": round(_va_mult, 2),
                 },
@@ -14194,7 +14211,7 @@ async def pulse():
                     "open_trades": len(TRADES),
                     "ws_guard_active": int(_ws_transport_guard_active()),
                     "bybit_msgs": int(MSG_COUNTER.get("Bybit", 0)),
-                    "regime": str(os.getenv("ORCH_REGIME", "unknown")),
+                    "regime": _status_regime,
                     "trade_on": bool(TRADE_ON),
                     "dry_run": bool(DRY_RUN),
                     "allocator_safe_mode": bool(ALLOCATOR_SAFE_MODE),
