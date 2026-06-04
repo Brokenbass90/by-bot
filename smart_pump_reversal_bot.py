@@ -816,7 +816,9 @@ BREAKDOWN_BREAKER_ALERT_COOLDOWN_SEC = max(300, int(os.getenv("BREAKDOWN_BREAKER
 BREAKDOWN_BREAKER_LAST_ALERT_TS = 0
 BREAKDOWN_ENGINE = None
 
-# ===== IMPULSE VOLUME BREAKOUT V1 (live) =====
+# ===== IMPULSE VOLUME BREAKOUT V1 (live/shadow) =====
+# IVB1_RISK_MULT=0.0 keeps the engine and signal telemetry active but must
+# never submit an order. Positive risk requires the normal live gates.
 ENABLE_IVB1_TRADING = os.getenv("ENABLE_IVB1_TRADING", "0").strip() == "1"
 IVB1_TRY_EVERY_SEC = int(os.getenv("IVB1_TRY_EVERY_SEC", "60"))
 IVB1_RISK_MULT = _risk_mult_or_pause("IVB1_RISK_MULT", "1.0")
@@ -2808,6 +2810,8 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "breakdown_entry": int(_diag_get_int("breakdown_entry")),
             "ivb1_try": int(_diag_get_int("ivb1_try")),
             "ivb1_no_signal": int(_diag_get_int("ivb1_no_signal")),
+            "ivb1_signal": int(_diag_get_int("ivb1_signal")),
+            "ivb1_shadow_signal": int(_diag_get_int("ivb1_shadow_signal")),
             "ivb1_entry": int(_diag_get_int("ivb1_entry")),
             "elder_try": int(_diag_get_int("elder_try")),
             "elder_no_signal": int(_diag_get_int("elder_no_signal")),
@@ -3291,7 +3295,8 @@ def _status_full_text() -> str:
         f"bounce1_try={int(_diag_get_int('bounce1_try'))} entry={int(_diag_get_int('bounce1_entry'))} | "
         f"sloped_try={int(_diag_get_int('sloped_try'))} | flat_try={int(_diag_get_int('flat_try'))} | "
         f"breakdown_try={int(_diag_get_int('breakdown_try'))} | "
-        f"ivb1_try={int(_diag_get_int('ivb1_try'))} entry={int(_diag_get_int('ivb1_entry'))} | "
+        f"ivb1_try={int(_diag_get_int('ivb1_try'))} signal={int(_diag_get_int('ivb1_signal'))} "
+        f"shadow={int(_diag_get_int('ivb1_shadow_signal'))} entry={int(_diag_get_int('ivb1_entry'))} | "
         f"brc1_try={int(_diag_get_int('brc1_try'))} signal={int(_diag_get_int('brc1_signal'))} "
         f"shadow={int(_diag_get_int('brc1_shadow_signal'))} entry={int(_diag_get_int('brc1_entry'))} | "
         f"elder_try={int(_diag_get_int('elder_try'))} entry={int(_diag_get_int('elder_entry'))}"
@@ -11253,32 +11258,36 @@ class _BRC1Store:
 
 
 async def try_ivb1_entry_async(symbol: str, price: float):
-    """Try live IVB1 entry for a symbol (impulse_volume_breakout_v1)."""
+    """Try IVB1 entry or record a zero-risk shadow signal."""
     if not ENABLE_IVB1_TRADING:
         _diag_inc("ivb1_skip_disabled")
         return
     if IVB1_ENGINE is None:
         return
-    if not TRADE_ON or DRY_RUN:
+    shadow_mode = IVB1_RISK_MULT <= 0
+    if not TRADE_ON:
         return
-    if TRADE_CLIENT is None:
+    if DRY_RUN and not shadow_mode:
+        return
+    if TRADE_CLIENT is None and not shadow_mode:
         return
     if symbol not in IVB1_SYMBOL_ALLOWLIST:
         return
-    if get_trade("Bybit", symbol) is not None:
-        return
-    if IVB1_MAX_OPEN_TRADES > 0:
-        open_ivb1 = sum(
-            1 for tr in TRADES.values()
-            if getattr(tr, "strategy", "") == "impulse_volume_breakout_v1"
-            and str(getattr(tr, "status", "")).upper() not in {"CLOSED", "ERROR"}
-        )
-        if open_ivb1 >= IVB1_MAX_OPEN_TRADES:
-            _diag_inc("ivb1_skip_max_open")
+    if not shadow_mode:
+        if get_trade("Bybit", symbol) is not None:
             return
-    if not portfolio_can_open():
-        _diag_inc_portfolio_skip("ivb1")
-        return
+        if IVB1_MAX_OPEN_TRADES > 0:
+            open_ivb1 = sum(
+                1 for tr in TRADES.values()
+                if getattr(tr, "strategy", "") == "impulse_volume_breakout_v1"
+                and str(getattr(tr, "status", "")).upper() not in {"CLOSED", "ERROR"}
+            )
+            if open_ivb1 >= IVB1_MAX_OPEN_TRADES:
+                _diag_inc("ivb1_skip_max_open")
+                return
+        if not portfolio_can_open():
+            _diag_inc_portfolio_skip("ivb1")
+            return
 
     now = now_s()
     last = float(_IVB1_LAST_TRY.get(symbol, 0) or 0)
@@ -11300,6 +11309,29 @@ async def try_ivb1_entry_async(symbol: str, price: float):
     if not sig:
         _diag_inc("ivb1_no_signal")
         _diag_inc(_ivb1_no_signal_diag_key(getattr(strat, "last_no_signal_reason", "")))
+        return
+
+    signal_reason = str(getattr(sig, "reason", "") or "")
+    _diag_inc("ivb1_signal")
+    _append_signal_decision(
+        "ivb1",
+        symbol,
+        "signal",
+        signal_reason,
+        side=str(sig.side),
+        entry=float(sig.entry),
+        tp=float(sig.tp),
+        sl=float(sig.sl),
+        shadow=bool(shadow_mode),
+    )
+    if shadow_mode:
+        _diag_inc("ivb1_shadow_signal")
+        tg_trade_throttled(
+            f"ivb1_shadow:{symbol}",
+            f"🧪 IVB1 SHADOW signal {symbol} {sig.side} entry≈{float(sig.entry):.6f} "
+            f"TP={float(sig.tp):.6f} SL={float(sig.sl):.6f} reason={signal_reason}",
+            21600,
+        )
         return
 
     side = "Buy" if sig.side == "long" else "Sell"
@@ -12534,7 +12566,11 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                     log_error(f"try_breakdown_entry schedule fail {sym}: {_e}")
 
         # ===== IVB1 LONG IMPULSE ENTRY =====
-        if ENABLE_IVB1_TRADING and sym in IVB1_SYMBOL_ALLOWLIST and _health_gate.allow_entry("impulse_volume_breakout_v1", sym):
+        if (
+            ENABLE_IVB1_TRADING
+            and sym in IVB1_SYMBOL_ALLOWLIST
+            and (IVB1_RISK_MULT <= 0 or _health_gate.allow_entry("impulse_volume_breakout_v1", sym))
+        ):
             last = float(_IVB1_LAST_TRY.get(sym, 0) or 0)
             if now - last >= IVB1_TRY_EVERY_SEC:
                 try:
@@ -13139,10 +13175,11 @@ def _recompute_universe_from_symbols(syms: list[str], *, notify: bool = True) ->
                 tg_trade(msg)
         if ENABLE_IVB1_TRADING:
             ivb1_symbols = sorted(_parse_symbol_csv(os.getenv("IVB1_SYMBOL_ALLOWLIST", "")))
+            ivb1_mode = "shadow" if IVB1_RISK_MULT <= 0 else "live"
             if ivb1_symbols:
-                msg = f"🧩 impulse-universe: using={len(ivb1_symbols)} ({','.join(ivb1_symbols)})"
+                msg = f"🧩 impulse-universe: mode={ivb1_mode} using={len(ivb1_symbols)} ({','.join(ivb1_symbols)})"
             else:
-                msg = "🧩 impulse-universe: using=dynamic (allowlist unset)"
+                msg = f"🧩 impulse-universe: mode={ivb1_mode} using=dynamic (allowlist unset)"
             if _startup_notify_allowed("startup_impulse_universe", msg):
                 tg_trade(msg)
         if ENABLE_ELDER_TRADING:

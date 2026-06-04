@@ -365,11 +365,20 @@ def build_self_audit(root: Path, *, since_hours: int = 6) -> dict[str, Any]:
             )
 
     ivb1_try = _safe_int(diag.get("ivb1_try"), 0)
+    ivb1_signal = _safe_int(diag.get("ivb1_signal"), 0)
+    ivb1_shadow_signal = _safe_int(diag.get("ivb1_shadow_signal"), 0)
     ivb1_entry = _safe_int(diag.get("ivb1_entry"), 0)
     ivb1_no_breakout = _safe_int(diag.get("ivb1_ns_no_breakout"), 0)
     ivb1_impulse_body = _safe_int(diag.get("ivb1_ns_impulse_body"), 0)
     ivb1_other = _safe_int(diag.get("ivb1_ns_other"), 0)
-    if ivb1_try > 0 and ivb1_entry == 0:
+    if ivb1_shadow_signal > 0:
+        _add_finding(
+            findings,
+            "info",
+            "IVB1 telemetry shadow is observing valid signals without capital",
+            f"ivb1_try={ivb1_try}, ivb1_signal={ivb1_signal}, ivb1_shadow_signal={ivb1_shadow_signal}, ivb1_entry=0",
+        )
+    elif ivb1_try > 0 and ivb1_entry == 0:
         if ivb1_other >= max(ivb1_no_breakout, ivb1_impulse_body):
             dominant = "other"
         elif ivb1_no_breakout >= ivb1_impulse_body:
@@ -506,6 +515,8 @@ def build_self_audit(root: Path, *, since_hours: int = 6) -> dict[str, Any]:
             "breakdown_entry": _safe_int(diag.get("breakdown_entry"), 0),
             "breakdown_skip_cooldown": _safe_int(diag.get("breakdown_skip_cooldown"), 0),
             "ivb1_try": ivb1_try,
+            "ivb1_signal": ivb1_signal,
+            "ivb1_shadow_signal": ivb1_shadow_signal,
             "ivb1_entry": ivb1_entry,
             "ivb1_ns_no_breakout": ivb1_no_breakout,
             "ivb1_ns_impulse_body": ivb1_impulse_body,
