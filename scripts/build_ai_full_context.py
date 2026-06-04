@@ -65,6 +65,7 @@ SOURCES = {
     "cross_exchange_funding": "runtime/arb/cross_exchange_funding_latest.json",
     "cross_exchange_funding_validated": "runtime/arb/cross_exchange_funding_validated.json",
     "cross_exchange_funding_shadow": "runtime/arb/cross_exchange_funding_shadow.json",
+    "arb_roi_estimate": "runtime/arb_roi_estimate.json",
     "exchange_account_readonly_status": "runtime/arb/exchange_account_readonly_status.json",
     "exchange_account_status": "runtime/arb/exchange_account_status.json",
     "cross_exchange_arb_dry_run": "runtime/arb/dry_run/latest.json",
@@ -458,6 +459,12 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         }
     else:
         ctx["cross_exchange_funding_shadow"] = xfund_shadow
+
+    arb_roi_path = source_path("arb_roi_estimate")
+    ctx["sources_used"]["arb_roi_estimate"] = (
+        str(arb_roi_path.relative_to(REPO_ROOT)) if arb_roi_path.exists() else None
+    )
+    ctx["arb_roi_estimate"] = load_json(arb_roi_path)
 
     account_status_path = source_path("exchange_account_readonly_status")
     ctx["sources_used"]["exchange_account_readonly_status"] = (

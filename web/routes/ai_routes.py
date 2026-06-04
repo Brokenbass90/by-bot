@@ -168,6 +168,7 @@ def _append_cross_exchange_context(parts: List[str], full_ctx: Dict[str, Any]) -
     raw = full_ctx.get("cross_exchange_funding")
     validated = full_ctx.get("cross_exchange_funding_validated")
     shadow = full_ctx.get("cross_exchange_funding_shadow")
+    roi = full_ctx.get("arb_roi_estimate")
     account_status = full_ctx.get("exchange_account_readonly_status")
     arb_account_status = full_ctx.get("exchange_account_status")
     arb_dry_run = full_ctx.get("cross_exchange_arb_dry_run")
@@ -292,6 +293,19 @@ def _append_cross_exchange_context(parts: List[str], full_ctx: Dict[str, Any]) -
         )
         for row in latest_open:
             parts.append(f"AI ARB SHADOW OPEN: {row}\n")
+
+    if isinstance(roi, dict):
+        sample = roi.get("sample") if isinstance(roi.get("sample"), dict) else {}
+        projection = roi.get("projection") if isinstance(roi.get("projection"), dict) else {}
+        parts.append(
+            "AI ARB ROI EVIDENCE: "
+            f"status={roi.get('status')} closed_cycles={sample.get('closed_cycles')} "
+            f"open_cycles={sample.get('open_cycles')} win_rate={sample.get('win_rate')} "
+            f"next_expected_close={sample.get('next_expected_close_utc')} "
+            f"monthly_pct_deployed={projection.get('monthly_return_pct_deployed_capital')} "
+            "rule=open shadow PnL is not earned return; never project monthly or annual ROI "
+            "until status=projection_available\n"
+        )
 
 
 def _read_env(p: Path) -> Dict[str, str]:
