@@ -265,7 +265,9 @@ def _append_cross_exchange_context(parts: List[str], full_ctx: Dict[str, Any]) -
             updates = item.get("updates") if isinstance(item.get("updates"), list) else []
             last = updates[-1] if updates and isinstance(updates[-1], dict) else item
             pct = _as_float(
-                last.get("total_estimated_pct_total_capital")
+                last.get("total_shadow_pct_total_capital")
+                if isinstance(last, dict) and last.get("total_shadow_pct_total_capital") is not None
+                else last.get("total_estimated_pct_total_capital")
                 if isinstance(last, dict)
                 else item.get("estimated_total_capital_pct")
             )
@@ -283,7 +285,8 @@ def _append_cross_exchange_context(parts: List[str], full_ctx: Dict[str, Any]) -
             "AI CROSS-EXCHANGE SHADOW: "
             f"generated={shadow.get('generated_at_utc')} open={shadow.get('open_count')} "
             f"closed={shadow.get('closed_count')} "
-            f"sum_pct={shadow.get('open_estimated_total_capital_pct')} "
+            f"sum_pct={shadow.get('open_shadow_total_capital_pct', shadow.get('open_estimated_total_capital_pct'))} "
+            f"model={shadow.get('model_version') or 'legacy'} "
             f"equal_weight_basket_pct={equal_weight_pct:.3f} "
             f"closed_items={len(closed_rows)}\n"
         )

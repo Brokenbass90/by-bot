@@ -171,7 +171,21 @@ def validate(args: argparse.Namespace) -> dict[str, Any]:
 
         entry_cost_bps = _f(long_leg.get("slippage_bps")) + _f(short_leg.get("slippage_bps")) + 2.0 * args.taker_fee_bps
         roundtrip_cost_pct = (entry_cost_bps * 2.0) / 100.0
+        fee_cost_pct_per_leg = (4.0 * args.taker_fee_bps) / 100.0
         net_hold_pct = spread_hold_pct - roundtrip_cost_pct
+        long_entry = _f(long_leg.get("avg_price"))
+        short_entry = _f(short_leg.get("avg_price"))
+        entry_basis_abs_pct = (
+            abs((long_entry / short_entry) - 1.0) * 100.0
+            if long_entry > 0 and short_entry > 0
+            else 9999.0
+        )
+        short_event_pct = _f(row.get("short_funding_event_pct"))
+        long_event_pct = _f(row.get("long_funding_event_pct"))
+        funding_events_sane = (
+            abs(short_event_pct) <= args.max_abs_funding_event_pct
+            and abs(long_event_pct) <= args.max_abs_funding_event_pct
+        )
         persistence_count = _persist_count(history, pair_key, args.min_spread_apr_pct)
         passed = (
             not error
@@ -179,6 +193,8 @@ def validate(args: argparse.Namespace) -> dict[str, Any]:
             and bool(short_leg.get("filled"))
             and _f(long_leg.get("slippage_bps")) <= args.max_slippage_bps
             and _f(short_leg.get("slippage_bps")) <= args.max_slippage_bps
+            and entry_basis_abs_pct <= args.max_entry_basis_pct
+            and funding_events_sane
             and spread_apr >= args.min_spread_apr_pct
             and net_hold_pct > 0
             and (persistence_count + 1) >= args.min_persistence_count
@@ -191,10 +207,19 @@ def validate(args: argparse.Namespace) -> dict[str, Any]:
             "short_exchange": short_ex,
             "spread_apr_pct": round(spread_apr, 4),
             "spread_monthly_pct": round(spread_apr / 12.0, 4),
+            "short_funding_event_pct": round(short_event_pct, 6),
+            "short_funding_interval_h": _f(row.get("short_funding_interval_h"), 8.0),
+            "short_next_funding_ms": int(_f(row.get("short_next_funding_ms"))),
+            "long_funding_event_pct": round(long_event_pct, 6),
+            "long_funding_interval_h": _f(row.get("long_funding_interval_h"), 8.0),
+            "long_next_funding_ms": int(_f(row.get("long_next_funding_ms"))),
             "hold_hours": float(args.hold_hours),
             "expected_funding_pct_for_hold": round(spread_hold_pct, 4),
             "estimated_roundtrip_cost_pct": round(roundtrip_cost_pct, 4),
+            "estimated_fee_cost_pct_per_leg": round(fee_cost_pct_per_leg, 4),
             "estimated_net_pct_for_hold": round(net_hold_pct, 4),
+            "entry_basis_abs_pct": round(entry_basis_abs_pct, 4),
+            "funding_events_sane": bool(funding_events_sane),
             "notional_usd_per_leg": float(args.notional_usd),
             "long_leg": long_leg,
             "short_leg": short_leg,
@@ -228,6 +253,8 @@ def validate(args: argparse.Namespace) -> dict[str, Any]:
         "taker_fee_bps": float(args.taker_fee_bps),
         "min_spread_apr_pct": float(args.min_spread_apr_pct),
         "max_slippage_bps": float(args.max_slippage_bps),
+        "max_entry_basis_pct": float(args.max_entry_basis_pct),
+        "max_abs_funding_event_pct": float(args.max_abs_funding_event_pct),
         "min_persistence_count": int(args.min_persistence_count),
         "persistence_window_min": int(args.persistence_window_min),
         "validated_count": sum(1 for x in validated if x.get("passed")),
@@ -256,6 +283,8 @@ def main() -> int:
     ap.add_argument("--hold-hours", type=float, default=24.0)
     ap.add_argument("--taker-fee-bps", type=float, default=6.0)
     ap.add_argument("--max-slippage-bps", type=float, default=12.0)
+    ap.add_argument("--max-entry-basis-pct", type=float, default=1.0)
+    ap.add_argument("--max-abs-funding-event-pct", type=float, default=0.5)
     ap.add_argument("--min-spread-apr-pct", type=float, default=36.0)
     ap.add_argument("--min-persistence-count", type=int, default=2)
     ap.add_argument("--persistence-window-min", type=int, default=90)
