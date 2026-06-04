@@ -96,7 +96,12 @@ def trade_history_summary(tail_n: int = 200) -> dict[str, Any]:
         return {"_warn": "no live_trade_events.jsonl found"}
 
     events = tail_jsonl(trades_path, tail_n)
-    closed = [e for e in events if isinstance(e, dict) and e.get("event") == "close"]
+    closed = [
+        e for e in events
+        if isinstance(e, dict)
+        and e.get("event") == "close"
+        and str(e.get("strategy") or "").strip().lower() != "bootstrap"
+    ]
 
     per_sleeve: dict[str, dict[str, float]] = defaultdict(lambda: {
         "n_closed": 0, "n_win": 0, "n_loss": 0,

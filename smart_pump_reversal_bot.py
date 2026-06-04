@@ -93,6 +93,7 @@ from bot.diagnostics import (
     _flat_no_signal_diag_key, _sloped_no_signal_diag_key, _att1_no_signal_diag_key, _asm1_no_signal_diag_key,
     _breakdown_no_signal_diag_key, _midterm_no_signal_diag_key,
 )
+from bot.tpsl_policy import preserve_existing_tpsl, restored_position_manual_lock
 from bot.deepseek_overlay import DeepSeekOverlay
 from bot.deepseek_autoresearch_agent import (
     results_report_text,
@@ -6368,16 +6369,43 @@ def _restore_trade_state_from_exchange_row(
     tr.entry_price_req = float(entry_px or avg_ex or 0.0)
     tr.tp_price = float(tp_px) if tp_px not in (None, "") else None
     tr.sl_price = float(sl_px) if sl_px not in (None, "") else None
-    tr.tpsl_on_exchange = bool(tp_ex is not None or sl_ex is not None)
-    tr.tpsl_manual_lock = bool(tp_ex is not None or sl_ex is not None)
+    tp_present = tp_ex is not None
+    sl_present = sl_ex is not None
+    tr.tpsl_on_exchange = bool(tp_present and sl_present)
+    tr.tpsl_manual_lock = restored_position_manual_lock(
+        strategy,
+        tp_present=tp_present,
+        sl_present=sl_present,
+    )
     tr.tpsl_last_set_ts = now_s()
     TRADES[key] = tr
 
     src = str(source or "runtime").upper()
+    missing_protection = [
+        name for name, present in (("tp", tp_present), ("sl", sl_present))
+        if not present
+    ]
+    if strategy == "bootstrap":
+        _diag_inc("bootstrap_adopted")
+        _append_live_trade_event(
+            "bootstrap_adopted",
+            sym,
+            tr,
+            source=str(source or "runtime"),
+            broker_tp_present=tp_present,
+            broker_sl_present=sl_present,
+            missing_protection=missing_protection,
+        )
     tg_trade(
         f"🔁 {src} RESTORED [{TRADE_CLIENT.name}] {sym} {side} qty={qty:.6f} "
         f"avg={float(tr.avg or 0.0):.6f} strategy={strategy}"
     )
+    if strategy == "bootstrap" and missing_protection:
+        tg_trade(
+            f"🚨 BOOTSTRAP PROTECTION REPAIR [{TRADE_CLIENT.name}] {sym} {side}: "
+            f"missing={','.join(missing_protection).upper()}. "
+            f"Бот сохранил существующую защиту и автоматически восстановит отсутствующую сторону."
+        )
     return True
 
 # =========================== КЛИЕНТЫ ===========================
@@ -7454,7 +7482,8 @@ def ensure_open_positions_have_tpsl():
         if RESPECT_MANUAL_TPSL and getattr(tr, "tpsl_manual_lock", False):
             continue
 
-        # если tp/sl ещё не рассчитаны — посчитаем по % от средней
+        # Если одна сторона отсутствует, сохраняем уже существующую защиту и
+        # рассчитываем только недостающую сторону.
         if tr.tp_price is None or tr.sl_price is None:
             avg = float(tr.avg)
 
@@ -7465,9 +7494,13 @@ def ensure_open_positions_have_tpsl():
                 tp_raw = avg * (1.0 + TP_PCT / 100.0)
                 sl_raw = avg * (1.0 - SL_PCT / 100.0)
 
-            tp_r, sl_r = round_tp_sl_prices(sym, tr.side, avg, tp_raw, sl_raw)
-            tr.tp_price = tp_r
-            tr.sl_price = sl_r
+            default_tp, default_sl = round_tp_sl_prices(sym, tr.side, avg, tp_raw, sl_raw)
+            tr.tp_price, tr.sl_price = preserve_existing_tpsl(
+                tr.tp_price,
+                tr.sl_price,
+                default_tp,
+                default_sl,
+            )
 
         was_on = bool(getattr(tr, "tpsl_on_exchange", False))
 
