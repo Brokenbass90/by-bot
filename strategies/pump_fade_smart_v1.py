@@ -189,6 +189,7 @@ class PFS1Config:
     vol_z_min: float = 2.0
     rsi_h1_min_ob: float = 65.0
     funding_threshold: float = 0.05
+    require_funding_data: bool = False
     reject_body_frac: float = 0.45
     reject_wick_frac: float = 0.30
     max_dist_atr: float = 2.5
@@ -234,6 +235,7 @@ class PumpFadeSmartV1Strategy:
         c.vol_z_min = _env_float("PFS1_VOL_Z_MIN", c.vol_z_min)
         c.rsi_h1_min_ob = _env_float("PFS1_RSI_H1_MIN_OB", c.rsi_h1_min_ob)
         c.funding_threshold = _env_float("PFS1_FUNDING_THRESHOLD", c.funding_threshold)
+        c.require_funding_data = _env_bool("PFS1_REQUIRE_FUNDING_DATA", c.require_funding_data)
         c.reject_body_frac = _env_float("PFS1_REJECT_BODY_FRAC", c.reject_body_frac)
         c.reject_wick_frac = _env_float("PFS1_REJECT_WICK_FRAC", c.reject_wick_frac)
         c.max_dist_atr = _env_float("PFS1_MAX_DIST_ATR", c.max_dist_atr)
@@ -381,7 +383,8 @@ class PumpFadeSmartV1Strategy:
             self._no_signal(f"macro_not_overbought_rsi={rsi_h1:.1f}")
             return None
 
-        # Funding rate (optional — нужен fetcher; если нет данных, пропускаем фильтр с warn)
+        # Funding may be optional in live, but research can require it so a
+        # price-only backtest cannot masquerade as a validated funding setup.
         funding_pct: float | None = None
         try:
             f = getattr(store, "fetch_funding_rate", None)
@@ -389,6 +392,9 @@ class PumpFadeSmartV1Strategy:
                 funding_pct = float(f(symbol)) * 100.0  # rate is decimal, convert to %
         except Exception:
             funding_pct = None
+        if funding_pct is None and c.require_funding_data:
+            self._no_signal("funding_missing")
+            return None
         if funding_pct is not None and funding_pct < c.funding_threshold:
             self._no_signal(f"funding_low={funding_pct:.4f}")
             return None

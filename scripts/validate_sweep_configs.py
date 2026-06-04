@@ -76,6 +76,48 @@ REQUIRED_WEIGHTS = ("profit_factor", "winrate", "max_drawdown")
 MAX_COMBOS = 500
 
 
+def _load_env_file(path: Path) -> Dict[str, str]:
+    """Parse a simple KEY=VALUE env file without mutating process env."""
+    values: Dict[str, str] = {}
+    for raw_line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if key:
+            values[key] = value.strip()
+    return values
+
+
+def _validate_baseline_env_parity(spec: Dict[str, Any], base_env: Dict[str, Any]) -> List[str]:
+    """Require additive package specs to preserve their declared baseline env."""
+    baseline_ref = str(spec.get("baseline_env_file") or "").strip()
+    if not baseline_ref:
+        return []
+
+    baseline_path = Path(baseline_ref)
+    if not baseline_path.is_absolute():
+        baseline_path = ROOT / baseline_path
+    if not baseline_path.exists():
+        return [f"baseline_env_file not found: {baseline_ref}"]
+
+    baseline = _load_env_file(baseline_path)
+    errors: List[str] = []
+    for key, expected in baseline.items():
+        if key.startswith("ENABLE_"):
+            continue
+        if key not in base_env:
+            errors.append(f"base_env missing baseline key: {key}")
+            continue
+        actual = str(base_env[key]).strip()
+        if actual != expected:
+            errors.append(
+                f"base_env baseline mismatch: {key}={actual!r}, expected {expected!r}"
+            )
+    return errors
+
+
 def _load_runner_helpers():
     """Import the actual runner module so we use its real _iter_grid/_grid_size."""
     spec = importlib.util.spec_from_file_location("autoresearch_runner", RUNNER_PATH)
@@ -279,6 +321,7 @@ def _validate_config(
             if "_SYMBOL_ALLOWLIST" in k or "_ALLOWLIST" in k:
                 if not str(v).strip():
                     warnings.append(f"base_env['{k}'] is empty — strategy will see no symbols")
+        errors.extend(_validate_baseline_env_parity(spec, base_env))
 
     return errors, warnings, ""
 

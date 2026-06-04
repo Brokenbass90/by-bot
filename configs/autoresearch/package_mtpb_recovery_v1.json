@@ -2,6 +2,7 @@
   "name": "package_mtpb_recovery_v1",
   "description": "MTPB pullback recovery sweep. Vary trend slope, pullback tolerance, reclaim depth, SL ATR \u2014 keep ATT1/ARF1/breakdown/MTPB-other baseline params. Must beat package baseline +73.96% / PF 1.591 / DD 5.16% via additive replay.",
   "cache_only": true,
+  "baseline_env_file": "configs/crypto_income_static_v1_candidate.env",
   "command": [
     "{python}",
     "backtest/run_portfolio.py",
@@ -26,7 +27,9 @@
     "--fee_bps",
     "6",
     "--slippage_bps",
-    "2"
+    "2",
+    "--cache",
+    ".cache/validated/crypto_static_v1_20260425"
   ],
   "base_env": {
     "ATT1_ALLOW_LONGS": "1",
@@ -66,6 +69,8 @@
     "ARF1_TRAIL_ATR_MULT": "0.0",
     "ARF1_TIME_STOP_BARS_5M": "576",
     "ARF1_MAX_CLOSE_VS_EMA_PCT": "1.2",
+    "ARF1_MIN_RSI": "52.0",
+    "ARF1_REJECT_BELOW_RES_ATR": "0.12",
     "MIDTERM_SYMBOLS": "BTCUSDT,ETHUSDT",
     "PORTFOLIO_GLOBAL_SL_COOLDOWN_BARS": "48",
     "PORTFOLIO_GLOBAL_SL_STRATEGIES": "alt_inplay_breakdown_v1",
@@ -74,10 +79,16 @@
     "MTPB_TREND_EMA_FAST": "50",
     "MTPB_TREND_EMA_SLOW": "200",
     "MTPB_ATR_PERIOD": "14",
-    "MTPB_USE_RUNNER_EXITS": "1",
+    "MTPB_USE_RUNNER_EXITS": "0",
+    "BACKTEST_REQUIRE_EXACT_CACHE": "1",
+    "BACKTEST_CACHE_FALLBACK_ENABLE": "0",
     "MTPB_RR": "2.2"
   },
   "grid": {
+    "MTPB_USE_RUNNER_EXITS": [
+      "0",
+      "1"
+    ],
     "MTPB_TREND_SLOPE_MIN_PCT": [
       "0.30",
       "0.45",
@@ -106,9 +117,9 @@
   },
   "constraints": {
     "min_trades": 30,
-    "min_profit_factor": 1.3,
-    "max_drawdown": 8.0,
-    "min_net_pnl": 30.0,
+    "min_profit_factor": 1.462,
+    "max_drawdown": 7.5,
+    "min_net_pnl": 65.9,
     "max_negative_months": 3,
     "max_negative_streak": 2
   },
@@ -122,5 +133,5 @@
     "negative_months": 2.0,
     "worst_month_pnl": 2.0
   },
-  "_notes": "Built 2026-06-02 by Claude Opus. Baseline base_env copied from package_arf1_flat_touch_v1.json. Goal: additive replay must beat baseline package +73.96% / PF 1.591 / DD 5.16% / 2 red months."
+  "_notes": "Built 2026-06-02 by Claude Opus. Updated 2026-06-04: additive replay must beat the reproducible strict exact-cache baseline +65.89% / PF 1.462 / DD 7.49% / 3 red months. The older +73.96% artifact used different cache provenance and remains a reference, not the promotion gate."
 }

@@ -94,10 +94,22 @@ def aggregate_candles_to_interval(base: List[Candle], interval_min: int) -> List
 class KlineStore:
     """Provides local kline slices in the same shape strategies expect."""
 
-    def __init__(self, symbol: str, candles_5m: List[Candle], base_interval_min: int = 5):
+    def __init__(
+        self,
+        symbol: str,
+        candles_5m: List[Candle],
+        base_interval_min: int = 5,
+        funding_rates: Optional[List[Tuple[int, float]]] = None,
+    ):
         self.symbol = symbol
         self.base_interval_min = 1 if int(base_interval_min) == 1 else 5
         self.exec_candles = candles_5m
+        funding_rows = sorted(
+            (int(ts), float(rate))
+            for ts, rate in (funding_rates or [])
+        )
+        self._funding_ts = [row[0] for row in funding_rows]
+        self._funding_rates = [row[1] for row in funding_rows]
         self.c1 = candles_5m[:] if self.base_interval_min == 1 else []
         self.c3 = aggregate_candles_to_interval(candles_5m, 3) if self.base_interval_min == 1 else []
         self.c5 = aggregate_candles_to_interval(candles_5m, 5)
@@ -174,6 +186,18 @@ class KlineStore:
         for c in self._slice(interval, limit):
             rows.append([str(c.ts), str(c.o), str(c.h), str(c.l), str(c.c), str(c.v), "0"])
         return rows
+
+    def fetch_funding_rate(self, symbol: str) -> Optional[float]:
+        """Return the most recent known funding rate without future leakage."""
+        if symbol != self.symbol:
+            raise ValueError("KlineStore is per-symbol")
+        cur_end_ts = self._current_exec_end_ts()
+        if cur_end_ts is None or not self._funding_ts:
+            return None
+        idx = bisect.bisect_right(self._funding_ts, int(cur_end_ts)) - 1
+        if idx < 0:
+            return None
+        return self._funding_rates[idx]
 
     def candles_1h_ohlc(self) -> List[Tuple[float, float, float, float]]:
         return [(c.o, c.h, c.l, c.c) for c in self._slice("60", 10**9)]

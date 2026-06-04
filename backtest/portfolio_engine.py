@@ -350,8 +350,14 @@ def run_portfolio_backtest(
                 if cap is None:
                     cap = (equity * float(params.leverage)) / max(1, int(params.max_positions))
 
-                sig_risk_mult = float(getattr(sig, "risk_mult", 1.0) or 1.0)
-                sig_risk_mult = max(0.10, min(3.00, sig_risk_mult))
+                raw_sig_risk_mult = getattr(sig, "risk_mult", None)
+                try:
+                    sig_risk_mult = 1.0 if raw_sig_risk_mult is None else float(raw_sig_risk_mult)
+                except (TypeError, ValueError):
+                    sig_risk_mult = 1.0
+                sig_risk_mult = max(0.00, min(3.00, sig_risk_mult))
+                if sig_risk_mult <= 0:
+                    continue
                 risk_pct_eff = float(params.risk_pct) * sig_risk_mult
                 qty = _calc_qty(equity, sig, risk_pct_eff, cap)
                 if qty <= 0:

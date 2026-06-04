@@ -41,7 +41,7 @@ from collections import defaultdict
 from importlib import import_module
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 
 from backtest.bybit_data import fetch_klines_public
@@ -535,10 +535,9 @@ def _directional_regime_at_bar(store: KlineStore, i: int) -> str:
     return f"{direction}_{phase}"
 
 
-def _allocator_risk_mult(strategy_name: str, regime: str) -> float:
-    """Dynamic risk multiplier for regime allocator backtests."""
+def _explicit_strategy_risk_mult(strategy_name: str) -> Optional[float]:
+    """Return an explicitly configured sleeve multiplier, if one exists."""
     st = str(strategy_name or "").strip().lower()
-    rg = str(regime or "trend").strip().lower()
     env_overrides = {
         "inplay_breakout": "BREAKOUT_RISK_MULT",
         "alt_inplay_breakdown_v1": "BREAKDOWN_RISK_MULT",
@@ -590,6 +589,16 @@ def _allocator_risk_mult(strategy_name: str, regime: str) -> float:
                 return float(raw)
             except Exception:
                 continue
+    return None
+
+
+def _allocator_risk_mult(strategy_name: str, regime: str) -> float:
+    """Dynamic risk multiplier for regime allocator backtests."""
+    st = str(strategy_name or "").strip().lower()
+    rg = str(regime or "trend").strip().lower()
+    explicit = _explicit_strategy_risk_mult(st)
+    if explicit is not None:
+        return explicit
     if st in {"inplay_breakout"}:
         if rg == "flat":
             return float(os.getenv("ALLOC_BREAKOUT_FLAT_MULT", "0.85"))
@@ -708,8 +717,18 @@ def _load_symbol_base(
 
     rows: List[List[float]]
     cache_only = str(os.getenv("BACKTEST_CACHE_ONLY", "0")).strip().lower() in {"1", "true", "yes", "on"}
+    require_exact_cache = str(os.getenv("BACKTEST_REQUIRE_EXACT_CACHE", "0")).strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
     if fname.exists():
         rows = json.loads(fname.read_text(encoding="utf-8"))
+    elif require_exact_cache:
+        raise FileNotFoundError(
+            f"Exact cached slice required but missing for {symbol}: {fname}"
+        )
     elif cache_only:
         best_path, best_rows = _pick_best_cached_rows()
         if best_path is None or best_rows is None:
@@ -757,6 +776,29 @@ def _load_symbol_base(
         o = float(r[1]); h = float(r[2]); l = float(r[3]); c = float(r[4])
         v = float(r[5]) if len(r) > 5 else 0.0
         out.append(Candle(ts=ts, o=o, h=h, l=l, c=c, v=v))
+
+    if require_exact_cache:
+        interval_ms = int(base_interval_min) * 60_000
+        expected_count = max(0, (end_ms - start_ms) // interval_ms)
+        first_ts = out[0].ts if out else 0
+        last_ts = out[-1].ts if out else 0
+        gap_count = sum(
+            1
+            for prev, cur in zip(out, out[1:])
+            if int(cur.ts) - int(prev.ts) != interval_ms
+        )
+        if (
+            len(out) != expected_count
+            or first_ts != start_ms
+            or last_ts != end_ms - interval_ms
+            or gap_count
+        ):
+            raise ValueError(
+                "Exact cache validation failed for "
+                f"{symbol}: rows={len(out)}/{expected_count}, "
+                f"first={first_ts}/{start_ms}, "
+                f"last={last_ts}/{end_ms - interval_ms}, gaps={gap_count}"
+            )
     return out
 
 
@@ -931,6 +973,27 @@ def _select_auto_symbols(*, base: str, min_volume_usd: float, top_n: int, exclud
         print(f"[auto-symbols] API returned empty universe, fallback used ({len(fallback)} symbols)")
         return fallback
     return []
+
+
+def _load_funding_history_csv(path: Path) -> List[Tuple[int, float]]:
+    """Load timestamped funding data for deterministic, no-lookahead replay."""
+    if not path.exists():
+        return []
+    rows: List[Tuple[int, float]] = []
+    with path.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            try:
+                ts = int(row.get("timestamp_ms") or 0)
+                rate = float(row.get("funding_rate") or "")
+            except (TypeError, ValueError):
+                continue
+            if ts > 0 and math.isfinite(rate):
+                rows.append((ts, rate))
+    rows.sort(key=lambda item: item[0])
+    return rows
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--symbols", default="", help="Comma-separated symbols")
@@ -958,6 +1021,11 @@ def main():
     ap.add_argument("--slippage_bps", type=float, default=2.0)
     ap.add_argument("--bybit_base", default=os.getenv("BYBIT_BASE", "https://api.bybit.com"))
     ap.add_argument("--cache", default=".cache/klines")
+    ap.add_argument(
+        "--funding-dir",
+        default=os.getenv("FR_HISTORY_DIR", ""),
+        help="Optional directory with per-symbol funding CSVs for deterministic strategy replay.",
+    )
     ap.add_argument(
         "--base_interval_min",
         type=int,
@@ -1014,6 +1082,7 @@ def main():
     start_ts = end_ts - int(args.days) * 86400
 
     cache_dir = Path(args.cache)
+    funding_dir = Path(args.funding_dir) if str(args.funding_dir).strip() else None
     stores: Dict[str, KlineStore] = {}
     for sym in symbols:
         base_candles = _load_symbol_base(
@@ -1024,7 +1093,17 @@ def main():
             cache_dir=cache_dir,
             base_interval_min=args.base_interval_min,
         )
-        stores[sym] = KlineStore(sym, base_candles, base_interval_min=args.base_interval_min)
+        funding_rates = (
+            _load_funding_history_csv(funding_dir / f"{sym}.csv")
+            if funding_dir is not None
+            else []
+        )
+        stores[sym] = KlineStore(
+            sym,
+            base_candles,
+            base_interval_min=args.base_interval_min,
+            funding_rates=funding_rates,
+        )
 
     if any(s in strategies for s in ("alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1")):
         min_cov_frac = float(os.getenv("FLAT_MIN_COVERAGE_FRAC", "0.85"))
@@ -1898,11 +1977,17 @@ def main():
             else:
                 sig = None
             if sig is not None:
-                if allocator_enable:
+                explicit_risk_mult = _explicit_strategy_risk_mult(
+                    str(getattr(sig, "strategy", st) or st)
+                )
+                if allocator_enable or explicit_risk_mult is not None:
                     try:
                         strategy_name = str(getattr(sig, "strategy", st) or st)
-                        rm = _allocator_risk_mult(strategy_name, regime)
-                        rm = max(float(allocator_mult_min), min(float(allocator_mult_max), float(rm)))
+                        if explicit_risk_mult is not None:
+                            rm = max(0.00, min(3.00, float(explicit_risk_mult)))
+                        else:
+                            rm = _allocator_risk_mult(strategy_name, regime)
+                            rm = max(float(allocator_mult_min), min(float(allocator_mult_max), float(rm)))
                         setattr(sig, "risk_mult", float(rm))
                     except Exception:
                         pass

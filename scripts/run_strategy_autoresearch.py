@@ -5,6 +5,7 @@ import argparse
 import collections
 import concurrent.futures
 import csv
+import hashlib
 import itertools
 import json
 import math
@@ -63,6 +64,37 @@ def _slug(text: str) -> str:
 def _load_spec(path: Path) -> dict:
     with path.open(encoding="utf-8") as f:
         return json.load(f)
+
+
+def _candidate_metadata(spec: dict, overrides: Dict[str, str]) -> dict:
+    payload = {
+        "name": str(spec.get("name", "")),
+        "cache_only": bool(spec.get("cache_only", False)),
+        "command": spec.get("command"),
+        "base_env": spec.get("base_env", {}),
+        "overrides": overrides,
+    }
+    encoded = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return {
+        "fingerprint": hashlib.sha256(encoded).hexdigest(),
+        "payload": payload,
+    }
+
+
+def _resume_matches(run_dir: Path, metadata: dict) -> bool:
+    path = run_dir / "autoresearch_candidate.json"
+    if not path.exists():
+        return False
+    try:
+        previous = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return False
+    return str(previous.get("fingerprint", "")) == str(metadata.get("fingerprint", ""))
+
+
+def _write_candidate_metadata(run_dir: Path, metadata: dict) -> None:
+    path = run_dir / "autoresearch_candidate.json"
+    path.write_text(json.dumps(metadata, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
 
 
 def _iter_grid(grid: Dict[str, list]) -> Iterable[Dict[str, str]]:
@@ -278,10 +310,13 @@ def _score_candidate(summary: dict, spec: dict) -> tuple[bool, str, float]:
 def _run_backtest(spec: dict, overrides: Dict[str, str], run_id: int) -> CandidateResult:
     name = _slug(spec["name"])
     tag = f"{name}_r{run_id:03d}"
+    candidate_metadata = _candidate_metadata(spec, overrides)
 
     # Resume support: if a run dir with this tag already exists and has a summary,
-    # skip the subprocess and re-use the cached result.
+    # re-use it only when the full command/base-env/override fingerprint matches.
     existing_dir = _latest_run_dir(tag)
+    if existing_dir is not None and not _resume_matches(existing_dir, candidate_metadata):
+        existing_dir = None
     # Only reuse if the run completed with at least 1 trade (avoids caching bad 0-trade runs)
     if existing_dir is not None and (existing_dir / "summary.csv").exists():
         _check_summary = _read_summary(existing_dir / "summary.csv")
@@ -379,6 +414,7 @@ def _run_backtest(spec: dict, overrides: Dict[str, str], run_id: int) -> Candida
     run_dir = _latest_run_dir(tag)
     if run_dir is None:
         raise RuntimeError(f"Missing run dir for tag={tag}")
+    _write_candidate_metadata(run_dir, candidate_metadata)
     summary = _read_summary(run_dir / "summary.csv")
     passed, fail_reasons, score = _score_candidate(summary, spec)
     metrics = _extract_metrics(summary, spec)

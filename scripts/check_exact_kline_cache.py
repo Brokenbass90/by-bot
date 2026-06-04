@@ -94,6 +94,7 @@ def main() -> int:
     ap.add_argument("--interval", default="5", help="Bybit interval, default 5.")
     ap.add_argument("--start-date", default="", help="UTC start date YYYY-MM-DD.")
     ap.add_argument("--end-date", default="", help="UTC end date YYYY-MM-DD.")
+    ap.add_argument("--days", type=int, default=0, help="Derive start from end minus this many days.")
     ap.add_argument("--start-ms", type=int, default=0)
     ap.add_argument("--end-ms", type=int, default=0)
     ap.add_argument("--cache-dir", default=str(DEFAULT_CACHE_DIR))
@@ -104,8 +105,10 @@ def main() -> int:
     if not symbols:
         raise SystemExit("no symbols provided")
 
-    start_ms = int(args.start_ms or (_parse_date_utc(args.start_date) if args.start_date else 0))
     end_ms = int(args.end_ms or (_parse_date_utc(args.end_date) if args.end_date else 0))
+    start_ms = int(args.start_ms or (_parse_date_utc(args.start_date) if args.start_date else 0))
+    if start_ms <= 0 and end_ms > 0 and int(args.days) > 0:
+        start_ms = end_ms - int(args.days) * 86_400_000
     if start_ms <= 0 or end_ms <= 0 or end_ms <= start_ms:
         raise SystemExit("invalid start/end window")
 

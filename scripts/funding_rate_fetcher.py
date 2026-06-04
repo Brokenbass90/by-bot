@@ -130,11 +130,13 @@ def fetch_funding_history(symbol: str, start_ms: int, end_ms: int) -> List[Tuple
     """
     Fetch historical funding rates for a symbol between start_ms and end_ms.
     Returns list of (timestamp_ms, funding_rate) sorted ascending.
-    Bybit returns up to 200 records per call — paginates automatically.
+    Bybit returns up to 200 records per call. This endpoint does not reliably
+    expose a cursor, so pagination walks backward using the oldest timestamp.
     """
     url = f"{BYBIT_BASE}/v5/market/funding/history"
     records: List[Tuple[int, float]] = []
-    cursor = ""
+    seen_ts: set[int] = set()
+    page_end_ms = int(end_ms)
     page = 0
 
     while True:
@@ -145,10 +147,8 @@ def fetch_funding_history(symbol: str, start_ms: int, end_ms: int) -> List[Tuple
         }
         if start_ms:
             params["startTime"] = start_ms
-        if end_ms:
-            params["endTime"] = end_ms
-        if cursor:
-            params["cursor"] = cursor
+        if page_end_ms:
+            params["endTime"] = page_end_ms
 
         try:
             data = _get_json(url, params)
@@ -168,18 +168,24 @@ def fetch_funding_history(symbol: str, start_ms: int, end_ms: int) -> List[Tuple
         for item in items:
             ts = int(item.get("fundingRateTimestamp", 0))
             fr = float(item.get("fundingRate", 0))
-            if ts:
+            if ts and ts not in seen_ts:
                 records.append((ts, fr))
+                seen_ts.add(ts)
 
-        cursor = result.get("nextPageCursor", "")
         page += 1
 
-        # Bybit returns newest first; stop when all records are older than start_ms
-        oldest_ts = min(r[0] for r in records) if records else 0
-        if oldest_ts and oldest_ts <= start_ms:
+        page_timestamps = [
+            int(item.get("fundingRateTimestamp", 0))
+            for item in items
+            if int(item.get("fundingRateTimestamp", 0)) > 0
+        ]
+        oldest_page_ts = min(page_timestamps) if page_timestamps else 0
+        if not oldest_page_ts or oldest_page_ts <= start_ms:
             break
-        if not cursor:
+        next_page_end_ms = oldest_page_ts - 1
+        if next_page_end_ms >= page_end_ms:
             break
+        page_end_ms = next_page_end_ms
 
         time.sleep(0.3)  # polite pacing
 
@@ -246,9 +252,9 @@ def fetch_once(symbols: List[str]) -> int:
 
 # ── Historical download mode ────────────────────────────────────────────────────
 
-def download_history(symbol: str, days: int, out_path: Path) -> int:
+def download_history(symbol: str, days: int, out_path: Path, end_ms: Optional[int] = None) -> int:
     """Download historical funding rates and save to CSV. Returns record count."""
-    now_ms = int(time.time() * 1000)
+    now_ms = int(end_ms or int(time.time() * 1000))
     start_ms = now_ms - days * 24 * 3600 * 1000
 
     logger.info(f"Downloading {days}d history for {symbol} → {out_path}")
@@ -266,12 +272,17 @@ def download_history(symbol: str, days: int, out_path: Path) -> int:
     return len(records)
 
 
-def download_history_all(symbols: List[str], days: int) -> None:
+def download_history_all(
+    symbols: List[str],
+    days: int,
+    end_ms: Optional[int] = None,
+    out_dir: Path = HISTORY_DIR,
+) -> None:
     """Download historical funding rates for all symbols."""
     for sym in symbols:
-        out_path = HISTORY_DIR / f"{sym}.csv"
+        out_path = out_dir / f"{sym}.csv"
         try:
-            count = download_history(sym, days, out_path)
+            count = download_history(sym, days, out_path, end_ms=end_ms)
             print(f"  {sym}: {count} records → {out_path}")
         except Exception as e:
             logger.error(f"Failed {sym}: {e}")
@@ -337,10 +348,17 @@ def main() -> None:
     ap.add_argument("--symbols",  default=",".join(DEFAULT_SYMBOLS), help="Comma-separated symbols")
     ap.add_argument("--symbol",   default="BTCUSDT",  help="Single symbol for --history mode")
     ap.add_argument("--days",     type=int, default=365, help="Days of history to download")
+    ap.add_argument("--end-date", default="", help="Optional UTC end date YYYY-MM-DD for reproducible history")
+    ap.add_argument("--out-dir",  default=str(HISTORY_DIR), help="Output directory for --history-all")
     ap.add_argument("--out",      default="",  help="Output CSV path for --history mode")
     args = ap.parse_args()
 
     symbols = [s.strip().upper() for s in args.symbols.split(",") if s.strip()]
+    end_ms = (
+        int(datetime.strptime(args.end_date, "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp() * 1000)
+        if args.end_date
+        else None
+    )
 
     if args.live:
         live_loop(symbols)
@@ -355,13 +373,13 @@ def main() -> None:
     elif args.history:
         sym = args.symbol.upper()
         out_path = Path(args.out) if args.out else HISTORY_DIR / f"{sym}.csv"
-        count = download_history(sym, args.days, out_path)
+        count = download_history(sym, args.days, out_path, end_ms=end_ms)
         print(f"\n✅ Downloaded {count} records for {sym} → {out_path}")
         print("   Use this CSV for realistic FR Reversion backtests.")
 
     elif args.history_all:
         print(f"\nDownloading {args.days}d history for {len(symbols)} symbols...")
-        download_history_all(symbols, args.days)
+        download_history_all(symbols, args.days, end_ms=end_ms, out_dir=Path(args.out_dir))
         print("\n✅ Done. CSV files saved to data/funding_rates/")
         print("   Tip: set FR_HISTORY_DIR=data/funding_rates in backtest for realistic replay.")
 

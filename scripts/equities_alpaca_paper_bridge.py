@@ -140,6 +140,33 @@ def _env_bool(name: str, default: bool) -> bool:
     return raw in {"1", "true", "yes", "on"}
 
 
+def _live_order_guard_errors(
+    *,
+    base_url: str,
+    send_orders: bool,
+    capital_override_usd: float,
+) -> list[str]:
+    """Fail closed before the paper bridge is allowed to touch a live account."""
+    if not send_orders or "paper" in str(base_url).lower():
+        return []
+
+    errors: list[str] = []
+    if _env("ALPACA_LIVE_ACCOUNT_ROLE").lower() != "monthly_v38":
+        errors.append("ALPACA_LIVE_ACCOUNT_ROLE must be monthly_v38")
+    if _env("ALPACA_LIVE_CONFIRM") != "MONTHLY_V38_LIVE":
+        errors.append("ALPACA_LIVE_CONFIRM must be MONTHLY_V38_LIVE")
+
+    max_capital = max(1.0, _env_float("ALPACA_LIVE_MAX_CAPITAL_USD", 500.0))
+    if capital_override_usd <= 0:
+        errors.append("ALPACA_CAPITAL_OVERRIDE_USD must be set for live orders")
+    elif capital_override_usd > max_capital:
+        errors.append(
+            f"ALPACA_CAPITAL_OVERRIDE_USD={capital_override_usd:.2f} exceeds "
+            f"ALPACA_LIVE_MAX_CAPITAL_USD={max_capital:.2f}"
+        )
+    return errors
+
+
 def _safe_float(value: Any, default: float = 0.0) -> float:
     try:
         return float(value)
@@ -1023,6 +1050,25 @@ def main() -> int:
     key_id = _env("ALPACA_API_KEY_ID")
     secret_key = _env("ALPACA_API_SECRET_KEY")
     base_url = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
+    live_guard_errors = _live_order_guard_errors(
+        base_url=base_url,
+        send_orders=send_orders,
+        capital_override_usd=capital_override_usd,
+    )
+    if live_guard_errors:
+        print(
+            json.dumps(
+                {
+                    "error": "alpaca_live_order_guard",
+                    "issues": live_guard_errors,
+                    "hint": "use a monthly-v38-only live credential profile with a bounded capital override",
+                },
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
+            file=sys.stderr,
+        )
+        return 6
     if (not key_id or not secret_key) and not offline_dry_run:
         print("error=missing_alpaca_keys", file=sys.stderr)
         return 4
