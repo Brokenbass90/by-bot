@@ -24,6 +24,13 @@ def test_ivb1_shadow_candidate_is_enabled_with_zero_risk() -> None:
     assert values["IVB1_ALLOW_MINQTY_FALLBACK"] == "0"
 
 
+def test_approved_overlay_does_not_disable_ivb1_shadow() -> None:
+    values = _env_values(ROOT / "configs" / "approved_strategy_params.env")
+
+    assert values["ENABLE_IVB1_TRADING"] == "1"
+    assert float(values["IVB1_RISK_MULT"]) == 0.0
+
+
 def test_ivb1_shadow_branch_returns_before_order_submission() -> None:
     tree = ast.parse((ROOT / "smart_pump_reversal_bot.py").read_text(encoding="utf-8"))
     fn = next(

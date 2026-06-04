@@ -9948,7 +9948,19 @@ async def try_att1_entry_async(symbol: str, price: float):
     tp_r, sl_r = round_tp_sl_prices(symbol, side, entry, None if use_runner else tp, sl)
     if _invalid_rounded_tpsl(use_runner, tp_r, sl_r):
         _diag_inc("att1_skip_rounding")
-        _append_signal_decision("att1", symbol, "skip_rounding", "invalid_rounded_tp_sl", side=str(sig.side))
+        _append_signal_decision(
+            "att1",
+            symbol,
+            "skip_rounding",
+            "invalid_rounded_tp_sl",
+            side=str(sig.side),
+            use_runner=use_runner,
+            entry_raw=entry,
+            tp_raw=None if use_runner else tp,
+            sl_raw=sl,
+            tp_rounded=tp_r,
+            sl_rounded=sl_r,
+        )
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0

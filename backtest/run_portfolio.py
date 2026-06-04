@@ -151,6 +151,7 @@ PumpFadeV4RStrategy = _import_strategy_class("pump_fade_v4r", "PumpFadeV4RStrate
 PumpFadeSimpleStrategy = _import_strategy_class("pump_fade_simple", "PumpFadeSimpleStrategy")
 PumpMomentumV1Strategy = _import_strategy_class("pump_momentum_v1", "PumpMomentumV1Strategy")
 ImpulseVolumeBreakoutV1Strategy = _import_strategy_class("impulse_volume_breakout_v1", "ImpulseVolumeBreakoutV1Strategy")
+ScalperClassicV1Strategy = _import_strategy_class("scalper_classic_v1", "ScalperClassicV1Strategy")
 FundingRateReversionV1Strategy = _import_strategy_class("funding_rate_reversion_v1", "FundingRateReversionV1")
 LiquidationCascadeEntryV1Strategy = _import_strategy_class("liquidation_cascade_entry_v1", "LiquidationCascadeEntryV1")
 AltLiquiditySweepReversalV1Strategy = _optional_strategy_class("alt_liquidity_sweep_reversal_v1", "AltLiquiditySweepReversalV1Strategy")
@@ -568,6 +569,7 @@ def _explicit_strategy_risk_mult(strategy_name: str) -> Optional[float]:
         "alt_spike_rejection_v1": "SPR1_RISK_MULT",
         "alt_bear_regime_continuation_v1": "BRC1_RISK_MULT",
         "alt_whale_print_follow_v1": "WHALE_RISK_MULT",
+        "scalper_classic_v1": "SC1_RISK_MULT",
     }
     env_keys = env_overrides.get(st)
     if env_keys:
@@ -1072,7 +1074,7 @@ def main():
         "alt_bear_breakdown_v1", "alt_bear_consolidation_short_v1", "alt_elder_revived_v1",
         "alt_momentum_breakout_v1", "alt_pullback_continuation_v1", "alt_squeeze_breakout_v1",
         "alt_trendline_touch_v1", "alt_sloped_momentum_v1", "alt_volume_spike_momentum_v1", "pump_fade_smart_v1", "grid_smart_v1",
-        "alt_slope_break_v1",
+        "alt_slope_break_v1", "scalper_classic_v1",
         "alt_horizontal_break_v1"}
     for s in strategies:
         if s not in allowed:
@@ -1283,6 +1285,7 @@ def main():
     pump_fade_simple = {sym: PumpFadeSimpleStrategy() for sym in symbols} if "pump_fade_simple" in strategies else {}
     pump_momentum_v1 = {sym: PumpMomentumV1Strategy() for sym in symbols} if "pump_momentum_v1" in strategies else {}
     impulse_volume_breakout_v1 = {sym: ImpulseVolumeBreakoutV1Strategy() for sym in symbols} if "impulse_volume_breakout_v1" in strategies else {}
+    scalper_classic_v1 = {sym: ScalperClassicV1Strategy() for sym in symbols} if "scalper_classic_v1" in strategies else {}
     funding_rate_reversion_v1 = {sym: FundingRateReversionV1Strategy() for sym in symbols} if "funding_rate_reversion_v1" in strategies else {}
     liquidation_cascade_entry_v1 = {sym: LiquidationCascadeEntryV1Strategy() for sym in symbols} if "liquidation_cascade_entry_v1" in strategies else {}
     if "alt_liquidity_sweep_reversal_v1" in strategies and AltLiquiditySweepReversalV1Strategy is None:
@@ -1479,6 +1482,12 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = impulse_volume_breakout_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "scalper_classic_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = scalper_classic_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "retest_levels":
                 sig = retest[sym].signal(store, ts_ms, last_price)
             elif st == "momentum":
