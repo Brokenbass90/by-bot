@@ -603,6 +603,8 @@ class AlpacaClient:
     def submit_bracket_order(self, symbol: str, side: str, qty: float,
                              stop_loss_price: float, take_profit_price: float) -> dict:
         qty_value = float(qty)
+        if side == "sell" and _is_fractional_qty(qty_value):
+            raise ValueError("Alpaca does not allow fractional short sells; qty must be a whole share")
         if _is_fractional_qty(qty_value):
             # Alpaca rejects fractional bracket orders. For small paper accounts,
             # enter with a simple market order and let the software manager own exits.
@@ -1497,6 +1499,22 @@ def run_once(client: AlpacaClient, dry_run: bool,
             if qty * entry_price > notional_usd * 2.0:
                 print(f"    ⚠ Stock price ${entry_price:.2f} >> notional ${notional_usd:.0f}; "
                       f"consider ALPACA_FRACTIONAL_SHARES=1")
+        qty_adjustment = ""
+        if sig.side == "short" and _is_fractional_qty(float(qty)):
+            whole_qty = int(float(qty))
+            if whole_qty < 1:
+                symbol_status.update({
+                    "status": "skip_fractional_short_qty",
+                    "side": sig.side,
+                    "entry_price": round(entry_price, 4),
+                    "qty": qty,
+                    "reason": "alpaca_fractional_short_not_supported",
+                })
+                advisory["symbols"].append(symbol_status)
+                print(f"    → Skip short: Alpaca rejects fractional short qty={qty}")
+                continue
+            qty_adjustment = f" | Qty rounded down for Alpaca short: {qty}→{whole_qty}"
+            qty = whole_qty
         actual_notional = qty * entry_price
         risk_usd        = abs(entry_price - sl_price) * qty
         rr_label        = f"RR≈{abs(tp_price-entry_price)/max(1e-6,abs(entry_price-sl_price)):.1f}"
@@ -1513,6 +1531,7 @@ def run_once(client: AlpacaClient, dry_run: bool,
                 "sl_price": round(sl_price, 4),
                 "tp_price": round(tp_price, 4),
                 "qty": qty,
+                "qty_adjustment": qty_adjustment,
                 "rr_label": rr_label,
                 "reason": sig.reason or "",
             })
@@ -1521,7 +1540,7 @@ def run_once(client: AlpacaClient, dry_run: bool,
             _tg(tg_token, tg_chat,
                 f"🔍 <b>[DRY-RUN] {symbol}</b> {sig.side.upper()}\n"
                 f"e≈${entry_price:.2f} | SL=${sl_price:.2f} | TP=${tp_price:.2f} | {rr_label}\n"
-                f"Qty={qty} | Risk≈${risk_usd:.2f} | {now_str}")
+                f"Qty={qty} | Risk≈${risk_usd:.2f}{qty_adjustment} | {now_str}")
         else:
             try:
                 alpaca_side = "buy" if sig.side == "long" else "sell"
@@ -1547,6 +1566,7 @@ def run_once(client: AlpacaClient, dry_run: bool,
                     "sl_price": round(sl_price, 4),
                     "tp_price": round(tp_price, 4),
                     "qty": qty,
+                    "qty_adjustment": qty_adjustment,
                     "rr_label": rr_label,
                     "reason": sig.reason or "",
                     "order_id": order_id,
