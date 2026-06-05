@@ -264,6 +264,10 @@ PY
     echo "[cp_health $(date -u '+%H:%M:%S')] INFO allocator overlap-only degraded (${ALLOC_REASON_TEXT:-unknown})"
     return
   fi
+  if [[ "$ALLOC_SAFE" != "1" && "$ALLOC_DEGRADED" != "1" && "$ALLOC_STATUS" == "disabled" ]]; then
+    echo "[cp_health $(date -u '+%H:%M:%S')] INFO allocator disabled by mode (safe_mode=${ALLOC_SAFE:-0}, degraded=${ALLOC_DEGRADED:-0})"
+    return
+  fi
   if [[ "$ALLOC_SAFE" == "1" || "$ALLOC_DEGRADED" == "1" || "$ALLOC_STATUS" != "ok" ]]; then
     local msg="⚠️ Portfolio allocator: DEGRADED (status=${ALLOC_STATUS:-?}, safe_mode=${ALLOC_SAFE:-0}, degraded=${ALLOC_DEGRADED:-0}"
     if [[ -n "${ALLOC_REASON_TEXT:-}" ]]; then
