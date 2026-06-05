@@ -275,6 +275,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     closed_positions = list(state.get("closed") or [])[-500:]
     for pos in list(state.get("open") or []):
         updated = _update_position(pos, current_by_key)
+        last = updated.get("last_update") or {}
+        close_invalid_after_h = float(args.close_invalid_after_hours)
+        if (
+            updated.get("status") != "closed"
+            and close_invalid_after_h > 0
+            and not bool(last.get("current_validated"))
+            and _f(last.get("age_hours")) >= close_invalid_after_h
+        ):
+            updated["status"] = "closed"
+            updated["closed_at_utc"] = _utc_now()
+            updated["close_reason"] = "current_validation_lost"
+            updated["final_shadow_pct_per_leg"] = last.get("total_shadow_pct_per_leg")
+            updated["final_shadow_pct_total_capital"] = last.get("total_shadow_pct_total_capital")
         if updated.get("status") == "closed":
             closed_positions.append(updated)
         else:
@@ -332,6 +345,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "min_net_pct": float(args.min_net_pct),
             "min_persistence_count": int(args.min_persistence_count),
             "taker_fee_bps": float(args.taker_fee_bps),
+            "close_invalid_after_hours": float(args.close_invalid_after_hours),
         },
         "open": open_positions,
         "closed": closed_positions[-500:],
@@ -351,6 +365,12 @@ def main() -> int:
     ap.add_argument("--min-net-pct", type=float, default=0.20)
     ap.add_argument("--min-persistence-count", type=int, default=3)
     ap.add_argument("--taker-fee-bps", type=float, default=6.0)
+    ap.add_argument(
+        "--close-invalid-after-hours",
+        type=float,
+        default=0.0,
+        help="Research-only: close paper positions once they are no longer validated for this many hours. 0 disables.",
+    )
     args = ap.parse_args()
 
     state = run(args)
