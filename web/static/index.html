@@ -2675,14 +2675,23 @@ function CredentialsPage() {
         React.createElement('table', null,
           React.createElement('thead', null,
             React.createElement('tr', null,
-              ['Exchange', 'Keys', 'Stage', 'Trading'].map(h => React.createElement('th', { key: h }, h))
+              ['Exchange', 'Keys', 'Available', 'Stage', 'Trading'].map(h => React.createElement('th', { key: h }, h))
             )
           ),
           React.createElement('tbody', null,
             (data?.arb_exchanges || []).map(x =>
               React.createElement('tr', { key: x.name },
                 React.createElement('td', { style: { fontWeight: 700 } }, x.name.toUpperCase()),
-                React.createElement('td', null, React.createElement('span', { className: `badge ${x.configured ? 'badge-ok' : 'badge-off'}` }, x.configured ? 'configured' : 'not set')),
+                React.createElement('td', null,
+                  React.createElement('span', { className: `badge ${x.account_ok ? 'badge-ok' : x.configured ? 'badge-warn' : 'badge-off'}` },
+                    x.account_ok ? 'verified' : x.configured ? 'keys set' : 'not set')
+                ),
+                React.createElement('td', null,
+                  x.available_usdt != null
+                    ? React.createElement('span', { className: `badge ${Number(x.available_usdt) >= 20 ? 'badge-ok' : 'badge-warn'}` },
+                        `$${Number(x.available_usdt).toFixed(2)}`)
+                    : React.createElement('span', { className: 'badge badge-off' }, x.reason || '—')
+                ),
                 React.createElement('td', null, React.createElement('span', { className: 'badge badge-warn' }, x.stage || 'planned')),
                 React.createElement('td', null, React.createElement('span', { className: 'badge badge-off' }, 'locked'))
               )

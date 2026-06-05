@@ -151,7 +151,10 @@ PumpFadeV4RStrategy = _import_strategy_class("pump_fade_v4r", "PumpFadeV4RStrate
 PumpFadeSimpleStrategy = _import_strategy_class("pump_fade_simple", "PumpFadeSimpleStrategy")
 PumpMomentumV1Strategy = _import_strategy_class("pump_momentum_v1", "PumpMomentumV1Strategy")
 ImpulseVolumeBreakoutV1Strategy = _import_strategy_class("impulse_volume_breakout_v1", "ImpulseVolumeBreakoutV1Strategy")
-ScalperClassicV1Strategy = _import_strategy_class("scalper_classic_v1", "ScalperClassicV1Strategy")
+ScalperClassicV1Strategy = _optional_strategy_class("scalper_classic_v1", "ScalperClassicV1Strategy")
+ScalperBounceV2Strategy = _import_strategy_class("scalper_bounce_v2", "ScalperBounceV2Strategy")
+ScalperSweepV2Strategy = _import_strategy_class("scalper_sweep_v2", "ScalperSweepV2Strategy")
+ScalperBreakoutV2Strategy = _import_strategy_class("scalper_breakout_v2", "ScalperBreakoutV2Strategy")
 FundingRateReversionV1Strategy = _import_strategy_class("funding_rate_reversion_v1", "FundingRateReversionV1")
 LiquidationCascadeEntryV1Strategy = _import_strategy_class("liquidation_cascade_entry_v1", "LiquidationCascadeEntryV1")
 AltLiquiditySweepReversalV1Strategy = _optional_strategy_class("alt_liquidity_sweep_reversal_v1", "AltLiquiditySweepReversalV1Strategy")
@@ -172,6 +175,7 @@ AltElderRevivedV1Strategy = _import_strategy_class("alt_elder_revived_v1", "AltE
 AltMomentumBreakoutV1Strategy = _import_strategy_class("alt_momentum_breakout_v1", "AltMomentumBreakoutV1")
 AltPullbackContinuationV1Strategy = _import_strategy_class("alt_pullback_continuation_v1", "AltPullbackContinuationV1")
 AltSqueezeBreakoutV1Strategy = _import_strategy_class("alt_squeeze_breakout_v1", "AltSqueezeBreakoutV1")
+ElderCryptoV1Strategy = _import_strategy_class("elder_crypto_v1", "ElderCryptoV1Strategy")
 
 
 def _bars_from_candles(candles: List[Candle]) -> List[dict]:
@@ -570,6 +574,10 @@ def _explicit_strategy_risk_mult(strategy_name: str) -> Optional[float]:
         "alt_bear_regime_continuation_v1": "BRC1_RISK_MULT",
         "alt_whale_print_follow_v1": "WHALE_RISK_MULT",
         "scalper_classic_v1": "SC1_RISK_MULT",
+        "scalper_bounce_v2": "SB2_RISK_MULT",
+        "scalper_sweep_v2": "SS2_RISK_MULT",
+        "scalper_breakout_v2": "SBR2_RISK_MULT",
+        "elder_crypto_v1": "ECV1_RISK_MULT",
     }
     env_keys = env_overrides.get(st)
     if env_keys:
@@ -1074,7 +1082,8 @@ def main():
         "alt_bear_breakdown_v1", "alt_bear_consolidation_short_v1", "alt_elder_revived_v1",
         "alt_momentum_breakout_v1", "alt_pullback_continuation_v1", "alt_squeeze_breakout_v1",
         "alt_trendline_touch_v1", "alt_sloped_momentum_v1", "alt_volume_spike_momentum_v1", "pump_fade_smart_v1", "grid_smart_v1",
-        "alt_slope_break_v1", "scalper_classic_v1",
+        "alt_slope_break_v1", "scalper_classic_v1", "scalper_bounce_v2",
+        "scalper_sweep_v2", "scalper_breakout_v2", "elder_crypto_v1",
         "alt_horizontal_break_v1"}
     for s in strategies:
         if s not in allowed:
@@ -1100,12 +1109,23 @@ def main():
             if funding_dir is not None
             else []
         )
-        stores[sym] = KlineStore(
-            sym,
-            base_candles,
-            base_interval_min=args.base_interval_min,
-            funding_rates=funding_rates,
-        )
+        try:
+            stores[sym] = KlineStore(
+                sym,
+                base_candles,
+                base_interval_min=args.base_interval_min,
+                funding_rates=funding_rates,
+            )
+        except TypeError as exc:
+            if "funding_rates" not in str(exc):
+                raise
+            store = KlineStore(
+                sym,
+                base_candles,
+                base_interval_min=args.base_interval_min,
+            )
+            setattr(store, "funding_rates", funding_rates)
+            stores[sym] = store
 
     if any(s in strategies for s in ("alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1")):
         min_cov_frac = float(os.getenv("FLAT_MIN_COVERAGE_FRAC", "0.85"))
@@ -1285,7 +1305,12 @@ def main():
     pump_fade_simple = {sym: PumpFadeSimpleStrategy() for sym in symbols} if "pump_fade_simple" in strategies else {}
     pump_momentum_v1 = {sym: PumpMomentumV1Strategy() for sym in symbols} if "pump_momentum_v1" in strategies else {}
     impulse_volume_breakout_v1 = {sym: ImpulseVolumeBreakoutV1Strategy() for sym in symbols} if "impulse_volume_breakout_v1" in strategies else {}
+    if "scalper_classic_v1" in strategies and ScalperClassicV1Strategy is None:
+        raise ImportError("scalper_classic_v1 is missing; deploy strategies/scalper_classic_v1.py or remove it from --strategies")
     scalper_classic_v1 = {sym: ScalperClassicV1Strategy() for sym in symbols} if "scalper_classic_v1" in strategies else {}
+    scalper_bounce_v2 = {sym: ScalperBounceV2Strategy() for sym in symbols} if "scalper_bounce_v2" in strategies else {}
+    scalper_sweep_v2 = {sym: ScalperSweepV2Strategy() for sym in symbols} if "scalper_sweep_v2" in strategies else {}
+    scalper_breakout_v2 = {sym: ScalperBreakoutV2Strategy() for sym in symbols} if "scalper_breakout_v2" in strategies else {}
     funding_rate_reversion_v1 = {sym: FundingRateReversionV1Strategy() for sym in symbols} if "funding_rate_reversion_v1" in strategies else {}
     liquidation_cascade_entry_v1 = {sym: LiquidationCascadeEntryV1Strategy() for sym in symbols} if "liquidation_cascade_entry_v1" in strategies else {}
     if "alt_liquidity_sweep_reversal_v1" in strategies and AltLiquiditySweepReversalV1Strategy is None:
@@ -1301,6 +1326,7 @@ def main():
     alt_bear_breakdown_v1 = {sym: AltBearBreakdownV1Strategy() for sym in symbols} if "alt_bear_breakdown_v1" in strategies else {}
     alt_bear_consolidation_short_v1 = {sym: AltBearConsolidationShortV1Strategy() for sym in symbols} if "alt_bear_consolidation_short_v1" in strategies else {}
     alt_elder_revived_v1 = {sym: AltElderRevivedV1Strategy() for sym in symbols} if "alt_elder_revived_v1" in strategies else {}
+    elder_crypto_v1 = {sym: ElderCryptoV1Strategy() for sym in symbols} if "elder_crypto_v1" in strategies else {}
     alt_momentum_breakout_v1 = {sym: AltMomentumBreakoutV1Strategy() for sym in symbols} if "alt_momentum_breakout_v1" in strategies else {}
     alt_pullback_continuation_v1 = {sym: AltPullbackContinuationV1Strategy() for sym in symbols} if "alt_pullback_continuation_v1" in strategies else {}
     alt_squeeze_breakout_v1 = {sym: AltSqueezeBreakoutV1Strategy() for sym in symbols} if "alt_squeeze_breakout_v1" in strategies else {}
@@ -1488,6 +1514,24 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = scalper_classic_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "scalper_bounce_v2":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = scalper_bounce_v2[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "scalper_sweep_v2":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = scalper_sweep_v2[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "scalper_breakout_v2":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = scalper_breakout_v2[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "retest_levels":
                 sig = retest[sym].signal(store, ts_ms, last_price)
             elif st == "momentum":
@@ -1922,6 +1966,12 @@ def main():
                     sym,
                 )
                 sig = _adapt_eval_signal(raw, strategy=st, symbol=sym, time_stop_bars=int(alt_elder_revived_v1[sym].params.get("TIME_STOP_BARS_5M", 0)))
+            elif st == "elder_crypto_v1":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = elder_crypto_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "alt_momentum_breakout_v1":
                 i = getattr(store, 'i5', getattr(store, 'i', None))
                 if i is None:

@@ -25,7 +25,8 @@ mkdir -p \
   "$MIRROR_ROOT"/equities_intraday_dynamic_v1 \
   "$MIRROR_ROOT"/equities_intraday_dynamic_v3_shadow \
   "$MIRROR_ROOT"/ai_context \
-  "$MIRROR_ROOT"/crypto_blocker
+  "$MIRROR_ROOT"/crypto_blocker \
+  "$MIRROR_ROOT"/arb
 
 copy_if_exists() {
   local remote_path="$1"
@@ -66,6 +67,11 @@ copy_if_exists "$BOT_DIR/runtime/ai_context/memory_lines.jsonl" "$MIRROR_ROOT/ai
 copy_if_exists "$BOT_DIR/runtime/crypto_blocker/latest.json" "$MIRROR_ROOT/crypto_blocker/latest.json"
 copy_if_exists "$BOT_DIR/runtime/crypto_blocker/latest.md" "$MIRROR_ROOT/crypto_blocker/latest.md"
 copy_if_exists "$BOT_DIR/runtime/bybit_api_key_expiry_status.json" "$MIRROR_ROOT/bybit_api_key_expiry_status.json"
+copy_if_exists "$BOT_DIR/runtime/live_positions.json" "$MIRROR_ROOT/live_positions.json"
+copy_if_exists "$BOT_DIR/runtime/arb/exchange_account_status.json" "$MIRROR_ROOT/arb/exchange_account_status.json"
+copy_if_exists "$BOT_DIR/runtime/arb/exchange_account_readonly_status.json" "$MIRROR_ROOT/arb/exchange_account_readonly_status.json"
+copy_if_exists "$BOT_DIR/runtime/arb/dry_run/latest.json" "$MIRROR_ROOT/arb/dry_run/latest.json"
+copy_if_exists "$BOT_DIR/runtime/arb_roi_estimate.json" "$MIRROR_ROOT/arb_roi_estimate.json"
 copy_if_exists "$BOT_DIR/trades.csv" "$MIRROR_ROOT/trades.csv"
 
 sync_chat_history() {

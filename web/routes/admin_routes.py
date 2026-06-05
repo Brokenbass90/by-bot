@@ -35,6 +35,23 @@ def _env_text_value(text: str, key: str) -> str:
     return ""
 
 
+def _load_runtime_arb_account_status() -> Dict[str, Any]:
+    """Read scrubbed exchange account status written by the arb read-only helper."""
+    for path in (
+        _rt("arb", "exchange_account_status.json"),
+        _ROOT / "runtime" / "arb" / "exchange_account_status.json",
+    ):
+        if not path.exists():
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(data, dict):
+            return data
+    return {}
+
+
 # ── User management ───────────────────────────────────────────────────────────
 
 @router.get("/users")
@@ -525,33 +542,38 @@ async def get_bybit_key_info(_: str = Depends(require_admin)):
             "risk_pct": acc.get("trade", {}).get("risk_pct"),
             "expiry": expiry_by_account.get(name, {"status": "unknown"}),
         })
+    arb_status = _load_runtime_arb_account_status()
+    arb_exchanges_status = arb_status.get("exchanges") or {}
+
+    def _arb_exchange_row(name: str, env_keys: List[str], stage: str) -> Dict[str, Any]:
+        status = arb_exchanges_status.get(name) if isinstance(arb_exchanges_status, dict) else None
+        status = status if isinstance(status, dict) else {}
+        configured_from_env = all(_env_text_value(text, key) for key in env_keys)
+        configured_from_runtime = bool(status.get("ok")) or status.get("reason") not in {None, "missing_keys"}
+        return {
+            "name": name,
+            "configured": bool(configured_from_env or configured_from_runtime),
+            "role": "cross_exchange_funding",
+            "stage": stage,
+            "trading_enabled": False,
+            "account_ok": bool(status.get("ok")),
+            "equity_usdt": status.get("equity_usdt"),
+            "available_usdt": status.get("available_usdt"),
+            "reason": status.get("reason"),
+            "status_source": "runtime/arb/exchange_account_status.json" if status else "env",
+        }
+
     other_exchanges = [
-        {
-            "name": "binance",
-            "configured": bool(_env_text_value(text, "BINANCE_API_KEY") and _env_text_value(text, "BINANCE_API_SECRET")),
-            "role": "cross_exchange_funding",
-            "stage": "planned_readonly_then_dry_run",
-            "trading_enabled": False,
-        },
-        {
-            "name": "bitget",
-            "configured": bool(_env_text_value(text, "BITGET_API_KEY") and _env_text_value(text, "BITGET_API_SECRET")),
-            "role": "cross_exchange_funding",
-            "stage": "planned_readonly_then_dry_run",
-            "trading_enabled": False,
-        },
-        {
-            "name": "okx",
-            "configured": bool(_env_text_value(text, "OKX_API_KEY") and _env_text_value(text, "OKX_API_SECRET")),
-            "role": "cross_exchange_funding",
-            "stage": "optional_later",
-            "trading_enabled": False,
-        },
+        _arb_exchange_row("binance", ["BINANCE_API_KEY", "BINANCE_API_SECRET"], "readonly_balance_then_dry_run"),
+        _arb_exchange_row("bitget", ["BITGET_API_KEY", "BITGET_API_SECRET", "BITGET_API_PASSPHRASE"], "readonly_balance_then_dry_run"),
+        _arb_exchange_row("mexc", ["MEXC_API_KEY", "MEXC_API_SECRET"], "optional_later"),
+        _arb_exchange_row("okx", ["OKX_API_KEY", "OKX_API_SECRET"], "optional_later"),
     ]
     return {
         "accounts": out,
         "arb_exchanges": other_exchanges,
         "expiry_checked_at_utc": expiry_report.get("checked_at_utc"),
+        "arb_status_checked_at_utc": arb_status.get("generated_at_utc"),
         "note": "Credential values and fragments are never returned by this endpoint.",
     }
 
