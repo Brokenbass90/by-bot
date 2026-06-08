@@ -10900,9 +10900,10 @@ async def try_breakdown_entry_async(symbol: str, price: float):
             f"🟡 BREAKDOWN RISK CUT {symbol}: x{breaker_mult:.2f} | {breaker.get('reason', 'soft breaker')}",
             BREAKDOWN_BREAKER_ALERT_COOLDOWN_SEC,
         )
+    effective_breakdown_risk_mult = float(BREAKDOWN_RISK_MULT) * breaker_mult
     dyn_usd = calc_notional_usd_from_stop_pct(
         stop_pct,
-        risk_mult=float(BREAKDOWN_RISK_MULT) * breaker_mult,
+        risk_mult=effective_breakdown_risk_mult,
     )
     qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
     if dyn_usd > 0:
@@ -10912,7 +10913,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
             symbol=symbol,
             price=price,
             stop_pct=stop_pct,
-            risk_mult=BREAKDOWN_RISK_MULT,
+            risk_mult=effective_breakdown_risk_mult,
             max_mult=BREAKDOWN_MINQTY_FALLBACK_MAX_MULT,
         )
         if fallback_qty > 0:
@@ -10975,6 +10976,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         tr.entry_price = float(entry)
         tr.entry_notional_usd = float(notional_real)
         tr.breakdown_breaker_mult = float(breaker_mult)
+        tr.breakdown_effective_risk_mult = float(effective_breakdown_risk_mult)
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
         tr.signal_ts = int(signal_ts)
@@ -10998,6 +11000,7 @@ async def try_breakdown_entry_async(symbol: str, price: float):
             request_sl=float(sl_r) if sl_r is not None else None,
             signal_reason=str(getattr(sig, "reason", "") or ""),
             breaker_mult=float(breaker_mult),
+            effective_risk_mult=float(effective_breakdown_risk_mult),
             breaker_reason=str(breaker.get("reason", "") or ""),
         )
 
