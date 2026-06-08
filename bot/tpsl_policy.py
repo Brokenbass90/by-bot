@@ -34,3 +34,26 @@ def preserve_existing_tpsl(
     tp = current_tp if current_tp is not None else default_tp
     sl = current_sl if current_sl is not None else default_sl
     return tp, sl
+
+
+def should_preserve_strategy_tpsl(
+    strategy: Optional[str],
+    *,
+    has_strategy_levels: bool,
+    legacy_pct_strategies,
+) -> bool:
+    """Decide how to set TP/SL at fill time.
+
+    Returns True  -> keep the strategy-designed TP/SL (only re-round vs avg).
+    Returns False -> use the global TP_PCT/SL_PCT percentage fallback.
+
+    P0-fix (2026-06-08): historically only a tiny hard-coded whitelist kept
+    their own levels; every other strategy had its stop overwritten with the
+    legacy pump 0.3% stop at fill, destroying its designed risk/reward. Now the
+    default is to preserve, and only explicit legacy pump strategies (or trades
+    that never supplied levels) fall back to the percentage model.
+    """
+    name = str(strategy or "pump")
+    if name in set(legacy_pct_strategies or ()):  # explicit legacy pump family
+        return False
+    return bool(has_strategy_levels)

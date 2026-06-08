@@ -93,7 +93,7 @@ from bot.diagnostics import (
     _flat_no_signal_diag_key, _sloped_no_signal_diag_key, _att1_no_signal_diag_key, _asm1_no_signal_diag_key,
     _breakdown_no_signal_diag_key, _midterm_no_signal_diag_key,
 )
-from bot.tpsl_policy import preserve_existing_tpsl, restored_position_manual_lock
+from bot.tpsl_policy import preserve_existing_tpsl, restored_position_manual_lock, should_preserve_strategy_tpsl
 from bot.deepseek_overlay import DeepSeekOverlay
 from bot.deepseek_autoresearch_agent import (
     results_report_text,
@@ -934,6 +934,9 @@ DCA_BREAK_PEAK_PCT = 0.20
 
 TP_PCT = 0.50
 SL_PCT = 0.30                   
+# legacy pump-style strategies that intentionally use global TP_PCT/SL_PCT
+# at fill time. ALL other strategies keep their own signal-designed TP/SL.
+LEGACY_PCT_STRATEGIES = {"pump", "pump_fade"}
 STALL_BOUNCE_PCT = 0.15
 STALL_MIN_SELL_IMB = 0.52
 
@@ -6131,12 +6134,15 @@ def sync_trades_with_exchange():
                     tr.entry_price = float(avg_ex)
 
                     # если TP/SL уже были рассчитаны по "примерному" price — пересчитаем от реального avg
-                    if getattr(tr, "strategy", "pump") in ("bounce", "range", "inplay", "inplay_breakout", "btc_eth_midterm_pullback"):
-                        # bounce tp/sl могли прийти из сигнала — оставляем их как есть,
-                        # но гарантируем корректное округление относительно entry
+                    has_strategy_levels = (
+                        tr.tp_price is not None and tr.sl_price is not None
+                        and tr.tp_price > 0 and tr.sl_price > 0
+                    )
+                    if should_preserve_strategy_tpsl(getattr(tr, "strategy", "pump"), has_strategy_levels=has_strategy_levels, legacy_pct_strategies=LEGACY_PCT_STRATEGIES):
+                        # P0-fix (2026-06-08): keep strategy-designed TP/SL, only re-round vs real avg.
                         tr.tp_price, tr.sl_price = round_tp_sl_prices(sym, tr.side, tr.avg, tr.tp_price, tr.sl_price)
                     else:
-                        # pump стратегия: tp/sl пересчитать от avg
+                        # legacy pump strategies OR strategy did not provide levels -> global pct fallback
                         if tr.side == "Sell":
                             tp_raw = tr.avg * (1.0 - TP_PCT / 100.0)
                             sl_raw = tr.avg * (1.0 + SL_PCT / 100.0)
