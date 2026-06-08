@@ -14400,6 +14400,9 @@ def main():
     # Start dynamic allowlist watcher (hot-reloads ASC1/ARF1 without bot restart)
     _allowlist_watcher = _AllowlistWatcher()
     _allowlist_watcher.start()
+    # Static approved params can carry global risk multipliers even when the
+    # dynamic regime/allocator overlays are intentionally disabled.
+    _recompute_effective_risk_pct()
     try:
         _apply_regime_overlay(force=True, notify=False)
     except Exception as e:
