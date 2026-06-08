@@ -10,3 +10,17 @@ def test_main_applies_static_global_risk_before_optional_overlays() -> None:
     allocator_pos = main_body.index("_apply_portfolio_allocator_overlay(force=True, notify=False)")
 
     assert recompute_pos < regime_pos < allocator_pos
+
+
+def test_heartbeat_exposes_effective_risk_controls() -> None:
+    src = Path("smart_pump_reversal_bot.py").read_text(encoding="utf-8")
+
+    for key in (
+        '"risk_per_trade_pct"',
+        '"base_risk_per_trade_pct"',
+        '"orch_global_risk_mult"',
+        '"allocator_global_risk_mult"',
+        '"max_open_portfolio_risk_pct"',
+        '"max_positions"',
+    ):
+        assert key in src
