@@ -32,6 +32,8 @@
 #  22. Weekly trade-forensics AI report — Friday 07:45 UTC
 #  23. AI full-context pack — every 5 min
 #  24. Crypto setup blocker report — every 10 min
+#  25. Freshness watchdog — control-plane stale-state alert
+#  26. Stop-integrity watchdog — P0 TP/SL compression alert
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -94,7 +96,9 @@ for req in \
     "$BOT_DIR/scripts/weekly_live_vs_backtest_report.py" \
     "$BOT_DIR/scripts/weekly_trade_forensics_ai_report.py" \
     "$BOT_DIR/scripts/promote_wf22_winner.py" \
-    "$BOT_DIR/scripts/funding_rate_fetcher.py"
+    "$BOT_DIR/scripts/funding_rate_fetcher.py" \
+    "$BOT_DIR/scripts/freshness_watchdog.py" \
+    "$BOT_DIR/scripts/stop_integrity_watchdog.py"
 do
     if [ ! -f "$req" ]; then
         err "Required file not found: $req"
@@ -134,6 +138,8 @@ CURRENT=$(
         | grep -v "scripts/build_ai_extras.py --quiet >> logs/ai_extras.log" \
         | grep -v "scripts/build_ai_ohlc_and_logs.py --quiet >> logs/ai_ohlc_and_logs.log" \
         | grep -v "scripts/build_crypto_setup_blocker_report.py --quiet >> logs/crypto_blocker.log" \
+        | grep -v "scripts/freshness_watchdog.py" \
+        | grep -v "scripts/stop_integrity_watchdog.py" \
         | grep -v "scripts/build_self_audit_report.py --quiet >> logs/self_audit.log" \
         | grep -v "scripts/build_project_doctor_report.py --quiet >> logs/project_doctor.log" \
         | grep -v "scripts/build_strategy_health_timeline.py --quiet >> logs/strategy_health_timeline.log" \
@@ -164,6 +170,12 @@ NEW_CRONS=$(cat << CRONEOF
 #
 # 4. Control-plane watchdog — detect degraded/stale state and self-heal every 15 min
 */15 * * * * cd $BOT_DIR && $PYTHON scripts/control_plane_watchdog.py --repair --quiet >> logs/control_plane_watchdog.log 2>&1 $CRON_TAG
+#
+# 4b. Freshness watchdog — make stale router/regime/allocator inputs loud every 30 min
+*/30 * * * * cd $BOT_DIR && $PYTHON scripts/freshness_watchdog.py --json runtime/freshness_report.json --telegram >> logs/freshness_watchdog.log 2>&1 $CRON_TAG
+#
+# 4c. Stop-integrity watchdog — catch P0 TP/SL compression or missing request telemetry every 10 min
+*/10 * * * * cd $BOT_DIR && $PYTHON scripts/stop_integrity_watchdog.py --lookback-hours 24 --json runtime/stop_integrity_report.json --telegram >> logs/stop_integrity_watchdog.log 2>&1 $CRON_TAG
 #
 # 5. Geometry state builder — deterministic levels / channels / compression for active symbols
 12 * * * * cd $BOT_DIR && $PYTHON scripts/build_geometry_state.py --quiet >> logs/geometry_state.log 2>&1 $CRON_TAG
@@ -274,35 +286,43 @@ echo "[5] Control-plane watchdog (dry-run):"
 cd "$BOT_DIR" && $PYTHON scripts/control_plane_watchdog.py 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[6] Geometry state builder:"
+echo "[6] Freshness watchdog:"
+cd "$BOT_DIR" && $PYTHON scripts/freshness_watchdog.py --json runtime/freshness_report.json 2>&1 | tail -8 && ok "OK" || warn "Check logs"
+
+echo ""
+echo "[7] Stop-integrity watchdog:"
+cd "$BOT_DIR" && $PYTHON scripts/stop_integrity_watchdog.py --lookback-hours 24 --json runtime/stop_integrity_report.json 2>&1 | tail -8 && ok "OK" || warn "Check logs"
+
+echo ""
+echo "[8] Geometry state builder:"
 cd "$BOT_DIR" && $PYTHON scripts/build_geometry_state.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[7] Self-audit report:"
+echo "[9] Self-audit report:"
 cd "$BOT_DIR" && $PYTHON scripts/build_self_audit_report.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[8] AI full-context pack:"
+echo "[10] AI full-context pack:"
 cd "$BOT_DIR" && $PYTHON scripts/build_ai_full_context.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[9] Crypto setup blocker report:"
+echo "[11] Crypto setup blocker report:"
 cd "$BOT_DIR" && $PYTHON scripts/build_crypto_setup_blocker_report.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[8] Project doctor report:"
+echo "[12] Project doctor report:"
 cd "$BOT_DIR" && $PYTHON scripts/build_project_doctor_report.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[9] Strategy health timeline builder:"
+echo "[13] Strategy health timeline builder:"
 cd "$BOT_DIR" && $PYTHON scripts/build_strategy_health_timeline.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[10] Operator snapshot builder:"
+echo "[14] Operator snapshot builder:"
 cd "$BOT_DIR" && $PYTHON scripts/build_operator_snapshot.py --quiet 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
-echo "[11] Intraday bridge (live paper once):"
+echo "[15] Intraday bridge (live paper once):"
 cd "$BOT_DIR" && bash scripts/run_equities_alpaca_intraday_dynamic_v1.sh --once 2>&1 | tail -5 && ok "OK" || warn "Check logs"
 
 echo ""
@@ -310,15 +330,15 @@ echo "================================================"
 echo "  Setup complete!"
 echo ""
 echo "  NEXT STEPS:"
-echo "  1. Regime/allocator now rebuild hourly; router rebuilds daily at 00:03 UTC"
-echo "  1. Regime/allocator now rebuild hourly; router rebuilds every 6h; watchdog checks every 15m"
-echo "  2. OR test manually:"
+echo "  1. Regime/allocator now rebuild hourly; router rebuilds every 4h"
+echo "  2. Control-plane/watchdog checks run every 10-30m"
+echo "  3. OR test manually:"
 echo "     python3 scripts/build_regime_state.py"
 echo "     python3 scripts/build_symbol_router.py --quiet"
 echo "     python3 scripts/build_portfolio_allocator.py"
 echo "     python3 scripts/deepseek_weekly_cron.py"
 echo "     python3 scripts/equity_curve_autopilot.py"
-echo "  3. Check logs: tail -f logs/regime_orchestrator.log"
+echo "  4. Check logs: tail -f logs/regime_orchestrator.log"
 echo "     tail -f logs/symbol_router.log"
 echo "     tail -f logs/portfolio_allocator.log"
 echo "================================================"

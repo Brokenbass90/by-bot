@@ -10049,6 +10049,16 @@ async def try_att1_entry_async(symbol: str, price: float):
         if ok:
             tr.tpsl_manual_lock = False
 
+        _append_live_trade_event(
+            "order_submitted",
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=float(tp_r) if tp_r is not None else None,
+            request_sl=float(sl_r) if sl_r is not None else None,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
+
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
             f"🔷 ATT1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"

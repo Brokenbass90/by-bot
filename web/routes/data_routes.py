@@ -1737,3 +1737,52 @@ async def coin_screener(
         "elapsed_sec": data.get("elapsed_sec"),
         "categories":  data.get("categories", {}),
     }
+
+
+# ── P&L breakdown by sleeve / day / month (Opus 2026-06-08) ──────────────────
+# Backbone for the clickable "Today P&L" modal. Reads the live trade-event log
+# and aggregates realized P&L per strategy (sleeve), per day and per month.
+@router.get("/pnl/by-sleeve")
+async def pnl_by_sleeve(_: str = Depends(require_auth)):
+    events_path = _RUNTIME_ROOT / "live_mirror" / "live_trade_events.jsonl"
+    if not events_path.exists():
+        events_path = _RUNTIME_ROOT / "live_trade_events.jsonl"
+    def _acc() -> Dict[str, float]:
+        return {"pnl": 0.0, "fees": 0.0, "wins": 0, "losses": 0, "trades": 0}
+    def _add(d: Dict[str, float], pnl: float, fees: float) -> None:
+        d["pnl"] += pnl; d["fees"] += fees; d["trades"] += 1
+        d["wins" if pnl >= 0 else "losses"] += 1
+    by_sleeve: Dict[str, Dict[str, float]] = defaultdict(_acc)
+    by_day: Dict[str, Dict[str, float]] = defaultdict(_acc)
+    by_month: Dict[str, Dict[str, float]] = defaultdict(_acc)
+    total = _acc()
+    if events_path.exists():
+        for line in events_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                e = json.loads(line)
+            except Exception:
+                continue
+            if e.get("event") != "close" or e.get("pnl") is None:
+                continue
+            pnl = float(e.get("pnl") or 0.0)
+            fees = float(e.get("fees") or 0.0)
+            sleeve = str(e.get("strategy") or "unknown")
+            day = str(e.get("ts_utc") or "")[:10]
+            month = day[:7]
+            _add(by_sleeve[sleeve], pnl, fees)
+            if day:
+                _add(by_day[day], pnl, fees)
+            if month:
+                _add(by_month[month], pnl, fees)
+            _add(total, pnl, fees)
+    def _rnd(d):
+        return {k: (round(v, 6) if isinstance(v, float) else v) for k, v in d.items()}
+    return {
+        "total": _rnd(total),
+        "by_sleeve": {k: _rnd(v) for k, v in sorted(by_sleeve.items(), key=lambda kv: kv[1]["pnl"])},
+        "by_day": {k: _rnd(v) for k, v in sorted(by_day.items())},
+        "by_month": {k: _rnd(v) for k, v in sorted(by_month.items())},
+    }
