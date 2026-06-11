@@ -50,6 +50,7 @@ DEFAULT_OUT = REPO_ROOT / "runtime" / "ai_context" / "full_context.json"
 # Каждый источник опционален: если файла нет, в JSON будет null.
 SOURCES = {
     "heartbeat": "runtime/bot_heartbeat.json",
+    "live_positions": "runtime/live_positions.json",
     "regime": "runtime/regime/orchestrator_state.json",
     "intraday_state": "configs/intraday_state.json",
     "trade_events": "runtime/live_trade_events.jsonl",
@@ -311,6 +312,19 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
     else:
         ctx["counters_by_sleeve"] = {}
         ctx["grouped_no_signal"] = {}
+
+    # ---- Open positions (2026-06-11 Claude): ИИ был слеп на открытые позиции —
+    # видел только open_trades=N из heartbeat без тикеров/сторон/входов.
+    # Теперь полные детали: symbol, side, entry, qty, sl/tp, unrealized pnl.
+    pos_path = source_path("live_positions")
+    if not pos_path.exists():
+        _mirror = REPO_ROOT / "runtime/live_mirror/live_positions.json"
+        if _mirror.exists():
+            pos_path = _mirror
+    ctx["sources_used"]["live_positions"] = (
+        str(pos_path.relative_to(REPO_ROOT)) if pos_path.exists() else None
+    )
+    ctx["open_positions"] = load_json(pos_path, fallback={"count": None, "positions": []})
 
     # ---- Regime ----
     regime_path = source_path("regime")

@@ -32,37 +32,64 @@ from backtest.robustness import fee_sensitivity
 
 
 def simulate_pair(prices_a: Sequence[float], prices_b: Sequence[float],
-                  cfg: PairConfig | None = None, fee_bps: float = 6.0) -> List[Dict[str, float]]:
+                  cfg: PairConfig | None = None, fee_bps: float = 6.0,
+                  max_hold_bars: int = 168) -> List[Dict[str, float]]:
+    """REWRITTEN 2026-06-10 (Claude audit): realizable P&L only.
+
+    The original version booked profit as the change of a spread RE-FITTED with
+    fresh beta/intercept at exit. That quantity is not realizable by the
+    executor and inflated results massively (PF 4.78 fantasy on ETH/BTC; honest
+    walk-forward of the same period: PF ~0.8, fee-fragile — see
+    scripts/walkforward_pair_arb.py / scripts/fast_pair_research.py).
+
+    Now: equal-notional legs, P&L = sign * (ret_long_leg - ret_short_leg) in
+    log-returns per LEG notional, fees for 4 fills, plus a max-hold time stop
+    (the executor has one; a sim without it can hold a divergence forever).
+    """
     cfg = cfg or PairConfig()
     n = min(len(prices_a), len(prices_b))
     a, b = list(prices_a[:n]), list(prices_b[:n])
     eng = PairStatArbV1(cfg)
     trades: List[Dict[str, float]] = []
     in_pos = False
-    entry_spread = 0.0
-    entry_sign = 0
+    entry_sign = 0  # +1: z>0 -> short A / long B; -1: long A / short B
+    a_e = b_e = 0.0
+    entry_i = 0
     fee_cost = 4.0 * fee_bps / 10000.0  # open 2 legs + close 2 legs
     lb = cfg.lookback
+
+    def _book(i: int) -> None:
+        nonlocal in_pos
+        ret_a = math.log(a[i] / a_e)
+        ret_b = math.log(b[i] / b_e)
+        gross = entry_sign * (ret_b - ret_a)
+        trades.append({"pnl": gross - fee_cost, "return_pct": gross - fee_cost,
+                       "fees": fee_cost})
+        in_pos = False
+
     for i in range(lb, n):
         wa, wb = a[: i + 1], b[: i + 1]
         d = eng.diagnostics(wa, wb)
-        if not d.get("tradeable"):
-            continue
-        z = d["z"]
-        _, _, spread = compute_spread(wa[-lb:], wb[-lb:])
-        cur_spread = spread[-1]
         if not in_pos:
+            if not d.get("tradeable"):
+                continue
+            z = d["z"]
             if abs(z) >= cfg.entry_z and abs(z) < cfg.stop_z:
                 in_pos = True
-                entry_spread = cur_spread
                 entry_sign = 1 if z > 0 else -1
+                a_e, b_e = a[i], b[i]
+                entry_i = i
         else:
+            z = d.get("z", 0.0)
             exit_now, _ = eng.should_exit(z)
+            if not d.get("tradeable"):
+                exit_now = True  # lost cointegration mid-trade -> bail
+            if not exit_now and (i - entry_i) >= max_hold_bars:
+                exit_now = True
             if exit_now:
-                gross = entry_sign * (entry_spread - cur_spread)
-                trades.append({"pnl": gross - fee_cost, "return_pct": gross - fee_cost,
-                               "fees": fee_cost})
-                in_pos = False
+                _book(i)
+    if in_pos:
+        _book(n - 1)
     return trades
 
 

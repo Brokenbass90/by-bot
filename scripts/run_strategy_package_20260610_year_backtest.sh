@@ -82,9 +82,16 @@ run_case() {
     --cache "$CACHE_DIR" \
     --tag "$tag" 2>&1 | tee "$log"
   local run_dir
-  run_dir="$(grep -E '^  out:' "$log" | tail -1 | awk '{print $2}')"
+  run_dir="$(
+    awk '
+      /^  out:/ {print $2}
+      /^Saved portfolio run to:/ {print $5}
+    ' "$log" | tail -1
+  )"
   if [[ -n "${run_dir:-}" && -d "$run_dir" ]]; then
     echo "${name},${run_dir}" >> "$OUT_ROOT/run_dirs.csv"
+  else
+    echo "warn: run_dir_not_found name=${name} log=${log}" | tee -a "$OUT_ROOT/run.log"
   fi
 }
 
