@@ -29,6 +29,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
+from bot.ai_context import append_ai_context_lines, compact_ai_full_context
+
 from ..deps import require_admin, require_auth
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
@@ -784,6 +786,7 @@ def _build_context() -> str:
         f"BOT: {'ALIVE' if alive else 'OFFLINE'} | heartbeat_age_sec={hb_age} | "
         f"open_trades={open_trades} ({flat_note})\n"
     )
+    append_ai_context_lines(parts, _ROOT)
 
     # Regime
     reg = _json(_rt("regime", "orchestrator_state.json")) or _json(_rt("regime.json"))
@@ -1388,6 +1391,7 @@ async def get_full_context(email: str = Depends(require_admin)):
     """Return AI ORACLE-stage context plus source runtime packs."""
     return {
         "context": _build_context(),
+        "unified_ai_context": compact_ai_full_context(_ROOT),
         "operator_snapshot": _json(_rt("operator", "operator_snapshot.json")),
         "ai_full_context": _json(_rt("ai_context", "full_context.json")),
         "ai_extras": _json(_rt("ai_context", "extras.json")),

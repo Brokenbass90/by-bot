@@ -95,6 +95,7 @@ from bot.diagnostics import (
 )
 from bot.tpsl_policy import preserve_existing_tpsl, restored_position_manual_lock, should_preserve_strategy_tpsl
 from bot.deepseek_overlay import DeepSeekOverlay
+from bot.ai_context import compact_ai_full_context
 from bot.deepseek_autoresearch_agent import (
     results_report_text,
     tune_strategy,
@@ -3013,37 +3014,7 @@ def _load_json_dict(path: Path) -> dict[str, Any]:
 
 
 def _compact_ai_full_context_for_deepseek() -> dict[str, Any]:
-    ctx = _load_json_dict(ROOT_DIR / "runtime" / "ai_context" / "full_context.json")
-    if not ctx:
-        return {}
-    setup = ctx.get("setups_scanner") if isinstance(ctx.get("setups_scanner"), dict) else {}
-    raw_cards = list((setup or {}).get("cards_top") or [])
-    cards = []
-    for card in raw_cards[:12]:
-        if not isinstance(card, dict):
-            continue
-        runtime = card.get("runtime") if isinstance(card.get("runtime"), dict) else {}
-        cards.append({
-            "symbol": card.get("symbol"),
-            "interval": card.get("interval"),
-            "side": card.get("side"),
-            "setup_type": card.get("setup_type"),
-            "strategy": card.get("strategy"),
-            "score": card.get("score"),
-            "runtime_enabled": runtime.get("enabled"),
-            "runtime_risk": runtime.get("risk_mult"),
-            "reasons": list(card.get("reasons") or [])[:4],
-        })
-    sources = ctx.get("sources_used") if isinstance(ctx.get("sources_used"), dict) else {}
-    missing_sources = [str(k) for k, v in sources.items() if not v]
-    grouped = ctx.get("grouped_no_signal") if isinstance(ctx.get("grouped_no_signal"), dict) else {}
-    return {
-        "generated_at_utc": ctx.get("generated_at_utc"),
-        "missing_sources": missing_sources[:8],
-        "setup_card_count": (setup or {}).get("card_count"),
-        "setup_cards_top": cards,
-        "grouped_no_signal": grouped,
-    }
+    return compact_ai_full_context(ROOT_DIR)
 
 
 def _compact_ai_extras_for_deepseek() -> dict[str, Any]:
