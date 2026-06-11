@@ -960,6 +960,7 @@ TPSL_HARD_FAIL_GRACE_SEC = int(os.getenv("TPSL_HARD_FAIL_GRACE_SEC", "15") or 15
 RESPECT_MANUAL_TPSL = True          # главный переключатель
 MANUAL_TPSL_MIN_AGE_SEC = 12        # не считаем "ручным" изменение в первые N секунд после входа/обновления
 MANUAL_TPSL_DETECT_TICKS = 2        # допуск расхождения в "тиках" (tickSize * N), чтобы не ловить шум
+MANUAL_TPSL_LOCK_TG_COOLDOWN_SEC = max(60, int(os.getenv("MANUAL_TPSL_LOCK_TG_COOLDOWN_SEC", "1800") or 1800))
 
 
 # =========================== BOUNCE DEBUG/CONTROL ===========================
@@ -6282,7 +6283,11 @@ def sync_trades_with_exchange():
                         tr.sl_price = sl_ex
                         tr.tpsl_manual_lock = True
                         tr.tpsl_on_exchange = True
-                        tg_trade(f"🧷 MANUAL TPSL LOCK {sym}: TP={tp_ex} SL={sl_ex}")
+                        tg_trade_throttled(
+                            f"manual_tpsl_lock:{sym}:{tp_ex}:{sl_ex}",
+                            f"🧷 MANUAL TPSL LOCK {sym}: TP={tp_ex} SL={sl_ex}",
+                            MANUAL_TPSL_LOCK_TG_COOLDOWN_SEC,
+                        )
 
     _scan_untracked_exchange_positions()
 
@@ -13405,6 +13410,15 @@ def _read_simple_env_file(path: Path) -> dict[str, str]:
     return out
 
 
+def _refresh_strategy_pause_env() -> None:
+    """Hot-apply monitor-written risk pauses before recalculating strategy risk."""
+    if not STRATEGY_PAUSE_ENV.exists():
+        return
+    pause_map = _read_simple_env_file(STRATEGY_PAUSE_ENV)
+    for k, v in pause_map.items():
+        os.environ[k] = v
+
+
 def _recompute_effective_risk_pct() -> None:
     global RISK_PER_TRADE_PCT
     if float(BASE_RISK_PER_TRADE_PCT or 0.0) <= 0:
@@ -13654,6 +13668,9 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ASB1_ENGINE, HZBO1_ENGINE, BOUNCE1_ENGINE, ASB1_SYMBOL_ALLOWLIST, HZBO1_SYMBOL_ALLOWLIST, BOUNCE1_SYMBOL_ALLOWLIST
     global RISK_PER_TRADE_PCT, ORCH_GLOBAL_RISK_MULT, REGIME_OVERLAY_LAST_MTIME
     global REGIME_OVERLAY_LAST_APPLY_TS, REGIME_OVERLAY_LAST_APPLIED_REGIME, LAST_UNIVERSE_REFRESH_TS
+    global BREAKOUT_RISK_MULT, MIDTERM_RISK_MULT, SLOPED_RISK_MULT, FLAT_RISK_MULT
+    global BREAKDOWN_RISK_MULT, IVB1_RISK_MULT, ELDER_RISK_MULT, ATT1_RISK_MULT
+    global ASM1_RISK_MULT, ASB1_RISK_MULT, HZBO1_RISK_MULT, BOUNCE1_RISK_MULT
 
     if not REGIME_OVERLAY_ENABLE:
         return False
@@ -13678,6 +13695,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
 
     for k, v in env_map.items():
         os.environ[k] = v
+    _refresh_strategy_pause_env()
     _mirror_env_aliases(_ENV_ALIAS_MAP)
 
     old_regime = str(REGIME_OVERLAY_LAST_APPLIED_REGIME or "").strip()
@@ -13725,6 +13743,57 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
         ORCH_GLOBAL_RISK_MULT = max(0.05, float(os.getenv("ORCH_GLOBAL_RISK_MULT", "1.0") or 1.0))
     except Exception:
         ORCH_GLOBAL_RISK_MULT = 1.0
+    try:
+        BREAKOUT_RISK_MULT = _risk_mult_or_pause("BREAKOUT_RISK_MULT", str(BREAKOUT_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        MIDTERM_RISK_MULT = _risk_mult_or_pause("MIDTERM_RISK_MULT", str(MIDTERM_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        SLOPED_RISK_MULT = _risk_mult_or_pause("SLOPED_RISK_MULT", str(SLOPED_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        FLAT_RISK_MULT = _risk_mult_or_pause("FLAT_RISK_MULT", str(FLAT_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        BREAKDOWN_RISK_MULT = _risk_mult_or_pause("BREAKDOWN_RISK_MULT", str(BREAKDOWN_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        IVB1_RISK_MULT = _risk_mult_or_pause("IVB1_RISK_MULT", str(IVB1_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        ELDER_RISK_MULT = max(
+            0.0,
+            _env_float_any("ELDER_RISK_MULT", "ELDER_V2_RISK_MULT", default=ELDER_RISK_MULT),
+        )
+    except Exception:
+        pass
+    try:
+        ATT1_RISK_MULT = _risk_mult_or_pause("ATT1_RISK_MULT", str(ATT1_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        ASM1_RISK_MULT = _risk_mult_or_pause("ASM1_RISK_MULT", str(ASM1_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        ASB1_RISK_MULT = _risk_mult_or_pause("ASB1_RISK_MULT", str(ASB1_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        HZBO1_RISK_MULT = _risk_mult_or_pause("HZBO1_RISK_MULT", str(HZBO1_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        BOUNCE1_RISK_MULT = _risk_mult_or_pause("BOUNCE1_RISK_MULT", str(BOUNCE1_RISK_MULT))
+    except Exception:
+        pass
     try:
         BRC1_RISK_MULT = max(0.0, float(os.getenv("BRC1_RISK_MULT", str(BRC1_RISK_MULT)) or BRC1_RISK_MULT))
     except Exception:
@@ -13840,6 +13909,7 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
 
     for k, v in env_map.items():
         os.environ[k] = v
+    _refresh_strategy_pause_env()
     _mirror_env_aliases(_ENV_ALIAS_MAP)
 
     old_status = str(PORTFOLIO_ALLOCATOR_LAST_STATUS or "").strip()

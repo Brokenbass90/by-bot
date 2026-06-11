@@ -32,7 +32,7 @@ Hysteresis (anti-flicker):
 Sleeve decision table (4H layer drives ON/OFF; macro layer drives risk multiplier):
   bull_trend  → breakout ON, asb1 ON, bounce ON, ivb1 ON, breakdown OFF, risk 1.00 × macro
   bull_chop   → breakout REDUCED, asb1 ON, flat ON, swing REDUCED, risk 0.85 × macro
-  bear_chop   → breakdown ON, flat ON, swing ON, breakout OFF, risk 0.70 × macro
+  bear_chop   → ATT1 short-only, legacy breakdown OFF, flat ON, breakout OFF, risk 0.70 × macro
   bear_trend  → breakdown ON, flat ON, bear-swing ON, momentum OFF, risk 0.50 × macro
 
 Usage:
@@ -641,7 +641,7 @@ _REGIME_DECISIONS = {
         "btc_bias": "short",
         "sleeves": {
             "momentum": "off", "breakout": "off", "bounce": "off",
-            "mean_reversion": "active", "swing": "active", "breakdown": "reduced",
+            "mean_reversion": "active", "swing": "short_only", "breakdown": "off",
         },
         "overrides": {
             # Range + breakdown strategies; longs off (EXCEPT if MACRO_BULL overlay)
@@ -656,8 +656,10 @@ _REGIME_DECISIONS = {
             "ENABLE_BOUNCE_TRADING":     "0",
             "ENABLE_BOUNCE1_TRADING":    "0",
             "ENABLE_IVB1_TRADING":       "0",
-            "ENABLE_ATT1_TRADING":       "1",   # ATT1 handles both sides
-            "ENABLE_BREAKDOWN_TRADING":  "1",
+            "ENABLE_ATT1_TRADING":       "1",   # ATT1 keeps edge in bear_chop only on shorts
+            "ATT1_ALLOW_LONGS":          "0",
+            "ATT1_ALLOW_SHORTS":         "1",
+            "ENABLE_BREAKDOWN_TRADING":  "0",   # legacy BD1 degraded in recent bear_chop; keep off until repaired
             "ENABLE_FLAT_TRADING":       "1",   # flat range is best in chop
             "ENABLE_VWAP_TRADING":       "1",
             "ENABLE_MIDTERM_TRADING":    "1",
@@ -675,7 +677,7 @@ _REGIME_DECISIONS = {
         },
         "notes": [
             "BTC 4H below EMA55, low ER — choppy bear",
-            "Range + VWAP + breakdown active; longs off",
+            "ATT1 short-only; legacy BD1 off until repaired",
             "Risk reduced to 0.70 base (macro modifier applied on top)",
         ],
     },
