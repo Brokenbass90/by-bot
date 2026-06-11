@@ -163,6 +163,7 @@ AltSpikeRejectionV1Strategy = _import_strategy_class("alt_spike_rejection_v1", "
 AltBearRegimeContinuationV1Strategy = _import_strategy_class("alt_bear_regime_continuation_v1", "AltBearRegimeContinuationV1Strategy")
 AltWhalePrintFollowV1Strategy = _import_strategy_class("alt_whale_print_follow_v1", "AltWhalePrintFollowV1Strategy")
 AltTrendlineTouchV1Strategy = _import_strategy_class("alt_trendline_touch_v1", "AltTrendlineTouchV1Strategy")
+AltTrendlineTouchV2Strategy = _import_strategy_class("alt_trendline_touch_v2", "AltTrendlineTouchV2Strategy")
 PumpFadeSmartV1Strategy = _import_strategy_class("pump_fade_smart_v1", "PumpFadeSmartV1Strategy")
 GridSmartV1Strategy = _import_strategy_class("grid_smart_v1", "GridSmartV1Strategy")
 AltSlopedMomentumV1Strategy = _import_strategy_class("alt_sloped_momentum_v1", "AltSlopedMomentumV1Strategy")
@@ -549,6 +550,7 @@ def _explicit_strategy_risk_mult(strategy_name: str) -> Optional[float]:
         "alt_resistance_fade_v1": "FLAT_RISK_MULT",
         "alt_sloped_channel_v1": "SLOPED_RISK_MULT",
         "alt_trendline_touch_v1": "ATT1_RISK_MULT",
+        "alt_trendline_touch_v2": ("ATT2_RISK_MULT", "ATT1_V2_RISK_MULT", "ATT1_RISK_MULT"),
         "alt_bear_breakdown_v1": "BBD1_RISK_MULT",
         "alt_bear_consolidation_short_v1": "BCS1_RISK_MULT",
         "alt_elder_revived_v1": "ELDER_REVIVED_RISK_MULT",
@@ -574,10 +576,14 @@ def _explicit_strategy_risk_mult(strategy_name: str) -> Optional[float]:
         "alt_bear_regime_continuation_v1": "BRC1_RISK_MULT",
         "alt_whale_print_follow_v1": "WHALE_RISK_MULT",
         "scalper_classic_v1": "SC1_RISK_MULT",
+        "micro_scalper_v1": ("MSCALP_RISK_MULT", "MICRO_SCALPER_RISK_MULT"),
+        "micro_scalper_bounce_v1": ("MSCALP_BOUNCE_RISK_MULT", "MICRO_SCALPER_BOUNCE_RISK_MULT"),
+        "micro_scalper_breakout_v1": ("MSCALP_BREAKOUT_RISK_MULT", "MICRO_SCALPER_BREAKOUT_RISK_MULT"),
         "scalper_bounce_v2": "SB2_RISK_MULT",
         "scalper_sweep_v2": "SS2_RISK_MULT",
         "scalper_breakout_v2": "SBR2_RISK_MULT",
         "elder_crypto_v1": "ECV1_RISK_MULT",
+        "grid_smart_v1": ("GS1_RISK_MULT", "GRID_SMART_RISK_MULT"),
     }
     env_keys = env_overrides.get(st)
     if env_keys:
@@ -778,6 +784,22 @@ def _load_symbol_base(
 
     out: List[Candle] = []
     for r in rows:
+        # 2026-06-10 (Claude): cache files may store rows as dicts
+        # ({"ts","o","h","l","c","v"} — the live bot / prefetch format) or as
+        # lists ([ts,o,h,l,c,v] — the REST fetch format). The old code silently
+        # dropped dict rows -> "0 candles / 0 trades" looked like a strategy
+        # failure in cache-only runs. Handle both.
+        if isinstance(r, dict):
+            try:
+                ts = int(float(r.get("ts", 0)))
+                if ts < start_ms or ts >= end_ms:
+                    continue
+                out.append(Candle(ts=ts, o=float(r["o"]), h=float(r["h"]),
+                                  l=float(r["l"]), c=float(r["c"]),
+                                  v=float(r.get("v", 0.0) or 0.0)))
+            except Exception:
+                continue
+            continue
         if not isinstance(r, (list, tuple)) or len(r) < 5:
             continue
         ts = int(float(r[0]))
@@ -1081,7 +1103,7 @@ def main():
     allowed = {"bounce", "bounce_v2", "range", "inplay", "inplay_pullback", "inplay_breakout", "pump_fade", "retest_levels", "momentum", "trend_pullback", "trend_pullback_be_trail", "sr_break_retest_volume_v1", "sloped_break_retest_v1", "sloped_resistance_choch_v1", "trend_breakout", "vol_breakout", "adaptive_range_short", "smart_grid", "smart_grid_v2", "smart_grid_v3", "range_bounce", "donchian_breakout", "btc_eth_midterm_pullback", "btc_eth_vol_expansion", "btc_eth_trend_rsi_reentry", "trendline_break_retest", "btc_eth_trend_follow", "trendline_break_retest_v2", "flat_bounce_v2", "flat_bounce_v3", "btc_eth_trend_follow_v2", "trendline_break_retest_v3", "trendline_break_retest_v4", "structure_shift_v1", "structure_shift_v2", "tv_atr_trend_v1", "tv_atr_trend_v2", "triple_screen_v132", "triple_screen_v132b", "btc_regime_retest_v1", "btc_cycle_pullback_v1", "btc_macro_cycle_v1", "btc_cycle_continuation_v1", "btc_cycle_level_target_v2", "btc_daily_level_reclaim_v1", "btc_swing_zone_reclaim_v1", "btc_weekly_zone_reclaim_v2", "btc_regime_flip_continuation_v1", "btc_sloped_reclaim_v1", "alt_range_reclaim_v1", "alt_resistance_fade_v1", "alt_sloped_channel_v1", "alt_inplay_breakdown_v1", "alt_inplay_breakdown_v2", "alt_support_bounce_v1", "alt_range_scalp_v1", "alt_vwap_mean_reversion_v1", "alt_liquidity_sweep_reversal_v1", "alt_liquidity_sweep_reversal_v2", "alt_spike_rejection_v1", "alt_bear_regime_continuation_v1", "alt_whale_print_follow_v1", "micro_scalper_v1", "micro_scalper_bounce_v1", "micro_scalper_breakout_v1", "alt_support_reclaim_v1", "pump_fade_v4r", "pump_fade_simple", "pump_fade_v2", "pump_fade_v3", "btc_eth_midterm_pullback_v2", "btc_eth_midterm_v3", "btc_eth_midterm_short_v1", "btc_eth_midterm_short_v2", "funding_rate_reversion_v1", "liquidation_cascade_entry_v1", "pump_momentum_v1", "elder_triple_screen_v2", "elder_triple_screen_v3", "impulse_volume_breakout_v1",
         "alt_bear_breakdown_v1", "alt_bear_consolidation_short_v1", "alt_elder_revived_v1",
         "alt_momentum_breakout_v1", "alt_pullback_continuation_v1", "alt_squeeze_breakout_v1",
-        "alt_trendline_touch_v1", "alt_sloped_momentum_v1", "alt_volume_spike_momentum_v1", "pump_fade_smart_v1", "grid_smart_v1",
+        "alt_trendline_touch_v1", "alt_trendline_touch_v2", "alt_sloped_momentum_v1", "alt_volume_spike_momentum_v1", "pump_fade_smart_v1", "grid_smart_v1",
         "alt_slope_break_v1", "scalper_classic_v1", "scalper_bounce_v2",
         "scalper_sweep_v2", "scalper_breakout_v2", "elder_crypto_v1",
         "alt_horizontal_break_v1"}
@@ -1321,6 +1343,7 @@ def main():
     alt_bear_regime_continuation_v1 = {sym: AltBearRegimeContinuationV1Strategy() for sym in symbols} if "alt_bear_regime_continuation_v1" in strategies else {}
     alt_whale_print_follow_v1 = {sym: AltWhalePrintFollowV1Strategy() for sym in symbols} if "alt_whale_print_follow_v1" in strategies else {}
     alt_trendline_touch_v1 = {sym: AltTrendlineTouchV1Strategy() for sym in symbols} if "alt_trendline_touch_v1" in strategies else {}
+    alt_trendline_touch_v2 = {sym: AltTrendlineTouchV2Strategy() for sym in symbols} if "alt_trendline_touch_v2" in strategies else {}
     pump_fade_smart_v1 = {sym: PumpFadeSmartV1Strategy() for sym in symbols} if "pump_fade_smart_v1" in strategies else {}
     grid_smart_v1 = {sym: GridSmartV1Strategy() for sym in symbols} if "grid_smart_v1" in strategies else {}
     alt_bear_breakdown_v1 = {sym: AltBearBreakdownV1Strategy() for sym in symbols} if "alt_bear_breakdown_v1" in strategies else {}
@@ -1918,6 +1941,12 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = alt_trendline_touch_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "alt_trendline_touch_v2":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = alt_trendline_touch_v2[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "pump_fade_smart_v1":
                 i = getattr(store, 'i5', getattr(store, 'i', None))
                 if i is None:

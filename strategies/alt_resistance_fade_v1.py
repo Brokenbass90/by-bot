@@ -221,7 +221,9 @@ class AltResistanceFadeV1Strategy:
         c.cooldown_bars_5m         = _env_int("ARF1_COOLDOWN_BARS_5M", c.cooldown_bars_5m)
         c.config_refresh_bars      = _env_int("ARF1_CONFIG_REFRESH_BARS", c.config_refresh_bars)
 
-        self._allow = _env_csv_set("ARF1_SYMBOL_ALLOWLIST", "BCHUSDT")
+        # Empty allowlist means "use the routed universe"; a BCH-only default
+        # made backtests silently diverge from live configs.
+        self._allow = _env_csv_set("ARF1_SYMBOL_ALLOWLIST", "")
         self._deny  = _env_csv_set("ARF1_SYMBOL_DENYLIST")
 
     def _maybe_refresh_config(self) -> None:

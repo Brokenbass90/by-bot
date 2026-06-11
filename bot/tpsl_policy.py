@@ -51,7 +51,9 @@ def should_preserve_strategy_tpsl(
     their own levels; every other strategy had its stop overwritten with the
     legacy pump 0.3% stop at fill, destroying its designed risk/reward. Now the
     default is to preserve, and only explicit legacy pump strategies (or trades
-    that never supplied levels) fall back to the percentage model.
+    that never supplied any level) fall back to the percentage model. Runner
+    strategies intentionally have no fixed TP, but their strategy SL is still a
+    real level and must be preserved.
     """
     name = str(strategy or "pump")
     if name in set(legacy_pct_strategies or ()):  # explicit legacy pump family

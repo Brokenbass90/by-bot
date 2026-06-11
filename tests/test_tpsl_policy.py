@@ -47,6 +47,15 @@ def test_modern_strategy_keeps_its_own_stop():
         assert should_preserve_strategy_tpsl(strat, has_strategy_levels=True, legacy_pct_strategies=_LEGACY) is True
 
 
+def test_modern_runner_strategy_keeps_sl_without_fixed_tp():
+    # Runner exits use TP=None on exchange; the strategy SL must still survive fill sync.
+    assert should_preserve_strategy_tpsl(
+        "att1_trendline_touch",
+        has_strategy_levels=True,
+        legacy_pct_strategies=_LEGACY,
+    ) is True
+
+
 def test_legacy_pump_uses_pct_fallback():
     assert should_preserve_strategy_tpsl("pump", has_strategy_levels=True, legacy_pct_strategies=_LEGACY) is False
     assert should_preserve_strategy_tpsl("pump_fade", has_strategy_levels=True, legacy_pct_strategies=_LEGACY) is False

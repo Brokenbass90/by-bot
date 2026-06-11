@@ -2011,6 +2011,27 @@ def _append_live_trade_event(event: str, sym: str, tr=None, **extra) -> None:
     except Exception as e:
         log_error(f"live trade event log fail: {e}")
 
+
+def _append_order_submitted_event(
+    sym: str,
+    tr,
+    *,
+    request_price: float,
+    request_tp: float | None,
+    request_sl: float | None,
+    signal_reason: str = "",
+) -> None:
+    _append_live_trade_event(
+        "order_submitted",
+        sym,
+        tr,
+        request_price=float(request_price),
+        request_tp=float(request_tp) if request_tp is not None else None,
+        request_sl=float(request_sl) if request_sl is not None else None,
+        signal_reason=str(signal_reason or ""),
+    )
+
+
 def _append_signal_decision(sleeve: str, sym: str, outcome: str, reason: str = "", **extra) -> None:
     """Write compact, bounded signal-stage evidence for live-vs-backtest parity."""
     if not SIGNAL_DECISION_TRACE_ENABLE:
@@ -6135,8 +6156,8 @@ def sync_trades_with_exchange():
 
                     # если TP/SL уже были рассчитаны по "примерному" price — пересчитаем от реального avg
                     has_strategy_levels = (
-                        tr.tp_price is not None and tr.sl_price is not None
-                        and tr.tp_price > 0 and tr.sl_price > 0
+                        (tr.tp_price is not None and tr.tp_price > 0)
+                        or (tr.sl_price is not None and tr.sl_price > 0)
                     )
                     if should_preserve_strategy_tpsl(getattr(tr, "strategy", "pump"), has_strategy_levels=has_strategy_levels, legacy_pct_strategies=LEGACY_PCT_STRATEGIES):
                         # P0-fix (2026-06-08): keep strategy-designed TP/SL, only re-round vs real avg.
@@ -6483,6 +6504,13 @@ try:
         MAX_POSITIONS = int(_trade_cfg.get("max_positions", MAX_POSITIONS))
     elif "max_trades" in _trade_cfg:
         MAX_POSITIONS = int(_trade_cfg.get("max_trades", MAX_POSITIONS))
+except Exception:
+    pass
+
+try:
+    _max_positions_env = os.getenv("MAX_POSITIONS")
+    if _max_positions_env is not None and str(_max_positions_env).strip() != "":
+        MAX_POSITIONS = int(str(_max_positions_env).strip())
 except Exception:
     pass
 
@@ -7497,6 +7525,7 @@ def ensure_open_positions_have_tpsl():
         # рассчитываем только недостающую сторону.
         if tr.tp_price is None or tr.sl_price is None:
             avg = float(tr.avg)
+            is_runner = bool(getattr(tr, "runner_enabled", False))
 
             if tr.side == "Sell":
                 tp_raw = avg * (1.0 - TP_PCT / 100.0)
@@ -7506,6 +7535,8 @@ def ensure_open_positions_have_tpsl():
                 sl_raw = avg * (1.0 - SL_PCT / 100.0)
 
             default_tp, default_sl = round_tp_sl_prices(sym, tr.side, avg, tp_raw, sl_raw)
+            if is_runner:
+                default_tp = None
             tr.tp_price, tr.sl_price = preserve_existing_tpsl(
                 tr.tp_price,
                 tr.sl_price,
@@ -7524,7 +7555,9 @@ def ensure_open_positions_have_tpsl():
 
             # уведомляем только если раньше считали, что TP/SL на бирже НЕ было
             if not was_on:
-                tg_trade(f"🧷 TP/SL ensured {sym}: TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}")
+                tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+                sl_txt = f"{tr.sl_price:.6f}" if tr.sl_price is not None else "none"
+                tg_trade(f"🧷 TP/SL ensured {sym}: TP={tp_txt} SL={sl_txt}")
         else:
             tr.tpsl_on_exchange = False
             _arm_tpsl_failsafe(sym, tr, "periodic_ensure_failed")
@@ -9017,6 +9050,15 @@ async def try_range_entry_async(symbol: str, price: float):
     if ok:
         tr.tpsl_manual_lock = False
 
+    _append_order_submitted_event(
+        symbol,
+        tr,
+        request_price=float(price),
+        request_tp=tp_r,
+        request_sl=sl_r,
+        signal_reason=str(getattr(sig, "reason", "") or ""),
+    )
+
     tg_trade(
         f"🟦 RANGE ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
         f"entry≈{price:.6f} TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}\n"
@@ -9118,6 +9160,15 @@ async def try_inplay_entry_async(symbol: str, price: float):
     tr.tpsl_last_set_ts = now_s()
     if ok:
         tr.tpsl_manual_lock = False
+
+    _append_order_submitted_event(
+        symbol,
+        tr,
+        request_price=float(entry),
+        request_tp=tp_r,
+        request_sl=sl_r,
+        signal_reason=str(getattr(sig, "reason", "") or ""),
+    )
 
     if tr.tp_price is not None:
         tp_txt = f"{tr.tp_price:.6f}"
@@ -9467,6 +9518,15 @@ async def try_breakout_entry_async(symbol: str, price: float):
         if ok:
             tr.tpsl_manual_lock = False
 
+        _append_order_submitted_event(
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=tp_r,
+            request_sl=sl_r,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
+
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
             f"🟩 BREAKOUT ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
@@ -9563,6 +9623,15 @@ async def try_retest_entry_async(symbol: str, price: float):
     tr.tpsl_last_set_ts = now_s()
     if ok:
         tr.tpsl_manual_lock = False
+
+    _append_order_submitted_event(
+        symbol,
+        tr,
+        request_price=float(entry),
+        request_tp=tp_r,
+        request_sl=sl_r,
+        signal_reason=str(getattr(sig, "reason", "") or ""),
+    )
 
     tg_trade(
         f"🟦 RETEST ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
@@ -9710,6 +9779,15 @@ async def try_midterm_entry_async(symbol: str, price: float):
         tr.tpsl_last_set_ts = now_s()
         if ok:
             tr.tpsl_manual_lock = False
+
+        _append_order_submitted_event(
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=tp_r,
+            request_sl=sl_r,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
 
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
@@ -9869,6 +9947,15 @@ async def try_sloped_entry_async(symbol: str, price: float):
         tr.tpsl_last_set_ts = now_s()
         if ok:
             tr.tpsl_manual_lock = False
+
+        _append_order_submitted_event(
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=tp_r,
+            request_sl=sl_r,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
 
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
@@ -10049,13 +10136,12 @@ async def try_att1_entry_async(symbol: str, price: float):
         if ok:
             tr.tpsl_manual_lock = False
 
-        _append_live_trade_event(
-            "order_submitted",
+        _append_order_submitted_event(
             symbol,
             tr,
             request_price=float(entry),
-            request_tp=float(tp_r) if tp_r is not None else None,
-            request_sl=float(sl_r) if sl_r is not None else None,
+            request_tp=tp_r,
+            request_sl=sl_r,
             signal_reason=str(getattr(sig, "reason", "") or ""),
         )
 
@@ -10210,6 +10296,15 @@ async def try_asm1_entry_async(symbol: str, price: float):
         if ok:
             tr.tpsl_manual_lock = False
 
+        _append_order_submitted_event(
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=tp_r,
+            request_sl=sl_r,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
+
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
             f"🟦 ASM1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
@@ -10352,6 +10447,15 @@ async def try_asb1_entry_async(symbol: str, price: float):
         if ok:
             tr.tpsl_manual_lock = False
 
+        _append_order_submitted_event(
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=tp_r,
+            request_sl=sl_r,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
+
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
             f"📉 ASB1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
@@ -10493,6 +10597,15 @@ async def try_hzbo1_entry_async(symbol: str, price: float):
         tr.tpsl_last_set_ts = now_s()
         if ok:
             tr.tpsl_manual_lock = False
+
+        _append_order_submitted_event(
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=tp_r,
+            request_sl=sl_r,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
 
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
@@ -10640,6 +10753,15 @@ async def try_bounce1_entry_async(symbol: str, price: float):
         tr.tpsl_last_set_ts = now_s()
         if ok:
             tr.tpsl_manual_lock = False
+
+        _append_order_submitted_event(
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=tp_r,
+            request_sl=sl_r,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
 
         tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
         tg_trade(
@@ -11117,6 +11239,14 @@ async def try_micro_scalper_entry_async(symbol: str, price: float):
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
         tr.tpsl_on_exchange = bool(ok)
         tr.tpsl_last_set_ts = now_s()
+        _append_order_submitted_event(
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=tp_r,
+            request_sl=sl_r,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
         tg_trade(
             f"⚡ MICRO ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
             f"entry≈{entry:.6f} TP={tp_r:.6f} SL={sl_r:.6f}\n"
@@ -11219,6 +11349,14 @@ async def try_support_reclaim_entry_async(symbol: str, price: float):
         ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
         tr.tpsl_on_exchange = bool(ok)
         tr.tpsl_last_set_ts = now_s()
+        _append_order_submitted_event(
+            symbol,
+            tr,
+            request_price=float(entry),
+            request_tp=tp_r,
+            request_sl=sl_r,
+            signal_reason=str(getattr(sig, "reason", "") or ""),
+        )
         tg_trade(
             f"🟢 SUPPORT RECLAIM [{TRADE_CLIENT.name}] {symbol} LONG\n"
             f"entry≈{entry:.6f} TP={tp_r:.6f} SL={sl_r:.6f}\n"
@@ -12081,6 +12219,15 @@ async def try_ts132_entry_async(symbol: str, price: float):
     if ok:
         tr.tpsl_manual_lock = False
 
+    _append_order_submitted_event(
+        symbol,
+        tr,
+        request_price=float(entry),
+        request_tp=tp_r,
+        request_sl=sl_r,
+        signal_reason=str(getattr(sig, "reason", "") or ""),
+    )
+
     tg_trade(
         f"🟫 TS132 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
         f"entry≈{entry:.6f} TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}\n"
@@ -12394,6 +12541,14 @@ def try_bounce_entry(exch: str, sym: str, st: SymState, now: int, price: float):
         if ok:
             tr.tpsl_manual_lock = False   # если бот только что поставил — это точно AUTO
 
+        _append_order_submitted_event(
+            sym,
+            tr,
+            request_price=float(price),
+            request_tp=tr.tp_price,
+            request_sl=tr.sl_price,
+            signal_reason=str(getattr(sig, "note", "") or ""),
+        )
 
 
         acc_name = TRADE_CLIENT.name if TRADE_CLIENT else "NO_CLIENT"
@@ -13025,6 +13180,14 @@ def detect(exch: str, sym: str, st: SymState, now: int):
                 if ok:
                     tr.tpsl_manual_lock = False
 
+                _append_order_submitted_event(
+                    sym,
+                    tr,
+                    request_price=float(p1),
+                    request_tp=tr.tp_price,
+                    request_sl=tr.sl_price,
+                    signal_reason="legacy_pump_fade",
+                )
 
                 acc_name = TRADE_CLIENT.name if TRADE_CLIENT else "NO_CLIENT"
                 tg_trade(
@@ -14275,6 +14438,37 @@ async def pulse():
                 if int(v) != 0
             }
             _status_regime = _current_regime_label_for_status()
+            _strategy_runtime_config = {
+                "no_entry_hours_utc": sorted(int(h) for h in NO_ENTRY_HOURS_UTC),
+                "enabled": {
+                    "att1": bool(ENABLE_ATT1_TRADING),
+                    "flat": bool(ENABLE_FLAT_TRADING),
+                    "breakdown": bool(ENABLE_BREAKDOWN_TRADING),
+                    "midterm": bool(ENABLE_MIDTERM_TRADING),
+                    "ivb1": bool(ENABLE_IVB1_TRADING),
+                    "bounce1": bool(ENABLE_BOUNCE1_TRADING),
+                    "asb1_slope_break": bool(ENABLE_ASB1_TRADING),
+                    "hzbo1": bool(ENABLE_HZBO1_TRADING),
+                    "elder": bool(ENABLE_ELDER_TRADING),
+                },
+                "risk_mult": {
+                    "att1": round(float(ATT1_RISK_MULT), 6),
+                    "flat": round(float(FLAT_RISK_MULT), 6),
+                    "breakdown": round(float(BREAKDOWN_RISK_MULT), 6),
+                    "midterm": round(float(MIDTERM_RISK_MULT), 6),
+                    "ivb1": round(float(IVB1_RISK_MULT), 6),
+                    "bounce1": round(float(BOUNCE1_RISK_MULT), 6),
+                    "asb1_slope_break": round(float(ASB1_RISK_MULT), 6),
+                    "hzbo1": round(float(HZBO1_RISK_MULT), 6),
+                    "elder": round(float(ELDER_RISK_MULT), 6),
+                },
+                "allowlist": {
+                    "att1": sorted(_csv_upper_set("ATT1_SYMBOL_ALLOWLIST")),
+                    "breakdown": sorted(_csv_upper_set("BREAKDOWN_SYMBOL_ALLOWLIST")),
+                    "arf1": sorted(_csv_upper_set("ARF1_SYMBOL_ALLOWLIST")),
+                    "bounce1": sorted(_csv_upper_set("BOUNCE1_SYMBOL_ALLOWLIST")),
+                },
+            }
             _diag_payload = {
                 "ts": int(time.time()),
                 "ts_iso": _utc_now_iso(),
@@ -14307,6 +14501,7 @@ async def pulse():
                     "voladj_atr_pct": round(_va_pct, 3),
                     "voladj_mult": round(_va_mult, 2),
                 },
+                "strategy_runtime_config": _strategy_runtime_config,
             }
             _write_json_atomic(_diag_path, _diag_payload)
             _write_json_atomic(
@@ -14330,6 +14525,7 @@ async def pulse():
                     "max_positions": int(MAX_POSITIONS),
                     "runtime_diag": _diag_payload["runtime_diag"],
                     "runtime_counters": _runtime_counters,
+                    "strategy_runtime_config": _strategy_runtime_config,
                     "voladj_atr_pct": round(_va_pct, 3),
                     "voladj_mult": round(_va_mult, 2),
                 },
