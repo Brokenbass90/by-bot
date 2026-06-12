@@ -108,6 +108,7 @@ EQUITY_LOG_FILE    = ROOT / "configs" / "intraday_equity_log.json"
 ADVISORY_DIR       = ROOT / "runtime" / "equities_intraday_dynamic_v1"
 ADVISORY_FILE      = ADVISORY_DIR / "latest_advisory.json"
 MONTHLY_RUNTIME_DIR = ROOT / "runtime" / "equities_monthly_v36"
+TG_DEDUPE_FILE     = ROOT / "runtime" / "alpaca_tg_dedupe.json"
 
 # US market session in UTC (EDT: +4h, EST: +5h). Wide window handles DST.
 US_SESSION_UTC_START = 14   # 10:00 AM ET (EDT safety buffer)
@@ -274,12 +275,13 @@ def _is_fractional_qty(qty: float) -> bool:
 
 def _refresh_runtime_paths() -> None:
     """Re-resolve path globals after env files/shell overrides are loaded."""
-    global STATE_FILE, EQUITY_LOG_FILE, ADVISORY_DIR, ADVISORY_FILE, MONTHLY_RUNTIME_DIR
+    global STATE_FILE, EQUITY_LOG_FILE, ADVISORY_DIR, ADVISORY_FILE, MONTHLY_RUNTIME_DIR, TG_DEDUPE_FILE
     STATE_FILE = Path(_env("INTRADAY_STATE_FILE", str(ROOT / "configs" / "intraday_state.json"))).expanduser()
     EQUITY_LOG_FILE = Path(_env("INTRADAY_EQUITY_LOG_FILE", str(ROOT / "configs" / "intraday_equity_log.json"))).expanduser()
     ADVISORY_DIR = Path(_env("INTRADAY_ADVISORY_DIR", str(ROOT / "runtime" / "equities_intraday_dynamic_v1"))).expanduser()
     ADVISORY_FILE = ADVISORY_DIR / "latest_advisory.json"
     MONTHLY_RUNTIME_DIR = Path(_env("INTRADAY_MONTHLY_RUNTIME_DIR", str(ROOT / "runtime" / "equities_monthly_v36"))).expanduser()
+    TG_DEDUPE_FILE = Path(_env("INTRADAY_TG_DEDUPE_FILE", str(ROOT / "runtime" / "alpaca_tg_dedupe.json"))).expanduser()
 
 
 def _load_strategy_map_from_env() -> Dict[str, str]:
@@ -453,6 +455,73 @@ def _tg(token: str, chat_id: str, msg: str) -> None:
             pass
     except Exception:
         pass
+
+
+def _load_tg_dedupe(now_ts: int) -> Dict[str, int]:
+    if not TG_DEDUPE_FILE.exists():
+        return {}
+    try:
+        raw = json.loads(TG_DEDUPE_FILE.read_text(encoding="utf-8"))
+        if not isinstance(raw, dict):
+            return {}
+        max_age = max(3600, _env_int("INTRADAY_TG_DEDUPE_KEEP_SEC", 86400))
+        out: Dict[str, int] = {}
+        for key, value in raw.items():
+            try:
+                ts = int(float(value))
+            except Exception:
+                continue
+            if now_ts - ts <= max_age:
+                out[str(key)] = ts
+        return out
+    except Exception:
+        return {}
+
+
+def _save_tg_dedupe(cache: Dict[str, int]) -> None:
+    try:
+        TG_DEDUPE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        tmp = TG_DEDUPE_FILE.with_suffix(TG_DEDUPE_FILE.suffix + ".tmp")
+        tmp.write_text(json.dumps(cache, indent=2, sort_keys=True), encoding="utf-8")
+        tmp.replace(TG_DEDUPE_FILE)
+    except Exception as exc:
+        print(f"[TG] dedupe save failed: {exc}")
+
+
+def _dry_run_tg_key(symbol: str, side: str, entry: float, sl: float, tp: float, qty: Any, reason: str) -> str:
+    return "|".join([
+        "intraday_dry_run",
+        symbol.upper(),
+        side.lower(),
+        f"e={entry:.2f}",
+        f"sl={sl:.2f}",
+        f"tp={tp:.2f}",
+        f"q={qty}",
+        (reason or "").strip().lower()[:48],
+    ])
+
+
+def _should_send_dry_run_tg(
+    symbol: str,
+    side: str,
+    entry: float,
+    sl: float,
+    tp: float,
+    qty: Any,
+    reason: str,
+    now_ts: int,
+) -> bool:
+    cooldown_sec = max(0, _env_int("INTRADAY_DRY_RUN_TG_DEDUPE_MINUTES", 60)) * 60
+    if cooldown_sec <= 0:
+        return True
+    cache = _load_tg_dedupe(now_ts)
+    key = _dry_run_tg_key(symbol, side, entry, sl, tp, qty, reason)
+    last_ts = int(cache.get(key, 0) or 0)
+    if last_ts and now_ts - last_ts < cooldown_sec:
+        return False
+    cache[key] = int(now_ts)
+    _save_tg_dedupe(cache)
+    return True
 
 
 def _load_monthly_managed_symbols() -> set[str]:
@@ -1537,10 +1606,13 @@ def run_once(client: AlpacaClient, dry_run: bool,
             })
             advisory["symbols"].append(symbol_status)
             print(f"    → [DRY-RUN] Would submit bracket order")
-            _tg(tg_token, tg_chat,
-                f"🔍 <b>[DRY-RUN] {symbol}</b> {sig.side.upper()}\n"
-                f"e≈${entry_price:.2f} | SL=${sl_price:.2f} | TP=${tp_price:.2f} | {rr_label}\n"
-                f"Qty={qty} | Risk≈${risk_usd:.2f}{qty_adjustment} | {now_str}")
+            if _should_send_dry_run_tg(symbol, sig.side, entry_price, sl_price, tp_price, qty, sig.reason or "", now_ts):
+                _tg(tg_token, tg_chat,
+                    f"🔍 <b>[DRY-RUN] {symbol}</b> {sig.side.upper()}\n"
+                    f"e≈${entry_price:.2f} | SL=${sl_price:.2f} | TP=${tp_price:.2f} | {rr_label}\n"
+                    f"Qty={qty} | Risk≈${risk_usd:.2f}{qty_adjustment} | {now_str}")
+            else:
+                print("    → TG skipped: duplicate dry-run signal inside cooldown")
         else:
             try:
                 alpaca_side = "buy" if sig.side == "long" else "sell"

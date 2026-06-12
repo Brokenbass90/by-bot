@@ -2170,9 +2170,34 @@ function SetupCardChart({ card }) {
   );
 }
 
+function setupCardPrompt(c, fr) {
+  const reasons = (c.reasons || []).join(' · ') || 'no reasons';
+  const runtime = c.runtime || {};
+  const funding = fr ? `${fr.rate_pct > 0 ? '+' : ''}${fr.rate_pct.toFixed(4)}% / 8h` : 'unknown';
+  return [
+    'Разбери эту карточку Setup Scanner как старший трейдер.',
+    'Не предлагай live-вход без подтверждения risk/backtest gates; дай план: что должно подтвердиться, где инвалидация, какой риск, стоит ли ждать.',
+    '',
+    `Symbol: ${c.symbol}`,
+    `Side: ${c.side || 'watch'}`,
+    `Interval: ${c.interval || '?'}m`,
+    `Setup: ${c.setup_type || '-'}`,
+    `Strategy: ${c.strategy || '-'}`,
+    `Score: ${Number(c.score || 0).toFixed(2)}`,
+    `Price: ${c.price ?? '-'}`,
+    `Level: ${c.level_price ?? '-'} (${c.level_touches || 0} touches)`,
+    `Distance ATR: ${c.distance_atr ?? '-'}`,
+    `Invalidation: ${c.invalidation ?? '-'}`,
+    `Runtime: ${runtime.enabled ? 'LIVE' : 'WATCH'} risk=${runtime.risk_mult ?? runtime.final_risk_mult ?? 0} health=${runtime.health || '-'}`,
+    `Funding: ${funding}`,
+    `Reasons: ${reasons}`,
+  ].join('\n');
+}
+
 // ── Setup Card with AI analysis ───────────────────────────────────────────
 function SetupCard({ c, sideBadge, frRates, frColor }) {
   const [aiState, setAiState] = useState(null);  // null | 'loading' | {verdict, reasoning, risk_note}
+  const [chatState, setChatState] = useState(null);
 
   const VERDICT_COLOR = {
     strong: 'var(--green)',
@@ -2215,6 +2240,14 @@ function SetupCard({ c, sideBadge, frRates, frColor }) {
     }
   };
 
+  const sendToAIChat = () => {
+    const prompt = setupCardPrompt(c, frRates[c.symbol]);
+    localStorage.setItem('ai_prefill', prompt);
+    window.dispatchEvent(new CustomEvent('open-ai-chat-card', { detail: { prompt } }));
+    setChatState('sent');
+    setTimeout(() => setChatState(null), 1800);
+  };
+
   return React.createElement('div', { className: 'card', style: { minHeight: '230px' } },
     React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start', marginBottom: '12px' } },
       React.createElement('div', null,
@@ -2223,6 +2256,12 @@ function SetupCard({ c, sideBadge, frRates, frColor }) {
       ),
       React.createElement('div', { style: { display: 'flex', gap: '8px', alignItems: 'center' } },
         React.createElement('span', { className: `badge ${sideBadge(c.side)}` }, c.side || 'WATCH'),
+        React.createElement('button', {
+          className: 'refresh-btn',
+          style: { fontSize: '12px', padding: '3px 8px' },
+          onClick: sendToAIChat,
+          title: 'Отправить карточку в AI Chat',
+        }, chatState === 'sent' ? '✓ Chat' : '↗ Chat'),
         React.createElement('button', {
           className: 'refresh-btn',
           style: { fontSize: '12px', padding: '3px 8px', opacity: aiState === 'loading' ? 0.5 : 1 },
@@ -2419,6 +2458,25 @@ function AIChatPage() {
       .catch(() => {});
   }, []);
   useEffect(() => {
+    const loadPrefill = () => {
+      const prompt = localStorage.getItem('ai_prefill') || '';
+      if (prompt.trim()) {
+        setInput(prompt);
+        localStorage.removeItem('ai_prefill');
+      }
+    };
+    const onCard = e => {
+      const prompt = e?.detail?.prompt || localStorage.getItem('ai_prefill') || '';
+      if (prompt.trim()) {
+        setInput(prompt);
+        localStorage.removeItem('ai_prefill');
+      }
+    };
+    loadPrefill();
+    window.addEventListener('open-ai-chat-card', onCard);
+    return () => window.removeEventListener('open-ai-chat-card', onCard);
+  }, []);
+  useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
     el.style.height = '0px';
@@ -2475,6 +2533,7 @@ function AIChatPage() {
   const quickBtns = [
     'Как работает бот прямо сейчас?',
     'Какой режим рынка и что активно?',
+    'Разбери лучший setup scanner и дай план без исполнения',
     'Покажи performance по стратегиям',
     'Есть ли проблемы которые надо починить?',
     'Что делает Alpaca?',
@@ -3265,6 +3324,12 @@ function App() {
     const t = setInterval(load, 10000);
     return () => clearInterval(t);
   }, [stage]);
+
+  useEffect(() => {
+    const openAI = () => setPage('ai');
+    window.addEventListener('open-ai-chat-card', openAI);
+    return () => window.removeEventListener('open-ai-chat-card', openAI);
+  }, []);
 
   async function logout() {
     await fetch('/auth/logout', { method: 'DELETE', credentials: 'include' }).catch(() => {});

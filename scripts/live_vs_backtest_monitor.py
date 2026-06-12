@@ -29,6 +29,9 @@ Env vars:
   MONITOR_DEGRADE_THRESHOLD   float, default 0.60  (live PF < backtest × this → pause)
   MONITOR_RECOVER_THRESHOLD   float, default 0.80  (live PF > backtest × this → recover)
   MONITOR_MIN_TRADES          int,   default 10    (min live trades to evaluate)
+  MONITOR_EMERGENCY_MIN_TRADES int,  default 5     (min trades for live-bleed emergency stop)
+  MONITOR_EMERGENCY_PF        float, default 0.20  (pause below this PF even before full sample)
+  MONITOR_EMERGENCY_NET_PNL   float, default -0.50 (pause if rolling net PnL is worse)
   MONITOR_ROLLING_DAYS        int,   default 30    (rolling window in days)
   MONITOR_BACKTEST_PF         json string, e.g. '{"alt_resistance_fade_v1":1.4}'
                                fallback PF expectations per strategy. If not set,
@@ -70,6 +73,9 @@ _DEFAULT_BACKTEST_PF: Dict[str, float] = {
     "alt_inplay_breakdown_v1":    1.35,
     "btc_eth_midterm_pullback":   1.30,
     "btc_eth_midterm_v3":         1.30,
+    # Live strategy labels emitted by smart_pump_reversal_bot.py
+    "flat_resistance_fade":       1.40,
+    "att1_trendline_touch":       1.25,
     # Awaiting promotion via sweep (2026-05-27)
     "alt_trendline_touch_v1":     1.25,
     "alt_bear_regime_continuation_v1": 1.30,   # 90d showed PF 4.80, conservative ref
@@ -96,6 +102,8 @@ _STRATEGY_RISK_KEY: Dict[str, str] = {
     "alt_range_scalp_v1":             "RANGE_RISK_MULT",
     "impulse_volume_breakout_v1":     "IVB1_RISK_MULT",
     "alt_inplay_breakdown_v1":        "BREAKDOWN_RISK_MULT",
+    "flat_resistance_fade":           "FLAT_RISK_MULT",
+    "att1_trendline_touch":           "ATT1_RISK_MULT",
     "inplay_breakout":                "BREAKOUT_RISK_MULT",
     "alt_inplay_breakdown_v2":        "BREAKDOWN2_RISK_MULT",
     "elder_triple_screen_v2":         "ELDER_RISK_MULT",
@@ -113,13 +121,9 @@ _STRATEGY_RISK_KEY: Dict[str, str] = {
     "micro_scalper_v1":               "MSCALP_RISK_MULT",
 }
 
-# IMPORTANT: bot has hard-floor max(0.05, X_RISK_MULT) for most strategies (line ~600-870
-# in smart_pump_reversal_bot.py). Setting X_RISK_MULT=0.0 in strategy_pause.env clamps
-# to 0.05, NOT zero. That's a 95% size reduction, not a true pause. Only ATT1 and BRC1
-# use max(0.0, ...) and can be truly paused.
-# Workaround for hard pause: use the bot's health gate (_health_gate.allow_entry) or
-# the ENABLE_*_TRADING flag (but enable flags are FORBIDDEN in auto_apply).
-# See OPUS_AUDIT_2026_05_27.md → Risk-mult floor discussion.
+# Current live bot uses _risk_mult_or_pause for most sleeve risk multipliers and
+# hot-applies runtime/strategy_pause.env. Keep this map aligned with emitted live
+# strategy labels; otherwise a bleeding sleeve can hide behind "insufficient_data".
 
 # ---------------------------------------------------------------------------
 # Config
@@ -127,6 +131,9 @@ _STRATEGY_RISK_KEY: Dict[str, str] = {
 DEGRADE_THRESHOLD = float(os.getenv("MONITOR_DEGRADE_THRESHOLD", "0.60"))
 RECOVER_THRESHOLD = float(os.getenv("MONITOR_RECOVER_THRESHOLD", "0.80"))
 MIN_TRADES        = int(os.getenv("MONITOR_MIN_TRADES", "10"))
+EMERGENCY_MIN_TRADES = int(os.getenv("MONITOR_EMERGENCY_MIN_TRADES", "5"))
+EMERGENCY_PF      = float(os.getenv("MONITOR_EMERGENCY_PF", "0.20"))
+EMERGENCY_NET_PNL = float(os.getenv("MONITOR_EMERGENCY_NET_PNL", "-0.50"))
 ROLLING_DAYS      = int(os.getenv("MONITOR_ROLLING_DAYS", "30"))
 TG_TOKEN          = os.getenv("TG_TOKEN", "")
 TG_CHAT_ID        = os.getenv("TG_CHAT_ID", os.getenv("TG_CHAT", ""))
@@ -302,14 +309,28 @@ def analyse_strategies(days: int = ROLLING_DAYS) -> Dict[str, Any]:
         pf = _compute_pf(wins, losses)
         bt_pf = _DEFAULT_BACKTEST_PF.get(strat)
 
+        total_pnl = round(sum(pnls), 4)
+        emergency_bleed = (
+            n >= EMERGENCY_MIN_TRADES
+            and pf is not None
+            and pf < EMERGENCY_PF
+            and total_pnl <= EMERGENCY_NET_PNL
+        )
+
         status = "ok"
-        if n < MIN_TRADES:
+        reason = ""
+        if emergency_bleed:
+            status = "degraded"
+            reason = "emergency_live_bleed"
+        elif n < MIN_TRADES:
             status = "insufficient_data"
         elif pf is not None and bt_pf is not None:
             if pf < bt_pf * DEGRADE_THRESHOLD:
                 status = "degraded"
+                reason = "below_backtest_threshold"
             elif pf < bt_pf * RECOVER_THRESHOLD:
                 status = "watch"
+                reason = "below_recover_threshold"
 
         results[strat] = {
             "strategy":         strat,
@@ -320,7 +341,8 @@ def analyse_strategies(days: int = ROLLING_DAYS) -> Dict[str, Any]:
             "degrade_threshold": round(bt_pf * DEGRADE_THRESHOLD, 3) if bt_pf else None,
             "recover_threshold": round(bt_pf * RECOVER_THRESHOLD, 3) if bt_pf else None,
             "status":           status,
-            "total_pnl_30d":    round(sum(pnls), 4),
+            "status_reason":    reason,
+            "total_pnl_30d":    total_pnl,
         }
 
     return results
@@ -378,6 +400,7 @@ def run(dry_run: bool = False) -> None:
                     f"live PF={info['live_pf_30d']} vs backtest PF={info['backtest_pf_ref']} "
                     f"(threshold={info['degrade_threshold']})\n"
                     f"trades_30d={info['trades_30d']} win_rate={info['win_rate_30d']:.0%}\n"
+                    f"reason={info.get('status_reason') or 'degraded'} net={info['total_pnl_30d']:+.4f}\n"
                     f"Action: pausing (risk_mult → 0.0) + queuing re-optimisation"
                 )
                 alerts.append(msg)

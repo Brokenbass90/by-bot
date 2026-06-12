@@ -385,3 +385,91 @@ Arbitrage quick check after audit fixes:
   - mean fold return: `-1.4092%`
   - fee sensitivity verdict: `fee_fragile`
 - Conclusion: pair-arb remains research-only. Do not allocate capital until pair-universe scan + regime/funding filters produce positive OOS after costs.
+
+## 2026-06-13 Codex live-protection/web session
+
+Context:
+
+- User reported that the bot traded again and closed another trade in minus.
+- Server was alive: `dry_run=false`, `trade_on=true`, regime `bear_chop`, one open Bybit trade.
+- Current open position at check time: `BNBUSDT` short from `flat_resistance_fade`, entry `607.033333`, current around `602.6`, small unrealized plus (`~+0.73%`, `~+$0.13`), SL `612.5`, TP `None`.
+- Recent live losses were not from the newly repaired research package. They were from old live sleeves:
+  - `alt_inplay_breakdown_v1`: 15 closed, 4 wins, net about `-2.417`.
+  - `att1_trendline_touch`: 7 closed, 1 win, net about `-1.283`.
+
+Live protection changes:
+
+- Patched `scripts/live_vs_backtest_monitor.py`.
+  - Added real live labels: `att1_trendline_touch` and `flat_resistance_fade`.
+  - Added emergency live-bleed stop before full sample size:
+    - `MONITOR_EMERGENCY_MIN_TRADES=5`
+    - `MONITOR_EMERGENCY_PF=0.20`
+    - `MONITOR_EMERGENCY_NET_PNL=-0.50`
+  - Reason: ATT1 had only 7 trades, so old monitor called it `insufficient_data` even with PF `0.056`, WR `14%`, net `-1.2827`.
+- Deployed the monitor to server and ran it live.
+- Resulting server `runtime/strategy_pause.env` now contains:
+  - `BREAKDOWN_RISK_MULT=0.0`
+  - `ATT1_RISK_MULT=0.0`
+- Expected P&L effect: stop adding new risk from the two currently bleeding live sleeves while the current `flat` BNB position continues normally. This is a defensive step, not a profit claim.
+
+Alpaca Telegram noise:
+
+- Patched `scripts/equities_alpaca_intraday_bridge.py`.
+  - Added dry-run Telegram dedupe keyed by symbol/side/entry/SL/TP/qty/reason.
+  - Default cooldown: `INTRADAY_DRY_RUN_TG_DEDUPE_MINUTES=60`.
+  - Repeated dry-run signals remain in `runtime/equities_intraday_dynamic_v1/latest_advisory.json`, but Telegram no longer repeats the exact same UNH/CRWD signal every 5 minutes.
+- Local check:
+  - first send: `True`
+  - repeat inside cooldown: `False`
+  - after cooldown: `True`
+- Expected P&L effect: none directly; expected operator effect is less noise and fewer false “new event” interpretations.
+
+Web/AI operator:
+
+- Patched `web/static/index.html`.
+  - Setup Scanner cards now have `↗ Chat`.
+  - Clicking it sends a structured card prompt into AI Chat and switches the UI to the AI page.
+  - AI Chat also got quick prompt: `Разбери лучший setup scanner и дай план без исполнения`.
+- Existing backend already has:
+  - `/api/ai/analyze-setup`
+  - `/api/ai/analyze-live-position`
+  - `/api/ai/propose-position-action`
+  - `/api/ai/confirm-position-action`
+- New behavior is intentionally proposal-first. AI can explain a setup and draft a plan, but live execution still requires explicit confirmation and risk gates.
+
+Research status:
+
+- `bd2_audit_20260612` still running.
+  - Around 100/486 checked.
+  - Best seen so far only around PF `1.08`, net `+0.51`, with fail reasons mostly `pf<1.3`, `net<5`, too many negative months/streak.
+  - Keep running for now, but current evidence says BD2 is not portfolio-ready.
+- Old strict `lsr2_audit_20260612` was stopped.
+  - It produced over 100 consecutive zero-trade configs. Diagnosis: over-filtered matrix, not useful research.
+- Started `lsr2_relaxed_20260612`.
+  - Spec: `configs/autoresearch/liquidity_sweep_reversal_v2_relaxed_diagnostic_v1.json`.
+  - Log: `logs/research_audit_20260612/lsr2_relaxed.log`.
+  - Screen: `lsr2_relaxed_20260612`.
+  - 64 diagnostic combos; all-regime, no ADX cap, lower volume/touch/persistence gates.
+  - This is diagnostic only. A pass is not promotion; it only proves whether the mechanism is still alive after audit repairs.
+
+Validation/deploy:
+
+- Local:
+  - `python3 -m py_compile scripts/live_vs_backtest_monitor.py scripts/equities_alpaca_intraday_bridge.py` — OK.
+  - Web static checks found one `setupCardPrompt`, five `open-ai-chat-card` references, one new setup quick prompt.
+- Server:
+  - Targeted `scp` deploy for:
+    - `scripts/live_vs_backtest_monitor.py`
+    - `scripts/equities_alpaca_intraday_bridge.py`
+    - `web/static/index.html`
+    - `configs/autoresearch/liquidity_sweep_reversal_v2_relaxed_diagnostic_v1.json`
+  - Server `py_compile` for the two scripts — OK.
+  - No live bot restart.
+
+Next checks:
+
+1. Confirm no new ATT1 or breakdown entries after `strategy_pause.env` hot-apply.
+2. Watch BNB flat position; do not restart live bot while it is open unless there is an emergency.
+3. Check `lsr2_relaxed_20260612` after it prints first 10-20 rows. If still zero trades, the LSR2 implementation/gates need mechanism-level review rather than more parameters.
+4. Check BD2 after at least 200 rows. If best PF remains near 1.0 with weak net, stop and redesign breakdown around retest/volume/5m confirmation rather than continuing parameter search.
+5. Commit/push only the scoped files from this session. Do not include dirty `configs/web_config.json` or unrelated archived/deleted strategy work.
