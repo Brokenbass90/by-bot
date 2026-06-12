@@ -773,6 +773,32 @@ def _add_reentry_block(
     }
 
 
+def _select_monthly_cycle_picks(
+    picks: list[Pick],
+    *,
+    earnings_blocked: dict[str, str],
+    blocked_reentry_symbols: set[str],
+    max_positions: int,
+    no_current_cycle: bool,
+) -> list[Pick]:
+    """Pick current monthly candidates after safety filters.
+
+    The refresh step can intentionally write a wider candidate pool than the
+    live max position count. This lets the bridge use next-best replacements
+    when the top symbols are temporarily blocked by re-entry protection.
+    """
+    if no_current_cycle:
+        return []
+    limit = max(0, int(max_positions))
+    if limit <= 0:
+        return []
+    return [
+        p for p in picks
+        if p.ticker not in earnings_blocked
+        and p.ticker not in blocked_reentry_symbols
+    ][:limit]
+
+
 def _save_hwm_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(state, indent=2), encoding="utf-8")
@@ -1198,11 +1224,13 @@ def main() -> int:
     # "no current cycle candidates" instead of buying old names.
     no_current_cycle = bool(stale_guard_triggered and refreshed_recently)
 
-    # Select only picks not blocked by earnings, up to max_positions
-    selected = [] if no_current_cycle else [
-        p for p in picks
-        if p.ticker not in earnings_blocked and p.ticker not in blocked_reentry_symbols
-    ][:max_positions]
+    selected = _select_monthly_cycle_picks(
+        picks,
+        earnings_blocked=earnings_blocked,
+        blocked_reentry_symbols=blocked_reentry_symbols,
+        max_positions=max_positions,
+        no_current_cycle=no_current_cycle,
+    )
     selected_symbols = {p.ticker for p in selected}
     intraday_managed_symbols = _load_intraday_managed_symbols()
     protected_intraday_symbols = sorted(sym for sym in current_positions.keys() if sym in intraday_managed_symbols)

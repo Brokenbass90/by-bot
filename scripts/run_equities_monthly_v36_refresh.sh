@@ -45,6 +45,10 @@ SIM_REGIME_MIN_BREADTH_MOM_PCT="${EQ_V36_SIM_REGIME_MIN_BREADTH_MOM_PCT:-45}"
 SIM_REGIME_MIN_AVG_MOM_PCT="${EQ_V36_SIM_REGIME_MIN_AVG_MOM_PCT:-1.5}"
 
 CURRENT_TOP_N="${EQ_V36_CURRENT_TOP_N:-3}"
+# Candidate pool can be wider than the bridge max position count. The paper
+# bridge still buys only ALPACA_MAX_POSITIONS, but a wider pool prevents
+# selected=[] when top names are temporarily blocked by re-entry protection.
+CURRENT_CANDIDATE_POOL_N="${EQ_V36_CURRENT_CANDIDATE_POOL_N:-$CURRENT_TOP_N}"
 CURRENT_LOOKBACK_DAYS="${EQ_V36_CURRENT_LOOKBACK_DAYS:-28}"
 CURRENT_MIN_MOM_LOOKBACK_PCT="${EQ_V36_CURRENT_MIN_MOM_LOOKBACK_PCT:-5.0}"
 CURRENT_PULLBACK_MIN_PCT="${EQ_V36_CURRENT_PULLBACK_MIN_PCT:-12.0}"
@@ -107,6 +111,7 @@ echo "data_dir=${DATA_DIR}"
 echo "earnings_csv=${EARNINGS_CSV}"
 echo "runtime_dir=${RUNTIME_DIR}"
 echo "sim_months=${SIM_START_MONTH}..${SIM_END_MONTH}"
+echo "current_candidate_pool_n=${CURRENT_CANDIDATE_POOL_N} max_live_positions_hint=${ALPACA_MAX_POSITIONS:-unset}"
 
 EQ_TICKERS="$ALL_FETCH_TICKERS" \
 EQ_YF_PERIOD="$FETCH_PERIOD" \
@@ -158,7 +163,7 @@ python3 scripts/equities_monthly_research_sim.py \
   --tag "$TAG"
 
 if ! run_current_cycle_builder \
-  "$CURRENT_TOP_N" \
+  "$CURRENT_CANDIDATE_POOL_N" \
   "$CURRENT_LOOKBACK_DAYS" \
   "$CURRENT_MIN_MOM_LOOKBACK_PCT" \
   "$CURRENT_PULLBACK_MIN_PCT" \
@@ -177,7 +182,7 @@ if ! run_current_cycle_builder \
   echo "warn: strict current-cycle builder produced no fresh picks"
   echo "info: retrying current-cycle builder with relaxed profile"
   if ! run_current_cycle_builder \
-    "$CURRENT_TOP_N" \
+    "$CURRENT_CANDIDATE_POOL_N" \
     "$CURRENT_LOOKBACK_DAYS" \
     "$CURRENT_RELAXED_MIN_MOM_LOOKBACK_PCT" \
     "$CURRENT_RELAXED_PULLBACK_MIN_PCT" \

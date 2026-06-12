@@ -1,6 +1,6 @@
 import unittest
 
-from scripts.equities_alpaca_paper_bridge import _trail_stop_triggered
+from scripts.equities_alpaca_paper_bridge import Pick, _select_monthly_cycle_picks, _trail_stop_triggered
 
 
 class TestAlpacaMonthlyTrailing(unittest.TestCase):
@@ -41,6 +41,45 @@ class TestAlpacaMonthlyTrailing(unittest.TestCase):
         self.assertFalse(fired)
         self.assertGreaterEqual(drop, 2.0)
         self.assertLess(peak_gain, 3.5)
+
+
+class TestAlpacaMonthlySelection(unittest.TestCase):
+    def _pick(self, ticker: str) -> Pick:
+        return Pick(
+            month="2026-06",
+            ticker=ticker,
+            entry_day="2026-06-12",
+            score=1.0,
+            atr20_pct=2.0,
+            momentum20_pct=3.0,
+            momentum60_pct=8.0,
+            pullback60_pct=-4.0,
+            universe_score=1.0,
+        )
+
+    def test_uses_next_best_when_top_picks_are_reentry_blocked(self):
+        picks = [self._pick(t) for t in ("DDOG", "QCOM", "NOW", "SNOW", "CRWD", "XOM")]
+
+        selected = _select_monthly_cycle_picks(
+            picks,
+            earnings_blocked={},
+            blocked_reentry_symbols={"DDOG", "QCOM", "NOW"},
+            max_positions=4,
+            no_current_cycle=False,
+        )
+
+        assert [p.ticker for p in selected] == ["SNOW", "CRWD", "XOM"]
+
+    def test_no_current_cycle_stays_flat(self):
+        selected = _select_monthly_cycle_picks(
+            [self._pick("DDOG")],
+            earnings_blocked={},
+            blocked_reentry_symbols=set(),
+            max_positions=4,
+            no_current_cycle=True,
+        )
+
+        assert selected == []
 
 
 if __name__ == "__main__":
