@@ -42,24 +42,25 @@ Env vars (префикс PFS1_)
   PFS1_SIGNAL_LOOKBACK               int     200
   PFS1_ATR_PERIOD                    int     14
   PFS1_RSI_PERIOD                    int     14
-  PFS1_PUMP_LOOKBACK_BARS            int     6      (30 минут)
-  PFS1_PUMP_MIN_PCT                  float   3.0
-  PFS1_VOL_Z_MIN                     float   2.0
-  PFS1_RSI_H1_MIN_OB                 float   65
+  PFS1_PUMP_LOOKBACK_BARS            int     8      (40 минут)
+  PFS1_PUMP_MIN_PCT                  float   4.0
+  PFS1_VOL_Z_MIN                     float   2.5
+  PFS1_RSI_H1_MIN_OB                 float   70
   PFS1_FUNDING_THRESHOLD             float   0.05   (% per 8h)
-  PFS1_REJECT_BODY_FRAC              float   0.45
-  PFS1_REJECT_WICK_FRAC              float   0.30
-  PFS1_MAX_DIST_ATR                  float   2.5
-  PFS1_SL_ATR_BUFFER                 float   0.5
-  PFS1_TP1_RR                        float   1.2
-  PFS1_TP2_RR                        float   2.5
+  PFS1_REJECT_BODY_FRAC              float   0.50
+  PFS1_REJECT_WICK_FRAC              float   0.40
+  PFS1_GIVEBACK_TOLERANCE_PCT        float   1.0
+  PFS1_MAX_DIST_ATR                  float   1.5
+  PFS1_SL_ATR_BUFFER                 float   0.3
+  PFS1_TP1_RR                        float   1.0
+  PFS1_TP2_RR                        float   2.0
   PFS1_TP1_FRAC                      float   0.55
   PFS1_BE_TRIGGER_RR                 float   1.0
   PFS1_BE_LOCK_RR                    float   0.05
-  PFS1_TRAIL_ATR_MULT                float   0.0    (0 = off)
+  PFS1_TRAIL_ATR_MULT                float   1.2    (0 = off)
   PFS1_TRAIL_ACTIVATE_RR             float   1.5
   PFS1_TIME_STOP_BARS_5M             int     144
-  PFS1_COOLDOWN_BARS_5M              int     96
+  PFS1_COOLDOWN_BARS_5M              int     48
   PFS1_ALLOW_SHORTS                  bool    1
   PFS1_ALLOW_LONGS                   bool    0      (symmetric long-fade-dump optional)
 
@@ -184,25 +185,26 @@ class PFS1Config:
     signal_lookback: int = 200
     atr_period: int = 14
     rsi_period: int = 14
-    pump_lookback_bars: int = 6
-    pump_min_pct: float = 3.0
-    vol_z_min: float = 2.0
-    rsi_h1_min_ob: float = 65.0
+    pump_lookback_bars: int = 8
+    pump_min_pct: float = 4.0
+    vol_z_min: float = 2.5
+    rsi_h1_min_ob: float = 70.0
     funding_threshold: float = 0.05
     require_funding_data: bool = False
-    reject_body_frac: float = 0.45
-    reject_wick_frac: float = 0.30
-    max_dist_atr: float = 2.5
-    sl_atr_buffer: float = 0.5
-    tp1_rr: float = 1.2
-    tp2_rr: float = 2.5
+    reject_body_frac: float = 0.50
+    reject_wick_frac: float = 0.40
+    giveback_tolerance_pct: float = 1.0
+    max_dist_atr: float = 1.5
+    sl_atr_buffer: float = 0.3
+    tp1_rr: float = 1.0
+    tp2_rr: float = 2.0
     tp1_frac: float = 0.55
     be_trigger_rr: float = 1.0
     be_lock_rr: float = 0.05
-    trail_atr_mult: float = 0.0
+    trail_atr_mult: float = 1.2
     trail_activate_rr: float = 1.5
     time_stop_bars_5m: int = 144
-    cooldown_bars_5m: int = 96
+    cooldown_bars_5m: int = 48
     allow_shorts: bool = True
     allow_longs: bool = False
 
@@ -238,6 +240,7 @@ class PumpFadeSmartV1Strategy:
         c.require_funding_data = _env_bool("PFS1_REQUIRE_FUNDING_DATA", c.require_funding_data)
         c.reject_body_frac = _env_float("PFS1_REJECT_BODY_FRAC", c.reject_body_frac)
         c.reject_wick_frac = _env_float("PFS1_REJECT_WICK_FRAC", c.reject_wick_frac)
+        c.giveback_tolerance_pct = _env_float("PFS1_GIVEBACK_TOLERANCE_PCT", c.giveback_tolerance_pct)
         c.max_dist_atr = _env_float("PFS1_MAX_DIST_ATR", c.max_dist_atr)
         c.sl_atr_buffer = _env_float("PFS1_SL_ATR_BUFFER", c.sl_atr_buffer)
         c.tp1_rr = _env_float("PFS1_TP1_RR", c.tp1_rr)
@@ -266,16 +269,17 @@ class PumpFadeSmartV1Strategy:
     def _detect_pump(
         self,
         closes: List[float],
+        highs: List[float],
         volumes: List[float],
     ) -> Tuple[bool, float, int, float]:
         """Detect the completed pump immediately before the rejection bar."""
         c = self.cfg
-        if len(closes) < c.pump_lookback_bars + 2:
+        if len(closes) < c.pump_lookback_bars + 2 or len(highs) < c.pump_lookback_bars + 2:
             return False, 0.0, 0, 0.0
         start = closes[-c.pump_lookback_bars - 1]
         # The latest bar is the rejection candidate. Including it in the pump
         # return made the pump and full-giveback conditions contradictory.
-        end = closes[-2]
+        end = max(highs[-c.pump_lookback_bars - 1:-1])
         if start <= 0:
             return False, 0.0, 0, 0.0
         pct = (end - start) / start * 100.0
@@ -303,7 +307,7 @@ class PumpFadeSmartV1Strategy:
         upper_wick = h - max(o, cl)
         wick_frac = upper_wick / rng
         # Закрытие должно вернуться ниже open первого pump-бара (отдали почти весь рост)
-        gave_back = cl < pump_start_open * 1.005  # 0.5% толерантность
+        gave_back = cl < pump_start_open * (1.0 + c.giveback_tolerance_pct / 100.0)
         return is_bearish and body_frac >= c.reject_body_frac and wick_frac >= c.reject_wick_frac and gave_back
 
     # ------------------------------------------------------------------
@@ -372,7 +376,7 @@ class PumpFadeSmartV1Strategy:
         closes_h1 = [float(r[4]) for r in rows_h1]
 
         # Pump detection
-        is_pump, pump_pct, look_n, vol_z = self._detect_pump(closes5, volumes5)
+        is_pump, pump_pct, look_n, vol_z = self._detect_pump(closes5, highs5, volumes5)
         if not is_pump:
             self._no_signal(f"no_pump_pct={pump_pct:.2f}_volz={vol_z:.2f}")
             return None
@@ -435,16 +439,22 @@ class PumpFadeSmartV1Strategy:
         self._last_tf_ts = ts_ms
         self._cooldown_bars = c.cooldown_bars_5m
 
-        return TradeSignal(
+        sig = TradeSignal(
             strategy="pump_fade_smart_v1",
             symbol=symbol,
-            side="Sell",
+            side="short",
             entry=entry,
             sl=sl,
-            tp=tp1,  # TP1 only; runner handles TP2/trail
+            tp=tp2,
+            tps=[tp1, tp2],
+            tp_fracs=[c.tp1_frac, max(0.0, 1.0 - c.tp1_frac)],
+            trailing_atr_mult=max(0.0, float(c.trail_atr_mult)),
+            trail_activate_rr=max(0.0, float(c.trail_activate_rr)),
+            time_stop_bars=max(0, int(c.time_stop_bars_5m)),
             reason=f"pfs1_pump_fade pump={pump_pct:.2f}% volz={vol_z:.2f} rsih1={rsi_h1:.1f}"
                    + (f" funding={funding_pct:.4f}" if funding_pct is not None else " funding=na"),
         )
+        return sig if sig.validate() else None
 
 
 # ---------------------------------------------------------------------------

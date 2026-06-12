@@ -33,7 +33,8 @@ import math
 
 
 def simulate_pair_realizable(prices_a, prices_b, cfg: PairConfig | None = None,
-                             fee_bps: float = 6.0, max_hold_bars: int = 168) -> List[dict]:
+                             fee_bps: float = 6.0, max_hold_bars: int = 168,
+                             funding_bps_per_8h: float = 0.0) -> List[dict]:
     """Honest pair simulation: P&L = realizable log-returns of the two legs.
 
     Unlike scripts/validate_pair_arb.simulate_pair (which measures the change of
@@ -52,6 +53,7 @@ def simulate_pair_realizable(prices_a, prices_b, cfg: PairConfig | None = None,
     a_e = b_e = 0.0
     entry_i = 0
     fee_cost = 4.0 * fee_bps / 10000.0
+    funding_cost_per_bar = 2.0 * funding_bps_per_8h / 10000.0 / 8.0
     lb = cfg.lookback
 
     def book(i: int, reason: str) -> None:
@@ -59,8 +61,12 @@ def simulate_pair_realizable(prices_a, prices_b, cfg: PairConfig | None = None,
         ret_a = math.log(a[i] / a_e)
         ret_b = math.log(b[i] / b_e)
         gross = entry_sign * (ret_b - ret_a)
-        trades.append({"pnl": gross - fee_cost, "return_pct": gross - fee_cost,
-                       "fees": fee_cost, "hold_bars": i - entry_i, "exit_reason": reason})
+        hold_bars = max(0, i - entry_i)
+        funding_cost = hold_bars * funding_cost_per_bar
+        net = gross - fee_cost - funding_cost
+        trades.append({"pnl": net, "return_pct": net,
+                       "fees": fee_cost, "funding_cost": funding_cost,
+                       "hold_bars": hold_bars, "exit_reason": reason})
         in_pos = False
 
     for i in range(lb, n):
@@ -141,7 +147,8 @@ def fold_metrics(trades: List[dict]) -> Dict[str, float]:
 
 
 def run_walkforward(a_sym: str, b_sym: str, cfg: PairConfig, fee_bps: float,
-                    oos_days: int, warmup_extra_bars: int = 24) -> dict:
+                    oos_days: int, warmup_extra_bars: int = 24,
+                    funding_bps_per_8h: float = 0.0) -> dict:
     ts, a, b = align(load_1h_closes(a_sym), load_1h_closes(b_sym))
     if len(ts) < cfg.lookback + 200:
         return {"error": f"not_enough_aligned_bars_{len(ts)}"}
@@ -157,7 +164,7 @@ def run_walkforward(a_sym: str, b_sym: str, cfg: PairConfig, fee_bps: float,
         if len(idx) <= warmup_bars + 10:
             continue
         s, e = idx[0], idx[-1] + 1
-        trades = simulate_pair_realizable(a[s:e], b[s:e], cfg, fee_bps)
+        trades = simulate_pair_realizable(a[s:e], b[s:e], cfg, fee_bps, funding_bps_per_8h=funding_bps_per_8h)
         m = fold_metrics(trades)
         per_fold.append(m)
         all_trades.extend(trades)
@@ -172,6 +179,7 @@ def run_walkforward(a_sym: str, b_sym: str, cfg: PairConfig, fee_bps: float,
         "aligned_bars_1h": len(ts),
         "config": vars(cfg),
         "fee_bps_per_fill": fee_bps,
+        "funding_bps_per_8h_conservative": funding_bps_per_8h,
         "folds_detail": fold_rows,
         "oos_aggregate": aggregate_oos(per_fold),
         "win_rate_all": round(sum(1 for t in all_trades if t["pnl"] > 0) / len(all_trades), 4) if all_trades else None,
@@ -185,6 +193,7 @@ def main() -> int:
     ap.add_argument("--a", default="ETHUSDT")
     ap.add_argument("--b", default="BTCUSDT")
     ap.add_argument("--fee-bps", type=float, default=6.0)
+    ap.add_argument("--funding-bps-per-8h", type=float, default=0.0)
     ap.add_argument("--lookback", type=int, default=168)
     ap.add_argument("--oos-days", type=int, default=30)
     ap.add_argument("--entry-z", type=float, default=2.0)
@@ -193,7 +202,7 @@ def main() -> int:
     args = ap.parse_args()
     cfg = PairConfig(lookback=args.lookback, entry_z=args.entry_z,
                      exit_z=args.exit_z, stop_z=args.stop_z)
-    out = run_walkforward(args.a, args.b, cfg, args.fee_bps, args.oos_days)
+    out = run_walkforward(args.a, args.b, cfg, args.fee_bps, args.oos_days, funding_bps_per_8h=args.funding_bps_per_8h)
     print(json.dumps(out, indent=2, default=str))
     return 0
 

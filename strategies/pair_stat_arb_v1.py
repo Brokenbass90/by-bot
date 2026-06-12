@@ -22,13 +22,15 @@ _LN2 = math.log(2.0)
 
 @dataclass
 class PairConfig:
-    lookback: int = 168          # bars for beta + z-score window (e.g. 168 = 7d of 1h)
-    entry_z: float = 2.0         # enter when |z| >= this
+    lookback: int = 336          # bars for beta + z-score window (e.g. 336 = 14d of 1h)
+    entry_z: float = 2.5         # enter when |z| >= this
     exit_z: float = 0.5          # exit when |z| <= this (reverted)
-    stop_z: float = 3.5          # bail when |z| >= this (gap keeps widening)
-    max_half_life: float = 72.0  # bars; spread must mean-revert faster than this
-    min_abs_corr: float = 0.6    # min |corr| of the two return series
-    risk_pct_per_pair: float = 0.7
+    stop_z: float = 3.0          # bail when |z| >= this (gap keeps widening)
+    max_half_life: float = 48.0  # bars; spread must mean-revert faster than this
+    min_abs_corr: float = 0.75   # min |corr| of the two return series
+    risk_pct_per_pair: float = 0.3
+    beta_stability_lookback: int = 168
+    max_beta_drift_frac: float = 0.35
 
 
 @dataclass
@@ -130,15 +132,36 @@ class PairStatArbV1:
         z = (spread[-1] - mu) / sd if sd > 0 else 0.0
         hl = half_life(spread)
         corr = _corr(returns(a), returns(b))
+        beta_drift_frac = 0.0
+        if cfg.max_beta_drift_frac > 0 and n >= cfg.lookback + max(20, cfg.beta_stability_lookback):
+            prev_a = list(prices_a[-cfg.lookback - cfg.beta_stability_lookback:-cfg.beta_stability_lookback])
+            prev_b = list(prices_b[-cfg.lookback - cfg.beta_stability_lookback:-cfg.beta_stability_lookback])
+            prev_beta, _, _ = compute_spread(prev_a, prev_b)
+            if prev_beta > 0:
+                beta_drift_frac = abs(beta - prev_beta) / max(abs(prev_beta), 1e-12)
+
         tradeable = (
             beta > 0
             and math.isfinite(hl) and 0 < hl <= cfg.max_half_life
             and abs(corr) >= cfg.min_abs_corr
+            and (cfg.max_beta_drift_frac <= 0 or beta_drift_frac <= cfg.max_beta_drift_frac)
             and sd > 0
         )
+        reason = "ok"
+        if not tradeable:
+            if beta <= 0:
+                reason = "beta_invalid"
+            elif not (math.isfinite(hl) and 0 < hl <= cfg.max_half_life):
+                reason = "half_life_bad"
+            elif abs(corr) < cfg.min_abs_corr:
+                reason = "corr_low"
+            elif cfg.max_beta_drift_frac > 0 and beta_drift_frac > cfg.max_beta_drift_frac:
+                reason = "beta_unstable"
+            else:
+                reason = "not_cointegrated"
         return {
             "tradeable": tradeable, "beta": beta, "z": z, "half_life": hl,
-            "corr": corr, "spread_std": sd, "reason": "ok" if tradeable else "not_cointegrated",
+            "corr": corr, "spread_std": sd, "beta_drift_frac": beta_drift_frac, "reason": reason,
         }
 
     def signal(

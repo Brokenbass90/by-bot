@@ -26,6 +26,7 @@ Env vars (all prefixed LQH2_):
   LQH2_MIN_REJECT_WICK_ATR    (0.10)
   LQH2_MIN_WICK_TO_BODY       (1.3)
   LQH2_MIN_VOL_MULT           (1.5)
+  LQH2_VOL_MODE               (quote) — quote volume (v*c) or base volume (v)
   LQH2_VOL_AVG_BARS           (24)
   LQH2_EMA_FAST               (9)
   LQH2_EMA_SLOW               (21)
@@ -33,7 +34,7 @@ Env vars (all prefixed LQH2_):
   LQH2_ATR_PERIOD             (14)
   LQH2_MAX_BODY_ATR           (0.6)
   LQH2_RR                     (2.0)
-  LQH2_TP1_RR                 (0.8)  — NEW v2
+  LQH2_TP1_RR                 (1.0)  — NEW v2
   LQH2_TP1_FRAC               (0.50) — NEW v2
   LQH2_BREAKEVEN_AFTER_TP1    (1)    — NEW v2
   LQH2_TRAIL_ATR_MULT         (1.0)  — NEW v2 trailing на оставшейся позиции
@@ -41,6 +42,7 @@ Env vars (all prefixed LQH2_):
   LQH2_MAX_RISK_ATR           (1.5)
   LQH2_TIME_STOP_BARS         (144)  — 12h на 5m
   LQH2_COOLDOWN_BARS_5M       (24)   — per-symbol cooldown
+  LQH2_POOL_COOLDOWN_BARS_5M  (72)   — do not resweep same pool immediately
   LQH2_REGIME_MODE            (chop_only) — chop_only|all|trending|env-csv
   LQH2_ALLOW_REGIMES          ()     — comma-separated если override
   LQH2_SYMBOL_ALLOWLIST       ()
@@ -80,6 +82,13 @@ def _env_int(name: str, default: int) -> int:
         return default
 
 
+def _env_str(name: str, default: str) -> str:
+    raw = os.getenv(name)
+    if raw is None or not str(raw).strip():
+        return default
+    return str(raw).strip()
+
+
 def _env_bool(name: str, default: bool) -> bool:
     raw = os.getenv(name)
     if raw is None:
@@ -103,6 +112,39 @@ def _atr(candles: list, period: int) -> float:
         trs.append(max(h - l, abs(h - pc), abs(l - pc)))
     recent = trs[-period:]
     return sum(recent) / float(len(recent)) if recent else float("nan")
+
+
+def _adx(candles: list, period: int) -> float:
+    """Wilder ADX over already-closed candles."""
+    if period <= 0 or len(candles) < period * 2 + 1:
+        return float("nan")
+    tr_list = []
+    plus_dm = []
+    minus_dm = []
+    for i in range(1, len(candles)):
+        h = float(candles[i].h)
+        l = float(candles[i].l)
+        ph = float(candles[i - 1].h)
+        pl = float(candles[i - 1].l)
+        pc = float(candles[i - 1].c)
+        up = h - ph
+        down = pl - l
+        tr_list.append(max(h - l, abs(h - pc), abs(l - pc)))
+        plus_dm.append(up if up > down and up > 0 else 0.0)
+        minus_dm.append(down if down > up and down > 0 else 0.0)
+    dxs = []
+    for end in range(period, len(tr_list) + 1):
+        tr = sum(tr_list[end - period:end])
+        if tr <= 0:
+            continue
+        pdi = 100.0 * sum(plus_dm[end - period:end]) / tr
+        mdi = 100.0 * sum(minus_dm[end - period:end]) / tr
+        denom = pdi + mdi
+        if denom > 0:
+            dxs.append(100.0 * abs(pdi - mdi) / denom)
+    if len(dxs) < period:
+        return float("nan")
+    return sum(dxs[-period:]) / float(period)
 
 
 def _ema(values: list[float], period: int) -> float:
@@ -137,6 +179,7 @@ class LQH2Config:
     min_reject_wick_atr: float = field(default_factory=lambda: _env_float("LQH2_MIN_REJECT_WICK_ATR", 0.10))
     min_wick_to_body: float = field(default_factory=lambda: _env_float("LQH2_MIN_WICK_TO_BODY", 1.3))
     min_vol_mult: float = field(default_factory=lambda: _env_float("LQH2_MIN_VOL_MULT", 1.5))
+    vol_mode: str = field(default_factory=lambda: _env_str("LQH2_VOL_MODE", "quote").lower())
     vol_avg_bars: int = field(default_factory=lambda: _env_int("LQH2_VOL_AVG_BARS", 24))
     ema_fast: int = field(default_factory=lambda: _env_int("LQH2_EMA_FAST", 9))
     ema_slow: int = field(default_factory=lambda: _env_int("LQH2_EMA_SLOW", 21))
@@ -144,7 +187,7 @@ class LQH2Config:
     atr_period: int = field(default_factory=lambda: _env_int("LQH2_ATR_PERIOD", 14))
     max_body_atr: float = field(default_factory=lambda: _env_float("LQH2_MAX_BODY_ATR", 0.6))
     rr: float = field(default_factory=lambda: _env_float("LQH2_RR", 2.0))
-    tp1_rr: float = field(default_factory=lambda: _env_float("LQH2_TP1_RR", 0.8))
+    tp1_rr: float = field(default_factory=lambda: _env_float("LQH2_TP1_RR", 1.0))
     tp1_frac: float = field(default_factory=lambda: _env_float("LQH2_TP1_FRAC", 0.50))
     breakeven_after_tp1: bool = field(default_factory=lambda: _env_bool("LQH2_BREAKEVEN_AFTER_TP1", True))
     trail_atr_mult: float = field(default_factory=lambda: _env_float("LQH2_TRAIL_ATR_MULT", 1.0))
@@ -152,6 +195,9 @@ class LQH2Config:
     max_risk_atr: float = field(default_factory=lambda: _env_float("LQH2_MAX_RISK_ATR", 1.5))
     time_stop_bars: int = field(default_factory=lambda: _env_int("LQH2_TIME_STOP_BARS", 144))
     cooldown_bars: int = field(default_factory=lambda: _env_int("LQH2_COOLDOWN_BARS_5M", 24))
+    pool_cooldown_bars: int = field(default_factory=lambda: _env_int("LQH2_POOL_COOLDOWN_BARS_5M", 72))
+    max_adx: float = field(default_factory=lambda: _env_float("LQH2_MAX_ADX", 0.0))
+    adx_period: int = field(default_factory=lambda: _env_int("LQH2_ADX_PERIOD", 14))
     regime_mode: str = field(default_factory=lambda: os.getenv("LQH2_REGIME_MODE", "chop_only").strip().lower())
     allow_regimes_override: set[str] = field(default_factory=lambda: _env_csv_set("LQH2_ALLOW_REGIMES"))
     symbol_allowlist: set[str] = field(default_factory=lambda: _env_csv_set("LQH2_SYMBOL_ALLOWLIST"))
@@ -173,6 +219,7 @@ class AltLiquiditySweepReversalV2Strategy:
     def __init__(self):
         self.cfg = LQH2Config()
         self._last_signal_i_by_symbol: dict[str, int] = {}  # FIX #1 — per-symbol cooldown
+        self._last_pool_by_symbol_side: dict[tuple[str, str], tuple[int, float]] = {}
         self.last_no_signal_reason = ""
 
     def _check_pool_persistence(self, candles: list, i: int, pool_low: float, pool_high: float, atr: float) -> bool:
@@ -221,10 +268,18 @@ class AltLiquiditySweepReversalV2Strategy:
             self.last_no_signal_reason = f"cooldown:{symbol}"
             return None
 
-        atr = _atr(candles[max(0, i - cfg.atr_period - 2): i + 1], cfg.atr_period)
+        # Use only completed bars before the sweep candle for volatility gates.
+        # Including the sweep itself lets a panic wick widen its own thresholds.
+        atr = _atr(candles[max(0, i - cfg.atr_period - 3): i], cfg.atr_period)
         if not math.isfinite(atr) or atr <= 0:
             self.last_no_signal_reason = "bad_atr"
             return None
+
+        if cfg.max_adx > 0:
+            adx = _adx(candles[max(0, i - cfg.adx_period * 3 - 5): i], cfg.adx_period)
+            if math.isfinite(adx) and adx > cfg.max_adx:
+                self.last_no_signal_reason = f"adx_trending={adx:.1f}"
+                return None
 
         cur = candles[i]
         o, h, l, c, v = float(cur.o), float(cur.h), float(cur.l), float(cur.c), float(cur.v)
@@ -255,8 +310,12 @@ class AltLiquiditySweepReversalV2Strategy:
                 self.last_no_signal_reason = "trend_too_extended"
                 return None
 
-        avg_vol = sum(float(candles[j].v) * float(candles[j].c) for j in range(i - cfg.vol_avg_bars, i)) / float(cfg.vol_avg_bars)
-        cur_vol = v * c
+        if cfg.vol_mode == "base":
+            avg_vol = sum(float(candles[j].v) for j in range(i - cfg.vol_avg_bars, i)) / float(cfg.vol_avg_bars)
+            cur_vol = v
+        else:
+            avg_vol = sum(float(candles[j].v) * float(candles[j].c) for j in range(i - cfg.vol_avg_bars, i)) / float(cfg.vol_avg_bars)
+            cur_vol = v * c
         vol_mult = cur_vol / avg_vol if avg_vol > 0 else 0.0
         if vol_mult < cfg.min_vol_mult:
             self.last_no_signal_reason = "weak_volume"
@@ -272,11 +331,26 @@ class AltLiquiditySweepReversalV2Strategy:
         # FIX #5: panic mode allows wider sweep
         max_sweep = cfg.panic_max_sweep_atr if cfg.panic_mode else cfg.max_sweep_atr
 
+        def _pool_recently_swept(side: str, level: float) -> bool:
+            if cfg.pool_cooldown_bars <= 0:
+                return False
+            key = (symbol.upper(), side)
+            prev = self._last_pool_by_symbol_side.get(key)
+            if prev is None:
+                return False
+            prev_i, prev_level = prev
+            return (i - prev_i) < cfg.pool_cooldown_bars and abs(level - prev_level) <= cfg.pool_touch_atr * atr
+
         # ── LONG (buy after sweep below pool_low + reclaim) ──────────────────
         if allow_longs and low_touches >= cfg.min_pool_touches:
             sweep_atr = (pool_low - l) / atr
             lower_wick = min(o, c) - l
+            long_pool_blocked = _pool_recently_swept("long", pool_low)
+            if long_pool_blocked:
+                self.last_no_signal_reason = "same_pool_cooldown"
             if (
+                not long_pool_blocked
+                and
                 sweep_atr >= cfg.min_sweep_atr
                 and sweep_atr <= max_sweep
                 and c >= pool_low + cfg.reclaim_atr * atr
@@ -287,6 +361,7 @@ class AltLiquiditySweepReversalV2Strategy:
                 risk = c - sl
                 if risk > 0 and risk <= cfg.max_risk_atr * atr:
                     self._last_signal_i_by_symbol[symbol] = i
+                    self._last_pool_by_symbol_side[(symbol.upper(), "long")] = (i, pool_low)
                     # FIX #3: TP1 partial + breakeven + trailing
                     tp_final = c + cfg.rr * risk
                     tp1 = c + cfg.tp1_rr * risk if cfg.tp1_frac > 0 else None
@@ -314,7 +389,12 @@ class AltLiquiditySweepReversalV2Strategy:
         if allow_shorts and high_touches >= cfg.min_pool_touches:
             sweep_atr = (h - pool_high) / atr
             upper_wick = h - max(o, c)
+            short_pool_blocked = _pool_recently_swept("short", pool_high)
+            if short_pool_blocked:
+                self.last_no_signal_reason = "same_pool_cooldown"
             if (
+                not short_pool_blocked
+                and
                 sweep_atr >= cfg.min_sweep_atr
                 and sweep_atr <= max_sweep
                 and c <= pool_high - cfg.reclaim_atr * atr
@@ -325,6 +405,7 @@ class AltLiquiditySweepReversalV2Strategy:
                 risk = sl - c
                 if risk > 0 and risk <= cfg.max_risk_atr * atr:
                     self._last_signal_i_by_symbol[symbol] = i
+                    self._last_pool_by_symbol_side[(symbol.upper(), "short")] = (i, pool_high)
                     tp_final = c - cfg.rr * risk
                     tp1 = c - cfg.tp1_rr * risk if cfg.tp1_frac > 0 else None
                     sig = TradeSignal(

@@ -33,7 +33,8 @@ from backtest.robustness import fee_sensitivity
 
 def simulate_pair(prices_a: Sequence[float], prices_b: Sequence[float],
                   cfg: PairConfig | None = None, fee_bps: float = 6.0,
-                  max_hold_bars: int = 168) -> List[Dict[str, float]]:
+                  max_hold_bars: int = 168,
+                  funding_bps_per_8h: float = 0.0) -> List[Dict[str, float]]:
     """REWRITTEN 2026-06-10 (Claude audit): realizable P&L only.
 
     The original version booked profit as the change of a spread RE-FITTED with
@@ -56,6 +57,7 @@ def simulate_pair(prices_a: Sequence[float], prices_b: Sequence[float],
     a_e = b_e = 0.0
     entry_i = 0
     fee_cost = 4.0 * fee_bps / 10000.0  # open 2 legs + close 2 legs
+    funding_cost_per_bar = 2.0 * funding_bps_per_8h / 10000.0 / 8.0
     lb = cfg.lookback
 
     def _book(i: int) -> None:
@@ -63,8 +65,12 @@ def simulate_pair(prices_a: Sequence[float], prices_b: Sequence[float],
         ret_a = math.log(a[i] / a_e)
         ret_b = math.log(b[i] / b_e)
         gross = entry_sign * (ret_b - ret_a)
-        trades.append({"pnl": gross - fee_cost, "return_pct": gross - fee_cost,
-                       "fees": fee_cost})
+        hold_bars = max(0, i - entry_i)
+        funding_cost = hold_bars * funding_cost_per_bar
+        net = gross - fee_cost - funding_cost
+        trades.append({"pnl": net, "return_pct": net,
+                       "fees": fee_cost, "funding_cost": funding_cost,
+                       "hold_bars": hold_bars})
         in_pos = False
 
     for i in range(lb, n):
@@ -106,8 +112,8 @@ def _gen_cointegrated(n=400, beta=1.0, seed=0):
     return [math.exp(x) for x in loga], [math.exp(x) for x in logb]
 
 
-def run_report(a, b, cfg=None, fee_bps=6.0, name="pair") -> Dict[str, Any]:
-    trades = simulate_pair(a, b, cfg, fee_bps)
+def run_report(a, b, cfg=None, fee_bps=6.0, name="pair", funding_bps_per_8h: float = 0.0) -> Dict[str, Any]:
+    trades = simulate_pair(a, b, cfg, fee_bps, funding_bps_per_8h=funding_bps_per_8h)
     rep = report_from_result(RunResult(trades=trades, meta={"name": name}))
     rets = [t["return_pct"] for t in trades]
     rep["fee_sensitivity"] = fee_sensitivity(rets, fee_bps_list=(6.0, 8.0, 10.0)) if rets else {"verdict": "no_trades"}
@@ -119,6 +125,7 @@ def main() -> int:
     ap.add_argument("--a", default=""); ap.add_argument("--b", default="")
     ap.add_argument("--interval", default="60")
     ap.add_argument("--fee-bps", type=float, default=6.0)
+    ap.add_argument("--funding-bps-per-8h", type=float, default=0.0)
     ap.add_argument("--lookback", type=int, default=168)
     args = ap.parse_args()
     cfg = PairConfig(lookback=args.lookback)
@@ -126,7 +133,7 @@ def main() -> int:
         print("No --a/--b given → synthetic self-test (cointegrated pair):")
         a, b = _gen_cointegrated()
         import json
-        print(json.dumps(run_report(a, b, cfg, args.fee_bps, "synthetic"), indent=2))
+        print(json.dumps(run_report(a, b, cfg, args.fee_bps, "synthetic", args.funding_bps_per_8h), indent=2))
         return 0
     # real data: load aligned closes from cache (Codex/server)
     import glob, csv, json, os
@@ -152,7 +159,7 @@ def main() -> int:
     if len(a) < cfg.lookback + 10:
         print("not enough aligned data (need cache); run on server with full data"); return 1
     import json
-    print(json.dumps(run_report(a, b, cfg, args.fee_bps, f"{args.a}/{args.b}"), indent=2))
+    print(json.dumps(run_report(a, b, cfg, args.fee_bps, f"{args.a}/{args.b}", args.funding_bps_per_8h), indent=2))
     return 0
 
 

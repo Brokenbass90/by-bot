@@ -14,7 +14,7 @@ entry.  A hard time-stop (TIME_STOP_BARS) prevents open exposure when a
 pump dies quietly.
 
 Entry conditions (all required on the trigger bar):
-  1. pump_pct  = (close - min_close_in_lookback) / min_close_in_lookback
+  1. pump_pct  = (close - min_low_in_lookback) / min_low_in_lookback
                  >= PM_MIN_PUMP_PCT  (default 8 %)
   2. pump_pct  <= PM_MAX_PUMP_PCT    (default 50 %) — skip if already ran
   3. vol_spike = current_volume / SMA(volume, PM_VOL_PERIOD)
@@ -34,19 +34,19 @@ Environment variables (prefix PM_):
   PM_INTERVAL_MIN          int   bar size in minutes         [5]
   PM_LOOKBACK_BARS         int   pump detection window        [12]
   PM_MIN_PUMP_PCT          float minimum pump pct (decimal)  [0.08]
-  PM_MAX_PUMP_PCT          float skip if pumped more          [0.50]
+  PM_MAX_PUMP_PCT          float skip if pumped more          [0.30]
   PM_VOL_MULT              float volume spike multiplier      [2.5]
   PM_VOL_PERIOD            int   volume SMA baseline period   [20]
   PM_REQUIRE_BULLISH       bool  trigger bar must be bullish  [1]
   PM_MIN_BODY_FRAC         float min body/range on entry bar  [0.30]
   PM_ATR_PERIOD            int   ATR lookback                 [14]
-  PM_SL_ATR_MULT           float stop loss width in ATR       [2.0]
+  PM_SL_ATR_MULT           float stop loss width in ATR       [1.5]
   PM_RR                    float risk-reward for TP           [2.0]
-  PM_MIN_STOP_PCT          float reject if SL% < this         [0.02]
-  PM_MAX_STOP_PCT          float reject if SL% > this         [0.12]
+  PM_MIN_STOP_PCT          float reject if SL% < this         [0.01]
+  PM_MAX_STOP_PCT          float reject if SL% > this         [0.06]
   PM_TRAIL_ATR_MULT        float trailing stop width in ATR   [1.8]
   PM_TRAIL_ACTIVATE_RR     float activate trailing at +N×R    [1.0]
-  PM_TIME_STOP_BARS        int   hard time stop in 5m bars     [96]
+  PM_TIME_STOP_BARS        int   hard time stop in 5m bars     [144]
   PM_COOLDOWN_BARS         int   bars between signals          [24]
   PM_SYMBOL_ALLOWLIST      str   CSV allowlist (empty=all)    [""]
   PM_SYMBOL_DENYLIST       str   CSV denylist                  [""]
@@ -141,7 +141,7 @@ class PumpMomentumConfig:
     # Pump detection
     lookback_bars: int = 12          # 12 × 5 m = 60 min window
     min_pump_pct: float = 0.08       # 8 % rise from recent low
-    max_pump_pct: float = 0.50       # skip if already +50 % (too late)
+    max_pump_pct: float = 0.30       # skip if already +30 % (too late)
 
     # Volume confirmation
     vol_mult: float = 2.5            # volume must be 2.5× SMA baseline
@@ -153,17 +153,17 @@ class PumpMomentumConfig:
 
     # ATR / risk
     atr_period: int = 14
-    sl_atr_mult: float = 2.0         # SL = entry − sl_atr × ATR
+    sl_atr_mult: float = 1.5         # SL = entry − sl_atr × ATR
     rr: float = 2.0                  # TP = entry + rr × risk
-    min_stop_pct: float = 0.02       # minimum stop as fraction of entry
-    max_stop_pct: float = 0.12       # maximum stop as fraction of entry
+    min_stop_pct: float = 0.01       # minimum stop as fraction of entry
+    max_stop_pct: float = 0.06       # maximum stop as fraction of entry
 
     # Trailing stop
     trail_atr_mult: float = 1.8      # trailing stop width in ATR (0 = disabled)
     trail_activate_rr: float = 1.0   # arm trailing after +1×R profit
 
     # Time management
-    time_stop_bars: int = 96         # hard time stop: 96 × 5 m = 8 h
+    time_stop_bars: int = 144        # hard time stop: 144 × 5 m = 12 h
     cooldown_bars: int = 24          # bars between new signals per symbol
 
     # Symbol filter
@@ -299,10 +299,10 @@ class PumpMomentumV1Strategy:
             return None
 
         # ------------------------------------------------------------------
-        # 1. Pump detection: current close vs lowest close in lookback window
+        # 1. Pump detection: current close vs lowest traded low in lookback window
         # ------------------------------------------------------------------
-        window_cls = cls[-(cfg.lookback_bars + 1):-1]   # exclude current bar
-        recent_low = min(window_cls)
+        window_lows = lows[-(cfg.lookback_bars + 1):-1]   # exclude current bar
+        recent_low = min(window_lows)
         if recent_low <= 0:
             self.last_no_signal_reason = "zero_price"
             return None

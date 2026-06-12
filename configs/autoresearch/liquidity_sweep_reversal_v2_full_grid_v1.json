@@ -33,11 +33,14 @@
     "LQH2_ALLOW_SHORTS": "1",
     "LQH2_REGIME_MODE": "chop_only",
     "LQH2_RR": "2.0",
-    "LQH2_TP1_RR": "0.8",
+    "LQH2_TP1_RR": "1.0",
     "LQH2_TP1_FRAC": "0.50",
     "LQH2_BREAKEVEN_AFTER_TP1": "1",
     "LQH2_TRAIL_ATR_MULT": "1.0",
-    "LQH2_TIME_STOP_BARS": "144"
+    "LQH2_TIME_STOP_BARS": "144",
+    "LQH2_VOL_MODE": "quote",
+    "LQH2_POOL_COOLDOWN_BARS_5M": "72",
+    "LQH2_MAX_ADX": "25"
   },
   "grid": {
     "LQH2_LOOKBACK_BARS": [24, 36, 48],
@@ -46,7 +49,8 @@
     "LQH2_MIN_POOL_WIDTH_ATR": [1.0, 1.5],
     "LQH2_MIN_SWEEP_ATR": [0.10, 0.20],
     "LQH2_MAX_SWEEP_ATR": [1.0, 1.5],
-    "LQH2_MIN_VOL_MULT": [1.5, 2.0]
+    "LQH2_MIN_VOL_MULT": [1.5, 2.0],
+    "LQH2_ADX_PERIOD": [14]
   },
   "constraints": {
     "min_trades": 30,
@@ -66,6 +70,6 @@
     "negative_months": 1.8,
     "worst_month_pnl": 1.4
   },
-  "_combo_count": "3x2x3x2x2x2x2 = 288 combos",
+  "_combo_count": "3x2x3x2x2x2x2x1 = 288 combos",
   "_companion_panic": "Дополнительный sweep с LQH2_PANIC_MODE=1 — отдельный config если этот пройдёт"
 }

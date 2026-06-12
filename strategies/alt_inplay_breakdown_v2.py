@@ -13,16 +13,17 @@ Key improvements:
 
 Typical env config:
     BREAKDOWN2_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT
-    BREAKDOWN2_LOOKBACK_H=24
-    BREAKDOWN2_MIN_BREAK_ATR=0.15
-    BREAKDOWN2_MAX_DIST_ATR=2.0
-    BREAKDOWN2_SL_ATR=1.5
+    BREAKDOWN2_LOOKBACK_H=48
+    BREAKDOWN2_MIN_BREAK_ATR=0.25
+    BREAKDOWN2_MAX_DIST_ATR=1.2
+    BREAKDOWN2_SL_ATR=1.2
     BREAKDOWN2_RR=2.0
-    BREAKDOWN2_RSI_MAX=52.0
+    BREAKDOWN2_RSI_MAX=45.0
     BREAKDOWN2_REGIME_MODE=off
     BREAKDOWN2_ALLOW_LONGS=0
-    BREAKDOWN2_VOL_MULT=1.0
+    BREAKDOWN2_VOL_MULT=1.3
     BREAKDOWN2_TP1_FRAC=0.50
+    BREAKDOWN2_REQUIRE_1H_CLOSE=1
 """
 from __future__ import annotations
 
@@ -125,12 +126,12 @@ def _std_dev(values: List[float], period: int) -> float:
 @dataclass
 class AltInplayBreakdownV2Config:
     # Structure detection on 1h bars
-    lookback_h: int = 24
-    min_break_atr: float = 0.15
-    max_dist_atr: float = 2.0
-    sl_atr: float = 1.5
+    lookback_h: int = 48
+    min_break_atr: float = 0.25
+    max_dist_atr: float = 1.2
+    sl_atr: float = 1.2
     rr: float = 2.0
-    rsi_max: float = 52.0
+    rsi_max: float = 45.0
 
     # Regime filter (off/ema)
     regime_mode: str = "off"
@@ -139,12 +140,19 @@ class AltInplayBreakdownV2Config:
     regime_ema_slow: int = 55
 
     # Filters
-    vol_mult: float = 1.0
+    vol_mult: float = 1.3
     tp1_frac: float = 0.50
+    require_1h_close: bool = True
+    retest_bars_5m: int = 0
+    retest_touch_atr: float = 0.20
 
     # Exit management
     time_stop_bars_5m: int = 288
-    cooldown_bars_5m: int = 48
+    cooldown_bars_5m: int = 24
+    trailing_atr_mult: float = 1.0
+    trail_activate_rr: float = 1.0
+    be_trigger_rr: float = 1.0
+    be_lock_rr: float = 0.05
     allow_longs: bool = False
     allow_shorts: bool = True
 
@@ -169,9 +177,16 @@ class AltInplayBreakdownV2Strategy:
 
         self.cfg.vol_mult = _env_float("BREAKDOWN2_VOL_MULT", self.cfg.vol_mult)
         self.cfg.tp1_frac = _env_float("BREAKDOWN2_TP1_FRAC", self.cfg.tp1_frac)
+        self.cfg.require_1h_close = _env_bool("BREAKDOWN2_REQUIRE_1H_CLOSE", self.cfg.require_1h_close)
+        self.cfg.retest_bars_5m = _env_int("BREAKDOWN2_RETEST_BARS_5M", self.cfg.retest_bars_5m)
+        self.cfg.retest_touch_atr = _env_float("BREAKDOWN2_RETEST_TOUCH_ATR", self.cfg.retest_touch_atr)
 
         self.cfg.time_stop_bars_5m = _env_int("BREAKDOWN2_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
         self.cfg.cooldown_bars_5m = _env_int("BREAKDOWN2_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
+        self.cfg.trailing_atr_mult = _env_float("BREAKDOWN2_TRAIL_ATR_MULT", self.cfg.trailing_atr_mult)
+        self.cfg.trail_activate_rr = _env_float("BREAKDOWN2_TRAIL_ACTIVATE_RR", self.cfg.trail_activate_rr)
+        self.cfg.be_trigger_rr = _env_float("BREAKDOWN2_BE_TRIGGER_RR", self.cfg.be_trigger_rr)
+        self.cfg.be_lock_rr = _env_float("BREAKDOWN2_BE_LOCK_RR", self.cfg.be_lock_rr)
         self.cfg.allow_longs = _env_bool("BREAKDOWN2_ALLOW_LONGS", self.cfg.allow_longs)
         self.cfg.allow_shorts = _env_bool("BREAKDOWN2_ALLOW_SHORTS", self.cfg.allow_shorts)
 
@@ -224,10 +239,12 @@ class AltInplayBreakdownV2Strategy:
             self.last_no_signal_reason = "regime_not_bearish"
             return None
 
-        # Fetch 1h bars (last 30 bars = ~30h of data)
-        lookback_bars = max(30, self.cfg.lookback_h)
+        # Fetch 1h bars: previous window defines support, latest closed 1h bar
+        # must confirm the break. Including the breakout bar in support makes
+        # the level chase price and can silently kill the strategy.
+        lookback_bars = max(30, self.cfg.lookback_h + 2)
         rows_1h = store.fetch_klines(store.symbol, "60", lookback_bars) or []
-        if len(rows_1h) < max(15, self.cfg.lookback_h):
+        if len(rows_1h) < max(15, self.cfg.lookback_h + 1):
             self.last_no_signal_reason = "not_enough_1h_bars"
             return None
 
@@ -236,14 +253,16 @@ class AltInplayBreakdownV2Strategy:
             return None
         self._last_1h_ts = tf_ts
 
-        # Find support (24h low on 1h bars)
+        # Find support on bars BEFORE the latest break-confirmation bar.
         lows_1h = [float(r[3]) for r in rows_1h]
         highs_1h = [float(r[2]) for r in rows_1h]
         closes_1h = [float(r[4]) for r in rows_1h]
 
-        lookback_idx = -min(self.cfg.lookback_h, len(rows_1h))
-        support = min(lows_1h[lookback_idx:])
-        resistance = max(highs_1h[lookback_idx:])
+        structure_lows = lows_1h[:-1]
+        structure_highs = highs_1h[:-1]
+        lookback_idx = -min(self.cfg.lookback_h, len(structure_lows))
+        support = min(structure_lows[lookback_idx:])
+        resistance = max(structure_highs[lookback_idx:])
 
         # RSI on 1h (must be below threshold for downtrend)
         rsi_1h = _rsi(closes_1h, 14)
@@ -255,6 +274,14 @@ class AltInplayBreakdownV2Strategy:
         atr_1h = _atr_from_rows(rows_1h, 14)
         if not math.isfinite(atr_1h) or atr_1h <= 0:
             self.last_no_signal_reason = "atr_invalid"
+            return None
+
+        # Latest completed 1h close confirms the break; current 5m close times
+        # the entry near that confirmed level.
+        last_1h_close = closes_1h[-1]
+        last_1h_break_atr = (support - last_1h_close) / max(1e-12, atr_1h)
+        if self.cfg.require_1h_close and last_1h_break_atr < self.cfg.min_break_atr:
+            self.last_no_signal_reason = f"1h_close_not_broken_{last_1h_break_atr:.2f}atr"
             return None
 
         # Check if price has broken below support
@@ -275,8 +302,8 @@ class AltInplayBreakdownV2Strategy:
             return None
 
         # Fetch 5m bars for confirmation + volume baseline (20 bars so baseline excludes current)
-        rows_5m = store.fetch_klines(store.symbol, "5", 20) or []
-        if len(rows_5m) < 3:
+        rows_5m = store.fetch_klines(store.symbol, "5", max(20, self.cfg.retest_bars_5m + 2)) or []
+        if len(rows_5m) < max(3, self.cfg.retest_bars_5m + 1):
             self.last_no_signal_reason = "not_enough_5m_bars"
             return None
 
@@ -290,6 +317,13 @@ class AltInplayBreakdownV2Strategy:
         if close_5m >= open_5m:
             self.last_no_signal_reason = "5m_not_bearish"
             return None
+
+        if self.cfg.retest_bars_5m > 0:
+            recent = rows_5m[-self.cfg.retest_bars_5m:]
+            retest_high = max(float(r[2]) for r in recent)
+            if retest_high < support - self.cfg.retest_touch_atr * atr_1h:
+                self.last_no_signal_reason = "no_support_retest"
+                return None
 
         body = abs(close_5m - open_5m)
         bar_range = max(1e-12, high_5m - low_5m)
@@ -333,8 +367,12 @@ class AltInplayBreakdownV2Strategy:
             tp=tp2,
             tps=[tp1, tp2],
             tp_fracs=[self.cfg.tp1_frac, 1.0 - self.cfg.tp1_frac],
-            trailing_atr_mult=0.0,
+            trailing_atr_mult=max(0.0, float(self.cfg.trailing_atr_mult)),
+            trailing_atr_period=14,
+            trail_activate_rr=max(0.0, float(self.cfg.trail_activate_rr)),
+            be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
+            be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
             time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
-            reason="bd2_1h_support_break",
+            reason=f"bd2_1h_support_break close_break={last_1h_break_atr:.2f}atr dist={dist_to_support:.2f}atr",
         )
         return sig if sig.validate() else None
