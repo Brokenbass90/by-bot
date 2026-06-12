@@ -1500,8 +1500,11 @@ async def get_live_pnl(_: str = Depends(require_auth)):
     # Health gate sleeve status
     sleeve_health: dict = {}
     try:
-        health_path = _ROOT / "configs" / "strategy_health.json"
-        hd = _json(health_path) or {}
+        hd = (
+            _json(_rt("strategy_health.json"))
+            or _json(_ROOT / "configs" / "strategy_health.json")
+            or {}
+        )
         for sname, sinfo in (hd.get("strategies") or {}).items():
             short = sname.replace("alt_", "").replace("btc_eth_", "").replace("_v1", "")
             sleeve_health[short] = str(sinfo.get("status", "OK")).upper()

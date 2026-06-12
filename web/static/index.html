@@ -435,6 +435,13 @@ function fmtPF(pf) {
   return parseFloat(pf).toFixed(3);
 }
 
+function fmtPx(n, dec = 4) {
+  if (n == null || n === '') return '—';
+  const v = parseFloat(n);
+  if (isNaN(v)) return '—';
+  return v.toFixed(dec);
+}
+
 function regimeLabel(r) {
   return (r || 'unknown').replace(/_/g, ' ').toUpperCase();
 }
@@ -447,8 +454,47 @@ function Dashboard({ onNavigate }) {
   const { data: regime } = useFetch('/api/regime', []);
   const { data: equity } = useFetch('/api/equity', []);
   const { data: livePnl, refresh: refreshPnl } = useFetch('/api/live-pnl', [], 15000);
+  const [positionAnalyses, setPositionAnalyses] = useState({});
+  const [positionActions, setPositionActions] = useState({});
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
+
+  const positionKey = useCallback((p, i) => `${p.symbol || i}:${p.side || ''}:${p.entry || p.avg_price || ''}`, []);
+
+  const analyzePosition = useCallback(async (p, key) => {
+    setPositionAnalyses(prev => ({ ...prev, [key]: { loading: true } }));
+    try {
+      const data = await post('/api/ai/analyze-live-position', {
+        symbol: p.symbol,
+        side: p.side,
+        strategy: p.strategy,
+        entry: p.entry ?? p.avg_price,
+        current: p.current ?? p.mark_price,
+        sl: p.sl ?? p.stop_loss,
+        tp: p.tp ?? p.take_profit,
+        upnl_pct: p.upnl_pct,
+        upnl_usd: p.upnl_usd ?? p.unrealized_pnl,
+      });
+      setPositionAnalyses(prev => ({ ...prev, [key]: data }));
+    } catch (err) {
+      setPositionAnalyses(prev => ({ ...prev, [key]: { error: err.message || String(err) } }));
+    }
+  }, []);
+
+  const queueClosePosition = useCallback(async (p, key) => {
+    if (!window.confirm(`Queue close request for ${p.symbol}? It will still require executor/confirmation.`)) return;
+    setPositionActions(prev => ({ ...prev, [key]: 'queueing…' }));
+    try {
+      const data = await post('/api/ai/propose-position-action', {
+        symbol: p.symbol,
+        action: 'close',
+        reason: `Manual web request after live position review: ${p.symbol} ${p.side || ''}`,
+      });
+      setPositionActions(prev => ({ ...prev, [key]: `queued ${data.action_id}` }));
+    } catch (err) {
+      setPositionActions(prev => ({ ...prev, [key]: err.message || String(err) }));
+    }
+  }, []);
 
   // Build equity chart
   useEffect(() => {
@@ -647,28 +693,60 @@ function Dashboard({ onNavigate }) {
                   React.createElement('th', { style: { textAlign: 'right' } }, 'Current'),
                   React.createElement('th', { style: { textAlign: 'right' } }, 'uPnL %'),
                   React.createElement('th', { style: { textAlign: 'right' } }, 'uPnL USDT'),
-                  React.createElement('th', { style: { textAlign: 'right' } }, 'SL')
+                  React.createElement('th', { style: { textAlign: 'right' } }, 'SL'),
+                  React.createElement('th', { style: { textAlign: 'right' } }, 'TP'),
+                  React.createElement('th', { style: { textAlign: 'right' } }, 'Actions')
                 )
               ),
               React.createElement('tbody', null,
                 livePnl.positions.map((p, i) => {
+                  const key = positionKey(p, i);
                   const isLong  = (p.side || '').toLowerCase() !== 'sell';
                   const pnlPos  = p.upnl_pct >= 0;
                   const strat   = (p.strategy || '').replace(/^(alt_|btc_eth_)/,'').replace(/_v\d+$/,'');
-                  return React.createElement('tr', { key: i },
-                    React.createElement('td', null, React.createElement('strong', null, p.symbol)),
-                    React.createElement('td', null,
-                      React.createElement('span', { className: isLong ? 'badge badge-long' : 'badge badge-short' },
-                        isLong ? 'LONG' : 'SHORT')),
-                    React.createElement('td', { className: 'dim' }, strat),
-                    React.createElement('td', { style: { textAlign: 'right', fontFamily: 'monospace' } }, p.entry ? p.entry.toFixed(4) : '—'),
-                    React.createElement('td', { style: { textAlign: 'right', fontFamily: 'monospace' } }, p.current ? p.current.toFixed(4) : '—'),
-                    React.createElement('td', { style: { textAlign: 'right', color: pnlPos ? 'var(--green)' : 'var(--red)', fontWeight: 600 } },
-                      (p.upnl_pct >= 0 ? '+' : '') + p.upnl_pct.toFixed(2) + '%'),
-                    React.createElement('td', { style: { textAlign: 'right', color: pnlPos ? 'var(--green)' : 'var(--red)' } },
-                      (p.upnl_usd >= 0 ? '+' : '') + p.upnl_usd.toFixed(3)),
-                    React.createElement('td', { style: { textAlign: 'right', color: 'var(--red)', fontFamily: 'monospace', fontSize: '11px' } },
-                      p.sl ? p.sl.toFixed(4) : '—')
+                  const sl = p.sl ?? p.stop_loss;
+                  const tp = p.tp ?? p.take_profit;
+                  const analysis = positionAnalyses[key];
+                  const actionStatus = positionActions[key];
+                  const toneColor = analysis?.tone === 'danger' ? 'var(--red)' : analysis?.tone === 'warn' ? 'var(--yellow)' : 'var(--green)';
+                  return React.createElement(React.Fragment, { key },
+                    React.createElement('tr', null,
+                      React.createElement('td', null, React.createElement('strong', null, p.symbol)),
+                      React.createElement('td', null,
+                        React.createElement('span', { className: isLong ? 'badge badge-long' : 'badge badge-short' },
+                          isLong ? 'LONG' : 'SHORT')),
+                      React.createElement('td', { className: 'dim' }, strat),
+                      React.createElement('td', { style: { textAlign: 'right', fontFamily: 'monospace' } }, fmtPx(p.entry ?? p.avg_price)),
+                      React.createElement('td', { style: { textAlign: 'right', fontFamily: 'monospace' } }, fmtPx(p.current ?? p.mark_price)),
+                      React.createElement('td', { style: { textAlign: 'right', color: pnlPos ? 'var(--green)' : 'var(--red)', fontWeight: 600 } },
+                        p.upnl_pct != null ? (p.upnl_pct >= 0 ? '+' : '') + Number(p.upnl_pct).toFixed(2) + '%' : '—'),
+                      React.createElement('td', { style: { textAlign: 'right', color: pnlPos ? 'var(--green)' : 'var(--red)' } },
+                        p.upnl_usd != null ? (p.upnl_usd >= 0 ? '+' : '') + Number(p.upnl_usd).toFixed(3) : '—'),
+                      React.createElement('td', { style: { textAlign: 'right', color: 'var(--red)', fontFamily: 'monospace', fontSize: '11px' } }, fmtPx(sl)),
+                      React.createElement('td', { style: { textAlign: 'right', color: 'var(--green)', fontFamily: 'monospace', fontSize: '11px' } }, fmtPx(tp)),
+                      React.createElement('td', { style: { textAlign: 'right', whiteSpace: 'nowrap' } },
+                        React.createElement('button', { className: 'refresh-btn', style: { marginRight: '6px' }, onClick: () => analyzePosition(p, key) }, 'AI read'),
+                        React.createElement('button', { className: 'refresh-btn', onClick: () => queueClosePosition(p, key) }, 'Queue close')
+                      )
+                    ),
+                    (analysis || actionStatus) && React.createElement('tr', null,
+                      React.createElement('td', { colSpan: 10, style: { background: 'var(--bg3)', color: 'var(--text2)', fontSize: '12px' } },
+                        analysis?.loading
+                          ? 'AI read: analyzing position risk…'
+                          : analysis?.error
+                            ? `AI read failed: ${analysis.error}`
+                            : analysis
+                              ? React.createElement('div', { style: { display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' } },
+                                  React.createElement('strong', { style: { color: toneColor } }, analysis.verdict || 'analysis'),
+                                  React.createElement('span', null, analysis.human_summary),
+                                  analysis.metrics && React.createElement('span', { className: 'dim' },
+                                    `R=${analysis.metrics.r_multiple ?? '—'} · dist SL=${analysis.metrics.distance_to_sl_pct ?? '—'}%`)
+                                )
+                              : null,
+                        actionStatus && React.createElement('div', { style: { marginTop: analysis ? '6px' : 0, color: 'var(--blue)' } },
+                          `Action queue: ${actionStatus}`)
+                      )
+                    )
                   );
                 })
               )

@@ -143,3 +143,79 @@ P1:
 - Run Alpaca v38 market-hour paper preflight.
 - Clean/triage untracked repo files separately, not mixed with trading changes.
 
+## 2026-06-12 Codex Session Addendum — Web Control Layer + Live Diagnosis
+
+Context:
+
+- Bot was checked after roughly 4 hours of live runtime after the IVB1 canary deploy.
+- `dry_run=false`, `trade_on=true`, `open_trades=0`.
+- Websocket/data path was alive: `bybit_msgs` was growing normally.
+- Regime remained `bear_chop`; orchestrator risk was conservative (`global_risk_mult` about `0.55`, effective risk per trade about `0.44%`).
+
+Why there were no new crypto entries:
+
+- This was not a frozen bot.
+- Active live sleeves were too narrow/strict for the current tape:
+  - `ivb1`: about 1105 attempts, all `no_signal`; most rejects were `ivb1_ns_other`, then `no_breakout` / `impulse_body`.
+  - `att1`: about 35 attempts, all `no_signal`; mostly no trendline/first-bar/touch quality.
+  - `flat`: about 30 attempts, all `no_signal`.
+  - `breakdown` is effectively zero-risk in runtime and should be treated as disabled until repaired.
+- Practical meaning for user: no entry is currently a strategy coverage/frequency problem, not an exchange connectivity problem.
+
+Weekly live-vs-backtest report translated:
+
+- Report: `reports/weekly_live_vs_backtest/weekly_live_vs_backtest_20260612_073424.md`.
+- Live 7d: `9` trades, PnL about `-0.8544`, PF `0.267`.
+- Replay/backtest same window: `24` exits, PnL about `+1.3070`, PF `1.315`.
+- Important caveat: replay uses the config snapshot at report time, so it is evidence only after a stable-config window.
+- Real issue: live bleed is concentrated in old `alt_inplay_breakdown_v1` and live ATT1 behavior:
+  - Live `alt_inplay_breakdown_v1`: 5 trades, net about `-0.476`, PF `0.330`.
+  - Live ATT1: 4 trades, net about `-0.378`, PF `0.168`.
+- Interpretation: do not add risk to these mechanisms until repaired and revalidated.
+
+Web/control changes made locally in this session:
+
+- Added read-only endpoint `POST /api/ai/analyze-live-position` in `web/routes/extra_routes.py`.
+  - It returns a human-readable position risk readout: missing SL, near SL, losing position, profit protection after about 1R, runner/no TP.
+  - It does not execute trades.
+- Extended Dashboard live positions widget in `web/static/index.html`.
+  - Adds TP column next to SL.
+  - Adds `AI read` button for a live position.
+  - Adds `Queue close` button that only creates a pending action through the existing `/api/ai/propose-position-action` path.
+  - Confirmation/execution remains separated; no hidden auto-close was added.
+- Fixed `web/routes/data_routes.py` live P&L sleeve health source.
+  - Prefer `runtime/strategy_health.json`; fall back to `configs/strategy_health.json`.
+- Added targeted tests: `tests/test_web_live_position_analysis.py`.
+
+Validation run:
+
+- `python3 -m py_compile web/routes/extra_routes.py web/routes/data_routes.py` — OK.
+- `.venv/bin/python tests/smoke_test.py` — 22/22 OK.
+- Direct live-position analysis checks — OK.
+- `node` syntax parse of `web/static/index.html` script — OK.
+- Local `pytest` was not available in this workspace venv, so the new pytest file was additionally validated by direct Python assertions.
+
+Expected P&L / ops effect:
+
+- Direct P&L effect: none, intentionally. This is a control/visibility layer.
+- Expected operational effect: fewer blind manual decisions on open positions, faster detection of missing stops / near-stop / profit-protection cases, and less noisy Telegram dependence.
+
+Next portfolio repair queue:
+
+1. Repair `alt_inplay_breakdown_v1` before any more risk:
+   - Test wider SL / fewer stop-then-reverse cases.
+   - Add local regime filter and impulse-exhaustion filter.
+   - Gate on 180d and 360d, with `stop_then_reversed` target below 15% and PF above 1.0.
+2. ATT1 additivity audit:
+   - Compare ATT1 daily PnL correlation and trade overlap against ASB1.
+   - If correlation is high, ATT1 should not stack risk on the same symbol/time; it needs a portfolio-level overlap guard.
+3. BTC/ETH midterm pullback:
+   - Expand to 360d and require at least 30 trades, PF above 1.3, WR above 45%.
+   - If passed, use it as a different niche from alt chop strategies.
+4. Web next:
+   - Add Alpaca live/paper positions into the same positions panel.
+   - Add pending action inbox with explicit confirm/deny.
+   - Add human-language report cards for weekly live-vs-backtest and sleeve health.
+5. Crypto frequency:
+   - Do not blindly loosen all filters.
+   - Add one validated canary at a time: LSR1 trend-filtered, repaired inplay, then ASB1/bounce only if regime/additivity gates pass.

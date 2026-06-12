@@ -10,7 +10,8 @@ These endpoints answer four user requests:
   1. /api/positions/live      — current open positions snapshot from Bybit
   2. /api/pnl/monthly         — per-month income/expense breakdown
   3. /api/ai/code-search      — AI reads project files (read-only, sandboxed)
-  4. /api/ai/propose-position-action — AI proposes close/move-SL/TP, user confirms
+  4. /api/ai/analyze-live-position — human-readable risk readout for one open position
+  5. /api/ai/propose-position-action — AI proposes close/move-SL/TP, user confirms
 
 All endpoints respect `require_auth`. AI position actions require explicit user
 confirmation via PUT (with action_id); they NEVER auto-execute.
@@ -333,9 +334,137 @@ class ProposePositionActionRequest(BaseModel):
     reason: str  # AI explanation
 
 
+class AnalyzeLivePositionRequest(BaseModel):
+    symbol: str
+    side: Optional[str] = None
+    strategy: Optional[str] = None
+    entry: Optional[float] = None
+    current: Optional[float] = None
+    sl: Optional[float] = None
+    tp: Optional[float] = None
+    upnl_pct: Optional[float] = None
+    upnl_usd: Optional[float] = None
+
+
 class ConfirmPositionActionRequest(BaseModel):
     action_id: str
     confirm: bool
+
+
+def _finite_float(value: Any) -> Optional[float]:
+    try:
+        out = float(value)
+    except (TypeError, ValueError):
+        return None
+    if out != out or out in (float("inf"), float("-inf")):
+        return None
+    return out
+
+
+def _round_opt(value: Optional[float], ndigits: int = 4) -> Optional[float]:
+    return round(value, ndigits) if value is not None else None
+
+
+@router.post("/ai/analyze-live-position")
+async def ai_analyze_live_position(
+    body: AnalyzeLivePositionRequest,
+    _: str = Depends(require_auth),
+):
+    """Read-only live-position risk analysis for the web/AI operator."""
+    symbol = (body.symbol or "").strip().upper()
+    if not symbol:
+        raise HTTPException(status_code=400, detail="symbol required")
+
+    side_raw = (body.side or "").strip().lower()
+    is_short = side_raw in {"sell", "short"}
+    direction = -1.0 if is_short else 1.0
+    side_label = "SHORT" if is_short else "LONG"
+
+    entry = _finite_float(body.entry)
+    current = _finite_float(body.current)
+    sl = _finite_float(body.sl)
+    tp = _finite_float(body.tp)
+    upnl_pct = _finite_float(body.upnl_pct)
+    upnl_usd = _finite_float(body.upnl_usd)
+
+    move_pct: Optional[float] = None
+    risk_to_sl_pct: Optional[float] = None
+    distance_to_sl_pct: Optional[float] = None
+    distance_to_tp_pct: Optional[float] = None
+    r_multiple: Optional[float] = None
+
+    if entry and current and entry > 0:
+        move_pct = ((current - entry) / entry) * 100.0 * direction
+    if entry and sl and entry > 0:
+        risk_to_sl_pct = ((entry - sl) / entry) * 100.0 if not is_short else ((sl - entry) / entry) * 100.0
+        if risk_to_sl_pct <= 0:
+            risk_to_sl_pct = None
+    if current and sl and current > 0:
+        distance_to_sl_pct = ((current - sl) / current) * 100.0 if not is_short else ((sl - current) / current) * 100.0
+    if current and tp and current > 0:
+        distance_to_tp_pct = ((tp - current) / current) * 100.0 if not is_short else ((current - tp) / current) * 100.0
+    if move_pct is not None and risk_to_sl_pct and risk_to_sl_pct > 0:
+        r_multiple = move_pct / risk_to_sl_pct
+
+    tone = "ok"
+    verdict = "hold"
+    summary = f"{symbol} {side_label}: позиция выглядит штатно, явного аварийного сигнала нет."
+    actions: list[dict[str, str]] = []
+
+    if sl is None:
+        tone = "danger"
+        verdict = "missing_sl"
+        summary = f"{symbol} {side_label}: нет стопа в снимке позиции. Это надо проверить первым."
+        actions.append({"action": "check_sl", "label": "Проверить защитный стоп"})
+    elif distance_to_sl_pct is not None and distance_to_sl_pct <= 0.25:
+        tone = "danger"
+        verdict = "near_stop"
+        summary = f"{symbol} {side_label}: цена почти у стопа, позиция в зоне высокого риска."
+        actions.append({"action": "watch_or_close", "label": "Наблюдать вплотную или подготовить закрытие"})
+    elif upnl_pct is not None and upnl_pct <= -1.5:
+        tone = "danger"
+        verdict = "losing"
+        summary = f"{symbol} {side_label}: позиция в заметном минусе; не усреднять без отдельного сигнала."
+        actions.append({"action": "avoid_averaging", "label": "Не усреднять без нового сигнала"})
+    elif r_multiple is not None and r_multiple >= 1.0:
+        tone = "ok"
+        verdict = "protect_profit"
+        summary = f"{symbol} {side_label}: позиция прошла около {r_multiple:.2f}R в плюс, пора думать о защите прибыли."
+        actions.append({"action": "consider_be", "label": "Рассмотреть перенос SL ближе к безубытку"})
+    elif tp is None:
+        tone = "warn"
+        verdict = "runner"
+        summary = f"{symbol} {side_label}: TP не задан, позиция похожа на runner; нужно следить за отдачей прибыли."
+        actions.append({"action": "monitor_giveback", "label": "Следить за отдачей MFE"})
+
+    if risk_to_sl_pct is not None and risk_to_sl_pct > 3.5:
+        tone = "warn" if tone == "ok" else tone
+        actions.append({"action": "risk_check", "label": "Проверить, не слишком широкий стоп"})
+    if distance_to_sl_pct is not None and distance_to_sl_pct < 0:
+        tone = "danger"
+        verdict = "past_stop"
+        summary = f"{symbol} {side_label}: текущая цена уже хуже стоп-уровня в снимке. Нужна ручная проверка биржи."
+        actions.insert(0, {"action": "manual_exchange_check", "label": "Сверить позицию на бирже"})
+
+    return {
+        "generated_at_utc": _utc_now(),
+        "symbol": symbol,
+        "side": side_label,
+        "strategy": body.strategy,
+        "tone": tone,
+        "verdict": verdict,
+        "human_summary": summary,
+        "metrics": {
+            "move_pct": _round_opt(move_pct, 3),
+            "risk_to_sl_pct": _round_opt(risk_to_sl_pct, 3),
+            "distance_to_sl_pct": _round_opt(distance_to_sl_pct, 3),
+            "distance_to_tp_pct": _round_opt(distance_to_tp_pct, 3),
+            "r_multiple": _round_opt(r_multiple, 3),
+            "upnl_pct": _round_opt(upnl_pct, 3),
+            "upnl_usd": _round_opt(upnl_usd, 4),
+        },
+        "suggested_actions": actions[:4],
+    }
 
 
 def _append_pending_action(entry: dict[str, Any]) -> None:
