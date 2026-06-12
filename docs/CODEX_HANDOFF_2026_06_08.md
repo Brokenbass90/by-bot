@@ -203,6 +203,29 @@ ATT1 live refresh applied after server result review:
 - Other ATT1 r259 params already matched live (`PIVOT_LEFT=2`, `PIVOT_RIGHT=3`, `MIN_PIVOTS=2`, `TOUCH_ATR=0.5`, `RSI_LONG_MAX=52`).
 - Expected P&L effect: improve ATT1 quality/frequency without adding a new sleeve. It is still a canary-style live refresh; monitor the next 20-30 ATT1 trades before increasing risk.
 
+Deploy status:
+
+- Web/control package committed and pushed as `2255afa Add web live position AI controls`.
+- ATT1 r259 refresh committed and pushed as `352e68a Apply ATT1 r259 live refresh`.
+- Server had a dirty working tree, so deploy was done by targeted backup + `scp`, not by `git pull`.
+- Web deployed:
+  - `web/routes/extra_routes.py`
+  - `web/routes/data_routes.py`
+  - `web/static/index.html`
+  - `tests/test_web_live_position_analysis.py`
+  - `docs/CODEX_HANDOFF_2026_06_08.md`
+  - restarted only `trading-journal-web.service`; `/ping` returned `{"pong": true}`.
+- ATT1 config deployed:
+  - `configs/approved_strategy_params.env`
+  - bot was restarted only after confirming `open_trades=0`.
+- Post-restart live status:
+  - `bybot.service`: active
+  - `trading-journal-web.service`: active
+  - `dry_run=false`, `trade_on=true`, `open_trades=0`
+  - heartbeat fresh
+  - websocket/data flow recovered after startup subscription warm-up: `bybit_msgs` grew to `21798`
+  - current regime: `bear_chop`
+
 Validation run:
 
 - `python3 -m py_compile web/routes/extra_routes.py web/routes/data_routes.py` — OK.
