@@ -36,6 +36,50 @@ def preserve_existing_tpsl(
     return tp, sl
 
 
+def planned_tpsl_after_fill(
+    side: str,
+    *,
+    fill_price: Optional[float],
+    planned_entry: Optional[float],
+    planned_tp: Optional[float],
+    planned_sl: Optional[float],
+    current_tp: Optional[float],
+    current_sl: Optional[float],
+) -> tuple[Optional[float], Optional[float]]:
+    """Return strategy-planned TP/SL for post-fill exchange placement.
+
+    The planned order-submission levels are the source of truth. If a fill gaps
+    through a planned level, preserve the planned distance from the real fill
+    instead of silently compressing to one tick.
+    """
+    tp = planned_tp if planned_tp is not None else current_tp
+    sl = planned_sl if planned_sl is not None else current_sl
+
+    try:
+        fill = float(fill_price) if fill_price is not None else None
+        entry = float(planned_entry) if planned_entry is not None else None
+    except (TypeError, ValueError):
+        return tp, sl
+    if fill is None or entry is None or fill <= 0 or entry <= 0:
+        return tp, sl
+
+    side_norm = str(side or "").strip()
+    try:
+        if side_norm == "Buy":
+            if planned_sl is not None and float(planned_sl) < entry and sl is not None and float(sl) >= fill:
+                sl = fill - abs(entry - float(planned_sl))
+            if planned_tp is not None and float(planned_tp) > entry and tp is not None and float(tp) <= fill:
+                tp = fill + abs(float(planned_tp) - entry)
+        elif side_norm == "Sell":
+            if planned_sl is not None and float(planned_sl) > entry and sl is not None and float(sl) <= fill:
+                sl = fill + abs(float(planned_sl) - entry)
+            if planned_tp is not None and float(planned_tp) < entry and tp is not None and float(tp) >= fill:
+                tp = fill - abs(entry - float(planned_tp))
+    except (TypeError, ValueError):
+        return tp, sl
+    return tp, sl
+
+
 def should_preserve_strategy_tpsl(
     strategy: Optional[str],
     *,

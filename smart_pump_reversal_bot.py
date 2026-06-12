@@ -93,7 +93,7 @@ from bot.diagnostics import (
     _flat_no_signal_diag_key, _sloped_no_signal_diag_key, _att1_no_signal_diag_key, _asm1_no_signal_diag_key,
     _breakdown_no_signal_diag_key, _midterm_no_signal_diag_key,
 )
-from bot.tpsl_policy import preserve_existing_tpsl, restored_position_manual_lock, should_preserve_strategy_tpsl
+from bot.tpsl_policy import planned_tpsl_after_fill, preserve_existing_tpsl, restored_position_manual_lock, should_preserve_strategy_tpsl
 from bot.deepseek_overlay import DeepSeekOverlay
 from bot.ai_context import compact_ai_full_context
 from bot.deepseek_autoresearch_agent import (
@@ -2023,6 +2023,13 @@ def _append_order_submitted_event(
     request_sl: float | None,
     signal_reason: str = "",
 ) -> None:
+    if tr is not None:
+        try:
+            tr.requested_entry_price = float(request_price)
+            tr.requested_tp_price = float(request_tp) if request_tp is not None else None
+            tr.requested_sl_price = float(request_sl) if request_sl is not None else None
+        except Exception:
+            pass
     _append_live_trade_event(
         "order_submitted",
         sym,
@@ -6132,8 +6139,19 @@ def sync_trades_with_exchange():
                         or (tr.sl_price is not None and tr.sl_price > 0)
                     )
                     if should_preserve_strategy_tpsl(getattr(tr, "strategy", "pump"), has_strategy_levels=has_strategy_levels, legacy_pct_strategies=LEGACY_PCT_STRATEGIES):
-                        # P0-fix (2026-06-08): keep strategy-designed TP/SL, only re-round vs real avg.
-                        tr.tp_price, tr.sl_price = round_tp_sl_prices(sym, tr.side, tr.avg, tr.tp_price, tr.sl_price)
+                        # P0.1-fix (2026-06-12): the order-submitted planned TP/SL
+                        # is the source of truth. Exchange/bootstrap levels must
+                        # not compress strategy stops during fill sync.
+                        tp_plan, sl_plan = planned_tpsl_after_fill(
+                            tr.side,
+                            fill_price=tr.avg,
+                            planned_entry=getattr(tr, "requested_entry_price", None) or getattr(tr, "entry_price_req", None),
+                            planned_tp=getattr(tr, "requested_tp_price", None),
+                            planned_sl=getattr(tr, "requested_sl_price", None),
+                            current_tp=tr.tp_price,
+                            current_sl=tr.sl_price,
+                        )
+                        tr.tp_price, tr.sl_price = round_tp_sl_prices(sym, tr.side, tr.avg, tp_plan, sl_plan)
                     else:
                         # legacy pump strategies OR strategy did not provide levels -> global pct fallback
                         if tr.side == "Sell":

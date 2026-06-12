@@ -74,6 +74,9 @@ class TradeState:
     # --- TP/SL ---
     tp_price: Optional[float] = None
     sl_price: Optional[float] = None
+    requested_entry_price: Optional[float] = None
+    requested_tp_price: Optional[float] = None
+    requested_sl_price: Optional[float] = None
 
     tpsl_on_exchange: bool = False
     tpsl_manual_lock: bool = False

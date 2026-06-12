@@ -1,4 +1,4 @@
-from bot.tpsl_policy import preserve_existing_tpsl, restored_position_manual_lock
+from bot.tpsl_policy import planned_tpsl_after_fill, preserve_existing_tpsl, restored_position_manual_lock
 
 
 def test_bootstrap_with_only_sl_is_not_manual_locked():
@@ -29,6 +29,33 @@ def test_missing_tp_is_filled_without_overwriting_existing_sl():
     tp, sl = preserve_existing_tpsl(None, 105.0, 95.0, 110.0)
     assert tp == 95.0
     assert sl == 105.0
+
+
+def test_planned_stop_survives_broker_level_on_fill():
+    tp, sl = planned_tpsl_after_fill(
+        "Buy",
+        fill_price=0.1688,
+        planned_entry=0.1687,
+        planned_tp=None,
+        planned_sl=0.1644,
+        current_tp=0.1697,
+        current_sl=0.1682,
+    )
+    assert tp == 0.1697
+    assert sl == 0.1644
+
+
+def test_planned_stop_reanchors_when_fill_crosses_level():
+    _, sl = planned_tpsl_after_fill(
+        "Buy",
+        fill_price=0.1630,
+        planned_entry=0.1687,
+        planned_tp=None,
+        planned_sl=0.1644,
+        current_tp=None,
+        current_sl=0.1644,
+    )
+    assert round(sl, 6) == 0.1587
 
 
 # --- P0-fix regression: strategy-designed TP/SL must survive the fill ---
