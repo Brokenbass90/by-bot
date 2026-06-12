@@ -24,11 +24,12 @@ def test_ivb1_shadow_candidate_is_enabled_with_zero_risk() -> None:
     assert values["IVB1_ALLOW_MINQTY_FALLBACK"] == "0"
 
 
-def test_approved_overlay_does_not_disable_ivb1_shadow() -> None:
+def test_approved_overlay_keeps_ivb1_small_canary() -> None:
     values = _env_values(ROOT / "configs" / "approved_strategy_params.env")
+    risk_mult = float(values["IVB1_RISK_MULT"])
 
     assert values["ENABLE_IVB1_TRADING"] == "1"
-    assert float(values["IVB1_RISK_MULT"]) == 0.0
+    assert 0.0 < risk_mult <= 0.25
 
 
 def test_ivb1_shadow_branch_returns_before_order_submission() -> None:
