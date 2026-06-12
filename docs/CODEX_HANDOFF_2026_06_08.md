@@ -348,3 +348,40 @@ Operational rule:
 
 - Do not restart live bot for these code changes while positions are open.
 - Do not increase live risk from this package. This is research/validator repair first, promotion later.
+
+Server deploy / research launch:
+
+- Commit pushed: `267c57a Apply strategy audit repair package`.
+- Targeted `scp` deploy to `/root/by-bot`; no `git pull`, no live bot restart.
+- Server validation:
+  - `.venv/bin/python -m py_compile` on changed strategy/scripts/tests — OK.
+  - Direct portable checks: 13/13 OK.
+- Research screens started:
+  - `bd2_audit_20260612`
+    - spec: `configs/autoresearch/breakdown_v2_1h_bear_sweep_v1.json`
+    - log: `logs/research_audit_20260612/bd2_audit.log`
+    - run dir: `backtest_runs/autoresearch_20260612_121825_breakdown_v2_1h_bear_sweep_v1`
+  - `lsr2_audit_20260612`
+    - spec: `configs/autoresearch/liquidity_sweep_reversal_v2_full_grid_v1.json`
+    - log: `logs/research_audit_20260612/lsr2_audit.log`
+    - run dir: `backtest_runs/autoresearch_20260612_121825_liquidity_sweep_reversal_v2_full_grid_v1`
+- At launch both were on candidate `r001`; `results.csv` had only headers while the first backtests were still running.
+- Live bot status during launch:
+  - `open_trades=0`
+  - `dry_run=false`
+  - `trade_on=true`
+  - `max_positions=3`
+  - `regime=bear_chop`
+  - Bybit message counter growing.
+
+Arbitrage quick check after audit fixes:
+
+- `scripts/pair_arb_scanner.py --lookback 336 --max 10` on server cache found no current candidates among `BNBUSDT,BTCUSDT,ETHUSDT,LINKUSDT,LTCUSDT,SOLUSDT,XRPUSDT`.
+- ETH/BTC walk-forward with `lookback=336`, `entry_z=2.5`, `stop_z=3.0`, fees `6bps/fill`, conservative funding drag `2bps/8h`:
+  - aligned 1h bars: `38976`
+  - OOS trades: `193`
+  - aggregate verdict: `fragile`
+  - median fold PF: `0.5103`
+  - mean fold return: `-1.4092%`
+  - fee sensitivity verdict: `fee_fragile`
+- Conclusion: pair-arb remains research-only. Do not allocate capital until pair-universe scan + regime/funding filters produce positive OOS after costs.
