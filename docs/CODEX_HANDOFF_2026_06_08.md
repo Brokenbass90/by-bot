@@ -187,6 +187,22 @@ Web/control changes made locally in this session:
   - Prefer `runtime/strategy_health.json`; fall back to `configs/strategy_health.json`.
 - Added targeted tests: `tests/test_web_live_position_analysis.py`.
 
+ATT1 live refresh applied after server result review:
+
+- Source result: `att1_density_v3_more_pivots_v1_r259` from server run `backtest_runs/autoresearch_20260611_141702_att1_density_v3_more_pivots_v1/results.csv`.
+- Evidence on 360d:
+  - net `+39.18`
+  - PF `1.376`
+  - WR `59.4%`
+  - max DD `3.97`
+  - trades `421`
+  - red months `1`, max red streak `1`
+- Live config changed in `configs/approved_strategy_params.env`:
+  - `ATT1_MAX_PIVOT_AGE=20` -> `16`
+  - `ATT1_MIN_R2=0.7` -> `0.65`
+- Other ATT1 r259 params already matched live (`PIVOT_LEFT=2`, `PIVOT_RIGHT=3`, `MIN_PIVOTS=2`, `TOUCH_ATR=0.5`, `RSI_LONG_MAX=52`).
+- Expected P&L effect: improve ATT1 quality/frequency without adding a new sleeve. It is still a canary-style live refresh; monitor the next 20-30 ATT1 trades before increasing risk.
+
 Validation run:
 
 - `python3 -m py_compile web/routes/extra_routes.py web/routes/data_routes.py` — OK.
