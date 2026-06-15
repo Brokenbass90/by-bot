@@ -442,6 +442,37 @@ function fmtPx(n, dec = 4) {
   return v.toFixed(dec);
 }
 
+function runnerTargets(p) {
+  const targets = p && p.runner && Array.isArray(p.runner.targets) ? p.runner.targets : [];
+  return targets.filter(t => t && t.price != null).slice(0, 4);
+}
+
+function renderTpCell(p) {
+  const exchangeTp = p ? (p.exchange_tp ?? p.tp ?? p.take_profit) : null;
+  const targets = runnerTargets(p);
+  if (!targets.length) {
+    return fmtPx(exchangeTp);
+  }
+  return React.createElement('div', {
+    title: exchangeTp ? `Exchange TP: ${fmtPx(exchangeTp)}` : 'Runner targets are managed by the bot; exchange TP is empty',
+    style: { lineHeight: 1.35, whiteSpace: 'nowrap' }
+  },
+    targets.map((t, idx) => {
+      const hit = t.hit === true || t.status === 'hit';
+      const frac = t.frac != null && !isNaN(parseFloat(t.frac))
+        ? ` ${Math.round(parseFloat(t.frac) * 100)}%`
+        : '';
+      return React.createElement('div', {
+        key: `${t.index || idx + 1}:${t.price}`,
+        style: { color: hit ? 'var(--text3)' : 'var(--green)' }
+      },
+        `TP${t.index || idx + 1} ${fmtPx(t.price)}${frac}`,
+        hit && React.createElement('span', { className: 'dim' }, ' hit')
+      );
+    })
+  );
+}
+
 function regimeLabel(r) {
   return (r || 'unknown').replace(/_/g, ' ').toUpperCase();
 }
@@ -705,7 +736,6 @@ function Dashboard({ onNavigate }) {
                   const pnlPos  = p.upnl_pct >= 0;
                   const strat   = (p.strategy || '').replace(/^(alt_|btc_eth_)/,'').replace(/_v\d+$/,'');
                   const sl = p.sl ?? p.stop_loss;
-                  const tp = p.tp ?? p.take_profit;
                   const analysis = positionAnalyses[key];
                   const actionStatus = positionActions[key];
                   const toneColor = analysis?.tone === 'danger' ? 'var(--red)' : analysis?.tone === 'warn' ? 'var(--yellow)' : 'var(--green)';
@@ -723,7 +753,7 @@ function Dashboard({ onNavigate }) {
                       React.createElement('td', { style: { textAlign: 'right', color: pnlPos ? 'var(--green)' : 'var(--red)' } },
                         p.upnl_usd != null ? (p.upnl_usd >= 0 ? '+' : '') + Number(p.upnl_usd).toFixed(3) : '—'),
                       React.createElement('td', { style: { textAlign: 'right', color: 'var(--red)', fontFamily: 'monospace', fontSize: '11px' } }, fmtPx(sl)),
-                      React.createElement('td', { style: { textAlign: 'right', color: 'var(--green)', fontFamily: 'monospace', fontSize: '11px' } }, fmtPx(tp)),
+                      React.createElement('td', { style: { textAlign: 'right', color: 'var(--green)', fontFamily: 'monospace', fontSize: '11px' } }, renderTpCell(p)),
                       React.createElement('td', { style: { textAlign: 'right', whiteSpace: 'nowrap' } },
                         React.createElement('button', { className: 'refresh-btn', style: { marginRight: '6px' }, onClick: () => analyzePosition(p, key) }, 'AI read'),
                         React.createElement('button', { className: 'refresh-btn', onClick: () => queueClosePosition(p, key) }, 'Queue close')
