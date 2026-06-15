@@ -339,8 +339,8 @@ class AltTrendlineTouchV1Strategy:
         self._deny = _env_csv_set("ATT1_SYMBOL_DENYLIST")
 
     def _slope_pct_per_day(self, slope: float, price_ref: float, bars_per_day: int = 24) -> float:
-        """Convert raw slope (price/bar) to pct/day."""
-        return abs(slope) / max(1e-12, price_ref) * 100.0 * bars_per_day
+        """Convert raw slope (price/bar) to signed pct/day."""
+        return slope / max(1e-12, price_ref) * 100.0 * bars_per_day
 
     def _check_long_trendline(
         self,
@@ -379,9 +379,10 @@ class AltTrendlineTouchV1Strategy:
 
         price_ref = max(1e-12, closes[-1])
         slope_pct = self._slope_pct_per_day(slope, price_ref)
+        abs_slope_pct = abs(slope_pct)
 
         # Slope constraints
-        if slope_pct < c.min_slope_pct or slope_pct > c.max_slope_pct:
+        if abs_slope_pct < c.min_slope_pct or abs_slope_pct > c.max_slope_pct:
             self._no_signal("long_slope_invalid")
             return None
         # Long trendline direction: support must be ascending or only slightly declining
@@ -402,7 +403,6 @@ class AltTrendlineTouchV1Strategy:
         cur_high = highs[-1]
         bar_range = max(1e-12, cur_high - cur_low)
         body_frac = abs(cur_close - cur_open) / bar_range
-        upper_wick = max(0.0, cur_high - max(cur_close, cur_open)) / bar_range
 
         touched = cur_low <= tl_now + c.touch_atr * atr
         reclaimed = cur_close >= tl_now + c.reject_atr * atr
@@ -460,8 +460,9 @@ class AltTrendlineTouchV1Strategy:
 
         price_ref = max(1e-12, closes[-1])
         slope_pct = self._slope_pct_per_day(slope, price_ref)
+        abs_slope_pct = abs(slope_pct)
 
-        if slope_pct < c.min_slope_pct or slope_pct > c.max_slope_pct:
+        if abs_slope_pct < c.min_slope_pct or abs_slope_pct > c.max_slope_pct:
             self._no_signal("short_slope_invalid")
             return None
         # Short trendline: resistance should be descending or only slightly rising
@@ -481,14 +482,11 @@ class AltTrendlineTouchV1Strategy:
         cur_low = lows[-1]
         bar_range = max(1e-12, cur_high - cur_low)
         body_frac = abs(cur_close - cur_open) / bar_range
-        upper_wick = max(0.0, cur_high - max(cur_close, cur_open)) / bar_range
 
         touched = cur_high >= tl_now - c.touch_atr * atr
         rejected = cur_close <= tl_now - c.reject_atr * atr
         bearish = cur_close < cur_open
         body_ok = body_frac >= c.min_body_frac
-        # Bonus: upper wick confirms rejection from trendline
-        has_wick = upper_wick >= 0.15
 
         if touched and rejected and bearish and body_ok and rsi >= c.rsi_short_min:
             return (tl_now, slope)

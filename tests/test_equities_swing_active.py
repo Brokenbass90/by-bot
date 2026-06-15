@@ -62,3 +62,25 @@ def test_select_ranks_and_filters():
 def test_day_trade_safety():
     assert is_day_trade_safe(0, 86400 * 2, min_hold_days=2) is True   # 2 days held
     assert is_day_trade_safe(0, 3600, min_hold_days=2) is False        # same day
+
+
+def test_quality_scorer_hook_filters_and_scales():
+    # AI-filter hook: drop one symbol, boost another
+    u = uptrend()
+    pm = {"KEEP": u, "DROP": uptrend(up=1.018, dn=0.992)}
+    def scorer(sym, sc, closes):
+        return None if sym == "DROP" else 2.0  # drop DROP, 2x KEEP
+    res = select(pm, SwingConfig(top_n=5), quality_scorer=scorer)
+    syms = [r[0] for r in res]
+    assert "DROP" not in syms and "KEEP" in syms
+
+
+def test_relative_strength_filter_optional():
+    # market strongly up; a weak symbol should be filtered when RS required
+    strong = uptrend(up=1.02, dn=0.99)
+    weak = uptrend(up=1.005, dn=0.999)
+    market = uptrend(up=1.012, dn=0.995)
+    cfg = SwingConfig(top_n=5, require_relative_strength=True, rs_lookback=40)
+    res = select({"STRONG": strong, "WEAK": weak}, cfg, market_closes=market)
+    syms = [r[0] for r in res]
+    assert "STRONG" in syms  # outperformer kept

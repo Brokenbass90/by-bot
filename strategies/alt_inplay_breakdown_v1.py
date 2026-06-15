@@ -12,6 +12,7 @@ portfolio harness do not need a config migration.
 """
 from __future__ import annotations
 
+import inspect
 import math
 import os
 from dataclasses import dataclass
@@ -93,6 +94,12 @@ def _rsi(values: List[float], period: int) -> float:
         return 100.0
     rs = (gains / float(period)) / (losses / float(period))
     return 100.0 - (100.0 / (1.0 + rs))
+
+
+def _tp1_rr(rr: float, tp1_frac: float) -> float:
+    rr_f = max(0.1, float(rr))
+    frac = max(0.1, float(tp1_frac))
+    return min(rr_f, rr_f * frac)
 
 
 @dataclass
@@ -282,7 +289,8 @@ class AltInplayBreakdownV1Strategy:
     async def _legacy_maybe_signal(self, store, ts_ms: int, last_price: float) -> Optional[TradeSignal]:
         if self._legacy_wrapper is None:
             return None
-        sig = await self._legacy_wrapper.maybe_signal(store, ts_ms, last_price)
+        res = self._legacy_wrapper.maybe_signal(store, ts_ms, last_price)
+        sig = await res if inspect.isawaitable(res) else res
         self.last_no_signal_reason = self._legacy_wrapper.last_no_signal_reason
         if sig is not None:
             sig.strategy = self.STRATEGY_NAME
@@ -362,7 +370,6 @@ class AltInplayBreakdownV1Strategy:
             self.last_no_signal_reason = "shorts_disabled"
             return
         if not self._regime_ok(store):
-            self.last_no_signal_reason = "regime_not_bearish"
             return
         if rsi > self.cfg.rsi_max:
             self.last_no_signal_reason = f"rsi_too_high_{rsi:.1f}"
@@ -496,8 +503,7 @@ class AltInplayBreakdownV1Strategy:
         if tp2 >= entry:
             self.last_no_signal_reason = "tp_invalid"
             return None
-        tp1_rr = max(0.8, float(self.cfg.rr) * min(0.8, max(0.1, float(self.cfg.tp1_frac))))
-        tp1 = entry - tp1_rr * risk
+        tp1 = entry - _tp1_rr(float(self.cfg.rr), float(self.cfg.tp1_frac)) * risk
         tp1_frac = min(0.9, max(0.1, float(self.cfg.tp1_frac)))
         level_tp_applied = False
 

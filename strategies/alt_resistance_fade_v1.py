@@ -29,8 +29,10 @@ def _env_int(name: str, default: int) -> int:
 
 
 def _env_bool(name: str, default: bool) -> bool:
-    v = os.getenv(name, "1" if default else "0").lower()
-    return v in {"1", "true", "yes", "on"}
+    v = os.getenv(name)
+    if v is None or not str(v).strip():
+        return default
+    return str(v).strip().lower() in {"1", "true", "yes", "on"}
 
 
 def _env_csv_set(name: str, default_csv: str = "") -> set[str]:
@@ -256,7 +258,7 @@ class AltResistanceFadeV1Strategy:
         # Use _ema() with proper SMA seed (no cold-start bias)
         ef      = _ema(closes, self.cfg.regime_ema_fast)
         es      = _ema(closes, self.cfg.regime_ema_slow)
-        es_prev = _ema(closes[:-6], self.cfg.regime_ema_slow)
+        es_prev = _ema(closes[:-1], self.cfg.regime_ema_slow)
         atr     = _atr_from_rows(rows, 14)
 
         if not all(math.isfinite(x) for x in (ef, es, es_prev, atr)) or atr <= 0:
@@ -412,7 +414,7 @@ class AltResistanceFadeV1Strategy:
             return None
 
         # ── SL / TP geometry ─────────────────────────────────────────────
-        entry_price = float(c)        # live tick price, not kline close
+        entry_price = float(cur)      # keep geometry consistent with the closed signal bar
         sl  = resistance + self.cfg.sl_atr_mult * atr
         tp2 = support * (1.0 + self.cfg.tp2_buffer_pct / 100.0)
 

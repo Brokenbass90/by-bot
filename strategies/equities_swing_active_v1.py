@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Callable, Dict, List, Optional, Sequence, Tuple
 
 
 @dataclass
@@ -32,6 +32,10 @@ class SwingConfig:
     top_n: int = 5
     max_positions: int = 4       # sized for $500-1000 (a few names, not 1)
     min_hold_days: int = 2       # PDT-safe: never same-day round trip
+    market_sma: int = 50         # market-regime gate: skip longs if market < its SMA
+    max_per_sector: int = 2      # diversification: cap picks per sector
+    require_relative_strength: bool = False  # only names outperforming the market
+    rs_lookback: int = 60        # window for relative-strength comparison
     w_mom: float = 0.6
     w_pullback: float = 0.4
 
@@ -45,42 +49,60 @@ def _sma(xs: Sequence[float], n: int) -> float:
 def _rsi(closes: Sequence[float], period: int = 14) -> float:
     if len(closes) < period + 1:
         return float("nan")
-    gains = losses = 0.0
-    for i in range(-period, 0):
+    gains = []
+    losses = []
+    for i in range(1, len(closes)):
         ch = closes[i] - closes[i - 1]
-        if ch >= 0:
-            gains += ch
-        else:
-            losses -= ch
-    if losses == 0:
+        gains.append(max(0.0, ch))
+        losses.append(max(0.0, -ch))
+    avg_gain = sum(gains[:period]) / period
+    avg_loss = sum(losses[:period]) / period
+    for i in range(period, len(gains)):
+        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+    if avg_loss <= 1e-12:
         return 100.0
-    rs = (gains / period) / (losses / period)
+    rs = avg_gain / avg_loss
     return 100.0 - 100.0 / (1.0 + rs)
 
 
 def _ret(closes: Sequence[float], n: int) -> float:
-    if len(closes) <= n or closes[-n - 1] <= 0:
+    if closes is None or n <= 0 or len(closes) < n + 1 or closes[-n - 1] <= 0:
         return float("nan")
     return closes[-1] / closes[-n - 1] - 1.0
+
+
+def _score_dict(eligible: bool, reason: str, score: float = 0.0, **extra: float) -> Dict[str, float]:
+    out: Dict[str, float] = {
+        "eligible": eligible,
+        "reason": reason,
+        "score": score,
+        "momentum": float("nan"),
+        "pullback": float("nan"),
+        "rsi": float("nan"),
+        "trend_ok": False,
+    }
+    out.update(extra)
+    return out
 
 
 def score_symbol(closes: Sequence[float], cfg: Optional[SwingConfig] = None) -> Dict[str, float]:
     cfg = cfg or SwingConfig()
     need = max(cfg.mom_slow, cfg.sma_trend, cfg.rsi_period) + 2
-    if len(closes) < need:
-        return {"eligible": False, "reason": "history_short", "score": 0.0}
+    if closes is None or len(closes) < need:
+        return _score_dict(False, "history_short")
     price = closes[-1]
     sma = _sma(closes, cfg.sma_trend)
     rsi = _rsi(closes, cfg.rsi_period)
     mom_f = _ret(closes, cfg.mom_fast)
     mom_s = _ret(closes, cfg.mom_slow)
     if not all(math.isfinite(x) for x in (sma, rsi, mom_f, mom_s)):
-        return {"eligible": False, "reason": "nan", "score": 0.0}
+        return _score_dict(False, "nan", rsi=rsi if math.isfinite(rsi) else float("nan"))
     trend_ok = price > sma
     if not trend_ok:
-        return {"eligible": False, "reason": "below_sma", "score": 0.0, "rsi": rsi}
+        return _score_dict(False, "below_sma", rsi=rsi, trend_ok=False)
     if rsi >= cfg.rsi_max:
-        return {"eligible": False, "reason": "overbought", "score": 0.0, "rsi": rsi}
+        return _score_dict(False, "overbought", rsi=rsi, trend_ok=True)
     momentum = 0.5 * mom_f + 0.5 * mom_s          # blended momentum
     # pullback bonus: peaks when RSI sits in the [lo,hi] band (dip within uptrend)
     mid = (cfg.rsi_pullback_lo + cfg.rsi_pullback_hi) / 2.0
@@ -94,19 +116,65 @@ def score_symbol(closes: Sequence[float], cfg: Optional[SwingConfig] = None) -> 
     }
 
 
+def market_regime_ok(market_closes: Sequence[float], sma_period: int = 50) -> bool:
+    """Safety gate: only go long when the market proxy is above its SMA (uptrend).
+    Pass an index series (e.g. SPY, or an equal-weight basket of the universe)."""
+    if not market_closes or len(market_closes) < sma_period:
+        return True  # no data -> do not block
+    return market_closes[-1] > _sma(market_closes, sma_period)
+
+
 def select(
     universe_closes: Dict[str, Sequence[float]],
     cfg: Optional[SwingConfig] = None,
+    market_closes: Optional[Sequence[float]] = None,
+    sector_map: Optional[Dict[str, str]] = None,
+    quality_scorer: Optional[Callable[[str, Dict[str, float], Sequence[float]], Optional[float]]] = None,
 ) -> List[Tuple[str, Dict[str, float]]]:
-    """Return ranked [(symbol, score_dict)] of eligible names, best first, top_n."""
+    """Return ranked [(symbol, score_dict)], best first, top_n.
+
+    Safety: if market_closes is given and the market is below its SMA, return []
+    (do not buy strength into a falling market). If sector_map is given, cap picks
+    per sector (cfg.max_per_sector) for diversification.
+    """
     cfg = cfg or SwingConfig()
+    if market_closes is not None and not market_regime_ok(market_closes, cfg.market_sma):
+        return []
+    mkt_ret = _ret(market_closes, cfg.rs_lookback) if market_closes is not None else None
+    if cfg.require_relative_strength and (mkt_ret is None or not math.isfinite(mkt_ret)):
+        return []
     scored = []
     for sym, closes in universe_closes.items():
-        s = score_symbol(closes, cfg)
-        if s.get("eligible"):
-            scored.append((sym, s))
+        sc = score_symbol(closes, cfg)
+        if not sc.get("eligible"):
+            continue
+        # relative strength: keep only names outperforming the market
+        if cfg.require_relative_strength and mkt_ret is not None and math.isfinite(mkt_ret):
+            sym_ret = _ret(closes, cfg.rs_lookback)
+            if not (math.isfinite(sym_ret) and sym_ret > mkt_ret):
+                continue
+        # optional pluggable quality scorer (e.g. an AI/news filter) — multiplies
+        # the base score; returning None or <=0 drops the candidate.
+        if quality_scorer is not None:
+            q = quality_scorer(sym, sc, closes)
+            if q is None or q <= 0:
+                continue
+            sc = dict(sc); sc["score"] = sc["score"] * float(q); sc["quality_mult"] = float(q)
+        scored.append((sym, sc))
     scored.sort(key=lambda kv: kv[1]["score"], reverse=True)
-    return scored[: cfg.top_n]
+    if sector_map is None:
+        return scored[: cfg.top_n]
+    picked: List[Tuple[str, Dict[str, float]]] = []
+    per_sector: Dict[str, int] = {}
+    for sym, sc in scored:
+        sect = sector_map.get(sym, "other")
+        if per_sector.get(sect, 0) >= cfg.max_per_sector:
+            continue
+        picked.append((sym, sc))
+        per_sector[sect] = per_sector.get(sect, 0) + 1
+        if len(picked) >= cfg.top_n:
+            break
+    return picked
 
 
 def is_day_trade_safe(entry_ts: int, now_ts: int, min_hold_days: int = 2) -> bool:
