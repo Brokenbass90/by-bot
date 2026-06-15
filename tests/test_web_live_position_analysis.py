@@ -1,5 +1,12 @@
 import asyncio
 
+import pytest
+
+# Web tests need the optional web stack (fastapi, pyotp, ...). Skip cleanly
+# instead of breaking collection of the whole suite when it is not installed.
+pytest.importorskip("fastapi")
+pytest.importorskip("pyotp")
+
 from web.routes.extra_routes import AnalyzeLivePositionRequest, ai_analyze_live_position
 
 

@@ -1,0 +1,6 @@
+# Dev/test dependencies (not needed to run the live bot).
+# Install with: pip install -r requirements-dev.txt
+-r requirements.txt
+pytest>=8.0
+pytest-timeout>=2.3      # enforces --timeout in pytest.ini so a hung test fails fast
+-r requirements-web.txt  # fastapi/pyotp/etc. so tests/test_web_*.py can import web.routes
