@@ -610,7 +610,7 @@ Bake-off (раздел 15) показал: частота и количеств�
 
 **Что делает:** собирает в один файл `reports/SERVER_SNAPSHOT_latest.{json,md}`: heartbeat, regime, allocator/позиции, последние ~80 событий журнала, P&L по рукавам (из журнала), strategy_catalog, и **безопасный конфиг** (ENABLE_*, *_RISK_MULT, *_MAX_OPEN_TRADES, NO_ENTRY_HOURS_UTC, риск/плечо/лимиты).
 
-**Безопасность (критично, проверено тестами):** секреты НИКОГДА не выгружаются — env берётся по белому списку не-секретных ключей; рекурсивный редактор маскирует любое значение с «секретным» именем (key/secret/token/api/account/…); сырой `.env`/ключи/токены в вывод не попадают. Проверка: 0 вхождений реального ключа, 85 безопасных ключей конфига, тесты `tests/test_export_server_snapshot.py` 4/4.
+**Безопасность (критично, проверено тестами):** секреты НИКОГДА не выгружаются — env берётся по белому списку не-секретных ключей; рекурсивный редактор маскирует любое значение с «секретным» именем (key/secret/token/api/account/…); сырой `.env`/ключи/токены в вывод не попадают. Проверка: 0 вхождений реального ключа, 85 безопасных ключей конфига, тесты `tests/test_export_server_snapshot.py` 5/5.
 
 **Рабочий цикл (то, что просил владелец):**
 1. Codex на сервере: `python scripts/export_server_snapshot.py` (можно по cron) → коммит `reports/SERVER_SNAPSHOT_latest.{json,md}`.
@@ -620,5 +620,7 @@ Bake-off (раздел 15) показал: частота и количеств�
 **Файлы:** `scripts/export_server_snapshot.py`, `tests/test_export_server_snapshot.py`.
 
 **Codex fix:** exporter теперь сначала читает реальные live paths (`runtime/bot_heartbeat.json`, `runtime/live_trade_events.jsonl`, `runtime/regime/...`) и только потом fallback в `runtime/live_mirror/...`. Это важно для запуска прямо на сервере.
+
+**Codex safety fix:** redactor стал path-aware для `strategy_catalog`: strategy names/keys сохраняются как аналитически полезные идентификаторы, но `api_key`/`secret`/`token` внутри каталога всё равно маскируются. Server snapshot от 2026-06-15T08:10Z проверен: `unredacted_secret_like_keys=0`, `open_trades=0`, `bybit_msgs=107194`, `recent_trade_events=70`, `pnl_sleeves=5`.
 
 **Задача Codex (добавить к §14):** запустить экспортёр на сервере и закоммитить снапшот — это разблокирует честный тюнинг крипты на реальных данных.

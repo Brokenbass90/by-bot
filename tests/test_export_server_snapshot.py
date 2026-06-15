@@ -23,6 +23,19 @@ def test_redact_masks_secret_keys_recursively():
     assert out["nested"]["regime"] == "bear_chop"        # non-secret kept
 
 
+def test_redact_preserves_strategy_catalog_names_but_masks_real_secrets():
+    payload = {
+        "strategy_catalog": {
+            "active_keys": ["flat", "ivb1"],
+            "families": [{"key": "flat", "api_key": "LEAK"}],
+        }
+    }
+    out = redact(payload)
+    assert out["strategy_catalog"]["active_keys"] == ["flat", "ivb1"]
+    assert out["strategy_catalog"]["families"][0]["key"] == "flat"
+    assert out["strategy_catalog"]["families"][0]["api_key"] == "***REDACTED***"
+
+
 def test_secret_key_detector():
     for k in ("BYBIT_KEY", "API_SECRET", "TG_TOKEN", "withdraw_password", "hmac_sig"):
         assert _is_secret_key(k) is True

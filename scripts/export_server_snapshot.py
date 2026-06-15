@@ -33,18 +33,23 @@ def _is_secret_key(k: str) -> bool:
     return bool(_SECRET_RE.search(str(k)))
 
 
-def redact(obj):
+def _is_allowed_non_secret_key_path(path: tuple[str, ...], k: str) -> bool:
+    return bool(path and path[0] == "strategy_catalog" and k in {"active_keys", "key"})
+
+
+def redact(obj, path: tuple[str, ...] = ()):
     """Recursively mask any value whose key looks like a secret."""
     if isinstance(obj, dict):
         out = {}
         for k, v in obj.items():
-            if _is_secret_key(k):
+            key = str(k)
+            if _is_secret_key(key) and not _is_allowed_non_secret_key_path(path, key):
                 out[k] = "***REDACTED***"
             else:
-                out[k] = redact(v)
+                out[k] = redact(v, path + (key,))
         return out
     if isinstance(obj, list):
-        return [redact(x) for x in obj]
+        return [redact(x, path) for x in obj]
     return obj
 
 
@@ -143,7 +148,10 @@ def build_snapshot() -> dict:
         import sys
         sys.path.insert(0, str(ROOT))
         from bot.strategy_catalog import build_strategy_catalog
-        snap["strategy_catalog"] = build_strategy_catalog()
+        snap["strategy_catalog"] = redact(
+            build_strategy_catalog(),
+            path=("strategy_catalog",),
+        )
     except Exception as e:
         snap["strategy_catalog"] = {"_error": str(e)}
     # pnl by sleeve from the journal (best-effort)
