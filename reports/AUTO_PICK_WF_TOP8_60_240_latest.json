@@ -1,0 +1,1194 @@
+{
+  "top_k": 8,
+  "fee_bps": 10.0,
+  "signal_tf": "60",
+  "regime_tf": "240",
+  "windows": 4,
+  "pass_candidates": [],
+  "matrix": {
+    "ASB1": {
+      "PIXELUSDT": {
+        "symbol": "PIXELUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 1,
+        "edges": [
+          -1.132
+        ],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": -1.13,
+              "expectancy_R": -1.132,
+              "profit_factor": 0.0,
+              "trades_per_30d": 3.0
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "FLOWUSDT": {
+        "symbol": "FLOWUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 1,
+        "edges": [
+          -1.097
+        ],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": -1.1,
+              "expectancy_R": -1.097,
+              "profit_factor": 0.0,
+              "trades_per_30d": 6.1
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "SAFEUSDT": {
+        "symbol": "SAFEUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 1,
+        "windows_with_trades": 1,
+        "edges": [
+          3.398
+        ],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 100.0,
+              "avg_win_R": 3.4,
+              "avg_loss_R": 0.0,
+              "expectancy_R": 3.398,
+              "profit_factor": "inf",
+              "trades_per_30d": 4.3
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "BERAUSDT": {
+        "symbol": "BERAUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "LPTUSDT": {
+        "symbol": "LPTUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "SIGNUSDT": {
+        "symbol": "SIGNUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 1,
+        "windows_with_trades": 3,
+        "edges": [
+          1.416,
+          -1.053,
+          -1.05
+        ],
+        "verdict": "WEAK (episodic / overfit risk)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 100.0,
+              "avg_win_R": 1.42,
+              "avg_loss_R": 0.0,
+              "expectancy_R": 1.416,
+              "profit_factor": "inf",
+              "trades_per_30d": 3.4
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": -1.05,
+              "expectancy_R": -1.053,
+              "profit_factor": 0.0,
+              "trades_per_30d": 1.7
+            }
+          },
+          {
+            "window": 4,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": -1.05,
+              "expectancy_R": -1.05,
+              "profit_factor": 0.0,
+              "trades_per_30d": 0.6
+            }
+          }
+        ]
+      },
+      "GWEIUSDT": {
+        "symbol": "GWEIUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "HMSTRUSDT": {
+        "symbol": "HMSTRUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      }
+    },
+    "ARF1": {
+      "XAGUSDT": {
+        "symbol": "XAGUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 1,
+        "windows_with_trades": 2,
+        "edges": [
+          0.607,
+          -1.214
+        ],
+        "verdict": "WEAK (episodic / overfit risk)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 100.0,
+              "avg_win_R": 0.61,
+              "avg_loss_R": 0.0,
+              "expectancy_R": 0.607,
+              "profit_factor": "inf",
+              "trades_per_30d": 1.9
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": -1.21,
+              "expectancy_R": -1.214,
+              "profit_factor": 0.0,
+              "trades_per_30d": 1.2
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "WIFUSDT": {
+        "symbol": "WIFUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 1,
+        "edges": [
+          -1.218
+        ],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": -1.22,
+              "expectancy_R": -1.218,
+              "profit_factor": 0.0,
+              "trades_per_30d": 0.9
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "4USDT": {
+        "symbol": "4USDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "CHIPUSDT": {
+        "symbol": "CHIPUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "AAVEUSDT": {
+        "symbol": "AAVEUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "BCHUSDT": {
+        "symbol": "BCHUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 1,
+        "windows_with_trades": 2,
+        "edges": [
+          0.796,
+          -0.085
+        ],
+        "verdict": "WEAK (episodic / overfit risk)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 100.0,
+              "avg_win_R": 0.8,
+              "avg_loss_R": 0.0,
+              "expectancy_R": 0.796,
+              "profit_factor": "inf",
+              "trades_per_30d": 0.9
+            }
+          },
+          {
+            "window": 3,
+            "trades": 2,
+            "metrics": {
+              "trades": 2,
+              "win_pct": 50.0,
+              "avg_win_R": 1.0,
+              "avg_loss_R": -1.17,
+              "expectancy_R": -0.085,
+              "profit_factor": 0.85,
+              "trades_per_30d": 1.8
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "LTCUSDT": {
+        "symbol": "LTCUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 1,
+        "windows_with_trades": 4,
+        "edges": [
+          0.74,
+          -1.183,
+          -1.157,
+          -1.176
+        ],
+        "verdict": "WEAK (episodic / overfit risk)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 100.0,
+              "avg_win_R": 0.74,
+              "avg_loss_R": 0.0,
+              "expectancy_R": 0.74,
+              "profit_factor": "inf",
+              "trades_per_30d": 1.2
+            }
+          },
+          {
+            "window": 2,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": -1.18,
+              "expectancy_R": -1.183,
+              "profit_factor": 0.0,
+              "trades_per_30d": 0.9
+            }
+          },
+          {
+            "window": 3,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": -1.16,
+              "expectancy_R": -1.157,
+              "profit_factor": 0.0,
+              "trades_per_30d": 0.9
+            }
+          },
+          {
+            "window": 4,
+            "trades": 1,
+            "metrics": {
+              "trades": 1,
+              "win_pct": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": -1.18,
+              "expectancy_R": -1.176,
+              "profit_factor": 0.0,
+              "trades_per_30d": 0.9
+            }
+          }
+        ]
+      },
+      "SNDKUSDT": {
+        "symbol": "SNDKUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      }
+    },
+    "BREAKDOWN": {
+      "STOUSDT": {
+        "symbol": "STOUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "1000TAGUSDT": {
+        "symbol": "1000TAGUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "BANKUSDT": {
+        "symbol": "BANKUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "PLAYSOUTUSDT": {
+        "symbol": "PLAYSOUTUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "USELESSUSDT": {
+        "symbol": "USELESSUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "KERNELUSDT": {
+        "symbol": "KERNELUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "HEIUSDT": {
+        "symbol": "HEIUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "DRIFTUSDT": {
+        "symbol": "DRIFTUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

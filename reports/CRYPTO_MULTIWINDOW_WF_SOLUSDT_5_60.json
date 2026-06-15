@@ -1,0 +1,52 @@
+{
+  "symbol": "SOLUSDT",
+  "signal_tf": "5",
+  "regime_tf": "60",
+  "windows": 4,
+  "fee_bps": 10.0,
+  "positive_windows": 1,
+  "windows_with_trades": 1,
+  "edges": [
+    0.708
+  ],
+  "verdict": "INSUFFICIENT DATA (need continuous history -> server WF; local cache too sparse)",
+  "details": [
+    {
+      "window": 1,
+      "trades": 0,
+      "metrics": {
+        "trades": 0,
+        "note": "no signals on available data"
+      }
+    },
+    {
+      "window": 2,
+      "trades": 0,
+      "metrics": {
+        "trades": 0,
+        "note": "no signals on available data"
+      }
+    },
+    {
+      "window": 3,
+      "trades": 0,
+      "metrics": {
+        "trades": 0,
+        "note": "no signals on available data"
+      }
+    },
+    {
+      "window": 4,
+      "trades": 10,
+      "metrics": {
+        "trades": 10,
+        "win_pct": 40.0,
+        "avg_win_R": 3.4,
+        "avg_loss_R": -1.09,
+        "expectancy_R": 0.708,
+        "profit_factor": 2.08,
+        "trades_per_30d": 0.7
+      }
+    }
+  ]
+}

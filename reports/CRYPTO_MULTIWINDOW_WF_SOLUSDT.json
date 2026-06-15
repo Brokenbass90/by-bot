@@ -1,0 +1,70 @@
+{
+  "symbol": "SOLUSDT",
+  "signal_tf": "60",
+  "regime_tf": "240",
+  "windows": 4,
+  "fee_bps": 10.0,
+  "positive_windows": 1,
+  "windows_with_trades": 4,
+  "edges": [
+    -1.077,
+    1.166,
+    -1.201,
+    -1.134
+  ],
+  "verdict": "WEAK (episodic / overfit risk)",
+  "details": [
+    {
+      "window": 1,
+      "trades": 1,
+      "metrics": {
+        "trades": 1,
+        "win_pct": 0.0,
+        "avg_win_R": 0.0,
+        "avg_loss_R": -1.08,
+        "expectancy_R": -1.077,
+        "profit_factor": 0.0,
+        "trades_per_30d": 1.2
+      }
+    },
+    {
+      "window": 2,
+      "trades": 3,
+      "metrics": {
+        "trades": 3,
+        "win_pct": 66.7,
+        "avg_win_R": 2.31,
+        "avg_loss_R": -1.13,
+        "expectancy_R": 1.166,
+        "profit_factor": 4.11,
+        "trades_per_30d": 2.7
+      }
+    },
+    {
+      "window": 3,
+      "trades": 1,
+      "metrics": {
+        "trades": 1,
+        "win_pct": 0.0,
+        "avg_win_R": 0.0,
+        "avg_loss_R": -1.2,
+        "expectancy_R": -1.201,
+        "profit_factor": 0.0,
+        "trades_per_30d": 0.9
+      }
+    },
+    {
+      "window": 4,
+      "trades": 2,
+      "metrics": {
+        "trades": 2,
+        "win_pct": 0.0,
+        "avg_win_R": 0.0,
+        "avg_loss_R": -1.13,
+        "expectancy_R": -1.134,
+        "profit_factor": 0.0,
+        "trades_per_30d": 1.8
+      }
+    }
+  ]
+}
