@@ -16,6 +16,7 @@ Run (server, after refreshing reports/STRATEGY_COIN_PICKS_latest.json):
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import json
 import os
 from pathlib import Path
@@ -42,7 +43,41 @@ def _majority_positive(pos: int, n: int) -> bool:
     return n >= 2 and pos > n / 2.0
 
 
-def main(top_k=4, fee_bps=10.0, signal_tf="60", regime_tf="240", windows=4, output_json: str = ""):
+@contextmanager
+def _temporary_env(overrides: dict[str, str]):
+    old = {k: os.environ.get(k) for k in overrides}
+    try:
+        for k, v in overrides.items():
+            os.environ[str(k)] = str(v)
+        yield
+    finally:
+        for k, v in old.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+
+
+def _profile_params(strategy: str, symbol: str, enabled: bool) -> dict[str, str]:
+    if not enabled:
+        return {}
+    try:
+        from bot.param_profiles import resolve_params
+        return resolve_params(strategy, symbol)
+    except Exception as exc:
+        print(f"  profile params unavailable for {strategy}/{symbol}: {exc}")
+        return {}
+
+
+def main(
+    top_k=4,
+    fee_bps=10.0,
+    signal_tf="60",
+    regime_tf="240",
+    windows=4,
+    output_json: str = "",
+    use_param_profiles: bool = False,
+):
     picks_path = ROOT / "reports" / "STRATEGY_COIN_PICKS_latest.json"
     if not picks_path.exists():
         print("run scripts/strategy_coin_picks.py first")
@@ -64,15 +99,20 @@ def main(top_k=4, fee_bps=10.0, signal_tf="60", regime_tf="240", windows=4, outp
         print(f"\n## {strat} — auto-picked: {coins}")
         matrix[strat] = {}
         for coin in coins:
-            result = mw_run(
-                factory,
-                coin,
-                signal_tf=str(signal_tf),
-                regime_tf=str(regime_tf),
-                k=int(windows),
-                fee_bps=float(fee_bps),
-                return_details=True,
-            )
+            profile = _profile_params(strat, coin, bool(use_param_profiles))
+            if profile:
+                print(f"  applying param profile for {strat}/{coin}: {profile}")
+            with _temporary_env(profile):
+                result = mw_run(
+                    factory,
+                    coin,
+                    signal_tf=str(signal_tf),
+                    regime_tf=str(regime_tf),
+                    k=int(windows),
+                    fee_bps=float(fee_bps),
+                    return_details=True,
+                )
+            result["param_profile"] = profile
             edges = result.get("edges") or []
             matrix[strat][coin] = result
             if edges:
@@ -95,6 +135,7 @@ def main(top_k=4, fee_bps=10.0, signal_tf="60", regime_tf="240", windows=4, outp
         "signal_tf": str(signal_tf),
         "regime_tf": str(regime_tf),
         "windows": int(windows),
+        "use_param_profiles": bool(use_param_profiles),
         "pass_candidates": pass_candidates,
         "matrix": matrix,
     }
@@ -113,6 +154,7 @@ if __name__ == "__main__":
     parser.add_argument("--regime-tf", default="240")
     parser.add_argument("--windows", type=int, default=4)
     parser.add_argument("--output-json", default="")
+    parser.add_argument("--use-param-profiles", action="store_true")
     args = parser.parse_args()
     main(
         top_k=args.top_k,
@@ -121,4 +163,5 @@ if __name__ == "__main__":
         regime_tf=args.regime_tf,
         windows=args.windows,
         output_json=args.output_json,
+        use_param_profiles=args.use_param_profiles,
     )

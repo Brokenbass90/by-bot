@@ -1,0 +1,26 @@
+{
+  "_doc": "Per-coin-family parameter profiles (hypotheses to VALIDATE via WF, not proven truth). Idea: one strategy, different params per coin tier (majors mean-revert cleaner -> tighter stops; micro-caps noisier -> wider stops, shorter holds). Resolver: bot/param_profiles.py. Tiers assigned by seed list + realized-vol fallback.",
+  "tiers": {
+    "major": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT", "ADAUSDT", "DOGEUSDT", "AVAXUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT"],
+    "mid": ["ATOMUSDT", "NEARUSDT", "APTUSDT", "ARBUSDT", "SUIUSDT", "RENDERUSDT", "INJUSDT", "SEIUSDT", "WLDUSDT", "ENAUSDT", "CRVUSDT", "AAVEUSDT", "ALGOUSDT", "GALAUSDT"]
+  },
+  "default_tier": "micro",
+  "vol_fallback": {"_doc": "if symbol not in any seed list, classify by 20-bar realized vol", "major_max_vol": 0.012, "mid_max_vol": 0.025},
+  "profiles": {
+    "ASB1": {
+      "major": {"ASB1_SL_ATR_MULT": "0.70", "ASB1_TIME_STOP_BARS_5M": "480", "ASB1_TP1_FRAC": "0.55"},
+      "mid":   {"ASB1_SL_ATR_MULT": "0.85", "ASB1_TIME_STOP_BARS_5M": "576", "ASB1_TP1_FRAC": "0.60"},
+      "micro": {"ASB1_SL_ATR_MULT": "1.10", "ASB1_TIME_STOP_BARS_5M": "432", "ASB1_TP1_FRAC": "0.65"}
+    },
+    "IVB1": {
+      "major": {"IVB1_SL_ATR": "0.65", "IVB1_RR": "2.0", "IVB1_TRAIL_ACTIVATE_RR": "1.0"},
+      "mid":   {"IVB1_SL_ATR": "0.75", "IVB1_RR": "2.2", "IVB1_TRAIL_ACTIVATE_RR": "1.1"},
+      "micro": {"IVB1_SL_ATR": "0.95", "IVB1_RR": "2.6", "IVB1_TRAIL_ACTIVATE_RR": "1.3"}
+    },
+    "MTPB": {
+      "major": {"MTPB_SL_ATR_MULT": "1.10", "MTPB_TP1_RR": "1.2", "MTPB_TP2_RR": "2.4"},
+      "mid":   {"MTPB_SL_ATR_MULT": "1.20", "MTPB_TP1_RR": "1.2", "MTPB_TP2_RR": "2.6"},
+      "micro": {"MTPB_SL_ATR_MULT": "1.40", "MTPB_TP1_RR": "1.3", "MTPB_TP2_RR": "3.0"}
+    }
+  }
+}
