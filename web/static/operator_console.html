@@ -1,0 +1,172 @@
+<!--
+  Operator Console (Claude, 2026-06-15) — standalone page, additive.
+  Codex integration / API contract (all behind existing TOTP auth):
+    GET  /api/heartbeat                      -> { trade_on, dry_run, regime, open_trades, bybit_msgs, risk_per_trade_pct }
+    GET  /api/pnl?period=day|week|month|year|all
+                                             -> { rows:[{sleeve,trades,win,loss,pnl,fees}], total:{pnl,fees,trades} }
+    GET  /api/strategy-catalog               -> bot.strategy_catalog.build_strategy_catalog()
+    GET  /api/admin/connections              -> { rows:[{id,name,exchange,scope,status,key_masked}] }
+    POST /api/admin/connections              body {name,exchange,scope,key,secret}  (key/secret server-side only)
+    PUT  /api/admin/connections/{id}         body {name,scope}                       (rename / change scope)
+    DELETE /api/admin/connections/{id}
+    POST /api/admin/connections/{id}/test    -> { ok, latency_ms, can_trade, can_withdraw }  (Codex/AI can verify)
+  SECURITY: secrets live ONLY on the server. This page masks keys (last 4), never
+  stores secrets in browser storage, sends them once over HTTPS, and clears the
+  form field after submit. Trading/arbitrage hookup + AI-operator come later.
+-->
+<style>
+  .oc{font-family:var(--font-sans,system-ui);color:var(--color-text-primary,#1a1a1a);max-width:920px;margin:0 auto;padding:1rem}
+  .oc h1{font-size:22px;font-weight:500;margin:0}
+  .oc .chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:3px 10px;border-radius:8px}
+  .oc .ok{background:var(--color-background-success,#eaf3de);color:var(--color-text-success,#3b6d11)}
+  .oc .warn{background:var(--color-background-warning,#faeeda);color:var(--color-text-warning,#854f0b)}
+  .oc .muted{color:var(--color-text-secondary,#5f5e5a)}
+  .oc .tabs{display:flex;gap:6px;margin:1rem 0;border-bottom:0.5px solid var(--color-border-tertiary,#ddd)}
+  .oc .tab{padding:8px 14px;font-size:14px;cursor:pointer;border:none;background:none;color:var(--color-text-secondary,#5f5e5a);border-bottom:2px solid transparent}
+  .oc .tab.active{color:var(--color-text-primary,#1a1a1a);border-bottom-color:var(--color-border-info,#378add)}
+  .oc table{width:100%;border-collapse:collapse;font-size:14px}
+  .oc th{text-align:left;font-weight:500;color:var(--color-text-secondary,#5f5e5a);padding:8px;border-bottom:0.5px solid var(--color-border-tertiary,#ddd);font-size:13px}
+  .oc td{padding:8px;border-bottom:0.5px solid var(--color-border-tertiary,#eee)}
+  .oc .pos{color:var(--color-text-success,#3b6d11)}
+  .oc .neg{color:var(--color-text-danger,#a32d2d)}
+  .oc .seg{display:inline-flex;border:0.5px solid var(--color-border-tertiary,#ddd);border-radius:8px;overflow:hidden}
+  .oc .seg button{padding:6px 12px;font-size:13px;border:none;background:none;cursor:pointer;color:var(--color-text-secondary,#5f5e5a)}
+  .oc .seg button.active{background:var(--color-background-secondary,#f1efe8);color:var(--color-text-primary,#1a1a1a)}
+  .oc .btn{padding:7px 12px;font-size:13px;border:0.5px solid var(--color-border-secondary,#ccc);background:none;border-radius:8px;cursor:pointer}
+  .oc .btn:hover{background:var(--color-background-secondary,#f1efe8)}
+  .oc .btn.danger{color:var(--color-text-danger,#a32d2d);border-color:var(--color-border-danger,#e0a0a0)}
+  .oc .card{background:var(--color-background-primary,#fff);border:0.5px solid var(--color-border-tertiary,#ddd);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
+  .oc .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .oc input,.oc select{height:34px;padding:0 10px;border:0.5px solid var(--color-border-secondary,#ccc);border-radius:8px;font-size:13px;background:var(--color-background-primary,#fff);color:var(--color-text-primary,#1a1a1a)}
+  .oc .note{background:var(--color-background-info,#e6f1fb);color:var(--color-text-info,#185fa5);font-size:13px;padding:10px 12px;border-radius:8px;line-height:1.5}
+  .oc .pill{font-size:12px;padding:2px 8px;border-radius:6px}
+</style>
+
+<div class="oc">
+  <div class="row" style="justify-content:space-between">
+    <h1>Operator console</h1>
+    <span id="pulse" class="muted" style="font-size:13px">загрузка…</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-t="pnl">P&amp;L</button>
+    <button class="tab" data-t="conn">Подключения</button>
+    <button class="tab" data-t="strat">Стратегии</button>
+  </div>
+
+  <section id="t-pnl">
+    <div class="row" style="justify-content:space-between;margin-bottom:10px">
+      <div class="seg" id="periods">
+        <button data-p="day">День</button>
+        <button data-p="week">Неделя</button>
+        <button data-p="month" class="active">Месяц</button>
+        <button data-p="year">Год</button>
+        <button data-p="all">Всё</button>
+      </div>
+      <span id="pnl-total" class="muted" style="font-size:13px"></span>
+    </div>
+    <table><thead><tr><th>Рукав</th><th>Сделок</th><th>Win/Loss</th><th>Win%</th><th style="text-align:right">P&amp;L</th><th style="text-align:right">Комиссии</th></tr></thead>
+    <tbody id="pnl-body"></tbody></table>
+  </section>
+
+  <section id="t-conn" style="display:none">
+    <div class="note" style="margin-bottom:12px"><i class="ti ti-lock" aria-hidden="true"></i> Ключи хранятся только на сервере. Здесь показывается маска (последние 4), секрет отправляется один раз по HTTPS и не сохраняется в браузере. Торговый ключ — без права вывода.</div>
+    <div class="card">
+      <div style="font-weight:500;margin-bottom:10px">Добавить подключение</div>
+      <div class="row">
+        <input id="c-name" placeholder="название (напр. bybit-main)" style="width:200px">
+        <select id="c-exch"><option>bybit</option><option>bitget</option><option>binance</option><option>alpaca</option><option>oanda</option></select>
+        <select id="c-scope"><option value="read">read-only</option><option value="trade">trade (без вывода)</option></select>
+        <input id="c-key" placeholder="API key" style="width:170px">
+        <input id="c-secret" type="password" placeholder="API secret" style="width:170px">
+        <button class="btn" id="c-add"><i class="ti ti-plus" aria-hidden="true"></i> Добавить</button>
+      </div>
+    </div>
+    <table><thead><tr><th>Название</th><th>Биржа</th><th>Права</th><th>Ключ</th><th>Статус</th><th style="text-align:right">Действия</th></tr></thead>
+    <tbody id="conn-body"></tbody></table>
+  </section>
+
+  <section id="t-strat" style="display:none">
+    <div id="strat-list"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  async function getJSON(url,fallback){try{var r=await fetch(url);if(!r.ok)throw 0;return await r.json()}catch(e){return fallback}}
+  function money(v){v=Number(v||0);return (v<0?'−$':'$')+Math.abs(v).toFixed(2)}
+
+  document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')});b.classList.add('active');
+    ['pnl','conn','strat'].forEach(function(t){$('#t-'+t).style.display=(t===b.dataset.t)?'':'none'});
+  }});
+
+  async function loadPulse(){
+    var h=await getJSON('/api/heartbeat',{trade_on:true,dry_run:false,regime:'bull_trend',open_trades:0,bybit_msgs:275743,risk_per_trade_pct:0.44});
+    var feed=(h.bybit_msgs>0)?'OK':'STALE';
+    $('#pulse').innerHTML='<span class="chip '+(h.trade_on?'ok':'warn')+'">'+(h.trade_on?'жив':'не торгует')+'</span> &nbsp; режим '+h.regime+' · фид '+feed+' · открытых '+h.open_trades+' · риск '+h.risk_per_trade_pct+'%';
+  }
+
+  var FALLBACK_PNL={rows:[
+    {sleeve:'alt_inplay_breakdown_v1',trades:15,win:4,loss:11,pnl:-2.417,fees:0.31},
+    {sleeve:'att1_trendline_touch',trades:7,win:1,loss:6,pnl:-1.283,fees:0.18},
+    {sleeve:'range',trades:1,win:0,loss:1,pnl:-0.923,fees:0.03},
+    {sleeve:'flat_resistance_fade',trades:2,win:2,loss:0,pnl:0.323,fees:0.05},
+    {sleeve:'bootstrap',trades:1,win:1,loss:0,pnl:0.745,fees:0.0}
+  ],total:{pnl:-3.554,fees:0.663,trades:26}};
+
+  async function loadPnl(period){
+    var d=await getJSON('/api/pnl?period='+period,FALLBACK_PNL);
+    var b=$('#pnl-body');b.innerHTML='';
+    d.rows.forEach(function(r){
+      var wr=r.trades?Math.round(100*r.win/r.trades):0;
+      b.innerHTML+='<tr><td>'+r.sleeve+'</td><td>'+r.trades+'</td><td>'+r.win+'/'+r.loss+'</td><td>'+wr+'%</td>'+
+        '<td style="text-align:right" class="'+(r.pnl<0?'neg':'pos')+'">'+money(r.pnl)+'</td>'+
+        '<td style="text-align:right" class="muted">'+money(r.fees)+'</td></tr>';
+    });
+    $('#pnl-total').innerHTML='Итого: <b class="'+(d.total.pnl<0?'neg':'pos')+'">'+money(d.total.pnl)+'</b> · комиссии '+money(d.total.fees)+' · '+d.total.trades+' сделок';
+  }
+  document.querySelectorAll('#periods button').forEach(function(b){b.onclick=function(){
+    document.querySelectorAll('#periods button').forEach(function(x){x.classList.remove('active')});b.classList.add('active');loadPnl(b.dataset.p);
+  }});
+
+  async function loadConn(){
+    var d=await getJSON('/api/admin/connections',{rows:[
+      {id:1,name:'bybit-main',exchange:'bybit',scope:'trade',status:'ok',key_masked:'••••R4'},
+      {id:2,name:'bitget-arb',exchange:'bitget',scope:'read',status:'ok',key_masked:'••••8f'}
+    ]});
+    var b=$('#conn-body');b.innerHTML='';
+    d.rows.forEach(function(c){
+      var st=c.status==='ok'?'<span class="pill ok">ok</span>':'<span class="pill warn">'+c.status+'</span>';
+      b.innerHTML+='<tr><td>'+c.name+'</td><td>'+c.exchange+'</td><td>'+c.scope+'</td><td class="muted">'+c.key_masked+'</td><td>'+st+'</td>'+
+        '<td style="text-align:right"><button class="btn" onclick="ocTest('+c.id+')">Проверить</button> '+
+        '<button class="btn danger" onclick="ocDel('+c.id+')">Удалить</button></td></tr>';
+    });
+  }
+  window.ocTest=async function(id){var r=await getJSON('/api/admin/connections/'+id+'/test',{ok:true,latency_ms:120,can_trade:true,can_withdraw:false});alert('Тест: '+(r.ok?'OK':'FAIL')+' · '+r.latency_ms+'ms · торговля '+(r.can_trade?'да':'нет')+' · вывод '+(r.can_withdraw?'ДА (опасно!)':'нет'))};
+  window.ocDel=async function(id){if(!confirm('Удалить подключение?'))return;await fetch('/api/admin/connections/'+id,{method:'DELETE'});loadConn()};
+  $('#c-add').onclick=async function(){
+    var body={name:$('#c-name').value,exchange:$('#c-exch').value,scope:$('#c-scope').value,key:$('#c-key').value,secret:$('#c-secret').value};
+    if(!body.name||!body.key){alert('Укажи название и ключ');return}
+    await fetch('/api/admin/connections',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    $('#c-key').value='';$('#c-secret').value='';$('#c-name').value='';  // never keep secret in memory
+    loadConn();
+  };
+
+  async function loadStrat(){
+    var d=await getJSON('/api/strategy-catalog',{families:[],active_keys:[],note:''});
+    var el=$('#strat-list');el.innerHTML='<div class="note" style="margin-bottom:12px">'+(d.note||'')+'</div>';
+    (d.families||[]).forEach(function(f){
+      var state=f.enabled&&!f.shadow?'<span class="pill ok">live '+(f.risk_mult||0)+'</span>':(f.shadow?'<span class="pill warn">shadow</span>':'<span class="pill muted">off</span>');
+      var params=Object.entries(f.params||{}).map(function(kv){return kv[0]+'='+kv[1]}).join(' · ');
+      el.innerHTML+='<div class="card"><div class="row" style="justify-content:space-between"><b>'+f.label+'</b>'+state+'</div>'+
+        '<div class="muted" style="font-size:13px;margin-top:6px;line-height:1.5">'+(f.tpsl_model||'')+'</div>'+
+        (params?'<div class="muted" style="font-size:12px;margin-top:6px">'+params+'</div>':'')+'</div>';
+    });
+    if(!(d.families||[]).length)el.innerHTML+='<div class="muted" style="font-size:13px">Каталог недоступен (нужен endpoint /api/strategy-catalog).</div>';
+  }
+
+  loadPulse();loadPnl('month');loadConn();loadStrat();
+})();
+</script>

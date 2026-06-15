@@ -8,7 +8,7 @@ import math
 import os
 import re
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -662,6 +662,101 @@ def _trade_sources() -> List[str]:
     return []
 
 
+def _live_events_path() -> Path:
+    mirror_path = _RUNTIME_ROOT / "live_mirror" / "live_trade_events.jsonl"
+    if mirror_path.exists():
+        return mirror_path
+    return _RUNTIME_ROOT / "live_trade_events.jsonl"
+
+
+def _iter_live_close_events() -> List[Dict[str, Any]]:
+    path = _live_events_path()
+    if not path.exists():
+        return []
+    rows: List[Dict[str, Any]] = []
+    try:
+        for raw in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            if not raw.strip():
+                continue
+            try:
+                event = json.loads(raw)
+            except Exception:
+                continue
+            if event.get("event") == "close" and event.get("pnl") is not None:
+                rows.append(event)
+    except Exception:
+        return []
+    return rows
+
+
+def _event_epoch(event: Dict[str, Any]) -> Optional[float]:
+    raw = event.get("ts")
+    try:
+        if raw is not None and raw != "":
+            value = float(raw)
+            return value / 1000.0 if value > 1e12 else value
+    except Exception:
+        pass
+    raw_iso = event.get("ts_utc") or event.get("close_time") or event.get("exit_ts")
+    try:
+        if raw_iso:
+            return datetime.fromisoformat(str(raw_iso).replace(" UTC", "+00:00").replace("Z", "+00:00")).timestamp()
+    except Exception:
+        return None
+    return None
+
+
+def _period_start(period: str) -> Optional[float]:
+    now = datetime.now(timezone.utc)
+    period = (period or "month").strip().lower()
+    if period == "day":
+        return now.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
+    if period == "week":
+        return (now - timedelta(days=7)).timestamp()
+    if period == "month":
+        return now.replace(day=1, hour=0, minute=0, second=0, microsecond=0).timestamp()
+    if period == "year":
+        return now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0).timestamp()
+    return None
+
+
+def _operator_pnl_payload(period: str) -> Dict[str, Any]:
+    since = _period_start(period)
+    rows: Dict[str, Dict[str, Any]] = defaultdict(
+        lambda: {"sleeve": "", "trades": 0, "win": 0, "loss": 0, "pnl": 0.0, "fees": 0.0}
+    )
+    total = {"pnl": 0.0, "fees": 0.0, "trades": 0}
+    for event in _iter_live_close_events():
+        ts = _event_epoch(event)
+        if since is not None and (ts is None or ts < since):
+            continue
+        sleeve = str(event.get("strategy") or "unknown")
+        row = rows[sleeve]
+        row["sleeve"] = sleeve
+        try:
+            pnl = float(event.get("pnl") or 0.0)
+        except Exception:
+            pnl = 0.0
+        try:
+            fees = float(event.get("fees") or 0.0)
+        except Exception:
+            fees = 0.0
+        row["trades"] += 1
+        row["pnl"] += pnl
+        row["fees"] += fees
+        row["win" if pnl > 0 else "loss"] += 1
+        total["pnl"] += pnl
+        total["fees"] += fees
+        total["trades"] += 1
+    out_rows = sorted(rows.values(), key=lambda row: float(row["pnl"]))
+    for row in out_rows:
+        row["pnl"] = round(float(row["pnl"]), 6)
+        row["fees"] = round(float(row["fees"]), 6)
+    total["pnl"] = round(float(total["pnl"]), 6)
+    total["fees"] = round(float(total["fees"]), 6)
+    return {"period": period, "rows": out_rows, "total": total, "source": str(_live_events_path())}
+
+
 # ── bot status (fast heartbeat check) ────────────────────────────────────────
 
 @router.get("/status")
@@ -764,6 +859,83 @@ async def get_status(_: str = Depends(require_auth)):
         "data_mode": "live_mirror" if _RUNTIME_ROOT != (_ROOT / "runtime") else "local",
         "ts_utc": datetime.now(timezone.utc).isoformat(),
     }
+
+
+@router.get("/heartbeat")
+async def operator_heartbeat(_: str = Depends(require_auth)):
+    """Compact heartbeat contract used by the additive operator console."""
+    hb = _json(_rt("bot_heartbeat.json")) or {}
+    if not hb:
+        hb = _json(_RUNTIME_ROOT / "live_mirror" / "bot_heartbeat.json") or {}
+    return {
+        "trade_on": bool(hb.get("trade_on")),
+        "dry_run": hb.get("dry_run"),
+        "regime": hb.get("regime", "unknown"),
+        "open_trades": hb.get("open_trades", 0),
+        "bybit_msgs": hb.get("bybit_msgs", 0),
+        "risk_per_trade_pct": hb.get("risk_per_trade_pct"),
+        "allocator_global_risk_mult": hb.get("allocator_global_risk_mult"),
+        "orch_global_risk_mult": hb.get("orch_global_risk_mult"),
+        "ts": hb.get("ts"),
+    }
+
+
+@router.get("/pnl")
+async def operator_pnl(period: str = Query("month"), _: str = Depends(require_auth)):
+    """P&L contract used by the additive operator console."""
+    if period not in {"day", "week", "month", "year", "all"}:
+        raise HTTPException(status_code=400, detail="period must be day|week|month|year|all")
+    return _operator_pnl_payload(period)
+
+
+@router.get("/strategy-catalog")
+async def operator_strategy_catalog(_: str = Depends(require_auth)):
+    """Read-only strategy catalog for web and on-board AI."""
+    try:
+        from bot.strategy_catalog import build_strategy_catalog
+        return build_strategy_catalog()
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"strategy catalog unavailable: {exc}")
+
+
+@router.get("/ai/tools")
+async def ai_toolbox_manifest(_: str = Depends(require_auth)):
+    from bot.ai_tools import available_tools
+    return {"tools": available_tools()}
+
+
+@router.get("/ai/pulse")
+async def ai_pulse(_: str = Depends(require_auth)):
+    from bot.ai_tools import get_pulse
+    return {"text": get_pulse()}
+
+
+@router.get("/ai/codemap")
+async def ai_codemap(_: str = Depends(require_auth)):
+    from bot.ai_tools import get_codemap
+    return get_codemap()
+
+
+@router.get("/ai/code/list")
+async def ai_code_list(subdir: str = Query("strategies"), _: str = Depends(require_auth)):
+    from bot.ai_tools import list_modules
+    return {"files": list_modules(subdir)}
+
+
+@router.get("/ai/code/read")
+async def ai_code_read(path: str = Query(...), _: str = Depends(require_auth)):
+    from bot.ai_tools import read_code
+    return {"path": path, "content": read_code(path)}
+
+
+@router.get("/ai/code/search")
+async def ai_code_search(
+    pattern: str = Query(...),
+    subdir: str = Query("strategies"),
+    _: str = Depends(require_auth),
+):
+    from bot.ai_tools import search_code
+    return {"matches": search_code(pattern, subdir)}
 
 
 # ── trades ────────────────────────────────────────────────────────────────────

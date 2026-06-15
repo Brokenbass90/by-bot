@@ -126,6 +126,14 @@ _STATIC_DIR = Path(__file__).parent / "static"
 if _STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")
 
+    @app.get("/operator-console", include_in_schema=False)
+    async def serve_operator_console():
+        """Serve the additive operator console page."""
+        page = _STATIC_DIR / "operator_console.html"
+        if page.exists():
+            return FileResponse(str(page))
+        return {"detail": "operator_console.html not found"}
+
     @app.get("/{full_path:path}", include_in_schema=False)
     async def serve_spa(full_path: str):
         """Serve React SPA for all non-API routes."""
