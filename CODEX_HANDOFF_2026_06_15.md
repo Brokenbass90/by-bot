@@ -624,3 +624,54 @@ Bake-off (раздел 15) показал: частота и количеств�
 **Codex safety fix:** redactor стал path-aware для `strategy_catalog`: strategy names/keys сохраняются как аналитически полезные идентификаторы, но `api_key`/`secret`/`token` внутри каталога всё равно маскируются. Server snapshot от 2026-06-15T08:10Z проверен: `unredacted_secret_like_keys=0`, `open_trades=0`, `bybit_msgs=107194`, `recent_trade_events=70`, `pnl_sleeves=5`.
 
 **Сделано:** exporter запущен на сервере; `reports/SERVER_SNAPSHOT_latest.{json,md}` сняты с live runtime, проверены на секреты и подготовлены отдельным data commit.
+
+---
+
+## 23. Snapshot follow-up, Alpaca bake-off, crypto smoke (2026-06-15)
+
+### Совместимость exporter
+- Исправлен `scripts/export_server_snapshot.py`: `dt.UTC` → `dt.timezone.utc`.
+- Причина: совместимо с Python <3.11; сервер сейчас показывает Python 3.12.3, но fix всё равно правильный и безопасный.
+- Тесты exporter остались зелёными.
+
+### Новый server snapshot
+- Серверный exporter повторно запущен после deploy research-модулей.
+- `reports/SERVER_SNAPSHOT_latest.{json,md}` обновлены с `generated_at_utc=2026-06-15T08:34:31.790670Z`.
+- Snapshot: `open_trades=0`, `trade_on=True`, `dry_run=False`, `regime=bull_trend`, `bybit_msgs=275743`, `risk_per_trade_pct=0.44`, `orch_global_risk_mult=0.55`, `allocator_global_risk_mult=0.80`.
+- Последний live trade event на сервере: `2026-06-13 18:00:15 UTC`; за последние 24h сделок нет, Telegram `no trade events` честный.
+
+### Alpaca bake-off WF на bear 2022
+- Добавлен `backtest/alpaca_bakeoff_wf.py` + `tests/test_alpaca_bakeoff_wf.py`.
+- Период: warm-up `2021-01-01..2023-01-01`, evaluation `2022-01-01..2023-01-01`, 19 cached symbols incl. SPY, fee/slippage `10 bps round-trip`, capital `$1000`, max positions `4`.
+- Сервер и локально дают одинаковую таблицу:
+  - `STATIC_TOP4_21D`: return `-32.26%`, PF `0.219`, DD `35.37%`.
+  - `V39_EVENT_CLOSE`: return `-23.47%`, PF `0.415`, DD `27.66%`.
+  - `V39_OHLC_SPY200_GATE`: return `-23.43%`, PF `0.257`, DD `24.83%`.
+  - `V40_EVENT_DRAFT`: return `-15.34%`, PF `0.413`, DD `19.68%`.
+  - `V40_STATIC_TOP4`: return `-15.93%`, PF `0.250`, DD `22.31%`.
+  - `ADAPTIVE_V1_GATED`: return `-6.54%`, PF `0.280`, DD `2.23%`.
+  - `ADAPTIVE_V1_UNGATED_CONTROL`: return `-15.27%`, PF `0.541`, DD `18.30%`.
+- Вывод: `alpaca_adaptive_v1` gated — лучший стабилизатор капитала в bear 2022, но не income-чемпион (PF < 1). v39/v40/static не готовы как bear-safe live sleeve.
+
+### Crypto efficiency smoke
+- Добавлен/задеплоен `backtest/crypto_efficiency_backtest.py` + `tests/test_crypto_efficiency_backtest.py`.
+- Server smoke по ASB1:
+  - SOLUSDT: `10 trades`, PF `3.67`, expectancy `+1.336R`.
+  - LINKUSDT: `9 trades`, PF `1.72`, expectancy `+0.561R`.
+  - ADAUSDT: `9 trades`, PF `1.22`, expectancy `+0.145R`.
+- Это только smoke без комиссий/slippage и с малой выборкой: ASB1 годится в shadow/research, но не как основание повышать live risk.
+
+### Проверки / deploy
+- Local full pytest: **228 passed**.
+- Server targeted tests after deploy: **17 passed**.
+- Server full pytest after deploy: **99 passed, 1 warning** (`passlib` deprecation).
+- Server live heartbeat после тестов: `open_trades=0`, `trade_on=True`, `dry_run=False`, `bybit_msgs=282111`, `uptime_s=2264`, `regime=bull_trend`.
+
+### Отчёт для Claude
+- Подготовлен `reports/CODEX_TO_CLAUDE_2026_06_15.md`:
+  - live server config/runtime truth;
+  - P&L by sleeve;
+  - Alpaca 2022 bake-off table;
+  - crypto smoke;
+  - Telegram honesty notes;
+  - test/deploy status and blockers.
