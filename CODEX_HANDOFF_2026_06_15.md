@@ -567,3 +567,58 @@ Bake-off (раздел 15) показал: частота и количеств�
 2. Десятки root-level roadmap/spec `.md` от 2025-05 — либо перенести в `docs/archive/`, либо собрать curated `docs/START_HERE.md`.
 3. `configs/*.env` и `configs/autoresearch/*.json` — разделить на active/live, research queue, archive.
 4. `strategies/sc1_live.py` не архивировался в этом pass; оставить до отдельной проверки ссылок и роли.
+
+---
+
+## 21. Server deploy after split push (2026-06-15)
+
+После push `dfa7adb` сделан **точечный серверный deploy без `git pull`**, потому что `/root/by-bot` на сервере грязный.
+
+### Что скопировано на сервер
+- `web/static/index.html` — web UI Live Positions теперь умеет показывать bot-managed runner TP ladder.
+- `strategies/alt_inplay_breakdown_v1.py`
+- `strategies/alt_resistance_fade_v1.py`
+- `strategies/alt_trendline_touch_v1.py`
+- `strategies/equities_swing_active_v1.py`
+
+Перед заменой создан backup:
+- `/root/by-bot/backups/codex_20260615_runner_tp_strategy_deploy/`
+
+### Проверки до/после restart
+- Перед restart: `runtime/live_positions.json` показывал `count=0`, `open_trades=0`.
+- Серверный compile: `.venv/bin/python3 -m py_compile` для 4 strategy files — OK.
+- `trading-journal-web` перезапущен, HTTP `/` отдаёт `200`.
+- На серверном `web/static/index.html` подтверждены `runnerTargets` / `renderTpCell`.
+- Старый live bot был запущен standalone при `systemctl bybot=inactive`; он был мягко остановлен через SIGTERM при `open_trades=0`.
+- `bybot.service` поднят через systemd; после старта:
+  - `bybot=active`, `trading-journal-web=active`;
+  - один `smart_pump_reversal_bot.py` process и один `uvicorn web.main` process;
+  - `open_trades=0`, `dry_run=false`, `trade_on=true`;
+  - `risk_per_trade_pct=0.44%` после `orch_global_risk_mult=0.55` и `allocator_global_risk_mult=0.8`;
+  - `bybit_msgs` вырос до `42521`, `detect_call=42500`, `ws_guard_active=0`.
+
+### Важное наблюдение
+После service restart `bybit_msgs` держался на `0`, пока бот дозавершал пачечные подписки на 120 Bybit topics. Отдельный probe `websockets` к `publicTrade.BTCUSDT` получал trades сразу, то есть сеть/Bybit были исправны. После завершения подписок live feed пошёл штатно.
+
+**P1 improvement:** уменьшить startup blind window: читать WS messages параллельно с batch subscription или быстрее подтверждать, что после полного subscribe `bybit_msgs` начал расти. Это не ломает сделки напрямую (бот просто не видит новые сигналы во время прогрева), но для live-ядра это неприятный operational gap.
+
+---
+
+## 22. Пайплайн данных сервер→проект: `scripts/export_server_snapshot.py` (2026-06-15)
+
+Чтобы аналитик/ИИ получал ground-truth БЕЗ ручного копипаста — построен безопасный экспортёр снапшота.
+
+**Что делает:** собирает в один файл `reports/SERVER_SNAPSHOT_latest.{json,md}`: heartbeat, regime, allocator/позиции, последние ~80 событий журнала, P&L по рукавам (из журнала), strategy_catalog, и **безопасный конфиг** (ENABLE_*, *_RISK_MULT, *_MAX_OPEN_TRADES, NO_ENTRY_HOURS_UTC, риск/плечо/лимиты).
+
+**Безопасность (критично, проверено тестами):** секреты НИКОГДА не выгружаются — env берётся по белому списку не-секретных ключей; рекурсивный редактор маскирует любое значение с «секретным» именем (key/secret/token/api/account/…); сырой `.env`/ключи/токены в вывод не попадают. Проверка: 0 вхождений реального ключа, 85 безопасных ключей конфига, тесты `tests/test_export_server_snapshot.py` 4/4.
+
+**Рабочий цикл (то, что просил владелец):**
+1. Codex на сервере: `python scripts/export_server_snapshot.py` (можно по cron) → коммит `reports/SERVER_SNAPSHOT_latest.{json,md}`.
+2. Следующая сессия аналитика/ИИ читает этот файл = реальное состояние live без вспомогательного влияния.
+3. На основе реальных данных — честный тюнинг (плато, не пики) и выбор чемпионов.
+
+**Файлы:** `scripts/export_server_snapshot.py`, `tests/test_export_server_snapshot.py`.
+
+**Codex fix:** exporter теперь сначала читает реальные live paths (`runtime/bot_heartbeat.json`, `runtime/live_trade_events.jsonl`, `runtime/regime/...`) и только потом fallback в `runtime/live_mirror/...`. Это важно для запуска прямо на сервере.
+
+**Задача Codex (добавить к §14):** запустить экспортёр на сервере и закоммитить снапшот — это разблокирует честный тюнинг крипты на реальных данных.
