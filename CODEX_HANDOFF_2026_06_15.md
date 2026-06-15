@@ -623,4 +623,4 @@ Bake-off (раздел 15) показал: частота и количеств�
 
 **Codex safety fix:** redactor стал path-aware для `strategy_catalog`: strategy names/keys сохраняются как аналитически полезные идентификаторы, но `api_key`/`secret`/`token` внутри каталога всё равно маскируются. Server snapshot от 2026-06-15T08:10Z проверен: `unredacted_secret_like_keys=0`, `open_trades=0`, `bybit_msgs=107194`, `recent_trade_events=70`, `pnl_sleeves=5`.
 
-**Задача Codex (добавить к §14):** запустить экспортёр на сервере и закоммитить снапшот — это разблокирует честный тюнинг крипты на реальных данных.
+**Сделано:** exporter запущен на сервере; `reports/SERVER_SNAPSHOT_latest.{json,md}` сняты с live runtime, проверены на секреты и подготовлены отдельным data commit.
