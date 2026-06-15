@@ -127,7 +127,7 @@ def build_snapshot() -> dict:
     rt = ROOT / "runtime"
     lm = rt / "live_mirror"
     snap = {
-        "generated_at_utc": dt.datetime.now(dt.UTC).isoformat().replace("+00:00", "Z"),
+        "generated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z"),
         "git_head": _git_head(),
         "safe_config": safe_env(),
         "heartbeat": load_json_first(rt / "bot_heartbeat.json", lm / "bot_heartbeat.json"),
@@ -208,7 +208,7 @@ def main():
     snap = build_snapshot()
     outdir = ROOT / "reports"
     outdir.mkdir(exist_ok=True)
-    stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%d_%H%M%S")
+    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d_%H%M%S")
     (outdir / f"SERVER_SNAPSHOT_{stamp}.json").write_text(json.dumps(snap, indent=2, default=str))
     (outdir / "SERVER_SNAPSHOT_latest.json").write_text(json.dumps(snap, indent=2, default=str))
     (outdir / "SERVER_SNAPSHOT_latest.md").write_text(to_markdown(snap))
