@@ -6,7 +6,7 @@ from bot import ai_tools
 def test_manifest_lists_read_and_gated_write():
     tools = ai_tools.available_tools()
     names = {t["name"] for t in tools}
-    assert {"get_pulse", "get_strategy_catalog", "read_code", "search_code"} <= names
+    assert {"get_pulse", "get_strategy_catalog", "get_project_map", "read_code", "search_code"} <= names
     # the only write channel must be the human-gated proposal path
     writes = [t for t in tools if t["kind"].startswith("write")]
     assert len(writes) == 1
@@ -17,6 +17,12 @@ def test_manifest_lists_read_and_gated_write():
 def test_strategy_catalog_accessible():
     cat = ai_tools.get_strategy_catalog()
     assert "families" in cat and "active_keys" in cat
+
+
+def test_project_map_accessible():
+    text = ai_tools.get_project_map()
+    assert "PROJECT MAP" in text
+    assert "promotion_gate" in text
 
 
 def test_read_code_is_secret_safe():

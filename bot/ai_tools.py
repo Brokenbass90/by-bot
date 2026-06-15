@@ -62,6 +62,17 @@ def get_codemap() -> Dict[str, Any]:
         return {"_error": str(e)}
 
 
+def get_project_map() -> str:
+    """Full project map (layers, arms, validation gate, current state) for onboarding."""
+    p = ROOT / "PROJECT_MAP.md"
+    if not p.exists():
+        return "no PROJECT_MAP.md"
+    try:
+        return p.read_text(encoding="utf-8", errors="ignore")
+    except Exception as e:
+        return f"project map unavailable: {e}"
+
+
 def read_code(relpath: str) -> str:
     from bot.code_access import read_source, CodeAccessError
     try:
@@ -94,6 +105,7 @@ def available_tools() -> List[Dict[str, str]]:
         {"name": "get_live_snapshot", "kind": "read", "desc": "full redacted server snapshot"},
         {"name": "get_strategy_catalog", "kind": "read", "desc": "strategy config + TP/SL model"},
         {"name": "get_codemap", "kind": "read", "desc": "map of all code modules + purpose"},
+        {"name": "get_project_map", "kind": "read", "desc": "full project map: layers, arms, validation gate, state"},
         {"name": "read_code", "kind": "read", "desc": "read one source file (secret-safe)"},
         {"name": "search_code", "kind": "read", "desc": "grep code for a pattern"},
         {"name": "list_modules", "kind": "read", "desc": "list source files in a dir"},
