@@ -1,0 +1,145 @@
+# AI codemap — 2026-06-15T12:16:21.297169+00:00
+*Map of strategy/bot modules. AI: use bot.code_access.read_source(path) to read any file.*
+
+
+## strategies/
+- `strategies/alpaca_adaptive_v1.py` (169L): alpaca_adaptive_v1 — best-of-breed Alpaca equities selector (2026-06-15). | classes: AdaptiveConfig
+- `strategies/alpaca_dynamic_v3_event.py` (370L): — | classes: EventPosition, EventTrade
+- `strategies/alpaca_dynamic_v4_event.py` (690L): alpaca_dynamic_v4_event.py — Улучшенная Alpaca стратегия. | classes: EventPosition, EventTrade, PortfolioGuard
+- `strategies/alt_bear_breakdown_v1.py` (203L): alt_bear_breakdown_v1 — short trend continuation в bear-фазах. | classes: BearBreakdownSignal, AltBearBreakdownV1
+- `strategies/alt_bear_consolidation_short_v1.py` (255L): alt_bear_consolidation_short_v1 — short scalp при отскоке к ресистенсу в bear-chop. | classes: BearConsolidationSignal, AltBearConsolidationShortV1
+- `strategies/alt_bear_regime_continuation_v1.py` (314L): alt_bear_regime_continuation_v1 — short trend-follow для bear / dead market. | classes: BRC1Config, AltBearRegimeContinuationV1Strategy
+- `strategies/alt_elder_revived_v1.py` (311L): alt_elder_revived_v1 — упрощённый Elder triple screen, реанимация мёртвой ETS3. | classes: ElderRevivedSignal, AltElderRevivedV1
+- `strategies/alt_horizontal_break_v1.py` (826L): alt_horizontal_break_v1 (HZBO1) — Horizontal support/resistance zone breakout | classes: AltHorizontalBreakV1Config, AltHorizontalBreakV1Strategy
+- `strategies/alt_inplay_breakdown_v1.py` (590L): alt_inplay_breakdown_v1 — independent bearish continuation / failed-reclaim short | classes: AltInplayBreakdownV1Config, AltInplayBreakdownV1Strategy
+- `strategies/alt_inplay_breakdown_v2.py` (378L): alt_inplay_breakdown_v2 — Improved breakdown strategy using 1h structure | classes: AltInplayBreakdownV2Config, AltInplayBreakdownV2Strategy
+- `strategies/alt_liquidity_sweep_reversal_v1.py` (252L): alt_liquidity_sweep_reversal_v1 - crypto liquidity sweep/reclaim research sleeve. | classes: LiquiditySweepReversalConfig, AltLiquiditySweepReversalV1Strategy
+- `strategies/alt_liquidity_sweep_reversal_v2.py` (431L): alt_liquidity_sweep_reversal_v2 — improved liquidity hunter (Claude 2026-05-04). | classes: LQH2Config, AltLiquiditySweepReversalV2Strategy
+- `strategies/alt_momentum_breakout_v1.py` (271L): alt_momentum_breakout_v1 — ловим сильные bull-импульсы которые ATT1 режет RSI-фильтром. | classes: MomentumBreakoutSignal, AltMomentumBreakoutV1
+- `strategies/alt_pullback_continuation_v1.py` (252L): alt_pullback_continuation_v1 — функциональная замена мёртвого Elder triple screen. | classes: PullbackContinuationSignal, AltPullbackContinuationV1
+- `strategies/alt_range_reclaim_v1.py` (282L): — | classes: AltRangeReclaimV1Config, AltRangeReclaimV1Strategy
+- `strategies/alt_range_scalp_v1.py` (281L): alt_range_scalp_v1 — 15-minute range scalper using Bollinger Bands + RSI | classes: AltRangeScalpV1Config, AltRangeScalpV1Strategy
+- `strategies/alt_resistance_fade_v1.py` (450L): — | classes: AltResistanceFadeV1Config, AltResistanceFadeV1Strategy
+- `strategies/alt_slope_break_v1.py` (739L): alt_slope_break_v1 (ASB1) — Trendline breakout with impulse momentum | classes: AltSlopeBreakV1Config, AltSlopeBreakV1Strategy
+- `strategies/alt_sloped_channel_v1.py` (563L): — | classes: AltSlopedChannelV1Config, AltSlopedChannelV1Strategy
+- `strategies/alt_sloped_momentum_v1.py` (624L): alt_sloped_momentum_v1 (ASM1) — Sloped channel breakout momentum rider | classes: AltSlopedMomentumV1Config, AltSlopedMomentumV1Strategy
+- `strategies/alt_spike_rejection_v1.py` (311L): alt_spike_rejection_v1 — volume spike rejection at strong level + auto-flip to breakout. | classes: SPR1Config, AltSpikeRejectionV1Strategy
+- `strategies/alt_squeeze_breakout_v1.py` (267L): alt_squeeze_breakout_v1 — Bollinger Band squeeze breakout, multi-regime. | classes: SqueezeBreakoutSignal, AltSqueezeBreakoutV1
+- `strategies/alt_support_bounce_v1.py` (352L): alt_support_bounce_v1 — Long counterpart of alt_resistance_fade_v1 | classes: AltSupportBounceV1Config, AltSupportBounceV1Strategy
+- `strategies/alt_support_reclaim_v1.py` (285L): — | classes: SupportReclaimConfig, AltSupportReclaimV1Strategy
+- `strategies/alt_trendline_touch_v1.py` (644L): alt_trendline_touch_v1 (ATT1) — Swing-pivot trendline bounce strategy | classes: AltTrendlineTouchV1Config, AltTrendlineTouchV1Strategy
+- `strategies/alt_trendline_touch_v2.py` (902L): alt_trendline_touch_v2 (ATT2) — Улучшенная версия ATT1. | classes: ATT2Config, AltTrendlineTouchV2Strategy
+- `strategies/alt_volume_spike_momentum_v1.py` (394L): alt_volume_spike_momentum_v1 (VSM1) — Volume-Spike Momentum Scalper | classes: VSM1Config, AltVolumeSpikeV1Strategy
+- `strategies/alt_vwap_mean_reversion_v1.py` (363L): alt_vwap_mean_reversion_v1 — 15m VWAP mean reversion for choppy/ranging markets. | classes: AltVWAPMeanReversionV1Config, AltVWAPMeanReversionV1Strategy
+- `strategies/alt_whale_print_follow_v1.py` (282L): alt_whale_print_follow_v1 — следование за крупным игроком (whale print). | classes: WhaleConfig, AltWhalePrintFollowV1Strategy
+- `strategies/asb1_live.py` (84L): Live wrapper for AltSlopeBreakV1Strategy (ASB1). | classes: _ASB1Store, ASB1LiveEngine
+- `strategies/asm1_live.py` (87L): Live wrapper for AltSlopedMomentumV1Strategy (ASM1). | classes: _ASM1Store, ASM1LiveEngine
+- `strategies/att1_live.py` (82L): Live wrapper for AltTrendlineTouchV1Strategy (ATT1). | classes: _ATT1Store, ATT1LiveEngine
+- `strategies/att1_v2_live.py` (86L): Live wrapper for AltTrendlineTouchV2Strategy (ATT1 v2). | classes: _ATT1V2Store, ATT1V2LiveEngine
+- `strategies/basis_arb_v1.py` (382L): basis_arb_v1.py — Same-exchange spot↔perp basis arbitrage on Bybit Unified. | classes: BasisArbV1Config, BasisArbSignal, BasisArbV1Strategy, BasisArbSelectorConfig, BasisArbV1Selector
+- `strategies/bounce1_live.py` (98L): Live wrapper for AltSupportBounceV1Strategy (Bounce1 / ASB1-long). | classes: _Bounce1Store, Bounce1LiveEngine
+- `strategies/breakdown_live.py` (87L): Live wrapper for AltInplayBreakdownV1Strategy. | classes: _BreakdownStore, BreakdownLiveEngine
+- `strategies/btc_cycle_continuation_v1.py` (291L): — | classes: BTCCycleContinuationV1Config, BTCCycleContinuationV1Strategy
+- `strategies/btc_cycle_level_target_v2.py` (299L): — | classes: BTCCycleLevelTargetV2Config, BTCCycleLevelTargetV2Strategy
+- `strategies/btc_cycle_pullback_v1.py` (276L): — | classes: BTCCyclePullbackV1Config, BTCCyclePullbackV1Strategy
+- `strategies/btc_daily_level_reclaim_v1.py` (275L): — | classes: BTCDailyLevelReclaimV1Config, BTCDailyLevelReclaimV1Strategy
+- `strategies/btc_eth_midterm_pullback.py` (320L): — | classes: BTCETHMidtermPullbackConfig, BTCETHMidtermPullbackStrategy
+- `strategies/btc_eth_midterm_pullback_v2.py` (513L): — | classes: BTCETHMidtermPullbackV2Config, BTCETHMidtermPullbackV2Strategy
+- `strategies/btc_eth_midterm_short_v1.py` (361L): — | classes: BTCETHMidtermShortV1Config, BTCETHMidtermShortV1Strategy
+- `strategies/btc_eth_midterm_short_v2.py` (571L): — | classes: BTCETHMidtermShortV2Config, BTCETHMidtermShortV2Strategy
+- `strategies/btc_eth_midterm_v3.py` (665L): — | classes: MidtermV3Config, BTCETHMidtermV3Strategy
+- `strategies/btc_macro_cycle_v1.py` (317L): — | classes: BTCMacroCycleV1Config, BTCMacroCycleV1Strategy
+- `strategies/btc_regime_flip_continuation_v1.py` (272L): — | classes: BTCRegimeFlipContinuationV1Config, BTCRegimeFlipContinuationV1Strategy
+- `strategies/btc_regime_retest_v1.py` (367L): — | classes: BTCRegimeRetestV1Config, BTCRegimeRetestV1Strategy
+- `strategies/btc_sloped_reclaim_v1.py` (314L): — | classes: BTCSlopedReclaimV1Config, BTCSlopedReclaimV1Strategy
+- `strategies/btc_swing_zone_reclaim_v1.py` (308L): — | classes: BTCSwingZoneReclaimV1Config, BTCSwingZoneReclaimV1Strategy
+- `strategies/btc_weekly_zone_reclaim_v2.py` (378L): — | classes: BTCWeeklyZoneReclaimV2Config, BTCWeeklyZoneReclaimV2Strategy
+- `strategies/elder_crypto_v1.py` (469L): elder_crypto_v1 (ECV1) — Elder Triple-Screen adapted для crypto perpetuals. | classes: ECV1Config, ElderCryptoV1Strategy, ECV1Selector
+- `strategies/elder_triple_screen_v2.py` (626L): elder_triple_screen_v2 — Three-timeframe Elder trading system | classes: ElderTripleScreenV2Config, ElderTripleScreenV2Strategy
+- `strategies/elder_triple_screen_v3.py` (569L): elder_triple_screen_v3 — Correct Elder Three-Screen system. | classes: ElderTripleScreenV3Config, ElderTripleScreenV3Strategy
+- `strategies/equities_swing_active_v1.py` (182L): PDT-safe active swing selector for a small Alpaca account (Opus 2026-06-08). | classes: SwingConfig
+- `strategies/flat_resistance_fade_live.py` (73L): Live wrapper for AltResistanceFadeV1Strategy. | classes: _FlatStore, FlatResistanceFadeLiveEngine
+- `strategies/funding_hold_v1.py` (71L): — | classes: FundingHoldV1Config, FundingHoldV1Strategy
+- `strategies/funding_rate_reversion_v1.py` (367L): Funding Rate Reversion v1 — Bybit Perpetuals Edge | classes: FundingRateReversionConfig, FundingRateReversionV1
+- `strategies/grid_smart_v1.py` (479L): grid_smart_v1 (GS1) — Regime-aware ATR-spaced grid strategy. | classes: GS1Config, GridSmartV1Strategy, GS1Selector
+- `strategies/gs1_live.py` (81L): Live wrapper for GridSmartV1Strategy (GS1). | classes: _GS1Store, GS1LiveEngine
+- `strategies/hzbo1_live.py` (89L): Live wrapper for AltHorizontalBreakV1Strategy (HZBO1). | classes: _HZBO1Store, HZBO1LiveEngine
+- `strategies/impulse_volume_breakout_v1.py` (429L): impulse_volume_breakout_v1 — 5m impulse breakout with shallow retrace entry. | classes: ImpulseVolumeBreakoutV1Config, ImpulseVolumeBreakoutV1Strategy
+- `strategies/inplay_breakout.py` (458L): — | classes: InPlayBreakoutConfig, InPlayBreakoutWrapper
+- `strategies/inplay_wrapper.py` (36L): —
+- `strategies/liquidation_cascade_entry_v1.py` (301L): strategies/liquidation_cascade_entry_v1.py — Liquidation Cascade Entry v1 | classes: LiquidationCascadeConfig, LiquidationCascadeEntryV1
+- `strategies/live_kline_utils.py` (46L): Helpers for live kline adapters.
+- `strategies/micro_scalper_bounce_v1.py` (338L): — | classes: MicroScalperBounceV1Config, MicroScalperBounceV1Strategy
+- `strategies/micro_scalper_breakout_v1.py` (321L): — | classes: MicroScalperBreakoutV1Config, MicroScalperBreakoutV1Strategy
+- `strategies/micro_scalper_live.py` (93L): Live wrapper for MicroScalperV1Strategy. | classes: _MicroScalperStore, MicroScalperLiveEngine
+- `strategies/micro_scalper_v1.py` (384L): micro_scalper_v1.py — 5m EMA Pullback Scalper | classes: MicroScalperV1Config, MicroScalperV1Strategy
+- `strategies/pair_arb_executor_v1.py` (110L): Two-leg executor for pair stat-arb — PAE1 (Opus 2026-06-09). | classes: PairExecConfig, OrderIntent, PairPosition
+- `strategies/pair_stat_arb_v1.py` (202L): Market-neutral pair statistical arbitrage — ETH/BTC and similar (Opus 2026-06-08). | classes: PairConfig, PairSignal, PairStatArbV1
+- `strategies/pfs1_live.py` (94L): Live wrapper for PumpFadeSmartV1Strategy (PFS1). | classes: _PFS1Store, PFS1LiveEngine
+- `strategies/pump_fade_simple.py` (204L): pump_fade_simple — exact baseline logic from commit e341055e. | classes: PumpFadeSimpleConfig, PumpFadeSimpleStrategy
+- `strategies/pump_fade_smart_v1.py` (476L): pump_fade_smart_v1 (PFS1) — Quality-gated pump fade strategy. | classes: PFS1Config, PumpFadeSmartV1Strategy, PFS1Selector
+- `strategies/pump_fade_v2.py` (296L): pump_fade_v2 — Improved pump fade with multi-bar confirmation | classes: PumpFadeV2Config, PumpFadeV2Strategy
+- `strategies/pump_fade_v3.py` (379L): pump_fade_v3 — Calibrated pump/dump fade with regime awareness. | classes: PumpFadeV3Config, PumpFadeV3Strategy
+- `strategies/pump_fade_v4r.py` (1203L): — | classes: PumpFadeConfig, PumpFadeV4RStrategy
+- `strategies/pump_momentum_v1.py` (390L): pump_momentum_v1 — Long-only pump momentum rider. | classes: PumpMomentumConfig, PumpMomentumV1Strategy
+- `strategies/scalper_bounce_v2.py` (407L): scalper_bounce_v2 (SB2) — Высоко-качественный wick-bounce scalper. | classes: SB2Config, ScalperBounceV2Strategy, SB2Selector
+- `strategies/scalper_breakout_v2.py` (344L): scalper_breakout_v2 (SBR2) — Strict range-breakout с retest требованием. | classes: SBR2Config, _PendingBreak, ScalperBreakoutV2Strategy, SBR2Selector
+- `strategies/scalper_sweep_v2.py` (310L): scalper_sweep_v2 (SS2) — Strict liquidity-sweep + reverse strategy. | classes: SS2Config, ScalperSweepV2Strategy, SS2Selector
+- `strategies/session_open_breakout_v1.py` (282L): Session Open Breakout v1 (session_open_breakout_v1) | classes: SessionOpenBreakoutConfig, SessionOpenBreakoutV1
+- `strategies/signals.py` (99L): — | classes: TradeSignal
+- `strategies/sloped_break_retest_v1.py` (448L): — | classes: SlopedBreakRetestV1Config, SlopedBreakRetestV1Strategy
+- `strategies/sloped_channel_live.py` (115L): Live wrapper for AltSlopedChannelV1Strategy. | classes: _SlopedStore, SlopedChannelLiveEngine
+- `strategies/sloped_resistance_choch_v1.py` (411L): — | classes: SlopedResistanceChochV1Config, SlopedResistanceChochV1Strategy
+- `strategies/support_reclaim_live.py` (65L): Live wrapper for AltSupportReclaimV1Strategy. | classes: _FlatStore, SupportReclaimLiveEngine
+- `strategies/triple_screen_v132.py` (341L): — | classes: TripleScreenV132Config, TripleScreenV132Strategy
+
+## bot/
+- `bot/ai_context.py` (230L): —
+- `bot/ai_tools.py` (102L): Unified on-board-AI toolbox — the AI's eyes, ears and analysis in one place.
+- `bot/allowlist_watcher.py` (372L): bot/allowlist_watcher.py — Dynamic Runtime Env Hot-Reload | classes: AllowlistWatcher
+- `bot/auth.py` (73L): bot/auth.py — Auth state and helpers.
+- `bot/chart_geometry.py` (287L): — | classes: PivotPoint, HorizontalLevel
+- `bot/circuit_breaker.py` (306L): bot/circuit_breaker.py | classes: CBState, PortfolioCircuitBreaker
+- `bot/code_access.py` (106L): Safe, read-only code access for the on-board AI ("open its eyes" to the code). | classes: CodeAccessError
+- `bot/confidence_risk.py` (136L): Confidence-based risk sizing — «умное плечо» (Claude 2026-06-10). | classes: RiskAdvice
+- `bot/dd_throttle.py` (51L): Drawdown throttle — тормоз риска при просадке (Claude 2026-06-10). | classes: DDThrottle
+- `bot/deepseek_action_executor.py` (303L): deepseek_action_executor.py
+- `bot/deepseek_autoresearch_agent.py` (1174L): deepseek_autoresearch_agent.py
+- `bot/deepseek_overlay.py` (540L): — | classes: DeepSeekConfig, DeepSeekOverlay
+- `bot/deepseek_research_gate.py` (522L): bot/deepseek_research_gate.py — Bounded Research Scope for DeepSeek Autonomy | classes: ResearchGate
+- `bot/diagnostics.py` (559L): bot/diagnostics.py — Runtime diagnostic counters and helpers.
+- `bot/edge_canary.py` (90L): Edge canary — канарейка эджа: авто-затухание умирающих стратегий (Claude 2026-06-10). | classes: CanaryVerdict, EdgeCanary
+- `bot/entry_guard.py` (56L): bot/entry_guard.py — lightweight circuit breaker for new entry submissions. | classes: EntryCircuitSnapshot, EntryCircuitBreaker
+- `bot/env_helpers.py` (72L): bot/env_helpers.py — Pure env/config helpers.
+- `bot/family_profiles.py` (271L): bot/family_profiles.py — Per-Symbol-Family Dynamic Parameter Profiles | classes: FamilyProfile, FamilyProfileManager
+- `bot/geometry_cache.py` (87L): —
+- `bot/health_gate.py` (274L): bot/health_gate.py — Strategy Health Gate | classes: HealthGate
+- `bot/liquidity_map.py` (272L): Liquidity map + sweep-reversal — охотник за ликвидностью без стакана (Claude 2026-06-11). | classes: LiqMapConfig, Pool, SweepEvent, LiquidityMap, LSRConfig, LiquiditySweepReversalV1
+- `bot/live_position_view.py` (120L): Build the AI/web-facing view of open live positions.
+- `bot/operator_snapshot.py` (1034L): —
+- `bot/order_link.py` (100L): Order link ID + idempotency helpers — выделено из smart_pump_reversal_bot.py.
+- `bot/router_geometry.py` (201L): —
+- `bot/runner_state.py` (71L): bot/runner_state.py — shared live-runner state hydration for TradeState.
+- `bot/strategy_catalog.py` (176L): Machine-readable catalogue of the live strategy families.
+- `bot/strategy_health_timeline.py` (182L): —
+- `bot/symbol_state.py` (159L): bot/symbol_state.py — Per-symbol in-memory state (SymState) and registry. | classes: SymState
+- `bot/tpsl_policy.py` (105L): Pure TP/SL restoration policy helpers.
+- `bot/trade_learning_loop.py` (207L): bot/trade_learning_loop.py — bounded per-trade learning loop | classes: TradeLearningLoop
+- `bot/utils.py` (38L): bot/utils.py — Misc pure utility functions.
+
+## backtest/
+- `backtest/alpaca_bakeoff_wf.py` (416L): Bear-inclusive Alpaca bake-off across current research variants.
+- `backtest/bt_types.py` (13L): Shared backtest types.
+- `backtest/bybit_data.py` (220L): Bybit public market data helpers with local caching. | classes: Kline
+- `backtest/crypto_efficiency_backtest.py` (172L): Crypto strategy EFFICIENCY backtester (signal-replay over OHLC). | classes: BacktestStore
+- `backtest/crypto_efficiency_wf.py` (202L): Fee/slippage-aware efficiency check for the crypto mean-reversion core.
+- `backtest/engine.py` (631L): — | classes: Candle, KlineStore, BacktestParams, Position
+- `backtest/lab.py` (142L): Backtest Lab — flexible scenario orchestration + honest comparison (Opus 2026-06-08). | classes: Scenario, RunResult
+- `backtest/ladder_exit.py` (71L): Canonical runner-ladder exit simulator (pure, deterministic, testable).
+- `backtest/metrics.py` (128L): — | classes: Trade, Summary
+- `backtest/portfolio_engine.py` (443L): Portfolio backtest engine (multi-symbol, multi-strategy). | classes: PortfolioResult
+- `backtest/prefetch_klines.py` (149L): Prefetch (download + cache) Bybit public klines for backtests.
+- `backtest/robustness.py` (202L): Backtest robustness tools — anti-overfit discipline (Opus 2026-06-08).
+- `backtest/run_month.py` (590L): Backtest runner: compare strategies over ~1 month.
+- `backtest/run_portfolio.py` (2192L): Run a combined portfolio backtest (multi-strategy, multi-symbol).
+- `backtest/symbols_from_summary.py` (80L): Print comma-separated symbol list from a backtest summary.

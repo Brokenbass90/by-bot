@@ -1,4 +1,4 @@
-# Server snapshot — 2026-06-15T08:34:31.790670Z (git 75de6bd)
+# Server snapshot — 2026-06-15T12:23:31.328663Z (git 75de6bd)
 *Auto-exported, secrets redacted. Read this for ground-truth live state.*
 
 ## Heartbeat

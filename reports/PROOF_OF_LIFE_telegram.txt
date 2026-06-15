@@ -1,0 +1,5 @@
+BOT PULSE — 0m ago
+ALIVE | regime=bull_trend | feed OK | open=0
+risk/trade=0.44% | maxpos=3 | block=False
+LIVE sleeves: flat=0.3, ivb1=0.25
+recent P&L: -3.554 over 26 trades

@@ -104,3 +104,79 @@ Weak point: strategy health section in Telegram can still refer to stale `config
 - Server Python is actually `3.12.3`, not `3.10.12`, but the compatibility fix is still correct.
 - No remaining server test errors after targeted deploy.
 - 2020 equities bear/COVID data is not yet in the local/server cache. Current honest table covers 2022 bear only.
+
+## Follow-up deploy: web/AI visibility + proof-of-life
+
+Deployed additively to server:
+
+- `bot/code_access.py` and `bot/ai_tools.py`: read-only source/code-map access for the on-board AI. Secret-like paths and `.env` are refused; secret-like assignments are redacted.
+- `scripts/build_ai_codemap.py`: generated `reports/AI_CODEMAP.{json,md}`.
+- `scripts/proof_of_life.py`: compact live pulse from `SERVER_SNAPSHOT_latest`.
+- `web/static/operator_console.html`.
+- `web/main.py`: `/operator-console` static route.
+- `web/routes/data_routes.py`: authenticated read-only operator/AI APIs: `/api/heartbeat`, `/api/pnl`, `/api/strategy-catalog`, `/api/ai/tools`, `/api/ai/pulse`, `/api/ai/codemap`, `/api/ai/code/list|read|search`.
+
+Safety note: connection/key write APIs from the HTML console are deliberately not implemented. The page is useful for visibility, but secret-store writes need a separate design.
+
+Server checks:
+
+- `trading-journal-web` restarted only; live trading bot was not restarted.
+- `/ping` = 200, `/operator-console` = 200, unauthenticated `/api/heartbeat` = 401.
+- Server full pytest after deploy: `118 passed, 1 warning`.
+- Latest full local pytest after additive work: `247 passed`; latest targeted local tests for this follow-up: `22 passed`.
+
+Proof-of-life:
+
+- Server exporter refreshed snapshot at `2026-06-15T12:23:31.328663Z`.
+- `scripts/proof_of_life.py --tg --send` sent a control Telegram successfully: `TG send ok`.
+- Added cron:
+
+```cron
+15 */3 * * * /bin/bash -lc 'cd /root/by-bot && set -a && source .env && set +a && .venv/bin/python3 scripts/proof_of_life.py --tg --send >> logs/proof_of_life.log 2>&1' # proof_of_life_tg_codex
+```
+
+Latest pulse:
+
+```text
+ALIVE | regime=bull_trend | feed OK | open=0
+risk/trade=0.44% | maxpos=3 | block=False
+LIVE sleeves: flat=0.3, ivb1=0.25
+recent P&L: -3.554 over 26 trades
+```
+
+## Crypto fee/slippage WF with ladder compare
+
+Deployed `backtest/ladder_exit.py` + `backtest/crypto_efficiency_wf.py` and ran bounded server WF:
+
+```bash
+PYTHONPATH=. .venv/bin/python3 backtest/crypto_efficiency_wf.py --max-rows 60000
+```
+
+| sleeve | symbol | 0bps | 10bps | 20bps |
+|---|---|---:|---:|---:|
+| ASB1 long | SOLUSDT | +1.34R PF3.67 n10 | +1.08R PF2.66 | +0.83R PF2.03 |
+| ASB1 long | LINKUSDT | +0.56R PF1.72 n9 | +0.29R PF1.29 | +0.01R PF1.01 |
+| ASB1 long | ADAUSDT | +0.14R PF1.22 n9 | -0.07R PF0.91 | -0.29R PF0.70 |
+| ARF1 short | SOLUSDT | -0.63R PF0.26 n7 | -0.85R PF0.19 | -1.06R PF0.13 |
+| ARF1 short | LINKUSDT | -0.43R PF0.44 n8 | -0.67R PF0.31 | -0.90R PF0.24 |
+| ARF1 short | ADAUSDT | +0.47R PF1.65 n14 | +0.25R PF1.28 | +0.03R PF1.03 |
+
+Ladder compare:
+
+- SOL ASB1: single +1.34R PF3.67 vs ladder +0.96R PF2.92 at 0bps; single +1.08R PF2.66 vs ladder +0.71R PF2.08 at 10bps.
+- LINK ASB1: single +0.56R PF1.72 vs ladder +0.54R PF1.76 at 0bps; both thin but survive near 10bps.
+- ADA ASB1: fails after fees/ladder; do not promote.
+
+Verdict: ASB1/SOL is the cleanest fee-resilient pocket. ASB1/LINK is thin. ASB1/ADA is not fee-safe. ARF1 short only has a possible ADA pocket; SOL/LINK fail this window. This supports symbol-specific shadow/canary design, not a broad package risk increase yet.
+
+## Alpaca paper status
+
+Alpaca paper is already running on server cron:
+
+- `ALPACA_SEND_ORDERS=1`
+- candidate env: `/root/by-bot/configs/alpaca_v38_hybrid_top4_candidate.env`
+- effective monthly capital: `$500`
+- current paper positions in log: `AMD`, `GE`, `LLY`, `SNOW`
+- broker protection active: stop orders exist/rearmed for all held names in the paper log.
+
+Important: this does not mean real `$500` is ready today. The bear-2022 WF says `alpaca_adaptive_v1` is the best capital-protection candidate, but still has PF `< 1` in 2022. Treat Alpaca as paper/stabilizer until it passes live-paper evidence: 4-8 weeks, enough closed decisions, protection clean, and live-paper behavior matching the harness.

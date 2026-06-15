@@ -1,0 +1,2014 @@
+{
+  "generated_at_utc": "2026-06-15T12:16:21.297169+00:00",
+  "modules": {
+    "strategies/alpaca_adaptive_v1.py": {
+      "purpose": "alpaca_adaptive_v1 \u2014 best-of-breed Alpaca equities selector (2026-06-15).",
+      "classes": [
+        "AdaptiveConfig"
+      ],
+      "functions": [
+        "_sma",
+        "_ret",
+        "_realized_vol",
+        "market_regime_ok",
+        "_score",
+        "select"
+      ],
+      "lines": 169
+    },
+    "strategies/alpaca_dynamic_v3_event.py": {
+      "purpose": "",
+      "classes": [
+        "EventPosition",
+        "EventTrade"
+      ],
+      "functions": [
+        "_safe_float",
+        "_atr_pct",
+        "_momentum",
+        "rank_symbols",
+        "_price",
+        "_drawdown_pct",
+        "_monthly_returns",
+        "summarize_result",
+        "run_event_v3",
+        "run_static_top4"
+      ],
+      "lines": 370
+    },
+    "strategies/alpaca_dynamic_v4_event.py": {
+      "purpose": "alpaca_dynamic_v4_event.py \u2014 \u0423\u043b\u0443\u0447\u0448\u0435\u043d\u043d\u0430\u044f Alpaca \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044f.",
+      "classes": [
+        "EventPosition",
+        "EventTrade",
+        "PortfolioGuard"
+      ],
+      "functions": [
+        "_safe_float",
+        "_price",
+        "_drawdown_pct",
+        "_monthly_returns",
+        "_realized_vol",
+        "_momentum",
+        "_neg_months_fraction",
+        "rank_symbols_v4",
+        "_sector_slots_available",
+        "run_event_v4"
+      ],
+      "lines": 690
+    },
+    "strategies/alt_bear_breakdown_v1.py": {
+      "purpose": "alt_bear_breakdown_v1 \u2014 short trend continuation \u0432 bear-\u0444\u0430\u0437\u0430\u0445.",
+      "classes": [
+        "BearBreakdownSignal",
+        "AltBearBreakdownV1"
+      ],
+      "functions": [],
+      "lines": 203
+    },
+    "strategies/alt_bear_consolidation_short_v1.py": {
+      "purpose": "alt_bear_consolidation_short_v1 \u2014 short scalp \u043f\u0440\u0438 \u043e\u0442\u0441\u043a\u043e\u043a\u0435 \u043a \u0440\u0435\u0441\u0438\u0441\u0442\u0435\u043d\u0441\u0443 \u0432 bear-chop.",
+      "classes": [
+        "BearConsolidationSignal",
+        "AltBearConsolidationShortV1"
+      ],
+      "functions": [],
+      "lines": 255
+    },
+    "strategies/alt_bear_regime_continuation_v1.py": {
+      "purpose": "alt_bear_regime_continuation_v1 \u2014 short trend-follow \u0434\u043b\u044f bear / dead market.",
+      "classes": [
+        "BRC1Config",
+        "AltBearRegimeContinuationV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_str",
+        "_env_csv_set",
+        "_candles_5m",
+        "_atr",
+        "_ema",
+        "_rsi"
+      ],
+      "lines": 314
+    },
+    "strategies/alt_elder_revived_v1.py": {
+      "purpose": "alt_elder_revived_v1 \u2014 \u0443\u043f\u0440\u043e\u0449\u0451\u043d\u043d\u044b\u0439 Elder triple screen, \u0440\u0435\u0430\u043d\u0438\u043c\u0430\u0446\u0438\u044f \u043c\u0451\u0440\u0442\u0432\u043e\u0439 ETS3.",
+      "classes": [
+        "ElderRevivedSignal",
+        "AltElderRevivedV1"
+      ],
+      "functions": [],
+      "lines": 311
+    },
+    "strategies/alt_horizontal_break_v1.py": {
+      "purpose": "alt_horizontal_break_v1 (HZBO1) \u2014 Horizontal support/resistance zone breakout",
+      "classes": [
+        "AltHorizontalBreakV1Config",
+        "AltHorizontalBreakV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr_from_rows",
+        "_rsi",
+        "_vol_sma",
+        "_ema_series",
+        "_macd_hist_last",
+        "_find_swing_lows"
+      ],
+      "lines": 826
+    },
+    "strategies/alt_inplay_breakdown_v1.py": {
+      "purpose": "alt_inplay_breakdown_v1 \u2014 independent bearish continuation / failed-reclaim short",
+      "classes": [
+        "AltInplayBreakdownV1Config",
+        "AltInplayBreakdownV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_rsi",
+        "_tp1_rr",
+        "_find_next_support_below"
+      ],
+      "lines": 590
+    },
+    "strategies/alt_inplay_breakdown_v2.py": {
+      "purpose": "alt_inplay_breakdown_v2 \u2014 Improved breakdown strategy using 1h structure",
+      "classes": [
+        "AltInplayBreakdownV2Config",
+        "AltInplayBreakdownV2Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_rsi",
+        "_sma",
+        "_std_dev"
+      ],
+      "lines": 378
+    },
+    "strategies/alt_liquidity_sweep_reversal_v1.py": {
+      "purpose": "alt_liquidity_sweep_reversal_v1 - crypto liquidity sweep/reclaim research sleeve.",
+      "classes": [
+        "LiquiditySweepReversalConfig",
+        "AltLiquiditySweepReversalV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr",
+        "_ema"
+      ],
+      "lines": 252
+    },
+    "strategies/alt_liquidity_sweep_reversal_v2.py": {
+      "purpose": "alt_liquidity_sweep_reversal_v2 \u2014 improved liquidity hunter (Claude 2026-05-04).",
+      "classes": [
+        "LQH2Config",
+        "AltLiquiditySweepReversalV2Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_str",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr",
+        "_adx",
+        "_ema"
+      ],
+      "lines": 431
+    },
+    "strategies/alt_momentum_breakout_v1.py": {
+      "purpose": "alt_momentum_breakout_v1 \u2014 \u043b\u043e\u0432\u0438\u043c \u0441\u0438\u043b\u044c\u043d\u044b\u0435 bull-\u0438\u043c\u043f\u0443\u043b\u044c\u0441\u044b \u043a\u043e\u0442\u043e\u0440\u044b\u0435 ATT1 \u0440\u0435\u0436\u0435\u0442 RSI-\u0444\u0438\u043b\u044c\u0442\u0440\u043e\u043c.",
+      "classes": [
+        "MomentumBreakoutSignal",
+        "AltMomentumBreakoutV1"
+      ],
+      "functions": [],
+      "lines": 271
+    },
+    "strategies/alt_pullback_continuation_v1.py": {
+      "purpose": "alt_pullback_continuation_v1 \u2014 \u0444\u0443\u043d\u043a\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u0430\u044f \u0437\u0430\u043c\u0435\u043d\u0430 \u043c\u0451\u0440\u0442\u0432\u043e\u0433\u043e Elder triple screen.",
+      "classes": [
+        "PullbackContinuationSignal",
+        "AltPullbackContinuationV1"
+      ],
+      "functions": [],
+      "lines": 252
+    },
+    "strategies/alt_range_reclaim_v1.py": {
+      "purpose": "",
+      "classes": [
+        "AltRangeReclaimV1Config",
+        "AltRangeReclaimV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_rsi"
+      ],
+      "lines": 282
+    },
+    "strategies/alt_range_scalp_v1.py": {
+      "purpose": "alt_range_scalp_v1 \u2014 15-minute range scalper using Bollinger Bands + RSI",
+      "classes": [
+        "AltRangeScalpV1Config",
+        "AltRangeScalpV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_sma",
+        "_std_dev",
+        "_atr_from_rows",
+        "_rsi"
+      ],
+      "lines": 281
+    },
+    "strategies/alt_resistance_fade_v1.py": {
+      "purpose": "",
+      "classes": [
+        "AltResistanceFadeV1Config",
+        "AltResistanceFadeV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_ema_series",
+        "_rsi_wilder",
+        "_atr_from_rows"
+      ],
+      "lines": 450
+    },
+    "strategies/alt_slope_break_v1.py": {
+      "purpose": "alt_slope_break_v1 (ASB1) \u2014 Trendline breakout with impulse momentum",
+      "classes": [
+        "AltSlopeBreakV1Config",
+        "AltSlopeBreakV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr_from_rows",
+        "_rsi",
+        "_ema_series",
+        "_macd_hist_last",
+        "_find_swing_lows",
+        "_find_swing_highs"
+      ],
+      "lines": 739
+    },
+    "strategies/alt_sloped_channel_v1.py": {
+      "purpose": "",
+      "classes": [
+        "AltSlopedChannelV1Config",
+        "AltSlopedChannelV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr_from_rows",
+        "_rsi",
+        "_linear_regression"
+      ],
+      "lines": 563
+    },
+    "strategies/alt_sloped_momentum_v1.py": {
+      "purpose": "alt_sloped_momentum_v1 (ASM1) \u2014 Sloped channel breakout momentum rider",
+      "classes": [
+        "AltSlopedMomentumV1Config",
+        "AltSlopedMomentumV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr_from_rows",
+        "_ema",
+        "_linear_regression",
+        "_r_squared",
+        "_efficiency_ratio",
+        "_channel_bands"
+      ],
+      "lines": 624
+    },
+    "strategies/alt_spike_rejection_v1.py": {
+      "purpose": "alt_spike_rejection_v1 \u2014 volume spike rejection at strong level + auto-flip to breakout.",
+      "classes": [
+        "SPR1Config",
+        "AltSpikeRejectionV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_candles_5m",
+        "_atr",
+        "_detect_strong_levels"
+      ],
+      "lines": 311
+    },
+    "strategies/alt_squeeze_breakout_v1.py": {
+      "purpose": "alt_squeeze_breakout_v1 \u2014 Bollinger Band squeeze breakout, multi-regime.",
+      "classes": [
+        "SqueezeBreakoutSignal",
+        "AltSqueezeBreakoutV1"
+      ],
+      "functions": [],
+      "lines": 267
+    },
+    "strategies/alt_support_bounce_v1.py": {
+      "purpose": "alt_support_bounce_v1 \u2014 Long counterpart of alt_resistance_fade_v1",
+      "classes": [
+        "AltSupportBounceV1Config",
+        "AltSupportBounceV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_rsi"
+      ],
+      "lines": 352
+    },
+    "strategies/alt_support_reclaim_v1.py": {
+      "purpose": "",
+      "classes": [
+        "SupportReclaimConfig",
+        "AltSupportReclaimV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_rsi"
+      ],
+      "lines": 285
+    },
+    "strategies/alt_trendline_touch_v1.py": {
+      "purpose": "alt_trendline_touch_v1 (ATT1) \u2014 Swing-pivot trendline bounce strategy",
+      "classes": [
+        "AltTrendlineTouchV1Config",
+        "AltTrendlineTouchV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr_from_rows",
+        "_rsi",
+        "_find_swing_lows",
+        "_find_swing_highs",
+        "_fit_line_points"
+      ],
+      "lines": 644
+    },
+    "strategies/alt_trendline_touch_v2.py": {
+      "purpose": "alt_trendline_touch_v2 (ATT2) \u2014 \u0423\u043b\u0443\u0447\u0448\u0435\u043d\u043d\u0430\u044f \u0432\u0435\u0440\u0441\u0438\u044f ATT1.",
+      "classes": [
+        "ATT2Config",
+        "AltTrendlineTouchV2Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_str",
+        "_env_csv_set",
+        "_atr",
+        "_rsi",
+        "_vol_ma",
+        "_find_swing_lows",
+        "_find_swing_highs"
+      ],
+      "lines": 902
+    },
+    "strategies/alt_volume_spike_momentum_v1.py": {
+      "purpose": "alt_volume_spike_momentum_v1 (VSM1) \u2014 Volume-Spike Momentum Scalper",
+      "classes": [
+        "VSM1Config",
+        "AltVolumeSpikeV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_atr",
+        "_rsi"
+      ],
+      "lines": 394
+    },
+    "strategies/alt_vwap_mean_reversion_v1.py": {
+      "purpose": "alt_vwap_mean_reversion_v1 \u2014 15m VWAP mean reversion for choppy/ranging markets.",
+      "classes": [
+        "AltVWAPMeanReversionV1Config",
+        "AltVWAPMeanReversionV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr_from_rows",
+        "_rsi",
+        "_efficiency_ratio",
+        "_session_vwap",
+        "_same_day"
+      ],
+      "lines": 363
+    },
+    "strategies/alt_whale_print_follow_v1.py": {
+      "purpose": "alt_whale_print_follow_v1 \u2014 \u0441\u043b\u0435\u0434\u043e\u0432\u0430\u043d\u0438\u0435 \u0437\u0430 \u043a\u0440\u0443\u043f\u043d\u044b\u043c \u0438\u0433\u0440\u043e\u043a\u043e\u043c (whale print).",
+      "classes": [
+        "WhaleConfig",
+        "AltWhalePrintFollowV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_candles_5m",
+        "_atr",
+        "_rsi"
+      ],
+      "lines": 282
+    },
+    "strategies/asb1_live.py": {
+      "purpose": "Live wrapper for AltSlopeBreakV1Strategy (ASB1).",
+      "classes": [
+        "_ASB1Store",
+        "ASB1LiveEngine"
+      ],
+      "functions": [],
+      "lines": 84
+    },
+    "strategies/asm1_live.py": {
+      "purpose": "Live wrapper for AltSlopedMomentumV1Strategy (ASM1).",
+      "classes": [
+        "_ASM1Store",
+        "ASM1LiveEngine"
+      ],
+      "functions": [],
+      "lines": 87
+    },
+    "strategies/att1_live.py": {
+      "purpose": "Live wrapper for AltTrendlineTouchV1Strategy (ATT1).",
+      "classes": [
+        "_ATT1Store",
+        "ATT1LiveEngine"
+      ],
+      "functions": [],
+      "lines": 82
+    },
+    "strategies/att1_v2_live.py": {
+      "purpose": "Live wrapper for AltTrendlineTouchV2Strategy (ATT1 v2).",
+      "classes": [
+        "_ATT1V2Store",
+        "ATT1V2LiveEngine"
+      ],
+      "functions": [],
+      "lines": 86
+    },
+    "strategies/basis_arb_v1.py": {
+      "purpose": "basis_arb_v1.py \u2014 Same-exchange spot\u2194perp basis arbitrage on Bybit Unified.",
+      "classes": [
+        "BasisArbV1Config",
+        "BasisArbSignal",
+        "BasisArbV1Strategy",
+        "BasisArbSelectorConfig",
+        "BasisArbV1Selector"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv",
+        "partial_profit_targets"
+      ],
+      "lines": 382
+    },
+    "strategies/bounce1_live.py": {
+      "purpose": "Live wrapper for AltSupportBounceV1Strategy (Bounce1 / ASB1-long).",
+      "classes": [
+        "_Bounce1Store",
+        "Bounce1LiveEngine"
+      ],
+      "functions": [],
+      "lines": 98
+    },
+    "strategies/breakdown_live.py": {
+      "purpose": "Live wrapper for AltInplayBreakdownV1Strategy.",
+      "classes": [
+        "_BreakdownStore",
+        "BreakdownLiveEngine"
+      ],
+      "functions": [],
+      "lines": 87
+    },
+    "strategies/btc_cycle_continuation_v1.py": {
+      "purpose": "",
+      "classes": [
+        "BTCCycleContinuationV1Config",
+        "BTCCycleContinuationV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_compress_closes"
+      ],
+      "lines": 291
+    },
+    "strategies/btc_cycle_level_target_v2.py": {
+      "purpose": "",
+      "classes": [
+        "BTCCycleLevelTargetV2Config",
+        "BTCCycleLevelTargetV2Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_compress_closes",
+        "_find_next_pivot_high"
+      ],
+      "lines": 299
+    },
+    "strategies/btc_cycle_pullback_v1.py": {
+      "purpose": "",
+      "classes": [
+        "BTCCyclePullbackV1Config",
+        "BTCCyclePullbackV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_compress_closes"
+      ],
+      "lines": 276
+    },
+    "strategies/btc_daily_level_reclaim_v1.py": {
+      "purpose": "",
+      "classes": [
+        "BTCDailyLevelReclaimV1Config",
+        "BTCDailyLevelReclaimV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_compress_4h_to_daily"
+      ],
+      "lines": 275
+    },
+    "strategies/btc_eth_midterm_pullback.py": {
+      "purpose": "",
+      "classes": [
+        "BTCETHMidtermPullbackConfig",
+        "BTCETHMidtermPullbackStrategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows"
+      ],
+      "lines": 320
+    },
+    "strategies/btc_eth_midterm_pullback_v2.py": {
+      "purpose": "",
+      "classes": [
+        "BTCETHMidtermPullbackV2Config",
+        "BTCETHMidtermPullbackV2Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_rsi",
+        "_linear_regression",
+        "_r_squared"
+      ],
+      "lines": 513
+    },
+    "strategies/btc_eth_midterm_short_v1.py": {
+      "purpose": "",
+      "classes": [
+        "BTCETHMidtermShortV1Config",
+        "BTCETHMidtermShortV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows"
+      ],
+      "lines": 361
+    },
+    "strategies/btc_eth_midterm_short_v2.py": {
+      "purpose": "",
+      "classes": [
+        "BTCETHMidtermShortV2Config",
+        "BTCETHMidtermShortV2Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_ema_series",
+        "_macd_histogram_series",
+        "_rsi",
+        "_atr_from_rows"
+      ],
+      "lines": 571
+    },
+    "strategies/btc_eth_midterm_v3.py": {
+      "purpose": "",
+      "classes": [
+        "MidtermV3Config",
+        "BTCETHMidtermV3Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_ema_series",
+        "_atr_from_rows",
+        "_rsi",
+        "_macd_hist"
+      ],
+      "lines": 665
+    },
+    "strategies/btc_macro_cycle_v1.py": {
+      "purpose": "",
+      "classes": [
+        "BTCMacroCycleV1Config",
+        "BTCMacroCycleV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_compress_closes"
+      ],
+      "lines": 317
+    },
+    "strategies/btc_regime_flip_continuation_v1.py": {
+      "purpose": "",
+      "classes": [
+        "BTCRegimeFlipContinuationV1Config",
+        "BTCRegimeFlipContinuationV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_compress_closes"
+      ],
+      "lines": 272
+    },
+    "strategies/btc_regime_retest_v1.py": {
+      "purpose": "",
+      "classes": [
+        "BTCRegimeRetestV1Config",
+        "BTCRegimeRetestV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_sma",
+        "_compress_closes"
+      ],
+      "lines": 367
+    },
+    "strategies/btc_sloped_reclaim_v1.py": {
+      "purpose": "",
+      "classes": [
+        "BTCSlopedReclaimV1Config",
+        "BTCSlopedReclaimV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_compress_closes",
+        "_linear_regression"
+      ],
+      "lines": 314
+    },
+    "strategies/btc_swing_zone_reclaim_v1.py": {
+      "purpose": "",
+      "classes": [
+        "BTCSwingZoneReclaimV1Config",
+        "BTCSwingZoneReclaimV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_compress_4h_to_daily",
+        "_find_pivot_low_idx",
+        "_find_resistance_from_pivots"
+      ],
+      "lines": 308
+    },
+    "strategies/btc_weekly_zone_reclaim_v2.py": {
+      "purpose": "",
+      "classes": [
+        "BTCWeeklyZoneReclaimV2Config",
+        "BTCWeeklyZoneReclaimV2Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_compress_rows",
+        "_find_pivot_low",
+        "_find_next_pivot_high"
+      ],
+      "lines": 378
+    },
+    "strategies/elder_crypto_v1.py": {
+      "purpose": "elder_crypto_v1 (ECV1) \u2014 Elder Triple-Screen adapted \u0434\u043b\u044f crypto perpetuals.",
+      "classes": [
+        "ECV1Config",
+        "ElderCryptoV1Strategy",
+        "ECV1Selector"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema_series",
+        "_atr",
+        "_rsi",
+        "_macd_histogram",
+        "_force_index_ema"
+      ],
+      "lines": 469
+    },
+    "strategies/elder_triple_screen_v2.py": {
+      "purpose": "elder_triple_screen_v2 \u2014 Three-timeframe Elder trading system",
+      "classes": [
+        "ElderTripleScreenV2Config",
+        "ElderTripleScreenV2Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_ema_series",
+        "_atr_from_rows",
+        "_rsi",
+        "_stoch_rsi",
+        "_macd_hist_series"
+      ],
+      "lines": 626
+    },
+    "strategies/elder_triple_screen_v3.py": {
+      "purpose": "elder_triple_screen_v3 \u2014 Correct Elder Three-Screen system.",
+      "classes": [
+        "ElderTripleScreenV3Config",
+        "ElderTripleScreenV3Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_ema_series",
+        "_atr_from_rows",
+        "_rsi",
+        "_macd_hist_series",
+        "_force_index_ema"
+      ],
+      "lines": 569
+    },
+    "strategies/equities_swing_active_v1.py": {
+      "purpose": "PDT-safe active swing selector for a small Alpaca account (Opus 2026-06-08).",
+      "classes": [
+        "SwingConfig"
+      ],
+      "functions": [
+        "_sma",
+        "_rsi",
+        "_ret",
+        "_score_dict",
+        "score_symbol",
+        "market_regime_ok",
+        "select",
+        "is_day_trade_safe"
+      ],
+      "lines": 182
+    },
+    "strategies/flat_resistance_fade_live.py": {
+      "purpose": "Live wrapper for AltResistanceFadeV1Strategy.",
+      "classes": [
+        "_FlatStore",
+        "FlatResistanceFadeLiveEngine"
+      ],
+      "functions": [],
+      "lines": 73
+    },
+    "strategies/funding_hold_v1.py": {
+      "purpose": "",
+      "classes": [
+        "FundingHoldV1Config",
+        "FundingHoldV1Strategy"
+      ],
+      "functions": [],
+      "lines": 71
+    },
+    "strategies/funding_rate_reversion_v1.py": {
+      "purpose": "Funding Rate Reversion v1 \u2014 Bybit Perpetuals Edge",
+      "classes": [
+        "FundingRateReversionConfig",
+        "FundingRateReversionV1"
+      ],
+      "functions": [
+        "_read_latest_funding_file",
+        "_env_float",
+        "_env_int",
+        "_env_csv_set",
+        "_ema",
+        "_atr",
+        "_rsi"
+      ],
+      "lines": 367
+    },
+    "strategies/grid_smart_v1.py": {
+      "purpose": "grid_smart_v1 (GS1) \u2014 Regime-aware ATR-spaced grid strategy.",
+      "classes": [
+        "GS1Config",
+        "GridSmartV1Strategy",
+        "GS1Selector"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_env_csv_lower_set",
+        "_ema_series",
+        "_atr",
+        "_slope_pct_per_bar",
+        "_efficiency_ratio"
+      ],
+      "lines": 479
+    },
+    "strategies/gs1_live.py": {
+      "purpose": "Live wrapper for GridSmartV1Strategy (GS1).",
+      "classes": [
+        "_GS1Store",
+        "GS1LiveEngine"
+      ],
+      "functions": [],
+      "lines": 81
+    },
+    "strategies/hzbo1_live.py": {
+      "purpose": "Live wrapper for AltHorizontalBreakV1Strategy (HZBO1).",
+      "classes": [
+        "_HZBO1Store",
+        "HZBO1LiveEngine"
+      ],
+      "functions": [],
+      "lines": 89
+    },
+    "strategies/impulse_volume_breakout_v1.py": {
+      "purpose": "impulse_volume_breakout_v1 \u2014 5m impulse breakout with shallow retrace entry.",
+      "classes": [
+        "ImpulseVolumeBreakoutV1Config",
+        "ImpulseVolumeBreakoutV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr_from_rows",
+        "_sma"
+      ],
+      "lines": 429
+    },
+    "strategies/inplay_breakout.py": {
+      "purpose": "",
+      "classes": [
+        "InPlayBreakoutConfig",
+        "InPlayBreakoutWrapper"
+      ],
+      "functions": [
+        "_run_coro_sync",
+        "_env_bool",
+        "_env_int",
+        "_env_float",
+        "_env_csv_floats",
+        "_env_csv_set"
+      ],
+      "lines": 458
+    },
+    "strategies/inplay_wrapper.py": {
+      "purpose": "",
+      "classes": [],
+      "functions": [],
+      "lines": 36
+    },
+    "strategies/liquidation_cascade_entry_v1.py": {
+      "purpose": "strategies/liquidation_cascade_entry_v1.py \u2014 Liquidation Cascade Entry v1",
+      "classes": [
+        "LiquidationCascadeConfig",
+        "LiquidationCascadeEntryV1"
+      ],
+      "functions": [
+        "_ema",
+        "_rsi",
+        "_atr"
+      ],
+      "lines": 301
+    },
+    "strategies/live_kline_utils.py": {
+      "purpose": "Helpers for live kline adapters.",
+      "classes": [],
+      "functions": [
+        "interval_to_ms",
+        "ts_to_ms",
+        "closed_kline_rows",
+        "fetch_closed_klines"
+      ],
+      "lines": 46
+    },
+    "strategies/micro_scalper_bounce_v1.py": {
+      "purpose": "",
+      "classes": [
+        "MicroScalperBounceV1Config",
+        "MicroScalperBounceV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr",
+        "_utc_hour",
+        "_session_vwap"
+      ],
+      "lines": 338
+    },
+    "strategies/micro_scalper_breakout_v1.py": {
+      "purpose": "",
+      "classes": [
+        "MicroScalperBreakoutV1Config",
+        "MicroScalperBreakoutV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr",
+        "_utc_hour",
+        "_session_vwap"
+      ],
+      "lines": 321
+    },
+    "strategies/micro_scalper_live.py": {
+      "purpose": "Live wrapper for MicroScalperV1Strategy.",
+      "classes": [
+        "_MicroScalperStore",
+        "MicroScalperLiveEngine"
+      ],
+      "functions": [],
+      "lines": 93
+    },
+    "strategies/micro_scalper_v1.py": {
+      "purpose": "micro_scalper_v1.py \u2014 5m EMA Pullback Scalper",
+      "classes": [
+        "MicroScalperV1Config",
+        "MicroScalperV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_atr",
+        "_utc_hour"
+      ],
+      "lines": 384
+    },
+    "strategies/pair_arb_executor_v1.py": {
+      "purpose": "Two-leg executor for pair stat-arb \u2014 PAE1 (Opus 2026-06-09).",
+      "classes": [
+        "PairExecConfig",
+        "OrderIntent",
+        "PairPosition"
+      ],
+      "functions": [
+        "plan_entry",
+        "pair_pnl",
+        "plan_exit"
+      ],
+      "lines": 110
+    },
+    "strategies/pair_stat_arb_v1.py": {
+      "purpose": "Market-neutral pair statistical arbitrage \u2014 ETH/BTC and similar (Opus 2026-06-08).",
+      "classes": [
+        "PairConfig",
+        "PairSignal",
+        "PairStatArbV1"
+      ],
+      "functions": [
+        "_mean",
+        "_std",
+        "_ols",
+        "_corr",
+        "compute_spread",
+        "half_life",
+        "returns"
+      ],
+      "lines": 202
+    },
+    "strategies/pfs1_live.py": {
+      "purpose": "Live wrapper for PumpFadeSmartV1Strategy (PFS1).",
+      "classes": [
+        "_PFS1Store",
+        "PFS1LiveEngine"
+      ],
+      "functions": [],
+      "lines": 94
+    },
+    "strategies/pump_fade_simple.py": {
+      "purpose": "pump_fade_simple \u2014 exact baseline logic from commit e341055e.",
+      "classes": [
+        "PumpFadeSimpleConfig",
+        "PumpFadeSimpleStrategy"
+      ],
+      "functions": [
+        "_pfs_ema",
+        "_pfs_rsi",
+        "_pfs_env_float",
+        "_pfs_env_int"
+      ],
+      "lines": 204
+    },
+    "strategies/pump_fade_smart_v1.py": {
+      "purpose": "pump_fade_smart_v1 (PFS1) \u2014 Quality-gated pump fade strategy.",
+      "classes": [
+        "PFS1Config",
+        "PumpFadeSmartV1Strategy",
+        "PFS1Selector"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema",
+        "_rsi",
+        "_atr",
+        "_vol_zscore"
+      ],
+      "lines": 476
+    },
+    "strategies/pump_fade_v2.py": {
+      "purpose": "pump_fade_v2 \u2014 Improved pump fade with multi-bar confirmation",
+      "classes": [
+        "PumpFadeV2Config",
+        "PumpFadeV2Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr_from_rows",
+        "_rsi"
+      ],
+      "lines": 296
+    },
+    "strategies/pump_fade_v3.py": {
+      "purpose": "pump_fade_v3 \u2014 Calibrated pump/dump fade with regime awareness.",
+      "classes": [
+        "PumpFadeV3Config",
+        "PumpFadeV3Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_rsi",
+        "_atr_from_bars",
+        "_efficiency_ratio"
+      ],
+      "lines": 379
+    },
+    "strategies/pump_fade_v4r.py": {
+      "purpose": "",
+      "classes": [
+        "PumpFadeConfig",
+        "PumpFadeV4RStrategy"
+      ],
+      "functions": [
+        "ema",
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_float_list",
+        "_env_csv_set",
+        "_env_csv_set_lower",
+        "_session_name_utc",
+        "_atr_last",
+        "rsi"
+      ],
+      "lines": 1203
+    },
+    "strategies/pump_momentum_v1.py": {
+      "purpose": "pump_momentum_v1 \u2014 Long-only pump momentum rider.",
+      "classes": [
+        "PumpMomentumConfig",
+        "PumpMomentumV1Strategy"
+      ],
+      "functions": [
+        "_pm_ema",
+        "_pm_sma",
+        "_pm_atr",
+        "_pm_env_float",
+        "_pm_env_int",
+        "_pm_env_bool",
+        "_pm_env_csv_set"
+      ],
+      "lines": 390
+    },
+    "strategies/scalper_bounce_v2.py": {
+      "purpose": "scalper_bounce_v2 (SB2) \u2014 \u0412\u044b\u0441\u043e\u043a\u043e-\u043a\u0430\u0447\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439 wick-bounce scalper.",
+      "classes": [
+        "SB2Config",
+        "ScalperBounceV2Strategy",
+        "SB2Selector"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema_series",
+        "_atr",
+        "_rsi",
+        "_vol_zscore",
+        "_slope_pct_per_bar",
+        "_count_pivot_touches"
+      ],
+      "lines": 407
+    },
+    "strategies/scalper_breakout_v2.py": {
+      "purpose": "scalper_breakout_v2 (SBR2) \u2014 Strict range-breakout \u0441 retest \u0442\u0440\u0435\u0431\u043e\u0432\u0430\u043d\u0438\u0435\u043c.",
+      "classes": [
+        "SBR2Config",
+        "_PendingBreak",
+        "ScalperBreakoutV2Strategy",
+        "SBR2Selector"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr",
+        "_vol_zscore",
+        "_count_touches"
+      ],
+      "lines": 344
+    },
+    "strategies/scalper_sweep_v2.py": {
+      "purpose": "scalper_sweep_v2 (SS2) \u2014 Strict liquidity-sweep + reverse strategy.",
+      "classes": [
+        "SS2Config",
+        "ScalperSweepV2Strategy",
+        "SS2Selector"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_ema_series",
+        "_atr",
+        "_vol_zscore",
+        "_slope_pct_per_bar"
+      ],
+      "lines": 310
+    },
+    "strategies/session_open_breakout_v1.py": {
+      "purpose": "Session Open Breakout v1 (session_open_breakout_v1)",
+      "classes": [
+        "SessionOpenBreakoutConfig",
+        "SessionOpenBreakoutV1"
+      ],
+      "functions": [
+        "_env_bool",
+        "_env_float",
+        "_env_int",
+        "_env_csv_ints",
+        "_env_csv_set",
+        "_atr",
+        "_vwap",
+        "_rsi"
+      ],
+      "lines": 282
+    },
+    "strategies/signals.py": {
+      "purpose": "",
+      "classes": [
+        "TradeSignal"
+      ],
+      "functions": [],
+      "lines": 99
+    },
+    "strategies/sloped_break_retest_v1.py": {
+      "purpose": "",
+      "classes": [
+        "SlopedBreakRetestV1Config",
+        "SlopedBreakRetestV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_tf_to_seconds",
+        "_atr_from_rows",
+        "_ema",
+        "_linear_regression"
+      ],
+      "lines": 448
+    },
+    "strategies/sloped_channel_live.py": {
+      "purpose": "Live wrapper for AltSlopedChannelV1Strategy.",
+      "classes": [
+        "_SlopedStore",
+        "SlopedChannelLiveEngine"
+      ],
+      "functions": [],
+      "lines": 115
+    },
+    "strategies/sloped_resistance_choch_v1.py": {
+      "purpose": "",
+      "classes": [
+        "SlopedResistanceChochV1Config",
+        "SlopedResistanceChochV1Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_env_bool",
+        "_env_csv_set",
+        "_atr_from_rows",
+        "_ema",
+        "_rsi",
+        "_linear_regression"
+      ],
+      "lines": 411
+    },
+    "strategies/support_reclaim_live.py": {
+      "purpose": "Live wrapper for AltSupportReclaimV1Strategy.",
+      "classes": [
+        "_FlatStore",
+        "SupportReclaimLiveEngine"
+      ],
+      "functions": [],
+      "lines": 65
+    },
+    "strategies/triple_screen_v132.py": {
+      "purpose": "",
+      "classes": [
+        "TripleScreenV132Config",
+        "TripleScreenV132Strategy"
+      ],
+      "functions": [
+        "_env_float",
+        "_env_int",
+        "_ema",
+        "_sma",
+        "_atr",
+        "_rsi",
+        "_stoch",
+        "_cci"
+      ],
+      "lines": 341
+    },
+    "bot/ai_context.py": {
+      "purpose": "",
+      "classes": [],
+      "functions": [
+        "load_json_dict",
+        "_as_float",
+        "_compact_positions",
+        "_compact_setup_cards",
+        "compact_ai_full_context",
+        "append_ai_context_lines"
+      ],
+      "lines": 230
+    },
+    "bot/ai_tools.py": {
+      "purpose": "Unified on-board-AI toolbox \u2014 the AI's eyes, ears and analysis in one place.",
+      "classes": [],
+      "functions": [
+        "get_live_snapshot",
+        "get_pulse",
+        "get_strategy_catalog",
+        "get_codemap",
+        "read_code",
+        "search_code",
+        "list_modules",
+        "available_tools"
+      ],
+      "lines": 102
+    },
+    "bot/allowlist_watcher.py": {
+      "purpose": "bot/allowlist_watcher.py \u2014 Dynamic Runtime Env Hot-Reload",
+      "classes": [
+        "AllowlistWatcher"
+      ],
+      "functions": [
+        "_resolve_allowlist_file",
+        "_resolve_auto_apply_file",
+        "_is_symbol_like_var",
+        "_is_hot_reload_var",
+        "_tg",
+        "_parse_env_file",
+        "_symbols_changed",
+        "apply_now"
+      ],
+      "lines": 372
+    },
+    "bot/auth.py": {
+      "purpose": "bot/auth.py \u2014 Auth state and helpers.",
+      "classes": [],
+      "functions": [
+        "auth_disabled",
+        "mark_auth_fail",
+        "auth_cooldown_remaining"
+      ],
+      "lines": 73
+    },
+    "bot/chart_geometry.py": {
+      "purpose": "",
+      "classes": [
+        "PivotPoint",
+        "HorizontalLevel"
+      ],
+      "functions": [
+        "_safe_float",
+        "_mean",
+        "_std",
+        "_atr_from_rows",
+        "find_pivots",
+        "cluster_horizontal_levels",
+        "regression_channel",
+        "compression_state",
+        "nearest_levels",
+        "analyze_geometry"
+      ],
+      "lines": 287
+    },
+    "bot/circuit_breaker.py": {
+      "purpose": "bot/circuit_breaker.py",
+      "classes": [
+        "CBState",
+        "PortfolioCircuitBreaker"
+      ],
+      "functions": [
+        "get_circuit_breaker"
+      ],
+      "lines": 306
+    },
+    "bot/code_access.py": {
+      "purpose": "Safe, read-only code access for the on-board AI (\"open its eyes\" to the code).",
+      "classes": [
+        "CodeAccessError"
+      ],
+      "functions": [
+        "_safe_resolve",
+        "_redact",
+        "read_source",
+        "list_sources",
+        "grep_sources"
+      ],
+      "lines": 106
+    },
+    "bot/confidence_risk.py": {
+      "purpose": "Confidence-based risk sizing \u2014 \u00ab\u0443\u043c\u043d\u043e\u0435 \u043f\u043b\u0435\u0447\u043e\u00bb (Claude 2026-06-10).",
+      "classes": [
+        "RiskAdvice"
+      ],
+      "functions": [
+        "_clamp",
+        "score_rr",
+        "score_regime_align",
+        "score_strategy_pf",
+        "score_vol_sanity",
+        "compute_confidence",
+        "advise"
+      ],
+      "lines": 136
+    },
+    "bot/dd_throttle.py": {
+      "purpose": "Drawdown throttle \u2014 \u0442\u043e\u0440\u043c\u043e\u0437 \u0440\u0438\u0441\u043a\u0430 \u043f\u0440\u0438 \u043f\u0440\u043e\u0441\u0430\u0434\u043a\u0435 (Claude 2026-06-10).",
+      "classes": [
+        "DDThrottle"
+      ],
+      "functions": [],
+      "lines": 51
+    },
+    "bot/deepseek_action_executor.py": {
+      "purpose": "deepseek_action_executor.py",
+      "classes": [],
+      "functions": [
+        "_env",
+        "_env_bool",
+        "_active_local_env",
+        "_remote_env_path",
+        "_backup_name",
+        "_backup_env",
+        "patch_env_file",
+        "diff_pending_changes",
+        "_server_deploy_allowed",
+        "_ssh"
+      ],
+      "lines": 303
+    },
+    "bot/deepseek_autoresearch_agent.py": {
+      "purpose": "deepseek_autoresearch_agent.py",
+      "classes": [],
+      "functions": [
+        "_env",
+        "_env_bool",
+        "_safe_float",
+        "_safe_int",
+        "find_latest_run_dirs",
+        "find_latest_autoresearch_dirs",
+        "find_latest_autoresearch_dirs_multi",
+        "read_best_candidates",
+        "read_portfolio_summary",
+        "read_progress_snapshot"
+      ],
+      "lines": 1174
+    },
+    "bot/deepseek_overlay.py": {
+      "purpose": "",
+      "classes": [
+        "DeepSeekConfig",
+        "DeepSeekOverlay"
+      ],
+      "functions": [
+        "_env_bool",
+        "_load_config",
+        "_safe_json"
+      ],
+      "lines": 540
+    },
+    "bot/deepseek_research_gate.py": {
+      "purpose": "bot/deepseek_research_gate.py \u2014 Bounded Research Scope for DeepSeek Autonomy",
+      "classes": [
+        "ResearchGate"
+      ],
+      "functions": [
+        "_tg"
+      ],
+      "lines": 522
+    },
+    "bot/diagnostics.py": {
+      "purpose": "bot/diagnostics.py \u2014 Runtime diagnostic counters and helpers.",
+      "classes": [],
+      "functions": [
+        "_diag_inc",
+        "_diag_get_int",
+        "_diag_reset",
+        "_runtime_diag_snapshot",
+        "_breakout_no_signal_diag_key",
+        "_ivb1_no_signal_diag_key",
+        "_flat_no_signal_diag_key",
+        "_sloped_no_signal_diag_key",
+        "_att1_no_signal_diag_key",
+        "_asm1_no_signal_diag_key"
+      ],
+      "lines": 559
+    },
+    "bot/edge_canary.py": {
+      "purpose": "Edge canary \u2014 \u043a\u0430\u043d\u0430\u0440\u0435\u0439\u043a\u0430 \u044d\u0434\u0436\u0430: \u0430\u0432\u0442\u043e-\u0437\u0430\u0442\u0443\u0445\u0430\u043d\u0438\u0435 \u0443\u043c\u0438\u0440\u0430\u044e\u0449\u0438\u0445 \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u0439 (Claude 2026-06-10).",
+      "classes": [
+        "CanaryVerdict",
+        "EdgeCanary"
+      ],
+      "functions": [
+        "rolling_pf"
+      ],
+      "lines": 90
+    },
+    "bot/entry_guard.py": {
+      "purpose": "bot/entry_guard.py \u2014 lightweight circuit breaker for new entry submissions.",
+      "classes": [
+        "EntryCircuitSnapshot",
+        "EntryCircuitBreaker"
+      ],
+      "functions": [],
+      "lines": 56
+    },
+    "bot/env_helpers.py": {
+      "purpose": "bot/env_helpers.py \u2014 Pure env/config helpers.",
+      "classes": [],
+      "functions": [
+        "_env_first",
+        "_env_bool",
+        "_env_bool_any",
+        "_env_float_any",
+        "_mirror_env_aliases",
+        "_csv_lower_set",
+        "_csv_upper_set",
+        "_session_name_utc"
+      ],
+      "lines": 72
+    },
+    "bot/family_profiles.py": {
+      "purpose": "bot/family_profiles.py \u2014 Per-Symbol-Family Dynamic Parameter Profiles",
+      "classes": [
+        "FamilyProfile",
+        "FamilyProfileManager"
+      ],
+      "functions": [],
+      "lines": 271
+    },
+    "bot/geometry_cache.py": {
+      "purpose": "",
+      "classes": [],
+      "functions": [
+        "safe_float",
+        "load_cache_rows",
+        "aggregate_rows",
+        "load_rows"
+      ],
+      "lines": 87
+    },
+    "bot/health_gate.py": {
+      "purpose": "bot/health_gate.py \u2014 Strategy Health Gate",
+      "classes": [
+        "HealthGate"
+      ],
+      "functions": [
+        "_tg"
+      ],
+      "lines": 274
+    },
+    "bot/liquidity_map.py": {
+      "purpose": "Liquidity map + sweep-reversal \u2014 \u043e\u0445\u043e\u0442\u043d\u0438\u043a \u0437\u0430 \u043b\u0438\u043a\u0432\u0438\u0434\u043d\u043e\u0441\u0442\u044c\u044e \u0431\u0435\u0437 \u0441\u0442\u0430\u043a\u0430\u043d\u0430 (Claude 2026-06-11).",
+      "classes": [
+        "LiqMapConfig",
+        "Pool",
+        "SweepEvent",
+        "LiquidityMap",
+        "LSRConfig",
+        "LiquiditySweepReversalV1"
+      ],
+      "functions": [
+        "_ema_last",
+        "_atr",
+        "find_pivots",
+        "_cluster"
+      ],
+      "lines": 272
+    },
+    "bot/live_position_view.py": {
+      "purpose": "Build the AI/web-facing view of open live positions.",
+      "classes": [],
+      "functions": [
+        "_float_or_none",
+        "_round_price",
+        "runner_exit_snapshot",
+        "build_live_position_row"
+      ],
+      "lines": 120
+    },
+    "bot/operator_snapshot.py": {
+      "purpose": "",
+      "classes": [],
+      "functions": [
+        "_load_json",
+        "_safe_float",
+        "_safe_int",
+        "_allocator_meaning",
+        "_file_age_sec",
+        "_path_text",
+        "_load_jsonl_tail",
+        "_parse_ts_utc",
+        "_load_csv_rows",
+        "_load_env_map"
+      ],
+      "lines": 1034
+    },
+    "bot/order_link.py": {
+      "purpose": "Order link ID + idempotency helpers \u2014 \u0432\u044b\u0434\u0435\u043b\u0435\u043d\u043e \u0438\u0437 smart_pump_reversal_bot.py.",
+      "classes": [],
+      "functions": [
+        "make_order_link_id",
+        "log_order_link"
+      ],
+      "lines": 100
+    },
+    "bot/router_geometry.py": {
+      "purpose": "",
+      "classes": [],
+      "functions": [
+        "_safe_float",
+        "_rows_from_series",
+        "_trend_label",
+        "_level_context",
+        "geometry_flags_from_series",
+        "_clamp_score",
+        "geometry_score_for_env"
+      ],
+      "lines": 201
+    },
+    "bot/runner_state.py": {
+      "purpose": "bot/runner_state.py \u2014 shared live-runner state hydration for TradeState.",
+      "classes": [],
+      "functions": [
+        "apply_runner_state"
+      ],
+      "lines": 71
+    },
+    "bot/strategy_catalog.py": {
+      "purpose": "Machine-readable catalogue of the live strategy families.",
+      "classes": [],
+      "functions": [
+        "_is_enabled",
+        "_risk_mult",
+        "build_strategy_catalog",
+        "strategy_catalog_prompt_lines"
+      ],
+      "lines": 176
+    },
+    "bot/strategy_health_timeline.py": {
+      "purpose": "",
+      "classes": [],
+      "functions": [
+        "_fallback_latest_portfolio_run",
+        "_fallback_run_from_health",
+        "_checkpoint_datetimes",
+        "_serialize_health",
+        "build_strategy_health_timeline",
+        "select_health_snapshot",
+        "load_strategy_health_timeline"
+      ],
+      "lines": 182
+    },
+    "bot/symbol_state.py": {
+      "purpose": "bot/symbol_state.py \u2014 Per-symbol in-memory state (SymState) and registry.",
+      "classes": [
+        "SymState"
+      ],
+      "functions": [
+        "S",
+        "update_5m_bar",
+        "trim",
+        "calc_atr_pct",
+        "calc_rsi",
+        "ema_val",
+        "candle_pattern",
+        "engulfing",
+        "trade_quality"
+      ],
+      "lines": 159
+    },
+    "bot/tpsl_policy.py": {
+      "purpose": "Pure TP/SL restoration policy helpers.",
+      "classes": [],
+      "functions": [
+        "restored_position_manual_lock",
+        "preserve_existing_tpsl",
+        "planned_tpsl_after_fill",
+        "should_preserve_strategy_tpsl"
+      ],
+      "lines": 105
+    },
+    "bot/trade_learning_loop.py": {
+      "purpose": "bot/trade_learning_loop.py \u2014 bounded per-trade learning loop",
+      "classes": [
+        "TradeLearningLoop"
+      ],
+      "functions": [
+        "_now",
+        "_safe_float",
+        "_load_state",
+        "_save_state",
+        "_iter_recent_entries",
+        "_classify",
+        "_build_proposal",
+        "_suggest_action"
+      ],
+      "lines": 207
+    },
+    "bot/utils.py": {
+      "purpose": "bot/utils.py \u2014 Misc pure utility functions.",
+      "classes": [],
+      "functions": [
+        "now_s",
+        "_to_float_safe",
+        "_today_ymd",
+        "base_from_usdt",
+        "dist_pct"
+      ],
+      "lines": 38
+    },
+    "backtest/alpaca_bakeoff_wf.py": {
+      "purpose": "Bear-inclusive Alpaca bake-off across current research variants.",
+      "classes": [],
+      "functions": [
+        "_safe_float",
+        "_compact_result",
+        "_slice_data",
+        "_daily_closes",
+        "_max_drawdown_pct",
+        "_profit_factor",
+        "_summarize_adaptive",
+        "run_adaptive_monthly",
+        "_print_stats",
+        "main"
+      ],
+      "lines": 416
+    },
+    "backtest/bt_types.py": {
+      "purpose": "Shared backtest types.",
+      "classes": [],
+      "functions": [],
+      "lines": 13
+    },
+    "backtest/bybit_data.py": {
+      "purpose": "Bybit public market data helpers with local caching.",
+      "classes": [
+        "Kline"
+      ],
+      "functions": [
+        "_dt_utc",
+        "_cache_path",
+        "_req_json",
+        "fetch_klines_public",
+        "to_bybit_raw",
+        "aggregate_klines"
+      ],
+      "lines": 220
+    },
+    "backtest/crypto_efficiency_backtest.py": {
+      "purpose": "Crypto strategy EFFICIENCY backtester (signal-replay over OHLC).",
+      "classes": [
+        "BacktestStore"
+      ],
+      "functions": [
+        "_load_interval",
+        "_target_from_signal",
+        "backtest",
+        "_metrics"
+      ],
+      "lines": 172
+    },
+    "backtest/crypto_efficiency_wf.py": {
+      "purpose": "Fee/slippage-aware efficiency check for the crypto mean-reversion core.",
+      "classes": [],
+      "functions": [
+        "_slice_recent",
+        "backtest_fees",
+        "backtest_ladder",
+        "_parse_floats",
+        "_parse_symbols",
+        "_compare",
+        "main"
+      ],
+      "lines": 202
+    },
+    "backtest/engine.py": {
+      "purpose": "",
+      "classes": [
+        "Candle",
+        "KlineStore",
+        "BacktestParams",
+        "Position"
+      ],
+      "functions": [
+        "aggregate_candles",
+        "aggregate_candles_to_interval",
+        "_apply_slippage",
+        "_fees",
+        "_calc_qty",
+        "_compute_atr_series",
+        "_tp_hits_in_bar",
+        "_stop_hit",
+        "_outcome_from_reason",
+        "run_symbol_backtest"
+      ],
+      "lines": 631
+    },
+    "backtest/lab.py": {
+      "purpose": "Backtest Lab \u2014 flexible scenario orchestration + honest comparison (Opus 2026-06-08).",
+      "classes": [
+        "Scenario",
+        "RunResult"
+      ],
+      "functions": [
+        "_max_drawdown_pct",
+        "report_from_result",
+        "run_scenarios",
+        "compare",
+        "ablation"
+      ],
+      "lines": 142
+    },
+    "backtest/ladder_exit.py": {
+      "purpose": "Canonical runner-ladder exit simulator (pure, deterministic, testable).",
+      "classes": [],
+      "functions": [
+        "simulate_ladder_exit"
+      ],
+      "lines": 71
+    },
+    "backtest/metrics.py": {
+      "purpose": "",
+      "classes": [
+        "Trade",
+        "Summary"
+      ],
+      "functions": [
+        "max_drawdown",
+        "summarize",
+        "to_row_dict",
+        "summarize_trades"
+      ],
+      "lines": 128
+    },
+    "backtest/portfolio_engine.py": {
+      "purpose": "Portfolio backtest engine (multi-symbol, multi-strategy).",
+      "classes": [
+        "PortfolioResult"
+      ],
+      "functions": [
+        "_run_awaitable",
+        "_csv_set",
+        "run_portfolio_backtest"
+      ],
+      "lines": 443
+    },
+    "backtest/prefetch_klines.py": {
+      "purpose": "Prefetch (download + cache) Bybit public klines for backtests.",
+      "classes": [],
+      "functions": [
+        "_parse_end",
+        "_select_auto_symbols",
+        "_k_ts_ms",
+        "_cache_path",
+        "main"
+      ],
+      "lines": 149
+    },
+    "backtest/robustness.py": {
+      "purpose": "Backtest robustness tools \u2014 anti-overfit discipline (Opus 2026-06-08).",
+      "classes": [],
+      "functions": [
+        "_is_dict_row",
+        "_get",
+        "jitter_rows",
+        "walk_forward_windows",
+        "aggregate_oos",
+        "geometric_mean_return",
+        "sortino_ratio",
+        "fee_sensitivity"
+      ],
+      "lines": 202
+    },
+    "backtest/run_month.py": {
+      "purpose": "Backtest runner: compare strategies over ~1 month.",
+      "classes": [],
+      "functions": [
+        "_ms",
+        "_utc_now",
+        "_ensure_dir",
+        "_write_trades_csv",
+        "_write_equity_curve_csv",
+        "_fmt_summary",
+        "main"
+      ],
+      "lines": 590
+    },
+    "backtest/run_portfolio.py": {
+      "purpose": "Run a combined portfolio backtest (multi-strategy, multi-symbol).",
+      "classes": [],
+      "functions": [
+        "_import_strategy_class",
+        "_optional_strategy_class",
+        "_bars_from_candles",
+        "_sliced_tf_bars",
+        "_adapt_eval_signal",
+        "_ema",
+        "_atr_from_candles",
+        "_atr_from_rows",
+        "_env_csv_set",
+        "_rsi"
+      ],
+      "lines": 2192
+    },
+    "backtest/symbols_from_summary.py": {
+      "purpose": "Print comma-separated symbol list from a backtest summary.",
+      "classes": [],
+      "functions": [
+        "_load_csv_rows",
+        "main"
+      ],
+      "lines": 80
+    }
+  }
+}

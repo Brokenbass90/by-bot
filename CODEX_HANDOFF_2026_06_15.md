@@ -675,3 +675,64 @@ Bake-off (раздел 15) показал: частота и количеств�
   - crypto smoke;
   - Telegram honesty notes;
   - test/deploy status and blockers.
+
+---
+
+## 24. Web/AI deploy + server fee WF + proof-of-life TG (2026-06-15)
+
+### Что задеплоено
+- Read-only AI code awareness:
+  - `bot/code_access.py`
+  - `bot/ai_tools.py`
+  - `scripts/build_ai_codemap.py`
+  - `reports/AI_CODEMAP.{json,md}`
+- Operator/web visibility:
+  - `web/static/operator_console.html`
+  - `/operator-console` route in `web/main.py`
+  - authenticated read-only APIs in `web/routes/data_routes.py`: heartbeat, P&L, strategy catalog, AI tools/pulse/codemap/source list/read/search.
+- Proof-of-life:
+  - `scripts/proof_of_life.py` now supports `--tg --send`;
+  - control Telegram send on server returned `TG send ok`;
+  - cron added: every 3 hours, `proof_of_life.py --tg --send` with output to `logs/proof_of_life.log`.
+
+### Проверки
+- Local targeted tests after proof-of-life sender: `22 passed`.
+- Previous full local suite after web/AI deploy: `247 passed`.
+- Server full suite after deploy: `118 passed, 1 warning`.
+- `trading-journal-web` restarted; live trading bot was not restarted.
+- HTTP: `/ping=200`, `/operator-console=200`, unauthenticated `/api/heartbeat=401`.
+- Latest server snapshot exported at `2026-06-15T12:23:31.328663Z`.
+
+### Live truth from latest pulse
+```text
+ALIVE | regime=bull_trend | feed OK | open=0
+risk/trade=0.44% | maxpos=3 | block=False
+LIVE sleeves: flat=0.3, ivb1=0.25
+recent P&L: -3.554 over 26 trades
+```
+
+Meaning: the crypto bot is alive and protected, but regular trading is limited because only `flat` and `ivb1` currently carry non-zero runtime risk. Most candidate sleeves remain shadow/zero-risk.
+
+### Crypto fee/slippage WF (`backtest/crypto_efficiency_wf.py --max-rows 60000`)
+| sleeve | symbol | 0bps | 10bps | 20bps |
+|---|---|---:|---:|---:|
+| ASB1 long | SOLUSDT | +1.34R PF3.67 n10 | +1.08R PF2.66 | +0.83R PF2.03 |
+| ASB1 long | LINKUSDT | +0.56R PF1.72 n9 | +0.29R PF1.29 | +0.01R PF1.01 |
+| ASB1 long | ADAUSDT | +0.14R PF1.22 n9 | -0.07R PF0.91 | -0.29R PF0.70 |
+| ARF1 short | SOLUSDT | -0.63R PF0.26 n7 | -0.85R PF0.19 | -1.06R PF0.13 |
+| ARF1 short | LINKUSDT | -0.43R PF0.44 n8 | -0.67R PF0.31 | -0.90R PF0.24 |
+| ARF1 short | ADAUSDT | +0.47R PF1.65 n14 | +0.25R PF1.28 | +0.03R PF1.03 |
+
+Ladder compare says: ASB1/SOL still survives with ladder and 10bps; LINK is thin; ADA fails under fees/ladder. ARF1 short has only a possible ADA pocket. This is enough for symbol-specific shadow/canary, not enough for broad risk increase.
+
+### Alpaca paper
+Alpaca paper is already running:
+- cron with `ALPACA_SEND_ORDERS=1`;
+- effective capital `$500`;
+- positions/logged paper names: `AMD`, `GE`, `LLY`, `SNOW`;
+- broker stop protection visible/rearmed in log.
+
+Real `$500` Alpaca deposit is **not ready today**. Bear-2022 bake-off makes `alpaca_adaptive_v1` the current capital-protection champion, but it still loses `-6.54%` with PF `<1` in 2022. Use Alpaca as paper/stabilizer until live-paper proof meets go-criteria.
+
+### Repo hygiene
+`configs/web_config.json` remains skip-worktree and must not be staged. This pass should be committed with explicit file list only; worktree still contains many unrelated untracked docs/logs/configs.
