@@ -32,6 +32,18 @@ def test_compact_ai_context_includes_open_positions(tmp_path):
                         "qty": 0.6,
                         "sl": 42.58,
                         "tp": None,
+                        "tp_model": "runner_ladder",
+                        "exchange_tp": None,
+                        "runner": {
+                            "enabled": True,
+                            "targets": [
+                                {"index": 1, "price": 41.9, "frac": 0.6, "status": "pending"},
+                                {"index": 2, "price": 41.2, "frac": 0.4, "status": "pending"},
+                            ],
+                            "trailing": {"enabled": False},
+                            "breakeven": {"enabled": False},
+                            "time_stop_sec": 172800,
+                        },
                         "upnl_usd": 0.3,
                     }
                 ],
@@ -46,6 +58,8 @@ def test_compact_ai_context_includes_open_positions(tmp_path):
     assert compact["open_positions"]["count"] == 1
     assert compact["open_positions"]["positions"][0]["symbol"] == "LTCUSDT"
     assert compact["open_positions"]["positions"][0]["sl"] == 42.58
+    assert compact["open_positions"]["positions"][0]["tp_model"] == "runner_ladder"
+    assert compact["open_positions"]["positions"][0]["runner"]["targets"][0]["price"] == 41.9
 
 
 def test_append_ai_context_lines_mentions_position(tmp_path):
@@ -59,7 +73,20 @@ def test_append_ai_context_lines_mentions_position(tmp_path):
             "open_positions": {
                 "count": 1,
                 "ts": 1781190000,
-                "positions": [{"symbol": "DOTUSDT", "side": "Sell", "entry": 0.9479, "sl": 0.964}],
+                "positions": [{
+                    "symbol": "DOTUSDT",
+                    "side": "Sell",
+                    "entry": 0.9479,
+                    "sl": 0.964,
+                    "tp_model": "runner_ladder",
+                    "exchange_tp": None,
+                    "runner": {
+                        "targets": [{"index": 1, "price": 0.93, "frac": 0.6, "status": "pending"}],
+                        "trailing": {"enabled": False},
+                        "breakeven": {"enabled": False},
+                        "time_stop_sec": 86400,
+                    },
+                }],
             },
             "setups_scanner": {"card_count": 0, "cards_top": []},
         },
@@ -72,3 +99,5 @@ def test_append_ai_context_lines_mentions_position(tmp_path):
     assert "UNIFIED AI CONTEXT" in text
     assert "OPEN POSITION: DOTUSDT Sell" in text
     assert "sl=0.964" in text
+    assert "tp_model=runner_ladder" in text
+    assert "runner_targets=[TP1=0.93 frac=0.6 pending]" in text

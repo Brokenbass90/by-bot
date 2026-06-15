@@ -5,6 +5,8 @@ import time
 from pathlib import Path
 from typing import Any
 
+from bot.strategy_catalog import build_strategy_catalog, strategy_catalog_prompt_lines
+
 
 def load_json_dict(path: Path) -> dict[str, Any]:
     try:
@@ -43,6 +45,10 @@ def _compact_positions(payload: Any, *, max_positions: int) -> dict[str, Any]:
                 "current": row.get("current"),
                 "qty": row.get("qty"),
                 "tp": row.get("tp"),
+                "tp_model": row.get("tp_model"),
+                "exchange_tp": row.get("exchange_tp"),
+                "exchange_sl": row.get("exchange_sl"),
+                "runner": row.get("runner"),
                 "sl": row.get("sl"),
                 "upnl_usd": row.get("upnl_usd"),
                 "upnl_pct": row.get("upnl_pct"),
@@ -142,6 +148,7 @@ def compact_ai_full_context(
             "strategy_counts": blocker.get("strategy_counts") or {},
         } if blocker else {},
         "weekly_live_vs_backtest": weekly,
+        "strategy_catalog": build_strategy_catalog(),
     }
 
 
@@ -172,6 +179,10 @@ def append_ai_context_lines(parts: list[str], repo_root: Path) -> None:
         f"safe_mode={allocator.get('safe_mode')}\n"
     )
 
+    # Strategy config + TP/SL model so the AI can answer questions like
+    # "why is there a stop on the exchange but no take-profit?".
+    parts.extend(strategy_catalog_prompt_lines())
+
     for row in pos_rows[:8]:
         if not isinstance(row, dict):
             continue
@@ -179,6 +190,29 @@ def append_ai_context_lines(parts: list[str], repo_root: Path) -> None:
         current = _as_float(row.get("current"))
         sl = _as_float(row.get("sl"))
         tp = _as_float(row.get("tp"))
+        runner = row.get("runner") if isinstance(row.get("runner"), dict) else {}
+        runner_targets = list(runner.get("targets") or []) if runner else []
+        runner_text = ""
+        if row.get("tp_model") == "runner_ladder":
+            target_bits = []
+            for target in runner_targets[:4]:
+                if not isinstance(target, dict):
+                    continue
+                frac = target.get("frac")
+                frac_txt = f" frac={frac}" if frac is not None else ""
+                target_bits.append(
+                    f"TP{target.get('index')}={target.get('price')}{frac_txt} {target.get('status')}"
+                )
+            trail = runner.get("trailing") if isinstance(runner.get("trailing"), dict) else {}
+            be = runner.get("breakeven") if isinstance(runner.get("breakeven"), dict) else {}
+            runner_text = (
+                " exchange_tp=None runner_targets=["
+                + "; ".join(target_bits)
+                + "]"
+                + f" trailing_enabled={trail.get('enabled')}"
+                + f" be_enabled={be.get('enabled')}"
+                + f" time_stop_sec={runner.get('time_stop_sec')}"
+            )
         upnl = _as_float(row.get("upnl_usd"))
         upnl_pct = _as_float(row.get("upnl_pct"))
         parts.append(
@@ -186,8 +220,11 @@ def append_ai_context_lines(parts: list[str], repo_root: Path) -> None:
             f"{row.get('symbol')} {row.get('side')} strategy={row.get('strategy') or '-'} "
             f"qty={row.get('qty')} entry={entry if entry is not None else row.get('entry')} "
             f"current={current if current is not None else row.get('current')} "
+            f"tp_model={row.get('tp_model') or '-'} "
+            f"exchange_tp={row.get('exchange_tp')} "
             f"tp={tp if tp is not None else row.get('tp')} "
             f"sl={sl if sl is not None else row.get('sl')} "
             f"upnl_usd={upnl if upnl is not None else row.get('upnl_usd')} "
-            f"upnl_pct={upnl_pct if upnl_pct is not None else row.get('upnl_pct')}\n"
+            f"upnl_pct={upnl_pct if upnl_pct is not None else row.get('upnl_pct')}"
+            f"{runner_text}\n"
         )

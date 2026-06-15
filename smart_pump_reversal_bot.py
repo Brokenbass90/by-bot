@@ -116,6 +116,7 @@ from bot.deepseek_action_executor import (
 from bot.entry_guard import EntryCircuitBreaker
 from bot.circuit_breaker import get_circuit_breaker as _get_cb
 from bot.runner_state import apply_runner_state
+from bot.live_position_view import build_live_position_row
 from bot.symbol_state import (
     SymState, STATE,
     S, update_5m_bar, trim,
@@ -14593,36 +14594,13 @@ async def pulse():
             _pos_path = Path(__file__).resolve().parent / "runtime" / "live_positions.json"
             _positions_list = []
             for (_p_exch, _p_sym), _p_tr in TRADES.items():
-                _p_entry = float(getattr(_p_tr, "avg", None) or getattr(_p_tr, "entry_price", 0.0) or 0.0)
                 _p_cur   = float(_BYBIT_LAST.get(_p_sym) or 0.0)
-                _p_side  = str(getattr(_p_tr, "side", "") or "")
-                _p_qty   = float(getattr(_p_tr, "qty", 0.0) or 0.0)
-                _p_sl    = float(getattr(_p_tr, "sl_price", 0.0) or 0.0)
-                _p_tp    = float(getattr(_p_tr, "tp_price", 0.0) or 0.0)
-                _p_strat = str(getattr(_p_tr, "strategy", "") or "")
-                _p_ts    = int(getattr(_p_tr, "entry_ts", 0) or 0)
-                if _p_entry > 0 and _p_cur > 0:
-                    _p_pct = (_p_cur - _p_entry) / _p_entry * 100.0
-                    if _p_side.lower() == "sell":
-                        _p_pct = -_p_pct
-                    _p_upnl = _p_pct * _p_entry * _p_qty / 100.0 if _p_qty > 0 else 0.0
-                else:
-                    _p_pct = 0.0
-                    _p_upnl = 0.0
-                _positions_list.append({
-                    "symbol": _p_sym,
-                    "exchange": _p_exch,
-                    "side": _p_side,
-                    "strategy": _p_strat,
-                    "entry": round(_p_entry, 6),
-                    "current": round(_p_cur, 6),
-                    "qty": _p_qty,
-                    "sl": round(_p_sl, 6) if _p_sl else None,
-                    "tp": round(_p_tp, 6) if _p_tp else None,
-                    "upnl_pct": round(_p_pct, 3),
-                    "upnl_usd": round(_p_upnl, 4),
-                    "entry_ts": _p_ts,
-                })
+                _positions_list.append(build_live_position_row(
+                    exchange=_p_exch,
+                    symbol=_p_sym,
+                    tr=_p_tr,
+                    current=_p_cur,
+                ))
             _write_json_atomic(_pos_path, {
                 "ts": int(time.time()),
                 "positions": _positions_list,
