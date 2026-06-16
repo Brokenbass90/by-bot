@@ -582,6 +582,36 @@ def _load_monthly_managed_symbols() -> set[str]:
     return symbols
 
 
+def _position_slot_views(
+    state_symbols: Any,
+    remote_only_symbols: Any,
+    protected_remote_symbols: Any,
+    pending_close_symbols: Any,
+) -> tuple[list[str], list[str]]:
+    """Return intraday slot symbols and all visible broker symbols.
+
+    Monthly-managed positions must be visible and protected, but they should
+    not consume the intraday sleeve's own max-position slots.
+    """
+    intraday_symbols = sorted(
+        {
+            str(sym).strip().upper()
+            for seq in (state_symbols, remote_only_symbols, pending_close_symbols)
+            for sym in (seq or [])
+            if str(sym).strip()
+        }
+    )
+    all_visible_symbols = sorted(
+        set(intraday_symbols)
+        | {
+            str(sym).strip().upper()
+            for sym in (protected_remote_symbols or [])
+            if str(sym).strip()
+        }
+    )
+    return intraday_symbols, all_visible_symbols
+
+
 def _fmt_usd_compact(value: float) -> str:
     amount = float(value or 0.0)
     if abs(amount) >= 1.0:
@@ -1441,15 +1471,20 @@ def run_once(client: AlpacaClient, dry_run: bool,
         advisory["position_management"] = {"enabled": _env_bool("INTRADAY_POSITION_MANAGER_ENABLE", True), "dry_run": True, "actions": []}
         advisory["monthly_managed_symbols"] = sorted(monthly_managed_symbols)
 
-    occupied_symbols = sorted(
-        set(state.keys())
-        | set(remote_only_symbols)
-        | set(protected_remote_symbols)
-        | set(pending_close_symbols)
+    intraday_slot_symbols, occupied_symbols = _position_slot_views(
+        state.keys(),
+        remote_only_symbols,
+        protected_remote_symbols,
+        pending_close_symbols,
     )
-    open_count = len(occupied_symbols)
+    open_count = len(intraday_slot_symbols)
     advisory["open_positions"] = list(occupied_symbols)
-    print(f"\n  Open positions: {open_count}/{max_positions} — {occupied_symbols or 'none'}")
+    advisory["intraday_open_positions"] = list(intraday_slot_symbols)
+    advisory["intraday_open_count"] = open_count
+    advisory["monthly_protected_count"] = len(protected_remote_symbols)
+    print(f"\n  Intraday slots: {open_count}/{max_positions} — {intraday_slot_symbols or 'none'}")
+    if protected_remote_symbols:
+        print(f"  Monthly protected: {protected_remote_symbols}")
 
     # ── Signal scan ────────────────────────────────────────────────
     for symbol in strategy_specs:
@@ -1660,9 +1695,16 @@ def run_once(client: AlpacaClient, dry_run: bool,
     print(f"\n  Done. Open: {list(state.keys()) or 'none'}")
     print(f"  Today P&L: ${_get_today_pnl():.2f}")
     advisory["today_pnl_usd"] = _get_today_pnl()
-    advisory["open_positions"] = sorted(
-        set(state.keys()) | set(remote_only_symbols) | set(protected_remote_symbols) | set(pending_close_symbols)
+    intraday_slot_symbols, occupied_symbols = _position_slot_views(
+        state.keys(),
+        remote_only_symbols,
+        protected_remote_symbols,
+        pending_close_symbols,
     )
+    advisory["open_positions"] = list(occupied_symbols)
+    advisory["intraday_open_positions"] = list(intraday_slot_symbols)
+    advisory["intraday_open_count"] = len(intraday_slot_symbols)
+    advisory["monthly_protected_count"] = len(protected_remote_symbols)
     advisory["occupied_symbols"] = advisory["open_positions"]
     _write_json_atomic(ADVISORY_FILE, advisory)
 
