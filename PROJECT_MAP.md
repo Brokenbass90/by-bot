@@ -34,6 +34,19 @@
 ## Безопасность
 `.env` не в git (mode 600); секреты никогда не выгружаются (allowlist+redaction в snapshot/code_access); read-only зрение ИИ по коду; действия с деньгами/кодом — только через одобрение человека (`deepseek_action_executor`).
 
+<!-- AUTO_SNAPSHOT_START -->
+## Авто-снимок
+- generated_utc: `2026-06-16T08:31:50Z`
+- git_head: `4abf8f9`
+- tests: `61` test files
+- strategies: `86` strategy modules
+- backtest modules: `27`
+- onboard AI project-map tool: `yes`
+- liquidation collector: `yes`
+- funding carry 180d hedgeable gate: `NO-GO, net=$7.22, annual=1.8%`
+- latest progress note: `CODEX_MORNING_PROGRESS_2026_06_16.md`
+<!-- AUTO_SNAPSHOT_END -->
+
 ## Ключевые документы
 - `CLAUDE_HANDOFF_NEXT_SESSION_2026_06_15.md` — START HERE.
 - `CODEX_HANDOFF_2026_06_15.md` (§1-20) — детальный журнал.
