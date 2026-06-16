@@ -31,6 +31,12 @@ SUITE = [
         "limit": 1152,
     },
     {
+        "name": "elder_ema50_force_canonical_v1",
+        "label": "Elder triple screen EMA50 canonical v1",
+        "spec": "configs/autoresearch/elder_ema50_force_canonical_v1.json",
+        "limit": 2000,
+    },
+    {
         "name": "range_scalp_v1_annual_repair_v3",
         "label": "range boundary scalp repair v3",
         "spec": "configs/autoresearch/range_scalp_v1_annual_repair_v3.json",

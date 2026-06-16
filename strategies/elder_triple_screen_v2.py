@@ -171,7 +171,7 @@ def _force_index_ema(rows: List[list], period: int) -> float:
 class ElderTripleScreenV2Config:
     # Screen 1: Trend (4h) — canonical Elder uses MACD histogram slope
     trend_tf: str = "240"
-    trend_mode: str = "macd_hist"  # canonical = "macd_hist"; "ema_slope" for legacy
+    trend_mode: str = "macd_hist"  # canonical = "macd_hist"; "ema_price" / "ema_slope" also available
     trend_ema: int = 13
     trend_slope_bars: int = 2      # slope over 2 bars (current vs 2 bars ago)
     macd_fast: int = 12
@@ -353,6 +353,20 @@ class ElderTripleScreenV2Strategy:
                     if candidate == "bearish" and cur_price > cur_ema:
                         return None
             return candidate
+        elif self.cfg.trend_mode in {"ema_price", "ema_side", "ema"}:
+            rows = store.fetch_klines(store.symbol, self.cfg.trend_tf, max(80, self.cfg.trend_ema + 10)) or []
+            if len(rows) < self.cfg.trend_ema + 2:
+                return None
+            closes = [float(r[4]) for r in rows]
+            ema = _ema(closes, self.cfg.trend_ema)
+            cur = closes[-1]
+            if not all(math.isfinite(x) for x in (ema, cur)):
+                return None
+            if cur > ema:
+                return "bullish"
+            if cur < ema:
+                return "bearish"
+            return None
         else:
             rows = store.fetch_klines(store.symbol, self.cfg.trend_tf, max(50, self.cfg.trend_ema + self.cfg.trend_slope_bars + 5)) or []
             if len(rows) < self.cfg.trend_ema + self.cfg.trend_slope_bars + 2:
