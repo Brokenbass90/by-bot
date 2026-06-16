@@ -1,0 +1,56 @@
+{
+  "go": false,
+  "net_usd": 7.22,
+  "annual_pct": 1.8,
+  "passed": [
+    "net $7.22 > $0.0 after fees+hedge+basis",
+    "consistency 1.00 >= 0.6 (7/7 windows)",
+    "worst-window tail 0.0% <= 5.0% (liquidation/basis)"
+  ],
+  "failed": [
+    "annualized 1.8% >= 4.0% on notional"
+  ],
+  "details": {
+    "gross_funding_usd": 10.259446,
+    "fees_usd": 2.4,
+    "hedge_cost_usd": 0.64,
+    "basis_pnl_usd": 0.0,
+    "notional_usd": 800.0,
+    "days": 180.0,
+    "windows": 7,
+    "positive_windows": 7,
+    "worst_window_usd": 0.197171,
+    "run_dir": "backtest_runs/funding_20260616_080919_funding_carry_180d_spot_hedgeable_stress",
+    "symbols": [
+      "SUIUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "NEARUSDT",
+      "HYPEUSDT",
+      "DOGEUSDT",
+      "AVAXUSDT",
+      "BNBUSDT"
+    ],
+    "notional_per_symbol": 100.0,
+    "monthly_gross_usd": [
+      0.941411,
+      2.019095,
+      0.631457,
+      1.081993,
+      2.089124,
+      2.635287,
+      0.861079
+    ],
+    "monthly_net_after_allocated_costs_usd": [
+      0.507125,
+      1.584809,
+      0.197171,
+      0.647707,
+      1.654838,
+      2.201001,
+      0.426793
+    ],
+    "extra_spread_bps": 8.0,
+    "extra_hedge_cost_usd": 0.0
+  }
+}

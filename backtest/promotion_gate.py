@@ -27,7 +27,7 @@ class GateThresholds:
     min_pos_frac: float = 0.75
     min_pf: float = 1.0
     min_expectancy: float = 0.0
-    min_trades: int = 20
+    min_trades: int = 30   # crypto: 20 too few given outliers (reviewer 2026-06-16)
 
 
 @dataclass

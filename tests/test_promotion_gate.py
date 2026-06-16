@@ -27,13 +27,13 @@ def test_pf_just_below_one_fails():
 
 def test_inf_pf_handled():
     c = {"windows_with_trades": 3, "positive_windows": 3, "profit_factor": "inf",
-         "expectancy_R": 0.5, "trades": 25}
+         "expectancy_R": 0.5, "trades": 32}   # >= min_trades 30
     assert evaluate(c).go is True
 
 
 def test_stack_optional_when_absent():
     c = {"windows_with_trades": 3, "positive_windows": 3, "profit_factor": 1.3,
-         "expectancy_R": 0.2, "trades": 22}
+         "expectancy_R": 0.2, "trades": 32}
     assert evaluate(c).go is True   # no stack_verdict -> not blocked
 
 

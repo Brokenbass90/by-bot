@@ -11,7 +11,8 @@
 3. **СТРАТЕГИИ (по логике):**
    - крипто-ядро: флэт-лонг `ASB1` (alt_support_bounce) ↔ флэт-шорт `ARF1` (alt_resistance_fade) · тренд `ATT1`/`IVB1`/breakout · bear-шорт `breakdown` · `midterm` BTC/ETH.
    - Alpaca: `strategies/alpaca_adaptive_v1` (SPY-гейт, стабилизатор) · intraday (shadow, research).
-   - market-neutral: funding-carry / pair-arb (shadow, не доказан).
+   - market-neutral: funding-carry (механический edge-кандидат; simple Bybit spot hedgeable basket пока NO-GO: ~1.8%/год после costs; picker `bot/funding_carry_picker` + gate `backtest/funding_carry_gate`) / pair-arb (shadow).
+   - liquidation-sweep: research-движок `backtest/liquidation_sweep_research` (2-й некоррелированный edge — отскок после каскадов ликвидаций; фальсифицируется на истории Bybit).
    - forex/CFD — будущий рукав (заготовки).
 4. **КОНТРОЛЬ (control-plane):** `bot/regime_orchestrator` (bull/bear × trend/chop) → portfolio_allocator (slot-caps, risk-mults) → risk rails (дневной −2% / общий −5%, в `portfolio_can_open`).
 5. **ИСПОЛНЕНИЕ:** `bot/maker_entry` (post-only, экономит комиссии) → broker SL/TP (`set_tp_sl_retry` + failsafe-закрытие) → ladder exit (`bot/ladder_exit`: TP1 частичный → breakeven → runner до дальней цели + трейлинг + time-stop).
@@ -19,10 +20,10 @@
 7. **ИИ / НАБЛЮДАЕМОСТЬ:** `bot/ai_tools` (catalog·code_access·codemap·snapshot·pulse) · `bot/deepseek_*` autoresearch (propose → одобрение человеком → execute) · `web/static/operator_console.html` + `scripts/proof_of_life` + Telegram.
 
 ## Гейт промоушена в live (нерушимо)
-кандидат → авто-подбор монет → multi-window WF (ladder+комиссии) → тир-профили → двойной тест → `promotion_gate` (≥3/4 окна + PF>1 после комиссий + expectancy≥0 + ≥20 сделок + обвязка не душит) → крошечный canary на $100.
+кандидат → авто-подбор монет → multi-window WF (ladder+комиссии) → тир-профили → двойной тест → `promotion_gate` (≥3/4 окна + PF>1 после комиссий + expectancy≥0 + ≥30 сделок + обвязка не душит) → крошечный canary на $100.
 
 ## Текущее состояние (2026-06-15)
-Бот жив/защищён; live-риск только `flat/ARF1=0.3`, `IVB1=0.25`; ядро в shadow; **0 доказанных карманов** (фильтр работает). Капитал: ~$100 крипта live / $0 Alpaca real ($500 paper) / $2500 резерв. Тесты ~266 зелёных.
+Бот жив/защищён; live-риск только `flat/ARF1=0.3`, `IVB1=0.25`; ядро в shadow; **0 доказанных карманов** (фильтр работает). Капитал: ~$100 крипта live / $0 Alpaca real ($500 paper) / $2500 резерв. Тесты 297 зелёных.
 
 ## Рукава (роли)
 - Крипта (Bybit perps) — работяга/доход (ядро на горизонтальных уровнях + тренд).
