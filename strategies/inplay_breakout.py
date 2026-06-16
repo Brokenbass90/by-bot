@@ -152,6 +152,16 @@ class InPlayBreakoutWrapper:
 
         self.cfg.allow_longs = _env_bool(f"{p}_ALLOW_LONGS", self.cfg.allow_longs)
         self.cfg.allow_shorts = _env_bool(f"{p}_ALLOW_SHORTS", self.cfg.allow_shorts)
+        direction_mode = str(os.getenv(f"{p}_DIRECTION_MODE", "") or "").strip().lower()
+        if direction_mode in {"long", "long_only", "long-only"}:
+            self.cfg.allow_longs = True
+            self.cfg.allow_shorts = False
+        elif direction_mode in {"short", "short_only", "short-only"}:
+            self.cfg.allow_longs = False
+            self.cfg.allow_shorts = True
+        elif direction_mode in {"both", "mirror", "long_short", "long-short"}:
+            self.cfg.allow_longs = True
+            self.cfg.allow_shorts = True
 
         self.cfg.regime_mode = os.getenv(f"{p}_REGIME_MODE", self.cfg.regime_mode)
         if str(os.getenv(f'{p}_REGIME', '')).strip().lower() in ('1','true','yes','on'):

@@ -120,6 +120,7 @@ class ImpulseVolumeBreakoutV1Config:
     cooldown_bars_5m: int = 12
     max_wait_bars_5m: int = 8
     allow_longs: bool = True
+    allow_shorts: bool = False
     regime_mode: str = "off"
     regime_ema_fast: int = 20
     regime_ema_slow: int = 50
@@ -181,6 +182,17 @@ class ImpulseVolumeBreakoutV1Strategy:
         self.cfg.cooldown_bars_5m = _env_int("IVB1_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
         self.cfg.max_wait_bars_5m = _env_int("IVB1_MAX_WAIT_BARS_5M", self.cfg.max_wait_bars_5m)
         self.cfg.allow_longs = _env_bool("IVB1_ALLOW_LONGS", self.cfg.allow_longs)
+        self.cfg.allow_shorts = _env_bool("IVB1_ALLOW_SHORTS", self.cfg.allow_shorts)
+        direction_mode = str(os.getenv("IVB1_DIRECTION_MODE", "") or "").strip().lower()
+        if direction_mode in {"long", "long_only", "long-only"}:
+            self.cfg.allow_longs = True
+            self.cfg.allow_shorts = False
+        elif direction_mode in {"short", "short_only", "short-only"}:
+            self.cfg.allow_longs = False
+            self.cfg.allow_shorts = True
+        elif direction_mode in {"both", "mirror", "long_short", "long-short"}:
+            self.cfg.allow_longs = True
+            self.cfg.allow_shorts = True
         self.cfg.regime_mode = os.getenv("IVB1_REGIME_MODE", self.cfg.regime_mode)
         self.cfg.regime_ema_fast = _env_int("IVB1_REGIME_EMA_FAST", self.cfg.regime_ema_fast)
         self.cfg.regime_ema_slow = _env_int("IVB1_REGIME_EMA_SLOW", self.cfg.regime_ema_slow)
@@ -255,8 +267,8 @@ class ImpulseVolumeBreakoutV1Strategy:
     def _arm_if_impulse(self, rows_5m: List[list], atr_5m: float, vol_base: float) -> None:
         if self._armed is not None:
             return
-        if not self.cfg.allow_longs:
-            self.last_no_signal_reason = "longs_disabled"
+        if not self.cfg.allow_longs and not self.cfg.allow_shorts:
+            self.last_no_signal_reason = "directions_disabled"
             return
 
         opens = [float(r[1]) for r in rows_5m]
@@ -271,23 +283,14 @@ class ImpulseVolumeBreakoutV1Strategy:
         cur_close = closes[-1]
         cur_volume = volumes[-1]
         prior_high = max(highs[-(self.cfg.breakout_lookback_bars + 1):-1])
+        prior_low = min(lows[-(self.cfg.breakout_lookback_bars + 1):-1])
         recent_low = min(lows[-(self.cfg.impulse_lookback_bars + 1):-1])
+        recent_high = max(highs[-(self.cfg.impulse_lookback_bars + 1):-1])
         bar_range = max(1e-12, cur_high - cur_low)
         body_frac = abs(cur_close - cur_open) / bar_range
-        impulse_pct = (cur_close - recent_low) / max(1e-12, recent_low)
         vol_mult = cur_volume / max(1e-12, vol_base) if vol_base > 0 else 0.0
-        broke_out = cur_close > prior_high + self.cfg.breakout_buffer_atr * atr_5m
         bar_range_atr = bar_range / max(1e-12, atr_5m)
 
-        if cur_close <= cur_open:
-            self.last_no_signal_reason = "impulse_bar_not_bullish"
-            return
-        if not broke_out:
-            self.last_no_signal_reason = "impulse_no_breakout"
-            return
-        if impulse_pct < self.cfg.min_impulse_pct:
-            self.last_no_signal_reason = f"impulse_too_small_{impulse_pct:.3f}"
-            return
         if vol_mult < self.cfg.min_vol_mult:
             self.last_no_signal_reason = f"impulse_vol_weak_{vol_mult:.2f}"
             return
@@ -298,15 +301,39 @@ class ImpulseVolumeBreakoutV1Strategy:
             self.last_no_signal_reason = f"impulse_range_weak_{bar_range_atr:.2f}"
             return
 
-        self._armed = {
-            "armed_ts": int(float(rows_5m[-1][0])),
-            "breakout_level": float(prior_high),
-            "impulse_high": float(cur_high),
-            "impulse_low": float(max(prior_high, cur_low)),
-            "impulse_range": float(max(cur_high - prior_high, atr_5m * 0.5)),
-            "atr": float(atr_5m),
-        }
-        self.last_no_signal_reason = "armed_impulse_breakout"
+        if self.cfg.allow_longs and cur_close > cur_open:
+            impulse_pct = (cur_close - recent_low) / max(1e-12, recent_low)
+            broke_out = cur_close > prior_high + self.cfg.breakout_buffer_atr * atr_5m
+            if broke_out and impulse_pct >= self.cfg.min_impulse_pct:
+                self._armed = {
+                    "side": "long",
+                    "armed_ts": int(float(rows_5m[-1][0])),
+                    "breakout_level": float(prior_high),
+                    "impulse_high": float(cur_high),
+                    "impulse_low": float(max(prior_high, cur_low)),
+                    "impulse_range": float(max(cur_high - prior_high, atr_5m * 0.5)),
+                    "atr": float(atr_5m),
+                }
+                self.last_no_signal_reason = "armed_impulse_breakout_long"
+                return
+
+        if self.cfg.allow_shorts and cur_close < cur_open:
+            impulse_pct = (recent_high - cur_close) / max(1e-12, recent_high)
+            broke_down = cur_close < prior_low - self.cfg.breakout_buffer_atr * atr_5m
+            if broke_down and impulse_pct >= self.cfg.min_impulse_pct:
+                self._armed = {
+                    "side": "short",
+                    "armed_ts": int(float(rows_5m[-1][0])),
+                    "breakout_level": float(prior_low),
+                    "impulse_high": float(min(prior_low, cur_high)),
+                    "impulse_low": float(cur_low),
+                    "impulse_range": float(max(prior_low - cur_low, atr_5m * 0.5)),
+                    "atr": float(atr_5m),
+                }
+                self.last_no_signal_reason = "armed_impulse_breakout_short"
+                return
+
+        self.last_no_signal_reason = "impulse_no_directional_breakout"
 
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (ts_ms, o, h, l, c, v)
@@ -367,30 +394,54 @@ class ImpulseVolumeBreakoutV1Strategy:
         armed = self._armed
         if armed is not None:
             wait_bars = max(1, int((bar_ts - int(armed["armed_ts"])) / (5 * 60 * 1000)))
+            armed_side = str(armed.get("side") or "long")
             breakout_level = float(armed["breakout_level"])
             impulse_high = float(armed["impulse_high"])
+            impulse_low = float(armed["impulse_low"])
             impulse_range = float(armed["impulse_range"])
             risk_atr = max(float(armed["atr"]) * 0.85, atr_5m)
-            zone_top = impulse_high - self.cfg.retrace_min_frac * impulse_range
-            zone_bot = impulse_high - self.cfg.retrace_max_frac * impulse_range
 
             if wait_bars > self.cfg.max_wait_bars_5m:
                 self._armed = None
                 self.last_no_signal_reason = "armed_expired"
-            elif cur_close < breakout_level - self.cfg.invalidation_close_atr * risk_atr:
+            elif armed_side == "long" and cur_close < breakout_level - self.cfg.invalidation_close_atr * risk_atr:
                 self._armed = None
                 self.last_no_signal_reason = "armed_lost_breakout_level"
+            elif armed_side == "short" and cur_close > breakout_level + self.cfg.invalidation_close_atr * risk_atr:
+                self._armed = None
+                self.last_no_signal_reason = "armed_lost_breakdown_level"
             else:
-                touched_retrace = cur_low <= zone_top
-                not_too_deep = cur_low >= max(zone_bot, breakout_level - self.cfg.touch_below_breakout_atr * risk_atr)
-                bullish_reclaim = cur_close > cur_open and cur_close > breakout_level + self.cfg.reclaim_atr * risk_atr
-                if touched_retrace and not_too_deep and bullish_reclaim and body_frac >= self.cfg.entry_body_min_frac:
+                if armed_side == "long":
+                    zone_top = impulse_high - self.cfg.retrace_min_frac * impulse_range
+                    zone_bot = impulse_high - self.cfg.retrace_max_frac * impulse_range
+                    touched_retrace = cur_low <= zone_top
+                    not_too_deep = cur_low >= max(zone_bot, breakout_level - self.cfg.touch_below_breakout_atr * risk_atr)
+                    reclaimed = cur_close > cur_open and cur_close > breakout_level + self.cfg.reclaim_atr * risk_atr
+                else:
+                    zone_bot = impulse_low + self.cfg.retrace_min_frac * impulse_range
+                    zone_top = impulse_low + self.cfg.retrace_max_frac * impulse_range
+                    touched_retrace = cur_high >= zone_bot
+                    not_too_deep = cur_high <= min(zone_top, breakout_level + self.cfg.touch_below_breakout_atr * risk_atr)
+                    reclaimed = cur_close < cur_open and cur_close < breakout_level - self.cfg.reclaim_atr * risk_atr
+
+                if touched_retrace and not_too_deep and reclaimed and body_frac >= self.cfg.entry_body_min_frac:
                     entry = float(cur_close)
-                    sl = breakout_level - self.cfg.sl_atr * risk_atr
-                    if sl >= entry:
-                        self.last_no_signal_reason = "sl_at_or_above_entry"
-                        return None
-                    risk = entry - sl
+                    if armed_side == "long":
+                        sl = breakout_level - self.cfg.sl_atr * risk_atr
+                        if sl >= entry:
+                            self.last_no_signal_reason = "sl_at_or_above_entry"
+                            return None
+                        risk = entry - sl
+                        tp1 = entry + self.cfg.tp1_rr * risk
+                        tp2 = entry + self.cfg.rr * risk
+                    else:
+                        sl = breakout_level + self.cfg.sl_atr * risk_atr
+                        if sl <= entry:
+                            self.last_no_signal_reason = "short_sl_at_or_below_entry"
+                            return None
+                        risk = sl - entry
+                        tp1 = entry - self.cfg.tp1_rr * risk
+                        tp2 = entry - self.cfg.rr * risk
                     stop_pct = risk / max(1e-12, entry)
                     if stop_pct < self.cfg.min_stop_pct:
                         self.last_no_signal_reason = f"stop_too_tight_{stop_pct:.4f}"
@@ -399,16 +450,16 @@ class ImpulseVolumeBreakoutV1Strategy:
                         self.last_no_signal_reason = f"stop_too_wide_{stop_pct:.4f}"
                         return None
 
-                    tp1 = entry + self.cfg.tp1_rr * risk
-                    tp2 = entry + self.cfg.rr * risk
-                    if tp2 <= tp1:
+                    if armed_side == "long" and tp2 <= tp1:
                         tp2 = tp1 + 0.5 * risk
+                    if armed_side == "short" and tp2 >= tp1:
+                        tp2 = tp1 - 0.5 * risk
                     self._armed = None
                     self._cooldown = max(0, self.cfg.cooldown_bars_5m)
                     return TradeSignal(
                         strategy=self.STRATEGY_NAME,
                         symbol=sym,
-                        side="long",
+                        side=armed_side,
                         entry=entry,
                         sl=sl,
                         tp=tp2,
@@ -420,7 +471,7 @@ class ImpulseVolumeBreakoutV1Strategy:
                         be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
                         be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
                         time_stop_bars=self.cfg.time_stop_bars_5m,
-                        reason="impulse_retrace_long",
+                        reason=f"impulse_retrace_{armed_side}",
                     )
                 self.last_no_signal_reason = "armed_waiting_retrace"
                 return None

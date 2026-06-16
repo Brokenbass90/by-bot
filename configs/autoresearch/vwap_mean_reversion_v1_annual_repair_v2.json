@@ -1,0 +1,73 @@
+{
+  "name": "vwap_mean_reversion_v1_annual_repair_v2",
+  "description": "Annual repair sweep for VWAP mean reversion. Uses the fixed post-mortem math from the strategy file: TP1 at VWAP, wider SL, meaningful TP2, intraday time stop, daily signal cap. Tests whether VWAP can complement range scalp as a second mean-reversion sleeve.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,DOTUSDT,LTCUSDT,SUIUSDT",
+    "--strategies",
+    "alt_vwap_mean_reversion_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "4",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "AVW1_SIGNAL_TF": "15",
+    "AVW1_SIGNAL_LOOKBACK": "72",
+    "AVW1_RSI_PERIOD": "14",
+    "AVW1_ATR_PERIOD": "14",
+    "AVW1_TP1_FRAC": "0.50",
+    "AVW1_TIME_STOP_BARS_5M": "36",
+    "AVW1_SESSION_BARS_MIN": "12",
+    "AVW1_MAX_SIGNALS_PER_DAY": "2",
+    "AVW1_ALLOW_LONGS": "1",
+    "AVW1_ALLOW_SHORTS": "1",
+    "AVW1_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,DOTUSDT,LTCUSDT,SUIUSDT"
+  },
+  "grid": {
+    "AVW1_MIN_VWAP_DEV_ATR": [1.20, 1.50, 1.80],
+    "AVW1_LONG_RSI_MAX": [37, 41, 45],
+    "AVW1_SHORT_RSI_MIN": [55, 59, 63],
+    "AVW1_SL_ATR_MULT": [1.20, 1.50, 1.80],
+    "AVW1_MAX_ER": [0.25, 0.35, 0.45],
+    "AVW1_TP2_ATR": [0.75, 1.00, 1.25],
+    "AVW1_COOLDOWN_BARS_5M": [36, 72]
+  },
+  "constraints": {
+    "min_trades": 50,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 4.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.1,
+    "profit_factor": 6.0,
+    "winrate": 4.0,
+    "max_drawdown": 2.0,
+    "trades": 0.13,
+    "trades_cap": 240,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.4
+  },
+  "_combo_count": "3x3x3x3x3x3x2 = 1458 combos",
+  "_goal": "Validate whether VWAP reversion has annual net edge after fees and can diversify the range scalp sleeve."
+}

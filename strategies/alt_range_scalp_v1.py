@@ -94,6 +94,31 @@ def _atr_from_rows(rows: List[list], period: int) -> float:
     return sum(trs) / float(period) if trs else float("nan")
 
 
+def _adx_from_rows(rows: List[list], period: int) -> float:
+    if len(rows) < period + 2:
+        return float("nan")
+    highs = [float(r[2]) for r in rows]
+    lows = [float(r[3]) for r in rows]
+    closes = [float(r[4]) for r in rows]
+    dxs: List[float] = []
+    start = max(1, len(rows) - period)
+    for i in range(start, len(rows)):
+        up_move = highs[i] - highs[i - 1]
+        down_move = lows[i - 1] - lows[i]
+        plus_dm = up_move if up_move > down_move and up_move > 0 else 0.0
+        minus_dm = down_move if down_move > up_move and down_move > 0 else 0.0
+        tr = max(highs[i] - lows[i], abs(highs[i] - closes[i - 1]), abs(lows[i] - closes[i - 1]))
+        if tr <= 1e-12:
+            continue
+        plus_di = 100.0 * plus_dm / tr
+        minus_di = 100.0 * minus_dm / tr
+        denom = plus_di + minus_di
+        if denom <= 1e-12:
+            continue
+        dxs.append(100.0 * abs(plus_di - minus_di) / denom)
+    return sum(dxs) / float(len(dxs)) if dxs else float("nan")
+
+
 def _rsi(values: List[float], period: int) -> float:
     if period <= 0 or len(values) < period + 1:
         return float("nan")
@@ -123,6 +148,10 @@ class AltRangeScalpV1Config:
     max_band_width_pct: float = 20.0
     sl_atr_mult: float = 0.8
     tp1_frac: float = 0.55
+    min_body_frac: float = 0.0
+    min_vol_mult: float = 0.0
+    max_adx: float = 0.0
+    adx_period: int = 14
     time_stop_bars_5m: int = 216
     cooldown_bars_5m: int = 48
     allow_longs: bool = True
@@ -145,6 +174,10 @@ class AltRangeScalpV1Strategy:
         self.cfg.max_band_width_pct = _env_float("ARS1_MAX_BAND_WIDTH_PCT", self.cfg.max_band_width_pct)
         self.cfg.sl_atr_mult = _env_float("ARS1_SL_ATR_MULT", self.cfg.sl_atr_mult)
         self.cfg.tp1_frac = _env_float("ARS1_TP1_FRAC", self.cfg.tp1_frac)
+        self.cfg.min_body_frac = _env_float("ARS1_MIN_BODY_FRAC", self.cfg.min_body_frac)
+        self.cfg.min_vol_mult = _env_float("ARS1_MIN_VOL_MULT", self.cfg.min_vol_mult)
+        self.cfg.max_adx = _env_float("ARS1_MAX_ADX", self.cfg.max_adx)
+        self.cfg.adx_period = _env_int("ARS1_ADX_PERIOD", self.cfg.adx_period)
         self.cfg.time_stop_bars_5m = _env_int("ARS1_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
         self.cfg.cooldown_bars_5m = _env_int("ARS1_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
         self.cfg.allow_longs = _env_bool("ARS1_ALLOW_LONGS", self.cfg.allow_longs)
@@ -189,6 +222,7 @@ class AltRangeScalpV1Strategy:
         lows_15m = [float(r[3]) for r in rows_15m]
         closes_15m = [float(r[4]) for r in rows_15m]
         opens_15m = [float(r[1]) for r in rows_15m]
+        volumes_15m = [float(r[5]) if len(r) > 5 else 0.0 for r in rows_15m]
 
         # Compute Bollinger Bands
         mid = _sma(closes_15m, self.cfg.bb_period)
@@ -212,12 +246,31 @@ class AltRangeScalpV1Strategy:
         if not all(math.isfinite(x) for x in (rsi_15m, atr_15m)) or atr_15m <= 0:
             self.last_no_signal_reason = "indicators_invalid"
             return None
+        if self.cfg.max_adx > 0:
+            adx_15m = _adx_from_rows(rows_15m, self.cfg.adx_period)
+            if not math.isfinite(adx_15m):
+                self.last_no_signal_reason = "adx_invalid"
+                return None
+            if adx_15m > self.cfg.max_adx:
+                self.last_no_signal_reason = f"adx_trending_{adx_15m:.1f}"
+                return None
 
         cur = closes_15m[-1]
         prev_close = closes_15m[-2]
         open_cur = opens_15m[-1]
         high_cur = highs_15m[-1]
         low_cur = lows_15m[-1]
+        range_cur = max(1e-12, high_cur - low_cur)
+        body_frac = abs(cur - open_cur) / range_cur
+        if self.cfg.min_body_frac > 0 and body_frac < self.cfg.min_body_frac:
+            self.last_no_signal_reason = f"body_too_small_{body_frac:.2f}"
+            return None
+        if self.cfg.min_vol_mult > 0:
+            vol_base = sum(volumes_15m[-21:-1]) / 20.0 if len(volumes_15m) >= 21 else 0.0
+            vol_mult = volumes_15m[-1] / max(1e-12, vol_base) if vol_base > 0 else 0.0
+            if vol_mult < self.cfg.min_vol_mult:
+                self.last_no_signal_reason = f"volume_weak_{vol_mult:.2f}"
+                return None
 
         # Determine signal
         entry_price = float(c)
