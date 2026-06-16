@@ -1,0 +1,81 @@
+{
+  "_comment": "Current-market WLD-style breakout/retest runner. Tests 1h compression breakout -> 5m retest/reclaim -> staged exits + runner, after fees/slippage.",
+  "name": "inplay_breakout_retest_runner_current_v1",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "inplay_breakout",
+    "--days",
+    "180",
+    "--end",
+    "2026-06-15",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "2",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "10",
+    "--slippage_bps",
+    "10"
+  ],
+  "grid": {
+    "SYMBOLS": [
+      "WLDUSDT",
+      "WLDUSDT,SOLUSDT,LINKUSDT,SUIUSDT",
+      "WLDUSDT,SOLUSDT,LINKUSDT,SUIUSDT,NEARUSDT,DOGEUSDT"
+    ],
+    "BT_BREAKOUT_QUALITY_MIN_SCORE": [0.42, 0.48, 0.54],
+    "BREAKOUT_RETEST_TOUCH_ATR": [0.25, 0.35, 0.50],
+    "BREAKOUT_RECLAIM_ATR": [0.08, 0.12],
+    "BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT": [0.05, 0.10, 0.15],
+    "BREAKOUT_MAX_LATE_VS_REF_PCT": [0.20, 0.35]
+  },
+  "base_env": {
+    "BT_BREAKOUT_QUALITY_ENABLE": "1",
+    "BREAKOUT_TF_BREAK": "60",
+    "BREAKOUT_TF_ENTRY": "5",
+    "BREAKOUT_ALLOW_LONGS": "1",
+    "BREAKOUT_ALLOW_SHORTS": "0",
+    "BREAKOUT_EXIT_MODE": "runner",
+    "BREAKOUT_PARTIAL_RS": "1.0,2.0,4.0",
+    "BREAKOUT_PARTIAL_FRACS": "0.45,0.30,0.15",
+    "BREAKOUT_TRAIL_ATR_MULT": "1.6",
+    "BREAKOUT_TIME_STOP_BARS": "288",
+    "BREAKOUT_BUFFER_ATR": "0.10",
+    "BREAKOUT_IMPULSE_ATR_MULT": "1.0",
+    "BREAKOUT_IMPULSE_BODY_MIN_FRAC": "0.35",
+    "BREAKOUT_MAX_DIST_ATR": "1.2",
+    "BREAKOUT_SL_ATR": "0.55",
+    "BREAKOUT_REGIME_MODE": "off",
+    "BACKTEST_CACHE_ONLY": "1"
+  },
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 1.25,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 6.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.2,
+    "profit_factor": 6.0,
+    "winrate": 6.0,
+    "max_drawdown": 2.0,
+    "trades": 0.08,
+    "trades_cap": 160,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "3x3x3x2x3x2 = 324 combos"
+}

@@ -1,0 +1,47 @@
+funding gate A/B start: 2026-06-15 18:41:13 UTC
+days=180 end_date=2026-06-15 top_n=8 notional=100
+filters: turnover>=20000000 oi>=5000000 abs_fr=[0.003,2.0] events>=120 interval=[6,10] clip=0.008
+selector: max_top_share=0.45 min_symbol_net=-0.10 selection_buffer_mult=10
+
+>>> RUN funding_gate_base_180d
+run_dir=backtest_runs/funding_20260615_184114_funding_gate_base_180d
+tag,days,symbols,notional_per_symbol,fee_total_bps,mode,flip_fee_bps,clip_abs_rate,min_events_per_symbol,min_interval_hours,max_interval_hours,positive_carry_only,exclude_requires_borrow,max_top_symbol_share,min_symbol_net_usd,funding_events,trades,gross_funding_total_usd,flip_fees_total_usd,fees_total_usd,net_total_usd,net_pnl,profit_factor,winrate,max_drawdown,top_symbol_share_net
+funding_gate_base_180d,180,INJUSDT;XMRUSDT;WLDUSDT;SUIUSDT;ZECUSDT;BCHUSDT;LINKUSDT;AAVEUSDT,100.00,16.00,hold,2.00,0.008000,120,6.000,10.000,0,0,0.450,-0.100,4477,4477,28.561722,0.000000,1.280000,27.281722,27.281722,999.000000,0.615367,0.000000,0.2890
+scan=backtest_runs/funding_20260615_184114_funding_gate_base_180d/funding_per_symbol.csv
+candidates=8 selected=8
+out=backtest_runs/funding_20260615_184114_funding_gate_base_180d/funding_per_symbol_gated.csv
+symbols_csv=INJUSDT,XMRUSDT,WLDUSDT,SUIUSDT,ZECUSDT,BCHUSDT,LINKUSDT,AAVEUSDT
+gated_symbols=INJUSDT,XMRUSDT,WLDUSDT,SUIUSDT,ZECUSDT,BCHUSDT,LINKUSDT,AAVEUSDT
+monthly:
+month,gross_funding_usd
+2025-12,0.725853
+2026-01,3.957725
+2026-02,7.727768
+2026-03,2.581029
+2026-04,4.992075
+2026-05,5.178465
+2026-06,3.398807
+compact=funding_gate_base_180d,hold,net=28.561722,top_share=0.000000,events=0.450,symbols=INJUSDT;XMRUSDT;WLDUSDT;SUIUSDT;ZECUSDT;BCHUSDT;LINKUSDT;AAVEUSDT
+
+>>> RUN funding_gate_stress_180d
+run_dir=backtest_runs/funding_20260615_184215_funding_gate_stress_180d
+tag,days,symbols,notional_per_symbol,fee_total_bps,mode,flip_fee_bps,clip_abs_rate,min_events_per_symbol,min_interval_hours,max_interval_hours,positive_carry_only,exclude_requires_borrow,max_top_symbol_share,min_symbol_net_usd,funding_events,trades,gross_funding_total_usd,flip_fees_total_usd,fees_total_usd,net_total_usd,net_pnl,profit_factor,winrate,max_drawdown,top_symbol_share_net
+funding_gate_stress_180d,180,INJUSDT;XMRUSDT;WLDUSDT;SUIUSDT;ZECUSDT;BCHUSDT;LINKUSDT;AAVEUSDT,100.00,30.00,hold,2.00,0.008000,120,6.000,10.000,0,0,0.450,-0.100,4477,4477,28.561722,0.000000,2.400000,26.161722,26.161722,999.000000,0.615367,0.000000,0.2961
+scan=backtest_runs/funding_20260615_184215_funding_gate_stress_180d/funding_per_symbol.csv
+candidates=8 selected=8
+out=backtest_runs/funding_20260615_184215_funding_gate_stress_180d/funding_per_symbol_gated.csv
+symbols_csv=INJUSDT,XMRUSDT,WLDUSDT,SUIUSDT,ZECUSDT,BCHUSDT,LINKUSDT,AAVEUSDT
+gated_symbols=INJUSDT,XMRUSDT,WLDUSDT,SUIUSDT,ZECUSDT,BCHUSDT,LINKUSDT,AAVEUSDT
+monthly:
+month,gross_funding_usd
+2025-12,0.725853
+2026-01,3.957725
+2026-02,7.727768
+2026-03,2.581029
+2026-04,4.992075
+2026-05,5.178465
+2026-06,3.398807
+compact=funding_gate_stress_180d,hold,net=28.561722,top_share=0.000000,events=0.450,symbols=INJUSDT;XMRUSDT;WLDUSDT;SUIUSDT;ZECUSDT;BCHUSDT;LINKUSDT;AAVEUSDT
+
+funding gate A/B done: 2026-06-15 18:43:12 UTC
+report=backtest_runs/funding_gate_ab_20260615_184113/report.txt
