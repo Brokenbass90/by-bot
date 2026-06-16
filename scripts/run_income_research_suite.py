@@ -48,7 +48,6 @@ SUITE = [
 ACTIVE_PATTERNS = [
     "ivb1_live_canary_annual_focus_v1",
     "range_scalp_v1_annual_focus_v2",
-    "run_classic_research_queue.py",
 ]
 
 
