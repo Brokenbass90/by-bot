@@ -194,6 +194,27 @@ def _bybit_section() -> str:
     else:
         lines.append("  ℹ️ Открытых 0 = бот жив, но сейчас вне позиции.")
 
+    pos = _read_json(ROOT / "runtime" / "live_positions.json")
+    positions = pos.get("positions") if isinstance(pos, dict) else None
+    if positions:
+        for p in list(positions)[:3]:
+            try:
+                symbol = p.get("symbol", "?")
+                side = p.get("side", "?")
+                strategy = p.get("strategy", "?")
+                entry = float(p.get("entry", 0.0) or 0.0)
+                current = float(p.get("current", 0.0) or 0.0)
+                sl = float(p.get("sl", p.get("exchange_sl", 0.0)) or 0.0)
+                tp = float(p.get("tp", p.get("exchange_tp", 0.0)) or 0.0)
+                upnl = float(p.get("upnl_usd", 0.0) or 0.0)
+                upnl_pct = float(p.get("upnl_pct", 0.0) or 0.0)
+                lines.append(
+                    f"  📌 {symbol} {side} {strategy}: entry={entry:g} now={current:g} "
+                    f"SL={sl:g} TP={tp:g} uPnL={upnl:+.3f} ({upnl_pct:+.2f}%)"
+                )
+            except Exception:
+                continue
+
     # ── What is truly live now ───────────────────────────────────────────────
     if hb and _runtime_sets and _sleeve_label:
         _enabled, rmult, live, shadow, _off = _runtime_sets(hb)
