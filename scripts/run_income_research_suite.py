@@ -152,6 +152,7 @@ def main() -> int:
     ap.add_argument("--skip-pair-arb", action="store_true")
     ap.add_argument("--start-at", help="Start from this suite item name or label slug")
     ap.add_argument("--only", help="Comma-separated suite item names or label slugs to run")
+    ap.add_argument("--limit-cap", type=int, help="Cap each selected autoresearch limit")
     args = ap.parse_args()
 
     suite = _select_suite(start_at=args.start_at, only=args.only)
@@ -166,6 +167,7 @@ def main() -> int:
         f"- jobs: `{args.jobs}`",
         f"- start_at: `{args.start_at or '-'}`",
         f"- only: `{args.only or '-'}`",
+        f"- limit_cap: `{args.limit_cap or '-'}`",
         f"- selected: `{','.join(str(item['name']) for item in suite)}`",
         "",
     ]
@@ -179,6 +181,8 @@ def main() -> int:
         spec_path = ROOT / item["spec"]
         name = _load_name(spec_path)
         limit = int(item["limit"])
+        if args.limit_cap is not None:
+            limit = min(limit, max(1, int(args.limit_cap)))
         lines.extend([f"## {item['label']}", "", f"- spec: `{spec_path}`", f"- limit: `{limit}`"])
         master.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
