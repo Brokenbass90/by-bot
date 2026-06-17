@@ -2475,6 +2475,7 @@ function AIChatPage() {
   const [loading, setLoading] = useState(false);
   const [pendingCmd, setPendingCmd] = useState(null);
   const [cmdConfirm, setCmdConfirm] = useState(false);
+  const [feed, setFeed] = useState([]);
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -2486,6 +2487,16 @@ function AIChatPage() {
         if (history.length > 0) setMessages(history);
       })
       .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    let alive = true;
+    const load = () => api('/api/ai/activity?limit=30')
+      .then(res => { if (alive && Array.isArray(res?.feed)) setFeed(res.feed.filter(x => x.channel === 'tg')); })
+      .catch(() => {});
+    load();
+    const id = setInterval(load, 20000);
+    return () => { alive = false; clearInterval(id); };
   }, []);
   useEffect(() => {
     const loadPrefill = () => {
@@ -2571,6 +2582,17 @@ function AIChatPage() {
 
   return React.createElement('div', { style: { display: 'flex', flexDirection: 'column', height: '100%' } },
     React.createElement('div', { className: 'section-title' }, '🤖 AI Assistant'),
+
+    // Operational feed reconstructed from trade events and the pulse digest.
+    React.createElement('div', { className: 'card', style: { marginBottom: '10px', maxHeight: '170px', overflowY: 'auto' } },
+      React.createElement('div', { style: { fontSize: '11px', color: 'var(--text3)', fontWeight: 700, marginBottom: '6px', letterSpacing: '0.04em' } }, 'СДЕЛКИ И ПУЛЬС БОТА'),
+      (feed.length === 0)
+        ? React.createElement('div', { style: { fontSize: '12px', color: 'var(--text3)' } }, 'пока пусто — здесь появятся события сделок и пульс')
+        : feed.map((it, i) => React.createElement('div', { key: i, style: { display: 'flex', gap: '8px', marginBottom: '5px', fontSize: '12px', lineHeight: 1.45 } },
+            React.createElement('span', { style: { color: 'var(--blue)', fontWeight: 700, flexShrink: 0 } }, it.kind === 'pulse' ? 'ПУЛЬС' : 'TG'),
+            React.createElement('span', { style: { color: 'var(--text2)', whiteSpace: 'pre-wrap' } }, it.text)
+          ))
+    ),
 
     // Chat window
     React.createElement('div', { className: 'card', style: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 } },

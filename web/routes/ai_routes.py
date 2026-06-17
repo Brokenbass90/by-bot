@@ -842,6 +842,15 @@ def _build_context() -> str:
                 "ALLOCATOR HUMAN MEANING: protective risk haircut for overlapping sleeves; "
                 "not a broken allocator, not an emergency by itself.\n"
             )
+        if (
+            str(allocator.get("status") or "").lower() == "disabled"
+            and not bool(allocator.get("safe_mode"))
+            and not bool(allocator.get("hard_block_new_entries"))
+        ):
+            parts.append(
+                "ALLOCATOR HUMAN MEANING: allocator overlay is disabled, but approved live env remains active; "
+                "new entries are not globally blocked.\n"
+            )
         parts.append(f"SLEEVES ACTIVE: {', '.join(active) or 'none'}\n")
         parts.append(f"SLEEVES OFF: {', '.join(inactive[:8]) or 'none'}\n")
 
@@ -869,7 +878,10 @@ def _build_context() -> str:
             losses = sum(1 for r in rows if float(r.get("pnl", 0) or 0) < 0)
             net = sum(float(r.get("pnl", 0) or 0) for r in rows)
             strats = list({r.get("strategy", "?") for r in rows})[:6]
-            parts.append(f"LAST 50 TRADES: wins={wins} losses={losses} net={net:.4f}\n")
+            parts.append(
+                f"MIXED HISTORICAL TRADES LAST 50: wins={wins} losses={losses} net={net:.4f}; "
+                "may include old strategies, versions and risk settings; not current-canary PF.\n"
+            )
             parts.append(f"ACTIVE STRATEGIES: {', '.join(strats)}\n")
 
     live_closes = _load_live_trade_event_closes(limit=50)
@@ -889,8 +901,9 @@ def _build_context() -> str:
             if evt.get("strategy"):
                 strats.add(str(evt.get("strategy")))
         parts.append(
-            f"LIVE CLOSED EVENTS LAST {len(live_closes)}: wins={wins} losses={losses} "
-            f"net={net:.4f} strategies={', '.join(sorted(strats)) or '-'}\n"
+            f"MIXED LIVE CLOSED EVENTS LAST {len(live_closes)}: wins={wins} losses={losses} "
+            f"net={net:.4f} strategies={', '.join(sorted(strats)) or '-'}; "
+            "not a current-canary window unless a deployment boundary is supplied.\n"
         )
         parts.append(
             "LAST CLOSED EVENT: "
@@ -1293,6 +1306,8 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         "In bear_trend, do not recommend ASB1/long-bounce activation unless current injected research shows a validated pass; if evidence is missing or weak, recommend a backtest/proposal instead. "
         "If allocator status is degraded only because degraded_kind=protective_overlap, explain it as a protective overlap risk haircut, not a broken allocator or critical incident. "
         "Do not recommend safe mode or reload solely for protective_overlap. "
+        "allocator.status=disabled does not block entries by itself: approved live env may remain active. Treat entries as globally blocked only when hard_block_new_entries=true or safe_mode=true; an individual sleeve is blocked when it is disabled or has risk_mult=0. "
+        "Never present MIXED HISTORICAL TRADES or MIXED LIVE CLOSED EVENTS as the PF of the current package. Current-canary metrics require an explicit deployment/version boundary. "
         "Do not convert websocket connect/disconnect counters into percent data loss unless the live context shows ws guard active, critical_streak/no_connect_streak, or stale/zero market messages. "
         "When suggesting control commands, explain the issue in human language first, cite current evidence from the injected context, state risk/preconditions, and only then emit a ```command JSON block. "
         "Never suggest actions that could cause significant losses without clear justification. "
@@ -1444,6 +1459,40 @@ async def get_code_context(email: str = Depends(require_admin)):
 async def get_history(email: str = Depends(require_admin)):
     """Return shared AI history used by web chat."""
     return {"messages": _load_shared_history()}
+
+
+@router.get("/activity")
+async def get_activity(limit: int = 50, email: str = Depends(require_admin)):
+    """Operational feed reconstructed from trade events, pulse and web chat.
+
+    Reads files the bot already writes:
+    runtime/live_mirror/live_trade_events.jsonl and reports/PROOF_OF_LIFE_telegram.txt.
+    Telegram charts, free-text messages and AI post-trade reviews are not mirrored.
+    """
+    from web.activity_feed import build_activity_feed, read_trade_events
+
+    events_path = _RUNTIME_ROOT / "live_mirror" / "live_trade_events.jsonl"
+    if not events_path.exists():
+        events_path = _RUNTIME_ROOT / "live_trade_events.jsonl"
+    events = read_trade_events(events_path, limit=30)
+
+    pulse_path = _ROOT / "reports" / "PROOF_OF_LIFE_telegram.txt"
+    pulse_text, pulse_ts = "", 0
+    if pulse_path.exists():
+        try:
+            pulse_text = pulse_path.read_text(encoding="utf-8", errors="ignore")
+            pulse_ts = int(pulse_path.stat().st_mtime)
+        except Exception:
+            pulse_text = ""
+
+    feed = build_activity_feed(
+        trade_events=events,
+        chat_history=_load_shared_history(),
+        pulse_text=pulse_text,
+        pulse_ts=pulse_ts,
+        limit=int(limit),
+    )
+    return {"feed": feed}
 
 
 # ── Setup Card AI Analysis ────────────────────────────────────────────────────
