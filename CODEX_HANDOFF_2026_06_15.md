@@ -797,6 +797,8 @@ Validation:
 
 Deployment note:
 - If an open live position exists, deploy can copy the file but bot restart should be done at a safe moment after `open_trades=0`, unless the operator explicitly accepts a restart with an open position. The text patch only takes effect after process restart.
+- Post-commit deploy: `smart_pump_reversal_bot.py` and this handoff were copied to `/root/by-bot/`.
+- Server watcher `apply_ru_alerts_when_flat_20260617` was started. It polls `runtime/live_positions.json`; while `count=1` it waits, and when `count=0` it runs one `systemctl restart bybot.service`, checks `systemctl is-active bybot.service`, writes `logs/apply_ru_alerts_when_flat_20260617.log`, then exits.
 
 ### Long-running research started / verified
 Local screens:
