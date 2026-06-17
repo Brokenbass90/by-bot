@@ -19,7 +19,32 @@ from urllib import error, parse, request
 
 ROOT = Path(__file__).resolve().parents[1]
 SNAP = ROOT / "reports" / "SERVER_SNAPSHOT_latest.json"
+SNAP_MD = ROOT / "reports" / "SERVER_SNAPSHOT_latest.md"
 TG_URL_TMPL = "https://api.telegram.org/bot{token}/sendMessage"
+
+SLEEVE_LABELS = {
+    "flat": "short from resistance",
+    "range": "range scalp",
+    "att1": "trendline touch",
+    "breakdown": "support breakdown",
+    "ivb1": "old impulse breakout",
+    "midterm": "BTC/ETH swing",
+    "bounce1": "support bounce",
+    "asb1_slope_break": "slope break",
+    "elder": "Elder triple screen",
+    "hzbo1": "horizontal breakout",
+}
+
+STRATEGY_TO_SLEEVE = {
+    "flat_resistance_fade": "flat",
+    "range": "range",
+    "alt_range_scalp_v1": "range",
+    "att1_trendline_touch": "att1",
+    "alt_inplay_breakdown_v1": "breakdown",
+    "impulse_volume_breakout_v1": "ivb1",
+    "bounce1": "bounce1",
+    "btc_eth_midterm": "midterm",
+}
 
 
 def _age(ts_iso: str) -> str:
@@ -35,12 +60,113 @@ def _age(ts_iso: str) -> str:
         return "?"
 
 
+def _event_ts_iso(event: dict) -> str:
+    raw = event.get("ts_utc")
+    if raw:
+        text = str(raw).strip()
+        if text.endswith(" UTC"):
+            return text[:-4].replace(" ", "T") + "Z"
+        return text
+    ts = event.get("ts")
+    try:
+        return dt.datetime.fromtimestamp(float(ts), tz=dt.timezone.utc).isoformat().replace("+00:00", "Z")
+    except Exception:
+        return ""
+
+
+def _latest_trade_event(events: list[dict]) -> dict | None:
+    for e in reversed(events or []):
+        if (e.get("event") or e.get("type")) in ("close", "entry_filled", "order_submitted"):
+            return e
+    return None
+
+
+def _sleeve_label(name: str, risk_mult=None) -> str:
+    label = SLEEVE_LABELS.get(str(name), str(name))
+    suffix = f" ({name})"
+    if risk_mult is None:
+        return label + suffix
+    return f"{label}{suffix} x{risk_mult}"
+
+
+def _runtime_sets(hb: dict) -> tuple[dict, dict, list[str], list[str], list[str]]:
+    rtc = hb.get("strategy_runtime_config") or {}
+    enabled = rtc.get("enabled") or {}
+    rmult = rtc.get("risk_mult") or {}
+    live = [s for s in rmult if (rmult.get(s) or 0) > 0 and enabled.get(s)]
+    shadow = [s for s in enabled if enabled.get(s) and (rmult.get(s) or 0) == 0]
+    off = [s for s in enabled if not enabled.get(s)]
+    return enabled, rmult, live, shadow, off
+
+
+def _sleeve_for_strategy(strategy: str) -> str:
+    key = str(strategy or "")
+    return STRATEGY_TO_SLEEVE.get(key, key)
+
+
+def _split_pnl_by_runtime(pnl: dict, live_sleeves: set[str], shadow_sleeves: set[str]) -> tuple[list[tuple[str, dict]], list[tuple[str, dict]], float, int, float, int]:
+    live_rows = []
+    shadow_rows = []
+    live_pnl = 0.0
+    live_n = 0
+    all_pnl = 0.0
+    all_n = 0
+    for strategy, agg in (pnl or {}).items():
+        if not isinstance(agg, dict):
+            continue
+        sleeve = _sleeve_for_strategy(strategy)
+        p = float(agg.get("pnl") or 0.0)
+        n = int(agg.get("n") or 0)
+        all_pnl += p
+        all_n += n
+        row = (strategy, agg)
+        if sleeve in live_sleeves:
+            live_rows.append(row)
+            live_pnl += p
+            live_n += n
+        elif sleeve in shadow_sleeves:
+            shadow_rows.append(row)
+    return live_rows, shadow_rows, live_pnl, live_n, all_pnl, all_n
+
+
+def _maybe_refresh_snapshot() -> dict | None:
+    """Use fresh runtime files when they are newer than the exported snapshot."""
+    hb_path = ROOT / "runtime" / "bot_heartbeat.json"
+    try:
+        snap_mtime = SNAP.stat().st_mtime if SNAP.exists() else 0.0
+        hb_mtime = hb_path.stat().st_mtime if hb_path.exists() else 0.0
+    except Exception:
+        return None
+    if hb_mtime <= snap_mtime:
+        return None
+    try:
+        from scripts.export_server_snapshot import build_snapshot, to_markdown
+
+        snap = build_snapshot()
+        SNAP.parent.mkdir(exist_ok=True)
+        SNAP.write_text(json.dumps(snap, indent=2, default=str), encoding="utf-8")
+        SNAP_MD.write_text(to_markdown(snap), encoding="utf-8")
+        return snap
+    except Exception:
+        return None
+
+
+def _load_snapshot() -> dict:
+    fresh = _maybe_refresh_snapshot()
+    if fresh is not None:
+        return fresh
+    return json.loads(SNAP.read_text(encoding="utf-8", errors="ignore"))
+
+
 def build_digest(snap: dict) -> str:
     hb = snap.get("heartbeat") or {}
     cat = snap.get("strategy_catalog") or {}
     pnl = snap.get("pnl_by_sleeve") or {}
     events = snap.get("recent_trade_events") or []
-    rtc = hb.get("strategy_runtime_config") or {}
+    enabled, rmult, live, shadow, off = _runtime_sets(hb)
+    live_sleeves = set(live)
+    shadow_sleeves = set(shadow)
+    live_rows, shadow_rows, live_pnl, live_n, all_pnl, all_n = _split_pnl_by_runtime(pnl, live_sleeves, shadow_sleeves)
 
     alive = bool(hb.get("trade_on")) and (hb.get("open_trades") is not None)
     msgs = hb.get("bybit_msgs")
@@ -64,40 +190,42 @@ def build_digest(snap: dict) -> str:
     # live vs shadow
     L.append("")
     L.append("-- SLEEVES (live vs shadow) --")
-    enabled = rtc.get("enabled") or {}
-    rmult = rtc.get("risk_mult") or {}
     if enabled or rmult:
-        live = [s for s in rmult if (rmult.get(s) or 0) > 0 and enabled.get(s)]
-        shadow = [s for s in enabled if enabled.get(s) and (rmult.get(s) or 0) == 0]
-        off = [s for s in enabled if not enabled.get(s)]
-        live_str = ", ".join(f"{s}={rmult.get(s)}" for s in live) if live else "NONE — все в shadow"
+        live_str = ", ".join(_sleeve_label(s, rmult.get(s)) for s in live) if live else "NONE — all shadow"
         L.append(f"LIVE (risk>0): {live_str}")
-        L.append(f"shadow (enabled, risk=0): {', '.join(shadow) if shadow else '-'}")
-        L.append(f"off: {', '.join(off) if off else '-'}")
+        L.append(f"shadow (enabled, risk=0): {', '.join(_sleeve_label(s) for s in shadow) if shadow else '-'}")
+        L.append(f"off: {', '.join(_sleeve_label(s) for s in off) if off else '-'}")
     else:
         L.append(f"active (catalog): {', '.join(cat.get('active_keys') or []) or '-'}")
 
     # pnl by sleeve
     L.append("")
-    L.append("-- RECENT P&L BY SLEEVE (journal) --")
+    L.append("-- JOURNAL P&L (tail, includes older/shadow attribution) --")
     if pnl:
+        if live_rows:
+            L.append("  current live-risk sleeves:")
+            for s, a in live_rows:
+                L.append(f"    {s}: pnl={a.get('pnl'):+.4f} trades={a.get('n')} W/L={a.get('w')}/{a.get('l')}")
+        if shadow_rows:
+            L.append("  enabled now but zero-risk/shadow:")
+            for s, a in shadow_rows:
+                L.append(f"    {s}: pnl={a.get('pnl'):+.4f} trades={a.get('n')} W/L={a.get('w')}/{a.get('l')}")
+        L.append("  full journal tail:")
         for s, a in pnl.items():
             if isinstance(a, dict):
-                L.append(f"  {s}: pnl={a.get('pnl'):+.4f} trades={a.get('n')} W/L={a.get('w')}/{a.get('l')}")
-        tot = sum(a.get("pnl", 0.0) for a in pnl.values() if isinstance(a, dict))
-        L.append(f"  TOTAL recent: {tot:+.4f}")
+                L.append(f"    {s}: pnl={a.get('pnl'):+.4f} trades={a.get('n')} W/L={a.get('w')}/{a.get('l')}")
+        L.append(f"  LIVE-risk subtotal: {live_pnl:+.4f} over {live_n} trades")
+        L.append(f"  TOTAL journal tail: {all_pnl:+.4f} over {all_n} trades")
     else:
         L.append("  (no closed trades in recent journal)")
 
     # last trade
-    last = None
-    for e in reversed(events):
-        if (e.get("event") or e.get("type")) in ("close", "entry_filled", "order_submitted"):
-            last = e
-            break
+    last = _latest_trade_event(events)
     L.append("")
     if last:
-        L.append(f"last trade event: {last.get('event') or last.get('type')} {last.get('strategy')} {last.get('symbol')}")
+        last_iso = _event_ts_iso(last)
+        age = _age(last_iso) if last_iso else "?"
+        L.append(f"last trade event: {age}: {last.get('event') or last.get('type')} {last.get('strategy')} {last.get('symbol')}")
     L.append(f"recent events in snapshot: {len(events)}")
 
     # honest verdict
@@ -119,23 +247,28 @@ def build_telegram_digest(snap: dict) -> str:
     """Compact, scannable status for a Telegram message (plain text, no emoji)."""
     hb = snap.get("heartbeat") or {}
     pnl = snap.get("pnl_by_sleeve") or {}
-    rtc = hb.get("strategy_runtime_config") or {}
-    enabled = rtc.get("enabled") or {}
-    rmult = rtc.get("risk_mult") or {}
-    live = [f"{s}={rmult.get(s)}" for s in rmult if (rmult.get(s) or 0) > 0 and enabled.get(s)]
+    _enabled, rmult, live, shadow, _off = _runtime_sets(hb)
     msgs = hb.get("bybit_msgs")
     feed = "OK" if isinstance(msgs, (int, float)) and msgs > 0 else "STALE"
     alive = "ALIVE" if hb.get("trade_on") else "NOT TRADING"
-    tot = sum(a.get("pnl", 0.0) for a in pnl.values() if isinstance(a, dict)) if pnl else 0.0
-    n = sum(a.get("n", 0) for a in pnl.values() if isinstance(a, dict)) if pnl else 0
+    live_rows, _shadow_rows, live_pnl, live_n, all_pnl, all_n = _split_pnl_by_runtime(pnl, set(live), set(shadow))
+    last = _latest_trade_event(snap.get("recent_trade_events") or [])
+    last_line = "last trade: none in journal tail"
+    if last:
+        last_iso = _event_ts_iso(last)
+        last_line = f"last trade: {_age(last_iso) if last_iso else '?'} {last.get('event') or last.get('type')} {last.get('strategy')} {last.get('symbol')}"
+    live_line = ", ".join(_sleeve_label(s, rmult.get(s)) for s in live) if live else "NONE (all shadow)"
+    shadow_line = ", ".join(shadow[:5]) + ("..." if len(shadow) > 5 else "")
 
     lines = [
         f"BOT PULSE — {_age(snap.get('generated_at_utc'))}",
         f"{alive} | regime={hb.get('regime')} | feed {feed} | open={hb.get('open_trades')}",
         f"risk/trade={hb.get('risk_per_trade_pct')}% | maxpos={hb.get('max_positions')} "
         f"| block={hb.get('allocator_hard_block')}",
-        f"LIVE sleeves: {', '.join(live) if live else 'NONE (all shadow)'}",
-        f"recent P&L: {tot:+.3f} over {n} trades",
+        f"LIVE risk: {live_line}",
+        f"shadow: {shadow_line or '-'}",
+        last_line,
+        f"P&L journal: live-risk {live_pnl:+.3f}/{live_n} trades | all tail {all_pnl:+.3f}/{all_n}",
     ]
     return "\n".join(lines)
 
@@ -171,7 +304,7 @@ def main():
     if not SNAP.exists():
         print(f"no snapshot at {SNAP} — run scripts/export_server_snapshot.py first")
         return
-    snap = json.loads(SNAP.read_text(encoding="utf-8", errors="ignore"))
+    snap = _load_snapshot()
     if "--tg" in sys.argv or "--telegram" in sys.argv:
         tg = build_telegram_digest(snap)
         print(tg)
