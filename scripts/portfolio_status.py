@@ -116,16 +116,16 @@ def _get_account_balance(account: Dict) -> Dict[str, Any]:
         return {"name": name, "error": f"parse: {exc}"}
 
 
-def _get_positions(account: Dict) -> List[Dict[str, Any]]:
-    """Get open positions for one account."""
+def _get_positions(account: Dict) -> tuple[List[Dict[str, Any]], Optional[str]]:
+    """Get open positions and keep API failure distinct from an empty account."""
     key = account.get("key", "")
     secret = account.get("secret", "")
     base = account.get("base", "https://api.bybit.com")
     if not key or not secret:
-        return []
+        return [], "missing credentials"
     data = _bybit_get(base, "/v5/position/list", key, secret, {"category": "linear", "settleCoin": "USDT"})
     if data.get("retCode") != 0:
-        return []
+        return [], f"API err: {data.get('retMsg', data.get('error', 'unknown'))}"
     out = []
     for p in (data.get("result") or {}).get("list", []):
         try:
@@ -143,7 +143,7 @@ def _get_positions(account: Dict) -> List[Dict[str, Any]]:
             })
         except (TypeError, ValueError):
             continue
-    return out
+    return out, None
 
 
 def _load_trades_for_window(days: int) -> List[Dict[str, Any]]:
@@ -303,6 +303,13 @@ def _format_report(report: Dict[str, Any], html: bool = False) -> str:
                 f"  {p['symbol']} {p['side']} sz={p['size']} @ {p['entry_price']:.4f}  "
                 f"→ {p['mark_price']:.4f}  PnL: {sign}${p['unrealized_pnl']:.2f}"
             )
+    elif report.get("position_query_ok"):
+        lines.extend(["", "Open positions: 0"])
+
+    if not report.get("position_query_ok", True):
+        lines.extend(["", "⚠️ Open positions are UNKNOWN: Bybit position query failed."])
+        for error in report.get("position_errors", []):
+            lines.append(f"  {error}")
 
     # PnL summary
     pnl = report["pnl"]
@@ -349,17 +356,22 @@ def main() -> int:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "accounts": [],
         "positions": [],
+        "position_query_ok": True,
+        "position_errors": [],
         "pnl": {},
     }
 
     for acc in accounts:
         balance = _get_account_balance(acc)
         report["accounts"].append(balance)
-        if not balance.get("error"):
-            positions = _get_positions(acc)
-            for p in positions:
-                p["account"] = acc.get("name")
-            report["positions"].extend(positions)
+        positions, position_error = _get_positions(acc)
+        if position_error:
+            report["position_query_ok"] = False
+            report["position_errors"].append(f"{acc.get('name', '?')}: {position_error}")
+            continue
+        for p in positions:
+            p["account"] = acc.get("name")
+        report["positions"].extend(positions)
 
     trades = _load_trades_for_window(args.days_pnl)
     report["pnl"] = _summarize_pnl(trades)
@@ -372,7 +384,7 @@ def main() -> int:
     if args.tg:
         _tg_send(_format_report(report, html=True))
 
-    return 0
+    return 0 if report["position_query_ok"] else 2
 
 
 if __name__ == "__main__":
