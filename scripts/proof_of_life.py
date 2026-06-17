@@ -135,11 +135,23 @@ def _maybe_refresh_snapshot() -> dict | None:
     try:
         snap_mtime = SNAP.stat().st_mtime if SNAP.exists() else 0.0
         hb_mtime = hb_path.stat().st_mtime if hb_path.exists() else 0.0
+        current_hb = json.loads(hb_path.read_text(encoding="utf-8", errors="ignore")) if hb_path.exists() else {}
+        current_ts = float(current_hb.get("ts") or 0.0)
+        snap_ts = 0.0
+        if SNAP.exists():
+            try:
+                previous = json.loads(SNAP.read_text(encoding="utf-8", errors="ignore"))
+                snap_ts = float((previous.get("heartbeat") or {}).get("ts") or 0.0)
+            except Exception:
+                snap_ts = 0.0
     except Exception:
         return None
-    if hb_mtime <= snap_mtime:
+    if hb_mtime <= snap_mtime and current_ts <= snap_ts:
         return None
     try:
+        import sys
+        if str(ROOT) not in sys.path:
+            sys.path.insert(0, str(ROOT))
         from scripts.export_server_snapshot import build_snapshot, to_markdown
 
         snap = build_snapshot()

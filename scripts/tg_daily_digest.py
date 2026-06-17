@@ -34,6 +34,13 @@ from typing import Any, Optional
 from urllib import request, error
 
 ROOT = Path(__file__).resolve().parent.parent
+try:
+    from proof_of_life import _event_ts_iso, _latest_trade_event, _runtime_sets, _sleeve_label
+except Exception:  # pragma: no cover - digest must still run if proof helper changes
+    _event_ts_iso = None
+    _latest_trade_event = None
+    _runtime_sets = None
+    _sleeve_label = None
 
 
 # ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -87,6 +94,20 @@ def _file_age(path: Path) -> Optional[float]:
         return time.time() - path.stat().st_mtime
     except Exception:
         return None
+
+
+def _tail_jsonl(path: Path, limit: int = 80) -> list[dict]:
+    try:
+        lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()[-limit:]
+        out = []
+        for line in lines:
+            try:
+                out.append(json.loads(line))
+            except Exception:
+                pass
+        return out
+    except Exception:
+        return []
 
 
 def _tg_send(token: str, chat_id: str, msg: str, dry_run: bool = False) -> bool:
@@ -168,7 +189,28 @@ def _bybit_section() -> str:
         bot_status = "🔴 нет файла heartbeat"
 
     lines.append(f"<b>🤖 Крипта Bybit:</b> {bot_status}")
-    lines.append("  ℹ️ Открытых 0 = бот жив, но сейчас вне позиции.")
+    if hb and int(hb.get("open_trades") or 0) > 0:
+        lines.append("  ℹ️ Есть открытая позиция: бот не молчит, сейчас управляет сделкой.")
+    else:
+        lines.append("  ℹ️ Открытых 0 = бот жив, но сейчас вне позиции.")
+
+    # ── What is truly live now ───────────────────────────────────────────────
+    if hb and _runtime_sets and _sleeve_label:
+        _enabled, rmult, live, shadow, _off = _runtime_sets(hb)
+        live_line = ", ".join(_sleeve_label(s, rmult.get(s)) for s in live) if live else "нет, всё shadow"
+        shadow_line = ", ".join(shadow[:6]) + ("..." if len(shadow) > 6 else "")
+        lines.append(f"🎯 Live-риск: {live_line}")
+        lines.append(f"👁 Shadow/телеметрия: {shadow_line or '-'}")
+
+    if _latest_trade_event and _event_ts_iso:
+        last = _latest_trade_event(_tail_jsonl(ROOT / "runtime" / "live_trade_events.jsonl"))
+        if last:
+            iso = _event_ts_iso(last)
+            age = _age_str((time.time() - datetime.fromisoformat(iso.replace("Z", "+00:00")).timestamp()) if iso else None)
+            lines.append(
+                f"🧾 Последняя сделка: {age} — {last.get('event')} "
+                f"{last.get('strategy')} {last.get('symbol')}"
+            )
 
     # ── Circuit Breaker ───────────────────────────────────────────────────────
     cb_path = ROOT / "runtime" / "circuit_breaker.json"
