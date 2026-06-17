@@ -105,6 +105,37 @@ def _wait_for_existing(poll_sec: int) -> None:
         time.sleep(max(30, int(poll_sec)))
 
 
+def _item_keys(item: dict[str, object]) -> set[str]:
+    name = str(item["name"])
+    return {name, _slug(name), _slug(str(item.get("label") or ""))}
+
+
+def _select_suite(*, start_at: str | None, only: str | None) -> list[dict[str, object]]:
+    selected = list(SUITE)
+    available = ", ".join(str(item["name"]) for item in SUITE)
+
+    if start_at:
+        wanted = _slug(start_at)
+        for idx, item in enumerate(selected):
+            if wanted in _item_keys(item):
+                selected = selected[idx:]
+                break
+        else:
+            raise SystemExit(f"unknown --start-at={start_at!r}; available: {available}")
+
+    if only:
+        wanted = {_slug(part) for part in only.split(",") if part.strip()}
+        if not wanted:
+            raise SystemExit("--only was provided but no strategy names were parsed")
+        matched = [item for item in selected if _item_keys(item) & wanted]
+        missing = wanted - set().union(*(_item_keys(item) for item in matched)) if matched else wanted
+        if missing:
+            raise SystemExit(f"unknown --only={','.join(sorted(missing))}; available: {available}")
+        selected = matched
+
+    return selected
+
+
 def _run(cmd: list[str], *, env: dict[str, str] | None = None) -> int:
     print("cmd=" + " ".join(cmd), flush=True)
     return subprocess.run(cmd, cwd=ROOT, env=env).returncode
@@ -119,7 +150,11 @@ def main() -> int:
     ap.add_argument("--max-concurrent", type=int, default=3)
     ap.add_argument("--bear-months", default="2025-10,2025-11,2025-12,2026-01,2026-02,2026-03,2026-04")
     ap.add_argument("--skip-pair-arb", action="store_true")
+    ap.add_argument("--start-at", help="Start from this suite item name or label slug")
+    ap.add_argument("--only", help="Comma-separated suite item names or label slugs to run")
     args = ap.parse_args()
+
+    suite = _select_suite(start_at=args.start_at, only=args.only)
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     master = ROOT / "reports" / f"INCOME_RESEARCH_SUITE_{stamp}.md"
@@ -129,6 +164,9 @@ def main() -> int:
         "",
         f"- generated_at_utc: `{datetime.now(timezone.utc).isoformat()}`",
         f"- jobs: `{args.jobs}`",
+        f"- start_at: `{args.start_at or '-'}`",
+        f"- only: `{args.only or '-'}`",
+        f"- selected: `{','.join(str(item['name']) for item in suite)}`",
         "",
     ]
     master.write_text("\n".join(lines), encoding="utf-8")
@@ -137,7 +175,7 @@ def main() -> int:
         _wait_for_existing(args.poll_sec)
 
     py = _repo_python()
-    for item in SUITE:
+    for item in suite:
         spec_path = ROOT / item["spec"]
         name = _load_name(spec_path)
         limit = int(item["limit"])
