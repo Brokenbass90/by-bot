@@ -1256,6 +1256,51 @@ def tg_trade(msg: str):
     tg_send(msg)
 
 
+def _ru_side(side: str | None) -> str:
+    s = str(side or "").strip().lower()
+    if s == "buy":
+        return "лонг"
+    if s == "sell":
+        return "шорт"
+    return str(side or "-")
+
+
+def _ru_strategy_label(strategy: str | None) -> str:
+    key = str(strategy or "").strip().lower()
+    labels = {
+        "range": "пила флэта",
+        "flat_resistance_fade": "шорт от сопротивления",
+        "att1_trendline_touch": "отбой от наклонной",
+        "inplay": "inplay / пробой-ретест",
+        "inplay_breakout": "пробой с ретестом",
+        "breakout": "пробой",
+        "bounce": "отскок",
+        "breakdown": "слом поддержки",
+    }
+    return labels.get(key, key or "-")
+
+
+def _ru_signal_reason(reason: str | None) -> str:
+    text = str(reason or "").strip()
+    if not text:
+        return "-"
+    if text.startswith("range-long:"):
+        text = "лонг от поддержки:" + text[len("range-long:"):]
+    elif text.startswith("range-short:"):
+        text = "шорт от сопротивления:" + text[len("range-short:"):]
+    replacements = (
+        (" sup=", " поддержка="),
+        (" res=", " сопротивление="),
+        (" mid=", " середина="),
+        (" w=", " ширина="),
+        (" min_rr=", " мин_RR="),
+        (" reason=", " причина="),
+    )
+    for old, new in replacements:
+        text = text.replace(old, new)
+    return text
+
+
 _TG_ALERT_THROTTLE_TS: dict[str, int] = {}
 BREAKOUT_SKIP_ALERT_COOLDOWN_SEC = int(os.getenv("BREAKOUT_SKIP_ALERT_COOLDOWN_SEC", "14400") or 14400)
 TG_SKIP_ALERT_COOLDOWN_SEC = max(300, int(os.getenv("TG_SKIP_ALERT_COOLDOWN_SEC", "3600") or 3600))
@@ -3564,7 +3609,7 @@ def _maybe_schedule_ai_trade_review(tr, sym: str, pnl_closed: float, fee_sum: fl
                 fallback_text=f"trade review: {summary}",
                 payload=payload,
                 prompt=prompt,
-                tg_prefix="🧠 AI trade review",
+                tg_prefix="🧠 ИИ-разбор сделки",
             )
         )
     except RuntimeError:
@@ -6212,7 +6257,8 @@ def sync_trades_with_exchange():
                     lat_txt = ("\nLatency: " + " | ".join(lat_parts)) if lat_parts else ""
                     rr_txt = ("\n" + " | ".join(rr_parts)) if rr_parts else ""
                     tg_trade(
-                        f"✅ ENTRY FILLED {sym} {tr.side} qty={tr.qty} avg={float(getattr(tr,'avg',0) or 0):.6f}"
+                        f"✅ ВХОД ИСПОЛНЕН {sym} {_ru_side(getattr(tr, 'side', ''))} "
+                        f"qty={tr.qty} avg={float(getattr(tr,'avg',0) or 0):.6f}"
                         f"{lat_txt}{rr_txt}"
                     )
                     _append_live_trade_event(
@@ -6228,7 +6274,13 @@ def sync_trades_with_exchange():
                     if TRADE_CHARTS_SEND_ON_ENTRY:
                         p = _make_trade_chart(sym, tr, stage="entry")
                         if p:
-                            tg_send_photo(p, caption=f"entry chart {sym} {tr.side} [{getattr(tr, 'strategy', '')}]")
+                            tg_send_photo(
+                                p,
+                                caption=(
+                                    f"график входа {sym} {_ru_side(getattr(tr, 'side', ''))} "
+                                    f"[{_ru_strategy_label(getattr(tr, 'strategy', ''))}]"
+                                ),
+                            )
                 continue
 
             # позиции нет — ждём grace период
@@ -6238,7 +6290,7 @@ def sync_trades_with_exchange():
             # grace вышел — считаем вход не состоялся
             tr.status = "FAILED"
             tr.close_reason = "ENTRY_NOT_CONFIRMED"
-            tg_trade(f"🟡 ENTRY FAILED {sym}: no position after {ENTRY_CONFIRM_GRACE_SEC}s")
+            tg_trade(f"🟡 ВХОД НЕ СОСТОЯЛСЯ {sym}: позиции нет через {ENTRY_CONFIRM_GRACE_SEC}s")
             try:
                 del TRADES[(exch, sym)]
             except Exception:
@@ -7009,14 +7061,14 @@ def _finalize_and_report_closed(tr, sym: str):
     tr.status = "CLOSED"
     tr.exit_ts = now
 
-    msg = f"✅ CLOSED {sym} {getattr(tr, 'side', '')}".strip()
-    msg += f"\nRealized PnL: {pnl_closed:+.4f} USDT"
+    msg = f"✅ СДЕЛКА ЗАКРЫТА {sym} {_ru_side(getattr(tr, 'side', ''))}".strip()
+    msg += f"\nРеализованный PnL: {pnl_closed:+.4f} USDT"
     if fee_sum is not None:
-        msg += f"\nFees: {float(fee_sum):.4f} USDT"
+        msg += f"\nКомиссии: {float(fee_sum):.4f} USDT"
     if exit_px is not None:
-        msg += f"\nExit px: {exit_px:.6f}"
+        msg += f"\nЦена выхода: {exit_px:.6f}"
     if getattr(tr, "close_reason", None):
-        msg += f"\nReason: {tr.close_reason}"
+        msg += f"\nПричина: {tr.close_reason}"
     hold_txt = []
     fill_ts = int(getattr(tr, "entry_fill_ts", 0) or 0)
     exit_ts = int(now)
@@ -7028,7 +7080,7 @@ def _finalize_and_report_closed(tr, sym: str):
     if fill_ts > 0 and exit_ts >= fill_ts:
         hold_txt.append(f"fill→close={exit_ts - fill_ts}s")
     if hold_txt:
-        msg += "\nTiming: " + " | ".join(hold_txt)
+        msg += "\nВремя: " + " | ".join(hold_txt)
     tg_trade(msg)
 
     # ── Big-loss alert ────────────────────────────────────────────────────────
@@ -7077,7 +7129,13 @@ def _finalize_and_report_closed(tr, sym: str):
     if TRADE_CHARTS_SEND_ON_CLOSE:
         p = _make_trade_chart(sym, tr, stage="close", pnl=pnl_closed, exit_px=exit_px)
         if p:
-            tg_send_photo(p, caption=f"close chart {sym} [{getattr(tr, 'strategy', '')}] pnl={pnl_closed:+.4f}")
+            tg_send_photo(
+                p,
+                caption=(
+                    f"график закрытия {sym} "
+                    f"[{_ru_strategy_label(getattr(tr, 'strategy', ''))}] pnl={pnl_closed:+.4f}"
+                ),
+            )
 
 def set_tp_sl_retry(symbol: str, side: str, tp: Optional[float], sl: Optional[float]) -> bool:
     if DRY_RUN or TRADE_CLIENT is None:
@@ -7564,7 +7622,7 @@ def ensure_open_positions_have_tpsl():
             if not was_on:
                 tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
                 sl_txt = f"{tr.sl_price:.6f}" if tr.sl_price is not None else "none"
-                tg_trade(f"🧷 TP/SL ensured {sym}: TP={tp_txt} SL={sl_txt}")
+                tg_trade(f"🧷 TP/SL проверены на бирже {sym}: тейк={tp_txt} стоп={sl_txt}")
         else:
             tr.tpsl_on_exchange = False
             _arm_tpsl_failsafe(sym, tr, "periodic_ensure_failed")
@@ -9093,10 +9151,11 @@ async def try_range_entry_async(symbol: str, price: float):
     )
 
     tg_trade(
-        f"🟦 RANGE ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
-        f"entry≈{price:.6f} TP={tr.tp_price:.6f} SL={tr.sl_price:.6f}\n"
-        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
-        f"reason={sig.reason}"
+        f"🟦 ВХОД: ПИЛА ФЛЭТА / ОТСКОК ОТ ГРАНИЦЫ [{TRADE_CLIENT.name}] "
+        f"{symbol} {_ru_side(getattr(sig, 'side', ''))}\n"
+        f"вход≈{price:.6f} тейк={tr.tp_price:.6f} стоп={tr.sl_price:.6f}\n"
+        f"объём≈{notional_real:.2f}$ qty≈{q}\n"
+        f"причина={_ru_signal_reason(getattr(sig, 'reason', ''))}"
     )
 
 
@@ -9208,10 +9267,10 @@ async def try_inplay_entry_async(symbol: str, price: float):
     else:
         tp_txt = "runner"
     tg_trade(
-        f"🟩 INPLAY ENTRY [{TRADE_CLIENT.name}] {symbol} {side}\n"
-        f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
-        f"notional≈{notional_real:.2f}$ qty≈{q}\n"
-        f"reason={sig.reason}"
+        f"🟩 ВХОД: INPLAY / ПРОБОЙ-РЕТЕСТ [{TRADE_CLIENT.name}] {symbol} {_ru_side(side)}\n"
+        f"вход≈{entry:.6f} тейк={tp_txt} стоп={tr.sl_price:.6f}\n"
+        f"объём≈{notional_real:.2f}$ qty≈{q}\n"
+        f"причина={_ru_signal_reason(getattr(sig, 'reason', ''))}"
     )
 
 

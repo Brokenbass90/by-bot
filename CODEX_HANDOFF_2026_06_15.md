@@ -736,3 +736,101 @@ Real `$500` Alpaca deposit is **not ready today**. Bear-2022 bake-off makes `alp
 
 ### Repo hygiene
 `configs/web_config.json` remains skip-worktree and must not be staged. This pass should be committed with explicit file list only; worktree still contains many unrelated untracked docs/logs/configs.
+
+---
+
+## 25. Session log: live visibility, alerts, and long research queues (2026-06-17)
+
+This section is a technical continuation log. It intentionally records what was changed, observed, and started; it is not a strategy verdict and should not be read as a conclusion that any sleeve is impossible.
+
+### Commits already pushed before this section
+- `31665f7 Fix inplay retest lookahead gate`
+  - `strategies/inplay_retest_v3.py` now builds levels from closed history before the current signal bar.
+  - `configs/autoresearch/inplay_retest_v3_level_retest_repair_v2.json` is the post-fix sweep spec with stricter constraints (`min_trades=60`, `min_pf=1.15`, `max_negative_streak=2`, etc.).
+- `ece4e1c Clarify proof of life report`
+- `fb3dcf2 Make Telegram status reports clearer`
+- `aec9350 Show live positions in Telegram digest`
+  - `scripts/proof_of_life.py` and `scripts/tg_daily_digest.py` now separate live-risk sleeves from shadow telemetry and show open-position TP/SL/uPnL in the daily digest.
+
+### Live Telegram reports inspected
+Screenshots from 2026-06-17 showed the live trade alert flow:
+1. range entry signal,
+2. exchange fill confirmation,
+3. entry chart,
+4. close chart,
+5. AI post-trade review.
+
+Server runtime confirmed these events:
+- `DOGEUSDT Buy [range]`
+  - submitted `2026-06-17 08:27:50 UTC`,
+  - filled `2026-06-17 08:28:00 UTC` at `0.08656`, qty `333`,
+  - TP `0.08782`, SL `0.08608`,
+  - closed by `SL` at `2026-06-17 08:38:45 UTC`,
+  - realized PnL `-0.19145905 USDT`, fees `0.01585349`.
+- `BERAUSDT Buy [range]`
+  - submitted `2026-06-17 08:41:01 UTC`,
+  - filled `2026-06-17 08:41:03 UTC` at `0.2514`, qty `78`,
+  - TP `0.2598`, SL `0.2494`,
+  - runtime position check showed `exchange_tp=0.2598`, `exchange_sl=0.2494`, `tp_model=exchange_tp`.
+
+### Telegram alert text localization
+Changed `smart_pump_reversal_bot.py` text only; no entry, sizing, TP, SL, or risk logic changed.
+
+Added helpers:
+- `_ru_side()` maps `Buy/Sell` to `лонг/шорт`.
+- `_ru_strategy_label()` maps internal strategy ids to trader-readable labels, e.g. `range -> пила флэта`, `flat_resistance_fade -> шорт от сопротивления`, `inplay_breakout -> пробой с ретестом`.
+- `_ru_signal_reason()` translates common reason fragments for range/inplay alerts (`sup`, `res`, `mid`, `min_rr`, etc.).
+
+Localized alert surfaces:
+- `ENTRY FILLED` -> `ВХОД ИСПОЛНЕН`.
+- `ENTRY FAILED` -> `ВХОД НЕ СОСТОЯЛСЯ`.
+- `CLOSED` report fields -> Russian labels for PnL, fees, exit price, close reason, timing.
+- `entry chart` / `close chart` captions -> Russian captions with trader-readable sleeve labels.
+- `AI trade review` -> `ИИ-разбор сделки`.
+- `RANGE ENTRY` -> `ВХОД: ПИЛА ФЛЭТА / ОТСКОК ОТ ГРАНИЦЫ`.
+- `INPLAY ENTRY` -> `ВХОД: INPLAY / ПРОБОЙ-РЕТЕСТ`.
+- `TP/SL ensured` -> `TP/SL проверены на бирже`.
+
+Validation:
+- `python3 -m py_compile smart_pump_reversal_bot.py` passed locally.
+- Grep check no longer finds the screenshot phrases `ENTRY FILLED`, `ENTRY FAILED`, `RANGE ENTRY`, `INPLAY ENTRY`, `AI trade review`, `entry chart`, `close chart`, `TP/SL ensured` in active alert strings. One old `Realized PnL: (pending)` placeholder remains in a separate pending-PnL branch and was not part of the screenshot flow.
+
+Deployment note:
+- If an open live position exists, deploy can copy the file but bot restart should be done at a safe moment after `open_trades=0`, unless the operator explicitly accepts a restart with an open position. The text patch only takes effect after process restart.
+
+### Long-running research started / verified
+Local screens:
+- `local_range_v3_repair_20260617`
+  - command: `scripts/run_income_research_suite.py --only range_scalp_v1_annual_repair_v3 --skip-wait --jobs 1 --limit-cap 500 --top 12`
+  - log: `logs/local_range_v3_repair_20260617.log`
+  - status at check: active, running `range_scalp_v1_annual_repair_v3_r232` of capped 500 candidates (spec total prints as 15552).
+- `local_income_week_queue_20260617`
+  - waits until `screen -ls` no longer shows `local_range_v3_repair_20260617`.
+  - then runs:
+    - `ivb1_impulse_retrace_v2_relaxed_mirror`
+    - `inplay_breakout_retest_htf_runner_v2`
+    - `elder_ema50_force_canonical_v1`
+    - `vwap_mean_reversion_v1_annual_repair_v2`
+  - command: `scripts/run_income_research_suite.py --only ... --skip-wait --jobs 1 --top 12`
+  - log: `logs/local_income_week_queue_20260617.log`
+  - earlier self-matching `pgrep -f` wait loop was removed; the active queue now waits via `screen -ls`.
+
+Server screens observed:
+- `income_research_suite_20260616`
+  - command: `scripts/run_income_research_suite.py --jobs 1 --poll-sec 600`
+  - status at check: active on `ivb1_impulse_retrace_v2_relaxed_mirror`, around candidate `r093/1536`.
+- `bybit_liquidations_collector_20260616`
+  - liquidation history collector remains active for the liquidation-sweep research lane.
+
+### Live runtime at last check
+- `bybot.service`: active.
+- `dry_run=false`, `trade_on=true`.
+- `runtime/live_positions.json` showed 1 open position at check:
+  - `BERAUSDT Buy range`, entry `0.2514`, current `0.2513`, qty `78`,
+  - TP `0.2598`, SL `0.2494`,
+  - exchange TP/SL fields present.
+
+### Repo hygiene notes
+- Do not stage `configs/web_config.json`.
+- Generated local artifacts `reports/PROOF_OF_LIFE_latest.txt` and `reports/PROOF_OF_LIFE_telegram.txt` are modified from local checks; leave them unstaged unless explicitly needed.
+- Commit live alert localization with explicit paths only.
