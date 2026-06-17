@@ -151,6 +151,7 @@ PumpFadeV4RStrategy = _import_strategy_class("pump_fade_v4r", "PumpFadeV4RStrate
 PumpFadeSimpleStrategy = _import_strategy_class("pump_fade_simple", "PumpFadeSimpleStrategy")
 PumpMomentumV1Strategy = _import_strategy_class("pump_momentum_v1", "PumpMomentumV1Strategy")
 ImpulseVolumeBreakoutV1Strategy = _import_strategy_class("impulse_volume_breakout_v1", "ImpulseVolumeBreakoutV1Strategy")
+InplayRetestV3Strategy = _import_strategy_class("inplay_retest_v3", "InplayRetestV3Strategy")
 ScalperClassicV1Strategy = _optional_strategy_class("scalper_classic_v1", "ScalperClassicV1Strategy")
 ScalperBounceV2Strategy = _import_strategy_class("scalper_bounce_v2", "ScalperBounceV2Strategy")
 ScalperSweepV2Strategy = _import_strategy_class("scalper_sweep_v2", "ScalperSweepV2Strategy")
@@ -584,6 +585,7 @@ def _explicit_strategy_risk_mult(strategy_name: str) -> Optional[float]:
         "scalper_breakout_v2": "SBR2_RISK_MULT",
         "elder_crypto_v1": "ECV1_RISK_MULT",
         "grid_smart_v1": ("GS1_RISK_MULT", "GRID_SMART_RISK_MULT"),
+        "inplay_retest_v3": ("IRV3_RISK_MULT", "RETEST_RISK_MULT"),
     }
     env_keys = env_overrides.get(st)
     if env_keys:
@@ -1106,7 +1108,7 @@ def main():
         "alt_trendline_touch_v1", "alt_trendline_touch_v2", "alt_sloped_momentum_v1", "alt_volume_spike_momentum_v1", "pump_fade_smart_v1", "grid_smart_v1",
         "alt_slope_break_v1", "scalper_classic_v1", "scalper_bounce_v2",
         "scalper_sweep_v2", "scalper_breakout_v2", "elder_crypto_v1",
-        "alt_horizontal_break_v1"}
+        "alt_horizontal_break_v1", "inplay_retest_v3"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -1327,6 +1329,7 @@ def main():
     pump_fade_simple = {sym: PumpFadeSimpleStrategy() for sym in symbols} if "pump_fade_simple" in strategies else {}
     pump_momentum_v1 = {sym: PumpMomentumV1Strategy() for sym in symbols} if "pump_momentum_v1" in strategies else {}
     impulse_volume_breakout_v1 = {sym: ImpulseVolumeBreakoutV1Strategy() for sym in symbols} if "impulse_volume_breakout_v1" in strategies else {}
+    inplay_retest_v3 = {sym: InplayRetestV3Strategy() for sym in symbols} if "inplay_retest_v3" in strategies else {}
     if "scalper_classic_v1" in strategies and ScalperClassicV1Strategy is None:
         raise ImportError("scalper_classic_v1 is missing; deploy strategies/scalper_classic_v1.py or remove it from --strategies")
     scalper_classic_v1 = {sym: ScalperClassicV1Strategy() for sym in symbols} if "scalper_classic_v1" in strategies else {}
@@ -1449,6 +1452,12 @@ def main():
                             if q_score < bt_breakout_quality_min_score:
                                 bt_quality_skipped += 1
                                 sig = None
+            elif st == "inplay_retest_v3":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = inplay_retest_v3[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "inplay_pullback":
                 sig = pullback[sym].signal(store, ts_ms, last_price)
             elif st == "pump_fade":
