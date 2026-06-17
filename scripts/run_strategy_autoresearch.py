@@ -233,6 +233,8 @@ def _extract_metrics(summary: dict, spec: dict) -> dict:
         "profit_factor": "profit_factor",
         "winrate": "winrate",
         "max_drawdown": "max_drawdown",
+        "avg_win": "avg_win",
+        "avg_loss": "avg_loss",
     }
     field_map.update(spec.get("field_map", {}))
     if "field_map" not in spec and "compounded_return_pct" in summary:
@@ -280,6 +282,17 @@ def _score_candidate(summary: dict, spec: dict) -> tuple[bool, str, float]:
     latest_entry_age_days = float(metrics.get("latest_entry_age_days") or 0.0)
     if not math.isfinite(latest_entry_age_days):
         latest_entry_age_days = float("inf")
+    avg_win = float(metrics.get("avg_win") or 0.0)
+    if not math.isfinite(avg_win):
+        avg_win = 0.0
+    avg_loss_abs = abs(float(metrics.get("avg_loss") or 0.0))
+    if not math.isfinite(avg_loss_abs):
+        avg_loss_abs = 0.0
+    avg_win_loss_ratio = (
+        avg_win / avg_loss_abs
+        if avg_win > 0 and avg_loss_abs > 0
+        else (math.inf if avg_win > 0 and avg_loss_abs == 0 else 0.0)
+    )
 
     fail_reasons: List[str] = []
     if trades < int(constraints.get("min_trades", 0)):
@@ -290,6 +303,13 @@ def _score_candidate(summary: dict, spec: dict) -> tuple[bool, str, float]:
         fail_reasons.append(f"dd>{constraints['max_drawdown']}")
     if net_pnl < float(constraints.get("min_net_pnl", -math.inf)):
         fail_reasons.append(f"net<{constraints['min_net_pnl']}")
+    if "min_winrate" in constraints and (not math.isfinite(winrate) or winrate < float(constraints["min_winrate"])):
+        fail_reasons.append(f"wr<{constraints['min_winrate']}")
+    if (
+        "min_avg_win_loss_ratio" in constraints
+        and (not math.isfinite(avg_win_loss_ratio) or avg_win_loss_ratio < float(constraints["min_avg_win_loss_ratio"]))
+    ):
+        fail_reasons.append(f"avg_wl<{constraints['min_avg_win_loss_ratio']}")
     if "max_latest_entry_age_days" in constraints and latest_entry_age_days > float(constraints.get("max_latest_entry_age_days", math.inf)):
         fail_reasons.append(f"entry_age>{constraints['max_latest_entry_age_days']}")
 

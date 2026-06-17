@@ -93,6 +93,28 @@ def _sma(values: List[float], period: int) -> float:
     return (sum(tail) / float(len(tail))) if tail else float("nan")
 
 
+def _row_ts_ms(row: list) -> Optional[int]:
+    try:
+        return int(float(row[0]))
+    except Exception:
+        return None
+
+
+def _closed_rows_before(rows: List[list], ts_ms: int, limit: int) -> List[list]:
+    """Return only rows that closed before the signal bar timestamp.
+
+    This strategy builds levels from history only. Some stores already enforce
+    that contract, but tests/live adapters are easy to get wrong; filtering here
+    keeps the strategy itself anti-lookahead.
+    """
+    out: List[list] = []
+    for row in rows:
+        row_ts = _row_ts_ms(row)
+        if row_ts is not None and row_ts < int(ts_ms):
+            out.append(row)
+    return out[-max(0, int(limit)):]
+
+
 # ---------- config ----------
 @dataclass
 class InplayRetestV3Config:
@@ -239,10 +261,14 @@ class InplayRetestV3Strategy:
         return max(below) if below else None
 
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
-        _ = (ts_ms, o, h, l, c, v)
         self.last_no_signal_reason = ""
         self._load_env()
         cfg = self.cfg
+        try:
+            signal_ts_ms = int(float(ts_ms))
+        except Exception:
+            self.last_no_signal_reason = "invalid_ts"
+            return None
 
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
@@ -252,17 +278,19 @@ class InplayRetestV3Strategy:
             self.last_no_signal_reason = "symbol_denied"
             return None
 
-        structure_rows = store.fetch_klines(sym, cfg.structure_tf, cfg.level_lookback) or []
-        entry_rows = store.fetch_klines(sym, cfg.entry_tf,
-                                        max(cfg.entry_lookback, cfg.vol_period + cfg.atr_period + 5)) or []
+        structure_raw = store.fetch_klines(sym, cfg.structure_tf, cfg.level_lookback + 2) or []
+        entry_need = max(cfg.entry_lookback, cfg.vol_period + cfg.atr_period + 5)
+        entry_raw = store.fetch_klines(sym, cfg.entry_tf, entry_need + 2) or []
+        structure_rows = _closed_rows_before(structure_raw, signal_ts_ms, cfg.level_lookback)
+        entry_history_rows = _closed_rows_before(entry_raw, signal_ts_ms, entry_need)
         if len(structure_rows) < (cfg.pivot_left + cfg.pivot_right + cfg.min_touches + 5):
-            self.last_no_signal_reason = "not_enough_structure_bars"
+            self.last_no_signal_reason = "not_enough_closed_structure_bars"
             return None
-        if len(entry_rows) < (cfg.atr_period + 3):
-            self.last_no_signal_reason = "not_enough_entry_bars"
+        if len(entry_history_rows) < max(3, cfg.vol_period if cfg.vol_mult > 0 else 3):
+            self.last_no_signal_reason = "not_enough_closed_entry_bars"
             return None
 
-        bar_ts = int(float(entry_rows[-1][0]))
+        bar_ts = signal_ts_ms
         if self._last_entry_ts is not None and bar_ts == self._last_entry_ts:
             self.last_no_signal_reason = "same_entry_bar"
             return None
@@ -280,14 +308,14 @@ class InplayRetestV3Strategy:
         # LEVEL's own scale, i.e. the structure-TF ATR — not the quiet entry feed.
         atr = structure_atr
 
-        cur_open = float(entry_rows[-1][1])
-        cur_high = float(entry_rows[-1][2])
-        cur_low = float(entry_rows[-1][3])
-        cur_close = float(entry_rows[-1][4])
-        cur_vol = float(entry_rows[-1][5]) if len(entry_rows[-1]) > 5 else 0.0
+        cur_open = float(o)
+        cur_high = float(h)
+        cur_low = float(l)
+        cur_close = float(c)
+        cur_vol = float(v or 0.0)
         bar_range = max(1e-12, cur_high - cur_low)
-        vols = [float(r[5]) if len(r) > 5 else 0.0 for r in entry_rows]
-        vol_base = _sma(vols[:-1], cfg.vol_period)
+        vols = [float(r[5]) if len(r) > 5 else 0.0 for r in entry_history_rows]
+        vol_base = _sma(vols, cfg.vol_period)
 
         if cfg.vol_mult > 0:
             if not (math.isfinite(vol_base) and vol_base > 0):

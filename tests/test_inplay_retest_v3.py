@@ -13,6 +13,18 @@ def _row(i, o, h, l, c, v):
     return [str(i * 3_600_000), str(o), str(h), str(l), str(c), str(v)]
 
 
+def _call(strategy, store, row):
+    return strategy.maybe_signal(
+        store,
+        int(float(row[0])),
+        float(row[1]),
+        float(row[2]),
+        float(row[3]),
+        float(row[4]),
+        float(row[5]),
+    )
+
+
 class _Store:
     """Synthetic feed. structure_rows build real levels (repeated touches at
     100 support and 110 resistance); entry_rows end on the chosen trigger bar."""
@@ -27,10 +39,10 @@ class _Store:
         return rows[-limit:]
 
 
-def _structure_with_levels():
+def _structure_with_levels(start_i=0):
     """~70 1h bars that repeatedly touch support=100 and resistance=110."""
     rows = []
-    i = 0
+    i = int(start_i)
     # oscillate between 100 (support) and 110 (resistance) several times -> >=2 touches each
     waypoints = [105, 110, 104, 100, 106, 110, 103, 100, 107, 110, 102, 100, 106]
     prev = 105.0
@@ -43,6 +55,18 @@ def _structure_with_levels():
             rows.append(_row(i, o, h, l, c, 100))
             prev = c
             i += 1
+    return rows
+
+
+def _structure_without_levels(start_i=0, n=48):
+    """Enough closed history for ATR, but no repeated pivot cluster."""
+    rows = []
+    prev = 92.0
+    for j in range(n):
+        i = int(start_i) + j
+        c = prev + 0.08
+        rows.append(_row(i, prev, c + 0.20, prev - 0.20, c, 100))
+        prev = c
     return rows
 
 
@@ -67,9 +91,10 @@ def _short_retest_bar(i, vol=100):
 
 def test_long_on_support_retest_hold():
     structure = _structure_with_levels()
-    entry = [_row(i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]  # hovering above support
-    entry.append(_long_retest_bar(40))
-    sig = InplayRetestV3Strategy(_cfg()).maybe_signal(_Store(structure, entry), 1, 0, 0, 0, 0, 0)
+    entry = [_row(70 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]  # hovering above support
+    trigger = _long_retest_bar(110)
+    entry.append(trigger)
+    sig = _call(InplayRetestV3Strategy(_cfg()), _Store(structure, entry), trigger)
     assert sig is not None, "should fire on a clean support retest-hold"
     assert sig.side == "long"
     # tight stop just BELOW the support level (not a far floating stop)
@@ -83,9 +108,10 @@ def test_long_on_support_retest_hold():
 
 def test_short_on_resistance_retest_hold():
     structure = _structure_with_levels()
-    entry = [_row(i, 109.5, 109.7, 109.3, 109.5, 100) for i in range(40)]  # hovering below resistance
-    entry.append(_short_retest_bar(40))
-    sig = InplayRetestV3Strategy(_cfg()).maybe_signal(_Store(structure, entry), 1, 0, 0, 0, 0, 0)
+    entry = [_row(70 + i, 109.5, 109.7, 109.3, 109.5, 100) for i in range(40)]  # hovering below resistance
+    trigger = _short_retest_bar(110)
+    entry.append(trigger)
+    sig = _call(InplayRetestV3Strategy(_cfg()), _Store(structure, entry), trigger)
     assert sig is not None, "should fire on a clean resistance retest-hold"
     assert sig.side == "short"
     assert sig.sl > 110.6
@@ -96,9 +122,11 @@ def test_short_on_resistance_retest_hold():
 def test_no_trade_when_price_far_from_any_level():
     structure = _structure_with_levels()
     # parked at 107, in the gap between 104.5 and 110.6 — the bar reaches no level
-    entry = [_row(i, 107.0, 107.3, 106.7, 107.0, 100) for i in range(41)]
+    entry = [_row(70 + i, 107.0, 107.3, 106.7, 107.0, 100) for i in range(40)]
+    trigger = _row(110, 107.0, 107.3, 106.7, 107.0, 100)
+    entry.append(trigger)
     s = InplayRetestV3Strategy(_cfg())
-    sig = s.maybe_signal(_Store(structure, entry), 1, 0, 0, 0, 0, 0)
+    sig = _call(s, _Store(structure, entry), trigger)
     assert sig is None
     assert s.last_no_signal_reason in {"no_retest_hold", "no_levels"}
 
@@ -106,19 +134,64 @@ def test_no_trade_when_price_far_from_any_level():
 def test_no_long_when_support_breaks_instead_of_holds():
     structure = _structure_with_levels()
     # bar slices clean through 99.4 and closes well below -> support did NOT hold
-    entry = [_row(i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
-    entry.append(_row(40, 100.0, 100.1, 97.5, 97.8, 100))
+    entry = [_row(70 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
+    trigger = _row(110, 100.0, 100.1, 97.5, 97.8, 100)
+    entry.append(trigger)
     s = InplayRetestV3Strategy(_cfg(allow_short=False))  # isolate the long-hold failure
-    sig = s.maybe_signal(_Store(structure, entry), 1, 0, 0, 0, 0, 0)
+    sig = _call(s, _Store(structure, entry), trigger)
     assert sig is None
     assert s.last_no_signal_reason == "no_retest_hold"
 
 
 def test_volume_filter_blocks_when_enabled_and_thin():
     structure = _structure_with_levels()
-    entry = [_row(i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
-    entry.append(_long_retest_bar(40, vol=10))  # thin volume on the trigger bar
+    entry = [_row(70 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
+    trigger = _long_retest_bar(110, vol=10)  # thin volume on the trigger bar
+    entry.append(trigger)
     s = InplayRetestV3Strategy(_cfg(vol_mult=1.5))
-    sig = s.maybe_signal(_Store(structure, entry), 1, 0, 0, 0, 0, 0)
+    sig = _call(s, _Store(structure, entry), trigger)
     assert sig is None
     assert s.last_no_signal_reason == "no_volume"
+
+
+def test_levels_ignore_current_and_future_bars():
+    history_without_levels = _structure_without_levels(start_i=0, n=48)
+    future_levels_after_signal = _structure_with_levels(start_i=120)
+    structure = history_without_levels + future_levels_after_signal
+    entry = [_row(60 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(8)]
+    trigger = _long_retest_bar(70)
+    entry.append(trigger)
+
+    s = InplayRetestV3Strategy(_cfg())
+    sig = _call(s, _Store(structure, entry), trigger)
+
+    assert sig is None
+    assert s.last_no_signal_reason in {"no_levels", "no_retest_hold"}
+
+
+def test_rr_guard_blocks_when_next_level_is_too_close():
+    structure = _structure_with_levels()
+    entry = [_row(70 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
+    trigger = _long_retest_bar(110)
+    entry.append(trigger)
+
+    s = InplayRetestV3Strategy(_cfg(min_rr_tp1=20.0))
+    sig = _call(s, _Store(structure, entry), trigger)
+
+    assert sig is None
+    assert s.last_no_signal_reason.startswith("tp1_rr_too_low_")
+
+
+def test_stop_width_guards_block_bad_risk_geometry():
+    structure = _structure_with_levels()
+    entry = [_row(70 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
+    trigger = _long_retest_bar(110)
+    entry.append(trigger)
+
+    too_tight = InplayRetestV3Strategy(_cfg(min_stop_pct=0.05))
+    assert _call(too_tight, _Store(structure, entry), trigger) is None
+    assert too_tight.last_no_signal_reason.startswith("stop_too_tight_")
+
+    too_wide = InplayRetestV3Strategy(_cfg(max_stop_pct=0.005))
+    assert _call(too_wide, _Store(structure, entry), trigger) is None
+    assert too_wide.last_no_signal_reason.startswith("stop_too_wide_")
