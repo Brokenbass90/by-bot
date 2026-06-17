@@ -7383,7 +7383,14 @@ def calc_notional_usd_candidate_from_stop_pct(stop_pct: float, risk_mult: float 
     if equity <= 0:
         return 0.0
 
-    mult = max(0.1, float(risk_mult or 1.0)) * _get_vol_adj_mult()
+    try:
+        risk_mult_f = float(risk_mult)
+    except Exception:
+        risk_mult_f = 1.0
+    if risk_mult_f <= 0:
+        return 0.0
+
+    mult = max(0.1, risk_mult_f) * _get_vol_adj_mult()
     risk_usd = equity * (RISK_PER_TRADE_PCT / 100.0) * mult
 
     notional_raw = risk_usd / (stop_pct / 100.0)
