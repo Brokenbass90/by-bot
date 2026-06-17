@@ -14542,6 +14542,7 @@ async def pulse():
                 "enabled": {
                     "att1": bool(ENABLE_ATT1_TRADING),
                     "flat": bool(ENABLE_FLAT_TRADING),
+                    "range": bool(ENABLE_RANGE_TRADING),
                     "breakdown": bool(ENABLE_BREAKDOWN_TRADING),
                     "midterm": bool(ENABLE_MIDTERM_TRADING),
                     "ivb1": bool(ENABLE_IVB1_TRADING),
@@ -14553,6 +14554,7 @@ async def pulse():
                 "risk_mult": {
                     "att1": round(float(ATT1_RISK_MULT), 6),
                     "flat": round(float(FLAT_RISK_MULT), 6),
+                    "range": round(float(RANGE_RISK_MULT), 6),
                     "breakdown": round(float(BREAKDOWN_RISK_MULT), 6),
                     "midterm": round(float(MIDTERM_RISK_MULT), 6),
                     "ivb1": round(float(IVB1_RISK_MULT), 6),
