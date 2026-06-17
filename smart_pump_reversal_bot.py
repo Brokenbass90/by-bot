@@ -1391,6 +1391,10 @@ BYBIT_POS_MODE = os.getenv("BYBIT_POSITION_MODE", "oneway").strip().lower()  # "
 POS_IS_ONEWAY = (BYBIT_POS_MODE != "hedge")
 
 ENABLE_RANGE_TRADING = os.getenv("ENABLE_RANGE_TRADING", "0").strip() == "1"
+RANGE_RISK_MULT = _risk_mult_or_pause("RANGE_RISK_MULT", "0.25")
+RANGE_ALLOW_MINQTY_FALLBACK = _env_bool("RANGE_ALLOW_MINQTY_FALLBACK", True)
+RANGE_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("RANGE_MINQTY_FALLBACK_MAX_MULT", "1.50")))
+RANGE_MAX_OPEN_TRADES = int(os.getenv("RANGE_MAX_OPEN_TRADES", "1"))
 RANGE_RESCAN_SEC = int(os.getenv("RANGE_RESCAN_SEC", "14400"))
 RANGE_LOOKBACK_H = int(os.getenv("RANGE_LOOKBACK_H", "72"))
 RANGE_SCAN_TF = os.getenv("RANGE_SCAN_TF", "60").strip()
@@ -2891,6 +2895,7 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "BOUNCE1_RISK_MULT": os.getenv("BOUNCE1_RISK_MULT", ""),
             "BOUNCE1_SYMBOL_ALLOWLIST": os.getenv("BOUNCE1_SYMBOL_ALLOWLIST", ""),
             "FLAT_RISK_MULT": os.getenv("FLAT_RISK_MULT", ""),
+            "RANGE_RISK_MULT": os.getenv("RANGE_RISK_MULT", ""),
             "IVB1_RISK_MULT": os.getenv("IVB1_RISK_MULT", ""),
             "IVB1_REGIME_MODE": os.getenv("IVB1_REGIME_MODE", ""),
             "IVB1_SYMBOL_ALLOWLIST": os.getenv("IVB1_SYMBOL_ALLOWLIST", ""),
@@ -8977,6 +8982,16 @@ async def try_range_entry_async(symbol: str, price: float):
         return
     if get_trade("Bybit", symbol) is not None:
         return
+    if RANGE_MAX_OPEN_TRADES > 0:
+        open_range = 0
+        for tr in TRADES.values():
+            if getattr(tr, "strategy", "") not in {"range", "alt_range_scalp_v1"}:
+                continue
+            if str(getattr(tr, "status", "") or "").upper() in {"CLOSED", "ERROR"}:
+                continue
+            open_range += 1
+        if open_range >= RANGE_MAX_OPEN_TRADES:
+            return
     if not portfolio_can_open():
         return
 
@@ -8996,12 +9011,28 @@ async def try_range_entry_async(symbol: str, price: float):
         return
 
     stop_pct = abs((float(sl_r) - float(price)) / max(1e-12, float(price))) * 100.0
-    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct)
-    if dyn_usd <= 0:
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=RANGE_RISK_MULT)
+    qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    if dyn_usd > 0:
+        qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
+    if qty_floor <= 0 and RANGE_ALLOW_MINQTY_FALLBACK:
+        fallback_usd, fallback_qty, fallback_notional, fallback_reason = try_minqty_notional_fallback(
+            symbol=symbol,
+            price=price,
+            stop_pct=stop_pct,
+            risk_mult=RANGE_RISK_MULT,
+            max_mult=RANGE_MINQTY_FALLBACK_MAX_MULT,
+        )
+        if fallback_qty > 0:
+            dyn_usd = fallback_usd
+            qty_floor = fallback_qty
+            notional_real = fallback_notional
+            reason = ""
+        elif not reason:
+            reason = fallback_reason
+    if dyn_usd <= 0 and qty_floor <= 0:
         tg_skip_throttled("range", symbol, "notional_small", f"🟡 RANGE SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
-
-    qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0:
         tg_skip_throttled("range", symbol, f"minqty:{reason}", f"🟡 RANGE SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
@@ -13658,7 +13689,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     global ASB1_ENGINE, HZBO1_ENGINE, BOUNCE1_ENGINE, ASB1_SYMBOL_ALLOWLIST, HZBO1_SYMBOL_ALLOWLIST, BOUNCE1_SYMBOL_ALLOWLIST
     global RISK_PER_TRADE_PCT, ORCH_GLOBAL_RISK_MULT, REGIME_OVERLAY_LAST_MTIME
     global REGIME_OVERLAY_LAST_APPLY_TS, REGIME_OVERLAY_LAST_APPLIED_REGIME, LAST_UNIVERSE_REFRESH_TS
-    global BREAKOUT_RISK_MULT, MIDTERM_RISK_MULT, SLOPED_RISK_MULT, FLAT_RISK_MULT
+    global BREAKOUT_RISK_MULT, MIDTERM_RISK_MULT, SLOPED_RISK_MULT, FLAT_RISK_MULT, RANGE_RISK_MULT
     global BREAKDOWN_RISK_MULT, IVB1_RISK_MULT, ELDER_RISK_MULT, ATT1_RISK_MULT
     global ASM1_RISK_MULT, ASB1_RISK_MULT, HZBO1_RISK_MULT, BOUNCE1_RISK_MULT
 
@@ -13747,6 +13778,10 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
         pass
     try:
         FLAT_RISK_MULT = _risk_mult_or_pause("FLAT_RISK_MULT", str(FLAT_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        RANGE_RISK_MULT = _risk_mult_or_pause("RANGE_RISK_MULT", str(RANGE_RISK_MULT))
     except Exception:
         pass
     try:
@@ -13873,7 +13908,7 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     global RISK_PER_TRADE_PCT, PORTFOLIO_ALLOCATOR_LAST_MTIME, PORTFOLIO_ALLOCATOR_LAST_APPLY_TS
     global PORTFOLIO_ALLOCATOR_LAST_STATUS, ALLOCATOR_GLOBAL_RISK_MULT, ALLOCATOR_HARD_BLOCK_NEW_ENTRIES
     global ALLOCATOR_SAFE_MODE, ALLOCATOR_SAFE_MODE_REASON, BREAKOUT_RISK_MULT, MIDTERM_RISK_MULT
-    global SLOPED_RISK_MULT, FLAT_RISK_MULT, BREAKDOWN_RISK_MULT, IVB1_RISK_MULT, ELDER_RISK_MULT
+    global SLOPED_RISK_MULT, FLAT_RISK_MULT, RANGE_RISK_MULT, BREAKDOWN_RISK_MULT, IVB1_RISK_MULT, ELDER_RISK_MULT
     global ATT1_RISK_MULT, ASM1_RISK_MULT, ASB1_RISK_MULT, HZBO1_RISK_MULT, BOUNCE1_RISK_MULT, BRC1_RISK_MULT, LAST_UNIVERSE_REFRESH_TS
 
     if not PORTFOLIO_ALLOCATOR_ENABLE:
@@ -13964,6 +13999,10 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
         pass
     try:
         FLAT_RISK_MULT = _risk_mult_or_pause("FLAT_RISK_MULT", str(FLAT_RISK_MULT))
+    except Exception:
+        pass
+    try:
+        RANGE_RISK_MULT = _risk_mult_or_pause("RANGE_RISK_MULT", str(RANGE_RISK_MULT))
     except Exception:
         pass
     try:
