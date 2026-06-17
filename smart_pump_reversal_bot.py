@@ -6135,6 +6135,13 @@ def sync_trades_with_exchange():
         if exch != "Bybit":
             continue
 
+        # PositionManager can finalize an exchange-triggered TP/SL before this
+        # reconciliation pass runs. Such trades are already fully reported;
+        # keeping them in TRADES creates ghost positions and consumes live slots.
+        if getattr(tr, "status", "") == "CLOSED":
+            TRADES.pop((exch, sym), None)
+            continue
+
         # --- PENDING_PNL: позиция уже закрыта, ждём запись closed-pnl ---
         if getattr(tr, "status", "") == "PENDING_PNL":
             age = now - int(getattr(tr, "pending_pnl_since", now) or now)
