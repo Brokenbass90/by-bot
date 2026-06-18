@@ -994,7 +994,8 @@ def main() -> int:
         return 2
 
     picks = _load_picks(picks_csv, args.month or None)
-    if not picks:
+    allow_empty_picks_for_cash = _env_bool("ALPACA_ALLOW_EMPTY_PICKS_FOR_CASH", False)
+    if not picks and not allow_empty_picks_for_cash:
         print("error=no_picks_for_month", file=sys.stderr)
         return 3
 

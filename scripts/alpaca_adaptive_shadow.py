@@ -9,6 +9,7 @@ making the two managers fight for the same Alpaca paper positions.
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import sys
 from datetime import datetime, timedelta, timezone
@@ -20,7 +21,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.alpaca_v3_event_backtest import DEFAULT_UNIVERSE, _fetch
-from strategies.alpaca_adaptive_v1 import AdaptiveConfig, select
+from strategies.alpaca_adaptive_v1 import AdaptiveConfig, lively_config, select
 from strategies.alpaca_dynamic_v4_event import SECTOR_MAP
 
 
@@ -47,13 +48,15 @@ def run_shadow(
     max_positions: int,
     cache_dir: Path,
     target_alloc_pct: float,
+    preset: str = "baseline",
 ) -> dict[str, Any]:
     fetch_symbols = sorted(set([s.upper() for s in symbols] + ["SPY"]))
     data = _fetch(fetch_symbols, start, end, cache_dir)
     closes = {sym: _close_series(df) for sym, df in data.items()}
     prices = {sym: _latest_close(df) for sym, df in data.items()}
 
-    cfg = AdaptiveConfig(max_positions=max_positions)
+    cfg = lively_config() if preset == "lively" else AdaptiveConfig()
+    cfg.max_positions = max_positions
     selected = select(
         {sym: xs for sym, xs in closes.items() if sym != "SPY"},
         closes.get("SPY", []),
@@ -87,6 +90,7 @@ def run_shadow(
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "mode": "shadow_no_orders",
         "strategy": "alpaca_adaptive_v1",
+        "preset": preset,
         "capital": capital,
         "target_alloc_pct": target_alloc_pct,
         "max_positions": max_positions,
@@ -95,6 +99,7 @@ def run_shadow(
         "regime_ok": bool(selected.get("regime_ok")),
         "reason": selected.get("reason"),
         "cash_frac": selected.get("cash_frac", 1.0),
+        "exposure": selected.get("exposure", 0.0 if not selected.get("regime_ok") else 1.0),
         "picks": picks,
         "native_trailing_min_capital_for_all_picks": (
             round(max((float(p.get("min_capital_for_one_share") or 0.0) for p in picks), default=0.0), 2)
@@ -109,6 +114,7 @@ def _md(report: dict[str, Any]) -> str:
         "",
         f"- generated_at_utc: `{report['generated_at_utc']}`",
         f"- mode: `{report['mode']}`",
+        f"- preset: `{report['preset']}`",
         f"- capital: `${report['capital']:.2f}`",
         f"- target_alloc_pct: `{report['target_alloc_pct']}`",
         f"- regime_ok: `{report['regime_ok']}` reason: `{report['reason']}`",
@@ -129,6 +135,53 @@ def _md(report: dict[str, Any]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+_PICKS_COLUMNS = [
+    "month", "ticker", "entry_day", "base_score", "overlay_score", "score",
+    "atr20_pct", "momentum20_pct", "momentum60_pct", "pullback60_pct",
+    "universe_score", "selection_score", "corr_penalty", "max_corr_to_existing",
+    "entry_price", "stop_price", "target_price", "weight",
+]
+
+
+def write_bridge_picks_csv(report: dict[str, Any], path: Path) -> None:
+    """Write adaptive targets in the monthly bridge's stable CSV contract."""
+    generated = datetime.fromisoformat(str(report["generated_at_utc"]).replace("Z", "+00:00"))
+    month = generated.strftime("%Y-%m")
+    entry_day = generated.date().isoformat()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=_PICKS_COLUMNS)
+        writer.writeheader()
+        for pick in report.get("picks") or []:
+            score = float(pick.get("score") or 0.0)
+            weight = float(pick.get("weight") or 0.0)
+            writer.writerow(
+                {
+                    "month": month,
+                    "ticker": str(pick.get("symbol") or "").upper(),
+                    "entry_day": entry_day,
+                    "base_score": score,
+                    "overlay_score": 0.0,
+                    # The bridge normalizes score weights. Adaptive's risk-parity
+                    # target is therefore the execution score, while the raw
+                    # research score remains available in base_score.
+                    "score": weight,
+                    "atr20_pct": float(pick.get("vol") or 0.0) * 100.0,
+                    "momentum20_pct": float(pick.get("mom_fast") or 0.0) * 100.0,
+                    "momentum60_pct": float(pick.get("mom_slow") or 0.0) * 100.0,
+                    "pullback60_pct": 0.0,
+                    "universe_score": score,
+                    "selection_score": score,
+                    "corr_penalty": 0.0,
+                    "max_corr_to_existing": 0.0,
+                    "entry_price": float(pick.get("latest_close") or 0.0),
+                    "stop_price": "",
+                    "target_price": "",
+                    "weight": weight,
+                }
+            )
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="alpaca_adaptive_v1 shadow advisor")
     ap.add_argument("--symbols", default=",".join(DEFAULT_UNIVERSE))
@@ -137,9 +190,11 @@ def main() -> int:
     ap.add_argument("--capital", type=float, default=1000.0)
     ap.add_argument("--target-alloc-pct", type=float, default=70.0)
     ap.add_argument("--max-positions", type=int, default=4)
+    ap.add_argument("--preset", choices=("baseline", "lively"), default="baseline")
     ap.add_argument("--cache-dir", default="runtime/equities_yf_cache")
     ap.add_argument("--out-json", default="runtime/alpaca_adaptive_v1_shadow_latest.json")
     ap.add_argument("--out-md", default="runtime/alpaca_adaptive_v1_shadow_latest.md")
+    ap.add_argument("--out-picks-csv", default="")
     args = ap.parse_args()
 
     end = args.end or (datetime.now(timezone.utc).date() + timedelta(days=1)).isoformat()
@@ -155,6 +210,7 @@ def main() -> int:
         max_positions=int(args.max_positions),
         cache_dir=cache_dir,
         target_alloc_pct=float(args.target_alloc_pct),
+        preset=args.preset,
     )
 
     out_json = Path(args.out_json)
@@ -167,6 +223,12 @@ def main() -> int:
     out_md.parent.mkdir(parents=True, exist_ok=True)
     out_json.write_text(json.dumps(report, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
     out_md.write_text(_md(report), encoding="utf-8")
+    if args.out_picks_csv:
+        out_picks_csv = Path(args.out_picks_csv)
+        if not out_picks_csv.is_absolute():
+            out_picks_csv = ROOT / out_picks_csv
+        write_bridge_picks_csv(report, out_picks_csv)
+        print(f"picks_csv={out_picks_csv}")
     print(f"json={out_json}")
     print(f"md={out_md}")
     print(f"regime_ok={report['regime_ok']} picks={','.join(p['symbol'] for p in report['picks']) or '-'}")

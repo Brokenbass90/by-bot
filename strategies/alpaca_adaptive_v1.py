@@ -52,6 +52,21 @@ class AdaptiveConfig:
     top_n: int = 5
     max_positions: int = 4
 
+    # --- "bodrее" extensions (OFF by default => baseline behavior unchanged) ---
+    # Graduated market gate: instead of binary cash-vs-invested, allow a reduced
+    # exposure in a borderline band just below the regime SMA, and only go FULL
+    # cash when the index is clearly below it. This adds activity in mild dips
+    # while keeping the deep-bear protection that gives the small drawdown.
+    soft_regime: bool = False
+    soft_band_pct: float = 3.0     # band width below SMA where we run reduced size
+    soft_exposure: float = 0.40    # total exposure fraction inside that band
+    # Trailing-stop overlay (exit between monthly rebalances). Pure helpers below;
+    # the executor calls them per bar. Locks gains / cuts losers earlier.
+    use_trailing: bool = False
+    trail_atr_mult: float = 3.0    # exit if price retraces this many ATR from peak
+    trail_activate_pct: float = 4.0  # arm only after +this% in favor
+    trail_pct: float = 0.0         # optional % trail floor (0 = ATR-only)
+
 
 # ----------------------------- pure helpers --------------------------------
 def _sma(xs: Sequence[float], n: int) -> float:
@@ -83,6 +98,30 @@ def market_regime_ok(index_closes: Sequence[float], sma_n: int) -> bool:
     if math.isnan(sma) or not index_closes:
         return False  # not enough data -> stay defensive (cash)
     return index_closes[-1] >= sma
+
+
+def regime_exposure(index_closes: Sequence[float], cfg: "AdaptiveConfig") -> float:
+    """Graduated market gate -> target total exposure in [0, 1].
+
+    - index >= SMA            -> 1.0 (uptrend; same as the binary gate)
+    - SMA*(1-band) <= index   -> cfg.soft_exposure (borderline; reduced size) IF soft_regime
+    - index < SMA*(1-band)    -> 0.0 (clear downtrend; full cash, bear protection)
+
+    With soft_regime=False this is exactly the binary gate (1.0 or 0.0), so the
+    proven baseline is preserved unless the operator opts in.
+    """
+    sma = _sma(index_closes, cfg.regime_index_sma)
+    if math.isnan(sma) or not index_closes:
+        return 0.0
+    px = index_closes[-1]
+    if px >= sma:
+        return 1.0
+    if not cfg.soft_regime:
+        return 0.0
+    floor = sma * (1.0 - max(0.0, cfg.soft_band_pct) / 100.0)
+    if px >= floor:
+        return max(0.0, min(1.0, cfg.soft_exposure))
+    return 0.0
 
 
 def _score(closes: Sequence[float], cfg: AdaptiveConfig) -> Optional[Dict[str, float]]:
@@ -124,8 +163,13 @@ def select(
 
     # 1) MARKET GATE — the bear-month protection. force_regime_ok=True is for
     #    A/B backtesting (measuring the gate's contribution), never for live.
-    if not force_regime_ok and not market_regime_ok(index_closes, cfg.regime_index_sma):
-        return {"regime_ok": False, "reason": "market_below_regime_sma_cash", "picks": []}
+    if force_regime_ok:
+        exposure = 1.0
+    else:
+        exposure = regime_exposure(index_closes, cfg)
+        if exposure <= 0.0:
+            return {"regime_ok": False, "reason": "market_below_regime_sma_cash",
+                    "exposure": 0.0, "picks": []}
 
     # 2) PORTFOLIO DD GUARD — stop adding risk while deep in drawdown.
     if current_dd_pct > cfg.max_portfolio_dd_pct:
@@ -162,8 +206,64 @@ def select(
     total_w = sum(float(p["vol_weight"]) for p in picks) or 1.0
     for p in picks:
         norm = float(p["vol_weight"]) / total_w
-        p["weight"] = min(norm, cfg.max_position_frac)
+        capped = min(norm, cfg.max_position_frac)
+        # graduated regime scales TOTAL exposure (reduced size in borderline band)
+        p["weight"] = capped * exposure
 
     cash_frac = max(0.0, 1.0 - sum(float(p["weight"]) for p in picks))
-    return {"regime_ok": True, "reason": "ok" if picks else "no_qualifying_names",
+    reason = "ok" if picks else "no_qualifying_names"
+    if picks and exposure < 1.0:
+        reason = f"soft_regime_partial_exposure_{exposure:.2f}"
+    return {"regime_ok": True, "reason": reason, "exposure": exposure,
             "cash_frac": cash_frac, "picks": picks}
+
+
+# ----------------------------- trailing exit overlay -----------------------
+def update_peak(prev_peak: float, price: float, side: str = "long") -> float:
+    """Track the best price since entry (high-water for long, low-water for short)."""
+    if side == "long":
+        return max(float(prev_peak), float(price))
+    return min(float(prev_peak), float(price))
+
+
+def trailing_exit(entry: float, peak: float, price: float, atr: float,
+                  cfg: "AdaptiveConfig", side: str = "long") -> Tuple[bool, float]:
+    """Pure trailing-stop check. Returns (should_exit, stop_price).
+
+    Arms only after price has moved `trail_activate_pct` in favor; then exits if
+    price retraces `trail_atr_mult`*ATR (or `trail_pct`%, whichever is wider) from
+    the peak. The executor calls this each bar with the running peak from
+    `update_peak`. Disabled (no exit) when cfg.use_trailing is False.
+    """
+    if not cfg.use_trailing or entry <= 0:
+        return (False, float("nan"))
+    atr = float(atr or 0.0)
+    if side == "long":
+        gain_pct = (peak / entry - 1.0) * 100.0
+        if gain_pct < cfg.trail_activate_pct:
+            return (False, float("nan"))
+        dist = cfg.trail_atr_mult * atr
+        if cfg.trail_pct > 0:
+            dist = max(dist, peak * cfg.trail_pct / 100.0)
+        stop = peak - dist
+        return (price <= stop, stop)
+    else:
+        gain_pct = (entry / peak - 1.0) * 100.0
+        if gain_pct < cfg.trail_activate_pct:
+            return (False, float("nan"))
+        dist = cfg.trail_atr_mult * atr
+        if cfg.trail_pct > 0:
+            dist = max(dist, peak * cfg.trail_pct / 100.0)
+        stop = peak + dist
+        return (price >= stop, stop)
+
+
+def lively_config() -> AdaptiveConfig:
+    """Recommended "bodrее" preset: a bit more active + trailing, while KEEPING
+    the deep-bear cash protection. For Codex to A/B vs the baseline AdaptiveConfig().
+    """
+    return AdaptiveConfig(
+        soft_regime=True, soft_band_pct=3.0, soft_exposure=0.45,
+        use_trailing=True, trail_atr_mult=3.0, trail_activate_pct=4.0,
+        max_positions=5, top_n=6,
+    )
