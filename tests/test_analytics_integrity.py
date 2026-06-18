@@ -10,6 +10,7 @@ from scripts import equities_alpaca_paper_bridge as monthly_bridge
 from scripts import live_vs_backtest_monitor as monitor
 from scripts import post_trade_ai_review as post_trade
 from scripts import pnl_by_sleeve
+from scripts import run_pair_arb_matrix
 
 
 def test_trade_learning_summary_uses_live_schema() -> None:
@@ -145,3 +146,53 @@ def test_pnl_breakdown_can_isolate_current_canary(tmp_path) -> None:
 
     assert result["total"]["pnl"] == 0.5
     assert result["total"]["trades"] == 1
+
+
+def test_pair_arb_matrix_reads_nested_walkforward_metrics() -> None:
+    result = {
+        "oos_aggregate": {
+            "profit_factor": {"mean": 1.23, "median": 1.10},
+            "return_pct": {"mean": 2.5},
+        },
+        "win_rate_all": 0.54,
+    }
+
+    assert run_pair_arb_matrix._metric(result, "profit_factor") == 1.23
+    assert run_pair_arb_matrix._metric(result, "return_pct") == 2.5
+    assert run_pair_arb_matrix._win_rate(result) == 0.54
+
+
+def test_pair_arb_matrix_marks_positive_but_unstable_candidate_as_research() -> None:
+    result = {
+        "oos_aggregate": {
+            "return_pct": {"mean": 1.06, "median": 0.0, "min": -5.06},
+            "verdict": "fragile",
+        },
+        "folds_detail": [
+            {"return_pct": value}
+            for value in (1.2, 0.0, -5.06, -1.7, 10.8, 4.7, -2.7, 2.3, 9.8, 0.3, -3.0, -1.1, -1.5, 2.0, -0.2)
+        ],
+        "fee_sensitivity": {"verdict": "fee_robust"},
+    }
+
+    verdict, evidence = run_pair_arb_matrix._classify(result, trades=49)
+
+    assert verdict == "RESEARCH"
+    assert evidence["positive_folds"] == 7
+    assert evidence["folds"] == 15
+
+
+def test_pair_arb_matrix_pass_requires_robust_majority_of_folds() -> None:
+    result = {
+        "oos_aggregate": {
+            "return_pct": {"mean": 1.5, "median": 1.1, "min": -2.0},
+            "verdict": "robust",
+        },
+        "folds_detail": [{"return_pct": value} for value in (2.0, 1.0, 1.5, -2.0, 1.2, 0.8, -0.5)],
+        "fee_sensitivity": {"verdict": "fee_robust"},
+    }
+
+    verdict, evidence = run_pair_arb_matrix._classify(result, trades=45)
+
+    assert verdict == "PASS"
+    assert evidence["positive_folds"] == 5

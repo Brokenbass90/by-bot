@@ -50,6 +50,8 @@ def _metric(result: dict[str, Any], key: str, default: float = 0.0) -> float:
     agg = result.get("oos_aggregate") or {}
     for source in (agg, result):
         value = source.get(key)
+        if isinstance(value, dict):
+            value = value.get("mean", value.get("median"))
         try:
             v = float(value)
         except Exception:
@@ -57,6 +59,60 @@ def _metric(result: dict[str, Any], key: str, default: float = 0.0) -> float:
         if math.isfinite(v):
             return v
     return default
+
+
+def _win_rate(result: dict[str, Any]) -> float:
+    value = result.get("win_rate_all")
+    if value is not None:
+        try:
+            return float(value)
+        except Exception:
+            pass
+    return _metric(result, "win_rate")
+
+
+def _aggregate_metric(result: dict[str, Any], key: str, stat: str, default: float = 0.0) -> float:
+    value = ((result.get("oos_aggregate") or {}).get(key) or {}).get(stat)
+    try:
+        parsed = float(value)
+    except Exception:
+        return default
+    return parsed if math.isfinite(parsed) else default
+
+
+def _classify(result: dict[str, Any], trades: int) -> tuple[str, dict[str, Any]]:
+    folds = list(result.get("folds_detail") or [])
+    returns = [float(fold.get("return_pct") or 0.0) for fold in folds]
+    positive_folds = sum(value > 0.0 for value in returns)
+    fold_count = len(returns)
+    mean_return = _metric(result, "return_pct")
+    median_return = _aggregate_metric(result, "return_pct", "median")
+    worst_return = _aggregate_metric(result, "return_pct", "min")
+    fee_verdict = str((result.get("fee_sensitivity") or {}).get("verdict") or "unknown")
+    aggregate_verdict = str((result.get("oos_aggregate") or {}).get("verdict") or "unknown")
+
+    evidence = {
+        "folds": fold_count,
+        "positive_folds": positive_folds,
+        "median_return_pct": median_return,
+        "worst_fold_return_pct": worst_return,
+        "fee_verdict": fee_verdict,
+        "aggregate_verdict": aggregate_verdict,
+    }
+    research_ready = trades >= 40 and mean_return > 0.0 and fee_verdict == "fee_robust"
+    live_gate = (
+        research_ready
+        and fold_count >= 6
+        and positive_folds > fold_count / 2
+        and median_return > 0.0
+        and worst_return >= -5.0
+        and aggregate_verdict == "robust"
+    )
+    if live_gate:
+        return "PASS", evidence
+    if research_ready:
+        return "RESEARCH", evidence
+    return "FAIL", evidence
 
 
 def _score(row: dict[str, Any]) -> float:
@@ -74,14 +130,14 @@ def _md(rows: list[dict[str, Any]], generated_at: str) -> str:
         f"- generated_at_utc: `{generated_at}`",
         f"- rows: `{len(rows)}`",
         "",
-        "| rank | pair | lookback | z in/out/stop | ret% | PF | WR | DD% | trades | verdict |",
-        "|---:|---|---:|---|---:|---:|---:|---:|---:|---|",
+        "| rank | pair | lookback | z in/out/stop | ret% | median% | worst% | +folds | PF | trades | verdict |",
+        "|---:|---|---:|---|---:|---:|---:|---:|---:|---:|---|",
     ]
     for i, row in enumerate(rows[:30], 1):
         lines.append(
             "| {rank} | `{pair}` | {lookback} | {entry_z}/{exit_z}/{stop_z} | "
-            "{return_pct:.2f} | {profit_factor:.2f} | {win_rate:.2f} | "
-            "{max_drawdown:.2f} | {trades} | {verdict} |".format(rank=i, **row)
+            "{return_pct:.2f} | {median_return_pct:.2f} | {worst_fold_return_pct:.2f} | "
+            "{positive_folds}/{folds} | {profit_factor:.2f} | {trades} | {verdict} |".format(rank=i, **row)
         )
     return "\n".join(lines) + "\n"
 
@@ -135,11 +191,18 @@ def main() -> int:
                 "win_rate": 0.0,
                 "max_drawdown": 0.0,
                 "trades": 0,
+                "folds": 0,
+                "positive_folds": 0,
+                "median_return_pct": 0.0,
+                "worst_fold_return_pct": 0.0,
+                "fee_verdict": "unknown",
+                "aggregate_verdict": "unknown",
                 "verdict": str(result.get("error")),
                 "score": -1_000_000.0,
             }
         else:
             trades = int(result.get("total_oos_trades") or _metric(result, "trades", 0.0))
+            verdict, evidence = _classify(result, trades)
             row = {
                 "pair": str(result.get("pair") or f"{a}/{b}"),
                 "lookback": int(lookback),
@@ -148,10 +211,11 @@ def main() -> int:
                 "stop_z": float(stop_z),
                 "return_pct": _metric(result, "return_pct"),
                 "profit_factor": _metric(result, "profit_factor"),
-                "win_rate": _metric(result, "win_rate"),
+                "win_rate": _win_rate(result),
                 "max_drawdown": _metric(result, "max_drawdown"),
                 "trades": trades,
-                "verdict": "PASS" if trades >= 20 and _metric(result, "profit_factor") > 1.10 and _metric(result, "return_pct") > 0 else "FAIL",
+                "verdict": verdict,
+                **evidence,
                 "raw": result,
             }
             row["score"] = _score(row)
