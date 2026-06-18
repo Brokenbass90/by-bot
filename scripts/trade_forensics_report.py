@@ -144,7 +144,10 @@ def _load_live_events(path: Path, days: int) -> list[Trade]:
     if not path.exists():
         return []
     cutoff_ms = int((time.time() - days * 86400) * 1000) if days > 0 else 0
-    out: list[Trade] = []
+    rows: list[dict[str, Any]] = []
+    fills_by_order: dict[str, dict[str, Any]] = {}
+    submits_by_order: dict[str, dict[str, Any]] = {}
+    recent_entries: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
     with path.open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
@@ -154,33 +157,82 @@ def _load_live_events(path: Path, days: int) -> list[Trade]:
                 row = json.loads(line)
             except Exception:
                 continue
-            if row.get("event") != "close":
+            if not isinstance(row, dict):
                 continue
-            ts = _ts_ms(row.get("ts"))
-            if cutoff_ms and ts < cutoff_ms:
-                continue
-            entry = _float(row.get("entry_price"))
-            exit_price = _float(row.get("exit_price") or row.get("fill_price"))
-            out.append(
-                Trade(
-                    source=f"live:{path.name}",
-                    strategy=(row.get("strategy") or "").strip(),
-                    symbol=(row.get("symbol") or "").strip().upper(),
-                    side=_norm_side(row.get("side") or ""),
-                    entry_ts_ms=0,
-                    exit_ts_ms=ts,
-                    entry_price=entry,
-                    exit_price=exit_price,
-                    qty=_float(row.get("qty")),
-                    pnl=_float(row.get("pnl")),
-                    fees=_float(row.get("fees")),
-                    outcome=(row.get("close_reason") or "").strip().lower(),
-                    reason=(row.get("signal_reason") or "").strip(),
-                    sl_price=_optional_float(row.get("sl_price")),
-                    tp_price=_optional_float(row.get("tp_price")),
+            rows.append(row)
+            event = str(row.get("event") or "").strip().lower()
+            order_id = str(row.get("entry_order_id") or "").strip()
+            if order_id and event == "entry_filled":
+                fills_by_order[order_id] = row
+            elif order_id and event == "order_submitted":
+                submits_by_order[order_id] = row
+            if event in {"entry_filled", "order_submitted"}:
+                key = (
+                    str(row.get("symbol") or "").strip().upper(),
+                    _norm_side(row.get("side") or ""),
+                    str(row.get("strategy") or "").strip(),
                 )
+                recent_entries[key].append(row)
+
+    def _entry_for_close(close: dict[str, Any]) -> dict[str, Any] | None:
+        order_id = str(close.get("entry_order_id") or "").strip()
+        if order_id:
+            return fills_by_order.get(order_id) or submits_by_order.get(order_id)
+        key = (
+            str(close.get("symbol") or "").strip().upper(),
+            _norm_side(close.get("side") or ""),
+            str(close.get("strategy") or "").strip(),
+        )
+        close_ts = _ts_ms(close.get("ts"))
+        candidates = [
+            row for row in recent_entries.get(key, [])
+            if 0 < _ts_ms(row.get("ts")) <= close_ts
+        ]
+        return max(candidates, key=lambda row: _ts_ms(row.get("ts")), default=None)
+
+    out: list[Trade] = []
+    for row in rows:
+        if str(row.get("event") or "").strip().lower() != "close":
+            continue
+        ts = _ts_ms(row.get("ts"))
+        if cutoff_ms and ts < cutoff_ms:
+            continue
+        entry_row = _entry_for_close(row) or {}
+        submit_row = submits_by_order.get(str(row.get("entry_order_id") or "").strip(), {})
+        entry = _float(
+            entry_row.get("fill_price")
+            or entry_row.get("entry_price")
+            or row.get("entry_price")
+        )
+        exit_price = _float(row.get("exit_price") or row.get("fill_price"))
+        entry_ts = _ts_ms(entry_row.get("ts"))
+        reason = str(
+            row.get("signal_reason")
+            or entry_row.get("signal_reason")
+            or submit_row.get("signal_reason")
+            or ""
+        ).strip()
+        out.append(
+            Trade(
+                source=f"live:{path.name}",
+                strategy=(row.get("strategy") or "").strip(),
+                symbol=(row.get("symbol") or "").strip().upper(),
+                side=_norm_side(row.get("side") or ""),
+                entry_ts_ms=entry_ts,
+                exit_ts_ms=ts,
+                entry_price=entry,
+                exit_price=exit_price,
+                qty=_float(row.get("qty") or entry_row.get("qty")),
+                pnl=_float(row.get("pnl")),
+                fees=_float(row.get("fees")),
+                outcome=(row.get("close_reason") or "").strip().lower(),
+                reason=reason,
+                sl_price=_optional_float(row.get("sl_price") or entry_row.get("sl_price")),
+                tp_price=_optional_float(row.get("tp_price") or entry_row.get("tp_price")),
             )
-    # Live close events often do not carry entry_ts, so use a conservative window.
+        )
+    # Legacy close-only journals do not carry entry timestamps. Keep the old
+    # conservative window only as an explicit fallback for those records.
     for t in out:
         if not t.entry_ts_ms and t.exit_ts_ms:
             t.entry_ts_ms = t.exit_ts_ms - 6 * 60 * 60 * 1000
@@ -245,6 +297,17 @@ def _cache_file_range(path: Path, symbol: str, interval: str) -> tuple[int, int]
         file_end = int(float(parts[1]))
     except Exception:
         return None
+    # backtest.bybit_data uses compact UTC dates in cache names, while older
+    # research caches use epoch milliseconds. Normalize both conventions.
+    if len(parts[0]) == 8 and len(parts[1]) == 8:
+        try:
+            file_start = int(datetime.strptime(parts[0], "%Y%m%d").replace(tzinfo=timezone.utc).timestamp() * 1000)
+            # The compact end token records only the UTC date even when the
+            # requested range ended later that day. Treat it as inclusive and
+            # let the actual candle timestamps perform the precise filtering.
+            file_end = int(datetime.strptime(parts[1], "%Y%m%d").replace(tzinfo=timezone.utc).timestamp() * 1000) + 86_400_000
+        except Exception:
+            return None
     return file_start, file_end
 
 
@@ -329,7 +392,9 @@ def _classify(trade: Trade, mfe_pct: float | None, mae_pct: float | None, post_p
     outcome = (trade.outcome or trade.reason or "").lower()
     if candles <= 0:
         return "missing_candles"
-    if "sl" in outcome or trade.pnl < 0:
+    explicit_stop = outcome in {"sl", "stop", "stop_loss"} or outcome.startswith("bounce_sl")
+    explicit_take = outcome in {"tp", "take_profit"} or outcome.startswith("bounce_tp")
+    if explicit_stop or trade.pnl < 0:
         if post_pct is not None and post_pct > 0.45:
             return "stop_then_reversed"
         if mae_pct is not None and mae_pct < -1.25 and (mfe_pct is None or mfe_pct < 0.35):
@@ -337,7 +402,7 @@ def _classify(trade: Trade, mfe_pct: float | None, mae_pct: float | None, post_p
         if mfe_pct is not None and mfe_pct > 0.75:
             return "gave_back_profit"
         return "stopped_no_reversal_yet"
-    if "tp" in outcome or trade.pnl > 0:
+    if explicit_take or trade.pnl > 0:
         if post_pct is not None and post_pct > 0.75:
             return "tp_then_continued"
         if mfe_pct is not None and mfe_pct < 0.35:
@@ -349,11 +414,11 @@ def _classify(trade: Trade, mfe_pct: float | None, mae_pct: float | None, post_p
 
 
 def analyze_trade(trade: Trade, cache_dir: Path, interval: str, post_bars: int) -> Forensic:
-    start_ms = max(0, trade.entry_ts_ms - 30 * 60 * 1000)
+    fetch_start_ms = max(0, trade.entry_ts_ms - 30 * 60 * 1000)
     exit_ms = trade.exit_ts_ms
     post_ms = exit_ms + post_bars * int(interval) * 60 * 1000
-    rows = _load_symbol_candles(cache_dir, trade.symbol, interval, start_ms, post_ms)
-    trade_rows = _window(rows, start_ms, exit_ms)
+    rows = _load_symbol_candles(cache_dir, trade.symbol, interval, fetch_start_ms, post_ms)
+    trade_rows = _window(rows, trade.entry_ts_ms, exit_ms)
     post_rows = _window(rows, exit_ms, post_ms)
 
     mfe_pct = None

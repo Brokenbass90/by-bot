@@ -118,6 +118,10 @@ class RangeWrapperConfig:
     adaptive_tp: bool = False
     tp_frac_low: float = 0.60
     tp_frac_high: float = 0.40
+    sl_width_frac: float = 0.10
+    sl_atr_mult: float = 1.0
+    allow_long: bool = True
+    allow_short: bool = True
 
 
 class RangeBacktestStrategy:
@@ -146,6 +150,7 @@ class RangeBacktestStrategy:
         self.cfg.touch_tolerance_atr_mult = _env_float("RANGE_TOUCH_TOL_ATR_MULT", self.cfg.touch_tolerance_atr_mult)
 
         self.cfg.atr_period = _env_int("RANGE_ATR_PERIOD", self.cfg.atr_period)
+        self.cfg.confirm_limit = _env_int("RANGE_CONFIRM_LIMIT", self.cfg.confirm_limit)
         self.cfg.tp_mode = os.getenv("RANGE_TP_MODE", self.cfg.tp_mode).strip().lower()
         self.cfg.min_rr = _env_float("RANGE_MIN_RR", self.cfg.min_rr)
         self.cfg.entry_zone_frac = _env_float("RANGE_ENTRY_ZONE_FRAC", self.cfg.entry_zone_frac)
@@ -164,6 +169,10 @@ class RangeBacktestStrategy:
         self.cfg.adaptive_tp = _env_bool("RANGE_ADAPTIVE_TP", self.cfg.adaptive_tp)
         self.cfg.tp_frac_low = _env_float("RANGE_TP_FRAC_LOW", self.cfg.tp_frac_low)
         self.cfg.tp_frac_high = _env_float("RANGE_TP_FRAC_HIGH", self.cfg.tp_frac_high)
+        self.cfg.sl_width_frac = _env_float("RANGE_SL_WIDTH_FRAC", self.cfg.sl_width_frac)
+        self.cfg.sl_atr_mult = _env_float("RANGE_SL_ATR_MULT", self.cfg.sl_atr_mult)
+        self.cfg.allow_long = _env_bool("RANGE_ALLOW_LONG", self.cfg.allow_long)
+        self.cfg.allow_short = _env_bool("RANGE_ALLOW_SHORT", self.cfg.allow_short)
 
         self.registry = RangeRegistry()
         self.scanner = RangeScanner(
@@ -208,6 +217,10 @@ class RangeBacktestStrategy:
             adaptive_tp=self.cfg.adaptive_tp,
             tp_frac_low=self.cfg.tp_frac_low,
             tp_frac_high=self.cfg.tp_frac_high,
+            sl_width_frac=self.cfg.sl_width_frac,
+            sl_atr_mult=self.cfg.sl_atr_mult,
+            allow_long=self.cfg.allow_long,
+            allow_short=self.cfg.allow_short,
             confirm_cache_ttl_sec=0,
         )
 

@@ -1,0 +1,72 @@
+{
+  "name": "range_live_side_exit_repair_v1",
+  "description": "Live-parity range repair: isolate long and short sides, test the observed 10% stop hypothesis at fixed risk, and compare stricter reclaim/wick confirmation after fees and slippage.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,DOGEUSDT,DYDXUSDT,APTUSDT,OPUSDT,GALAUSDT,APEUSDT,POLUSDT",
+    "--strategies",
+    "range",
+    "--days",
+    "180",
+    "--end",
+    "2026-06-18",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0025",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "2",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2"
+  ],
+  "base_env": {
+    "RANGE_LOOKBACK_H": "72",
+    "RANGE_SCAN_TF": "60",
+    "RANGE_MIN_RANGE_PCT": "3.0",
+    "RANGE_MAX_RANGE_PCT": "8.0",
+    "RANGE_MIN_TOUCHES": "3",
+    "RANGE_CONFIRM_LIMIT": "40",
+    "RANGE_ATR_PERIOD": "14",
+    "RANGE_ENTRY_ZONE_FRAC": "0.08",
+    "RANGE_SWEEP_FRAC": "0.02",
+    "RANGE_IMPULSE_BODY_ATR_MAX": "0.90",
+    "RANGE_TP_MODE": "mid",
+    "RANGE_MIN_RR": "3.0"
+  },
+  "grid": {
+    "RANGE_ALLOW_LONG": ["0", "1"],
+    "RANGE_ALLOW_SHORT": ["0", "1"],
+    "RANGE_RECLAIM_FRAC": [0.01, 0.015, 0.02],
+    "RANGE_WICK_FRAC_MIN": [0.35, 0.45, 0.55],
+    "RANGE_SL_WIDTH_FRAC": [0.10, 0.11],
+    "RANGE_SL_ATR_MULT": [0.8, 0.88, 1.0]
+  },
+  "constraints": {
+    "min_trades": 30,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 1.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.2,
+    "profit_factor": 6.0,
+    "winrate": 3.0,
+    "max_drawdown": 2.0,
+    "trades": 0.12,
+    "trades_cap": 160,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "2x2x3x3x2x3 = 216 combinations; the both-disabled cells fail min_trades, while the remaining cells compare long-only, short-only and both-directions under identical exits"
+}
