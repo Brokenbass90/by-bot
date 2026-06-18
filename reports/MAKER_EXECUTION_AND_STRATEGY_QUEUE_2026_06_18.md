@@ -58,6 +58,12 @@ No risk increase is justified by this sample. The next useful checkpoint is
 the first 5-10 entries executed by the new path, including maker fill rate,
 fallback rate, slippage, post-fill risk ratio, and PnL by direction.
 
+At `2026-06-18 11:09 UTC`, `configs/range_short_only_canary.env` was applied
+after three flat-account confirmations. The live process now has
+`RANGE_ALLOW_LONG=0`, `RANGE_ALLOW_SHORT=1`, and `RANGE_RISK_MULT=0.25`.
+This preserves the active short side while the losing long side is returned
+to validation. The market feed was `OK` after subscription startup.
+
 ## 4. Strategy queue
 
 The current validation order is:
@@ -92,4 +98,3 @@ observable while risk stays zero.
 The execution-validation clock for `adaptive_v1` has not started because it
 does not yet submit paper orders. Shadow recommendations cannot validate
 fills, cancellation, trailing exits, or broker-side protection.
-
