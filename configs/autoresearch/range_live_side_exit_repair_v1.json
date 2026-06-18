@@ -6,7 +6,7 @@
     "{python}",
     "backtest/run_portfolio.py",
     "--symbols",
-    "BTCUSDT,ETHUSDT,SOLUSDT,DOGEUSDT,DYDXUSDT,APTUSDT,OPUSDT,GALAUSDT,APEUSDT,POLUSDT",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,ADAUSDT,SUIUSDT,DOGEUSDT",
     "--strategies",
     "range",
     "--days",

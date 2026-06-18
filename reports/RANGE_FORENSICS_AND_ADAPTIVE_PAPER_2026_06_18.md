@@ -48,12 +48,13 @@ Server research started:
 - All three entries filled and each has an active broker-hosted stop order.
 - LLY was selected but correctly blocked by the 21-day post-trailing re-entry guard.
 - `lively_config` runs as a separate no-order A/B shadow until multi-regime evidence exists.
+- The first automatic manager tick exposed an ownership conflict: intraday cleanup recognized only the legacy v38 CSV and closed the new adaptive symbols. The monthly symbol loader now unions legacy and adaptive cycle files. A live paper verification preserved AAPL/JPM/UNH as monthly-owned and reported zero intraday slots consumed. The adaptive positions were reopened with broker stops after the fix.
 
 First `$500` decision gate: five clean US trading sessions with correct fills, stable ownership between monthly/intraday managers, and broker protection present after every fill. If no execution incident occurs, review on 2026-06-25.
 
 ## Alpaca cleanup warning
 
-The JPM `40410000 position not found` cleanup warning was an idempotent race: the position disappeared after listing but before DELETE. The client now preserves structured HTTP status/details and treats only Alpaca's exact missing-position code as already flat. Other 404/errors still alert.
+The JPM `40410000 position not found` cleanup warning was the visible result of two issues: stale monthly ownership caused intraday cleanup to target a monthly symbol, then the position disappeared between listing and DELETE. Monthly ownership now unions all active cycle files. The client also preserves structured HTTP status/details and treats only Alpaca's exact missing-position code as already flat. Other 404/errors still alert.
 
 ## Strategy review entry points
 
