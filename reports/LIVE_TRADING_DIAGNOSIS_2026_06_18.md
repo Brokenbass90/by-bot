@@ -62,8 +62,15 @@ The bot is live, not globally blocked, and has zero open trades at this snapshot
 - `ivb1_impulse_retrace_v2_relaxed_mirror`: local run stopped around `1276/1536`;
   observed rows were negative and none passed. The detached screen is stale and
   is not evidence of an active computation.
-- Pair-arbitrage matrix: all 180 rows returned zero P&L despite many trades. This
-  is a harness/accounting defect until proven otherwise, not a strategy verdict.
+- Pair-arbitrage matrix accounting was repaired. The only useful pocket is
+  `LINKUSDT/ETHUSDT` (`336h`, z `2.4/0.3/3.5`): 49 trades, mean OOS return
+  `+1.0611%`, but only 7/15 positive folds, median return `0%` and worst fold
+  `-5.0572%`. Its corrected status is `RESEARCH`, not live `PASS`; see
+  `PAIR_ARB_REVIEW_2026_06_18.md`.
+- Cross-exchange funding shadow is currently negative despite large scanner APR
+  snapshots: 65 closed cycles, 23 wins / 42 losses, mean cycle return
+  `-0.0147%` and median `-0.0965%` of total deployed capital. It must remain
+  shadow and is not a positive sleeve candidate yet.
 - Bybit liquidation collector is active and accumulating the event history needed
   for the liquidation-sweep hypothesis test.
 
@@ -93,6 +100,11 @@ days with: no ownership conflicts, every fractional position closed by TP/SL/
 trail as designed, and realized fills/P&L reconciled. If deployment and the next
 five sessions are clean, the earliest evidence-based funding decision is around
 `2026-06-25`, not another open-ended waiting period.
+
+The live paper account report on 2026-06-18 shows month-to-date equity P&L
+`+$46.87` (`+0.05%`) and seven open positions with combined unrealized P&L
+`-$4.07`. This account-level number mixes monthly v38 and intraday activity; it
+is not an annual return for adaptive_v1 and must not be used as such.
 
 ## Code corrections in this session
 
