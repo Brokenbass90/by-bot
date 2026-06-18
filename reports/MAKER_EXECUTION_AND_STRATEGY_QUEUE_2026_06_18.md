@@ -83,6 +83,13 @@ requires fee/slippage-aware OOS or walk-forward evidence and monthly loss
 distribution. Existing shadow counters are retained so signal frequency is
 observable while risk stays zero.
 
+The first three follow-up sweeps are queued on the server in detached screen
+`classic_next_20260618`. It waits for the active Elder process and then runs,
+with one worker, `inplay_retest_v3_level_retest_repair_v2`,
+`pump_fade_v5_bear_window_v1`, and
+`breakdown_recent_bear_window_v2_entry_quality`. Queue output is written to
+`logs/classic_next_20260618.log`. The server InPlay test passed (`8 passed`).
+
 ## 5. Alpaca version state
 
 - `v38` is still the monthly order-driving paper executor.
