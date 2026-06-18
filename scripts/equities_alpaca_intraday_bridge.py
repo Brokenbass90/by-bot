@@ -641,6 +641,22 @@ def _humanize_reason(reason: str) -> str:
     return cleaned or raw
 
 # ── Alpaca client ───────────────────────────────────────────────────────────────
+class AlpacaHttpError(RuntimeError):
+    def __init__(self, method: str, url: str, status_code: int, detail: str):
+        self.method = method
+        self.url = url
+        self.status_code = int(status_code)
+        self.detail = str(detail or "")
+        super().__init__(f"{method} {url} → {self.status_code}: {self.detail}")
+
+
+def _is_position_not_found_error(exc: BaseException) -> bool:
+    if not isinstance(exc, AlpacaHttpError) or exc.status_code != 404:
+        return False
+    detail = exc.detail.lower()
+    return "40410000" in detail and "position not found" in detail
+
+
 class AlpacaClient:
     def __init__(self, base_url: str, key_id: str, secret_key: str):
         self.base_url = base_url.rstrip("/")
@@ -664,7 +680,7 @@ class AlpacaClient:
                 return json.loads(raw) if raw else {}
         except error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")
-            raise RuntimeError(f"{method} {url} → {exc.code}: {detail}") from exc
+            raise AlpacaHttpError(method, url, int(exc.code), detail) from exc
 
     def get_account(self) -> dict:
         return self._req("GET", f"{self.base_url}/v2/account")
@@ -1479,6 +1495,9 @@ def run_once(client: AlpacaClient, dry_run: bool,
                             f"\nCancelled open orders first: <b>{cancelled}</b>\n{now_str}",
                         )
                     except Exception as exc:
+                        if _is_position_not_found_error(exc):
+                            print(f"    → {sym} already flat; cleanup is complete")
+                            continue
                         print(f"    ✗ Failed to close unknown remote position {sym}: {exc}")
                         _tg(tg_token, tg_chat, f"⚠️ <b>Intraday cleanup</b> failed for {sym}: {exc}")
             else:

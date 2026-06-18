@@ -36,3 +36,18 @@ def test_intraday_slots_still_count_intraday_and_unknown_remote_positions():
 
     assert intraday == ["GOOGL", "JPM", "TSLA"]
     assert visible == ["AMD", "GOOGL", "JPM", "TSLA"]
+
+
+def test_position_not_found_cleanup_error_is_idempotent_only_for_known_alpaca_code():
+    from scripts.equities_alpaca_intraday_bridge import AlpacaHttpError, _is_position_not_found_error
+
+    gone = AlpacaHttpError(
+        "DELETE",
+        "https://paper-api.alpaca.markets/v2/positions/JPM",
+        404,
+        '{"code":40410000,"message":"position not found: JPM"}',
+    )
+    unrelated = AlpacaHttpError("GET", "https://example.test/missing", 404, "not found")
+
+    assert _is_position_not_found_error(gone) is True
+    assert _is_position_not_found_error(unrelated) is False
