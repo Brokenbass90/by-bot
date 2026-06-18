@@ -550,13 +550,19 @@ def _load_monthly_managed_symbols() -> set[str]:
         candidate_paths = []
 
     # 3. Known runtime dirs (check all of them)
-    for env_key in ("ALPACA_AUTOPILOT_RUNTIME_DIR", "EQ_V35_RUNTIME_DIR", "EQ_BASELINE_RUNTIME_DIR"):
+    for env_key in (
+        "ALPACA_ADAPTIVE_RUNTIME_DIR",
+        "ALPACA_AUTOPILOT_RUNTIME_DIR",
+        "EQ_V35_RUNTIME_DIR",
+        "EQ_BASELINE_RUNTIME_DIR",
+    ):
         raw = os.getenv(env_key, "")
         if raw:
             candidate_paths.append(Path(raw) / "current_cycle_picks.csv")
 
     # 4. Hardcoded default
     candidate_paths.append(MONTHLY_RUNTIME_DIR / "current_cycle_picks.csv")
+    candidate_paths.append(ROOT / "runtime" / "equities_alpaca_adaptive_v1" / "current_cycle_picks.csv")
 
     # 5. Walk up from ROOT looking for any runtime/equities_monthly* dir
     for d in sorted(ROOT.glob("runtime/equities_monthly*")):
@@ -575,7 +581,9 @@ def _load_monthly_managed_symbols() -> set[str]:
                         loaded_symbols.add(sym)
             if loaded_symbols:
                 symbols.update(loaded_symbols)
-                break  # Use the first non-empty CSV that loads successfully
+                # Multiple monthly candidates can coexist during a controlled
+                # migration. Protect their union so intraday cleanup cannot
+                # liquidate a newly promoted paper sleeve between ticks.
         except Exception:
             continue
 

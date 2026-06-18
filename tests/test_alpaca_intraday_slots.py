@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import sys
+import csv
 from pathlib import Path
 
 
@@ -51,3 +52,27 @@ def test_position_not_found_cleanup_error_is_idempotent_only_for_known_alpaca_co
 
     assert _is_position_not_found_error(gone) is True
     assert _is_position_not_found_error(unrelated) is False
+
+
+def test_monthly_ownership_unions_legacy_and_adaptive_cycles(tmp_path, monkeypatch):
+    from scripts import equities_alpaca_intraday_bridge as bridge
+
+    legacy = tmp_path / "runtime" / "equities_monthly_v36" / "current_cycle_picks.csv"
+    adaptive = tmp_path / "runtime" / "equities_alpaca_adaptive_v1" / "current_cycle_picks.csv"
+    for path, symbols in ((legacy, ["GE", "SNOW"]), (adaptive, ["AAPL", "JPM", "UNH"])):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=["ticker"])
+            writer.writeheader()
+            for symbol in symbols:
+                writer.writerow({"ticker": symbol})
+
+    monkeypatch.setattr(bridge, "ROOT", tmp_path)
+    monkeypatch.setattr(bridge, "MONTHLY_RUNTIME_DIR", legacy.parent)
+    monkeypatch.delenv("ALPACA_CURRENT_CYCLE_PICKS_CSV", raising=False)
+    monkeypatch.delenv("ALPACA_ADAPTIVE_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("ALPACA_AUTOPILOT_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("EQ_V35_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("EQ_BASELINE_RUNTIME_DIR", raising=False)
+
+    assert bridge._load_monthly_managed_symbols() == {"AAPL", "GE", "JPM", "SNOW", "UNH"}
