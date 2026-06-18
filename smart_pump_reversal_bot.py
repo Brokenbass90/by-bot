@@ -114,6 +114,8 @@ from bot.deepseek_action_executor import (
     diff_pending_changes,
 )
 from bot.entry_guard import EntryCircuitBreaker
+from bot.maker_entry import post_only_price
+from bot.maker_execution import MakerExecutionResult, assess_entry_risk, execute_maker_first
 from bot.circuit_breaker import get_circuit_breaker as _get_cb
 from bot.runner_state import apply_runner_state
 from bot.live_position_view import build_live_position_row
@@ -2048,6 +2050,10 @@ def _append_live_trade_event(event: str, sym: str, tr=None, **extra) -> None:
                 "sl_price": float(getattr(tr, "sl_price", 0.0) or 0.0) if getattr(tr, "sl_price", None) is not None else None,
                 "entry_notional_usd": float(getattr(tr, "entry_notional_usd", 0.0) or 0.0),
                 "entry_order_id": str(getattr(tr, "entry_order_id", "") or ""),
+                "entry_execution_mode": str(getattr(tr, "entry_execution_mode", "") or ""),
+                "entry_maker_order_id": str(getattr(tr, "entry_maker_order_id", "") or ""),
+                "entry_limit_price": float(getattr(tr, "entry_limit_price", 0.0) or 0.0),
+                "entry_cancel_confirmed": bool(getattr(tr, "entry_cancel_confirmed", False)),
                 "signal_reason": str(getattr(tr, "signal_reason", "") or ""),
                 "close_reason": str(getattr(tr, "close_reason", "") or ""),
             })
@@ -5711,6 +5717,63 @@ class BybitClient:
             log_error(f"[{self.name}] cancel_order fail {symbol} {order_id}: {e}")
             return False
 
+    def get_last_price(self, symbol: str) -> float:
+        response = _HTTP.get(
+            f"{self.base}/v5/market/tickers",
+            params={"category": "linear", "symbol": symbol},
+            timeout=7,
+        )
+        response.raise_for_status()
+        rows = (((response.json() or {}).get("result") or {}).get("list") or [])
+        if not rows:
+            raise RuntimeError(f"ticker not found for {symbol}")
+        price = float(rows[0].get("lastPrice") or 0.0)
+        if price <= 0.0:
+            raise RuntimeError(f"invalid lastPrice for {symbol}: {price}")
+        return price
+
+    def place_post_only(
+        self,
+        symbol: str,
+        side: str,
+        qty: float,
+        reference_price: float,
+        offset_bps: float,
+    ) -> tuple[str, float, float]:
+        q_fixed = strict_round_qty(symbol, qty)
+        tick = float(_get_meta(symbol).get("tickSize") or 0.000001)
+        limit_price = post_only_price(
+            side,
+            reference_price,
+            offset_bps=offset_bps,
+            tick=tick,
+        )
+        if DRY_RUN:
+            return f"DRYRUN-MAKER-{self.name}-{symbol}-{int(time.time())}", q_fixed, limit_price
+
+        link_id = _make_order_link_id(self.name, symbol, side, "open_maker") if ORDER_LINK_ID_ENABLED else ""
+        body = {
+            "category": "linear",
+            "symbol": symbol,
+            "side": side,
+            "orderType": "Limit",
+            "qty": fmt_qty(symbol, q_fixed),
+            "price": fmt_price(symbol, limit_price),
+            "timeInForce": "PostOnly",
+            "marketUnit": "baseCoin",
+        }
+        if link_id:
+            body["orderLinkId"] = link_id
+        if not POS_IS_ONEWAY:
+            body["positionIdx"] = 1 if side == "Buy" else 2
+        result = self.post("/v5/order/create", body)
+        order_id = str(((result or {}).get("result") or {}).get("orderId") or "")
+        if not order_id:
+            raise RuntimeError(f"post-only order id missing for {symbol}")
+        if link_id and not str((result or {}).get("retMsg") or "").startswith("OK (recovered"):
+            _log_order_link(self.name, link_id, order_id, body, "placed")
+        return order_id, q_fixed, limit_price
+
     def __init__(self, name: str, key: str, secret: str, base: str):
         self.name = name
         self.key = key
@@ -6178,6 +6241,7 @@ def sync_trades_with_exchange():
 
             # позиция появилась -> OPEN
             if size > 0:
+                post_fill_risk = None
                 tr.status = "OPEN"
                 if not getattr(tr, "entry_fill_ts", 0):
                     tr.entry_fill_ts = int(now)
@@ -6228,6 +6292,41 @@ def sync_trades_with_exchange():
                         if planned_rr is not None and rr_after_fill is not None:
                             feats["rr_drift"] = float(rr_after_fill) - float(planned_rr)
 
+                strategy_key = str(getattr(tr, "strategy", "") or "").strip().lower()
+                execution_mode = str(getattr(tr, "entry_execution_mode", "") or "").strip().lower()
+                planned_entry = float(
+                    getattr(tr, "requested_entry_price", 0.0)
+                    or getattr(tr, "entry_price_req", 0.0)
+                    or 0.0
+                )
+                planned_sl = float(
+                    getattr(tr, "requested_sl_price", 0.0)
+                    or getattr(tr, "sl_price", 0.0)
+                    or 0.0
+                )
+                actual_entry = float(getattr(tr, "avg", 0.0) or 0.0)
+                if (
+                    MAKER_ENTRY_ENABLE
+                    and strategy_key in MAKER_ENTRY_STRATEGIES
+                    and execution_mode in {"maker", "maker_partial", "market_fallback"}
+                    and planned_entry > 0.0
+                    and planned_sl > 0.0
+                    and actual_entry > 0.0
+                ):
+                    post_fill_risk = assess_entry_risk(
+                        side=tr.side,
+                        qty=float(size),
+                        planned_entry=planned_entry,
+                        actual_entry=actual_entry,
+                        stop_price=planned_sl,
+                        max_risk_expansion=POST_FILL_MAX_RISK_EXPANSION,
+                    )
+                    tr.post_fill_planned_risk_usd = post_fill_risk.planned_risk_usd
+                    tr.post_fill_actual_risk_usd = post_fill_risk.actual_risk_usd
+                    tr.post_fill_risk_expansion_ratio = post_fill_risk.expansion_ratio
+                    tr.post_fill_risk_allowed = post_fill_risk.allowed
+                    tr.post_fill_risk_reason = post_fill_risk.reason
+
                 # поставить TP/SL, когда позиция реально появилась
                 if not (RESPECT_MANUAL_TPSL and getattr(tr, "tpsl_manual_lock", False)):
                     if tr.tp_price is not None or tr.sl_price is not None:
@@ -6273,11 +6372,18 @@ def sync_trades_with_exchange():
                         sym,
                         tr,
                         fill_price=float(getattr(tr, "avg", 0.0) or 0.0),
+                        planned_risk_usd=(post_fill_risk.planned_risk_usd if post_fill_risk is not None else None),
+                        actual_risk_usd=(post_fill_risk.actual_risk_usd if post_fill_risk is not None else None),
+                        risk_expansion_ratio=(post_fill_risk.expansion_ratio if post_fill_risk is not None else None),
+                        post_fill_risk_allowed=(post_fill_risk.allowed if post_fill_risk is not None else None),
+                        post_fill_risk_reason=(post_fill_risk.reason if post_fill_risk is not None else ""),
                         latency_sig_to_send_sec=(send_ts - sig_ts) if sig_ts > 0 and send_ts >= sig_ts else None,
                         latency_send_to_fill_sec=(fill_ts - send_ts) if send_ts > 0 and fill_ts >= send_ts else None,
                     )
                     _db_log_event("ENTRY", tr, sym, reason=str(getattr(tr, "signal_reason", "") or ""))
                     _db_log_ml_entry(tr, sym)
+                    if post_fill_risk is not None and not post_fill_risk.allowed:
+                        _close_post_fill_risk_breach(sym, tr, post_fill_risk)
                     if TRADE_CHARTS_SEND_ON_ENTRY:
                         p = _make_trade_chart(sym, tr, stage="entry")
                         if p:
@@ -7251,6 +7357,49 @@ def _close_unprotected_position(symbol: str, tr, note: str) -> bool:
         tr,
         close_qty=float(size_now),
         note=str(note or ""),
+    )
+    return True
+
+
+def _close_post_fill_risk_breach(symbol: str, tr, risk) -> bool:
+    """Flatten an entry whose real fill invalidated the planned stop risk."""
+    if TRADE_CLIENT is None or getattr(tr, "close_requested", False):
+        return False
+    try:
+        size_now, _, _, _, _, _ = TRADE_CLIENT.get_position_summary(symbol)
+    except Exception as e:
+        log_error(f"post-fill risk get_position_summary fail {symbol}: {e}")
+        return False
+    if size_now <= 0:
+        return False
+
+    tr.close_requested = True
+    tr.exit_req_ts = now_s()
+    tr.close_reason = f"POST_FILL_RISK_CAP::{getattr(risk, 'reason', 'unknown')}"
+    try:
+        close_market(symbol, tr.side, float(size_now))
+    except Exception as e:
+        tr.close_requested = False
+        log_error(f"post-fill risk close fail {symbol}: {e}")
+        tg_trade(f"🛑 НЕ УДАЛОСЬ ЗАКРЫТЬ {symbol} ПО ЛИМИТУ РИСКА: {e}")
+        return False
+
+    tg_trade(
+        f"🛑 ЗАКРЫТИЕ ПО ЛИМИТУ РИСКА {symbol}\n"
+        f"Фактический риск={float(getattr(risk, 'actual_risk_usd', 0.0)):.4f}$ "
+        f"вместо {float(getattr(risk, 'planned_risk_usd', 0.0)):.4f}$ "
+        f"({float(getattr(risk, 'expansion_ratio', 0.0)):.2f}×)"
+    )
+    _append_live_trade_event(
+        "post_fill_risk_close_sent",
+        symbol,
+        tr,
+        close_qty=float(size_now),
+        risk_reason=str(getattr(risk, "reason", "") or ""),
+        planned_risk_usd=float(getattr(risk, "planned_risk_usd", 0.0) or 0.0),
+        actual_risk_usd=float(getattr(risk, "actual_risk_usd", 0.0) or 0.0),
+        risk_expansion_ratio=float(getattr(risk, "expansion_ratio", 0.0) or 0.0),
+        adverse_bps=float(getattr(risk, "adverse_bps", 0.0) or 0.0),
     )
     return True
 
@@ -8478,6 +8627,15 @@ ENTRY_CIRCUIT_COOLDOWN_SEC = max(10, int(os.getenv("ENTRY_CIRCUIT_COOLDOWN_SEC",
 ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC = max(30, int(os.getenv("ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC", "300") or 300))
 ENTRY_RESERVATION_TTL_SEC = max(30, int(os.getenv("ENTRY_RESERVATION_TTL_SEC", "180") or 180))
 ENTRY_RESERVATION_CLEAR_ON_REMOTE_ERROR = _env_bool("ENTRY_RESERVATION_CLEAR_ON_REMOTE_ERROR", False)
+MAKER_ENTRY_ENABLE = _env_bool("MAKER_ENTRY_ENABLE", False)
+MAKER_ENTRY_STRATEGIES = _csv_lower_set("MAKER_ENTRY_STRATEGIES") or {"range", "flat_resistance_fade"}
+MAKER_ENTRY_OFFSET_BPS = max(0.0, float(os.getenv("MAKER_ENTRY_OFFSET_BPS", "2.0") or 2.0))
+MAKER_ENTRY_WAIT_SEC = max(0.5, float(os.getenv("MAKER_ENTRY_WAIT_SEC", "8.0") or 8.0))
+MAKER_ENTRY_POLL_SEC = max(0.2, float(os.getenv("MAKER_ENTRY_POLL_SEC", "1.0") or 1.0))
+MAKER_ENTRY_CANCEL_SETTLE_SEC = max(0.2, float(os.getenv("MAKER_ENTRY_CANCEL_SETTLE_SEC", "0.5") or 0.5))
+MAKER_ENTRY_MAX_ADVERSE_BPS = max(0.0, float(os.getenv("MAKER_ENTRY_MAX_ADVERSE_BPS", "10.0") or 10.0))
+MAKER_ENTRY_MAX_RISK_EXPANSION = max(1.0, float(os.getenv("MAKER_ENTRY_MAX_RISK_EXPANSION", "1.15") or 1.15))
+POST_FILL_MAX_RISK_EXPANSION = max(1.0, float(os.getenv("POST_FILL_MAX_RISK_EXPANSION", "1.20") or 1.20))
 _ENTRY_CIRCUIT = EntryCircuitBreaker(
     failure_threshold=ENTRY_CIRCUIT_FAILURES,
     cooldown_sec=ENTRY_CIRCUIT_COOLDOWN_SEC,
@@ -8531,6 +8689,31 @@ def _clear_stale_entry_reservations(symbol: str | None = None, *, now: int | Non
         age = ts_now - int(getattr(tr, "entry_ts", ts_now) or ts_now)
         if age < ENTRY_RESERVATION_TTL_SEC:
             continue
+        maker_order_id = str(getattr(tr, "entry_maker_order_id", "") or "")
+        if maker_order_id and TRADE_CLIENT is not None:
+            try:
+                maker_order = TRADE_CLIENT.get_order(sym, maker_order_id)
+            except Exception as e:
+                _diag_inc("entry_reservation_maker_status_unknown")
+                log_error(f"stale maker reservation status fail {sym} {maker_order_id}: {e}")
+                continue
+            maker_status = str((maker_order or {}).get("orderStatus") or "").strip().lower()
+            maker_terminal_safe = maker_status in {
+                "cancelled",
+                "canceled",
+                "partiallyfilledcancelled",
+                "partiallyfilledcanceled",
+                "rejected",
+                "deactivated",
+            }
+            if not maker_terminal_safe:
+                _diag_inc("entry_reservation_maker_quarantined")
+                tg_trade_throttled(
+                    f"entry_reservation_maker_quarantined:{sym}:{maker_order_id}",
+                    f"⚠️ MAKER ORDER QUARANTINE {sym}: status={maker_status or 'unknown'}, entry remains blocked.",
+                    1800,
+                )
+                continue
         remote_size = _remote_position_size(sym)
         if remote_size is None and not ENTRY_RESERVATION_CLEAR_ON_REMOTE_ERROR:
             _diag_inc("entry_reservation_stale_remote_unknown")
@@ -8606,6 +8789,20 @@ def _clear_entry_slot(symbol: str) -> None:
             pass
 
 
+def _release_or_quarantine_entry_slot(symbol: str, execution: MakerExecutionResult) -> None:
+    tr = TRADES.get(("Bybit", symbol))
+    if tr is None or not _is_entry_reservation(tr):
+        return
+    tr.entry_maker_order_id = execution.maker_order_id
+    tr.entry_limit_price = execution.limit_price
+    tr.entry_cancel_confirmed = execution.cancel_confirmed
+    tr.entry_failure_reason = execution.reason
+    if execution.maker_order_id and not execution.cancel_confirmed:
+        _diag_inc("entry_reservation_maker_quarantined")
+        return
+    _clear_entry_slot(symbol)
+
+
 def _submit_entry_order_guarded(symbol: str, side: str, qty_floor: float) -> tuple[str, float] | None:
     if TRADE_CLIENT is None:
         return None
@@ -8652,6 +8849,79 @@ def _submit_entry_order_guarded(symbol: str, side: str, qty_floor: float) -> tup
             ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC,
         )
         return None
+
+
+async def _submit_level_entry_guarded(
+    symbol: str,
+    side: str,
+    qty_floor: float,
+    *,
+    strategy: str,
+    entry_ref: float,
+    sl_price: float,
+) -> MakerExecutionResult:
+    strategy_key = str(strategy or "").strip().lower()
+    if not MAKER_ENTRY_ENABLE or strategy_key not in MAKER_ENTRY_STRATEGIES:
+        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
+        if not submitted:
+            return MakerExecutionResult(False, reason="market_submit_failed")
+        order_id, qty = submitted
+        return MakerExecutionResult(True, order_id=order_id, qty=qty, mode="market")
+
+    if TRADE_CLIENT is None:
+        return MakerExecutionResult(False, reason="no_trade_client")
+    if symbol in _BYBIT_UNSUPPORTED:
+        _diag_inc("entry_submit_unsupported_symbol")
+        return MakerExecutionResult(False, reason="unsupported_symbol")
+    if _entry_circuit_active():
+        _diag_inc("entry_circuit_blocked")
+        tg_trade_throttled(
+            f"entry_circuit:{symbol}",
+            f"🛑 ENTRY BLOCKED {symbol}: {_entry_circuit_reason()}",
+            ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC,
+        )
+        return MakerExecutionResult(False, reason="entry_circuit")
+
+    ensure_leverage(symbol, BYBIT_LEVERAGE)
+    result = await execute_maker_first(
+        TRADE_CLIENT,
+        symbol=symbol,
+        side=side,
+        qty=qty_floor,
+        reference_price=entry_ref,
+        stop_price=sl_price,
+        offset_bps=MAKER_ENTRY_OFFSET_BPS,
+        wait_sec=MAKER_ENTRY_WAIT_SEC,
+        poll_sec=MAKER_ENTRY_POLL_SEC,
+        cancel_settle_sec=MAKER_ENTRY_CANCEL_SETTLE_SEC,
+        max_adverse_bps=MAKER_ENTRY_MAX_ADVERSE_BPS,
+        max_risk_expansion=MAKER_ENTRY_MAX_RISK_EXPANSION,
+    )
+    if result.ok:
+        if ENTRY_CIRCUIT_ENABLE:
+            _ENTRY_CIRCUIT.note_success()
+        _diag_inc(f"entry_submit_{result.mode}")
+        return result
+
+    _diag_inc("entry_submit_maker_fail")
+    error_is_exchange_failure = result.reason.startswith(("maker_submit_failed", "fallback_submit_failed"))
+    snap = None
+    if error_is_exchange_failure and ENTRY_CIRCUIT_ENABLE:
+        snap = _ENTRY_CIRCUIT.note_failure(result.reason, time.time())
+    log_error(f"maker entry stopped {symbol} {side}: {result.reason}")
+    tg_trade_throttled(
+        f"maker_entry_stopped:{symbol}:{result.reason}",
+        (
+            f"🟡 MAKER ENTRY STOPPED {symbol} {side}: {result.reason}"
+            + (
+                f"\nBreaker: failures={snap.failures} open={int(snap.open)} rem={snap.remaining_sec}s"
+                if snap is not None
+                else ""
+            )
+        ),
+        ENTRY_CIRCUIT_ALERT_COOLDOWN_SEC,
+    )
+    return result
 
 
 def _entry_lock_key(exch: str, sym: str) -> Tuple[str, str]:
@@ -9120,11 +9390,18 @@ async def try_range_entry_async(symbol: str, price: float):
 
     if not await _reserve_entry_slot(symbol, sig.side, reserved_risk_usd=proposed_risk_usd):
         return
-    submitted = _submit_entry_order_guarded(symbol, sig.side, qty_floor)
-    if not submitted:
-        _clear_entry_slot(symbol)
+    execution = await _submit_level_entry_guarded(
+        symbol,
+        sig.side,
+        qty_floor,
+        strategy="range",
+        entry_ref=float(price),
+        sl_price=float(sl_r),
+    )
+    if not execution.ok:
+        _release_or_quarantine_entry_slot(symbol, execution)
         return
-    oid, q = submitted
+    oid, q = execution.order_id, execution.qty
 
     tr = TradeState(
         symbol=symbol,
@@ -9134,10 +9411,16 @@ async def try_range_entry_async(symbol: str, price: float):
         entry_ts=now,
     )
     tr.entry_order_id = oid
+    tr.entry_execution_mode = execution.mode
+    tr.entry_maker_order_id = execution.maker_order_id
+    tr.entry_limit_price = execution.limit_price
+    tr.entry_cancel_confirmed = execution.cancel_confirmed
     tr.status = "PENDING_ENTRY"
     tr.strategy = "range"
+    tr.signal_reason = str(getattr(sig, "reason", "") or "")
     tr.avg = float(price)
     tr.entry_price = float(price)
+    tr.entry_notional_usd = float(q) * float(price)
     tr.tp_price = float(tp_r)
     tr.sl_price = float(sl_r)
     TRADES[("Bybit", symbol)] = tr
@@ -10989,12 +11272,19 @@ async def try_flat_entry_async(symbol: str, price: float):
             return
 
         _diag_inc("flat_entry")
-        submitted = _submit_entry_order_guarded(symbol, side, qty_floor)
-        if not submitted:
+        execution = await _submit_level_entry_guarded(
+            symbol,
+            side,
+            qty_floor,
+            strategy="flat_resistance_fade",
+            entry_ref=float(entry),
+            sl_price=float(sl_r),
+        )
+        if not execution.ok:
             _diag_inc("flat_skip_submit")
-            _clear_entry_slot(symbol)
+            _release_or_quarantine_entry_slot(symbol, execution)
             return
-        oid, q = submitted
+        oid, q = execution.order_id, execution.qty
 
         tr = TradeState(
             symbol=symbol,
@@ -11004,12 +11294,16 @@ async def try_flat_entry_async(symbol: str, price: float):
             entry_ts=now,
         )
         tr.entry_order_id = oid
+        tr.entry_execution_mode = execution.mode
+        tr.entry_maker_order_id = execution.maker_order_id
+        tr.entry_limit_price = execution.limit_price
+        tr.entry_cancel_confirmed = execution.cancel_confirmed
         tr.status = "PENDING_ENTRY"
         tr.strategy = "flat_resistance_fade"
         tr.signal_reason = str(getattr(sig, "reason", "") or "")
         tr.avg = float(entry)
         tr.entry_price = float(entry)
-        tr.entry_notional_usd = float(notional_real)
+        tr.entry_notional_usd = float(q) * float(entry)
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
         apply_runner_state(tr, sig, q, use_runner=use_runner)
@@ -11021,8 +11315,7 @@ async def try_flat_entry_async(symbol: str, price: float):
         if ok:
             tr.tpsl_manual_lock = False
 
-        _append_live_trade_event(
-            "order_submitted",
+        _append_order_submitted_event(
             symbol,
             tr,
             request_price=float(entry),
