@@ -3575,8 +3575,6 @@ async def _ai_operator_emit(
 
 
 def _maybe_schedule_ai_trade_review(tr, sym: str, pnl_closed: float, fee_sum: float | None, exit_px: float | None) -> None:
-    if not (DEEPSEEK_OPERATOR_ENABLE and DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE):
-        return
     summary, payload = _build_trade_review_summary(tr, sym, pnl_closed, fee_sum, exit_px)
     try:
         learning_result = trade_learning.record(payload)
@@ -3595,6 +3593,8 @@ def _maybe_schedule_ai_trade_review(tr, sym: str, pnl_closed: float, fee_sum: fl
             )
     except Exception as e:
         log_error(f"trade learning loop fail: {e}")
+    if not (DEEPSEEK_OPERATOR_ENABLE and DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE):
+        return
     prompt = (
         "Кратко разберись с только что закрытой сделкой. "
         "Нужно 3-5 коротких строк по-русски: verdict, что было хорошо/плохо, "

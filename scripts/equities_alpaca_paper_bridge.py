@@ -638,14 +638,18 @@ def _current_cycle_picks_path(picks_csv: Path) -> Path | None:
     return candidate if candidate.exists() else None
 
 
-def _load_intraday_managed_symbols() -> set[str]:
+def _load_intraday_managed_symbols(*, strict: bool = False) -> set[str]:
     symbols: set[str] = set()
     raw = _env("ALPACA_INTRADAY_STATE_PATH", "")
     state_path = Path(raw) if raw else (Path(__file__).resolve().parent.parent / "configs" / "intraday_state.json")
     if state_path.exists():
         try:
             data = json.loads(state_path.read_text())
-        except Exception:
+        except Exception as exc:
+            if strict:
+                raise RuntimeError(
+                    f"intraday ownership state is unreadable; refusing monthly cleanup: {state_path}"
+                ) from exc
             data = {}
         if isinstance(data, dict):
             for sym in data.keys():
@@ -1232,7 +1236,7 @@ def main() -> int:
         no_current_cycle=no_current_cycle,
     )
     selected_symbols = {p.ticker for p in selected}
-    intraday_managed_symbols = _load_intraday_managed_symbols()
+    intraday_managed_symbols = _load_intraday_managed_symbols(strict=close_stale_positions)
     protected_intraday_symbols = sorted(sym for sym in current_positions.keys() if sym in intraday_managed_symbols)
     protected_intraday_orders = sorted(sym for sym in pending_buy_orders.keys() if sym in intraday_managed_symbols)
     stale_symbols = sorted(

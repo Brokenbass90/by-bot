@@ -4,7 +4,7 @@
 After each closed trade, send a compact lifecycle summary to a cheap LLM
 (Haiku by default, DeepSeek fallback) and ask:
 
-    1. What was visible at signal time (setup card, OHLC context)?
+    1. What is present in the recorded lifecycle and review-time snapshots?
     2. What signal would have been obvious in hindsight?
     3. Pattern code (1-3 short tags) for future grouping.
     4. Win/loss honest verdict on the strategy, not just the outcome.
@@ -240,8 +240,9 @@ def _compact_trade_for_ai(lc: dict[str, Any]) -> dict[str, Any]:
         "latency_sig_to_send_sec": fil.get("latency_sig_to_send_sec"),
         "latency_send_to_fill_sec": fil.get("latency_send_to_fill_sec"),
         "duration_sec": int(cls.get("ts", 0)) - int(fil.get("ts", 0)) if cls.get("ts") and fil.get("ts") else None,
-        "scanner_setup_at_run_time": _scanner_setup_for(symbol),
-        "ohlc_top_at_run_time": _ohlc_for(symbol),
+        "context_timing": "review_time_not_entry_time",
+        "scanner_setup_at_review_time": _scanner_setup_for(symbol),
+        "ohlc_top_at_review_time": _ohlc_for(symbol),
     }
 
 
@@ -252,13 +253,15 @@ def _compact_trade_for_ai(lc: dict[str, Any]) -> dict[str, Any]:
 _SYSTEM = (
     "Ты — senior квант-аналитик. Тебе дают закрытую сделку алго-бота на Bybit perpetuals. "
     "Твоя задача — холодный разбор:\n"
-    "1. Был ли сетап ясно виден в момент входа (по setup card / OHLC)?\n"
+    "1. Что подтверждено жизненным циклом сделки и снимками на момент разбора?\n"
     "2. Какие факторы из ПЕРЕДАННЫХ данных могли повлиять на исход?\n"
     "3. Это качественная победа/проигрыш стратегии или удача/неудача?\n"
     "4. Pattern code: 1-3 коротких тега (например `bear_chop_short_runner_win` или `low_atr_chop_stopped`).\n"
     "Отвечай строго в JSON: "
     '{"setup_visibility":"...","hidden_factors":"...","quality_verdict":"win_quality|loss_quality|lucky_win|unlucky_loss","pattern_tags":["..."],"one_line_lesson":"..."}\n'
     "Не выдумывай новости, листинги, макро-события, ликвидность или время-сезонность, если их нет во входных данных. "
+    "Поля scanner_setup_at_review_time и ohlc_top_at_review_time сняты ПОСЛЕ сделки: "
+    "не используй их как доказательство того, что было видно на входе. "
     "Для неизвестных факторов пиши `unknown_from_snapshot`. "
     "Будь краток. Не пиши markdown, не объясняй что такое JSON."
 )

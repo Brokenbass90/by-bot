@@ -795,7 +795,9 @@ def _load_state() -> Dict[str, PositionState]:
 
 def _save_state(state: Dict[str, PositionState]) -> None:
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps({k: asdict(v) for k, v in state.items()}, indent=2))
+    tmp = STATE_FILE.with_suffix(STATE_FILE.suffix + ".tmp")
+    tmp.write_text(json.dumps({k: asdict(v) for k, v in state.items()}, indent=2))
+    tmp.replace(STATE_FILE)
 
 
 def _confirmed_exit_pnl(client: AlpacaClient, ps: PositionState) -> Optional[dict[str, Any]]:
@@ -936,6 +938,21 @@ def _position_management_decision(ps: PositionState, remote_pos: dict, now_ts: i
         "action": "hold",
         "reason": "",
     }
+    current = float(stats["current"] or 0.0)
+    short = _is_short_position(ps, remote_pos)
+    if current > 0:
+        if (not short and ps.sl_price > 0 and current <= ps.sl_price) or (
+            short and ps.sl_price > 0 and current >= ps.sl_price
+        ):
+            decision["action"] = "close"
+            decision["reason"] = "software_stop_loss"
+            return decision
+        if (not short and ps.tp_price > 0 and current >= ps.tp_price) or (
+            short and ps.tp_price > 0 and current <= ps.tp_price
+        ):
+            decision["action"] = "close"
+            decision["reason"] = "software_take_profit"
+            return decision
     if (
         trail_enable
         and stats["best_gain_pct"] >= trail_min_gain_pct
@@ -1032,7 +1049,11 @@ def _manage_tracked_positions(client: AlpacaClient, state: Dict[str, PositionSta
             ps.close_order_id = str(result.get("id") or "")
             closed_symbols.add(sym.upper())
             state_changed = True
-            cooldown = trail_cooldown if reason == "software_trailing_stop" else time_stop_cooldown
+            cooldown = (
+                trail_cooldown
+                if reason in {"software_trailing_stop", "software_take_profit", "software_stop_loss"}
+                else time_stop_cooldown
+            )
             _add_reentry_block(reentry_blocks, sym, reason, now_ts, cooldown)
             decision.update({
                 "close_submitted": True,

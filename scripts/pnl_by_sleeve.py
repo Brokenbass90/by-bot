@@ -7,6 +7,7 @@ read-only. Feeds /api/pnl/by-sleeve and the planned P&L modal.
 
 Usage:
     python3 scripts/pnl_by_sleeve.py
+    python3 scripts/pnl_by_sleeve.py --since 2026-06-17
     python3 scripts/pnl_by_sleeve.py --json runtime/pnl_breakdown.json
 """
 from __future__ import annotations
@@ -36,7 +37,7 @@ def _add(d: Dict[str, float], pnl: float, fees: float) -> None:
         d["losses"] += 1
 
 
-def build_breakdown(events_path: Path = EVENTS) -> Dict[str, Any]:
+def build_breakdown(events_path: Path = EVENTS, *, since_day: str = "") -> Dict[str, Any]:
     if not events_path.exists() and events_path == EVENTS and MIRROR_EVENTS.exists():
         events_path = MIRROR_EVENTS
     by_sleeve: Dict[str, Dict[str, float]] = defaultdict(_acc)
@@ -62,6 +63,8 @@ def build_breakdown(events_path: Path = EVENTS) -> Dict[str, Any]:
         fees = float(e.get("fees") or 0.0)
         sleeve = str(e.get("strategy") or "unknown")
         day = str(e.get("ts_utc") or "")[:10]      # YYYY-MM-DD
+        if since_day and day < since_day:
+            continue
         month = day[:7]                            # YYYY-MM
         _add(by_sleeve[sleeve], pnl, fees)
         _add(by_day[day], pnl, fees)
@@ -84,8 +87,9 @@ def build_breakdown(events_path: Path = EVENTS) -> Dict[str, Any]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", type=str, default="", help="optional output path")
+    ap.add_argument("--since", type=str, default="", help="include closes on/after YYYY-MM-DD")
     args = ap.parse_args()
-    bd = build_breakdown()
+    bd = build_breakdown(since_day=args.since)
     if args.json:
         Path(args.json).write_text(json.dumps(bd, indent=2), encoding="utf-8")
         print(f"written: {args.json}")

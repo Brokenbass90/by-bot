@@ -40,7 +40,8 @@ from urllib import error, request
 
 ROOT = Path(__file__).resolve().parent.parent
 ENV_FILE          = ROOT / "configs" / "claude_analyst.env"
-HEALTH_FILE       = ROOT / "configs" / "strategy_health.json"
+HEALTH_FILE       = ROOT / "runtime" / "strategy_health.json"
+LEGACY_HEALTH_FILE = ROOT / "configs" / "strategy_health.json"
 REPORTS_DIR       = ROOT / "docs" / "monthly_reports"
 WEEKLY_REPORTS    = ROOT / "docs" / "weekly_reports"
 TRADE_LEARN_LOG   = ROOT / "data" / "trade_learning_log.jsonl"
@@ -178,6 +179,48 @@ def _make_client() -> "ClaudeClient | DeepSeekClient":
 
     return None  # caller handles missing keys
 
+
+def _trade_learning_summary(trades: List[dict]) -> dict[str, Any]:
+    """Summarize the canonical trade-learning schema.
+
+    Older experiments used ``pnl``/``patterns`` while the live recorder writes
+    ``pnl_closed``/``tags``. Keep the fallback so historical rows remain useful.
+    """
+    pnls = [float(t.get("pnl_closed", t.get("pnl", 0)) or 0.0) for t in trades]
+    winners = [p for p in pnls if p > 0]
+    losers = [p for p in pnls if p <= 0]
+    patterns: Dict[str, int] = {}
+    for trade in trades:
+        for pattern in list(trade.get("tags", trade.get("patterns", [])) or []):
+            key = str(pattern)
+            patterns[key] = patterns.get(key, 0) + 1
+    return {
+        "count": len(trades),
+        "win_rate": len(winners) / len(trades) if trades else 0.0,
+        "avg_win": sum(winners) / len(winners) if winners else 0.0,
+        "avg_loss": sum(losers) / len(losers) if losers else 0.0,
+        "patterns": patterns,
+    }
+
+
+def _intraday_state_summary(state: Any) -> dict[str, Any]:
+    if not isinstance(state, dict):
+        return {"realized_pnl": 0.0, "open_positions": 0}
+    if isinstance(state.get("open_positions"), list):
+        return {
+            "realized_pnl": float(state.get("today_realized_pnl", 0) or 0.0),
+            "open_positions": len(state.get("open_positions") or []),
+            "equity_curve_ok": state.get("equity_curve_ok"),
+            "spy_regime_ok": state.get("spy_regime_ok"),
+        }
+    positions = [value for value in state.values() if isinstance(value, dict) and value.get("symbol")]
+    return {
+        "realized_pnl": sum(float(value.get("realized_pnl", 0) or 0.0) for value in positions),
+        "open_positions": len(positions),
+        "equity_curve_ok": None,
+        "spy_regime_ok": None,
+    }
+
 # ── Context builders ──────────────────────────────────────────────────────────────
 SYSTEM_PROMPT = """You are the senior architect of a self-improving crypto + equities trading bot.
 The bot runs on Bybit perpetual futures and Alpaca paper equities.
@@ -211,9 +254,10 @@ def _load_portfolio_context() -> str:
     lines = [f"== BOT CONTEXT (generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}) =="]
 
     # ── 1. Strategy health ─────────────────────────────────────────────────────
-    if HEALTH_FILE.exists():
+    health_path = HEALTH_FILE if HEALTH_FILE.exists() else LEGACY_HEALTH_FILE
+    if health_path.exists():
         try:
-            health = json.loads(HEALTH_FILE.read_text(encoding="utf-8"))
+            health = json.loads(health_path.read_text(encoding="utf-8"))
             ts = health.get("timestamp", "unknown")
             overall = health.get("overall_health", "unknown")
             lines.append(f"\nStrategy Health (as of {ts}, overall={overall}):")
@@ -267,17 +311,13 @@ def _load_portfolio_context() -> str:
             # Last 50 trades
             recent_trades = recent_trades[-50:]
             if recent_trades:
-                winners = [t for t in recent_trades if t.get("pnl", 0) > 0]
-                losers  = [t for t in recent_trades if t.get("pnl", 0) <= 0]
-                avg_win  = sum(t.get("pnl", 0) for t in winners) / max(1, len(winners))
-                avg_loss = sum(t.get("pnl", 0) for t in losers)  / max(1, len(losers))
+                learning = _trade_learning_summary(recent_trades)
                 lines.append(f"\nTrade Learning (last {len(recent_trades)} trades):")
-                lines.append(f"  WR={len(winners)/len(recent_trades):.1%} | avg_win={avg_win:.4f} | avg_loss={avg_loss:.4f}")
-                # Pattern summary
-                patterns: Dict[str, int] = {}
-                for t in recent_trades:
-                    for pat in t.get("patterns", []):
-                        patterns[pat] = patterns.get(pat, 0) + 1
+                lines.append(
+                    f"  WR={learning['win_rate']:.1%} | "
+                    f"avg_win={learning['avg_win']:.4f} | avg_loss={learning['avg_loss']:.4f}"
+                )
+                patterns = learning["patterns"]
                 if patterns:
                     top = sorted(patterns.items(), key=lambda x: x[1], reverse=True)[:5]
                     lines.append(f"  Top patterns: {top}")
@@ -300,13 +340,14 @@ def _load_portfolio_context() -> str:
     if INTRADAY_STATE.exists():
         try:
             state = json.loads(INTRADAY_STATE.read_text(encoding="utf-8"))
-            daily_pnl  = state.get("today_realized_pnl", 0)
-            open_pos   = state.get("open_positions", [])
-            eq_healthy = state.get("equity_curve_ok", True)
-            spy_ok     = state.get("spy_regime_ok", True)
+            intraday = _intraday_state_summary(state)
             lines.append(f"\nAlpaca Intraday State:")
-            lines.append(f"  today_pnl={daily_pnl:+.2f} | open_positions={len(open_pos)} | "
-                         f"equity_curve_ok={eq_healthy} | spy_regime_ok={spy_ok}")
+            lines.append(
+                f"  realized_pnl={intraday['realized_pnl']:+.2f} | "
+                f"open_positions={intraday['open_positions']} | "
+                f"equity_curve_ok={intraday.get('equity_curve_ok')} | "
+                f"spy_regime_ok={intraday.get('spy_regime_ok')}"
+            )
         except Exception:
             pass
 
@@ -332,11 +373,10 @@ def _load_portfolio_context() -> str:
         except Exception:
             pass
 
-    # ── 7. Static portfolio baseline (always included as reference) ───────────
-    lines.append("\nGolden Portfolio Baseline (5-strategy, 360-day backtest):")
-    lines.append("  PnL=+100.93%, PF=2.078, DD=3.65%, trades=446, 0 red months")
-    lines.append("  Live stack: alt_inplay_breakdown_v1, alt_resistance_fade_v1,")
-    lines.append("    alt_sloped_channel_v1, btc_eth_midterm_pullback, inplay_breakout")
+    # ── 7. Historical claim, never current evidence ──────────────────────────
+    lines.append("\nHistorical Portfolio Claim (stale; revalidate before use):")
+    lines.append("  Archived claim: PnL=+100.93%, PF=2.078, DD=3.65%, trades=446, 0 red months")
+    lines.append("  This is not the current live package and must not be used as live performance evidence.")
     lines.append("  Server: 64.226.73.119 | Bot: smart_pump_reversal_bot.py")
 
     return "\n".join(lines)
@@ -350,10 +390,9 @@ def run_monthly_report(client: ClaudeClient) -> str:
 Task: Generate a comprehensive monthly analysis report.
 
 Cover:
-1. Overall portfolio health — is the current 5-strategy setup still valid?
+1. Overall portfolio health — assess only strategies present in the supplied current health data.
 2. Per-strategy assessment — any showing regime drift signals?
-3. Elder Triple Screen recommendation — integrate as 6th strategy (PF=4.27, 32 trades/year)?
-   What's the correlation risk? What allocation % would be appropriate?
+3. Diversification — identify only candidates supported by supplied evidence; label missing evidence explicitly.
 4. Top 3 actions for next month (specific, numbered, with thresholds)
 5. One new strategy concept worth researching next (with entry/exit logic sketch)
 """
