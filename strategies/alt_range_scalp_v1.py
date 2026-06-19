@@ -95,28 +95,61 @@ def _atr_from_rows(rows: List[list], period: int) -> float:
 
 
 def _adx_from_rows(rows: List[list], period: int) -> float:
-    if len(rows) < period + 2:
+    if period <= 0 or len(rows) < period + 2:
         return float("nan")
     highs = [float(r[2]) for r in rows]
     lows = [float(r[3]) for r in rows]
     closes = [float(r[4]) for r in rows]
-    dxs: List[float] = []
-    start = max(1, len(rows) - period)
-    for i in range(start, len(rows)):
+
+    # ADX is based on Wilder-smoothed directional movement.  Computing DI from
+    # one bar at a time makes one of +DI/-DI zero on almost every bar, which in
+    # turn makes DX (and therefore ADX) approximately 100 for both trends and
+    # ranges.  Keep the full transition series, seed it with ``period`` bars,
+    # then apply Wilder smoothing before calculating DX.
+    trs: List[float] = []
+    plus_dms: List[float] = []
+    minus_dms: List[float] = []
+    for i in range(1, len(rows)):
         up_move = highs[i] - highs[i - 1]
         down_move = lows[i - 1] - lows[i]
-        plus_dm = up_move if up_move > down_move and up_move > 0 else 0.0
-        minus_dm = down_move if down_move > up_move and down_move > 0 else 0.0
-        tr = max(highs[i] - lows[i], abs(highs[i] - closes[i - 1]), abs(lows[i] - closes[i - 1]))
-        if tr <= 1e-12:
+        plus_dms.append(up_move if up_move > down_move and up_move > 0 else 0.0)
+        minus_dms.append(down_move if down_move > up_move and down_move > 0 else 0.0)
+        trs.append(
+            max(
+                highs[i] - lows[i],
+                abs(highs[i] - closes[i - 1]),
+                abs(lows[i] - closes[i - 1]),
+            )
+        )
+
+    if len(trs) < period:
+        return float("nan")
+
+    smoothed_tr = sum(trs[:period])
+    smoothed_plus_dm = sum(plus_dms[:period])
+    smoothed_minus_dm = sum(minus_dms[:period])
+    dxs: List[float] = []
+    for i in range(period - 1, len(trs)):
+        if i >= period:
+            smoothed_tr = smoothed_tr - smoothed_tr / period + trs[i]
+            smoothed_plus_dm = smoothed_plus_dm - smoothed_plus_dm / period + plus_dms[i]
+            smoothed_minus_dm = smoothed_minus_dm - smoothed_minus_dm / period + minus_dms[i]
+        if smoothed_tr <= 1e-12:
+            dxs.append(0.0)
             continue
-        plus_di = 100.0 * plus_dm / tr
-        minus_di = 100.0 * minus_dm / tr
+        plus_di = 100.0 * smoothed_plus_dm / smoothed_tr
+        minus_di = 100.0 * smoothed_minus_dm / smoothed_tr
         denom = plus_di + minus_di
         if denom <= 1e-12:
+            dxs.append(0.0)
             continue
         dxs.append(100.0 * abs(plus_di - minus_di) / denom)
-    return sum(dxs) / float(len(dxs)) if dxs else float("nan")
+
+    # With the normal 50-bar input there is enough history for a conventional
+    # period-length ADX average.  Shorter valid inputs still return a stable
+    # mean instead of silently disabling the strategy.
+    window = dxs[-period:] if len(dxs) >= period else dxs
+    return sum(window) / float(len(window)) if window else float("nan")
 
 
 def _rsi(values: List[float], period: int) -> float:
