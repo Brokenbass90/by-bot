@@ -50,3 +50,42 @@ def test_hypothesis_test_verdict_shape():
     res = hypothesis_test(ev, bars, target_pct=0.4, stop_pct=0.4, fee_bps=0)
     assert res["trades"] == 1
     assert "verdict" in res
+
+
+def test_cluster_detection_never_combines_different_symbols():
+    ev = [
+        {"ts_ms": 0, "symbol": "BTCUSDT", "side": "long", "usd": 600_000},
+        {"ts_ms": 1000, "symbol": "ETHUSDT", "side": "long", "usd": 600_000},
+    ]
+
+    assert detect_clusters(ev, min_usd=1_000_000) == []
+
+
+def test_multi_symbol_hypothesis_uses_matching_price_bars():
+    ev = [
+        {"ts_ms": 0, "symbol": "BTCUSDT", "side": "long", "usd": 2_000_000},
+        {"ts_ms": 0, "symbol": "ETHUSDT", "side": "short", "usd": 2_000_000},
+    ]
+    bars = {
+        "BTCUSDT": [(0, 100.0, 100.0, 100.0), (60_000, 100.5, 99.9, 100.4)],
+        "ETHUSDT": [(0, 200.0, 200.0, 200.0), (60_000, 200.1, 199.0, 199.2)],
+    }
+
+    result = hypothesis_test(ev, bars, target_pct=0.4, stop_pct=0.4, fee_bps=0)
+
+    assert result["clusters"] == 2
+    assert result["trades"] == 2
+    assert result["win_pct"] == 100.0
+
+
+def test_multi_symbol_hypothesis_rejects_one_unkeyed_bar_stream():
+    ev = [
+        {"ts_ms": 0, "symbol": "BTCUSDT", "side": "long", "usd": 2_000_000},
+        {"ts_ms": 0, "symbol": "ETHUSDT", "side": "short", "usd": 2_000_000},
+    ]
+    bars = [(0, 100.0, 100.0, 100.0), (60_000, 100.5, 99.9, 100.4)]
+
+    import pytest
+
+    with pytest.raises(ValueError, match="bars keyed by symbol"):
+        hypothesis_test(ev, bars, target_pct=0.4, stop_pct=0.4, fee_bps=0)

@@ -20,45 +20,59 @@ Price bars: list of (ts_ms, high, low, close), ascending.
 """
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
 
 def detect_clusters(events: Sequence[dict], *, window_ms: int = 5 * 60_000,
                     min_usd: float = 1_000_000.0, dominance: float = 0.7) -> List[dict]:
     """Group liquidations into clusters where one side dominates and exceeds min_usd.
 
-    Returns clusters: {"ts_ms", "side" (liquidated side), "usd", "reversal_side"}.
+    Events are clustered independently per symbol.  Combining liquidation USD
+    from unrelated instruments creates synthetic cascades and makes subsequent
+    price-bar joins invalid.
+
+    Returns clusters: {"ts_ms", "symbol", "side" (liquidated side), "usd",
+    "reversal_side"}.
     """
-    ev = sorted([e for e in events if e.get("usd")], key=lambda e: e["ts_ms"])
+    by_symbol: Dict[str, List[dict]] = {}
+    for event in events:
+        if not event.get("usd"):
+            continue
+        symbol = str(event.get("symbol") or "").upper()
+        by_symbol.setdefault(symbol, []).append(event)
+
     clusters: List[dict] = []
-    i = 0
-    n = len(ev)
-    while i < n:
-        t0 = ev[i]["ts_ms"]
-        long_usd = short_usd = 0.0
-        j = i
-        last_ts = t0
-        while j < n and ev[j]["ts_ms"] - t0 <= window_ms:
-            side = str(ev[j].get("side", "")).lower()
-            if side == "long":
-                long_usd += float(ev[j]["usd"])
-            elif side == "short":
-                short_usd += float(ev[j]["usd"])
-            last_ts = ev[j]["ts_ms"]
-            j += 1
-        total = long_usd + short_usd
-        if total >= min_usd and total > 0:
-            dom_side = "long" if long_usd >= short_usd else "short"
-            dom_frac = max(long_usd, short_usd) / total
-            if dom_frac >= dominance:
-                clusters.append({
-                    "ts_ms": last_ts,
-                    "side": dom_side,
-                    "usd": round(total, 2),
-                    "reversal_side": "long" if dom_side == "long" else "short",
-                })
-        i = j if j > i else i + 1
-    return clusters
+    for symbol, symbol_events in by_symbol.items():
+        ev = sorted(symbol_events, key=lambda e: e["ts_ms"])
+        i = 0
+        n = len(ev)
+        while i < n:
+            t0 = ev[i]["ts_ms"]
+            long_usd = short_usd = 0.0
+            j = i
+            last_ts = t0
+            while j < n and ev[j]["ts_ms"] - t0 <= window_ms:
+                side = str(ev[j].get("side", "")).lower()
+                if side == "long":
+                    long_usd += float(ev[j]["usd"])
+                elif side == "short":
+                    short_usd += float(ev[j]["usd"])
+                last_ts = ev[j]["ts_ms"]
+                j += 1
+            total = long_usd + short_usd
+            if total >= min_usd and total > 0:
+                dom_side = "long" if long_usd >= short_usd else "short"
+                dom_frac = max(long_usd, short_usd) / total
+                if dom_frac >= dominance:
+                    clusters.append({
+                        "ts_ms": last_ts,
+                        "symbol": symbol,
+                        "side": dom_side,
+                        "usd": round(total, 2),
+                        "reversal_side": "long" if dom_side == "long" else "short",
+                    })
+            i = j if j > i else i + 1
+    return sorted(clusters, key=lambda cluster: cluster["ts_ms"])
 
 
 def _price_at(bars: Sequence[Tuple[int, float, float, float]], ts_ms: int) -> Optional[int]:
@@ -117,15 +131,29 @@ def measure_bounce(cluster: dict, bars: Sequence[Tuple[int, float, float, float]
     return move - fee_R
 
 
-def hypothesis_test(events: Sequence[dict], bars: Sequence[Tuple[int, float, float, float]],
+Bars = Sequence[Tuple[int, float, float, float]]
+BarsBySymbol = Mapping[str, Bars]
+
+
+def hypothesis_test(events: Sequence[dict], bars: Union[Bars, BarsBySymbol],
                     *, window_ms=5 * 60_000, min_usd=1_000_000.0,
                     horizon_ms=15 * 60_000, target_pct=0.4, stop_pct=0.4,
                     fee_bps=10.0) -> Dict[str, object]:
     """Run the full falsifiable test. Verdict: pass if WR>55% and expectancy>0."""
     clusters = detect_clusters(events, window_ms=window_ms, min_usd=min_usd)
+    bars_by_symbol: Optional[BarsBySymbol]
+    if isinstance(bars, Mapping):
+        bars_by_symbol = {str(symbol).upper(): rows for symbol, rows in bars.items()}
+    else:
+        bars_by_symbol = None
+        cluster_symbols = {str(cluster.get("symbol") or "").upper() for cluster in clusters}
+        cluster_symbols.discard("")
+        if len(cluster_symbols) > 1:
+            raise ValueError("multi-symbol liquidation clusters require bars keyed by symbol")
     Rs: List[float] = []
     for c in clusters:
-        r = measure_bounce(c, bars, horizon_ms=horizon_ms, target_pct=target_pct,
+        cluster_bars = bars_by_symbol.get(str(c.get("symbol") or "").upper(), []) if bars_by_symbol is not None else bars
+        r = measure_bounce(c, cluster_bars, horizon_ms=horizon_ms, target_pct=target_pct,
                            stop_pct=stop_pct, fee_bps=fee_bps)
         if r is not None:
             Rs.append(r)
