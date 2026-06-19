@@ -6,7 +6,7 @@
 Многорукавная торговая станция. Цель — устойчивый процесс с доказанным эджем, не «быстрое богатство». Человек в контуре на всех решениях о деньгах/коде. Деньги — только за доказанным OOS-эджем.
 
 ## Слои (поток сверху вниз)
-1. **ДАННЫЕ:** Bybit WS feed (перпы, ликвидации) · Alpaca data (акции) · `data_cache` (история OHLC) · cross-exchange funding/basis (read-only).
+1. **ДАННЫЕ:** Bybit WS feed (перпы) · отдельный public liquidation collector (`scripts/collect_bybit_liquidations.py` → `runtime/liquidations/bybit_liquidations.jsonl`) · Alpaca data (акции) · `data_cache` (история OHLC) · cross-exchange funding/basis (read-only). Liquidation research обязан кластеризовать и join-ить события строго per-symbol.
 2. **ПОДБОР МОНЕТ:** `scripts/build_symbol_router`/`dynamic_universe` → `scripts/strategy_scorer` (фитнес монеты 0-1 под стратегию) → `bot/cross_sectional` (ранг, не порог) → per-strategy allowlists (`bot/allowlist_watcher`).
 3. **СТРАТЕГИИ (по логике):**
    - крипто-ядро: флэт-лонг `ASB1` (alt_support_bounce) ↔ флэт-шорт `ARF1` (alt_resistance_fade) · тренд `ATT1`/`IVB1`/breakout · bear-шорт `breakdown` · `midterm` BTC/ETH.
@@ -16,7 +16,7 @@
    - forex/CFD — будущий рукав (заготовки).
 4. **КОНТРОЛЬ (control-plane):** `bot/regime_orchestrator` (bull/bear × trend/chop) → portfolio_allocator (slot-caps, risk-mults) → risk rails (дневной −2% / общий −5%, в `portfolio_can_open`).
 5. **ИСПОЛНЕНИЕ:** `bot/maker_entry` (post-only, экономит комиссии) → broker SL/TP (`set_tp_sl_retry` + failsafe-закрытие) → ladder exit (`bot/ladder_exit`: TP1 частичный → breakeven → runner до дальней цели + трейлинг + time-stop).
-6. **ОФЛАЙН-ВАЛИДАЦИЯ (анти-overfit):** `scripts/strategy_coin_picks` → `backtest/crypto_multiwindow_wf` / `auto_pick_wf` (WF по окнам) → `bot/param_profiles` (тиры монет) → `backtest/stack_comparison` (обвязка vs голо) → `backtest/promotion_gate` (объективный GO/NO-GO) → малый canary.
+6. **ОФЛАЙН-ВАЛИДАЦИЯ (анти-overfit):** `scripts/strategy_coin_picks` → `backtest/crypto_multiwindow_wf` / `auto_pick_wf` (WF по окнам) → `bot/param_profiles` (тиры монет) → `backtest/stack_comparison` (обвязка vs голо) → `scripts/evaluate_crypto_promotion.py` (next-open + cost floors + monthly stability + WF + portfolio compare) → shadow → малый canary.
 7. **ИИ / НАБЛЮДАЕМОСТЬ:** `bot/ai_tools` (catalog·code_access·codemap·snapshot·pulse) · `bot/deepseek_*` autoresearch (propose → одобрение человеком → execute) · `web/static/operator_console.html` + `scripts/proof_of_life` + Telegram.
 
 ## Человеческие названия стратегий
@@ -36,10 +36,12 @@
 - **Кэрри на фондинге** (`funding_carry`) — сбор funding через хеджированную perp/spot позицию.
 
 ## Гейт промоушена в live (нерушимо)
-кандидат → авто-подбор монет → multi-window WF (ladder+комиссии) → тир-профили → двойной тест → `promotion_gate` (≥3/4 окна + PF>1 после комиссий + expectancy≥0 + ≥30 сделок + обвязка не душит) → крошечный canary на $100.
+кандидат → авто-подбор монет → 360d next-open с fee≥6 bps/side и slippage≥2 bps/side → monthly stability (≥10 месяцев, ≤3 красных, streak≤2) → multi-window WF → strategy-only/full-stack compare → `evaluate_crypto_promotion.py` → shadow → крошечный canary на $100.
 
-## Текущее состояние (2026-06-15)
-Бот жив/защищён; live-риск только `flat/ARF1=0.3`, `IVB1=0.25`; ядро в shadow; **0 доказанных карманов** (фильтр работает). Капитал: ~$100 крипта live / $0 Alpaca real ($500 paper) / $2500 резерв. Тесты 297 зелёных.
+## Текущее состояние (2026-06-19)
+Серверный `bybot.service` активен, private Bybit API подтверждает 0 открытых позиций, equity около `121.11 USDT`, режим `bear_chop`, allocator `hard_block=false`. Реальный риск несут только `flat_resistance_fade=0.30x` и legacy `sr_range_strategy.RangeStrategy=0.25x` short-only; ATT1, bounce, breakdown, IVB1 и midterm работают с нулевым риском. Live Range и исследовательский Bollinger/RSI `alt_range_scalp_v1` (ARS1) — разные реализации.
+
+Доказательная истина остаётся жёсткой: полный доступный live-журнал отрицателен (`40` закрытий, около `-3.81 USDT`, PF `0.517`), а две сделки flat и три short-сделки Range слишком малы для вывода. **Доказанных live-карманов пока 0; риск не масштабировать.** Alpaca `alpaca_adaptive_v1` управляет paper-позициями на виртуальном `$1000`; первый формальный review — после пяти полных сессий, не раньше закрытия 2026-06-26. Резерв `$2500` не развёрнут.
 
 ## Рукава (роли)
 - Крипта (Bybit perps) — работяга/доход (ядро на горизонтальных уровнях + тренд).
@@ -52,18 +54,21 @@
 
 <!-- AUTO_SNAPSHOT_START -->
 ## Авто-снимок
-- generated_utc: `2026-06-16T08:31:50Z`
-- git_head: `4abf8f9`
-- tests: `61` test files
-- strategies: `86` strategy modules
-- backtest modules: `27`
+- generated_utc: `2026-06-19T14:55:00Z`
+- git_head: `4aba49f`
+- tests: `87` test files
+- strategies: `88` strategy modules
+- backtest modules: `29`
 - onboard AI project-map tool: `yes`
 - liquidation collector: `yes`
 - funding carry 180d hedgeable gate: `NO-GO, net=$7.22, annual=1.8%`
-- latest progress note: `CODEX_MORNING_PROGRESS_2026_06_16.md`
+- latest progress note: `CODEX_HANDOFF_2026_06_19.md`
 <!-- AUTO_SNAPSHOT_END -->
 
 ## Ключевые документы
+- `CODEX_HANDOFF_2026_06_19.md` — каноническая точка продолжения и текущая серверная истина.
+- `reports/LIVE_TRADING_AUDIT_2026_06_18.md`, `reports/RANGE_FORENSICS_AND_ADAPTIVE_PAPER_2026_06_18.md` — live/runtime и execution evidence.
+- `reports/audit_bundle_20260619/AUDITOR_README.md` — пакет для независимого ревью.
 - `CLAUDE_HANDOFF_NEXT_SESSION_2026_06_15.md` — START HERE.
 - `CODEX_HANDOFF_2026_06_15.md` (§1-20) — детальный журнал.
 - `reports/FOUNDATION_UPGRADES_AND_LAUNCH_2026_06_15.md`, `HIGH_IMPACT_IDEAS_2026_06_15.md`, `CLAUDE_TO_CODEX_2026_06_15_entry_rework.md` — что делать дальше.
