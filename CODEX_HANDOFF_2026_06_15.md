@@ -1,3 +1,9 @@
+# Superseded continuation pointer
+
+Read `CODEX_HANDOFF_2026_06_19.md` first for current verified state and the
+continuation sequence. This file remains the detailed historical record through
+2026-06-15.
+
 # Codex Handoff — Intake аудит + починка основы + ревизия исполнения (2026-06-15)
 *Новый инженер-лид. Один файл-сводка всего сделанного за сессию. Готов к пушу.*
 *Глубокий аудит — в `AUDIT_INTAKE_2026_06_14.md` (этот файл — что СДЕЛАНО + что дальше).*
