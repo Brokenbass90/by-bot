@@ -116,6 +116,7 @@ from bot.deepseek_action_executor import (
 from bot.entry_guard import EntryCircuitBreaker
 from bot.maker_entry import post_only_price
 from bot.maker_execution import MakerExecutionResult, assess_entry_risk, execute_maker_first
+from bot.regime_side_gate import regime_side_allowed
 from bot.circuit_breaker import get_circuit_breaker as _get_cb
 from bot.runner_state import apply_runner_state
 from bot.live_position_view import build_live_position_row
@@ -1477,6 +1478,7 @@ RANGE_MIN_RR = float(os.getenv("RANGE_MIN_RR", "3.00"))
 
 RANGE_ALLOW_LONG = os.getenv("RANGE_ALLOW_LONG", "1").strip() == "1"
 RANGE_ALLOW_SHORT = os.getenv("RANGE_ALLOW_SHORT", "1").strip() == "1"
+RANGE_REGIME_SIDE_GUARD = _env_bool("RANGE_REGIME_SIDE_GUARD", True)
 
 # =========================== REGEXP ===========================
 _bybit_sym_re = re.compile(r'publicTrade\.([A-Z0-9]+USDT)\b')
@@ -9345,6 +9347,19 @@ async def try_range_entry_async(symbol: str, price: float):
 
     sig = await RANGE_STRATEGY.maybe_signal(symbol, price)
     if not sig:
+        return
+
+    regime_label = _current_regime_label_for_status()
+    if not regime_side_allowed(sig.side, regime_label, enabled=RANGE_REGIME_SIDE_GUARD):
+        _diag_inc("range_skip_regime_side")
+        tg_skip_throttled(
+            "range",
+            symbol,
+            f"regime_side:{regime_label}:{sig.side}",
+            f"🟡 RANGE SKIP {symbol}: направление {sig.side} запрещено режимом {regime_label}",
+        )
+        return
+    if not portfolio_can_open(sig.side):
         return
 
     # округлим TP/SL под tickSize и логически проверим
