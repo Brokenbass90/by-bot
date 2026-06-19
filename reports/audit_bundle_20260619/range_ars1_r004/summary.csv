@@ -1,0 +1,2 @@
+tag,days,end_date_utc,symbols,strategies,starting_equity,ending_equity,trades,net_pnl,profit_factor,winrate,avg_win,avg_loss,max_drawdown,news_blocked_signals
+range_scalp_v1_annual_repair_v3_r004,360,2026-04-01,ADAUSDT;LINKUSDT;DOTUSDT;LTCUSDT;SUIUSDT;ATOMUSDT;SOLUSDT,alt_range_scalp_v1,100.00,113.95,109,13.95,1.565,0.284,1.2470,-0.3168,6.8327,0

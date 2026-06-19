@@ -52,8 +52,24 @@ def _safe_int_ms(value: Any) -> int:
 
 def _candidate_rows(path: Path, top: int) -> list[dict[str, Any]]:
     """Return rows with run_dir and ranking metadata."""
-    if (path / "ranked_results.csv").exists():
-        rows = _read_csv(path / "ranked_results.csv")
+    ranked_path = path / "ranked_results.csv"
+    results_path = path / "results.csv"
+    if ranked_path.exists() or results_path.exists():
+        rows = _read_csv(ranked_path if ranked_path.exists() else results_path)
+        if not ranked_path.exists():
+            # Interrupted sweeps still contain valuable completed runs. Rank the
+            # partial results deterministically instead of discarding hours of
+            # work because the final ranked_results.csv was never written.
+            rows = [row for row in rows if str(row.get("run_dir", "")).strip()]
+            rows.sort(
+                key=lambda row: (
+                    str(row.get("passed", "")).strip().lower() in {"1", "true", "yes"},
+                    _safe_float(row.get("score"), -1_000_000.0),
+                    _safe_float(row.get("profit_factor"), 0.0),
+                    _safe_float(row.get("net_pnl"), -1_000_000.0),
+                ),
+                reverse=True,
+            )
         out: list[dict[str, Any]] = []
         for row in rows[: max(1, top)]:
             run_dir = Path(str(row.get("run_dir", "")))
@@ -111,6 +127,9 @@ def _compact_summary(summary: dict[str, str]) -> dict[str, Any]:
         "winrate",
         "max_drawdown",
         "ending_equity",
+        "entry_execution",
+        "fee_bps_per_side",
+        "slippage_bps_per_side",
     ]
     return {k: summary.get(k, "") for k in keys if k in summary}
 
