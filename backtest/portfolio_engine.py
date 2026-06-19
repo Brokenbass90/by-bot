@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import asyncio
+import copy
 import inspect
 import os
 from typing import Callable, Dict, List, Optional, Tuple
@@ -102,6 +103,7 @@ def run_portfolio_backtest(
     pos_by_sym: Dict[str, Position] = {}
     pos_strat: Dict[str, str] = {}
     cooldown_until_i: Dict[str, int] = {}
+    pending_signals: Dict[str, Tuple[int, object]] = {}
 
     sl_cooldown_bars = max(0, int(os.getenv("PORTFOLIO_SL_COOLDOWN_BARS", "0") or 0))
     sl_cooldown_strategies = _csv_set("PORTFOLIO_SL_COOLDOWN_STRATEGIES") or {"inplay_breakout"}
@@ -177,10 +179,120 @@ def run_portfolio_backtest(
         pos_by_sym.pop(sym, None)
         pos_strat.pop(sym, None)
 
+    def _open(sym: str, sig: object, bar: Candle, *, entry_ref: float) -> bool:
+        """Validate and open one position at the supplied executable price."""
+        nonlocal equity
+
+        fill_sig = copy.copy(sig)
+        try:
+            fill_sig.entry = float(entry_ref)
+            if not bool(fill_sig.validate()):
+                return False
+        except Exception:
+            return False
+
+        sig_strat = str(getattr(fill_sig, "strategy", "") or "").lower()
+        if (
+            _global_sl_cooldown_bars > 0
+            and _global_sl_strategies
+            and _strat_matches_global(sig_strat)
+            and _global_strat_cooldown_until_i.get(sig_strat, -1) > i
+        ):
+            return False
+
+        cap = params.cap_notional_usd
+        if cap is None:
+            cap = (equity * float(params.leverage)) / max(1, int(params.max_positions))
+
+        raw_sig_risk_mult = getattr(fill_sig, "risk_mult", None)
+        try:
+            sig_risk_mult = 1.0 if raw_sig_risk_mult is None else float(raw_sig_risk_mult)
+        except (TypeError, ValueError):
+            sig_risk_mult = 1.0
+        sig_risk_mult = max(0.00, min(3.00, sig_risk_mult))
+        if sig_risk_mult <= 0:
+            return False
+        risk_pct_eff = float(params.risk_pct) * sig_risk_mult
+        qty = _calc_qty(equity, fill_sig, risk_pct_eff, cap)
+        if qty <= 0:
+            return False
+
+        entry_px = _apply_slippage(fill_sig.entry, fill_sig.side, is_entry=True, slippage_bps=params.slippage_bps)
+        entry_fee = _fees(entry_px * qty, params.fee_bps)
+        equity -= entry_fee
+
+        legacy_tp = getattr(fill_sig, "tp", 0.0)
+        tps = list(getattr(fill_sig, "tps", []) or [])
+        if not tps:
+            tps = [float(legacy_tp)] if legacy_tp and legacy_tp > 0 else []
+        fracs = list(getattr(fill_sig, "tp_fracs", []) or [])
+        if not fracs and tps:
+            fracs = [1.0] if len(tps) == 1 else [1.0 / len(tps)] * len(tps)
+        if fracs and sum(fracs) > 1.0:
+            total = sum(fracs)
+            fracs = [x / total for x in fracs]
+
+        if not tps:
+            tp_qty_remaining: List[float] = []
+        elif len(tps) == 1 and (not fracs or fracs[0] >= 0.999):
+            tp_qty_remaining = [qty]
+        else:
+            tp_qty_remaining = [
+                max(0.0, qty * float(fracs[k] if k < len(fracs) else 0.0))
+                for k in range(len(tps))
+            ]
+
+        reason = (getattr(fill_sig, "reason", "") or "").strip()
+        p = Position(
+            side=fill_sig.side,
+            entry_price=entry_px,
+            sl=float(fill_sig.sl),
+            qty=qty,
+            remaining_qty=qty,
+            entry_ts=bar.ts,
+            entry_i=i,
+            initial_sl=float(fill_sig.sl),
+            equity_at_entry=equity + entry_fee,
+            tps=[float(x) for x in tps],
+            tp_qty_remaining=tp_qty_remaining,
+            trailing_atr_mult=float(getattr(fill_sig, "trailing_atr_mult", 0.0) or 0.0),
+            trailing_atr_period=int(getattr(fill_sig, "trailing_atr_period", 14) or 14),
+            trail_activate_rr=float(getattr(fill_sig, "trail_activate_rr", 0.0) or 0.0),
+            trail_armed=float(getattr(fill_sig, "trail_activate_rr", 0.0) or 0.0) <= 0.0,
+            be_trigger_rr=float(getattr(fill_sig, "be_trigger_rr", 0.0) or 0.0),
+            be_lock_rr=float(getattr(fill_sig, "be_lock_rr", 0.0) or 0.0),
+            time_stop_bars=int(getattr(fill_sig, "time_stop_bars", 0) or 0),
+            hh_since_entry=entry_px,
+            ll_since_entry=entry_px,
+            reasons=[reason] if reason else [],
+            entry_fee=entry_fee,
+        )
+        pos_by_sym[sym] = p
+        pos_strat[sym] = str(getattr(fill_sig, "strategy", "unknown"))
+        return True
+
     for i in range(min_len):
         # Advance all stores to the same index.
         for s in syms:
             stores[s].set_index(i)
+
+        # Fill signals from the previous bar at this bar's open. Positions are
+        # created before exit processing so this bar's full OHLC is considered;
+        # if both TP and SL are reachable, the conservative SL-first rule wins.
+        if params.entry_on_next_open and pending_signals:
+            for sym in syms:
+                pending = pending_signals.pop(sym, None)
+                if pending is None:
+                    continue
+                signal_i, sig = pending
+                if signal_i >= i or sym in pos_by_sym:
+                    continue
+                if len(pos_by_sym) >= int(params.max_positions):
+                    continue
+                if int(cooldown_until_i.get(sym, -1)) > i:
+                    continue
+                bar = stores[sym].exec_candles[i]
+                _open(sym, sig, bar, entry_ref=float(bar.o))
 
         # 1) Manage exits for all open positions first.
         for sym in list(pos_by_sym.keys()):
@@ -332,96 +444,10 @@ def run_portfolio_backtest(
                 if sig is None:
                     continue
 
-                # Global strategy cooldown check: if this signal's strategy had a
-                # recent SL on any symbol, block all new entries for that strategy.
-                if _global_sl_cooldown_bars > 0 and _global_sl_strategies:
-                    sig_strat = str(getattr(sig, "strategy", "") or "").lower()
-                    if (_strat_matches_global(sig_strat) and
-                            _global_strat_cooldown_until_i.get(sig_strat, -1) > i):
-                        continue
-
-                # Duck-typed TradeSignal
-                try:
-                    sig.validate()
-                except Exception:
+                if params.entry_on_next_open:
+                    pending_signals[sym] = (i, sig)
                     continue
-
-                cap = params.cap_notional_usd
-                if cap is None:
-                    cap = (equity * float(params.leverage)) / max(1, int(params.max_positions))
-
-                raw_sig_risk_mult = getattr(sig, "risk_mult", None)
-                try:
-                    sig_risk_mult = 1.0 if raw_sig_risk_mult is None else float(raw_sig_risk_mult)
-                except (TypeError, ValueError):
-                    sig_risk_mult = 1.0
-                sig_risk_mult = max(0.00, min(3.00, sig_risk_mult))
-                if sig_risk_mult <= 0:
-                    continue
-                risk_pct_eff = float(params.risk_pct) * sig_risk_mult
-                qty = _calc_qty(equity, sig, risk_pct_eff, cap)
-                if qty <= 0:
-                    continue
-
-                entry_px = _apply_slippage(sig.entry, sig.side, is_entry=True, slippage_bps=params.slippage_bps)
-                entry_fee = _fees(entry_px * qty, params.fee_bps)
-                equity -= entry_fee
-
-                legacy_tp = getattr(sig, "tp", 0.0)
-                tps = list(getattr(sig, "tps", []) or [])
-                if not tps:
-                    if legacy_tp and legacy_tp > 0:
-                        tps = [float(legacy_tp)]
-                    else:
-                        tps = []
-                fracs = list(getattr(sig, "tp_fracs", []) or [])
-
-                if not fracs:
-                    if tps:
-                        fracs = [1.0]
-                        if len(tps) > 1:
-                            fracs = [1.0 / len(tps)] * len(tps)
-                if fracs and sum(fracs) > 1.0:
-                    s = sum(fracs)
-                    fracs = [x / s for x in fracs]
-
-                tp_qty_remaining: List[float] = []
-                if not tps:
-                    tp_qty_remaining = []
-                elif len(tps) == 1 and (not fracs or fracs[0] >= 0.999):
-                    tp_qty_remaining = [qty]
-                else:
-                    for k in range(len(tps)):
-                        f = fracs[k] if k < len(fracs) else 0.0
-                        tp_qty_remaining.append(max(0.0, qty * float(f)))
-
-                p = Position(
-                    side=sig.side,
-                    entry_price=entry_px,
-                    sl=float(sig.sl),
-                    qty=qty,
-                    remaining_qty=qty,
-                    entry_ts=bar.ts,
-                    entry_i=i,
-                    initial_sl=float(sig.sl),
-                    equity_at_entry=equity + entry_fee,
-                    tps=[float(x) for x in tps],
-                    tp_qty_remaining=tp_qty_remaining,
-                    trailing_atr_mult=float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0),
-                    trailing_atr_period=int(getattr(sig, "trailing_atr_period", 14) or 14),
-                    trail_activate_rr=float(getattr(sig, "trail_activate_rr", 0.0) or 0.0),
-                    trail_armed=float(getattr(sig, "trail_activate_rr", 0.0) or 0.0) <= 0.0,
-                    be_trigger_rr=float(getattr(sig, "be_trigger_rr", 0.0) or 0.0),
-                    be_lock_rr=float(getattr(sig, "be_lock_rr", 0.0) or 0.0),
-                    time_stop_bars=int(getattr(sig, "time_stop_bars", 0) or 0),
-                    hh_since_entry=entry_px,
-                    ll_since_entry=entry_px,
-                    reasons=[(getattr(sig, "reason", "") or "").strip()] if (getattr(sig, "reason", "") or "").strip() else [],
-                    entry_fee=entry_fee,
-                )
-
-                pos_by_sym[sym] = p
-                pos_strat[sym] = str(getattr(sig, "strategy", "unknown"))
+                _open(sym, sig, bar, entry_ref=float(getattr(sig, "entry", bar.c)))
 
         curve.append(equity)
 

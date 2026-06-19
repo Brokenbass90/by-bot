@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import bisect
+import copy
 import math
 import os
 from dataclasses import dataclass, field
@@ -227,6 +228,9 @@ class BacktestParams:
     max_positions: int = 1
     fee_bps: float = 6.0
     slippage_bps: float = 2.0
+    # Promotion-grade execution: a signal observed after bar close is filled at
+    # the next execution bar open. Keep False only for legacy comparisons.
+    entry_on_next_open: bool = False
 
 
 @dataclass
@@ -442,12 +446,77 @@ def run_symbol_backtest(
         )
 
     pos: Optional[Position] = None
+    pending_signal: Optional[Tuple[int, TradeSignal]] = None
+
+    def _open_position(sig: TradeSignal, bar: Candle, i: int, *, entry_ref: float) -> Optional[Position]:
+        nonlocal equity
+
+        fill_sig = copy.copy(sig)
+        fill_sig.entry = float(entry_ref)
+        if not fill_sig.validate():
+            return None
+
+        cap = params.cap_notional_usd
+        if cap is None:
+            mp = max(1, int(params.max_positions))
+            cap = float(equity) * float(params.leverage) / mp
+        sig_qty = _calc_qty(equity, fill_sig, params.risk_pct, cap)
+        if sig_qty <= 0:
+            return None
+
+        entry_px = _apply_slippage(fill_sig.entry, fill_sig.side, is_entry=True, slippage_bps=params.slippage_bps)
+        if fill_sig.tps:
+            tps = [float(x) for x in fill_sig.tps]
+            fr = [float(x) for x in (fill_sig.tp_fracs or [])]
+            if not fr:
+                fr = [1.0 / len(tps)] * len(tps)
+            total = sum(fr)
+            if total > 1.000001:
+                fr = [x / total for x in fr]
+            tp_qty_remaining = [max(0.0, sig_qty * x) for x in fr]
+        else:
+            tps = [float(fill_sig.tp)]
+            tp_qty_remaining = [float(sig_qty)]
+
+        entry_fee = _fees(entry_px * sig_qty, params.fee_bps)
+        equity_before_entry = equity
+        equity -= entry_fee
+        return Position(
+            side=fill_sig.side,
+            entry_price=entry_px,
+            sl=float(fill_sig.sl),
+            qty=float(sig_qty),
+            remaining_qty=float(sig_qty),
+            entry_ts=int(bar.ts),
+            entry_i=int(i),
+            initial_sl=float(fill_sig.sl),
+            equity_at_entry=float(equity_before_entry),
+            tps=tps,
+            tp_qty_remaining=tp_qty_remaining,
+            trailing_atr_mult=float(getattr(fill_sig, "trailing_atr_mult", 0.0) or 0.0),
+            trailing_atr_period=int(getattr(fill_sig, "trailing_atr_period", 14) or 14),
+            trail_activate_rr=float(getattr(fill_sig, "trail_activate_rr", 0.0) or 0.0),
+            trail_armed=float(getattr(fill_sig, "trail_activate_rr", 0.0) or 0.0) <= 0.0,
+            hh_since_entry=float(entry_px),
+            ll_since_entry=float(entry_px),
+            be_trigger_rr=float(getattr(fill_sig, "be_trigger_rr", 0.0) or 0.0),
+            be_lock_rr=float(getattr(fill_sig, "be_lock_rr", 0.0) or 0.0),
+            time_stop_bars=int(getattr(fill_sig, "time_stop_bars", 0) or 0),
+            entry_fee=float(entry_fee),
+        )
 
     for i, bar in enumerate(exec_candles):
         store.set_index(i)
+        entered_on_open = False
+        if pos is None and pending_signal is not None:
+            signal_i, sig = pending_signal
+            pending_signal = None
+            if signal_i < i:
+                pos = _open_position(sig, bar, i, entry_ref=float(bar.o))
+                entered_on_open = pos is not None
 
         # -------------------- Manage open position --------------------
-        if pos is not None and i > pos.entry_i:
+        if pos is not None and (i > pos.entry_i or entered_on_open):
             # Update extrema since entry for trailing calculations.
             pos.hh_since_entry = max(pos.hh_since_entry, float(bar.h))
             pos.ll_since_entry = min(pos.ll_since_entry, float(bar.l))
@@ -496,6 +565,11 @@ def run_symbol_backtest(
                         pos.tp_qty_remaining[k] -= qty_to_exit
                         pos.remaining_qty -= qty_to_exit
                         pos.reasons.append(f"TP{k+1}")
+
+                if pos is not None and pos.remaining_qty <= 1e-12:
+                    pos.remaining_qty = 0.0
+                    _close_position(pos, int(bar.ts), "TP")
+                    pos = None
 
                 # --- Stop loss (including trailing) ---
                 if pos is not None and pos.remaining_qty > 0 and stop_hit:
@@ -580,58 +654,10 @@ def run_symbol_backtest(
         if pos is None:
             sig = signal_fn(store, bar)
             if sig is not None and sig.validate():
-                cap = params.cap_notional_usd
-                if cap is None:
-                    mp = max(1, int(params.max_positions))
-                    cap = float(equity) * float(params.leverage) / mp
-                sig_qty = _calc_qty(equity, sig, params.risk_pct, cap)
-                if sig_qty > 0:
-                    entry_px = _apply_slippage(sig.entry, sig.side, is_entry=True, slippage_bps=params.slippage_bps)
-
-                    # Build TP plan
-                    if sig.tps:
-                        tps = [float(x) for x in sig.tps]
-                        fr = [float(x) for x in (sig.tp_fracs or [])]
-                        if not fr:
-                            fr = [1.0 / len(tps)] * len(tps)
-                        s = sum(fr)
-                        if s > 1.000001:
-                            fr = [x / s for x in fr]
-                        tp_qty_remaining = [max(0.0, sig_qty * x) for x in fr]
-                        # legacy tp is the last target (for compatibility)
-                        legacy_tp = float(tps[-1])
-                    else:
-                        tps = [float(sig.tp)]
-                        tp_qty_remaining = [float(sig_qty)]
-                        legacy_tp = float(sig.tp)
-
-                    entry_fee = _fees(entry_px * sig_qty, params.fee_bps)
-                    equity_before_entry = equity
-                    equity -= entry_fee
-
-                    pos = Position(
-                        side=sig.side,
-                        entry_price=entry_px,
-                        sl=float(sig.sl),
-                        qty=float(sig_qty),
-                        remaining_qty=float(sig_qty),
-                        entry_ts=int(bar.ts),
-                        entry_i=int(i),
-                        initial_sl=float(sig.sl),
-                        equity_at_entry=float(equity_before_entry),
-                        tps=tps,
-                        tp_qty_remaining=tp_qty_remaining,
-                        trailing_atr_mult=float(getattr(sig, "trailing_atr_mult", 0.0) or 0.0),
-                        trailing_atr_period=int(getattr(sig, "trailing_atr_period", 14) or 14),
-                        trail_activate_rr=float(getattr(sig, "trail_activate_rr", 0.0) or 0.0),
-                        trail_armed=float(getattr(sig, "trail_activate_rr", 0.0) or 0.0) <= 0.0,
-                        hh_since_entry=float(entry_px),
-                        ll_since_entry=float(entry_px),
-                        be_trigger_rr=float(getattr(sig, "be_trigger_rr", 0.0) or 0.0),
-                        be_lock_rr=float(getattr(sig, "be_lock_rr", 0.0) or 0.0),
-                        time_stop_bars=int(getattr(sig, "time_stop_bars", 0) or 0),
-                        entry_fee=float(entry_fee),
-                    )
+                if params.entry_on_next_open:
+                    pending_signal = (i, sig)
+                else:
+                    pos = _open_position(sig, bar, i, entry_ref=float(sig.entry))
 
         curve.append(equity)
 

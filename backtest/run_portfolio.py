@@ -1053,6 +1053,11 @@ def main():
     ap.add_argument("--max_positions", type=int, default=5)
     ap.add_argument("--fee_bps", type=float, default=6.0)
     ap.add_argument("--slippage_bps", type=float, default=2.0)
+    ap.add_argument(
+        "--entry-on-next-open",
+        action="store_true",
+        help="Fill signals at the next execution-bar open (required for promotion-grade results).",
+    )
     ap.add_argument("--bybit_base", default=os.getenv("BYBIT_BASE", "https://api.bybit.com"))
     ap.add_argument("--cache", default=".cache/klines")
     ap.add_argument(
@@ -2118,6 +2123,7 @@ def main():
         max_positions=args.max_positions,
         fee_bps=args.fee_bps,
         slippage_bps=args.slippage_bps,
+        entry_on_next_open=bool(args.entry_on_next_open),
     )
 
     out_dir = Path("backtest_runs") / f"portfolio_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{args.tag}"
@@ -2146,7 +2152,8 @@ def main():
         w = csv.writer(f)
         w.writerow([
             "tag","days","end_date_utc","symbols","strategies","starting_equity","ending_equity",
-            "trades","net_pnl","profit_factor","winrate","avg_win","avg_loss","max_drawdown","news_blocked_signals"
+            "trades","net_pnl","profit_factor","winrate","avg_win","avg_loss","max_drawdown","news_blocked_signals",
+            "entry_execution","fee_bps_per_side","slippage_bps_per_side"
         ])
         # Compute avg win / avg loss in $ terms (not %)
         wins_ = [t.pnl for t in res.trades if getattr(t, "pnl", 0.0) > 0]
@@ -2172,6 +2179,9 @@ def main():
             f"{avg_loss:.4f}",
             f"{overall.max_drawdown:.4f}",
             news_blocked_signals,
+            "next_open" if args.entry_on_next_open else "signal_price",
+            f"{args.fee_bps:.4f}",
+            f"{args.slippage_bps:.4f}",
         ])
 
     if news_events:

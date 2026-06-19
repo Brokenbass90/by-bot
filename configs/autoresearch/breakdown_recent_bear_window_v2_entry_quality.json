@@ -26,7 +26,8 @@
     "--fee_bps",
     "10",
     "--slippage_bps",
-    "10"
+    "10",
+    "--entry-on-next-open"
   ],
   "base_env": {
     "BACKTEST_CACHE_ONLY": "1",

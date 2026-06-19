@@ -189,6 +189,11 @@ def main() -> int:
     )
     ap.add_argument("--slippage_bps", type=float, default=2.0)
     ap.add_argument(
+        "--entry-on-next-open",
+        action="store_true",
+        help="Fill signals at the next execution-bar open.",
+    )
+    ap.add_argument(
         "--no_save",
         action="store_true",
         help="If set, do not write CSV files; print summaries to terminal only.",
@@ -491,6 +496,7 @@ def main() -> int:
                     max_positions=int(args.max_positions),
                     fee_bps=float(fee_bps),
                     slippage_bps=float(args.slippage_bps),
+                    entry_on_next_open=bool(args.entry_on_next_open),
                 )
 
                 try:
