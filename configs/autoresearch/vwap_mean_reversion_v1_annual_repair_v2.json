@@ -26,7 +26,8 @@
     "--fee_bps",
     "6",
     "--slippage_bps",
-    "2"
+    "2",
+    "--entry-on-next-open"
   ],
   "base_env": {
     "AVW1_SIGNAL_TF": "15",
