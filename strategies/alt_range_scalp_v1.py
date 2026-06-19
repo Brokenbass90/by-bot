@@ -95,7 +95,9 @@ def _atr_from_rows(rows: List[list], period: int) -> float:
 
 
 def _adx_from_rows(rows: List[list], period: int) -> float:
-    if period <= 0 or len(rows) < period + 2:
+    # A canonical ADX needs ``period`` observations to seed smoothed TR/DM and
+    # another ``period`` DX observations to seed ADX itself.
+    if period <= 0 or len(rows) < 2 * period:
         return float("nan")
     highs = [float(r[2]) for r in rows]
     lows = [float(r[3]) for r in rows]
@@ -145,11 +147,16 @@ def _adx_from_rows(rows: List[list], period: int) -> float:
             continue
         dxs.append(100.0 * abs(plus_di - minus_di) / denom)
 
-    # With the normal 50-bar input there is enough history for a conventional
-    # period-length ADX average.  Shorter valid inputs still return a stable
-    # mean instead of silently disabling the strategy.
-    window = dxs[-period:] if len(dxs) >= period else dxs
-    return sum(window) / float(len(window)) if window else float("nan")
+    if len(dxs) < period:
+        return float("nan")
+
+    # Wilder smooths DX recursively too. A rolling arithmetic mean of the last
+    # ``period`` DX values can differ enough to move an ARS1 regime decision
+    # across its configured ADX threshold.
+    adx = sum(dxs[:period]) / float(period)
+    for dx in dxs[period:]:
+        adx = ((adx * (period - 1)) + dx) / float(period)
+    return adx
 
 
 def _rsi(values: List[float], period: int) -> float:

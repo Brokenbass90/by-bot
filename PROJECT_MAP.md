@@ -1,6 +1,6 @@
 # PROJECT MAP — Bybit/Alpaca trading bot (полная карта)
 
-*Онбординг для человека и любого ИИ. Визуал: `reports/PROJECT_MAP.svg`. Машиночитаемая карта кода: `reports/AI_CODEMAP.json` (через `bot.ai_tools.get_codemap`). START HERE для новой сессии: `CLAUDE_HANDOFF_NEXT_SESSION_2026_06_15.md`.*
+*Онбординг для человека и любого ИИ. Визуал: `reports/PROJECT_MAP.svg`. Машиночитаемая карта кода: `reports/AI_CODEMAP.json` (через `bot.ai_tools.get_codemap`). START HERE для новой сессии: `CODEX_HANDOFF_2026_06_20.md`.*
 
 ## Что это
 Многорукавная торговая станция. Цель — устойчивый процесс с доказанным эджем, не «быстрое богатство». Человек в контуре на всех решениях о деньгах/коде. Деньги — только за доказанным OOS-эджем.
@@ -16,7 +16,7 @@
    - forex/CFD — будущий рукав (заготовки).
 4. **КОНТРОЛЬ (control-plane):** `bot/regime_orchestrator` (bull/bear × trend/chop) → portfolio_allocator (slot-caps, risk-mults) → risk rails (дневной −2% / общий −5%, в `portfolio_can_open`).
 5. **ИСПОЛНЕНИЕ:** `bot/maker_entry` (post-only, экономит комиссии) → broker SL/TP (`set_tp_sl_retry` + failsafe-закрытие) → ladder exit (`bot/ladder_exit`: TP1 частичный → breakeven → runner до дальней цели + трейлинг + time-stop).
-6. **ОФЛАЙН-ВАЛИДАЦИЯ (анти-overfit):** `scripts/strategy_coin_picks` → `backtest/crypto_multiwindow_wf` / `auto_pick_wf` (WF по окнам) → `bot/param_profiles` (тиры монет) → `backtest/stack_comparison` (обвязка vs голо) → `scripts/evaluate_crypto_promotion.py` (next-open + cost floors + monthly stability + WF + portfolio compare) → shadow → малый canary.
+6. **ОФЛАЙН-ВАЛИДАЦИЯ (анти-overfit):** `scripts/strategy_coin_picks` → `backtest/crypto_multiwindow_wf` / `auto_pick_wf` (WF по окнам) → `bot/param_profiles` (тиры монет) → `backtest/stack_comparison` (обвязка vs голо) → `backtest/promotion_gate` + `scripts/evaluate_crypto_promotion.py` (next-open + cost floors + monthly stability + WF + portfolio compare) → shadow → малый canary.
 7. **ИИ / НАБЛЮДАЕМОСТЬ:** `bot/ai_tools` (catalog·code_access·codemap·snapshot·pulse) · `bot/deepseek_*` autoresearch (propose → одобрение человеком → execute) · `web/static/operator_console.html` + `scripts/proof_of_life` + Telegram.
 
 ## Человеческие названия стратегий
@@ -66,7 +66,8 @@
 <!-- AUTO_SNAPSHOT_END -->
 
 ## Ключевые документы
-- `CODEX_HANDOFF_2026_06_19.md` — каноническая точка продолжения и текущая серверная истина.
+- `CODEX_HANDOFF_2026_06_20.md` — каноническая точка продолжения, проверка последних коммитов и текущая серверная истина.
+- `CODEX_HANDOFF_2026_06_19.md` — предшествующий подробный handoff.
 - `reports/LIVE_TRADING_AUDIT_2026_06_18.md`, `reports/RANGE_FORENSICS_AND_ADAPTIVE_PAPER_2026_06_18.md` — live/runtime и execution evidence.
 - `reports/audit_bundle_20260619/AUDITOR_README.md` — пакет для независимого ревью.
 - `CLAUDE_HANDOFF_NEXT_SESSION_2026_06_15.md` — START HERE.
