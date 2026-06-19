@@ -117,6 +117,11 @@ from bot.entry_guard import EntryCircuitBreaker
 from bot.maker_entry import post_only_price
 from bot.maker_execution import MakerExecutionResult, assess_entry_risk, execute_maker_first
 from bot.regime_side_gate import regime_side_allowed
+from bot.unsupported_symbols import (
+    is_unsupported_symbol_error,
+    load_quarantined_symbols,
+    quarantine_symbol,
+)
 from bot.circuit_breaker import get_circuit_breaker as _get_cb
 from bot.runner_state import apply_runner_state
 from bot.live_position_view import build_live_position_row
@@ -6721,7 +6726,25 @@ POS_IS_ONEWAY = (BYBIT_POS_MODE != "hedge")
 _BYBIT_LAST = {}  # symbol -> lastPrice (float), кеш из /market/tickers
 _BYBIT_CACHE = {"syms": [], "ts": 0}
 _BYBIT_META = {}
-_BYBIT_UNSUPPORTED = set()
+UNSUPPORTED_SYMBOLS_PATH = Path(
+    os.getenv(
+        "UNSUPPORTED_SYMBOLS_PATH",
+        str(ROOT_DIR / "runtime" / "unsupported_symbols.json"),
+    )
+).expanduser()
+_BYBIT_UNSUPPORTED = load_quarantined_symbols(UNSUPPORTED_SYMBOLS_PATH)
+
+
+def _remember_unsupported_symbol(symbol: str) -> None:
+    normalized = str(symbol or "").strip().upper()
+    if not normalized:
+        return
+    _BYBIT_UNSUPPORTED.add(normalized)
+    _BYBIT_CACHE["syms"] = [s for s in _BYBIT_CACHE.get("syms", []) if s != normalized]
+    try:
+        quarantine_symbol(UNSUPPORTED_SYMBOLS_PATH, normalized)
+    except OSError as exc:
+        log_error(f"unsupported-symbol quarantine write failed {normalized}: {exc}")
 
 
 def bybit_symbols(top_n:int)->List[str]:
@@ -8829,12 +8852,16 @@ def _submit_entry_order_guarded(symbol: str, side: str, qty_floor: float) -> tup
         return oid, q
     except Exception as e:
         err_text = str(e)
-        if "symbol is not supported" in err_text.lower():
-            _BYBIT_UNSUPPORTED.add(symbol)
-            try:
-                _BYBIT_CACHE["syms"] = [s for s in _BYBIT_CACHE.get("syms", []) if s != symbol]
-            except Exception:
-                pass
+        if is_unsupported_symbol_error(err_text):
+            _remember_unsupported_symbol(symbol)
+            _diag_inc("entry_submit_unsupported_symbol")
+            log_error(f"entry submit skipped unsupported symbol {symbol}")
+            tg_trade_throttled(
+                f"entry_unsupported:{symbol}",
+                f"🟡 Вход пропущен: {symbol} больше не поддерживается Bybit и исключён из торговли.",
+                86400,
+            )
+            return None
         snap = _ENTRY_CIRCUIT.note_failure(str(e), time.time()) if ENTRY_CIRCUIT_ENABLE else None
         _diag_inc("entry_submit_fail")
         log_error(f"entry submit fail {symbol} {side}: {e}")
@@ -8904,6 +8931,17 @@ async def _submit_level_entry_guarded(
             _ENTRY_CIRCUIT.note_success()
         _diag_inc(f"entry_submit_{result.mode}")
         return result
+
+    if is_unsupported_symbol_error(result.reason):
+        _remember_unsupported_symbol(symbol)
+        _diag_inc("entry_submit_unsupported_symbol")
+        log_error(f"maker entry skipped unsupported symbol {symbol}")
+        tg_trade_throttled(
+            f"maker_entry_unsupported:{symbol}",
+            f"🟡 Вход пропущен: {symbol} больше не поддерживается Bybit и исключён из торговли.",
+            86400,
+        )
+        return MakerExecutionResult(False, reason="unsupported_symbol")
 
     _diag_inc("entry_submit_maker_fail")
     error_is_exchange_failure = result.reason.startswith(("maker_submit_failed", "fallback_submit_failed"))
