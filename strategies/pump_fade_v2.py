@@ -139,7 +139,7 @@ class PumpFadeV2Strategy:
 
         self._allow = _env_csv_set("PF2_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set("PF2_SYMBOL_DENYLIST")
-        self._cooldown = 0
+        self._cooldown_until_ts_ms = 0
         self._last_5m_ts: Optional[int] = None
         self._bars: List[tuple[int, float, float, float, float, float]] = []
         self.last_no_signal_reason = ""
@@ -156,15 +156,14 @@ class PumpFadeV2Strategy:
             return None
         if sym in self._deny:
             return None
-        if self._cooldown > 0:
-            self._cooldown -= 1
-            return None
-
         need = self.cfg.pump_window_bars + self.cfg.confirm_bars + 5
         tf_ts = int(ts_ms)
         if self._last_5m_ts is not None and tf_ts == self._last_5m_ts:
             return None
         self._last_5m_ts = tf_ts
+        if tf_ts < self._cooldown_until_ts_ms:
+            self.last_no_signal_reason = "cooldown"
+            return None
         self._bars.append((tf_ts, float(o), float(h), float(l), float(c), float(v or 0.0)))
         max_keep = max(need + 10, 220)
         if len(self._bars) > max_keep:
@@ -281,7 +280,7 @@ class PumpFadeV2Strategy:
             self.last_no_signal_reason = "no_signal_conditions"
             return None
 
-        self._cooldown = max(0, int(self.cfg.cooldown_bars))
+        self._cooldown_until_ts_ms = tf_ts + max(0, int(self.cfg.cooldown_bars)) * 300_000
         sig = TradeSignal(
             strategy="pump_fade_v2",
             symbol=sym,
