@@ -16,6 +16,9 @@ research headlines as current evidence without reproducing them.
   - `72600ca` — crypto promotion evidence gate;
   - `4aba49f` — per-symbol liquidation research;
   - `fd4dee4` — project map refresh.
+- This session commit `a2a00fc` contains the canonical ADX correction, its
+  numerical regression test, the refreshed project map and this handoff; it is
+  pushed to `origin/codex/dynamic-symbol-filters`.
 
 ## 2. Verified live state
 
@@ -51,6 +54,13 @@ Local correction in this session:
   particular bug;
 - the 64-run `range_scalp_v1_regime_repair_v1` matrix used ADX thresholds and
   must be rerun after deploying the canonical correction.
+
+The corrected strategy module was copied to `/root/by-bot` without restarting
+`bybot.service`; backup:
+`runtime/alt_range_scalp_v1.py.pre_wilder_20260620.bak`.
+Server screen `ars1_wilder_recheck_20260620` is queued behind the already
+running ASB1 autoresearch process and will start the compact 64-run matrix when
+that process exits. Log: `logs/ars1_wilder_recheck_20260620.log`.
 
 ### Promotion gate
 
@@ -187,9 +197,9 @@ considering the first real `$500`.
 
 ## 8. Continuation order
 
-1. Deploy the canonical ADX correction without restarting live trading unless
-   the affected module is loaded by the running process; rerun only the compact
-   64-combination ARS1 matrix.
+1. Poll `asb1_bull_chop_repair_v1`, then
+   `ars1_wilder_recheck_20260620`; the canonical ADX module is already deployed
+   and the compact 64-combination rerun is queued.
 2. Fix completed-candle live adapters for IVB1/Elder/ARS1 and add live-vs-
    backtest decision parity tests.
 3. Harden promotion evidence provenance and require a fresh matching combined
@@ -199,4 +209,3 @@ considering the first real `$500`.
 5. Finish bounded ASB1 research and publish monthly/side/symbol attribution.
 6. Review Alpaca adaptive after 2026-06-26; keep real capital out until that
    execution review is complete.
-
