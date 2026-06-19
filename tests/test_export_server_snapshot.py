@@ -62,7 +62,14 @@ def test_safe_env_excludes_secrets_includes_config(monkeypatch):
 def test_build_snapshot_prefers_live_runtime_paths(tmp_path, monkeypatch):
     runtime = tmp_path / "runtime"
     (runtime / "regime").mkdir(parents=True)
-    (runtime / "bot_heartbeat.json").write_text(json.dumps({"open_trades": 0, "trade_on": True}))
+    (runtime / "bot_heartbeat.json").write_text(json.dumps({
+        "open_trades": 0,
+        "trade_on": True,
+        "strategy_runtime_config": {
+            "enabled": {"range": True, "att1": True, "elder": False},
+            "risk_mult": {"range": 0.25, "att1": 0.0, "elder": 0.1},
+        },
+    }))
     (runtime / "regime" / "orchestrator_state.json").write_text(json.dumps({"regime": "bull_trend"}))
     (runtime / "live_positions.json").write_text(json.dumps({"count": 0, "positions": []}))
     (runtime / "arb_roi_estimate.json").write_text(json.dumps({"status": "ready"}))
@@ -77,3 +84,27 @@ def test_build_snapshot_prefers_live_runtime_paths(tmp_path, monkeypatch):
     assert snap["regime"]["regime"] == "bull_trend"
     assert snap["live_positions"]["count"] == 0
     assert snap["pnl_by_sleeve"]["flat"]["pnl"] == 1.25
+    assert snap["effective_strategy_runtime"]["risk_mult"]["range"] == 0.25
+
+
+def test_markdown_separates_live_shadow_and_disabled_runtime():
+    snap = {
+        "generated_at_utc": "2026-06-19T00:00:00Z",
+        "git_head": "abc1234",
+        "heartbeat": {"open_trades": 0, "trade_on": True, "dry_run": False, "regime": "bear_chop"},
+        "effective_strategy_runtime": {
+            "enabled": {"range": True, "att1": True, "elder": False},
+            "risk_mult": {"range": 0.25, "att1": 0.0, "elder": 0.1},
+        },
+        "safe_config": {"ENABLE_RANGE_TRADING": "1"},
+        "pnl_by_sleeve": {},
+        "strategy_catalog": {},
+        "recent_trade_events": [],
+    }
+
+    md = exporter.to_markdown(snap)
+
+    assert "live-risk: range=0.25x" in md
+    assert "shadow/scan-only (risk=0): att1" in md
+    assert "disabled: elder" in md
+    assert "Configured env (safe keys; may be overridden at runtime)" in md

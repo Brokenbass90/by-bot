@@ -143,6 +143,10 @@ def build_snapshot() -> dict:
             n=80,
         ),
     }
+    heartbeat = snap.get("heartbeat", {})
+    snap["effective_strategy_runtime"] = redact(
+        heartbeat.get("strategy_runtime_config", {}) if isinstance(heartbeat, dict) else {}
+    )
     # strategy catalog (config + TP/SL model) if importable
     try:
         import sys
@@ -191,14 +195,36 @@ def to_markdown(snap: dict) -> str:
     L += ["## Heartbeat",
           f"- open_trades={hb.get('open_trades')} trade_on={hb.get('trade_on')} "
           f"dry_run={hb.get('dry_run')} regime={hb.get('regime')}", ""]
-    L += ["## Safe config (strategies / risk)"]
+    runtime = snap.get("effective_strategy_runtime", {})
+    enabled = runtime.get("enabled", {}) if isinstance(runtime, dict) else {}
+    risk_mult = runtime.get("risk_mult", {}) if isinstance(runtime, dict) else {}
+    live_risk = []
+    shadow = []
+    disabled = []
+    for key in sorted(set(enabled) | set(risk_mult)):
+        is_enabled = bool(enabled.get(key, False))
+        try:
+            risk = float(risk_mult.get(key, 0.0) or 0.0)
+        except Exception:
+            risk = 0.0
+        if is_enabled and risk > 0.0:
+            live_risk.append(f"{key}={risk:.2f}x")
+        elif is_enabled:
+            shadow.append(key)
+        else:
+            disabled.append(key)
+    L += ["## Effective runtime strategies (heartbeat overrides config)",
+          f"- live-risk: {', '.join(live_risk) if live_risk else '-'}",
+          f"- shadow/scan-only (risk=0): {', '.join(shadow) if shadow else '-'}",
+          f"- disabled: {', '.join(disabled) if disabled else '-'}", ""]
+    L += ["## Configured env (safe keys; may be overridden at runtime)"]
     for k, v in sorted(snap.get("safe_config", {}).items()):
         L.append(f"- {k} = {v}")
     L += ["", "## P&L by sleeve (from recent journal)"]
     for s, a in snap.get("pnl_by_sleeve", {}).items():
         L.append(f"- {s}: pnl={a['pnl']:+.4f} trades={a['n']} W/L={a['w']}/{a['l']}")
     cat = snap.get("strategy_catalog", {})
-    L += ["", f"## Strategy catalog: active={cat.get('active_count')} "
+    L += ["", f"## Static strategy catalog: active={cat.get('active_count')} "
           f"keys={','.join(cat.get('active_keys') or [])}"]
     L += ["", f"## Recent trade events: {len(snap.get('recent_trade_events', []))} (in JSON)"]
     return "\n".join(L)
