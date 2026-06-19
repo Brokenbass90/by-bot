@@ -14,9 +14,12 @@ def _row(i, o, h, l, c, v):
 
 
 def _call(strategy, store, row):
+    # Bybit kline timestamps mark bar OPEN. Evaluate only after the configured
+    # entry timeframe has fully closed.
+    signal_ts = int(float(row[0])) + int(strategy.cfg.entry_tf) * 60_000
     return strategy.maybe_signal(
         store,
-        int(float(row[0])),
+        signal_ts,
         float(row[1]),
         float(row[2]),
         float(row[3]),
@@ -81,12 +84,12 @@ def _cfg(**kw):
 # detected levels in the fixture: support ~99.4, resistance ~110.6 (structure ATR ~1.77)
 def _long_retest_bar(i, vol=100):
     # dips into the 99.4 support and closes back above it (held) — a real retest
-    return _row(i, 100.1, 100.2, 99.45, 99.95, vol)
+    return _row(i, 99.7, 100.2, 99.3, 99.58, vol)
 
 
 def _short_retest_bar(i, vol=100):
     # pokes up into the 110.6 resistance and closes back below it (rejected)
-    return _row(i, 110.0, 110.55, 109.9, 110.1, vol)
+    return _row(i, 110.3, 110.7, 109.8, 110.42, vol)
 
 
 def test_long_on_support_retest_hold():
@@ -158,7 +161,7 @@ def test_levels_ignore_current_and_future_bars():
     history_without_levels = _structure_without_levels(start_i=0, n=48)
     future_levels_after_signal = _structure_with_levels(start_i=120)
     structure = history_without_levels + future_levels_after_signal
-    entry = [_row(60 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(8)]
+    entry = [_row(49 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(20)]
     trigger = _long_retest_bar(70)
     entry.append(trigger)
 
@@ -195,3 +198,44 @@ def test_stop_width_guards_block_bad_risk_geometry():
     too_wide = InplayRetestV3Strategy(_cfg(max_stop_pct=0.005))
     assert _call(too_wide, _Store(structure, entry), trigger) is None
     assert too_wide.last_no_signal_reason.startswith("stop_too_wide_")
+
+
+def test_entry_distance_cap_rejects_far_from_level_chase():
+    # bar dips to touch support 99.4 but CLOSES far above it (a chase) -> rejected.
+    # This is the guard against the net=-100/wide-stop blow-up: entry must be AT
+    # the level so the stop is genuinely tight.
+    structure = _structure_with_levels()
+    entry = [_row(70 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
+    far_bar = _row(110, 99.5, 102.1, 99.45, 102.0, 100)  # touched 99.4, closed way up at 102.0
+    entry.append(far_bar)
+    s = InplayRetestV3Strategy(_cfg(retest_band_atr=10.0))  # isolate the stricter distance cap
+    sig = _call(s, _Store(structure, entry), far_bar)
+    assert sig is None
+    assert s.last_no_signal_reason == "entry_too_far_from_level"
+
+
+def test_forming_entry_bar_is_ignored():
+    structure = _structure_with_levels()
+    entry = [_row(70 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
+    trigger = _long_retest_bar(110)
+    forming = _row(111, 120.0, 125.0, 80.0, 90.0, 10_000)
+    entry.extend([trigger, forming])
+
+    sig = _call(InplayRetestV3Strategy(_cfg()), _Store(structure, entry), trigger)
+
+    assert sig is not None
+    assert sig.entry == float(trigger[4])
+
+
+def test_cooldown_is_tied_to_entry_bar_time():
+    structure = _structure_with_levels()
+    entry = [_row(70 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
+    first = _long_retest_bar(110)
+    entry.append(first)
+    strategy = InplayRetestV3Strategy(_cfg(cooldown_bars=5))
+    assert _call(strategy, _Store(structure, entry), first) is not None
+
+    second = _long_retest_bar(111)
+    entry.append(second)
+    assert _call(strategy, _Store(structure, entry), second) is None
+    assert strategy.last_no_signal_reason == "cooldown"

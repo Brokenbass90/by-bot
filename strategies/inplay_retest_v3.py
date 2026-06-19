@@ -100,8 +100,22 @@ def _row_ts_ms(row: list) -> Optional[int]:
         return None
 
 
-def _closed_rows_before(rows: List[list], ts_ms: int, limit: int) -> List[list]:
-    """Return only rows that closed before the signal bar timestamp.
+def _interval_ms(interval: str) -> int:
+    try:
+        minutes = int(str(interval).strip())
+    except (TypeError, ValueError):
+        return 0
+    return max(0, minutes) * 60_000
+
+
+def _closed_rows_before(
+    rows: List[list],
+    ts_ms: int,
+    limit: int,
+    *,
+    interval_ms: int = 0,
+) -> List[list]:
+    """Return only rows that were fully closed by ``ts_ms``.
 
     This strategy builds levels from history only. Some stores already enforce
     that contract, but tests/live adapters are easy to get wrong; filtering here
@@ -110,7 +124,8 @@ def _closed_rows_before(rows: List[list], ts_ms: int, limit: int) -> List[list]:
     out: List[list] = []
     for row in rows:
         row_ts = _row_ts_ms(row)
-        if row_ts is not None and row_ts < int(ts_ms):
+        row_close_ts = row_ts + max(0, int(interval_ms)) if row_ts is not None else None
+        if row_close_ts is not None and row_close_ts <= int(ts_ms):
             out.append(row)
     return out[-max(0, int(limit)):]
 
@@ -142,6 +157,11 @@ class InplayRetestV3Config:
     touch_into_atr: float = 0.25   # bar must dip/poke into the level by up to this (came to test it)
     max_pierce_atr: float = 0.45   # but must not blow through the level by more than this
     reject_frac: float = 0.45      # close must sit this far into the bar away from the level (rejection wick)
+    # ANTI-BLOWUP: the entry (bar close) must be genuinely AT the level, not far
+    # above/below it. A far close means a wide stop and a big loss per trade — the
+    # main reason the first v3 smoke produced net=-100/DD~100%. Cap the entry-to-
+    # level distance so every trade is a real tight-stop retest, not a chase.
+    max_entry_dist_atr: float = 0.5
 
     # volume confirmation (объёмный вход) — single confirmation, set 0 to disable
     vol_period: int = 20
@@ -168,7 +188,10 @@ class InplayRetestV3Config:
     allow_short: bool = True
     cooldown_bars: int = 3
 
-    # optional, OFF by default (the whole point is to NOT over-filter)
+    # Regime guard stays OFF by default: v3 is also used for range/bounce setups,
+    # which are intentionally counter-trend — a global slope filter would kill
+    # them. Enable IRV3_USE_REGIME=1 only for the continuation/breakout profile.
+    # (The entry-distance cap above is the universal anti-blowup, regime-agnostic.)
     use_regime: bool = False
 
     allow_csv: str = ""
@@ -181,8 +204,8 @@ class InplayRetestV3Strategy:
     def __init__(self, cfg: Optional[InplayRetestV3Config] = None):
         self.cfg = cfg or InplayRetestV3Config()
         self.last_no_signal_reason = ""
-        self._cooldown = 0
-        self._last_entry_ts: Optional[int] = None
+        self._cooldown_until_ts: Optional[int] = None
+        self._last_evaluated_entry_ts: Optional[int] = None
         self._allow: set[str] = set()
         self._deny: set[str] = set()
         self._load_env()
@@ -207,6 +230,7 @@ class InplayRetestV3Strategy:
         c.touch_into_atr = _env_float("IRV3_TOUCH_INTO_ATR", c.touch_into_atr)
         c.max_pierce_atr = _env_float("IRV3_MAX_PIERCE_ATR", c.max_pierce_atr)
         c.reject_frac = _env_float("IRV3_REJECT_FRAC", c.reject_frac)
+        c.max_entry_dist_atr = _env_float("IRV3_MAX_ENTRY_DIST_ATR", c.max_entry_dist_atr)
         c.vol_period = _env_int("IRV3_VOL_PERIOD", c.vol_period)
         c.vol_mult = _env_float("IRV3_VOL_MULT", c.vol_mult)
         c.stop_buffer_atr = _env_float("IRV3_STOP_BUFFER_ATR", c.stop_buffer_atr)
@@ -281,22 +305,37 @@ class InplayRetestV3Strategy:
         structure_raw = store.fetch_klines(sym, cfg.structure_tf, cfg.level_lookback + 2) or []
         entry_need = max(cfg.entry_lookback, cfg.vol_period + cfg.atr_period + 5)
         entry_raw = store.fetch_klines(sym, cfg.entry_tf, entry_need + 2) or []
-        structure_rows = _closed_rows_before(structure_raw, signal_ts_ms, cfg.level_lookback)
-        entry_history_rows = _closed_rows_before(entry_raw, signal_ts_ms, entry_need)
+        structure_rows = _closed_rows_before(
+            structure_raw,
+            signal_ts_ms,
+            cfg.level_lookback,
+            interval_ms=_interval_ms(cfg.structure_tf),
+        )
+        entry_closed_rows = _closed_rows_before(
+            entry_raw,
+            signal_ts_ms,
+            entry_need + 1,
+            interval_ms=_interval_ms(cfg.entry_tf),
+        )
         if len(structure_rows) < (cfg.pivot_left + cfg.pivot_right + cfg.min_touches + 5):
             self.last_no_signal_reason = "not_enough_closed_structure_bars"
             return None
-        if len(entry_history_rows) < max(3, cfg.vol_period if cfg.vol_mult > 0 else 3):
+        min_entry_history = max(cfg.atr_period + 1, cfg.vol_period if cfg.vol_mult > 0 else 3)
+        if len(entry_closed_rows) < min_entry_history + 1:
             self.last_no_signal_reason = "not_enough_closed_entry_bars"
             return None
 
-        bar_ts = signal_ts_ms
-        if self._last_entry_ts is not None and bar_ts == self._last_entry_ts:
+        trigger_row = entry_closed_rows[-1]
+        entry_history_rows = entry_closed_rows[:-1]
+        trigger_ts = _row_ts_ms(trigger_row)
+        if trigger_ts is None:
+            self.last_no_signal_reason = "invalid_entry_bar_ts"
+            return None
+        if self._last_evaluated_entry_ts == trigger_ts:
             self.last_no_signal_reason = "same_entry_bar"
             return None
-        self._last_entry_ts = bar_ts
-        if self._cooldown > 0:
-            self._cooldown -= 1
+        self._last_evaluated_entry_ts = trigger_ts
+        if self._cooldown_until_ts is not None and trigger_ts < self._cooldown_until_ts:
             self.last_no_signal_reason = "cooldown"
             return None
 
@@ -304,15 +343,19 @@ class InplayRetestV3Strategy:
         if not (math.isfinite(structure_atr) and structure_atr > 0):
             self.last_no_signal_reason = "structure_atr_invalid"
             return None
-        # Level geometry (proximity, stop buffer, tp offset) is measured in the
-        # LEVEL's own scale, i.e. the structure-TF ATR — not the quiet entry feed.
-        atr = structure_atr
+        entry_atr = _atr(entry_history_rows, cfg.atr_period)
+        if not (math.isfinite(entry_atr) and entry_atr > 0):
+            self.last_no_signal_reason = "entry_atr_invalid"
+            return None
 
-        cur_open = float(o)
-        cur_high = float(h)
-        cur_low = float(l)
-        cur_close = float(c)
-        cur_vol = float(v or 0.0)
+        # The trigger is the latest fully closed entry-TF bar. The caller's OHLC
+        # may be a 5m execution bar or a still-forming live bar and is therefore
+        # intentionally not used for signal geometry.
+        cur_open = float(trigger_row[1])
+        cur_high = float(trigger_row[2])
+        cur_low = float(trigger_row[3])
+        cur_close = float(trigger_row[4])
+        cur_vol = float(trigger_row[5]) if len(trigger_row) > 5 else 0.0
         bar_range = max(1e-12, cur_high - cur_low)
         vols = [float(r[5]) if len(r) > 5 else 0.0 for r in entry_history_rows]
         vol_base = _sma(vols, cfg.vol_period)
@@ -331,9 +374,9 @@ class InplayRetestV3Strategy:
             return None
 
         price = cur_close
-        band = cfg.retest_band_atr * atr
-        touch = cfg.touch_into_atr * atr
-        pierce = cfg.max_pierce_atr * atr
+        band = cfg.retest_band_atr * entry_atr
+        touch = cfg.touch_into_atr * entry_atr
+        pierce = cfg.max_pierce_atr * entry_atr
 
         best: Optional[Tuple[float, str, float]] = None  # (level, side, score)
         for lv_price, lv_score, _kind in levels:
@@ -361,28 +404,33 @@ class InplayRetestV3Strategy:
             return None
 
         level, side, _score = best
+        # ANTI-BLOWUP: entry must be genuinely AT the level (a real retest), else
+        # the stop is wide and the loss is large. Reject far-from-level chases.
+        if abs(cur_close - level) > cfg.max_entry_dist_atr * entry_atr:
+            self.last_no_signal_reason = "entry_too_far_from_level"
+            return None
         if cfg.use_regime and not self._regime_ok(structure_rows, side):
             self.last_no_signal_reason = "regime_block"
             return None
 
         entry = float(cur_close)
         if side == "long":
-            sl = level - cfg.stop_buffer_atr * atr
+            sl = level - cfg.stop_buffer_atr * structure_atr
             if sl >= entry:
                 self.last_no_signal_reason = "sl_at_or_above_entry"
                 return None
             risk = entry - sl
             nxt = self._nearest_opposing(levels, entry, "long")
-            tp1 = (nxt - cfg.tp_before_level_atr * atr) if nxt else (entry + cfg.min_rr_tp1 * risk)
+            tp1 = (nxt - cfg.tp_before_level_atr * structure_atr) if nxt else (entry + cfg.min_rr_tp1 * risk)
             tp2 = max(entry + cfg.rr_runner * risk, tp1 + 0.5 * risk)
         else:
-            sl = level + cfg.stop_buffer_atr * atr
+            sl = level + cfg.stop_buffer_atr * structure_atr
             if sl <= entry:
                 self.last_no_signal_reason = "sl_at_or_below_entry"
                 return None
             risk = sl - entry
             nxt = self._nearest_opposing(levels, entry, "short")
-            tp1 = (nxt + cfg.tp_before_level_atr * atr) if nxt else (entry - cfg.min_rr_tp1 * risk)
+            tp1 = (nxt + cfg.tp_before_level_atr * structure_atr) if nxt else (entry - cfg.min_rr_tp1 * risk)
             tp2 = min(entry - cfg.rr_runner * risk, tp1 - 0.5 * risk)
 
         stop_pct = risk / max(1e-12, entry)
@@ -399,7 +447,7 @@ class InplayRetestV3Strategy:
             self.last_no_signal_reason = f"tp1_rr_too_low_{rr_tp1:.2f}"
             return None
 
-        self._cooldown = max(0, cfg.cooldown_bars)
+        self._cooldown_until_ts = trigger_ts + max(0, cfg.cooldown_bars) * _interval_ms(cfg.entry_tf)
         return TradeSignal(
             strategy=self.STRATEGY_NAME,
             symbol=sym,
