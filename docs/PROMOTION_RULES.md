@@ -7,17 +7,24 @@ or one isolated strategy result.
 
 ## Required Evidence
 
-Every candidate package must clear all three gates:
+Every candidate package must clear all four gates:
 
 1. Annual gate
 - run a full `360d` package summary
 - require:
   - positive net pnl
-  - acceptable profit factor
+  - profit factor at or above the policy minimum
   - acceptable max drawdown
   - enough trades to matter
+  - next-bar-open entry execution
+  - fee and slippage assumptions at or above the policy floors
 
-2. Walk-forward gate
+2. Monthly stability gate
+- `trades.csv` must exist beside the annual `summary.csv`
+- require at least 10 represented calendar months
+- reject too many negative months or a long consecutive negative-month streak
+
+3. Walk-forward gate
 - run rolling walk-forward on the same package
 - require:
   - enough windows
@@ -25,7 +32,7 @@ Every candidate package must clear all three gates:
   - positive average net pnl
   - acceptable average drawdown
 
-3. Portfolio compare gate
+4. Portfolio compare gate
 - compare the candidate package against the current golden annual baseline
 - promotion is allowed only if the candidate:
   - does not materially regress return / PF / DD

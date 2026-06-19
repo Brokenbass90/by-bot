@@ -1,11 +1,20 @@
 {
-  "policy_version": "2026-04-08-promotion-v1",
-  "updated_utc": "2026-04-08T00:00:00Z",
+  "policy_version": "2026-06-19-promotion-v2",
+  "updated_utc": "2026-06-19T14:40:00Z",
   "annual_gate": {
     "min_net_pnl": 0.0,
-    "min_profit_factor": 1.15,
+    "min_profit_factor": 1.2,
     "max_drawdown_pct": 15.0,
-    "min_trades": 100
+    "min_trades": 100,
+    "required_entry_execution": "next_open",
+    "min_fee_bps_per_side": 6.0,
+    "min_slippage_bps_per_side": 2.0
+  },
+  "monthly_gate": {
+    "required": true,
+    "min_months": 10,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
   },
   "walkforward_gate": {
     "min_windows": 8,

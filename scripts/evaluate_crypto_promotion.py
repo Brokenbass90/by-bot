@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import datetime as dt
 import json
 import math
 from pathlib import Path
@@ -60,6 +61,52 @@ def _load_summary(path: Path) -> Dict[str, Any]:
         "profit_factor": _safe_float(row.get("profit_factor"), 0.0),
         "winrate": _safe_float(row.get("winrate"), 0.0),
         "max_drawdown": _safe_float(row.get("max_drawdown"), math.inf),
+        "entry_execution": str(row.get("entry_execution") or "").strip(),
+        "fee_bps_per_side": _safe_float(row.get("fee_bps_per_side"), 0.0),
+        "slippage_bps_per_side": _safe_float(row.get("slippage_bps_per_side"), 0.0),
+    }
+
+
+def _load_monthly_metrics(trades_path: Path) -> Dict[str, Any]:
+    if not trades_path.exists():
+        return {
+            "path": str(trades_path),
+            "available": False,
+            "months": 0,
+            "negative_months": 0,
+            "max_negative_streak": 0,
+            "worst_month_pnl": 0.0,
+        }
+
+    monthly: Dict[str, float] = {}
+    with trades_path.open(newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            raw_ts = row.get("exit_ts") or row.get("exit_ts_ms") or row.get("close_time")
+            try:
+                ts = float(raw_ts or 0.0)
+                if ts > 1e11:
+                    ts /= 1000.0
+                month = dt.datetime.fromtimestamp(ts, tz=dt.timezone.utc).strftime("%Y-%m")
+                pnl = float(row.get("pnl") or 0.0)
+            except (OSError, OverflowError, TypeError, ValueError):
+                continue
+            monthly[month] = monthly.get(month, 0.0) + pnl
+
+    ordered = [(month, monthly[month]) for month in sorted(monthly)]
+    negative_months = sum(1 for _, pnl in ordered if pnl < 0.0)
+    max_negative_streak = 0
+    streak = 0
+    for _, pnl in ordered:
+        streak = streak + 1 if pnl < 0.0 else 0
+        max_negative_streak = max(max_negative_streak, streak)
+    return {
+        "path": str(trades_path),
+        "available": True,
+        "months": len(ordered),
+        "negative_months": negative_months,
+        "max_negative_streak": max_negative_streak,
+        "worst_month_pnl": min((pnl for _, pnl in ordered), default=0.0),
+        "monthly_pnl": {month: round(pnl, 8) for month, pnl in ordered},
     }
 
 
@@ -90,6 +137,26 @@ def _annual_gate(candidate: Dict[str, Any], cfg: Dict[str, Any]) -> Dict[str, An
         reasons.append("drawdown_above_max")
     if candidate["trades"] < _safe_int(cfg.get("min_trades"), 0):
         reasons.append("trades_below_min")
+    required_execution = str(cfg.get("required_entry_execution") or "").strip()
+    if required_execution and candidate.get("entry_execution") != required_execution:
+        reasons.append("entry_execution_not_approved")
+    if candidate.get("fee_bps_per_side", 0.0) < _safe_float(cfg.get("min_fee_bps_per_side"), 0.0):
+        reasons.append("fee_assumption_below_min")
+    if candidate.get("slippage_bps_per_side", 0.0) < _safe_float(cfg.get("min_slippage_bps_per_side"), 0.0):
+        reasons.append("slippage_assumption_below_min")
+    return {"passed": not reasons, "reasons": reasons}
+
+
+def _monthly_gate(monthly: Dict[str, Any], cfg: Dict[str, Any]) -> Dict[str, Any]:
+    reasons: list[str] = []
+    if bool(cfg.get("required", False)) and not monthly.get("available"):
+        reasons.append("monthly_trade_stream_missing")
+    if monthly.get("months", 0) < _safe_int(cfg.get("min_months"), 0):
+        reasons.append("months_below_min")
+    if monthly.get("negative_months", 0) > _safe_int(cfg.get("max_negative_months"), 10**9):
+        reasons.append("negative_months_above_max")
+    if monthly.get("max_negative_streak", 0) > _safe_int(cfg.get("max_negative_streak"), 10**9):
+        reasons.append("negative_streak_above_max")
     return {"passed": not reasons, "reasons": reasons}
 
 
@@ -185,21 +252,30 @@ def main() -> int:
     policy_path = Path(args.policy).expanduser()
 
     candidate = _load_summary(annual_summary)
+    monthly = _load_monthly_metrics(annual_summary.with_name("trades.csv"))
     baseline = _load_summary(baseline_summary)
     walkforward = _load_walkforward(walkforward_latest)
     policy = _load_json(policy_path)
 
     annual_gate = _annual_gate(candidate, dict(policy.get("annual_gate") or {}))
+    monthly_gate = _monthly_gate(monthly, dict(policy.get("monthly_gate") or {}))
     walkforward_gate = _walkforward_gate(walkforward, dict(policy.get("walkforward_gate") or {}))
     compare_gate = _portfolio_compare(candidate, baseline, dict(policy.get("portfolio_compare") or {}))
 
-    overall_pass = bool(annual_gate["passed"] and walkforward_gate["passed"] and compare_gate["passed"])
+    overall_pass = bool(
+        annual_gate["passed"]
+        and monthly_gate["passed"]
+        and walkforward_gate["passed"]
+        and compare_gate["passed"]
+    )
     result = {
         "policy_version": str(policy.get("policy_version") or "unknown"),
         "candidate": candidate,
         "baseline": baseline,
         "walkforward": walkforward,
         "annual_gate": annual_gate,
+        "monthly": monthly,
+        "monthly_gate": monthly_gate,
         "walkforward_gate": walkforward_gate,
         "portfolio_compare": compare_gate,
         "promotion_passed": overall_pass,
@@ -214,6 +290,11 @@ def main() -> int:
     print(f"walkforward={walkforward['tag']} pass_ratio={walkforward['pass_ratio']:.2%} avg_pf={walkforward['avg_pf']:.3f} avg_dd={walkforward['avg_max_drawdown']:.2f}")
     print(f"baseline={baseline['tag']} annual_return={baseline['return_pct']:.2f}% pf={baseline['profit_factor']:.3f} dd={baseline['max_drawdown']:.2f}")
     print(f"annual_gate={'PASS' if annual_gate['passed'] else 'FAIL'} reasons={annual_gate['reasons']}")
+    print(
+        f"monthly_gate={'PASS' if monthly_gate['passed'] else 'FAIL'} "
+        f"months={monthly['months']} negative={monthly['negative_months']} "
+        f"max_negative_streak={monthly['max_negative_streak']} reasons={monthly_gate['reasons']}"
+    )
     print(f"walkforward_gate={'PASS' if walkforward_gate['passed'] else 'FAIL'} reasons={walkforward_gate['reasons']}")
     print(
         f"portfolio_compare={'PASS' if compare_gate['passed'] else 'FAIL'} "
