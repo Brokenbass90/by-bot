@@ -52,6 +52,7 @@ from strategies.impulse_volume_breakout_v1 import ImpulseVolumeBreakoutV1Strateg
 from strategies.elder_triple_screen_v2 import ElderTripleScreenV2Strategy
 from strategies.alt_bear_regime_continuation_v1 import AltBearRegimeContinuationV1Strategy
 from strategies.session_open_breakout_v1 import SessionOpenBreakoutV1
+from strategies.live_kline_utils import fetch_closed_klines as _fetch_closed_klines
 from trade_reporting import generate_report, since_days
 
 from sr_range import RangeRegistry, RangeScanner
@@ -1057,9 +1058,15 @@ fetch_kline_tuple = fetch_kline
 async def fetch_klines_for_range(symbol: str, interval: str, limit: int):
     """
     sr_range ждёт RAW Bybit v5 klines: [[ts, o, h, l, c, v, turnover], ...]
-    Совместимо со старым поведением, но без лишних compat-обёрток.
+    Live обязан передавать только закрытые свечи, как backtest KlineStore.
     """
-    return await asyncio.to_thread(fetch_klines, symbol, interval, limit)
+    return await asyncio.to_thread(
+        _fetch_closed_klines,
+        fetch_klines,
+        symbol,
+        interval,
+        limit,
+    )
 
 _KLINE_RAW_CACHE = {}  # (symbol, interval, limit) -> (saved_time, rows)
 KLINE_STALE_GRACE_SEC = int(os.getenv("KLINE_STALE_GRACE_SEC", "90"))
@@ -11823,7 +11830,7 @@ class _IVB1Store:
     def __init__(self, symbol: str):
         self.symbol = symbol
     def fetch_klines(self, symbol: str, interval: str, limit: int):
-        return fetch_klines(symbol, interval, limit)
+        return _fetch_closed_klines(fetch_klines, symbol, interval, limit)
 
 
 class _ElderStore:
@@ -11831,7 +11838,7 @@ class _ElderStore:
     def __init__(self, symbol: str):
         self.symbol = symbol
     def fetch_klines(self, symbol: str, interval: str, limit: int):
-        return fetch_klines(symbol, interval, limit)
+        return _fetch_closed_klines(fetch_klines, symbol, interval, limit)
 
 
 class _BRC1Candle:
