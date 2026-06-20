@@ -115,6 +115,7 @@ from bot.deepseek_action_executor import (
     diff_pending_changes,
 )
 from bot.entry_guard import EntryCircuitBreaker
+from bot.live_loss_cooldown import record_loss_cooldown, restore_loss_cooldowns
 from bot.maker_entry import post_only_price
 from bot.maker_execution import MakerExecutionResult, assess_entry_risk, execute_maker_first
 from bot.regime_side_gate import regime_side_allowed
@@ -1456,6 +1457,7 @@ RANGE_ALLOW_MINQTY_FALLBACK = _env_bool("RANGE_ALLOW_MINQTY_FALLBACK", True)
 RANGE_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("RANGE_MINQTY_FALLBACK_MAX_MULT", "1.50")))
 RANGE_MAX_OPEN_TRADES = int(os.getenv("RANGE_MAX_OPEN_TRADES", "1"))
 RANGE_RESCAN_SEC = int(os.getenv("RANGE_RESCAN_SEC", "14400"))
+RANGE_LOSS_COOLDOWN_SEC = max(0, int(os.getenv("RANGE_LOSS_COOLDOWN_SEC", "14400")))
 RANGE_LOOKBACK_H = int(os.getenv("RANGE_LOOKBACK_H", "72"))
 RANGE_SCAN_TF = os.getenv("RANGE_SCAN_TF", "60").strip()
 MIN_RANGE_PCT = float(os.getenv("MIN_RANGE_PCT", "3.0"))
@@ -7263,6 +7265,20 @@ def _finalize_and_report_closed(tr, sym: str):
     _db_log_event("CLOSE", tr, sym, pnl=pnl_closed, fees=fee_sum, exit_px=exit_px)
     _db_log_ml_close(tr, sym, pnl=pnl_closed, fees=fee_sum)
     _maybe_schedule_ai_trade_review(tr, sym, pnl_closed, fee_sum, exit_px)
+    # A losing range close invalidates the current level thesis. Keep the
+    # symbol blocked through at least one full range-rescan cycle. The close
+    # journal restores this state after process restarts.
+    try:
+        if str(getattr(tr, "strategy", "")) == "range":
+            record_loss_cooldown(
+                _RANGE_LOSS_COOLDOWN_UNTIL,
+                symbol=sym,
+                pnl=float(pnl_closed or 0.0),
+                closed_ts=int(now),
+                cooldown_sec=int(RANGE_LOSS_COOLDOWN_SEC),
+            )
+    except Exception as e:
+        log_error(f"range loss cooldown set fail {sym}: {e}")
     # Cooldown after breakout SL to reduce repeated entries in noisy chop.
     try:
         if str(getattr(tr, "strategy", "")) == "inplay_breakout":
@@ -9330,6 +9346,7 @@ def live_allocator_multiplier(strategy_key: str, regime: str) -> float:
 
 
 _RANGE_LAST_TRY = {}            # symbol -> ts
+_RANGE_LOSS_COOLDOWN_UNTIL = {} # symbol -> ts; restored from live close journal
 RANGE_TRY_EVERY_SEC = 20
 
 _INPLAY_LAST_TRY = {}           # symbol -> ts
@@ -9385,6 +9402,16 @@ async def try_range_entry_async(symbol: str, price: float):
         return
 
     now = now_s()
+    cooldown_until = int(_RANGE_LOSS_COOLDOWN_UNTIL.get(str(symbol).upper(), 0) or 0)
+    if cooldown_until > now:
+        _diag_inc("range_skip_loss_cooldown")
+        tg_skip_throttled(
+            "range",
+            symbol,
+            "loss_cooldown",
+            f"🟡 RANGE SKIP {symbol}: loss cooldown ещё {cooldown_until - now}s",
+        )
+        return
     last = int(_RANGE_LAST_TRY.get(symbol, 0) or 0)
     if now - last < RANGE_TRY_EVERY_SEC:
         return
@@ -15117,6 +15144,13 @@ async def main_async():
 
 def main():
     _db_init()
+    _RANGE_LOSS_COOLDOWN_UNTIL.update(
+        restore_loss_cooldowns(
+            LIVE_TRADE_EVENTS_JSONL,
+            strategy="range",
+            cooldown_sec=int(RANGE_LOSS_COOLDOWN_SEC),
+        )
+    )
     # Start dynamic allowlist watcher (hot-reloads ASC1/ARF1 without bot restart)
     _allowlist_watcher = _AllowlistWatcher()
     _allowlist_watcher.start()
