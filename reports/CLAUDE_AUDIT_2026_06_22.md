@@ -888,3 +888,79 @@ live маршрутизацию.
 НОВЫЙ/ИЗМЕНЁН: `backtest/regime_affinity_profiler.py`,
 `reports/REGIME_AFFINITY_MIDTERM_2026_06_25.md`,
 `CODEX_HANDOFF_2026_06_25.md`.
+
+---
+
+## 34. (2026-06-25) СТРАТЕГИЧЕСКИЙ ВЫВОД: проблема не только в багах, но и в классе стратегий
+Codex: regime-affinity на серверном execution-like CSV — агрегатный минус скрывал
+полезные buckets (pullback CHOP long/short, v3 CHOP long + BEAR short), но
+macro-side gate не помогает, strict trend-only в минус; WF 24m→6m провал, 12m→3m
+плюс на 15-19 сделках. Идея research-only. Следующий шаг — package-level WF по всем
+sleeves с execution-like exits, БЕЗ внедрения в live.
+
+**Честный вывод владельцу (вопрос «может проблема в логиках?»):**
+Нельзя говорить «стратегии точно не багованы»: live/backtest parity, closed-candle,
+модель выхода, join внешних событий и broker/exchange execution уже не раз давали
+искажения. Поэтому баги/дыры продолжаем искать через `system_integrity_gate`,
+execution-accurate replay и provenance каждого результата.
+
+Но даже после устранения известных технических искажений видна вторая проблема:
+большая часть ценовых стратегий — вариации одной краудед-жилы TA
+(отбой/фейд/наклонка/пробой/пуллбек). На ликвидных мажорах эти паттерны видит весь
+рынок; тонкий gross-edge часто превращается в expectancy около нуля после
+комиссий, проскальзывания и реалистичных выходов. Regime-routing показал: часть
+bucket'ов не мусор, но edge пока тонкий и хрупкий; WF подтверждает, что это может
+быть диверсификатором, а не доказанным двигателем дохода.
+
+**Где реально лежит крипто-эдж (куда пивотить R&D):**
+СТРУКТУРНЫЕ/механические эджи деривативов — НЕ графические паттерны:
+- funding-разворот/carry (привязан к механике перпов, менее краудед);
+- ликвидационные каскады (коллектор уже собирает);
+- базис спот/перп (cash-and-carry).
+Это ДРУГИЕ ДАННЫЕ (funding/liquidations/basis по времени), не свечные паттерны.
+Локально funding есть только сводкой (не серией) → прототип на сервере.
+
+**Решение:** (1) не плодить новые вариации 5m-price-pattern без WF; (2) Codex:
+package-WF как финальный вердикт по ним (выживут robust WF → тонкий диверсификатор,
+нет → архив); (3) пивот крипто-R&D на структурные эджи, но тоже только через gate
+и closed-cycle статистику; (4) Alpaca — первая реальная canary-нога при чистом
+ревью исполнения после 2026-06-26 close.
+
+---
+
+## 35. (2026-06-25) Codex structural R&D: liquidation cascade и funding arb shadow
+Codex добавил memory-safe раннер `backtest/liquidation_sweep_run.py`: один символ
+в RAM за раз, потоковый вывод, `--symbols`, `--max-symbols`, JSON-результат. Это
+закрывает прошлый OOM-класс для данного исследования при запуске рядом с live.
+
+**Реальный серверный прогон ликвидаций** (`safe_liquidation_sweep_real_20260625b`,
+MemoryMax=360M, CPUQuota=60%, research copy + symlink к live
+`runtime/liquidations/bybit_liquidations.jsonl`):
+- событий: `45,859`
+- кластеров: `87`
+- сделок: `20`
+- win%: `20.0`
+- expectancy: `-0.429R`
+- PF: `0.19`
+- verdict: `FAIL (noise / no edge)`
+
+По символам: BTCUSDT `13` сделок, PF `0.26`; ETHUSDT `7` сделок, PF `0.10`;
+остальные дали no-data/слишком мало сделок. Вывод: текущая простая гипотеза
+«отскок после каскада ликвидаций» не готова к shadow/live. Нужен либо другой
+entry/exit/context-filter, либо архив до появления более богатой event-модели.
+
+**Cross-exchange funding shadow** на сервере:
+- `runtime/arb/cross_exchange_funding_shadow.json` свежий, model
+  `settlement_execution_v2`
+- closed cycles: `102`
+- open cycles: `5`
+- winrate: `33.33%`
+- mean return per cycle: `-0.029861%` total capital
+- p25 return per cycle: `-0.192875%` total capital
+- ROI projection by closed-cycle p25: negative
+
+Вывод: funding/arb остаётся полезным structural-source данных, но текущий
+cross-exchange shadow не даёт разрешение на деньги. Следующий research-шаг —
+разложить closed cycles по причинам убытка: fee/slippage, исчезновение funding,
+неудачная price leg, биржа/символ, persistence_count, hold_hours. Решение о live
+только после положительной closed-cycle статистики, а не по текущему APR.
