@@ -15,6 +15,10 @@
     `candidate_shortlist.py` maker/taker shortlist.
   - `51a0828` — this handoff file before later OOM notes; if this paragraph is
     visible in git, a later handoff update was also saved.
+  - `5e8f660` — Claude safety/research update saved: memory-safe
+    `package_efficiency_run.py`, caveats in midterm/package runners,
+    `cross_sectional_momentum.py`, `midterm_trade_export.py`, `PROJECT_MAP.md`
+    and updated Claude audit sections.
 - Local full suite before commit: `423 passed`.
 - Server research-copy targeted tests: `18 passed`.
 - Still dirty locally but not part of this save: generated
@@ -115,6 +119,41 @@ Transient research unit:
 - tasks: `midterm_efficiency_run.py`, then IVB1 package on `BTCUSDT ETHUSDT SOLUSDT`,
   then `candidate_shortlist.py`.
 
+Results from `safe_small_research_20260625`:
+
+- simplified/binary midterm runner:
+  - `midterm_pullback`: `111` trades, PF `1.5`, total `+33.0R`;
+  - `midterm_v3`: `40` trades, PF `1.5`, total `+12.5R`;
+  - shortlist marked these as GO, but this is **not** production evidence because
+    the runner uses binary full TP/SL and does not model ladder/trailing/time-stop.
+- IVB1 BTC/ETH/SOL package with costs:
+  - `3885` trades, taker expectancy `-0.097R`, taker PF `0.89`;
+  - maker expectancy `-0.025R`, maker PF `0.97`;
+  - conclusion: Claude's BTC-only maker flip did not generalize to this 3-symbol
+    server run. IVB1 is CUT/WATCH until fill-risk and subset evidence improve.
+
+Execution-like midterm export:
+
+- Unit: `safe_midterm_export_20260625.service`.
+- Research path: `/root/by-bot-research-20260625-49a4ad0`.
+- Command: `backtest/midterm_trade_export.py` with `MemoryMax=360M`,
+  `CPUQuota=60%`.
+- Output CSV: `/root/by-bot-research-20260625-49a4ad0/runtime/midterm_trades_latest.csv`.
+- Caveat: models ladder + 7h time-stop, but still does **not** model the full
+  monolith ATR trailing. It is more realistic than the binary runner and closer
+  to the risk question.
+- Result:
+  - all midterm: `154` trades, `+5.1R`, profitable months `54%`, max red streak
+    `5`, top-month share `86%`, maxDD `-11.6R` → **not ready**;
+  - `midterm_pullback`: `113` trades, `+7.6R`, profitable months `57%`, max red
+    streak `3`, top-month share `57%`, maxDD `-7.5R` → only "with caveats",
+    not enough for live risk;
+  - `midterm_v3`: `41` trades, `-2.4R`, profitable months `38%`, max red streak
+    `7`, maxDD `-7.3R` → cut for now.
+- Important operational note: the export hit `360M` RAM and `~504M` swap while
+  live remained active. Future server research must either shard further or run
+  off the 1GB live VPS.
+
 Old stopped/unsafe queue for reference:
 
 - `research_queue_20260625_22f7c34`
@@ -160,17 +199,44 @@ ssh -i ~/.ssh/by-bot root@64.226.73.119 'cd /root/by-bot-research-20260625-22f7c
   2026-06-26: ownership, fills, duplicate orders, broker stops, realized/unreal
   PnL and trailing behavior.
 
+Update checked 2026-06-25 18:03 UTC:
+
+- Paper equity: `$100,212.42`, cash `$99,767.27`.
+- Open positions: `JPM` and `UNH`; both green on paper:
+  - `JPM`: about `$256`, PnL about `+$4.19` (`+1.7%`);
+  - `UNH`: about `$189`, PnL about `+$5.61` (`+3.1%`).
+- Broker open stop orders confirmed by Alpaca GET:
+  - `JPM` sell-to-close stop `317.43`, qty `0.762191422`, expires
+    `2026-06-25T20:00:00Z`;
+  - `UNH` sell-to-close stop `388.79`, qty `0.456144915`, expires
+    `2026-06-25T20:00:00Z`.
+- AAPL was no longer open at this check. It had appeared earlier as a dry-run
+  new-buy candidate, not a live/paper mutation during this check.
+
+Real `$500` Alpaca canary rule:
+
+- Earliest decision: after US market close on `2026-06-26` (20:00 UTC / 23:00
+  Asia-Nicosia), after a clean execution review.
+- Practical first real trade window if clean: next regular session,
+  `2026-06-29`.
+- Start only at `1.0x` / no leverage. The historical baseline is about `21%`
+  CAGR (`~1.7%/month`, roughly `$8-9/month` on `$500` on average). The `1.25x`
+  leverage probe is about `~2.0%/month`, but leverage is not for the first
+  canary.
+
 ## 7. Next order of work
 
-1. Wait for server research screens to finish; extract:
-   package ranking, midterm ranking, hedge `improved=True/False`, Alpaca leverage
-   table.
-2. If package ranking finds a positive sleeve, run real next-open/monthly/WF
-   with fees and the fail-closed promotion gate.
-3. IVB1 remains the first serious crypto candidate from prior evidence, but must
-   be revalidated after closed-candle fixes and with risk scaled under DD limit.
-4. v3 family (`inplay_retest_v3`, `breakdown_retest_v3`, `spike_fade_v3`) is now
-   saved and ready for sweeps/monthly/WF.
+1. Alpaca post-close review after `2026-06-26`: account ownership, fills,
+   duplicate order prevention, stop renewal/expiry handling, realized/unreal PnL
+   consistency. If clean, allow `$500` live canary at `1.0x`.
+2. Midterm: do not promote from simplified PF `1.5`. Either add monolith-accurate
+   ATR trailing to the export or replay the monolith execution path, then monthly
+   / WF / fail-closed gate. Current ladder+7h evidence is not enough.
+3. Package/maker: IVB1 needs fill-risk modeling and a stricter subset; current
+   3-symbol maker run remains negative.
+4. v3 family (`inplay_retest_v3`, `breakdown_retest_v3`, `spike_fade_v3`) is
+   saved and ready for sweeps/monthly/WF, but run off the live VPS or in small
+   shards only.
 5. Build `system_integrity_gate` before any next live promotion: tests, secrets,
    closed candles, live/backtest parity, broker positions/stops, stale data,
    promotion provenance, strategy risk consistency.
