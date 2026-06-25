@@ -15,9 +15,10 @@ from __future__ import annotations
 
 import importlib
 import sys
+import time
 from typing import List, Optional
 
-from backtest.package_efficiency_run import ResampleStore, _target_from_signal
+from backtest.package_efficiency_run import ResampleStore, _target_from_signal, ROOT
 
 REGISTRY = [
     ("MT-PB   midterm_pullback",      "strategies.btc_eth_midterm_pullback", "BTCETHMidtermPullbackStrategy"),
@@ -80,34 +81,49 @@ def main(argv=None) -> int:
     argv = argv if argv is not None else sys.argv[1:]
     step = int(argv[argv.index("--step") + 1]) if "--step" in argv else 48      # 4h
     hold = int(argv[argv.index("--hold") + 1]) if "--hold" in argv else 8000    # ~28d
-    print(f"=== MIDTERM EFFICIENCY (swing; scan every {step*5}m; hold<= {hold*5//1440}d) ===")
-    print(f"{'strategy':28s} {'trd':>4s} {'win%':>5s} {'expR':>6s} {'totR':>7s} {'PF':>5s}")
-    print("-" * 60)
+    try:
+        sys.stdout.reconfigure(line_buffering=True)  # потоковый вывод на сервере
+    except Exception:
+        pass
+    print(f"=== MIDTERM EFFICIENCY (swing; scan every {step*5}m; hold<= {hold*5//1440}d) ===", flush=True)
+    print("(потоковый вывод: каждая стратегия печатается сразу по готовности)", flush=True)
+    print(f"{'strategy':28s} {'trd':>4s} {'win%':>5s} {'expR':>6s} {'totR':>7s} {'PF':>5s} {'sec':>6s}", flush=True)
+    print("-" * 66, flush=True)
+    import json as _json
+    from datetime import datetime as _dt, timezone as _tz
     stores = {s: ResampleStore(s) for s in SYMBOLS}
     stores = {s: st for s, st in stores.items() if st.has_base()}
-    rows = []
+    out = {}
+    rep = ROOT / "runtime" / f"midterm_efficiency_{_dt.now(_tz.utc):%Y%m%d_%H%M%S}.json"
     for label, module, cls in REGISTRY:
+        t0 = time.time()
         Rs: List[float] = []
         for s, st in stores.items():
             try:
                 strat = getattr(importlib.import_module(module), cls)()
             except Exception as e:
-                print(f"{label:28s} init fail: {e}"); Rs = []; break
+                print(f"{label:28s} init fail: {e}", flush=True); Rs = []; break
             st.set_cursor(0)
             Rs.extend(run_one(strat, st, step, hold))
+        dt_s = time.time() - t0
         n = len(Rs)
         if not n:
-            rows.append((label, 0, 0, 0, 0, "-")); continue
-        w = [r for r in Rs if r > 0]; lo = [r for r in Rs if r <= 0]
-        pf = (sum(w) / -sum(lo)) if lo and sum(lo) < 0 else float("inf")
-        rows.append((label, n, 100 * len(w) / n, sum(Rs) / n, sum(Rs),
-                     round(pf, 2) if pf != float("inf") else "inf"))
-    rows.sort(key=lambda x: (x[4] if isinstance(x[4], (int, float)) else -1e9), reverse=True)
-    for lab, n, wp, e, t, pf in rows:
-        if not n:
-            print(f"{lab:28s} {'0':>4s}  (нет сигналов)"); continue
-        print(f"{lab:28s} {n:>4d} {wp:>5.1f} {e:>6.2f} {t:>7.1f} {str(pf):>5s}")
-    print("\nBTC+ETH, локальный кэш ~1г, без комиссий. Полный прогон/комиссии — сервер.")
+            out[label] = {"trades": 0}
+            print(f"{label:28s} {'0':>4s}  (нет сигналов){'':>24s}{dt_s:>6.1f}", flush=True)
+        else:
+            w = [r for r in Rs if r > 0]; lo = [r for r in Rs if r <= 0]
+            pf = (sum(w) / -sum(lo)) if lo and sum(lo) < 0 else float("inf")
+            out[label] = {"trades": n, "win_pct": round(100 * len(w) / n, 1),
+                          "expectancy_R": round(sum(Rs) / n, 3), "total_R": round(sum(Rs), 1),
+                          "profit_factor": round(pf, 2) if pf != float("inf") else "inf"}
+            print(f"{label:28s} {n:>4d} {100*len(w)/n:>5.1f} {sum(Rs)/n:>6.2f} {sum(Rs):>7.1f} "
+                  f"{str(out[label]['profit_factor']):>5s} {dt_s:>6.1f}", flush=True)
+        try:
+            rep.write_text(_json.dumps(out, indent=2), encoding="utf-8")
+        except Exception:
+            pass
+    print(f"\nJSON (чекпойнт) -> {rep}", flush=True)
+    print("BTC+ETH, локальный кэш ~1г, без комиссий. Полный прогон/комиссии — сервер.", flush=True)
     return 0
 
 

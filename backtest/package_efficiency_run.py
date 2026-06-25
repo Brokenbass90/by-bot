@@ -21,6 +21,7 @@ import importlib
 import json
 import os
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -175,14 +176,16 @@ def run_one(strategy, store: ResampleStore) -> List[float]:
         if exit_R is None:
             cj = rows[min(i + MAX_HOLD_BARS, len(rows) - 1)][4]
             exit_R = ((cj - entry) if side in ("buy", "long") else (entry - cj)) / risk
-        Rs.append(exit_R - COST_R_PER_TRADE)
+        Rs.append(exit_R)   # RAW R (без комиссии); издержки применяются в _agg
     return Rs
 
 
-def _agg(Rs: List[float], n_syms: int) -> dict:
-    n = len(Rs)
+def _agg(Rs_raw: List[float], n_syms: int, cost: float = 0.0) -> dict:
+    """Метрики при заданной издержке `cost` (в R) на сделку (taker или maker)."""
+    n = len(Rs_raw)
     if n == 0:
         return {"trades": 0}
+    Rs = [r - cost for r in Rs_raw]
     wins = [r for r in Rs if r > 0]
     losses = [r for r in Rs if r <= 0]
     gp = sum(wins); gl = -sum(losses)
@@ -200,45 +203,79 @@ def _agg(Rs: List[float], n_syms: int) -> dict:
 
 def main(argv: Optional[List[str]] = None) -> int:
     argv = argv if argv is not None else sys.argv[1:]
+    # Потоковый вывод: на сервере stdout редиректят в файл -> блочная буферизация
+    # «вешает» вывод. Делаем line-buffered + flush после каждой строки.
+    try:
+        sys.stdout.reconfigure(line_buffering=True)
+    except Exception:
+        pass
     symbols = [a for a in argv if a.endswith("USDT")] or DEFAULT_SYMBOLS
-    print("=== PACKAGE EFFICIENCY (resample store; signal-replay; R-multiples) ===")
-    print(f"symbols={len(symbols)}  hold<= {MAX_HOLD_BARS} bars  cost_R/trade={COST_R_PER_TRADE}\n")
+    # --strategies foo,bar  → прогнать только подмножество (дробление тяжёлого прогона)
+    only = None
+    if "--strategies" in argv:
+        only = {x.strip().lower() for x in argv[argv.index("--strategies") + 1].split(",") if x.strip()}
+    registry = [r for r in REGISTRY if (only is None or any(t in r[0].lower() for t in only))]
+
+    # Maker/taker: один replay -> две издержки. taker = полная COST_R; maker =
+    # COST_R * фактор (entry-нога у уровня становится rebate/дешевле). Фактор по
+    # умолчанию 0.4 (грубо: одна из двух ног бесплатна + рибейт). FILL-RISK НЕ
+    # моделируется -> maker = оптимистичная верхняя оценка.
+    taker_cost = COST_R_PER_TRADE
+    maker_factor = float(os.getenv("PKG_MAKER_FACTOR", "0.4"))
+    maker_cost = round(taker_cost * maker_factor, 4)
+
+    print("=== PACKAGE EFFICIENCY (resample store; signal-replay; R-multiples) ===", flush=True)
+    print(f"symbols={len(symbols)}  strategies={len(registry)}  hold<= {MAX_HOLD_BARS} bars  "
+          f"cost taker={taker_cost} maker={maker_cost} (фактор {maker_factor})", flush=True)
+    print("(потоковый вывод; колонки taker/maker; ↑ = maker выводит в плюс)\n", flush=True)
+
+    t_load = time.time()
     stores = {s: ResampleStore(s) for s in symbols}
     stores = {s: st for s, st in stores.items() if st.has_base()}
-    rows_out = []
-    for label, module, cls in REGISTRY:
+    print(f"[load] {len(stores)} символов загружено за {time.time()-t_load:.1f}s\n", flush=True)
+
+    hdr = (f"{'strategy':30s} {'trd':>5s} {'win%':>5s} "
+           f"{'expR_tk':>7s} {'PF_tk':>5s}  {'expR_mk':>7s} {'PF_mk':>5s} {'flip':>4s} {'sec':>5s}")
+    print(hdr, flush=True); print("-" * len(hdr), flush=True)
+    out: Dict[str, dict] = {}
+    rep = ROOT / "runtime" / f"package_efficiency_{datetime.now(timezone.utc):%Y%m%d_%H%M%S}.json"
+    for label, module, cls in registry:
+        t0 = time.time()
         all_Rs: List[float] = []
         nsy = 0
         for s, st in stores.items():
             try:
                 strat = getattr(importlib.import_module(module), cls)()
             except Exception as e:
-                print(f"  [skip] {label}: init fail: {e}")
+                print(f"{label:30s}  init fail: {e}", flush=True)
                 all_Rs = []; break
             r = run_one(strat, st)
             if r:
                 nsy += 1
             all_Rs.extend(r)
-        rows_out.append((label, _agg(all_Rs, nsy or 1)))
+        mt = _agg(all_Rs, nsy or 1, cost=taker_cost)
+        mk = _agg(all_Rs, nsy or 1, cost=maker_cost)
+        out[label] = {"taker": mt, "maker": mk}
+        dt_s = time.time() - t0
+        if not mt.get("trades"):
+            print(f"{label:30s} {'0':>5s}  (нет сигналов){'':>40s}{dt_s:>5.1f}", flush=True)
+        else:
+            flip = "↑" if (mt["expectancy_R"] <= 0 < mk["expectancy_R"]) else ""
+            print(f"{label:30s} {mt['trades']:>5d} {mt['win_pct']:>5.1f} "
+                  f"{mt['expectancy_R']:>7.2f} {str(mt['profit_factor']):>5s}  "
+                  f"{mk['expectancy_R']:>7.2f} {str(mk['profit_factor']):>5s} {flip:>4s} {dt_s:>5.1f}",
+                  flush=True)
+        try:
+            rep.write_text(json.dumps(out, indent=2), encoding="utf-8")
+        except Exception:
+            pass
 
-    rows_out.sort(key=lambda it: (it[1].get("total_R", -1e9) if isinstance(it[1].get("total_R"), (int, float)) else -1e9), reverse=True)
-    hdr = f"{'strategy':32s} {'trd':>5s} {'win%':>5s} {'expR':>6s} {'totR':>7s} {'PF':>5s} {'t/30d':>6s}"
-    print(hdr); print("-" * len(hdr))
-    out = {}
-    for label, m in rows_out:
-        out[label] = m
-        if not m.get("trades"):
-            print(f"{label:32s} {'0':>5s}  (нет сигналов)"); continue
-        print(f"{label:32s} {m['trades']:>5d} {m['win_pct']:>5.1f} {m['expectancy_R']:>6.2f} "
-              f"{m['total_R']:>7.1f} {str(m['profit_factor']):>5s} {m['trades_per_30d']:>6.2f}")
-    rep = ROOT / "runtime" / f"package_efficiency_{datetime.now(timezone.utc):%Y%m%d_%H%M%S}.json"
-    try:
-        rep.write_text(json.dumps(out, indent=2), encoding="utf-8")
-        print(f"\nJSON -> {rep}")
-    except Exception as e:
-        print(f"(report write failed: {e})")
-    print("\nЗаметка: локальный кэш + COST_R можно задать через env PKG_COST_R. "
-          "Доказательство эджа = серверный next-open прогон с реальными fee/slip через promotion_gate.")
+    print(f"\nJSON (чекпойнт, дополняется по ходу) -> {rep}", flush=True)
+    print("tk=taker (полные комиссии), mk=maker (entry-нога дешевле/rebate). "
+          "↑ = maker выводит стратегию в плюс. FILL-RISK не моделируется → maker оптимистичен.", flush=True)
+    print("Заметка: COST_R задаётся через env PKG_COST_R; для дробления — "
+          "--strategies ivb1,midterm и/или список символов. Доказательство эджа = "
+          "серверный next-open прогон через promotion_gate.", flush=True)
     return 0
 
 
