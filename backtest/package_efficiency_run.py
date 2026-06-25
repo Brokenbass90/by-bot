@@ -28,6 +28,8 @@ from typing import Dict, List, Optional, Tuple
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "data_cache"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 # Контракт maybe_signal(store, ts, o,h,l,c,v); высшие TF берутся ресэмплингом,
 # поэтому env-оверрайды TF не нужны — у каждой стратегии работают её дефолты.
@@ -203,6 +205,14 @@ def _agg(Rs_raw: List[float], n_syms: int, cost: float = 0.0) -> dict:
 
 def main(argv: Optional[List[str]] = None) -> int:
     argv = argv if argv is not None else sys.argv[1:]
+    if "--help" in argv or "-h" in argv:
+        print(
+            "usage: PYTHONPATH=. python3 backtest/package_efficiency_run.py "
+            "[--max-symbols N] [--strategies csv] [SYMBOLUSDT ...]\n\n"
+            "Memory-safe package signal replay. Use PKG_COST_R for taker cost in R "
+            "and PKG_MAKER_FACTOR for optimistic maker cost factor."
+        )
+        return 0
     # Потоковый вывод: на сервере stdout редиректят в файл -> блочная буферизация
     # «вешает» вывод. Делаем line-buffered + flush после каждой строки.
     try:

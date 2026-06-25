@@ -964,3 +964,21 @@ cross-exchange shadow не даёт разрешение на деньги. Сл
 разложить closed cycles по причинам убытка: fee/slippage, исчезновение funding,
 неудачная price leg, биржа/символ, persistence_count, hold_hours. Решение о live
 только после положительной closed-cycle статистики, а не по текущему APR.
+
+---
+
+## 36. (2026-06-25) Codex reliability fix: package runner больше не зависит от PYTHONPATH
+При проверке `backtest/package_efficiency_run.py --help` обнаружен практический
+runner-bug: скрипт не имел `--help` и без `PYTHONPATH=.` запускал default-run, где
+все стратегии падали на `No module named 'strategies'`. Это могло давать ложный
+вывод «0 сигналов» при неправильной команде.
+
+Исправлено:
+- `ROOT` добавлен в `sys.path` внутри runner-а;
+- `--help`/`-h` теперь печатает usage и не запускает replay.
+
+Smoke без `PYTHONPATH`: `IVB1` на `BTCUSDT`, `--max-symbols 1`, дал `332`
+сделки, PF `1.15` в optimistic binary replay. Это не production-edge, но
+подтверждает, что import-path bug закрыт.
+
+Suite: `423 passed`.
