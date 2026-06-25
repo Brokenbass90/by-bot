@@ -982,3 +982,16 @@ Smoke без `PYTHONPATH`: `IVB1` на `BTCUSDT`, `--max-symbols 1`, дал `332
 подтверждает, что import-path bug закрыт.
 
 Suite: `423 passed`.
+
+**Server resource note:** после фикса запускались safe systemd probes на
+`/root/by-bot-research-20260625-49a4ad0` рядом с live:
+- all sleeves, `--max-symbols 3`, `PKG_COST_R=0.12`: остановлен вручную, потому
+  что за ~60s не прошёл первый символ и держал `317-360MB` при MemoryMax `360MB`;
+- `IVB1`/`BTCUSDT`, `--max-symbols 1`: остановлен вручную, потому что за ~85s не
+  завершил первый символ и держал `339-360MB`.
+
+Вывод: даже memory-safe price-package runner пока не подходит для 1GB live-VPS
+рядом с боевым ботом. Package-WF по всем sleeves переносить на локальную машину,
+отдельный research-host или после дополнительной оптимизации/сэмплинга. На live
+VPS безопасно оставлять только лёгкие event/funding runners с systemd resource
+caps.
