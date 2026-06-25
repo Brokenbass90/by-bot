@@ -154,6 +154,31 @@ Execution-like midterm export:
   live remained active. Future server research must either shard further or run
   off the 1GB live VPS.
 
+Regime-affinity check, after Claude hypothesis:
+
+- New tool saved locally: `backtest/regime_affinity_profiler.py`.
+- Report: `reports/REGIME_AFFINITY_MIDTERM_2026_06_25.md`.
+- Server source: `runtime/midterm_trades_latest.csv` from the execution-like
+  midterm export.
+- Key profile:
+  - `midterm_pullback`: CHOP buckets are strongest (`CHOP long +2.37R/22`,
+    `CHOP short +5.36R/24`), BEAR short is not good (`-0.64R/24`).
+  - `midterm_v3`: CHOP long and BEAR short are positive, BULL long and CHOP
+    short are negative.
+- Simple macro-side gate does **not** help:
+  - all: `151` trades, `+5.32R`, PF `1.092`, DD `-11.64R`;
+  - "no short in bull / no long in bear, chop allowed": `+5.06R`, PF `1.087`;
+  - strict bull-long/bear-short only: `-0.56R`, PF `0.984`.
+- WF:
+  - strict `24m train -> 6m test`: OOS routed `-5.28R`, PF `0.688` → fail;
+  - `24m->6m` with higher thresholds still failed (`-2.57R`, PF `0.678`);
+  - short `12m train -> 3m test, minN=4, minAvg=0.10`: OOS `+4.32R`, PF
+    `1.793`, DD `-2.78R`, but only `19` trades.
+- Decision: regime routing is a promising research direction, but not live-ready.
+  Do **not** add recommended regimes to `regime_orchestrator` yet. Next honest
+  step is package-level WF across all sleeves with execution-like exits, not
+  cherry-picking midterm buckets.
+
 Old stopped/unsafe queue for reference:
 
 - `research_queue_20260625_22f7c34`
@@ -232,13 +257,15 @@ Real `$500` Alpaca canary rule:
 2. Midterm: do not promote from simplified PF `1.5`. Either add monolith-accurate
    ATR trailing to the export or replay the monolith execution path, then monthly
    / WF / fail-closed gate. Current ladder+7h evidence is not enough.
-3. Package/maker: IVB1 needs fill-risk modeling and a stricter subset; current
+3. Regime routing: continue as research only. Expand `regime_affinity_profiler`
+   to package-level execution-like/WF before touching live `regime_orchestrator`.
+4. Package/maker: IVB1 needs fill-risk modeling and a stricter subset; current
    3-symbol maker run remains negative.
-4. v3 family (`inplay_retest_v3`, `breakdown_retest_v3`, `spike_fade_v3`) is
+5. v3 family (`inplay_retest_v3`, `breakdown_retest_v3`, `spike_fade_v3`) is
    saved and ready for sweeps/monthly/WF, but run off the live VPS or in small
    shards only.
-5. Build `system_integrity_gate` before any next live promotion: tests, secrets,
+6. Build `system_integrity_gate` before any next live promotion: tests, secrets,
    closed candles, live/backtest parity, broker positions/stops, stale data,
    promotion provenance, strategy risk consistency.
-6. Keep crypto live defensive: ARF1 only canary risk; Range/ATT1/Breakdown/IVB1/
+7. Keep crypto live defensive: ARF1 only canary risk; Range/ATT1/Breakdown/IVB1/
    Midterm remain zero-risk until evidence says otherwise.
