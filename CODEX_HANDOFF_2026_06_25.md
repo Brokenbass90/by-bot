@@ -11,6 +11,10 @@
     fail-closed `evaluate_crypto_promotion.py`, package/hedge/alpaca runners,
     Claude audit/state reports and tests.
   - `9a43566` — `backtest/midterm_efficiency_run.py`.
+  - `49a4ad0` — streaming/checkpointed package and midterm runners plus
+    `candidate_shortlist.py` maker/taker shortlist.
+  - `51a0828` — this handoff file before later OOM notes; if this paragraph is
+    visible in git, a later handoff update was also saved.
 - Local full suite before commit: `423 passed`.
 - Server research-copy targeted tests: `18 passed`.
 - Still dirty locally but not part of this save: generated
@@ -34,6 +38,28 @@
     (heartbeat still shows elder risk field `0.05`, but enabled is false).
 - After the 2026-06-20 stop-loss cluster there were no new Bybit trades in the
   checked journal. Realized since 2026-06-20: `range -0.7292 USDT`, 5 losses.
+
+### OOM incident and fix — checked/applied 2026-06-25 12:04 UTC
+
+- A full `package_efficiency_run.py` research process on the same 1GB VPS
+  caused memory pressure and `bybot.service` was killed by the kernel OOM killer
+  at `2026-06-25 11:00 UTC`.
+- The live service did restart automatically, but the unit was configured with
+  `OOMScoreAdjust=500`, making the trading bot more likely to be killed than
+  research. That is wrong for production.
+- Applied server-side persistent unit change while Bybit was flat:
+  - `/etc/systemd/system/bybot.service`
+  - `OOMScoreAdjust=-900`
+  - `MemoryMax=700M`
+  - `systemctl daemon-reload && systemctl restart bybot.service`
+- Post-restart check:
+  - Bybit open positions: `0`;
+  - `bybot.service` active;
+  - process `/proc/<pid>/oom_score_adj=-900`;
+  - heartbeat fresh.
+- Heavy research on this VPS must not run unbounded again. Use a separate
+  research server, local machine with caffeinate, or transient systemd units with
+  strict `MemoryMax/CPUQuota` and small symbol/strategy shards.
 
 ## 3. Why the candle bug reappeared
 
@@ -70,8 +96,26 @@ Completed server evidence:
 - Old `+89%/+120%` baseline remains invalid as a current trading claim. Latest
   known exact rerun was around `+11.24%`, PF `1.148`, DD `8.77%`.
 
-Active server-side screens, started in isolated research copy
-`/root/by-bot-research-20260625-22f7c34-archive`:
+Earlier active server-side screens, started in isolated research copy
+`/root/by-bot-research-20260625-22f7c34-archive`, were stopped after the OOM
+finding because the full 12-symbol package runner was too heavy for the live VPS.
+
+New safer research copy:
+
+- `/root/by-bot-research-20260625-49a4ad0`
+- source: local `git archive` of commit `49a4ad0`;
+- data cache symlinked to `/root/by-bot/data_cache`;
+- targeted tests: `18 passed`.
+
+Transient research unit:
+
+- `safe_small_research_20260625.service`
+- `MemoryMax=360M`, `CPUQuota=60%`, `Nice=10`;
+- log: `/root/by-bot-research-20260625-49a4ad0/logs/safe_small_research_20260625.log`;
+- tasks: `midterm_efficiency_run.py`, then IVB1 package on `BTCUSDT ETHUSDT SOLUSDT`,
+  then `candidate_shortlist.py`.
+
+Old stopped/unsafe queue for reference:
 
 - `research_queue_20260625_22f7c34`
   - running full `backtest/package_efficiency_run.py` on 12 symbols with
@@ -88,7 +132,7 @@ Active server-side screens, started in isolated research copy
 Useful server check command:
 
 ```bash
-ssh -i ~/.ssh/by-bot root@64.226.73.119 'cd /root/by-bot-research-20260625-22f7c34-archive && screen -ls && tail -220 logs/quick_research_20260625_22f7c34.log && tail -180 logs/midterm_efficiency_20260625.log'
+ssh -i ~/.ssh/by-bot root@64.226.73.119 'cd /root/by-bot-research-20260625-49a4ad0 && systemctl status safe_small_research_20260625 --no-pager -l | head -40 && tail -220 logs/safe_small_research_20260625.log'
 ```
 
 For full package, output is currently buffered; use:
@@ -132,4 +176,3 @@ ssh -i ~/.ssh/by-bot root@64.226.73.119 'cd /root/by-bot-research-20260625-22f7c
    promotion provenance, strategy risk consistency.
 6. Keep crypto live defensive: ARF1 only canary risk; Range/ATT1/Breakdown/IVB1/
    Midterm remain zero-risk until evidence says otherwise.
-
