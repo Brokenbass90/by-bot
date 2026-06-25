@@ -124,6 +124,9 @@ def main(argv=None) -> int:
             pass
     print(f"\nJSON (чекпойнт) -> {rep}", flush=True)
     print("BTC+ETH, локальный кэш ~1г, без комиссий. Полный прогон/комиссии — сервер.", flush=True)
+    print("!!! ВЫХОД БИНАРНЫЙ (без ladder/trailing/time-stop) → АБСОЛЮТНЫЙ R "
+          "ОПТИМИСТИЧЕН. Только относительное ранжирование; эдж — серверный "
+          "execution-accurate прогон (см. midterm_trade_export для ladder-варианта).", flush=True)
     return 0
 
 

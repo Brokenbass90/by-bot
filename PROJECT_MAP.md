@@ -75,5 +75,24 @@
 - `reports/FOUNDATION_UPGRADES_AND_LAUNCH_2026_06_15.md`, `HIGH_IMPACT_IDEAS_2026_06_15.md`, `CLAUDE_TO_CODEX_2026_06_15_entry_rework.md` — что делать дальше.
 - `reports/SERVER_SNAPSHOT_latest.md` — реальное live-состояние.
 
+## Research-инструменты (Claude, 2026-06-22..25)
+Аддитивные раннеры в `backtest/` (offline на `data_cache`; memory-safe, потоковый
+вывод, JSON-чекпойнты). Карта находок и команд: `reports/CLAUDE_AUDIT_2026_06_22.md`
+(§1-24), сценарий запуска на сервере: `reports/SERVER_TEST_RUNBOOK.md`.
+- `package_efficiency_run.py` — пакет крипто-стратегий, taker/maker издержки,
+  `--strategies`, `--max-symbols` (на live-VPS 2..3, иначе OOM).
+- `midterm_efficiency_run.py` — среднесрочка (4h/дневки).
+- `candidate_shortlist.py` — читает чекпойнты → GO/WATCH/CUT для gate.
+- `portfolio_combiner.py` — книга целиком (диверсификация, просадка).
+- `red_month_doctor.py` — кто «лечит» красные месяцы книги (цели аллокатору).
+- `hedge_pairing_run.py` — range vs breakdown по месяцам.
+- `alpaca_leverage_probe.py` — regime-gated плечо Alpaca.
+- `funding_carry_maximizer.py` / `liquidation_sweep_run.py` / `ai_vet_ab_run.py` —
+  market-neutral carry / снос ликвидности / A/B ценности ИИ-вета.
+**Ключевые находки:** комиссии убивают высокочастотные стратегии (среднесрочка
+выживает); maker-входы оживляют IVB1; диверсификация режет просадку вдвое.
+Все цифры — на кэше без финального WF/monthly/gate (доказательство = сервер).
+Веб: `web/static/live_chart_prototype.html` — живой перематываемый график (прототип).
+
 ## Координация ИИ
 Claude = аддитивные инструменты `backtest/`, анализ, доки. Codex = монолит `smart_pump_reversal_bot.py` / `scripts` / веб / деплой / серверные прогоны. Связь — `reports/*_TO_*`.

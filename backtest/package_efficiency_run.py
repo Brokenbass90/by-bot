@@ -229,50 +229,65 @@ def main(argv: Optional[List[str]] = None) -> int:
           f"cost taker={taker_cost} maker={maker_cost} (фактор {maker_factor})", flush=True)
     print("(потоковый вывод; колонки taker/maker; ↑ = maker выводит в плюс)\n", flush=True)
 
-    t_load = time.time()
-    stores = {s: ResampleStore(s) for s in symbols}
-    stores = {s: st for s, st in stores.items() if st.has_base()}
-    print(f"[load] {len(stores)} символов загружено за {time.time()-t_load:.1f}s\n", flush=True)
+    # MEMORY-SAFE (инцидент OOM на 1GB live-VPS 2026-06-25): держим в RAM ОДИН
+    # символ за раз и освобождаем перед следующим. --max-symbols ограничивает.
+    # На маленьком хосте используй --max-symbols 2..3, не гоняй 12 рядом с live.
+    import gc
+    max_syms = int(argv[argv.index("--max-symbols") + 1]) if "--max-symbols" in argv else len(symbols)
+    symbols = symbols[:max_syms]
+    print(f"symbols(используется)={len(symbols)}  (memory-safe: один символ в RAM за раз)\n", flush=True)
 
-    hdr = (f"{'strategy':30s} {'trd':>5s} {'win%':>5s} "
-           f"{'expR_tk':>7s} {'PF_tk':>5s}  {'expR_mk':>7s} {'PF_mk':>5s} {'flip':>4s} {'sec':>5s}")
-    print(hdr, flush=True); print("-" * len(hdr), flush=True)
-    out: Dict[str, dict] = {}
+    rsmap: Dict[str, List[float]] = {label: [] for label, _, _ in registry}
+    nsym: Dict[str, int] = {label: 0 for label, _, _ in registry}
     rep = ROOT / "runtime" / f"package_efficiency_{datetime.now(timezone.utc):%Y%m%d_%H%M%S}.json"
-    for label, module, cls in registry:
-        t0 = time.time()
-        all_Rs: List[float] = []
-        nsy = 0
-        for s, st in stores.items():
-            try:
-                strat = getattr(importlib.import_module(module), cls)()
-            except Exception as e:
-                print(f"{label:30s}  init fail: {e}", flush=True)
-                all_Rs = []; break
-            r = run_one(strat, st)
-            if r:
-                nsy += 1
-            all_Rs.extend(r)
-        mt = _agg(all_Rs, nsy or 1, cost=taker_cost)
-        mk = _agg(all_Rs, nsy or 1, cost=maker_cost)
-        out[label] = {"taker": mt, "maker": mk}
-        dt_s = time.time() - t0
-        if not mt.get("trades"):
-            print(f"{label:30s} {'0':>5s}  (нет сигналов){'':>40s}{dt_s:>5.1f}", flush=True)
-        else:
-            flip = "↑" if (mt["expectancy_R"] <= 0 < mk["expectancy_R"]) else ""
-            print(f"{label:30s} {mt['trades']:>5d} {mt['win_pct']:>5.1f} "
-                  f"{mt['expectancy_R']:>7.2f} {str(mt['profit_factor']):>5s}  "
-                  f"{mk['expectancy_R']:>7.2f} {str(mk['profit_factor']):>5s} {flip:>4s} {dt_s:>5.1f}",
-                  flush=True)
+
+    def _dump():
+        out = {label: {"taker": _agg(rsmap[label], nsym[label] or 1, taker_cost),
+                       "maker": _agg(rsmap[label], nsym[label] or 1, maker_cost)}
+               for label, _, _ in registry}
         try:
             rep.write_text(json.dumps(out, indent=2), encoding="utf-8")
         except Exception:
             pass
 
-    print(f"\nJSON (чекпойнт, дополняется по ходу) -> {rep}", flush=True)
-    print("tk=taker (полные комиссии), mk=maker (entry-нога дешевле/rebate). "
-          "↑ = maker выводит стратегию в плюс. FILL-RISK не моделируется → maker оптимистичен.", flush=True)
+    for si, sym in enumerate(symbols, 1):
+        t0 = time.time()
+        st = ResampleStore(sym)
+        if not st.has_base():
+            print(f"[{si}/{len(symbols)}] {sym}: нет данных", flush=True)
+            del st; continue
+        for label, module, cls in registry:
+            try:
+                strat = getattr(importlib.import_module(module), cls)()
+            except Exception as e:
+                print(f"  init fail {label}: {e}", flush=True); continue
+            r = run_one(strat, st)
+            if r:
+                nsym[label] += 1
+            rsmap[label].extend(r)
+        del st; gc.collect()                 # ← освобождаем RAM перед следующим символом
+        _dump()                              # чекпойнт после каждого символа
+        print(f"[{si}/{len(symbols)}] {sym} обработан за {time.time()-t0:.1f}s (RAM освобождена)", flush=True)
+
+    hdr = (f"\n{'strategy':30s} {'trd':>5s} {'win%':>5s} "
+           f"{'expR_tk':>7s} {'PF_tk':>5s}  {'expR_mk':>7s} {'PF_mk':>5s} {'flip':>4s}")
+    print(hdr, flush=True); print("-" * (len(hdr) - 1), flush=True)
+    for label, _, _ in registry:
+        mt = _agg(rsmap[label], nsym[label] or 1, cost=taker_cost)
+        mk = _agg(rsmap[label], nsym[label] or 1, cost=maker_cost)
+        if not mt.get("trades"):
+            print(f"{label:30s} {'0':>5s}  (нет сигналов)", flush=True); continue
+        flip = "↑" if (mt["expectancy_R"] <= 0 < mk["expectancy_R"]) else ""
+        print(f"{label:30s} {mt['trades']:>5d} {mt['win_pct']:>5.1f} "
+              f"{mt['expectancy_R']:>7.2f} {str(mt['profit_factor']):>5s}  "
+              f"{mk['expectancy_R']:>7.2f} {str(mk['profit_factor']):>5s} {flip:>4s}", flush=True)
+    print(f"\nJSON (чекпойнт по символам) -> {rep}", flush=True)
+    print("tk=taker, mk=maker (entry дешевле/rebate). ↑ = maker выводит в плюс. "
+          "FILL-RISK не моделируется → maker оптимистичен. На live-VPS: --max-symbols 2..3.", flush=True)
+    print("\n!!! ВЫХОД БИНАРНЫЙ (полный TP/SL, без ladder/trailing/time-stop) → "
+          "АБСОЛЮТНЫЙ R ОПТИМИСТИЧЕН и НЕДОСТОВЕРЕН. Используй для ОТНОСИТЕЛЬНОГО "
+          "ранжирования и поиска багов. Абсолютный эдж = серверный execution-accurate "
+          "прогон монолита (см. CLAUDE_AUDIT §27).", flush=True)
     print("Заметка: COST_R задаётся через env PKG_COST_R; для дробления — "
           "--strategies ivb1,midterm и/или список символов. Доказательство эджа = "
           "серверный next-open прогон через promotion_gate.", flush=True)
