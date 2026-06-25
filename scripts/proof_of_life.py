@@ -23,17 +23,49 @@ SNAP_MD = ROOT / "reports" / "SERVER_SNAPSHOT_latest.md"
 TG_URL_TMPL = "https://api.telegram.org/bot{token}/sendMessage"
 
 SLEEVE_LABELS = {
-    "flat": "short from resistance",
-    "range": "range scalp",
-    "att1": "trendline touch",
-    "breakdown": "support breakdown",
-    "ivb1": "old impulse breakout",
-    "midterm": "BTC/ETH swing",
-    "bounce1": "support bounce",
-    "asb1_slope_break": "slope break",
-    "elder": "Elder triple screen",
-    "hzbo1": "horizontal breakout",
+    "flat": "шорт от сопротивления",
+    "range": "пила во флэте",
+    "att1": "отбой от наклонной",
+    "breakdown": "слом поддержки",
+    "ivb1": "старый импульсный пробой",
+    "midterm": "среднесрок BTC/ETH",
+    "bounce1": "отбой от поддержки",
+    "asb1_slope_break": "пробой наклонной",
+    "elder": "тройной экран Элдера",
+    "hzbo1": "пробой горизонтали",
+    "inplay_retest_v3": "ретест уровня (v3)",
 }
+
+# Человеческие названия режимов рынка для русских отчётов.
+REGIME_RU = {
+    "bull_trend": "бычий тренд",
+    "bear_trend": "медвежий тренд",
+    "bull_chop": "бычий флэт",
+    "bear_chop": "медвежий флэт",
+    "chop": "флэт",
+    "range": "флэт",
+    "neutral": "нейтрально",
+}
+
+# Человеческие названия торговых событий.
+EVENT_RU = {
+    "open": "открытие",
+    "opened": "открытие",
+    "entry": "вход",
+    "close": "закрытие",
+    "closed": "закрытие",
+    "exit": "выход",
+    "tp": "тейк-профит",
+    "sl": "стоп",
+}
+
+
+def _regime_ru(regime) -> str:
+    return REGIME_RU.get(str(regime or "").strip().lower(), str(regime or "—"))
+
+
+def _event_ru(event) -> str:
+    return EVENT_RU.get(str(event or "").strip().lower(), str(event or "—"))
 
 STRATEGY_TO_SLEEVE = {
     "flat_resistance_fade": "flat",
@@ -52,12 +84,12 @@ def _age(ts_iso: str) -> str:
         t = dt.datetime.fromisoformat(str(ts_iso).replace("Z", "+00:00"))
         secs = (dt.datetime.now(dt.timezone.utc) - t).total_seconds()
         if secs < 3600:
-            return f"{int(secs//60)}m ago"
+            return f"{int(secs//60)} мин назад"
         if secs < 86400:
-            return f"{secs/3600:.1f}h ago"
-        return f"{secs/86400:.1f}d ago"
+            return f"{secs/3600:.1f} ч назад"
+        return f"{secs/86400:.1f} дн назад"
     except Exception:
-        return "?"
+        return "неизвестно"
 
 
 def _event_ts_iso(event: dict) -> str:
@@ -261,28 +293,58 @@ def build_telegram_digest(snap: dict) -> str:
     pnl = snap.get("pnl_by_sleeve") or {}
     _enabled, rmult, live, shadow, _off = _runtime_sets(hb)
     msgs = hb.get("bybit_msgs")
-    feed = "OK" if isinstance(msgs, (int, float)) and msgs > 0 else "STALE"
-    alive = "ALIVE" if hb.get("trade_on") else "NOT TRADING"
+    feed = "ОК" if isinstance(msgs, (int, float)) and msgs > 0 else "УСТАРЕЛИ"
+    alive = "ЖИВ И ТОРГУЕТ" if hb.get("trade_on") else "НЕ ТОРГУЕТ"
+    block = "да" if hb.get("allocator_hard_block") else "нет"
     live_rows, _shadow_rows, live_pnl, live_n, all_pnl, all_n = _split_pnl_by_runtime(pnl, set(live), set(shadow))
     last = _latest_trade_event(snap.get("recent_trade_events") or [])
-    last_line = "last trade: none in journal tail"
+    last_line = "Последняя сделка: в журнале пока нет"
     if last:
         last_iso = _event_ts_iso(last)
-        last_line = f"last trade: {_age(last_iso) if last_iso else '?'} {last.get('event') or last.get('type')} {last.get('strategy')} {last.get('symbol')}"
-    live_line = ", ".join(_sleeve_label(s, rmult.get(s)) for s in live) if live else "NONE (all shadow)"
+        ev = _event_ru(last.get("event") or last.get("type"))
+        when = _age(last_iso) if last_iso else "неизвестно"
+        last_line = f"Последняя сделка: {when} — {ev} {last.get('strategy')} {last.get('symbol')}"
+    live_line = ", ".join(_sleeve_label(s, rmult.get(s)) for s in live) if live else "нет (всё в наблюдении)"
     shadow_line = ", ".join(shadow[:5]) + ("..." if len(shadow) > 5 else "")
 
     lines = [
-        f"BOT PULSE — {_age(snap.get('generated_at_utc'))}",
-        f"{alive} | regime={hb.get('regime')} | feed {feed} | open={hb.get('open_trades')}",
-        f"risk/trade={hb.get('risk_per_trade_pct')}% | maxpos={hb.get('max_positions')} "
-        f"| block={hb.get('allocator_hard_block')}",
-        f"LIVE risk: {live_line}",
-        f"shadow: {shadow_line or '-'}",
+        f"ПУЛЬС БОТА — {_age(snap.get('generated_at_utc'))}",
+        f"{alive} | режим: {_regime_ru(hb.get('regime'))} | данные: {feed} | в позиции: {hb.get('open_trades')}",
+        f"риск/сделка: {hb.get('risk_per_trade_pct')}% | макс. позиций: {hb.get('max_positions')} "
+        f"| блокировка: {block}",
+        f"В БОЮ: {live_line}",
+        f"Наблюдение: {shadow_line or '—'}",
         last_line,
-        f"P&L journal: live-risk {live_pnl:+.3f}/{live_n} trades | all tail {all_pnl:+.3f}/{all_n}",
+        f"Журнал P&L: боевые {live_pnl:+.3f} / {live_n} сд. | всего {all_pnl:+.3f} / {all_n} сд.",
     ]
     return "\n".join(lines)
+
+
+def build_daily_digest_ru(snap: dict) -> str:
+    """Ежедневный дайджест на человеческом русском: пульс + P&L по рукавам + риск-постура.
+
+    Берём только поля, что реально есть в снапшоте (без выдуманных чисел).
+    """
+    hb = snap.get("heartbeat") or {}
+    pnl = snap.get("pnl_by_sleeve") or {}
+    _enabled, rmult, live, shadow, _off = _runtime_sets(hb)
+    live_rows, _shadow_rows, _lp, _ln, _ap, _an = _split_pnl_by_runtime(pnl, set(live), set(shadow))
+
+    L = [build_telegram_digest(snap), "", "— P&L по рукавам (журнал) —"]
+    if live_rows:
+        for s, a in live_rows:
+            label = SLEEVE_LABELS.get(_sleeve_for_strategy(s), _sleeve_for_strategy(s))
+            L.append(f"  {label}: {float(a.get('pnl') or 0):+.3f} / {int(a.get('n') or 0)} сд.")
+    else:
+        L.append("  боевых сделок в журнале пока нет")
+    L.append("")
+    L.append("— Риск-постура —")
+    L.append(
+        f"  безопасный режим: {'да' if hb.get('allocator_safe_mode') else 'нет'} | "
+        f"лимит портфельного риска: {hb.get('max_open_portfolio_risk_pct')}% | "
+        f"открыто позиций: {hb.get('open_trades')}"
+    )
+    return "\n".join(L)
 
 
 def _send_tg(text: str) -> bool:
@@ -317,6 +379,13 @@ def main():
         print(f"no snapshot at {SNAP} — run scripts/export_server_snapshot.py first")
         return
     snap = _load_snapshot()
+    if "--daily" in sys.argv:
+        daily = build_daily_digest_ru(snap)
+        print(daily)
+        (ROOT / "reports" / "PROOF_OF_LIFE_daily.txt").write_text(daily, encoding="utf-8")
+        if "--send" in sys.argv:
+            _send_tg(daily)
+        return
     if "--tg" in sys.argv or "--telegram" in sys.argv:
         tg = build_telegram_digest(snap)
         print(tg)

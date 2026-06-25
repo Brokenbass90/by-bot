@@ -283,7 +283,7 @@ def main() -> int:
 
     if args.json:
         print(json.dumps(result, indent=2))
-        return 0
+        return 0 if overall_pass else 2
 
     print(f"policy_version={result['policy_version']}")
     print(f"candidate={candidate['tag']} annual_return={candidate['return_pct']:.2f}% pf={candidate['profit_factor']:.3f} dd={candidate['max_drawdown']:.2f}")
@@ -301,7 +301,7 @@ def main() -> int:
         f"winning_paths={compare_gate['winning_paths']} reasons={compare_gate['reasons']}"
     )
     print(f"promotion_passed={int(overall_pass)}")
-    return 0
+    return 0 if overall_pass else 2
 
 
 if __name__ == "__main__":
