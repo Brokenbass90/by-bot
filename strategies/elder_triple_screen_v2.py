@@ -214,6 +214,10 @@ class ElderTripleScreenV2Config:
     tp1_frac: float = 0.50             # 50% at TP1
     trail_atr_mult: float = 0.0        # disabled — TP1/TP2 structure handles exits
     trail_activate_rr: float = 0.0    # n/a when trail disabled
+    min_rr: float = 1.5
+    min_stop_pct: float = 0.002
+    max_stop_pct: float = 0.060
+    max_entry_dist_atr: float = 2.0
     allow_longs: bool = True
     allow_shorts: bool = True
     time_stop_bars_5m: int = 288       # 24h time stop (288 × 5m = 24h)
@@ -275,6 +279,10 @@ class ElderTripleScreenV2Strategy:
         self.cfg.tp1_frac = _env_float("ETS2_TP1_FRAC", self.cfg.tp1_frac)
         self.cfg.trail_atr_mult = _env_float("ETS2_TRAIL_ATR_MULT", self.cfg.trail_atr_mult)
         self.cfg.trail_activate_rr = _env_float("ETS2_TRAIL_ACTIVATE_RR", self.cfg.trail_activate_rr)
+        self.cfg.min_rr = _env_float("ETS2_MIN_RR", self.cfg.min_rr)
+        self.cfg.min_stop_pct = _env_float("ETS2_MIN_STOP_PCT", self.cfg.min_stop_pct)
+        self.cfg.max_stop_pct = _env_float("ETS2_MAX_STOP_PCT", self.cfg.max_stop_pct)
+        self.cfg.max_entry_dist_atr = _env_float("ETS2_MAX_ENTRY_DIST_ATR", self.cfg.max_entry_dist_atr)
         self.cfg.allow_longs = _env_bool("ETS2_ALLOW_LONGS", self.cfg.allow_longs)
         self.cfg.allow_shorts = _env_bool("ETS2_ALLOW_SHORTS", self.cfg.allow_shorts)
         self.cfg.time_stop_bars_5m = _env_int("ETS2_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
@@ -599,6 +607,10 @@ class ElderTripleScreenV2Strategy:
             if sl >= entry_price:
                 self.last_no_signal_reason = "long_sl_invalid"
                 return None
+            entry_dist_atr = max(0.0, entry_price - prev_entry_high) / max(1e-12, atr)
+            if entry_dist_atr > self.cfg.max_entry_dist_atr:
+                self.last_no_signal_reason = f"long_entry_too_far_{entry_dist_atr:.2f}atr"
+                return None
             tp1 = entry_price + self.cfg.tp1_atr_mult * atr
             tp2 = entry_price + self.cfg.tp_atr_mult * atr
             if tp2 <= entry_price or tp1 <= entry_price or tp1 >= tp2:
@@ -610,11 +622,32 @@ class ElderTripleScreenV2Strategy:
             if sl <= entry_price:
                 self.last_no_signal_reason = "short_sl_invalid"
                 return None
+            entry_dist_atr = max(0.0, prev_entry_low - entry_price) / max(1e-12, atr)
+            if entry_dist_atr > self.cfg.max_entry_dist_atr:
+                self.last_no_signal_reason = f"short_entry_too_far_{entry_dist_atr:.2f}atr"
+                return None
             tp1 = entry_price - self.cfg.tp1_atr_mult * atr
             tp2 = entry_price - self.cfg.tp_atr_mult * atr
             if tp2 >= entry_price or tp1 >= entry_price or tp1 <= tp2:
                 self.last_no_signal_reason = "short_tp_invalid"
                 return None
+
+        risk = abs(entry_price - sl)
+        stop_pct = risk / max(1e-12, entry_price)
+        if stop_pct < self.cfg.min_stop_pct:
+            self.last_no_signal_reason = f"stop_too_tight_{stop_pct:.4f}"
+            return None
+        if stop_pct > self.cfg.max_stop_pct:
+            self.last_no_signal_reason = f"stop_too_wide_{stop_pct:.4f}"
+            return None
+        actual_rr = (
+            (tp2 - entry_price) / max(1e-12, risk)
+            if side == "long"
+            else (entry_price - tp2) / max(1e-12, risk)
+        )
+        if actual_rr < self.cfg.min_rr:
+            self.last_no_signal_reason = f"rr_too_low_{actual_rr:.2f}"
+            return None
 
         self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
         self._signals_today += 1

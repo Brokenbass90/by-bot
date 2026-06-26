@@ -116,6 +116,8 @@ class ImpulseVolumeBreakoutV1Config:
     trail_activate_rr: float = 1.1
     min_stop_pct: float = 0.008
     max_stop_pct: float = 0.060
+    min_rr: float = 1.5
+    max_entry_dist_atr: float = 2.0
     time_stop_bars_5m: int = 72
     cooldown_bars_5m: int = 12
     max_wait_bars_5m: int = 8
@@ -147,11 +149,33 @@ class ImpulseVolumeBreakoutV1Strategy:
 
     def __init__(self, cfg: Optional[ImpulseVolumeBreakoutV1Config] = None):
         self.cfg = cfg or ImpulseVolumeBreakoutV1Config()
-        self._load_runtime_config()
         self._cooldown = 0
         self._last_entry_ts: Optional[int] = None
         self._armed: Optional[dict] = None
+        self._armed_config_signature_value: Optional[tuple] = None
         self.last_no_signal_reason = ""
+        self._load_runtime_config()
+        self._armed_config_signature_value = self._armed_config_signature()
+
+    def _armed_config_signature(self) -> tuple:
+        """Config subset that changes semantics of an already armed setup."""
+        return (
+            self.cfg.retrace_min_frac,
+            self.cfg.retrace_max_frac,
+            self.cfg.reclaim_atr,
+            self.cfg.touch_below_breakout_atr,
+            self.cfg.invalidation_close_atr,
+            self.cfg.sl_atr,
+            self.cfg.rr,
+            self.cfg.tp1_rr,
+            self.cfg.min_stop_pct,
+            self.cfg.max_stop_pct,
+            self.cfg.min_rr,
+            self.cfg.max_entry_dist_atr,
+            self.cfg.max_wait_bars_5m,
+            self.cfg.allow_longs,
+            self.cfg.allow_shorts,
+        )
 
     def _load_runtime_config(self) -> None:
         self.cfg.entry_tf = os.getenv("IVB1_ENTRY_TF", self.cfg.entry_tf)
@@ -178,6 +202,8 @@ class ImpulseVolumeBreakoutV1Strategy:
         self.cfg.trail_activate_rr = _env_float("IVB1_TRAIL_ACTIVATE_RR", self.cfg.trail_activate_rr)
         self.cfg.min_stop_pct = _env_float("IVB1_MIN_STOP_PCT", self.cfg.min_stop_pct)
         self.cfg.max_stop_pct = _env_float("IVB1_MAX_STOP_PCT", self.cfg.max_stop_pct)
+        self.cfg.min_rr = _env_float("IVB1_MIN_RR", self.cfg.min_rr)
+        self.cfg.max_entry_dist_atr = _env_float("IVB1_MAX_ENTRY_DIST_ATR", self.cfg.max_entry_dist_atr)
         self.cfg.time_stop_bars_5m = _env_int("IVB1_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
         self.cfg.cooldown_bars_5m = _env_int("IVB1_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
         self.cfg.max_wait_bars_5m = _env_int("IVB1_MAX_WAIT_BARS_5M", self.cfg.max_wait_bars_5m)
@@ -208,7 +234,12 @@ class ImpulseVolumeBreakoutV1Strategy:
         self._deny = _env_csv_set("IVB1_SYMBOL_DENYLIST")
 
     def _refresh_runtime_config(self) -> None:
+        old_signature = self._armed_config_signature_value
         self._load_runtime_config()
+        new_signature = self._armed_config_signature()
+        if old_signature is not None and new_signature != old_signature:
+            self._armed = None
+        self._armed_config_signature_value = new_signature
 
     def _macro_ok(self, store) -> bool:
         """4h MACD histogram check — block longs when macro is bearish.
@@ -399,7 +430,10 @@ class ImpulseVolumeBreakoutV1Strategy:
             impulse_high = float(armed["impulse_high"])
             impulse_low = float(armed["impulse_low"])
             impulse_range = float(armed["impulse_range"])
-            risk_atr = max(float(armed["atr"]) * 0.85, atr_5m)
+            # The impulse ATR belongs to retrace-zone geometry. Entry risk must
+            # be priced from current volatility, otherwise live and backtest can
+            # overstate risk/targets after volatility contracts.
+            risk_atr = atr_5m
 
             if wait_bars > self.cfg.max_wait_bars_5m:
                 self._armed = None
@@ -443,6 +477,14 @@ class ImpulseVolumeBreakoutV1Strategy:
                         tp1 = entry - self.cfg.tp1_rr * risk
                         tp2 = entry - self.cfg.rr * risk
                     stop_pct = risk / max(1e-12, entry)
+                    entry_dist_atr = (
+                        (entry - breakout_level) / max(1e-12, risk_atr)
+                        if armed_side == "long"
+                        else (breakout_level - entry) / max(1e-12, risk_atr)
+                    )
+                    if entry_dist_atr > self.cfg.max_entry_dist_atr:
+                        self.last_no_signal_reason = f"entry_too_far_from_breakout_{entry_dist_atr:.2f}atr"
+                        return None
                     if stop_pct < self.cfg.min_stop_pct:
                         self.last_no_signal_reason = f"stop_too_tight_{stop_pct:.4f}"
                         return None
@@ -454,6 +496,14 @@ class ImpulseVolumeBreakoutV1Strategy:
                         tp2 = tp1 + 0.5 * risk
                     if armed_side == "short" and tp2 >= tp1:
                         tp2 = tp1 - 0.5 * risk
+                    actual_rr = (
+                        (tp2 - entry) / max(1e-12, risk)
+                        if armed_side == "long"
+                        else (entry - tp2) / max(1e-12, risk)
+                    )
+                    if actual_rr < self.cfg.min_rr:
+                        self.last_no_signal_reason = f"rr_too_low_{actual_rr:.2f}"
+                        return None
                     self._armed = None
                     self._cooldown = max(0, self.cfg.cooldown_bars_5m)
                     return TradeSignal(

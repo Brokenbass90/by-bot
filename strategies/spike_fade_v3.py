@@ -180,6 +180,18 @@ class SpikeFadeV3Strategy:
         if not (math.isfinite(atr) and atr > 0):
             self.last_no_signal_reason = "structure_atr_invalid"
             return None
+        entry_atr_rows = entry_history + [[
+            str(signal_ts_ms),
+            str(o),
+            str(h),
+            str(l),
+            str(c),
+            str(v or 0.0),
+        ]]
+        entry_atr = _atr(entry_atr_rows, cfg.atr_period)
+        if not (math.isfinite(entry_atr) and entry_atr > 0):
+            self.last_no_signal_reason = "entry_atr_invalid"
+            return None
 
         cur_open, cur_high, cur_low, cur_close = float(o), float(h), float(l), float(c)
         cur_vol = float(v or 0.0)
@@ -233,7 +245,7 @@ class SpikeFadeV3Strategy:
 
         entry = float(cur_close)
         if side == "short":
-            sl = max(cur_high, level) + cfg.stop_buffer_atr * atr
+            sl = max(cur_high, level) + cfg.stop_buffer_atr * entry_atr
             if sl <= entry:
                 self.last_no_signal_reason = "sl_at_or_below_entry"
                 return None
@@ -243,7 +255,7 @@ class SpikeFadeV3Strategy:
             tp2 = min(entry - cfg.rr_runner * risk, tp1 - 0.25 * risk)
             rr_tp1 = (entry - tp1) / risk
         else:
-            sl = min(cur_low, level) - cfg.stop_buffer_atr * atr
+            sl = min(cur_low, level) - cfg.stop_buffer_atr * entry_atr
             if sl >= entry:
                 self.last_no_signal_reason = "sl_at_or_above_entry"
                 return None

@@ -1,0 +1,72 @@
+{
+  "name": "hzbo1_24h_bounded_v1",
+  "description": "24h bounded HZBO1 validation after EMA gate repair. Cache-only version of the live bridge sweep for first-pass portfolio triage.",
+  "cache_only": true,
+  "timeout_sec": 900,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,AVAXUSDT,ADAUSDT,XRPUSDT",
+    "--strategies",
+    "alt_horizontal_break_v1",
+    "--days",
+    "240",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2",
+    "--entry-on-next-open"
+  ],
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "HZBO1_SIGNAL_TF": "60",
+    "HZBO1_SIGNAL_LOOKBACK": "180",
+    "HZBO1_MAX_ZONE_AGE": "30",
+    "HZBO1_PIVOT_RIGHT": "3",
+    "HZBO1_SL_ATR_MULT": "0.50",
+    "HZBO1_TP1_RR": "1.50",
+    "HZBO1_TP2_RR": "3.00",
+    "HZBO1_ALLOW_SHORTS": "1",
+    "HZBO1_MACRO_REQUIRE_BEARISH": "1",
+    "HZBO1_MACRO_REQUIRE_BULLISH": "1"
+  },
+  "grid": {
+    "HZBO1_ALLOW_LONGS": [0, 1],
+    "HZBO1_MIN_TOUCHES": [2, 3],
+    "HZBO1_ZONE_ATR_WIDTH": [0.40, 0.60],
+    "HZBO1_BREAK_ATR": [0.20, 0.30],
+    "HZBO1_MIN_BODY_FRAC": [0.30, 0.40]
+  },
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.10,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 0.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.8,
+    "profit_factor": 5.5,
+    "winrate": 5.0,
+    "max_drawdown": 2.0,
+    "trades": 0.12,
+    "trades_cap": 90,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.2
+  },
+  "_combo_count": "2x2x2x2x2 = 32 bounded combinations"
+}

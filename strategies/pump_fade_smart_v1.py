@@ -68,6 +68,7 @@ Author: Claude Opus, 2026-06-03. Quality-first pump fade, не «short на лю
 """
 from __future__ import annotations
 
+import inspect
 import math
 import os
 from dataclasses import dataclass
@@ -174,6 +175,24 @@ def _vol_zscore(volumes: List[float], baseline_period: int = 60, recent_period: 
     return (recent_avg - mean) / std
 
 
+def _fetch_funding_pct(store, symbol: str, ts_ms: int) -> float | None:
+    """Fetch funding as percent, passing historical timestamp when supported."""
+    fetcher = getattr(store, "fetch_funding_rate", None)
+    if not callable(fetcher):
+        return None
+    try:
+        params = inspect.signature(fetcher).parameters
+        if "ts_ms" in params:
+            raw = fetcher(symbol, ts_ms=ts_ms)
+        elif len(params) >= 2:
+            raw = fetcher(symbol, ts_ms)
+        else:
+            raw = fetcher(symbol)
+        return float(raw) * 100.0
+    except Exception:
+        return None
+
+
 # ---------------------------------------------------------------------------
 # Strategy
 # ---------------------------------------------------------------------------
@@ -199,6 +218,8 @@ class PFS1Config:
     tp1_rr: float = 1.0
     tp2_rr: float = 2.0
     tp1_frac: float = 0.55
+    min_stop_pct: float = 0.002
+    max_stop_pct: float = 0.080
     be_trigger_rr: float = 1.0
     be_lock_rr: float = 0.05
     trail_atr_mult: float = 1.2
@@ -246,6 +267,8 @@ class PumpFadeSmartV1Strategy:
         c.tp1_rr = _env_float("PFS1_TP1_RR", c.tp1_rr)
         c.tp2_rr = _env_float("PFS1_TP2_RR", c.tp2_rr)
         c.tp1_frac = _env_float("PFS1_TP1_FRAC", c.tp1_frac)
+        c.min_stop_pct = _env_float("PFS1_MIN_STOP_PCT", c.min_stop_pct)
+        c.max_stop_pct = _env_float("PFS1_MAX_STOP_PCT", c.max_stop_pct)
         c.be_trigger_rr = _env_float("PFS1_BE_TRIGGER_RR", c.be_trigger_rr)
         c.be_lock_rr = _env_float("PFS1_BE_LOCK_RR", c.be_lock_rr)
         c.trail_atr_mult = _env_float("PFS1_TRAIL_ATR_MULT", c.trail_atr_mult)
@@ -342,11 +365,6 @@ class PumpFadeSmartV1Strategy:
             self._no_signal("shorts_and_longs_disabled")
             return None
 
-        # Bar dedupe (one signal per closed bar)
-        if self._last_tf_ts is not None and ts_ms <= self._last_tf_ts:
-            self._no_signal("same_signal_bar")
-            return None
-
         # Cooldown
         if self._cooldown_bars > 0:
             self._cooldown_bars -= 1
@@ -367,6 +385,14 @@ class PumpFadeSmartV1Strategy:
         if len(rows_h1) < c.rsi_period + 5:
             self._no_signal("macro_history_short")
             return None
+
+        # Bar dedupe: use the closed signal candle timestamp, not caller tick
+        # time, so live polling cannot recalculate the same bar repeatedly.
+        bar_ts = int(float(rows_5m[-1][0]))
+        if self._last_tf_ts is not None and bar_ts <= self._last_tf_ts:
+            self._no_signal("same_signal_bar")
+            return None
+        self._last_tf_ts = bar_ts
 
         opens5 = [float(r[1]) for r in rows_5m]
         highs5 = [float(r[2]) for r in rows_5m]
@@ -390,12 +416,7 @@ class PumpFadeSmartV1Strategy:
         # Funding may be optional in live, but research can require it so a
         # price-only backtest cannot masquerade as a validated funding setup.
         funding_pct: float | None = None
-        try:
-            f = getattr(store, "fetch_funding_rate", None)
-            if callable(f):
-                funding_pct = float(f(symbol)) * 100.0  # rate is decimal, convert to %
-        except Exception:
-            funding_pct = None
+        funding_pct = _fetch_funding_pct(store, symbol, ts_ms)
         if funding_pct is None and c.require_funding_data:
             self._no_signal("funding_missing")
             return None
@@ -424,6 +445,13 @@ class PumpFadeSmartV1Strategy:
         if risk <= 0:
             self._no_signal("invalid_risk")
             return None
+        stop_pct = risk / max(1e-12, entry)
+        if stop_pct < c.min_stop_pct:
+            self._no_signal(f"stop_too_tight_{stop_pct:.4f}")
+            return None
+        if stop_pct > c.max_stop_pct:
+            self._no_signal(f"stop_too_wide_{stop_pct:.4f}")
+            return None
 
         # Distance to entry constraint
         dist_atr = (pump_high - entry) / atr
@@ -435,8 +463,7 @@ class PumpFadeSmartV1Strategy:
         tp1 = entry - c.tp1_rr * risk
         tp2 = entry - c.tp2_rr * risk
 
-        # Update state for cooldown / bar dedupe (caller fills cooldown after entry)
-        self._last_tf_ts = ts_ms
+        # Update state for cooldown after accepted entry.
         self._cooldown_bars = c.cooldown_bars_5m
 
         sig = TradeSignal(
@@ -474,3 +501,6 @@ class PFS1Selector:
 
     def reset(self, symbol: str) -> None:
         self._strategies.pop(symbol, None)
+
+    def reset_all(self) -> None:
+        self._strategies.clear()

@@ -1,0 +1,60 @@
+{
+  "enabled": true,
+  "max_active_processes": 1,
+  "max_launches_per_run": 1,
+  "default_min_interval_hours": 24,
+  "nice_level": 15,
+  "quiet_window_utc": {
+    "enabled": false,
+    "start_hour": 0,
+    "end_hour": 0
+  },
+  "log_dir": "logs/research_priority_24h",
+  "status_path": "runtime/research_priority_24h/status.json",
+  "task_state_path": "runtime/research_priority_24h/task_state.json",
+  "history_path": "runtime/research_priority_24h/history.jsonl",
+  "tasks": [
+    {
+      "name": "ivb1_short_next_open_recheck",
+      "spec": "configs/autoresearch/ivb1_short_next_open_recheck_v1.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "breakdown_bear_entry_quality",
+      "spec": "configs/autoresearch/breakdown_recent_bear_window_v2_entry_quality.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "pfs1_strict_package",
+      "spec": "configs/autoresearch/package_pfs1_pump_fade_v1.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "spike_fade_v3_bounded",
+      "spec": "configs/autoresearch/spike_fade_v3_24h_bounded_v1.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "hzbo1_bounded",
+      "spec": "configs/autoresearch/hzbo1_24h_bounded_v1.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "ets2_canonical_bounded",
+      "spec": "configs/autoresearch/ets2_canonical_24h_bounded_v1.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "inplay_retest_v3_bounded",
+      "spec": "configs/autoresearch/inplay_retest_v3_24h_bounded_v1.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    }
+  ]
+}
