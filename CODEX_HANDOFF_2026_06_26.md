@@ -73,6 +73,32 @@ Changed:
 
 Purpose: preserve and re-check the old May-25 ATT1 density pocket that showed about `+38%`, PF `~1.38`, WR `~59.6%`, DD `~4%`, but under current code and stricter `--entry-on-next-open` execution. This is not a live promotion; it is revalidation of a previously strong sweep.
 
+5. `bae02c1 make priority queue resource-safe and add arf1 scanner allowlist probe`
+
+Changed:
+
+- added `configs/autoresearch/spike_fade_v3_smoke_20260626.json`
+- added `configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json`
+- changed priority queue so `spike_fade_v3_bounded` uses the resource-safe smoke spec instead of the heavy 128-combo spec
+- appended `arf1_scanner_allowlist_probe` to the queue
+
+Reason:
+
+- the full `spike_fade_v3_24h_bounded_v1` rerun no longer failed as unsupported, but rows r001-r005 timed out at 900s each on the 1GB live VPS;
+- the heavy Spike run was manually stopped on server to avoid burning the queue for 24h+;
+- the owner/AI operator noticed scanner flat-short cards on SOL/ATOM/BTC/XRP while live ARF1 allowlist is narrow. The ARF1 probe tests expanded scanner-driven allowlist in backtest only; no live reload.
+
+6. `347f7fb approve resource-safe priority research specs`
+
+Changed:
+
+- appended to `configs/autoresearch/approved_specs.txt`:
+  - `spike_fade_v3_smoke_20260626.json`
+  - `att1_density_top_revalidate_20260626.json`
+  - `arf1_scanner_allowlist_probe_20260626.json`
+
+Reason: `run_nightly_research_queue.py` only auto-runs approved specs. New specs can otherwise be proposed/deferred and consume a queue slot without executing.
+
 ## Server deploys performed
 
 No `git pull` on server because `/root/by-bot` is dirty/old.
@@ -91,6 +117,7 @@ Backups on server:
 - `/root/by-bot_backups/e7ca451_20260626/`
 - `/root/by-bot_backups/a8c3243_20260626/`
 - `/root/by-bot_backups/c8a2e15_20260626/`
+- `/root/by-bot_backups/bae02c1_20260626/`
 
 Server tests after deploy:
 
@@ -125,6 +152,16 @@ Server validation after `c8a2e15` deploy:
 ```
 
 Result: passed, no warnings.
+
+Server validation after `bae02c1` deploy:
+
+```bash
+.venv/bin/python3 scripts/validate_sweep_configs.py --file configs/autoresearch/spike_fade_v3_smoke_20260626.json
+.venv/bin/python3 scripts/validate_sweep_configs.py --file configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json
+.venv/bin/python3 -m json.tool configs/research_priority_24h_20260626.json
+```
+
+Results: both specs passed, no warnings; queue JSON valid.
 
 ## Research queue status and results
 
@@ -204,18 +241,44 @@ Next: let cron rerun it automatically after current HZBO process releases the si
 
 Spec: `configs/autoresearch/hzbo1_24h_bounded_v1.json`
 
-At handoff time:
+Final result:
 
-- active process: `hzbo1_24h_bounded_v1`, around row r007/32
-- early rows weak: negative net, PF `<1`, DD high.
+- 32/32 failed.
+- Best: `hzbo1_24h_bounded_v1_r003`
+- net `-3.81`
+- PF `0.919`
+- WR `0.342`
+- DD `12.4078`
 
-Need wait for completion before final verdict.
+Verdict: CUT/REWRITE FOR NOW. Current HZBO1 horizontal breakout/failure implementation is not a live candidate.
 
 ### ETS2 / InPlay Retest V3
 
-Still deferred behind active queue.
+As of 2026-06-26 ~15:35 UTC, ETS2 is active:
 
-Need ensure Spike rerun after integration fix and HZBO completion.
+- active spec: `configs/autoresearch/ets2_canonical_24h_bounded_v1.json`
+- row r001 already failed badly: net `-58.85`, PF `0.709`, DD `60.200`
+- do not judge until full 64 rows finish, but early signal is weak.
+
+InPlay Retest V3 still deferred behind ETS2.
+
+### SpikeFadeV3
+
+Heavy spec:
+
+- `configs/autoresearch/spike_fade_v3_24h_bounded_v1.json`
+- rerun reached rows r001-r005 and all timed out at 900s.
+- active parent/child were killed manually on server:
+  - old parent: `632798`
+  - old child: `634884`
+
+Replacement:
+
+- `configs/autoresearch/spike_fade_v3_smoke_20260626.json`
+- 4 combinations, 4 symbols, 120 days, next-open, timeout 600s
+- approved and queued under the existing task name `spike_fade_v3_bounded`.
+
+Need after ETS2: verify queue launches smoke, not old heavy spec.
 
 ### ATT1 density top-pocket revalidation
 
@@ -242,6 +305,19 @@ Top pocket params:
 - `ATT1_RSI_LONG_MAX=52`
 
 This revalidation adds `--entry-on-next-open`; expect lower results than old sweep. If it survives, next step is monthly/WF and live/backtest parity.
+
+### ARF1 scanner allowlist probe
+
+Spec: `configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json`
+
+Queued after ATT1 top-pocket.
+
+Purpose: test the operator/AI claim that flat/ARF1 is silent partly because scanner high-score symbols are not in the live ARF1 allowlist. The probe compares:
+
+- current-ish core: `ADA,LINK,LTC,DOT,SUI`
+- expanded scanner-driven set: `ADA,LINK,LTC,DOT,SUI,SOL,ATOM,BTC,XRP`
+
+Execution: 180d, next-open, 16 combinations, research-only. Do not reload live config based on scanner cards before this result.
 
 ## What was fixed in candidate strategies
 
@@ -330,10 +406,11 @@ cd /root/by-bot
 - Breakdown V1 = CUT FOR NOW
 - PFS1 solo = CUT/RESEARCH, 0 trades
 - Spike = rerun pending after integration fix
-- HZBO = pending/likely weak early
-- ETS2 = pending
+- HZBO = CUT/REWRITE after 32/32 fail
+- ETS2 = active, early weak
 - InPlay Retest V3 = pending
 - ATT1 density top-pocket = queued revalidation of old strong sweep, not live
+- ARF1 scanner allowlist probe = queued, tests whether live flat silence is allowlist/universe issue
 
 ## When can crypto unfreeze?
 
