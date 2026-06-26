@@ -27,8 +27,8 @@
       "min_interval_hours": 24
     },
     {
-      "name": "pfs1_strict_package",
-      "spec": "configs/autoresearch/package_pfs1_pump_fade_v1.json",
+      "name": "pfs1_solo_bounded",
+      "spec": "configs/autoresearch/pfs1_solo_24h_bounded_v1.json",
       "enabled": true,
       "min_interval_hours": 24
     },

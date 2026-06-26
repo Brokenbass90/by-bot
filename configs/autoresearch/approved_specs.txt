@@ -14,7 +14,7 @@ asb1_bull_chop_repair_v1.json
 att1_density_v3_more_pivots_v1.json
 elder_v3_macro_off_full_relax_v1.json
 ivb1_short_next_open_recheck_v1.json
-package_pfs1_pump_fade_v1.json
+pfs1_solo_24h_bounded_v1.json
 spike_fade_v3_24h_bounded_v1.json
 hzbo1_24h_bounded_v1.json
 ets2_canonical_24h_bounded_v1.json

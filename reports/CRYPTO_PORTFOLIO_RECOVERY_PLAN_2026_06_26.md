@@ -30,7 +30,7 @@
 
 1. `ivb1_short_next_open_recheck_v1`
 2. `breakdown_recent_bear_window_v2_entry_quality`
-3. `package_pfs1_pump_fade_v1`
+3. `pfs1_solo_24h_bounded_v1`
 4. `spike_fade_v3_24h_bounded_v1`
 5. `hzbo1_24h_bounded_v1`
 6. `ets2_canonical_24h_bounded_v1`
@@ -92,3 +92,7 @@ tail -n 80 logs/research_priority_24h/*.log
 4. Собрать портфельный replay из PASS/WATCH sleeves.
 5. Если портфель проходит gates — включить shadow/risk=0.
 6. Canary только после shadow: маленький риск, per-sleeve circuit breaker, без включения деградировавших старых параметров.
+
+## 2026-06-26 server safety note
+
+`package_pfs1_pump_fade_v1` нельзя автоматически гонять на live VPS 1GB: первый ряд занял ~506MB RSS рядом с live bot и оставил ~53MB available. Для live-хоста он заменён на `pfs1_solo_24h_bounded_v1`. Package additivity PFS1 остаётся нужной, но должна идти на research host или в memory-safe runner.
