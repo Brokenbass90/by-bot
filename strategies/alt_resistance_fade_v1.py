@@ -151,6 +151,9 @@ class AltResistanceFadeV1Config:
     sl_atr_mult: float = 0.85
     tp1_frac: float = 0.60
     tp2_buffer_pct: float = 0.45
+    min_rr: float = 1.15
+    min_stop_pct: float = 0.0015
+    max_stop_pct: float = 0.06
     # ATR trailing stop: 0.0 = disabled, e.g. 1.5 = trail at 1.5*ATR below peak
     trail_atr_mult: float = 0.0
     trail_atr_period: int = 14
@@ -217,6 +220,9 @@ class AltResistanceFadeV1Strategy:
         c.sl_atr_mult              = _env_float("ARF1_SL_ATR_MULT", c.sl_atr_mult)
         c.tp1_frac                 = _env_float("ARF1_TP1_FRAC", c.tp1_frac)
         c.tp2_buffer_pct           = _env_float("ARF1_TP2_BUFFER_PCT", c.tp2_buffer_pct)
+        c.min_rr                   = _env_float("ARF1_MIN_RR", c.min_rr)
+        c.min_stop_pct             = _env_float("ARF1_MIN_STOP_PCT", c.min_stop_pct)
+        c.max_stop_pct             = _env_float("ARF1_MAX_STOP_PCT", c.max_stop_pct)
         c.trail_atr_mult           = _env_float("ARF1_TRAIL_ATR_MULT", c.trail_atr_mult)
         c.trail_atr_period         = _env_int("ARF1_TRAIL_ATR_PERIOD", c.trail_atr_period)
         c.time_stop_bars_5m        = _env_int("ARF1_TIME_STOP_BARS_5M", c.time_stop_bars_5m)
@@ -423,6 +429,20 @@ class AltResistanceFadeV1Strategy:
             return None
         if tp2 >= entry_price:
             self._no_signal("tp_above_entry")
+            return None
+
+        risk = sl - entry_price
+        reward = entry_price - tp2
+        stop_pct = risk / max(1e-12, entry_price)
+        rr = reward / max(1e-12, risk)
+        if stop_pct < self.cfg.min_stop_pct:
+            self._no_signal(f"stop_too_tight_{stop_pct:.4f}")
+            return None
+        if stop_pct > self.cfg.max_stop_pct:
+            self._no_signal(f"stop_too_wide_{stop_pct:.4f}")
+            return None
+        if rr < self.cfg.min_rr:
+            self._no_signal(f"rr_too_low_{rr:.2f}")
             return None
 
         # tp1 = 55% of the way from entry to tp2

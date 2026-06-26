@@ -11,7 +11,7 @@ Why this exists (vs IVB1 / inplay_breakout):
 
 What this does instead (the owner's described system):
   1. Detect REAL levels: horizontal S/R from clustered pivots (>=N touches,
-     via bot.chart_geometry) AND a sloped trendline (regression channel).
+     via bot.chart_geometry) AND projected sloped channel bands (наклонки).
   2. Wait for price to RETEST a level and HOLD it (a rejection bar at the
      level), then enter ON the retest — near the level, not after a reclaim.
   3. Tight stop just BEYOND the level (fixed small buffer), so RR is good.
@@ -150,6 +150,7 @@ class InplayRetestV3Config:
     use_sloped: bool = True
     channel_lookback: int = 72
     channel_min_r2: float = 0.35
+    max_sloped_projection_bars: float = 2.0
 
     # retest / hold trigger (вход НА ретесте, не после реклейма)
     atr_period: int = 14
@@ -225,6 +226,7 @@ class InplayRetestV3Strategy:
         c.use_sloped = _env_bool("IRV3_USE_SLOPED", c.use_sloped)
         c.channel_lookback = _env_int("IRV3_CHANNEL_LOOKBACK", c.channel_lookback)
         c.channel_min_r2 = _env_float("IRV3_CHANNEL_MIN_R2", c.channel_min_r2)
+        c.max_sloped_projection_bars = _env_float("IRV3_MAX_SLOPED_PROJECTION_BARS", c.max_sloped_projection_bars)
         c.atr_period = _env_int("IRV3_ATR_PERIOD", c.atr_period)
         c.retest_band_atr = _env_float("IRV3_RETEST_BAND_ATR", c.retest_band_atr)
         c.touch_into_atr = _env_float("IRV3_TOUCH_INTO_ATR", c.touch_into_atr)
@@ -253,7 +255,12 @@ class InplayRetestV3Strategy:
         self._deny = _env_csv_set("IRV3_DENY", c.deny_csv)
 
     # ---------- level mapping ----------
-    def _candidate_levels(self, rows: List[list], structure_atr: float) -> List[Tuple[float, float, str]]:
+    def _candidate_levels(
+        self,
+        rows: List[list],
+        structure_atr: float,
+        signal_ts_ms: Optional[int] = None,
+    ) -> List[Tuple[float, float, str]]:
         """Return [(price, score, kind), ...]; kind in {support, resistance, mixed, sloped_up, sloped_dn}."""
         out: List[Tuple[float, float, str]] = []
         pivots = find_pivots(rows, left=self.cfg.pivot_left, right=self.cfg.pivot_right)
@@ -269,10 +276,20 @@ class InplayRetestV3Strategy:
             ch = regression_channel(rows, lookback=self.cfg.channel_lookback)
             if ch and float(ch.get("r2", 0.0)) >= self.cfg.channel_min_r2:
                 slope = float(ch.get("slope_pct_per_bar", 0.0))
-                # the lower band acts as dynamic support, upper band as dynamic resistance
-                out.append((float(ch["lower"]), float(ch["r2"]) * float(self.cfg.min_touches),
+                slope_abs = float(ch.get("slope_per_bar", 0.0))
+                bars_forward = 0.0
+                interval_ms = _interval_ms(self.cfg.structure_tf)
+                last_ts = _row_ts_ms(rows[-1]) if rows else None
+                if signal_ts_ms is not None and last_ts is not None and interval_ms > 0:
+                    last_close_ts = int(last_ts) + int(interval_ms)
+                    bars_forward = max(0.0, (float(signal_ts_ms) - float(last_close_ts)) / float(interval_ms))
+                if bars_forward <= max(0.0, float(self.cfg.max_sloped_projection_bars)):
+                    lower = float(ch["lower"]) + slope_abs * bars_forward
+                    upper = float(ch["upper"]) + slope_abs * bars_forward
+                    # projected lower band acts as dynamic support, projected upper band as dynamic resistance
+                    out.append((lower, float(ch["r2"]) * float(self.cfg.min_touches),
                             "sloped_up" if slope >= 0 else "sloped_dn"))
-                out.append((float(ch["upper"]), float(ch["r2"]) * float(self.cfg.min_touches),
+                    out.append((upper, float(ch["r2"]) * float(self.cfg.min_touches),
                             "sloped_up" if slope >= 0 else "sloped_dn"))
         return out
 
@@ -368,7 +385,7 @@ class InplayRetestV3Strategy:
                 self.last_no_signal_reason = "no_volume"
                 return None
 
-        levels = self._candidate_levels(structure_rows, structure_atr)
+        levels = self._candidate_levels(structure_rows, structure_atr, signal_ts_ms)
         if not levels:
             self.last_no_signal_reason = "no_levels"
             return None
@@ -414,23 +431,24 @@ class InplayRetestV3Strategy:
             return None
 
         entry = float(cur_close)
+        execution_atr = float(entry_atr)
         if side == "long":
-            sl = level - cfg.stop_buffer_atr * structure_atr
+            sl = level - cfg.stop_buffer_atr * execution_atr
             if sl >= entry:
                 self.last_no_signal_reason = "sl_at_or_above_entry"
                 return None
             risk = entry - sl
             nxt = self._nearest_opposing(levels, entry, "long")
-            tp1 = (nxt - cfg.tp_before_level_atr * structure_atr) if nxt else (entry + cfg.min_rr_tp1 * risk)
+            tp1 = (nxt - cfg.tp_before_level_atr * execution_atr) if nxt else (entry + cfg.min_rr_tp1 * risk)
             tp2 = max(entry + cfg.rr_runner * risk, tp1 + 0.5 * risk)
         else:
-            sl = level + cfg.stop_buffer_atr * structure_atr
+            sl = level + cfg.stop_buffer_atr * execution_atr
             if sl <= entry:
                 self.last_no_signal_reason = "sl_at_or_below_entry"
                 return None
             risk = sl - entry
             nxt = self._nearest_opposing(levels, entry, "short")
-            tp1 = (nxt + cfg.tp_before_level_atr * structure_atr) if nxt else (entry - cfg.min_rr_tp1 * risk)
+            tp1 = (nxt + cfg.tp_before_level_atr * execution_atr) if nxt else (entry - cfg.min_rr_tp1 * risk)
             tp2 = min(entry - cfg.rr_runner * risk, tp1 - 0.5 * risk)
 
         stop_pct = risk / max(1e-12, entry)

@@ -6,6 +6,9 @@ We prove the logic that was WRONG in IVB1 is right here:
   - tp1 sits before the next opposing level; runner beyond;
   - no level / no hold -> no trade.
 """
+import pytest
+
+import strategies.inplay_retest_v3 as irv3
 from strategies.inplay_retest_v3 import InplayRetestV3Config, InplayRetestV3Strategy
 
 
@@ -195,9 +198,48 @@ def test_stop_width_guards_block_bad_risk_geometry():
     assert _call(too_tight, _Store(structure, entry), trigger) is None
     assert too_tight.last_no_signal_reason.startswith("stop_too_tight_")
 
-    too_wide = InplayRetestV3Strategy(_cfg(max_stop_pct=0.005))
+    too_wide = InplayRetestV3Strategy(_cfg(max_stop_pct=0.002))
     assert _call(too_wide, _Store(structure, entry), trigger) is None
     assert too_wide.last_no_signal_reason.startswith("stop_too_wide_")
+
+
+def test_stop_geometry_uses_entry_atr_not_structure_atr(monkeypatch):
+    structure = _structure_with_levels()
+    entry = [_row(70 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
+    trigger = _long_retest_bar(110)
+    entry.append(trigger)
+
+    def fake_atr(rows, period):
+        _ = period
+        # Structure ATR can be much wider than entry ATR. Retest execution
+        # geometry must stay on the entry timeframe, otherwise the tight
+        # manual retest becomes a wide-stop trade.
+        return 5.0 if len(rows) > 50 else 0.5
+
+    monkeypatch.setattr(irv3, "_atr", fake_atr)
+    sig = _call(InplayRetestV3Strategy(_cfg()), _Store(structure, entry), trigger)
+
+    assert sig is not None
+    assert sig.entry - sig.sl < 0.60
+
+
+def test_sloped_channel_levels_are_projected_to_signal_time():
+    rows = []
+    for i in range(80):
+        c = 100.0 + i
+        rows.append(_row(i, c - 0.1, c + 0.2, c - 0.2, c, 100))
+
+    strategy = InplayRetestV3Strategy(
+        _cfg(use_sloped=True, min_touches=99, channel_lookback=72, channel_min_r2=0.95)
+    )
+    last_open_ts = int(float(rows[-1][0]))
+    at_last_close = strategy._candidate_levels(rows, structure_atr=1.0, signal_ts_ms=last_open_ts + 3_600_000)
+    one_bar_forward = strategy._candidate_levels(rows, structure_atr=1.0, signal_ts_ms=last_open_ts + 7_200_000)
+
+    assert len(at_last_close) == 2
+    assert len(one_bar_forward) == 2
+    assert one_bar_forward[0][0] == pytest.approx(at_last_close[0][0] + 1.0)
+    assert one_bar_forward[1][0] == pytest.approx(at_last_close[1][0] + 1.0)
 
 
 def test_entry_distance_cap_rejects_far_from_level_chase():

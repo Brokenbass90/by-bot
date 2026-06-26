@@ -180,11 +180,66 @@ class InPlayBreakoutWrapper:
 
         self.impl: Optional[InPlayBreakoutStrategy] = None
         self._impl_by_symbol: Dict[str, InPlayBreakoutStrategy] = {}
+        self._impl_signature: Optional[tuple] = None
+        self._impl_signature_by_symbol: Dict[str, tuple] = {}
 
     def _refresh_runtime_allowlists(self) -> None:
         p = getattr(self, "_prefix", "BREAKOUT")
         self._allow = _env_csv_set(f"{p}_SYMBOL_ALLOWLIST")
         self._deny = _env_csv_set(f"{p}_SYMBOL_DENYLIST")
+
+    def _refresh_runtime_config(self) -> None:
+        """Re-read runtime env knobs so hot config changes rebuild the engine."""
+        p = getattr(self, "_prefix", "BREAKOUT")
+        self.cfg.tf_break = os.getenv(f"{p}_TF_BREAK", self.cfg.tf_break)
+        self.cfg.tf_entry = os.getenv(f"{p}_TF_ENTRY", self.cfg.tf_entry)
+        self.cfg.lookback_h = _env_int(f"{p}_LOOKBACK_H", self.cfg.lookback_h)
+        self.cfg.atr_period = _env_int(f"{p}_ATR_PERIOD", self.cfg.atr_period)
+        self.cfg.impulse_atr_mult = _env_float(f"{p}_IMPULSE_ATR_MULT", self.cfg.impulse_atr_mult)
+        self.cfg.impulse_body_min_frac = _env_float(f"{p}_IMPULSE_BODY_MIN_FRAC", self.cfg.impulse_body_min_frac)
+        self.cfg.impulse_vol_mult = _env_float(f"{p}_IMPULSE_VOL_MULT", self.cfg.impulse_vol_mult)
+        self.cfg.impulse_vol_period = _env_int(f"{p}_IMPULSE_VOL_PERIOD", self.cfg.impulse_vol_period)
+        self.cfg.breakout_buffer_atr = _env_float(f"{p}_BUFFER_ATR", self.cfg.breakout_buffer_atr)
+        self.cfg.breakout_sl_atr = _env_float(f"{p}_SL_ATR", self.cfg.breakout_sl_atr)
+        self.cfg.breakout_sl_htf_mult = _env_float(f"{p}_SL_HTF_MULT", self.cfg.breakout_sl_htf_mult)
+        self.cfg.retest_touch_atr = _env_float(f"{p}_RETEST_TOUCH_ATR", self.cfg.retest_touch_atr)
+        self.cfg.reclaim_atr = _env_float(f"{p}_RECLAIM_ATR", self.cfg.reclaim_atr)
+        self.cfg.entry_body_min_frac = _env_float(f"{p}_ENTRY_BODY_MIN_FRAC", self.cfg.entry_body_min_frac)
+        self.cfg.min_hold_bars = _env_int(f"{p}_MIN_HOLD_BARS", self.cfg.min_hold_bars)
+        self.cfg.max_retest_bars = _env_int(f"{p}_MAX_RETEST_BARS", self.cfg.max_retest_bars)
+        self.cfg.min_break_bars = _env_int(f"{p}_MIN_BREAK_BARS", self.cfg.min_break_bars)
+        self.cfg.max_dist_atr = _env_float(f"{p}_MAX_DIST_ATR", self.cfg.max_dist_atr)
+        self.cfg.max_dist_htf_mult = _env_float(f"{p}_MAX_DIST_HTF_MULT", self.cfg.max_dist_htf_mult)
+        self.cfg.rr = _env_float(f"{p}_RR", self.cfg.rr)
+        self.cfg.range_atr_max = _env_float(f"{p}_RANGE_ATR_MAX", self.cfg.range_atr_max)
+
+        self.cfg.allow_longs = _env_bool(f"{p}_ALLOW_LONGS", self.cfg.allow_longs)
+        self.cfg.allow_shorts = _env_bool(f"{p}_ALLOW_SHORTS", self.cfg.allow_shorts)
+        direction_mode = str(os.getenv(f"{p}_DIRECTION_MODE", "") or "").strip().lower()
+        if direction_mode in {"long", "long_only", "long-only"}:
+            self.cfg.allow_longs = True
+            self.cfg.allow_shorts = False
+        elif direction_mode in {"short", "short_only", "short-only"}:
+            self.cfg.allow_longs = False
+            self.cfg.allow_shorts = True
+        elif direction_mode in {"both", "mirror", "long_short", "long-short"}:
+            self.cfg.allow_longs = True
+            self.cfg.allow_shorts = True
+
+        self.cfg.regime_mode = os.getenv(f"{p}_REGIME_MODE", self.cfg.regime_mode)
+        if str(os.getenv(f'{p}_REGIME', '')).strip().lower() in ('1','true','yes','on'):
+            if str(self.cfg.regime_mode).strip().lower() in ('off','0','false','none',''):
+                self.cfg.regime_mode = 'ema'
+        self.cfg.regime_tf = os.getenv(f"{p}_REGIME_TF", self.cfg.regime_tf)
+        self.cfg.regime_ema_fast = _env_int(f"{p}_REGIME_EMA_FAST", self.cfg.regime_ema_fast)
+        self.cfg.regime_ema_slow = _env_int(f"{p}_REGIME_EMA_SLOW", self.cfg.regime_ema_slow)
+        self.cfg.regime_min_gap_atr = _env_float(f"{p}_REGIME_MIN_GAP_ATR", self.cfg.regime_min_gap_atr)
+        self.cfg.regime_strict = _env_bool(f"{p}_REGIME_STRICT", self.cfg.regime_strict)
+        self.cfg.regime_price_filter = _env_bool(f"{p}_REGIME_PRICE_FILTER", self.cfg.regime_price_filter)
+        self.cfg.regime_cache_sec = int(os.getenv(f"{p}_REGIME_CACHE_SEC", str(self.cfg.regime_cache_sec)) or self.cfg.regime_cache_sec)
+        self.cfg.chop_er_min = _env_float(f"{p}_CHOP_ER_MIN", self.cfg.chop_er_min)
+        self.cfg.chop_er_period = int(os.getenv(f"{p}_CHOP_ER_PERIOD", str(self.cfg.chop_er_period)) or self.cfg.chop_er_period)
+        self.cfg.chop_in_range_only = _env_bool(f"{p}_CHOP_IN_RANGE_ONLY", self.cfg.chop_in_range_only)
 
     @staticmethod
     def _bar_value(bar: Any, key: str) -> Optional[float]:
@@ -282,12 +337,52 @@ class InPlayBreakoutWrapper:
         bars = int(math.ceil((lookback_h * 60) / minutes))
         return max(10, bars)
 
+    def _config_signature(self) -> tuple:
+        return (
+            str(self.cfg.tf_break),
+            str(self.cfg.tf_entry),
+            int(self.cfg.lookback_h),
+            int(self.cfg.atr_period),
+            float(self.cfg.impulse_atr_mult),
+            float(self.cfg.impulse_body_min_frac),
+            float(self.cfg.impulse_vol_mult),
+            int(self.cfg.impulse_vol_period),
+            float(self.cfg.breakout_buffer_atr),
+            float(self.cfg.breakout_sl_atr),
+            float(self.cfg.breakout_sl_htf_mult),
+            float(self.cfg.retest_touch_atr),
+            float(self.cfg.reclaim_atr),
+            float(self.cfg.entry_body_min_frac),
+            int(self.cfg.min_hold_bars),
+            int(self.cfg.max_retest_bars),
+            int(self.cfg.min_break_bars),
+            float(self.cfg.max_dist_atr),
+            float(self.cfg.max_dist_htf_mult),
+            float(self.cfg.rr),
+            float(self.cfg.range_atr_max),
+            bool(self.cfg.allow_longs),
+            bool(self.cfg.allow_shorts),
+            str(self.cfg.regime_mode),
+            str(self.cfg.regime_tf),
+            int(self.cfg.regime_ema_fast),
+            int(self.cfg.regime_ema_slow),
+            float(self.cfg.regime_min_gap_atr),
+            bool(self.cfg.regime_strict),
+            bool(self.cfg.regime_price_filter),
+            int(self.cfg.regime_cache_sec),
+            float(self.cfg.chop_er_min),
+            int(self.cfg.chop_er_period),
+            bool(self.cfg.chop_in_range_only),
+        )
+
     def _ensure_impl(self, store) -> None:
+        self._refresh_runtime_config()
         symbol = str(getattr(store, "symbol", "") or "").upper()
-        if symbol and symbol in self._impl_by_symbol:
+        cfg_sig = self._config_signature()
+        if symbol and symbol in self._impl_by_symbol and self._impl_signature_by_symbol.get(symbol) == cfg_sig:
             self.impl = self._impl_by_symbol[symbol]
             return
-        if not symbol and self.impl is not None:
+        if not symbol and self.impl is not None and self._impl_signature == cfg_sig:
             return
 
         tf_break = self.cfg.tf_break
@@ -384,6 +479,8 @@ class InPlayBreakoutWrapper:
         impl = InPlayBreakoutStrategy(_fetch_klines, **filtered)
         if symbol:
             self._impl_by_symbol[symbol] = impl
+            self._impl_signature_by_symbol[symbol] = cfg_sig
+        self._impl_signature = cfg_sig
         self.impl = impl
 
     def signal(self, store, ts_ms: int, last_price: float) -> Optional[TradeSignal]:

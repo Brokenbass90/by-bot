@@ -722,10 +722,14 @@ class AltHorizontalBreakV1Strategy:
         # Compute once, reuse for both short and long checks.
         signal_ema_val: Optional[float] = None
         if self.cfg.signal_ema_gate and self.cfg.signal_ema_period > 0:
-            if len(closes) >= self.cfg.signal_ema_period:
+            if len(closes) >= self.cfg.signal_ema_period + 1:
                 ema_vals = _ema_series(closes, self.cfg.signal_ema_period)
-                if ema_vals and math.isfinite(ema_vals[-1]):
-                    signal_ema_val = ema_vals[-1]
+                # Compare the breakout close to the EMA known before this
+                # signal bar. Including the signal close in the EMA makes the
+                # gate self-influencing and can let marginal breakouts pass
+                # because the current close dragged the EMA toward itself.
+                if len(ema_vals) >= 2 and math.isfinite(ema_vals[-2]):
+                    signal_ema_val = ema_vals[-2]
 
         # ── SHORT: horizontal support zone breakdown ───────────────────
         # Signal EMA gate for short: price must be below signal-TF EMA
