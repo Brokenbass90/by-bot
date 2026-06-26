@@ -107,6 +107,32 @@ def _rsi(values: List[float], period: int) -> float:
     return 100.0 - (100.0 / (1.0 + rs))
 
 
+def _geometry_block_reason(
+    *,
+    entry: float,
+    sl: float,
+    tp: float,
+    min_rr: float,
+    min_stop_pct: float,
+    max_stop_pct: float,
+) -> str:
+    risk = float(entry) - float(sl)
+    reward = float(tp) - float(entry)
+    if risk <= 0:
+        return "sl_above_entry"
+    if reward <= 0:
+        return "tp_invalid"
+    stop_pct = risk / max(1e-12, float(entry))
+    rr = reward / max(1e-12, risk)
+    if stop_pct < float(min_stop_pct):
+        return f"stop_too_tight_{stop_pct:.4f}"
+    if stop_pct > float(max_stop_pct):
+        return f"stop_too_wide_{stop_pct:.4f}"
+    if rr < float(min_rr):
+        return f"rr_too_low_{rr:.2f}"
+    return ""
+
+
 @dataclass
 class AltSupportBounceV1Config:
     # Regime check on 4h
@@ -138,6 +164,11 @@ class AltSupportBounceV1Config:
     sl_atr_mult: float = 0.85
     tp1_frac: float = 0.60
     tp2_buffer_pct: float = 0.45
+    min_rr: float = 1.15
+    min_stop_pct: float = 0.0015
+    max_stop_pct: float = 0.06
+    max_entry_dist_atr: float = 2.0
+    reclaim_require_higher_close: bool = True
     trail_atr_mult: float = 0.0
     trail_atr_period: int = 14
     time_stop_bars_5m: int = 576
@@ -178,6 +209,11 @@ class AltSupportBounceV1Strategy:
         self.cfg.sl_atr_mult = _env_float("ASB1_SL_ATR_MULT", self.cfg.sl_atr_mult)
         self.cfg.tp1_frac = _env_float("ASB1_TP1_FRAC", self.cfg.tp1_frac)
         self.cfg.tp2_buffer_pct = _env_float("ASB1_TP2_BUFFER_PCT", self.cfg.tp2_buffer_pct)
+        self.cfg.min_rr = _env_float("ASB1_MIN_RR", self.cfg.min_rr)
+        self.cfg.min_stop_pct = _env_float("ASB1_MIN_STOP_PCT", self.cfg.min_stop_pct)
+        self.cfg.max_stop_pct = _env_float("ASB1_MAX_STOP_PCT", self.cfg.max_stop_pct)
+        self.cfg.max_entry_dist_atr = _env_float("ASB1_MAX_ENTRY_DIST_ATR", self.cfg.max_entry_dist_atr)
+        self.cfg.reclaim_require_higher_close = _env_bool("ASB1_RECLAIM_REQUIRE_HIGHER_CLOSE", self.cfg.reclaim_require_higher_close)
         self.cfg.trail_atr_mult = _env_float("ASB1_TRAIL_ATR_MULT", self.cfg.trail_atr_mult)
         self.cfg.trail_atr_period = _env_int("ASB1_TRAIL_ATR_PERIOD", self.cfg.trail_atr_period)
         self.cfg.time_stop_bars_5m = _env_int("ASB1_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
@@ -303,22 +339,26 @@ class AltSupportBounceV1Strategy:
         # Touched support
         touched_supp = low_now <= support + self.cfg.support_touch_buffer_atr * atr
         # Reclaimed above support (bullish)
-        reclaimed_above = cur >= support + self.cfg.reclaim_above_supp_atr * atr and cur > prev and cur > opens[-1]
+        reclaimed_above = cur >= support + self.cfg.reclaim_above_supp_atr * atr and cur > opens[-1]
+        if self.cfg.reclaim_require_higher_close:
+            reclaimed_above = reclaimed_above and cur > prev
         # Close vs EMA
         close_vs_ema_pct = (cur - ema) / max(1e-12, ema) * 100.0
+        entry_dist_atr = (cur - support) / max(1e-12, atr)
 
         if not (
             touched_supp
             and reclaimed_above
             and body_frac >= self.cfg.min_body_frac
             and close_vs_ema_pct <= self.cfg.max_close_vs_ema_pct
+            and entry_dist_atr <= self.cfg.max_entry_dist_atr
         ):
             self.last_no_signal_reason = f"entry_conditions_not_met"
             return None
 
         # SL below support
         sl = support - self.cfg.sl_atr_mult * atr
-        entry_price = float(c)
+        entry_price = float(cur)
 
         if sl >= entry_price:
             self.last_no_signal_reason = "sl_above_entry"
@@ -328,6 +368,17 @@ class AltSupportBounceV1Strategy:
         tp2 = resistance * (1.0 - self.cfg.tp2_buffer_pct / 100.0)
         if tp2 <= entry_price:
             self.last_no_signal_reason = "tp_invalid"
+            return None
+        block_reason = _geometry_block_reason(
+            entry=entry_price,
+            sl=sl,
+            tp=tp2,
+            min_rr=self.cfg.min_rr,
+            min_stop_pct=self.cfg.min_stop_pct,
+            max_stop_pct=self.cfg.max_stop_pct,
+        )
+        if block_reason:
+            self.last_no_signal_reason = block_reason
             return None
 
         # TP1 at 55% to resistance

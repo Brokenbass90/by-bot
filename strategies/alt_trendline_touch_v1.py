@@ -150,6 +150,37 @@ def _rsi(values: List[float], period: int) -> float:
     return 100.0 - 100.0 / (1.0 + rs)
 
 
+def _geometry_block_reason(
+    *,
+    side: str,
+    entry: float,
+    sl: float,
+    tp: float,
+    min_rr: float,
+    min_stop_pct: float,
+    max_stop_pct: float,
+) -> str:
+    if side == "long":
+        risk = float(entry) - float(sl)
+        reward = float(tp) - float(entry)
+    else:
+        risk = float(sl) - float(entry)
+        reward = float(entry) - float(tp)
+    if risk <= 0:
+        return f"{side}_invalid_risk"
+    if reward <= 0:
+        return f"{side}_tp_invalid"
+    stop_pct = risk / max(1e-12, float(entry))
+    rr = reward / max(1e-12, risk)
+    if stop_pct < float(min_stop_pct):
+        return f"{side}_stop_too_tight_{stop_pct:.4f}"
+    if stop_pct > float(max_stop_pct):
+        return f"{side}_stop_too_wide_{stop_pct:.4f}"
+    if rr < float(min_rr):
+        return f"{side}_rr_too_low_{rr:.2f}"
+    return ""
+
+
 def _find_swing_lows(
     lows: List[float], left: int, right: int
 ) -> List[Tuple[int, float]]:
@@ -242,6 +273,7 @@ class AltTrendlineTouchV1Config:
     pivot_left: int = 3
     pivot_right: int = 3
     min_pivots: int = 2       # need at least this many pivots to form trendline
+    max_pivots_used: int = 3  # most recent swing pivots used to fit a line
     max_pivot_age: int = 16   # last pivot must be within N bars of current bar
 
     # Slope constraints (pct per day, relative to price; 1H bars → 24 bars/day)
@@ -264,6 +296,10 @@ class AltTrendlineTouchV1Config:
 
     # Trade management
     sl_atr_mult: float = 1.10
+    max_entry_dist_atr: float = 2.0
+    min_rr: float = 1.15
+    min_stop_pct: float = 0.0015
+    max_stop_pct: float = 0.06
     tp1_rr: float = 1.20
     tp2_rr: float = 2.50
     tp1_frac: float = 0.55
@@ -307,6 +343,7 @@ class AltTrendlineTouchV1Strategy:
         c.pivot_left = _env_int("ATT1_PIVOT_LEFT", c.pivot_left)
         c.pivot_right = _env_int("ATT1_PIVOT_RIGHT", c.pivot_right)
         c.min_pivots = _env_int("ATT1_MIN_PIVOTS", c.min_pivots)
+        c.max_pivots_used = _env_int("ATT1_MAX_PIVOTS_USED", c.max_pivots_used)
         c.max_pivot_age = _env_int("ATT1_MAX_PIVOT_AGE", c.max_pivot_age)
         c.min_slope_pct = _env_float("ATT1_MIN_SLOPE_PCT", c.min_slope_pct)
         c.max_slope_pct = _env_float("ATT1_MAX_SLOPE_PCT", c.max_slope_pct)
@@ -319,6 +356,10 @@ class AltTrendlineTouchV1Strategy:
         c.rsi_long_max = _env_float("ATT1_RSI_LONG_MAX", c.rsi_long_max)
         c.rsi_short_min = _env_float("ATT1_RSI_SHORT_MIN", c.rsi_short_min)
         c.sl_atr_mult = _env_float("ATT1_SL_ATR_MULT", c.sl_atr_mult)
+        c.max_entry_dist_atr = _env_float("ATT1_MAX_ENTRY_DIST_ATR", c.max_entry_dist_atr)
+        c.min_rr = _env_float("ATT1_MIN_RR", c.min_rr)
+        c.min_stop_pct = _env_float("ATT1_MIN_STOP_PCT", c.min_stop_pct)
+        c.max_stop_pct = _env_float("ATT1_MAX_STOP_PCT", c.max_stop_pct)
         c.tp1_rr = _env_float("ATT1_TP1_RR", c.tp1_rr)
         c.tp2_rr = _env_float("ATT1_TP2_RR", c.tp2_rr)
         c.tp1_frac = _env_float("ATT1_TP1_FRAC", c.tp1_frac)
@@ -362,8 +403,9 @@ class AltTrendlineTouchV1Strategy:
             self._no_signal("long_pivots_short")
             return None
 
-        # Use last min_pivots pivot points (most recent history)
-        recent = pivots[-max(c.min_pivots, 3):]  # at most 3 most recent
+        # Use configurable count of recent pivot points. Two points define the
+        # line, more points validate that the same line has been respected.
+        recent = pivots[-max(c.min_pivots, c.max_pivots_used):]
         if len(recent) < c.min_pivots:
             recent = pivots[-c.min_pivots:]
 
@@ -444,7 +486,7 @@ class AltTrendlineTouchV1Strategy:
             self._no_signal("short_pivots_short")
             return None
 
-        recent = pivots[-max(c.min_pivots, 3):]
+        recent = pivots[-max(c.min_pivots, c.max_pivots_used):]
         if len(recent) < c.min_pivots:
             recent = pivots[-c.min_pivots:]
 
@@ -566,8 +608,24 @@ class AltTrendlineTouchV1Strategy:
                 sl = tl_level - self.cfg.sl_atr_mult * atr
                 risk = cur - sl
                 if risk > 0:
+                    entry_dist_atr = (cur - tl_level) / max(1e-12, atr)
+                    if entry_dist_atr > self.cfg.max_entry_dist_atr:
+                        self._no_signal("long_entry_too_far_from_line")
+                        return None
                     tp1 = cur + self.cfg.tp1_rr * risk
                     tp2 = cur + self.cfg.tp2_rr * risk
+                    block_reason = _geometry_block_reason(
+                        side="long",
+                        entry=cur,
+                        sl=sl,
+                        tp=tp2,
+                        min_rr=self.cfg.min_rr,
+                        min_stop_pct=self.cfg.min_stop_pct,
+                        max_stop_pct=self.cfg.max_stop_pct,
+                    )
+                    if block_reason:
+                        self._no_signal(block_reason)
+                        return None
                     sig = TradeSignal(
                         strategy="alt_trendline_touch_v1",
                         symbol=store.symbol,
@@ -606,9 +664,25 @@ class AltTrendlineTouchV1Strategy:
                 sl = tl_level + self.cfg.sl_atr_mult * atr
                 risk = sl - cur
                 if risk > 0:
+                    entry_dist_atr = (tl_level - cur) / max(1e-12, atr)
+                    if entry_dist_atr > self.cfg.max_entry_dist_atr:
+                        self._no_signal("short_entry_too_far_from_line")
+                        return None
                     tp1 = cur - self.cfg.tp1_rr * risk
                     tp2 = cur - self.cfg.tp2_rr * risk
                     if tp2 > 0:
+                        block_reason = _geometry_block_reason(
+                            side="short",
+                            entry=cur,
+                            sl=sl,
+                            tp=tp2,
+                            min_rr=self.cfg.min_rr,
+                            min_stop_pct=self.cfg.min_stop_pct,
+                            max_stop_pct=self.cfg.max_stop_pct,
+                        )
+                        if block_reason:
+                            self._no_signal(block_reason)
+                            return None
                         sig = TradeSignal(
                             strategy="alt_trendline_touch_v1",
                             symbol=store.symbol,

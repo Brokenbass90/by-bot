@@ -176,6 +176,37 @@ def _rsi(values: List[float], period: int) -> float:
     return 100.0 - (100.0 / (1.0 + rs))
 
 
+def _geometry_block_reason(
+    *,
+    side: str,
+    entry: float,
+    sl: float,
+    tp: float,
+    min_rr: float,
+    min_stop_pct: float,
+    max_stop_pct: float,
+) -> str:
+    if side == "long":
+        risk = float(entry) - float(sl)
+        reward = float(tp) - float(entry)
+    else:
+        risk = float(sl) - float(entry)
+        reward = float(entry) - float(tp)
+    if risk <= 0:
+        return f"{side}_invalid_risk"
+    if reward <= 0:
+        return f"{side}_tp_invalid"
+    stop_pct = risk / max(1e-12, float(entry))
+    rr = reward / max(1e-12, risk)
+    if stop_pct < float(min_stop_pct):
+        return f"{side}_stop_too_tight_{stop_pct:.4f}"
+    if stop_pct > float(max_stop_pct):
+        return f"{side}_stop_too_wide_{stop_pct:.4f}"
+    if rr < float(min_rr):
+        return f"{side}_rr_too_low_{rr:.2f}"
+    return ""
+
+
 @dataclass
 class AltRangeScalpV1Config:
     bb_period: int = 20
@@ -188,10 +219,17 @@ class AltRangeScalpV1Config:
     max_band_width_pct: float = 20.0
     sl_atr_mult: float = 0.8
     tp1_frac: float = 0.55
+    min_rr: float = 1.15
+    min_stop_pct: float = 0.0015
+    max_stop_pct: float = 0.06
+    max_tp_dist_atr: float = 0.0
+    reclaim_atr: float = 0.0
     min_body_frac: float = 0.0
     min_vol_mult: float = 0.0
-    max_adx: float = 0.0
+    max_adx: float = 25.0
     adx_period: int = 14
+    trail_atr_mult: float = 1.5
+    trail_activate_rr: float = 1.0
     time_stop_bars_5m: int = 216
     cooldown_bars_5m: int = 48
     allow_longs: bool = True
@@ -214,10 +252,17 @@ class AltRangeScalpV1Strategy:
         self.cfg.max_band_width_pct = _env_float("ARS1_MAX_BAND_WIDTH_PCT", self.cfg.max_band_width_pct)
         self.cfg.sl_atr_mult = _env_float("ARS1_SL_ATR_MULT", self.cfg.sl_atr_mult)
         self.cfg.tp1_frac = _env_float("ARS1_TP1_FRAC", self.cfg.tp1_frac)
+        self.cfg.min_rr = _env_float("ARS1_MIN_RR", self.cfg.min_rr)
+        self.cfg.min_stop_pct = _env_float("ARS1_MIN_STOP_PCT", self.cfg.min_stop_pct)
+        self.cfg.max_stop_pct = _env_float("ARS1_MAX_STOP_PCT", self.cfg.max_stop_pct)
+        self.cfg.max_tp_dist_atr = _env_float("ARS1_MAX_TP_DIST_ATR", self.cfg.max_tp_dist_atr)
+        self.cfg.reclaim_atr = _env_float("ARS1_RECLAIM_ATR", self.cfg.reclaim_atr)
         self.cfg.min_body_frac = _env_float("ARS1_MIN_BODY_FRAC", self.cfg.min_body_frac)
         self.cfg.min_vol_mult = _env_float("ARS1_MIN_VOL_MULT", self.cfg.min_vol_mult)
         self.cfg.max_adx = _env_float("ARS1_MAX_ADX", self.cfg.max_adx)
         self.cfg.adx_period = _env_int("ARS1_ADX_PERIOD", self.cfg.adx_period)
+        self.cfg.trail_atr_mult = _env_float("ARS1_TRAIL_ATR_MULT", self.cfg.trail_atr_mult)
+        self.cfg.trail_activate_rr = _env_float("ARS1_TRAIL_ACTIVATE_RR", self.cfg.trail_activate_rr)
         self.cfg.time_stop_bars_5m = _env_int("ARS1_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
         self.cfg.cooldown_bars_5m = _env_int("ARS1_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
         self.cfg.allow_longs = _env_bool("ARS1_ALLOW_LONGS", self.cfg.allow_longs)
@@ -319,6 +364,9 @@ class AltRangeScalpV1Strategy:
 
         # SHORT: above upper band + high RSI + bearish bar
         if self.cfg.allow_shorts and cur > upper and rsi_15m > self.cfg.rsi_short_min and cur < open_cur:
+            if self.cfg.reclaim_atr > 0 and cur > upper + self.cfg.reclaim_atr * atr_15m:
+                self.last_no_signal_reason = "short_no_reclaim"
+                return None
             side = "short"
             tp_other = lower
             sl = upper + self.cfg.sl_atr_mult * atr_15m
@@ -329,6 +377,9 @@ class AltRangeScalpV1Strategy:
 
         # LONG: below lower band + low RSI + bullish bar
         elif self.cfg.allow_longs and cur < lower and rsi_15m < self.cfg.rsi_long_max and cur > open_cur:
+            if self.cfg.reclaim_atr > 0 and cur < lower - self.cfg.reclaim_atr * atr_15m:
+                self.last_no_signal_reason = "long_no_reclaim"
+                return None
             side = "long"
             tp_other = upper
             sl = lower - self.cfg.sl_atr_mult * atr_15m
@@ -349,6 +400,9 @@ class AltRangeScalpV1Strategy:
             if tp2 >= entry_price or tp1 >= entry_price or tp1 <= tp2:
                 self.last_no_signal_reason = "short_tp_invalid"
                 return None
+            if self.cfg.max_tp_dist_atr > 0 and (entry_price - tp2) > self.cfg.max_tp_dist_atr * atr_15m:
+                self.last_no_signal_reason = "short_tp_too_far"
+                return None
         else:  # long
             # TP1 = 50% to mid, TP2 = upper band + 0.3 ATR buffer
             tp1 = entry_price + (tp_other - entry_price) * self.cfg.tp1_frac
@@ -356,6 +410,22 @@ class AltRangeScalpV1Strategy:
             if tp2 <= entry_price or tp1 <= entry_price or tp1 >= tp2:
                 self.last_no_signal_reason = "long_tp_invalid"
                 return None
+            if self.cfg.max_tp_dist_atr > 0 and (tp2 - entry_price) > self.cfg.max_tp_dist_atr * atr_15m:
+                self.last_no_signal_reason = "long_tp_too_far"
+                return None
+
+        block_reason = _geometry_block_reason(
+            side=side,
+            entry=entry_price,
+            sl=sl,
+            tp=tp2,
+            min_rr=self.cfg.min_rr,
+            min_stop_pct=self.cfg.min_stop_pct,
+            max_stop_pct=self.cfg.max_stop_pct,
+        )
+        if block_reason:
+            self.last_no_signal_reason = block_reason
+            return None
 
         self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
         sig = TradeSignal(
@@ -367,7 +437,9 @@ class AltRangeScalpV1Strategy:
             tp=tp2,
             tps=[tp1, tp2],
             tp_fracs=[self.cfg.tp1_frac, 1.0 - self.cfg.tp1_frac],
-            trailing_atr_mult=0.0,
+            trailing_atr_mult=max(0.0, float(self.cfg.trail_atr_mult)),
+            trailing_atr_period=max(5, int(self.cfg.atr_period)),
+            trail_activate_rr=max(0.0, float(self.cfg.trail_activate_rr)),
             time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
             reason="ars1_bb_scalp",
         )
