@@ -22,3 +22,6 @@ inplay_retest_v3_24h_bounded_v1.json
 spike_fade_v3_smoke_20260626.json
 att1_density_top_revalidate_20260626.json
 arf1_scanner_allowlist_probe_20260626.json
+sloped_resistance_choch_bounded_20260627.json
+ivb1_short_wider_bounded_20260627.json
+funding_reversion_short_smoke_20260627.json

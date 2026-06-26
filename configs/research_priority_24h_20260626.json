@@ -67,6 +67,24 @@
       "spec": "configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json",
       "enabled": true,
       "min_interval_hours": 24
+    },
+    {
+      "name": "sloped_resistance_choch_bounded",
+      "spec": "configs/autoresearch/sloped_resistance_choch_bounded_20260627.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "ivb1_short_wider_bounded",
+      "spec": "configs/autoresearch/ivb1_short_wider_bounded_20260627.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "funding_reversion_short_smoke",
+      "spec": "configs/autoresearch/funding_reversion_short_smoke_20260627.json",
+      "enabled": true,
+      "min_interval_hours": 24
     }
   ]
 }

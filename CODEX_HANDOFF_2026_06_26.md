@@ -377,17 +377,115 @@ Codex interpretation:
 
 ## Immediate next steps for next Codex
 
+## 2026-06-27 pre-sleep update — owner-context + overnight queue
+
+User pushed for a richer bot that does not trade a flat mathematical shadow of
+the manual setup. Codex added a read-only owner-style setup context layer:
+
+- `bot/owner_setup_context.py`
+- `scripts/owner_setup_context_report.py`
+- `tests/test_owner_setup_context.py`
+
+What it checks:
+
+- current in-play volume inflow;
+- strong 1H level;
+- entry distance to level;
+- room to the next level;
+- RR proxy;
+- explicit reject reasons such as `volume:*`, `level_missing`,
+  `entry_far_from_level`, `target_level_missing`, `rr_proxy_low`.
+
+Validation:
+
+```bash
+.venv/bin/python -m pytest tests/test_owner_setup_context.py tests/test_inplay_volume_universe.py -q
+# 7 passed
+```
+
+The first local diagnostic report:
+
+- `reports/OWNER_SETUP_CONTEXT_latest.md`
+- current local cache had 0/8 candidates on BTC/ETH/SOL/LINK, correctly rejecting
+  non-inplay/far-from-level setups.
+
+This is not wired into live risk. Next implementation step is A/B research:
+
+- old level-first InPlay/ARF1/ATT1;
+- new volume-first + level-quality owner context gate.
+
+## Overnight queue extension
+
+The server priority queue was extended after the existing InPlay/ATT1/ARF1
+tasks with three bounded research-only jobs:
+
+1. `sloped_resistance_choch_bounded_20260627.json`
+   - short-only repeated sloped/horizontal resistance + rejection + 5m CHoCH;
+   - tests the owner’s “short breakdown of sloped levels” logic.
+2. `ivb1_short_wider_bounded_20260627.json`
+   - expands the only currently positive crypto price-action candidate, IVB1
+     short, to a wider universe with stricter entry-distance guards.
+3. `funding_reversion_short_smoke_20260627.json`
+   - small structural smoke: positive funding → short reversion;
+   - caveat: mocked funding, validates price/exit filters only.
+
+All three:
+
+- cache-only;
+- one-at-a-time through `configs/research_priority_24h_20260626.json`;
+- approved in `configs/autoresearch/approved_specs.txt`;
+- passed JSON load, strict sweep validation, and `ResearchGate.can_run=True`.
+
+Full priority queue order now:
+
+1. `ivb1_short_next_open_recheck`
+2. `breakdown_bear_entry_quality`
+3. `pfs1_solo_bounded`
+4. `spike_fade_v3_bounded`
+5. `hzbo1_bounded`
+6. `ets2_canonical_bounded`
+7. `inplay_retest_v3_bounded`
+8. `att1_density_top_revalidate`
+9. `arf1_scanner_allowlist_probe`
+10. `sloped_resistance_choch_bounded`
+11. `ivb1_short_wider_bounded`
+12. `funding_reversion_short_smoke`
+
+At 2026-06-26 ~22:32 UTC server was still running:
+
+- `inplay_retest_v3_24h_bounded_v1`, row `r032/64`;
+- live bot active;
+- research guard status OK.
+
+## Morning checks
+
 1. Check current research status:
 
 ```bash
 cd /root/by-bot
 .venv/bin/python3 -c "import pathlib; print(pathlib.Path('runtime/research_priority_24h/status.json').read_text())"
 tail -80 logs/research_priority_24h/cron.log
+tail -120 logs/research_priority_24h/*.log
 ```
 
-2. Wait for HZBO to finish. Current early HZBO rows are weak, but final verdict requires full 32/32.
+2. Check which row is active:
 
-3. Confirm cron launches SpikeFadeV3 after HZBO. It should, because the invalid spike log was moved and task state was cleared. If task_state somehow blocks it, clear only `spike_fade_v3_bounded` from:
+```bash
+pgrep -fal "run_strategy_autoresearch|run_portfolio.py"
+cat runtime/research_guard/status.json
+```
+
+3. If queue is blocked because no active process but a task is stuck in `launched`,
+run once:
+
+```bash
+cd /root/by-bot
+.venv/bin/python3 scripts/run_nightly_research_queue.py --config configs/research_priority_24h_20260626.json
+```
+
+Do not start a second heavy runner manually while another `run_portfolio.py` is active.
+
+4. If task_state somehow blocks a completed task, clear only that single task from:
 
 ```bash
 /root/by-bot/runtime/research_priority_24h/task_state.json
@@ -400,7 +498,7 @@ cd /root/by-bot
 .venv/bin/python3 scripts/run_nightly_research_queue.py --config configs/research_priority_24h_20260626.json --quiet
 ```
 
-4. Return to owner with updated PASS/WATCH/CUT:
+5. Return to owner with updated PASS/WATCH/CUT:
 
 - IVB1 = WATCH
 - Breakdown V1 = CUT FOR NOW
@@ -411,6 +509,11 @@ cd /root/by-bot
 - InPlay Retest V3 = pending
 - ATT1 density top-pocket = queued revalidation of old strong sweep, not live
 - ARF1 scanner allowlist probe = queued, tests whether live flat silence is allowlist/universe issue
+- SRC1 sloped resistance CHoCH = queued after ARF1; this directly tests owner’s
+  sloped-level short-breakdown hypothesis
+- IVB1 short wider = queued after SRC1; expands the only current positive crypto
+  candidate
+- Funding short smoke = queued last; structural research only, not promotion data
 
 ## When can crypto unfreeze?
 

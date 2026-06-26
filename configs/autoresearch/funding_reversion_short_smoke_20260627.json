@@ -1,0 +1,72 @@
+{
+  "name": "funding_reversion_short_smoke_20260627",
+  "description": "Small structural-edge smoke for positive funding -> short reversion. Caveat: funding is mocked as extreme positive, so this validates price/exit filters, not final historical funding edge.",
+  "cache_only": true,
+  "timeout_sec": 900,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT,AVAXUSDT",
+    "--strategies",
+    "funding_rate_reversion_v1",
+    "--days",
+    "240",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "2",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2",
+    "--entry-on-next-open"
+  ],
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "FR_ALLOW_LONGS": "0",
+    "FR_ALLOW_SHORTS": "1",
+    "FR_LATEST_BTCUSDT": "0.003",
+    "FR_LATEST_ETHUSDT": "0.003",
+    "FR_LATEST_SOLUSDT": "0.003",
+    "FR_LATEST_BNBUSDT": "0.003",
+    "FR_LATEST_AVAXUSDT": "0.003",
+    "FR_THRESHOLD": "0.001",
+    "FR_COOLDOWN_BARS": "24",
+    "FR_MIN_VOLUME_USDT": "500000"
+  },
+  "grid": {
+    "FR_EMA_PERIOD": ["55", "89"],
+    "FR_EXT_PCT": ["0.007", "0.012"],
+    "FR_RSI_OB": ["60.0", "67.0", "72.0"],
+    "FR_SL_ATR_MULT": ["1.0", "1.5"],
+    "FR_TP_ATR_MULT": ["2.0", "3.0"],
+    "FR_TIME_STOP_BARS_5M": ["48"]
+  },
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.25,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 1.5,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 5.0,
+    "winrate": 4.0,
+    "max_drawdown": 2.0,
+    "trades": 0.05,
+    "trades_cap": 120,
+    "negative_months": 2.0
+  },
+  "_combo_count": "2 EMA x 2 extension x 3 RSI x 2 SL x 2 TP = 48 combinations"
+}
