@@ -34,7 +34,7 @@
     },
     {
       "name": "spike_fade_v3_bounded",
-      "spec": "configs/autoresearch/spike_fade_v3_24h_bounded_v1.json",
+      "spec": "configs/autoresearch/spike_fade_v3_smoke_20260626.json",
       "enabled": true,
       "min_interval_hours": 24
     },
@@ -59,6 +59,12 @@
     {
       "name": "att1_density_top_revalidate",
       "spec": "configs/autoresearch/att1_density_top_revalidate_20260626.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "arf1_scanner_allowlist_probe",
+      "spec": "configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json",
       "enabled": true,
       "min_interval_hours": 24
     }
