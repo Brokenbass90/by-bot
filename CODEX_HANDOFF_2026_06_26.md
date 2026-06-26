@@ -64,6 +64,15 @@ Changed:
 
 Local full suite after this commit: `440 passed`.
 
+4. `c8a2e15 queue att1 density top-pocket revalidation`
+
+Changed:
+
+- added `configs/autoresearch/att1_density_top_revalidate_20260626.json`
+- appended `att1_density_top_revalidate` to `configs/research_priority_24h_20260626.json`
+
+Purpose: preserve and re-check the old May-25 ATT1 density pocket that showed about `+38%`, PF `~1.38`, WR `~59.6%`, DD `~4%`, but under current code and stricter `--entry-on-next-open` execution. This is not a live promotion; it is revalidation of a previously strong sweep.
+
 ## Server deploys performed
 
 No `git pull` on server because `/root/by-bot` is dirty/old.
@@ -81,6 +90,7 @@ Backups on server:
 - `/root/by-bot_backups/prev_strategy_fixes_20260626/`
 - `/root/by-bot_backups/e7ca451_20260626/`
 - `/root/by-bot_backups/a8c3243_20260626/`
+- `/root/by-bot_backups/c8a2e15_20260626/`
 
 Server tests after deploy:
 
@@ -107,6 +117,14 @@ Server test after `a8c3243` deploy:
 ```
 
 Result: `6 passed`.
+
+Server validation after `c8a2e15` deploy:
+
+```bash
+.venv/bin/python3 scripts/validate_sweep_configs.py --file configs/autoresearch/att1_density_top_revalidate_20260626.json
+```
+
+Result: passed, no warnings.
 
 ## Research queue status and results
 
@@ -199,6 +217,32 @@ Still deferred behind active queue.
 
 Need ensure Spike rerun after integration fix and HZBO completion.
 
+### ATT1 density top-pocket revalidation
+
+Spec: `configs/autoresearch/att1_density_top_revalidate_20260626.json`
+
+Queued after `inplay_retest_v3_bounded`.
+
+Why: old local sweep `att1_density_v3_more_pivots_v1` had strong top rows:
+
+- net about `+38%`
+- PF about `1.38`
+- WR about `59.6%`
+- DD about `4%`
+- around `406` trades
+
+Top pocket params:
+
+- `ATT1_PIVOT_LEFT=2`
+- `ATT1_PIVOT_RIGHT=3`
+- `ATT1_MIN_PIVOTS=2/3`
+- `ATT1_MAX_PIVOT_AGE=16/20/24`
+- `ATT1_MIN_R2=0.55/0.65`
+- `ATT1_TOUCH_ATR=0.5`
+- `ATT1_RSI_LONG_MAX=52`
+
+This revalidation adds `--entry-on-next-open`; expect lower results than old sweep. If it survives, next step is monthly/WF and live/backtest parity.
+
 ## What was fixed in candidate strategies
 
 ### IVB1
@@ -289,6 +333,7 @@ cd /root/by-bot
 - HZBO = pending/likely weak early
 - ETS2 = pending
 - InPlay Retest V3 = pending
+- ATT1 density top-pocket = queued revalidation of old strong sweep, not live
 
 ## When can crypto unfreeze?
 
