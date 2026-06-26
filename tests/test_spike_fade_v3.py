@@ -1,4 +1,6 @@
 """Tests for spike_fade_v3 — fade pumps into resistance / reclaim dumps at support."""
+from pathlib import Path
+
 from strategies.spike_fade_v3 import SpikeFadeV3Config, SpikeFadeV3Strategy
 
 
@@ -105,3 +107,11 @@ def test_no_fade_when_move_too_small():
     sig = _call(s, _Store(_structure(), hist + [small]), small)
     assert sig is None
     assert s.last_no_signal_reason == "no_spike_fade_setup"
+
+
+def test_run_portfolio_supports_spike_fade_v3():
+    source = (Path(__file__).resolve().parents[1] / "backtest" / "run_portfolio.py").read_text(encoding="utf-8")
+
+    assert 'SpikeFadeV3Strategy = _import_strategy_class("spike_fade_v3", "SpikeFadeV3Strategy")' in source
+    assert '"spike_fade_v3"' in source
+    assert 'spike_fade_v3[sym].maybe_signal' in source

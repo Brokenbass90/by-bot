@@ -161,6 +161,7 @@ LiquidationCascadeEntryV1Strategy = _import_strategy_class("liquidation_cascade_
 AltLiquiditySweepReversalV1Strategy = _optional_strategy_class("alt_liquidity_sweep_reversal_v1", "AltLiquiditySweepReversalV1Strategy")
 AltLiquiditySweepReversalV2Strategy = _import_strategy_class("alt_liquidity_sweep_reversal_v2", "AltLiquiditySweepReversalV2Strategy")
 AltSpikeRejectionV1Strategy = _import_strategy_class("alt_spike_rejection_v1", "AltSpikeRejectionV1Strategy")
+SpikeFadeV3Strategy = _import_strategy_class("spike_fade_v3", "SpikeFadeV3Strategy")
 AltBearRegimeContinuationV1Strategy = _import_strategy_class("alt_bear_regime_continuation_v1", "AltBearRegimeContinuationV1Strategy")
 AltWhalePrintFollowV1Strategy = _import_strategy_class("alt_whale_print_follow_v1", "AltWhalePrintFollowV1Strategy")
 AltTrendlineTouchV1Strategy = _import_strategy_class("alt_trendline_touch_v1", "AltTrendlineTouchV1Strategy")
@@ -1113,7 +1114,7 @@ def main():
         "alt_trendline_touch_v1", "alt_trendline_touch_v2", "alt_sloped_momentum_v1", "alt_volume_spike_momentum_v1", "pump_fade_smart_v1", "grid_smart_v1",
         "alt_slope_break_v1", "scalper_classic_v1", "scalper_bounce_v2",
         "scalper_sweep_v2", "scalper_breakout_v2", "elder_crypto_v1",
-        "alt_horizontal_break_v1", "inplay_retest_v3"}
+        "alt_horizontal_break_v1", "inplay_retest_v3", "spike_fade_v3"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -1348,6 +1349,7 @@ def main():
     alt_liquidity_sweep_reversal_v1 = {sym: AltLiquiditySweepReversalV1Strategy() for sym in symbols} if "alt_liquidity_sweep_reversal_v1" in strategies else {}
     alt_liquidity_sweep_reversal_v2 = {sym: AltLiquiditySweepReversalV2Strategy() for sym in symbols} if "alt_liquidity_sweep_reversal_v2" in strategies else {}
     alt_spike_rejection_v1 = {sym: AltSpikeRejectionV1Strategy() for sym in symbols} if "alt_spike_rejection_v1" in strategies else {}
+    spike_fade_v3 = {sym: SpikeFadeV3Strategy() for sym in symbols} if "spike_fade_v3" in strategies else {}
     alt_bear_regime_continuation_v1 = {sym: AltBearRegimeContinuationV1Strategy() for sym in symbols} if "alt_bear_regime_continuation_v1" in strategies else {}
     alt_whale_print_follow_v1 = {sym: AltWhalePrintFollowV1Strategy() for sym in symbols} if "alt_whale_print_follow_v1" in strategies else {}
     alt_trendline_touch_v1 = {sym: AltTrendlineTouchV1Strategy() for sym in symbols} if "alt_trendline_touch_v1" in strategies else {}
@@ -1931,6 +1933,12 @@ def main():
                 except Exception:
                     regime_hint = None
                 sig = alt_spike_rejection_v1[sym].signal(store, sym, int(i), regime=regime_hint)
+            elif st == "spike_fade_v3":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = spike_fade_v3[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "alt_bear_regime_continuation_v1":
                 i = getattr(store, 'i5', getattr(store, 'i', None))
                 if i is None:
