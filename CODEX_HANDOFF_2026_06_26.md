@@ -416,8 +416,10 @@ This is not wired into live risk. Next implementation step is A/B research:
 
 ## Overnight queue extension
 
-The server priority queue was extended after the existing InPlay/ATT1/ARF1
-tasks with three bounded research-only jobs:
+The server priority queue was extended with three bounded research-only jobs.
+After seeing the current InPlay run still active, the queue was reordered so
+the new P0 research jobs run immediately after InPlay; ATT1/ARF1 remain queued
+after them.
 
 1. `sloped_resistance_choch_bounded_20260627.json`
    - short-only repeated sloped/horizontal resistance + rejection + 5m CHoCH;
@@ -445,17 +447,18 @@ Full priority queue order now:
 5. `hzbo1_bounded`
 6. `ets2_canonical_bounded`
 7. `inplay_retest_v3_bounded`
-8. `att1_density_top_revalidate`
-9. `arf1_scanner_allowlist_probe`
-10. `sloped_resistance_choch_bounded`
-11. `ivb1_short_wider_bounded`
-12. `funding_reversion_short_smoke`
+8. `sloped_resistance_choch_bounded`
+9. `ivb1_short_wider_bounded`
+10. `funding_reversion_short_smoke`
+11. `att1_density_top_revalidate`
+12. `arf1_scanner_allowlist_probe`
 
-At 2026-06-26 ~22:32 UTC server was still running:
+At 2026-06-26 ~22:41 UTC server was still running:
 
-- `inplay_retest_v3_24h_bounded_v1`, row `r032/64`;
+- `inplay_retest_v3_24h_bounded_v1`, row `r036/64`;
 - live bot active;
 - research guard status OK.
+- server owner-context diagnostic completed: `candidates_ok=2/16`.
 
 ## Morning checks
 

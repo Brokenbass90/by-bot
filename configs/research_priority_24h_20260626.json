@@ -57,18 +57,6 @@
       "min_interval_hours": 24
     },
     {
-      "name": "att1_density_top_revalidate",
-      "spec": "configs/autoresearch/att1_density_top_revalidate_20260626.json",
-      "enabled": true,
-      "min_interval_hours": 24
-    },
-    {
-      "name": "arf1_scanner_allowlist_probe",
-      "spec": "configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json",
-      "enabled": true,
-      "min_interval_hours": 24
-    },
-    {
       "name": "sloped_resistance_choch_bounded",
       "spec": "configs/autoresearch/sloped_resistance_choch_bounded_20260627.json",
       "enabled": true,
@@ -83,6 +71,18 @@
     {
       "name": "funding_reversion_short_smoke",
       "spec": "configs/autoresearch/funding_reversion_short_smoke_20260627.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "att1_density_top_revalidate",
+      "spec": "configs/autoresearch/att1_density_top_revalidate_20260626.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "arf1_scanner_allowlist_probe",
+      "spec": "configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json",
       "enabled": true,
       "min_interval_hours": 24
     }
