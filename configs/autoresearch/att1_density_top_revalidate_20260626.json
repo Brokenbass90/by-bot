@@ -1,0 +1,64 @@
+{
+  "name": "att1_density_top_revalidate_20260626",
+  "description": "Revalidate the May-25 ATT1 density top pocket with current code and next-open execution. Purpose: do not lose old +38% ATT1 finding; prove or reject it under stricter execution.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "--strategies",
+    "alt_trendline_touch_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-30",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2",
+    "--entry-on-next-open"
+  ],
+  "base_env": {
+    "ATT1_ALLOW_LONGS": "1",
+    "ATT1_ALLOW_SHORTS": "1"
+  },
+  "grid": {
+    "ATT1_PIVOT_LEFT": [2],
+    "ATT1_PIVOT_RIGHT": [3],
+    "ATT1_MIN_PIVOTS": [2, 3],
+    "ATT1_MAX_PIVOT_AGE": [16, 20, 24],
+    "ATT1_MIN_R2": [0.55, 0.65],
+    "ATT1_TOUCH_ATR": [0.50],
+    "ATT1_RSI_LONG_MAX": [52]
+  },
+  "constraints": {
+    "min_trades": 80,
+    "min_profit_factor": 1.20,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 6.0,
+    "max_negative_months": 4,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.3,
+    "profit_factor": 5.5,
+    "winrate": 5.0,
+    "max_drawdown": 2.0,
+    "trades": 0.16,
+    "trades_cap": 350,
+    "negative_months": 2.0,
+    "worst_month_pnl": 1.5
+  },
+  "_combo_count": "1x1x2x3x2x1x1 = 12 combos"
+}

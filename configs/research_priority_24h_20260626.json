@@ -55,6 +55,12 @@
       "spec": "configs/autoresearch/inplay_retest_v3_24h_bounded_v1.json",
       "enabled": true,
       "min_interval_hours": 24
+    },
+    {
+      "name": "att1_density_top_revalidate",
+      "spec": "configs/autoresearch/att1_density_top_revalidate_20260626.json",
+      "enabled": true,
+      "min_interval_hours": 24
     }
   ]
 }
