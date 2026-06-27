@@ -1,0 +1,83 @@
+{
+  "name": "spike_fade_v3_link_short_bounded_20260627",
+  "description": "Annual bounded validation for the only SpikeFadeV3 slice that survived execution-accurate smoke: LINKUSDT pump-fade shorts. Mixed long+short and SUI variants were weak; this spec keeps dump-reclaim longs disabled and requires annual stability before any shadow/canary discussion.",
+  "cache_only": true,
+  "timeout_sec": 900,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "LINKUSDT",
+    "--strategies",
+    "spike_fade_v3",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-01",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "1",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2",
+    "--entry-on-next-open"
+  ],
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "SFV3_STRUCTURE_TF": "60",
+    "SFV3_ENTRY_TF": "15",
+    "SFV3_LEVEL_LOOKBACK": "240",
+    "SFV3_ENTRY_LOOKBACK": "96",
+    "SFV3_MIN_TOUCHES": "2",
+    "SFV3_ALLOW_LONG": "0",
+    "SFV3_ALLOW_SHORT": "1",
+    "SFV3_MIN_STOP_PCT": "0.0015",
+    "SFV3_MAX_STOP_PCT": "0.080",
+    "SFV3_BE_TRIGGER_RR": "1.0",
+    "SFV3_COOLDOWN_BARS": "3",
+    "SFV3_TRAIL_ATR_MULT": "0.0",
+    "SFV3_TRAIL_ACTIVATE_RR": "0.0"
+  },
+  "grid": {
+    "SFV3_LEVEL_TOL_ATR": [0.35, 0.50],
+    "SFV3_SPIKE_MIN_PCT": [4.0, 5.0],
+    "SFV3_TAG_LEVEL_ATR": [0.6, 0.8],
+    "SFV3_REJECT_FRAC": [0.50, 0.55],
+    "SFV3_STOP_BUFFER_ATR": [0.25, 0.40]
+  },
+  "constraints": {
+    "min_trades": 24,
+    "min_profit_factor": 1.35,
+    "max_drawdown": 4.0,
+    "min_net_pnl": 3.0,
+    "max_negative_months": 3,
+    "max_negative_streak": 2,
+    "min_worst_month_pnl": -0.75
+  },
+  "score_weights": {
+    "net_pnl": 1.5,
+    "profit_factor": 6.0,
+    "winrate": 4.0,
+    "max_drawdown": 2.5,
+    "trades": 0.12,
+    "trades_cap": 60,
+    "negative_months": 2.5,
+    "max_negative_streak": 3.0,
+    "worst_month_pnl": 1.5
+  },
+  "_evidence_20260627": {
+    "mixed_link_sui_240d": "97 trades, net=+3.90, PF=1.184, DD=5.65, but 4 negative months and 3-month negative streak",
+    "link_mixed_360d": "58 trades, net=+1.73, PF=1.136, DD=3.64; long side net=-2.32, short side net=+4.05",
+    "link_short_base_360d": "32 trades, net=+4.29, PF=1.818, DD=1.82; still 4 negative months, so this remains research only",
+    "loosened_smoke_rejected": "2026-06-27 smoke limit showed spike_min=3.0/reject=0.45 variants degrade to PF<=1.128 and fail stability gates"
+  },
+  "_combo_count": "2x2x2x2x2 = 32 bounded annual combinations"
+}

@@ -96,6 +96,22 @@ def test_invalid_signal_is_not_opened():
     assert result.trades == []
 
 
+def test_portfolio_selector_receives_execution_bar_close_timestamp():
+    seen = []
+
+    def selector(symbol, store, ts_ms, last_price):
+        seen.append(ts_ms)
+        return None
+
+    run_portfolio_backtest(
+        {"BTCUSDT": _store()},
+        selector,
+        params=BacktestParams(fee_bps=0.0, slippage_bps=0.0),
+    )
+
+    assert seen[:3] == [300_000, 600_000, 900_000]
+
+
 def test_single_symbol_engine_uses_next_open_too():
     emitted = False
 

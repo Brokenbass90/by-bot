@@ -39,12 +39,6 @@
       "min_interval_hours": 168
     },
     {
-      "name": "breakdown_bear_entry_quality",
-      "spec": "configs/autoresearch/breakdown_recent_bear_window_v2_entry_quality.json",
-      "enabled": true,
-      "min_interval_hours": 168
-    },
-    {
       "name": "inplay_retest_repair",
       "spec": "configs/autoresearch/inplay_breakout_retest_focus_v1.json",
       "enabled": true,

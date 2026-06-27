@@ -1,4 +1,5 @@
 {
+  "_archived_reason": "Rejected 2026-06-27. Server fact from reports/STRATEGY_LOGIC_HUMAN_2026_06_26.md: 36/36 FAIL, best net=-8.47, PF=0.58, DD=8.73. Removed from configs/autoresearch/approved_specs.txt; do not extend live Breakdown V1 from this window.",
   "_comment": "Short-side mirror of the breakout entry-quality repair. Test whether tighter entry-bar quality and distance-to-level improve recent bear-window performance of alt_inplay_breakdown_v1.",
   "name": "breakdown_recent_bear_window_v2_entry_quality",
   "cache_only": true,

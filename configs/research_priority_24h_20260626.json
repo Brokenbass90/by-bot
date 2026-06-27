@@ -21,20 +21,14 @@
       "min_interval_hours": 24
     },
     {
-      "name": "breakdown_bear_entry_quality",
-      "spec": "configs/autoresearch/breakdown_recent_bear_window_v2_entry_quality.json",
-      "enabled": true,
-      "min_interval_hours": 24
-    },
-    {
       "name": "pfs1_solo_bounded",
       "spec": "configs/autoresearch/pfs1_solo_24h_bounded_v1.json",
       "enabled": true,
       "min_interval_hours": 24
     },
     {
-      "name": "spike_fade_v3_bounded",
-      "spec": "configs/autoresearch/spike_fade_v3_smoke_20260626.json",
+      "name": "spike_fade_v3_link_short_bounded",
+      "spec": "configs/autoresearch/spike_fade_v3_link_short_bounded_20260627.json",
       "enabled": true,
       "min_interval_hours": 24
     },

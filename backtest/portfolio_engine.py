@@ -438,7 +438,8 @@ def run_portfolio_backtest(
 
                 store = stores[sym]
                 bar = store.exec_candles[i]
-                sig = selector(sym, store, bar.ts, bar.c)
+                signal_ts = int(bar.ts) + int(getattr(store, "base_interval_min", 5)) * 60_000
+                sig = selector(sym, store, signal_ts, bar.c)
                 if inspect.isawaitable(sig):
                     sig = _run_awaitable(sig)
                 if sig is None:

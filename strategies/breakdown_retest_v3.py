@@ -25,7 +25,7 @@ from typing import List, Optional, Tuple
 from .signals import TradeSignal
 from .inplay_retest_v3 import (
     _env_float, _env_int, _env_bool, _env_csv_set,
-    _atr, _sma, _closed_rows_before,
+    _atr, _sma, _closed_rows_before, _interval_ms, _row_ts_ms,
 )
 from bot.chart_geometry import find_pivots, cluster_horizontal_levels
 
@@ -159,20 +159,36 @@ class BreakdownRetestV3Strategy:
         structure_raw = store.fetch_klines(sym, cfg.structure_tf, cfg.level_lookback + 2) or []
         entry_need = max(cfg.entry_lookback, cfg.vol_period + cfg.atr_period + 5)
         entry_raw = store.fetch_klines(sym, cfg.entry_tf, entry_need + 2) or []
-        structure_rows = _closed_rows_before(structure_raw, signal_ts_ms, cfg.level_lookback)
-        entry_history_rows = _closed_rows_before(entry_raw, signal_ts_ms, entry_need)
+        structure_rows = _closed_rows_before(
+            structure_raw,
+            signal_ts_ms,
+            cfg.level_lookback,
+            interval_ms=_interval_ms(cfg.structure_tf),
+        )
+        entry_closed_rows = _closed_rows_before(
+            entry_raw,
+            signal_ts_ms,
+            entry_need + 1,
+            interval_ms=_interval_ms(cfg.entry_tf),
+        )
         if len(structure_rows) < (cfg.pivot_left + cfg.pivot_right + cfg.min_touches + 5):
             self.last_no_signal_reason = "not_enough_closed_structure_bars"
             return None
-        if len(entry_history_rows) < max(3, cfg.vol_period if cfg.retest_vol_max_mult > 0 else 3):
+        min_entry_history = max(3, cfg.vol_period if cfg.retest_vol_max_mult > 0 else 3)
+        if len(entry_closed_rows) < min_entry_history + 1:
             self.last_no_signal_reason = "not_enough_closed_entry_bars"
             return None
 
-        bar_ts = signal_ts_ms
-        if self._last_entry_ts is not None and bar_ts == self._last_entry_ts:
+        trigger_row = entry_closed_rows[-1]
+        entry_history_rows = entry_closed_rows[:-1]
+        trigger_ts = _row_ts_ms(trigger_row)
+        if trigger_ts is None:
+            self.last_no_signal_reason = "invalid_entry_bar_ts"
+            return None
+        if self._last_entry_ts is not None and trigger_ts == self._last_entry_ts:
             self.last_no_signal_reason = "same_entry_bar"
             return None
-        self._last_entry_ts = bar_ts
+        self._last_entry_ts = trigger_ts
         if self._cooldown > 0:
             self._cooldown -= 1
             self.last_no_signal_reason = "cooldown"
@@ -183,8 +199,11 @@ class BreakdownRetestV3Strategy:
             self.last_no_signal_reason = "structure_atr_invalid"
             return None
 
-        cur_open, cur_high, cur_low, cur_close = float(o), float(h), float(l), float(c)
-        cur_vol = float(v or 0.0)
+        cur_open = float(trigger_row[1])
+        cur_high = float(trigger_row[2])
+        cur_low = float(trigger_row[3])
+        cur_close = float(trigger_row[4])
+        cur_vol = float(trigger_row[5]) if len(trigger_row) > 5 else 0.0
         bar_range = max(1e-12, cur_high - cur_low)
         last_structure_close = float(structure_rows[-1][4])
 

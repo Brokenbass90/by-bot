@@ -7,7 +7,8 @@ def _row(i, o, h, l, c, v=100):
 
 
 def _call(strategy, store, row):
-    return strategy.maybe_signal(store, int(float(row[0])),
+    signal_ts = int(float(row[0])) + int(strategy.cfg.entry_tf) * 60_000
+    return strategy.maybe_signal(store, signal_ts,
                                  float(row[1]), float(row[2]), float(row[3]),
                                  float(row[4]), float(row[5]))
 
@@ -61,6 +62,10 @@ def _cfg(**kw):
     return BreakdownRetestV3Config(**base)
 
 
+def _row_ms(ts_ms, o, h, l, c, v=100):
+    return [str(ts_ms), str(o), str(h), str(l), str(c), str(v)]
+
+
 # retest bar: pokes up to broken support 99.4 and closes back below it (rejected)
 def _retest_bar(i=110):
     return _row(i, 99.4, 99.5, 98.7, 99.0)
@@ -111,3 +116,15 @@ def test_weak_retest_volume_filter_blocks_high_volume():
     sig = _call(s, _Store(_structure_broken(), entry), hot)
     assert sig is None
     assert s.last_no_signal_reason == "retest_volume_too_high"
+
+
+def test_forming_entry_bar_after_retest_is_ignored():
+    retest = _retest_bar()
+    forming_start = int(float(retest[0])) + int(BreakdownRetestV3Config().entry_tf) * 60_000
+    forming = _row_ms(forming_start, 105.0, 107.0, 104.0, 106.5, 10_000)
+    entry = _entry_history() + [retest, forming]
+
+    sig = _call(BreakdownRetestV3Strategy(_cfg()), _Store(_structure_broken(), entry), retest)
+
+    assert sig is not None
+    assert sig.entry == float(retest[4])

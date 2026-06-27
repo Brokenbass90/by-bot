@@ -9,7 +9,8 @@ def _row(i, o, h, l, c, v=100):
 
 
 def _call(strategy, store, row):
-    return strategy.maybe_signal(store, int(float(row[0])),
+    signal_ts = int(float(row[0])) + int(strategy.cfg.entry_tf) * 60_000
+    return strategy.maybe_signal(store, signal_ts,
                                  float(row[1]), float(row[2]), float(row[3]),
                                  float(row[4]), float(row[5]))
 
@@ -39,6 +40,10 @@ def _structure():
 
 def _flat(n, px, start=70):
     return [_row(start + i, px, px + 0.3, px - 0.2, px) for i in range(n)]
+
+
+def _row_ms(ts_ms, o, h, l, c, v=100):
+    return [str(ts_ms), str(o), str(h), str(l), str(c), str(v)]
 
 
 def _cfg(**kw):
@@ -107,6 +112,22 @@ def test_no_fade_when_move_too_small():
     sig = _call(s, _Store(_structure(), hist + [small]), small)
     assert sig is None
     assert s.last_no_signal_reason == "no_spike_fade_setup"
+
+
+def test_forming_entry_bar_after_trigger_is_ignored():
+    hist = _flat(34, 104.0) + [
+        _row(104, 104, 105.5, 104.0, 105.0), _row(105, 105, 107.0, 104.8, 106.5),
+        _row(106, 106.5, 108.5, 106.0, 108.0), _row(107, 108, 110.0, 107.5, 109.5),
+        _row(108, 109.5, 110.2, 109.0, 110.0),
+    ]
+    spike = _row(109, 110.0, 110.5, 108.0, 108.3)
+    forming_start = int(float(spike[0])) + int(SpikeFadeV3Config().entry_tf) * 60_000
+    forming = _row_ms(forming_start, 120.0, 125.0, 119.0, 124.0, 10_000)
+
+    sig = _call(SpikeFadeV3Strategy(_cfg()), _Store(_structure(), hist + [spike, forming]), spike)
+
+    assert sig is not None
+    assert sig.entry == float(spike[4])
 
 
 def test_run_portfolio_supports_spike_fade_v3():
