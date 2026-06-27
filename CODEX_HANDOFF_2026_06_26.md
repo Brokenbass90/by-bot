@@ -765,3 +765,83 @@ It contains:
 - 2–4 week plan.
 
 Use this file as the first attachment for Claude/DeepSeek/external reviewer.
+
+## 2026-06-27 afternoon update — range/pila repair queued
+
+User asked to work on “пила” because it has useful frequency. Fresh facts:
+
+- live `range` is not safe to unpause:
+  - last mixed live sample: `range` 21 closes, 5 wins / 16 losses,
+    PnL `-2.0534 USDT`;
+  - long side was worse: `Buy -1.7069`, short side roughly flat:
+    `Sell -0.0231`;
+  - repeated short stop-outs happened on symbols such as RENDER/APE/JUP;
+  - legacy `strategy=range` 180d repair replay `r216` was deeply negative:
+    280 trades, net `-18.60`, PF `0.610`, WR `19.6%`, DD `20.54`,
+    5 red months in a row.
+- ARS1 is a different implementation and remains worth repairing:
+  - previous exact next-open ARS1 validation:
+    108 trades, net `+16.61`, PF `1.682`, DD `6.68`;
+  - weakness: 4 red months, max red streak 2.
+- ARF1 is also separate from legacy range:
+  - live mixed sample had `flat_resistance_fade` 2/2 wins, `+0.3234 USDT`;
+  - too small for promotion, but enough to test as short-only structured range
+    fade instead of mixing into the legacy range wrapper.
+
+New bounded research-only specs:
+
+- `configs/autoresearch/ars1_side_regime_repair_20260627.json`
+  - tests `alt_range_scalp_v1`;
+  - side split: long-only / short-only / both;
+  - stronger gates: ADX, reclaim, trailing, volume;
+  - 192 combos, cache-only, next-open.
+- `configs/autoresearch/arf1_structured_short_repair_20260627.json`
+  - tests `alt_resistance_fade_v1`;
+  - short-only resistance fade;
+  - symbol baskets, RSI/rejection/touch/SL/trailing;
+  - 144 combos, cache-only, next-open.
+
+Both specs:
+
+- are added to `configs/autoresearch/approved_specs.txt`;
+- are queued in `configs/research_priority_24h_20260626.json` after
+  `att1_dd_repair` and before the older `arf1_scanner_allowlist_probe`;
+- passed local strict config validation;
+- passed server strict config validation;
+- were deployed to `/root/by-bot`;
+- do not change live risk and do not unpause `runtime/strategy_pause.env`.
+
+Local validation:
+
+```bash
+python3 scripts/validate_sweep_configs.py --strict --file configs/autoresearch/ars1_side_regime_repair_20260627.json
+python3 scripts/validate_sweep_configs.py --strict --file configs/autoresearch/arf1_structured_short_repair_20260627.json
+.venv/bin/python -m pytest -q tests/test_classic_strategy_geometry_guards.py tests/test_alt_range_scalp_adx.py tests/test_strategy_catalog.py
+# 16 passed
+```
+
+Server validation:
+
+```bash
+.venv/bin/python3 scripts/validate_sweep_configs.py --strict --file configs/autoresearch/ars1_side_regime_repair_20260627.json
+.venv/bin/python3 scripts/validate_sweep_configs.py --strict --file configs/autoresearch/arf1_structured_short_repair_20260627.json
+python3 -m json.tool configs/research_priority_24h_20260626.json
+```
+
+Current server research around 2026-06-27 14:26 UTC:
+
+- live still active, no open positions;
+- active research still `asb1_bull_chop_repair_v1`, around row `r197/432`;
+- early ASB1 rows are mostly FAIL, PF often `<1.0`, DD often `18–25`;
+- let it finish or time out; priority queue will then continue.
+
+Decision rule for range:
+
+- do not revive legacy `range`;
+- only consider `ARS1` or `ARF1` if the new bounded repair passes gates;
+- if ARS1 passes but still has 4 red months, it can only be a small sleeve,
+  not the portfolio engine;
+- preferred final structure is side-specific:
+  - `ARF1 short resistance fade` in bear/chop;
+  - `ASB1 long support bounce` only in bull/chop if it ever passes;
+  - `ARS1 BB scalp` only in clean low-ADX ranges.

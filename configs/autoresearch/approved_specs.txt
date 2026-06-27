@@ -26,3 +26,5 @@ funding_reversion_short_smoke_20260627.json
 ivb1_dd_repair_20260627.json
 inplay_dd_repair_20260627.json
 att1_dd_repair_20260627.json
+ars1_side_regime_repair_20260627.json
+arf1_structured_short_repair_20260627.json

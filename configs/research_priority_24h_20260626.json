@@ -93,6 +93,18 @@
       "min_interval_hours": 24
     },
     {
+      "name": "ars1_side_regime_repair",
+      "spec": "configs/autoresearch/ars1_side_regime_repair_20260627.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "arf1_structured_short_repair",
+      "spec": "configs/autoresearch/arf1_structured_short_repair_20260627.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
       "name": "arf1_scanner_allowlist_probe",
       "spec": "configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json",
       "enabled": true,

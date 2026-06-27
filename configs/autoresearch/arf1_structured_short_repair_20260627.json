@@ -1,0 +1,91 @@
+{
+  "name": "arf1_structured_short_repair_20260627",
+  "description": "Bounded repair sweep for ARF1 resistance-fade shorts. Tests whether structured short-only resistance fades can become the safer range/pila sleeve after live range wrapper degradation. Research-only; no live unpause.",
+  "cache_only": true,
+  "timeout_sec": 900,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "{SYMBOLS}",
+    "--strategies",
+    "alt_resistance_fade_v1",
+    "--days",
+    "240",
+    "--end",
+    "2026-04-30",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.005",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "2",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2",
+    "--entry-on-next-open"
+  ],
+  "base_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "ARF1_SYMBOL_ALLOWLIST": "ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT,SOLUSDT,ATOMUSDT,BTCUSDT,XRPUSDT",
+    "ARF1_SIGNAL_TF": "60",
+    "ARF1_REGIME_TF": "240",
+    "ARF1_SIGNAL_LOOKBACK": "48",
+    "ARF1_SIGNAL_EMA_PERIOD": "20",
+    "ARF1_SIGNAL_ATR_PERIOD": "14",
+    "ARF1_MIN_RANGE_PCT": "4.5",
+    "ARF1_MAX_RANGE_PCT": "30.0",
+    "ARF1_MIN_BODY_FRAC": "0.22",
+    "ARF1_MAX_DIST_FROM_RES_PCT": "1.4",
+    "ARF1_RSI_PERIOD": "14",
+    "ARF1_TP1_FRAC": "0.60",
+    "ARF1_TP2_BUFFER_PCT": "0.45",
+    "ARF1_MIN_RR": "1.15",
+    "ARF1_MIN_STOP_PCT": "0.0015",
+    "ARF1_MAX_STOP_PCT": "0.0600",
+    "ARF1_TIME_STOP_BARS_5M": "576",
+    "ARF1_COOLDOWN_BARS_5M": "48",
+    "ARF1_REJECT_REQUIRE_LOWER_CLOSE": "1"
+  },
+  "grid": {
+    "SYMBOLS": [
+      "ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+      "ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT,SOLUSDT,ATOMUSDT,BTCUSDT,XRPUSDT",
+      "ADAUSDT,LTCUSDT,BCHUSDT,XRPUSDT"
+    ],
+    "ARF1_MIN_RSI": ["50", "55", "58"],
+    "ARF1_REJECT_BELOW_RES_ATR": ["0.06", "0.10"],
+    "ARF1_RES_TOUCH_BUFFER_ATR": ["0.35", "0.50"],
+    "ARF1_SL_ATR_MULT": ["0.60", "0.85"],
+    "ARF1_TRAIL_ATR_MULT": ["0.0", "1.2"]
+  },
+  "constraints": {
+    "min_trades": 10,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 8.0,
+    "min_net_pnl": 0.5,
+    "max_negative_months": 3,
+    "max_negative_streak": 2,
+    "min_winrate": 0.42
+  },
+  "score_weights": {
+    "net_pnl": 1.1,
+    "profit_factor": 6.0,
+    "winrate": 5.0,
+    "max_drawdown": 2.5,
+    "trades": 0.12,
+    "trades_cap": 80,
+    "negative_months": 3.0,
+    "max_negative_streak": 2.5,
+    "worst_month_pnl": 2.0
+  },
+  "_notes": {
+    "why": "Live flat_resistance_fade was 2/2 positive in the mixed live sample, while legacy range wrapper lost. Test ARF1 as a dedicated short-only range sleeve rather than mixing it with bidirectional BB range.",
+    "combo_count": "3 symbol baskets x 3 RSI x 2 reject x 2 touch x 2 SL x 2 trail = 144 combos"
+  }
+}
