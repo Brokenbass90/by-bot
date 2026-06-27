@@ -533,3 +533,82 @@ Do not unfreeze Breakdown V1 or PFS1 from current results.
 ## Alpaca
 
 Not rechecked in this turn. Previous plan remains: Alpaca is likely the first real-money candidate, but only after post-2026-06-26 market-close execution review: broker stops, fills, ownership, PnL accounting, no duplicate orders. If clean, `$500 @ 1.0x` canary is reasonable. Do not answer “yes, fund now” without doing that check.
+
+## Morning update — 2026-06-27
+
+Server queue did not stall overnight:
+
+- live bot still active, no restart performed;
+- InPlay bounded run completed;
+- `sloped_resistance_choch_bounded` completed;
+- `funding_reversion_short_smoke` completed;
+- `ivb1_short_wider_bounded` started and was on the final rows around
+  2026-06-27 04:50 UTC.
+
+Current morning verdicts:
+
+- `ivb1_short_next_open_recheck_v1`: still the best price-action candidate.
+  Best row `r005`: net `+15.23`, PF `1.25`, WR `~54.7%`, DD `8.46`.
+  Fails only the strict DD gate.
+- `inplay_retest_v3_24h_bounded_v1`: best row `r059`: net about `+1.01`,
+  PF `1.072`, DD `1.83`, 90 trades. Safer but edge is too thin.
+- `sloped_resistance_choch_bounded`: only ~1 trade in the bounded smoke;
+  current wrapper/conditions are too narrow or not connected to the real manual
+  sloped-breakdown logic yet.
+- `funding_reversion_short_smoke`: failed; useful only as structural smoke
+  because funding was mocked.
+
+New reusable DD tool:
+
+- `scripts/drawdown_doctor_report.py`
+
+It reads `backtest_runs/.../trades.csv` plus optional
+`trade_forensics_report.py` JSONL and writes:
+
+- max-DD window start/trough;
+- worst contributors by symbol, side, reason, month, UTC hour;
+- contributors inside the max-DD window;
+- forensic verdict contribution;
+- concrete next hypotheses.
+
+Server reports already generated:
+
+- `reports/trade_forensics/trade_forensics_20260627_050212_dd_doctor_ivb1_20260627.md`
+- `reports/trade_forensics/trade_forensics_20260627_050204_dd_doctor_inplay_20260627.md`
+- `reports/drawdown_doctor/drawdown_doctor_ivb1_20260627.md`
+- `reports/drawdown_doctor/drawdown_doctor_inplay_20260627.md`
+
+Key IVB1 DD facts:
+
+- combined IVB1 forensic sample: 312 trades, net `+16.45`, PF `1.254`,
+  WR `55.4%`;
+- max DD `8.9956`, from 2025-04-08 to 2025-08-13, 82 trades;
+- worst symbols overall: BTCUSDT `-1.86`, SOLUSDT roughly flat;
+- best contributors: ADAUSDT `+6.50`, DOGEUSDT `+4.93`, ETHUSDT `+2.98`,
+  LINKUSDT `+2.70`;
+- inside max-DD window, worst contributors were SOL/LINK/DOGE;
+- dominant DD patterns:
+  - `stop_then_reversed`;
+  - `gave_back_profit`;
+  - winners often `tp_then_continued`.
+
+Concrete IVB1 hypotheses:
+
+1. symbol gating: test removing BTC and possibly SOL from IVB1 short;
+2. stop geometry: test wider SL / delayed entry / stop behind structure;
+3. exit management: test breakeven or trailing after MFE threshold;
+4. runner: test wider TP2 or ATR trailing runner.
+
+Key InPlay DD facts:
+
+- best bounded row: 90 trades, net `+1.01`, PF `1.072`, WR `41.1%`;
+- max DD `4.71`, from 2025-08-19 to 2026-02-10, 52 trades;
+- longs net negative, shorts net positive;
+- NEAR/SUI were main max-DD contributors;
+- dominant pattern: many SLs, winners continue after TP.
+
+Next automation step:
+
+- make DD doctor a mandatory postprocess for every promoted/reviewed
+  autoresearch candidate: ranked row → trades.csv → trade_forensics →
+  drawdown_doctor → only then GO/WATCH/CUT.
