@@ -81,6 +81,18 @@
       "min_interval_hours": 24
     },
     {
+      "name": "ivb1_dd_repair",
+      "spec": "configs/autoresearch/ivb1_dd_repair_20260627.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
+      "name": "inplay_dd_repair",
+      "spec": "configs/autoresearch/inplay_dd_repair_20260627.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
       "name": "arf1_scanner_allowlist_probe",
       "spec": "configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json",
       "enabled": true,

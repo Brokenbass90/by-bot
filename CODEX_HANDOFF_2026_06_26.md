@@ -612,3 +612,18 @@ Next automation step:
 - make DD doctor a mandatory postprocess for every promoted/reviewed
   autoresearch candidate: ranked row → trades.csv → trade_forensics →
   drawdown_doctor → only then GO/WATCH/CUT.
+
+New DD-repair sweeps added after the morning diagnosis:
+
+- `configs/autoresearch/ivb1_dd_repair_20260627.json`
+  - 48 bounded combos;
+  - tests IVB1 symbol gating, SL width, BE trigger, trail width and runner RR;
+  - directly targets IVB1 DD causes from `drawdown_doctor_ivb1_20260627.md`.
+- `configs/autoresearch/inplay_dd_repair_20260627.json`
+  - 24 bounded combos;
+  - tests InPlay short-only vs both, NEAR/SUI exclusion, stop buffer and runner;
+  - directly targets InPlay DD causes from `drawdown_doctor_inplay_20260627.md`.
+
+Both specs passed strict config validation and `ResearchGate.can_run=True`.
+They were added to `configs/autoresearch/approved_specs.txt` and queued after
+`att1_density_top_revalidate`, before `arf1_scanner_allowlist_probe`.
