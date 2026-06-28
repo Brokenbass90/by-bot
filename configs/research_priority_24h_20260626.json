@@ -111,6 +111,12 @@
       "min_interval_hours": 24
     },
     {
+      "name": "arf2_structured_resistance_fade",
+      "spec": "configs/autoresearch/arf2_structured_resistance_fade_20260628.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
       "name": "arf1_scanner_allowlist_probe",
       "spec": "configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json",
       "enabled": true,

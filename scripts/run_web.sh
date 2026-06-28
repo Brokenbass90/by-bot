@@ -20,6 +20,15 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+# Preserve explicit shell overrides. `.env.local` is convenient for the default
+# owner workstation setup, but it must not make `WEB_LIVE_SYNC=0 bash
+# scripts/run_web.sh` impossible when the SSH mirror is temporarily stuck.
+CLI_WEB_HOST="${WEB_HOST-}"
+CLI_WEB_PORT="${WEB_PORT-}"
+CLI_WEB_RUNTIME_ROOT="${WEB_RUNTIME_ROOT-}"
+CLI_WEB_LIVE_SYNC="${WEB_LIVE_SYNC-}"
+CLI_WEB_LIVE_SYNC_INTERVAL_SEC="${WEB_LIVE_SYNC_INTERVAL_SEC-}"
+
 source .venv/bin/activate
 
 if [[ -f ".env" ]]; then
@@ -35,6 +44,12 @@ if [[ -f ".env.local" ]]; then
   source .env.local
   set +a
 fi
+
+if [[ -n "$CLI_WEB_HOST" ]]; then export WEB_HOST="$CLI_WEB_HOST"; fi
+if [[ -n "$CLI_WEB_PORT" ]]; then export WEB_PORT="$CLI_WEB_PORT"; fi
+if [[ -n "$CLI_WEB_RUNTIME_ROOT" ]]; then export WEB_RUNTIME_ROOT="$CLI_WEB_RUNTIME_ROOT"; fi
+if [[ -n "$CLI_WEB_LIVE_SYNC" ]]; then export WEB_LIVE_SYNC="$CLI_WEB_LIVE_SYNC"; fi
+if [[ -n "$CLI_WEB_LIVE_SYNC_INTERVAL_SEC" ]]; then export WEB_LIVE_SYNC_INTERVAL_SEC="$CLI_WEB_LIVE_SYNC_INTERVAL_SEC"; fi
 
 # Required: set a real secret in production
 export WEB_JWT_SECRET="${WEB_JWT_SECRET:-change-me-use-openssl-rand-hex-32}"
@@ -55,7 +70,7 @@ fi
 SYNC_PID=""
 if [[ "${WEB_LIVE_SYNC:-0}" == "1" ]]; then
   echo "[web] Live mirror sync enabled every ${WEB_LIVE_SYNC_INTERVAL_SEC:-60}s"
-  bash scripts/sync_web_live_mirror.sh >/dev/null 2>&1 || true
+  bash scripts/sync_web_live_mirror.sh >/dev/null 2>&1 || true &
   (
     while true; do
       sleep "${WEB_LIVE_SYNC_INTERVAL_SEC:-60}"
