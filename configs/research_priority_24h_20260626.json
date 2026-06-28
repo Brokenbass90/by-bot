@@ -33,6 +33,12 @@
       "min_interval_hours": 24
     },
     {
+      "name": "package_att1_short_ars1_additivity",
+      "spec": "configs/autoresearch/package_att1_short_ars1_additivity_20260628.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
       "name": "hzbo1_bounded",
       "spec": "configs/autoresearch/hzbo1_24h_bounded_v1.json",
       "enabled": true,

@@ -15,6 +15,7 @@ elder_v3_macro_off_full_relax_v1.json
 ivb1_short_next_open_recheck_v1.json
 pfs1_solo_24h_bounded_v1.json
 spike_fade_v3_link_short_bounded_20260627.json
+package_att1_short_ars1_additivity_20260628.json
 hzbo1_24h_bounded_v1.json
 ets2_canonical_24h_bounded_v1.json
 inplay_retest_v3_24h_bounded_v1.json

@@ -845,3 +845,107 @@ Decision rule for range:
   - `ARF1 short resistance fade` in bear/chop;
   - `ASB1 long support bounce` only in bull/chop if it ever passes;
   - `ARS1 BB scalp` only in clean low-ADX ranges.
+
+## 2026-06-28 update — controlled-unpause groundwork, ATT1+ARS1 package queued
+
+User asked to deploy what is needed and start a portfolio if one is ready.
+Decision: do **not** blindly unpause crypto. Current safe posture is preserved:
+
+- live bot is active: `bybot.service`;
+- `trade_on=true`, `dry_run=false`;
+- `runtime/live_positions.json`: `count=0`, no open positions;
+- current market regime in heartbeat: `bear_chop`;
+- `runtime/strategy_pause.env` still pauses degraded sleeves:
+  - `BREAKDOWN_RISK_MULT=0.0`;
+  - `ATT1_RISK_MULT=0.0`;
+  - `RANGE_RISK_MULT=0.0`;
+- proof-of-life says live-risk is only `flat x0.3`;
+- ATT1/breakdown/range remain shadow/paused until a controlled gate passes.
+
+Safety bug fixed and deployed:
+
+- found inconsistent ATT1 risk parsing in `smart_pump_reversal_bot.py`;
+- one allocator refresh path used `max(0.05, ATT1_RISK_MULT)` and could, in
+  theory, lift an explicit `ATT1_RISK_MULT=0.0` pause to `0.05`;
+- fixed all ATT1 risk reads to use `_risk_mult_or_pause(...)`;
+- added regression test:
+  - `tests/test_strategy_pause_contract.py`;
+- local targeted tests: `17 passed`;
+- server validation: config validation OK, targeted tests `5 passed`;
+- copied fixed `smart_pump_reversal_bot.py` to `/root/by-bot`;
+- restarted `bybot.service` after confirming no open positions;
+- post-restart heartbeat: service active, no open positions, data feed alive.
+
+ASB1 result:
+
+- old nightly `asb1_bull_chop_repair_v1` finished `432/432 FAIL`;
+- best row:
+  - `asb1_bull_chop_repair_v1_r117`;
+  - net `-2.68`;
+  - PF `0.924`;
+  - WR `39.2%`;
+  - DD `6.90`;
+- many rows had PF `<1.0` and DD `10–24`;
+- conclusion: ASB1 long support-bounce is not a live candidate by parameter
+  tuning. Keep the idea, but rewrite/support it with better level/context logic.
+
+Elder forensics, no code changes:
+
+- `ets2_canonical_24h_bounded_v1` finished `64/64 FAIL`;
+- trading rows were deeply negative, typical DD `40–83`;
+- old `elder_canonical_rewrite_v1` also produced mass FAIL rows and was stopped;
+- conclusion: current Elder is not a standalone engine. Treat it as:
+  - a future filter/booster for ATT1/InPlay, or
+  - a rewrite candidate after the price-action portfolio gate.
+
+New package research spec:
+
+- `configs/autoresearch/package_att1_short_ars1_additivity_20260628.json`;
+- purpose: answer whether ARS1/pila diversifies ATT1 or worsens it;
+- command uses:
+  - strategies: `alt_trendline_touch_v1,alt_range_scalp_v1`;
+  - ATT1 first, so ARS1 cannot override same-bar trendline setups;
+  - 360d, `--entry-on-next-open`, fees/slippage `6/2` bps;
+  - 192 bounded combos;
+  - `RANGE_RISK_MULT=0.00` rows are ATT1-only controls;
+  - ARS1 rows must beat/smooth the control to be useful.
+- queued immediately after current `spike_fade_v3_link_short_bounded`;
+- added to:
+  - `configs/autoresearch/approved_specs.txt`;
+  - `configs/research_priority_24h_20260626.json`;
+- deployed and server-validated.
+
+Current server research around 2026-06-28 05:55 UTC:
+
+- active priority process:
+  - `spike_fade_v3_link_short_bounded_20260627`;
+  - around row `r024/32`;
+- when it finishes, next intended priority task is:
+  - `package_att1_short_ars1_additivity_20260628`.
+
+Alpaca status:
+
+- paper bridge is in `send_orders` mode with effective capital override `$1000`;
+- current paper positions: `UNH` and `V`;
+- broker stop orders were present/rearmed in latest logs;
+- no stale positions;
+- market closed; next open in logs: `2026-06-29 09:30:00 -04:00`;
+- real `$500` canary should only be considered on/after Monday open after a
+  fresh check confirms:
+  - correct account role/live guard;
+  - broker stops for all positions;
+  - no duplicate orders;
+  - current picks are still fresh.
+
+Next crypto decision gates:
+
+1. Wait for `spike_fade_v3_link_short_bounded` final row/ranking.
+2. Wait for `package_att1_short_ars1_additivity` results.
+3. If ATT1 short-only/additivity passes:
+   - run DD doctor and monthly/OOS;
+   - create explicit controlled-unpause waiver, not manual edit of pause env;
+   - tiny canary only (`ATT1 short-only`, risk multiplier around `0.05–0.10`);
+   - auto-rollback if live PF/DD or stop series violates gate.
+4. If ARS1 degrades ATT1 monthly stability, keep ARS1 in research only.
+5. Do not revive legacy `strategy=range`; it is rejected as implementation,
+   not as a human trading idea.

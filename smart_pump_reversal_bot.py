@@ -738,7 +738,7 @@ ATT1_DECISION_EVERY_SEC = max(
     ATT1_TRY_EVERY_SEC,
     int(float(os.getenv("ATT1_DECISION_MIN_AGE_MIN", "55")) * 60),
 )
-ATT1_RISK_MULT = max(0.0, float(os.getenv("ATT1_RISK_MULT", "1.0")))
+ATT1_RISK_MULT = _risk_mult_or_pause("ATT1_RISK_MULT", "1.0")
 ATT1_ALLOW_MINQTY_FALLBACK = _env_bool("ATT1_ALLOW_MINQTY_FALLBACK", True)
 ATT1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("ATT1_MINQTY_FALLBACK_MAX_MULT", "1.80")))
 ATT1_MAX_OPEN_TRADES = int(os.getenv("ATT1_MAX_OPEN_TRADES", "2"))
@@ -14474,7 +14474,7 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     except Exception:
         pass
     try:
-        ATT1_RISK_MULT = max(0.05, float(os.getenv("ATT1_RISK_MULT", str(ATT1_RISK_MULT)) or ATT1_RISK_MULT))
+        ATT1_RISK_MULT = _risk_mult_or_pause("ATT1_RISK_MULT", str(ATT1_RISK_MULT))
     except Exception:
         pass
     try:
