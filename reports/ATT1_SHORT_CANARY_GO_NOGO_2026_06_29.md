@@ -33,9 +33,10 @@ corrected spec: `configs/autoresearch/package_att1_strong_short_ars1_additivity_
 ### GO gates (all required)
 1. **Execution-accurate replay** — green locally: +28.17, PF 1.402, DD 6.59,
    2 red months. Server replay should be captured/archived before live if possible.
-2. **Monolith breaker wiring** — `bot/strategy_breaker.py` exists and is tested,
-   but is not yet wired into `smart_pump_reversal_bot.py`. Do not run an open-ended
-   canary without this or equivalent manual expiry/rollback.
+2. **Monolith breaker wiring** — now implemented in `smart_pump_reversal_bot.py`.
+   The breaker uses the live trade-event strategy id `att1_trendline_touch`
+   (not the backtest id `alt_trendline_touch_v1`), scales sizing before order
+   submission, and is visible in heartbeat/operator context.
 3. **Shadow sanity**: ATT1 already runs shadow; confirm recent shadow signals look
    sane (no degenerate clustering) before flipping risk on.
 4. **Package additivity**: ARS1 is not required for first canary. Include it only
@@ -63,58 +64,19 @@ rollback when any of these hit (defaults in the env file):
 Tested with synthetic DBs: aggregate/streak math, soft cut, hard block, consecutive-loss
 kill, min-trades gate, expiry (past/future), lookback exclusion, missing-DB safety.
 
-## Monolith wiring (one insertion — apply on GO; Codex rechecks)
-Mirror the existing BREAKDOWN_BREAKER pattern.
+## Monolith wiring status
+Implemented by Codex on 2026-06-29:
 
-1) Near the ATT1 env defs (~line 745), add:
-```python
-from bot.strategy_breaker import breaker_state as _strategy_breaker_state  # top imports
+- import `bot.strategy_breaker.breaker_state`;
+- `_att1_breaker_state()` reads live closes for `att1_trendline_touch`;
+- ATT1 entry path checks the breaker after signal/SL geometry and before sizing;
+- `effective_att1_risk_mult = ATT1_RISK_MULT * breaker_mult` is used for both
+  normal sizing and min-qty fallback;
+- heartbeat/operator context exposes `att1_breaker`;
+- canary env sets `MAX_POSITIONS=3` and `ATT1_MAX_OPEN_TRADES=3`.
 
-ATT1_BREAKER_ENABLE = _env_bool("ATT1_BREAKER_ENABLE", True)
-ATT1_BREAKER_LOOKBACK_DAYS = max(3, int(os.getenv("ATT1_BREAKER_LOOKBACK_DAYS", "21") or 21))
-ATT1_BREAKER_MIN_TRADES = max(1, int(os.getenv("ATT1_BREAKER_MIN_TRADES", "6") or 6))
-ATT1_BREAKER_SOFT_NET_PNL = float(os.getenv("ATT1_BREAKER_SOFT_NET_PNL", "-1.5") or -1.5)
-ATT1_BREAKER_SOFT_MULT = max(0.05, min(1.0, float(os.getenv("ATT1_BREAKER_SOFT_MULT", "0.50") or 0.50)))
-ATT1_BREAKER_HARD_NET_PNL = float(os.getenv("ATT1_BREAKER_HARD_NET_PNL", "-3.0") or -3.0)
-ATT1_BREAKER_MAX_CONSEC_LOSSES = int(os.getenv("ATT1_BREAKER_MAX_CONSEC_LOSSES", "5") or 5)
-ATT1_BREAKER_ALERT_COOLDOWN_SEC = max(300, int(os.getenv("ATT1_BREAKER_ALERT_COOLDOWN_SEC", "1800") or 1800))
-ATT1_CANARY_EXPIRY_UTC = os.getenv("ATT1_CANARY_EXPIRY_UTC", "").strip()
-
-def _att1_breaker_state():
-    return _strategy_breaker_state(
-        TRADE_DB_PATH, "alt_trendline_touch_v1",
-        enable=ATT1_BREAKER_ENABLE,
-        lookback_days=ATT1_BREAKER_LOOKBACK_DAYS,
-        min_trades=ATT1_BREAKER_MIN_TRADES,
-        soft_net_pnl=ATT1_BREAKER_SOFT_NET_PNL,
-        soft_mult=ATT1_BREAKER_SOFT_MULT,
-        hard_net_pnl=ATT1_BREAKER_HARD_NET_PNL,
-        max_consec_losses=ATT1_BREAKER_MAX_CONSEC_LOSSES,
-        expiry_utc=ATT1_CANARY_EXPIRY_UTC or None,
-    )
-```
-
-2) In the ATT1 entry path, right after `stop_pct = ...` and before
-`dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=ATT1_RISK_MULT)`
-(~line 10529), insert:
-```python
-    _att1_brk = _att1_breaker_state()
-    if _att1_brk.get("blocked"):
-        _diag_inc("att1_skip_breaker")
-        tg_trade_throttled(f"att1_breaker:block:{symbol}",
-            f"🛑 ATT1 BLOCKED {symbol}: {_att1_brk.get('reason','breaker')}",
-            ATT1_BREAKER_ALERT_COOLDOWN_SEC)
-        return
-    _att1_brk_mult = float(_att1_brk.get("risk_mult", 1.0) or 1.0)
-    _att1_effective_risk_mult = float(ATT1_RISK_MULT) * _att1_brk_mult
-```
-then change the sizing line(s) to use `_att1_effective_risk_mult` instead of
-`ATT1_RISK_MULT` (also in the minqty fallback branch).
-
-3) (optional) add `"att1_breaker": _att1_breaker_state()` to the heartbeat dict
-(~line 2994) for observability in proof-of-life.
-
-After wiring: `python -m py_compile smart_pump_reversal_bot.py` and run
+Validation required after every edit/deploy:
+`python -m py_compile smart_pump_reversal_bot.py` and
 `pytest tests/test_strategy_breaker.py tests/test_strategy_pause_contract.py -q`.
 
 ## Launch steps (owner, on server, after GO)

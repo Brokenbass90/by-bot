@@ -16,7 +16,9 @@
   canary-кандидат. Exact short-only replay 2026-06-29: 296 сделок, +28.17R,
   PF 1.402, WR 59.1%, DD 6.59, **2 красных месяца, серия 1**. Bidirectional
   revalidate тоже силён: 457 сделок, +37.35R, PF 1.325. Шортовая нога отдельно
-  подтверждена и подходит для первого tiny canary после breaker wiring + shadow sanity.
+  подтверждена и подходит для первого tiny canary после shadow sanity. Breaker
+  wiring уже добавлен в монолит: live-id `att1_trendline_touch`, soft-cut/hard-block/
+  canary-expiry, heartbeat visibility.
 - **SpikeFadeV3 LINK short-only** (`spike_fade_v3.py`) — чистый диверсификатор:
   360d, 32 сделки, +5.10R, PF 1.987, DD 1.27, 2 красных, серия 1. Не двигатель сам,
   но хорошая низкочастотная нога.
@@ -73,13 +75,17 @@ execution-accurate прогон Codex.
 1. (Codex) Старый `package_att1_short_ars1_additivity_20260628` считать некорректным
    verdict: baseline ATT1 в нём слабый (net~9/PF~1.12), не proven short-only.
    Использовать corrected spec `package_att1_strong_short_ars1_additivity_20260629`.
-2. (Codex) ARF2 свип запущен 2026-06-29 в screen `arf2_structured_20260629`; если
+2. (Codex) ATT1 canary code: breaker wired; before actual live risk, run py_compile/
+   focused tests on deployed server, confirm heartbeat `att1_breaker`, then only
+   controlled restart with `configs/att1_short_canary_20260629.env`.
+3. (Codex) ARF2 свип запущен 2026-06-29 в screen `arf2_structured_20260629`; если
    пройдёт, добавить как range/chop ногу.
-3. (Codex) Alpaca ревью исполнения → $500 canary @1.0x если чисто.
-4. (Codex+Claude) Построить ОБЪЁМНЫЙ СЛОЙ владельца: volume-inflow отбор монеты +
+4. (Codex) Alpaca ревью исполнения → $500 canary @1.0x если чисто.
+5. (Codex+Claude) Построить ОБЪЁМНЫЙ СЛОЙ владельца: volume-inflow отбор монеты +
    объёмный ранний выход (OWNER_STRATEGY_SPEC) — главный недоисследованный эдж.
-5. (Codex) Crypto safety P0: per-strategy circuit breaker + incident report.
-6. Дисциплина: shadow → canary с rollback; не плодить 5m TA; не размораживать вслепую.
+6. (Codex) Crypto safety P0: расширить per-strategy circuit breaker + incident report
+   на следующие live-кандидаты после ATT1.
+7. Дисциплина: shadow → canary с rollback; не плодить 5m TA; не размораживать вслепую.
 
 ## Координация
 Claude = аддитивные `backtest/`, анализ, доки, спеки. Codex = монолит, scripts,

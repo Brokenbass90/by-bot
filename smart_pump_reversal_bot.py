@@ -127,6 +127,7 @@ from bot.unsupported_symbols import (
 from bot.circuit_breaker import get_circuit_breaker as _get_cb
 from bot.runner_state import apply_runner_state
 from bot.live_position_view import build_live_position_row
+from bot.strategy_breaker import breaker_state as _strategy_breaker_state
 from bot.symbol_state import (
     SymState, STATE,
     S, update_5m_bar, trim,
@@ -2729,6 +2730,59 @@ def _breakdown_breaker_state() -> dict[str, Any]:
         )
     return state
 
+
+def _att1_breaker_state() -> dict[str, Any]:
+    """Live ATT1 canary breaker.
+
+    ATT1 backtests use strategy id ``alt_trendline_touch_v1``, but live trade
+    events are written as ``att1_trendline_touch``. The breaker must use the
+    live id or it will never see real canary losses.
+    """
+    enabled = _env_bool("ATT1_BREAKER_ENABLE", False)
+    strategy_name = str(os.getenv("ATT1_BREAKER_STRATEGY_NAME", "att1_trendline_touch") or "").strip()
+    if not strategy_name:
+        strategy_name = "att1_trendline_touch"
+    try:
+        lookback_days = max(3, int(os.getenv("ATT1_BREAKER_LOOKBACK_DAYS", "21") or 21))
+        min_trades = max(1, int(os.getenv("ATT1_BREAKER_MIN_TRADES", "6") or 6))
+        soft_net_pnl = float(os.getenv("ATT1_BREAKER_SOFT_NET_PNL", "-1.5") or -1.5)
+        soft_mult = max(0.05, min(1.0, float(os.getenv("ATT1_BREAKER_SOFT_MULT", "0.50") or 0.50)))
+        hard_net_pnl = float(os.getenv("ATT1_BREAKER_HARD_NET_PNL", "-3.0") or -3.0)
+        max_consec_raw = int(os.getenv("ATT1_BREAKER_MAX_CONSEC_LOSSES", "5") or 5)
+        max_consec_losses = max_consec_raw if max_consec_raw > 0 else None
+        expiry_utc = str(os.getenv("ATT1_CANARY_EXPIRY_UTC", "") or "").strip() or None
+        state = _strategy_breaker_state(
+            TRADE_DB_PATH,
+            strategy_name,
+            enable=enabled,
+            lookback_days=lookback_days,
+            min_trades=min_trades,
+            soft_net_pnl=soft_net_pnl,
+            soft_mult=soft_mult,
+            hard_net_pnl=hard_net_pnl,
+            max_consec_losses=max_consec_losses,
+            expiry_utc=expiry_utc,
+        )
+        state["strategy"] = strategy_name
+        return state
+    except Exception as e:
+        log_error(f"att1 breaker state fail: {e}")
+        return {
+            "enabled": bool(enabled),
+            "strategy": strategy_name,
+            "lookback_days": 0,
+            "min_trades": 0,
+            "trades": 0,
+            "net_pnl": 0.0,
+            "winrate": 0.0,
+            "max_consec_losses": 0,
+            "blocked": bool(enabled),
+            "risk_mult": 0.0 if enabled else 1.0,
+            "reason": f"breaker_error: {e}",
+            "expired": False,
+        }
+
+
 def _tg_reply(msg: str):
     tg_send(msg)
 
@@ -2955,6 +3009,10 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "SLOPED_RISK_MULT": os.getenv("SLOPED_RISK_MULT", ""),
             "ATT1_RISK_MULT": os.getenv("ATT1_RISK_MULT", ""),
             "ATT1_SYMBOL_ALLOWLIST": os.getenv("ATT1_SYMBOL_ALLOWLIST", ""),
+            "ATT1_MAX_OPEN_TRADES": os.getenv("ATT1_MAX_OPEN_TRADES", ""),
+            "ATT1_BREAKER_ENABLE": os.getenv("ATT1_BREAKER_ENABLE", ""),
+            "ATT1_BREAKER_STRATEGY_NAME": os.getenv("ATT1_BREAKER_STRATEGY_NAME", ""),
+            "ATT1_CANARY_EXPIRY_UTC": os.getenv("ATT1_CANARY_EXPIRY_UTC", ""),
             "ASB1_RISK_MULT": os.getenv("ASB1_RISK_MULT", ""),
             "ASB1_SYMBOL_ALLOWLIST": os.getenv("ASB1_SYMBOL_ALLOWLIST", ""),
             "HZBO1_RISK_MULT": os.getenv("HZBO1_RISK_MULT", ""),
@@ -2991,6 +3049,7 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "tpsl_hard_fail_grace_sec": str(os.getenv("TPSL_HARD_FAIL_GRACE_SEC", "")),
             "router_regime": str(os.getenv("ROUTER_REGIME", "")),
             "orch_global_risk_mult": str(os.getenv("ORCH_GLOBAL_RISK_MULT", "")),
+            "att1_breaker": _att1_breaker_state(),
             "breakdown_breaker": _breakdown_breaker_state(),
             "live_trade_events_jsonl": str(Path(LIVE_TRADE_EVENTS_JSONL).expanduser()),
         },
@@ -10526,7 +10585,26 @@ async def try_att1_entry_async(symbol: str, price: float):
         return
 
     stop_pct = abs((float(sl_r) - float(entry)) / max(1e-12, float(entry))) * 100.0
-    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=ATT1_RISK_MULT)
+    breaker = _att1_breaker_state()
+    if breaker.get("blocked"):
+        _diag_inc("att1_skip_breaker")
+        alert_cooldown = max(300, int(os.getenv("ATT1_BREAKER_ALERT_COOLDOWN_SEC", "1800") or 1800))
+        tg_trade_throttled(
+            f"att1_breaker:block:{symbol}",
+            f"🛑 ATT1 BLOCKED {symbol}: {breaker.get('reason', 'breaker')}",
+            alert_cooldown,
+        )
+        return
+    breaker_mult = float(breaker.get("risk_mult", 1.0) or 1.0)
+    if breaker_mult < 0.999:
+        alert_cooldown = max(300, int(os.getenv("ATT1_BREAKER_ALERT_COOLDOWN_SEC", "1800") or 1800))
+        tg_trade_throttled(
+            f"att1_breaker:soft:{symbol}",
+            f"🟡 ATT1 RISK CUT {symbol}: x{breaker_mult:.2f} | {breaker.get('reason', 'soft breaker')}",
+            alert_cooldown,
+        )
+    effective_att1_risk_mult = float(ATT1_RISK_MULT) * breaker_mult
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=effective_att1_risk_mult)
     qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
     if dyn_usd > 0:
         qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
@@ -10535,7 +10613,7 @@ async def try_att1_entry_async(symbol: str, price: float):
             symbol=symbol,
             price=price,
             stop_pct=stop_pct,
-            risk_mult=ATT1_RISK_MULT,
+            risk_mult=effective_att1_risk_mult,
             max_mult=ATT1_MINQTY_FALLBACK_MAX_MULT,
         )
         if fallback_qty > 0:
@@ -10596,6 +10674,7 @@ async def try_att1_entry_async(symbol: str, price: float):
         tr.entry_notional_usd = float(notional_real)
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
+        tr.att1_breaker_mult = float(breaker_mult)
         apply_runner_state(tr, sig, q, use_runner=use_runner)
         TRADES[("Bybit", symbol)] = tr
 
@@ -15021,6 +15100,10 @@ async def pulse():
                     "breakdown": sorted(_csv_upper_set("BREAKDOWN_SYMBOL_ALLOWLIST")),
                     "arf1": sorted(_csv_upper_set("ARF1_SYMBOL_ALLOWLIST")),
                     "bounce1": sorted(_csv_upper_set("BOUNCE1_SYMBOL_ALLOWLIST")),
+                },
+                "breaker": {
+                    "att1": _att1_breaker_state(),
+                    "breakdown": _breakdown_breaker_state(),
                 },
             }
             _diag_payload = {
