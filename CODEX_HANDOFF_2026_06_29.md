@@ -79,7 +79,28 @@ Dry env simulation on server confirmed:
 - with canary override: `ATT1_RISK_MULT=0.10`, `FLAT_RISK_MULT=0.0`,
   breaker enabled.
 
-To enable canary only after owner OK:
+Live canary status update:
+
+- Enabled on server on 2026-06-29 around `13:17 UTC` after owner OK.
+- `.env` backup: `/root/by-bot/runtime/env_backups/.env.pre_att1_canary_20260629_131703`
+- Active server-only `.env` lines:
+  - `ALLOW_OPERATOR_LIVE_OVERRIDES=1`
+  - `OPERATOR_LIVE_OVERRIDE_ENV=configs/att1_short_canary_20260629.env`
+- Post-restart heartbeat confirmed:
+  - `operator_live_override.loaded=true`
+  - `risk_mult.att1=0.10`
+  - `risk_mult.flat=0.0`, `range=0.0`, `breakdown=0.0`, `ivb1=0.0`,
+    `midterm=0.0`, `bounce1=0.0`
+  - `enabled.elder=false`; heartbeat may still show `risk_mult.elder=0.05`
+    because one overlay refresh applies an Elder risk floor, but the sleeve is
+    disabled and will not trade
+  - ATT1 breaker `enabled=true`, `blocked=false`, `expired=false`
+  - `open_trades=0`, `trade_on=true`, `dry_run=false`, regime `bear_chop`
+- `ATT1_CANARY_EXPIRY_UTC=2026-07-20` is present in the canary env and consumed
+  by the ATT1 breaker.
+
+To enable canary only after owner OK (already done on 2026-06-29; kept for
+reference / re-enable after rollback):
 
 ```bash
 cd /root/by-bot
