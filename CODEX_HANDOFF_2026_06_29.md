@@ -13,16 +13,37 @@ Pushed commits:
 - `c74abad` — isolated ATT1 canary env from other sleeves.
 - `93ab864` — added explicit operator live override layer loaded after
   `runtime/strategy_pause.env`.
+- `edf5a1d` — operational handoff for the ATT1 canary / Alpaca gate.
+- `189b82e` — research-only expansion: `volume_exit`, `carry_neutral`,
+  `alt_support_bounce_v2`, `alt_channel_bounce_v1`, `classify_channel` /
+  HVN confluence, Alpaca live env template, strategy inventory and rehab docs.
 
 Server deploy status:
 
-- Code through `93ab864` copied to `/root/by-bot`.
+- Code through `189b82e` copied to `/root/by-bot` via explicit tar overlay.
+  `git pull --ff-only` was intentionally not used because the server worktree is
+  dirty with many historical local files/untracked artifacts.
 - `bybot.service` restarted with current env only; no ATT1 risk was enabled.
 - Server checks passed:
   - `python -m py_compile smart_pump_reversal_bot.py`
   - `pytest tests/test_strategy_pause_contract.py`
+- Additional local checks for `189b82e`:
+  - `42 passed`: `test_volume_exit`, `test_alt_support_bounce_v2`,
+    `test_alt_channel_bounce_v1`, `test_market_context`, `test_carry_neutral`
+  - `24 passed`: closed-candle / next-open / strategy catalog focused suite
+- Additional server checks for `189b82e`:
+  - py_compile for `portfolio_engine.py`, `run_portfolio.py`, `volume_exit.py`,
+    `market_context.py`, `carry_neutral.py`, ASB2 and ACB1
+  - same 42 focused tests passed on server
 - Live heartbeat after restart: `open_trades=0`, `trade_on=true`, `dry_run=false`,
   regime `bear_chop`.
+- Latest live heartbeat snapshot after research deploy:
+  - service active; `open_trades=0`, `trade_on=true`, `dry_run=false`,
+    regime `bear_chop`, `ws_guard_active=0`, messages growing
+  - `allocator_hard_block=false`, `allocator_safe_mode=false`
+  - `strategy_runtime_config.risk_mult.att1=0.0`, `flat=0.3`,
+    `range=0.0`, `breakdown=0.0`, `ivb1=0.0`, `midterm=0.0`
+  - operator override disabled/unloaded
 
 ## ATT1 short-only canary
 
@@ -86,9 +107,25 @@ Currently running:
 
 - `screen arf2_structured_20260629`
 - spec: `configs/autoresearch/arf2_structured_resistance_fade_20260628.json`
-- progress observed: rows 1–4/192 completed, all FAIL so far.
-  - r001/r003 were profitable PF~1.7 but failed monthly stability
-    (`neg_months>3;neg_streak>2`).
+- progress observed on 2026-06-29 12:42 UTC: running r071/192.
+- r019/r023/r031/r033/r035/r037/r039/r049/r051/r053/r055/r065/r067/r069
+  and several others are PASS so far.
+  - Examples: r055 net `+6.22`, PF `5.246`, WR `76.9%`, DD `0.90`;
+    r067 net `+7.68`, PF `1.874`, WR `58.7%`, DD `2.517`.
+- Do not promote before full sweep + OOS/monthly review. But unlike ARF1 legacy,
+  ARF2 has real passing rows and is a live portfolio candidate after validation.
+
+Queued after ARF2 completes:
+
+- `screen post_arf2_queue_20260629`
+- It waits with `pgrep -f "[a]rf2_structured_resistance_fade_20260628.json"` so it
+  does not match itself.
+- Then runs:
+  1. `inplay_retest_v3` 240d baseline `irv3_base_240_20260629`
+  2. `inplay_retest_v3` 240d with `VOLUME_EXIT_ENABLE=1`
+     `irv3_vol_240_20260629`
+  3. ASB2 240d `asb2_240_20260629`
+  4. ACB1 240d `acb1_240_20260629`
 
 Corrected ATT1+ARS1 package:
 
@@ -96,12 +133,59 @@ Corrected ATT1+ARS1 package:
 - It replaces the invalid old `package_att1_short_ars1_additivity_20260628`,
   whose control rows used a weak ATT1 baseline.
 - Let ARF2 finish or pause it before launching this on the 1GB VPS.
+- Manual aggregation of the old `package_att1_short_ars1_additivity_20260628`
+  portfolio runs showed ARS1 is not additive in the current package:
+  best observed rows around 404 trades, net `+9.07R`, PF `1.12`, DD `6.79`,
+  which is materially worse than ATT1 short-only (`+28.17R`, PF `1.40`).
+  Keep ARS1 research-only until repaired.
 
 SpikeFadeV3:
 
 - `spike_fade_v3_link_short_bounded_20260627` best r008:
   32 trades, net `+5.10`, PF `1.987`, WR `59.4%`, DD `1.27`.
 - Candidate/diversifier only; low frequency, not first engine.
+
+New ASB2/ACB1 / volume-density work:
+
+- `strategies/alt_support_bounce_v2.py`: long-only support bounce on shared
+  market context; horizontal support + lower channel line; optional HVN gate.
+- `strategies/alt_channel_bounce_v1.py`: two-sided channel bounce; flat,
+  ascending and descending channels; optional HVN gate.
+- `bot/market_context.py`: added `classify_channel()` and `nearest_dist_atr()`.
+- Smoke on local and server, 30d LINK/SOL:
+  - ASB2: 7 trades, net `+0.76`, PF `2.155`, WR `71.4%`, DD `0.4076`
+  - ACB1: 4 trades, net `+0.05`, PF `1.086`, WR `50%`, DD `0.4144`
+- This only proves wiring and early signal sanity; 240d queued after ARF2.
+
+Volume exit:
+
+- `bot/volume_exit.py` wired into `backtest/portfolio_engine.py`, default off.
+- Flag: `VOLUME_EXIT_ENABLE=1`; strategy filter:
+  `VOLUME_EXIT_STRATEGIES=inplay`.
+- It exits the remaining runner with reason `VOL_FADE` when a real volume impulse
+  fades and price stalls.
+- 240d IRV3 base-vs-volume comparison is queued after ARF2.
+
+Funding/carry:
+
+- Raw cross-exchange scan:
+  `scripts/cross_exchange_funding_scan.py --min-spread-apr-pct 10 --top 30`
+  saved `runtime/arb/cross_exchange_funding_latest.json`.
+- Validator:
+  `scripts/cross_exchange_funding_validate.py --in-json runtime/arb/cross_exchange_funding_latest.json --top 30 --out-json runtime/arb/cross_exchange_funding_validated_20260629.json --out-top 30 --notional-usd 20 --min-spread-apr-pct 10 --keep-failed`
+- Validated PASS examples:
+  - `GWEIUSDT:binance->bybit`: net_hold `0.5071%`, spread/month `22.72%`,
+    entry basis `0.4998%`, persistence `2`
+  - `SLXUSDT:binance->bybit`: net_hold `0.3592%`, spread/month `18.225%`,
+    entry basis `0.358%`, persistence `3`
+  - `TACUSDT`, `MANTAUSDT`, `SKHYNIXUSDT`, `MAGICUSDT`, `VELVETUSDT` also passed
+    at smaller expected net.
+- Historical funding capture on validated-ish symbols:
+  `backtest_runs/funding_20260629_123907_funding_spike_scan_20260629`
+  - 90d, $20/symbol, net `+$8.85`, PF `999`, WR `91.8%`, DD `0`
+  - but concentration is high: top symbol share `57.35%` (ESPORTSUSDT).
+  - Treat as carry/shadow candidate only; requires hedge/balance/orderbook
+    execution validation before any capital.
 
 ## Alpaca
 
@@ -135,4 +219,6 @@ Do not place Alpaca live orders from Codex without explicit owner confirmation.
    dry-run if owner supplied real env.
 4. Continue ARF2 research; if no PASS after full sweep, keep ARF2 research-only and
    launch corrected ATT1+ARS1 additivity.
-5. Build owner volume-inflow layer from `reports/OWNER_STRATEGY_SPEC_2026_06_25.md`.
+5. When ARF2 finishes, read `post_arf2_queue_20260629` results and send Claude:
+   IRV3 base/vol summaries, ASB2/ACB1 240d summaries, and ARF2 ranked/top rows.
+6. Build owner volume-inflow layer from `reports/OWNER_STRATEGY_SPEC_2026_06_25.md`.
