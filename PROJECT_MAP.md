@@ -1,6 +1,16 @@
 # PROJECT MAP — Bybit/Alpaca trading bot (полная карта)
 
-*Онбординг для человека и любого ИИ. Визуал: `reports/PROJECT_MAP.svg`. Машиночитаемая карта кода: `reports/AI_CODEMAP.json` (через `bot.ai_tools.get_codemap`). START HERE для новой сессии: `CODEX_HANDOFF_2026_06_20.md`.*
+*Онбординг для человека и любого ИИ. Визуал: `reports/PROJECT_MAP.svg`. Машиночитаемая карта кода: `reports/AI_CODEMAP.json` (через `bot.ai_tools.get_codemap`).*
+
+**START HERE (2026-06-28):** `reports/STATE_AND_MIGRATION_2026_06_28.md` →
+`CODEX_HANDOFF_2026_06_28.md` → `reports/OWNER_STRATEGY_SPEC_2026_06_25.md`
+(ручной эдж владельца) → `reports/CLAUDE_AUDIT_2026_06_22.md` (§22-33).
+
+**Текущие кандидаты (execution-accurate, 2026-06-28):** ATT1 short-only — первый
+canary-кандидат (+37.35R, PF 1.32, DD ~5%, 2 красных мес, серия 1); SpikeFadeV3
+LINK short — диверсификатор (PF 1.99, DD 1.27); IVB1 short — watch (DD-гейт не
+прошёл); ARF2 — новый research-only. Alpaca — первый РЕАЛЬНЫЙ canary $500 @1.0x
+после ревью исполнения. Крипто-риск ЗАМОРОЖЕН, не размораживать вслепую.
 
 ## Что это
 Многорукавная торговая станция. Цель — устойчивый процесс с доказанным эджем, не «быстрое богатство». Человек в контуре на всех решениях о деньгах/коде. Деньги — только за доказанным OOS-эджем.
