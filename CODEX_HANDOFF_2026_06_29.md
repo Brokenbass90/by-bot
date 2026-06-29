@@ -148,6 +148,21 @@ Queued after ARF2 completes:
   3. ASB2 240d `asb2_240_20260629`
   4. ACB1 240d `acb1_240_20260629`
 
+Queued after the crypto queue, to avoid overloading the 1GB live VPS:
+
+- `screen fx_after_crypto_queue_20260629`
+- It waits for both `arf2_structured_20260629` and
+  `post_arf2_queue_20260629` to finish.
+- Then runs free-data FX research, no OANDA keys required for backtest:
+  - majors/crosses overnight research:
+    `EURUSD,GBPUSD,USDJPY,AUDUSD,USDCAD,USDCHF,NZDUSD,EURGBP,EURJPY,GBPJPY,AUDJPY,CADJPY`
+  - metals scout:
+    `XAUUSD,XAGUSD` with trend-retest, range-bounce, breakout-continuation and
+    liquidity-sweep strategies.
+- Caveat: OANDA keys are only needed later for demo/live execution. Metals
+  results are scout-only until the spread/pip/swap model is made instrument
+  specific.
+
 Corrected ATT1+ARS1 package:
 
 - `configs/autoresearch/package_att1_strong_short_ars1_additivity_20260629.json`
