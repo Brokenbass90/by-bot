@@ -73,7 +73,8 @@ Implemented by Codex on 2026-06-29:
 - `effective_att1_risk_mult = ATT1_RISK_MULT * breaker_mult` is used for both
   normal sizing and min-qty fallback;
 - heartbeat/operator context exposes `att1_breaker`;
-- canary env sets `MAX_POSITIONS=3` and `ATT1_MAX_OPEN_TRADES=3`.
+- canary env sets `MAX_POSITIONS=3`, `ATT1_MAX_OPEN_TRADES=3`, and pauses the
+  other current price sleeves (`FLAT_RISK_MULT=0.0`, etc.) for clean attribution.
 
 Validation required after every edit/deploy:
 `python -m py_compile smart_pump_reversal_bot.py` and

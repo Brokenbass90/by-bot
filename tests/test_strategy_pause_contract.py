@@ -21,3 +21,5 @@ def test_att1_canary_breaker_uses_live_strategy_id_and_scales_sizing():
     assert '"att1": _att1_breaker_state()' in src
     assert "ATT1_BREAKER_STRATEGY_NAME=att1_trendline_touch" in env
     assert "ATT1_MAX_OPEN_TRADES=3" in env
+    assert "FLAT_RISK_MULT=0.0" in env
+    assert "ENABLE_ATT1_TRADING=1" in env
