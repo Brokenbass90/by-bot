@@ -51,3 +51,6 @@ configs/intraday_state.json
 configs/auto_apply_params.env
 runtime/auto_apply_log.jsonl
 runtime/auto_apply_current_params.json
+
+# live Alpaca creds (real money) — never commit
+configs/alpaca_live_v38.env

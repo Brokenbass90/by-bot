@@ -111,3 +111,51 @@ def test_vwap_and_hvn():
     assert math.isfinite(mc.vwap(rows))
     hvns = mc.volume_hvns(rows, bins=10, top_n=3)
     assert len(hvns) <= 3
+
+
+def _trend_rows(n, start, step, amp=3, vol=100):
+    # zig-zag around a sloped centerline so pivots exist on both sides
+    rows = []
+    for i in range(n):
+        mid = start + step * i
+        h = mid + amp + (1 if i % 2 else 0)
+        l = mid - amp - (1 if i % 2 == 0 else 0)
+        o = mid - 0.5
+        c = mid + 0.5
+        rows.append([i, o, h, l, c, vol])
+    return rows
+
+
+def test_classify_channel_flat():
+    rows = _trend_rows(60, 100, 0.0)  # no drift
+    r = mc.classify_channel(rows, atr_value=4.0, pivot_left=1, pivot_right=1)
+    assert r["regime"] == "flat"
+    assert abs(r["slope_atr"]) <= 0.04 + 1e-9
+
+
+def test_classify_channel_ascending():
+    rows = _trend_rows(60, 100, 1.0)  # +1/bar
+    r = mc.classify_channel(rows, atr_value=4.0, pivot_left=1, pivot_right=1)
+    assert r["regime"] == "ascending"
+    assert r["slope_atr"] > 0
+
+
+def test_classify_channel_descending():
+    rows = _trend_rows(60, 200, -1.0)  # -1/bar
+    r = mc.classify_channel(rows, atr_value=4.0, pivot_left=1, pivot_right=1)
+    assert r["regime"] == "descending"
+    assert r["slope_atr"] < 0
+
+
+def test_classify_channel_position_and_width():
+    rows = _trend_rows(60, 100, 0.0, amp=5)
+    r = mc.classify_channel(rows, atr_value=4.0, pivot_left=1, pivot_right=1)
+    # price (~mid+0.5) should sit roughly mid-channel
+    if r["pos_in_channel"] == r["pos_in_channel"]:
+        assert 0.0 <= r["pos_in_channel"] <= 1.0
+    assert r["width_atr"] >= 0
+
+
+def test_classify_channel_empty_safe():
+    r = mc.classify_channel([])
+    assert r["regime"] == "unknown"

@@ -1,0 +1,92 @@
+strategy,in_backtest,bucket,status,known_metric
+alpaca_adaptive_v1,0,KEEP,STABILIZER,Alpaca adaptive: stabilizer PF<1
+alpaca_dynamic_v3_event,0,FREEZE,,
+alpaca_dynamic_v4_event,0,FREEZE,,
+alt_bear_regime_continuation_v1,1,FREEZE,,
+alt_channel_bounce_v1,1,KEEP,NEW(tested),"ACB1: new two-sided channel, needs WF"
+alt_elder_revived_v1,1,FREEZE,,
+alt_horizontal_break_v1,1,FREEZE,,
+alt_inplay_breakdown_v1,1,REHAB,FAIL->anti-manip rewrite,"Breakdown: sweep FAIL, live shadow -2.41/15"
+alt_inplay_breakdown_v2,1,FREEZE,,
+alt_liquidity_sweep_reversal_v2,1,FREEZE,,
+alt_momentum_breakout_v1,1,FREEZE,,
+alt_pullback_continuation_v1,1,FREEZE,,
+alt_range_reclaim_v1,1,FREEZE,,
+alt_range_scalp_v1,1,REHAB,ADDITIVITY TEST w/ ATT1,ARS1: older pocket +16.6 PF1.68 but 4 red months
+alt_resistance_fade_v1,1,REHAB,FAIL->rebuild as ARF2,ARF1: weak levels
+alt_resistance_fade_v2,1,KEEP,RESEARCH,"ARF2: research sweep running, some PF1.7-1.9 rows fail red-months"
+alt_slope_break_v1,1,FREEZE,,
+alt_sloped_channel_v1,1,FREEZE,,
+alt_sloped_momentum_v1,1,FREEZE,,
+alt_spike_rejection_v1,1,FREEZE,,
+alt_squeeze_breakout_v1,1,FREEZE,,
+alt_support_bounce_v1,1,REHAB,FAIL->rebuild as ASB2,ASB1: 432/432 FAIL best -2.68 PF0.92
+alt_support_bounce_v2,1,KEEP,NEW(tested),"ASB2: new foundation, needs WF"
+alt_support_reclaim_v1,1,FREEZE,,
+alt_trendline_touch_v1,1,KEEP,CANDIDATE(live canary ready),ATT1: 457tr +37R PF1.32 DD~5 short>long
+alt_trendline_touch_v2,1,FREEZE,,
+alt_volume_spike_momentum_v1,1,FREEZE,,
+alt_vwap_mean_reversion_v1,1,FREEZE,,
+alt_whale_print_follow_v1,1,FREEZE,,
+asb1_live,0,ARCHIVE,,
+asm1_live,0,ARCHIVE,,
+att1_live,0,ARCHIVE,,
+att1_v2_live,0,ARCHIVE,,
+basis_arb_v1,0,RESEARCH,,
+bounce1_live,0,ARCHIVE,,
+breakdown_live,0,ARCHIVE,,
+breakdown_retest_v3,0,FREEZE,,
+btc_cycle_continuation_v1,1,ARCHIVE,,
+btc_cycle_level_target_v2,1,ARCHIVE,,
+btc_cycle_pullback_v1,1,ARCHIVE,,
+btc_eth_midterm_pullback,1,ARCHIVE,,
+btc_eth_midterm_pullback_v2,1,ARCHIVE,,
+btc_eth_midterm_short_v1,1,ARCHIVE,,
+btc_eth_midterm_short_v2,1,ARCHIVE,,
+btc_eth_midterm_v3,1,ARCHIVE,,
+btc_regime_flip_continuation_v1,1,ARCHIVE,,
+btc_regime_retest_v1,1,ARCHIVE,,
+btc_sloped_reclaim_v1,1,ARCHIVE,,
+elder_crypto_v1,1,ARCHIVE,NOT engine,Elder crypto: failed
+elder_triple_screen_v2,1,REHAB,NOT engine->use as filter,Elder v2: mass FAIL DD40-83
+elder_triple_screen_v3,1,ARCHIVE,NOT engine->filter,Elder v3: mass FAIL
+equities_swing_active_v1,0,FREEZE,,
+flat_resistance_fade_live,0,ARCHIVE,,
+funding_hold_v1,0,RESEARCH,,
+funding_rate_reversion_v1,1,RESEARCH,,
+grid_smart_v1,1,FREEZE,,
+gs1_live,0,ARCHIVE,,
+hzbo1_live,0,ARCHIVE,,
+impulse_volume_breakout_v1,1,REHAB,"WATCH (edge, DD fails)",IVB1: 312tr +16.45 PF1.25 DD8.99
+inplay_breakout,1,REHAB,REPAIR,InPlay breakout wrapper: REPAIR
+inplay_retest_v3,1,KEEP,REPAIR/WATCH,InPlay retest: REPAIR->WATCH; owner's manual leg + volume_exit
+inplay_wrapper,1,FREEZE,,
+liquidation_cascade_entry_v1,1,RESEARCH,,
+live_kline_utils,0,FREEZE,,
+micro_scalper_bounce_v1,1,FREEZE,,
+micro_scalper_breakout_v1,1,FREEZE,,
+micro_scalper_live,0,ARCHIVE,,
+micro_scalper_v1,1,FREEZE,,
+pair_arb_executor_v1,0,RESEARCH,,
+pair_stat_arb_v1,0,RESEARCH,,
+pfs1_live,0,ARCHIVE,,
+pump_fade_simple,1,FREEZE,,
+pump_fade_smart_v1,1,FREEZE,,
+pump_fade_v2,1,FREEZE,,
+pump_fade_v4r,1,FREEZE,,
+pump_momentum_v1,1,FREEZE,,
+range_mean_reversion_v1,0,FREEZE,,
+sc1_live,0,ARCHIVE,,
+scalper_bounce_v2,1,FREEZE,,
+scalper_breakout_v2,1,FREEZE,,
+scalper_classic_v1,1,FREEZE,,
+scalper_sweep_v2,1,FREEZE,,
+session_open_breakout_v1,0,FREEZE,,
+signals,0,FREEZE,,
+sloped_break_retest_v1,1,FREEZE,,
+sloped_channel_live,0,ARCHIVE,,
+sloped_resistance_choch_v1,1,FREEZE,,
+smart_grid_v1,0,FREEZE,,
+spike_fade_v3,1,KEEP,DIVERSIFIER,SpikeFadeV3 LINK short: 32tr +5.1 PF1.99 DD1.27
+support_reclaim_live,0,ARCHIVE,,
+trend_pullback_v1,0,FREEZE,,

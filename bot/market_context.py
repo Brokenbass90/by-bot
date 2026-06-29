@@ -246,6 +246,83 @@ def _nearest(levels: List[dict], price: float, *, above: bool, atr_value: float,
     }
 
 
+def nearest_dist_atr(level: float, points: List[float], atr_value: float) -> float:
+    """Min distance from ``level`` to the closest point (e.g. an HVN), in ATR.
+
+    Returns +inf if there are no points or ATR is invalid. Lets a strategy ask
+    "is this level backed by a volume-at-price density?" -> dist <= threshold.
+    """
+    if not points or not (atr_value == atr_value and atr_value > 0):
+        return float("inf")
+    return min(abs(float(level) - float(p)) for p in points) / atr_value
+
+
+def classify_channel(
+    rows: List[list],
+    *,
+    atr_value: Optional[float] = None,
+    atr_period: int = 14,
+    lookback: int = 60,
+    pivot_left: int = 2,
+    pivot_right: int = 2,
+    flat_slope_atr: float = 0.04,
+) -> dict[str, Any]:
+    """Classify the recent channel/regime for regime-aware bounces.
+
+    Fits an upper line through swing highs and a lower line through swing lows,
+    then labels the regime by their average slope normalized to ATR-per-bar:
+    ``ascending`` / ``descending`` / ``flat`` (the owner wants bounces in flat,
+    up AND down channels). Returns regime, slope_atr (signed, ATR/bar), upper and
+    lower line values at the last bar, channel width in ATR, and price position
+    inside the channel (0=at lower, 1=at upper).
+    """
+    out: dict[str, Any] = {
+        "regime": "unknown", "slope_atr": float("nan"),
+        "upper_now": float("nan"), "lower_now": float("nan"),
+        "width_atr": float("nan"), "pos_in_channel": float("nan"),
+        "upper_r2": float("nan"), "lower_r2": float("nan"),
+    }
+    if not rows:
+        return out
+    rows = rows[-int(max(10, lookback)):] if len(rows) > lookback else rows
+    a = float(atr_value) if (atr_value is not None and atr_value > 0) else atr(rows, atr_period)
+    if not (math.isfinite(a) and a > 0):
+        return out
+    price = _f(rows[-1], CLOSE)
+
+    up = sloped_level(rows, side="resistance", left=pivot_left, right=pivot_right, min_pivots=2)
+    lo = sloped_level(rows, side="support", left=pivot_left, right=pivot_right, min_pivots=2)
+    slopes = []
+    if up is not None:
+        out["upper_now"] = up["level_now"]
+        out["upper_r2"] = up["r2"]
+        slopes.append(up["slope"])
+    if lo is not None:
+        out["lower_now"] = lo["level_now"]
+        out["lower_r2"] = lo["r2"]
+        slopes.append(lo["slope"])
+    if not slopes:
+        return out
+
+    slope_per_bar = sum(slopes) / len(slopes)
+    slope_atr = slope_per_bar / a  # ATR units per bar
+    out["slope_atr"] = round(slope_atr, 5)
+
+    if slope_atr > float(flat_slope_atr):
+        out["regime"] = "ascending"
+    elif slope_atr < -float(flat_slope_atr):
+        out["regime"] = "descending"
+    else:
+        out["regime"] = "flat"
+
+    if up is not None and lo is not None:
+        width = up["level_now"] - lo["level_now"]
+        out["width_atr"] = round(width / a, 3)
+        if width > 1e-12:
+            out["pos_in_channel"] = round((price - lo["level_now"]) / width, 3)
+    return out
+
+
 def build_context(
     rows: List[list],
     *,

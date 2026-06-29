@@ -38,6 +38,11 @@ from backtest.engine import (
     _tp_hits_in_bar,
 )
 
+try:
+    from bot.volume_exit import volume_fade_exit as _volume_fade_exit
+except Exception:  # pragma: no cover - defensive
+    _volume_fade_exit = None
+
 
 # ---------------------------------------------------------------------------
 # Async compatibility
@@ -107,6 +112,20 @@ def run_portfolio_backtest(
 
     sl_cooldown_bars = max(0, int(os.getenv("PORTFOLIO_SL_COOLDOWN_BARS", "0") or 0))
     sl_cooldown_strategies = _csv_set("PORTFOLIO_SL_COOLDOWN_STRATEGIES") or {"inplay_breakout"}
+
+    # Volume-fade early exit (owner setup A): close the runner when the impulse's
+    # volume dies before reaching target. Additive, default OFF. See bot/volume_exit.py.
+    _vol_exit_enable = (
+        str(os.getenv("VOLUME_EXIT_ENABLE", "0")).strip().lower() in {"1", "true", "yes", "on"}
+        and _volume_fade_exit is not None
+    )
+    _vol_exit_strats = _csv_set("VOLUME_EXIT_STRATEGIES")  # empty = all strategies
+    _vol_exit_baseline = max(2, int(os.getenv("VOLUME_EXIT_BASELINE_WINDOW", "20") or 20))
+    _vol_exit_impulse = max(1, int(os.getenv("VOLUME_EXIT_IMPULSE_WINDOW", "3") or 3))
+    _vol_exit_fade = float(os.getenv("VOLUME_EXIT_FADE_RATIO", "0.70") or 0.70)
+    _vol_exit_peakfade = float(os.getenv("VOLUME_EXIT_PEAK_FADE_RATIO", "0.45") or 0.45)
+    _vol_exit_stall = str(os.getenv("VOLUME_EXIT_REQUIRE_STALL", "1")).strip().lower() in {"1", "true", "yes", "on"}
+    _vol_exit_bars = max(_vol_exit_baseline + 2 * _vol_exit_impulse + 2, 30)
 
     # Global strategy-level cooldown: after any SL in strategy X, ALL symbols
     # of that strategy are blocked for PORTFOLIO_GLOBAL_SL_COOLDOWN_BARS bars.
@@ -381,6 +400,39 @@ def run_portfolio_backtest(
                 reason = "+".join(p.reasons + ["TIME"]) if p.reasons else "TIME"
                 _close(sym, p, bar.ts, reason)
                 continue
+
+            # Volume-fade early exit (owner setup A). Closes the remaining runner
+            # when impulse volume dies (vs run-up / vs peak) and price has stalled.
+            if (
+                _vol_exit_enable
+                and p.remaining_qty > 1e-12
+                and (not _vol_exit_strats or any(k in pos_strat.get(sym, "").lower() for k in _vol_exit_strats))
+            ):
+                _vtail = stores[sym].exec_candles[max(0, i - _vol_exit_bars):i + 1]
+                _vrows = [[c.ts, c.o, c.h, c.l, c.c, c.v] for c in _vtail]
+                _vfx = _volume_fade_exit(
+                    _vrows,
+                    side=p.side,
+                    baseline_window=_vol_exit_baseline,
+                    impulse_window=_vol_exit_impulse,
+                    fade_ratio=_vol_exit_fade,
+                    peak_fade_ratio=_vol_exit_peakfade,
+                    require_stall=_vol_exit_stall,
+                )
+                if _vfx.get("exit"):
+                    raw = bar.c
+                    exit_px = _apply_slippage(raw, p.side, is_entry=False, slippage_bps=params.slippage_bps)
+                    exit_qty = p.remaining_qty
+                    exit_fee = _fees(exit_px * exit_qty, params.fee_bps)
+                    pnl_portion = (exit_px - p.entry_price) * exit_qty if p.side == "long" else (p.entry_price - exit_px) * exit_qty
+                    equity += pnl_portion - exit_fee
+                    p.realized_pnl += pnl_portion - exit_fee
+                    p.exit_fees += exit_fee
+                    p.exit_notional_sum += exit_px * exit_qty
+                    p.remaining_qty = 0.0
+                    reason = "+".join(p.reasons + ["VOL_FADE"]) if p.reasons else "VOL_FADE"
+                    _close(sym, p, bar.ts, reason)
+                    continue
 
             # Move SL to break-even only after full-bar processing (conservative).
             if i > p.entry_i and p.be_trigger_rr > 0 and not p.be_armed:
