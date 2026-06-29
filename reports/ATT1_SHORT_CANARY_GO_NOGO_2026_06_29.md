@@ -9,24 +9,40 @@ Artifacts shipped with this doc:
 
 ---
 
-## Verdict: NOT YET — build is ready, launch is gated
+## Verdict: TECHNICALLY CLOSE — build is ready, launch still gated
 
-The canary package is built and the safety brake is tested. Live risk must wait for
-the non-negotiable guardrail: execution-accurate replay → DD/monthly/side forensics
-→ shadow → tiny canary. Two gates need owner/Codex input first.
+The canary package is built and the safety brake is tested. Codex additionally
+ran an exact cache-only ATT1 short-only replay on 2026-06-29 using the strong
+top-revalidate parameters and next-open execution. The numbers are green enough
+for a tiny canary **after** monolith breaker wiring + shadow sanity.
+
+Exact ATT1 short-only replay (`att1_short_only_exact_local_20260629`):
+
+| trades | net | PF | WR | max DD | red months | red streak |
+|---:|---:|---:|---:|---:|---:|---:|
+| 296 | +28.17 | 1.402 | 59.1% | 6.59 | 2 | 1 |
+
+Symbol split: SUI +7.30, DOT +6.12, LTC +5.02, ETH +3.58, LINK +2.79,
+BTC +2.10, ADA +1.78, SOL -0.51.
+
+The previous `package_att1_short_ars1_additivity_20260628` is **not** a valid
+final verdict: its control rows used a weaker ATT1 baseline (`net~9`, PF~1.12,
+5-6 red months), not the proven short-only config above. Codex prepared a
+corrected spec: `configs/autoresearch/package_att1_strong_short_ars1_additivity_20260629.json`.
 
 ### GO gates (all required)
-1. **Research confirms ATT1 short-only is still the pick.** The queued server jobs
-   `spike_fade_v3_link_short_bounded` and `package_att1_short_ars1_additivity_20260628`
-   must finish. Send me the final ranking logs and I will interpret:
-   - does ARS1 help ATT1's DD / monthly stability, or stay research-only?
-   - is short-only still net+, PF>1 after 6/2 bps fees, ≤3 red months, red streak ≤2?
-2. **Execution-accurate replay** of ATT1 short-only on current cache (next-open,
-   fees/slippage 6/2, closed-candle parity) reproduces the +37 / PF~1.3 / DD~5-6 class.
+1. **Execution-accurate replay** — green locally: +28.17, PF 1.402, DD 6.59,
+   2 red months. Server replay should be captured/archived before live if possible.
+2. **Monolith breaker wiring** — `bot/strategy_breaker.py` exists and is tested,
+   but is not yet wired into `smart_pump_reversal_bot.py`. Do not run an open-ended
+   canary without this or equivalent manual expiry/rollback.
 3. **Shadow sanity**: ATT1 already runs shadow; confirm recent shadow signals look
    sane (no degenerate clustering) before flipping risk on.
+4. **Package additivity**: ARS1 is not required for first canary. Include it only
+   if the corrected package test improves DD/monthly stability over the ATT1-only
+   control rows.
 
-If 1–3 pass → tiny canary at `ATT1_RISK_MULT=0.10`, short-only, with the breaker armed.
+If 1–3 pass → tiny canary at `ATT1_RISK_MULT=0.10`, short-only, with breaker/expiry armed.
 
 ---
 

@@ -30,3 +30,4 @@ att1_dd_repair_20260627.json
 ars1_side_regime_repair_20260627.json
 arf1_structured_short_repair_20260627.json
 arf2_structured_resistance_fade_20260628.json
+package_att1_strong_short_ars1_additivity_20260629.json

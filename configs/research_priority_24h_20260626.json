@@ -117,6 +117,12 @@
       "min_interval_hours": 24
     },
     {
+      "name": "package_att1_strong_short_ars1_additivity",
+      "spec": "configs/autoresearch/package_att1_strong_short_ars1_additivity_20260629.json",
+      "enabled": true,
+      "min_interval_hours": 24
+    },
+    {
       "name": "arf1_scanner_allowlist_probe",
       "spec": "configs/autoresearch/arf1_scanner_allowlist_probe_20260626.json",
       "enabled": true,

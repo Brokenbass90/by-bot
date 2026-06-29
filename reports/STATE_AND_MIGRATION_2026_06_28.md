@@ -13,8 +13,10 @@
 
 ## ГЛАВНОЕ — впервые есть положительные execution-accurate кандидаты
 - **ATT1 short-only** (`strategies/alt_trendline_touch_v1.py`) — ПЕРВЫЙ серьёзный
-  canary-кандидат: 457 сделок, +37.35R, PF 1.325, WR 58.9%, DD ~4.7-6.4, **2
-  красных месяца, серия 1**. Шорт сильно сильнее лонга. Проходит monthly+DD гейты.
+  canary-кандидат. Exact short-only replay 2026-06-29: 296 сделок, +28.17R,
+  PF 1.402, WR 59.1%, DD 6.59, **2 красных месяца, серия 1**. Bidirectional
+  revalidate тоже силён: 457 сделок, +37.35R, PF 1.325. Шортовая нога отдельно
+  подтверждена и подходит для первого tiny canary после breaker wiring + shadow sanity.
 - **SpikeFadeV3 LINK short-only** (`spike_fade_v3.py`) — чистый диверсификатор:
   360d, 32 сделки, +5.10R, PF 1.987, DD 1.27, 2 красных, серия 1. Не двигатель сам,
   но хорошая низкочастотная нога.
@@ -68,9 +70,11 @@ execution-accurate прогон Codex.
 по execution-accurate + WF, не по локальным/оптимистичным цифрам.
 
 ## СЛЕДУЮЩИЕ ШАГИ
-1. (Codex) Дождаться `package_att1_short_ars1_additivity_20260628` → если ARS1 НЕ
-   улучшает DD/monthly → первый canary = ATT1 short + SpikeFadeV3 LINK short.
-2. (Codex) ARF2 свип (когда сервер свободен) → если пройдёт, добавить как range/chop ногу.
+1. (Codex) Старый `package_att1_short_ars1_additivity_20260628` считать некорректным
+   verdict: baseline ATT1 в нём слабый (net~9/PF~1.12), не proven short-only.
+   Использовать corrected spec `package_att1_strong_short_ars1_additivity_20260629`.
+2. (Codex) ARF2 свип запущен 2026-06-29 в screen `arf2_structured_20260629`; если
+   пройдёт, добавить как range/chop ногу.
 3. (Codex) Alpaca ревью исполнения → $500 canary @1.0x если чисто.
 4. (Codex+Claude) Построить ОБЪЁМНЫЙ СЛОЙ владельца: volume-inflow отбор монеты +
    объёмный ранний выход (OWNER_STRATEGY_SPEC) — главный недоисследованный эдж.
