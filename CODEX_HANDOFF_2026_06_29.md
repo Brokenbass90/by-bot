@@ -99,6 +99,22 @@ Live canary status update:
 - `ATT1_CANARY_EXPIRY_UTC=2026-07-20` is present in the canary env and consumed
   by the ATT1 breaker.
 
+Pre-sleep live check on 2026-06-29 `18:07 UTC`:
+
+- Service still alive: `trade_on=true`, `dry_run=false`, `open_trades=0`,
+  regime `bear_chop`, `ws_guard_active=0`.
+- Operator override still loaded; active risk remains clean:
+  `att1=0.10`; `flat/range/breakdown/ivb1/midterm/bounce1=0.0`.
+- ATT1 had no live entry yet. Runtime counters since restart:
+  `att1_try=48`, `att1_no_signal=48`, main rejects:
+  `trendline=28`, `first_bar=8`, `same_bar=8`, `touch=2`, `reject=2`.
+  This is normal waiting behaviour for a strict short trendline sleeve, not a
+  freeze.
+- ATT1 breaker: `enabled=true`, `blocked=false`, `expired=false`.
+- Lightweight monitor `screen overnight_live_watch_20260629` started; it logs
+  heartbeat, active risk, ATT1 breaker and runtime counters every 15 minutes to
+  `logs/manual_research/overnight_live_watch_20260629.log`.
+
 To enable canary only after owner OK (already done on 2026-06-29; kept for
 reference / re-enable after rollback):
 
@@ -129,10 +145,15 @@ Currently running:
 - `screen arf2_structured_20260629`
 - spec: `configs/autoresearch/arf2_structured_resistance_fade_20260628.json`
 - progress observed on 2026-06-29 12:42 UTC: running r071/192.
+- progress observed on 2026-06-29 18:07 UTC: running r118/192 with 46 PASS rows
+  and 72 FAIL rows so far.
 - r019/r023/r031/r033/r035/r037/r039/r049/r051/r053/r055/r065/r067/r069
   and several others are PASS so far.
   - Examples: r055 net `+6.22`, PF `5.246`, WR `76.9%`, DD `0.90`;
     r067 net `+7.68`, PF `1.874`, WR `58.7%`, DD `2.517`.
+- Better non-outlier current candidates include r065/r067/r069/r071/r081/r083/r087:
+  roughly `+7R` to `+8.5R`, PF `1.75` to `2.27`, DD about `2R` to `3R`.
+  Still require full sweep + monthly/OOS before any canary.
 - Do not promote before full sweep + OOS/monthly review. But unlike ARF1 legacy,
   ARF2 has real passing rows and is a live portfolio candidate after validation.
 
