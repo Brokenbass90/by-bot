@@ -23,3 +23,12 @@ def test_att1_canary_breaker_uses_live_strategy_id_and_scales_sizing():
     assert "ATT1_MAX_OPEN_TRADES=3" in env
     assert "FLAT_RISK_MULT=0.0" in env
     assert "ENABLE_ATT1_TRADING=1" in env
+
+
+def test_operator_live_override_loads_after_strategy_pause():
+    src = (ROOT / "smart_pump_reversal_bot.py").read_text(encoding="utf-8")
+
+    assert "ALLOW_OPERATOR_LIVE_OVERRIDES" in src
+    assert "OPERATOR_LIVE_OVERRIDE_ENV" in src
+    assert src.index("STRATEGY_PAUSE_ENV.exists()") < src.index("OPERATOR_LIVE_OVERRIDE_ENV")
+    assert src.count("_refresh_operator_live_override_env()") >= 2

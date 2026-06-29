@@ -156,6 +156,20 @@ STRATEGY_PAUSE_ENV = ROOT_DIR / "runtime" / "strategy_pause.env"
 if STRATEGY_PAUSE_ENV.exists():
     load_dotenv(STRATEGY_PAUSE_ENV, override=True)
 
+# Phase 4: explicit operator live override — loaded last, only when deliberately
+# enabled in the server-only .env. This is the controlled way to run a canary
+# over a monitor-written pause without deleting runtime/strategy_pause.env.
+ALLOW_OPERATOR_LIVE_OVERRIDES = os.getenv("ALLOW_OPERATOR_LIVE_OVERRIDES", "0").strip().lower() in ("1", "true", "yes", "on")
+OPERATOR_LIVE_OVERRIDE_ENV = str(os.getenv("OPERATOR_LIVE_OVERRIDE_ENV", "") or "").strip()
+OPERATOR_LIVE_OVERRIDE_LOADED = False
+if ALLOW_OPERATOR_LIVE_OVERRIDES and OPERATOR_LIVE_OVERRIDE_ENV:
+    _operator_override_path = Path(OPERATOR_LIVE_OVERRIDE_ENV)
+    if not _operator_override_path.is_absolute():
+        _operator_override_path = ROOT_DIR / _operator_override_path
+    if _operator_override_path.exists():
+        load_dotenv(_operator_override_path, override=True)
+        OPERATOR_LIVE_OVERRIDE_LOADED = True
+
 _ENV_ALIAS_MAP = {
     "ENABLE_ELDER_TRADING": "ENABLE_ELDER_V2_TRADING",
     "ELDER_RISK_MULT": "ELDER_V2_RISK_MULT",
@@ -3034,6 +3048,8 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "ETS2_TP_ATR_MULT": os.getenv("ETS2_TP_ATR_MULT", ""),
             "CB_ENABLED": os.getenv("CB_ENABLED", ""),
             "DRY_RUN": os.getenv("DRY_RUN", ""),
+            "ALLOW_OPERATOR_LIVE_OVERRIDES": os.getenv("ALLOW_OPERATOR_LIVE_OVERRIDES", ""),
+            "OPERATOR_LIVE_OVERRIDE_ENV": os.getenv("OPERATOR_LIVE_OVERRIDE_ENV", ""),
             "ENABLE_BREAKDOWN_TRADING": os.getenv("ENABLE_BREAKDOWN_TRADING", "0"),
             "ENABLE_ATT1_TRADING": os.getenv("ENABLE_ATT1_TRADING", "0"),
             "ENABLE_ASB1_TRADING": os.getenv("ENABLE_ASB1_TRADING", "0"),
@@ -3049,6 +3065,11 @@ def _deepseek_snapshot() -> dict[str, Any]:
             "tpsl_hard_fail_grace_sec": str(os.getenv("TPSL_HARD_FAIL_GRACE_SEC", "")),
             "router_regime": str(os.getenv("ROUTER_REGIME", "")),
             "orch_global_risk_mult": str(os.getenv("ORCH_GLOBAL_RISK_MULT", "")),
+            "operator_live_override": {
+                "enabled": bool(ALLOW_OPERATOR_LIVE_OVERRIDES),
+                "env": str(OPERATOR_LIVE_OVERRIDE_ENV or ""),
+                "loaded": bool(OPERATOR_LIVE_OVERRIDE_LOADED),
+            },
             "att1_breaker": _att1_breaker_state(),
             "breakdown_breaker": _breakdown_breaker_state(),
             "live_trade_events_jsonl": str(Path(LIVE_TRADE_EVENTS_JSONL).expanduser()),
@@ -13972,6 +13993,30 @@ def _refresh_strategy_pause_env() -> None:
         os.environ[k] = v
 
 
+def _refresh_operator_live_override_env() -> None:
+    """Hot-apply an explicitly enabled operator canary override after pauses."""
+    global ALLOW_OPERATOR_LIVE_OVERRIDES, OPERATOR_LIVE_OVERRIDE_ENV, OPERATOR_LIVE_OVERRIDE_LOADED
+    ALLOW_OPERATOR_LIVE_OVERRIDES = str(os.getenv("ALLOW_OPERATOR_LIVE_OVERRIDES", "0") or "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    )
+    OPERATOR_LIVE_OVERRIDE_ENV = str(os.getenv("OPERATOR_LIVE_OVERRIDE_ENV", "") or "").strip()
+    OPERATOR_LIVE_OVERRIDE_LOADED = False
+    if not ALLOW_OPERATOR_LIVE_OVERRIDES or not OPERATOR_LIVE_OVERRIDE_ENV:
+        return
+    path = Path(OPERATOR_LIVE_OVERRIDE_ENV)
+    if not path.is_absolute():
+        path = ROOT_DIR / path
+    if not path.exists():
+        return
+    override_map = _read_simple_env_file(path)
+    for k, v in override_map.items():
+        os.environ[k] = v
+    OPERATOR_LIVE_OVERRIDE_LOADED = True
+
+
 def _recompute_effective_risk_pct() -> None:
     global RISK_PER_TRADE_PCT
     if float(BASE_RISK_PER_TRADE_PCT or 0.0) <= 0:
@@ -14249,6 +14294,7 @@ def _apply_regime_overlay(*, force: bool = False, notify: bool = False) -> bool:
     for k, v in env_map.items():
         os.environ[k] = v
     _refresh_strategy_pause_env()
+    _refresh_operator_live_override_env()
     _mirror_env_aliases(_ENV_ALIAS_MAP)
 
     old_regime = str(REGIME_OVERLAY_LAST_APPLIED_REGIME or "").strip()
@@ -14467,6 +14513,7 @@ def _apply_portfolio_allocator_overlay(*, force: bool = False, notify: bool = Fa
     for k, v in env_map.items():
         os.environ[k] = v
     _refresh_strategy_pause_env()
+    _refresh_operator_live_override_env()
     _mirror_env_aliases(_ENV_ALIAS_MAP)
 
     old_status = str(PORTFOLIO_ALLOCATOR_LAST_STATUS or "").strip()
@@ -15100,6 +15147,11 @@ async def pulse():
                     "breakdown": sorted(_csv_upper_set("BREAKDOWN_SYMBOL_ALLOWLIST")),
                     "arf1": sorted(_csv_upper_set("ARF1_SYMBOL_ALLOWLIST")),
                     "bounce1": sorted(_csv_upper_set("BOUNCE1_SYMBOL_ALLOWLIST")),
+                },
+                "operator_live_override": {
+                    "enabled": bool(ALLOW_OPERATOR_LIVE_OVERRIDES),
+                    "env": str(OPERATOR_LIVE_OVERRIDE_ENV or ""),
+                    "loaded": bool(OPERATOR_LIVE_OVERRIDE_LOADED),
                 },
                 "breaker": {
                     "att1": _att1_breaker_state(),

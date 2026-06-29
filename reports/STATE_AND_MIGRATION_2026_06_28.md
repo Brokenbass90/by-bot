@@ -18,7 +18,9 @@
   revalidate тоже силён: 457 сделок, +37.35R, PF 1.325. Шортовая нога отдельно
   подтверждена и подходит для первого tiny canary после shadow sanity. Breaker
   wiring уже добавлен в монолит: live-id `att1_trendline_touch`, soft-cut/hard-block/
-  canary-expiry, heartbeat visibility.
+  canary-expiry, heartbeat visibility. Для реальной разморозки нужен явный
+  operator override, потому что `runtime/strategy_pause.env` сейчас держит
+  `ATT1_RISK_MULT=0.0` из-за старой деградации.
 - **SpikeFadeV3 LINK short-only** (`spike_fade_v3.py`) — чистый диверсификатор:
   360d, 32 сделки, +5.10R, PF 1.987, DD 1.27, 2 красных, серия 1. Не двигатель сам,
   но хорошая низкочастотная нога.
@@ -77,7 +79,8 @@ execution-accurate прогон Codex.
    Использовать corrected spec `package_att1_strong_short_ars1_additivity_20260629`.
 2. (Codex) ATT1 canary code: breaker wired; before actual live risk, run py_compile/
    focused tests on deployed server, confirm heartbeat `att1_breaker`, then only
-   controlled restart with `configs/att1_short_canary_20260629.env`.
+   controlled restart with operator override pointing to
+   `configs/att1_short_canary_20260629.env`.
 3. (Codex) ARF2 свип запущен 2026-06-29 в screen `arf2_structured_20260629`; если
    пройдёт, добавить как range/chop ногу.
 4. (Codex) Alpaca ревью исполнения → $500 canary @1.0x если чисто.

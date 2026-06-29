@@ -73,6 +73,8 @@ Implemented by Codex on 2026-06-29:
 - `effective_att1_risk_mult = ATT1_RISK_MULT * breaker_mult` is used for both
   normal sizing and min-qty fallback;
 - heartbeat/operator context exposes `att1_breaker`;
+- explicit operator override layer loads after `runtime/strategy_pause.env`, so a
+  reviewed canary can override an old monitor pause without deleting the auto file;
 - canary env sets `MAX_POSITIONS=3`, `ATT1_MAX_OPEN_TRADES=3`, and pauses the
   other current price sleeves (`FLAT_RISK_MULT=0.0`, etc.) for clean attribution.
 
@@ -83,12 +85,24 @@ Validation required after every edit/deploy:
 ## Launch steps (owner, on server, after GO)
 ```bash
 cd /root/by-bot
-# 1) shadow→canary: source the canary env on top of live env, restart service
-set -a; source configs/att1_short_canary_20260629.env; set +a
-# 2) confirm posture in proof-of-life: ATT1 live x0.10 short-only, others paused
-# 3) watch first closes; the breaker auto-pauses on the gates above
+# 1) Enable the explicit operator override in server-only .env.
+#    This is required because runtime/strategy_pause.env currently pauses ATT1.
+printf '\nALLOW_OPERATOR_LIVE_OVERRIDES=1\nOPERATOR_LIVE_OVERRIDE_ENV=configs/att1_short_canary_20260629.env\n' >> .env
+
+# 2) Restart service. The bot loads:
+#    .env -> approved_strategy_params.env -> runtime/strategy_pause.env -> operator override.
+systemctl restart bybot.service
+
+# 3) Confirm posture in runtime/bot_heartbeat.json:
+#    operator_live_override.loaded=true,
+#    ATT1 live x0.10 short-only,
+#    FLAT/RANGE/BREAKDOWN/etc. risk=0,
+#    att1_breaker.enabled=true.
+
+# 4) Watch first closes; the breaker auto-pauses on the gates above.
 ```
 
 ## Rollback
-Set `ATT1_RISK_MULT=0.0` (explicit pause) and restart — or let the breaker/expiry do it.
-No code revert needed; the wiring is inert while ATT1 is paused.
+Remove or comment the two `ALLOW_OPERATOR_LIVE_OVERRIDES` / `OPERATOR_LIVE_OVERRIDE_ENV`
+lines from `.env`, then `systemctl restart bybot.service`. No code revert needed; the
+wiring is inert while ATT1 is paused.
