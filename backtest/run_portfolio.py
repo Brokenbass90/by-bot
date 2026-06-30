@@ -136,6 +136,7 @@ AltResistanceFadeV1Strategy = _import_strategy_class("alt_resistance_fade_v1", "
 AltResistanceFadeV2Strategy = _import_strategy_class("alt_resistance_fade_v2", "AltResistanceFadeV2Strategy")
 AltSupportBounceV2Strategy = _import_strategy_class("alt_support_bounce_v2", "AltSupportBounceV2Strategy")
 AltChannelBounceV1Strategy = _import_strategy_class("alt_channel_bounce_v1", "AltChannelBounceV1Strategy")
+InplayRetestV4Strategy = _import_strategy_class("inplay_retest_v4", "InplayRetestV4Strategy")
 AltSlopedChannelV1Strategy = _import_strategy_class("alt_sloped_channel_v1", "AltSlopedChannelV1Strategy")
 AltInplayBreakdownV1Strategy = _import_strategy_class("alt_inplay_breakdown_v1", "AltInplayBreakdownV1Strategy")
 AltInplayBreakdownV2Strategy = _import_strategy_class("alt_inplay_breakdown_v2", "AltInplayBreakdownV2Strategy")
@@ -591,6 +592,7 @@ def _explicit_strategy_risk_mult(strategy_name: str) -> Optional[float]:
         "elder_crypto_v1": "ECV1_RISK_MULT",
         "grid_smart_v1": ("GS1_RISK_MULT", "GRID_SMART_RISK_MULT"),
         "inplay_retest_v3": ("IRV3_RISK_MULT", "RETEST_RISK_MULT"),
+        "inplay_retest_v4": ("IRV4_RISK_MULT", "RETEST_RISK_MULT"),
     }
     env_keys = env_overrides.get(st)
     if env_keys:
@@ -1118,7 +1120,7 @@ def main():
         "alt_trendline_touch_v1", "alt_trendline_touch_v2", "alt_sloped_momentum_v1", "alt_volume_spike_momentum_v1", "pump_fade_smart_v1", "grid_smart_v1",
         "alt_slope_break_v1", "scalper_classic_v1", "scalper_bounce_v2",
         "scalper_sweep_v2", "scalper_breakout_v2", "elder_crypto_v1",
-        "alt_horizontal_break_v1", "inplay_retest_v3", "spike_fade_v3"}
+        "alt_horizontal_break_v1", "inplay_retest_v3", "inplay_retest_v4", "spike_fade_v3"}
     for s in strategies:
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
@@ -1340,6 +1342,7 @@ def main():
     alt_resistance_fade_v2 = {sym: AltResistanceFadeV2Strategy() for sym in symbols} if "alt_resistance_fade_v2" in strategies else {}
     alt_support_bounce_v2 = {sym: AltSupportBounceV2Strategy() for sym in symbols} if "alt_support_bounce_v2" in strategies else {}
     alt_channel_bounce_v1 = {sym: AltChannelBounceV1Strategy() for sym in symbols} if "alt_channel_bounce_v1" in strategies else {}
+    inplay_retest_v4 = {sym: InplayRetestV4Strategy() for sym in symbols} if "inplay_retest_v4" in strategies else {}
     alt_sloped_channel_v1 = {sym: AltSlopedChannelV1Strategy() for sym in symbols} if "alt_sloped_channel_v1" in strategies else {}
     alt_inplay_breakdown_v1 = {sym: AltInplayBreakdownV1Strategy() for sym in symbols} if "alt_inplay_breakdown_v1" in strategies else {}
     alt_inplay_breakdown_v2 = {sym: AltInplayBreakdownV2Strategy() for sym in symbols} if "alt_inplay_breakdown_v2" in strategies else {}
@@ -1806,6 +1809,12 @@ def main():
                     raise AttributeError('KlineStore missing current index (expected i5)')
                 bar = store.c5[int(i)]
                 sig = alt_channel_bounce_v1[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
+            elif st == "inplay_retest_v4":
+                i = getattr(store, 'i5', getattr(store, 'i', None))
+                if i is None:
+                    raise AttributeError('KlineStore missing current index (expected i5)')
+                bar = store.c5[int(i)]
+                sig = inplay_retest_v4[sym].maybe_signal(store, ts_ms, bar.o, bar.h, bar.l, bar.c, bar.v)
             elif st == "alt_sloped_channel_v1":
                 i = getattr(store, 'i5', getattr(store, 'i', None))
                 if i is None:

@@ -1,0 +1,61 @@
+symbol,tag,regime,atr_pct,strong_levels,valid_sloped,width_atr,score
+ATOMUSDT,LEVELS (mixed),descending,0.78,18,0,6.866,36
+MUSDT,LEVELS (mixed),ascending,2.0,18,0,1.923,36
+RENDERUSDT,LEVELS (mixed),ascending,1.43,16,0,2.44,32
+1000PEPEUSDT,LEVELS (mixed),ascending,0.74,15,0,2.142,30
+BTCUSDT,LEVELS (mixed),descending,0.54,14,0,1.798,28
+MONUSDT,LEVELS (mixed),ascending,2.13,14,0,2.614,28
+ARIAUSDT,LEVELS (mixed),ascending,5.31,13,0,2.552,26
+CUSDT,RANGE/BOUNCE,flat,5.44,13,0,2.863,26
+GALAUSDT,LEVELS (mixed),ascending,0.93,13,0,1.833,26
+NEARUSDT,LEVELS (mixed),ascending,0.7,13,0,0.763,26
+SEIUSDT,LEVELS (mixed),ascending,0.93,13,0,2.704,26
+ADAUSDT,LEVELS (mixed),ascending,0.7,12,0,1.561,24
+CFGUSDT,LEVELS (mixed),ascending,2.56,12,0,2.237,24
+ENAUSDT,LEVELS (mixed),descending,0.94,12,0,3.059,24
+BRUSDT,LEVELS (mixed),ascending,5.17,11,0,2.35,22
+DOGEUSDT,LEVELS (mixed),ascending,0.44,11,0,2.913,22
+DRIFTUSDT,LEVELS (mixed),descending,5.3,11,0,0.765,22
+LITUSDT,LEVELS (mixed),ascending,1.64,11,0,6.398,22
+NIGHTUSDT,LEVELS (mixed),descending,2.27,11,0,3.501,22
+STOUSDT,HIGH_VOL (pump-fade/caution),descending,10.74,12,0,-5.048,22
+TAOUSDT,RANGE/BOUNCE,flat,1.03,11,0,1.956,22
+WIFUSDT,LEVELS (mixed),ascending,0.79,11,0,4.637,22
+ZECUSDT,LEVELS (mixed),descending,0.83,11,0,-0.356,22
+FIDAUSDT,LEVELS (mixed),ascending,4.87,10,0,2.924,20
+KERNELUSDT,RANGE/BOUNCE,flat,4.47,10,0,2.015,20
+LTCUSDT,LEVELS (mixed),ascending,0.34,10,0,2.154,20
+ONTUSDT,LEVELS (mixed),descending,3.15,10,0,1.359,20
+PIPPINUSDT,HIGH_VOL (pump-fade/caution),descending,6.21,11,0,6.303,20
+SAHARAUSDT,RANGE/BOUNCE,flat,1.89,10,0,1.582,20
+TRUMPUSDT,RANGE/BOUNCE,flat,0.78,10,0,4.879,20
+XPLUSDT,RANGE/BOUNCE,flat,1.98,10,0,3.213,20
+XRPUSDT,RANGE/BOUNCE,flat,0.33,10,0,0.098,20
+ALGOUSDT,LEVELS (mixed),ascending,3.1,9,0,2.128,18
+BARDUSDT,RANGE/BOUNCE,flat,2.55,9,0,4.112,18
+BNBUSDT,RANGE/BOUNCE,flat,0.27,9,0,-1.465,18
+DOTUSDT,LEVELS (mixed),ascending,0.57,9,0,1.346,18
+ETHUSDT,LEVELS (mixed),descending,0.28,9,0,-0.901,18
+SUIUSDT,LEVELS (mixed),ascending,0.54,9,0,1.032,18
+YBUSDT,LEVELS (mixed),ascending,3.88,9,0,4.767,18
+AAVEUSDT,RANGE/BOUNCE,flat,0.48,8,0,1.945,16
+EDGEUSDT,HIGH_VOL (pump-fade/caution),ascending,7.26,9,0,2.709,16
+FARTCOINUSDT,RANGE/BOUNCE,flat,1.02,8,0,1.127,16
+GASUSDT,LEVELS (mixed),ascending,2.88,8,0,4.637,16
+KITEUSDT,RANGE/BOUNCE,flat,2.92,8,0,1.868,16
+NOMUSDT,LEVELS (mixed),descending,5.66,8,0,0.123,16
+WLDUSDT,RANGE/BOUNCE,flat,0.81,8,0,1.568,16
+APTUSDT,LEVELS (mixed),descending,0.61,7,0,2.355,14
+AVAXUSDT,LEVELS (mixed),ascending,0.53,7,0,3.6,14
+CRVUSDT,RANGE/BOUNCE,flat,0.63,7,0,0.812,14
+RIVERUSDT,RANGE/BOUNCE,flat,3.74,7,0,0.158,14
+ARBUSDT,RANGE/BOUNCE,flat,0.59,6,0,1.196,12
+HYPEUSDT,LEVELS (mixed),ascending,0.54,6,0,1.32,12
+LINKUSDT,LEVELS (mixed),ascending,0.38,6,0,1.954,12
+POLYXUSDT,LEVELS (mixed),ascending,3.84,6,0,3.39,12
+SIRENUSDT,HIGH_VOL (pump-fade/caution),flat,16.87,7,0,2.122,12
+SOLUSDT,LEVELS (mixed),ascending,0.41,5,0,2.161,10
+ONGUSDT,HIGH_VOL (pump-fade/caution),ascending,6.53,5,0,3.436,8
+PUFFERUSDT,HIGH_VOL (pump-fade/caution),ascending,11.4,5,0,2.636,8
+XAUTUSDT,LEVELS (mixed),descending,0.07,4,0,-16.106,8
+BEATUSDT,LEVELS (mixed),descending,3.41,3,0,3.075,6

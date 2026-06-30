@@ -81,6 +81,32 @@ Alpaca:
   dry-run with `ALPACA_SEND_ORDERS=0`, then enable send-orders only after owner
   OK during market hours.
 
+2026-06-30 later update:
+
+- Claude batch added local research-only `strategies/inplay_retest_v4.py` and
+  `scripts/market_survey.py`.
+- Found and fixed two wiring issues before committing:
+  - `AltChannelBounceV1Strategy` import in `backtest/run_portfolio.py` had an
+    accidental third argument;
+  - `inplay_retest_v4` was not in `run_portfolio.py` allowed strategy list /
+    risk env map.
+- Local checks after fix:
+  - `38 passed`: InPlay V4, next-open, strategy catalog, market context,
+    adaptive context;
+  - `py_compile` passed for `backtest/run_portfolio.py`,
+    `strategies/inplay_retest_v4.py`, `scripts/market_survey.py`;
+  - smoke run completed:
+    `LINKUSDT,SUIUSDT`, 30d, next-open, 6/2 bps,
+    `9` trades, `-0.33R`, PF `0.761`, DD `0.9167`.
+    This is only a routing smoke, not a verdict on V4.
+- `market_survey.py` smoke found 60 symbols:
+  `38` LEVELS/mixed, `16` RANGE/BOUNCE, `6` HIGH_VOL. It is a scouting dashboard,
+  not a signal generator.
+- Server cleanup: stopped stale `support_bounce_v1_annual_repair_v2` after
+  `406` rows / `0` PASS. Best rows had PF around `1.31-1.37` but failed
+  monthly stability (`5-6` red months, red streak `3`). Available RAM recovered
+  to about `467MB`.
+
 ## What changed today
 
 Pushed commits:
