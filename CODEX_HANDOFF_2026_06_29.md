@@ -115,6 +115,22 @@ Pre-sleep live check on 2026-06-29 `18:07 UTC`:
   heartbeat, active risk, ATT1 breaker and runtime counters every 15 minutes to
   `logs/manual_research/overnight_live_watch_20260629.log`.
 
+Morning live check on 2026-06-30 `04:30 UTC`:
+
+- Bot is alive and not blocked: `trade_on=true`, `dry_run=false`,
+  `open_trades=0`, `regime=bear_chop`, heartbeat age about 20s,
+  `ws_guard_active=0`, Bybit messages growing.
+- Operator override still loaded and clean:
+  `att1=0.10`; `flat/range/breakdown/ivb1/midterm/bounce1=0.0`.
+- ATT1 still has no live entry. Runtime counters since restart:
+  `att1_try=126`, `att1_no_signal=126`; main rejects:
+  `trendline=97`, `first_bar=8`, `same_bar=8`, `touch=6`, `reject=7`.
+  Conclusion: no technical freeze; the strict short trendline canary is simply
+  waiting for a valid setup.
+- ATT1 breaker: `enabled=true`, `blocked=false`, `expired=false`, old-window
+  stats now `trades=4`, `net_pnl=-0.7206`, `winrate=25%`; below `min_trades=6`
+  so it does not block.
+
 To enable canary only after owner OK (already done on 2026-06-29; kept for
 reference / re-enable after rollback):
 
@@ -156,6 +172,17 @@ Currently running:
   Still require full sweep + monthly/OOS before any canary.
 - Do not promote before full sweep + OOS/monthly review. But unlike ARF1 legacy,
   ARF2 has real passing rows and is a live portfolio candidate after validation.
+
+Morning 2026-06-30 status:
+
+- ARF2 sweep completed all `192/192`: `63` PASS rows.
+- Best ranked row: r121, 15 trades, net `+6.10R`, PF `5.301`, WR `73.3%`,
+  DD `0.8609`, `negative_months=0`, `positive_months=5`.
+- Top rows are attractive but low-frequency. Higher-trade rows around 22-24
+  trades (for example r113/r115) are also positive but have more red months.
+- `screen arf2_oos_20260630` started on 2026-06-30 to replay 8 selected ARF2
+  candidates on a fresh 60d OOS window ending 2026-06-30 plus a 360d stability
+  window. No live risk is added until this passes.
 
 Queued after ARF2 completes:
 
@@ -223,6 +250,20 @@ Volume exit:
   fades and price stalls.
 - 240d IRV3 base-vs-volume comparison is queued after ARF2.
 
+InPlay repair overnight result:
+
+- `backtest_runs/autoresearch_20260629_231010_inplay_dd_repair_20260627`
+- Only one PASS out of 24: r010, 102 trades, net `+4.36R`, PF `1.308`,
+  WR `39.2%`, DD `2.2704`, red months `2`, max red streak `1`.
+- This is a watchlist/research improvement, not a canary-quality engine yet.
+
+SpikeFadeV3 overnight recheck:
+
+- `backtest_runs/autoresearch_20260629_230022_spike_fade_v3_link_short_bounded_20260627`
+- 3 PASS out of 32. Best remains r008: 32 trades, net `+5.10R`, PF `1.987`,
+  WR `59.4%`, DD `1.2715`, red months `2`, max red streak `1`.
+- Candidate for a small diversifier after ATT1/ARF2, not a primary engine.
+
 Funding/carry:
 
 - Raw cross-exchange scan:
@@ -243,6 +284,26 @@ Funding/carry:
   - but concentration is high: top symbol share `57.35%` (ESPORTSUSDT).
   - Treat as carry/shadow candidate only; requires hedge/balance/orderbook
     execution validation before any capital.
+
+## Forex / metals overnight research
+
+Completed after crypto queue on 2026-06-29/30:
+
+- Fast FX scout produced many pass rows, then full confirm narrowed to 3 CANARY
+  combos:
+  - `GBPJPY trend_retest_session_v1:conservative`: stress `+212.17` pips,
+    recent stress `+48.43` pips, 84 trades, stress DD `289.62` pips.
+  - `GBPUSD trend_retest_session_v1:eurusd_canary`: stress `+74.68` pips,
+    recent stress `+129.00` pips, 106 trades, stress DD `107.79` pips.
+  - `GBPUSD trend_retest_session_v1:active`: stress `+11.54` pips,
+    recent stress `+87.42` pips, 142 trades, stress DD `162.81` pips.
+- State files:
+  - `docs/forex_combo_state_latest.csv`
+  - `docs/forex_live_filter_latest.csv`
+- The exporter marks these as CANARY, not ACTIVE. Estimated stress returns in
+  the full confirm are negative, so this is not ready for money; it needs demo
+  execution/cost-model work.
+- Metals scout `XAUUSD/XAGUSD`: 0 pair+strategy passed current gate.
 
 ## Alpaca
 
