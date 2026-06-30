@@ -184,6 +184,23 @@ Morning 2026-06-30 status:
   candidates on a fresh 60d OOS window ending 2026-06-30 plus a 360d stability
   window. No live risk is added until this passes.
 
+2026-06-30 `08:15 UTC` update:
+
+- ARF2 OOS safe-subset completed on
+  `ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT,SOLUSDT`.
+- Fresh 60d OOS was effectively dead: most variants produced `0` trades; r055
+  produced `1` trade for `-0.50R`.
+- 360d safe-subset:
+  - r055: 19 trades, net `+3.90R`, PF `1.944`, DD `1.13`
+  - r121: 16 trades, net `+2.91R`, PF `1.912`, DD `1.47`
+  - r125: 14 trades, net `+2.16R`, PF `1.799`, DD `0.98`
+  - more frequent r065/r067/r069 degraded to PF around `0.98/1.00/0.95` with
+    DD `5.5R` to `7R`.
+- Verdict: do **not** add ARF2 live risk yet. The attractive 240d sweep did not
+  translate into a useful fresh 60d canary and the more frequent variants
+  degraded. Keep ARF2 in research; next step is either full data refresh
+  including missing ATOM/BTC/XRP slices or redesign the range/fade logic.
+
 Queued after ARF2 completes:
 
 - `screen post_arf2_queue_20260629`
@@ -257,6 +274,25 @@ InPlay repair overnight result:
   WR `39.2%`, DD `2.2704`, red months `2`, max red streak `1`.
 - This is a watchlist/research improvement, not a canary-quality engine yet.
 
+InPlay volume-exit comparison (server, 2026-06-30):
+
+- Baseline `irv3_base_240_20260630`: 210 trades, net `-4.31R`, PF `0.868`,
+  WR `26.7%`, DD `6.47`.
+- Volume exit `irv3_vol_240_20260630`: 232 trades, net `-8.00R`, PF `0.701`,
+  WR `30.2%`, DD `8.68`.
+- Verdict: current `volume_exit` wiring does not fix IRV3; it worsens the tested
+  portfolio. Keep off by default, use only for further research.
+
+ASB2/ACB1 240d queue:
+
+- `screen post_oos_repair_queue_20260630` is running. It completed InPlay base
+  vs volume and is now running ASB2/ACB1 240d default/HVN tests.
+
+Stopped stale research:
+
+- Killed old `package_att1_short_ars1_additivity_20260628` autoresearch on
+  2026-06-30 because it was already no-go and was consuming live VPS RAM/CPU.
+
 SpikeFadeV3 overnight recheck:
 
 - `backtest_runs/autoresearch_20260629_230022_spike_fade_v3_link_short_bounded_20260627`
@@ -304,6 +340,14 @@ Completed after crypto queue on 2026-06-29/30:
   the full confirm are negative, so this is not ready for money; it needs demo
   execution/cost-model work.
 - Metals scout `XAUUSD/XAGUSD`: 0 pair+strategy passed current gate.
+
+Next FX queue:
+
+- `screen fx_deep_after_crypto_20260630` started on 2026-06-30.
+- It waits for `post_oos_repair_queue_20260630`, then runs a stricter FX gate
+  with positive stress-return requirements and a separate strict metals gate.
+- Crypto strategies are not being ported into FX; this uses the isolated
+  `forex/` strategy set.
 
 ## Alpaca
 
