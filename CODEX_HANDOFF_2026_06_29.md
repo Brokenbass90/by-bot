@@ -107,6 +107,38 @@ Alpaca:
   monthly stability (`5-6` red months, red streak `3`). Available RAM recovered
   to about `467MB`.
 
+2026-06-30 night update:
+
+- User asked whether horizontal levels are live. Current answer: **no live
+  horizontal price sleeve has risk**. The canary override leaves only ATT1
+  short-only (`risk=0.10`) live. `flat/range/bounce/ivb1/midterm/breakdown`
+  remain `risk=0.0`. Horizontal/range/pump/breakout helpers are research until
+  wired + WF/OOS pass.
+- Stopped another stale live-VPS research process:
+  `inplay_breakout_retest_focus_v1` was consuming about `41%` RAM and left only
+  ~`153MB` available. After kill, available RAM recovered to ~`494MB`. Rule:
+  do not run heavy sweeps on the 1GB live VPS; use local or separate research
+  VPS.
+- New helper-layer batch from Claude exists locally and is validated:
+  - `bot/range_filter.py` — unified range/chop + side split;
+  - `bot/pump_exhaustion.py` — pump/dump exhaustion fade gate;
+  - `bot/retest_quality.py` — shared retest quality scorer;
+  - `bot/elder_filter.py` — Elder as confluence filter, not standalone engine;
+  - `bot/breakout_confirm.py` — confirmed breakout + anti-fakeout.
+- Local validation:
+  `73 passed` for range/pump/retest/elder/breakout helpers plus market_context,
+  adaptive_context, IRV4, next-open and strategy catalog.
+- These helpers are not yet wired into live sleeves. Next engineering step is
+  phased wiring, not enabling risk:
+  1. `range_filter` -> ARF2/ASB2/ACB1/forex range;
+  2. `retest_quality` -> IRV4/support/channel/breakout retests;
+  3. `pump_exhaustion` -> pump/spike fade;
+  4. `breakout_confirm` -> breakout legs;
+  5. `elder_filter` -> optional confluence gate in sweeps.
+- Alpaca paper messages are useful telemetry, not live proof:
+  `Equities PAPER` / `[DRY-RUN]` means no real broker live money yet.
+  Create real Alpaca account + `$500`, then dry-run live account first.
+
 ## What changed today
 
 Pushed commits:
