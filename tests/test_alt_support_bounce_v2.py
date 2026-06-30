@@ -96,3 +96,29 @@ def test_descending_regime_can_be_disabled():
     sig = strat.maybe_signal(s, trig[0], trig[1], trig[2], trig[3], trig[4], trig[5])
     assert sig is None
     assert "regime_blocked" in strat.last_no_signal_reason
+
+
+def test_adaptive_mode_runs_and_fires():
+    rows = _flat_channel()
+    strat = AltSupportBounceV2Strategy(_cfg(adaptive=True))
+    s = _Store(rows)
+    assert strat.maybe_signal(s, rows[-1][0], 0, 0, 0, 0, 0) is None  # warm-up
+    trig = _row(len(rows), 101.0, 104.5, 99.8, 104.0, 600.0)
+    s.rows = rows + [trig]
+    sig = strat.maybe_signal(s, trig[0], trig[1], trig[2], trig[3], trig[4], trig[5])
+    # adaptive flat-regime tightens params but fresh support exists -> should fire
+    assert sig is not None, strat.last_no_signal_reason
+    assert sig.side == "long"
+
+
+def test_max_age_config_accepted_and_runs():
+    # freshness logic itself is unit-tested in market_context; here just ensure the
+    # strategy accepts max_age_bars and still fires on a fresh, in-range support.
+    rows = _flat_channel()
+    strat = AltSupportBounceV2Strategy(_cfg(max_age_bars=5))
+    s = _Store(rows)
+    strat.maybe_signal(s, rows[-1][0], 0, 0, 0, 0, 0)
+    trig = _row(len(rows), 101.0, 104.5, 99.8, 104.0, 600.0)  # fresh support tag
+    s.rows = rows + [trig]
+    sig = strat.maybe_signal(s, trig[0], trig[1], trig[2], trig[3], trig[4], trig[5])
+    assert sig is not None, strat.last_no_signal_reason

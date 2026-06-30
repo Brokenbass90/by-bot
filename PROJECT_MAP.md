@@ -2,15 +2,23 @@
 
 *Онбординг для человека и любого ИИ. Визуал: `reports/PROJECT_MAP.svg`. Машиночитаемая карта кода: `reports/AI_CODEMAP.json` (через `bot.ai_tools.get_codemap`).*
 
-**START HERE (2026-06-28):** `reports/STATE_AND_MIGRATION_2026_06_28.md` →
-`CODEX_HANDOFF_2026_06_28.md` → `reports/OWNER_STRATEGY_SPEC_2026_06_25.md`
-(ручной эдж владельца) → `reports/CLAUDE_AUDIT_2026_06_22.md` (§22-33).
+**START HERE (2026-06-30):** `CODEX_HANDOFF_2026_06_29.md` →
+`reports/ROADMAP_WHERE_WE_ARE_2026_06_30.md` →
+`reports/STATE_AND_MIGRATION_2026_06_28.md` →
+`reports/OWNER_STRATEGY_SPEC_2026_06_25.md` (ручной эдж владельца).
 
-**Текущие кандидаты (execution-accurate, 2026-06-28):** ATT1 short-only — первый
-canary-кандидат (+37.35R, PF 1.32, DD ~5%, 2 красных мес, серия 1); SpikeFadeV3
-LINK short — диверсификатор (PF 1.99, DD 1.27); IVB1 short — watch (DD-гейт не
-прошёл); ARF2 — новый research-only. Alpaca — первый РЕАЛЬНЫЙ canary $500 @1.0x
-после ревью исполнения. Крипто-риск ЗАМОРОЖЕН, не размораживать вслепую.
+**Текущая истина (2026-06-30):**
+- Crypto live уже разморожен точечно: ATT1 short-only canary `risk=0.10`,
+  остальные price-рукава `risk=0.0`. Нет сделок не из-за freeze, а потому что
+  одна редкая наклонка ждёт валидный short setup.
+- НЕ добавлять второй crypto sleeve без OOS: ARF2, ASB2, ACB1 и InPlay 240d
+  не прошли live-гейт 30 июня.
+- Ближайший crypto-диверсификатор: SpikeFadeV3 LINK short после свежего
+  bounded OOS/replay.
+- Ближайшие реальные деньги: Alpaca v38 `$500` canary после live-account dry-run;
+  carry/funding — только market-neutral после execution/balance validation.
+- FX/XAU research идёт отдельным бесплатным data-track; OANDA нужен только для
+  исполнения позже, не для бэктеста.
 
 ## Что это
 Многорукавная торговая станция. Цель — устойчивый процесс с доказанным эджем, не «быстрое богатство». Человек в контуре на всех решениях о деньгах/коде. Деньги — только за доказанным OOS-эджем.
@@ -48,10 +56,28 @@ LINK short — диверсификатор (PF 1.99, DD 1.27); IVB1 short — w
 ## Гейт промоушена в live (нерушимо)
 кандидат → авто-подбор монет → 360d next-open с fee≥6 bps/side и slippage≥2 bps/side → monthly stability (≥10 месяцев, ≤3 красных, streak≤2) → multi-window WF → strategy-only/full-stack compare → `evaluate_crypto_promotion.py` → shadow → крошечный canary на $100.
 
-## Текущее состояние (2026-06-19)
-Серверный `bybot.service` активен, private Bybit API подтверждает 0 открытых позиций, equity около `121.11 USDT`, режим `bear_chop`, allocator `hard_block=false`. Реальный риск несут только `flat_resistance_fade=0.30x` и legacy `sr_range_strategy.RangeStrategy=0.25x` short-only; ATT1, bounce, breakdown, IVB1 и midterm работают с нулевым риском. Live Range и исследовательский Bollinger/RSI `alt_range_scalp_v1` (ARS1) — разные реализации.
+## Текущее состояние (2026-06-30)
 
-Доказательная истина остаётся жёсткой: полный доступный live-журнал отрицателен (`40` закрытий, около `-3.81 USDT`, PF `0.517`), а две сделки flat и три short-сделки Range слишком малы для вывода. **Доказанных live-карманов пока 0; риск не масштабировать.** Alpaca `alpaca_adaptive_v1` управляет paper-позициями на виртуальном `$1000`; первый формальный review — после пяти полных сессий, не раньше закрытия 2026-06-26. Резерв `$2500` не развёрнут.
+Серверный `bybot.service` активен: `trade_on=true`, `dry_run=false`,
+`open_trades=0`, режим `bear_chop`, `ws_guard_active=0`.
+Операторский override загружен:
+`configs/att1_short_canary_20260629.env`.
+Живой риск сейчас только у **ATT1 short-only**: `risk_mult.att1=0.10`.
+`flat/range/breakdown/ivb1/midterm/bounce1=0.0`.
+
+ATT1 не заблокирован: breaker `enabled=true`, `blocked=false`,
+`expired=false`. Нет сделок, потому что стратегия не нашла валидную наклонку;
+это ожидаемо для редкого canary.
+
+Доказательная истина:
+- ATT1 short-only остаётся единственным crypto live canary.
+- ARF2 OOS 30 июня не дал частого/устойчивого live-кандидата.
+- ASB2/ACB1 240d отрицательны; ACB1+HVN — research baseline, не live.
+- InPlay + volume_exit текущей версии ухудшил результат; `volume_exit` off.
+- SpikeFadeV3 LINK short — лучший следующий crypto candidate, но нужен свежий
+  OOS/replay.
+- Alpaca v38 — первый реальный non-crypto canary candidate на `$500`, после
+  live-account dry-run без ордеров.
 
 ## Рукава (роли)
 - Крипта (Bybit perps) — работяга/доход (ядро на горизонтальных уровнях + тренд).

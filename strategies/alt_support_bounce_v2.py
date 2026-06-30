@@ -23,6 +23,7 @@ from typing import List, Optional
 
 from .signals import TradeSignal
 from bot import market_context as mc
+from bot.adaptive_context import adaptive_params as _adaptive_params
 
 
 def _env_float(name: str, d: float) -> float:
@@ -77,6 +78,8 @@ class AltSupportBounceV2Config:
     allow_ascending: bool = True
     allow_descending: bool = True
     flat_slope_atr: float = 0.04
+    adaptive: bool = False        # ASB2_ADAPTIVE: regime-tune tol/touches/pivot + freshness
+    max_age_bars: int = 0         # 0 = off; else drop supports older than N bars
     # risk geometry
     sl_atr_mult: float = 0.6
     tp1_rr: float = 1.0
@@ -118,6 +121,8 @@ def _load_cfg() -> AltSupportBounceV2Config:
     c.allow_ascending = _env_bool("ASB2_ALLOW_ASCENDING", c.allow_ascending)
     c.allow_descending = _env_bool("ASB2_ALLOW_DESCENDING", c.allow_descending)
     c.flat_slope_atr = _env_float("ASB2_FLAT_SLOPE_ATR", c.flat_slope_atr)
+    c.adaptive = _env_bool("ASB2_ADAPTIVE", c.adaptive)
+    c.max_age_bars = _env_int("ASB2_MAX_AGE_BARS", c.max_age_bars)
     c.sl_atr_mult = _env_float("ASB2_SL_ATR_MULT", c.sl_atr_mult)
     c.tp1_rr = _env_float("ASB2_TP1_RR", c.tp1_rr)
     c.tp2_rr = _env_float("ASB2_TP2_RR", c.tp2_rr)
@@ -205,11 +210,22 @@ class AltSupportBounceV2Strategy:
         if not self._regime_allowed(regime):
             self._no(f"regime_blocked_{regime}"); return None
 
-        # nearest real horizontal support at/under price
+        # effective detector params (regime-adaptive if enabled)
+        eff_tol, eff_touch, eff_pl, eff_pr = cfg.level_tol_atr, cfg.min_touches, cfg.pivot_left, cfg.pivot_right
+        eff_max_age = cfg.max_age_bars
+        if cfg.adaptive:
+            ap = _adaptive_params((atr / price * 100.0) if price else 0.0, regime)
+            eff_tol, eff_touch = ap["tol_atr"], ap["min_touches"]
+            eff_pl, eff_pr, eff_max_age = ap["pivot_left"], ap["pivot_right"], ap["max_age_bars"]
+
+        # nearest real horizontal support at/under price (freshness-filtered)
+        last_idx = len(rows) - 1
         sup_levels = mc.horizontal_levels(rows, side="support", atr_value=atr,
-                                          left=cfg.pivot_left, right=cfg.pivot_right,
-                                          tol_atr=cfg.level_tol_atr, min_touches=cfg.min_touches)
-        cand = [c2 for c2 in sup_levels if c2["level"] <= price + cfg.level_tol_atr * atr]
+                                          left=eff_pl, right=eff_pr,
+                                          tol_atr=eff_tol, min_touches=eff_touch)
+        cand = [c2 for c2 in sup_levels
+                if c2["level"] <= price + eff_tol * atr
+                and (eff_max_age <= 0 or (last_idx - c2["last_idx"]) <= eff_max_age)]
         # also consider the lower channel line as a dynamic support
         lower = ch.get("lower_now")
         support = None

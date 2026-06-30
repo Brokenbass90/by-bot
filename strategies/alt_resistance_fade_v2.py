@@ -69,7 +69,7 @@ class AltResistanceFadeV2Config:
     min_body_frac: float = 0.15
     min_rsi: float = 56.0
     max_close_vs_ema_pct: float = 1.8
-    min_reject_vol_mult: float = 0.0
+    min_reject_vol_mult: float = 1.2  # FIX (2026-06-30): volume confirm ON by default (owner's edge)
     volume_avg_period: int = 20
 
     funding_filter_enabled: bool = False

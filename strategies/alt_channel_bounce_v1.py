@@ -25,6 +25,7 @@ from typing import Optional
 
 from .signals import TradeSignal
 from bot import market_context as mc
+from bot.adaptive_context import adaptive_params as _adaptive_params
 
 
 def _f(name, d):
@@ -67,6 +68,7 @@ class AltChannelBounceV1Config:
     require_reject_close: bool = True # long: close>open ; short: close<open
     vol_avg_period: int = 20
     vol_mult: float = 1.2
+    adaptive: bool = False        # ACB1_ADAPTIVE: regime-tune pivot sensitivity
     require_hvn: bool = False
     hvn_bins: int = 24
     hvn_top_n: int = 6
@@ -105,6 +107,7 @@ def _load_cfg() -> AltChannelBounceV1Config:
     c.require_reject_close = _b("ACB1_REQUIRE_REJECT_CLOSE", c.require_reject_close)
     c.vol_avg_period = _i("ACB1_VOL_AVG_PERIOD", c.vol_avg_period)
     c.vol_mult = _f("ACB1_VOL_MULT", c.vol_mult)
+    c.adaptive = _b("ACB1_ADAPTIVE", c.adaptive)
     c.require_hvn = _b("ACB1_REQUIRE_HVN", c.require_hvn)
     c.hvn_bins = _i("ACB1_HVN_BINS", c.hvn_bins)
     c.hvn_top_n = _i("ACB1_HVN_TOP_N", c.hvn_top_n)
@@ -178,11 +181,20 @@ class AltChannelBounceV1Strategy:
         if not (atr == atr and atr > 0):
             self._no("atr_invalid"); return None
 
+        _price0 = float(rows[-1][4])
+        _pl, _pr = cfg.pivot_left, cfg.pivot_right
         ch = mc.classify_channel(rows, atr_value=atr, lookback=cfg.lookback,
-                                 pivot_left=cfg.pivot_left, pivot_right=cfg.pivot_right,
+                                 pivot_left=_pl, pivot_right=_pr,
                                  flat_slope_atr=cfg.flat_slope_atr)
-        upper = ch.get("upper_now"); lower = ch.get("lower_now")
         regime = ch.get("regime", "unknown")
+        if cfg.adaptive:
+            ap = _adaptive_params((atr / _price0 * 100.0) if _price0 else 0.0, regime)
+            _pl, _pr = ap["pivot_left"], ap["pivot_right"]
+            ch = mc.classify_channel(rows, atr_value=atr, lookback=cfg.lookback,
+                                     pivot_left=_pl, pivot_right=_pr,
+                                     flat_slope_atr=cfg.flat_slope_atr)
+            regime = ch.get("regime", "unknown")
+        upper = ch.get("upper_now"); lower = ch.get("lower_now")
         pos = ch.get("pos_in_channel")
         width_atr = ch.get("width_atr")
         if upper is None or lower is None or pos != pos or width_atr != width_atr:

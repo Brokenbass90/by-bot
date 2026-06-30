@@ -83,3 +83,14 @@ def test_long_disabled():
     trig = _row(len(rows), 100.2, 101.2, 99.8, 101.0, 600.0)
     sig = _fire(strat, s, trig)
     assert sig is None  # long suppressed; lower edge but allow_long False -> not_at_edge/None
+
+
+def test_adaptive_mode_runs():
+    rows = _flat()
+    strat = AltChannelBounceV1Strategy(_cfg(adaptive=True))
+    s = _Store(rows)
+    strat.maybe_signal(s, rows[-1][0], 0, 0, 0, 0, 0)  # warm-up, must not crash
+    trig = _row(len(rows), 100.2, 101.2, 99.8, 101.0, 600.0)
+    sig = _fire(strat, s, trig)
+    # adaptive path runs; flat regime -> long off lower edge expected
+    assert sig is None or sig.side == "long"

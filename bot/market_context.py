@@ -38,8 +38,14 @@ def _f(row: list, i: int) -> float:
 
 
 # ── ATR ──────────────────────────────────────────────────────────────────────
-def atr(rows: List[list], period: int = 14) -> float:
-    """Simple average true range over the last ``period`` bars."""
+def atr(rows: List[list], period: int = 14, exclude_last: bool = False) -> float:
+    """Simple average true range over the last ``period`` bars.
+
+    ``exclude_last=True`` drops the most recent (signal) bar so its own range does
+    not inflate the ATR used to size that bar's stop (anti-self-inflation).
+    """
+    if exclude_last and len(rows) > 1:
+        rows = rows[:-1]
     if len(rows) < 2:
         return float("nan")
     trs: List[float] = []
@@ -172,11 +178,15 @@ def sloped_level(
     right: int = 2,
     min_pivots: int = 2,
     min_r2: float = 0.0,
+    min_slope_atr: float = 0.0,
+    require_unbroken: bool = False,
+    atr_value: Optional[float] = None,
 ) -> Optional[dict]:
     """Fit a trendline through recent swing highs (resistance) / lows (support).
 
-    Returns dict: slope, intercept, r2, level_now (line value at last bar idx),
-    pivots (count). ``None`` if not enough colinear pivots.
+    Returns dict: slope, intercept, r2, level_now, pivots, valid (line not breached
+    by a close beyond it). ``min_slope_atr`` rejects near-flat lines. ``require_unbroken``
+    drops already-broken lines. ``None`` if not enough colinear pivots / fails a filter.
     """
     pivots = pivot_highs(rows, left, right) if side == "resistance" else pivot_lows(rows, left, right)
     if len(pivots) < int(min_pivots):
@@ -185,6 +195,19 @@ def sloped_level(
     m, b, r2 = fit_line(pts)
     if not math.isfinite(m) or (math.isfinite(r2) and r2 < float(min_r2)):
         return None
+    if min_slope_atr > 0.0 and atr_value and atr_value > 0:
+        if abs(m) / atr_value < float(min_slope_atr):
+            return None
+    valid = True
+    for i in range(len(rows)):
+        line_val = m * i + b
+        c = _f(rows[i], CLOSE)
+        if side == "resistance" and c > line_val:
+            valid = False; break
+        if side == "support" and c < line_val:
+            valid = False; break
+    if require_unbroken and not valid:
+        return None
     last_idx = len(rows) - 1
     return {
         "slope": m,
@@ -192,6 +215,7 @@ def sloped_level(
         "r2": r2,
         "level_now": m * last_idx + b,
         "pivots": len(pivots),
+        "valid": valid,
     }
 
 
@@ -255,6 +279,31 @@ def nearest_dist_atr(level: float, points: List[float], atr_value: float) -> flo
     if not points or not (atr_value == atr_value and atr_value > 0):
         return float("inf")
     return min(abs(float(level) - float(p)) for p in points) / atr_value
+
+
+def nearest_broken_level(rows: List[list], levels: List[dict], price: float,
+                         atr_value: float, side: str, max_age_bars: int = 20) -> Optional[dict]:
+    """Find a recently-BROKEN level that may now act as the opposite (retest entry).
+
+    side="support": former resistance the price closed ABOVE recently -> now support.
+    side="resistance": former support the price closed BELOW recently -> now resistance.
+    Returns the nearest such flipped level with dist_atr, else None.
+    """
+    if not levels or not (atr_value == atr_value and atr_value > 0):
+        return None
+    tail = rows[-int(max(1, max_age_bars)):]
+    cands = []
+    for lv in levels:
+        L = lv["level"]
+        if side == "support" and L < price and any(_f(r, CLOSE) > L for r in tail):
+            cands.append(lv)
+        elif side == "resistance" and L > price and any(_f(r, CLOSE) < L for r in tail):
+            cands.append(lv)
+    if not cands:
+        return None
+    best = min(cands, key=lambda x: abs(x["level"] - price))
+    return {"level": best["level"], "touches": best.get("touches", 0),
+            "dist_atr": abs(best["level"] - price) / atr_value}
 
 
 def classify_channel(
@@ -334,6 +383,8 @@ def build_context(
     min_touches: int = 2,
     min_pivots: int = 2,
     min_r2: float = 0.0,
+    max_age_bars: Optional[int] = None,
+    exclude_last_atr: bool = False,
 ) -> dict[str, Any]:
     """Build a compact, strategy-ready view of current structure.
 
@@ -350,7 +401,7 @@ def build_context(
     if not rows:
         return out
     price = _f(rows[-1], CLOSE)
-    a = float(atr_value) if (atr_value is not None and atr_value > 0) else atr(rows, atr_period)
+    a = float(atr_value) if (atr_value is not None and atr_value > 0) else atr(rows, atr_period, exclude_last=exclude_last_atr)
     out["price"] = price
     out["atr"] = a
     if not (math.isfinite(a) and a > 0):
@@ -361,8 +412,14 @@ def build_context(
                             right=pivot_right, tol_atr=tol_atr, min_touches=min_touches)
     sup = horizontal_levels(rows, side="support", atr_value=a, left=pivot_left,
                             right=pivot_right, tol_atr=tol_atr, min_touches=min_touches)
+    def _age_ok(n):
+        return n is None or max_age_bars is None or n.get("age_bars", 0) <= int(max_age_bars)
     out["resistance"] = _nearest(res, price, above=True, atr_value=a, last_idx=last_idx)
+    if not _age_ok(out["resistance"]):
+        out["resistance"] = None
     out["support"] = _nearest(sup, price, above=False, atr_value=a, last_idx=last_idx)
+    if not _age_ok(out["support"]):
+        out["support"] = None
 
     sr = sloped_level(rows, side="resistance", left=pivot_left, right=pivot_right,
                       min_pivots=min_pivots, min_r2=min_r2)

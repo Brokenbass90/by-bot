@@ -159,3 +159,52 @@ def test_classify_channel_position_and_width():
 def test_classify_channel_empty_safe():
     r = mc.classify_channel([])
     assert r["regime"] == "unknown"
+
+
+def test_atr_exclude_last():
+    rows = [_row(i, 10, 11, 9, 10) for i in range(20)]
+    rows.append(_row(20, 10, 50, 5, 10))  # huge final bar
+    a_incl = mc.atr(rows, 14, exclude_last=False)
+    a_excl = mc.atr(rows, 14, exclude_last=True)
+    assert a_excl < a_incl  # excluding the spike bar lowers ATR
+
+
+def test_build_context_max_age_filters():
+    # resistance touched only long ago -> filtered when max_age_bars small
+    rows = []
+    for i in range(60):
+        if i in (2, 5):  # old resistance touches near 130
+            rows.append(_row(i, 120, 130, 118, 122, 100))
+        else:
+            rows.append(_row(i, 100, 105, 98, 101, 100))
+    ctx_no = mc.build_context(rows, atr_value=8.0, pivot_left=1, pivot_right=1,
+                              min_touches=2, max_age_bars=5)
+    # the only resistance is ancient -> should be filtered out
+    assert ctx_no["resistance"] is None
+
+
+def test_sloped_validity_flag():
+    # descending highs, clean -> valid; price stays under line
+    rows = []
+    highs = [20, 22, 19, 21, 18, 20, 17, 19, 16, 18, 15, 17]
+    for i, h in enumerate(highs):
+        rows.append(_row(i, h - 2, h, h - 4, h - 3))
+    sl = mc.sloped_level(rows, side="resistance", left=1, right=1, min_pivots=2)
+    assert sl is not None and "valid" in sl
+
+
+def test_min_slope_atr_rejects_flat():
+    rows = [_row(i, 100, 101 + (i % 2), 99 - (i % 2), 100) for i in range(20)]
+    sl = mc.sloped_level(rows, side="resistance", left=1, right=1, min_pivots=2,
+                         min_slope_atr=0.5, atr_value=2.0)
+    assert sl is None  # near-flat rejected
+
+
+def test_nearest_broken_level():
+    # former resistance ~100 that price closed above -> now support
+    rows = [_row(i, 95, 101, 94, 96, 100) for i in range(15)]
+    rows += [_row(i + 15, 100, 112, 99, 110, 100) for i in range(8)]  # closed above 100
+    levels = [{"level": 100.0, "touches": 3}]
+    r = mc.nearest_broken_level(rows, levels, price=110.0, atr_value=5.0,
+                                side="support", max_age_bars=10)
+    assert r is not None and abs(r["level"] - 100.0) < 1e-9

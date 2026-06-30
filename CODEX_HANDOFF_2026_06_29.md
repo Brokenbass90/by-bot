@@ -3,6 +3,84 @@
 Branch: `codex/dynamic-symbol-filters`. Stage only explicit paths; the worktree
 still contains many old untracked docs/scripts and generated proof-of-life files.
 
+## 2026-06-30 midday update — current truth
+
+Live crypto:
+
+- Server live check at `2026-06-30T11:07:35Z`: `trade_on=true`,
+  `dry_run=false`, `open_trades=0`, regime `bear_chop`, uptime about `4h44m`.
+- Operator canary override is still loaded:
+  `OPERATOR_LIVE_OVERRIDE_ENV=configs/att1_short_canary_20260629.env`.
+- Active risk is intentionally clean:
+  `att1=0.10`; `flat/range/breakdown/ivb1/midterm/bounce1=0.0`.
+- ATT1 breaker is armed and not blocking:
+  `enabled=true`, `blocked=false`, `expired=false`, old window
+  `trades=4`, `net_pnl=-0.7206`, `winrate=25%`, below `min_trades=6`.
+- Since latest restart, ATT1 had `36` tries and `0` entries. Rejections are
+  normal strict-setup rejects: `trendline=24`, `touch=5`, `rsi=1`,
+  `first_bar=6`. Conclusion: live is not frozen; only one rare short-trendline
+  canary has risk, so it can wait many hours without a trade.
+
+Research results:
+
+- ARF2 (`alt_resistance_fade_v2`) full 240d sweep completed with `63/192` PASS,
+  but the safe-subset OOS did **not** justify live risk:
+  - fresh 60d mostly `0` trades; r055 had `1` trade for `-0.50R`;
+  - 360d safe-subset r055/r121/r125 stayed positive but low-frequency
+    (`14-19` trades, PF about `1.8-1.94`);
+  - more frequent r065/r067/r069 degraded to PF about `0.95-1.00` with
+    `5.5R-7R` DD.
+  Verdict: ARF2 remains research/watchlist, not canary.
+- ASB2/ACB1 240d post queue completed and was negative:
+  - ASB2 default: `245` trades, `-6.83R`, PF `0.845`, DD `10.61`;
+  - ASB2 + HVN: `180` trades, `-9.24R`, PF `0.731`, DD `11.82`;
+  - ACB1 default: `208` trades, `-4.99R`, PF `0.854`, DD `7.43`;
+  - ACB1 + HVN: `140` trades, `-1.46R`, PF `0.936`, DD `6.09`.
+  Verdict: no live risk; ACB1+HVN is the least bad research baseline.
+- InPlay 240d comparison:
+  - base: `210` trades, `-4.31R`, PF `0.868`, DD `6.47`;
+  - `VOLUME_EXIT_ENABLE=1`: `232` trades, `-8.00R`, PF `0.701`, DD `8.68`.
+  Verdict: current volume-exit wiring worsened this tested InPlay package; keep
+  disabled until redesigned.
+- SpikeFadeV3 LINK short remains the cleanest crypto diversifier candidate:
+  `32` trades, `+5.10R`, PF `1.987`, WR `59.4%`, DD `1.27`, red months `2`.
+  Next required step: bounded OOS/replay on fresh cache before tiny canary.
+- PFS1 pump-fade autoresearch was stopped manually on `2026-06-30` because it
+  repeatedly timed out / produced `0` trades and consumed about `25%` RAM next
+  to live. Available RAM improved from roughly `285MB` to `484MB`.
+
+FX / metals:
+
+- `screen fx_deep_after_crypto_20260630` is running a stricter free-data FX
+  gate. No OANDA keys are needed for research; OANDA is only for demo/live
+  execution later.
+- Previous loose FX gate produced three CANARY rows (`GBPJPY` conservative,
+  `GBPUSD` eurusd_canary/active), but those are not live-ready until the strict
+  gate confirms positive stress return and acceptable DD.
+- Metals scout previously had no PASS; treat XAU/XAG as separate strategies
+  with instrument-specific spread/swap/session models, not a direct crypto port.
+
+Local code batch status:
+
+- AdaptiveContextProvider / market-context freshness / HVN/adaptive hooks are
+  local and tested, but not deployed to live yet.
+- Local checks passed:
+  - `35 passed`: adaptive context, market context, ASB2, ACB1;
+  - `70 passed`: strategy catalog, live closed-candle parity, next-open,
+    strategy breaker, market context, adaptive context, ASB2/ACB1,
+    SpikeFadeV3, BreakdownRetestV3.
+- Because ASB2/ACB1 OOS is negative and `market_context` is shared
+  infrastructure, deploy this batch as research/foundation only after explicit
+  review; do not use it to enable new live risk.
+
+Alpaca:
+
+- Alpaca v38 remains the fastest real-money path. Action is operational, not
+  research: create/fund real Alpaca account with about `$500`, generate live API
+  keys, create server-only `configs/alpaca_live_v38.env`, run live-account
+  dry-run with `ALPACA_SEND_ORDERS=0`, then enable send-orders only after owner
+  OK during market hours.
+
 ## What changed today
 
 Pushed commits:
