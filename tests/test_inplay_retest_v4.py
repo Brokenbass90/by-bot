@@ -82,3 +82,32 @@ def test_adaptive_runs():
     trig = _row(40, 100.2, 101.0, 99.9, 100.8, 600.0)
     sig = _fire(strat, s, trig)
     assert sig is None or sig.side in ("long", "short")
+
+
+def test_retest_quality_gate_can_pass():
+    s = _Store(_flat())
+    strat = InplayRetestV4Strategy(_cfg(use_retest_quality=True, retest_min_quality=0.10))
+    strat.maybe_signal(s, s.rows[-1][0], 0, 0, 0, 0, 0)
+    trig = _row(40, 100.2, 101.0, 99.9, 100.8, 600.0)
+    sig = _fire(strat, s, trig)
+    assert sig is not None, strat.last_no_signal_reason
+    assert "quality=" in sig.reason
+
+
+def test_retest_quality_gate_can_block():
+    s = _Store(_flat())
+    strat = InplayRetestV4Strategy(_cfg(use_retest_quality=True, retest_min_quality=1.01))
+    strat.maybe_signal(s, s.rows[-1][0], 0, 0, 0, 0, 0)
+    trig = _row(40, 100.2, 101.0, 99.9, 100.8, 600.0)
+    sig = _fire(strat, s, trig)
+    assert sig is None
+    assert strat.last_no_signal_reason.startswith("quality=")
+
+
+def test_range_gate_can_be_enabled_without_crash():
+    s = _Store(_flat(n=80))
+    strat = InplayRetestV4Strategy(_cfg(use_range_filter=True, range_require_all=False))
+    strat.maybe_signal(s, s.rows[-1][0], 0, 0, 0, 0, 0)
+    trig = _row(80, 100.2, 101.0, 99.9, 100.8, 600.0)
+    sig = _fire(strat, s, trig)
+    assert sig is None or sig.side in ("long", "short")

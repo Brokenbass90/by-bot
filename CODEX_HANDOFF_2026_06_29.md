@@ -25,6 +25,25 @@ still contains many old untracked docs/scripts and generated proof-of-life files
     frequency and still requires server gate before tiny canary.
 - New morning report: `reports/MORNING_STATUS_2026_07_01.md`.
 
+## 2026-07-01 implementation update — Spike gate + InPlay helper wiring
+
+- Added `scripts/spike_fade_robustness_gate.py`.
+  Purpose: replace nested 90/240/360d checks with rolling train/test folds,
+  fee/slippage stress and cross-symbol sanity for `SpikeFadeV3 LINK short`.
+  Smoke run passed and wrote a FAIL report as expected for a 1-fold/1-combo
+  smoke.
+- Full local gate is running in screen:
+  `sfv3_robust_gate_20260701`.
+  Log: `logs/manual_research/sfv3_robust_gate_20260701.log`.
+  Do not run this on the 1GB live VPS.
+- `strategies/inplay_retest_v4.py` now supports helper layers behind env flags:
+  `IRV4_USE_RETEST_QUALITY`, `IRV4_USE_RANGE_FILTER`,
+  `IRV4_USE_ELDER_FILTER`, `IRV4_USE_BREAKOUT_CONFIRM`.
+  Defaults are off, so old V4 behavior is unchanged unless explicitly enabled.
+- Added tests for the helper wiring in `tests/test_inplay_retest_v4.py`.
+  Focused suite: `44 passed`.
+- New report: `reports/INPLAY_V4_HELPER_WIRING_2026_07_01.md`.
+
 ## 2026-06-30 midday update — current truth
 
 Live crypto:

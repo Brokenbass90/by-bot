@@ -21,6 +21,10 @@ from typing import Optional
 from .signals import TradeSignal
 from bot import market_context as mc
 from bot.adaptive_context import adaptive_params as _adaptive_params
+from bot.breakout_confirm import breakout_confirm as _breakout_confirm
+from bot.elder_filter import elder_bias as _elder_bias
+from bot.range_filter import range_state as _range_state
+from bot.retest_quality import score_retest as _score_retest
 
 
 def _f(n, d):
@@ -75,6 +79,18 @@ class InplayRetestV4Config:
     allow_long: bool = True
     allow_short: bool = True
     adaptive: bool = False
+    use_retest_quality: bool = False
+    retest_min_quality: float = 0.55
+    use_range_filter: bool = False
+    range_require_all: bool = False
+    use_elder_filter: bool = False
+    elder_htf_tf: str = "240"
+    elder_require_with_tide: bool = False
+    use_breakout_confirm: bool = False
+    breakout_lookback: int = 60
+    breakout_event_window: int = 8
+    breakout_buffer_atr: float = 0.25
+    breakout_vol_mult: float = 1.3
     trail_atr_mult: float = 1.0
     trail_activate_rr: float = 1.5
     be_trigger_rr: float = 1.0
@@ -98,6 +114,12 @@ def _load_cfg() -> InplayRetestV4Config:
         ("IRV4_TRAIL_ATR_MULT", "trail_atr_mult", float), ("IRV4_TRAIL_ACTIVATE_RR", "trail_activate_rr", float),
         ("IRV4_BE_TRIGGER_RR", "be_trigger_rr", float), ("IRV4_BE_LOCK_RR", "be_lock_rr", float),
         ("IRV4_COOLDOWN_BARS", "cooldown_bars", int),
+        ("IRV4_RETEST_MIN_QUALITY", "retest_min_quality", float),
+        ("IRV4_ELDER_HTF_TF", "elder_htf_tf", str),
+        ("IRV4_BREAKOUT_LOOKBACK", "breakout_lookback", int),
+        ("IRV4_BREAKOUT_EVENT_WINDOW", "breakout_event_window", int),
+        ("IRV4_BREAKOUT_BUFFER_ATR", "breakout_buffer_atr", float),
+        ("IRV4_BREAKOUT_VOL_MULT", "breakout_vol_mult", float),
     ]:
         if fn is str:
             setattr(c, attr, os.getenv(name, getattr(c, attr)))
@@ -110,6 +132,12 @@ def _load_cfg() -> InplayRetestV4Config:
     c.allow_long = _b("IRV4_ALLOW_LONG", c.allow_long)
     c.allow_short = _b("IRV4_ALLOW_SHORT", c.allow_short)
     c.adaptive = _b("IRV4_ADAPTIVE", c.adaptive)
+    c.use_retest_quality = _b("IRV4_USE_RETEST_QUALITY", c.use_retest_quality)
+    c.use_range_filter = _b("IRV4_USE_RANGE_FILTER", c.use_range_filter)
+    c.range_require_all = _b("IRV4_RANGE_REQUIRE_ALL", c.range_require_all)
+    c.use_elder_filter = _b("IRV4_USE_ELDER_FILTER", c.use_elder_filter)
+    c.elder_require_with_tide = _b("IRV4_ELDER_REQUIRE_WITH_TIDE", c.elder_require_with_tide)
+    c.use_breakout_confirm = _b("IRV4_USE_BREAKOUT_CONFIRM", c.use_breakout_confirm)
     return c
 
 
@@ -137,6 +165,76 @@ class InplayRetestV4Strategy:
             trailing_atr_mult=max(0.0, cfg.trail_atr_mult), trailing_atr_period=cfg.atr_period,
             trail_activate_rr=max(0.0, cfg.trail_activate_rr), reason=reason)
         return sig if sig.validate() else None
+
+    def _elder_allows(self, store, rows, side: str) -> tuple[bool, str]:
+        cfg = self.cfg
+        if not cfg.use_elder_filter:
+            return True, "elder_off"
+        htf_rows = None
+        try:
+            raw = store.fetch_klines(store.symbol, cfg.elder_htf_tf, max(240, cfg.lookback)) or []
+            if raw:
+                htf_rows = [[float(r[0]), float(r[1]), float(r[2]), float(r[3]), float(r[4]),
+                             float(r[5]) if len(r) > 5 else 0.0] for r in raw]
+        except Exception:
+            htf_rows = None
+        eb = _elder_bias(rows, htf_rows=htf_rows, require_with_tide=cfg.elder_require_with_tide)
+        if not eb.ok:
+            return True, f"elder_unknown:{eb.reason}"
+        allowed = eb.allow_long if side == "long" else eb.allow_short
+        return bool(allowed), f"elder={eb.reason}"
+
+    def _range_allows(self, rows, side: str) -> tuple[bool, str]:
+        cfg = self.cfg
+        if not cfg.use_range_filter:
+            return True, "range_off"
+        rs = _range_state(rows, require_all=cfg.range_require_all, allow_sloped=True)
+        if not rs.ok:
+            return False, f"range_bad:{rs.reason}"
+        allowed = rs.long_ok if side == "long" else rs.short_ok
+        return bool(allowed), f"range={rs.reason}:{rs.side_hint}"
+
+    def _quality_allows(self, rows, level: float, side: str, *, atr: float,
+                        last_touch_idx: int | None, touches: int) -> tuple[bool, str]:
+        cfg = self.cfg
+        if not cfg.use_retest_quality:
+            return True, "quality_off"
+        rq = _score_retest(
+            rows, level, "support" if side == "long" else "resistance",
+            atr_value=atr,
+            last_touch_idx=last_touch_idx,
+            touches=touches,
+            entry_band_atr=cfg.entry_band_atr,
+            max_age_bars=cfg.max_age_bars,
+            vol_mult=cfg.vol_mult,
+            vol_window=cfg.vol_avg_period,
+            min_quality=cfg.retest_min_quality,
+        )
+        allowed = rq.long_ok if side == "long" else rq.short_ok
+        return bool(allowed), f"quality={rq.quality:.2f}:{rq.reason}"
+
+    def _recent_breakout_allows(self, rows, side: str) -> tuple[bool, str]:
+        cfg = self.cfg
+        if not cfg.use_breakout_confirm:
+            return True, "breakout_off"
+        # Setup B is a retest after a break; scan recent completed bars before the
+        # current retest bar for a confirmed break in the same direction.
+        direction_ok = "up" if side == "long" else "down"
+        max_window = max(1, cfg.breakout_event_window)
+        for back in range(1, min(max_window, len(rows) - 30) + 1):
+            sub = rows[:-back]
+            if len(sub) < 30:
+                continue
+            st = _breakout_confirm(
+                sub,
+                buffer_atr=cfg.breakout_buffer_atr,
+                vol_mult=cfg.breakout_vol_mult,
+                event_window=max_window,
+                lookback=cfg.breakout_lookback,
+            )
+            if st.confirmed and st.direction == direction_ok:
+                return True, f"breakout={st.kind}:{st.direction}"
+        return False, "breakout_not_confirmed"
 
     def maybe_signal(self, store, ts_ms, o, h, l, c, v=0.0) -> Optional[TradeSignal]:
         _ = (o, h, l, c, v, ts_ms)
@@ -194,30 +292,50 @@ class InplayRetestV4Strategy:
         if cfg.allow_long:
             cands = [c2 for c2 in sup if fresh(c2) and bar[3] - c2["level"] <= cfg.entry_band_atr * atr and c2["level"] <= price]
             if cands:
-                lvl = max(cands, key=lambda c2: c2["level"])["level"]
+                cand = max(cands, key=lambda c2: c2["level"])
+                lvl = cand["level"]
                 if (not cfg.require_reject_close or bar[4] >= bar[1]) and lower_wick >= cfg.min_wick_frac and vol_ok:
+                    q_ok, q_reason = self._quality_allows(rows, lvl, "long", atr=atr, last_touch_idx=cand.get("last_idx"), touches=int(cand.get("touches", 0)))
+                    r_ok, r_reason = self._range_allows(rows, "long")
+                    e_ok, e_reason = self._elder_allows(store, rows, "long")
+                    if not q_ok:
+                        self._no(q_reason); return None
+                    if not r_ok:
+                        self._no(r_reason); return None
+                    if not e_ok:
+                        self._no(e_reason); return None
                     sl = lvl - cfg.sl_atr_buffer * atr
                     risk = price - sl
                     if risk > 0:
                         sp = risk / price
                         if cfg.min_stop_pct <= sp <= cfg.max_stop_pct:
                             sig = self._build("long", price, sl, price + cfg.tp1_rr * risk, price + cfg.tp_rr * risk,
-                                              f"irv4A_long lvl={lvl:.6f} rr={cfg.tp_rr}")
+                                              f"irv4A_long lvl={lvl:.6f} rr={cfg.tp_rr} {q_reason} {r_reason} {e_reason}")
                             if sig:
                                 self._cooldown = cfg.cooldown_bars; return sig
         # SHORT off resistance
         if cfg.allow_short:
             cands = [c2 for c2 in res if fresh(c2) and c2["level"] - bar[2] <= cfg.entry_band_atr * atr and c2["level"] >= price]
             if cands:
-                lvl = min(cands, key=lambda c2: c2["level"])["level"]
+                cand = min(cands, key=lambda c2: c2["level"])
+                lvl = cand["level"]
                 if (not cfg.require_reject_close or bar[4] <= bar[1]) and upper_wick >= cfg.min_wick_frac and vol_ok:
+                    q_ok, q_reason = self._quality_allows(rows, lvl, "short", atr=atr, last_touch_idx=cand.get("last_idx"), touches=int(cand.get("touches", 0)))
+                    r_ok, r_reason = self._range_allows(rows, "short")
+                    e_ok, e_reason = self._elder_allows(store, rows, "short")
+                    if not q_ok:
+                        self._no(q_reason); return None
+                    if not r_ok:
+                        self._no(r_reason); return None
+                    if not e_ok:
+                        self._no(e_reason); return None
                     sl = lvl + cfg.sl_atr_buffer * atr
                     risk = sl - price
                     if risk > 0:
                         sp = risk / price
                         if cfg.min_stop_pct <= sp <= cfg.max_stop_pct:
                             sig = self._build("short", price, sl, price - cfg.tp1_rr * risk, price - cfg.tp_rr * risk,
-                                              f"irv4A_short lvl={lvl:.6f} rr={cfg.tp_rr}")
+                                              f"irv4A_short lvl={lvl:.6f} rr={cfg.tp_rr} {q_reason} {r_reason} {e_reason}")
                             if sig:
                                 self._cooldown = cfg.cooldown_bars; return sig
 
@@ -228,8 +346,17 @@ class InplayRetestV4Strategy:
                 if bsup and abs(price - bsup["level"]) <= cfg.entry_band_atr * atr and bar[4] >= bar[1]:
                     lvl = bsup["level"]; sl = lvl - cfg.sl_atr_buffer * atr; risk = price - sl
                     if risk > 0 and cfg.min_stop_pct <= risk / price <= cfg.max_stop_pct:
+                        q_ok, q_reason = self._quality_allows(rows, lvl, "long", atr=atr, last_touch_idx=None, touches=int(bsup.get("touches", 0)))
+                        b_ok, b_reason = self._recent_breakout_allows(rows, "long")
+                        e_ok, e_reason = self._elder_allows(store, rows, "long")
+                        if not q_ok:
+                            self._no(q_reason); return None
+                        if not b_ok:
+                            self._no(b_reason); return None
+                        if not e_ok:
+                            self._no(e_reason); return None
                         sig = self._build("long", price, sl, price + cfg.tp1_rr * risk, price + cfg.tp_rr * risk,
-                                          f"irv4B_long flip={lvl:.6f}")
+                                          f"irv4B_long flip={lvl:.6f} {q_reason} {b_reason} {e_reason}")
                         if sig:
                             self._cooldown = cfg.cooldown_bars; return sig
             if cfg.allow_short:
@@ -237,8 +364,17 @@ class InplayRetestV4Strategy:
                 if bres and abs(price - bres["level"]) <= cfg.entry_band_atr * atr and bar[4] <= bar[1]:
                     lvl = bres["level"]; sl = lvl + cfg.sl_atr_buffer * atr; risk = sl - price
                     if risk > 0 and cfg.min_stop_pct <= risk / price <= cfg.max_stop_pct:
+                        q_ok, q_reason = self._quality_allows(rows, lvl, "short", atr=atr, last_touch_idx=None, touches=int(bres.get("touches", 0)))
+                        b_ok, b_reason = self._recent_breakout_allows(rows, "short")
+                        e_ok, e_reason = self._elder_allows(store, rows, "short")
+                        if not q_ok:
+                            self._no(q_reason); return None
+                        if not b_ok:
+                            self._no(b_reason); return None
+                        if not e_ok:
+                            self._no(e_reason); return None
                         sig = self._build("short", price, sl, price - cfg.tp1_rr * risk, price - cfg.tp_rr * risk,
-                                          f"irv4B_short flip={lvl:.6f}")
+                                          f"irv4B_short flip={lvl:.6f} {q_reason} {b_reason} {e_reason}")
                         if sig:
                             self._cooldown = cfg.cooldown_bars; return sig
 
