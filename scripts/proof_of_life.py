@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Proof-of-life digest — a clear, honest one-screen status of the live bot.
 
-Reads reports/SERVER_SNAPSHOT_latest.json (committed by export_server_snapshot.py)
-and prints a human/AI/Telegram-friendly "is the bot alive and what is it doing"
-summary. The point: make the system's REAL state visible at a glance — alive,
-protected, what's live vs shadow, per-arm P&L, distance to risk limits — so
-progress is tangible even before profits appear.
+Reads fresh runtime/live_mirror files when available, refreshes
+reports/SERVER_SNAPSHOT_latest.json locally, then prints a human/AI/Telegram-
+friendly "is the bot alive and what is it doing" summary. The point: make the
+system's REAL state visible at a glance — alive, protected, what's live vs
+shadow, per-arm P&L, distance to risk limits — so progress is tangible even
+before profits appear.
 
 Additive / read-only. Run:  python scripts/proof_of_life.py
 """
@@ -163,12 +164,35 @@ def _split_pnl_by_runtime(pnl: dict, live_sleeves: set[str], shadow_sleeves: set
 
 def _maybe_refresh_snapshot() -> dict | None:
     """Use fresh runtime files when they are newer than the exported snapshot."""
-    hb_path = ROOT / "runtime" / "bot_heartbeat.json"
+    heartbeat_paths = [
+        ROOT / "runtime" / "bot_heartbeat.json",
+        ROOT / "runtime" / "live_mirror" / "bot_heartbeat.json",
+    ]
+    operator_snapshot_paths = [
+        ROOT / "runtime" / "operator" / "operator_snapshot.json",
+        ROOT / "runtime" / "live_mirror" / "operator" / "operator_snapshot.json",
+    ]
+
+    def _heartbeat_from(path: Path) -> dict:
+        data = json.loads(path.read_text(encoding="utf-8", errors="ignore"))
+        if path.name == "operator_snapshot.json" and isinstance(data, dict):
+            return data.get("heartbeat") or {}
+        return data if isinstance(data, dict) else {}
+
     try:
         snap_mtime = SNAP.stat().st_mtime if SNAP.exists() else 0.0
-        hb_mtime = hb_path.stat().st_mtime if hb_path.exists() else 0.0
-        current_hb = json.loads(hb_path.read_text(encoding="utf-8", errors="ignore")) if hb_path.exists() else {}
-        current_ts = float(current_hb.get("ts") or 0.0)
+        runtime_candidates: list[tuple[float, float, Path]] = []
+        for path in [*heartbeat_paths, *operator_snapshot_paths]:
+            if not path.exists():
+                continue
+            hb = _heartbeat_from(path)
+            mtime = float(path.stat().st_mtime)
+            ts = float(hb.get("ts") or 0.0)
+            runtime_candidates.append((mtime, ts, path))
+        if not runtime_candidates:
+            return None
+        current_mtime = max(x[0] for x in runtime_candidates)
+        current_ts = max(x[1] for x in runtime_candidates)
         snap_ts = 0.0
         if SNAP.exists():
             try:
@@ -178,7 +202,7 @@ def _maybe_refresh_snapshot() -> dict | None:
                 snap_ts = 0.0
     except Exception:
         return None
-    if hb_mtime <= snap_mtime and current_ts <= snap_ts:
+    if current_mtime <= snap_mtime and current_ts <= snap_ts:
         return None
     try:
         import sys
@@ -375,7 +399,7 @@ def _send_tg(text: str) -> bool:
 
 def main():
     import sys
-    if not SNAP.exists():
+    if not SNAP.exists() and _maybe_refresh_snapshot() is None:
         print(f"no snapshot at {SNAP} — run scripts/export_server_snapshot.py first")
         return
     snap = _load_snapshot()

@@ -58,3 +58,35 @@ WF_AND_LIVE_HONEST_READ_2026_06_30_PM, этот queue.
 
 ## ДОБАВЛЕНО 2026-06-30 (breakout + ночной деплой)
 - НОВОЕ P1: подключить bot/breakout_confirm.py к пробойным ногам (confirmed long_ok/short_ok; ретест через retest_quality). Полный тёрнкей-план ночи: reports/DEPLOY_OVERNIGHT_2026_06_30.md (коммит 5 модулей -> wiring -> WF OOS асимметр R:R -> carry re-gate -> pair-arb WF -> Alpaca dry-run).
+
+## ДОБАВЛЕНО 2026-07-01 (InPlay V4 реворк-спек)
+- НОВОЕ P1: реворк InPlay V4 через helper-слои (не разморозка). reports/INPLAY_V4_REWORK_2026_07_01.md: Setup A -> retest_quality.score_retest (градуированный вход), Setup B -> breakout_confirm + ретест, конфлюэнс elder allow_long/short + range_filter, сплит сохранён. Свип IRV4_MIN_QUALITY/tp_rr/require_with_tide, отбор по OOS-плато, лестница валидации до canary.
+
+## ДОБАВЛЕНО 2026-07-01 (OOS-selector в пайплайн)
+- НОВОЕ P0: bot/oos_selector.py — прогонять результаты КАЖДОГО свипа через select_robust/evaluate_candidate; в canary только passes==True (robust_plateau). Закоммитить модуль+тест. Заменяет ручной отбор по in-sample пику.
+
+## ДОБАВЛЕНО 2026-07-01 (level_entry в исполнение)
+- НОВОЕ P1: bot/level_entry.py — планировщик maker-лимита У уровня. Подключить к level-ногам вместо market-входа по закрытию; в бэктестах использовать simulate_fill (честный maker-филл + validity). Закоммитить модуль+тест.
+
+## ДОБАВЛЕНО 2026-07-01 (sizing + КРИТИЧНО про тесты)
+- НОВОЕ P1: bot/position_sizing.py — единый sizer (fixed-R + бюджет + leverage-cap + vol-target). Подключить во все ноги.
+- КРИТИЧНО: WF ДОЛЖЕН гонять РЕВОРКНУТЫЕ ноги (с range_filter/retest_quality/breakout_confirm/elder_filter/level_entry/position_sizing), иначе цифры = старая логика. В движке: maker-fill через level_entry.simulate_fill, sizing через position_sizing, отбор через oos_selector. Без этого "тест с учётом технологий" не выполнен.
+
+## ДОБАВЛЕНО 2026-07-01 (decision_bus + CPCV)
+- НОВОЕ P1: подключить bot/decision_bus.py — каждая нога пишет запись (helper-контекст+plan+outcome) в JSONL; summarize для ИИ-аналитика. P1: WF-харнесс -> purging+embargo (CPCV-lite) вместо вложенных окон.
+
+## ДОБАВЛЕНО 2026-07-01 (H4-тест каскадов + purge/embargo)
+- НОВОЕ P1: честный H4-тест через bot/cascade_reversal.py на MID-CAPS (SOL/AVAX/LINK/MATIC, НЕ BTC/ETH), реальные liq-данные коллектора, вход +2 бара, SL1/TP2 ATR, PF>1.3 -> canary $50. Реализовать purge+embargo в WF (gap>=max-hold). См. reports/DEEPSEEK_RESPONSE_ACTIONS_2026_07_01.md
+
+## ДОБАВЛЕНО 2026-07-01 (edge_monitor)
+- НОВОЕ P1: bot/edge_monitor.py — governor против деградации. Подключить: assess_all(decision_bus records, baselines) периодически -> degraded=throttle, halt=stop рукав. Baselines брать из WF-ожиданий. Часть champion/challenger цикла.
+
+## ДОБАВЛЕНО 2026-07-01 (slippage + Mac-параллель)
+- НОВОЕ P1: bot/slippage_model.py — писать live-fills (expected vs actual), калибровать по символу, кормить WF-движок (context inplay для каскадов/инплэя). P0-инфра: reports/RESEARCH_PARALLELIZATION_2026_07_01.md — Mac шардинг+caffeinate для H4-данных/WF параллельно.
+
+## ДОБАВЛЕНО 2026-07-01 (trailing/liquidity/regime/checkpoint)
+- НОВОЕ: trailing_stop -> подключить к элдеру/трендовым (breakeven+chandelier); liquidity_sweep -> охотник за ликвидностью (sweep-фейд vs break-follow); regime_hmm+regime_gate -> блок торговли в high_vol, risk_scalar; run_checkpoint -> ВСЕ длинные свипы оборачивать (caffeinate+screen+checkpoint) для устойчивости к сну Mac. Закоммитить 4 модуля+тесты.
+
+## ДОБАВЛЕНО 2026-07-01 (InPlay gate FAIL -> next)
+- InPlay V4 gate FAIL (2/4 фолда, N мал, fold3=1 сделка). НЕ canary. НЕ хоронить: фикс = РАСШИРИТЬ юниверс (больше mid-caps -> больше сделок -> стат.мощность) ИЛИ принять как редкий диверсификатор в мульти-ноге. Следующее: H4 cascade test на mid-caps (потенциально чаще/сильнее). Alpaca $500 = реальное семя.
+- TG: gitignore+refresh stale reports/PROOF_OF_LIFE_*.txt (показывают bull_trend/flat/ivb1 — устарело); Alpaca-TG метить paper/dry-run.

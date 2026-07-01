@@ -28,6 +28,11 @@ docs/*_latest.txt
 docs/*_latest.json
 docs/*_latest.env
 docs/*_backup_*.csv
+reports/PROOF_OF_LIFE_*.txt
+reports/SERVER_SNAPSHOT_latest.json
+reports/SERVER_SNAPSHOT_latest.md
+reports/SERVER_SNAPSHOT_*.json
+reports/SERVER_SNAPSHOT_*.md
 
 # Local-only operator secrets.
 configs/forex_mt5_demo_local.env

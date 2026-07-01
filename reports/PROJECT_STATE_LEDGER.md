@@ -189,3 +189,24 @@
 - SpikeFadeV3 robust gate: FAIL (`29 OOS trades, +0.93R, PF 1.144`, fee stress failed). Не canary.
 - Добавлен `scripts/inplay_v4_mechanics_gate.py`: rolling train/test gate для реворкнутой цепочки `retest_quality + level_entry + pending limit fills + oos_selector`. Smoke gate прошёл технически: слабые train-кандидаты больше не скрывают OOS, а тестируются и пишутся в report.
 - Детали: reports/MECHANICS_WIRING_STATUS_2026_07_01.md. Следующий gate: нормальный rolling WF только на реворкнутой цепочке.
+
+## ДОБАВЛЕНО 2026-07-01 (первые цифры механики + пред-регистрация, Claude)
+- Codex встроил механику (portfolio_engine pending-limit, IRV4 level_entry+retest_quality). ПЕРВЫЙ ПОЗИТИВ: IRV4 base PF0.691(минус) -> +limit 1.25 -> +полная цепочка 2.52 (240d ADA/DOGE/SUI, 22 сделки). Фикс позднего входа ПОДТВЕРЖДЁН. SpikeFade провалил fee-stress -> НЕ canary (дисциплина работает).
+- КРАСНЫЕ ФЛАГИ: N мал (22), символ-зависимость (эдж несут SUI+DOGE, LINK/SOL минус), 240d=одно окно. Rolling gate считается.
+- ПРЕД-РЕГИСТРАЦИЯ критериев PASS: reports/INPLAY_V4_GATE_PREREG_2026_07_01.md (≥3/4 фолдов+, медиана>0, peak-gate, N≥40, fee-stress, + cross-symbol на ДРУГИХ mid-caps). DeepSeek — ПОСЛЕ цифр, не вместо.
+
+## ДОБАВЛЕНО 2026-07-01 (InPlay V4 gate ВЕРДИКТ + телеграм-аудит, Claude)
+- InPlay V4 mechanics gate: FAIL по пред-регистрации. OOS 4 фолда: +0.62R(9tr)/+0.54R(6tr)/-0.26R(1tr!)/-0.03R(5tr); total +0.87R/21tr. oos_selector passes=False (unstable_frac_pos_0.50: только 2/4 фолда+). Причина провала = НИЗКАЯ ЧАСТОТА (fold3=1 сделка), не отрицательный эдж.
+- ПОТЕНЦИАЛ честно: OOS ~+0.4..1.3%/год (risk 0.3-1%), smoke ~+1..4%/год; красные периоды ~50% в OOS. Частота ~1 сделка/11 дней. Это НЕ зарабатывающий рукав (для сравнения Alpaca v38 ~22-28%/год, 1-2 красных мес). Фикс позднего входа реален, но нога слишком редкая.
+- ТЕЛЕГРАМ-АУДИТ: логика digest (proof_of_life.py/tg_daily_digest.py) ЧИТАЕТ live-heartbeat -> при запуске на сервере данные СВЕЖИЕ/верные. НО закоммиченные reports/PROOF_OF_LIFE_*.txt СТАРЫЕ (17-25 июня: regime=bull_trend, flat x0.3/ivb1 x0.25/att1 shadow) — противоречат текущему (bear_chop, att1 x0.10). Это устаревшие артефакты в репо, НЕ то что шлёт бот. Alpaca-TG = PAPER/dry-run телеметрия (не live-доход) -> метить явно. Фикс: gitignore/refresh stale-снапшотов + ярлык paper.
+
+## ДОБАВЛЕНО 2026-07-01 (TG root-cause + next steps, Claude)
+- TG BUG root-cause: proof_of_life._maybe_refresh_snapshot читает runtime/bot_heartbeat.json, а в mirror оно в runtime/live_mirror/bot_heartbeat.json -> refresh падает -> stale SERVER_SNAPSHOT_latest.json (15июн bull_trend). Свежак есть в runtime/live_mirror/operator/operator_snapshot.json (bear_chop 01июл). Фикс: fallback-пути + проверка на сервере + re-export + метка paper для Alpaca-TG.
+- InPlay FAIL = низкая частота (не логика). План: расширить юниверс 7-8 mid-caps + OOS-свип min_quality; вписать+гейтить ARF2/ASB2/ACB1 (пила ещё НЕ тестировалась с тех!); приоритет H4/liquidity (частые механич.) + Alpaca. См. reports/NEXT_STEPS_2026_07_01.md
+
+## ДОБАВЛЕНО 2026-07-01 PM (Codex — proof fix + research queue)
+- Реализован TG/proof stale fix: `scripts/proof_of_life.py` теперь проверяет `runtime/live_mirror/bot_heartbeat.json` и `runtime/live_mirror/operator/operator_snapshot.json`; generated `PROOF_OF_LIFE_*` и `SERVER_SNAPSHOT_latest.*` удалены из tracked git и добавлены в `.gitignore`.
+- Проверка после фикса: proof показывает свежий live state `bear_chop`, `dry_run=False`, `open_trades=0`, live-risk только `att1 x0.10`; старый `bull_trend/flat/ivb1` больше не берётся из committed stale snapshot.
+- Зафиксирован отчёт: reports/SESSION_STATUS_2026_07_01_PM.md.
+- InPlay V4 full-grid mechanics gate запущен в `screen irv4_mech_gate_full_20260701`; лог `logs/manual_research/irv4_mechanics_gate_full_20260701.log`. Это проверяет, не был ли предыдущий 12-combo gate слишком узким.
+- H4 cascade: локально нет реального `runtime/liquidations/bybit_liquidations.jsonl`/OI/funding series; proxy mid-cap test (`SOL/DOGE/AVAX/LINK/ADA`) FAIL PF0.26, значит простой price/volume fade нельзя считать H4-эджем. Настоящий H4 gate нужен на серверных реальных liq/OI/funding данных.
