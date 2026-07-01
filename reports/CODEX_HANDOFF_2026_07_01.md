@@ -65,3 +65,7 @@ WF-цифры реворкнутых ног (форекс+крипта), H4 PF �
   `SOLUSDT,SUIUSDT,DOGEUSDT,ADAUSDT`.
 - Cleanup is not executed blindly. `.gitignore` and plan are safe; strategy
   archiving requires grep/import/catalog check first.
+- Server safety: stopped stale `arf1_structured_short_repair_20260627`
+  research on the 1GB live VPS (`~446MB RAM`, `~82% CPU`). Available RAM
+  recovered from about `134MB` to about `561MB`. Live bot and liquidation
+  collector were not touched.
