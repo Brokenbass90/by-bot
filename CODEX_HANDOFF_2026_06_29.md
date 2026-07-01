@@ -3,6 +3,28 @@
 Branch: `codex/dynamic-symbol-filters`. Stage only explicit paths; the worktree
 still contains many old untracked docs/scripts and generated proof-of-life files.
 
+## 2026-07-01 morning update — current truth
+
+- Server live proof-of-life at `2026-07-01T05:33:22Z`: `ALIVE`,
+  `dry_run=False`, `open_trades=0`, regime `bear_chop`, market feed OK,
+  `hard_block=False`, `safe_mode=False`.
+- Live risk is still intentionally narrow: only `att1` / trendline touch has
+  `risk_mult=0.10`. Horizontal/range/bounce/breakout sleeves are enabled/shadow
+  or off with `risk=0.0`; they are not trading money.
+- Stopped stale server research process
+  `ars1_side_regime_repair_20260627` / `alt_range_scalp_v1` r107. It used about
+  `380MB` RAM and `88%` CPU on the 1GB live VPS. Available RAM recovered from
+  about `155MB` to about `503MB`. Heavy sweeps must not run next to live.
+- Overnight local queue completed:
+  - `market_survey`: 60 symbols, `38` LEVELS/mixed, `16` RANGE/BOUNCE,
+    `6` HIGH_VOL;
+  - `InPlay V4`: `ADA/DOGE/SUI` short-only near breakeven, best `+1.38R`,
+    PF `1.039`, DD `7.55R`; `LINK/SOL/ADA` negative. Not live.
+  - `SpikeFadeV3 LINK short-only`: `360d 29 trades +5.21R`, PF `2.107`,
+    WR `62.1%`, DD `1.27R`. Best current crypto add-on candidate, but low
+    frequency and still requires server gate before tiny canary.
+- New morning report: `reports/MORNING_STATUS_2026_07_01.md`.
+
 ## 2026-06-30 midday update — current truth
 
 Live crypto:
