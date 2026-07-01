@@ -210,3 +210,15 @@
 - Зафиксирован отчёт: reports/SESSION_STATUS_2026_07_01_PM.md.
 - InPlay V4 full-grid mechanics gate запущен в `screen irv4_mech_gate_full_20260701`; лог `logs/manual_research/irv4_mechanics_gate_full_20260701.log`. Это проверяет, не был ли предыдущий 12-combo gate слишком узким.
 - H4 cascade: локально нет реального `runtime/liquidations/bybit_liquidations.jsonl`/OI/funding series; proxy mid-cap test (`SOL/DOGE/AVAX/LINK/ADA`) FAIL PF0.26, значит простой price/volume fade нельзя считать H4-эджем. Настоящий H4 gate нужен на серверных реальных liq/OI/funding данных.
+
+## ДОБАВЛЕНО 2026-07-01 (код-ревью Codex + H4 real-data спек, Claude)
+- КОД-РЕВЮ portfolio_engine limit-fill: ЧЕСТНО, без lookahead (signal_i<i, fill только если bar реально дошёл до лимита, expiry, SL-first). IRV4 корректно ставит entry_order_type=limit из plan_level_entry, уважает chase-guard. InPlay FAIL = настоящий, не артефакт.
+- H4 proxy упал (PF 0.26) -> подтверждает: наивный фейд спайка = минус. Реальный H4 требует данных (liq/OI/funding по mid-caps) -> reports/H4_REAL_DATA_TEST_SPEC_2026_07_01.md (сбор + прогон через cascade_reversal+level_entry+slippage(inplay)+wf_folds+oos_selector, пре-регистр критерии). H4 приоритетнее расширения InPlay (событийная = чаще).
+
+## ДОБАВЛЕНО 2026-07-01 (preflight_check + range/bounce runbook, Claude)
+- bot/preflight_check.py ГОТОВ под тестами (tests/test_preflight_check.py 6 зелёных; фундамент 227). Дешёвый GO/NO-GO ПЕРЕД дорогим OOS-gate: частота (N total, per-fold), покрытие символов. Ловит InPlay-проблему ЗАРАНЕЕ (21 сделка/тонкий фолд -> NO-GO). Не даёт гонять пустые тесты.
+- RUNBOOK range/bounce: reports/RANGE_BOUNCE_EXECUTION_RUNBOOK_2026_07_01.md — порядок: ARF2 на общий контракт -> pre-flight 4 сторон (ARF2_short/ASB2_long/ACB1_long/ACB1_short) на широком юниверсе (7-8 mid-caps) -> OOS gate ТОЛЬКО для GO -> champion_challenger. Side-split, честные издержки, пре-регистр критерии. Учтено всё, пустых тестов нет.
+
+## ДОБАВЛЕНО 2026-07-01 (сплит-управление + единые уровни, Claude)
+- bot/unified_levels.py (6 тестов): ОДИН вызов -> ВСЕ типы уровней (horizontal/sloped/hvn/flip/liquidity/round) с тегами + nearest support/resistance по всем типам. Ответ на «все стратегии учитывают все уровни»: любая нога берёт полную картину, а не свой кусок. Codex: подключить как level-source (ARF2 первым).
+- bot/sleeve_registry.py (6 тестов): (стратегия x сторона) = АТОМАРНАЯ единица. sleeve_id, group_by_sleeve, sleeve_health (side-specific!), SleeveRegistry (risk/stage per side), apply_lifecycle (демоут ТОЛЬКО плохой стороны). Демо: arf2:long healthy / arf2:short halt -> шорт стопаем, лонг живёт. Bidirectional-PF больше не основание для live. Фундамент 239.

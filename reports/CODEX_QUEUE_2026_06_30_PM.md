@@ -90,3 +90,9 @@ WF_AND_LIVE_HONEST_READ_2026_06_30_PM, этот queue.
 ## ДОБАВЛЕНО 2026-07-01 (InPlay gate FAIL -> next)
 - InPlay V4 gate FAIL (2/4 фолда, N мал, fold3=1 сделка). НЕ canary. НЕ хоронить: фикс = РАСШИРИТЬ юниверс (больше mid-caps -> больше сделок -> стат.мощность) ИЛИ принять как редкий диверсификатор в мульти-ноге. Следующее: H4 cascade test на mid-caps (потенциально чаще/сильнее). Alpaca $500 = реальное семя.
 - TG: gitignore+refresh stale reports/PROOF_OF_LIFE_*.txt (показывают bull_trend/flat/ivb1 — устарело); Alpaca-TG метить paper/dry-run.
+
+## ДОБАВЛЕНО 2026-07-01 (preflight + runbook)
+- НОВОЕ: bot/preflight_check.py — ОБЯЗАТЕЛЬНО прогонять ПЕРЕД любым OOS-gate (dry signal-run -> preflight -> GO/NO-GO). reports/RANGE_BOUNCE_EXECUTION_RUNBOOK_2026_07_01.md — довести ARF2/ASB2/ACB1: ARF2 на общий контракт -> pre-flight 4 сторон на 7-8 mid-caps -> gate только GO -> champion_challenger. Не запускать дорогие прогоны без GO.
+
+## ДОБАВЛЕНО 2026-07-01 (unified_levels + sleeve_registry)
+- НОВОЕ: bot/unified_levels.py — единый level-provider (все типы одним вызовом); подключить ко ВСЕМ ногам как источник уровней, ARF2 первым. bot/sleeve_registry.py — управлять рукавами как (strategy x side): side-specific stats/health/risk/lifecycle, демоут плохой стороны независимо. Регистрировать directional ноги через register_bidirectional.
