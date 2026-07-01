@@ -187,4 +187,5 @@
 - Smoke: InPlay V4 `ADA/DOGE/SUI`, 120d, base close-entry `61 trades, -3.64R, PF 0.691, DD 6.75R`; с `level_entry` `11 trades, +0.31R, PF 1.25, DD 0.33R`.
 - Smoke с `retest_quality + level_entry`, 240d: `ADA/DOGE/SUI` `22 trades, +2.61R, PF 2.52, DD 0.60R`; `LINK/SOL/ADA` `14 trades, -0.19R, PF 0.908`. Это НЕ live-grade, но первый позитивный end-to-end сигнал новой цепочки.
 - SpikeFadeV3 robust gate: FAIL (`29 OOS trades, +0.93R, PF 1.144`, fee stress failed). Не canary.
-- Детали: reports/MECHANICS_WIRING_STATUS_2026_07_01.md. Следующий gate: rolling WF через `wf_folds + oos_selector` только на реворкнутой цепочке.
+- Добавлен `scripts/inplay_v4_mechanics_gate.py`: rolling train/test gate для реворкнутой цепочки `retest_quality + level_entry + pending limit fills + oos_selector`. Smoke gate прошёл технически: слабые train-кандидаты больше не скрывают OOS, а тестируются и пишутся в report.
+- Детали: reports/MECHANICS_WIRING_STATUS_2026_07_01.md. Следующий gate: нормальный rolling WF только на реворкнутой цепочке.

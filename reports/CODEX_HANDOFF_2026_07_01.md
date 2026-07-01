@@ -92,3 +92,7 @@ WF-цифры реворкнутых ног (форекс+крипта), H4 PF �
   (`retest_quality -> level_entry -> pending limit fill/expiry -> costs ->
   wf_folds -> oos_selector`). Details:
   `reports/MECHANICS_WIRING_STATUS_2026_07_01.md`.
+- Added `scripts/inplay_v4_mechanics_gate.py` for that next gate. It runs
+  rolling train/test on the rewired chain and writes markdown+CSV under
+  `reports/research/`. Smoke verification completed; use a longer screen run
+  for actual evidence.
