@@ -145,6 +145,30 @@ def run_portfolio(
     return out
 
 
+def skipped_row(*, tag: str, symbols: str, phase: str, reason: str, fold: int | None = None,
+                extra: Dict[str, str] | None = None) -> Dict[str, str]:
+    row: Dict[str, str] = {
+        "tag": tag,
+        "symbols": symbols,
+        "strategies": "spike_fade_v3",
+        "trades": "0",
+        "net_pnl": "0",
+        "profit_factor": "0",
+        "winrate": "0",
+        "avg_win": "0",
+        "avg_loss": "0",
+        "max_drawdown": "0",
+        "phase": phase,
+        "skipped": "1",
+        "skip_reason": reason,
+    }
+    if fold is not None:
+        row["fold"] = str(fold)
+    if extra:
+        row.update(extra)
+    return row
+
+
 def train_score(row: Dict[str, str]) -> float:
     trades = _i(row, "trades")
     net = _f(row, "net_pnl")
@@ -300,16 +324,26 @@ def main() -> int:
         if not args.skip_cross:
             for sym in [s.strip().upper() for s in args.cross_symbols.split(",") if s.strip()]:
                 tag = f"{args.tag_prefix}_f{fold_idx:02d}_cross_{sym}_{ts}"
-                cr = run_portfolio(
-                    py=py,
-                    tag=tag,
-                    symbols=sym,
-                    days=args.test_days,
-                    end=_fmt(test_end),
-                    env_extra={**best_params, "SFV3_ALLOW": sym},
-                    fee_bps=6,
-                    slippage_bps=2,
-                )
+                try:
+                    cr = run_portfolio(
+                        py=py,
+                        tag=tag,
+                        symbols=sym,
+                        days=args.test_days,
+                        end=_fmt(test_end),
+                        env_extra={**best_params, "SFV3_ALLOW": sym},
+                        fee_bps=6,
+                        slippage_bps=2,
+                    )
+                except (subprocess.CalledProcessError, FileNotFoundError) as exc:
+                    cr = skipped_row(
+                        tag=tag,
+                        symbols=sym,
+                        phase="cross",
+                        reason=type(exc).__name__,
+                        fold=fold_idx,
+                        extra={"combo": "selected", "cross_symbol": sym, **best_params},
+                    )
                 cr.update({"phase": "cross", "fold": str(fold_idx), "combo": "selected", "cross_symbol": sym, **best_params})
                 all_rows.append(cr)
                 cross_rows.append(cr)

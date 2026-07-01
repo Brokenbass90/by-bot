@@ -54,3 +54,10 @@ runtime/auto_apply_current_params.json
 
 # live Alpaca creds (real money) — never commit
 configs/alpaca_live_v38.env
+
+# --- added 2026-07-01 (Claude): build artifacts / scratch ---
+pytest-cache-files-*/
+.pytest_cache/
+tmp/
+tmp_codex_sync/
+*.pyc
