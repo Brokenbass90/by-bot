@@ -37,6 +37,12 @@ Verification after fix:
 - `LIVE (risk>0): att1 x0.1`
 - shadow: `bounce1, flat, ivb1, midterm, range`
 
+Alpaca TG label fix:
+
+- `scripts/equities_alpaca_intraday_bridge.py` now labels intraday manager and
+  close-fill messages as `DRY-RUN`, `PAPER`, or `LIVE`.
+- This prevents paper DDOG/SNOW fills from being read as real live income.
+
 ## 2. InPlay V4 mechanics gate result
 
 Run:

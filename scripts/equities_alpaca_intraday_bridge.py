@@ -665,6 +665,14 @@ def _is_position_not_found_error(exc: BaseException) -> bool:
     return "40410000" in detail and "position not found" in detail
 
 
+def _alpaca_mode_label(dry_run: bool, base_url: str = "") -> str:
+    """Explicit TG/report mode label: avoid mistaking paper/dry-run for live P&L."""
+    if dry_run:
+        return "🔍 DRY-RUN"
+    url = (base_url or _env("ALPACA_BASE_URL", "")).lower()
+    return "📄 PAPER" if "paper" in url else "💰 LIVE"
+
+
 class AlpacaClient:
     def __init__(self, base_url: str, key_id: str, secret_key: str):
         self.base_url = base_url.rstrip("/")
@@ -1090,7 +1098,7 @@ def _manage_tracked_positions(client: AlpacaClient, state: Dict[str, PositionSta
             _tg(
                 tg_token,
                 tg_chat,
-                f"🧭 <b>Alpaca intraday manager</b>\n"
+                f"🧭 <b>Alpaca intraday manager {_alpaca_mode_label(manager_dry_run)}</b>\n"
                 f"{sym}: {reason}\n"
                 f"Held: {decision['held_min']}m | Best: {decision['best_gain_pct']:.2f}% "
                 f"| Pullback: {decision['trail_drawdown_pct']:.2f}%\n"
@@ -1443,14 +1451,14 @@ def run_once(client: AlpacaClient, dry_run: bool,
                 print(f"\n  [{sym}] ✓ Position close fill confirmed after {held_min}m "
                       f"| realized P&L={realized_label}")
                 _tg(tg_token, tg_chat,
-                    f"📊 <b>{sym}</b> close filled after {held_min}m\n"
+                    f"📊 <b>{sym}</b> close filled after {held_min}m — {_alpaca_mode_label(dry_run, base_url)}\n"
                     f"Entry=${ps.entry_price:.2f} | Exit=${float(confirmed['exit_price']):.2f}\n"
                     f"Realized P&L: {realized_label}")
             else:
                 print(f"\n  [{sym}] ✓ Position no longer open after {held_min}m "
                       "| fill not found; P&L not booked")
                 _tg(tg_token, tg_chat,
-                    f"📊 <b>{sym}</b> no longer open after {held_min}m\n"
+                    f"📊 <b>{sym}</b> no longer open after {held_min}m — {_alpaca_mode_label(dry_run, base_url)}\n"
                     "Fill not found yet; realized P&L not booked.")
         _save_state(state)
 
