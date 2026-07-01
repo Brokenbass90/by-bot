@@ -222,3 +222,9 @@
 ## ДОБАВЛЕНО 2026-07-01 (сплит-управление + единые уровни, Claude)
 - bot/unified_levels.py (6 тестов): ОДИН вызов -> ВСЕ типы уровней (horizontal/sloped/hvn/flip/liquidity/round) с тегами + nearest support/resistance по всем типам. Ответ на «все стратегии учитывают все уровни»: любая нога берёт полную картину, а не свой кусок. Codex: подключить как level-source (ARF2 первым).
 - bot/sleeve_registry.py (6 тестов): (стратегия x сторона) = АТОМАРНАЯ единица. sleeve_id, group_by_sleeve, sleeve_health (side-specific!), SleeveRegistry (risk/stage per side), apply_lifecycle (демоут ТОЛЬКО плохой стороны). Демо: arf2:long healthy / arf2:short halt -> шорт стопаем, лонг живёт. Bidirectional-PF больше не основание для live. Фундамент 239.
+
+## ДОБАВЛЕНО 2026-07-01 (DeepSeek hardening — Codex)
+- Уточнение после внешней критики: preflight теперь проверяет не только частоту/coverage, но и дешёвый quality sanity, если dry-run records содержат `r/pnl_r/net_r`: `quality_pf < 0.80` блокирует дорогой OOS, `0.80..1.00` помечается caution. Это снижает риск гонять частый, но шумовой рукав.
+- unified_levels усилен: horizontal/flip/HVN/channel считаются по свежему lookback-окну, добавлен `max_age_bars`, merge близких уровней в одну зону с приоритетом источника, `best_level()` для стратегий, `include_liquidity` можно выключить (текущая liquidity = recent extreme, не полноценная heatmap).
+- RANGE_BOUNCE_RUNBOOK обновлён: ARF2 old/new A/B перед миграцией, sequential filter analysis перед preflight/OOS, low-frequency рукава отделяются от high-frequency range-пакета. H4_SPEC обновлён: data-quality gate, 1m/5m liq aggregation, OI/funding caveats, hybrid execution, crash-day stress.
+- Verification: helper-suite `123 passed`.

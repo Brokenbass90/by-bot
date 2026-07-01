@@ -7,22 +7,44 @@ Proxy честно упал (596 сделок, PF 0.26, exp -0.62R). Это ПО
 ## Данные (research-host/сервер, где live-коллектор)
 1. **Ликвидации**: `bybit_liquidations.jsonl` (коллектор уже пишет вперёд). Нужна история
    ≥60-90 дней по SOL/AVAX/LINK/MATIC (mid-caps; НЕ BTC/ETH — переполнено). Агрегировать в
-   per-5m-bar liq_volume (USD).
+   per-5m-bar liq_volume (USD). Если jsonl имеет секундные метки — дополнительно собрать 1m
+   агрегаты для триггера, потому что каскад часто начинается внутри 5m свечи.
 2. **Open Interest**: OI time series 5m по тем же символам (Bybit API `/v5/market/open-interest`).
    ≥60-90 дней.
 3. **Funding**: funding rate history 5m/8h по тем же (у нас есть data_cache/funding_rates — проверить
-   покрытие mid-caps; добрать недостающее).
+   покрытие mid-caps; добрать недостающее). Сохранять также время до следующего funding.
 4. Свечи 5m по тем же (есть в кэше).
+
+## Data-quality gate перед WF
+- Проверить покрытие ликвидаций/OI/funding по каждому символу и фолду. Фолд без данных = невалидный,
+  не "нет сигналов".
+- Bybit-only ликвидации могут быть неполными для mid-caps. Если есть внешний источник
+  (Coinglass/Binance), сравнить пики; расхождение >30% в пиковые моменты = Bybit-only данные
+  недостаточны для live-решения.
+- OI на Bybit общий, не side-specific. Временно допускается аппроксимация:
+  цена падает + OI падает -> long liquidation pressure; цена растёт + OI падает -> short squeeze.
+  Это обязательно пометить как approximation в отчёте.
+- Минимальные динамические пороги: SOL liq < $500k/5m обычно шум; AVAX/LINK/MATIC < $200k/5m
+  обычно шум. Основной порог должен быть percentile-based (например, 95-й процентиль rolling).
 
 ## Как прогнать (feed в cascade_reversal)
 На каждом баре: cascade_reversal(price_rows, funding_window, oi_window, liq_window) ->
-long_ok/short_ok. Вход = level_entry (SL 1 ATR / TP 2 ATR, как DeepSeek). Издержки: slippage_model
-context="inplay" (каскады = высокий слиппедж, 5x). Фолды: wf_folds (purge+embargo). Отбор: oos_selector.
+long_ok/short_ok. Вход = hybrid:
+- сначала limit у уровня/отката;
+- если не исполнился быстро, market-entry только с capped slippage;
+- в backtest моделировать fill ratio и high-slippage market leg отдельно.
+
+Издержки: slippage_model context="inplay" (каскады = высокий слиппедж, 5x) плюс stress.
+Фолды: wf_folds (purge+embargo). Отбор: oos_selector.
+Не оптимизировать всё сразу: сначала фиксировать liq percentile и entry delay, оптимизировать только
+1-2 параметра (например, funding z и OI drop).
 
 ## Пре-регистрированные критерии PASS (H4)
 - OOS: ≥3/4 фолда net>0, медиана>0, нет один-окно-героя, N≥40 (≥8/фолд), fee/slip-stress выживает;
 - cross-symbol: работает на ≥2-3 из 4 mid-caps (не один символ);
 - частота: заметно выше InPlay (каскады — частые внутридневные события; если реже — не наш кейс).
+- crash-day stress: на днях с движением рынка >15% стратегия не должна давать дневной убыток
+  выше заранее заданного cap; иначе нужен hard time/correlation stop.
 PASS -> shadow -> tiny canary $50 (breaker+expiry). FAIL -> H4 в архив гипотез, не форсим.
 
 ## Почему это приоритетнее расширения InPlay

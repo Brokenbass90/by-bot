@@ -16,7 +16,7 @@ def test_insufficient_data():
 
 
 def test_aggregates_multiple_kinds():
-    ls = unified_levels(_rows())
+    ls = unified_levels(_rows(), merge_tol_atr=0.0)
     assert ls.ok is True and len(ls.levels) > 0
     kinds = {l.kind for l in ls.levels}
     # at least sloped + hvn + liquidity present
@@ -49,3 +49,21 @@ def test_every_level_has_side_and_dist():
     for l in ls.levels:
         assert l.side in ("support", "resistance")
         assert l.dist_atr >= 0
+
+
+def test_best_level_returns_nearest_filtered_level():
+    ls = unified_levels(_rows(), merge_tol_atr=0.0)
+    best = ls.best_level("support", max_dist_atr=10)
+    assert best is None or best.side == "support"
+
+
+def test_merge_collapses_nearby_duplicate_zone():
+    raw = unified_levels(_rows(), include_round=True, merge_tol_atr=0.0)
+    merged = unified_levels(_rows(), include_round=True, merge_tol_atr=1.0)
+    assert len(merged.levels) <= len(raw.levels)
+    assert any("merged_count" in l.meta for l in merged.levels)
+
+
+def test_can_disable_liquidity_extreme_levels():
+    ls = unified_levels(_rows(), include_liquidity=False, merge_tol_atr=0.0)
+    assert not any(l.kind == "liquidity" for l in ls.levels)

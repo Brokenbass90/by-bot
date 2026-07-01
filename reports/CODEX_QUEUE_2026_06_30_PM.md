@@ -96,3 +96,9 @@ WF_AND_LIVE_HONEST_READ_2026_06_30_PM, этот queue.
 
 ## ДОБАВЛЕНО 2026-07-01 (unified_levels + sleeve_registry)
 - НОВОЕ: bot/unified_levels.py — единый level-provider (все типы одним вызовом); подключить ко ВСЕМ ногам как источник уровней, ARF2 первым. bot/sleeve_registry.py — управлять рукавами как (strategy x side): side-specific stats/health/risk/lifecycle, демоут плохой стороны независимо. Регистрировать directional ноги через register_bidirectional.
+
+## ДОБАВЛЕНО 2026-07-01 (DeepSeek hardening)
+- PRE-FLIGHT: использовать обновлённый `bot/preflight_check.py` с quality sanity (`r/pnl_r/net_r` -> PF). `quality_pf <0.80` = NO-GO до дорогого OOS; 0.80..1.00 = caution.
+- LEVELS: использовать обновлённый `bot/unified_levels.py` с lookback/max_age/merge/best_level. Не включать `liquidity` как полноценную heatmap: текущий тип = recent_extreme, годится только как слабый confluence.
+- RANGE/BOUNCE: перед gate сделать ARF2 OLD vs NEW A/B и sequential filter analysis; если helper-фильтр режет >50% сигналов без улучшения PF/R, он не обязателен для этой ноги.
+- H4: перед WF обязателен data-quality gate (liq/OI/funding coverage, OI approximation, 1m/5m aggregation, slippage/hybrid execution, crash-day stress).

@@ -47,3 +47,22 @@ def test_custom_fold_edges():
 def test_total_trades_and_symbols_counted():
     r = preflight(_healthy(60), n_folds=4, min_trades_total=40)
     assert r.total_trades == 60 and r.symbols_covered == 6
+
+
+def test_quality_pf_blocks_obvious_noise_when_r_available():
+    sig = _healthy(60)
+    for i, s in enumerate(sig):
+        s["r"] = 0.2 if i % 3 == 0 else -0.4
+    r = preflight(sig, n_folds=4, min_quality_trades=20, min_quality_pf=0.8)
+    assert r.go is False
+    assert any(x.startswith("low_quality_pf_") for x in r.reasons)
+    assert r.extra["quality_checked"] is True
+
+
+def test_quality_pf_caution_does_not_block_borderline_signal():
+    sig = _healthy(60)
+    for i, s in enumerate(sig):
+        s["r"] = 0.9 if i % 2 == 0 else -1.0
+    r = preflight(sig, n_folds=4, min_quality_trades=20, min_quality_pf=0.8, caution_quality_pf=1.0)
+    assert r.go is True
+    assert any("caution_quality_pf" in x for x in r.extra["quality_warnings"])
