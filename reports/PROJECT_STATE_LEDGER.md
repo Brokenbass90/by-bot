@@ -158,3 +158,24 @@
 - Исправлен `scripts/spike_fade_robustness_gate.py`: отсутствие кэша по cross-symbol теперь не валит весь gate, а пишется как skipped row. Первый полный gate упал на missing cache `NEARUSDT`; перезапущен `sfv3_robust_gate_20260701_v2` с кэшированными cross-symbols `SOL/SUI/DOGE/ADA`.
 - Чистка проекта пока только подготовлена планом и `.gitignore`. Массовый перенос стратегий в archive делать только после grep импортов + проверки strategy catalog.
 - Live-VPS safety: остановлен новый тяжёлый `arf1_structured_short_repair_20260627` рядом с live (`~446MB RAM`, `~82% CPU`). Available RAM восстановилась примерно `134MB -> 561MB`. Правило подтверждено: тяжёлые свипы только локально/research-host, не на 1GB live.
+
+## ДОБАВЛЕНО 2026-07-01 (edge_monitor — анти-деградация, Claude)
+- bot/edge_monitor.py ГОТОВ под тестами (tests/test_edge_monitor.py 7 зелёных; фундамент 179). Монитор деградации эджа: сравнивает LIVE realized R с backtest-baseline по рукаву -> статус healthy/watch/degraded/halt (decay-ratio, drawdown-R, losing-streak, negative-expectancy). assess_all читает decision_bus. Кормит strategy_breaker/ИИ. Codex: подключить как governor -> авто-throttle degraded, halt при breach. ЭТО ответ на «не деградировать годами».
+
+## ДОБАВЛЕНО 2026-07-01 (champion_challenger — конвейер портфеля, Claude)
+- bot/champion_challenger.py ГОТОВ под тестами (tests/test_champion_challenger.py 8 зелёных; фундамент 187). Жизненный цикл рукава: candidate--(oos_selector pass)-->shadow--(edge_monitor healthy)-->canary--(live healthy+exp>0)-->champion; degraded/halt-->demoted. run_registry + portfolio_view. Тянет ноги из ямы честно и авто-выбраковывает мёртвые. Codex: реестр состояний рукавов + периодический прогон.
+- Технологий под тестами: 14. Полный конвейер отбора/промоушена/анти-деградации.
+
+## ДОБАВЛЕНО 2026-07-01 (slippage_model + распараллеливание, Claude)
+- bot/slippage_model.py ГОТОВ под тестами (tests/test_slippage_model.py 7 зелёных; фундамент 194). Калибратор слиппеджа (слепая зона DeepSeek #1): calibrate_from_fills (live expected vs actual -> median/p90 bps по символу), estimate_bps (калибровка/дефолт + context inplay×5/illiquid×8 + sublinear размер), apply_slippage. Codex: кормить таблицу в WF-движок -> честные издержки; писать live-fills для калибровки.
+- INFRA: reports/RESEARCH_PARALLELIZATION_2026_07_01.md — Mac=research-хост, шардинг символов + caffeinate -> H4-данные/WF параллельно за часы. VPS только live+коллектор.
+
+## ДОБАВЛЕНО 2026-07-01 (трейлинг+ликвидность+режим+чекпойнт, Claude)
+- bot/trailing_stop.py (7 тестов): breakeven + Chandelier ATR-трейл, one-way, exit по стопу бара (без same-bar whipsaw); simulate_trail. Для ЭЛДЕРОВ и всех ног — даёт прибылям течь (в тесте runner дал +7.5R). Codex: подключить к элдеру/трендовым ногам.
+- bot/liquidity_sweep.py (7 тестов): охотник за ликвидностью/плотности. Различает sweep_reversal (свип за уровень + возврат -> ФЕЙД/отскок) и break_hold (закрытие за уровнем -> ПРОБОЙ). Ответ на вопрос: плотности берут И отскок, И пробой — по close vs pool. Сплит сторон.
+- bot/regime_hmm.py (8 тестов): HMM-lite вероятностный режим (bull/bear/range/high_vol) со sticky-переходами; regime_gate блокирует торговлю в high_vol (анти-деградация) + risk_scalar по уверенности.
+- bot/run_checkpoint.py (5 тестов): возобновляемые прогоны — уснул/убился Mac -> рестарт с места (JSONL done-log+fsync). Обёртка: caffeinate + screen + этот чекпойнт.
+- Технологий под тестами: 19. Фундамент 221.
+
+## ДОБАВЛЕНО 2026-07-01 (интеграционный референс, Claude)
+- reports/INTEGRATION_REFERENCE_2026_07_01.md: канонический порядок вызова 19 модулей в ОДНОЙ ноге (regime->сигнал->range->elder->news->level_entry->sizing->exposure->decision_bus->trailing) + бэктест-цепочка (simulate_fill+slippage->attach_outcome->wf_folds->oos_selector->edge_monitor->champion_challenger). Чтобы Codex вписал единообразно. Claude осознанно ПАУЗА в стройке — ждём реальные WF-цифры, не строим вслепую.
