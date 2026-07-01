@@ -111,3 +111,27 @@ def test_range_gate_can_be_enabled_without_crash():
     trig = _row(80, 100.2, 101.0, 99.9, 100.8, 600.0)
     sig = _fire(strat, s, trig)
     assert sig is None or sig.side in ("long", "short")
+
+
+def test_level_entry_builds_limit_order_at_level():
+    s = _Store(_flat())
+    strat = InplayRetestV4Strategy(_cfg(use_level_entry=True, level_entry_validity_bars=3))
+    strat.maybe_signal(s, s.rows[-1][0], 0, 0, 0, 0, 0)
+    trig = _row(40, 100.2, 101.0, 99.9, 100.8, 600.0)
+    sig = _fire(strat, s, trig)
+    assert sig is not None, strat.last_no_signal_reason
+    assert sig.side == "long"
+    assert getattr(sig, "entry_order_type") == "limit"
+    assert getattr(sig, "limit_validity_bars") == 3
+    assert getattr(sig, "entry_plan_reason") == "limit_at_level"
+    assert sig.entry < trig[4]  # limit at/near the level, not late bar-close chase
+
+
+def test_level_entry_blocks_late_chase():
+    s = _Store(_flat())
+    strat = InplayRetestV4Strategy(_cfg(use_level_entry=True, level_entry_max_chase_atr=0.01))
+    strat.maybe_signal(s, s.rows[-1][0], 0, 0, 0, 0, 0)
+    trig = _row(40, 100.2, 101.0, 99.9, 100.8, 600.0)
+    sig = _fire(strat, s, trig)
+    assert sig is None
+    assert strat.last_no_signal_reason.startswith("level_entry:would_chase")

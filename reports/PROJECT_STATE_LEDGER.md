@@ -179,3 +179,12 @@
 
 ## ДОБАВЛЕНО 2026-07-01 (интеграционный референс, Claude)
 - reports/INTEGRATION_REFERENCE_2026_07_01.md: канонический порядок вызова 19 модулей в ОДНОЙ ноге (regime->сигнал->range->elder->news->level_entry->sizing->exposure->decision_bus->trailing) + бэктест-цепочка (simulate_fill+slippage->attach_outcome->wf_folds->oos_selector->edge_monitor->champion_challenger). Чтобы Codex вписал единообразно. Claude осознанно ПАУЗА в стройке — ждём реальные WF-цифры, не строим вслепую.
+
+## ДОБАВЛЕНО 2026-07-01 (Codex — mechanics wiring)
+- `backtest/portfolio_engine.py` теперь честно моделирует pending limit-сигналы: `entry_order_type=limit`, fill только при касании limit price, expiry через `limit_validity_bars`; обычные next-open сигналы не изменены.
+- `strategies/inplay_retest_v4.py` получил `IRV4_USE_LEVEL_ENTRY`: Setup A/B строят maker-limit у уровня через `bot.level_entry`, не догоняют late-close, и сохраняют точные reject reasons.
+- Focused suite: `56 passed`.
+- Smoke: InPlay V4 `ADA/DOGE/SUI`, 120d, base close-entry `61 trades, -3.64R, PF 0.691, DD 6.75R`; с `level_entry` `11 trades, +0.31R, PF 1.25, DD 0.33R`.
+- Smoke с `retest_quality + level_entry`, 240d: `ADA/DOGE/SUI` `22 trades, +2.61R, PF 2.52, DD 0.60R`; `LINK/SOL/ADA` `14 trades, -0.19R, PF 0.908`. Это НЕ live-grade, но первый позитивный end-to-end сигнал новой цепочки.
+- SpikeFadeV3 robust gate: FAIL (`29 OOS trades, +0.93R, PF 1.144`, fee stress failed). Не canary.
+- Детали: reports/MECHANICS_WIRING_STATUS_2026_07_01.md. Следующий gate: rolling WF через `wf_folds + oos_selector` только на реворкнутой цепочке.

@@ -290,6 +290,29 @@ def run_portfolio_backtest(
         pos_strat[sym] = str(getattr(fill_sig, "strategy", "unknown"))
         return True
 
+    def _is_limit_signal(sig: object) -> bool:
+        return str(getattr(sig, "entry_order_type", "") or "").strip().lower() == "limit"
+
+    def _limit_fillable(sig: object, bar: Candle) -> bool:
+        try:
+            entry = float(getattr(sig, "entry"))
+        except (TypeError, ValueError):
+            return False
+        side = str(getattr(sig, "side", "") or "").lower()
+        if side == "long":
+            return float(bar.l) <= entry
+        if side == "short":
+            return float(bar.h) >= entry
+        return False
+
+    def _limit_expired(signal_i: int, sig: object) -> bool:
+        try:
+            validity = int(getattr(sig, "limit_validity_bars", 1) or 1)
+        except (TypeError, ValueError):
+            validity = 1
+        validity = max(1, validity)
+        return (i - int(signal_i)) > validity
+
     for i in range(min_len):
         # Advance all stores to the same index.
         for s in syms:
@@ -307,11 +330,23 @@ def run_portfolio_backtest(
                 if signal_i >= i or sym in pos_by_sym:
                     continue
                 if len(pos_by_sym) >= int(params.max_positions):
+                    if _is_limit_signal(sig) and not _limit_expired(signal_i, sig):
+                        pending_signals[sym] = pending
                     continue
                 if int(cooldown_until_i.get(sym, -1)) > i:
+                    if _is_limit_signal(sig) and not _limit_expired(signal_i, sig):
+                        pending_signals[sym] = pending
                     continue
                 bar = stores[sym].exec_candles[i]
-                _open(sym, sig, bar, entry_ref=float(bar.o))
+                if _is_limit_signal(sig):
+                    if _limit_expired(signal_i, sig):
+                        continue
+                    if _limit_fillable(sig, bar):
+                        _open(sym, sig, bar, entry_ref=float(getattr(sig, "entry")))
+                    else:
+                        pending_signals[sym] = pending
+                else:
+                    _open(sym, sig, bar, entry_ref=float(bar.o))
 
         # 1) Manage exits for all open positions first.
         for sym in list(pos_by_sym.keys()):

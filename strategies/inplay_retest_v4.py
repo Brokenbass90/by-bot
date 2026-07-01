@@ -23,6 +23,7 @@ from bot import market_context as mc
 from bot.adaptive_context import adaptive_params as _adaptive_params
 from bot.breakout_confirm import breakout_confirm as _breakout_confirm
 from bot.elder_filter import elder_bias as _elder_bias
+from bot.level_entry import plan_level_entry as _plan_level_entry
 from bot.range_filter import range_state as _range_state
 from bot.retest_quality import score_retest as _score_retest
 
@@ -91,6 +92,10 @@ class InplayRetestV4Config:
     breakout_event_window: int = 8
     breakout_buffer_atr: float = 0.25
     breakout_vol_mult: float = 1.3
+    use_level_entry: bool = False
+    level_entry_offset_atr: float = 0.05
+    level_entry_max_chase_atr: float = 0.5
+    level_entry_validity_bars: int = 4
     trail_atr_mult: float = 1.0
     trail_activate_rr: float = 1.5
     be_trigger_rr: float = 1.0
@@ -120,6 +125,9 @@ def _load_cfg() -> InplayRetestV4Config:
         ("IRV4_BREAKOUT_EVENT_WINDOW", "breakout_event_window", int),
         ("IRV4_BREAKOUT_BUFFER_ATR", "breakout_buffer_atr", float),
         ("IRV4_BREAKOUT_VOL_MULT", "breakout_vol_mult", float),
+        ("IRV4_LEVEL_ENTRY_OFFSET_ATR", "level_entry_offset_atr", float),
+        ("IRV4_LEVEL_ENTRY_MAX_CHASE_ATR", "level_entry_max_chase_atr", float),
+        ("IRV4_LEVEL_ENTRY_VALIDITY_BARS", "level_entry_validity_bars", int),
     ]:
         if fn is str:
             setattr(c, attr, os.getenv(name, getattr(c, attr)))
@@ -138,6 +146,7 @@ def _load_cfg() -> InplayRetestV4Config:
     c.use_elder_filter = _b("IRV4_USE_ELDER_FILTER", c.use_elder_filter)
     c.elder_require_with_tide = _b("IRV4_ELDER_REQUIRE_WITH_TIDE", c.elder_require_with_tide)
     c.use_breakout_confirm = _b("IRV4_USE_BREAKOUT_CONFIRM", c.use_breakout_confirm)
+    c.use_level_entry = _b("IRV4_USE_LEVEL_ENTRY", c.use_level_entry)
     return c
 
 
@@ -165,6 +174,41 @@ class InplayRetestV4Strategy:
             trailing_atr_mult=max(0.0, cfg.trail_atr_mult), trailing_atr_period=cfg.atr_period,
             trail_activate_rr=max(0.0, cfg.trail_activate_rr), reason=reason)
         return sig if sig.validate() else None
+
+    def _build_level_entry(self, rows, level: float, side: str, *, atr: float, reason: str):
+        cfg = self.cfg
+        level_side = "support" if side == "long" else "resistance"
+        plan = _plan_level_entry(
+            rows,
+            level,
+            level_side,
+            atr_value=atr,
+            offset_atr=cfg.level_entry_offset_atr,
+            stop_buffer_atr=cfg.sl_atr_buffer,
+            tp1_rr=cfg.tp1_rr,
+            tp_rr=cfg.tp_rr,
+            max_chase_atr=cfg.level_entry_max_chase_atr,
+            validity_bars=cfg.level_entry_validity_bars,
+            min_stop_pct=cfg.min_stop_pct,
+            max_stop_pct=cfg.max_stop_pct,
+        )
+        if not plan.place:
+            self._no(f"level_entry:{plan.reason}")
+            return None
+        sig = self._build(
+            side,
+            plan.limit_price,
+            plan.stop,
+            plan.tp1,
+            plan.tp2,
+            f"{reason} level_entry limit={plan.limit_price:.6f} valid={plan.validity_bars}",
+        )
+        if sig:
+            sig.entry_order_type = "limit"
+            sig.limit_validity_bars = int(plan.validity_bars)
+            sig.entry_level = float(level)
+            sig.entry_plan_reason = str(plan.reason)
+        return sig
 
     def _elder_allows(self, store, rows, side: str) -> tuple[bool, str]:
         cfg = self.cfg
@@ -309,8 +353,17 @@ class InplayRetestV4Strategy:
                     if risk > 0:
                         sp = risk / price
                         if cfg.min_stop_pct <= sp <= cfg.max_stop_pct:
-                            sig = self._build("long", price, sl, price + cfg.tp1_rr * risk, price + cfg.tp_rr * risk,
-                                              f"irv4A_long lvl={lvl:.6f} rr={cfg.tp_rr} {q_reason} {r_reason} {e_reason}")
+                            if cfg.use_level_entry:
+                                sig = self._build_level_entry(
+                                    rows, lvl, "long", atr=atr,
+                                    reason=f"irv4A_long lvl={lvl:.6f} rr={cfg.tp_rr} {q_reason} {r_reason} {e_reason}",
+                                )
+                                if sig:
+                                    self._cooldown = cfg.cooldown_bars; return sig
+                                return None
+                            else:
+                                sig = self._build("long", price, sl, price + cfg.tp1_rr * risk, price + cfg.tp_rr * risk,
+                                                  f"irv4A_long lvl={lvl:.6f} rr={cfg.tp_rr} {q_reason} {r_reason} {e_reason}")
                             if sig:
                                 self._cooldown = cfg.cooldown_bars; return sig
         # SHORT off resistance
@@ -334,8 +387,17 @@ class InplayRetestV4Strategy:
                     if risk > 0:
                         sp = risk / price
                         if cfg.min_stop_pct <= sp <= cfg.max_stop_pct:
-                            sig = self._build("short", price, sl, price - cfg.tp1_rr * risk, price - cfg.tp_rr * risk,
-                                              f"irv4A_short lvl={lvl:.6f} rr={cfg.tp_rr} {q_reason} {r_reason} {e_reason}")
+                            if cfg.use_level_entry:
+                                sig = self._build_level_entry(
+                                    rows, lvl, "short", atr=atr,
+                                    reason=f"irv4A_short lvl={lvl:.6f} rr={cfg.tp_rr} {q_reason} {r_reason} {e_reason}",
+                                )
+                                if sig:
+                                    self._cooldown = cfg.cooldown_bars; return sig
+                                return None
+                            else:
+                                sig = self._build("short", price, sl, price - cfg.tp1_rr * risk, price - cfg.tp_rr * risk,
+                                                  f"irv4A_short lvl={lvl:.6f} rr={cfg.tp_rr} {q_reason} {r_reason} {e_reason}")
                             if sig:
                                 self._cooldown = cfg.cooldown_bars; return sig
 
@@ -355,8 +417,17 @@ class InplayRetestV4Strategy:
                             self._no(b_reason); return None
                         if not e_ok:
                             self._no(e_reason); return None
-                        sig = self._build("long", price, sl, price + cfg.tp1_rr * risk, price + cfg.tp_rr * risk,
-                                          f"irv4B_long flip={lvl:.6f} {q_reason} {b_reason} {e_reason}")
+                        if cfg.use_level_entry:
+                            sig = self._build_level_entry(
+                                rows, lvl, "long", atr=atr,
+                                reason=f"irv4B_long flip={lvl:.6f} {q_reason} {b_reason} {e_reason}",
+                            )
+                            if sig:
+                                self._cooldown = cfg.cooldown_bars; return sig
+                            return None
+                        else:
+                            sig = self._build("long", price, sl, price + cfg.tp1_rr * risk, price + cfg.tp_rr * risk,
+                                              f"irv4B_long flip={lvl:.6f} {q_reason} {b_reason} {e_reason}")
                         if sig:
                             self._cooldown = cfg.cooldown_bars; return sig
             if cfg.allow_short:
@@ -373,8 +444,17 @@ class InplayRetestV4Strategy:
                             self._no(b_reason); return None
                         if not e_ok:
                             self._no(e_reason); return None
-                        sig = self._build("short", price, sl, price - cfg.tp1_rr * risk, price - cfg.tp_rr * risk,
-                                          f"irv4B_short flip={lvl:.6f} {q_reason} {b_reason} {e_reason}")
+                        if cfg.use_level_entry:
+                            sig = self._build_level_entry(
+                                rows, lvl, "short", atr=atr,
+                                reason=f"irv4B_short flip={lvl:.6f} {q_reason} {b_reason} {e_reason}",
+                            )
+                            if sig:
+                                self._cooldown = cfg.cooldown_bars; return sig
+                            return None
+                        else:
+                            sig = self._build("short", price, sl, price - cfg.tp1_rr * risk, price - cfg.tp_rr * risk,
+                                              f"irv4B_short flip={lvl:.6f} {q_reason} {b_reason} {e_reason}")
                         if sig:
                             self._cooldown = cfg.cooldown_bars; return sig
 

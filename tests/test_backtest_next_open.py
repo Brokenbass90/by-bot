@@ -140,3 +140,78 @@ def test_single_symbol_engine_uses_next_open_too():
     assert trades[0].entry_ts == 300_000
     assert trades[0].entry_price == 105.0
     assert trades[0].exit_ts == 300_000
+
+
+def test_portfolio_limit_signal_waits_for_touch_then_fills_at_limit():
+    candles = [
+        Candle(ts=0, o=105.0, h=106.0, l=104.0, c=105.0, v=1.0),
+        Candle(ts=300_000, o=105.0, h=106.0, l=101.0, c=102.0, v=1.0),  # no fill yet
+        Candle(ts=600_000, o=102.0, h=111.0, l=99.0, c=110.0, v=1.0),   # touches limit, then TP
+    ]
+    store = KlineStore("BTCUSDT", candles)
+    emitted = False
+
+    def selector(symbol, store, ts_ms, last_price):
+        nonlocal emitted
+        if emitted:
+            return None
+        emitted = True
+        sig = TradeSignal("limit_demo", symbol, "long", 100.0, 95.0, 110.0)
+        sig.entry_order_type = "limit"
+        sig.limit_validity_bars = 2
+        return sig
+
+    result = run_portfolio_backtest(
+        {"BTCUSDT": store},
+        selector,
+        params=BacktestParams(
+            starting_equity=100.0,
+            risk_pct=0.01,
+            cap_notional_usd=1_000.0,
+            fee_bps=0.0,
+            slippage_bps=0.0,
+            entry_on_next_open=True,
+        ),
+    )
+
+    assert len(result.trades) == 1
+    trade = result.trades[0]
+    assert trade.entry_ts == 600_000
+    assert trade.entry_price == 100.0
+    assert trade.exit_price == 110.0
+
+
+def test_portfolio_limit_signal_expires_unfilled():
+    candles = [
+        Candle(ts=0, o=105.0, h=106.0, l=104.0, c=105.0, v=1.0),
+        Candle(ts=300_000, o=105.0, h=106.0, l=101.0, c=102.0, v=1.0),
+        Candle(ts=600_000, o=102.0, h=103.0, l=101.0, c=102.0, v=1.0),
+        Candle(ts=900_000, o=102.0, h=103.0, l=101.0, c=102.0, v=1.0),
+    ]
+    store = KlineStore("BTCUSDT", candles)
+    emitted = False
+
+    def selector(symbol, store, ts_ms, last_price):
+        nonlocal emitted
+        if emitted:
+            return None
+        emitted = True
+        sig = TradeSignal("limit_demo", symbol, "long", 100.0, 95.0, 110.0)
+        sig.entry_order_type = "limit"
+        sig.limit_validity_bars = 2
+        return sig
+
+    result = run_portfolio_backtest(
+        {"BTCUSDT": store},
+        selector,
+        params=BacktestParams(
+            starting_equity=100.0,
+            risk_pct=0.01,
+            cap_notional_usd=1_000.0,
+            fee_bps=0.0,
+            slippage_bps=0.0,
+            entry_on_next_open=True,
+        ),
+    )
+
+    assert result.trades == []

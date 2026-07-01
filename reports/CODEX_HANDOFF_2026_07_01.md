@@ -69,3 +69,26 @@ WF-цифры реворкнутых ног (форекс+крипта), H4 PF �
   research on the 1GB live VPS (`~446MB RAM`, `~82% CPU`). Available RAM
   recovered from about `134MB` to about `561MB`. Live bot and liquidation
   collector were not touched.
+
+## Codex update — 2026-07-01 mechanics wiring
+
+- SpikeFadeV3 robust gate completed and FAILED:
+  `29` OOS trades, `+0.93R`, PF `1.144`, bad fold `-1.10R`,
+  fee-stress failed. Do not canary SpikeFadeV3 LINK short.
+- `backtest/portfolio_engine.py` now supports pending limit-signal execution:
+  `entry_order_type=limit`, fill only on touch, expiry by `limit_validity_bars`;
+  ordinary next-open signals unchanged.
+- `strategies/inplay_retest_v4.py` now supports `IRV4_USE_LEVEL_ENTRY`.
+  Setup A/B build maker-limit plans via `bot.level_entry`; late-chase rejects
+  preserve exact reason.
+- Focused verification: `56 passed`.
+- First end-to-end smoke:
+  - InPlay V4 base, `ADA/DOGE/SUI`, 120d: `61 trades, -3.64R, PF 0.691, DD 6.75R`.
+  - InPlay V4 + level-entry: `11 trades, +0.31R, PF 1.25, DD 0.33R`.
+  - InPlay V4 + retest_quality + level-entry, 240d:
+    `ADA/DOGE/SUI` `22 trades, +2.61R, PF 2.52, DD 0.60R`;
+    `LINK/SOL/ADA` `14 trades, -0.19R, PF 0.908`.
+- Not live-grade yet. Next required gate: rolling WF using the rewired chain
+  (`retest_quality -> level_entry -> pending limit fill/expiry -> costs ->
+  wf_folds -> oos_selector`). Details:
+  `reports/MECHANICS_WIRING_STATUS_2026_07_01.md`.
