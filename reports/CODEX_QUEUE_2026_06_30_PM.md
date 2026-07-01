@@ -102,3 +102,7 @@ WF_AND_LIVE_HONEST_READ_2026_06_30_PM, этот queue.
 - LEVELS: использовать обновлённый `bot/unified_levels.py` с lookback/max_age/merge/best_level. Не включать `liquidity` как полноценную heatmap: текущий тип = recent_extreme, годится только как слабый confluence.
 - RANGE/BOUNCE: перед gate сделать ARF2 OLD vs NEW A/B и sequential filter analysis; если helper-фильтр режет >50% сигналов без улучшения PF/R, он не обязателен для этой ноги.
 - H4: перед WF обязателен data-quality gate (liq/OI/funding coverage, OI approximation, 1m/5m aggregation, slippage/hybrid execution, crash-day stress).
+
+## ДОБАВЛЕНО 2026-07-01 (ARF2 flag wiring)
+- ARF2 уже получил флаги общего контракта, все OFF по умолчанию: `ARF2_USE_UNIFIED_LEVELS/RANGE_FILTER/RETEST_QUALITY/ELDER_FILTER/LEVEL_ENTRY`.
+- Следующий шаг: A/B sequential dry-run по флагам, не OOS сразу. Порядок: OLD baseline -> +LEVEL_ENTRY -> +UNIFIED_LEVELS -> +RANGE_FILTER -> +RETEST_QUALITY -> +ELDER_FILTER. На каждом шаге: signal count, cheap PF/R, symbol coverage, filter drop rate.

@@ -126,6 +126,26 @@ def test_no_signal_without_bearish_rejection():
     assert s.last_no_signal_reason == "no_rejection"
 
 
+def test_level_entry_flag_builds_limit_signal_without_changing_default_path():
+    rows = _structured_resistance_rows()
+    s = AltResistanceFadeV2Strategy(_cfg(
+        use_level_entry=True,
+        level_entry_max_chase_atr=10.0,
+        level_entry_stop_buffer_atr=0.20,
+        level_entry_tp_rr=2.0,
+    ))
+    s._last_tf_ts = int(float(rows[-2][0]))
+
+    sig = s.maybe_signal(_Store(rows), int(float(rows[-1][0])) + 3_600_000, 104.7, 105.35, 102.8, 103.8, 1500)
+
+    assert sig is not None, s.last_no_signal_reason
+    assert sig.side == "short"
+    assert getattr(sig, "entry_order_type", None) == "limit"
+    assert getattr(sig, "limit_validity_bars", 0) > 0
+    assert sig.tp < sig.entry < sig.sl
+    assert "level_entry" in sig.reason
+
+
 def test_run_portfolio_supports_alt_resistance_fade_v2():
     source = (Path(__file__).resolve().parents[1] / "backtest" / "run_portfolio.py").read_text(encoding="utf-8")
 

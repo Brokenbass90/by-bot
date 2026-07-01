@@ -228,3 +228,8 @@
 - unified_levels усилен: horizontal/flip/HVN/channel считаются по свежему lookback-окну, добавлен `max_age_bars`, merge близких уровней в одну зону с приоритетом источника, `best_level()` для стратегий, `include_liquidity` можно выключить (текущая liquidity = recent extreme, не полноценная heatmap).
 - RANGE_BOUNCE_RUNBOOK обновлён: ARF2 old/new A/B перед миграцией, sequential filter analysis перед preflight/OOS, low-frequency рукава отделяются от high-frequency range-пакета. H4_SPEC обновлён: data-quality gate, 1m/5m liq aggregation, OI/funding caveats, hybrid execution, crash-day stress.
 - Verification: helper-suite `123 passed`.
+
+## ДОБАВЛЕНО 2026-07-01 (ARF2 флаговый wiring — Codex)
+- `strategies/alt_resistance_fade_v2.py` получил research-only флаги для общего контракта: `ARF2_USE_UNIFIED_LEVELS`, `ARF2_USE_RANGE_FILTER`, `ARF2_USE_RETEST_QUALITY`, `ARF2_USE_ELDER_FILTER`, `ARF2_USE_LEVEL_ENTRY`. Все OFF по умолчанию, baseline не меняется.
+- `ARF2_USE_LEVEL_ENTRY=1` строит limit-at-level сигнал с `entry_order_type="limit"` и `limit_validity_bars`; добавлен тест. Это открывает OLD vs NEW A/B без live-risk.
+- Verification: ARF2+helper focused suite `53 passed`. Отчёт: `reports/ARF2_WIRING_STATUS_2026_07_01.md`.

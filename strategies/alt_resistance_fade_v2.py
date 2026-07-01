@@ -15,6 +15,11 @@ from .alt_resistance_fade_v1 import (
     _rsi_wilder,
 )
 from .signals import TradeSignal
+from bot.elder_filter import elder_bias as _elder_bias
+from bot.level_entry import plan_level_entry as _plan_level_entry
+from bot.range_filter import range_state as _range_state
+from bot.retest_quality import score_retest as _score_retest
+from bot.unified_levels import unified_levels as _unified_levels
 
 
 @dataclass
@@ -89,6 +94,26 @@ class AltResistanceFadeV2Config:
     time_stop_bars_5m: int = 432
     cooldown_bars_5m: int = 36
     config_refresh_bars: int = 50
+
+    # Research-only helper-chain switches. All OFF by default to preserve the
+    # legacy ARF2 baseline for A/B. Enable via env for "new contract" tests.
+    use_unified_levels: bool = False
+    unified_include_liquidity: bool = False
+    unified_merge_tol_atr: float = 0.12
+    use_range_filter: bool = False
+    range_require_all: bool = False
+    use_retest_quality: bool = False
+    retest_min_quality: float = 0.55
+    use_elder_filter: bool = False
+    elder_htf_tf: str = "240"
+    elder_require_with_tide: bool = False
+    use_level_entry: bool = False
+    level_entry_offset_atr: float = 0.05
+    level_entry_stop_buffer_atr: float = 0.40
+    level_entry_max_chase_atr: float = 0.50
+    level_entry_validity_bars: int = 4
+    level_entry_tp1_rr: float = 1.00
+    level_entry_tp_rr: float = 2.50
 
 
 def _pivot_highs(rows: List[list], left: int, right: int) -> List[Tuple[float, int, int]]:
@@ -254,6 +279,24 @@ class AltResistanceFadeV2Strategy:
         c.cooldown_bars_5m = _env_int("ARF2_COOLDOWN_BARS_5M", c.cooldown_bars_5m)
         c.config_refresh_bars = _env_int("ARF2_CONFIG_REFRESH_BARS", c.config_refresh_bars)
 
+        c.use_unified_levels = _env_bool("ARF2_USE_UNIFIED_LEVELS", c.use_unified_levels)
+        c.unified_include_liquidity = _env_bool("ARF2_UNIFIED_INCLUDE_LIQUIDITY", c.unified_include_liquidity)
+        c.unified_merge_tol_atr = _env_float("ARF2_UNIFIED_MERGE_TOL_ATR", c.unified_merge_tol_atr)
+        c.use_range_filter = _env_bool("ARF2_USE_RANGE_FILTER", c.use_range_filter)
+        c.range_require_all = _env_bool("ARF2_RANGE_REQUIRE_ALL", c.range_require_all)
+        c.use_retest_quality = _env_bool("ARF2_USE_RETEST_QUALITY", c.use_retest_quality)
+        c.retest_min_quality = _env_float("ARF2_RETEST_MIN_QUALITY", c.retest_min_quality)
+        c.use_elder_filter = _env_bool("ARF2_USE_ELDER_FILTER", c.use_elder_filter)
+        c.elder_htf_tf = os.getenv("ARF2_ELDER_HTF_TF", c.elder_htf_tf)
+        c.elder_require_with_tide = _env_bool("ARF2_ELDER_REQUIRE_WITH_TIDE", c.elder_require_with_tide)
+        c.use_level_entry = _env_bool("ARF2_USE_LEVEL_ENTRY", c.use_level_entry)
+        c.level_entry_offset_atr = _env_float("ARF2_LEVEL_ENTRY_OFFSET_ATR", c.level_entry_offset_atr)
+        c.level_entry_stop_buffer_atr = _env_float("ARF2_LEVEL_ENTRY_STOP_BUFFER_ATR", c.level_entry_stop_buffer_atr)
+        c.level_entry_max_chase_atr = _env_float("ARF2_LEVEL_ENTRY_MAX_CHASE_ATR", c.level_entry_max_chase_atr)
+        c.level_entry_validity_bars = _env_int("ARF2_LEVEL_ENTRY_VALIDITY_BARS", c.level_entry_validity_bars)
+        c.level_entry_tp1_rr = _env_float("ARF2_LEVEL_ENTRY_TP1_RR", c.level_entry_tp1_rr)
+        c.level_entry_tp_rr = _env_float("ARF2_LEVEL_ENTRY_TP_RR", c.level_entry_tp_rr)
+
         self._allow = _env_csv_set("ARF2_SYMBOL_ALLOWLIST", "")
         self._deny = _env_csv_set("ARF2_SYMBOL_DENYLIST", "")
 
@@ -342,6 +385,8 @@ class AltResistanceFadeV2Strategy:
 
     def _select_resistance(self, history: List[list], atr: float, high_now: float) -> Optional[dict]:
         c = self.cfg
+        if c.use_unified_levels:
+            return self._select_resistance_unified(history, atr, high_now)
         tol = max(1e-12, c.level_tol_atr * atr)
         clusters = _cluster_prices(_pivot_highs(history, c.pivot_left, c.pivot_right), tol)
         if not clusters:
@@ -373,6 +418,59 @@ class AltResistanceFadeV2Strategy:
         candidates.sort(key=lambda x: (x["score"], x["level"]), reverse=True)
         return candidates[0]
 
+    def _select_resistance_unified(self, history: List[list], atr: float, high_now: float) -> Optional[dict]:
+        c = self.cfg
+        ls = _unified_levels(
+            history,
+            lookback=c.signal_lookback,
+            min_touches=c.min_touches,
+            max_age_bars=c.signal_lookback,
+            include_round=False,
+            include_liquidity=c.unified_include_liquidity,
+            merge_tol_atr=c.unified_merge_tol_atr,
+            atr_value=atr,
+        )
+        if not ls.ok:
+            self._no_signal(f"unified_levels:{ls.reason}")
+            return None
+        candidates: List[dict] = []
+        for lv in ls.levels:
+            level = float(lv.price)
+            if lv.side != "resistance" and level < float(history[-1][4]):
+                continue
+            if high_now < level - c.resistance_touch_buffer_atr * atr:
+                continue
+            if high_now > level + c.max_pierce_atr * atr:
+                continue
+            touches = int(lv.meta.get("touches", 0) or 0)
+            if lv.kind == "horizontal" and touches < c.min_touches:
+                continue
+            source_bonus = {
+                "horizontal": 0.35,
+                "sloped": 0.25,
+                "flip": 0.25,
+                "hvn": 0.15,
+                "liquidity": 0.05,
+                "round": 0.00,
+            }.get(lv.kind, 0.0)
+            touch_score = min(1.0, touches / max(1.0, float(c.min_touches + 1))) if touches else 0.5
+            proximity_score = max(0.0, 1.0 - abs(high_now - level) / max(1e-12, c.max_pierce_atr * atr))
+            score = 0.45 * touch_score + 0.35 * proximity_score + source_bonus
+            if score >= c.min_level_score:
+                candidates.append({
+                    "level": level,
+                    "score": score,
+                    "touches": touches,
+                    "last_idx": lv.meta.get("last_idx", len(history) - 1),
+                    "source": lv.kind,
+                    "dist_atr": lv.dist_atr,
+                    "merged_kinds": lv.meta.get("merged_kinds", [lv.kind]),
+                })
+        if not candidates:
+            return None
+        candidates.sort(key=lambda x: (x["score"], -float(x.get("dist_atr", 999.0))), reverse=True)
+        return candidates[0]
+
     def _support_below(self, history: List[list], entry: float, atr: float) -> Optional[float]:
         c = self.cfg
         tol = max(1e-12, c.level_tol_atr * atr)
@@ -382,6 +480,106 @@ class AltResistanceFadeV2Strategy:
             return max(below)
         raw = [float(r[3]) for r in history[-c.signal_lookback:] if float(r[3]) < entry - 0.5 * atr]
         return min(raw) if raw else None
+
+    def _range_helper_ok(self, rows: List[list]) -> bool:
+        c = self.cfg
+        if not c.use_range_filter:
+            return True
+        rs = _range_state(
+            rows,
+            lookback=min(c.signal_lookback, max(30, len(rows) - 1)),
+            require_all=c.range_require_all,
+            allow_sloped=True,
+        )
+        if not rs.ok:
+            self._no_signal(f"range_filter:{rs.reason}")
+            return False
+        if not rs.short_ok:
+            self._no_signal(f"range_filter:not_short:{rs.reason}")
+            return False
+        return True
+
+    def _elder_helper_ok(self, store, rows: List[list]) -> bool:
+        c = self.cfg
+        if not c.use_elder_filter:
+            return True
+        htf_rows = None
+        try:
+            raw = store.fetch_klines(store.symbol, c.elder_htf_tf, max(240, c.regime_lookback)) or []
+            if raw:
+                htf_rows = raw
+        except Exception:
+            htf_rows = None
+        eb = _elder_bias(rows, htf_rows=htf_rows, require_with_tide=c.elder_require_with_tide)
+        if eb.ok and not eb.allow_short:
+            self._no_signal(f"elder_blocks_short:{eb.reason}")
+            return False
+        return True
+
+    def _retest_helper_ok(self, rows: List[list], resistance: dict, atr: float) -> bool:
+        c = self.cfg
+        if not c.use_retest_quality:
+            return True
+        rs = _score_retest(
+            rows,
+            float(resistance["level"]),
+            "resistance",
+            atr_value=atr,
+            last_touch_idx=resistance.get("last_idx"),
+            touches=int(resistance.get("touches", 0) or 0),
+            entry_band_atr=max(c.resistance_touch_buffer_atr, c.reject_below_res_atr + 0.05),
+            max_age_bars=c.signal_lookback,
+            min_quality=c.retest_min_quality,
+        )
+        if not rs.entry_ok or not rs.short_ok:
+            self._no_signal(f"retest_quality:{rs.reason}:{rs.quality:.2f}")
+            return False
+        return True
+
+    def _build_level_entry_signal(self, store, rows: List[list], resistance: dict, atr: float, reason: str) -> Optional[TradeSignal]:
+        c = self.cfg
+        plan = _plan_level_entry(
+            rows,
+            float(resistance["level"]),
+            "resistance",
+            atr_value=atr,
+            offset_atr=c.level_entry_offset_atr,
+            stop_buffer_atr=c.level_entry_stop_buffer_atr,
+            tp1_rr=c.level_entry_tp1_rr,
+            tp_rr=c.level_entry_tp_rr,
+            max_chase_atr=c.level_entry_max_chase_atr,
+            validity_bars=c.level_entry_validity_bars,
+            min_stop_pct=c.min_stop_pct,
+            max_stop_pct=c.max_stop_pct,
+        )
+        if not plan.place:
+            self._no_signal(f"level_entry:{plan.reason}")
+            return None
+        tp1_frac = min(0.9, max(0.1, c.tp1_frac))
+        sig = TradeSignal(
+            strategy="alt_resistance_fade_v2",
+            symbol=store.symbol,
+            side="short",
+            entry=float(plan.limit_price),
+            sl=float(plan.stop),
+            tp=float(plan.tp2),
+            tps=[float(plan.tp1), float(plan.tp2)],
+            tp_fracs=[tp1_frac, max(0.0, 1.0 - tp1_frac)],
+            trailing_atr_mult=max(0.0, float(c.trail_atr_mult)),
+            trailing_atr_period=max(5, int(c.trail_atr_period)),
+            be_trigger_rr=max(0.0, float(c.be_trigger_rr)),
+            be_lock_rr=max(0.0, float(c.be_lock_rr)),
+            time_stop_bars=max(0, int(c.time_stop_bars_5m)),
+            reason=f"{reason} level_entry limit={plan.limit_price:.6f} valid={plan.validity_bars}",
+        )
+        if not sig.validate():
+            self._no_signal("signal_invalid_post")
+            return None
+        sig.entry_order_type = "limit"
+        sig.limit_validity_bars = int(plan.validity_bars)
+        sig.entry_level = float(resistance["level"])
+        sig.entry_plan_reason = str(plan.reason)
+        return sig
 
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (o, h, l, c, v, ts_ms)
@@ -459,6 +657,9 @@ class AltResistanceFadeV2Strategy:
             self._no_signal(f"range_too_wide_{range_pct:.2f}")
             return None
 
+        if not self._range_helper_ok(rows):
+            return None
+
         if high_now < level - self.cfg.resistance_touch_buffer_atr * atr:
             self._no_signal("no_res_touch")
             return None
@@ -493,6 +694,19 @@ class AltResistanceFadeV2Strategy:
             if avg_vol > 0 and vols[-1] < self.cfg.min_reject_vol_mult * avg_vol:
                 self._no_signal("reject_volume_low")
                 return None
+
+        if not self._elder_helper_ok(store, rows):
+            return None
+        if not self._retest_helper_ok(rows, resistance, atr):
+            return None
+
+        reason = (
+            f"arf2_structured_resistance_fade score={float(resistance['score']):.2f}"
+            f" source={resistance.get('source', 'legacy')}"
+        )
+        if self.cfg.use_level_entry:
+            self._cooldown = max(0, int(self.cfg.cooldown_bars_5m))
+            return self._build_level_entry_signal(store, rows, resistance, atr, reason)
 
         entry_price = float(cur)
         sl = max(high_now, level) + self.cfg.sl_atr_mult * atr
@@ -534,7 +748,7 @@ class AltResistanceFadeV2Strategy:
             be_trigger_rr=max(0.0, float(self.cfg.be_trigger_rr)),
             be_lock_rr=max(0.0, float(self.cfg.be_lock_rr)),
             time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
-            reason=f"arf2_structured_resistance_fade score={float(resistance['score']):.2f}",
+            reason=reason,
         )
         if not sig.validate():
             self._no_signal("signal_invalid_post")
