@@ -60,6 +60,20 @@ def test_unstable_half_negative_rejected():
     assert g.passes is False
 
 
+def test_negative_robustness_rejected_even_if_most_folds_positive():
+    # Three tiny positive folds and one larger loss can pass frac-positive/median,
+    # but it is not a stable plateau and must not be promoted.
+    c = {"id": "weak_robustness", "folds": [
+        {"net_r": 0.05, "trades": 12},
+        {"net_r": 0.08, "trades": 12},
+        {"net_r": 0.06, "trades": 12},
+        {"net_r": -0.30, "trades": 12},
+    ]}
+    g = evaluate_candidate(c)
+    assert g.passes is False
+    assert g.reason.startswith("weak_robustness")
+
+
 def test_pf_fallback_metric():
     # candidate with pf (not net_r): pf>1 profitable
     c = {"id": "pf", "folds": [

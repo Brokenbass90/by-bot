@@ -85,6 +85,7 @@ def evaluate_candidate(
     min_trades_per_fold: int = 5,
     max_peak_ratio: float = 3.0,       # best fold may not exceed 3x the median
     dispersion_weight: float = 0.5,
+    min_robustness: float = 0.0,
 ) -> Candidate:
     """Grade one candidate by OOS stability; sets passes + robustness."""
     folds = cand.get("folds", []) or []
@@ -138,6 +139,9 @@ def evaluate_candidate(
         return base
     if peak_ratio > max_peak_ratio:
         base.reason = f"one_window_hero_peak_{peak_ratio:.1f}"
+        return base
+    if robustness <= min_robustness:
+        base.reason = f"weak_robustness_{robustness:.3f}"
         return base
 
     base.passes = True

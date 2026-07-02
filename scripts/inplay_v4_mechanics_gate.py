@@ -161,7 +161,8 @@ def main() -> int:
     ap.add_argument("--fee-bps", type=float, default=6.0)
     ap.add_argument("--slippage-bps", type=float, default=2.0)
     ap.add_argument("--max-positions", type=int, default=2)
-    ap.add_argument("--min-oos-trades", type=int, default=18)
+    ap.add_argument("--min-oos-trades", type=int, default=40)
+    ap.add_argument("--min-oos-trades-per-fold", type=int, default=8)
     ap.add_argument("--py", default=".venv/bin/python")
     ap.add_argument("--tag-prefix", default="irv4_mechanics_gate")
     ap.add_argument("--no-fail-exit", action="store_true")
@@ -269,8 +270,9 @@ def main() -> int:
         candidate,
         min_folds=min(3, args.folds),
         min_trades_total=args.min_oos_trades,
-        min_trades_per_fold=1,
-        max_peak_ratio=5.0,
+        min_trades_per_fold=args.min_oos_trades_per_fold,
+        max_peak_ratio=3.0,
+        min_robustness=0.0,
     )
 
     oos_trades = sum(_i(r, "trades") for r in oos_rows)

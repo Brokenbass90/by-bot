@@ -233,3 +233,25 @@
 - `strategies/alt_resistance_fade_v2.py` получил research-only флаги для общего контракта: `ARF2_USE_UNIFIED_LEVELS`, `ARF2_USE_RANGE_FILTER`, `ARF2_USE_RETEST_QUALITY`, `ARF2_USE_ELDER_FILTER`, `ARF2_USE_LEVEL_ENTRY`. Все OFF по умолчанию, baseline не меняется.
 - `ARF2_USE_LEVEL_ENTRY=1` строит limit-at-level сигнал с `entry_order_type="limit"` и `limit_validity_bars`; добавлен тест. Это открывает OLD vs NEW A/B без live-risk.
 - Verification: ARF2+helper focused suite `53 passed`. Отчёт: `reports/ARF2_WIRING_STATUS_2026_07_01.md`.
+
+## ДОБАВЛЕНО 2026-07-02 (оценка ночной работы Codex, Claude)
+- ARF2 helper-chain: вписан КОРРЕКТНО и БЕЗОПАСНО (за флагами use_unified_levels/retest_quality/level_entry=False по умолчанию, на общем контракте, использует мои модули). Вердикт NO-GO честный: unified_levels починил ТИШИНУ (частота 5->39->57), но не прибыльность; tiny-N "3 сделки PF 1.99" правильно НЕ промоутят. Ключевой инсайт Codex ВЕРНЫЙ: пиле нужна смена логики (fade ТОЛЬКО после exhaustion/failed-breakout, не просто "у сопротивления") — совпадает с моим давним тезисом (fade у уровня в не-range режет пила).
+- unified_levels/sleeve preflight: hardened (de72391, 5229bf1) — работает как задумано (дал частоту).
+- ФЛАГ по ATT1 r068 (live-рукав): config взял pocket r068 (284 tr, +19.17R, PF 1.30, DD 6.61) как "360d replay" — это ОДНО окно / selected pocket, НЕ показан проход rolling-OOS (wf_folds/oos_selector). При risk 0.10 canary это приемлемо (breaker+expiry, малый риск), НО перед ЛЮБЫМ повышением риска ATT1 r068 обязан пройти тот же OOS-гейт, что и все. Записать в go/no-go.
+- InPlay V4 wide gate идёт: train 39tr +3.48R PF1.99 (in-sample!), level_entry реально используется (проверено в trades). Ждём OOS-фолды. Частота выросла -> preflight скорее GO.
+
+## ДОБАВЛЕНО 2026-07-02 (smart_grid — частый механич. рукав, Claude)
+- bot/smart_grid.py (5 тестов; фундамент 244): режим-осознанный сеточник, «умнее Велеса». Активен ТОЛЬКО в подтверждённом range (classify_channel flat + regime_hmm не high_vol), сетка привязана к реальному каналу [lower,upper], KILL-SWITCH при пробое канала/смене режима -> halt_and_flatten (не держит мешок в тренде — главная беда обычных сеток). Частый рукав -> «торгует каждый день» в боковике. Механика (осцилляция), не прогноз. Требует OOS-гейт как все.
+- ВИДЕНИЕ AI-supervised портфель: пьесы есть (decision_bus/edge_monitor/regime_hmm/champion_challenger/sleeve_registry/adaptive_context). Не хватает ОРКЕСТРАТОРА-цикла: читает bus -> regime-гейт+risk_scalar -> edge_monitor -> promote/demote -> аллокация. ВАЖНО: ИИ крутит РИСК/РЕЖИМ/ЖИЗН.ЦИКЛ В РЕЛЬСАХ, НЕ свободную live-оптимизацию параметров (=оверфит). Это следующий интеграционный слой (Codex вписывает в live-loop).
+
+## ДОБАВЛЕНО 2026-07-02 (статус wiring — пауза стройки, Claude)
+- ЧЕСТНО: 24 модуля построено, вписаны в ноги ТОЛЬКО 2 (inplay_retest_v4, ARF2)+движок limit. ~20 модулей провалидированы на юнитах, но НЕ в торговле/управлении. РЕШЕНИЕ: стройку на паузу, приоритет wiring+gate. Backlog: reports/MODULE_WIRING_STATUS_2026_07_02.md. Приоритет: smart_grid backtest -> InPlay wide gate вердикт -> ARF2 exhaustion-логика -> liquidity/H4 -> orchestrator. Правило: не строить новое, пока построенное не вписано и не прогнано.
+
+## ДОБАВЛЕНО 2026-07-02 (InPlay wide gate — маргинальный PASS, Claude)
+- InPlay V4 wide gate (7 mid-caps): gate вернул passes=True (robust_plateau), НО по НАШЕЙ пре-регистрации это НЕ чистый pass: total 36<40, fold4=2 сделки/fold3=3 (<8/фолд), робастность -0.068<0, fold1 PF1.03=шум. Потенциал ~0.4-1.2%/год. ВЕРДИКТ Claude: -> SHADOW (paper) накапливать сделки, НЕ canary.
+- ФИКС Codex: gate-скрипт oos_selector мягче нашей пре-регистрации (пропускает тонкие фолды 2-3 сделки). Ужесточить min_trades_per_fold>=8 и min_trades_total>=40, отклонять робастность<=0. Иначе штампует пустышки как PASS.
+- Стройка на паузе (built>>validated). Следующее: smart_grid backtest, InPlay->shadow, ARF2 exhaustion-логика. Новые модули НЕ пишем.
+
+## ДОБАВЛЕНО 2026-07-02 (research_orchestrator — недельный ИИ-ревью, Claude)
+- bot/research_orchestrator.py (6 тестов; фундамент 250): реализует видение «постоянный теневой поиск + ИИ под капотом + предложения раз в неделю». weekly_review компонует oos_selector+edge_monitor+champion_challenger+preflight -> Proposal: действия по рукавам (PROMOTE/DEMOTE/HOLD), ранг новых кандидатов (GATE_PASS/NO), shadow-retest-очередь. format_proposal -> человекочитаемо (для TG). РЕЛЬС: только ПРЕДЛАГАЕТ, человек одобряет; НЕ крутит риск/параметры сам. Демо: PROMOTE att1(healthy canary), DEMOTE arf2(degraded), smart_grid GATE_PASS.
+- Это капстоун управляющего слоя (не новый эдж). Codex: гонять раз в неделю (scheduled), слать Proposal в TG на аппрув.

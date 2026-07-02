@@ -106,3 +106,13 @@ WF_AND_LIVE_HONEST_READ_2026_06_30_PM, этот queue.
 ## ДОБАВЛЕНО 2026-07-01 (ARF2 flag wiring)
 - ARF2 уже получил флаги общего контракта, все OFF по умолчанию: `ARF2_USE_UNIFIED_LEVELS/RANGE_FILTER/RETEST_QUALITY/ELDER_FILTER/LEVEL_ENTRY`.
 - Следующий шаг: A/B sequential dry-run по флагам, не OOS сразу. Порядок: OLD baseline -> +LEVEL_ENTRY -> +UNIFIED_LEVELS -> +RANGE_FILTER -> +RETEST_QUALITY -> +ELDER_FILTER. На каждом шаге: signal count, cheap PF/R, symbol coverage, filter drop rate.
+
+## ДОБАВЛЕНО 2026-07-02 (smart_grid + orchestrator идея)
+- НОВОЕ: bot/smart_grid.py — режим-осознанный сеточник (range-only + kill-switch на пробой). Прогнать через backtest/OOS как частый механич. рукав (кандидат «торгует каждый день»). Затем orchestrator: цикл decision_bus->regime_hmm->edge_monitor->champion_challenger->sleeve_registry для AI-supervised портфеля В РЕЛЬСАХ (риск/режим/цикл, НЕ live-оптимизация параметров).
+
+## ДОБАВЛЕНО 2026-07-02 (gate threshold fix)
+- НОВОЕ: ужесточить oos_selector в gate-скриптах под пре-регистрацию (min_trades_per_fold>=8, min_trades_total>=40, reject robustness<=0). InPlay wide gate PASS был маргинальный (fold 2-3 сделки) -> в shadow, не canary.
+
+## ДОБАВЛЕНО 2026-07-02 (weekly orchestrator)
+- НОВОЕ: bot/research_orchestrator.py — недельный ИИ-ревью (weekly_review->Proposal, format_proposal). Codex: scheduled раз/неделю -> собрать running sleeves (из decision_bus/edge_monitor) + новые кандидаты (из shadow-свипов) -> Proposal в TG на аппрув владельца. Ничего не авто-применять.
+- smart_grid: поставить в backtest->preflight->OOS gate (кандидат «каждый день»).
