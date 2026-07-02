@@ -180,6 +180,33 @@ Read:
 - It is alive but waiting for ATT1 trendline setup.
 - Horizontal/range legs are still correctly not live-risk because ARF2/range evidence did not pass.
 
+## 7. H4 / liquidation smoke after freeing server
+
+Server had real liquidation data:
+
+- `runtime/liquidations/bybit_liquidations.jsonl`
+- 66,931 events in the smoke run.
+
+Because server worktree is too dirty for `git pull`, only the missing memory-safe runner
+`backtest/liquidation_sweep_run.py` was copied to the server and executed. This did not
+change live bot logic.
+
+Result:
+
+| scope | clusters | trades | WR | expR | PF | verdict |
+|---|---:|---:|---:|---:|---:|---|
+| all | 116 | 85 | 29.4% | -0.407 | 0.25 | FAIL |
+| BTCUSDT | 71 | 52 | 32.7% | -0.316 | 0.32 | FAIL |
+| ETHUSDT | 40 | 31 | 22.6% | -0.555 | 0.15 | FAIL |
+| SOLUSDT | 3 | 2 | 50.0% | -0.500 | 0.33 | FAIL |
+
+Read:
+
+- Naive “bounce after liquidation cluster” is not an edge.
+- This does **not** fully invalidate `cascade_reversal.py`, because the full H4 spec requires
+  OI drop + funding z-score + timing + percentile thresholds.
+- It does invalidate simple liquidation-fade canary ideas.
+
 ## Next actions
 
 ### P0 — today
@@ -190,10 +217,10 @@ Read:
    - compare against ATT1 solo.
    Goal: decide if ARS1 is harmful, neutral, or useful only in specific months.
 
-2. Deploy/run H4 real-data smoke only if required scripts are on server:
-   - server has real Bybit liquidations JSONL;
-   - server currently lacks `backtest/liquidation_sweep_run.py`;
-   - do not run proxy H4 again.
+2. H4 next step:
+   - simple liquidation sweep already failed on real data;
+   - only continue H4 if we add OI + funding history and run `cascade_reversal.py` proper;
+   - do not promote any liquidation-fade without those triggers.
 
 3. Keep crypto live unchanged:
    - ATT1 short-only tiny canary stays.
