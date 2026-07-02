@@ -297,3 +297,18 @@
 ## ДОБАВЛЕНО 2026-07-02 (failed_breakout — ARF2 exhaustion фикс, Claude)
 - bot/failed_breakout.py (6 тестов; фундамент 288): детектор несостоявшегося пробоя. Цена вышла ЗА уровень (close beyond) и НЕ удержалась (reclaim обратно в range за event_window) -> фейд. Мульти-бар (не 1-бар свип). Опц. vol-fade. Сплит: fail-up->short, fail-down->long. НЕ фейдит удержавшийся пробой (тест подтвердил). Это правильная логика для ARF2/пилы (фейд после провала пробоя, не «просто у уровня»).
 - Codex: перевести ARF2 на failed_breakout+range_filter+level_entry вместо «fade at resistance» -> preflight -> gate. Это следующий крипто-кандидат после ATT1 r001.
+
+## ДОБАВЛЕНО 2026-07-02 (разбор ARF2+FX + мета-инсайт про частоту, Claude)
+- ATT1 r001 миграция: чисто, риск 0.10 держим (правильно). Ждёт short-наклонку. ЕДИНСТВЕННОЕ около денег.
+- ARF2 failed_breakout: NO-GO, но пульс есть. plain 177 сделок +6.02R PF1.05, 2/4 фолда красные. Инсайты Codex ВЕРНЫЕ: (1) level_entry ВРЕДИТ failed-breakout (−65R) — логично: на провале пробоя входим на reclaim СРАЗУ, а не лимиткой у уровня; level_entry для РЕТЕСТОВ, не для reclaim. (2) range_filter слишком строг для этого события. (3) DOGE/XRP/ONDO несут (symbol-selection риск). Фикс: убрать level_entry для этого сетапа, ослабить range-гейт; но эдж тонкий -> низкий приоритет.
+- FX smoke: XAUUSD round_level_sweep 4 сделки +0.94R PF1.37 (пульс на золоте!), остальное 0 сделок (round_sweep/session_breakout РЕДКИЕ на 60d M5). NO-GO по частоте.
+- МЕТА-ИНСАЙТ: наш ГЛАВНЫЙ повторяющийся барьер = ЧАСТОТА/fold-стабильность (не lookahead, не издержки). Редкие сетапы не набирают N для OOS (InPlay, ARF2, round_sweep, grid — все упёрлись в это). Рычаги: (a) ЧАСТЫЕ сетапы приоритетнее редких (session_range_fade, trend_pullback, grid > round_sweep, breakout); (b) шире юниверс; (c) больше/длиннее данных (60d M5 мало); (d) ослаблять гейты, но OOS-тестить.
+- FX-ГАЙД Codex: свипать в первую очередь session_range_fade + trend_pullback (частые) на БОЛЬШЕЙ истории + XAU (показал пульс); редкие round_sweep/breakout — вторично.
+
+## ДОБАВЛЕНО 2026-07-02 (structure_break BOS/CHoCH + FX-свип разбор, Claude)
+- bot/structure_break.py (6 тестов; фундамент 294): чистый детектор слома структуры. BOS=пробой свинга ПО тренду (продолжение), CHoCH=пробой ПРОТИВ тренда (разворот). Из pivot_highs/lows. Сплит long/short. Ранее слом структуры был разрозненно в choch_v1/breakdown — теперь единый проверяемый контракт. Частый паттерн -> против проблемы частоты. Codex: построить BOS/CHoCH-ногу + gate.
+- FX bg-свип разбор: session_range_fade на XAU ЧАСТЫЙ (285 сделок) но ТЕРЯЕТ (-117R PF0.51, золото ломает range). round_level_sweep XAU: ПУЛЬС (tp2/sl1: +3.57R PF1.49, 3/3 фолда+) но 12 сделок (мало N). Урок: нужен частый И с эджем; частый без эджа теряет быстрее. session_breakout=0 сигналов.
+- FX-вывод: range_fade на золоте -> NO. round_sweep -> пульс, добрать N (больше данных/символов). Гнать BOS/CHoCH + trend_pullback на FX (частые+трендовые).
+
+## ДОБАВЛЕНО 2026-07-02 (structure_break частота на крипте, Claude)
+- structure_break прогнан на РЕАЛЬНОЙ крипте (60m): BOS/CHoCH сигнал на ~26-30% баров (BTC 216 bos+85 choch/1192; SOL/LINK/ADA аналогично), long/short сбалансированы. ЧАСТЫЙ (vs ATT1/InPlay редкие) -> ответ на проблему частоты. Работает на крипте И FX (один OHLC-контракт). Оговорка: 28% сырых многовато -> фильтр (regime_hmm/retest_quality/cooldown) иначе оверрейд. Codex: BOS/CHoCH-нога с фильтром -> preflight -> gate на крипто-mid-caps И FX.

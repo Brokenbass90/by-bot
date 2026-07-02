@@ -138,3 +138,12 @@ WF_AND_LIVE_HONEST_READ_2026_06_30_PM, этот queue.
 
 ## ДОБАВЛЕНО 2026-07-02 (ARF2 exhaustion через failed_breakout)
 - НОВОЕ: bot/failed_breakout.py — логика для ARF2 rewrite. ARF2: фейд ТОЛЬКО при failed_breakout.short_ok/long_ok (не «at resistance») + range_filter + level_entry -> preflight -> wf_folds -> oos_selector. Side-split. Следующий крипто-кандидат после ATT1 r001.
+
+## ДОБАВЛЕНО 2026-07-02 (FX-гайд + ARF2 фикс)
+- FX свип: приоритет ЧАСТЫМ сетапам session_range_fade + trend_pullback (не только редкие round_sweep/breakout) на БОЛЬШЕЙ истории (60d M5 мало -> больше данных). XAU показал пульс (+0.94R PF1.37 на 4 сделках). Цель — набрать N для OOS.
+- ARF2 failed_breakout: если возвращаться — БЕЗ level_entry (вход на reclaim сразу), ослабить range_filter. Но эдж тонкий -> низкий приоритет vs ATT1/FX-частые.
+- Главный барьер везде = ЧАСТОТА. Редкие сетапы не набирают N. Приоритет частым + широкий юниверс + больше данных.
+
+## ДОБАВЛЕНО 2026-07-02 (structure_break + FX-вывод)
+- НОВОЕ: bot/structure_break.py — BOS/CHoCH детектор. Построить ногу (BOS=продолжение, CHoCH=разворот) + preflight + gate. Частый паттерн.
+- FX: range_fade на золоте NO (теряет). round_sweep пульс (+PF на 12 сделках) -> добрать N (больше истории/символов). Свипать structure_break + trend_pullback на FX-мажорах/золоте. session_breakout не даёт сигналов -> ослабить.
