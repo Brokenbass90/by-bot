@@ -288,3 +288,12 @@
 ## ДОБАВЛЕНО 2026-07-02 (fx_harness — FX разблокирован, Claude)
 - bot/fx_harness.py (6 тестов; фундамент 282): бэктест-харнесс для fx_setups. Прогоняет сетап по FX-барам, открывает трейд с fixed-R (SL=sl_atr*ATR, TP=tp_rr*R), резолвит на ПОСЛЕДУЮЩИХ барах (SL-first), комиссии в R, cooldown/без перехлёста. Выдаёт trades -> wf_folds -> oos_selector. Причинно. Единственный блокер FX (harness) СНЯТ.
 - ПЕРЕПРИОРИТЕТ: FX больше НЕ в конце очереди. Это ПАРАЛЛЕЛЬНЫЙ трек (бесплатные demo-данные, свой харнесс, не конкурирует с ATT1 за крипто-компьют). Codex: подать реальные FX-данные (Dukascopy/yfinance/OANDA demo) в fx_harness, свипать XAU round_sweep + session_breakout + range_fade + smart_grid(мажоры) через preflight->wf_folds->oos_selector.
+
+## ДОБАВЛЕНО 2026-07-02 (ВЕХА: ATT1 short r001 прошёл строгий барьер, Claude)
+- ATT1 short r001 = ПЕРВЫЙ честно-валидированный крипто-эдж: strict folds 4/4, 239-307 сделок, peak 2.35 (не hero), fee-stress выживает (10/5bps: +16.5R PF1.21), 2 красных мес. Потенциал ~14%/год@0.5%, ~21%@0.75%, DD~3-5%.
+- РЕШЕНИЕ (reports/ATT1_R001_MIGRATION_DECISION_2026_07_02.md): мигрировать ATT1 canary на r001-геометрию, риск ОСТАВИТЬ 0.10 (не поднимать при миграции) -> 10-20 live healthy сделок -> разгон через smart_risk (0.10->0.25->0.5->0.75), анти-мартингейл. Claude готовит config-спек, Codex подставляет точные r001 params + деплой после OK владельца.
+- Параллельно: FX (fx_harness real-data, XAU/session первыми) + ARF2 exhaustion.
+
+## ДОБАВЛЕНО 2026-07-02 (failed_breakout — ARF2 exhaustion фикс, Claude)
+- bot/failed_breakout.py (6 тестов; фундамент 288): детектор несостоявшегося пробоя. Цена вышла ЗА уровень (close beyond) и НЕ удержалась (reclaim обратно в range за event_window) -> фейд. Мульти-бар (не 1-бар свип). Опц. vol-fade. Сплит: fail-up->short, fail-down->long. НЕ фейдит удержавшийся пробой (тест подтвердил). Это правильная логика для ARF2/пилы (фейд после провала пробоя, не «просто у уровня»).
+- Codex: перевести ARF2 на failed_breakout+range_filter+level_entry вместо «fade at resistance» -> preflight -> gate. Это следующий крипто-кандидат после ATT1 r001.

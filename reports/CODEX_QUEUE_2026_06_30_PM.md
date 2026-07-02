@@ -131,3 +131,10 @@ WF_AND_LIVE_HONEST_READ_2026_06_30_PM, этот queue.
 
 ## ДОБАВЛЕНО 2026-07-02 (FX разблокирован — параллельный трек)
 - НОВОЕ: bot/fx_harness.py готов. FX БОЛЬШЕ НЕ В КОНЦЕ. Параллельно с ATT1 rolling-OOS: подать реальные FX-данные (EURUSD/GBPUSD/USDJPY/GBPJPY/XAUUSD) в fx_harness, свипать 4 fx_setups + smart_grid(мажоры/золото, side-split, range_scanner) -> preflight -> wf_folds -> oos_selector. XAU round_sweep + session_breakout первыми. Demo/zero-risk.
+
+## ДОБАВЛЕНО 2026-07-02 (ATT1 r001 миграция)
+- P0: мигрировать ATT1 canary на r001-геометрию (точные params из strict-grading r001 ranked), риск ОСТАВИТЬ 0.10, breaker+expiry как есть. Деплой после OK владельца. НЕ поднимать риск при миграции. reports/ATT1_R001_MIGRATION_DECISION_2026_07_02.md
+- Далее: 10-20 live healthy -> smart_risk ramp. Параллельно FX harness real-data + ARF2 exhaustion.
+
+## ДОБАВЛЕНО 2026-07-02 (ARF2 exhaustion через failed_breakout)
+- НОВОЕ: bot/failed_breakout.py — логика для ARF2 rewrite. ARF2: фейд ТОЛЬКО при failed_breakout.short_ok/long_ok (не «at resistance») + range_filter + level_entry -> preflight -> wf_folds -> oos_selector. Side-split. Следующий крипто-кандидат после ATT1 r001.
