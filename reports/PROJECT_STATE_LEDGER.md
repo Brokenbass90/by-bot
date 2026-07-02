@@ -312,3 +312,13 @@
 
 ## ДОБАВЛЕНО 2026-07-02 (structure_break частота на крипте, Claude)
 - structure_break прогнан на РЕАЛЬНОЙ крипте (60m): BOS/CHoCH сигнал на ~26-30% баров (BTC 216 bos+85 choch/1192; SOL/LINK/ADA аналогично), long/short сбалансированы. ЧАСТЫЙ (vs ATT1/InPlay редкие) -> ответ на проблему частоты. Работает на крипте И FX (один OHLC-контракт). Оговорка: 28% сырых многовато -> фильтр (regime_hmm/retest_quality/cooldown) иначе оверрейд. Codex: BOS/CHoCH-нога с фильтром -> preflight -> gate на крипто-mid-caps И FX.
+
+## ДОБАВЛЕНО 2026-07-02 (КОРРЕКЦИЯ structure_break свипа, Claude)
+- ПРОБЛЕМА: scripts/run_structure_break_diagnostic.py гоняет сетку event/side/RR/SL/hold/buffer БЕЗ фильтра/cooldown -> тестирует СЫРОЙ (оверрейд) сигнал, который мы знаем минусовой. 4ч прогон предрасположен к NO-GO.
+- ДАННЫЕ (реальная крипта 60m, sl1/tp2): RAW BTC -39R/SOL -14R/ADA +53.5R. С cooldown=10: BTC -39->-2R, ADA expectancy +0.28->+0.52R (меньше сделок, выше качество). Cooldown = ключевой рычаг против 28%-частоты.
+- КОРРЕКЦИЯ Codex: добавить в сетку свипа cooldown_bars {0,5,10,20} (обязательно) + per-symbol отчёт (символ-зависимость огромная: ADA+, BTC/SOL-) + cross-symbol робастность в гейте (не черри-пик ADA). Опц. regime-фильтр. БЕЗ cooldown свип = пустой.
+
+## ДОБАВЛЕНО 2026-07-02 PM (разбор short-bias + режимная оговорка, Claude)
+- Codex: crypto BOS long крупно минусовой -> остановил (верно, не жёг время). FX BOS/CHoCH пакет no-go, но XAU BOS short 60d = карман (PF 1.5-2.8, +13..24R, 20-60 сделок). Лучший новый след, но 1 инструмент + короткая история.
+- Claude независимая проверка (крипта cooldown=10): short чуть лучше на 3/4, НО ДОМИНИРУЕТ СИМВОЛ, не сторона: ADA + с обеих, BTC/SOL -, LINK long(+4)>short(+1.4). Плюс режимный крен (short лучше в падении). Вывод: «short-only» НЕ чистый ответ; это symbol×side×regime.
+- РИСКИ для Codex: (1) short-эджи вероятно bear_chop-зависимы -> long-history свип должен дать per-period/per-year разрез (выживает ли в bull-ногах?); если bear-only -> нужен regime_hmm-гейт (выключать в bull) + correlation-cap (несколько short-рукавов вместе сольются в bull-развороте). (2) не резать long целиком -> держать per-symbol×side гранулярность, отбор по cross-symbol робастности, не «short-only». (3) XAU short 60d -> не радоваться карману; PASS = стабильность на 876d+ и per-period.
