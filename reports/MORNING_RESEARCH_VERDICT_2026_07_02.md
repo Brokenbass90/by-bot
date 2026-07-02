@@ -144,6 +144,18 @@ Decision:
 - Align the ATT1 canary env with r068 geometry, but keep risk tiny.
 - Next: live reload only after confirming `open_trades=0`.
 
+Action taken after report:
+
+- `configs/att1_short_canary_20260629.env` was updated with r068 geometry.
+- The updated env was copied to the server.
+- `bybot.service` was restarted with `open_trades=0`.
+- Post-restart check:
+  - `STATUS: ALIVE`
+  - `market feed: OK`
+  - `open_trades=0`
+  - live risk remains only `ATT1 x0.10`
+  - Bybit message counter resumed after WS subscriptions completed.
+
 ## 5. Elder canonical rewrite
 
 Server sweep status:
