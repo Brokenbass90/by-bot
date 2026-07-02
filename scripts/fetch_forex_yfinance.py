@@ -12,6 +12,9 @@ PAIR_TO_TICKER: Dict[str, str] = {
     "EURUSD": "EURUSD=X",
     "GBPUSD": "GBPUSD=X",
     "USDJPY": "USDJPY=X",
+    # Yahoo does not reliably expose spot XAUUSD intraday as XAUUSD=X.
+    # GC=F is COMEX gold futures and is used as a free research proxy only.
+    "XAUUSD": "GC=F",
 }
 
 
@@ -118,4 +121,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
