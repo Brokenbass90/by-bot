@@ -136,7 +136,7 @@ def _simulate(rows: Sequence[Sequence[float]], i: int, side: str, *, sl_atr: flo
     return {"r": round(gross_r - fee_r, 4), "entry": entry, "stop": stop, "tp": tp, "exit_i": exit_i}
 
 
-def _run_one(symbol: str, rows: List[List[float]], *, event_filter: str, side_filter: str, sl_atr: float, tp_rr: float, max_hold: int, buffer_atr: float, left: int, right: int, fee_bps: float, slippage_bps: float, warmup: int) -> List[Dict[str, Any]]:
+def _run_one(symbol: str, rows: List[List[float]], *, event_filter: str, side_filter: str, sl_atr: float, tp_rr: float, max_hold: int, buffer_atr: float, cooldown_bars: int, left: int, right: int, fee_bps: float, slippage_bps: float, warmup: int) -> List[Dict[str, Any]]:
     trades: List[Dict[str, Any]] = []
     i = max(warmup, 4 * (left + right) + 10)
     while i < len(rows) - max_hold - 2:
@@ -168,7 +168,7 @@ def _run_one(symbol: str, rows: List[List[float]], *, event_filter: str, side_fi
             "tp": sim["tp"],
             "exit_ts": int(_f(rows[sim["exit_i"]], TS)),
         })
-        i = int(sim["exit_i"]) + 1
+        i = int(sim["exit_i"]) + 1 + max(0, int(cooldown_bars))
     return trades
 
 
@@ -187,6 +187,7 @@ def main() -> int:
     ap.add_argument("--sl-atr", default="0.8,1.0,1.3")
     ap.add_argument("--max-hold", default="12,24")
     ap.add_argument("--buffer-atr", default="0.05,0.10,0.20")
+    ap.add_argument("--cooldown-bars", default="0", help="CSV bars to skip after a closed trade; controls BOS/CHoCH overtrading.")
     ap.add_argument("--left", type=int, default=2)
     ap.add_argument("--right", type=int, default=2)
     ap.add_argument("--fee-bps", type=float, default=6.0)
@@ -200,6 +201,7 @@ def main() -> int:
 
     all_rows: List[Dict[str, Any]] = []
     summaries: List[Dict[str, Any]] = []
+    symbol_summaries: List[Dict[str, Any]] = []
     row_cache: Dict[str, List[List[float]]] = {}
     for sym in _csv(args.symbols):
         if args.market == "crypto":
@@ -218,9 +220,11 @@ def main() -> int:
                 for sl_atr in [float(x) for x in args.sl_atr.split(",") if x.strip()]:
                     for max_hold in [int(x) for x in args.max_hold.split(",") if x.strip()]:
                         for buffer_atr in [float(x) for x in args.buffer_atr.split(",") if x.strip()]:
-                            trades: List[Dict[str, Any]] = []
-                            for sym, rows in row_cache.items():
-                                trades.extend(_run_one(
+                            for cooldown_bars in [int(x) for x in args.cooldown_bars.split(",") if x.strip()]:
+                                trades: List[Dict[str, Any]] = []
+                                per_symbol_trades: Dict[str, List[Dict[str, Any]]] = {}
+                                for sym, rows in row_cache.items():
+                                    cur_trades = _run_one(
                                     sym, rows,
                                     event_filter=event,
                                     side_filter=side,
@@ -228,36 +232,63 @@ def main() -> int:
                                     tp_rr=tp_rr,
                                     max_hold=max_hold,
                                     buffer_atr=buffer_atr,
+                                    cooldown_bars=cooldown_bars,
                                     left=args.left,
                                     right=args.right,
                                     fee_bps=args.fee_bps,
                                     slippage_bps=args.slippage_bps,
                                     warmup=80,
-                                ))
-                            rs = [float(t["r"]) for t in trades]
-                            pf_report = preflight(trades, min_trades_total=40, min_trades_per_fold=8, min_symbols=3)
-                            row = {
-                                "market": args.market,
-                                "event": event,
-                                "side": side,
-                                "tp_rr": tp_rr,
-                                "sl_atr": sl_atr,
-                                "max_hold": max_hold,
-                                "buffer_atr": buffer_atr,
-                                "trades": len(rs),
-                                "net_r": round(sum(rs), 4),
-                                "pf": _pf(rs),
-                                "win_rate": round(sum(1 for x in rs if x > 0) / len(rs), 4) if rs else 0.0,
-                                "symbols": len({t["symbol"] for t in trades}),
-                                "preflight_go": pf_report.go,
-                                "preflight_reasons": ";".join(pf_report.reasons),
-                            }
-                            summaries.append(row)
-                            tag = f"{event}_{side}_rr{tp_rr}_sl{sl_atr}_h{max_hold}_b{buffer_atr}"
-                            for t in trades:
-                                t.update({"tag": tag, **{k: row[k] for k in ("event", "side", "tp_rr", "sl_atr", "max_hold", "buffer_atr")}})
-                            all_rows.extend(trades)
-                            print(f"[run] {tag} trades={row['trades']} netR={row['net_r']} pf={row['pf']:.3f} preflight={row['preflight_go']}", flush=True)
+                                    )
+                                    per_symbol_trades[sym] = cur_trades
+                                    trades.extend(cur_trades)
+                                rs = [float(t["r"]) for t in trades]
+                                pf_report = preflight(trades, min_trades_total=40, min_trades_per_fold=8, min_symbols=3)
+                                by_symbol_rows: List[Dict[str, Any]] = []
+                                for sym, cur_trades in sorted(per_symbol_trades.items()):
+                                    cur_rs = [float(t["r"]) for t in cur_trades]
+                                    by_symbol_rows.append({
+                                        "symbol": sym,
+                                        "trades": len(cur_rs),
+                                        "net_r": round(sum(cur_rs), 4),
+                                        "pf": _pf(cur_rs),
+                                        "win_rate": round(sum(1 for x in cur_rs if x > 0) / len(cur_rs), 4) if cur_rs else 0.0,
+                                    })
+                                positive_symbols = sum(1 for r in by_symbol_rows if int(r["trades"]) > 0 and float(r["net_r"]) > 0)
+                                active_symbols = sum(1 for r in by_symbol_rows if int(r["trades"]) > 0)
+                                top_symbol_trades = max((int(r["trades"]) for r in by_symbol_rows), default=0)
+                                top_symbol_frac = (top_symbol_trades / len(rs)) if rs else 0.0
+                                row = {
+                                    "market": args.market,
+                                    "event": event,
+                                    "side": side,
+                                    "tp_rr": tp_rr,
+                                    "sl_atr": sl_atr,
+                                    "max_hold": max_hold,
+                                    "buffer_atr": buffer_atr,
+                                    "cooldown_bars": cooldown_bars,
+                                    "trades": len(rs),
+                                    "net_r": round(sum(rs), 4),
+                                    "pf": _pf(rs),
+                                    "win_rate": round(sum(1 for x in rs if x > 0) / len(rs), 4) if rs else 0.0,
+                                    "symbols": active_symbols,
+                                    "positive_symbols": positive_symbols,
+                                    "top_symbol_frac": round(top_symbol_frac, 4),
+                                    "preflight_go": pf_report.go,
+                                    "preflight_reasons": ";".join(pf_report.reasons),
+                                }
+                                summaries.append(row)
+                                tag = f"{event}_{side}_rr{tp_rr}_sl{sl_atr}_h{max_hold}_b{buffer_atr}_cd{cooldown_bars}"
+                                for sym_row in by_symbol_rows:
+                                    symbol_summaries.append({"tag": tag, **{k: row[k] for k in ("market", "event", "side", "tp_rr", "sl_atr", "max_hold", "buffer_atr", "cooldown_bars")}, **sym_row})
+                                for t in trades:
+                                    t.update({"tag": tag, **{k: row[k] for k in ("event", "side", "tp_rr", "sl_atr", "max_hold", "buffer_atr", "cooldown_bars")}})
+                                all_rows.extend(trades)
+                                print(
+                                    f"[run] {tag} trades={row['trades']} netR={row['net_r']} "
+                                    f"pf={row['pf']:.3f} pos_symbols={positive_symbols}/{active_symbols} "
+                                    f"preflight={row['preflight_go']}",
+                                    flush=True,
+                                )
 
     if summaries:
         with (outdir / "summary.csv").open("w", newline="", encoding="utf-8") as f:
@@ -272,6 +303,10 @@ def main() -> int:
         with (outdir / "trades.csv").open("w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=keys)
             w.writeheader(); w.writerows(all_rows)
+    if symbol_summaries:
+        with (outdir / "per_symbol.csv").open("w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=list(symbol_summaries[0].keys()))
+            w.writeheader(); w.writerows(symbol_summaries)
 
     top = sorted(summaries, key=lambda r: (bool(r["preflight_go"]), float(r["net_r"]), float(r["pf"])), reverse=True)[:30]
     lines = [
@@ -281,17 +316,18 @@ def main() -> int:
         f"- interval_min: `{args.interval_min}`",
         f"- rows: {len(summaries)}",
         "",
-        "| event | side | rr | sl_atr | hold | buffer | trades | netR | PF | WR | symbols | preflight |",
-        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
+        "| event | side | rr | sl_atr | hold | buffer | cd | trades | netR | PF | WR | symbols+ | concentration | preflight |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
     ]
     for r in top:
         pf = float(r["pf"])
         pf_s = "inf" if math.isinf(pf) else f"{pf:.3f}"
         lines.append(
-            f"| {r['event']} | {r['side']} | {r['tp_rr']} | {r['sl_atr']} | {r['max_hold']} | {r['buffer_atr']} | "
-            f"{r['trades']} | {r['net_r']:.3f} | {pf_s} | {r['win_rate']:.3f} | {r['symbols']} | {r['preflight_go']} |"
+            f"| {r['event']} | {r['side']} | {r['tp_rr']} | {r['sl_atr']} | {r['max_hold']} | {r['buffer_atr']} | {r['cooldown_bars']} | "
+            f"{r['trades']} | {r['net_r']:.3f} | {pf_s} | {r['win_rate']:.3f} | "
+            f"{r['positive_symbols']}/{r['symbols']} | {r['top_symbol_frac']:.2%} | {r['preflight_go']} |"
         )
-    lines += ["", "## Outputs", "", f"- `{outdir / 'summary.csv'}`", f"- `{outdir / 'trades.csv'}`"]
+    lines += ["", "## Outputs", "", f"- `{outdir / 'summary.csv'}`", f"- `{outdir / 'per_symbol.csv'}`", f"- `{outdir / 'trades.csv'}`"]
     (outdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"[done] {outdir}", flush=True)
     return 0 if summaries else 1
