@@ -85,6 +85,23 @@ def _structured_resistance_rows():
     return rows + [reject]
 
 
+def _failed_breakout_rows(held: bool = False):
+    rows = []
+    for i in range(25):
+        rows.append(_row(i, 100.0, 101.0, 99.0, 100.0, 1000))
+    rows.extend([
+        _row(25, 100.4, 101.8, 100.2, 101.45, 3000),  # close beyond resistance
+        _row(26, 101.45, 101.7, 100.8, 101.2, 2500),
+        _row(27, 101.2, 101.3, 100.3, 100.7, 2200),
+        _row(28, 100.7, 101.2, 100.1, 100.5, 1800),
+    ])
+    if held:
+        rows.append(_row(29, 101.4, 102.0, 101.2, 101.7, 2000))
+    else:
+        rows.append(_row(29, 101.2, 101.35, 100.2, 100.7, 1800))  # reclaimed below
+    return rows
+
+
 def test_structured_resistance_cluster_is_faded_short():
     rows = _structured_resistance_rows()
     s = AltResistanceFadeV2Strategy(_cfg())
@@ -144,6 +161,51 @@ def test_level_entry_flag_builds_limit_signal_without_changing_default_path():
     assert getattr(sig, "limit_validity_bars", 0) > 0
     assert sig.tp < sig.entry < sig.sl
     assert "level_entry" in sig.reason
+
+
+def test_failed_breakout_flag_fades_reclaimed_break_above():
+    rows = _failed_breakout_rows()
+    s = AltResistanceFadeV2Strategy(_cfg(
+        use_failed_breakout=True,
+        signal_lookback=20,
+        failed_breakout_level_lookback=20,
+        failed_breakout_event_window=5,
+        failed_breakout_buffer_atr=0.10,
+        min_reject_vol_mult=0.0,
+        min_touches=1,
+        min_upper_wick_frac=0.10,
+        resistance_touch_buffer_atr=0.60,
+        max_pierce_atr=1.20,
+        min_range_pct=1.0,
+    ))
+    s._last_tf_ts = int(float(rows[-2][0]))
+
+    sig = s.maybe_signal(_Store(rows), int(float(rows[-1][0])) + 3_600_000, 101.2, 101.35, 100.2, 100.7, 1800)
+
+    assert sig is not None, s.last_no_signal_reason
+    assert sig.side == "short"
+    assert "source=failed_breakout" in sig.reason
+
+
+def test_failed_breakout_flag_does_not_fade_held_breakout():
+    rows = _failed_breakout_rows(held=True)
+    s = AltResistanceFadeV2Strategy(_cfg(
+        use_failed_breakout=True,
+        signal_lookback=20,
+        failed_breakout_level_lookback=20,
+        failed_breakout_event_window=5,
+        failed_breakout_buffer_atr=0.10,
+        min_reject_vol_mult=0.0,
+        min_touches=1,
+        resistance_touch_buffer_atr=0.60,
+        max_pierce_atr=1.20,
+    ))
+    s._last_tf_ts = int(float(rows[-2][0]))
+
+    sig = s.maybe_signal(_Store(rows), int(float(rows[-1][0])) + 3_600_000, 101.4, 102.0, 101.2, 101.7, 2000)
+
+    assert sig is None
+    assert s.last_no_signal_reason == "failed_breakout:no_failed_break"
 
 
 def test_run_portfolio_supports_alt_resistance_fade_v2():

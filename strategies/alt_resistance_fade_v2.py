@@ -16,6 +16,7 @@ from .alt_resistance_fade_v1 import (
 )
 from .signals import TradeSignal
 from bot.elder_filter import elder_bias as _elder_bias
+from bot.failed_breakout import failed_breakout as _failed_breakout
 from bot.level_entry import plan_level_entry as _plan_level_entry
 from bot.range_filter import range_state as _range_state
 from bot.retest_quality import score_retest as _score_retest
@@ -104,6 +105,12 @@ class AltResistanceFadeV2Config:
     range_require_all: bool = False
     use_retest_quality: bool = False
     retest_min_quality: float = 0.55
+    use_failed_breakout: bool = False
+    failed_breakout_level_lookback: int = 20
+    failed_breakout_event_window: int = 5
+    failed_breakout_buffer_atr: float = 0.15
+    failed_breakout_require_vol_fade: bool = False
+    failed_breakout_vol_window: int = 20
     use_elder_filter: bool = False
     elder_htf_tf: str = "240"
     elder_require_with_tide: bool = False
@@ -286,6 +293,12 @@ class AltResistanceFadeV2Strategy:
         c.range_require_all = _env_bool("ARF2_RANGE_REQUIRE_ALL", c.range_require_all)
         c.use_retest_quality = _env_bool("ARF2_USE_RETEST_QUALITY", c.use_retest_quality)
         c.retest_min_quality = _env_float("ARF2_RETEST_MIN_QUALITY", c.retest_min_quality)
+        c.use_failed_breakout = _env_bool("ARF2_USE_FAILED_BREAKOUT", c.use_failed_breakout)
+        c.failed_breakout_level_lookback = _env_int("ARF2_FAILED_BREAKOUT_LEVEL_LOOKBACK", c.failed_breakout_level_lookback)
+        c.failed_breakout_event_window = _env_int("ARF2_FAILED_BREAKOUT_EVENT_WINDOW", c.failed_breakout_event_window)
+        c.failed_breakout_buffer_atr = _env_float("ARF2_FAILED_BREAKOUT_BUFFER_ATR", c.failed_breakout_buffer_atr)
+        c.failed_breakout_require_vol_fade = _env_bool("ARF2_FAILED_BREAKOUT_REQUIRE_VOL_FADE", c.failed_breakout_require_vol_fade)
+        c.failed_breakout_vol_window = _env_int("ARF2_FAILED_BREAKOUT_VOL_WINDOW", c.failed_breakout_vol_window)
         c.use_elder_filter = _env_bool("ARF2_USE_ELDER_FILTER", c.use_elder_filter)
         c.elder_htf_tf = os.getenv("ARF2_ELDER_HTF_TF", c.elder_htf_tf)
         c.elder_require_with_tide = _env_bool("ARF2_ELDER_REQUIRE_WITH_TIDE", c.elder_require_with_tide)
@@ -536,6 +549,33 @@ class AltResistanceFadeV2Strategy:
             return False
         return True
 
+    def _failed_breakout_resistance(self, rows: List[list], atr: float) -> Optional[dict]:
+        c = self.cfg
+        fb = _failed_breakout(
+            rows,
+            level_lookback=max(5, int(c.failed_breakout_level_lookback)),
+            event_window=max(2, int(c.failed_breakout_event_window)),
+            buffer_atr=max(0.0, float(c.failed_breakout_buffer_atr)),
+            require_vol_fade=bool(c.failed_breakout_require_vol_fade),
+            vol_window=max(5, int(c.failed_breakout_vol_window)),
+            atr_value=atr,
+        )
+        if not fb.ok:
+            self._no_signal(f"failed_breakout:{fb.reason}")
+            return None
+        if not fb.short_ok:
+            self._no_signal(f"failed_breakout:{fb.reason}")
+            return None
+        return {
+            "level": float(fb.level),
+            "score": 1.0,
+            "touches": int(fb.reclaim_bars),
+            "last_idx": len(rows) - 1,
+            "source": "failed_breakout",
+            "vol_faded": bool(fb.vol_faded),
+            "direction": fb.direction,
+        }
+
     def _build_level_entry_signal(self, store, rows: List[list], resistance: dict, atr: float, reason: str) -> Optional[TradeSignal]:
         c = self.cfg
         plan = _plan_level_entry(
@@ -605,6 +645,13 @@ class AltResistanceFadeV2Strategy:
             c_need := self.cfg.signal_lookback + self.cfg.pivot_right + 3,
             self.cfg.signal_ema_period + self.cfg.rsi_period * 2 + 5,
             self.cfg.volume_avg_period + 5,
+            (
+                self.cfg.failed_breakout_level_lookback
+                + self.cfg.failed_breakout_event_window
+                + 2
+                if self.cfg.use_failed_breakout
+                else 0
+            ),
         )
         rows = store.fetch_klines(store.symbol, self.cfg.signal_tf, need) or []
         if len(rows) < max(10, min(need, c_need)):
@@ -639,9 +686,13 @@ class AltResistanceFadeV2Strategy:
         high_now = highs[-1]
         low_now = lows[-1]
         open_now = opens[-1]
-        resistance = self._select_resistance(history, atr, high_now)
+        if self.cfg.use_failed_breakout:
+            resistance = self._failed_breakout_resistance(rows, atr)
+        else:
+            resistance = self._select_resistance(history, atr, high_now)
         if not resistance:
-            self._no_signal("level_not_found")
+            if not self.last_no_signal_reason:
+                self._no_signal("level_not_found")
             return None
         level = float(resistance["level"])
         support = self._support_below(history, cur, atr)
