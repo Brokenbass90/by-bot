@@ -123,11 +123,26 @@ Best stable-looking rows:
 
 But earlier stack comparison said ATT1 short solo was stronger than ATT1+ARS1 package. Current additivity rows are positive, but not enough to override that conclusion without side/symbol/month breakdown.
 
+The best DD-controlled row is more relevant for canary:
+
+| run | trades | net | PF | WR | DD |
+|---|---:|---:|---:|---:|---:|
+| r068 | 284 | +19.17 | 1.300 | 56.7% | 6.61 |
+
+r068 composition:
+
+- ATT1 short: 257 trades, +19.32
+- ARS1: 27 trades, -0.15
+- Therefore ARS1 is not additive enough for live.
+- r068 env uses the reduced symbol set `BTC,SOL,LINK,LTC,DOT,SUI` and ATT1 geometry:
+  `MAX_PIVOT_AGE=24`, `MIN_R2=0.55`, `TOUCH_ATR=0.50`.
+
 Decision:
 
 - Keep live as `ATT1 short-only x0.10`.
 - Do **not** add ARS1 to live yet.
-- Next: pull server trades for top `r016` and compare ATT1-only vs ARS1 contribution by month/symbol/side.
+- Align the ATT1 canary env with r068 geometry, but keep risk tiny.
+- Next: live reload only after confirming `open_trades=0`.
 
 ## 5. Elder canonical rewrite
 
