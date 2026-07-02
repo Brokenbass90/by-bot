@@ -116,3 +116,9 @@ WF_AND_LIVE_HONEST_READ_2026_06_30_PM, этот queue.
 ## ДОБАВЛЕНО 2026-07-02 (weekly orchestrator)
 - НОВОЕ: bot/research_orchestrator.py — недельный ИИ-ревью (weekly_review->Proposal, format_proposal). Codex: scheduled раз/неделю -> собрать running sleeves (из decision_bus/edge_monitor) + новые кандидаты (из shadow-свипов) -> Proposal в TG на аппрув владельца. Ничего не авто-применять.
 - smart_grid: поставить в backtest->preflight->OOS gate (кандидат «каждый день»).
+
+## ДОБАВЛЕНО 2026-07-02 (smart_grid v2 + приоритеты)
+- НОВОЕ: bot/smart_grid.py v2 fee-aware+strong-flat. Codex: обновить адаптер strategies/smart_grid.py под новый API (grid step_pct/n_levels/kill-flatten/мульти-ордер) и RE-TEST backtest. НО приоритет выше: (1) ARF2 exhaustion/failed-breakout rewrite, (2) ATT1 strict OOS перед повышением риска. Сетка — ниже (тяжёлый эдж). Alpaca $500 = ближайший real-money.
+
+## ДОБАВЛЕНО 2026-07-02 (FX native — свипать)
+- НОВОЕ: bot/fx_setups.py — 4 FX-сетапа под массовый свип на demo-данных (Dukascopy/yfinance/OANDA). Codex: свип символы×сторона×сессии×параметры -> preflight -> wf_folds -> oos_selector; что прошло -> shadow. XAU round_level_sweep + session_breakout_retest первыми. reports/FX_NATIVE_PACKAGE_2026_07_02.md

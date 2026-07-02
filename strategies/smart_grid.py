@@ -55,10 +55,13 @@ def _env_bool(name: str, default: bool) -> bool:
 @dataclass
 class SmartGridConfig:
     lookback: int = 60
-    n_levels: int = 6
+    n_levels: int = 10
+    fee_bps: float = 6.0
+    fee_survival_mult: float = 3.0
     kill_buffer_atr: float = 0.75
     min_width_atr: float = 2.0
-    require_flat_regime: bool = True
+    require_strong_flat: bool = True
+    side: str = "both"
     allow_longs: bool = True
     allow_shorts: bool = True
     limit_validity_bars: int = 3
@@ -72,9 +75,18 @@ def _load_cfg() -> SmartGridConfig:
     c = SmartGridConfig()
     c.lookback = _env_int("SG_LOOKBACK", _env_int("SG_LOOKBACK_BARS", c.lookback))
     c.n_levels = _env_int("SG_LEVELS", c.n_levels)
+    c.fee_bps = _env_float("SG_FEE_BPS", c.fee_bps)
+    c.fee_survival_mult = _env_float("SG_FEE_SURVIVAL_MULT", c.fee_survival_mult)
     c.kill_buffer_atr = _env_float("SG_KILL_BUFFER_ATR", c.kill_buffer_atr)
     c.min_width_atr = _env_float("SG_MIN_WIDTH_ATR", c.min_width_atr)
-    c.require_flat_regime = _env_bool("SG_REQUIRE_FLAT_REGIME", c.require_flat_regime)
+    # Backward-compatible alias: old env/config name meant "only trade a flat".
+    c.require_strong_flat = _env_bool(
+        "SG_REQUIRE_STRONG_FLAT",
+        _env_bool("SG_REQUIRE_FLAT_REGIME", c.require_strong_flat),
+    )
+    c.side = (os.getenv("SG_SIDE") or c.side).strip().lower()
+    if c.side not in {"long", "short", "both"}:
+        c.side = "both"
     c.allow_longs = _env_bool("SG_ALLOW_LONGS", c.allow_longs)
     c.allow_shorts = _env_bool("SG_ALLOW_SHORTS", c.allow_shorts)
     c.limit_validity_bars = _env_int("SG_LIMIT_VALIDITY_BARS", c.limit_validity_bars)
@@ -135,6 +147,16 @@ class SmartGridStrategy:
         sig.limit_validity_bars = max(1, int(c.limit_validity_bars))
         return sig
 
+    def _planner_side(self) -> str:
+        c = self.cfg
+        if c.side in {"long", "short"}:
+            return c.side
+        if c.allow_longs and not c.allow_shorts:
+            return "long"
+        if c.allow_shorts and not c.allow_longs:
+            return "short"
+        return "both"
+
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0):
         # Protect against duplicate calls on the same bar in live/replay loops.
         ts_i = int(ts_ms)
@@ -156,9 +178,12 @@ class SmartGridStrategy:
             self.rows,
             lookback=self.cfg.lookback,
             n_levels=self.cfg.n_levels,
+            fee_bps=self.cfg.fee_bps,
+            fee_survival_mult=self.cfg.fee_survival_mult,
             kill_buffer_atr=self.cfg.kill_buffer_atr,
             min_width_atr=self.cfg.min_width_atr,
-            require_flat_regime=self.cfg.require_flat_regime,
+            require_strong_flat=self.cfg.require_strong_flat,
+            side=self._planner_side(),
         )
         if not g.active:
             self._no(g.reason or "grid_inactive")
@@ -181,7 +206,7 @@ class SmartGridStrategy:
                 entry,
                 sl,
                 tp,
-                f"smart_grid_long regime={g.regime} lower={g.lower:.6f} upper={g.upper:.6f} width_atr={g.extra.get('width_atr'):.2f}",
+                f"smart_grid_long regime={g.regime} lower={g.lower:.6f} upper={g.upper:.6f} width_atr={g.extra.get('width_atr'):.2f} step_pct={g.step_pct:.4f} levels={g.n_levels}",
             )
         elif price >= mid and self.cfg.allow_shorts and g.sell_levels:
             entry = min(g.sell_levels)
@@ -193,7 +218,7 @@ class SmartGridStrategy:
                 entry,
                 sl,
                 tp,
-                f"smart_grid_short regime={g.regime} lower={g.lower:.6f} upper={g.upper:.6f} width_atr={g.extra.get('width_atr'):.2f}",
+                f"smart_grid_short regime={g.regime} lower={g.lower:.6f} upper={g.upper:.6f} width_atr={g.extra.get('width_atr'):.2f} step_pct={g.step_pct:.4f} levels={g.n_levels}",
             )
         else:
             self._no("no_side_level")
@@ -203,4 +228,3 @@ class SmartGridStrategy:
             return None
         self._cooldown = max(0, int(self.cfg.cooldown_bars))
         return sig
-

@@ -255,3 +255,18 @@
 ## ДОБАВЛЕНО 2026-07-02 (research_orchestrator — недельный ИИ-ревью, Claude)
 - bot/research_orchestrator.py (6 тестов; фундамент 250): реализует видение «постоянный теневой поиск + ИИ под капотом + предложения раз в неделю». weekly_review компонует oos_selector+edge_monitor+champion_challenger+preflight -> Proposal: действия по рукавам (PROMOTE/DEMOTE/HOLD), ранг новых кандидатов (GATE_PASS/NO), shadow-retest-очередь. format_proposal -> человекочитаемо (для TG). РЕЛЬС: только ПРЕДЛАГАЕТ, человек одобряет; НЕ крутит риск/параметры сам. Демо: PROMOTE att1(healthy canary), DEMOTE arf2(degraded), smart_grid GATE_PASS.
 - Это капстоун управляющего слоя (не новый эдж). Codex: гонять раз в неделю (scheduled), слать Proposal в TG на аппрув.
+
+## ДОБАВЛЕНО 2026-07-02 (smart_grid v2 fee-aware, Claude)
+- bot/smart_grid.py ПЕРЕПИСАН под провал smoke (PF0.34/DD86). Два фикса: (1) STRONG-FLAT гейт через range_filter.is_range (не просто slope-flat), (2) FEE-AWARE шаг: grid step >= fee_survival_mult*round-trip-fee, иначе fee_infeasible->idle (сжимает n_levels пока шаг не перекроет комиссию). + kill-switch на пробой/high_vol. Тесты 7 зелёных (фундамент ~252). Демо: strong flat low fee -> grid 10 ур; high fee -> отказ.
+- НЕ доказан: нужен RE-TEST. Адаптер strategies/smart_grid.py должен честно реализовать МУЛЬТИ-ордер грид + kill-flatten + fee-aware шаг (v1 адаптер, вероятно, гридил в шум/тренд). Честно: сетки — тяжёлый эдж; ARF2 exhaustion вероятно выше по шансам.
+- ПОЗИТИВНОГО портфеля пока НЕТ: live только ATT1 short tiny canary (ждёт). Реальный первый плюс = Alpaca v38 (paper-доказан), ждёт $500.
+
+## ДОБАВЛЕНО 2026-07-02 (EDGE_HUNT — офенс по нашим козырям, Claude)
+- Разворот к активной охоте: дисциплина=не врать себе, НЕ перестраховка. Рабочий эдж не публичен -> ищем на СВОИХ данных. Козыри: (1) свой liq/OI/funding поток (H4 триггерный — НЕ тестирован на реале, #1 фронтир), (2) FX/CFD структурные ноги (не строили: XAU sweep, London/NY breakout-retest, session range, trend-pullback), (3) ИИ-майнер гипотез из decision_bus (в рельсах->OOS), (4) cross-exchange/basis. План: reports/EDGE_HUNT_2026_07_02.md. Приоритет: A H4 real-data, B FX native demo, C ИИ-майнер, D ATT1 strict OOS+символы.
+
+## ДОБАВЛЕНО 2026-07-02 (FX native пакет, Claude)
+- bot/fx_setups.py (7 тестов; фундамент 259): 4 родных FX-сетапа (session_range_fade, round_level_sweep, session_breakout_retest, trend_pullback) — композит наших технологий, сплит long/short, под свипы тысяч вариаций, все с news_session_filter. НЕ порт крипты. Данные бесплатные (demo). Спек: reports/FX_NATIVE_PACKAGE_2026_07_02.md.
+- Конвейер перебора: свип (символы×сторона×сессии×параметры) -> preflight -> wf_folds -> oos_selector. Offense: пробуем много/быстро, отбор по OOS. XAU round-sweep — топ-интерес.
+
+## ОБНОВЛЕНО 2026-07-02 (smart_grid side-split, Claude)
+- bot/smart_grid.py: добавлен параметр side (long=только биды/накопление лонга на дне; short=только аски; both). Теперь сетка делится long-only/short-only как все рукава -> отдельная статистика/гейт по стороне. 9 тестов зелёных (фундамент 261). FX/CFD: работает (тот же OHLC-контракт). Стабильные мажоры+золото = лучший дом для сетки (чистые ranges, тайт спреды -> fee-aware гейт проходит легче, каждая сторона свипается отдельно).

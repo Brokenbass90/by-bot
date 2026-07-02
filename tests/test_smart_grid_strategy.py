@@ -40,7 +40,7 @@ def test_adapter_emits_limit_signal_in_range():
             lookback=40,
             n_levels=4,
             min_width_atr=1.0,
-            require_flat_regime=False,
+            require_strong_flat=False,
             min_rr=0.1,
             max_stop_pct=0.20,
             cooldown_bars=0,
@@ -65,7 +65,7 @@ def test_adapter_blocks_trend_when_flat_required():
             lookback=40,
             n_levels=4,
             min_width_atr=1.0,
-            require_flat_regime=True,
+            require_strong_flat=True,
             cooldown_bars=0,
         )
     )
@@ -78,9 +78,49 @@ def test_adapter_blocks_trend_when_flat_required():
 
 
 def test_duplicate_bar_blocked():
-    s = SmartGridStrategy(SmartGridConfig(lookback=40, require_flat_regime=False))
+    s = SmartGridStrategy(SmartGridConfig(lookback=40, require_strong_flat=False))
     row = _range_rows(1)[0]
     assert s.maybe_signal(_Store(), int(row[0]), *row[1:]) is None
     assert s.maybe_signal(_Store(), int(row[0]), *row[1:]) is None
     assert s.last_no_signal_reason == "duplicate_bar"
 
+
+def test_adapter_passes_side_split_to_planner():
+    long_only = SmartGridStrategy(
+        SmartGridConfig(
+            lookback=40,
+            n_levels=4,
+            min_width_atr=1.0,
+            require_strong_flat=False,
+            side="long",
+            min_rr=0.1,
+            max_stop_pct=0.20,
+            cooldown_bars=0,
+        )
+    )
+    short_only = SmartGridStrategy(
+        SmartGridConfig(
+            lookback=40,
+            n_levels=4,
+            min_width_atr=1.0,
+            require_strong_flat=False,
+            side="short",
+            min_rr=0.1,
+            max_stop_pct=0.20,
+            cooldown_bars=0,
+        )
+    )
+
+    long_sides = set()
+    short_sides = set()
+    for r in _range_rows(seed=11):
+        sig_l = long_only.maybe_signal(_Store(), int(r[0]), *r[1:])
+        sig_s = short_only.maybe_signal(_Store(), int(r[0]), *r[1:])
+        if sig_l:
+            long_sides.add(sig_l.side)
+        if sig_s:
+            short_sides.add(sig_s.side)
+
+    assert long_sides <= {"long"}
+    assert short_sides <= {"short"}
+    assert long_sides or short_sides
