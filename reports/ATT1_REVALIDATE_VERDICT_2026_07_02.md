@@ -68,6 +68,20 @@ Verdict:
 - Next required gate before any risk increase: strict rolling-OOS with `wf_folds + oos_selector`, side-specific (`ATT1 short` separately from `ATT1 long`).
 - `ATT1 long` is not dead, but should be treated as a separate lower-priority sleeve because its PF is materially weaker.
 
+Fast temporal fold sanity on `r005` trades:
+
+| sleeve | folds | trades used | verdict | reason | median fold net | peak ratio |
+| --- | ---: | ---: | --- | --- | ---: | ---: |
+| all | 4 | 437 | PASS | robust_plateau | +9.29 | 1.22 |
+| short | 4 | 244 | PASS | robust_plateau | +5.27 | 2.93 |
+| long | 4 | 194 | FAIL | one_window_hero_peak_8.2 | +0.81 | 8.18 |
+
+Interpretation:
+
+- `ATT1 short` is the actionable crypto candidate.
+- `ATT1 long` should not be promoted from this evidence; it needs separate repair/OOS.
+- This temporal fold check is a sanity gate on fixed parameters, not a substitute for full rolling train/test selection.
+
 Operational note:
 
 - Current live risk should remain tiny until strict OOS passes.
