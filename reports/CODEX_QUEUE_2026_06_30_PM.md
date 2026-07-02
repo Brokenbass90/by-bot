@@ -122,3 +122,9 @@ WF_AND_LIVE_HONEST_READ_2026_06_30_PM, этот queue.
 
 ## ДОБАВЛЕНО 2026-07-02 (FX native — свипать)
 - НОВОЕ: bot/fx_setups.py — 4 FX-сетапа под массовый свип на demo-данных (Dukascopy/yfinance/OANDA). Codex: свип символы×сторона×сессии×параметры -> preflight -> wf_folds -> oos_selector; что прошло -> shadow. XAU round_level_sweep + session_breakout_retest первыми. reports/FX_NATIVE_PACKAGE_2026_07_02.md
+
+## ДОБАВЛЕНО 2026-07-02 (range_scanner + приоритеты)
+- НОВОЕ: bot/range_scanner.py — подбор правильных инструментов для сетки/range-ног (scan/best_ranging). Сетку запускать ТОЛЬКО на top-tradeable флетах. Приоритет: (1) дождаться ATT1 revalidate -> strict rolling-OOS (первый реальный earner?), (2) ARF2 exhaustion, (3) FX harness+свип (XAU round-sweep+session breakout, + smart_grid по мажорам/золоту с range_scanner+side-split), (4) H4 real-data. Сетке добавить range_scanner фильтр перед свипом.
+
+## ДОБАВЛЕНО 2026-07-02 (smart risk)
+- НОВОЕ: bot/risk_manager.py — умный анти-мартингейл риск (regime/health/drawdown/vol scalars + hard-cap). Вписать поверх position_sizing во все ноги; ATT1 после rolling-OOS повышать риск через smart_risk, а не фикс процентом.
