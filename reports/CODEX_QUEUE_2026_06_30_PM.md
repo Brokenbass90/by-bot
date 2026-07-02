@@ -128,3 +128,6 @@ WF_AND_LIVE_HONEST_READ_2026_06_30_PM, этот queue.
 
 ## ДОБАВЛЕНО 2026-07-02 (smart risk)
 - НОВОЕ: bot/risk_manager.py — умный анти-мартингейл риск (regime/health/drawdown/vol scalars + hard-cap). Вписать поверх position_sizing во все ноги; ATT1 после rolling-OOS повышать риск через smart_risk, а не фикс процентом.
+
+## ДОБАВЛЕНО 2026-07-02 (FX разблокирован — параллельный трек)
+- НОВОЕ: bot/fx_harness.py готов. FX БОЛЬШЕ НЕ В КОНЦЕ. Параллельно с ATT1 rolling-OOS: подать реальные FX-данные (EURUSD/GBPUSD/USDJPY/GBPJPY/XAUUSD) в fx_harness, свипать 4 fx_setups + smart_grid(мажоры/золото, side-split, range_scanner) -> preflight -> wf_folds -> oos_selector. XAU round_sweep + session_breakout первыми. Demo/zero-risk.

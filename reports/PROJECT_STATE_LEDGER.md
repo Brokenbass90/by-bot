@@ -279,3 +279,12 @@
 ## ДОБАВЛЕНО 2026-07-02 (risk_manager — умный гибкий риск, Claude)
 - bot/risk_manager.py (9 тестов; фундамент 276): адаптивный риск = base * regime * health * drawdown * vol, clamp[0,hard_cap]. АНТИ-МАРТИНГЕЙЛ: в просадке/degraded/high_vol РЕЖЕМ, не наращиваем. Блок в high_vol и halt. Общий для ATT1+сетки+портфеля. Композит regime_hmm+edge_monitor+position_sizing, в рельсах.
 - Codex: обернуть sizing каждого рукава smart_risk; ATT1 при повышении риска после rolling-OOS использовать smart_risk (гибко), не фиксированный процент.
+
+## ДОБАВЛЕНО 2026-07-02 (ATT1 short rolling-OOS пре-регистрация, Claude)
+- ATT1 revalidate 12/12 PASS. SIDE-РАЗРЕЗ (наш сплит сработал): short +30.19R PF1.52 folds PASS = кандидат; long +6.48R PF1.12 = one-window hero -> НА СКАМЕЙКУ (retest-очередь). Без сплита вывели бы дохлый long.
+- Пре-регистрация strict rolling-OOS ATT1 short + план разгона риска через smart_risk: reports/ATT1_SHORT_ROLLING_OOS_PREREG_2026_07_02.md. Пороги: >=3/4 фолда, медиана>0, робастность>0, N>=40/>=8-фолд, fee-stress, DD<=6R. PASS -> пошаговый разгон 0.10->0.25->0.5->0.75 через smart_risk, каждый шаг подтверждается live healthy (edge_monitor), анти-мартингейл, hard_cap<=1%.
+- Стройка на паузе (25 модулей, 276 тестов). Следующее — прогоны Codex + мой честный разбор, не новый код.
+
+## ДОБАВЛЕНО 2026-07-02 (fx_harness — FX разблокирован, Claude)
+- bot/fx_harness.py (6 тестов; фундамент 282): бэктест-харнесс для fx_setups. Прогоняет сетап по FX-барам, открывает трейд с fixed-R (SL=sl_atr*ATR, TP=tp_rr*R), резолвит на ПОСЛЕДУЮЩИХ барах (SL-first), комиссии в R, cooldown/без перехлёста. Выдаёт trades -> wf_folds -> oos_selector. Причинно. Единственный блокер FX (harness) СНЯТ.
+- ПЕРЕПРИОРИТЕТ: FX больше НЕ в конце очереди. Это ПАРАЛЛЕЛЬНЫЙ трек (бесплатные demo-данные, свой харнесс, не конкурирует с ATT1 за крипто-компьют). Codex: подать реальные FX-данные (Dukascopy/yfinance/OANDA demo) в fx_harness, свипать XAU round_sweep + session_breakout + range_fade + smart_grid(мажоры) через preflight->wf_folds->oos_selector.
