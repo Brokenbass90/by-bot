@@ -21,7 +21,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from bot.fx_harness import backtest_fx_setup, summarize_trades
+from bot.candle_coverage import assess_coverage
+from bot.fx_harness import backtest_fx_setup, cost_feasibility, summarize_trades
 from bot.fx_setups import (
     round_level_sweep,
     session_breakout_retest,
@@ -56,6 +57,78 @@ def _load_rows(path: Path) -> List[List[float]]:
             except Exception:
                 continue
     return rows
+
+
+def _coverage_rows(rows: Sequence[Sequence[float]]) -> List[List[float]]:
+    """Normalize FX CSV rows for candle_coverage.
+
+    The FX harness historically uses CSV timestamps in seconds. candle_coverage's
+    contract is milliseconds (same as crypto/backtest rows), so normalize only
+    for the data-quality gate and leave the trading harness untouched.
+    """
+    out: List[List[float]] = []
+    for r in rows:
+        try:
+            ts = float(r[0])
+            if ts < 10_000_000_000:  # seconds -> ms
+                ts *= 1000.0
+            out.append([ts, float(r[1]), float(r[2]), float(r[3]), float(r[4]), float(r[5]) if len(r) > 5 else 0.0])
+        except Exception:
+            continue
+    return out
+
+
+def _aggregate_rows_seconds(rows: Sequence[Sequence[float]], interval_min: int) -> List[List[float]]:
+    """Aggregate second-timestamped M5 FX rows while preserving seconds.
+
+    FX session filters intentionally expect epoch seconds. Do not use the common
+    Candle(ms) aggregator here or London/NY/Asia session logic shifts by 1000x.
+    """
+    interval = int(interval_min)
+    if interval <= 5:
+        return [list(r) for r in rows]
+    bucket_s = interval * 60
+    out: List[List[float]] = []
+    cur_bucket: int | None = None
+    chunk: List[Sequence[float]] = []
+    for r in rows:
+        try:
+            ts = int(float(r[0]))
+        except Exception:
+            continue
+        bucket = (ts // bucket_s) * bucket_s
+        if cur_bucket is None:
+            cur_bucket = bucket
+        if bucket != cur_bucket:
+            if chunk:
+                out.append([
+                    float(cur_bucket),
+                    float(chunk[0][1]),
+                    max(float(x[2]) for x in chunk),
+                    min(float(x[3]) for x in chunk),
+                    float(chunk[-1][4]),
+                    sum(float(x[5]) if len(x) > 5 else 0.0 for x in chunk),
+                ])
+            chunk = [r]
+            cur_bucket = bucket
+        else:
+            chunk.append(r)
+    if chunk and cur_bucket is not None:
+        out.append([
+            float(cur_bucket),
+            float(chunk[0][1]),
+            max(float(x[2]) for x in chunk),
+            min(float(x[3]) for x in chunk),
+            float(chunk[-1][4]),
+            sum(float(x[5]) if len(x) > 5 else 0.0 for x in chunk),
+        ])
+    return out
+
+
+def _default_market_closure_gap_bars(interval_min: int) -> int:
+    # FX weekend is roughly 48h. Use ~75% of that as the scheduled-closure
+    # threshold so ordinary feed holes still fail but weekends are not counted.
+    return max(4, int(round(0.75 * (48 * 60 / max(1, int(interval_min))))))
 
 
 def _pf(rs: Sequence[float]) -> float:
@@ -99,6 +172,16 @@ def main() -> int:
     ap.add_argument("--fee-bps", type=float, default=1.0)
     ap.add_argument("--slippage-bps", type=float, default=0.5)
     ap.add_argument("--tail-rows", type=int, default=0, help="Use only the latest N rows per symbol; 0 = all.")
+    ap.add_argument("--interval-min", type=int, default=5, help="Aggregate M5 input to this interval before screening, preserving FX second timestamps.")
+    ap.add_argument("--disable-coverage-gate", action="store_true", help="Research override: run even when candle coverage fails.")
+    ap.add_argument("--disable-cost-gate", action="store_true", help="Research override: run even when round-trip cost is too large in R.")
+    ap.add_argument("--coverage-interval-min", type=int, default=0, help="Override coverage interval; default = --interval-min.")
+    ap.add_argument("--min-coverage", type=float, default=0.995)
+    ap.add_argument("--max-gap-bars", type=int, default=12)
+    ap.add_argument("--max-flat-frac", type=float, default=0.05)
+    ap.add_argument("--min-coverage-bars", type=int, default=200)
+    ap.add_argument("--market-closure-gap-bars", type=int, default=0, help="FX scheduled-closure threshold after aggregation; 0 = auto by --interval-min.")
+    ap.add_argument("--max-fee-r", type=float, default=0.25)
     args = ap.parse_args()
 
     pairs = [x.strip().upper() for x in args.pairs.split(",") if x.strip()]
@@ -113,6 +196,7 @@ def main() -> int:
 
     summaries: List[Dict[str, Any]] = []
     all_trades: List[Dict[str, Any]] = []
+    coverage_rows_out: List[Dict[str, Any]] = []
     for pair in pairs:
         path = data_dir / f"{pair}_M5.csv"
         if not path.exists():
@@ -121,8 +205,42 @@ def main() -> int:
         rows = _load_rows(path)
         if args.tail_rows and args.tail_rows > 0:
             rows = rows[-int(args.tail_rows):]
-        if len(rows) < 1000:
+        rows = _aggregate_rows_seconds(rows, args.interval_min)
+        if len(rows) < int(args.min_coverage_bars):
             print(f"[skip] {pair} too few rows: {len(rows)}", flush=True)
+            continue
+        coverage_interval_min = int(args.coverage_interval_min or args.interval_min)
+        closure_gap_bars = int(args.market_closure_gap_bars or _default_market_closure_gap_bars(coverage_interval_min))
+        cov = assess_coverage(
+            _coverage_rows(rows),
+            symbol=pair,
+            interval_min=coverage_interval_min,
+            min_coverage=args.min_coverage,
+            max_gap_bars_allowed=args.max_gap_bars,
+            max_flat_frac=args.max_flat_frac,
+            min_bars=args.min_coverage_bars,
+            market_closure_gap_bars=closure_gap_bars,
+        )
+        coverage_rows_out.append({
+            "symbol": pair,
+            "coverage_ok": bool(cov.ok),
+            "coverage": cov.coverage,
+            "actual_bars": cov.actual_bars,
+            "expected_bars": cov.expected_bars,
+            "n_gaps": cov.n_gaps,
+            "max_gap_bars": cov.max_gap_bars,
+            "flat_frac": cov.flat_frac,
+            "dup_bars": cov.dup_bars,
+            "coverage_reasons": ";".join(cov.reasons),
+        })
+        print(
+            f"[coverage] {pair} ok={cov.ok} coverage={cov.coverage} "
+            f"gaps={cov.n_gaps} max_gap={cov.max_gap_bars} flat={cov.flat_frac} "
+            f"reasons={';'.join(cov.reasons)}",
+            flush=True,
+        )
+        if not cov.ok and not args.disable_coverage_gate:
+            print(f"[skip] {pair} coverage_gate_failed", flush=True)
             continue
         for setup_name in setup_names:
             setup_fn = SETUPS.get(setup_name)
@@ -134,8 +252,43 @@ def main() -> int:
             for tp_rr in tp_rrs:
                 for sl_atr in sl_atrs:
                     for max_hold in max_holds:
+                        cf = cost_feasibility(
+                            rows,
+                            sl_atr=sl_atr,
+                            fee_bps=args.fee_bps,
+                            slippage_bps=args.slippage_bps,
+                            max_fee_r=args.max_fee_r,
+                        )
+                        if not cf["feasible"] and not args.disable_cost_gate:
+                            summaries.append({
+                                "symbol": pair,
+                                "setup": setup_name,
+                                "tp_rr": tp_rr,
+                                "sl_atr": sl_atr,
+                                "max_hold": max_hold,
+                                "coverage_ok": bool(cov.ok),
+                                "coverage_reasons": ";".join(cov.reasons),
+                                "cost_ok": False,
+                                "fee_r": cf["fee_r"],
+                                "cost_reason": cf["reason"],
+                                "skip_reason": "cost_infeasible",
+                                "trades": 0,
+                                "net_r": 0.0,
+                                "pf": 0.0,
+                                "win_rate": 0.0,
+                                "folds_positive": 0,
+                                "min_fold_trades": 0,
+                                "preflight_go": False,
+                                "preflight_reasons": cf["reason"],
+                            })
+                            print(
+                                f"[skip] {pair} {setup_name} rr={tp_rr} sl={sl_atr} "
+                                f"hold={max_hold} cost_infeasible feeR={cf['fee_r']} reason={cf['reason']}",
+                                flush=True,
+                            )
+                            continue
                         print(
-                            f"[start] {pair} {setup_name} rr={tp_rr} sl={sl_atr} hold={max_hold} rows={len(rows)}",
+                            f"[start] {pair} {setup_name} rr={tp_rr} sl={sl_atr} hold={max_hold} rows={len(rows)} interval={args.interval_min}",
                             flush=True,
                         )
                         trades = backtest_fx_setup(
@@ -174,6 +327,12 @@ def main() -> int:
                             "tp_rr": tp_rr,
                             "sl_atr": sl_atr,
                             "max_hold": max_hold,
+                            "coverage_ok": bool(cov.ok),
+                            "coverage_reasons": ";".join(cov.reasons),
+                            "cost_ok": bool(cf["feasible"]),
+                            "fee_r": cf["fee_r"],
+                            "cost_reason": cf["reason"],
+                            "skip_reason": "",
                             "trades": int(s["trades"]),
                             "net_r": float(s["net_r"]),
                             "pf": pf,
@@ -192,6 +351,11 @@ def main() -> int:
 
     summary_path = outdir / "summary.csv"
     trades_path = outdir / "trades.csv"
+    coverage_path = outdir / "coverage.csv"
+    if coverage_rows_out:
+        with coverage_path.open("w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=list(coverage_rows_out[0].keys()))
+            w.writeheader(); w.writerows(coverage_rows_out)
     if summaries:
         with summary_path.open("w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=list(summaries[0].keys()))
@@ -212,17 +376,21 @@ def main() -> int:
         "",
         f"- rows: {len(summaries)}",
         f"- data_dir: `{data_dir}`",
+        f"- interval_min: `{args.interval_min}`",
+        f"- coverage_gate: `{not args.disable_coverage_gate}`",
+        f"- cost_gate: `{not args.disable_cost_gate}`",
         "",
-        "| symbol | setup | rr | sl_atr | hold | trades | netR | PF | WR | folds+ | preflight |",
-        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|",
+        "| symbol | setup | rr | sl_atr | hold | coverage | cost | feeR | skip | trades | netR | PF | WR | folds+ | preflight |",
+        "|---|---|---:|---:|---:|---|---|---:|---|---:|---:|---:|---:|---:|---|",
     ]
     for r in top:
         lines.append(
             f"| {r['symbol']} | {r['setup']} | {r['tp_rr']} | {r['sl_atr']} | {r['max_hold']} | "
+            f"{r.get('coverage_ok')} | {r.get('cost_ok')} | {_fmt(r.get('fee_r'))} | {r.get('skip_reason', '')} | "
             f"{r['trades']} | {_fmt(r['net_r'])} | {_fmt(r['pf'])} | {_fmt(r['win_rate'])} | "
             f"{r['folds_positive']}/4 | {r['preflight_go']} |"
         )
-    lines += ["", "## Outputs", "", f"- `{summary_path}`", f"- `{trades_path}`"]
+    lines += ["", "## Outputs", "", f"- `{summary_path}`", f"- `{coverage_path}`", f"- `{trades_path}`"]
     (outdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"[done] {outdir}", flush=True)
     return 0 if summaries else 1

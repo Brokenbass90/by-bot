@@ -22,6 +22,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from backtest.engine import Candle, aggregate_candles_to_interval
+from bot.candle_coverage import assess_coverage
+from bot.fx_harness import cost_feasibility
 from bot.market_context import atr, CLOSE, HIGH, LOW, TS
 from bot.preflight_check import preflight
 from bot.structure_break import structure_break
@@ -192,6 +194,14 @@ def main() -> int:
     ap.add_argument("--right", type=int, default=2)
     ap.add_argument("--fee-bps", type=float, default=6.0)
     ap.add_argument("--slippage-bps", type=float, default=2.0)
+    ap.add_argument("--disable-coverage-gate", action="store_true", help="Research override: run even when candle coverage fails.")
+    ap.add_argument("--disable-cost-gate", action="store_true", help="Research override for FX: run even when round-trip cost is too large in R.")
+    ap.add_argument("--min-coverage", type=float, default=0.995)
+    ap.add_argument("--max-gap-bars", type=int, default=12)
+    ap.add_argument("--max-flat-frac", type=float, default=0.05)
+    ap.add_argument("--min-coverage-bars", type=int, default=200)
+    ap.add_argument("--market-closure-gap-bars", type=int, default=40, help="FX scheduled-closure threshold after interval aggregation; 40 ~= weekend on H1.")
+    ap.add_argument("--max-fee-r", type=float, default=0.25)
     ap.add_argument("--outdir", default="")
     args = ap.parse_args()
 
@@ -203,6 +213,7 @@ def main() -> int:
     summaries: List[Dict[str, Any]] = []
     symbol_summaries: List[Dict[str, Any]] = []
     row_cache: Dict[str, List[List[float]]] = {}
+    coverage_rows_out: List[Dict[str, Any]] = []
     for sym in _csv(args.symbols):
         if args.market == "crypto":
             rows = _load_crypto_rows(Path(args.crypto_cache), sym, args.days, args.interval_min)
@@ -210,6 +221,37 @@ def main() -> int:
             rows = _load_fx_rows(Path(args.fx_data_dir), sym, args.tail_rows, args.interval_min)
         if not rows or len(rows) < 200:
             print(f"[skip] {sym} rows={0 if not rows else len(rows)}", flush=True)
+            continue
+        cov = assess_coverage(
+            rows,
+            symbol=sym,
+            interval_min=args.interval_min,
+            min_coverage=args.min_coverage,
+            max_gap_bars_allowed=args.max_gap_bars,
+            max_flat_frac=args.max_flat_frac,
+            min_bars=args.min_coverage_bars,
+            market_closure_gap_bars=args.market_closure_gap_bars if args.market == "fx" else None,
+        )
+        coverage_rows_out.append({
+            "symbol": sym,
+            "coverage_ok": bool(cov.ok),
+            "coverage": cov.coverage,
+            "actual_bars": cov.actual_bars,
+            "expected_bars": cov.expected_bars,
+            "n_gaps": cov.n_gaps,
+            "max_gap_bars": cov.max_gap_bars,
+            "flat_frac": cov.flat_frac,
+            "dup_bars": cov.dup_bars,
+            "coverage_reasons": ";".join(cov.reasons),
+        })
+        print(
+            f"[coverage] {sym} ok={cov.ok} coverage={cov.coverage} "
+            f"gaps={cov.n_gaps} max_gap={cov.max_gap_bars} flat={cov.flat_frac} "
+            f"reasons={';'.join(cov.reasons)}",
+            flush=True,
+        )
+        if not cov.ok and not args.disable_coverage_gate:
+            print(f"[skip] {sym} coverage_gate_failed", flush=True)
             continue
         row_cache[sym] = rows
         print(f"[load] {sym} rows={len(rows)}", flush=True)
@@ -223,7 +265,22 @@ def main() -> int:
                             for cooldown_bars in [int(x) for x in args.cooldown_bars.split(",") if x.strip()]:
                                 trades: List[Dict[str, Any]] = []
                                 per_symbol_trades: Dict[str, List[Dict[str, Any]]] = {}
+                                cost_skipped_symbols = 0
+                                cost_reasons: List[str] = []
                                 for sym, rows in row_cache.items():
+                                    if args.market == "fx" and not args.disable_cost_gate:
+                                        cf = cost_feasibility(
+                                            rows,
+                                            sl_atr=sl_atr,
+                                            fee_bps=args.fee_bps,
+                                            slippage_bps=args.slippage_bps,
+                                            max_fee_r=args.max_fee_r,
+                                        )
+                                        if not cf["feasible"]:
+                                            cost_skipped_symbols += 1
+                                            cost_reasons.append(f"{sym}:{cf['reason']}")
+                                            per_symbol_trades[sym] = []
+                                            continue
                                     cur_trades = _run_one(
                                     sym, rows,
                                     event_filter=event,
@@ -273,6 +330,10 @@ def main() -> int:
                                     "symbols": active_symbols,
                                     "positive_symbols": positive_symbols,
                                     "top_symbol_frac": round(top_symbol_frac, 4),
+                                    "coverage_ok_symbols": len(row_cache),
+                                    "cost_ok": cost_skipped_symbols == 0,
+                                    "cost_skipped_symbols": cost_skipped_symbols,
+                                    "cost_reasons": ";".join(cost_reasons[:12]),
                                     "preflight_go": pf_report.go,
                                     "preflight_reasons": ";".join(pf_report.reasons),
                                 }
@@ -286,10 +347,14 @@ def main() -> int:
                                 print(
                                     f"[run] {tag} trades={row['trades']} netR={row['net_r']} "
                                     f"pf={row['pf']:.3f} pos_symbols={positive_symbols}/{active_symbols} "
-                                    f"preflight={row['preflight_go']}",
+                                    f"cost_skipped={cost_skipped_symbols} preflight={row['preflight_go']}",
                                     flush=True,
                                 )
 
+    if coverage_rows_out:
+        with (outdir / "coverage.csv").open("w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=list(coverage_rows_out[0].keys()))
+            w.writeheader(); w.writerows(coverage_rows_out)
     if summaries:
         with (outdir / "summary.csv").open("w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=list(summaries[0].keys()))
@@ -315,19 +380,22 @@ def main() -> int:
         f"- market: `{args.market}`",
         f"- interval_min: `{args.interval_min}`",
         f"- rows: {len(summaries)}",
+        f"- coverage_gate: `{not args.disable_coverage_gate}`",
+        f"- cost_gate: `{not args.disable_cost_gate if args.market == 'fx' else False}`",
         "",
-        "| event | side | rr | sl_atr | hold | buffer | cd | trades | netR | PF | WR | symbols+ | concentration | preflight |",
-        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
+        "| event | side | rr | sl_atr | hold | buffer | cd | cost | cost_skip | trades | netR | PF | WR | symbols+ | concentration | preflight |",
+        "|---|---|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---|",
     ]
     for r in top:
         pf = float(r["pf"])
         pf_s = "inf" if math.isinf(pf) else f"{pf:.3f}"
         lines.append(
             f"| {r['event']} | {r['side']} | {r['tp_rr']} | {r['sl_atr']} | {r['max_hold']} | {r['buffer_atr']} | {r['cooldown_bars']} | "
+            f"{r.get('cost_ok')} | {r.get('cost_skipped_symbols')} | "
             f"{r['trades']} | {r['net_r']:.3f} | {pf_s} | {r['win_rate']:.3f} | "
             f"{r['positive_symbols']}/{r['symbols']} | {r['top_symbol_frac']:.2%} | {r['preflight_go']} |"
         )
-    lines += ["", "## Outputs", "", f"- `{outdir / 'summary.csv'}`", f"- `{outdir / 'per_symbol.csv'}`", f"- `{outdir / 'trades.csv'}`"]
+    lines += ["", "## Outputs", "", f"- `{outdir / 'summary.csv'}`", f"- `{outdir / 'coverage.csv'}`", f"- `{outdir / 'per_symbol.csv'}`", f"- `{outdir / 'trades.csv'}`"]
     (outdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"[done] {outdir}", flush=True)
     return 0 if summaries else 1

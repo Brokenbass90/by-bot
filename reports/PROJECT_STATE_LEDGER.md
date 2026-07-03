@@ -395,3 +395,9 @@
 - Обновлены `reports/CLAUDE_NEW_CHAT_HANDOFF_2026_07_03.md` и `reports/NEW_CHAT_KICKOFF_PROMPT.md`: новый чат стартует с актуальной рамки `data/cost gate first`, а не со старых тем 30 июня.
 - Главная инструкция новому чату: не разбирать PF до `candle_coverage` и `cost_feasibility`; live остаётся только ATT1 short r001 risk 0.10; range/pila/FX/XAU пересматривать только после backfill/clean coverage.
 - Логистика: если Mac уснёт, локальные jobs могут встать/отвалиться. Вечером первым делом проверять `screen -ls` и логи, а не предполагать, что ночные прогоны реально крутились.
+
+## ДОБАВЛЕНО 2026-07-03 (Codex: coverage/cost gates wired into runners)
+- `scripts/run_fx_native_harness.py`: теперь перед прогоном пишет `coverage.csv`, проверяет `candle_coverage`, проверяет `cost_feasibility` по каждой `sl_atr`, и cost-infeasible комбинации НЕ бэктестит (`skip_reason=cost_infeasible`, `fee_r` в summary). Добавлен `--interval-min`: M5 можно честно агрегировать в H1/H4 с сохранением FX timestamps в секундах для session logic.
+- `scripts/run_structure_break_diagnostic.py`: теперь пишет `coverage.csv`, фильтрует символы с плохим coverage, а для FX дополнительно пропускает cost-infeasible symbol×sl_atr до симуляции. Crypto structure symbols сегодня coverage-clean, FX M5 — нет.
+- Smoke: FX EURUSD M5 `session_range_fade` теперь skip cost-infeasible вместо PF; crypto BTC H1 structure пишет coverage и summary. Тесты P0: `13 passed`.
+- Практический вывод: старые запущенные FX M5 скрининги считаются obsolete/diagnostic-only. Новые meaningful FX-прогоны запускать H1/H4 через этот runner.
