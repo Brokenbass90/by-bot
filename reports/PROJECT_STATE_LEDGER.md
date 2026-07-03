@@ -327,3 +327,26 @@
 - Codex: ARF2 failed_breakout short DOGE/XRP/ONDO = +25.87R PF1.65, fee-stress держит (16bps PF1.41), обе половины+90d+, 3/3 символа. НО символы выбраны после анализа (selection bias).
 - Claude OOS-symbol чек: НЕ чистый оверфит (свежие символы слабо+: SOL/ADA/AVAX/SUI+, DOT-), но эдж ТОНЬШЕ +25R. Лучше SpikeFade/InPlay (те вне выборки разваливались).
 - Пре-регистрация gate: reports/ARF2_FAILED_BREAKOUT_GATE_PREREG_2026_07_03.md. ГЛАВНОЕ = OOS-СИМВОЛЫ (тот же config на свежем наборе, >=50%+, не 1 символ). + temporal + fee-stress + реалистичный размер (не +25R). PASS -> shadow -> canary + ОБЯЗАТЕЛЬНО regime_hmm-гейт (bear_chop-зависимость) + correlation-cap (ATT1-short+ARF2-short коррелированы).
+
+## ДОБАВЛЕНО 2026-07-03 (план: manual gate -> dynamic live selection, Claude)
+- Разделение: gate по OOS-символам = проверка ОБОБЩЕНИЯ (фикс. свежий набор, манульно). Live = ДИНАМИЧЕСКИЙ symbol-agnostic отбор (сканер по УСЛОВИЮ, не список монет). Примитив есть — range_scanner; для failed-breakout/структуры сделать аналог КОГДА эдж подтвердится на OOS (не раньше — преждевременно).
+- Порядок ввода: ATT1 short (live) -> ARF2 (gate->canary, ~сутки если OOS держит) -> range/пила блок (ASB2/ACB1/ARF2-split + dynamic range_scanner = ЧАСТОТА) -> пробои через confirm+retest+regime -> InPlay (редкий, позже) -> FX native (2-3 недели).
+- Реалистично «3 рукава» на след. неделе = ATT1 + ARF2(если PASS) + Alpaca($500 владелец). FX догоняет позже.
+
+## ДОБАВЛЕНО 2026-07-03 (блупринт живой управляющей петли, Claude)
+- reports/LIVE_MANAGEMENT_LOOP_BLUEPRINT_2026_07_03.md: как собрать динамику+ИИ-надзор в прод. Вход рукава = динамич. отбор символов (scanner по условию, НЕ хардкод) -> сигнал -> regime/конфлюэнс гейты -> level_entry -> smart_risk -> exposure-cap -> decision_bus. Фон: edge_monitor (throttle/halt). Еженедельно: research_orchestrator Proposal в TG на аппрув владельца. Не деградирует (динамика+decay-монитор+ротация), всё в рельсах.
+- ЧЕСТНО: управляющий слой ПРОТЕСТИРОВАН (294 теста), но в живой петле НЕ крутится. Вписывать по мере live-рукавов, начиная с ARF2 (динамич. символы, не фикс DOGE/XRP/ONDO).
+
+## ПРИНЦИП РАЗВИТИЯ (зафиксировано 2026-07-03, Claude) — против искажения/оверфита
+- Технологии сейчас НЕ подключены к live -> сломать не могут. Вписывание: ОДИН рукав за раз, за флагом, с тестами, деплой после OK владельца, canary tiny. 294 теста = регрессия-сетка.
+- Отбор монет = АВТОМАТ+ДИНАМИКА (сканер по условию, не список). ИИ-аппрув = на уровне СТРАТЕГИИ раз/неделю (не по монете). Частое/объективное — автомат; редкое/высокоставочное — человек.
+- НЕ включать всё разом (исказит картину, оверфит). Метод: (1) одно изменение за раз с A/B-замером; (2) decision_bus для АТРИБУЦИИ (что реально помогает); (3) технология ЗАСЛУЖИВАЕТ включение улучшением OOS/live, иначе в ящике; (4) смещение к ПРОСТОТЕ (меньше активных фильтров = робастнее). 26 модулей = ящик инструментов, берём выборочно под рукав, НЕ "включить всё".
+
+## ДОБАВЛЕНО 2026-07-03 (МАСТЕР-КАРТА технологий + план фаз, Claude)
+- reports/MASTER_MAP_AND_PLAN_2026_07_03.md: карта «зачем каждая технология» (find->select->execute->size->prove->monitor->improve, ни одна не лишняя) + 4 фазы: Ф1 первые рукава (ATT1/ARF2/Alpaca) -> Ф2 частота (range блок+dynamic scanner) -> Ф3 сборка портфеля+живая петля -> Ф4 умное улучшение технологиями (A/B + decision_bus атрибуция + research_orchestrator еженедельно, в рельсах). НЕ отказываемся от технологий — берём выборочно, включаем по результату. ИИ-анализ бота = edge_monitor(онлайн)+research_orchestrator(еженедельно).
+
+## ДОБАВЛЕНО 2026-07-03 (ARF2 OOS-symbol gate — NO-GO, Codex)
+- Пре-регистрированный главный риск ARF2 подтвердился: символы DOGE/XRP/ONDO были выбраны после анализа. OOS-symbol gate на независимом наборе `BTC/SOL/LINK/ADA/AVAX/DOT/SUI/LTC/ATOM/BNB/BCH/XLM/1000PEPE/HYPE/TAO` провалился.
+- Результат OOS: `failed_breakout_short` 132 сделки, -15.48R, PF0.83; `failed_breakout_volfade_short` 112 сделок, -11.62R, PF0.85. При этом selected DOGE/XRP/ONDO оставались +25.87R PF1.65. Вывод: focused результат selection-inflated, в canary/live НЕ пускать.
+- ARF2 failed-breakout возвращается в research. Следующий ремонт только через symbol-agnostic динамический scanner/gate + regime split + quality score, потом broad preflight -> OOS. Не использовать `level_entry` для reclaim-entry failed-breakout.
+- Отчёт: reports/ARF2_FAILED_BREAKOUT_OOS_SYMBOL_VERDICT_2026_07_03.md.
