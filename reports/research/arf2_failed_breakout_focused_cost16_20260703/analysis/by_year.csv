@@ -1,0 +1,5 @@
+trades,net_r,pf,win_rate,avg_r,tag,year
+49,12.4176,1.4205286358434528,0.5102,0.2534,failed_breakout_short,2025
+24,5.5945,1.3901766753939173,0.5,0.2331,failed_breakout_short,2026
+38,6.3712,1.2730717759830343,0.5,0.1677,failed_breakout_volfade_short,2025
+22,5.9797,1.4520319711964969,0.5,0.2718,failed_breakout_volfade_short,2026

@@ -1,0 +1,7 @@
+trades,net_r,pf,win_rate,avg_r,tag,symbol
+27,13.4529,1.916187015175085,0.5556,0.4983,failed_breakout_short,DOGEUSDT
+25,2.9053,1.1872702093446474,0.48,0.1162,failed_breakout_short,ONDOUSDT
+21,1.6539,1.1209916371941455,0.4762,0.0788,failed_breakout_short,XRPUSDT
+22,7.5407,1.5638427243254491,0.5,0.3428,failed_breakout_volfade_short,DOGEUSDT
+19,7.3478,1.77208596924293,0.5789,0.3867,failed_breakout_volfade_short,ONDOUSDT
+19,-2.5377,0.8143511040321659,0.4211,-0.1336,failed_breakout_volfade_short,XRPUSDT

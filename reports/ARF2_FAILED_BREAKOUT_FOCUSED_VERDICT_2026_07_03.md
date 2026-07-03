@@ -23,6 +23,13 @@ Fee/slippage stress at `12 bps` per side still survives:
 | failed_breakout_short | 73 | +21.94 | 1.52 | 50.7% |
 | failed_breakout_volfade_short | 60 | +15.64 | 1.45 | 50.0% |
 
+Stress at `16 bps` per side also survives:
+
+| variant | trades | netR | PF | WR |
+|---|---:|---:|---:|---:|
+| failed_breakout_short | 73 | +18.01 | 1.41 | 50.7% |
+| failed_breakout_volfade_short | 60 | +12.35 | 1.34 | 50.0% |
+
 Temporal sanity on the stressed run:
 
 | variant | split | trades | netR | PF |
@@ -70,3 +77,5 @@ Only after that: shadow/canary discussion.
 - `reports/research/arf2_failed_breakout_focused_20260703/analysis/summary.md`
 - `reports/research/arf2_failed_breakout_focused_cost12_20260703/summary.md`
 - `reports/research/arf2_failed_breakout_focused_cost12_20260703/analysis/summary.md`
+- `reports/research/arf2_failed_breakout_focused_cost16_20260703/summary.md`
+- `reports/research/arf2_failed_breakout_focused_cost16_20260703/analysis/summary.md`
