@@ -390,3 +390,8 @@
 - bot/fx_harness.py: + cost_feasibility() (4 теста) — fee_r > 0.25R => run cost_infeasible, PF НЕ читать. Обязателен ПЕРЕД каждым FX-прогоном.
 - ЖИВОЙ ЗАМЕР локального FX-кэша (closure-aware): EURUSD/GBPUSD M5 cov 99.8% НО EURUSD flat=14.6%, AUDUSD flat=14.8% (мёртвые бары = источник коллапса ATR); EURJPY cov 98.5%; XAUUSD H1 cov 93.4% (494 гэпа!) — ВСЕ прошлые XAU-вердикты вынесены на дырявых данных. NO-GO оставляем (дыры режут в обе стороны), но после backfill XAU round_sweep/BOS заслуживает ре-скрининга.
 - Тесты: 737 passed. Урок дня: у нас уже ДВА случая за сутки, когда «стратегия провалилась» = «данные/издержки врут» (missing_candles live, EURUSD M5). Отсюда порядок: coverage gate + cost guard ВПЕРЕДИ любых новых свипов.
+
+## ДОБАВЛЕНО 2026-07-03 evening (handoff обновлён для переезда)
+- Обновлены `reports/CLAUDE_NEW_CHAT_HANDOFF_2026_07_03.md` и `reports/NEW_CHAT_KICKOFF_PROMPT.md`: новый чат стартует с актуальной рамки `data/cost gate first`, а не со старых тем 30 июня.
+- Главная инструкция новому чату: не разбирать PF до `candle_coverage` и `cost_feasibility`; live остаётся только ATT1 short r001 risk 0.10; range/pila/FX/XAU пересматривать только после backfill/clean coverage.
+- Логистика: если Mac уснёт, локальные jobs могут встать/отвалиться. Вечером первым делом проверять `screen -ls` и логи, а не предполагать, что ночные прогоны реально крутились.
