@@ -401,3 +401,6 @@
 - `scripts/run_structure_break_diagnostic.py`: теперь пишет `coverage.csv`, фильтрует символы с плохим coverage, а для FX дополнительно пропускает cost-infeasible symbol×sl_atr до симуляции. Crypto structure symbols сегодня coverage-clean, FX M5 — нет.
 - Smoke: FX EURUSD M5 `session_range_fade` теперь skip cost-infeasible вместо PF; crypto BTC H1 structure пишет coverage и summary. Тесты P0: `13 passed`.
 - Практический вывод: старые запущенные FX M5 скрининги считаются obsolete/diagnostic-only. Новые meaningful FX-прогоны запускать H1/H4 через этот runner.
+
+## ДОБАВЛЕНО 2026-07-03 (карта «видение владельца -> исполнение», Claude)
+- reports/VISION_TO_EXECUTION_MAP_2026_07_03.md: видение владельца (все стратегии идеально + ИИ на пульсе + side-split + наклонные/горизонтальные уровни + перенос на FX-боковики) замаплено на модули и фазы. Почти под каждый пункт модуль ЕСТЬ; разрыв не в стройке, а в wiring+доказательстве. Стандарт «идеально» зафиксирован: тесты/причинность -> флаги/атрибуция/breaker -> OOS+cross-symbol+side-split -> данные через coverage+cost гейты. ИИ-подстройка ТОЛЬКО в рельсах. «Идеальная стратегия без эджа = идеальный слив».

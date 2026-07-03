@@ -1,0 +1,12 @@
+symbol,coverage_ok,coverage,actual_bars,expected_bars,n_gaps,max_gap_bars,flat_frac,dup_bars,coverage_reasons
+EURUSD,True,0.998585,1411,1413,1,2,0.007087,0,
+GBPUSD,True,0.998585,1411,1413,1,2,0.007796,0,
+USDJPY,True,0.998577,1403,1405,1,2,0.001426,0,
+AUDUSD,True,0.996454,1405,1410,2,3,0.024911,0,
+USDCAD,False,0.985341,8335,8459,4,35,0.0,0,coverage_below_0.9853;gap_over_35_bars
+USDCHF,False,0.981508,1380,1406,7,7,0.007971,0,coverage_below_0.9815
+EURJPY,False,0.985353,8342,8466,4,35,0.0,0,coverage_below_0.9854;gap_over_35_bars
+GBPJPY,False,0.985353,8342,8466,4,35,0.0,0,coverage_below_0.9854;gap_over_35_bars
+AUDJPY,False,0.98479,8352,8481,9,35,0.0,0,coverage_below_0.9848;gap_over_35_bars
+CADJPY,False,0.98156,1384,1410,6,10,0.009393,0,coverage_below_0.9816
+XAUUSD,False,0.965986,1136,1176,40,1,0.0,0,coverage_below_0.9660
