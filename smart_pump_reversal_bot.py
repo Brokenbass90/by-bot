@@ -78,6 +78,7 @@ from bot.env_helpers import (
 )
 from bot.utils import now_s, _to_float_safe, _today_ymd, base_from_usdt, dist_pct
 from bot.health_gate import gate as _health_gate  # equity-curve live entry gate
+from bot import att1_live_wiring as _att1_wire  # decision_bus + edge_monitor (flags default OFF)
 from bot.allowlist_watcher import AllowlistWatcher as _AllowlistWatcher  # dynamic allowlist hot-reload
 from bot.auth import (
     AUTH_DISABLED_UNTIL, AUTH_LAST_ERROR, BOT_START_TS,
@@ -7343,6 +7344,8 @@ def _finalize_and_report_closed(tr, sym: str):
         exit_price=float(exit_px) if exit_px is not None else None,
     )
     _db_log_event("CLOSE", tr, sym, pnl=pnl_closed, fees=fee_sum, exit_px=exit_px)
+    _att1_wire.record_outcome(tr, sym, pnl=float(pnl_closed or 0.0),
+                              exit_reason=str(getattr(tr, "close_reason", "") or ""))
     _db_log_ml_close(tr, sym, pnl=pnl_closed, fees=fee_sum)
     _maybe_schedule_ai_trade_review(tr, sym, pnl_closed, fee_sum, exit_px)
     # A losing range close invalidates the current level thesis. Keep the
@@ -10573,6 +10576,7 @@ async def try_att1_entry_async(symbol: str, price: float):
     # Shadow mode — log signal but never place order
     if ATT1_RISK_MULT <= 0:
         _diag_inc("att1_shadow_signal")
+        _att1_wire.record_skip(symbol, str(sig.side), "shadow_signal")
         side_s = "long" if sig.side == "long" else "short"
         tg_skip_throttled(
             "att1", symbol, "shadow",
@@ -10609,6 +10613,7 @@ async def try_att1_entry_async(symbol: str, price: float):
     breaker = _att1_breaker_state()
     if breaker.get("blocked"):
         _diag_inc("att1_skip_breaker")
+        _att1_wire.record_skip(symbol, str(sig.side), "skip_breaker", breaker_reason=str(breaker.get("reason", "")))
         alert_cooldown = max(300, int(os.getenv("ATT1_BREAKER_ALERT_COOLDOWN_SEC", "1800") or 1800))
         tg_trade_throttled(
             f"att1_breaker:block:{symbol}",
@@ -10627,6 +10632,7 @@ async def try_att1_entry_async(symbol: str, price: float):
     effective_att1_risk_mult = float(ATT1_RISK_MULT) * breaker_mult
     dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=effective_att1_risk_mult)
     qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
+    minqty_fallback_used = False
     if dyn_usd > 0:
         qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
     if qty_floor <= 0 and ATT1_ALLOW_MINQTY_FALLBACK:
@@ -10642,20 +10648,24 @@ async def try_att1_entry_async(symbol: str, price: float):
             qty_floor = fallback_qty
             notional_real = fallback_notional
             reason = ""
+            minqty_fallback_used = True
         elif not reason:
             reason = fallback_reason
     if dyn_usd <= 0 and qty_floor <= 0:
         _diag_inc("att1_skip_notional_small")
+        _att1_wire.record_skip(symbol, str(sig.side), "skip_notional_small", stop_pct=float(stop_pct))
         tg_skip_throttled("att1", symbol, "notional_small", f"🟡 ATT1 SKIP {symbol}: stop={stop_pct:.2f}% -> notional too small")
         return
     if qty_floor <= 0:
         _diag_inc("att1_skip_minqty")
+        _att1_wire.record_skip(symbol, str(sig.side), "skip_minqty", detail=str(reason))
         tg_skip_throttled("att1", symbol, f"minqty:{reason}", f"🟡 ATT1 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)
     if not can_add:
         _diag_inc("att1_skip_open_risk")
+        _att1_wire.record_skip(symbol, str(sig.side), "skip_open_risk", total_risk_pct=float(total_risk_pct), cap_risk_pct=float(cap_risk_pct))
         tg_trade_throttled(
             f"portfolio_risk:att1:{symbol}",
             f"🟡 ATT1 SKIP {symbol}: open-risk {total_risk_pct:.2f}% > cap {cap_risk_pct:.2f}%",
@@ -10696,6 +10706,13 @@ async def try_att1_entry_async(symbol: str, price: float):
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
         tr.att1_breaker_mult = float(breaker_mult)
+        tr.att1_bus_id = _att1_wire.record_entry(
+            symbol=symbol, side=("long" if side == "Buy" else "short"),
+            entry=float(entry), sl=float(sl_r), tp=(float(tp_r) if tp_r is not None else None),
+            breaker_mult=float(breaker_mult), effective_risk_mult=float(effective_att1_risk_mult),
+            stop_pct=float(stop_pct), minqty_fallback=bool(minqty_fallback_used),
+            notional_usd=float(notional_real), qty=float(q),
+        )
         apply_runner_state(tr, sig, q, use_runner=use_runner)
         TRADES[("Bybit", symbol)] = tr
 
@@ -15103,6 +15120,10 @@ async def pulse():
                 last_ws_health_check_ts = now
         except Exception as e:
             log_error(f"strategy-stats pulse fail: {e}")
+        try:
+            _att1_wire.maybe_edge_check(TRADE_DB_PATH, notify=tg_send)
+        except Exception as e:
+            log_error(f"att1 edge check fail: {e}")
         # ── Heartbeat file (external watchdog reads this) ──────────────────────
         try:
             _clear_stale_entry_reservations()
