@@ -51,6 +51,9 @@ def _summ(rs: Sequence[float]) -> Dict[str, Any]:
 def _tag(row: Dict[str, Any]) -> str:
     if row.get("tag"):
         return str(row["tag"])
+    if row.get("variant"):
+        side = str(row.get("side") or "").strip()
+        return str(row["variant"]) + (f"_{side}" if side else "")
     parts = [
         str(row.get("setup") or row.get("strategy") or "unknown"),
         str(row.get("side") or "side"),
