@@ -50,3 +50,14 @@
    retest_quality/regime + cooldown) и только ПОСЛЕ range-блока — не соло-сырьё.
 5. Порядок: coverage backfill -> range/bounce repair (dynamic scanner) -> строгий OOS. Параллельно P1 wiring
    ATT1 по спеку ATT1_DECISION_BUS_EDGE_MONITOR_WIRING_SPEC_2026_07_03.md.
+
+## СРОЧНОЕ ДОПОЛНЕНИЕ (ревью clean-гейтов, Claude ~14:00)
+- Wiring 2ca0c18 проверен по диффу: КОРРЕКТНО (closure авто-порог, крипта closure=None, cost-гейт
+  FX-only с override, coverage.csv). Логи подтверждают: 36 комбо честно срезаны cost-гейтом,
+  coverage ok по всем символам. Хорошая работа.
+- НО: fx_h1_clean_gate идёт на rows~1400 H1 = ~59 торговых дней (агрегация короткого M5-файла).
+  Это наш известный грабель «60d мало»: редкие сетапы не наберут N -> предрешённый NO-GO по частоте.
+  В data_cache/forex_1h лежит ~17.2k H1 баров ~ 2.4 ГОДА (coverage EURUSD 99.6% уже проверен).
+  => ПЕРЕЗАПУСТИТЬ fx_h1_clean_gate на data_cache/forex_1h БЕЗ агрегации (--interval-min 60,
+  coverage closure=40). Крипто-прогон не трогать, он на полной истории (8641x60m = 360d).
+- Экономика: лучше потерять 30 мин сейчас, чем 6 часов компьюта на неинформативный вердикт.
