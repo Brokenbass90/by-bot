@@ -1,0 +1,3 @@
+trades,net_r,pf,win_rate,avg_r,tag,symbols,positive_symbols,years,positive_years,months,positive_months,worst_month_r,top_symbol_frac
+73,25.8658,1.64772384394283,0.5068,0.3543,failed_breakout_short,3,3,2,2,12,7,-3.4172,0.3699
+60,18.9214,1.5685512198222662,0.5,0.3154,failed_breakout_volfade_short,3,2,2,2,11,8,-3.9613,0.3667
