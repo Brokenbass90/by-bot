@@ -350,3 +350,20 @@
 - Результат OOS: `failed_breakout_short` 132 сделки, -15.48R, PF0.83; `failed_breakout_volfade_short` 112 сделок, -11.62R, PF0.85. При этом selected DOGE/XRP/ONDO оставались +25.87R PF1.65. Вывод: focused результат selection-inflated, в canary/live НЕ пускать.
 - ARF2 failed-breakout возвращается в research. Следующий ремонт только через symbol-agnostic динамический scanner/gate + regime split + quality score, потом broad preflight -> OOS. Не использовать `level_entry` для reclaim-entry failed-breakout.
 - Отчёт: reports/ARF2_FAILED_BREAKOUT_OOS_SYMBOL_VERDICT_2026_07_03.md.
+
+## ДОБАВЛЕНО 2026-07-03 (ARF2 OOS-symbol gate FAIL — победа процесса, Claude)
+- ARF2 failed-breakout: выбранные DOGE/XRP/ONDO +25.87R PF1.65, НО независимые OOS-символы -15.48R PF0.83 (volfade -11.62R). SELECTION BIAS пойман gate'ом ДО денег. ARF2 НЕ в live/canary. Ни доллара не слито на раздутой цифре. Это ровно зачем нужен OOS-symbol gate.
+- Портфель: live только ATT1 r001 x0.10 (ждёт наклонку). Второй крипто-рукав теперь от crypto_structure_break_cd_gate или следующего range/bounce ремонта, НЕ от старого ARF2.
+
+## ДОБАВЛЕНО 2026-07-03 (новый чат: аудит перед разбором гейтов, Claude)
+- Гейты crypto_structure_break_cd_gate_20260703 / fx_native_gate_20260703 созданы 09:33-09:34, диры ПУСТЫЕ = в полёте у Codex. Разбор — как только появятся файлы. Также пустые: xau_structure_break_long_20260703, structure_break_crypto_short_20260703, structure_break_crypto_cooldown_overnight_20260702 (Codex: подтвердить — бегут или умерли).
+- XAU round_level_sweep LONG (37 сделок, 876d H1) = NO-GO: ВСЕ 18 комбо минусовые (лучшее -2.83R PF0.89), short ещё хуже (-6..-10R PF0.26-0.56). Вчерашний «пульс» (+3.57R на 12 сделках) умер при добавлении N — классика tiny-N. round_sweep ЗАКРЫТ по обеим сторонам.
+- FX BOS/CHoCH cooldown overnight: вся сетка минусовая (лучшее -0.86R PF0.98) — подтверждает no-go. FX-надежда остаётся только trend_pullback/session-сетапы в бегущем fx_native_gate.
+- АУДИТ ГЕЙТ-МАШИНЕРИИ: (1) oos_selector строгий путь ужесточён ВЕРНО (gate-скрипт: 40 total/8 per fold, robustness<=0 -> reject, median<=0 -> reject) — фикс от 07-02 применён. (2) НО run_structure_break_diagnostic.py = IN-SAMPLE свип (cooldown-грид+per-symbol+preflight 40/8/3 есть, wf_folds/oos_selector НЕТ); run_fx_native_harness.py = грубые 4 хроно-фолда без purge/embargo. => Сегодняшние «gate»-прогоны считать СКРИНИНГОМ: их PASS не даёт canary, а даёт билет на строгий wf_folds+oos_selector+OOS-symbol набор (как ARF2). Не переименовывать скрининг в гейт.
+- ATT1 r001 canary config проверен: risk 0.10, short-only, breaker+expiry 2026-07-20, все непруфнутые рукава занулены — корректно. Live-статус из локального репо НЕ верифицируем (trades.db устарел, журнал на сервере). Codex: прислать журнал/скрин live-канарейки в следующем статусе.
+
+## ДОБАВЛЕНО 2026-07-03 (аудит перед вторым рукавом, Claude)
+- ТЕСТЫ ВЕРИФИЦИРОВАНЫ: 726 passed, 0 реальных красных (3 «падения» trade_startup_recovery/trade_sync = отсутствие websockets в песочнице, после установки зелёные). Исключены из прогона только файлы, требующие данных/env (alpaca backtests, liquidations collector).
+- ATT1 LIVE-ПУТЬ ОТАУДИРОВАН, вердикт ЧИСТО: shadow при risk<=0; breaker блокирует вход с TG-алертом; soft-режим режет риск; sizing = ATT1_RISK_MULT x breaker_mult; при ошибке breaker'а fail-safe БЛОК; canary expiry 2026-07-20 жёстко блокирует до ручного продления. Breaker слушает live id att1_trendline_touch (не бэктест-id) — корректно.
+- НЮАНС (не баг): ATT1_ALLOW_MINQTY_FALLBACK=True default, cap 1.8x — на мелком счёте эффективный риск сделки может быть ~0.18 вместо 0.10. Codex: замерить долю fallback-входов; если >30% — учитывать при решении о разгоне риска (live-статистика бежит «горячее» номинала).
+- Очередь Codex: CODEX_QUEUE_2026_07_03.md (статус пустых гейт-дир, скрининг≠гейт терминология, строгий путь после скрининга, ATT1 журнал+fallback, закрытые направления).
