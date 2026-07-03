@@ -378,3 +378,8 @@
 - Серверный cache также не содержит dynamic range symbols: APE/APT/BERA/DASH/DYDX/GALA/JUP/OP/POL/PYTH/RENDER = 0 files. Core symbols есть (ADA/BTC/ETH/DOGE).
 - Интерпретация: это не доказывает, что live-бот входил без свечей, но доказывает, что MFE/MAE/live-vs-backtest forensics по range/pila сейчас ненадёжны. Range/pila остаётся risk=0 до candle-coverage/backfill gate: 0% missing по canary symbol set -> 180/360d OOS/additivity -> только потом tiny canary.
 - Отчёт: reports/LIVE_FORENSICS_CANDLE_COVERAGE_2026_07_03.md.
+
+## ДОБАВЛЕНО 2026-07-03 (raw structure/FX screening fast-fail, Codex)
+- Raw crypto BOS/CHoCH screens stopped early: BOS-long, BOS-short and CHoCH-short all opened with broad large negative expectancy (examples: BOS-long -939R PF0.60, BOS-short -574R PF0.75, CHoCH-short -206R PF0.78). Частота есть, edge нет. Дальше только с quality/regime фильтром, не raw grid.
+- Naive FX session_range_fade stopped early: EURUSD 1111 trades, -3061R, PF0.00. FX требует setup audit; текущие trend_pullback/round/session_breakout дали ноль сигналов на первых majors, range_fade даёт частый минус.
+- Отчёт: reports/STRUCTURE_AND_FX_SCREENING_FAST_FAIL_2026_07_03.md.
