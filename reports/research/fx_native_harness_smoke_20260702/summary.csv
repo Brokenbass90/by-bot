@@ -1,0 +1,17 @@
+symbol,setup,tp_rr,sl_atr,max_hold,trades,net_r,pf,win_rate,folds_positive,min_fold_trades,preflight_go,preflight_reasons
+XAUUSD,round_level_sweep,1.5,0.8,120,4,-0.323,0.881,0.5,2,1,False,too_few_total_4<30;thin_fold_0<5
+XAUUSD,round_level_sweep,1.5,1.0,120,4,-0.058,0.977,0.5,2,1,False,too_few_total_4<30;thin_fold_0<5
+XAUUSD,round_level_sweep,2.0,0.8,120,4,0.677,1.25,0.5,2,1,False,too_few_total_4<30;thin_fold_0<5
+XAUUSD,round_level_sweep,2.0,1.0,120,4,0.942,1.366,0.5,2,1,False,too_few_total_4<30;thin_fold_0<5
+XAUUSD,session_breakout_retest,1.5,0.8,120,0,0.0,0.0,0.0,0,0,False,no_signals
+XAUUSD,session_breakout_retest,1.5,1.0,120,0,0.0,0.0,0.0,0,0,False,no_signals
+XAUUSD,session_breakout_retest,2.0,0.8,120,0,0.0,0.0,0.0,0,0,False,no_signals
+XAUUSD,session_breakout_retest,2.0,1.0,120,0,0.0,0.0,0.0,0,0,False,no_signals
+EURUSD,round_level_sweep,1.5,0.8,120,0,0.0,0.0,0.0,0,0,False,no_signals
+EURUSD,round_level_sweep,1.5,1.0,120,0,0.0,0.0,0.0,0,0,False,no_signals
+EURUSD,round_level_sweep,2.0,0.8,120,0,0.0,0.0,0.0,0,0,False,no_signals
+EURUSD,round_level_sweep,2.0,1.0,120,0,0.0,0.0,0.0,0,0,False,no_signals
+EURUSD,session_breakout_retest,1.5,0.8,120,0,0.0,0.0,0.0,0,0,False,no_signals
+EURUSD,session_breakout_retest,1.5,1.0,120,0,0.0,0.0,0.0,0,0,False,no_signals
+EURUSD,session_breakout_retest,2.0,0.8,120,0,0.0,0.0,0.0,0,0,False,no_signals
+EURUSD,session_breakout_retest,2.0,1.0,120,0,0.0,0.0,0.0,0,0,False,no_signals

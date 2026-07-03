@@ -1,0 +1,17 @@
+entry_ts,exit_ts,r,side,symbol,setup,tp_rr,sl_atr,max_hold
+1781832000.0,1781833800.0,-1.3504,long,XAUUSD,round_level_sweep,1.5,0.8,120
+1782382500.0,1782384900.0,-1.3627,long,XAUUSD,round_level_sweep,1.5,0.8,120
+1782442500.0,1782443400.0,1.2694,long,XAUUSD,round_level_sweep,1.5,0.8,120
+1782875700.0,1782876600.0,1.1212,short,XAUUSD,round_level_sweep,1.5,0.8,120
+1781832000.0,1781834700.0,-1.2804,long,XAUUSD,round_level_sweep,1.5,1.0,120
+1782382500.0,1782386100.0,-1.2901,long,XAUUSD,round_level_sweep,1.5,1.0,120
+1782442500.0,1782445200.0,1.3155,long,XAUUSD,round_level_sweep,1.5,1.0,120
+1782875700.0,1782876600.0,1.197,short,XAUUSD,round_level_sweep,1.5,1.0,120
+1781832000.0,1781833800.0,-1.3504,long,XAUUSD,round_level_sweep,2.0,0.8,120
+1782382500.0,1782384900.0,-1.3627,long,XAUUSD,round_level_sweep,2.0,0.8,120
+1782442500.0,1782445200.0,1.7694,long,XAUUSD,round_level_sweep,2.0,0.8,120
+1782875700.0,1782876600.0,1.6212,short,XAUUSD,round_level_sweep,2.0,0.8,120
+1781832000.0,1781834700.0,-1.2804,long,XAUUSD,round_level_sweep,2.0,1.0,120
+1782382500.0,1782386100.0,-1.2901,long,XAUUSD,round_level_sweep,2.0,1.0,120
+1782442500.0,1782446100.0,1.8155,long,XAUUSD,round_level_sweep,2.0,1.0,120
+1782875700.0,1782878400.0,1.697,short,XAUUSD,round_level_sweep,2.0,1.0,120

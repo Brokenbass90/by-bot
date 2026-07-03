@@ -1,0 +1,5 @@
+market,event,side,tp_rr,sl_atr,max_hold,buffer_atr,cooldown_bars,trades,net_r,pf,win_rate,symbols,positive_symbols,top_symbol_frac,preflight_go,preflight_reasons
+crypto,bos,long,1.5,1.0,6,0.1,0,106,-37.3018,0.5168198174625587,0.3585,2,0,0.5283,False,low_symbol_coverage_2<3;low_quality_pf_0.52<0.80
+crypto,bos,long,1.5,1.0,6,0.1,10,61,-16.5043,0.598814258072671,0.377,2,0,0.541,False,low_symbol_coverage_2<3;low_quality_pf_0.60<0.80
+crypto,bos,short,1.5,1.0,6,0.1,0,127,-21.9493,0.7186575113149432,0.4409,2,0,0.5197,False,low_symbol_coverage_2<3;low_quality_pf_0.72<0.80
+crypto,bos,short,1.5,1.0,6,0.1,10,69,-12.3513,0.7093674996470423,0.4348,2,0,0.5072,False,thin_fold_6<8;low_symbol_coverage_2<3;low_quality_pf_0.71<0.80

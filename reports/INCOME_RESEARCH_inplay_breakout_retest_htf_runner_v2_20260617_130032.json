@@ -1,0 +1,713 @@
+{
+  "generated_at_utc": "2026-06-19T01:32:46.992890+00:00",
+  "source": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260618_210427_inplay_breakout_retest_htf_runner_v2",
+  "top": 12,
+  "max_concurrent": 3,
+  "bear_months": [
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04"
+  ],
+  "candidates": [
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_000507_inplay_breakout_retest_htf_runner_v2_r129",
+      "rank_row": {
+        "run_id": "129",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r129",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_000507_inplay_breakout_retest_htf_runner_v2_r129",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.2\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"36\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.2\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"0.8\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r129",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_000613_inplay_breakout_retest_htf_runner_v2_r130",
+      "rank_row": {
+        "run_id": "130",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r130",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_000613_inplay_breakout_retest_htf_runner_v2_r130",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.2\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"72\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.2\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"0.8\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r130",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_000720_inplay_breakout_retest_htf_runner_v2_r131",
+      "rank_row": {
+        "run_id": "131",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r131",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_000720_inplay_breakout_retest_htf_runner_v2_r131",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.2\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"36\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.35\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"0.8\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r131",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_000825_inplay_breakout_retest_htf_runner_v2_r132",
+      "rank_row": {
+        "run_id": "132",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r132",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_000825_inplay_breakout_retest_htf_runner_v2_r132",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.2\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"72\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.35\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"0.8\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r132",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_000933_inplay_breakout_retest_htf_runner_v2_r133",
+      "rank_row": {
+        "run_id": "133",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r133",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_000933_inplay_breakout_retest_htf_runner_v2_r133",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.8\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"36\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.2\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"0.8\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r133",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001038_inplay_breakout_retest_htf_runner_v2_r134",
+      "rank_row": {
+        "run_id": "134",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r134",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001038_inplay_breakout_retest_htf_runner_v2_r134",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.8\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"72\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.2\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"0.8\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r134",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001145_inplay_breakout_retest_htf_runner_v2_r135",
+      "rank_row": {
+        "run_id": "135",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r135",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001145_inplay_breakout_retest_htf_runner_v2_r135",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.8\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"36\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.35\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"0.8\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r135",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001251_inplay_breakout_retest_htf_runner_v2_r136",
+      "rank_row": {
+        "run_id": "136",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r136",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001251_inplay_breakout_retest_htf_runner_v2_r136",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.8\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"72\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.35\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"0.8\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r136",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001358_inplay_breakout_retest_htf_runner_v2_r137",
+      "rank_row": {
+        "run_id": "137",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r137",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001358_inplay_breakout_retest_htf_runner_v2_r137",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.2\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"36\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.2\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"1.2\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r137",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001504_inplay_breakout_retest_htf_runner_v2_r138",
+      "rank_row": {
+        "run_id": "138",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r138",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001504_inplay_breakout_retest_htf_runner_v2_r138",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.2\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"72\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.2\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"1.2\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r138",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001611_inplay_breakout_retest_htf_runner_v2_r139",
+      "rank_row": {
+        "run_id": "139",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r139",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001611_inplay_breakout_retest_htf_runner_v2_r139",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.2\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"36\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.35\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"1.2\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r139",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001717_inplay_breakout_retest_htf_runner_v2_r140",
+      "rank_row": {
+        "run_id": "140",
+        "tag": "inplay_breakout_retest_htf_runner_v2_r140",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_001717_inplay_breakout_retest_htf_runner_v2_r140",
+        "passed": "False",
+        "fail_reasons": "trades<35;pf<1.15;net<4.0",
+        "score": "-1000.0",
+        "trades": "0",
+        "net_pnl": "0.0",
+        "profit_factor": "0.0",
+        "winrate": "0.0",
+        "max_drawdown": "0.0",
+        "negative_months": "0",
+        "positive_months": "0",
+        "max_negative_streak": "0",
+        "worst_month_pnl": "0.0",
+        "overrides_json": "{\"BREAKOUT_BUFFER_ATR\": \"0.05\", \"BREAKOUT_DIRECTION_MODE\": \"short\", \"BREAKOUT_IMPULSE_BODY_MIN_FRAC\": \"0.45\", \"BREAKOUT_IMPULSE_VOL_MULT\": \"1.4\", \"BREAKOUT_MAX_DIST_HTF_MULT\": \"1.2\", \"BREAKOUT_MAX_LATE_VS_REF_PCT\": \"0.35\", \"BREAKOUT_MAX_RETEST_BARS\": \"72\", \"BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT\": \"0.05\", \"BREAKOUT_RECLAIM_ATR\": \"0.08\", \"BREAKOUT_RETEST_TOUCH_ATR\": \"0.35\", \"BREAKOUT_RR\": \"3.0\", \"BREAKOUT_SL_HTF_MULT\": \"1.2\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT\"}"
+      },
+      "summary": {
+        "tag": "inplay_breakout_retest_htf_runner_v2_r140",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT",
+        "strategies": "inplay_breakout",
+        "trades": "0",
+        "net_pnl": "0.00",
+        "profit_factor": "0.000",
+        "winrate": "0.000",
+        "max_drawdown": "0.0000",
+        "ending_equity": "100.00"
+      },
+      "monthly": {},
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 0,
+        "months": 0,
+        "positive_months": 0,
+        "bear_months": [],
+        "red_bear_months": [],
+        "reason": "net negative"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "stacked": {
+          "trades": 0,
+          "expectancy_R": 0.0,
+          "profit_factor": 0.0,
+          "win_pct": 0.0
+        },
+        "dropped": 0,
+        "verdict": "STACK BLOCKS ALL \u2014 control-plane too restrictive"
+      }
+    }
+  ]
+}

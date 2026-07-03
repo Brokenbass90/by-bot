@@ -1,0 +1,2 @@
+strategy,symbol,status,elapsed_sec,trades,net_pnl,profit_factor,winrate,max_drawdown,negative_months,run_dir,tail
+alt_bear_breakdown_v1,DOTUSDT,TIMEOUT>180s,180.0,,,,,,0,backtest_runs/portfolio_20260524_184131_candidate180_bear_breakdown_tail_20260524_alt_bear_breakdown_v1_DOTUSDT_180d,

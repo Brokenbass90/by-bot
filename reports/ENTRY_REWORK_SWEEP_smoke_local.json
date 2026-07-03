@@ -1,0 +1,193 @@
+{
+  "generated_at_utc": "2026-06-15T18:18:38.908062Z",
+  "signal_tf": "60",
+  "regime_tf": "240",
+  "windows": 2,
+  "fee_bps": 10.0,
+  "strategies": {
+    "ASB1": {
+      "symbols": [
+        "PIXELUSDT",
+        "FLOWUSDT"
+      ],
+      "combos": [
+        {
+          "overrides": {
+            "ASB1_SIGNAL_TF": "60",
+            "ASB1_REGIME_TF": "240",
+            "ASB1_REGIME_MAX_SLOPE_PCT": "1.8",
+            "ASB1_REGIME_MAX_ATR_PCT": "6.5",
+            "ASB1_MIN_RANGE_PCT": "3.5",
+            "ASB1_COOLDOWN_BARS_5M": "36"
+          },
+          "score": {
+            "symbols_tested": 2,
+            "symbols_with_trades": 0,
+            "candidate_like_symbols": 0,
+            "total_trades": 0,
+            "avg_weighted_expectancy_R": 0.0,
+            "candidate_like": []
+          },
+          "symbols": [
+            {
+              "symbol": "PIXELUSDT",
+              "windows_with_trades": 0,
+              "positive_windows": 0,
+              "positive_frac": 0.0,
+              "total_trades": 0,
+              "weighted_expectancy_R": 0.0,
+              "mean_window_pf": null,
+              "min_window_pf": null,
+              "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)"
+            },
+            {
+              "symbol": "FLOWUSDT",
+              "windows_with_trades": 0,
+              "positive_windows": 0,
+              "positive_frac": 0.0,
+              "total_trades": 0,
+              "weighted_expectancy_R": 0.0,
+              "mean_window_pf": null,
+              "min_window_pf": null,
+              "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)"
+            }
+          ]
+        }
+      ],
+      "top_combos": [
+        {
+          "overrides": {
+            "ASB1_SIGNAL_TF": "60",
+            "ASB1_REGIME_TF": "240",
+            "ASB1_REGIME_MAX_SLOPE_PCT": "1.8",
+            "ASB1_REGIME_MAX_ATR_PCT": "6.5",
+            "ASB1_MIN_RANGE_PCT": "3.5",
+            "ASB1_COOLDOWN_BARS_5M": "36"
+          },
+          "score": {
+            "symbols_tested": 2,
+            "symbols_with_trades": 0,
+            "candidate_like_symbols": 0,
+            "total_trades": 0,
+            "avg_weighted_expectancy_R": 0.0,
+            "candidate_like": []
+          },
+          "symbols": [
+            {
+              "symbol": "PIXELUSDT",
+              "windows_with_trades": 0,
+              "positive_windows": 0,
+              "positive_frac": 0.0,
+              "total_trades": 0,
+              "weighted_expectancy_R": 0.0,
+              "mean_window_pf": null,
+              "min_window_pf": null,
+              "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)"
+            },
+            {
+              "symbol": "FLOWUSDT",
+              "windows_with_trades": 0,
+              "positive_windows": 0,
+              "positive_frac": 0.0,
+              "total_trades": 0,
+              "weighted_expectancy_R": 0.0,
+              "mean_window_pf": null,
+              "min_window_pf": null,
+              "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)"
+            }
+          ]
+        }
+      ]
+    },
+    "ATT1": {
+      "symbols": [
+        "ADAUSDT",
+        "ENAUSDT"
+      ],
+      "combos": [
+        {
+          "overrides": {
+            "ATT1_SIGNAL_TF": "60",
+            "ATT1_MIN_R2": "0.62",
+            "ATT1_TOUCH_ATR": "0.35",
+            "ATT1_COOLDOWN_BARS_5M": "48"
+          },
+          "score": {
+            "symbols_tested": 2,
+            "symbols_with_trades": 1,
+            "candidate_like_symbols": 0,
+            "total_trades": 3,
+            "avg_weighted_expectancy_R": 0.732,
+            "candidate_like": []
+          },
+          "symbols": [
+            {
+              "symbol": "ADAUSDT",
+              "windows_with_trades": 2,
+              "positive_windows": 2,
+              "positive_frac": 1.0,
+              "total_trades": 3,
+              "weighted_expectancy_R": 0.732,
+              "mean_window_pf": Infinity,
+              "min_window_pf": 1.43,
+              "verdict": "CONSISTENT"
+            },
+            {
+              "symbol": "ENAUSDT",
+              "windows_with_trades": 0,
+              "positive_windows": 0,
+              "positive_frac": 0.0,
+              "total_trades": 0,
+              "weighted_expectancy_R": 0.0,
+              "mean_window_pf": null,
+              "min_window_pf": null,
+              "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)"
+            }
+          ]
+        }
+      ],
+      "top_combos": [
+        {
+          "overrides": {
+            "ATT1_SIGNAL_TF": "60",
+            "ATT1_MIN_R2": "0.62",
+            "ATT1_TOUCH_ATR": "0.35",
+            "ATT1_COOLDOWN_BARS_5M": "48"
+          },
+          "score": {
+            "symbols_tested": 2,
+            "symbols_with_trades": 1,
+            "candidate_like_symbols": 0,
+            "total_trades": 3,
+            "avg_weighted_expectancy_R": 0.732,
+            "candidate_like": []
+          },
+          "symbols": [
+            {
+              "symbol": "ADAUSDT",
+              "windows_with_trades": 2,
+              "positive_windows": 2,
+              "positive_frac": 1.0,
+              "total_trades": 3,
+              "weighted_expectancy_R": 0.732,
+              "mean_window_pf": Infinity,
+              "min_window_pf": 1.43,
+              "verdict": "CONSISTENT"
+            },
+            {
+              "symbol": "ENAUSDT",
+              "windows_with_trades": 0,
+              "positive_windows": 0,
+              "positive_frac": 0.0,
+              "total_trades": 0,
+              "weighted_expectancy_R": 0.0,
+              "mean_window_pf": null,
+              "min_window_pf": null,
+              "verdict": "INSUFFICIENT TRADED WINDOWS (need signals in at least 2 windows)"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

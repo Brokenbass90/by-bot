@@ -1,0 +1,421 @@
+{
+  "top_k": 3,
+  "fee_bps": 10.0,
+  "signal_tf": "60",
+  "regime_tf": "240",
+  "windows": 4,
+  "pass_candidates": [],
+  "matrix": {
+    "ASB1": {
+      "STOUSDT": {
+        "symbol": "STOUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT DATA (need continuous history -> server WF; local cache too sparse)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "PIPPINUSDT": {
+        "symbol": "PIPPINUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT DATA (need continuous history -> server WF; local cache too sparse)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "WLDUSDT": {
+        "symbol": "WLDUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT DATA (need continuous history -> server WF; local cache too sparse)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      }
+    },
+    "ARF1": {
+      "NEARUSDT": {
+        "symbol": "NEARUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT DATA (need continuous history -> server WF; local cache too sparse)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "MONUSDT": {
+        "symbol": "MONUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT DATA (need continuous history -> server WF; local cache too sparse)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "BRUSDT": {
+        "symbol": "BRUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT DATA (need continuous history -> server WF; local cache too sparse)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      }
+    },
+    "BREAKDOWN": {
+      "SIRENUSDT": {
+        "symbol": "SIRENUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT DATA (need continuous history -> server WF; local cache too sparse)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "NIGHTUSDT": {
+        "symbol": "NIGHTUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT DATA (need continuous history -> server WF; local cache too sparse)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      },
+      "WLDUSDT": {
+        "symbol": "WLDUSDT",
+        "signal_tf": "60",
+        "regime_tf": "240",
+        "windows": 4,
+        "fee_bps": 10.0,
+        "positive_windows": 0,
+        "windows_with_trades": 0,
+        "edges": [],
+        "verdict": "INSUFFICIENT DATA (need continuous history -> server WF; local cache too sparse)",
+        "details": [
+          {
+            "window": 1,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 2,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 3,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          },
+          {
+            "window": 4,
+            "trades": 0,
+            "metrics": {
+              "trades": 0,
+              "note": "no signals on available data"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+tag,market,event,side,tp_rr,sl_atr,max_hold,buffer_atr,cooldown_bars,symbol,trades,net_r,pf,win_rate
+bos_long_rr1.5_sl1.0_h6_b0.1_cd0,crypto,bos,long,1.5,1.0,6,0.1,0,ADAUSDT,56,-14.5183,0.6080859288533281,0.3571
+bos_long_rr1.5_sl1.0_h6_b0.1_cd0,crypto,bos,long,1.5,1.0,6,0.1,0,BTCUSDT,50,-22.7835,0.4326252614802271,0.36
+bos_long_rr1.5_sl1.0_h6_b0.1_cd10,crypto,bos,long,1.5,1.0,6,0.1,10,ADAUSDT,33,-9.4174,0.579617891259709,0.3333
+bos_long_rr1.5_sl1.0_h6_b0.1_cd10,crypto,bos,long,1.5,1.0,6,0.1,10,BTCUSDT,28,-7.0869,0.6217657230690407,0.4286
+bos_short_rr1.5_sl1.0_h6_b0.1_cd0,crypto,bos,short,1.5,1.0,6,0.1,0,ADAUSDT,61,-0.4589,0.9856821940033071,0.4918
+bos_short_rr1.5_sl1.0_h6_b0.1_cd0,crypto,bos,short,1.5,1.0,6,0.1,0,BTCUSDT,66,-21.4904,0.532464707072509,0.3939
+bos_short_rr1.5_sl1.0_h6_b0.1_cd10,crypto,bos,short,1.5,1.0,6,0.1,10,ADAUSDT,35,-4.7855,0.7696665447334476,0.4286
+bos_short_rr1.5_sl1.0_h6_b0.1_cd10,crypto,bos,short,1.5,1.0,6,0.1,10,BTCUSDT,34,-7.5658,0.6516923246906307,0.4412

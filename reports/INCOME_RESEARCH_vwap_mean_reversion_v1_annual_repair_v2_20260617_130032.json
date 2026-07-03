@@ -1,0 +1,403 @@
+{
+  "generated_at_utc": "2026-06-19T05:23:18.828898+00:00",
+  "source": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260619_050525_vwap_mean_reversion_v1_annual_repair_v2",
+  "top": 12,
+  "max_concurrent": 3,
+  "bear_months": [
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04"
+  ],
+  "candidates": [
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_081230_vwap_mean_reversion_v1_annual_repair_v2_r002",
+      "rank_row": {
+        "run_id": "2",
+        "tag": "vwap_mean_reversion_v1_annual_repair_v2_r002",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_081230_vwap_mean_reversion_v1_annual_repair_v2_r002",
+        "passed": "False",
+        "fail_reasons": "pf<1.15;dd>10.0;net<4.0;neg_months>4;neg_streak>2",
+        "score": "-2340.3148872179995",
+        "trades": "3912",
+        "net_pnl": "-98.53",
+        "profit_factor": "0.545",
+        "winrate": "0.439",
+        "max_drawdown": "98.5341",
+        "negative_months": "12",
+        "positive_months": "0",
+        "max_negative_streak": "12",
+        "worst_month_pnl": "-30.045490869999995",
+        "overrides_json": "{\"AVW1_COOLDOWN_BARS_5M\": \"72\", \"AVW1_LONG_RSI_MAX\": \"37\", \"AVW1_MAX_ER\": \"0.25\", \"AVW1_MIN_VWAP_DEV_ATR\": \"1.2\", \"AVW1_SHORT_RSI_MIN\": \"55\", \"AVW1_SL_ATR_MULT\": \"1.2\", \"AVW1_TP2_ATR\": \"0.75\"}"
+      },
+      "summary": {
+        "tag": "vwap_mean_reversion_v1_annual_repair_v2_r002",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT;ADAUSDT;DOTUSDT;LTCUSDT;SUIUSDT",
+        "strategies": "alt_vwap_mean_reversion_v1",
+        "trades": "3912",
+        "net_pnl": "-98.53",
+        "profit_factor": "0.545",
+        "winrate": "0.439",
+        "max_drawdown": "98.5341",
+        "ending_equity": "1.47"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -15.1696,
+          "trades": 229,
+          "wins": 106,
+          "bear_trades": 0,
+          "win_pct": 46.3,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": -30.0455,
+          "trades": 320,
+          "wins": 123,
+          "bear_trades": 0,
+          "win_pct": 38.4,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-06": {
+          "pnl": -12.9611,
+          "trades": 352,
+          "wins": 172,
+          "bear_trades": 0,
+          "win_pct": 48.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-07": {
+          "pnl": -16.5423,
+          "trades": 360,
+          "wins": 143,
+          "bear_trades": 0,
+          "win_pct": 39.7,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": -8.1412,
+          "trades": 361,
+          "wins": 148,
+          "bear_trades": 0,
+          "win_pct": 41.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-09": {
+          "pnl": -6.2645,
+          "trades": 339,
+          "wins": 153,
+          "bear_trades": 0,
+          "win_pct": 45.1,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-10": {
+          "pnl": -2.7225,
+          "trades": 339,
+          "wins": 154,
+          "bear_trades": 0,
+          "win_pct": 45.4,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-11": {
+          "pnl": -1.2438,
+          "trades": 325,
+          "wins": 163,
+          "bear_trades": 0,
+          "win_pct": 50.2,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-12": {
+          "pnl": -2.8966,
+          "trades": 315,
+          "wins": 123,
+          "bear_trades": 0,
+          "win_pct": 39.0,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-01": {
+          "pnl": -1.4813,
+          "trades": 349,
+          "wins": 152,
+          "bear_trades": 0,
+          "win_pct": 43.6,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-02": {
+          "pnl": -0.537,
+          "trades": 304,
+          "wins": 138,
+          "bear_trades": 0,
+          "win_pct": 45.4,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": -0.5205,
+          "trades": 319,
+          "wins": 144,
+          "bear_trades": 0,
+          "win_pct": 45.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": -98.5259,
+        "months": 12,
+        "positive_months": 0,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "reason": "red bear months: ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 3912,
+          "expectancy_R": -0.025,
+          "profit_factor": 0.54,
+          "win_pct": 43.9
+        },
+        "stacked": {
+          "trades": 3410,
+          "expectancy_R": -0.026,
+          "profit_factor": 0.54,
+          "win_pct": 44.1
+        },
+        "dropped": 502,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_080533_vwap_mean_reversion_v1_annual_repair_v2_r001",
+      "rank_row": {
+        "run_id": "1",
+        "tag": "vwap_mean_reversion_v1_annual_repair_v2_r001",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260619_080533_vwap_mean_reversion_v1_annual_repair_v2_r001",
+        "passed": "False",
+        "fail_reasons": "pf<1.15;dd>10.0;net<4.0;neg_months>4;neg_streak>2",
+        "score": "-2350.771946314",
+        "trades": "4256",
+        "net_pnl": "-99.33",
+        "profit_factor": "0.534",
+        "winrate": "0.429",
+        "max_drawdown": "99.3308",
+        "negative_months": "12",
+        "positive_months": "0",
+        "max_negative_streak": "12",
+        "worst_month_pnl": "-35.748104509999976",
+        "overrides_json": "{\"AVW1_COOLDOWN_BARS_5M\": \"36\", \"AVW1_LONG_RSI_MAX\": \"37\", \"AVW1_MAX_ER\": \"0.25\", \"AVW1_MIN_VWAP_DEV_ATR\": \"1.2\", \"AVW1_SHORT_RSI_MIN\": \"55\", \"AVW1_SL_ATR_MULT\": \"1.2\", \"AVW1_TP2_ATR\": \"0.75\"}"
+      },
+      "summary": {
+        "tag": "vwap_mean_reversion_v1_annual_repair_v2_r001",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT;ADAUSDT;DOTUSDT;LTCUSDT;SUIUSDT",
+        "strategies": "alt_vwap_mean_reversion_v1",
+        "trades": "4256",
+        "net_pnl": "-99.33",
+        "profit_factor": "0.534",
+        "winrate": "0.429",
+        "max_drawdown": "99.3308",
+        "ending_equity": "0.67"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -12.5618,
+          "trades": 247,
+          "wins": 121,
+          "bear_trades": 0,
+          "win_pct": 49.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": -35.7481,
+          "trades": 350,
+          "wins": 128,
+          "bear_trades": 0,
+          "win_pct": 36.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-06": {
+          "pnl": -12.7974,
+          "trades": 372,
+          "wins": 180,
+          "bear_trades": 0,
+          "win_pct": 48.4,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-07": {
+          "pnl": -17.3377,
+          "trades": 399,
+          "wins": 158,
+          "bear_trades": 0,
+          "win_pct": 39.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": -7.6485,
+          "trades": 386,
+          "wins": 154,
+          "bear_trades": 0,
+          "win_pct": 39.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-09": {
+          "pnl": -5.5484,
+          "trades": 361,
+          "wins": 158,
+          "bear_trades": 0,
+          "win_pct": 43.8,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-10": {
+          "pnl": -2.2612,
+          "trades": 367,
+          "wins": 165,
+          "bear_trades": 0,
+          "win_pct": 45.0,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-11": {
+          "pnl": -1.7826,
+          "trades": 361,
+          "wins": 161,
+          "bear_trades": 0,
+          "win_pct": 44.6,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-12": {
+          "pnl": -2.1876,
+          "trades": 356,
+          "wins": 132,
+          "bear_trades": 0,
+          "win_pct": 37.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-01": {
+          "pnl": -0.8092,
+          "trades": 382,
+          "wins": 169,
+          "bear_trades": 0,
+          "win_pct": 44.2,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-02": {
+          "pnl": -0.3225,
+          "trades": 329,
+          "wins": 147,
+          "bear_trades": 0,
+          "win_pct": 44.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": -0.3218,
+          "trades": 346,
+          "wins": 154,
+          "bear_trades": 0,
+          "win_pct": 44.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": -99.3268,
+        "months": 12,
+        "positive_months": 0,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "reason": "red bear months: ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 4256,
+          "expectancy_R": -0.023,
+          "profit_factor": 0.53,
+          "win_pct": 42.9
+        },
+        "stacked": {
+          "trades": 3647,
+          "expectancy_R": -0.024,
+          "profit_factor": 0.53,
+          "win_pct": 43.0
+        },
+        "dropped": 609,
+        "verdict": "neutral"
+      }
+    }
+  ]
+}

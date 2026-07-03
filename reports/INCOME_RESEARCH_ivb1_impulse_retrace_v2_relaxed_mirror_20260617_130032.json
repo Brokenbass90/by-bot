@@ -1,0 +1,2273 @@
+{
+  "generated_at_utc": "2026-06-18T21:04:27.759483+00:00",
+  "source": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/autoresearch_20260617_130032_ivb1_impulse_retrace_v2_relaxed_mirror",
+  "top": 12,
+  "max_concurrent": 3,
+  "bear_months": [
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04"
+  ],
+  "candidates": [
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_143520_ivb1_impulse_retrace_v2_relaxed_mirror_r1358",
+      "rank_row": {
+        "run_id": "1358",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1358",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_143520_ivb1_impulse_retrace_v2_relaxed_mirror_r1358",
+        "passed": "False",
+        "fail_reasons": "pf<1.2",
+        "score": "-986.3301721820001",
+        "trades": "287",
+        "net_pnl": "7.15",
+        "profit_factor": "1.116",
+        "winrate": "0.526",
+        "max_drawdown": "7.1263",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-4.93898013",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.2\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.25\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"2.2\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,DOGEUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1358",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT;DOGEUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "287",
+        "net_pnl": "7.15",
+        "profit_factor": "1.116",
+        "winrate": "0.526",
+        "max_drawdown": "7.1263",
+        "ending_equity": "107.15"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -4.939,
+          "trades": 14,
+          "wins": 2,
+          "bear_trades": 0,
+          "win_pct": 14.3,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 1.237,
+          "trades": 20,
+          "wins": 11,
+          "bear_trades": 0,
+          "win_pct": 55.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 1.3467,
+          "trades": 21,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 61.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.4019,
+          "trades": 26,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.3512,
+          "trades": 20,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 60.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 0.9159,
+          "trades": 8,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 50.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 6.9579,
+          "trades": 29,
+          "wins": 21,
+          "bear_trades": 0,
+          "win_pct": 72.4,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 1.4714,
+          "trades": 42,
+          "wins": 24,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 3.774,
+          "trades": 34,
+          "wins": 20,
+          "bear_trades": 0,
+          "win_pct": 58.8,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 2.3982,
+          "trades": 27,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 48.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -4.3692,
+          "trades": 39,
+          "wins": 15,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.4118,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 7.154,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 287,
+          "expectancy_R": 0.025,
+          "profit_factor": 1.12,
+          "win_pct": 52.6
+        },
+        "stacked": {
+          "trades": 248,
+          "expectancy_R": 0.03,
+          "profit_factor": 1.15,
+          "win_pct": 53.2
+        },
+        "dropped": 39,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_152757_ivb1_impulse_retrace_v2_relaxed_mirror_r1374",
+      "rank_row": {
+        "run_id": "1374",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1374",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_152757_ivb1_impulse_retrace_v2_relaxed_mirror_r1374",
+        "passed": "False",
+        "fail_reasons": "pf<1.2",
+        "score": "-987.866172182",
+        "trades": "285",
+        "net_pnl": "6.88",
+        "profit_factor": "1.112",
+        "winrate": "0.526",
+        "max_drawdown": "7.7078",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-4.93898013",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.2\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.35\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"2.2\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,DOGEUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1374",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT;DOGEUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "285",
+        "net_pnl": "6.88",
+        "profit_factor": "1.112",
+        "winrate": "0.526",
+        "max_drawdown": "7.7078",
+        "ending_equity": "106.88"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -4.939,
+          "trades": 14,
+          "wins": 2,
+          "bear_trades": 0,
+          "win_pct": 14.3,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 0.5183,
+          "trades": 19,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 52.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 1.3401,
+          "trades": 21,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 61.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.3882,
+          "trades": 26,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.3491,
+          "trades": 20,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 60.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 1.3974,
+          "trades": 7,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 6.9424,
+          "trades": 29,
+          "wins": 21,
+          "bear_trades": 0,
+          "win_pct": 72.4,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 1.4673,
+          "trades": 42,
+          "wins": 24,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 3.7625,
+          "trades": 34,
+          "wins": 20,
+          "bear_trades": 0,
+          "win_pct": 58.8,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 2.3874,
+          "trades": 27,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 48.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -4.3684,
+          "trades": 39,
+          "wins": 15,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.4115,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 6.8804,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 285,
+          "expectancy_R": 0.024,
+          "profit_factor": 1.11,
+          "win_pct": 52.6
+        },
+        "stacked": {
+          "trades": 247,
+          "expectancy_R": 0.032,
+          "profit_factor": 1.16,
+          "win_pct": 53.4
+        },
+        "dropped": 38,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_142203_ivb1_impulse_retrace_v2_relaxed_mirror_r1354",
+      "rank_row": {
+        "run_id": "1354",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1354",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_142203_ivb1_impulse_retrace_v2_relaxed_mirror_r1354",
+        "passed": "False",
+        "fail_reasons": "pf<1.2",
+        "score": "-989.1923835",
+        "trades": "302",
+        "net_pnl": "6.55",
+        "profit_factor": "1.102",
+        "winrate": "0.523",
+        "max_drawdown": "7.6653",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-5.592702500000001",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.1\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.25\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"2.2\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,DOGEUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1354",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT;DOGEUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "302",
+        "net_pnl": "6.55",
+        "profit_factor": "1.102",
+        "winrate": "0.523",
+        "max_drawdown": "7.6653",
+        "ending_equity": "106.55"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -5.5927,
+          "trades": 17,
+          "wins": 3,
+          "bear_trades": 0,
+          "win_pct": 17.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 1.2388,
+          "trades": 20,
+          "wins": 11,
+          "bear_trades": 0,
+          "win_pct": 55.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 1.2732,
+          "trades": 23,
+          "wins": 14,
+          "bear_trades": 0,
+          "win_pct": 60.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.3108,
+          "trades": 27,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 37.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.3164,
+          "trades": 21,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 0.63,
+          "trades": 9,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 44.4,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 7.4498,
+          "trades": 32,
+          "wins": 24,
+          "bear_trades": 0,
+          "win_pct": 75.0,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 1.6034,
+          "trades": 42,
+          "wins": 24,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 3.3788,
+          "trades": 35,
+          "wins": 20,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 2.4285,
+          "trades": 27,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 48.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -4.2734,
+          "trades": 42,
+          "wins": 17,
+          "bear_trades": 0,
+          "win_pct": 40.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.4112,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 6.5532,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 302,
+          "expectancy_R": 0.022,
+          "profit_factor": 1.1,
+          "win_pct": 52.3
+        },
+        "stacked": {
+          "trades": 261,
+          "expectancy_R": 0.023,
+          "profit_factor": 1.11,
+          "win_pct": 52.5
+        },
+        "dropped": 41,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260617_211532_ivb1_impulse_retrace_v2_relaxed_mirror_r590",
+      "rank_row": {
+        "run_id": "590",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r590",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260617_211532_ivb1_impulse_retrace_v2_relaxed_mirror_r590",
+        "passed": "False",
+        "fail_reasons": "pf<1.2;dd>8.0",
+        "score": "-989.250372182",
+        "trades": "245",
+        "net_pnl": "6.3",
+        "profit_factor": "1.122",
+        "winrate": "0.527",
+        "max_drawdown": "8.0524",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-4.93898013",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.2\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.25\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"2.2\", \"SYMBOLS\": \"DOGEUSDT,LINKUSDT,SOLUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r590",
+        "symbols": "DOGEUSDT;LINKUSDT;SOLUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "245",
+        "net_pnl": "6.30",
+        "profit_factor": "1.122",
+        "winrate": "0.527",
+        "max_drawdown": "8.0524",
+        "ending_equity": "106.30"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -4.939,
+          "trades": 14,
+          "wins": 2,
+          "bear_trades": 0,
+          "win_pct": 14.3,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 0.7738,
+          "trades": 17,
+          "wins": 9,
+          "bear_trades": 0,
+          "win_pct": 52.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 0.7162,
+          "trades": 18,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 55.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.3812,
+          "trades": 26,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.0946,
+          "trades": 19,
+          "wins": 11,
+          "bear_trades": 0,
+          "win_pct": 57.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 1.2396,
+          "trades": 7,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 6.4565,
+          "trades": 26,
+          "wins": 19,
+          "bear_trades": 0,
+          "win_pct": 73.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 0.1622,
+          "trades": 33,
+          "wins": 18,
+          "bear_trades": 0,
+          "win_pct": 54.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 2.0702,
+          "trades": 30,
+          "wins": 16,
+          "bear_trades": 0,
+          "win_pct": 53.3,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 2.6522,
+          "trades": 23,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 52.2,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -0.9593,
+          "trades": 25,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 48.0,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.4109,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 6.2967,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 245,
+          "expectancy_R": 0.026,
+          "profit_factor": 1.12,
+          "win_pct": 52.7
+        },
+        "stacked": {
+          "trades": 227,
+          "expectancy_R": 0.033,
+          "profit_factor": 1.16,
+          "win_pct": 53.7
+        },
+        "dropped": 18,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_143205_ivb1_impulse_retrace_v2_relaxed_mirror_r1357",
+      "rank_row": {
+        "run_id": "1357",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1357",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_143205_ivb1_impulse_retrace_v2_relaxed_mirror_r1357",
+        "passed": "False",
+        "fail_reasons": "pf<1.2;net<5.0",
+        "score": "-989.520472182",
+        "trades": "287",
+        "net_pnl": "4.59",
+        "profit_factor": "1.075",
+        "winrate": "0.526",
+        "max_drawdown": "6.9447",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-4.93898013",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.2\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.25\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"1.6\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,DOGEUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1357",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT;DOGEUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "287",
+        "net_pnl": "4.59",
+        "profit_factor": "1.075",
+        "winrate": "0.526",
+        "max_drawdown": "6.9447",
+        "ending_equity": "104.59"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -4.939,
+          "trades": 14,
+          "wins": 2,
+          "bear_trades": 0,
+          "win_pct": 14.3,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 0.8464,
+          "trades": 20,
+          "wins": 11,
+          "bear_trades": 0,
+          "win_pct": 55.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 1.4285,
+          "trades": 21,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 61.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.0363,
+          "trades": 26,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.4102,
+          "trades": 20,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 60.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 0.7461,
+          "trades": 8,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 50.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 6.3712,
+          "trades": 29,
+          "wins": 21,
+          "bear_trades": 0,
+          "win_pct": 72.4,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 1.5029,
+          "trades": 42,
+          "wins": 24,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 3.746,
+          "trades": 34,
+          "wins": 20,
+          "bear_trades": 0,
+          "win_pct": 58.8,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 0.997,
+          "trades": 27,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 48.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -4.8482,
+          "trades": 39,
+          "wins": 15,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.361,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 4.5858,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 287,
+          "expectancy_R": 0.016,
+          "profit_factor": 1.07,
+          "win_pct": 52.6
+        },
+        "stacked": {
+          "trades": 251,
+          "expectancy_R": 0.023,
+          "profit_factor": 1.11,
+          "win_pct": 53.4
+        },
+        "dropped": 36,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260617_214941_ivb1_impulse_retrace_v2_relaxed_mirror_r606",
+      "rank_row": {
+        "run_id": "606",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r606",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260617_214941_ivb1_impulse_retrace_v2_relaxed_mirror_r606",
+        "passed": "False",
+        "fail_reasons": "pf<1.2;dd>8.0",
+        "score": "-990.102472182",
+        "trades": "244",
+        "net_pnl": "6.33",
+        "profit_factor": "1.123",
+        "winrate": "0.529",
+        "max_drawdown": "8.5047",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-4.93898013",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.2\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.35\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"2.2\", \"SYMBOLS\": \"DOGEUSDT,LINKUSDT,SOLUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r606",
+        "symbols": "DOGEUSDT;LINKUSDT;SOLUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "244",
+        "net_pnl": "6.33",
+        "profit_factor": "1.123",
+        "winrate": "0.529",
+        "max_drawdown": "8.5047",
+        "ending_equity": "106.33"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -4.939,
+          "trades": 14,
+          "wins": 2,
+          "bear_trades": 0,
+          "win_pct": 14.3,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 0.3111,
+          "trades": 17,
+          "wins": 9,
+          "bear_trades": 0,
+          "win_pct": 52.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 0.7147,
+          "trades": 18,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 55.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.3724,
+          "trades": 26,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.0945,
+          "trades": 19,
+          "wins": 11,
+          "bear_trades": 0,
+          "win_pct": 57.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 1.7249,
+          "trades": 6,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 66.7,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 6.4585,
+          "trades": 26,
+          "wins": 19,
+          "bear_trades": 0,
+          "win_pct": 73.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 0.1627,
+          "trades": 33,
+          "wins": 18,
+          "bear_trades": 0,
+          "win_pct": 54.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 2.0717,
+          "trades": 30,
+          "wins": 16,
+          "bear_trades": 0,
+          "win_pct": 53.3,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 2.6539,
+          "trades": 23,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 52.2,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -0.9591,
+          "trades": 25,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 48.0,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.4109,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 6.3324,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 244,
+          "expectancy_R": 0.026,
+          "profit_factor": 1.12,
+          "win_pct": 52.9
+        },
+        "stacked": {
+          "trades": 226,
+          "expectancy_R": 0.035,
+          "profit_factor": 1.17,
+          "win_pct": 54.0
+        },
+        "dropped": 18,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_151504_ivb1_impulse_retrace_v2_relaxed_mirror_r1370",
+      "rank_row": {
+        "run_id": "1370",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1370",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_151504_ivb1_impulse_retrace_v2_relaxed_mirror_r1370",
+        "passed": "False",
+        "fail_reasons": "pf<1.2;dd>8.0",
+        "score": "-990.8867835",
+        "trades": "300",
+        "net_pnl": "6.29",
+        "profit_factor": "1.098",
+        "winrate": "0.523",
+        "max_drawdown": "8.3325",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-5.592702500000001",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.1\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.35\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"2.2\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,DOGEUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1370",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT;DOGEUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "300",
+        "net_pnl": "6.29",
+        "profit_factor": "1.098",
+        "winrate": "0.523",
+        "max_drawdown": "8.3325",
+        "ending_equity": "106.29"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -5.5927,
+          "trades": 17,
+          "wins": 3,
+          "bear_trades": 0,
+          "win_pct": 17.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 0.5249,
+          "trades": 19,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 52.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 1.2713,
+          "trades": 23,
+          "wins": 14,
+          "bear_trades": 0,
+          "win_pct": 60.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.2939,
+          "trades": 27,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 37.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.3144,
+          "trades": 21,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 1.1115,
+          "trades": 8,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 50.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 7.4362,
+          "trades": 32,
+          "wins": 24,
+          "bear_trades": 0,
+          "win_pct": 75.0,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 1.5981,
+          "trades": 42,
+          "wins": 24,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 3.3678,
+          "trades": 35,
+          "wins": 20,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 2.4159,
+          "trades": 27,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 48.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -4.2751,
+          "trades": 42,
+          "wins": 17,
+          "bear_trades": 0,
+          "win_pct": 40.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.4109,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 6.2893,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 300,
+          "expectancy_R": 0.021,
+          "profit_factor": 1.1,
+          "win_pct": 52.3
+        },
+        "stacked": {
+          "trades": 260,
+          "expectancy_R": 0.025,
+          "profit_factor": 1.12,
+          "win_pct": 52.7
+        },
+        "dropped": 40,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_152445_ivb1_impulse_retrace_v2_relaxed_mirror_r1373",
+      "rank_row": {
+        "run_id": "1373",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1373",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_152445_ivb1_impulse_retrace_v2_relaxed_mirror_r1373",
+        "passed": "False",
+        "fail_reasons": "pf<1.2;net<5.0",
+        "score": "-991.3016721820001",
+        "trades": "285",
+        "net_pnl": "4.32",
+        "profit_factor": "1.071",
+        "winrate": "0.526",
+        "max_drawdown": "7.6488",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-4.93898013",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.2\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.35\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"1.6\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,DOGEUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1373",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT;DOGEUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "285",
+        "net_pnl": "4.32",
+        "profit_factor": "1.071",
+        "winrate": "0.526",
+        "max_drawdown": "7.6488",
+        "ending_equity": "104.32"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -4.939,
+          "trades": 14,
+          "wins": 2,
+          "bear_trades": 0,
+          "win_pct": 14.3,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 0.1306,
+          "trades": 19,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 52.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 1.4219,
+          "trades": 21,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 61.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.0229,
+          "trades": 26,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.4081,
+          "trades": 20,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 60.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 1.229,
+          "trades": 7,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 6.3577,
+          "trades": 29,
+          "wins": 21,
+          "bear_trades": 0,
+          "win_pct": 72.4,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 1.4989,
+          "trades": 42,
+          "wins": 24,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 3.7348,
+          "trades": 34,
+          "wins": 20,
+          "bear_trades": 0,
+          "win_pct": 58.8,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 0.9861,
+          "trades": 27,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 48.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -4.8435,
+          "trades": 39,
+          "wins": 15,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.3607,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 4.3224,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 285,
+          "expectancy_R": 0.015,
+          "profit_factor": 1.07,
+          "win_pct": 52.6
+        },
+        "stacked": {
+          "trades": 250,
+          "expectancy_R": 0.025,
+          "profit_factor": 1.12,
+          "win_pct": 53.6
+        },
+        "dropped": 35,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_161938_ivb1_impulse_retrace_v2_relaxed_mirror_r1390",
+      "rank_row": {
+        "run_id": "1390",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1390",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260618_161938_ivb1_impulse_retrace_v2_relaxed_mirror_r1390",
+        "passed": "False",
+        "fail_reasons": "pf<1.2",
+        "score": "-991.449963082",
+        "trades": "279",
+        "net_pnl": "5.08",
+        "profit_factor": "1.083",
+        "winrate": "0.513",
+        "max_drawdown": "7.7042",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-5.68147363",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.2\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.25\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.4\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"2.2\", \"SYMBOLS\": \"BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,DOGEUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r1390",
+        "symbols": "BTCUSDT;ETHUSDT;SOLUSDT;LINKUSDT;DOGEUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "279",
+        "net_pnl": "5.08",
+        "profit_factor": "1.083",
+        "winrate": "0.513",
+        "max_drawdown": "7.7042",
+        "ending_equity": "105.08"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -5.6815,
+          "trades": 14,
+          "wins": 1,
+          "bear_trades": 0,
+          "win_pct": 7.1,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 0.8036,
+          "trades": 19,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 52.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 1.1871,
+          "trades": 20,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 60.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.3766,
+          "trades": 26,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.9513,
+          "trades": 19,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 63.2,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 0.9057,
+          "trades": 8,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 50.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 6.9098,
+          "trades": 29,
+          "wins": 21,
+          "bear_trades": 0,
+          "win_pct": 72.4,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 1.0944,
+          "trades": 37,
+          "wins": 20,
+          "bear_trades": 0,
+          "win_pct": 54.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 3.2142,
+          "trades": 35,
+          "wins": 20,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 2.3157,
+          "trades": 27,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 48.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -4.6544,
+          "trades": 38,
+          "wins": 14,
+          "bear_trades": 0,
+          "win_pct": 36.8,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.4096,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 5.0789,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 279,
+          "expectancy_R": 0.018,
+          "profit_factor": 1.08,
+          "win_pct": 51.3
+        },
+        "stacked": {
+          "trades": 242,
+          "expectancy_R": 0.025,
+          "profit_factor": 1.12,
+          "win_pct": 52.1
+        },
+        "dropped": 37,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260617_211321_ivb1_impulse_retrace_v2_relaxed_mirror_r589",
+      "rank_row": {
+        "run_id": "589",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r589",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260617_211321_ivb1_impulse_retrace_v2_relaxed_mirror_r589",
+        "passed": "False",
+        "fail_reasons": "pf<1.2;net<5.0",
+        "score": "-991.4687721820001",
+        "trades": "245",
+        "net_pnl": "4.41",
+        "profit_factor": "1.086",
+        "winrate": "0.527",
+        "max_drawdown": "7.8341",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-4.93898013",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.2\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.25\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"1.6\", \"SYMBOLS\": \"DOGEUSDT,LINKUSDT,SOLUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r589",
+        "symbols": "DOGEUSDT;LINKUSDT;SOLUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "245",
+        "net_pnl": "4.41",
+        "profit_factor": "1.086",
+        "winrate": "0.527",
+        "max_drawdown": "7.8341",
+        "ending_equity": "104.41"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -4.939,
+          "trades": 14,
+          "wins": 2,
+          "bear_trades": 0,
+          "win_pct": 14.3,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 0.5472,
+          "trades": 17,
+          "wins": 9,
+          "bear_trades": 0,
+          "win_pct": 52.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 0.8004,
+          "trades": 18,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 55.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.0191,
+          "trades": 26,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.1535,
+          "trades": 19,
+          "wins": 11,
+          "bear_trades": 0,
+          "win_pct": 57.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 1.0742,
+          "trades": 7,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 57.1,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 5.9338,
+          "trades": 26,
+          "wins": 19,
+          "bear_trades": 0,
+          "win_pct": 73.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 0.2509,
+          "trades": 33,
+          "wins": 18,
+          "bear_trades": 0,
+          "win_pct": 54.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 2.0547,
+          "trades": 30,
+          "wins": 16,
+          "bear_trades": 0,
+          "win_pct": 53.3,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 1.4732,
+          "trades": 23,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 52.2,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -1.279,
+          "trades": 25,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 48.0,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.3608,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 4.4116,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 245,
+          "expectancy_R": 0.018,
+          "profit_factor": 1.09,
+          "win_pct": 52.7
+        },
+        "stacked": {
+          "trades": 228,
+          "expectancy_R": 0.024,
+          "profit_factor": 1.12,
+          "win_pct": 53.5
+        },
+        "dropped": 17,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260617_210650_ivb1_impulse_retrace_v2_relaxed_mirror_r586",
+      "rank_row": {
+        "run_id": "586",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r586",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260617_210650_ivb1_impulse_retrace_v2_relaxed_mirror_r586",
+        "passed": "False",
+        "fail_reasons": "pf<1.2;dd>8.0",
+        "score": "-991.6511554279999",
+        "trades": "254",
+        "net_pnl": "5.34",
+        "profit_factor": "1.1",
+        "winrate": "0.524",
+        "max_drawdown": "8.3193",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-5.286111020000001",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.1\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.25\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"2.2\", \"SYMBOLS\": \"DOGEUSDT,LINKUSDT,SOLUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r586",
+        "symbols": "DOGEUSDT;LINKUSDT;SOLUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "254",
+        "net_pnl": "5.34",
+        "profit_factor": "1.100",
+        "winrate": "0.524",
+        "max_drawdown": "8.3193",
+        "ending_equity": "105.34"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -5.2861,
+          "trades": 16,
+          "wins": 3,
+          "bear_trades": 0,
+          "win_pct": 18.8,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 0.7734,
+          "trades": 17,
+          "wins": 9,
+          "bear_trades": 0,
+          "win_pct": 52.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 0.7151,
+          "trades": 18,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 55.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.2939,
+          "trades": 27,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 37.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.0618,
+          "trades": 20,
+          "wins": 11,
+          "bear_trades": 0,
+          "win_pct": 55.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 0.9584,
+          "trades": 8,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 50.0,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 6.6607,
+          "trades": 28,
+          "wins": 21,
+          "bear_trades": 0,
+          "win_pct": 75.0,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 0.1558,
+          "trades": 33,
+          "wins": 18,
+          "bear_trades": 0,
+          "win_pct": 54.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 2.0519,
+          "trades": 30,
+          "wins": 16,
+          "bear_trades": 0,
+          "win_pct": 53.3,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 2.6333,
+          "trades": 23,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 52.2,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -1.499,
+          "trades": 27,
+          "wins": 13,
+          "bear_trades": 0,
+          "win_pct": 48.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.4099,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 5.3413,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 254,
+          "expectancy_R": 0.021,
+          "profit_factor": 1.1,
+          "win_pct": 52.4
+        },
+        "stacked": {
+          "trades": 236,
+          "expectancy_R": 0.028,
+          "profit_factor": 1.14,
+          "win_pct": 53.4
+        },
+        "dropped": 18,
+        "verdict": "neutral"
+      }
+    },
+    {
+      "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260617_214733_ivb1_impulse_retrace_v2_relaxed_mirror_r605",
+      "rank_row": {
+        "run_id": "605",
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r605",
+        "run_dir": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/backtest_runs/portfolio_20260617_214733_ivb1_impulse_retrace_v2_relaxed_mirror_r605",
+        "passed": "False",
+        "fail_reasons": "pf<1.2;dd>8.0;net<5.0",
+        "score": "-992.306072182",
+        "trades": "244",
+        "net_pnl": "4.45",
+        "profit_factor": "1.087",
+        "winrate": "0.529",
+        "max_drawdown": "8.2855",
+        "negative_months": "3",
+        "positive_months": "9",
+        "max_negative_streak": "1",
+        "worst_month_pnl": "-4.93898013",
+        "overrides_json": "{\"IVB1_DIRECTION_MODE\": \"short\", \"IVB1_ENTRY_BODY_MIN_FRAC\": \"0.2\", \"IVB1_MAX_WAIT_BARS_5M\": \"8\", \"IVB1_MIN_BODY_FRAC\": \"0.35\", \"IVB1_MIN_IMPULSE_PCT\": \"0.035\", \"IVB1_MIN_VOL_MULT\": \"1.2\", \"IVB1_RETRACE_MAX_FRAC\": \"0.75\", \"IVB1_RR\": \"1.6\", \"SYMBOLS\": \"DOGEUSDT,LINKUSDT,SOLUSDT,ADAUSDT\"}"
+      },
+      "summary": {
+        "tag": "ivb1_impulse_retrace_v2_relaxed_mirror_r605",
+        "symbols": "DOGEUSDT;LINKUSDT;SOLUSDT;ADAUSDT",
+        "strategies": "impulse_volume_breakout_v1",
+        "trades": "244",
+        "net_pnl": "4.45",
+        "profit_factor": "1.087",
+        "winrate": "0.529",
+        "max_drawdown": "8.2855",
+        "ending_equity": "104.45"
+      },
+      "monthly": {
+        "2025-04": {
+          "pnl": -4.939,
+          "trades": 14,
+          "wins": 2,
+          "bear_trades": 0,
+          "win_pct": 14.3,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-05": {
+          "pnl": 0.0856,
+          "trades": 17,
+          "wins": 9,
+          "bear_trades": 0,
+          "win_pct": 52.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-06": {
+          "pnl": 0.7989,
+          "trades": 18,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 55.6,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-07": {
+          "pnl": -3.0104,
+          "trades": 26,
+          "wins": 10,
+          "bear_trades": 0,
+          "win_pct": 38.5,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2025-08": {
+          "pnl": 0.1534,
+          "trades": 19,
+          "wins": 11,
+          "bear_trades": 0,
+          "win_pct": 57.9,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-09": {
+          "pnl": 1.5603,
+          "trades": 6,
+          "wins": 4,
+          "bear_trades": 0,
+          "win_pct": 66.7,
+          "is_bear_month": false,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-10": {
+          "pnl": 5.9354,
+          "trades": 26,
+          "wins": 19,
+          "bear_trades": 0,
+          "win_pct": 73.1,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-11": {
+          "pnl": 0.2514,
+          "trades": 33,
+          "wins": 18,
+          "bear_trades": 0,
+          "win_pct": 54.5,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2025-12": {
+          "pnl": 2.0563,
+          "trades": 30,
+          "wins": 16,
+          "bear_trades": 0,
+          "win_pct": 53.3,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-01": {
+          "pnl": 1.4747,
+          "trades": 23,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 52.2,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        },
+        "2026-02": {
+          "pnl": -1.2789,
+          "trades": 25,
+          "wins": 12,
+          "bear_trades": 0,
+          "win_pct": 48.0,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": true
+        },
+        "2026-03": {
+          "pnl": 1.3608,
+          "trades": 7,
+          "wins": 6,
+          "bear_trades": 0,
+          "win_pct": 85.7,
+          "is_bear_month": true,
+          "bear_source": "explicit",
+          "red": false
+        }
+      },
+      "monthly_verdict": {
+        "verdict": "FAIL",
+        "total_pnl": 4.4485,
+        "months": 12,
+        "positive_months": 9,
+        "bear_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03"
+        ],
+        "red_bear_months": [
+          "2026-02"
+        ],
+        "reason": "red bear months: ['2026-02']"
+      },
+      "stack_comparison": {
+        "bare": {
+          "trades": 244,
+          "expectancy_R": 0.018,
+          "profit_factor": 1.09,
+          "win_pct": 52.9
+        },
+        "stacked": {
+          "trades": 227,
+          "expectancy_R": 0.026,
+          "profit_factor": 1.13,
+          "win_pct": 53.7
+        },
+        "dropped": 17,
+        "verdict": "neutral"
+      }
+    }
+  ]
+}
