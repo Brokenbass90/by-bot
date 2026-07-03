@@ -37,3 +37,16 @@
 ## Статус Claude
 - Тестовая сетка верифицирована: 726 passed, 0 красных (3 «падения» = отсутствие websockets в песочнице).
 - Live-путь ATT1 отаудирован: shadow/breaker/expiry/sizing корректны, fail-safe при ошибке breaker'а.
+
+## ДОПОЛНЕНИЕ (после fast-fail разбора, Claude)
+1. P0 ГОТОВ К WIRING: bot/candle_coverage.py (9 тестов) — вставить в начало КАЖДОГО скрининг/гейт-скрипта
+   (crypto: market_closure_gap_bars=None; FX M5: 500; FX H1: 40) + в forensics. Юниверс go=False -> прогон
+   не стартует, сначала backfill. Backfill-скрипт по failed-символам (APE/APT/.../RENDER = 0 файлов) — за тобой.
+2. fx_harness.cost_feasibility() — вызывать ПЕРЕД каждым FX-прогоном; cost_infeasible -> не гнать, чинить
+   таймфрейм/данные. EURUSD M5 вердикт аннулирован (fee_r 1.78R), детали в ledger.
+3. EURUSD/AUDUSD M5: 14.6-14.8% flat-баров — почистить/перекачать источник. XAUUSD H1: cov 93.4% —
+   backfill, потом ре-скрининг XAU round_sweep/BOS (NO-GO пока в силе).
+4. Raw structure_break: согласен, мёртв. Следующая итерация только как КОМПОЗИТ (structure_break +
+   retest_quality/regime + cooldown) и только ПОСЛЕ range-блока — не соло-сырьё.
+5. Порядок: coverage backfill -> range/bounce repair (dynamic scanner) -> строгий OOS. Параллельно P1 wiring
+   ATT1 по спеку ATT1_DECISION_BUS_EDGE_MONITOR_WIRING_SPEC_2026_07_03.md.

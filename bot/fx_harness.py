@@ -91,6 +91,35 @@ def backtest_fx_setup(
     return trades
 
 
+def cost_feasibility(
+    rows: Sequence[Sequence[float]],
+    *,
+    sl_atr: float = 1.0,
+    fee_bps: float = 1.0,
+    slippage_bps: float = 0.5,
+    atr_period: int = 14,
+    max_fee_r: float = 0.25,
+) -> Dict[str, Any]:
+    """Refuse to backtest a doomed (data x timeframe x cost) combination.
+
+    EURUSD/M5 lesson (2026-07-03): with ATR ~2 pips a 0.8*ATR stop makes the
+    round-trip cost ~1.78R per trade — every result is an artifact of costs,
+    not the market (screen showed PF 0.00 over 1111 trades). Call this BEFORE
+    backtest_fx_setup; if feasible=False the run is uninformative: fix the
+    timeframe/data or the cost model, do not read the PF.
+    """
+    a = atr(rows, atr_period) if len(rows) > atr_period + 2 else float("nan")
+    price = _f(rows[-1], CLOSE) if rows else float("nan")
+    if not (a == a and a > 0 and price == price and price > 0):
+        return {"feasible": False, "fee_r": float("nan"), "reason": "no_atr_or_price"}
+    risk_frac = max(1e-9, float(sl_atr) * a / price)
+    fee_r = (2.0 * (float(fee_bps) + float(slippage_bps)) / 1e4) / risk_frac
+    if fee_r > float(max_fee_r):
+        return {"feasible": False, "fee_r": round(fee_r, 4),
+                "reason": f"fee_r_{fee_r:.2f}_exceeds_{max_fee_r}"}
+    return {"feasible": True, "fee_r": round(fee_r, 4), "reason": ""}
+
+
 def summarize_trades(trades: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
     """Quick net-of-fee summary for a first read before the full gate."""
     rs = [float(t["r"]) for t in trades if t.get("r") == t.get("r")]
