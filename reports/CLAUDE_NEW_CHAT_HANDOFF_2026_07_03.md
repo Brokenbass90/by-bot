@@ -19,6 +19,9 @@
 держит, ~14-21%/год@0.5-0.75%, DD~3-5%); Alpaca v38 (на бумаге ~22-28%/год, ждёт $500 владельца).
 NO-GO честно (не слили деньги): ARF2 failed-breakout (OOS-symbol FAIL -15R = selection bias
 пойман), SpikeFade, InPlay V4, grid v1/v2, pair-arb, carry, Elder standalone, H4-naive, raw BOS.
+ВАЖНО 2026-07-03: свежий live-forensics подтвердил `missing_candles` 31/41 сделок за 45d.
+Range/pila остаётся risk=0 до candle-coverage gate; многие dynamic range symbols отсутствуют
+в `.cache/klines` и локально, и на сервере. См. reports/LIVE_FORENSICS_CANDLE_COVERAGE_2026_07_03.md.
 
 ## Главный урок и метод (НЕ нарушать)
 - OOS-first + ОБЯЗАТЕЛЬНО cross-symbol (OOS-symbol) gate — selection bias по монетам = наш
@@ -33,15 +36,20 @@ NO-GO честно (не слили деньги): ARF2 failed-breakout (OOS-sym
 - Claude готовит код+конфиги+разбор; Codex деплоит/гоняет (Mac/сервер); владелец заводит деньги.
 
 ## Что крутится (2026-07-03)
-- crypto_structure_break_cd_gate_20260703 — BOS/CHoCH с cooldown+cross-symbol (следующий частотный кандидат).
-- fx_native_gate_20260703 — trend_pullback/round_sweep/session_breakout на локальных данных.
-- xau_bos_long — слабый, добегает.
+- ЛОКАЛЬНО: `crypto_choch_short_screen_20260703` — только CHoCH short. BOS long/short уже показали крупный
+  broad-minus и остановлены, чтобы не жечь компьютер.
+- ЛОКАЛЬНО: `fx_session_range_fade_screen_20260703` — частый FX range-fade по мажорам/кроссам, XAU исключён
+  (XAU range-fade уже no-go). Это screening, не promotion gate.
+- СЕРВЕР: research/backtest/sweep сейчас НЕ крутятся. На сервере живут live-бот, web, liquidation collector.
+  Тяжёлые research-задачи не запускать рядом с live без явного решения/лимитов.
 
 ## PENDING
-- Claude (новый чат): разобрать crypto structure + FX gate по OOS честно (%/год, красные мес,
-  cross-symbol!); если PASS -> вписать 2-й рукав на ДИНАМИЧЕСКИЕ рельсы (decision_bus+edge_monitor+
-  smart_risk+exposure), не хардкод. Дальше range/пила блок для частоты.
-- Codex: гонять гейты; вписывать управляющий слой по блупринту по мере live-рукавов.
+- Claude/Codex (новый чат): разобрать `crypto_choch_short_screen_20260703` и
+  `fx_session_range_fade_screen_20260703`. Любой PASS = только билет в строгий wf_folds+oos_selector,
+  НЕ live.
+- Codex P0: candle-coverage/backfill gate для range/pila. Без 0% missing_candles не включать range/pila.
+- Codex P1: ATT1 decision_bus + edge_monitor wiring по reports/ATT1_DECISION_BUS_EDGE_MONITOR_WIRING_SPEC_2026_07_03.md.
+  Деплой флагами 0 -> сутки стабильности -> включение после OK.
 - Владелец: Alpaca $500 (3-й рукав: ATT1+ARF2/structure+Alpaca = старт).
 
 ## Цель

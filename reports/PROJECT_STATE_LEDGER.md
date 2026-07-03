@@ -372,3 +372,9 @@
 - reports/ATT1_DECISION_BUS_EDGE_MONITOR_WIRING_SPEC_2026_07_03.md: канарейка с первого дня пишет атрибуцию (enter/skip с контекстом breaker_mult/minqty_fallback/fallback_stretch, outcome по bus_id от ФАКТИЧЕСКОГО риска) + почасовой edge_monitor (baseline 0.054R = fee-stress 10/5bps, halt=громкий алерт, НЕ авто-стоп — единственный автостоп остаётся breaker). Всё за флагами default 0, rollback=выключить флаги. Codex: реализовать по спеку, тесты обязательны, деплой с флагами 0 -> сутки -> OK владельца -> включить.
 - Решение владельца: Alpaca $500 на выходных (копилка/стабилизатор). Фокус разгона = крипта (A) + FX (B). Переделка провалившихся стратегий — ТОЛЬКО через гипотезу+одна технология+A/B на OOS (не наваливать фильтры до розового винрейта — так чуть не пустили ARF2).
 - Ожидание: crypto_structure_break_short_screen ~2-3ч, fx_native_gate ~4-6ч. Оговорка к short-screen зафиксирована ранее: short-only после провала long на тех же данных = условность на выборке -> планка выше (cross-symbol, per-period, regime-гейт+corr-cap в live).
+
+## ДОБАВЛЕНО 2026-07-03 (live forensics candle coverage, Codex)
+- Свежий пересчёт live-forensics за 45d подтвердил `missing_candles`: 31/41 сделок не реконструируются по `.cache/klines`; range = 20/20 missing, breakdown = 6/11, ATT1 = 3/7, flat = 2/2.
+- Серверный cache также не содержит dynamic range symbols: APE/APT/BERA/DASH/DYDX/GALA/JUP/OP/POL/PYTH/RENDER = 0 files. Core symbols есть (ADA/BTC/ETH/DOGE).
+- Интерпретация: это не доказывает, что live-бот входил без свечей, но доказывает, что MFE/MAE/live-vs-backtest forensics по range/pila сейчас ненадёжны. Range/pila остаётся risk=0 до candle-coverage/backfill gate: 0% missing по canary symbol set -> 180/360d OOS/additivity -> только потом tiny canary.
+- Отчёт: reports/LIVE_FORENSICS_CANDLE_COVERAGE_2026_07_03.md.
