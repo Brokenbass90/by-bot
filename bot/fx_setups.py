@@ -79,6 +79,7 @@ def session_range_fade(
 def round_level_sweep(
     rows: Sequence[Sequence[float]], *,
     events=None, block_asia: bool = True, tol_frac: float = 0.0006,
+    atr_value: Optional[float] = None,
 ) -> FxSignal:
     """Stop-hunt reversal: liquidity swept AT/near a round level -> fade back."""
     if len(rows) < 30:
@@ -86,11 +87,11 @@ def round_level_sweep(
     ts = _f(rows[-1], 0); price = _f(rows[-1], CLOSE)
     if not _news_ok(ts, events, price, block_asia):
         return _none("round_level_sweep", "news_or_session_block")
-    sw = liquidity_sweep(rows)
+    sw = liquidity_sweep(rows, atr_value=atr_value)
     if sw.event != "sweep_reversal":
         return _none("round_level_sweep", sw.reason)
     # the swept pool must sit near a round level (desk stop-hunt signature)
-    a = atr(rows)
+    a = float(atr_value) if (atr_value is not None and atr_value == atr_value and atr_value > 0) else atr(rows)
     rounds = _round_levels(price, a) if (a == a and a > 0) else []
     near_round = any(abs(sw.pool_level - r) <= tol_frac * price for r in rounds)
     if not near_round:

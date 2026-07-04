@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts.collect_bybit_orderbook_density import apply_orderbook_message, extract_densities
+from scripts.collect_bybit_orderbook_density import apply_orderbook_message, build_parser, extract_densities
 
 
 def _snapshot(symbol="BTCUSDT", bids=None, asks=None):
@@ -70,3 +70,8 @@ def test_top_n_caps_output():
     book = {"bids": bids, "asks": {100.0: 1.0, 100.1: 1.0}}
     dens = extract_densities(book, symbol="X", ts_ms=1, min_mult=4.0, max_dist_pct=10.0, top_n=3)
     assert len([d for d in dens if d["side"] == "bid"]) == 3
+
+
+def test_parser_help_formats_percent_sign():
+    help_text = build_parser().format_help()
+    assert "within this % of mid" in help_text

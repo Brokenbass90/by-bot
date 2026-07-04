@@ -183,7 +183,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--out", default="runtime/orderbook/bybit_densities.jsonl")
     p.add_argument("--emit-every-sec", type=float, default=30.0)
     p.add_argument("--min-mult", type=float, default=4.0, help="wall >= mult * median level size")
-    p.add_argument("--max-dist-pct", type=float, default=3.0, help="only walls within this % of mid")
+    p.add_argument("--max-dist-pct", type=float, default=3.0, help="only walls within this %% of mid")
     p.add_argument("--top-n", type=int, default=5, help="largest walls per side per emit")
     p.add_argument("--min-usd", type=float, default=10_000.0)
     p.add_argument("--chunk-size", type=int, default=10)

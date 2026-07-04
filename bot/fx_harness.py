@@ -8,6 +8,7 @@ bars AFTER entry; one position at a time (cooldown). Pure stdlib + market_contex
 """
 from __future__ import annotations
 
+import inspect
 from typing import Any, Callable, Dict, List, Sequence
 
 from bot.market_context import atr, HIGH, LOW, CLOSE, TS
@@ -94,14 +95,21 @@ def backtest_fx_setup(
     n = len(rows)
     trades: List[Dict[str, Any]] = []
     fin_sums, cnt_at = _prefix_atr_arrays(rows)
+    try:
+        accepts_atr_value = "atr_value" in inspect.signature(setup_fn).parameters
+    except (TypeError, ValueError):
+        accepts_atr_value = False
     i = max(warmup, atr_period + 2)
     while i < n - 1:
-        sig = setup_fn(_PrefixView(rows, i + 1), **setup_kwargs)
+        a = _atr_at(fin_sums, cnt_at, i, atr_period)
+        kwargs = setup_kwargs
+        if accepts_atr_value:
+            kwargs = {**setup_kwargs, "atr_value": a if (a == a and a > 0) else None}
+        sig = setup_fn(_PrefixView(rows, i + 1), **kwargs)
         side = getattr(sig, "side", "none")
         if side not in ("long", "short"):
             i += 1
             continue
-        a = _atr_at(fin_sums, cnt_at, i, atr_period)
         if not (a == a and a > 0):
             i += 1
             continue
