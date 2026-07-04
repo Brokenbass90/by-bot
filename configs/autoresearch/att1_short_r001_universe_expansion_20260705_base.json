@@ -1,0 +1,65 @@
+{
+  "name": "att1_short_r001_universe_expansion_20260705_base",
+  "description": "Pre-registered ATT1 short r001 symbol-OOS expansion. Base cost 6/2 bps. Do not tune: tests the whole expansion group from reports/ATT1_UNIVERSE_EXPANSION_PREREG_2026_07_04.md.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "DOGEUSDT,XRPUSDT,AVAXUSDT,ATOMUSDT,BNBUSDT,BCHUSDT,XLMUSDT,1000PEPEUSDT,HYPEUSDT,TAOUSDT,ONDOUSDT",
+    "--strategies",
+    "alt_trendline_touch_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-07-04",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2",
+    "--entry-on-next-open"
+  ],
+  "base_env": {
+    "ATT1_ALLOW_LONGS": "0",
+    "ATT1_ALLOW_SHORTS": "1",
+    "ATT1_PIVOT_LEFT": "2",
+    "ATT1_PIVOT_RIGHT": "3",
+    "ATT1_MIN_PIVOTS": "2",
+    "ATT1_MAX_PIVOT_AGE": "16",
+    "ATT1_MIN_R2": "0.55",
+    "ATT1_TOUCH_ATR": "0.50",
+    "ATT1_RSI_LONG_MAX": "52",
+    "ATT1_SYMBOL_ALLOWLIST": "DOGEUSDT,XRPUSDT,AVAXUSDT,ATOMUSDT,BNBUSDT,BCHUSDT,XLMUSDT,1000PEPEUSDT,HYPEUSDT,TAOUSDT,ONDOUSDT"
+  },
+  "grid": {
+    "ATT1_UNIVERSE_EXPANSION_LOCKED": ["r001"]
+  },
+  "constraints": {
+    "min_trades": 40,
+    "min_profit_factor": 1.15,
+    "max_drawdown": 12.0,
+    "min_net_pnl": 0.01,
+    "max_negative_months": 5,
+    "max_negative_streak": 2
+  },
+  "score_weights": {
+    "net_pnl": 1.0,
+    "profit_factor": 4.0,
+    "winrate": 3.0,
+    "max_drawdown": 1.0,
+    "trades": 0.05,
+    "trades_cap": 300,
+    "negative_months": 1.0,
+    "worst_month_pnl": 1.0
+  }
+}

@@ -99,12 +99,23 @@ def _row_to_candle(r: Any) -> Candle:
 
 
 def load_price_rows(cache: Path, symbol: str, start_ms: int, end_ms: int) -> List[List[float]]:
-    files = sorted(cache.glob(f"{symbol}_5_*.json"), key=lambda p: p.stat().st_size, reverse=True)
+    files = sorted(cache.glob(f"{symbol}_5_*.json"))
     if not files:
         return []
-    raw = json.loads(files[0].read_text(encoding="utf-8"))
-    candles = sorted((_row_to_candle(r) for r in raw), key=lambda c: c.ts)
-    candles = [c for c in candles if start_ms <= c.ts <= end_ms]
+    by_ts: Dict[int, Candle] = {}
+    for file in files:
+        try:
+            raw = json.loads(file.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        for r in raw:
+            try:
+                c = _row_to_candle(r)
+            except Exception:
+                continue
+            if start_ms <= c.ts <= end_ms:
+                by_ts[c.ts] = c
+    candles = [by_ts[ts] for ts in sorted(by_ts)]
     candles = aggregate_candles_to_interval(candles, 5)
     return [[c.ts, c.o, c.h, c.l, c.c, c.v] for c in candles]
 

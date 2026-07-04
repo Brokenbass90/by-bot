@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.run_cascade_real_gate import (
     bucket_liquidations, forward_fill_to_grid, liq_series_for_grid,
-    run_symbol, simulate_fade,
+    load_price_rows, run_symbol, simulate_fade,
 )
 
 M5 = 5 * 60_000
@@ -76,3 +76,18 @@ def test_simulate_fade_sl_first_and_fees():
                         fee_bps=6.0, slippage_bps=2.0)
     assert sim is not None
     assert sim["r"] < -0.9  # stopped out + fees
+
+
+def test_load_price_rows_uses_window_not_largest_file(tmp_path):
+    old = [[i * M5, 10, 11, 9, 10, 1] for i in range(200)]
+    fresh_start = 10_000 * M5
+    fresh = [[fresh_start + i * M5, 20, 21, 19, 20, 1] for i in range(20)]
+    # Old file is intentionally larger; loader must still pick/merge the fresh
+    # window instead of sorting by file size and returning zero rows.
+    (tmp_path / "BTCUSDT_5_20250101_20250102.json").write_text(str(old).replace("'", '"'))
+    (tmp_path / "BTCUSDT_5_20260701_20260702.json").write_text(str(fresh).replace("'", '"'))
+
+    rows = load_price_rows(tmp_path, "BTCUSDT", fresh_start, fresh_start + 19 * M5)
+    assert len(rows) == 20
+    assert rows[0][0] == fresh_start
+    assert rows[0][4] == 20
