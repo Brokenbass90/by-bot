@@ -440,3 +440,19 @@
 - bot/fx_harness.py: O(n^2) -> O(n). _PrefixView (нулевое копирование причинного среза) + префиксный ATR (реплика market_context.atr бит-в-бит, включая non-finite TR путь). Golden-тест эквивалентности: сделки идентичны старой версии на 3 сетапах + NaN-бары (3 теста). 17k H1 баров = 0.02s на цикл харнесса. FX-свипы на 2.4г истории больше не ползут. Тесты: 748 passed.
 - КРИТИЧНО (из отчёта Codex): Bybit equity = $120.20, риск ATT1 = $0.053/сделку, номинал ~$2.65 < min-notional Bybit. При появлении сигнала вход, вероятно, зарежется по minqty (att1_skip_minqty/notional_small) — канарейка может «молчать» не из-за редкости сетапа, а из-за РАЗМЕРА. ДЕЙСТВИЕ ВЛАДЕЛЬЦА: довести Bybit до $2000 по CAPITAL_ALLOCATION_PLAN. Codex: следить за att1_skip_minqty в diag; после пополнения счётчик должен перестать расти.
 - AUDUSD session_range_fade 59d: +6.20R PF1.28 32tr = пульс, ждём long-history вердикт (fx_yf_1h_session_range на новом чистом кэше). НЕ live-grade до OOS на 2.4г + cross-pair.
+
+## ДОБАВЛЕНО 2026-07-04 morning (Codex — live + ARS1 decision)
+- Live-сервер проверен после пополнения: `bybot.service=active`, `dry_run=false`, `trade_on=true`, `open_trades=0`, `regime=bull_chop`, `risk_per_trade_pct=0.44`, `operator_live_override=configs/att1_short_r001_canary_20260702.env`. Единственный денежный рукав остаётся `ATT1 r001 risk_mult=0.10`; `flat/range/ivb1/midterm/bounce/breakdown=0.0`. Блокеров нет: ATT1 молчит из-за отсутствия валидной наклонки (`att1_ns_trendline` доминирует), а не из-за freeze/safety.
+- Server research: `ars1_r170_revalidate_20260704` завершён: `68 trades`, `+13.12R`, `PF 1.864`, `WR 29.4%`, `DD 3.34R`, 3 красных месяца из 10. Символы: DOT +7.49R, ADA +2.73R, LINK +2.04R, SUI +1.21R, LTC -0.35R. Стороны почти симметричны: long +6.62R, short +6.50R.
+- Локальная ARS1 r170 диагностика:
+  - no-LTC (`ADA/LINK/DOT/SUI`): `70 trades`, `+12.91R`, `PF 1.825`, `DD 3.66R`, 2 красных месяца из 10; long +6.56R, short +6.35R.
+  - long-only: `47 trades`, `+5.60R`, `PF 1.501`, `DD 7.28R`, 6 красных месяцев — слабее, не live.
+  - short-only: `39 trades`, `+4.63R`, `PF 1.557`, `DD 2.42R`, 4 красных месяца — аккуратный диверсификатор, но маловат.
+  - no-LTC rolling 4x90d: `+3.47R / -0.12R / +3.60R / +5.78R`, 3/4 положительных, total `+12.73R`, median `+3.54R`, min fold trades 14. `oos_selector` => `passes=True`, reason `robust_plateau`.
+- Additivity sanity:
+  - ATT1 r001 solo: `290 trades`, `+27.77R`, `PF 1.402`, `DD 6.55R`, 2 красных месяца.
+  - ATT1 r001 + ARS1 no-LTC fixed: `407 trades`, `+33.35R`, `PF 1.397`, `DD 7.16R`, 2 красных месяца; вклад ARS1 `+12.44R/61tr`, ATT1 `+20.91R/346tr`.
+  - Вывод: ARS1 no-LTC — первый реальный кандидат на второй крипто-рукав, но не включать вслепую. Он добавляет доход/частоту, но слегка ухудшает DD относительно ATT1 solo. Следующий безопасный шаг: `shadow`/paper telemetry или tiny canary `range risk_mult <=0.03-0.05` с отдельным breaker+expiry и запретом LTC; не добавлять как равный risk=0.10.
+- ARF2 failed-breakout: focused-подбор был плюсовой (`+21.94R PF1.52`), но OOS-symbol gate на 15 новых символах провалился (`-15.48R PF0.83`). ARF2 НЕ кандидат в live; проблема = symbol pocket/overfit.
+- FX/CFD: `session_range_fade` на длинной H1 истории EUR/GBP/USDJPY отрицателен; XAU round/structure текущие вердикты небоевые из-за coverage и отрицательных результатов. FX-трек остаётся research, не live.
+- Текущий локальный процесс: старый `screen fx_1h_major_relaxed_gate_20260703` всё ещё считает и ест CPU; его результаты считать diagnostic-only до завершения. Новые полезные ночные задачи: ARS1 no-LTC additivity/telemetry packaging и/или ARS1 shadow config, а не ещё один raw BOS/FX range sweep.
