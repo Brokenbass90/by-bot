@@ -458,6 +458,14 @@
 - Текущий локальный процесс: старый `screen fx_1h_major_relaxed_gate_20260703` всё ещё считает и ест CPU; его результаты считать diagnostic-only до завершения. Новые полезные ночные задачи: ARS1 no-LTC additivity/telemetry packaging и/или ARS1 shadow config, а не ещё один raw BOS/FX range sweep.
 - Подготовлен config-proposal: `configs/ars1_r170_noltc_tiny_canary_20260704.env` (`ENABLE_RANGE_TRADING=1`, `RANGE_RISK_MULT=0.03`, no-LTC, r170 params). Это НЕ задеплоено и НЕ live; применять только после явного owner OK.
 
+## ДОБАВЛЕНО 2026-07-04 continuation (Codex — ARS1 OOS-symbol gate)
+- Claude generic range breaker commit уже в HEAD: `193a624 feat: generic sleeve breaker+expiry...`. Range-канарейка теперь имела бы breaker/expiry, но это не снимает requirement на OOS-symbol PASS.
+- ARS1 fixed r170/no-LTC OOS-symbol gate выполнен по заранее отделённой корзине `BTC/ETH/SOL/DOGE/ATOM/AVAX/1000PEPE/HYPE/TAO/ONDO`. Результат: `293 trades`, `-16.90R`, `PF 0.743`, `DD 22.17R`, 7 красных месяцев из 11, positive symbols `2/10` (`ONDO +4.02R`, `ATOM +2.34R`). Preregistered criterion (`>=50% symbols+`, total PF>1.1) => FAIL.
+- Расширенная ARS1 symbol-matrix по cached OOS symbols (исключены `ADA/LINK/DOT/SUI/LTC`) также FAIL: 14 ok symbols, positive `4/14`, crude symbol PF `0.691`, total `-5.99R`. Top positives: `ONDO +4.96R`, `TAO +4.08R`, `ATOM +3.27R`, `ETH +1.07R`. Laggards: `HYPE -5.63R`, `SOL -3.50R`, `1000PEPE -2.53R`.
+- Post-hoc top3 pocket `ONDO/TAO/ETH`: 360d `53 trades`, `+11.82R`, `PF 2.073`, `DD 2.75R`, but 4x90d folds `+3.11/-0.12/-0.17/+7.45R`, only `2/4` positive, `oos_selector` FAIL reason `unstable_frac_pos_0.50`. Не live.
+- Decision: ARS1/range НЕ включать в live сейчас. Проблема не в breaker, а в переносимости по символам. Следующий research only: build/use dynamic symbol-picker for range suitability, then run symbol×time OOS again. `configs/ars1_r170_noltc_tiny_canary_20260704.env` помечен BLOCKED/RESEARCH ONLY.
+- Добавлен tooling: `scripts/run_ars1_symbol_matrix.py` — fixed-param ARS1 per-symbol matrix для воспроизводимых symbol-transfer проверок.
+
 ## ДОБАВЛЕНО 2026-07-04 (ревью ARS1 canary + generic sleeve breaker, Claude)
 - РЕВЬЮ ARS1 no-LTC кандидата: цифры хорошие (70tr +12.91R PF1.83, rolling 3/4+, oos_selector pass), НО две дисциплинарные дыры ПЕРЕД canary:
   (1) СИМВОЛЫ ВЫБРАНЫ ПОСЛЕ АНАЛИЗА: allowlist ADA/LINK/DOT/SUI из свипа + LTC исключён post-hoc как «слабейший» — это ровно паттерн ARF2 (focused +25.87R -> OOS-символы -15.48R). ARS1 ОБЯЗАН пройти OOS-symbol gate на свежем наборе (DOGE/XRP/AVAX/ATOM/BNB/XLM/TAO/SOL/BTC/ETH, 15m из 5m кэша, params r170 БЕЗ изменений, пре-регистрация: >=50% символов+, суммарный PF>1.1) ДО включения деньгами. Плюс раскрыть цифру С LTC (честный full-set результат).
