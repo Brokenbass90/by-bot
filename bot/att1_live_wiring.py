@@ -16,6 +16,7 @@ Env:
   ATT1_EDGE_BASELINE_EXPECTANCY_R  default 0.054 (fee-stress 10/5bps: 16.53R/307).
   ATT1_EDGE_INTERVAL_SEC     default 3600.
   ATT1_EDGE_HEALTH_PATH      default runtime/att1_edge_health.json.
+  ATT1_EDGE_START_TS         optional unix seconds; ignore older legacy trades.
 """
 from __future__ import annotations
 
@@ -158,6 +159,12 @@ def att1_r_multiples_from_db(db_path: str, *, lookback_days: int = 90) -> List[f
     """R-multiples of closed ATT1 trades from trade_events, actual-risk based."""
     out: List[float] = []
     cutoff = int(time.time()) - int(lookback_days) * 86400
+    try:
+        start_ts = int(float(os.getenv("ATT1_EDGE_START_TS", "0") or 0))
+        if start_ts > 0:
+            cutoff = max(cutoff, start_ts)
+    except (TypeError, ValueError):
+        pass
     with sqlite3.connect(db_path) as con:
         rows = con.execute(
             "SELECT qty, entry_price, sl_price, pnl FROM trade_events "

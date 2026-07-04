@@ -22,6 +22,8 @@
   - `ATT1_EDGE_BASELINE_EXPECTANCY_R=0.054`
 - Перед рестартом проверено `open_trades=0`; после рестарта `bybot.service=active`.
 - `edge_monitor` alert-only; он не должен сам останавливать торговлю. Автостоп остаётся за breaker.
+- После первого включения `edge_monitor` показал ложный `halt`, потому что читал legacy ATT1 trades из общей `trade_events` истории.
+- Это исправлено: добавлен `ATT1_EDGE_START_TS`, на сервере выставлен `1783162792`. Новый health корректный: `status=watch`, `n=0`, `reason=insufficient_trades_0`.
 - Orderbook density collector поставлен на сервер точечно без `git pull`, потому что server worktree грязный.
 - Collector запущен в `screen=orderbook_density_20260704` рядом с liquidation collector.
 - Подтверждено, что `runtime/orderbook/bybit_densities.jsonl` начал наполняться. Первые строки уже есть.
@@ -33,6 +35,14 @@
 - Добавлен тест `test_parser_help_formats_percent_sign`.
 - Локально: `tests/test_orderbook_density_collector.py` → `6 passed`.
 - На сервере после установки: `tests/test_orderbook_density_collector.py` → `6 passed`.
+
+## ATT1 edge monitor legacy filter
+
+- `bot/att1_live_wiring.py` теперь поддерживает `ATT1_EDGE_START_TS`.
+- `att1_r_multiples_from_db()` берёт `max(lookback_cutoff, ATT1_EDGE_START_TS)`, поэтому старые ATT1-сделки не загрязняют r001 canary health.
+- Test: `tests/test_att1_live_wiring.py::test_edge_check_start_ts_ignores_legacy_trades`.
+- Локально: `tests/test_att1_live_wiring.py` → `7 passed`.
+- На сервере после установки: `tests/test_att1_live_wiring.py` → `7 passed`.
 
 ## FX/CFD research — актуальный статус
 

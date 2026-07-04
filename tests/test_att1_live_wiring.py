@@ -112,6 +112,26 @@ def test_edge_check_watch_then_halt(monkeypatch, tmp_path):
     assert health["status"] == "halt"
 
 
+def test_edge_check_start_ts_ignores_legacy_trades(monkeypatch, tmp_path):
+    _env(monkeypatch, tmp_path, bus=False, edge=True)
+    db = tmp_path / "legacy.db"
+    now = int(time.time())
+    with sqlite3.connect(db) as con:
+        con.execute("CREATE TABLE trade_events (ts INT, event TEXT, strategy TEXT, "
+                    "qty REAL, entry_price REAL, sl_price REAL, pnl REAL)")
+        # Legacy pre-canary loss: should be ignored by ATT1_EDGE_START_TS.
+        con.execute("INSERT INTO trade_events VALUES (?,?,?,?,?,?,?)",
+                    (now - 10_000, "CLOSE", "att1_trendline_touch", 100.0, 1.0, 1.02, -10.0))
+        # Current canary win: should be counted.
+        con.execute("INSERT INTO trade_events VALUES (?,?,?,?,?,?,?)",
+                    (now + 10, "CLOSE", "att1_trendline_touch", 100.0, 1.0, 1.02, 2.0))
+    monkeypatch.setenv("ATT1_EDGE_START_TS", str(now))
+    d = w.edge_check(str(db))
+    assert d["status"] == "watch"
+    assert d["n"] == 1
+    assert abs(d["live_expectancy_R"] - 1.0) < 1e-9
+
+
 def test_maybe_edge_check_disabled_and_ratelimit(monkeypatch, tmp_path):
     _env(monkeypatch, tmp_path, bus=False, edge=False)
     assert w.maybe_edge_check(_mk_db(tmp_path, [1.0], name="t0.db")) is None
