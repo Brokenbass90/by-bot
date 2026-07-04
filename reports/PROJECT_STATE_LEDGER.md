@@ -456,3 +456,4 @@
 - ARF2 failed-breakout: focused-подбор был плюсовой (`+21.94R PF1.52`), но OOS-symbol gate на 15 новых символах провалился (`-15.48R PF0.83`). ARF2 НЕ кандидат в live; проблема = symbol pocket/overfit.
 - FX/CFD: `session_range_fade` на длинной H1 истории EUR/GBP/USDJPY отрицателен; XAU round/structure текущие вердикты небоевые из-за coverage и отрицательных результатов. FX-трек остаётся research, не live.
 - Текущий локальный процесс: старый `screen fx_1h_major_relaxed_gate_20260703` всё ещё считает и ест CPU; его результаты считать diagnostic-only до завершения. Новые полезные ночные задачи: ARS1 no-LTC additivity/telemetry packaging и/или ARS1 shadow config, а не ещё один raw BOS/FX range sweep.
+- Подготовлен config-proposal: `configs/ars1_r170_noltc_tiny_canary_20260704.env` (`ENABLE_RANGE_TRADING=1`, `RANGE_RISK_MULT=0.03`, no-LTC, r170 params). Это НЕ задеплоено и НЕ live; применять только после явного owner OK.
