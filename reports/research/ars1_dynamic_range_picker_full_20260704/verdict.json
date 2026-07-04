@@ -1,0 +1,19 @@
+{
+  "best": {
+    "candidate": "td30_lb120_top3_s0.6_w1.5-8",
+    "dispersion": 1.7212664910853672,
+    "folds": 4,
+    "folds_positive": 2,
+    "frac_positive": 0.5,
+    "median_metric": -0.54,
+    "min_metric": -2.78,
+    "passes": 0,
+    "peak_ratio": Infinity,
+    "reason": "unstable_frac_pos_0.50",
+    "robustness": -1.4006332455426835,
+    "total_trades": 59
+  },
+  "candidates": 216,
+  "outdir": "reports/research/ars1_dynamic_range_picker_full_20260704",
+  "passing": 0
+}

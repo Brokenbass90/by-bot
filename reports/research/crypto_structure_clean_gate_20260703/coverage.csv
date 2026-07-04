@@ -1,0 +1,13 @@
+symbol,coverage_ok,coverage,actual_bars,expected_bars,n_gaps,max_gap_bars,flat_frac,dup_bars,coverage_reasons
+BTCUSDT,True,1.0,8641,8641,0,0,0.0,0,
+ETHUSDT,True,1.0,8641,8641,0,0,0.0,0,
+SOLUSDT,True,1.0,8640,8640,0,0,0.0,0,
+LINKUSDT,True,1.0,8640,8640,0,0,0.0,0,
+ADAUSDT,True,1.0,8641,8641,0,0,0.0,0,
+DOGEUSDT,True,1.0,8641,8641,0,0,0.0,0,
+XRPUSDT,True,1.0,8641,8641,0,0,0.0,0,
+ONDOUSDT,True,1.0,8641,8641,0,0,0.0,0,
+SUIUSDT,True,1.0,8641,8641,0,0,0.0,0,
+AVAXUSDT,True,1.0,8641,8641,0,0,0.0,0,
+DOTUSDT,True,1.0,8641,8641,0,0,0.0,0,
+LTCUSDT,True,1.0,8641,8641,0,0,0.0,0,

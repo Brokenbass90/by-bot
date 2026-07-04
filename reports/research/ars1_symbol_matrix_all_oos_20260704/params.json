@@ -1,0 +1,53 @@
+{
+  "args": {
+    "days": 360,
+    "end": "2026-04-30",
+    "exclude": "ADAUSDT,LINKUSDT,DOTUSDT,SUIUSDT,LTCUSDT",
+    "fee_bps": 6.0,
+    "max_symbols": 0,
+    "outdir": "reports/research/ars1_symbol_matrix_all_oos_20260704",
+    "slippage_bps": 2.0,
+    "symbols": "",
+    "tag_prefix": "ars1_symbol_matrix_all_oos_20260704"
+  },
+  "env": {
+    "ARS1_ADX_PERIOD": "14",
+    "ARS1_ALLOW_LONGS": "1",
+    "ARS1_ALLOW_SHORTS": "1",
+    "ARS1_BB_PERIOD": "20",
+    "ARS1_BB_STD": "2.0",
+    "ARS1_COOLDOWN_BARS_5M": "12",
+    "ARS1_MAX_ADX": "0.0",
+    "ARS1_MAX_BAND_WIDTH_PCT": "24.0",
+    "ARS1_MAX_STOP_PCT": "0.0600",
+    "ARS1_MIN_BAND_WIDTH_PCT": "1.5",
+    "ARS1_MIN_RR": "1.15",
+    "ARS1_MIN_STOP_PCT": "0.0015",
+    "ARS1_MIN_VOL_MULT": "1.1",
+    "ARS1_RECLAIM_ATR": "0.0",
+    "ARS1_RSI_LONG_MAX": "38",
+    "ARS1_RSI_SHORT_MIN": "55",
+    "ARS1_SL_ATR_MULT": "0.8",
+    "ARS1_TIME_STOP_BARS_5M": "216",
+    "ARS1_TP1_FRAC": "0.55",
+    "ARS1_TRAIL_ACTIVATE_RR": "1.0",
+    "ARS1_TRAIL_ATR_MULT": "0.0",
+    "BACKTEST_CACHE_ONLY": "1"
+  },
+  "symbols": [
+    "1000PEPEUSDT",
+    "ATOMUSDT",
+    "AVAXUSDT",
+    "BCHUSDT",
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "HYPEUSDT",
+    "ONDOUSDT",
+    "SOLUSDT",
+    "TAOUSDT",
+    "XLMUSDT",
+    "XRPUSDT"
+  ]
+}

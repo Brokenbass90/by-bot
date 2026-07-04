@@ -1,0 +1,19 @@
+{
+  "best": {
+    "candidate": "td30_lb60_top3_s0.45_w2-12",
+    "dispersion": 0.24748737341529162,
+    "folds": 2,
+    "folds_positive": 1,
+    "frac_positive": 0.5,
+    "median_metric": 0.175,
+    "min_metric": 0.0,
+    "passes": 0,
+    "peak_ratio": 2.0,
+    "reason": "insufficient_trades_10",
+    "robustness": 0.05125631329235418,
+    "total_trades": 10
+  },
+  "candidates": 1,
+  "outdir": "reports/research/ars1_dynamic_range_picker_smoke_20260704",
+  "passing": 0
+}

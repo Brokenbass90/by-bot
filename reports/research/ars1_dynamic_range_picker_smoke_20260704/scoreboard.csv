@@ -1,0 +1,11 @@
+candidate,fold,rank,symbol,score,tradeable,is_range,votes,regime,range_prob,width_atr,reason
+td30_lb60_top3_s0.45_w2-12,0,1,TAOUSDT,0.7881,1,1,2,range,0.486,2.86,ok
+td30_lb60_top3_s0.45_w2-12,0,2,SOLUSDT,0.4309,0,1,2,bull,0.317,1.16,below_bar
+td30_lb60_top3_s0.45_w2-12,0,3,ADAUSDT,0.212,0,0,1,bull,0.252,2.29,below_bar
+td30_lb60_top3_s0.45_w2-12,0,4,ONDOUSDT,0.0263,0,0,1,bull,0.278,1.22,below_bar
+td30_lb60_top3_s0.45_w2-12,0,5,LINKUSDT,0.0,0,0,1,bull,0.21,1.01,below_bar
+td30_lb60_top3_s0.45_w2-12,1,1,ADAUSDT,0.2029,0,0,1,bull,0.236,5.0,below_bar
+td30_lb60_top3_s0.45_w2-12,1,2,TAOUSDT,0.1999,0,0,1,bull,0.23,3.96,below_bar
+td30_lb60_top3_s0.45_w2-12,1,3,LINKUSDT,0.1645,0,0,1,bull,0.166,3.2,below_bar
+td30_lb60_top3_s0.45_w2-12,1,4,ONDOUSDT,0.0966,0,0,0,bull,0.194,2.82,below_bar
+td30_lb60_top3_s0.45_w2-12,1,5,SOLUSDT,0.0,0,0,1,bull,0.183,1.68,below_bar

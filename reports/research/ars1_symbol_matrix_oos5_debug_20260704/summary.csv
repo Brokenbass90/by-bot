@@ -1,0 +1,6 @@
+symbol,status,trades,net_pnl,profit_factor,winrate,max_drawdown,run_dir,error
+ATOMUSDT,ok,3,3.27,13.464,0.667,0.2807,backtest_runs/portfolio_20260704_083959_ars1_symbol_matrix_oos5_debug_20260704_ATOMUSDT_20260704_053951,
+AVAXUSDT,ok,18,-0.43,0.898,0.167,3.8041,backtest_runs/portfolio_20260704_084006_ars1_symbol_matrix_oos5_debug_20260704_AVAXUSDT_20260704_053951,
+BNBUSDT,ok,4,-0.68,0.144,0.25,0.6846,backtest_runs/portfolio_20260704_084019_ars1_symbol_matrix_oos5_debug_20260704_BNBUSDT_20260704_053951,
+BCHUSDT,ok,7,-1.83,0.0,0.0,1.8299,backtest_runs/portfolio_20260704_084013_ars1_symbol_matrix_oos5_debug_20260704_BCHUSDT_20260704_053951,
+1000PEPEUSDT,ok,43,-2.53,0.754,0.186,5.152,backtest_runs/portfolio_20260704_083952_ars1_symbol_matrix_oos5_debug_20260704_1000PEPEUSDT_20260704_053951,
