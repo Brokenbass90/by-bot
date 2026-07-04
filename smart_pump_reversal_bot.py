@@ -2746,6 +2746,55 @@ def _breakdown_breaker_state() -> dict[str, Any]:
     return state
 
 
+def _sleeve_breaker_state_env(prefix: str, default_strategy: str) -> dict[str, Any]:
+    """Generic per-sleeve live breaker + canary expiry.
+
+    Driven by env keys {prefix}_BREAKER_* and {prefix}_CANARY_EXPIRY_UTC with the
+    same contract as the ATT1 breaker. Fail-safe: on internal error the sleeve is
+    BLOCKED when the breaker is enabled (never fail-open into live risk)."""
+    enabled = _env_bool(f"{prefix}_BREAKER_ENABLE", False)
+    strategy_name = str(os.getenv(f"{prefix}_BREAKER_STRATEGY_NAME", default_strategy) or "").strip() or default_strategy
+    try:
+        lookback_days = max(3, int(os.getenv(f"{prefix}_BREAKER_LOOKBACK_DAYS", "21") or 21))
+        min_trades = max(1, int(os.getenv(f"{prefix}_BREAKER_MIN_TRADES", "6") or 6))
+        soft_net_pnl = float(os.getenv(f"{prefix}_BREAKER_SOFT_NET_PNL", "-1.5") or -1.5)
+        soft_mult = max(0.05, min(1.0, float(os.getenv(f"{prefix}_BREAKER_SOFT_MULT", "0.50") or 0.50)))
+        hard_net_pnl = float(os.getenv(f"{prefix}_BREAKER_HARD_NET_PNL", "-3.0") or -3.0)
+        max_consec_raw = int(os.getenv(f"{prefix}_BREAKER_MAX_CONSEC_LOSSES", "5") or 5)
+        max_consec_losses = max_consec_raw if max_consec_raw > 0 else None
+        expiry_utc = str(os.getenv(f"{prefix}_CANARY_EXPIRY_UTC", "") or "").strip() or None
+        state = _strategy_breaker_state(
+            TRADE_DB_PATH,
+            strategy_name,
+            enable=enabled,
+            lookback_days=lookback_days,
+            min_trades=min_trades,
+            soft_net_pnl=soft_net_pnl,
+            soft_mult=soft_mult,
+            hard_net_pnl=hard_net_pnl,
+            max_consec_losses=max_consec_losses,
+            expiry_utc=expiry_utc,
+        )
+        state["strategy"] = strategy_name
+        return state
+    except Exception as e:
+        log_error(f"{prefix.lower()} breaker state fail: {e}")
+        return {
+            "enabled": bool(enabled),
+            "strategy": strategy_name,
+            "lookback_days": 0,
+            "min_trades": 0,
+            "trades": 0,
+            "net_pnl": 0.0,
+            "winrate": 0.0,
+            "max_consec_losses": 0,
+            "blocked": bool(enabled),
+            "risk_mult": 0.0 if enabled else 1.0,
+            "reason": f"breaker_error: {e}",
+            "expired": False,
+        }
+
+
 def _att1_breaker_state() -> dict[str, Any]:
     """Live ATT1 canary breaker.
 
@@ -9523,7 +9572,24 @@ async def try_range_entry_async(symbol: str, price: float):
         return
 
     stop_pct = abs((float(sl_r) - float(price)) / max(1e-12, float(price))) * 100.0
-    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=RANGE_RISK_MULT)
+    range_breaker = _sleeve_breaker_state_env("RANGE", "range")
+    if range_breaker.get("blocked"):
+        _diag_inc("range_skip_breaker")
+        tg_trade_throttled(
+            f"range_breaker:block:{symbol}",
+            f"🛑 RANGE BLOCKED {symbol}: {range_breaker.get('reason', 'breaker')}",
+            1800,
+        )
+        return
+    range_breaker_mult = float(range_breaker.get("risk_mult", 1.0) or 1.0)
+    if range_breaker_mult < 0.999:
+        tg_trade_throttled(
+            f"range_breaker:soft:{symbol}",
+            f"🟡 RANGE RISK CUT {symbol}: x{range_breaker_mult:.2f} | {range_breaker.get('reason', 'soft breaker')}",
+            1800,
+        )
+    effective_range_risk_mult = float(RANGE_RISK_MULT) * range_breaker_mult
+    dyn_usd = calc_notional_usd_from_stop_pct(stop_pct, risk_mult=effective_range_risk_mult)
     qty_floor, notional_real, reason = (0.0, 0.0, "BELOW_MIN_NOTIONAL_MODEL")
     if dyn_usd > 0:
         qty_floor, notional_real, reason = qty_floor_from_notional(symbol, dyn_usd, price)
@@ -9532,7 +9598,7 @@ async def try_range_entry_async(symbol: str, price: float):
             symbol=symbol,
             price=price,
             stop_pct=stop_pct,
-            risk_mult=RANGE_RISK_MULT,
+            risk_mult=effective_range_risk_mult,
             max_mult=RANGE_MINQTY_FALLBACK_MAX_MULT,
         )
         if fallback_qty > 0:

@@ -457,3 +457,10 @@
 - FX/CFD: `session_range_fade` на длинной H1 истории EUR/GBP/USDJPY отрицателен; XAU round/structure текущие вердикты небоевые из-за coverage и отрицательных результатов. FX-трек остаётся research, не live.
 - Текущий локальный процесс: старый `screen fx_1h_major_relaxed_gate_20260703` всё ещё считает и ест CPU; его результаты считать diagnostic-only до завершения. Новые полезные ночные задачи: ARS1 no-LTC additivity/telemetry packaging и/или ARS1 shadow config, а не ещё один raw BOS/FX range sweep.
 - Подготовлен config-proposal: `configs/ars1_r170_noltc_tiny_canary_20260704.env` (`ENABLE_RANGE_TRADING=1`, `RANGE_RISK_MULT=0.03`, no-LTC, r170 params). Это НЕ задеплоено и НЕ live; применять только после явного owner OK.
+
+## ДОБАВЛЕНО 2026-07-04 (ревью ARS1 canary + generic sleeve breaker, Claude)
+- РЕВЬЮ ARS1 no-LTC кандидата: цифры хорошие (70tr +12.91R PF1.83, rolling 3/4+, oos_selector pass), НО две дисциплинарные дыры ПЕРЕД canary:
+  (1) СИМВОЛЫ ВЫБРАНЫ ПОСЛЕ АНАЛИЗА: allowlist ADA/LINK/DOT/SUI из свипа + LTC исключён post-hoc как «слабейший» — это ровно паттерн ARF2 (focused +25.87R -> OOS-символы -15.48R). ARS1 ОБЯЗАН пройти OOS-symbol gate на свежем наборе (DOGE/XRP/AVAX/ATOM/BNB/XLM/TAO/SOL/BTC/ETH, 15m из 5m кэша, params r170 БЕЗ изменений, пре-регистрация: >=50% символов+, суммарный PF>1.1) ДО включения деньгами. Плюс раскрыть цифру С LTC (честный full-set результат).
+  (2) У range-рукава НЕ БЫЛО breaker/expiry (ATT1-защита на него не распространялась) — ЗАКРЫТО кодом.
+- КОД: _sleeve_breaker_state_env(prefix, strategy) — generic breaker+expiry для ЛЮБОГО рукава (ATT1 = wrapper, поведение бит-в-бит). Range-нога: breaker-блок перед sizing, soft-mult в effective_range_risk_mult (оба call-sites, включая minqty fallback), fail-safe блок при ошибке. Конфиг canary дополнен RANGE_BREAKER_*+expiry 2026-07-25 (hard -2.0 туже ATT1: рукав менее доказан). Тесты: 4 новых, 752 passed.
+- ВЕРДИКТ Claude: canary НЕ включать до PASS OOS-symbol gate (день работы). Если PASS -> включать с моим конфиг-дополнением. Если FAIL -> в research, повторяем судьбу ARF2 БЕЗ потери денег. Дисциплина не торгуется: одинаковая планка для всех кандидатов.
