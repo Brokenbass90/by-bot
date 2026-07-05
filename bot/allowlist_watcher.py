@@ -106,6 +106,31 @@ def _is_symbol_like_var(var: str) -> bool:
     )
 
 
+def _operator_live_override_enabled() -> bool:
+    return str(os.getenv("ALLOW_OPERATOR_LIVE_OVERRIDES", "0") or "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
+def _operator_live_override_values() -> Dict[str, str]:
+    """Return explicit operator canary overrides that must beat dynamic overlays."""
+    if not _operator_live_override_enabled():
+        return {}
+    raw_path = str(os.getenv("OPERATOR_LIVE_OVERRIDE_ENV", "") or "").strip()
+    if not raw_path:
+        return {}
+    path = Path(raw_path).expanduser()
+    if not path.is_absolute():
+        path = ROOT / path
+    try:
+        return _parse_env_file(path)
+    except Exception:
+        return {}
+
+
 def _is_hot_reload_var(var: str) -> bool:
     return var in HOT_RELOAD_VARS or var.startswith(HOT_RELOAD_PREFIXES)
 
@@ -221,8 +246,14 @@ class AllowlistWatcher:
         """Apply new env values → os.environ. Track changes."""
         hot_changes: Dict[str, tuple[str, str]] = {}     # var → (old, new)
         restart_changes: Dict[str, tuple[str, str]] = {}
+        operator_overrides = _operator_live_override_values()
 
         for var, new_val in new_values.items():
+            if var in operator_overrides:
+                # Explicit live canary overrides are owner-controlled. Dynamic
+                # router / auto-apply overlays must not silently change their
+                # universe, risk, or gating while the override is active.
+                continue
             old_val = os.environ.get(var, "")
             if old_val == new_val:
                 continue
