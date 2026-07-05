@@ -491,6 +491,15 @@
 
 ## ДОБАВЛЕНО 2026-07-04 (ARS1 FAIL = победа процесса #3 + распечатываем козырь #1, Claude)
 - ARS1 через dynamic range-picker: 216/216 кандидатов 0 PASS (лучший 2/4 фолда, медиана минус). Вчерашний PF 1.83 на выбранных символах был бы вторым ARF2 — гейт, который я потребовал перед canary, отработал. Деньги не тронуты. Это ТРЕТИЙ пойманный карман за 2 суток (ARF2, XAU round_sweep tiny-N, ARS1).
+
+## ДОБАВЛЕНО 2026-07-05 morning (Codex — live fix + research verdicts)
+- Утренний live-аудит: бот не заморожен (`dry_run=false`, `trade_on=true`, `open_trades=0`, Bybit equity ≈ `1019 USDT`), но денежный crypto-портфель фактически один рукав: `ATT1 short-only risk_mult=0.10`.
+- Найден реальный control-plane bug: серверный `configs/dynamic_allowlist_latest.env` hot-reload перетирал `ATT1_SYMBOL_ALLOWLIST` поверх explicit r001 canary override. Heartbeat до фикса показывал `operator_live_override.loaded=true` и `att1 risk=0.10`, но effective ATT1 universe был `1000BONK,ADA,NEAR,WLD,XLM` вместо валидированного r001 base universe.
+- Исправление: `a643032 fix: protect operator canary override from dynamic allowlist`. `AllowlistWatcher` теперь не применяет dynamic/auto overlay vars, если эти vars явно присутствуют в active `OPERATOR_LIVE_OVERRIDE_ENV`. Тесты: `4 passed` new watcher tests; `10 passed` вместе с pause/proof-of-life контрактами.
+- Серверный `git pull --ff-only` заблокирован dirty worktree; destructive cleanup НЕ делался. Для срочного live-фикса скопирован только `bot/allowlist_watcher.py` на сервер и перезапущен `bybot.service`. После restart heartbeat подтверждает корректный r001 universe: `ADA,BTC,DOT,ETH,LINK,LTC,SOL,SUI`; breaker не блокирует.
+- Research verdicts: ATT1 universe expansion FAIL (`PF 1.081` base, `PF 0.913` stress) -> не расширять; FX H1 trend pass FAIL/zero-trade; midterm short_v2/v3 FAIL (`PF 0.011`, `0.383`, `0.200`); strict cascade gate на валидных данных 0 trades -> не live.
+- Следующий продуктовый фокус: не ещё один short-only pocket, а bull-side crypto sleeve через строгий gate. Сейчас отсутствие сделок в `bull_trend` ожидаемо для одного `ATT1 short-only`, но портфель структурно слишком узкий.
+- Подробный отчёт: `reports/MORNING_LIVE_AND_RESEARCH_STATUS_2026_07_05.md`.
 - СТРАТЕГИЧЕСКИЙ ВЫВОД: 5 мёртвых детекторов подряд на 1h крипто price-action = поляна перекопана всеми ботами мира. Смещаем поиск туда, где у нас МОНОПОЛИЯ: реальный liq-поток коллектора (месяцы на сервере), до сих пор НЕ тестированный (proxy-провал PF 0.26 не считается — данные были суррогатные).
 - scripts/run_cascade_real_gate.py (4 теста, 756 passed): гейт cascade_reversal на РЕАЛЬНЫХ данных. Liq JSONL -> 5m бакеты; funding/OI c Bybit REST (пагинация) или CSV; coverage gate; пре-регистрированный мини-грид 16 комбо (fz 1.5/2.0, oi-drop 3/5, liq-pctile 90/95, rr 1.5/2.0), side-split, 4 фолда, консервативный SL-first + fees. Codex: гнать на сервере, где лежит runtime/liquidations/*.jsonl (окно = сколько собрано). НЕ расширять грид под результат.
 - Ожидание ЧЕСТНО: каскады редки, окно недели -> N может не хватить даже на скрининг; тогда вывод = «копить поток дальше», не «мертво». FX H1 trend/breakout бежит параллельно.
