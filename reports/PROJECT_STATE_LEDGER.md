@@ -500,6 +500,14 @@
 - Research verdicts: ATT1 universe expansion FAIL (`PF 1.081` base, `PF 0.913` stress) -> не расширять; FX H1 trend pass FAIL/zero-trade; midterm short_v2/v3 FAIL (`PF 0.011`, `0.383`, `0.200`); strict cascade gate на валидных данных 0 trades -> не live.
 - Следующий продуктовый фокус: не ещё один short-only pocket, а bull-side crypto sleeve через строгий gate. Сейчас отсутствие сделок в `bull_trend` ожидаемо для одного `ATT1 short-only`, но портфель структурно слишком узкий.
 - Подробный отчёт: `reports/MORNING_LIVE_AND_RESEARCH_STATUS_2026_07_05.md`.
+
+## ДОБАВЛЕНО 2026-07-05 continuation (Codex — IVB1 long bull candidate)
+- IVB1 long-only preflight запущен как ответ на bull-side дыру портфеля. `32` rows, `9 PASS`. Лучший `r003`: `29 trades`, `+6.47R`, `PF 2.791`, `WR 72.4%`, `DD 1.67R`, 2 красных месяца.
+- Next-open execution check НЕ убил результат: `29 trades`, `+6.47R`, `PF 2.791`, `DD 1.59R`.
+- Stress 10/5 bps тоже держит: `29 trades`, `+5.28R`, `PF 2.338`, `DD 1.72R`.
+- Time-fold (`wf_folds` + `oos_selector`) держит на base universe: base/stress оба `4/4` positive folds, `robust_plateau`.
+- Symbol-OOS НЕ держит: external basket `58 trades`, `-0.22R`, `PF 0.985`, `2/4` positive folds -> `unstable_frac_pos_0.50`.
+- Decision: IVB1 long r003 = top next crypto candidate / shadow candidate, НЕ live money today. Нужен либо pre-registered symbol-selection gate, либо live shadow telemetry с risk=0.0. Подробно: `reports/IVB1_LONG_R003_PREFLIGHT_VERDICT_2026_07_05.md`.
 - СТРАТЕГИЧЕСКИЙ ВЫВОД: 5 мёртвых детекторов подряд на 1h крипто price-action = поляна перекопана всеми ботами мира. Смещаем поиск туда, где у нас МОНОПОЛИЯ: реальный liq-поток коллектора (месяцы на сервере), до сих пор НЕ тестированный (proxy-провал PF 0.26 не считается — данные были суррогатные).
 - scripts/run_cascade_real_gate.py (4 теста, 756 passed): гейт cascade_reversal на РЕАЛЬНЫХ данных. Liq JSONL -> 5m бакеты; funding/OI c Bybit REST (пагинация) или CSV; coverage gate; пре-регистрированный мини-грид 16 комбо (fz 1.5/2.0, oi-drop 3/5, liq-pctile 90/95, rr 1.5/2.0), side-split, 4 фолда, консервативный SL-first + fees. Codex: гнать на сервере, где лежит runtime/liquidations/*.jsonl (окно = сколько собрано). НЕ расширять грид под результат.
 - Ожидание ЧЕСТНО: каскады редки, окно недели -> N может не хватить даже на скрининг; тогда вывод = «копить поток дальше», не «мертво». FX H1 trend/breakout бежит параллельно.
