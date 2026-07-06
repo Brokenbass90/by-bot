@@ -80,6 +80,36 @@ def planned_tpsl_after_fill(
     return tp, sl
 
 
+def protective_stop_is_live(
+    side: str,
+    stop: Optional[float],
+    current_price: Optional[float],
+    *,
+    tick: float = 0.0,
+) -> bool:
+    """Return whether a stop can still protect the position from here.
+
+    For a long, a protective stop must be below the current market. For a short,
+    it must be above the current market. This intentionally checks current price,
+    not entry, because runner/breakeven stops are allowed to lock profit after a
+    trade moves in our favor.
+    """
+    try:
+        stop_f = float(stop) if stop is not None else None
+        price_f = float(current_price) if current_price is not None else None
+        tick_f = max(0.0, float(tick or 0.0))
+    except (TypeError, ValueError):
+        return False
+    if stop_f is None or price_f is None or stop_f <= 0 or price_f <= 0:
+        return False
+    side_norm = str(side or "").strip()
+    if side_norm == "Buy":
+        return stop_f < price_f - tick_f
+    if side_norm == "Sell":
+        return stop_f > price_f + tick_f
+    return False
+
+
 def should_preserve_strategy_tpsl(
     strategy: Optional[str],
     *,

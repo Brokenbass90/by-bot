@@ -95,7 +95,13 @@ from bot.diagnostics import (
     _flat_no_signal_diag_key, _sloped_no_signal_diag_key, _att1_no_signal_diag_key, _asm1_no_signal_diag_key,
     _breakdown_no_signal_diag_key, _midterm_no_signal_diag_key,
 )
-from bot.tpsl_policy import planned_tpsl_after_fill, preserve_existing_tpsl, restored_position_manual_lock, should_preserve_strategy_tpsl
+from bot.tpsl_policy import (
+    planned_tpsl_after_fill,
+    preserve_existing_tpsl,
+    protective_stop_is_live,
+    restored_position_manual_lock,
+    should_preserve_strategy_tpsl,
+)
 from bot.deepseek_overlay import DeepSeekOverlay
 from bot.ai_context import compact_ai_full_context
 from bot.deepseek_autoresearch_agent import (
@@ -7206,6 +7212,8 @@ def _prepare_exchange_tpsl(
     tp: Optional[float],
     sl: Optional[float],
     entry_ref: Optional[float] = None,
+    market_ref: Optional[float] = None,
+    allow_profit_stop: bool = False,
 ) -> tuple[Optional[float], Optional[float], Optional[str]]:
     """
     Финальная sanity-подготовка TP/SL перед отправкой на биржу.
@@ -7213,6 +7221,8 @@ def _prepare_exchange_tpsl(
     Что делаем:
       - выбрасываем нечисловые / <= 0 значения;
       - если есть entry_ref, ещё раз прогоняем через round_tp_sl_prices();
+      - runner profit-lock может быть уже лучше entry, но обязан быть защитным
+        относительно текущего рынка;
       - не даём отправить на биржу логически перевёрнутые уровни.
     """
     def _norm(px: Optional[float]) -> Optional[float]:
@@ -7229,9 +7239,26 @@ def _prepare_exchange_tpsl(
     tp_v = _norm(tp)
     sl_v = _norm(sl)
     entry_v = _norm(entry_ref)
+    market_v = _norm(market_ref)
 
-    if entry_v is not None:
+    if entry_v is not None and not allow_profit_stop:
         tp_v, sl_v = round_tp_sl_prices(symbol, side, entry_v, tp_v, sl_v)
+    else:
+        if tp_v is not None:
+            tp_mode = ROUND_UP if side == "Buy" else ROUND_DOWN
+            tp_v = strict_round_price_dir(symbol, tp_v, tp_mode)
+        if sl_v is not None:
+            sl_mode = ROUND_DOWN if side == "Buy" else ROUND_UP
+            sl_v = strict_round_price_dir(symbol, sl_v, sl_mode)
+
+    if allow_profit_stop and sl_v is not None and market_v is not None:
+        tick = 0.0
+        try:
+            tick = float(_get_meta(symbol).get("tickSize") or 0.0)
+        except Exception:
+            tick = 0.0
+        if not protective_stop_is_live(side, sl_v, market_v, tick=tick):
+            return None, None, f"invalid profit-stop vs market: side={side} sl={sl_v} market={market_v}"
 
     if tp_v is not None and sl_v is not None:
         if side == "Buy" and tp_v <= sl_v:
@@ -7468,7 +7495,15 @@ def _finalize_and_report_closed(tr, sym: str):
                 ),
             )
 
-def set_tp_sl_retry(symbol: str, side: str, tp: Optional[float], sl: Optional[float]) -> bool:
+def set_tp_sl_retry(
+    symbol: str,
+    side: str,
+    tp: Optional[float],
+    sl: Optional[float],
+    *,
+    market_ref: Optional[float] = None,
+    allow_profit_stop: bool = False,
+) -> bool:
     if DRY_RUN or TRADE_CLIENT is None:
         return False
     if not ALWAYS_SET_TPSL_ON_EXCHANGE:
@@ -7482,7 +7517,15 @@ def set_tp_sl_retry(symbol: str, side: str, tp: Optional[float], sl: Optional[fl
         except Exception:
             entry_ref = None
 
-    tp_send, sl_send, invalid_reason = _prepare_exchange_tpsl(symbol, side, tp, sl, entry_ref=entry_ref)
+    tp_send, sl_send, invalid_reason = _prepare_exchange_tpsl(
+        symbol,
+        side,
+        tp,
+        sl,
+        entry_ref=entry_ref,
+        market_ref=market_ref,
+        allow_profit_stop=allow_profit_stop,
+    )
     if invalid_reason:
         log_error(f"TP/SL invariant reject {symbol}: {invalid_reason}")
         return False
@@ -7679,15 +7722,17 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
         if side == "Buy":
             be_hit = price >= (float(tr.entry_price) + float(tr.be_trigger_rr) * risk)
             be_sl = float(tr.entry_price) + float(tr.be_lock_rr or 0.0) * risk
-            better = tr.sl_price is None or be_sl > float(tr.sl_price)
+            old_live = protective_stop_is_live(side, tr.sl_price, price)
+            better = (not old_live) or tr.sl_price is None or be_sl > float(tr.sl_price)
         else:
             be_hit = price <= (float(tr.entry_price) - float(tr.be_trigger_rr) * risk)
             be_sl = float(tr.entry_price) - float(tr.be_lock_rr or 0.0) * risk
-            better = tr.sl_price is None or be_sl < float(tr.sl_price)
-        if be_hit and better:
-            tr.sl_price = float(be_sl)
-            ok = set_tp_sl_retry(symbol, side, None, tr.sl_price)
+            old_live = protective_stop_is_live(side, tr.sl_price, price)
+            better = (not old_live) or tr.sl_price is None or be_sl < float(tr.sl_price)
+        if be_hit and better and protective_stop_is_live(side, be_sl, price):
+            ok = set_tp_sl_retry(symbol, side, None, be_sl, market_ref=price, allow_profit_stop=True)
             if ok:
+                tr.sl_price = float(be_sl)
                 tr.tpsl_last_set_ts = now_s()
                 tr.last_runner_action_ts = now
             tr.be_armed = True
@@ -7726,18 +7771,20 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
         if atr > 0:
             if side == "Buy" and tr.hh is not None:
                 new_sl = tr.hh - float(tr.trail_mult) * atr
-                if tr.sl_price is None or new_sl > float(tr.sl_price):
-                    tr.sl_price = float(new_sl)
-                    ok = set_tp_sl_retry(symbol, side, None, tr.sl_price)
+                old_live = protective_stop_is_live(side, tr.sl_price, price)
+                if protective_stop_is_live(side, new_sl, price) and ((not old_live) or tr.sl_price is None or new_sl > float(tr.sl_price)):
+                    ok = set_tp_sl_retry(symbol, side, None, new_sl, market_ref=price, allow_profit_stop=True)
                     if ok:
+                        tr.sl_price = float(new_sl)
                         tr.tpsl_last_set_ts = now_s()
                         tr.last_runner_action_ts = now
             elif side == "Sell" and tr.ll is not None:
                 new_sl = tr.ll + float(tr.trail_mult) * atr
-                if tr.sl_price is None or new_sl < float(tr.sl_price):
-                    tr.sl_price = float(new_sl)
-                    ok = set_tp_sl_retry(symbol, side, None, tr.sl_price)
+                old_live = protective_stop_is_live(side, tr.sl_price, price)
+                if protective_stop_is_live(side, new_sl, price) and ((not old_live) or tr.sl_price is None or new_sl < float(tr.sl_price)):
+                    ok = set_tp_sl_retry(symbol, side, None, new_sl, market_ref=price, allow_profit_stop=True)
                     if ok:
+                        tr.sl_price = float(new_sl)
                         tr.tpsl_last_set_ts = now_s()
                         tr.last_runner_action_ts = now
 

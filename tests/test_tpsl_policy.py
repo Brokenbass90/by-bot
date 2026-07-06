@@ -1,4 +1,9 @@
-from bot.tpsl_policy import planned_tpsl_after_fill, preserve_existing_tpsl, restored_position_manual_lock
+from bot.tpsl_policy import (
+    planned_tpsl_after_fill,
+    preserve_existing_tpsl,
+    protective_stop_is_live,
+    restored_position_manual_lock,
+)
 
 
 def test_bootstrap_with_only_sl_is_not_manual_locked():
@@ -56,6 +61,17 @@ def test_planned_stop_reanchors_when_fill_crosses_level():
         current_sl=0.1644,
     )
     assert round(sl, 6) == 0.1587
+
+
+def test_protective_stop_is_checked_against_current_price_not_entry():
+    # Short profit-lock can be below entry, but it still has to sit above the
+    # current market. ADA exposed the bad case: internal SL below current is not
+    # a live protective stop for a short.
+    assert protective_stop_is_live("Sell", stop=0.1870, current_price=0.1845)
+    assert not protective_stop_is_live("Sell", stop=0.179861, current_price=0.1845)
+
+    assert protective_stop_is_live("Buy", stop=101.0, current_price=104.0)
+    assert not protective_stop_is_live("Buy", stop=105.0, current_price=104.0)
 
 
 # --- P0-fix regression: strategy-designed TP/SL must survive the fill ---

@@ -819,3 +819,16 @@ Next actions:
 3. Check ADA state and whether TP2/trailing closed or moved SL.
 4. Continue FX data gate; no FX/CFD capital until data status + OOS verdicts.
 5. Implement broader system health checker: bot heartbeat, ws guard, CPU/RAM, stale research, stop integrity, Alpaca stop coverage, digest freshness.
+
+### ADA runner stop truth check (2026-07-06 evening)
+
+- Direct Bybit REST via `scripts/check_bybit_open_positions.py` showed `ADAUSDT Sell size=138`, `takeProfit=""`, `stopLoss="0.1893"`, unrealized PnL about `+0.61 USDT`. Exchange protection exists.
+- `runtime/live_positions.json` showed `exchange_sl=0.179861`, but that was internal runner/local-state, not the actual broker stop. Do not treat that field as exchange truth until the pending fix is deployed.
+- Local fix prepared, not deployed/restarted while ADA is open: `bot.tpsl_policy.protective_stop_is_live()` and runner changes so breakeven/trailing profit-locks are validated against current market and local `tr.sl_price` updates only after a protective broker update succeeds.
+- Verification: `python3 -m py_compile smart_pump_reversal_bot.py bot/tpsl_policy.py`; `.venv/bin/python -m pytest -q tests/test_tpsl_policy.py tests/test_live_position_view.py` -> `14 passed`.
+- Deploy only when flat or via restart-when-flat hygiene.
+
+### Inplay maker-fill first row
+
+- Local screen still running. First completed combo: `offset=0.1`, `validity=6`, `stress_trades=84`, `stress_netR=+1.39`, `stress_pf=1.037`, `unfilled=9.68%`, gate `FAIL stress_weak;time_folds_weak_2/4`.
+- Interpretation: fill rate is not the blocker on the first row; stressed edge/time stability is. Continue full grid before verdict, but no promotion from row 1.
