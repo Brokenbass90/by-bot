@@ -36,6 +36,8 @@ import glob
 import json
 import os
 import re
+import sqlite3
+import subprocess
 import sys
 import time
 from datetime import datetime, timezone
@@ -72,6 +74,8 @@ SOURCES = {
     "cross_exchange_arb_dry_run": "runtime/arb/dry_run/latest.json",
     "router_quality": "runtime/control_plane/router_quality_audit.json",
     "crypto_blocker": "runtime/crypto_blocker/latest.json",
+    "att1_edge_health": "runtime/att1_edge_health.json",
+    "alpaca_account_state": "runtime/alpaca_live_v38/account_state.json",
 }
 
 SOURCE_FALLBACKS = {
@@ -101,6 +105,107 @@ def load_json(path: Path, *, fallback: Any = None) -> Any:
         return json.loads(path.read_text(encoding="utf-8", errors="ignore"))
     except Exception as exc:
         return {"_error": f"json load: {type(exc).__name__}: {exc}"}
+
+
+def tail_text(path: Path, n: int = 80, *, max_chars: int = 12000) -> dict[str, Any]:
+    if not path.exists() or n <= 0:
+        return {"path": None, "lines": []}
+    try:
+        lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()[-n:]
+        text_lines = lines
+        if sum(len(x) for x in text_lines) > max_chars:
+            joined = "\n".join(text_lines)[-max_chars:]
+            text_lines = joined.splitlines()
+        return {"path": str(path.relative_to(REPO_ROOT)), "lines": text_lines}
+    except Exception as exc:
+        return {
+            "path": str(path.relative_to(REPO_ROOT)) if path.exists() else None,
+            "_error": f"text tail: {type(exc).__name__}: {exc}",
+            "lines": [],
+        }
+
+
+def first_existing(paths: list[str]) -> Path | None:
+    for rel in paths:
+        p = REPO_ROOT / rel
+        if p.exists():
+            return p
+    return None
+
+
+def git_revision() -> dict[str, Any]:
+    try:
+        rev = subprocess.check_output(
+            ["git", "rev-parse", "--short=12", "HEAD"],
+            cwd=str(REPO_ROOT),
+            text=True,
+            stderr=subprocess.DEVNULL,
+            timeout=2,
+        ).strip()
+    except Exception as exc:
+        rev = ""
+        err = f"{type(exc).__name__}: {exc}"
+    else:
+        err = ""
+    return {"head": rev, "error": err}
+
+
+def build_ai_brief() -> str:
+    try:
+        from bot.ai_context_brief import compose_from_repo
+
+        return compose_from_repo(REPO_ROOT)
+    except Exception as exc:
+        return f"AI_CONTEXT_BRIEF unavailable: {type(exc).__name__}: {exc}"
+
+
+def pnl_by_sleeve_from_db(limit_days: int = 45) -> dict[str, Any]:
+    db_path = REPO_ROOT / "trades.db"
+    if not db_path.exists():
+        return {"source": None, "lookback_days": limit_days, "rows": []}
+    cutoff = int(time.time()) - int(limit_days) * 86400
+    try:
+        with sqlite3.connect(str(db_path)) as con:
+            cur = con.execute(
+                """
+                SELECT COALESCE(strategy, '') AS strategy,
+                       COUNT(*) AS n,
+                       SUM(CASE WHEN pnl > 0 THEN 1 ELSE 0 END) AS wins,
+                       SUM(CASE WHEN pnl < 0 THEN 1 ELSE 0 END) AS losses,
+                       COALESCE(SUM(pnl), 0.0) AS pnl_usd,
+                       COALESCE(SUM(CASE WHEN pnl > 0 THEN pnl ELSE 0 END), 0.0) AS gross_win,
+                       COALESCE(SUM(CASE WHEN pnl < 0 THEN -pnl ELSE 0 END), 0.0) AS gross_loss,
+                       COALESCE(MAX(ts), 0) AS last_ts
+                FROM trade_events
+                WHERE event='CLOSE' AND pnl IS NOT NULL AND ts>=?
+                GROUP BY COALESCE(strategy, '')
+                ORDER BY pnl_usd DESC
+                """,
+                (cutoff,),
+            )
+            rows = []
+            for strategy, n, wins, losses, pnl_usd, gross_win, gross_loss, last_ts in cur.fetchall():
+                gl = float(gross_loss or 0.0)
+                gw = float(gross_win or 0.0)
+                rows.append(
+                    {
+                        "strategy": str(strategy or "unknown"),
+                        "trades": int(n or 0),
+                        "wins": int(wins or 0),
+                        "losses": int(losses or 0),
+                        "pnl_usd": round(float(pnl_usd or 0.0), 6),
+                        "profit_factor": round((gw / gl), 6) if gl > 0 else (999.0 if gw > 0 else None),
+                        "last_ts": int(last_ts or 0),
+                    }
+                )
+    except Exception as exc:
+        return {
+            "source": str(db_path.relative_to(REPO_ROOT)),
+            "lookback_days": limit_days,
+            "_error": f"sqlite: {type(exc).__name__}: {exc}",
+            "rows": [],
+        }
+    return {"source": str(db_path.relative_to(REPO_ROOT)), "lookback_days": limit_days, "rows": rows}
 
 
 def source_path(key: str) -> Path:
@@ -299,6 +404,8 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         "repo_root": str(REPO_ROOT),
         "sources_used": {},
     }
+    ctx["git_revision"] = git_revision()
+    ctx["ai_context_brief"] = build_ai_brief()
 
     # ---- Heartbeat (key live source) ----
     hb_path = source_path("heartbeat")
@@ -370,6 +477,37 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
     op_path = source_path("operator_snapshot")
     ctx["sources_used"]["operator_snapshot"] = str(op_path.relative_to(REPO_ROOT)) if op_path.exists() else None
     ctx["operator_snapshot"] = load_json(op_path)
+
+    att1_health_path = source_path("att1_edge_health")
+    ctx["sources_used"]["att1_edge_health"] = (
+        str(att1_health_path.relative_to(REPO_ROOT)) if att1_health_path.exists() else None
+    )
+    ctx["att1_edge_health"] = load_json(att1_health_path)
+
+    ctx["pnl_by_sleeve_usd"] = pnl_by_sleeve_from_db(limit_days=45)
+
+    err_path = first_existing([
+        "runtime/errors.log",
+        "logs/errors.log",
+        "runtime/live.out",
+        "logs/bybot.err",
+        "logs/bybot.log",
+    ])
+    ctx["sources_used"]["errors_tail"] = str(err_path.relative_to(REPO_ROOT)) if err_path else None
+    ctx["errors_tail"] = tail_text(err_path, n=80) if err_path else {"path": None, "lines": []}
+
+    alpaca_account_path = source_path("alpaca_account_state")
+    ctx["sources_used"]["alpaca_account_state"] = (
+        str(alpaca_account_path.relative_to(REPO_ROOT)) if alpaca_account_path.exists() else None
+    )
+    alpaca_account_state = load_json(alpaca_account_path)
+    operator_alpaca = None
+    if isinstance(ctx.get("operator_snapshot"), dict):
+        operator_alpaca = ctx["operator_snapshot"].get("alpaca")
+    ctx["alpaca_account_state"] = {
+        "api_snapshot": alpaca_account_state,
+        "operator_snapshot": operator_alpaca,
+    }
 
     sa_path = source_path("self_audit")
     ctx["sources_used"]["self_audit"] = str(sa_path.relative_to(REPO_ROOT)) if sa_path.exists() else None

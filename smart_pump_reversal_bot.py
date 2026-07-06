@@ -115,6 +115,7 @@ from bot.deepseek_action_executor import (
     check_server_status,
     diff_pending_changes,
 )
+from bot.ai_manual_trade import issue_token as issue_ai_manual_token
 from bot.entry_guard import EntryCircuitBreaker
 from bot.live_loss_cooldown import record_loss_cooldown, restore_loss_cooldowns
 from bot.maker_entry import post_only_price
@@ -4318,7 +4319,8 @@ def _handle_tg_command(text: str):
             "  /ai_diff — показать pending изменения от AI\n"
             "  /ai_rollback — откатить последнее изменение env\n"
             "  /ai_monthly [report|idea <текст>|diagnose <стратегия>] — Claude глубокий анализ\n"
-            "  /ai_shadow — последние AI рекомендации (shadow log)"
+            "  /ai_shadow — последние AI рекомендации (shadow log)\n"
+            "  /ai_manual_token — выдать одноразовый токен для будущего ai_manual_v1"
         )
         return
 
@@ -4819,6 +4821,18 @@ def _handle_tg_command(text: str):
 
     if name == "/ai_shadow_reset":
         _tg_reply(DEEPSEEK_OVERLAY.reset_shadow_log())
+        return
+
+    if name == "/ai_manual_token":
+        token, payload = issue_ai_manual_token(ROOT_DIR)
+        expires = int(payload.get("expires_ts") or 0)
+        exp_txt = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime(expires)) if expires else "?"
+        _tg_reply(
+            "ai_manual_v1 token issued.\n"
+            "Execution path is not enabled yet; token scaffold only.\n"
+            f"expires={exp_txt}\n"
+            f"token={token}"
+        )
         return
 
     if name == "/ai_approve" and len(cmd) >= 2:
@@ -6590,11 +6604,12 @@ def sync_trades_with_exchange():
                         tr.sl_price = sl_ex
                         tr.tpsl_manual_lock = True
                         tr.tpsl_on_exchange = True
-                        tg_trade_throttled(
-                            f"manual_tpsl_lock:{sym}:{tp_ex}:{sl_ex}",
-                            f"🧷 MANUAL TPSL LOCK {sym}: TP={tp_ex} SL={sl_ex}",
-                            MANUAL_TPSL_LOCK_TG_COOLDOWN_SEC,
-                        )
+                        if _manual_tpsl_alert_changed(sym, tp_ex, sl_ex):
+                            tg_trade_throttled(
+                                f"manual_tpsl_lock:{sym}:{tp_ex}:{sl_ex}",
+                                f"🧷 MANUAL TPSL LOCK {sym}: TP={tp_ex} SL={sl_ex}",
+                                MANUAL_TPSL_LOCK_TG_COOLDOWN_SEC,
+                            )
 
     _scan_untracked_exchange_positions()
 
@@ -6975,6 +6990,28 @@ def tpsl_diff(sym: str, a: Optional[float], b: Optional[float]) -> bool:
     tick = float(_get_meta(sym).get("tickSize") or 0.000001)
     eps = tick * float(MANUAL_TPSL_DETECT_TICKS)
     return abs(float(a) - float(b)) > eps
+
+
+_MANUAL_TPSL_LOCK_ALERT_VALUES: Dict[str, Tuple[str, str]] = {}
+
+
+def _manual_tpsl_alert_changed(sym: str, tp: Optional[float], sl: Optional[float]) -> bool:
+    """Return True only for a new manual TP/SL value pair per symbol."""
+    tick = float(_get_meta(sym).get("tickSize") or 0.000001)
+
+    def _norm(v: Optional[float]) -> str:
+        if v is None:
+            return "none"
+        if tick > 0:
+            return f"ticks:{round(float(v) / tick)}"
+        return f"{float(v):.12g}"
+
+    sig = (_norm(tp), _norm(sl))
+    key = str(sym or "").upper()
+    if _MANUAL_TPSL_LOCK_ALERT_VALUES.get(key) == sig:
+        return False
+    _MANUAL_TPSL_LOCK_ALERT_VALUES[key] = sig
+    return True
 
 
 def _get_meta(symbol: str) -> dict:

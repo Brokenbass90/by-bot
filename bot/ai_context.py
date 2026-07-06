@@ -113,9 +113,16 @@ def compact_ai_full_context(
     heartbeat = ctx.get("heartbeat") if isinstance(ctx.get("heartbeat"), dict) else {}
     weekly = ctx.get("weekly_live_vs_backtest") if isinstance(ctx.get("weekly_live_vs_backtest"), dict) else {}
     blocker = ctx.get("crypto_blocker_summary") if isinstance(ctx.get("crypto_blocker_summary"), dict) else {}
+    att1_edge_health = ctx.get("att1_edge_health") if isinstance(ctx.get("att1_edge_health"), dict) else {}
+    pnl_by_sleeve = ctx.get("pnl_by_sleeve_usd") if isinstance(ctx.get("pnl_by_sleeve_usd"), dict) else {}
+    alpaca_state = ctx.get("alpaca_account_state") if isinstance(ctx.get("alpaca_account_state"), dict) else {}
+    git_rev = ctx.get("git_revision") if isinstance(ctx.get("git_revision"), dict) else {}
+    errors_tail = ctx.get("errors_tail") if isinstance(ctx.get("errors_tail"), dict) else {}
 
     return {
         "generated_at_utc": ctx.get("generated_at_utc"),
+        "git_revision": git_rev,
+        "ai_context_brief": ctx.get("ai_context_brief"),
         "missing_sources": missing_sources[:8],
         "heartbeat": {
             "open_trades": heartbeat.get("open_trades"),
@@ -147,6 +154,16 @@ def compact_ai_full_context(
             "classification_counts": blocker.get("classification_counts") or {},
             "strategy_counts": blocker.get("strategy_counts") or {},
         } if blocker else {},
+        "att1_edge_health": att1_edge_health,
+        "pnl_by_sleeve_usd": {
+            "lookback_days": pnl_by_sleeve.get("lookback_days"),
+            "rows": list(pnl_by_sleeve.get("rows") or [])[:12],
+        },
+        "alpaca_account_state": alpaca_state,
+        "errors_tail": {
+            "path": errors_tail.get("path"),
+            "lines": list(errors_tail.get("lines") or [])[-20:],
+        },
         "weekly_live_vs_backtest": weekly,
         "strategy_catalog": build_strategy_catalog(),
     }
@@ -169,6 +186,7 @@ def append_ai_context_lines(parts: list[str], repo_root: Path) -> None:
     parts.append(
         "UNIFIED AI CONTEXT: "
         f"generated={compact.get('generated_at_utc')} "
+        f"git={((compact.get('git_revision') or {}).get('head') if isinstance(compact.get('git_revision'), dict) else '') or '?'} "
         f"open_positions={positions.get('count')} "
         f"positions_age_sec={pos_age if pos_age is not None else '?'} "
         f"heartbeat_open_trades={heartbeat.get('open_trades')} "
@@ -178,6 +196,10 @@ def append_ai_context_lines(parts: list[str], repo_root: Path) -> None:
         f"allocator_hard_block={allocator.get('hard_block_new_entries')} "
         f"safe_mode={allocator.get('safe_mode')}\n"
     )
+
+    brief = str(compact.get("ai_context_brief") or "").strip()
+    if brief:
+        parts.append(f"AI_CONTEXT_BRIEF:\n{brief}\n")
 
     # Strategy config + TP/SL model so the AI can answer questions like
     # "why is there a stop on the exchange but no take-profit?".

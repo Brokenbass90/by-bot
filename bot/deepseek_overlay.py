@@ -69,6 +69,19 @@ def _safe_json(data: Any) -> str:
         return str(data)
 
 
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[1]
+
+
+def _load_ai_context_brief() -> str:
+    try:
+        from bot.ai_context_brief import compose_from_repo
+
+        return compose_from_repo(_repo_root())
+    except Exception as exc:
+        return f"AI_CONTEXT_BRIEF unavailable: {type(exc).__name__}: {exc}"
+
+
 class DeepSeekOverlay:
     def __init__(self) -> None:
         self.cfg = _load_config()
@@ -450,10 +463,19 @@ class DeepSeekOverlay:
             "health-gate, allocator, symbol router и server operations.\n"
             "На вопросы об улучшении бота отвечай с приоритетом: сначала правда и риск, потом идеи роста доходности."
         )
+        ai_context_brief = _load_ai_context_brief()
         snapshot_text = _safe_json(snapshot)
         history = self._load_history()
         messages: list[dict[str, str]] = [
             {"role": "system", "content": system_prompt},
+            {
+                "role": "system",
+                "content": (
+                    "Ниже обязательная память проекта и правила активации. "
+                    "Они имеют приоритет над творческими рекомендациями и не являются торговым сигналом.\n"
+                    f"{ai_context_brief}"
+                ),
+            },
             {
                 "role": "system",
                 "content": (

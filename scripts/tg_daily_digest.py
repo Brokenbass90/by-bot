@@ -148,6 +148,57 @@ def _write_latest_digest(msg: str) -> None:
         pass
 
 
+def _write_alpaca_account_state(*, account: Any, positions: Any, orders: Any, base_url: str) -> None:
+    def _pos_row(pos: dict) -> dict:
+        return {
+            "symbol": pos.get("symbol"),
+            "side": pos.get("side"),
+            "qty": pos.get("qty"),
+            "market_value": pos.get("market_value"),
+            "avg_entry_price": pos.get("avg_entry_price"),
+            "unrealized_pl": pos.get("unrealized_pl"),
+            "unrealized_plpc": pos.get("unrealized_plpc"),
+        }
+
+    def _order_row(order: dict) -> dict:
+        return {
+            "id": order.get("id"),
+            "client_order_id": order.get("client_order_id"),
+            "symbol": order.get("symbol"),
+            "side": order.get("side"),
+            "type": order.get("type"),
+            "order_class": order.get("order_class"),
+            "qty": order.get("qty"),
+            "filled_qty": order.get("filled_qty"),
+            "status": order.get("status"),
+            "limit_price": order.get("limit_price"),
+            "stop_price": order.get("stop_price"),
+            "submitted_at": order.get("submitted_at"),
+        }
+
+    payload = {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "base_url": base_url,
+        "account": {
+            "status": account.get("status") if isinstance(account, dict) else None,
+            "equity": account.get("equity") if isinstance(account, dict) else None,
+            "cash": account.get("cash") if isinstance(account, dict) else None,
+            "buying_power": account.get("buying_power") if isinstance(account, dict) else None,
+            "portfolio_value": account.get("portfolio_value") if isinstance(account, dict) else None,
+            "trading_blocked": account.get("trading_blocked") if isinstance(account, dict) else None,
+            "account_blocked": account.get("account_blocked") if isinstance(account, dict) else None,
+        },
+        "positions": [_pos_row(p) for p in positions if isinstance(p, dict)] if isinstance(positions, list) else [],
+        "open_orders": [_order_row(o) for o in orders if isinstance(o, dict)] if isinstance(orders, list) else [],
+    }
+    out = ROOT / "runtime" / "alpaca_live_v38" / "account_state.json"
+    try:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+
 # ─── Alpaca API ───────────────────────────────────────────────────────────────
 
 def _alpaca_get(path: str) -> Any:
@@ -417,6 +468,8 @@ def _alpaca_monthly_section() -> str:
     # Try to get live positions from Alpaca API
     positions = _alpaca_get("/v2/positions")
     account = _alpaca_get("/v2/account")
+    orders = _alpaca_get("/v2/orders?status=open&limit=100&nested=true")
+    _write_alpaca_account_state(account=account, positions=positions, orders=orders, base_url=base_url)
 
     # Load current cycle picks
     cycle_path = ROOT / "runtime" / "equities_monthly_v36" / "current_cycle_picks.csv"
