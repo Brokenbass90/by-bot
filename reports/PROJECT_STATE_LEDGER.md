@@ -718,3 +718,8 @@
   - `2026-07-06 16:45 Cyprus`: check Alpaca first live manager run and positions/stops.
   - `2026-07-06 evening / after 4-6h`: check FX backfill progress and whether any CSVs landed.
   - ADA: check immediately only if owner wants manual risk action; otherwise bot manages under exchange SL + runner.
+
+## ДОБАВЛЕНО 2026-07-08 (разбор отчёта бортового ИИ + дизайн ai_manual_v1, Claude)
+- Отчёт бортового ИИ: жалобы на слепоту ЗАКОННЫ (нет деталей позиций/real P&L) -> P1 observability в очереди. Его рекомендации ОТКЛОНЕНЫ как негейченные: включение ASB1 по одной screener-карте = промоушен по красивой карте; подъём risk_mult без OOS/live-выборки; направленный ML 4-8ч = осознанно отвергнутая поляна. «PF 0.571/45д = убыточен» — вводит в заблуждение: окно включает грязную эпоху; честная выборка = после ATT1_EDGE_START_TS (4 сделки, вердиктов нет). Урок: бортовой ИИ без памяти о пойманных карманах = генератор тех же ошибок; его идеи идут в общий гейт.
+- Идея владельца принята: AI one-shot manual trading. Рельсы: одноразовый токен от владельца (TTL 1ч, сгорает), карточка сделки исполняется только с обязательным биржевым SL, жёсткий risk 0.05, 1 позиция, ликвидный allowlist, breaker+expiry, strategy=ai_manual_v1 в bus. Винрейт ИИ меряется edge_monitor'ом, вердикт при N>=20. Это эксперимент «дискреционный рукав в клетке», не руль.
+- ADA: SL подтянут 0.1936 -> 0.1893 (~breakeven после частичного TP) — trailing работает штатно; TP=None на бирже by design (лестница). TPSL-LOCK алерт-спам -> фикс троттлинга в очереди.
