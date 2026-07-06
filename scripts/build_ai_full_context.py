@@ -362,6 +362,38 @@ def compact_crypto_blocker(blocker: Any, max_cards: int = 12) -> dict[str, Any] 
     }
 
 
+def compact_record(row: Any, *, max_text: int = 240) -> Any:
+    if not isinstance(row, dict):
+        return row
+    out: dict[str, Any] = {}
+    for key, value in row.items():
+        if isinstance(value, (int, float, bool)) or value is None:
+            out[str(key)] = value
+        elif isinstance(value, str):
+            out[str(key)] = value[:max_text]
+        elif isinstance(value, list):
+            out[f"{key}_count"] = len(value)
+        elif isinstance(value, dict):
+            out[f"{key}_keys"] = list(value.keys())[:12]
+    return out
+
+
+def compact_meta_dict(data: dict[str, Any], *, skip: set[str]) -> dict[str, Any]:
+    meta: dict[str, Any] = {}
+    for key, value in data.items():
+        if key in skip:
+            continue
+        if isinstance(value, (int, float, bool)) or value is None:
+            meta[key] = value
+        elif isinstance(value, str):
+            meta[key] = value[:240]
+        elif isinstance(value, list):
+            meta[f"{key}_count"] = len(value)
+        elif isinstance(value, dict):
+            meta[f"{key}_keys"] = list(value.keys())[:12]
+    return meta
+
+
 def collect_strategies_inventory() -> dict[str, Any]:
     """Список файлов в strategies/, classes найти не пытаемся (быстро)."""
     strat_dir = REPO_ROOT / "strategies"
@@ -459,7 +491,9 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
     ctx["sources_used"]["allocator_state"] = str(alloc_state_path.relative_to(REPO_ROOT)) if alloc_state_path.exists() else None
     ctx["allocator_state"] = load_json(alloc_state_path)
     alloc_hist_path = REPO_ROOT / SOURCES["allocator_history"]
-    ctx["allocator_history_tail"] = tail_jsonl(alloc_hist_path, min(args.tail_decisions, 50))
+    ctx["allocator_history_tail"] = [
+        compact_record(x) for x in tail_jsonl(alloc_hist_path, min(args.tail_decisions, 10))
+    ]
     alloc_dec_path = REPO_ROOT / SOURCES["allocator_decisions"]
     ctx["allocator_decisions_tail"] = tail_jsonl(alloc_dec_path, args.tail_decisions)
 
@@ -605,9 +639,9 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
     xfund_shadow = load_json(xfund_shadow_path)
     if isinstance(xfund_shadow, dict):
         ctx["cross_exchange_funding_shadow"] = {
-            **{k: v for k, v in xfund_shadow.items() if k not in {"open", "closed"}},
-            "open": (xfund_shadow.get("open") or [])[:10],
-            "closed": (xfund_shadow.get("closed") or [])[-10:],
+            **compact_meta_dict(xfund_shadow, skip={"open", "closed"}),
+            "open": [compact_record(x) for x in (xfund_shadow.get("open") or [])[:10]],
+            "closed": [compact_record(x) for x in (xfund_shadow.get("closed") or [])[-10:]],
         }
     else:
         ctx["cross_exchange_funding_shadow"] = xfund_shadow
