@@ -832,3 +832,23 @@ Next actions:
 
 - Local screen still running. First completed combo: `offset=0.1`, `validity=6`, `stress_trades=84`, `stress_netR=+1.39`, `stress_pf=1.037`, `unfilled=9.68%`, gate `FAIL stress_weak;time_folds_weak_2/4`.
 - Interpretation: fill rate is not the blocker on the first row; stressed edge/time stability is. Continue full grid before verdict, but no promotion from row 1.
+
+### Inplay maker-fill final verdict + overnight selector
+
+- Full maker-fill gate finished at `reports/research/inplay_maker_fill_gate_20260706_20260706_164001/`: final verdict `FAIL`.
+- Best row was close but not enough: `offset=0.4`, `validity=24`, stress `84 trades`, `+6.46R`, `PF=1.173`, unfilled `25.66%`, concentration `0.255`, folds `2/4`. Prereg gate required PF >= 1.2 and 3/4 folds. No shadow/live promotion from this run.
+- Diagnosis: maker fill solved the fee/fill problem enough; remaining weakness is regime/symbol-window stability. This should be handled by causal dynamic symbol selection, not by turning on risk.
+- Added and smoke-tested `scripts/run_inplay_maker_dynamic_selector_20260706.py`.
+- Started local overnight screen `inplay_maker_dynsel_overnight_20260706`.
+  - log: `logs/inplay_maker_dynsel_overnight_20260706/run.log`
+  - output prefix: `reports/research/inplay_maker_dynsel_overnight_20260706_*`
+  - grid: train `90,180`, test `45`, topN `2,3,5`, min train trades `3,5`, offset `0.4,0.55`, validity `24,36`, folds `4`, broad 20-symbol crypto basket.
+  - PASS can justify shadow/risk=0.0 only.
+
+### Latest live read-only facts
+
+- Web on VPS responds: `/position.html` 200, `/api/position` 200.
+- Direct Bybit REST: `ADAUSDT Sell size=138`, `stopLoss=0.1893`, `takeProfit=""`, unrealized PnL about `+0.78 USDT`.
+- `runtime/live_positions.json`: current about `0.1829`, notional about `25.2 USDT`, TP1 hit, TP2 pending, runner ladder active.
+- Alpaca Monthly LIVE visible in digest: 4 positions, equity about `$496`, cash/BP about `$149`.
+- FX/CFD backfill still running; XAUUSD remains data-short, so no FX/CFD verdict.
