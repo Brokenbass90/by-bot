@@ -126,7 +126,7 @@ from bot.unsupported_symbols import (
     quarantine_symbol,
 )
 from bot.circuit_breaker import get_circuit_breaker as _get_cb
-from bot.runner_state import apply_runner_state
+from bot.runner_state import apply_runner_state, sync_runner_qty_after_fill
 from bot.live_position_view import build_live_position_row
 from bot.strategy_breaker import breaker_state as _strategy_breaker_state
 from bot.symbol_state import (
@@ -6393,6 +6393,7 @@ def sync_trades_with_exchange():
                     tr.entry_fill_ts = int(now)
 
                 tr.qty = float(size)
+                sync_runner_qty_after_fill(tr, float(size))
                 if side in ("Buy", "Sell"):
                     tr.side = side
 
@@ -8930,6 +8931,23 @@ async def _reserve_entry_slot(symbol: str, side: str, *, reserved_risk_usd: floa
     async with _ENTRY_RESERVATION_LOCK:
         _clear_stale_entry_reservations(symbol)
         if key in TRADES:
+            return False
+        remote_size = _remote_position_size(symbol)
+        if remote_size is None:
+            _diag_inc("entry_reserve_remote_unknown")
+            tg_trade_throttled(
+                f"entry_reserve_remote_unknown:{symbol}",
+                f"⚠️ ENTRY BLOCK {symbol}: remote position check failed before entry.",
+                1800,
+            )
+            return False
+        if remote_size > 0:
+            _diag_inc("entry_reserve_remote_open")
+            tg_trade_throttled(
+                f"entry_reserve_remote_open:{symbol}",
+                f"⚠️ ENTRY BLOCK {symbol}: remote position already open size={remote_size}.",
+                1800,
+            )
             return False
         if not portfolio_can_open():
             return False

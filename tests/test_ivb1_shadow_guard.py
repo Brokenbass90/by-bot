@@ -24,6 +24,20 @@ def test_ivb1_shadow_candidate_is_enabled_with_zero_risk() -> None:
     assert values["IVB1_ALLOW_MINQTY_FALLBACK"] == "0"
 
 
+def test_ivb1_r003_combined_operator_override_keeps_att1_live_and_ivb1_shadow() -> None:
+    values = _env_values(ROOT / "configs" / "att1_r001_plus_ivb1_r003_shadow_20260705.env")
+
+    assert values["ENABLE_ATT1_TRADING"] == "1"
+    assert float(values["ATT1_RISK_MULT"]) == 0.10
+    assert values["ATT1_ALLOW_SHORTS"] == "1"
+    assert values["ATT1_ALLOW_LONGS"] == "0"
+
+    assert values["ENABLE_IVB1_TRADING"] == "1"
+    assert float(values["IVB1_RISK_MULT"]) == 0.0
+    assert values["IVB1_ALLOW_LONGS"] == "1"
+    assert values["IVB1_ALLOW_SHORTS"] == "0"
+
+
 def test_approved_overlay_keeps_ivb1_visible_but_zero_risk() -> None:
     values = _env_values(ROOT / "configs" / "approved_strategy_params.env")
     risk_mult = float(values["IVB1_RISK_MULT"])

@@ -69,3 +69,30 @@ def apply_runner_state(
     tr.initial_qty = float(qty)
     tr.remaining_qty = float(qty)
     return True
+
+
+def sync_runner_qty_after_fill(tr: TradeState, actual_qty: float) -> bool:
+    """Align runner quantities with the exchange-confirmed filled position size.
+
+    Entries can be rounded or filled at a different size than the submitted
+    quantity. Runner ladders must manage the real open size, not the request
+    size, otherwise partial exits/time stops can leave residual exposure.
+    """
+    if not bool(getattr(tr, "runner_enabled", False)):
+        return False
+    qty = float(actual_qty or 0.0)
+    if qty <= 0.0:
+        return False
+
+    hits = list(getattr(tr, "tp_hit", None) or [])
+    if any(bool(x) for x in hits):
+        return False
+
+    old_initial = float(getattr(tr, "initial_qty", 0.0) or 0.0)
+    old_remaining = float(getattr(tr, "remaining_qty", 0.0) or 0.0)
+    if abs(old_initial - qty) <= 1e-12 and abs(old_remaining - qty) <= 1e-12:
+        return False
+
+    tr.initial_qty = qty
+    tr.remaining_qty = qty
+    return True

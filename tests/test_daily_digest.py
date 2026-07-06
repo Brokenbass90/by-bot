@@ -73,3 +73,23 @@ def test_compose_from_runtime_tolerates_missing_and_reads_bus(tmp_path):
     msg2 = compose_from_runtime(tmp_path, now_ts=NOW)
     assert "закрыто 1" in msg2 and "+1.00$" in msg2       # stale record excluded
     assert "ЖИВ" in msg2
+
+
+def test_compose_from_runtime_reads_live_positions_data_wrapper(tmp_path):
+    rt = tmp_path / "runtime"
+    rt.mkdir()
+    (rt / "bot_heartbeat.json").write_text(json.dumps({"dry_run": False, "trade_on": True, "regime": "bull"}))
+    (rt / "live_positions.json").write_text(json.dumps({
+        "data": {
+            "positions": [{
+                "symbol": "ADAUSDT",
+                "side": "Sell",
+                "upnl_usd": 0.6675,
+                "exchange_sl": 0.1893,
+            }]
+        }
+    }))
+    msg = compose_from_runtime(tmp_path, now_ts=NOW)
+    assert "ADAUSDT Sell" in msg
+    assert "uPnL +0.67$" in msg
+    assert "SL 0.1893" in msg

@@ -326,6 +326,67 @@ class InPlayBreakoutWrapper:
                 return False
         return True
 
+    def _apply_limit_entry(
+        self,
+        sig: TradeSignal,
+        *,
+        partial_rs: Optional[List[float]] = None,
+        fixed_rr: Optional[float] = None,
+    ) -> Optional[TradeSignal]:
+        p = getattr(self, "_prefix", "BREAKOUT")
+        if not _env_bool(f"{p}_USE_LIMIT_ENTRY", False):
+            return sig
+        impl = getattr(self, "impl", None)
+        level = float(getattr(impl, "_level", 0.0) or 0.0)
+        atr = float(getattr(impl, "_atr", 0.0) or 0.0)
+        if level <= 0 or atr <= 0:
+            self.last_no_signal_reason = "limit_entry_missing_level"
+            return None
+
+        offset_atr = _env_float(f"{p}_LIMIT_ENTRY_OFFSET_ATR", 0.0)
+        side = str(sig.side or "").lower()
+        if side == "long":
+            limit_entry = level + max(0.0, offset_atr) * atr
+            if not (float(sig.sl) < limit_entry):
+                self.last_no_signal_reason = "limit_entry_invalid_long"
+                return None
+        elif side == "short":
+            limit_entry = level - max(0.0, offset_atr) * atr
+            if not (limit_entry < float(sig.sl)):
+                self.last_no_signal_reason = "limit_entry_invalid_short"
+                return None
+        else:
+            self.last_no_signal_reason = "limit_entry_invalid_side"
+            return None
+
+        sig.entry = float(limit_entry)
+        risk = abs(float(sig.entry) - float(sig.sl))
+        if risk <= 0:
+            self.last_no_signal_reason = "limit_entry_zero_risk"
+            return None
+
+        if partial_rs and sig.tps:
+            if side == "long":
+                sig.tps = [float(sig.entry) + float(r) * risk for r in partial_rs]
+            else:
+                sig.tps = [float(sig.entry) - float(r) * risk for r in partial_rs]
+            sig.tp = float(sig.tps[-1])
+        elif fixed_rr is not None and fixed_rr > 0:
+            if side == "long":
+                sig.tp = float(sig.entry) + float(fixed_rr) * risk
+            else:
+                sig.tp = float(sig.entry) - float(fixed_rr) * risk
+
+        if not sig.validate():
+            self.last_no_signal_reason = "limit_entry_invalid_signal"
+            return None
+
+        validity = max(1, _env_int(f"{p}_LIMIT_ENTRY_VALIDITY_BARS", 3))
+        sig.entry_order_type = "limit"
+        sig.limit_validity_bars = int(validity)
+        sig.reason = (sig.reason or "") + f";limit_entry level={level:.6g} valid={validity}"
+        return sig
+
     @staticmethod
     def _hours_to_break_bars(lookback_h: int, tf_break: str) -> int:
         try:
@@ -544,7 +605,7 @@ class InPlayBreakoutWrapper:
                 trail_period = _env_int(f"{p}_TRAIL_ATR_PERIOD", 14)
                 time_stop = _env_int(f"{p}_TIME_STOP_BARS", 288)
 
-                return TradeSignal(
+                out = TradeSignal(
                     strategy="inplay_breakout",
                     symbol=symbol,
                     side=side,
@@ -558,12 +619,13 @@ class InPlayBreakoutWrapper:
                     time_stop_bars=time_stop,
                     reason=(base_reason + ";runner"),
                 )
+                return self._apply_limit_entry(out, partial_rs=rs)
 
         self.last_no_signal_reason = ""
         # Allow a configurable time-stop in fixed mode (default 0 = disabled).
         # Set e.g. BREAKOUT_TIME_STOP_BARS=96 to cap trades at 8h on 5m bars.
         time_stop = _env_int(f"{p}_TIME_STOP_BARS", 0)
-        return TradeSignal(
+        out = TradeSignal(
             strategy="inplay_breakout",
             symbol=symbol,
             side=side,
@@ -573,3 +635,4 @@ class InPlayBreakoutWrapper:
             time_stop_bars=time_stop,
             reason=base_reason,
         )
+        return self._apply_limit_entry(out, fixed_rr=float(self.cfg.rr))

@@ -58,11 +58,24 @@ def _load_bus_tail(path: Path, since_ts: float) -> List[Dict[str, Any]]:
 def _fmt_pos(p: Dict[str, Any]) -> str:
     sym = str(p.get("symbol", "?"))
     side = str(p.get("side", "?"))
-    upnl = p.get("upnl", p.get("unrealised_pnl"))
-    sl = p.get("sl", p.get("sl_price", p.get("stop_loss")))
+    upnl = p.get("upnl", p.get("upnl_usd", p.get("unrealised_pnl")))
+    sl = p.get("sl", p.get("exchange_sl", p.get("sl_price", p.get("stop_loss"))))
     upnl_s = f"{float(upnl):+.2f}$" if isinstance(upnl, (int, float)) else "?"
     sl_s = f"SL {sl}" if sl not in (None, "", 0) else "SL: НЕТ (!)"
     return f"{sym} {side} | uPnL {upnl_s} | {sl_s}"
+
+
+def _extract_positions(raw: Any) -> List[Dict[str, Any]]:
+    if isinstance(raw, list):
+        return [p for p in raw if isinstance(p, dict)]
+    if not isinstance(raw, dict):
+        return []
+    data = raw.get("data")
+    if isinstance(data, dict) and isinstance(data.get("positions"), list):
+        return [p for p in data["positions"] if isinstance(p, dict)]
+    if isinstance(raw.get("positions"), list):
+        return [p for p in raw["positions"] if isinstance(p, dict)]
+    return []
 
 
 def build_digest(
@@ -142,13 +155,7 @@ def compose_from_runtime(root: Path | str = ".", *, now_ts: Optional[float] = No
     now = float(now_ts if now_ts is not None else time.time())
     heartbeat = _load_json(root / "runtime" / "bot_heartbeat.json")
     positions_raw = _load_json(root / "runtime" / "live_positions.json")
-    if isinstance(positions_raw, dict):
-        positions = list(positions_raw.get("positions", positions_raw.values() or []))
-        positions = [p for p in positions if isinstance(p, dict)]
-    elif isinstance(positions_raw, list):
-        positions = [p for p in positions_raw if isinstance(p, dict)]
-    else:
-        positions = []
+    positions = _extract_positions(positions_raw)
     bus = _load_bus_tail(root / "runtime" / "decision_bus.jsonl", now - DAY_S)
     health = _load_json(root / "runtime" / "att1_edge_health.json")
     extra = _load_json(root / "runtime" / "daily_digest_extra.json") or {}

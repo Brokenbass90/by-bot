@@ -20,6 +20,7 @@ PAIR_PRICE_SCALE: Dict[str, int] = {
     "GBPJPY": 1000,
     "AUDJPY": 1000,
     "CADJPY": 1000,
+    "XAUUSD": 1000,
 }
 
 FIVE_MIN = 300

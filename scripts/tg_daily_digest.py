@@ -17,7 +17,7 @@ Cron (08:00 UTC every day):
   0 8 * * * /bin/bash -lc 'cd /root/by-bot && source .venv/bin/activate && python3 scripts/tg_daily_digest.py >> logs/tg_daily_digest.log 2>&1'
 
 ENV:
-  TG_TOKEN, TG_CHAT_ID — Telegram credentials (from alpaca_paper_local.env or live env)
+  TG_TOKEN, TG_CHAT_ID/TG_CHAT — Telegram credentials (from live bot env)
   ALPACA_API_KEY_ID, ALPACA_API_SECRET_KEY, ALPACA_BASE_URL — for Alpaca positions
 """
 from __future__ import annotations
@@ -410,6 +410,9 @@ def _alpaca_intraday_section() -> str:
 
 def _alpaca_monthly_section() -> str:
     lines = []
+    base_url = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
+    is_live_account = "paper-api" not in base_url
+    account_label = "LIVE" if is_live_account else "paper"
 
     # Try to get live positions from Alpaca API
     positions = _alpaca_get("/v2/positions")
@@ -441,10 +444,10 @@ def _alpaca_monthly_section() -> str:
         equity = float(account.get("equity", 0))
         cash = float(account.get("cash", 0))
         buying_power = float(account.get("buying_power", 0))
-        lines.append(f"<b>📅 Alpaca Monthly ({cycle_month}):</b>")
-        lines.append(f"  💰 Демо equity: <b>${equity:,.0f}</b> | cash: ${cash:,.0f}")
+        lines.append(f"<b>📅 Alpaca Monthly {account_label} ({cycle_month}):</b>")
+        lines.append(f"  💰 Equity: <b>${equity:,.0f}</b> | cash: ${cash:,.0f} | BP: ${buying_power:,.0f}")
     else:
-        lines.append(f"<b>📅 Alpaca Monthly ({cycle_month}):</b>")
+        lines.append(f"<b>📅 Alpaca Monthly {account_label} ({cycle_month}):</b>")
         lines.append("  💰 Equity: API недоступен")
 
     if current_tickers:
@@ -475,7 +478,10 @@ def _alpaca_monthly_section() -> str:
     elif refresh_age is not None:
         stale_warn = f" (обновлены {_age_str(refresh_age)})"
     lines.append(f"  🔄 Пики{stale_warn}")
-    lines.append("  ℹ️ Это paper-счёт; перед реальными $500 ждём сверку fills, broker-side protection и итог текущего цикла.")
+    if is_live_account:
+        lines.append("  ℹ️ Это LIVE-счёт; все заявки должны идти только через capped v38 и broker-side stop protection.")
+    else:
+        lines.append("  ℹ️ Это paper-счёт; перед реальными деньгами ждём сверку fills, broker-side protection и итог текущего цикла.")
 
     return "\n".join(lines)
 
@@ -489,7 +495,8 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true", help="Print, don't send to TG")
     args = ap.parse_args()
 
-    # Load credentials
+    # Load credentials. Live env has priority; paper env only fills gaps.
+    _load_env_file(ROOT / "configs" / "alpaca_live_v38.env")
     _load_env_file(ROOT / "configs" / "alpaca_paper_local.env")
     # Also try live bot env for TG creds if not already set
     live_env_candidates = [
@@ -502,7 +509,7 @@ def main() -> int:
             break
 
     token = _env("TG_TOKEN")
-    chat_id = _env("TG_CHAT_ID")
+    chat_id = _env("TG_CHAT_ID") or _env("TG_CHAT")
     now_utc = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     sections: list[str] = []
