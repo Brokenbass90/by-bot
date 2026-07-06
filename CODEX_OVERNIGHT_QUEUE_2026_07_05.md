@@ -36,3 +36,21 @@ scripts/run_fx_native_harness.py на data_cache/forex_1h (2.4 ГОДА, --inter
 ## УТРОМ владельцу (сводка одним сообщением):
 статус live (сделки ATT1? bus-записи?), вердикты A-D, что прошло в следующий этап.
 Claude утром разбирает всё честно: cross-symbol, per-period, красные месяцы.
+
+## ОЧЕРЕДЬ 2026-07-07 (Claude; после вердикта inplay strict FAIL=stress_360_weak)
+1. ADA-СДЕЛКА — ДОКАЗАТЕЛЬСТВА (P0, 15 мин): владелец НЕ видит сделку в Bybit. Предъявить тройное
+   подтверждение: (a) trades.db CLOSE event по att1_trendline_touch/ADAUSDT, (b) decision_bus
+   enter+outcome записи, (c) Bybit API execution list за окно. Если чего-то нет -> ИНЦИДЕНТ:
+   разобрать, откуда live_positions.json показал позицию (стейл? другой аккаунт? бага view) и
+   зафиксировать в ledger. Врущая отчётность = баг класса P0.
+2. INPLAY MAKER-ENTRY RE-GATE (P1, часы): strict FAIL только по стресс-издержкам (base PF 1.44 ->
+   stress 1.07). ПРЕ-РЕГИСТРАЦИЯ: те же r061-параметры и набор (DOGE/ADA/SUI/1000PEPE/TAO), вход
+   ЛИМИТКОЙ на ретесте через level_entry/pending-limit (честный fill: цена должна ДОЙТИ до лимитки),
+   maker fee 1bps + slippage 0 на входе, выход как было (taker). PASS = stress-PF >= 1.2, 3/4 фолдов,
+   концентрация < 0.35, unfilled-rate < 50% (лимитки, до которых цена не дошла, честно теряются).
+   НЕ крутить другие параметры. PASS -> shadow risk=0.0 немедленно.
+3. FX BACKFILL ПО-ВЗРОСЛОМУ (P1, фон): Dukascopy/histdata M1->M5/H1 на 2-3 ГОДА для
+   EURUSD/GBPUSD/USDJPY/XAUUSD/GBPJPY/AUDJPY -> coverage gate >= 0.99 (closure-aware) -> только
+   потом боковики: session_range_fade/смарт-сетка на XAU+мажорах. До чистых данных FX-вердиктов НЕ выносить.
+4. Alpaca: подтвердить зачисление, funded dry-run, чеклист включения SEND_ORDERS=1 с OK владельца.
+5. qty-sync деплой при первом flat-окне (план уже согласован).
