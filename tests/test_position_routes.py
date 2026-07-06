@@ -59,3 +59,23 @@ def test_missing_sl_flagged(tmp_path, monkeypatch):
     p = build()["positions"][0]
     assert p["sl_present"] is False
     assert p["risk_usd_at_sl"] is None
+
+
+def test_holding_math_short_with_targets(tmp_path, monkeypatch):
+    rt = tmp_path / "runtime"
+    rt.mkdir(parents=True)
+    (rt / "live_positions.json").write_text(json.dumps([{
+        "symbol": "ADAUSDT", "side": "Sell", "entry": 0.190, "qty": 100,
+        "exchange_sl": 0.194, "upnl_usd": 0.20,           # -> current = 0.188
+        "runner_targets": [0.184, 0.178],
+    }]))
+    build = _view(tmp_path, monkeypatch)
+    p = build()["positions"][0]
+    assert p["tp_targets"][0] == 0.184                    # ближняя цель первой
+    assert abs(p["current_price"] - 0.188) < 1e-9
+    # прогресс к TP1: (0.190-0.188)/(0.190-0.184) = 33.3%
+    assert abs(p["progress_to_tp1_pct"] - 33.3) < 0.2
+    # r_now: risk=0.004*100=0.4$, upnl 0.2 -> 0.5R
+    assert abs(p["r_now"] - 0.5) < 1e-6
+    exp = {e["target"]: e["approx_usd"] for e in p["expected_at_targets"]}
+    assert abs(exp[0.184] - 0.60) < 1e-9 and abs(exp[0.178] - 1.20) < 1e-9

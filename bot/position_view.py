@@ -79,12 +79,74 @@ def build_position_view(now_ts: Optional[float] = None) -> Dict[str, Any]:
         sl = p.get("sl", p.get("exchange_sl", p.get("sl_price")))
         entry = p.get("entry", p.get("entry_price", p.get("avg")))
         qty = p.get("qty", p.get("size"))
+        side = str(p.get("side", "")).lower()
+        is_short = side in ("sell", "short")
         try:
             risk_usd = abs(float(entry) - float(sl)) * float(qty)
         except (TypeError, ValueError):
             risk_usd = None
         q["sl_present"] = sl not in (None, "", 0)
         q["risk_usd_at_sl"] = round(risk_usd, 4) if isinstance(risk_usd, float) else None
+
+        # ── holding math: targets, current price, progress, expected profit ──
+        targets: List[float] = []
+        for key in ("tp_targets", "targets", "runner_targets"):
+            v = p.get(key)
+            if isinstance(v, (list, tuple)):
+                targets += [float(x) for x in v if isinstance(x, (int, float)) and x > 0]
+        for key in ("tp1", "tp2", "tp_price", "tp"):
+            v = p.get(key)
+            if isinstance(v, (int, float)) and v > 0:
+                targets.append(float(v))
+        targets = sorted(set(targets), reverse=is_short is False)
+        if is_short:
+            targets = sorted(set(targets), reverse=True)  # ближняя цель первой (выше)
+            targets = [t for t in targets if True]
+        q["tp_targets"] = targets
+
+        upnl = p.get("upnl", p.get("upnl_usd", p.get("unrealised_pnl")))
+        current = None
+        for key in ("mark_price", "last_price", "current_price", "current", "price"):
+            v = p.get(key)
+            if isinstance(v, (int, float)) and v > 0:
+                current = float(v)
+                break
+        try:
+            if current is None and isinstance(upnl, (int, float)):
+                # derive from uPnL: short profit when price below entry
+                current = float(entry) - float(upnl) / float(qty) if is_short \
+                          else float(entry) + float(upnl) / float(qty)
+        except (TypeError, ValueError, ZeroDivisionError):
+            current = None
+        q["current_price"] = round(current, 8) if isinstance(current, float) else None
+
+        try:
+            q["r_now"] = round(float(upnl) / risk_usd, 3) if risk_usd else None
+        except (TypeError, ValueError):
+            q["r_now"] = None
+
+        # progress toward the NEAREST remaining target, % (can exceed 100)
+        prog = None
+        if targets and isinstance(current, float):
+            try:
+                t0 = float(targets[0])
+                denom = (float(entry) - t0) if is_short else (t0 - float(entry))
+                moved = (float(entry) - current) if is_short else (current - float(entry))
+                if abs(denom) > 1e-12:
+                    prog = max(-50.0, min(150.0, 100.0 * moved / denom))
+            except (TypeError, ValueError):
+                prog = None
+        q["progress_to_tp1_pct"] = round(prog, 1) if isinstance(prog, float) else None
+
+        # expected profit if each target hits (full remaining qty approximation)
+        exp = []
+        for t in targets:
+            try:
+                gain = (float(entry) - float(t)) if is_short else (float(t) - float(entry))
+                exp.append({"target": float(t), "approx_usd": round(gain * float(qty), 2)})
+            except (TypeError, ValueError):
+                continue
+        q["expected_at_targets"] = exp
         enriched.append(q)
 
     return {

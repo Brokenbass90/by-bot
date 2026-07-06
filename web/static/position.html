@@ -25,6 +25,11 @@
   button:disabled { opacity:.5; cursor:default; }
   .flag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:12px; margin-left:8px; }
   .flag.ok { background:#1f6f43; } .flag.warn { background:#8a6d1d; } .flag.bad { background:#8e2c33; }
+  .rail { position:relative; height:26px; background:#21262d; border-radius:8px; margin:10px 0 4px; }
+  .rail .seg { position:absolute; top:0; bottom:0; border-radius:8px; }
+  .rail .mark { position:absolute; top:-4px; bottom:-4px; width:2px; }
+  .rail .lbl { position:absolute; top:28px; font-size:10px; color:#8b949e; transform:translateX(-50%); white-space:nowrap; }
+  canvas { width:100%; height:220px; background:#0d1117; border:1px solid #21262d; border-radius:8px; }
 </style>
 </head>
 <body>
@@ -32,6 +37,7 @@
 <div class="grid">
   <div>
     <div class="card" id="poscard"><div class="muted">Загрузка…</div></div>
+    <div class="card" style="margin-top:14px;"><div class="pos-title">📈 График (5м, вход/стоп/тейки)</div><canvas id="chart" width="640" height="220"></canvas><div class="muted" id="chartnote"></div></div>
     <div class="card" style="margin-top:14px;">
       <div class="pos-title">Лента решений бота (bus, 3 дня)</div>
       <div class="events" id="events"><div class="muted">—</div></div>
@@ -47,6 +53,70 @@
 <div class="muted" style="margin-top:10px;">Наблюдение + обсуждение. Управление из веба отключено by design — руками только через биржу или ai_manual-токен.</div>
 <script>
 let lastView = null;
+
+function rail(p) {
+  const entry = +(p.entry ?? p.entry_price ?? p.avg);
+  const sl = +(p.sl ?? p.exchange_sl ?? p.sl_price);
+  const cur = p.current_price;
+  const tps = p.tp_targets || [];
+  if (!entry || !sl || cur == null) return "";
+  const pts = [sl, entry, cur, ...tps];
+  const lo = Math.min(...pts), hi = Math.max(...pts), span = (hi-lo) || 1;
+  const x = v => 100*(v-lo)/span;
+  const isShort = /sell|short/i.test(p.side||"");
+  const profitSide = isShort ? [x(Math.min(...tps.length?tps:[cur])), x(entry)] : [x(entry), x(Math.max(...tps.length?tps:[cur]))];
+  let html = '<div class="rail">';
+  html += `<div class="seg" style="left:${Math.min(...profitSide)}%;width:${Math.abs(profitSide[1]-profitSide[0])}%;background:#12351f;"></div>`;
+  html += `<div class="mark" style="left:${x(sl)}%;background:#f85149;"></div><div class="lbl" style="left:${x(sl)}%">SL ${sl}</div>`;
+  html += `<div class="mark" style="left:${x(entry)}%;background:#8b949e;"></div><div class="lbl" style="left:${x(entry)}%">вход</div>`;
+  html += `<div class="mark" style="left:${x(cur)}%;background:#79c0ff;width:3px;"></div><div class="lbl" style="left:${x(cur)}%">сейчас</div>`;
+  tps.forEach((t,i)=>{ html += `<div class="mark" style="left:${x(t)}%;background:#3fb950;"></div><div class="lbl" style="left:${x(t)}%">TP${i+1}</div>`; });
+  return html + '</div><div style="height:18px"></div>';
+}
+
+let chartLoaded = 0;
+async function drawChart(p) {
+  const now = Date.now();
+  if (now - chartLoaded < 60000) return;   // раз в минуту достаточно
+  chartLoaded = now;
+  try {
+    const entryTs = p.entry_ts || p.opened_ts || (now - 12*3600000);
+    const sl = p.sl ?? p.exchange_sl ?? p.sl_price;
+    const url = `/api/trades/chart?symbol=${p.symbol}&entry_ts=${entryTs}&exit_ts=${now}&interval=5`
+      + `&entry_price=${p.entry ?? p.entry_price ?? ""}&sl_price=${sl ?? ""}`;
+    const r = await fetch(url, {credentials:"include"});
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const candles = d.candles || d.data || d;
+    if (!Array.isArray(candles) || !candles.length) throw new Error("нет свечей");
+    const cv = document.getElementById("chart"), ctx = cv.getContext("2d");
+    const W = cv.width, H = cv.height;
+    ctx.clearRect(0,0,W,H);
+    const highs = candles.map(c=>c.high), lows = candles.map(c=>c.low);
+    const tps = p.tp_targets || [];
+    let lo = Math.min(...lows, ...(sl?[+sl]:[]), ...tps), hi = Math.max(...highs, ...(sl?[+sl]:[]), ...tps);
+    const pad = (hi-lo)*0.05 || 1; lo -= pad; hi += pad;
+    const X = i => 8 + (W-16) * i/(candles.length-1 || 1);
+    const Y = v => H - (H-10) * (v-lo)/(hi-lo) - 5;
+    const line = (v, color, label) => { if (v==null||!isFinite(v)) return;
+      ctx.strokeStyle = color; ctx.setLineDash([4,4]); ctx.beginPath();
+      ctx.moveTo(0, Y(v)); ctx.lineTo(W, Y(v)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = color; ctx.font = "10px monospace"; ctx.fillText(label+" "+v, 4, Y(v)-3); };
+    // candle wicks + bodies (thin)
+    candles.forEach((c,i)=>{ const x = X(i);
+      ctx.strokeStyle = c.close >= c.open ? "#3fb950" : "#f85149";
+      ctx.beginPath(); ctx.moveTo(x, Y(c.high)); ctx.lineTo(x, Y(c.low)); ctx.stroke();
+      ctx.lineWidth = 2.4;
+      ctx.beginPath(); ctx.moveTo(x, Y(c.open)); ctx.lineTo(x, Y(c.close)); ctx.stroke();
+      ctx.lineWidth = 1; });
+    line(+(p.entry ?? p.entry_price), "#8b949e", "вход");
+    line(sl!=null? +sl: null, "#f85149", "SL");
+    tps.forEach((t,i)=>line(+t, "#3fb950", "TP"+(i+1)));
+    document.getElementById("chartnote").textContent = candles.length + " свечей 5м";
+  } catch(e) {
+    document.getElementById("chartnote").textContent = "график недоступен: " + e;
+  }
+}
 const fmt = (x, d=4) => (typeof x === "number" ? x.toFixed(d) : (x ?? "?"));
 
 async function refresh() {
@@ -67,16 +137,21 @@ async function refresh() {
         const sl = p.sl ?? p.exchange_sl ?? p.sl_price;
         const cls = (typeof upnl === "number" && upnl >= 0) ? "green" : "red";
         const slFlag = p.sl_present ? '<span class="flag ok">SL на бирже</span>' : '<span class="flag bad">SL НЕТ!</span>';
+        const rGauge = p.r_now != null ? ` · ${p.r_now>=0?"+":""}${p.r_now}R` : "";
+        const prog = p.progress_to_tp1_pct != null ? `${p.progress_to_tp1_pct}% пути к TP1` : "";
+        const tps = (p.expected_at_targets||[]).map((e,i)=>`TP${i+1} ${e.target} → ≈${e.approx_usd>=0?"+":""}${e.approx_usd}$`).join(" · ");
         return `<div class="pos-title">${p.symbol} ${p.side} ${slFlag}</div>
           <div class="kv">
             <b>Вход</b><span>${fmt(p.entry ?? p.entry_price ?? p.avg)}</span>
+            <b>Сейчас</b><span>${fmt(p.current_price)} ${prog ? '<span class="muted">('+prog+')</span>' : ''}</span>
             <b>Объём</b><span>${fmt(p.qty ?? p.size, 2)}</span>
-            <b>uPnL</b><span class="${cls}">${typeof upnl === "number" ? (upnl>=0?"+":"")+upnl.toFixed(2)+" $" : "?"}</span>
-            <b>Стоп</b><span>${fmt(sl)}</span>
-            <b>Риск на стопе</b><span>${p.risk_usd_at_sl != null ? p.risk_usd_at_sl.toFixed(2)+" $" : "?"}</span>
+            <b>uPnL</b><span class="${cls}">${typeof upnl === "number" ? (upnl>=0?"+":"")+upnl.toFixed(2)+" $" : "?"}${rGauge}</span>
+            <b>Стоп</b><span>${fmt(sl)} <span class="muted">(риск ${p.risk_usd_at_sl != null ? p.risk_usd_at_sl.toFixed(2)+"$" : "?"})</span></span>
+            <b>Цели бота</b><span>${tps || "—"}</span>
             <b>Стратегия</b><span>${p.strategy ?? "?"}</span>
-          </div>`;
+          </div>` + rail(p);
       }).join("<hr style='border-color:#30363d'>");
+      drawChart(v.positions[0]);
     }
     const ev = document.getElementById("events");
     if (v.recent_events && v.recent_events.length) {
