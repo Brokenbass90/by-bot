@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Живая позиция</title>
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; background:#0d1117; color:#e6edf3; margin:0; padding:16px; }
+  h1 { font-size:18px; margin:0 0 12px; }
+  .grid { display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  .card { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:14px; }
+  .pos-title { font-size:16px; font-weight:600; margin-bottom:8px; }
+  .kv { display:grid; grid-template-columns: 140px 1fr; row-gap:4px; font-size:14px; }
+  .kv b { color:#8b949e; font-weight:500; }
+  .green { color:#3fb950; } .red { color:#f85149; } .yellow { color:#d29922; }
+  .muted { color:#8b949e; font-size:12px; }
+  .events { max-height:260px; overflow-y:auto; font-size:12px; font-family:monospace; }
+  .events div { padding:3px 0; border-bottom:1px solid #21262d; }
+  #chatlog { max-height:320px; overflow-y:auto; font-size:14px; margin-bottom:8px; }
+  .msg-u { color:#79c0ff; margin:6px 0 2px; } .msg-a { color:#e6edf3; white-space:pre-wrap; }
+  textarea { width:100%; box-sizing:border-box; background:#0d1117; color:#e6edf3; border:1px solid #30363d; border-radius:8px; padding:8px; min-height:56px; }
+  button { background:#238636; color:#fff; border:0; border-radius:8px; padding:8px 16px; margin-top:6px; cursor:pointer; font-size:14px; }
+  button:disabled { opacity:.5; cursor:default; }
+  .flag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:12px; margin-left:8px; }
+  .flag.ok { background:#1f6f43; } .flag.warn { background:#8a6d1d; } .flag.bad { background:#8e2c33; }
+</style>
+</head>
+<body>
+<h1>🎯 Живая позиция <span id="alive" class="flag warn">…</span> <span id="regime" class="muted"></span></h1>
+<div class="grid">
+  <div>
+    <div class="card" id="poscard"><div class="muted">Загрузка…</div></div>
+    <div class="card" style="margin-top:14px;">
+      <div class="pos-title">Лента решений бота (bus, 3 дня)</div>
+      <div class="events" id="events"><div class="muted">—</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="pos-title">💬 Обсудить с ИИ</div>
+    <div id="chatlog"><div class="muted">ИИ получает текущую позицию автоматически. Спроси: «какие риски у этой позиции?», «где логично зафиксировать?», «что говорит телеметрия?»</div></div>
+    <textarea id="q" placeholder="Вопрос про позицию…"></textarea>
+    <button id="send" onclick="ask()">Спросить</button>
+  </div>
+</div>
+<div class="muted" style="margin-top:10px;">Наблюдение + обсуждение. Управление из веба отключено by design — руками только через биржу или ai_manual-токен.</div>
+<script>
+let lastView = null;
+const fmt = (x, d=4) => (typeof x === "number" ? x.toFixed(d) : (x ?? "?"));
+
+async function refresh() {
+  try {
+    const r = await fetch("/api/position/live", {credentials: "include"});
+    if (!r.ok) throw new Error(r.status);
+    const v = await r.json();
+    lastView = v;
+    document.getElementById("alive").textContent = v.alive ? "ЖИВ" : "НЕ ТОРГУЕТ";
+    document.getElementById("alive").className = "flag " + (v.alive ? "ok" : "bad");
+    document.getElementById("regime").textContent = v.regime ? ("режим: " + v.regime) : "";
+    const pc = document.getElementById("poscard");
+    if (!v.positions || !v.positions.length) {
+      pc.innerHTML = '<div class="pos-title">Открытых позиций нет</div><div class="muted">Бот сканирует рынок.</div>';
+    } else {
+      pc.innerHTML = v.positions.map(p => {
+        const upnl = p.upnl ?? p.upnl_usd ?? p.unrealised_pnl;
+        const sl = p.sl ?? p.exchange_sl ?? p.sl_price;
+        const cls = (typeof upnl === "number" && upnl >= 0) ? "green" : "red";
+        const slFlag = p.sl_present ? '<span class="flag ok">SL на бирже</span>' : '<span class="flag bad">SL НЕТ!</span>';
+        return `<div class="pos-title">${p.symbol} ${p.side} ${slFlag}</div>
+          <div class="kv">
+            <b>Вход</b><span>${fmt(p.entry ?? p.entry_price ?? p.avg)}</span>
+            <b>Объём</b><span>${fmt(p.qty ?? p.size, 2)}</span>
+            <b>uPnL</b><span class="${cls}">${typeof upnl === "number" ? (upnl>=0?"+":"")+upnl.toFixed(2)+" $" : "?"}</span>
+            <b>Стоп</b><span>${fmt(sl)}</span>
+            <b>Риск на стопе</b><span>${p.risk_usd_at_sl != null ? p.risk_usd_at_sl.toFixed(2)+" $" : "?"}</span>
+            <b>Стратегия</b><span>${p.strategy ?? "?"}</span>
+          </div>`;
+      }).join("<hr style='border-color:#30363d'>");
+    }
+    const ev = document.getElementById("events");
+    if (v.recent_events && v.recent_events.length) {
+      ev.innerHTML = v.recent_events.slice().reverse().map(e => {
+        const t = new Date((e.ts||0)*1000).toISOString().slice(5,16).replace("T"," ");
+        return `<div>${t} · ${e.symbol} · <b>${e.decision}</b> ${e.reason||""}</div>`;
+      }).join("");
+    }
+  } catch (e) {
+    document.getElementById("poscard").innerHTML = '<div class="red">Ошибка загрузки: ' + e + '</div>';
+  }
+}
+
+async function ask() {
+  const q = document.getElementById("q").value.trim();
+  if (!q) return;
+  const log = document.getElementById("chatlog");
+  log.innerHTML += `<div class="msg-u">Ты: ${q}</div>`;
+  document.getElementById("q").value = "";
+  document.getElementById("send").disabled = true;
+  try {
+    const ctx = lastView ? ("Текущая позиция (JSON): " + JSON.stringify({
+      positions: lastView.positions, regime: lastView.regime, health: lastView.health
+    })) : "Позиция недоступна.";
+    const r = await fetch("/api/ai/chat", {
+      method: "POST", credentials: "include",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({messages: [
+        {role: "user", content: ctx + "\n\nВопрос владельца: " + q}
+      ]})
+    });
+    const data = await r.json();
+    const answer = data.reply ?? data.answer ?? data.content ?? JSON.stringify(data).slice(0, 800);
+    log.innerHTML += `<div class="msg-a">${String(answer).replace(/</g,"&lt;")}</div>`;
+  } catch (e) {
+    log.innerHTML += `<div class="msg-a red">Ошибка ИИ: ${e}</div>`;
+  } finally {
+    document.getElementById("send").disabled = false;
+    log.scrollTop = log.scrollHeight;
+  }
+}
+
+refresh();
+setInterval(refresh, 10000);
+</script>
+</body>
+</html>
