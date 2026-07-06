@@ -776,3 +776,46 @@ Next return:
 
 - Best high-signal return: after `16:45 Cyprus` to see Alpaca first live manager run, or evening to see FX backfill progress.
 - If owner worries about ADA before then, check Bybit position and SL; manual close/reduce is an owner risk decision, not automatic code work.
+
+## 2026-07-06 Late Afternoon Codex Continuation — Alpaca Live, Maker-Fill Gate Running
+
+What changed factually:
+
+- Git origin pushed to `7830297`; VPS fast-forwarded from `ff3ee50` to `7830297` without reset. Dirty VPS tracked files were runtime-generated (`configs/intraday_config.json`, `configs/portfolio_allocator_latest.env`) and were not reverted.
+- Web only was restarted (`uvicorn web.main` on `127.0.0.1:8765`); live `bybot.service` was not restarted. `/position.html` and `/api/position` return 200. `/api/trades/chart` returns 401 without auth, expected. ADA `entry_ts` exists in `runtime/live_positions.json`.
+- Alpaca real money is active: VPS read-only account state shows positions `SNOW`, `GE`, `ABBV`, `BAC`, equity about `$496`, cash/BP about `$149`. Each position has a broker-side stop order:
+  - SNOW stop `234.23`
+  - GE stop `356.47`
+  - ABBV stop `247.77`
+  - BAC stop `56.31`
+  Native trailing is configured in the monthly runner, but these fractional positions currently use simple broker stops, not trailing stop orders.
+- Bybit live: `ADAUSDT Sell` remains open under ATT1. Runtime at check: entry `0.189137`, current about `0.1857`, qty `138`, exchange SL `0.1893`, runner TP1 `0.183584` hit, TP2 `0.177717` pending, trailing armed. Notional about `$25.6`, uPnL about `$0.47`. `TP=None` on exchange is by design: runner manages exits, broker SL protects.
+- WS guard: not active. Last state `NO_CONNECT_TRANSIENT`, `critical_streak=0`, last window `bybit_msgs=31095`, `disconnect=1`. Earlier AI operator warning was valid as a watch item, not an active emergency.
+- VPS load hygiene: a stale server-side `att1_density_v3_more_pivots` autoresearch was consuming roughly 55% CPU / 45% RAM and was stopped to protect live trading and WebSocket stability. Do not launch heavy research on VPS while live bot is running; use local screens.
+
+Research running now:
+
+- Local screen `inplay_maker_fill_gate_20260706`
+  - log: `logs/inplay_maker_fill_gate_20260706/run.log`
+  - new runner: `scripts/run_inplay_maker_fill_gate_20260706.py`
+  - purpose: final honest maker-fill check for inplay r061 using `simulate_maker_trade`
+  - grid: offset `{0.1,0.25,0.4}*ATR` x validity `{6,12,24}`
+  - thresholds: stress PF >= 1.2, 3/4 stress folds positive, unfilled < 50%, symbol concentration < 0.35
+  - smoke 30d passed; full scan may take a while before first printed combo.
+- Local screen `fx_cfd_backfill_gate_20260706`
+  - Dukascopy backfill still alive.
+  - At check: total forex cache ~1.09M M5 rows. EURUSD/GBPUSD/USDJPY/EURJPY near 145k-148k rows; XAUUSD only ~13.6k rows, so gold verdict is not ready.
+
+What is live money:
+
+- Bybit: ATT1 short r001 only.
+- Alpaca: monthly v38 capped live sleeve now has 4 positions with broker stops.
+- Inplay/IVB1/FX/CFD: not live.
+
+Next actions:
+
+1. Check local `logs/inplay_maker_fill_gate_20260706/run.log`. PASS -> shadow/risk=0.0 inplay candidate; FAIL -> do not promote, move to softer retest/maker design.
+2. Check Alpaca account state after next cron cycle; confirm every open position still has a matching stop order.
+3. Check ADA state and whether TP2/trailing closed or moved SL.
+4. Continue FX data gate; no FX/CFD capital until data status + OOS verdicts.
+5. Implement broader system health checker: bot heartbeat, ws guard, CPU/RAM, stale research, stop integrity, Alpaca stop coverage, digest freshness.
