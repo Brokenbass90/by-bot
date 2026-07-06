@@ -38,6 +38,10 @@
   <div>
     <div class="card" id="poscard"><div class="muted">Загрузка…</div></div>
     <div class="card" style="margin-top:14px;"><div class="pos-title">📈 График (5м, вход/стоп/тейки)</div><canvas id="chart" width="640" height="220"></canvas><div class="muted" id="chartnote"></div></div>
+    <div class="card" style="margin-top:14px;" id="alpacacard" hidden>
+      <div class="pos-title">🇺🇸 Alpaca (акции)</div>
+      <div id="alpaca"></div>
+    </div>
     <div class="card" style="margin-top:14px;">
       <div class="pos-title">Лента решений бота (bus, 3 дня)</div>
       <div class="events" id="events"><div class="muted">—</div></div>
@@ -153,6 +157,18 @@ async function refresh() {
       }).join("<hr style='border-color:#30363d'>");
       drawChart(v.positions[0]);
     }
+    const ac = document.getElementById("alpacacard");
+    if (v.alpaca && v.alpaca.length) {
+      ac.hidden = false;
+      document.getElementById("alpaca").innerHTML = v.alpaca.map(p => {
+        const cls = (typeof p.upnl === "number" && p.upnl >= 0) ? "green" : "red";
+        const stop = p.stop ? `SL ${p.stop}` : '<span class="red">SL: НЕТ (!)</span>';
+        return `<div class="kv" style="margin-bottom:6px;">
+          <b>${p.symbol}</b><span>${fmt(p.qty,0)} шт · вход ${fmt(p.entry,2)} · сейчас ${fmt(p.current,2)}
+          · <span class="${cls}">${typeof p.upnl === "number" ? (p.upnl>=0?"+":"")+p.upnl.toFixed(2)+"$" : "?"}</span> · ${stop}</span>
+        </div>`;
+      }).join("");
+    } else { ac.hidden = true; }
     const ev = document.getElementById("events");
     if (v.recent_events && v.recent_events.length) {
       ev.innerHTML = v.recent_events.slice().reverse().map(e => {

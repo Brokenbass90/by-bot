@@ -93,3 +93,16 @@ def test_compose_from_runtime_reads_live_positions_data_wrapper(tmp_path):
     assert "ADAUSDT Sell" in msg
     assert "uPnL +0.67$" in msg
     assert "SL 0.1893" in msg
+
+
+def test_alpaca_section_with_missing_stop_warning():
+    msg = build_digest(
+        heartbeat={"dry_run": False, "trade_on": True, "regime": "bull"},
+        positions=[], bus_records=[], health=None,
+        alpaca=[{"symbol": "KO", "upnl": 1.8, "stop": 60.0},
+                {"symbol": "AMD", "upnl": -1.0, "stop": None}],
+        now_ts=NOW,
+    )
+    assert "Alpaca: 2 позиций (KO, AMD)" in msg
+    assert "uPnL +0.80$" in msg
+    assert "БЕЗ СТОПА: 1 (!)" in msg

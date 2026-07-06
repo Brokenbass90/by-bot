@@ -63,6 +63,36 @@ def _bus_tail_for(symbols: List[str], since_ts: float, limit: int = 40) -> List[
     return out[-limit:]
 
 
+def _alpaca_positions(rt: Path) -> List[Dict[str, Any]]:
+    """Alpaca open stock positions from the monthly advisory (tolerant keys)."""
+    advisory = _load_json(rt / "equities_monthly_v36" / "latest_advisory.json") or {}
+    if isinstance(advisory, dict) and isinstance(advisory.get("report"), dict):
+        advisory = advisory["report"]
+    raw: List[Any] = []
+    for key in ("open_positions", "monthly_managed_positions"):
+        v = advisory.get(key) if isinstance(advisory, dict) else None
+        if isinstance(v, list):
+            raw += v
+    out: List[Dict[str, Any]] = []
+    seen = set()
+    for it in raw:
+        if not isinstance(it, dict):
+            continue
+        sym = str(it.get("symbol", it.get("ticker", ""))).upper()
+        if not sym or sym in seen:
+            continue
+        seen.add(sym)
+        out.append({
+            "symbol": sym,
+            "qty": it.get("qty", it.get("shares", it.get("quantity"))),
+            "entry": it.get("avg_entry_price", it.get("avg_price", it.get("entry"))),
+            "current": it.get("current_price", it.get("price", it.get("last_price"))),
+            "upnl": it.get("unrealized_pl", it.get("upnl", it.get("pl", it.get("pnl")))),
+            "stop": it.get("stop_price", it.get("stop", it.get("sl"))),
+        })
+    return out
+
+
 def build_position_view(now_ts: Optional[float] = None) -> Dict[str, Any]:
     """Aggregate everything the owner/AI needs about the open trade(s)."""
     rt = _runtime_root()
@@ -157,6 +187,7 @@ def build_position_view(now_ts: Optional[float] = None) -> Dict[str, Any]:
         "positions": enriched,
         "health": health if isinstance(health, dict) else None,
         "recent_events": events,
+        "alpaca": _alpaca_positions(rt),
         "manage": {
             "enabled": False,
             "note": "Управление позицией из веба отключено by design (v1 = наблюдение+обсуждение). "

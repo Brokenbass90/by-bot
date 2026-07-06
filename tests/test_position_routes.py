@@ -79,3 +79,28 @@ def test_holding_math_short_with_targets(tmp_path, monkeypatch):
     assert abs(p["r_now"] - 0.5) < 1e-6
     exp = {e["target"]: e["approx_usd"] for e in p["expected_at_targets"]}
     assert abs(exp[0.184] - 0.60) < 1e-9 and abs(exp[0.178] - 1.20) < 1e-9
+
+
+def test_alpaca_positions_tolerant_and_in_view(tmp_path, monkeypatch):
+    rt = tmp_path / "runtime"
+    (rt / "equities_monthly_v36").mkdir(parents=True)
+    (rt / "equities_monthly_v36" / "latest_advisory.json").write_text(json.dumps({
+        "report": {
+            "open_positions": [
+                {"symbol": "KO", "qty": 3, "avg_entry_price": 62.5,
+                 "current_price": 63.1, "unrealized_pl": 1.8, "stop_price": 60.0},
+                {"ticker": "AMD", "shares": 1, "avg_price": 150.0, "price": 149.0, "pl": -1.0},
+            ],
+            "monthly_managed_positions": [
+                {"symbol": "KO"},  # дубликат — не должен задвоиться
+            ],
+        }
+    }))
+    build = _view(tmp_path, monkeypatch)
+    v = build()
+    syms = [a["symbol"] for a in v["alpaca"]]
+    assert syms == ["KO", "AMD"]
+    ko = v["alpaca"][0]
+    assert ko["stop"] == 60.0 and ko["upnl"] == 1.8
+    amd = v["alpaca"][1]
+    assert amd["stop"] is None  # нет стопа -> None, панель подсветит

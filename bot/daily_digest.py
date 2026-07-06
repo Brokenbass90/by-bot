@@ -84,6 +84,7 @@ def build_digest(
     positions: Optional[Sequence[Dict[str, Any]]],
     bus_records: Sequence[Dict[str, Any]],
     health: Optional[Dict[str, Any]],
+    alpaca: Optional[Sequence[Dict[str, Any]]] = None,
     research: Optional[Sequence[Dict[str, Any]]] = None,
     pending_owner: Optional[Sequence[str]] = None,
     now_ts: Optional[float] = None,
@@ -122,6 +123,16 @@ def build_digest(
     else:
         lines.append(f"Сделки за 24ч: закрытых нет | новых входов {len(enters)}")
 
+    # ── alpaca stocks ──
+    if alpaca:
+        held = [p for p in alpaca if p]
+        no_stop = sum(1 for p in held if p.get("stop") in (None, "", 0))
+        upnl_sum = sum(float(p.get("upnl") or 0) for p in held
+                       if isinstance(p.get("upnl"), (int, float)))
+        warn = f" | БЕЗ СТОПА: {no_stop} (!)" if no_stop else ""
+        names = ", ".join(str(p.get("symbol")) for p in held[:6])
+        lines.append(f"Alpaca: {len(held)} позиций ({names}) | uPnL {upnl_sum:+.2f}${warn}")
+
     # ── sleeve health ──
     if health:
         st = str(health.get("status", "?"))
@@ -159,11 +170,17 @@ def compose_from_runtime(root: Path | str = ".", *, now_ts: Optional[float] = No
     bus = _load_bus_tail(root / "runtime" / "decision_bus.jsonl", now - DAY_S)
     health = _load_json(root / "runtime" / "att1_edge_health.json")
     extra = _load_json(root / "runtime" / "daily_digest_extra.json") or {}
+    try:
+        from bot.position_view import _alpaca_positions
+        alpaca = _alpaca_positions(root / "runtime")
+    except Exception:
+        alpaca = []
     return build_digest(
         heartbeat=heartbeat if isinstance(heartbeat, dict) else None,
         positions=positions,
         bus_records=bus,
         health=health if isinstance(health, dict) else None,
+        alpaca=alpaca,
         research=extra.get("research"),
         pending_owner=extra.get("pending_owner"),
         now_ts=now,
