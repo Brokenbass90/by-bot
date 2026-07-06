@@ -728,3 +728,51 @@ Next operator checklist:
 5. Inspect FX data status and native/multi-strategy outputs after `fx_cfd_backfill_gate_20260706` completes.
 6. Do not enable Alpaca send-orders until buying power is nonzero and a funded dry-run is reviewed.
 7. P0 technical debt: reconcile live reporting. Bybit executions, `live_trade_events`, `trades.db`, and Telegram must agree automatically.
+
+## 2026-07-06 Mid-Morning Continuation — Alpaca Armed, Reports Fixed
+
+Facts changed:
+
+- Commit pushed and deployed: `a028213 ops: harden live sleeves and research gates`.
+- VPS is now at `a028213` via fast-forward pull, no reset. Server runner/smart live patches were stashed/backed up before pull; runtime `configs/portfolio_allocator_latest.env` remains server-local dirty.
+- Server validation passed:
+  - py_compile for touched modules OK;
+  - `pytest -q tests/test_daily_digest.py tests/test_inplay_breakout_limit_entry.py tests/test_runner_state_fill_sync.py tests/test_level_memory.py` -> `14 passed`.
+- Telegram daily digest is wired and tested:
+  - `python3 -m bot.daily_digest --root . --print` reports `ADAUSDT Sell | uPnL +0.67$ | SL 0.1893`;
+  - `python3 scripts/tg_daily_digest.py` sent successfully at `2026-07-06 08:30 UTC`;
+  - cron already has daily digest at `0 8 * * *`.
+
+Live Bybit:
+
+- ADA short is real and still open at last check.
+- Partial profit was taken: `53 ADA @ 0.1837`, `closedPnl=+0.27827803`.
+- Remaining exchange/runtime position around `138 ADA Sell`.
+- Runtime shows exchange SL at `0.1893` (near breakeven). No visible Bybit TP is expected because TP model is runner ladder/trailing, not a normal exchange TP.
+- Live risk impact: no new crypto risk. Still only ATT1 r001 with `risk_mult=0.10`.
+- Residual caveat: running service may still have old runner qty state until flat/restart. Exchange SL covers full remaining size.
+
+Alpaca:
+
+- Funds settled: live API/account shows about `$494.90` cash/buying power/equity.
+- Funded dry-run and pre-market `send_orders=1` smoke-run passed safely:
+  - market closed;
+  - no orders placed;
+  - planned entries skipped as `skipped_market_closed`.
+- Live v38 manager armed in cron:
+  - `*/30 13-20 * * 1-5 /bin/bash -lc 'cd /root/by-bot && bash scripts/run_alpaca_live_v38_once.sh --send-orders >> logs/alpaca_live_v38_manager.log 2>&1' # alpaca_live_v38_manager`
+  - first real attempt: `2026-07-06 13:30 UTC / 16:30 Cyprus`, if Alpaca clock is open.
+- Constraints: live endpoint, cap `$500`, current top4, broker stop required, market-clock gate, Telegram action report.
+
+Research verdicts:
+
+- Inplay maker-cost proxy: PASS, validates cost-drag hypothesis.
+- True limit-entry scan: FAIL/current implementation. All 20 offset/validity combos produced `0 trades`. Next repair must be a real maker-fill/queue model or softer retest execution, not another exact-limit grid.
+- IVB1 causal dynamic selector: FAIL. Best policy only `2/4` positive OOS folds, aggregate PF about `0.36`. IVB1 remains shadow/risk `0.0`.
+- Support-reclaim datacache repair: FAIL/no-signal. Bounded `96/288` rows all `0 trades`. Redesign with `level_memory`/respect-score/sweep-reclaim before more compute.
+- FX/CFD backfill screen is alive locally but long/noisy: `730d x 6` Dukascopy fetch has poor progress logging and may take hours. No FX/CFD capital.
+
+Next return:
+
+- Best high-signal return: after `16:45 Cyprus` to see Alpaca first live manager run, or evening to see FX backfill progress.
+- If owner worries about ADA before then, check Bybit position and SL; manual close/reduce is an owner risk decision, not automatic code work.
