@@ -41,6 +41,20 @@ level_memory (уважение уровней per-symbol, H1-уровни/M5-и�
 5. Weekly Allocator spec: предложения по risk_mult на базе edge_monitor, решение владельца.
 6. Wiring level_memory в уровневые ноги (A/B). 7. ИИ-майнер по bus (после 4-6 нед данных) -> ML.
 
+## НОЧЬ 2026-07-07 -> 2026-07-08
+Запущены две локальные research-ветки без влияния на live:
+- `screen=crypto_lm_sweep_reclaim_20260707b` — level_memory + sweep/reclaim для флет/отскоков.
+- `screen=codex_overnight_20260707` — FX H1/M5 range/sweep/session/trend, MRB/пила repair, cascade real-liq gate if data exists.
+
+Утром читать:
+- `logs/crypto_lm_sweep_reclaim_20260707b/run.log`
+- `logs/codex_overnight_20260707/`
+- `reports/research/codex_overnight_20260707/SUMMARY.md`
+
+Критерий движения вперёд: exploration PASS даёт только strict/OOS/shadow-кандидата. Live money
+разрешён только после validation gate + clean shadow telemetry. Broad MRB уже FAIL; флетовая
+ветка продолжается через quality levels/sweep/reclaim, а не через тупую сетку по всем монетам.
+
 ## ТОП-3 СТАВКИ СЛЕДУЮЩЕГО ЦИКЛА
 1. ATT1 exit/re-entry A/B: entry-семейство уже ловит live-движение, слабое место сейчас не вход, а удержание прибыли после TP1.
 2. Level-memory range/sweep/reclaim: "пила"/отскоки остаются важной веткой, но только через качество уровней, causal symbol-selection и отдельные long/short ноги. Broad MRB по всем монетам провалился и не включается; новый full run `crypto_lm_sweep_reclaim_20260707` идёт.

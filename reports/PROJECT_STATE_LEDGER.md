@@ -848,3 +848,10 @@
 - Validation: `py_compile smart_pump_reversal_bot.py bot/daily_digest.py bot/portfolio_health.py`; targeted suite `23 passed` (`daily_digest`, `runner_state_restore`, `live_position_view`, `position_routes`, `portfolio_status`, `portfolio_health`).
 - Alpaca live v38 after market activity: current positions `ABBV`, `BAC`, `GE`, `PANW`; `SNOW` was sold and `PANW` bought. All current positions have broker-side simple stops; native trailing is skipped for fractional positions. Cash/BP about `$194.97`, capital cap `$500`.
 - Research hygiene: duplicate local `crypto_level_memory_sweep_reclaim` processes were stopped; only `screen=crypto_lm_sweep_reclaim_20260707b` remains. First useful row is exploration-only combo 4: `83` trades, `+11.8122R`, `PF 1.2998`, `2/4` positive folds.
+
+## ДОБАВЛЕНО 2026-07-07 night setup (Codex — overnight sleeve search)
+- Owner asked for 10-11h overnight compute focused on the next crypto sleeve plus FX/CFD/flet ideas. Added `scripts/run_codex_overnight_20260707.sh` and started `screen=codex_overnight_20260707`.
+- The run is explicitly research-only: no live orders, no risk changes, no server trading process touched. Outputs go to `logs/codex_overnight_20260707/` and `reports/research/codex_overnight_20260707/`.
+- Queue contents: FX native H1 range/sweep/session/trend on `data_cache/forex_1h`; FX M5 multi-strategy gate on `data_cache/forex`; two MRB/пила repair variants with stricter z-score/ATR exits; cascade real-liq gate only if local `runtime/liquidations/*.jsonl` exists.
+- Immediate first result: `01_fx_native_h1_range_sweep` completed; `XAUUSD` failed H1 coverage (`coverage≈0.664`, max gap 66), so gold/CFD remains data-quality blocked for strict conclusions on this local cache. This is not a strategy live verdict.
+- Parallel crypto `screen=crypto_lm_sweep_reclaim_20260707b` remains running. Early rows have exploration pulse (`combo 4`: `83` trades, `+11.8122R`, `PF 1.2998`, `2/4` folds), but it is not promotion-grade before strict/OOS.
