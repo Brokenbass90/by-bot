@@ -105,7 +105,7 @@ async def _startup_security_gate() -> None:
 @app.middleware("http")
 async def _security_headers(request: Request, call_next):
     response = await call_next(request)
-    response.headers.setdefault("X-Frame-Options", "DENY")
+    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("Referrer-Policy", "no-referrer")
     response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
@@ -138,11 +138,11 @@ if _STATIC_DIR.exists():
 
     @app.get("/position.html", include_in_schema=False)
     async def serve_live_position_page():
-        """Serve the dedicated live-position panel before SPA catch-all."""
-        page = _STATIC_DIR / "position.html"
-        if page.exists():
-            return FileResponse(str(page))
-        return {"detail": "position.html not found"}
+        """Serve the SPA shell with the embedded live-position panel selected."""
+        index = _STATIC_DIR / "index.html"
+        if index.exists():
+            return FileResponse(str(index))
+        return {"detail": "Frontend not built yet. Run: cd web/frontend && npm run build"}
 
     @app.get("/{full_path:path}", include_in_schema=False)
     async def serve_spa(full_path: str):

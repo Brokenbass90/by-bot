@@ -96,9 +96,18 @@ async function drawChart(p) {
     const cv = document.getElementById("chart"), ctx = cv.getContext("2d");
     const W = cv.width, H = cv.height;
     ctx.clearRect(0,0,W,H);
-    const highs = candles.map(c=>c.high), lows = candles.map(c=>c.low);
     const tps = p.tp_targets || [];
-    let lo = Math.min(...lows, ...(sl?[+sl]:[]), ...tps), hi = Math.max(...highs, ...(sl?[+sl]:[]), ...tps);
+    let lo = Infinity, hi = -Infinity;
+    candles.forEach(c => {
+      const h = Number(c.high), l = Number(c.low);
+      if (Number.isFinite(h)) hi = Math.max(hi, h);
+      if (Number.isFinite(l)) lo = Math.min(lo, l);
+    });
+    [sl != null ? +sl : null, ...tps].forEach(v => {
+      const n = Number(v);
+      if (Number.isFinite(n)) { lo = Math.min(lo, n); hi = Math.max(hi, n); }
+    });
+    if (!Number.isFinite(lo) || !Number.isFinite(hi)) throw new Error("нет валидных цен");
     const pad = (hi-lo)*0.05 || 1; lo -= pad; hi += pad;
     const X = i => 8 + (W-16) * i/(candles.length-1 || 1);
     const Y = v => H - (H-10) * (v-lo)/(hi-lo) - 5;

@@ -11,6 +11,7 @@
 - Web was updated and VPS fast-forwarded to `4f996e0`.
 - Sidebar now has `Systems -> Live Position`, direct page `/position.html`.
 - Follow-up fix on disk: `web/main.py` now serves `/position.html` before the SPA catch-all. Before this fix, the URL changed but FastAPI returned `index.html`, so the owner still saw Dashboard.
+- Latest web fix: `/position.html` now serves the SPA shell, which selects `Live Position`; the detailed standalone panel is embedded as `/static/position.html`. `X-Frame-Options=SAMEORIGIN` allows same-origin embedding. The candle chart avoids array-spread min/max over large candle sets to prevent `RangeError: Maximum call stack size exceeded`.
 - Web restart touched only `uvicorn`; live trading process was not restarted.
 - If owner says "web does not show trades", first check that they clicked `Live Position`, not `Sweeps`. Dashboard also shows live positions; Sweeps page only shows autoreserach sweep jobs.
 
@@ -30,6 +31,13 @@
 - Rejected: deleting 71 strategies immediately. Only archive after inventory and references are mapped.
 - Rejected: relaxing canary/live gates just because the project needs trades. `Exploration` can be soft; live money remains strict.
 - Rejected: "Inplay shadow now" unless dynamic selector reaches a softer but preregistered shadow bar, e.g. `3/4 folds` and `PF>1.15`, or a new level_memory A/B validates it.
+
+## Priority Bets After Owner Review
+1. `ATT1 exit/re-entry A/B`: current live ADA proves the entry family can catch a move, but the exit model is too passive after TP1. Test profit-lock-after-TP1, tighter ATR trail, larger TP1 fraction, and retest-exit/re-entry before changing live behavior.
+2. `Level-memory range/sweep/reclaim`: keep the "pila"/range idea, but broad MRB failed. Next version must combine range scan + level respect score + causal symbol selection + regime direction guard. Build both long and short variants; separate horizontal and sloped levels.
+3. `FX/XAU H1 range/sweep/session`: data is research-ready; current exploration screen is running. Treat it as parallel discovery, not capital deployment. Capital only after clean OOS/demo gate.
+
+Inplay maker is not the next live sleeve right now: fill rate was acceptable, but stability/time folds and dynamic selector quality were weak. Freeze until entry-quality repair or level_memory A/B.
 
 ## Next Work Order
 1. Finish/inspect `fx_h1_exploration_20260707`; summarize top rows and reject any row that only passes due soft thresholds.
