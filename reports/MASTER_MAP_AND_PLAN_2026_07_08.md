@@ -45,15 +45,20 @@ level_memory (уважение уровней per-symbol, H1-уровни/M5-и�
 Запущены две локальные research-ветки без влияния на live:
 - `screen=crypto_lm_sweep_reclaim_20260707b` — level_memory + sweep/reclaim для флет/отскоков.
 - `screen=codex_overnight_20260707` — FX H1/M5 range/sweep/session/trend, MRB/пила repair, cascade real-liq gate if data exists.
+- `screen=cascade_real_liq_20260707` — отдельный real-liq gate после pull `runtime/liquidations/bybit_liquidations.jsonl` с VPS (`85009` строк).
 
 Утром читать:
 - `logs/crypto_lm_sweep_reclaim_20260707b/run.log`
 - `logs/codex_overnight_20260707/`
+- `logs/cascade_liq_pull_20260707/run_cascade_real_liq_20260707.log`
 - `reports/research/codex_overnight_20260707/SUMMARY.md`
+- `reports/research/cascade_real_liq_20260707/`
 
 Критерий движения вперёд: exploration PASS даёт только strict/OOS/shadow-кандидата. Live money
 разрешён только после validation gate + clean shadow telemetry. Broad MRB уже FAIL; флетовая
 ветка продолжается через quality levels/sweep/reclaim, а не через тупую сетку по всем монетам.
+Дополнительная MRB repair-проверка ночью уже подтвердила FAIL (`PF≈0.84`, `0/4` folds), поэтому
+простую basket-пилу больше не гонять без causal symbol-selection/level filter.
 
 ## ТОП-3 СТАВКИ СЛЕДУЮЩЕГО ЦИКЛА
 1. ATT1 exit/re-entry A/B: entry-семейство уже ловит live-движение, слабое место сейчас не вход, а удержание прибыли после TP1.

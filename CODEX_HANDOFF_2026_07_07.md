@@ -295,3 +295,15 @@ blocker для строгого вывода. Это не live/no-live verdict �
 Параллельно оставлен существующий `screen=crypto_lm_sweep_reclaim_20260707b`: первые строки
 имеют exploration-пульс (например combo 4: 83 trades, +11.8122R, PF 1.2998, 2/4 folds),
 но это только билет на strict/OOS, не shadow/live.
+
+### ДОПОЛНИТЕЛЬНО ПЕРЕД НОЧЬЮ
+- С VPS стянут реальный поток ликвидаций:
+  `runtime/liquidations/bybit_liquidations.jsonl` (`85009` строк, ~12MB). Отдельно запущен
+  `screen=cascade_real_liq_20260707`, лог `logs/cascade_liq_pull_20260707/run_cascade_real_liq_20260707.log`,
+  outdir `reports/research/cascade_real_liq_20260707`. Первый факт: поток читается, окно
+  `2026-06-16 08:10 UTC .. 2026-07-07 17:40 UTC`, 12 символов, coverage BTC/ETH/SOL/XRP идёт.
+- Чтобы флет/пила не ждали длинный FX M5 шаг, отдельно прогнаны два MRB repair-варианта:
+  `logs/crypto_mrb_repair_20260707/z18.log` и `z24_fast.log`. Оба FAIL:
+  `z18`: netR `-139.18`, PF `0.844`, folds `0/4`; `z24_fast`: netR `-67.67`,
+  PF `0.835`, folds `0/4`. Вывод: простую broad mean-reversion basket/пилу не включать;
+  продолжать флетовую ветку через level quality / sweep-reclaim / causal symbol-selection.
