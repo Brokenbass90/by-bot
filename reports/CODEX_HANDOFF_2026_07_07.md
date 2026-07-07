@@ -10,12 +10,13 @@
 ## Web / Observability
 - Web was updated and VPS fast-forwarded to `4f996e0`.
 - Sidebar now has `Systems -> Live Position`, direct page `/position.html`.
+- Follow-up fix on disk: `web/main.py` now serves `/position.html` before the SPA catch-all. Before this fix, the URL changed but FastAPI returned `index.html`, so the owner still saw Dashboard.
 - Web restart touched only `uvicorn`; live trading process was not restarted.
 - If owner says "web does not show trades", first check that they clicked `Live Position`, not `Sweeps`. Dashboard also shows live positions; Sweeps page only shows autoreserach sweep jobs.
 
 ## Research Status
 - Inplay maker-fill strict gate: FAIL but close. Best `offset=0.4`, `validity=24`, stress `84 trades`, `+6.46R`, `PF=1.173`, unfilled `25.66%`, concentration `0.255`; failed prereg `PF>=1.2` and `3/4` positive folds (`2/4`).
-- Inplay dynamic selector is still running locally (`screen=inplay_maker_dynsel_overnight_20260706`); early rows are mostly `0-1` trades and FAIL. Do not promote before final verdict.
+- Inplay dynamic selector is still running locally (`screen=inplay_maker_dynsel_overnight_20260706`); latest log rows remain mostly `0-1` future trades and FAIL. Current inplay-maker implementation is not promotable unless the final rows materially change; next path is repair with `level_memory`/entry filters or move compute to the exploration pack.
 - FX/CFD data backfill completed. Six symbols passed M5 preflight: `EURUSD,GBPUSD,USDJPY,EURJPY,GBPJPY,XAUUSD`.
 - FX/CFD multi-strategy gate completed with no capital-ready candidate. Best diagnostic row: `EURJPY liquidity_sweep_bounce_session_v1`, `21` trades, stress `+8.48` pips, but estimated return/recent quality are not good enough. Native H1 harness skipped all pairs under strict gap coverage.
 

@@ -136,6 +136,14 @@ if _STATIC_DIR.exists():
             return FileResponse(str(page))
         return {"detail": "operator_console.html not found"}
 
+    @app.get("/position.html", include_in_schema=False)
+    async def serve_live_position_page():
+        """Serve the dedicated live-position panel before SPA catch-all."""
+        page = _STATIC_DIR / "position.html"
+        if page.exists():
+            return FileResponse(str(page))
+        return {"detail": "position.html not found"}
+
     @app.get("/{full_path:path}", include_in_schema=False)
     async def serve_spa(full_path: str):
         """Serve React SPA for all non-API routes."""

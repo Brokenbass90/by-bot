@@ -802,3 +802,9 @@
 - Rejected external advice to promote Inplay just because `PF=1.173` is close. Shadow/risk=0.0 still needs either dynamic selector evidence (`3/4 folds`, `PF>1.15`) or a new `level_memory` A/B gate.
 - FX/CFD multi-strategy gate finished. No capital-ready row. Best diagnostic: `EURJPY liquidity_sweep_bounce_session_v1`, `21` trades, stress `+8.48` pips, but negative estimated return/recent quality; native H1 harness skipped all symbols under strict gap coverage. Next FX step is exploration/redesign, not live/demo capital.
 - Owner-facing clarification: current ATT1/ADA is a swing/runner trade with TP1 hit and TP2 pending, not a scalper. Exchange SL is near breakeven, not a profit-lock stop. The reason profit is not locked tighter is live core is still old until flat/restart; moving/closing ADA manually needs explicit owner approval.
+
+## ДОБАВЛЕНО 2026-07-07 web route + inplay dynsel status (Codex)
+- Owner report: clicking `Live Position` changed the URL to `/position.html` but still rendered the Dashboard. Root cause: FastAPI SPA catch-all served `web/static/index.html` for `/position.html`; dedicated `web/static/position.html` existed but was unreachable.
+- Fix on disk: `web/main.py` now serves `/position.html` explicitly before the SPA catch-all. Web-only; no live orders or bot process behavior changed.
+- Live ADA facts from local live mirror: `ADAUSDT Sell`, qty `138`, entry about `0.189137`, current about `0.1804`, exchange SL `0.1893`, exchange TP empty, local uPnL about `+1.2 USDT`. This is a protected runner but not a strict profit lock.
+- Inplay maker dynamic selector overnight remains poor so far: mostly `0-1` future trades and `FAIL` rows. Treat current inplay-maker implementation as not promotable; next path is repair with better filters (e.g. `level_memory`) or move compute to the exploration pack.
