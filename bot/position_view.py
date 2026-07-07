@@ -28,6 +28,19 @@ def _load_json(path: Path) -> Optional[Any]:
         return None
 
 
+def _to_float(value: Any) -> Optional[float]:
+    try:
+        if value in (None, ""):
+            return None
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _present(value: Any) -> bool:
+    return value not in (None, "", 0, "0", "0.0")
+
+
 def _positions(raw: Any) -> List[Dict[str, Any]]:
     if isinstance(raw, list):
         return [p for p in raw if isinstance(p, dict)]
@@ -93,6 +106,19 @@ def _alpaca_positions(rt: Path) -> List[Dict[str, Any]]:
     return out
 
 
+def _target_price(item: Any) -> Optional[float]:
+    if isinstance(item, (int, float)):
+        return float(item) if item > 0 else None
+    if isinstance(item, str):
+        return _to_float(item)
+    if isinstance(item, dict):
+        for key in ("price", "target", "tp", "tp_price"):
+            value = _to_float(item.get(key))
+            if value and value > 0:
+                return value
+    return None
+
+
 def build_position_view(now_ts: Optional[float] = None) -> Dict[str, Any]:
     """Aggregate everything the owner/AI needs about the open trade(s)."""
     rt = _runtime_root()
@@ -111,6 +137,7 @@ def build_position_view(now_ts: Optional[float] = None) -> Dict[str, Any]:
         qty = p.get("qty", p.get("size"))
         side = str(p.get("side", "")).lower()
         is_short = side in ("sell", "short")
+        runner = p.get("runner") if isinstance(p.get("runner"), dict) else {}
         try:
             risk_usd = abs(float(entry) - float(sl)) * float(qty)
         except (TypeError, ValueError):
@@ -123,7 +150,16 @@ def build_position_view(now_ts: Optional[float] = None) -> Dict[str, Any]:
         for key in ("tp_targets", "targets", "runner_targets"):
             v = p.get(key)
             if isinstance(v, (list, tuple)):
-                targets += [float(x) for x in v if isinstance(x, (int, float)) and x > 0]
+                for item in v:
+                    price = _target_price(item)
+                    if price and price > 0:
+                        targets.append(price)
+        rv = runner.get("targets")
+        if isinstance(rv, (list, tuple)):
+            for item in rv:
+                price = _target_price(item)
+                if price and price > 0:
+                    targets.append(price)
         for key in ("tp1", "tp2", "tp_price", "tp"):
             v = p.get(key)
             if isinstance(v, (int, float)) and v > 0:
@@ -177,6 +213,69 @@ def build_position_view(now_ts: Optional[float] = None) -> Dict[str, Any]:
             except (TypeError, ValueError):
                 continue
         q["expected_at_targets"] = exp
+
+        upnl_f = _to_float(upnl)
+        entry_f = _to_float(entry)
+        sl_f = _to_float(sl)
+        qty_f = _to_float(qty)
+        trailing = runner.get("trailing") if isinstance(runner.get("trailing"), dict) else {}
+        breakeven = runner.get("breakeven") if isinstance(runner.get("breakeven"), dict) else {}
+        exchange_tp = p.get("exchange_tp", p.get("take_profit", p.get("takeProfit")))
+        exchange_tp_present = _present(exchange_tp)
+        bot_targets_present = bool(targets)
+
+        profit_lock_active = None
+        stop_vs_entry = None
+        if entry_f is not None and sl_f is not None:
+            stop_vs_entry = round((sl_f - entry_f) / entry_f * 100.0, 4) if entry_f else None
+            if is_short:
+                profit_lock_active = sl_f < entry_f
+            elif side in ("buy", "long"):
+                profit_lock_active = sl_f > entry_f
+        warnings: List[str] = []
+        if not q["sl_present"]:
+            warnings.append("exchange_sl_missing")
+        if not exchange_tp_present and not bot_targets_present:
+            warnings.append("no_tp_plan_visible")
+        if not bool(runner.get("enabled")):
+            warnings.append("runner_disabled")
+        if upnl_f is not None and upnl_f > 0:
+            if profit_lock_active is False:
+                warnings.append("profit_not_locked")
+            if not bool(trailing.get("enabled")):
+                warnings.append("trailing_disabled")
+            if not bool(breakeven.get("enabled")):
+                warnings.append("breakeven_disabled")
+
+        # r_now from the *current* exchange SL is misleading once SL is almost at
+        # entry: a tiny denominator turns a normal +$1 runner into +50R. Keep the
+        # raw value for diagnostics, but hide the headline R unless the risk
+        # denominator is meaningful.
+        if isinstance(risk_usd, float) and risk_usd < 0.10 and upnl_f is not None and abs(upnl_f) > 0.10:
+            q["r_now_raw_current_sl"] = q.get("r_now")
+            q["r_now"] = None
+            q["r_now_note"] = "R скрыт: текущий SL почти у входа, original-risk не виден"
+
+        q["runner_state"] = {
+            "enabled": bool(runner.get("enabled")),
+            "targets": runner.get("targets") if isinstance(runner.get("targets"), list) else [],
+            "trailing_enabled": bool(trailing.get("enabled")),
+            "trailing_armed": bool(trailing.get("armed")),
+            "breakeven_enabled": bool(breakeven.get("enabled")),
+            "breakeven_armed": bool(breakeven.get("armed")),
+            "time_stop_enabled": bool(runner.get("time_stop_enabled")),
+            "time_stop_sec": runner.get("time_stop_sec"),
+        }
+        q["exit_state"] = {
+            "exchange_sl_present": q["sl_present"],
+            "exchange_tp_present": exchange_tp_present,
+            "bot_targets_present": bot_targets_present,
+            "profit_lock_active": profit_lock_active,
+            "stop_vs_entry_pct": stop_vs_entry,
+            "warnings": warnings,
+            "summary": "runner/TP not visible; only exchange SL is protecting"
+            if warnings else "runner/TP telemetry looks complete",
+        }
         enriched.append(q)
 
     return {

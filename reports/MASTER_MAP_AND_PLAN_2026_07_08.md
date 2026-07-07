@@ -1,7 +1,7 @@
 # КАРТА + ПЛАН v2026-07-08 (заменяет 07-03). START HERE для стратегии.
 
 ## ГДЕ ДЕНЬГИ СЕЙЧАС
-- LIVE: ATT1 short r001 x0.10 (Bybit, первые сделки идут, ADA под трейлингом ~breakeven)
+- LIVE: ATT1 short r001 x0.10 (Bybit, ADA открыта; биржевой SL около breakeven, но runtime runner/TP/trailing сейчас НЕ виден)
   + Alpaca v38 $495 (первые заявки с открытия рынка США). Телеметрия/сводка/breaker'ы в бою.
 - Кандидат #2 (крипта): inplay_breakout_retest — эдж есть (PF 1.44 base / 2.0 maker-cost),
   maker-fill strict FAIL близко к порогу (stress PF 1.173, 2/4 folds) -> ждём dyn-selector; без PASS не live.
@@ -35,16 +35,16 @@ level_memory (уважение уровней per-symbol, H1-уровни/M5-и�
 
 ## БЛИЖАЙШИЕ ИТЕРАЦИИ (порядок)
 1. ADA: не путать runtime SL и биржевой SL; profit-lock fix применится после flat/restart.
-2. Inplay dyn-selector: если 3/4 folds и PF>1.15 -> shadow/risk=0.0; иначе freeze до level_memory A/B.
-3. Exploration pack: MRB crypto basket, FX H1 trend/session breakout, XAU range-bounce, OI/funding carry.
+2. Inplay dyn-selector: текущий maker/dynsel weak/FAIL -> freeze до level_memory/entry-quality A/B.
+3. Exploration pack: level_memory sweep/reclaim full run, ATT1 exit A/B, FX/XAU redesign, OI/funding carry.
 4. FX/CFD validation только после exploration-зерна; первый gate показал no capital.
 5. Weekly Allocator spec: предложения по risk_mult на базе edge_monitor, решение владельца.
 6. Wiring level_memory в уровневые ноги (A/B). 7. ИИ-майнер по bus (после 4-6 нед данных) -> ML.
 
 ## ТОП-3 СТАВКИ СЛЕДУЮЩЕГО ЦИКЛА
 1. ATT1 exit/re-entry A/B: entry-семейство уже ловит live-движение, слабое место сейчас не вход, а удержание прибыли после TP1.
-2. Level-memory range/sweep/reclaim: "пила"/отскоки остаются важной веткой, но только через качество уровней, causal symbol-selection и отдельные long/short ноги. Broad MRB по всем монетам провалился и не включается.
-3. FX/XAU H1 range/sweep/session: данные готовы для research; это параллельный рынок-кандидат, но без капитала до OOS/demo.
+2. Level-memory range/sweep/reclaim: "пила"/отскоки остаются важной веткой, но только через качество уровней, causal symbol-selection и отдельные long/short ноги. Broad MRB по всем монетам провалился и не включается; новый full run `crypto_lm_sweep_reclaim_20260707` идёт.
+3. FX/XAU H1 range/sweep/session: данные готовы для research; первый H1 exploration не дал capital-ready строки, поэтому следующий шаг = redesign/OOS, без капитала до demo.
 
 ## ПРАВИЛА (без изменений, нерушимы)
 Одно изменение за раз. Отбор монет — динамика. Анти-мартингейл. ИИ предлагает — человек одобряет.

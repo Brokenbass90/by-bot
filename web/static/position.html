@@ -25,6 +25,8 @@
   button:disabled { opacity:.5; cursor:default; }
   .flag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:12px; margin-left:8px; }
   .flag.ok { background:#1f6f43; } .flag.warn { background:#8a6d1d; } .flag.bad { background:#8e2c33; }
+  .warnline { margin-top:8px; font-size:12px; color:#d29922; }
+  .badline { margin-top:8px; font-size:12px; color:#f85149; }
   .rail { position:relative; height:26px; background:#21262d; border-radius:8px; margin:10px 0 4px; }
   .rail .seg { position:absolute; top:0; bottom:0; border-radius:8px; }
   .rail .mark { position:absolute; top:-4px; bottom:-4px; width:2px; }
@@ -150,9 +152,13 @@ async function refresh() {
         const sl = p.sl ?? p.exchange_sl ?? p.sl_price;
         const cls = (typeof upnl === "number" && upnl >= 0) ? "green" : "red";
         const slFlag = p.sl_present ? '<span class="flag ok">SL на бирже</span>' : '<span class="flag bad">SL НЕТ!</span>';
-        const rGauge = p.r_now != null ? ` · ${p.r_now>=0?"+":""}${p.r_now}R` : "";
+        const rGauge = p.r_now != null ? ` · ${p.r_now>=0?"+":""}${p.r_now}R` : (p.r_now_note ? ` · <span class="muted">${p.r_now_note}</span>` : "");
         const prog = p.progress_to_tp1_pct != null ? `${p.progress_to_tp1_pct}% пути к TP1` : "";
         const tps = (p.expected_at_targets||[]).map((e,i)=>`TP${i+1} ${e.target} → ≈${e.approx_usd>=0?"+":""}${e.approx_usd}$`).join(" · ");
+        const exit = p.exit_state || {};
+        const runner = p.runner_state || {};
+        const warn = (exit.warnings || []).join(", ");
+        const warnClass = (exit.warnings || []).includes("exchange_sl_missing") ? "badline" : "warnline";
         return `<div class="pos-title">${p.symbol} ${p.side} ${slFlag}</div>
           <div class="kv">
             <b>Вход</b><span>${fmt(p.entry ?? p.entry_price ?? p.avg)}</span>
@@ -161,8 +167,10 @@ async function refresh() {
             <b>uPnL</b><span class="${cls}">${typeof upnl === "number" ? (upnl>=0?"+":"")+upnl.toFixed(2)+" $" : "?"}${rGauge}</span>
             <b>Стоп</b><span>${fmt(sl)} <span class="muted">(риск ${p.risk_usd_at_sl != null ? p.risk_usd_at_sl.toFixed(2)+"$" : "?"})</span></span>
             <b>Цели бота</b><span>${tps || "—"}</span>
+            <b>Выход</b><span>${exit.summary || "?"}</span>
+            <b>Runner</b><span>enabled=${runner.enabled ? "yes" : "no"} · trail=${runner.trailing_enabled ? "on" : "off"}${runner.trailing_armed ? "/armed" : ""} · BE=${runner.breakeven_enabled ? "on" : "off"}${runner.breakeven_armed ? "/armed" : ""}</span>
             <b>Стратегия</b><span>${p.strategy ?? "?"}</span>
-          </div>` + rail(p);
+          </div>${warn ? `<div class="${warnClass}">⚠ ${warn}</div>` : ""}` + rail(p);
       }).join("<hr style='border-color:#30363d'>");
       drawChart(v.positions[0]);
     }
@@ -199,7 +207,12 @@ async function ask() {
   document.getElementById("send").disabled = true;
   try {
     const ctx = lastView ? ("Текущая позиция (JSON): " + JSON.stringify({
-      positions: lastView.positions, regime: lastView.regime, health: lastView.health
+      positions: lastView.positions,
+      alpaca: lastView.alpaca,
+      regime: lastView.regime,
+      health: lastView.health,
+      recent_events: (lastView.recent_events || []).slice(-12),
+      manage: lastView.manage
     })) : "Позиция недоступна.";
     const r = await fetch("/api/ai/chat", {
       method: "POST", credentials: "include",

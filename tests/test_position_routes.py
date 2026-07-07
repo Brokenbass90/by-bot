@@ -81,6 +81,53 @@ def test_holding_math_short_with_targets(tmp_path, monkeypatch):
     assert abs(exp[0.184] - 0.60) < 1e-9 and abs(exp[0.178] - 1.20) < 1e-9
 
 
+def test_exit_state_flags_unprotected_profit_runner(tmp_path, monkeypatch):
+    rt = tmp_path / "runtime"
+    rt.mkdir(parents=True)
+    (rt / "live_positions.json").write_text(json.dumps([{
+        "symbol": "ADAUSDT", "side": "Sell", "entry": 0.18913665, "qty": 138,
+        "exchange_sl": 0.1893, "exchange_tp": None, "upnl_usd": 1.44,
+        "runner": {
+            "enabled": False,
+            "targets": [],
+            "trailing": {"enabled": False, "armed": False},
+            "breakeven": {"enabled": False, "armed": False},
+        },
+    }]))
+    build = _view(tmp_path, monkeypatch)
+    p = build()["positions"][0]
+    assert p["r_now"] is None
+    assert p["r_now_raw_current_sl"] is not None
+    assert p["exit_state"]["profit_lock_active"] is False
+    assert "no_tp_plan_visible" in p["exit_state"]["warnings"]
+    assert "profit_not_locked" in p["exit_state"]["warnings"]
+    assert "trailing_disabled" in p["exit_state"]["warnings"]
+
+
+def test_runner_nested_targets_are_visible(tmp_path, monkeypatch):
+    rt = tmp_path / "runtime"
+    rt.mkdir(parents=True)
+    (rt / "live_positions.json").write_text(json.dumps([{
+        "symbol": "ADAUSDT", "side": "Sell", "entry": 0.190, "qty": 100,
+        "exchange_sl": 0.194, "upnl_usd": 0.20,
+        "runner": {
+            "enabled": True,
+            "targets": [{"price": 0.184, "status": "pending"}, {"target": 0.178}],
+            "trailing": {"enabled": True, "armed": False},
+            "breakeven": {"enabled": True, "armed": True},
+            "time_stop_enabled": True,
+            "time_stop_sec": 604800,
+        },
+    }]))
+    build = _view(tmp_path, monkeypatch)
+    p = build()["positions"][0]
+    assert p["tp_targets"] == [0.184, 0.178]
+    assert p["exit_state"]["bot_targets_present"] is True
+    assert p["runner_state"]["enabled"] is True
+    assert p["runner_state"]["trailing_enabled"] is True
+    assert p["runner_state"]["breakeven_armed"] is True
+
+
 def test_alpaca_positions_tolerant_and_in_view(tmp_path, monkeypatch):
     rt = tmp_path / "runtime"
     (rt / "equities_monthly_v36").mkdir(parents=True)
