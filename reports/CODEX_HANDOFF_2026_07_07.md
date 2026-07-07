@@ -15,6 +15,8 @@
 - New observability patch on disk: `bot/position_view.py` emits `exit_state`/`runner_state` and warning labels (`no_tp_plan_visible`, `profit_not_locked`, `runner_disabled`, `trailing_disabled`); headline `R` is hidden when computed from tiny current-SL risk instead of original risk. `/static/position.html` displays those warnings and passes Alpaca positions + recent events into AI chat context.
 - Web restart touched only `uvicorn`; live trading process was not restarted.
 - If owner says "web does not show trades", first check that they clicked `Live Position`, not `Sweeps`. Dashboard also shows live positions; Sweeps page only shows autoreserach sweep jobs.
+- New code fix on disk: live runner state is now durable. `bot/runner_state.py` has runner snapshot roundtrip/hydration; `smart_pump_reversal_bot.py` writes runner snapshots into live trade events and restores them from `runtime/live_trade_events.jsonl`. This fixes the class of bug where a runner trade restored from exchange loses TP ladder/BE/trailing after restart.
+- This fix was not applied to the current ADA state by restarting live core. It is for future entries and restart-after-flat. Do not restart `bybot.service` while ADA is open unless the owner explicitly approves that operational risk.
 
 ## Research Status
 - Inplay maker-fill strict gate: FAIL but close. Best `offset=0.4`, `validity=24`, stress `84 trades`, `+6.46R`, `PF=1.173`, unfilled `25.66%`, concentration `0.255`; failed prereg `PF>=1.2` and `3/4` positive folds (`2/4`).
@@ -42,7 +44,7 @@
 Inplay maker is not the next live sleeve right now: fill rate was acceptable, but stability/time folds and dynamic selector quality were weak. Freeze until entry-quality repair or level_memory A/B.
 
 ## Next Work Order
-1. Inspect full `crypto_lm_sweep_reclaim_20260707` output. If it improves the smoke result with enough trades/folds, design a strict validation pass; otherwise keep level_memory as a filter and redesign entry/exit.
+1. Restart/inspect `crypto_lm_sweep_reclaim_20260707` only with progress logging. The prior full screen had an empty log and no new output; the script now emits JSON per combo.
 2. Start ATT1 exit A/B research: current live ADA exposed the weak point. Variants: profit-lock-after-TP1, tighter ATR trail, larger TP1 fraction, retest-exit/re-entry.
 3. Continue Exploration pack, not live:
    - `FXH1/XAU`: redesign from the completed exploration result, focusing on XAU trend-retest and session/sweep filters.
@@ -50,6 +52,10 @@ Inplay maker is not the next live sleeve right now: fill rate was acceptable, bu
 4. Add exploration-mode config/API to `oos_selector` or a wrapper: soft pass labels only, never canary promotion.
 5. Add a stop-truth reconciliation watchdog: if local runner desired SL differs from exchange SL for >N minutes, alert and do not mislabel it as exchange stop.
 6. Update owner-facing daily digest with "next expected catalyst": active run ETA, next market open, or next owner decision.
+
+## Latest Local Validation
+- `.venv/bin/python -m pytest tests/test_runner_state_restore.py tests/test_live_position_view.py tests/test_position_routes.py` -> `12 passed`.
+- `python3 scripts/run_crypto_level_memory_sweep_reclaim_20260707.py --symbols ADAUSDT,BTCUSDT --days 120 --lookbacks 48 --respect 0.55 --rr 1.2 --min-touches 3` completed and printed progress JSON.
 
 ## Do Not Do
 - Do not raise Bybit risk or use `3x/full balance` until there are at least 2 live sleeves and 2 weeks positive P&L.

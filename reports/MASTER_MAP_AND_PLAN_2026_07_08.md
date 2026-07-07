@@ -34,7 +34,7 @@ level_memory (уважение уровней per-symbol, H1-уровни/M5-и�
 ИИ-сделка по токену владельца, риск 0.05, SL обязателен — меряем винрейт ИИ как рукав).
 
 ## БЛИЖАЙШИЕ ИТЕРАЦИИ (порядок)
-1. ADA: не путать runtime SL и биржевой SL; profit-lock fix применится после flat/restart.
+1. ADA: не путать runtime SL и биржевой SL; текущая позиция защищена near-breakeven, но runner/TP/trailing в runtime потерян после restore. Новый durable runner-restore fix уже в коде, но вступит в силу для будущих/перезапущенных сделок после flat/restart.
 2. Inplay dyn-selector: текущий maker/dynsel weak/FAIL -> freeze до level_memory/entry-quality A/B.
 3. Exploration pack: level_memory sweep/reclaim full run, ATT1 exit A/B, FX/XAU redesign, OI/funding carry.
 4. FX/CFD validation только после exploration-зерна; первый gate показал no capital.
@@ -45,6 +45,9 @@ level_memory (уважение уровней per-symbol, H1-уровни/M5-и�
 1. ATT1 exit/re-entry A/B: entry-семейство уже ловит live-движение, слабое место сейчас не вход, а удержание прибыли после TP1.
 2. Level-memory range/sweep/reclaim: "пила"/отскоки остаются важной веткой, но только через качество уровней, causal symbol-selection и отдельные long/short ноги. Broad MRB по всем монетам провалился и не включается; новый full run `crypto_lm_sweep_reclaim_20260707` идёт.
 3. FX/XAU H1 range/sweep/session: данные готовы для research; первый H1 exploration не дал capital-ready строки, поэтому следующий шаг = redesign/OOS, без капитала до demo.
+
+## ИНЦИДЕНТ ADA RUNNER RESTORE (07.07)
+ATT1 runner должен уметь TP-лестницу, breakeven, ATR trailing и time-stop. Текущая ADA показала не слабость входа, а слабость восстановления состояния: после рестарта открытая позиция была восстановлена с биржевым SL, но без durable runner-плана. Фикс: runner snapshot теперь пишется в live events и восстанавливается из них; частично закрытые TP inferred by reduced exchange qty. Текущую ADA не двигаем кодом без явного решения владельца.
 
 ## ПРАВИЛА (без изменений, нерушимы)
 Одно изменение за раз. Отбор монет — динамика. Анти-мартингейл. ИИ предлагает — человек одобряет.

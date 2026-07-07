@@ -290,6 +290,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     ap.add_argument("--rr", default="1.2,1.6,2.0")
     ap.add_argument("--min-touches", type=int, default=3)
     ap.add_argument("--out", default="")
+    ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args(list(argv) if argv is not None else None)
 
     cache_dir = Path(args.cache_dir)
@@ -304,9 +305,23 @@ def main(argv: Iterable[str] | None = None) -> int:
     best: dict = {"score": -1e9}
     best_trades: List[Trade] = []
 
-    for lookback in [int(x) for x in args.lookbacks.split(",") if x.strip()]:
-        for respect_min in [float(x) for x in args.respect.split(",") if x.strip()]:
-            for rr in [float(x) for x in args.rr.split(",") if x.strip()]:
+    lookbacks = [int(x) for x in args.lookbacks.split(",") if x.strip()]
+    respect_grid = [float(x) for x in args.respect.split(",") if x.strip()]
+    rr_grid = [float(x) for x in args.rr.split(",") if x.strip()]
+    total_combos = max(1, len(lookbacks) * len(respect_grid) * len(rr_grid))
+    combo_idx = 0
+    if not args.quiet:
+        print(json.dumps({
+            "event": "start",
+            "out": str(out_dir),
+            "symbols": list(data),
+            "combos": total_combos,
+        }, ensure_ascii=False), flush=True)
+
+    for lookback in lookbacks:
+        for respect_min in respect_grid:
+            for rr in rr_grid:
+                combo_idx += 1
                 trades: List[Trade] = []
                 for sym, bars in data.items():
                     trades.extend(
@@ -343,6 +358,13 @@ def main(argv: Iterable[str] | None = None) -> int:
                 if score > float(best.get("score", -1e9)):
                     best = dict(row)
                     best_trades = sorted(trades, key=lambda t: t.entry_ts)
+                if not args.quiet:
+                    print(json.dumps({
+                        "event": "combo_done",
+                        "combo": combo_idx,
+                        "combos": total_combos,
+                        **row,
+                    }, ensure_ascii=False), flush=True)
 
     _write_outputs(out_dir, grid_rows, best_trades, best)
     print(json.dumps({"out": str(out_dir), "symbols": list(data), "best": best}, ensure_ascii=False, indent=2))

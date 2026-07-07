@@ -133,7 +133,12 @@ from bot.unsupported_symbols import (
     quarantine_symbol,
 )
 from bot.circuit_breaker import get_circuit_breaker as _get_cb
-from bot.runner_state import apply_runner_state, sync_runner_qty_after_fill
+from bot.runner_state import (
+    apply_runner_snapshot,
+    apply_runner_state,
+    runner_snapshot_from_trade,
+    sync_runner_qty_after_fill,
+)
 from bot.live_position_view import build_live_position_row
 from bot.strategy_breaker import breaker_state as _strategy_breaker_state
 from bot.symbol_state import (
@@ -2095,6 +2100,7 @@ def _append_live_trade_event(event: str, sym: str, tr=None, **extra) -> None:
                 "entry_cancel_confirmed": bool(getattr(tr, "entry_cancel_confirmed", False)),
                 "signal_reason": str(getattr(tr, "signal_reason", "") or ""),
                 "close_reason": str(getattr(tr, "close_reason", "") or ""),
+                "runner": runner_snapshot_from_trade(tr),
             })
         for k, v in extra.items():
             if isinstance(v, (Path,)):
@@ -4144,6 +4150,46 @@ def _get_last_open_entry_event(symbol: str, side: str | None = None) -> dict | N
             }
     except Exception as e:
         log_error(f"open entry query failed {symbol}: {e}")
+        return None
+
+
+def _get_latest_runner_snapshot_event(
+    symbol: str,
+    *,
+    side: str | None = None,
+    since_ts: int = 0,
+    max_lines: int = 5000,
+) -> dict | None:
+    """Return latest durable runner snapshot for an open live position."""
+    path = Path(LIVE_TRADE_EVENTS_JSONL).expanduser()
+    if not path.exists():
+        return None
+    sym = str(symbol or "").upper()
+    side_norm = str(side or "").strip()
+    best: dict | None = None
+    try:
+        with path.open(encoding="utf-8") as f:
+            tail = collections.deque(f, maxlen=max(100, int(max_lines)))
+        for line in tail:
+            try:
+                rec = json.loads(str(line).strip())
+            except Exception:
+                continue
+            if str(rec.get("symbol", "")).upper() != sym:
+                continue
+            if side_norm and str(rec.get("side", "")).strip() != side_norm:
+                continue
+            if int(rec.get("ts", 0) or 0) < int(since_ts or 0):
+                continue
+            event = str(rec.get("event", "")).lower()
+            if event.startswith("close"):
+                continue
+            runner = rec.get("runner")
+            if isinstance(runner, dict):
+                best = rec
+        return best
+    except Exception as e:
+        log_error(f"runner snapshot query failed {symbol}: {e}")
         return None
 
 
@@ -6734,6 +6780,15 @@ def _restore_trade_state_from_exchange_row(
     tr.entry_price_req = float(entry_px or avg_ex or 0.0)
     tr.tp_price = float(tp_px) if tp_px not in (None, "") else None
     tr.sl_price = float(sl_px) if sl_px not in (None, "") else None
+    runner_event = _get_latest_runner_snapshot_event(sym, side=side, since_ts=entry_ts)
+    if runner_event and apply_runner_snapshot(
+        tr,
+        runner_event.get("runner") if isinstance(runner_event, dict) else None,
+        exchange_qty=float(qty),
+    ):
+        if getattr(tr, "tps", None):
+            tr.tp_price = None
+        _diag_inc("restore_runner_state")
     tp_present = tp_ex is not None
     sl_present = sl_ex is not None
     tr.tpsl_on_exchange = bool(tp_present and sl_present)
@@ -7711,6 +7766,7 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                 TRADE_CLIENT.close_market(symbol, side, qty)
                 tr.close_reason = "TIME_STOP"
                 tr.last_runner_action_ts = now
+                _append_live_trade_event("runner_time_stop", symbol, tr, close_qty=float(qty), price=float(price))
                 tg_trade(f"🟧 INPLAY TIME STOP {symbol}: closed qty≈{qty}")
             return
 
@@ -7735,6 +7791,8 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                 tr.sl_price = float(be_sl)
                 tr.tpsl_last_set_ts = now_s()
                 tr.last_runner_action_ts = now
+                tr.be_armed = True
+                _append_live_trade_event("runner_breakeven", symbol, tr, new_sl=float(be_sl), price=float(price))
             tr.be_armed = True
 
     if tr.tps and tr.tp_fracs and tr.tp_hit:
@@ -7754,6 +7812,15 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
             tr.remaining_qty = max(0.0, qty_left - qty_to_close)
             tr.tp_hit[i] = True
             tr.last_runner_action_ts = now
+            _append_live_trade_event(
+                "runner_tp",
+                symbol,
+                tr,
+                tp_index=int(i + 1),
+                tp_price=float(tp),
+                close_qty=float(qty_to_close),
+                price=float(price),
+            )
             tg_trade(f"🟩 INPLAY TP{i+1} {symbol}: closed≈{qty_to_close}")
 
     trail_ready = bool((tr.trail_activate_rr or 0.0) <= 0.0 or tr.trail_armed)
@@ -7778,6 +7845,7 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                         tr.sl_price = float(new_sl)
                         tr.tpsl_last_set_ts = now_s()
                         tr.last_runner_action_ts = now
+                        _append_live_trade_event("runner_trailing_sl", symbol, tr, new_sl=float(new_sl), price=float(price))
             elif side == "Sell" and tr.ll is not None:
                 new_sl = tr.ll + float(tr.trail_mult) * atr
                 old_live = protective_stop_is_live(side, tr.sl_price, price)
@@ -7787,6 +7855,7 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                         tr.sl_price = float(new_sl)
                         tr.tpsl_last_set_ts = now_s()
                         tr.last_runner_action_ts = now
+                        _append_live_trade_event("runner_trailing_sl", symbol, tr, new_sl=float(new_sl), price=float(price))
 
 def _get_vol_adj_mult() -> float:
     """
