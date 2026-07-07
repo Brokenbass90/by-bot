@@ -3339,6 +3339,7 @@ const NAV_GROUPS = [
   {
     label: 'Systems',
     pages: [
+      { id: 'position', label: 'Live Position', icon: '🎯', url: '/position.html' },
       { id: 'alpaca',  label: 'Alpaca',   icon: '📊' },
       { id: 'regime',  label: 'Regime',   icon: '⬡' },
       { id: 'sweep',   label: 'Sweeps',     icon: '🔬' },
@@ -3426,7 +3427,7 @@ function App() {
         React.createElement('div', { key: g.label },
           React.createElement('div', { className: 'nav-section' }, g.label),
           g.pages.map(p =>
-            React.createElement('div', { key: p.id, className: `nav-item ${page === p.id ? 'active' : ''}`, onClick: () => setPage(p.id) },
+            React.createElement('div', { key: p.id, className: `nav-item ${page === p.id ? 'active' : ''}`, onClick: () => p.url ? (window.location.href = p.url) : setPage(p.id) },
               React.createElement('span', { className: 'icon' }, p.icon),
               React.createElement('span', null, p.label))
           )
