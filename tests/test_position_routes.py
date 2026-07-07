@@ -151,3 +151,33 @@ def test_alpaca_positions_tolerant_and_in_view(tmp_path, monkeypatch):
     assert ko["stop"] == 60.0 and ko["upnl"] == 1.8
     amd = v["alpaca"][1]
     assert amd["stop"] is None  # нет стопа -> None, панель подсветит
+
+
+def test_alpaca_positions_prefer_live_account_state_with_stops(tmp_path, monkeypatch):
+    rt = tmp_path / "runtime"
+    (rt / "alpaca_live_v38").mkdir(parents=True)
+    (rt / "equities_monthly_v36").mkdir(parents=True)
+    (rt / "equities_monthly_v36" / "latest_advisory.json").write_text(json.dumps({
+        "report": {"open_positions": [{"symbol": "OLD", "qty": 1}]}
+    }))
+    (rt / "alpaca_live_v38" / "account_state.json").write_text(json.dumps({
+        "account": {"equity": "495.14"},
+        "positions": [
+            {"symbol": "SNOW", "qty": "0.5", "market_value": "100.0",
+             "avg_entry_price": "190.0", "unrealized_pl": "5.0"},
+            {"symbol": "BAC", "qty": "1", "market_value": "60.0",
+             "avg_entry_price": "59.0", "unrealized_pl": "1.0"},
+        ],
+        "open_orders": [
+            {"symbol": "SNOW", "side": "sell", "type": "stop", "status": "new", "stop_price": "180.0"},
+            {"symbol": "BAC", "side": "sell", "type": "limit", "status": "new", "limit_price": "65.0"},
+        ],
+    }))
+    build = _view(tmp_path, monkeypatch)
+    v = build()
+    syms = [a["symbol"] for a in v["alpaca"]]
+    assert syms == ["SNOW", "BAC"]
+    assert v["alpaca"][0]["current"] == 200.0
+    assert v["alpaca"][0]["stop"] == 180.0
+    assert v["alpaca"][1]["stop"] is None
+    assert v["alpaca"][0]["source"] == "alpaca_live_v38_account_state"

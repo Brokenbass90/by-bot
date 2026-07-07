@@ -78,6 +78,47 @@ def _bus_tail_for(symbols: List[str], since_ts: float, limit: int = 40) -> List[
 
 def _alpaca_positions(rt: Path) -> List[Dict[str, Any]]:
     """Alpaca open stock positions from the monthly advisory (tolerant keys)."""
+    account_state = _load_json(rt / "alpaca_live_v38" / "account_state.json")
+    if isinstance(account_state, dict):
+        positions = account_state.get("positions")
+        if isinstance(positions, list) and positions:
+            stop_by_symbol: Dict[str, Any] = {}
+            for order in account_state.get("open_orders", []):
+                if not isinstance(order, dict):
+                    continue
+                sym = str(order.get("symbol", "")).upper()
+                status = str(order.get("status", "")).lower()
+                if (
+                    sym
+                    and str(order.get("side", "")).lower() == "sell"
+                    and str(order.get("type", "")).lower() == "stop"
+                    and status not in {"canceled", "cancelled", "filled", "expired", "rejected"}
+                ):
+                    stop_by_symbol[sym] = _to_float(order.get("stop_price")) or order.get("stop_price")
+            out: List[Dict[str, Any]] = []
+            for it in positions:
+                if not isinstance(it, dict):
+                    continue
+                sym = str(it.get("symbol", "")).upper()
+                if not sym:
+                    continue
+                qty = _to_float(it.get("qty"))
+                mv = _to_float(it.get("market_value"))
+                current = _to_float(it.get("current_price"))
+                if current is None and qty and mv is not None:
+                    current = mv / qty
+                out.append({
+                    "symbol": sym,
+                    "qty": qty if qty is not None else it.get("qty"),
+                    "entry": _to_float(it.get("avg_entry_price")) or it.get("avg_entry_price"),
+                    "current": current,
+                    "upnl": _to_float(it.get("unrealized_pl")) or it.get("unrealized_pl"),
+                    "stop": stop_by_symbol.get(sym),
+                    "source": "alpaca_live_v38_account_state",
+                })
+            if out:
+                return out
+
     advisory = _load_json(rt / "equities_monthly_v36" / "latest_advisory.json") or {}
     if isinstance(advisory, dict) and isinstance(advisory.get("report"), dict):
         advisory = advisory["report"]
