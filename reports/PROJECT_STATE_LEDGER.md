@@ -808,3 +808,11 @@
 - Fix on disk: `web/main.py` now serves `/position.html` explicitly before the SPA catch-all. Web-only; no live orders or bot process behavior changed.
 - Live ADA facts from local live mirror: `ADAUSDT Sell`, qty `138`, entry about `0.189137`, current about `0.1804`, exchange SL `0.1893`, exchange TP empty, local uPnL about `+1.2 USDT`. This is a protected runner but not a strict profit lock.
 - Inplay maker dynamic selector overnight remains poor so far: mostly `0-1` future trades and `FAIL` rows. Treat current inplay-maker implementation as not promotable; next path is repair with better filters (e.g. `level_memory`) or move compute to the exploration pack.
+
+## ДОБАВЛЕНО 2026-07-07 exploration wave 1 (Codex)
+- Added research-only `scripts/run_crypto_mrb_exploration_20260707.py`: cached crypto mean-reversion basket scan; no network, no orders, no live path. It ranks overextension by z-score and exits with ATR SL/TP rails after fees.
+- MRB baseline verdict: FAIL. `reports/research/crypto_mrb_exploration_20260707_20260707_065918/summary.md` -> 19 symbols, 1516 trades, net `-146.72R`, PF `0.843`, WR `42.5%`, maxDD `167.42R`, positive folds `0/4`.
+- MRB quick variants also FAIL: PF about `0.763-0.844`, all broad baskets negative. Some tiny diagnostic islands (`1000PEPE`, `DOGE`, `ATOM/TAO/LINK` depending on config) are not candidates because they are selected after seeing the result; next valid step would require causal symbol-selection.
+- Inplay dynamic selector was stopped to free local compute after hours of mostly `0-1` trade FAIL rows. Current inplay-maker implementation is frozen until repair (`level_memory`/entry filter) or a redesigned gate.
+- Started local `screen=fx_h1_exploration_20260707` over `EURUSD,GBPUSD,USDJPY,XAUUSD` with trend/retest/range/sweep/breakout strategies and soft exploration thresholds. This is research-only; no FX/CFD capital decision pending before results.
+- Funding-carry maximizer ran on a single old live scan: attractive annualized numbers but `GO=0%`. Conclusion: keep OI/funding carry as a DD-smoothing research branch, but require 180d funding history gate before any sleeve.

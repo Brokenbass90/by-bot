@@ -16,7 +16,10 @@
 
 ## Research Status
 - Inplay maker-fill strict gate: FAIL but close. Best `offset=0.4`, `validity=24`, stress `84 trades`, `+6.46R`, `PF=1.173`, unfilled `25.66%`, concentration `0.255`; failed prereg `PF>=1.2` and `3/4` positive folds (`2/4`).
-- Inplay dynamic selector is still running locally (`screen=inplay_maker_dynsel_overnight_20260706`); latest log rows remain mostly `0-1` future trades and FAIL. Current inplay-maker implementation is not promotable unless the final rows materially change; next path is repair with `level_memory`/entry filters or move compute to the exploration pack.
+- Inplay dynamic selector was stopped after hours of mostly `0-1` future trades and FAIL rows. Current inplay-maker implementation is not promotable; freeze until `level_memory`/entry-filter repair or redesigned gate.
+- MRB crypto mean-reversion exploration added: `scripts/run_crypto_mrb_exploration_20260707.py`. Baseline and three quick variants all FAIL as broad baskets; baseline `1516` trades, net `-146.72R`, PF `0.843`, positive folds `0/4`. Do not promote "pila" as a generic basket. If revisited, require causal symbol-selection, not cherry-picked top symbols.
+- FX H1 exploration is currently running locally: `screen=fx_h1_exploration_20260707` over `EURUSD,GBPUSD,USDJPY,XAUUSD` and trend/retest/range/sweep/breakout strategy families. Research-only.
+- Funding-carry maximizer on a single old live scan showed attractive annualized diagnostics but `GO=0%`; needs 180d funding history gate before sleeve discussion.
 - FX/CFD data backfill completed. Six symbols passed M5 preflight: `EURUSD,GBPUSD,USDJPY,EURJPY,GBPJPY,XAUUSD`.
 - FX/CFD multi-strategy gate completed with no capital-ready candidate. Best diagnostic row: `EURJPY liquidity_sweep_bounce_session_v1`, `21` trades, stress `+8.48` pips, but estimated return/recent quality are not good enough. Native H1 harness skipped all pairs under strict gap coverage.
 
@@ -29,15 +32,16 @@
 - Rejected: "Inplay shadow now" unless dynamic selector reaches a softer but preregistered shadow bar, e.g. `3/4 folds` and `PF>1.15`, or a new level_memory A/B validates it.
 
 ## Next Work Order
-1. Finish/inspect `inplay_maker_dynsel_overnight_20260706`. If no policy hits `3/4 folds` and `PF>1.15`, freeze Inplay until `level_memory` integration.
-2. Register and run Exploration pack, not live:
+1. Finish/inspect `fx_h1_exploration_20260707`; summarize top rows and reject any row that only passes due soft thresholds.
+2. Continue Exploration pack, not live:
    - `MRB1 crypto mean-reversion basket`: rolling liquid mid-caps, z-score, 1.5 ATR SL, 2 ATR TP.
    - `FXH1 trend/session breakout-retest`: EURUSD, GBPUSD, USDJPY.
    - `XAU range-bounce`: H1 range detector with spread/session gate.
    - `OIFC1 OI-weighted funding carry`: funding + OI/liquidation filters.
 3. Add exploration-mode config/API to `oos_selector` or a wrapper: soft pass labels only, never canary promotion.
 4. Add a stop-truth reconciliation watchdog: if local runner desired SL differs from exchange SL for >N minutes, alert and do not mislabel it as exchange stop.
-5. Update owner-facing daily digest with "next expected catalyst": active run ETA, next market open, or next owner decision.
+5. Design ATT1 exit-variant A/B: current runner vs profit-lock-after-TP1 vs tighter ATR trail vs retest-exit/re-entry. Validate before changing live behavior.
+6. Update owner-facing daily digest with "next expected catalyst": active run ETA, next market open, or next owner decision.
 
 ## Do Not Do
 - Do not raise Bybit risk or use `3x/full balance` until there are at least 2 live sleeves and 2 weeks positive P&L.

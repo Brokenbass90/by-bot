@@ -1,0 +1,83 @@
+{
+  "strategy": "MRB1 crypto mean-reversion basket exploration",
+  "passed_exploration": false,
+  "symbols_loaded": [
+    "ETHUSDT",
+    "BTCUSDT",
+    "LINKUSDT",
+    "SUIUSDT",
+    "SOLUSDT",
+    "ADAUSDT",
+    "DOGEUSDT",
+    "LTCUSDT",
+    "TAOUSDT",
+    "HYPEUSDT",
+    "1000PEPEUSDT",
+    "DOTUSDT",
+    "ATOMUSDT",
+    "XRPUSDT",
+    "AVAXUSDT",
+    "ONDOUSDT",
+    "BCHUSDT",
+    "XLMUSDT",
+    "BNBUSDT"
+  ],
+  "trades": 1003,
+  "net_r": -94.1835,
+  "pf": 0.8436,
+  "winrate": 0.4457,
+  "dd_r": 119.7644,
+  "positive_folds": 1,
+  "folds": [
+    {
+      "fold": 1,
+      "trades": 188,
+      "net_r": -6.5044,
+      "pf": 0.9394,
+      "dd_r": 19.3437
+    },
+    {
+      "fold": 2,
+      "trades": 198,
+      "net_r": 0.2126,
+      "pf": 1.0019,
+      "dd_r": 14.3288
+    },
+    {
+      "fold": 3,
+      "trades": 420,
+      "net_r": -71.4517,
+      "pf": 0.7321,
+      "dd_r": 76.3696
+    },
+    {
+      "fold": 4,
+      "trades": 197,
+      "net_r": -16.44,
+      "pf": 0.8608,
+      "dd_r": 29.3669
+    }
+  ],
+  "args": {
+    "symbols": "",
+    "data_cache": "data_cache",
+    "days": 360,
+    "symbol_limit": 40,
+    "min_rows_5m": 15000,
+    "lookback": 20,
+    "z_entry": 2.2,
+    "atr_period": 14,
+    "sl_atr": 1.2,
+    "tp_atr": 1.5,
+    "max_hold_bars": 24,
+    "rebalance_hours": 4,
+    "fee_bps_entry": 6.0,
+    "fee_bps_exit": 6.0,
+    "folds": 4,
+    "min_trades": 80,
+    "min_pf": 1.05,
+    "min_positive_folds": 3,
+    "tag": "crypto_mrb_grid_l20_z22_sl12_tp15_h24_20260707"
+  },
+  "note": "Exploration-only. PASS is not live/canary approval."
+}
