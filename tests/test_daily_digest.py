@@ -106,3 +106,15 @@ def test_alpaca_section_with_missing_stop_warning():
     assert "Alpaca: 2 позиций (KO, AMD)" in msg
     assert "uPnL +0.80$" in msg
     assert "БЕЗ СТОПА: 1 (!)" in msg
+
+
+def test_exit_warnings_surface_in_digest():
+    msg = build_digest(
+        heartbeat={"dry_run": False, "trade_on": True, "regime": "bull"},
+        positions=[{"symbol": "ADAUSDT", "side": "Sell", "upnl": 1.4, "sl": 0.1893,
+                    "exit_state": {"warnings": ["no_tp_plan_visible", "profit_not_locked",
+                                                "trailing_disabled"]}}],
+        bus_records=[], health=None, now_ts=NOW,
+    )
+    assert "ВЫХОД НЕ ЗАЩИЩЁН" in msg
+    assert "profit_not_locked" in msg

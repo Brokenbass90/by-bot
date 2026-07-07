@@ -62,3 +62,16 @@ Inplay maker is not the next live sleeve right now: fill rate was acceptable, bu
 - Do not manually close/move ADA unless owner explicitly approves a concrete action.
 - Do not run heavy research on VPS; local Mac only.
 - Do not use `reset --hard` on VPS dirty worktree.
+
+## Update 2026-07-07 17:00 UTC — ADA closed, runner heartbeat deploy ready
+- ADA incident final state: owner manually closed `ADAUSDT Sell`; Bybit VPS check after close shows `positions=[]`, equity about `1020.64 USDT`, realized today `+1.36 USDT`. Treat the trade as profitable entry + failed live execution follow-through, not as a clean autonomous ATT1 win. The failure mode was runner orphaning after restore/heartbeat gaps: exchange SL existed, but no visible runtime TP/runner/trailing plan.
+- Code now has two layers for future runner trades:
+  1. durable runner restore from `runtime/live_trade_events.jsonl` (`bot/runner_state.py`, already committed earlier);
+  2. heartbeat fallback `_manage_all_open_runners()` in `pulse()`, keyed by `tr.runner_enabled`, so TP ladder / breakeven / trailing / time-stop is advanced even if detect/tape does not call the runner.
+- Optional broker-side far TP exists as `_maybe_arm_exchange_safety_tp()`, but `RUNNER_EXCHANGE_TP_ENABLE=0` by default. Do not enable without owner OK because it places real exchange TP orders and needs live reconciliation around partial exits.
+- New `bot/portfolio_health.py`: alert-only portfolio sleeve health monitor. `PORTFOLIO_HEALTH_ENABLE=1` default, `PORTFOLIO_HEALTH_AUTOCUT=0` default. It writes `runtime/portfolio_health.json`; auto-cut wiring into entries is a later reviewed rollout.
+- Telegram startup/status truth fixed on disk: startup now prints `money-sleeves: live_money=... | shadow_or_paused=...` and `runner_guard: heartbeat/exchange_safety_tp/portfolio_health/autocut`, so enabled strategy flags are no longer confused with live-money sleeves.
+- Local validation for this deploy set: `py_compile smart_pump_reversal_bot.py bot/daily_digest.py bot/portfolio_health.py`; `.venv/bin/python -m pytest tests/test_daily_digest.py tests/test_runner_state_restore.py tests/test_live_position_view.py tests/test_position_routes.py tests/test_portfolio_status.py tests/test_portfolio_health.py` -> `23 passed`.
+- VPS pre-deploy facts: `bybot.service active`, `git rev=131bef7`, Bybit flat, `runtime/ai_context/full_context.json` fresh and cron every 5 minutes already installed.
+- Alpaca live v38 facts: latest send-orders cycle has positions `ABBV`, `BAC`, `GE`, `PANW`, cash/BP about `$194.97`, and broker simple stops on all four (`ABBV 247.77`, `BAC 56.31`, `GE 356.47`, `PANW 329.59`). `SNOW` was sold and `PANW` bought. Native trailing is skipped for current fractional positions; current protection is simple-stop + bridge rotation/trail logic, not native broker trailing.
+- Local research hygiene: duplicate `run_crypto_level_memory_sweep_reclaim_20260707.py` processes were consuming ~3 CPU cores. Old duplicate PIDs were killed; only screen `crypto_lm_sweep_reclaim_20260707b` remains. Its first useful exploration row: combo 4, `83` trades, `+11.8122R`, `PF 1.2998`, `2/4` folds, exploration PASS only. Not a live candidate yet.

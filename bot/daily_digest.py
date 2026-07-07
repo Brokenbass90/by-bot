@@ -62,7 +62,13 @@ def _fmt_pos(p: Dict[str, Any]) -> str:
     sl = p.get("sl", p.get("exchange_sl", p.get("sl_price", p.get("stop_loss"))))
     upnl_s = f"{float(upnl):+.2f}$" if isinstance(upnl, (int, float)) else "?"
     sl_s = f"SL {sl}" if sl not in (None, "", 0) else "SL: НЕТ (!)"
-    return f"{sym} {side} | uPnL {upnl_s} | {sl_s}"
+    line = f"{sym} {side} | uPnL {upnl_s} | {sl_s}"
+    warns = (p.get("exit_state") or {}).get("warnings") or []
+    critical = [w for w in ("profit_not_locked", "no_tp_plan_visible", "trailing_disabled",
+                            "exchange_sl_missing", "runner_disabled") if w in warns]
+    if critical:
+        line += " | ⚠️ ВЫХОД НЕ ЗАЩИЩЁН: " + ",".join(critical[:3])
+    return line
 
 
 def _extract_positions(raw: Any) -> List[Dict[str, Any]]:

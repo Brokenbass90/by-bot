@@ -3225,6 +3225,61 @@ def _strategy_flags_text() -> str:
     return " | ".join(f"{name}={enabled}" for name, enabled in _strategy_flag_pairs())
 
 
+def _strategy_money_sleeves_text() -> str:
+    """Startup/status truth: enabled flags are not the same thing as live money."""
+    rows = [
+        ("breakout", ENABLE_BREAKOUT_TRADING, BREAKOUT_RISK_MULT),
+        ("midterm", ENABLE_MIDTERM_TRADING, MIDTERM_RISK_MULT),
+        ("sloped", ENABLE_SLOPED_TRADING, SLOPED_RISK_MULT),
+        ("att1", ENABLE_ATT1_TRADING, ATT1_RISK_MULT),
+        ("asb1", ENABLE_ASB1_TRADING, ASB1_RISK_MULT),
+        ("hzbo1", ENABLE_HZBO1_TRADING, HZBO1_RISK_MULT),
+        ("bounce1", ENABLE_BOUNCE1_TRADING, BOUNCE1_RISK_MULT),
+        ("asm1", ENABLE_ASM1_TRADING, ASM1_RISK_MULT),
+        ("flat", ENABLE_FLAT_TRADING, FLAT_RISK_MULT),
+        ("range", ENABLE_RANGE_TRADING, RANGE_RISK_MULT),
+        ("breakdown", ENABLE_BREAKDOWN_TRADING, BREAKDOWN_RISK_MULT),
+        ("ivb1", ENABLE_IVB1_TRADING, IVB1_RISK_MULT),
+        ("brc1", ENABLE_BRC1_TRADING, BRC1_RISK_MULT),
+        ("elder", ENABLE_ELDER_TRADING, ELDER_RISK_MULT),
+    ]
+    legacy = [
+        name for name, enabled in [
+            ("inplay", ENABLE_INPLAY_TRADING),
+            ("pump_fade", ENABLE_PUMP_FADE_TRADING),
+            ("retest", ENABLE_RETEST_TRADING),
+        ] if enabled
+    ]
+    live = []
+    shadow = []
+    for name, enabled, risk_mult in rows:
+        if not enabled:
+            continue
+        try:
+            rm = float(risk_mult)
+        except Exception:
+            rm = 0.0
+        if rm > 0.0:
+            live.append(f"{name} x{rm:.2f}")
+        else:
+            shadow.append(f"{name} x0")
+    return (
+        f"live_money={','.join(live) or '-'} | "
+        f"shadow_or_paused={','.join(shadow) or '-'} | "
+        f"legacy_enabled_no_risk_key={','.join(legacy) or '-'}"
+    )
+
+
+def _runner_protection_text() -> str:
+    return (
+        "runner_guard: "
+        f"heartbeat={'ON' if _env_bool('RUNNER_HEARTBEAT_ENABLE', True) else 'OFF'} | "
+        f"exchange_safety_tp={'ON' if _env_bool('RUNNER_EXCHANGE_TP_ENABLE', False) else 'OFF'} | "
+        f"portfolio_health={'ON' if _env_bool('PORTFOLIO_HEALTH_ENABLE', True) else 'OFF'} | "
+        f"autocut={'ON' if _env_bool('PORTFOLIO_HEALTH_AUTOCUT', False) else 'OFF'}"
+    )
+
+
 def _load_json_dict(path: Path) -> dict[str, Any]:
     try:
         if not path.exists():
@@ -3437,6 +3492,8 @@ def _status_full_text() -> str:
     )
     lines.append(_allocator_state_text())
     lines.append("strategy-flags: " + _strategy_flags_text())
+    lines.append("money-sleeves: " + _strategy_money_sleeves_text())
+    lines.append(_runner_protection_text())
 
     router_regime = str(os.getenv("ROUTER_REGIME", "") or "").strip()
     router_status = str(os.getenv("ROUTER_STATUS", "") or "").strip()
@@ -5499,6 +5556,8 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
         alloc_status = "risk_reduced_for_overlap"
     lines = [
         "🧠 strategy-flags: " + _strategy_flags_text(),
+        "💰 money-sleeves: " + _strategy_money_sleeves_text(),
+        "🛡 " + _runner_protection_text(),
         f"🎛 allocator-active: {active_txt} | degraded={degraded_txt} | status={alloc_status} | risk×={risk_txt}",
         f"📊 trade-events ({max(1, int(lookback_hours))}h):",
         _runtime_diag_since_restart_text(),
@@ -8123,6 +8182,148 @@ def ensure_open_positions_have_tpsl():
                 and now - fail_since >= max(0, int(TPSL_HARD_FAIL_GRACE_SEC))
             ):
                 _close_unprotected_position(sym, tr, str(getattr(tr, "tpsl_fail_reason", "") or "periodic_ensure_failed"))
+
+
+_last_portfolio_health_ts = 0.0
+
+
+def sleeve_health_risk_mult(strategy: str) -> float:
+    """Soft risk multiplier for a sleeve from the portfolio health report.
+
+    Returns 1.0 unless PORTFOLIO_HEALTH_AUTOCUT is set AND the sleeve is degraded/halted.
+    Fail-safe: any error -> 1.0 (a monitoring bug must never block/starve live trading).
+    Entries may multiply their risk by this once the auto-cut rollout is reviewed.
+    """
+    if not _env_bool("PORTFOLIO_HEALTH_AUTOCUT", False):
+        return 1.0
+    try:
+        path = Path(os.getenv("PORTFOLIO_HEALTH_PATH", "runtime/portfolio_health.json"))
+        if not path.is_absolute():
+            path = ROOT_DIR / path
+        if not path.exists():
+            return 1.0
+        row = ((json.loads(path.read_text()).get("sleeves") or {}).get(str(strategy or "")) or {})
+        if not isinstance(row, dict):
+            return 1.0
+        _v = row.get("risk_mult", 1.0)
+        if _v is None:
+            return 1.0
+        return max(0.0, min(1.0, float(_v)))
+    except Exception:
+        return 1.0
+
+
+def _maybe_portfolio_health_check(*, notify: bool = True) -> None:
+    """Rate-limited health grade for EVERY sleeve (generalizes att1 edge_monitor).
+
+    Writes runtime/portfolio_health.json and alerts on per-sleeve status changes
+    (healthy/watch -> degraded/halt). ALERT-ONLY by default; the risk multiplier is
+    consumed only when PORTFOLIO_HEALTH_AUTOCUT is set (see sleeve_health_risk_mult).
+    Never raises. Behind PORTFOLIO_HEALTH_ENABLE (default ON, alert-only)."""
+    global _last_portfolio_health_ts
+    if not _env_bool("PORTFOLIO_HEALTH_ENABLE", True):
+        return
+    try:
+        interval = max(300, int(os.getenv("PORTFOLIO_HEALTH_INTERVAL_SEC", "3600") or 3600))
+        now = time.time()
+        if now - _last_portfolio_health_ts < interval:
+            return
+        _last_portfolio_health_ts = now
+        from bot import portfolio_health as _ph
+        path = Path(os.getenv("PORTFOLIO_HEALTH_PATH", "runtime/portfolio_health.json"))
+        if not path.is_absolute():
+            path = ROOT_DIR / path
+        prev = {}
+        try:
+            if path.exists():
+                prev = {k: (v or {}).get("status")
+                        for k, v in (json.loads(path.read_text()).get("sleeves") or {}).items()}
+        except Exception:
+            prev = {}
+        baselines = {"att1_trendline_touch": float(os.getenv("ATT1_EDGE_BASELINE_EXPECTANCY_R", "0.054") or 0.054)}
+        lookback = max(7, int(os.getenv("PORTFOLIO_HEALTH_LOOKBACK_DAYS", "45") or 45))
+        reports = _ph.assess_portfolio(TRADE_DB_PATH, baselines=baselines, lookback_days=lookback)
+        rep = _ph.build_report(reports)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(rep, ensure_ascii=True))
+        if notify:
+            for sleeve, row in (rep.get("sleeves") or {}).items():
+                new = row.get("status")
+                old = prev.get(sleeve)
+                if old and new and old != new and new in ("degraded", "halt"):
+                    icon = "\U0001f6d1" if new == "halt" else "\U0001f7e0"
+                    try:
+                        tg_trade(f"{icon} SLEEVE HEALTH {sleeve}: {old} -> {new} "
+                                 f"(n={row.get('n')}, liveExp={row.get('live_expectancy_R')}, {row.get('reason')})")
+                    except Exception:
+                        pass
+    except Exception as e:
+        log_error(f"portfolio health check fail: {e}")
+
+
+def _maybe_arm_exchange_safety_tp(symbol: str, tr) -> None:
+    """Broker-side safety net for runner trades: place an exchange position TP at the
+    far ladder target (tps[-1]) so the winner still books even if the bot process dies.
+    Set ONCE per trade; trailing SL updates pass tp=None and do NOT clear this TP
+    (set_tp_sl only writes takeProfit when tp is not None). The bot's own partial
+    ladder + trailing keep working; this only adds a broker-side guarantee for the
+    far target. Behind RUNNER_EXCHANGE_TP_ENABLE (default OFF — it places real orders)."""
+    if not _env_bool("RUNNER_EXCHANGE_TP_ENABLE", False):
+        return
+    if TRADE_CLIENT is None or DRY_RUN:
+        return
+    if getattr(tr, "_safety_tp_armed", False):
+        return
+    tps = [float(x) for x in (getattr(tr, "tps", None) or []) if x is not None]
+    if not tps:
+        return
+    far = float(tps[-1])
+    side = getattr(tr, "side", "")
+    if side not in ("Buy", "Sell") or far <= 0.0:
+        return
+    try:
+        TRADE_CLIENT.set_tp_sl(symbol, side, far, None)
+        tr._safety_tp_armed = True
+        tr.tp_price = far
+        _append_live_trade_event("runner_exchange_safety_tp", symbol, tr, tp_price=float(far))
+    except Exception as e:
+        log_error(f"safety tp arm fail {symbol}: {e}")
+
+
+def _manage_all_open_runners() -> None:
+    """Heartbeat fallback: advance runner exits (TP ladder / breakeven / ATR trail /
+    time-stop) for EVERY open runner-managed position, independent of the tape/detect
+    path. Guarantees profit-taking and trailing even when the position's symbol is
+    quiet, rotated out of the WS universe, or the process was just restarted.
+
+    Keyed off tr.runner_enabled (not a strategy allowlist), so no sleeve can be
+    orphaned. Idempotent vs the detect() path: _manage_inplay_runner throttles on
+    last_runner_action_ts and guards each ladder rung with tp_hit[]/remaining_qty.
+    Behind RUNNER_HEARTBEAT_ENABLE (default ON); disable the flag to roll back.
+    """
+    if not _env_bool("RUNNER_HEARTBEAT_ENABLE", True):
+        return
+    if TRADE_CLIENT is None:
+        return
+    for (exch, sym), tr in list(TRADES.items()):
+        try:
+            if str(exch) != "Bybit":
+                continue
+            if getattr(tr, "status", None) != "OPEN":
+                continue
+            if not bool(getattr(tr, "runner_enabled", False)):
+                continue
+            try:
+                price = float(TRADE_CLIENT.get_last_price(sym) or 0.0)
+            except Exception as e:
+                log_error(f"runner heartbeat price fail {sym}: {e}")
+                continue
+            if price <= 0.0:
+                continue
+            _manage_inplay_runner(sym, tr, price)
+            _maybe_arm_exchange_safety_tp(sym, tr)
+        except Exception as e:
+            log_error(f"runner heartbeat fail {sym}: {e}")
 
 
 def bootstrap_open_trades_from_exchange():
@@ -15191,6 +15392,8 @@ def auth_check_all_accounts():
     else:
         lines.append("🤖 Торговый аккаунт: не выбран/нет ключей")
     lines.append("🧠 strategy-flags: " + _strategy_flags_text())
+    lines.append("💰 money-sleeves: " + _strategy_money_sleeves_text())
+    lines.append("🛡 " + _runner_protection_text())
 
     text = "\n".join(lines)
     print(text)
@@ -15251,6 +15454,16 @@ async def pulse():
             ensure_open_positions_have_tpsl()
         except Exception as e:
             log_error(f"ensure_tpsl crash: {e}")
+
+        try:
+            _manage_all_open_runners()
+        except Exception as e:
+            log_error(f"runner heartbeat crash: {e}")
+
+        try:
+            _maybe_portfolio_health_check(notify=True)
+        except Exception as e:
+            log_error(f"portfolio health crash: {e}")
 
         print(
             f"[pulse] Bybit msgs={MSG_COUNTER.get('Bybit', 0)}  open_trades={len(TRADES)}  "

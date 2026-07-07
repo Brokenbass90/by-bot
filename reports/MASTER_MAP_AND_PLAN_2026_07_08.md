@@ -1,7 +1,7 @@
 # КАРТА + ПЛАН v2026-07-08 (заменяет 07-03). START HERE для стратегии.
 
 ## ГДЕ ДЕНЬГИ СЕЙЧАС
-- LIVE: ATT1 short r001 x0.10 (Bybit, ADA открыта; биржевой SL около breakeven, но runtime runner/TP/trailing сейчас НЕ виден)
+- LIVE: ATT1 short r001 x0.10 (Bybit; сейчас flat после ручного закрытия ADA с прибылью, но это execution-incident: runner/TP/trailing не сопровождал сделку автономно)
   + Alpaca v38 $495 (первые заявки с открытия рынка США). Телеметрия/сводка/breaker'ы в бою.
 - Кандидат #2 (крипта): inplay_breakout_retest — эдж есть (PF 1.44 base / 2.0 maker-cost),
   maker-fill strict FAIL близко к порогу (stress PF 1.173, 2/4 folds) -> ждём dyn-selector; без PASS не live.
@@ -34,7 +34,7 @@ level_memory (уважение уровней per-symbol, H1-уровни/M5-и�
 ИИ-сделка по токену владельца, риск 0.05, SL обязателен — меряем винрейт ИИ как рукав).
 
 ## БЛИЖАЙШИЕ ИТЕРАЦИИ (порядок)
-1. ADA: не путать runtime SL и биржевой SL; текущая позиция защищена near-breakeven, но runner/TP/trailing в runtime потерян после restore. Новый durable runner-restore fix уже в коде, но вступит в силу для будущих/перезапущенных сделок после flat/restart.
+1. Runner deploy/verification: Bybit flat, поэтому деплоим runner heartbeat + portfolio health, рестартуем live-core и проверяем `money-sleeves`, `runner_guard`, `runtime/portfolio_health.json`, отсутствие открытых позиций. Биржевой safety-TP остаётся OFF до отдельного OK.
 2. Inplay dyn-selector: текущий maker/dynsel weak/FAIL -> freeze до level_memory/entry-quality A/B.
 3. Exploration pack: level_memory sweep/reclaim full run, ATT1 exit A/B, FX/XAU redesign, OI/funding carry.
 4. FX/CFD validation только после exploration-зерна; первый gate показал no capital.
@@ -47,7 +47,7 @@ level_memory (уважение уровней per-symbol, H1-уровни/M5-и�
 3. FX/XAU H1 range/sweep/session: данные готовы для research; первый H1 exploration не дал capital-ready строки, поэтому следующий шаг = redesign/OOS, без капитала до demo.
 
 ## ИНЦИДЕНТ ADA RUNNER RESTORE (07.07)
-ATT1 runner должен уметь TP-лестницу, breakeven, ATR trailing и time-stop. Текущая ADA показала не слабость входа, а слабость восстановления состояния: после рестарта открытая позиция была восстановлена с биржевым SL, но без durable runner-плана. Фикс: runner snapshot теперь пишется в live events и восстанавливается из них; частично закрытые TP inferred by reduced exchange qty. Текущую ADA не двигаем кодом без явного решения владельца.
+ATT1 runner должен уметь TP-лестницу, breakeven, ATR trailing и time-stop. ADA показала не слабость входа, а слабость live-сопровождения: после restore/heartbeat gaps позиция была с биржевым SL, но без видимого runtime runner-плана, поэтому владелец закрыл её руками. Фиксы: runner snapshot пишется/восстанавливается из live events; heartbeat вызывает runner для всех открытых runner-позиций; startup теперь показывает live-money truth; portfolio-health пишет alert-only отчёт. Следующий стандарт: runner/restore/heartbeat tests обязательны до любого повышения риска.
 
 ## ПРАВИЛА (без изменений, нерушимы)
 Одно изменение за раз. Отбор монет — динамика. Анти-мартингейл. ИИ предлагает — человек одобряет.
