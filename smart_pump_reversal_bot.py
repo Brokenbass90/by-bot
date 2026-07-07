@@ -8242,8 +8242,18 @@ def _maybe_portfolio_health_check(*, notify: bool = True) -> None:
             prev = {}
         baselines = {"att1_trendline_touch": float(os.getenv("ATT1_EDGE_BASELINE_EXPECTANCY_R", "0.054") or 0.054)}
         lookback = max(7, int(os.getenv("PORTFOLIO_HEALTH_LOOKBACK_DAYS", "45") or 45))
-        reports = _ph.assess_portfolio(TRADE_DB_PATH, baselines=baselines, lookback_days=lookback)
+        start_raw = (
+            os.getenv("PORTFOLIO_HEALTH_START_TS")
+            or os.getenv("ATT1_EDGE_START_TS")
+            or "1783162792"  # r001 canary telemetry start; ignore legacy dirty live trades.
+        )
+        try:
+            start_ts = max(0, int(float(start_raw)))
+        except Exception:
+            start_ts = 0
+        reports = _ph.assess_portfolio(TRADE_DB_PATH, baselines=baselines, lookback_days=lookback, start_ts=start_ts)
         rep = _ph.build_report(reports)
+        rep["start_ts"] = start_ts
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(rep, ensure_ascii=True))
         if notify:
