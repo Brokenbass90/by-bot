@@ -69,6 +69,10 @@
   - outdir `reports/research/fx_native_h1_full_grid_20260708`
   - command uses pairs `EURUSD,GBPUSD,USDJPY` and setups `trend_pullback,session_breakout_retest,session_range_fade,round_level_sweep`.
   - First log line confirms `EURUSD coverage=0.995732`, so the harness is now using the correct H1 gate.
+- Started local keep-awake screen for the pause:
+  - `screen=prevacation_keepawake_20260708`
+  - command: `caffeinate -dimsu -t 432000`
+  - Note: this helps while the Mac is powered/open; closing the laptop into sleep can still stop local screens.
 - `level_memory_oos_prereg_20260708` is still running and heavy; latest log is at `simulate_base_start rr=1.2`. This is the closest crypto sleeve candidate, but it has no promotion until the prereg OOS verdict completes.
 - `cascade_window_v1_real_20260708` completed with `combos=0`. The new `diag.csv` is useful: the binding conditions are mostly `oi_ok`/direction/liquidity rarity, not only the old timing bug. Cascade remains a data-accumulation branch, not a next live sleeve.
 - Alpaca last checked snapshot remains a small canary drawdown around `-0.8%`; broker-side stops were present for the main positions. Recheck after US open for the accepted `XYZ` sell and current stops.
