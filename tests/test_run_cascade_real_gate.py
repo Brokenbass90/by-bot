@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.run_cascade_real_gate import (
     bucket_liquidations, forward_fill_to_grid, liq_series_for_grid,
-    load_price_rows, run_symbol, simulate_fade,
+    condition_diag, load_price_rows, run_symbol, run_symbol_window_v1, simulate_fade,
 )
 
 M5 = 5 * 60_000
@@ -66,6 +66,32 @@ def test_detector_plus_sim_produces_fade_trade():
     for t in trades:
         assert t["side"] == "long"
         assert isinstance(t["r"], float)
+
+
+def test_window_v1_accepts_sparse_liq_spike():
+    rows, funding, oi, liq = _mk_market()
+    trades = run_symbol_window_v1(
+        rows, funding, oi, liq, symbol="TESTUSDT",
+        funding_z_min=1.5, oi_drop_min_pct=3.0,
+        intensity_window=3, intensity_k=5.0, liq_mean_mult=8.0,
+        liq_abs_min=0.0, sl_atr=1.0, tp_rr=1.5, max_hold=48,
+        cooldown_bars=12, fee_bps=6.0, slippage_bps=2.0, warmup=300,
+    )
+    assert trades
+    assert all(t["side"] == "long" for t in trades)
+
+
+def test_condition_diag_reports_binding_rates():
+    rows, funding, oi, liq = _mk_market()
+    diag = condition_diag(
+        rows, funding, oi, liq, mode="window_v1", warmup=300,
+        funding_z_min=1.5, oi_drop_min_pct=3.0, liq_pctile_min=0.0,
+        intensity_window=3, intensity_k=5.0, liq_mean_mult=8.0,
+        liq_abs_min=0.0,
+    )
+    assert diag["bars"] > 0
+    assert "timing_ok_rate" in diag
+    assert "liq_ok_rate" in diag
 
 
 def test_simulate_fade_sl_first_and_fees():
