@@ -7,6 +7,7 @@ SERVER_USER="${SERVER_USER:-root}"
 SERVER_BOT_DIR="${SERVER_BOT_DIR:-/root/by-bot}"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/by-bot}"
 SERVICE_NAME="${SERVICE_NAME:-trading-journal-web}"
+DEPLOY_WEB_AUTH_CONFIG="${DEPLOY_WEB_AUTH_CONFIG:-0}"
 
 SSH_OPTS=(-o StrictHostKeyChecking=no)
 if [[ -n "${SSH_KEY:-}" && -f "${SSH_KEY}" ]]; then
@@ -25,7 +26,6 @@ required_local=(
   "web/routes/admin_routes.py"
   "web/static/index.html"
   "scripts/run_web.sh"
-  "configs/web_config.json"
 )
 
 for rel in "${required_local[@]}"; do
@@ -46,7 +46,20 @@ scp "${SSH_OPTS[@]}" web/routes/auth_routes.py "$SERVER_USER@$SERVER_IP:$SERVER_
 scp "${SSH_OPTS[@]}" web/routes/admin_routes.py "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/web/routes/admin_routes.py" >/dev/null
 scp "${SSH_OPTS[@]}" web/static/index.html "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/web/static/index.html" >/dev/null
 scp "${SSH_OPTS[@]}" scripts/run_web.sh "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/scripts/run_web.sh" >/dev/null
-scp "${SSH_OPTS[@]}" configs/web_config.json "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/configs/web_config.json" >/dev/null
+
+# Authentication state is instance-owned.  A normal code deploy must never
+# replace password/TOTP records with a local template or stale copy.
+if [[ "$DEPLOY_WEB_AUTH_CONFIG" == "1" ]]; then
+  if [[ ! -f configs/web_config.json ]]; then
+    echo "[deploy-web] DEPLOY_WEB_AUTH_CONFIG=1 but configs/web_config.json is missing" >&2
+    exit 1
+  fi
+  echo "[deploy-web] explicit auth-config migration enabled"
+  scp "${SSH_OPTS[@]}" configs/web_config.json "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/configs/web_config.json" >/dev/null
+  ssh "${SSH_OPTS[@]}" "$SERVER_USER@$SERVER_IP" "chmod 600 '$SERVER_BOT_DIR/configs/web_config.json'"
+else
+  echo "[deploy-web] preserving server-owned configs/web_config.json"
+fi
 
 echo "[deploy-web] installing systemd service $SERVICE_NAME"
 ssh "${SSH_OPTS[@]}" "$SERVER_USER@$SERVER_IP" "cat >/etc/systemd/system/$SERVICE_NAME.service <<'UNIT'

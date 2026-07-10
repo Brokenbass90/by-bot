@@ -1,6 +1,14 @@
 import unittest
+from datetime import datetime, timezone
 
-from scripts.equities_alpaca_paper_bridge import Pick, _select_monthly_cycle_picks, _trail_stop_triggered
+from scripts.equities_alpaca_paper_bridge import (
+    Pick,
+    _active_reentry_blocks,
+    _add_reentry_block,
+    _new_entry_allowed,
+    _select_monthly_cycle_picks,
+    _trail_stop_triggered,
+)
 
 
 class TestAlpacaMonthlyTrailing(unittest.TestCase):
@@ -80,6 +88,19 @@ class TestAlpacaMonthlySelection(unittest.TestCase):
         )
 
         assert selected == []
+
+    def test_safe_hold_disables_every_new_entry(self):
+        assert not _new_entry_allowed("PANW", enabled=False, blocked_symbols=set())
+
+    def test_same_cycle_stop_exit_blocks_reentry(self):
+        now = datetime(2026, 7, 10, 12, 0, tzinfo=timezone.utc)
+        state = {}
+        _add_reentry_block(state, "PANW", now=now, days=21, reason="stop_loss_close")
+        active = _active_reentry_blocks(state, now)
+
+        assert "PANW" in active
+        assert active["PANW"]["reason"] == "stop_loss_close"
+        assert not _new_entry_allowed("PANW", enabled=True, blocked_symbols=set(active))
 
 
 if __name__ == "__main__":

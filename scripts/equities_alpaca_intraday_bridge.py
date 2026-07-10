@@ -1314,6 +1314,7 @@ def run_once(client: AlpacaClient, dry_run: bool,
     eq_curve_days  = _env_int("INTRADAY_EQUITY_CURVE_DAYS", 20)
     tg_token       = _env("TG_TOKEN")
     tg_chat        = _env("TG_CHAT_ID")
+    broker_mode_label = _alpaca_mode_label(dry_run, getattr(client, "base_url", ""))
 
     now_utc = datetime.now(timezone.utc)
     now_ts  = int(now_utc.timestamp())
@@ -1451,14 +1452,14 @@ def run_once(client: AlpacaClient, dry_run: bool,
                 print(f"\n  [{sym}] ✓ Position close fill confirmed after {held_min}m "
                       f"| realized P&L={realized_label}")
                 _tg(tg_token, tg_chat,
-                    f"📊 <b>{sym}</b> close filled after {held_min}m — {_alpaca_mode_label(dry_run, base_url)}\n"
+                    f"📊 <b>{sym}</b> close filled after {held_min}m — {broker_mode_label}\n"
                     f"Entry=${ps.entry_price:.2f} | Exit=${float(confirmed['exit_price']):.2f}\n"
                     f"Realized P&L: {realized_label}")
             else:
                 print(f"\n  [{sym}] ✓ Position no longer open after {held_min}m "
                       "| fill not found; P&L not booked")
                 _tg(tg_token, tg_chat,
-                    f"📊 <b>{sym}</b> no longer open after {held_min}m — {_alpaca_mode_label(dry_run, base_url)}\n"
+                    f"📊 <b>{sym}</b> no longer open after {held_min}m — {broker_mode_label}\n"
                     "Fill not found yet; realized P&L not booked.")
         _save_state(state)
 

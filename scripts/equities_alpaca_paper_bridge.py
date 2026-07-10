@@ -803,6 +803,11 @@ def _select_monthly_cycle_picks(
     ][:limit]
 
 
+def _new_entry_allowed(symbol: str, *, enabled: bool, blocked_symbols: set[str]) -> bool:
+    """Fail closed for preservation mode and same-cycle exit cooldowns."""
+    return bool(enabled) and symbol.strip().upper() not in blocked_symbols
+
+
 def _save_hwm_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(state, indent=2), encoding="utf-8")
@@ -1003,6 +1008,7 @@ def main() -> int:
     target_alloc_pct = max(0.01, min(1.0, _env_float("ALPACA_TARGET_ALLOC_PCT", 0.45)))
     min_dollar_order = max(1.0, _env_float("ALPACA_MIN_DOLLAR_ORDER", 50.0))
     send_orders = _env_bool("ALPACA_SEND_ORDERS", False)
+    allow_new_entries = _env_bool("ALPACA_ALLOW_NEW_ENTRIES", True)
     close_stale_positions = _env_bool("ALPACA_CLOSE_STALE_POSITIONS", False)
     offline_dry_run = _env_bool("ALPACA_OFFLINE_DRY_RUN", False) and not send_orders
     capital_override_usd = max(0.0, _env_float("ALPACA_CAPITAL_OVERRIDE_USD", 0.0))
@@ -1249,7 +1255,8 @@ def main() -> int:
         if sym not in selected_symbols and sym not in intraday_managed_symbols
     )
     hold_symbols = sorted(sym for sym in occupied_symbols if sym in selected_symbols)
-    new_buy_symbols = [p.ticker for p in selected if p.ticker not in occupied_symbols]
+    candidate_new_buy_symbols = [p.ticker for p in selected if p.ticker not in occupied_symbols]
+    new_buy_symbols = list(candidate_new_buy_symbols) if allow_new_entries else []
 
     # ── Stop-loss detection ───────────────────────────────────────────────────
     # Any position (held or stale) that is down >= stop_loss_pct → force close.
@@ -1347,7 +1354,8 @@ def main() -> int:
     )
     replacement_picks = [t for t in extended_candidates if t not in already_handled]
     replacement_slots = len(closed_out) - len([s for s in closed_out if s not in current_positions])
-    replacement_buys = replacement_picks[:replacement_slots] if replacement_slots > 0 else []
+    candidate_replacement_buys = replacement_picks[:replacement_slots] if replacement_slots > 0 else []
+    replacement_buys = list(candidate_replacement_buys) if allow_new_entries else []
 
     # ── Score-weighted + ATR-adjusted position sizing ─────────────────────────
     # Combined weight = score × (1 / sqrt(atr20_pct)) so high-volatility picks
@@ -1411,6 +1419,7 @@ def main() -> int:
         "cash": round(cash, 2),
         "effective_capital": round(effective_capital, 2),
         "per_position_notional": round(per_position_notional, 2),
+        "allow_new_entries": bool(allow_new_entries),
         "close_stale_positions": bool(close_stale_positions),
         "latest_entry_day": latest_entry_day,
         "pick_age_days": pick_age_days,
@@ -1479,6 +1488,7 @@ def main() -> int:
         "midmonth_dd_pct": round(midmonth_dd_pct * 100, 2),
         "rotation_triggered": rotation_symbols,
         "rotation_loss_pct": rotation_details,
+        "candidate_replacement_buys": candidate_replacement_buys,
         "replacement_buys": replacement_buys,
         "weighted_sizing": weighted_sizing,
         "atr_adjusted_sizing": atr_adjusted_sizing,
@@ -1510,6 +1520,7 @@ def main() -> int:
             }
             for sym, orders in sorted(open_trailing_sell_orders.items())
         ],
+        "candidate_new_buy_symbols": candidate_new_buy_symbols,
         "new_buy_symbols": new_buy_symbols,
         "selected": [
             {
@@ -1754,6 +1765,16 @@ def main() -> int:
                     continue
                 try:
                     result = client.close_position(symbol)
+                    if reentry_block_enable:
+                        _add_reentry_block(
+                            reentry_block_state,
+                            symbol,
+                            now=now_utc,
+                            days=trail_reentry_block_days,
+                            reason="stop_loss_close",
+                        )
+                        blocked_reentry_symbols.add(symbol)
+                        _save_reentry_block_state(reentry_block_path, reentry_block_state)
                     report["results"].append(
                         {
                             "ticker": symbol,
@@ -1791,6 +1812,7 @@ def main() -> int:
                             days=trail_reentry_block_days,
                             reason="trail_stop_close",
                         )
+                        blocked_reentry_symbols.add(symbol)
                     report["results"].append({
                         "ticker": symbol,
                         "action": "trail_stop_close",
@@ -2147,11 +2169,34 @@ def main() -> int:
                     }
                 )
                 continue
+            if not _new_entry_allowed(
+                pick.ticker,
+                enabled=allow_new_entries,
+                blocked_symbols=blocked_reentry_symbols,
+            ):
+                report["results"].append(
+                    {
+                        "ticker": pick.ticker,
+                        "action": "market_buy",
+                        "status": (
+                            "skipped_new_entries_disabled"
+                            if not allow_new_entries
+                            else "skipped_reentry_block"
+                        ),
+                    }
+                )
+                continue
             notional = per_ticker_notional.get(pick.ticker, per_position_notional)
             _submit_buy_action(pick, action="market_buy", notional=notional)
 
         # ── 5. Buy replacement picks (after SL/rotation freed slots) ──────────
         for ticker in replacement_buys:
+            if not _new_entry_allowed(
+                ticker,
+                enabled=allow_new_entries,
+                blocked_symbols=blocked_reentry_symbols,
+            ):
+                continue
             if ticker in current_positions or ticker in pending_buy_orders:
                 continue
             if ticker in earnings_blocked:
