@@ -55,6 +55,7 @@ Environment variables (ATT1_ prefix)
   ATT1_MIN_BODY_FRAC         float  min body/range ratio [0.20]
   ATT1_RSI_LONG_MAX          float  max RSI for long [55.0]
   ATT1_RSI_SHORT_MIN         float  min RSI for short [45.0]
+  ATT1_RSI_SHORT_MAX         float  max RSI for short [100.0]
   ATT1_SL_ATR_MULT           float  SL buffer below/above trendline [1.10]
   ATT1_TP1_RR                float  TP1 R-multiple [1.20]
   ATT1_TP2_RR                float  TP2 R-multiple [2.50]
@@ -293,6 +294,7 @@ class AltTrendlineTouchV1Config:
     # RSI filter
     rsi_long_max: float = 55.0
     rsi_short_min: float = 45.0
+    rsi_short_max: float = 100.0
 
     # Trade management
     sl_atr_mult: float = 1.10
@@ -355,6 +357,7 @@ class AltTrendlineTouchV1Strategy:
         c.min_body_frac = _env_float("ATT1_MIN_BODY_FRAC", c.min_body_frac)
         c.rsi_long_max = _env_float("ATT1_RSI_LONG_MAX", c.rsi_long_max)
         c.rsi_short_min = _env_float("ATT1_RSI_SHORT_MIN", c.rsi_short_min)
+        c.rsi_short_max = _env_float("ATT1_RSI_SHORT_MAX", c.rsi_short_max)
         c.sl_atr_mult = _env_float("ATT1_SL_ATR_MULT", c.sl_atr_mult)
         c.max_entry_dist_atr = _env_float("ATT1_MAX_ENTRY_DIST_ATR", c.max_entry_dist_atr)
         c.min_rr = _env_float("ATT1_MIN_RR", c.min_rr)
@@ -530,7 +533,13 @@ class AltTrendlineTouchV1Strategy:
         bearish = cur_close < cur_open
         body_ok = body_frac >= c.min_body_frac
 
-        if touched and rejected and bearish and body_ok and rsi >= c.rsi_short_min:
+        if (
+            touched
+            and rejected
+            and bearish
+            and body_ok
+            and c.rsi_short_min <= rsi <= c.rsi_short_max
+        ):
             return (tl_now, slope)
         if not touched:
             self._no_signal("short_no_touch")
@@ -542,6 +551,8 @@ class AltTrendlineTouchV1Strategy:
             self._no_signal("short_body_weak")
         elif rsi < c.rsi_short_min:
             self._no_signal("short_rsi_too_low")
+        elif rsi > c.rsi_short_max:
+            self._no_signal("short_rsi_too_high")
         return None
 
     def maybe_signal(

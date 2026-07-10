@@ -53,6 +53,20 @@ VARIANTS: dict[str, dict[str, str]] = {
         "ATT1_TRAIL_ACTIVATE_RR": "1.00",
         "ATT1_TRAIL_ATR_MULT": "1.50",
     },
+    # Entry-quality hypothesis selected on folds 1-3 and first checked on fold
+    # 4 by run_att1_entry_meta_gate_20260710.py.  This full rerun is required
+    # because filtering entries changes cooldown/portfolio slot availability.
+    "entry_desc_rsi50_70": {
+        "ATT1_TP1_RR": "1.20",
+        "ATT1_TP2_RR": "2.50",
+        "ATT1_TP1_FRAC": "0.55",
+        "ATT1_BE_TRIGGER_RR": "1.00",
+        "ATT1_TRAIL_ACTIVATE_RR": "1.00",
+        "ATT1_TRAIL_ATR_MULT": "1.50",
+        "ATT1_SHORT_MAX_POS_SLOPE": "-0.05",
+        "ATT1_RSI_SHORT_MIN": "50",
+        "ATT1_RSI_SHORT_MAX": "70",
+    },
     "early_be_05": {
         "ATT1_TP1_RR": "1.20",
         "ATT1_TP2_RR": "2.50",

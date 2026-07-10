@@ -28,20 +28,31 @@ def load_cache_rows(symbol: str, interval: str, *, data_cache_dir: Path | None =
             continue
         for item in reversed(raw):
             try:
-                ts = int(item["ts"])
-                if ts in seen_ts:
-                    continue
-                seen_ts.add(ts)
-                merged.append(
-                    [
-                        ts,
+                if isinstance(item, dict):
+                    normalized = [
+                        int(item["ts"]),
                         safe_float(item["o"]),
                         safe_float(item["h"]),
                         safe_float(item["l"]),
                         safe_float(item["c"]),
                         safe_float(item["v"]),
                     ]
-                )
+                elif isinstance(item, (list, tuple)) and len(item) >= 6:
+                    normalized = [
+                        int(item[0]),
+                        safe_float(item[1]),
+                        safe_float(item[2]),
+                        safe_float(item[3]),
+                        safe_float(item[4]),
+                        safe_float(item[5]),
+                    ]
+                else:
+                    continue
+                ts = int(normalized[0])
+                if ts in seen_ts:
+                    continue
+                seen_ts.add(ts)
+                merged.append(normalized)
             except Exception:
                 continue
     merged.sort(key=lambda row: row[0])

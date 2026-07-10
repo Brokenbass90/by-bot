@@ -2,6 +2,8 @@
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from bot.level_memory import level_respect, symbol_respect
@@ -49,6 +51,29 @@ def _break_touch(start_i):
     ]
 
 
+def _shallow_sustained_break_touch(start_i):
+    """Close only modestly beyond support, then hold below it."""
+    rows = [
+        _bar(start_i, 103, 103.4, 102.0, 102.5),
+        _bar(start_i + 1, 102.5, 102.6, 99.2, 99.5),
+    ]
+    rows += [
+        _bar(start_i + k, 99.5, 99.7, 99.1, 99.4)
+        for k in range(2, 9)
+    ]
+    return rows
+
+
+def _resistance_bounce_touch(start_i):
+    """Approach 100 from below, touch resistance, reject downward."""
+    return [
+        _bar(start_i, 97.0, 98.0, 96.5, 97.5),
+        _bar(start_i + 1, 97.5, 99.9, 97.3, 99.5),
+        _bar(start_i + 2, 99.5, 99.7, 97.0, 97.2),
+        _bar(start_i + 3, 97.2, 97.5, 96.0, 96.3),
+    ]
+
+
 def _series(touch_builders):
     rows = _drift(0, 40, 105.0)
     i = 40
@@ -77,6 +102,22 @@ def test_breaking_symbol_scores_low():
     assert st.respect_score <= 0.4
 
 
+def test_shallow_sustained_close_beyond_level_is_break_not_bounce():
+    rows = _drift(0, 40, 105.0)
+    i = 40
+    for _ in range(3):
+        event = _shallow_sustained_break_touch(i)
+        rows += event
+        i += len(event)
+        rows += _drift(i, 10, 105.0)
+        i += 10
+    rows += _drift(i, 10, 105.0)
+    st = level_respect(rows, LEVEL, approach="from_above")
+    assert st.breaks >= 2
+    assert st.bounces == 0
+    assert st.respect_score <= 0.4
+
+
 def test_sweeps_count_half():
     rows = _series([_sweep_touch, _sweep_touch, _break_touch, _break_touch])
     st = level_respect(rows, LEVEL)
@@ -100,3 +141,28 @@ def test_symbol_respect_excludes_tiny_n_levels():
     assert out["rated_levels"] == 1
     assert out["symbol_respect"] >= 0.9
     assert any(not d["rated"] for d in out["per_level"])
+
+
+def test_approach_filter_separates_support_and_resistance_reactions():
+    rows = _series([
+        _bounce_touch,
+        _resistance_bounce_touch,
+        _bounce_touch,
+        _resistance_bounce_touch,
+    ])
+    both = level_respect(rows, LEVEL)
+    support = level_respect(rows, LEVEL, approach="from_above")
+    resistance = level_respect(rows, LEVEL, approach="from_below")
+
+    assert both.approach == "both"
+    assert support.approach == "from_above"
+    assert resistance.approach == "from_below"
+    assert support.touches >= 2
+    assert resistance.touches >= 2
+    assert set(support.touch_indices).isdisjoint(resistance.touch_indices)
+    assert set(support.touch_indices) | set(resistance.touch_indices) <= set(both.touch_indices)
+
+
+def test_invalid_approach_fails_closed():
+    with pytest.raises(ValueError, match="approach"):
+        level_respect(_drift(0, 60, 105.0), LEVEL, approach="sideways")

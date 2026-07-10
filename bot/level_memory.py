@@ -11,6 +11,10 @@ others slice through them like butter. This module gives levels a MEMORY:
 
   respect_score = (bounces + 0.5 * sweeps) / touches   in [0..1]
 
+Support and resistance reactions must not be mixed.  ``approach`` can keep all
+touches (the backward-compatible default), only touches approached from above
+(support), or only touches approached from below (resistance).
+
 Intended use (MTF): levels drawn on H1, execution on M5; a leg consults the H1
 respect history BEFORE leaning on a level. High respect -> full confidence;
 low respect -> skip or downweight (the symbol "не чувствует" its levels).
@@ -33,6 +37,7 @@ __all__ = ["LevelStats", "level_respect", "symbol_respect"]
 @dataclass
 class LevelStats:
     level: float
+    approach: str = "both"
     touches: int = 0
     bounces: int = 0
     sweeps: int = 0
@@ -43,7 +48,8 @@ class LevelStats:
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            "level": self.level, "touches": self.touches, "bounces": self.bounces,
+            "level": self.level, "approach": self.approach,
+            "touches": self.touches, "bounces": self.bounces,
             "sweeps": self.sweeps, "breaks": self.breaks, "unresolved": self.unresolved,
             "respect_score": self.respect_score,
         }
@@ -60,6 +66,7 @@ def level_respect(
     rows: Sequence[Sequence[float]],
     level: float,
     *,
+    approach: str = "both",          # both | from_above (support) | from_below (resistance)
     touch_tol_atr: float = 0.25,    # bar counts as a touch if it comes this close
     pierce_max_atr: float = 0.75,   # sweep may pierce at most this far beyond
     confirm_bars: int = 6,          # bars to resolve the reaction
@@ -68,8 +75,15 @@ def level_respect(
     atr_period: int = 14,
     min_history: int = 30,
 ) -> LevelStats:
-    """Classify every historical touch of `level` in `rows` (causal per touch)."""
-    stats = LevelStats(level=float(level))
+    """Classify historical touches of ``level`` (causal per touch).
+
+    ``approach="from_above"`` rates support reactions only; ``from_below``
+    rates resistance reactions only.  ``both`` preserves the original API.
+    """
+    approach = str(approach or "both").strip().lower()
+    if approach not in {"both", "from_above", "from_below"}:
+        raise ValueError("approach must be both, from_above, or from_below")
+    stats = LevelStats(level=float(level), approach=approach)
     n = len(rows)
     if n < max(min_history, atr_period + 3) or not (level == level and level > 0):
         return stats
@@ -91,6 +105,14 @@ def level_respect(
         # closes beyond the level, so its own close cannot define the side.
         prev_close = _f(rows[i - 1], CLOSE) if i > 0 else close_i
         from_above = prev_close >= level
+        if (
+            (approach == "from_above" and not from_above)
+            or (approach == "from_below" and from_above)
+        ):
+            # Ignore the whole local touch cluster, not each bar in it.  This
+            # keeps side-filtered counts comparable with the legacy aggregate.
+            i += max(1, cooldown_bars + 1)
+            continue
         stats.touches += 1
         stats.touch_indices.append(i)
 
@@ -100,28 +122,59 @@ def level_respect(
             break
 
         max_pierce = 0.0
-        broke = False
+        had_beyond_close = False
+        reclaimed_after_beyond = False
+        deep_break = False
         bounced = False
         for j in range(i, end + 1):
             hj, lj, cj = _f(rows[j], HIGH), _f(rows[j], LOW), _f(rows[j], CLOSE)
             pierce = (level - lj) if from_above else (hj - level)
             max_pierce = max(max_pierce, pierce)
             beyond_close = (cj < level - 0.1 * a) if from_above else (cj > level + 0.1 * a)
-            if beyond_close and pierce > pierce_max_atr * a:
-                broke = True
-                break
+            if beyond_close:
+                had_beyond_close = True
+                if pierce > pierce_max_atr * a:
+                    # Preserve the legacy hard-break rule: a deep close through
+                    # the level resolves immediately as a break, rather than a
+                    # later unrelated rebound rewriting it as a sweep.
+                    deep_break = True
+                    break
+            elif had_beyond_close:
+                back_on_original_side = (cj >= level) if from_above else (cj <= level)
+                reclaimed_after_beyond = reclaimed_after_beyond or back_on_original_side
             away = (cj - level) if from_above else (level - cj)
             if j > i and away >= move_away_atr * a:
                 bounced = True
                 break
 
-        if broke:
+        final_close = _f(rows[j], CLOSE)
+        final_beyond = (
+            (final_close < level - 0.1 * a)
+            if from_above
+            else (final_close > level + 0.1 * a)
+        )
+        final_on_original_side = (final_close >= level) if from_above else (final_close <= level)
+
+        # A close beyond the level that remains there is a BREAK even when the
+        # penetration is shallow.  The old implementation required >0.75 ATR
+        # penetration, then mislabeled a sustained 0.1..0.75 ATR break as a
+        # bounce merely because max_pierce was below pierce_max_atr.
+        if deep_break:
             stats.breaks += 1
+        elif had_beyond_close and final_beyond and not reclaimed_after_beyond:
+            stats.breaks += 1
+        elif had_beyond_close and reclaimed_after_beyond:
+            stats.sweeps += 1
         elif bounced and max_pierce > 0.05 * a:
             stats.sweeps += 1          # pierced first, then reclaimed and left
         elif bounced:
             stats.bounces += 1
-        elif j >= end and max_pierce <= pierce_max_atr * a:
+        elif (
+            j >= end
+            and not had_beyond_close
+            and final_on_original_side
+            and max_pierce <= pierce_max_atr * a
+        ):
             stats.bounces += 1         # held the level through the window
         else:
             stats.unresolved += 1

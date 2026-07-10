@@ -17,6 +17,7 @@ import argparse
 import csv
 import json
 import math
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -30,6 +31,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from bot.geometry_cache import aggregate_rows, load_cache_rows
+from bot.elder_filter import elder_bias
 from bot.level_memory import level_respect
 
 
@@ -98,15 +100,23 @@ def _discover_symbols(cache_dir: Path, min_rows_5m: int, limit: int) -> List[str
     return syms[: max(1, int(limit))]
 
 
-def _load_symbol_h1(cache_dir: Path, symbol: str, days: int) -> List[Bar]:
-    rows = load_cache_rows(symbol, "60", data_cache_dir=cache_dir)
-    if not rows:
-        rows = aggregate_rows(load_cache_rows(symbol, "5", data_cache_dir=cache_dir), 60)
+def _load_symbol_h1(cache_dir: Path, symbol: str, days: int, end_ms: int | None) -> List[Bar]:
+    direct = load_cache_rows(symbol, "60", data_cache_dir=cache_dir)
+    derived = aggregate_rows(load_cache_rows(symbol, "5", data_cache_dir=cache_dir), 60)
+    # Older runs silently preferred a short direct-H1 cache over a complete M5
+    # history.  Use the candidate with the larger causal span/row count.
+    candidates = [rows for rows in (direct, derived) if rows]
+    rows = max(
+        candidates,
+        key=lambda x: ((int(_f(x[-1][0])) - int(_f(x[0][0]))) if len(x) > 1 else 0, len(x)),
+        default=[],
+    )
     bars = _bars(rows)
     if not bars:
         return []
-    start = bars[-1].ts - int(days) * 86_400_000
-    return [b for b in bars if b.ts >= start]
+    cutoff = int(end_ms) if end_ms is not None else bars[-1].ts + 1
+    start = cutoff - int(days) * 86_400_000
+    return [b for b in bars if start <= b.ts < cutoff]
 
 
 def _atr(bars: Sequence[Bar], idx: int, period: int) -> float:
@@ -172,11 +182,13 @@ def _simulate_symbol(
     fee_bps_exit: float,
     allow_longs: bool,
     allow_shorts: bool,
+    memory_bars: int,
+    elder_mode: str,
 ) -> List[Trade]:
     trades: List[Trade] = []
     if len(bars) < lookback + atr_period + max_hold_bars + 5:
         return trades
-    i = max(lookback, atr_period) + 1
+    i = max(lookback, atr_period, memory_bars) + 1
     while i < len(bars) - max_hold_bars - 2:
         b = bars[i]
         a = _atr(bars, i, atr_period)
@@ -195,12 +207,24 @@ def _simulate_symbol(
             i += 1
             continue
 
-        history = _rows(bars[:i])
+        history = _rows(bars[max(0, i - memory_bars) : i])
+        htf_history = aggregate_rows(history, 240) if elder_mode != "off" else []
         picked = None
         for side, level, sl in candidates:
-            st = level_respect(history, level)
+            approach = "from_above" if side == "long" else "from_below"
+            st = level_respect(history, level, approach=approach)
             resolved = _resolved_touches(st)
-            if resolved >= min_touches and st.respect_score == st.respect_score and st.respect_score >= respect_min:
+            if not (resolved >= min_touches and st.respect_score == st.respect_score and st.respect_score >= respect_min):
+                continue
+            if elder_mode != "off":
+                eb = elder_bias(
+                    history,
+                    htf_rows=htf_history,
+                    require_with_tide=(elder_mode == "strict"),
+                )
+                if (side == "long" and not eb.allow_long) or (side == "short" and not eb.allow_short):
+                    continue
+            if resolved >= min_touches:
                 picked = (side, level, sl, st.respect_score, resolved)
                 break
         if picked is None:
@@ -282,6 +306,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache-dir", default=str(ROOT / "data_cache"))
     ap.add_argument("--days", type=int, default=360)
+    ap.add_argument("--end", default="", help="Exclusive UTC date, YYYY-MM-DD.")
     ap.add_argument("--limit", type=int, default=24)
     ap.add_argument("--min-rows-5m", type=int, default=50_000)
     ap.add_argument("--symbols", default="")
@@ -289,6 +314,10 @@ def main(argv: Iterable[str] | None = None) -> int:
     ap.add_argument("--respect", default="0.55,0.65,0.75")
     ap.add_argument("--rr", default="1.2,1.6,2.0")
     ap.add_argument("--min-touches", type=int, default=3)
+    ap.add_argument("--side", choices=("long", "short", "both"), default="both")
+    ap.add_argument("--memory-bars", type=int, default=960)
+    ap.add_argument("--elder-mode", choices=("off", "permissive", "strict"), default="off")
+    ap.add_argument("--max-wall-sec", type=int, default=0)
     ap.add_argument("--out", default="")
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args(list(argv) if argv is not None else None)
@@ -297,7 +326,10 @@ def main(argv: Iterable[str] | None = None) -> int:
     symbols = [s.strip().upper() for s in args.symbols.split(",") if s.strip()]
     if not symbols:
         symbols = _discover_symbols(cache_dir, args.min_rows_5m, args.limit)
-    data = {s: _load_symbol_h1(cache_dir, s, args.days) for s in symbols}
+    end_ms = None
+    if args.end:
+        end_ms = int(datetime.strptime(args.end, "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp() * 1000)
+    data = {s: _load_symbol_h1(cache_dir, s, args.days, end_ms) for s in symbols}
     data = {s: b for s, b in data.items() if len(b) >= 300}
 
     out_dir = Path(args.out) if args.out else ROOT / "reports" / "research" / f"crypto_level_memory_sweep_reclaim_20260707_{_utc_compact()}"
@@ -310,6 +342,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     rr_grid = [float(x) for x in args.rr.split(",") if x.strip()]
     total_combos = max(1, len(lookbacks) * len(respect_grid) * len(rr_grid))
     combo_idx = 0
+    started = time.monotonic()
     if not args.quiet:
         print(json.dumps({
             "event": "start",
@@ -339,10 +372,14 @@ def main(argv: Iterable[str] | None = None) -> int:
                             max_hold_bars=36,
                             fee_bps_entry=6.0,
                             fee_bps_exit=2.0,
-                            allow_longs=True,
-                            allow_shorts=True,
+                            allow_longs=args.side in {"long", "both"},
+                            allow_shorts=args.side in {"short", "both"},
+                            memory_bars=max(30, int(args.memory_bars)),
+                            elder_mode=args.elder_mode,
                         )
                     )
+                    if args.max_wall_sec and time.monotonic() - started > args.max_wall_sec:
+                        raise TimeoutError(f"max wall time exceeded after {sym}")
                 stats = _summarize(sorted(trades, key=lambda t: t.entry_ts))
                 pass_exploration = stats["trades"] >= 40 and stats["pf"] >= 1.05 and stats["folds_pos"] >= 2
                 score = stats["net_r"] + 20.0 * (stats["pf"] - 1.0) + 5.0 * stats["folds_pos"]
@@ -350,6 +387,8 @@ def main(argv: Iterable[str] | None = None) -> int:
                     "lookback": lookback,
                     "respect_min": respect_min,
                     "rr": rr,
+                    "side": args.side,
+                    "elder_mode": args.elder_mode,
                     **stats,
                     "pass_exploration": int(pass_exploration),
                     "score": round(score, 4),
