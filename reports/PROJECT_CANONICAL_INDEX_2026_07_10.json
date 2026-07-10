@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-10T19:20:02Z",
+  "as_of_utc": "2026-07-10T19:30:15Z",
   "status": "crisis_recovery_live_safe_hold_and_research",
   "canonical_documents": [
     "reports/PROJECT_SYSTEM_AND_ROADMAP_2026_07_10.md",
@@ -38,7 +38,7 @@
     "level_memory_resistance_sweep_short": "NO_PROMOTION_FRESH_FORWARD_FAIL",
     "level_memory_support_reclaim_long": "FAIL_FIRST_REPAIRED_GATE",
     "inplay_maker_long": "FAIL_SIDE_DECOMPOSITION_CONCENTRATED_REDESIGN_REQUIRED",
-    "inplay_maker_short": "CLEAN_INDEPENDENT_ADDITIVITY_PREREGISTERED_PENDING_RISK_ZERO_RUN",
+    "inplay_maker_short": "NO_PROMOTION_CLEAN_INDEPENDENT_ADDITIVITY_FAIL",
     "broad_mrb_pila": "NO_GO_CURRENT_FORM",
     "usd_jpy_standard_00_50": "NO_PROMOTION_FRESH_OOS_FAIL",
     "usd_jpy_big_figure_sweep_short": "NO_PROMOTION_NONROBUST_OOS",
@@ -68,7 +68,7 @@
     },
     {
       "priority": "P1",
-      "action": "run_one_fixed_parameter_independent_symbol_additivity_gate_for_inplay_short_without_grid_retuning",
+      "action": "freeze_legacy_inplay_maker_and_design_event_first_exhaustion_unwind_short_successor",
       "live_risk_change": false
     },
     {
@@ -101,12 +101,13 @@
       "fresh USDJPY 00/50 and big-figure OOS NO_PROMOTION",
       "InPlay long/short exact decomposition completed with both sides FAIL",
       "InPlay short clean independent-symbol additivity pre-registered before outcomes",
+      "InPlay short clean independent-symbol additivity completed NO_PROMOTION",
       "JPY cross big-figure additivity failed"
     ],
     "live_deployed": true,
     "live_behavior_changed": "Alpaca entries and rotation disabled; existing broker-stop management retained",
     "live_orders_or_risk_changed": false,
-    "git_head_pushed": "0d9443b"
+    "git_head_used_for_final_research_run": "3836378"
   },
   "verification": {
     "fast_tests_passed": 897,
@@ -114,6 +115,8 @@
     "python_compile": "pass",
     "shell_syntax": "pass",
     "git_diff_check": "pass",
+    "targeted_research_tests_passed": 63,
+    "inplay_clean_preflight": "pass",
     "html_structural_qa": "pass",
     "html_visual_qa": "blocked_by_local_file_browser_policy"
   },
@@ -132,6 +135,7 @@
     "reports/research/inplay_maker_long_exact_20260710_20260710_185827/summary.md",
     "reports/research/inplay_maker_short_exact_20260710_20260710_185827/summary.md",
     "configs/research/inplay_short_independent_additivity_20260710.json",
+    "reports/research/inplay_short_independent_additivity_20260710/summary.md",
     "reports/NIGHT_QUEUE_CHECKPOINT_2026_07_10.md",
     "reports/repo_drift_manifest_local_20260710.json",
     "reports/server_repo_drift_manifest_20260710.json",

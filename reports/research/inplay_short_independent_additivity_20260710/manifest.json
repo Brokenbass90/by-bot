@@ -1,0 +1,15 @@
+{
+  "broker_calls": false,
+  "cache_only": true,
+  "command": ".venv/bin/python3 scripts/run_inplay_short_independent_additivity_20260710.py --config configs/research/inplay_short_independent_additivity_20260710.json",
+  "completed_at_utc": "2026-07-10T19:29:15.306480+00:00",
+  "config": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/research/inplay_short_independent_additivity_20260710.json",
+  "config_sha256": "86751496d541ddb1e42471410a26910c614820b13c956b20d0779b423960ce6c",
+  "experiment_id": "inplay_short_independent_additivity_20260710",
+  "git_head_at_run": "3836378ecebe01887c388afb906c26c3b4032364",
+  "network_calls": false,
+  "parameter_combinations": 1,
+  "research_only": true,
+  "runner": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/scripts/run_inplay_short_independent_additivity_20260710.py",
+  "runner_sha256": "460b3faaa78f3176775e2038998376b4d7c73e3ca8928284ec9af19816629e97"
+}

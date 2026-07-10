@@ -43,7 +43,14 @@ The frozen long/short decomposition completed without any order path:
 
 The short side is the closest second-sleeve hypothesis, but a near-threshold failure is still a failure. A post-run data preflight also found a shared `1,033`-bar M5 gap in ADA/SUI, while the original runner accounted cross-symbol portfolio occupancy by candle index instead of timestamp. The side-split metrics are therefore not promotion evidence. Short may advance only to a clean, timestamp-synchronised, fixed-parameter independent-symbol additivity test at risk zero; long-only is frozen pending a new event-expansion contract.
 
-That single follow-up is now pre-registered, before outcomes, in `configs/research/inplay_short_independent_additivity_20260710.json`. The independent universe is BTC/ETH/BNB/XRP/AVAX: no overlap with the five development symbols, identical M5 timestamps, coverage `0.998852`, and zero internal gaps. Parameters remain frozen (`short`, `offset=0.4 ATR`, `validity=24`); base/stress costs, four chronological folds, a final 90-day holdout, breadth and `<35%` concentration gates are explicit. A PASS can authorize only risk-zero shadow, never money directly.
+That single follow-up was pre-registered, before outcomes, in `configs/research/inplay_short_independent_additivity_20260710.json` and executed from pushed Git head `3836378`. The independent BTC/ETH/BNB/XRP/AVAX universe had identical M5 timestamps, coverage `0.998852`, zero internal gaps, and no overlap with the five development symbols. The frozen result is `NO_PROMOTION`:
+
+- stress full: `42` trades, `+1.4389R`, PF `1.075`, WR `45.2%`, unfilled `14.3%`;
+- chronological folds: `3/4` positive, but fold 2 PF `0.569` and `-3.2846R`;
+- final 90-day holdout: `16` trades, `+2.0344R`, PF `1.286`;
+- only ETH and AVAX produced trades (`2/5` breadth), only ETH was positive (`1/5`), and gross-profit concentration was `67.7%` versus the frozen `<35%` limit.
+
+The positive recent holdout is useful for successor design, but the edge does not transfer broadly enough for shadow or money. Do not weaken the gates and do not retune the old maker grid.
 
 ## FX/CFD fresh gate
 
@@ -67,8 +74,8 @@ XAUUSD needs schedule-aware CFD coverage before another serious gate. No FX proc
 
 ## Morning continuation
 
-1. Read the fixed-parameter independent-symbol InPlay short additivity verdict; do not retune the maker grid.
-2. If short additivity fails, freeze old InPlay and write the event-first exhaustion/unwind successor; long already requires an event-expansion redesign.
+1. Freeze old InPlay maker: both sides and the clean independent short additivity gate are formal FAILs.
+2. Write separate event-first successors: exhaustion/unwind short and expansion/retest long, with clean data and timestamp-based portfolio accounting from the start.
 3. Reconstruct Alpaca v1 broker-fill ledger, then deploy idempotency safely.
 4. Prepare a manifest-based VPS normalization and JWT-secret rotation.
 5. Keep all new crypto/FX sleeves at risk zero until their complete gate passes.
