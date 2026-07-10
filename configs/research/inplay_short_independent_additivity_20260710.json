@@ -4,6 +4,7 @@
   "purpose": "One fixed-parameter, cache-only, research-only portability test of the completed InPlay maker short exact candidate on symbols excluded from candidate development.",
   "source_candidate_artifact": "reports/research/inplay_maker_short_exact_20260710_20260710_185827/verdict.json",
   "no_tuning": true,
+  "holdout_not_used_for_tuning": true,
   "direction": "short",
   "development_symbols_excluded": [
     "DOGEUSDT",
@@ -106,6 +107,7 @@
     "maker_gate_sha256": "52aa48cf04395d45d34dffc61fcb4a15c39dfe1f82efaa47a094fa78138fe263",
     "strict_gate_sha256": "c9fbb82938e7322acc0d52ab45371bd2d5e753b1e232e893caf18fc732c1b6b1",
     "maker_fill_sha256": "ebe3075cb2963556e18d836db7c0ff30e6f157484faafa248aca1730555419d6",
-    "strategy_sha256": "318be191060e40f923abfcc1b163240d9ddf8c775c8dd2c18795d44911f8aba7"
+    "strategy_sha256": "318be191060e40f923abfcc1b163240d9ddf8c775c8dd2c18795d44911f8aba7",
+    "independent_runner_sha256": "460b3faaa78f3176775e2038998376b4d7c73e3ca8928284ec9af19816629e97"
   }
 }
