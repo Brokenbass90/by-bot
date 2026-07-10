@@ -67,6 +67,18 @@ VARIANTS: dict[str, dict[str, str]] = {
         "ATT1_RSI_SHORT_MIN": "50",
         "ATT1_RSI_SHORT_MAX": "70",
     },
+    # Rich entry-card diagnostic on the newer four-fold cohort selected this
+    # single causal candidate on folds 1-3 and checked it on fold 4. A full
+    # rerun is mandatory because filtering changes cooldown and slot reuse.
+    "entry_r2_080": {
+        "ATT1_TP1_RR": "1.20",
+        "ATT1_TP2_RR": "2.50",
+        "ATT1_TP1_FRAC": "0.55",
+        "ATT1_BE_TRIGGER_RR": "1.00",
+        "ATT1_TRAIL_ACTIVATE_RR": "1.00",
+        "ATT1_TRAIL_ATR_MULT": "1.50",
+        "ATT1_MIN_R2": "0.80",
+    },
     "early_be_05": {
         "ATT1_TP1_RR": "1.20",
         "ATT1_TP2_RR": "2.50",

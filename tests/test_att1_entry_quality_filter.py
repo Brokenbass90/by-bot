@@ -1,6 +1,25 @@
 from strategies import alt_trendline_touch_v1 as att1
 
 
+def test_att1_entry_card_exposes_richer_geometry_without_changing_signal() -> None:
+    card = att1._entry_card_text(
+        side="short",
+        points=[(8, 110.0), (16, 109.0), (24, 108.0)],
+        current_index=30,
+        trendline_level=107.25,
+        entry=106.80,
+        touch_extreme=107.35,
+        close=106.80,
+        open_=107.10,
+        high=107.35,
+        low=106.60,
+        atr=1.0,
+    )
+
+    for field in ("r2=", "pivots=3", "age=6", "entrydist=", "touchdist=", "reject=", "body=", "atrpct="):
+        assert field in card
+
+
 def test_att1_short_rsi_max_loads_from_env(monkeypatch) -> None:
     monkeypatch.setenv("ATT1_RSI_SHORT_MAX", "70")
 

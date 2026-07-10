@@ -48,6 +48,7 @@ Config env vars (or configs/alpaca_paper_local.env):
   INTRADAY_MAX_DAILY_LOSS_PCT=2.0    # halt if down X% today
   INTRADAY_EQUITY_CURVE_GATE=1       # 1=enabled, 0=disabled
   INTRADAY_EQUITY_CURVE_DAYS=20      # rolling window for equity filter
+  INTRADAY_EXIT_LEDGER_FILE=...       # durable idempotency ledger for confirmed exit fills
   INTRADAY_CLOSE_UNKNOWN_REMOTE_POSITIONS=0  # close paper leftovers not tracked in intraday_state
   INTRADAY_POSITION_MANAGER_ENABLE=1 # manage tracked open paper positions
   INTRADAY_TRAIL_ENABLE=1            # software trailing for tracked positions
@@ -64,6 +65,8 @@ from __future__ import annotations
 import argparse
 import copy
 import csv
+import fcntl
+import hashlib
 import json
 import os
 import ssl
@@ -1137,7 +1140,9 @@ def _load_equity_log() -> List[DailyPnL]:
 
 def _save_equity_log(log: List[DailyPnL]) -> None:
     EQUITY_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    EQUITY_LOG_FILE.write_text(json.dumps([asdict(e) for e in log], indent=2))
+    tmp = EQUITY_LOG_FILE.with_suffix(EQUITY_LOG_FILE.suffix + ".tmp")
+    tmp.write_text(json.dumps([asdict(e) for e in log], indent=2), encoding="utf-8")
+    tmp.replace(EQUITY_LOG_FILE)
 
 
 def _write_json_atomic(path: Path, payload: dict) -> None:
@@ -1146,17 +1151,131 @@ def _write_json_atomic(path: Path, payload: dict) -> None:
     tmp.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     tmp.replace(path)
 
-def _record_daily_pnl(pnl_usd: float) -> None:
-    """Add today's P&L to the equity log (accumulates intraday)."""
+def _exit_pnl_ledger_file() -> Path:
+    explicit = _env("INTRADAY_EXIT_LEDGER_FILE", "")
+    if explicit:
+        return Path(explicit).expanduser()
+    return EQUITY_LOG_FILE.with_name(f"{EQUITY_LOG_FILE.stem}_exit_ledger.json")
+
+
+def _exit_pnl_event_id(ps: PositionState, confirmed: dict[str, Any]) -> str:
+    """Return a stable identity for one confirmed broker exit fill."""
+    order_id = str(confirmed.get("order_id") or "").strip()
+    if order_id:
+        return f"alpaca_order:{order_id}"
+
+    # Some broker payloads/fixtures omit the order id. Keep the fallback stable
+    # across process restarts while distinguishing separate position lifecycles.
+    identity = {
+        "symbol": str(ps.symbol or "").upper(),
+        "side": str(ps.side or "").lower(),
+        "entry_order_id": str(ps.alpaca_order_id or ""),
+        "entry_ts": int(ps.entry_ts or 0),
+        "entry_price": float(ps.entry_price or 0.0),
+        "position_qty": float(ps.qty or 0.0),
+        "filled_at": str(confirmed.get("filled_at") or ""),
+        "exit_price": _safe_float(confirmed.get("exit_price"), 0.0),
+        "filled_qty": _safe_float(confirmed.get("qty"), 0.0),
+    }
+    raw = json.dumps(identity, sort_keys=True, separators=(",", ":"))
+    return f"fallback:{hashlib.sha256(raw.encode('utf-8')).hexdigest()}"
+
+
+def _new_exit_pnl_ledger(baseline: List[DailyPnL]) -> dict[str, Any]:
+    return {
+        "version": 1,
+        "baseline_equity_log": [asdict(row) for row in baseline],
+        "events": {},
+    }
+
+
+def _load_exit_pnl_ledger(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return _new_exit_pnl_ledger(_load_equity_log())
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise RuntimeError(f"cannot read intraday exit PnL ledger: {path}") from exc
+    if (
+        not isinstance(payload, dict)
+        or payload.get("version") != 1
+        or not isinstance(payload.get("baseline_equity_log"), list)
+        or not isinstance(payload.get("events"), dict)
+    ):
+        raise RuntimeError(f"invalid intraday exit PnL ledger schema: {path}")
+    return payload
+
+
+def _project_equity_log_from_exit_ledger(ledger: dict[str, Any]) -> List[DailyPnL]:
+    totals: dict[str, float] = {}
+    for raw in ledger.get("baseline_equity_log", []):
+        if not isinstance(raw, dict) or not raw.get("date"):
+            continue
+        day = str(raw["date"])
+        totals[day] = totals.get(day, 0.0) + _safe_float(raw.get("pnl_usd"), 0.0)
+    for raw in ledger.get("events", {}).values():
+        if not isinstance(raw, dict) or not raw.get("date"):
+            continue
+        day = str(raw["date"])
+        totals[day] = totals.get(day, 0.0) + _safe_float(raw.get("pnl_usd"), 0.0)
+    return [DailyPnL(date=day, pnl_usd=totals[day]) for day in sorted(totals)][-90:]
+
+
+def _record_daily_pnl(
+    pnl_usd: float,
+    event_id: str = "",
+    event_metadata: Optional[dict[str, Any]] = None,
+    event_date: str = "",
+) -> bool:
+    """Book one realized-PnL event exactly once and refresh the daily projection.
+
+    The ledger is written before the derived equity log. If the process dies in
+    between, the next call for the same event rebuilds the projection without
+    adding the fill again. Calls without an event id retain legacy accumulating
+    behavior; production exit reconciliation always supplies a stable id.
+    """
     today = date.today().isoformat()
-    log = _load_equity_log()
-    if log and log[-1].date == today:
-        log[-1].pnl_usd += pnl_usd
-    else:
-        log.append(DailyPnL(date=today, pnl_usd=pnl_usd))
-    # Keep last 90 days
-    log = log[-90:]
-    _save_equity_log(log)
+    booking_date = str(event_date or "").strip()[:10]
+    try:
+        datetime.strptime(booking_date, "%Y-%m-%d")
+    except (TypeError, ValueError):
+        booking_date = today
+    normalized_id = str(event_id or "").strip()
+    if not normalized_id:
+        normalized_id = f"legacy:{today}:{os.getpid()}:{time.time_ns()}"
+
+    ledger_path = _exit_pnl_ledger_file()
+    lock_path = ledger_path.with_suffix(ledger_path.suffix + ".lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a+", encoding="utf-8") as lock_file:
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        try:
+            ledger = _load_exit_pnl_ledger(ledger_path)
+            events = ledger["events"]
+            existing = events.get(normalized_id)
+            booked_now = existing is None
+            if existing is not None:
+                existing_pnl = _safe_float(existing.get("pnl_usd"), 0.0)
+                if abs(existing_pnl - float(pnl_usd)) > 1e-9:
+                    raise RuntimeError(
+                        f"exit PnL event {normalized_id!r} changed from "
+                        f"{existing_pnl} to {float(pnl_usd)}"
+                    )
+            else:
+                events[normalized_id] = {
+                    "date": booking_date,
+                    "pnl_usd": float(pnl_usd),
+                    "recorded_at": datetime.now(timezone.utc).isoformat(),
+                    "metadata": dict(event_metadata or {}),
+                }
+                _write_json_atomic(ledger_path, ledger)
+
+            # Refresh on duplicate calls too: this recovers a crash after the
+            # ledger commit but before the equity-log projection was replaced.
+            _save_equity_log(_project_equity_log_from_exit_ledger(ledger))
+            return booked_now
+        finally:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
 
 def _get_today_pnl() -> float:
     today = date.today().isoformat()
@@ -1447,7 +1566,22 @@ def run_once(client: AlpacaClient, dry_run: bool,
             confirmed = _confirmed_exit_pnl(client, ps)
             if confirmed:
                 realized = float(confirmed["pnl_usd"])
-                _record_daily_pnl(realized)
+                event_id = _exit_pnl_event_id(ps, confirmed)
+                _record_daily_pnl(
+                    realized,
+                    event_id,
+                    {
+                        "symbol": sym,
+                        "side": ps.side,
+                        "entry_ts": ps.entry_ts,
+                        "entry_order_id": ps.alpaca_order_id,
+                        "exit_order_id": confirmed.get("order_id") or "",
+                        "filled_at": confirmed.get("filled_at"),
+                        "exit_price": confirmed.get("exit_price"),
+                        "qty": confirmed.get("qty"),
+                    },
+                    str(confirmed.get("filled_at") or "")[:10],
+                )
                 realized_label = _fmt_usd_compact(realized)
                 print(f"\n  [{sym}] ✓ Position close fill confirmed after {held_min}m "
                       f"| realized P&L={realized_label}")

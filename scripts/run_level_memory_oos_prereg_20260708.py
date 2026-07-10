@@ -105,6 +105,9 @@ def _simulate_many(
     rr: float,
     fee_bps_entry: float,
     fee_bps_exit: float,
+    side: str,
+    memory_bars: int,
+    elder_mode: str,
 ) -> List[Trade]:
     trades: List[Trade] = []
     for sym, bars in data.items():
@@ -123,8 +126,10 @@ def _simulate_many(
                 max_hold_bars=36,
                 fee_bps_entry=fee_bps_entry,
                 fee_bps_exit=fee_bps_exit,
-                allow_longs=True,
-                allow_shorts=True,
+                allow_longs=side in {"long", "both"},
+                allow_shorts=side in {"short", "both"},
+                memory_bars=memory_bars,
+                elder_mode=elder_mode,
             )
         )
     return sorted(trades, key=lambda t: t.entry_ts)
@@ -250,31 +255,56 @@ def main(argv: Iterable[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache-dir", default=str(ROOT / "data_cache"))
     ap.add_argument("--days", type=int, default=360)
+    ap.add_argument("--end", default="", help="Exclusive UTC date, YYYY-MM-DD.")
     ap.add_argument("--out", default="")
     ap.add_argument("--symbols", default=",".join(BASE_SYMBOLS))
     ap.add_argument("--holdout-symbols", default=",".join(HOLDOUT_SYMBOLS))
+    ap.add_argument("--rrs", default="1.2,1.6")
+    ap.add_argument("--side", choices=("long", "short", "both"), default="both")
+    ap.add_argument("--memory-bars", type=int, default=960)
+    ap.add_argument("--elder-mode", choices=("off", "permissive", "strict"), default="off")
     args = ap.parse_args(list(argv) if argv is not None else None)
 
     cache_dir = Path(args.cache_dir)
     out_dir = Path(args.out) if args.out else ROOT / "reports" / "research" / f"level_memory_oos_prereg_20260708_{_utc_compact()}"
     symbols = [s.strip().upper() for s in args.symbols.split(",") if s.strip()]
     holdouts = [s.strip().upper() for s in args.holdout_symbols.split(",") if s.strip()]
+    rrs = [float(x) for x in args.rrs.split(",") if x.strip()]
+    end_ms = None
+    if args.end:
+        end_ms = int(datetime.strptime(args.end, "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp() * 1000)
 
     coverage = [_coverage_row(cache_dir, s) for s in symbols + holdouts]
     _write_csv(out_dir / "coverage.csv", coverage)
     print(json.dumps({"event": "coverage_done", "out": str(out_dir), "rows": len(coverage)}, ensure_ascii=False), flush=True)
 
-    base_data = {s: _load_symbol_h1(cache_dir, s, args.days) for s in symbols}
+    base_data = {s: _load_symbol_h1(cache_dir, s, args.days, end_ms) for s in symbols}
     base_data = {s: b for s, b in base_data.items() if len(b) >= 300}
     print(json.dumps({"event": "base_data_loaded", "symbols": sorted(base_data)}, ensure_ascii=False), flush=True)
     trades_by_rr: Dict[float, List[Trade]] = {}
     stress_by_rr: Dict[float, List[Trade]] = {}
-    for rr in (1.2, 1.6):
+    for rr in rrs:
         print(json.dumps({"event": "simulate_base_start", "rr": rr}, ensure_ascii=False), flush=True)
-        trades_by_rr[rr] = _simulate_many(base_data, rr=rr, fee_bps_entry=6.0, fee_bps_exit=2.0)
+        trades_by_rr[rr] = _simulate_many(
+            base_data,
+            rr=rr,
+            fee_bps_entry=6.0,
+            fee_bps_exit=2.0,
+            side=args.side,
+            memory_bars=max(30, args.memory_bars),
+            elder_mode=args.elder_mode,
+        )
         print(json.dumps({"event": "simulate_base_done", "rr": rr, "trades": len(trades_by_rr[rr])}, ensure_ascii=False), flush=True)
         print(json.dumps({"event": "simulate_stress_start", "rr": rr}, ensure_ascii=False), flush=True)
-        stress_by_rr[rr] = _simulate_many(base_data, rr=rr, fee_bps_entry=10.0, fee_bps_exit=5.0)
+        stress_by_rr[rr] = _simulate_many(
+            base_data,
+            rr=rr,
+            fee_bps_entry=10.0,
+            fee_bps_exit=5.0,
+            side=args.side,
+            memory_bars=max(30, args.memory_bars),
+            elder_mode=args.elder_mode,
+        )
         print(json.dumps({"event": "simulate_stress_done", "rr": rr, "trades": len(stress_by_rr[rr])}, ensure_ascii=False), flush=True)
 
     grid_rows: List[Dict[str, Any]] = []
@@ -287,6 +317,8 @@ def main(argv: Iterable[str] | None = None) -> int:
             "respect_min": 0.65,
             "lookback": 48,
             "rr": rr,
+            "side": args.side,
+            "elder_mode": args.elder_mode,
             **stats,
             "stress_net_r": stress["net_r"],
             "stress_pf": stress["pf"],
@@ -295,7 +327,12 @@ def main(argv: Iterable[str] | None = None) -> int:
             "top3_trade_pnl_share": conc["top3_trade_pnl_share"],
             "folds": json.dumps(fold_rows, ensure_ascii=False),
             "step1_pass": int(stats["trades"] >= 40 and conc["top_symbol_share"] < 0.35),
-            "step2_pass": int(stats["folds_pos"] >= 3 and stats["pf"] >= 1.20),
+            "step2_pass": int(
+                stats["folds_pos"] >= 3
+                and stats["pf"] >= 1.20
+                and stress["net_r"] > 0
+                and stress["pf"] >= 1.10
+            ),
         })
         _write_csv(out_dir / f"trades_rr{rr}.csv", [asdict(t) for t in trades])
         (out_dir / f"concentration_rr{rr}.json").write_text(json.dumps(conc, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -303,23 +340,46 @@ def main(argv: Iterable[str] | None = None) -> int:
     oos = _oos_selector(trades_by_rr)
     _write_csv(out_dir / "oos_windows.csv", oos["windows"])
 
-    holdout_data = {s: _load_symbol_h1(cache_dir, s, args.days) for s in holdouts}
+    holdout_data = {s: _load_symbol_h1(cache_dir, s, args.days, end_ms) for s in holdouts}
     holdout_rows: List[Dict[str, Any]] = []
     holdout_passes: List[bool] = []
-    for rr in (1.2, 1.6):
+    for rr in rrs:
         print(json.dumps({"event": "simulate_holdout_start", "rr": rr}, ensure_ascii=False), flush=True)
-        trades = _simulate_many({s: b for s, b in holdout_data.items() if len(b) >= 300}, rr=rr, fee_bps_entry=6.0, fee_bps_exit=2.0)
+        trades = _simulate_many(
+            {s: b for s, b in holdout_data.items() if len(b) >= 300},
+            rr=rr,
+            fee_bps_entry=6.0,
+            fee_bps_exit=2.0,
+            side=args.side,
+            memory_bars=max(30, args.memory_bars),
+            elder_mode=args.elder_mode,
+        )
         print(json.dumps({"event": "simulate_holdout_done", "rr": rr, "trades": len(trades)}, ensure_ascii=False), flush=True)
         stats = _summarize(trades)
         present = sorted({t.symbol for t in trades} | {s for s, b in holdout_data.items() if len(b) >= 300})
         missing = [s for s in holdouts if s not in present]
-        passed = bool(not missing and stats["pf"] >= 1.15 and stats["net_r"] > 0)
+        symbol_net = {
+            symbol: sum(float(t.net_r) for t in trades if t.symbol == symbol)
+            for symbol in present
+        }
+        positive_symbol_share = (
+            sum(1 for value in symbol_net.values() if value > 0) / len(symbol_net)
+            if symbol_net else 0.0
+        )
+        passed = bool(
+            not missing
+            and stats["trades"] >= 20
+            and stats["pf"] >= 1.15
+            and stats["net_r"] > 0
+            and positive_symbol_share >= 0.60
+        )
         holdout_passes.append(passed)
         holdout_rows.append({
             "rr": rr,
             **stats,
             "symbols_present": ",".join(present),
             "symbols_missing_or_no_cache": ",".join(missing),
+            "positive_symbol_share": round(positive_symbol_share, 4),
             "pass": int(passed),
         })
     _write_csv(out_dir / "holdout.csv", holdout_rows)
@@ -332,7 +392,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     _write_csv(out_dir / "period_regime.csv", period_rows)
 
     best = max(grid_rows, key=lambda r: (int(r["step1_pass"]) + int(r["step2_pass"]), float(r["net_r"])), default={})
-    promotion = bool(
+    advance_to_execution_gate = bool(
         best
         and best.get("step1_pass")
         and best.get("step2_pass")
@@ -346,7 +406,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         "best": best,
         "oos_selector": oos["summary"],
         "holdout": holdout_rows,
-        "promotion_to_shadow": promotion,
+        "advance_to_m5_execution_gate": advance_to_execution_gate,
+        "promotion_to_shadow": False,
         "blocked_by_data": any(r.get("symbols_missing_or_no_cache") for r in holdout_rows),
     }
     (out_dir / "verdict.json").write_text(json.dumps(verdict, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -359,9 +420,9 @@ def main(argv: Iterable[str] | None = None) -> int:
         f"- best frozen row: `{best}`",
         f"- OOS selector: `{oos['summary']}`",
         f"- holdout: `{holdout_rows}`",
-        f"- verdict: `{'PROMOTE_TO_SHADOW' if promotion else 'NO_PROMOTION'}`",
+        f"- verdict: `{'ADVANCE_TO_M5_EXECUTION_GATE' if advance_to_execution_gate else 'NO_PROMOTION'}`",
         "",
-        "This is strict follow-up for the 2026-07-07 exploration pulse. No live money is enabled by this script.",
+        "This is strict follow-up for the repaired side-specific exploration pulse. Even PASS only advances to M5 execution parity; no live money or shadow is enabled by this script.",
     ]
     (out_dir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(json.dumps(verdict, ensure_ascii=False, indent=2))

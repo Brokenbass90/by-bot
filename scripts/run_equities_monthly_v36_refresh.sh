@@ -33,6 +33,7 @@ RUNTIME_DIR="${EQ_V36_RUNTIME_DIR:-runtime/equities_monthly_v36}"
 
 SIM_START_MONTH="${EQ_V36_SIM_START_MONTH:-2024-05}"
 SIM_END_MONTH="${EQ_V36_SIM_END_MONTH:-2026-04}"
+SIM_TOP_N="${EQ_V36_SIM_TOP_N:-3}"
 SIM_MAX_HOLD_DAYS="${EQ_V36_SIM_MAX_HOLD_DAYS:-20}"
 SIM_MIN_MOM_LOOKBACK_PCT="${EQ_V36_SIM_MIN_MOM_LOOKBACK_PCT:-5.0}"
 SIM_STOP_ATR_MULT="${EQ_V36_SIM_STOP_ATR_MULT:-2.0}"
@@ -111,23 +112,28 @@ echo "data_dir=${DATA_DIR}"
 echo "earnings_csv=${EARNINGS_CSV}"
 echo "runtime_dir=${RUNTIME_DIR}"
 echo "sim_months=${SIM_START_MONTH}..${SIM_END_MONTH}"
+echo "sim_top_n=${SIM_TOP_N}"
 echo "current_candidate_pool_n=${CURRENT_CANDIDATE_POOL_N} max_live_positions_hint=${ALPACA_MAX_POSITIONS:-unset}"
 
-EQ_TICKERS="$ALL_FETCH_TICKERS" \
-EQ_YF_PERIOD="$FETCH_PERIOD" \
-EQ_YF_INTERVAL="$FETCH_INTERVAL" \
-EQ_DATA_DIR="$DATA_DIR" \
-bash scripts/run_equities_fetch_yf.sh
+if [[ "${EQ_V36_RESEARCH_ONLY:-0}" == "1" ]]; then
+  echo "research_only=1; using existing cache and leaving current-cycle runtime untouched"
+else
+  EQ_TICKERS="$ALL_FETCH_TICKERS" \
+  EQ_YF_PERIOD="$FETCH_PERIOD" \
+  EQ_YF_INTERVAL="$FETCH_INTERVAL" \
+  EQ_DATA_DIR="$DATA_DIR" \
+  bash scripts/run_equities_fetch_yf.sh
 
-EQ_TICKERS="$TICKERS" \
-EQ_EARNINGS_LIMIT="$EARNINGS_LIMIT" \
-EQ_EARNINGS_OUT_CSV="$EARNINGS_CSV" \
-bash scripts/run_equities_fetch_earnings_yf.sh
+  EQ_TICKERS="$TICKERS" \
+  EQ_EARNINGS_LIMIT="$EARNINGS_LIMIT" \
+  EQ_EARNINGS_OUT_CSV="$EARNINGS_CSV" \
+  bash scripts/run_equities_fetch_earnings_yf.sh
+fi
 
 python3 scripts/equities_monthly_research_sim.py \
   --tickers "$TICKERS" \
   --data-dir "$DATA_DIR" \
-  --top-n 3 \
+  --top-n "$SIM_TOP_N" \
   --max-hold-days "$SIM_MAX_HOLD_DAYS" \
   --lookback-days 28 \
   --min-mom-lookback-pct "$SIM_MIN_MOM_LOOKBACK_PCT" \
@@ -161,6 +167,11 @@ python3 scripts/equities_monthly_research_sim.py \
   --start-month "$SIM_START_MONTH" \
   --end-month "$SIM_END_MONTH" \
   --tag "$TAG"
+
+if [[ "${EQ_V36_RESEARCH_ONLY:-0}" == "1" ]]; then
+  echo "research_only=1 complete; skipped current-cycle builder and runtime publish"
+  exit 0
+fi
 
 if ! run_current_cycle_builder \
   "$CURRENT_CANDIDATE_POOL_N" \

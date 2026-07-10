@@ -259,6 +259,40 @@ def _fit_line_points(
     return m, b, r2
 
 
+def _entry_card_text(
+    *,
+    side: str,
+    points: List[Tuple[int, float]],
+    current_index: int,
+    trendline_level: float,
+    entry: float,
+    touch_extreme: float,
+    close: float,
+    open_: float,
+    high: float,
+    low: float,
+    atr: float,
+) -> str:
+    """Stable, behavior-neutral entry features for causal ATT1 forensics."""
+    _, _, r2 = _fit_line_points(points)
+    pivot_age = current_index - points[-1][0] if points else -1
+    body_frac = abs(close - open_) / max(1e-12, high - low)
+    if side == "short":
+        entry_dist_atr = (trendline_level - entry) / max(1e-12, atr)
+        touch_dist_atr = (trendline_level - touch_extreme) / max(1e-12, atr)
+        reject_dist_atr = (trendline_level - close) / max(1e-12, atr)
+    else:
+        entry_dist_atr = (entry - trendline_level) / max(1e-12, atr)
+        touch_dist_atr = (touch_extreme - trendline_level) / max(1e-12, atr)
+        reject_dist_atr = (close - trendline_level) / max(1e-12, atr)
+    atr_pct = atr / max(1e-12, entry) * 100.0
+    return (
+        f"r2={r2:.3f} pivots={len(points)} age={pivot_age} "
+        f"entrydist={entry_dist_atr:.3f} touchdist={touch_dist_atr:.3f} "
+        f"reject={reject_dist_atr:.3f} body={body_frac:.3f} atrpct={atr_pct:.3f}"
+    )
+
+
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
@@ -659,7 +693,22 @@ class AltTrendlineTouchV1Strategy:
                             f"att1_long_trendline "
                             f"tl={tl_level:.4f} "
                             f"slope={slope * 24 / max(1e-12, cur) * 100:.3f}%/d "
-                            f"rsi={rsi:.1f}"
+                            f"rsi={rsi:.1f} "
+                            + _entry_card_text(
+                                side="long",
+                                points=_find_swing_lows(lows, self.cfg.pivot_left, self.cfg.pivot_right)[
+                                    -max(self.cfg.min_pivots, self.cfg.max_pivots_used):
+                                ],
+                                current_index=len(lows) - 1,
+                                trendline_level=tl_level,
+                                entry=cur,
+                                touch_extreme=lows[-1],
+                                close=closes[-1],
+                                open_=opens[-1],
+                                high=highs[-1],
+                                low=lows[-1],
+                                atr=atr,
+                            )
                         ),
                     )
                     if sig.validate():
@@ -716,7 +765,22 @@ class AltTrendlineTouchV1Strategy:
                                 f"att1_short_trendline "
                                 f"tl={tl_level:.4f} "
                                 f"slope={slope * 24 / max(1e-12, cur) * 100:.3f}%/d "
-                                f"rsi={rsi:.1f}"
+                                f"rsi={rsi:.1f} "
+                                + _entry_card_text(
+                                    side="short",
+                                    points=_find_swing_highs(highs, self.cfg.pivot_left, self.cfg.pivot_right)[
+                                        -max(self.cfg.min_pivots, self.cfg.max_pivots_used):
+                                    ],
+                                    current_index=len(highs) - 1,
+                                    trendline_level=tl_level,
+                                    entry=cur,
+                                    touch_extreme=highs[-1],
+                                    close=closes[-1],
+                                    open_=opens[-1],
+                                    high=highs[-1],
+                                    low=lows[-1],
+                                    atr=atr,
+                                )
                             ),
                         )
                         if sig.validate():
