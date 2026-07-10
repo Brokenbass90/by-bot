@@ -1,0 +1,17 @@
+{
+  "top_symbol": "ONDOUSDT",
+  "top_symbol_share": 0.5038,
+  "top2_share": 0.9732,
+  "top3_share": 1.0,
+  "top3_trade_pnl_share": 0.7645,
+  "symbol_net_r": {
+    "ONDOUSDT": 2.2977,
+    "1000PEPEUSDT": 2.1406,
+    "TAOUSDT": 0.122,
+    "ATOMUSDT": -1.0706,
+    "AVAXUSDT": -1.0803,
+    "DOGEUSDT": -1.2804,
+    "XRPUSDT": -2.1217,
+    "HYPEUSDT": -3.2108
+  }
+}

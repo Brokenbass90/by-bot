@@ -1,0 +1,19 @@
+{
+  "research_only": true,
+  "runner": "scripts/run_inplay_maker_fill_gate_20260706.py",
+  "strategy_env_source": "scripts.run_inplay_breakout_retest_strict_gate_20260706.INPLAY_R061_ENV",
+  "direction_override": {
+    "key": "BREAKOUT_DIRECTION_MODE",
+    "value": "long",
+    "method": "mutate the shared INPLAY_R061_ENV dictionary before importing the maker runner"
+  },
+  "frozen_arguments": {
+    "end": "2026-07-05",
+    "cache": "data_cache",
+    "offsets": "0.4",
+    "validities": "24",
+    "tag_prefix": "inplay_maker_long_exact_20260710"
+  },
+  "log": "reports/research/inplay_maker_long_exact_20260710.log",
+  "live_orders_possible": false
+}

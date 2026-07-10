@@ -1,0 +1,41 @@
+{
+  "best": {
+    "score": 338.0699869227444,
+    "offset_atr": 0.4,
+    "validity_bars": 24,
+    "verdict": {
+      "passed": false,
+      "reasons": "stress_weak;concentration_0.511",
+      "stress_pf": 1.297922,
+      "stress_net_r": 3.3086,
+      "stress_trades": 23,
+      "stress_unfilled_rate": 0.115385,
+      "folds_positive": 3,
+      "symbol_concentration": 0.511315,
+      "gross_profit_by_symbol": {
+        "DOGEUSDT": 7.3702,
+        "ADAUSDT": 7.044,
+        "SUIUSDT": 0,
+        "1000PEPEUSDT": 0,
+        "TAOUSDT": 0
+      }
+    }
+  },
+  "verdict": {
+    "passed": false,
+    "reasons": "stress_weak;concentration_0.511",
+    "stress_pf": 1.297922,
+    "stress_net_r": 3.3086,
+    "stress_trades": 23,
+    "stress_unfilled_rate": 0.115385,
+    "folds_positive": 3,
+    "symbol_concentration": 0.511315,
+    "gross_profit_by_symbol": {
+      "DOGEUSDT": 7.3702,
+      "ADAUSDT": 7.044,
+      "SUIUSDT": 0,
+      "1000PEPEUSDT": 0,
+      "TAOUSDT": 0
+    }
+  }
+}

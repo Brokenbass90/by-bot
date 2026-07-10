@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-10T17:12:00Z",
+  "as_of_utc": "2026-07-10T19:20:02Z",
   "status": "crisis_recovery_live_safe_hold_and_research",
   "canonical_documents": [
     "reports/PROJECT_SYSTEM_AND_ROADMAP_2026_07_10.md",
@@ -35,13 +35,16 @@
   "stage_board": {
     "ATT1_short_r001": "LIVE_CANARY_BASE_NO_CHANGE_NO_SCALE",
     "ATT1_r2_080_challenger": "NO_PROMOTION_ADVERSE_COST_STRESS_FAIL_EXECUTION_RESEARCH_ONLY",
-    "level_memory_resistance_sweep_short": "NO_PROMOTION_STRICT_COST_AND_CONCENTRATION_FAIL",
+    "level_memory_resistance_sweep_short": "NO_PROMOTION_FRESH_FORWARD_FAIL",
     "level_memory_support_reclaim_long": "FAIL_FIRST_REPAIRED_GATE",
-    "inplay_maker": "REPAIR_FROZEN",
+    "inplay_maker_long": "FAIL_SIDE_DECOMPOSITION_CONCENTRATED_REDESIGN_REQUIRED",
+    "inplay_maker_short": "CLEAN_INDEPENDENT_ADDITIVITY_PREREGISTERED_PENDING_RISK_ZERO_RUN",
     "broad_mrb_pila": "NO_GO_CURRENT_FORM",
-    "usd_jpy_big_figure_sweep_short": "PREREG_REQUIRED",
+    "usd_jpy_standard_00_50": "NO_PROMOTION_FRESH_OOS_FAIL",
+    "usd_jpy_big_figure_sweep_short": "NO_PROMOTION_NONROBUST_OOS",
+    "jpy_cross_big_figure_additivity": "FAIL_ADDITIVITY",
     "fx_trend_pullback_rewired": "DIAGNOSTIC_ONLY",
-    "alpaca_monthly": "SAFE_HOLD_TOP4_HEADLINE_REPRODUCED_FRESH_OOS_DATA_BLOCKED",
+    "alpaca_monthly": "SAFE_HOLD_FRESH_FORWARD_POSITIVE_N2_NO_SCALE",
     "alpaca_intraday_v1_v3": "PAPER_SHADOW_HISTORICAL_DATA_INVALID_IDEMPOTENT_LEDGER_LOCAL_AWAITING_REBUILD"
   },
   "forbidden_without_owner_approval": [
@@ -65,7 +68,7 @@
     },
     {
       "priority": "P1",
-      "action": "diagnose_level_memory_resistance_short_cost_sensitivity_and_symbol_concentration_without_parameter_grid",
+      "action": "run_one_fixed_parameter_independent_symbol_additivity_gate_for_inplay_short_without_grid_retuning",
       "live_risk_change": false
     },
     {
@@ -92,12 +95,18 @@
       "side-specific level-memory semantic repair and strict NO_PROMOTION verdict",
       "Alpaca top3/top4 research-cardinality repair and cache-only parity replay",
       "Alpaca idempotent exit ledger implemented locally pending corrupt-baseline rebuild",
-      "ATT1 behavior-neutral richer entry-card cohort and exact R2 challenger rerun completed"
+      "ATT1 behavior-neutral richer entry-card cohort and exact R2 challenger rerun completed",
+      "fresh Alpaca 59-symbol cache and N2 forward replay",
+      "fresh clean level-memory short forward NO_PROMOTION",
+      "fresh USDJPY 00/50 and big-figure OOS NO_PROMOTION",
+      "InPlay long/short exact decomposition completed with both sides FAIL",
+      "InPlay short clean independent-symbol additivity pre-registered before outcomes",
+      "JPY cross big-figure additivity failed"
     ],
     "live_deployed": true,
     "live_behavior_changed": "Alpaca entries and rotation disabled; existing broker-stop management retained",
     "live_orders_or_risk_changed": false,
-    "git_head_pushed": "23f9446"
+    "git_head_pushed": "0d9443b"
   },
   "verification": {
     "fast_tests_passed": 897,
@@ -114,9 +123,16 @@
     "reports/research/att1_entry_filter_exact_20260710/summary.md",
     "reports/research/lm_short_off_20260710/summary.md",
     "reports/research/lm_short_strict_oos_20260710/summary.md",
+    "reports/research/lm_short_fresh_clean_forward_20260710/summary.md",
     "reports/research/lm_long_off_20260710/summary.md",
     "reports/research/fx_native_h1_full_grid_20260708/summary.md",
     "reports/research/fx_native_h1_level_rewire_smoke_20260710_v2/summary.md",
+    "reports/research/fx_usdjpy_round_levels_oos_20260710/summary.md",
+    "reports/research/fx_jpy_cross_round_additivity_20260710/summary.md",
+    "reports/research/inplay_maker_long_exact_20260710_20260710_185827/summary.md",
+    "reports/research/inplay_maker_short_exact_20260710_20260710_185827/summary.md",
+    "configs/research/inplay_short_independent_additivity_20260710.json",
+    "reports/NIGHT_QUEUE_CHECKPOINT_2026_07_10.md",
     "reports/repo_drift_manifest_local_20260710.json",
     "reports/server_repo_drift_manifest_20260710.json",
     "reports/SERVER_REPO_NORMALIZATION_PLAN_2026_07_10.md",

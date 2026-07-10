@@ -1,0 +1,111 @@
+{
+  "experiment_id": "inplay_short_independent_additivity_20260710",
+  "preregistered_at_utc": "2026-07-10T19:13:40Z",
+  "purpose": "One fixed-parameter, cache-only, research-only portability test of the completed InPlay maker short exact candidate on symbols excluded from candidate development.",
+  "source_candidate_artifact": "reports/research/inplay_maker_short_exact_20260710_20260710_185827/verdict.json",
+  "no_tuning": true,
+  "direction": "short",
+  "development_symbols_excluded": [
+    "DOGEUSDT",
+    "ADAUSDT",
+    "SUIUSDT",
+    "1000PEPEUSDT",
+    "TAOUSDT"
+  ],
+  "independent_symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "XRPUSDT",
+    "AVAXUSDT"
+  ],
+  "symbol_selection_rule": "Independent broad/liquid crypto basket with no overlap with the five candidate-development symbols; all five were required to share the exact same cached M5 timestamp set. Selection used cache quality only, before strategy outcomes were computed.",
+  "cache": "data_cache",
+  "interval_min": 5,
+  "start": "2025-07-10",
+  "end": "2026-07-05",
+  "folds": [
+    ["2025-07-10", "2025-10-08"],
+    ["2025-10-08", "2026-01-06"],
+    ["2026-01-06", "2026-04-06"],
+    ["2026-04-06", "2026-07-05"]
+  ],
+  "holdout_fold": 4,
+  "maker_entry": {
+    "offset_atr": 0.4,
+    "validity_bars": 24,
+    "through_atr": 0.05,
+    "tp_rr": 1.5,
+    "max_hold_bars": 288,
+    "max_positions": 3
+  },
+  "costs": {
+    "base": {
+      "maker_fee_bps": 1.0,
+      "taker_fee_bps": 6.0,
+      "exit_slippage_bps": 2.0
+    },
+    "stress": {
+      "maker_fee_bps": 2.0,
+      "taker_fee_bps": 10.0,
+      "exit_slippage_bps": 5.0
+    }
+  },
+  "strategy_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "CACHE_ONLY": "1",
+    "BREAKOUT_TF_BREAK": "240",
+    "BREAKOUT_TF_ENTRY": "5",
+    "BREAKOUT_LOOKBACK_H": "96",
+    "BREAKOUT_SL_ATR": "0.40",
+    "BREAKOUT_EXIT_MODE": "runner",
+    "BREAKOUT_PARTIAL_RS": "1.5,3.0,5.0",
+    "BREAKOUT_PARTIAL_FRACS": "0.50,0.30,0.20",
+    "BREAKOUT_TRAIL_ATR_MULT": "2.2",
+    "BREAKOUT_TIME_STOP_BARS": "288",
+    "BREAKOUT_REGIME_MODE": "ema",
+    "BREAKOUT_REGIME_TF": "240",
+    "BREAKOUT_REGIME_EMA_FAST": "20",
+    "BREAKOUT_REGIME_EMA_SLOW": "50",
+    "BREAKOUT_SYMBOL_ALLOWLIST": "",
+    "BREAKOUT_RECLAIM_ATR": "0.08",
+    "BREAKOUT_RR": "3.0",
+    "BREAKOUT_MAX_LATE_VS_REF_PCT": "0.35",
+    "BREAKOUT_MIN_PULLBACK_FROM_EXTREME_PCT": "0.05",
+    "BREAKOUT_BUFFER_ATR": "0.12",
+    "BREAKOUT_DIRECTION_MODE": "short",
+    "BREAKOUT_IMPULSE_BODY_MIN_FRAC": "0.45",
+    "BREAKOUT_IMPULSE_VOL_MULT": "1.8",
+    "BREAKOUT_MAX_DIST_HTF_MULT": "1.2",
+    "BREAKOUT_MAX_RETEST_BARS": "36",
+    "BREAKOUT_RETEST_TOUCH_ATR": "0.2",
+    "BREAKOUT_SL_HTF_MULT": "0.8"
+  },
+  "data_gates": {
+    "min_coverage": 0.98,
+    "max_internal_gap_bars": 12,
+    "max_tail_lag_hours": 12.0,
+    "require_identical_timestamps": true
+  },
+  "promotion_gates": {
+    "stress_min_trades": 30,
+    "stress_min_profit_factor": 1.2,
+    "stress_net_r_must_be_positive": true,
+    "stress_max_unfilled_rate": 0.5,
+    "min_positive_chronological_folds": 3,
+    "holdout_min_trades": 5,
+    "holdout_min_profit_factor": 1.0,
+    "holdout_net_r_must_be_positive": true,
+    "min_symbols_with_trades": 3,
+    "min_positive_symbols": 2,
+    "max_gross_profit_concentration": 0.35,
+    "require_zero_long_signals": true
+  },
+  "source_code": {
+    "git_head_before_run": "0d9443bd1fe70473c6bc80bcf4fde68e2167ddfe",
+    "maker_gate_sha256": "52aa48cf04395d45d34dffc61fcb4a15c39dfe1f82efaa47a094fa78138fe263",
+    "strict_gate_sha256": "c9fbb82938e7322acc0d52ab45371bd2d5e753b1e232e893caf18fc732c1b6b1",
+    "maker_fill_sha256": "ebe3075cb2963556e18d836db7c0ff30e6f157484faafa248aca1730555419d6",
+    "strategy_sha256": "318be191060e40f923abfcc1b163240d9ddf8c775c8dd2c18795d44911f8aba7"
+  }
+}

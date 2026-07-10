@@ -1,0 +1,17 @@
+{
+  "status": "FAIL_ADDITIVITY",
+  "promotion_to_demo_or_live": false,
+  "checks": {
+    "EURJPY_full_stress_n_ge_30": true,
+    "EURJPY_full_stress_pf_ge_1_05": false,
+    "EURJPY_validation_stress_positive": false,
+    "EURJPY_holdout_stress_n_ge_5": true,
+    "EURJPY_holdout_stress_pf_ge_1_10": false,
+    "GBPJPY_full_stress_n_ge_30": true,
+    "GBPJPY_full_stress_pf_ge_1_05": false,
+    "GBPJPY_validation_stress_positive": false,
+    "GBPJPY_holdout_stress_n_ge_5": true,
+    "GBPJPY_holdout_stress_pf_ge_1_10": false
+  },
+  "note": "00-only was selected after the USDJPY anatomy and needs a new independent period even if additive"
+}

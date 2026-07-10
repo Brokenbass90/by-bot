@@ -1,0 +1,24 @@
+{
+  "status": "NO_PROMOTION",
+  "promotion_to_demo_or_live": false,
+  "primary": {
+    "mode": "standard_00_50",
+    "side": "short"
+  },
+  "checks": {
+    "full_base_n_ge_30": true,
+    "full_base_pf_ge_1_15": false,
+    "full_stress_pf_ge_1_05": false,
+    "stress_positive_folds_ge_3": false,
+    "validation_stress_n_ge_5": true,
+    "validation_stress_net_positive": false,
+    "holdout_stress_n_ge_5": true,
+    "holdout_stress_pf_ge_1_10": false,
+    "holdout_stress_net_positive": false
+  },
+  "notes": [
+    "legacy_decade is a selected historical control and cannot count as OOS evidence",
+    "no historical news-event blackout is available in this run",
+    "a PASS advances only to independent-feed execution replay and then demo shadow"
+  ]
+}
