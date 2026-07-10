@@ -1,6 +1,21 @@
 # MASTER MAP AND PLAN 2026-07-10
 
+> Canonical continuation point: `reports/PROJECT_SYSTEM_AND_ROADMAP_2026_07_10.md`.
+> Machine-readable index: `reports/PROJECT_CANONICAL_INDEX_2026_07_10.json`.
+> This document remains the concise strategic summary; the canonical roadmap resolves conflicts and contains the session/timeline protocol.
+
 This replaces the 2026-07-08 map as the current strategic starting point.
+
+## Crisis-Recovery Update
+
+- The TG AI `missing_candles` diagnosis was wrong: it measured post-hoc forensic cache gaps, not missing live candles or broken exits. ATT1 had zero such gaps in that report.
+- ATT1 current r001 has only four clean-start closes. Three autonomous closes lost; ADA's manual profit contaminates the net. This is a serious warning but not enough data to declare the strategy dead.
+- Simple `trend_only` and early-BE repairs already lost to the all-regimes baseline in strict A/B. Do not patch live from the last few stops.
+- There are multiple level engines and a renderer, but no mandatory canonical level contract across research/live/web. Consolidation and parity are now explicit roadmap work.
+- FX native trend/retest wiring had a real structural defect; it is fixed locally and now produces honest diagnostic trades. No repaired row is capital-ready.
+- Web trading mutations are blocked fail-closed until a live consumer writes an effective-state acknowledgement. The old overlay is proposal history, not live control.
+- Read-only VPS drift manifest found 877 records but only two tracked generated configs. A hidden fail-open base risk was removed locally: approved baseline now caps ATT1 short at 0.10 and sets every other sleeve risk to zero.
+- Local P0 fixes are not deployed. Live risk/orders were not changed.
 
 ## Product Vision
 
@@ -84,7 +99,9 @@ Verdict: do not change ATT1 live exits based on this. The next useful work is en
 ### FX/CFD
 - H1 coverage is usable for `EURUSD`, `GBPUSD`, `USDJPY`.
 - Full H1 grid produced no promotion row.
-- Best diagnostic: `USDJPY round_level_sweep`, about `30-31` trades, `PF≈1.25-1.28`, `3/4` folds, but thin-fold preflight still fails.
+- Best historical diagnostic: `USDJPY round_level_sweep`, about `30-31` trades, `PF≈1.25-1.28`, `3/4` folds, but thin-fold preflight still fails. It is actually a big-figure/decade-handle detector under the current step formula, not ordinary FX 00/50 levels.
+- Side split of the fixed `RR=2.5 / SL=1 ATR` row: short `18` trades, `+10.6487R`, `PF=1.946`; long `12`, `-4.6731R`, `PF=0.587`. Only the short hypothesis deserves a new prereg.
+- Repaired H1 smoke: USDJPY trend pullback `40` trades, `-0.284R`, `PF=0.990`, `2/4` folds. This proves plumbing/frequency, not edge.
 - `EURUSD` rows are too small; session/range fade is negative on USDJPY.
 - `XAUUSD` remains data-quality/backfill dependent before serious verdicts.
 
@@ -184,9 +201,20 @@ No live risk change until this produces a strict result.
 - Produce clear PnL-by-branch: monthly vs intraday vs closed sells.
 
 ### P1: FX Follow-Up
-- Continue USDJPY round-level sweep with real OOS and more instruments/time.
+- Freeze and test USDJPY big-figure sweep short-only with real chronological OOS and cost/session/news splits.
+- Test instrument-aware 00/50 levels as a separate hypothesis.
+- Repaired trend/retest branches stay diagnostic until side-specific strict gates pass.
 - Backfill real M5 if session/retest logic remains target.
 - No FX capital until OOS and broker-cost gate pass.
+
+## Planning Time Ranges
+
+- `1-2 sessions`: canonical memory, local P0 review, reviewed deploy diff and server inventory.
+- `3-7 days`: flat-window VPS normalization, Alpaca cron/fill verification, ATT1 entry cards, first strict FX/crypto verdicts.
+- `1-2 weeks`: canonical level contract/parity and side-specific repair gates.
+- `2-4 weeks`: at most one crypto and one FX/equity candidate reach shadow, only if PASS.
+- `6-12 weeks`: enough clean live/shadow evidence for a scale/pause/replace decision.
+- Stable income has no honest calendar promise; it depends on verified edge, live costs, capital and drawdown tolerance.
 
 ### P2: New Idea Mining
 Encouraged:
@@ -211,3 +239,21 @@ Discouraged only for live money:
 - Do not promote a new crypto sleeve today.
 - Do keep research aggressive.
 - Do keep ATT1 as a canary/telemetry source unless owner explicitly pauses it.
+
+## Evening execution update — 2026-07-10
+
+1. `Web`: recovered. VPS auth state had been overwritten with zero users. Restored and protected against normal deploy overwrite.
+2. `Alpaca LIVE`: moved to safe-hold. The previous implementation was daily rotation, not monthly research parity; it realized about `-$5.72` over 7 closes. Existing positions remain broker-stop protected, but new entries/rotation are off pending exact-live replay.
+3. `ATT1`: current base remains the live research champion. A simple descending-slope + RSI 50..70 filter improved PF slightly but failed one fold, did not improve WR in the exact rerun and cut frequency/net. No live parameter change.
+4. `Crypto candidate`: repaired horizontal resistance sweep/fade, `short-only`, Elder off, produced an exploration pulse (`42` trades, PF `1.20`, 3/4). Strict follow-up passed temporal OOS and unseen symbols but failed stressed PF (`1.003`) and concentration (`38%` from the top symbol versus `<35%`). Verdict `NO_PROMOTION`; long support reclaim and Elder variants also failed.
+5. `Inplay/pump fade`: retain the concept, especially for mania/bear unwind, but do not rerun the old maker grid. Its latest stress gate was close but failed (`PF=1.173`, 2/4). Rebuild it as event-first expansion/exhaustion with level memory and side/regime-specific gates after the current resistance-sweep validation.
+6. `Alpaca research parity`: the refresh simulator was hard-coded to three names while the live config advertised four. Cardinality is now explicit. Same-window A/B reproduced top3 `+53.28%`/PF `7.326` and top4 `+50.75%`/PF `6.744`; the latter matches the old published headline. Local data ended `2026-04-27`, so fresh May-June evidence is still missing. The isolated refresh runner is ready but external data access was blocked by the current tool quota.
+7. `Alpaca ledger`: an atomic, idempotent broker-fill ledger is complete locally and full tests pass. Deploy only after reconstructing the old false `+$442` baseline.
+8. `ATT1 next wave`: newer four-fold base weakened to PF `1.205`, WR `56.3%`, 3/4. Exact `R² >= 0.80` challenger improved PF to `1.285`, WR to `57.6%`, 4/4 and slightly raised net while cutting frequency about 24%. Adverse cost stress failed at PF `1.078`, 1/4. No promotion. Next is actual-cost measurement and maker/retest execution, then a fresh holdout; frequency should later come from causal universe expansion, not lower-quality entries.
+9. `Git`: safety, accounting and research repairs committed through `23f9446`; full suite `897 passed`.
+
+Immediate order:
+- diagnose level-memory short cost sensitivity and concentration without reopening a broad grid; do not advance to M5/shadow yet;
+- rebuild Alpaca v1 ledger from broker fills and add idempotent execution IDs;
+- finish Alpaca top3/top4 parity pulse, then exact monthly-vs-accidental-daily-vs-adaptive replay;
+- then return to inplay pump expansion/fade and ATT1 richer entry-card/universe work.

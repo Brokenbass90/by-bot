@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "as_of_utc": "2026-07-10T17:12:00Z",
+  "status": "crisis_recovery_live_safe_hold_and_research",
+  "canonical_documents": [
+    "reports/PROJECT_SYSTEM_AND_ROADMAP_2026_07_10.md",
+    "reports/MASTER_MAP_AND_PLAN_2026_07_10.md",
+    "reports/CODEX_HANDOFF_2026_07_10.md",
+    "reports/PROJECT_STATE_LEDGER.md"
+  ],
+  "source_priority": [
+    "broker_exchange_direct",
+    "fresh_heartbeat_effective_config",
+    "versioned_clean_live_cohort",
+    "preregistered_research_artifact",
+    "snapshot_or_summary",
+    "ai_interpretation"
+  ],
+  "live_money": {
+    "bybit": {
+      "last_verified": "flat",
+      "sleeves": ["ATT1 short r001 risk_mult=0.10"]
+    },
+    "alpaca": {
+      "last_verified_equity_usd": 490.36,
+      "mode": "safe_hold_existing_positions_no_new_entries",
+      "last_verified_positions": ["ABBV", "ABNB", "GE", "SCHW"],
+      "broker_stop_coverage": "4/4",
+      "scale_allowed": false
+    },
+    "fx_cfd": {
+      "capital_allocated": false
+    }
+  },
+  "stage_board": {
+    "ATT1_short_r001": "LIVE_CANARY_BASE_NO_CHANGE_NO_SCALE",
+    "ATT1_r2_080_challenger": "NO_PROMOTION_ADVERSE_COST_STRESS_FAIL_EXECUTION_RESEARCH_ONLY",
+    "level_memory_resistance_sweep_short": "NO_PROMOTION_STRICT_COST_AND_CONCENTRATION_FAIL",
+    "level_memory_support_reclaim_long": "FAIL_FIRST_REPAIRED_GATE",
+    "inplay_maker": "REPAIR_FROZEN",
+    "broad_mrb_pila": "NO_GO_CURRENT_FORM",
+    "usd_jpy_big_figure_sweep_short": "PREREG_REQUIRED",
+    "fx_trend_pullback_rewired": "DIAGNOSTIC_ONLY",
+    "alpaca_monthly": "SAFE_HOLD_TOP4_HEADLINE_REPRODUCED_FRESH_OOS_DATA_BLOCKED",
+    "alpaca_intraday_v1_v3": "PAPER_SHADOW_HISTORICAL_DATA_INVALID_IDEMPOTENT_LEDGER_LOCAL_AWAITING_REBUILD"
+  },
+  "forbidden_without_owner_approval": [
+    "increase_live_risk",
+    "enable_new_live_money_sleeve",
+    "enable_runner_exchange_tp",
+    "enable_portfolio_health_autocut",
+    "destructive_server_cleanup",
+    "restart_live_core_with_unreconciled_positions"
+  ],
+  "next_actions": [
+    {
+      "priority": "P0",
+      "action": "rebuild_alpaca_v1_idempotent_ledger_and_exact_live_monthly_parity",
+      "live_risk_change": false
+    },
+    {
+      "priority": "P0",
+      "action": "measure_att1_actual_costs_then_test_maker_retest_execution_fresh_holdout_and_causal_universe_expansion",
+      "live_risk_change": false
+    },
+    {
+      "priority": "P1",
+      "action": "diagnose_level_memory_resistance_short_cost_sensitivity_and_symbol_concentration_without_parameter_grid",
+      "live_risk_change": false
+    },
+    {
+      "priority": "P1",
+      "action": "rebuild_inplay_as_separate_event_expansion_long_and_exhaustion_unwind_short_arms",
+      "live_risk_change": false
+    }
+  ],
+  "last_session": {
+    "date": "2026-07-10",
+    "changes": [
+      "weekly AI forensic cohort/cache contract",
+      "AI context direct-import fix",
+      "Alpaca close reconciliation NameError fix",
+      "Alpaca v3 shadow launcher executable fix",
+      "truth-first web control blocking",
+      "FX retest metadata and bounded causal window repair",
+      "read-only repository drift manifest and local classification",
+      "read-only VPS repository manifest and fail-safe approved risk baseline",
+      "canonical system map and roadmap",
+      "web auth config recovery and deploy-preserve guard",
+      "Alpaca live safe-hold and no same-cycle stop reentry",
+      "ATT1 exact entry-filter validation with no live promotion",
+      "side-specific level-memory semantic repair and strict NO_PROMOTION verdict",
+      "Alpaca top3/top4 research-cardinality repair and cache-only parity replay",
+      "Alpaca idempotent exit ledger implemented locally pending corrupt-baseline rebuild",
+      "ATT1 behavior-neutral richer entry-card cohort and exact R2 challenger rerun completed"
+    ],
+    "live_deployed": true,
+    "live_behavior_changed": "Alpaca entries and rotation disabled; existing broker-stop management retained",
+    "live_orders_or_risk_changed": false,
+    "git_head_pushed": "23f9446"
+  },
+  "verification": {
+    "fast_tests_passed": 897,
+    "slow_tests_deselected": 0,
+    "python_compile": "pass",
+    "shell_syntax": "pass",
+    "git_diff_check": "pass",
+    "html_structural_qa": "pass",
+    "html_visual_qa": "blocked_by_local_file_browser_policy"
+  },
+  "evidence": [
+    "reports/AI_TG_FORENSICS_AUDIT_2026_07_10.md",
+    "reports/research/att1_exit_regime_ab_20260710_20260710_064618/summary.md",
+    "reports/research/att1_entry_filter_exact_20260710/summary.md",
+    "reports/research/lm_short_off_20260710/summary.md",
+    "reports/research/lm_short_strict_oos_20260710/summary.md",
+    "reports/research/lm_long_off_20260710/summary.md",
+    "reports/research/fx_native_h1_full_grid_20260708/summary.md",
+    "reports/research/fx_native_h1_level_rewire_smoke_20260710_v2/summary.md",
+    "reports/repo_drift_manifest_local_20260710.json",
+    "reports/server_repo_drift_manifest_20260710.json",
+    "reports/SERVER_REPO_NORMALIZATION_PLAN_2026_07_10.md",
+    "reports/live_audit_20260710"
+  ]
+}

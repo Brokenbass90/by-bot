@@ -5,12 +5,15 @@ This is the current handoff for the next Codex/Claude-style session.
 ## Start Here
 
 Read these first:
-1. `reports/MASTER_MAP_AND_PLAN_2026_07_10.md`
-2. `reports/CODEX_FACTS_AND_PLAN_2026_07_10.md`
-3. tail of `reports/PROJECT_STATE_LEDGER.md`
-4. `reports/research/att1_exit_regime_ab_20260710_20260710_064618/summary.md`
+1. `reports/PROJECT_SYSTEM_AND_ROADMAP_2026_07_10.md`
+2. `reports/PROJECT_CANONICAL_INDEX_2026_07_10.json`
+3. `reports/MASTER_MAP_AND_PLAN_2026_07_10.md`
+4. tail of `reports/PROJECT_STATE_LEDGER.md`
+5. current `git status` and latest direct runtime/server snapshot
 
 Use this handoff as the operational summary. The project is a live trading system, not a notebook.
+
+Do not repeat a completed audit just because a new chat started. Compare `last_session` and `next_actions` in the canonical index, verify freshness, then continue the first unfinished action. At session end update the index and append the ledger.
 
 ## Mission
 
@@ -98,8 +101,20 @@ Meaning:
 ### FX/CFD
 - H1 data is usable for `EURUSD,GBPUSD,USDJPY`.
 - No promotion yet.
-- `USDJPY round_level_sweep` is best lead.
+- `USDJPY big-figure sweep short-only` is the best lead; the current round-step is 10 JPY, not normal 00/50 FX levels.
+- Local native trend/retest wiring has been repaired. First H1 smoke produced trades but no promotable edge.
 - XAU/gold still needs better data before serious claims.
+
+### Truth/Control Fixes Awaiting Deploy
+
+- Weekly AI forensics now distinguishes forensic-cache gaps, mixed accounting and clean cohorts.
+- AI full-context direct import is fixed.
+- Alpaca v1 close reconciliation NameError is fixed.
+- Alpaca v3 shadow launcher is executable.
+- Fake web trading controls/SIGHUP are blocked until effective ACK exists.
+- FX level metadata/current-price bug and unbounded prefix work are fixed.
+
+All are local only until reviewed commit + flat-window deploy. They did not change orders or risk.
 
 ## Next Work Order
 
@@ -135,7 +150,15 @@ Complete missing holdout cache and rerun prereg with:
 Fix stale intraday advisory or mark it stale/disabled in dashboard/TG. Confirm every path has broker stops.
 
 ### 5. FX USDJPY Follow-Up
-Run proper OOS for `USDJPY round_level_sweep`; include cost/slippage and enough folds. No capital yet.
+Run a frozen short-only prereg for the big-figure sweep; separately define/test 00/50 levels. Include chronological OOS, costs, sessions/news and enough folds. No capital yet.
+
+## Time Expectations
+
+- One to two sessions: finish review/commit/deploy package and server manifest.
+- Three to seven days: operational normalization plus first strict ATT1/FX/crypto verdicts.
+- Two to four weeks: shadow candidates only if gates pass.
+- Six to twelve weeks: first meaningful clean live/shadow portfolio assessment.
+- Do not promise stable income by date or compensate for time pressure with leverage.
 
 ## Rules For The Next Chat
 
@@ -163,8 +186,10 @@ The goal is momentum with proof, not pessimism.
 
 ## Current Git
 
-Latest pushed commit at handoff creation:
-- `66895e1 record att1 audit and post-pause facts`
+Latest pushed commits:
+- `07b0bdd fix: preserve web auth and freeze Alpaca live churn`
+- `0e7eb73 research: repair level memory and validate ATT1 entries`
+- `23f9446 fix: harden Alpaca accounting and research gates`
 
 The worktree still has many unrelated untracked historical files. Do not clean them destructively. Add only explicit files you touched.
 
@@ -178,3 +203,15 @@ The owner is frustrated because prior sessions mixed promises, bugs, and unclear
 - when to return.
 
 Do not hide failures. Do not turn failures into fatalism. Convert each failure into a binding reason and next experiment.
+
+## Evening checkpoint — continue from here
+
+- Web `Unauthorized` is fixed on VPS: auth config restored, service active, one user visible, `/ping` healthy. Normal web deploy now preserves instance auth state.
+- Alpaca real account is intentionally `safe-hold`: no new entries, no stale/daily/midmonth rotation, existing positions remain protected by broker stops. Daily refresh cron is commented with a backup. Do not re-enable until monthly-vs-daily exact-live parity verdict.
+- Alpaca historical intraday v1 equity/PnL log is `DATA_INVALID` due repeated booking after a crash. Idempotent atomic broker-fill ledger is implemented and tested locally, but must not be deployed until the corrupted baseline is backed up/rebuilt from broker fills.
+- ATT1 exact full rerun rejected the simple slope+RSI filter: `3/4` folds, PF `1.327`, WR `57.7%`, lower net/frequency versus base `4/4`, PF `1.277`, WR `57.9%`. Keep current live params/risk unchanged. Next ATT1 experiment needs richer entry cards (R2, pivots, touch distance, ATR state, level respect, BTC context) and/or causal universe expansion.
+- Repaired level-memory strict result: short resistance sweep/fade passed temporal OOS and a strong unseen-symbol holdout, but failed stressed costs (PF `1.003`) and concentration (top symbol `38%` versus `<35%`). Final `NO_PROMOTION`; do not run M5/shadow until the binding weaknesses are repaired. Long support reclaim and Elder variants failed.
+- Alpaca research had another parity mismatch: the refresh simulator was hard-coded `top_n=3` while live advertised four positions. Fixed A/B reproduced top3 `+53.28%`/PF `7.326` and top4 `+50.75%`/PF `6.744`, so the old top4 headline is reproducible. Local data ended `2026-04-27`; fresh May-June OOS remains blocked on an isolated data refresh. The VPS newer report is top3, not exact live-cardinality parity.
+- ATT1 richer entry-card cohort completed. On newer windows through Jul 10, base is weaker (`346` trades, PF `1.205`, WR `56.3%`, 3/4). Exact `R² >= 0.80` rerun improved to `264` trades, PF `1.285`, WR `57.6%`, 4/4, net `+13.41` versus base `+12.98`, with lower drawdown. Higher-cost stress failed (`263` trades, PF `1.078`, 1/4; latest fold negative). No live/shadow change. Next test is measured live costs plus maker/retest execution and a fresh holdout, not another threshold grid.
+- VPS research queues are temporarily disabled because the active liquidity-sweep run exactly duplicated a completed 486-row zero-PASS grid. Backups exist next to both configs. Re-enable only after queue fingerprint/resume repair and obsolete-task cleanup.
+- Full fast tests: `897 passed`.
