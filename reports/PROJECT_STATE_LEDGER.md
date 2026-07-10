@@ -894,3 +894,8 @@
 - Best row: `small_tp1/all_regimes`, `379` trades, `+19.21R`, `PF=1.283`, `WR=57.9%`, `4/4` positive folds. Baseline is effectively tied: `base/all_regimes`, `379` trades, `+18.78R`, `PF=1.277`, `WR=57.9%`, `4/4` folds.
 - Rejected for live change: `trend_only` filter (`2/4` folds), early BE `0.5R` (`3/4` but lower net), early BE `0.3R` (weak), and `pure_trail` (too few trades, `2/4` folds).
 - Interpretation: the recent LTC/DOT losses are not solved by simply moving BE earlier or allowing only simple trend regimes. ATT1 needs entry-quality/regime meta-filter research and more clean post-fix live telemetry. No ATT1 risk increase, no exit-parameter live change.
+
+## ДОБАВЛЕНО 2026-07-10 (Codex — next-chat handoff and updated map)
+- Created `reports/MASTER_MAP_AND_PLAN_2026_07_10.md`, `reports/CODEX_HANDOFF_2026_07_10.md`, and `reports/NEXT_CHAT_START_PROMPT_2026_07_10.md`.
+- Intentional framing for next agent: keep research creative and aggressive, do not pessimize new ideas, do not treat prior FAIL as permanently dead, but keep live money behind validation/shadow/canary gates.
+- Current project stance captured: Bybit only ATT1 canary; Alpaca $500 canary with stale intraday observability issue; no second crypto sleeve; no FX/CFD money; top next work is ATT1 entry-quality/meta-filter, level-memory repair, Alpaca observability, and USDJPY round-level OOS.
