@@ -36,7 +36,11 @@ def build_att1_runtime_contract(*, risk_mult: float) -> dict[str, Any]:
         "min_body_frac": round(float(cfg.min_body_frac), 6),
         "rsi_long_max": round(float(cfg.rsi_long_max), 6),
         "rsi_short_min": round(float(cfg.rsi_short_min), 6),
-        "rsi_short_max": round(float(cfg.rsi_short_max), 6),
+        # Older deployed ATT1 classes predate the optional upper RSI bound.
+        # Their behavior is equivalent to an unbounded maximum, represented by
+        # the newer strategy default of 100.0.  Keep telemetry compatible so a
+        # truth-only deploy never forces a strategy-code upgrade.
+        "rsi_short_max": round(float(getattr(cfg, "rsi_short_max", 100.0)), 6),
         "sl_atr_mult": round(float(cfg.sl_atr_mult), 6),
         "min_rr": round(float(cfg.min_rr), 6),
         "min_stop_pct": round(float(cfg.min_stop_pct), 8),

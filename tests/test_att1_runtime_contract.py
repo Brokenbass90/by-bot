@@ -1,6 +1,8 @@
 import hashlib
 import json
+from types import SimpleNamespace
 
+import bot.att1_runtime_contract as runtime_contract
 from bot.att1_runtime_contract import build_att1_runtime_contract
 
 
@@ -44,3 +46,22 @@ def test_runtime_contract_hash_changes_when_entry_gate_changes(monkeypatch):
     assert first["params"]["rsi_short_min"] == 45.0
     assert second["params"]["rsi_short_min"] == 50.0
     assert first["sha256"] != second["sha256"]
+
+
+def test_runtime_contract_supports_deployed_legacy_cfg_without_rsi_short_max(monkeypatch):
+    current = runtime_contract.AltTrendlineTouchV1Strategy().cfg
+    legacy_values = {
+        key: value
+        for key, value in vars(current).items()
+        if key != "rsi_short_max"
+    }
+    legacy = SimpleNamespace(**legacy_values)
+    monkeypatch.setattr(
+        runtime_contract,
+        "AltTrendlineTouchV1Strategy",
+        lambda: SimpleNamespace(cfg=legacy),
+    )
+
+    contract = runtime_contract.build_att1_runtime_contract(risk_mult=0.10)
+
+    assert contract["params"]["rsi_short_max"] == 100.0
