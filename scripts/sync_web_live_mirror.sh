@@ -31,11 +31,20 @@ mkdir -p \
 copy_if_exists() {
   local remote_path="$1"
   local local_path="$2"
+  local local_tmp="${local_path}.sync.$$"
   local local_dir
   local_dir="$(dirname "$local_path")"
   mkdir -p "$local_dir"
   if ssh "${SSH_OPTS[@]}" "$SERVER_USER@$SERVER_IP" "test -f '$remote_path'"; then
-    scp "${SSH_OPTS[@]}" "$SERVER_USER@$SERVER_IP:$remote_path" "$local_path" >/dev/null
+    # Preserve the source mtime: Web/AI freshness must not turn stale payloads
+    # into fresh ones merely because the mirror copied them again.  Download to
+    # a sibling temporary file and rename atomically so readers never observe a
+    # partially written JSON/CSV payload.
+    if ! scp -p "${SSH_OPTS[@]}" "$SERVER_USER@$SERVER_IP:$remote_path" "$local_tmp" >/dev/null; then
+      rm -f "$local_tmp"
+      return 1
+    fi
+    mv "$local_tmp" "$local_path"
     echo "[mirror] synced ${remote_path#$BOT_DIR/} -> ${local_path#$ROOT/}"
   else
     echo "[mirror] missing ${remote_path#$BOT_DIR/}"

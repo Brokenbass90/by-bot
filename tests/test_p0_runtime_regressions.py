@@ -106,6 +106,14 @@ def test_web_deploy_preserves_instance_auth_config_by_default() -> None:
     assert "preserving server-owned configs/web_config.json" in script
 
 
+def test_web_mirror_preserves_source_mtime_and_replaces_atomically() -> None:
+    script = (ROOT / "scripts" / "sync_web_live_mirror.sh").read_text(encoding="utf-8")
+
+    assert 'scp -p "${SSH_OPTS[@]}"' in script
+    assert 'local local_tmp="${local_path}.sync.$$"' in script
+    assert 'mv "$local_tmp" "$local_path"' in script
+
+
 def test_alpaca_live_wrapper_sources_safe_hold_last() -> None:
     wrapper = (ROOT / "scripts" / "run_alpaca_live_v38_once.sh").read_text(encoding="utf-8")
     safe_hold = (ROOT / "configs" / "alpaca_live_v38_safe_hold.env").read_text(encoding="utf-8")
