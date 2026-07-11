@@ -14,7 +14,7 @@
 
 На момент handoff:
 
-- local/origin `e286534`, VPS `f7ed011` и на 22 commits позади;
+- implementation checkpoint `e286534`; documentation commits идут следом, поэтому сначала получи current local/origin HEAD; VPS `f7ed011` был на 22 implementation commits позади;
 - все изменения сессии pushed, ничего из них не deployed на VPS;
 - Bybit last verified flat, money sleeve только ATT1 short `0.10`;
 - server active override ещё использует RSI threshold `40`, Git r001 contract уже `45`;

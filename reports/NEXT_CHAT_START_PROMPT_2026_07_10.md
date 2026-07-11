@@ -42,7 +42,7 @@
 - Поправка: это big-figure/decade-handle sweep; side split short positive, long negative. Нужен новый short-only prereg.
 - TG AI ошибочно истолковал `missing_candles`: это post-hoc forensic cache gap, не доказательство сломанных live candles/exits.
 - Local P0 truth/Alpaca/web/FX fixes готовы, но ещё не deployed; live risk/orders не менялись.
-- Latest Jul 11 continuation: local/origin `e286534`, VPS `f7ed011` (22 commits behind). Session code is pushed but not deployed; use the superseding Jul 11 prompt above.
+- Latest Jul 11 implementation checkpoint: `e286534`; documentation commits follow it. VPS `f7ed011` was 22 implementation commits behind. Resolve current HEAD and use the superseding Jul 11 prompt above.
 - FX V2 prereg tested impulse breakout/retest, sweep/reclaim bounce and range/pila as separate long/short sleeves. All six are negative in base and stress -> `NO_PROMOTION`; do not tune the same frozen run.
 - Strict FX data has zero promotion-valid symbols; four pairs are diagnostic-only after complete-H1 and gap/censor controls; EURJPY/XAU blocked.
 - Clean independent InPlay short also `NO_PROMOTION` (PF `1.075`, concentration `67.7%`). Build event-first pump exhaustion short and event expansion long successors.

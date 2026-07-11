@@ -19,7 +19,7 @@ Read first: `reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md`.
 - Strict FX data has `0/6` promotion-valid symbols. Four pairs are diagnostic-only after partial-H1 removal and market-gap segmentation; `EURJPY/XAUUSD` remain data-blocked.
 - Clean independent InPlay short is `NO_PROMOTION` (stress PF `1.075`, only two symbols traded, concentration `67.7%`). Old InPlay is frozen; build event-first long expansion and short pump-exhaustion successors.
 - Alpaca remains safe-hold: equity `$486.93`, positions `ABBV,ABNB,GE,SCHW`, stops `4/4`. Safety improved; profitability has not been proven improved.
-- Latest Jul 11 state: local/origin `e286534`; VPS remains `f7ed011`, `22` commits behind. Research/safety/reporting code is pushed, not deployed to live.
+- Latest Jul 11 implementation checkpoint: `e286534`; documentation commits follow it. VPS remains `f7ed011` and was 22 implementation commits behind. Resolve current HEAD; code is pushed, not deployed to live.
 
 Next order: rebuild Alpaca fill ledger baseline; verify ATT1 expiry/effective env; refresh/calibrate FX data; then implement one-causal-change V3 repairs. Do not rerun the failed V2 parameter set or enable a new money sleeve.
 

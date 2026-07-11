@@ -151,8 +151,8 @@ OANDA сейчас не пополнять. Текущий ожидаемый р
 
 ## Git и VPS truth
 
-- Local/origin: `e286534` на ветке `codex/dynamic-symbol-filters`.
-- VPS checkout: `f7ed011`, на 22 commits позади.
+- Последний implementation commit до документационного checkpoint: `e286534` на ветке `codex/dynamic-symbol-filters`; сама карта коммитится следом, поэтому новый чат обязан получить current HEAD через `git rev-parse`.
+- VPS checkout: `f7ed011`; на implementation checkpoint он был на 22 commits позади, без учёта последующих documentation-only commits.
 - Все изменения этой сессии запушены в Git.
 - На VPS они не deployed; действующий сервер продолжает безопасный ATT1 override `risk=0.10` и Alpaca safe-hold, но ещё без RSI45/report/AI truth patches.
 - Полный blind pull запрещён: VPS содержит ручные/dirty/untracked файлы. Нужен manifest, backup, clean release checkout, targeted config migration, flat-window restart и post-deploy heartbeat/config-hash verification.

@@ -143,10 +143,11 @@
     "live_behavior_changed": "none this session; existing Alpaca safe-hold and broker-stop management retained",
     "live_orders_or_risk_changed": false,
     "git_head_used_for_final_research_run": "376ad21",
-    "git_head_end_of_session": "e286534",
+    "git_implementation_head_end_of_session": "e286534",
+    "documentation_checkpoint_committed_after_implementation_head": true,
     "git_origin_pushed": true,
     "vps_head": "f7ed011",
-    "vps_commits_behind": 22,
+    "vps_implementation_commits_behind_at_checkpoint": 22,
     "vps_deploy_of_session_changes": false
   },
   "verification": {
