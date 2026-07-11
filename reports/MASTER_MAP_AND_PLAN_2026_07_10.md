@@ -1,5 +1,9 @@
 # MASTER MAP AND PLAN 2026-07-10
 
+> Latest recovery truth: `reports/PROJECT_RECOVERY_TRUTH_AND_ROADMAP_2026_07_11.md`.
+> Latest continuation prompt: `reports/NEXT_CHAT_START_PROMPT_2026_07_11.md`.
+> The July 11 recovery report supersedes stale live/deploy counts below.
+>
 > Canonical continuation point: `reports/PROJECT_SYSTEM_AND_ROADMAP_2026_07_10.md`.
 > Machine-readable index: `reports/PROJECT_CANONICAL_INDEX_2026_07_10.json`.
 > This document remains the concise strategic summary; the canonical roadmap resolves conflicts and contains the session/timeline protocol.
@@ -15,7 +19,7 @@ Read first: `reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md`.
 - Strict FX data has `0/6` promotion-valid symbols. Four pairs are diagnostic-only after partial-H1 removal and market-gap segmentation; `EURJPY/XAUUSD` remain data-blocked.
 - Clean independent InPlay short is `NO_PROMOTION` (stress PF `1.075`, only two symbols traded, concentration `67.7%`). Old InPlay is frozen; build event-first long expansion and short pump-exhaustion successors.
 - Alpaca remains safe-hold: equity `$486.93`, positions `ABBV,ABNB,GE,SCHW`, stops `4/4`. Safety improved; profitability has not been proven improved.
-- Local/origin `376ad21`; VPS remains `f7ed011`, `15` commits behind. Research code is pushed, not deployed to live.
+- Latest Jul 11 state: local/origin `e286534`; VPS remains `f7ed011`, `22` commits behind. Research/safety/reporting code is pushed, not deployed to live.
 
 Next order: rebuild Alpaca fill ledger baseline; verify ATT1 expiry/effective env; refresh/calibrate FX data; then implement one-causal-change V3 repairs. Do not rerun the failed V2 parameter set or enable a new money sleeve.
 

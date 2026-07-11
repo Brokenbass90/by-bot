@@ -1,8 +1,10 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-11T06:16:36Z",
-  "status": "crisis_recovery_safe_hold_fx_v2_no_promotion",
+  "as_of_utc": "2026-07-11T06:57:43Z",
+  "status": "crisis_recovery_truth_first_git_pushed_vps_deploy_pending",
   "canonical_documents": [
+    "reports/PROJECT_RECOVERY_TRUTH_AND_ROADMAP_2026_07_11.md",
+    "reports/NEXT_CHAT_START_PROMPT_2026_07_11.md",
     "reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md",
     "reports/PROJECT_SYSTEM_AND_ROADMAP_2026_07_10.md",
     "reports/MASTER_MAP_AND_PLAN_2026_07_10.md",
@@ -50,7 +52,11 @@
     "fx_v2_range_reversion_long_short": "NO_PROMOTION_BASE_AND_STRESS_NEGATIVE",
     "fx_v2_data": "ZERO_PROMOTION_VALID_FOUR_DIAGNOSTIC_ONLY_EURJPY_XAU_BLOCKED",
     "alpaca_monthly": "SAFE_HOLD_FRESH_FORWARD_POSITIVE_N2_NO_SCALE",
-    "alpaca_intraday_v1_v3": "PAPER_SHADOW_HISTORICAL_DATA_INVALID_IDEMPOTENT_LEDGER_LOCAL_AWAITING_REBUILD"
+    "alpaca_intraday_v1_v3": "PAPER_SHADOW_HISTORICAL_DATA_INVALID_IDEMPOTENT_LEDGER_LOCAL_AWAITING_REBUILD",
+    "pump_exhaustion_unwind_short_v1": "RESEARCH_MECHANICS_READY_PERSISTENCE_AND_PREREG_GATE_REQUIRED",
+    "event_expansion_retest_long_v1": "DESIGN_ONLY_NEXT_SUCCESSOR",
+    "alpaca_reporting": "TRUTH_FIRST_REPAIR_PUSHED_NOT_DEPLOYED",
+    "ai_operator": "CANONICAL_FRESHNESS_FAIL_CLOSED_PATCH_PUSHED_NOT_DEPLOYED"
   },
   "forbidden_without_owner_approval": [
     "increase_live_risk",
@@ -63,27 +69,32 @@
   "next_actions": [
     {
       "priority": "P0",
-      "action": "rebuild_alpaca_v1_idempotent_ledger_and_exact_live_monthly_parity",
+      "action": "targeted_flat_window_vps_deploy_att1_fail_closed_rsi45_contract_hash_and_verify",
       "live_risk_change": false
     },
     {
       "priority": "P0",
-      "action": "verify_att1_effective_vps_expiry_20260720_and_measure_actual_execution_costs",
+      "action": "deploy_truth_first_ai_and_alpaca_reports_then_verify_delivery_watchdog",
+      "live_risk_change": false
+    },
+    {
+      "priority": "P0",
+      "action": "rebuild_alpaca_v1_ledger_from_broker_fills_and_exact_monthly_daily_adaptive_parity",
       "live_risk_change": false
     },
     {
       "priority": "P1",
-      "action": "refresh_fx_m5_and_build_broker_holiday_news_cost_bidask_evidence",
+      "action": "build_persisted_event_state_and_frozen_prereg_runner_for_pump_exhaustion_unwind_short_v1",
       "live_risk_change": false
     },
     {
       "priority": "P1",
-      "action": "implement_bounded_fx_v3_failed_break_retest_horizontal_range_and_range_edge_expansion_repairs",
+      "action": "refresh_fx_m5_holiday_news_bidask_cost_evidence_then_freeze_v3_repairs",
       "live_risk_change": false
     },
     {
       "priority": "P1",
-      "action": "implement_crypto_event_first_pump_exhaustion_short_and_event_expansion_long_successors",
+      "action": "implement_event_expansion_retest_long_v1_with_same_persisted_event_protocol",
       "live_risk_change": false
     }
   ],
@@ -118,12 +129,25 @@
       "FX/CFD V2 independent P0/P1 audit completed before outcomes",
       "FX/CFD V2 prereg code and config pushed as 376ad21 before full run",
       "FX/CFD V2 six side-specific candidates completed NO_PROMOTION",
-      "morning recovery checkpoint and canonical continuation updated"
+      "morning recovery checkpoint and canonical continuation updated",
+      "ATT1 approved and active override made fail-closed with exact r001 RSI45",
+      "ATT1 effective strategy contract and SHA added to heartbeat through dynamic strategy-config helper",
+      "AI context made canonical freshness-aware and fail-closed on conflicting live truth",
+      "web AI trading controls made proposal-only and weekly forensics split mixed and clean cohorts",
+      "Alpaca Telegram reports rebuilt around broker holdings stops safe-hold and DATA_INVALID ledger truth",
+      "weekday Alpaca post-close report and delivery watchdog added",
+      "pump_exhaustion_unwind_short_v1 event-first research mechanics implemented and tested",
+      "project recovery truth roadmap and next-chat continuation refreshed"
     ],
     "live_deployed": false,
     "live_behavior_changed": "none this session; existing Alpaca safe-hold and broker-stop management retained",
     "live_orders_or_risk_changed": false,
-    "git_head_used_for_final_research_run": "376ad21"
+    "git_head_used_for_final_research_run": "376ad21",
+    "git_head_end_of_session": "e286534",
+    "git_origin_pushed": true,
+    "vps_head": "f7ed011",
+    "vps_commits_behind": 22,
+    "vps_deploy_of_session_changes": false
   },
   "verification": {
     "fast_tests_passed": 897,
@@ -136,6 +160,10 @@
     "fx_v2_preflight": "DIAGNOSTIC_ONLY_FOUR_SYMBOLS_ZERO_PROMOTION_VALID",
     "fx_v2_full_gate": "NO_LIVE_PROMOTION_ALL_SIX_SIDES_FAIL",
     "inplay_clean_preflight": "pass",
+    "att1_runtime_contract_tests_passed": 24,
+    "ai_truth_tests_passed": 33,
+    "alpaca_reporting_tests_passed": 22,
+    "pump_exhaustion_successor_related_tests_passed": 58,
     "html_structural_qa": "pass",
     "html_visual_qa": "blocked_by_local_file_browser_policy"
   },
@@ -164,6 +192,13 @@
     "configs/research/fx_v2_gate_20260711.json",
     "reports/research/fx_v2_gate_20260711/summary.md",
     "reports/research/fx_v2_gate_20260711/verdict.json",
-    "reports/research/fx_v2_gate_20260711/manifest.json"
+    "reports/research/fx_v2_gate_20260711/manifest.json",
+    "reports/PROJECT_RECOVERY_TRUTH_AND_ROADMAP_2026_07_11.md",
+    "configs/ai_operator_canonical_state.json",
+    "strategies/pump_exhaustion_unwind_short_v1.py",
+    "tests/test_pump_exhaustion_unwind_short_v1.py",
+    "tests/test_alpaca_reporting_truth.py",
+    "tests/test_ai_full_context_truth.py",
+    "tests/test_att1_runtime_contract.py"
   ]
 }

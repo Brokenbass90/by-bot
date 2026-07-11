@@ -29,8 +29,8 @@
 
 ### Git/VPS
 
-- Local и origin: `376ad21`.
-- VPS checkout остаётся `f7ed011`, теперь на `15` коммитов позади.
+- Local и origin на момент фиксации результатов: `39443d3`.
+- VPS checkout остаётся `f7ed011`, на тот момент на `16` коммитов позади.
 - На VPS вручную присутствует выбранный safety-пакет, но полного Git deploy не было. Не делать blind pull/restart до flat-window reconciliation.
 
 ## Crypto: результат ночи

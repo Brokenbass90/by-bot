@@ -1,5 +1,8 @@
 # NEXT CHAT START PROMPT 2026-07-10
 
+> Superseded by `reports/NEXT_CHAT_START_PROMPT_2026_07_11.md` and
+> `reports/PROJECT_RECOVERY_TRUTH_AND_ROADMAP_2026_07_11.md`.
+
 Ты новый Codex/Claude-контур в проекте live trading bot. Работай как pragmatic product engineer + quant researcher + live-system operator.
 
 Главная цель: довести систему до портфеля доказанных денежных рукавов, а не просто писать стратегии. Bybit crypto сейчас, Alpaca equities уже small live canary, FX/CFD позже после data/cost/OOS gates.
@@ -39,7 +42,7 @@
 - Поправка: это big-figure/decade-handle sweep; side split short positive, long negative. Нужен новый short-only prereg.
 - TG AI ошибочно истолковал `missing_candles`: это post-hoc forensic cache gap, не доказательство сломанных live candles/exits.
 - Local P0 truth/Alpaca/web/FX fixes готовы, но ещё не deployed; live risk/orders не менялись.
-- Update Jul 11: local/origin `376ad21`, VPS `f7ed011` (15 commits behind). FX V2 research code is pushed but not deployed.
+- Latest Jul 11 continuation: local/origin `e286534`, VPS `f7ed011` (22 commits behind). Session code is pushed but not deployed; use the superseding Jul 11 prompt above.
 - FX V2 prereg tested impulse breakout/retest, sweep/reclaim bounce and range/pila as separate long/short sleeves. All six are negative in base and stress -> `NO_PROMOTION`; do not tune the same frozen run.
 - Strict FX data has zero promotion-valid symbols; four pairs are diagnostic-only after complete-H1 and gap/censor controls; EURJPY/XAU blocked.
 - Clean independent InPlay short also `NO_PROMOTION` (PF `1.075`, concentration `67.7%`). Build event-first pump exhaustion short and event expansion long successors.
