@@ -90,11 +90,14 @@ FVG/order block разумно добавить позже как deterministic 
 - FSM `expanded → exhausted → bearish CHoCH → failed reclaim → one next-open plan`;
 - immutable event ID, seen/planned ledgers, expiry/invalidation;
 - реальные structural contacts без выдуманных touches;
-- `58` связанных tests passed.
+- restart-safe atomic state envelope с schema/version, source fingerprint, payload checksum и отдельными bounded seen/planned ledgers;
+- corrupt/schema/source/hash/symlink mismatch закрывается fail-closed и не сбрасывает state в пустой;
+- frozen 720d prereg фиксирует `13` symbols, short-only, next-open, base/stress costs, `4` folds, `7d` embargo, untouched `120d` holdout, breadth/LOSO/concentration gates;
+- полный regression после persistence/preflight: `1019 passed`.
 
 Cache smoke подтверждает только жизнеспособность механизма, не edge: на последних `9,000` M5 барах BTC дал 0 events, ETH 2 events/1 plan, DOGE 1 event/0 plans.
 
-До shadow обязательны persisted event state и отдельный frozen prereg runner с source SHA, cache gate, next-open gaps, base/stress costs, timestamp occupancy, folds/embargo и untouched holdout.
+Persistence и strict preflight теперь готовы, но performance ещё не запускался. Preflight source SHA и state fingerprint проходят; permission=`BLOCKED_FAIL_CLOSED`, потому что immutable 720d snapshots для всех `13` symbols ещё не materialized/hash-pinned. До shadow обязательны data-freeze commit, evaluator с gap/exit/timestamp-occupancy parity и полный frozen outcome gate. Нельзя трактовать data blocker как результат стратегии.
 
 Второй successor остаётся следующим: `event_expansion_retest_long_v1` — breakout/hold качественного frozen уровня и только первый ретест сверху. Long и short никогда не объединяются в одну статистику.
 
@@ -186,15 +189,15 @@ Alpaca broker-truth dry-run прошёл. Установлены weekday post-cl
 
 ## Git и VPS truth
 
-- Current implementation/security head перед этим документационным checkpoint: `18050bf` ветки `codex/dynamic-symbol-filters`, совпадает с origin. Опорные commits: `f459e9f`, `ba53710`, `a625a8b`, `4de548b`, `115d032`, `c307085`, `18050bf`.
+- Current implementation/research head перед этим документационным checkpoint: `202aead` ветки `codex/dynamic-symbol-filters`, совпадает с origin. Новые ops/research commits: `3818a0a` (targeted release manifest), `f95cd3e` (first web/canonical manifest), `e919ec3` (persisted pump state + strict preflight), `202aead` (frozen prereg + blocked evidence).
 - VPS Git checkout остаётся `f7ed011`, dirty; Git там не pull/advance. Адресно установленные disk files новее server HEAD, поэтому `git status`/`rev-parse` не описывают deployed runtime полностью.
 - Первый targeted пакет ATT1/AI/Alpaca reporting/web установлен с backup `/root/by-bot-backups/targeted_580d845_20260711T111235Z`. `bybot` после него подтвердил точный ATT1 contract/hash и flat.
 - Watcher P0 пакет (`bot/allowlist_watcher.py`, `configs/approved_strategy_params.env`) установлен с staging PASS и backup `/root/by-bot-backups/watcher_f459e9f_20260711T111848Z`. Read-only проверка в `16:10 UTC` после второго restart подтвердила direct Bybit positions `0`, ATT1 short-only, risk `0.10`, RSI `45`, expiry `2026-07-20`, exact hash `fd8048f7…`; единственный money sleeve — ATT1.
 - Web restart и report cron install подтверждены отдельно; auth login не replayed, первый scheduled Alpaca delivery ещё не наступил. Manual TG delivery прошла.
 - SHA всех адресно развёрнутых ATT1/AI/Web/Alpaca-reporting файлов, включая `4de548b` и `115d032`, совпал с локальным implementation checkpoint. Это не делает старый server checkout чистым: VPS Git HEAD всё ещё `f7ed011` и dirty.
 - Canonical AI/report bundle установлен с backup `/root/by-bot-backups/ai_canonical_3c26464_20260711T162537Z`. Web code backup: `/root/by-bot-backups/web_auth_code_20260711T162806Z`; JWT-файл создан впервые, поэтому старого `.env.local` для backup не существовало.
-- Full local regression после всех изменений: `981 passed`.
-- Полный blind pull по-прежнему запрещён. Следующий ops этап — построить reproducible release checkout/manifest и перенести server-only state вне tracked tree, не удаляя архивы/backup-env/ручные файлы без reference audit.
+- Full local regression после всех изменений: `1019 passed`.
+- Первый explicit-file manifest записан в `reports/releases/targeted_web_canonical_4c7f645_20260711.json`; он фиксирует SHA/size/mode семи точно известных web/canonical файлов и честно помечает dirty source tree. Полный blind pull по-прежнему запрещён. Следующий ops этап — расширить manifest на весь deployed set и перенести server-only state вне tracked tree, не удаляя архивы/backup-env/ручные файлы без reference audit.
 
 ## План и сроки
 
@@ -208,14 +211,14 @@ Alpaca broker-truth dry-run прошёл. Установлены weekday post-cl
 
 ### Следующие 1–3 рабочие сессии
 
-1. Выбрать новый event-first frequent challenger: pump exhaustion short с persisted FSM либо новый horizontal first-retest sleeve; не переписывать провалившийся ARS1 threshold-grid.
+1. Materialize и hash-pin `13` immutable 720d M5 snapshots для уже замороженного pump-exhaustion short prereg; затем повторить только preflight, не performance, пока data gate не PASS.
 2. Восстановить Alpaca intraday v1 ledger из broker fills и провести exact monthly-vs-daily-vs-adaptive replay с одинаковой exit model.
 3. Получить и hash-pin fresh FX M5, historical macro-news и OANDA spread/commission/financing calibration; только после этого разрешить V3 performance runner.
 4. Реализовать первый vertical slice из `ARCHITECTURE_PARITY_AND_MONEY_PATH_2026_07_11.md`: Market/Level/Decision snapshots + side-specific ID + Operator Truth receipt.
 
 ### 3–7 дней после снятия data/parity blockers
 
-1. Построить frozen prereg runner для pump-exhaustion successor и первый 360–720d data gate.
+1. Реализовать frozen performance evaluator для pump-exhaustion successor только после data-freeze commit: next-open gaps, base/stress costs, timestamp occupancy, folds/embargo/holdout/LOSO и zero-duplicate event receipts.
 2. Реализовать long successor с тем же persisted event protocol.
 3. Запустить замороженный FX V3 performance gate только если preflight сменится с `DATA_DIAGNOSTICS_ONLY` на strict PASS.
 

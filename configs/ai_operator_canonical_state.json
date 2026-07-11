@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-11T16:30:00Z",
+  "as_of_utc": "2026-07-11T17:05:00Z",
   "schema_version": 1,
   "authority": "human_reviewed_project_truth",
   "live": {
@@ -24,7 +24,8 @@
     "alpaca_backtest_63pct": "RESEARCH_RESULT_NOT_LIVE_EXPECTATION",
     "fx_v2_data": "DIAGNOSTIC_ONLY_ZERO_OF_SIX_PROMOTION_GRADE",
     "fx_v3_data": "DATA_DIAGNOSTICS_ONLY_ZERO_PROMOTION_GRADE_MISSING_NEWS_AND_OANDA_COSTS",
-    "frequent_crypto_20260711": "VALID_IMMUTABLE_RUN_ALL_THREE_CANDIDATES_NO_PROMOTION"
+    "frequent_crypto_20260711": "VALID_IMMUTABLE_RUN_ALL_THREE_CANDIDATES_NO_PROMOTION",
+    "pump_exhaustion_prereg": "SOURCE_AND_STATE_FINGERPRINT_PASS_INPUT_SNAPSHOTS_UNPINNED_PERFORMANCE_FORBIDDEN"
   },
   "no_promotion": [
     "legacy_inplay_short",
@@ -42,7 +43,7 @@
     "asb2_no_descending_long_current"
   ],
   "research_queue": [
-    "pump_exhaustion_unwind_short_v1",
+    "pump_exhaustion_unwind_short_v1_materialize_hash_pin_720d_inputs",
     "event_expansion_retest_long_v1",
     "level_memory_sweep_reclaim_side_split_repair",
     "failed_break_retest_short_v3_fx",
@@ -65,6 +66,7 @@
     "reports/research/inplay_short_independent_additivity_20260710/summary.md",
     "reports/FREQUENT_CRYPTO_VERDICT_2026_07_11.md",
     "reports/research/fx_v3_preflight_20260711/summary.md",
-    "reports/ARCHITECTURE_PARITY_AND_MONEY_PATH_2026_07_11.md"
+    "reports/ARCHITECTURE_PARITY_AND_MONEY_PATH_2026_07_11.md",
+    "reports/research/pump_exhaustion_unwind_short_v1_20260711_preflight.json"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-11T16:30:00Z",
+  "as_of_utc": "2026-07-11T17:05:00Z",
   "status": "recovery_runtime_verified_web_hardened_single_money_sleeve_new_candidates_failed",
   "canonical_documents": [
     "reports/PROJECT_RECOVERY_TRUTH_AND_ROADMAP_2026_07_11.md",
@@ -55,7 +55,7 @@
     "fx_v2_data": "ZERO_PROMOTION_VALID_FOUR_DIAGNOSTIC_ONLY_EURJPY_XAU_BLOCKED",
     "alpaca_monthly": "SAFE_HOLD_FRESH_FORWARD_POSITIVE_N2_NO_SCALE",
     "alpaca_intraday_v1_v3": "PAPER_SHADOW_HISTORICAL_DATA_INVALID_IDEMPOTENT_LEDGER_LOCAL_AWAITING_REBUILD",
-    "pump_exhaustion_unwind_short_v1": "RESEARCH_MECHANICS_READY_PERSISTENCE_AND_PREREG_GATE_REQUIRED",
+    "pump_exhaustion_unwind_short_v1": "PERSISTED_PREREG_SOURCE_PASS_DATA_SNAPSHOTS_UNPINNED_PERFORMANCE_BLOCKED",
     "event_expansion_retest_long_v1": "DESIGN_ONLY_NEXT_SUCCESSOR",
     "ars1_long_adx25": "NO_PROMOTION_BASE_STRESS_FRESH90_FAIL",
     "ars1_short_adx25": "NO_PROMOTION_BASE_STRESS_FRESH90_FAIL",
@@ -91,7 +91,7 @@
     },
     {
       "priority": "P1",
-      "action": "build_persisted_event_state_and_frozen_prereg_runner_for_pump_exhaustion_unwind_short_v1",
+      "action": "materialize_and_hash_pin_pump_exhaustion_720d_snapshots_then_repeat_strict_preflight",
       "live_risk_change": false
     },
     {
@@ -151,21 +151,23 @@
       ,"architecture parity and money-path contract added"
       ,"canonical AI and final research verdict bundle deployed and context rebuilt"
       ,"web JWT rotated to 256-bit server-only secret and prefix logging removed"
-      ,"full regression 981 passed"
+      ,"explicit-file targeted release manifest tooling and first seven-file receipt added"
+      ,"pump exhaustion restart-safe state and frozen fail-closed prereg added; data snapshots remain unpinned"
+      ,"full regression 1019 passed"
     ],
     "live_deployed": true,
     "live_behavior_changed": "ATT1 effective RSI parity corrected to 45 and runtime overlays fail-closed; no risk increase; Alpaca safe-hold retained",
     "live_orders_or_risk_changed": false,
     "git_head_used_for_final_research_run": "376ad21",
-    "git_implementation_head_end_of_session": "18050bf",
+    "git_implementation_head_end_of_session": "202aead",
     "documentation_checkpoint_committed_after_implementation_head": true,
     "git_origin_pushed": true,
     "vps_head": "f7ed011",
-    "vps_implementation_commits_behind_at_checkpoint": 33,
+    "vps_implementation_commits_behind_at_checkpoint": 38,
     "vps_deploy_of_session_changes": true
   },
   "verification": {
-    "fast_tests_passed": 981,
+    "fast_tests_passed": 1019,
     "slow_tests_deselected": 0,
     "python_compile": "pass",
     "shell_syntax": "pass",
@@ -178,7 +180,9 @@
     "att1_runtime_contract_tests_passed": 24,
     "ai_truth_tests_passed": 33,
     "alpaca_reporting_tests_passed": 22,
-    "pump_exhaustion_successor_related_tests_passed": 58,
+    "pump_exhaustion_successor_related_tests_passed": 76,
+    "pump_exhaustion_persistence_preflight_focused_tests_passed": 18,
+    "pump_exhaustion_preflight": "BLOCKED_FAIL_CLOSED_SOURCE_PASS_THIRTEEN_SNAPSHOTS_UNPINNED",
     "frequent_crypto_immutable_cases_completed": 15,
     "frequent_crypto_research_pass_candidates": 0,
     "fx_v3_preflight": "DATA_DIAGNOSTICS_ONLY_ZERO_PROMOTION_GRADE",
@@ -219,6 +223,11 @@
     "configs/ai_operator_canonical_state.json",
     "strategies/pump_exhaustion_unwind_short_v1.py",
     "tests/test_pump_exhaustion_unwind_short_v1.py",
+    "bot/pump_exhaustion_state_store.py",
+    "scripts/preflight_pump_exhaustion_prereg.py",
+    "configs/preregistered/pump_exhaustion_unwind_short_v1_20260711.json",
+    "reports/research/pump_exhaustion_unwind_short_v1_20260711_preflight.json",
+    "reports/releases/targeted_web_canonical_4c7f645_20260711.json",
     "tests/test_alpaca_reporting_truth.py",
     "tests/test_ai_full_context_truth.py",
     "tests/test_att1_runtime_contract.py"
