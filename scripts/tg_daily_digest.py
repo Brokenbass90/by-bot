@@ -70,6 +70,26 @@ def _load_env_file(path: Path) -> None:
                 os.environ[k] = v
 
 
+def _configured_env_bool(name: str, fallback_path: Path, default: bool = False) -> bool:
+    """Read effective report env, then the manager's tracked base profile."""
+    if name in os.environ:
+        return _env_bool(name, default)
+    if fallback_path.exists():
+        try:
+            for raw in fallback_path.read_text(encoding="utf-8").splitlines():
+                row = raw.strip()
+                if not row or row.startswith("#") or "=" not in row:
+                    continue
+                key, value = row.split("=", 1)
+                if key.strip() == name:
+                    return value.strip().strip('"').strip("'").lower() in {
+                        "1", "true", "yes", "on"
+                    }
+        except Exception:
+            pass
+    return default
+
+
 def _read_json(path: Path) -> dict:
     try:
         with path.open() as f:
@@ -687,12 +707,24 @@ def _alpaca_monthly_section() -> str:
         cash = _safe_float(account.get("cash"))
         buying_power = _safe_float(account.get("buying_power"))
         lines.append(f"<b>📅 Alpaca Monthly {account_label} ({cycle_month}):</b>")
-        execution = "ON" if send_orders else "OFF"
+        report_submit = "ON" if send_orders else "OFF"
         entries = "ON" if allow_new_entries else "OFF"
         hold_label = " | <b>SAFE-HOLD</b>" if safe_hold else ""
         lines.append(
-            f"  🔐 Execution={execution} | new entries={entries} | stale closes={'ON' if close_stale else 'OFF'}{hold_label}"
+            f"  🔐 Report order-submit={report_submit} | new entries={entries} | "
+            f"stale/rotation closes={'ON' if close_stale else 'OFF'}{hold_label}"
         )
+        if safe_hold:
+            trail_configured = _configured_env_bool(
+                "MONTHLY_TRAIL_ENABLE",
+                ROOT / "configs" / "alpaca_v38_hybrid_top4_candidate.env",
+                False,
+            )
+            software_trail = "ON" if trail_configured else "OFF"
+            lines.append(
+                "  🛠 Protection truth: broker-stop coverage is audited below; "
+                f"software trail config={software_trail} (requires the scheduled manager poll)"
+            )
         lines.append(f"  💰 Equity: <b>${equity:,.2f}</b> | cash: ${cash:,.2f} | BP: ${buying_power:,.2f}")
         if metrics["base"] > 0:
             lines.append(

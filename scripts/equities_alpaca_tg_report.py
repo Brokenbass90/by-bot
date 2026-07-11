@@ -60,6 +60,26 @@ def _env_int(name: str, default: int) -> int:
         return default
 
 
+def _configured_env_bool(name: str, fallback_path: Path, default: bool = False) -> bool:
+    """Read effective report env, then the manager's tracked base profile."""
+    if name in os.environ:
+        return _env_bool(name, default)
+    if fallback_path.exists():
+        try:
+            for raw in fallback_path.read_text(encoding="utf-8").splitlines():
+                row = raw.strip()
+                if not row or row.startswith("#") or "=" not in row:
+                    continue
+                key, value = row.split("=", 1)
+                if key.strip() == name:
+                    return value.strip().strip('"').strip("'").lower() in {
+                        "1", "true", "yes", "on"
+                    }
+        except Exception:
+            pass
+    return default
+
+
 TG_TOKEN   = _env("TG_TOKEN")
 TG_CHAT_ID = _env("TG_CHAT_ID")
 ALPACA_KEY    = _env("ALPACA_API_KEY_ID")
@@ -578,6 +598,11 @@ def daily_report() -> str:
     allow_entries = _env_bool("ALPACA_ALLOW_NEW_ENTRIES", True)
     close_stale = _env_bool("ALPACA_CLOSE_STALE_POSITIONS", False)
     safe_hold = (not send_orders) or (not allow_entries)
+    software_trail = _configured_env_bool(
+        "MONTHLY_TRAIL_ENABLE",
+        ROOT / "configs" / "alpaca_v38_hybrid_top4_candidate.env",
+        False,
+    )
 
     now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines = [
@@ -585,10 +610,15 @@ def daily_report() -> str:
         f"<code>{now_str}</code>",
         "",
         (
-            f"🔐 Execution={'ON' if send_orders else 'OFF'} | "
+            f"🔐 Report order-submit={'ON' if send_orders else 'OFF'} | "
             f"new entries={'ON' if allow_entries else 'OFF'} | "
-            f"stale closes={'ON' if close_stale else 'OFF'}"
+            f"stale/rotation closes={'ON' if close_stale else 'OFF'}"
             f"{' | <b>SAFE-HOLD</b>' if safe_hold else ''}"
+        ),
+        (
+            "🛠 Protection truth: broker-stop coverage is audited below; "
+            f"software trail config={'ON' if software_trail else 'OFF'} "
+            "(requires the scheduled manager poll)"
         ),
         f"💼 Equity:  <b>${equity:,.2f}</b>",
         f"💵 Cash:    ${cash:,.2f}",
@@ -684,15 +714,25 @@ def monthly_report() -> str:
     send_orders = _env_bool("ALPACA_SEND_ORDERS", False)
     allow_entries = _env_bool("ALPACA_ALLOW_NEW_ENTRIES", True)
     safe_hold = (not send_orders) or (not allow_entries)
+    software_trail = _configured_env_bool(
+        "MONTHLY_TRAIL_ENABLE",
+        ROOT / "configs" / "alpaca_v38_hybrid_top4_candidate.env",
+        False,
+    )
 
     now_str = datetime.now(timezone.utc).strftime("%Y-%m")
     lines = [
         f"📅 <b>Equities {MODE_LABEL} — Monthly Report {now_str}</b>",
         "",
         (
-            f"🔐 Execution={'ON' if send_orders else 'OFF'} | "
+            f"🔐 Report order-submit={'ON' if send_orders else 'OFF'} | "
             f"new entries={'ON' if allow_entries else 'OFF'}"
             f"{' | <b>SAFE-HOLD</b>' if safe_hold else ''}"
+        ),
+        (
+            "🛠 Protection truth: broker-stop coverage is audited below; "
+            f"software trail config={'ON' if software_trail else 'OFF'} "
+            "(requires the scheduled manager poll)"
         ),
         f"💼 Start equity: ${start_equity:,.2f}",
         f"💼 End equity:   <b>${end_equity:,.2f}</b>",

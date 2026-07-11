@@ -101,12 +101,21 @@ def test_intraday_v1_is_data_invalid_until_strict_broker_fill_proof(tmp_path, mo
     assert digest._intraday_v1_ledger_status() == "VERIFIED"
 
 
+def test_report_reads_trail_setting_from_manager_profile_when_env_is_absent(tmp_path, monkeypatch):
+    monkeypatch.delenv("MONTHLY_TRAIL_ENABLE", raising=False)
+    profile = tmp_path / "manager.env"
+    profile.write_text("MONTHLY_TRAIL_ENABLE=1\n", encoding="utf-8")
+    assert digest._configured_env_bool("MONTHLY_TRAIL_ENABLE", profile) is True
+    assert report._configured_env_bool("MONTHLY_TRAIL_ENABLE", profile) is True
+
+
 def test_monthly_digest_tells_live_safe_hold_broker_truth(tmp_path, monkeypatch):
     monkeypatch.setattr(digest, "ROOT", tmp_path)
     monkeypatch.setenv("ALPACA_BASE_URL", "https://api.alpaca.markets")
     monkeypatch.setenv("ALPACA_SEND_ORDERS", "0")
     monkeypatch.setenv("ALPACA_ALLOW_NEW_ENTRIES", "0")
     monkeypatch.setenv("ALPACA_CLOSE_STALE_POSITIONS", "0")
+    monkeypatch.setenv("MONTHLY_TRAIL_ENABLE", "1")
     monkeypatch.setenv("ALPACA_REPORT_BASE_CAPITAL_USD", "500")
 
     picks = tmp_path / "runtime" / "equities_monthly_v36" / "current_cycle_picks.csv"
@@ -127,7 +136,9 @@ def test_monthly_digest_tells_live_safe_hold_broker_truth(tmp_path, monkeypatch)
     monkeypatch.setattr(digest, "_alpaca_get", fake_get)
     text = digest._alpaca_monthly_section()
     assert "LIVE BROKER" in text
-    assert "Execution=OFF" in text and "new entries=OFF" in text and "SAFE-HOLD" in text
+    assert "Report order-submit=OFF" in text
+    assert "new entries=OFF" in text and "SAFE-HOLD" in text
+    assert "software trail config=ON (requires the scheduled manager poll)" in text
     assert "Base $500.00" in text and "DD от max(base/HWM $510.00)" in text
     assert "Current research picks (не holdings): ABBV, ABNB" in text
     assert "Actual broker holdings: ABBV, GE" in text
