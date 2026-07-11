@@ -30,6 +30,7 @@
 - Все targeted ATT1/AI/Web/Alpaca-reporting файлы на VPS сверены по SHA с implementation checkpoint. `4de548b` deployed; `115d032` установлен с backup `/root/by-bot-backups/live_mirror_115d032_20260711T161011Z`. VPS Git HEAD при этом остаётся старым/dirty.
 - Canonical AI/report bundle установлен с backup `/root/by-bot-backups/ai_canonical_3c26464_20260711T162537Z`; AI context пересобран и видит canonical `as_of=16:15 UTC`, frequent crypto `3/3 NO_PROMOTION` и FX V3 data block. Web code backup: `/root/by-bot-backups/web_auth_code_20260711T162806Z`.
 - Pump-exhaustion successor теперь имеет atomic restart-safe state и frozen 720d prereg. Source hashes/fingerprint PASS, но preflight=`BLOCKED_FAIL_CLOSED`: `13/13` immutable snapshots unpinned, performance не вычислялся, promotion не разрешён. Следующий шаг — data materialization/hash freeze, не threshold tuning.
+- Local public-data screen `pump_exhaustion_720d_backfill_20260711` запущен для 11 недостающих symbols; log `logs/pump_exhaustion_720d_20260711/backfill.log`, затем автоматически создаются `coverage.log/csv`. До запуска следующего шага проверь screen/log/files/coverage; не считай отсутствие screen доказательством успеха без итогового CSV.
 - Targeted release-manifest tool опубликован; первый manifest: `reports/releases/targeted_web_canonical_4c7f645_20260711.json` (`7` explicit files, dirty tree отмечен честно).
 - Full local regression: `1019 passed`. AI critical truth: `control_recommendations_allowed=true`, blockers `[]`; AI остаётся observer/proposal-only.
 
