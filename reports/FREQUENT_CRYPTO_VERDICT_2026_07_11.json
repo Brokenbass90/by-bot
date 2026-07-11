@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "experiment": "frequent_crypto_side_specific_20260711",
+  "evidence_stamp": "20260711_112429",
+  "completed_at_utc": "2026-07-11T11:58:49Z",
+  "evidence_root": "reports/research/frequent_crypto_prereg_20260711/20260711_112429",
+  "preregistration": "configs/preregistered/frequent_crypto_20260711.json",
+  "preregistration_sha256": "d56de6d1769442f5ecb610cb38ed4446526716dfc0ec74dca88bd838a4f8b417",
+  "integrity": {
+    "scheduled_cases": 15,
+    "completed_cases": 15,
+    "data_gate": "PASS",
+    "coverage": 1.0,
+    "max_gap_bars": 0,
+    "execution": "next_open",
+    "side_purity": "PASS",
+    "broker_calls": 0
+  },
+  "controls": {
+    "ars1_long_adx_off": {
+      "annual_base": {"trades": 150, "net_pnl": -8.21, "profit_factor": 0.765},
+      "annual_stress": {"trades": 177, "net_pnl": -18.11, "profit_factor": 0.604}
+    },
+    "ars1_short_adx_off": {
+      "annual_base": {"trades": 103, "net_pnl": 3.09, "profit_factor": 1.139},
+      "annual_stress": {"trades": 106, "net_pnl": 0.13, "profit_factor": 1.005}
+    },
+    "asb2_descending_allowed": {
+      "annual_base": {"trades": 1165, "net_pnl": -50.41, "profit_factor": 0.721},
+      "annual_stress": {"trades": 1416, "net_pnl": -93.44, "profit_factor": 0.471}
+    }
+  },
+  "candidates": {
+    "ars1_long_adx25": {
+      "annual_base": {"trades": 43, "net_pnl": -6.47, "profit_factor": 0.374},
+      "annual_stress": {"trades": 44, "net_pnl": -8.55, "profit_factor": 0.292},
+      "fresh_90d_stress": {"trades": 11, "net_pnl": -0.47, "profit_factor": 0.821},
+      "verdict": "NO_PROMOTION"
+    },
+    "ars1_short_adx25": {
+      "annual_base": {"trades": 38, "net_pnl": -2.56, "profit_factor": 0.682},
+      "annual_stress": {"trades": 38, "net_pnl": -4.16, "profit_factor": 0.55},
+      "fresh_90d_stress": {"trades": 13, "net_pnl": -1.51, "profit_factor": 0.514},
+      "verdict": "NO_PROMOTION"
+    },
+    "asb2_no_descending_long": {
+      "annual_base": {"trades": 791, "net_pnl": -31.18, "profit_factor": 0.754},
+      "annual_stress": {"trades": 906, "net_pnl": -68.1, "profit_factor": 0.524},
+      "fresh_90d_stress": {"trades": 123, "net_pnl": -8.55, "profit_factor": 0.639},
+      "verdict": "NO_PROMOTION"
+    }
+  },
+  "research_pass_candidates": 0,
+  "shadow_eligible_candidates": 0,
+  "live_eligible_candidates": 0,
+  "human_report": "reports/FREQUENT_CRYPTO_VERDICT_2026_07_11.md"
+}

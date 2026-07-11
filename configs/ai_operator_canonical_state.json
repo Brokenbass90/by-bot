@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-11T07:00:00Z",
+  "as_of_utc": "2026-07-11T16:15:00Z",
   "schema_version": 1,
   "authority": "human_reviewed_project_truth",
   "live": {
@@ -17,7 +17,9 @@
     "att1_clean_sample": "N_LT_20_NO_EDGE_VERDICT",
     "alpaca_intraday_v1_ledger": "DATA_INVALID_REBUILD_FROM_BROKER_FILLS",
     "alpaca_backtest_63pct": "RESEARCH_RESULT_NOT_LIVE_EXPECTATION",
-    "fx_v2_data": "DIAGNOSTIC_ONLY_ZERO_OF_SIX_PROMOTION_GRADE"
+    "fx_v2_data": "DIAGNOSTIC_ONLY_ZERO_OF_SIX_PROMOTION_GRADE",
+    "fx_v3_data": "DATA_DIAGNOSTICS_ONLY_ZERO_PROMOTION_GRADE_MISSING_NEWS_AND_OANDA_COSTS",
+    "frequent_crypto_20260711": "VALID_IMMUTABLE_RUN_ALL_THREE_CANDIDATES_NO_PROMOTION"
   },
   "no_promotion": [
     "legacy_inplay_short",
@@ -29,7 +31,10 @@
     "fx_v2_regime_range_long",
     "fx_v2_regime_range_short",
     "level_memory_current_variants",
-    "ivb1_current_money_activation"
+    "ivb1_current_money_activation",
+    "ars1_long_adx25_current",
+    "ars1_short_adx25_current",
+    "asb2_no_descending_long_current"
   ],
   "research_queue": [
     "pump_exhaustion_unwind_short_v1",
@@ -52,6 +57,9 @@
   "source_reports": [
     "reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md",
     "reports/research/fx_v2_gate_20260711/summary.md",
-    "reports/research/inplay_short_independent_additivity_20260710/summary.md"
+    "reports/research/inplay_short_independent_additivity_20260710/summary.md",
+    "reports/FREQUENT_CRYPTO_VERDICT_2026_07_11.md",
+    "reports/research/fx_v3_preflight_20260711/summary.md",
+    "reports/ARCHITECTURE_PARITY_AND_MONEY_PATH_2026_07_11.md"
   ]
 }
