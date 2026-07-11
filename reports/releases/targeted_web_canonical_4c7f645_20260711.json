@@ -1,0 +1,60 @@
+{
+  "files": [
+    {
+      "mode": "0644",
+      "path": "configs/ai_operator_canonical_state.json",
+      "sha256": "368bc949281390c821408542fd89d1dd393143725f02d18dff20d1c22c0709ec",
+      "size_bytes": 2725
+    },
+    {
+      "mode": "0644",
+      "path": "reports/NEXT_CHAT_START_PROMPT_2026_07_11.md",
+      "sha256": "c21a18d65bdf97f5b24324e9f0ee915eaf25a8269cedf930ca89ce5ab1c9cc9d",
+      "size_bytes": 7747
+    },
+    {
+      "mode": "0644",
+      "path": "reports/PROJECT_CANONICAL_INDEX_2026_07_10.json",
+      "sha256": "b3248b6b3a1f05770c3304d6e363cada0b7d86f5444ee64c4f4b4b09fbd63de3",
+      "size_bytes": 11633
+    },
+    {
+      "mode": "0644",
+      "path": "reports/PROJECT_RECOVERY_TRUTH_AND_ROADMAP_2026_07_11.md",
+      "sha256": "e4ab840f4216d4e8150bebeb176e83a360567a27e23e0d1852dc0bd7550202a0",
+      "size_bytes": 29693
+    },
+    {
+      "mode": "0644",
+      "path": "reports/PROJECT_STATE_LEDGER.md",
+      "sha256": "53ee501e4a44db3f406358d588d1f78634e51a56493674cfc48e54f3e10cd651",
+      "size_bytes": 241210
+    },
+    {
+      "mode": "0644",
+      "path": "scripts/rotate_web_jwt_secret.py",
+      "sha256": "8fc5ddc587bb96abad9e4b9bac3c31ea1920ea6161685a80a8c2de8bee2e8231",
+      "size_bytes": 2897
+    },
+    {
+      "mode": "0755",
+      "path": "scripts/run_web.sh",
+      "sha256": "91a1ba08485ed8c3a9e35b715f54a571fbdd0b3f48f4da76458d5d573b7b2718",
+      "size_bytes": 3246
+    }
+  ],
+  "git_head": "4c7f6453e18e115d7af593cbb0b929e906f85f4d",
+  "metadata": {
+    "explicit_files_only": true,
+    "file_count": 7,
+    "git_dirty": true,
+    "operations": [
+      "read_explicit_files",
+      "read_git_dirty_flag",
+      "write_manifest"
+    ],
+    "reproducible": true
+  },
+  "release_id": "targeted_web_canonical_20260711T163311Z",
+  "schema_version": 1
+}
