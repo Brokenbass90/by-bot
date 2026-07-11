@@ -1,0 +1,154 @@
+{
+  "name": "frequent_crypto_side_specific_20260711",
+  "frozen_at_utc": "2026-07-11T11:24:00Z",
+  "code_head_at_freeze": "f459e9fec81b8da77cb10f3224451e4809673cfa",
+  "frozen_runtime_sha256": {
+    "backtest/engine.py": "b96f9d10196fa6a1ca7371682cd5d91865abf3e2292f473fed3874bc17d144ac",
+    "backtest/run_portfolio.py": "85842dfaee4a32c6e1c20172258d37114df9db43d38a217f974e86f35784313c",
+    "strategies/alt_range_scalp_v1.py": "bb19b78cdfb0ca6404d33c2ecb48d9f870acd979ffc10cea7064fb24b5ffc567",
+    "strategies/alt_support_bounce_v2.py": "bbf1d445015f59bba60bcaeea03facfd7f519f40e51d218c61f268bb2684a3aa"
+  },
+  "purpose": "Risk-zero causal validation of the only two frequent crypto repairs still worth measuring. No live promotion is authorized by this run.",
+  "data": {
+    "cache": "data_cache",
+    "end_utc": "2026-07-04",
+    "windows_days": [360, 90],
+    "interval_min": 5,
+    "universe_selection_rule": "All symbols below passed coverage >= 0.98 and max internal gap <= 12 five-minute bars before outcomes were run. No result-based symbol removal is allowed.",
+    "symbols": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "ATOMUSDT",
+      "AVAXUSDT",
+      "BNBUSDT",
+      "XRPUSDT",
+      "DOGEUSDT",
+      "BCHUSDT",
+      "XLMUSDT",
+      "1000PEPEUSDT",
+      "HYPEUSDT",
+      "TAOUSDT",
+      "ONDOUSDT"
+    ],
+    "preflight": {
+      "min_coverage": 0.98,
+      "max_gap_bars": 12,
+      "strict": true
+    }
+  },
+  "execution_contract": {
+    "entry": "next_5m_open_after_closed_signal_bar",
+    "base_costs_bps_per_side": {"fee": 6, "slippage": 2},
+    "stress_costs_bps_per_side": {"fee": 10, "slippage": 5},
+    "starting_equity": 100,
+    "risk_pct": 0.005,
+    "leverage": 1,
+    "cap_notional_usd": 30,
+    "max_positions": 4,
+    "allocator": "off",
+    "regime_router": "off",
+    "live_or_broker_calls": false
+  },
+  "candidates": [
+    {
+      "id": "ars1_adx25_side_split",
+      "strategy": "alt_range_scalp_v1",
+      "hypothesis": "A causal ADX<=25 anti-trend gate removes the breakout months that damaged the otherwise positive next-open range scalp. Long and short are evaluated independently.",
+      "control_change": "ARS1_MAX_ADX 0 -> 25; every other parameter frozen from the previously validated r004 pocket.",
+      "sides": ["long_only", "short_only"],
+      "expected_frequency_before_outcome": "20-120 trades per side per 360 days over the frozen 13-symbol universe; 90-day N may be below 15.",
+      "frozen_env": {
+        "ARS1_BB_PERIOD": "20",
+        "ARS1_BB_STD": "2.0",
+        "ARS1_MIN_BAND_WIDTH_PCT": "1.5",
+        "ARS1_MAX_BAND_WIDTH_PCT": "24.0",
+        "ARS1_RSI_LONG_MAX": "38",
+        "ARS1_RSI_SHORT_MIN": "55",
+        "ARS1_SL_ATR_MULT": "0.8",
+        "ARS1_TP1_FRAC": "0.55",
+        "ARS1_COOLDOWN_BARS_5M": "12",
+        "ARS1_MIN_BODY_FRAC": "0.0",
+        "ARS1_MIN_VOL_MULT": "1.1",
+        "ARS1_ADX_PERIOD": "14",
+        "ARS1_MIN_RR": "1.15",
+        "ARS1_MIN_STOP_PCT": "0.0015",
+        "ARS1_MAX_STOP_PCT": "0.06",
+        "ARS1_TIME_STOP_BARS_5M": "216",
+        "ARS1_TRAIL_ATR_MULT": "0.0"
+      },
+      "promotion_gate_per_side": {
+        "annual_base_min_trades": 30,
+        "annual_base_min_profit_factor": 1.25,
+        "annual_stress_min_profit_factor": 1.05,
+        "annual_stress_min_net_pnl": 0.0,
+        "annual_max_drawdown_pct": 10.0,
+        "fresh_90d_stress_min_trades": 8,
+        "fresh_90d_stress_min_profit_factor": 1.0,
+        "fresh_90d_stress_min_net_pnl": 0.0,
+        "causal_requirement": "ADX25 must improve annual stress PF versus the same-side ADX-off control without reducing trade count by more than 70%."
+      }
+    },
+    {
+      "id": "asb2_no_descending_long",
+      "strategy": "alt_support_bounce_v2",
+      "hypothesis": "The shared horizontal/channel-level bounce loses because a long-only sleeve is allowed in descending channels; blocking descending regimes is one causal repair.",
+      "control_change": "ASB2_ALLOW_DESCENDING 1 -> 0; shared horizontal clusters, channel support, volume and risk geometry remain unchanged.",
+      "sides": ["long_only"],
+      "expected_frequency_before_outcome": "80-400 trades per 360 days over 13 symbols; the regime block should materially reduce the prior excessive cadence.",
+      "frozen_env": {
+        "ASB2_SIGNAL_TF": "60",
+        "ASB2_LOOKBACK": "120",
+        "ASB2_PIVOT_LEFT": "2",
+        "ASB2_PIVOT_RIGHT": "2",
+        "ASB2_MIN_TOUCHES": "3",
+        "ASB2_LEVEL_TOL_ATR": "0.45",
+        "ASB2_MAX_ENTRY_DIST_ATR": "0.60",
+        "ASB2_MIN_LOWER_WICK_FRAC": "0.20",
+        "ASB2_VOL_MULT": "1.20",
+        "ASB2_REQUIRE_HVN": "0",
+        "ASB2_ALLOW_FLAT": "1",
+        "ASB2_ALLOW_ASCENDING": "1",
+        "ASB2_SL_ATR_MULT": "0.60",
+        "ASB2_TP1_RR": "1.0",
+        "ASB2_TP2_RR": "2.0",
+        "ASB2_DESCENDING_TP2_RR": "1.2",
+        "ASB2_TRAIL_ATR_MULT": "1.0",
+        "ASB2_TRAIL_ACTIVATE_RR": "1.0",
+        "ASB2_BE_TRIGGER_RR": "1.0",
+        "ASB2_BE_LOCK_RR": "0.2"
+      },
+      "promotion_gate": {
+        "annual_base_min_trades": 40,
+        "annual_base_min_profit_factor": 1.25,
+        "annual_stress_min_profit_factor": 1.05,
+        "annual_stress_min_net_pnl": 0.0,
+        "annual_max_drawdown_pct": 10.0,
+        "fresh_90d_stress_min_trades": 10,
+        "fresh_90d_stress_min_profit_factor": 1.0,
+        "fresh_90d_stress_min_net_pnl": 0.0,
+        "causal_requirement": "No-descending must improve annual stress PF and DD versus the descending-enabled control without reducing trades by more than 70%."
+      }
+    }
+  ],
+  "scheduled_cases": [
+    "ars1_long_control_adx0_360d_base",
+    "ars1_long_control_adx0_360d_stress",
+    "ars1_long_adx25_360d_base",
+    "ars1_long_adx25_360d_stress",
+    "ars1_long_adx25_90d_stress",
+    "ars1_short_control_adx0_360d_base",
+    "ars1_short_control_adx0_360d_stress",
+    "ars1_short_adx25_360d_base",
+    "ars1_short_adx25_360d_stress",
+    "ars1_short_adx25_90d_stress",
+    "asb2_control_descending_360d_base",
+    "asb2_control_descending_360d_stress",
+    "asb2_nodescending_360d_base",
+    "asb2_nodescending_360d_stress",
+    "asb2_nodescending_90d_stress"
+  ],
+  "automatic_verdict": {
+    "any_gate_failure": "NO_PROMOTION",
+    "all_gates_pass": "RESEARCH_PASS_ONLY_REQUIRES_PARITY_AND_SHADOW_REVIEW"
+  }
+}
