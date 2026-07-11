@@ -30,6 +30,9 @@ Config:
     ALLOWLIST_WATCHER_ENABLED=1                  # set 0 to disable
     ALLOWLIST_WATCHER_FILE=configs/dynamic_allowlist_latest.env
     AUTO_APPLY_WATCHER_FILE=configs/auto_apply_params.env
+    ALLOW_AUTO_APPLY_OVERRIDES=0                 # startup auto-apply authorization
+    ALLOW_AUTO_APPLY_HOT_RELOAD=0                # separate runtime authorization
+    ALLOW_DYNAMIC_PARAM_HOT_RELOAD=0             # symbol/router metadata only by default
 """
 from __future__ import annotations
 
@@ -107,12 +110,27 @@ def _is_symbol_like_var(var: str) -> bool:
 
 
 def _operator_live_override_enabled() -> bool:
-    return str(os.getenv("ALLOW_OPERATOR_LIVE_OVERRIDES", "0") or "").strip().lower() in {
+    return _env_truthy("ALLOW_OPERATOR_LIVE_OVERRIDES")
+
+
+def _env_truthy(name: str, default: str = "0") -> bool:
+    return str(os.getenv(name, default) or "").strip().lower() in {
         "1",
         "true",
         "yes",
         "on",
     }
+
+
+def _auto_apply_hot_reload_enabled() -> bool:
+    """Require explicit authorization for both startup and runtime auto-apply."""
+    return _env_truthy("ALLOW_AUTO_APPLY_OVERRIDES") and _env_truthy(
+        "ALLOW_AUTO_APPLY_HOT_RELOAD"
+    )
+
+
+def _dynamic_param_hot_reload_enabled() -> bool:
+    return _env_truthy("ALLOW_DYNAMIC_PARAM_HOT_RELOAD")
 
 
 def _operator_live_override_values() -> Dict[str, str]:
@@ -133,6 +151,38 @@ def _operator_live_override_values() -> Dict[str, str]:
 
 def _is_hot_reload_var(var: str) -> bool:
     return var in HOT_RELOAD_VARS or var.startswith(HOT_RELOAD_PREFIXES)
+
+
+def _source_name(source: str) -> str:
+    return Path(str(source or "")).name
+
+
+def _is_auto_apply_source(source: str) -> bool:
+    return _source_name(source) == _resolve_auto_apply_file().name
+
+
+def _is_dynamic_allowlist_source(source: str) -> bool:
+    return _source_name(source) == _resolve_allowlist_file().name
+
+
+def _source_allows_var(source: str, var: str) -> bool:
+    """Fail closed unless the source and variable class are explicitly authorized."""
+    if _is_auto_apply_source(source):
+        return _auto_apply_hot_reload_enabled() and (
+            _is_hot_reload_var(var) or var in RESTART_REQUIRED_VARS
+        )
+
+    if _is_dynamic_allowlist_source(source):
+        # The generated router overlay owns universes and its own metadata. It
+        # must not silently become a strategy-parameter overlay.
+        if _is_symbol_like_var(var) or var.startswith("ROUTER_"):
+            return True
+        return _dynamic_param_hot_reload_enabled() and (
+            _is_hot_reload_var(var) or var in RESTART_REQUIRED_VARS
+        )
+
+    # Unknown callers get the same conservative policy as the dynamic router.
+    return _is_symbol_like_var(var) or var.startswith("ROUTER_")
 
 
 def _tg(token: str, chat_id: str, msg: str) -> None:
@@ -186,7 +236,9 @@ class AllowlistWatcher:
     def __init__(self, poll_interval: Optional[int] = None) -> None:
         self._interval  = poll_interval or int(os.getenv("ALLOWLIST_WATCHER_INTERVAL", "300"))
         self._enabled   = os.getenv("ALLOWLIST_WATCHER_ENABLED", "1").strip() == "1"
-        self._files     = [_resolve_allowlist_file(), _resolve_auto_apply_file()]
+        self._files     = [_resolve_allowlist_file()]
+        if _auto_apply_hot_reload_enabled():
+            self._files.append(_resolve_auto_apply_file())
         self._tg_token  = os.getenv("TG_TOKEN", "")
         self._tg_chat   = os.getenv("TG_CHAT_ID", "") or os.getenv("TG_CHAT", "")
         self._last_mtimes: Dict[Path, float] = {}
@@ -249,6 +301,8 @@ class AllowlistWatcher:
         operator_overrides = _operator_live_override_values()
 
         for var, new_val in new_values.items():
+            if not _source_allows_var(source, var):
+                continue
             if var in operator_overrides:
                 # Explicit live canary overrides are owner-controlled. Dynamic
                 # router / auto-apply overlays must not silently change their
