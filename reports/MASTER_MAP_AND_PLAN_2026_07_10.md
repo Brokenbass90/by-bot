@@ -6,6 +6,19 @@
 
 This replaces the 2026-07-08 map as the current strategic starting point.
 
+## Morning Update — 2026-07-11
+
+Read first: `reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md`.
+
+- FX/CFD V2 causal research frame and three new families were committed and pushed as `376ad21` before outcomes were viewed.
+- Full prereg: all six long/short sleeves are `NO_PROMOTION`; base PF is already below 1, so this is not merely cost drag. No FX/CFD demo/live capital.
+- Strict FX data has `0/6` promotion-valid symbols. Four pairs are diagnostic-only after partial-H1 removal and market-gap segmentation; `EURJPY/XAUUSD` remain data-blocked.
+- Clean independent InPlay short is `NO_PROMOTION` (stress PF `1.075`, only two symbols traded, concentration `67.7%`). Old InPlay is frozen; build event-first long expansion and short pump-exhaustion successors.
+- Alpaca remains safe-hold: equity `$486.93`, positions `ABBV,ABNB,GE,SCHW`, stops `4/4`. Safety improved; profitability has not been proven improved.
+- Local/origin `376ad21`; VPS remains `f7ed011`, `15` commits behind. Research code is pushed, not deployed to live.
+
+Next order: rebuild Alpaca fill ledger baseline; verify ATT1 expiry/effective env; refresh/calibrate FX data; then implement one-causal-change V3 repairs. Do not rerun the failed V2 parameter set or enable a new money sleeve.
+
 ## Crisis-Recovery Update
 
 - The TG AI `missing_candles` diagnosis was wrong: it measured post-hoc forensic cache gaps, not missing live candles or broken exits. ATT1 had zero such gaps in that report.

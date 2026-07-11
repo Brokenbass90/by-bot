@@ -1,5 +1,16 @@
 # CODEX FACTS AND PLAN 2026-07-10
 
+## Superseding facts — 2026-07-11 morning
+
+Canonical detail: `reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md`.
+
+- Alpaca safe-hold snapshot: equity `$486.93`, cash/BP `$328.45`, `ABBV,ABNB,GE,SCHW`, broker stops `4/4`; no entries/closes after safe-hold, only protective stop re-arm. This is safer operation, not an improved edge claim.
+- Clean InPlay short independent additivity: stress `N=42`, `+1.4389R`, PF `1.075`, only ETH/AVAX traded, concentration `67.7%` -> `NO_PROMOTION`.
+- FX/CFD V2 prereg from pushed `376ad21`: all six candidate sides negative in base and stress -> `NO_PROMOTION`. Best whole-family stress PF is `0.747`; no FX money.
+- FX strict data: zero promotion-valid symbols; four diagnostic-only pairs after complete-H1/gap/censor controls; EURJPY and XAUUSD blocked.
+- Local/origin `376ad21`; VPS `f7ed011`, `15` commits behind. No research/live deploy, order or risk change.
+- Next hypotheses are V3 event/confirmation redesigns, not parameter relaxation: failed-break retest short, flat horizontal range rejection, and frozen range-edge expansion retest.
+
 ## Live Truth
 
 ### Bybit

@@ -2,6 +2,19 @@
 
 This is the current handoff for the next Codex/Claude-style session.
 
+## 2026-07-11 continuation override
+
+The newest checkpoint is `reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md`; it overrides older FX/crypto lead wording below.
+
+- Git/origin `376ad21`; VPS `f7ed011` (`15` commits behind). Do not claim the research commit is deployed.
+- FX/CFD V2 has three implemented families and a prereg causal harness. All six long/short candidates failed; see `reports/research/fx_v2_gate_20260711/summary.md`. No demo/live.
+- Strict FX data promotion gate has zero valid symbols; `EURUSD,GBPUSD,USDJPY,GBPJPY` are diagnostic-only, `EURJPY/XAUUSD` blocked.
+- Old InPlay short independent additivity failed; next crypto work is event-first `pump_exhaustion_unwind_short_v1` and `event_expansion_retest_long_v1`, not another legacy grid.
+- Alpaca is safe-hold at last snapshot `$486.93`, positions `ABBV,ABNB,GE,SCHW`, stops `4/4`. Idempotent intraday ledger is pushed but not deployed until broker-fill baseline rebuild.
+- ATT1 stays tiny telemetry/no-scale; verify the effective VPS canary expiry `2026-07-20` and never silently extend it.
+
+First unfinished actions: Alpaca ledger rebuild, ATT1 effective-expiry/cost truth, fresh FX data/calendar/cost evidence, then bounded V3 repair. Every action is risk-neutral.
+
 ## Start Here
 
 Read these first:

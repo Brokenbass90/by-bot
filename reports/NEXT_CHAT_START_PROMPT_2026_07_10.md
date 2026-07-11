@@ -5,11 +5,13 @@
 Главная цель: довести систему до портфеля доказанных денежных рукавов, а не просто писать стратегии. Bybit crypto сейчас, Alpaca equities уже small live canary, FX/CFD позже после data/cost/OOS gates.
 
 Сначала прочитай:
-1. `reports/MASTER_MAP_AND_PLAN_2026_07_10.md`
-2. `reports/CODEX_HANDOFF_2026_07_10.md`
-3. `reports/CODEX_FACTS_AND_PLAN_2026_07_10.md`
+1. `reports/PROJECT_SYSTEM_AND_ROADMAP_2026_07_10.md`
+2. `reports/PROJECT_CANONICAL_INDEX_2026_07_10.json`
+3. `reports/MASTER_MAP_AND_PLAN_2026_07_10.md`
 4. tail of `reports/PROJECT_STATE_LEDGER.md`
-5. `reports/research/att1_exit_regime_ab_20260710_20260710_064618/summary.md`
+5. текущий `git status` и свежий direct runtime/server snapshot
+
+Не повторяй уже завершённый аудит. Сравни `last_session` и `next_actions`, проверь freshness и продолжай первый незавершённый action. В конце обнови canonical index и append-only ledger.
 
 После чтения сразу ответь коротко:
 - что реально live money;
@@ -34,6 +36,15 @@
 - Inplay maker: near miss, FAIL.
 - Broad MRB/pila: FAIL.
 - FX best lead: `USDJPY round_level_sweep`, but no promotion.
+- Поправка: это big-figure/decade-handle sweep; side split short positive, long negative. Нужен новый short-only prereg.
+- TG AI ошибочно истолковал `missing_candles`: это post-hoc forensic cache gap, не доказательство сломанных live candles/exits.
+- Local P0 truth/Alpaca/web/FX fixes готовы, но ещё не deployed; live risk/orders не менялись.
+- Update Jul 11: local/origin `376ad21`, VPS `f7ed011` (15 commits behind). FX V2 research code is pushed but not deployed.
+- FX V2 prereg tested impulse breakout/retest, sweep/reclaim bounce and range/pila as separate long/short sleeves. All six are negative in base and stress -> `NO_PROMOTION`; do not tune the same frozen run.
+- Strict FX data has zero promotion-valid symbols; four pairs are diagnostic-only after complete-H1 and gap/censor controls; EURJPY/XAU blocked.
+- Clean independent InPlay short also `NO_PROMOTION` (PF `1.075`, concentration `67.7%`). Build event-first pump exhaustion short and event expansion long successors.
+- Alpaca is safe-hold at `$486.93`, stops `4/4`; safety changed, proven profitability did not. Rebuild idempotent fill ledger baseline before deploy.
+- Read `reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md` and continue its first unfinished action.
 
 Стиль работы:
 - Ищи широко, запускай узко.

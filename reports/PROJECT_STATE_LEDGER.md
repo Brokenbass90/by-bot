@@ -1,5 +1,5 @@
 # PROJECT STATE LEDGER — единая точка правды (обновляется каждую сессию)
-Последнее обновление: 2026-07-01 morning (Codex). START HERE. План вперёд: reports/ROADMAP_V2_2026_06_30.md. Утренний статус: reports/MORNING_STATUS_2026_07_01.md.
+Последнее обновление: 2026-07-11 morning (Codex). START HERE: `reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md`, затем canonical index и последние append-only секции этого ledger.
 
 ## Принципы (не нарушать)
 - АСИММЕТРИЧНЫЙ R:R: тейк 2-3R, стоп ~1R (прибыль через R, не винрейт).
@@ -948,3 +948,14 @@
 - Clean InPlay short additivity completed from pushed head `3836378`: data/source/direction gates PASS, but strategy verdict `NO_PROMOTION`. Stress full `42` trades, `+1.4389R`, PF `1.075`, `3/4` positive folds; final 90d holdout `16` trades, `+2.0344R`, PF `1.286`. Only ETH/AVAX traded (`2/5`), only ETH positive (`1/5`), concentration `67.7%`. Old InPlay maker is now frozen; do not rescue it by weakening thresholds or retuning the same grid.
 - JPY cross additivity falsified the USDJPY big-figure pulse: EURJPY/GBPJPY short stress PF `0.573/0.450`, with negative validation and holdout. Verdict `FAIL_ADDITIVITY`; stop FX round-level grids and allocate no demo/live capital.
 - Durable checkpoint: `reports/NIGHT_QUEUE_CHECKPOINT_2026_07_10.md`.
+
+## ДОБАВЛЕНО 2026-07-11 morning (Codex — FX/CFD V2 causal frame and prereg verdict)
+- Alpaca direct audit: safe-hold effective; equity `$486.93`, cash/BP `$328.45`, positions `ABBV,ABNB,GE,SCHW`, broker stops `4/4`. No post-hold buys/closes; only four protective stops re-armed. Safety improved, strategy expectancy not proven improved.
+- Clean independent InPlay short finished `NO_PROMOTION`: stress `42` trades, `+1.4389R`, PF `1.075`, only ETH/AVAX traded, only ETH positive, concentration `67.7%`. Old InPlay frozen. Successors: strictly short pump-exhaustion unwind and strictly long event-expansion retest with persisted event IDs.
+- Built research-only FX/CFD V2: explicit event/plan/cost contracts; impulse breakout/later retest, sweep/failed-break reclaim, and non-grid range reversion; long/short isolated; horizontal/sloped/range levels; H1 decision timestamp; later fill; synthetic bid/ask; adverse gaps; session/news fill window; data SHA/coverage; partial-H1 removal; gap segmentation/censor; signal ledger; folds/holdout/LOSO.
+- Independent review found and closed causal defects before results: same-H1 limit TP ambiguity, marketable limit open, MID-vs-bid/ask, H1 timestamp shift, rolling event IDs, stale breakout levels, max-hold off-by-one, unknown-gap forced exits, non-finite OHLCV, side/duplicate/censor gates.
+- `135` related tests passed; preflight `DIAGNOSTIC_ONLY`: four pairs usable only for diagnosis, zero promotion-valid; EURJPY/XAUUSD blocked. Frozen code/config committed and pushed first as `376ad21`.
+- Full prereg `reports/research/fx_v2_gate_20260711`: every side `NO_PROMOTION`. Stress: impulse long PF `0.609`, impulse short `0.382`, sweep long `0.747`, sweep short `0.690`, range long `0.394`, range short `0.587`. All base rows are also negative, so failure is not only cost drag.
+- No live/demo order, risk or strategy enable occurred. Local/origin `376ad21`; VPS stays `f7ed011`, 15 commits behind. Do not blind-pull/restart.
+- Next FX repair: failed-break retest short, flat horizontal-only range rejection, and frozen range-edge expansion retest. New experiment must change one causal hypothesis, use fresh/calibrated data and be preregistered; never weaken the failed V2 gate.
+- Canonical checkpoint: `reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md`.

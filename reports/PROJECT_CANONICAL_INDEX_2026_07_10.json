@@ -1,8 +1,9 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-10T19:30:15Z",
-  "status": "crisis_recovery_live_safe_hold_and_research",
+  "as_of_utc": "2026-07-11T06:16:36Z",
+  "status": "crisis_recovery_safe_hold_fx_v2_no_promotion",
   "canonical_documents": [
+    "reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md",
     "reports/PROJECT_SYSTEM_AND_ROADMAP_2026_07_10.md",
     "reports/MASTER_MAP_AND_PLAN_2026_07_10.md",
     "reports/CODEX_HANDOFF_2026_07_10.md",
@@ -22,7 +23,7 @@
       "sleeves": ["ATT1 short r001 risk_mult=0.10"]
     },
     "alpaca": {
-      "last_verified_equity_usd": 490.36,
+      "last_verified_equity_usd": 486.93,
       "mode": "safe_hold_existing_positions_no_new_entries",
       "last_verified_positions": ["ABBV", "ABNB", "GE", "SCHW"],
       "broker_stop_coverage": "4/4",
@@ -44,6 +45,10 @@
     "usd_jpy_big_figure_sweep_short": "NO_PROMOTION_NONROBUST_OOS",
     "jpy_cross_big_figure_additivity": "FAIL_ADDITIVITY",
     "fx_trend_pullback_rewired": "DIAGNOSTIC_ONLY",
+    "fx_v2_impulse_breakout_retest_long_short": "NO_PROMOTION_BASE_AND_STRESS_NEGATIVE",
+    "fx_v2_sweep_reclaim_long_short": "NO_PROMOTION_BASE_AND_STRESS_NEGATIVE",
+    "fx_v2_range_reversion_long_short": "NO_PROMOTION_BASE_AND_STRESS_NEGATIVE",
+    "fx_v2_data": "ZERO_PROMOTION_VALID_FOUR_DIAGNOSTIC_ONLY_EURJPY_XAU_BLOCKED",
     "alpaca_monthly": "SAFE_HOLD_FRESH_FORWARD_POSITIVE_N2_NO_SCALE",
     "alpaca_intraday_v1_v3": "PAPER_SHADOW_HISTORICAL_DATA_INVALID_IDEMPOTENT_LEDGER_LOCAL_AWAITING_REBUILD"
   },
@@ -63,22 +68,27 @@
     },
     {
       "priority": "P0",
-      "action": "measure_att1_actual_costs_then_test_maker_retest_execution_fresh_holdout_and_causal_universe_expansion",
+      "action": "verify_att1_effective_vps_expiry_20260720_and_measure_actual_execution_costs",
       "live_risk_change": false
     },
     {
       "priority": "P1",
-      "action": "freeze_legacy_inplay_maker_and_design_event_first_exhaustion_unwind_short_successor",
+      "action": "refresh_fx_m5_and_build_broker_holiday_news_cost_bidask_evidence",
       "live_risk_change": false
     },
     {
       "priority": "P1",
-      "action": "rebuild_inplay_as_separate_event_expansion_long_and_exhaustion_unwind_short_arms",
+      "action": "implement_bounded_fx_v3_failed_break_retest_horizontal_range_and_range_edge_expansion_repairs",
+      "live_risk_change": false
+    },
+    {
+      "priority": "P1",
+      "action": "implement_crypto_event_first_pump_exhaustion_short_and_event_expansion_long_successors",
       "live_risk_change": false
     }
   ],
   "last_session": {
-    "date": "2026-07-10",
+    "date": "2026-07-11",
     "changes": [
       "weekly AI forensic cohort/cache contract",
       "AI context direct-import fix",
@@ -102,12 +112,18 @@
       "InPlay long/short exact decomposition completed with both sides FAIL",
       "InPlay short clean independent-symbol additivity pre-registered before outcomes",
       "InPlay short clean independent-symbol additivity completed NO_PROMOTION",
-      "JPY cross big-figure additivity failed"
+      "JPY cross big-figure additivity failed",
+      "Alpaca safe-hold morning truth reverified with 4/4 broker stops",
+      "FX/CFD V2 typed event execution data and gate frame implemented",
+      "FX/CFD V2 independent P0/P1 audit completed before outcomes",
+      "FX/CFD V2 prereg code and config pushed as 376ad21 before full run",
+      "FX/CFD V2 six side-specific candidates completed NO_PROMOTION",
+      "morning recovery checkpoint and canonical continuation updated"
     ],
-    "live_deployed": true,
-    "live_behavior_changed": "Alpaca entries and rotation disabled; existing broker-stop management retained",
+    "live_deployed": false,
+    "live_behavior_changed": "none this session; existing Alpaca safe-hold and broker-stop management retained",
     "live_orders_or_risk_changed": false,
-    "git_head_used_for_final_research_run": "3836378"
+    "git_head_used_for_final_research_run": "376ad21"
   },
   "verification": {
     "fast_tests_passed": 897,
@@ -115,7 +131,10 @@
     "python_compile": "pass",
     "shell_syntax": "pass",
     "git_diff_check": "pass",
-    "targeted_research_tests_passed": 63,
+    "targeted_research_tests_passed": 135,
+    "fx_v2_focused_tests_passed": 34,
+    "fx_v2_preflight": "DIAGNOSTIC_ONLY_FOUR_SYMBOLS_ZERO_PROMOTION_VALID",
+    "fx_v2_full_gate": "NO_LIVE_PROMOTION_ALL_SIX_SIDES_FAIL",
     "inplay_clean_preflight": "pass",
     "html_structural_qa": "pass",
     "html_visual_qa": "blocked_by_local_file_browser_policy"
@@ -140,6 +159,11 @@
     "reports/repo_drift_manifest_local_20260710.json",
     "reports/server_repo_drift_manifest_20260710.json",
     "reports/SERVER_REPO_NORMALIZATION_PLAN_2026_07_10.md",
-    "reports/live_audit_20260710"
+    "reports/live_audit_20260710",
+    "reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md",
+    "configs/research/fx_v2_gate_20260711.json",
+    "reports/research/fx_v2_gate_20260711/summary.md",
+    "reports/research/fx_v2_gate_20260711/verdict.json",
+    "reports/research/fx_v2_gate_20260711/manifest.json"
   ]
 }
