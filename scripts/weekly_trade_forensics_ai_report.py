@@ -27,6 +27,21 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 
 
+# This report deliberately mixes a rolling accounting window with post-hoc
+# candle reconstruction.  Those are useful inputs, but neither is a clean
+# live-edge cohort.  Keep the distinction close to the AI call so it cannot be
+# lost when the report is invoked directly from cron.
+FORENSICS_DATA_CONTRACT = """\
+ОБЯЗАТЕЛЬНЫЙ КОНТРАКТ ДАННЫХ (имеет приоритет над любым текстом отчёта):
+- missing_candles означает только отсутствие свечей в post-hoc forensic cache; это НЕ доказательство, что live-бот входил без свечей, не видел рынок или не мог закрыть позицию.
+- rolling live-окно содержит исторические стратегии и конфигурации. Не приписывай его итог текущему активному рукаву без отдельного clean-cohort фильтра.
+- текущий clean cohort начинается с ATT1_EDGE_START_TS. При N<20 нельзя объявлять наличие или отсутствие live edge.
+- enabled=true при risk_mult=0 означает shadow/наблюдение, а не торговлю деньгами.
+- tiny-N backtest, одна удачная карта или in-sample результат не разрешают promotion; нужны data/stress/time-OOS/symbol-OOS/shadow/canary gates.
+- не называй данные свежими или достоверными без явной проверки их timestamps и качества.
+"""
+
+
 def _env(name: str, default: str = "") -> str:
     return str(os.getenv(name, default) or default).strip()
 
@@ -48,6 +63,79 @@ def _load_env_file(path: Path) -> None:
         value = value.strip().strip('"').strip("'")
         if key and key not in os.environ:
             os.environ[key] = value
+
+
+def _load_json(path: Path) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def _runtime_truth() -> dict[str, Any]:
+    """Return a compact, non-secret snapshot that constrains AI interpretation."""
+    heartbeat = _load_json(ROOT / "runtime" / "bot_heartbeat.json")
+    runtime_cfg = heartbeat.get("strategy_runtime_config")
+    if not isinstance(runtime_cfg, dict):
+        runtime_cfg = {}
+    enabled = runtime_cfg.get("enabled")
+    risk_mult = runtime_cfg.get("risk_mult")
+    if not isinstance(enabled, dict):
+        enabled = {}
+    if not isinstance(risk_mult, dict):
+        risk_mult = {}
+
+    live_sleeves = sorted(
+        str(name)
+        for name, mult in risk_mult.items()
+        if bool(enabled.get(name)) and _as_float(mult) > 0.0
+    )
+    shadow_sleeves = sorted(
+        str(name)
+        for name, is_enabled in enabled.items()
+        if bool(is_enabled) and _as_float(risk_mult.get(name)) <= 0.0
+    )
+    return {
+        "heartbeat_ts": heartbeat.get("ts") or heartbeat.get("updated_at") or heartbeat.get("generated_at"),
+        "regime": heartbeat.get("regime"),
+        "trade_on": heartbeat.get("trade_on"),
+        "dry_run": heartbeat.get("dry_run"),
+        "open_trades": heartbeat.get("open_trades"),
+        "live_money_sleeves": live_sleeves,
+        "shadow_sleeves": shadow_sleeves,
+        "risk_mult": {str(k): _as_float(v) for k, v in risk_mult.items()},
+        "att1_edge_start_ts": _env("ATT1_EDGE_START_TS"),
+    }
+
+
+def _as_float(value: Any) -> float:
+    try:
+        return float(value or 0.0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _project_ai_brief() -> str:
+    try:
+        sys.path.insert(0, str(ROOT))
+        from bot.ai_context_brief import compose_from_repo  # type: ignore
+
+        return compose_from_repo(ROOT)
+    except Exception as exc:
+        return f"Project AI brief unavailable: {exc}"
+
+
+def _data_quality_notice() -> str:
+    truth = _runtime_truth()
+    live = ", ".join(truth["live_money_sleeves"]) or "не подтверждены heartbeat-ом"
+    start = truth["att1_edge_start_ts"] or "не задан в окружении этого процесса"
+    return (
+        "🛡️ Контракт интерпретации\n"
+        "missing_candles = пробел post-hoc forensic cache, а не доказательство сбоя live-свечей/выходов. "
+        "Rolling live-итог — смешанный исторический accounting cohort, не вердикт текущему ATT1.\n"
+        f"Live-money рукава по heartbeat: {live}. ATT1 clean-cohort start: {start}; при N<20 verdict запрещён."
+    )
 
 
 def _send_tg(text: str) -> None:
@@ -141,11 +229,17 @@ def _ai_interpret(markdown: str, live_md: str) -> str:
     if not overlay.is_ready():
         return "AI forensic interpretation skipped: DeepSeek is not configured/enabled."
 
+    runtime_truth = _runtime_truth()
     prompt = (
-        "Проанализируй weekly trade-forensics отчёт. "
+        f"{FORENSICS_DATA_CONTRACT}\n"
+        f"{_project_ai_brief()}\n\n"
+        "Проанализируй weekly trade-forensics отчёт строго в рамках контракта выше. "
         "Дай коротко: 1) что реально работает, 2) что ломает портфель, "
         "3) какие 3 исследовательских теста запустить дальше. "
+        "Явно разделяй historical accounting cohort, current clean cohort и backtest. "
         "Не предлагай включать live без 180/360d additivity gate.\n\n"
+        "CURRENT RUNTIME TRUTH (может быть пустым, если heartbeat недоступен):\n"
+        f"{json.dumps(runtime_truth, ensure_ascii=False, sort_keys=True)}\n\n"
         "BACKTEST FORENSICS:\n"
         f"{markdown[:9000]}\n\n"
         "LIVE FORENSICS:\n"
@@ -154,6 +248,8 @@ def _ai_interpret(markdown: str, live_md: str) -> str:
     snapshot = {
         "kind": "weekly_trade_forensics",
         "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+        "forensics_data_contract": FORENSICS_DATA_CONTRACT,
+        "runtime_truth": runtime_truth,
     }
     try:
         return overlay.ask(prompt, snapshot).strip()
@@ -178,6 +274,10 @@ def main() -> int:
     parts: list[str] = []
     backtest_md = ""
     live_md = ""
+
+    # This deterministic notice travels with both CLI and Telegram output.  It
+    # remains visible even if the optional model ignores its prompt.
+    parts.append(_data_quality_notice())
 
     if backtest_trades:
         md_path = _run_forensics(

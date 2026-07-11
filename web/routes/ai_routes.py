@@ -1,4 +1,4 @@
-"""AI Chat — Anthropic Claude with full bot context injection and safe control commands.
+"""AI Chat with full bot context, proposal inbox, and truth-first controls.
 
 The AI sees:
   - Current regime, confidence, risk mult
@@ -8,10 +8,9 @@ The AI sees:
   - Bot heartbeat / liveness
   - Alpaca monthly picks and metrics
 
-Safe control commands the AI can request (user must confirm, then they execute):
-  - enable_sleeve   / disable_sleeve
-  - set_safe_mode   / clear_safe_mode
-  - reload_config
+Trading mutations are proposal-only until the live bot exposes a verified,
+acknowledged consumer.  The implemented write paths are the operator-review
+backtest inbox and admin user management.
 
 All executed commands are written to runtime/web_audit_log.jsonl.
 """
@@ -854,10 +853,18 @@ def _build_context() -> str:
         parts.append(f"SLEEVES ACTIVE: {', '.join(active) or 'none'}\n")
         parts.append(f"SLEEVES OFF: {', '.join(inactive[:8]) or 'none'}\n")
 
-    # Control overlay (web-applied commands)
+    # Legacy web overlay is not consumed by the live bot.  Keep it visible only
+    # as explicitly non-effective history so stale files cannot mislead the AI.
     overlay = _read_env(_OVERLAY_ENV)
     if overlay:
-        parts.append(f"WEB OVERLAY: {json.dumps(overlay)}\n")
+        try:
+            overlay_age = max(0, int(time.time() - _OVERLAY_ENV.stat().st_mtime))
+        except OSError:
+            overlay_age = -1
+        parts.append(
+            "WEB OVERLAY (historical_non_effective_proposal; no live acknowledgement): "
+            f"age_sec={overlay_age} values={json.dumps(overlay)}\n"
+        )
 
     # Recent trades summary
     trades_path = None
@@ -933,14 +940,12 @@ def _build_context() -> str:
         "You can suggest control actions. The user will confirm before execution.\n"
         "If you suggest a command, first explain in plain language what is wrong, why the command helps, what evidence supports it, and what the risk/preconditions are.\n"
         "To suggest a command, include a JSON block: ```command\n{\"action\": \"...\", \"params\": {...}, \"evidence\": [\"...\"], \"risk\": \"low|medium|high\", \"preconditions\": [\"...\"]}\n```\n"
-        "Available actions:\n"
-        "  enable_sleeve   {\"sleeve\": \"asb1\"}          — set sleeve multipliers active\n"
-        "  disable_sleeve  {\"sleeve\": \"ivb1\"}          — zero out sleeve risk mults\n"
-        "  set_safe_mode   {}                             — set global risk mult to 0.25\n"
-        "  clear_safe_mode {}                             — restore normal risk mult\n"
-        "  reload_config   {}                             — trigger bot hot-reload\n"
+        "Implemented actions:\n"
+        "  run_backtest    {\"sleeve\": \"att1\", \"symbols\": [\"BTCUSDT\"], \"days\": 360} — add a validated request to the operator-review inbox; no automatic runner is connected\n"
         "  add_user        {\"email\": \"x@y.com\"}         — pre-create user slot (no TOTP yet)\n"
         "  remove_user     {\"email\": \"x@y.com\"}         — revoke web access\n"
+        "Trading mutations (enable/disable sleeve, safe mode, reload) are intentionally blocked: "
+        "the current web overlay has no acknowledged live-consumer path. Describe them as proposals, not executed controls.\n"
     )
 
     return "".join(parts)
@@ -981,6 +986,14 @@ _COMMAND_TITLES = {
     "set_global_params": "Предложить глобальные параметры",
 }
 
+_UNACKNOWLEDGED_TRADING_CONTROLS = {
+    "enable_sleeve",
+    "disable_sleeve",
+    "set_safe_mode",
+    "clear_safe_mode",
+    "reload_config",
+}
+
 
 def _symbol_market(symbol: str) -> str:
     s = str(symbol or "").strip().upper()
@@ -1004,6 +1017,16 @@ def _params_symbols(params: dict) -> List[str]:
     return []
 
 
+def _parse_backtest_days(params: dict) -> Optional[int]:
+    raw = params.get("days", params.get("period"))
+    if isinstance(raw, bool):
+        return None
+    if isinstance(raw, (int, float)) and float(raw).is_integer():
+        return int(raw)
+    match = re.fullmatch(r"\s*(\d+)\s*[dD]?\s*", str(raw or ""))
+    return int(match.group(1)) if match else None
+
+
 def _infer_command_market(action: str, params: dict) -> str:
     sleeve = str(params.get("sleeve") or params.get("strategy") or "").strip().lower()
     if sleeve in _CRYPTO_SLEEVES:
@@ -1021,14 +1044,16 @@ def _infer_command_market(action: str, params: dict) -> str:
 def _validate_command(action: str, params: dict) -> Tuple[bool, List[str], str]:
     """Validate AI-suggested commands before the UI can execute them."""
     action = str(action or "").strip()
-    params = dict(params or {})
+    if not isinstance(params, dict):
+        return (False, ["params must be a JSON object"], "unknown")
+    params = dict(params)
     reasons: List[str] = []
 
-    if action in {"enable_sleeve", "disable_sleeve"}:
-        sleeve = str(params.get("sleeve") or "").strip().lower()
-        if sleeve not in _VALID_SLEEVE_NAMES:
-            reasons.append(f"unknown crypto sleeve '{sleeve or '-'}'")
-        return (not reasons, reasons, "crypto")
+    if action in _UNACKNOWLEDGED_TRADING_CONTROLS:
+        reasons.append(
+            "web trading control is proposal-only until the live bot consumes it and writes an effective-state acknowledgement"
+        )
+        return (False, reasons, _infer_command_market(action, params))
 
     if action == "run_backtest":
         sleeve = str(params.get("sleeve") or params.get("strategy") or "").strip().lower()
@@ -1052,16 +1077,23 @@ def _validate_command(action: str, params: dict) -> Tuple[bool, List[str], str]:
             reasons.append(f"unknown backtest sleeve/strategy '{sleeve}'")
         if not symbols:
             reasons.append("missing symbols")
-        period = str(params.get("period") or params.get("days") or "").strip()
-        if not period:
-            reasons.append("missing period/days")
+        elif len(symbols) > 20:
+            reasons.append("too many symbols; maximum is 20")
+        bad_format = [s for s in symbols if not re.fullmatch(r"[A-Z0-9/._:-]{2,24}", s)]
+        if bad_format:
+            reasons.append(f"invalid symbol format: {', '.join(bad_format[:5])}")
+        days = _parse_backtest_days(params)
+        if days is None:
+            reasons.append("days/period must be an integer number of days")
+        elif not 30 <= days <= 3650:
+            reasons.append("days/period must be between 30 and 3650")
         return (not reasons, reasons, market)
 
     if action in {"set_sleeve_params", "set_global_params"}:
         reasons.append("direct parameter mutation is not enabled; create a proposal + backtest first")
         return (False, reasons, _infer_command_market(action, params))
 
-    if action in {"set_safe_mode", "clear_safe_mode", "reload_config", "add_user", "remove_user"}:
+    if action in {"add_user", "remove_user"}:
         return (True, [], _infer_command_market(action, params))
 
     reasons.append(f"unknown action '{action or '-'}'")
@@ -1095,34 +1127,6 @@ def _decorate_command(raw: dict) -> dict:
     cmd.setdefault("risk", "unknown")
     return cmd
 
-_ENABLE_ENV_MAP = {
-    "breakout": "ENABLE_BREAKOUT_TRADING", "breakdown": "ENABLE_BREAKDOWN_TRADING",
-    "flat": "ENABLE_FLAT_TRADING", "sloped": "ENABLE_SLOPED_TRADING",
-    "att1": "ENABLE_ATT1_TRADING", "asm1": "ENABLE_ASM1_TRADING",
-    "midterm": "ENABLE_MIDTERM_TRADING", "midterm_short": "ENABLE_MTSV1_TRADING",
-    "midterm_short_v2": "ENABLE_MTSV2_TRADING", "range_scalp": "ENABLE_RANGE_TRADING",
-    "asb1": "ENABLE_ASB1_TRADING", "hzbo1": "ENABLE_HZBO1_TRADING",
-    "bounce1": "ENABLE_BOUNCE1_TRADING", "impulse": "ENABLE_IVB1_TRADING",
-    "pump_fade": "ENABLE_PUMP_FADE_TRADING", "elder_ts": "ENABLE_ELDER_TRADING",
-    "elder_ts_v3": "ENABLE_ETS3_TRADING", "vwap_mr": "ENABLE_VWAP_TRADING",
-    # v7 new sleeves
-    "breakdown_v2": "ENABLE_BREAKDOWN2_TRADING",
-    "slope_choch":  "ENABLE_SLOPE_CHOCH_TRADING",
-    "liq_cascade":  "ENABLE_LC_TRADING",
-    "funding_rev":  "ENABLE_FR_TRADING",
-    "micro_scalp":  "ENABLE_MSCALP_TRADING",
-}
-
-
-def _write_overlay(updates: Dict[str, str]) -> None:
-    """Merge updates into the web control overlay env file."""
-    existing = _read_env(_OVERLAY_ENV)
-    existing.update(updates)
-    _OVERLAY_ENV.parent.mkdir(parents=True, exist_ok=True)
-    lines = [f"{k}={v}" for k, v in sorted(existing.items())]
-    _OVERLAY_ENV.write_text("\n".join(lines) + "\n")
-
-
 def _audit(email: str, action: str, params: dict, result: str) -> None:
     _AUDIT_LOG.parent.mkdir(parents=True, exist_ok=True)
     entry = {
@@ -1144,57 +1148,7 @@ def execute_command(action: str, params: dict, email: str) -> str:
         _audit(email, action, params, result)
         return result
 
-    hb = _json(_rt("bot_heartbeat.json")) or {}
-    open_trades = int(hb.get("open_trades", 0) or 0)
-    if action == "enable_sleeve":
-        sleeve = params.get("sleeve", "").lower()
-        if sleeve not in _VALID_SLEEVE_NAMES:
-            return f"Unknown sleeve: {sleeve}"
-        env_key = _ENABLE_ENV_MAP.get(sleeve)
-        if env_key:
-            _write_overlay({env_key: "1"})
-        _audit(email, action, params, f"enabled {sleeve}")
-        return f"✓ Sleeve '{sleeve}' enabled in overlay. Bot will pick up on next reload."
-
-    elif action == "disable_sleeve":
-        sleeve = params.get("sleeve", "").lower()
-        if sleeve not in _VALID_SLEEVE_NAMES:
-            return f"Unknown sleeve: {sleeve}"
-        env_key = _ENABLE_ENV_MAP.get(sleeve)
-        if env_key:
-            _write_overlay({env_key: "0"})
-        _audit(email, action, params, f"disabled {sleeve}")
-        return f"✓ Sleeve '{sleeve}' disabled in overlay."
-
-    elif action == "set_safe_mode":
-        _write_overlay({"WEB_SAFE_MODE": "1", "PORTFOLIO_GLOBAL_RISK_MULT": "0.25"})
-        _audit(email, action, params, "safe_mode=ON risk=0.25")
-        return "⚠️ Safe mode ON — global risk mult set to 0.25×."
-
-    elif action == "clear_safe_mode":
-        _write_overlay({"WEB_SAFE_MODE": "0", "PORTFOLIO_GLOBAL_RISK_MULT": "1.0"})
-        _audit(email, action, params, "safe_mode=OFF")
-        return "✓ Safe mode cleared — risk back to normal."
-
-    elif action == "reload_config":
-        if open_trades > 0:
-            _audit(email, action, params, f"blocked open_trades={open_trades}")
-            return f"Reload blocked: bot has {open_trades} open trade(s). Close or reconcile them first."
-        # Send SIGHUP to bot process if PID file exists
-        pid_path = _rt("bot.pid")
-        if pid_path.exists():
-            try:
-                import signal
-                pid = int(pid_path.read_text().strip())
-                os.kill(pid, signal.SIGHUP)
-                _audit(email, action, params, f"SIGHUP sent to pid {pid}")
-                return f"✓ SIGHUP sent to bot (PID {pid}) — config will reload."
-            except Exception as e:
-                return f"Could not send SIGHUP: {e}"
-        _audit(email, action, params, "no pid file")
-        return "PID file not found — restart bot manually to apply overlay."
-
-    elif action == "add_user":
+    if action == "add_user":
         # Pre-create user slot without TOTP (they run setup_totp.py separately)
         from ..auth import _load_config, _save_config
         target_email = params.get("email", "").strip().lower()
@@ -1226,16 +1180,20 @@ def execute_command(action: str, params: dict, email: str) -> str:
             "ts": datetime.now(timezone.utc).isoformat(),
             "user": email,
             "action": action,
-            "params": params,
-            "status": "queued_for_operator",
-            "note": "Web AI can request validated backtests; execution is handled by the research runner, not by arbitrary shell.",
+            "params": {
+                "sleeve": str(params.get("sleeve") or params.get("strategy") or "").strip().lower(),
+                "symbols": _params_symbols(params),
+                "days": _parse_backtest_days(params),
+            },
+            "status": "operator_review_required",
+            "note": "Validated proposal inbox only; no automatic research-runner consumer is connected.",
         }
         with open(queue_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(item, ensure_ascii=False) + "\n")
         _audit(email, action, params, "validated backtest request queued")
         return (
-            "✓ Backtest request is valid and queued for the research runner. "
-            "It was not executed as an arbitrary shell command."
+            "✓ Backtest request is valid and stored in the operator-review inbox. "
+            "No automatic runner is connected, so it has not executed."
         )
 
     else:
