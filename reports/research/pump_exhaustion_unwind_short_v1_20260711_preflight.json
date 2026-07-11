@@ -1,0 +1,108 @@
+{
+  "blockers": [
+    "immutable_input_snapshots_not_ready"
+  ],
+  "experiment": "pump_exhaustion_unwind_short_v1_720d_prereg_20260711",
+  "live_or_broker_calls": false,
+  "performance_computed": false,
+  "permission": "BLOCKED_FAIL_CLOSED",
+  "promotion_authorized": false,
+  "schema_version": 1,
+  "side_identity": "short_only",
+  "snapshots": [
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "BTCUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "ETHUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "BNBUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "XRPUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "DOGEUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "ADAUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "SOLUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "SUIUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "1000PEPEUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "WIFUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "TAOUSDT"
+    },
+    {
+      "ok": false,
+      "reasons": [
+        "snapshot_unpinned"
+      ],
+      "symbol": "ONDOUSDT"
+    }
+  ],
+  "source_mismatches": [],
+  "state_source_fingerprint_ok": true,
+  "strategy": "pump_exhaustion_unwind_short_v1"
+}
