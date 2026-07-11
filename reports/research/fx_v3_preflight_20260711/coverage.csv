@@ -1,0 +1,7 @@
+symbol,diagnostic_data_ok,promotion_data_ok,input_sha256,input_hash_ok,snapshot_age_hours,snapshot_fresh,source_coverage,source_max_missing_run,source_off_schedule_bars,source_reasons,h1_coverage,h1_max_missing_run,h1_reasons,incomplete_h1_buckets,max_h1_missing_subbars
+EURUSD,True,False,9c404d615e5b7bad6b4d12046421c487abaf8383b93542c8acf51aa14e0dc25c,True,120.314,False,0.99156,324,401,missing_run_324>12;off_schedule_bars_401>0,0.99072,27,missing_run_27>12,15,7
+GBPUSD,True,False,d28e95753fff94cc3a0562e3b0109a99d667e0ec6a705abaec8597d12cfa6db7,True,120.314,False,0.995427,120,386,missing_run_120>12;off_schedule_bars_386>0,0.993544,10,,29,9
+USDJPY,True,False,82803d32d6d7d6d94a41e11e83414625534ede582a6752834f3cfc36fb4acee7,True,120.314,False,0.992683,132,407,missing_run_132>12;off_schedule_bars_407>0,0.99072,11,,29,7
+EURJPY,False,False,b1ea467f3393acb6c6b8b3cd515d2799d80fb052700ca1161b8199847d511792,True,120.314,False,0.9714,1440,392,coverage_0.9714<0.98;missing_run_1440>12;off_schedule_bars_392>0,0.959571,120,coverage_0.9596<0.98;missing_run_120>12,165,10
+GBPJPY,True,False,7af11dc0709bf7d34263d93cd5012d86c552cc0396d1a3109d2eb288d96a10a8,True,120.314,False,0.995676,96,404,missing_run_96>12;off_schedule_bars_404>0,0.983054,8,,178,10
+XAUUSD,False,False,1c0bf3c63a979b2db89285e5dcf17c43fcedf1c158b94c7a6c6696c2f03d111b,True,120.314,False,0.977101,276,288,coverage_0.9771<0.98;missing_run_276>12;off_schedule_bars_288>0,0.97571,23,coverage_0.9757<0.98;missing_run_23>12,25,10

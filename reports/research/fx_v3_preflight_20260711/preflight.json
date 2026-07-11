@@ -1,0 +1,87 @@
+{
+  "status": "DATA_DIAGNOSTICS_ONLY",
+  "performance_research_allowed": false,
+  "diagnostic_symbols": [
+    "EURUSD",
+    "GBPJPY",
+    "GBPUSD",
+    "USDJPY"
+  ],
+  "promotion_symbols": [],
+  "blocked_symbols": [
+    "EURJPY",
+    "EURUSD",
+    "GBPJPY",
+    "GBPUSD",
+    "USDJPY",
+    "XAUUSD"
+  ],
+  "historical_news": {
+    "path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/data_cache/forex/historical_macro_news_20240708_20260706.json",
+    "required": true,
+    "exists": false,
+    "expected_sha256": "",
+    "actual_sha256": "",
+    "hash_ok": false,
+    "parse_ok": false,
+    "schema_ok": false,
+    "coverage_ok": false,
+    "quality_ok": false,
+    "rows": 0,
+    "ok": false
+  },
+  "broker_cost_calibration": {
+    "path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/reports/research/oanda_fx_cfd_cost_calibration_20260711.json",
+    "required": true,
+    "exists": false,
+    "expected_sha256": "",
+    "actual_sha256": "",
+    "hash_ok": false,
+    "parse_ok": false,
+    "schema_ok": false,
+    "coverage_ok": false,
+    "quality_ok": false,
+    "rows": 0,
+    "ok": false
+  },
+  "blockers": [
+    "strict_promotion_data_gate_failed",
+    "historical_news_calendar_missing_or_unpinned",
+    "target_broker_cost_calibration_missing_or_unpinned"
+  ],
+  "validated_families": [
+    "failed_break_retest_short_v3",
+    "horizontal_range_rejection_v3",
+    "range_edge_expansion_retest_v3"
+  ],
+  "candidate_sides": {
+    "failed_break_retest_short_v3": [
+      "short"
+    ],
+    "horizontal_range_rejection_v3": [
+      "long",
+      "short"
+    ],
+    "range_edge_expansion_retest_v3": [
+      "long",
+      "short"
+    ]
+  },
+  "config": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/research/fx_v3_preflight_20260711.json",
+  "config_sha256": "8a27a30d8a54ae14dc8d6552ad7b8fc793f2850e6701ee5b4984ff15bde13e00",
+  "source_sha256": {
+    "runner_sha256": "311cb6725ab26736e49f6cd259ae0c9c59cd7190f731193bd9d8a8d0f705bba2",
+    "setups_v3_sha256": "6c474326cfad5798a61e48215e80dc7f34a4e1fdeeb2731511327d621487cb20",
+    "contracts_sha256": "1fd59db8f3f76cffd0c9712f38d77cb318be56fa7b2cc848932cd59586e30492",
+    "instruments_sha256": "72ccb5e3b262a8fe0f63a01864d1231a235151ae974506d73835258bb83a5a03",
+    "calendar_sha256": "16e83a9bf162dcd7fecfaac705820703773b9a3e91263a7294373802949b78f5",
+    "harness_sha256": "e7b23b387c0a9423d75c8c81786db03e959ecc2441a9a519db6852f601b34778",
+    "market_context_sha256": "34e79fbcca9bf33e1247a44ac5b57f0b33e6c1d188a329f28859ea6503a8054c",
+    "range_filter_sha256": "f6e2a2f90030acf303ad392bc8e0157defa4f350e0fa8e89e48078c00664c234",
+    "level_memory_sha256": "6b14027483435503938f7ce7c28b6009df0e8e91f055020147ada5edbcd86c08",
+    "news_session_filter_sha256": "8dbe4340a0f9e967013ee5976cf8b80b08dfd95111ed63119cd053f673e67d54",
+    "forex_regime_sha256": "7a6294ccd1405c9eb42a5c4c4146e27c2e193fb6d11535b91dfd524841cbc000",
+    "forex_types_sha256": "50bb7dfcbedc83393ce3095cad157b5ad50876e46202ef2c7dc942608171c30e",
+    "base_preflight_sha256": "b19e707577d3e91e8c74771c8d062395fbb796313271d52ed74151856f0ab4aa"
+  }
+}
