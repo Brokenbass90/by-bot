@@ -54,17 +54,10 @@ def test_approved_att1_geometry_matches_r001_operator_override():
         assert float(active[key]) == float(r001[key]), key
 
 
-def test_heartbeat_exposes_exact_att1_effective_contract_and_hash():
+def test_heartbeat_uses_dynamic_att1_contract_helper():
     source = (ROOT / "smart_pump_reversal_bot.py").read_text(encoding="utf-8")
 
-    for field in (
-        '"pivot_left": int(ATT1_PIVOT_LEFT)',
-        '"pivot_right": int(ATT1_PIVOT_RIGHT)',
-        '"min_pivots": int(ATT1_MIN_PIVOTS)',
-        '"max_pivot_age": int(ATT1_MAX_PIVOT_AGE)',
-        '"min_r2": round(float(ATT1_MIN_R2)',
-        '"touch_atr": round(float(ATT1_TOUCH_ATR)',
-        '"rsi_short_min": round(float(ATT1_RSI_SHORT_MIN)',
-        '"att1_effective_params_sha256": _att1_effective_params_sha256',
-    ):
-        assert field in source
+    assert "build_att1_runtime_contract(risk_mult=ATT1_RISK_MULT)" in source
+    assert '"att1_effective_params": _att1_contract["params"]' in source
+    assert '"att1_effective_params_sha256": _att1_contract["sha256"]' in source
+    assert "ATT1_RSI_SHORT_MIN" not in source

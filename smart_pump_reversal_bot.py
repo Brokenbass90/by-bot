@@ -79,6 +79,7 @@ from bot.env_helpers import (
 from bot.utils import now_s, _to_float_safe, _today_ymd, base_from_usdt, dist_pct
 from bot.health_gate import gate as _health_gate  # equity-curve live entry gate
 from bot import att1_live_wiring as _att1_wire  # decision_bus + edge_monitor (flags default OFF)
+from bot.att1_runtime_contract import build_att1_runtime_contract
 from bot.allowlist_watcher import AllowlistWatcher as _AllowlistWatcher  # dynamic allowlist hot-reload
 from bot.auth import (
     AUTH_DISABLED_UNTIL, AUTH_LAST_ERROR, BOT_START_TS,
@@ -15597,21 +15598,7 @@ async def pulse():
                 if int(v) != 0
             }
             _status_regime = _current_regime_label_for_status()
-            _att1_effective_params = {
-                "risk_mult": round(float(ATT1_RISK_MULT), 6),
-                "allow_longs": bool(ATT1_ALLOW_LONGS),
-                "allow_shorts": bool(ATT1_ALLOW_SHORTS),
-                "pivot_left": int(ATT1_PIVOT_LEFT),
-                "pivot_right": int(ATT1_PIVOT_RIGHT),
-                "min_pivots": int(ATT1_MIN_PIVOTS),
-                "max_pivot_age": int(ATT1_MAX_PIVOT_AGE),
-                "min_r2": round(float(ATT1_MIN_R2), 6),
-                "touch_atr": round(float(ATT1_TOUCH_ATR), 6),
-                "rsi_short_min": round(float(ATT1_RSI_SHORT_MIN), 6),
-            }
-            _att1_effective_params_sha256 = hashlib.sha256(
-                json.dumps(_att1_effective_params, sort_keys=True, separators=(",", ":")).encode("utf-8")
-            ).hexdigest()
+            _att1_contract = build_att1_runtime_contract(risk_mult=ATT1_RISK_MULT)
             _strategy_runtime_config = {
                 "no_entry_hours_utc": sorted(int(h) for h in NO_ENTRY_HOURS_UTC),
                 "enabled": {
@@ -15649,8 +15636,8 @@ async def pulse():
                     "env": str(OPERATOR_LIVE_OVERRIDE_ENV or ""),
                     "loaded": bool(OPERATOR_LIVE_OVERRIDE_LOADED),
                 },
-                "att1_effective_params": _att1_effective_params,
-                "att1_effective_params_sha256": _att1_effective_params_sha256,
+                "att1_effective_params": _att1_contract["params"],
+                "att1_effective_params_sha256": _att1_contract["sha256"],
                 "breaker": {
                     "att1": _att1_breaker_state(),
                     "breakdown": _breakdown_breaker_state(),
