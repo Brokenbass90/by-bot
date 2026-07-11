@@ -83,7 +83,7 @@ fi
 
 echo "[web] Starting Trading Journal on http://${HOST}:${PORT}"
 echo "[web] To set up a user: python3 web/setup_totp.py --email you@example.com"
-echo "[web] JWT secret: ${WEB_JWT_SECRET:0:8}... (first 8 chars)"
+echo "[web] JWT secret: configured"
 if [[ -n "${WEB_RUNTIME_ROOT:-}" ]]; then
   echo "[web] Runtime root: ${WEB_RUNTIME_ROOT}"
 fi

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import stat
+from pathlib import Path
 
 from scripts.rotate_web_jwt_secret import rotate_secret
 
@@ -46,3 +47,12 @@ def test_rotate_secret_rejects_symlink(tmp_path):
         raise AssertionError("symlinked env file was accepted")
 
     assert real_env.read_text(encoding="utf-8") == "WEB_JWT_SECRET=old\n"
+
+
+def test_run_web_never_logs_any_part_of_jwt_secret():
+    root = Path(__file__).resolve().parents[1]
+    script = (root / "scripts" / "run_web.sh").read_text(encoding="utf-8")
+
+    assert "${WEB_JWT_SECRET:0" not in script
+    assert not any("WEB_JWT_SECRET" in row for row in script.splitlines() if row.lstrip().startswith("echo "))
+    assert "JWT secret: configured" in script
