@@ -79,6 +79,7 @@ SOURCES = {
     "crypto_blocker": "runtime/crypto_blocker/latest.json",
     "att1_edge_health": "runtime/att1_edge_health.json",
     "alpaca_account_state": "runtime/alpaca_live_v38/account_state.json",
+    "canonical_project_state": "configs/ai_operator_canonical_state.json",
 }
 
 SOURCE_FALLBACKS = {
@@ -151,6 +152,70 @@ def git_revision() -> dict[str, Any]:
     else:
         err = ""
     return {"head": rev, "error": err}
+
+
+def source_freshness(sources_used: dict[str, Any], *, now: float | None = None) -> dict[str, Any]:
+    """Return filesystem freshness without trusting timestamps inside payloads."""
+    now_ts = float(time.time() if now is None else now)
+    result: dict[str, Any] = {}
+    for name, rel in sources_used.items():
+        if not rel or not isinstance(rel, str):
+            result[str(name)] = {"present": False, "age_sec": None}
+            continue
+        clean_rel = rel.split(":", 1)[0]
+        path = REPO_ROOT / clean_rel
+        try:
+            mtime = float(path.stat().st_mtime)
+        except OSError:
+            result[str(name)] = {"present": False, "age_sec": None, "path": clean_rel}
+            continue
+        result[str(name)] = {
+            "present": True,
+            "age_sec": max(0, int(now_ts - mtime)),
+            "path": clean_rel,
+        }
+    return result
+
+
+def critical_truth_assessment(
+    *, heartbeat: Any, freshness: dict[str, Any], canonical_state: Any
+) -> dict[str, Any]:
+    """Fail closed when live-control evidence is stale or contradicts reviewed truth."""
+    blockers: list[str] = []
+    hb = heartbeat if isinstance(heartbeat, dict) else {}
+    hb_fresh = freshness.get("heartbeat") if isinstance(freshness.get("heartbeat"), dict) else {}
+    pos_fresh = freshness.get("live_positions") if isinstance(freshness.get("live_positions"), dict) else {}
+    if not hb_fresh.get("present") or hb_fresh.get("age_sec") is None or int(hb_fresh["age_sec"]) > 120:
+        blockers.append("heartbeat_missing_or_stale")
+    if not pos_fresh.get("present") or pos_fresh.get("age_sec") is None or int(pos_fresh["age_sec"]) > 120:
+        blockers.append("live_positions_missing_or_stale")
+
+    runtime_cfg = hb.get("strategy_runtime_config") if isinstance(hb.get("strategy_runtime_config"), dict) else {}
+    override = runtime_cfg.get("operator_live_override") if isinstance(runtime_cfg.get("operator_live_override"), dict) else {}
+    if override.get("enabled") and not override.get("loaded"):
+        blockers.append("operator_override_not_loaded")
+    enabled = runtime_cfg.get("enabled") if isinstance(runtime_cfg.get("enabled"), dict) else {}
+    risk_mult = runtime_cfg.get("risk_mult") if isinstance(runtime_cfg.get("risk_mult"), dict) else {}
+    actual_money = sorted(
+        str(name) for name, value in risk_mult.items()
+        if bool(enabled.get(name)) and isinstance(value, (int, float)) and float(value) > 0.0
+    )
+    canonical_live = canonical_state.get("live") if isinstance(canonical_state, dict) and isinstance(canonical_state.get("live"), dict) else {}
+    expected_money = sorted(str(x) for x in (canonical_live.get("crypto_money_sleeves") or []))
+    if expected_money and actual_money != expected_money:
+        blockers.append(f"money_sleeve_conflict:expected={expected_money}:actual={actual_money}")
+    expected_att1 = canonical_live.get("att1_risk_mult")
+    actual_att1 = risk_mult.get("att1")
+    if isinstance(expected_att1, (int, float)) and (
+        not isinstance(actual_att1, (int, float)) or abs(float(actual_att1) - float(expected_att1)) > 1e-9
+    ):
+        blockers.append(f"att1_risk_conflict:expected={expected_att1}:actual={actual_att1}")
+    return {
+        "control_recommendations_allowed": not blockers,
+        "blockers": blockers,
+        "live_money_sleeves_by_heartbeat": actual_money,
+        "source_precedence": ["fresh_heartbeat", "broker_positions", "human_reviewed_canonical", "allocator", "env"],
+    }
 
 
 def build_ai_brief() -> str:
@@ -442,6 +507,12 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
     ctx["git_revision"] = git_revision()
     ctx["ai_context_brief"] = build_ai_brief()
 
+    canonical_path = source_path("canonical_project_state")
+    ctx["sources_used"]["canonical_project_state"] = (
+        str(canonical_path.relative_to(REPO_ROOT)) if canonical_path.exists() else None
+    )
+    ctx["canonical_project_state"] = load_json(canonical_path)
+
     # ---- Heartbeat (key live source) ----
     hb_path = source_path("heartbeat")
     hb = load_json(hb_path)
@@ -676,6 +747,13 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
     # ---- Static inventory ----
     ctx["strategies_inventory"] = collect_strategies_inventory()
     ctx["active_configs_hint"] = collect_active_configs()
+
+    ctx["source_freshness"] = source_freshness(ctx["sources_used"])
+    ctx["critical_truth_assessment"] = critical_truth_assessment(
+        heartbeat=ctx.get("heartbeat"),
+        freshness=ctx["source_freshness"],
+        canonical_state=ctx.get("canonical_project_state"),
+    )
 
     return ctx
 

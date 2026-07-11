@@ -118,6 +118,9 @@ def compact_ai_full_context(
     alpaca_state = ctx.get("alpaca_account_state") if isinstance(ctx.get("alpaca_account_state"), dict) else {}
     git_rev = ctx.get("git_revision") if isinstance(ctx.get("git_revision"), dict) else {}
     errors_tail = ctx.get("errors_tail") if isinstance(ctx.get("errors_tail"), dict) else {}
+    truth = ctx.get("critical_truth_assessment") if isinstance(ctx.get("critical_truth_assessment"), dict) else {}
+    freshness = ctx.get("source_freshness") if isinstance(ctx.get("source_freshness"), dict) else {}
+    canonical = ctx.get("canonical_project_state") if isinstance(ctx.get("canonical_project_state"), dict) else {}
 
     return {
         "generated_at_utc": ctx.get("generated_at_utc"),
@@ -130,7 +133,11 @@ def compact_ai_full_context(
             "dry_run": heartbeat.get("dry_run"),
             "regime": heartbeat.get("regime"),
             "ws_guard_active": heartbeat.get("ws_guard_active"),
+            "strategy_runtime_config": heartbeat.get("strategy_runtime_config"),
         },
+        "critical_truth_assessment": truth,
+        "source_freshness": freshness,
+        "canonical_project_state": canonical,
         "open_positions": _compact_positions(positions_payload, max_positions=max_positions),
         "router": {
             "status": router.get("status"),
@@ -195,6 +202,14 @@ def append_ai_context_lines(parts: list[str], repo_root: Path) -> None:
         f"router={router.get('status')} allocator={allocator.get('status')} "
         f"allocator_hard_block={allocator.get('hard_block_new_entries')} "
         f"safe_mode={allocator.get('safe_mode')}\n"
+    )
+
+    truth = compact.get("critical_truth_assessment") if isinstance(compact.get("critical_truth_assessment"), dict) else {}
+    parts.append(
+        "AI CONTROL TRUTH: "
+        f"recommendations_allowed={truth.get('control_recommendations_allowed')} "
+        f"blockers={truth.get('blockers') or []} "
+        f"live_money_sleeves={truth.get('live_money_sleeves_by_heartbeat') or []}\n"
     )
 
     brief = str(compact.get("ai_context_brief") or "").strip()

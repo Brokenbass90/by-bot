@@ -1,0 +1,57 @@
+{
+  "as_of_utc": "2026-07-11T07:00:00Z",
+  "schema_version": 1,
+  "authority": "human_reviewed_project_truth",
+  "live": {
+    "crypto_money_sleeves": ["att1"],
+    "att1_risk_mult": 0.1,
+    "att1_side": "short_only",
+    "att1_canary_expiry_utc": "2026-07-20",
+    "att1_edge_verdict": "UNPROVEN_DO_NOT_SCALE",
+    "alpaca_mode": "SAFE_HOLD_EXISTING_POSITIONS",
+    "alpaca_edge_verdict": "CONTAINED_NOT_PROVEN",
+    "fx_cfd_mode": "RESEARCH_ONLY_NO_MONEY"
+  },
+  "data_contract": {
+    "historical_crypto_accounting": "MIXED_COHORT_NOT_CURRENT_EDGE",
+    "att1_clean_sample": "N_LT_20_NO_EDGE_VERDICT",
+    "alpaca_intraday_v1_ledger": "DATA_INVALID_REBUILD_FROM_BROKER_FILLS",
+    "alpaca_backtest_63pct": "RESEARCH_RESULT_NOT_LIVE_EXPECTATION",
+    "fx_v2_data": "DIAGNOSTIC_ONLY_ZERO_OF_SIX_PROMOTION_GRADE"
+  },
+  "no_promotion": [
+    "legacy_inplay_short",
+    "legacy_inplay_long",
+    "fx_v2_impulse_breakout_retest_long",
+    "fx_v2_impulse_breakout_retest_short",
+    "fx_v2_sweep_reclaim_long",
+    "fx_v2_sweep_reclaim_short",
+    "fx_v2_regime_range_long",
+    "fx_v2_regime_range_short",
+    "level_memory_current_variants",
+    "ivb1_current_money_activation"
+  ],
+  "research_queue": [
+    "pump_exhaustion_unwind_short_v1",
+    "event_expansion_retest_long_v1",
+    "level_memory_sweep_reclaim_side_split_repair",
+    "failed_break_retest_short_v3_fx",
+    "horizontal_range_rejection_v3_fx",
+    "range_edge_expansion_retest_v3_fx",
+    "alpaca_exact_live_parity_replay_and_ledger_rebuild"
+  ],
+  "promotion_gate": {
+    "stress_pf_min": 1.2,
+    "min_trades": 40,
+    "positive_folds_min": "3/4",
+    "min_traded_symbols": 3,
+    "min_positive_symbols": 2,
+    "max_profit_concentration_pct": 35,
+    "shadow_clean_closes_before_tiny_money": 30
+  },
+  "source_reports": [
+    "reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md",
+    "reports/research/fx_v2_gate_20260711/summary.md",
+    "reports/research/inplay_short_independent_additivity_20260710/summary.md"
+  ]
+}

@@ -16,6 +16,7 @@ changes. Fault-tolerant like the digest: missing files never break the brief.
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
@@ -93,15 +94,42 @@ def compose_from_repo(root: Path | str = ".") -> str:
     """Build the brief from runtime overrides + heartbeat facts (fault-tolerant)."""
     root = Path(root)
     extra = _load_json(root / "runtime" / "ai_brief_extra.json") or {}
+    canonical = _load_json(root / "configs" / "ai_operator_canonical_state.json") or {}
     hb = _load_json(root / "runtime" / "bot_heartbeat.json")
     live: Dict[str, Any] = {}
     if isinstance(hb, dict):
+        hb_ts = hb.get("ts")
+        hb_age = int(time.time() - float(hb_ts)) if isinstance(hb_ts, (int, float)) else None
+        runtime_cfg = hb.get("strategy_runtime_config")
+        runtime_cfg = runtime_cfg if isinstance(runtime_cfg, dict) else {}
+        enabled = runtime_cfg.get("enabled") if isinstance(runtime_cfg.get("enabled"), dict) else {}
+        risk_mult = runtime_cfg.get("risk_mult") if isinstance(runtime_cfg.get("risk_mult"), dict) else {}
+        money = sorted(
+            str(name) for name, value in risk_mult.items()
+            if bool(enabled.get(name)) and isinstance(value, (int, float)) and float(value) > 0.0
+        )
         live["режим"] = hb.get("regime", "?")
         live["торгует"] = bool(hb.get("trade_on")) and not bool(hb.get("dry_run"))
         live["open_trades"] = hb.get("open_trades", "?")
+        live["heartbeat_age_sec"] = hb_age if hb_age is not None else "unknown"
+        live["live_money_sleeves_by_heartbeat"] = money
+        live["strategy_runtime_config"] = runtime_cfg
+        if hb_age is None or hb_age > 120:
+            live["TRUTH_WARNING"] = "STALE_HEARTBEAT_NO_LIVE_CONTROL_RECOMMENDATIONS"
+    canonical_live = canonical.get("live") if isinstance(canonical.get("live"), dict) else {}
+    if canonical_live:
+        live["human_reviewed_canonical_live"] = canonical_live
+    canonical_no_go = list(canonical.get("no_promotion") or [])
+    extra_no_go = extra.get("no_go")
+    no_go = list(extra_no_go) if isinstance(extra_no_go, list) else list(DEFAULT_NO_GO)
+    no_go.extend(x for x in canonical_no_go if x not in no_go)
+    canonical_queue = list(canonical.get("research_queue") or [])
+    extra_queue = extra.get("queue")
+    queue = list(extra_queue) if isinstance(extra_queue, list) else []
+    queue.extend(x for x in canonical_queue if x not in queue)
     return build_brief(
-        no_go=extra.get("no_go"),
-        queue=extra.get("queue"),
+        no_go=no_go,
+        queue=queue,
         clean_sample_since=str(extra.get("clean_sample_since")
                                or "включения телеметрии (ATT1_EDGE_START_TS)"),
         live_truth=live or None,

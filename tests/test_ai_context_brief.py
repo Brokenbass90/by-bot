@@ -37,3 +37,33 @@ def test_compose_from_repo_tolerates_empty_and_reads_extra(tmp_path):
     b = compose_from_repo(tmp_path)
     assert "X-strategy" in b and "AI observability P1" in b
     assert "торгует: True" in b
+
+
+def test_compose_prefers_heartbeat_runtime_truth_and_canonical_memory(tmp_path, monkeypatch):
+    monkeypatch.setattr("bot.ai_context_brief.time.time", lambda: 200.0)
+    rt = tmp_path / "runtime"
+    cfg = tmp_path / "configs"
+    rt.mkdir()
+    cfg.mkdir()
+    (rt / "bot_heartbeat.json").write_text(json.dumps({
+        "ts": 190,
+        "regime": "bear_chop",
+        "trade_on": True,
+        "dry_run": False,
+        "open_trades": 0,
+        "strategy_runtime_config": {
+            "enabled": {"att1": True, "ivb1": True},
+            "risk_mult": {"att1": 0.1, "ivb1": 0.0},
+        },
+    }))
+    (cfg / "ai_operator_canonical_state.json").write_text(json.dumps({
+        "live": {"crypto_money_sleeves": ["att1"]},
+        "no_promotion": ["legacy_inplay_short"],
+        "research_queue": ["pump_exhaustion_unwind_short_v1"],
+    }))
+
+    brief = compose_from_repo(tmp_path)
+
+    assert "live_money_sleeves_by_heartbeat: ['att1']" in brief
+    assert "legacy_inplay_short" in brief
+    assert "pump_exhaustion_unwind_short_v1" in brief
