@@ -174,7 +174,9 @@ OANDA сейчас не пополнять. Текущий ожидаемый р
 - Alpaca TG показывает LIVE/PAPER, safe-hold, фактические holdings, fractional qty, broker stops, base/DD и `DATA_INVALID` ledger;
 - weekday post-close report и delivery watchdog.
 
-Эти observability-патчи установлены на VPS. После web restart `trading-journal-web` активен (PID `2750626`, since `2026-07-11 11:22 UTC`), `configs/web_config.json` существует и содержит одного пользователя, локальный `/ping` вернул `{pong:true}`, warning-записей сервиса не было. Реальный password/TOTP login после рестарта не replayed — доступ по `/ping` не является доказательством полного auth flow.
+Эти observability-патчи установлены на VPS. Human-reviewed canonical state и итоговые frequent-crypto/FX V3 verdicts адресно установлены в `16:25 UTC`, после чего `runtime/ai_context/full_context.json` пересобран: canonical `as_of=2026-07-11T16:15:00Z`, critical blockers пусты, analysis recommendations разрешены, но live control остаётся proposal-only.
+
+Web-auth отдельно усилен в commits `c307085` и `18050bf`: дефолтный JWT заменён атомарно на новый 256-bit server-only secret в `/root/by-bot/.env.local` с mode `600`, а стартовый скрипт больше не пишет даже префикс секрета в journal. Перезапущен только `trading-journal-web`; новый PID `2761068`, `/ping={pong:true}`, `/auth/me` и `/api/health` без cookie возвращают `401`, listener остаётся только `127.0.0.1:8765`. `WEB_COOKIE_SECURE=0` сейчас необходим для plain HTTP через SSH tunnel, поскольку HTTPS reverse proxy и listeners `80/443` отсутствуют. Реальный password/TOTP login после ротации не replayed — если UI продолжит отвечать `Unauthorized`, следующая проверка должна быть owner login, а затем безопасный password reset без передачи пароля в чат.
 
 Alpaca broker-truth dry-run прошёл. Установлены weekday post-close report `22:10 UTC`, monthly day-1 report `22:20 UTC` и weekday delivery watchdog `23:00 UTC`. Watchdog dry-run в субботу законно вернул `not_due`; первый автоматический post-close ожидается в понедельник 13 июля. Manual real Telegram digest успешно доставлен в `11:22 UTC`.
 
@@ -184,13 +186,14 @@ Alpaca broker-truth dry-run прошёл. Установлены weekday post-cl
 
 ## Git и VPS truth
 
-- Implementation head перед этим документационным checkpoint: `115d032` ветки `codex/dynamic-symbol-filters`, pushed; current local/origin HEAD надо получать командой, потому что commit карты идёт следом. Опорные commits: `f459e9f`, `ba53710`, `a625a8b`, `4de548b`, `115d032`.
+- Current implementation/security head перед этим документационным checkpoint: `18050bf` ветки `codex/dynamic-symbol-filters`, совпадает с origin. Опорные commits: `f459e9f`, `ba53710`, `a625a8b`, `4de548b`, `115d032`, `c307085`, `18050bf`.
 - VPS Git checkout остаётся `f7ed011`, dirty; Git там не pull/advance. Адресно установленные disk files новее server HEAD, поэтому `git status`/`rev-parse` не описывают deployed runtime полностью.
 - Первый targeted пакет ATT1/AI/Alpaca reporting/web установлен с backup `/root/by-bot-backups/targeted_580d845_20260711T111235Z`. `bybot` после него подтвердил точный ATT1 contract/hash и flat.
 - Watcher P0 пакет (`bot/allowlist_watcher.py`, `configs/approved_strategy_params.env`) установлен с staging PASS и backup `/root/by-bot-backups/watcher_f459e9f_20260711T111848Z`. Read-only проверка в `16:10 UTC` после второго restart подтвердила direct Bybit positions `0`, ATT1 short-only, risk `0.10`, RSI `45`, expiry `2026-07-20`, exact hash `fd8048f7…`; единственный money sleeve — ATT1.
 - Web restart и report cron install подтверждены отдельно; auth login не replayed, первый scheduled Alpaca delivery ещё не наступил. Manual TG delivery прошла.
 - SHA всех адресно развёрнутых ATT1/AI/Web/Alpaca-reporting файлов, включая `4de548b` и `115d032`, совпал с локальным implementation checkpoint. Это не делает старый server checkout чистым: VPS Git HEAD всё ещё `f7ed011` и dirty.
-- Full local regression после всех изменений: `977 passed`.
+- Canonical AI/report bundle установлен с backup `/root/by-bot-backups/ai_canonical_3c26464_20260711T162537Z`. Web code backup: `/root/by-bot-backups/web_auth_code_20260711T162806Z`; JWT-файл создан впервые, поэтому старого `.env.local` для backup не существовало.
+- Full local regression после всех изменений: `981 passed`.
 - Полный blind pull по-прежнему запрещён. Следующий ops этап — построить reproducible release checkout/manifest и перенести server-only state вне tracked tree, не удаляя архивы/backup-env/ручные файлы без reference audit.
 
 ## План и сроки
@@ -201,6 +204,7 @@ Alpaca broker-truth dry-run прошёл. Установлены weekday post-cl
 2. Проверить первый scheduled Alpaca post-close/watchdog в понедельник; manual delivery уже доказана, schedule delivery ещё нет.
 3. Начать release-manifest/reproducible-checkout план для VPS; не делать blind pull и не удалять server-only файлы до reference audit.
 4. Обновлять canonical AI state и project map после каждого frozen verdict/deploy ACK.
+5. Владельцу повторить реальный password+TOTP login после JWT-ротации; при `Unauthorized` выполнить локальный password reset, не отправляя пароль в чат.
 
 ### Следующие 1–3 рабочие сессии
 

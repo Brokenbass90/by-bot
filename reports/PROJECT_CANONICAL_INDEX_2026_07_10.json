@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-11T16:15:00Z",
-  "status": "recovery_runtime_verified_single_money_sleeve_new_candidates_failed",
+  "as_of_utc": "2026-07-11T16:30:00Z",
+  "status": "recovery_runtime_verified_web_hardened_single_money_sleeve_new_candidates_failed",
   "canonical_documents": [
     "reports/PROJECT_RECOVERY_TRUTH_AND_ROADMAP_2026_07_11.md",
     "reports/ARCHITECTURE_PARITY_AND_MONEY_PATH_2026_07_11.md",
@@ -62,7 +62,8 @@
     "asb2_no_descending_long": "NO_PROMOTION_CAUSAL_DAMAGE_REDUCED_EDGE_STILL_NEGATIVE",
     "fx_v3": "DATA_DIAGNOSTICS_ONLY_ZERO_PROMOTION_VALID_NEWS_COSTS_MISSING",
     "alpaca_reporting": "TRUTH_FIRST_DEPLOYED_MANUAL_DELIVERY_PASS_SCHEDULED_DELIVERY_PENDING",
-    "ai_operator": "CANONICAL_FRESHNESS_FAIL_CLOSED_DEPLOYED_CRITICAL_TRUTH_PASS"
+    "ai_operator": "CANONICAL_FRESHNESS_FAIL_CLOSED_DEPLOYED_CRITICAL_TRUTH_PASS",
+    "web_auth": "JWT_256BIT_ROTATED_LOOPBACK_ONLY_OWNER_LOGIN_REPLAY_PENDING"
   },
   "forbidden_without_owner_approval": [
     "increase_live_risk",
@@ -148,21 +149,23 @@
       ,"frequent crypto immutable 15-case run completed with all three candidates NO_PROMOTION"
       ,"FX/CFD V3 fail-closed research branch added; performance blocked by data/news/OANDA costs"
       ,"architecture parity and money-path contract added"
-      ,"full regression 977 passed"
+      ,"canonical AI and final research verdict bundle deployed and context rebuilt"
+      ,"web JWT rotated to 256-bit server-only secret and prefix logging removed"
+      ,"full regression 981 passed"
     ],
     "live_deployed": true,
     "live_behavior_changed": "ATT1 effective RSI parity corrected to 45 and runtime overlays fail-closed; no risk increase; Alpaca safe-hold retained",
     "live_orders_or_risk_changed": false,
     "git_head_used_for_final_research_run": "376ad21",
-    "git_implementation_head_end_of_session": "115d032",
+    "git_implementation_head_end_of_session": "18050bf",
     "documentation_checkpoint_committed_after_implementation_head": true,
     "git_origin_pushed": true,
     "vps_head": "f7ed011",
-    "vps_implementation_commits_behind_at_checkpoint": 22,
+    "vps_implementation_commits_behind_at_checkpoint": 33,
     "vps_deploy_of_session_changes": true
   },
   "verification": {
-    "fast_tests_passed": 977,
+    "fast_tests_passed": 981,
     "slow_tests_deselected": 0,
     "python_compile": "pass",
     "shell_syntax": "pass",

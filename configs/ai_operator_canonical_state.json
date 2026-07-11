@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-11T16:15:00Z",
+  "as_of_utc": "2026-07-11T16:30:00Z",
   "schema_version": 1,
   "authority": "human_reviewed_project_truth",
   "live": {
@@ -11,6 +11,11 @@
     "alpaca_mode": "SAFE_HOLD_EXISTING_POSITIONS",
     "alpaca_edge_verdict": "CONTAINED_NOT_PROVEN",
     "fx_cfd_mode": "RESEARCH_ONLY_NO_MONEY"
+  },
+  "operations": {
+    "web_auth": "JWT_256BIT_ROTATED_LOOPBACK_ONLY_OWNER_LOGIN_REPLAY_PENDING",
+    "web_cookie_transport": "PLAIN_HTTP_SSH_TUNNEL_COOKIE_SECURE_ZERO_UNTIL_HTTPS_PROXY",
+    "vps_release_model": "TARGETED_SHA_DEPLOY_VPS_GIT_STALE_DIRTY_NO_BLIND_PULL"
   },
   "data_contract": {
     "historical_crypto_accounting": "MIXED_COHORT_NOT_CURRENT_EDGE",
