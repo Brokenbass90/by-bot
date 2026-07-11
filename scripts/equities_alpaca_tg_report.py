@@ -121,10 +121,10 @@ def get_portfolio_history(period: str = "1D", timeframe: str = "1D") -> dict:
 
 
 # ── Telegram helpers ──────────────────────────────────────────────────────────
-def _tg_send(msg: str) -> None:
+def _tg_send(msg: str) -> bool:
     if not TG_TOKEN or not TG_CHAT_ID:
         print(f"[TG disabled] {msg[:100]}", file=sys.stderr)
-        return
+        return False
     url = f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage"
     payload = json.dumps({
         "chat_id": TG_CHAT_ID,
@@ -136,8 +136,10 @@ def _tg_send(msg: str) -> None:
     try:
         with urllib.request.urlopen(req, context=_SSL, timeout=10):
             pass
+        return True
     except Exception as exc:
         print(f"TG send failed: {exc}", file=sys.stderr)
+        return False
 
 
 def _tg_send_photo(path: Path, caption: str = "") -> bool:
@@ -177,6 +179,153 @@ def _safe_int(value: Any, default: int = 0) -> int:
         return int(float(value))
     except Exception:
         return default
+
+
+def _fmt_qty(value: Any) -> str:
+    rendered = f"{_safe_float(value):.8f}".rstrip("0").rstrip(".")
+    return rendered or "0"
+
+
+def get_open_orders() -> list[dict]:
+    return list(_alpaca("GET", "/v2/orders?status=open&limit=100&nested=true"))
+
+
+def _flatten_orders(orders: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    def visit(raw: Any) -> None:
+        if not isinstance(raw, dict):
+            return
+        key = str(raw.get("id") or raw.get("client_order_id") or id(raw))
+        if key not in seen:
+            seen.add(key)
+            out.append(raw)
+        for leg in raw.get("legs") or []:
+            visit(leg)
+
+    for raw in orders:
+        visit(raw)
+    return out
+
+
+def _stop_coverage(positions: list[dict[str, Any]], orders: list[dict[str, Any]]) -> dict[str, Any]:
+    active = {"new", "accepted", "pending_new", "partially_filled", "held", "replaced"}
+    stop_types = {"stop", "stop_limit", "trailing_stop"}
+    stops = [
+        row for row in _flatten_orders(orders)
+        if str(row.get("status") or "").lower() in active
+        and str(row.get("type") or "").lower() in stop_types
+    ]
+    covered: list[str] = []
+    missing: list[str] = []
+    for pos in positions:
+        symbol = str(pos.get("symbol") or "?").upper()
+        qty = abs(_safe_float(pos.get("qty")))
+        protective_side = "buy" if str(pos.get("side") or "long").lower() == "short" else "sell"
+        stop_qty = sum(
+            max(0.0, _safe_float(row.get("qty")) - _safe_float(row.get("filled_qty")))
+            for row in stops
+            if str(row.get("symbol") or "").upper() == symbol
+            and str(row.get("side") or "").lower() == protective_side
+        )
+        if qty > 0 and stop_qty + max(1e-6, qty * 1e-5) >= qty:
+            covered.append(symbol)
+        else:
+            missing.append(symbol)
+    return {"covered": covered, "missing": missing, "total": len(positions)}
+
+
+def _read_current_cycle_picks() -> tuple[str, list[str]]:
+    path = ROOT / "runtime" / "equities_monthly_v36" / "current_cycle_picks.csv"
+    if not path.exists():
+        return "?", []
+    try:
+        import csv
+        with path.open(newline="", encoding="utf-8") as fh:
+            rows = list(csv.DictReader(fh))
+    except Exception:
+        return "?", []
+    if not rows:
+        return "?", []
+    month = str(rows[0].get("month") or "?").strip() or "?"
+    symbols: list[str] = []
+    for row in rows:
+        symbol = str(row.get("ticker") or row.get("symbol") or "").strip().upper()
+        if symbol and symbol not in symbols:
+            symbols.append(symbol)
+    return month, symbols
+
+
+def _report_metrics(acct: dict[str, Any], positions: list[dict[str, Any]], history: dict[str, Any]) -> dict[str, Any]:
+    equity = _safe_float(acct.get("equity") or acct.get("portfolio_value"))
+    last_equity = _safe_float(acct.get("last_equity"), equity)
+    base = _safe_float(
+        _env("ALPACA_REPORT_BASE_CAPITAL_USD")
+        or _env("ALPACA_LIVE_MAX_CAPITAL_USD")
+        or _env("ALPACA_CAPITAL_OVERRIDE_USD")
+    )
+    open_unrealized = sum(_safe_float(pos.get("unrealized_pl")) for pos in positions)
+    day_pnl = equity - last_equity if last_equity else None
+    intraday = [
+        _safe_float(pos.get("unrealized_intraday_pl"))
+        for pos in positions if pos.get("unrealized_intraday_pl") is not None
+    ]
+    intraday_unrealized = sum(intraday) if len(intraday) == len(positions) else None
+    realized_day_est = (
+        day_pnl - intraday_unrealized
+        if day_pnl is not None and intraday_unrealized is not None else None
+    )
+    peaks = [equity]
+    if base > 0:
+        peaks.append(base)
+    peaks.extend(_safe_float(value) for value in (history.get("equity") or []))
+    peak = max(peaks) if peaks else equity
+    return {
+        "equity": equity,
+        "base": base,
+        "day_pnl": day_pnl,
+        "open_unrealized": open_unrealized,
+        "intraday_unrealized": intraday_unrealized,
+        "realized_day_est": realized_day_est,
+        "peak": peak,
+        "dd_pct": ((equity / peak) - 1.0) * 100.0 if peak > 0 else None,
+        "vs_base_pct": ((equity / base) - 1.0) * 100.0 if base > 0 else None,
+    }
+
+
+def _intraday_ledger_verified() -> bool:
+    path = ROOT / "runtime" / "equities_intraday_dynamic_v1" / "ledger_reconciliation.json"
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return False
+    return (
+        str(raw.get("status") or "").upper() in {"VERIFIED", "RECONCILED"}
+        and str(raw.get("source") or "").lower() == "broker_fills"
+    )
+
+
+def _write_delivery_status(*, report_key: str, success: bool, dry_run: bool = False) -> None:
+    safe_key = "".join(ch for ch in report_key if ch.isalnum() or ch in {"-", "_"})
+    if not safe_key:
+        return
+    payload = {
+        "report_key": safe_key,
+        "attempted_at_utc": datetime.now(timezone.utc).isoformat(),
+        "success": bool(success),
+        "dry_run": bool(dry_run),
+        "broker_mode": "PAPER" if IS_PAPER else "LIVE",
+    }
+    try:
+        RUNTIME_REPORT_DIR.mkdir(parents=True, exist_ok=True)
+        status_key = f"{safe_key}_dry_run" if dry_run else safe_key
+        out = RUNTIME_REPORT_DIR / f"{status_key}_status.json"
+        tmp = out.with_suffix(out.suffix + ".tmp")
+        tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp.replace(out)
+    except Exception:
+        pass
 
 
 def _read_csv_first(path: Path) -> dict[str, str] | None:
@@ -414,23 +563,68 @@ def _pnl_emoji(pnl: float) -> str:
 
 def daily_report() -> str:
     acct = get_account()
-    equity     = float(acct.get("equity") or 0)
-    cash       = float(acct.get("cash") or 0)
-    pnl_day    = float(acct.get("unrealized_pl") or 0)     # today's open pnl
-    pnl_day_pct = pnl_day / max(1.0, equity - pnl_day) * 100
-
     positions = get_positions()
+    orders = get_open_orders()
+    history = get_portfolio_history(period="3M", timeframe="1D")
+    metrics = _report_metrics(acct, positions, history)
+    equity = metrics["equity"]
+    cash = _safe_float(acct.get("cash"))
+    pnl_day = metrics["day_pnl"]
+    pnl_day_pct = pnl_day / max(1.0, equity - pnl_day) * 100 if pnl_day is not None else None
+    stop_cov = _stop_coverage(positions, orders)
+    cycle_month, picks = _read_current_cycle_picks()
+    holdings = sorted(str(pos.get("symbol") or "?").upper() for pos in positions)
+    send_orders = _env_bool("ALPACA_SEND_ORDERS", False)
+    allow_entries = _env_bool("ALPACA_ALLOW_NEW_ENTRIES", True)
+    close_stale = _env_bool("ALPACA_CLOSE_STALE_POSITIONS", False)
+    safe_hold = (not send_orders) or (not allow_entries)
 
     now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines = [
         f"📊 <b>Equities {MODE_LABEL} — Daily</b>",
         f"<code>{now_str}</code>",
         "",
+        (
+            f"🔐 Execution={'ON' if send_orders else 'OFF'} | "
+            f"new entries={'ON' if allow_entries else 'OFF'} | "
+            f"stale closes={'ON' if close_stale else 'OFF'}"
+            f"{' | <b>SAFE-HOLD</b>' if safe_hold else ''}"
+        ),
         f"💼 Equity:  <b>${equity:,.2f}</b>",
         f"💵 Cash:    ${cash:,.2f}",
-        f"{_pnl_emoji(pnl_day)} P&amp;L today: <b>{pnl_day:+.2f} ({pnl_day_pct:+.2f}%)</b>",
+    ]
+    if metrics["base"] > 0:
+        lines.append(
+            f"📐 Base ${metrics['base']:,.2f}: {metrics['vs_base_pct']:+.2f}% | "
+            f"DD from max(base/HWM ${metrics['peak']:,.2f}): <b>{metrics['dd_pct']:+.2f}%</b>"
+        )
+    if pnl_day is not None:
+        lines.append(
+            f"{_pnl_emoji(pnl_day)} Account day P&amp;L: "
+            f"<b>{pnl_day:+.2f} ({pnl_day_pct:+.2f}%)</b>"
+        )
+    if metrics["intraday_unrealized"] is not None:
+        lines.append(
+            f"🧾 Intraday uPnL: {metrics['intraday_unrealized']:+.2f} | "
+            f"realized estimate: {metrics['realized_day_est']:+.2f}"
+        )
+    lines += [
+        f"📊 Open unrealized: <b>{metrics['open_unrealized']:+.2f}</b>",
         "",
-        f"📋 Open positions ({len(positions)}):",
+        f"🧪 Current research picks ({cycle_month}, not holdings): {', '.join(picks) or '—'}",
+        f"🏦 Actual broker holdings: {', '.join(holdings) or '—'}",
+        f"🛡 Broker stop coverage: <b>{len(stop_cov['covered'])}/{stop_cov['total']}</b>",
+    ]
+    if stop_cov["missing"]:
+        lines.append(f"🚨 Without full stop coverage: {', '.join(stop_cov['missing'])}")
+    lines += [
+        (
+            "🚫 Intraday v1 realized history: <b>DATA_INVALID</b> until broker-fill reconciliation"
+            if not _intraday_ledger_verified()
+            else "✅ Intraday v1 realized history: broker-fill reconciled"
+        ),
+        "",
+        f"📋 Open broker positions ({len(positions)}):",
     ]
 
     if not positions:
@@ -445,7 +639,7 @@ def daily_report() -> str:
             ep    = float(pos.get("avg_entry_price") or 0)
             cp    = float(pos.get("current_price") or 0)
             lines.append(
-                f"  {_pnl_emoji(upnl)} <b>{sym}</b> {qty:.0f}sh "
+                f"  {_pnl_emoji(upnl)} <b>{sym}</b> {_fmt_qty(qty)}sh "
                 f"@{ep:.2f}→{cp:.2f}  "
                 f"P&amp;L: <b>{upnl:+.2f} ({upct:+.1f}%)</b>  ${mv:.0f}"
             )
@@ -483,11 +677,23 @@ def monthly_report() -> str:
     closed_symbols = {o.get("symbol") for o in orders}
 
     positions = get_positions()
+    open_orders = get_open_orders()
+    stop_cov = _stop_coverage(positions, open_orders)
+    cycle_month, picks = _read_current_cycle_picks()
+    holdings = sorted(str(pos.get("symbol") or "?").upper() for pos in positions)
+    send_orders = _env_bool("ALPACA_SEND_ORDERS", False)
+    allow_entries = _env_bool("ALPACA_ALLOW_NEW_ENTRIES", True)
+    safe_hold = (not send_orders) or (not allow_entries)
 
     now_str = datetime.now(timezone.utc).strftime("%Y-%m")
     lines = [
         f"📅 <b>Equities {MODE_LABEL} — Monthly Report {now_str}</b>",
         "",
+        (
+            f"🔐 Execution={'ON' if send_orders else 'OFF'} | "
+            f"new entries={'ON' if allow_entries else 'OFF'}"
+            f"{' | <b>SAFE-HOLD</b>' if safe_hold else ''}"
+        ),
         f"💼 Start equity: ${start_equity:,.2f}",
         f"💼 End equity:   <b>${end_equity:,.2f}</b>",
         f"{_pnl_emoji(month_pnl)} Month P&amp;L: <b>{month_pnl:+.2f} ({month_pct:+.2f}%)</b>",
@@ -495,9 +701,22 @@ def monthly_report() -> str:
         "",
         f"📋 Trades this month: {len(orders)} orders  ({len(buy_orders)} buys / {len(sell_orders)} sells)",
         f"📋 Symbols traded: {', '.join(sorted(closed_symbols)) or '—'}",
+        f"🧪 Current research picks ({cycle_month}, not holdings): {', '.join(picks) or '—'}",
+        f"🏦 Actual broker holdings: {', '.join(holdings) or '—'}",
+        f"🛡 Broker stop coverage: <b>{len(stop_cov['covered'])}/{stop_cov['total']}</b>",
         "",
         f"🔵 Current positions ({len(positions)}):",
     ]
+    if stop_cov["missing"]:
+        lines.insert(-2, f"🚨 Without full stop coverage: {', '.join(stop_cov['missing'])}")
+    lines.insert(
+        -2,
+        (
+            "🚫 Intraday v1 realized history: <b>DATA_INVALID</b> until broker-fill reconciliation"
+            if not _intraday_ledger_verified()
+            else "✅ Intraday v1 realized history: broker-fill reconciled"
+        ),
+    )
 
     if not positions:
         lines.append("   — none —")
@@ -511,7 +730,7 @@ def monthly_report() -> str:
             upct = float(pos.get("unrealized_plpc") or 0) * 100
             ep   = float(pos.get("avg_entry_price") or 0)
             total_upnl += upnl
-            lines.append(f"  {_pnl_emoji(upnl)} <b>{sym}</b> {qty:.0f}sh @{ep:.2f}  Unrealized: <b>{upnl:+.2f} ({upct:+.1f}%)</b>  ${mv:.0f}")
+            lines.append(f"  {_pnl_emoji(upnl)} <b>{sym}</b> {_fmt_qty(qty)}sh @{ep:.2f}  Unrealized: <b>{upnl:+.2f} ({upct:+.1f}%)</b>  ${mv:.0f}")
         lines.append(f"\n  Total unrealized: <b>{total_upnl:+.2f}</b>")
 
     lines += [
@@ -537,28 +756,43 @@ def main() -> int:
         print("error: ALPACA_API_KEY_ID and ALPACA_API_SECRET_KEY required", file=sys.stderr)
         return 1
 
+    report_ok = True
     try:
         msg = monthly_report() if args.monthly else daily_report()
     except Exception as exc:
         msg = f"❌ Equities {MODE_LABEL} report error: {exc}"
         print(msg, file=sys.stderr)
+        report_ok = False
 
     if args.dry_run:
         print(msg)
         chart_path = None if args.no_chart else _build_progress_chart(monthly=args.monthly)
         if chart_path:
             print(f"chart={chart_path}")
-        return 0
+        _write_delivery_status(
+            report_key="alpaca_monthly" if args.monthly else "alpaca_postclose",
+            success=report_ok,
+            dry_run=True,
+        )
+        return 0 if report_ok else 1
 
-    _tg_send(msg)
+    sent = _tg_send(msg)
+    delivery_ok = report_ok and sent
+    _write_delivery_status(
+        report_key="alpaca_monthly" if args.monthly else "alpaca_postclose",
+        success=delivery_ok,
+    )
     chart_path = None if args.no_chart else _build_progress_chart(monthly=args.monthly)
     if chart_path:
         _tg_send_photo(
             chart_path,
             caption=f"Equities {MODE_LABEL} {'monthly' if args.monthly else 'daily'} progress",
         )
-    print(f"Sent {'monthly' if args.monthly else 'daily'} report to Telegram ({len(msg)} chars)")
-    return 0
+    if sent:
+        print(f"Sent {'monthly' if args.monthly else 'daily'} report to Telegram ({len(msg)} chars)")
+    else:
+        print("Telegram report delivery failed", file=sys.stderr)
+    return 0 if delivery_ok else 1
 
 
 if __name__ == "__main__":

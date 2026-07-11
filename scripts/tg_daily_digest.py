@@ -23,6 +23,7 @@ ENV:
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import os
 import ssl
@@ -75,6 +76,162 @@ def _read_json(path: Path) -> dict:
             return json.load(f)
     except Exception:
         return {}
+
+
+def _safe_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _fmt_qty(value: Any) -> str:
+    """Preserve fractional Alpaca quantities without noisy trailing zeroes."""
+    qty = _safe_float(value)
+    rendered = f"{qty:.8f}".rstrip("0").rstrip(".")
+    return rendered or "0"
+
+
+def _flatten_orders(orders: Any) -> list[dict[str, Any]]:
+    """Return unique parent/leg orders from Alpaca's nested order response."""
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    def visit(raw: Any) -> None:
+        if not isinstance(raw, dict):
+            return
+        key = str(raw.get("id") or raw.get("client_order_id") or id(raw))
+        if key not in seen:
+            seen.add(key)
+            out.append(raw)
+        for leg in raw.get("legs") or []:
+            visit(leg)
+
+    for raw in orders if isinstance(orders, list) else []:
+        visit(raw)
+    return out
+
+
+def _stop_coverage(positions: Any, orders: Any) -> dict[str, Any]:
+    """Compare actual broker positions with still-open protective stop quantities."""
+    active = {"new", "accepted", "pending_new", "partially_filled", "held", "replaced"}
+    stop_types = {"stop", "stop_limit", "trailing_stop"}
+    stops = []
+    for order in _flatten_orders(orders):
+        if str(order.get("status") or "").lower() not in active:
+            continue
+        if str(order.get("type") or "").lower() not in stop_types:
+            continue
+        stops.append(order)
+
+    covered: list[str] = []
+    missing: list[str] = []
+    rows = positions if isinstance(positions, list) else []
+    for pos in rows:
+        if not isinstance(pos, dict):
+            continue
+        symbol = str(pos.get("symbol") or "?").upper()
+        qty = abs(_safe_float(pos.get("qty")))
+        pos_side = str(pos.get("side") or "long").lower()
+        protective_side = "buy" if pos_side == "short" else "sell"
+        protected_qty = 0.0
+        for order in stops:
+            if str(order.get("symbol") or "").upper() != symbol:
+                continue
+            if str(order.get("side") or "").lower() != protective_side:
+                continue
+            protected_qty += max(
+                0.0,
+                _safe_float(order.get("qty")) - _safe_float(order.get("filled_qty")),
+            )
+        # Alpaca fractional rounding can differ by a few millionths.
+        if qty > 0 and protected_qty + max(1e-6, qty * 1e-5) >= qty:
+            covered.append(symbol)
+        else:
+            missing.append(symbol)
+    return {
+        "covered": covered,
+        "missing": missing,
+        "covered_count": len(covered),
+        "position_count": len(rows),
+    }
+
+
+def _intraday_v1_ledger_status() -> str:
+    """Fail closed until the damaged v1 history is rebuilt from broker fills."""
+    proof = _read_json(
+        ROOT / "runtime" / "equities_intraday_dynamic_v1" / "ledger_reconciliation.json"
+    )
+    status = str(proof.get("status") or "").upper()
+    source = str(proof.get("source") or "").lower()
+    if status in {"VERIFIED", "RECONCILED"} and source == "broker_fills":
+        return "VERIFIED"
+    return "DATA_INVALID"
+
+
+def _read_monthly_picks(path: Path) -> tuple[str, list[str]]:
+    if not path.exists():
+        return "?", []
+    try:
+        with path.open(newline="", encoding="utf-8") as fh:
+            rows = list(csv.DictReader(fh))
+    except Exception:
+        return "?", []
+    if not rows:
+        return "?", []
+    month = str(rows[0].get("month") or "?").strip() or "?"
+    tickers = []
+    for row in rows:
+        symbol = str(row.get("ticker") or row.get("symbol") or "").strip().upper()
+        if symbol and symbol not in tickers:
+            tickers.append(symbol)
+    return month, tickers
+
+
+def _account_metrics(account: Any, positions: Any, history: Any) -> dict[str, Any]:
+    account = account if isinstance(account, dict) else {}
+    rows = positions if isinstance(positions, list) else []
+    equity = _safe_float(account.get("equity") or account.get("portfolio_value"))
+    last_equity = _safe_float(account.get("last_equity"), equity)
+    base = _safe_float(
+        _env("ALPACA_REPORT_BASE_CAPITAL_USD")
+        or _env("ALPACA_LIVE_MAX_CAPITAL_USD")
+        or _env("ALPACA_CAPITAL_OVERRIDE_USD")
+    )
+    open_unrealized = sum(_safe_float(pos.get("unrealized_pl")) for pos in rows if isinstance(pos, dict))
+    day_pnl = equity - last_equity if last_equity else None
+    intraday_values = [
+        _safe_float(pos.get("unrealized_intraday_pl"))
+        for pos in rows
+        if isinstance(pos, dict) and pos.get("unrealized_intraday_pl") is not None
+    ]
+    intraday_unrealized = sum(intraday_values) if len(intraday_values) == len(rows) else None
+    realized_day_est = (
+        day_pnl - intraday_unrealized
+        if day_pnl is not None and intraday_unrealized is not None
+        else None
+    )
+    history_equity = history.get("equity") if isinstance(history, dict) else []
+    peaks = [equity]
+    if base > 0:
+        peaks.append(base)
+    if isinstance(history_equity, list):
+        peaks.extend(_safe_float(value) for value in history_equity)
+    peak = max(peaks) if peaks else equity
+    dd_pct = ((equity / peak) - 1.0) * 100.0 if peak > 0 else None
+    vs_base_pct = ((equity / base) - 1.0) * 100.0 if base > 0 else None
+    return {
+        "equity": equity,
+        "last_equity": last_equity,
+        "base": base,
+        "day_pnl": day_pnl,
+        "open_unrealized": open_unrealized,
+        "intraday_unrealized": intraday_unrealized,
+        "realized_day_est": realized_day_est,
+        "peak": peak,
+        "dd_pct": dd_pct,
+        "vs_base_pct": vs_base_pct,
+    }
 
 
 def _age_str(age_sec: Optional[float]) -> str:
@@ -148,7 +305,36 @@ def _write_latest_digest(msg: str) -> None:
         pass
 
 
+def _write_delivery_status(key: str, *, success: bool, dry_run: bool) -> None:
+    if not key:
+        return
+    safe_key = "".join(ch for ch in key if ch.isalnum() or ch in {"-", "_"})
+    if not safe_key:
+        return
+    status_key = f"{safe_key}_dry_run" if dry_run else safe_key
+    out = ROOT / "runtime" / "alpaca_reports" / f"{status_key}_status.json"
+    payload = {
+        "report_key": safe_key,
+        "attempted_at_utc": datetime.now(timezone.utc).isoformat(),
+        "success": bool(success),
+        "dry_run": bool(dry_run),
+        "broker_mode": "PAPER" if "paper-api" in _env("ALPACA_BASE_URL").lower() else "LIVE",
+    }
+    try:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        tmp = out.with_suffix(out.suffix + ".tmp")
+        tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        tmp.replace(out)
+    except Exception:
+        pass
+
+
 def _write_alpaca_account_state(*, account: Any, positions: Any, orders: Any, base_url: str) -> None:
+    # A transient API failure must not replace the last known broker snapshot
+    # with an empty payload that looks current.
+    if not isinstance(account, dict) or not isinstance(positions, list):
+        return
+
     def _pos_row(pos: dict) -> dict:
         return {
             "symbol": pos.get("symbol"),
@@ -182,6 +368,7 @@ def _write_alpaca_account_state(*, account: Any, positions: Any, orders: Any, ba
         "account": {
             "status": account.get("status") if isinstance(account, dict) else None,
             "equity": account.get("equity") if isinstance(account, dict) else None,
+            "last_equity": account.get("last_equity") if isinstance(account, dict) else None,
             "cash": account.get("cash") if isinstance(account, dict) else None,
             "buying_power": account.get("buying_power") if isinstance(account, dict) else None,
             "portfolio_value": account.get("portfolio_value") if isinstance(account, dict) else None,
@@ -423,16 +610,22 @@ def _alpaca_intraday_section() -> str:
         entries_blocked = adv.get("entries_blocked", False)
         prot = adv.get("protection", {})
 
-        status = "🟢 paper работает" if mode == "LIVE_PAPER" else "⚪ dry-run"
+        ledger_status = _intraday_v1_ledger_status()
+        status = "🟢 PAPER execution" if mode == "LIVE_PAPER" else "⚪ PAPER dry-run/shadow"
         if entries_blocked:
             block_reason = adv.get("entries_blocked_reason", "unknown")
             status = f"⛔ входы заблокированы ({block_reason})"
 
         lines.append(f"<b>📈 Alpaca Intraday ({mode}):</b> {status}")
 
-        if today_pnl is not None:
+        if ledger_status == "DATA_INVALID":
+            lines.append(
+                "  🚫 P&amp;L v1: <b>DATA_INVALID</b> — старый ledger повреждён повторным booking; "
+                "цифры не используются до rebuild из broker fills"
+            )
+        elif today_pnl is not None:
             pnl_e = "📈" if today_pnl >= 0 else "📉"
-            lines.append(f"  {pnl_e} Paper journal P&L: <b>${today_pnl:+.2f}</b> (сверяем по fills)")
+            lines.append(f"  {pnl_e} Verified fill-ledger P&amp;L: <b>${today_pnl:+.2f}</b>")
 
         if tracked_positions:
             lines.append(f"  📌 Intraday tracked: {', '.join(tracked_positions[:6])}")
@@ -463,12 +656,17 @@ def _alpaca_monthly_section() -> str:
     lines = []
     base_url = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
     is_live_account = "paper-api" not in base_url
-    account_label = "LIVE" if is_live_account else "paper"
+    account_label = "LIVE BROKER" if is_live_account else "PAPER BROKER"
+    send_orders = _env_bool("ALPACA_SEND_ORDERS", False)
+    allow_new_entries = _env_bool("ALPACA_ALLOW_NEW_ENTRIES", True)
+    close_stale = _env_bool("ALPACA_CLOSE_STALE_POSITIONS", False)
+    safe_hold = (not send_orders) or (not allow_new_entries)
 
     # Try to get live positions from Alpaca API
     positions = _alpaca_get("/v2/positions")
     account = _alpaca_get("/v2/account")
     orders = _alpaca_get("/v2/orders?status=open&limit=100&nested=true")
+    history = _alpaca_get("/v2/account/portfolio/history?period=3M&timeframe=1D&extended_hours=false")
     _write_alpaca_account_state(account=account, positions=positions, orders=orders, base_url=base_url)
 
     # Load current cycle picks
@@ -476,54 +674,90 @@ def _alpaca_monthly_section() -> str:
     refresh_path = ROOT / "runtime" / "equities_monthly_v36" / "latest_refresh.env"
     refresh_age = _file_age(refresh_path)
 
-    # Parse current picks
-    current_tickers: list[str] = []
-    cycle_month = "?"
-    if cycle_path.exists():
-        try:
-            with cycle_path.open() as f:
-                lines_ = f.readlines()
-            if len(lines_) > 1:
-                for row in lines_[1:]:
-                    parts = row.strip().split(",")
-                    if len(parts) >= 2:
-                        if not cycle_month or cycle_month == "?":
-                            cycle_month = parts[0]
-                        current_tickers.append(parts[1])
-        except Exception:
-            pass
+    cycle_month, current_tickers = _read_monthly_picks(cycle_path)
+    metrics = _account_metrics(account, positions, history)
+    stop_cov = _stop_coverage(positions, orders)
+    broker_symbols = sorted(
+        str(pos.get("symbol") or "?").upper()
+        for pos in positions if isinstance(pos, dict)
+    ) if isinstance(positions, list) else []
 
     if account:
-        equity = float(account.get("equity", 0))
-        cash = float(account.get("cash", 0))
-        buying_power = float(account.get("buying_power", 0))
+        equity = metrics["equity"]
+        cash = _safe_float(account.get("cash"))
+        buying_power = _safe_float(account.get("buying_power"))
         lines.append(f"<b>📅 Alpaca Monthly {account_label} ({cycle_month}):</b>")
-        lines.append(f"  💰 Equity: <b>${equity:,.0f}</b> | cash: ${cash:,.0f} | BP: ${buying_power:,.0f}")
+        execution = "ON" if send_orders else "OFF"
+        entries = "ON" if allow_new_entries else "OFF"
+        hold_label = " | <b>SAFE-HOLD</b>" if safe_hold else ""
+        lines.append(
+            f"  🔐 Execution={execution} | new entries={entries} | stale closes={'ON' if close_stale else 'OFF'}{hold_label}"
+        )
+        lines.append(f"  💰 Equity: <b>${equity:,.2f}</b> | cash: ${cash:,.2f} | BP: ${buying_power:,.2f}")
+        if metrics["base"] > 0:
+            lines.append(
+                f"  📐 Base ${metrics['base']:,.2f}: {metrics['vs_base_pct']:+.2f}% | "
+                f"DD от max(base/HWM ${metrics['peak']:,.2f}): <b>{metrics['dd_pct']:+.2f}%</b>"
+            )
+        if metrics["day_pnl"] is not None:
+            pnl_line = f"  🧾 Account day P&amp;L: <b>${metrics['day_pnl']:+.2f}</b>"
+            if metrics["intraday_unrealized"] is not None:
+                pnl_line += (
+                    f" | intraday uPnL ${metrics['intraday_unrealized']:+.2f}"
+                    f" | realized est. ${metrics['realized_day_est']:+.2f}"
+                )
+            lines.append(pnl_line)
+        lines.append(f"  📊 Open unrealized: <b>${metrics['open_unrealized']:+.2f}</b>")
     else:
         lines.append(f"<b>📅 Alpaca Monthly {account_label} ({cycle_month}):</b>")
         lines.append("  💰 Equity: API недоступен")
 
     if current_tickers:
-        lines.append(f"  📋 Выбранные акции: {', '.join(current_tickers)}")
+        lines.append(f"  🧪 Current research picks (не holdings): {', '.join(current_tickers)}")
     else:
-        lines.append("  📋 Выбранных акций не найдено")
+        lines.append("  🧪 Current research picks: не найдены")
+    if isinstance(positions, list):
+        lines.append(f"  🏦 Actual broker holdings: {', '.join(broker_symbols) if broker_symbols else 'нет'}")
+        picks_not_held = [s for s in current_tickers if s not in broker_symbols]
+        holdings_not_picks = [s for s in broker_symbols if s not in current_tickers]
+        if picks_not_held:
+            lines.append(f"  ℹ️ Picks, которых нет у брокера: {', '.join(picks_not_held)}")
+        if holdings_not_picks:
+            lines.append(f"  ⚠️ Holdings вне current picks: {', '.join(holdings_not_picks)}")
+    else:
+        lines.append("  🏦 Actual broker holdings: API недоступен")
 
     # Show open positions with P&L
-    if positions and isinstance(positions, list):
-        # Filter to monthly tickers only (exclude intraday leftovers)
-        monthly_pos = [p for p in positions if p.get("symbol") in current_tickers] if current_tickers else positions
-        if monthly_pos:
-            for pos in monthly_pos[:4]:
+    if isinstance(positions, list):
+        if positions:
+            for pos in positions:
                 sym = pos.get("symbol", "?")
-                qty = pos.get("qty", "?")
-                unrealized = float(pos.get("unrealized_pl", 0))
-                unrealized_pct = float(pos.get("unrealized_plpc", 0)) * 100
+                qty = _fmt_qty(pos.get("qty"))
+                unrealized = _safe_float(pos.get("unrealized_pl"))
+                unrealized_pct = _safe_float(pos.get("unrealized_plpc")) * 100
                 e = "📈" if unrealized >= 0 else "📉"
-                lines.append(f"  {e} {sym}: {unrealized_pct:+.1f}% ({unrealized:+.2f} USD)")
+                lines.append(
+                    f"  {e} {sym}: qty={qty} | {unrealized_pct:+.2f}% ({unrealized:+.2f} USD)"
+                )
         else:
-            lines.append("  💤 Открытых monthly-позиций пока нет")
+            lines.append("  💤 Открытых broker-позиций пока нет")
     else:
         lines.append("  💤 Позиций нет или API недоступен")
+
+    if isinstance(positions, list) and isinstance(orders, list):
+        lines.append(
+            f"  🛡 Broker stop coverage: <b>{stop_cov['covered_count']}/{stop_cov['position_count']}</b>"
+        )
+        if stop_cov["missing"]:
+            lines.append(f"  🚨 Без полного stop coverage: {', '.join(stop_cov['missing'])}")
+    else:
+        lines.append("  ⚠️ Broker stop coverage: API недоступен")
+
+    lines.append(
+        "  🚫 Intraday v1 realized history: <b>DATA_INVALID</b> до broker-fill reconciliation"
+        if _intraday_v1_ledger_status() == "DATA_INVALID"
+        else "  ✅ Intraday v1 realized history: broker-fill reconciled"
+    )
 
     stale_warn = ""
     if refresh_age is not None and refresh_age > 1209600:  # 14 days
@@ -532,7 +766,7 @@ def _alpaca_monthly_section() -> str:
         stale_warn = f" (обновлены {_age_str(refresh_age)})"
     lines.append(f"  🔄 Пики{stale_warn}")
     if is_live_account:
-        lines.append("  ℹ️ Это LIVE-счёт; все заявки должны идти только через capped v38 и broker-side stop protection.")
+        lines.append("  ℹ️ Это LIVE broker account; отчёт не называет safe-hold активной торговлей.")
     else:
         lines.append("  ℹ️ Это paper-счёт; перед реальными деньгами ждём сверку fills, broker-side protection и итог текущего цикла.")
 
@@ -546,10 +780,16 @@ def main() -> int:
     ap.add_argument("--bybit-only", action="store_true")
     ap.add_argument("--alpaca-only", action="store_true")
     ap.add_argument("--dry-run", action="store_true", help="Print, don't send to TG")
+    ap.add_argument(
+        "--status-key",
+        default="",
+        help="Write delivery status under runtime/alpaca_reports (used by report watchdog)",
+    )
     args = ap.parse_args()
 
     # Load credentials. Live env has priority; paper env only fills gaps.
     _load_env_file(ROOT / "configs" / "alpaca_live_v38.env")
+    _load_env_file(ROOT / "configs" / "alpaca_live_v38_safe_hold.env")
     _load_env_file(ROOT / "configs" / "alpaca_paper_local.env")
     # Also try live bot env for TG creds if not already set
     live_env_candidates = [
@@ -581,6 +821,7 @@ def main() -> int:
     msg = "\n".join(sections)
     _write_latest_digest(msg)
     success = _tg_send(token, chat_id, msg, dry_run=args.dry_run)
+    _write_delivery_status(args.status_key, success=success, dry_run=args.dry_run)
     if not args.dry_run:
         print(f"[tg_digest] {'sent' if success else 'failed'} — {now_utc}")
     return 0 if success else 1

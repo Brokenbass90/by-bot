@@ -34,6 +34,8 @@
 #  24. Crypto setup blocker report — every 10 min
 #  25. Freshness watchdog — control-plane stale-state alert
 #  26. Stop-integrity watchdog — P0 TP/SL compression alert
+#  27. Alpaca post-close truth report — 22:10 UTC weekdays
+#  28. Alpaca report delivery watchdog — 23:00 UTC weekdays
 #
 # After running: verify with `crontab -l`
 # Logs: /root/by-bot/logs/  (auto-created)
@@ -98,7 +100,8 @@ for req in \
     "$BOT_DIR/scripts/promote_wf22_winner.py" \
     "$BOT_DIR/scripts/funding_rate_fetcher.py" \
     "$BOT_DIR/scripts/freshness_watchdog.py" \
-    "$BOT_DIR/scripts/stop_integrity_watchdog.py"
+    "$BOT_DIR/scripts/stop_integrity_watchdog.py" \
+    "$BOT_DIR/scripts/alpaca_report_freshness_watchdog.py"
 do
     if [ ! -f "$req" ]; then
         err "Required file not found: $req"
@@ -140,6 +143,9 @@ CURRENT=$(
         | grep -v "scripts/build_crypto_setup_blocker_report.py --quiet >> logs/crypto_blocker.log" \
         | grep -v "scripts/freshness_watchdog.py" \
         | grep -v "scripts/stop_integrity_watchdog.py" \
+        | grep -v "scripts/tg_daily_digest.py --alpaca-only" \
+        | grep -v "scripts/alpaca_report_freshness_watchdog.py" \
+        | grep -v "scripts/equities_alpaca_tg_report.py" \
         | grep -v "scripts/build_self_audit_report.py --quiet >> logs/self_audit.log" \
         | grep -v "scripts/build_project_doctor_report.py --quiet >> logs/project_doctor.log" \
         | grep -v "scripts/build_strategy_health_timeline.py --quiet >> logs/strategy_health_timeline.log" \
@@ -230,6 +236,12 @@ NEW_CRONS=$(cat << CRONEOF
 # 17. Daily Telegram health digest — every morning at 08:00 UTC
 # Reports: CB state, regime, allocator, open trades, Alpaca P&L + picks
 0 8 * * * /bin/bash -lc 'cd $BOT_DIR && source .venv/bin/activate && python3 scripts/tg_daily_digest.py >> logs/tg_daily_digest.log 2>&1' $CRON_TAG
+#
+# 17b. Alpaca post-close truth report — recurring weekdays after the US close
+10 22 * * 1-5 /bin/bash -lc 'cd $BOT_DIR && source .venv/bin/activate && python3 scripts/tg_daily_digest.py --alpaca-only --status-key alpaca_postclose >> logs/alpaca_postclose_report.log 2>&1' $CRON_TAG
+#
+# 17c. Alpaca report delivery watchdog — alert if today's post-close delivery is absent
+0 23 * * 1-5 /bin/bash -lc 'cd $BOT_DIR && source .venv/bin/activate && python3 scripts/alpaca_report_freshness_watchdog.py >> logs/alpaca_report_watchdog.log 2>&1' $CRON_TAG
 #
 # 18. Alpaca monthly autopilot — 1st of each month at 09:30 UTC (after market open)
 30 9 1 * * /bin/bash -lc 'cd $BOT_DIR && bash scripts/run_equities_alpaca_monthly_autopilot.sh >> logs/alpaca_monthly.log 2>&1' $CRON_TAG
