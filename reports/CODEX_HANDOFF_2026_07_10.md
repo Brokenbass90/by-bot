@@ -1,5 +1,9 @@
 # CODEX HANDOFF 2026-07-10
 
+> **Superseded 2026-07-13:** continue from `reports/NEXT_CHAT_START_PROMPT_2026_07_13.md`
+> and `reports/PROJECT_CANONICAL_INDEX_2026_07_13.json`; do not execute the older
+> unfinished-action list below without reconciling it with that checkpoint.
+
 This is the current handoff for the next Codex/Claude-style session.
 
 ## 2026-07-11 continuation override

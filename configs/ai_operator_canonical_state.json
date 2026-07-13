@@ -1,33 +1,73 @@
 {
-  "as_of_utc": "2026-07-11T17:05:00Z",
-  "schema_version": 1,
+  "as_of_utc": "2026-07-13T09:58:01Z",
+  "schema_version": 2,
   "authority": "human_reviewed_project_truth",
+  "control_recommendations_allowed": false,
+  "operator_role": "observer_and_proposal_only",
   "live": {
-    "crypto_money_sleeves": ["att1"],
+    "crypto_money_sleeves": [
+      "att1"
+    ],
     "att1_risk_mult": 0.1,
     "att1_side": "short_only",
     "att1_canary_expiry_utc": "2026-07-20",
     "att1_edge_verdict": "UNPROVEN_DO_NOT_SCALE",
-    "alpaca_mode": "SAFE_HOLD_EXISTING_POSITIONS",
-    "alpaca_edge_verdict": "CONTAINED_NOT_PROVEN",
+    "bybit_api_key_expiry_utc": "2026-08-12",
+    "alpaca_mode": "SAFE_HOLD_EXISTING_POSITIONS_NO_NEW_ROTATION",
+    "alpaca_edge_verdict": "HISTORICAL_PULSE_EXACT_PARITY_BLOCKED",
     "fx_cfd_mode": "RESEARCH_ONLY_NO_MONEY"
   },
   "operations": {
     "web_auth": "JWT_256BIT_ROTATED_LOOPBACK_ONLY_OWNER_LOGIN_REPLAY_PENDING",
     "web_cookie_transport": "PLAIN_HTTP_SSH_TUNNEL_COOKIE_SECURE_ZERO_UNTIL_HTTPS_PROXY",
-    "vps_release_model": "TARGETED_SHA_DEPLOY_VPS_GIT_STALE_DIRTY_NO_BLIND_PULL"
+    "vps_release_model": "TARGETED_SHA_DEPLOY_VPS_GIT_STALE_DIRTY_NO_BLIND_PULL",
+    "vps_checkout": "f7ed011",
+    "bybit_partial_pnl_fix": "GIT_PUSHED_NOT_VPS_DEPLOYED",
+    "core_service_restarted_20260713": false,
+    "live_risk_changed_20260713": false
   },
   "data_contract": {
     "historical_crypto_accounting": "MIXED_COHORT_NOT_CURRENT_EDGE",
     "att1_clean_sample": "N_LT_20_NO_EDGE_VERDICT",
     "alpaca_intraday_v1_ledger": "DATA_INVALID_REBUILD_FROM_BROKER_FILLS",
-    "alpaca_backtest_63pct": "RESEARCH_RESULT_NOT_LIVE_EXPECTATION",
+    "alpaca_backtest_50_75pct": "SELECTED_HISTORICAL_REPLAY_NOT_LIVE_EXPECTATION",
+    "alpaca_exact_parity_20260713": "BLOCKED_NINE_REQUIRED_ARTIFACTS_UNPINNED",
     "fx_v2_data": "DIAGNOSTIC_ONLY_ZERO_OF_SIX_PROMOTION_GRADE",
-    "fx_v3_data": "DATA_DIAGNOSTICS_ONLY_ZERO_PROMOTION_GRADE_MISSING_NEWS_AND_OANDA_COSTS",
-    "frequent_crypto_20260711": "VALID_IMMUTABLE_RUN_ALL_THREE_CANDIDATES_NO_PROMOTION",
-    "pump_exhaustion_prereg": "SOURCE_AND_STATE_FINGERPRINT_PASS_INPUT_SNAPSHOTS_UNPINNED_PERFORMANCE_FORBIDDEN"
+    "fx_v2_performance": "ALL_SIX_SIDE_SPECIFIC_SLEEVES_NO_PROMOTION",
+    "fx_v3_contract": "FAIL_CLOSED_H1_NEWS_COST_HARDENED_NEW_PREREG_REQUIRED",
+    "pump_exhaustion_inputs": "THIRTEEN_OF_THIRTEEN_IMMUTABLE_PASS",
+    "pump_exhaustion_strict_20260713": "NO_PROMOTION_MIN_SAMPLE_FAIL"
+  },
+  "research_verdicts": {
+    "pump_exhaustion_unwind_short_v1": {
+      "verdict": "NO_PROMOTION",
+      "failed_gates": [
+        "min_trades_39_lt_40",
+        "holdout_min_trades_6_lt_10"
+      ],
+      "stress_pf": 1.2341598397951055,
+      "stress_return_pct_720d": 1.228416503363472,
+      "stress_conservative_max_drawdown_pct": 3.0146367210692246,
+      "ondo_share_of_final_stress_net_pct": 93.4,
+      "loso_without_ondo_pf": 1.0179400844764672,
+      "loso_without_ondo_return_pct": -0.127056621404098,
+      "red_active_months": 7,
+      "active_months": 16,
+      "promotion_authorized": false
+    },
+    "alpaca_monthly_exact_parity": {
+      "permission": "BLOCKED_FAIL_CLOSED",
+      "performance_computed": false,
+      "outcome_access_allowed": false,
+      "safe_hold_changed": false
+    },
+    "fx_v3": {
+      "permission": "BLOCKED_PENDING_NEW_VERSIONED_PREREG_AND_EXTERNAL_INPUTS",
+      "performance_computed": false
+    }
   },
   "no_promotion": [
+    "pump_exhaustion_unwind_short_v1_current_frozen_run",
     "legacy_inplay_short",
     "legacy_inplay_long",
     "fx_v2_impulse_breakout_retest_long",
@@ -40,16 +80,16 @@
     "ivb1_current_money_activation",
     "ars1_long_adx25_current",
     "ars1_short_adx25_current",
-    "asb2_no_descending_long_current"
+    "asb2_no_descending_long_current",
+    "elder_current_forms"
   ],
   "research_queue": [
-    "pump_exhaustion_unwind_short_v1_materialize_hash_pin_720d_inputs",
-    "event_expansion_retest_long_v1",
-    "level_memory_sweep_reclaim_side_split_repair",
-    "failed_break_retest_short_v3_fx",
-    "horizontal_range_rejection_v3_fx",
-    "range_edge_expansion_retest_v3_fx",
-    "alpaca_exact_live_parity_replay_and_ledger_rebuild"
+    "event_expansion_retest_long_v1_preregister_before_performance",
+    "pump_short_point_in_time_universe_additivity",
+    "horizontal_range_rejection_crypto_long_short_shared_level_snapshot",
+    "att1_entry_geometry_challenger_preregister",
+    "alpaca_materialize_nine_exact_parity_artifacts",
+    "fx_v3_new_prereg_after_oanda_and_news_inputs"
   ],
   "promotion_gate": {
     "stress_pf_min": 1.2,
@@ -58,15 +98,22 @@
     "min_traded_symbols": 3,
     "min_positive_symbols": 2,
     "max_profit_concentration_pct": 35,
-    "shadow_clean_closes_before_tiny_money": 30
+    "shadow_clean_closes_before_tiny_money": 30,
+    "gates_may_not_be_waived_after_outcome": true
+  },
+  "time_critical": {
+    "att1_explicit_review_by": "2026-07-20",
+    "bybit_key_rotate_before": "2026-08-05",
+    "alpaca_report_due_utc": "2026-07-13T22:10:00Z",
+    "alpaca_watchdog_due_utc": "2026-07-13T23:00:00Z"
   },
   "source_reports": [
-    "reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md",
-    "reports/research/fx_v2_gate_20260711/summary.md",
-    "reports/research/inplay_short_independent_additivity_20260710/summary.md",
-    "reports/FREQUENT_CRYPTO_VERDICT_2026_07_11.md",
-    "reports/research/fx_v3_preflight_20260711/summary.md",
-    "reports/ARCHITECTURE_PARITY_AND_MONEY_PATH_2026_07_11.md",
-    "reports/research/pump_exhaustion_unwind_short_v1_20260711_preflight.json"
+    "reports/RECOVERY_CHECKPOINT_2026_07_13.md",
+    "reports/PROJECT_CANONICAL_INDEX_2026_07_13.json",
+    "reports/PUMP_EXHAUSTION_STRICT_VERDICT_2026_07_13.md",
+    "reports/research/pump_exhaustion_unwind_short_v1_20260713_strict_gate/metrics.json",
+    "reports/ALPACA_TRUTH_AND_NEXT_TEST_2026_07_13.md",
+    "reports/research/alpaca_monthly_exact_parity_replay_20260713_preflight.json",
+    "reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md"
   ]
 }

@@ -1,5 +1,9 @@
 # CODEX FACTS AND PLAN 2026-07-10
 
+> **Superseded 2026-07-13:** canonical facts are in
+> `reports/RECOVERY_CHECKPOINT_2026_07_13.md` and
+> `reports/PROJECT_CANONICAL_INDEX_2026_07_13.json`.
+
 ## Superseding facts — 2026-07-11 morning
 
 Canonical detail: `reports/MORNING_RECOVERY_CHECKPOINT_2026_07_11.md`.

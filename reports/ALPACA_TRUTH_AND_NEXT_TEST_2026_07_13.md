@@ -51,4 +51,6 @@
 5. Считать daily equity/DD, turnover, concentration, regimes, delistings/survivorship и untouched forward.
 6. Re-enable rotation только на monthly boundary после signal/fill/exit parity receipts; adaptive остаётся challenger.
 
+Методика уже зафиксирована до outcome в `configs/preregistered/alpaca_monthly_exact_parity_replay_20260713.json`. Preflight `reports/research/alpaca_monthly_exact_parity_replay_20260713_preflight.json` честно вернул `BLOCKED_FAIL_CLOSED`: source hashes и contract fingerprint PASS, но все девять обязательных artifacts ещё unpinned; shared executable exit не доказан, Jul6–9 broker lifecycle не восстановлен, untouched forward не sealed. `performance_computed=false`, outcome access false, SAFE-HOLD не изменён. Семь focused tests и full suite `1070 passed`.
+
 Никаких Alpaca live/config изменений в аудите 13 июля не было.

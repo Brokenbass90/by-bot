@@ -1,0 +1,129 @@
+{
+  "schema_version": 2,
+  "as_of_utc": "2026-07-13T09:58:01Z",
+  "status": "recovery_truth_pinned_single_crypto_money_sleeve_pump_candidate_no_promotion_fx_alpaca_blocked_fail_closed",
+  "implementation_head_before_docs": "a8d8bb878a6fc9a87501f42327eebc72e6b1a7bd",
+  "branch": "codex/dynamic-symbol-filters",
+  "origin_matched_before_docs": true,
+  "canonical_documents": [
+    "reports/RECOVERY_CHECKPOINT_2026_07_13.md",
+    "reports/PUMP_EXHAUSTION_STRICT_VERDICT_2026_07_13.md",
+    "reports/ALPACA_TRUTH_AND_NEXT_TEST_2026_07_13.md",
+    "reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md",
+    "reports/NEXT_CHAT_START_PROMPT_2026_07_13.md",
+    "reports/PROJECT_STATE_LEDGER.md",
+    "configs/ai_operator_canonical_state.json"
+  ],
+  "source_priority": [
+    "direct_broker_or_exchange",
+    "fresh_heartbeat_and_effective_runtime_contract",
+    "targeted_release_receipt",
+    "immutable_preregistered_research",
+    "historical_summary",
+    "ai_interpretation"
+  ],
+  "live_truth": {
+    "bybit": {
+      "last_read_only_verification_utc": "2026-07-13T09:04:00Z",
+      "positions_at_verification": 0,
+      "money_sleeves": ["ATT1_short_r001_risk_mult_0.10"],
+      "att1_edge": "UNPROVEN_DO_NOT_SCALE",
+      "att1_canary_expiry": "2026-07-20",
+      "api_key_expiry": "2026-08-12"
+    },
+    "alpaca": {
+      "mode": "SAFE_HOLD_EXISTING_POSITIONS_NO_NEW_ROTATION",
+      "last_direct_equity_usd": 486.93,
+      "positions": ["ABBV", "ABNB", "GE", "SCHW"],
+      "broker_stop_coverage": "4/4",
+      "manual_core_restart_required": false,
+      "scheduled_report_due_utc": "2026-07-13T22:10:00Z",
+      "watchdog_due_utc": "2026-07-13T23:00:00Z"
+    },
+    "fx_cfd": {
+      "mode": "RESEARCH_ONLY_NO_CAPITAL",
+      "performance_permission": "BLOCKED_PENDING_NEW_PREREG_AND_EXTERNAL_INPUTS"
+    }
+  },
+  "git_and_deploy_truth": {
+    "bybit_partial_close_pnl_fix": "PUSHED_NOT_DEPLOYED_TO_VPS",
+    "pump_strict_runner_and_verdict": "PUSHED_RESEARCH_ONLY",
+    "fx_v3_fail_closed_hardening": "PUSHED_RESEARCH_ONLY",
+    "alpaca_exact_parity_prereg": "PUSHED_BLOCKED_NO_PERFORMANCE",
+    "vps_checkout": "f7ed011_dirty_stale_no_blind_pull",
+    "core_service_restarted_this_session": false,
+    "live_risk_changed_this_session": false
+  },
+  "stage_board": {
+    "ATT1_short_r001": "LIVE_CANARY_BASE_UNCHANGED_NO_SCALE",
+    "ATT1_entry_geometry_challenger": "PREREG_REQUIRED_BEFORE_NEW_OUTCOME",
+    "pump_exhaustion_unwind_short_v1": "NO_PROMOTION_N39_HOLDOUT_N6",
+    "event_expansion_retest_long_v1": "NEXT_DESIGN_ONLY",
+    "horizontal_range_rejection_crypto_long_short": "DESIGN_AFTER_SHARED_LEVEL_SNAPSHOT",
+    "legacy_inplay_short_long": "NO_PROMOTION_FROZEN",
+    "ARS1_ASB2_Elder": "NO_PROMOTION_CURRENT_FORMS",
+    "Alpaca_monthly_v38": "SAFE_HOLD_EXACT_PARITY_PREFLIGHT_BLOCKED",
+    "Alpaca_adaptive": "CHALLENGER_ONLY_NO_LIVE_AUTHORITY",
+    "FX_V2": "NO_PROMOTION_ALL_SIX_SIDES_NEGATIVE",
+    "FX_V3": "FAIL_CLOSED_CONTRACT_READY_NEW_PINNED_PREREG_REQUIRED",
+    "AI_operator": "OBSERVER_PROPOSAL_ONLY_CANONICAL_TRUTH_REQUIRED",
+    "web_control": "TRUTH_FIRST_TARGETED_DEPLOY_PREVIOUSLY_VERIFIED"
+  },
+  "research_truth": {
+    "pump_data": "13_OF_13_IMMUTABLE_PASS",
+    "pump_strict": {
+      "verdict": "NO_PROMOTION",
+      "failed_gates": ["min_trades", "holdout_min_trades"],
+      "stress_trades": 39,
+      "stress_pf": 1.2341598397951055,
+      "stress_return_pct_720d": 1.228416503363472,
+      "stress_max_drawdown_pct": 3.0146367210692246,
+      "ondo_share_of_final_stress_net_pct": 93.4,
+      "loso_without_ondo_pf": 1.0179400844764672,
+      "loso_without_ondo_return_pct": -0.127056621404098,
+      "holdout_trades": 6,
+      "red_active_months": 7,
+      "active_months": 16
+    },
+    "alpaca_parity": "BLOCKED_ALL_NINE_REQUIRED_ARTIFACTS_UNPINNED",
+    "fx_v3": "OLD_CONFIG_ACTIONABLY_BLOCKED_NEW_VERSION_REQUIRED"
+  },
+  "owner_inputs_required": {
+    "fx": [
+      "OANDA_v20_fxTrade_Practice_account",
+      "local_OANDA_API_TOKEN_and_ACCOUNT_ID_never_in_chat",
+      "regulatory_region_and_account_pricing_type",
+      "desired_FX_and_CFD_instruments",
+      "licensed_historical_macro_calendar_with_UTC_currency_numeric_impact_event"
+    ],
+    "bybit": [
+      "rotate_API_key_before_early_August_without_sharing_secret"
+    ]
+  },
+  "forbidden_without_new_gate_and_owner_approval": [
+    "increase_ATT1_or_Alpaca_risk",
+    "enable_second_crypto_money_sleeve",
+    "waive_pump_minimum_sample_gates_after_outcome",
+    "run_FX_performance_from_old_Jul11_contract",
+    "fund_OANDA_or_trade_FX_CFD",
+    "remove_Alpaca_SAFE_HOLD",
+    "blind_pull_reset_or_cleanup_dirty_VPS",
+    "mix_long_and_short_physical_strategy_identity"
+  ],
+  "next_actions": [
+    "deploy_Bybit_partial_PnL_fix_targeted_when_server_access_returns_and_exchange_is_flat",
+    "reconcile_ADA_partial_and_final_broker_rows",
+    "verify_Alpaca_scheduled_report_and_watchdog_after_due_window",
+    "materialize_Alpaca_broker_lifecycle_PIT_data_shared_exit_and_forward_artifacts",
+    "create_new_FX_V3_prereg_after_owner_inputs_then_refresh_bid_ask_data",
+    "preregister_event_expansion_retest_long_v1_before_performance",
+    "design_point_in_time_pump_universe_additivity_without_symbol_cherry_pick"
+  ],
+  "verification": {
+    "full_pytest": "1070_passed",
+    "git_diff_check_code": "pass",
+    "pump_artifact_manifest": "11_of_11_hashes_match",
+    "pump_preflight_embedded_exact": true,
+    "live_or_broker_orders_from_research": false
+  }
+}

@@ -4,7 +4,7 @@
 
 ## Короткий вывод
 
-Реальные Dukascopy M5 данные уже существуют почти за два года; утверждение, что FX заблокирован полным отсутствием M5, неверно. Но ни один символ пока не является promotion-grade: календарные/загрузочные дыры не нормализованы, исторические новости и реальные OANDA costs не закреплены, а кодовый контракт V3 требует нескольких fail-closed ремонтов до вычисления PnL.
+Реальные Dukascopy M5 данные уже существуют почти за два года; утверждение, что FX заблокирован полным отсутствием M5, неверно. Но ни один символ пока не является promotion-grade: календарные/загрузочные дыры не нормализованы, исторические новости и реальные OANDA costs не закреплены. Кодовый fail-closed ремонт V3 выполнен; следующий блокер — новый versioned prereg с owner-confirmed contracts и реальными artifacts, а не PnL.
 
 Старые V2 цифры уже есть и отрицательны. V3 — причинно более аккуратная ветка с физически раздельными long/short sleeves, но у неё пока нет замороженного performance runner. Первые честные приблизительные V3 цифры реалистичны через 2–4 дня после получения owner inputs; полный пяти-рукавный verdict — примерно через неделю. XAU/индексные CFD требуют отдельной очереди.
 
@@ -48,13 +48,14 @@ Evidence: `reports/research/fx_v2_gate_20260711/summary.md`. Все старые
 
 Итого это пять side-separated sleeves, а не три смешанных long/short стратегии.
 
-## Что исправить до outcome
+## Что уже исправлено до outcome и что осталось
 
-- `bot/fx_setups_v3.py`: проверка `min_resolved_reactions` сейчас fail-open при недостатке разрешённых реакций. Нужно выбрать строгую семантику, исправить, протестировать и перезаморозить до PnL.
-- News artifact: `min_rows=1` и проверка только верхнеуровневых полей не доказывают двухлетнее покрытие. Нужны schema/type/range/duplicate/currency/density gates.
-- Cost artifact: нужны uniqueness `symbol+session`, numeric/range guards, `p50 <= p95`, freshness и account-pricing identity; шесть дубликатов не могут считаться шестью режимами.
+- `bot/fx_setups_v3.py`: недостаточное число resolved reactions теперь строго fail-closed; высокий score сам по себе не пропускает уровень.
+- Все V3 plans явно закрепляют текущий `execution_bar_seconds=3600`; это честный H1 contract, не скрытый M15.
+- News validator теперь требует typed epoch-second schema, window envelope, canonical currency/numeric impact/event, отсутствие дублей, minimum events и maximum gap по каждой required currency.
+- OANDA cost validator требует confirmed broker/account type, точный unique set `symbol+session`, finite nonnegative numbers, `p50 <= p95` и integer minimum observations.
+- Старый Jul11 config не редактировался после evidence. С новым runner он останавливается раньше source gate и перечисляет отсутствующие contract fields, не создавая output. Следующим создаётся новый prereg с fresh source hashes.
 - `scripts/import_news_events_csv.py` несовместим с V3 schema (`ts_utc/title`, строковый impact вместо `ts/event`, numeric impact). Нужен нормализатор и фильтр валюты инструмента.
-- Контракт должен заранее решить `H1 next-open` либо `H1 context + M15 execution`. Сейчас код фактически H1 (`h1_interval=60`, `execution_bar_seconds=3600`), несмотря на прежние слова о M15.
 - `scripts/fetch_forex_oanda.py` получает только midpoint, полностью переписывает файл, не сохраняет bid/ask costs и не имеет XAUUSD mapping. Нужен resumable BA/cost collector.
 - Текущий CFD scope — только XAUUSD; индексных CFD data/spec V3 пока нет.
 
@@ -71,10 +72,10 @@ OANDA официально рекомендует practice endpoint для те�
 
 ## Срок после получения inputs
 
-- День 1: закрыть fail-open contracts, news normalization/currency scope, resumable BA ingestion, H1/M15 freeze; проверить account instruments; обновить EURUSD/GBPUSD/USDJPY.
+- День 1: создать новый prereg, закрыть news normalization/currency scope, resumable BA ingestion; проверить account instruments; обновить EURUSD/GBPUSD/USDJPY.
 - День 2–4: закрепить news и account costs; получить `>=3` clean majors; заморозить один runner и первые approximate V3 figures с costs/folds/embargo/holdout/LOSO.
 - День 5–7: полный пяти-рукавный report и автоматический `NO_GO` либо `RESEARCH_PASS`.
 - XAU/прочие CFD: отдельная очередь ориентировочно 5–10+ дней.
 - Demo orders: только после strict PASS. Реальные деньги: только после не менее 30 чистых demo closes и отдельного owner approval.
 
-Проверка этой сессии: 42 focused FX tests PASS; repo/live не изменялись.
+Проверка этой сессии: 66 focused/FX regression tests PASS; full suite `1070 passed`. Изменения pushed как research-only; performance, broker calls и live не запускались.

@@ -1,5 +1,10 @@
 # MASTER MAP AND PLAN 2026-07-10
 
+> **2026-07-13 canonical override:** read `reports/RECOVERY_CHECKPOINT_2026_07_13.md`,
+> `reports/PROJECT_CANONICAL_INDEX_2026_07_13.json` and
+> `reports/NEXT_CHAT_START_PROMPT_2026_07_13.md`. They supersede live/research
+> status below. Strict pump verdict is `NO_PROMOTION`; FX/Alpaca remain blocked.
+>
 > Latest recovery truth: `reports/PROJECT_RECOVERY_TRUTH_AND_ROADMAP_2026_07_11.md`.
 > Latest continuation prompt: `reports/NEXT_CHAT_START_PROMPT_2026_07_11.md`.
 > The July 11 recovery report supersedes stale live/deploy counts below.

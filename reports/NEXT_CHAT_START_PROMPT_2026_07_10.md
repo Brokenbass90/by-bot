@@ -1,7 +1,8 @@
 # NEXT CHAT START PROMPT 2026-07-10
 
-> Superseded by `reports/NEXT_CHAT_START_PROMPT_2026_07_11.md` and
-> `reports/PROJECT_RECOVERY_TRUTH_AND_ROADMAP_2026_07_11.md`.
+> Superseded by `reports/NEXT_CHAT_START_PROMPT_2026_07_13.md`,
+> `reports/RECOVERY_CHECKPOINT_2026_07_13.md` and
+> `reports/PROJECT_CANONICAL_INDEX_2026_07_13.json`.
 
 Ты новый Codex/Claude-контур в проекте live trading bot. Работай как pragmatic product engineer + quant researcher + live-system operator.
 
