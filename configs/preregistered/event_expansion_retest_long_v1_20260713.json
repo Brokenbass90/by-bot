@@ -1,0 +1,334 @@
+{
+  "schema_version": 1,
+  "name": "event_expansion_retest_long_v1_20260713_phase0",
+  "frozen_at_utc": "2026-07-13T10:32:00Z",
+  "phase": "PHASE_0_MECHANICS_IDENTITY_ONLY",
+  "purpose": "Freeze the causal long-only implementation identity, cohorts, future evaluation gates, and fail-closed blockers before any performance-capable runner exists.",
+  "research_only": true,
+  "live_or_broker_calls": false,
+  "risk_pct": 0,
+  "no_parameter_scan": true,
+  "no_performance_access": true,
+  "current_automatic_verdict": "BLOCKED_RESEARCH_MECHANICS",
+  "current_performance_permission": "PERFORMANCE_FORBIDDEN",
+  "current_live_permission": "LIVE_FORBIDDEN",
+  "implementation_identity": {
+    "git_commit": "f07dd012810d55028d238fe5d6780e591768bb64",
+    "side_identity": "long_only",
+    "level_schema": "level_snapshot_v1",
+    "level_scope": "horizontal_h1_h4_resistance_flip_only",
+    "sloped_levels": "DEFERRED_TO_A_SEPARATE_VERSIONED_CONTRACT",
+    "pinned_files": [
+      {
+        "role": "phase0_preflight",
+        "path": "scripts/preflight_event_expansion_retest_long_v1.py",
+        "sha256": "38a21104fdbb78fa7c8360dbb286deb25c5d3be5086c0bda8a4cd51c19185a59"
+      },
+      {
+        "role": "level_snapshot_source",
+        "path": "bot/level_snapshot_v1.py",
+        "sha256": "91b2c4650cc03ffd054b7c68395fa4fcfc6d408933f24e6902c9c91f3e6c4bdc"
+      },
+      {
+        "role": "strategy_mechanics_source",
+        "path": "strategies/event_expansion_retest_long_v1.py",
+        "sha256": "d56beeca7fe928bab1471acd19e4b7a4a5f0fe1be8e9f3c8ea6ca3e715f3b349"
+      },
+      {
+        "role": "state_store_source",
+        "path": "bot/event_expansion_retest_long_state_store.py",
+        "sha256": "7be50de4293d8f78cded571133953cea96dd76cb5c5d139a067e9eb85e2c18a8"
+      },
+      {
+        "role": "market_context_dependency",
+        "path": "bot/market_context.py",
+        "sha256": "34e79fbcca9bf33e1247a44ac5b57f0b33e6c1d188a329f28859ea6503a8054c"
+      },
+      {
+        "role": "closed_bar_aggregation_source",
+        "path": "bot/closed_bar_aggregation_v1.py",
+        "sha256": "5ad6b37ee5124b185ae1cefd0b7aed43863d338fed3d3abfcbf2fce96f2d95aa"
+      },
+      {
+        "role": "level_snapshot_tests",
+        "path": "tests/test_level_snapshot_v1.py",
+        "sha256": "4f0878e69e7269f8f6518ba341ff21830895ff6934f7eebbc22d6d1ed9cc47f4"
+      },
+      {
+        "role": "strategy_mechanics_tests",
+        "path": "tests/test_event_expansion_retest_long_v1.py",
+        "sha256": "af37a5cf3fd70b5f2f6123b9133f7905444e9e0169e66a655d8a98670ae912f5"
+      },
+      {
+        "role": "state_store_tests",
+        "path": "tests/test_event_expansion_retest_long_state_store.py",
+        "sha256": "d56094446b6ac46d9c41198cd8625297b759d6d3c54834659bf59af493e3271a"
+      },
+      {
+        "role": "closed_bar_aggregation_tests",
+        "path": "tests/test_closed_bar_aggregation_v1.py",
+        "sha256": "45654441770fbde1252a4b136e6b80b96d731ffa6e932b16ed60f4540976643c"
+      },
+      {
+        "role": "phase0_preflight_tests",
+        "path": "tests/test_preflight_event_expansion_retest_long_v1.py",
+        "sha256": "990804b185fa96d1ab4b9d5364ab4e7540e5c595f7607bbb2e81e3e94721aeae"
+      }
+    ]
+  },
+  "cohorts": {
+    "dev13": {
+      "role": "DEVELOPMENT_MECHANICS_ONLY_NO_PROMOTION_AUTHORITY",
+      "symbols": [
+        "1000PEPEUSDT",
+        "ADAUSDT",
+        "AVAXUSDT",
+        "BNBUSDT",
+        "BTCUSDT",
+        "DOGEUSDT",
+        "ETHUSDT",
+        "ONDOUSDT",
+        "SOLUSDT",
+        "SUIUSDT",
+        "TAOUSDT",
+        "WIFUSDT",
+        "XRPUSDT"
+      ],
+      "source_interval": "M5",
+      "window_start_utc": "2024-07-15T00:00:00Z",
+      "window_end_utc_exclusive": "2026-07-05T00:00:00Z",
+      "manifest_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/manifest.json",
+      "manifest_sha256": "f1f425e8822a5a8de56676fb24f257982d4c5fb33e254a328dc2b8243aedffd8"
+    },
+    "sealed_external8": {
+      "role": "STRATEGY_UNTOUCHED_HISTORICAL_REPLICATION",
+      "base_assets": [
+        "FIL",
+        "UNI",
+        "ETC",
+        "ICP",
+        "TRX",
+        "TON",
+        "MNT",
+        "IMX"
+      ],
+      "symbols": [
+        "FILUSDT",
+        "UNIUSDT",
+        "ETCUSDT",
+        "ICPUSDT",
+        "TRXUSDT",
+        "TONUSDT",
+        "MNTUSDT",
+        "IMXUSDT"
+      ],
+      "source_interval": "M5",
+      "window_start_utc": "2024-07-15T00:00:00Z",
+      "window_end_utc_exclusive": "2026-07-05T00:00:00Z",
+      "sealed_before_data_access": true,
+      "selection_rule": "fixed_non_pnl_cohort_no_symbol_substitution_or_post_result_filtering",
+      "data_status": "ABSENT_AND_UNREAD",
+      "manifest_path": "",
+      "manifest_sha256": ""
+    },
+    "prospective": {
+      "role": "FORWARD_ONLY_AFTER_COMPLETE_RUNNABLE_FREEZE",
+      "start_rule": "start_timestamp_is_set_only_after_runner_aggregation_mtf_exits_costs_funding_data_and_att1_reference_are_hash_pinned_and_pushed",
+      "start_utc": null,
+      "retroactive_backfill_as_prospective": false,
+      "status": "NOT_STARTED"
+    }
+  },
+  "intended_multitimeframe_contract": {
+    "raw_source": "exact_closed_M5_bars",
+    "aggregation": {
+      "H1": "12_contiguous_M5_bars_utc_grid_no_partial_bucket",
+      "H4": "48_contiguous_M5_bars_utc_grid_no_partial_bucket",
+      "M15": "3_contiguous_M5_bars_utc_grid_no_partial_bucket"
+    },
+    "level_source": "frozen_horizontal_resistance_from_closed_H1_or_H4_only",
+    "expansion_signal": "closed_H1_only",
+    "hold_and_first_retest": "strictly_later_closed_M15_bars_only",
+    "bullish_structure_confirmation": "strictly_later_closed_M15_bar_after_first_retest",
+    "execution": "first_eligible_M5_open_strictly_after_confirmation",
+    "same_bar_stage_collapse_allowed": false,
+    "future_bar_access_allowed": false,
+    "first_retest_only": true,
+    "duplicate_event_or_plan_ids_allowed": false,
+    "level_redraw_after_event_allowed": false,
+    "provider_mixing_allowed": false,
+    "missing_or_duplicate_source_bars_allowed": false
+  },
+  "future_execution_and_cost_contract": {
+    "sizing": {
+      "starting_equity_usd": 100.0,
+      "risk_fraction_per_trade": 0.005,
+      "notional_cap_usd": 30.0,
+      "max_global_open_positions": 4,
+      "max_open_positions_per_symbol": 1
+    },
+    "base_costs": {
+      "fee_bps_per_side": 6.0,
+      "slippage_bps_per_side": 2.0
+    },
+    "stress_costs": {
+      "fee_bps_per_side": 10.0,
+      "slippage_bps_per_side": 5.0
+    },
+    "funding": {
+      "credits_bps": 0.0,
+      "debit_rule": "max(actual_debit,5_bps_per_funding_event)",
+      "missing_funding_data": "FAIL_CLOSED"
+    },
+    "exit_model": "UNDEFINED_AND_MUST_BE_HASH_PINNED_IN_A_SUCCESSOR_RUNNABLE_FREEZE_BEFORE_ANY_PERFORMANCE",
+    "same_bar_stop_and_target": "UNDEFINED_UNTIL_EXIT_MODEL_FREEZE",
+    "post_outcome_exit_selection_allowed": false
+  },
+  "fixed_temporal_partition": {
+    "calendar_window_days": 720,
+    "development_window_days": 600,
+    "folds": [
+      {
+        "id": "fold_1",
+        "start_utc": "2024-07-15T00:00:00Z",
+        "end_utc_exclusive": "2024-12-12T00:00:00Z"
+      },
+      {
+        "id": "fold_2",
+        "start_utc": "2024-12-12T00:00:00Z",
+        "end_utc_exclusive": "2025-05-11T00:00:00Z"
+      },
+      {
+        "id": "fold_3",
+        "start_utc": "2025-05-11T00:00:00Z",
+        "end_utc_exclusive": "2025-10-08T00:00:00Z"
+      },
+      {
+        "id": "fold_4",
+        "start_utc": "2025-10-08T00:00:00Z",
+        "end_utc_exclusive": "2026-03-07T00:00:00Z"
+      }
+    ],
+    "embargo_after_boundaries_days": 7,
+    "embargo_boundaries_utc": [
+      "2024-12-12T00:00:00Z",
+      "2025-05-11T00:00:00Z",
+      "2025-10-08T00:00:00Z",
+      "2026-03-07T00:00:00Z"
+    ],
+    "final_holdout": {
+      "start_utc": "2026-03-07T00:00:00Z",
+      "end_utc_exclusive": "2026-07-05T00:00:00Z",
+      "calendar_days": 120,
+      "first_7_days_embargoed": true
+    }
+  },
+  "future_evaluation_gates": {
+    "aggregate": {
+      "base_profit_factor_min": 1.35,
+      "stress_profit_factor_min": 1.25,
+      "stress_closed_trades_min": 60,
+      "stress_conservative_max_drawdown_pct_max": 8.0,
+      "duplicate_event_ids_max": 0,
+      "duplicate_plan_ids_max": 0,
+      "censored_or_invalid_trades_max": 0,
+      "long_side_purity_pct_min": 100.0
+    },
+    "folds": {
+      "fixed_folds": 4,
+      "calendar_days_per_fold": 150,
+      "trades_per_fold_min": 8,
+      "net_positive_folds_min": 3,
+      "median_fold_profit_factor_min": 1.1
+    },
+    "final_holdout": {
+      "stress_closed_trades_min": 12,
+      "stress_net_r_must_be_positive": true,
+      "stress_profit_factor_min": 1.1
+    },
+    "cohort_breadth": {
+      "dev13_traded_symbols_min": 7,
+      "dev13_positive_symbols_min": 4,
+      "external8_traded_symbols_min": 6,
+      "external8_positive_symbols_min": 4,
+      "top_positive_net_concentration_pct_max": 30.0
+    },
+    "leave_one_symbol_out": {
+      "worst_stress_profit_factor_min": 1.05,
+      "worst_stress_net_r_must_be_positive": true,
+      "worst_stress_max_drawdown_pct_max": 10.0
+    },
+    "att1_additivity": {
+      "daily_return_correlation_abs_max": 0.35,
+      "downside_return_correlation_abs_max": 0.45,
+      "co_loss_day_jaccard_max": 0.4,
+      "occupancy_orderings_required": [
+        "ATT1_FIRST",
+        "EVENT_LONG_FIRST"
+      ],
+      "worse_ordering_long_trade_retention_pct_min": 70.0,
+      "worse_ordering_combined_net_r_min_rule": "ATT1_net_r_plus_0.25_times_standalone_event_long_net_r",
+      "worse_ordering_max_drawdown_ratio_to_att1_max": 1.1,
+      "worse_ordering_return_over_drawdown_ratio_to_att1_min": 1.1,
+      "worse_ordering_worst_month_degradation_percentage_points_max": 0.5
+    },
+    "decision_rule": "EVERY_GATE_MUST_PASS_WITHOUT_SYMBOL_OR_PARAMETER_CHERRY_PICKING;_PASS_DOES_NOT_AUTOMATICALLY_AUTHORIZE_LIVE"
+  },
+  "phase0_missing_artifacts": [
+    {
+      "code": "PERFORMANCE_RUNNER_ABSENT",
+      "required_artifact": "hash_pinned_event_long_performance_runner",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "MULTITIMEFRAME_ORCHESTRATOR_ABSENT",
+      "required_artifact": "hash_pinned_H1_expansion_M15_retest_M5_next_open_orchestrator_and_conformance",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "EXIT_MODEL_ABSENT",
+      "required_artifact": "hash_pinned_exit_simulator_and_conformance",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "COST_FUNDING_MODEL_ABSENT",
+      "required_artifact": "hash_pinned_base_stress_cost_and_funding_model_with_receipts",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "EXTERNAL8_MARKET_DATA_ABSENT",
+      "required_artifact": "sealed_external8_exact_M5_manifest",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "EXTERNAL8_METADATA_ABSENT",
+      "required_artifact": "sealed_external8_point_in_time_instrument_metadata_manifest",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "EXTERNAL8_LIQUIDITY_ABSENT",
+      "required_artifact": "sealed_external8_point_in_time_liquidity_and_tradability_manifest",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "EXTERNAL8_FUNDING_ABSENT",
+      "required_artifact": "sealed_external8_historical_funding_manifest",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "ATT1_REFERENCE_ABSENT",
+      "required_artifact": "hash_pinned_ATT1_same_window_daily_returns_trades_occupancy_and_equity_reference",
+      "path": "",
+      "sha256": ""
+    }
+  ],
+  "contract_fingerprint_sha256": "317a3a63d437a2ce0aad06bee7dcea61a12e333fd1306ac7236719729fe40c7d"
+}
