@@ -221,6 +221,7 @@ from bot.order_link import (
     make_order_link_id as _make_order_link_id_pure,
     log_order_link as _log_order_link_pure,
 )
+from bot.bybit_closed_pnl import aggregate_closed_pnl
 
 ORDER_LINK_ID_ENABLED = _env_bool("ORDER_LINK_ID_ENABLED", True)
 ORDER_LINK_LOG_PATH = ROOT_DIR / "runtime" / "order_link_id_log.jsonl"
@@ -7401,29 +7402,40 @@ def _finalize_and_report_closed(tr, sym: str):
 
     rows = []
     try:
-        rows = TRADE_CLIENT.get_closed_pnl(sym, start_ms, end_ms, limit=50)
+        rows = TRADE_CLIENT.get_closed_pnl(sym, start_ms, end_ms, limit=100)
     except Exception as e:
         log_error(f"closed-pnl fetch fail {sym}: {e}")
 
-    # выберем самую свежую запись
-    row = None
-    if rows:
-        def _t(r):
-            return int(r.get("updatedTime") or r.get("createdTime") or 0)
-        row = max(rows, key=_t)
+    # Bybit returns one closed-PnL row per close order.  A runner can therefore
+    # produce several rows (partial TPs + final stop/trail); account for the
+    # complete logical position instead of selecting only the newest row.
+    expected_size = float(
+        getattr(tr, "initial_qty", 0.0)
+        or getattr(tr, "qty", 0.0)
+        or 0.0
+    )
+    aggregate = aggregate_closed_pnl(
+        rows,
+        symbol=sym,
+        position_side=str(getattr(tr, "side", "") or ""),
+        entry_time_ms=int(entry_ts * 1000),
+        entry_price=float(
+            getattr(tr, "avg", 0.0)
+            or getattr(tr, "entry_price", 0.0)
+            or getattr(tr, "entry_price_req", 0.0)
+            or 0.0
+        ),
+        expected_size=expected_size,
+    )
+    matched_rows = list(aggregate.rows) if aggregate is not None else []
+    row = matched_rows[-1] if matched_rows else None
 
     pnl_closed = None
     fee_sum = None
     exit_px = None
 
-    if row:
-        # closedPnl: отличаем "нет поля" от "0"
-        pnl_raw = row.get("closedPnl", None)
-        if pnl_raw not in (None, ""):
-            try:
-                pnl_closed = float(pnl_raw)
-            except Exception:
-                pnl_closed = None
+    if aggregate is not None and row:
+        pnl_closed = float(aggregate.pnl)
 
         # exit price (на разных аккаунтах/версиях Bybit ключи могут отличаться)
         for k in ("avgExitPrice", "exitPrice", "avgClosePrice", "closeAvgPrice"):
@@ -7435,18 +7447,7 @@ def _finalize_and_report_closed(tr, sym: str):
                 except Exception:
                     pass
 
-        # fees: пробуем несколько вариантов
-        def _f(key: str) -> float:
-            v = row.get(key)
-            try:
-                return float(v) if v not in (None, "") else 0.0
-            except Exception:
-                return 0.0
-
-        fee_sum = (
-            _f("cumEntryFee") + _f("cumExitFee")
-            + _f("totalFee") + _f("fee")
-        )
+        fee_sum = float(aggregate.fees)
 
     # если записи closed-pnl ещё нет ИЛИ Bybit ещё не дал closedPnl — ставим pending и попробуем позже
     if pnl_closed is None:
