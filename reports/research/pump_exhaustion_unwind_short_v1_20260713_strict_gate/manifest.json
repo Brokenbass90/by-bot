@@ -1,0 +1,21 @@
+{
+  "experiment": "pump_exhaustion_unwind_short_v1_720d_prereg_20260711",
+  "files": {
+    "accepted.csv": "3ee1b09704af36a5db30dcc1298a3daa184e9ca22a75e6917327d8ee740a89df",
+    "annual.csv": "a2b2283ff71f16563f48586bafe69f24d27fae5cfa4b40e3d4f82e77816edc74",
+    "candidates.csv": "f3d2281069b8b83df32e1133751a8bced0dd61dd21eae768ebccf0adfe9a687d",
+    "folds.csv": "aa8cd5d9afb5781c67184015d20941a995700b2ef591c442cdff3604efd26c4b",
+    "loso.csv": "ec402e8501ff02c09cd0dd9514783311bab8da8e41b3d26ce60e0ee26d1034d0",
+    "metrics.json": "bb5184f8638c72bba6300be946d10a1e0a31001db608e3d1dfae7cfc7389c32f",
+    "monthly.csv": "5f374046283fc03e3e87857fd2d8b9bf9a43907dfe2017dc8843ee66f8ff50de",
+    "preflight_evidence.json": "4118e2bd68d0133e5d94d096bc2520cf3354920ab9fe4f4adf34d57fdf41f609",
+    "rejected.csv": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "symbols.csv": "bf95e99fcd0fabed5f4c4602a8c572eb5c7cb37b9e80ae526721f31bcdde6b1b",
+    "trades.csv": "b58450c11276a42d9403657f6e52e1e0a289500cbc947156fff9a94ffae8c415"
+  },
+  "kind": "pump_exhaustion_strict_gate_artifacts",
+  "promotion_authorized": false,
+  "research_only": true,
+  "schema_version": 1,
+  "verdict": "NO_PROMOTION"
+}
