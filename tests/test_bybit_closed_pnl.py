@@ -1,7 +1,28 @@
-from bot.bybit_closed_pnl import aggregate_closed_pnl
+from bot.bybit_closed_pnl import (
+    BYBIT_CLOSED_PNL_MAX_WINDOW_MS,
+    aggregate_closed_pnl,
+    closed_pnl_query_windows,
+)
 
 
 ENTRY_MS = 1_780_000_000_000
+
+
+def test_query_windows_respect_bybit_seven_day_limit_without_gaps():
+    end = ENTRY_MS + BYBIT_CLOSED_PNL_MAX_WINDOW_MS + 240_000
+
+    windows = closed_pnl_query_windows(ENTRY_MS - 120_000, end)
+
+    assert len(windows) == 2
+    assert all(right - left <= BYBIT_CLOSED_PNL_MAX_WINDOW_MS for left, right in windows)
+    assert windows[1][0] == windows[0][1] + 1
+    assert windows[0][0] == ENTRY_MS - 120_000
+    assert windows[-1][1] == end
+
+
+def test_query_windows_reject_invalid_range():
+    assert closed_pnl_query_windows(ENTRY_MS, ENTRY_MS - 1) == ()
+    assert closed_pnl_query_windows(0, ENTRY_MS) == ()
 
 
 def _row(

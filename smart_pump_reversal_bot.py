@@ -221,7 +221,7 @@ from bot.order_link import (
     make_order_link_id as _make_order_link_id_pure,
     log_order_link as _log_order_link_pure,
 )
-from bot.bybit_closed_pnl import aggregate_closed_pnl
+from bot.bybit_closed_pnl import aggregate_closed_pnl, closed_pnl_query_windows
 
 ORDER_LINK_ID_ENABLED = _env_bool("ORDER_LINK_ID_ENABLED", True)
 ORDER_LINK_LOG_PATH = ROOT_DIR / "runtime" / "order_link_id_log.jsonl"
@@ -7401,10 +7401,23 @@ def _finalize_and_report_closed(tr, sym: str):
     end_ms   = int((now + 120) * 1000)
 
     rows = []
-    try:
-        rows = TRADE_CLIENT.get_closed_pnl(sym, start_ms, end_ms, limit=100)
-    except Exception as e:
-        log_error(f"closed-pnl fetch fail {sym}: {e}")
+    for query_start_ms, query_end_ms in closed_pnl_query_windows(start_ms, end_ms):
+        try:
+            rows.extend(
+                TRADE_CLIENT.get_closed_pnl(
+                    sym,
+                    query_start_ms,
+                    query_end_ms,
+                    limit=100,
+                )
+            )
+        except Exception as e:
+            # Aggregation below remains fail-closed if a missing window leaves
+            # the logical position only partially accounted for.
+            log_error(
+                f"closed-pnl fetch fail {sym} "
+                f"window={query_start_ms}:{query_end_ms}: {e}"
+            )
 
     # Bybit returns one closed-PnL row per close order.  A runner can therefore
     # produce several rows (partial TPs + final stop/trail); account for the

@@ -12,6 +12,9 @@ import math
 from typing import Any, Iterable
 
 
+BYBIT_CLOSED_PNL_MAX_WINDOW_MS = 7 * 24 * 60 * 60 * 1000
+
+
 @dataclass(frozen=True)
 class ClosedPnlAggregate:
     pnl: float
@@ -19,6 +22,34 @@ class ClosedPnlAggregate:
     closed_size: float
     latest_exit_price: float | None
     rows: tuple[dict[str, Any], ...]
+
+
+def closed_pnl_query_windows(
+    start_ms: int,
+    end_ms: int,
+    *,
+    max_window_ms: int = BYBIT_CLOSED_PNL_MAX_WINDOW_MS,
+) -> tuple[tuple[int, int], ...]:
+    """Split an inclusive Bybit query range into API-valid windows.
+
+    Bybit limits ``endTime - startTime`` to seven days.  ATT1's maximum
+    holding period is also seven days, and the finalizer deliberately adds a
+    small timestamp buffer, so a single request can otherwise exceed the API
+    contract exactly when a time-stop closes.  Adjacent windows use ``+1 ms``
+    to avoid both gaps and duplicate boundary timestamps.
+    """
+    start = _int(start_ms)
+    end = _int(end_ms)
+    window = _int(max_window_ms)
+    if start <= 0 or end < start or window <= 0:
+        return ()
+    out: list[tuple[int, int]] = []
+    cursor = start
+    while cursor <= end:
+        chunk_end = min(end, cursor + window)
+        out.append((cursor, chunk_end))
+        cursor = chunk_end + 1
+    return tuple(out)
 
 
 def _float(value: Any) -> float | None:
