@@ -33,18 +33,31 @@ def _refingerprint(cfg: dict) -> None:
     cfg["contract_fingerprint_sha256"] = canonical_sha256(frozen)
 
 
-def test_current_phase0_is_integrity_clean_but_performance_blocked() -> None:
+def test_historical_phase0_detects_superseded_level_hashes_and_stays_blocked() -> None:
     payload = build_preflight(_config(), ROOT)
 
     assert payload["status"] == "BLOCKED_RESEARCH_MECHANICS"
     assert payload["performance_permission"] == "PERFORMANCE_FORBIDDEN"
     assert payload["live_permission"] == "LIVE_FORBIDDEN"
-    assert payload["identity"]["integrity_pass"] is True
+    # Phase 0 is intentionally immutable historical evidence.  The active
+    # LevelSnapshot source/tests were causally hardened after that freeze, so
+    # its old hashes must now fail rather than being silently rewritten.
+    assert payload["identity"]["integrity_pass"] is False
     assert payload["identity"]["dev13_manifest"]["hash_match"] is True
     assert payload["identity"]["dev13_manifest"]["shape_match"] is True
     assert tuple(payload["identity"]["dev13_manifest"]["symbols"]) == EXPECTED_DEV13
     assert tuple(payload["identity"]["sealed_external8"]) == EXPECTED_EXTERNAL8
-    assert tuple(row["code"] for row in payload["blockers"]) == EXPECTED_BLOCKERS
+    assert [row["reason"] for row in payload["blockers"][:3]] == [
+        "pinned identity mismatch: level_snapshot_source",
+        "pinned identity mismatch: level_snapshot_tests",
+        "pinned identity mismatch: phase0_preflight_tests",
+    ]
+    assert tuple(row["code"] for row in payload["blockers"][:3]) == (
+        "PINNED_FILE_HASH_MISMATCH",
+        "PINNED_FILE_HASH_MISMATCH",
+        "PINNED_FILE_HASH_MISMATCH",
+    )
+    assert tuple(row["code"] for row in payload["blockers"][3:]) == EXPECTED_BLOCKERS
     assert "EXACT_CLOSED_BAR_AGGREGATION_ABSENT" not in EXPECTED_BLOCKERS
 
 
