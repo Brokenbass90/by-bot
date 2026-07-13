@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "as_of_utc": "2026-07-13T09:58:01Z",
-  "status": "recovery_truth_pinned_single_crypto_money_sleeve_pump_candidate_no_promotion_fx_alpaca_blocked_fail_closed",
-  "implementation_head_before_docs": "a8d8bb878a6fc9a87501f42327eebc72e6b1a7bd",
+  "as_of_utc": "2026-07-13T10:45:46Z",
+  "status": "recovery_truth_pinned_single_crypto_money_sleeve_pump_no_promotion_event_long_phase0_blocked_fx_alpaca_blocked",
+  "implementation_head_before_docs": "526492ae35d11379adbc97f6d48cfb27d10796bc",
   "branch": "codex/dynamic-symbol-filters",
   "origin_matched_before_docs": true,
   "canonical_documents": [
@@ -10,6 +10,7 @@
     "reports/PUMP_EXHAUSTION_STRICT_VERDICT_2026_07_13.md",
     "reports/ALPACA_TRUTH_AND_NEXT_TEST_2026_07_13.md",
     "reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md",
+    "reports/EVENT_EXPANSION_RETEST_LONG_V1_PREREG_2026_07_13.md",
     "reports/NEXT_CHAT_START_PROMPT_2026_07_13.md",
     "reports/PROJECT_STATE_LEDGER.md",
     "configs/ai_operator_canonical_state.json"
@@ -50,6 +51,7 @@
     "pump_strict_runner_and_verdict": "PUSHED_RESEARCH_ONLY",
     "fx_v3_fail_closed_hardening": "PUSHED_RESEARCH_ONLY",
     "alpaca_exact_parity_prereg": "PUSHED_BLOCKED_NO_PERFORMANCE",
+    "event_long_level_aggregation_and_phase0_prereg": "PUSHED_RESEARCH_ONLY_PERFORMANCE_FORBIDDEN",
     "vps_checkout": "f7ed011_dirty_stale_no_blind_pull",
     "core_service_restarted_this_session": false,
     "live_risk_changed_this_session": false
@@ -58,7 +60,7 @@
     "ATT1_short_r001": "LIVE_CANARY_BASE_UNCHANGED_NO_SCALE",
     "ATT1_entry_geometry_challenger": "PREREG_REQUIRED_BEFORE_NEW_OUTCOME",
     "pump_exhaustion_unwind_short_v1": "NO_PROMOTION_N39_HOLDOUT_N6",
-    "event_expansion_retest_long_v1": "NEXT_DESIGN_ONLY",
+    "event_expansion_retest_long_v1": "PHASE0_IDENTITY_PASS_NINE_BLOCKERS_PERFORMANCE_FORBIDDEN",
     "horizontal_range_rejection_crypto_long_short": "DESIGN_AFTER_SHARED_LEVEL_SNAPSHOT",
     "legacy_inplay_short_long": "NO_PROMOTION_FROZEN",
     "ARS1_ASB2_Elder": "NO_PROMOTION_CURRENT_FORMS",
@@ -86,7 +88,26 @@
       "active_months": 16
     },
     "alpaca_parity": "BLOCKED_ALL_NINE_REQUIRED_ARTIFACTS_UNPINNED",
-    "fx_v3": "OLD_CONFIG_ACTIONABLY_BLOCKED_NEW_VERSION_REQUIRED"
+    "fx_v3": "OLD_CONFIG_ACTIONABLY_BLOCKED_NEW_VERSION_REQUIRED",
+    "event_expansion_retest_long_v1": {
+      "phase": "PHASE_0_MECHANICS_IDENTITY_ONLY",
+      "integrity_pass": true,
+      "performance_permission": "PERFORMANCE_FORBIDDEN",
+      "live_permission": "LIVE_FORBIDDEN",
+      "level_scope": "HORIZONTAL_H1_H4_ONLY_SLOPED_DEFERRED",
+      "closed_bar_aggregation": "M5_TO_M15_H1_H4_PINNED",
+      "declared_blockers": 9,
+      "external_replication_symbols": [
+        "FILUSDT",
+        "UNIUSDT",
+        "ETCUSDT",
+        "ICPUSDT",
+        "TRXUSDT",
+        "TONUSDT",
+        "MNTUSDT",
+        "IMXUSDT"
+      ]
+    }
   },
   "owner_inputs_required": {
     "fx": [
@@ -116,11 +137,13 @@
     "verify_Alpaca_scheduled_report_and_watchdog_after_due_window",
     "materialize_Alpaca_broker_lifecycle_PIT_data_shared_exit_and_forward_artifacts",
     "create_new_FX_V3_prereg_after_owner_inputs_then_refresh_bid_ask_data",
-    "preregister_event_expansion_retest_long_v1_before_performance",
+    "build_and_pin_event_long_H1_M15_M5_orchestrator_exits_cost_funding_runner_before_performance",
+    "materialize_fixed_external8_only_after_successor_runnable_freeze",
     "design_point_in_time_pump_universe_additivity_without_symbol_cherry_pick"
   ],
   "verification": {
-    "full_pytest": "1070_passed",
+    "full_pytest": "1127_passed_after_phase0_prereg",
+    "event_long_phase0_focused": "57_passed_integrity_pass_true_performance_forbidden",
     "git_diff_check_code": "pass",
     "pump_artifact_manifest": "11_of_11_hashes_match",
     "pump_preflight_embedded_exact": true,

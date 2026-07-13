@@ -9,6 +9,7 @@
 - Ночная ADA-сделка была прибыльной по направлению и корректно прошла partial TP -> breakeven/trailing exit. Но бот записал только последнюю Bybit close row и занизил итог сделки. Root cause исправлен и полностью протестирован в Git; existing ADA history ещё нужно broker-reconcile.
 - Alpaca не требует restart core bot. Она остаётся SAFE-HOLD; scheduled weekday Telegram report впервые должен отработать 13 июля в 22:10 UTC, watchdog — 23:00 UTC.
 - Pump-exhaustion data gate закрыт, runner и authorization были committed до outcome, строгий 720d performance завершён `NO_PROMOTION`: stress `N=39`, PF `1.234`, return `+1.228%`, conservative DD `3.015%`; holdout `N=6`. Не пройдены только frozen minimum-sample gates, но ослаблять их после просмотра нельзя.
+- Следующий независимый crypto-long больше не существует только на уровне идеи: добавлены и pushed immutable horizontal `LevelSnapshot v1`, restart-safe long-only event FSM и детерминированная агрегация closed M5 -> M15/H1/H4. Phase-0 prereg integrity PASS, но performance и live намеренно заблокированы девятью явными prerequisite-блокерами.
 - FX M5 данные уже есть почти за два года. Level respect теперь fail-closed, H1 явно закреплён, news/cost schemas усилены. Jul11 contract остаётся историческим и останавливается до source gate; для первых V3 figures нужен новый versioned prereg после внешних inputs.
 - Никакой второй crypto sleeve, FX/CFD demo/live money или Alpaca scale в этой сессии не включались.
 
@@ -19,11 +20,13 @@
 | aggregate Bybit partial closes into one logical trade PnL | 1038 full regression PASS; 7-day API boundary focused PASS | `3f6278b` + `12a9abd` | pushed | **не развёрнуто**; targeted manifest готов |
 | immutable pump snapshots 13/13 + provenance manifest | 18 focused + full regression PASS | `693ffa3` | pushed | research-only, deploy не требуется |
 | strict pump runner -> hash-bound authorization -> immutable verdict | 55 pump tests; artifact manifest 11/11; full suite 1070 PASS | `c282ff6`, `55d00cc`, `a8d8bb8` | pushed | research-only; `NO_PROMOTION` |
+| causal levels + event-expansion long mechanics + closed-bar aggregation | 18 new mechanics tests; 25 aggregation tests; full suite 1088 PASS before phase-0 prereg | `a98b640`, `f07dd01` | pushed | research-only; no live wiring |
+| event-expansion long phase-0 prereg/preflight | 57 focused PASS; identity/data hashes PASS; nine blockers retained | `526492a` | pushed | `PERFORMANCE_FORBIDDEN`, `LIVE_FORBIDDEN` |
 | FX V3 fail-closed level/news/cost contract | 82 combined focused/FX/Alpaca tests PASS | `864b054` | pushed | research-only; no performance |
 | exact Alpaca four-arm parity prereg + blocked evidence | 7 focused; sources/fingerprint PASS | `bb377bc`, `997f205` | pushed | no live change; outcome access blocked |
 | прежний ATT1 RSI45/AI/Web/Alpaca reporting package | verified ранее | ancestors HEAD | pushed | targeted-deployed ранее |
 
-Implementation local/origin HEAD до documentation commit: `a8d8bb8`. VPS checkout по-прежнему намеренно старый/dirty (`f7ed011` на последней проверке); blind pull/reset/cleanup запрещены. Внешний server tool достиг usage quota во время этой сессии, поэтому сегодняшнее P0 исправление нельзя честно назвать live. Release receipt: `reports/releases/targeted_bybit_partial_pnl_12a9abd_20260713.json`.
+Implementation local/origin HEAD до текущего canonical update: `526492a`. VPS checkout по-прежнему намеренно старый/dirty (`f7ed011` на последней проверке); blind pull/reset/cleanup запрещены. Внешний server tool достиг usage quota во время этой сессии, поэтому сегодняшнее P0 исправление нельзя честно назвать live. Release receipt: `reports/releases/targeted_bybit_partial_pnl_12a9abd_20260713.json`.
 
 ## Что произошло с ночной crypto сделкой
 
@@ -59,12 +62,12 @@ Bybit API возвращает `closedSize/closedPnl/openFee/closeFee` на ур
 ## Следующие crypto sleeves
 
 1. `pump_exhaustion_unwind_short_v1` — честно завершён `NO_PROMOTION`, а не готовый второй рукав. Stress: 39 trades, PF `1.234`, `+2.922R`, `+1.228%` при frozen sizing, conservative DD `3.015%`; 3/4 positive folds. Holdout позитивен, но только 6 trades против gate 10. За 25 calendar months было 16 active, 9 нулевых и 7 красных active months. ONDO дал 93.4% итогового net; без него LOSO PF `1.018` и return `-0.127%`, что добавляет robustness-риск. Подробно: `reports/PUMP_EXHAUSTION_STRICT_VERDICT_2026_07_13.md`.
-2. `event_expansion_retest_long_v1` — следующий физически отдельный long-only successor, а не механическая инверсия short sleeve. Сначала prereg/design, затем data/runner; сейчас реализации и цифр нет.
+2. `event_expansion_retest_long_v1` — следующий физически отдельный long-only successor, а не механическая инверсия short sleeve. Уже есть immutable horizontal H1/H4 level identity, source/config/payload hashes, persisted event ledger и причинная последовательность expansion -> hold -> first retest -> higher-low -> bullish BOS. Но текущий plan специально `BLOCKED_RESEARCH_MECHANICS`: нет интегрированного H1/M15/M5 orchestrator, exits/cost/funding runner, external8 data/metadata/liquidity/funding и ATT1 additivity reference. Поэтому цифр и live-разрешения пока нет. Подробно: `reports/EVENT_EXPANSION_RETEST_LONG_V1_PREREG_2026_07_13.md`.
 3. Horizontal range rejection — отдельные long-only и short-only sleeves на общем Level Snapshot. Это правильный наследник «пилы/отскоков»; старые ARS1/ASB2/ARF формы не включать, потому что свежие gates отрицательны.
 
 Elder использовать как side-specific context/filter, а не самостоятельный двигатель. Breakdown — только bear-only и ниже по приоритету. FVG/imbalances пока не production sleeve: deterministic context можно тестировать только отдельной ablation после общего уровня/события, а не добавлять как красивую эвристику.
 
-Сегодня нет второго честного performance-run из уже frozen artifacts. `pump_fade_simple_meme` — 486-combo autoresearch на selected microcaps, не prereg/nested OOS; ARS1/ASB2/InPlay/level-memory уже провалены на просмотренных окнах. ARF2 unified-level replay уже оживлял частоту, но дал только PF `0.588`, поэтому одного wiring provider недостаточно. Следующая тройка должна сначала заморозить versioned `LevelSnapshot v1` (stable level ID, zone, pivots, created/valid time, flip/invalidation, respect history, source-bars hash): expansion-retest long; horizontal range rejection long; horizontal range rejection short.
+Сегодня нет второго честного performance-run из уже frozen artifacts. `pump_fade_simple_meme` — 486-combo autoresearch на selected microcaps, не prereg/nested OOS; ARS1/ASB2/InPlay/level-memory уже провалены на просмотренных окнах. ARF2 unified-level replay уже оживлял частоту, но дал только PF `0.588`, поэтому одного wiring provider недостаточно. Versioned horizontal `LevelSnapshot v1` и exact closed-bar aggregation теперь заморожены; следующий шаг — соединить их одним multi-timeframe orchestrator. После expansion-retest long та же рама пойдёт в отдельные horizontal range rejection long и short. Sloped levels остаются отдельным будущим versioned contract, а не тихим расширением текущего v1.
 
 Текущий order-book density collector хранит lossy 30-second wall snapshots без sequence IDs, exchange timestamps, full deltas и public trades. Это context telemetry, не replayable imbalance edge. Для честного InPlay/L2 исследования нужен новый reconstructible publicTrade + L2 collector и примерно 60–90 дней tape.
 
@@ -118,7 +121,7 @@ Jul12 Claude reports остаются advisor input, а не canonical state. Э
 
 ## Реалистичные сроки выхода из кризиса
 
-- Сегодня/эта сессия: P0 accounting Git fix, immutable data freeze, strict runner/preflight/verdict, FX fail-closed hardening, Alpaca prereg и canonical map выполнены. Full suite `1070 passed`.
+- Сегодня/эта сессия: P0 accounting Git fix, immutable data freeze, strict runner/preflight/verdict, FX fail-closed hardening, Alpaca prereg, `LevelSnapshot v1`, closed-bar aggregation и event-long phase-0 prereg выполнены. Финальный полный suite: `1127 passed`; phase-0 focused suite: `57 passed`.
 - Pump verdict уже получен: слабоположительный, но недостаточно частый `NO_PROMOTION`; live timing от него не начинается.
 - 2–4 дня после OANDA/news inputs: первые честные V3 FX figures.
 - 1 неделя: Alpaca frozen parity plan + FX five-sleeve verdict + решение по risk-zero crypto shadow.
@@ -140,6 +143,6 @@ Jul12 Claude reports остаются advisor input, а не canonical state. Э
 1. После восстановления server access адресно deploy P0 partial-PnL package при flat, без risk change; reconcile ADA broker rows.
 2. После 22:10/23:00 UTC проверить Alpaca scheduled report/watchdog receipt; затем материализовать девять prereg artifacts, не запускать performance при BLOCKED.
 3. Получить owner OANDA/news inputs; создать новый FX V3 prereg с fresh source/artifact hashes и только потом считать PnL.
-4. Preregister физически отдельный `event_expansion_retest_long_v1`; short pump universe-additivity разрешён только по point-in-time non-PnL rule.
-5. Подготовить shared frozen Level Snapshot для отдельных horizontal-range long/short sleeves; Elder только как ablation/filter.
+4. Собрать hash-pinned H1-expansion/M15-retest/M5-next-open orchestrator, exit/cost/funding runner и conformance для уже preregistered `event_expansion_retest_long_v1`; до этого performance запрещён. Затем data-only materialize fixed external8 без замен символов.
+5. Расширить shared frozen Level Snapshot отдельным sloped contract и использовать horizontal v1 для отдельных horizontal-range long/short sleeves; Elder только как ablation/filter.
 6. Обновлять AI canonical state/index/ledger после каждого verdict; оператор остаётся observer/proposal-only.

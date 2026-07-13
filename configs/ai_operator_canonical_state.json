@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-13T09:58:01Z",
+  "as_of_utc": "2026-07-13T10:45:46Z",
   "schema_version": 2,
   "authority": "human_reviewed_project_truth",
   "control_recommendations_allowed": false,
@@ -36,7 +36,10 @@
     "fx_v2_performance": "ALL_SIX_SIDE_SPECIFIC_SLEEVES_NO_PROMOTION",
     "fx_v3_contract": "FAIL_CLOSED_H1_NEWS_COST_HARDENED_NEW_PREREG_REQUIRED",
     "pump_exhaustion_inputs": "THIRTEEN_OF_THIRTEEN_IMMUTABLE_PASS",
-    "pump_exhaustion_strict_20260713": "NO_PROMOTION_MIN_SAMPLE_FAIL"
+    "pump_exhaustion_strict_20260713": "NO_PROMOTION_MIN_SAMPLE_FAIL",
+    "event_long_level_snapshot_v1": "HORIZONTAL_H1_H4_HASH_PINNED_SLOPED_DEFERRED",
+    "event_long_closed_bar_aggregation": "M5_TO_M15_H1_H4_HASH_PINNED",
+    "event_long_phase0": "IDENTITY_PASS_PERFORMANCE_AND_LIVE_FORBIDDEN_NINE_BLOCKERS"
   },
   "research_verdicts": {
     "pump_exhaustion_unwind_short_v1": {
@@ -64,6 +67,16 @@
     "fx_v3": {
       "permission": "BLOCKED_PENDING_NEW_VERSIONED_PREREG_AND_EXTERNAL_INPUTS",
       "performance_computed": false
+    },
+    "event_expansion_retest_long_v1": {
+      "phase": "PHASE_0_MECHANICS_IDENTITY_ONLY",
+      "integrity_pass": true,
+      "permission": "BLOCKED_RESEARCH_MECHANICS",
+      "performance_computed": false,
+      "live_ready": false,
+      "declared_blockers": 9,
+      "physical_side": "long_only",
+      "level_scope": "horizontal_H1_H4_only_sloped_deferred"
     }
   },
   "no_promotion": [
@@ -84,7 +97,8 @@
     "elder_current_forms"
   ],
   "research_queue": [
-    "event_expansion_retest_long_v1_preregister_before_performance",
+    "event_expansion_retest_long_v1_build_H1_M15_M5_orchestrator_exits_cost_funding_runner_before_performance",
+    "event_expansion_retest_long_v1_fixed_external8_materialize_only_after_runnable_freeze",
     "pump_short_point_in_time_universe_additivity",
     "horizontal_range_rejection_crypto_long_short_shared_level_snapshot",
     "att1_entry_geometry_challenger_preregister",
@@ -114,6 +128,7 @@
     "reports/research/pump_exhaustion_unwind_short_v1_20260713_strict_gate/metrics.json",
     "reports/ALPACA_TRUTH_AND_NEXT_TEST_2026_07_13.md",
     "reports/research/alpaca_monthly_exact_parity_replay_20260713_preflight.json",
-    "reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md"
+    "reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md",
+    "reports/EVENT_EXPANSION_RETEST_LONG_V1_PREREG_2026_07_13.md"
   ]
 }
