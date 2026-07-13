@@ -1,0 +1,449 @@
+{
+  "config": "configs/preregistered/pump_exhaustion_unwind_short_v1_20260711.json",
+  "config_edited": false,
+  "config_sha256": "601ee8fa02c19189f710ef0fd32f872a00959f29300d604347fbc09d79b34505",
+  "experiment": "pump_exhaustion_unwind_short_v1_720d_prereg_20260711",
+  "input_snapshots": {
+    "1000PEPEUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/1000PEPEUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "aa64aba3cc56534c04befa94c0a084d791e6cd8a4473c45672b5fb13f9990dcc"
+    },
+    "ADAUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/ADAUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "e9b6d15ebdd1e4b8b3b0138a97c9b46f42f1a6016d9c4e4f388e0477c4d436f0"
+    },
+    "AVAXUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/AVAXUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "17da6be021428a40bed2c5e6d792571ce96df76773710b3eb9859296baac8437"
+    },
+    "BNBUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/BNBUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "60ed489d893e676d0a78f2aad4a9f557a0a15d28626842d5096f7aa25af0700a"
+    },
+    "BTCUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/BTCUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "bbd8647d2f5c070ec9422f852b5d5d882cbb2d81c12519c29b88241b7dcde027"
+    },
+    "DOGEUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/DOGEUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "23e97a52227b9cba17d6565718858e195c0e9007cdf34f2371020f68f4dcbea0"
+    },
+    "ETHUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/ETHUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "065327fe18b76e6ed7e4aed72b2eda18edbd043e9b3368c1735ebfb3415f3290"
+    },
+    "ONDOUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/ONDOUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "06e086a31ba3cb1a42c39a4e548256c5b1bb5d10335a22c24ee15fc6c6bfb3dd"
+    },
+    "SOLUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/SOLUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "40a2c4b6af2f0c96d9301a3a9e574d7574d2754a0f85c239b18d5541238a885d"
+    },
+    "SUIUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/SUIUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "f9e8d1bb27c2d30d183ada22005d6fd3a3c9c424260f2f2a204579c530b336f7"
+    },
+    "TAOUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/TAOUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "91bb0670fc8bdf86bd527a8f53f657517a48c419d45da106293b60fbc5449f81"
+    },
+    "WIFUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/WIFUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "cc40d7b49d0e132436b43ef496505dc5ed32698f396f579cbf6d3017c24266ab"
+    },
+    "XRPUSDT": {
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/XRPUSDT_5_1721001600000_1783209600000.json",
+      "sha256": "f980c48ab5004aac28bd96f5cfe3d1557f99ab4a188899501601db32e5e3da77"
+    }
+  },
+  "interval_ms": 300000,
+  "kind": "pump_exhaustion_immutable_snapshot_manifest",
+  "live_state_changed": false,
+  "network_calls": false,
+  "performance_computed": false,
+  "quality_gate": {
+    "max_internal_gap_bars": 12,
+    "min_coverage": 0.98
+  },
+  "schema_version": 1,
+  "side_identity": "short_only",
+  "snapshots": {
+    "1000PEPEUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/1000PEPEUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/1000PEPEUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "d39f682d3b569143d74cce609efb84fbd3b74aecbec101394b3b5f0f648a2612",
+          "size": 14441270
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "aa64aba3cc56534c04befa94c0a084d791e6cd8a4473c45672b5fb13f9990dcc"
+    },
+    "ADAUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/ADAUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/ADAUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "33fb671f974d7d9cbe49085d203602fd9eef8684961b65d23aadd720f003d9bd",
+          "size": 12204977
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "e9b6d15ebdd1e4b8b3b0138a97c9b46f42f1a6016d9c4e4f388e0477c4d436f0"
+    },
+    "AVAXUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/AVAXUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/AVAXUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "4aaf00d3e3bace77c190eb9237d7840452b9da0a4c1184e7e5b79ada77466dcf",
+          "size": 11530087
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "17da6be021428a40bed2c5e6d792571ce96df76773710b3eb9859296baac8437"
+    },
+    "BNBUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/BNBUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/BNBUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "877838910d8d0a2fecafe7a0d3066198ba98ec79fe7c8c599458a5fa58f0f2db",
+          "size": 11106897
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "60ed489d893e676d0a78f2aad4a9f557a0a15d28626842d5096f7aa25af0700a"
+    },
+    "BTCUSDT": {
+      "coverage": 0.999426119,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 1047575,
+      "last_ts": 1783173600000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 119,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/BTCUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/BTCUSDT_5_20230705_20260704.json",
+          "row_format": "mapping",
+          "rows_contributed": 207072,
+          "rows_in_window": 207072,
+          "rows_total": 315360,
+          "sha256": "f32ec3fc05cd867119d9580d8b8000ad2ce1d504073c5990d018eb3ebf36515f",
+          "size": 29477296
+        },
+        {
+          "identical_duplicate_rows": 5591,
+          "path": "data_cache/BTCUSDT_5_20260614_20260704.json",
+          "row_format": "mapping",
+          "rows_contributed": 169,
+          "rows_in_window": 5760,
+          "rows_total": 5760,
+          "sha256": "54cdaa19eb53b7ec20e55fdbc2ee3301553f5816af26231f449f5374b4fc3931",
+          "size": 533272
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207241,
+      "sha256": "bbd8647d2f5c070ec9422f852b5d5d882cbb2d81c12519c29b88241b7dcde027"
+    },
+    "DOGEUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/DOGEUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/DOGEUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "92213fb552002403f22ed7182d24dc1a6554893bcdfb51172ba1f73e25866ef1",
+          "size": 13206140
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "23e97a52227b9cba17d6565718858e195c0e9007cdf34f2371020f68f4dcbea0"
+    },
+    "ETHUSDT": {
+      "coverage": 0.999426119,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 1076951,
+      "last_ts": 1783173600000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 119,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/ETHUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/ETHUSDT_5_20230705_20260704.json",
+          "row_format": "mapping",
+          "rows_contributed": 207072,
+          "rows_in_window": 207072,
+          "rows_total": 315360,
+          "sha256": "2207d0f387a306f888c20330219e5127c4608222a0d1085c4dbd5a758eac276b",
+          "size": 29027922
+        },
+        {
+          "identical_duplicate_rows": 5591,
+          "path": "data_cache/ETHUSDT_5_20260614_20260704.json",
+          "row_format": "mapping",
+          "rows_contributed": 169,
+          "rows_in_window": 5760,
+          "rows_total": 5760,
+          "sha256": "3d22f4cd565d85088bcadc32dfe0b04e43e855f47ac56488ca2b4f4fc277191b",
+          "size": 531265
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207241,
+      "sha256": "065327fe18b76e6ed7e4aed72b2eda18edbd043e9b3368c1735ebfb3415f3290"
+    },
+    "ONDOUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/ONDOUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/ONDOUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "4a3d6e1b2814403e9406268165b102398d18847e625c60802de6877e30a13eb2",
+          "size": 12098200
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "06e086a31ba3cb1a42c39a4e548256c5b1bb5d10335a22c24ee15fc6c6bfb3dd"
+    },
+    "SOLUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/SOLUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/SOLUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "7edeca8ac8b67c5a25424a79425a8014538d634dcd25f5d4844f06ca2d66a0b3",
+          "size": 11743917
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "40a2c4b6af2f0c96d9301a3a9e574d7574d2754a0f85c239b18d5541238a885d"
+    },
+    "SUIUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/SUIUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/SUIUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "c8dca06113cd8f9993c52384c87751d68544da1b154e17984ad639414816ec60",
+          "size": 12111051
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "f9e8d1bb27c2d30d183ada22005d6fd3a3c9c424260f2f2a204579c530b336f7"
+    },
+    "TAOUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/TAOUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/TAOUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "18840bc2fe3a44f6810022f2a56147f5cf0884251e64ed75f7a8bcf428fd9604",
+          "size": 11913351
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "91bb0670fc8bdf86bd527a8f53f657517a48c419d45da106293b60fbc5449f81"
+    },
+    "WIFUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/WIFUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/WIFUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "2592c2bb5a40cffb904f578e5da10dfdf55d036cc488d4af0c22ef6e33df6903",
+          "size": 12333828
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "cc40d7b49d0e132436b43ef496505dc5ed32698f396f579cbf6d3017c24266ab"
+    },
+    "XRPUSDT": {
+      "coverage": 1.0,
+      "expected_rows": 207360,
+      "first_ts": 1721001600000,
+      "identical_duplicates_across_sources": 0,
+      "last_ts": 1783209300000,
+      "max_internal_gap_bars": 0,
+      "missing_prefix_bars": 0,
+      "missing_suffix_bars": 0,
+      "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/XRPUSDT_5_1721001600000_1783209600000.json",
+      "provenance": [
+        {
+          "identical_duplicate_rows": 0,
+          "path": "data_cache/XRPUSDT_5_1721001600000_1783209600000.json",
+          "row_format": "sequence",
+          "rows_contributed": 207360,
+          "rows_in_window": 207360,
+          "rows_total": 207360,
+          "sha256": "f2d78edc5dbe4698e1b3964a8dca797813b6f240c086fa0d9918783e4cd8419b",
+          "size": 12227959
+        }
+      ],
+      "quality_pass": true,
+      "rows": 207360,
+      "sha256": "f980c48ab5004aac28bd96f5cfe3d1557f99ab4a188899501601db32e5e3da77"
+    }
+  },
+  "strategy": "pump_exhaustion_unwind_short_v1",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "XRPUSDT",
+    "DOGEUSDT",
+    "ADAUSDT",
+    "SOLUSDT",
+    "AVAXUSDT",
+    "SUIUSDT",
+    "1000PEPEUSDT",
+    "WIFUSDT",
+    "TAOUSDT",
+    "ONDOUSDT"
+  ],
+  "window_end_ts_exclusive": 1783209600000,
+  "window_start_ts": 1721001600000
+}
