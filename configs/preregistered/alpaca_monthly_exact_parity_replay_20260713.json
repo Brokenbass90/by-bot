@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "name": "alpaca_monthly_exact_parity_replay_20260713",
+  "frozen_at_utc": "2026-07-13T09:49:00Z",
+  "purpose": "Freeze one four-arm exact monthly parity methodology before any outcome access. This preregistration cannot alter SAFE-HOLD or authorize live money.",
+  "research_only": true,
+  "frozen_before_results": true,
+  "no_parameter_scan": true,
+  "performance_forbidden_until_preflight_pass": true,
+  "live_or_broker_calls": false,
+  "risk_pct": 0,
+  "current_permission": "BLOCKED_FAIL_CLOSED_UNTIL_ALL_REQUIRED_INPUTS_PINNED",
+  "arms": [
+    {
+      "id": "true_monthly_v38_top4",
+      "role": "candidate",
+      "schedule": {
+        "signal_time": "completed_last_xnys_session_close_of_calendar_month",
+        "entry_time": "next_tradable_xnys_session_open",
+        "same_close_or_same_bar_entry_allowed": false,
+        "target_refresh": "calendar_monthly"
+      },
+      "selector": {
+        "selector_id": "v38_momentum_top4_frozen",
+        "top_n": 4,
+        "candidate_pool_n": 12,
+        "universe_top_k": 18,
+        "momentum_lookback_sessions": 28,
+        "minimum_momentum_pct": 5.0,
+        "max_positions": 4,
+        "max_per_sector": 2,
+        "position_weight_mode": "score_inv_vol",
+        "parameter_scan": false
+      },
+      "market_regime_gate": "v38_frozen_native_gate"
+    },
+    {
+      "id": "accidental_daily_rotation_negative_control",
+      "role": "negative_control",
+      "schedule": {
+        "signal_time": "each_completed_xnys_session_close",
+        "entry_time": "next_tradable_xnys_session_open",
+        "same_close_or_same_bar_entry_allowed": false,
+        "target_refresh": "daily_full_rotation_negative_control"
+      },
+      "selector": {
+        "selector_id": "v38_momentum_top4_frozen",
+        "top_n": 4,
+        "candidate_pool_n": 12,
+        "universe_top_k": 18,
+        "momentum_lookback_sessions": 28,
+        "minimum_momentum_pct": 5.0,
+        "max_positions": 4,
+        "max_per_sector": 2,
+        "position_weight_mode": "score_inv_vol",
+        "parameter_scan": false
+      },
+      "market_regime_gate": "v38_frozen_native_gate"
+    },
+    {
+      "id": "adaptive_default_gated",
+      "role": "challenger",
+      "schedule": {
+        "signal_time": "completed_last_xnys_session_close_of_calendar_month",
+        "entry_time": "next_tradable_xnys_session_open",
+        "same_close_or_same_bar_entry_allowed": false,
+        "target_refresh": "calendar_monthly"
+      },
+      "selector": {
+        "selector_id": "alpaca_adaptive_v1_defaults_frozen",
+        "mom_fast": 20,
+        "mom_slow": 60,
+        "vol_period": 60,
+        "trend_sma": 50,
+        "regime_index": "SPY",
+        "regime_index_sma": 200,
+        "min_entry_mom": 0.0,
+        "target_vol": 0.02,
+        "max_position_frac": 0.4,
+        "max_per_sector": 2,
+        "max_portfolio_dd_pct": 15.0,
+        "top_n": 5,
+        "max_positions": 4,
+        "soft_regime": false,
+        "ai_approver": false,
+        "parameter_scan": false
+      },
+      "market_regime_gate": "spy_sma200_enabled",
+      "force_regime_ok": false
+    },
+    {
+      "id": "adaptive_ungated_control",
+      "role": "gate_ab_control",
+      "schedule": {
+        "signal_time": "completed_last_xnys_session_close_of_calendar_month",
+        "entry_time": "next_tradable_xnys_session_open",
+        "same_close_or_same_bar_entry_allowed": false,
+        "target_refresh": "calendar_monthly"
+      },
+      "selector": {
+        "selector_id": "alpaca_adaptive_v1_defaults_frozen",
+        "mom_fast": 20,
+        "mom_slow": 60,
+        "vol_period": 60,
+        "trend_sma": 50,
+        "regime_index": "SPY",
+        "regime_index_sma": 200,
+        "min_entry_mom": 0.0,
+        "target_vol": 0.02,
+        "max_position_frac": 0.4,
+        "max_per_sector": 2,
+        "max_portfolio_dd_pct": 15.0,
+        "top_n": 5,
+        "max_positions": 4,
+        "soft_regime": false,
+        "ai_approver": false,
+        "parameter_scan": false
+      },
+      "market_regime_gate": "disabled_for_frozen_control_only",
+      "force_regime_ok": true
+    }
+  ],
+  "source_code": {
+    "preflight_sha256": "02b4d548175fd490b8934cfbf320db643a86128040499d0c9c10346c292a208f",
+    "monthly_sim_sha256": "cefe0c6f8757deb8e3a2dd9f2d7e3a99ebd4d7529408ad742a2bfa69ad440dc5",
+    "monthly_refresh_sha256": "6dff0ab3b075bf5723b58c1f62bd0ccfd46895f0a1fa51c7b6230e9f091a6e84",
+    "adaptive_selector_sha256": "9c936a6f387c693e8f388d82c2eefbac939314c55d8633666efbcbe79baa8b7b",
+    "adaptive_reference_replay_sha256": "3c083774e80bf3b346f55e6ee903fc36ef3f4db5b0a2d23c5dbb848b7b9e4396",
+    "live_bridge_reference_sha256": "41d1c6fbb52173c4523beb5771fd331c7baba95c7e3a2ffb9a9014b3de80b6dd"
+  },
+  "contract_fingerprint": "5a2a878169ee2274303d3788fdad1152388a02154e8e2618f3bc40cce0fbbff0",
+  "required_artifacts": {
+    "point_in_time_universe": {
+      "content_type": "alpaca_point_in_time_universe_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "market_data_manifest": {
+      "content_type": "alpaca_point_in_time_market_data_manifest_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "broker_fill_order_lifecycle_20260706_20260709": {
+      "content_type": "alpaca_broker_lifecycle_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "cost_gap_calibration": {
+      "content_type": "alpaca_cost_gap_calibration_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "regime_labels": {
+      "content_type": "alpaca_causal_regime_labels_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "corporate_actions_survivorship": {
+      "content_type": "alpaca_survivorship_receipt_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "untouched_forward_manifest": {
+      "content_type": "alpaca_untouched_forward_manifest_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "shared_exit_model_implementation": {
+      "content_type": "python_source_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "shared_exit_model_conformance": {
+      "content_type": "alpaca_shared_exit_conformance_v1",
+      "path": "",
+      "sha256": ""
+    }
+  },
+  "execution_contract": {
+    "calendar": "XNYS",
+    "signal_data": "completed_bars_only",
+    "monthly_signal_to_fill": "completed_month_close_to_next_session_open",
+    "daily_negative_control_signal_to_fill": "completed_day_close_to_next_session_open",
+    "same_bar_fill_allowed": false,
+    "price_basis": "split_and_dividend_adjusted_ohlcv",
+    "entry_gap_fill": "next_session_open_plus_adverse_cost",
+    "stop_gap_fill": "opening_price_if_open_beyond_stop",
+    "target_gap_fill": "frozen_target_price_no_favorable_gap_credit",
+    "same_bar_stop_and_target": "stop_first",
+    "base_cost_bps_per_side": 5.0,
+    "stress_cost_bps_per_side": 10.0,
+    "costs_applied_on_entries_and_exits": true,
+    "broker_or_live_calls": false,
+    "risk_pct": 0
+  },
+  "shared_exit_contract": {
+    "id": "alpaca_v38_atr_be_trail_shared_v1",
+    "entrypoint": "simulate_position",
+    "used_by_arm_ids": [
+      "true_monthly_v38_top4",
+      "accidental_daily_rotation_negative_control",
+      "adaptive_default_gated",
+      "adaptive_ungated_control"
+    ],
+    "one_implementation_for_all_arms": true,
+    "initial_stop_atr": 2.0,
+    "profit_target_atr": 3.2,
+    "break_even_trigger_r": 0.8,
+    "trail_atr": 1.5,
+    "max_hold_sessions": 22,
+    "intramonth_portfolio_stop_pct": 0.08,
+    "daily_mark_to_market": true,
+    "opening_gap_processed_before_intraday_path": true,
+    "same_bar_stop_and_target": "stop_first",
+    "implementation_artifact": "shared_exit_model_implementation",
+    "conformance_artifact": "shared_exit_model_conformance"
+  },
+  "evaluation_contract": {
+    "development_cutoff_utc": "2026-07-13T00:00:00Z",
+    "untouched_forward_start_utc": "2026-07-13T00:00:00Z",
+    "untouched_forward_used_for_parameter_selection": false,
+    "daily_equity_curve_required": true,
+    "daily_mark_to_market_required": true,
+    "daily_max_drawdown_required": true,
+    "monthly_returns_required": true,
+    "turnover_required": true,
+    "sector_and_symbol_concentration_required": true,
+    "required_regimes": [
+      "bull",
+      "bear",
+      "sideways"
+    ],
+    "point_in_time_membership_required": true,
+    "delisted_names_and_corporate_actions_required": true,
+    "all_four_arms_same_data_costs_and_exit_model": true,
+    "broker_lifecycle_window_start_utc": "2026-07-06T00:00:00Z",
+    "broker_lifecycle_window_end_utc_exclusive": "2026-07-10T00:00:00Z",
+    "parameter_search_after_freeze": false
+  },
+  "automatic_verdict": {
+    "preflight_blocked": "NO_PERFORMANCE_RUN",
+    "preflight_passed": "PERFORMANCE_REPLAY_ONLY_NO_PROMOTION_AUTHORITY",
+    "any_parity_failure": "REMAIN_SAFE_HOLD",
+    "all_parity_checks_pass": "RESEARCH_REVIEW_REQUIRED_NO_AUTOMATIC_LIVE_CHANGE"
+  }
+}
