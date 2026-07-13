@@ -9,7 +9,7 @@
 - Ночная ADA-сделка была прибыльной по направлению и корректно прошла partial TP -> breakeven/trailing exit. Но бот записал только последнюю Bybit close row и занизил итог сделки. Root cause исправлен и полностью протестирован в Git; existing ADA history ещё нужно broker-reconcile.
 - Alpaca не требует restart core bot. Она остаётся SAFE-HOLD; scheduled weekday Telegram report впервые должен отработать 13 июля в 22:10 UTC, watchdog — 23:00 UTC.
 - Pump-exhaustion data gate закрыт, runner и authorization были committed до outcome, строгий 720d performance завершён `NO_PROMOTION`: stress `N=39`, PF `1.234`, return `+1.228%`, conservative DD `3.015%`; holdout `N=6`. Не пройдены только frozen minimum-sample gates, но ослаблять их после просмотра нельзя.
-- Следующий независимый crypto-long больше не существует только на уровне идеи: добавлены и pushed immutable horizontal `LevelSnapshot v1`, restart-safe long-only event FSM и детерминированная агрегация closed M5 -> M15/H1/H4. Phase-0 prereg integrity PASS, но performance и live намеренно заблокированы девятью явными prerequisite-блокерами.
+- Следующий независимый crypto-long больше не существует только на уровне идеи: phase-1 теперь hash-pin фиксирует horizontal `LevelSnapshot v1`, closed M5 -> M15/H1/H4, причинный long-only MTF, exact next-open execution, authenticated bridge и атомарный single-writer state/outbox. Phase-1 integrity PASS, но performance и live намеренно заблокированы девятью явными prerequisite-блокерами.
 - FX M5 данные уже есть почти за два года. Level respect теперь fail-closed, H1 явно закреплён, news/cost schemas усилены. Jul11 contract остаётся историческим и останавливается до source gate; для первых V3 figures нужен новый versioned prereg после внешних inputs.
 - Никакой второй crypto sleeve, FX/CFD demo/live money или Alpaca scale в этой сессии не включались.
 
@@ -22,11 +22,15 @@
 | strict pump runner -> hash-bound authorization -> immutable verdict | 55 pump tests; artifact manifest 11/11; full suite 1070 PASS | `c282ff6`, `55d00cc`, `a8d8bb8` | pushed | research-only; `NO_PROMOTION` |
 | causal levels + event-expansion long mechanics + closed-bar aggregation | 18 new mechanics tests; 25 aggregation tests; full suite 1088 PASS before phase-0 prereg | `a98b640`, `f07dd01` | pushed | research-only; no live wiring |
 | event-expansion long phase-0 prereg/preflight | 57 focused PASS; identity/data hashes PASS; nine blockers retained | `526492a` | pushed | `PERFORMANCE_FORBIDDEN`, `LIVE_FORBIDDEN` |
+| causal level evidence + exact event-long execution | approach/reaction/unbroken evidence, next-open/gap/stop-first/partial costs/funding contract | `7249b45`, `dd427c4` | pushed | research-only; no performance |
+| MTF orchestrator + atomic state/outbox + execution bridge | downtime replay freezes at first plan; durable ACK barrier; end-to-end exact-open conformance | `6dfd263`, `d7608d8`, `1f95e85`, `72c273d` | pushed | research-only; no registry/live wiring |
+| event-expansion long phase-1 freeze | `97` exact related tests; integrity PASS; nine runner/data blockers | `e05f7b3` | pushed | `PERFORMANCE_FORBIDDEN`, `LIVE_FORBIDDEN` |
+| historical phase-0 regression semantics | old immutable hashes now expected to reject strengthened level code; phase-1 is current authority | `7e93150` | pushed | no live effect |
 | FX V3 fail-closed level/news/cost contract | 82 combined focused/FX/Alpaca tests PASS | `864b054` | pushed | research-only; no performance |
 | exact Alpaca four-arm parity prereg + blocked evidence | 7 focused; sources/fingerprint PASS | `bb377bc`, `997f205` | pushed | no live change; outcome access blocked |
 | прежний ATT1 RSI45/AI/Web/Alpaca reporting package | verified ранее | ancestors HEAD | pushed | targeted-deployed ранее |
 
-Implementation local/origin HEAD до текущего canonical update: `526492a`. VPS checkout по-прежнему намеренно старый/dirty (`f7ed011` на последней проверке); blind pull/reset/cleanup запрещены. Внешний server tool достиг usage quota во время этой сессии, поэтому сегодняшнее P0 исправление нельзя честно назвать live. Release receipt: `reports/releases/targeted_bybit_partial_pnl_12a9abd_20260713.json`.
+Implementation local/origin HEAD до текущего canonical update: `7e93150`. VPS checkout по-прежнему намеренно старый/dirty (`f7ed011` на последней проверке); blind pull/reset/cleanup запрещены. Внешний server tool достиг usage quota во время этой сессии, поэтому P0 accounting нельзя честно назвать live. Release receipt: `reports/releases/targeted_bybit_partial_pnl_12a9abd_20260713.json`.
 
 ## Что произошло с ночной crypto сделкой
 
@@ -62,12 +66,12 @@ Bybit API возвращает `closedSize/closedPnl/openFee/closeFee` на ур
 ## Следующие crypto sleeves
 
 1. `pump_exhaustion_unwind_short_v1` — честно завершён `NO_PROMOTION`, а не готовый второй рукав. Stress: 39 trades, PF `1.234`, `+2.922R`, `+1.228%` при frozen sizing, conservative DD `3.015%`; 3/4 positive folds. Holdout позитивен, но только 6 trades против gate 10. За 25 calendar months было 16 active, 9 нулевых и 7 красных active months. ONDO дал 93.4% итогового net; без него LOSO PF `1.018` и return `-0.127%`, что добавляет robustness-риск. Подробно: `reports/PUMP_EXHAUSTION_STRICT_VERDICT_2026_07_13.md`.
-2. `event_expansion_retest_long_v1` — следующий физически отдельный long-only successor, а не механическая инверсия short sleeve. Уже есть immutable horizontal H1/H4 level identity, source/config/payload hashes, persisted event ledger и причинная последовательность expansion -> hold -> first retest -> higher-low -> bullish BOS. Но текущий plan специально `BLOCKED_RESEARCH_MECHANICS`: нет интегрированного H1/M15/M5 orchestrator, exits/cost/funding runner, external8 data/metadata/liquidity/funding и ATT1 additivity reference. Поэтому цифр и live-разрешения пока нет. Подробно: `reports/EVENT_EXPANSION_RETEST_LONG_V1_PREREG_2026_07_13.md`.
+2. `event_expansion_retest_long_v1` — следующий физически отдельный long-only successor, а не механическая инверсия short sleeve. Phase-1 уже соединяет immutable horizontal H1/H4 level, H1 expansion, строго более поздние M15 hold/first-retest/higher-low/BOS, exact next M5 open, frozen stop, 1R/2R, costs/funding policy, authenticated bridge и restart-safe outbox. Критический downtime case теперь останавливает replay ровно на первом плане и не пропускает next-open до durable ACK. Статус всё равно `BLOCKED_RESEARCH_RUNNER_DATA`: нет performance/receipt runner, доказательства полноты funding, uniform dev13 manifest, external8 data/metadata/liquidity/funding и ATT1 additivity reference. Поэтому цифр и live-разрешения пока нет. Текущий authority: `reports/EVENT_EXPANSION_RETEST_LONG_V1_PHASE1_FREEZE_2026_07_13.md`.
 3. Horizontal range rejection — отдельные long-only и short-only sleeves на общем Level Snapshot. Это правильный наследник «пилы/отскоков»; старые ARS1/ASB2/ARF формы не включать, потому что свежие gates отрицательны.
 
 Elder использовать как side-specific context/filter, а не самостоятельный двигатель. Breakdown — только bear-only и ниже по приоритету. FVG/imbalances пока не production sleeve: deterministic context можно тестировать только отдельной ablation после общего уровня/события, а не добавлять как красивую эвристику.
 
-Сегодня нет второго честного performance-run из уже frozen artifacts. `pump_fade_simple_meme` — 486-combo autoresearch на selected microcaps, не prereg/nested OOS; ARS1/ASB2/InPlay/level-memory уже провалены на просмотренных окнах. ARF2 unified-level replay уже оживлял частоту, но дал только PF `0.588`, поэтому одного wiring provider недостаточно. Versioned horizontal `LevelSnapshot v1` и exact closed-bar aggregation теперь заморожены; следующий шаг — соединить их одним multi-timeframe orchestrator. После expansion-retest long та же рама пойдёт в отдельные horizontal range rejection long и short. Sloped levels остаются отдельным будущим versioned contract, а не тихим расширением текущего v1.
+Сегодня нет второго честного performance-run из уже frozen artifacts. Это не простой вычислительной мощности: phase-1 специально запрещает outcomes до runner/data freeze. `pump_fade_simple_meme` — 486-combo autoresearch на selected microcaps, не prereg/nested OOS; ARS1/ASB2/InPlay/level-memory уже провалены на просмотренных окнах. ARF2 unified-level replay уже оживлял частоту, но дал только PF `0.588`, поэтому одного wiring provider недостаточно. После phase-2 runner/data freeze event-long получит первый допустимый performance gate; затем та же рама пойдёт в отдельные horizontal range rejection long и short. Sloped levels остаются отдельным будущим versioned contract, а не тихим расширением текущего v1.
 
 Текущий order-book density collector хранит lossy 30-second wall snapshots без sequence IDs, exchange timestamps, full deltas и public trades. Это context telemetry, не replayable imbalance edge. Для честного InPlay/L2 исследования нужен новый reconstructible publicTrade + L2 collector и примерно 60–90 дней tape.
 
@@ -121,10 +125,11 @@ Jul12 Claude reports остаются advisor input, а не canonical state. Э
 
 ## Реалистичные сроки выхода из кризиса
 
-- Сегодня/эта сессия: P0 accounting Git fix, immutable data freeze, strict runner/preflight/verdict, FX fail-closed hardening, Alpaca prereg, `LevelSnapshot v1`, closed-bar aggregation и event-long phase-0 prereg выполнены. Финальный полный suite: `1127 passed`; phase-0 focused suite: `57 passed`.
+- Эта recovery-сессия: P0 accounting Git fix, immutable pump verdict, FX/Alpaca fail-closed gates, strengthened `LevelSnapshot v1`, closed-bar aggregation, exact execution, restart-safe MTF/outbox/bridge и event-long phase-1 freeze выполнены. Финальный полный suite: `1191 passed`; phase-1 exact suite: `97 passed`.
 - Pump verdict уже получен: слабоположительный, но недостаточно частый `NO_PROMOTION`; live timing от него не начинается.
 - 2–4 дня после OANDA/news inputs: первые честные V3 FX figures.
-- 1 неделя: Alpaca frozen parity plan + FX five-sleeve verdict + решение по risk-zero crypto shadow.
+- 1–3 рабочих сессии: event-long phase-2 runner/receipt journal и uniform dev13/funding manifests; только затем первый допустимый performance-run.
+- Около 1 недели после необходимых данных: Alpaca frozen parity replay + FX five-sleeve verdict + решение по risk-zero crypto shadow.
 - 2–4 недели: возможен первый маленький диверсифицированный canary только если хотя бы два независимых sleeves реально пройдут gates.
 - Стабильный семейный доход нельзя обещать сроком: нужен минимум десятки clean shadow/demo/live closes в разных regimes и месяцы наблюдения. Цель этой рамы — перестать терять месяцы на ложные PASS и быстро получать проверяемые `PASS/FAIL`, а не гарантировать прибыль.
 
@@ -143,6 +148,6 @@ Jul12 Claude reports остаются advisor input, а не canonical state. Э
 1. После восстановления server access адресно deploy P0 partial-PnL package при flat, без risk change; reconcile ADA broker rows.
 2. После 22:10/23:00 UTC проверить Alpaca scheduled report/watchdog receipt; затем материализовать девять prereg artifacts, не запускать performance при BLOCKED.
 3. Получить owner OANDA/news inputs; создать новый FX V3 prereg с fresh source/artifact hashes и только потом считать PnL.
-4. Собрать hash-pinned H1-expansion/M15-retest/M5-next-open orchestrator, exit/cost/funding runner и conformance для уже preregistered `event_expansion_retest_long_v1`; до этого performance запрещён. Затем data-only materialize fixed external8 без замен символов.
-5. Расширить shared frozen Level Snapshot отдельным sloped contract и использовать horizontal v1 для отдельных horizontal-range long/short sleeves; Elder только как ablation/filter.
+4. Не повторять уже закрытый phase-1 MTF. Следующий шаг: single-owner phase-2 runner, который durable-пишет bridge/trade receipts до ACK, доказывает funding coverage, использует uniform dev13 window и фиксированные folds/embargo/LOSO/additivity. До нового freeze performance запрещён; затем materialize fixed external8 без замен символов.
+5. После первого честного event-long verdict использовать horizontal v1 для отдельных horizontal-range rejection long и short. Sloped levels — отдельный versioned contract; Elder только как ablation/filter.
 6. Обновлять AI canonical state/index/ledger после каждого verdict; оператор остаётся observer/proposal-only.

@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-13T10:45:46Z",
+  "as_of_utc": "2026-07-13T11:41:29Z",
   "schema_version": 2,
   "authority": "human_reviewed_project_truth",
   "control_recommendations_allowed": false,
@@ -39,7 +39,8 @@
     "pump_exhaustion_strict_20260713": "NO_PROMOTION_MIN_SAMPLE_FAIL",
     "event_long_level_snapshot_v1": "HORIZONTAL_H1_H4_HASH_PINNED_SLOPED_DEFERRED",
     "event_long_closed_bar_aggregation": "M5_TO_M15_H1_H4_HASH_PINNED",
-    "event_long_phase0": "IDENTITY_PASS_PERFORMANCE_AND_LIVE_FORBIDDEN_NINE_BLOCKERS"
+    "event_long_phase0": "HISTORICAL_IMMUTABLE_FREEZE_SUPERSEDED_BY_PHASE1",
+    "event_long_phase1": "CAUSAL_IDENTITY_PASS_MTF_EXECUTION_BRIDGE_ATOMIC_OUTBOX_PINNED_NINE_RUNNER_DATA_BLOCKERS_PERFORMANCE_AND_LIVE_FORBIDDEN"
   },
   "research_verdicts": {
     "pump_exhaustion_unwind_short_v1": {
@@ -69,14 +70,17 @@
       "performance_computed": false
     },
     "event_expansion_retest_long_v1": {
-      "phase": "PHASE_0_MECHANICS_IDENTITY_ONLY",
+      "phase": "PHASE_1_CAUSAL_CONTRACTS_ONLY",
       "integrity_pass": true,
-      "permission": "BLOCKED_RESEARCH_MECHANICS",
+      "permission": "BLOCKED_RESEARCH_RUNNER_DATA",
       "performance_computed": false,
       "live_ready": false,
       "declared_blockers": 9,
       "physical_side": "long_only",
-      "level_scope": "horizontal_H1_H4_only_sloped_deferred"
+      "level_scope": "horizontal_H1_H4_only_sloped_deferred",
+      "downtime_replay": "FREEZE_AT_FIRST_PLAN_PENDING_OUTBOX_BLOCKS_ADVANCE_UNTIL_DURABLE_ACK",
+      "execution": "EXACT_NEXT_M5_FROZEN_STOP_STOP_FIRST_1R_2R_BASE_STRESS_COSTS",
+      "phase1_focused_tests": 97
     }
   },
   "no_promotion": [
@@ -97,7 +101,8 @@
     "elder_current_forms"
   ],
   "research_queue": [
-    "event_expansion_retest_long_v1_build_H1_M15_M5_orchestrator_exits_cost_funding_runner_before_performance",
+    "event_expansion_retest_long_v1_phase2_single_owner_runner_persist_bridge_and_trade_receipts_before_ACK",
+    "event_expansion_retest_long_v1_uniform_dev13_and_complete_funding_manifests_before_performance",
     "event_expansion_retest_long_v1_fixed_external8_materialize_only_after_runnable_freeze",
     "pump_short_point_in_time_universe_additivity",
     "horizontal_range_rejection_crypto_long_short_shared_level_snapshot",
@@ -129,6 +134,7 @@
     "reports/ALPACA_TRUTH_AND_NEXT_TEST_2026_07_13.md",
     "reports/research/alpaca_monthly_exact_parity_replay_20260713_preflight.json",
     "reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md",
-    "reports/EVENT_EXPANSION_RETEST_LONG_V1_PREREG_2026_07_13.md"
+    "reports/EVENT_EXPANSION_RETEST_LONG_V1_PREREG_2026_07_13.md",
+    "reports/EVENT_EXPANSION_RETEST_LONG_V1_PHASE1_FREEZE_2026_07_13.md"
   ]
 }

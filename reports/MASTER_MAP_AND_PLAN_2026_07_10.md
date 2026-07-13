@@ -2,8 +2,10 @@
 
 > **2026-07-13 canonical override:** read `reports/RECOVERY_CHECKPOINT_2026_07_13.md`,
 > `reports/PROJECT_CANONICAL_INDEX_2026_07_13.json` and
-> `reports/NEXT_CHAT_START_PROMPT_2026_07_13.md`. They supersede live/research
-> status below. Strict pump verdict is `NO_PROMOTION`; FX/Alpaca remain blocked.
+> `reports/NEXT_CHAT_START_PROMPT_2026_07_13.md`. For the newest crypto-long
+> contract also read `reports/EVENT_EXPANSION_RETEST_LONG_V1_PHASE1_FREEZE_2026_07_13.md`.
+> They supersede live/research status below. Strict pump verdict is
+> `NO_PROMOTION`; event-long/FX/Alpaca remain blocked from performance/live.
 >
 > Latest recovery truth: `reports/PROJECT_RECOVERY_TRUTH_AND_ROADMAP_2026_07_11.md`.
 > Latest continuation prompt: `reports/NEXT_CHAT_START_PROMPT_2026_07_11.md`.

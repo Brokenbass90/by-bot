@@ -2,7 +2,8 @@
 
 > **Superseded 2026-07-13:** canonical facts are in
 > `reports/RECOVERY_CHECKPOINT_2026_07_13.md` and
-> `reports/PROJECT_CANONICAL_INDEX_2026_07_13.json`.
+> `reports/PROJECT_CANONICAL_INDEX_2026_07_13.json`; event-long current
+> causal freeze is `reports/EVENT_EXPANSION_RETEST_LONG_V1_PHASE1_FREEZE_2026_07_13.md`.
 
 ## Superseding facts — 2026-07-11 morning
 

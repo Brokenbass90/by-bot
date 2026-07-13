@@ -1,8 +1,10 @@
 # CODEX HANDOFF 2026-07-10
 
 > **Superseded 2026-07-13:** continue from `reports/NEXT_CHAT_START_PROMPT_2026_07_13.md`
-> and `reports/PROJECT_CANONICAL_INDEX_2026_07_13.json`; do not execute the older
-> unfinished-action list below without reconciling it with that checkpoint.
+> and `reports/PROJECT_CANONICAL_INDEX_2026_07_13.json`; event-long current
+> authority is `reports/EVENT_EXPANSION_RETEST_LONG_V1_PHASE1_FREEZE_2026_07_13.md`.
+> Do not execute the older unfinished-action list below without reconciling it
+> with that checkpoint.
 
 This is the current handoff for the next Codex/Claude-style session.
 

@@ -1,5 +1,10 @@
 # Event Expansion Retest Long v1 — phase-0 preregistration
 
+> Historical freeze: не переписывать. Текущий causal authority —
+> `reports/EVENT_EXPANSION_RETEST_LONG_V1_PHASE1_FREEZE_2026_07_13.md`.
+> После усиления LevelSnapshot старый phase-0 hash preflight ожидаемо mismatch;
+> performance/live по-прежнему запрещены.
+
 Дата фиксации: 2026-07-13 10:32 UTC
 Статус: **BLOCKED_RESEARCH_MECHANICS**
 Performance: **PERFORMANCE_FORBIDDEN**
