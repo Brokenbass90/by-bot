@@ -658,6 +658,16 @@ def process_closed_m5_prefix(
             raise MTFContractError("source start changed after restart")
         if prior.m5_watermark_close_ms > as_of_ms:
             raise MTFContractError("as_of moved behind persisted M5 watermark")
+        if prior.plan_outbox:
+            if as_of_ms != prior.m5_watermark_close_ms or len(rows) != prior.source_count:
+                raise MTFContractError(
+                    "pending plan outbox must be durably acknowledged before source advancement"
+                )
+            if full_source_sha != prior.source_sha256:
+                raise MTFContractError("pending plan outbox source changed at the frozen boundary")
+            return MTFOrchestratorStepV1(
+                prior, None, "pending_plan_outbox_requires_durable_ack"
+            )
         start_boundary = prior.m15_watermark_close_ms
         active, seen = prior.active, prior.seen_event_ids
         consumed, outbox, acked = prior.consumed_retest_ids, prior.plan_outbox, prior.acknowledged_plan_ids
@@ -676,6 +686,7 @@ def process_closed_m5_prefix(
         provider_identity=provider_identity, provider_fingerprint=provider_fingerprint,
     ) if h1_end > int(rows[0][TS]) else None
     latest_plan = None
+    frozen_at_plan_ms: Optional[int] = None
     reason = "no_new_complete_m15"
     if m15_receipt is not None:
         h1_by_close = ({int(bar[TS]) + H1: i for i, bar in enumerate(h1_receipt.output_bars)}
@@ -720,15 +731,35 @@ def process_closed_m5_prefix(
                         raise MTFContractError("plan idempotency key already exists")
                     outbox = outbox + (plan,)  # returned in the same immutable state transition
                     latest_plan = plan
+                    frozen_at_plan_ms = plan.known_at_ms
+                    # Plan emission is a transaction boundary.  Do not observe
+                    # even one later M5/M15 from a downtime catch-up until this
+                    # exact state+outbox receipt is durably persisted and ACKed.
+                    break
+
+    committed_m5_end = as_of_ms if frozen_at_plan_ms is None else frozen_at_plan_ms
+    committed_count = (committed_m5_end - int(rows[0][TS])) // M5
+    if committed_count <= 0 or committed_count > len(rows):
+        raise MTFContractError("transaction boundary does not describe a valid M5 source prefix")
+    committed_rows = rows[:committed_count]
+    if int(committed_rows[-1][TS]) + M5 != committed_m5_end:
+        raise MTFContractError("transaction boundary is not the exact end of its M5 source prefix")
+    committed_source_sha = (
+        full_source_sha if committed_count == len(rows)
+        else canonical_bars_sha256(committed_rows)
+    )
+    committed_m15_end = committed_m5_end - committed_m5_end % M15
+    committed_h1_end = committed_m5_end - committed_m5_end % H1
 
     state = MTFOrchestratorStateV1(
         schema=STATE_SCHEMA, strategy=STRATEGY_NAME, symbol=canonical_symbol,
         side_identity=SIDE_IDENTITY, provider_identity=provider_identity,
         provider_fingerprint=provider_fingerprint, config_sha256=config.fingerprint,
         aggregation_config_fingerprints=fps,
-        source_start_open_ts_ms=int(rows[0][TS]), source_count=len(rows),
-        source_sha256=full_source_sha, m5_watermark_close_ms=as_of_ms,
-        m15_watermark_close_ms=m15_end, h1_watermark_close_ms=h1_end,
+        source_start_open_ts_ms=int(rows[0][TS]), source_count=committed_count,
+        source_sha256=committed_source_sha, m5_watermark_close_ms=committed_m5_end,
+        m15_watermark_close_ms=committed_m15_end,
+        h1_watermark_close_ms=committed_h1_end,
         active=active, seen_event_ids=seen, consumed_retest_ids=consumed,
         plan_outbox=outbox, acknowledged_plan_ids=acked,
     )

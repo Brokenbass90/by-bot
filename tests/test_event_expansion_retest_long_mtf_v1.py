@@ -11,6 +11,16 @@ import strategies.event_expansion_retest_long_mtf_v1 as mod
 M5, M15, H1 = mod.M5, mod.M15, mod.H1
 PROVIDER_SHA = "a" * 64
 SYMBOL = "TESTUSDT"
+GOLDEN_M15_BARS = (
+    (111.0, 111.2, 110.45, 110.8),
+    (110.8, 111.1, 110.45, 110.9),
+    (110.8, 110.9, 109.85, 110.10),
+    (110.3, 110.7, 110.22, 110.5),
+    (110.5, 110.6, 110.15, 110.3),
+    (110.3, 110.7, 110.25, 110.4),
+    (110.4, 110.9, 110.30, 110.6),
+    (110.6, 111.8, 110.50, 111.5),
+)
 
 
 def _children(ts, o, h, low, c, volume):
@@ -71,16 +81,7 @@ def _golden_path():
     step = _step(rows)
     assert step.state.active is not None
     stages = [step.state.active.stage]
-    for bar in (
-        (111.0, 111.2, 110.45, 110.8),
-        (110.8, 111.1, 110.45, 110.9),
-        (110.8, 110.9, 109.85, 110.10),
-        (110.3, 110.7, 110.22, 110.5),
-        (110.5, 110.6, 110.15, 110.3),
-        (110.3, 110.7, 110.25, 110.4),
-        (110.4, 110.9, 110.30, 110.6),
-        (110.6, 111.8, 110.50, 111.5),
-    ):
+    for bar in GOLDEN_M15_BARS:
         _append_m15(rows, *bar)
         step = _step(rows, step.state)
         assert step.state.active is not None
@@ -316,3 +317,38 @@ def test_rehashed_malicious_envelope_still_cannot_break_nested_state_links() -> 
             json.dumps(envelope), expected_provider_fingerprint=PROVIDER_SHA,
             expected_cfg=mod.EventExpansionRetestLongMTFConfigV1(),
         )
+
+
+def test_downtime_replay_freezes_at_plan_then_resumes_same_tail_only_after_ack() -> None:
+    from bot.event_long_mtf_execution_bridge_v1 import bridge_mtf_research_plan_v1
+
+    rows = _through_expansion()
+    before_downtime = _step(rows)
+    for bar in GOLDEN_M15_BARS:
+        _append_m15(rows, *bar)
+    expected_plan_boundary = rows[-1][0] + M5
+    # These bars are already present when the process wakes, but they must not
+    # be observed in the same transaction that discovers the plan.
+    _append_m15(rows, 111.5, 112.0, 111.1, 111.8)
+    _append_m15(rows, 111.8, 112.2, 111.4, 112.0)
+    full_as_of = rows[-1][0] + M5
+
+    caught_up = _step(rows, before_downtime.state)
+    assert caught_up.plan is not None
+    assert caught_up.plan.known_at_ms == expected_plan_boundary
+    assert caught_up.state.m5_watermark_close_ms == expected_plan_boundary
+    assert caught_up.state.m15_watermark_close_ms == expected_plan_boundary
+    assert caught_up.state.source_count < len(rows)
+    assert caught_up.state.source_count * M5 == expected_plan_boundary
+    bridged = bridge_mtf_research_plan_v1(caught_up.plan, caught_up.state)
+    assert bridged.receipt.m5_watermark_close_ms == expected_plan_boundary
+
+    with pytest.raises(mod.MTFContractError, match="durably acknowledged"):
+        _step(rows, caught_up.state)
+
+    acknowledged = mod.acknowledge_plan(caught_up.state, caught_up.plan.plan_id)
+    resumed = _step(rows, acknowledged)
+    assert resumed.plan is None
+    assert resumed.state.m5_watermark_close_ms == full_as_of
+    assert resumed.state.source_count == len(rows)
+    assert resumed.state.acknowledged_plan_ids == (caught_up.plan.plan_id,)

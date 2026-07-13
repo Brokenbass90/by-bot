@@ -150,18 +150,16 @@ def test_bridge_rejects_acknowledged_missing_or_nonmatching_atomic_outbox() -> N
         bridge_mtf_research_plan_v1(step.plan, without_active)
 
 
-def test_bridge_rejects_late_conversion_after_exact_next_open_was_observed() -> None:
+def test_pure_orchestrator_blocks_late_conversion_before_next_open_is_observed() -> None:
     rows, step = _golden_path()
     prior = step.state
     next_open = rows[-1][0] + M5
     rows.append([next_open, 111.5, 111.7, 111.3, 111.6, 100.0])
-    late = _step(rows, prior)
-    assert late.state.plan_outbox == prior.plan_outbox
-    assert late.state.m5_watermark_close_ms == step.plan.known_at_ms + M5
+    with pytest.raises(mtf.MTFContractError, match="durably acknowledged"):
+        _step(rows, prior)
     assert "freeze source advancement" in PENDING_OUTBOX_DELIVERY_REQUIREMENT
     assert "only then atomically" in PENDING_OUTBOX_DELIVERY_REQUIREMENT
-    with pytest.raises(EventLongMTFBridgeError, match="exact closed-M15 / next-M5"):
-        bridge_mtf_research_plan_v1(step.plan, late.state)
+    assert bridge_mtf_research_plan_v1(step.plan, prior).receipt.m5_watermark_close_ms == step.plan.known_at_ms
 
 
 def test_bridge_revalidates_plan_event_and_level_after_decoder_tamper() -> None:
