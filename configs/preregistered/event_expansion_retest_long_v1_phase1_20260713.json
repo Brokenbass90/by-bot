@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "name": "event_expansion_retest_long_v1_20260713_phase1",
+  "frozen_at_utc": "2026-07-13T11:35:00Z",
+  "phase": "PHASE_1_CAUSAL_CONTRACTS_ONLY",
+  "purpose": "Freeze the current causal long-only MTF, level, execution, bridge, and durable single-writer state/outbox identities without permitting market-data performance evaluation or live use.",
+  "research_only": true,
+  "live_or_broker_calls": false,
+  "risk_pct": 0,
+  "no_parameter_scan": true,
+  "no_performance_access": true,
+  "current_automatic_verdict": "BLOCKED_RESEARCH_RUNNER_DATA",
+  "current_performance_permission": "PERFORMANCE_FORBIDDEN",
+  "current_live_permission": "LIVE_FORBIDDEN",
+  "phase0_history": {
+    "path": "configs/preregistered/event_expansion_retest_long_v1_20260713.json",
+    "sha256": "8660ae7718951a9acfb510df0549d38ebef265c5dd67e1a692029bd9d7dc88de",
+    "contract_fingerprint_sha256": "317a3a63d437a2ce0aad06bee7dcea61a12e333fd1306ac7236719729fe40c7d",
+    "mutation_allowed": false,
+    "current_preflight_expected_to_pass": false,
+    "reason_current_preflight_may_fail": "phase0 pins historical level code before causal evidence hardening; phase1 supersedes it for current work without rewriting history"
+  },
+  "implementation_identity": {
+    "side_identity": "long_only",
+    "level_scope": "horizontal_h1_h4_resistance_flip_only",
+    "sloped_levels": "DEFERRED_TO_A_SEPARATE_VERSIONED_CONTRACT",
+    "default_mtf_config_fingerprint_sha256": "b2a0529e343ed273675f9b3e11af27be95ca62c42b94c842c68929a87ecd3d4e",
+    "component_commits": {
+      "closed_bar_aggregation": "f07dd012810d55028d238fe5d6780e591768bb64",
+      "level_evidence": "7249b45a9542055ec9e1b25740f1afde5e478456",
+      "mtf_orchestrator": "72c273d05cc93b945bea8709e25275a8e9f51b25",
+      "execution_contract": "dd427c4194c702405677cf1ee7dca3cad61c65f3",
+      "durable_state_outbox": "d7608d8432c637eb8222d9ae5f2d72360bd064ad",
+      "mtf_execution_bridge": "1f95e85637e4fb79e33441f727e6d40447003efd"
+    },
+    "pinned_files": [
+      {
+        "role": "phase1_preflight",
+        "path": "scripts/preflight_event_expansion_retest_long_v1_phase1.py",
+        "sha256": "4e7f1001fcd14ed442279e8726a8b098600b06e2470742fb1d74f93519b0a53f"
+      },
+      {
+        "role": "closed_bar_aggregation_source",
+        "path": "bot/closed_bar_aggregation_v1.py",
+        "sha256": "5ad6b37ee5124b185ae1cefd0b7aed43863d338fed3d3abfcbf2fce96f2d95aa"
+      },
+      {
+        "role": "closed_bar_aggregation_tests",
+        "path": "tests/test_closed_bar_aggregation_v1.py",
+        "sha256": "45654441770fbde1252a4b136e6b80b96d731ffa6e932b16ed60f4540976643c"
+      },
+      {
+        "role": "level_snapshot_source",
+        "path": "bot/level_snapshot_v1.py",
+        "sha256": "b776d2db30b350639be2705ded3c1b338ed34b976e1538c28c5e1e7c6586ad19"
+      },
+      {
+        "role": "level_snapshot_tests",
+        "path": "tests/test_level_snapshot_v1.py",
+        "sha256": "d10b198fb3f4e48e29f77f7d78d8b784a39ce5d3386d741779ad3394187b1af1"
+      },
+      {
+        "role": "market_context_dependency",
+        "path": "bot/market_context.py",
+        "sha256": "34e79fbcca9bf33e1247a44ac5b57f0b33e6c1d188a329f28859ea6503a8054c"
+      },
+      {
+        "role": "mtf_orchestrator_source",
+        "path": "strategies/event_expansion_retest_long_mtf_v1.py",
+        "sha256": "2b3cb32d32a87c622a3484f0bc0d48282cc54fa316bf1f4252d37b076a7085fd"
+      },
+      {
+        "role": "mtf_orchestrator_tests",
+        "path": "tests/test_event_expansion_retest_long_mtf_v1.py",
+        "sha256": "fe267bcbf29f555449b4eba7b15eb1cfbc948edbe202797fd32db2222ae070b5"
+      },
+      {
+        "role": "execution_contract_source",
+        "path": "bot/event_long_execution_v1.py",
+        "sha256": "8179b14f5dccefb273022c90e8abcd9ecd391092f6c9c08d706448ddb3ac1836"
+      },
+      {
+        "role": "execution_contract_tests",
+        "path": "tests/test_event_long_execution_v1.py",
+        "sha256": "351e040a33564329a23278e8dce10611b073eb15a2bd83155e48981bb3d806c4"
+      },
+      {
+        "role": "mtf_execution_bridge_source",
+        "path": "bot/event_long_mtf_execution_bridge_v1.py",
+        "sha256": "d2a7e55e9a2908a6a9bfb8db95af6963246e4319d958cd5fd02e905836eb5dd7"
+      },
+      {
+        "role": "mtf_execution_bridge_tests",
+        "path": "tests/test_event_long_mtf_execution_bridge_v1.py",
+        "sha256": "52c430e49f46a91c6ff43e5e7966db6f9f16c4aac17ff5653ff41023d25975d1"
+      },
+      {
+        "role": "durable_state_outbox_source",
+        "path": "bot/event_expansion_retest_long_mtf_state_store.py",
+        "sha256": "ea593fac52564f602015777f327a6790ca11b30c9db2243b636d6454328eefcb"
+      },
+      {
+        "role": "durable_state_outbox_tests",
+        "path": "tests/test_event_expansion_retest_long_mtf_state_store.py",
+        "sha256": "d2f5f84c551b7a2caf6006d2389f7b62ad305bc665d99175e6ff6481c5298904"
+      },
+      {
+        "role": "phase1_preflight_tests",
+        "path": "tests/test_preflight_event_expansion_retest_long_v1_phase1.py",
+        "sha256": "adc63e7e6658dbf0012bf8478bf0d1f0b770b4c7f7635c10ed5dfb73a6ba57dd"
+      }
+    ]
+  },
+  "frozen_contracts": {
+    "raw_source": "exact_contiguous_closed_M5_prefix_with_explicit_as_of_and_provider_fingerprint",
+    "causal_sequence": [
+      "closed_H1_expansion",
+      "later_closed_M15_hold",
+      "later_first_M15_retest_consumed_once",
+      "later_confirmed_M15_higher_low_pivot",
+      "strictly_later_closed_M15_BOS",
+      "exact_same_boundary_next_M5_open"
+    ],
+    "same_bar_stage_collapse_allowed": false,
+    "future_bar_access_allowed": false,
+    "execution": {
+      "entry": "actual_exact_next_M5_open",
+      "stop": "frozen_below_min_retest_low_and_zone_low_with_ATR_buffer",
+      "targets": "reanchored_from_actual_open_1R_50pct_2R_50pct",
+      "max_hold_m5": 96,
+      "same_bar_ambiguity": "STOP_FIRST",
+      "base_fee_slippage_bps_per_side": [
+        6.0,
+        2.0
+      ],
+      "stress_fee_slippage_bps_per_side": [
+        10.0,
+        5.0
+      ],
+      "funding_credit_bps": 0.0,
+      "stress_min_funding_debit_bps_per_event": 5.0,
+      "missing_funding": "FAIL_CLOSED"
+    },
+    "durable_state_outbox": {
+      "atomic_single_file": true,
+      "file_mode": "0600",
+      "temp_fsync_replace_directory_fsync": true,
+      "pending_outbox_blocks_replay": true,
+      "ack_is_atomic_and_reload_verified": true,
+      "interprocess_writers": false
+    },
+    "research_bridge": {
+      "requires_exact_pending_outbox_plan": true,
+      "binds_M5_H1_M15_level_event_state_and_config": true,
+      "persists_or_acknowledges": false,
+      "live_or_broker_calls": false
+    }
+  },
+  "cohorts": {
+    "dev13": {
+      "role": "DEVELOPMENT_MECHANICS_ONLY_NO_PROMOTION_AUTHORITY",
+      "symbols": [
+        "1000PEPEUSDT",
+        "ADAUSDT",
+        "AVAXUSDT",
+        "BNBUSDT",
+        "BTCUSDT",
+        "DOGEUSDT",
+        "ETHUSDT",
+        "ONDOUSDT",
+        "SOLUSDT",
+        "SUIUSDT",
+        "TAOUSDT",
+        "WIFUSDT",
+        "XRPUSDT"
+      ],
+      "source_interval": "M5",
+      "requested_window_start_utc": "2024-07-15T00:00:00Z",
+      "requested_window_end_utc_exclusive": "2026-07-05T00:00:00Z",
+      "manifest_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/manifest.json",
+      "manifest_sha256": "f1f425e8822a5a8de56676fb24f257982d4c5fb33e254a328dc2b8243aedffd8",
+      "uniform_window_status": "BLOCKED_BTC_ETH_MISSING_FINAL_119_M5",
+      "observed_common_safe_end_utc_exclusive": "2026-07-04T14:05:00Z",
+      "performance_authority": false
+    },
+    "sealed_external8": {
+      "role": "STRATEGY_UNTOUCHED_HISTORICAL_REPLICATION",
+      "symbols": [
+        "FILUSDT",
+        "UNIUSDT",
+        "ETCUSDT",
+        "ICPUSDT",
+        "TRXUSDT",
+        "TONUSDT",
+        "MNTUSDT",
+        "IMXUSDT"
+      ],
+      "sealed_before_data_access": true,
+      "data_status": "ABSENT_AND_UNREAD",
+      "manifest_path": "",
+      "manifest_sha256": ""
+    },
+    "prospective": {
+      "role": "FORWARD_ONLY_AFTER_COMPLETE_RUNNABLE_FREEZE",
+      "status": "NOT_STARTED",
+      "start_utc": null,
+      "retroactive_backfill_as_prospective": false
+    }
+  },
+  "phase0_blocker_transitions": [
+    {
+      "phase0_code": "MULTITIMEFRAME_ORCHESTRATOR_ABSENT",
+      "status": "RESOLVED_CODE_CONTRACT_ONLY",
+      "evidence": "MTF orchestrator plus causal/restart conformance tests are hash-pinned; no performance claim"
+    },
+    {
+      "phase0_code": "EXIT_MODEL_ABSENT",
+      "status": "RESOLVED_CODE_CONTRACT_ONLY",
+      "evidence": "exact next-open, frozen-stop, stop-first, 1R/2R, max-hold execution simulator is hash-pinned"
+    },
+    {
+      "phase0_code": "COST_FUNDING_MODEL_ABSENT",
+      "status": "RESOLVED_CODE_CONTRACT_ONLY",
+      "evidence": "base/stress costs and exact funding-event policy are hash-pinned; completeness proof remains blocked"
+    }
+  ],
+  "evaluation_gate_inheritance": {
+    "source_path": "configs/preregistered/event_expansion_retest_long_v1_20260713.json",
+    "source_sha256": "8660ae7718951a9acfb510df0549d38ebef265c5dd67e1a692029bd9d7dc88de",
+    "source_contract_fingerprint_sha256": "317a3a63d437a2ce0aad06bee7dcea61a12e333fd1306ac7236719729fe40c7d",
+    "relaxation_allowed": false,
+    "pass_authorizes_live_automatically": false
+  },
+  "remaining_blockers": [
+    {
+      "code": "PERFORMANCE_RUNNER_ABSENT",
+      "required_artifact": "hash_pinned_engine_store_completed_bar_runner_with_canonical_snapshot_loader_fixed_folds_embargo_LOSO_portfolio_sizing_and_additivity",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "DURABLE_EXECUTION_RECEIPT_AND_ACK_RUNNER_ABSENT",
+      "required_artifact": "single_owner_runner_that_persists_bridge_and_trade_receipts_before_atomic_outbox_ACK_and_recovers_ambiguous_write_outcomes_without_duplicate_execution",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "FUNDING_COMPLETENESS_PROOF_ABSENT",
+      "required_artifact": "hash_pinned_exact_event_funding_histories_and_machine_checked_complete_coverage_for_every_filled_holding_window",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "DEV13_UNIFORM_WINDOW_MANIFEST_ABSENT",
+      "required_artifact": "new_immutable_dev13_manifest_with_identical_contiguous_M5_window_per_symbol_or_transparent_common_window_crop_before_outcomes",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "EXTERNAL8_MARKET_DATA_ABSENT",
+      "required_artifact": "sealed_external8_exact_contiguous_M5_manifest",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "EXTERNAL8_METADATA_ABSENT",
+      "required_artifact": "sealed_external8_point_in_time_instrument_metadata_manifest",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "EXTERNAL8_LIQUIDITY_ABSENT",
+      "required_artifact": "sealed_external8_point_in_time_liquidity_and_tradability_manifest",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "EXTERNAL8_FUNDING_ABSENT",
+      "required_artifact": "sealed_external8_exact_historical_funding_manifest",
+      "path": "",
+      "sha256": ""
+    },
+    {
+      "code": "ATT1_REFERENCE_ABSENT",
+      "required_artifact": "hash_pinned_ATT1_same_window_daily_returns_trades_occupancy_and_equity_reference_for_both_allocation_orderings",
+      "path": "",
+      "sha256": ""
+    }
+  ],
+  "contract_fingerprint_sha256": "4d1dcf764c2f183945c01919ab8e52796f72ccc2d00ad945a950745e9c1ce993"
+}
