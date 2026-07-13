@@ -1,0 +1,136 @@
+{
+  "artifacts": [
+    {
+      "content_type": "alpaca_point_in_time_universe_v1",
+      "name": "point_in_time_universe",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ]
+    },
+    {
+      "content_type": "alpaca_point_in_time_market_data_manifest_v1",
+      "name": "market_data_manifest",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ]
+    },
+    {
+      "content_type": "alpaca_broker_lifecycle_v1",
+      "name": "broker_fill_order_lifecycle_20260706_20260709",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ]
+    },
+    {
+      "content_type": "alpaca_cost_gap_calibration_v1",
+      "name": "cost_gap_calibration",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ]
+    },
+    {
+      "content_type": "alpaca_causal_regime_labels_v1",
+      "name": "regime_labels",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ]
+    },
+    {
+      "content_type": "alpaca_survivorship_receipt_v1",
+      "name": "corporate_actions_survivorship",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ]
+    },
+    {
+      "content_type": "alpaca_untouched_forward_manifest_v1",
+      "name": "untouched_forward_manifest",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ]
+    },
+    {
+      "content_type": "python_source_v1",
+      "name": "shared_exit_model_implementation",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ]
+    },
+    {
+      "content_type": "alpaca_shared_exit_conformance_v1",
+      "name": "shared_exit_model_conformance",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ]
+    }
+  ],
+  "blockers": [
+    "required_hash_pinned_inputs_not_ready",
+    "one_shared_executable_exit_model_not_proven",
+    "jul6_9_broker_fill_order_lifecycle_not_reconstructed",
+    "untouched_forward_not_sealed"
+  ],
+  "contract_fingerprint_ok": true,
+  "experiment": "alpaca_monthly_exact_parity_replay_20260713",
+  "frozen_arm_ids": [
+    "true_monthly_v38_top4",
+    "accidental_daily_rotation_negative_control",
+    "adaptive_default_gated",
+    "adaptive_ungated_control"
+  ],
+  "live_or_broker_calls": false,
+  "outcome_access_allowed": false,
+  "performance_computed": false,
+  "performance_fields_present": false,
+  "permission": "BLOCKED_FAIL_CLOSED",
+  "promotion_authorized": false,
+  "safe_hold_changed": false,
+  "schema_version": 1,
+  "source_status": [
+    {
+      "name": "preflight_sha256",
+      "ok": true,
+      "reasons": [],
+      "sha256": "02b4d548175fd490b8934cfbf320db643a86128040499d0c9c10346c292a208f"
+    },
+    {
+      "name": "monthly_sim_sha256",
+      "ok": true,
+      "reasons": [],
+      "sha256": "cefe0c6f8757deb8e3a2dd9f2d7e3a99ebd4d7529408ad742a2bfa69ad440dc5"
+    },
+    {
+      "name": "monthly_refresh_sha256",
+      "ok": true,
+      "reasons": [],
+      "sha256": "6dff0ab3b075bf5723b58c1f62bd0ccfd46895f0a1fa51c7b6230e9f091a6e84"
+    },
+    {
+      "name": "adaptive_selector_sha256",
+      "ok": true,
+      "reasons": [],
+      "sha256": "9c936a6f387c693e8f388d82c2eefbac939314c55d8633666efbcbe79baa8b7b"
+    },
+    {
+      "name": "adaptive_reference_replay_sha256",
+      "ok": true,
+      "reasons": [],
+      "sha256": "3c083774e80bf3b346f55e6ee903fc36ef3f4db5b0a2d23c5dbb848b7b9e4396"
+    },
+    {
+      "name": "live_bridge_reference_sha256",
+      "ok": true,
+      "reasons": [],
+      "sha256": "41d1c6fbb52173c4523beb5771fd331c7baba95c7e3a2ffb9a9014b3de80b6dd"
+    }
+  ]
+}
