@@ -200,7 +200,7 @@ def _respect(
     score = stats.respect_score
     rated = resolved >= int(min_resolved)
     return (
-        (not rated) or (score == score and score >= min_score),
+        rated and score == score and score >= min_score,
         {
             "respect_rated": rated,
             "respect_score": score if score == score else None,
@@ -375,6 +375,7 @@ def failed_break_retest_short_v3(
             max_hold_bars=cfg.max_hold_bars,
             validity_bars=1,
             allowed_fill_sessions=cfg.allowed_sessions,
+            execution_bar_seconds=H1_SECONDS,
             metadata={"atr": a, "sessions": session_labels(decision_ts)},
         )
     return None
@@ -504,6 +505,7 @@ def horizontal_range_rejection_v3(
         max_hold_bars=cfg.max_hold_bars,
         validity_bars=1,
         allowed_fill_sessions=cfg.allowed_sessions,
+        execution_bar_seconds=H1_SECONDS,
         metadata={"atr": a, "sessions": session_labels(decision_ts)},
     )
 
@@ -679,6 +681,7 @@ def range_edge_expansion_retest_v3(
             max_hold_bars=cfg.max_hold_bars,
             validity_bars=1,
             allowed_fill_sessions=cfg.allowed_sessions,
+            execution_bar_seconds=H1_SECONDS,
             metadata={"atr": a, "sessions": session_labels(decision_ts)},
         )
     return None

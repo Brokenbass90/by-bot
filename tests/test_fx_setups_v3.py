@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import pytest
 
 import bot.fx_setups_v3 as v3
@@ -8,6 +10,7 @@ from bot.fx_instruments import get_instrument
 
 HOUR = 3600
 ORIGINAL_SESSION_NEWS_OK = v3._session_news_ok
+ORIGINAL_RESPECT = v3._respect
 
 
 def _row(i: int, o: float, h: float, l: float, c: float, v: float = 100.0) -> list[float]:
@@ -74,6 +77,61 @@ def test_session_news_gate_fails_closed_when_calendar_is_missing() -> None:
         )
 
 
+def test_level_respect_fails_closed_when_reactions_are_insufficient(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        v3,
+        "level_respect",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            bounces=1,
+            sweeps=0,
+            breaks=0,
+            respect_score=1.0,
+        ),
+    )
+    ok, metadata = ORIGINAL_RESPECT(
+        _base(80),
+        100.0,
+        side="long",
+        min_resolved=2,
+        min_score=0.0,
+    )
+    assert not ok
+    assert metadata["respect_rated"] is False
+    assert metadata["respect_resolved"] == 1
+
+
+@pytest.mark.parametrize(
+    ("score", "expected"),
+    [(0.39, False), (0.40, True)],
+)
+def test_level_respect_requires_both_minimum_reactions_and_score(
+    monkeypatch: pytest.MonkeyPatch,
+    score: float,
+    expected: bool,
+) -> None:
+    monkeypatch.setattr(
+        v3,
+        "level_respect",
+        lambda *_args, **_kwargs: SimpleNamespace(
+            bounces=2,
+            sweeps=1,
+            breaks=0,
+            respect_score=score,
+        ),
+    )
+    ok, metadata = ORIGINAL_RESPECT(
+        _base(80),
+        110.0,
+        side="short",
+        min_resolved=3,
+        min_score=0.40,
+    )
+    assert ok is expected
+    assert metadata["respect_rated"] is True
+
+
 def test_failed_break_short_requires_break_then_reclaim_then_later_retest(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -100,6 +158,7 @@ def test_failed_break_short_requires_break_then_reclaim_then_later_retest(
     assert plan is not None
     assert plan.side == "short"
     assert plan.entry_type == "market_next_open"
+    assert plan.execution_bar_seconds == HOUR
     assert plan.event.family == "failed_break_retest_short_v3"
     assert plan.event.metadata["break_ts"] == int(rows[130][0])
     assert plan.event.metadata["reclaim_ts"] == int(rows[131][0])
@@ -155,6 +214,7 @@ def test_horizontal_rejection_is_horizontal_and_side_pure(
     assert plan.side == expected
     assert plan.event.level_kind == "horizontal_range_edge"
     assert plan.entry_type == "market_next_open"
+    assert plan.execution_bar_seconds == HOUR
     assert plan.target_price == pytest.approx(105.0)
 
 
@@ -189,6 +249,7 @@ def test_range_expansion_retest_is_later_and_freezes_before_event(
     assert plan.event.metadata["event_ts"] == int(rows[130][0])
     assert plan.event.metadata["retest_age_bars"] == 1
     assert plan.event.signal_ts == int(rows[131][0]) + HOUR
+    assert plan.execution_bar_seconds == HOUR
     assert max(frozen_last_ts) <= int(rows[129][0])
 
 
