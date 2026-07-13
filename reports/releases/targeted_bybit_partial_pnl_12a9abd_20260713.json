@@ -1,0 +1,30 @@
+{
+  "files": [
+    {
+      "mode": "0644",
+      "path": "bot/bybit_closed_pnl.py",
+      "sha256": "55999b89907301d95fae0e0f830848fbcd008c3e3bc95d16b5e7bd9056704f54",
+      "size_bytes": 7890
+    },
+    {
+      "mode": "0644",
+      "path": "smart_pump_reversal_bot.py",
+      "sha256": "abd46176680fa36d5951c3fe8f73630b9c13ad8d10b1088c207f6039938e5653",
+      "size_bytes": 664931
+    }
+  ],
+  "git_head": "12a9abd",
+  "metadata": {
+    "explicit_files_only": true,
+    "file_count": 2,
+    "git_dirty": true,
+    "operations": [
+      "read_explicit_files",
+      "read_git_dirty_flag",
+      "write_manifest"
+    ],
+    "reproducible": true
+  },
+  "release_id": "bybit-partial-pnl-12a9abd-20260713",
+  "schema_version": 1
+}
