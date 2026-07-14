@@ -10,6 +10,7 @@ import os
 import ssl
 import sys
 import time
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -940,6 +941,27 @@ def _build_bracket_buy_spec(
     elif size_mode != "notional":
         return None, f"unsupported_size_mode:{size_mode}"
     return spec, ""
+
+
+def _broker_stop_rearm_symbols(
+    *,
+    hold_symbols: Iterable[str],
+    current_position_symbols: Iterable[str],
+    intraday_managed_symbols: Iterable[str],
+    close_stale_positions: bool,
+) -> list[str]:
+    """Return every existing monthly position that must retain broker protection."""
+    protected = {str(sym).strip().upper() for sym in hold_symbols if str(sym).strip()}
+    intraday = {str(sym).strip().upper() for sym in intraday_managed_symbols if str(sym).strip()}
+    if not close_stale_positions:
+        # SAFE-HOLD deliberately keeps stale positions, so they still require
+        # the same broker-side stop coverage as currently selected holdings.
+        protected.update(
+            str(sym).strip().upper()
+            for sym in current_position_symbols
+            if str(sym).strip()
+        )
+    return sorted(protected - intraday)
 
 
 def _wait_for_filled_qty(client: AlpacaClient, order: dict[str, Any], *, timeout_sec: float) -> tuple[float, str]:
@@ -2081,25 +2103,38 @@ def main() -> int:
 
         # ── 3b. Re-arm broker stop for existing monthly fractional positions ─
         if broker_protection_enable and broker_protection_order_class == "simple_stop":
-            for symbol in hold_symbols:
-                if symbol in intraday_managed_symbols:
-                    continue
+            rearm_symbols = _broker_stop_rearm_symbols(
+                hold_symbols=hold_symbols,
+                current_position_symbols=current_positions.keys(),
+                intraday_managed_symbols=intraday_managed_symbols,
+                close_stale_positions=close_stale_positions,
+            )
+            for symbol in rearm_symbols:
                 if symbol in closed_out:
                     continue
                 if open_stop_sell_orders.get(symbol):
                     continue
                 pos = current_positions.get(symbol)
                 pick = picks_by_ticker.get(symbol)
-                if not pos or not pick:
+                if not pos:
                     continue
                 notional = per_ticker_notional.get(symbol, per_position_notional)
-                spec, reason = _build_bracket_buy_spec(
-                    pick,
-                    notional=notional,
-                    stop_loss_pct=stop_loss_pct,
-                    target_pct=broker_target_pct,
-                    size_mode="qty",
-                )
+                if pick is not None:
+                    spec, reason = _build_bracket_buy_spec(
+                        pick,
+                        notional=notional,
+                        stop_loss_pct=stop_loss_pct,
+                        target_pct=broker_target_pct,
+                        size_mode="qty",
+                    )
+                else:
+                    avg_entry = _safe_float(pos.get("avg_entry_price"), 0.0)
+                    spec = (
+                        {"stop_loss_price": avg_entry * (1.0 - stop_loss_pct)}
+                        if avg_entry > 0
+                        else None
+                    )
+                    reason = "" if spec is not None else "missing_pick_and_avg_entry_price"
                 qty = abs(_safe_float(pos.get("qty"), 0.0))
                 if spec is None or qty <= 0:
                     report["results"].append(

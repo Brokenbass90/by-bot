@@ -5,6 +5,7 @@ from scripts.equities_alpaca_paper_bridge import (
     Pick,
     _active_reentry_blocks,
     _add_reentry_block,
+    _broker_stop_rearm_symbols,
     _new_entry_allowed,
     _select_monthly_cycle_picks,
     _trail_stop_triggered,
@@ -101,6 +102,26 @@ class TestAlpacaMonthlySelection(unittest.TestCase):
         assert "PANW" in active
         assert active["PANW"]["reason"] == "stop_loss_close"
         assert not _new_entry_allowed("PANW", enabled=True, blocked_symbols=set(active))
+
+    def test_safe_hold_rearms_stale_existing_positions(self):
+        symbols = _broker_stop_rearm_symbols(
+            hold_symbols={"ABBV", "SCHW"},
+            current_position_symbols={"ABBV", "SCHW", "GE", "AAPL"},
+            intraday_managed_symbols={"AAPL"},
+            close_stale_positions=False,
+        )
+
+        assert symbols == ["ABBV", "GE", "SCHW"]
+
+    def test_rotation_mode_does_not_rearm_positions_it_will_close(self):
+        symbols = _broker_stop_rearm_symbols(
+            hold_symbols={"ABBV", "SCHW"},
+            current_position_symbols={"ABBV", "SCHW", "GE"},
+            intraday_managed_symbols=set(),
+            close_stale_positions=True,
+        )
+
+        assert symbols == ["ABBV", "SCHW"]
 
 
 if __name__ == "__main__":
