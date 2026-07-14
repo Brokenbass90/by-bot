@@ -21,6 +21,7 @@ mkdir -p \
   "$MIRROR_ROOT"/control_plane \
   "$MIRROR_ROOT"/operator \
   "$MIRROR_ROOT"/equities_monthly_v36 \
+  "$MIRROR_ROOT"/alpaca_live_v38 \
   "$MIRROR_ROOT"/equities_monthly_v38_more_active_research \
   "$MIRROR_ROOT"/equities_intraday_dynamic_v1 \
   "$MIRROR_ROOT"/equities_intraday_dynamic_v3_shadow \
@@ -60,6 +61,8 @@ copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/current_cycle_picks.csv" "
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/latest_summary.csv" "$MIRROR_ROOT/equities_monthly_v36/latest_summary.csv"
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/latest_advisory.json" "$MIRROR_ROOT/equities_monthly_v36/latest_advisory.json"
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/latest_refresh.env" "$MIRROR_ROOT/equities_monthly_v36/latest_refresh.env"
+copy_if_exists "$BOT_DIR/runtime/equities_monthly_v36/latest_manager_receipt.json" "$MIRROR_ROOT/equities_monthly_v36/latest_manager_receipt.json"
+copy_if_exists "$BOT_DIR/runtime/alpaca_live_v38/account_state.json" "$MIRROR_ROOT/alpaca_live_v38/account_state.json"
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v38_more_active_research/current_cycle_picks.csv" "$MIRROR_ROOT/equities_monthly_v38_more_active_research/current_cycle_picks.csv"
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v38_more_active_research/current_cycle_summary.csv" "$MIRROR_ROOT/equities_monthly_v38_more_active_research/current_cycle_summary.csv"
 copy_if_exists "$BOT_DIR/runtime/equities_monthly_v38_more_active_research/latest_summary.csv" "$MIRROR_ROOT/equities_monthly_v38_more_active_research/latest_summary.csv"

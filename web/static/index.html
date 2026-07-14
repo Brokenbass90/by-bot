@@ -268,7 +268,10 @@ const { useState, useEffect, useRef, useCallback, useMemo } = React;
 
 async function api(path, opts = {}) {
   const r = await fetch(path, { credentials: 'include', ...opts });
-  if (r.status === 401) throw Object.assign(new Error('Unauthorized'), { status: 401 });
+  if (r.status === 401) {
+    const b = await r.json().catch(() => ({}));
+    throw Object.assign(new Error(b.detail || 'Unauthorized'), { status: 401 });
+  }
   if (!r.ok) { const b = await r.json().catch(() => ({})); throw new Error(b.detail || `HTTP ${r.status}`); }
   return r.json();
 }
@@ -311,7 +314,7 @@ function LoginScreen({ onPartial }) {
   async function submit(e) {
     e.preventDefault(); setErr(''); setLoading(true);
     try { await post('/auth/login', { email, password: pw }); onPartial(email); }
-    catch(ex) { setErr(ex.message || 'Login failed'); }
+    catch(ex) { setErr(ex.status === 401 ? 'Неверный email или пароль' : (ex.message || 'Login failed')); }
     finally { setLoading(false); }
   }
 
@@ -346,7 +349,7 @@ function TOTPScreen({ email, onAuth }) {
   async function submit(e) {
     e.preventDefault(); setErr(''); setLoading(true);
     try { await post('/auth/totp', { code }); onAuth(email); }
-    catch(ex) { setErr(ex.message || 'Invalid code'); setCode(''); }
+    catch(ex) { setErr(ex.status === 401 ? 'Неверный или просроченный код 2FA' : (ex.message || 'Invalid code')); setCode(''); }
     finally { setLoading(false); }
   }
 
@@ -1391,6 +1394,7 @@ function AlpacaPage() {
   if (!data) return React.createElement('div', { className: 'empty' }, 'No Alpaca data');
 
   const sum = data.summary || {};
+  const liveMonthly = data.live_monthly || {};
   const picks = data.current_picks || [];
   const adv = data.advisory || {};
   const intraday = data.intraday_positions || [];
@@ -1511,13 +1515,49 @@ function AlpacaPage() {
 
   return React.createElement('div', null,
     React.createElement('div', { className: 'page-hdr' },
-      React.createElement('div', { className: 'section-title' }, 'Alpaca Paper Trading',
+      React.createElement('div', { className: 'section-title' }, 'Alpaca Trading',
         React.createElement('span', { className: 'section-sub' },
-          'основная месячная + intraday paper + shadow-тест')
+          'LIVE monthly отдельно от intraday paper и research')
       ),
       React.createElement('div', { className: 'topbar-right' },
         React.createElement('button', { className: 'refresh-btn', onClick: refresh }, '↺ Обновить')
       )
+    ),
+
+    React.createElement('div', {
+      className: 'card',
+      style: {
+        marginBottom: '16px',
+        borderColor: liveMonthly.authoritative && liveMonthly.stop_coverage_complete ? 'var(--green)' : 'var(--red)'
+      }
+    },
+      React.createElement('div', { className: 'card-title' }, 'LIVE monthly broker truth'),
+      React.createElement('div', { className: 'info-row' },
+        React.createElement('span', { className: 'label' }, 'Режим'),
+        React.createElement('span', { className: `value ${liveMonthly.mode === 'SAFE_HOLD' ? 'pos' : ''}` }, liveMonthly.mode || 'UNKNOWN')
+      ),
+      React.createElement('div', { className: 'info-row' },
+        React.createElement('span', { className: 'label' }, 'Источник'),
+        React.createElement('span', { className: `value ${liveMonthly.authoritative ? 'pos' : 'neg'}` },
+          liveMonthly.authoritative ? `${liveMonthly.source} · свежий` : `${liveMonthly.source || 'missing'} · stale/unavailable`)
+      ),
+      React.createElement('div', { className: 'info-row' },
+        React.createElement('span', { className: 'label' }, 'Equity / cash'),
+        React.createElement('span', { className: 'value' },
+          `$${parseFloat(liveMonthly.account?.equity || 0).toFixed(2)} / $${parseFloat(liveMonthly.account?.cash || 0).toFixed(2)}`)
+      ),
+      React.createElement('div', { className: 'info-row' },
+        React.createElement('span', { className: 'label' }, 'Позиции'),
+        React.createElement('span', { className: 'value' }, (liveMonthly.position_symbols || []).join(', ') || 'нет')
+      ),
+      React.createElement('div', { className: 'info-row' },
+        React.createElement('span', { className: 'label' }, 'Broker stops'),
+        React.createElement('span', { className: `value ${liveMonthly.stop_coverage_complete ? 'pos' : 'neg'}` },
+          `${liveMonthly.stop_coverage_count || 0}/${liveMonthly.position_count || 0}` +
+          ((liveMonthly.protection_gap_symbols || []).length ? ` · неполная защита: ${liveMonthly.protection_gap_symbols.join(', ')}` : ' · full qty covered'))
+      ),
+      React.createElement('div', { style: { color: 'var(--text2)', fontSize: '12px', marginTop: '8px' } },
+        'Исторические PF/return ниже — research backtest, они не являются текущим live P&L.')
     ),
 
     variants.length > 0 && React.createElement('div', { className: 'grid3', style: { marginBottom: '16px' } },
@@ -1612,6 +1652,7 @@ function AlpacaPage() {
     renderMonthlyPicksSection('Пики v38 hybrid', { current_picks: picks }),
     renderMonthlyPicksSection('Пики v38-active research', v38Active),
 
+    renderPositionSection('LIVE monthly: broker positions', liveMonthly.positions || [], liveMonthly.generated_at_utc),
     renderPositionSection('Интрадей v1: tracked позиции', v1.positions || intraday, v1.generated_at_utc || data.intraday_updated_utc),
     renderPositionSection('Интрадей v1: ожидают исполнения закрытия', v1.pending_close_positions || [], v1.generated_at_utc),
     renderPositionSection('Monthly-owned позиции (не intraday)', v1.monthly_managed_positions || [], v1.generated_at_utc),

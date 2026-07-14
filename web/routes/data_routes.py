@@ -18,6 +18,7 @@ import urllib.request
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+from bot.alpaca_truth import build_alpaca_live_truth
 from ..deps import require_auth
 
 router = APIRouter(prefix="/api", tags=["data"])
@@ -1326,6 +1327,7 @@ async def get_health(_: str = Depends(require_auth)):
 @router.get("/alpaca")
 async def get_alpaca(_: str = Depends(require_auth)):
     """Monthly picks, summary metrics, advisory."""
+    live_monthly = build_alpaca_live_truth(_ROOT, runtime_root=_RUNTIME_ROOT)
     monthly_dir = _rt("equities_monthly_v36")
     monthly_v38 = _load_alpaca_monthly_variant(
         "equities_monthly_v36",
@@ -1360,6 +1362,7 @@ async def get_alpaca(_: str = Depends(require_auth)):
     ]
 
     return {
+        "live_monthly": live_monthly,
         "current_picks": clean_picks,
         "summary": summary,
         "advisory": (advisory or {}).get("report", advisory),

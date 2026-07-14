@@ -1,10 +1,15 @@
 import unittest
+import fcntl
+import os
+
+import scripts.equities_alpaca_paper_bridge as bridge
 from datetime import datetime, timezone
 
 from scripts.equities_alpaca_paper_bridge import (
     Pick,
     _active_reentry_blocks,
     _add_reentry_block,
+    _broker_truth_snapshot,
     _broker_stop_rearm_symbols,
     _new_entry_allowed,
     _select_monthly_cycle_picks,
@@ -122,6 +127,87 @@ class TestAlpacaMonthlySelection(unittest.TestCase):
         )
 
         assert symbols == ["ABBV", "SCHW"]
+
+    def test_broker_truth_reports_missing_stop_and_excludes_intraday(self):
+        truth = _broker_truth_snapshot(
+            account={"equity": "485.0", "cash": "300.0"},
+            positions=[
+                {"symbol": "ABBV", "qty": "1", "avg_entry_price": "100"},
+                {"symbol": "GE", "qty": "1", "avg_entry_price": "200"},
+                {"symbol": "AAPL", "qty": "1", "avg_entry_price": "300"},
+            ],
+            open_orders=[
+                {"symbol": "ABBV", "side": "sell", "type": "stop", "status": "new", "qty": "1", "filled_qty": "0"},
+                {"symbol": "AAPL", "side": "sell", "type": "stop", "status": "new", "qty": "1"},
+                {"symbol": "GE", "side": "sell", "type": "limit", "status": "new", "qty": "1"},
+            ],
+            intraday_managed_symbols={"AAPL"},
+        )
+
+        assert truth["position_symbols"] == ["ABBV", "GE"]
+        assert truth["stop_symbols"] == ["ABBV"]
+        assert truth["missing_stop_symbols"] == ["GE"]
+        assert truth["stop_coverage_count"] == 1
+        assert truth["position_count"] == 2
+        assert truth["stop_coverage_complete"] is False
+
+    def test_broker_truth_requires_full_remaining_stop_quantity(self):
+        truth = _broker_truth_snapshot(
+            account={"equity": "485.0"},
+            positions=[{"symbol": "GE", "qty": "2.0"}],
+            open_orders=[
+                {
+                    "symbol": "GE",
+                    "side": "sell",
+                    "type": "stop",
+                    "status": "partially_filled",
+                    "qty": "2.0",
+                    "filled_qty": "1.25",
+                }
+            ],
+            intraday_managed_symbols=set(),
+        )
+
+        assert truth["protected_qty_by_symbol"]["GE"] == 0.75
+        assert truth["underprotected_stop_symbols"] == ["GE"]
+        assert truth["protection_gap_symbols"] == ["GE"]
+        assert truth["stop_coverage_count"] == 0
+        assert truth["stop_coverage_complete"] is False
+
+    def test_broker_truth_flags_overprotected_quantity(self):
+        truth = _broker_truth_snapshot(
+            account={"equity": "485.0"},
+            positions=[{"symbol": "GE", "qty": "1.0"}],
+            open_orders=[
+                {"symbol": "GE", "side": "sell", "type": "stop", "status": "new", "qty": "1.0"},
+                {"symbol": "GE", "side": "sell", "type": "stop", "status": "new", "qty": "1.0"},
+            ],
+            intraday_managed_symbols=set(),
+        )
+
+        assert truth["overprotected_stop_symbols"] == ["GE"]
+        assert truth["protection_gap_symbols"] == ["GE"]
+        assert truth["stop_coverage_count"] == 0
+        assert truth["stop_coverage_complete"] is False
+
+    def test_bridge_single_writer_lock_fails_closed(self):
+        from tempfile import TemporaryDirectory
+
+        with TemporaryDirectory() as directory:
+            path = os.path.join(directory, "alpaca.lock")
+            previous = os.environ.get("ALPACA_BRIDGE_LOCK_PATH")
+            os.environ["ALPACA_BRIDGE_LOCK_PATH"] = path
+            fd = os.open(path, os.O_RDWR | os.O_CREAT, 0o600)
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            try:
+                assert bridge.main() == 75
+            finally:
+                fcntl.flock(fd, fcntl.LOCK_UN)
+                os.close(fd)
+                if previous is None:
+                    os.environ.pop("ALPACA_BRIDGE_LOCK_PATH", None)
+                else:
+                    os.environ["ALPACA_BRIDGE_LOCK_PATH"] = previous
 
 
 if __name__ == "__main__":

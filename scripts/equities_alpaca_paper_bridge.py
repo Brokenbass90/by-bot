@@ -3,13 +3,16 @@ from __future__ import annotations
 
 import argparse
 import csv
+import fcntl
 import hashlib
 import json
 import math
 import os
 import ssl
+import stat
 import sys
 import time
+import uuid
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
@@ -964,6 +967,169 @@ def _broker_stop_rearm_symbols(
     return sorted(protected - intraday)
 
 
+def _remaining_sell_order_qty(row: dict[str, Any]) -> float:
+    """Return the still-open quantity of one Alpaca sell order."""
+    leaves_raw = row.get("leaves_qty")
+    if leaves_raw not in {None, ""}:
+        return abs(_safe_float(leaves_raw, 0.0))
+    order_qty = abs(_safe_float(row.get("qty"), 0.0))
+    filled_qty = abs(_safe_float(row.get("filled_qty"), 0.0))
+    return max(0.0, order_qty - filled_qty)
+
+
+def _protected_stop_qty(open_stop_orders: Iterable[dict[str, Any]]) -> float:
+    return sum(_remaining_sell_order_qty(dict(row or {})) for row in open_stop_orders)
+
+
+def _broker_truth_snapshot(
+    *,
+    account: dict[str, Any],
+    positions: Iterable[dict[str, Any]],
+    open_orders: Iterable[dict[str, Any]],
+    intraday_managed_symbols: Iterable[str],
+) -> dict[str, Any]:
+    """Build a sanitized post-action broker receipt for web/AI truth views."""
+    intraday = {str(sym).strip().upper() for sym in intraday_managed_symbols if str(sym).strip()}
+    position_rows: list[dict[str, Any]] = []
+    position_symbols: set[str] = set()
+    position_qty_by_symbol: dict[str, float] = {}
+    for raw in positions:
+        row = dict(raw or {})
+        symbol = str(row.get("symbol") or "").strip().upper()
+        if not symbol or symbol in intraday:
+            continue
+        position_symbols.add(symbol)
+        position_qty_by_symbol[symbol] = abs(_safe_float(row.get("qty"), 0.0))
+        position_rows.append(
+            {
+                "symbol": symbol,
+                "side": str(row.get("side") or ""),
+                "qty": str(row.get("qty") or ""),
+                "market_value": str(row.get("market_value") or ""),
+                "avg_entry_price": str(row.get("avg_entry_price") or ""),
+                "unrealized_pl": str(row.get("unrealized_pl") or ""),
+                "unrealized_plpc": str(row.get("unrealized_plpc") or ""),
+            }
+        )
+
+    active_statuses = {"accepted", "new", "pending_new", "partially_filled", "accepted_for_bidding"}
+    stop_rows: list[dict[str, Any]] = []
+    stop_symbols: set[str] = set()
+    protected_qty_by_symbol: dict[str, float] = {}
+    for raw in open_orders:
+        row = dict(raw or {})
+        symbol = str(row.get("symbol") or "").strip().upper()
+        side = str(row.get("side") or "").strip().lower()
+        order_type = str(row.get("type") or "").strip().lower()
+        status = str(row.get("status") or "").strip().lower()
+        if (
+            symbol not in position_symbols
+            or side != "sell"
+            or order_type not in {"stop", "stop_limit", "trailing_stop"}
+            or status not in active_statuses
+        ):
+            continue
+        stop_symbols.add(symbol)
+        protected_qty = _remaining_sell_order_qty(row)
+        protected_qty_by_symbol[symbol] = protected_qty_by_symbol.get(symbol, 0.0) + protected_qty
+        stop_rows.append(
+            {
+                "symbol": symbol,
+                "type": order_type,
+                "status": status,
+                "qty": str(row.get("qty") or ""),
+                "filled_qty": str(row.get("filled_qty") or ""),
+                "protected_remaining_qty": protected_qty,
+                "stop_price": str(row.get("stop_price") or ""),
+                "trail_percent": str(row.get("trail_percent") or ""),
+            }
+        )
+
+    missing = sorted(position_symbols - stop_symbols)
+    underprotected: list[str] = []
+    overprotected: list[str] = []
+    fully_protected: list[str] = []
+    for symbol in sorted(position_symbols):
+        position_qty = position_qty_by_symbol.get(symbol, 0.0)
+        protected_qty = protected_qty_by_symbol.get(symbol, 0.0)
+        tolerance = max(1e-9, position_qty * 1e-6)
+        if position_qty <= 0:
+            if symbol in stop_symbols:
+                underprotected.append(symbol)
+        elif protected_qty + tolerance < position_qty:
+            if symbol in stop_symbols:
+                underprotected.append(symbol)
+        elif protected_qty <= position_qty + tolerance:
+            fully_protected.append(symbol)
+        if protected_qty > position_qty + tolerance:
+            overprotected.append(symbol)
+    protection_gaps = sorted(set(missing) | set(underprotected) | set(overprotected))
+    return {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "account": {
+            "status": account.get("status"),
+            "equity": str(account.get("equity") or ""),
+            "last_equity": str(account.get("last_equity") or ""),
+            "cash": str(account.get("cash") or ""),
+            "buying_power": str(account.get("buying_power") or ""),
+            "portfolio_value": str(account.get("portfolio_value") or ""),
+            "trading_blocked": bool(account.get("trading_blocked")),
+            "account_blocked": bool(account.get("account_blocked")),
+        },
+        "positions": sorted(position_rows, key=lambda row: row["symbol"]),
+        "open_stops": sorted(stop_rows, key=lambda row: row["symbol"]),
+        "position_symbols": sorted(position_symbols),
+        "stop_symbols": sorted(stop_symbols),
+        "missing_stop_symbols": missing,
+        "underprotected_stop_symbols": underprotected,
+        "overprotected_stop_symbols": overprotected,
+        "protection_gap_symbols": protection_gaps,
+        "position_qty_by_symbol": position_qty_by_symbol,
+        "protected_qty_by_symbol": protected_qty_by_symbol,
+        "stop_coverage_count": len(fully_protected),
+        "position_count": len(position_symbols),
+        "stop_coverage_complete": not protection_gaps,
+    }
+
+
+def _write_manager_receipt(path: Path, report: dict[str, Any]) -> None:
+    """Atomically publish the latest deterministic manager/broker truth receipt."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "schema_version": 1,
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "report": report,
+    }
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.{uuid.uuid4().hex}.tmp")
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+    fd: int | None = None
+    try:
+        fd = os.open(tmp, flags, 0o600)
+        data = (json.dumps(payload, ensure_ascii=True, indent=2) + "\n").encode("utf-8")
+        view = memoryview(data)
+        while view:
+            written = os.write(fd, view)
+            if written <= 0:
+                raise OSError("short manager-receipt write")
+            view = view[written:]
+        os.fsync(fd)
+        os.close(fd)
+        fd = None
+        os.replace(tmp, path)
+        directory_fd = os.open(path.parent, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    finally:
+        if fd is not None:
+            os.close(fd)
+        try:
+            tmp.unlink()
+        except FileNotFoundError:
+            pass
+
+
 def _wait_for_filled_qty(client: AlpacaClient, order: dict[str, Any], *, timeout_sec: float) -> tuple[float, str]:
     order_id = str(order.get("id") or "").strip()
     status = str(order.get("status") or "").strip().lower()
@@ -1009,7 +1175,7 @@ def _parse_iso_utc(text: str) -> datetime | None:
     return None
 
 
-def main() -> int:
+def _main_unlocked() -> int:
     ap = argparse.ArgumentParser(description="Dry-run-first Alpaca paper bridge for monthly equities picks")
     ap.add_argument("--picks-csv", default=_env("ALPACA_PICKS_CSV", ""))
     ap.add_argument("--month", default=_env("ALPACA_PICKS_MONTH", ""))
@@ -2112,8 +2278,6 @@ def main() -> int:
             for symbol in rearm_symbols:
                 if symbol in closed_out:
                     continue
-                if open_stop_sell_orders.get(symbol):
-                    continue
                 pos = current_positions.get(symbol)
                 pick = picks_by_ticker.get(symbol)
                 if not pos:
@@ -2146,6 +2310,77 @@ def main() -> int:
                         }
                     )
                     continue
+                existing_stops = list(open_stop_sell_orders.get(symbol) or [])
+                protected_qty = _protected_stop_qty(existing_stops)
+                tolerance = max(1e-9, qty * 1e-6)
+                if existing_stops and abs(protected_qty - qty) <= tolerance:
+                    continue
+                if existing_stops:
+                    cancel_failed = False
+                    for order in existing_stops:
+                        order_id = str(order.get("id") or "").strip()
+                        if not order_id:
+                            cancel_failed = True
+                            report["results"].append(
+                                {
+                                    "ticker": symbol,
+                                    "action": "rearm_cancel_mismatched_stop",
+                                    "status": "error",
+                                    "error": "missing_order_id",
+                                }
+                            )
+                            continue
+                        try:
+                            result = client.cancel_order(order_id)
+                            report["results"].append(
+                                {
+                                    "ticker": symbol,
+                                    "action": "rearm_cancel_mismatched_stop",
+                                    "order_id": order_id,
+                                    "status": result.get("status", "canceled"),
+                                    "position_qty": qty,
+                                    "protected_qty_before": protected_qty,
+                                }
+                            )
+                        except RuntimeError as exc:
+                            cancel_failed = True
+                            report["results"].append(
+                                {
+                                    "ticker": symbol,
+                                    "action": "rearm_cancel_mismatched_stop",
+                                    "order_id": order_id,
+                                    "status": "error",
+                                    "error": str(exc),
+                                }
+                            )
+                    if cancel_failed:
+                        continue
+                    # A partially filled stop changes the broker position.  Do
+                    # not reuse the pre-action quantity after cancellation.
+                    try:
+                        refreshed_rows = client.list_positions()
+                    except RuntimeError as exc:
+                        report["results"].append(
+                            {
+                                "ticker": symbol,
+                                "action": "rearm_refresh_position_after_cancel",
+                                "status": "error",
+                                "error": str(exc),
+                            }
+                        )
+                        continue
+                    refreshed = {
+                        str(row.get("symbol") or "").strip().upper(): row
+                        for row in refreshed_rows
+                        if str(row.get("symbol") or "").strip()
+                    }
+                    pos = refreshed.get(symbol)
+                    if not pos:
+                        continue
+                    current_positions[symbol] = pos
+                    qty = abs(_safe_float(pos.get("qty"), 0.0))
+                    if qty <= 0:
+                        continue
                 stop_price = float(spec["stop_loss_price"])
                 cur = _safe_float(pos.get("current_price"), 0.0)
                 try:
@@ -2261,6 +2496,28 @@ def main() -> int:
                     }
                 )
 
+    truth_account = account
+    truth_positions = positions
+    truth_orders = open_orders
+    if client is not None and send_orders:
+        try:
+            # Post-action refresh makes stop coverage immediately visible to
+            # web/AI instead of waiting for the next Telegram reporting cron.
+            truth_account = client.get_account()
+            truth_positions = client.list_positions()
+            truth_orders = client.list_orders(status="open", limit=100)
+        except Exception as exc:
+            report["broker_truth_refresh_error"] = f"{type(exc).__name__}: {exc}"
+    report["broker_truth_authoritative"] = bool(
+        client is not None and not report.get("broker_truth_refresh_error")
+    )
+    report["broker_truth_after"] = _broker_truth_snapshot(
+        account=truth_account,
+        positions=truth_positions,
+        open_orders=truth_orders,
+        intraday_managed_symbols=intraday_managed_symbols,
+    )
+
     advisory = _alpaca_ai_advisory(report=report, summary_row=summary_row, picks_csv=picks_csv)
     if advisory:
         report["advisory"] = advisory
@@ -2277,6 +2534,10 @@ def main() -> int:
             encoding="utf-8",
         )
         report["advisory_path"] = str(advisory_path)
+
+    manager_receipt_path = picks_csv.parent / "latest_manager_receipt.json"
+    report["manager_receipt_path"] = str(manager_receipt_path)
+    _write_manager_receipt(manager_receipt_path, report)
 
     print(json.dumps(report, ensure_ascii=True, separators=(",", ":")))
 
@@ -2375,6 +2636,41 @@ def main() -> int:
         _tg_send_equities_report(tg_token, tg_chat_id, "\n".join(lines), report)
 
     return 0
+
+
+def main() -> int:
+    """Run one broker cycle under a non-blocking per-account writer lock."""
+    identity = f"{_env('ALPACA_BASE_URL')}|{_env('ALPACA_API_KEY_ID')}"
+    digest = hashlib.sha256(identity.encode("utf-8", errors="replace")).hexdigest()[:16]
+    configured_lock = _env("ALPACA_BRIDGE_LOCK_PATH", "")
+    lock_path = (
+        Path(configured_lock)
+        if configured_lock
+        else Path(__file__).resolve().parent.parent
+        / "runtime"
+        / "locks"
+        / f"alpaca_bridge_{digest}.lock"
+    )
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    flags = os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)
+    fd = os.open(lock_path, flags, 0o600)
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode):
+            print("error=alpaca_bridge_lock_not_regular", file=sys.stderr)
+            return 75
+        os.fchmod(fd, 0o600)
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            print("status=skipped_single_writer_lock_busy", file=sys.stderr)
+            return 75
+        return _main_unlocked()
+    finally:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_UN)
+        finally:
+            os.close(fd)
 
 
 if __name__ == "__main__":

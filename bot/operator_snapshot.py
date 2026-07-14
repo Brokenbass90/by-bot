@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
+from bot.alpaca_truth import build_alpaca_live_truth
+
 
 ROOT = Path(__file__).resolve().parent.parent
 MEMORY_DIR = ROOT / "runtime" / "ai_operator"
@@ -629,6 +631,7 @@ def _project_doctor_block(root: Path) -> Dict[str, Any]:
 
 
 def _alpaca_block(root: Path) -> Dict[str, Any]:
+    live_monthly = build_alpaca_live_truth(root)
     monthly_candidates = [
         root / "runtime" / "equities_monthly_v36",
         root / "runtime" / "equities_monthly",
@@ -694,6 +697,7 @@ def _alpaca_block(root: Path) -> Dict[str, Any]:
     intraday_remote_only = list(intraday_advisory.get("remote_only_positions") or [])
 
     return {
+        "live_monthly": live_monthly,
         "monthly": {
             "runtime_dir": _path_text(monthly_dir),
             "exists": bool(monthly_dir.exists()),
@@ -751,6 +755,7 @@ def _urgent_alerts(snapshot: Dict[str, Any]) -> List[Dict[str, str]]:
     cp = dict(snapshot.get("control_plane") or {})
     allocator = dict(cp.get("allocator") or {})
     watchdog = dict(cp.get("watchdog") or {})
+    alpaca_live = dict(((snapshot.get("alpaca") or {}).get("live_monthly") or {}))
 
     hb_age = _safe_int(hb.get("age_sec"), -1)
     if hb_age >= 0 and hb_age > 90:
@@ -789,6 +794,24 @@ def _urgent_alerts(snapshot: Dict[str, Any]) -> List[Dict[str, str]]:
                 "level": "warn",
                 "kind": "control_plane_watchdog",
                 "summary": f"Control-plane watchdog status={watchdog.get('status')}",
+            }
+        )
+
+    if alpaca_live.get("authoritative") and alpaca_live.get("protection_gap_symbols"):
+        alerts.append(
+            {
+                "level": "critical",
+                "kind": "alpaca_broker_stop_protection_gap",
+                "summary": "Alpaca positions without full broker-stop qty: "
+                + ",".join(str(x) for x in alpaca_live.get("protection_gap_symbols") or []),
+            }
+        )
+    elif alpaca_live.get("exists") and not alpaca_live.get("authoritative"):
+        alerts.append(
+            {
+                "level": "warn",
+                "kind": "alpaca_live_truth_not_authoritative",
+                "summary": f"Alpaca live truth unavailable/stale: age_sec={alpaca_live.get('age_sec')}",
             }
         )
 
@@ -840,6 +863,7 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
     watchdog = dict(cp.get("watchdog") or {})
     health_timeline = dict(health.get("timeline") or {})
     alpaca_monthly = dict(alpaca.get("monthly") or {})
+    alpaca_live = dict(alpaca.get("live_monthly") or {})
     alpaca_intraday = dict(alpaca.get("intraday") or {})
 
     lines = [
@@ -1018,6 +1042,9 @@ def format_operator_snapshot_text(snapshot: Dict[str, Any]) -> str:
         [
             "",
             "[alpaca_monthly]",
+            f"live_mode={alpaca_live.get('mode') or '-'} authoritative={int(bool(alpaca_live.get('authoritative')))} source={alpaca_live.get('source') or '-'} age_sec={alpaca_live.get('age_sec')}",
+            f"live_equity={(alpaca_live.get('account') or {}).get('equity') or '-'} positions={','.join(alpaca_live.get('position_symbols') or []) or '-'} stop_coverage={alpaca_live.get('stop_coverage_count')}/{alpaca_live.get('position_count')} protection_gaps={','.join(alpaca_live.get('protection_gap_symbols') or []) or '-'}",
+            "research_metrics_are_live_pnl=0",
             f"exists={int(bool(alpaca_monthly.get('exists')))} age_sec={alpaca_monthly.get('age_sec')} cycle_mode={alpaca_monthly.get('current_cycle_mode') or '-'} cycle_month={alpaca_monthly.get('current_cycle_month') or '-'}",
             f"selected={alpaca_monthly.get('current_cycle_selected')} tickers={alpaca_monthly.get('current_cycle_tickers') or '-'} advisory_status={alpaca_monthly.get('advisory_status') or '-'}",
             f"capital={alpaca_monthly.get('effective_capital')} per_position={alpaca_monthly.get('per_position_notional')} earnings_blocked={','.join(alpaca_monthly.get('earnings_blocked') or []) or '-'}",
