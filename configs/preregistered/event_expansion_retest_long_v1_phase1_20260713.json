@@ -2,6 +2,14 @@
   "schema_version": 1,
   "name": "event_expansion_retest_long_v1_20260713_phase1",
   "frozen_at_utc": "2026-07-13T11:35:00Z",
+  "input_identity_amended_at_utc": "2026-07-14T05:56:06Z",
+  "phase1_original_freeze": {
+    "commit": "e05f7b376db4f643818b9b506d808a95066b6a84",
+    "file_sha256": "47ff9ddff0e22a4965f4ccf99bac90690e40f586eddf559ad862c15e3df708b4",
+    "contract_fingerprint_sha256": "4d1dcf764c2f183945c01919ab8e52796f72ccc2d00ad945a950745e9c1ce993",
+    "history_preserved_in_git": true,
+    "amendment_scope": "DEV13_UNIFORM_WINDOW_INPUT_IDENTITY_ONLY_NO_OUTCOMES"
+  },
   "phase": "PHASE_1_CAUSAL_CONTRACTS_ONLY",
   "purpose": "Freeze the current causal long-only MTF, level, execution, bridge, and durable single-writer state/outbox identities without permitting market-data performance evaluation or live use.",
   "research_only": true,
@@ -37,7 +45,7 @@
       {
         "role": "phase1_preflight",
         "path": "scripts/preflight_event_expansion_retest_long_v1_phase1.py",
-        "sha256": "4e7f1001fcd14ed442279e8726a8b098600b06e2470742fb1d74f93519b0a53f"
+        "sha256": "563bbb0e713b9efa0fa45f6e0c45e31e90ad7e88c8d7ec69ccadcd325dfff3bc"
       },
       {
         "role": "closed_bar_aggregation_source",
@@ -105,9 +113,19 @@
         "sha256": "d2f5f84c551b7a2caf6006d2389f7b62ad305bc665d99175e6ff6481c5298904"
       },
       {
+        "role": "uniform_window_validator_source",
+        "path": "scripts/validate_event_long_dev13_uniform_window_v1.py",
+        "sha256": "f26e58cdcf9dc5002911399a731f107f9fb8ae5ae891c41e08dd89283803549f"
+      },
+      {
+        "role": "uniform_window_validator_tests",
+        "path": "tests/test_validate_event_long_dev13_uniform_window_v1.py",
+        "sha256": "c55ab9d24c3c5f07dce7aa56a87c84611353cfa9f67170f161debe9252703b35"
+      },
+      {
         "role": "phase1_preflight_tests",
         "path": "tests/test_preflight_event_expansion_retest_long_v1_phase1.py",
-        "sha256": "adc63e7e6658dbf0012bf8478bf0d1f0b770b4c7f7635c10ed5dfb73a6ba57dd"
+        "sha256": "1c0dd25d2865ca4124e2f317f13ec0b66dbbf97dedd940005b6a7575d442587d"
       }
     ]
   },
@@ -179,8 +197,13 @@
       "requested_window_end_utc_exclusive": "2026-07-05T00:00:00Z",
       "manifest_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/manifest.json",
       "manifest_sha256": "f1f425e8822a5a8de56676fb24f257982d4c5fb33e254a328dc2b8243aedffd8",
-      "uniform_window_status": "BLOCKED_BTC_ETH_MISSING_FINAL_119_M5",
+      "uniform_window_status": "VERIFIED_VIRTUAL_COMMON_WINDOW_CROP",
       "observed_common_safe_end_utc_exclusive": "2026-07-04T14:05:00Z",
+      "uniform_window_manifest_path": "configs/preregistered/event_long_dev13_uniform_m5_window_v1_20260714.json",
+      "uniform_window_manifest_sha256": "16b4f746a982c4e688de1c6766d93fb916173f3f3e636b7230038455d68facfb",
+      "uniform_window_start_utc": "2024-07-15T00:00:00Z",
+      "uniform_window_end_utc_exclusive": "2026-07-04T14:05:00Z",
+      "uniform_window_rows_per_symbol": 207241,
       "performance_authority": false
     },
     "sealed_external8": {
@@ -224,6 +247,18 @@
       "evidence": "base/stress costs and exact funding-event policy are hash-pinned; completeness proof remains blocked"
     }
   ],
+  "resolved_phase1_blockers": [
+    {
+      "code": "DEV13_UNIFORM_WINDOW_MANIFEST_ABSENT",
+      "status": "RESOLVED_INPUT_IDENTITY_ONLY_NO_OUTCOMES",
+      "artifact_path": "configs/preregistered/event_long_dev13_uniform_m5_window_v1_20260714.json",
+      "artifact_sha256": "16b4f746a982c4e688de1c6766d93fb916173f3f3e636b7230038455d68facfb",
+      "validator_path": "scripts/validate_event_long_dev13_uniform_window_v1.py",
+      "validator_sha256": "f26e58cdcf9dc5002911399a731f107f9fb8ae5ae891c41e08dd89283803549f",
+      "performance_permission_changed": false,
+      "live_permission_changed": false
+    }
+  ],
   "evaluation_gate_inheritance": {
     "source_path": "configs/preregistered/event_expansion_retest_long_v1_20260713.json",
     "source_sha256": "8660ae7718951a9acfb510df0549d38ebef265c5dd67e1a692029bd9d7dc88de",
@@ -247,12 +282,6 @@
     {
       "code": "FUNDING_COMPLETENESS_PROOF_ABSENT",
       "required_artifact": "hash_pinned_exact_event_funding_histories_and_machine_checked_complete_coverage_for_every_filled_holding_window",
-      "path": "",
-      "sha256": ""
-    },
-    {
-      "code": "DEV13_UNIFORM_WINDOW_MANIFEST_ABSENT",
-      "required_artifact": "new_immutable_dev13_manifest_with_identical_contiguous_M5_window_per_symbol_or_transparent_common_window_crop_before_outcomes",
       "path": "",
       "sha256": ""
     },
@@ -287,5 +316,5 @@
       "sha256": ""
     }
   ],
-  "contract_fingerprint_sha256": "4d1dcf764c2f183945c01919ab8e52796f72ccc2d00ad945a950745e9c1ce993"
+  "contract_fingerprint_sha256": "144cd03abb37315d0fbc05e74220be4971c0cadf167e3f484b0fe464695c02a9"
 }

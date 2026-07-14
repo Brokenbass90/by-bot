@@ -2,21 +2,32 @@
 """Fail-closed phase-1 identity preflight for the event-long research sleeve.
 
 Phase 1 freezes causal mechanics, durable single-writer state/outbox storage,
-and the exact research execution bridge.  It deliberately cannot load bars,
-simulate trades, calculate returns, call a broker, or authorize performance.
+the exact research execution bridge, and immutable input identity.  It may hash
+data files and validate a manifest, but cannot simulate trades, calculate
+returns, call a broker, or authorize performance.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import re
 import sys
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.validate_event_long_dev13_uniform_window_v1 import (  # noqa: E402
+    UniformWindowError,
+    validate_uniform_window_manifest,
+)
+
 DEFAULT_CONFIG = (
     ROOT
     / "configs"
@@ -26,6 +37,13 @@ DEFAULT_CONFIG = (
 
 EXPECTED_NAME = "event_expansion_retest_long_v1_20260713_phase1"
 EXPECTED_PHASE = "PHASE_1_CAUSAL_CONTRACTS_ONLY"
+EXPECTED_PHASE1_ORIGINAL_FREEZE = {
+    "commit": "e05f7b376db4f643818b9b506d808a95066b6a84",
+    "file_sha256": "47ff9ddff0e22a4965f4ccf99bac90690e40f586eddf559ad862c15e3df708b4",
+    "contract_fingerprint_sha256": "4d1dcf764c2f183945c01919ab8e52796f72ccc2d00ad945a950745e9c1ce993",
+    "history_preserved_in_git": True,
+    "amendment_scope": "DEV13_UNIFORM_WINDOW_INPUT_IDENTITY_ONLY_NO_OUTCOMES",
+}
 EXPECTED_PHASE0_PATH = (
     "configs/preregistered/event_expansion_retest_long_v1_20260713.json"
 )
@@ -42,6 +60,22 @@ EXPECTED_DEV_MANIFEST_PATH = (
 EXPECTED_DEV_MANIFEST_SHA256 = (
     "f1f425e8822a5a8de56676fb24f257982d4c5fb33e254a328dc2b8243aedffd8"
 )
+EXPECTED_UNIFORM_MANIFEST_PATH = (
+    "configs/preregistered/event_long_dev13_uniform_m5_window_v1_20260714.json"
+)
+EXPECTED_UNIFORM_MANIFEST_SHA256 = (
+    "16b4f746a982c4e688de1c6766d93fb916173f3f3e636b7230038455d68facfb"
+)
+EXPECTED_UNIFORM_VALIDATOR_PATH = (
+    "scripts/validate_event_long_dev13_uniform_window_v1.py"
+)
+EXPECTED_UNIFORM_VALIDATOR_SHA256 = (
+    "f26e58cdcf9dc5002911399a731f107f9fb8ae5ae891c41e08dd89283803549f"
+)
+EXPECTED_UNIFORM_WINDOW_STATUS = "VERIFIED_VIRTUAL_COMMON_WINDOW_CROP"
+EXPECTED_UNIFORM_START_UTC = "2024-07-15T00:00:00Z"
+EXPECTED_UNIFORM_END_UTC_EXCLUSIVE = "2026-07-04T14:05:00Z"
+EXPECTED_UNIFORM_ROWS = 207241
 EXPECTED_DEV13 = (
     "1000PEPEUSDT", "ADAUSDT", "AVAXUSDT", "BNBUSDT", "BTCUSDT",
     "DOGEUSDT", "ETHUSDT", "ONDOUSDT", "SOLUSDT", "SUIUSDT",
@@ -74,6 +108,8 @@ EXPECTED_PIN_ROLES = {
     "mtf_execution_bridge_tests": "tests/test_event_long_mtf_execution_bridge_v1.py",
     "durable_state_outbox_source": "bot/event_expansion_retest_long_mtf_state_store.py",
     "durable_state_outbox_tests": "tests/test_event_expansion_retest_long_mtf_state_store.py",
+    "uniform_window_validator_source": "scripts/validate_event_long_dev13_uniform_window_v1.py",
+    "uniform_window_validator_tests": "tests/test_validate_event_long_dev13_uniform_window_v1.py",
     "phase1_preflight_tests": "tests/test_preflight_event_expansion_retest_long_v1_phase1.py",
 }
 EXPECTED_RESOLVED_PHASE0 = (
@@ -85,13 +121,51 @@ EXPECTED_BLOCKERS = (
     "PERFORMANCE_RUNNER_ABSENT",
     "DURABLE_EXECUTION_RECEIPT_AND_ACK_RUNNER_ABSENT",
     "FUNDING_COMPLETENESS_PROOF_ABSENT",
-    "DEV13_UNIFORM_WINDOW_MANIFEST_ABSENT",
     "EXTERNAL8_MARKET_DATA_ABSENT",
     "EXTERNAL8_METADATA_ABSENT",
     "EXTERNAL8_LIQUIDITY_ABSENT",
     "EXTERNAL8_FUNDING_ABSENT",
     "ATT1_REFERENCE_ABSENT",
 )
+EXPECTED_RESOLVED_PHASE1 = ("DEV13_UNIFORM_WINDOW_MANIFEST_ABSENT",)
+
+EXPECTED_TOP_LEVEL_KEYS = {
+    "schema_version", "name", "frozen_at_utc", "input_identity_amended_at_utc",
+    "phase1_original_freeze", "phase", "purpose", "research_only",
+    "no_parameter_scan", "no_performance_access", "live_or_broker_calls",
+    "risk_pct", "current_automatic_verdict", "current_performance_permission",
+    "current_live_permission", "phase0_history", "implementation_identity",
+    "frozen_contracts", "cohorts", "phase0_blocker_transitions",
+    "resolved_phase1_blockers", "evaluation_gate_inheritance",
+    "remaining_blockers", "contract_fingerprint_sha256",
+}
+
+# Outcome keys are normalized with Unicode NFKC + casefold + punctuation folding,
+# then checked in both tokenized and compact forms.  This intentionally covers
+# common aliases rather than only the exact spelling used by one report writer.
+_OUTCOME_KEY_ALIASES = {
+    "performance_results", "outcome_results", "trade_results", "observed_metrics",
+    "selected_winner", "promotion_verdict", "pnl", "p_l", "profit_and_loss",
+    "profit_loss", "gross_pnl", "gross_p_l", "net_pnl", "net_p_l",
+    "realized_pnl", "realized_p_l", "unrealized_pnl", "unrealized_p_l",
+    "sharpe", "sharpe_ratio", "sortino", "sortino_ratio", "calmar",
+    "calmar_ratio", "cagr", "annual_return", "annualized_return",
+    "annualised_return", "total_return", "gross_return", "net_return",
+    "return", "returns", "return_pct", "roi", "monthly_return",
+    "monthly_returns", "returns_by_month", "monthly_pnl", "trades",
+    "trade_count", "trades_count", "number_of_trades", "num_trades",
+    "n_trades", "profit_factor", "pf", "win_rate", "winrate", "loss_rate",
+    "max_drawdown", "max_drawdown_pct", "drawdown", "drawdown_pct", "dd",
+    "expectancy", "expectancy_r", "average_trade", "avg_trade", "equity_curve",
+}
+_OUTCOME_KEY_COMPACT = {alias.replace("_", "") for alias in _OUTCOME_KEY_ALIASES}
+_OUTCOME_COMPACT_FRAGMENTS = {
+    "pnl", "sharpe", "sortino", "calmar", "cagr", "profitfactor",
+    "winrate", "drawdown", "expectancy", "monthlyreturn", "totalreturn",
+    "grossreturn", "netreturn", "returnpct", "returnsbymonth", "trades",
+    "annualizedreturn", "annualisedreturn", "tradecount", "numberoftrades",
+    "numtrades", "closedtrades", "equitycurve",
+}
 
 
 class Phase1PreflightError(ValueError):
@@ -122,6 +196,12 @@ def _is_sha256(value: object) -> bool:
     return len(text) == 64 and all(char in "0123456789abcdef" for char in text)
 
 
+def _require_exact_keys(value: object, expected: set[str], name: str) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping) or set(value) != expected:
+        raise Phase1PreflightError(f"{name} schema keys changed")
+    return value
+
+
 def _repo_file(root: Path, raw: object) -> Path:
     text = str(raw or "")
     relative = Path(text)
@@ -143,27 +223,46 @@ def _contract_fingerprint(cfg: Mapping[str, Any]) -> str:
     return canonical_sha256(frozen)
 
 
-def _contains_outcomes(value: object) -> bool:
-    forbidden = {
-        "performance_results", "outcome_results", "trade_results",
-        "observed_metrics", "selected_winner", "promotion_verdict",
-        "profit_factor", "return_pct", "max_drawdown_pct", "win_rate",
-    }
+def _normalized_key(value: object) -> tuple[str, str]:
+    text = unicodedata.normalize("NFKC", str(value)).casefold()
+    normalized = re.sub(r"[^a-z0-9]+", "_", text).strip("_")
+    return normalized, normalized.replace("_", "")
+
+
+def _outcome_key_path(value: object, path: str = "$") -> str | None:
     if isinstance(value, Mapping):
-        return any(
-            str(key) in forbidden or _contains_outcomes(item)
-            for key, item in value.items()
-        )
+        for key, item in value.items():
+            normalized, compact = _normalized_key(key)
+            if (
+                normalized in _OUTCOME_KEY_ALIASES
+                or compact in _OUTCOME_KEY_COMPACT
+                or any(fragment in compact for fragment in _OUTCOME_COMPACT_FRAGMENTS)
+            ):
+                return f"{path}.{key}"
+            nested = _outcome_key_path(item, f"{path}.{key}")
+            if nested is not None:
+                return nested
     if isinstance(value, list):
-        return any(_contains_outcomes(item) for item in value)
-    return False
+        for index, item in enumerate(value):
+            nested = _outcome_key_path(item, f"{path}[{index}]")
+            if nested is not None:
+                return nested
+    return None
 
 
 def validate_contract(cfg: Mapping[str, Any]) -> None:
+    outcome_path = _outcome_key_path(cfg)
+    if outcome_path is not None:
+        raise Phase1PreflightError(
+            f"phase-1 freeze contains forbidden outcome metric at {outcome_path}"
+        )
+    _require_exact_keys(cfg, EXPECTED_TOP_LEVEL_KEYS, "phase-1 root")
     if cfg.get("schema_version") != 1 or cfg.get("name") != EXPECTED_NAME:
         raise Phase1PreflightError("phase-1 schema/name changed")
     if cfg.get("phase") != EXPECTED_PHASE:
         raise Phase1PreflightError("phase must remain causal-contracts-only")
+    if cfg.get("phase1_original_freeze") != EXPECTED_PHASE1_ORIGINAL_FREEZE:
+        raise Phase1PreflightError("original phase-1 freeze lineage changed")
     if not all(cfg.get(key) is True for key in (
         "research_only", "no_parameter_scan", "no_performance_access",
     )):
@@ -177,8 +276,15 @@ def validate_contract(cfg: Mapping[str, Any]) -> None:
     if cfg.get("current_live_permission") != "LIVE_FORBIDDEN":
         raise Phase1PreflightError("live permission must remain forbidden")
 
-    history = cfg.get("phase0_history")
-    if not isinstance(history, Mapping) or history.get("path") != EXPECTED_PHASE0_PATH:
+    history = _require_exact_keys(
+        cfg.get("phase0_history"),
+        {
+            "path", "sha256", "contract_fingerprint_sha256", "mutation_allowed",
+            "current_preflight_expected_to_pass", "reason_current_preflight_may_fail",
+        },
+        "phase0_history",
+    )
+    if history.get("path") != EXPECTED_PHASE0_PATH:
         raise Phase1PreflightError("phase-0 history reference changed")
     if (
         history.get("sha256") != EXPECTED_PHASE0_SHA256
@@ -188,9 +294,14 @@ def validate_contract(cfg: Mapping[str, Any]) -> None:
     ):
         raise Phase1PreflightError("phase-0 historical identity/semantics changed")
 
-    identity = cfg.get("implementation_identity")
-    if not isinstance(identity, Mapping):
-        raise Phase1PreflightError("implementation identity is missing")
+    identity = _require_exact_keys(
+        cfg.get("implementation_identity"),
+        {
+            "side_identity", "level_scope", "sloped_levels",
+            "default_mtf_config_fingerprint_sha256", "component_commits", "pinned_files",
+        },
+        "implementation_identity",
+    )
     if identity.get("side_identity") != "long_only":
         raise Phase1PreflightError("physical long-only identity changed")
     if identity.get("level_scope") != "horizontal_h1_h4_resistance_flip_only":
@@ -220,9 +331,15 @@ def validate_contract(cfg: Mapping[str, Any]) -> None:
         if pin_map[role].get("path") != expected_path or not _is_sha256(pin_map[role].get("sha256")):
             raise Phase1PreflightError(f"invalid frozen pin: {role}")
 
-    contracts = cfg.get("frozen_contracts")
-    if not isinstance(contracts, Mapping):
-        raise Phase1PreflightError("frozen causal contracts are missing")
+    contracts = _require_exact_keys(
+        cfg.get("frozen_contracts"),
+        {
+            "raw_source", "causal_sequence", "same_bar_stage_collapse_allowed",
+            "future_bar_access_allowed", "execution", "durable_state_outbox",
+            "research_bridge",
+        },
+        "frozen_contracts",
+    )
     expected_sequence = [
         "closed_H1_expansion",
         "later_closed_M15_hold",
@@ -267,19 +384,46 @@ def validate_contract(cfg: Mapping[str, Any]) -> None:
     }:
         raise Phase1PreflightError("MTF-to-execution bridge contract changed")
 
-    cohorts = cfg.get("cohorts")
-    if not isinstance(cohorts, Mapping) or set(cohorts) != {"dev13", "sealed_external8", "prospective"}:
-        raise Phase1PreflightError("cohort split changed")
+    cohorts = _require_exact_keys(
+        cfg.get("cohorts"), {"dev13", "sealed_external8", "prospective"}, "cohorts"
+    )
     dev = cohorts["dev13"]
     external = cohorts["sealed_external8"]
     prospective = cohorts["prospective"]
+    _require_exact_keys(
+        dev,
+        {
+            "role", "symbols", "source_interval", "requested_window_start_utc",
+            "requested_window_end_utc_exclusive", "manifest_path", "manifest_sha256",
+            "uniform_window_status", "observed_common_safe_end_utc_exclusive",
+            "uniform_window_manifest_path", "uniform_window_manifest_sha256",
+            "uniform_window_start_utc", "uniform_window_end_utc_exclusive",
+            "uniform_window_rows_per_symbol", "performance_authority",
+        },
+        "cohorts.dev13",
+    )
+    _require_exact_keys(
+        external,
+        {"role", "symbols", "data_status", "sealed_before_data_access", "manifest_path", "manifest_sha256"},
+        "cohorts.sealed_external8",
+    )
+    _require_exact_keys(
+        prospective,
+        {"role", "status", "start_utc", "retroactive_backfill_as_prospective"},
+        "cohorts.prospective",
+    )
     if tuple(dev.get("symbols", ())) != EXPECTED_DEV13:
         raise Phase1PreflightError("dev13 symbols changed")
     if (
         dev.get("manifest_path") != EXPECTED_DEV_MANIFEST_PATH
         or dev.get("manifest_sha256") != EXPECTED_DEV_MANIFEST_SHA256
         or dev.get("performance_authority") is not False
-        or dev.get("uniform_window_status") != "BLOCKED_BTC_ETH_MISSING_FINAL_119_M5"
+        or dev.get("uniform_window_status") != EXPECTED_UNIFORM_WINDOW_STATUS
+        or dev.get("uniform_window_manifest_path") != EXPECTED_UNIFORM_MANIFEST_PATH
+        or dev.get("uniform_window_manifest_sha256") != EXPECTED_UNIFORM_MANIFEST_SHA256
+        or dev.get("uniform_window_start_utc") != EXPECTED_UNIFORM_START_UTC
+        or dev.get("uniform_window_end_utc_exclusive") != EXPECTED_UNIFORM_END_UTC_EXCLUSIVE
+        or dev.get("uniform_window_rows_per_symbol") != EXPECTED_UNIFORM_ROWS
     ):
         raise Phase1PreflightError("dev13 data-quality status changed")
     if tuple(external.get("symbols", ())) != EXPECTED_EXTERNAL8:
@@ -292,17 +436,46 @@ def validate_contract(cfg: Mapping[str, Any]) -> None:
         raise Phase1PreflightError("prospective period cannot start in phase 1")
 
     transitions = cfg.get("phase0_blocker_transitions")
-    if not isinstance(transitions, list) or tuple(
-        row.get("phase0_code") for row in transitions if isinstance(row, Mapping)
-    ) != EXPECTED_RESOLVED_PHASE0:
+    if (
+        not isinstance(transitions, list)
+        or len(transitions) != len(EXPECTED_RESOLVED_PHASE0)
+        or not all(isinstance(row, Mapping) for row in transitions)
+        or tuple(row.get("phase0_code") for row in transitions) != EXPECTED_RESOLVED_PHASE0
+    ):
         raise Phase1PreflightError("phase-0 blocker transitions changed")
     if any(row.get("status") != "RESOLVED_CODE_CONTRACT_ONLY" for row in transitions):
         raise Phase1PreflightError("a resolved code contract was overstated")
+    if any(set(row) != {"phase0_code", "status", "evidence"} for row in transitions):
+        raise Phase1PreflightError("phase-0 transition schema changed")
+
+    resolved_phase1 = cfg.get("resolved_phase1_blockers")
+    if (
+        not isinstance(resolved_phase1, list)
+        or len(resolved_phase1) != len(EXPECTED_RESOLVED_PHASE1)
+        or not all(isinstance(row, Mapping) for row in resolved_phase1)
+        or tuple(row.get("code") for row in resolved_phase1) != EXPECTED_RESOLVED_PHASE1
+    ):
+        raise Phase1PreflightError("resolved phase-1 blocker set changed")
+    expected_resolution = {
+        "code": "DEV13_UNIFORM_WINDOW_MANIFEST_ABSENT",
+        "status": "RESOLVED_INPUT_IDENTITY_ONLY_NO_OUTCOMES",
+        "artifact_path": EXPECTED_UNIFORM_MANIFEST_PATH,
+        "artifact_sha256": EXPECTED_UNIFORM_MANIFEST_SHA256,
+        "validator_path": EXPECTED_UNIFORM_VALIDATOR_PATH,
+        "validator_sha256": EXPECTED_UNIFORM_VALIDATOR_SHA256,
+        "performance_permission_changed": False,
+        "live_permission_changed": False,
+    }
+    if resolved_phase1 != [expected_resolution]:
+        raise Phase1PreflightError("uniform-window resolution identity changed")
 
     blockers = cfg.get("remaining_blockers")
-    if not isinstance(blockers, list) or tuple(
-        row.get("code") for row in blockers if isinstance(row, Mapping)
-    ) != EXPECTED_BLOCKERS:
+    if (
+        not isinstance(blockers, list)
+        or len(blockers) != len(EXPECTED_BLOCKERS)
+        or not all(isinstance(row, Mapping) for row in blockers)
+        or tuple(row.get("code") for row in blockers) != EXPECTED_BLOCKERS
+    ):
         raise Phase1PreflightError("remaining blocker set/order changed")
     for row in blockers:
         if set(row) != {"code", "required_artifact", "path", "sha256"}:
@@ -319,8 +492,6 @@ def validate_contract(cfg: Mapping[str, Any]) -> None:
         "pass_authorizes_live_automatically": False,
     }:
         raise Phase1PreflightError("strict phase-0 evaluation gates are not inherited exactly")
-    if _contains_outcomes(cfg):
-        raise Phase1PreflightError("phase-1 freeze contains forbidden outcome metrics")
     if cfg.get("contract_fingerprint_sha256") != _contract_fingerprint(cfg):
         raise Phase1PreflightError("contract fingerprint mismatch")
 
@@ -386,6 +557,29 @@ def build_preflight(cfg: Mapping[str, Any], root: Path) -> dict[str, Any]:
             "severity": "CRITICAL",
             "reason": "the pinned development manifest changed or disappeared",
         })
+    uniform_path = _repo_file(root, dev["uniform_window_manifest_path"])
+    uniform_actual = sha256_file(uniform_path) if uniform_path.is_file() else None
+    uniform_match = uniform_actual == dev["uniform_window_manifest_sha256"]
+    uniform_receipt: dict[str, Any] = {}
+    uniform_error: str | None = None
+    if uniform_match:
+        try:
+            uniform_receipt = validate_uniform_window_manifest(
+                root,
+                uniform_path,
+                verify_rows=False,
+            )
+        except (OSError, TypeError, ValueError, json.JSONDecodeError, UniformWindowError) as exc:
+            uniform_match = False
+            uniform_error = str(exc)
+    else:
+        uniform_error = "the hash-pinned uniform-window manifest changed or disappeared"
+    if not uniform_match:
+        integrity_blockers.append({
+            "code": "DEV13_UNIFORM_WINDOW_MANIFEST_INVALID",
+            "severity": "CRITICAL",
+            "reason": uniform_error or "uniform-window validation failed",
+        })
     declared = [{
         "code": row["code"],
         "severity": "CRITICAL",
@@ -409,7 +603,18 @@ def build_preflight(cfg: Mapping[str, Any], root: Path) -> dict[str, Any]:
                 "expected_sha256": dev["manifest_sha256"],
                 "actual_sha256": manifest_actual,
                 "match": manifest_match,
-                "uniform_window_status": dev["uniform_window_status"],
+            },
+            "dev13_uniform_window": {
+                "path": dev["uniform_window_manifest_path"],
+                "expected_sha256": dev["uniform_window_manifest_sha256"],
+                "actual_sha256": uniform_actual,
+                "match": uniform_match,
+                "status": dev["uniform_window_status"],
+                "start_utc": dev["uniform_window_start_utc"],
+                "end_utc_exclusive": dev["uniform_window_end_utc_exclusive"],
+                "rows_per_symbol": dev["uniform_window_rows_per_symbol"],
+                "source_hashes_verified": uniform_receipt.get("source_hashes_verified", False),
+                "rows_verified": uniform_receipt.get("rows_verified", False),
             },
             "sealed_external8": list(cfg["cohorts"]["sealed_external8"]["symbols"]),
             "prospective_status": cfg["cohorts"]["prospective"]["status"],
@@ -417,6 +622,9 @@ def build_preflight(cfg: Mapping[str, Any], root: Path) -> dict[str, Any]:
         },
         "resolved_phase0_code_contracts": [
             row["phase0_code"] for row in cfg["phase0_blocker_transitions"]
+        ],
+        "resolved_phase1_input_contracts": [
+            row["code"] for row in cfg["resolved_phase1_blockers"]
         ],
         "blockers": integrity_blockers + declared,
     }

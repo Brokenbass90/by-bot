@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "kind": "uniform_closed_m5_virtual_window_manifest_v1",
+  "name": "event_expansion_retest_long_v1_dev13_uniform_m5_20260714",
+  "frozen_at_utc": "2026-07-14T05:56:06Z",
+  "research_only": true,
+  "closed_bars_only": true,
+  "no_parameter_scan": true,
+  "performance_computed": false,
+  "live_or_broker_calls": false,
+  "physical_data_mutated": false,
+  "materialization": "virtual_timestamp_crop_of_hash_pinned_sources",
+  "source_manifest": {
+    "path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/manifest.json",
+    "sha256": "f1f425e8822a5a8de56676fb24f257982d4c5fb33e254a328dc2b8243aedffd8",
+    "kind": "pump_exhaustion_immutable_snapshot_manifest",
+    "schema_version": 1
+  },
+  "loader_contract": {
+    "path": "scripts/validate_event_long_dev13_uniform_window_v1.py",
+    "sha256": "f26e58cdcf9dc5002911399a731f107f9fb8ae5ae891c41e08dd89283803549f",
+    "selection": "start_ts_lte_row_ts_lt_end_ts_exclusive",
+    "requires_exact_contiguous_grid": true,
+    "forming_or_future_tail_allowed": false
+  },
+  "window": {
+    "start_ts": 1721001600000,
+    "start_utc": "2024-07-15T00:00:00Z",
+    "end_ts_exclusive": 1783173900000,
+    "end_utc_exclusive": "2026-07-04T14:05:00Z",
+    "interval_ms": 300000,
+    "expected_rows_per_symbol": 207241,
+    "bar_timestamp_semantics": "open_time_ms",
+    "end_semantics": "exact_close_of_final_included_M5_bar"
+  },
+  "symbols": [
+    "1000PEPEUSDT",
+    "ADAUSDT",
+    "AVAXUSDT",
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "ONDOUSDT",
+    "SOLUSDT",
+    "SUIUSDT",
+    "TAOUSDT",
+    "WIFUSDT",
+    "XRPUSDT"
+  ],
+  "snapshots": {
+    "1000PEPEUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/1000PEPEUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "aa64aba3cc56534c04befa94c0a084d791e6cd8a4473c45672b5fb13f9990dcc",
+      "source_manifest_record_sha256": "9a435707d5619feb34406abbd13c63e1acf09e299008278f75fc478ac4355949",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "03ab274678ab102c7329fee0ba76f14541e0f212f0400ea03f8e5faabf40c5c8"
+    },
+    "ADAUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/ADAUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "e9b6d15ebdd1e4b8b3b0138a97c9b46f42f1a6016d9c4e4f388e0477c4d436f0",
+      "source_manifest_record_sha256": "44ee264eacdb741c86fcbe5042a922978b402540c0fa7f14e52f6c108ee02fae",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "2998420ab8925e29ebc26259acc3e66dd965ffc7e7539002cbddacd66c326269"
+    },
+    "AVAXUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/AVAXUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "17da6be021428a40bed2c5e6d792571ce96df76773710b3eb9859296baac8437",
+      "source_manifest_record_sha256": "ed92e05510013474574928399d5ddc9ea68b6d34d5e14b1efcd26ffe6f110164",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "ad6059e00a3ed661fd534e8e0185803c9999944d5389173c80d6ee6542bc217e"
+    },
+    "BNBUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/BNBUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "60ed489d893e676d0a78f2aad4a9f557a0a15d28626842d5096f7aa25af0700a",
+      "source_manifest_record_sha256": "abd72db5b87adb6fca4713e5f6c6870ec4535e83e54a72acf82766112fe730a9",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "f2d4395812e67cf3e87e7435cec414997fbd350a5dafbfd71f740423f19ca0c7"
+    },
+    "BTCUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/BTCUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "bbd8647d2f5c070ec9422f852b5d5d882cbb2d81c12519c29b88241b7dcde027",
+      "source_manifest_record_sha256": "dfffff63dc3d97f4f76e206cf980c95fef27c97cacdfd355adb417382deb41d2",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "59674b53f8f9a874ae7169d79fc07067fdf936b7d8f0b7fb7d500d96fdf84533"
+    },
+    "DOGEUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/DOGEUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "23e97a52227b9cba17d6565718858e195c0e9007cdf34f2371020f68f4dcbea0",
+      "source_manifest_record_sha256": "ddbf8f3b09c32c5bd1f6060ba6f744e2f3884143aeeae38465c6eaf9ebe3679e",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "d5ed2a607507ed80ae83a0dd3b4ab684816ede90f89371fa8af7927ca77db94b"
+    },
+    "ETHUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/ETHUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "065327fe18b76e6ed7e4aed72b2eda18edbd043e9b3368c1735ebfb3415f3290",
+      "source_manifest_record_sha256": "f05b0af1ed38c94ae71412248df2e75f038b54724d7b41fc2de18a0eb6dc920e",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "2157b9031daf118a449ede4eba253c7ca3838a38801336776904259874260609"
+    },
+    "ONDOUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/ONDOUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "06e086a31ba3cb1a42c39a4e548256c5b1bb5d10335a22c24ee15fc6c6bfb3dd",
+      "source_manifest_record_sha256": "077ec51b76e65a829039d802a8902c705ad0e8b72f6e9c087cd303afa627eebe",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "13a4c07780ee04824b3766eace2076899d2eb463558e7ea6dcf467eae79e4434"
+    },
+    "SOLUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/SOLUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "40a2c4b6af2f0c96d9301a3a9e574d7574d2754a0f85c239b18d5541238a885d",
+      "source_manifest_record_sha256": "f0a09bf80ea61ac9c81ebfde77d6b673639641c95f5b886dd9af864d2ca31cb0",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "b69d336da3dcbc66d54fa5299523c47d0968b0e81befdba02f2af902ce977ebd"
+    },
+    "SUIUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/SUIUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "f9e8d1bb27c2d30d183ada22005d6fd3a3c9c424260f2f2a204579c530b336f7",
+      "source_manifest_record_sha256": "4d91f862cd1fcca2e328b8ffa8e00c25ef092e1901fb59e04e2f91b357e07137",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "805bec643a62971e4500a33ac511f7f4e3bf04835c695ca49c38c09c3a7d2c8c"
+    },
+    "TAOUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/TAOUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "91bb0670fc8bdf86bd527a8f53f657517a48c419d45da106293b60fbc5449f81",
+      "source_manifest_record_sha256": "bc146948742a314c5cca5ab68eaa4be5810c296e5d82d7e881840cf389bef1a8",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "9ee9c4cbb23d1db48bb615fe75b1b6bfc5aa6b02a8a0793e867d6a4a4faa9388"
+    },
+    "WIFUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/WIFUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "cc40d7b49d0e132436b43ef496505dc5ed32698f396f579cbf6d3017c24266ab",
+      "source_manifest_record_sha256": "38a7f67ee015a3c787882aa26d2061873d7da93e5677250b4578b7eb33ed35f1",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "7609487a4a082893be1ae20aad29797843d4809b05c5c6d35715bbf828702d7c"
+    },
+    "XRPUSDT": {
+      "source_path": "data_cache/immutable/pump_exhaustion_unwind_short_v1_720d_20260711/XRPUSDT_5_1721001600000_1783209600000.json",
+      "source_sha256": "f980c48ab5004aac28bd96f5cfe3d1557f99ab4a188899501601db32e5e3da77",
+      "source_manifest_record_sha256": "866de70743672b3cc6a80596b3c5938562872d855e0ffc6e38687b64ac68a7b3",
+      "slice_first_ts": 1721001600000,
+      "slice_last_ts": 1783173600000,
+      "slice_rows": 207241,
+      "virtual_slice_sha256": "44d4af86778151892328f9b61d9c5a14b696ff228d89dfb173580549f9a0686b"
+    }
+  },
+  "manifest_fingerprint_sha256": "c54bd9bfb12fafb47a8dac8df76da5a51e856288abbbe2497d461766591d50f6"
+}
