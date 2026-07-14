@@ -84,7 +84,7 @@ Jul14 amendment опубликован commit `5801cc6`. Он доказывае
 ## Research clock
 
 - Активного overnight performance backtest/autoresearch нет: `configs/research_nightly_queue.json` и `configs/research_priority_24h_20260626.json` имеют `enabled=false`; случайный grid не запускался.
-- Replayable data clock запущен локально: screen `l2_ondo_v1_20260714` пишет ONDO depth-50 L2+publicTrade с cap `20 GiB`; `trades_micro_v1_20260714` пишет publicTrade для `ONDO/WIF/SUI/DOGE/1000PEPE/FIL` с cap `8 GiB`. Оба процесса public-only, без keys/orders, retention=`stop`, min-free=`80 GiB`. Первый read-only replay ONDO: snapshot `1`, deltas `354`, trades `18`, gaps `0`, valid PASS. Это сбор данных, не performance verdict.
+- Replayable data clock запущен локально: screen `l2_ondo_v1_20260714` пишет ONDO depth-50 L2+publicTrade с cap `20 GiB`; `trades_micro_v1_20260714` пишет publicTrade для `ONDO/WIF/SUI/DOGE/1000PEPE/FIL` с cap `8 GiB`; `tape_keepawake_20260714` удерживает открытый Mac от idle-sleep максимум семь суток. Оба collector-процесса public-only, без keys/orders, retention=`stop`, min-free=`80 GiB`. Первый read-only replay ONDO: snapshot `1`, deltas `354`, trades `18`, gaps `0`, valid PASS. Это сбор данных, не performance verdict.
 - Не запускать случайную широкую сетку «чтобы компьютер не простаивал». Следующий долгий запуск обязан иметь prereg, pinned data/costs, progress/receipt и автоматический stop on failed integrity.
 
 ## Следующая исполнимая очередь
