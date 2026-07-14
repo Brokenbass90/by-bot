@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-13T11:41:29Z",
+  "as_of_utc": "2026-07-14T06:30:06Z",
   "schema_version": 2,
   "authority": "human_reviewed_project_truth",
   "control_recommendations_allowed": false,
@@ -22,9 +22,18 @@
     "web_cookie_transport": "PLAIN_HTTP_SSH_TUNNEL_COOKIE_SECURE_ZERO_UNTIL_HTTPS_PROXY",
     "vps_release_model": "TARGETED_SHA_DEPLOY_VPS_GIT_STALE_DIRTY_NO_BLIND_PULL",
     "vps_checkout": "f7ed011",
-    "bybit_partial_pnl_fix": "GIT_PUSHED_NOT_VPS_DEPLOYED",
-    "core_service_restarted_20260713": false,
-    "live_risk_changed_20260713": false
+    "bybit_partial_pnl_fix": "TARGETED_DEPLOYED_CORE_RESTARTED_FLAT",
+    "core_service_restarted_20260714": true,
+    "live_risk_changed_20260714": false,
+    "alpaca_safe_hold_stop_rearm": "CC3EF8A_PUSHED_TARGETED_DEPLOYED_BROKER_STOPS_EXACT_QUANTITY_4_OF_4",
+    "alpaca_web_truth_patch": "66FFA02_PUSHED_TARGETED_DEPLOYED_AUTHORITATIVE_POST_ACTION_RECEIPT_WEB_RESTARTED",
+    "ai_shadow_mission": "41DA86D_PUSHED_RESEARCH_ONLY_FEED_BOUND_SELECT_OR_ABSTAIN_NO_BROKER_TG_LIVE_PROMOTION_AUTHORITY_FALSE",
+    "event_long_uniform_dev13": "5801CC6_PUSHED_DEEP_INTEGRITY_PASS_13_X_207241_PERFORMANCE_AND_LIVE_FORBIDDEN",
+    "bybit_l2_public_trade_collector": "4DB0F4D_PUSHED_LOCAL_ONDO_L2_AND_SIX_SYMBOL_TRADES_RUNNING_BOUNDED_NO_KEYS_ORDERS",
+    "active_overnight_performance_research": false,
+    "active_replayable_public_data_collection": true,
+    "published_git_head": "4db0f4dc3aca5bafd115b426f8644049518ddf90",
+    "full_regression": "1283_PASSED"
   },
   "data_contract": {
     "historical_crypto_accounting": "MIXED_COHORT_NOT_CURRENT_EDGE",
@@ -40,7 +49,9 @@
     "event_long_level_snapshot_v1": "HORIZONTAL_H1_H4_HASH_PINNED_SLOPED_DEFERRED",
     "event_long_closed_bar_aggregation": "M5_TO_M15_H1_H4_HASH_PINNED",
     "event_long_phase0": "HISTORICAL_IMMUTABLE_FREEZE_SUPERSEDED_BY_PHASE1",
-    "event_long_phase1": "CAUSAL_IDENTITY_PASS_MTF_EXECUTION_BRIDGE_ATOMIC_OUTBOX_PINNED_NINE_RUNNER_DATA_BLOCKERS_PERFORMANCE_AND_LIVE_FORBIDDEN"
+    "event_long_phase1": "CAUSAL_IDENTITY_PASS_LOCAL_UNIFORM_INPUT_IDENTITY_PASS_EIGHT_REMAINING_BLOCKERS_PERFORMANCE_AND_LIVE_FORBIDDEN",
+    "fx_m5_cache": "DUKASCOPY_M5_PRESENT_APPROX_728_DAYS_SIX_SYMBOLS_ZERO_PROMOTION_GRADE",
+    "replayable_l2_public_trade_tape": "LOCAL_DATA_CLOCK_RUNNING_ONDO_DEPTH50_PLUS_SIX_SYMBOL_TRADES_FIRST_REPLAY_PASS_GAPS_ZERO"
   },
   "research_verdicts": {
     "pump_exhaustion_unwind_short_v1": {
@@ -75,12 +86,13 @@
       "permission": "BLOCKED_RESEARCH_RUNNER_DATA",
       "performance_computed": false,
       "live_ready": false,
-      "declared_blockers": 9,
+      "declared_blockers": 8,
       "physical_side": "long_only",
       "level_scope": "horizontal_H1_H4_only_sloped_deferred",
       "downtime_replay": "FREEZE_AT_FIRST_PLAN_PENDING_OUTBOX_BLOCKS_ADVANCE_UNTIL_DURABLE_ACK",
       "execution": "EXACT_NEXT_M5_FROZEN_STOP_STOP_FIRST_1R_2R_BASE_STRESS_COSTS",
-      "phase1_focused_tests": 97
+      "phase1_focused_tests": 149,
+      "uniform_dev13_input_identity": "PUSHED_5801CC6_DEEP_ROWS_AND_SOURCE_HASHES_PASS_NO_PERFORMANCE"
     }
   },
   "no_promotion": [
@@ -102,7 +114,7 @@
   ],
   "research_queue": [
     "event_expansion_retest_long_v1_phase2_single_owner_runner_persist_bridge_and_trade_receipts_before_ACK",
-    "event_expansion_retest_long_v1_uniform_dev13_and_complete_funding_manifests_before_performance",
+    "event_expansion_retest_long_v1_freeze_local_uniform_dev13_then_complete_funding_manifests_before_performance",
     "event_expansion_retest_long_v1_fixed_external8_materialize_only_after_runnable_freeze",
     "pump_short_point_in_time_universe_additivity",
     "horizontal_range_rejection_crypto_long_short_shared_level_snapshot",
@@ -124,9 +136,12 @@
     "att1_explicit_review_by": "2026-07-20",
     "bybit_key_rotate_before": "2026-08-05",
     "alpaca_report_due_utc": "2026-07-13T22:10:00Z",
-    "alpaca_watchdog_due_utc": "2026-07-13T23:00:00Z"
+    "alpaca_watchdog_due_utc": "2026-07-13T23:00:00Z",
+    "alpaca_report_delivery_20260713": "DELIVERED_WATCHDOG_CONFIRMED"
   },
   "source_reports": [
+    "reports/RECOVERY_CHECKPOINT_2026_07_14.md",
+    "reports/PROJECT_CANONICAL_INDEX_2026_07_14.json",
     "reports/RECOVERY_CHECKPOINT_2026_07_13.md",
     "reports/PROJECT_CANONICAL_INDEX_2026_07_13.json",
     "reports/PUMP_EXHAUSTION_STRICT_VERDICT_2026_07_13.md",
@@ -135,6 +150,7 @@
     "reports/research/alpaca_monthly_exact_parity_replay_20260713_preflight.json",
     "reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md",
     "reports/EVENT_EXPANSION_RETEST_LONG_V1_PREREG_2026_07_13.md",
-    "reports/EVENT_EXPANSION_RETEST_LONG_V1_PHASE1_FREEZE_2026_07_13.md"
+    "reports/EVENT_EXPANSION_RETEST_LONG_V1_PHASE1_FREEZE_2026_07_13.md",
+    "reports/L2_TAPE_COLLECTION_START_2026_07_14.md"
   ]
 }
