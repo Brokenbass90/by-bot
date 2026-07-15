@@ -111,7 +111,11 @@ def test_web_mirror_preserves_source_mtime_and_replaces_atomically() -> None:
 
     assert 'scp -p "${SSH_OPTS[@]}"' in script
     assert 'local local_tmp="${local_path}.sync.$$"' in script
-    assert 'mv "$local_tmp" "$local_path"' in script
+    assert '/bin/mv -f "$local_tmp" "$local_path"' in script
+    assert 'write_bundle_manifest "syncing"' in script
+    assert 'write_bundle_manifest "complete"' in script
+    assert 'write_bundle_manifest "incomplete"' in script
+    assert 'CRITICAL_FAILURES' in script
 
 
 def test_alpaca_live_wrapper_sources_safe_hold_last() -> None:

@@ -80,6 +80,7 @@ SOURCES = {
     "att1_edge_health": "runtime/att1_edge_health.json",
     "alpaca_account_state": "runtime/alpaca_live_v38/account_state.json",
     "canonical_project_state": "configs/ai_operator_canonical_state.json",
+    "capability_registry": "configs/project_capability_registry_v1.json",
 }
 
 SOURCE_FALLBACKS = {
@@ -512,6 +513,47 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         str(canonical_path.relative_to(REPO_ROOT)) if canonical_path.exists() else None
     )
     ctx["canonical_project_state"] = load_json(canonical_path)
+
+    capability_path = source_path("capability_registry")
+    ctx["sources_used"]["capability_registry"] = (
+        str(capability_path.relative_to(REPO_ROOT)) if capability_path.exists() else None
+    )
+    capability_payload = load_json(capability_path)
+    if isinstance(capability_payload, dict):
+        components = [
+            row for row in (capability_payload.get("components") or []) if isinstance(row, dict)
+        ]
+        stage_counts: dict[str, int] = {}
+        authority_counts: dict[str, int] = {}
+        for row in components:
+            stage = str(row.get("stage") or "unknown")
+            authority = str(row.get("execution_authority") or "unknown")
+            stage_counts[stage] = stage_counts.get(stage, 0) + 1
+            authority_counts[authority] = authority_counts.get(authority, 0) + 1
+        ctx["project_capability_registry"] = {
+            "schema_version": capability_payload.get("schema_version"),
+            "as_of_utc": capability_payload.get("as_of_utc"),
+            "authority": capability_payload.get("authority"),
+            "component_count": len(components),
+            "stage_counts": dict(sorted(stage_counts.items())),
+            "authority_counts": dict(sorted(authority_counts.items())),
+            "components": [
+                {
+                    "component_id": row.get("component_id"),
+                    "kind": row.get("kind"),
+                    "market": row.get("market"),
+                    "physical_side": row.get("physical_side"),
+                    "stage": row.get("stage"),
+                    "execution_authority": row.get("execution_authority"),
+                    "promotion_authorized": row.get("promotion_authorized"),
+                    "known_gaps": list(row.get("known_gaps") or [])[:4],
+                    "next_gate": row.get("next_gate"),
+                }
+                for row in components
+            ],
+        }
+    else:
+        ctx["project_capability_registry"] = None
 
     # ---- Heartbeat (key live source) ----
     hb_path = source_path("heartbeat")

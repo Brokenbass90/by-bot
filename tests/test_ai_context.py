@@ -1,4 +1,6 @@
 import json
+import os
+import time
 from pathlib import Path
 
 from bot.ai_context import append_ai_context_lines, compact_ai_full_context
@@ -118,3 +120,45 @@ def test_append_ai_context_lines_mentions_position(tmp_path):
     assert "sl=0.964" in text
     assert "tp_model=runner_ladder" in text
     assert "runner_targets=[TP1=0.93 frac=0.6 pending]" in text
+
+
+def test_stale_full_context_is_reduced_to_fail_closed_marker(tmp_path):
+    path = tmp_path / "runtime" / "ai_context" / "full_context.json"
+    _write_json(
+        path,
+        {
+            "generated_at_utc": "2026-07-10T00:00:00Z",
+            "heartbeat": {"open_trades": 0, "regime": "bull_chop"},
+            "setups_scanner": {"card_count": 80, "cards_top": [{"symbol": "AVAXUSDT"}]},
+        },
+    )
+    old = time.time() - 10_000
+    os.utime(path, (old, old))
+    _write_json(
+        tmp_path / "configs" / "project_capability_registry_v1.json",
+        {
+            "schema_version": 1,
+            "as_of_utc": "2026-07-15T00:00:00Z",
+            "components": [
+                {
+                    "component_id": "crypto_att1_short_r001",
+                    "market": "crypto_perpetual",
+                    "physical_side": "short_only",
+                    "stage": "live_tiny_canary",
+                    "execution_authority": "tiny_money",
+                    "promotion_authorized": False,
+                    "known_gaps": ["edge unproven"],
+                    "next_gate": "review",
+                }
+            ],
+        },
+    )
+
+    compact = compact_ai_full_context(tmp_path)
+
+    assert compact["critical_truth_assessment"]["control_recommendations_allowed"] is False
+    assert compact["heartbeat"] == {}
+    assert compact["setup_cards_top"] == []
+    assert "ai_full_context_stale" in compact["critical_truth_assessment"]["blockers"][0]
+    assert compact["project_capability_registry"]["component_count"] == 1
+    assert compact["project_capability_registry"]["components"][0]["execution_authority"] == "tiny_money"

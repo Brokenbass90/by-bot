@@ -46,9 +46,27 @@ _HISTORY_TTL_SEC = max(0, int(os.getenv("DEEPSEEK_HISTORY_TTL_SEC", "21600") or 
 _CHAT_RATE: Dict[str, List[float]] = {}  # email → list of timestamps
 _MAX_RPM = 20  # requests per minute per user
 
+HEARTBEAT_MAX_AGE_SEC = 120
+POSITIONS_MAX_AGE_SEC = 120
+ALLOCATOR_MAX_AGE_SEC = 900
+AI_PACK_MAX_AGE_SEC = 900
+REGIME_MAX_AGE_SEC = 7_200
+OPERATOR_SNAPSHOT_MAX_AGE_SEC = 7_200
+MIRROR_BUNDLE_MAX_AGE_SEC = 180
+
 
 def _rt(*p: str) -> Path:
-    return _RUNTIME_ROOT / Path(*p)
+    direct = _RUNTIME_ROOT / Path(*p)
+    candidates = [direct]
+    try:
+        if _RUNTIME_ROOT.resolve() == (_ROOT / "runtime").resolve():
+            candidates.append(_RUNTIME_ROOT / "live_mirror" / Path(*p))
+    except OSError:
+        pass
+    existing = [path for path in candidates if path.exists()]
+    if not existing:
+        return direct
+    return max(existing, key=lambda path: path.stat().st_mtime)
 
 
 def _cfg(*p: str) -> Path:
@@ -64,6 +82,47 @@ def _json(p: Path) -> Optional[dict]:
         return None
 
 
+def _age_sec(path: Path) -> Optional[int]:
+    try:
+        return max(0, int(time.time() - path.stat().st_mtime)) if path.exists() else None
+    except OSError:
+        return None
+
+
+def _fresh_json(path: Path, *, max_age_sec: int) -> Tuple[Optional[dict], Optional[int]]:
+    age = _age_sec(path)
+    if age is None or age > int(max_age_sec):
+        return None, age
+    return _json(path), age
+
+
+def _web_live_truth_gate() -> Tuple[bool, List[str]]:
+    heartbeat_path = _rt("bot_heartbeat.json")
+    required = [
+        ("heartbeat", heartbeat_path, HEARTBEAT_MAX_AGE_SEC),
+        ("positions", _rt("live_positions.json"), POSITIONS_MAX_AGE_SEC),
+        ("allocator", _rt("control_plane", "portfolio_allocator_state.json"), ALLOCATOR_MAX_AGE_SEC),
+        ("regime", _rt("regime", "orchestrator_state.json"), REGIME_MAX_AGE_SEC),
+        ("operator", _rt("operator", "operator_snapshot.json"), OPERATOR_SNAPSHOT_MAX_AGE_SEC),
+        ("ai_full_context", _rt("ai_context", "full_context.json"), AI_PACK_MAX_AGE_SEC),
+    ]
+    blockers: List[str] = []
+    for name, path, max_age in required:
+        payload, age = _fresh_json(path, max_age_sec=max_age)
+        if payload is None:
+            blockers.append(f"{name}_missing_or_stale:{age}s")
+    if "live_mirror" in heartbeat_path.parts:
+        manifest_path = heartbeat_path.parent / "sync_bundle_manifest.json"
+        manifest, manifest_age = _fresh_json(
+            manifest_path,
+            max_age_sec=MIRROR_BUNDLE_MAX_AGE_SEC,
+        )
+        if not manifest or manifest.get("status") != "complete":
+            status_value = manifest.get("status") if isinstance(manifest, dict) else "missing"
+            blockers.append(f"mirror_bundle_not_complete:{status_value}:age={manifest_age}s")
+    return not blockers, blockers
+
+
 def _http_error_summary(exc: Exception) -> str:
     code = getattr(exc, "code", None) or getattr(exc, "status", None)
     if code == 402:
@@ -74,9 +133,18 @@ def _http_error_summary(exc: Exception) -> str:
 
 
 def _local_chat_fallback(command_result: Optional[str] = None, reason: str = "") -> "ChatResponse":
-    hb = _json(_rt("bot_heartbeat.json")) or {}
-    alloc = _json(_rt("control_plane", "portfolio_allocator_state.json")) or {}
-    op = _json(_rt("operator", "operator_snapshot.json")) or {}
+    hb, hb_age = _fresh_json(_rt("bot_heartbeat.json"), max_age_sec=HEARTBEAT_MAX_AGE_SEC)
+    alloc, alloc_age = _fresh_json(
+        _rt("control_plane", "portfolio_allocator_state.json"),
+        max_age_sec=ALLOCATOR_MAX_AGE_SEC,
+    )
+    op, op_age = _fresh_json(
+        _rt("operator", "operator_snapshot.json"),
+        max_age_sec=OPERATOR_SNAPSHOT_MAX_AGE_SEC,
+    )
+    hb = hb or {}
+    alloc = alloc or {}
+    op = op or {}
     cp_alloc = dict((op.get("control_plane") or {}).get("allocator") or {})
     alpaca = dict(op.get("alpaca") or {})
     monthly = dict(alpaca.get("monthly") or {})
@@ -85,14 +153,16 @@ def _local_chat_fallback(command_result: Optional[str] = None, reason: str = "")
     reply = (
         "Работаю в локальном fallback-режиме без внешней LLM."
         f"{reason_line}\n\n"
-        f"Серверный снимок: open_trades={hb.get('open_trades')}, dry_run={hb.get('dry_run')}, "
+        f"Серверный снимок: heartbeat_age_sec={hb_age}, open_trades={hb.get('open_trades')}, "
+        f"dry_run={hb.get('dry_run')}, "
         f"regime={hb.get('regime') or 'unknown'}.\n"
         f"Control-plane: status={alloc.get('status') or cp_alloc.get('status')}, "
         f"hard_block={bool(alloc.get('hard_block_new_entries') or cp_alloc.get('hard_block_new_entries'))}, "
-        f"enabled_sleeves={','.join(enabled) or '-'}.\n"
+        f"enabled_sleeves={','.join(enabled) or '-'}, allocator_age_sec={alloc_age}.\n"
         f"Alpaca monthly: selected={monthly.get('current_cycle_tickers') or monthly.get('current_cycle_selected') or '-'}.\n\n"
-        "Следующий лучший шаг: если crypto за 24 часа после strict3 всё ещё не даёт входов, "
-        "строим setup-to-entry blocker report по каждому sleeve и чиним конкретный фильтр."
+        f"operator_snapshot_age_sec={op_age}. "
+        "Если любой live-блок выше неизвестен или просрочен, текущие сделки, ручные входы "
+        "и изменение риска не рекомендуются."
     )
     return ChatResponse(reply=reply, command_result=command_result)
 
@@ -403,8 +473,13 @@ def _latest_report_files(rel_dir: str, *, limit: int = 8) -> List[Dict[str, Any]
 
 
 def _append_operator_snapshot_context(parts: List[str]) -> None:
-    snap = _json(_rt("operator", "operator_snapshot.json"))
+    path = _rt("operator", "operator_snapshot.json")
+    snap, age = _fresh_json(path, max_age_sec=OPERATOR_SNAPSHOT_MAX_AGE_SEC)
     if not snap:
+        parts.append(
+            "STALE_EXCLUDED operator_snapshot: "
+            f"age_sec={age}; no live recommendation may use this block.\n"
+        )
         return
     cp = dict(snap.get("control_plane") or {})
     allocator = dict(cp.get("allocator") or {})
@@ -531,10 +606,13 @@ def _append_operator_snapshot_context(parts: List[str]) -> None:
 
 
 def _append_ai_runtime_packs_context(parts: List[str]) -> None:
-    full_ctx = _json(_rt("ai_context", "full_context.json")) or {}
+    full_path = _rt("ai_context", "full_context.json")
+    full_ctx, full_age = _fresh_json(full_path, max_age_sec=AI_PACK_MAX_AGE_SEC)
+    full_ctx = full_ctx or {}
     if full_ctx:
         setup = dict(full_ctx.get("setups_scanner") or {})
         router_state = dict(full_ctx.get("router_state") or {})
+        capability = dict(full_ctx.get("project_capability_registry") or {})
         sources = dict(full_ctx.get("sources_used") or {})
         missing = [str(k) for k, v in sources.items() if not v]
         parts.append(
@@ -581,8 +659,27 @@ def _append_ai_runtime_packs_context(parts: List[str]) -> None:
                 f"reasons={'; '.join(str(x) for x in (card.get('reasons') or [])[:4])}\n"
             )
         _append_cross_exchange_context(parts, full_ctx)
+        if capability:
+            live_rows = [
+                row
+                for row in (capability.get("components") or [])
+                if isinstance(row, dict) and str(row.get("stage") or "").startswith("live_")
+            ]
+            parts.append(
+                "PROJECT CAPABILITY REGISTRY: "
+                f"as_of={capability.get('as_of_utc')} components={capability.get('component_count')} "
+                f"live={','.join(str(row.get('component_id')) for row in live_rows) or '-'} "
+                f"stages={capability.get('stage_counts')}\n"
+            )
+    else:
+        parts.append(
+            "STALE_EXCLUDED ai_full_context: "
+            f"age_sec={full_age}; setup cards, allocator and arbitrage rows are non-authoritative.\n"
+        )
 
-    extras = _json(_rt("ai_context", "extras.json")) or {}
+    extras_path = _rt("ai_context", "extras.json")
+    extras, extras_age = _fresh_json(extras_path, max_age_sec=AI_PACK_MAX_AGE_SEC)
+    extras = extras or {}
     if extras:
         trade_history = dict(extras.get("trade_history") or {})
         bot_errors = dict(extras.get("bot_errors") or {})
@@ -642,8 +739,12 @@ def _append_ai_runtime_packs_context(parts: List[str]) -> None:
                 f"{mem.get('ts_utc') or ''} {mem.get('author') or ''} "
                 f"{mem.get('topic') or ''}: {str(mem.get('text') or '')[:260]}\n"
             )
+    elif extras_age is not None:
+        parts.append(f"STALE_EXCLUDED ai_extras: age_sec={extras_age}.\n")
 
-    ohlc_logs = _json(_rt("ai_context", "ohlc_and_logs.json")) or {}
+    ohlc_path = _rt("ai_context", "ohlc_and_logs.json")
+    ohlc_logs, ohlc_age = _fresh_json(ohlc_path, max_age_sec=AI_PACK_MAX_AGE_SEC)
+    ohlc_logs = ohlc_logs or {}
     if ohlc_logs:
         log_tail = dict(ohlc_logs.get("log_tail") or {})
         parts.append(
@@ -668,8 +769,12 @@ def _append_ai_runtime_packs_context(parts: List[str]) -> None:
             )
         for line in list(log_tail.get("lines") or [])[-12:]:
             parts.append(f"AI RAW LOG TAIL: {str(line)[:260]}\n")
+    elif ohlc_age is not None:
+        parts.append(f"STALE_EXCLUDED ai_ohlc_and_logs: age_sec={ohlc_age}.\n")
 
-    blocker = _json(_rt("crypto_blocker", "latest.json")) or {}
+    blocker_path = _rt("crypto_blocker", "latest.json")
+    blocker, blocker_age = _fresh_json(blocker_path, max_age_sec=AI_PACK_MAX_AGE_SEC)
+    blocker = blocker or {}
     if blocker:
         parts.append(
             "CRYPTO BLOCKER REPORT: "
@@ -689,6 +794,8 @@ def _append_ai_runtime_packs_context(parts: List[str]) -> None:
                 f"try={sleeve.get('try')} entry={sleeve.get('entry')} "
                 f"no_signal={sleeve.get('no_signal')} status={sleeve.get('status')} top={top_txt}\n"
             )
+    elif blocker_age is not None:
+        parts.append(f"STALE_EXCLUDED crypto_blocker: age_sec={blocker_age}.\n")
 
 
 def _load_shared_history() -> List[Dict[str, str]]:
@@ -771,40 +878,65 @@ def _check_rate(email: str) -> None:
 def _build_context() -> str:
     """Build a compact context string injected into every AI request."""
     parts: List[str] = []
+    live_truth_blockers: List[str] = []
     now = datetime.now(timezone.utc).isoformat()
     parts.append(f"=== BOT CONTEXT [{now}] ===\n")
 
     # Bot liveness
-    hb = _json(_rt("bot_heartbeat.json"))
     hb_path = _rt("bot_heartbeat.json")
-    hb_age = int(time.time() - hb_path.stat().st_mtime) if hb_path.exists() else -1
-    alive = hb_path.exists() and hb_age < 120
-    open_trades = hb.get("open_trades", 0) if hb else 0
-    flat_note = "flat/no open positions" if alive and int(open_trades or 0) == 0 else "has open positions"
+    hb, hb_age_value = _fresh_json(hb_path, max_age_sec=HEARTBEAT_MAX_AGE_SEC)
+    hb_age = hb_age_value if hb_age_value is not None else -1
+    alive = hb is not None
+    hb = hb or {}
+    if not alive:
+        live_truth_blockers.append(f"mirror_heartbeat_missing_or_stale:{hb_age}s")
+    open_trades = hb.get("open_trades") if alive else None
+    if not alive:
+        flat_note = "position state unknown"
+    elif int(open_trades or 0) == 0:
+        flat_note = "flat/no open positions"
+    else:
+        flat_note = "has open positions"
     parts.append(
-        f"BOT: {'ALIVE' if alive else 'OFFLINE'} | heartbeat_age_sec={hb_age} | "
+        f"BOT MIRROR: {'FRESH' if alive else 'STALE_OR_MISSING'} | heartbeat_age_sec={hb_age} | "
         f"open_trades={open_trades} ({flat_note})\n"
     )
+    if not alive:
+        parts.append(
+            "SERVER STATUS: UNKNOWN_FROM_THIS_MIRROR; a stale local mirror does not prove the VPS is offline.\n"
+        )
     append_ai_context_lines(parts, _ROOT)
 
     # Regime
-    reg = _json(_rt("regime", "orchestrator_state.json")) or _json(_rt("regime.json"))
+    reg_path = _rt("regime", "orchestrator_state.json")
+    reg, reg_age_value = _fresh_json(reg_path, max_age_sec=REGIME_MAX_AGE_SEC)
+    if not reg:
+        fallback_reg_path = _rt("regime.json")
+        reg, reg_age_value = _fresh_json(fallback_reg_path, max_age_sec=REGIME_MAX_AGE_SEC)
+        if reg:
+            reg_path = fallback_reg_path
     if reg:
-        reg_state_path = _rt("regime", "orchestrator_state.json")
-        reg_age = int(time.time() - reg_state_path.stat().st_mtime) if reg_state_path.exists() else -1
+        reg_age = reg_age_value if reg_age_value is not None else -1
         parts.append(
             f"REGIME: {reg.get('regime','?')} conf={reg.get('confidence','?')} "
             f"risk_mult={reg.get('global_risk_mult','?')} "
             f"longs={'Y' if reg.get('allow_longs') else 'N'} shorts={'Y' if reg.get('allow_shorts') else 'N'} "
             f"age_sec={reg_age}\n"
         )
+    else:
+        live_truth_blockers.append(f"regime_missing_or_stale:{reg_age_value}s")
+        parts.append(f"STALE_EXCLUDED regime: age_sec={reg_age_value}.\n")
 
     # Allocator sleeves: always prefer runtime control-plane truth over static policy.
-    allocator = _json(_rt("control_plane", "portfolio_allocator_state.json")) or {}
+    alloc_state_path = _rt("control_plane", "portfolio_allocator_state.json")
+    allocator, alloc_age_value = _fresh_json(
+        alloc_state_path,
+        max_age_sec=ALLOCATOR_MAX_AGE_SEC,
+    )
+    allocator = allocator or {}
     sleeve_states = dict(allocator.get("sleeves") or {})
     if sleeve_states:
-        alloc_state_path = _rt("control_plane", "portfolio_allocator_state.json")
-        alloc_age = int(time.time() - alloc_state_path.stat().st_mtime) if alloc_state_path.exists() else -1
+        alloc_age = alloc_age_value if alloc_age_value is not None else -1
         active = sorted(
             [
                 str(name)
@@ -852,6 +984,19 @@ def _build_context() -> str:
             )
         parts.append(f"SLEEVES ACTIVE: {', '.join(active) or 'none'}\n")
         parts.append(f"SLEEVES OFF: {', '.join(inactive[:8]) or 'none'}\n")
+    else:
+        live_truth_blockers.append(f"allocator_missing_or_stale:{alloc_age_value}s")
+        parts.append(f"STALE_EXCLUDED allocator: age_sec={alloc_age_value}.\n")
+
+    _truth_ok, strict_truth_blockers = _web_live_truth_gate()
+    for blocker in strict_truth_blockers:
+        if blocker not in live_truth_blockers:
+            live_truth_blockers.append(blocker)
+    parts.append(
+        "WEB LIVE TRUTH GATE: "
+        f"control_recommendations_allowed={_truth_ok and not live_truth_blockers} "
+        f"blockers={live_truth_blockers}.\n"
+    )
 
     # Legacy web overlay is not consumed by the live bot.  Keep it visible only
     # as explicitly non-effective history so stale files cannot mislead the AI.
@@ -1235,6 +1380,19 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         params = body.execute_command.get("params", {})
         cmd_result = execute_command(action, params, email)
 
+    truth_ok, truth_blockers = _web_live_truth_gate()
+    if not truth_ok:
+        return ChatResponse(
+            reply=(
+                "⚠️ MIRROR_STALE / SERVER_STATUS_UNKNOWN. Локальный web-mirror не содержит "
+                "согласованный свежий набор heartbeat, positions, regime, allocator, operator и AI context. "
+                f"Blockers: {', '.join(truth_blockers)}.\n\n"
+                "Я намеренно не буду называть бот офлайн, предлагать ручные сделки, включение рукавов, "
+                "масштабирование Alpaca или изменение риска, пока зеркало не обновится целиком."
+            ),
+            command_result=cmd_result,
+        )
+
     # ── pick AI provider: DeepSeek > Anthropic ───────────────────────────────
     deepseek_key  = os.getenv("DEEPSEEK_API_KEY", "").strip()
     anthropic_key = (os.getenv("ANTHROPIC_API_KEY") or os.getenv("AI_API_KEY", "")).strip()
@@ -1257,10 +1415,15 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         "You have access to live bot data (injected below). "
         "Be concise and precise. When you spot issues, say so directly. "
         "Never treat stale chat memory as a source of truth when current runtime ages disagree. "
+        "Any block marked STALE_EXCLUDED is physically non-authoritative: do not quote its regime, allocator, setup cards, positions, Alpaca state or arbitrage rows. "
+        "If WEB LIVE TRUTH GATE says control_recommendations_allowed=false, say MIRROR_STALE / SERVER_STATUS_UNKNOWN and refuse current-position, manual-entry, restart, activation or risk-change advice until the mirror is refreshed. "
         "Do not claim you know everything; say what the injected live context shows. "
         "open_trades=0 means flat/no open positions, not offline, when BOT is ALIVE. "
         "The server has a backtest infrastructure, but this chat may not have a direct safe execution endpoint yet; propose an approved/spec-based backtest instead of saying the project has no backtester. "
         "Do not recommend enabling a sleeve from setup cards alone. A setup card is only a candidate; live enablement requires regime fit plus backtest/research evidence from the injected context. "
+        "Never recommend that the operator manually open a live trade from a setup card, AI score or chart opinion. "
+        "Never recommend scaling Alpaca capital from a selected backtest headline or one paper week; require exact broker-parity replay, costs, OOS and a completed canary gate. "
+        "Never annualize one observed arbitrage/funding spread into expected daily income. Require simultaneous executable depth, all fills, fees, funding timing, basis drift, inventory/rebalancing, venue risk and a positive conservative shadow distribution. "
         "In bear_trend, do not recommend ASB1/long-bounce activation unless current injected research shows a validated pass; if evidence is missing or weak, recommend a backtest/proposal instead. "
         "If allocator status is degraded only because degraded_kind=protective_overlap, explain it as a protective overlap risk haircut, not a broken allocator or critical incident. "
         "Do not recommend safe mode or reload solely for protective_overlap. "
@@ -1485,6 +1648,18 @@ async def analyze_setup(body: SetupAnalysisRequest, _: str = Depends(require_aut
     Fast AI analysis of a single setup card.
     Uses claude-haiku for low latency. Returns verdict + reasoning in ~1-2s.
     """
+    truth_ok, truth_blockers = _web_live_truth_gate()
+    if not truth_ok:
+        return SetupAnalysisResponse(
+            verdict="skip",
+            reasoning=(
+                "Live-контекст зеркала устарел или неполон; карточка исключена из анализа. "
+                f"Blockers: {', '.join(truth_blockers)}."
+            ),
+            risk_note="Setup card не является разрешением на ручной или автоматический вход.",
+            model="deterministic-truth-gate",
+        )
+
     anthropic_key = os.getenv("ANTHROPIC_API_KEY", "").strip()
     deepseek_key = os.getenv("DEEPSEEK_API_KEY", "").strip()
 

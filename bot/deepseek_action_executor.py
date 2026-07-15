@@ -1,15 +1,15 @@
 """
 deepseek_action_executor.py
 ============================
-Executes approved DeepSeek proposals:
+Historical executor for approved DeepSeek proposals (mutations quarantined):
   - Reads "changes" list from approval queue item
   - Patches the active local env file
   - Optionally deploys it to the server via SSH
 
 Telegram commands:
-  /ai_deploy <id>   – execute an approved proposal (patch env + push to server)
-  /ai_diff          – show what would change if all approved proposals were applied
-  /ai_rollback      – revert the active env file to the last backup
+  /ai_deploy <id>   – blocked by P0 quarantine
+  /ai_diff          – redacted inventory only
+  /ai_rollback      – blocked by P0 quarantine
 """
 from __future__ import annotations
 
@@ -25,6 +25,16 @@ _HERE = Path(__file__).resolve().parent
 _ROOT = _HERE.parent
 
 _ENV_BACKUP_DIR = _ROOT / "configs" / "env_backups"
+
+# P0 quarantine (2026-07-14): an approved AI proposal could patch repo/.env on
+# the VPS even when server deploy/restart was disabled.  Mutations stay
+# physically unavailable until a reviewed key allowlist, typed value bounds,
+# owner challenge, flat-window guard and durable before/after receipt exist.
+EXECUTOR_MUTATIONS_QUARANTINED = True
+EXECUTOR_QUARANTINE_REASON = (
+    "AI env mutation is quarantined: proposal approval is not sufficient authority "
+    "to patch a live-loaded .env"
+)
 
 
 def _env(name: str, default: str = "") -> str:
@@ -85,6 +95,8 @@ def patch_env_file(changes: list[dict[str, Any]]) -> list[str]:
     Apply a list of {env_key, new_value} changes to the active env file.
     Returns list of applied change descriptions.
     """
+    if EXECUTOR_MUTATIONS_QUARANTINED:
+        raise PermissionError(EXECUTOR_QUARANTINE_REASON)
     active_env = _active_local_env()
     if not active_env.exists():
         raise FileNotFoundError(f"Config not found: {active_env}")
@@ -113,6 +125,20 @@ def patch_env_file(changes: list[dict[str, Any]]) -> list[str]:
 
 def diff_pending_changes(pending_items: list[dict[str, Any]]) -> str:
     """Show what env changes would be applied if all pending items were deployed."""
+    if EXECUTOR_MUTATIONS_QUARANTINED:
+        keys = sorted(
+            {
+                str(change.get("env_key") or "").strip()
+                for item in pending_items
+                for change in ((item.get("payload") or {}).get("changes") or [])
+                if str(change.get("env_key") or "").strip()
+            }
+        )
+        return (
+            "⛔ AI env executor is quarantined. Values are intentionally redacted.\n"
+            f"pending_proposals={len(pending_items)} keys={','.join(keys) or '-'}\n"
+            "Required before re-enable: allowlist + typed bounds + owner challenge + flat-window guard + diff receipt."
+        )
     active_env = _active_local_env()
     if not active_env.exists():
         return f"env не найден: {active_env}"
@@ -142,7 +168,9 @@ _SSH_KEY = str(Path.home() / ".ssh" / "by-bot")
 
 def _server_deploy_allowed() -> bool:
     """AI-driven server deploy stays off unless explicitly enabled."""
-    return _env_bool("DEEPSEEK_EXECUTOR_ALLOW_SERVER_DEPLOY", False)
+    return (not EXECUTOR_MUTATIONS_QUARANTINED) and _env_bool(
+        "DEEPSEEK_EXECUTOR_ALLOW_SERVER_DEPLOY", False
+    )
 
 
 def _ssh(cmd: str, timeout: int = 30) -> tuple[str, int]:
@@ -192,6 +220,8 @@ def deploy_env_to_server() -> str:
     Push the active env file to the server and restart the bot.
     Returns a status message for Telegram.
     """
+    if EXECUTOR_MUTATIONS_QUARANTINED:
+        return f"⛔ {EXECUTOR_QUARANTINE_REASON}."
     if not _server_deploy_allowed():
         return (
             "⛔ Server deploy disabled for AI executor.\n"
@@ -239,6 +269,8 @@ def execute_proposal(
     Find an approved proposal by id, patch the env, optionally deploy.
     Returns a Telegram message string.
     """
+    if EXECUTOR_MUTATIONS_QUARANTINED:
+        return f"⛔ Proposal {proposal_id} not executed. {EXECUTOR_QUARANTINE_REASON}."
     item = next(
         (x for x in approval_queue if int(x.get("id") or -1) == int(proposal_id)), None
     )
@@ -290,6 +322,8 @@ def execute_proposal(
 
 def rollback_env() -> str:
     """Restore the most recent backup of the active env file."""
+    if EXECUTOR_MUTATIONS_QUARANTINED:
+        return f"⛔ Rollback command quarantined. {EXECUTOR_QUARANTINE_REASON}."
     active_env = _active_local_env()
     backups = sorted(_ENV_BACKUP_DIR.glob(f"{active_env.stem}_*{active_env.suffix or '.env'}"))
     if not backups:

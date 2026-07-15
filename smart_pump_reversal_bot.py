@@ -117,8 +117,7 @@ from bot.deepseek_autoresearch_agent import (
 from bot.operator_snapshot import build_operator_snapshot, append_operator_memory, MEMORY_PATH
 from bot.trade_learning_loop import trade_learning
 from bot.deepseek_action_executor import (
-    execute_proposal,
-    rollback_env,
+    EXECUTOR_QUARANTINE_REASON,
     check_server_status,
     diff_pending_changes,
 )
@@ -4427,8 +4426,9 @@ def _handle_tg_command(text: str):
             "  /ai_budget — расход AI токенов\n"
             "  /ai_reset — сбросить историю диалога\n"
             "  /ai_server — статус сервера и процессов\n"
-            "  /ai_diff — показать pending изменения от AI\n"
-            "  /ai_rollback — откатить последнее изменение env\n"
+            "  /ai_diff — redacted список pending AI-ключей (executor quarantined)\n"
+            "  /ai_deploy — заблокирован: AI env executor quarantined\n"
+            "  /ai_rollback — заблокирован: AI env executor quarantined\n"
             "  /ai_monthly [report|idea <текст>|diagnose <стратегия>] — Claude глубокий анализ\n"
             "  /ai_shadow — последние AI рекомендации (shadow log)\n"
             "  /ai_manual_token — выдать одноразовый токен для будущего ai_manual_v1"
@@ -5032,21 +5032,14 @@ def _handle_tg_command(text: str):
         _tg_reply(diff_pending_changes(pending))
         return
 
-    if name == "/ai_deploy" and len(cmd) >= 2:
-        pid = _parse_float(cmd[1])
-        if pid is None:
-            _tg_reply("Usage: /ai_deploy <proposal_id>")
-            return
-        queue = DEEPSEEK_OVERLAY._load_approval_queue()
-        _tg_reply("📡 Применяю и деплою, жди...")
-        result = execute_proposal(int(pid), queue, deploy=True)
-        DEEPSEEK_OVERLAY._save_approval_queue(queue)
-        _tg_reply(result)
+    if name == "/ai_deploy":
+        # Defence in depth: do not even load or rewrite the approval queue while
+        # the historical env executor is quarantined.
+        _tg_reply(f"⛔ /ai_deploy disabled. {EXECUTOR_QUARANTINE_REASON}.")
         return
 
     if name == "/ai_rollback":
-        result = rollback_env()
-        _tg_reply(result)
+        _tg_reply(f"⛔ /ai_rollback disabled. {EXECUTOR_QUARANTINE_REASON}.")
         return
 
     if name == "/ai_monthly":

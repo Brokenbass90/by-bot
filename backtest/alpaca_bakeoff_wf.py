@@ -93,8 +93,18 @@ def _daily_closes(data: dict[str, object]) -> dict[str, dict[object, float]]:
     return out
 
 
-def _max_drawdown_pct(curve: Iterable[float]) -> float:
-    peak = 0.0
+def _max_drawdown_pct(
+    curve: Iterable[float], *, initial_value: float | None = None
+) -> float:
+    """Return peak-to-trough drawdown, including capital before point one.
+
+    The adaptive diagnostic stores only rebalance endpoints.  Starting the
+    peak at the first endpoint hid an initial loss between initial capital and
+    that endpoint (the July 2026 receipt reported 2.23% instead of at least
+    8.20%).  `initial_value` fixes that accounting error; it does not turn the
+    sparse endpoint curve into a daily mark-to-market series.
+    """
+    peak = max(0.0, _safe_float(initial_value)) if initial_value is not None else 0.0
     max_dd = 0.0
     for value in curve:
         value = _safe_float(value)
@@ -129,7 +139,7 @@ def _summarize_adaptive(
         "profit_factor": _profit_factor(trade_returns),
         "winrate_pct": 100.0 * wins / max(1, wins + losses),
         "trades": len(trade_returns),
-        "max_dd_pct": _max_drawdown_pct(equity_curve),
+        "max_dd_pct": _max_drawdown_pct(equity_curve, initial_value=initial_capital),
         "neg_months": sum(1 for x in monthly_returns if x < 0),
         "n_months": len(monthly_returns),
         "worst_month_pct": min(monthly_returns, default=0.0) * 100.0,
@@ -224,10 +234,22 @@ def run_adaptive_monthly(
         )
         i += rebalance_every
 
+    rebalance_equity = [(row["date"], value) for row, value in zip(rebalance_log, equity_curve)]
     return {
         "initial_capital": initial_capital,
         "final_equity": equity_curve[-1] if equity_curve else initial_capital,
-        "daily_equity": [(row["date"], value) for row, value in zip(rebalance_log, equity_curve)],
+        # Backwards-compatible alias.  These are sparse rebalance endpoints,
+        # not daily MTM; promotion-grade replay must supply a real daily curve.
+        "daily_equity": rebalance_equity,
+        "rebalance_equity": rebalance_equity,
+        "equity_curve_grain": "rebalance_endpoint_not_daily",
+        "research_contract": {
+            "promotion_eligible": False,
+            "execution_timing": "same_close_diagnostic_only",
+            "calendar_rebalance": False,
+            "daily_mark_to_market": False,
+            "required_successor": "alpaca_monthly_exact_parity_replay_20260713",
+        },
         "monthly_returns": monthly_returns,
         "trade_returns": trade_returns,
         "rebalance_log": rebalance_log,

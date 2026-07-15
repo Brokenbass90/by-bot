@@ -8,6 +8,9 @@ from typing import Any
 from bot.strategy_catalog import build_strategy_catalog, strategy_catalog_prompt_lines
 
 
+AI_FULL_CONTEXT_MAX_AGE_SEC = 900
+
+
 def load_json_dict(path: Path) -> dict[str, Any]:
     try:
         if not path.exists():
@@ -87,6 +90,44 @@ def _compact_setup_cards(setup: dict[str, Any], *, max_cards: int) -> list[dict[
     return cards
 
 
+def _freshest_runtime_path(root: Path, *parts: str) -> Path:
+    """Prefer the freshest direct or live-mirror copy of a runtime artifact."""
+    candidates = [root / "runtime" / Path(*parts), root / "runtime" / "live_mirror" / Path(*parts)]
+    existing = [path for path in candidates if path.exists()]
+    if not existing:
+        return candidates[0]
+    return max(existing, key=lambda path: path.stat().st_mtime)
+
+
+def _compact_capability_registry(payload: Any) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
+    components = [row for row in (payload.get("components") or []) if isinstance(row, dict)]
+    stage_counts: dict[str, int] = {}
+    for row in components:
+        stage = str(row.get("stage") or "unknown")
+        stage_counts[stage] = stage_counts.get(stage, 0) + 1
+    return {
+        "schema_version": payload.get("schema_version"),
+        "as_of_utc": payload.get("as_of_utc"),
+        "component_count": len(components),
+        "stage_counts": dict(sorted(stage_counts.items())),
+        "components": [
+            {
+                "component_id": row.get("component_id"),
+                "market": row.get("market"),
+                "physical_side": row.get("physical_side"),
+                "stage": row.get("stage"),
+                "execution_authority": row.get("execution_authority"),
+                "promotion_authorized": row.get("promotion_authorized"),
+                "known_gaps": list(row.get("known_gaps") or [])[:3],
+                "next_gate": row.get("next_gate"),
+            }
+            for row in components
+        ],
+    }
+
+
 def compact_ai_full_context(
     repo_root: Path,
     *,
@@ -95,9 +136,39 @@ def compact_ai_full_context(
 ) -> dict[str, Any]:
     """Return the shared compact AI context used by Telegram and web chat."""
     root = Path(repo_root)
-    ctx = load_json_dict(root / "runtime" / "ai_context" / "full_context.json")
+    context_path = _freshest_runtime_path(root, "ai_context", "full_context.json")
+    ctx = load_json_dict(context_path)
+    static_capability_registry = _compact_capability_registry(
+        load_json_dict(root / "configs" / "project_capability_registry_v1.json")
+    )
     if not ctx:
-        return {}
+        return {
+            "critical_truth_assessment": {
+                "control_recommendations_allowed": False,
+                "blockers": ["ai_full_context_missing"],
+                "live_money_sleeves_by_heartbeat": [],
+            },
+            "project_capability_registry": static_capability_registry,
+        }
+    context_age_sec = max(0, int(time.time() - context_path.stat().st_mtime))
+    if context_age_sec > AI_FULL_CONTEXT_MAX_AGE_SEC:
+        return {
+            "generated_at_utc": ctx.get("generated_at_utc"),
+            "context_path": str(context_path),
+            "context_file_age_sec": context_age_sec,
+            "critical_truth_assessment": {
+                "control_recommendations_allowed": False,
+                "blockers": [f"ai_full_context_stale:{context_age_sec}s"],
+                "live_money_sleeves_by_heartbeat": [],
+            },
+            "heartbeat": {},
+            "open_positions": {"count": None, "positions": []},
+            "router": {},
+            "allocator": {},
+            "setup_cards_top": [],
+            "strategy_catalog": build_strategy_catalog(),
+            "project_capability_registry": static_capability_registry,
+        }
 
     setup = ctx.get("setups_scanner") if isinstance(ctx.get("setups_scanner"), dict) else {}
     sources = ctx.get("sources_used") if isinstance(ctx.get("sources_used"), dict) else {}
@@ -106,7 +177,7 @@ def compact_ai_full_context(
 
     positions_payload = ctx.get("open_positions")
     if not isinstance(positions_payload, dict):
-        positions_payload = load_json_dict(root / "runtime" / "live_positions.json")
+        positions_payload = load_json_dict(_freshest_runtime_path(root, "live_positions.json"))
 
     router = ctx.get("router_state") if isinstance(ctx.get("router_state"), dict) else {}
     allocator = ctx.get("allocator_state") if isinstance(ctx.get("allocator_state"), dict) else {}
@@ -124,6 +195,8 @@ def compact_ai_full_context(
 
     return {
         "generated_at_utc": ctx.get("generated_at_utc"),
+        "context_path": str(context_path),
+        "context_file_age_sec": context_age_sec,
         "git_revision": git_rev,
         "ai_context_brief": ctx.get("ai_context_brief"),
         "missing_sources": missing_sources[:8],
@@ -138,6 +211,11 @@ def compact_ai_full_context(
         "critical_truth_assessment": truth,
         "source_freshness": freshness,
         "canonical_project_state": canonical,
+        "project_capability_registry": (
+            ctx.get("project_capability_registry")
+            if isinstance(ctx.get("project_capability_registry"), dict)
+            else static_capability_registry
+        ),
         "open_positions": _compact_positions(positions_payload, max_positions=max_positions),
         "router": {
             "status": router.get("status"),
@@ -193,6 +271,7 @@ def append_ai_context_lines(parts: list[str], repo_root: Path) -> None:
     parts.append(
         "UNIFIED AI CONTEXT: "
         f"generated={compact.get('generated_at_utc')} "
+        f"context_age_sec={compact.get('context_file_age_sec')} "
         f"git={((compact.get('git_revision') or {}).get('head') if isinstance(compact.get('git_revision'), dict) else '') or '?'} "
         f"open_positions={positions.get('count')} "
         f"positions_age_sec={pos_age if pos_age is not None else '?'} "
@@ -211,6 +290,19 @@ def append_ai_context_lines(parts: list[str], repo_root: Path) -> None:
         f"blockers={truth.get('blockers') or []} "
         f"live_money_sleeves={truth.get('live_money_sleeves_by_heartbeat') or []}\n"
     )
+
+    capability = compact.get("project_capability_registry")
+    if isinstance(capability, dict) and capability:
+        live_ids = [
+            str(row.get("component_id"))
+            for row in (capability.get("components") or [])
+            if isinstance(row, dict) and str(row.get("stage") or "").startswith("live_")
+        ]
+        parts.append(
+            "PROJECT CAPABILITY REGISTRY: "
+            f"as_of={capability.get('as_of_utc')} components={capability.get('component_count')} "
+            f"live={','.join(live_ids) or '-'} stages={capability.get('stage_counts')}\n"
+        )
 
     brief = str(compact.get("ai_context_brief") or "").strip()
     if brief:

@@ -82,6 +82,19 @@ def _load_ai_context_brief() -> str:
         return f"AI_CONTEXT_BRIEF unavailable: {type(exc).__name__}: {exc}"
 
 
+def _snapshot_truth_gate(snapshot: dict[str, Any]) -> tuple[bool, list[str]]:
+    full = snapshot.get("ai_full_context") if isinstance(snapshot, dict) else None
+    full = full if isinstance(full, dict) else {}
+    truth = full.get("critical_truth_assessment")
+    truth = truth if isinstance(truth, dict) else {}
+    blockers = [str(item) for item in (truth.get("blockers") or [])]
+    if truth.get("control_recommendations_allowed") is not True:
+        if not blockers:
+            blockers.append("critical_live_truth_missing_or_unverified")
+        return False, blockers
+    return True, blockers
+
+
 class DeepSeekOverlay:
     def __init__(self) -> None:
         self.cfg = _load_config()
@@ -406,12 +419,29 @@ class DeepSeekOverlay:
         if self._count_today_requests() >= self.cfg.daily_request_cap:
             return "DeepSeek budget exhausted for today. Увеличь `DEEPSEEK_DAILY_REQUEST_CAP` или дождись следующего дня."
 
+        truth_ok, truth_blockers = _snapshot_truth_gate(snapshot)
+        if not truth_ok:
+            self._append_audit(
+                {
+                    "ts": int(time.time()),
+                    "kind": "truth_gate_blocked",
+                    "question": q[:500],
+                    "blockers": truth_blockers,
+                }
+            )
+            return (
+                "⚠️ LIVE_TRUTH_STALE_OR_CONFLICTING. Я не буду делать выводы о текущем VPS, "
+                "предлагать ручные сделки, включение рукавов, перезапуск или изменение риска. "
+                f"Blockers: {', '.join(truth_blockers)}. Сначала обнови единый live snapshot."
+            )
+
         system_prompt = (
             "Ты — senior-партнёр и аналитик адаптивного алготрейдингового бота на Bybit perpetual futures.\n"
             "Отвечай по-русски, спокойно и по делу. Веди диалог как опытный коллега.\n\n"
             "== ИСТОЧНИК ПРАВДЫ ==\n"
             "Главный источник правды — ЖИВОЙ snapshot, который будет передан ниже.\n"
             "Если snapshot, live_params, research context и старые воспоминания конфликтуют — верь snapshot.\n"
+            "Если critical_truth_assessment запрещает control recommendations, не давай operational/live советов вообще.\n"
             "Не цитируй устаревшие цифры, старые составы стратегий или несуществующие файлы.\n"
             "Если файла нет в текущем коде, не утверждай, что он управляет ботом.\n\n"
             "== ТЕКУЩАЯ АРХИТЕКТУРА ==\n"
@@ -434,6 +464,9 @@ class DeepSeekOverlay:
             "3) ещё не подтверждённые experimental sleeves.\n\n"
             "Setup cards не являются разрешением включать стратегию. Они показывают кандидаты, "
             "а live-рекомендация требует совпадения режима, свежих counters и backtest/research evidence.\n"
+            "Никогда не советуй владельцу вручную открыть live-сделку по setup card, AI score или визуальному мнению.\n"
+            "Не советуй увеличивать капитал Alpaca по selected backtest/PF или одной paper-неделе: нужен exact parity/OOS/canary gate.\n"
+            "Не превращай единичный funding/arbitrage snapshot в обещанную дневную/годовую доходность: нужны исполнимые цены, четыре fill, fees, basis, inventory, rebalance и положительный shadow distribution.\n"
             "В bear_trend не рекомендуй ASB1/long-bounce activation, если в текущем snapshot.research "
             "нет validated pass; при слабых/отсутствующих метриках проси backtest/proposal, а не включение.\n\n"
             "allocator.status=disabled сам по себе НЕ означает запрет входов: это может означать approved-env режим. "
