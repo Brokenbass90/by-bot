@@ -129,3 +129,17 @@ Focused v2:
 После code review можно отдельно спроектировать безопасный public collector schedule с lifecycle receipt и external journal anchor. Он не должен включать shadow-open по текущим ставкам: economics gate ожидаемо оставит их в `observe/refuse`. Сначала нужен сбор реальных funding persistence, walked depth и cost receipts; капитал и live permission не требуются.
 
 Замороженный v2 контракт: `configs/preregistered/bybit_cashcarry_shadow_v2_20260715.json`.
+
+## Реальный public screen после code review — 17:56 UTC
+
+Первый запрос к реальному Bybit API fail-closed выявил несовпадение fixture с production schema: spot `instruments-info` публикует шаг базового количества в `basePrecision`, а linear — в `qtyStep`. Адаптер исправлен с сохранением строгого linear-контракта; focused v1+v2 regression снова `25 passed`.
+
+После исправления выполнено по одному public GET-only `observe/refuse` наблюдению без ключей и ордеров:
+
+| Символ | Conservative funding | Carry за 42 | Required со стаканом | Решение |
+|---|---:|---:|---:|---|
+| XRPUSDT | 0.003573% | 15.01 bps | 55.79 bps | observe / NO_ENTRY |
+| BTCUSDT | 0.002182% | 9.16 bps | 54.03 bps | observe / NO_ENTRY |
+| ETHUSDT | 0.004819% | 20.24 bps | 54.10 bps | observe / NO_ENTRY |
+
+Все три break-even gate провалили `conservative_funding_below_entry_minimum`; shadow positions `0`. Точный неизменяемый итог сохранён в `reports/research/bybit_cashcarry_shadow_v2_public_screen_20260715/receipt.json`. Старый XRP расчёт `31.92 bps` был оптимистичным экраном; новый durable runner использует минимум projected и требуемых completed settlements, поэтому текущая оценка строже и ниже.

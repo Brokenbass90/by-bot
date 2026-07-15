@@ -108,7 +108,9 @@ def _rules(symbol: str, spot_row: Mapping[str, Any], perp_row: Mapping[str, Any]
         spot=InstrumentLegRules(
             market="spot",
             tick_size=str(spot_price.get("tickSize") or ""),
-            qty_step=str(spot_lot.get("qtyStep") or ""),
+            # Bybit spot exposes the executable base-quantity increment as
+            # basePrecision, while linear instruments use qtyStep.
+            qty_step=str(spot_lot.get("qtyStep") or spot_lot.get("basePrecision") or ""),
             min_order_qty=str(spot_lot.get("minOrderQty") or ""),
             min_notional_usd=str(spot_lot.get("minOrderAmt") or ""),
         ),

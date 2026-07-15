@@ -245,7 +245,7 @@ def test_public_adapter_parses_instruments_and_uses_only_allowlisted_get_paths()
                 "fundingInterval": "480" if not is_spot else None,
                 "priceFilter": {"tickSize": "0.01"},
                 "lotSizeFilter": {
-                    "qtyStep": "0.001",
+                    **({"basePrecision": "0.001"} if is_spot else {"qtyStep": "0.001"}),
                     "minOrderQty": "0.001",
                     **({"minOrderAmt": "5"} if is_spot else {"minNotionalValue": "5"}),
                 },
