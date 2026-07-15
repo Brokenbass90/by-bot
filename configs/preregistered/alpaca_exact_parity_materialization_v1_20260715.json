@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "materialization_id": "alpaca_exact_parity_materialization_v1_20260715",
+  "frozen_at_utc": "2026-07-15T17:29:22Z",
+  "purpose": "Materialize only inspectable Alpaca parity inputs and executable contracts. Performance, broker access, live writes, SAFE_HOLD changes, and automatic promotion remain forbidden.",
+  "research_only": true,
+  "performance_forbidden": true,
+  "no_broker_calls": true,
+  "no_live_writes": true,
+  "safe_hold_must_remain": true,
+  "risk_pct": 0,
+  "promotion_authority": false,
+  "sources": {
+    "parent_preregistration": {
+      "path": "configs/preregistered/alpaca_monthly_exact_parity_replay_20260713.json",
+      "sha256": "d1260af1a1eac3f78aaaf7ce876581193e469cd43d115c17c6524c6c73cdb515"
+    },
+    "parent_preflight": {
+      "path": "scripts/preflight_alpaca_monthly_exact_parity.py",
+      "sha256": "02b4d548175fd490b8934cfbf320db643a86128040499d0c9c10346c292a208f"
+    },
+    "parity_contract_implementation": {
+      "path": "backtest/alpaca_exact_parity_contract.py",
+      "sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50"
+    },
+    "materializer": {
+      "path": "scripts/materialize_alpaca_exact_parity_inputs.py",
+      "sha256": "bf7795892e9e2ecbdffb0a42e32e661d131866996b37850829fb5f05a81644a5"
+    }
+  },
+  "required_inputs": {
+    "official_xnys_session_ledger": {
+      "schema_id": "xnys_session_ledger_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "point_in_time_universe": {
+      "schema_id": "alpaca_point_in_time_universe_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "point_in_time_market_data_manifest": {
+      "schema_id": "alpaca_point_in_time_market_data_manifest_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "corporate_actions_and_delistings": {
+      "schema_id": "alpaca_corporate_actions_delistings_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "broker_order_fill_lifecycle": {
+      "schema_id": "alpaca_broker_lifecycle_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "untouched_forward_manifest": {
+      "schema_id": "alpaca_untouched_forward_manifest_v2",
+      "path": "",
+      "sha256": ""
+    }
+  },
+  "diagnostic_observed_session_source": {
+    "path": "runtime/equities_1h_parity_20260710/SPY_M5.csv",
+    "sha256": "f2c68bb965c932f571f761ecdf260232f63237a9d40206c8c8fa19e1eff41001"
+  },
+  "diagnostic_market_data_directory": "runtime/equities_1h_parity_20260710",
+  "contract": {
+    "calendar": "XNYS",
+    "signal_time": "last_completed_xnys_session_close_of_calendar_month",
+    "entry_time": "next_xnys_session_open",
+    "completed_bars_only": true,
+    "same_close_entry": false,
+    "base_cost_bps_per_side": 5.0,
+    "stress_cost_bps_per_side": 10.0,
+    "entry_cost_application": "adverse_at_next_open",
+    "stop_gap_fill": "opening_price_if_open_beyond_stop",
+    "target_gap_fill": "frozen_target_no_favorable_gap_credit",
+    "same_bar_stop_and_target": "stop_first",
+    "daily_mark_to_market": true,
+    "daily_drawdown_includes_initial_capital": true,
+    "shared_exit": {
+      "initial_stop_atr": 2.0,
+      "profit_target_atr": 3.2,
+      "break_even_trigger_r": 0.8,
+      "trail_atr": 1.5,
+      "max_hold_sessions": 22,
+      "intramonth_portfolio_stop_pct": 0.08,
+      "stop_update_timing": "completed_bar_for_next_session"
+    }
+  }
+}

@@ -1,0 +1,1057 @@
+{
+  "blockers": [
+    "broker_calibrated_fee_slippage_unavailable",
+    "end_to_end_four_arm_replay_runner_not_authorized",
+    "missing_or_invalid:broker_order_fill_lifecycle",
+    "missing_or_invalid:corporate_actions_and_delistings",
+    "missing_or_invalid:official_xnys_session_ledger",
+    "missing_or_invalid:point_in_time_market_data_manifest",
+    "missing_or_invalid:point_in_time_universe",
+    "missing_or_invalid:untouched_forward_manifest",
+    "original_2026_07_13_forward_window_not_retroactively_sealable",
+    "shared_exit_broker_lifecycle_conformance_unavailable"
+  ],
+  "component_receipts": [
+    {
+      "calendar": "XNYS",
+      "component": "calendar_month_signal_dates",
+      "rows": [],
+      "rows_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "status": "BLOCKED_OFFICIAL_XNYS_LEDGER_MISSING"
+    },
+    {
+      "component": "next_session_open_execution",
+      "daily_negative_control_rows": [],
+      "rows_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "same_close_allowed": false,
+      "status": "CONTRACT_READY_INPUT_BLOCKED"
+    },
+    {
+      "assumption_policy": "fixed modern universe or adjusted bars alone are not PIT/delisting proof",
+      "component": "point_in_time_universe_and_corporate_actions",
+      "status": "BLOCKED_UNTIL_BOTH_HASH_PINNED_AND_VALID"
+    },
+    {
+      "component": "daily_mark_to_market_and_drawdown",
+      "drawdown": "daily_curve_with_initial_capital_as_first_peak",
+      "implementation_sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+      "mark_formula": "settled_cash_plus_sum(quantity_times_completed_session_close)",
+      "status": "EXECUTABLE_CONTRACT_READY"
+    },
+    {
+      "applied_adversely_on_every_entry_and_exit": true,
+      "base_bps_per_side": 5.0,
+      "component": "fee_slippage_and_gap_model",
+      "four_fills_for_round_trip_two_position_rotations": false,
+      "status": "FROZEN_DEFAULTS_BUT_BROKER_CALIBRATION_BLOCKED",
+      "stress_bps_per_side": 10.0
+    },
+    {
+      "component": "shared_stop_break_even_trailing_contract",
+      "contract": {
+        "break_even_trigger_r": 0.8,
+        "initial_stop_atr": 2.0,
+        "intramonth_portfolio_stop_pct": 0.08,
+        "max_hold_sessions": 22,
+        "profit_target_atr": 3.2,
+        "stop_update_timing": "completed_bar_for_next_session",
+        "trail_atr": 1.5
+      },
+      "implementation_sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+      "status": "SYNTHETIC_CONFORMANCE_READY_BROKER_PARITY_BLOCKED",
+      "unit_conformance": {
+        "all_cases_passed": true,
+        "broker_lifecycle_exact_match": false,
+        "cases": {
+          "break_even_and_trail_next_session": true,
+          "calendar_month_signal_date": true,
+          "daily_drawdown_includes_initial": true,
+          "daily_mark_to_market": true,
+          "entry_adverse_cost": true,
+          "exit_adverse_cost": true,
+          "next_session_open": true,
+          "opening_gap_before_intraday": true,
+          "same_bar_stop_first": true
+        },
+        "promotion_authority": false,
+        "synthetic_only": true
+      }
+    }
+  ],
+  "config_sha256": "4e0b477aa9b7bc545e7369c502a3f1da19145cb2cbd60e3adc545b0e52fdc5b7",
+  "diagnostic_market_data_inventory": {
+    "authoritative": false,
+    "file_count": 59,
+    "files": [
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/AAPL_M5.csv",
+        "sha256": "9907a2e6479cea78878f3995cec9426842912893b13be200293a8e12b017932e",
+        "symbol": "AAPL",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/ABBV_M5.csv",
+        "sha256": "8ebd86f3482056702359a9b8bb9a62efdb993f5b8a5005874b183f61f97e4317",
+        "symbol": "ABBV",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/ABNB_M5.csv",
+        "sha256": "55284670a13624225dea93c8b0e1dcac93d98b4f5e24e1401315eed0379ccec9",
+        "symbol": "ABNB",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/ADBE_M5.csv",
+        "sha256": "63791f866bcf59b8142831a37c60758ff9be3bbe14867c6e24213ae45befebae",
+        "symbol": "ADBE",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/ADSK_M5.csv",
+        "sha256": "113426c0ed57a04fd5cdf60715ce7f5c4608a42e123f6b88eabaa50f584570a3",
+        "symbol": "ADSK",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/AMD_M5.csv",
+        "sha256": "7ea3e5b44a042bce824428a6cd85714e30f6d0e2f62368b1a8cd32cf3bf316a1",
+        "symbol": "AMD",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/AMZN_M5.csv",
+        "sha256": "87cfd3dbd5a05104560b43b8db0a48eb8ab97693da3de192c4ad9d1a7adc5eaa",
+        "symbol": "AMZN",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/AVGO_M5.csv",
+        "sha256": "4235c119ee9e0263cf4f565d37db753b4fd879a5fca6c28216f4cdc1c83c8e47",
+        "symbol": "AVGO",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/BAC_M5.csv",
+        "sha256": "9aba1f1d5584d21765e68f7f345ddd656996048508bef1d2bafee1381c96626f",
+        "symbol": "BAC",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/CAT_M5.csv",
+        "sha256": "6c84456cca7ac45361bc402af8d32f011d59f4b7cf794dd69b0b160635730cec",
+        "symbol": "CAT",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/COIN_M5.csv",
+        "sha256": "b2bfdd2f2cd86353e6f618b4ef284659ca4fa917d326324871c885fc722ef43b",
+        "symbol": "COIN",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/COST_M5.csv",
+        "sha256": "2613a2f23274e189943c786a6d562da80a5558c2797698fd6309c383f119658a",
+        "symbol": "COST",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/CRM_M5.csv",
+        "sha256": "b2be86b0485e739391d471e964e77c6353e8453e0452bc3942c1a09ceac1b3e3",
+        "symbol": "CRM",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/CRWD_M5.csv",
+        "sha256": "0a0eb15950678ccf2764fc28c2cb79512940ea3eb6497aa453ecbc9238b8b59f",
+        "symbol": "CRWD",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/CVX_M5.csv",
+        "sha256": "cc38c2ef4b72968fa065ff050680edd85d4532fbfe262e400ad203f3f9c3818d",
+        "symbol": "CVX",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/DDOG_M5.csv",
+        "sha256": "ff3875732f91a8f19222cf04990ed35da4096a7b707541899462c9b278df17e4",
+        "symbol": "DDOG",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/GE_M5.csv",
+        "sha256": "28574c8c4eff43bf0c71bd23e25443ef339a5e7137f3109ce3bc8904f604f651",
+        "symbol": "GE",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/GOOGL_M5.csv",
+        "sha256": "e72cb476912e59d87c3c6c32d03df1135f2b11253b6a239a4ef382597aacd59d",
+        "symbol": "GOOGL",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/GS_M5.csv",
+        "sha256": "5c3aef6feaa7083254fb861429bc52685cae826b223cd050e2a68f12c996f8c6",
+        "symbol": "GS",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/HD_M5.csv",
+        "sha256": "4db90d7c3f804d924ff4ff82150e58393fefc67daa5253da483a321e7f744d21",
+        "symbol": "HD",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/INTU_M5.csv",
+        "sha256": "52764a46ab4729f59b03b253478fb53b4161d6d94fa00a06846f02af869d2732",
+        "symbol": "INTU",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/ISRG_M5.csv",
+        "sha256": "8211ebab6d49c104e2e4618cf92c772862683952a6eba55f858fabc035dfadb8",
+        "symbol": "ISRG",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/JNJ_M5.csv",
+        "sha256": "a71f5dc52d18c5c9107d8982aaca7bb27066e5a2a421390f8b443499315c70dd",
+        "symbol": "JNJ",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/JPM_M5.csv",
+        "sha256": "035abb59a581bcbbe0849b857efbd77ba50f3808d28ce0df6cddf9efed14af14",
+        "symbol": "JPM",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/KO_M5.csv",
+        "sha256": "c1ecabcb3d40c014ed7a1c6c0fcf35b82b10210971e0d1c967205fc1fb1c0fd7",
+        "symbol": "KO",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/LLY_M5.csv",
+        "sha256": "409b3cf7ee9709d154f33485362f8713d613376958ca83d1efb8779643817380",
+        "symbol": "LLY",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/LMT_M5.csv",
+        "sha256": "080772bd5a0dc0d8aafeac91ef99dd31181d3336bee2b9b4a1671bde8a593eab",
+        "symbol": "LMT",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/MA_M5.csv",
+        "sha256": "6432d628816b4df72315340b0ad083c7b269854e76a6b163d2850eea39b69403",
+        "symbol": "MA",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/MDB_M5.csv",
+        "sha256": "21bb9a6df72026f2119d911431100dfa4dcc9fe8f9d27a3a5d9c3bbcf950b89a",
+        "symbol": "MDB",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/META_M5.csv",
+        "sha256": "169aa6e6f3e39e43336de9b3b3bb70974d34a878c27ce6d10b5d3744a7ebe97c",
+        "symbol": "META",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/MRK_M5.csv",
+        "sha256": "ba08a44c841b768d71bdfd5b6623b8276229b950e038dae02be707720895fcc6",
+        "symbol": "MRK",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/MSFT_M5.csv",
+        "sha256": "00410c5eaa5d82948d3252b7d51e06678d1c74b47e3fd3b657d74b310eeb3b85",
+        "symbol": "MSFT",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/NET_M5.csv",
+        "sha256": "048c6a81c59441b215db108b537b1f3e357fe34ada59adf18266c21798b38ad2",
+        "symbol": "NET",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/NFLX_M5.csv",
+        "sha256": "3352ddf6a61d7e3f65cb6803056b4a9677dc2db5329154526da9843add5474a8",
+        "symbol": "NFLX",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/NKE_M5.csv",
+        "sha256": "1a17a42485a5fa041abf86748ba23b93f47a5bf39d5c951df80a00e61409ac45",
+        "symbol": "NKE",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/NOW_M5.csv",
+        "sha256": "ae051d123d96605ae2978a7297013580e57b68c6a64378664794359e4d530aa7",
+        "symbol": "NOW",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/NVDA_M5.csv",
+        "sha256": "672dcced4a33193f8b9d3c1e99d86e4d1e16ff34ede204e2182c13bc4706487f",
+        "symbol": "NVDA",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/ORCL_M5.csv",
+        "sha256": "b75ebc611a3cb60b17ce26744a79376510bd75e8fe41207e667c27ec4d06e134",
+        "symbol": "ORCL",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/PANW_M5.csv",
+        "sha256": "9ce03da1353aa77ca698b55e96241b702a0b460ce1ebcdbb9d9594549f9a495b",
+        "symbol": "PANW",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/PG_M5.csv",
+        "sha256": "fea67f7fae8cb737b401862d24cf2a2eaf0e55d9f52375a122c425605d7ca269",
+        "symbol": "PG",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/PLTR_M5.csv",
+        "sha256": "2ac3e0a6c147c0b0926cbb562949985443fc7a399f0e89fea6a8734a47c0fe7f",
+        "symbol": "PLTR",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/QCOM_M5.csv",
+        "sha256": "b7b31ae4838cbf2824735536d36893522b7ff6f768afa435f39cbc16351a1863",
+        "symbol": "QCOM",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/QQQ_M5.csv",
+        "sha256": "1c1035206e448ad4411dfa8ee68cf1bac60da30b5f03fd3df59d9a9e18912e27",
+        "symbol": "QQQ",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/REGN_M5.csv",
+        "sha256": "60365bdfe31c1dc09a663600fb5ced7a23ab6a7f54bd54f1e820cad5d902b9c6",
+        "symbol": "REGN",
+        "timestamp_rows": 5080
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/SBUX_M5.csv",
+        "sha256": "6a4a9ed978f564bb053667b7490c4b07b1133417a35f38c7ec7d2130a7210692",
+        "symbol": "SBUX",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/SCHW_M5.csv",
+        "sha256": "6aee7250eb1879dd0071b9b2dfa779aa689e41ad8544272c83f9b58be805e9c5",
+        "symbol": "SCHW",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/SHOP_M5.csv",
+        "sha256": "a3f6c70646426b5152222383214cab7a137f0953a196b9771a75d654bd5567e0",
+        "symbol": "SHOP",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/SNOW_M5.csv",
+        "sha256": "8e8493e3499d00558e71acd938fc0e3073e0aa653d0019f961af87fb87646671",
+        "symbol": "SNOW",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/SPY_M5.csv",
+        "sha256": "f2c68bb965c932f571f761ecdf260232f63237a9d40206c8c8fa19e1eff41001",
+        "symbol": "SPY",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/TSLA_M5.csv",
+        "sha256": "ad2efbc93f1053948d6c2359b812438982b9e8c08d3c83b2ca096dd29ec1c7d4",
+        "symbol": "TSLA",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/TSM_M5.csv",
+        "sha256": "cbb100856b3f5365a38cf8053e432abf3d671301d5d656f657036b7bb6592a5e",
+        "symbol": "TSM",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/TXN_M5.csv",
+        "sha256": "041b981f8443dfc38c388d6dea41fd57a09e662b42b89e477fcf826bfac27e73",
+        "symbol": "TXN",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/UBER_M5.csv",
+        "sha256": "1c7b54f78cd1d961876c4348f7580b75c40e10b9dbb3cdf132f5e12c9c19da3d",
+        "symbol": "UBER",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/UNH_M5.csv",
+        "sha256": "b0e39ae7fc387cd88ade045208c39a16404e00af486ee3f92f21f2d3bb83daef",
+        "symbol": "UNH",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/V_M5.csv",
+        "sha256": "b90ec01ecc2690ab037a0847f37ce57305c9eaa5c71d67169c5265c8ddd93192",
+        "symbol": "V",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/WFC_M5.csv",
+        "sha256": "5faae390aed93bf44d9e812632481abf1977d973b4375511a68c4b117229ea37",
+        "symbol": "WFC",
+        "timestamp_rows": 5080
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/WMT_M5.csv",
+        "sha256": "85c9d95e820a15bb937bfba911c5584492612faf8536faa04d9157bb6fe39fbf",
+        "symbol": "WMT",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1691760600,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/XOM_M5.csv",
+        "sha256": "19c23279929c86aeb1be6c825619d96167f670cb544de0efbe5a02099d4e2250",
+        "symbol": "XOM",
+        "timestamp_rows": 5081
+      },
+      {
+        "first_ts": 1737469800,
+        "last_ts": 1783708200,
+        "path": "runtime/equities_1h_parity_20260710/XYZ_M5.csv",
+        "sha256": "e25e5a526e78db6875deb1ed037a263b82f2ecc8100d62917204b5b7686a9503",
+        "symbol": "XYZ",
+        "timestamp_rows": 2570
+      }
+    ],
+    "status": "DIAGNOSTIC_INVENTORY_ONLY_NOT_PIT_OR_CORPORATE_ACTION_PROOF"
+  },
+  "diagnostic_observed_schedule": {
+    "authoritative": false,
+    "calendar_month_pairs": [
+      {
+        "entry_at_utc": "2023-09-01T13:30:00Z",
+        "entry_session": "2023-09-01",
+        "signal_at_utc": "2023-08-31T19:30:00Z",
+        "signal_month": "2023-08",
+        "signal_session": "2023-08-31"
+      },
+      {
+        "entry_at_utc": "2023-10-02T13:30:00Z",
+        "entry_session": "2023-10-02",
+        "signal_at_utc": "2023-09-29T19:30:00Z",
+        "signal_month": "2023-09",
+        "signal_session": "2023-09-29"
+      },
+      {
+        "entry_at_utc": "2023-11-01T13:30:00Z",
+        "entry_session": "2023-11-01",
+        "signal_at_utc": "2023-10-31T19:30:00Z",
+        "signal_month": "2023-10",
+        "signal_session": "2023-10-31"
+      },
+      {
+        "entry_at_utc": "2023-12-01T14:30:00Z",
+        "entry_session": "2023-12-01",
+        "signal_at_utc": "2023-11-30T20:30:00Z",
+        "signal_month": "2023-11",
+        "signal_session": "2023-11-30"
+      },
+      {
+        "entry_at_utc": "2024-01-02T14:30:00Z",
+        "entry_session": "2024-01-02",
+        "signal_at_utc": "2023-12-29T20:30:00Z",
+        "signal_month": "2023-12",
+        "signal_session": "2023-12-29"
+      },
+      {
+        "entry_at_utc": "2024-02-01T14:30:00Z",
+        "entry_session": "2024-02-01",
+        "signal_at_utc": "2024-01-31T20:30:00Z",
+        "signal_month": "2024-01",
+        "signal_session": "2024-01-31"
+      },
+      {
+        "entry_at_utc": "2024-03-01T14:30:00Z",
+        "entry_session": "2024-03-01",
+        "signal_at_utc": "2024-02-29T20:30:00Z",
+        "signal_month": "2024-02",
+        "signal_session": "2024-02-29"
+      },
+      {
+        "entry_at_utc": "2024-04-01T13:30:00Z",
+        "entry_session": "2024-04-01",
+        "signal_at_utc": "2024-03-28T19:30:00Z",
+        "signal_month": "2024-03",
+        "signal_session": "2024-03-28"
+      },
+      {
+        "entry_at_utc": "2024-05-01T13:30:00Z",
+        "entry_session": "2024-05-01",
+        "signal_at_utc": "2024-04-30T19:30:00Z",
+        "signal_month": "2024-04",
+        "signal_session": "2024-04-30"
+      },
+      {
+        "entry_at_utc": "2024-06-03T13:30:00Z",
+        "entry_session": "2024-06-03",
+        "signal_at_utc": "2024-05-31T19:30:00Z",
+        "signal_month": "2024-05",
+        "signal_session": "2024-05-31"
+      },
+      {
+        "entry_at_utc": "2024-07-01T13:30:00Z",
+        "entry_session": "2024-07-01",
+        "signal_at_utc": "2024-06-28T19:30:00Z",
+        "signal_month": "2024-06",
+        "signal_session": "2024-06-28"
+      },
+      {
+        "entry_at_utc": "2024-08-01T13:30:00Z",
+        "entry_session": "2024-08-01",
+        "signal_at_utc": "2024-07-31T19:30:00Z",
+        "signal_month": "2024-07",
+        "signal_session": "2024-07-31"
+      },
+      {
+        "entry_at_utc": "2024-09-03T13:30:00Z",
+        "entry_session": "2024-09-03",
+        "signal_at_utc": "2024-08-30T19:30:00Z",
+        "signal_month": "2024-08",
+        "signal_session": "2024-08-30"
+      },
+      {
+        "entry_at_utc": "2024-10-01T13:30:00Z",
+        "entry_session": "2024-10-01",
+        "signal_at_utc": "2024-09-30T19:30:00Z",
+        "signal_month": "2024-09",
+        "signal_session": "2024-09-30"
+      },
+      {
+        "entry_at_utc": "2024-11-01T13:30:00Z",
+        "entry_session": "2024-11-01",
+        "signal_at_utc": "2024-10-31T19:30:00Z",
+        "signal_month": "2024-10",
+        "signal_session": "2024-10-31"
+      },
+      {
+        "entry_at_utc": "2024-12-02T14:30:00Z",
+        "entry_session": "2024-12-02",
+        "signal_at_utc": "2024-11-29T16:30:00Z",
+        "signal_month": "2024-11",
+        "signal_session": "2024-11-29"
+      },
+      {
+        "entry_at_utc": "2025-01-02T14:30:00Z",
+        "entry_session": "2025-01-02",
+        "signal_at_utc": "2024-12-31T20:30:00Z",
+        "signal_month": "2024-12",
+        "signal_session": "2024-12-31"
+      },
+      {
+        "entry_at_utc": "2025-02-03T14:30:00Z",
+        "entry_session": "2025-02-03",
+        "signal_at_utc": "2025-01-31T20:30:00Z",
+        "signal_month": "2025-01",
+        "signal_session": "2025-01-31"
+      },
+      {
+        "entry_at_utc": "2025-03-03T14:30:00Z",
+        "entry_session": "2025-03-03",
+        "signal_at_utc": "2025-02-28T20:30:00Z",
+        "signal_month": "2025-02",
+        "signal_session": "2025-02-28"
+      },
+      {
+        "entry_at_utc": "2025-04-01T13:30:00Z",
+        "entry_session": "2025-04-01",
+        "signal_at_utc": "2025-03-31T19:30:00Z",
+        "signal_month": "2025-03",
+        "signal_session": "2025-03-31"
+      },
+      {
+        "entry_at_utc": "2025-05-01T13:30:00Z",
+        "entry_session": "2025-05-01",
+        "signal_at_utc": "2025-04-30T19:30:00Z",
+        "signal_month": "2025-04",
+        "signal_session": "2025-04-30"
+      },
+      {
+        "entry_at_utc": "2025-06-02T13:30:00Z",
+        "entry_session": "2025-06-02",
+        "signal_at_utc": "2025-05-30T19:30:00Z",
+        "signal_month": "2025-05",
+        "signal_session": "2025-05-30"
+      },
+      {
+        "entry_at_utc": "2025-07-01T13:30:00Z",
+        "entry_session": "2025-07-01",
+        "signal_at_utc": "2025-06-30T19:30:00Z",
+        "signal_month": "2025-06",
+        "signal_session": "2025-06-30"
+      },
+      {
+        "entry_at_utc": "2025-08-01T13:30:00Z",
+        "entry_session": "2025-08-01",
+        "signal_at_utc": "2025-07-31T19:30:00Z",
+        "signal_month": "2025-07",
+        "signal_session": "2025-07-31"
+      },
+      {
+        "entry_at_utc": "2025-09-02T13:30:00Z",
+        "entry_session": "2025-09-02",
+        "signal_at_utc": "2025-08-29T19:30:00Z",
+        "signal_month": "2025-08",
+        "signal_session": "2025-08-29"
+      },
+      {
+        "entry_at_utc": "2025-10-01T13:30:00Z",
+        "entry_session": "2025-10-01",
+        "signal_at_utc": "2025-09-30T19:30:00Z",
+        "signal_month": "2025-09",
+        "signal_session": "2025-09-30"
+      },
+      {
+        "entry_at_utc": "2025-11-03T14:30:00Z",
+        "entry_session": "2025-11-03",
+        "signal_at_utc": "2025-10-31T19:30:00Z",
+        "signal_month": "2025-10",
+        "signal_session": "2025-10-31"
+      },
+      {
+        "entry_at_utc": "2025-12-01T14:30:00Z",
+        "entry_session": "2025-12-01",
+        "signal_at_utc": "2025-11-28T16:30:00Z",
+        "signal_month": "2025-11",
+        "signal_session": "2025-11-28"
+      },
+      {
+        "entry_at_utc": "2026-01-02T14:30:00Z",
+        "entry_session": "2026-01-02",
+        "signal_at_utc": "2025-12-31T20:30:00Z",
+        "signal_month": "2025-12",
+        "signal_session": "2025-12-31"
+      },
+      {
+        "entry_at_utc": "2026-02-02T14:30:00Z",
+        "entry_session": "2026-02-02",
+        "signal_at_utc": "2026-01-30T20:30:00Z",
+        "signal_month": "2026-01",
+        "signal_session": "2026-01-30"
+      },
+      {
+        "entry_at_utc": "2026-03-02T14:30:00Z",
+        "entry_session": "2026-03-02",
+        "signal_at_utc": "2026-02-27T20:30:00Z",
+        "signal_month": "2026-02",
+        "signal_session": "2026-02-27"
+      },
+      {
+        "entry_at_utc": "2026-04-01T13:30:00Z",
+        "entry_session": "2026-04-01",
+        "signal_at_utc": "2026-03-31T19:30:00Z",
+        "signal_month": "2026-03",
+        "signal_session": "2026-03-31"
+      },
+      {
+        "entry_at_utc": "2026-05-01T13:30:00Z",
+        "entry_session": "2026-05-01",
+        "signal_at_utc": "2026-04-30T19:30:00Z",
+        "signal_month": "2026-04",
+        "signal_session": "2026-04-30"
+      },
+      {
+        "entry_at_utc": "2026-06-01T13:30:00Z",
+        "entry_session": "2026-06-01",
+        "signal_at_utc": "2026-05-29T19:30:00Z",
+        "signal_month": "2026-05",
+        "signal_session": "2026-05-29"
+      },
+      {
+        "entry_at_utc": "2026-07-01T13:30:00Z",
+        "entry_session": "2026-07-01",
+        "signal_at_utc": "2026-06-30T19:30:00Z",
+        "signal_month": "2026-06",
+        "signal_session": "2026-06-30"
+      }
+    ],
+    "observed_first_session": "2023-08-11",
+    "observed_last_session": "2026-07-10",
+    "observed_session_count": 730,
+    "source_path": "runtime/equities_1h_parity_20260710/SPY_M5.csv",
+    "source_sha256": "f2c68bb965c932f571f761ecdf260232f63237a9d40206c8c8fa19e1eff41001",
+    "status": "DIAGNOSTIC_ONLY_NOT_XNYS_AUTHORITY",
+    "warning": "dates/times are inferred from observed SPY bars and cannot prove the official XNYS holiday or early-close calendar"
+  },
+  "generated_at_utc": "2026-07-15T17:29:50.326989Z",
+  "live_or_broker_calls": false,
+  "live_or_environment_writes": false,
+  "materialization_id": "alpaca_exact_parity_materialization_v1_20260715",
+  "outcome_access_allowed": false,
+  "parent_preflight_current_state": {
+    "artifacts": [
+      {
+        "content_type": "alpaca_point_in_time_universe_v1",
+        "name": "point_in_time_universe",
+        "ok": false,
+        "reasons": [
+          "artifact_unpinned"
+        ]
+      },
+      {
+        "content_type": "alpaca_point_in_time_market_data_manifest_v1",
+        "name": "market_data_manifest",
+        "ok": false,
+        "reasons": [
+          "artifact_unpinned"
+        ]
+      },
+      {
+        "content_type": "alpaca_broker_lifecycle_v1",
+        "name": "broker_fill_order_lifecycle_20260706_20260709",
+        "ok": false,
+        "reasons": [
+          "artifact_unpinned"
+        ]
+      },
+      {
+        "content_type": "alpaca_cost_gap_calibration_v1",
+        "name": "cost_gap_calibration",
+        "ok": false,
+        "reasons": [
+          "artifact_unpinned"
+        ]
+      },
+      {
+        "content_type": "alpaca_causal_regime_labels_v1",
+        "name": "regime_labels",
+        "ok": false,
+        "reasons": [
+          "artifact_unpinned"
+        ]
+      },
+      {
+        "content_type": "alpaca_survivorship_receipt_v1",
+        "name": "corporate_actions_survivorship",
+        "ok": false,
+        "reasons": [
+          "artifact_unpinned"
+        ]
+      },
+      {
+        "content_type": "alpaca_untouched_forward_manifest_v1",
+        "name": "untouched_forward_manifest",
+        "ok": false,
+        "reasons": [
+          "artifact_unpinned"
+        ]
+      },
+      {
+        "content_type": "python_source_v1",
+        "name": "shared_exit_model_implementation",
+        "ok": false,
+        "reasons": [
+          "artifact_unpinned"
+        ]
+      },
+      {
+        "content_type": "alpaca_shared_exit_conformance_v1",
+        "name": "shared_exit_model_conformance",
+        "ok": false,
+        "reasons": [
+          "artifact_unpinned"
+        ]
+      }
+    ],
+    "blockers": [
+      "frozen_source_hashes_not_ready",
+      "contract_fingerprint_mismatch",
+      "required_hash_pinned_inputs_not_ready",
+      "one_shared_executable_exit_model_not_proven",
+      "jul6_9_broker_fill_order_lifecycle_not_reconstructed",
+      "untouched_forward_not_sealed"
+    ],
+    "contract_fingerprint_ok": false,
+    "experiment": "alpaca_monthly_exact_parity_replay_20260713",
+    "frozen_arm_ids": [
+      "true_monthly_v38_top4",
+      "accidental_daily_rotation_negative_control",
+      "adaptive_default_gated",
+      "adaptive_ungated_control"
+    ],
+    "live_or_broker_calls": false,
+    "outcome_access_allowed": false,
+    "performance_computed": false,
+    "performance_fields_present": false,
+    "permission": "BLOCKED_FAIL_CLOSED",
+    "promotion_authorized": false,
+    "safe_hold_changed": false,
+    "schema_version": 1,
+    "source_status": [
+      {
+        "name": "preflight_sha256",
+        "ok": true,
+        "reasons": [],
+        "sha256": "02b4d548175fd490b8934cfbf320db643a86128040499d0c9c10346c292a208f"
+      },
+      {
+        "name": "monthly_sim_sha256",
+        "ok": true,
+        "reasons": [],
+        "sha256": "cefe0c6f8757deb8e3a2dd9f2d7e3a99ebd4d7529408ad742a2bfa69ad440dc5"
+      },
+      {
+        "name": "monthly_refresh_sha256",
+        "ok": true,
+        "reasons": [],
+        "sha256": "6dff0ab3b075bf5723b58c1f62bd0ccfd46895f0a1fa51c7b6230e9f091a6e84"
+      },
+      {
+        "name": "adaptive_selector_sha256",
+        "ok": true,
+        "reasons": [],
+        "sha256": "9c936a6f387c693e8f388d82c2eefbac939314c55d8633666efbcbe79baa8b7b"
+      },
+      {
+        "name": "adaptive_reference_replay_sha256",
+        "ok": false,
+        "reasons": [
+          "source_hash_mismatch"
+        ],
+        "sha256": "3ececac872b214d132e3727c83b7ab45bc6514c8d558cb4141de69a451c8a644"
+      },
+      {
+        "name": "live_bridge_reference_sha256",
+        "ok": false,
+        "reasons": [
+          "source_hash_mismatch"
+        ],
+        "sha256": "ef03eb208133d509789eb83031c4f656cb1df6a481d6699b5ff17d7292c33829"
+      }
+    ]
+  },
+  "performance_computed": false,
+  "performance_fields_present": false,
+  "permission": "BLOCKED_FAIL_CLOSED",
+  "promotion_authorized": false,
+  "required_inputs": [
+    {
+      "name": "official_xnys_session_ledger",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "xnys_session_ledger_v1",
+      "status": "MISSING_UNPINNED"
+    },
+    {
+      "name": "point_in_time_universe",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "alpaca_point_in_time_universe_v1",
+      "status": "MISSING_UNPINNED"
+    },
+    {
+      "name": "point_in_time_market_data_manifest",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "alpaca_point_in_time_market_data_manifest_v1",
+      "status": "MISSING_UNPINNED"
+    },
+    {
+      "name": "corporate_actions_and_delistings",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "alpaca_corporate_actions_delistings_v1",
+      "status": "MISSING_UNPINNED"
+    },
+    {
+      "name": "broker_order_fill_lifecycle",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "alpaca_broker_lifecycle_v1",
+      "status": "MISSING_UNPINNED"
+    },
+    {
+      "name": "untouched_forward_manifest",
+      "ok": false,
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "alpaca_untouched_forward_manifest_v2",
+      "status": "MISSING_UNPINNED"
+    }
+  ],
+  "safe_hold_changed": false,
+  "schema_version": 1,
+  "sources": [
+    {
+      "actual_sha256": "d1260af1a1eac3f78aaaf7ce876581193e469cd43d115c17c6524c6c73cdb515",
+      "expected_sha256": "d1260af1a1eac3f78aaaf7ce876581193e469cd43d115c17c6524c6c73cdb515",
+      "name": "parent_preregistration",
+      "ok": true,
+      "path": "configs/preregistered/alpaca_monthly_exact_parity_replay_20260713.json"
+    },
+    {
+      "actual_sha256": "02b4d548175fd490b8934cfbf320db643a86128040499d0c9c10346c292a208f",
+      "expected_sha256": "02b4d548175fd490b8934cfbf320db643a86128040499d0c9c10346c292a208f",
+      "name": "parent_preflight",
+      "ok": true,
+      "path": "scripts/preflight_alpaca_monthly_exact_parity.py"
+    },
+    {
+      "actual_sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+      "expected_sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+      "name": "parity_contract_implementation",
+      "ok": true,
+      "path": "backtest/alpaca_exact_parity_contract.py"
+    },
+    {
+      "actual_sha256": "bf7795892e9e2ecbdffb0a42e32e661d131866996b37850829fb5f05a81644a5",
+      "expected_sha256": "bf7795892e9e2ecbdffb0a42e32e661d131866996b37850829fb5f05a81644a5",
+      "name": "materializer",
+      "ok": true,
+      "path": "scripts/materialize_alpaca_exact_parity_inputs.py"
+    }
+  ]
+}
