@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "completed_at_utc": "2026-07-15T18:03:45Z",
+  "release_id": "ai_canonical_cashcarry_bc46aab_20260715T180213Z",
+  "source_branch": "codex/dynamic-symbol-filters",
+  "source_git_head": "bc46aaba460a038e2b8e7a9f07b798c9f8d43619",
+  "origin_head_matched": true,
+  "source_research_commit": "d9ec438",
+  "vps": {
+    "host": "64.226.73.119",
+    "repo_root": "/root/by-bot",
+    "checkout_head_before_and_after": "f7ed0116a5f5b8fed59dbf8a339a85989bcf2f3b",
+    "checkout_intentionally_not_pulled_or_cleaned": true,
+    "dirty_path_count_after": 328,
+    "backup_path": "/root/by-bot-backups/ai_canonical_cashcarry_bc46aab_20260715T180213Z",
+    "env_sha256_before_and_after": "4b2b2db8d174c38f5be5c58ff39a632ceabb9a084abdff54eeefe7abaa575560"
+  },
+  "deployed_files": [
+    {
+      "path": "configs/project_capability_registry_v1.json",
+      "mode": "0644",
+      "size_bytes": 23923,
+      "sha256": "26b139412fedac5db9d761bf6c05fcf0210695532e93778dfe8208c6e8bed1a8",
+      "backup_sha256": "5aa452d4ec6f106661ce9183a49c231c9f4c85a4c1d95ebb9a86881992012fef"
+    },
+    {
+      "path": "configs/ai_operator_canonical_state.json",
+      "mode": "0644",
+      "size_bytes": 11920,
+      "sha256": "b206ac156877eeb8680dc24ed6158fa34a197675dfd764536fdc53a6464a7fc5",
+      "backup_sha256": "170d18f4a43aeb7bd807bbfdbbf6ba8c1a09f29e9f4972444dbd89254ce6118c"
+    }
+  ],
+  "ai_context_postcondition": {
+    "generated_at_utc": "2026-07-15T18:03:22.172444+00:00",
+    "sha256": "6af9dddf994eb2790d174305ce012873c11bef80e54cf67ef77d6e53436e3666",
+    "canonical_as_of_utc": "2026-07-15T17:58:00Z",
+    "registry_as_of_utc": "2026-07-15T17:58:00Z",
+    "component_count": 26,
+    "control_recommendations_allowed": true,
+    "blockers": [],
+    "live_money_sleeves": [
+      "att1"
+    ],
+    "cashcarry_truth": "XRP_BTC_ETH_OBSERVED_ALL_BREAK_EVEN_FAIL_NO_ENTRY_NO_POSITION_NO_KEYS_ORDERS"
+  },
+  "live_postcondition": {
+    "bybot_service": "active",
+    "bybot_pid_before_and_after": 2931263,
+    "web_service": "active",
+    "web_pid_before_and_after": 2931393,
+    "heartbeat_age_sec_observed": 16.8,
+    "trade_on": true,
+    "dry_run": false,
+    "regime": "bull_chop",
+    "heartbeat_open_trades": 0,
+    "direct_bybit_ret_code": 0,
+    "direct_bybit_open_positions": 0
+  },
+  "core_restart": false,
+  "web_restart": false,
+  "live_risk_changed": false,
+  "broker_orders_created": false,
+  "research_runner_deployed": false,
+  "explicitly_excluded": [
+    "scripts/run_bybit_cashcarry_shadow_v2.py and all other research code",
+    "all strategy, risk, allocator, regime and router configs",
+    ".env and all secret files",
+    "all Alpaca execution settings"
+  ],
+  "rollback": "Atomically restore both config files from backup_path and rebuild runtime/ai_context/full_context.json; do not restart services."
+}

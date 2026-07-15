@@ -38,7 +38,7 @@ AI/web safety was targeted-deployed from Git source `aaf57f12223002dd4979c0cf7aa
 
 At `17:44–17:51 UTC`, the PM canonical registry/state and one AI-context defect fix were targeted-deployed without restarting either service. The defect was exact: AI freshness allowed only `900s` for an allocator that is rebuilt hourly and governed elsewhere by a `10800s` fail-closed contract, so AI incorrectly blocked itself for most of every hour. Commit `b067ff6` aligns the threshold and adds a boundary test. Post-build context sees `26` components, `ATT1` as the sole money sleeve, `control_recommendations_allowed=true`, `blockers=[]`; direct Bybit positions remain `0`, PIDs and `.env` SHA are unchanged. Receipt: `reports/releases/AI_CANONICAL_AND_FRESHNESS_DEPLOY_RECEIPT_2026_07_15.json`.
 
-The real public cash-carry adapter/screen is committed as `d9ec438`; exact result: `3 observed / 0 gate passes / 0 shadow positions`. Evidence: `reports/research/bybit_cashcarry_shadow_v2_public_screen_20260715/receipt.json`.
+The real public cash-carry adapter/screen is committed as `d9ec438`; exact result: `3 observed / 0 gate passes / 0 shadow positions`. Evidence: `reports/research/bybit_cashcarry_shadow_v2_public_screen_20260715/receipt.json`. Its NO_ENTRY conclusion was added to the onboard AI canonical state without deploying the research runner or restarting services; receipt: `reports/releases/AI_CASHCARRY_CANONICAL_REFRESH_RECEIPT_2026_07_15.json`.
 
 VPS checkout remains stale/dirty `f7ed011`; blind pull/reset/cleanup remains prohibited.
 
