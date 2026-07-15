@@ -11,6 +11,32 @@ from bot.strategy_catalog import build_strategy_catalog, strategy_catalog_prompt
 AI_FULL_CONTEXT_MAX_AGE_SEC = 900
 
 
+def assess_runtime_authority(authority: Any) -> tuple[list[str], list[str]]:
+    """Validate the live process' exhaustive authority map and return money sleeves."""
+    blockers: list[str] = []
+    payload = authority if isinstance(authority, dict) else {}
+    components = payload.get("components") if isinstance(payload.get("components"), dict) else {}
+    if payload.get("complete") is not True or payload.get("unclassified_sleeves"):
+        blockers.append("runtime_authority_missing_or_incomplete")
+    derived_money: list[str] = []
+    for name, row in components.items():
+        if not isinstance(row, dict):
+            blockers.append(f"runtime_authority_invalid:{name}")
+            continue
+        classification = str(row.get("execution_authority") or "")
+        if bool(row.get("enabled")) and classification == "money":
+            derived_money.append(str(name))
+        elif bool(row.get("enabled")) and classification not in {"none", "none_or_shadow"}:
+            blockers.append(f"runtime_authority_unclassified_enabled:{name}")
+    actual_money = sorted(derived_money)
+    emitted_money = sorted(str(name) for name in (payload.get("live_money_sleeves") or []))
+    if emitted_money != actual_money:
+        blockers.append(
+            f"runtime_authority_self_conflict:emitted={emitted_money}:derived={actual_money}"
+        )
+    return actual_money, blockers
+
+
 def load_json_dict(path: Path) -> dict[str, Any]:
     try:
         if not path.exists():

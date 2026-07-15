@@ -9,6 +9,8 @@ from typing import Any
 
 import requests
 
+from bot.ai_context import assess_runtime_authority
+
 
 def _env_bool(name: str, default: bool = False) -> bool:
     raw = str(os.getenv(name, "1" if default else "0")).strip().lower()
@@ -91,6 +93,28 @@ def _snapshot_truth_gate(snapshot: dict[str, Any]) -> tuple[bool, list[str]]:
     if truth.get("control_recommendations_allowed") is not True:
         if not blockers:
             blockers.append("critical_live_truth_missing_or_unverified")
+        return False, blockers
+    current_authority = snapshot.get("runtime_authority")
+    current_money, authority_blockers = assess_runtime_authority(current_authority)
+    blockers.extend(authority_blockers)
+    cached_money = truth.get("live_money_sleeves_by_heartbeat")
+    if not isinstance(cached_money, list):
+        blockers.append("ai_full_context_money_authority_missing")
+    elif sorted(str(name) for name in cached_money) != current_money:
+        blockers.append(
+            "runtime_ai_context_authority_mismatch:"
+            f"runtime={current_money}:context={sorted(str(name) for name in cached_money)}"
+        )
+    cached_heartbeat = full.get("heartbeat")
+    cached_heartbeat = cached_heartbeat if isinstance(cached_heartbeat, dict) else {}
+    cached_runtime_cfg = cached_heartbeat.get("strategy_runtime_config")
+    cached_runtime_cfg = cached_runtime_cfg if isinstance(cached_runtime_cfg, dict) else {}
+    cached_authority = cached_runtime_cfg.get("authority")
+    if not isinstance(cached_authority, dict):
+        blockers.append("ai_full_context_runtime_authority_missing")
+    elif cached_authority != current_authority:
+        blockers.append("runtime_ai_context_authority_contract_mismatch")
+    if blockers:
         return False, blockers
     return True, blockers
 

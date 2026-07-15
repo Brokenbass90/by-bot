@@ -28,7 +28,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
-from bot.ai_context import append_ai_context_lines, compact_ai_full_context
+from bot.ai_context import assess_runtime_authority, append_ai_context_lines, compact_ai_full_context
 
 from ..deps import require_admin, require_auth
 
@@ -128,6 +128,29 @@ def _web_live_truth_gate() -> Tuple[bool, List[str]]:
             "ai_full_context_truth_blocked:"
             + ("|".join(reasons) if reasons else "missing_explicit_allow")
         )
+    heartbeat = payloads.get("heartbeat") or {}
+    runtime_cfg = heartbeat.get("strategy_runtime_config")
+    runtime_cfg = runtime_cfg if isinstance(runtime_cfg, dict) else {}
+    current_authority = runtime_cfg.get("authority")
+    current_money, authority_blockers = assess_runtime_authority(current_authority)
+    blockers.extend(authority_blockers)
+    embedded_money = embedded_truth.get("live_money_sleeves_by_heartbeat")
+    if not isinstance(embedded_money, list):
+        blockers.append("ai_full_context_money_authority_missing")
+    elif sorted(str(name) for name in embedded_money) != current_money:
+        blockers.append(
+            "heartbeat_ai_context_authority_mismatch:"
+            f"heartbeat={current_money}:context={sorted(str(name) for name in embedded_money)}"
+        )
+    cached_heartbeat = full_context.get("heartbeat")
+    cached_heartbeat = cached_heartbeat if isinstance(cached_heartbeat, dict) else {}
+    cached_runtime_cfg = cached_heartbeat.get("strategy_runtime_config")
+    cached_runtime_cfg = cached_runtime_cfg if isinstance(cached_runtime_cfg, dict) else {}
+    cached_authority = cached_runtime_cfg.get("authority")
+    if not isinstance(cached_authority, dict):
+        blockers.append("ai_full_context_runtime_authority_missing")
+    elif cached_authority != current_authority:
+        blockers.append("heartbeat_ai_context_authority_contract_mismatch")
     if source_root.name == "live_mirror":
         manifest_path = source_root / "sync_bundle_manifest.json"
         manifest, manifest_age = _fresh_json(

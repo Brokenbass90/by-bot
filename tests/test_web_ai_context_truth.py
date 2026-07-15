@@ -110,17 +110,28 @@ def test_mirror_truth_gate_requires_complete_bundle_manifest(monkeypatch, tmp_pa
     root = tmp_path
     runtime = root / "runtime"
     mirror = runtime / "live_mirror"
+    authority = {
+        "complete": True,
+        "unclassified_sleeves": [],
+        "live_money_sleeves": [],
+        "components": {},
+    }
     required = {
-        "bot_heartbeat.json": {"trade_on": True},
+        "bot_heartbeat.json": {
+            "trade_on": True,
+            "strategy_runtime_config": {"authority": authority},
+        },
         "live_positions.json": {"count": 0, "positions": []},
         "control_plane/portfolio_allocator_state.json": {"sleeves": {}},
         "regime/orchestrator_state.json": {"regime": "bear_chop"},
         "operator/operator_snapshot.json": {"generated_at_utc": "now"},
         "ai_context/full_context.json": {
             "generated_at_utc": "now",
+            "heartbeat": {"strategy_runtime_config": {"authority": authority}},
             "critical_truth_assessment": {
                 "control_recommendations_allowed": True,
                 "blockers": [],
+                "live_money_sleeves_by_heartbeat": [],
             },
         },
     }
@@ -198,3 +209,87 @@ def test_truth_gate_never_mixes_direct_and_mirror_files(monkeypatch, tmp_path):
 
     assert ok is False
     assert any("positions_missing_or_stale" in blocker for blocker in blockers)
+
+
+def test_truth_gate_binds_cached_context_to_current_heartbeat_authority(monkeypatch, tmp_path):
+    runtime = tmp_path / "runtime"
+    authority = {
+        "complete": True,
+        "unclassified_sleeves": [],
+        "live_money_sleeves": ["range"],
+        "components": {
+            "range": {"enabled": True, "execution_authority": "money"},
+        },
+    }
+    required = {
+        "bot_heartbeat.json": {
+            "trade_on": True,
+            "strategy_runtime_config": {"authority": authority},
+        },
+        "live_positions.json": {"count": 0, "positions": []},
+        "control_plane/portfolio_allocator_state.json": {"sleeves": {}},
+        "regime/orchestrator_state.json": {"regime": "bull_chop"},
+        "operator/operator_snapshot.json": {"generated_at_utc": "now"},
+        "ai_context/full_context.json": {
+            "critical_truth_assessment": {
+                "control_recommendations_allowed": True,
+                "blockers": [],
+                "live_money_sleeves_by_heartbeat": ["att1"],
+            }
+        },
+    }
+    for rel, payload in required.items():
+        _write_json(runtime / rel, payload)
+
+    monkeypatch.setattr(ai_routes, "_ROOT", tmp_path)
+    monkeypatch.setattr(ai_routes, "_RUNTIME_ROOT", runtime)
+
+    ok, blockers = ai_routes._web_live_truth_gate()
+
+    assert ok is False
+    assert any("heartbeat_ai_context_authority_mismatch" in blocker for blocker in blockers)
+
+
+def test_truth_gate_rejects_same_sleeve_risk_contract_race(monkeypatch, tmp_path):
+    runtime = tmp_path / "runtime"
+    current = {
+        "complete": True,
+        "unclassified_sleeves": [],
+        "live_money_sleeves": ["att1"],
+        "components": {
+            "att1": {"enabled": True, "risk_mult": 0.7, "execution_authority": "money"}
+        },
+    }
+    cached = {
+        **current,
+        "components": {
+            "att1": {"enabled": True, "risk_mult": 0.1, "execution_authority": "money"}
+        },
+    }
+    required = {
+        "bot_heartbeat.json": {
+            "trade_on": True,
+            "strategy_runtime_config": {"authority": current},
+        },
+        "live_positions.json": {"count": 0, "positions": []},
+        "control_plane/portfolio_allocator_state.json": {"sleeves": {}},
+        "regime/orchestrator_state.json": {"regime": "bull_chop"},
+        "operator/operator_snapshot.json": {"generated_at_utc": "now"},
+        "ai_context/full_context.json": {
+            "heartbeat": {"strategy_runtime_config": {"authority": cached}},
+            "critical_truth_assessment": {
+                "control_recommendations_allowed": True,
+                "blockers": [],
+                "live_money_sleeves_by_heartbeat": ["att1"],
+            },
+        },
+    }
+    for rel, payload in required.items():
+        _write_json(runtime / rel, payload)
+    monkeypatch.setattr(ai_routes, "_ROOT", tmp_path)
+    monkeypatch.setattr(ai_routes, "_RUNTIME_ROOT", runtime)
+
+    ok, blockers = ai_routes._web_live_truth_gate()
+
+    assert ok is False
+    assert "heartbeat_ai_context_authority_contract_mismatch" in blockers

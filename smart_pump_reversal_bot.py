@@ -3067,6 +3067,7 @@ def _deepseek_snapshot() -> dict[str, Any]:
         "filters": _symbol_filters_summary(),
         "research": build_research_context(),
         "operator_context": build_operator_snapshot(),
+        "runtime_authority": _strategy_runtime_authority_snapshot(),
         "ai_full_context": _compact_ai_full_context_for_deepseek(),
         "ai_extras": _compact_ai_extras_for_deepseek(),
         "ai_ohlc_and_logs": _compact_ai_ohlc_logs_for_deepseek(),
