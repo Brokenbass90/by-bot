@@ -1,0 +1,72 @@
+{
+  "files": [
+    {
+      "mode": "0644",
+      "path": "bot/ai_context.py",
+      "sha256": "6eabc039aa222e53fa84ee75400f95a0159a4aa9c074d1987b9e954ae382675f",
+      "size_bytes": 17616
+    },
+    {
+      "mode": "0644",
+      "path": "bot/deepseek_action_executor.py",
+      "sha256": "746a88c4abbf678a087bbc404970066a0d1a429ac2c779215dec507ce0a83c5a",
+      "size_bytes": 12658
+    },
+    {
+      "mode": "0600",
+      "path": "bot/deepseek_autoresearch_agent.py",
+      "sha256": "b9d6533ea5bac6a910dd5263c8c56731071653d121be476814e893b303913230",
+      "size_bytes": 50704
+    },
+    {
+      "mode": "0600",
+      "path": "bot/deepseek_overlay.py",
+      "sha256": "9875fe70cc147045eaddda7bbf5f10201cfe9bb5e5ffe70ec89195a7c082a574",
+      "size_bytes": 32436
+    },
+    {
+      "mode": "0644",
+      "path": "configs/ai_operator_canonical_state.json",
+      "sha256": "99cd823f02872bbe2c4d2832843749e7d134d708b17d92f5a55a1a500533d65e",
+      "size_bytes": 9502
+    },
+    {
+      "mode": "0644",
+      "path": "configs/project_capability_registry_v1.json",
+      "sha256": "e3bbe7ae555f6cd1b82b6b6127231d5bf678ba8d416da609872519a59c0bd606",
+      "size_bytes": 22907
+    },
+    {
+      "mode": "0644",
+      "path": "scripts/build_ai_full_context.py",
+      "sha256": "5b6cf69c8b201e1dff82310ec407448f4994cc077aba175e54c0ebaec2d1c248",
+      "size_bytes": 40294
+    },
+    {
+      "mode": "0644",
+      "path": "smart_pump_reversal_bot.py",
+      "sha256": "992926fa0ba167322b18183ab495cd71a50ce4f689c604be11c1a747527db1b5",
+      "size_bytes": 668328
+    },
+    {
+      "mode": "0600",
+      "path": "web/routes/ai_routes.py",
+      "sha256": "014e48aed7c49e71cba8858679074e79aca419cf25428a12494393f497cc9e72",
+      "size_bytes": 84594
+    }
+  ],
+  "git_head": "aaf57f12223002dd4979c0cf7aafb26c2f183f87",
+  "metadata": {
+    "explicit_files_only": true,
+    "file_count": 9,
+    "git_dirty": true,
+    "operations": [
+      "read_explicit_files",
+      "read_git_dirty_flag",
+      "write_manifest"
+    ],
+    "reproducible": true
+  },
+  "release_id": "ai_truth_aaf57f1_20260715",
+  "schema_version": 1
+}

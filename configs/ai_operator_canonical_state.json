@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-15T17:01:35Z",
+  "as_of_utc": "2026-07-15T17:10:20Z",
   "schema_version": 2,
   "authority": "human_reviewed_project_truth",
   "control_recommendations_allowed": false,
@@ -31,12 +31,13 @@
     "event_long_uniform_dev13": "5801CC6_PUSHED_DEEP_INTEGRITY_PASS_13_X_207241_PERFORMANCE_AND_LIVE_FORBIDDEN",
     "bybit_l2_public_trade_collector": "4DB0F4D_PUSHED_LOCAL_ONDO_L2_AND_SIX_SYMBOL_TRADES_RUNNING_BOUNDED_NO_KEYS_ORDERS",
     "direct_vps_truth_20260715": "BYBOT_ACTIVE_HEARTBEAT_FRESH_BROKER_FLAT_BULL_CHOP_ATT1_ONLY_RISK_0_10",
-    "ai_truth_gate": "GIT_PUSHED_4983079_PENDING_TARGETED_DEPLOY_STALE_MIXED_SEMANTIC_OR_AUTHORITY_CONFLICT_FAILS_CLOSED",
-    "ai_env_mutation": "GIT_PUSHED_PHYSICALLY_QUARANTINED_PENDING_REVIEWED_ALLOWLIST_BOUNDS_CHALLENGE_AND_RECEIPT",
+    "ai_truth_gate": "TARGETED_DEPLOYED_RELEASE_AI_TRUTH_AAF57F1_20260715_STALE_MIXED_SEMANTIC_OR_AUTHORITY_CONFLICT_FAILS_CLOSED",
+    "ai_env_mutation": "TARGETED_DEPLOYED_PHYSICALLY_QUARANTINED_PENDING_REVIEWED_ALLOWLIST_BOUNDS_CHALLENGE_AND_RECEIPT",
     "web_live_mirror": "LOCAL_ATOMIC_BUNDLE_SYNC_COMPLETE_31_FILES_2_OPTIONAL_MISSING_ZERO_CRITICAL_FAILURES",
     "active_overnight_performance_research": false,
     "active_replayable_public_data_collection": true,
-    "published_git_head": "498307901e7899f052dc7772d98a8b85b7b43947",
+    "ai_web_targeted_deploy_receipt": "reports/releases/AI_TRUTH_TARGETED_DEPLOY_RECEIPT_AAF57F1_2026_07_15.json_HASHES_PASS_CORE_AND_WEB_RESTARTED_FLAT",
+    "published_git_head": "aaf57f12223002dd4979c0cf7aafb26c2f183f87",
     "full_regression": "1334_PASSED"
   },
   "data_contract": {

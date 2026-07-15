@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "release_id": "ai_truth_aaf57f1_20260715",
+  "completed_at_utc": "2026-07-15T17:10:20Z",
+  "source_git_head": "aaf57f12223002dd4979c0cf7aafb26c2f183f87",
+  "source_branch": "codex/dynamic-symbol-filters",
+  "full_regression": "1334_passed",
+  "manifest": {
+    "path": "reports/releases/targeted_ai_truth_aaf57f1_20260715.json",
+    "sha256": "3c7a996fe075e70e84e5a3c78c11a01b59b6f598234be53f56b6f13b527b9e62",
+    "file_count": 9,
+    "all_deployed_hashes_match": true
+  },
+  "vps": {
+    "host": "64.226.73.119",
+    "repo_root": "/root/by-bot",
+    "checkout_head_before_and_after": "f7ed0116a5f5b8fed59dbf8a339a85989bcf2f3b",
+    "checkout_intentionally_not_pulled_or_cleaned": true,
+    "dirty_path_count_after": 328,
+    "backup_path": "/root/by-bot-backups/ai_truth_aaf57f1_20260715",
+    "remote_install_receipt_sha256": "f89baeaac2c8f891ea53511d89851c94bfc07a3c608130afb60aa84b6e84b456",
+    "env_sha256_before_and_after": "4b2b2db8d174c38f5be5c58ff39a632ceabb9a084abdff54eeefe7abaa575560"
+  },
+  "restart_guard": {
+    "direct_bybit_flat_confirmations": 3,
+    "confirmation_interval_sec": 20,
+    "confirmation_timestamps_utc": [
+      "2026-07-15T17:06:49.383696Z",
+      "2026-07-15T17:07:09.603383Z",
+      "2026-07-15T17:07:29.784031Z"
+    ],
+    "open_positions_each_confirmation": [0, 0, 0]
+  },
+  "post_deploy_truth": {
+    "bybot_service": "active",
+    "bybot_pid": 2931263,
+    "web_service": "active",
+    "web_pid": 2931393,
+    "web_ping": {"pong": true},
+    "heartbeat_fresh": true,
+    "heartbeat_age_sec_observed": 10.2,
+    "trade_on": true,
+    "dry_run": false,
+    "heartbeat_open_trades": 0,
+    "direct_bybit_positions": 0,
+    "runtime_authority_complete": true,
+    "runtime_authority_component_count": 21,
+    "live_money_sleeves": ["att1"],
+    "att1_risk_mult": 0.1,
+    "ai_control_recommendations_allowed": true,
+    "ai_truth_blockers": [],
+    "bybot_import_or_traceback_scan": "clean"
+  },
+  "local_web_smoke": {
+    "service_pid": 39214,
+    "ping": {"pong": true},
+    "login_dom": "Trading Journal / Email / Password / Continue",
+    "unauthorized_visible_before_submit": false,
+    "successful_owner_password_totp_replay_proven": false
+  },
+  "explicitly_excluded": [
+    "backtest/alpaca_bakeoff_wf.py",
+    "scripts/sync_web_live_mirror.sh",
+    "bot/bybit_cashcarry_shadow_v1.py",
+    "scripts/run_multicoin_pattern_atlas_v1.py",
+    "bot/fx_setups.py",
+    "tests/test_fx_setups.py",
+    "all research results, strategy configs and env files"
+  ],
+  "live_risk_changed": false,
+  "broker_orders_created_by_deploy": false,
+  "rollback": "restore exact files from backup path, then repeat the direct-flat guarded bybot restart; never use git reset/pull"
+}

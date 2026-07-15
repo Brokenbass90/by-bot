@@ -32,7 +32,7 @@
 
 ## Publication/deploy truth
 
-Implementation commits through `498307901e7899f052dc7772d98a8b85b7b43947` are pushed and local/origin match. They are not live until a targeted release receipt exists. Required next sequence: commit/push this canonical checkpoint -> targeted release manifest -> deploy only AI/web safety package -> controlled service restart only while broker flat -> wait for exhaustive heartbeat authority -> rebuild full AI context -> restart/smoke web -> record hashes and post-deploy truth. Research files never deploy to trading runtime.
+AI/web safety was targeted-deployed from Git source `aaf57f12223002dd4979c0cf7aafb26c2f183f87` under release `ai_truth_aaf57f1_20260715`. All nine deployed hashes match; backup is `/root/by-bot-backups/ai_truth_aaf57f1_20260715`. Core restarted after three direct flat confirmations; web restarted after the new 21-component heartbeat authority and full AI context agreed. Post-check: both services active, direct broker flat, only ATT1 risk `0.10`, AI truth blockers empty, `.env` hash unchanged. Canonical receipt: `reports/releases/AI_TRUTH_TARGETED_DEPLOY_RECEIPT_AAF57F1_2026_07_15.json`. Research files did not deploy.
 
 VPS checkout remains stale/dirty `f7ed011`; blind pull/reset/cleanup remains prohibited.
 

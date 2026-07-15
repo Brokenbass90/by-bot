@@ -1,13 +1,13 @@
 {
   "schema_version": 5,
-  "as_of_utc": "2026-07-15T17:01:35Z",
-  "status": "vnext_truth_registry_ai_fail_closed_pattern_atlas_and_cashcarry_shadow_published_deploy_pending",
+  "as_of_utc": "2026-07-15T17:10:20Z",
+  "status": "vnext_truth_registry_ai_fail_closed_targeted_deployed_pattern_atlas_and_cashcarry_shadow_research",
   "branch": "codex/dynamic-symbol-filters",
   "git_observation": {
     "pre_session_local_head": "e1a5836dc7954432045471b4f1e72afaeac4812d",
     "pre_session_origin_head": "e1a5836dc7954432045471b4f1e72afaeac4812d",
     "matched": true,
-    "session_changes": "IMPLEMENTATION_PUSHED_THROUGH_498307901e7899f052dc7772d98a8b85b7b43947_FULL_REGRESSION_1334_TARGETED_DEPLOY_PENDING",
+    "session_changes": "SOURCE_AAF57F12223002DD4979C0CF7AAFB26C2F183F87_TARGETED_DEPLOYED_AI_TRUTH_AAF57F1_20260715_HASHES_PASS_FULL_REGRESSION_1334",
     "foreign_dirty_files_to_exclude": [
       "bot/fx_setups.py",
       "tests/test_fx_setups.py"
@@ -19,6 +19,7 @@
     "reports/RECOVERY_CHECKPOINT_2026_07_15.md",
     "reports/PROJECT_VNEXT_AUDIT_AND_7DAY_PLAN_2026_07_15.md",
     "reports/NEXT_CHAT_START_PROMPT_2026_07_15.md",
+    "reports/releases/AI_TRUTH_TARGETED_DEPLOY_RECEIPT_AAF57F1_2026_07_15.json",
     "configs/project_capability_registry_v1.json",
     "configs/ai_operator_canonical_state.json",
     "reports/PATTERN_ATLAS_V1_PREREG_2026_07_15.md",

@@ -29,6 +29,7 @@
 - `/ai_code` больше не читает `configs/` вообще, поэтому ignored broker/env credentials не могут уйти внешнему AI; дополнительные Telegram packs исключаются после `900` секунд.
 - Web login page локально загружается нормально и больше не показывает `Unauthorized` до ввода. Успешный password+TOTP replay без данных владельца не заявляется.
 - Финальный полный regression после независимого safety-review: `1334 passed`.
+- Safety package targeted-deployed under `ai_truth_aaf57f1_20260715`: nine SHA256 matches, exact backup, three direct-flat confirmations before core restart, web restart/ping PASS, ATT1-only `0.10`, AI truth blockers empty and `.env` unchanged. Research/strategy/FX files were excluded.
 
 ### Alpaca
 
