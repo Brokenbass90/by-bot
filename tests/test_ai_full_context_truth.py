@@ -35,6 +35,42 @@ def test_critical_truth_allows_only_fresh_matching_live_state():
     assert result["live_money_sleeves_by_heartbeat"] == ["att1"]
 
 
+def test_critical_truth_uses_hourly_allocator_freshness_contract():
+    heartbeat = {
+        "strategy_runtime_config": {
+            "risk_mult": {"att1": 0.1},
+            "authority": {
+                "complete": True,
+                "unclassified_sleeves": [],
+                "live_money_sleeves": ["att1"],
+                "components": {
+                    "att1": {"enabled": True, "execution_authority": "money"},
+                },
+            },
+        }
+    }
+    canonical = {"live": {"crypto_money_sleeves": ["att1"], "att1_risk_mult": 0.1}}
+    freshness = {
+        "heartbeat": {"present": True, "age_sec": 10},
+        "live_positions": {"present": True, "age_sec": 10},
+        "allocator_state": {"present": True, "age_sec": 10_799},
+        "regime": {"present": True, "age_sec": 10},
+        "operator_snapshot": {"present": True, "age_sec": 10},
+    }
+
+    result = builder.critical_truth_assessment(
+        heartbeat=heartbeat, freshness=freshness, canonical_state=canonical
+    )
+    assert result["control_recommendations_allowed"] is True
+
+    freshness["allocator_state"]["age_sec"] = 10_801
+    result = builder.critical_truth_assessment(
+        heartbeat=heartbeat, freshness=freshness, canonical_state=canonical
+    )
+    assert result["control_recommendations_allowed"] is False
+    assert "allocator_state_missing_or_stale" in result["blockers"]
+
+
 def test_critical_truth_fails_closed_on_stale_or_conflicting_sources():
     heartbeat = {
         "strategy_runtime_config": {

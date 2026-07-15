@@ -193,7 +193,11 @@ def critical_truth_assessment(
     if not pos_fresh.get("present") or pos_fresh.get("age_sec") is None or int(pos_fresh["age_sec"]) > 120:
         blockers.append("live_positions_missing_or_stale")
     for source_name, max_age_sec in (
-        ("allocator_state", 900),
+        # The allocator is rebuilt hourly and every other control-plane
+        # health check uses a three-hour fail-closed window.  A 15-minute
+        # threshold made the AI reject valid allocator truth for most of
+        # every hour even while the bot heartbeat was fresh.
+        ("allocator_state", 10_800),
         ("regime", 7_200),
         ("operator_snapshot", 7_200),
     ):
