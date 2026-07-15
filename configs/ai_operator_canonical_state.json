@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-14T06:30:06Z",
+  "as_of_utc": "2026-07-15T17:01:35Z",
   "schema_version": 2,
   "authority": "human_reviewed_project_truth",
   "control_recommendations_allowed": false,
@@ -30,10 +30,14 @@
     "ai_shadow_mission": "41DA86D_PUSHED_RESEARCH_ONLY_FEED_BOUND_SELECT_OR_ABSTAIN_NO_BROKER_TG_LIVE_PROMOTION_AUTHORITY_FALSE",
     "event_long_uniform_dev13": "5801CC6_PUSHED_DEEP_INTEGRITY_PASS_13_X_207241_PERFORMANCE_AND_LIVE_FORBIDDEN",
     "bybit_l2_public_trade_collector": "4DB0F4D_PUSHED_LOCAL_ONDO_L2_AND_SIX_SYMBOL_TRADES_RUNNING_BOUNDED_NO_KEYS_ORDERS",
+    "direct_vps_truth_20260715": "BYBOT_ACTIVE_HEARTBEAT_FRESH_BROKER_FLAT_BULL_CHOP_ATT1_ONLY_RISK_0_10",
+    "ai_truth_gate": "GIT_PUSHED_4983079_PENDING_TARGETED_DEPLOY_STALE_MIXED_SEMANTIC_OR_AUTHORITY_CONFLICT_FAILS_CLOSED",
+    "ai_env_mutation": "GIT_PUSHED_PHYSICALLY_QUARANTINED_PENDING_REVIEWED_ALLOWLIST_BOUNDS_CHALLENGE_AND_RECEIPT",
+    "web_live_mirror": "LOCAL_ATOMIC_BUNDLE_SYNC_COMPLETE_31_FILES_2_OPTIONAL_MISSING_ZERO_CRITICAL_FAILURES",
     "active_overnight_performance_research": false,
     "active_replayable_public_data_collection": true,
-    "published_git_head": "4db0f4dc3aca5bafd115b426f8644049518ddf90",
-    "full_regression": "1283_PASSED"
+    "published_git_head": "498307901e7899f052dc7772d98a8b85b7b43947",
+    "full_regression": "1334_PASSED"
   },
   "data_contract": {
     "historical_crypto_accounting": "MIXED_COHORT_NOT_CURRENT_EDGE",
@@ -51,9 +55,30 @@
     "event_long_phase0": "HISTORICAL_IMMUTABLE_FREEZE_SUPERSEDED_BY_PHASE1",
     "event_long_phase1": "CAUSAL_IDENTITY_PASS_LOCAL_UNIFORM_INPUT_IDENTITY_PASS_EIGHT_REMAINING_BLOCKERS_PERFORMANCE_AND_LIVE_FORBIDDEN",
     "fx_m5_cache": "DUKASCOPY_M5_PRESENT_APPROX_728_DAYS_SIX_SYMBOLS_ZERO_PROMOTION_GRADE",
-    "replayable_l2_public_trade_tape": "LOCAL_DATA_CLOCK_RUNNING_ONDO_DEPTH50_PLUS_SIX_SYMBOL_TRADES_FIRST_REPLAY_PASS_GAPS_ZERO"
+    "replayable_l2_public_trade_tape": "LOCAL_DATA_CLOCK_RUNNING_ONDO_DEPTH50_PLUS_SIX_SYMBOL_TRADES_FIRST_REPLAY_PASS_GAPS_ZERO",
+    "research_station_claude_v2": "107_VARIANTS_ONE_IS_PASS_ZERO_FORWARD_ZERO_OOS_ZERO_SURVIVORS_DIAGNOSTIC_ONLY",
+    "multicoin_pattern_atlas_v1": "DISCOVERY_COMPLETE_20372_PATHS_SEALED_BYTES_HASH_VERIFIED_ROWS_NOT_DECODED_OR_SCORED_ONE_FAT_TAIL_BREAKOUT_LONG_72H_LEAD_NO_PROMOTION"
   },
   "research_verdicts": {
+    "alpaca_gated_adaptive_v1": {
+      "verdict": "DIAGNOSTIC_ONLY_REBUILD_REQUIRED",
+      "bear_2022_return_pct": -6.540064970946091,
+      "bear_2022_profit_factor": 0.2799490993333468,
+      "bear_2022_trades": 12,
+      "old_reported_max_dd_pct_withdrawn": 2.234006129376814,
+      "corrected_sparse_endpoint_max_dd_pct_minimum": 8.2045931018021,
+      "true_daily_drawdown_known": false,
+      "same_close_execution": true,
+      "promotion_authorized": false
+    },
+    "arbitrage": {
+      "cross_exchange_verdict": "NO_GO_NEGATIVE_174_CYCLE_SHADOW",
+      "cross_exchange_mean_cycle_pct": -0.031376,
+      "cross_exchange_median_cycle_pct": -0.10485,
+      "bybit_cashcarry_verdict": "PUBLIC_PAPER_ENGINE_MECHANICS_PASS_DURABLE_COLLECTOR_AND_REAL_CYCLES_REQUIRED",
+      "fresh_public_xrp_lead_20260715": "0.01_PERCENT_PER_8H_GROSS_SNAPSHOT_NOT_EXPECTED_RETURN",
+      "capital_increase_authorized": false
+    },
     "pump_exhaustion_unwind_short_v1": {
       "verdict": "NO_PROMOTION",
       "failed_gates": [
@@ -113,6 +138,8 @@
     "elder_current_forms"
   ],
   "research_queue": [
+    "freeze_one_costed_horizontal_breakout_long_72h_successor_before_any_sealed_holdout_scoring",
+    "add_durable_collector_quantization_and_recovery_to_bybit_cashcarry_shadow_then_collect_10_mechanics_and_30_edge_cycles",
     "event_expansion_retest_long_v1_phase2_single_owner_runner_persist_bridge_and_trade_receipts_before_ACK",
     "event_expansion_retest_long_v1_freeze_local_uniform_dev13_then_complete_funding_manifests_before_performance",
     "event_expansion_retest_long_v1_fixed_external8_materialize_only_after_runnable_freeze",
@@ -135,11 +162,14 @@
   "time_critical": {
     "att1_explicit_review_by": "2026-07-20",
     "bybit_key_rotate_before": "2026-08-05",
+    "bybit_key_days_left_observed_20260715": 27.8,
     "alpaca_report_due_utc": "2026-07-13T22:10:00Z",
     "alpaca_watchdog_due_utc": "2026-07-13T23:00:00Z",
     "alpaca_report_delivery_20260713": "DELIVERED_WATCHDOG_CONFIRMED"
   },
   "source_reports": [
+    "reports/PROJECT_VNEXT_AUDIT_AND_7DAY_PLAN_2026_07_15.md",
+    "reports/PATTERN_ATLAS_V1_PREREG_2026_07_15.md",
     "reports/RECOVERY_CHECKPOINT_2026_07_14.md",
     "reports/PROJECT_CANONICAL_INDEX_2026_07_14.json",
     "reports/RECOVERY_CHECKPOINT_2026_07_13.md",
