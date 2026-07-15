@@ -1,13 +1,18 @@
 {
-  "schema_version": 5,
-  "as_of_utc": "2026-07-15T17:10:20Z",
-  "status": "vnext_truth_registry_ai_fail_closed_targeted_deployed_pattern_atlas_and_cashcarry_shadow_research",
+  "schema_version": 6,
+  "as_of_utc": "2026-07-15T17:32:02Z",
+  "status": "vnext_live_verified_ai_truth_deployed_cashcarry_v2_alpaca_parity_and_one_crypto_successor_frozen",
   "branch": "codex/dynamic-symbol-filters",
   "git_observation": {
     "pre_session_local_head": "e1a5836dc7954432045471b4f1e72afaeac4812d",
     "pre_session_origin_head": "e1a5836dc7954432045471b4f1e72afaeac4812d",
     "matched": true,
-    "session_changes": "SOURCE_AAF57F12223002DD4979C0CF7AAFB26C2F183F87_TARGETED_DEPLOYED_AI_TRUTH_AAF57F1_20260715_HASHES_PASS_FULL_REGRESSION_1334",
+    "session_changes": "AI_TRUTH_AAF57F1_TARGETED_DEPLOYED_HASHES_PASS_PLUS_RESEARCH_COMMITS_C6BC755_6DF7C6B_FF81F30_FULL_REGRESSION_1362",
+    "new_research_commits": [
+      "c6bc755",
+      "6df7c6b",
+      "ff81f30"
+    ],
     "foreign_dirty_files_to_exclude": [
       "bot/fx_setups.py",
       "tests/test_fx_setups.py"
@@ -20,6 +25,10 @@
     "reports/PROJECT_VNEXT_AUDIT_AND_7DAY_PLAN_2026_07_15.md",
     "reports/NEXT_CHAT_START_PROMPT_2026_07_15.md",
     "reports/releases/AI_TRUTH_TARGETED_DEPLOY_RECEIPT_AAF57F1_2026_07_15.json",
+    "reports/HORIZONTAL_BREAKOUT_LONG_72H_SEALED_V1_PREREG_2026_07_15.md",
+    "reports/ALPACA_EXACT_PARITY_MATERIALIZATION_2026_07_15.md",
+    "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md",
+    "reports/RESEARCH_STATION_V2_AUDIT_2026_07_15.md",
     "configs/project_capability_registry_v1.json",
     "configs/ai_operator_canonical_state.json",
     "reports/PATTERN_ATLAS_V1_PREREG_2026_07_15.md",
@@ -46,6 +55,7 @@
     },
     "alpaca": {
       "mode": "MONTHLY_V38_SAFE_HOLD",
+      "equity_observed_20260715_1726_utc": 486.53,
       "positions": ["ABBV", "ABNB", "GE", "SCHW"],
       "stop_quantity_coverage": "EXACT_4_OF_4",
       "allow_new_entries": false,
@@ -53,19 +63,21 @@
     },
     "fx_cfd": "RESEARCH_ONLY",
     "cross_exchange_arb": "NO_GO_NEGATIVE_174_CYCLE_SHADOW",
-    "bybit_cashcarry": "PUBLIC_DATA_PAPER_CORE_MECHANICS_PASS_DISABLED_NO_DAEMON_NO_REAL_CYCLES"
+    "bybit_cashcarry": "V2_DURABLE_PUBLIC_MECHANICS_READY_DEFAULT_DISABLED_CURRENT_RATES_FAIL_BREAK_EVEN_NO_DAEMON_NO_REAL_CYCLES"
   },
   "research_truth": {
     "claude_station": "107_VARIANTS_1_IS_PASS_0_FORWARD_0_OOS_0_SURVIVORS_DIAGNOSTIC_ONLY",
     "pattern_atlas_v1": "DISCOVERY_COMPLETE_20372_OBSERVATIONS_120D_HOLDOUT_UNSCORED_ONE_BREAKOUT_LONG_72H_FAT_TAIL_LEAD_NO_PROMOTION",
+    "horizontal_breakout_long_72h_successor": "ONE_LONG_ONLY_COSTED_CANDIDATE_FROZEN_HOLDOUT_ROWS_DECODED_ZERO_SCORER_NOT_IMPLEMENTED",
+    "alpaca_exact_parity": "MECHANICS_MATERIALIZED_PERFORMANCE_BLOCKED_BY_SIX_AUTHORITATIVE_INPUTS_AND_NEW_FUTURE_FORWARD_SAFE_HOLD_UNCHANGED",
     "replayable_tape": "COLLECTING_PUBLIC_ONLY_NO_COMPLETE_UTC_DAY_CLOSED_YET",
     "alpaca_gated_adaptive_2022": "RETURN_MINUS_6_54_PF_0_280_N12_CORRECTED_SPARSE_DD_AT_LEAST_8_205_SAME_CLOSE_DIAGNOSTIC",
     "fx_v2": "NO_PROMOTION_ALL_SIX_SIDE_SPECIFIC_SLEEVES_NEGATIVE"
   },
   "next_actions": [
-    "add_durable_collector_quantization_and_recovery_to_bybit_cashcarry_public_paper_shadow",
-    "freeze_one_costed_breakout_long_72h_successor_before_scoring_sealed_holdout_rows",
-    "materialize_alpaca_exact_parity_inputs_and_four_arm_replay",
+    "freeze_funding_complete_breakout_long_72h_scorer_then_make_exactly_one_sealed_run",
+    "schedule_public_cashcarry_observe_refuse_receipts_without_capital_then_require_10_mechanics_and_30_edge_cycles",
+    "materialize_six_authoritative_alpaca_inputs_and_new_future_forward_before_four_arm_replay",
     "review_att1_on_20260720",
     "freeze_fx_v3_data_news_and_account_cost_contract"
   ],

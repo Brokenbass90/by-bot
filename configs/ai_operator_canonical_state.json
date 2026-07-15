@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-15T17:10:20Z",
+  "as_of_utc": "2026-07-15T17:32:02Z",
   "schema_version": 2,
   "authority": "human_reviewed_project_truth",
   "control_recommendations_allowed": false,
@@ -31,21 +31,31 @@
     "event_long_uniform_dev13": "5801CC6_PUSHED_DEEP_INTEGRITY_PASS_13_X_207241_PERFORMANCE_AND_LIVE_FORBIDDEN",
     "bybit_l2_public_trade_collector": "4DB0F4D_PUSHED_LOCAL_ONDO_L2_AND_SIX_SYMBOL_TRADES_RUNNING_BOUNDED_NO_KEYS_ORDERS",
     "direct_vps_truth_20260715": "BYBOT_ACTIVE_HEARTBEAT_FRESH_BROKER_FLAT_BULL_CHOP_ATT1_ONLY_RISK_0_10",
+    "direct_vps_truth_20260715_1726_utc": "BYBOT_AND_WEB_ACTIVE_HEARTBEAT_FRESH_BROKER_FLAT_BULL_CHOP_ALLOCATOR_NOT_BLOCKED_ATT1_ONLY_RISK_0_10",
+    "alpaca_broker_truth_20260715_1726_utc": "LIVE_EQUITY_486_53_SAFE_HOLD_ABBV_ABNB_GE_SCHW_BROKER_STOPS_EXACT_4_OF_4_DAY_PNL_PLUS_2_16",
     "ai_truth_gate": "TARGETED_DEPLOYED_RELEASE_AI_TRUTH_AAF57F1_20260715_STALE_MIXED_SEMANTIC_OR_AUTHORITY_CONFLICT_FAILS_CLOSED",
     "ai_env_mutation": "TARGETED_DEPLOYED_PHYSICALLY_QUARANTINED_PENDING_REVIEWED_ALLOWLIST_BOUNDS_CHALLENGE_AND_RECEIPT",
     "web_live_mirror": "LOCAL_ATOMIC_BUNDLE_SYNC_COMPLETE_31_FILES_2_OPTIONAL_MISSING_ZERO_CRITICAL_FAILURES",
     "active_overnight_performance_research": false,
     "active_replayable_public_data_collection": true,
     "ai_web_targeted_deploy_receipt": "reports/releases/AI_TRUTH_TARGETED_DEPLOY_RECEIPT_AAF57F1_2026_07_15.json_HASHES_PASS_CORE_AND_WEB_RESTARTED_FLAT",
-    "published_git_head": "aaf57f12223002dd4979c0cf7aafb26c2f183f87",
-    "full_regression": "1334_PASSED"
+    "cashcarry_v2_research": "DURABLE_PUBLIC_COMMON_QUANTITY_BOOK_WALK_RESTART_REPLAY_BREAK_EVEN_GATE_READY_DEFAULT_DISABLED_NO_CAPITAL",
+    "horizontal_breakout_long_72h_freeze": "ONE_RESEARCH_ONLY_LONG_CANDIDATE_FROZEN_HOLDOUT_UNDECODED_UNSCORED",
+    "alpaca_exact_parity_materialization": "PURE_CONTRACT_READY_SIX_AUTHORITATIVE_INPUTS_AND_NEW_FORWARD_BLOCK_PERFORMANCE_SAFE_HOLD_UNCHANGED",
+    "published_git_head": "ff81f302ebbf4f4f9f0ee61e66d30b94c41dd618",
+    "new_research_commits_20260715_pm": [
+      "c6bc755_BREAKOUT_SUCCESSOR_AND_STATION_PRESERVATION",
+      "6df7c6b_ALPACA_EXACT_PARITY_MATERIALIZATION",
+      "ff81f30_DURABLE_CASHCARRY_V2"
+    ],
+    "full_regression": "1362_PASSED"
   },
   "data_contract": {
     "historical_crypto_accounting": "MIXED_COHORT_NOT_CURRENT_EDGE",
     "att1_clean_sample": "N_LT_20_NO_EDGE_VERDICT",
     "alpaca_intraday_v1_ledger": "DATA_INVALID_REBUILD_FROM_BROKER_FILLS",
     "alpaca_backtest_50_75pct": "SELECTED_HISTORICAL_REPLAY_NOT_LIVE_EXPECTATION",
-    "alpaca_exact_parity_20260713": "BLOCKED_NINE_REQUIRED_ARTIFACTS_UNPINNED",
+    "alpaca_exact_parity_20260715": "EXECUTABLE_CALENDAR_NEXT_OPEN_COST_EXIT_DAILY_MTM_CONTRACT_READY_BUT_SIX_AUTHORITATIVE_INPUTS_AND_NEW_FORWARD_WINDOW_BLOCKED_NO_PERFORMANCE",
     "fx_v2_data": "DIAGNOSTIC_ONLY_ZERO_OF_SIX_PROMOTION_GRADE",
     "fx_v2_performance": "ALL_SIX_SIDE_SPECIFIC_SLEEVES_NO_PROMOTION",
     "fx_v3_contract": "FAIL_CLOSED_H1_NEWS_COST_HARDENED_NEW_PREREG_REQUIRED",
@@ -58,7 +68,9 @@
     "fx_m5_cache": "DUKASCOPY_M5_PRESENT_APPROX_728_DAYS_SIX_SYMBOLS_ZERO_PROMOTION_GRADE",
     "replayable_l2_public_trade_tape": "LOCAL_DATA_CLOCK_RUNNING_ONDO_DEPTH50_PLUS_SIX_SYMBOL_TRADES_FIRST_REPLAY_PASS_GAPS_ZERO",
     "research_station_claude_v2": "107_VARIANTS_ONE_IS_PASS_ZERO_FORWARD_ZERO_OOS_ZERO_SURVIVORS_DIAGNOSTIC_ONLY",
-    "multicoin_pattern_atlas_v1": "DISCOVERY_COMPLETE_20372_PATHS_SEALED_BYTES_HASH_VERIFIED_ROWS_NOT_DECODED_OR_SCORED_ONE_FAT_TAIL_BREAKOUT_LONG_72H_LEAD_NO_PROMOTION"
+    "multicoin_pattern_atlas_v1": "DISCOVERY_COMPLETE_20372_PATHS_SEALED_BYTES_HASH_VERIFIED_ROWS_NOT_DECODED_OR_SCORED_ONE_FAT_TAIL_BREAKOUT_LONG_72H_LEAD_NO_PROMOTION",
+    "horizontal_breakout_long_72h_successor": "ONE_LONG_ONLY_CANDIDATE_PREREGISTERED_COSTED_FUNDING_REQUIRED_SEALED_HOLDOUT_UNDECODED_SCORER_NOT_IMPLEMENTED_NO_PROMOTION",
+    "bybit_cashcarry_v2": "DURABLE_COMMON_QUANTITY_BOOK_WALK_RESTART_REPLAY_AND_BREAK_EVEN_GATE_READY_DEFAULT_DISABLED_CURRENT_PUBLIC_RATES_NO_ENTRY"
   },
   "research_verdicts": {
     "alpaca_gated_adaptive_v1": {
@@ -76,8 +88,8 @@
       "cross_exchange_verdict": "NO_GO_NEGATIVE_174_CYCLE_SHADOW",
       "cross_exchange_mean_cycle_pct": -0.031376,
       "cross_exchange_median_cycle_pct": -0.10485,
-      "bybit_cashcarry_verdict": "PUBLIC_PAPER_ENGINE_MECHANICS_PASS_DURABLE_COLLECTOR_AND_REAL_CYCLES_REQUIRED",
-      "fresh_public_xrp_lead_20260715": "0.01_PERCENT_PER_8H_GROSS_SNAPSHOT_NOT_EXPECTED_RETURN",
+      "bybit_cashcarry_verdict": "DURABLE_PUBLIC_RESEARCH_MECHANICS_READY_DEFAULT_DISABLED_CURRENT_CANDIDATES_FAIL_BREAK_EVEN_NO_REAL_CYCLES",
+      "fresh_public_xrp_lead_20260715": "0.0076_PERCENT_PER_8H_GROSS_SNAPSHOT_31_92_BPS_OPTIMISTIC_14D_VERSUS_MINIMUM_54_BPS_BEFORE_REAL_SPREAD_NO_ENTRY",
       "capital_increase_authorized": false
     },
     "pump_exhaustion_unwind_short_v1": {
@@ -100,7 +112,10 @@
       "permission": "BLOCKED_FAIL_CLOSED",
       "performance_computed": false,
       "outcome_access_allowed": false,
-      "safe_hold_changed": false
+      "safe_hold_changed": false,
+      "executable_contract_ready": true,
+      "authoritative_inputs_missing": 6,
+      "old_20260713_forward_retroactive_seal_allowed": false
     },
     "fx_v3": {
       "permission": "BLOCKED_PENDING_NEW_VERSIONED_PREREG_AND_EXTERNAL_INPUTS",
@@ -139,15 +154,15 @@
     "elder_current_forms"
   ],
   "research_queue": [
-    "freeze_one_costed_horizontal_breakout_long_72h_successor_before_any_sealed_holdout_scoring",
-    "add_durable_collector_quantization_and_recovery_to_bybit_cashcarry_shadow_then_collect_10_mechanics_and_30_edge_cycles",
+    "implement_and_freeze_horizontal_breakout_long_72h_parity_scorer_with_complete_hash_pinned_funding_before_the_single_sealed_run",
+    "schedule_public_cashcarry_observe_refuse_receipts_without_capital_then_require_10_mechanics_and_30_edge_cycles",
     "event_expansion_retest_long_v1_phase2_single_owner_runner_persist_bridge_and_trade_receipts_before_ACK",
     "event_expansion_retest_long_v1_freeze_local_uniform_dev13_then_complete_funding_manifests_before_performance",
     "event_expansion_retest_long_v1_fixed_external8_materialize_only_after_runnable_freeze",
     "pump_short_point_in_time_universe_additivity",
     "horizontal_range_rejection_crypto_long_short_shared_level_snapshot",
     "att1_entry_geometry_challenger_preregister",
-    "alpaca_materialize_nine_exact_parity_artifacts",
+    "alpaca_materialize_official_xnys_pit_market_corporate_action_broker_lifecycle_and_new_forward_inputs",
     "fx_v3_new_prereg_after_oanda_and_news_inputs"
   ],
   "promotion_gate": {
@@ -182,6 +197,10 @@
     "reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md",
     "reports/EVENT_EXPANSION_RETEST_LONG_V1_PREREG_2026_07_13.md",
     "reports/EVENT_EXPANSION_RETEST_LONG_V1_PHASE1_FREEZE_2026_07_13.md",
-    "reports/L2_TAPE_COLLECTION_START_2026_07_14.md"
+    "reports/L2_TAPE_COLLECTION_START_2026_07_14.md",
+    "reports/HORIZONTAL_BREAKOUT_LONG_72H_SEALED_V1_PREREG_2026_07_15.md",
+    "reports/ALPACA_EXACT_PARITY_MATERIALIZATION_2026_07_15.md",
+    "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md",
+    "reports/RESEARCH_STATION_V2_AUDIT_2026_07_15.md"
   ]
 }
