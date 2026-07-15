@@ -849,9 +849,12 @@ def read_strategy_file(name: str, max_lines: int = 180) -> str:
 def read_any_bot_file(relative_path: str, max_lines: int = 250) -> str:
     """
     Read any file relative to bot root for /ai_code <filename>.
-    Only paths inside allowed directories to prevent traversal.
+    Only source/research directories are allowed.  `configs/` is deliberately
+    excluded because ignored instance files in that tree can contain broker
+    credentials; configuration context must go through the dedicated redacted
+    reader instead.
     """
-    _ALLOWED_DIRS = {"strategies", "bot", "backtest", "configs", "scripts"}
+    _ALLOWED_DIRS = {"strategies", "bot", "backtest", "scripts"}
     p = Path(relative_path.replace("\\", "/"))
     parts = p.parts
     if not parts or ".." in parts or p.is_absolute():

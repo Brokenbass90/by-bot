@@ -55,18 +55,22 @@ OPERATOR_SNAPSHOT_MAX_AGE_SEC = 7_200
 MIRROR_BUNDLE_MAX_AGE_SEC = 180
 
 
-def _rt(*p: str) -> Path:
-    direct = _RUNTIME_ROOT / Path(*p)
-    candidates = [direct]
+def _runtime_source_root() -> Path:
+    """Select one coherent runtime tree from its heartbeat, never per file."""
+    candidates = [_RUNTIME_ROOT]
     try:
         if _RUNTIME_ROOT.resolve() == (_ROOT / "runtime").resolve():
-            candidates.append(_RUNTIME_ROOT / "live_mirror" / Path(*p))
+            candidates.append(_RUNTIME_ROOT / "live_mirror")
     except OSError:
         pass
-    existing = [path for path in candidates if path.exists()]
-    if not existing:
-        return direct
-    return max(existing, key=lambda path: path.stat().st_mtime)
+    heartbeat_roots = [root for root in candidates if (root / "bot_heartbeat.json").exists()]
+    if not heartbeat_roots:
+        return _RUNTIME_ROOT
+    return max(heartbeat_roots, key=lambda root: (root / "bot_heartbeat.json").stat().st_mtime)
+
+
+def _rt(*p: str) -> Path:
+    return _runtime_source_root() / Path(*p)
 
 
 def _cfg(*p: str) -> Path:
@@ -97,22 +101,35 @@ def _fresh_json(path: Path, *, max_age_sec: int) -> Tuple[Optional[dict], Option
 
 
 def _web_live_truth_gate() -> Tuple[bool, List[str]]:
-    heartbeat_path = _rt("bot_heartbeat.json")
+    source_root = _runtime_source_root()
+    heartbeat_path = source_root / "bot_heartbeat.json"
     required = [
         ("heartbeat", heartbeat_path, HEARTBEAT_MAX_AGE_SEC),
-        ("positions", _rt("live_positions.json"), POSITIONS_MAX_AGE_SEC),
-        ("allocator", _rt("control_plane", "portfolio_allocator_state.json"), ALLOCATOR_MAX_AGE_SEC),
-        ("regime", _rt("regime", "orchestrator_state.json"), REGIME_MAX_AGE_SEC),
-        ("operator", _rt("operator", "operator_snapshot.json"), OPERATOR_SNAPSHOT_MAX_AGE_SEC),
-        ("ai_full_context", _rt("ai_context", "full_context.json"), AI_PACK_MAX_AGE_SEC),
+        ("positions", source_root / "live_positions.json", POSITIONS_MAX_AGE_SEC),
+        ("allocator", source_root / "control_plane" / "portfolio_allocator_state.json", ALLOCATOR_MAX_AGE_SEC),
+        ("regime", source_root / "regime" / "orchestrator_state.json", REGIME_MAX_AGE_SEC),
+        ("operator", source_root / "operator" / "operator_snapshot.json", OPERATOR_SNAPSHOT_MAX_AGE_SEC),
+        ("ai_full_context", source_root / "ai_context" / "full_context.json", AI_PACK_MAX_AGE_SEC),
     ]
     blockers: List[str] = []
+    payloads: Dict[str, dict] = {}
     for name, path, max_age in required:
         payload, age = _fresh_json(path, max_age_sec=max_age)
         if payload is None:
             blockers.append(f"{name}_missing_or_stale:{age}s")
-    if "live_mirror" in heartbeat_path.parts:
-        manifest_path = heartbeat_path.parent / "sync_bundle_manifest.json"
+        else:
+            payloads[name] = payload
+    full_context = payloads.get("ai_full_context") or {}
+    embedded_truth = full_context.get("critical_truth_assessment")
+    embedded_truth = embedded_truth if isinstance(embedded_truth, dict) else {}
+    if embedded_truth.get("control_recommendations_allowed") is not True:
+        reasons = [str(item) for item in (embedded_truth.get("blockers") or [])]
+        blockers.append(
+            "ai_full_context_truth_blocked:"
+            + ("|".join(reasons) if reasons else "missing_explicit_allow")
+        )
+    if source_root.name == "live_mirror":
+        manifest_path = source_root / "sync_bundle_manifest.json"
         manifest, manifest_age = _fresh_json(
             manifest_path,
             max_age_sec=MIRROR_BUNDLE_MAX_AGE_SEC,

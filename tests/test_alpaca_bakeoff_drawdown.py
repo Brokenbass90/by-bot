@@ -9,6 +9,10 @@ def test_drawdown_includes_initial_capital_before_first_endpoint() -> None:
     assert _max_drawdown_pct([950.0, 980.0], initial_value=1000.0) == pytest.approx(5.0)
 
 
+def test_drawdown_counts_zero_equity_as_total_loss() -> None:
+    assert _max_drawdown_pct([1000.0, 0.0], initial_value=1000.0) == pytest.approx(100.0)
+
+
 def test_adaptive_summary_does_not_hide_initial_loss() -> None:
     summary = _summarize_adaptive(
         initial_capital=1000.0,

@@ -190,17 +190,42 @@ def critical_truth_assessment(
         blockers.append("heartbeat_missing_or_stale")
     if not pos_fresh.get("present") or pos_fresh.get("age_sec") is None or int(pos_fresh["age_sec"]) > 120:
         blockers.append("live_positions_missing_or_stale")
+    for source_name, max_age_sec in (
+        ("allocator_state", 900),
+        ("regime", 7_200),
+        ("operator_snapshot", 7_200),
+    ):
+        row = freshness.get(source_name) if isinstance(freshness.get(source_name), dict) else {}
+        if not row.get("present") or row.get("age_sec") is None or int(row["age_sec"]) > max_age_sec:
+            blockers.append(f"{source_name}_missing_or_stale")
 
     runtime_cfg = hb.get("strategy_runtime_config") if isinstance(hb.get("strategy_runtime_config"), dict) else {}
     override = runtime_cfg.get("operator_live_override") if isinstance(runtime_cfg.get("operator_live_override"), dict) else {}
     if override.get("enabled") and not override.get("loaded"):
         blockers.append("operator_override_not_loaded")
-    enabled = runtime_cfg.get("enabled") if isinstance(runtime_cfg.get("enabled"), dict) else {}
     risk_mult = runtime_cfg.get("risk_mult") if isinstance(runtime_cfg.get("risk_mult"), dict) else {}
-    actual_money = sorted(
-        str(name) for name, value in risk_mult.items()
-        if bool(enabled.get(name)) and isinstance(value, (int, float)) and float(value) > 0.0
+    authority = runtime_cfg.get("authority") if isinstance(runtime_cfg.get("authority"), dict) else {}
+    authority_components = (
+        authority.get("components") if isinstance(authority.get("components"), dict) else {}
     )
+    if authority.get("complete") is not True or authority.get("unclassified_sleeves"):
+        blockers.append("runtime_authority_missing_or_incomplete")
+    derived_money: list[str] = []
+    for name, row in authority_components.items():
+        if not isinstance(row, dict):
+            blockers.append(f"runtime_authority_invalid:{name}")
+            continue
+        classification = str(row.get("execution_authority") or "")
+        if bool(row.get("enabled")) and classification == "money":
+            derived_money.append(str(name))
+        elif bool(row.get("enabled")) and classification not in {"none", "none_or_shadow"}:
+            blockers.append(f"runtime_authority_unclassified_enabled:{name}")
+    actual_money = sorted(derived_money)
+    emitted_money = sorted(str(name) for name in (authority.get("live_money_sleeves") or []))
+    if emitted_money != actual_money:
+        blockers.append(
+            f"runtime_authority_self_conflict:emitted={emitted_money}:derived={actual_money}"
+        )
     canonical_live = canonical_state.get("live") if isinstance(canonical_state, dict) and isinstance(canonical_state.get("live"), dict) else {}
     expected_money = sorted(str(x) for x in (canonical_live.get("crypto_money_sleeves") or []))
     if expected_money and actual_money != expected_money:

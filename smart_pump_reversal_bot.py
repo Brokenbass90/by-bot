@@ -3217,7 +3217,10 @@ def _strategy_flag_pairs() -> list[tuple[str, bool]]:
         ("breakdown", ENABLE_BREAKDOWN_TRADING),
         ("ivb1", ENABLE_IVB1_TRADING),
         ("brc1", ENABLE_BRC1_TRADING),
+        ("sob1", ENABLE_SOB1_TRADING),
         ("elder", ENABLE_ELDER_TRADING),
+        ("micro_scalper", ENABLE_MICRO_SCALPER_TRADING),
+        ("support_reclaim", ENABLE_SUPPORT_RECLAIM_TRADING),
         ("ts132", ENABLE_TS132_TRADING),
     ]
 
@@ -3271,6 +3274,69 @@ def _strategy_money_sleeves_text() -> str:
     )
 
 
+def _strategy_runtime_authority_snapshot() -> dict[str, Any]:
+    """Exhaustive machine-readable execution authority for every live loop flag."""
+    risk_rows = [
+        ("breakout", ENABLE_BREAKOUT_TRADING, BREAKOUT_RISK_MULT),
+        ("midterm", ENABLE_MIDTERM_TRADING, MIDTERM_RISK_MULT),
+        ("sloped", ENABLE_SLOPED_TRADING, SLOPED_RISK_MULT),
+        ("att1", ENABLE_ATT1_TRADING, ATT1_RISK_MULT),
+        ("asb1", ENABLE_ASB1_TRADING, ASB1_RISK_MULT),
+        ("hzbo1", ENABLE_HZBO1_TRADING, HZBO1_RISK_MULT),
+        ("bounce1", ENABLE_BOUNCE1_TRADING, BOUNCE1_RISK_MULT),
+        ("asm1", ENABLE_ASM1_TRADING, ASM1_RISK_MULT),
+        ("flat", ENABLE_FLAT_TRADING, FLAT_RISK_MULT),
+        ("range", ENABLE_RANGE_TRADING, RANGE_RISK_MULT),
+        ("breakdown", ENABLE_BREAKDOWN_TRADING, BREAKDOWN_RISK_MULT),
+        ("ivb1", ENABLE_IVB1_TRADING, IVB1_RISK_MULT),
+        ("elder", ENABLE_ELDER_TRADING, ELDER_RISK_MULT),
+        ("brc1", ENABLE_BRC1_TRADING, BRC1_RISK_MULT),
+        ("sob1", ENABLE_SOB1_TRADING, SOB1_RISK_MULT),
+        ("micro_scalper", ENABLE_MICRO_SCALPER_TRADING, MICRO_SCALPER_RISK_MULT),
+        ("support_reclaim", ENABLE_SUPPORT_RECLAIM_TRADING, SUPPORT_RECLAIM_RISK_MULT),
+    ]
+    implicit_money_rows = [
+        ("inplay", ENABLE_INPLAY_TRADING),
+        ("pump_fade", ENABLE_PUMP_FADE_TRADING),
+        ("retest", ENABLE_RETEST_TRADING),
+        ("ts132", ENABLE_TS132_TRADING),
+    ]
+    components: dict[str, dict[str, Any]] = {}
+    live_money: list[str] = []
+    for name, enabled, raw_risk in risk_rows:
+        try:
+            risk_mult = max(0.0, float(raw_risk))
+        except Exception:
+            risk_mult = 0.0
+        money_authorized = bool(enabled) and risk_mult > 0.0
+        components[name] = {
+            "enabled": bool(enabled),
+            "risk_mult": round(risk_mult, 6),
+            "risk_model": "explicit_multiplier",
+            "execution_authority": "money" if money_authorized else "none_or_shadow",
+        }
+        if money_authorized:
+            live_money.append(name)
+    for name, enabled in implicit_money_rows:
+        components[name] = {
+            "enabled": bool(enabled),
+            "risk_mult": None,
+            "risk_model": "implicit_base_risk_no_shadow_multiplier",
+            "execution_authority": "money" if enabled else "none",
+        }
+        if enabled:
+            live_money.append(name)
+    expected_names = {name for name, _enabled in _strategy_flag_pairs()}
+    classified_names = set(components)
+    return {
+        "schema_version": 1,
+        "complete": expected_names == classified_names,
+        "components": components,
+        "live_money_sleeves": sorted(live_money),
+        "unclassified_sleeves": sorted(expected_names - classified_names),
+    }
+
+
 def _runner_protection_text() -> str:
     return (
         "runner_guard: "
@@ -3292,12 +3358,25 @@ def _load_json_dict(path: Path) -> dict[str, Any]:
         return {}
 
 
+AI_AUX_PACK_MAX_AGE_SEC = 900
+
+
+def _load_fresh_json_dict(path: Path, *, max_age_sec: int = AI_AUX_PACK_MAX_AGE_SEC) -> dict[str, Any]:
+    try:
+        age_sec = max(0.0, time.time() - path.stat().st_mtime)
+    except OSError:
+        return {}
+    if age_sec > float(max_age_sec):
+        return {}
+    return _load_json_dict(path)
+
+
 def _compact_ai_full_context_for_deepseek() -> dict[str, Any]:
     return compact_ai_full_context(ROOT_DIR)
 
 
 def _compact_ai_extras_for_deepseek() -> dict[str, Any]:
-    extras = _load_json_dict(ROOT_DIR / "runtime" / "ai_context" / "extras.json")
+    extras = _load_fresh_json_dict(ROOT_DIR / "runtime" / "ai_context" / "extras.json")
     if not extras:
         return {}
     trade_history = extras.get("trade_history") if isinstance(extras.get("trade_history"), dict) else {}
@@ -3368,7 +3447,7 @@ def _compact_ai_extras_for_deepseek() -> dict[str, Any]:
 
 
 def _compact_ai_ohlc_logs_for_deepseek() -> dict[str, Any]:
-    pack = _load_json_dict(ROOT_DIR / "runtime" / "ai_context" / "ohlc_and_logs.json")
+    pack = _load_fresh_json_dict(ROOT_DIR / "runtime" / "ai_context" / "ohlc_and_logs.json")
     if not pack:
         return {}
     ohlc = pack.get("ohlc") if isinstance(pack.get("ohlc"), dict) else {}
@@ -3405,7 +3484,7 @@ def _compact_ai_ohlc_logs_for_deepseek() -> dict[str, Any]:
 
 
 def _compact_crypto_blocker_for_deepseek() -> dict[str, Any]:
-    report = _load_json_dict(ROOT_DIR / "runtime" / "crypto_blocker" / "latest.json")
+    report = _load_fresh_json_dict(ROOT_DIR / "runtime" / "crypto_blocker" / "latest.json")
     if not report:
         return {}
     sleeves = {}
@@ -4995,7 +5074,7 @@ def _handle_tg_command(text: str):
                 "Примеры:\n"
                 "  /ai_code strategies/alt_sloped_channel_v1.py\n"
                 "  /ai_code bot/deepseek_autoresearch_agent.py как работает аудит?\n"
-                "  /ai_code configs/server.env.example что у нас включено в live?"
+                "Конфиги запрещены: их содержимое может включать credentials; для live truth используй /ai."
             )
             return
         filename = cmd[1]
@@ -15608,6 +15687,7 @@ async def pulse():
             _att1_contract = build_att1_runtime_contract(risk_mult=ATT1_RISK_MULT)
             _strategy_runtime_config = {
                 "no_entry_hours_utc": sorted(int(h) for h in NO_ENTRY_HOURS_UTC),
+                "authority": _strategy_runtime_authority_snapshot(),
                 "enabled": {
                     "att1": bool(ENABLE_ATT1_TRADING),
                     "flat": bool(ENABLE_FLAT_TRADING),

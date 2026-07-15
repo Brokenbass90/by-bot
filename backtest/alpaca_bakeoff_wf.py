@@ -108,7 +108,7 @@ def _max_drawdown_pct(
     max_dd = 0.0
     for value in curve:
         value = _safe_float(value)
-        if value <= 0:
+        if peak <= 0 and value <= 0:
             continue
         peak = max(peak, value)
         if peak > 0:

@@ -116,7 +116,13 @@ def test_mirror_truth_gate_requires_complete_bundle_manifest(monkeypatch, tmp_pa
         "control_plane/portfolio_allocator_state.json": {"sleeves": {}},
         "regime/orchestrator_state.json": {"regime": "bear_chop"},
         "operator/operator_snapshot.json": {"generated_at_utc": "now"},
-        "ai_context/full_context.json": {"generated_at_utc": "now"},
+        "ai_context/full_context.json": {
+            "generated_at_utc": "now",
+            "critical_truth_assessment": {
+                "control_recommendations_allowed": True,
+                "blockers": [],
+            },
+        },
     }
     for rel, payload in required.items():
         _write_json(mirror / rel, payload)
@@ -132,3 +138,63 @@ def test_mirror_truth_gate_requires_complete_bundle_manifest(monkeypatch, tmp_pa
     ok, blockers = ai_routes._web_live_truth_gate()
     assert ok is True
     assert blockers == []
+
+
+def test_truth_gate_rejects_fresh_semantic_conflict(monkeypatch, tmp_path):
+    runtime = tmp_path / "runtime"
+    required = {
+        "bot_heartbeat.json": {"trade_on": True},
+        "live_positions.json": {"count": 0, "positions": []},
+        "control_plane/portfolio_allocator_state.json": {"sleeves": {}},
+        "regime/orchestrator_state.json": {"regime": "bull_chop"},
+        "operator/operator_snapshot.json": {"generated_at_utc": "now"},
+        "ai_context/full_context.json": {
+            "critical_truth_assessment": {
+                "control_recommendations_allowed": False,
+                "blockers": ["money_sleeve_conflict"],
+            }
+        },
+    }
+    for rel, payload in required.items():
+        _write_json(runtime / rel, payload)
+
+    monkeypatch.setattr(ai_routes, "_ROOT", tmp_path)
+    monkeypatch.setattr(ai_routes, "_RUNTIME_ROOT", runtime)
+
+    ok, blockers = ai_routes._web_live_truth_gate()
+
+    assert ok is False
+    assert any("money_sleeve_conflict" in blocker for blocker in blockers)
+
+
+def test_truth_gate_never_mixes_direct_and_mirror_files(monkeypatch, tmp_path):
+    root = tmp_path
+    runtime = root / "runtime"
+    mirror = runtime / "live_mirror"
+    _write_json(runtime / "bot_heartbeat.json", {"trade_on": True})
+    for rel, payload in {
+        "live_positions.json": {"count": 0, "positions": []},
+        "control_plane/portfolio_allocator_state.json": {"sleeves": {}},
+        "regime/orchestrator_state.json": {"regime": "bull_chop"},
+        "operator/operator_snapshot.json": {"generated_at_utc": "now"},
+        "ai_context/full_context.json": {
+            "critical_truth_assessment": {
+                "control_recommendations_allowed": True,
+                "blockers": [],
+            }
+        },
+        "sync_bundle_manifest.json": {"status": "complete"},
+    }.items():
+        _write_json(mirror / rel, payload)
+    old = time.time() - 60
+    _write_json(mirror / "bot_heartbeat.json", {"trade_on": True})
+    os.utime(mirror / "bot_heartbeat.json", (old, old))
+
+    monkeypatch.setattr(ai_routes, "_ROOT", root)
+    monkeypatch.setattr(ai_routes, "_RUNTIME_ROOT", runtime)
+
+    assert ai_routes._runtime_source_root() == runtime
+    ok, blockers = ai_routes._web_live_truth_gate()
+
+    assert ok is False
+    assert any("positions_missing_or_stale" in blocker for blocker in blockers)
