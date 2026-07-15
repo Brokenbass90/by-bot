@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-15T17:32:02Z",
+  "as_of_utc": "2026-07-15T17:58:00Z",
   "schema_version": 2,
   "authority": "human_reviewed_project_truth",
   "control_recommendations_allowed": false,
@@ -40,15 +40,17 @@
     "active_replayable_public_data_collection": true,
     "ai_web_targeted_deploy_receipt": "reports/releases/AI_TRUTH_TARGETED_DEPLOY_RECEIPT_AAF57F1_2026_07_15.json_HASHES_PASS_CORE_AND_WEB_RESTARTED_FLAT",
     "cashcarry_v2_research": "DURABLE_PUBLIC_COMMON_QUANTITY_BOOK_WALK_RESTART_REPLAY_BREAK_EVEN_GATE_READY_DEFAULT_DISABLED_NO_CAPITAL",
+    "cashcarry_v2_public_screen_20260715_1756_utc": "XRP_BTC_ETH_OBSERVED_ALL_BREAK_EVEN_FAIL_NO_ENTRY_NO_POSITION_NO_KEYS_ORDERS",
     "horizontal_breakout_long_72h_freeze": "ONE_RESEARCH_ONLY_LONG_CANDIDATE_FROZEN_HOLDOUT_UNDECODED_UNSCORED",
     "alpaca_exact_parity_materialization": "PURE_CONTRACT_READY_SIX_AUTHORITATIVE_INPUTS_AND_NEW_FORWARD_BLOCK_PERFORMANCE_SAFE_HOLD_UNCHANGED",
-    "published_git_head": "ff81f302ebbf4f4f9f0ee61e66d30b94c41dd618",
+    "latest_published_research_implementation_head": "d9ec438",
     "new_research_commits_20260715_pm": [
       "c6bc755_BREAKOUT_SUCCESSOR_AND_STATION_PRESERVATION",
       "6df7c6b_ALPACA_EXACT_PARITY_MATERIALIZATION",
-      "ff81f30_DURABLE_CASHCARRY_V2"
+      "ff81f30_DURABLE_CASHCARRY_V2",
+      "d9ec438_REAL_PUBLIC_CASHCARRY_SCHEMA_AND_NO_ENTRY_SCREEN"
     ],
-    "full_regression": "1362_PASSED"
+    "full_regression": "1363_PASSED"
   },
   "data_contract": {
     "historical_crypto_accounting": "MIXED_COHORT_NOT_CURRENT_EDGE",
@@ -184,6 +186,8 @@
     "alpaca_report_delivery_20260713": "DELIVERED_WATCHDOG_CONFIRMED"
   },
   "source_reports": [
+    "reports/RECOVERY_CHECKPOINT_2026_07_15.md",
+    "reports/PROJECT_CANONICAL_INDEX_2026_07_15.json",
     "reports/PROJECT_VNEXT_AUDIT_AND_7DAY_PLAN_2026_07_15.md",
     "reports/PATTERN_ATLAS_V1_PREREG_2026_07_15.md",
     "reports/RECOVERY_CHECKPOINT_2026_07_14.md",
@@ -201,6 +205,7 @@
     "reports/HORIZONTAL_BREAKOUT_LONG_72H_SEALED_V1_PREREG_2026_07_15.md",
     "reports/ALPACA_EXACT_PARITY_MATERIALIZATION_2026_07_15.md",
     "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md",
+    "reports/research/bybit_cashcarry_shadow_v2_public_screen_20260715/receipt.json",
     "reports/RESEARCH_STATION_V2_AUDIT_2026_07_15.md"
   ]
 }

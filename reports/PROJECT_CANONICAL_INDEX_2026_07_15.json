@@ -1,19 +1,19 @@
 {
-  "schema_version": 7,
-  "as_of_utc": "2026-07-15T17:51:22Z",
-  "status": "vnext_live_verified_ai_canonical_current_cashcarry_v2_alpaca_parity_and_one_crypto_successor_frozen",
+  "schema_version": 8,
+  "as_of_utc": "2026-07-15T17:58:00Z",
+  "status": "vnext_live_verified_ai_canonical_current_cashcarry_real_screen_no_entry_alpaca_parity_and_one_crypto_successor_frozen",
   "branch": "codex/dynamic-symbol-filters",
   "git_observation": {
     "pre_session_local_head": "e1a5836dc7954432045471b4f1e72afaeac4812d",
     "pre_session_origin_head": "e1a5836dc7954432045471b4f1e72afaeac4812d",
     "matched": true,
-    "session_changes": "AI_TRUTH_AAF57F1_TARGETED_DEPLOYED_PLUS_RESEARCH_COMMITS_C6BC755_6DF7C6B_FF81F30_PLUS_AI_FRESHNESS_B067FF6_FULL_REGRESSION_1363",
+    "session_changes": "AI_TRUTH_AAF57F1_TARGETED_DEPLOYED_PLUS_RESEARCH_COMMITS_C6BC755_6DF7C6B_FF81F30_PLUS_AI_FRESHNESS_B067FF6_PLUS_REAL_CASHCARRY_D9EC438_FULL_REGRESSION_1363",
     "new_research_commits": [
       "c6bc755",
       "6df7c6b",
       "ff81f30"
     ],
-    "latest_implementation_commit": "b067ff6",
+    "latest_implementation_commit": "d9ec438",
     "foreign_dirty_files_to_exclude": [
       "bot/fx_setups.py",
       "tests/test_fx_setups.py"
@@ -30,6 +30,7 @@
     "reports/HORIZONTAL_BREAKOUT_LONG_72H_SEALED_V1_PREREG_2026_07_15.md",
     "reports/ALPACA_EXACT_PARITY_MATERIALIZATION_2026_07_15.md",
     "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md",
+    "reports/research/bybit_cashcarry_shadow_v2_public_screen_20260715/receipt.json",
     "reports/RESEARCH_STATION_V2_AUDIT_2026_07_15.md",
     "configs/project_capability_registry_v1.json",
     "configs/ai_operator_canonical_state.json",
@@ -66,7 +67,7 @@
     },
     "fx_cfd": "RESEARCH_ONLY",
     "cross_exchange_arb": "NO_GO_NEGATIVE_174_CYCLE_SHADOW",
-    "bybit_cashcarry": "V2_DURABLE_PUBLIC_MECHANICS_READY_DEFAULT_DISABLED_CURRENT_RATES_FAIL_BREAK_EVEN_NO_DAEMON_NO_REAL_CYCLES"
+        "bybit_cashcarry": "V2_REAL_PUBLIC_XRP_BTC_ETH_ALL_NO_ENTRY_ZERO_SHADOW_POSITIONS_DEFAULT_DISABLED_NO_DAEMON_NO_CAPITAL"
   },
   "research_truth": {
     "claude_station": "107_VARIANTS_1_IS_PASS_0_FORWARD_0_OOS_0_SURVIVORS_DIAGNOSTIC_ONLY",

@@ -1078,3 +1078,8 @@
 - Live verification exposed a real observability defect: `build_ai_full_context.py` treated allocator state as stale after `900s`, while the allocator is rebuilt hourly and all control-plane health contracts use `10800s`. This falsely disabled AI recommendations for most of every hour even with fresh heartbeat and valid allocator truth.
 - Commit `b067ff6` aligns the AI gate to the established three-hour fail-closed contract and adds boundary coverage. Full regression: `1363 passed`; focused AI truth suite: `27 passed`.
 - The one-file fix was targeted-deployed with backup and no restarts. Post-context: `control_recommendations_allowed=true`, `blockers=[]`, services/PIDs unchanged, `.env` unchanged, direct Bybit positions `0`. Receipt: `reports/releases/AI_CANONICAL_AND_FRESHNESS_DEPLOY_RECEIPT_2026_07_15.json`.
+
+## ДОБАВЛЕНО 2026-07-15 PM — real public cash-carry observe/refuse screen (Codex)
+- First real public v2 run failed closed because Bybit spot exposes `basePrecision` while the synthetic fixture used `qtyStep`. Adapter repaired with spot fallback only; linear remains strict `qtyStep`. Focused v1+v2 tests `25 passed`; full project regression `1363 passed`.
+- Durable public GET-only observations: XRP expected/required `15.01/55.79 bps`, BTC `9.16/54.03`, ETH `20.24/54.10`. All actions `observe`, all gates FAIL, positions `0`, keys/private API/orders `0`.
+- Commit `d9ec438`; receipt `reports/research/bybit_cashcarry_shadow_v2_public_screen_20260715/receipt.json`. This supersedes the optimistic XRP screen for current decision-making and strengthens `NO_ENTRY`.

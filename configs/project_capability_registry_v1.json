@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-15T17:32:02Z",
+  "as_of_utc": "2026-07-15T17:58:00Z",
   "authority": "human_reviewed_capability_map",
   "purpose": "One machine-readable map of what exists, what may act, what is proven, and what must happen next.",
   "source_precedence": [
@@ -246,8 +246,8 @@
       "data_contract": "default-disabled public Bybit instruments/orderbook/funding snapshots; common-base quantity; hash-chained deterministic restart replay",
       "level_contract": "not applicable",
       "cost_contract": "four fees plus deterministic walked round-trip spread/slippage, funding timing, 10 bps basis reserve and 5 bps residual edge; partial fills refuse before state mutation",
-      "evidence": ["reports/BYBIT_CASHCARRY_SHADOW_V1_2026_07_15.md", "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md", "tests/fixtures/bybit_cashcarry_shadow_v2_replay.json"],
-      "known_gaps": ["no scheduled collector or external journal anchor", "no account fee-tier/balance/margin/two-leg recovery model", "fresh public candidates fail the break-even gate and no real paper cycles exist"],
+      "evidence": ["reports/BYBIT_CASHCARRY_SHADOW_V1_2026_07_15.md", "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md", "reports/research/bybit_cashcarry_shadow_v2_public_screen_20260715/receipt.json", "tests/fixtures/bybit_cashcarry_shadow_v2_replay.json"],
+      "known_gaps": ["no scheduled collector or external journal anchor", "no account fee-tier/balance/margin/two-leg recovery model", "three real public XRP/BTC/ETH observations all fail the break-even gate and no paper cycle exists"],
       "next_gate": "collect public observe/refuse receipts only; 10 closed cycles prove mechanics and 30+ across three liquid coins test stressed edge before any capital"
     },
     {
