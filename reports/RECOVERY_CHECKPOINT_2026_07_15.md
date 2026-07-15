@@ -30,11 +30,13 @@
 - Bybit cash-carry v2: default disabled/public GET only; exact instrument rules, common base quantity, multi-level book walk, hash-chained journal, restart replay and fail-closed break-even gate. Current-like XRP `31.92 bps` optimistic 14-day gross carry is below the `54 bps + real spread/depth` minimum, so `NO_ENTRY`; no capital or daemon. Frozen v1 unchanged.
 - Alpaca exact-parity mechanics are now executable research primitives: official calendar-month close -> next XNYS open, adverse costs/gaps, shared stop/BE/ATR trail, daily MTM and DD including initial capital. Performance remains blocked by six authoritative inputs plus a new genuinely future forward window; SAFE_HOLD unchanged.
 - The single Pattern Atlas successor `horizontal_breakout_long_72h_v1` is frozen long-only with cost/funding/fold/concentration gates. Integrity preflight is `16 passed`, sealed holdout rows decoded `0`; scorer is intentionally not implemented yet.
-- Full project regression after the successor, Alpaca parity, cash-carry v2, registry and preservation updates: `1362 passed` (the preceding AI-safety baseline was `1334`).
+- Full project regression after the successor, Alpaca parity, cash-carry v2, registry and preservation updates: `1362 passed` (the preceding AI-safety baseline was `1334`). A separate AI allocator-freshness regression brought the final suite to `1363 passed`.
 
 ## Publication/deploy truth
 
 AI/web safety was targeted-deployed from Git source `aaf57f12223002dd4979c0cf7aafb26c2f183f87` under release `ai_truth_aaf57f1_20260715`. All nine deployed hashes match; backup is `/root/by-bot-backups/ai_truth_aaf57f1_20260715`. Core restarted after three direct flat confirmations; web restarted after the new 21-component heartbeat authority and full AI context agreed. Post-check: both services active, direct broker flat, only ATT1 risk `0.10`, AI truth blockers empty, `.env` hash unchanged. Canonical receipt: `reports/releases/AI_TRUTH_TARGETED_DEPLOY_RECEIPT_AAF57F1_2026_07_15.json`. Research files did not deploy.
+
+At `17:44–17:51 UTC`, the PM canonical registry/state and one AI-context defect fix were targeted-deployed without restarting either service. The defect was exact: AI freshness allowed only `900s` for an allocator that is rebuilt hourly and governed elsewhere by a `10800s` fail-closed contract, so AI incorrectly blocked itself for most of every hour. Commit `b067ff6` aligns the threshold and adds a boundary test. Post-build context sees `26` components, `ATT1` as the sole money sleeve, `control_recommendations_allowed=true`, `blockers=[]`; direct Bybit positions remain `0`, PIDs and `.env` SHA are unchanged. Receipt: `reports/releases/AI_CANONICAL_AND_FRESHNESS_DEPLOY_RECEIPT_2026_07_15.json`.
 
 VPS checkout remains stale/dirty `f7ed011`; blind pull/reset/cleanup remains prohibited.
 

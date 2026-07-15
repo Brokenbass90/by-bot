@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "completed_at_utc": "2026-07-15T17:51:22Z",
+  "source_branch": "codex/dynamic-symbol-filters",
+  "source_commits": {
+    "canonical_bundle": "417316fe3b2d88f30053ada686232800353fad5f",
+    "allocator_freshness_fix": "b067ff6ad2be575b8bd8fb0c3fc78bf744a0d68e",
+    "origin_matches_latest_source": true
+  },
+  "local_validation": {
+    "full_regression": "1363 passed in 28.69s",
+    "focused_ai_truth_tests": "27 passed",
+    "registry_validation": {
+      "ok": true,
+      "component_count": 26,
+      "errors": [],
+      "warnings": []
+    },
+    "foreign_dirty_files_excluded": [
+      "bot/fx_setups.py",
+      "tests/test_fx_setups.py"
+    ]
+  },
+  "vps": {
+    "host": "64.226.73.119",
+    "repo_root": "/root/by-bot",
+    "checkout_head_before_and_after": "f7ed0116a5f5b8fed59dbf8a339a85989bcf2f3b",
+    "checkout_intentionally_not_pulled_or_cleaned": true,
+    "dirty_path_count_after": 328,
+    "env_sha256_before_and_after": "4b2b2db8d174c38f5be5c58ff39a632ceabb9a084abdff54eeefe7abaa575560",
+    "canonical_backup_path": "/root/by-bot-backups/ai_canonical_417316f_20260715T174429Z",
+    "freshness_fix_backup_path": "/root/by-bot-backups/ai_context_freshness_b067ff6_20260715T174848Z"
+  },
+  "deployed_files": [
+    {
+      "path": "configs/project_capability_registry_v1.json",
+      "mode": "0644",
+      "size_bytes": 23823,
+      "sha256": "5aa452d4ec6f106661ce9183a49c231c9f4c85a4c1d95ebb9a86881992012fef",
+      "backup_sha256": "e3bbe7ae555f6cd1b82b6b6127231d5bf678ba8d416da609872519a59c0bd606"
+    },
+    {
+      "path": "configs/ai_operator_canonical_state.json",
+      "mode": "0644",
+      "size_bytes": 11538,
+      "sha256": "170d18f4a43aeb7bd807bbfdbbf6ba8c1a09f29e9f4972444dbd89254ce6118c",
+      "backup_sha256": "99cd823f02872bbe2c4d2832843749e7d134d708b17d92f5a55a1a500533d65e"
+    },
+    {
+      "path": "scripts/build_ai_full_context.py",
+      "mode": "0644",
+      "size_bytes": 40577,
+      "sha256": "796b3a5896d3493600bcef7462df309b24e39b8dd19543449242986c53b31c0d",
+      "backup_sha256": "5b6cf69c8b201e1dff82310ec407448f4994cc077aba175e54c0ebaec2d1c248"
+    }
+  ],
+  "ai_context_postcondition": {
+    "observed_generated_at_utc": "2026-07-15T17:50:03.773525+00:00",
+    "observed_sha256": "d6e77633913029fbb4ed390447b0b9db41de2b8f57abfa1caf0ed6f96a9e75d2",
+    "canonical_as_of_utc": "2026-07-15T17:32:02Z",
+    "registry_as_of_utc": "2026-07-15T17:32:02Z",
+    "component_count": 26,
+    "control_recommendations_allowed": true,
+    "blockers": [],
+    "live_money_sleeves_by_heartbeat": [
+      "att1"
+    ],
+    "fixed_defect": "AI used a 900-second allocator freshness limit although the allocator is rebuilt hourly and the project-wide fail-closed contract is 10800 seconds"
+  },
+  "live_postcondition": {
+    "bybot_service": "active",
+    "bybot_pid_before_and_after": 2931263,
+    "web_service": "active",
+    "web_pid_before_and_after": 2931393,
+    "heartbeat_fresh": true,
+    "heartbeat_open_trades": 0,
+    "regime": "bull_chop",
+    "trade_on": true,
+    "dry_run": false,
+    "direct_bybit_ret_code": 0,
+    "direct_bybit_open_positions": 0
+  },
+  "core_restart": false,
+  "web_restart": false,
+  "live_risk_changed": false,
+  "broker_orders_created": false,
+  "explicitly_excluded": [
+    "all strategy code and strategy configs",
+    "all research runners and results",
+    ".env and all secret files",
+    "all allocator, regime, router and risk settings",
+    "all Alpaca execution settings"
+  ],
+  "rollback": "Atomically restore the three exact files from the two backup paths, rebuild runtime/ai_context/full_context.json, and do not restart either service."
+}

@@ -1,18 +1,19 @@
 {
-  "schema_version": 6,
-  "as_of_utc": "2026-07-15T17:32:02Z",
-  "status": "vnext_live_verified_ai_truth_deployed_cashcarry_v2_alpaca_parity_and_one_crypto_successor_frozen",
+  "schema_version": 7,
+  "as_of_utc": "2026-07-15T17:51:22Z",
+  "status": "vnext_live_verified_ai_canonical_current_cashcarry_v2_alpaca_parity_and_one_crypto_successor_frozen",
   "branch": "codex/dynamic-symbol-filters",
   "git_observation": {
     "pre_session_local_head": "e1a5836dc7954432045471b4f1e72afaeac4812d",
     "pre_session_origin_head": "e1a5836dc7954432045471b4f1e72afaeac4812d",
     "matched": true,
-    "session_changes": "AI_TRUTH_AAF57F1_TARGETED_DEPLOYED_HASHES_PASS_PLUS_RESEARCH_COMMITS_C6BC755_6DF7C6B_FF81F30_FULL_REGRESSION_1362",
+    "session_changes": "AI_TRUTH_AAF57F1_TARGETED_DEPLOYED_PLUS_RESEARCH_COMMITS_C6BC755_6DF7C6B_FF81F30_PLUS_AI_FRESHNESS_B067FF6_FULL_REGRESSION_1363",
     "new_research_commits": [
       "c6bc755",
       "6df7c6b",
       "ff81f30"
     ],
+    "latest_implementation_commit": "b067ff6",
     "foreign_dirty_files_to_exclude": [
       "bot/fx_setups.py",
       "tests/test_fx_setups.py"
@@ -25,6 +26,7 @@
     "reports/PROJECT_VNEXT_AUDIT_AND_7DAY_PLAN_2026_07_15.md",
     "reports/NEXT_CHAT_START_PROMPT_2026_07_15.md",
     "reports/releases/AI_TRUTH_TARGETED_DEPLOY_RECEIPT_AAF57F1_2026_07_15.json",
+    "reports/releases/AI_CANONICAL_AND_FRESHNESS_DEPLOY_RECEIPT_2026_07_15.json",
     "reports/HORIZONTAL_BREAKOUT_LONG_72H_SEALED_V1_PREREG_2026_07_15.md",
     "reports/ALPACA_EXACT_PARITY_MATERIALIZATION_2026_07_15.md",
     "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md",
@@ -44,6 +46,7 @@
     "ai_interpretation"
   ],
   "live_truth": {
+    "onboard_ai": "CANONICAL_26_COMPONENTS_CURRENT_ALLOCATOR_FRESHNESS_CONTRACT_FIXED_BLOCKERS_EMPTY_PROPOSAL_ONLY",
     "bybit": {
       "service": "ACTIVE_FRESH_FLAT",
       "regime": "bull_chop",
