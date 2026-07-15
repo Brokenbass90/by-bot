@@ -100,3 +100,35 @@ def test_critical_truth_rejects_incomplete_runtime_authority():
 
     assert result["control_recommendations_allowed"] is False
     assert "runtime_authority_missing_or_incomplete" in result["blockers"]
+
+
+def test_critical_truth_treats_empty_canonical_money_list_as_strict_zero() -> None:
+    heartbeat = {
+        "strategy_runtime_config": {
+            "risk_mult": {"att1": 0.1},
+            "authority": {
+                "complete": True,
+                "unclassified_sleeves": [],
+                "live_money_sleeves": ["att1"],
+                "components": {
+                    "att1": {"enabled": True, "execution_authority": "money"},
+                },
+            },
+        }
+    }
+    freshness = {
+        "heartbeat": {"present": True, "age_sec": 10},
+        "live_positions": {"present": True, "age_sec": 10},
+        "allocator_state": {"present": True, "age_sec": 10},
+        "regime": {"present": True, "age_sec": 10},
+        "operator_snapshot": {"present": True, "age_sec": 10},
+    }
+
+    result = builder.critical_truth_assessment(
+        heartbeat=heartbeat,
+        freshness=freshness,
+        canonical_state={"live": {"crypto_money_sleeves": []}},
+    )
+
+    assert result["control_recommendations_allowed"] is False
+    assert any("money_sleeve_conflict" in row for row in result["blockers"])

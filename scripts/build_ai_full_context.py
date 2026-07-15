@@ -227,8 +227,13 @@ def critical_truth_assessment(
             f"runtime_authority_self_conflict:emitted={emitted_money}:derived={actual_money}"
         )
     canonical_live = canonical_state.get("live") if isinstance(canonical_state, dict) and isinstance(canonical_state.get("live"), dict) else {}
-    expected_money = sorted(str(x) for x in (canonical_live.get("crypto_money_sleeves") or []))
-    if expected_money and actual_money != expected_money:
+    expected_raw = canonical_live.get("crypto_money_sleeves")
+    if not isinstance(expected_raw, list):
+        blockers.append("canonical_money_sleeves_missing_or_invalid")
+        expected_money: list[str] = []
+    else:
+        expected_money = sorted(str(x) for x in expected_raw)
+    if actual_money != expected_money:
         blockers.append(f"money_sleeve_conflict:expected={expected_money}:actual={actual_money}")
     expected_att1 = canonical_live.get("att1_risk_mult")
     actual_att1 = risk_mult.get("att1")
