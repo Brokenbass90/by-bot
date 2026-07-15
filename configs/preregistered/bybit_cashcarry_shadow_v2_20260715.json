@@ -1,0 +1,117 @@
+{
+  "schema_version": 2,
+  "name": "bybit_cashcarry_shadow_v2_20260715",
+  "frozen_at_utc": "2026-07-15T17:32:02Z",
+  "status": "RESEARCH_ONLY_DISABLED_DURABLE_MECHANICS_NOT_EDGE",
+  "purpose": "Durably collect and replay public Bybit spot/linear-perpetual observations with exact instrument receipts, common-quantity quantization, deterministic multi-level book walks, and conservative break-even refusal before any paper cycle opens.",
+  "research_only": true,
+  "default_enabled": false,
+  "live_permission": "FORBIDDEN",
+  "performance_claims_allowed": false,
+  "network": {
+    "default": "DISABLED",
+    "method": "GET_ONLY",
+    "public_host_allowlist": [
+      "api.bybit.com",
+      "api-testnet.bybit.com"
+    ],
+    "public_path_allowlist": [
+      "/v5/market/instruments-info",
+      "/v5/market/orderbook",
+      "/v5/market/tickers",
+      "/v5/market/funding/history"
+    ],
+    "private_api": false,
+    "api_keys_or_environment": false,
+    "order_transfer_withdrawal_paths": false,
+    "daemon_autostart": false
+  },
+  "frozen_v1_dependency": {
+    "engine": "bot/bybit_cashcarry_shadow_v1.py",
+    "engine_sha256": "e06b8dbb4d8b7e4e0936f506f44920327a55588f518d203a2a32d6bea97468e8",
+    "spec": "configs/preregistered/bybit_cashcarry_shadow_v1_20260715.json",
+    "spec_sha256": "5ef2f5da356ca8d6f5132d0c17e231612582463f96b23d2a93bb6e495db72e4f",
+    "mutation_allowed": false
+  },
+  "v1_mechanics": {
+    "enabled": false,
+    "target_notional_usd": 100.0,
+    "min_completed_funding_observations": 3,
+    "min_entry_funding_rate": 0.00005,
+    "funding_flip_exit_rate": 0.0,
+    "spot_fee_bps": 10.0,
+    "perp_fee_bps": 5.5,
+    "slippage_bps_per_fill": 2.0,
+    "max_quote_age_ms": 5000,
+    "max_quote_skew_ms": 3000,
+    "max_funding_valuation_lag_ms": 120000,
+    "max_latest_completed_funding_age_ms": 43200000,
+    "max_funding_persistence_span_ms": 259200000,
+    "max_entry_abs_basis_bps": 75.0,
+    "max_live_abs_basis_bps": 125.0,
+    "max_adverse_basis_widen_bps": 50.0,
+    "max_delta_drift_bps": 100.0,
+    "max_hold_ms": 1209600000
+  },
+  "durable_collector": {
+    "enabled": false,
+    "shadow_enabled": false,
+    "basis_stress_bps": 10.0,
+    "minimum_expected_edge_bps": 5.0,
+    "book_levels": 50,
+    "single_writer": true,
+    "fsync_each_record": true,
+    "append_only_hash_chain": true,
+    "record_contains_observation_decision_and_state": true
+  },
+  "entry_economics_gate": {
+    "conservative_rate": "minimum of projected rate and the required completed-settlement rates",
+    "expected_settlements": "floor(max_hold_ms / public instruments-info funding interval)",
+    "credited_basis_convergence": false,
+    "required_coverage": [
+      "two spot fees",
+      "two linear-perpetual fees",
+      "round-trip deterministic walked spread and slippage",
+      "10 bps adverse basis reserve",
+      "5 bps minimum residual edge"
+    ],
+    "failure": "OBSERVE_ONLY_PAPER_CYCLE_MUST_NOT_OPEN"
+  },
+  "quantization_contract": {
+    "quantity": "same base quantity on spot and perp, floored to the least common quantity step",
+    "minimums": "both minOrderQty and min notional must pass",
+    "price": "every public level must align to tickSize; adverse limit guard rounds away from the trader",
+    "depth": "walk levels deterministically in exchange price priority",
+    "partial_fill": "FORBIDDEN_REFUSE_BEFORE_STATE_MUTATION"
+  },
+  "recovery_contract": {
+    "journal": "one JSONL record atomically contains normalized observation, v2 execution/economics decision, frozen-v1 step, and post-step open state",
+    "identity": "observation payload SHA-256",
+    "integrity": "strict sequence plus previous-record hash chain plus per-record checksum",
+    "duplicate": "identical observation is an idempotent no-op",
+    "conflict": "same symbol and observed timestamp with different payload fails closed",
+    "restart": "replay every observation and require byte-equivalent deterministic decision/state"
+  },
+  "evidence_gate": {
+    "mechanics": "focused deterministic tests plus restart/idempotency/corruption fixtures",
+    "paper_cycles": "at least 10 completed cycles diagnose mechanics only",
+    "edge": "at least 30 completed cycles across at least 3 liquid symbols with positive median and p25 net results under base and stress costs",
+    "authority_after_pass": "MANUAL_REVIEW_ONLY_NO_AUTOMATIC_LIVE"
+  },
+  "known_remaining_blockers": [
+    "v2 is a single-shot/replay library and runner; no daemon is preregistered or launched",
+    "frozen v1 receipts use equal USD notional per leg while v2 stores an executable common-base-quantity plan; exact receipt parity is intentionally not claimed",
+    "no account fee-tier receipt, balance, margin, liquidation, transfer, borrow, outage, or reconciliation model",
+    "no partial-fill recovery state machine because partial fills are refused before paper state mutation",
+    "public REST legs are non-atomic and are still subject to stale/skew refusal",
+    "a local hash chain cannot independently detect deletion of a valid terminal suffix without an external anchor",
+    "no evidence of positive edge and no permission to allocate capital"
+  ],
+  "implementation": {
+    "module": "bot/bybit_cashcarry_shadow_v2.py",
+    "runner": "scripts/run_bybit_cashcarry_shadow_v2.py",
+    "fixture": "tests/fixtures/bybit_cashcarry_shadow_v2_replay.json",
+    "tests": "tests/test_bybit_cashcarry_shadow_v2.py",
+    "operator_note": "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md"
+  }
+}

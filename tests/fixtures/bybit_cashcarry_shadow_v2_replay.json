@@ -1,0 +1,97 @@
+{
+  "schema_id": "bybit_cashcarry_shadow_v2_fixture_20260715",
+  "synthetic": true,
+  "performance_claims": false,
+  "snapshots": [
+    {
+      "symbol": "BTCUSDT",
+      "observed_at_ms": 1700000000000,
+      "spot_book_ts_ms": 1700000000000,
+      "perp_book_ts_ms": 1700000000000,
+      "spot_bids": [["99.95", "0.4"], ["99.90", "1.0"]],
+      "spot_asks": [["100.05", "0.4"], ["100.10", "1.0"]],
+      "perp_bids": [["100.15", "0.3"], ["100.10", "1.0"]],
+      "perp_asks": [["100.25", "0.4"], ["100.30", "1.0"]],
+      "projected_funding_rate": 0.0003,
+      "next_funding_time_ms": 1700028800000,
+      "funding_settlements": [
+        {"settled_at_ms": 1700000000000, "rate": 0.0003, "perp_mark_price": 100.2}
+      ],
+      "instruments": {
+        "symbol": "BTCUSDT",
+        "funding_interval_minutes": 480,
+        "spot": {"market": "spot", "tick_size": "0.01", "qty_step": "0.001", "min_order_qty": "0.001", "min_notional_usd": "5"},
+        "linear_perp": {"market": "linear_perp", "tick_size": "0.01", "qty_step": "0.001", "min_order_qty": "0.001", "min_notional_usd": "5"}
+      }
+    },
+    {
+      "symbol": "BTCUSDT",
+      "observed_at_ms": 1700028800000,
+      "spot_book_ts_ms": 1700028800000,
+      "perp_book_ts_ms": 1700028800000,
+      "spot_bids": [["99.95", "0.4"], ["99.90", "1.0"]],
+      "spot_asks": [["100.05", "0.4"], ["100.10", "1.0"]],
+      "perp_bids": [["100.15", "0.3"], ["100.10", "1.0"]],
+      "perp_asks": [["100.25", "0.4"], ["100.30", "1.0"]],
+      "projected_funding_rate": 0.0003,
+      "next_funding_time_ms": 1700057600000,
+      "funding_settlements": [
+        {"settled_at_ms": 1700000000000, "rate": 0.0003, "perp_mark_price": 100.2},
+        {"settled_at_ms": 1700028800000, "rate": 0.0003, "perp_mark_price": 100.2}
+      ],
+      "instruments": {
+        "symbol": "BTCUSDT",
+        "funding_interval_minutes": 480,
+        "spot": {"market": "spot", "tick_size": "0.01", "qty_step": "0.001", "min_order_qty": "0.001", "min_notional_usd": "5"},
+        "linear_perp": {"market": "linear_perp", "tick_size": "0.01", "qty_step": "0.001", "min_order_qty": "0.001", "min_notional_usd": "5"}
+      }
+    },
+    {
+      "symbol": "BTCUSDT",
+      "observed_at_ms": 1700057600000,
+      "spot_book_ts_ms": 1700057600000,
+      "perp_book_ts_ms": 1700057600000,
+      "spot_bids": [["99.95", "0.4"], ["99.90", "1.0"]],
+      "spot_asks": [["100.05", "0.4"], ["100.10", "1.0"]],
+      "perp_bids": [["100.15", "0.3"], ["100.10", "1.0"]],
+      "perp_asks": [["100.25", "0.4"], ["100.30", "1.0"]],
+      "projected_funding_rate": 0.0003,
+      "next_funding_time_ms": 1700086400000,
+      "funding_settlements": [
+        {"settled_at_ms": 1700000000000, "rate": 0.0003, "perp_mark_price": 100.2},
+        {"settled_at_ms": 1700028800000, "rate": 0.0003, "perp_mark_price": 100.2},
+        {"settled_at_ms": 1700057600000, "rate": 0.0003, "perp_mark_price": 100.2}
+      ],
+      "instruments": {
+        "symbol": "BTCUSDT",
+        "funding_interval_minutes": 480,
+        "spot": {"market": "spot", "tick_size": "0.01", "qty_step": "0.001", "min_order_qty": "0.001", "min_notional_usd": "5"},
+        "linear_perp": {"market": "linear_perp", "tick_size": "0.01", "qty_step": "0.001", "min_order_qty": "0.001", "min_notional_usd": "5"}
+      }
+    },
+    {
+      "symbol": "BTCUSDT",
+      "observed_at_ms": 1700086400000,
+      "spot_book_ts_ms": 1700086400000,
+      "perp_book_ts_ms": 1700086400000,
+      "spot_bids": [["99.95", "0.4"], ["99.90", "1.0"]],
+      "spot_asks": [["100.05", "0.4"], ["100.10", "1.0"]],
+      "perp_bids": [["100.15", "0.3"], ["100.10", "1.0"]],
+      "perp_asks": [["100.25", "0.4"], ["100.30", "1.0"]],
+      "projected_funding_rate": -0.0001,
+      "next_funding_time_ms": 1700115200000,
+      "funding_settlements": [
+        {"settled_at_ms": 1700000000000, "rate": 0.0003, "perp_mark_price": 100.2},
+        {"settled_at_ms": 1700028800000, "rate": 0.0003, "perp_mark_price": 100.2},
+        {"settled_at_ms": 1700057600000, "rate": 0.0003, "perp_mark_price": 100.2},
+        {"settled_at_ms": 1700086400000, "rate": -0.0001, "perp_mark_price": 100.2}
+      ],
+      "instruments": {
+        "symbol": "BTCUSDT",
+        "funding_interval_minutes": 480,
+        "spot": {"market": "spot", "tick_size": "0.01", "qty_step": "0.001", "min_order_qty": "0.001", "min_notional_usd": "5"},
+        "linear_perp": {"market": "linear_perp", "tick_size": "0.01", "qty_step": "0.001", "min_order_qty": "0.001", "min_notional_usd": "5"}
+      }
+    }
+  ]
+}
