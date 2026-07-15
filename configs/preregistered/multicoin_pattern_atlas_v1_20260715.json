@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "kind": "multicoin_pattern_atlas_v1_preregistration",
+  "name": "multicoin_horizontal_h1_pattern_atlas_v1_dev13_20260715",
+  "frozen_at_utc": "2026-07-15T16:28:12Z",
+  "research_only": true,
+  "discovery_only": true,
+  "promotion_eligible": false,
+  "parameter_search": false,
+  "live_or_broker_calls": false,
+  "data_contract": {
+    "uniform_manifest_path": "configs/preregistered/event_long_dev13_uniform_m5_window_v1_20260714.json",
+    "uniform_manifest_sha256": "16b4f746a982c4e688de1c6766d93fb916173f3f3e636b7230038455d68facfb",
+    "cohort": "all_13_symbols_exactly_as_frozen",
+    "source_hash_verification_required": true,
+    "holdout_days": 120,
+    "holdout_cutoff_alignment": "floor_to_complete_H1_boundary",
+    "sealed_holdout_rule": "rows_at_or_after_discovery_end_exclusive_must_not_be_decoded_or_used",
+    "forming_bars_allowed": false
+  },
+  "aggregation_contract": {
+    "path": "bot/closed_bar_aggregation_v1.py",
+    "sha256": "5ad6b37ee5124b185ae1cefd0b7aed43863d338fed3d3abfcbf2fce96f2d95aa",
+    "source_timeframe": "M5",
+    "target_timeframe": "H1",
+    "utc_complete_children_only": true
+  },
+  "event_contract": {
+    "prior_range_lookback_h1": 20,
+    "touch_tolerance_bps": 10.0,
+    "minimum_wick_to_body_ratio": 1.5,
+    "same_pattern_cooldown_h1": 168,
+    "signal_time": "exact_close_of_completed_H1_bar",
+    "entry_time": "next_H1_open",
+    "forward_horizons_h1": [
+      6,
+      24,
+      72,
+      168
+    ],
+    "gross_paths_only": true,
+    "fees_slippage_funding_and_fill_model_included": false
+  },
+  "patterns": [
+    {
+      "id": "horizontal_breakout_long",
+      "side": "long",
+      "definition": "H1 opens at_or_below prior_20_high and closes strictly above prior_20_high"
+    },
+    {
+      "id": "horizontal_breakout_short",
+      "side": "short",
+      "definition": "H1 opens at_or_above prior_20_low and closes strictly below prior_20_low"
+    },
+    {
+      "id": "failed_break_reversal_long",
+      "side": "long",
+      "definition": "H1 low breaks prior_20_low, then bullish H1 closes back at_or_above that level"
+    },
+    {
+      "id": "failed_break_reversal_short",
+      "side": "short",
+      "definition": "H1 high breaks prior_20_high, then bearish H1 closes back at_or_below that level"
+    },
+    {
+      "id": "horizontal_rejection_long",
+      "side": "long",
+      "definition": "bullish H1 touches within 10bps above prior_20_low, closes above it, and lower_wick is at_least 1.5x body"
+    },
+    {
+      "id": "horizontal_rejection_short",
+      "side": "short",
+      "definition": "bearish H1 touches within 10bps below prior_20_high, closes below it, and upper_wick is at_least 1.5x body"
+    }
+  ],
+  "reporting_contract": {
+    "metrics": [
+      "n",
+      "mean_return_bps",
+      "median_return_bps",
+      "hit_rate",
+      "p25_return_bps",
+      "p75_return_bps",
+      "mean_mfe_bps",
+      "mean_mae_bps",
+      "per_symbol_n_and_mean_return_bps",
+      "largest_symbol_share",
+      "symbol_count_hhi",
+      "mean_excess_vs_time_sampled_side_control_bps"
+    ],
+    "control": "same_cohort_same_side_next_open_paths_sampled_every_168_H1_bars",
+    "p_values_or_promotion_claims_allowed": false,
+    "empty_or_concentrated_results_must_remain_visible": true
+  },
+  "explicit_exclusions": [
+    "sloped_or_diagonal_levels_until_a_promotion_grade_causal_contract_exists",
+    "parameter_optimization",
+    "sealed_holdout_scoring",
+    "transaction_level_backtest_claims",
+    "portfolio_sizing_or_live_promotion",
+    "AI_selected_post_hoc_patterns"
+  ],
+  "preregistration_fingerprint_sha256": "982651be725692cfc6fe0e74c04ead9993d3e66c02f11a9d8c573567b4016340"
+}

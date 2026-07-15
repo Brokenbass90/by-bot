@@ -1,0 +1,82 @@
+{
+  "schema_id": "bybit_cashcarry_shadow_replay_fixture_v1",
+  "description": "Synthetic normalized public Bybit observations. Three completed positive settlements open a shadow cycle; one later positive settlement is credited; a completed negative settlement then forces a four-fill paper exit.",
+  "synthetic_fixture_only": true,
+  "observations": [
+    {
+      "source": "bybit_public_v5",
+      "symbol": "BTCUSDT",
+      "observed_at_ms": 1700000000000,
+      "spot_quote_ts_ms": 1700000000000,
+      "perp_quote_ts_ms": 1700000000000,
+      "spot": {"bid": 99.95, "ask": 100.05, "bid_qty": 50.0, "ask_qty": 50.0},
+      "perp": {"bid": 100.15, "ask": 100.25, "bid_qty": 50.0, "ask_qty": 50.0},
+      "projected_funding_rate": 0.0001,
+      "next_funding_time_ms": 1700028800000,
+      "funding_settlements": [
+        {"settled_at_ms": 1700000000000, "rate": 0.0001, "perp_mark_price": 100.2}
+      ],
+      "complete": true
+    },
+    {
+      "source": "bybit_public_v5",
+      "symbol": "BTCUSDT",
+      "observed_at_ms": 1700028800000,
+      "spot_quote_ts_ms": 1700028800000,
+      "perp_quote_ts_ms": 1700028800000,
+      "spot": {"bid": 100.0, "ask": 100.1, "bid_qty": 50.0, "ask_qty": 50.0},
+      "perp": {"bid": 100.2, "ask": 100.3, "bid_qty": 50.0, "ask_qty": 50.0},
+      "projected_funding_rate": 0.00011,
+      "next_funding_time_ms": 1700057600000,
+      "funding_settlements": [
+        {"settled_at_ms": 1700028800000, "rate": 0.00012, "perp_mark_price": 100.25}
+      ],
+      "complete": true
+    },
+    {
+      "source": "bybit_public_v5",
+      "symbol": "BTCUSDT",
+      "observed_at_ms": 1700057600000,
+      "spot_quote_ts_ms": 1700057600000,
+      "perp_quote_ts_ms": 1700057600000,
+      "spot": {"bid": 100.0, "ask": 100.1, "bid_qty": 50.0, "ask_qty": 50.0},
+      "perp": {"bid": 100.3, "ask": 100.4, "bid_qty": 50.0, "ask_qty": 50.0},
+      "projected_funding_rate": 0.0001,
+      "next_funding_time_ms": 1700086400000,
+      "funding_settlements": [
+        {"settled_at_ms": 1700057600000, "rate": 0.00009, "perp_mark_price": 100.35}
+      ],
+      "complete": true
+    },
+    {
+      "source": "bybit_public_v5",
+      "symbol": "BTCUSDT",
+      "observed_at_ms": 1700086400000,
+      "spot_quote_ts_ms": 1700086400000,
+      "perp_quote_ts_ms": 1700086400000,
+      "spot": {"bid": 102.0, "ask": 102.1, "bid_qty": 50.0, "ask_qty": 50.0},
+      "perp": {"bid": 102.25, "ask": 102.35, "bid_qty": 50.0, "ask_qty": 50.0},
+      "projected_funding_rate": 0.0001,
+      "next_funding_time_ms": 1700115200000,
+      "funding_settlements": [
+        {"settled_at_ms": 1700086400000, "rate": 0.00011, "perp_mark_price": 102.3}
+      ],
+      "complete": true
+    },
+    {
+      "source": "bybit_public_v5",
+      "symbol": "BTCUSDT",
+      "observed_at_ms": 1700115200000,
+      "spot_quote_ts_ms": 1700115200000,
+      "perp_quote_ts_ms": 1700115200000,
+      "spot": {"bid": 101.0, "ask": 101.1, "bid_qty": 50.0, "ask_qty": 50.0},
+      "perp": {"bid": 101.15, "ask": 101.25, "bid_qty": 50.0, "ask_qty": 50.0},
+      "projected_funding_rate": -0.00002,
+      "next_funding_time_ms": 1700144000000,
+      "funding_settlements": [
+        {"settled_at_ms": 1700115200000, "rate": -0.00002, "perp_mark_price": 101.2}
+      ],
+      "complete": true
+    }
+  ]
+}

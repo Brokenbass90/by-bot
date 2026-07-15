@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "name": "bybit_cashcarry_shadow_v1_20260715",
+  "frozen_at_utc": "2026-07-15T16:45:00Z",
+  "status": "RESEARCH_ONLY_DISABLED_MECHANICS_NOT_EDGE",
+  "purpose": "Validate mechanics and net realized paper PnL for a single-exchange Bybit long-spot plus short-linear-perpetual cash-and-carry cycle using public market observations only.",
+  "research_only": true,
+  "default_enabled": false,
+  "live_permission": "FORBIDDEN",
+  "broker_or_exchange_order_calls": false,
+  "private_api_calls": false,
+  "api_key_or_environment_reads": false,
+  "performance_claims_allowed": false,
+  "construction": {
+    "spot_leg": "LONG_SPOT",
+    "perpetual_leg": "SHORT_USDT_LINEAR_PERP",
+    "entry_notional": "EQUAL_USD_NOTIONAL_PER_LEG",
+    "funding_direction": "POSITIVE_RATE_SHORT_RECEIVES",
+    "negative_funding_or_short_spot_variants": "OUT_OF_SCOPE"
+  },
+  "mechanics": {
+    "enabled": false,
+    "target_notional_usd": 100.0,
+    "min_completed_funding_observations": 3,
+    "min_entry_funding_rate": 0.00005,
+    "funding_flip_exit_rate": 0.0,
+    "spot_fee_bps": 10.0,
+    "perp_fee_bps": 5.5,
+    "slippage_bps_per_fill": 2.0,
+    "max_quote_age_ms": 5000,
+    "max_quote_skew_ms": 3000,
+    "max_funding_valuation_lag_ms": 120000,
+    "max_latest_completed_funding_age_ms": 43200000,
+    "max_funding_persistence_span_ms": 259200000,
+    "max_entry_abs_basis_bps": 75.0,
+    "max_live_abs_basis_bps": 125.0,
+    "max_adverse_basis_widen_bps": 50.0,
+    "max_delta_drift_bps": 100.0,
+    "max_hold_ms": 1209600000
+  },
+  "causal_sequence": [
+    "observe timestamped spot and linear-perp public top-of-book",
+    "ingest only funding records whose settlement timestamp is not in the future",
+    "require at least three distinct completed positive settlements",
+    "after the third settlement, simulate spot buy at ask plus adverse slippage and perp short at bid minus adverse slippage",
+    "book later funding only when settlement timestamp is strictly after entry and a contemporaneous public perp-price proxy exists",
+    "monitor executable basis, absolute basis, delta drift, funding flip and max hold",
+    "simulate spot sell at bid minus adverse slippage and perp cover at ask plus adverse slippage",
+    "freeze one checksummed append-only four-fill cycle receipt"
+  ],
+  "public_network_contract": {
+    "base": "https://api.bybit.com",
+    "opt_in_only": true,
+    "allowed_get_paths": [
+      "/v5/market/orderbook",
+      "/v5/market/tickers",
+      "/v5/market/funding/history"
+    ],
+    "authenticated_headers": false,
+    "private_paths": false,
+    "order_paths": false
+  },
+  "failure_policy": {
+    "missing_or_crossed_quote": "REFUSE_NO_STATE_MUTATION",
+    "stale_or_skewed_quote": "REFUSE_NO_STATE_MUTATION",
+    "insufficient_top_level_depth": "REFUSE_PARTIAL_FILL_FORBIDDEN",
+    "missing_funding_price_proxy_during_open_cycle": "REFUSE_FUNDING_NOT_FABRICATED",
+    "duplicate_observation": "IDEMPOTENT_NOOP",
+    "duplicate_identical_cycle_receipt": "IDEMPOTENT_NOOP",
+    "cycle_id_with_different_receipt": "FAIL_CLOSED"
+  },
+  "evidence_ladder": [
+    {
+      "stage": "MECHANICS_REPLAY",
+      "minimum": "deterministic fixtures and focused tests",
+      "authority_after_pass": "NONE"
+    },
+    {
+      "stage": "PUBLIC_PAPER_SHADOW",
+      "minimum": "at least 10 completed cycles to diagnose fill, timing, persistence and recovery mechanics",
+      "authority_after_pass": "NONE_MECHANICS_ONLY"
+    },
+    {
+      "stage": "EDGE_SCREEN",
+      "minimum": "at least 30 completed cycles across at least 3 liquid symbols; median and p25 net cycle PnL positive after base and stress costs; no single-symbol concentration",
+      "authority_after_pass": "REVIEW_ONLY_NOT_AUTOMATIC_LIVE"
+    }
+  ],
+  "known_blockers_before_any_live_design": [
+    "no persistent public collector/state daemon is included in v1",
+    "no exchange instrument lot-step, tick-size and minimum-notional quantization receipt",
+    "no multi-level order-book walk or partial-fill recovery state machine",
+    "no margin, liquidation, account-transfer, borrow, availability or operational reconciliation model",
+    "fee inputs are conservative constants and are not bound to an actual account fee tier",
+    "public REST calls are non-atomic; the engine refuses excessive timestamp skew but cannot make them atomic",
+    "funding settlement history does not include the exact settlement mark; v1 requires a near-time public perp midpoint proxy",
+    "no outage/restart durable open-position state because v1 cannot hold real or paper broker positions"
+  ],
+  "implementation": {
+    "engine": "bot/bybit_cashcarry_shadow_v1.py",
+    "runner": "scripts/run_bybit_cashcarry_shadow_v1.py",
+    "fixture": "tests/fixtures/bybit_cashcarry_shadow_v1_replay.json",
+    "tests": "tests/test_bybit_cashcarry_shadow_v1.py",
+    "operator_note": "reports/BYBIT_CASHCARRY_SHADOW_V1_2026_07_15.md"
+  }
+}

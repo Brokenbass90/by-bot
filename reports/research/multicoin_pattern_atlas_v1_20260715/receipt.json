@@ -1,0 +1,2220 @@
+{
+  "aggregation_receipts": [
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "7a5e9b86f3e7e3dae740fbd7bc889c5778446617999959013ab15965a64405ba",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "1000PEPEUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "cbcb18191c46a6606404de5ffada7dca765b72f473fd0bafd23d617ec1641b2a",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "ADAUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "837edc45fd11bbc0fade418d1055619e835efab2b40115489428c3588bb88f81",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "d39ec095bd43e08f354560791925bb037b99b7f87077985c7048a281d72a5410",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "57ab19ac561331e49bd57b47e72b48990a76d85f6e112038fee54554170a74db",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "BTCUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "987af253ca981b7eb43a8455f6cbc1aa7692917799f6e4c7a19896c852c528b0",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "DOGEUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "680b10d8eef18dcc88d86e878cba8120b7452e35e3404b87b5bd9689c14e31a8",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "ETHUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "e72842be9ca43719e3b778e726c27b0169d5bbd039acd7d0601696d726612963",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "ONDOUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "1df68117529aa73fb812633bc1fa2bc76fbf788c4287ae4bff03c56c6a2b797f",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "SOLUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "f51ea5d02e3efe9e8c39d479e1142ce457b6aba7feb67d0e28d29fb790852053",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "SUIUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "8f9e7f554bb90d6e4f1c4271a17a8cb960c90074f9cea53dd03521c94fa4a46b",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "TAOUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "11d26b69e1ac10eff7a137f84f1dbe7baf1700d2a7eb3a19b13527d96ec16f03",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "WIFUSDT"
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 14390,
+      "h1_sha256": "f2572493822792af099b40d5eb9f0bbddf2503894bd27a6fb7967721e46973f5",
+      "sealed_rows_decoded": 0,
+      "source_m5_rows_decoded": 172680,
+      "symbol": "XRPUSDT"
+    }
+  ],
+  "config": "configs/preregistered/multicoin_pattern_atlas_v1_20260715.json",
+  "config_sha256": "9e4b16604d8b97c3c99d1faef47a4c394ab0c9f667913835e8d24468953d0551",
+  "control_rows": 8840,
+  "costs_or_fill_model_included": false,
+  "discovery_end_ts_exclusive": 1772805600000,
+  "discovery_end_utc_exclusive": "2026-03-06T14:00:00Z",
+  "discovery_start_ts": 1721001600000,
+  "discovery_start_utc": "2024-07-15T00:00:00Z",
+  "generated_at_utc": "2026-07-15T16:35:43.840038Z",
+  "gross_paths_only": true,
+  "limitations": [
+    "Discovery cohort only; the final 120 days remain unscored.",
+    "Six related hypotheses are descriptive and receive no p-values or promotion status.",
+    "Gross next-open paths omit fees, slippage, funding, fills, stops and portfolio overlap.",
+    "Horizontal prior-20-H1 levels only; sloped levels are explicitly excluded.",
+    "Any candidate requires a separately preregistered sealed-holdout and external-cohort gate."
+  ],
+  "live_or_broker_calls": false,
+  "mode": "discovery",
+  "observation_rows": 20372,
+  "performance_computed": true,
+  "preregistration_fingerprint_sha256": "982651be725692cfc6fe0e74c04ead9993d3e66c02f11a9d8c573567b4016340",
+  "promotion_eligible": false,
+  "schema": "multicoin_pattern_atlas_v1_receipt",
+  "sealed_holdout_scored": false,
+  "sealed_holdout_start_ts": 1772805600000,
+  "sealed_holdout_start_utc": "2026-03-06T14:00:00Z",
+  "source_hashes_verified": true,
+  "summaries": [
+    {
+      "control_mean_return_bps": -5.603045,
+      "control_n": 1105,
+      "hit_rate": 0.466447,
+      "horizon_h1": 6,
+      "largest_symbol_share": 0.079208,
+      "mean_excess_vs_time_sampled_side_control_bps": 9.160771,
+      "mean_mae_bps": -190.262004,
+      "mean_mfe_bps": 205.896566,
+      "mean_return_bps": 3.557725,
+      "median_return_bps": -12.534245,
+      "n": 909,
+      "p25_return_bps": -137.3831,
+      "p75_return_bps": 103.475497,
+      "pattern_id": "horizontal_breakout_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": 38.251435,
+          "n": 69,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -34.333565,
+          "n": 69,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": 22.114902,
+          "n": 70,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -6.932989,
+          "n": 72,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -4.12745,
+          "n": 70,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": 53.852484,
+          "n": 71,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 8.392025,
+          "n": 71,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -0.168202,
+          "n": 69,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -9.085344,
+          "n": 71,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": 8.757691,
+          "n": 69,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -40.565681,
+          "n": 70,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -7.633447,
+          "n": 70,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 17.803772,
+          "n": 68,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.076941,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -8.11244,
+      "control_n": 1105,
+      "hit_rate": 0.438944,
+      "horizon_h1": 24,
+      "largest_symbol_share": 0.079208,
+      "mean_excess_vs_time_sampled_side_control_bps": -7.070487,
+      "mean_mae_bps": -364.869386,
+      "mean_mfe_bps": 380.2722,
+      "mean_return_bps": -15.182928,
+      "median_return_bps": -52.767917,
+      "n": 909,
+      "p25_return_bps": -303.141875,
+      "p75_return_bps": 222.583596,
+      "pattern_id": "horizontal_breakout_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": -17.710821,
+          "n": 69,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -70.838117,
+          "n": 69,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -3.267173,
+          "n": 70,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -19.475739,
+          "n": 72,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -11.579193,
+          "n": 70,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": 16.251972,
+          "n": 71,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -64.285605,
+          "n": 71,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -15.177798,
+          "n": 69,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -38.691122,
+          "n": 71,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": 42.244759,
+          "n": 69,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": 13.32108,
+          "n": 70,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -89.93361,
+          "n": 70,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 64.747185,
+          "n": 68,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.076941,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -36.50226,
+      "control_n": 1105,
+      "hit_rate": 0.479648,
+      "horizon_h1": 72,
+      "largest_symbol_share": 0.079208,
+      "mean_excess_vs_time_sampled_side_control_bps": 91.001535,
+      "mean_mae_bps": -659.697382,
+      "mean_mfe_bps": 720.566721,
+      "mean_return_bps": 54.499276,
+      "median_return_bps": -49.235523,
+      "n": 909,
+      "p25_return_bps": -442.558147,
+      "p75_return_bps": 434.057183,
+      "pattern_id": "horizontal_breakout_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": 155.542542,
+          "n": 69,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": 137.146261,
+          "n": 69,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": 70.073826,
+          "n": 70,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -16.212067,
+          "n": 72,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 17.268182,
+          "n": 70,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": 2.040814,
+          "n": 71,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 22.941676,
+          "n": 71,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": 144.27274,
+          "n": 69,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 69.193841,
+          "n": 71,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": 20.195303,
+          "n": 69,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -14.274944,
+          "n": 70,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -64.291131,
+          "n": 70,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 174.447843,
+          "n": 68,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.076941,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 39.258243,
+      "control_n": 1105,
+      "hit_rate": 0.475248,
+      "horizon_h1": 168,
+      "largest_symbol_share": 0.079208,
+      "mean_excess_vs_time_sampled_side_control_bps": 32.307904,
+      "mean_mae_bps": -993.189448,
+      "mean_mfe_bps": 1095.703573,
+      "mean_return_bps": 71.566147,
+      "median_return_bps": -53.923589,
+      "n": 909,
+      "p25_return_bps": -721.329831,
+      "p75_return_bps": 670.551542,
+      "pattern_id": "horizontal_breakout_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": -5.455697,
+          "n": 69,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": 181.797361,
+          "n": 69,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": 43.76554,
+          "n": 70,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": 51.7937,
+          "n": 72,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 44.021151,
+          "n": 70,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": 118.332578,
+          "n": 71,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 37.705422,
+          "n": 71,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -47.27456,
+          "n": 69,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -27.339185,
+          "n": 71,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": 254.330715,
+          "n": 69,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": 55.039999,
+          "n": 70,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -129.612385,
+          "n": 70,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 364.814919,
+          "n": 68,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.076941,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 5.603045,
+      "control_n": 1105,
+      "hit_rate": 0.455038,
+      "horizon_h1": 6,
+      "largest_symbol_share": 0.07909,
+      "mean_excess_vs_time_sampled_side_control_bps": -22.670136,
+      "mean_mae_bps": -187.848213,
+      "mean_mfe_bps": 194.063449,
+      "mean_return_bps": -17.067091,
+      "median_return_bps": -19.020431,
+      "n": 923,
+      "p25_return_bps": -128.38662,
+      "p75_return_bps": 95.638917,
+      "pattern_id": "horizontal_breakout_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": -37.647984,
+          "n": 72,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": 23.031278,
+          "n": 70,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -6.91445,
+          "n": 73,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -34.802765,
+          "n": 72,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -5.13852,
+          "n": 70,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": 1.958332,
+          "n": 71,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -38.523693,
+          "n": 68,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -9.032652,
+          "n": 73,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -16.961794,
+          "n": 71,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -49.617049,
+          "n": 71,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -76.169567,
+          "n": 69,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": 58.505175,
+          "n": 73,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -34.747651,
+          "n": 70,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076958,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 8.11244,
+      "control_n": 1105,
+      "hit_rate": 0.488624,
+      "horizon_h1": 24,
+      "largest_symbol_share": 0.07909,
+      "mean_excess_vs_time_sampled_side_control_bps": -51.609109,
+      "mean_mae_bps": -397.166136,
+      "mean_mfe_bps": 387.494886,
+      "mean_return_bps": -43.496668,
+      "median_return_bps": -4.274722,
+      "n": 923,
+      "p25_return_bps": -262.13126,
+      "p75_return_bps": 258.850064,
+      "pattern_id": "horizontal_breakout_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": -80.830882,
+          "n": 72,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -57.846541,
+          "n": 70,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -53.49003,
+          "n": 73,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -43.314726,
+          "n": 72,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -10.266306,
+          "n": 70,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -22.538644,
+          "n": 71,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -100.677833,
+          "n": 68,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -88.775701,
+          "n": 73,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -3.735574,
+          "n": 71,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -51.786804,
+          "n": 71,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -47.554193,
+          "n": 69,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": 52.589427,
+          "n": 73,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -60.357242,
+          "n": 70,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076958,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 36.50226,
+      "control_n": 1105,
+      "hit_rate": 0.52221,
+      "horizon_h1": 72,
+      "largest_symbol_share": 0.07909,
+      "mean_excess_vs_time_sampled_side_control_bps": -58.752529,
+      "mean_mae_bps": -664.404544,
+      "mean_mfe_bps": 674.414274,
+      "mean_return_bps": -22.25027,
+      "median_return_bps": 33.629594,
+      "n": 923,
+      "p25_return_bps": -461.280959,
+      "p75_return_bps": 501.10641,
+      "pattern_id": "horizontal_breakout_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": 30.776826,
+          "n": 72,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -36.577502,
+          "n": 70,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -40.478915,
+          "n": 73,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -104.104012,
+          "n": 72,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -40.60338,
+          "n": 70,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": 6.162013,
+          "n": 71,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 41.162241,
+          "n": 68,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -5.960793,
+          "n": 73,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -78.724649,
+          "n": 71,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -44.39831,
+          "n": 71,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -4.613783,
+          "n": 69,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": 46.342975,
+          "n": 73,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -57.488177,
+          "n": 70,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076958,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -39.258243,
+      "control_n": 1105,
+      "hit_rate": 0.539545,
+      "horizon_h1": 168,
+      "largest_symbol_share": 0.07909,
+      "mean_excess_vs_time_sampled_side_control_bps": 39.317517,
+      "mean_mae_bps": -1040.30637,
+      "mean_mfe_bps": 1056.908113,
+      "mean_return_bps": 0.059274,
+      "median_return_bps": 72.667604,
+      "n": 923,
+      "p25_return_bps": -587.805668,
+      "p75_return_bps": 766.713262,
+      "pattern_id": "horizontal_breakout_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": -11.798623,
+          "n": 72,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": 43.530806,
+          "n": 70,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": 75.596772,
+          "n": 73,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -81.747261,
+          "n": 72,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -29.796512,
+          "n": 70,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -159.892897,
+          "n": 71,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 106.496358,
+          "n": 68,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": 73.603247,
+          "n": 73,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -14.791526,
+          "n": 71,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -142.20579,
+          "n": 71,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": 153.47031,
+          "n": 69,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": 49.180346,
+          "n": 73,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -56.930747,
+          "n": 70,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076958,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -5.603045,
+      "control_n": 1105,
+      "hit_rate": 0.511601,
+      "horizon_h1": 6,
+      "largest_symbol_share": 0.080046,
+      "mean_excess_vs_time_sampled_side_control_bps": 9.313866,
+      "mean_mae_bps": -187.738273,
+      "mean_mfe_bps": 167.532194,
+      "mean_return_bps": 3.710821,
+      "median_return_bps": 4.409493,
+      "n": 862,
+      "p25_return_bps": -94.559474,
+      "p75_return_bps": 100.085586,
+      "pattern_id": "failed_break_reversal_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": 13.324259,
+          "n": 66,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": 20.756525,
+          "n": 69,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": 14.836483,
+          "n": 69,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": 2.773,
+          "n": 63,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 12.629362,
+          "n": 67,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -16.502839,
+          "n": 66,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 23.556339,
+          "n": 63,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": 0.09854,
+          "n": 69,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 15.540288,
+          "n": 67,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -58.388913,
+          "n": 66,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -35.996138,
+          "n": 66,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -6.447675,
+          "n": 67,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 63.454528,
+          "n": 64,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.076991,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -8.11244,
+      "control_n": 1105,
+      "hit_rate": 0.487239,
+      "horizon_h1": 24,
+      "largest_symbol_share": 0.080046,
+      "mean_excess_vs_time_sampled_side_control_bps": 16.90551,
+      "mean_mae_bps": -396.362927,
+      "mean_mfe_bps": 373.705956,
+      "mean_return_bps": 8.79307,
+      "median_return_bps": -15.193173,
+      "n": 862,
+      "p25_return_bps": -258.9864,
+      "p75_return_bps": 263.956073,
+      "pattern_id": "failed_break_reversal_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": -26.825536,
+          "n": 66,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": 34.073668,
+          "n": 69,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -10.205494,
+          "n": 69,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": 74.988143,
+          "n": 63,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 33.819378,
+          "n": 67,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": 44.494385,
+          "n": 66,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 41.923244,
+          "n": 63,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -111.829475,
+          "n": 69,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 64.960936,
+          "n": 67,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -3.110809,
+          "n": 66,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": 97.600191,
+          "n": 66,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -85.984733,
+          "n": 67,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -30.878263,
+          "n": 64,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.076991,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -36.50226,
+      "control_n": 1105,
+      "hit_rate": 0.477958,
+      "horizon_h1": 72,
+      "largest_symbol_share": 0.080046,
+      "mean_excess_vs_time_sampled_side_control_bps": 1.351968,
+      "mean_mae_bps": -705.118767,
+      "mean_mfe_bps": 619.390227,
+      "mean_return_bps": -35.150292,
+      "median_return_bps": -31.226205,
+      "n": 862,
+      "p25_return_bps": -545.913625,
+      "p75_return_bps": 413.18071,
+      "pattern_id": "failed_break_reversal_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": -98.665589,
+          "n": 66,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": 10.920203,
+          "n": 69,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -194.246717,
+          "n": 69,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": 100.323108,
+          "n": 63,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 47.493531,
+          "n": 67,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -41.045168,
+          "n": 66,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 69.25927,
+          "n": 63,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -85.887996,
+          "n": 69,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -57.022045,
+          "n": 67,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -54.996957,
+          "n": 66,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": 82.535683,
+          "n": 66,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -243.439214,
+          "n": 67,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 30.386741,
+          "n": 64,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.076991,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 39.258243,
+      "control_n": 1105,
+      "hit_rate": 0.460557,
+      "horizon_h1": 168,
+      "largest_symbol_share": 0.080046,
+      "mean_excess_vs_time_sampled_side_control_bps": -32.182674,
+      "mean_mae_bps": -1082.267957,
+      "mean_mfe_bps": 1043.51624,
+      "mean_return_bps": 7.075569,
+      "median_return_bps": -81.785503,
+      "n": 862,
+      "p25_return_bps": -805.884248,
+      "p75_return_bps": 633.787663,
+      "pattern_id": "failed_break_reversal_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": 35.593442,
+          "n": 66,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -7.269105,
+          "n": 69,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -39.239307,
+          "n": 69,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": 11.578669,
+          "n": 63,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 96.244367,
+          "n": 67,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -89.294509,
+          "n": 66,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -29.042631,
+          "n": 63,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -192.799003,
+          "n": 69,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -8.060229,
+          "n": 67,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -7.29661,
+          "n": 66,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": 140.370673,
+          "n": 66,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -225.019079,
+          "n": 67,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 431.88914,
+          "n": 64,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.076991,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 5.603045,
+      "control_n": 1105,
+      "hit_rate": 0.511601,
+      "horizon_h1": 6,
+      "largest_symbol_share": 0.081206,
+      "mean_excess_vs_time_sampled_side_control_bps": -10.863756,
+      "mean_mae_bps": -193.701063,
+      "mean_mfe_bps": 180.549175,
+      "mean_return_bps": -5.260711,
+      "median_return_bps": 4.532877,
+      "n": 862,
+      "p25_return_bps": -111.164859,
+      "p75_return_bps": 132.428322,
+      "pattern_id": "failed_break_reversal_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": -43.255686,
+          "n": 65,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": 24.237372,
+          "n": 64,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": 44.255641,
+          "n": 70,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -6.097302,
+          "n": 67,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -0.111812,
+          "n": 67,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -22.031337,
+          "n": 65,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -3.996872,
+          "n": 66,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": 14.504271,
+          "n": 68,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 22.176993,
+          "n": 68,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -69.601507,
+          "n": 66,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -72.177154,
+          "n": 67,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": 31.878887,
+          "n": 67,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 8.693526,
+          "n": 62,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076989,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 8.11244,
+      "control_n": 1105,
+      "hit_rate": 0.506961,
+      "horizon_h1": 24,
+      "largest_symbol_share": 0.081206,
+      "mean_excess_vs_time_sampled_side_control_bps": -34.980139,
+      "mean_mae_bps": -379.039025,
+      "mean_mfe_bps": 356.997258,
+      "mean_return_bps": -26.867698,
+      "median_return_bps": 5.835756,
+      "n": 862,
+      "p25_return_bps": -242.117301,
+      "p75_return_bps": 261.026201,
+      "pattern_id": "failed_break_reversal_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": -53.992475,
+          "n": 65,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -33.070942,
+          "n": 64,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": 46.626908,
+          "n": 70,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -61.362058,
+          "n": 67,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -15.483309,
+          "n": 67,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -91.774646,
+          "n": 65,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 7.679926,
+          "n": 66,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": 77.378261,
+          "n": 68,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 5.888676,
+          "n": 68,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -130.131784,
+          "n": 66,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -134.175225,
+          "n": 67,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": 41.114763,
+          "n": 67,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -16.597984,
+          "n": 62,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076989,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 36.50226,
+      "control_n": 1105,
+      "hit_rate": 0.49536,
+      "horizon_h1": 72,
+      "largest_symbol_share": 0.081206,
+      "mean_excess_vs_time_sampled_side_control_bps": -137.681656,
+      "mean_mae_bps": -739.473731,
+      "mean_mfe_bps": 611.076951,
+      "mean_return_bps": -101.179397,
+      "median_return_bps": -11.168068,
+      "n": 862,
+      "p25_return_bps": -500.748558,
+      "p75_return_bps": 437.038005,
+      "pattern_id": "failed_break_reversal_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": -137.019546,
+          "n": 65,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -173.789948,
+          "n": 64,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -5.40432,
+          "n": 70,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -58.386384,
+          "n": 67,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -62.422853,
+          "n": 67,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -80.16971,
+          "n": 65,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -122.982713,
+          "n": 66,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -1.516821,
+          "n": 68,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -17.316733,
+          "n": 68,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -124.677606,
+          "n": 66,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -133.203563,
+          "n": 67,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -225.443997,
+          "n": 67,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -191.106629,
+          "n": 62,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076989,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -39.258243,
+      "control_n": 1105,
+      "hit_rate": 0.549884,
+      "horizon_h1": 168,
+      "largest_symbol_share": 0.081206,
+      "mean_excess_vs_time_sampled_side_control_bps": -3.002522,
+      "mean_mae_bps": -1125.667159,
+      "mean_mfe_bps": 1003.049846,
+      "mean_return_bps": -42.260766,
+      "median_return_bps": 99.653036,
+      "n": 862,
+      "p25_return_bps": -650.881143,
+      "p75_return_bps": 794.160645,
+      "pattern_id": "failed_break_reversal_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": -87.748399,
+          "n": 65,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -88.941968,
+          "n": 64,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": 109.283912,
+          "n": 70,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -29.719817,
+          "n": 67,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -95.119409,
+          "n": 67,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -63.465688,
+          "n": 65,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -23.214489,
+          "n": 66,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": 135.566385,
+          "n": 68,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 71.821382,
+          "n": 68,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -152.737197,
+          "n": 66,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -147.818121,
+          "n": 67,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": 53.859279,
+          "n": 67,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -264.31514,
+          "n": 62,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076989,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -5.603045,
+      "control_n": 1105,
+      "hit_rate": 0.51229,
+      "horizon_h1": 6,
+      "largest_symbol_share": 0.085382,
+      "mean_excess_vs_time_sampled_side_control_bps": 19.329955,
+      "mean_mae_bps": -175.418231,
+      "mean_mfe_bps": 171.643181,
+      "mean_return_bps": 13.72691,
+      "median_return_bps": 4.934413,
+      "n": 773,
+      "p25_return_bps": -95.211812,
+      "p75_return_bps": 106.505447,
+      "pattern_id": "horizontal_rejection_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": 18.938618,
+          "n": 61,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": 22.541117,
+          "n": 62,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -1.506676,
+          "n": 61,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": 4.5966,
+          "n": 56,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 6.579337,
+          "n": 63,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": 2.938999,
+          "n": 59,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 19.927159,
+          "n": 56,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -6.381452,
+          "n": 61,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 20.482053,
+          "n": 66,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": 3.993555,
+          "n": 57,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -23.012311,
+          "n": 58,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": 70.808281,
+          "n": 59,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 39.918887,
+          "n": 54,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.077143,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -8.11244,
+      "control_n": 1105,
+      "hit_rate": 0.477361,
+      "horizon_h1": 24,
+      "largest_symbol_share": 0.085382,
+      "mean_excess_vs_time_sampled_side_control_bps": -0.981238,
+      "mean_mae_bps": -405.338472,
+      "mean_mfe_bps": 366.440312,
+      "mean_return_bps": -9.093679,
+      "median_return_bps": -32.513307,
+      "n": 773,
+      "p25_return_bps": -267.096168,
+      "p75_return_bps": 241.171404,
+      "pattern_id": "horizontal_rejection_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": 26.289246,
+          "n": 61,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -9.076805,
+          "n": 62,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": 54.05557,
+          "n": 61,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": 48.872352,
+          "n": 56,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 21.045974,
+          "n": 63,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -1.985177,
+          "n": 59,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -80.540906,
+          "n": 56,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -64.55546,
+          "n": 61,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 53.477741,
+          "n": 66,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -91.558838,
+          "n": 57,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -30.668231,
+          "n": 58,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -11.410463,
+          "n": 59,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -50.441424,
+          "n": 54,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.077143,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -36.50226,
+      "control_n": 1105,
+      "hit_rate": 0.467012,
+      "horizon_h1": 72,
+      "largest_symbol_share": 0.085382,
+      "mean_excess_vs_time_sampled_side_control_bps": -0.197573,
+      "mean_mae_bps": -708.522625,
+      "mean_mfe_bps": 606.963916,
+      "mean_return_bps": -36.699832,
+      "median_return_bps": -46.240415,
+      "n": 773,
+      "p25_return_bps": -531.968663,
+      "p75_return_bps": 387.78771,
+      "pattern_id": "horizontal_rejection_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": -7.354302,
+          "n": 61,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -62.499751,
+          "n": 62,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -87.189103,
+          "n": 61,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": 11.42008,
+          "n": 56,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 53.141529,
+          "n": 63,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -144.624667,
+          "n": 59,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -89.537735,
+          "n": 56,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -34.190985,
+          "n": 61,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 0.667273,
+          "n": 66,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": 115.038187,
+          "n": 57,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -66.77627,
+          "n": 58,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -219.691491,
+          "n": 59,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 58.369349,
+          "n": 54,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.077143,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 39.258243,
+      "control_n": 1105,
+      "hit_rate": 0.443726,
+      "horizon_h1": 168,
+      "largest_symbol_share": 0.085382,
+      "mean_excess_vs_time_sampled_side_control_bps": -69.406917,
+      "mean_mae_bps": -1098.651846,
+      "mean_mfe_bps": 1001.62728,
+      "mean_return_bps": -30.148674,
+      "median_return_bps": -116.27907,
+      "n": 773,
+      "p25_return_bps": -792.760642,
+      "p75_return_bps": 577.401013,
+      "pattern_id": "horizontal_rejection_long",
+      "per_symbol": [
+        {
+          "mean_return_bps": 83.293651,
+          "n": 61,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -20.00559,
+          "n": 62,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -45.355913,
+          "n": 61,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -19.886061,
+          "n": 56,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 84.402868,
+          "n": 63,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -135.672683,
+          "n": 59,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -135.048699,
+          "n": 56,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -132.381275,
+          "n": 61,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 65.166281,
+          "n": 66,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": 78.56133,
+          "n": 57,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": 9.659898,
+          "n": 58,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -384.923824,
+          "n": 59,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": 156.136908,
+          "n": 54,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "long",
+      "symbol_count_hhi": 0.077143,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 5.603045,
+      "control_n": 1105,
+      "hit_rate": 0.494764,
+      "horizon_h1": 6,
+      "largest_symbol_share": 0.081152,
+      "mean_excess_vs_time_sampled_side_control_bps": -15.776721,
+      "mean_mae_bps": -190.75112,
+      "mean_mfe_bps": 166.931285,
+      "mean_return_bps": -10.173675,
+      "median_return_bps": -1.00251,
+      "n": 764,
+      "p25_return_bps": -110.532444,
+      "p75_return_bps": 105.660663,
+      "pattern_id": "horizontal_rejection_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": -12.785462,
+          "n": 58,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -22.80995,
+          "n": 57,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -42.065886,
+          "n": 60,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": 17.023669,
+          "n": 62,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -4.076998,
+          "n": 61,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": 7.414514,
+          "n": 56,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 18.734482,
+          "n": 59,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -38.781249,
+          "n": 59,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 28.225402,
+          "n": 60,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -36.018862,
+          "n": 57,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -27.037144,
+          "n": 60,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -7.565681,
+          "n": 57,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -14.365714,
+          "n": 58,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076989,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 8.11244,
+      "control_n": 1105,
+      "hit_rate": 0.505236,
+      "horizon_h1": 24,
+      "largest_symbol_share": 0.081152,
+      "mean_excess_vs_time_sampled_side_control_bps": -65.266347,
+      "mean_mae_bps": -398.233031,
+      "mean_mfe_bps": 339.360192,
+      "mean_return_bps": -57.153906,
+      "median_return_bps": 4.304121,
+      "n": 764,
+      "p25_return_bps": -240.962602,
+      "p75_return_bps": 228.186871,
+      "pattern_id": "horizontal_rejection_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": -53.973998,
+          "n": 58,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -155.296136,
+          "n": 57,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -66.568007,
+          "n": 60,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -7.232095,
+          "n": 62,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -21.730214,
+          "n": 61,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -76.023182,
+          "n": 56,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -7.858968,
+          "n": 59,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -24.400431,
+          "n": 59,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -93.086368,
+          "n": 60,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -65.816943,
+          "n": 57,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -70.041785,
+          "n": 60,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -48.644569,
+          "n": 57,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -59.355196,
+          "n": 58,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076989,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": 36.50226,
+      "control_n": 1105,
+      "hit_rate": 0.496073,
+      "horizon_h1": 72,
+      "largest_symbol_share": 0.081152,
+      "mean_excess_vs_time_sampled_side_control_bps": -144.288765,
+      "mean_mae_bps": -729.361304,
+      "mean_mfe_bps": 572.422496,
+      "mean_return_bps": -107.786505,
+      "median_return_bps": -3.380334,
+      "n": 764,
+      "p25_return_bps": -474.312527,
+      "p75_return_bps": 429.963403,
+      "pattern_id": "horizontal_rejection_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": 3.428415,
+          "n": 58,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -237.811547,
+          "n": 57,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": -89.801757,
+          "n": 60,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -37.617995,
+          "n": 62,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": -14.554139,
+          "n": 61,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -121.315693,
+          "n": 56,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": -107.851083,
+          "n": 59,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": -53.667128,
+          "n": 59,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": -126.246822,
+          "n": 60,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -78.700582,
+          "n": 57,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": -171.725349,
+          "n": 60,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": -198.900281,
+          "n": 57,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -178.610752,
+          "n": 58,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076989,
+      "symbols_with_events": 13
+    },
+    {
+      "control_mean_return_bps": -39.258243,
+      "control_n": 1105,
+      "hit_rate": 0.562827,
+      "horizon_h1": 168,
+      "largest_symbol_share": 0.081152,
+      "mean_excess_vs_time_sampled_side_control_bps": 24.993621,
+      "mean_mae_bps": -1107.517275,
+      "mean_mfe_bps": 978.262429,
+      "mean_return_bps": -14.264622,
+      "median_return_bps": 152.995701,
+      "n": 764,
+      "p25_return_bps": -543.718912,
+      "p75_return_bps": 815.430534,
+      "pattern_id": "horizontal_rejection_short",
+      "per_symbol": [
+        {
+          "mean_return_bps": 155.678174,
+          "n": 58,
+          "symbol": "1000PEPEUSDT"
+        },
+        {
+          "mean_return_bps": -94.764804,
+          "n": 57,
+          "symbol": "ADAUSDT"
+        },
+        {
+          "mean_return_bps": 68.1481,
+          "n": 60,
+          "symbol": "AVAXUSDT"
+        },
+        {
+          "mean_return_bps": -26.489747,
+          "n": 62,
+          "symbol": "BNBUSDT"
+        },
+        {
+          "mean_return_bps": 5.088903,
+          "n": 61,
+          "symbol": "BTCUSDT"
+        },
+        {
+          "mean_return_bps": -210.9658,
+          "n": 56,
+          "symbol": "DOGEUSDT"
+        },
+        {
+          "mean_return_bps": 9.370496,
+          "n": 59,
+          "symbol": "ETHUSDT"
+        },
+        {
+          "mean_return_bps": 78.257748,
+          "n": 59,
+          "symbol": "ONDOUSDT"
+        },
+        {
+          "mean_return_bps": 38.468148,
+          "n": 60,
+          "symbol": "SOLUSDT"
+        },
+        {
+          "mean_return_bps": -165.32019,
+          "n": 57,
+          "symbol": "SUIUSDT"
+        },
+        {
+          "mean_return_bps": 132.125388,
+          "n": 60,
+          "symbol": "TAOUSDT"
+        },
+        {
+          "mean_return_bps": 43.253963,
+          "n": 57,
+          "symbol": "WIFUSDT"
+        },
+        {
+          "mean_return_bps": -239.942679,
+          "n": 58,
+          "symbol": "XRPUSDT"
+        }
+      ],
+      "side": "short",
+      "symbol_count_hhi": 0.076989,
+      "symbols_with_events": 13
+    }
+  ],
+  "symbols": [
+    "1000PEPEUSDT",
+    "ADAUSDT",
+    "AVAXUSDT",
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "ONDOUSDT",
+    "SOLUSDT",
+    "SUIUSDT",
+    "TAOUSDT",
+    "WIFUSDT",
+    "XRPUSDT"
+  ],
+  "uniform_manifest_sha256": "16b4f746a982c4e688de1c6766d93fb916173f3f3e636b7230038455d68facfb",
+  "uniform_window_end_ts_exclusive": 1783173900000,
+  "uniform_window_end_utc_exclusive": "2026-07-04T14:05:00Z"
+}
