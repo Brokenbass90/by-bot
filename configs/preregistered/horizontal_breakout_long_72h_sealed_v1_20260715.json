@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "kind": "horizontal_breakout_long_72h_sealed_v1_preregistration",
+  "name": "horizontal_breakout_long_72h_sealed_dev13_v1_20260715",
+  "frozen_at_utc": "2026-07-15T17:29:22Z",
+  "research_only": true,
+  "candidate_count": 1,
+  "preregistered_before_holdout_access": true,
+  "performance_computed": false,
+  "sealed_holdout_decoded": false,
+  "parameter_search": false,
+  "promotion_eligible_now": false,
+  "live_router_broker_or_allocator_integration": false,
+  "provenance": {
+    "pins": [
+      {
+        "role": "atlas_preregistration",
+        "path": "configs/preregistered/multicoin_pattern_atlas_v1_20260715.json",
+        "sha256": "9e4b16604d8b97c3c99d1faef47a4c394ab0c9f667913835e8d24468953d0551"
+      },
+      {
+        "role": "atlas_discovery_receipt",
+        "path": "reports/research/multicoin_pattern_atlas_v1_20260715/receipt.json",
+        "sha256": "acb571eb59a5e85773176d21bce411ebaaab45294f4c168fefa292d484aab739"
+      },
+      {
+        "role": "uniform_window_manifest",
+        "path": "configs/preregistered/event_long_dev13_uniform_m5_window_v1_20260714.json",
+        "sha256": "16b4f746a982c4e688de1c6766d93fb916173f3f3e636b7230038455d68facfb"
+      },
+      {
+        "role": "closed_bar_aggregation",
+        "path": "bot/closed_bar_aggregation_v1.py",
+        "sha256": "5ad6b37ee5124b185ae1cefd0b7aed43863d338fed3d3abfcbf2fce96f2d95aa"
+      }
+    ],
+    "selected_discovery_cell": {
+      "pattern_id": "horizontal_breakout_long",
+      "side": "long",
+      "horizon_h1": 72,
+      "selection_count": 1,
+      "other_atlas_cells_rescued": 0
+    }
+  },
+  "data_contract": {
+    "cohort": "exact_hash_pinned_dev13_no_additions_or_removals",
+    "symbols": [
+      "1000PEPEUSDT",
+      "ADAUSDT",
+      "AVAXUSDT",
+      "BNBUSDT",
+      "BTCUSDT",
+      "DOGEUSDT",
+      "ETHUSDT",
+      "ONDOUSDT",
+      "SOLUSDT",
+      "SUIUSDT",
+      "TAOUSDT",
+      "WIFUSDT",
+      "XRPUSDT"
+    ],
+    "source_timeframe": "M5",
+    "decision_timeframe": "H1",
+    "sealed_holdout": {
+      "start_ts": 1772805600000,
+      "start_utc": "2026-03-06T14:00:00Z",
+      "end_ts_exclusive": 1783173600000,
+      "end_utc_exclusive": "2026-07-04T14:00:00Z",
+      "calendar_days": 120,
+      "status": "SEALED_UNDECODED_UNSCORED",
+      "performance_access_before_freeze_commit_allowed": false,
+      "discovery_prefix_may_be_used_as_20_H1_warmup_only": true
+    },
+    "source_hash_verification_before_scoring": true,
+    "preflight_may_open_raw_snapshots": false,
+    "preflight_may_decode_market_rows": false,
+    "forming_bars_allowed": false,
+    "provider_mixing_allowed": false
+  },
+  "strategy_contract": {
+    "candidate_id": "horizontal_breakout_long_72h_v1",
+    "physical_side": "long",
+    "short_logic_present": false,
+    "signal": {
+      "lookback_h1": 20,
+      "level": "maximum_high_of_exactly_20_completed_H1_bars_before_signal_bar",
+      "signal_bar": "completed_H1_only",
+      "condition": "signal_open_at_or_below_frozen_level_and_signal_close_strictly_above_frozen_level",
+      "signal_timestamp": "exact_close_of_signal_H1_bar",
+      "level_redraw_after_signal_allowed": false,
+      "extra_regime_volume_momentum_or_AI_filters_allowed": false
+    },
+    "retest": {
+      "required": false,
+      "delayed_or_conditional_entry_allowed": false,
+      "post_entry_level_behavior_changes_exit": false,
+      "reason": "preserve_the_selected_atlas_next_open_72h_hypothesis_without_post_hoc_repair"
+    },
+    "entry": {
+      "time": "next_H1_open_after_completed_signal_bar",
+      "price": "actual_next_H1_open_plus_adverse_long_slippage",
+      "order_assumption": "taker_market",
+      "same_bar_or_signal_close_fill_allowed": false
+    },
+    "exit": {
+      "type": "fixed_time_exit_only",
+      "holding_period_h1": 72,
+      "price": "close_of_the_72nd_completed_H1_bar_after_entry_minus_adverse_long_slippage",
+      "stop_loss": null,
+      "take_profit": null,
+      "trailing_or_breakeven": null,
+      "early_exit_or_reentry": false
+    },
+    "overlap_and_state": {
+      "same_symbol_pattern_cooldown_h1": 168,
+      "cooldown_clock": "completed_signal_bar_indices",
+      "max_open_positions_per_symbol": 1,
+      "cooldown_state_continues_through_folds_and_embargoes": true,
+      "duplicate_event_ids_allowed": 0
+    },
+    "parameter_search": false
+  },
+  "execution_and_cost_contract": {
+    "portfolio": {
+      "starting_equity_usd": 10000.0,
+      "fixed_notional_per_trade_usd": 769.23,
+      "compounding": false,
+      "leverage_allowed": false,
+      "max_global_open_positions": 13,
+      "max_open_positions_per_symbol": 1,
+      "timestamp_occupancy_required": true
+    },
+    "base_costs": {
+      "fee_bps_per_side": 6.0,
+      "slippage_bps_per_side": 2.0,
+      "round_trip_non_funding_cost_bps": 16.0
+    },
+    "stress_costs": {
+      "fee_bps_per_side": 10.0,
+      "slippage_bps_per_side": 5.0,
+      "round_trip_non_funding_cost_bps": 30.0
+    },
+    "funding": {
+      "instrument": "Bybit_USDT_linear_perpetual_long",
+      "event_interval": "use_symbol_specific_hash_pinned_funding_timestamps_not_a_fixed_8h_assumption",
+      "event_inclusion": "entry_ts_lte_funding_ts_lt_exit_ts",
+      "base_debit_bps": "max(actual_positive_funding_bps,0)",
+      "stress_debit_bps": "max(actual_positive_funding_bps,5.0)",
+      "negative_rate_credit_bps": 0.0,
+      "missing_or_incomplete_history": "FAIL_CLOSED_NO_PERFORMANCE"
+    }
+  },
+  "temporal_partition": {
+    "folds": [
+      {
+        "id": "fold_1",
+        "start_utc": "2026-03-06T14:00:00Z",
+        "end_utc_exclusive": "2026-04-05T14:00:00Z"
+      },
+      {
+        "id": "fold_2",
+        "start_utc": "2026-04-05T14:00:00Z",
+        "end_utc_exclusive": "2026-05-05T14:00:00Z"
+      },
+      {
+        "id": "fold_3",
+        "start_utc": "2026-05-05T14:00:00Z",
+        "end_utc_exclusive": "2026-06-04T14:00:00Z"
+      },
+      {
+        "id": "fold_4",
+        "start_utc": "2026-06-04T14:00:00Z",
+        "end_utc_exclusive": "2026-07-04T14:00:00Z"
+      }
+    ],
+    "embargo_h1": 72,
+    "fold_assignment": {
+      "event_assigned_by": "signal_close_timestamp",
+      "entry_and_exit_must_both_complete_inside_same_fold": true,
+      "first_72_H1_after_each_internal_boundary_scored": false,
+      "signals_during_embargo_update_cooldown_but_are_not_scored": true
+    },
+    "warmup": {
+      "completed_H1_bars": 20,
+      "may_precede_holdout_start": true,
+      "warmup_returns_or_outcomes_scored": false
+    },
+    "one_shot_holdout_rule": {
+      "maximum_performance_runs": 1,
+      "parameter_or_gate_changes_after_result": "new_named_generation_and_new_unseen_data_required",
+      "partial_symbol_or_fold_preview_allowed": false
+    }
+  },
+  "promotion_gates": {
+    "aggregate": {
+      "stress_closed_trades_min": 100,
+      "base_profit_factor_min": 1.25,
+      "stress_profit_factor_min": 1.10,
+      "stress_net_pnl_must_be_positive": true,
+      "stress_95pct_winsorized_mean_net_bps_must_be_positive": true,
+      "stress_timestamp_portfolio_max_drawdown_pct_max": 12.0,
+      "invalid_or_censored_trades_max": 0,
+      "long_side_purity_pct_min": 100.0
+    },
+    "folds": {
+      "fixed_folds": 4,
+      "stress_trades_per_fold_min": 15,
+      "stress_net_positive_folds_min": 3,
+      "stress_median_fold_profit_factor_min": 1.05
+    },
+    "breadth_and_concentration": {
+      "traded_symbols_min": 10,
+      "stress_positive_symbols_min": 7,
+      "largest_symbol_trade_count_share_max": 0.15,
+      "symbol_trade_count_hhi_max": 0.12,
+      "top_symbol_positive_net_contribution_share_max": 0.35,
+      "top_10pct_trades_positive_net_contribution_share_max": 0.65,
+      "leave_one_symbol_out_stress_net_must_be_positive": true,
+      "leave_one_symbol_out_worst_stress_profit_factor_min": 1.02
+    },
+    "decision_rule": {
+      "any_gate_failure": "NO_PROMOTION",
+      "all_gates_pass": "SEALED_RESEARCH_PASS_ONLY_REQUIRES_INDEPENDENT_PARITY_REVIEW_AND_PROSPECTIVE_PAPER",
+      "automatic_live_or_shadow_authorization": false,
+      "post_hoc_symbol_fold_trade_or_parameter_exclusion_allowed": false
+    }
+  },
+  "preflight_contract": {
+    "path": "scripts/preflight_horizontal_breakout_long_72h_sealed_v1.py",
+    "sha256": "8dce6b2574d91a2c00689d258df349a2696bf99def8c00b34aeb7a375f18cd5e",
+    "mode": "integrity_only_no_market_row_access",
+    "performance_runner": "NOT_IMPLEMENTED_AND_FORBIDDEN_IN_THIS_FREEZE",
+    "network_calls": false,
+    "writes": false
+  },
+  "preregistration_fingerprint_sha256": "6ee2fb1a70a6409ee1bae5296435ed6338e723ce4b659759500f7cd885c376d0"
+}

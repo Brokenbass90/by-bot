@@ -1,0 +1,107 @@
+{"key": "001530e3bf25", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.0, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784095258}
+{"key": "3f681bcabd20", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.0, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784095323}
+{"key": "6e9ca5a1a6f7", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.0, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784095387}
+{"key": "c616f9d7a078", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.5, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784095452}
+{"key": "e89b965d3ffc", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.5, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784095515}
+{"key": "3060d9544c68", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.5, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784095578}
+{"key": "38e09f66c219", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 3.5, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784095641}
+{"key": "153987054230", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 3.5, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784095704}
+{"key": "b0c3a1c3eb1a", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 3.5, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784095767}
+{"key": "3b668490844c", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 5.0, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784095831}
+{"key": "591afab1d83a", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 5.0, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784095894}
+{"key": "2bb20dabfb36", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 5.0, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784095957}
+{"key": "1fcc59c4a5c0", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.0, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096020}
+{"key": "2444c27e49e5", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.0, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096084}
+{"key": "d4defe49bc0a", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.0, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784096147}
+{"key": "38fbb61b0af5", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.5, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096210}
+{"key": "f911ab4c8ff9", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.5, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096273}
+{"key": "2042ed9c4036", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.5, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096336}
+{"key": "483914cfd266", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 3.5, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096400}
+{"key": "b5ba15a03493", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 3.5, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096464}
+{"key": "0be4fa22570a", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 3.5, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784096527}
+{"key": "d49912caa450", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 5.0, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096590}
+{"key": "bf52da9d9c2a", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 5.0, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096653}
+{"key": "8a2b5f9204be", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 5.0, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784096715}
+{"key": "b246dfa82793", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.0, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096781}
+{"key": "7a87dd58ee0d", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.0, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096845}
+{"key": "2edf923fc262", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.0, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784096909}
+{"key": "4385ed4b90b2", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.5, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784096973}
+{"key": "e0b5e6ce48d7", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.5, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784097040}
+{"key": "a611431c0083", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.5, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784097107}
+{"key": "826032c4474e", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 3.5, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784097173}
+{"key": "64df6b34f9e4", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 3.5, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784097240}
+{"key": "45c368b13142", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 3.5, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784097307}
+{"key": "d930a1a16b19", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 5.0, "trail": 1.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784097372}
+{"key": "2067707d242b", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 5.0, "trail": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784097437}
+{"key": "dd1b695b310e", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 5.0, "trail": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784097501}
+{"key": "94225b491ceb", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784097678}
+{"key": "e94e3b8fc1de", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784097844}
+{"key": "40d091ffb944", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784097999}
+{"key": "0a886e7c918d", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784098172}
+{"key": "336a0e049fe9", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784098336}
+{"key": "79dbec27407f", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784098491}
+{"key": "1dfa3b7b3e2f", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784098670}
+{"key": "efb1d2f87fc4", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784098841}
+{"key": "61bcacebddc1", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784099007}
+{"key": "7110817a5e89", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784099189}
+{"key": "078c117b0773", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784099361}
+{"key": "e29f7279c819", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784099528}
+{"key": "1e6adaaa9b24", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 30, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784099727}
+{"key": "eec51b3faadf", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 30, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784099917}
+{"key": "a4d53ed5ad17", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 30, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784100099}
+{"key": "9a252f792cf1", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 30, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784100298}
+{"key": "9c522dc7225b", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 30, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784100488}
+{"key": "f33a3bf70abe", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 30, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784100673}
+{"key": "13544d8a13da", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 15, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784100826}
+{"key": "eefb728c0974", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 15, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784100965}
+{"key": "dbc92d002676", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 15, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784101097}
+{"key": "205b37fa404a", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 15, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784101251}
+{"key": "186803d2959f", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 15, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784101389}
+{"key": "4375c2e3c4b7", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 15, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784101520}
+{"key": "2d6b50233758", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 20, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784101686}
+{"key": "c7dc46d47cba", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 20, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784101834}
+{"key": "7110f3843be9", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 20, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784101973}
+{"key": "409f0902b768", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 20, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784102136}
+{"key": "05ad97ac41cc", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 20, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784102284}
+{"key": "9c408215ede8", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 20, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784102424}
+{"key": "bb6fca71adce", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 30, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784102602}
+{"key": "f72d54067668", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 30, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784102765}
+{"key": "338073c5b507", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 30, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784102918}
+{"key": "d2d5b2d27ad4", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 30, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784103095}
+{"key": "3bd55faf4a15", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 30, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784103259}
+{"key": "58a2af5f54a2", "strategy": "levelfade_regime", "params": {"er": 0.3, "lb": 30, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784103409}
+{"key": "98f80b2c2c84", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 15, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784103543}
+{"key": "5041bd20827e", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 15, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784103665}
+{"key": "5bfbe99ecdc5", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 15, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784103777}
+{"key": "7ace0eea6f23", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 15, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784103913}
+{"key": "3ddedc892e4b", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 15, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784104033}
+{"key": "936d272ee7fd", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 15, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784104146}
+{"key": "e9dbea1db3d5", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 20, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784104291}
+{"key": "992bcbfa4bb7", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 20, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784104419}
+{"key": "0dd5b5e88701", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 20, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784104538}
+{"key": "4fd79963d2ab", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 20, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784104684}
+{"key": "86e79d14d140", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 20, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784104812}
+{"key": "63604fa14510", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 20, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784104930}
+{"key": "537e00cf5185", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 30, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784105089}
+{"key": "9316c27b4b91", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 30, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784105229}
+{"key": "2023a5a4cdfc", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 30, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784105357}
+{"key": "2b8d02904559", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 30, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784105514}
+{"key": "6b9b42a5a3c9", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 30, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784105655}
+{"key": "68f101d5f98b", "strategy": "levelfade_regime", "params": {"er": 0.4, "lb": 30, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784105784}
+{"key": "f7700afc52f7", "strategy": "pump_fade_simple", "params": {"thr": 0.06, "rsi": 70, "rr": 1.6}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784105788}
+{"key": "e50435552065", "strategy": "pump_fade_simple", "params": {"thr": 0.06, "rsi": 70, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784105791}
+{"key": "dba60368a5ac", "strategy": "pump_fade_simple", "params": {"thr": 0.06, "rsi": 75, "rr": 1.6}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "ts": 1784105795}
+{"key": "fac6b69c387c", "strategy": "pump_fade_simple", "params": {"thr": 0.06, "rsi": 75, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784105799}
+{"key": "26db0e468571", "strategy": "pump_fade_simple", "params": {"thr": 0.08, "rsi": 70, "rr": 1.6}, "is_pass": false, "is_reason": "folds_thin_fold_1", "ts": 1784105802}
+{"key": "8d7bcb4b7c01", "strategy": "pump_fade_simple", "params": {"thr": 0.08, "rsi": 70, "rr": 2.0}, "is_pass": false, "is_reason": "folds_thin_fold_1", "ts": 1784105806}
+{"key": "618dd45f56ae", "strategy": "pump_fade_simple", "params": {"thr": 0.08, "rsi": 75, "rr": 1.6}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784105809}
+{"key": "73941a691476", "strategy": "pump_fade_simple", "params": {"thr": 0.08, "rsi": 75, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784105813}
+{"key": "a612b34d6dc2", "strategy": "pump_fade_simple", "params": {"thr": 0.12, "rsi": 70, "rr": 1.6}, "is_pass": false, "is_reason": "low_N_11", "ts": 1784105816}
+{"key": "31e07a77655b", "strategy": "pump_fade_simple", "params": {"thr": 0.12, "rsi": 70, "rr": 2.0}, "is_pass": false, "is_reason": "low_N_11", "ts": 1784105820}
+{"key": "d9b685c0b71b", "strategy": "pump_fade_simple", "params": {"thr": 0.12, "rsi": 75, "rr": 1.6}, "is_pass": false, "is_reason": "low_N_8", "ts": 1784105823}
+{"key": "a72e72aa4e19", "strategy": "pump_fade_simple", "params": {"thr": 0.12, "rsi": 75, "rr": 2.0}, "is_pass": false, "is_reason": "low_N_8", "ts": 1784105826}
+{"key": "d1e59dd1e075", "strategy": "elder", "params": {"variant": 0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784105858}
+{"key": "ee11ea81389b", "strategy": "horizontal_break", "params": {"variant": 0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784105945}
+{"key": "dc0bdb6c7caf", "strategy": "range_scalp", "params": {"variant": 0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784105994}
+{"key": "24dce8e291d4", "strategy": "impulse_breakout", "params": {"variant": 0}, "is_pass": true, "is_reason": "PASS", "ts": 1784106226, "fwd_pass": false, "oos_sym_pass": false, "survivor": false}
+{"key": "b4fd701feea7", "strategy": "midterm_v3", "params": {"variant": 0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784106648}
