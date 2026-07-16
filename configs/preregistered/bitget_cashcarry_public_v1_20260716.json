@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "name": "bitget_cashcarry_public_v1_20260716",
+  "frozen_at_utc": "2026-07-16T04:38:59Z",
+  "status": "PREFLIGHT_READY_NORMALIZATION_ONLY_NOT_STATION_COMPATIBLE",
+  "purpose": "Normalize a complete public Bitget V2 spot plus USDT perpetual instruments/orderbooks/current-and-historical-funding snapshot without keys, account state, orders, or Bybit source relabelling.",
+  "adapter_id": "bitget_public_v2_cashcarry_v1",
+  "exchange_id": "bitget",
+  "source_id": "bitget_public_v2",
+  "snapshot_schema_id": "bitget_public_cashcarry_snapshot_v1",
+  "research_only": true,
+  "default_enabled": false,
+  "live_permission": "FORBIDDEN",
+  "performance_claims_allowed": false,
+  "station_compatibility": "BLOCKED_SEPARATE_SOURCE_ENGINE_REQUIRED",
+  "network": {
+    "default": "DISABLED",
+    "host": "api.bitget.com",
+    "scheme": "https",
+    "method": "GET_ONLY",
+    "public_path_allowlist": [
+      "/api/v2/spot/public/symbols",
+      "/api/v2/spot/market/orderbook",
+      "/api/v2/mix/market/contracts",
+      "/api/v2/mix/market/merge-depth",
+      "/api/v2/mix/market/current-fund-rate",
+      "/api/v2/mix/market/history-fund-rate",
+      "/api/v2/public/time"
+    ],
+    "private_api": false,
+    "api_keys_or_environment": false,
+    "account_balance_position": false,
+    "orders_transfers_withdrawals": false,
+    "daemon_autostart": false
+  },
+  "market_contract": {
+    "symbol": "explicit *USDT only",
+    "spot": "online spot symbol quoted in USDT",
+    "perpetual": "normal perpetual with productType=USDT-FUTURES and USDT margin support",
+    "book": "unmerged step0/scale0 with exact tick alignment and unique sorted sides",
+    "time": "server time fetched last; all response and book timestamps must be causal",
+    "funding": "contract fundInterval must equal current fundingRateInterval; history is deduplicated and sorted ascending",
+    "funding_proxy": "current public perp midpoint only when settlement is at most 120 seconds old"
+  },
+  "precision_contract": {
+    "spot_tick": "10^-pricePrecision",
+    "spot_qty_step": "10^-quantityPrecision",
+    "spot_min_qty": "lowest positive qty step; official minTradeAmount is obsolete and minTradeUSDT is authoritative for notional",
+    "spot_min_qty_provenance": "DERIVED_LOWEST_POSITIVE_QTY_STEP_OFFICIAL_MIN_TRADE_AMOUNT_OBSOLETE",
+    "perp_tick": "priceEndStep * 10^-pricePlace, checked against scale0 response scale",
+    "perp_qty_step": "sizeMultiplier",
+    "perp_min_qty": "minTradeNum",
+    "minimum_notional": "minTradeUSDT independently on both legs"
+  },
+  "fee_contract": {
+    "captured": "public default takerFeeRate from both spot symbols and mix contracts responses",
+    "account_parity": false,
+    "promotion_block": "Public defaults cannot replace an account-specific fee-tier receipt."
+  },
+  "source_separation": {
+    "frozen_bybit_spec_mutated": false,
+    "bybit_source_id_reuse": false,
+    "bybit_snapshot_type_reuse": false,
+    "bybit_durable_journal_ingestion": "FORBIDDEN",
+    "reason": "Frozen Bybit v2 validates source=bybit_public_v5 and has Bybit-specific deterministic replay/economics receipts."
+  },
+  "official_schema_sources": [
+    "https://www.bitget.com/api-doc/spot/market/Get-Symbols",
+    "https://www.bitget.com/api-doc/spot/market/Get-Orderbook",
+    "https://www.bitget.com/api-doc/contract/market/Get-All-Symbols-Contracts",
+    "https://www.bitget.com/api-doc/contract/market/Get-Merge-Depth",
+    "https://www.bitget.com/api-doc/contract/market/Get-Current-Funding-Rate",
+    "https://www.bitget.com/api-doc/contract/market/Get-History-Funding-Rate",
+    "https://www.bitget.com/api-doc/common/public/Get-Server-Time"
+  ],
+  "blockers_before_station": [
+    "separate Bitget durable hash-chain journal and deterministic restart replay",
+    "Bitget-native common-quantity multi-level execution and economics engine",
+    "account-specific Bitget fee-tier receipt",
+    "balance, margin, liquidation, transfer, outage, reconciliation, and two-leg recovery model",
+    "at least 10 completed public paper cycles for mechanics and 30 cycles across 3 liquid symbols for manual edge review"
+  ],
+  "implementation": {
+    "normalizer": "bot/bitget_cashcarry_public_v1.py",
+    "normalizer_sha256": "00e2394adf1046bba86349df2cb4718a2b62b3a77e2653bf0e3b77e9d4d79ad2",
+    "runner": "scripts/run_bitget_cashcarry_public_v1.py",
+    "runner_sha256": "3d905a34a56a8290d760fddf1848399b151574a572ba1e314dc4f3389a2aac6e",
+    "fixture": "tests/fixtures/bitget_cashcarry_public_v1_responses.json",
+    "fixture_sha256": "74d682b5f6deee9c042022be3124e70e133d74bc6c23a4b2f9ecce14d654ef6b",
+    "tests": "tests/test_bitget_cashcarry_public_v1.py",
+    "operator_note": "reports/BITGET_CASHCARRY_PUBLIC_ADAPTER_V1_2026_07_16.md"
+  }
+}

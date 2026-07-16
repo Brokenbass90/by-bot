@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "schema_id": "public_cashcarry_research_station_v1",
+  "name": "public_cashcarry_station_v1_20260716",
+  "frozen_at_utc": "2026-07-16T04:14:39Z",
+  "status": "RESEARCH_ONLY_DEFAULT_DISABLED_PUBLIC_OBSERVE_REFUSE",
+  "purpose": "Collect a bounded seven-day public-only cash-carry evidence clock with durable per-symbol replay, conservative v2 economics gates, and funding-timestamp-aware scheduling.",
+  "research_only": true,
+  "default_enabled": false,
+  "live_permission": "FORBIDDEN",
+  "performance_claims_allowed": false,
+  "adapter": {
+    "adapter_id": "bybit_public_v5_cashcarry_v1",
+    "exchange_id": "bybit",
+    "source_id": "bybit_public_v5",
+    "public_only": true,
+    "method": "GET_ONLY",
+    "current_implementation": "scripts/run_bybit_cashcarry_shadow_v2.py:fetch_public_snapshot",
+    "future_portability": "A Bitget adapter must implement the explicit station protocol under a separately preregistered source/engine contract. Relabelling Bitget data as Bybit data is forbidden."
+  },
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT",
+    "DOGEUSDT",
+    "SUIUSDT"
+  ],
+  "schedule": {
+    "poll_interval_seconds": 1800,
+    "funding_capture_delay_seconds": 30,
+    "funding_capture_retry_seconds": 20,
+    "max_funding_valuation_lag_seconds": 120,
+    "transient_retry_seconds": 300,
+    "book_levels": 50,
+    "request_timeout_seconds": 15,
+    "funding_awareness": "Next cycle is the earlier of normal poll or 30 seconds after the nearest advertised nextFundingTime. This stays inside the frozen v2 120-second public valuation-proxy window."
+  },
+  "bounds": {
+    "max_runtime_seconds": 604800,
+    "max_observations": 2304,
+    "max_journal_bytes_per_symbol": 67108864,
+    "max_total_bytes": 536870912,
+    "max_append_reserve_bytes": 1048576,
+    "min_free_bytes": 85899345920,
+    "max_consecutive_all_symbol_failure_cycles": 288,
+    "retention_action": "STOP_NO_DELETE_NO_ROTATE",
+    "restart": "Same run root requires explicit resume and deterministic replay. Terminal roots cannot be reopened."
+  },
+  "frozen_v2_dependency": {
+    "spec": "configs/preregistered/bybit_cashcarry_shadow_v2_20260715.json",
+    "spec_sha256": "f2b9b7b7e24a42074333b115d61a461ded3ebe34c3879284cb82055a38e08246",
+    "module": "bot/bybit_cashcarry_shadow_v2.py",
+    "mutation_allowed": false
+  },
+  "economics_contract": {
+    "gate": "Frozen v2 minimum(projected, required completed funding rates) must cover walked round-trip spread/slippage, four configured fees, 10 bps basis stress, and 5 bps residual edge.",
+    "fee_status": "CONSERVATIVE_RESEARCH_SCHEDULE_NOT_ACCOUNT_FEE_TIER_PARITY",
+    "basis_convergence_credit": false,
+    "shadow_open": "Allowed only after explicit research-shadow opt-in and frozen v2 gate PASS; it remains paper state with no broker call.",
+    "promotion": "Forbidden until account-specific fee/cost receipt plus at least 10 completed mechanics cycles and 30 completed cycles across at least 3 liquid symbols pass manual review."
+  },
+  "safety_contract": {
+    "api_keys": false,
+    "environment_reads": false,
+    "private_api": false,
+    "account_balance_position": false,
+    "orders_transfers_withdrawals": false,
+    "live_or_demo_broker": false,
+    "single_writer": true,
+    "per_symbol_hash_chain_journal": true,
+    "atomic_checksummed_lifecycle_state": true,
+    "default_preflight_network": false,
+    "default_preflight_writes": false
+  },
+  "known_limitations": [
+    "Public REST legs are non-atomic and stale/skew refusal still applies.",
+    "The frozen fee schedule is deliberately conservative but is not a receipt for the owner's actual account tier.",
+    "No balance, margin, liquidation, transfer, borrow, outage, reconciliation, or two-leg partial-fill recovery model exists.",
+    "A public shadow pass is mechanics evidence, not proof of live executable profit.",
+    "The current normalized snapshot type is Bybit-specific; Bitget needs a separately frozen adapter and engine parity review."
+  ],
+  "implementation": {
+    "module": "bot/public_cashcarry_station_v1.py",
+    "runner": "scripts/run_public_cashcarry_station_v1.py",
+    "supervisor": "scripts/supervise_public_cashcarry_station_v1.sh",
+    "detached_launcher": "scripts/launch_public_cashcarry_station_v1.sh",
+    "tests": "tests/test_public_cashcarry_station_v1.py",
+    "operator_note": "reports/PUBLIC_CASHCARRY_RESEARCH_STATION_V1_2026_07_16.md"
+  }
+}

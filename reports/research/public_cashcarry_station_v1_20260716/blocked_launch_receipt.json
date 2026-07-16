@@ -1,0 +1,32 @@
+{
+  "schema_id": "public_cashcarry_station_blocked_launch_receipt_v1",
+  "attempted_at_utc": "2026-07-16T04:13:02Z",
+  "attempt_scope": "PRE_FINALIZATION_BOUNDED_CONNECTIVITY_PROBE",
+  "research_only": true,
+  "executable": false,
+  "broker_calls": false,
+  "private_api_calls": false,
+  "api_keys_or_environment_reads": false,
+  "orders_transfers_withdrawals": false,
+  "live_or_demo_changes": false,
+  "vps_changes": false,
+  "symbols_attempted": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT",
+    "DOGEUSDT",
+    "SUIUSDT"
+  ],
+  "successful_public_payloads": 0,
+  "durable_observations": 0,
+  "shadow_positions": 0,
+  "failure_class": "SANDBOX_PUBLIC_DNS_UNAVAILABLE",
+  "external_network_permission": "REJECTED_TOOL_USAGE_LIMIT",
+  "workaround_attempted": false,
+  "long_running_process_started": false,
+  "final_frozen_spec_sha256": "40b608ac40074821b6a4b3c773bdcd108d894cd5e1092aff5c926f39487000e1",
+  "final_station_config_sha256": "dbe17d320a0afb1603f812ff66a6f2c930108a510325cb646c95875e3fb2e2c4",
+  "safe_next_command": "bash scripts/launch_public_cashcarry_station_v1.sh",
+  "performance_claims": false
+}
