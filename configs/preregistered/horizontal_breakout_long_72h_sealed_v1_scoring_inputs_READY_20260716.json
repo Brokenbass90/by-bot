@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "kind": "horizontal_breakout_long_72h_scoring_inputs_v1",
+  "name": "horizontal_breakout_long_72h_sealed_v1_scoring_inputs_ready_20260716",
+  "frozen_at_utc": "2026-07-16T04:25:24Z",
+  "research_only": true,
+  "one_shot_performance_run": true,
+  "automatic_shadow_or_live_authorization": false,
+  "source_pins": [
+    {
+      "role": "strategy_preregistration",
+      "path": "configs/preregistered/horizontal_breakout_long_72h_sealed_v1_20260715.json",
+      "sha256": "44c8d35a5bae734be0bb47f2bd2ea81cc82c13eac4b8e19356e802350fd6a04a"
+    },
+    {
+      "role": "uniform_price_manifest",
+      "path": "configs/preregistered/event_long_dev13_uniform_m5_window_v1_20260714.json",
+      "sha256": "16b4f746a982c4e688de1c6766d93fb916173f3f3e636b7230038455d68facfb"
+    },
+    {
+      "role": "integrity_preflight",
+      "path": "scripts/preflight_horizontal_breakout_long_72h_sealed_v1.py",
+      "sha256": "8dce6b2574d91a2c00689d258df349a2696bf99def8c00b34aeb7a375f18cd5e"
+    },
+    {
+      "role": "closed_bar_aggregation",
+      "path": "bot/closed_bar_aggregation_v1.py",
+      "sha256": "5ad6b37ee5124b185ae1cefd0b7aed43863d338fed3d3abfcbf2fce96f2d95aa"
+    },
+    {
+      "role": "sealed_scorer",
+      "path": "scripts/run_horizontal_breakout_long_72h_sealed_v1.py",
+      "sha256": "1e74cff0cbbad2cc73eb51597a2959fc543287d0156a0464c123895ec99f9f9f"
+    }
+  ],
+  "side_and_execution_contract": {
+    "candidate_id": "horizontal_breakout_long_72h_v1",
+    "physical_side": "long_only",
+    "entry": "next_completed_H1_open",
+    "exit": "close_of_72nd_completed_H1_after_entry",
+    "short_logic_allowed": false,
+    "post_hoc_filters_allowed": false
+  },
+  "sealed_window": {
+    "start_ts": 1772805600000,
+    "end_ts_exclusive": 1783173600000,
+    "warmup_completed_h1": 20,
+    "price_rows_may_be_opened_only_after_all_other_gates_pass": true
+  },
+  "funding_history": {
+    "required": true,
+    "status": "HASH_PINNED_COMPLETE",
+    "manifest_path": "data_cache/immutable/horizontal_breakout_long_72h_funding_v1_20260716/manifest.json",
+    "manifest_sha256": "c10525b0a1111664235e5b5d471813cd7bb9ff249cce31e472ed61da0382292f",
+    "required_manifest_kind": "bybit_linear_funding_history_complete_v1",
+    "symbols": [
+      "1000PEPEUSDT",
+      "ADAUSDT",
+      "AVAXUSDT",
+      "BNBUSDT",
+      "BTCUSDT",
+      "DOGEUSDT",
+      "ETHUSDT",
+      "ONDOUSDT",
+      "SOLUSDT",
+      "SUIUSDT",
+      "TAOUSDT",
+      "WIFUSDT",
+      "XRPUSDT"
+    ],
+    "coverage_start_ts": 1772805600000,
+    "coverage_end_ts_exclusive": 1783173600000,
+    "max_allowed_event_gap_ms": 28800000,
+    "negative_rate_credit_bps": 0.0
+  },
+  "materialization_evidence": {
+    "builder_path": "scripts/materialize_horizontal_breakout_long_72h_funding_v1.py",
+    "builder_sha256": "61d1249b8cdfe0a8e5e9411c98a0a16397ba94747d260d5685fc5c1977ddf635",
+    "funding_manifest_fingerprint_sha256": "a03f579d24da05dedaf573808b70a2539cd9e49766f1defe9891a5c3ebe22471",
+    "symbols_complete": 13,
+    "raw_api_pages": 32,
+    "funding_events": 6400,
+    "price_snapshots_opened": 0,
+    "performance_computed": false,
+    "private_or_broker_calls": false
+  },
+  "output_contract": {
+    "directory": "reports/research/horizontal_breakout_long_72h_sealed_v1_20260716",
+    "claim": "run_claim.json",
+    "receipt": "receipt.json",
+    "trades": "trades.json",
+    "refuse_overwrite": true
+  },
+  "authorization_fingerprint_sha256": "8e7f7d9c2765efb13d479fa671976eb3822ac0eb727a8d047e999b993e958d1e"
+}

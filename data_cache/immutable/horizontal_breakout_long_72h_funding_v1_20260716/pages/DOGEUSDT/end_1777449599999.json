@@ -1,0 +1,1011 @@
+{
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "fundingRate": "0.00006084",
+        "fundingRateTimestamp": "1777420800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00008685",
+        "fundingRateTimestamp": "1777392000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00004777",
+        "fundingRateTimestamp": "1777363200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777334400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004149",
+        "fundingRateTimestamp": "1777305600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00006674",
+        "fundingRateTimestamp": "1777276800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00000845",
+        "fundingRateTimestamp": "1777248000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00000968",
+        "fundingRateTimestamp": "1777219200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00001626",
+        "fundingRateTimestamp": "1777190400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00005805",
+        "fundingRateTimestamp": "1777161600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00009138",
+        "fundingRateTimestamp": "1777132800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00002345",
+        "fundingRateTimestamp": "1777104000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0000308",
+        "fundingRateTimestamp": "1777075200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0000477",
+        "fundingRateTimestamp": "1777046400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00008475",
+        "fundingRateTimestamp": "1777017600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00003911",
+        "fundingRateTimestamp": "1776988800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00004897",
+        "fundingRateTimestamp": "1776960000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00020083",
+        "fundingRateTimestamp": "1776931200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00002051",
+        "fundingRateTimestamp": "1776902400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00000866",
+        "fundingRateTimestamp": "1776873600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001032",
+        "fundingRateTimestamp": "1776844800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00006187",
+        "fundingRateTimestamp": "1776816000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776787200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00004494",
+        "fundingRateTimestamp": "1776758400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0000621",
+        "fundingRateTimestamp": "1776729600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00005292",
+        "fundingRateTimestamp": "1776700800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776672000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00003034",
+        "fundingRateTimestamp": "1776643200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00009813",
+        "fundingRateTimestamp": "1776614400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00003312",
+        "fundingRateTimestamp": "1776585600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004039",
+        "fundingRateTimestamp": "1776556800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0000318",
+        "fundingRateTimestamp": "1776528000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00006305",
+        "fundingRateTimestamp": "1776499200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00004469",
+        "fundingRateTimestamp": "1776470400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776441600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001935",
+        "fundingRateTimestamp": "1776412800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00006157",
+        "fundingRateTimestamp": "1776384000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776355200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776326400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776297600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776268800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00003022",
+        "fundingRateTimestamp": "1776240000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00011743",
+        "fundingRateTimestamp": "1776211200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776182400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776153600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776124800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00001727",
+        "fundingRateTimestamp": "1776096000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00000197",
+        "fundingRateTimestamp": "1776067200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0000474",
+        "fundingRateTimestamp": "1776038400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00013591",
+        "fundingRateTimestamp": "1776009600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00006324",
+        "fundingRateTimestamp": "1775980800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775952000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004448",
+        "fundingRateTimestamp": "1775923200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00006154",
+        "fundingRateTimestamp": "1775894400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775865600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00009736",
+        "fundingRateTimestamp": "1775836800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775808000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775779200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00003379",
+        "fundingRateTimestamp": "1775750400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00013857",
+        "fundingRateTimestamp": "1775721600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775692800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775664000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775635200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775606400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00000353",
+        "fundingRateTimestamp": "1775577600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001455",
+        "fundingRateTimestamp": "1775548800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00009065",
+        "fundingRateTimestamp": "1775520000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775491200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775462400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00004917",
+        "fundingRateTimestamp": "1775433600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00002122",
+        "fundingRateTimestamp": "1775404800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0000397",
+        "fundingRateTimestamp": "1775376000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775347200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005815",
+        "fundingRateTimestamp": "1775318400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00000911",
+        "fundingRateTimestamp": "1775289600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775260800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775232000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00009572",
+        "fundingRateTimestamp": "1775203200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00006684",
+        "fundingRateTimestamp": "1775174400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00002699",
+        "fundingRateTimestamp": "1775145600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00012294",
+        "fundingRateTimestamp": "1775116800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775088000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775059200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775030400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775001600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00000846",
+        "fundingRateTimestamp": "1774972800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774944000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774915200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774886400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774857600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00002878",
+        "fundingRateTimestamp": "1774828800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00011616",
+        "fundingRateTimestamp": "1774800000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00002722",
+        "fundingRateTimestamp": "1774771200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00000718",
+        "fundingRateTimestamp": "1774742400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774713600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004688",
+        "fundingRateTimestamp": "1774684800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005302",
+        "fundingRateTimestamp": "1774656000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00009004",
+        "fundingRateTimestamp": "1774627200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00007713",
+        "fundingRateTimestamp": "1774598400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00009574",
+        "fundingRateTimestamp": "1774569600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0001366",
+        "fundingRateTimestamp": "1774540800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0001062",
+        "fundingRateTimestamp": "1774512000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774483200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774454400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774425600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774396800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00001318",
+        "fundingRateTimestamp": "1774368000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00005284",
+        "fundingRateTimestamp": "1774339200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774310400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774281600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005782",
+        "fundingRateTimestamp": "1774252800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004351",
+        "fundingRateTimestamp": "1774224000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001906",
+        "fundingRateTimestamp": "1774195200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0001064",
+        "fundingRateTimestamp": "1774166400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00004153",
+        "fundingRateTimestamp": "1774137600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005533",
+        "fundingRateTimestamp": "1774108800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00000797",
+        "fundingRateTimestamp": "1774080000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00004007",
+        "fundingRateTimestamp": "1774051200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005484",
+        "fundingRateTimestamp": "1774022400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00001849",
+        "fundingRateTimestamp": "1773993600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005868",
+        "fundingRateTimestamp": "1773964800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0000247",
+        "fundingRateTimestamp": "1773936000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00005281",
+        "fundingRateTimestamp": "1773907200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00003274",
+        "fundingRateTimestamp": "1773878400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001024",
+        "fundingRateTimestamp": "1773849600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00008622",
+        "fundingRateTimestamp": "1773820800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773792000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005997",
+        "fundingRateTimestamp": "1773763200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00008203",
+        "fundingRateTimestamp": "1773734400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773705600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773676800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773648000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0000543",
+        "fundingRateTimestamp": "1773619200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00002966",
+        "fundingRateTimestamp": "1773590400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00012338",
+        "fundingRateTimestamp": "1773561600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00008492",
+        "fundingRateTimestamp": "1773532800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00001117",
+        "fundingRateTimestamp": "1773504000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0000006",
+        "fundingRateTimestamp": "1773475200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00007882",
+        "fundingRateTimestamp": "1773446400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773417600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773388800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773360000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773331200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00010427",
+        "fundingRateTimestamp": "1773302400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00006477",
+        "fundingRateTimestamp": "1773273600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0000602",
+        "fundingRateTimestamp": "1773244800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00015439",
+        "fundingRateTimestamp": "1773216000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00007412",
+        "fundingRateTimestamp": "1773187200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773158400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00004945",
+        "fundingRateTimestamp": "1773129600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00005302",
+        "fundingRateTimestamp": "1773100800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00005461",
+        "fundingRateTimestamp": "1773072000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00008171",
+        "fundingRateTimestamp": "1773043200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00002096",
+        "fundingRateTimestamp": "1773014400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00012593",
+        "fundingRateTimestamp": "1772985600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00006602",
+        "fundingRateTimestamp": "1772956800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00008936",
+        "fundingRateTimestamp": "1772928000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00007201",
+        "fundingRateTimestamp": "1772899200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00012803",
+        "fundingRateTimestamp": "1772870400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00006154",
+        "fundingRateTimestamp": "1772841600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0001337",
+        "fundingRateTimestamp": "1772812800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00003761",
+        "fundingRateTimestamp": "1772784000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0000383",
+        "fundingRateTimestamp": "1772755200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00009904",
+        "fundingRateTimestamp": "1772726400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00009291",
+        "fundingRateTimestamp": "1772697600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772668800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772640000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004621",
+        "fundingRateTimestamp": "1772611200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00010602",
+        "fundingRateTimestamp": "1772582400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00007975",
+        "fundingRateTimestamp": "1772553600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00013372",
+        "fundingRateTimestamp": "1772524800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00007678",
+        "fundingRateTimestamp": "1772496000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00002736",
+        "fundingRateTimestamp": "1772467200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00000108",
+        "fundingRateTimestamp": "1772438400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0000023",
+        "fundingRateTimestamp": "1772409600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00005205",
+        "fundingRateTimestamp": "1772380800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772352000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00006692",
+        "fundingRateTimestamp": "1772323200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005291",
+        "fundingRateTimestamp": "1772294400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00008734",
+        "fundingRateTimestamp": "1772265600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0000414",
+        "fundingRateTimestamp": "1772236800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00006819",
+        "fundingRateTimestamp": "1772208000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772179200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00003231",
+        "fundingRateTimestamp": "1772150400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001203",
+        "fundingRateTimestamp": "1772121600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00004183",
+        "fundingRateTimestamp": "1772092800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772064000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772035200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00001158",
+        "fundingRateTimestamp": "1772006400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00001554",
+        "fundingRateTimestamp": "1771977600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00007953",
+        "fundingRateTimestamp": "1771948800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00003672",
+        "fundingRateTimestamp": "1771920000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00000875",
+        "fundingRateTimestamp": "1771891200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00002263",
+        "fundingRateTimestamp": "1771862400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00002645",
+        "fundingRateTimestamp": "1771833600000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00000403",
+        "fundingRateTimestamp": "1771804800000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001605",
+        "fundingRateTimestamp": "1771776000000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.00003336",
+        "fundingRateTimestamp": "1771747200000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "0.00006818",
+        "fundingRateTimestamp": "1771718400000",
+        "symbol": "DOGEUSDT"
+      },
+      {
+        "fundingRate": "-0.0001108",
+        "fundingRateTimestamp": "1771689600000",
+        "symbol": "DOGEUSDT"
+      }
+    ]
+  },
+  "retCode": 0,
+  "retExtInfo": {},
+  "retMsg": "OK",
+  "time": 1784175898067
+}

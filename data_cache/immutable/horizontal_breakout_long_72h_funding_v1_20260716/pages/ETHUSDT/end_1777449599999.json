@@ -1,0 +1,1011 @@
+{
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "fundingRate": "0.00001073",
+        "fundingRateTimestamp": "1777420800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000446",
+        "fundingRateTimestamp": "1777392000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00007664",
+        "fundingRateTimestamp": "1777363200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00006621",
+        "fundingRateTimestamp": "1777334400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005158",
+        "fundingRateTimestamp": "1777305600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005454",
+        "fundingRateTimestamp": "1777276800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000079",
+        "fundingRateTimestamp": "1777248000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0000156",
+        "fundingRateTimestamp": "1777219200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00001541",
+        "fundingRateTimestamp": "1777190400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000966",
+        "fundingRateTimestamp": "1777161600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002179",
+        "fundingRateTimestamp": "1777132800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00004994",
+        "fundingRateTimestamp": "1777104000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003695",
+        "fundingRateTimestamp": "1777075200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005208",
+        "fundingRateTimestamp": "1777046400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005994",
+        "fundingRateTimestamp": "1777017600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002068",
+        "fundingRateTimestamp": "1776988800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005031",
+        "fundingRateTimestamp": "1776960000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00001709",
+        "fundingRateTimestamp": "1776931200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.0000386",
+        "fundingRateTimestamp": "1776902400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000856",
+        "fundingRateTimestamp": "1776873600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00004234",
+        "fundingRateTimestamp": "1776844800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000333",
+        "fundingRateTimestamp": "1776816000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00006756",
+        "fundingRateTimestamp": "1776787200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005988",
+        "fundingRateTimestamp": "1776758400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00010327",
+        "fundingRateTimestamp": "1776729600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002374",
+        "fundingRateTimestamp": "1776700800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00004987",
+        "fundingRateTimestamp": "1776672000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00001194",
+        "fundingRateTimestamp": "1776643200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00007638",
+        "fundingRateTimestamp": "1776614400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.0000959",
+        "fundingRateTimestamp": "1776585600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.000116",
+        "fundingRateTimestamp": "1776556800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00013025",
+        "fundingRateTimestamp": "1776528000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00011193",
+        "fundingRateTimestamp": "1776499200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00016286",
+        "fundingRateTimestamp": "1776470400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00001083",
+        "fundingRateTimestamp": "1776441600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00004022",
+        "fundingRateTimestamp": "1776412800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00005099",
+        "fundingRateTimestamp": "1776384000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00006616",
+        "fundingRateTimestamp": "1776355200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.0000048",
+        "fundingRateTimestamp": "1776326400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00007443",
+        "fundingRateTimestamp": "1776297600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000525",
+        "fundingRateTimestamp": "1776268800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0000134",
+        "fundingRateTimestamp": "1776240000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00007969",
+        "fundingRateTimestamp": "1776211200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0000396",
+        "fundingRateTimestamp": "1776182400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776153600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00008502",
+        "fundingRateTimestamp": "1776124800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002299",
+        "fundingRateTimestamp": "1776096000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000786",
+        "fundingRateTimestamp": "1776067200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002077",
+        "fundingRateTimestamp": "1776038400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00008203",
+        "fundingRateTimestamp": "1776009600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00004348",
+        "fundingRateTimestamp": "1775980800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00009038",
+        "fundingRateTimestamp": "1775952000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000754",
+        "fundingRateTimestamp": "1775923200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00006516",
+        "fundingRateTimestamp": "1775894400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003328",
+        "fundingRateTimestamp": "1775865600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003563",
+        "fundingRateTimestamp": "1775836800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00004567",
+        "fundingRateTimestamp": "1775808000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775779200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003657",
+        "fundingRateTimestamp": "1775750400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0000203",
+        "fundingRateTimestamp": "1775721600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00005194",
+        "fundingRateTimestamp": "1775692800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002924",
+        "fundingRateTimestamp": "1775664000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775635200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775606400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000432",
+        "fundingRateTimestamp": "1775577600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00007812",
+        "fundingRateTimestamp": "1775548800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00009356",
+        "fundingRateTimestamp": "1775520000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00005365",
+        "fundingRateTimestamp": "1775491200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775462400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00004059",
+        "fundingRateTimestamp": "1775433600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00010322",
+        "fundingRateTimestamp": "1775404800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00007888",
+        "fundingRateTimestamp": "1775376000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00001785",
+        "fundingRateTimestamp": "1775347200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005297",
+        "fundingRateTimestamp": "1775318400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002555",
+        "fundingRateTimestamp": "1775289600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00003428",
+        "fundingRateTimestamp": "1775260800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00004974",
+        "fundingRateTimestamp": "1775232000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00005042",
+        "fundingRateTimestamp": "1775203200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003243",
+        "fundingRateTimestamp": "1775174400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.000059",
+        "fundingRateTimestamp": "1775145600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00009567",
+        "fundingRateTimestamp": "1775116800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005324",
+        "fundingRateTimestamp": "1775088000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000277",
+        "fundingRateTimestamp": "1775059200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775030400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00006238",
+        "fundingRateTimestamp": "1775001600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00006342",
+        "fundingRateTimestamp": "1774972800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774944000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002755",
+        "fundingRateTimestamp": "1774915200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00004563",
+        "fundingRateTimestamp": "1774886400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774857600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000949",
+        "fundingRateTimestamp": "1774828800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00006661",
+        "fundingRateTimestamp": "1774800000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002779",
+        "fundingRateTimestamp": "1774771200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.0000022",
+        "fundingRateTimestamp": "1774742400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000074",
+        "fundingRateTimestamp": "1774713600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003173",
+        "fundingRateTimestamp": "1774684800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00001695",
+        "fundingRateTimestamp": "1774656000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00015665",
+        "fundingRateTimestamp": "1774627200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000101",
+        "fundingRateTimestamp": "1774598400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000248",
+        "fundingRateTimestamp": "1774569600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00004332",
+        "fundingRateTimestamp": "1774540800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00003185",
+        "fundingRateTimestamp": "1774512000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00004595",
+        "fundingRateTimestamp": "1774483200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00005266",
+        "fundingRateTimestamp": "1774454400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00006909",
+        "fundingRateTimestamp": "1774425600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00005948",
+        "fundingRateTimestamp": "1774396800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003363",
+        "fundingRateTimestamp": "1774368000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000499",
+        "fundingRateTimestamp": "1774339200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00004832",
+        "fundingRateTimestamp": "1774310400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00006478",
+        "fundingRateTimestamp": "1774281600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0000012",
+        "fundingRateTimestamp": "1774252800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002962",
+        "fundingRateTimestamp": "1774224000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00001084",
+        "fundingRateTimestamp": "1774195200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000285",
+        "fundingRateTimestamp": "1774166400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002692",
+        "fundingRateTimestamp": "1774137600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000708",
+        "fundingRateTimestamp": "1774108800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003087",
+        "fundingRateTimestamp": "1774080000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002883",
+        "fundingRateTimestamp": "1774051200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002131",
+        "fundingRateTimestamp": "1774022400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000412",
+        "fundingRateTimestamp": "1773993600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003252",
+        "fundingRateTimestamp": "1773964800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000702",
+        "fundingRateTimestamp": "1773936000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000186",
+        "fundingRateTimestamp": "1773907200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003889",
+        "fundingRateTimestamp": "1773878400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002873",
+        "fundingRateTimestamp": "1773849600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00003364",
+        "fundingRateTimestamp": "1773820800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002499",
+        "fundingRateTimestamp": "1773792000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00004974",
+        "fundingRateTimestamp": "1773763200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003187",
+        "fundingRateTimestamp": "1773734400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003371",
+        "fundingRateTimestamp": "1773705600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003692",
+        "fundingRateTimestamp": "1773676800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773648000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00007782",
+        "fundingRateTimestamp": "1773619200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000805",
+        "fundingRateTimestamp": "1773590400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00007794",
+        "fundingRateTimestamp": "1773561600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00003817",
+        "fundingRateTimestamp": "1773532800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005906",
+        "fundingRateTimestamp": "1773504000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00001687",
+        "fundingRateTimestamp": "1773475200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00001092",
+        "fundingRateTimestamp": "1773446400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00005261",
+        "fundingRateTimestamp": "1773417600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0000441",
+        "fundingRateTimestamp": "1773388800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002704",
+        "fundingRateTimestamp": "1773360000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00004451",
+        "fundingRateTimestamp": "1773331200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005169",
+        "fundingRateTimestamp": "1773302400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002121",
+        "fundingRateTimestamp": "1773273600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773244800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00001962",
+        "fundingRateTimestamp": "1773216000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0000102",
+        "fundingRateTimestamp": "1773187200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00007858",
+        "fundingRateTimestamp": "1773158400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0000852",
+        "fundingRateTimestamp": "1773129600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00001748",
+        "fundingRateTimestamp": "1773100800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00009217",
+        "fundingRateTimestamp": "1773072000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00008256",
+        "fundingRateTimestamp": "1773043200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00015305",
+        "fundingRateTimestamp": "1773014400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00006106",
+        "fundingRateTimestamp": "1772985600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00007021",
+        "fundingRateTimestamp": "1772956800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00003413",
+        "fundingRateTimestamp": "1772928000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000472",
+        "fundingRateTimestamp": "1772899200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00004361",
+        "fundingRateTimestamp": "1772870400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00001712",
+        "fundingRateTimestamp": "1772841600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00006952",
+        "fundingRateTimestamp": "1772812800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00005578",
+        "fundingRateTimestamp": "1772784000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00005956",
+        "fundingRateTimestamp": "1772755200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002984",
+        "fundingRateTimestamp": "1772726400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000012",
+        "fundingRateTimestamp": "1772697600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003022",
+        "fundingRateTimestamp": "1772668800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772640000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000992",
+        "fundingRateTimestamp": "1772611200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00001935",
+        "fundingRateTimestamp": "1772582400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005368",
+        "fundingRateTimestamp": "1772553600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000596",
+        "fundingRateTimestamp": "1772524800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772496000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002819",
+        "fundingRateTimestamp": "1772467200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002859",
+        "fundingRateTimestamp": "1772438400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00000424",
+        "fundingRateTimestamp": "1772409600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772380800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772352000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00003367",
+        "fundingRateTimestamp": "1772323200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002844",
+        "fundingRateTimestamp": "1772294400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00007829",
+        "fundingRateTimestamp": "1772265600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00006276",
+        "fundingRateTimestamp": "1772236800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.0000246",
+        "fundingRateTimestamp": "1772208000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00004068",
+        "fundingRateTimestamp": "1772179200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00001962",
+        "fundingRateTimestamp": "1772150400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00008493",
+        "fundingRateTimestamp": "1772121600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772092800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772064000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772035200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00008885",
+        "fundingRateTimestamp": "1772006400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00000487",
+        "fundingRateTimestamp": "1771977600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00001053",
+        "fundingRateTimestamp": "1771948800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00011943",
+        "fundingRateTimestamp": "1771920000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00002249",
+        "fundingRateTimestamp": "1771891200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00002452",
+        "fundingRateTimestamp": "1771862400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00020824",
+        "fundingRateTimestamp": "1771833600000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.0000469",
+        "fundingRateTimestamp": "1771804800000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00005581",
+        "fundingRateTimestamp": "1771776000000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "-0.00001853",
+        "fundingRateTimestamp": "1771747200000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.00008187",
+        "fundingRateTimestamp": "1771718400000",
+        "symbol": "ETHUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1771689600000",
+        "symbol": "ETHUSDT"
+      }
+    ]
+  },
+  "retCode": 0,
+  "retExtInfo": {},
+  "retMsg": "OK",
+  "time": 1784175899364
+}

@@ -1,0 +1,553 @@
+{
+  "aggregation_receipts": [
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "adf460d61c3f2a87044544af270461c238e64e3bff79c242efdd1b6cd918f419",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "1000PEPEUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "c4c1807442509edb57395ef95798c8a021f24fb212ed78f78bdb807efa781d5d",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "ADAUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "80237f9a6f83a2bac7f686fe2c0843f622df95b48c89e9559da5603eabb24ef9",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "AVAXUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "f8bf14d9ba7902b3e495a82c5f91b479404f935931afeb7da785a5555a39aafe",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "BNBUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "e0b3eb08ded8b609ddb97fea9563b2db34f6c7cdb24bd29582e60f62ec6a589b",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "BTCUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "c6b8e67ac00cbe445d14b6eee641f1fe3ad870eea25a787f9266468de61d4624",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "DOGEUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "7429b04e2f729c475e135c5f99ebd56e6c1376022e0f78f58adf788cd60f296a",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "ETHUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "6596b91232437574c9bec2c8ebbc99c9b876db754f558a4f47b9d27929869eb1",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "ONDOUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "b383628371b90677f8ded5afed7a2ff17bd8647e29d05be17540639d1d8ca315",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "SOLUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "427e98a16e1fb87fb4f3ec4d9ed35f7b57f7b46e5f5a4ec4e15f2abeb907c567",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "SUIUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "739a098991da14a6ebc469ce504fa069fda1837b7ab0c9adc51c774bd8a9088f",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "TAOUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "5fda19f39de9274586b362e7633cb9ed248cd2972091c0dba322bb7d957a4fc7",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "WIFUSDT",
+      "warmup_m5_rows_decoded": 240
+    },
+    {
+      "config_fingerprint": "2adf56d47216016d2e379a67004e1269761fceca13519a0f274ec3bf81869a17",
+      "h1_rows": 2900,
+      "h1_sha256": "37ace22e00f8086f1084bb0c237ca2d72073b67dcf5c5ee38a8d951513d60505",
+      "sealed_m5_rows_decoded": 34560,
+      "selected_m5_rows_decoded": 34800,
+      "symbol": "XRPUSDT",
+      "warmup_m5_rows_decoded": 240
+    }
+  ],
+  "authorization_sha256": "d528437b1e0812038903b7fcc2f664939ce469f44b05169c1bdc6b0e0e7b3979",
+  "automatic_shadow_or_live_authorization": false,
+  "candidate_id": "horizontal_breakout_long_72h_v1",
+  "decision": "NO_PROMOTION",
+  "evaluation": {
+    "aggregate": {
+      "base_net_bps": -27811.62146588716,
+      "base_profit_factor": 0.3923289759049695,
+      "base_profit_factor_infinite": false,
+      "closed_trades": 155,
+      "invalid_or_censored_trades": 0,
+      "stress_net_bps": -37853.61865183698,
+      "stress_profit_factor": 0.2808069502631809,
+      "stress_profit_factor_infinite": false,
+      "stress_timestamp_portfolio_max_drawdown_pct": 36.89727626263558,
+      "stress_winsorized_mean_net_bps": -249.43310641057428
+    },
+    "checks": [
+      {
+        "actual": 155,
+        "gate": "stress_closed_trades_min",
+        "pass": true
+      },
+      {
+        "actual": 0.3923289759049695,
+        "gate": "base_profit_factor_min",
+        "pass": false
+      },
+      {
+        "actual": 0.2808069502631809,
+        "gate": "stress_profit_factor_min",
+        "pass": false
+      },
+      {
+        "actual": -37853.61865183698,
+        "gate": "stress_net_pnl_positive",
+        "pass": false
+      },
+      {
+        "actual": -249.43310641057428,
+        "gate": "stress_winsorized_mean_positive",
+        "pass": false
+      },
+      {
+        "actual": 36.89727626263558,
+        "gate": "stress_timestamp_max_drawdown",
+        "pass": false
+      },
+      {
+        "actual": 0,
+        "gate": "invalid_or_censored_trades",
+        "pass": true
+      },
+      {
+        "actual": 100.0,
+        "gate": "long_side_purity",
+        "pass": true
+      },
+      {
+        "actual": 32,
+        "gate": "stress_trades_per_fold_min",
+        "pass": true
+      },
+      {
+        "actual": 0,
+        "gate": "stress_net_positive_folds_min",
+        "pass": false
+      },
+      {
+        "actual": 0.2651845810435999,
+        "gate": "stress_median_fold_profit_factor_min",
+        "pass": false
+      },
+      {
+        "actual": 13,
+        "gate": "traded_symbols_min",
+        "pass": true
+      },
+      {
+        "actual": 1,
+        "gate": "stress_positive_symbols_min",
+        "pass": false
+      },
+      {
+        "actual": 0.08387096774193549,
+        "gate": "largest_symbol_trade_count_share_max",
+        "pass": true
+      },
+      {
+        "actual": 0.07737773152965662,
+        "gate": "symbol_trade_count_hhi_max",
+        "pass": true
+      },
+      {
+        "actual": 1.0,
+        "gate": "top_symbol_positive_net_contribution_share_max",
+        "pass": false
+      },
+      {
+        "actual": 0.850597289995167,
+        "gate": "top_10pct_trades_positive_net_contribution_share_max",
+        "pass": false
+      },
+      {
+        "actual": -39571.246465576456,
+        "gate": "leave_one_symbol_out_stress_net_positive",
+        "pass": false
+      },
+      {
+        "actual": 0.19109996249739294,
+        "gate": "leave_one_symbol_out_worst_stress_profit_factor_min",
+        "pass": false
+      }
+    ],
+    "concentration": {
+      "largest_symbol_trade_count_share": 0.08387096774193549,
+      "symbol_trade_count_hhi": 0.07737773152965662,
+      "top_10pct_trades_positive_net_contribution_share": 0.850597289995167,
+      "top_symbol_positive_net_contribution_share": 1.0
+    },
+    "folds": [
+      {
+        "fold": "fold_1",
+        "stress_net_bps": -10586.484099761594,
+        "stress_profit_factor": 0.34253022510120684,
+        "stress_profit_factor_infinite": false,
+        "trades": 49
+      },
+      {
+        "fold": "fold_2",
+        "stress_net_bps": -4623.899312260633,
+        "stress_profit_factor": 0.5292936264285044,
+        "stress_profit_factor_infinite": false,
+        "trades": 39
+      },
+      {
+        "fold": "fold_3",
+        "stress_net_bps": -12473.04202922654,
+        "stress_profit_factor": 0.12074361782137434,
+        "stress_profit_factor_infinite": false,
+        "trades": 32
+      },
+      {
+        "fold": "fold_4",
+        "stress_net_bps": -10170.193210588208,
+        "stress_profit_factor": 0.18783893698599285,
+        "stress_profit_factor_infinite": false,
+        "trades": 35
+      }
+    ],
+    "leave_one_symbol_out": [
+      {
+        "excluded_symbol": "1000PEPEUSDT",
+        "stress_net_bps": -31548.58676817165,
+        "stress_profit_factor": 0.3182270703938708,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "ADAUSDT",
+        "stress_net_bps": -32408.417220391995,
+        "stress_profit_factor": 0.30313047889670297,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "AVAXUSDT",
+        "stress_net_bps": -33972.848576596196,
+        "stress_profit_factor": 0.3001712819681579,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "BNBUSDT",
+        "stress_net_bps": -36548.38231624575,
+        "stress_profit_factor": 0.27257955466015193,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "BTCUSDT",
+        "stress_net_bps": -35013.58184890804,
+        "stress_profit_factor": 0.29276180320524586,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "DOGEUSDT",
+        "stress_net_bps": -32867.06921790296,
+        "stress_profit_factor": 0.3065546764983166,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "ETHUSDT",
+        "stress_net_bps": -34633.30423035914,
+        "stress_profit_factor": 0.2935847484873342,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "ONDOUSDT",
+        "stress_net_bps": -36938.325014114256,
+        "stress_profit_factor": 0.2512297305121737,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "SOLUSDT",
+        "stress_net_bps": -34938.34231933176,
+        "stress_profit_factor": 0.28876628835319634,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "SUIUSDT",
+        "stress_net_bps": -34989.446558506985,
+        "stress_profit_factor": 0.28140749690941264,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "TAOUSDT",
+        "stress_net_bps": -39571.246465576456,
+        "stress_profit_factor": 0.19109996249739294,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "WIFUSDT",
+        "stress_net_bps": -35376.08907324991,
+        "stress_profit_factor": 0.2643224952634581,
+        "stress_profit_factor_infinite": false
+      },
+      {
+        "excluded_symbol": "XRPUSDT",
+        "stress_net_bps": -35437.784212688624,
+        "stress_profit_factor": 0.2905151387404001,
+        "stress_profit_factor_infinite": false
+      }
+    ],
+    "research_gate_pass": false,
+    "symbols": [
+      {
+        "stress_net_bps": -6305.031883665324,
+        "stress_profit_factor": 0.008506881466633144,
+        "stress_profit_factor_infinite": false,
+        "symbol": "1000PEPEUSDT",
+        "trades": 13
+      },
+      {
+        "stress_net_bps": -5445.201431444982,
+        "stress_profit_factor": 0.11138538178850221,
+        "stress_profit_factor_infinite": false,
+        "symbol": "ADAUSDT",
+        "trades": 13
+      },
+      {
+        "stress_net_bps": -3880.7700752407836,
+        "stress_profit_factor": 0.0509107046722654,
+        "stress_profit_factor_infinite": false,
+        "symbol": "AVAXUSDT",
+        "trades": 13
+      },
+      {
+        "stress_net_bps": -1305.236335591228,
+        "stress_profit_factor": 0.45379362346499524,
+        "stress_profit_factor_infinite": false,
+        "symbol": "BNBUSDT",
+        "trades": 12
+      },
+      {
+        "stress_net_bps": -2840.0368029289384,
+        "stress_profit_factor": 0.09147275481483183,
+        "stress_profit_factor_infinite": false,
+        "symbol": "BTCUSDT",
+        "trades": 10
+      },
+      {
+        "stress_net_bps": -4986.549433934015,
+        "stress_profit_factor": 0.04776674500390677,
+        "stress_profit_factor_infinite": false,
+        "symbol": "DOGEUSDT",
+        "trades": 13
+      },
+      {
+        "stress_net_bps": -3220.3144214778326,
+        "stress_profit_factor": 0.10711130316301916,
+        "stress_profit_factor_infinite": false,
+        "symbol": "ETHUSDT",
+        "trades": 12
+      },
+      {
+        "stress_net_bps": -915.2936377227227,
+        "stress_profit_factor": 0.7227620656611866,
+        "stress_profit_factor_infinite": false,
+        "symbol": "ONDOUSDT",
+        "trades": 12
+      },
+      {
+        "stress_net_bps": -2915.276332505222,
+        "stress_profit_factor": 0.1694098267599603,
+        "stress_profit_factor_infinite": false,
+        "symbol": "SOLUSDT",
+        "trades": 11
+      },
+      {
+        "stress_net_bps": -2864.172093329994,
+        "stress_profit_factor": 0.2733886534896804,
+        "stress_profit_factor_infinite": false,
+        "symbol": "SUIUSDT",
+        "trades": 11
+      },
+      {
+        "stress_net_bps": 1717.6278137394825,
+        "stress_profit_factor": 1.4625190021682468,
+        "stress_profit_factor_infinite": false,
+        "symbol": "TAOUSDT",
+        "trades": 12
+      },
+      {
+        "stress_net_bps": -2477.529578587066,
+        "stress_profit_factor": 0.45513491703833997,
+        "stress_profit_factor_infinite": false,
+        "symbol": "WIFUSDT",
+        "trades": 11
+      },
+      {
+        "stress_net_bps": -2415.83443914835,
+        "stress_profit_factor": 0.1001968849298025,
+        "stress_profit_factor_infinite": false,
+        "symbol": "XRPUSDT",
+        "trades": 12
+      }
+    ],
+    "winsorization_definition": "symmetric_2.5pct_each_tail_nearest_observed_bounds"
+  },
+  "funding_manifest_sha256": "c10525b0a1111664235e5b5d471813cd7bb9ff249cce31e472ed61da0382292f",
+  "generated_at_utc": "2026-07-16T04:29:54.365030Z",
+  "invalid_or_censored": [],
+  "market_snapshots_opened": 13,
+  "network_or_broker_calls": false,
+  "one_shot_performance_run": 1,
+  "parameter_search_performed": false,
+  "performance_computed": true,
+  "physical_side": "long_only",
+  "runner_sha256": "1e74cff0cbbad2cc73eb51597a2959fc543287d0156a0464c123895ec99f9f9f",
+  "schema": "horizontal_breakout_long_72h_sealed_v1_performance_receipt",
+  "sealed_holdout_rows_decoded": 449280,
+  "sealed_window": [
+    1772805600000,
+    1783173600000
+  ],
+  "signal_counters": {
+    "1000PEPEUSDT": {
+      "detected_signals": 129,
+      "excluded_cooldown": 114,
+      "excluded_cross_fold_or_boundary": 1,
+      "excluded_internal_embargo": 1,
+      "scored_trades": 13
+    },
+    "ADAUSDT": {
+      "detected_signals": 111,
+      "excluded_cooldown": 96,
+      "excluded_internal_embargo": 2,
+      "scored_trades": 13
+    },
+    "AVAXUSDT": {
+      "detected_signals": 126,
+      "excluded_cooldown": 111,
+      "excluded_cross_fold_or_boundary": 1,
+      "excluded_internal_embargo": 1,
+      "scored_trades": 13
+    },
+    "BNBUSDT": {
+      "detected_signals": 140,
+      "excluded_cooldown": 125,
+      "excluded_internal_embargo": 3,
+      "scored_trades": 12
+    },
+    "BTCUSDT": {
+      "detected_signals": 107,
+      "excluded_cooldown": 93,
+      "excluded_cross_fold_or_boundary": 2,
+      "excluded_internal_embargo": 2,
+      "scored_trades": 10
+    },
+    "DOGEUSDT": {
+      "detected_signals": 111,
+      "excluded_cooldown": 96,
+      "excluded_cross_fold_or_boundary": 1,
+      "excluded_internal_embargo": 1,
+      "scored_trades": 13
+    },
+    "ETHUSDT": {
+      "detected_signals": 92,
+      "excluded_cooldown": 78,
+      "excluded_internal_embargo": 2,
+      "scored_trades": 12
+    },
+    "ONDOUSDT": {
+      "detected_signals": 151,
+      "excluded_cooldown": 136,
+      "excluded_cross_fold_or_boundary": 1,
+      "excluded_internal_embargo": 2,
+      "scored_trades": 12
+    },
+    "SOLUSDT": {
+      "detected_signals": 124,
+      "excluded_cooldown": 110,
+      "excluded_cross_fold_or_boundary": 1,
+      "excluded_incomplete_horizon": 1,
+      "excluded_internal_embargo": 1,
+      "scored_trades": 11
+    },
+    "SUIUSDT": {
+      "detected_signals": 111,
+      "excluded_cooldown": 98,
+      "excluded_cross_fold_or_boundary": 1,
+      "excluded_internal_embargo": 1,
+      "scored_trades": 11
+    },
+    "TAOUSDT": {
+      "detected_signals": 136,
+      "excluded_cooldown": 122,
+      "excluded_internal_embargo": 2,
+      "scored_trades": 12
+    },
+    "WIFUSDT": {
+      "detected_signals": 130,
+      "excluded_cooldown": 116,
+      "excluded_cross_fold_or_boundary": 2,
+      "excluded_internal_embargo": 1,
+      "scored_trades": 11
+    },
+    "XRPUSDT": {
+      "detected_signals": 118,
+      "excluded_cooldown": 104,
+      "excluded_internal_embargo": 2,
+      "scored_trades": 12
+    }
+  },
+  "strategy_config_sha256": "44c8d35a5bae734be0bb47f2bd2ea81cc82c13eac4b8e19356e802350fd6a04a"
+}

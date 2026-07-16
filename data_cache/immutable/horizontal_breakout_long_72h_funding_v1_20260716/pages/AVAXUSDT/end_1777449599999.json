@@ -1,0 +1,1011 @@
+{
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "fundingRate": "0.00009481",
+        "fundingRateTimestamp": "1777420800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00003227",
+        "fundingRateTimestamp": "1777392000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777363200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777334400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00013356",
+        "fundingRateTimestamp": "1777305600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00020452",
+        "fundingRateTimestamp": "1777276800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00003375",
+        "fundingRateTimestamp": "1777248000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777219200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00007831",
+        "fundingRateTimestamp": "1777190400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00009254",
+        "fundingRateTimestamp": "1777161600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.0000639",
+        "fundingRateTimestamp": "1777132800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00005537",
+        "fundingRateTimestamp": "1777104000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777075200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777046400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006818",
+        "fundingRateTimestamp": "1777017600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00002636",
+        "fundingRateTimestamp": "1776988800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00001815",
+        "fundingRateTimestamp": "1776960000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00011365",
+        "fundingRateTimestamp": "1776931200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00001878",
+        "fundingRateTimestamp": "1776902400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006232",
+        "fundingRateTimestamp": "1776873600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776844800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00009274",
+        "fundingRateTimestamp": "1776816000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776787200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00001154",
+        "fundingRateTimestamp": "1776758400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006774",
+        "fundingRateTimestamp": "1776729600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00000652",
+        "fundingRateTimestamp": "1776700800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00002366",
+        "fundingRateTimestamp": "1776672000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.0000432",
+        "fundingRateTimestamp": "1776643200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00007504",
+        "fundingRateTimestamp": "1776614400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00012324",
+        "fundingRateTimestamp": "1776585600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00003032",
+        "fundingRateTimestamp": "1776556800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00006459",
+        "fundingRateTimestamp": "1776528000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00001659",
+        "fundingRateTimestamp": "1776499200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00007787",
+        "fundingRateTimestamp": "1776470400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776441600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00001075",
+        "fundingRateTimestamp": "1776412800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776384000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00004399",
+        "fundingRateTimestamp": "1776355200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776326400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776297600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776268800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00000513",
+        "fundingRateTimestamp": "1776240000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00005873",
+        "fundingRateTimestamp": "1776211200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00001192",
+        "fundingRateTimestamp": "1776182400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00009961",
+        "fundingRateTimestamp": "1776153600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776124800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0000616",
+        "fundingRateTimestamp": "1776096000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00000575",
+        "fundingRateTimestamp": "1776067200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0000192",
+        "fundingRateTimestamp": "1776038400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00003797",
+        "fundingRateTimestamp": "1776009600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.0000613",
+        "fundingRateTimestamp": "1775980800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00009756",
+        "fundingRateTimestamp": "1775952000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00003532",
+        "fundingRateTimestamp": "1775923200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00006983",
+        "fundingRateTimestamp": "1775894400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00009419",
+        "fundingRateTimestamp": "1775865600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006782",
+        "fundingRateTimestamp": "1775836800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775808000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775779200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775750400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0000981",
+        "fundingRateTimestamp": "1775721600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775692800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775664000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775635200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775606400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00016854",
+        "fundingRateTimestamp": "1775577600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.0003296",
+        "fundingRateTimestamp": "1775548800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00000859",
+        "fundingRateTimestamp": "1775520000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775491200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775462400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006921",
+        "fundingRateTimestamp": "1775433600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00011316",
+        "fundingRateTimestamp": "1775404800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00002945",
+        "fundingRateTimestamp": "1775376000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775347200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00003085",
+        "fundingRateTimestamp": "1775318400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00003395",
+        "fundingRateTimestamp": "1775289600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775260800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775232000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775203200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00000724",
+        "fundingRateTimestamp": "1775174400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00002565",
+        "fundingRateTimestamp": "1775145600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00013463",
+        "fundingRateTimestamp": "1775116800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00003839",
+        "fundingRateTimestamp": "1775088000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00002817",
+        "fundingRateTimestamp": "1775059200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775030400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775001600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00000627",
+        "fundingRateTimestamp": "1774972800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00007608",
+        "fundingRateTimestamp": "1774944000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00000656",
+        "fundingRateTimestamp": "1774915200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00007299",
+        "fundingRateTimestamp": "1774886400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006284",
+        "fundingRateTimestamp": "1774857600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00000564",
+        "fundingRateTimestamp": "1774828800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00008837",
+        "fundingRateTimestamp": "1774800000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00001227",
+        "fundingRateTimestamp": "1774771200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00005768",
+        "fundingRateTimestamp": "1774742400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00003479",
+        "fundingRateTimestamp": "1774713600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00005883",
+        "fundingRateTimestamp": "1774684800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.0000099",
+        "fundingRateTimestamp": "1774656000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.000123",
+        "fundingRateTimestamp": "1774627200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00000042",
+        "fundingRateTimestamp": "1774598400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00019416",
+        "fundingRateTimestamp": "1774569600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00004465",
+        "fundingRateTimestamp": "1774540800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006278",
+        "fundingRateTimestamp": "1774512000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774483200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774454400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774425600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774396800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0000436",
+        "fundingRateTimestamp": "1774368000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774339200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00004142",
+        "fundingRateTimestamp": "1774310400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00007672",
+        "fundingRateTimestamp": "1774281600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00003229",
+        "fundingRateTimestamp": "1774252800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00016957",
+        "fundingRateTimestamp": "1774224000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00016997",
+        "fundingRateTimestamp": "1774195200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00004015",
+        "fundingRateTimestamp": "1774166400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00009379",
+        "fundingRateTimestamp": "1774137600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00004306",
+        "fundingRateTimestamp": "1774108800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00000994",
+        "fundingRateTimestamp": "1774080000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00003045",
+        "fundingRateTimestamp": "1774051200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00002198",
+        "fundingRateTimestamp": "1774022400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00005827",
+        "fundingRateTimestamp": "1773993600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00000877",
+        "fundingRateTimestamp": "1773964800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0000908",
+        "fundingRateTimestamp": "1773936000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00004269",
+        "fundingRateTimestamp": "1773907200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00001442",
+        "fundingRateTimestamp": "1773878400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00006868",
+        "fundingRateTimestamp": "1773849600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00003822",
+        "fundingRateTimestamp": "1773820800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00008511",
+        "fundingRateTimestamp": "1773792000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00003903",
+        "fundingRateTimestamp": "1773763200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00005049",
+        "fundingRateTimestamp": "1773734400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773705600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006947",
+        "fundingRateTimestamp": "1773676800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773648000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006844",
+        "fundingRateTimestamp": "1773619200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006413",
+        "fundingRateTimestamp": "1773590400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00004748",
+        "fundingRateTimestamp": "1773561600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00009639",
+        "fundingRateTimestamp": "1773532800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00009433",
+        "fundingRateTimestamp": "1773504000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00004698",
+        "fundingRateTimestamp": "1773475200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00003594",
+        "fundingRateTimestamp": "1773446400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006955",
+        "fundingRateTimestamp": "1773417600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773388800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773360000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0000127",
+        "fundingRateTimestamp": "1773331200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00001266",
+        "fundingRateTimestamp": "1773302400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00007218",
+        "fundingRateTimestamp": "1773273600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00007219",
+        "fundingRateTimestamp": "1773244800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00008265",
+        "fundingRateTimestamp": "1773216000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773187200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773158400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773129600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773100800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773072000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773043200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00010413",
+        "fundingRateTimestamp": "1773014400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.0000643",
+        "fundingRateTimestamp": "1772985600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00013402",
+        "fundingRateTimestamp": "1772956800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00014135",
+        "fundingRateTimestamp": "1772928000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00011905",
+        "fundingRateTimestamp": "1772899200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00006976",
+        "fundingRateTimestamp": "1772870400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00007701",
+        "fundingRateTimestamp": "1772841600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00020248",
+        "fundingRateTimestamp": "1772812800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00002658",
+        "fundingRateTimestamp": "1772784000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0000068",
+        "fundingRateTimestamp": "1772755200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00001159",
+        "fundingRateTimestamp": "1772726400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00000609",
+        "fundingRateTimestamp": "1772697600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772668800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00008866",
+        "fundingRateTimestamp": "1772640000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00003039",
+        "fundingRateTimestamp": "1772611200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772582400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00008454",
+        "fundingRateTimestamp": "1772553600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00003178",
+        "fundingRateTimestamp": "1772524800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772496000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00003648",
+        "fundingRateTimestamp": "1772467200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772438400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772409600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772380800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772352000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772323200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00002785",
+        "fundingRateTimestamp": "1772294400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00008999",
+        "fundingRateTimestamp": "1772265600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00006506",
+        "fundingRateTimestamp": "1772236800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.0001214",
+        "fundingRateTimestamp": "1772208000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772179200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772150400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00004932",
+        "fundingRateTimestamp": "1772121600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00006431",
+        "fundingRateTimestamp": "1772092800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772064000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772035200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00004966",
+        "fundingRateTimestamp": "1772006400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00000311",
+        "fundingRateTimestamp": "1771977600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00011768",
+        "fundingRateTimestamp": "1771948800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00009767",
+        "fundingRateTimestamp": "1771920000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00004293",
+        "fundingRateTimestamp": "1771891200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.00007508",
+        "fundingRateTimestamp": "1771862400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00016532",
+        "fundingRateTimestamp": "1771833600000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.0001724",
+        "fundingRateTimestamp": "1771804800000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00004697",
+        "fundingRateTimestamp": "1771776000000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00010495",
+        "fundingRateTimestamp": "1771747200000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "-0.00014236",
+        "fundingRateTimestamp": "1771718400000",
+        "symbol": "AVAXUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1771689600000",
+        "symbol": "AVAXUSDT"
+      }
+    ]
+  },
+  "retCode": 0,
+  "retExtInfo": {},
+  "retMsg": "OK",
+  "time": 1784175894237
+}

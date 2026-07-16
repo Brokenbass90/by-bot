@@ -1,0 +1,1011 @@
+{
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "fundingRate": "0.00005028",
+        "fundingRateTimestamp": "1777420800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00002422",
+        "fundingRateTimestamp": "1777392000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00007851",
+        "fundingRateTimestamp": "1777363200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00000273",
+        "fundingRateTimestamp": "1777334400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00006393",
+        "fundingRateTimestamp": "1777305600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00004465",
+        "fundingRateTimestamp": "1777276800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00007892",
+        "fundingRateTimestamp": "1777248000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00003834",
+        "fundingRateTimestamp": "1777219200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00002279",
+        "fundingRateTimestamp": "1777190400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00004196",
+        "fundingRateTimestamp": "1777161600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00007484",
+        "fundingRateTimestamp": "1777132800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00003711",
+        "fundingRateTimestamp": "1777104000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00000731",
+        "fundingRateTimestamp": "1777075200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777046400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00008079",
+        "fundingRateTimestamp": "1777017600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00009241",
+        "fundingRateTimestamp": "1776988800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776960000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00008136",
+        "fundingRateTimestamp": "1776931200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00002826",
+        "fundingRateTimestamp": "1776902400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776873600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776844800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00002546",
+        "fundingRateTimestamp": "1776816000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776787200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00008589",
+        "fundingRateTimestamp": "1776758400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776729600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776700800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00000077",
+        "fundingRateTimestamp": "1776672000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00010654",
+        "fundingRateTimestamp": "1776643200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00008051",
+        "fundingRateTimestamp": "1776614400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00013963",
+        "fundingRateTimestamp": "1776585600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00010514",
+        "fundingRateTimestamp": "1776556800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00007603",
+        "fundingRateTimestamp": "1776528000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00010454",
+        "fundingRateTimestamp": "1776499200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776470400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776441600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0000572",
+        "fundingRateTimestamp": "1776412800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00007541",
+        "fundingRateTimestamp": "1776384000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776355200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776326400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776297600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776268800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.0001499",
+        "fundingRateTimestamp": "1776240000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00005738",
+        "fundingRateTimestamp": "1776211200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776182400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776153600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776124800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00005479",
+        "fundingRateTimestamp": "1776096000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00001649",
+        "fundingRateTimestamp": "1776067200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00008188",
+        "fundingRateTimestamp": "1776038400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00003233",
+        "fundingRateTimestamp": "1776009600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00013903",
+        "fundingRateTimestamp": "1775980800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775952000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.0000426",
+        "fundingRateTimestamp": "1775923200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00004003",
+        "fundingRateTimestamp": "1775894400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775865600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775836800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00003037",
+        "fundingRateTimestamp": "1775808000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775779200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0000823",
+        "fundingRateTimestamp": "1775750400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00001376",
+        "fundingRateTimestamp": "1775721600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775692800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775664000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775635200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775606400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00022736",
+        "fundingRateTimestamp": "1775577600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00004869",
+        "fundingRateTimestamp": "1775548800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775520000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775491200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775462400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775433600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00006036",
+        "fundingRateTimestamp": "1775404800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.0000617",
+        "fundingRateTimestamp": "1775376000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775347200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775318400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775289600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775260800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775232000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775203200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00000032",
+        "fundingRateTimestamp": "1775174400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00008573",
+        "fundingRateTimestamp": "1775145600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00018974",
+        "fundingRateTimestamp": "1775116800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775088000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775059200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775030400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00021591",
+        "fundingRateTimestamp": "1775001600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00002768",
+        "fundingRateTimestamp": "1774972800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00004331",
+        "fundingRateTimestamp": "1774944000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00004355",
+        "fundingRateTimestamp": "1774915200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00006786",
+        "fundingRateTimestamp": "1774886400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00007432",
+        "fundingRateTimestamp": "1774857600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00003885",
+        "fundingRateTimestamp": "1774828800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00006001",
+        "fundingRateTimestamp": "1774800000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774771200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00001086",
+        "fundingRateTimestamp": "1774742400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00004216",
+        "fundingRateTimestamp": "1774713600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00001218",
+        "fundingRateTimestamp": "1774684800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00013054",
+        "fundingRateTimestamp": "1774656000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00009008",
+        "fundingRateTimestamp": "1774627200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00000213",
+        "fundingRateTimestamp": "1774598400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774569600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00006952",
+        "fundingRateTimestamp": "1774540800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0000379",
+        "fundingRateTimestamp": "1774512000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774483200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774454400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.000011",
+        "fundingRateTimestamp": "1774425600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774396800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0000413",
+        "fundingRateTimestamp": "1774368000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00006144",
+        "fundingRateTimestamp": "1774339200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00007393",
+        "fundingRateTimestamp": "1774310400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00007602",
+        "fundingRateTimestamp": "1774281600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00004997",
+        "fundingRateTimestamp": "1774252800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00004959",
+        "fundingRateTimestamp": "1774224000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00023653",
+        "fundingRateTimestamp": "1774195200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.0001325",
+        "fundingRateTimestamp": "1774166400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00002625",
+        "fundingRateTimestamp": "1774137600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00001287",
+        "fundingRateTimestamp": "1774108800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774080000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00003855",
+        "fundingRateTimestamp": "1774051200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00000931",
+        "fundingRateTimestamp": "1774022400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00000972",
+        "fundingRateTimestamp": "1773993600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00003405",
+        "fundingRateTimestamp": "1773964800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.0001104",
+        "fundingRateTimestamp": "1773936000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00011697",
+        "fundingRateTimestamp": "1773907200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00001184",
+        "fundingRateTimestamp": "1773878400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00008913",
+        "fundingRateTimestamp": "1773849600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00000412",
+        "fundingRateTimestamp": "1773820800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00006282",
+        "fundingRateTimestamp": "1773792000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00006163",
+        "fundingRateTimestamp": "1773763200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00005704",
+        "fundingRateTimestamp": "1773734400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00008135",
+        "fundingRateTimestamp": "1773705600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773676800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773648000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00001609",
+        "fundingRateTimestamp": "1773619200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00009695",
+        "fundingRateTimestamp": "1773590400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00008528",
+        "fundingRateTimestamp": "1773561600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00002462",
+        "fundingRateTimestamp": "1773532800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00016814",
+        "fundingRateTimestamp": "1773504000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00005289",
+        "fundingRateTimestamp": "1773475200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00004802",
+        "fundingRateTimestamp": "1773446400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773417600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773388800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00002375",
+        "fundingRateTimestamp": "1773360000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00008081",
+        "fundingRateTimestamp": "1773331200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00009454",
+        "fundingRateTimestamp": "1773302400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773273600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0000864",
+        "fundingRateTimestamp": "1773244800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00006778",
+        "fundingRateTimestamp": "1773216000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00003591",
+        "fundingRateTimestamp": "1773187200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773158400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773129600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00001536",
+        "fundingRateTimestamp": "1773100800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00009111",
+        "fundingRateTimestamp": "1773072000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00005659",
+        "fundingRateTimestamp": "1773043200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00003785",
+        "fundingRateTimestamp": "1773014400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00008903",
+        "fundingRateTimestamp": "1772985600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.0000378",
+        "fundingRateTimestamp": "1772956800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00010043",
+        "fundingRateTimestamp": "1772928000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00020944",
+        "fundingRateTimestamp": "1772899200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00004729",
+        "fundingRateTimestamp": "1772870400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00008418",
+        "fundingRateTimestamp": "1772841600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00023433",
+        "fundingRateTimestamp": "1772812800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00003675",
+        "fundingRateTimestamp": "1772784000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772755200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00009016",
+        "fundingRateTimestamp": "1772726400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772697600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772668800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772640000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00012192",
+        "fundingRateTimestamp": "1772611200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00006639",
+        "fundingRateTimestamp": "1772582400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00001417",
+        "fundingRateTimestamp": "1772553600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00008733",
+        "fundingRateTimestamp": "1772524800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00006712",
+        "fundingRateTimestamp": "1772496000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00005127",
+        "fundingRateTimestamp": "1772467200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772438400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772409600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00003358",
+        "fundingRateTimestamp": "1772380800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772352000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00003835",
+        "fundingRateTimestamp": "1772323200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00000518",
+        "fundingRateTimestamp": "1772294400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.0000627",
+        "fundingRateTimestamp": "1772265600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00001489",
+        "fundingRateTimestamp": "1772236800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00013099",
+        "fundingRateTimestamp": "1772208000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772179200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00002677",
+        "fundingRateTimestamp": "1772150400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00001414",
+        "fundingRateTimestamp": "1772121600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00003512",
+        "fundingRateTimestamp": "1772092800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772064000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772035200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00002572",
+        "fundingRateTimestamp": "1772006400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1771977600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00005148",
+        "fundingRateTimestamp": "1771948800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00001511",
+        "fundingRateTimestamp": "1771920000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.00007884",
+        "fundingRateTimestamp": "1771891200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "0.0000794",
+        "fundingRateTimestamp": "1771862400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00003605",
+        "fundingRateTimestamp": "1771833600000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.0001245",
+        "fundingRateTimestamp": "1771804800000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00008032",
+        "fundingRateTimestamp": "1771776000000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00014141",
+        "fundingRateTimestamp": "1771747200000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00012867",
+        "fundingRateTimestamp": "1771718400000",
+        "symbol": "ADAUSDT"
+      },
+      {
+        "fundingRate": "-0.00004481",
+        "fundingRateTimestamp": "1771689600000",
+        "symbol": "ADAUSDT"
+      }
+    ]
+  },
+  "retCode": 0,
+  "retExtInfo": {},
+  "retMsg": "OK",
+  "time": 1784175892904
+}

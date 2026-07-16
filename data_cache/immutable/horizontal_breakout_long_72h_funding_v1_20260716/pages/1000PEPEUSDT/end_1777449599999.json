@@ -1,0 +1,1011 @@
+{
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777420800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777392000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777363200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777334400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00000722",
+        "fundingRateTimestamp": "1777305600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00017056",
+        "fundingRateTimestamp": "1777276800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777248000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777219200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777190400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005841",
+        "fundingRateTimestamp": "1777161600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004963",
+        "fundingRateTimestamp": "1777132800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777104000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777075200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777046400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777017600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776988800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00006108",
+        "fundingRateTimestamp": "1776960000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00036015",
+        "fundingRateTimestamp": "1776931200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00007376",
+        "fundingRateTimestamp": "1776902400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00000847",
+        "fundingRateTimestamp": "1776873600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776844800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776816000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00009018",
+        "fundingRateTimestamp": "1776787200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00002722",
+        "fundingRateTimestamp": "1776758400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00000954",
+        "fundingRateTimestamp": "1776729600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776700800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776672000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776643200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004378",
+        "fundingRateTimestamp": "1776614400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00016749",
+        "fundingRateTimestamp": "1776585600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00019784",
+        "fundingRateTimestamp": "1776556800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00002958",
+        "fundingRateTimestamp": "1776528000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00028146",
+        "fundingRateTimestamp": "1776499200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00006052",
+        "fundingRateTimestamp": "1776470400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00008459",
+        "fundingRateTimestamp": "1776441600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776412800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776384000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00008849",
+        "fundingRateTimestamp": "1776355200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776326400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776297600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00004661",
+        "fundingRateTimestamp": "1776268800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00017833",
+        "fundingRateTimestamp": "1776240000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00021005",
+        "fundingRateTimestamp": "1776211200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776182400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776153600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776124800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004468",
+        "fundingRateTimestamp": "1776096000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00024943",
+        "fundingRateTimestamp": "1776067200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00016861",
+        "fundingRateTimestamp": "1776038400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00000279",
+        "fundingRateTimestamp": "1776009600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00026075",
+        "fundingRateTimestamp": "1775980800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775952000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00009319",
+        "fundingRateTimestamp": "1775923200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775894400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775865600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775836800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775808000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005691",
+        "fundingRateTimestamp": "1775779200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00017389",
+        "fundingRateTimestamp": "1775750400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00013145",
+        "fundingRateTimestamp": "1775721600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775692800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775664000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775635200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775606400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004448",
+        "fundingRateTimestamp": "1775577600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00025654",
+        "fundingRateTimestamp": "1775548800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00016543",
+        "fundingRateTimestamp": "1775520000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775491200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775462400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775433600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00015082",
+        "fundingRateTimestamp": "1775404800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00023055",
+        "fundingRateTimestamp": "1775376000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00004",
+        "fundingRateTimestamp": "1775347200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00016978",
+        "fundingRateTimestamp": "1775318400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00003839",
+        "fundingRateTimestamp": "1775289600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775260800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775232000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775203200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00005216",
+        "fundingRateTimestamp": "1775174400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.0000773",
+        "fundingRateTimestamp": "1775145600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00048478",
+        "fundingRateTimestamp": "1775116800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00000823",
+        "fundingRateTimestamp": "1775088000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00028343",
+        "fundingRateTimestamp": "1775059200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00009998",
+        "fundingRateTimestamp": "1775030400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775001600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001082",
+        "fundingRateTimestamp": "1774972800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004876",
+        "fundingRateTimestamp": "1774944000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774915200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774886400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00005575",
+        "fundingRateTimestamp": "1774857600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001802",
+        "fundingRateTimestamp": "1774828800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00026642",
+        "fundingRateTimestamp": "1774800000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00028753",
+        "fundingRateTimestamp": "1774771200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00008233",
+        "fundingRateTimestamp": "1774742400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00007977",
+        "fundingRateTimestamp": "1774713600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00006701",
+        "fundingRateTimestamp": "1774684800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001995",
+        "fundingRateTimestamp": "1774656000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00031349",
+        "fundingRateTimestamp": "1774627200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00009686",
+        "fundingRateTimestamp": "1774598400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00009237",
+        "fundingRateTimestamp": "1774569600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00014961",
+        "fundingRateTimestamp": "1774540800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00010565",
+        "fundingRateTimestamp": "1774512000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774483200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774454400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774425600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774396800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00000786",
+        "fundingRateTimestamp": "1774368000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00002293",
+        "fundingRateTimestamp": "1774339200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00011185",
+        "fundingRateTimestamp": "1774310400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00021322",
+        "fundingRateTimestamp": "1774281600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004934",
+        "fundingRateTimestamp": "1774252800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00017763",
+        "fundingRateTimestamp": "1774224000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00024366",
+        "fundingRateTimestamp": "1774195200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00043263",
+        "fundingRateTimestamp": "1774166400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00025238",
+        "fundingRateTimestamp": "1774137600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00024199",
+        "fundingRateTimestamp": "1774108800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.0003439",
+        "fundingRateTimestamp": "1774080000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00017617",
+        "fundingRateTimestamp": "1774051200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00032111",
+        "fundingRateTimestamp": "1774022400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00027868",
+        "fundingRateTimestamp": "1773993600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00011463",
+        "fundingRateTimestamp": "1773964800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00001641",
+        "fundingRateTimestamp": "1773936000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00008084",
+        "fundingRateTimestamp": "1773907200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00017659",
+        "fundingRateTimestamp": "1773878400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773849600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00021451",
+        "fundingRateTimestamp": "1773820800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00015537",
+        "fundingRateTimestamp": "1773792000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00017663",
+        "fundingRateTimestamp": "1773763200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773734400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773705600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773676800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773648000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00003552",
+        "fundingRateTimestamp": "1773619200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.000069",
+        "fundingRateTimestamp": "1773590400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00022785",
+        "fundingRateTimestamp": "1773561600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00020235",
+        "fundingRateTimestamp": "1773532800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00035951",
+        "fundingRateTimestamp": "1773504000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00024502",
+        "fundingRateTimestamp": "1773475200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005719",
+        "fundingRateTimestamp": "1773446400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773417600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00006824",
+        "fundingRateTimestamp": "1773388800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00006459",
+        "fundingRateTimestamp": "1773360000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00021188",
+        "fundingRateTimestamp": "1773331200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00021495",
+        "fundingRateTimestamp": "1773302400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00000753",
+        "fundingRateTimestamp": "1773273600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00024456",
+        "fundingRateTimestamp": "1773244800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00017209",
+        "fundingRateTimestamp": "1773216000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00031062",
+        "fundingRateTimestamp": "1773187200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00009578",
+        "fundingRateTimestamp": "1773158400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00024092",
+        "fundingRateTimestamp": "1773129600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00013051",
+        "fundingRateTimestamp": "1773100800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00051606",
+        "fundingRateTimestamp": "1773072000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00071009",
+        "fundingRateTimestamp": "1773043200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00056884",
+        "fundingRateTimestamp": "1773014400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00036212",
+        "fundingRateTimestamp": "1772985600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00061302",
+        "fundingRateTimestamp": "1772956800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00070093",
+        "fundingRateTimestamp": "1772928000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00063565",
+        "fundingRateTimestamp": "1772899200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00018549",
+        "fundingRateTimestamp": "1772870400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00054136",
+        "fundingRateTimestamp": "1772841600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00042426",
+        "fundingRateTimestamp": "1772812800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00003533",
+        "fundingRateTimestamp": "1772784000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00023075",
+        "fundingRateTimestamp": "1772755200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00027462",
+        "fundingRateTimestamp": "1772726400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00017752",
+        "fundingRateTimestamp": "1772697600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772668800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00007806",
+        "fundingRateTimestamp": "1772640000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00000176",
+        "fundingRateTimestamp": "1772611200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001674",
+        "fundingRateTimestamp": "1772582400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00031728",
+        "fundingRateTimestamp": "1772553600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00007683",
+        "fundingRateTimestamp": "1772524800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772496000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00023334",
+        "fundingRateTimestamp": "1772467200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772438400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00026357",
+        "fundingRateTimestamp": "1772409600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004981",
+        "fundingRateTimestamp": "1772380800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00007532",
+        "fundingRateTimestamp": "1772352000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772323200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772294400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004075",
+        "fundingRateTimestamp": "1772265600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00004495",
+        "fundingRateTimestamp": "1772236800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00015879",
+        "fundingRateTimestamp": "1772208000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00009885",
+        "fundingRateTimestamp": "1772179200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00018817",
+        "fundingRateTimestamp": "1772150400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00023196",
+        "fundingRateTimestamp": "1772121600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772092800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772064000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00005032",
+        "fundingRateTimestamp": "1772035200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00039497",
+        "fundingRateTimestamp": "1772006400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00009002",
+        "fundingRateTimestamp": "1771977600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00004962",
+        "fundingRateTimestamp": "1771948800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.00002086",
+        "fundingRateTimestamp": "1771920000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1771891200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1771862400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1771833600000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0000836",
+        "fundingRateTimestamp": "1771804800000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1771776000000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00007429",
+        "fundingRateTimestamp": "1771747200000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.00001003",
+        "fundingRateTimestamp": "1771718400000",
+        "symbol": "1000PEPEUSDT"
+      },
+      {
+        "fundingRate": "-0.0001219",
+        "fundingRateTimestamp": "1771689600000",
+        "symbol": "1000PEPEUSDT"
+      }
+    ]
+  },
+  "retCode": 0,
+  "retExtInfo": {},
+  "retMsg": "OK",
+  "time": 1784175891763
+}

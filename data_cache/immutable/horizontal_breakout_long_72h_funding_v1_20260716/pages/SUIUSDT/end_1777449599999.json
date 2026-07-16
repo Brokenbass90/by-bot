@@ -1,0 +1,1011 @@
+{
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "fundingRate": "-0.00004602",
+        "fundingRateTimestamp": "1777420800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00003666",
+        "fundingRateTimestamp": "1777392000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00007013",
+        "fundingRateTimestamp": "1777363200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00000802",
+        "fundingRateTimestamp": "1777334400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00021898",
+        "fundingRateTimestamp": "1777305600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00013143",
+        "fundingRateTimestamp": "1777276800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00001864",
+        "fundingRateTimestamp": "1777248000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00006528",
+        "fundingRateTimestamp": "1777219200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777190400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00005241",
+        "fundingRateTimestamp": "1777161600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00004811",
+        "fundingRateTimestamp": "1777132800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777104000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0000335",
+        "fundingRateTimestamp": "1777075200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00007773",
+        "fundingRateTimestamp": "1777046400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777017600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776988800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00010067",
+        "fundingRateTimestamp": "1776960000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00010079",
+        "fundingRateTimestamp": "1776931200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00008207",
+        "fundingRateTimestamp": "1776902400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776873600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776844800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00008351",
+        "fundingRateTimestamp": "1776816000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00003464",
+        "fundingRateTimestamp": "1776787200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00007675",
+        "fundingRateTimestamp": "1776758400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00003691",
+        "fundingRateTimestamp": "1776729600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776700800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00009445",
+        "fundingRateTimestamp": "1776672000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776643200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00001832",
+        "fundingRateTimestamp": "1776614400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00007699",
+        "fundingRateTimestamp": "1776585600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776556800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776528000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00003837",
+        "fundingRateTimestamp": "1776499200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00003354",
+        "fundingRateTimestamp": "1776470400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776441600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00009568",
+        "fundingRateTimestamp": "1776412800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776384000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00007419",
+        "fundingRateTimestamp": "1776355200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776326400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776297600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776268800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776240000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0000589",
+        "fundingRateTimestamp": "1776211200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776182400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776153600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776124800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776096000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776067200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776038400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1776009600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00000661",
+        "fundingRateTimestamp": "1775980800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775952000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00008398",
+        "fundingRateTimestamp": "1775923200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775894400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775865600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775836800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775808000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775779200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00000601",
+        "fundingRateTimestamp": "1775750400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00016879",
+        "fundingRateTimestamp": "1775721600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00003908",
+        "fundingRateTimestamp": "1775692800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775664000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775635200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775606400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00005751",
+        "fundingRateTimestamp": "1775577600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00012876",
+        "fundingRateTimestamp": "1775548800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775520000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775491200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775462400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00000402",
+        "fundingRateTimestamp": "1775433600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00006214",
+        "fundingRateTimestamp": "1775404800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.0000872",
+        "fundingRateTimestamp": "1775376000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00001679",
+        "fundingRateTimestamp": "1775347200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00001776",
+        "fundingRateTimestamp": "1775318400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00007965",
+        "fundingRateTimestamp": "1775289600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00008405",
+        "fundingRateTimestamp": "1775260800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00006534",
+        "fundingRateTimestamp": "1775232000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0000435",
+        "fundingRateTimestamp": "1775203200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0000586",
+        "fundingRateTimestamp": "1775174400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00003511",
+        "fundingRateTimestamp": "1775145600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00004083",
+        "fundingRateTimestamp": "1775116800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00000395",
+        "fundingRateTimestamp": "1775088000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00004393",
+        "fundingRateTimestamp": "1775059200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0000593",
+        "fundingRateTimestamp": "1775030400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1775001600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0000691",
+        "fundingRateTimestamp": "1774972800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774944000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00002888",
+        "fundingRateTimestamp": "1774915200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774886400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00007754",
+        "fundingRateTimestamp": "1774857600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00000882",
+        "fundingRateTimestamp": "1774828800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00000765",
+        "fundingRateTimestamp": "1774800000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00002954",
+        "fundingRateTimestamp": "1774771200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00001759",
+        "fundingRateTimestamp": "1774742400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00000275",
+        "fundingRateTimestamp": "1774713600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00012006",
+        "fundingRateTimestamp": "1774684800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00012068",
+        "fundingRateTimestamp": "1774656000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00005257",
+        "fundingRateTimestamp": "1774627200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00003348",
+        "fundingRateTimestamp": "1774598400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00007077",
+        "fundingRateTimestamp": "1774569600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00005943",
+        "fundingRateTimestamp": "1774540800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00010538",
+        "fundingRateTimestamp": "1774512000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00003448",
+        "fundingRateTimestamp": "1774483200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774454400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774425600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774396800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774368000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00003531",
+        "fundingRateTimestamp": "1774339200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774310400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00008379",
+        "fundingRateTimestamp": "1774281600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00002777",
+        "fundingRateTimestamp": "1774252800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774224000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1774195200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00007449",
+        "fundingRateTimestamp": "1774166400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00002832",
+        "fundingRateTimestamp": "1774137600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00006409",
+        "fundingRateTimestamp": "1774108800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00000065",
+        "fundingRateTimestamp": "1774080000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00008086",
+        "fundingRateTimestamp": "1774051200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00007813",
+        "fundingRateTimestamp": "1774022400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00001794",
+        "fundingRateTimestamp": "1773993600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0000492",
+        "fundingRateTimestamp": "1773964800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773936000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00008294",
+        "fundingRateTimestamp": "1773907200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773878400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773849600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773820800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0000351",
+        "fundingRateTimestamp": "1773792000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00006028",
+        "fundingRateTimestamp": "1773763200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0000893",
+        "fundingRateTimestamp": "1773734400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00006439",
+        "fundingRateTimestamp": "1773705600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773676800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773648000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00000331",
+        "fundingRateTimestamp": "1773619200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00005721",
+        "fundingRateTimestamp": "1773590400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00000786",
+        "fundingRateTimestamp": "1773561600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00008666",
+        "fundingRateTimestamp": "1773532800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00001084",
+        "fundingRateTimestamp": "1773504000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00005812",
+        "fundingRateTimestamp": "1773475200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00014461",
+        "fundingRateTimestamp": "1773446400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.0000178",
+        "fundingRateTimestamp": "1773417600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00009313",
+        "fundingRateTimestamp": "1773388800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773360000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00004816",
+        "fundingRateTimestamp": "1773331200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00005172",
+        "fundingRateTimestamp": "1773302400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773273600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00004185",
+        "fundingRateTimestamp": "1773244800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00006924",
+        "fundingRateTimestamp": "1773216000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00001577",
+        "fundingRateTimestamp": "1773187200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773158400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00010239",
+        "fundingRateTimestamp": "1773129600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773100800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773072000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1773043200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00004408",
+        "fundingRateTimestamp": "1773014400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.0000283",
+        "fundingRateTimestamp": "1772985600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00002697",
+        "fundingRateTimestamp": "1772956800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.0000191",
+        "fundingRateTimestamp": "1772928000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.000067",
+        "fundingRateTimestamp": "1772899200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00004073",
+        "fundingRateTimestamp": "1772870400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00014061",
+        "fundingRateTimestamp": "1772841600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00016097",
+        "fundingRateTimestamp": "1772812800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00003709",
+        "fundingRateTimestamp": "1772784000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00004162",
+        "fundingRateTimestamp": "1772755200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00003959",
+        "fundingRateTimestamp": "1772726400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772697600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772668800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00009134",
+        "fundingRateTimestamp": "1772640000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00012311",
+        "fundingRateTimestamp": "1772611200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00001404",
+        "fundingRateTimestamp": "1772582400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00015097",
+        "fundingRateTimestamp": "1772553600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00001529",
+        "fundingRateTimestamp": "1772524800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772496000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00009535",
+        "fundingRateTimestamp": "1772467200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772438400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00009741",
+        "fundingRateTimestamp": "1772409600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772380800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772352000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00000973",
+        "fundingRateTimestamp": "1772323200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00009049",
+        "fundingRateTimestamp": "1772294400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00007635",
+        "fundingRateTimestamp": "1772265600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00001266",
+        "fundingRateTimestamp": "1772236800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00009034",
+        "fundingRateTimestamp": "1772208000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00006771",
+        "fundingRateTimestamp": "1772179200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00007695",
+        "fundingRateTimestamp": "1772150400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00001999",
+        "fundingRateTimestamp": "1772121600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772092800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772064000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1772035200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00005825",
+        "fundingRateTimestamp": "1772006400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00009689",
+        "fundingRateTimestamp": "1771977600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00004243",
+        "fundingRateTimestamp": "1771948800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00002819",
+        "fundingRateTimestamp": "1771920000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00005562",
+        "fundingRateTimestamp": "1771891200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1771862400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00009432",
+        "fundingRateTimestamp": "1771833600000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00001086",
+        "fundingRateTimestamp": "1771804800000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "-0.00003559",
+        "fundingRateTimestamp": "1771776000000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00003537",
+        "fundingRateTimestamp": "1771747200000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1771718400000",
+        "symbol": "SUIUSDT"
+      },
+      {
+        "fundingRate": "0.00009441",
+        "fundingRateTimestamp": "1771689600000",
+        "symbol": "SUIUSDT"
+      }
+    ]
+  },
+  "retCode": 0,
+  "retExtInfo": {},
+  "retMsg": "OK",
+  "time": 1784175903815
+}

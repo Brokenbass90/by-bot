@@ -1,0 +1,13 @@
+{
+  "authorization_fingerprint": "8e7f7d9c2765efb13d479fa671976eb3822ac0eb727a8d047e999b993e958d1e",
+  "authorization_sha256": "d528437b1e0812038903b7fcc2f664939ce469f44b05169c1bdc6b0e0e7b3979",
+  "claimed_at_utc": "2026-07-16T04:29:46.087191Z",
+  "live_or_broker_calls": false,
+  "performance_attempt_consumed": true,
+  "runner_sha256": "1e74cff0cbbad2cc73eb51597a2959fc543287d0156a0464c123895ec99f9f9f",
+  "schema": "horizontal_breakout_long_72h_sealed_v1_one_shot_claim",
+  "sealed_window": [
+    1772805600000,
+    1783173600000
+  ]
+}

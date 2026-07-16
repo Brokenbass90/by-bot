@@ -1,0 +1,1011 @@
+{
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777435200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777420800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777406400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777392000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777377600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777363200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00001005",
+        "fundingRateTimestamp": "1777348800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00001213",
+        "fundingRateTimestamp": "1777334400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00018842",
+        "fundingRateTimestamp": "1777320000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777305600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006495",
+        "fundingRateTimestamp": "1777291200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777276800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777262400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777248000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777233600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00004494",
+        "fundingRateTimestamp": "1777219200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777204800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00014101",
+        "fundingRateTimestamp": "1777190400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00027386",
+        "fundingRateTimestamp": "1777176000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00048265",
+        "fundingRateTimestamp": "1777161600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00026986",
+        "fundingRateTimestamp": "1777147200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777132800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777118400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777104000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777089600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777075200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777060800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777046400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777032000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00000413",
+        "fundingRateTimestamp": "1777017600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777003200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776988800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00033885",
+        "fundingRateTimestamp": "1776974400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00000947",
+        "fundingRateTimestamp": "1776960000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00052855",
+        "fundingRateTimestamp": "1776945600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00035592",
+        "fundingRateTimestamp": "1776931200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00013808",
+        "fundingRateTimestamp": "1776916800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776902400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00007438",
+        "fundingRateTimestamp": "1776888000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.0000425",
+        "fundingRateTimestamp": "1776873600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776859200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776844800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00002592",
+        "fundingRateTimestamp": "1776830400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776816000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00032966",
+        "fundingRateTimestamp": "1776801600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00024713",
+        "fundingRateTimestamp": "1776787200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006146",
+        "fundingRateTimestamp": "1776772800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776758400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776744000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776729600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00009559",
+        "fundingRateTimestamp": "1776715200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00016863",
+        "fundingRateTimestamp": "1776700800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00028452",
+        "fundingRateTimestamp": "1776686400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00011213",
+        "fundingRateTimestamp": "1776672000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00001129",
+        "fundingRateTimestamp": "1776657600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00007027",
+        "fundingRateTimestamp": "1776643200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00030098",
+        "fundingRateTimestamp": "1776628800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006878",
+        "fundingRateTimestamp": "1776614400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00009016",
+        "fundingRateTimestamp": "1776600000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00009532",
+        "fundingRateTimestamp": "1776585600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00007716",
+        "fundingRateTimestamp": "1776571200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00010581",
+        "fundingRateTimestamp": "1776556800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006557",
+        "fundingRateTimestamp": "1776542400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00017617",
+        "fundingRateTimestamp": "1776528000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00003332",
+        "fundingRateTimestamp": "1776513600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00005911",
+        "fundingRateTimestamp": "1776499200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776484800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00009381",
+        "fundingRateTimestamp": "1776470400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00023781",
+        "fundingRateTimestamp": "1776456000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00048716",
+        "fundingRateTimestamp": "1776441600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00028989",
+        "fundingRateTimestamp": "1776427200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00017708",
+        "fundingRateTimestamp": "1776412800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006037",
+        "fundingRateTimestamp": "1776398400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776384000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776369600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776355200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776340800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776326400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00008703",
+        "fundingRateTimestamp": "1776312000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00008781",
+        "fundingRateTimestamp": "1776297600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00003981",
+        "fundingRateTimestamp": "1776283200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006333",
+        "fundingRateTimestamp": "1776268800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776254400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776240000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00000694",
+        "fundingRateTimestamp": "1776225600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776211200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00000103",
+        "fundingRateTimestamp": "1776196800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.0000442",
+        "fundingRateTimestamp": "1776182400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.0001836",
+        "fundingRateTimestamp": "1776168000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00003415",
+        "fundingRateTimestamp": "1776153600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00005587",
+        "fundingRateTimestamp": "1776139200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776124800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776110400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.0000456",
+        "fundingRateTimestamp": "1776096000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776081600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00011365",
+        "fundingRateTimestamp": "1776067200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00014518",
+        "fundingRateTimestamp": "1776052800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006834",
+        "fundingRateTimestamp": "1776038400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776024000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00007966",
+        "fundingRateTimestamp": "1776009600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.0004339",
+        "fundingRateTimestamp": "1775995200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00012993",
+        "fundingRateTimestamp": "1775980800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.0000277",
+        "fundingRateTimestamp": "1775966400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775952000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775937600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775923200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775908800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775894400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775880000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775865600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00052",
+        "fundingRateTimestamp": "1775851200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00103169",
+        "fundingRateTimestamp": "1775836800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775822400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775808000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00002104",
+        "fundingRateTimestamp": "1775793600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775779200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775764800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00000668",
+        "fundingRateTimestamp": "1775750400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00023711",
+        "fundingRateTimestamp": "1775736000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775721600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00005006",
+        "fundingRateTimestamp": "1775707200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775692800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775678400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775664000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775649600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775635200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775620800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775606400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775592000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00000304",
+        "fundingRateTimestamp": "1775577600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00005298",
+        "fundingRateTimestamp": "1775563200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00012062",
+        "fundingRateTimestamp": "1775548800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775534400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775520000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775505600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775491200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775476800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775462400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.0000401",
+        "fundingRateTimestamp": "1775448000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775433600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775419200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775404800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00003824",
+        "fundingRateTimestamp": "1775390400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00005748",
+        "fundingRateTimestamp": "1775376000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.0001764",
+        "fundingRateTimestamp": "1775361600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00008094",
+        "fundingRateTimestamp": "1775347200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00000244",
+        "fundingRateTimestamp": "1775332800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775318400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00003172",
+        "fundingRateTimestamp": "1775304000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775289600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775275200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775260800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775246400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775232000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775217600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775203200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775188800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775174400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775160000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775145600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775131200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00011983",
+        "fundingRateTimestamp": "1775116800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00009106",
+        "fundingRateTimestamp": "1775102400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00024753",
+        "fundingRateTimestamp": "1775088000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00002796",
+        "fundingRateTimestamp": "1775073600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00007305",
+        "fundingRateTimestamp": "1775059200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775044800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775030400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775016000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775001600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774987200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774972800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774958400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774944000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774929600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774915200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774900800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00001538",
+        "fundingRateTimestamp": "1774886400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00016479",
+        "fundingRateTimestamp": "1774872000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00001018",
+        "fundingRateTimestamp": "1774857600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774843200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774828800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774814400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.000108",
+        "fundingRateTimestamp": "1774800000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00001497",
+        "fundingRateTimestamp": "1774785600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774771200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774756800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00009321",
+        "fundingRateTimestamp": "1774742400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "-0.00003553",
+        "fundingRateTimestamp": "1774728000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00001129",
+        "fundingRateTimestamp": "1774713600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774699200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00000452",
+        "fundingRateTimestamp": "1774684800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774670400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774656000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774641600000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774627200000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774612800000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774598400000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.000012",
+        "fundingRateTimestamp": "1774584000000",
+        "symbol": "TAOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774569600000",
+        "symbol": "TAOUSDT"
+      }
+    ]
+  },
+  "retCode": 0,
+  "retExtInfo": {},
+  "retMsg": "OK",
+  "time": 1784175905492
+}

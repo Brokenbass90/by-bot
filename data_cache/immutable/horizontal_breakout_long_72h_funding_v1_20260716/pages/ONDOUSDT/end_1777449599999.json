@@ -1,0 +1,1011 @@
+{
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "fundingRate": "-0.00008058",
+        "fundingRateTimestamp": "1777435200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777420800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777406400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00003915",
+        "fundingRateTimestamp": "1777392000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00001772",
+        "fundingRateTimestamp": "1777377600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777363200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777348800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777334400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777320000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.0001016",
+        "fundingRateTimestamp": "1777305600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00002768",
+        "fundingRateTimestamp": "1777291200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00012918",
+        "fundingRateTimestamp": "1777276800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777262400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00001283",
+        "fundingRateTimestamp": "1777248000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00010217",
+        "fundingRateTimestamp": "1777233600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00005658",
+        "fundingRateTimestamp": "1777219200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777204800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00004664",
+        "fundingRateTimestamp": "1777190400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.0000001",
+        "fundingRateTimestamp": "1777176000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00000035",
+        "fundingRateTimestamp": "1777161600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00002053",
+        "fundingRateTimestamp": "1777147200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777132800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.0000735",
+        "fundingRateTimestamp": "1777118400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00003049",
+        "fundingRateTimestamp": "1777104000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777089600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777075200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777060800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777046400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777032000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777017600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1777003200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776988800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776974400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00002478",
+        "fundingRateTimestamp": "1776960000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00000186",
+        "fundingRateTimestamp": "1776945600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00003236",
+        "fundingRateTimestamp": "1776931200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00001432",
+        "fundingRateTimestamp": "1776916800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776902400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776888000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00007217",
+        "fundingRateTimestamp": "1776873600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00003765",
+        "fundingRateTimestamp": "1776859200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776844800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00004951",
+        "fundingRateTimestamp": "1776830400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776816000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00000161",
+        "fundingRateTimestamp": "1776801600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776787200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776772800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776758400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776744000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776729600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00003787",
+        "fundingRateTimestamp": "1776715200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00001657",
+        "fundingRateTimestamp": "1776700800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00000106",
+        "fundingRateTimestamp": "1776686400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00002892",
+        "fundingRateTimestamp": "1776672000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006652",
+        "fundingRateTimestamp": "1776657600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776643200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.0000337",
+        "fundingRateTimestamp": "1776628800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00005547",
+        "fundingRateTimestamp": "1776614400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776600000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776585600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00000371",
+        "fundingRateTimestamp": "1776571200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00026098",
+        "fundingRateTimestamp": "1776556800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00003676",
+        "fundingRateTimestamp": "1776542400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00001016",
+        "fundingRateTimestamp": "1776528000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776513600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776499200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776484800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776470400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776456000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776441600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.0000248",
+        "fundingRateTimestamp": "1776427200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.0000385",
+        "fundingRateTimestamp": "1776412800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776398400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776384000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776369600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776355200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776340800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776326400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776312000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776297600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776283200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776268800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776254400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00018565",
+        "fundingRateTimestamp": "1776240000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776225600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776211200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776196800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776182400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776168000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776153600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776139200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776124800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00001092",
+        "fundingRateTimestamp": "1776110400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776096000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1776081600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00000582",
+        "fundingRateTimestamp": "1776067200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.0000094",
+        "fundingRateTimestamp": "1776052800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00004392",
+        "fundingRateTimestamp": "1776038400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00003414",
+        "fundingRateTimestamp": "1776024000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00008282",
+        "fundingRateTimestamp": "1776009600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775995200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006894",
+        "fundingRateTimestamp": "1775980800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00020775",
+        "fundingRateTimestamp": "1775966400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775952000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775937600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00007932",
+        "fundingRateTimestamp": "1775923200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006831",
+        "fundingRateTimestamp": "1775908800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006601",
+        "fundingRateTimestamp": "1775894400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00001626",
+        "fundingRateTimestamp": "1775880000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775865600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775851200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775836800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00011323",
+        "fundingRateTimestamp": "1775822400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00000351",
+        "fundingRateTimestamp": "1775808000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00000055",
+        "fundingRateTimestamp": "1775793600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775779200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00002255",
+        "fundingRateTimestamp": "1775764800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00011212",
+        "fundingRateTimestamp": "1775750400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00009571",
+        "fundingRateTimestamp": "1775736000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00005459",
+        "fundingRateTimestamp": "1775721600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775707200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775692800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775678400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775664000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775649600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775635200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775620800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775606400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00002937",
+        "fundingRateTimestamp": "1775592000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00004389",
+        "fundingRateTimestamp": "1775577600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00011844",
+        "fundingRateTimestamp": "1775563200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00007555",
+        "fundingRateTimestamp": "1775548800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775534400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775520000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775505600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775491200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775476800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775462400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775448000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775433600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00000223",
+        "fundingRateTimestamp": "1775419200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775404800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775390400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00011171",
+        "fundingRateTimestamp": "1775376000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00003797",
+        "fundingRateTimestamp": "1775361600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00008941",
+        "fundingRateTimestamp": "1775347200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00000278",
+        "fundingRateTimestamp": "1775332800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00008798",
+        "fundingRateTimestamp": "1775318400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00009122",
+        "fundingRateTimestamp": "1775304000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775289600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00004695",
+        "fundingRateTimestamp": "1775275200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00007605",
+        "fundingRateTimestamp": "1775260800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775246400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775232000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775217600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775203200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775188800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00002799",
+        "fundingRateTimestamp": "1775174400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00008102",
+        "fundingRateTimestamp": "1775160000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00007529",
+        "fundingRateTimestamp": "1775145600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00000228",
+        "fundingRateTimestamp": "1775131200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00000019",
+        "fundingRateTimestamp": "1775116800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00002004",
+        "fundingRateTimestamp": "1775102400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00002698",
+        "fundingRateTimestamp": "1775088000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00010199",
+        "fundingRateTimestamp": "1775073600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00006659",
+        "fundingRateTimestamp": "1775059200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00000212",
+        "fundingRateTimestamp": "1775044800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775030400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775016000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1775001600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774987200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774972800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00005335",
+        "fundingRateTimestamp": "1774958400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00014047",
+        "fundingRateTimestamp": "1774944000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00014625",
+        "fundingRateTimestamp": "1774929600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774915200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774900800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774886400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774872000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00004321",
+        "fundingRateTimestamp": "1774857600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774843200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00002577",
+        "fundingRateTimestamp": "1774828800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774814400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00003275",
+        "fundingRateTimestamp": "1774800000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774785600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774771200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774756800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774742400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774728000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00001063",
+        "fundingRateTimestamp": "1774713600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00002759",
+        "fundingRateTimestamp": "1774699200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774684800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774670400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00002466",
+        "fundingRateTimestamp": "1774656000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "-0.00005815",
+        "fundingRateTimestamp": "1774641600000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774627200000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774612800000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774598400000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774584000000",
+        "symbol": "ONDOUSDT"
+      },
+      {
+        "fundingRate": "0.00005",
+        "fundingRateTimestamp": "1774569600000",
+        "symbol": "ONDOUSDT"
+      }
+    ]
+  },
+  "retCode": 0,
+  "retExtInfo": {},
+  "retMsg": "OK",
+  "time": 1784175900992
+}

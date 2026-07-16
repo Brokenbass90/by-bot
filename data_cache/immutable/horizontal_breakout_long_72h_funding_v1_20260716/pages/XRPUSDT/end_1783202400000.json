@@ -1,0 +1,1011 @@
+{
+  "result": {
+    "category": "linear",
+    "list": [
+      {
+        "fundingRate": "0.00003459",
+        "fundingRateTimestamp": "1783180800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00001248",
+        "fundingRateTimestamp": "1783152000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001466",
+        "fundingRateTimestamp": "1783123200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003699",
+        "fundingRateTimestamp": "1783094400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00007717",
+        "fundingRateTimestamp": "1783065600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00008019",
+        "fundingRateTimestamp": "1783036800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000197",
+        "fundingRateTimestamp": "1783008000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00004981",
+        "fundingRateTimestamp": "1782979200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00002058",
+        "fundingRateTimestamp": "1782950400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00004443",
+        "fundingRateTimestamp": "1782921600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00002972",
+        "fundingRateTimestamp": "1782892800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1782864000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00005354",
+        "fundingRateTimestamp": "1782835200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00013179",
+        "fundingRateTimestamp": "1782806400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00001683",
+        "fundingRateTimestamp": "1782777600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0000288",
+        "fundingRateTimestamp": "1782748800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002122",
+        "fundingRateTimestamp": "1782720000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005749",
+        "fundingRateTimestamp": "1782691200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000911",
+        "fundingRateTimestamp": "1782662400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00010935",
+        "fundingRateTimestamp": "1782633600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00013292",
+        "fundingRateTimestamp": "1782604800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00008954",
+        "fundingRateTimestamp": "1782576000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0000501",
+        "fundingRateTimestamp": "1782547200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00000607",
+        "fundingRateTimestamp": "1782518400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00006502",
+        "fundingRateTimestamp": "1782489600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003264",
+        "fundingRateTimestamp": "1782460800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00007818",
+        "fundingRateTimestamp": "1782432000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00012983",
+        "fundingRateTimestamp": "1782403200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00010945",
+        "fundingRateTimestamp": "1782374400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00012203",
+        "fundingRateTimestamp": "1782345600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0000678",
+        "fundingRateTimestamp": "1782316800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00001412",
+        "fundingRateTimestamp": "1782288000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00003987",
+        "fundingRateTimestamp": "1782259200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00008654",
+        "fundingRateTimestamp": "1782230400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00009376",
+        "fundingRateTimestamp": "1782201600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0001012",
+        "fundingRateTimestamp": "1782172800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005236",
+        "fundingRateTimestamp": "1782144000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00004347",
+        "fundingRateTimestamp": "1782115200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00006248",
+        "fundingRateTimestamp": "1782086400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001585",
+        "fundingRateTimestamp": "1782057600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002433",
+        "fundingRateTimestamp": "1782028800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00006994",
+        "fundingRateTimestamp": "1782000000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00008659",
+        "fundingRateTimestamp": "1781971200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00008386",
+        "fundingRateTimestamp": "1781942400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.000015",
+        "fundingRateTimestamp": "1781913600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00003608",
+        "fundingRateTimestamp": "1781884800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00002005",
+        "fundingRateTimestamp": "1781856000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00006979",
+        "fundingRateTimestamp": "1781827200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005986",
+        "fundingRateTimestamp": "1781798400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005034",
+        "fundingRateTimestamp": "1781769600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00001211",
+        "fundingRateTimestamp": "1781740800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005939",
+        "fundingRateTimestamp": "1781712000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000135",
+        "fundingRateTimestamp": "1781683200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0000544",
+        "fundingRateTimestamp": "1781654400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001922",
+        "fundingRateTimestamp": "1781625600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005076",
+        "fundingRateTimestamp": "1781596800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00005609",
+        "fundingRateTimestamp": "1781568000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00002526",
+        "fundingRateTimestamp": "1781539200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005613",
+        "fundingRateTimestamp": "1781510400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000588",
+        "fundingRateTimestamp": "1781481600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00012719",
+        "fundingRateTimestamp": "1781452800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00012773",
+        "fundingRateTimestamp": "1781424000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00010851",
+        "fundingRateTimestamp": "1781395200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1781366400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00003393",
+        "fundingRateTimestamp": "1781337600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00009071",
+        "fundingRateTimestamp": "1781308800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001512",
+        "fundingRateTimestamp": "1781280000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00001192",
+        "fundingRateTimestamp": "1781251200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002381",
+        "fundingRateTimestamp": "1781222400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00004085",
+        "fundingRateTimestamp": "1781193600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00007041",
+        "fundingRateTimestamp": "1781164800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00004364",
+        "fundingRateTimestamp": "1781136000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001205",
+        "fundingRateTimestamp": "1781107200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000505",
+        "fundingRateTimestamp": "1781078400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001603",
+        "fundingRateTimestamp": "1781049600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00004578",
+        "fundingRateTimestamp": "1781020800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00001463",
+        "fundingRateTimestamp": "1780992000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00012152",
+        "fundingRateTimestamp": "1780963200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000233",
+        "fundingRateTimestamp": "1780934400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00003251",
+        "fundingRateTimestamp": "1780905600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0000224",
+        "fundingRateTimestamp": "1780876800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00006739",
+        "fundingRateTimestamp": "1780848000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00010493",
+        "fundingRateTimestamp": "1780819200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0000836",
+        "fundingRateTimestamp": "1780790400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000325",
+        "fundingRateTimestamp": "1780761600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00000184",
+        "fundingRateTimestamp": "1780732800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00002884",
+        "fundingRateTimestamp": "1780704000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00005223",
+        "fundingRateTimestamp": "1780675200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0001347",
+        "fundingRateTimestamp": "1780646400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00000898",
+        "fundingRateTimestamp": "1780617600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0001169",
+        "fundingRateTimestamp": "1780588800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001807",
+        "fundingRateTimestamp": "1780560000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00003341",
+        "fundingRateTimestamp": "1780531200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00006361",
+        "fundingRateTimestamp": "1780502400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002178",
+        "fundingRateTimestamp": "1780473600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00016656",
+        "fundingRateTimestamp": "1780444800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00001039",
+        "fundingRateTimestamp": "1780416000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005096",
+        "fundingRateTimestamp": "1780387200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00004726",
+        "fundingRateTimestamp": "1780358400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0000108",
+        "fundingRateTimestamp": "1780329600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00008903",
+        "fundingRateTimestamp": "1780300800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00006316",
+        "fundingRateTimestamp": "1780272000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000704",
+        "fundingRateTimestamp": "1780243200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002324",
+        "fundingRateTimestamp": "1780214400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002915",
+        "fundingRateTimestamp": "1780185600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003538",
+        "fundingRateTimestamp": "1780156800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00004684",
+        "fundingRateTimestamp": "1780128000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00008725",
+        "fundingRateTimestamp": "1780099200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00001124",
+        "fundingRateTimestamp": "1780070400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00004656",
+        "fundingRateTimestamp": "1780041600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00000402",
+        "fundingRateTimestamp": "1780012800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000989",
+        "fundingRateTimestamp": "1779984000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00015607",
+        "fundingRateTimestamp": "1779955200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00001249",
+        "fundingRateTimestamp": "1779926400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00004607",
+        "fundingRateTimestamp": "1779897600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000409",
+        "fundingRateTimestamp": "1779868800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00010234",
+        "fundingRateTimestamp": "1779840000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00007246",
+        "fundingRateTimestamp": "1779811200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00002705",
+        "fundingRateTimestamp": "1779782400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002447",
+        "fundingRateTimestamp": "1779753600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002554",
+        "fundingRateTimestamp": "1779724800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00009458",
+        "fundingRateTimestamp": "1779696000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005597",
+        "fundingRateTimestamp": "1779667200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002077",
+        "fundingRateTimestamp": "1779638400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002326",
+        "fundingRateTimestamp": "1779609600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001276",
+        "fundingRateTimestamp": "1779580800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002686",
+        "fundingRateTimestamp": "1779552000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00007841",
+        "fundingRateTimestamp": "1779523200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003778",
+        "fundingRateTimestamp": "1779494400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00001091",
+        "fundingRateTimestamp": "1779465600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003031",
+        "fundingRateTimestamp": "1779436800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003919",
+        "fundingRateTimestamp": "1779408000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000274",
+        "fundingRateTimestamp": "1779379200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1779350400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001862",
+        "fundingRateTimestamp": "1779321600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1779292800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1779264000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1779235200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003156",
+        "fundingRateTimestamp": "1779206400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001337",
+        "fundingRateTimestamp": "1779177600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00008067",
+        "fundingRateTimestamp": "1779148800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005111",
+        "fundingRateTimestamp": "1779120000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00004593",
+        "fundingRateTimestamp": "1779091200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003014",
+        "fundingRateTimestamp": "1779062400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00004573",
+        "fundingRateTimestamp": "1779033600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00002538",
+        "fundingRateTimestamp": "1779004800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00005983",
+        "fundingRateTimestamp": "1778976000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00004353",
+        "fundingRateTimestamp": "1778947200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00010584",
+        "fundingRateTimestamp": "1778918400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00007745",
+        "fundingRateTimestamp": "1778889600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00010641",
+        "fundingRateTimestamp": "1778860800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00000337",
+        "fundingRateTimestamp": "1778832000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1778803200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1778774400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00005747",
+        "fundingRateTimestamp": "1778745600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002216",
+        "fundingRateTimestamp": "1778716800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00004721",
+        "fundingRateTimestamp": "1778688000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1778659200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00012811",
+        "fundingRateTimestamp": "1778630400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000932",
+        "fundingRateTimestamp": "1778601600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00004525",
+        "fundingRateTimestamp": "1778572800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001471",
+        "fundingRateTimestamp": "1778544000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0000147",
+        "fundingRateTimestamp": "1778515200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00007474",
+        "fundingRateTimestamp": "1778486400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1778457600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00004121",
+        "fundingRateTimestamp": "1778428800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000403",
+        "fundingRateTimestamp": "1778400000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003761",
+        "fundingRateTimestamp": "1778371200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001371",
+        "fundingRateTimestamp": "1778342400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00005017",
+        "fundingRateTimestamp": "1778313600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00008166",
+        "fundingRateTimestamp": "1778284800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000779",
+        "fundingRateTimestamp": "1778256000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003887",
+        "fundingRateTimestamp": "1778227200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00007308",
+        "fundingRateTimestamp": "1778198400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0001042",
+        "fundingRateTimestamp": "1778169600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00009083",
+        "fundingRateTimestamp": "1778140800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00016653",
+        "fundingRateTimestamp": "1778112000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00003281",
+        "fundingRateTimestamp": "1778083200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00005791",
+        "fundingRateTimestamp": "1778054400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00009649",
+        "fundingRateTimestamp": "1778025600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00009495",
+        "fundingRateTimestamp": "1777996800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777968000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00007527",
+        "fundingRateTimestamp": "1777939200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00004447",
+        "fundingRateTimestamp": "1777910400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.0001",
+        "fundingRateTimestamp": "1777881600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00000036",
+        "fundingRateTimestamp": "1777852800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.0000072",
+        "fundingRateTimestamp": "1777824000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001389",
+        "fundingRateTimestamp": "1777795200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000694",
+        "fundingRateTimestamp": "1777766400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00000804",
+        "fundingRateTimestamp": "1777737600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00003786",
+        "fundingRateTimestamp": "1777708800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001425",
+        "fundingRateTimestamp": "1777680000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002866",
+        "fundingRateTimestamp": "1777651200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00006474",
+        "fundingRateTimestamp": "1777622400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00002368",
+        "fundingRateTimestamp": "1777593600000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00000563",
+        "fundingRateTimestamp": "1777564800000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00000566",
+        "fundingRateTimestamp": "1777536000000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00007553",
+        "fundingRateTimestamp": "1777507200000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "-0.00007088",
+        "fundingRateTimestamp": "1777478400000",
+        "symbol": "XRPUSDT"
+      },
+      {
+        "fundingRate": "0.00001365",
+        "fundingRateTimestamp": "1777449600000",
+        "symbol": "XRPUSDT"
+      }
+    ]
+  },
+  "retCode": 0,
+  "retExtInfo": {},
+  "retMsg": "OK",
+  "time": 1784175908951
+}
