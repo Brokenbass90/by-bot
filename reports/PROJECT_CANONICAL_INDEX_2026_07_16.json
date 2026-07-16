@@ -1,0 +1,167 @@
+{
+  "schema_version": 9,
+  "as_of_utc": "2026-07-16T04:42:19Z",
+  "status": "live_verified_att1_tiny_only_alpaca_safe_hold_breakout_sealed_no_go_cashcarry_stations_ready_not_running_fx_external_inputs_blocked",
+  "branch": "codex/dynamic-symbol-filters",
+  "source_priority": [
+    "direct_broker_or_exchange",
+    "fresh_runtime_receipt",
+    "targeted_deploy_receipt_and_sha",
+    "immutable_preregistered_research",
+    "human_reviewed_registry_and_checkpoint",
+    "ai_interpretation"
+  ],
+  "git_observation": {
+    "pre_session_local_head": "54269ba801dc69a8e26bafa1f82ca50be9b31b44",
+    "pre_session_origin_head": "54269ba801dc69a8e26bafa1f82ca50be9b31b44",
+    "pre_session_matched": true,
+    "latest_implementation_commit": "f492c747d6710e0947706e9ccb991312c6d4264d",
+    "canonical_checkpoint_commit": "PENDING_POST_COMMIT_METADATA_REFRESH",
+    "session_implementation_commits": [
+      "5343856_research_sealed_breakout_72h_no_promotion",
+      "ca3da2f_alpaca_successor_bakeoff",
+      "11d00c3_live_vs_historical_health_truth",
+      "f492c74_bybit_and_bitget_public_cashcarry_stations"
+    ],
+    "foreign_dirty_files_to_exclude": [
+      "bot/fx_setups.py",
+      "tests/test_fx_setups.py"
+    ],
+    "vps_checkout": "f7ed011_dirty_stale",
+    "blind_pull_reset_cleanup_allowed": false
+  },
+  "verification": {
+    "full_regression": "1411 passed in 29.17s",
+    "horizontal_breakout_focused": "26 passed plus independent pre-run review PASS",
+    "cashcarry_combined": "46 passed",
+    "health_truth_focused": "5 passed",
+    "project_registry_validation": "3 passed",
+    "live_deploy_performed_this_session": false
+  },
+  "live_truth": {
+    "observed_at_utc": "2026-07-16T04:06:00Z",
+    "bybit": {
+      "services": "CORE_AND_WEB_ACTIVE",
+      "broker_positions": 0,
+      "equity_usdt_approx": 1020.08,
+      "regime": "bull_chop",
+      "allocator_blocked": false,
+      "money_sleeves": [
+        "ATT1_SHORT_RISK_0_10"
+      ],
+      "att1_canary": "N5_2W_3L_NET_PLUS_0_15_USDT_EDGE_UNPROVEN",
+      "att1_review": "2026-07-20",
+      "key_expiry": "2026-08-12",
+      "key_rotate_by": "2026-08-05"
+    },
+    "alpaca": {
+      "mode": "SAFE_HOLD_PROTECT_EXISTING_NO_NEW_ORDER_SUBMIT",
+      "equity_usd_approx": 486.34,
+      "positions": [
+        "ABBV",
+        "ABNB",
+        "GE",
+        "SCHW"
+      ],
+      "broker_stop_coverage": "4_OF_4",
+      "forced_liquidation_authorized": false,
+      "best_successor_live": false
+    },
+    "fx_cfd": "RESEARCH_ONLY_NO_MONEY",
+    "second_crypto_money_sleeve": false,
+    "onboard_ai": "PROPOSAL_ONLY_CANONICAL_STATE_LOCAL_REFRESH_NOT_DEPLOYED",
+    "telegram_startup_snapshot": "EXECUTION_AUTHORITY_ACCURATE_LOCAL_HEALTH_PROVENANCE_FIX_NOT_DEPLOYED"
+  },
+  "research_truth": {
+    "horizontal_breakout_long_72h": {
+      "verdict": "NO_PROMOTION_ONE_SHOT_CONSUMED",
+      "trades": 155,
+      "base_profit_factor": 0.3923289759049695,
+      "stress_profit_factor": 0.2808069502631809,
+      "stress_max_drawdown_pct": 36.89727626263558,
+      "positive_folds": "0_OF_4",
+      "positive_symbols": "1_OF_13",
+      "invalid_or_censored": 0,
+      "retry_repair_or_tao_rescue_allowed": false
+    },
+    "alpaca_bakeoff_v2": {
+      "status": "FROZEN_BLOCKED_FAIL_CLOSED",
+      "arms": 5,
+      "source_pins": "10_OF_10_PASS",
+      "authoritative_inputs_missing": 5,
+      "future_forward": "2026-08-03_TO_2026-11-04_NO_INTERIM_READ",
+      "safe_hold_changed": false
+    },
+    "bybit_cashcarry": {
+      "status": "PUBLIC_STATION_READY_PAUSED_AFTER_DNS_FAILURE",
+      "fresh_gate_passes": "0_OF_3",
+      "new_station_observations": 0,
+      "paper_cycles": 0,
+      "expected_income": "UNKNOWN_OLD_5_TO_15_USD_MONTHLY_CLAIM_WITHDRAWN",
+      "capital_authorized": false
+    },
+    "bitget_cashcarry": {
+      "status": "PUBLIC_NORMALIZATION_PREFLIGHT_READY_NOT_STATION_COMPATIBLE",
+      "keys_required_for_public_research": false,
+      "performance_computed": false,
+      "live_authorized": false
+    },
+    "fx_v3": {
+      "status": "BLOCKED_EXTERNAL_INPUTS",
+      "m5_symbols": 6,
+      "coverage_days_approx": 728,
+      "missing": [
+        "point_in_time_historical_macro_news",
+        "account_specific_cost_calibration"
+      ],
+      "performance_computed": false
+    },
+    "claude_search_station": "107_VARIANTS_1_IS_PASS_0_FORWARD_0_OOS_0_SURVIVORS_DIAGNOSTIC_ONLY",
+    "replayable_tape": "LOCAL_RUNNING_FIRST_CLOSED_DAY_88_18_PERCENT_COVERAGE_NOT_PROMOTION_GRADE"
+  },
+  "required_owner_inputs": [
+    "rotate Bybit key securely before 2026-08-05",
+    "prepare Bitget subaccount only as operational fallback; no capital or live key is needed for public research",
+    "choose FX broker/account and later install demo credentials securely",
+    "provide or authorize historical news and broker cost artifacts for FX",
+    "do not force-sell Alpaca or add arbitration capital"
+  ],
+  "next_actions": [
+    "run bounded Bybit cashcarry station outside the restricted DNS sandbox or on a stable host without keys or capital",
+    "materialize five Alpaca authoritative inputs and preserve the untouched August-November seal",
+    "review ATT1 on 2026-07-20 without scaling from N5",
+    "freeze FX V3 historical-news and account-cost manifests before performance",
+    "move tape collectors to a stable host and establish at least 98 percent validated daily coverage",
+    "choose a genuinely independent preregistered crypto hypothesis; never repair or retry the revealed breakout holdout"
+  ],
+  "timeframes": {
+    "att1_review": "2026-07-20",
+    "cashcarry_mechanics": "7_DAY_OBSERVATION_THEN_10_CYCLES_DATA_DEPENDENT",
+    "cashcarry_edge": "30_CYCLES_ACROSS_3_SYMBOLS_DATA_DEPENDENT_NO_INCOME_DATE",
+    "fx_first_honest_figures": "1_TO_3_WEEKS_AFTER_NEWS_AND_COST_INPUTS_EXIST",
+    "alpaca_final_untouched_forward_verdict": "NO_EARLIER_THAN_2026-11-04"
+  },
+  "forbidden": [
+    "scale ATT1 from N5",
+    "force-liquidate Alpaca to restart research",
+    "remove SAFE_HOLD before parity and transition review",
+    "add arbitrage capital before a positive stressed paper distribution",
+    "retry, repair, filter, or rescue TAO from the revealed breakout holdout",
+    "give AI unrestricted live trading authority",
+    "call local or Git changes live without a targeted deploy receipt",
+    "blind pull, reset, or clean the dirty VPS checkout",
+    "promise income from gross funding or selected historical returns"
+  ],
+  "canonical_documents": [
+    "reports/RECOVERY_CHECKPOINT_2026_07_16.md",
+    "reports/PROJECT_CANONICAL_INDEX_2026_07_16.json",
+    "reports/NEXT_CHAT_START_PROMPT_2026_07_16.md",
+    "reports/HORIZONTAL_BREAKOUT_LONG_72H_SEALED_V1_SCORER_2026_07_16.md",
+    "reports/ALPACA_BAKEOFF_V2_AND_SAFE_HOLD_AUDIT_2026_07_16.md",
+    "reports/PUBLIC_CASHCARRY_RESEARCH_STATION_V1_2026_07_16.md",
+    "reports/BITGET_CASHCARRY_PUBLIC_ADAPTER_V1_2026_07_16.md",
+    "configs/project_capability_registry_v1.json",
+    "configs/ai_operator_canonical_state.json",
+    "reports/PROJECT_STATE_LEDGER.md"
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-15T17:58:00Z",
+  "as_of_utc": "2026-07-16T04:42:19Z",
   "authority": "human_reviewed_capability_map",
   "purpose": "One machine-readable map of what exists, what may act, what is proven, and what must happen next.",
   "source_precedence": [
@@ -134,9 +134,9 @@
       "data_contract": "append-only UTC L2/publicTrade partitions with gaps and deterministic replay",
       "level_contract": "not applicable",
       "cost_contract": "not applicable",
-      "evidence": ["reports/L2_TAPE_COLLECTION_START_2026_07_14.md"],
-      "known_gaps": ["collection began 2026-07-14 06:28 UTC so no complete UTC day is closed yet", "microstructure edge not tested"],
-      "next_gate": "30-90 days of validated tape before density/imbalance strategy claims"
+      "evidence": ["reports/L2_TAPE_COLLECTION_START_2026_07_14.md", "reports/RECOVERY_CHECKPOINT_2026_07_16.md"],
+      "known_gaps": ["first closed day coverage is about 88.18% with multi-minute gaps and is not promotion-grade", "local Mac/network continuity is inadequate", "microstructure edge not tested"],
+      "next_gate": "move collection to a stable always-on host or repair/backfill; require at least 98% validated days before starting the 30-90 day density/imbalance evidence clock"
     },
     {
       "component_id": "alpaca_monthly_v38",
@@ -146,13 +146,13 @@
       "stage": "live_safe_hold",
       "execution_authority": "protect_existing_only",
       "promotion_authorized": false,
-      "runtime_entrypoints": ["scripts/equities_alpaca_paper_bridge.py", "scripts/run_alpaca_live_v38_once.sh"],
-      "data_contract": "broker receipt is live authority; exact calendar/next-open/daily-MTM contract is executable but PIT and forward inputs remain fail-closed",
+      "runtime_entrypoints": ["scripts/equities_alpaca_paper_bridge.py", "scripts/run_alpaca_live_v38_once.sh", "backtest/alpaca_bakeoff_v2_contract.py", "scripts/preflight_alpaca_bakeoff_v2.py"],
+      "data_contract": "broker receipt is live authority; five-arm successor bakeoff is frozen with exact calendar/next-open/daily-MTM parity and a future 2026-08-03 through 2026-11-04 seal, but five authoritative inputs remain fail-closed",
       "level_contract": "momentum selection; not level-driven",
       "cost_contract": "live fractional fills and broker stops; exact research/live parity blocked",
-      "evidence": ["reports/ALPACA_TRUTH_AND_NEXT_TEST_2026_07_13.md", "reports/ALPACA_EXACT_PARITY_MATERIALIZATION_2026_07_15.md", "reports/research/alpaca_exact_parity_materialization_v1_20260715/receipt.json"],
-      "known_gaps": ["daily-rotation defect history", "official XNYS/PIT/corporate-action/broker-lifecycle/untouched-forward inputs unpinned", "no validated forecast"],
-      "next_gate": "materialize the six authoritative inputs and freeze a new future forward window; keep SAFE_HOLD"
+      "evidence": ["reports/ALPACA_TRUTH_AND_NEXT_TEST_2026_07_13.md", "reports/ALPACA_EXACT_PARITY_MATERIALIZATION_2026_07_15.md", "reports/ALPACA_BAKEOFF_V2_AND_SAFE_HOLD_AUDIT_2026_07_16.md", "reports/research/alpaca_bakeoff_v2_20260716/preflight_receipt.json"],
+      "known_gaps": ["daily-rotation defect history", "XNYS session ledger, PIT universe/market data, corporate actions/delistings and broker lifecycle/cost calibration are unpinned", "no validated forecast"],
+      "next_gate": "materialize and pin the five authoritative inputs, run historical diagnostics through one common runner, then preserve the untouched August-November forward window; keep SAFE_HOLD and do not force-liquidate"
     },
     {
       "component_id": "alpaca_gated_adaptive_v1",
@@ -242,13 +242,29 @@
       "stage": "research_blocked",
       "execution_authority": "none",
       "promotion_authorized": false,
-      "runtime_entrypoints": ["bot/bybit_cashcarry_shadow_v1.py", "scripts/run_bybit_cashcarry_shadow_v1.py", "bot/bybit_cashcarry_shadow_v2.py", "scripts/run_bybit_cashcarry_shadow_v2.py"],
-      "data_contract": "default-disabled public Bybit instruments/orderbook/funding snapshots; common-base quantity; hash-chained deterministic restart replay",
+      "runtime_entrypoints": ["bot/bybit_cashcarry_shadow_v1.py", "scripts/run_bybit_cashcarry_shadow_v1.py", "bot/bybit_cashcarry_shadow_v2.py", "scripts/run_bybit_cashcarry_shadow_v2.py", "bot/public_cashcarry_station_v1.py", "scripts/run_public_cashcarry_station_v1.py", "scripts/launch_public_cashcarry_station_v1.sh"],
+      "data_contract": "default-disabled public Bybit instruments/orderbook/funding snapshots; common-base quantity; hash-chained deterministic restart replay; bounded six-symbol seven-day public-only station ready but not started",
       "level_contract": "not applicable",
       "cost_contract": "four fees plus deterministic walked round-trip spread/slippage, funding timing, 10 bps basis reserve and 5 bps residual edge; partial fills refuse before state mutation",
-      "evidence": ["reports/BYBIT_CASHCARRY_SHADOW_V1_2026_07_15.md", "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md", "reports/research/bybit_cashcarry_shadow_v2_public_screen_20260715/receipt.json", "tests/fixtures/bybit_cashcarry_shadow_v2_replay.json"],
-      "known_gaps": ["no scheduled collector or external journal anchor", "no account fee-tier/balance/margin/two-leg recovery model", "three real public XRP/BTC/ETH observations all fail the break-even gate and no paper cycle exists"],
-      "next_gate": "collect public observe/refuse receipts only; 10 closed cycles prove mechanics and 30+ across three liquid coins test stressed edge before any capital"
+      "evidence": ["reports/BYBIT_CASHCARRY_SHADOW_V1_2026_07_15.md", "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md", "reports/research/bybit_cashcarry_shadow_v2_public_screen_20260715/receipt.json", "reports/PUBLIC_CASHCARRY_RESEARCH_STATION_V1_2026_07_16.md", "reports/research/public_cashcarry_station_v1_20260716/blocked_launch_receipt.json", "tests/fixtures/bybit_cashcarry_shadow_v2_replay.json"],
+      "known_gaps": ["public station has zero observations because both network launches failed closed on DNS", "no account fee-tier/balance/margin/two-leg recovery model", "three real public XRP/BTC/ETH observations all fail the break-even gate and no paper cycle exists", "the separate Bitget normalizer exists but intentionally cannot enter this Bybit journal"],
+      "next_gate": "start the bounded public station without keys/capital; then 10 closed cycles prove mechanics and 30+ across three liquid coins test stressed edge before any capital"
+    },
+    {
+      "component_id": "arb_bitget_cash_and_carry_public_v1",
+      "kind": "arbitrage_data_adapter",
+      "market": "bitget_spot_and_usdt_perpetual_public",
+      "physical_side": "long_spot_short_perp_intent",
+      "stage": "research_blocked",
+      "execution_authority": "read_only",
+      "promotion_authorized": false,
+      "runtime_entrypoints": ["bot/bitget_cashcarry_public_v1.py", "scripts/run_bitget_cashcarry_public_v1.py"],
+      "data_contract": "Bitget-native public spot/perpetual instruments, books, current/history funding and causal server time; immutable adapter/source identity; normalization-only",
+      "level_contract": "not applicable",
+      "cost_contract": "public default taker fees are evidence only and cannot replace account-specific fee tier; no economics engine yet",
+      "evidence": ["reports/BITGET_CASHCARRY_PUBLIC_ADAPTER_V1_2026_07_16.md", "reports/research/bitget_cashcarry_public_v1_20260716/blocker_receipt.json"],
+      "known_gaps": ["not compatible with frozen Bybit journal by design", "no Bitget-native hash journal/replay or common-quantity economics engine", "no account fee receipt or two-leg recovery/margin/transfer contract", "no paper cycle"],
+      "next_gate": "build a separate Bitget journal/replay and economics engine, then apply the same 10 mechanics and 30 edge cycle gates; no private key or capital before that"
     },
     {
       "component_id": "funding_one_legged_perp",
@@ -354,13 +370,13 @@
       "stage": "diagnostic_only",
       "execution_authority": "none",
       "promotion_authorized": false,
-      "runtime_entrypoints": ["scripts/run_multicoin_pattern_atlas_v1.py", "scripts/preflight_horizontal_breakout_long_72h_sealed_v1.py"],
-      "data_contract": "hash-pinned uniform dev13 M5; final 120 days sealed and unscored; closed M5 to H1 aggregation",
+      "runtime_entrypoints": ["scripts/run_multicoin_pattern_atlas_v1.py", "scripts/preflight_horizontal_breakout_long_72h_sealed_v1.py", "scripts/materialize_horizontal_breakout_long_72h_funding_v1.py", "scripts/run_horizontal_breakout_long_72h_sealed_v1.py"],
+      "data_contract": "hash-pinned uniform dev13 M5; closed M5 to H1 aggregation; funding materialized 13/13; the only long-only sealed scorer attempt is consumed with a NO_PROMOTION receipt",
       "level_contract": "six frozen horizontal prior-20-H1 patterns; sloped levels explicitly excluded",
       "cost_contract": "gross next-H1-open forward paths only; no strategy PnL or execution claim",
-      "evidence": ["reports/PATTERN_ATLAS_V1_PREREG_2026_07_15.md", "reports/research/multicoin_pattern_atlas_v1_20260715/receipt.json", "reports/HORIZONTAL_BREAKOUT_LONG_72H_SEALED_V1_PREREG_2026_07_15.md"],
-      "known_gaps": ["best discovery cell has positive mean but negative median and fat tails", "funding-history/source-hash parity scorer is not implemented", "final 120 days and external cohort remain unscored"],
-      "next_gate": "review and freeze a separate parity scorer with complete funding history, then make the single sealed run; do not rescue the other 23 cells"
+      "evidence": ["reports/PATTERN_ATLAS_V1_PREREG_2026_07_15.md", "reports/research/multicoin_pattern_atlas_v1_20260715/receipt.json", "reports/HORIZONTAL_BREAKOUT_LONG_72H_SEALED_V1_PREREG_2026_07_15.md", "reports/HORIZONTAL_BREAKOUT_LONG_72H_SEALED_V1_SCORER_2026_07_16.md", "reports/research/horizontal_breakout_long_72h_sealed_v1_20260716/preflight_receipt.json", "reports/research/horizontal_breakout_long_72h_sealed_v1_20260716/receipt.json", "reports/research/horizontal_breakout_long_72h_sealed_v1_20260716/run_claim.json"],
+      "known_gaps": ["the discovery winner failed sealed with base/stress PF 0.392/0.281, stress DD 36.90%, 0/4 positive folds and 1/13 positive symbols", "the one-shot attempt is consumed", "there is no second crypto sleeve from this family"],
+      "next_gate": "archive horizontal breakout long 72h without repair, retry or TAO-only rescue; preregister a genuinely independent causal hypothesis before opening new unseen data"
     },
     {
       "component_id": "ai_operator_context",
@@ -419,12 +435,12 @@
       "execution_authority": "report_only",
       "promotion_authorized": false,
       "runtime_entrypoints": ["scripts/tg_daily_digest.py", "scripts/equities_alpaca_tg_report.py"],
-      "data_contract": "mixed report sources; scheduled Alpaca delivery was confirmed on 2026-07-13",
+      "data_contract": "startup execution snapshot is accurate; scheduled Alpaca delivery was confirmed on 2026-07-13 through 2026-07-15; local health truth split distinguishes fresh runtime closes from stale historical research",
       "level_contract": "not applicable",
       "cost_contract": "not applicable",
-      "evidence": ["reports/AI_TG_FORENSICS_AUDIT_2026_07_10.md"],
-      "known_gaps": ["TG_CHAT versus TG_CHAT_ID fragmentation", "old mixed-cohort crypto summaries can mislead"],
-      "next_gate": "one notifier contract with provenance and freshness on every report"
+      "evidence": ["reports/AI_TG_FORENSICS_AUDIT_2026_07_10.md", "reports/RECOVERY_CHECKPOINT_2026_07_16.md"],
+      "known_gaps": ["TG_CHAT versus TG_CHAT_ID fragmentation", "new no-duplicate startup and live-versus-historical health split are local and not targeted-deployed", "old mixed-cohort crypto summaries can mislead"],
+      "next_gate": "targeted-deploy the focused observability patch with exact SHA and verify one restart plus /sleeve and /brief provenance"
     },
     {
       "component_id": "nontrading_analytics_product",
