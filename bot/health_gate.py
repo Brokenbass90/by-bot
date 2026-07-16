@@ -51,6 +51,7 @@ ALERT_LOG   = ROOT / "configs" / "health_gate_alerts.json"
 
 # How often to re-read the health file (seconds). 3600 = 1 hour.
 CACHE_TTL_S = 3600
+DEFAULT_HEALTH_MAX_AGE_S = 8 * 86400
 
 # Map from strategy name used in health file → ENV enable flag
 STRATEGY_ENV_MAP: Dict[str, str] = {
@@ -101,6 +102,8 @@ class HealthGate:
     def __init__(self) -> None:
         self._cache: Dict[str, Any] = {}
         self._cache_ts: float = 0.0
+        self._source_age_s: Optional[int] = None
+        self._source_stale: bool = True
         self._alert_log: Dict[str, str] = {}   # strategy → last alert date
         self._tg_token  = os.getenv("TG_TOKEN", "")
         self._tg_chat   = os.getenv("TG_CHAT_ID", "")
@@ -109,17 +112,30 @@ class HealthGate:
     # ── Cache management ────────────────────────────────────────────────────────
     def _reload_if_stale(self) -> None:
         now = time.monotonic()
-        if now - self._cache_ts < CACHE_TTL_S and self._cache:
+        if self._cache_ts > 0 and now - self._cache_ts < CACHE_TTL_S:
             return
         if not HEALTH_FILE.exists():
             self._cache = {}
+            self._source_age_s = None
+            self._source_stale = True
+            self._cache_ts = now
             return
         try:
+            age_s = max(0, int(time.time() - HEALTH_FILE.stat().st_mtime))
+            try:
+                max_age_s = max(60, int(os.getenv("HEALTH_GATE_MAX_SOURCE_AGE_SEC", str(DEFAULT_HEALTH_MAX_AGE_S))))
+            except Exception:
+                max_age_s = DEFAULT_HEALTH_MAX_AGE_S
             data = json.loads(HEALTH_FILE.read_text())
             self._cache = data.get("strategies", {})
+            self._source_age_s = age_s
+            self._source_stale = age_s > max_age_s
             self._cache_ts = now
         except Exception:
-            pass
+            self._cache = {}
+            self._source_age_s = None
+            self._source_stale = True
+            self._cache_ts = now
 
     def _load_alert_log(self) -> None:
         if ALERT_LOG.exists():
@@ -145,6 +161,8 @@ class HealthGate:
         visible without unexpectedly hard-blocking them.
         """
         self._reload_if_stale()
+        if self._source_stale:
+            return "WATCH"
         info = self._cache.get(strategy_name, {})
         if info:
             return str(info.get("status", "OK"))
@@ -158,6 +176,17 @@ class HealthGate:
         Call before every maybe_signal. Returns True if entry is allowed.
         Sends Telegram alert on status change (max once per day per strategy).
         """
+        self._reload_if_stale()
+        if self._source_stale:
+            today = date.today().isoformat()
+            if self._alert_log.get("health_source_stale") != today:
+                self._send_source_stale_alert()
+                self._alert_log["health_source_stale"] = today
+                self._save_alert_log()
+            # A stale research snapshot is not authorized to block live money.
+            # Runtime portfolio_health remains the alert-first live monitor.
+            return True
+
         status = self.get_status(strategy_name)
         today  = date.today().isoformat()
 
@@ -228,11 +257,33 @@ class HealthGate:
         )
         _tg(self._tg_token, self._tg_chat, msg)
 
+    def _send_source_stale_alert(self) -> None:
+        age = "missing" if self._source_age_s is None else f"{self._source_age_s}s"
+        msg = (
+            "⚠️ <b>Strategy health source is stale</b>\n"
+            f"configs/strategy_health.json age={age}. Historical PAUSE/KILL states "
+            "are ignored fail-open; live runtime health remains alert-only."
+        )
+        _tg(self._tg_token, self._tg_chat, msg)
+
     # ── Bulk status ─────────────────────────────────────────────────────────────
     def status_summary(self) -> Dict[str, str]:
         """Returns {strategy_name: status} for all strategies."""
         self._reload_if_stale()
+        if self._source_stale:
+            return {k: "WATCH" for k in self._cache}
         return {k: v.get("status", "OK") for k, v in self._cache.items()}
+
+    def source_meta(self) -> Dict[str, Any]:
+        """Expose provenance so operator surfaces never present stale research as live truth."""
+        self._reload_if_stale()
+        return {
+            "path": str(HEALTH_FILE),
+            "exists": HEALTH_FILE.exists(),
+            "age_sec": self._source_age_s,
+            "stale": self._source_stale,
+            "authority": "historical_research" if self._source_stale else "health_gate",
+        }
 
     def any_blocked(self) -> bool:
         return any(s in ("PAUSE", "KILL") for s in self.status_summary().values())

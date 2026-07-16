@@ -78,6 +78,7 @@ from bot.env_helpers import (
 )
 from bot.utils import now_s, _to_float_safe, _today_ymd, base_from_usdt, dist_pct
 from bot.health_gate import gate as _health_gate  # equity-curve live entry gate
+from bot.health_truth import compact_age as _health_age_text, load_health_truth as _load_health_truth
 from bot import att1_live_wiring as _att1_wire  # decision_bus + edge_monitor (flags default OFF)
 from bot.att1_runtime_contract import build_att1_runtime_contract
 from bot.allowlist_watcher import AllowlistWatcher as _AllowlistWatcher  # dynamic allowlist hot-reload
@@ -4625,13 +4626,13 @@ def _handle_tg_command(text: str):
     # ── /sleeve — per-strategy health gate status + funding rates ──────────
     if name == "/sleeve":
         import json as _json
-        _hp = Path(__file__).resolve().parent / "configs" / "strategy_health.json"
+        _root_h = Path(__file__).resolve().parent
         _fp = Path(__file__).resolve().parent / "configs" / "funding_rates_latest.json"
         try:
-            _hd = _json.loads(_hp.read_text())
-            _overall = _hd.get("overall_health", "?")
-            _ts = _hd.get("timestamp", "?")[:10]
-            _strats = _hd.get("strategies") or {}
+            _truth = _load_health_truth(_root_h)
+            _live = _truth["live"]
+            _historical = _truth["historical"]
+            _strats = _historical.get("strategies") or {}
             # Load funding rates (optional, may not exist)
             _fr_map: dict = {}
             try:
@@ -4640,11 +4641,30 @@ def _handle_tg_command(text: str):
             except Exception:
                 pass
             STATUS_ICON = {"OK": "✅", "WATCH": "⚠️", "PAUSE": "🔴", "KILL": "💀"}
-            lines = [f"🛡 *Sleeve Health Gate* — {_ts}"]
-            lines.append(f"Overall: *{_overall}*")
+            _live_age = _health_age_text(_live.get("age_sec"))
+            _live_label = "STALE" if _live.get("stale") else "fresh"
+            lines = ["🛡 *Sleeve Health — truth split*"]
+            lines.append(f"Live closes (alert-only): *{_live_label}*, age={_live_age}")
+            _live_sleeves = _live.get("sleeves") or {}
+            if _live_sleeves:
+                for _sname, _sinfo in sorted(_live_sleeves.items()):
+                    _st = str((_sinfo or {}).get("status") or "unknown").upper()
+                    lines.append(
+                        f"  {STATUS_ICON.get(_st, '❓')} `{_sname}` → {_st} "
+                        f"(n={(_sinfo or {}).get('n', 0)}, reason={(_sinfo or {}).get('reason', '-')})"
+                    )
+            else:
+                lines.append("  no live close sample")
+
+            _hist_age = _health_age_text(_historical.get("age_sec"))
+            _hist_marker = "STALE / historical only" if _historical.get("stale") else "fresh research snapshot"
+            lines.append(
+                f"\nResearch health: *{_hist_marker}*, age={_hist_age}, "
+                f"overall={_historical.get('overall_health', '?')}"
+            )
             for _sname, _sinfo in _strats.items():
                 _st = str(_sinfo.get("status", "?")).upper()
-                _icon = STATUS_ICON.get(_st, "❓")
+                _icon = "▫️" if _historical.get("stale") else STATUS_ICON.get(_st, "❓")
                 _short = _sname.replace("alt_", "").replace("btc_eth_", "").replace("_v1", "")
                 # Append funding rate for symbols in this sleeve
                 _syms = list(_sinfo.get("symbols") or [])
@@ -4718,15 +4738,20 @@ def _handle_tg_command(text: str):
 
         # Strategy health
         try:
-            _hd = _json.loads((_ROOT_B / "configs" / "strategy_health.json").read_text())
-            _overall = _hd.get("overall_health", "?")
-            _strats  = _hd.get("strategies") or {}
-            _paused  = [k for k, v in _strats.items() if str(v.get("status","")).upper() in ("PAUSE","KILL")]
-            _warn    = [k for k, v in _strats.items() if str(v.get("status","")).upper() == "WATCH"]
+            _truth = _load_health_truth(_ROOT_B)
+            _live_h = _truth["live"]
+            _hist_h = _truth["historical"]
+            _live_rows = _live_h.get("sleeves") or {}
             _b_parts.append(
-                f"HEALTH: overall={_overall} | "
-                f"paused={','.join(_paused) or 'none'} | "
-                f"watch={','.join(_warn) or 'none'}"
+                "LIVE_HEALTH(alert-only): "
+                f"fresh={not bool(_live_h.get('stale'))} age={_health_age_text(_live_h.get('age_sec'))} "
+                f"sleeves={','.join(sorted(_live_rows)) or 'no_sample'} "
+                f"degraded={','.join(_live_h.get('degraded_sleeves') or []) or 'none'}"
+            )
+            _b_parts.append(
+                "RESEARCH_HEALTH(historical): "
+                f"stale={bool(_hist_h.get('stale'))} age={_health_age_text(_hist_h.get('age_sec'))} "
+                f"overall={_hist_h.get('overall_health', '?')}"
             )
         except Exception:
             _b_parts.append("HEALTH: unavailable")
@@ -15529,7 +15554,9 @@ async def range_rescan_loop():
 
 # =========================== PULSE ===========================
 async def pulse():
-    last_stats_sent = 0
+    # auth_check_all_accounts already sends the execution contract at startup.
+    # Start the periodic timer now so the first pulse does not duplicate that block.
+    last_stats_sent = int(time.time())
     last_regime_overlay_check_ts = 0
     last_allocator_overlay_check_ts = 0
     last_ws_health_check_ts = 0
