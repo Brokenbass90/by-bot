@@ -1,0 +1,513 @@
+{
+  "arms": [
+    {
+      "execution": {
+        "base_cost_bps_per_side": 5.0,
+        "completed_bars_only": true,
+        "daily_drawdown_includes_initial_capital": true,
+        "daily_mark_to_market": true,
+        "entry_cost": "adverse_at_next_open",
+        "same_bar_stop_and_target": "stop_first",
+        "stop_gap_fill": "opening_price_if_open_beyond_stop",
+        "stress_cost_bps_per_side": 10.0,
+        "target_gap_fill": "frozen_target_no_favorable_gap_credit",
+        "target_gross_exposure": 0.7
+      },
+      "exit": {
+        "break_even_trigger_r": 0.8,
+        "implementation": "backtest.alpaca_exact_parity_contract.simulate_position",
+        "initial_stop_atr": 2.0,
+        "intramonth_portfolio_stop_pct": 0.08,
+        "max_hold_sessions": 22,
+        "profit_target_atr": 3.2,
+        "stop_update_timing": "completed_bar_for_next_session",
+        "trail_atr": 1.5
+      },
+      "id": "v38_successor_spy200_gated",
+      "regime_gate": {
+        "benchmark": "SPY",
+        "exposure_on_fail": 0.0,
+        "exposure_on_pass": 1.0,
+        "id": "spy_close_ge_trailing_sma200_v1",
+        "insufficient_history": "cash_fail_closed",
+        "lookback_completed_sessions": 200,
+        "pass_rule": "signal_close_ge_trailing_sma"
+      },
+      "role": "candidate",
+      "schedule": {
+        "calendar": "XNYS",
+        "entry_time": "next_xnys_session_open",
+        "same_close_or_same_bar_entry": false,
+        "signal_time": "completed_last_xnys_session_close_of_calendar_month",
+        "target_refresh": "calendar_monthly"
+      },
+      "selector": {
+        "correlation_lookback_sessions": 60,
+        "correlation_penalty_multiplier": 2.5,
+        "correlation_penalty_threshold": 0.5,
+        "earnings_blackout_sessions_after": 1,
+        "earnings_blackout_sessions_before": 3,
+        "eligible_universe": "point_in_time_membership_only",
+        "family": "v38",
+        "id": "v38_monthly_live_intent_successor_v2",
+        "max_pair_correlation": 0.75,
+        "max_per_cluster": 1,
+        "max_per_sector": 2,
+        "max_position_share_of_allocated_sleeve": 0.6,
+        "minimum_momentum_pct": 5.0,
+        "momentum_lookback_sessions": 28,
+        "parameter_scan": false,
+        "pullback_max_pct": -1.5,
+        "pullback_min_pct": -12.0,
+        "top_n": 4,
+        "universe_score_lookback_sessions": 80,
+        "universe_top_k": 18,
+        "weighting": "score_div_sqrt_atr_then_normalize"
+      }
+    },
+    {
+      "execution": {
+        "base_cost_bps_per_side": 5.0,
+        "completed_bars_only": true,
+        "daily_drawdown_includes_initial_capital": true,
+        "daily_mark_to_market": true,
+        "entry_cost": "adverse_at_next_open",
+        "same_bar_stop_and_target": "stop_first",
+        "stop_gap_fill": "opening_price_if_open_beyond_stop",
+        "stress_cost_bps_per_side": 10.0,
+        "target_gap_fill": "frozen_target_no_favorable_gap_credit",
+        "target_gross_exposure": 0.7
+      },
+      "exit": {
+        "break_even_trigger_r": 0.8,
+        "implementation": "backtest.alpaca_exact_parity_contract.simulate_position",
+        "initial_stop_atr": 2.0,
+        "intramonth_portfolio_stop_pct": 0.08,
+        "max_hold_sessions": 22,
+        "profit_target_atr": 3.2,
+        "stop_update_timing": "completed_bar_for_next_session",
+        "trail_atr": 1.5
+      },
+      "id": "v38_successor_ungated_control",
+      "regime_gate": {
+        "exposure": 1.0,
+        "id": "gate_disabled_control_v1",
+        "purpose": "isolate_regime_gate_effect_only"
+      },
+      "role": "gate_ab_control",
+      "schedule": {
+        "calendar": "XNYS",
+        "entry_time": "next_xnys_session_open",
+        "same_close_or_same_bar_entry": false,
+        "signal_time": "completed_last_xnys_session_close_of_calendar_month",
+        "target_refresh": "calendar_monthly"
+      },
+      "selector": {
+        "correlation_lookback_sessions": 60,
+        "correlation_penalty_multiplier": 2.5,
+        "correlation_penalty_threshold": 0.5,
+        "earnings_blackout_sessions_after": 1,
+        "earnings_blackout_sessions_before": 3,
+        "eligible_universe": "point_in_time_membership_only",
+        "family": "v38",
+        "id": "v38_monthly_live_intent_successor_v2",
+        "max_pair_correlation": 0.75,
+        "max_per_cluster": 1,
+        "max_per_sector": 2,
+        "max_position_share_of_allocated_sleeve": 0.6,
+        "minimum_momentum_pct": 5.0,
+        "momentum_lookback_sessions": 28,
+        "parameter_scan": false,
+        "pullback_max_pct": -1.5,
+        "pullback_min_pct": -12.0,
+        "top_n": 4,
+        "universe_score_lookback_sessions": 80,
+        "universe_top_k": 18,
+        "weighting": "score_div_sqrt_atr_then_normalize"
+      }
+    },
+    {
+      "execution": {
+        "base_cost_bps_per_side": 5.0,
+        "completed_bars_only": true,
+        "daily_drawdown_includes_initial_capital": true,
+        "daily_mark_to_market": true,
+        "entry_cost": "adverse_at_next_open",
+        "same_bar_stop_and_target": "stop_first",
+        "stop_gap_fill": "opening_price_if_open_beyond_stop",
+        "stress_cost_bps_per_side": 10.0,
+        "target_gap_fill": "frozen_target_no_favorable_gap_credit",
+        "target_gross_exposure": 0.7
+      },
+      "exit": {
+        "break_even_trigger_r": 0.8,
+        "implementation": "backtest.alpaca_exact_parity_contract.simulate_position",
+        "initial_stop_atr": 2.0,
+        "intramonth_portfolio_stop_pct": 0.08,
+        "max_hold_sessions": 22,
+        "profit_target_atr": 3.2,
+        "stop_update_timing": "completed_bar_for_next_session",
+        "trail_atr": 1.5
+      },
+      "id": "adaptive_v1_spy200_gated",
+      "regime_gate": {
+        "benchmark": "SPY",
+        "exposure_on_fail": 0.0,
+        "exposure_on_pass": 1.0,
+        "id": "spy_close_ge_trailing_sma200_v1",
+        "insufficient_history": "cash_fail_closed",
+        "lookback_completed_sessions": 200,
+        "pass_rule": "signal_close_ge_trailing_sma"
+      },
+      "role": "challenger",
+      "schedule": {
+        "calendar": "XNYS",
+        "entry_time": "next_xnys_session_open",
+        "same_close_or_same_bar_entry": false,
+        "signal_time": "completed_last_xnys_session_close_of_calendar_month",
+        "target_refresh": "calendar_monthly"
+      },
+      "selector": {
+        "ai_approver": false,
+        "eligible_universe": "point_in_time_membership_only",
+        "family": "adaptive_v1",
+        "id": "adaptive_v1_defaults_frozen_v2",
+        "max_per_sector": 2,
+        "max_position_share_of_allocated_sleeve": 0.4,
+        "max_positions": 4,
+        "minimum_slow_momentum": 0.0,
+        "mom_fast_sessions": 20,
+        "mom_slow_sessions": 60,
+        "parameter_scan": false,
+        "per_name_trend_sma_sessions": 50,
+        "target_daily_volatility": 0.02,
+        "top_n": 5,
+        "volatility_sessions": 60,
+        "weighting": "inverse_realized_vol_then_cap_without_upward_renormalization"
+      }
+    },
+    {
+      "execution": {
+        "base_cost_bps_per_side": 5.0,
+        "completed_bars_only": true,
+        "daily_drawdown_includes_initial_capital": true,
+        "daily_mark_to_market": true,
+        "entry_cost": "adverse_at_next_open",
+        "same_bar_stop_and_target": "stop_first",
+        "stop_gap_fill": "opening_price_if_open_beyond_stop",
+        "stress_cost_bps_per_side": 10.0,
+        "target_gap_fill": "frozen_target_no_favorable_gap_credit",
+        "target_gross_exposure": 0.7
+      },
+      "exit": {
+        "break_even_trigger_r": 0.8,
+        "implementation": "backtest.alpaca_exact_parity_contract.simulate_position",
+        "initial_stop_atr": 2.0,
+        "intramonth_portfolio_stop_pct": 0.08,
+        "max_hold_sessions": 22,
+        "profit_target_atr": 3.2,
+        "stop_update_timing": "completed_bar_for_next_session",
+        "trail_atr": 1.5
+      },
+      "id": "adaptive_v1_ungated_control",
+      "regime_gate": {
+        "exposure": 1.0,
+        "id": "gate_disabled_control_v1",
+        "purpose": "isolate_regime_gate_effect_only"
+      },
+      "role": "gate_ab_control",
+      "schedule": {
+        "calendar": "XNYS",
+        "entry_time": "next_xnys_session_open",
+        "same_close_or_same_bar_entry": false,
+        "signal_time": "completed_last_xnys_session_close_of_calendar_month",
+        "target_refresh": "calendar_monthly"
+      },
+      "selector": {
+        "ai_approver": false,
+        "eligible_universe": "point_in_time_membership_only",
+        "family": "adaptive_v1",
+        "id": "adaptive_v1_defaults_frozen_v2",
+        "max_per_sector": 2,
+        "max_position_share_of_allocated_sleeve": 0.4,
+        "max_positions": 4,
+        "minimum_slow_momentum": 0.0,
+        "mom_fast_sessions": 20,
+        "mom_slow_sessions": 60,
+        "parameter_scan": false,
+        "per_name_trend_sma_sessions": 50,
+        "target_daily_volatility": 0.02,
+        "top_n": 5,
+        "volatility_sessions": 60,
+        "weighting": "inverse_realized_vol_then_cap_without_upward_renormalization"
+      }
+    },
+    {
+      "execution": {
+        "base_cost_bps_per_side": 5.0,
+        "completed_bars_only": true,
+        "daily_drawdown_includes_initial_capital": true,
+        "daily_mark_to_market": true,
+        "entry_cost": "adverse_at_next_open",
+        "same_bar_stop_and_target": "stop_first",
+        "stop_gap_fill": "opening_price_if_open_beyond_stop",
+        "stress_cost_bps_per_side": 10.0,
+        "target_gap_fill": "frozen_target_no_favorable_gap_credit",
+        "target_gross_exposure": 1.0
+      },
+      "exit": {
+        "break_even_trigger_r": 0.8,
+        "implementation": "backtest.alpaca_exact_parity_contract.simulate_position",
+        "initial_stop_atr": 2.0,
+        "intramonth_portfolio_stop_pct": 0.08,
+        "max_hold_sessions": 22,
+        "profit_target_atr": 3.2,
+        "stop_update_timing": "completed_bar_for_next_session",
+        "trail_atr": 1.5
+      },
+      "id": "v38_legacy_native_reference",
+      "regime_gate": {
+        "benchmark_lookback_sessions": 60,
+        "benchmarks": [
+          "SPY",
+          "QQQ"
+        ],
+        "id": "v38_legacy_breadth_plus_benchmark_reference",
+        "minimum_average_momentum_pct": 1.5,
+        "minimum_benchmarks_above_sma": 1,
+        "minimum_breadth_above_sma_pct": 60.0,
+        "minimum_breadth_positive_momentum_pct": 45.0,
+        "universe_breadth_sma_lookback_sessions": 28
+      },
+      "role": "diagnostic_reference_not_winner_eligible",
+      "schedule": {
+        "calendar": "XNYS",
+        "entry_time": "next_xnys_session_open",
+        "same_close_or_same_bar_entry": false,
+        "signal_time": "completed_last_xnys_session_close_of_calendar_month",
+        "target_refresh": "calendar_monthly"
+      },
+      "selector": {
+        "correlation_lookback_sessions": 60,
+        "correlation_penalty_multiplier": 2.5,
+        "correlation_penalty_threshold": 0.5,
+        "earnings_blackout_calendar_days_after": 2,
+        "earnings_blackout_calendar_days_before": 5,
+        "eligible_universe": "fixed_current_tickers_not_pit",
+        "family": "v38_legacy_diagnostic",
+        "id": "v38_legacy_research_reference_20260710",
+        "max_pair_correlation": 0.75,
+        "max_per_cluster": 1,
+        "max_per_sector": null,
+        "minimum_momentum_pct": 5.0,
+        "momentum_lookback_sessions": 28,
+        "promotion_eligible": false,
+        "pullback_max_pct": -1.5,
+        "pullback_min_pct": -12.0,
+        "target_gross_exposure": 1.0,
+        "top_n": 4,
+        "universe_score_lookback_sessions": 80,
+        "universe_top_k": 14,
+        "weighting": "score_div_atr_then_normalized_to_full_investment"
+      }
+    }
+  ],
+  "bakeoff_id": "alpaca_monthly_bakeoff_v2_20260716",
+  "blockers": [
+    "input:broker_lifecycle_and_cost_calibration",
+    "input:corporate_actions_and_delistings",
+    "input:official_xnys_session_ledger",
+    "input:point_in_time_market_data_manifest",
+    "input:point_in_time_universe"
+  ],
+  "broker_or_network_calls": false,
+  "generated_at_utc": "2026-07-16T04:10:41.904813Z",
+  "known_legacy_parity_gaps": [
+    "legacy_research_fixed_current_universe_not_point_in_time",
+    "legacy_research_target_exposure_100pct_vs_live_intent_70pct",
+    "legacy_research_universe_top_k_14_vs_live_intent_18",
+    "legacy_research_earnings_blackout_5_2_vs_live_intent_3_1",
+    "legacy_research_no_sector_cap_vs_live_intent_max_2",
+    "legacy_research_weight_score_div_atr_vs_live_score_div_sqrt_atr",
+    "legacy_research_monthly_endpoint_drawdown_not_daily_mtm"
+  ],
+  "live_writes": false,
+  "next_allowed_action": "pin_authoritative_inputs_then_rerun_preflight",
+  "outcome_files_opened": false,
+  "pairwise_contrasts": [
+    {
+      "id": "v38_gate_effect",
+      "left": "v38_successor_spy200_gated",
+      "only_allowed_difference": "regime_gate",
+      "right": "v38_successor_ungated_control"
+    },
+    {
+      "id": "adaptive_gate_effect",
+      "left": "adaptive_v1_spy200_gated",
+      "only_allowed_difference": "regime_gate",
+      "right": "adaptive_v1_ungated_control"
+    },
+    {
+      "id": "selector_effect_with_spy200_gate",
+      "left": "v38_successor_spy200_gated",
+      "only_allowed_difference": "selector",
+      "right": "adaptive_v1_spy200_gated"
+    },
+    {
+      "id": "selector_effect_without_gate",
+      "left": "v38_successor_ungated_control",
+      "only_allowed_difference": "selector",
+      "right": "adaptive_v1_ungated_control"
+    }
+  ],
+  "performance_computed": false,
+  "permission": "BLOCKED_FAIL_CLOSED",
+  "promotion_authorized": false,
+  "required_inputs": [
+    {
+      "name": "official_xnys_session_ledger",
+      "ok": false,
+      "path": "",
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "xnys_session_ledger_v1",
+      "sha256": ""
+    },
+    {
+      "name": "point_in_time_universe",
+      "ok": false,
+      "path": "",
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "alpaca_point_in_time_universe_v1",
+      "sha256": ""
+    },
+    {
+      "name": "point_in_time_market_data_manifest",
+      "ok": false,
+      "path": "",
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "alpaca_point_in_time_market_data_manifest_v1",
+      "sha256": ""
+    },
+    {
+      "name": "corporate_actions_and_delistings",
+      "ok": false,
+      "path": "",
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "alpaca_corporate_actions_delistings_v1",
+      "sha256": ""
+    },
+    {
+      "name": "broker_lifecycle_and_cost_calibration",
+      "ok": false,
+      "path": "",
+      "reasons": [
+        "artifact_unpinned"
+      ],
+      "schema_id": "alpaca_broker_lifecycle_cost_bundle_v1",
+      "sha256": ""
+    }
+  ],
+  "safe_hold": {
+    "expected": {
+      "ALPACA_ALLOW_NEW_ENTRIES": "0",
+      "ALPACA_CLOSE_STALE_POSITIONS": "0",
+      "MONTHLY_MIDMONTH_ROTATION": "0"
+    },
+    "forced_liquidation_required_by_research": false,
+    "mismatches": [],
+    "ok": true,
+    "path": "configs/alpaca_live_v38_safe_hold.env",
+    "safe_hold_changed": false
+  },
+  "schema_version": 2,
+  "sources": [
+    {
+      "actual_sha256": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+      "expected_sha256": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee",
+      "name": "arm_contract",
+      "ok": true,
+      "path": "backtest/alpaca_bakeoff_v2_contract.py"
+    },
+    {
+      "actual_sha256": "3ff7a41e10a6ebbc711707df9420dab0c8baff7a9e7f15691907dc50e11ad407",
+      "expected_sha256": "3ff7a41e10a6ebbc711707df9420dab0c8baff7a9e7f15691907dc50e11ad407",
+      "name": "preflight",
+      "ok": true,
+      "path": "scripts/preflight_alpaca_bakeoff_v2.py"
+    },
+    {
+      "actual_sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+      "expected_sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50",
+      "name": "exact_execution_exit_contract",
+      "ok": true,
+      "path": "backtest/alpaca_exact_parity_contract.py"
+    },
+    {
+      "actual_sha256": "9c936a6f387c693e8f388d82c2eefbac939314c55d8633666efbcbe79baa8b7b",
+      "expected_sha256": "9c936a6f387c693e8f388d82c2eefbac939314c55d8633666efbcbe79baa8b7b",
+      "name": "adaptive_selector",
+      "ok": true,
+      "path": "strategies/alpaca_adaptive_v1.py"
+    },
+    {
+      "actual_sha256": "cefe0c6f8757deb8e3a2dd9f2d7e3a99ebd4d7529408ad742a2bfa69ad440dc5",
+      "expected_sha256": "cefe0c6f8757deb8e3a2dd9f2d7e3a99ebd4d7529408ad742a2bfa69ad440dc5",
+      "name": "legacy_research_sim",
+      "ok": true,
+      "path": "scripts/equities_monthly_research_sim.py"
+    },
+    {
+      "actual_sha256": "6dff0ab3b075bf5723b58c1f62bd0ccfd46895f0a1fa51c7b6230e9f091a6e84",
+      "expected_sha256": "6dff0ab3b075bf5723b58c1f62bd0ccfd46895f0a1fa51c7b6230e9f091a6e84",
+      "name": "legacy_refresh_wrapper",
+      "ok": true,
+      "path": "scripts/run_equities_monthly_v36_refresh.sh"
+    },
+    {
+      "actual_sha256": "36fa73e2f6868f87a512f9c9f7196df9365657ecb60d1304d6986288942d51c2",
+      "expected_sha256": "36fa73e2f6868f87a512f9c9f7196df9365657ecb60d1304d6986288942d51c2",
+      "name": "current_cycle_builder",
+      "ok": true,
+      "path": "scripts/build_equities_monthly_live_cycle.py"
+    },
+    {
+      "actual_sha256": "ef03eb208133d509789eb83031c4f656cb1df6a481d6699b5ff17d7292c33829",
+      "expected_sha256": "ef03eb208133d509789eb83031c4f656cb1df6a481d6699b5ff17d7292c33829",
+      "name": "live_bridge_reference",
+      "ok": true,
+      "path": "scripts/equities_alpaca_paper_bridge.py"
+    },
+    {
+      "actual_sha256": "aa166e5a80d782e525bbeae1f21d2a1c0ce7006273588b1dfe971c8f09e4c29e",
+      "expected_sha256": "aa166e5a80d782e525bbeae1f21d2a1c0ce7006273588b1dfe971c8f09e4c29e",
+      "name": "v38_intent_config",
+      "ok": true,
+      "path": "configs/alpaca_v38_hybrid_top4_candidate.env"
+    },
+    {
+      "actual_sha256": "e3478c99ccf17cc86f23d6015894adbb4dc7acbc1d0505f15660b4992c5867de",
+      "expected_sha256": "e3478c99ccf17cc86f23d6015894adbb4dc7acbc1d0505f15660b4992c5867de",
+      "name": "safe_hold_overlay",
+      "ok": true,
+      "path": "configs/alpaca_live_v38_safe_hold.env"
+    }
+  ],
+  "untouched_forward_manifest": {
+    "minimum_complete_monthly_entry_cycles": 3,
+    "ok": true,
+    "path": "configs/preregistered/alpaca_bakeoff_v2_forward_manifest_20260716.json",
+    "reasons": [],
+    "sealed_at_utc": "2026-07-16T04:04:22Z",
+    "sha256": "c13e8796f266182b216f2213431b430cbf940aa21074ad0c96b3a60b44879857",
+    "window_end_utc_exclusive": "2026-11-04T00:00:00Z",
+    "window_start_utc": "2026-08-03T00:00:00Z"
+  }
+}

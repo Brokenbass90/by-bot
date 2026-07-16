@@ -1,0 +1,131 @@
+{
+  "schema_version": 2,
+  "bakeoff_id": "alpaca_monthly_bakeoff_v2_20260716",
+  "frozen_at_utc": "2026-07-16T04:04:22Z",
+  "purpose": "Freeze an apples-to-apples monthly Alpaca comparison before the August 2026 forward window. No performance, broker access, live writes, forced liquidation, or promotion is authorized.",
+  "research_only": true,
+  "performance_forbidden_until_preflight_pass": true,
+  "no_broker_calls": true,
+  "no_live_writes": true,
+  "safe_hold_must_remain": true,
+  "no_parameter_scan": true,
+  "risk_pct": 0,
+  "promotion_authority": false,
+  "arm_contract": "alpaca_bakeoff_v2_contract",
+  "arm_ids": [
+    "v38_successor_spy200_gated",
+    "v38_successor_ungated_control",
+    "adaptive_v1_spy200_gated",
+    "adaptive_v1_ungated_control",
+    "v38_legacy_native_reference"
+  ],
+  "pairwise_contrasts": [
+    {
+      "id": "v38_gate_effect",
+      "left": "v38_successor_spy200_gated",
+      "right": "v38_successor_ungated_control",
+      "only_allowed_difference": "regime_gate"
+    },
+    {
+      "id": "adaptive_gate_effect",
+      "left": "adaptive_v1_spy200_gated",
+      "right": "adaptive_v1_ungated_control",
+      "only_allowed_difference": "regime_gate"
+    },
+    {
+      "id": "selector_effect_with_spy200_gate",
+      "left": "v38_successor_spy200_gated",
+      "right": "adaptive_v1_spy200_gated",
+      "only_allowed_difference": "selector"
+    },
+    {
+      "id": "selector_effect_without_gate",
+      "left": "v38_successor_ungated_control",
+      "right": "adaptive_v1_ungated_control",
+      "only_allowed_difference": "selector"
+    }
+  ],
+  "known_legacy_parity_gaps": [
+    "legacy_research_fixed_current_universe_not_point_in_time",
+    "legacy_research_target_exposure_100pct_vs_live_intent_70pct",
+    "legacy_research_universe_top_k_14_vs_live_intent_18",
+    "legacy_research_earnings_blackout_5_2_vs_live_intent_3_1",
+    "legacy_research_no_sector_cap_vs_live_intent_max_2",
+    "legacy_research_weight_score_div_atr_vs_live_score_div_sqrt_atr",
+    "legacy_research_monthly_endpoint_drawdown_not_daily_mtm"
+  ],
+  "safe_hold_env_path": "configs/alpaca_live_v38_safe_hold.env",
+  "sources": {
+    "arm_contract": {
+      "path": "backtest/alpaca_bakeoff_v2_contract.py",
+      "sha256": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee"
+    },
+    "preflight": {
+      "path": "scripts/preflight_alpaca_bakeoff_v2.py",
+      "sha256": "3ff7a41e10a6ebbc711707df9420dab0c8baff7a9e7f15691907dc50e11ad407"
+    },
+    "exact_execution_exit_contract": {
+      "path": "backtest/alpaca_exact_parity_contract.py",
+      "sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50"
+    },
+    "adaptive_selector": {
+      "path": "strategies/alpaca_adaptive_v1.py",
+      "sha256": "9c936a6f387c693e8f388d82c2eefbac939314c55d8633666efbcbe79baa8b7b"
+    },
+    "legacy_research_sim": {
+      "path": "scripts/equities_monthly_research_sim.py",
+      "sha256": "cefe0c6f8757deb8e3a2dd9f2d7e3a99ebd4d7529408ad742a2bfa69ad440dc5"
+    },
+    "legacy_refresh_wrapper": {
+      "path": "scripts/run_equities_monthly_v36_refresh.sh",
+      "sha256": "6dff0ab3b075bf5723b58c1f62bd0ccfd46895f0a1fa51c7b6230e9f091a6e84"
+    },
+    "current_cycle_builder": {
+      "path": "scripts/build_equities_monthly_live_cycle.py",
+      "sha256": "36fa73e2f6868f87a512f9c9f7196df9365657ecb60d1304d6986288942d51c2"
+    },
+    "live_bridge_reference": {
+      "path": "scripts/equities_alpaca_paper_bridge.py",
+      "sha256": "ef03eb208133d509789eb83031c4f656cb1df6a481d6699b5ff17d7292c33829"
+    },
+    "v38_intent_config": {
+      "path": "configs/alpaca_v38_hybrid_top4_candidate.env",
+      "sha256": "aa166e5a80d782e525bbeae1f21d2a1c0ce7006273588b1dfe971c8f09e4c29e"
+    },
+    "safe_hold_overlay": {
+      "path": "configs/alpaca_live_v38_safe_hold.env",
+      "sha256": "e3478c99ccf17cc86f23d6015894adbb4dc7acbc1d0505f15660b4992c5867de"
+    }
+  },
+  "untouched_forward_manifest": {
+    "path": "configs/preregistered/alpaca_bakeoff_v2_forward_manifest_20260716.json",
+    "sha256": "c13e8796f266182b216f2213431b430cbf940aa21074ad0c96b3a60b44879857"
+  },
+  "required_inputs": {
+    "official_xnys_session_ledger": {
+      "schema_id": "xnys_session_ledger_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "point_in_time_universe": {
+      "schema_id": "alpaca_point_in_time_universe_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "point_in_time_market_data_manifest": {
+      "schema_id": "alpaca_point_in_time_market_data_manifest_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "corporate_actions_and_delistings": {
+      "schema_id": "alpaca_corporate_actions_delistings_v1",
+      "path": "",
+      "sha256": ""
+    },
+    "broker_lifecycle_and_cost_calibration": {
+      "schema_id": "alpaca_broker_lifecycle_cost_bundle_v1",
+      "path": "",
+      "sha256": ""
+    }
+  }
+}

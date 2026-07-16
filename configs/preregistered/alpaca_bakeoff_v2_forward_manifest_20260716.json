@@ -1,0 +1,16 @@
+{
+  "schema_id": "alpaca_untouched_forward_manifest_v2",
+  "manifest_id": "alpaca_bakeoff_v2_forward_20260803",
+  "sealed_at_utc": "2026-07-16T04:04:22Z",
+  "window_start_utc": "2026-08-03T00:00:00Z",
+  "window_end_utc_exclusive": "2026-11-04T00:00:00Z",
+  "session_times_resolved_only_from_pinned_xnys_ledger": true,
+  "minimum_complete_monthly_entry_cycles": 3,
+  "outcomes_read_before_seal": false,
+  "performance_embargo_until_window_complete": true,
+  "parameters_frozen_for_window": true,
+  "interim_reads_allowed": false,
+  "outcome_files": [],
+  "promotion_authority": false,
+  "risk_pct": 0
+}
