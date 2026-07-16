@@ -16,7 +16,7 @@
     "pre_session_origin_head": "54269ba801dc69a8e26bafa1f82ca50be9b31b44",
     "pre_session_matched": true,
     "latest_implementation_commit": "f492c747d6710e0947706e9ccb991312c6d4264d",
-    "canonical_checkpoint_commit": "PENDING_POST_COMMIT_METADATA_REFRESH",
+    "canonical_checkpoint_commit": "6f6c7e8_docs_checkpoint_recovery_truth_for_July_16",
     "session_implementation_commits": [
       "5343856_research_sealed_breakout_72h_no_promotion",
       "ca3da2f_alpaca_successor_bakeoff",
