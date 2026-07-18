@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-18T06:18:00Z",
+  "as_of_utc": "2026-07-18T07:36:00Z",
   "authority": "human_reviewed_capability_map",
   "purpose": "One machine-readable map of what exists, what may act, what is proven, and what must happen next.",
   "source_precedence": [
@@ -63,7 +63,7 @@
       "kind": "research_universe_selector",
       "market": "crypto_perpetual",
       "physical_side": "none",
-      "stage": "prospective_collection",
+      "stage": "data_collection",
       "execution_authority": "none",
       "promotion_authorized": false,
       "runtime_entrypoints": ["bot/event_universe_v1.py", "scripts/run_event_universe_v1.py", "scripts/launch_event_universe_v1.sh"],
