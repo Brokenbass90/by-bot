@@ -22,6 +22,9 @@ def _fake_transport(tmp_path: Path) -> Path:
         fake_bin / "ssh",
         "#!/bin/bash\n"
         "# Every requested fixture exists; command execution itself is a no-op.\n"
+        "if [[ \"${FAKE_SSH_TERM_PARENT:-0}\" == \"1\" ]]; then\n"
+        "  kill -TERM \"$PPID\"\n"
+        "fi\n"
         "exit 0\n",
     )
     _write_executable(
@@ -32,6 +35,11 @@ def _fake_transport(tmp_path: Path) -> Path:
         "eval 'dst=${'\"$argc\"'}'\n"
         "# Upload back to the fake server.\n"
         "if [[ \"$dst\" == *:* ]]; then exit 0; fi\n"
+        "if [[ \"${FAKE_SCP_FAIL_OPTIONAL_STATES:-0}\" == \"1\" ]]; then\n"
+        "  case \"$src\" in\n"
+        "    *runtime/geometry/geometry_state.json|*runtime/router/symbol_router_state.json) exit 23 ;;\n"
+        "  esac\n"
+        "fi\n"
         "mkdir -p \"$(dirname \"$dst\")\"\n"
         "case \"$src\" in\n"
         "  *.json) printf '{}\\n' > \"$dst\" ;;\n"
@@ -72,6 +80,79 @@ def test_sync_completes_when_failure_arrays_are_empty(tmp_path: Path) -> None:
     assert manifest["status"] == "complete"
     assert manifest["failures"] == []
     assert all(row["present"] for row in manifest["critical_files"].values())
+    assert json.loads((mirror / "geometry" / "geometry_state.json").read_text(encoding="utf-8")) == {}
+    assert json.loads((mirror / "router" / "symbol_router_state.json").read_text(encoding="utf-8")) == {}
+    assert "geometry/geometry_state.json" not in manifest["critical_files"]
+    assert "router/symbol_router_state.json" not in manifest["critical_files"]
+    assert not (mirror / ".sync_lock").exists()
+
+
+def test_optional_geometry_and_router_failures_do_not_block_bundle(tmp_path: Path) -> None:
+    mirror = tmp_path / "mirror"
+    fake_bin = _fake_transport(tmp_path)
+    env = dict(os.environ)
+    env.update(
+        {
+            "PATH": f"{fake_bin}:{env['PATH']}",
+            "MIRROR_ROOT": str(mirror),
+            "CHAT_LOCAL_PATH": str(mirror / "deepseek_chat.json"),
+            "SSH_KEY": str(tmp_path / "missing-key"),
+            "FAKE_SCP_FAIL_OPTIONAL_STATES": "1",
+        }
+    )
+
+    result = subprocess.run(
+        ["bash", str(SCRIPT)],
+        cwd=ROOT,
+        env=env,
+        text=True,
+        capture_output=True,
+        timeout=30,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    manifest = json.loads((mirror / "sync_bundle_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "complete"
+    assert set(manifest["failures"]) == {
+        "scp_failed:runtime/geometry/geometry_state.json",
+        "scp_failed:runtime/router/symbol_router_state.json",
+    }
+    assert all(row["present"] for row in manifest["critical_files"].values())
+    assert not (mirror / "geometry" / "geometry_state.json").exists()
+    assert not (mirror / "router" / "symbol_router_state.json").exists()
+    assert not (mirror / ".sync_lock").exists()
+
+
+def test_aborted_sync_finalizes_manifest_as_incomplete(tmp_path: Path) -> None:
+    mirror = tmp_path / "mirror"
+    fake_bin = _fake_transport(tmp_path)
+    env = dict(os.environ)
+    env.update(
+        {
+            "PATH": f"{fake_bin}:{env['PATH']}",
+            "MIRROR_ROOT": str(mirror),
+            "CHAT_LOCAL_PATH": str(mirror / "deepseek_chat.json"),
+            "SSH_KEY": str(tmp_path / "missing-key"),
+            "FAKE_SSH_TERM_PARENT": "1",
+        }
+    )
+
+    result = subprocess.run(
+        ["bash", str(SCRIPT)],
+        cwd=ROOT,
+        env=env,
+        text=True,
+        capture_output=True,
+        timeout=30,
+        check=False,
+    )
+
+    assert result.returncode == 143
+    manifest = json.loads((mirror / "sync_bundle_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "incomplete"
+    assert manifest["sync_finished_utc"] is not None
+    assert "aborted:exit_143" in manifest["failures"]
     assert not (mirror / ".sync_lock").exists()
 
 

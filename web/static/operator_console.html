@@ -5,14 +5,16 @@
     GET  /api/pnl?period=day|week|month|year|all
                                              -> { rows:[{sleeve,trades,win,loss,pnl,fees}], total:{pnl,fees,trades} }
     GET  /api/strategy-catalog               -> bot.strategy_catalog.build_strategy_catalog()
+    Optional generic-connections contract (not the Bybit key-rotation UI):
     GET  /api/admin/connections              -> { rows:[{id,name,exchange,scope,status,key_masked}] }
     POST /api/admin/connections              body {name,exchange,scope,key,secret}  (key/secret server-side only)
     PUT  /api/admin/connections/{id}         body {name,scope}                       (rename / change scope)
     DELETE /api/admin/connections/{id}
     POST /api/admin/connections/{id}/test    -> { ok, latency_ms, can_trade, can_withdraw }  (Codex/AI can verify)
-  SECURITY: secrets live ONLY on the server. This page masks keys (last 4), never
-  stores secrets in browser storage, sends them once over HTTPS, and clears the
-  form field after submit. Trading/arbitrage hookup + AI-operator come later.
+  SECURITY: when this optional backend is present, secrets live ONLY on the
+  server. This page never invents connection/account rows when it is absent,
+  never stores secrets in browser storage, and clears credential fields after
+  every submit attempt. The supported Bybit rotation UI remains in API Keys.
 -->
 <style>
   .oc{font-family:var(--font-sans,system-ui);color:var(--color-text-primary,#1a1a1a);max-width:920px;margin:0 auto;padding:1rem}
@@ -34,6 +36,7 @@
   .oc .seg button.active{background:var(--color-background-secondary,#f1efe8);color:var(--color-text-primary,#1a1a1a)}
   .oc .btn{padding:7px 12px;font-size:13px;border:0.5px solid var(--color-border-secondary,#ccc);background:none;border-radius:8px;cursor:pointer}
   .oc .btn:hover{background:var(--color-background-secondary,#f1efe8)}
+  .oc .btn:disabled,.oc input:disabled,.oc select:disabled{cursor:not-allowed;opacity:.55}
   .oc .btn.danger{color:var(--color-text-danger,#a32d2d);border-color:var(--color-border-danger,#e0a0a0)}
   .oc .card{background:var(--color-background-primary,#fff);border:0.5px solid var(--color-border-tertiary,#ddd);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}
   .oc .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -45,7 +48,10 @@
 <div class="oc">
   <div class="row" style="justify-content:space-between">
     <h1>Operator console</h1>
-    <span id="pulse" class="muted" style="font-size:13px">загрузка…</span>
+    <div class="row">
+      <a class="btn" href="/">Основная консоль</a>
+      <span id="pulse" class="muted" style="font-size:13px">загрузка…</span>
+    </div>
   </div>
 
   <div class="tabs">
@@ -70,20 +76,21 @@
   </section>
 
   <section id="t-conn" style="display:none">
-    <div class="note" style="margin-bottom:12px"><i class="ti ti-lock" aria-hidden="true"></i> Ключи хранятся только на сервере. Здесь показывается маска (последние 4), секрет отправляется один раз по HTTPS и не сохраняется в браузере. Торговый ключ — без права вывода.</div>
+    <div class="note" style="margin-bottom:12px"><i class="ti ti-lock" aria-hidden="true"></i> Это опциональный интерфейс универсальных подключений. Он активируется только после ответа backend и не подменяет реальную ротацию Bybit в основной консоли: <b>Tools → API Keys</b>.</div>
+    <div id="conn-state" class="note" style="margin-bottom:12px">Проверяем backend подключений…</div>
     <div class="card">
       <div style="font-weight:500;margin-bottom:10px">Добавить подключение</div>
       <div class="row">
-        <input id="c-name" placeholder="название (напр. bybit-main)" style="width:200px">
-        <select id="c-exch"><option>bybit</option><option>bitget</option><option>binance</option><option>alpaca</option><option>oanda</option></select>
-        <select id="c-scope"><option value="read">read-only</option><option value="trade">trade (без вывода)</option></select>
-        <input id="c-key" placeholder="API key" style="width:170px">
-        <input id="c-secret" type="password" placeholder="API secret" style="width:170px">
-        <button class="btn" id="c-add"><i class="ti ti-plus" aria-hidden="true"></i> Добавить</button>
+        <input id="c-name" placeholder="название подключения" style="width:200px" disabled>
+        <select id="c-exch" disabled><option>bybit</option><option>bitget</option><option>binance</option><option>alpaca</option><option>oanda</option></select>
+        <select id="c-scope" disabled><option value="read">read-only</option><option value="trade">trade (без вывода)</option></select>
+        <input id="c-key" placeholder="API key" style="width:170px" disabled>
+        <input id="c-secret" type="password" placeholder="API secret" style="width:170px" disabled>
+        <button class="btn" id="c-add" disabled><i class="ti ti-plus" aria-hidden="true"></i> Добавить</button>
       </div>
     </div>
     <table><thead><tr><th>Название</th><th>Биржа</th><th>Права</th><th>Ключ</th><th>Статус</th><th style="text-align:right">Действия</th></tr></thead>
-    <tbody id="conn-body"></tbody></table>
+    <tbody id="conn-body"><tr><td colspan="6" class="muted">Проверяем доступность backend; подключённые accounts пока не подтверждены.</td></tr></tbody></table>
   </section>
 
   <section id="t-strat" style="display:none">
@@ -95,6 +102,11 @@
 (function(){
   var $=function(s){return document.querySelector(s)};
   async function getJSON(url,fallback){try{var r=await fetch(url);if(!r.ok)throw 0;return await r.json()}catch(e){return fallback}}
+  async function fetchJSON(url,options){
+    var r=await fetch(url,options);
+    if(!r.ok){var e=new Error('HTTP '+r.status);e.status=r.status;throw e}
+    return await r.json();
+  }
   function money(v){v=Number(v||0);return (v<0?'−$':'$')+Math.abs(v).toFixed(2)}
 
   document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){
@@ -131,27 +143,60 @@
     document.querySelectorAll('#periods button').forEach(function(x){x.classList.remove('active')});b.classList.add('active');loadPnl(b.dataset.p);
   }});
 
-  async function loadConn(){
-    var d=await getJSON('/api/admin/connections',{rows:[
-      {id:1,name:'bybit-main',exchange:'bybit',scope:'trade',status:'ok',key_masked:'••••R4'},
-      {id:2,name:'bitget-arb',exchange:'bitget',scope:'read',status:'ok',key_masked:'••••8f'}
-    ]});
-    var b=$('#conn-body');b.innerHTML='';
-    d.rows.forEach(function(c){
-      var st=c.status==='ok'?'<span class="pill ok">ok</span>':'<span class="pill warn">'+c.status+'</span>';
-      b.innerHTML+='<tr><td>'+c.name+'</td><td>'+c.exchange+'</td><td>'+c.scope+'</td><td class="muted">'+c.key_masked+'</td><td>'+st+'</td>'+
-        '<td style="text-align:right"><button class="btn" onclick="ocTest('+c.id+')">Проверить</button> '+
-        '<button class="btn danger" onclick="ocDel('+c.id+')">Удалить</button></td></tr>';
-    });
+  var connEndpointAvailable=false;
+  function setConnectionControlsEnabled(enabled){
+    ['#c-name','#c-exch','#c-scope','#c-key','#c-secret','#c-add'].forEach(function(s){$(s).disabled=!enabled});
   }
-  window.ocTest=async function(id){var r=await getJSON('/api/admin/connections/'+id+'/test',{ok:true,latency_ms:120,can_trade:true,can_withdraw:false});alert('Тест: '+(r.ok?'OK':'FAIL')+' · '+r.latency_ms+'ms · торговля '+(r.can_trade?'да':'нет')+' · вывод '+(r.can_withdraw?'ДА (опасно!)':'нет'))};
-  window.ocDel=async function(id){if(!confirm('Удалить подключение?'))return;await fetch('/api/admin/connections/'+id,{method:'DELETE'});loadConn()};
+  function renderConnectionUnavailable(){
+    connEndpointAvailable=false;setConnectionControlsEnabled(false);
+    $('#conn-state').textContent='Connections unavailable / not connected: backend endpoint /api/admin/connections отсутствует или не отвечает. Ни одна account не подтверждена.';
+    $('#conn-body').innerHTML='<tr><td colspan="6"><span class="pill warn">unavailable / not connected</span> <span class="muted">Backend не подтвердил ни одного подключения.</span></td></tr>';
+  }
+  async function loadConn(){
+    connEndpointAvailable=false;setConnectionControlsEnabled(false);
+    $('#conn-state').textContent='Проверяем backend подключений…';
+    try{
+      var d=await fetchJSON('/api/admin/connections');
+      if(!d||!Array.isArray(d.rows))throw new Error('invalid connections response');
+      connEndpointAvailable=true;setConnectionControlsEnabled(true);
+      $('#conn-state').textContent=d.rows.length?'Backend подключений доступен; показаны только подтверждённые им записи.':'Backend подключений доступен; настроенных подключений нет (not connected).';
+      var b=$('#conn-body');b.innerHTML='';
+      if(!d.rows.length){b.innerHTML='<tr><td colspan="6" class="muted">Нет настроенных подключений (not connected).</td></tr>';return}
+      d.rows.forEach(function(c){
+        var st=c.status==='ok'?'<span class="pill ok">ok</span>':'<span class="pill warn">'+c.status+'</span>';
+        b.innerHTML+='<tr><td>'+c.name+'</td><td>'+c.exchange+'</td><td>'+c.scope+'</td><td class="muted">'+c.key_masked+'</td><td>'+st+'</td>'+
+          '<td style="text-align:right"><button class="btn" onclick="ocTest('+c.id+')">Проверить</button> '+
+          '<button class="btn danger" onclick="ocDel('+c.id+')">Удалить</button></td></tr>';
+      });
+    }catch(e){renderConnectionUnavailable()}
+  }
+  window.ocTest=async function(id){
+    if(!connEndpointAvailable){alert('Проверка недоступна: connections backend unavailable / not connected.');return}
+    try{
+      var r=await fetchJSON('/api/admin/connections/'+id+'/test',{method:'POST'});
+      if(!r||typeof r.ok!=='boolean')throw new Error('invalid test response');
+      var latency=Number.isFinite(Number(r.latency_ms))?Number(r.latency_ms)+'ms':'latency unavailable';
+      var trade=r.can_trade===true?'да':(r.can_trade===false?'нет':'unavailable');
+      var withdraw=r.can_withdraw===true?'ДА (опасно!)':(r.can_withdraw===false?'нет':'unavailable');
+      alert('Тест: '+(r.ok?'OK':'FAIL')+' · '+latency+' · торговля '+trade+' · вывод '+withdraw);
+    }catch(e){alert('Проверка недоступна: test endpoint unavailable / not connected.')}
+  };
+  window.ocDel=async function(id){
+    if(!connEndpointAvailable){alert('Удаление недоступно: connections backend unavailable / not connected.');return}
+    if(!confirm('Удалить подключение?'))return;
+    try{var r=await fetch('/api/admin/connections/'+id,{method:'DELETE'});if(!r.ok)throw new Error('HTTP '+r.status);await loadConn()}
+    catch(e){alert('Удаление недоступно: backend не подтвердил операцию.')}
+  };
   $('#c-add').onclick=async function(){
+    if(!connEndpointAvailable){alert('Добавление недоступно: connections backend unavailable / not connected.');return}
     var body={name:$('#c-name').value,exchange:$('#c-exch').value,scope:$('#c-scope').value,key:$('#c-key').value,secret:$('#c-secret').value};
     if(!body.name||!body.key){alert('Укажи название и ключ');return}
-    await fetch('/api/admin/connections',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    $('#c-key').value='';$('#c-secret').value='';$('#c-name').value='';  // never keep secret in memory
-    loadConn();
+    try{
+      var r=await fetch('/api/admin/connections',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      $('#c-name').value='';await loadConn();
+    }catch(e){alert('Добавление недоступно: backend не подтвердил операцию.')}
+    finally{$('#c-key').value='';$('#c-secret').value=''}  // never keep credentials in the form
   };
 
   async function loadStrat(){

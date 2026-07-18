@@ -24,13 +24,17 @@ from pathlib import Path
 from typing import List
 
 ROOT = Path(__file__).resolve().parents[1]
-ALLOWED_DIRS = ("strategies", "bot", "backtest", "scripts", "web", "tests", "configs")
+ALLOWED_DIRS = ("strategies", "bot", "backtest", "scripts", "web", "tests")
 MAX_BYTES = 200_000
 
-_DENY_NAME = re.compile(r"(^\.env|\.env$|\.env\.|secret|credential|\.key$|\.pem$|id_rsa)", re.IGNORECASE)
+_DENY_NAME = re.compile(
+    r"(^\.env|\.env$|\.env\.|secret|credential|web_config|exchange_keys|"
+    r"\.key$|\.pem$|id_rsa)",
+    re.IGNORECASE,
+)
 _SECRET_LINE = re.compile(
-    r"^\s*[\w\.]*(key|secret|token|passw|api|account|webhook|chat_id|hmac|private)"
-    r"[\w\.]*\s*[:=]", re.IGNORECASE)
+    r"^\s*[\"']?[\w\.\-]*(key|secret|token|passw|api|account|webhook|chat_id|hmac|private)"
+    r"[\w\.\-]*[\"']?\s*[:=]", re.IGNORECASE)
 
 
 class CodeAccessError(Exception):

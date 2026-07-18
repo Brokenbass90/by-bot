@@ -1,0 +1,4 @@
+{
+  "_comment": "Local-only web auth config. Create configs/web_config.json with web/setup_totp.py; never commit the generated file.",
+  "users": {}
+}

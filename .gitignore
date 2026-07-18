@@ -38,6 +38,10 @@ reports/SERVER_SNAPSHOT_*.md
 configs/forex_mt5_demo_local.env
 configs/ctrader_openapi_local.env
 configs/alpaca_paper_local.env
+configs/web_config.json
+configs/exchange_keys.env
+configs/*_credentials.env
+configs/*_secrets.env
 
 # Local share/archive bundles.
 backtest_runs_old_*.tgz

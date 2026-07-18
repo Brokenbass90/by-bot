@@ -17,6 +17,8 @@ SYNCED_COUNT=0
 MISSING_COUNT=0
 FAILURES=()
 CRITICAL_FAILURES=()
+MANIFEST_IN_PROGRESS=0
+MANIFEST_FINALIZED=0
 
 SSH_OPTS=(-o StrictHostKeyChecking=no)
 if [[ -n "${SSH_KEY:-}" && -f "${SSH_KEY}" ]]; then
@@ -34,6 +36,8 @@ mkdir -p \
   "$MIRROR_ROOT"/equities_intraday_dynamic_v3_shadow \
   "$MIRROR_ROOT"/ai_context \
   "$MIRROR_ROOT"/crypto_blocker \
+  "$MIRROR_ROOT"/geometry \
+  "$MIRROR_ROOT"/router \
   "$MIRROR_ROOT"/arb
 
 # The web launcher starts an immediate sync and a periodic loop.  A slow SSH
@@ -51,12 +55,11 @@ if ! mkdir "$SYNC_LOCK_DIR" 2>/dev/null; then
     exit 0
   fi
 fi
-trap 'rmdir "$SYNC_LOCK_DIR" 2>/dev/null || true' EXIT INT TERM
 
 write_bundle_manifest() {
   local status="$1"
   shift || true
-  python3 - "$BUNDLE_MANIFEST" "$MIRROR_ROOT" "$status" "$SYNC_STARTED_UTC" "$SYNCED_COUNT" "$MISSING_COUNT" "$@" <<'PY'
+  if ! python3 - "$BUNDLE_MANIFEST" "$MIRROR_ROOT" "$status" "$SYNC_STARTED_UTC" "$SYNCED_COUNT" "$MISSING_COUNT" "$@" <<'PY'
 import json
 import os
 import sys
@@ -107,7 +110,45 @@ tmp = manifest.with_name(f"{manifest.name}.sync.{os.getpid()}")
 tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 os.replace(tmp, manifest)
 PY
+  then
+    return 1
+  fi
+
+  if [[ "$status" == "syncing" ]]; then
+    MANIFEST_IN_PROGRESS=1
+  else
+    MANIFEST_FINALIZED=1
+  fi
 }
+
+finalize_on_exit() {
+  local exit_code="$1"
+  local abort_failure="aborted:exit_${exit_code}"
+
+  # Avoid recursively re-entering this handler if finalization itself fails.
+  trap - EXIT HUP INT TERM
+  set +e
+  if [[ "$MANIFEST_IN_PROGRESS" -eq 1 && "$MANIFEST_FINALIZED" -eq 0 ]]; then
+    if [[ "${#CRITICAL_FAILURES[@]}" -gt 0 ]]; then
+      if [[ "${#FAILURES[@]}" -gt 0 ]]; then
+        write_bundle_manifest "incomplete" "${CRITICAL_FAILURES[@]}" "${FAILURES[@]}" "$abort_failure"
+      else
+        write_bundle_manifest "incomplete" "${CRITICAL_FAILURES[@]}" "$abort_failure"
+      fi
+    elif [[ "${#FAILURES[@]}" -gt 0 ]]; then
+      write_bundle_manifest "incomplete" "${FAILURES[@]}" "$abort_failure"
+    else
+      write_bundle_manifest "incomplete" "$abort_failure"
+    fi
+  fi
+  rmdir "$SYNC_LOCK_DIR" 2>/dev/null || true
+  exit "$exit_code"
+}
+
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+trap 'finalize_on_exit "$?"' EXIT
 
 write_bundle_manifest "syncing"
 
@@ -187,6 +228,8 @@ copy_if_exists "$BOT_DIR/runtime/ai_context/ohlc_and_logs.json" "$MIRROR_ROOT/ai
 copy_if_exists "$BOT_DIR/runtime/ai_context/memory_lines.jsonl" "$MIRROR_ROOT/ai_context/memory_lines.jsonl"
 copy_if_exists "$BOT_DIR/runtime/crypto_blocker/latest.json" "$MIRROR_ROOT/crypto_blocker/latest.json"
 copy_if_exists "$BOT_DIR/runtime/crypto_blocker/latest.md" "$MIRROR_ROOT/crypto_blocker/latest.md"
+copy_if_exists "$BOT_DIR/runtime/geometry/geometry_state.json" "$MIRROR_ROOT/geometry/geometry_state.json"
+copy_if_exists "$BOT_DIR/runtime/router/symbol_router_state.json" "$MIRROR_ROOT/router/symbol_router_state.json"
 copy_if_exists "$BOT_DIR/runtime/bybit_api_key_expiry_status.json" "$MIRROR_ROOT/bybit_api_key_expiry_status.json"
 copy_if_exists "$BOT_DIR/runtime/live_positions.json" "$MIRROR_ROOT/live_positions.json" critical
 copy_if_exists "$BOT_DIR/runtime/arb/exchange_account_status.json" "$MIRROR_ROOT/arb/exchange_account_status.json"

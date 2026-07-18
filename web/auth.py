@@ -85,7 +85,12 @@ def _save_config(cfg: dict) -> None:
     _CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
     tmp = _CONFIG_PATH.with_suffix(".tmp")
     tmp.write_text(json.dumps(cfg, indent=2))
+    # Authentication material must never inherit the process umask's common
+    # world-readable 0644 default.  Lock the temporary inode before the atomic
+    # replace and enforce the same mode on an existing destination.
+    os.chmod(tmp, 0o600)
     tmp.replace(_CONFIG_PATH)
+    os.chmod(_CONFIG_PATH, 0o600)
 
 
 # ── user lookup ───────────────────────────────────────────────────────────────

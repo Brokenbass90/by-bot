@@ -216,10 +216,25 @@ async def pnl_monthly(_: str = Depends(require_auth)):
 # 3) AI Code Reader — grep + read with sandboxing
 # ---------------------------------------------------------------------------
 
-# Allowed roots (no traversal outside)
-_ALLOWED_ROOTS = ["strategies", "bot", "scripts", "configs", "web", "docs", "backtest", "runtime/ai_context", "runtime/strategy_pipeline.json", "runtime/strategy_registry.json"]
+# Source inspection is intentionally code/docs only.  Runtime state has its
+# own redacted endpoints and configs may contain operator credentials.
+_ALLOWED_ROOTS = ["strategies", "bot", "scripts", "web", "docs", "backtest"]
 _MAX_GREP_RESULTS = 100
 _MAX_READ_LINES = 400
+_DENIED_SOURCE_NAME = re.compile(
+    r"(^\.env|\.env$|\.env\.|secret|credential|web_config|exchange_keys|"
+    r"\.key$|\.pem$|id_rsa)",
+    re.IGNORECASE,
+)
+_SECRET_SOURCE_LINE = re.compile(
+    r"^\s*[\"']?[\w\.\-]*(key|secret|token|passw|api|account|webhook|chat_id|hmac|private)"
+    r"[\w\.\-]*[\"']?\s*[:=]",
+    re.IGNORECASE,
+)
+
+
+def _redact_source_line(line: str) -> str:
+    return "***REDACTED***" if _SECRET_SOURCE_LINE.match(line) else line
 
 
 def _safe_path(rel: str) -> Optional[Path]:
@@ -235,6 +250,8 @@ def _safe_path(rel: str) -> Optional[Path]:
     rel_norm = str(p.relative_to(_ROOT.resolve()))
     if not any(rel_norm == r or rel_norm.startswith(r + "/") for r in _ALLOWED_ROOTS):
         return None
+    if _DENIED_SOURCE_NAME.search(p.name):
+        return None
     return p
 
 
@@ -248,7 +265,7 @@ class CodeSearchRequest(BaseModel):
 
 
 @router.post("/ai/code-search")
-async def ai_code_search(body: CodeSearchRequest, _: str = Depends(require_auth)):
+async def ai_code_search(body: CodeSearchRequest, _: str = Depends(require_admin)):
     """Read-only code search/inspection for AI agent."""
     mode = (body.mode or "").strip().lower()
 
@@ -263,6 +280,8 @@ async def ai_code_search(body: CodeSearchRequest, _: str = Depends(require_auth)
         for p in (_ROOT / root_match).rglob(Path(glob_pat).name):
             try:
                 rel = str(p.relative_to(_ROOT))
+                if _DENIED_SOURCE_NAME.search(p.name):
+                    continue
                 files.append(rel)
             except Exception:
                 continue
@@ -284,7 +303,10 @@ async def ai_code_search(body: CodeSearchRequest, _: str = Depends(require_auth)
         end = min(len(lines), body.line_end or (start + _MAX_READ_LINES - 1))
         if end - start + 1 > _MAX_READ_LINES:
             end = start + _MAX_READ_LINES - 1
-        snippet = "\n".join(f"{i+1:6d}\t{ln}" for i, ln in enumerate(lines[start-1:end], start=start-1))
+        snippet = "\n".join(
+            f"{i+1:6d}\t{_redact_source_line(ln)}"
+            for i, ln in enumerate(lines[start-1:end], start=start-1)
+        )
         return {
             "mode": "read",
             "path": body.path,
@@ -307,10 +329,16 @@ async def ai_code_search(body: CodeSearchRequest, _: str = Depends(require_auth)
             raise HTTPException(status_code=400, detail="glob must start with an allowed root")
         results = []
         for p in (_ROOT / root_match).rglob(Path(glob_pat).name):
+            if _DENIED_SOURCE_NAME.search(p.name):
+                continue
             try:
                 for i, ln in enumerate(p.read_text(encoding="utf-8", errors="replace").splitlines(), start=1):
                     if pat.search(ln):
-                        results.append({"path": str(p.relative_to(_ROOT)), "line": i, "text": ln[:200]})
+                        results.append({
+                            "path": str(p.relative_to(_ROOT)),
+                            "line": i,
+                            "text": _redact_source_line(ln)[:200],
+                        })
                         if len(results) >= _MAX_GREP_RESULTS:
                             break
             except Exception:

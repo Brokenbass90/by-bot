@@ -16,6 +16,27 @@ def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload), encoding="utf-8")
 
 
+def test_allocator_freshness_matches_three_hour_control_plane_contract(monkeypatch, tmp_path):
+    path = tmp_path / "portfolio_allocator_state.json"
+    _write_json(path, {"status": "ok"})
+
+    monkeypatch.setattr(ai_routes, "_age_sec", lambda _path: 10_800)
+    payload, age_sec = ai_routes._fresh_json(
+        path,
+        max_age_sec=ai_routes.ALLOCATOR_MAX_AGE_SEC,
+    )
+    assert payload == {"status": "ok"}
+    assert age_sec == 10_800
+
+    monkeypatch.setattr(ai_routes, "_age_sec", lambda _path: 10_801)
+    payload, age_sec = ai_routes._fresh_json(
+        path,
+        max_age_sec=ai_routes.ALLOCATOR_MAX_AGE_SEC,
+    )
+    assert payload is None
+    assert age_sec == 10_801
+
+
 def test_disabled_allocator_without_hard_block_is_explained_as_entry_capable(monkeypatch, tmp_path):
     _write_json(
         tmp_path / "bot_heartbeat.json",
@@ -72,7 +93,7 @@ def test_stale_allocator_and_operator_are_excluded_from_prompt(monkeypatch, tmp_
         },
     )
     _write_json(runtime / "operator" / "operator_snapshot.json", {"urgent_alerts": [{"summary": "old"}]})
-    old = time.time() - 10_000
+    old = time.time() - 12_000
     for path in (
         runtime / "control_plane" / "portfolio_allocator_state.json",
         runtime / "operator" / "operator_snapshot.json",

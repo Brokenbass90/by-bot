@@ -81,18 +81,40 @@ function rail(p) {
 }
 
 let chartLoaded = 0;
+let chartSymbol = null;
+let chartRequestId = 0;
+
+function resetChart(note, symbol = null) {
+  chartRequestId += 1;
+  chartLoaded = 0;
+  chartSymbol = symbol;
+  const cv = document.getElementById("chart"), ctx = cv.getContext("2d");
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  document.getElementById("chartnote").textContent = note;
+}
+
 async function drawChart(p) {
+  const symbol = String(p.symbol || "");
+  if (!symbol) {
+    resetChart("Открытой криптопозиции нет — бот сканирует рынок.");
+    return;
+  }
   const now = Date.now();
+  if (symbol !== chartSymbol) {
+    resetChart(`Загрузка графика ${symbol}…`, symbol);
+  }
   if (now - chartLoaded < 60000) return;   // раз в минуту достаточно
   chartLoaded = now;
+  const requestId = ++chartRequestId;
   try {
     const entryTs = p.entry_ts || p.opened_ts || (now - 12*3600000);
     const sl = p.sl ?? p.exchange_sl ?? p.sl_price;
-    const url = `/api/trades/chart?symbol=${p.symbol}&entry_ts=${entryTs}&exit_ts=${now}&interval=5`
+    const url = `/api/trades/chart?symbol=${symbol}&entry_ts=${entryTs}&exit_ts=${now}&interval=5`
       + `&entry_price=${p.entry ?? p.entry_price ?? ""}&sl_price=${sl ?? ""}`;
     const r = await fetch(url, {credentials:"include"});
     if (!r.ok) throw new Error(r.status);
     const d = await r.json();
+    if (requestId !== chartRequestId || symbol !== chartSymbol) return;
     const candles = d.candles || d.data || d;
     if (!Array.isArray(candles) || !candles.length) throw new Error("нет свечей");
     const cv = document.getElementById("chart"), ctx = cv.getContext("2d");
@@ -129,10 +151,17 @@ async function drawChart(p) {
     tps.forEach((t,i)=>line(+t, "#3fb950", "TP"+(i+1)));
     document.getElementById("chartnote").textContent = candles.length + " свечей 5м";
   } catch(e) {
+    if (requestId !== chartRequestId || symbol !== chartSymbol) return;
     document.getElementById("chartnote").textContent = "график недоступен: " + e;
   }
 }
 const fmt = (x, d=4) => (typeof x === "number" ? x.toFixed(d) : (x ?? "?"));
+const fmtQty = x => {
+  if (x == null || x === "") return "?";
+  const n = Number(x);
+  if (!Number.isFinite(n)) return String(x);
+  return n.toFixed(9).replace(/\.?0+$/, "");
+};
 
 async function refresh() {
   try {
@@ -146,6 +175,7 @@ async function refresh() {
     const pc = document.getElementById("poscard");
     if (!v.positions || !v.positions.length) {
       pc.innerHTML = '<div class="pos-title">Открытых позиций нет</div><div class="muted">Бот сканирует рынок.</div>';
+      resetChart("Открытой криптопозиции нет — бот сканирует рынок.");
     } else {
       pc.innerHTML = v.positions.map(p => {
         const upnl = p.upnl ?? p.upnl_usd ?? p.unrealised_pnl;
@@ -181,7 +211,7 @@ async function refresh() {
         const cls = (typeof p.upnl === "number" && p.upnl >= 0) ? "green" : "red";
         const stop = p.stop ? `SL ${p.stop}` : '<span class="red">SL: НЕТ (!)</span>';
         return `<div class="kv" style="margin-bottom:6px;">
-          <b>${p.symbol}</b><span>${fmt(p.qty,0)} шт · вход ${fmt(p.entry,2)} · сейчас ${fmt(p.current,2)}
+          <b>${p.symbol}</b><span>${fmtQty(p.qty)} шт · вход ${fmt(p.entry,2)} · сейчас ${fmt(p.current,2)}
           · <span class="${cls}">${typeof p.upnl === "number" ? (p.upnl>=0?"+":"")+p.upnl.toFixed(2)+"$" : "?"}</span> · ${stop}</span>
         </div>`;
       }).join("");

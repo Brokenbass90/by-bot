@@ -19,7 +19,7 @@ import urllib.request
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from bot.alpaca_truth import build_alpaca_live_truth
-from ..deps import require_auth
+from ..deps import require_admin, require_auth
 
 router = APIRouter(prefix="/api", tags=["data"])
 
@@ -28,6 +28,11 @@ router = APIRouter(prefix="/api", tags=["data"])
 _ROOT = Path(__file__).parent.parent.parent
 _RUNTIME_ROOT = Path(os.getenv("WEB_RUNTIME_ROOT", str(_ROOT / "runtime")))
 _INCLUDE_BACKTEST_TRADES = os.getenv("WEB_INCLUDE_BACKTEST_TRADES", "0").strip().lower() in {"1", "true", "yes"}
+
+SETUP_SCANNER_GEOMETRY_MAX_AGE_SEC = 21_600
+SETUP_SCANNER_ROUTER_MAX_AGE_SEC = 28_800
+SETUP_SCANNER_ALLOCATOR_MAX_AGE_SEC = 10_800
+SETUP_SCANNER_SCORE_SEMANTICS = "heuristic_rank_not_probability"
 
 
 def _rt(*p: str) -> Path:
@@ -918,13 +923,13 @@ async def ai_codemap(_: str = Depends(require_auth)):
 
 
 @router.get("/ai/code/list")
-async def ai_code_list(subdir: str = Query("strategies"), _: str = Depends(require_auth)):
+async def ai_code_list(subdir: str = Query("strategies"), _: str = Depends(require_admin)):
     from bot.ai_tools import list_modules
     return {"files": list_modules(subdir)}
 
 
 @router.get("/ai/code/read")
-async def ai_code_read(path: str = Query(...), _: str = Depends(require_auth)):
+async def ai_code_read(path: str = Query(...), _: str = Depends(require_admin)):
     from bot.ai_tools import read_code
     return {"path": path, "content": read_code(path)}
 
@@ -933,7 +938,7 @@ async def ai_code_read(path: str = Query(...), _: str = Depends(require_auth)):
 async def ai_code_search(
     pattern: str = Query(...),
     subdir: str = Query("strategies"),
-    _: str = Depends(require_auth),
+    _: str = Depends(require_admin),
 ):
     from bot.ai_tools import search_code
     return {"matches": search_code(pattern, subdir)}
@@ -1536,10 +1541,33 @@ async def get_setup_scanner(
     router_path = _rt("router", "symbol_router_state.json")
     allocator_path = _rt("control_plane", "portfolio_allocator_state.json")
 
-    geometry_state = _json(geometry_path) or {}
-    router_state = _json(router_path) or {}
-    allocator_state = _json(allocator_path) or {}
-    cards = _build_setup_cards(geometry_state, router_state, allocator_state) if geometry_state else []
+    source_specs = {
+        "geometry": (geometry_path, SETUP_SCANNER_GEOMETRY_MAX_AGE_SEC),
+        "router": (router_path, SETUP_SCANNER_ROUTER_MAX_AGE_SEC),
+        "allocator": (allocator_path, SETUP_SCANNER_ALLOCATOR_MAX_AGE_SEC),
+    }
+    source_states: Dict[str, Dict[str, Any]] = {}
+    source_ages: Dict[str, Optional[int]] = {}
+    blockers: List[str] = []
+    for name, (path, max_age_sec) in source_specs.items():
+        age_sec = _file_age_sec(path)
+        state = _json(path)
+        source_ages[name] = age_sec
+        if (
+            age_sec is None
+            or age_sec > max_age_sec
+            or not isinstance(state, dict)
+            or not state
+        ):
+            blockers.append(f"{name}_missing_or_stale")
+            continue
+        source_states[name] = state
+
+    authoritative = not blockers
+    geometry_state = source_states.get("geometry", {}) if authoritative else {}
+    router_state = source_states.get("router", {}) if authoritative else {}
+    allocator_state = source_states.get("allocator", {}) if authoritative else {}
+    cards = _build_setup_cards(geometry_state, router_state, allocator_state) if authoritative else []
 
     active_sleeves = []
     for name, sleeve in _allocator_sleeve_map(allocator_state).items():
@@ -1553,21 +1581,28 @@ async def get_setup_scanner(
     active_sleeves.sort(key=lambda x: x.get("risk_mult", 0.0), reverse=True)
 
     return {
+        "authoritative": authoritative,
+        "blockers": blockers,
+        "score_semantics": SETUP_SCANNER_SCORE_SEMANTICS,
+        "freshness_max_age_sec": {
+            name: max_age_sec for name, (_path, max_age_sec) in source_specs.items()
+        },
         "generated_at_utc": geometry_state.get("generated_at_utc"),
-        "geometry_age_sec": _file_age_sec(geometry_path),
-        "router_age_sec": _file_age_sec(router_path),
-        "allocator_age_sec": _file_age_sec(allocator_path),
+        "geometry_age_sec": source_ages["geometry"],
+        "router_age_sec": source_ages["router"],
+        "allocator_age_sec": source_ages["allocator"],
         "symbols_analyzed": geometry_state.get("symbols_analyzed") or len(geometry_state.get("symbols") or {}),
         "snapshots_built": geometry_state.get("snapshots_built"),
         "intervals": geometry_state.get("intervals") or [],
         "regime": router_state.get("regime") or allocator_state.get("regime"),
         "confidence": router_state.get("confidence"),
         "allocator_status": allocator_state.get("status"),
-        "safe_mode": bool(allocator_state.get("safe_mode")),
+        "safe_mode": bool(allocator_state.get("safe_mode")) if authoritative else None,
         "active_sleeves": active_sleeves,
         "cards": cards,
         "notes": [
             "Scanner cards are candidates, not trade approvals.",
+            "Score is a heuristic rank, not a probability.",
             "Promotion still requires annual/OOS/additivity tests.",
             "AI should rank and explain these setups, not bypass risk gates.",
         ],
