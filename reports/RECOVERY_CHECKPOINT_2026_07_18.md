@@ -148,7 +148,7 @@ python3 web/setup_totp.py --email brokenbass1990@gmail.com --admin
 
 Нужно выбрать новый пароль, заново отсканировать QR и подтвердить TOTP. Старый secret удалён из текущего Git, но остаётся в истории, поэтому rotation обязательна; историю Git без отдельного разрешения не переписывать.
 
-Canonical/sloped map commit `5db00d7` targeted-deployed без restart/risk/orders. Пересобранный server AI видел 27 capabilities, 80 setup cards, blockers `[]`. ИИ теперь лучше осведомлён, но остаётся observer/proposal-only. Он не должен сам переводить scanner card в live order. AI shadow trade mission надо проверить на 100–300 preregistered missions против mechanical/random/no-trade controls.
+Canonical/sloped map commit `5db00d7` targeted-deployed без restart/risk/orders. После финального map-only refresh из checkpoint commit `de06ad8` пересобранный server AI видит 28 capabilities, 80 setup cards, blockers `[]`, включая новый `event_universe_v1` gap. ИИ теперь лучше осведомлён, но остаётся observer/proposal-only. Он не должен сам переводить scanner card в live order. AI shadow trade mission надо проверить на 100–300 preregistered missions против mechanical/random/no-trade controls.
 
 Telegram startup execution snapshot был корректным. Patch, разделяющий fresh runtime closes и stale historical health и убирающий duplicate first pulse, остаётся local-only; в live его не считать до отдельного exact-file deploy.
 
@@ -198,5 +198,6 @@ Telegram startup execution snapshot был корректным. Patch, разд
 - `reports/BYBIT_ACCOUNT_FEE_RECEIPT_2026_07_18.md`
 - `reports/releases/WEB_TRUTH_TARGETED_DEPLOY_RECEIPT_6F59938_2026_07_18.json`
 - `reports/releases/CANONICAL_SLOPED_TARGETED_DEPLOY_RECEIPT_5DB00D7_2026_07_18.json`
+- `reports/releases/CANONICAL_EVENT_GAP_TARGETED_DEPLOY_RECEIPT_DE06AD8_2026_07_18.json`
 - `reports/PROJECT_CANONICAL_INDEX_2026_07_18.json`
 - `reports/NEXT_CHAT_START_PROMPT_2026_07_18.md`

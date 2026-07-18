@@ -12,6 +12,7 @@
 6. `reports/BYBIT_ACCOUNT_FEE_RECEIPT_2026_07_18.md`;
 7. `reports/releases/WEB_TRUTH_TARGETED_DEPLOY_RECEIPT_6F59938_2026_07_18.json`;
 8. `reports/releases/CANONICAL_SLOPED_TARGETED_DEPLOY_RECEIPT_5DB00D7_2026_07_18.json`.
+9. `reports/releases/CANONICAL_EVENT_GAP_TARGETED_DEPLOY_RECEIPT_DE06AD8_2026_07_18.json`.
 
 Не доверяй старым пересказам без receipt. Local/Git/VPS checkout/deployed live — разные истины. Не используй `git add -A`. Сохрани чужие dirty-файлы `bot/fx_setups.py` и `tests/test_fx_setups.py`.
 
@@ -29,7 +30,7 @@
 - Current scanner sees only 20 symbols and H1/H4; AKE/BANK/LYN/US screenshot setups находятся вне universe. Нужен отдельный research-only `event_universe_v1`, не расширение live-router.
 - FX dirty repair полезен, focused 11 PASS, но legacy harness имеет next-open/parity gaps. FX V2 NO-GO; V3 требует pinned macro-news и broker/account/session cost contract.
 - Web truth/auth hardening live; core/risk не менялись. Login требует owner password+TOTP reset через `web/setup_totp.py`; секрет не просить в чат.
-- Onboard AI после map deploy видит 27 capabilities/80 setup cards/blockers empty, но observer/proposal-only.
+- Onboard AI после финального map deploy видит 28 capabilities/80 setup cards/blockers empty, но observer/proposal-only.
 - Telegram new health provenance/no-duplicate patch остаётся local-only.
 - Full regression `1438 passed in 32.31s`.
 

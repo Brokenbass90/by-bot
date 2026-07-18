@@ -68,7 +68,7 @@
     },
     "fx_cfd": "RESEARCH_ONLY_NO_MONEY",
     "second_crypto_money_sleeve": false,
-    "onboard_ai": "OBSERVER_PROPOSAL_ONLY_27_CAPABILITIES_80_SETUP_CARDS_BLOCKERS_EMPTY_AFTER_TARGETED_MAP_DEPLOY",
+    "onboard_ai": "OBSERVER_PROPOSAL_ONLY_28_CAPABILITIES_80_SETUP_CARDS_BLOCKERS_EMPTY_AFTER_TARGETED_MAP_DEPLOY",
     "telegram": "STARTUP_EXECUTION_TRUTH_ACCURATE_NEW_HEALTH_SPLIT_AND_NO_DUPLICATE_PATCH_LOCAL_ONLY"
   },
   "cashcarry_clock": {
@@ -238,6 +238,7 @@
     "reports/BYBIT_ACCOUNT_FEE_RECEIPT_2026_07_18.md",
     "reports/releases/WEB_TRUTH_TARGETED_DEPLOY_RECEIPT_6F59938_2026_07_18.json",
     "reports/releases/CANONICAL_SLOPED_TARGETED_DEPLOY_RECEIPT_5DB00D7_2026_07_18.json",
+    "reports/releases/CANONICAL_EVENT_GAP_TARGETED_DEPLOY_RECEIPT_DE06AD8_2026_07_18.json",
     "configs/project_capability_registry_v1.json",
     "configs/ai_operator_canonical_state.json",
     "reports/PROJECT_STATE_LEDGER.md"

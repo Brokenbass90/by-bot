@@ -1,0 +1,30 @@
+{
+  "files": [
+    {
+      "mode": "0644",
+      "path": "configs/ai_operator_canonical_state.json",
+      "sha256": "4698c7ff45af6ad00ffa4515251d34dfba879733f233fea7f040b41d4439b7f7",
+      "size_bytes": 18411
+    },
+    {
+      "mode": "0644",
+      "path": "configs/project_capability_registry_v1.json",
+      "sha256": "bcd7402f45cbafaeff349f24c2956e5c6f046ee84967b57571407cf34f3653b0",
+      "size_bytes": 29354
+    }
+  ],
+  "git_head": "de06ad8",
+  "metadata": {
+    "explicit_files_only": true,
+    "file_count": 2,
+    "git_dirty": true,
+    "operations": [
+      "read_explicit_files",
+      "read_git_dirty_flag",
+      "write_manifest"
+    ],
+    "reproducible": true
+  },
+  "release_id": "canonical_event_gap_de06ad8_20260718",
+  "schema_version": 1
+}

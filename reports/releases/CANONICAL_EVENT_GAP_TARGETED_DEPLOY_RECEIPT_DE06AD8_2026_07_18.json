@@ -1,0 +1,35 @@
+{
+  "schema_id": "targeted_deploy_receipt_v1",
+  "release_id": "canonical_event_gap_de06ad8_20260718",
+  "deployed_at_utc": "2026-07-18T06:29:45Z",
+  "source_branch": "codex/dynamic-symbol-filters",
+  "source_commit": "de06ad8",
+  "target": "root@64.226.73.119:/root/by-bot",
+  "deployment_scope": "human_reviewed_ai_maps_only",
+  "files": {
+    "configs/ai_operator_canonical_state.json": "4698c7ff45af6ad00ffa4515251d34dfba879733f233fea7f040b41d4439b7f7",
+    "configs/project_capability_registry_v1.json": "bcd7402f45cbafaeff349f24c2956e5c6f046ee84967b57571407cf34f3653b0"
+  },
+  "transport_archive_sha256": "688efb49a33cb831b4ef8bac53ddfc69b81225938552a3244dc4672322ffc672",
+  "backup": "/root/by-bot-backups/canonical_event_gap_de06ad8_20260718_before.tar.gz",
+  "core_restart_performed": false,
+  "web_restart_performed": false,
+  "trading_configuration_changed": false,
+  "risk_or_execution_authority_changed": false,
+  "orders_or_private_api_calls": false,
+  "postcheck": {
+    "all_file_hashes_match_manifest": true,
+    "ai_context_generated_at_utc": "2026-07-18T06:29:45.860773+00:00",
+    "ai_control_recommendations_allowed": true,
+    "ai_blockers": [],
+    "ai_live_money_sleeves": [
+      "att1"
+    ],
+    "ai_capability_count": 28,
+    "ai_setup_card_count": 80,
+    "ai_setup_cards_top_count": 16,
+    "event_universe_stage": "design",
+    "bybot_service": "active_unchanged",
+    "trading_journal_web_service": "active_unchanged"
+  }
+}
