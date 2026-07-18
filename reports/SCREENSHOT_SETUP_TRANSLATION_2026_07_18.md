@@ -66,3 +66,7 @@ ATT1 нельзя незаметно перевести на эту геомет
 - Главный текущий gap — universe discovery, а не отсутствие ещё одного индикатора.
 - Приоритет: закончить frozen `event_universe_v1` clock без tuning -> horizontal event-long runner -> отдельные sloped long/short consumers -> prospective shadow.
 - Старую пилу не включать: её историческое состояние `N21, WR 23.81%, PF 0.487`. Новый range-кандидат должен быть failed-break/sweep/reclaim с отдельными long/short контрактами, regime filter, time stop и stress costs.
+
+## Первый prospective reality check после freeze
+
+Snapshot `000001` не использовался для настройки порогов. AKE/BANK/US уже попали в новый full-universe selector и были M5-scored; LYN был честно отклонён по 24h turnover `$640.5k < $1m`. В момент snapshot AKE/BANK/US не были event candidates: AKE и BANK не имели frozen relative-volume inflow, US не прошёл recent quote floor. Это подтверждает, что старые скриншоты теперь не пропускаются на уровне universe, но бот не притворяется, что прошлый красивый outcome является текущим сигналом.
