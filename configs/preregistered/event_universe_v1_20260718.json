@@ -1,0 +1,90 @@
+{
+  "schema_id": "event_universe_preregistered_spec_v1",
+  "strategy_id": "event_universe_v1",
+  "source_id": "bybit_public_v5",
+  "status": "RESEARCH_ONLY_DEFAULT_DISABLED",
+  "frozen_at_utc": "2026-07-18T07:28:00Z",
+  "purpose": "Prospectively discover fresh relative-volume and range events before the mature live router excludes them.",
+  "authority": {
+    "research_only": true,
+    "executable": false,
+    "private_api_calls": false,
+    "api_keys_or_environment_reads": false,
+    "broker_calls": false,
+    "orders_transfers_withdrawals": false,
+    "risk_or_live_router_mutation": false,
+    "performance_claims": false,
+    "promotion_authority": false
+  },
+  "public_io": {
+    "host": "api.bybit.com",
+    "method": "GET_ONLY",
+    "paths": [
+      "/v5/market/instruments-info",
+      "/v5/market/tickers",
+      "/v5/market/kline"
+    ],
+    "category": "linear",
+    "instrument_status": "Trading",
+    "instrument_contract_type": "LinearPerpetual",
+    "quote_coin": "USDT",
+    "settle_coin": "USDT",
+    "instrument_page_limit": 1000,
+    "kline_limit": 77,
+    "timeout_seconds": 15,
+    "max_retries": 4,
+    "backoff_base_seconds": 1.0
+  },
+  "config": {
+    "schema_id": "event_universe_config_v1",
+    "source_id": "bybit_public_v5",
+    "interval": "5",
+    "recent_bars": 3,
+    "baseline_bars": 72,
+    "min_listing_age_hours": 24,
+    "normal_listing_age_days": 7,
+    "min_turnover_24h_usd": 1000000.0,
+    "max_spread_bps": 35.0,
+    "min_recent_quote_usd": 100000.0,
+    "min_inflow_mult": 1.5,
+    "min_inflow_z": 1.5,
+    "max_abs_recent_return_pct": 18.0,
+    "min_range_expansion_atr": 1.0,
+    "max_prefetch_symbols": 100,
+    "top_k": 32,
+    "poll_interval_seconds": 300,
+    "max_cycle_seconds": 240,
+    "max_source_time_skew_ms": 120000,
+    "max_runtime_seconds": 604800,
+    "max_snapshots": 2016,
+    "max_total_bytes": 536870912,
+    "min_free_bytes": 21474836480,
+    "max_response_bytes": 8388608,
+    "max_replay_uncompressed_bytes": 16777216,
+    "public_requests_per_second": 2.0
+  },
+  "persistence": {
+    "immutable_snapshot_files": true,
+    "deterministic_gzip_snapshots": true,
+    "snapshot_hash_chain": true,
+    "delta_score_replay_chain": true,
+    "source_hashes_asserted_not_replayed": true,
+    "atomic_latest_state": true,
+    "file_mode": "0600",
+    "retention_action": "STOP_NO_DELETE_NO_ROTATE"
+  },
+  "interpretation": {
+    "rank_semantics": "heuristic_rank_not_probability",
+    "top_k_is_advisory": true,
+    "screenshots_are_not_labels": true,
+    "separate_long_short_strategy_gates_required": true,
+    "prospective_logging_before_strategy_promotion": true
+  },
+  "analysis_policy": {
+    "thresholds_and_universe_rules_locked_for_this_run": true,
+    "no_midrun_outcome_tuning": true,
+    "candidate_labels_are_advisory_not_trade_signals": true,
+    "this_discovery_run_cannot_authorize_promotion": true,
+    "downstream_long_and_short_consumers_require_separate_preregistration_and_sealed_tests": true
+  }
+}
