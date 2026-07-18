@@ -1,0 +1,36 @@
+{
+  "files": [
+    {
+      "mode": "0644",
+      "path": "bot/sloped_level_snapshot_v1.py",
+      "sha256": "49383d6a8c2e29afec4dc6cc0d0924e44384dde39cab57cc13c9174ed460ff91",
+      "size_bytes": 25131
+    },
+    {
+      "mode": "0644",
+      "path": "configs/ai_operator_canonical_state.json",
+      "sha256": "1eb8904307e9e68fe4486717696ec482c3dc989714e7522182f17473f5635de5",
+      "size_bytes": 16995
+    },
+    {
+      "mode": "0644",
+      "path": "configs/project_capability_registry_v1.json",
+      "sha256": "b64516f81163855e0bc97a514d9c4a10b4d5a8d22b5d4857ac5ca1a36bad0013",
+      "size_bytes": 28069
+    }
+  ],
+  "git_head": "5db00d7",
+  "metadata": {
+    "explicit_files_only": true,
+    "file_count": 3,
+    "git_dirty": true,
+    "operations": [
+      "read_explicit_files",
+      "read_git_dirty_flag",
+      "write_manifest"
+    ],
+    "reproducible": true
+  },
+  "release_id": "canonical_sloped_5db00d7_20260718",
+  "schema_version": 1
+}

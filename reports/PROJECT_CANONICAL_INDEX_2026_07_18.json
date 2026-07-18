@@ -1,0 +1,245 @@
+{
+  "schema_version": 10,
+  "as_of_utc": "2026-07-18T06:18:00Z",
+  "status": "live_verified_att1_tiny_only_alpaca_safe_hold_cashcarry_active_zero_economics_passes_web_truth_deployed_sloped_research_deployed_fx_external_inputs_blocked",
+  "branch": "codex/dynamic-symbol-filters",
+  "source_priority": [
+    "direct_broker_or_exchange",
+    "fresh_runtime_receipt",
+    "targeted_deploy_receipt_and_sha",
+    "immutable_preregistered_research",
+    "human_reviewed_registry_and_checkpoint",
+    "ai_interpretation"
+  ],
+  "git_observation": {
+    "pre_checkpoint_local_head": "5db00d7db198b12f8b3723d8c5ccd19e78d1da94",
+    "pre_checkpoint_origin_head": "5db00d7db198b12f8b3723d8c5ccd19e78d1da94",
+    "pre_checkpoint_matched": true,
+    "session_implementation_commits": [
+      "6f59938_web_truth_and_auth_fail_closed",
+      "5db00d7_causal_sloped_level_research_contract"
+    ],
+    "canonical_checkpoint_commit": "PENDING_PIN_AFTER_FIRST_CHECKPOINT_COMMIT",
+    "foreign_dirty_files_to_exclude": [
+      "bot/fx_setups.py",
+      "tests/test_fx_setups.py"
+    ],
+    "vps_checkout": "f7ed011_dirty_stale",
+    "blind_pull_reset_cleanup_allowed": false
+  },
+  "verification": {
+    "full_regression": "1438 passed in 32.31s",
+    "foreign_fx_focused": "11 passed; useful legacy repair but excluded",
+    "sloped_level_focused": "10 passed",
+    "web_and_truth_focused": "PASS before targeted deployment",
+    "web_targeted_deploy": "8 exact files, hashes pass, web-only restart, core unchanged",
+    "canonical_sloped_targeted_deploy": "3 exact files, hashes pass, no restart, no trading/risk/order change"
+  },
+  "live_truth": {
+    "observed_at_utc": "2026-07-18T06:07:00Z",
+    "bybit": {
+      "services": "CORE_AND_WEB_ACTIVE",
+      "broker_positions": 0,
+      "equity_usdt_approx": 1020.15,
+      "regime": "bull_chop",
+      "global_block": false,
+      "money_sleeves": [
+        "ATT1_SHORT_RISK_0_10"
+      ],
+      "att1_canary": "N6_WR50_NET_PLUS_0_4605_USDT_EDGE_UNPROVEN",
+      "att1_first_scale_gate": "20_TO_30_CLEAN_BROKER_RECONCILED_CLOSES_THEN_REVIEW",
+      "key_expiry": "2026-08-12",
+      "key_rotate_by": "2026-08-05"
+    },
+    "alpaca": {
+      "observed_at_utc": "2026-07-18T06:09:00Z",
+      "mode": "SAFE_HOLD_MANAGER_DRY_RUN_NO_NEW_ENTRIES_NO_STALE_CLOSES",
+      "equity_usd_approx": 484.46,
+      "cash_usd": 358.11,
+      "positions": [
+        "ABBV",
+        "ABNB",
+        "SCHW"
+      ],
+      "broker_stop_coverage": "3_OF_3_EXACT_NO_GAPS",
+      "native_trailing": "CURRENT_FRACTIONAL_HOLDINGS_SKIPPED_STATIC_STOPS_ONLY",
+      "forced_liquidation_authorized": false,
+      "successor_auto_start": false
+    },
+    "fx_cfd": "RESEARCH_ONLY_NO_MONEY",
+    "second_crypto_money_sleeve": false,
+    "onboard_ai": "OBSERVER_PROPOSAL_ONLY_27_CAPABILITIES_80_SETUP_CARDS_BLOCKERS_EMPTY_AFTER_TARGETED_MAP_DEPLOY",
+    "telegram": "STARTUP_EXECUTION_TRUTH_ACCURATE_NEW_HEALTH_SPLIT_AND_NO_DUPLICATE_PATCH_LOCAL_ONLY"
+  },
+  "cashcarry_clock": {
+    "observed_at_utc": "2026-07-18T06:18:00Z",
+    "status": "ACTIVE_PUBLIC_RESEARCH_ONLY",
+    "deadline_utc_approx": "2026-07-23T04:37:10Z",
+    "symbols": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT",
+      "XRPUSDT",
+      "DOGEUSDT",
+      "SUIUSDT"
+    ],
+    "cycles": 101,
+    "attempts": 606,
+    "durable_observations": 570,
+    "successful_observations_per_symbol": 95,
+    "economics_passes": 0,
+    "last_actions": "ALL_OBSERVE",
+    "private_api_broker_orders_capital": false,
+    "fee_receipt": {
+      "spot_maker_bps": 10.0,
+      "spot_taker_bps": 10.0,
+      "linear_maker_bps": 2.0,
+      "linear_taker_bps": 5.5,
+      "four_taker_fill_bps": 31.0
+    },
+    "expected_income": "UNKNOWN_OLD_5_TO_15_USD_PER_1000_PER_MONTH_WITHDRAWN",
+    "capital_authorized": false
+  },
+  "research_truth": {
+    "att1": {
+      "execution_verdict": "NO_OBVIOUS_ENGINE_BREAK",
+      "edge_verdict": "UNPROVEN_WEAK_TWO_PIVOT_GEOMETRY",
+      "known_gaps": [
+        "two-pivot line makes R2 weak evidence",
+        "unbroken and first-retest guards not mandatory",
+        "N6 too small"
+      ],
+      "next_gate": "separate preregistered >=3-pivot challenger; do not silently alter live"
+    },
+    "event_expansion_retest_long_v1": {
+      "status": "RESEARCH_BLOCKED",
+      "physical_side": "LONG_ONLY",
+      "declared_blockers": 8,
+      "performance_computed": false,
+      "live_authorized": false
+    },
+    "sloped_level_snapshot_v1": {
+      "status": "RESEARCH_PRIMITIVE_PUSHED_AND_TARGETED_DEPLOYED",
+      "contract": ">=3 confirmed pivots, separate support/resistance, all-pivot OLS, close-unbroken, exact as-of projection, stable hashes",
+      "signals_orders_performance": false,
+      "next_consumers": [
+        "support_bounce_long_only",
+        "support_break_retest_short_only"
+      ]
+    },
+    "screenshot_event_gap": {
+      "current_scanner_symbols": 20,
+      "current_intervals": [
+        "H1",
+        "H4"
+      ],
+      "missing_examples": [
+        "AKEUSDT",
+        "BANKUSDT",
+        "LYNUSDT",
+        "USUSDT"
+      ],
+      "next_gate": "research-only point-in-time event_universe_v1 over full Trading USDT perpetual universe"
+    },
+    "horizontal_breakout_long_72h": {
+      "verdict": "NO_PROMOTION_ONE_SHOT_CONSUMED",
+      "trades": 155,
+      "base_profit_factor": 0.3923289759049695,
+      "stress_profit_factor": 0.2808069502631809,
+      "stress_max_drawdown_pct": 36.89727626263558,
+      "positive_folds": "0_OF_4",
+      "positive_symbols": "1_OF_13",
+      "retry_repair_or_tao_rescue_allowed": false
+    },
+    "old_range": "NO_GO_N21_WR23_81_PF0_487_DO_NOT_REENABLE",
+    "pump_exhaustion_short": "NO_PROMOTION_N39_HOLDOUT6_ONDO_CONCENTRATION93_4_PERCENT",
+    "alpaca_bakeoff_v2": {
+      "status": "FROZEN_BLOCKED_FAIL_CLOSED",
+      "arms": 5,
+      "authoritative_inputs_missing": 5,
+      "future_forward": "2026-08-03_TO_2026-11-04_NO_INTERIM_READ",
+      "safe_hold_changed": false
+    },
+    "fx_v2": "RESEARCH_NO_GO_BEST_USDJPY_TREND_PULLBACK_N40_PF0_990_NET_MINUS0_284R_2_OF_4_FOLDS",
+    "fx_v3": {
+      "status": "BLOCKED_EXTERNAL_INPUTS_AND_RUNNER_PARITY",
+      "m5_symbols": 6,
+      "coverage_days_approx": 728,
+      "missing": [
+        "point_in_time_historical_macro_news",
+        "broker_account_session_specific_cost_contract"
+      ],
+      "performance_computed": false
+    },
+    "claude_research_station": "107_VARIANTS_1_IS_PASS_0_FORWARD_0_OOS_0_SURVIVORS_PROPOSAL_ONLY",
+    "cross_exchange_arbitrage": "NO_GO_174_CYCLES_MEAN_MINUS0_031376_PERCENT_MEDIAN_MINUS0_10485_PERCENT_WR33_3_PERCENT"
+  },
+  "operations_truth": {
+    "web_auth": "CONFIG_VALID_PASSWORD_REJECTED_BEFORE_TOTP_OWNER_RESET_REQUIRED_OLD_SECRET_REMOVED_FROM_GIT_HEAD_BUT_REMAINS_IN_HISTORY",
+    "web_mirror": "ATOMIC_FAIL_CLOSED_SYNC_DEPLOYED_GEOMETRY_AND_ROUTER_SYNCED_SCANNER_STALE_BLOCK_DEPLOYED",
+    "web_ui": "FRACTIONAL_QTY_AND_STALE_CHART_FIXED_FAKE_EXCHANGE_FALLBACKS_REMOVED",
+    "scanner_score_semantics": "HEURISTIC_RANK_NOT_PROBABILITY",
+    "core_restart_this_session": false,
+    "live_risk_changed_this_session": false,
+    "telegram_observability_patch_live": false,
+    "active_collectors": [
+      "PUBLIC_CASHCARRY_SEVEN_DAY_CLOCK",
+      "ONDO_L2_LOCAL",
+      "SIX_SYMBOL_PUBLIC_TRADES_LOCAL",
+      "LOCAL_WEB_MIRROR"
+    ]
+  },
+  "required_owner_inputs": [
+    "reset Web password and TOTP locally with web/setup_totp.py; never send secret in chat",
+    "rotate Bybit key securely before 2026-08-05",
+    "prepare Bitget subaccount only as fallback; no capital/private key needed for public research",
+    "choose FX broker/account and provide official cost schedule; demo credentials later via secure install",
+    "do not force-sell Alpaca, add arbitrage capital, or scale ATT1 from N6"
+  ],
+  "next_actions": [
+    "build research-only event_universe_v1 with point-in-time full-USDT-perp receipts and bounded top-K",
+    "complete event-expansion long phase-2 runner/data blockers before performance access",
+    "preregister separate horizontal failed-break/reclaim short then long",
+    "preregister separate sloped support-bounce long and support-break/retest short consumers",
+    "finish cash-carry clock and issue evidence-only verdict around 2026-07-23",
+    "review ATT1 on 2026-07-20 without automatic scale",
+    "materialize five Alpaca authoritative inputs and preserve untouched August-November seal",
+    "freeze FX news and account cost manifests before V3 performance",
+    "targeted-deploy Telegram health/no-duplicate observability patch separately",
+    "move tape collectors to stable host before claiming microstructure evidence"
+  ],
+  "timeframes": {
+    "event_universe_research_implementation": "2_TO_5_WORKING_DAYS",
+    "event_long_first_honest_figures": "1_TO_3_WEEKS_ENGINEERING_DATA_DEPENDENT",
+    "two_to_three_shadow_candidates": "3_TO_8_WEEKS_NOT_MONEY_PROMOTION",
+    "cashcarry_clock_end": "AROUND_2026-07-23",
+    "att1_review": "2026-07-20_SAMPLE_MAY_REMAIN_TOO_SMALL",
+    "fx_first_honest_figures": "1_TO_3_WEEKS_AFTER_NEWS_AND_COST_INPUTS_EXIST",
+    "alpaca_final_untouched_forward_verdict": "NO_EARLIER_THAN_2026-11-04"
+  },
+  "forbidden": [
+    "scale ATT1 from N6 or one recent win",
+    "add screenshot winners manually after outcome and call it research",
+    "widen live microcap router before separate liquidity-safe research universe",
+    "force-liquidate Alpaca to restart successor",
+    "add arbitrage capital before positive stressed paper distribution",
+    "retry or repair revealed breakout-72h holdout",
+    "give AI unrestricted live trading authority",
+    "call local or Git changes live without targeted deploy receipt",
+    "blind pull reset or clean the dirty VPS checkout",
+    "git add -A in the dirty local repository",
+    "promise income from selected backtests or gross funding"
+  ],
+  "canonical_documents": [
+    "reports/RECOVERY_CHECKPOINT_2026_07_18.md",
+    "reports/PROJECT_CANONICAL_INDEX_2026_07_18.json",
+    "reports/NEXT_CHAT_START_PROMPT_2026_07_18.md",
+    "reports/SCREENSHOT_SETUP_TRANSLATION_2026_07_18.md",
+    "reports/BYBIT_ACCOUNT_FEE_RECEIPT_2026_07_18.md",
+    "reports/releases/WEB_TRUTH_TARGETED_DEPLOY_RECEIPT_6F59938_2026_07_18.json",
+    "reports/releases/CANONICAL_SLOPED_TARGETED_DEPLOY_RECEIPT_5DB00D7_2026_07_18.json",
+    "configs/project_capability_registry_v1.json",
+    "configs/ai_operator_canonical_state.json",
+    "reports/PROJECT_STATE_LEDGER.md"
+  ]
+}

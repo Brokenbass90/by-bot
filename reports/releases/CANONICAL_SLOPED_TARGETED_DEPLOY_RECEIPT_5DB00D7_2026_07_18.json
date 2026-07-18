@@ -1,0 +1,33 @@
+{
+  "schema_id": "targeted_deploy_receipt_v1",
+  "release_id": "canonical_sloped_5db00d7_20260718",
+  "deployed_at_utc": "2026-07-18T06:13:23Z",
+  "source_branch": "codex/dynamic-symbol-filters",
+  "source_commit": "5db00d7",
+  "target": "root@64.226.73.119:/root/by-bot",
+  "deployment_scope": "research_primitive_and_human_reviewed_ai_maps_only",
+  "files": {
+    "bot/sloped_level_snapshot_v1.py": "49383d6a8c2e29afec4dc6cc0d0924e44384dde39cab57cc13c9174ed460ff91",
+    "configs/ai_operator_canonical_state.json": "1eb8904307e9e68fe4486717696ec482c3dc989714e7522182f17473f5635de5",
+    "configs/project_capability_registry_v1.json": "b64516f81163855e0bc97a514d9c4a10b4d5a8d22b5d4857ac5ca1a36bad0013"
+  },
+  "transport_archive_sha256": "fa3902256fe1474146cca11e5e505b3a30dee6b43602403301ce6302d01ed935",
+  "backup": "/root/by-bot-backups/canonical_sloped_5db00d7_20260718_before.tar.gz",
+  "core_restart_performed": false,
+  "web_restart_performed": false,
+  "trading_configuration_changed": false,
+  "risk_or_execution_authority_changed": false,
+  "orders_or_private_api_calls": false,
+  "postcheck": {
+    "all_file_hashes_match_manifest": true,
+    "python_compile": "PASS",
+    "ai_context_generated_at_utc": "2026-07-18T06:13:23.548213+00:00",
+    "ai_control_recommendations_allowed": true,
+    "ai_blockers": [],
+    "ai_capability_count": 27,
+    "ai_setup_card_count": 80,
+    "sloped_stage": "research_blocked",
+    "bybot_service": "active_unchanged",
+    "trading_journal_web_service": "active_unchanged"
+  }
+}
