@@ -63,16 +63,16 @@
       "kind": "research_universe_selector",
       "market": "crypto_perpetual",
       "physical_side": "none",
-      "stage": "design",
+      "stage": "prospective_collection",
       "execution_authority": "none",
       "promotion_authorized": false,
-      "runtime_entrypoints": [],
-      "data_contract": "planned point-in-time full Trading USDT-perpetual scan on closed M5 with bounded top-K, source/config/input hashes, missing reasons and restart-safe receipts",
+      "runtime_entrypoints": ["bot/event_universe_v1.py", "scripts/run_event_universe_v1.py", "scripts/launch_event_universe_v1.sh"],
+      "data_contract": "frozen point-in-time full Trading linear USDT-perpetual public scan; 100-symbol bounded prefetch; 72+3 closed contiguous M5; strict increasing cutoff; deterministic gzip snapshots and exact delta score replay",
       "level_contract": "none; candidate discovery only",
-      "cost_contract": "tradability, spread, depth/turnover and listing-age guards before advisory scoring",
-      "evidence": ["reports/SCREENSHOT_SETUP_TRANSLATION_2026_07_18.md", "reports/RECOVERY_CHECKPOINT_2026_07_18.md"],
-      "known_gaps": ["not implemented", "current live geometry/router universe has only 20 symbols and excludes AKE/BANK/LYN/US examples", "current scanner intervals are H1/H4 rather than M5/M15/H1 event resolution"],
-      "next_gate": "implement research-only prospective universe receipts and advisory candidate logging without keys, orders, risk mutation or live-router expansion"
+      "cost_contract": "tradability, current bid/ask spread, 24h turnover and listing-age guards before advisory scoring; no depth claim",
+      "evidence": ["reports/EVENT_UNIVERSE_V1_PROSPECTIVE_FREEZE_2026_07_18.md", "reports/SCREENSHOT_SETUP_TRANSLATION_2026_07_18.md", "runtime/research/event_universe_v1_20260718_public1/latest_state.json"],
+      "known_gaps": ["only two prospective snapshots as of 2026-07-18T07:36Z", "discovery rank is not a setup or probability", "source response hashes are bound but full exchange responses are not retained", "downstream horizontal/sloped long and short consumers remain separate blocked work"],
+      "next_gate": "finish frozen public clock through approximately 2026-07-25T07:32Z without tuning; then report coverage/base rates and preregister separate side-specific consumers"
     },
     {
       "component_id": "crypto_horizontal_range_rejection_long",

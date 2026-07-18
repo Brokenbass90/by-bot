@@ -1,7 +1,7 @@
 {
-  "schema_version": 10,
-  "as_of_utc": "2026-07-18T06:18:00Z",
-  "status": "live_verified_att1_tiny_only_alpaca_safe_hold_cashcarry_active_zero_economics_passes_web_truth_deployed_sloped_research_deployed_fx_external_inputs_blocked",
+  "schema_version": 11,
+  "as_of_utc": "2026-07-18T07:36:00Z",
+  "status": "live_verified_att1_tiny_only_alpaca_safe_hold_cashcarry_active_event_universe_public_collection_active_web_truth_deployed_sloped_research_deployed_fx_external_inputs_blocked",
   "branch": "codex/dynamic-symbol-filters",
   "source_priority": [
     "direct_broker_or_exchange",
@@ -17,7 +17,8 @@
     "pre_checkpoint_matched": true,
     "session_implementation_commits": [
       "6f59938_web_truth_and_auth_fail_closed",
-      "5db00d7_causal_sloped_level_research_contract"
+      "5db00d7_causal_sloped_level_research_contract",
+      "9b5dfef_prospective_crypto_event_universe_freeze"
     ],
     "canonical_checkpoint_commit": "3a1a19b_docs_checkpoint_July_18_recovery_truth",
     "foreign_dirty_files_to_exclude": [
@@ -28,7 +29,8 @@
     "blind_pull_reset_cleanup_allowed": false
   },
   "verification": {
-    "full_regression": "1438 passed in 32.31s",
+    "full_regression": "1463 passed in 31.80s",
+    "event_universe_focused": "25 passed; independent freeze audit found no remaining P0/P1 blocker",
     "foreign_fx_focused": "11 passed; useful legacy repair but excluded",
     "sloped_level_focused": "10 passed",
     "web_and_truth_focused": "PASS before targeted deployment",
@@ -127,7 +129,19 @@
         "support_break_retest_short_only"
       ]
     },
-    "screenshot_event_gap": {
+    "event_universe_v1": {
+      "status": "ACTIVE_PUBLIC_RESEARCH_ONLY",
+      "implementation_commit": "9b5dfef",
+      "deadline_utc": "2026-07-25T07:32:46Z",
+      "snapshots_at_2026_07_18_0736_utc": 2,
+      "latest_universe_count": 743,
+      "latest_prefetch_count": 100,
+      "latest_score_count": 100,
+      "latest_advisory_candidate_count": 13,
+      "latest_errors": 0,
+      "execution_authority": false,
+      "threshold_tuning_during_run": false,
+      "replay_scope": "EXACT_NORMALIZED_SCORE_DELTA_CHAIN_SOURCE_HASHES_ASSERTED_NOT_REPLAYED",
       "current_scanner_symbols": 20,
       "current_intervals": [
         "H1",
@@ -139,7 +153,7 @@
         "LYNUSDT",
         "USUSDT"
       ],
-      "next_gate": "research-only point-in-time event_universe_v1 over full Trading USDT perpetual universe"
+      "next_gate": "finish frozen seven-day public clock, then report coverage/base rates without promotion; downstream consumers remain separately preregistered"
     },
     "horizontal_breakout_long_72h": {
       "verdict": "NO_PROMOTION_ONE_SHOT_CONSUMED",
@@ -184,6 +198,7 @@
     "telegram_observability_patch_live": false,
     "active_collectors": [
       "PUBLIC_CASHCARRY_SEVEN_DAY_CLOCK",
+      "PUBLIC_EVENT_UNIVERSE_SEVEN_DAY_CLOCK",
       "ONDO_L2_LOCAL",
       "SIX_SYMBOL_PUBLIC_TRADES_LOCAL",
       "LOCAL_WEB_MIRROR"
@@ -197,7 +212,7 @@
     "do not force-sell Alpaca, add arbitrage capital, or scale ATT1 from N6"
   ],
   "next_actions": [
-    "build research-only event_universe_v1 with point-in-time full-USDT-perp receipts and bounded top-K",
+    "finish event_universe_v1 frozen clock through approximately 2026-07-25 and issue coverage/base-rate receipt without tuning or promotion",
     "complete event-expansion long phase-2 runner/data blockers before performance access",
     "preregister separate horizontal failed-break/reclaim short then long",
     "preregister separate sloped support-bounce long and support-break/retest short consumers",
@@ -209,7 +224,9 @@
     "move tape collectors to stable host before claiming microstructure evidence"
   ],
   "timeframes": {
-    "event_universe_research_implementation": "2_TO_5_WORKING_DAYS",
+    "event_universe_research_implementation": "COMPLETED_AND_PUSHED_9B5DFEF",
+    "event_universe_public_clock_end": "2026-07-25T07:32:46Z",
+    "event_universe_downstream_edge_evidence": "30_TO_60_DAYS_PROSPECTIVE_AFTER_SEPARATE_CONSUMERS_EXIST",
     "event_long_first_honest_figures": "1_TO_3_WEEKS_ENGINEERING_DATA_DEPENDENT",
     "two_to_three_shadow_candidates": "3_TO_8_WEEKS_NOT_MONEY_PROMOTION",
     "cashcarry_clock_end": "AROUND_2026-07-23",
@@ -235,6 +252,7 @@
     "reports/PROJECT_CANONICAL_INDEX_2026_07_18.json",
     "reports/NEXT_CHAT_START_PROMPT_2026_07_18.md",
     "reports/SCREENSHOT_SETUP_TRANSLATION_2026_07_18.md",
+    "reports/EVENT_UNIVERSE_V1_PROSPECTIVE_FREEZE_2026_07_18.md",
     "reports/BYBIT_ACCOUNT_FEE_RECEIPT_2026_07_18.md",
     "reports/releases/WEB_TRUTH_TARGETED_DEPLOY_RECEIPT_6F59938_2026_07_18.json",
     "reports/releases/CANONICAL_SLOPED_TARGETED_DEPLOY_RECEIPT_5DB00D7_2026_07_18.json",

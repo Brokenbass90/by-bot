@@ -1112,3 +1112,11 @@
 - Alpaca broker truth `06:09 UTC`: SAFE_HOLD/dry-run, new entries and stale closes off, equity `$484.46`, cash `$358.11`, ABBV/ABNB/SCHW, exact static stops 3/3. GE has exited. All current fractional holdings skip native trailing. Forced liquidation remains rejected and successor does not auto-start.
 - Foreign dirty `bot/fx_setups.py` and `tests/test_fx_setups.py` are useful 10-Jul legacy repair (bounded causal windows, real retest level metadata, fail-closed sloped retest; focused 11 PASS) but remain outside commits. Legacy harness next-open/parity gaps mean FX V2 is still research_no_go; V3 requires separate pinned macro-news and account-specific costs.
 - Canonical continuation: `reports/RECOVERY_CHECKPOINT_2026_07_18.md`, `reports/PROJECT_CANONICAL_INDEX_2026_07_18.json`, `reports/NEXT_CHAT_START_PROMPT_2026_07_18.md`.
+
+## ДОБАВЛЕНО 2026-07-18 07:36 UTC — event-universe v1 frozen and collecting (Codex)
+
+- `9b5dfef` pushed before the first public observation: bounded public GET-only event discovery over all Trading linear USDT perpetuals; no credentials/private calls/accounts/orders/risk/live-router/performance/promotion authority.
+- Frozen causality: listing/spread/turnover eligibility, 100-symbol event+liquidity prefetch, exact 72+3 closed contiguous M5 using quote turnover, strict increasing source cutoff, heuristic rank explicitly not probability.
+- Durable contract: deterministic-gzip immutable snapshots, sequence/hash chain, exact checkpoint+delta normalized score replay, launch spec/config/implementation hashes, whole-tree 512MiB and 20GiB free-space guards, 0600 and single writer. Source hashes are bound but full exchange response bodies are not retained or claimed replayable.
+- Independent audit blockers fixed: normalized `..` containment, launch-spec pin, read-only status, no shell writes, strict chronology and one full chain validation per process with incremental in-memory head. Focused 25 PASS; full 1463 PASS; no remaining P0/P1 freeze blocker.
+- Public clock active in screen `event_universe_v1_20260718` until `2026-07-25T07:32:46Z`. At 07:36 UTC: snapshots 2, universe 743, prefetch/scored 100/100, advisory candidates 13, errors 0, tree 296K. No threshold tuning or promotion from this run.

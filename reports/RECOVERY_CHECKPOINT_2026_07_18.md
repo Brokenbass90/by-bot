@@ -155,6 +155,7 @@ Telegram startup execution snapshot был корректным. Patch, разд
 ## Активные clocks
 
 - Public cash-carry: active, bounded, до примерно 23 июля.
+- Public event-universe v1: active local, bounded, до `2026-07-25T07:32:46Z`; implementation `9b5dfef` был pushed до первого наблюдения. На `07:36 UTC`: 2 immutable snapshots, 743 instruments, 100 scored, 13 advisory candidates, 0 errors, всего 296K. No keys/private calls/orders/risk/live-router.
 - ONDO L2 collector и 6-symbol public trade tape: active local, но coverage нестабильна из-за сна Mac; promotion-grade требует stable host и >=98% valid days.
 - Local Web truth mirror: active; sync может кратко показывать реальный `syncing` во время SFTP bundle.
 - Активного blind performance/autoresearch grid нет. Это намеренно: 107 Claude variants дали 1 IS, 0 forward, 0 OOS survivors. Следующая машина должна искать causal proposals, учитывать multiple testing и открывать один sealed holdout только после freeze.
@@ -169,7 +170,7 @@ Telegram startup execution snapshot был корректным. Patch, разд
 
 ## Ближайший порядок работ и сроки
 
-1. `event_universe_v1` research-only + prospective candidate receipts: ориентир 2–5 рабочих дней разработки/проверки.
+1. `event_universe_v1` research-only реализован, проверен и запущен; frozen clock закончится около 25 июля. Threshold tuning и promotion по этому discovery-run запрещены.
 2. Event-expansion long phase-2 blockers и первый honest backtest: ориентир 1–3 недели, без обещания PASS.
 3. Новый horizontal failed-break/reclaim «пила» и отдельные sloped consumers: 1–3 недели на contract/tests/gate после общей runner parity.
 4. Cash-carry 7-day conclusion: около 23 июля; если economics passes остаются нулевыми, этот рынок/fee tier остаётся research NO_ENTRY, а не «чинится» риском.
@@ -195,9 +196,19 @@ Telegram startup execution snapshot был корректным. Patch, разд
 ## Новые доказательные документы
 
 - `reports/SCREENSHOT_SETUP_TRANSLATION_2026_07_18.md`
+- `reports/EVENT_UNIVERSE_V1_PROSPECTIVE_FREEZE_2026_07_18.md`
 - `reports/BYBIT_ACCOUNT_FEE_RECEIPT_2026_07_18.md`
 - `reports/releases/WEB_TRUTH_TARGETED_DEPLOY_RECEIPT_6F59938_2026_07_18.json`
 - `reports/releases/CANONICAL_SLOPED_TARGETED_DEPLOY_RECEIPT_5DB00D7_2026_07_18.json`
 - `reports/releases/CANONICAL_EVENT_GAP_TARGETED_DEPLOY_RECEIPT_DE06AD8_2026_07_18.json`
 - `reports/PROJECT_CANONICAL_INDEX_2026_07_18.json`
 - `reports/NEXT_CHAT_START_PROMPT_2026_07_18.md`
+
+## Дополнение 07:36 UTC — screenshot-universe gap закрыт на уровне discovery
+
+- Commit `9b5dfef` pushed до первого public outcome. Focused event suite `25 passed`; full regression `1463 passed in 31.80s`; независимый freeze-аудит не нашёл оставшихся P0/P1 blockers.
+- Реализован public GET-only full Trading linear USDT-perpetual selector с cursor pagination, listing/spread/turnover guards, 100-symbol bounded prefetch, 72+3 строго закрытыми contiguous M5, source/config/input hashes и strict increasing point-in-time cutoff.
+- Persistence: deterministic-gzip immutable snapshots, exact normalized score replay через checkpoint+delta chain, whole-tree 512MiB cap, 20GiB free-space guard, single writer, 0600. Полные source response bodies не хранятся; их hashes tamper-bound, но source replay не заявляется.
+- Первый снимок: universe 743, prefetch/score 100/100, advisory event cards 13, errors 0. Среди них NEAR/ZEC/SKHYNIX/AVAAI/GALA/VVV/GRAM/XRP/HYPE/CL/LAB/1000BONK/KAITO. Это события объёма/диапазона, не торговые сигналы и не probabilities; пример SKHYNIX отдельно показывает необходимость asset-taxonomy gate у downstream consumers.
+- Detached screen `event_universe_v1_20260718` и `caffeinate` активны до `2026-07-25T07:32:46Z`. Snapshot 2 появился автоматически; размер run tree 296K. Порогов по первым результатам не менять.
+- Gap теперь закрыт только для discovery. Следующие стратегии всё ещё отдельны: horizontal breakout/hold/retest long, sweep/reclaim long/short, sloped bounce long и sloped break/retest short. Каждой нужны отдельный prereg, costs, sealed time+symbol gate и prospective shadow.

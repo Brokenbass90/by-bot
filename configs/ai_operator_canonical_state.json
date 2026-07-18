@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-07-18T06:18:00Z",
+  "as_of_utc": "2026-07-18T07:36:00Z",
   "schema_version": 2,
   "authority": "human_reviewed_project_truth",
   "control_recommendations_allowed": true,
@@ -41,7 +41,7 @@
     "ai_env_mutation": "TARGETED_DEPLOYED_PHYSICALLY_QUARANTINED_PENDING_REVIEWED_ALLOWLIST_BOUNDS_CHALLENGE_AND_RECEIPT",
     "web_live_mirror": "LOCAL_ATOMIC_BUNDLE_SYNC_COMPLETE_33_FILES_2_OPTIONAL_MISSING_ZERO_CRITICAL_FAILURES_GEOMETRY_AND_ROUTER_NOW_SYNCED_SCANNER_FAILS_CLOSED_WHEN_STALE",
     "active_overnight_performance_research": false,
-    "active_replayable_public_data_collection": "LOCAL_TAPE_AND_L2_RUNNING_NOT_PROMOTION_GRADE_PUBLIC_CASHCARRY_SEVEN_DAY_CLOCK_ACTIVE",
+    "active_replayable_public_data_collection": "LOCAL_TAPE_AND_L2_RUNNING_NOT_PROMOTION_GRADE_PUBLIC_CASHCARRY_AND_EVENT_UNIVERSE_SEVEN_DAY_CLOCKS_ACTIVE",
     "ai_web_targeted_deploy_receipt": "reports/releases/AI_TRUTH_TARGETED_DEPLOY_RECEIPT_AAF57F1_2026_07_15.json_HASHES_PASS_CORE_AND_WEB_RESTARTED_FLAT",
     "cashcarry_v2_research": "DURABLE_PUBLIC_COMMON_QUANTITY_BOOK_WALK_RESTART_REPLAY_BREAK_EVEN_GATE_READY_DEFAULT_DISABLED_NO_CAPITAL",
     "cashcarry_v2_public_screen_20260715_1756_utc": "XRP_BTC_ETH_OBSERVED_ALL_BREAK_EVEN_FAIL_NO_ENTRY_NO_POSITION_NO_KEYS_ORDERS",
@@ -57,8 +57,9 @@
     "web_truth_targeted_deploy_20260718": "COMMIT_6F59938_PUSHED_EIGHT_EXACT_FILES_SHA_PASS_BACKUP_PRESENT_WEB_ONLY_RESTART_CORE_UNCHANGED_AUTH_CONFIG_SHA_UNCHANGED",
     "sloped_level_snapshot_v1_20260718": "RESEARCH_MECHANICS_CAUSAL_CLOSED_PREFIX_MIN_THREE_CONFIRMED_PIVOTS_UNBROKEN_CLOSE_HASHED_IDENTITIES_NO_SIGNAL_ORDERS_OR_PERFORMANCE",
     "sloped_level_targeted_deploy_20260718": "COMMIT_5DB00D7_PUSHED_THREE_EXACT_FILES_SHA_PASS_BACKUP_PRESENT_NO_RESTART_RISK_ORDERS_OR_PRIVATE_CALLS_AI_CONTEXT_27_CAPABILITIES_80_CARDS_BLOCKERS_EMPTY",
-    "screenshot_event_gap_20260718": "CURRENT_SCANNER_20_SYMBOLS_H1_H4_EXCLUDES_AKE_BANK_LYN_US_REQUIRES_SEPARATE_POINT_IN_TIME_EVENT_UNIVERSE_V1_RESEARCH_ONLY_NO_LIVE_ROUTER_EXPANSION",
-    "latest_published_research_implementation_head": "5db00d7",
+    "screenshot_event_gap_20260718": "LIVE_SCANNER_STILL_20_SYMBOLS_H1_H4_BUT_SEPARATE_EVENT_UNIVERSE_V1_PUBLIC_RESEARCH_IS_ACTIVE_NO_LIVE_ROUTER_EXPANSION",
+    "event_universe_v1_20260718": "COMMIT_9B5DFEF_PUSHED_PUBLIC_RESEARCH_ACTIVE_UNTIL_20260725_0732_UTC_TWO_SNAPSHOTS_743_UNIVERSE_100_SCORED_13_ADVISORY_ZERO_ERRORS_NO_KEYS_PRIVATE_CALLS_ORDERS_RISK_OR_PROMOTION",
+    "latest_published_research_implementation_head": "9b5dfef",
     "new_research_commits_20260715_pm": [
       "c6bc755_BREAKOUT_SUCCESSOR_AND_STATION_PRESERVATION",
       "6df7c6b_ALPACA_EXACT_PARITY_MATERIALIZATION",
@@ -71,7 +72,7 @@
       "11D00C3_LIVE_VERSUS_HISTORICAL_HEALTH_TRUTH",
       "F492C74_BYBIT_AND_BITGET_PUBLIC_CASHCARRY_STATIONS"
     ],
-    "full_regression": "1438_PASSED_IN_32_31_SECONDS"
+    "full_regression": "1463_PASSED_IN_31_80_SECONDS"
   },
   "data_contract": {
     "historical_crypto_accounting": "MIXED_COHORT_NOT_CURRENT_EDGE",
@@ -98,7 +99,7 @@
     "bybit_cashcarry_v2": "DURABLE_COMMON_QUANTITY_BOOK_WALK_RESTART_REPLAY_AND_BREAK_EVEN_GATE_READY_DEFAULT_DISABLED_CURRENT_PUBLIC_RATES_NO_ENTRY",
     "public_cashcarry_station_v1": "SIX_SYMBOL_BOUNDED_PUBLIC_ONLY_RESTARTABLE_STATION_ACTIVE_570_DURABLE_OBSERVATIONS_95_PER_SYMBOL_ZERO_ECONOMICS_PASSES_NO_EXECUTION_AUTHORITY",
     "setup_scanner_runtime_universe": "TWENTY_SYMBOL_H1_H4_ADVISORY_HEURISTIC_RANK_NOT_PROBABILITY_FRESH_MICROCAP_MOVERS_CAN_BE_EXCLUDED_BEFORE_GEOMETRY",
-    "event_universe_v1": "DESIGN_ONLY_FULL_TRADING_USDT_PERP_POINT_IN_TIME_CLOSED_M5_RELATIVE_VOLUME_RANGE_RANK_BOUNDED_TOP_K_HASHED_PROSPECTIVE_RECEIPTS_NO_KEYS_ORDERS_OR_LIVE_AUTHORITY",
+    "event_universe_v1": "ACTIVE_PUBLIC_RESEARCH_ONLY_FULL_TRADING_LINEAR_USDT_PERP_POINT_IN_TIME_100_PREFETCH_CLOSED_M5_RELATIVE_VOLUME_RANGE_RANK_DELTA_SCORE_REPLAY_SOURCE_HASHES_ASSERTED_NO_KEYS_ORDERS_OR_LIVE_AUTHORITY",
     "bitget_cashcarry_public_v1": "PUBLIC_NORMALIZATION_PREFLIGHT_READY_SEPARATE_JOURNAL_AND_ECONOMICS_ENGINE_REQUIRED_NO_PERFORMANCE_OR_LIVE_AUTHORITY"
   },
   "research_verdicts": {
@@ -205,7 +206,7 @@
     "elder_current_forms"
   ],
   "research_queue": [
-    "build_research_only_event_universe_v1_full_trading_usdt_perpetual_closed_m5_tradability_spread_turnover_listing_guards_bounded_top_k_hashes_reasons_missing_and_restart_receipts_without_live_router_or_orders",
+    "finish_frozen_event_universe_v1_public_clock_through_20260725_without_threshold_tuning_then_report_coverage_and_base_rates_no_promotion",
     "connect_event_universe_v1_only_to_separate_m5_m15_h1_advisory_scorer_and_prospective_label_ledger",
     "archive_horizontal_breakout_long_72h_no_promotion_without_retry_repair_or_tao_only_rescue_then_choose_an_independent_preregistered_crypto_hypothesis",
     "start_bounded_public_cashcarry_station_without_keys_or_capital_then_require_10_mechanics_and_30_edge_cycles",

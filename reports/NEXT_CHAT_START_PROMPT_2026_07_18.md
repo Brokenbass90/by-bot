@@ -13,12 +13,13 @@
 7. `reports/releases/WEB_TRUTH_TARGETED_DEPLOY_RECEIPT_6F59938_2026_07_18.json`;
 8. `reports/releases/CANONICAL_SLOPED_TARGETED_DEPLOY_RECEIPT_5DB00D7_2026_07_18.json`.
 9. `reports/releases/CANONICAL_EVENT_GAP_TARGETED_DEPLOY_RECEIPT_DE06AD8_2026_07_18.json`.
+10. `reports/EVENT_UNIVERSE_V1_PROSPECTIVE_FREEZE_2026_07_18.md`.
 
 Не доверяй старым пересказам без receipt. Local/Git/VPS checkout/deployed live — разные истины. Не используй `git add -A`. Сохрани чужие dirty-файлы `bot/fx_setups.py` и `tests/test_fx_setups.py`.
 
 ## Текущая истина
 
-- Local/origin implementation head перед checkpoint: `5db00d7`; VPS checkout `f7ed011` dirty/stale, blind pull/reset/cleanup запрещён.
+- Local/origin implementation head: `9b5dfef`; VPS checkout `f7ed011` dirty/stale, blind pull/reset/cleanup запрещён.
 - Bybit core/web active, broker flat, `bull_chop`, global block отсутствует. Единственный money sleeve — ATT1 short-only x0.10.
 - ATT1: N6, WR50%, net +0.4605 USDT, edge UNPROVEN. Не масштабировать до 20–30 clean broker-reconciled closes. Геометрия слабая: 2 pivots/R2 и нет mandatory unbroken/first-retest. Challenger строить отдельно.
 - Bybit key expires 12 Aug; rotate securely by 5 Aug.
@@ -27,19 +28,19 @@
 - Horizontal breakout 72h окончательно NO_PROMOTION: N155, PF 0.392/0.281, DD36.9%, folds0/4, symbols1/13. Не retry/repair/TAO rescue.
 - Event-expansion/retest long — ближайший causal crypto challenger, но 8 blockers и performance forbidden.
 - New sloped primitive pushed+targeted-deployed research-only: >=3 confirmed pivots, support/resistance separately, no signals/orders/performance.
-- Current scanner sees only 20 symbols and H1/H4; AKE/BANK/LYN/US screenshot setups находятся вне universe. Нужен отдельный research-only `event_universe_v1`, не расширение live-router.
+- Live scanner всё ещё видит только 20 symbols/H1/H4, но отдельный `event_universe_v1` уже frozen/pushed и public research clock активен до `2026-07-25T07:32:46Z`. На 07:36 UTC: 2 snapshots, universe 743, 100 scored, 13 advisory cards, 0 errors. Это discovery, не signals/live-router.
 - FX dirty repair полезен, focused 11 PASS, но legacy harness имеет next-open/parity gaps. FX V2 NO-GO; V3 требует pinned macro-news и broker/account/session cost contract.
 - Web truth/auth hardening live; core/risk не менялись. Login требует owner password+TOTP reset через `web/setup_totp.py`; секрет не просить в чат.
 - Onboard AI после финального map deploy видит 28 capabilities/80 setup cards/blockers empty, но observer/proposal-only.
 - Telegram new health provenance/no-duplicate patch остаётся local-only.
-- Full regression `1438 passed in 32.31s`.
+- Full regression `1463 passed in 31.80s`; event-universe focused `25 passed`; independent freeze audit: no remaining P0/P1 blocker.
 
 ## Начать работу в таком порядке
 
 1. Read-only recheck Git/origin, VPS services/broker/heartbeat, Alpaca manager receipt, cash-carry station state и active collectors. Фиксировать timestamp.
 2. Не менять риск и не запускать ордера. Проверить ATT1 review, но N<20 означает только продолжение canary.
-3. Реализовать bounded research-only `event_universe_v1`: full Trading USDT-perp point-in-time scan каждые 5m, closed M5, tradability/spread/turnover/listing guards, relative-volume/range ranking, top-24/40, hashes/reasons/missing/restart receipt. No key/order/live wiring.
-4. Подключить его только к отдельному M5/M15/H1 advisory scorer; построить prospective label ledger. Не подмешивать скриншот-победителей вручную.
+3. Проверить screen/status `event_universe_v1_20260718`, но не менять frozen thresholds. Довести clock до 25 Jul и выдать coverage/base-rate receipt; этот run не имеет promotion authority.
+4. После clock отдельно preregister M5/M15/H1 consumers и prospective label ledger. Не подмешивать screenshot winners вручную и не считать advisory cards сигналами.
 5. Закрывать event-long phase-2 blockers в frozen order: runner/persist/receipt-before-ACK -> funding completeness -> external8 -> same-window reference -> one honest gate.
 6. Затем отдельные preregistered consumers: horizontal failed-break/reclaim short, horizontal long; sloped support-bounce long, sloped support-break/retest short. Elder только как ablation/filter.
 7. Завершить 7-day cash-carry clock и выдать evidence-only verdict. При 0 passes не менять threshold и не добавлять капитал.
@@ -73,3 +74,7 @@ python3 web/setup_totp.py --email brokenbass1990@gmail.com --admin
 - называть local/Git код live без deploy receipt;
 - трогать foreign FX dirty files;
 - blind pull/reset/clean VPS.
+
+## Самый узкий следующий implementation task
+
+Не переписывать уже запущенный `event_universe_v1`. Подготовить один отдельный causal consumer без просмотра будущего outcome: horizontal breakout -> close hold -> first retest long-only. Он читает только frozen candidate receipt, использует shared horizontal levels и exact next-open/cost/funding contract. Sloped support break/retest short-only остаётся другим consumer; стороны не смешивать.

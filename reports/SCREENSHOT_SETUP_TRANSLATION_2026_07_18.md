@@ -45,17 +45,17 @@ ATT1 нельзя незаметно перевести на эту геомет
 
 `AKEUSDT`, `BANKUSDT`, `LYNUSDT` и `USUSDT` отсутствуют и отсекаются до геометрии. Дополнительно текущий geometry builder обычно строит только H1/H4 (`60/240`), поэтому 1m/5m/15m события со скриншотов не представлены. Web-карты — heuristic advisory rank, а не закрытый breakout/retest и не оценённая вероятность прибыли.
 
-## Самый узкий следующий implementation task
+## Реализованный discovery layer
 
-Собрать отдельный research-only `event_universe_v1`, не расширяя live-router:
+Отдельный research-only `event_universe_v1` frozen в commit `9b5dfef` и собирает prospective public receipts до `2026-07-25T07:32:46Z`, не расширяя live-router:
 
 1. каждые пять минут читать полный Trading USDT-perpetual universe point-in-time;
-2. fail-closed проверять tradability, spread, depth/turnover floor и listing age;
+2. fail-closed проверять tradability, spread, turnover floor и listing age; depth не заявлен;
 3. загружать только закрытые M5 prefix;
 4. переиспользовать relative-volume/range event scoring;
-5. ранжировать свежие movers и сохранять bounded top-24/40;
-6. писать hash/time/source/reasons/missing receipt с restart-safe state;
-7. подавать этот список отдельному M5/M15/H1 advisory scorer;
+5. ранжировать movers и сохранять bounded top-32 candidate cards из 100 scored symbols;
+6. писать hash/time/source/reasons/missing receipt с exact normalized delta score replay и restart verification;
+7. после frozen clock подавать этот список только отдельному preregistered M5/M15/H1 advisory consumer;
 8. не иметь ключей, ордеров, risk mutation или live promotion authority.
 
 После 30–60 дней prospective candidate logging можно измерять base rate, precision после costs и пригодность horizontal/sloped consumers. L2/стаканные плотности добавляются только для дней с полноценным replayable tape: wall lifetime, cancel-versus-execution, order-flow imbalance, microprice, absorption и depth recovery.
@@ -64,5 +64,5 @@ ATT1 нельзя незаметно перевести на эту геомет
 
 - Скриншоты дают полезные causal hypotheses, но не разрешение на live.
 - Главный текущий gap — universe discovery, а не отсутствие ещё одного индикатора.
-- Приоритет: `event_universe_v1` -> horizontal event-long runner -> отдельные sloped long/short consumers -> prospective shadow.
+- Приоритет: закончить frozen `event_universe_v1` clock без tuning -> horizontal event-long runner -> отдельные sloped long/short consumers -> prospective shadow.
 - Старую пилу не включать: её историческое состояние `N21, WR 23.81%, PF 0.487`. Новый range-кандидат должен быть failed-break/sweep/reclaim с отдельными long/short контрактами, regime filter, time stop и stress costs.
