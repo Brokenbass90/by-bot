@@ -19,7 +19,7 @@
       "6f59938_web_truth_and_auth_fail_closed",
       "5db00d7_causal_sloped_level_research_contract"
     ],
-    "canonical_checkpoint_commit": "PENDING_PIN_AFTER_FIRST_CHECKPOINT_COMMIT",
+    "canonical_checkpoint_commit": "3a1a19b_docs_checkpoint_July_18_recovery_truth",
     "foreign_dirty_files_to_exclude": [
       "bot/fx_setups.py",
       "tests/test_fx_setups.py"
