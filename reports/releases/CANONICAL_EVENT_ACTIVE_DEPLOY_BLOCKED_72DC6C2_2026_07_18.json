@@ -1,0 +1,30 @@
+{
+  "schema_id": "targeted_deploy_blocked_receipt_v1",
+  "release_id": "canonical_event_active_72dc6c2_20260718",
+  "recorded_at_utc": "2026-07-18T07:45:03Z",
+  "source_branch": "codex/dynamic-symbol-filters",
+  "source_commit": "72dc6c2",
+  "target": "root@64.226.73.119:/root/by-bot",
+  "deployment_scope": "human_reviewed_ai_maps_only",
+  "files": {
+    "configs/ai_operator_canonical_state.json": "c54f606c98c4027eae86a6634a7fa2b2a103116e6c9d08ca47c048f448ef5a58",
+    "configs/project_capability_registry_v1.json": "ec8a43bb4a39cad2f1fda1035f81502b7984a060359d40543d5c83c805ecaf74"
+  },
+  "local_registry_validation": {
+    "ok": true,
+    "component_count": 28,
+    "errors": []
+  },
+  "transport_archive_sha256": "376e7a6214e0b3abd788f1fe08b8643352de3c911ab5ef2a84bcdc9694b37f0d",
+  "transport_staged_in_remote_tmp": true,
+  "remote_install_performed": false,
+  "remote_postcheck_performed": false,
+  "core_restart_performed": false,
+  "web_restart_performed": false,
+  "trading_configuration_changed": false,
+  "risk_or_execution_authority_changed": false,
+  "orders_or_private_api_calls": false,
+  "blocker": "remote installation approval was rejected because the approval usage limit was exhausted; no bypass attempted",
+  "server_canonical_truth_remains": "CANONICAL_EVENT_GAP_TARGETED_DEPLOY_RECEIPT_DE06AD8_2026_07_18",
+  "next_gate": "explicit owner approval in a future available session, then exact-file backup/hash/install/context rebuild/postcheck"
+}

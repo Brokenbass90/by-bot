@@ -32,6 +32,7 @@
 - FX dirty repair полезен, focused 11 PASS, но legacy harness имеет next-open/parity gaps. FX V2 NO-GO; V3 требует pinned macro-news и broker/account/session cost contract.
 - Web truth/auth hardening live; core/risk не менялись. Login требует owner password+TOTP reset через `web/setup_totp.py`; секрет не просить в чат.
 - Onboard AI после финального map deploy видит 28 capabilities/80 setup cards/blockers empty, но observer/proposal-only.
+- Более новая map truth `72dc6c2` о работающем event-universe пока local/Git only: remote archive staged, install blocked approval limit, сервер остаётся на `de06ad8` и считает его design-gap. Не называть новый map live до exact postcheck receipt.
 - Telegram new health provenance/no-duplicate patch остаётся local-only.
 - Full regression `1463 passed in 31.80s`; event-universe focused `25 passed`; independent freeze audit: no remaining P0/P1 blocker.
 
@@ -48,6 +49,7 @@
 9. FX: выбрать broker/account, pin PIT macro-news и real cost schedule, исправить next-open runner, только затем V3 figures.
 10. Targeted-deploy Telegram observability patch отдельным exact-file release с backup/SHA/post-check, если diff всё ещё чисто изолирован.
 11. Любой deploy: exact files only, backup, hashes, flat broker check при core restart, receipt. VPS Git не нормализовать вслепую.
+12. Когда снова доступен approval, завершить только map-only release `72dc6c2` по blocked receipt; не переносить event research code на VPS.
 
 ## Владелец должен сделать
 

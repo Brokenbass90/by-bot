@@ -1,0 +1,30 @@
+{
+  "files": [
+    {
+      "mode": "0644",
+      "path": "configs/ai_operator_canonical_state.json",
+      "sha256": "c54f606c98c4027eae86a6634a7fa2b2a103116e6c9d08ca47c048f448ef5a58",
+      "size_bytes": 18582
+    },
+    {
+      "mode": "0644",
+      "path": "configs/project_capability_registry_v1.json",
+      "sha256": "ec8a43bb4a39cad2f1fda1035f81502b7984a060359d40543d5c83c805ecaf74",
+      "size_bytes": 29730
+    }
+  ],
+  "git_head": "72dc6c2",
+  "metadata": {
+    "explicit_files_only": true,
+    "file_count": 2,
+    "git_dirty": true,
+    "operations": [
+      "read_explicit_files",
+      "read_git_dirty_flag",
+      "write_manifest"
+    ],
+    "reproducible": true
+  },
+  "release_id": "canonical_event_active_72dc6c2_20260718",
+  "schema_version": 1
+}
