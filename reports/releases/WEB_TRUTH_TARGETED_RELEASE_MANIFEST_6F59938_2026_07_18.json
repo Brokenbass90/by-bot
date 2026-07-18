@@ -1,0 +1,66 @@
+{
+  "files": [
+    {
+      "mode": "0644",
+      "path": "bot/code_access.py",
+      "sha256": "ef20df97ea1113af7c9b7d3212bda1f8adfa01ebe3fc25b5afb6117e07b8358f",
+      "size_bytes": 4314
+    },
+    {
+      "mode": "0644",
+      "path": "scripts/sync_web_live_mirror.sh",
+      "sha256": "cd5099a5807a98ee4f35d414e8c4195f35ab35f2e0bb4a7a0223143c928413b5",
+      "size_bytes": 13632
+    },
+    {
+      "mode": "0644",
+      "path": "web/auth.py",
+      "sha256": "83dbf8fec7b619b1418f4654579c269b05eb53f5b4cce00e1b516fd116c9d4b8",
+      "size_bytes": 7643
+    },
+    {
+      "mode": "0644",
+      "path": "web/routes/ai_routes.py",
+      "sha256": "69c56c596f2be3b8b1c59327bf939f761883df7a8a48b94d4134b2732d3d9642",
+      "size_bytes": 84597
+    },
+    {
+      "mode": "0644",
+      "path": "web/routes/data_routes.py",
+      "sha256": "6727c33a1bff047ffcaaf95732315b00186fb540a88b23ceb67aec332b50c509",
+      "size_bytes": 82038
+    },
+    {
+      "mode": "0644",
+      "path": "web/routes/extra_routes.py",
+      "sha256": "eb197995de53a3939ceffb4a1589fc783fdfafa49a3a2757f14db2d586c0cb5e",
+      "size_bytes": 28020
+    },
+    {
+      "mode": "0644",
+      "path": "web/static/operator_console.html",
+      "sha256": "9b1df77d22b070e1dcf13ede1a66aabd92d0706fe5ba95d2fa056966d767dabc",
+      "size_bytes": 15855
+    },
+    {
+      "mode": "0644",
+      "path": "web/static/position.html",
+      "sha256": "4dc086181f8f63403e3e6e6c1ea66cdbc0953ac7549fc56735a0fb293d7a9058",
+      "size_bytes": 15211
+    }
+  ],
+  "git_head": "6f59938",
+  "metadata": {
+    "explicit_files_only": true,
+    "file_count": 8,
+    "git_dirty": true,
+    "operations": [
+      "read_explicit_files",
+      "read_git_dirty_flag",
+      "write_manifest"
+    ],
+    "reproducible": true
+  },
+  "release_id": "web_truth_6f59938_20260718",
+  "schema_version": 1
+}

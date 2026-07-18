@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-16T04:42:19Z",
+  "as_of_utc": "2026-07-18T06:10:00Z",
   "authority": "human_reviewed_capability_map",
   "purpose": "One machine-readable map of what exists, what may act, what is proven, and what must happen next.",
   "source_precedence": [
@@ -38,8 +38,8 @@
       "data_contract": "closed candles; current live geometry remains weakly constrained",
       "level_contract": "legacy sloped two-pivot line; not LevelSnapshot parity",
       "cost_contract": "live exchange fills plus broker reconciliation",
-      "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_14.md"],
-      "known_gaps": ["edge unproven", "two-pivot R2 is weak evidence", "first-retest and unbroken-line guards are not mandatory"],
+      "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_14.md", "reports/RECOVERY_CHECKPOINT_2026_07_18.md"],
+      "known_gaps": ["N6, 50% win rate and +0.4605 USDT remain too small to prove edge", "two-pivot R2 is weak evidence", "first-retest and unbroken-line guards are not mandatory"],
       "next_gate": "broker-reconciled canary review on 2026-07-20; geometry challenger separately preregistered"
     },
     {
@@ -319,16 +319,16 @@
       "kind": "shared_technology",
       "market": "multi_market_research",
       "physical_side": "none",
-      "stage": "missing",
+      "stage": "research_blocked",
       "execution_authority": "none",
       "promotion_authorized": false,
-      "runtime_entrypoints": [],
-      "data_contract": "planned closed-bar causal projection",
-      "level_contract": "planned >=3 pivots, unbroken interval, first retest, bounded overshoot and projection identity",
+      "runtime_entrypoints": ["bot/sloped_level_snapshot_v1.py"],
+      "data_contract": "bounded contiguous closed-bar prefix with canonical source/config/input/pivot/payload hashes; forming and future tails excluded",
+      "level_contract": "separate support and resistance; >=3 pivot_right-confirmed pivots; all-pivot OLS; close-unbroken through as-of; exact causal projection with line and snapshot identities",
       "cost_contract": "not applicable",
-      "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_14.md"],
-      "known_gaps": ["legacy sloped implementations are fragmented and not parity-grade"],
-      "next_gate": "build as a separate versioned contract; do not pretend horizontal parity covers it"
+      "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_14.md", "tests/test_sloped_level_snapshot_v1.py"],
+      "known_gaps": ["research primitive only; no signal or live wiring", "unbroken is close-based rather than wick-based", "volume, order flow, first-retest and performance gates remain separate"],
+      "next_gate": "preregister separate support-bounce long and support-break short consumers; never silently replace ATT1 geometry or horizontal levels"
     },
     {
       "component_id": "research_autoresearch_core",
@@ -419,12 +419,12 @@
       "execution_authority": "proposal_only",
       "promotion_authorized": false,
       "runtime_entrypoints": ["web/routes/ai_routes.py", "scripts/sync_web_live_mirror.sh"],
-      "data_contract": "fresh complete mirror bundle or deterministic stale block",
+      "data_contract": "fresh complete critical mirror bundle or deterministic stale block; geometry/router are optional sync artifacts and setup scanner itself fails closed when either is stale",
       "level_contract": "display only; setup cards are not executable signals",
       "cost_contract": "not applicable",
-      "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_14.md"],
-      "known_gaps": ["successful owner-password/TOTP replay remains unproven", "mirror sync intentionally fails closed while a bundle is in progress"],
-      "next_gate": "owner login replay; keep all mutations proposal-only until a bounded reviewed consumer exists"
+      "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_14.md", "reports/releases/WEB_TRUTH_TARGETED_DEPLOY_RECEIPT_6F59938_2026_07_18.json"],
+      "known_gaps": ["successful owner-password/TOTP replay remains unproven and requires owner reset", "setup score remains a heuristic rank rather than calibrated probability"],
+      "next_gate": "owner password/TOTP reset and replay; calibrate scanner labels prospectively; keep all mutations proposal-only until a bounded reviewed consumer exists"
     },
     {
       "component_id": "telegram_reporting",

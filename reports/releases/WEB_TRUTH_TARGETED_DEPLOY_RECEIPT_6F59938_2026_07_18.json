@@ -1,0 +1,37 @@
+{
+  "schema_id": "targeted_deploy_receipt_v1",
+  "release_id": "web_truth_6f59938_20260718",
+  "deployed_at_utc": "2026-07-18T06:03:00Z",
+  "source_branch": "codex/dynamic-symbol-filters",
+  "source_commit": "6f59938",
+  "target": "root@64.226.73.119:/root/by-bot",
+  "deployment_scope": "web_and_observability_only",
+  "core_restart_performed": false,
+  "web_restart_performed": true,
+  "trading_configuration_changed": false,
+  "risk_or_strategy_configuration_changed": false,
+  "auth_config_replaced": false,
+  "server_auth_config_sha256_before_and_after": "682b171cddf7241604a14b0111329eec20992d5782da753463af825118ada9d7",
+  "backup": "/root/by-bot-backups/web_truth_6f59938_20260718_before.tar.gz",
+  "transport_archive_sha256": "eb741f275242096f4fc46ec35917e209638a9fea5a600c77057a56e6ba83c993",
+  "files": {
+    "bot/code_access.py": "ef20df97ea1113af7c9b7d3212bda1f8adfa01ebe3fc25b5afb6117e07b8358f",
+    "scripts/sync_web_live_mirror.sh": "cd5099a5807a98ee4f35d414e8c4195f35ab35f2e0bb4a7a0223143c928413b5",
+    "web/auth.py": "83dbf8fec7b619b1418f4654579c269b05eb53f5b4cce00e1b516fd116c9d4b8",
+    "web/routes/ai_routes.py": "69c56c596f2be3b8b1c59327bf939f761883df7a8a48b94d4134b2732d3d9642",
+    "web/routes/data_routes.py": "6727c33a1bff047ffcaaf95732315b00186fb540a88b23ceb67aec332b50c509",
+    "web/routes/extra_routes.py": "eb197995de53a3939ceffb4a1589fc783fdfafa49a3a2757f14db2d586c0cb5e",
+    "web/static/operator_console.html": "9b1df77d22b070e1dcf13ede1a66aabd92d0706fe5ba95d2fa056966d767dabc",
+    "web/static/position.html": "4dc086181f8f63403e3e6e6c1ea66cdbc0953ac7549fc56735a0fb293d7a9058"
+  },
+  "postcheck": {
+    "all_file_hashes_match_manifest": true,
+    "python_compile": "PASS",
+    "web_ping": {"pong": true},
+    "bybot_service": "active_unchanged",
+    "trading_journal_web_service": "active_restarted",
+    "unauthenticated_protected_endpoints": "HTTP_401",
+    "server_git_checkout_normalized": false
+  },
+  "remaining_manual_security_action": "Rotate the web password and TOTP because the previous instance secret existed in Git history; do not rewrite history without explicit owner approval."
+}
