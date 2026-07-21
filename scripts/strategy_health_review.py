@@ -54,6 +54,7 @@ import json
 import os
 import ssl
 import sys
+import time
 import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
@@ -241,7 +242,22 @@ def _live_events_path() -> Path | None:
     return next((path for path in LIVE_EVENT_CANDIDATES if path.exists()), None)
 
 
-def _tail_closes(n_max: int = 10000) -> list[dict[str, Any]]:
+def _event_ts_seconds(event: dict[str, Any]) -> float | None:
+    try:
+        value = float(event.get("ts"))
+    except (TypeError, ValueError):
+        return None
+    if value > 10_000_000_000:
+        value /= 1000.0
+    return value if value > 0 else None
+
+
+def _tail_closes(
+    n_max: int = 10000,
+    *,
+    rolling_days: float | None = None,
+    now_ts: float | None = None,
+) -> list[dict[str, Any]]:
     live_events = _live_events_path()
     if live_events is None:
         return []
@@ -261,8 +277,15 @@ def _tail_closes(n_max: int = 10000) -> list[dict[str, Any]]:
         # Skip bootstrap-labelled positions (not algo)
         if str(ev.get("strategy") or "").lower() == "bootstrap":
             continue
+        event_ts = _event_ts_seconds(ev)
+        if event_ts is None:
+            continue
+        if rolling_days is not None:
+            reference = time.time() if now_ts is None else float(now_ts)
+            if event_ts < reference - float(rolling_days) * 86400.0:
+                continue
         closes.append(ev)
-    closes.sort(key=lambda c: int(c.get("ts") or 0))
+    closes.sort(key=lambda c: _event_ts_seconds(c) or 0.0)
     return closes
 
 
@@ -288,6 +311,8 @@ def main() -> int:
                     help="Take last N closed trades per strategy (default 50)")
     ap.add_argument("--all-history", action="store_true",
                     help="Use ALL history per strategy instead of windowed")
+    ap.add_argument("--rolling-days", type=float, default=30.0,
+                    help="Ignore closes older than this many days (default 30)")
     ap.add_argument("--notify-tg", action="store_true",
                     help="Send TG alert if any sleeve >= underperforming")
     ap.add_argument("--auto-demote", action="store_true",
@@ -302,7 +327,8 @@ def main() -> int:
         expectations = DEFAULT_EXPECTATIONS
         _write_json(EXPECTATIONS, expectations)
 
-    closes = _tail_closes(10000)
+    rolling_days = None if args.all_history else max(1.0, float(args.rolling_days))
+    closes = _tail_closes(10000, rolling_days=rolling_days)
     live_events = _live_events_path()
     if not closes:
         report = {
@@ -344,6 +370,12 @@ def main() -> int:
             "verdict": cls["verdict"],
             "flags": cls["flags"],
             "details": cls["details"],
+            "first_close_at_utc": datetime.fromtimestamp(
+                _event_ts_seconds(window[0]) or 0.0, timezone.utc
+            ).isoformat(),
+            "last_close_at_utc": datetime.fromtimestamp(
+                _event_ts_seconds(window[-1]) or 0.0, timezone.utc
+            ).isoformat(),
         }
 
     # Overall verdict
@@ -354,6 +386,7 @@ def main() -> int:
     report = {
         "generated_at_utc": _utc_now_iso(),
         "window_trades": args.window_trades if not args.all_history else "all_history",
+        "rolling_days": rolling_days,
         "live_events_source": str(live_events) if live_events else None,
         "thresholds": THRESHOLDS,
         "overall_verdict": verdict_label,
@@ -397,7 +430,8 @@ def main() -> int:
             bullets.append(
                 f"  • {strat} [{v['verdict']}] n={v['trades_window']}: "
                 f"WR {d.get('live_wr_pct','?')}% vs {d.get('expected_wr_pct','?')}%, "
-                f"PF {d.get('live_pf','?')} vs {d.get('expected_pf','?')}"
+                f"PF {d.get('live_pf','?')} vs {d.get('expected_pf','?')}; "
+                f"last={v.get('last_close_at_utc','?')[:10]}"
             )
         msg = (f"🩺 Strategy health: overall = *{verdict_label}*\n"
                + "\n".join(bullets)

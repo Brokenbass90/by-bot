@@ -1,0 +1,43 @@
+{
+  "schema_id": "targeted_deploy_receipt_v1",
+  "release_id": "canonical_event_active_72dc6c2_20260721",
+  "deployed_at_utc": "2026-07-21T17:38:16Z",
+  "owner_authorization": "explicit map-only deploy approval in Codex task",
+  "source_branch": "codex/dynamic-symbol-filters",
+  "source_commit": "72dc6c2",
+  "target": "root@64.226.73.119:/root/by-bot",
+  "deployment_scope": "human_reviewed_ai_maps_only",
+  "files": {
+    "configs/ai_operator_canonical_state.json": "c54f606c98c4027eae86a6634a7fa2b2a103116e6c9d08ca47c048f448ef5a58",
+    "configs/project_capability_registry_v1.json": "ec8a43bb4a39cad2f1fda1035f81502b7984a060359d40543d5c83c805ecaf74"
+  },
+  "transport_archive_sha256": "376e7a6214e0b3abd788f1fe08b8643352de3c911ab5ef2a84bcdc9694b37f0d",
+  "backup": "/root/by-bot-backups/canonical_event_active_72dc6c2_20260721T173745Z_before.tar.gz",
+  "installation_note": "The stale VPS checkout did not contain scripts/validate_project_capability_registry.py. The two files had already been atomically installed when that optional command failed. Recovery completed immediately using local registry validation plus remote JSON, hash, component-identity, context-build, service and PID assertions.",
+  "local_registry_validation": {
+    "ok": true,
+    "component_count": 28,
+    "errors": [],
+    "warnings": []
+  },
+  "postcheck": {
+    "all_file_hashes_match_manifest": true,
+    "remote_json_parse": "PASS",
+    "remote_component_ids_unique": true,
+    "remote_component_count": 28,
+    "ai_context_generated_at_utc": "2026-07-21T17:38:16.316659+00:00",
+    "canonical_as_of_utc": "2026-07-18T07:36:00Z",
+    "event_universe_stage": "data_collection",
+    "bybot_service": "active_unchanged",
+    "bybot_pid_before_and_after": 2931263,
+    "trading_journal_web_service": "active_unchanged",
+    "trading_journal_web_pid_before_and_after": 3114570
+  },
+  "core_restart_performed": false,
+  "web_restart_performed": false,
+  "trading_configuration_changed": false,
+  "risk_or_execution_authority_changed": false,
+  "orders_or_private_api_calls": false,
+  "vps_checkout_advanced_or_cleaned": false,
+  "rollback": "Restore both config files plus runtime/ai_context/full_context.json from backup and rebuild AI context; no service restart is required."
+}

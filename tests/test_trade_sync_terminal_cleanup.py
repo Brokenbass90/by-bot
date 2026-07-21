@@ -8,6 +8,9 @@ def test_sync_prunes_already_closed_trade_without_exchange_call(monkeypatch):
         def get_position_summary(self, _symbol):
             raise AssertionError("closed trades must not query the exchange again")
 
+        def list_open_positions(self):
+            return []
+
     trade = TradeState(symbol="DASHUSDT", side="Buy", strategy="range")
     trade.status = "CLOSED"
     trades = {("Bybit", "DASHUSDT"): trade}

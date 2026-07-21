@@ -33,10 +33,19 @@ SETUP_SCANNER_GEOMETRY_MAX_AGE_SEC = 21_600
 SETUP_SCANNER_ROUTER_MAX_AGE_SEC = 28_800
 SETUP_SCANNER_ALLOCATOR_MAX_AGE_SEC = 10_800
 SETUP_SCANNER_SCORE_SEMANTICS = "heuristic_rank_not_probability"
+_EPOCH_SECONDS_MAX_ABS = 10_000_000_000
 
 
 def _rt(*p: str) -> Path:
     return _RUNTIME_ROOT / Path(*p)
+
+
+def _epoch_ms(value: int) -> int:
+    """Normalize a Unix timestamp expressed in seconds or milliseconds."""
+    timestamp = int(value)
+    if timestamp and abs(timestamp) < _EPOCH_SECONDS_MAX_ABS:
+        return timestamp * 1000
+    return timestamp
 
 
 def _cfg(*p: str) -> Path:
@@ -1046,6 +1055,12 @@ async def trade_chart(
     Returns list of {time_ms, open, high, low, close, volume} dicts plus
     entry/exit timestamps so the frontend can draw markers.
     """
+    # Live-position snapshots use epoch seconds, while journal rows and
+    # Date.now() use epoch milliseconds.  Normalize each value independently
+    # before building the Bybit/cache window so mixed inputs are safe.
+    entry_ts = _epoch_ms(entry_ts)
+    exit_ts = _epoch_ms(exit_ts)
+
     WINDOW_BEFORE_MS = 8 * 3_600_000   # 8 hours before entry
     WINDOW_AFTER_MS  = 4 * 3_600_000   # 4 hours after exit
 
