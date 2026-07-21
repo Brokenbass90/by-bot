@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "created_at_utc": "2026-07-21T18:52:00Z",
+  "finalized_at_utc": "2026-07-21T19:07:00Z",
   "owner_authorization": "explicit_go_to_start_att1_and_continue_collecting_statistics",
   "commit": "71e0857",
   "branch": "codex/dynamic-symbol-filters",
@@ -21,11 +22,11 @@
   },
   "deploy_checks": {
     "remote_exact_file_sha_matches": true,
-    "core_restarted": false,
+    "core_restarted": true,
     "orders_submitted": false,
     "risk_raised": false
   },
-  "last_runtime_observation": {
+  "pre_restart_runtime_observation": {
     "heartbeat_utc": "2026-07-21T18:49:56Z",
     "broker_open_trades": 0,
     "runtime_expiry_utc": "2026-07-20",
@@ -34,7 +35,32 @@
     "breaker_risk_mult": 0.0,
     "configured_att1_risk_mult": 0.1
   },
-  "status": "EXACT_OVERRIDE_INSTALLED_RUNTIME_RELOAD_NOT_CONFIRMED",
-  "interpretation": "The bounded owner-approved override is present on disk, but a fresh heartbeat still reflects the old process environment. ATT1 must not be described as active until a post-reload heartbeat shows expiry 2026-08-05, blocked=false, expired=false and breaker risk_mult=1.0.",
-  "safe_next_action": "After a direct broker-flat check, perform one controlled bybot.service restart and verify the new PID, heartbeat, ATT1 short-only risk 0.10, IVB1 risk 0 and unchanged broker positions."
+  "controlled_restart": {
+    "performed_at_utc": "2026-07-21T19:04:10Z",
+    "mechanism": "scripts/restart_bybot_when_flat.py",
+    "direct_exchange_flat_confirmations": 3,
+    "flat_confirmation_interval_sec": 10,
+    "old_pid": 2931263,
+    "new_pid": 1131772,
+    "service_active": true
+  },
+  "post_restart_runtime_observation": {
+    "heartbeat_utc": "2026-07-21T19:06:21Z",
+    "uptime_s": 130,
+    "broker_open_positions_postcheck": 0,
+    "broker_position_query_ok": true,
+    "runtime_expiry_utc": "2026-08-05",
+    "breaker_expired": false,
+    "breaker_blocked": false,
+    "breaker_risk_mult": 1.0,
+    "configured_att1_risk_mult": 0.1,
+    "att1_allow_longs": false,
+    "att1_allow_shorts": true,
+    "ivb1_risk_mult": 0.0,
+    "trade_on": true,
+    "dry_run": false
+  },
+  "status": "ACTIVE_CONFIRMED_AT_UNCHANGED_TINY_RISK",
+  "interpretation": "The bounded owner-approved override is installed and the controlled broker-flat restart loaded it. ATT1 is active short-only at configured risk 0.10; IVB1 remains zero-risk shadow. N8 remains insufficient to prove edge or authorize scaling.",
+  "safe_next_action": "Continue broker-reconciled collection at unchanged risk, monitor breaker/heartbeat, and review again before the fail-closed 2026-08-05 expiry."
 }

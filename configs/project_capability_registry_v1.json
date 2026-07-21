@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-21T19:05:00Z",
+  "as_of_utc": "2026-07-21T19:07:00Z",
   "authority": "human_reviewed_capability_map",
   "purpose": "One machine-readable map of what exists, what may act, what is proven, and what must happen next.",
   "source_precedence": [
@@ -35,12 +35,12 @@
       "execution_authority": "tiny_money",
       "promotion_authorized": false,
       "runtime_entrypoints": ["smart_pump_reversal_bot.py", "strategies/alt_trendline_touch_v1.py"],
-      "data_contract": "closed candles; owner-approved expiry 2026-08-05 is installed on VPS at unchanged risk, but the last fresh runtime heartbeat still reports expiry 2026-07-20 and breaker effective risk zero; current live geometry remains weakly constrained",
+      "data_contract": "closed candles; owner-approved expiry 2026-08-05 is active after a controlled three-confirmation broker-flat restart; configured and effective risk are 0.10 short-only, IVB1 remains zero; current live geometry remains weakly constrained",
       "level_contract": "legacy sloped two-pivot line; not LevelSnapshot parity",
       "cost_contract": "live exchange fills plus broker reconciliation",
       "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_18.md", "reports/RECOVERY_CHECKPOINT_2026_07_21.md"],
-      "known_gaps": ["N8, 50% win rate, PF 1.27965 and +0.4992 USDT remain too small to prove edge", "owner renewal is installed but runtime reload is not yet confirmed, so ATT1 is not active at the last observed heartbeat", "two-pivot R2 is weak evidence", "first-retest and unbroken-line guards are not mandatory"],
-      "next_gate": "confirm expiry 2026-08-05 and blocked=false in a fresh heartbeat, using one controlled broker-flat restart if required; then continue only at 0.10 and keep the geometry challenger separate"
+      "known_gaps": ["N8, 50% win rate, PF 1.27965 and +0.4992 USDT remain too small to prove edge", "two-pivot R2 is weak evidence", "first-retest and unbroken-line guards are not mandatory"],
+      "next_gate": "continue broker-reconciled collection only at 0.10, review before fail-closed 2026-08-05 expiry, and keep the geometry challenger separate"
     },
     {
       "component_id": "crypto_event_expansion_retest_long_v1",

@@ -6,7 +6,7 @@
 
 ## Короткий вердикт
 
-Оба live-сервиса работают, но доказанного нового денежного рукава нет. Владелец явно одобрил bounded-renewal ATT1: commit `71e0857` pushed, exact override с expiry `2026-08-05`, short-only risk `0.10` и IVB1 risk `0` установлен на VPS. Однако свежий heartbeat `2026-07-21T18:49:56Z` всё ещё показывает старый process env (`2026-07-20`, breaker blocked, **effective risk `0.0`**), поэтому ATT1 пока нельзя называть активным до reload/restart postcheck. Его маленькая выборка `N8`, WR `50%`, PF `1.27965`, net `+0.4992 USDT` не доказывает edge. Alpaca real live безопасно удерживает три позиции со стопами `3/3` в `SAFE_HOLD`. Старый TSM PASS отозван. Intraday sloped/horizontal/sweep, pump-fade final gate и три level-DCA ветки не дали второго crypto sleeve.
+Оба live-сервиса работают, но доказанного второго денежного рукава нет. Владелец явно одобрил bounded-renewal ATT1: commit `71e0857` pushed, exact override с expiry `2026-08-05`, short-only risk `0.10` и IVB1 risk `0` установлен. Штатный скрипт трижды подтвердил broker-flat и перезапустил core; postcheck `2026-07-21T19:06:21Z` подтвердил новый PID `1131772`, expiry Aug5, breaker open, effective risk `0.10`, IVB1 `0`, direct broker positions `0`. ATT1 теперь действительно активен, но его маленькая выборка `N8`, WR `50%`, PF `1.27965`, net `+0.4992 USDT` не доказывает edge и не разрешает scaling. Alpaca real live безопасно удерживает три позиции со стопами `3/3` в `SAFE_HOLD`. Старый TSM PASS отозван. Intraday sloped/horizontal/sweep, pump-fade final gate и три level-DCA ветки не дали второго crypto sleeve.
 
 Положительный прогресс сейчас инфраструктурный: truthful Web/health patch развернут, event-universe V2r2 корректно preregistered и собирает public data, public cash-carry clock дошёл до 1557 observations, а Research Station v3 получила immutable/resumable/fail-closed каркас. Это не обещание прибыли.
 
@@ -18,16 +18,16 @@
 - До July-21 docs/research batch local HEAD и upstream совпадали на `71e0857`; сам audited batch committed и pushed как `d55fbc1`. Небольшой metadata follow-up может быть новее; следующая сессия обязана заново получить HEAD/upstream.
 - VPS checkout намеренно остаётся `f7ed011` stale; последняя direct проверка насчитала `349` status records. Blind pull/reset/clean запрещены. Runtime truth задают exact-file deploy receipts и postchecks.
 - Map-only release `72dc6c2` завершён: два AI/capability map файла установлены с совпадающими hashes, без restart, risk, orders или checkout advance. Receipt: `reports/releases/CANONICAL_EVENT_ACTIVE_TARGETED_DEPLOY_RECEIPT_72DC6C2_2026_07_21.json`.
-- Commit `8f030e3` адресно развернут только для Web chart timestamps и rolling health. `bybot.service` остался active, PID `2931263` не менялся с 15 июля; `trading-journal-web.service` active и был перезапущен 21 июля, новый PID `1046949`. Core/env/risk/orders не менялись. Receipt: `reports/releases/TRUTHFUL_WEB_HEALTH_TARGETED_DEPLOY_RECEIPT_8F030E3_2026_07_21.json`.
+- Commit `8f030e3` адресно развернут только для Web chart timestamps и rolling health. В момент этого web-deploy core PID `2931263` не менялся; позднее отдельный owner-approved ATT1 flat-restart создал PID `1131772`. `trading-journal-web.service` active, PID `1046949`. Receipt: `reports/releases/TRUTHFUL_WEB_HEALTH_TARGETED_DEPLOY_RECEIPT_8F030E3_2026_07_21.json`.
 - Canonical configs локально обновлены, но их новый July-21 batch ещё не targeted-deployed на VPS: onboard AI остаётся на предыдущем map receipt до отдельной установки exact files и rebuild context.
-- ATT1 renewal receipt: `reports/releases/ATT1_BOUNDED_RENEWAL_TARGETED_DEPLOY_RECEIPT_71E0857_2026_07_21.json`. Exact override SHA `956af19f...` совпал после установки; backup существует; core не перезапускался, риск/геометрия/allowlist не повышались.
+- ATT1 renewal receipt: `reports/releases/ATT1_BOUNDED_RENEWAL_TARGETED_DEPLOY_RECEIPT_71E0857_2026_07_21.json`. Exact override SHA `956af19f...` совпал; backup существует; controlled flat restart и postchecks завершены; риск/геометрия/allowlist не повышались.
 
 ## Bybit и ATT1
 
 - Direct/mirrored runtime: core active, `trade_on=true`, `dry_run=false`, broker flat, `bull_chop`.
-- Installed ATT1 override содержит expiry `2026-08-05`, configured `risk_mult=0.10`, short-only; IVB1 остаётся `0`. Last observed runtime всё ещё содержит expiry `2026-07-20`; breaker показывает `expired=true`, `blocked=true`, поэтому effective risk пока `0.0`.
+- Runtime ATT1 содержит expiry `2026-08-05`, configured/effective `risk_mult=0.10`, short-only; IVB1 остаётся `0`. Breaker: `expired=false`, `blocked=false`, multiplier `1.0`.
 - Последний честный малый cohort: `N8`, wins/losses `4/4`, WR `50%`, PF `1.27965`, net `+0.4992 USDT`; verdict `insufficient`, edge unproven.
-- Решение владельца уже получено и exact override установлен. Следующий gate — один свежий heartbeat с expiry `2026-08-05`, `blocked=false`, `expired=false`, breaker multiplier `1.0`; если standalone reload не происходит, нужен один controlled broker-flat restart. Будущие автопродления запрещены.
+- Решение владельца, controlled broker-flat restart и exact postcheck завершены. Следующий gate — продолжать reconciled collection без изменения параметров и пересмотреть canary до fail-closed expiry `2026-08-05`. Будущие автопродления запрещены.
 - Риск нельзя повышать ради частоты: `risk_mult` меняет размер позиции, но не создаёт сигналов. Повышение выше `0.10` требует отдельной evidence ladder и достаточной broker-reconciled выборки, которой сейчас нет.
 - Source: `runtime/live_mirror/bot_heartbeat.json`, `reports/ATT1_CANARY_ACTIVATION_2026_06_29.md`, deploy receipt `8f030e3` выше.
 
@@ -120,7 +120,7 @@ Sources: `reports/L2_TAPE_COLLECTOR_SPEC_2026_07_13.md`, `reports/L2_TAPE_COLLEC
 | Приоритет и срок | Работа | Жёсткий выход/ворота |
 |---|---|---|
 | P0, 22 Jul | После финального root config/docs commit заново проверить HEAD/upstream, tracked dirty ownership, оба service PID, broker flat, ATT1 breaker и Alpaca stops. | Только read-only receipt. VPS checkout не чистить. |
-| P0, сейчас | Подтвердить применение уже установленного owner-approved ATT1 renewal. Если heartbeat остаётся stale — один controlled restart только после broker-flat check. | Postcheck: expiry Aug5, blocked/expired false, breaker×1, ATT1 `0.10` short-only, IVB1 `0`, позиции не изменились. |
+| P0, до 5 Aug | Продолжать ATT1 broker-reconciled collection на неизменном `0.10`; ежедневно контролировать heartbeat/breaker. | Review до fail-closed expiry; не scale и не ослаблять фильтры ради частоты. |
 | P0, 23 Jul 04:37Z; report 23–24 Jul | Дать public cash-carry clock закончиться, затем заморозить final counts/distribution/reasons. | При `0` stressed economics passes: `NO_ENTRY`, no capital; не «лечить» рискованием. |
 | P0, target 22–25 Jul | Freeze audited local-only `settlement_execution_v3`, построить provenance-bound public collector и начать fresh cycles from zero. | Никакого cron/deploy/capital на этой неделе; descriptive ROI не превращать в доходность. |
 | P1, earliest interim 23 Jul 18:19Z; hard end 28 Jul 18:19Z | Не трогать V2r2 thresholds; после 48h только source-finality/interim labels, после deadline — final evidence freeze. | Любая revision => terminal fail-closed. Final report реалистично 29 Jul, не в минуту deadline. |
@@ -129,10 +129,9 @@ Sources: `reports/L2_TAPE_COLLECTOR_SPEC_2026_07_13.md`, `reports/L2_TAPE_COLLEC
 
 ## Решения владельца
 
-1. Если runtime не перечитает override сам, нужен отдельный controlled broker-flat restart и postcheck; renewal и риск уже одобрены, повторное решение не требуется.
-2. Не force-sell Alpaca и не путать paper `ABBV/CRWD/DDOG` с real `ABBV/ABNB/SCHW`.
-3. Для FX предоставить/подтвердить account-specific commission/swap/session spread evidence и PIT macro-news source; secrets не присылать в чат.
-4. Не добавлять капитал в carry/arbitrage и не ждать фиксированную доходность от текущих research clocks.
+1. Не force-sell Alpaca и не путать paper `ABBV/CRWD/DDOG` с real `ABBV/ABNB/SCHW`.
+2. Для FX предоставить/подтвердить account-specific commission/swap/session spread evidence и PIT macro-news source; secrets не присылать в чат.
+3. Не добавлять капитал в carry/arbitrage и не ждать фиксированную доходность от текущих research clocks.
 
 ## Запрещено без новых ворот
 

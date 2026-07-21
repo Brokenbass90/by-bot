@@ -1364,3 +1364,17 @@
 - Audited 47-file July-21 research/docs batch committed and pushed as `d55fbc1`;
   чужие `research_lab/run_station.sh`, `research_lab/search_station.py`, data/results/logs
   и старые untracked artifacts не вошли.
+
+## ДОБАВЛЕНО 2026-07-21 19:07 UTC (Codex — ATT1 фактически активирован)
+
+- `scripts/restart_bybot_when_flat.py` через private Bybit API три раза подряд подтвердил
+  `open_positions=0` с интервалом 10 секунд и только затем перезапустил `bybot.service`.
+- Core active с `2026-07-21T19:04:10Z`, новый PID `1131772`. Fresh heartbeat
+  `19:06:21Z`: expiry `2026-08-05`, breaker `blocked=false/expired=false/risk_mult=1.0`,
+  ATT1 configured/effective `0.10`, long=false, short=true, IVB1 `0`, trade_on=true,
+  dry_run=false, open_trades=0.
+- Direct broker postcheck `19:06:52Z`: query OK, positions `[]`, equity `$1020.68`,
+  unrealized `$0`. Startup log: ATT1 engine initialized, three Bybit shards connected,
+  money sleeve `att1 x0.10`; явных startup errors нет.
+- Итог: ATT1 снова торгует и набирает статистику на прежнем tiny risk. N8 остаётся
+  insufficient; scaling/ослабление фильтров не разрешены. Следующий review до Aug5.

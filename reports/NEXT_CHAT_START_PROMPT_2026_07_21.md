@@ -19,10 +19,10 @@
 ## Текущая истина
 
 - VPS checkout `f7ed011` намеренно stale с последними `349` status records; targeted deploy receipts важнее checkout SHA. Blind pull/reset/clean запрещены.
-- `bybot.service` active, PID `2931263` не менялся с Jul15. Web active, PID `1046949`, перезапущен Jul21 только для `8f030e3`.
+- `bybot.service` active, PID `1131772`, controlled broker-flat restart выполнен `2026-07-21T19:04:10Z`. Web active, PID `1046949`, перезапущен Jul21 только для `8f030e3`.
 - `8f030e3` исправил chart epoch и настоящий rolling health; stale `range N21 PF0.487` удалён. Core/env/risk/orders не менялись.
 - Map-only `72dc6c2` deployed с hashes, без restart/risk/orders. Новый July-21 canonical batch сначала проверь по resulting commit/receipt; не дублируй и не broad-deploy вслепую.
-- Владелец одобрил ATT1 renewal: `71e0857` pushed, exact override expiry Aug5/risk `0.10` short-only/IVB1 `0` установлен на VPS с совпавшим SHA и backup. Но last heartbeat `18:49:56Z` всё ещё видел Jul20, breaker blocked, effective `0`: runtime reload не подтверждён. До postcheck не называй ATT1 active. `N8`, WR `50%`, PF `1.27965`, net `+0.4992 USDT`, edge unproven. Никогда не повышай risk ради frequency.
+- ATT1 renewal полностью применён: `71e0857` pushed, exact override expiry Aug5/risk `0.10` short-only/IVB1 `0` установлен с совпавшим SHA и backup; 3 direct flat confirmations, controlled restart, heartbeat `19:06:21Z` expiry Aug5, breaker open/×1, broker positions 0. ATT1 активен. `N8`, WR `50%`, PF `1.27965`, net `+0.4992 USDT`, edge unproven. Никогда не повышай risk ради frequency.
 - Alpaca real = `SAFE_HOLD`, equity `$484.01`, `ABBV/ABNB/SCHW`, stops `3/3`. Separate paper manager = `ABBV/CRWD/DDOG`; это не real live. Successor не auto-start/force-liquidate и blocked пятью authoritative inputs.
 - Старый TSM PASS отозван: `RESEARCH_BLOCKED`, valid shadow weeks `0/8`; defects anchor/cost/funding/concentration/liquidation/parity/immutability. Не wire на VPS.
 - Sloped/horizontal/sweep и level-DCA families провалены; final pump-fade тоже без survivor. Второго crypto money sleeve нет.
@@ -37,7 +37,7 @@
 ## Строгий порядок 22–28 июля
 
 1. `22 Jul`: read-only direct-truth receipt после финального root commit. Никаких широких изменений.
-2. Сейчас: проверить heartbeat. Если он всё ещё видит Jul20, при direct broker-flat выполнить один controlled `bybot.service` restart и postcheck expiry Aug5 / blocked false / breaker×1 / ATT1 `0.10` short-only / IVB1 `0`. Risk raise не обсуждать как способ получить больше сделок.
+2. До Aug5: продолжать ATT1 broker-reconciled collection на `0.10`, контролировать breaker/heartbeat и не менять geometry/allowlist. Risk raise не обсуждать как способ получить больше сделок.
 3. `23 Jul 04:37Z`: дать cash-carry clock завершиться. `23–24 Jul` выпустить immutable final evidence; при нуле economics passes — `NO_ENTRY`.
 4. `22–25 Jul`: freeze audited local-only `settlement_execution_v3`, построить provenance-bound public collector и начать fresh public cycles from zero. Не менять VPS cron до отдельного approved migration.
 5. Не раньше `23 Jul 18:19Z`: V2r2 48h source-finality/interim label pass без tuning. До `28 Jul 18:19Z` продолжать clock; final report реалистично 29 Jul. Любая revision = stop fail-closed.
