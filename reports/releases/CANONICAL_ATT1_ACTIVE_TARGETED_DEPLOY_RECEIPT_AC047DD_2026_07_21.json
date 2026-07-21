@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-21T19:11:00Z",
+  "source_commit": "ac047dd",
+  "branch": "codex/dynamic-symbol-filters",
+  "target": "root@64.226.73.119:/root/by-bot",
+  "policy": "targeted_exact_map_files_only",
+  "backup": "/root/by-bot-backups/canonical_att1_ac047dd_20260721T190948Z",
+  "files": {
+    "configs/ai_operator_canonical_state.json": {
+      "sha256": "2d3be2728bb530e7d1755d6a9fd8dbbce67b8bfe0157b7728e5e0ae92012260c",
+      "remote_sha_matches": true
+    },
+    "configs/project_capability_registry_v1.json": {
+      "sha256": "08c4ac4754ed996023f4eeab26bcba2b34d366224dad9c3a1cdacdbd1689e608",
+      "remote_sha_matches": true
+    }
+  },
+  "ai_context_postcheck": {
+    "generated_at_utc": "2026-07-21T19:10:50.852011+00:00",
+    "crypto_money_sleeves": ["att1"],
+    "att1_configured_risk_mult": 0.1,
+    "att1_effective_risk_mult": 0.1,
+    "att1_side": "short_only",
+    "att1_expiry_utc": "2026-08-05",
+    "heartbeat_breaker_blocked": false,
+    "heartbeat_breaker_expired": false,
+    "heartbeat_breaker_risk_mult": 1.0,
+    "heartbeat_open_trades": 0
+  },
+  "service_postcheck": {
+    "bybot_active": true,
+    "bybot_pid": 1131772,
+    "pid_unchanged_by_map_refresh": true,
+    "active_enter_timestamp_utc": "2026-07-21T19:04:10Z"
+  },
+  "mutations": {
+    "core_restart": false,
+    "web_restart": false,
+    "env_change": false,
+    "risk_change": false,
+    "orders": false,
+    "vps_checkout_advanced": false
+  },
+  "status": "DEPLOYED_AND_AI_CONTEXT_VERIFIED"
+}

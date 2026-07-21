@@ -1378,3 +1378,7 @@
   money sleeve `att1 x0.10`; явных startup errors нет.
 - Итог: ATT1 снова торгует и набирает статистику на прежнем tiny risk. N8 остаётся
   insufficient; scaling/ослабление фильтров не разрешены. Следующий review до Aug5.
+- Две canonical AI-карты из `ac047dd` targeted-deployed exact-file с backup и SHA pass;
+  AI context rebuilt `19:10:50Z`. Он видит money sleeve `att1`, effective `0.10`,
+  expiry Aug5 и breaker open. Map-only refresh не перезапускал core: PID `1131772`.
+  Receipt: `reports/releases/CANONICAL_ATT1_ACTIVE_TARGETED_DEPLOY_RECEIPT_AC047DD_2026_07_21.json`.

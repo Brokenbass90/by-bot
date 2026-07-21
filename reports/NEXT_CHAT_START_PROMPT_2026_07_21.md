@@ -21,7 +21,7 @@
 - VPS checkout `f7ed011` намеренно stale с последними `349` status records; targeted deploy receipts важнее checkout SHA. Blind pull/reset/clean запрещены.
 - `bybot.service` active, PID `1131772`, controlled broker-flat restart выполнен `2026-07-21T19:04:10Z`. Web active, PID `1046949`, перезапущен Jul21 только для `8f030e3`.
 - `8f030e3` исправил chart epoch и настоящий rolling health; stale `range N21 PF0.487` удалён. Core/env/risk/orders не менялись.
-- Map-only `72dc6c2` deployed с hashes, без restart/risk/orders. Новый July-21 canonical batch сначала проверь по resulting commit/receipt; не дублируй и не broad-deploy вслепую.
+- Map-only `72dc6c2` исторически deployed; свежий active-ATT1 map refresh из `ac047dd` также targeted-deployed с SHA pass, backup и AI context rebuild, без restart/risk/orders. Receipt: `CANONICAL_ATT1_ACTIVE_TARGETED_DEPLOY_RECEIPT_AC047DD_2026_07_21.json`.
 - ATT1 renewal полностью применён: `71e0857` pushed, exact override expiry Aug5/risk `0.10` short-only/IVB1 `0` установлен с совпавшим SHA и backup; 3 direct flat confirmations, controlled restart, heartbeat `19:06:21Z` expiry Aug5, breaker open/×1, broker positions 0. ATT1 активен. `N8`, WR `50%`, PF `1.27965`, net `+0.4992 USDT`, edge unproven. Никогда не повышай risk ради frequency.
 - Alpaca real = `SAFE_HOLD`, equity `$484.01`, `ABBV/ABNB/SCHW`, stops `3/3`. Separate paper manager = `ABBV/CRWD/DDOG`; это не real live. Successor не auto-start/force-liquidate и blocked пятью authoritative inputs.
 - Старый TSM PASS отозван: `RESEARCH_BLOCKED`, valid shadow weeks `0/8`; defects anchor/cost/funding/concentration/liquidation/parity/immutability. Не wire на VPS.
@@ -66,6 +66,7 @@ FX figures реалистичны через `1–3 недели` **после**
 - `reports/releases/TRUTHFUL_WEB_HEALTH_TARGETED_DEPLOY_RECEIPT_8F030E3_2026_07_21.json`
 - `reports/releases/CANONICAL_EVENT_ACTIVE_TARGETED_DEPLOY_RECEIPT_72DC6C2_2026_07_21.json`
 - `reports/releases/ATT1_BOUNDED_RENEWAL_TARGETED_DEPLOY_RECEIPT_71E0857_2026_07_21.json`
+- `reports/releases/CANONICAL_ATT1_ACTIVE_TARGETED_DEPLOY_RECEIPT_AC047DD_2026_07_21.json`
 - `runtime/live_mirror/bot_heartbeat.json`
 - `runtime/live_mirror/alpaca_live_v38/account_state.json`
 - `runtime/live_mirror/operator/operator_snapshot.json`

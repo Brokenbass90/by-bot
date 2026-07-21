@@ -19,7 +19,7 @@
 - VPS checkout намеренно остаётся `f7ed011` stale; последняя direct проверка насчитала `349` status records. Blind pull/reset/clean запрещены. Runtime truth задают exact-file deploy receipts и postchecks.
 - Map-only release `72dc6c2` завершён: два AI/capability map файла установлены с совпадающими hashes, без restart, risk, orders или checkout advance. Receipt: `reports/releases/CANONICAL_EVENT_ACTIVE_TARGETED_DEPLOY_RECEIPT_72DC6C2_2026_07_21.json`.
 - Commit `8f030e3` адресно развернут только для Web chart timestamps и rolling health. В момент этого web-deploy core PID `2931263` не менялся; позднее отдельный owner-approved ATT1 flat-restart создал PID `1131772`. `trading-journal-web.service` active, PID `1046949`. Receipt: `reports/releases/TRUTHFUL_WEB_HEALTH_TARGETED_DEPLOY_RECEIPT_8F030E3_2026_07_21.json`.
-- Canonical configs локально обновлены, но их новый July-21 batch ещё не targeted-deployed на VPS: onboard AI остаётся на предыдущем map receipt до отдельной установки exact files и rebuild context.
+- Canonical configs из `ac047dd` targeted-deployed двумя exact files с SHA pass и backup; onboard AI context пересобран `2026-07-21T19:10:50Z` и видит active ATT1 `0.10`, expiry Aug5, breaker open. Map-only refresh не менял PID/risk/env/orders. Receipt: `reports/releases/CANONICAL_ATT1_ACTIVE_TARGETED_DEPLOY_RECEIPT_AC047DD_2026_07_21.json`.
 - ATT1 renewal receipt: `reports/releases/ATT1_BOUNDED_RENEWAL_TARGETED_DEPLOY_RECEIPT_71E0857_2026_07_21.json`. Exact override SHA `956af19f...` совпал; backup существует; controlled flat restart и postchecks завершены; риск/геометрия/allowlist не повышались.
 
 ## Bybit и ATT1
@@ -155,6 +155,7 @@ Sources: `reports/L2_TAPE_COLLECTOR_SPEC_2026_07_13.md`, `reports/L2_TAPE_COLLEC
 - `reports/releases/TRUTHFUL_WEB_HEALTH_TARGETED_DEPLOY_RECEIPT_8F030E3_2026_07_21.json`
 - `reports/releases/CANONICAL_EVENT_ACTIVE_TARGETED_DEPLOY_RECEIPT_72DC6C2_2026_07_21.json`
 - `reports/releases/ATT1_BOUNDED_RENEWAL_TARGETED_DEPLOY_RECEIPT_71E0857_2026_07_21.json`
+- `reports/releases/CANONICAL_ATT1_ACTIVE_TARGETED_DEPLOY_RECEIPT_AC047DD_2026_07_21.json`
 - `reports/TSM_PROVISIONAL_DOWNGRADE_AUDIT_2026_07_21.md`
 - `reports/EVENT_UNIVERSE_LABEL_SCORER_FIRST_PASS_2026_07_21.md`
 - `reports/EVENT_UNIVERSE_V2R2_LAUNCH_STATUS_2026_07_21.md`
