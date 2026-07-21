@@ -1,7 +1,11 @@
 """Tests for bot.fx_setups — FX/CFD native setups composed from our tech."""
 import random
+from types import SimpleNamespace
+
+import bot.fx_setups as fx_setups
 from bot.fx_setups import (session_range_fade, round_level_sweep,
                            session_breakout_retest, trend_pullback, FxSignal)
+from bot.retest_quality import RetestScore
 
 LON = 9 * 3600          # 09:00 UTC -> london
 ASIA = 2 * 3600         # 02:00 UTC -> asian
@@ -73,3 +77,122 @@ def test_all_setups_are_one_directional():
     for fn in (session_range_fade, round_level_sweep, trend_pullback):
         s = fn(rows)
         assert not (s.long_ok and s.short_ok)
+
+
+def _retest(*, side="long", level=100.0):
+    return RetestScore(
+        ok=True,
+        entry_ok=True,
+        side=side,
+        long_ok=side == "long",
+        short_ok=side == "short",
+        level=level,
+        dist_atr=0.1,
+        freshness_bars=1,
+        touches=3,
+        quality=0.8,
+        freshness_score=1.0,
+        proximity_score=0.8,
+        strength_score=1.0,
+        rejection_score=0.8,
+        volume_score=0.0,
+        reason="retest_ok",
+    )
+
+
+def test_trend_pullback_uses_real_best_level_not_current_price(monkeypatch):
+    rows = _jagged(n=80)
+    seen = {}
+
+    monkeypatch.setattr(fx_setups, "elder_bias", lambda _rows: SimpleNamespace(tide="up", allow_long=True, allow_short=False))
+
+    def fake_best(_rows, **kwargs):
+        seen.update(kwargs)
+        return _retest(side="long", level=98.5)
+
+    monkeypatch.setattr(fx_setups, "best_retest", fake_best)
+
+    signal = trend_pullback(rows, min_quality=0.61)
+
+    assert signal.long_ok and signal.level == 98.5
+    assert seen["min_quality"] == 0.61
+
+
+def test_breakout_retest_passes_touch_metadata_to_quality_scorer(monkeypatch):
+    rows = _jagged(n=80)
+    rows[-1][0] = LON
+    captured = {}
+    monkeypatch.setattr(
+        fx_setups,
+        "breakout_confirm",
+        lambda _rows: SimpleNamespace(
+            confirmed=True,
+            direction="up",
+            kind="horizontal",
+            level=100.0,
+            reason="breakout_confirmed",
+            extra={"atr": 1.0},
+        ),
+    )
+    monkeypatch.setattr(
+        fx_setups,
+        "horizontal_levels",
+        lambda *_args, **_kwargs: [{"level": 100.0, "last_idx": 71, "touches": 4}],
+    )
+
+    def fake_score(_rows, level, side, **kwargs):
+        captured.update({"level": level, "side": side, **kwargs})
+        return _retest(side="long", level=level)
+
+    monkeypatch.setattr(fx_setups, "score_retest", fake_score)
+
+    signal = session_breakout_retest(rows)
+
+    assert signal.long_ok
+    assert captured["side"] == "support"
+    assert captured["last_touch_idx"] == 71
+    assert captured["touches"] == 4
+
+
+def test_sloped_breakout_retest_fails_closed_without_metadata(monkeypatch):
+    rows = _jagged(n=80)
+    rows[-1][0] = LON
+    monkeypatch.setattr(
+        fx_setups,
+        "breakout_confirm",
+        lambda _rows: SimpleNamespace(
+            confirmed=True,
+            direction="up",
+            kind="sloped",
+            level=100.0,
+            reason="breakout_confirmed",
+            extra={"atr": 1.0},
+        ),
+    )
+
+    signal = session_breakout_retest(rows)
+
+    assert signal.side == "none"
+    assert signal.reason == "sloped_retest_metadata_unavailable"
+
+
+def test_fx_level_setups_bound_their_causal_window(monkeypatch):
+    rows = _jagged(n=500)
+    rows[-1][0] = LON
+    seen = {}
+
+    def fake_elder(window):
+        seen["trend"] = len(window)
+        return SimpleNamespace(tide="flat", allow_long=True, allow_short=True)
+
+    def fake_breakout(window):
+        seen["breakout"] = len(window)
+        return SimpleNamespace(confirmed=False, reason="no_breakout")
+
+    monkeypatch.setattr(fx_setups, "elder_bias", fake_elder)
+    monkeypatch.setattr(fx_setups, "breakout_confirm", fake_breakout)
+
+    trend_pullback(rows)
+    session_breakout_retest(rows)
+
+    assert seen == {"trend": 240, "breakout": 120}

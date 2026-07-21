@@ -18,11 +18,11 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Sequence
 
-from bot.market_context import atr, CLOSE, HIGH, LOW, OPEN
+from bot.market_context import atr, horizontal_levels, CLOSE, HIGH, LOW, OPEN
 from bot.range_filter import range_state
 from bot.liquidity_sweep import liquidity_sweep
 from bot.breakout_confirm import breakout_confirm
-from bot.retest_quality import score_retest
+from bot.retest_quality import best_retest, score_retest
 from bot.elder_filter import elder_bias
 from bot.news_session_filter import entry_allowed, session_of
 from bot.unified_levels import _round_levels
@@ -103,6 +103,7 @@ def round_level_sweep(
 def session_breakout_retest(
     rows: Sequence[Sequence[float]], *,
     events=None, sessions=("london", "london_ny_overlap", "newyork"),
+    level_lookback: int = 120,
 ) -> FxSignal:
     """Break of prior range in an active session, then a clean retest of the level."""
     if len(rows) < 40:
@@ -112,11 +113,34 @@ def session_breakout_retest(
         return _none("session_breakout_retest", "wrong_session")
     if not _news_ok(ts, events, price, False):
         return _none("session_breakout_retest", "news_block")
-    bo = breakout_confirm(rows)
+    # Bound every geometry calculation to a causal rolling window.  Passing the
+    # whole growing prefix makes walk-forward research O(n²) and lets ancient
+    # levels leak into a setup that is explicitly session-local.
+    window = list(rows[-max(60, int(level_lookback)):])
+    bo = breakout_confirm(window)
     if not bo.confirmed:
         return _none("session_breakout_retest", bo.reason)
+    if bo.kind != "horizontal":
+        # score_retest expects touch/freshness metadata for a concrete level.
+        # A projected channel value has different geometry and needs its own
+        # sloped-retest contract; pretending it is a horizontal level produces
+        # a misleading quality score.
+        return _none("session_breakout_retest", "sloped_retest_metadata_unavailable")
     side = "support" if bo.direction == "up" else "resistance"
-    rq = score_retest(rows, bo.level, side)
+    source_side = "resistance" if bo.direction == "up" else "support"
+    a = float((bo.extra or {}).get("atr") or atr(window))
+    source_levels = horizontal_levels(window, side=source_side, atr_value=a, min_touches=2)
+    source = min(source_levels, key=lambda lv: abs(float(lv["level"]) - float(bo.level))) if source_levels else None
+    if source is None:
+        return _none("session_breakout_retest", "broken_level_metadata_unavailable")
+    rq = score_retest(
+        window,
+        bo.level,
+        side,
+        atr_value=a,
+        last_touch_idx=source.get("last_idx"),
+        touches=int(source.get("touches", 0)),
+    )
     if not rq.entry_ok:
         return _none("session_breakout_retest", f"retest_{rq.reason}")
     return FxSignal("session_breakout_retest", rq.long_ok, rq.short_ok, rq.side, bo.level,
@@ -125,6 +149,7 @@ def session_breakout_retest(
 
 def trend_pullback(
     rows: Sequence[Sequence[float]], *, events=None, min_quality: float = 0.55,
+    level_lookback: int = 240,
 ) -> FxSignal:
     """Pullback to a level WITH the elder tide (long in uptide / short in downtide)."""
     if len(rows) < 60:
@@ -132,13 +157,19 @@ def trend_pullback(
     ts = _f(rows[-1], 0); price = _f(rows[-1], CLOSE)
     if not _news_ok(ts, events, price, False):
         return _none("trend_pullback", "news_block")
-    eb = elder_bias(rows)
+    # 240 H1 bars preserve the slow Elder tide while keeping walk-forward work
+    # bounded.  The setup remains causal and no longer rescans years of history
+    # for every new bar.
+    window = list(rows[-max(60, int(level_lookback)):])
+    eb = elder_bias(window)
     if eb.tide == "up":
-        rq = score_retest(rows, price, "support", min_quality=min_quality)
+        rq = best_retest(window, min_quality=min_quality)
         if rq.entry_ok and eb.allow_long:
-            return FxSignal("trend_pullback", True, False, "long", rq.level, "pullback_uptide")
+            if rq.side == "long":
+                return FxSignal("trend_pullback", True, False, "long", rq.level, "pullback_uptide")
     elif eb.tide == "down":
-        rq = score_retest(rows, price, "resistance", min_quality=min_quality)
+        rq = best_retest(window, min_quality=min_quality)
         if rq.entry_ok and eb.allow_short:
-            return FxSignal("trend_pullback", False, True, "short", rq.level, "pullback_downtide")
+            if rq.side == "short":
+                return FxSignal("trend_pullback", False, True, "short", rq.level, "pullback_downtide")
     return _none("trend_pullback", f"tide_{eb.tide}_no_setup")
