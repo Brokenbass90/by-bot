@@ -14,7 +14,7 @@
 6. `reports/EVENT_UNIVERSE_V2R2_LAUNCH_STATUS_2026_07_21.md`
 7. `reports/SETTLEMENT_EXECUTION_V3_RESEARCH_MVP_2026_07_21.md`
 
-Затем read-only проверь изменчивую truth: current local/upstream HEAD, tracked dirty ownership, оба service PID/start time, direct broker positions, ATT1 breaker/effective risk, Alpaca real positions/stops, active screen names и clock state. Не считай `71e0857` финальным docs HEAD: это совпавший local/upstream SHA **до** финального July-21 research/docs batch.
+Затем read-only проверь изменчивую truth: current local/upstream HEAD, tracked dirty ownership, оба service PID/start time, direct broker positions, ATT1 breaker/effective risk, Alpaca real positions/stops, active screen names и clock state. `d55fbc1` — pushed audited July-21 research/docs batch; metadata follow-up может быть новее.
 
 ## Текущая истина
 

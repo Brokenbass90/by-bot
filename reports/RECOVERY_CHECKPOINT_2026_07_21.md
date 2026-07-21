@@ -15,7 +15,7 @@
 ## Git и targeted live
 
 - Branch: `codex/dynamic-symbol-filters`.
-- До финального July-21 docs/research batch local HEAD и upstream совпадали на pushed commit `71e0857` (`ops: renew ATT1 canary at unchanged risk`). Финальный docs/config commit будет новее; следующая сессия обязана заново получить HEAD/upstream.
+- До July-21 docs/research batch local HEAD и upstream совпадали на `71e0857`; сам audited batch committed и pushed как `d55fbc1`. Небольшой metadata follow-up может быть новее; следующая сессия обязана заново получить HEAD/upstream.
 - VPS checkout намеренно остаётся `f7ed011` stale; последняя direct проверка насчитала `349` status records. Blind pull/reset/clean запрещены. Runtime truth задают exact-file deploy receipts и postchecks.
 - Map-only release `72dc6c2` завершён: два AI/capability map файла установлены с совпадающими hashes, без restart, risk, orders или checkout advance. Receipt: `reports/releases/CANONICAL_EVENT_ACTIVE_TARGETED_DEPLOY_RECEIPT_72DC6C2_2026_07_21.json`.
 - Commit `8f030e3` адресно развернут только для Web chart timestamps и rolling health. `bybot.service` остался active, PID `2931263` не менялся с 15 июля; `trading-journal-web.service` active и был перезапущен 21 июля, новый PID `1046949`. Core/env/risk/orders не менялись. Receipt: `reports/releases/TRUTHFUL_WEB_HEALTH_TARGETED_DEPLOY_RECEIPT_8F030E3_2026_07_21.json`.

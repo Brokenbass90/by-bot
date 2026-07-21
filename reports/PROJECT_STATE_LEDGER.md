@@ -1361,3 +1361,6 @@
   `git diff --check` clean. Canonical continuation: `reports/RECOVERY_CHECKPOINT_2026_07_21.md`,
   `reports/PROJECT_CANONICAL_INDEX_2026_07_21.json`,
   `reports/NEXT_CHAT_START_PROMPT_2026_07_21.md`.
+- Audited 47-file July-21 research/docs batch committed and pushed as `d55fbc1`;
+  чужие `research_lab/run_station.sh`, `research_lab/search_station.py`, data/results/logs
+  и старые untracked artifacts не вошли.
