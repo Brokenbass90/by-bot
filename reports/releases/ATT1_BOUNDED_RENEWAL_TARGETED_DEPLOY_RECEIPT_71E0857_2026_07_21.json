@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-07-21T18:52:00Z",
+  "owner_authorization": "explicit_go_to_start_att1_and_continue_collecting_statistics",
+  "commit": "71e0857",
+  "branch": "codex/dynamic-symbol-filters",
+  "target": "root@64.226.73.119:/root/by-bot",
+  "file": "configs/att1_r001_plus_ivb1_r003_shadow_20260705.env",
+  "installed_sha256": "956af19f0358ba554f7cb5e0b71a4797e89e849599d26b6b74485420ab2b28f4",
+  "backup": "/root/by-bot-backups/att1_renewal_71e0857_20260721T183836Z_before.env",
+  "bounded_change": {
+    "att1_canary_expiry_utc_before": "2026-07-20",
+    "att1_canary_expiry_utc_installed": "2026-08-05",
+    "att1_risk_mult_before": 0.1,
+    "att1_risk_mult_installed": 0.1,
+    "att1_side_before": "short_only",
+    "att1_side_installed": "short_only",
+    "ivb1_risk_mult_before": 0.0,
+    "ivb1_risk_mult_installed": 0.0,
+    "geometry_or_allowlist_changed": false
+  },
+  "deploy_checks": {
+    "remote_exact_file_sha_matches": true,
+    "core_restarted": false,
+    "orders_submitted": false,
+    "risk_raised": false
+  },
+  "last_runtime_observation": {
+    "heartbeat_utc": "2026-07-21T18:49:56Z",
+    "broker_open_trades": 0,
+    "runtime_expiry_utc": "2026-07-20",
+    "breaker_expired": true,
+    "breaker_blocked": true,
+    "breaker_risk_mult": 0.0,
+    "configured_att1_risk_mult": 0.1
+  },
+  "status": "EXACT_OVERRIDE_INSTALLED_RUNTIME_RELOAD_NOT_CONFIRMED",
+  "interpretation": "The bounded owner-approved override is present on disk, but a fresh heartbeat still reflects the old process environment. ATT1 must not be described as active until a post-reload heartbeat shows expiry 2026-08-05, blocked=false, expired=false and breaker risk_mult=1.0.",
+  "safe_next_action": "After a direct broker-flat check, perform one controlled bybot.service restart and verify the new PID, heartbeat, ATT1 short-only risk 0.10, IVB1 risk 0 and unchanged broker positions."
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of_utc": "2026-07-18T07:36:00Z",
+  "as_of_utc": "2026-07-21T19:05:00Z",
   "authority": "human_reviewed_capability_map",
   "purpose": "One machine-readable map of what exists, what may act, what is proven, and what must happen next.",
   "source_precedence": [
@@ -35,12 +35,12 @@
       "execution_authority": "tiny_money",
       "promotion_authorized": false,
       "runtime_entrypoints": ["smart_pump_reversal_bot.py", "strategies/alt_trendline_touch_v1.py"],
-      "data_contract": "closed candles; current live geometry remains weakly constrained",
+      "data_contract": "closed candles; owner-approved expiry 2026-08-05 is installed on VPS at unchanged risk, but the last fresh runtime heartbeat still reports expiry 2026-07-20 and breaker effective risk zero; current live geometry remains weakly constrained",
       "level_contract": "legacy sloped two-pivot line; not LevelSnapshot parity",
       "cost_contract": "live exchange fills plus broker reconciliation",
-      "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_14.md", "reports/RECOVERY_CHECKPOINT_2026_07_18.md"],
-      "known_gaps": ["N6, 50% win rate and +0.4605 USDT remain too small to prove edge", "two-pivot R2 is weak evidence", "first-retest and unbroken-line guards are not mandatory"],
-      "next_gate": "broker-reconciled canary review on 2026-07-20; geometry challenger separately preregistered"
+      "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_18.md", "reports/RECOVERY_CHECKPOINT_2026_07_21.md"],
+      "known_gaps": ["N8, 50% win rate, PF 1.27965 and +0.4992 USDT remain too small to prove edge", "owner renewal is installed but runtime reload is not yet confirmed, so ATT1 is not active at the last observed heartbeat", "two-pivot R2 is weak evidence", "first-retest and unbroken-line guards are not mandatory"],
+      "next_gate": "confirm expiry 2026-08-05 and blocked=false in a fresh heartbeat, using one controlled broker-flat restart if required; then continue only at 0.10 and keep the geometry challenger separate"
     },
     {
       "component_id": "crypto_event_expansion_retest_long_v1",
@@ -59,20 +59,20 @@
       "next_gate": "close all eight preregistered blockers before any performance access"
     },
     {
-      "component_id": "crypto_event_universe_v1",
+      "component_id": "crypto_event_universe_v2r2",
       "kind": "research_universe_selector",
       "market": "crypto_perpetual",
       "physical_side": "none",
       "stage": "data_collection",
       "execution_authority": "none",
       "promotion_authorized": false,
-      "runtime_entrypoints": ["bot/event_universe_v1.py", "scripts/run_event_universe_v1.py", "scripts/launch_event_universe_v1.sh"],
-      "data_contract": "frozen point-in-time full Trading linear USDT-perpetual public scan; 100-symbol bounded prefetch; 72+3 closed contiguous M5; strict increasing cutoff; deterministic gzip snapshots and exact delta score replay",
+      "runtime_entrypoints": ["bot/event_universe_v1.py", "scripts/run_event_universe_v2.py", "scripts/launch_event_universe_v2r2.sh"],
+      "data_contract": "correctly preregistered point-in-time full Trading linear USDT-perpetual public scan; 100-symbol bounded prefetch; settlement-lagged closed M5; deterministic gzip/hash replay; online cross-snapshot immutable-bar assertion stops fail-closed",
       "level_contract": "none; candidate discovery only",
       "cost_contract": "tradability, current bid/ask spread, 24h turnover and listing-age guards before advisory scoring; no depth claim",
-      "evidence": ["reports/EVENT_UNIVERSE_V1_PROSPECTIVE_FREEZE_2026_07_18.md", "reports/SCREENSHOT_SETUP_TRANSLATION_2026_07_18.md", "runtime/research/event_universe_v1_20260718_public1/latest_state.json"],
-      "known_gaps": ["only two prospective snapshots as of 2026-07-18T07:36Z", "discovery rank is not a setup or probability", "source response hashes are bound but full exchange responses are not retained", "downstream horizontal/sloped long and short consumers remain separate blocked work"],
-      "next_gate": "finish frozen public clock through approximately 2026-07-25T07:32Z without tuning; then report coverage/base rates and preregister separate side-specific consumers"
+      "evidence": ["reports/EVENT_UNIVERSE_LABEL_SCORER_FIRST_PASS_2026_07_21.md", "reports/EVENT_UNIVERSE_V2R2_SOURCE_FINALITY_PREREG_2026_07_21.md", "reports/EVENT_UNIVERSE_V2R2_LAUNCH_STATUS_2026_07_21.md", "runtime/research/event_universe_v2r2_20260721_public1/latest_state.json"],
+      "known_gaps": ["V1 outcome tape was invalidated by eleven cross-snapshot M5 revisions and produced no labels", "V2 original one-snapshot run was invalidated for a future-declared freeze timestamp", "V2r2 has only begun its seven-day clock", "discovery rank is not a setup or probability", "downstream long and short consumers remain separately blocked"],
+      "next_gate": "keep V2r2 thresholds frozen through approximately 2026-07-28T18:19Z; after at least 48 hours audit source finality only; then use the already frozen side-specific label semantics without promotion"
     },
     {
       "component_id": "crypto_horizontal_range_rejection_long",
@@ -203,6 +203,22 @@
       "next_gate": "rebuild ledger from broker fills before any performance claim"
     },
     {
+      "component_id": "alpaca_adaptive_lively_paper_v1",
+      "kind": "strategy_sleeve",
+      "market": "us_equities",
+      "physical_side": "long_or_cash",
+      "stage": "paper",
+      "execution_authority": "paper_orders",
+      "promotion_authorized": false,
+      "runtime_entrypoints": ["scripts/alpaca_adaptive_paper.py", "scripts/equities_alpaca_paper_bridge.py"],
+      "data_contract": "separate Alpaca paper account and separate 1000 USD shadow preview; must never be reported as the 484 USD real SAFE_HOLD account",
+      "level_contract": "regime-gated momentum selection; not level-driven",
+      "cost_contract": "paper fills and static broker stops; native trailing is unavailable for most fractional picks at this capital",
+      "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_21.md"],
+      "known_gaps": ["zero validated paper performance history under the corrected contract", "paper account buying power can make accidental scale look real", "not exact-parity successor evidence"],
+      "next_gate": "keep account labels explicit, reconcile paper fills and stops, and compare only through the five-input exact-parity bakeoff; no automatic real-live activation"
+    },
+    {
       "component_id": "fx_cfd_v2",
       "kind": "strategy_family",
       "market": "fx_cfd",
@@ -212,10 +228,10 @@
       "promotion_authorized": false,
       "runtime_entrypoints": ["bot/fx_setups.py"],
       "data_contract": "Dukascopy M5/H1 diagnostic data",
-      "level_contract": "partially rewired horizontal levels; foreign dirty edits remain",
+      "level_contract": "causal bounded real retest levels and fail-closed sloped support preserved in commit 1436f7b; research-only",
       "cost_contract": "generic OANDA-like stress, not account-specific",
-      "evidence": ["reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md"],
-      "known_gaps": ["all six side-specific sleeves negative", "zero promotion-grade symbols"],
+      "evidence": ["reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md", "reports/RECOVERY_CHECKPOINT_2026_07_21.md"],
+      "known_gaps": ["all six side-specific sleeves negative", "legacy harness can still use same-bar or close entry rather than exact next-open", "zero promotion-grade symbols"],
       "next_gate": "do not repeat V2; define a new V3 prereg after data/news/cost pinning"
     },
     {
@@ -227,11 +243,11 @@
       "execution_authority": "none",
       "promotion_authorized": false,
       "runtime_entrypoints": ["bot/fx_setups_v3.py", "scripts/run_fx_v3_preflight_20260711.py"],
-      "data_contract": "existing M5 needs repair/refresh plus pinned macro news",
+      "data_contract": "Dukascopy M5 is present for six symbols at about 728 days; point-in-time macro news and immutable input manifest remain missing",
       "level_contract": "planned horizontal failed-break/range/expansion contracts",
       "cost_contract": "account-specific bid/ask commission and financing not pinned",
       "evidence": ["reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md"],
-      "known_gaps": ["news source", "account-specific costs", "execution adapter", "fresh promotion-grade data"],
+      "known_gaps": ["point-in-time news source", "account-specific bid/ask, fee, swap and rollover costs", "exact next-open execution adapter", "side-specific gates"],
       "next_gate": "new immutable prereg and input preflight before performance"
     },
     {
@@ -242,13 +258,13 @@
       "stage": "research_no_go",
       "execution_authority": "none",
       "promotion_authorized": false,
-      "runtime_entrypoints": ["scripts/cross_exchange_funding_shadow.py", "scripts/cross_exchange_arb_dry_run.py"],
-      "data_contract": "saved shadow snapshots; last distribution is negative",
+      "runtime_entrypoints": ["scripts/cross_exchange_funding_scan.py", "scripts/run_settlement_execution_v3.py", "scripts/settlement_execution_v3/supervisor.py", "scripts/settlement_execution_v3/storage.py", "scripts/settlement_execution_v3/scanner.py", "scripts/settlement_execution_v3/validator.py", "scripts/settlement_execution_v3/shadow.py", "scripts/settlement_execution_v3/roi.py"],
+      "data_contract": "settlement_execution_v2 is invalidated; the separate local v3 research MVP uses a sequential atomic journal, full module hashes, a strict predicted-funding to validation-book to entry-book to settlement chain, and exact settlement mark provenance; no deployment or private account authority",
       "level_contract": "not applicable",
-      "cost_contract": "executable prices and fees modeled, but no atomic live executor",
-      "evidence": ["runtime/live_mirror/arb_roi_estimate.json"],
-      "known_gaps": ["negative 174-cycle shadow distribution", "capital required on both venues", "no real executor"],
-      "next_gate": "park until a genuinely new hypothesis and fresh positive shadow distribution exist"
+      "cost_contract": "v3 requires leg quantity times exact settlement mark times actual public funding rate and records assumed fees; old 5-15 USD per 1000 monthly forecast is withdrawn",
+      "evidence": ["reports/CROSS_EXCHANGE_FUNDING_V2_FORENSIC_VERDICT_2026_07_21.md", "reports/SETTLEMENT_EXECUTION_V3_RESEARCH_MVP_2026_07_21.md", "configs/preregistered/settlement_execution_v3_research_v1.json", "tests/test_settlement_execution_v3_station.py"],
+      "known_gaps": ["pre-normalized public bundles need a provenance-bound collector", "fees remain assumptions rather than account-specific fills", "no authenticated fills, margin, liquidation, transfers or real two-leg recovery", "ROI is descriptive research only"],
+      "next_gate": "freeze the audited 11-test v3 MVP, build the public collector, then collect fresh cycles from zero; no capital, cron migration or live orders"
     },
     {
       "component_id": "arb_bybit_cash_and_carry",
@@ -259,12 +275,12 @@
       "execution_authority": "none",
       "promotion_authorized": false,
       "runtime_entrypoints": ["bot/bybit_cashcarry_shadow_v1.py", "scripts/run_bybit_cashcarry_shadow_v1.py", "bot/bybit_cashcarry_shadow_v2.py", "scripts/run_bybit_cashcarry_shadow_v2.py", "bot/public_cashcarry_station_v1.py", "scripts/run_public_cashcarry_station_v1.py", "scripts/launch_public_cashcarry_station_v1.sh"],
-      "data_contract": "default-disabled public Bybit instruments/orderbook/funding snapshots; common-base quantity; hash-chained deterministic restart replay; bounded six-symbol seven-day public-only station ready but not started",
+      "data_contract": "default-disabled public Bybit instruments/orderbook/funding snapshots; common-base quantity; hash-chained deterministic restart replay; bounded six-symbol public-only station active through 2026-07-23T04:37Z",
       "level_contract": "not applicable",
       "cost_contract": "four fees plus deterministic walked round-trip spread/slippage, funding timing, 10 bps basis reserve and 5 bps residual edge; partial fills refuse before state mutation",
       "evidence": ["reports/BYBIT_CASHCARRY_SHADOW_V1_2026_07_15.md", "reports/BYBIT_CASHCARRY_SHADOW_V2_2026_07_15.md", "reports/research/bybit_cashcarry_shadow_v2_public_screen_20260715/receipt.json", "reports/PUBLIC_CASHCARRY_RESEARCH_STATION_V1_2026_07_16.md", "reports/research/public_cashcarry_station_v1_20260716/blocked_launch_receipt.json", "tests/fixtures/bybit_cashcarry_shadow_v2_replay.json"],
-      "known_gaps": ["public station has zero observations because both network launches failed closed on DNS", "no account fee-tier/balance/margin/two-leg recovery model", "three real public XRP/BTC/ETH observations all fail the break-even gate and no paper cycle exists", "the separate Bitget normalizer exists but intentionally cannot enter this Bybit journal"],
-      "next_gate": "start the bounded public station without keys/capital; then 10 closed cycles prove mechanics and 30+ across three liquid coins test stressed edge before any capital"
+      "known_gaps": ["1557 durable observations currently contain zero economics passes", "no account balance/margin/two-leg recovery model", "no paper cycle exists", "the separate Bitget normalizer exists but intentionally cannot enter this Bybit journal"],
+      "next_gate": "finish the fixed clock and report break-even pass rate; only if nonzero durable candidates exist may a new paper-cycle contract be preregistered; no capital"
     },
     {
       "component_id": "arb_bitget_cash_and_carry_public_v1",
@@ -379,6 +395,22 @@
       "next_gate": "do not expand blindly; replace mutable cache selection with frozen datasets and a trial ledger"
     },
     {
+      "component_id": "research_station_v3",
+      "kind": "research_platform",
+      "market": "multi_market",
+      "physical_side": "none",
+      "stage": "research_blocked",
+      "execution_authority": "none",
+      "promotion_authorized": false,
+      "runtime_entrypoints": ["research_lab/station_v3.py", "research_lab/station_v3_worker.py"],
+      "data_contract": "explicit immutable hashed inputs/config/runner/spec/code; interval, ordering, duplicate, gap and calendar validation; resumable idempotent receipts and hash-chain ledger",
+      "level_contract": "strategy-owned and must be explicitly hashed; station supplies no trading geometry",
+      "cost_contract": "strategy-owned and must be explicitly frozen; station supplies no expected return",
+      "evidence": ["research_lab/RESEARCH_STATION_V3.md", "tests/test_research_station_v3.py"],
+      "known_gaps": ["independent integrity audit is closed with 16 focused tests passing and no remaining P0/P1 within the documented frame model, but no production candidate family has been migrated", "orchestrator integrity is not edge evidence"],
+      "next_gate": "migrate one preregistered family with frozen inputs and independently audit that adapter; station can never self-promote"
+    },
+    {
       "component_id": "multicoin_pattern_atlas_v1",
       "kind": "research_platform",
       "market": "crypto_perpetual",
@@ -434,13 +466,13 @@
       "stage": "operator_only",
       "execution_authority": "proposal_only",
       "promotion_authorized": false,
-      "runtime_entrypoints": ["web/routes/ai_routes.py", "scripts/sync_web_live_mirror.sh"],
+      "runtime_entrypoints": ["web/routes/ai_routes.py", "web/routes/data_routes.py", "scripts/sync_web_live_mirror.sh"],
       "data_contract": "fresh complete critical mirror bundle or deterministic stale block; geometry/router are optional sync artifacts and setup scanner itself fails closed when either is stale",
       "level_contract": "display only; setup cards are not executable signals",
       "cost_contract": "not applicable",
-      "evidence": ["reports/RECOVERY_CHECKPOINT_2026_07_14.md", "reports/releases/WEB_TRUTH_TARGETED_DEPLOY_RECEIPT_6F59938_2026_07_18.json"],
-      "known_gaps": ["successful owner-password/TOTP replay remains unproven and requires owner reset", "setup score remains a heuristic rank rather than calibrated probability", "current 20-symbol H1/H4 universe misses fresh AKE/BANK/LYN/US-like movers before geometry"],
-      "next_gate": "owner password/TOTP reset and replay; build separate point-in-time event_universe_v1 and prospective labels; keep all mutations proposal-only until a bounded reviewed consumer exists"
+      "evidence": ["reports/releases/WEB_TRUTH_TARGETED_DEPLOY_RECEIPT_6F59938_2026_07_18.json", "reports/releases/TRUTHFUL_WEB_HEALTH_TARGETED_DEPLOY_RECEIPT_8F030E3_2026_07_21.json"],
+      "known_gaps": ["successful owner-password/TOTP replay remains unproven and requires owner reset", "setup score remains a heuristic rank rather than calibrated probability", "trade chart timestamp bug is fixed but exact signal-time horizontal and sloped geometry is not persisted or rendered", "current 20-symbol H1/H4 live universe misses fresh movers before geometry"],
+      "next_gate": "persist exact signal geometry with bar/pivot/source hashes and render it in web/TG; keep all mutations proposal-only until a bounded reviewed consumer exists"
     },
     {
       "component_id": "telegram_reporting",
@@ -451,12 +483,12 @@
       "execution_authority": "report_only",
       "promotion_authorized": false,
       "runtime_entrypoints": ["scripts/tg_daily_digest.py", "scripts/equities_alpaca_tg_report.py"],
-      "data_contract": "startup execution snapshot is accurate; scheduled Alpaca delivery was confirmed on 2026-07-13 through 2026-07-15; local health truth split distinguishes fresh runtime closes from stale historical research",
-      "level_contract": "not applicable",
+      "data_contract": "startup execution snapshot is accurate; scheduled Alpaca delivery is account-labelled; deployed rolling 30-day health handles seconds and milliseconds and excludes stale cohorts",
+      "level_contract": "current trade chart still draws placeholder window quartiles rather than frozen strategy levels",
       "cost_contract": "not applicable",
-      "evidence": ["reports/AI_TG_FORENSICS_AUDIT_2026_07_10.md", "reports/RECOVERY_CHECKPOINT_2026_07_16.md"],
-      "known_gaps": ["TG_CHAT versus TG_CHAT_ID fragmentation", "new no-duplicate startup and live-versus-historical health split are local and not targeted-deployed", "old mixed-cohort crypto summaries can mislead"],
-      "next_gate": "targeted-deploy the focused observability patch with exact SHA and verify one restart plus /sleeve and /brief provenance"
+      "evidence": ["reports/AI_TG_FORENSICS_AUDIT_2026_07_10.md", "reports/releases/TRUTHFUL_WEB_HEALTH_TARGETED_DEPLOY_RECEIPT_8F030E3_2026_07_21.json"],
+      "known_gaps": ["TG_CHAT versus TG_CHAT_ID fragmentation", "exact horizontal and sloped signal geometry is not rendered", "real-live and paper Alpaca reports must remain visibly separated"],
+      "next_gate": "replace placeholder quartiles with persisted signal geometry and verify real-versus-paper account labels on the next scheduled report"
     },
     {
       "component_id": "nontrading_analytics_product",

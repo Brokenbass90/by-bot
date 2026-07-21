@@ -1121,3 +1121,243 @@
 - Independent audit blockers fixed: normalized `..` containment, launch-spec pin, read-only status, no shell writes, strict chronology and one full chain validation per process with incremental in-memory head. Focused 25 PASS; full 1463 PASS; no remaining P0/P1 freeze blocker.
 - Public clock active in screen `event_universe_v1_20260718` until `2026-07-25T07:32:46Z`. At 07:36 UTC: snapshots 2, universe 743, prefetch/scored 100/100, advisory candidates 13, errors 0, tree 296K. No threshold tuning or promotion from this run.
 - Local/Git AI map update `72dc6c2` validates 28 components/errors 0. Bundle was copied only to remote `/tmp`; installation was blocked by approval usage limit and was not bypassed. No backup/install/context rebuild/restart/risk/order action occurred. Server canonical maps therefore remain `de06ad8`; blocked receipt is authoritative.
+
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork — новая сессия)
+- ФИКС: спам errors.log `FailClient has no list_open_positions` — это был ТЕСТОВЫЙ стаб (pytest),
+  live не затронут. В `_scan_untracked_exchange_positions` добавлен getattr-guard; 3 focused tests passed.
+- НОВОЕ: стратегия владельца «ретест после пробоя наклонного уровня» реализована research-only:
+  `research_lab/sloped_break_retest.py` + станция `research_lab/station_sloped_v1.py` (64 комбо,
+  тройной гейт). Prereg: `reports/SLOPED_BREAK_RETEST_PREREG_2026_07_20.md`. Смоук: LINK 26 сделок
+  +3.6R / SOL 16 сделок -1.57R (НЕ вердикт). ЖДЁТ запуска на Mac владельцем:
+  `bash research_lab/run_station.sh sloped_v1 station_sloped_v1.py`
+- `run_station.sh` параметризован вторым аргументом (файл станции), обратная совместимость сохранена.
+- Отложено владельцем: ротация Bybit-ключа и веб-пароль/TOTP (возможна смена биржи — Bybit закроют
+  по новым законам; при выборе новой площадки учесть fee-структуру под cash-carry).
+- ОЧЕРЕДЬ Cowork (по согласованию): 1) sloped_v1 вердикт; 2) DCA-по-уровням (level_dca_v1,
+  research + tail-risk анализ); 3) ATT1 geometry challenger (3+ пивота, unbroken/first-retest);
+  4) event_universe_v1 доводка.
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork, вторая часть — DCA вердикт + Codex батч)
+- level_dca_v1 (идея владельца: усреднение по сильным уровням, 10 колен) — ПРОГНАН ПОЛНОСТЬЮ
+  (8 конфигов × 12 монет × ~2 года, 96 прогонов, 37830 циклов): **FAIL семейства**.
+  WR 96-99%, но 3.1% циклов доходят до 10-го колена и съедают всё: медианы минус по всем
+  long-конфигам; short-«плюс» сконцентрирован в 3 монетах (LOSO-ловушка); 206 ликвидаций на 3x;
+  worst цикл -$3339 на 1x. В live НЕ идёт. НЕ перетестировать тот же грид.
+  Вердикт: reports/LEVEL_DCA_V1_VERDICT_2026_07_20.md; сырьё: research_lab/results/level_dca_v1.jsonl.
+- Батч для Codex (коммит+targeted deploy фикса монолита): reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md.
+- Живое зерно из DCA-теста: реакция цены на мульти-тач уровни подтверждается -> усиливает
+  приоритет level_memory/sweep-reclaim ветки (стоп 1R, тейк 2-3R вместо усреднения).
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork, третья часть — «умная сетка» midterm)
+- level_dca_v2_midterm (5 колен, rescue-в-ноль, флет-гейт, среднесрок): **FAIL** —
+  long 0/12 монет, short сумма минус при worst -$3925; rescue спасает 80% полных глубин,
+  но оставшиеся 20% (тренд против) фатальны. Флет-отбор монет не помогает (corr +0.47
+  в обратную сторону). Семейство усреднения на крипте ЗАКРЫТО двумя вердиктами.
+  reports/LEVEL_DCA_V2_MIDTERM_VERDICT_2026_07_20.md
+- Скриншоты владельца (BANK наклонная+ликвидность, ESPORTS ретест поддержки) — оба сетапа
+  уже покрываются целевыми ветками event_universe_v1 + event_expansion_retest_long +
+  level_memory; оба тикера вне старого 20-символьного universe -> подтверждение приоритета
+  discovery-слоя.
+- ГЭП аналитики зафиксирован: при разборе позиции ATT1 веб НЕ рисует наклонную линию входа.
+  Нужен контракт: каждый вход сохраняет snapshot геометрии (линия/пивоты/уровни) -> веб рендерит.
+  Задача Codex (web) + Cowork (контракт данных).
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork, четвёртая часть — финал сетки + сроки)
+- level_dca_v3 (уточнения владельца: BTC/ETH-среднесрок с тренд-гейтом; интрадей флет-альты):
+  FAIL — BTC long единственный плюс (+33..92 за 2 года = шум), ETH зеркально минус,
+  интрадей long 0/9. Семейство усреднения на крипте закрыто ТРЕМЯ preregistered-вердиктами.
+  reports/LEVEL_DCA_V3_FINAL_VERDICT_2026_07_20.md
+- simulate_mid расширен: trend_gate (EMA200+наклон), level_agg (ТФ уровней), er_n; O(n^2) срез ER устранён.
+- СРОКИ (зафиксировано для владельца): FX-заморозка стартует с запуска скачивания Dukascopy M5
+  на Mac владельца (инструкция от 13.07) -> первые честные FX-цифры ~1-2 нед после;
+  event_universe: клок активен с 18.07, первые цифры event-long ~сер.-конец августа
+  (нужно закрыть 8 блокеров + 2-4 нед проспективных данных); weekly momentum BTC/ETH и
+  cross-sectional — первые цифры с кэша в ближайшие сессии Cowork; каскады — данные к сен-окт;
+  funding-carry episodic — после carry clock 23.07 + анализ распределения funding (август).
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork, пятая часть — weekly TSM пульс)
+- weekly_tsm_v1 скрининг: L=4w long/short ПЛЮС на всех 3 символах (BTC +791, ETH +866,
+  SOL +314 на $1000 за ~2г), бьёт buy-hold везде. СКРИНИНГ, не вердикт (selection risk по
+  лукбеку, ~20 сделок/символ). Следующий шаг: station_tsm_v1 с тройным гейтом.
+  reports/WEEKLY_TSM_V1_SCREEN_2026_07_20.md; код research_lab/weekly_tsm_v1.py.
+- Диагноз для владельца подтверждён цифрами: усреднение инвертирует сайзинг (макс размер
+  в худших сделках), тренд-подход монетизирует амплитуду BTC/ETH. Среднесрок-ветка =
+  weekly TSM + (позже) пирамидинг, НЕ усреднение.
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork, шестая часть — TSM станция + holdout prereg)
+- station_tsm_v1/v1b (28 комбо, тройной гейт, вкл. vol-target/ансамбль/skip/MA-cross):
+  0 выживших НА ВИДИМЫХ данных — но ВСЕ tsm-варианты net-плюс (до +77R); валятся только
+  на квартальной стабильности фолдов (trend-following = «комковая» прибыль, гейт под неё
+  структурно не подходит). Гейт НЕ ослабляем.
+- Решение: чистый HOLDOUT 2020-2023 (Bybit дневки, наш поиск их не видел). Финалисты (4) и
+  гейт ЗАМОРОЖЕНЫ ДО взгляда на данные: reports/TSM_HOLDOUT_PREREG_2026_07_20.md.
+  Владелец запускает fetch_daily_history.py + station_tsm_v2_holdout.py на Mac (~2 мин).
+- sloped_v1 станция ЗАПУЩЕНА владельцем на Mac 2026-07-20 07:23 UTC (лог подтверждён).
+- Скриншот ESPORTS (breakdown->отложки на ретесте->шорт) = целевой consumer event_universe;
+  механика лимиток у уровня уже есть (level_entry/maker_entry).
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork, седьмая часть — ПЕРВЫЙ HOLDOUT PASS)
+- **TSM L=4w long_short: PASS** замороженного holdout-гейта на невиданных 2020-2023
+  (+61.4R pooled, медвежий 2022 +13.2R, 5/6 символов не-минус) ПРИ уже показанном плюсе
+  на 2023-2026. Первый кандидат проекта, подтверждённый на двух непересекающихся эпохах.
+  Остальные 3 финалиста FAIL. reports/TSM_HOLDOUT_PASS_AND_SHADOW_SPEC_2026_07_20.md
+- Следующий шаг: Codex wiring shadow (risk 0, receipts) -> 8 недель parity -> canary 0.05.
+  БЕЗ срезания углов: в чоп-годы рукав ~ноль, это стабилизатор, не печатный станок.
+- Спека рисовки геометрии позиций (наклонные/уровни в вебе + ИИ-объяснение):
+  reports/GEOMETRY_SNAPSHOT_SPEC_2026_07_20.md. Cowork далее пишет генератор для ATT1.
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork, восьмая часть — XS momentum вердикт)
+- xs_momentum_v1 (лонг top-2 / шорт bottom-2 из 6, weekly, замороженный двойной гейт):
+  **FAIL** — на 2023-2026 плюс (+8..14R, в осн. 2024), на holdout 2021-2023 минус по всем
+  лукбекам (2/4/8w). Классический пример ценности holdout: по свежей эпохе выглядел бы «OK».
+  Код research_lab/xs_momentum_v1.py. Не перетестировать этот же вид.
+- sloped_v1 станция: перезапущена владельцем через nohup (PID 38548), 50/64 сделано,
+  промежуточно 0 IS-pass (folds unstable). Ждём полного завершения для вердикта.
+- Статус портфеля кандидатов: TSM tsm4-LS — ЕДИНСТВЕННЫЙ PASS (ждёт shadow-wiring Codex).
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork, девятая часть — sloped вердикт + решения владельца)
+- sloped_break_retest v1: станция ЗАВЕРШЕНА (64/64) — **0 выживших**, все комбо
+  folds-unstable (как TSM-профиль, но net неизвестен — станция не пишет net не-выживших).
+  Опция: диагностический прогон net-ов на Mac (station_sloped_net) -> решить, есть ли
+  «живое ядро» для holdout-экзамена. Пока вердикт: no candidate под текущим гейтом.
+- РЕШЕНИЯ ВЛАДЕЛЬЦА: капитал сейчас ~$2800 ($500 Alpaca / $1000 крипта / $1300 на FX-или-арбитраж
+  по готовности веток); цель $100-300/мес сначала, потом тысячи EUR; времени готов давать
+  «сколько понадобится»; амбиция — динамическая самообучающаяся система, позже ML.
+- МИГРАЦИЯ БИРЖИ: **Bitget = основная**, MEXC + BingX = запасные/арбитраж. У нас УЖЕ есть
+  bot/bitget_cashcarry_public_v1.py (public адаптер). TODO Cowork: Bitget fee/API probe,
+  migration checklist, carry-экономика на Bitget (spot maker дешевле Bybit?).
+  TODO Codex: план live-адаптера BitgetClient по образу BybitClient.
+- Масштабирование риска: подтверждено правило — каждый рукав поднимает риск только после
+  20-30 reconciled closes (ATT1 0.10->0.25 и т.д.). «Вся сумма» работает через ПОРТФЕЛЬ рукавов.
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork, десятая часть — широкая станция wide_v1)
+- По запросу владельца («давай гораздо больше пробовать») построена ШИРОКАЯ станция:
+  research_lab/station_wide_v1.py = 64 комбо sloped-retest (новые варианты: entry_style
+  reject/touch, sl_mode line/tight) + 64 комбо horizontal_break_retest (НОВАЯ логика по
+  скриншотам POLYX/ESPORTS: закрепление над мульти-тач уровнем -> удержанный ретест ->
+  продолжение; long и short). Смоук OK.
+- search_station теперь пишет is_net_r/fwd/oos net ВСЕХ комбо -> после прогона видно
+  «живое ядро» несмотря на гейт; лучшие семейства пойдут на holdout-экзамен (как TSM).
+- ЖДЁТ запуска владельцем на Mac (ночь): nohup bash research_lab/run_station.sh wide_v1 station_wide_v1.py
+- Bitget: у владельца УЖЕ есть аккаунт с $50 — достаточно для fee-пробы и API-теста, ничего
+  освобождать не нужно до этапа арбитражных переводов.
+- Alpaca план владельца: при ноябрьском PASS докладка до $3000 + плечо x2 (после отдельного
+  ревью рисков) -> целевые ~2-3%/мес; далее многолетнее наращивание рукава.
+
+## ДОБАВЛЕНО 2026-07-20 (Cowork, одиннадцатая часть — ночной пакет)
+- wide_v1 ЗАПУЩЕНА владельцем (PID 88173, nohup) — 128 комбо sloped/horizontal на ночь.
+- Построена ВТОРАЯ ночная станция: sweep_reclaim (вынос стопов под мульти-тач уровень ->
+  reclaim -> разворот; 64 комбо; смоук OK) — research_lab/station_sweep_v1.py. Можно
+  ПАРАЛЛЕЛЬНО wide_v1.
+- fetch_daily_history расширен до 24 символов (дневки с листинга) — сырьё для будущих
+  daily-стратегий, holdout-экзаменов и cross-sectional на широком универсе.
+- Итого в ночь: 192 комбо трёх скриншот-семейств + расширение данных. Утром: разбор
+  выживших + «живых ядер» (net теперь пишется у всех) -> лучшие на holdout 2020-2023.
+
+## ДОБАВЛЕНО 2026-07-21 (Cowork, утро — вердикт ночных станций)
+- wide_v1 (96) + sweep_v1 (64): **0 выживших И 0 плюсовых net из 160 комбо**. Лучшие
+  -15..-20R на 250-480 сделках = -0.05R/сделку -> сигнал есть, издержки съедают.
+  ВЕРДИКТ: внутридневные уровневые семейства (sloped/horizontal/sweep retest) на СТАРЫХ
+  ликвидных монетах ЗАКРЫТЫ (подтверждает deeprun1 107/107). Скриншот-сетапы владельца
+  (BANK/POLYX/ESPORTS) живут на СВЕЖИХ movers -> event_universe = безальтернативный №1.
+  НЕ перетестировать эти семейства на majors.
+- Дневки 24 монет скачаны полностью (вкл. LINK/LTC с 2020, глубина выросла).
+- Bitget fee-проба: сайт/API не читаются из песочницы (JS/таймауты). Нужна 1-минутная
+  проверка владельцем в UI аккаунта: spot maker/taker, futures maker/taker, BGB-скидка.
+- Статус без Codex: Alpaca сама (вердикт 04.11), carry-clock сам (до ~23.07), FX ждёт
+  Dukascopy (может запустить владелец при наличии npm или Codex), event-данные копятся
+  на VPS (для разбора понадобится scp от Codex).
+
+## ДОБАВЛЕНО 2026-07-21 (Cowork — РАЗВОРОТ К ДЕЙСТВИЯМ после критики владельца)
+- Критика владельца принята частично: две ночи на majors-внутридень = повтор известного
+  вердикта (ошибка приоритизации Cowork). Исправление: мораторий на новые семейства на
+  majors; энергия -> movers + подключение доказанного.
+- **TSM SHADOW ЗАПУЩЕН ЛОКАЛЬНО (без ожидания Codex)**: research_lab/tsm_shadow_local.py,
+  ledger tsm_shadow_ledger.jsonl, запись #1 от 2026-07-21: LONG BTC/ETH/SOL/ADA, SHORT DOGE.
+  Владелец запускает по понедельникам одну команду. 8-недельный отсчёт parity НАЧАТ.
+- Написан research_lab/fetch_movers_5m.py: 5m-история ВСЕХ листингов Bybit за 18 мес
+  (+BANK/POLYX/ESPORTS со скриншотов), ~20-40 мин на Mac, resumable. После скачивания -
+  станция трёх семейств НА MOVERS (там, где сетапы живут). Ограничение survivorship
+  (делистнутые недоступны) зафиксировано честно.
+
+## ДОБАВЛЕНО 2026-07-21 (Cowork — movers-станция готова)
+- TSM shadow: владелец сделал запись #2 тем же днём (ок, далее по понедельникам).
+- fetch_movers_5m запущен владельцем (PID 82001), POLYX уже на диске (115200 баров).
+- Построена station_movers_v1: 64 комбо × 4 семейства (sloped/horizontal/sweep/pumpfade —
+  НОВЫЙ класс research_lab/pump_spike_fade.py) на замороженном movers-универсе;
+  IS = старшие 60% листингов, OOS = младшие 40% (point-in-time). Смоук на POLYX OK.
+  Многочасовой прогон — запуск владельцем после ГОТОВО у fetch.
+
+## ДОБАВЛЕНО 2026-07-21 (Cowork — ПРОРЫВ на movers: pump-fade)
+- movers_v2 (37 монет, 56 комбо, случайно-ранний универс): pumpfade — ЕДИНСТВЕННОЕ плюсовое
+  семейство (4/8 комбо в плюс на обеих сторонах). Лучший: short lb24 spike12% rr1.5 =
+  **IS +18.06R (365 сделок, гейт PASS) / fwd +1.57R / OOS-монеты +13.09R — плюс на ВСЕХ
+  трёх ступенях** (формальные пороги стабильности fwd/oos не добраны). Сильнейший
+  внутридневной сигнал проекта. horizontal/sweep на movers сильно минус (churn), sloped слабо минус.
+- fetch завершён ПОЛНОСТЬЮ: 338 монет, из них 198 с >=70д истории.
+- Построена решающая станция station_pumpfade_v1: 36 комбо × 100 монет (IS 60/OOS 40
+  point-in-time по листингу), ~сутки счёта. ЖДЁТ запуска владельцем.
+- Если тройной гейт пройден -> shadow pump-fade + спека для Codex. Это кандидат в
+  «частотный» рукав, который владелец просил с первого дня.
+
+## ДОБАВЛЕНО 2026-07-21 (Codex — corrective truth audit и безопасный live-пакет)
+
+- Предыдущая метка `TSM tsm4 long_short PASS` **отозвана**: runner использовал разные
+  weekdays по символам, списывал только одну сторону заявленных round-trip costs,
+  не моделировал liquidation/maintenance/mark, а результат был сильно
+  anchor/2021-sensitive. Локальный ledger содержит две разные записи за один день
+  без as-of/hash/idempotency, поэтому valid shadow weeks = `0/8`. Статус:
+  `RESEARCH_BLOCKED`, серверный wiring запрещён до исправленного immutable rerun.
+  Полный corrective audit: `reports/TSM_PROVISIONAL_DOWNGRADE_AUDIT_2026_07_21.md`.
+- Финальные intraday-исследования не дали второго рукава: sloped unique `64/64`
+  FAIL; wide+sweep `160/160` без survivor и без положительного IS net; финальный
+  pump-fade `36/36`, включая 19 положительных IS, но `0` IS-pass и `0` survivor.
+  DCA по уровням v1/v2/v3 закрыт тремя отрицательными prereg-вердиктами.
+- Direct VPS truth: core жив, PID `2931263` не менялся, broker flat. ATT1 за 30 дней:
+  N8, WR50%, PF1.280, net `+0.4992 USDT`, но canary истёк 20 июля и effective risk
+  автоматически равен нулю до явного ручного продления. Повышение risk меняет
+  размер позиции, но не частоту сигналов.
+- Commit `8f030e3` pushed. Targeted live deploy исправил только секунды/миллисекунды
+  в web trade chart и настоящий 30-day rolling health. Web restart выполнен; core,
+  env, risk и orders не менялись. Старый TG `range N21 PF0.487` больше не считается
+  текущим: новый отчёт содержит только ATT1 и verdict `insufficient`.
+- Approved map-only deploy `72dc6c2` завершён до этого пакета без рестартов и
+  торговых изменений. Receipts находятся в `reports/releases/`.
+
+## ДОБАВЛЕНО 2026-07-21 19:05 UTC (Codex — bounded ATT1 renewal + final research frame)
+
+- Владелец явно одобрил продолжение ATT1. Commit `71e0857` pushed; exact override
+  установлен на VPS с SHA `956af19f...`, backup сохранён. Изменена только bounded
+  expiry `2026-07-20 -> 2026-08-05`: risk остаётся `0.10`, short-only, геометрия и
+  allowlist без изменений, IVB1 остаётся risk `0`. Core не перезапускался.
+- Важная незакрытая live-истина: свежий heartbeat `2026-07-21T18:49:56Z` всё ещё
+  показывает process expiry Jul20, breaker blocked/expired и effective risk `0`.
+  Файл установлен, но runtime reload НЕ подтверждён; ATT1 пока нельзя называть
+  активным. Безопасный следующий шаг — direct broker-flat check, один controlled
+  restart `bybot.service`, затем exact postcheck Aug5/blocked=false/breaker×1/
+  ATT1 0.10 short-only/IVB1 0/positions unchanged. Receipt:
+  `reports/releases/ATT1_BOUNDED_RENEWAL_TARGETED_DEPLOY_RECEIPT_71E0857_2026_07_21.json`.
+- Hot-reload forensic: standalone watcher для operator override отсутствует; файл
+  перечитывается только как побочный эффект regime/allocator overlay cycle. Breaker
+  читает env динамически, поэтому fresh Jul20 heartbeat — не cache artifact. Не
+  трогать unrelated overlay mtimes для обхода; позже добавить independent watcher,
+  resolved path/hash/mtime telemetry и functional reload test.
+- Cross-exchange funding v2 окончательно invalidated: 228 legacy cycles не edge и
+  старый `$5–15/month per $1000` forecast withdrawn. Новый отдельный
+  `settlement_execution_v3` local research-only MVP прошёл independent audit: три P1
+  исправлены (funding = quantity × exact settlement mark × rate; strict predicted ->
+  validation -> entry -> settlement chronology; hashes всего package/runner).
+  `11` focused PASS, P0/P1 внутри declared model нет. Следующий gate — provenance-
+  bound public collector и fresh cycles from zero; no cron/deploy/capital/orders.
+- Research Station v3 independent integrity audit closed: checkpoint/resume/finality/
+  isolation P1 исправлены, `16` focused PASS, оставшихся P0/P1 внутри frame model нет.
+  Это orchestration frame, не edge; production adapters = 0.
+- Corrected event-universe V2r2 остаётся единственным действующим event clock:
+  first `752/100/100/17/0`, deadline `2026-07-28T18:19:58Z`, public GET-only.
+  Original V2 invalidated; V1 labels blocked source revisions. Public cash-carry clock:
+  1557 durable observations, economics passes 0, deadline `2026-07-23T04:37:10Z`.
+- Final local regression после всех P1 fixes: `1507` tests PASS; JSON maps валидны;
+  `git diff --check` clean. Canonical continuation: `reports/RECOVERY_CHECKPOINT_2026_07_21.md`,
+  `reports/PROJECT_CANONICAL_INDEX_2026_07_21.json`,
+  `reports/NEXT_CHAT_START_PROMPT_2026_07_21.md`.

@@ -1,0 +1,125 @@
+{
+  "schema_id": "event_universe_label_scorer_preregistered_v1",
+  "scorer_id": "event_universe_label_scorer_v1",
+  "status": "RESEARCH_ONLY_FROZEN_NO_PROMOTION_AUTHORITY",
+  "frozen_at_utc": "2026-07-21T18:15:00Z",
+  "source_contract": {
+    "collector_spec_path": "configs/preregistered/event_universe_v1_20260718.json",
+    "collector_spec_payload_sha256": "0ea396a373b48e759ef68271d713842b4d2dc7d8bfbfabbe7a8fd0f3df8a3df5",
+    "collector_config_sha256": "d9ebb7fa07e05db966474aad44c096f42e12bfbfe8443fb8b121fa24ae0bee8e",
+    "snapshot_schema_id": "event_universe_snapshot_v1",
+    "replay_schema_id": "event_universe_normalized_replay_v1",
+    "interval_ms": 300000
+  },
+  "selection": {
+    "candidate_ok": true,
+    "candidate_reason": "event_ok",
+    "allowed_directions": [
+      "long",
+      "short"
+    ],
+    "episode_identity": "symbol_plus_direction",
+    "episode_rule": "chronologically_first_eligible_candidate_then_first_after_cooldown",
+    "cooldown_ms": 86400000,
+    "selection_uses_future_outcomes": false
+  },
+  "execution_model": {
+    "entry_rule": "open_of_exact_next_contiguous_closed_m5_bar_after_signal_tail",
+    "entry_delay_bars": 1,
+    "roundtrip_cost_bps": 16.0,
+    "cost_scope": "fixed_research_hurdle_deducted_once_from_endpoint_return",
+    "cost_warning": "not_an_account_or_symbol_specific_executable_cost_contract"
+  },
+  "horizons": [
+    {
+      "id": "1h",
+      "bars": 12
+    },
+    {
+      "id": "4h",
+      "bars": 48
+    },
+    {
+      "id": "24h",
+      "bars": 288
+    }
+  ],
+  "path_metrics": {
+    "endpoint_return": "direction_adjusted_simple_return_bps_minus_roundtrip_cost",
+    "mfe": "gross_maximum_direction_favorable_intrabar_excursion_bps_from_entry_open",
+    "mae": "gross_maximum_direction_adverse_intrabar_excursion_bps_from_entry_open",
+    "closed_bars_only": true
+  },
+  "feature_buckets": {
+    "heuristic_rank": [
+      0.0,
+      50.0,
+      65.0,
+      80.0,
+      100.000001
+    ],
+    "inflow_mult": [
+      0.0,
+      2.5,
+      5.0,
+      1000000000000.0
+    ],
+    "abs_recent_return_pct": [
+      0.0,
+      2.0,
+      5.0,
+      10.0,
+      18.000001
+    ],
+    "range_expansion_atr": [
+      0.0,
+      2.0,
+      4.0,
+      1000000000000.0
+    ],
+    "latest_body_fraction": [
+      0.0,
+      0.33,
+      0.67,
+      1.000001
+    ]
+  },
+  "summary_contract": {
+    "groups": [
+      "all",
+      "direction",
+      "listing_tier",
+      "direction_x_listing_tier",
+      "fixed_feature_bucket"
+    ],
+    "metrics": [
+      "n",
+      "mean_net_return_bps",
+      "median_net_return_bps",
+      "positive_rate",
+      "mean_mfe_bps",
+      "mean_mae_bps"
+    ],
+    "minimum_n_for_performance_claim": null
+  },
+  "missing_data_policy": {
+    "broken_snapshot_or_replay_hash": "abort_entire_run",
+    "broken_delta_or_conflicting_bar": "abort_entire_run",
+    "gap_after_horizon_is_observable": "episode_horizon_unscorable_fail_closed",
+    "horizon_not_yet_observable_at_chain_head": "episode_horizon_pending",
+    "partial_horizon_is_never_scored": true
+  },
+  "authority": {
+    "research_only": true,
+    "executable": false,
+    "network_calls": false,
+    "environment_or_api_key_reads": false,
+    "private_api_calls": false,
+    "broker_calls": false,
+    "orders_transfers_withdrawals": false,
+    "risk_or_live_router_mutation": false,
+    "parameter_tuning": false,
+    "performance_claims": false,
+    "promotion_authority": false
+  }
+}

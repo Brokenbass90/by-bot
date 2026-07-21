@@ -1,0 +1,67 @@
+{
+  "schema_version": "settlement_execution_v3_config_v1",
+  "model_version": "settlement_execution_v3",
+  "research_only": true,
+  "network_calls": false,
+  "private_api_calls": false,
+  "orders_enabled": false,
+  "transfers_enabled": false,
+  "withdrawals_enabled": false,
+  "live_capital_usd": 0,
+  "ranking": {
+    "minimum_predicted_spread_apr_pct": 15.0
+  },
+  "execution": {
+    "virtual_notional_usd_per_leg": 100.0,
+    "virtual_hold_hours": 24.0,
+    "max_book_age_ms": 2000,
+    "max_pair_skew_ms": 2000,
+    "max_predicted_age_ms": 5000,
+    "max_predicted_pair_skew_ms": 5000,
+    "max_actual_basis_pct": 1.0,
+    "max_entry_slippage_bps_per_leg": 10.0,
+    "exit_slippage_buffer_bps_per_leg": 10.0,
+    "additional_safety_buffer_bps": 10.0,
+    "minimum_predicted_net_bps_pair_sum": 1.0,
+    "max_open_virtual_routes": 5
+  },
+  "settlement": {
+    "max_missing_receipt_attempts": 3
+  },
+  "exit_retry": {
+    "deadline_ms": 1800000,
+    "max_attempts": 3
+  },
+  "venue_fee_contracts": {
+    "bybit": {
+      "fee_kind": "assumed_conservative_public_only",
+      "entry_fee_bps": 10.0,
+      "exit_fee_bps": 10.0,
+      "source": "preregistered research assumption; not an account fee receipt",
+      "valid_at_utc": "2026-07-21T00:00:00Z"
+    },
+    "binance": {
+      "fee_kind": "assumed_conservative_public_only",
+      "entry_fee_bps": 10.0,
+      "exit_fee_bps": 10.0,
+      "source": "preregistered research assumption; not an account fee receipt",
+      "valid_at_utc": "2026-07-21T00:00:00Z"
+    },
+    "bitget": {
+      "fee_kind": "assumed_conservative_public_only",
+      "entry_fee_bps": 10.0,
+      "exit_fee_bps": 10.0,
+      "source": "preregistered research assumption; not an account fee receipt",
+      "valid_at_utc": "2026-07-21T00:00:00Z"
+    }
+  },
+  "roi": {
+    "monetary_projection_enabled": false
+  },
+  "limitations": [
+    "Consumes normalized public-response bundles; no collector or network client is included.",
+    "All notionals are virtual and live capital is fixed at zero.",
+    "Fees are conservative preregistered assumptions, not private account receipts.",
+    "No deployment or scheduler configuration is part of this station."
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema_id": "research_collector_stop_receipt_v1",
+  "collector_id": "event_universe_v1",
+  "stopped_at_utc": "2026-07-21T18:16:00Z",
+  "screen": "event_universe_v1_20260718",
+  "run_root": "runtime/research/event_universe_v1_20260718_public1",
+  "final_snapshot_count": 961,
+  "final_snapshot": "snapshot_000961_1784657606230.json.gz",
+  "reason": "superseded_after_fail_closed_cross_snapshot_m5_revision; V2 adds a full settlement lag and online immutability stop",
+  "data_deleted_or_rewritten": false,
+  "live_or_risk_changed": false,
+  "orders_or_private_api_calls": false,
+  "successor": {
+    "collector_id": "event_universe_v2",
+    "run_revision": "v2r2_timestamp_corrected",
+    "screen": "event_universe_v2r2_20260721",
+    "run_root": "runtime/research/event_universe_v2r2_20260721_public1",
+    "launch_sha256": "0423342b537df8426b548c51570aa47a00a8fe5aa00d52954803fe59c28b6096",
+    "deadline_at_ms": 1785262798535
+  },
+  "invalidated_intermediate_run": {
+    "run_revision": "v2_original_invalidated",
+    "receipt": "reports/releases/EVENT_UNIVERSE_V2_INVALIDATED_TIMESTAMP_RECEIPT_2026_07_21.json",
+    "reason": "declared_preregistration_timestamp_was_after_first_observation"
+  }
+}

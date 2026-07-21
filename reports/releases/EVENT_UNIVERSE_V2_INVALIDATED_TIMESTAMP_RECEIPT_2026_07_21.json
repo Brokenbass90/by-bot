@@ -1,0 +1,25 @@
+{
+  "schema_id": "event_universe_invalidated_run_receipt_v1",
+  "run_revision": "v2_original_invalidated",
+  "status": "INVALIDATED_NO_ANALYSIS_NO_PROMOTION",
+  "reason": "declared_preregistration_timestamp_was_after_first_observation",
+  "declared_frozen_at_utc": "2026-07-21T19:05:00Z",
+  "launch_started_at_ms": 1784657620491,
+  "first_observation_as_of_ms": 1784657621561,
+  "invalidated_and_screen_stopped_by_utc": "2026-07-21T18:18:02Z",
+  "screen_name": "event_universe_v2_20260721",
+  "run_root": "runtime/research/event_universe_v2_20260721_public1",
+  "snapshot_count_preserved": 1,
+  "last_snapshot_sha256": "47ac3b389904cf687b4312605768fb12ad102944403a6a49a09fe395be276d5e",
+  "invalid_spec_sha256": "91132805c676810a98a716685bd5b2b5ace0491364bad2f3b7d03e52a1af3727",
+  "launch_receipt_self_hash": "d0e92a2270ae349587b82da9e5369d8b4b05ec64655bb7a739f1bcb808abc33c",
+  "source_data_deleted_or_rewritten": false,
+  "outcomes_scored": false,
+  "performance_inference_allowed": false,
+  "promotion_authority": false,
+  "replacement": {
+    "run_revision": "v2r2_timestamp_corrected",
+    "spec": "configs/preregistered/event_universe_v2r2_20260721.json",
+    "run_root": "runtime/research/event_universe_v2r2_20260721_public1"
+  }
+}

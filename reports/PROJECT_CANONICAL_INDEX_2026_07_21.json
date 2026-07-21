@@ -1,0 +1,207 @@
+{
+  "schema_version": 12,
+  "as_of_utc": "2026-07-21T19:05:00Z",
+  "status": "services_active_att1_renewal_installed_runtime_reload_unconfirmed_alpaca_safe_hold_no_second_crypto_sleeve_event_v2r2_active_cashcarry_active_research_only",
+  "branch": "codex/dynamic-symbol-filters",
+  "profit_or_income_promise": false,
+  "source_priority": [
+    "direct_broker_or_exchange",
+    "fresh_runtime_receipt",
+    "targeted_deploy_receipt_and_sha",
+    "immutable_preregistered_research",
+    "human_reviewed_checkpoint_and_index",
+    "ai_interpretation"
+  ],
+  "git_and_deploy": {
+    "pre_documentation_local_head": "71e0857",
+    "pre_documentation_upstream_head": "71e0857",
+    "matched_and_pushed": true,
+    "vps_checkout": "f7ed011_stale_intentionally_not_advanced",
+    "vps_status_records_latest_direct_audit": 349,
+    "deployment_policy": "TARGETED_EXACT_FILES_ONLY_WITH_HASH_BACKUP_POSTCHECK",
+    "blind_pull_reset_clean_allowed": false,
+    "map_release": "72dc6c2_DEPLOYED_NO_RESTART_NO_RISK_NO_ORDERS",
+    "web_health_release": "8f030e3_DEPLOYED_WEB_RESTART_ONLY",
+    "canonical_config_refresh": "LOCAL_JULY21_BATCH_IN_PROGRESS_NOT_YET_TARGETED_DEPLOYED",
+    "att1_renewal_commit": "71e0857",
+    "att1_installed_override_sha256": "956af19f0358ba554f7cb5e0b71a4797e89e849599d26b6b74485420ab2b28f4",
+    "att1_remote_backup": "/root/by-bot-backups/att1_renewal_71e0857_20260721T183836Z_before.env",
+    "att1_core_restart_performed": false,
+    "att1_runtime_reload_confirmed": false
+  },
+  "live_truth": {
+    "services": {
+      "bybot": {"status": "ACTIVE", "pid": 2931263, "pid_unchanged_since": "2026-07-15"},
+      "trading_journal_web": {"status": "ACTIVE", "pid": 1046949, "restarted_at_utc": "2026-07-21T17:55:09Z"}
+    },
+    "bybit": {
+      "broker_positions": 0,
+      "trade_on": true,
+      "dry_run": false,
+      "regime": "bull_chop",
+      "second_crypto_money_sleeve": false,
+      "att1": {
+        "side": "SHORT_ONLY",
+        "configured_risk_mult": 0.1,
+        "installed_override_expiry_utc": "2026-08-05",
+        "runtime_observed_expiry_utc": "2026-07-20",
+        "runtime_reload_confirmed": false,
+        "breaker_expired": true,
+        "breaker_blocked": true,
+        "effective_risk_mult": 0.0,
+        "trades": 8,
+        "win_rate_pct": 50.0,
+        "profit_factor": 1.27965,
+        "net_pnl_usdt": 0.4992,
+        "edge_verdict": "INSUFFICIENT_UNPROVEN",
+        "renewal": "OWNER_APPROVED_PUSHED_EXACT_FILE_DEPLOYED_AWAITING_RUNTIME_CONFIRMATION",
+        "risk_raise_for_frequency_allowed": false
+      }
+    },
+    "alpaca_real": {
+      "snapshot_utc": "2026-07-21T08:00:13.780813Z",
+      "mode": "SAFE_HOLD",
+      "equity_usd": 484.01,
+      "cash_usd": 358.11,
+      "positions": ["ABBV", "ABNB", "SCHW"],
+      "protective_stops": "3_OF_3_EXACT_QUANTITY",
+      "new_entries": false,
+      "forced_liquidation": false,
+      "successor_auto_activation": false
+    },
+    "alpaca_paper_separate": {
+      "mode": "LIVE_PAPER_NOT_REAL_LIVE",
+      "positions": ["ABBV", "CRWD", "DDOG"],
+      "may_be_reported_as_real_holdings": false
+    }
+  },
+  "web_and_ai_truth": {
+    "trade_chart_epoch": "FIXED_SECONDS_AND_MILLISECONDS_NORMALIZATION_8F030E3",
+    "strategy_health": "TRUE_30_DAY_ROLLING_ATT1_ONLY_INSUFFICIENT_STALE_RANGE_REMOVED",
+    "exact_signal_geometry": "NOT_WIRED_NOT_RENDERED_HORIZONTAL_OR_SLOPED",
+    "event_map": "72DC6C2_TARGETED_DEPLOY_COMPLETE"
+  },
+  "research_truth": {
+    "alpaca_successor": {
+      "status": "BLOCKED_FAIL_CLOSED",
+      "authoritative_inputs_missing": 5,
+      "missing": ["XNYS_calendar_ledger", "PIT_universe", "PIT_adjusted_market_manifest", "corporate_actions_and_delistings", "broker_lifecycle_and_real_cost_calibration"]
+    },
+    "tsm4_long_short": {
+      "old_verdict": "PASS_WITHDRAWN",
+      "current_verdict": "RESEARCH_BLOCKED",
+      "valid_shadow_weeks": "0_OF_8",
+      "blockers": ["weekday_anchor", "round_trip_cost_and_PIT_funding", "anchor_and_2021_concentration", "mark_maintenance_liquidation_survival", "shadow_parity_idempotency", "immutable_evidence"]
+    },
+    "failed_crypto_families": {
+      "sloped_unique": "64_OF_64_FAIL",
+      "wide_sloped_horizontal_plus_sweep": "160_OF_160_NO_SURVIVOR_AND_NO_POSITIVE_IS_NET",
+      "pumpfade_final": "36_OF_36_ZERO_IS_PASS_ZERO_SURVIVOR",
+      "level_dca": "V1_V2_V3_FAIL_CLOSED",
+      "second_money_sleeve": false
+    },
+    "event_universe_v1_labels": "BLOCKED_BY_SOURCE_FINALITY_NO_RETURNS_COMPUTED",
+    "event_universe_v2_original": "PRESERVED_INVALIDATED_BAD_PREREG_TIMESTAMP_NEVER_COMBINE_WITH_V2R2",
+    "event_universe_v2r2": {
+      "status": "ACTIVE_PUBLIC_GET_ONLY_RESEARCH",
+      "screen": "event_universe_v2r2_20260721",
+      "deadline_utc": "2026-07-28T18:19:58Z",
+      "first_observation": {"universe": 752, "prefetch": 100, "scored": 100, "advisory_candidates": 17, "errors": 0},
+      "keys_private_calls_orders_risk": false,
+      "cross_snapshot_revision_action": "TERMINAL_FAIL_CLOSED"
+    },
+    "public_cashcarry": {
+      "status": "ACTIVE_PUBLIC_RESEARCH_ONLY",
+      "deadline_utc": "2026-07-23T04:37:10Z",
+      "durable_observations_snapshot": 1557,
+      "economics_passes": 0,
+      "capital_authorized": false,
+      "old_5_to_15_usd_month_forecast": "WITHDRAWN"
+    },
+    "cross_exchange_funding": {
+      "v2_model": "INVALIDATED_228_CYCLES_NOT_EDGE_EVIDENCE",
+      "old_5_to_15_usd_month_forecast": "WITHDRAWN",
+      "scanner_p0_fix": "LOCAL_ONLY_TESTED_UNDEPLOYED",
+      "v3": "LOCAL_RESEARCH_ONLY_MVP_IMPLEMENTED_11_TESTS_PASS_THREE_P1_FIXED_ZERO_REMAINING_P0_P1_WITHIN_DECLARED_MODEL_NO_PERFORMANCE_AUTHORITY",
+      "v3_limitations": ["pre_normalized_public_bundles_only", "assumed_fees", "no_authenticated_fills_margin_transfers_liquidation_or_real_legging", "descriptive_roi_only"],
+      "capital_authorized": false
+    },
+    "fx_v3": {
+      "status": "RESEARCH_BLOCKED",
+      "dukascopy_m5": "EXISTS_APPROX_728_DAYS_6_SYMBOLS",
+      "legacy_fx_setups_repair": "COMMITTED_1436F7B_RESEARCH_ONLY_NOT_LIVE",
+      "missing": ["PIT_macro_news", "account_and_session_specific_costs", "exact_next_tradable_open_parity"],
+      "oanda_eu_mt5_demo": "USEFUL_INPUT_NOT_V20_REST_DEPLOYMENT_AUTHORITY"
+    },
+    "research_station_v3": {
+      "status": "FRAME_READY_RESEARCH_ONLY",
+      "properties": ["immutable_manifest", "resumable_idempotent_receipts", "fail_closed_inputs_and_runner", "credential_free_network_blocked_worker"],
+      "integrity_audit": "CLOSED",
+      "focused_tests_passed": 16,
+      "remaining_p0_p1_within_documented_model": 0,
+      "production_strategies_plugged": 0,
+      "promotion_authority": false
+    },
+    "local_tape": {
+      "ondo_l2_size_approx": "1.5GB",
+      "six_symbol_trades_size_snapshot": "637_TO_638MB",
+      "clocks": "ACTIVE_LOCAL",
+      "promotion_grade": false
+    }
+  },
+  "seven_day_queue": {
+    "window": "2026-07-22_TO_2026-07-28",
+    "items": [
+      {"priority": "P0", "target": "2026-07-22", "action": "reverify HEAD/upstream dirty ownership service PIDs broker flat ATT1 breaker Alpaca stops after final root commit", "mutation": "READ_ONLY"},
+      {"priority": "P0", "target": "NOW", "action": "confirm runtime reload of installed ATT1 renewal; if stale, controlled broker-flat core restart and exact postcheck", "until_confirmed": "EFFECTIVE_ZERO"},
+      {"priority": "P0", "target": "2026-07-23T04:37:10Z_THEN_REPORT_BY_2026-07-24", "action": "finish and freeze public cashcarry clock", "gate": "ZERO_ECONOMICS_PASS_MEANS_NO_ENTRY_NO_CAPITAL"},
+      {"priority": "P0", "target": "2026-07-25", "action": "freeze audited settlement_execution_v3, build provenance-bound public collector and collect fresh cycles from zero", "deploy_or_capital": false},
+      {"priority": "P1", "target": "INTERIM_NOT_BEFORE_2026-07-23T18:19:58Z_FINAL_CLOCK_2026-07-28T18:19:58Z", "action": "preserve V2r2 thresholds and run source-finality labels only", "revision_action": "FAIL_CLOSED"},
+      {"priority": "P1", "target": "2026-07-26", "action": "correct TSM anchor costs funding liquidation parity and immutable contract then use first reviewed Station v3 adapter", "pass_promised": false},
+      {"priority": "P1", "target": "2026-07-28", "action": "local exact geometry snapshot and Web overlay plus FX and Alpaca input materialization", "deployment": "SEPARATE_APPROVAL_ONLY"}
+    ]
+  },
+  "owner_inputs": [
+    "if runtime remains stale, approval or manual execution of one controlled broker-flat bybot.service restart",
+    "FX target-account commission swap and session-spread evidence plus PIT macro-news source",
+    "no secrets in chat"
+  ],
+  "forbidden": [
+    "auto-renew or scale ATT1 or loosen filters for frequency",
+    "call N8 an edge proof",
+    "wire TSM from the withdrawn PASS or count duplicate same-day rows as shadow weeks",
+    "combine invalidated event V2 with V2r2 or tune V2r2 during the clock",
+    "fund carry or arbitrage from 1557 observations or invalid 228 cycles",
+    "confuse Alpaca paper holdings with real SAFE_HOLD holdings",
+    "call MT5 demo a REST deployment",
+    "call local tape bytes promotion-grade",
+    "claim Web renders exact signal geometry",
+    "blind pull reset clean the dirty VPS or use git add -A",
+    "promise profit income or a money-promotion date"
+  ],
+  "canonical_sources": [
+    "reports/RECOVERY_CHECKPOINT_2026_07_21.md",
+    "reports/NEXT_CHAT_START_PROMPT_2026_07_21.md",
+    "reports/PROJECT_STATE_LEDGER.md",
+    "reports/releases/TRUTHFUL_WEB_HEALTH_TARGETED_DEPLOY_RECEIPT_8F030E3_2026_07_21.json",
+    "reports/releases/CANONICAL_EVENT_ACTIVE_TARGETED_DEPLOY_RECEIPT_72DC6C2_2026_07_21.json",
+    "reports/releases/ATT1_BOUNDED_RENEWAL_TARGETED_DEPLOY_RECEIPT_71E0857_2026_07_21.json",
+    "runtime/live_mirror/bot_heartbeat.json",
+    "runtime/live_mirror/alpaca_live_v38/account_state.json",
+    "runtime/live_mirror/operator/operator_snapshot.json",
+    "reports/ALPACA_BAKEOFF_V2_AND_SAFE_HOLD_AUDIT_2026_07_16.md",
+    "reports/TSM_PROVISIONAL_DOWNGRADE_AUDIT_2026_07_21.md",
+    "reports/EVENT_UNIVERSE_LABEL_SCORER_FIRST_PASS_2026_07_21.md",
+    "reports/EVENT_UNIVERSE_V2R2_LAUNCH_STATUS_2026_07_21.md",
+    "reports/releases/EVENT_UNIVERSE_V2_INVALIDATED_TIMESTAMP_RECEIPT_2026_07_21.json",
+    "runtime/research/public_cashcarry_station_v1_20260716_public1/station_state.json",
+    "reports/CROSS_EXCHANGE_FUNDING_V2_FORENSIC_VERDICT_2026_07_21.md",
+    "reports/SETTLEMENT_EXECUTION_V3_RESEARCH_MVP_2026_07_21.md",
+    "reports/FX_CFD_DATA_AND_FIRST_FIGURES_AUDIT_2026_07_13.md",
+    "reports/FX_COST_CONTRACT_OANDA_DEMO_2026_07_13.md",
+    "research_lab/RESEARCH_STATION_V3.md",
+    "configs/preregistered/settlement_execution_v3_research_v1.json",
+    "tests/test_settlement_execution_v3_station.py",
+    "reports/GEOMETRY_SNAPSHOT_SPEC_2026_07_20.md"
+  ]
+}
