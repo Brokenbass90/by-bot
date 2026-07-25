@@ -1,0 +1,204 @@
+{
+  "aggregate_by_round_trip_cost_bps": {
+    "0": {
+      "block_count": 4,
+      "cumulative_net_bps": 51.50273333333333,
+      "mean_net_bps_per_block": 12.875683333333333,
+      "positive_blocks": 4,
+      "round_trip_cost_bps": 0.0
+    },
+    "22": {
+      "block_count": 4,
+      "cumulative_net_bps": -36.49726666666666,
+      "mean_net_bps_per_block": -9.124316666666665,
+      "positive_blocks": 1,
+      "round_trip_cost_bps": 22.0
+    },
+    "40": {
+      "block_count": 4,
+      "cumulative_net_bps": -108.49726666666666,
+      "mean_net_bps_per_block": -27.124316666666665,
+      "positive_blocks": 0,
+      "round_trip_cost_bps": 40.0
+    },
+    "8": {
+      "block_count": 4,
+      "cumulative_net_bps": 19.50273333333333,
+      "mean_net_bps_per_block": 4.875683333333333,
+      "positive_blocks": 3,
+      "round_trip_cost_bps": 8.0
+    }
+  },
+  "aligned_symbol_count": 8,
+  "blocks": [
+    {
+      "basket_gross_bps": 22.927133333333334,
+      "basket_net_bps_by_round_trip_cost": {
+        "0": 22.927133333333334,
+        "22": 0.9271333333333338,
+        "40": -17.072866666666666,
+        "8": 14.927133333333334
+      },
+      "oos_end_exclusive_utc": "2026-04-27T00:00:00+00:00",
+      "oos_start_utc": "2026-03-28T00:00:00+00:00",
+      "selected": [
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 12.5292,
+          "oos_observations": 90,
+          "symbol": "ETHUSDT",
+          "train_mean_diff_bps_per_settlement": 0.2821072222222222,
+          "train_observations": 180
+        },
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 23.1903,
+          "oos_observations": 90,
+          "symbol": "SOLUSDT",
+          "train_mean_diff_bps_per_settlement": 0.2712277777777778,
+          "train_observations": 180
+        },
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 33.0619,
+          "oos_observations": 90,
+          "symbol": "SUIUSDT",
+          "train_mean_diff_bps_per_settlement": 0.2616511111111111,
+          "train_observations": 180
+        }
+      ]
+    },
+    {
+      "basket_gross_bps": 9.658233333333333,
+      "basket_net_bps_by_round_trip_cost": {
+        "0": 9.658233333333333,
+        "22": -12.341766666666667,
+        "40": -30.341766666666665,
+        "8": 1.6582333333333334
+      },
+      "oos_end_exclusive_utc": "2026-05-27T00:00:00+00:00",
+      "oos_start_utc": "2026-04-27T00:00:00+00:00",
+      "selected": [
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 9.2282,
+          "oos_observations": 90,
+          "symbol": "DOTUSDT",
+          "train_mean_diff_bps_per_settlement": 0.4764333333333333,
+          "train_observations": 180
+        },
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 18.143500000000003,
+          "oos_observations": 90,
+          "symbol": "SUIUSDT",
+          "train_mean_diff_bps_per_settlement": 0.33281444444444447,
+          "train_observations": 180
+        },
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 1.6029999999999993,
+          "oos_observations": 90,
+          "symbol": "ADAUSDT",
+          "train_mean_diff_bps_per_settlement": 0.2420233333333333,
+          "train_observations": 180
+        }
+      ]
+    },
+    {
+      "basket_gross_bps": 15.248433333333333,
+      "basket_net_bps_by_round_trip_cost": {
+        "0": 15.248433333333333,
+        "22": -6.751566666666667,
+        "40": -24.75156666666667,
+        "8": 7.248433333333333
+      },
+      "oos_end_exclusive_utc": "2026-06-26T00:00:00+00:00",
+      "oos_start_utc": "2026-05-27T00:00:00+00:00",
+      "selected": [
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 14.714599999999999,
+          "oos_observations": 90,
+          "symbol": "DOTUSDT",
+          "train_mean_diff_bps_per_settlement": 0.3734383333333333,
+          "train_observations": 180
+        },
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 14.6392,
+          "oos_observations": 90,
+          "symbol": "SUIUSDT",
+          "train_mean_diff_bps_per_settlement": 0.2844744444444445,
+          "train_observations": 180
+        },
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 16.3915,
+          "oos_observations": 90,
+          "symbol": "SOLUSDT",
+          "train_mean_diff_bps_per_settlement": 0.2413438888888889,
+          "train_observations": 180
+        }
+      ]
+    },
+    {
+      "basket_gross_bps": 3.668933333333334,
+      "basket_net_bps_by_round_trip_cost": {
+        "0": 3.668933333333334,
+        "22": -18.331066666666665,
+        "40": -36.331066666666665,
+        "8": -4.331066666666667
+      },
+      "oos_end_exclusive_utc": "2026-07-25T16:00:00.001000+00:00",
+      "oos_start_utc": "2026-06-26T00:00:00+00:00",
+      "selected": [
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": -9.500399999999999,
+          "oos_observations": 90,
+          "symbol": "SOLUSDT",
+          "train_mean_diff_bps_per_settlement": 0.20357277777777777,
+          "train_observations": 180
+        },
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 0.10330000000000121,
+          "oos_observations": 90,
+          "symbol": "SUIUSDT",
+          "train_mean_diff_bps_per_settlement": 0.1821261111111111,
+          "train_observations": 180
+        },
+        {
+          "collection_route": "short_bybit_long_mexc",
+          "oos_gross_bps": 20.4039,
+          "oos_observations": 90,
+          "symbol": "ADAUSDT",
+          "train_mean_diff_bps_per_settlement": 0.15355222222222223,
+          "train_observations": 180
+        }
+      ]
+    }
+  ],
+  "generated_at_utc": "2026-07-25T21:42:28.907825+00:00",
+  "input_file_sha256": "2856e94bfeda8a4a0489ff330d46597c21ecef0a4b259c1d0dea4d0543fc723d",
+  "input_path": "research_lab/data/cross_exchange_funding_history_180d.json",
+  "not_live_authorization": true,
+  "omitted_risks": [
+    "basis_convergence_or_divergence",
+    "borrow_and_margin_availability",
+    "liquidation",
+    "legging_and_fill",
+    "funding_rate_revision",
+    "venue_credit_and_transfer"
+  ],
+  "oos_days": 30,
+  "research_only": true,
+  "schema_id": "cross_exchange_funding_walk_forward_v1",
+  "top_k": 3,
+  "train_days": 60,
+  "venues": [
+    "bybit",
+    "mexc"
+  ]
+}

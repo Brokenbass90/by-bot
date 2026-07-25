@@ -342,7 +342,11 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Research-only cross-exchange funding spread scanner.")
     ap.add_argument("--exchanges", default="bybit,binance,bitget")
     ap.add_argument("--min-volume-usd", type=float, default=1_000_000.0)
-    ap.add_argument("--min-spread-apr-pct", type=float, default=15.0)
+    # A 15% discovery floor hid ordinary 3-10% annualized cross-venue
+    # differentials before execution economics could evaluate them.  Discovery
+    # is deliberately wider; the downstream order-book/fee/persistence
+    # validator remains the authority for whether a route is actionable.
+    ap.add_argument("--min-spread-apr-pct", type=float, default=5.5)
     ap.add_argument("--top", type=int, default=30)
     ap.add_argument("--out-json", default="runtime/arb/cross_exchange_funding_latest.json")
     ap.add_argument("--out-csv", default="runtime/arb/cross_exchange_funding_latest.csv")

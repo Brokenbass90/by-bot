@@ -142,12 +142,31 @@ from bot.runner_state import (
 )
 from bot.live_position_view import build_live_position_row
 from bot.strategy_breaker import breaker_state as _strategy_breaker_state
+from bot.operator_strategy_controls import (
+    OperatorControlError as _OperatorControlError,
+    format_status as _operator_control_status,
+    is_paused as _operator_strategy_is_paused,
+    pause as _operator_pause_strategy,
+    resume as _operator_resume_strategy,
+)
 from bot.symbol_state import (
     SymState, STATE,
     S, update_5m_bar, trim,
     calc_atr_pct, calc_rsi, ema_val, candle_pattern, engulfing, trade_quality,
 )
 # ─────────────────────────────────────────────────────────────────────────────
+
+
+def _operator_strategy_entry_allowed(sleeve: str) -> bool:
+    """Hot-read the persistent human pause before producing a new entry.
+
+    This is independent of automated health/breaker logic.  It never closes or
+    interferes with management of an existing position.
+    """
+    paused = _operator_strategy_is_paused(sleeve)
+    if paused:
+        _diag_inc(f"{sleeve}_skip_operator_pause")
+    return not paused
 
 # Load .env before any module-level os.getenv(...) settings below are evaluated.
 ROOT_DIR = Path(__file__).resolve().parent
@@ -3575,6 +3594,7 @@ def _status_full_text() -> str:
     lines.append(_allocator_state_text())
     lines.append("strategy-flags: " + _strategy_flags_text())
     lines.append("money-sleeves: " + _strategy_money_sleeves_text())
+    lines.append(_operator_control_status())
     lines.append(_runner_protection_text())
 
     router_regime = str(os.getenv("ROUTER_REGIME", "") or "").strip()
@@ -4479,6 +4499,9 @@ def _handle_tg_command(text: str):
             "⚙️ *Управление торговлей*\n"
             "  /pause — пауза всех стратегий\n"
             "  /resume — возобновить торговлю\n"
+            "  /strategy_controls — ручные паузы отдельных стратегий\n"
+            "  /strategy_pause att1 [причина] — запретить новые входы ATT1\n"
+            "  /strategy_resume att1 — снова разрешить новые входы ATT1\n"
             "  /risk 0.5 — риск на сделку в %\n"
             "  /capital 300 — капитал бота (USDT)\n"
             "  /positions 3 — макс. одновременных позиций\n\n"
@@ -4551,6 +4574,45 @@ def _handle_tg_command(text: str):
         TRADE_ON = True
         PORTFOLIO_STATE["disabled"] = False
         _tg_reply("Trading resumed.")
+        return
+
+    if name == "/strategy_controls":
+        _tg_reply(_operator_control_status())
+        return
+
+    if name == "/strategy_pause":
+        if len(cmd) < 2:
+            _tg_reply("Usage: /strategy_pause att1 [причина]")
+            return
+        try:
+            reason = " ".join(cmd[2:]).strip()
+            state = _operator_pause_strategy(
+                cmd[1],
+                source="telegram_admin",
+                reason=reason,
+            )
+            _tg_reply(
+                "Paused new entries: "
+                + ", ".join(state["paused_sleeves"])
+                + ". Existing positions remain managed with their protections."
+            )
+        except _OperatorControlError as exc:
+            _tg_reply(f"Operator control rejected: {exc}")
+        return
+
+    if name == "/strategy_resume":
+        if len(cmd) < 2:
+            _tg_reply("Usage: /strategy_resume att1")
+            return
+        try:
+            state = _operator_resume_strategy(cmd[1])
+            paused = ", ".join(state["paused_sleeves"]) or "none"
+            _tg_reply(
+                f"New entries resumed for {cmd[1].lower()}. "
+                f"Still paused: {paused}."
+            )
+        except _OperatorControlError as exc:
+            _tg_reply(f"Operator control rejected: {exc}")
         return
 
     if name == "/risk" and len(cmd) >= 2:
@@ -5657,6 +5719,7 @@ def _strategy_runtime_stats_text(lookback_hours: int = 24) -> str:
     lines = [
         "🧠 strategy-flags: " + _strategy_flags_text(),
         "💰 money-sleeves: " + _strategy_money_sleeves_text(),
+        "🎚 " + _operator_control_status(),
         "🛡 " + _runner_protection_text(),
         f"🎛 allocator-active: {active_txt} | degraded={degraded_txt} | status={alloc_status} | risk×={risk_txt}",
         f"📊 trade-events ({max(1, int(lookback_hours))}h):",
@@ -10009,6 +10072,8 @@ _BREAKOUT_SESSION_LOG_TS = {}   # symbol -> ts
 async def try_range_entry_async(symbol: str, price: float):
     if not ENABLE_RANGE_TRADING:
         return
+    if not _operator_strategy_entry_allowed("range"):
+        return
     if not TRADE_ON or DRY_RUN:
         return
     if TRADE_CLIENT is None:
@@ -10183,6 +10248,8 @@ async def try_range_entry_async(symbol: str, price: float):
 async def try_inplay_entry_async(symbol: str, price: float):
     if not ENABLE_INPLAY_TRADING:
         return
+    if not _operator_strategy_entry_allowed("inplay"):
+        return
     if not TRADE_ON or DRY_RUN:
         return
     if TRADE_CLIENT is None:
@@ -10297,6 +10364,8 @@ async def try_inplay_entry_async(symbol: str, price: float):
 
 async def try_breakout_entry_async(symbol: str, price: float):
     if not ENABLE_BREAKOUT_TRADING:
+        return
+    if not _operator_strategy_entry_allowed("breakout"):
         return
     if not TRADE_ON or DRY_RUN:
         return
@@ -10653,6 +10722,8 @@ async def try_breakout_entry_async(symbol: str, price: float):
 async def try_retest_entry_async(symbol: str, price: float):
     if not ENABLE_RETEST_TRADING:
         return
+    if not _operator_strategy_entry_allowed("retest"):
+        return
     if not TRADE_ON or DRY_RUN:
         return
     if TRADE_CLIENT is None:
@@ -10756,6 +10827,8 @@ async def try_retest_entry_async(symbol: str, price: float):
 
 async def try_midterm_entry_async(symbol: str, price: float):
     if not ENABLE_MIDTERM_TRADING:
+        return
+    if not _operator_strategy_entry_allowed("midterm"):
         return
     if not TRADE_ON or DRY_RUN:
         return
@@ -10917,6 +10990,8 @@ async def try_sloped_entry_async(symbol: str, price: float):
     """Try sloped channel entry for a symbol."""
     if not ENABLE_SLOPED_TRADING:
         _diag_inc("sloped_skip_disabled")
+        return
+    if not _operator_strategy_entry_allowed("sloped"):
         return
     if not _ensure_sloped_engine():
         _diag_inc("sloped_skip_no_engine")
@@ -11083,6 +11158,8 @@ async def try_att1_entry_async(symbol: str, price: float):
     """Try ATT1 trendline-touch entry for a symbol."""
     if not ENABLE_ATT1_TRADING:
         _diag_inc("att1_skip_disabled")
+        return
+    if not _operator_strategy_entry_allowed("att1"):
         return
     if not _ensure_att1_engine():
         _diag_inc("att1_skip_no_engine")
@@ -11306,6 +11383,8 @@ async def try_asm1_entry_async(symbol: str, price: float):
     if not ENABLE_ASM1_TRADING:
         _diag_inc("asm1_skip_disabled")
         return
+    if not _operator_strategy_entry_allowed("asm1"):
+        return
     if not _ensure_asm1_engine():
         _diag_inc("asm1_skip_no_engine")
         return
@@ -11465,6 +11544,8 @@ async def try_asb1_entry_async(symbol: str, price: float):
     """Try ASB1 sloped trendline breakdown short entry for a symbol."""
     if not ENABLE_ASB1_TRADING:
         return
+    if not _operator_strategy_entry_allowed("asb1"):
+        return
     if not _ensure_asb1_engine():
         _diag_inc("asb1_skip_no_engine")
         return
@@ -11615,6 +11696,8 @@ async def try_asb1_entry_async(symbol: str, price: float):
 async def try_hzbo1_entry_async(symbol: str, price: float):
     """Try HZBO1 horizontal zone breakdown short entry for a symbol."""
     if not ENABLE_HZBO1_TRADING:
+        return
+    if not _operator_strategy_entry_allowed("hzbo1"):
         return
     if not _ensure_hzbo1_engine():
         _diag_inc("hzbo1_skip_no_engine")
@@ -11772,6 +11855,8 @@ async def try_bounce1_entry_async(symbol: str, price: float):
     """
     if not ENABLE_BOUNCE1_TRADING:
         return
+    if not _operator_strategy_entry_allowed("bounce1"):
+        return
     if not _ensure_bounce1_engine():
         _diag_inc("bounce1_skip_no_engine")
         return
@@ -11923,6 +12008,8 @@ async def try_flat_entry_async(symbol: str, price: float):
     """Try flat resistance fade entry for a symbol."""
     if not ENABLE_FLAT_TRADING:
         _diag_inc("flat_skip_disabled")
+        return
+    if not _operator_strategy_entry_allowed("flat"):
         return
     if not _ensure_flat_engine():
         _diag_inc("flat_skip_no_engine")
@@ -12102,6 +12189,8 @@ async def try_breakdown_entry_async(symbol: str, price: float):
     """Try breakdown short entry for a symbol (alt_inplay_breakdown_v1)."""
     if not ENABLE_BREAKDOWN_TRADING:
         _diag_inc("breakdown_skip_disabled")
+        return
+    if not _operator_strategy_entry_allowed("breakdown"):
         return
     if not _ensure_breakdown_engine():
         _diag_inc("breakdown_skip_no_engine")
@@ -12306,6 +12395,8 @@ async def try_micro_scalper_entry_async(symbol: str, price: float):
     """Try micro scalper entry for a symbol (micro_scalper_v1)."""
     if not ENABLE_MICRO_SCALPER_TRADING:
         return
+    if not _operator_strategy_entry_allowed("micro_scalper"):
+        return
     if MICRO_SCALPER_ENGINE is None:
         return
     if not TRADE_ON or DRY_RUN:
@@ -12415,6 +12506,8 @@ async def try_micro_scalper_entry_async(symbol: str, price: float):
 async def try_support_reclaim_entry_async(symbol: str, price: float):
     """Try support reclaim long entry for a symbol (alt_support_reclaim_v1)."""
     if not ENABLE_SUPPORT_RECLAIM_TRADING:
+        return
+    if not _operator_strategy_entry_allowed("support_reclaim"):
         return
     if SUPPORT_RECLAIM_ENGINE is None:
         return
@@ -12587,6 +12680,8 @@ async def try_ivb1_entry_async(symbol: str, price: float):
     """Try IVB1 entry or record a zero-risk shadow signal."""
     if not ENABLE_IVB1_TRADING:
         _diag_inc("ivb1_skip_disabled")
+        return
+    if not _operator_strategy_entry_allowed("ivb1"):
         return
     if IVB1_ENGINE is None:
         return
@@ -12778,6 +12873,8 @@ async def try_elder_entry_async(symbol: str, price: float):
     if not ENABLE_ELDER_TRADING:
         _diag_inc("elder_skip_disabled")
         return
+    if not _operator_strategy_entry_allowed("elder"):
+        return
     if ELDER_ENGINE is None:
         return
     if not TRADE_ON or DRY_RUN:
@@ -12944,6 +13041,8 @@ async def try_brc1_entry_async(symbol: str, price: float):
     """
     if not ENABLE_BRC1_TRADING:
         _diag_inc("brc1_skip_disabled")
+        return
+    if not _operator_strategy_entry_allowed("brc1"):
         return
     if BRC1_ENGINE is None:
         return
@@ -13132,6 +13231,8 @@ async def try_sob1_entry_async(symbol: str, price: float):
     """
     if not ENABLE_SOB1_TRADING:
         return
+    if not _operator_strategy_entry_allowed("sob1"):
+        return
     if not TRADE_ON or DRY_RUN:
         return
     if TRADE_CLIENT is None:
@@ -13278,6 +13379,8 @@ async def try_sob1_entry_async(symbol: str, price: float):
 async def try_ts132_entry_async(symbol: str, price: float):
     """Try Triple Screen v132 entry for a symbol."""
     if not ENABLE_TS132_TRADING:
+        return
+    if not _operator_strategy_entry_allowed("ts132"):
         return
     if TS132_ENGINE is None:
         return
@@ -15516,6 +15619,7 @@ def auth_check_all_accounts():
         lines.append("🤖 Торговый аккаунт: не выбран/нет ключей")
     lines.append("🧠 strategy-flags: " + _strategy_flags_text())
     lines.append("💰 money-sleeves: " + _strategy_money_sleeves_text())
+    lines.append("🎚 " + _operator_control_status())
     lines.append("🛡 " + _runner_protection_text())
 
     text = "\n".join(lines)
