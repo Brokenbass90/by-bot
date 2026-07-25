@@ -208,11 +208,23 @@ Telegram-команды:
 
 Проверки: `17 passed`; `py_compile` и `git diff --check` прошли.
 
-Release boundary: в live это ещё не развёрнуто. Основной файл содержит
-параллельную пользовательскую правку геометрии графика, а VPS checkout грязный;
-слепая замена файла нарушила бы правило targeted deploy. Код нужно выпустить
-изолированным commit/patch, проверить broker-flat, сделать backup и только затем
-перезапустить core.
+Targeted live deploy завершён в `2026-07-25T21:50Z`:
+
+- source commit: `e7e0478`;
+- VPS Git HEAD оставлен `f7ed011` (HEAD не используется как ложное
+  доказательство deploy);
+- server drift сохранён, применены только owner-control hunks;
+- backup:
+  `smart_pump_reversal_bot.py.bak_e7e0478_20260725T2150Z`;
+- pre-deploy positions: `0`;
+- remote `py_compile` и control pause/resume roundtrip: PASS;
+- `bybot.service` active, новый PID `1560017`;
+- post-restart heartbeat: `trade_on=true`, `dry_run=false`, `open_trades=0`,
+  money sleeve `att1`, breaker clear;
+- live control state отсутствует, что штатно означает `all sleeves allowed`.
+
+Receipt:
+`reports/releases/OPERATOR_STRATEGY_CONTROLS_TARGETED_DEPLOY_RECEIPT_E7E0478_2026_07_26.json`.
 
 ## 4. Очередь денег
 

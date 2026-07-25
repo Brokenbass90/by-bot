@@ -1,0 +1,80 @@
+{
+  "schema_id": "operator_strategy_controls_targeted_deploy_receipt_v1",
+  "deployed_at_utc": "2026-07-25T21:50:01Z",
+  "source_commit": "e7e0478",
+  "source_branch": "codex/dynamic-symbol-filters",
+  "source_remote": "origin/codex/dynamic-symbol-filters",
+  "server": {
+    "host": "64.226.73.119",
+    "repo_path": "/root/by-bot",
+    "git_head_before_and_after": "f7ed011",
+    "git_head_is_not_deploy_proof": true,
+    "core_was_dirty_before": true
+  },
+  "scope": {
+    "targeted_patch_only": true,
+    "full_core_file_replacement": false,
+    "preserved_server_drift": [
+      "health_truth_split",
+      "startup_duplicate_stats_suppression"
+    ],
+    "deployed_files": [
+      "bot/operator_strategy_controls.py",
+      "smart_pump_reversal_bot.py owner-control hunks only"
+    ],
+    "excluded_local_user_change": "trade chart signal geometry"
+  },
+  "predeploy": {
+    "open_positions": 0,
+    "service_active": true,
+    "service_main_pid": 1802297,
+    "server_core_sha256": "992926fa0ba167322b18183ab495cd71a50ce4f689c604be11c1a747527db1b5",
+    "patch_apply_check": "PASS"
+  },
+  "backup": {
+    "path": "/root/by-bot/smart_pump_reversal_bot.py.bak_e7e0478_20260725T2150Z",
+    "sha256": "992926fa0ba167322b18183ab495cd71a50ce4f689c604be11c1a747527db1b5",
+    "recoverable": true
+  },
+  "remote_validation": {
+    "py_compile": "PASS",
+    "git_diff_check": "PASS",
+    "control_pause_resume_roundtrip_on_temp_path": "PASS",
+    "operator_module_sha256": "a61dde4fae0fa4a32c8680de4279fb2d306725842cb1c81a19b099dba6dddad3",
+    "patched_core_sha256": "528ff5723783e05b5b8d5f4bddcbbd3f379510b2981e68cc49acdd2837f34b4f"
+  },
+  "service_after": {
+    "unit": "bybot.service",
+    "active": true,
+    "main_pid": 1560017,
+    "started_at_utc": "2026-07-25T21:50:01Z"
+  },
+  "heartbeat_after": {
+    "age_sec_at_check": 25,
+    "trade_on": true,
+    "dry_run": false,
+    "open_trades": 0,
+    "live_money_sleeves": [
+      "att1"
+    ],
+    "att1": {
+      "blocked": false,
+      "expired": false,
+      "trades": 10,
+      "net_pnl_usdt": 0.2902,
+      "breaker_risk_mult": 1.0
+    }
+  },
+  "operator_control_after": {
+    "state_path": "/root/by-bot/runtime/operator_strategy_controls.json",
+    "exists": false,
+    "effective_default": "all_sleeves_allowed",
+    "commands": [
+      "/strategy_controls",
+      "/strategy_pause att1 reason",
+      "/strategy_resume att1"
+    ],
+    "pause_scope": "new_entries_only",
+    "existing_position_management_unchanged": true
+  }
+}
