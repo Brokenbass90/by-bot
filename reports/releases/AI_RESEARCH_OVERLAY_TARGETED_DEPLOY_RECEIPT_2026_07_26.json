@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "deployed_at_utc": "2026-07-26T16:11:00Z",
+  "source_branch": "codex/dynamic-symbol-filters",
+  "source_commit": "9692e5a",
+  "deployment_kind": "targeted_file_copy_and_service_restart",
+  "server": "64.226.73.119",
+  "service": "bybot",
+  "files": [
+    {
+      "path": "bot/ai_context_brief.py",
+      "sha256": "cdd851b31d1b4d34fd518654fde6ea1eb8dc09ccdc715a923ba7aceefc88601c"
+    },
+    {
+      "path": "configs/ai_operator_research_overlay.json",
+      "sha256": "65b7894c92cad58f12a3c507f677ab22836ed438ff617032ce2f77eadbc5c804"
+    }
+  ],
+  "remote_hash_match": true,
+  "service_verification": {
+    "active": true,
+    "main_pid": 1596662,
+    "active_enter_timestamp_utc": "2026-07-26T16:11:00Z",
+    "heartbeat_age_sec_observed": 26.5,
+    "trade_on": true,
+    "dry_run": false,
+    "regime": "bear_trend",
+    "open_trades": 0,
+    "money_sleeves": {
+      "att1": 0.1
+    },
+    "ws_guard_active": false
+  },
+  "ai_brief_verification": {
+    "length_chars": 7000,
+    "fresh_research_truth_present": true,
+    "proposal_format_present": true,
+    "research_queue_present": true,
+    "overlay_expires_after_hours": 48
+  },
+  "live_strategy_changes": "none",
+  "alpaca_changes": "none",
+  "research_process_changes": "none"
+}
