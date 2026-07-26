@@ -22,6 +22,11 @@ from typing import Any, Dict, List, Optional, Sequence
 
 __all__ = ["HOUSE_RULES", "DEFAULT_NO_GO", "build_brief", "compose_from_repo"]
 
+# Бриф режется по символам. Очередь исследований стоит последней и лимитирована,
+# чтобы обрезание никогда не съедало правила дома и формат ответа.
+BRIEF_MAX_CHARS = 7000
+QUEUE_MAX_ITEMS = 14
+
 HOUSE_RULES: List[str] = [
     "Включение стратегии/риска надо ЗАСЛУЖИТЬ: data-gate -> backtest -> stress-издержки -> "
     "time-OOS -> symbol-OOS -> shadow -> телеметрия -> tiny canary. Рекомендации в обход ворот запрещены.",
@@ -33,6 +38,17 @@ HOUSE_RULES: List[str] = [
     "на СВОИХ размеченных сделках, после сотен примеров.",
     "Частота умножает ЗНАК ожидания: чаще торговать с минусом = быстрее слить.",
     "Redкий рукав в чужом режиме МОЛЧИТ по построению (short-only в bull) — это не поломка.",
+    "Фильтр (новости/режим/киты/китовые потоки) МОЖЕТ помочь, но НЕ создаёт эдж из шума. "
+    "Разрешено: фильтр пре-регистрирован ДО прогона, отсекает структурно опознаваемый режим потерь, "
+    "и отфильтрованная версия проходит ПОЛНЫЙ гейт самостоятельно, а не только улучшает метрику. "
+    "Запрещено: перебирать фильтры на убыточной логике, пока какой-нибудь не выведет её в плюс — "
+    "это подгонка. Замер: режим-фильтр на мёртвой логике сдвинул PF 0.58 -> 0.59, то есть никак.",
+    "Внутри ОДНОГО семейства параметров переключение на «то, что сейчас лучше идёт» ПРОИГРЫВАЕТ простому удержанию всех вариантов (замерено: адаптив +4/+87/+101% против +108% у равного портфеля, просадка хуже). Не предлагай «переключиться на лучший конфиг». Перевзвешивание уместно только МЕЖДУ классами стратегий, где различия структурные, а не шумовые.",
+    "Маркет-мейкинг на ликвидных перпах Bybit при стандартной мейкерской комиссии НЕВОЗМОЖЕН арифметически: медианный спред 0.13-3.19 bps против 4 bps круга. Идеальный ММ без единого промаха теряет -1.09 bps. Предлагать ММ можно ТОЛЬКО с мейкерским ребейтом или на символе со спредом >8 bps.",
+    "Издержки исполнения могут быть решающими, а не второстепенными: у портфельного моментума тейкер даёт -6.8% на свежей половине, мейкер +23.7%. Прежде чем хоронить кандидата — проверь, не комиссия ли его убила.",
+    "ПЕРЕКРЫВАЮЩИЕСЯ ОКНА — отдельный класс самообмана. События, взятые с каждого бара, "
+    "коррелированы: размер выборки завышен, уверенность ложная. Замер: фейд импульса дал +14 bps с перекрытием и +0.25 bps без него — разница в 56 раз, PF 1.002, t=0.06. "
+    "Событийное исследование обязано использовать НЕПЕРЕСЕКАЮЩИЕСЯ окна до того, как результат назван кандидатом.",
     "Ты ПРЕДЛАГАЕШЬ, человек одобряет. Каждое предложение снабжай данными и указывай, какие "
     "ворота оно ещё не прошло.",
 ]
@@ -59,6 +75,7 @@ def build_brief(
     queue: Optional[Sequence[str]] = None,
     clean_sample_since: str = "включения телеметрии (ATT1_EDGE_START_TS)",
     live_truth: Optional[Dict[str, Any]] = None,
+    research_truth: Optional[Sequence[str]] = None,
 ) -> str:
     lines: List[str] = ["=== ВВОДНАЯ ДЛЯ БОРТОВОГО ИИ (правила дома + память проекта) ==="]
 
@@ -79,15 +96,26 @@ def build_brief(
         for k, v in live_truth.items():
             lines.append(f"- {k}: {v}")
 
-    if queue:
-        lines.append("\n-- ЧТО УЖЕ В ОЧЕРЕДИ (не дублируй как «новую идею»):")
-        lines += [f"- {q}" for q in queue]
+    if research_truth:
+        lines.append("\n-- ЛОКАЛЬНАЯ RESEARCH-ПРАВДА (НЕ LIVE И НЕ РАЗРЕШЕНИЕ НА РИСК):")
+        lines += [f"- {item}" for item in research_truth]
 
     lines.append(
         "\n-- ФОРМАТ ТВОИХ ПРЕДЛОЖЕНИЙ: {что, данные-обоснование, какие ворота пройдены/не пройдены, "
         "ожидаемый следующий шаг}. Предложение без указания ворот считается неполным."
     )
-    return "\n".join(lines)[:3900]
+
+    if queue:
+        # Очередь идёт ПОСЛЕДНЕЙ и ограничена: при переполнении режется именно она,
+        # а правила дома и формат ответа сохраняются всегда.
+        shown = list(queue)[:QUEUE_MAX_ITEMS]
+        lines.append("\n-- ЧТО УЖЕ В ОЧЕРЕДИ (не дублируй как «новую идею»):")
+        lines += [f"- {q}" for q in shown]
+        if len(queue) > len(shown):
+            lines.append(f"- ... и ещё {len(queue) - len(shown)} пунктов "
+                         "(полный список: configs/ai_operator_canonical_state.json)")
+
+    return "\n".join(lines)[:BRIEF_MAX_CHARS]
 
 
 def compose_from_repo(root: Path | str = ".") -> str:
@@ -95,6 +123,7 @@ def compose_from_repo(root: Path | str = ".") -> str:
     root = Path(root)
     extra = _load_json(root / "runtime" / "ai_brief_extra.json") or {}
     canonical = _load_json(root / "configs" / "ai_operator_canonical_state.json") or {}
+    research_overlay = _load_json(root / "configs" / "ai_operator_research_overlay.json") or {}
     hb = _load_json(root / "runtime" / "bot_heartbeat.json")
     live: Dict[str, Any] = {}
     if isinstance(hb, dict):
@@ -127,12 +156,29 @@ def compose_from_repo(root: Path | str = ".") -> str:
     extra_queue = extra.get("queue")
     queue = list(extra_queue) if isinstance(extra_queue, list) else []
     queue.extend(x for x in canonical_queue if x not in queue)
+    research_truth: List[str] = []
+    if isinstance(research_overlay, dict):
+        generated_at_epoch = research_overlay.get("generated_at_epoch")
+        max_age_hours = research_overlay.get("max_age_hours", 48)
+        overlay_age_h: Optional[float] = None
+        if isinstance(generated_at_epoch, (int, float)):
+            overlay_age_h = max(0.0, (time.time() - float(generated_at_epoch)) / 3600.0)
+        if overlay_age_h is None or overlay_age_h > float(max_age_hours):
+            research_truth.append(
+                "RESEARCH_OVERLAY_STALE: не утверждай, что локальные процессы всё ещё активны; "
+                "нужна новая синхронизация с owner host"
+            )
+        else:
+            facts = research_overlay.get("facts")
+            if isinstance(facts, list):
+                research_truth.extend(str(item) for item in facts[:12])
     return build_brief(
         no_go=no_go,
         queue=queue,
         clean_sample_since=str(extra.get("clean_sample_since")
                                or "включения телеметрии (ATT1_EDGE_START_TS)"),
         live_truth=live or None,
+        research_truth=research_truth or None,
     )
 
 

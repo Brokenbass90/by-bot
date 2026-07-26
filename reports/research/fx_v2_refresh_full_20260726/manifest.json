@@ -1,0 +1,51 @@
+{
+  "broker_calls": false,
+  "completed_at_utc": "2026-07-26T15:59:41.891497+00:00",
+  "config": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/research/fx_v2_gate_20260711.json",
+  "config_sha256": "6cbd6b7ce6bd276b5a24c25474c200cd9539d98d3c34c7f99134e0f99024d2dd",
+  "expected_input_data_sha256": {
+    "EURJPY": "b1ea467f3393acb6c6b8b3cd515d2799d80fb052700ca1161b8199847d511792",
+    "EURUSD": "9c404d615e5b7bad6b4d12046421c487abaf8383b93542c8acf51aa14e0dc25c",
+    "GBPJPY": "7af11dc0709bf7d34263d93cd5012d86c552cc0396d1a3109d2eb288d96a10a8",
+    "GBPUSD": "d28e95753fff94cc3a0562e3b0109a99d667e0ec6a705abaec8597d12cfa6db7",
+    "USDJPY": "82803d32d6d7d6d94a41e11e83414625534ede582a6752834f3cfc36fb4acee7",
+    "XAUUSD": "1c0bf3c63a979b2db89285e5dcf17c43fcedf1c158b94c7a6c6696c2f03d111b"
+  },
+  "experiment_id": "fx_v2_gate_20260711_r2",
+  "frozen_window": {
+    "end_ts_exclusive": 1783317600,
+    "start_ts": 1720389600
+  },
+  "input_data_sha256": {
+    "EURJPY": "b1ea467f3393acb6c6b8b3cd515d2799d80fb052700ca1161b8199847d511792",
+    "EURUSD": "9c404d615e5b7bad6b4d12046421c487abaf8383b93542c8acf51aa14e0dc25c",
+    "GBPJPY": "7af11dc0709bf7d34263d93cd5012d86c552cc0396d1a3109d2eb288d96a10a8",
+    "GBPUSD": "d28e95753fff94cc3a0562e3b0109a99d667e0ec6a705abaec8597d12cfa6db7",
+    "USDJPY": "82803d32d6d7d6d94a41e11e83414625534ede582a6752834f3cfc36fb4acee7",
+    "XAUUSD": "1c0bf3c63a979b2db89285e5dcf17c43fcedf1c158b94c7a6c6696c2f03d111b"
+  },
+  "network_calls": false,
+  "parameter_combinations_per_candidate": 1,
+  "research_only": true,
+  "source_sha256": {
+    "calendar_sha256": "16e83a9bf162dcd7fecfaac705820703773b9a3e91263a7294373802949b78f5",
+    "context_sha256": "69e48824ed94268622d3093d6b39ef9b44efd12fdc66fb71120f7a2d27f7a364",
+    "contracts_sha256": "1fd59db8f3f76cffd0c9712f38d77cb318be56fa7b2cc848932cd59586e30492",
+    "elder_filter_sha256": "a5d8ba521a85f4e9d1cdc2782b1662b434311beba7bcb371dbfe5c3ebe0cf8cb",
+    "failed_breakout_sha256": "6042d717b7623e84d70163d2c772184390d48cf4a12ef684f78c69fa3c0e8460",
+    "forex_regime_sha256": "7a6294ccd1405c9eb42a5c4c4146e27c2e193fb6d11535b91dfd524841cbc000",
+    "forex_types_sha256": "50bb7dfcbedc83393ce3095cad157b5ad50876e46202ef2c7dc942608171c30e",
+    "harness_sha256": "e7b23b387c0a9423d75c8c81786db03e959ecc2441a9a519db6852f601b34778",
+    "instruments_sha256": "72ccb5e3b262a8fe0f63a01864d1231a235151ae974506d73835258bb83a5a03",
+    "level_memory_sha256": "6b14027483435503938f7ce7c28b6009df0e8e91f055020147ada5edbcd86c08",
+    "liquidity_sweep_sha256": "fc12e47c0ab8675f269deaadf5e8f1296b42aa87f32cd5f4f7b85dbe22165323",
+    "market_context_sha256": "34e79fbcca9bf33e1247a44ac5b57f0b33e6c1d188a329f28859ea6503a8054c",
+    "news_session_filter_sha256": "8dbe4340a0f9e967013ee5976cf8b80b08dfd95111ed63119cd053f673e67d54",
+    "range_filter_sha256": "f6e2a2f90030acf303ad392bc8e0157defa4f350e0fa8e89e48078c00664c234",
+    "regime_hmm_sha256": "4e944c983cdd5fb3eb7d27cedbe892ff2bcd26f2a975e67cceab0b121863092f",
+    "runner_sha256": "b19e707577d3e91e8c74771c8d062395fbb796313271d52ed74151856f0ab4aa",
+    "setups_sha256": "dbcd480d76d25bdd9e6dfd8b2145963ca154dd7a7e9f637c07a21848122aea03",
+    "structure_break_sha256": "4c5cf2c3f268b187bed46ce76a5e5dda4a66b31a3620acb39717b36d38752522",
+    "unified_levels_sha256": "48fe925df349adceaaf392618785c71c3d88ba28f4c36e2c921c799c65a237ca"
+  }
+}

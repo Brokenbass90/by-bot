@@ -42,6 +42,55 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _parse_utc_epoch(value: Any) -> float:
+    text = str(value or "").strip()
+    if not text:
+        return 0.0
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return 0.0
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.timestamp()
+
+
+def _cooldown_pair_keys(
+    closed_positions: list[dict[str, Any]],
+    *,
+    now: float,
+    cooldown_hours: float,
+) -> set[str]:
+    if cooldown_hours <= 0:
+        return set()
+    cutoff = now - cooldown_hours * 3600.0
+    out: set[str] = set()
+    for pos in closed_positions:
+        closed_epoch = _f(pos.get("closed_at_epoch"))
+        if closed_epoch <= 0:
+            closed_epoch = _parse_utc_epoch(pos.get("closed_at_utc"))
+        if closed_epoch >= cutoff:
+            key = str(pos.get("pair_key") or "")
+            if key:
+                out.add(key)
+    return out
+
+
+def _update_validation_evidence(pos: dict[str, Any], update: dict[str, Any]) -> None:
+    """Count only explicit validator failures; top-N absence is not failure."""
+    observed = bool(update.get("current_observed"))
+    passed = bool(update.get("current_validated"))
+    if observed and passed:
+        pos["validation_fail_streak"] = 0
+        pos["validation_missing_streak"] = 0
+        pos["last_validated_at_utc"] = str(update.get("ts_utc") or _utc_now())
+    elif observed:
+        pos["validation_fail_streak"] = int(pos.get("validation_fail_streak") or 0) + 1
+        pos["validation_missing_streak"] = 0
+    else:
+        pos["validation_missing_streak"] = int(pos.get("validation_missing_streak") or 0) + 1
+
+
 def _load_json(path: Path, default: Any) -> Any:
     if not path.exists():
         return default
@@ -244,6 +293,7 @@ def _update_position(pos: dict[str, Any], current_by_key: dict[str, dict[str, An
         "fee_cost_pct_per_leg": round(_f(pos.get("fee_cost_pct_per_leg")), 4),
         "total_shadow_pct_per_leg": round(total_shadow, 4),
         "total_shadow_pct_total_capital": round(total_shadow / 2.0, 4),
+        "current_observed": current is not None,
         "current_validated": bool(current and current.get("passed")),
         "current_net_pct_for_hold": current.get("estimated_net_pct_for_hold") if current else None,
         "error": error,
@@ -254,6 +304,7 @@ def _update_position(pos: dict[str, Any], current_by_key: dict[str, dict[str, An
     if age_h >= hold_h:
         pos["status"] = "closed"
         pos["closed_at_utc"] = _utc_now()
+        pos["closed_at_epoch"] = now
         pos["close_reason"] = "hold_time_elapsed"
         pos["final_shadow_pct_per_leg"] = update["total_shadow_pct_per_leg"]
         pos["final_shadow_pct_total_capital"] = update["total_shadow_pct_total_capital"]
@@ -276,15 +327,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     for pos in list(state.get("open") or []):
         updated = _update_position(pos, current_by_key)
         last = updated.get("last_update") or {}
+        _update_validation_evidence(updated, last)
         close_invalid_after_h = float(args.close_invalid_after_hours)
         if (
             updated.get("status") != "closed"
             and close_invalid_after_h > 0
-            and not bool(last.get("current_validated"))
+            and bool(last.get("current_observed"))
+            and int(updated.get("validation_fail_streak") or 0) >= int(args.close_invalid_count)
             and _f(last.get("age_hours")) >= close_invalid_after_h
         ):
             updated["status"] = "closed"
             updated["closed_at_utc"] = _utc_now()
+            updated["closed_at_epoch"] = time.time()
             updated["close_reason"] = "current_validation_lost"
             updated["final_shadow_pct_per_leg"] = last.get("total_shadow_pct_per_leg")
             updated["final_shadow_pct_total_capital"] = last.get("total_shadow_pct_total_capital")
@@ -294,13 +348,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             open_positions.append(updated)
 
     open_keys = {str(x.get("pair_key")) for x in open_positions}
+    cooldown_keys = _cooldown_pair_keys(
+        closed_positions,
+        now=time.time(),
+        cooldown_hours=float(args.reentry_cooldown_hours),
+    )
     slots = max(0, int(args.max_open) - len(open_positions))
     opened = []
     for item in items:
         if slots <= 0:
             break
         key = str(item.get("pair_key") or "")
-        if key in open_keys:
+        if key in open_keys or key in cooldown_keys:
             continue
         if not item.get("passed"):
             continue
@@ -314,6 +373,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             print(f"[warn] open {key}: {type(exc).__name__}: {exc}")
             continue
         pos = _update_position(pos, current_by_key)
+        _update_validation_evidence(pos, pos.get("last_update") or {})
         open_positions.append(pos)
         open_keys.add(key)
         opened.append(pos)
@@ -346,6 +406,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "min_persistence_count": int(args.min_persistence_count),
             "taker_fee_bps": float(args.taker_fee_bps),
             "close_invalid_after_hours": float(args.close_invalid_after_hours),
+            "close_invalid_count": int(args.close_invalid_count),
+            "reentry_cooldown_hours": float(args.reentry_cooldown_hours),
         },
         "open": open_positions,
         "closed": closed_positions[-500:],
@@ -371,7 +433,23 @@ def main() -> int:
         default=0.0,
         help="Research-only: close paper positions once they are no longer validated for this many hours. 0 disables.",
     )
+    ap.add_argument(
+        "--close-invalid-count",
+        type=int,
+        default=3,
+        help="Require this many consecutive explicit validator failures before invalidation close.",
+    )
+    ap.add_argument(
+        "--reentry-cooldown-hours",
+        type=float,
+        default=6.0,
+        help="Do not reopen the same pair until this many hours after a paper close.",
+    )
     args = ap.parse_args()
+    if args.close_invalid_count < 1:
+        ap.error("--close-invalid-count must be at least 1")
+    if args.reentry_cooldown_hours < 0:
+        ap.error("--reentry-cooldown-hours must be non-negative")
 
     state = run(args)
     print(

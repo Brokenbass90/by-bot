@@ -20,10 +20,12 @@ def test_brief_contains_rules_nogo_and_data_warning():
 
 def test_overrides_and_live_truth():
     b = build_brief(no_go=["ТОЛЬКО_ЭТО"], queue=["maker-fill redesign"],
-                    live_truth={"режим": "bull_trend", "open_trades": 1})
+                    live_truth={"режим": "bull_trend", "open_trades": 1},
+                    research_truth=["XSEC shadow active, risk zero"])
     assert "ТОЛЬКО_ЭТО" in b and "ARF2 failed-breakout" not in b
     assert "maker-fill redesign" in b
     assert "режим: bull_trend" in b
+    assert "XSEC shadow active, risk zero" in b
 
 
 def test_compose_from_repo_tolerates_empty_and_reads_extra(tmp_path):
@@ -67,3 +69,27 @@ def test_compose_prefers_heartbeat_runtime_truth_and_canonical_memory(tmp_path, 
     assert "live_money_sleeves_by_heartbeat: ['att1']" in brief
     assert "legacy_inplay_short" in brief
     assert "pump_exhaustion_unwind_short_v1" in brief
+
+
+def test_compose_includes_fresh_research_overlay_and_expires_it(tmp_path, monkeypatch):
+    monkeypatch.setattr("bot.ai_context_brief.time.time", lambda: 10_000.0)
+    cfg = tmp_path / "configs"
+    cfg.mkdir()
+    (cfg / "ai_operator_research_overlay.json").write_text(json.dumps({
+        "generated_at_epoch": 9_000,
+        "max_age_hours": 1,
+        "facts": ["XSEC risk-zero shadow active"],
+    }))
+
+    fresh = compose_from_repo(tmp_path)
+    assert "XSEC risk-zero shadow active" in fresh
+    assert "НЕ LIVE" in fresh
+
+    (cfg / "ai_operator_research_overlay.json").write_text(json.dumps({
+        "generated_at_epoch": 1_000,
+        "max_age_hours": 1,
+        "facts": ["XSEC risk-zero shadow active"],
+    }))
+    stale = compose_from_repo(tmp_path)
+    assert "XSEC risk-zero shadow active" not in stale
+    assert "RESEARCH_OVERLAY_STALE" in stale

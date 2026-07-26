@@ -1,0 +1,19 @@
+{
+  "status": "DIAGNOSTIC_ONLY",
+  "source_hashes": true,
+  "diagnostic_symbols": [
+    "EURUSD",
+    "GBPJPY",
+    "GBPUSD",
+    "USDJPY"
+  ],
+  "promotion_valid_symbols": [],
+  "data_blocked_symbols": [
+    "EURJPY",
+    "EURUSD",
+    "GBPJPY",
+    "GBPUSD",
+    "USDJPY",
+    "XAUUSD"
+  ]
+}

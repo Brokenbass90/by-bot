@@ -1,8 +1,10 @@
 from scripts.cross_exchange_funding_shadow import (
     MODEL_VERSION,
     _aligned_next_epoch,
+    _cooldown_pair_keys,
     _pair_price_pnl_pct,
     _settle_funding,
+    _update_validation_evidence,
 )
 from scripts import cross_exchange_funding_scan as scan
 
@@ -71,6 +73,62 @@ def test_missing_current_snapshot_uses_last_pre_settlement_rate_then_clears_it()
 def test_model_version_is_explicit():
     assert MODEL_VERSION == "settlement_execution_v2"
     assert _aligned_next_epoch(0.0, 8.0) == 8.0 * 3600.0
+
+
+def test_missing_top_n_candidate_is_not_counted_as_validation_failure():
+    pos = {"validation_fail_streak": 2}
+    _update_validation_evidence(
+        pos,
+        {
+            "ts_utc": "2026-07-26T12:00:00+00:00",
+            "current_observed": False,
+            "current_validated": False,
+        },
+    )
+    assert pos["validation_fail_streak"] == 2
+    assert pos["validation_missing_streak"] == 1
+
+
+def test_explicit_validation_failures_need_consecutive_evidence():
+    pos = {}
+    failed = {
+        "ts_utc": "2026-07-26T12:00:00+00:00",
+        "current_observed": True,
+        "current_validated": False,
+    }
+    _update_validation_evidence(pos, failed)
+    _update_validation_evidence(pos, failed)
+    assert pos["validation_fail_streak"] == 2
+
+    _update_validation_evidence(
+        pos,
+        {
+            "ts_utc": "2026-07-26T12:10:00+00:00",
+            "current_observed": True,
+            "current_validated": True,
+        },
+    )
+    assert pos["validation_fail_streak"] == 0
+    assert pos["last_validated_at_utc"] == "2026-07-26T12:10:00+00:00"
+
+
+def test_recently_closed_pair_enters_reentry_cooldown():
+    closed = [
+        {
+            "pair_key": "ERAUSDT:binance->bybit",
+            "closed_at_utc": "2026-07-26T12:00:00+00:00",
+        },
+        {
+            "pair_key": "OLDUSDT:binance->bybit",
+            "closed_at_utc": "2026-07-25T12:00:00+00:00",
+        },
+    ]
+    keys = _cooldown_pair_keys(
+        closed,
+        now=1785074400.0,
+        cooldown_hours=6.0,
+    )
+    assert keys == {"ERAUSDT:binance->bybit"}
 
 
 def test_esports_uses_bitget_one_hour_interval_and_is_not_old_false_positive(monkeypatch):

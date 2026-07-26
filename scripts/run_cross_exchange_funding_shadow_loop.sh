@@ -40,7 +40,9 @@ while true; do
       --min-net-pct 0.20 \
       --min-persistence-count 3 \
       --taker-fee-bps 6 \
-      --close-invalid-after-hours 2
+      --close-invalid-after-hours 2 \
+      --close-invalid-count 3 \
+      --reentry-cooldown-hours 6
   } >"${log}" 2>&1 || true
 
   ln -sfn "${log}" "${LOG_DIR}/latest.log"
