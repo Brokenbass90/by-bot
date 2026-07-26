@@ -93,3 +93,14 @@ def test_compose_includes_fresh_research_overlay_and_expires_it(tmp_path, monkey
     stale = compose_from_repo(tmp_path)
     assert "XSEC risk-zero shadow active" not in stale
     assert "RESEARCH_OVERLAY_STALE" in stale
+
+
+def test_long_no_go_list_cannot_truncate_research_truth_or_format():
+    brief = build_brief(
+        no_go=[f"dead_strategy_{idx}" for idx in range(100)],
+        research_truth=["XSEC audited shadow truth"],
+    )
+    assert "XSEC audited shadow truth" in brief
+    assert "ФОРМАТ ТВОИХ ПРЕДЛОЖЕНИЙ" in brief
+    assert "dead_strategy_99" not in brief
+    assert "ещё 82 no-go записей" in brief

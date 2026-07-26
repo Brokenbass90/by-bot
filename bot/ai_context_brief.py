@@ -26,6 +26,7 @@ __all__ = ["HOUSE_RULES", "DEFAULT_NO_GO", "build_brief", "compose_from_repo"]
 # чтобы обрезание никогда не съедало правила дома и формат ответа.
 BRIEF_MAX_CHARS = 7000
 QUEUE_MAX_ITEMS = 14
+NO_GO_MAX_ITEMS = 18
 
 HOUSE_RULES: List[str] = [
     "Включение стратегии/риска надо ЗАСЛУЖИТЬ: data-gate -> backtest -> stress-издержки -> "
@@ -82,9 +83,6 @@ def build_brief(
     lines.append("\n-- ПРАВИЛА (нарушать нельзя, предложения в обход = отклоняются автоматически):")
     lines += [f"{i}. {r}" for i, r in enumerate(HOUSE_RULES, 1)]
 
-    lines.append("\n-- УЖЕ УМЕРЛО НА ГЕЙТАХ (не предлагай включать в текущем виде):")
-    lines += [f"- {x}" for x in (no_go if no_go is not None else DEFAULT_NO_GO)]
-
     lines.append(
         f"\n-- ДАННЫЕ: forensics до {clean_sample_since} включает ГРЯЗНУЮ эпоху "
         "(missing_candles, старые ноги) — выводы «бот убыточен» по этому окну НЕВАЛИДНЫ. "
@@ -99,6 +97,15 @@ def build_brief(
     if research_truth:
         lines.append("\n-- ЛОКАЛЬНАЯ RESEARCH-ПРАВДА (НЕ LIVE И НЕ РАЗРЕШЕНИЕ НА РИСК):")
         lines += [f"- {item}" for item in research_truth]
+
+    rejected = list(no_go if no_go is not None else DEFAULT_NO_GO)
+    lines.append("\n-- УЖЕ УМЕРЛО НА ГЕЙТАХ (не предлагай включать в текущем виде):")
+    lines += [f"- {x}" for x in rejected[:NO_GO_MAX_ITEMS]]
+    if len(rejected) > NO_GO_MAX_ITEMS:
+        lines.append(
+            f"- ... и ещё {len(rejected) - NO_GO_MAX_ITEMS} no-go записей "
+            "(полный список: configs/ai_operator_canonical_state.json)"
+        )
 
     lines.append(
         "\n-- ФОРМАТ ТВОИХ ПРЕДЛОЖЕНИЙ: {что, данные-обоснование, какие ворота пройдены/не пройдены, "
