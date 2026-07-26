@@ -149,7 +149,14 @@ def compose_from_repo(root: Path | str = ".") -> str:
         live["open_trades"] = hb.get("open_trades", "?")
         live["heartbeat_age_sec"] = hb_age if hb_age is not None else "unknown"
         live["live_money_sleeves_by_heartbeat"] = money
-        live["strategy_runtime_config"] = runtime_cfg
+        live["strategy_runtime_summary"] = {
+            "enabled": sorted(str(name) for name, value in enabled.items() if bool(value)),
+            "positive_risk_mult": {
+                str(name): value
+                for name, value in risk_mult.items()
+                if isinstance(value, (int, float)) and float(value) > 0.0
+            },
+        }
         if hb_age is None or hb_age > 120:
             live["TRUTH_WARNING"] = "STALE_HEARTBEAT_NO_LIVE_CONTROL_RECOMMENDATIONS"
     canonical_live = canonical.get("live") if isinstance(canonical.get("live"), dict) else {}
