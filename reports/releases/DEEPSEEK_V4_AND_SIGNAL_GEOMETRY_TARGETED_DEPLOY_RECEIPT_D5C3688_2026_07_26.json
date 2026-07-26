@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "deployed_at_utc": "2026-07-26T05:29:29Z",
+  "source_commit": "d5c3688569ef4246f02843c0911601df83aed3cc",
+  "branch": "codex/dynamic-symbol-filters",
+  "deploy_mode": "targeted_patch_without_git_pull",
+  "server": "64.226.73.119",
+  "service": "bybot.service",
+  "files": [
+    "bot/deepseek_overlay.py",
+    "bot/position_geometry.py",
+    "configs/deepseek_overlay.env.example",
+    "configs/server.env.example",
+    "smart_pump_reversal_bot.py",
+    "trade_state.py"
+  ],
+  "environment_changes": {
+    "DEEPSEEK_MODEL": {
+      "before": "deepseek-chat",
+      "after": "deepseek-v4-flash"
+    }
+  },
+  "behavioral_scope": {
+    "deepseek_operator": "restore API compatibility and sanitized HTTP diagnostics",
+    "trade_charts": "render persisted signal geometry instead of synthetic range quartiles",
+    "trade_reports": "include signal level, parsed geometry, and snapshot path",
+    "live_entry_logic": "unchanged",
+    "att1_risk_mult": "unchanged",
+    "att1_universe": "unchanged",
+    "alpaca_safe_hold": "unchanged"
+  },
+  "pre_restart_broker_truth": {
+    "source": "direct Bybit private position API",
+    "flat_confirmations": 3,
+    "open_positions_each_confirmation": [
+      0,
+      0,
+      0
+    ]
+  },
+  "verification": {
+    "local_regression": "1532 passed in 30.17s",
+    "remote_py_compile": "passed",
+    "deepseek_api_smoke": {
+      "model": "deepseek-v4-flash",
+      "content": "OK",
+      "finish_reason": "stop"
+    },
+    "service_active": true,
+    "post_restart_direct_open_positions": 0,
+    "heartbeat_age_sec_at_check": 2.0,
+    "heartbeat_trade_on": true,
+    "heartbeat_dry_run": false,
+    "heartbeat_open_trades": 0,
+    "startup_auth": "main auth OK",
+    "startup_equity_usdt_approx": 1020.21,
+    "startup_money_sleeves": "live_money=att1 x0.10; midterm/bounce1/ivb1 x0"
+  },
+  "rollback": {
+    "backup_directory": "/root/by-bot/runtime/deploy_backups/d5c3688_20260726",
+    "env_backup": "/root/by-bot/runtime/deploy_backups/d5c3688_20260726/live.env.backup"
+  },
+  "limitations": [
+    "The VPS checkout HEAD remains stale because this was a targeted patch.",
+    "ATT1 exact trendline projection is persisted; source pivot coordinates are not yet serialized by the strategy.",
+    "The API smoke verifies the provider path; a Telegram /ai round-trip still depends on a fresh unified live snapshot."
+  ]
+}
