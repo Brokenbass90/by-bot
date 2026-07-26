@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import sys
 from datetime import datetime, timedelta, timezone
@@ -86,7 +87,7 @@ def run_shadow(
             }
         )
 
-    return {
+    report = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "mode": "shadow_no_orders",
         "strategy": "alpaca_adaptive_v1",
@@ -106,6 +107,28 @@ def run_shadow(
         ),
         "symbols_loaded": sorted(data),
     }
+    decision_payload = {
+        "strategy": report["strategy"],
+        "preset": report["preset"],
+        "start": report["start"],
+        "end": report["end"],
+        "capital": report["capital"],
+        "target_alloc_pct": report["target_alloc_pct"],
+        "regime_ok": report["regime_ok"],
+        "picks": [
+            {
+                "symbol": pick["symbol"],
+                "weight": pick["weight"],
+                "latest_close": pick["latest_close"],
+            }
+            for pick in report["picks"]
+        ],
+        "symbols_loaded": report["symbols_loaded"],
+    }
+    report["decision_id"] = hashlib.sha256(
+        json.dumps(decision_payload, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    return report
 
 
 def _md(report: dict[str, Any]) -> str:
@@ -194,6 +217,10 @@ def main() -> int:
     ap.add_argument("--cache-dir", default="runtime/equities_yf_cache")
     ap.add_argument("--out-json", default="runtime/alpaca_adaptive_v1_shadow_latest.json")
     ap.add_argument("--out-md", default="runtime/alpaca_adaptive_v1_shadow_latest.md")
+    ap.add_argument(
+        "--ledger-jsonl",
+        default="runtime/alpaca_adaptive_v1_shadow_ledger.jsonl",
+    )
     ap.add_argument("--out-picks-csv", default="")
     args = ap.parse_args()
 
@@ -215,14 +242,20 @@ def main() -> int:
 
     out_json = Path(args.out_json)
     out_md = Path(args.out_md)
+    ledger_jsonl = Path(args.ledger_jsonl)
     if not out_json.is_absolute():
         out_json = ROOT / out_json
     if not out_md.is_absolute():
         out_md = ROOT / out_md
+    if not ledger_jsonl.is_absolute():
+        ledger_jsonl = ROOT / ledger_jsonl
     out_json.parent.mkdir(parents=True, exist_ok=True)
     out_md.parent.mkdir(parents=True, exist_ok=True)
     out_json.write_text(json.dumps(report, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
     out_md.write_text(_md(report), encoding="utf-8")
+    ledger_jsonl.parent.mkdir(parents=True, exist_ok=True)
+    with ledger_jsonl.open("a", encoding="utf-8") as ledger:
+        ledger.write(json.dumps(report, ensure_ascii=True, sort_keys=True) + "\n")
     if args.out_picks_csv:
         out_picks_csv = Path(args.out_picks_csv)
         if not out_picks_csv.is_absolute():

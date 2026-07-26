@@ -1,0 +1,17 @@
+symbol,setup,tp_rr,sl_atr,max_hold,coverage_ok,coverage_reasons,cost_ok,fee_r,cost_reason,skip_reason,trades,net_r,pf,win_rate,folds_positive,min_fold_trades,preflight_go,preflight_reasons
+GBPUSD,session_range_fade,1.5,1.0,12,True,,True,0.2457,,,146,-13.759,0.855,0.445,0,36,True,ready_for_gate
+GBPUSD,session_range_fade,1.5,1.0,30,True,,True,0.2457,,,139,-10.727,0.884,0.46,0,34,True,ready_for_gate
+GBPUSD,session_range_fade,1.5,1.3,12,True,,True,0.189,,,125,-0.599,0.992,0.456,2,31,True,ready_for_gate
+GBPUSD,session_range_fade,1.5,1.3,30,True,,True,0.189,,,119,-2.251,0.97,0.462,1,29,True,ready_for_gate
+GBPUSD,session_range_fade,2.0,1.0,12,True,,True,0.2457,,,135,-7.105,0.926,0.393,1,33,True,ready_for_gate
+GBPUSD,session_range_fade,2.0,1.0,30,True,,True,0.2457,,,130,-12.681,0.872,0.377,1,32,True,ready_for_gate
+GBPUSD,session_range_fade,2.0,1.3,12,True,,True,0.189,,,114,-6.863,0.905,0.404,1,28,True,ready_for_gate
+GBPUSD,session_range_fade,2.0,1.3,30,True,,True,0.189,,,99,-11.252,0.848,0.364,1,24,True,ready_for_gate
+USDJPY,session_range_fade,1.5,1.0,12,True,,True,0.1662,,,142,-39.023,0.63,0.373,0,35,False,low_quality_pf_0.63<0.80
+USDJPY,session_range_fade,1.5,1.0,30,True,,True,0.1662,,,138,-35.681,0.653,0.377,1,34,False,low_quality_pf_0.65<0.80
+USDJPY,session_range_fade,1.5,1.3,12,True,,True,0.1279,,,121,-17.648,0.777,0.421,1,30,False,low_quality_pf_0.78<0.80
+USDJPY,session_range_fade,1.5,1.3,30,True,,True,0.1279,,,111,-10.741,0.853,0.423,1,27,True,ready_for_gate
+USDJPY,session_range_fade,2.0,1.0,12,True,,True,0.1662,,,134,-28.271,0.729,0.343,1,33,False,low_quality_pf_0.73<0.80
+USDJPY,session_range_fade,2.0,1.0,30,True,,True,0.1662,,,123,-20.87,0.783,0.341,1,30,False,low_quality_pf_0.78<0.80
+USDJPY,session_range_fade,2.0,1.3,12,True,,True,0.1279,,,115,-15.551,0.807,0.383,1,28,True,ready_for_gate
+USDJPY,session_range_fade,2.0,1.3,30,True,,True,0.1279,,,101,-3.515,0.951,0.376,1,25,True,ready_for_gate

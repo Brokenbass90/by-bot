@@ -80,6 +80,7 @@ from bot.utils import now_s, _to_float_safe, _today_ymd, base_from_usdt, dist_pc
 from bot.health_gate import gate as _health_gate  # equity-curve live entry gate
 from bot.health_truth import compact_age as _health_age_text, load_health_truth as _load_health_truth
 from bot import att1_live_wiring as _att1_wire  # decision_bus + edge_monitor (flags default OFF)
+from bot.att1_challenger import classify_descending_rsi_50_70
 from bot.att1_runtime_contract import build_att1_runtime_contract
 from bot.allowlist_watcher import AllowlistWatcher as _AllowlistWatcher  # dynamic allowlist hot-reload
 from bot.auth import (
@@ -11209,7 +11210,16 @@ async def try_att1_entry_async(symbol: str, price: float):
         return
 
     _diag_inc("att1_signal")
-    _append_signal_decision("att1", symbol, "signal", str(getattr(sig, "reason", "") or ""), side=str(sig.side))
+    signal_reason = str(getattr(sig, "reason", "") or "")
+    challenger = classify_descending_rsi_50_70(str(sig.side), signal_reason)
+    _append_signal_decision(
+        "att1",
+        symbol,
+        "signal",
+        signal_reason,
+        side=str(sig.side),
+        challenger=challenger.as_dict(),
+    )
 
     # Shadow mode — log signal but never place order
     if ATT1_RISK_MULT <= 0:

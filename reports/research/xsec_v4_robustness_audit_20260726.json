@@ -1,0 +1,271 @@
+{
+  "schema_id": "xsec_v4_robustness_audit_v1",
+  "generated_at": "2026-07-26T04:27:55.448780+00:00",
+  "research_only": true,
+  "baseline": {
+    "tot": 49.1,
+    "dd": 6.8,
+    "sh": 2.73,
+    "h1": 19.7,
+    "h2": 24.5,
+    "n_rebalances": 117,
+    "symbols": 62,
+    "total_cost_bps": 15.0
+  },
+  "cost_sensitivity": [
+    {
+      "tot": 51.4,
+      "dd": 6.6,
+      "sh": 2.82,
+      "h1": 20.8,
+      "h2": 25.3,
+      "n_rebalances": 117,
+      "symbols": 62,
+      "total_cost_bps": 8.0
+    },
+    {
+      "tot": 49.1,
+      "dd": 6.8,
+      "sh": 2.73,
+      "h1": 19.7,
+      "h2": 24.5,
+      "n_rebalances": 117,
+      "symbols": 62,
+      "total_cost_bps": 15.0
+    },
+    {
+      "tot": 46.9,
+      "dd": 7.0,
+      "sh": 2.63,
+      "h1": 18.7,
+      "h2": 23.8,
+      "n_rebalances": 117,
+      "symbols": 62,
+      "total_cost_bps": 22.0
+    },
+    {
+      "tot": 44.4,
+      "dd": 7.3,
+      "sh": 2.51,
+      "h1": 17.5,
+      "h2": 23.0,
+      "n_rebalances": 117,
+      "symbols": 62,
+      "total_cost_bps": 30.0
+    }
+  ],
+  "maturity_sensitivity": [
+    {
+      "tot": 29.7,
+      "dd": 7.0,
+      "sh": 1.75,
+      "h1": 5.5,
+      "h2": 23.0,
+      "n_rebalances": 117,
+      "symbols": 180,
+      "total_cost_bps": 15.0,
+      "maturity_days": 180
+    },
+    {
+      "tot": 18.7,
+      "dd": 7.1,
+      "sh": 1.32,
+      "h1": 7.7,
+      "h2": 10.2,
+      "n_rebalances": 117,
+      "symbols": 143,
+      "total_cost_bps": 15.0,
+      "maturity_days": 270
+    },
+    {
+      "tot": 49.1,
+      "dd": 6.8,
+      "sh": 2.73,
+      "h1": 19.7,
+      "h2": 24.5,
+      "n_rebalances": 117,
+      "symbols": 62,
+      "total_cost_bps": 15.0,
+      "maturity_days": 390
+    },
+    {
+      "maturity_days": 540,
+      "symbols": 0,
+      "status": "insufficient_universe"
+    }
+  ],
+  "universe_dropout_sensitivity": [
+    {
+      "tot": 25.4,
+      "dd": 14.3,
+      "sh": 1.59,
+      "h1": 24.1,
+      "h2": 1.1,
+      "n_rebalances": 117,
+      "symbols": 49,
+      "total_cost_bps": 15.0,
+      "seed": 11,
+      "dropout_fraction": 0.2
+    },
+    {
+      "tot": 32.9,
+      "dd": 8.2,
+      "sh": 2.01,
+      "h1": 16.3,
+      "h2": 14.2,
+      "n_rebalances": 117,
+      "symbols": 48,
+      "total_cost_bps": 15.0,
+      "seed": 23,
+      "dropout_fraction": 0.2
+    },
+    {
+      "tot": 48.3,
+      "dd": 7.1,
+      "sh": 2.73,
+      "h1": 17.9,
+      "h2": 25.7,
+      "n_rebalances": 117,
+      "symbols": 56,
+      "total_cost_bps": 15.0,
+      "seed": 47,
+      "dropout_fraction": 0.2
+    }
+  ],
+  "validation": {
+    "research_ok": true,
+    "research_checks": [
+      {
+        "name": "размер выборки",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "n=117 (нужно >=60)"
+      },
+      {
+        "name": "непересекающиеся окна",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "объявлено non-overlapping"
+      },
+      {
+        "name": "независимость от фазы",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "фазы: 58.3%(Sh 2.30) / 40.0%(Sh 1.93) / 45.8%(Sh 1.87)"
+      },
+      {
+        "name": "пороги пре-регистрированы",
+        "passed": false,
+        "severity": "WARN",
+        "detail": "ВНИМАНИЕ, пост-фактум: inherited maturity threshold 390d"
+      },
+      {
+        "name": "универсум с делистингами",
+        "passed": false,
+        "severity": "WARN",
+        "detail": "универсум только из выживших — доходность завышена (величина неизвестна)"
+      },
+      {
+        "name": "ставка тейкера верна",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "тейкер 5.5 bps"
+      },
+      {
+        "name": "Sharpe",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "2.73 (нужно >=2.19)"
+      },
+      {
+        "name": "просадка",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "6.8% (лимит 50.0%)"
+      },
+      {
+        "name": "обе половины времени > 0",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "1-я 19.7%, 2-я 24.5%"
+      }
+    ],
+    "capital_ok": false,
+    "capital_checks": [
+      {
+        "name": "размер выборки",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "n=117 (нужно >=60)"
+      },
+      {
+        "name": "непересекающиеся окна",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "объявлено non-overlapping"
+      },
+      {
+        "name": "независимость от фазы",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "фазы: 58.3%(Sh 2.30) / 40.0%(Sh 1.93) / 45.8%(Sh 1.87)"
+      },
+      {
+        "name": "пороги пре-регистрированы",
+        "passed": false,
+        "severity": "BLOCK",
+        "detail": "ВНИМАНИЕ, пост-фактум: inherited maturity threshold 390d"
+      },
+      {
+        "name": "универсум с делистингами",
+        "passed": false,
+        "severity": "BLOCK",
+        "detail": "универсум только из выживших — доходность завышена (величина неизвестна)"
+      },
+      {
+        "name": "ставка тейкера верна",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "тейкер 5.5 bps"
+      },
+      {
+        "name": "независимый OOS",
+        "passed": false,
+        "severity": "BLOCK",
+        "detail": "нет подтверждённого независимого OOS/forward"
+      },
+      {
+        "name": "проскальзывание",
+        "passed": false,
+        "severity": "BLOCK",
+        "detail": "slippage не смоделирован и не измерен"
+      },
+      {
+        "name": "execution parity",
+        "passed": false,
+        "severity": "BLOCK",
+        "detail": "нет доказательства parity между сигналом, заявкой и fill"
+      },
+      {
+        "name": "Sharpe",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "2.73 (нужно >=2.19)"
+      },
+      {
+        "name": "просадка",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "6.8% (лимит 50.0%)"
+      },
+      {
+        "name": "обе половины времени > 0",
+        "passed": true,
+        "severity": "BLOCK",
+        "detail": "1-я 19.7%, 2-я 24.5%"
+      }
+    ]
+  },
+  "promotion": "SHADOW",
+  "binding_reason": "Risk-zero shadow is allowed, but capital remains blocked by survivor-only prices, inherited maturity threshold, absent independent OOS, unmeasured slippage, and no execution parity."
+}

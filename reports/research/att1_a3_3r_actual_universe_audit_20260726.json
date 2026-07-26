@@ -1,0 +1,1220 @@
+{
+  "schema_id": "att1_a3_3r_actual_universe_audit_v1",
+  "generated_at": "2026-07-26T04:26:09.873274+00:00",
+  "research_only": true,
+  "exact_live_att1_replay": false,
+  "model": "claude_h1_trendline_geometry_proxy",
+  "symbols": [
+    "ADAUSDT",
+    "BTCUSDT",
+    "DOTUSDT",
+    "ETHUSDT",
+    "LINKUSDT",
+    "LTCUSDT",
+    "SOLUSDT",
+    "SUIUSDT"
+  ],
+  "common_window": {
+    "start_ms": 1745539200000,
+    "end_ms": 1771887600000,
+    "start_utc": "2025-04-25T00:00:00+00:00",
+    "end_utc": "2026-02-23T23:00:00+00:00"
+  },
+  "sources": {
+    "ADAUSDT": {
+      "path": "data_cache/ADAUSDT_5_20240715_20260705.json",
+      "sha256": "d4d54ca96e3c17933db0dd6115eedce88b8e398be88add18344d27bda6a3d35c",
+      "m5_rows": 207360,
+      "first_ts": 1721001600000,
+      "last_ts": 1783209300000
+    },
+    "BTCUSDT": {
+      "path": "data_cache/BTCUSDT_5_20230705_20260704.json",
+      "sha256": "f32ec3fc05cd867119d9580d8b8000ad2ce1d504073c5990d018eb3ebf36515f",
+      "m5_rows": 315360,
+      "first_ts": 1688515200000,
+      "last_ts": 1783122900000
+    },
+    "DOTUSDT": {
+      "path": "data_cache/DOTUSDT_5_20250425_20260425.json",
+      "sha256": "e48705ab5f6e432135ff3297c6db53737488e99143254f0082462c640a449256",
+      "m5_rows": 105120,
+      "first_ts": 1745539200000,
+      "last_ts": 1777074900000
+    },
+    "ETHUSDT": {
+      "path": "data_cache/ETHUSDT_5_20230705_20260704.json",
+      "sha256": "2207d0f387a306f888c20330219e5127c4608222a0d1085c4dbd5a758eac276b",
+      "m5_rows": 315360,
+      "first_ts": 1688515200000,
+      "last_ts": 1783122900000
+    },
+    "LINKUSDT": {
+      "path": "data_cache/LINKUSDT_5_20250224_20260224.json",
+      "sha256": "136e533fdebdff0a986bcea4619a647453fc037244055d44b62ff7f349ad56ea",
+      "m5_rows": 105120,
+      "first_ts": 1740355200000,
+      "last_ts": 1771890900000
+    },
+    "LTCUSDT": {
+      "path": "data_cache/LTCUSDT_5_20250425_20260425.json",
+      "sha256": "baac92ac081833fc63ac13be034a52cb0fdaabc46e156e43e158e57ebaf9caf1",
+      "m5_rows": 105120,
+      "first_ts": 1745539200000,
+      "last_ts": 1777074900000
+    },
+    "SOLUSDT": {
+      "path": "data_cache/SOLUSDT_5_20240715_20260705.json",
+      "sha256": "e69619918f68c3b31d21d5476e3682402a242666d363d4aa7bc1bb022f31f343",
+      "m5_rows": 207360,
+      "first_ts": 1721001600000,
+      "last_ts": 1783209300000
+    },
+    "SUIUSDT": {
+      "path": "data_cache/SUIUSDT_5_20240715_20260705.json",
+      "sha256": "534cd89b91dc53ac63b3831b3f42cf23f550a5b6cd2656a002485a1f048c5a08",
+      "m5_rows": 207360,
+      "first_ts": 1721001600000,
+      "last_ts": 1783209300000
+    }
+  },
+  "raw_candidate_count": 819,
+  "matrix": [
+    {
+      "guard": "none",
+      "side": "all",
+      "target_r": 2,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 612,
+      "expectancy_r": 0.009687,
+      "t_stat": 0.171,
+      "profit_factor": 1.0148,
+      "win_rate_pct": 34.31,
+      "median_risk_pct": 1.3225,
+      "half_expectancy_r": [
+        0.03735,
+        -0.017976
+      ],
+      "fold_expectancy_r": [
+        0.07823,
+        -0.00353,
+        -0.10061,
+        0.06465
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "all",
+      "target_r": 2,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 612,
+      "expectancy_r": -0.025235,
+      "t_stat": -0.445,
+      "profit_factor": 0.9628,
+      "win_rate_pct": 34.31,
+      "median_risk_pct": 1.3225,
+      "half_expectancy_r": [
+        0.001719,
+        -0.05219
+      ],
+      "fold_expectancy_r": [
+        0.04279,
+        -0.03935,
+        -0.13258,
+        0.0282
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "all",
+      "target_r": 2,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 612,
+      "expectancy_r": -0.055793,
+      "t_stat": -0.983,
+      "profit_factor": 0.9201,
+      "win_rate_pct": 34.31,
+      "median_risk_pct": 1.3225,
+      "half_expectancy_r": [
+        -0.029458,
+        -0.082127
+      ],
+      "fold_expectancy_r": [
+        0.01178,
+        -0.0707,
+        -0.16055,
+        -0.0037
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "all",
+      "target_r": 2,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 612,
+      "expectancy_r": -0.08635,
+      "t_stat": -1.52,
+      "profit_factor": 0.8798,
+      "win_rate_pct": 34.31,
+      "median_risk_pct": 1.3225,
+      "half_expectancy_r": [
+        -0.060636,
+        -0.112064
+      ],
+      "fold_expectancy_r": [
+        -0.01923,
+        -0.10204,
+        -0.18853,
+        -0.0356
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "all",
+      "target_r": 3,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 591,
+      "expectancy_r": 0.047907,
+      "t_stat": 0.691,
+      "profit_factor": 1.068,
+      "win_rate_pct": 28.93,
+      "median_risk_pct": 1.3354,
+      "half_expectancy_r": [
+        0.129679,
+        -0.033589
+      ],
+      "fold_expectancy_r": [
+        0.17621,
+        0.08346,
+        -0.19004,
+        0.12287
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "all",
+      "target_r": 3,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 591,
+      "expectancy_r": 0.013198,
+      "t_stat": 0.19,
+      "profit_factor": 1.0181,
+      "win_rate_pct": 28.93,
+      "median_risk_pct": 1.3354,
+      "half_expectancy_r": [
+        0.094599,
+        -0.067929
+      ],
+      "fold_expectancy_r": [
+        0.14173,
+        0.04779,
+        -0.22192,
+        0.08606
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "all",
+      "target_r": 3,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 591,
+      "expectancy_r": -0.017173,
+      "t_stat": -0.248,
+      "profit_factor": 0.9772,
+      "win_rate_pct": 28.93,
+      "median_risk_pct": 1.3354,
+      "half_expectancy_r": [
+        0.063904,
+        -0.097976
+      ],
+      "fold_expectancy_r": [
+        0.11155,
+        0.01658,
+        -0.24981,
+        0.05386
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "all",
+      "target_r": 3,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 591,
+      "expectancy_r": -0.047543,
+      "t_stat": -0.685,
+      "profit_factor": 0.9385,
+      "win_rate_pct": 28.93,
+      "median_risk_pct": 1.3354,
+      "half_expectancy_r": [
+        0.033209,
+        -0.128023
+      ],
+      "fold_expectancy_r": [
+        0.08138,
+        -0.01463,
+        -0.27771,
+        0.02166
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "short",
+      "target_r": 2,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 328,
+      "expectancy_r": 0.066775,
+      "t_stat": 0.85,
+      "profit_factor": 1.1052,
+      "win_rate_pct": 35.98,
+      "median_risk_pct": 1.3137,
+      "half_expectancy_r": [
+        0.140305,
+        -0.006756
+      ],
+      "fold_expectancy_r": [
+        0.39889,
+        -0.11828,
+        0.02439,
+        -0.0379
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "short",
+      "target_r": 2,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 328,
+      "expectancy_r": 0.031195,
+      "t_stat": 0.397,
+      "profit_factor": 1.0474,
+      "win_rate_pct": 35.98,
+      "median_risk_pct": 1.3137,
+      "half_expectancy_r": [
+        0.1042,
+        -0.041811
+      ],
+      "fold_expectancy_r": [
+        0.36312,
+        -0.15472,
+        -0.00965,
+        -0.07397
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "short",
+      "target_r": 2,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 328,
+      "expectancy_r": 6.2e-05,
+      "t_stat": 0.001,
+      "profit_factor": 1.0001,
+      "win_rate_pct": 35.98,
+      "median_risk_pct": 1.3137,
+      "half_expectancy_r": [
+        0.072609,
+        -0.072484
+      ],
+      "fold_expectancy_r": [
+        0.33183,
+        -0.18661,
+        -0.03944,
+        -0.10553
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "short",
+      "target_r": 2,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 328,
+      "expectancy_r": -0.03107,
+      "t_stat": -0.394,
+      "profit_factor": 0.9556,
+      "win_rate_pct": 35.98,
+      "median_risk_pct": 1.3137,
+      "half_expectancy_r": [
+        0.041017,
+        -0.103157
+      ],
+      "fold_expectancy_r": [
+        0.30054,
+        -0.2185,
+        -0.06922,
+        -0.13709
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "short",
+      "target_r": 3,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 321,
+      "expectancy_r": 0.09045,
+      "t_stat": 0.943,
+      "profit_factor": 1.13,
+      "win_rate_pct": 29.6,
+      "median_risk_pct": 1.3192,
+      "half_expectancy_r": [
+        0.185137,
+        -0.00365
+      ],
+      "fold_expectancy_r": [
+        0.62784,
+        -0.25756,
+        -0.01942,
+        0.01192
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "short",
+      "target_r": 3,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 321,
+      "expectancy_r": 0.054987,
+      "t_stat": 0.573,
+      "profit_factor": 1.0762,
+      "win_rate_pct": 29.6,
+      "median_risk_pct": 1.3192,
+      "half_expectancy_r": [
+        0.14918,
+        -0.03862
+      ],
+      "fold_expectancy_r": [
+        0.59203,
+        -0.29367,
+        -0.05345,
+        -0.02397
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "short",
+      "target_r": 3,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 321,
+      "expectancy_r": 0.023958,
+      "t_stat": 0.249,
+      "profit_factor": 1.0322,
+      "win_rate_pct": 29.6,
+      "median_risk_pct": 1.3192,
+      "half_expectancy_r": [
+        0.117718,
+        -0.069219
+      ],
+      "fold_expectancy_r": [
+        0.5607,
+        -0.32526,
+        -0.08323,
+        -0.05538
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "short",
+      "target_r": 3,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 321,
+      "expectancy_r": -0.007072,
+      "t_stat": -0.074,
+      "profit_factor": 0.9908,
+      "win_rate_pct": 29.6,
+      "median_risk_pct": 1.3192,
+      "half_expectancy_r": [
+        0.086255,
+        -0.099819
+      ],
+      "fold_expectancy_r": [
+        0.52936,
+        -0.35685,
+        -0.11301,
+        -0.08679
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "long",
+      "target_r": 2,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 330,
+      "expectancy_r": -0.04975,
+      "t_stat": -0.655,
+      "profit_factor": 0.9262,
+      "win_rate_pct": 32.42,
+      "median_risk_pct": 1.2757,
+      "half_expectancy_r": [
+        -0.022666,
+        -0.076835
+      ],
+      "fold_expectancy_r": [
+        -0.24073,
+        0.19277,
+        -0.23997,
+        0.08434
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "long",
+      "target_r": 2,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 330,
+      "expectancy_r": -0.085881,
+      "t_stat": -1.13,
+      "profit_factor": 0.8771,
+      "win_rate_pct": 32.42,
+      "median_risk_pct": 1.2757,
+      "half_expectancy_r": [
+        -0.058292,
+        -0.113471
+      ],
+      "fold_expectancy_r": [
+        -0.27591,
+        0.1567,
+        -0.27436,
+        0.04548
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "long",
+      "target_r": 2,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 330,
+      "expectancy_r": -0.117496,
+      "t_stat": -1.545,
+      "profit_factor": 0.8368,
+      "win_rate_pct": 32.42,
+      "median_risk_pct": 1.2757,
+      "half_expectancy_r": [
+        -0.089464,
+        -0.145527
+      ],
+      "fold_expectancy_r": [
+        -0.30669,
+        0.12514,
+        -0.30444,
+        0.01147
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "long",
+      "target_r": 2,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 330,
+      "expectancy_r": -0.14911,
+      "t_stat": -1.96,
+      "profit_factor": 0.7989,
+      "win_rate_pct": 32.42,
+      "median_risk_pct": 1.2757,
+      "half_expectancy_r": [
+        -0.120637,
+        -0.177584
+      ],
+      "fold_expectancy_r": [
+        -0.33747,
+        0.09358,
+        -0.33453,
+        -0.02253
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "long",
+      "target_r": 3,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 325,
+      "expectancy_r": -0.028646,
+      "t_stat": -0.315,
+      "profit_factor": 0.9605,
+      "win_rate_pct": 27.08,
+      "median_risk_pct": 1.2912,
+      "half_expectancy_r": [
+        0.057592,
+        -0.114356
+      ],
+      "fold_expectancy_r": [
+        -0.18814,
+        0.30333,
+        -0.28612,
+        0.05532
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "long",
+      "target_r": 3,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 325,
+      "expectancy_r": -0.064541,
+      "t_stat": -0.71,
+      "profit_factor": 0.914,
+      "win_rate_pct": 27.08,
+      "median_risk_pct": 1.2912,
+      "half_expectancy_r": [
+        0.022507,
+        -0.151056
+      ],
+      "fold_expectancy_r": [
+        -0.22262,
+        0.26764,
+        -0.32051,
+        0.01634
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "long",
+      "target_r": 3,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 325,
+      "expectancy_r": -0.09595,
+      "t_stat": -1.056,
+      "profit_factor": 0.876,
+      "win_rate_pct": 27.08,
+      "median_risk_pct": 1.2912,
+      "half_expectancy_r": [
+        -0.008193,
+        -0.183168
+      ],
+      "fold_expectancy_r": [
+        -0.25279,
+        0.23641,
+        -0.35061,
+        -0.01777
+      ]
+    },
+    {
+      "guard": "none",
+      "side": "long",
+      "target_r": 3,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 325,
+      "expectancy_r": -0.127358,
+      "t_stat": -1.402,
+      "profit_factor": 0.8401,
+      "win_rate_pct": 27.08,
+      "median_risk_pct": 1.2912,
+      "half_expectancy_r": [
+        -0.038892,
+        -0.215281
+      ],
+      "fold_expectancy_r": [
+        -0.28296,
+        0.20518,
+        -0.3807,
+        -0.05188
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "all",
+      "target_r": 2,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 391,
+      "expectancy_r": 0.037381,
+      "t_stat": 0.523,
+      "profit_factor": 1.0579,
+      "win_rate_pct": 35.29,
+      "median_risk_pct": 1.3319,
+      "half_expectancy_r": [
+        0.068652,
+        0.006269
+      ],
+      "fold_expectancy_r": [
+        0.10577,
+        0.03191,
+        -0.20514,
+        0.21768
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "all",
+      "target_r": 2,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 391,
+      "expectancy_r": 0.002217,
+      "t_stat": 0.031,
+      "profit_factor": 1.0033,
+      "win_rate_pct": 35.29,
+      "median_risk_pct": 1.3319,
+      "half_expectancy_r": [
+        0.032511,
+        -0.027923
+      ],
+      "fold_expectancy_r": [
+        0.07031,
+        -0.0049,
+        -0.23624,
+        0.1804
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "all",
+      "target_r": 2,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 391,
+      "expectancy_r": -0.028552,
+      "t_stat": -0.399,
+      "profit_factor": 0.9585,
+      "win_rate_pct": 35.29,
+      "median_risk_pct": 1.3319,
+      "half_expectancy_r": [
+        0.000888,
+        -0.057842
+      ],
+      "fold_expectancy_r": [
+        0.03928,
+        -0.03712,
+        -0.26346,
+        0.14777
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "all",
+      "target_r": 2,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 391,
+      "expectancy_r": -0.059321,
+      "t_stat": -0.83,
+      "profit_factor": 0.9162,
+      "win_rate_pct": 35.29,
+      "median_risk_pct": 1.3319,
+      "half_expectancy_r": [
+        -0.030735,
+        -0.08776
+      ],
+      "fold_expectancy_r": [
+        0.00826,
+        -0.06933,
+        -0.29067,
+        0.11515
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "all",
+      "target_r": 3,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 380,
+      "expectancy_r": 0.084901,
+      "t_stat": 0.972,
+      "profit_factor": 1.122,
+      "win_rate_pct": 30.26,
+      "median_risk_pct": 1.3336,
+      "half_expectancy_r": [
+        0.121731,
+        0.048071
+      ],
+      "fold_expectancy_r": [
+        0.2652,
+        -0.02174,
+        -0.22762,
+        0.32376
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "all",
+      "target_r": 3,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 380,
+      "expectancy_r": 0.049662,
+      "t_stat": 0.569,
+      "profit_factor": 1.0689,
+      "win_rate_pct": 30.26,
+      "median_risk_pct": 1.3336,
+      "half_expectancy_r": [
+        0.085324,
+        0.014
+      ],
+      "fold_expectancy_r": [
+        0.23033,
+        -0.05969,
+        -0.25746,
+        0.28546
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "all",
+      "target_r": 3,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 380,
+      "expectancy_r": 0.018828,
+      "t_stat": 0.216,
+      "profit_factor": 1.0254,
+      "win_rate_pct": 30.26,
+      "median_risk_pct": 1.3336,
+      "half_expectancy_r": [
+        0.053468,
+        -0.015813
+      ],
+      "fold_expectancy_r": [
+        0.19982,
+        -0.09289,
+        -0.28358,
+        0.25195
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "all",
+      "target_r": 3,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 380,
+      "expectancy_r": -0.012006,
+      "t_stat": -0.138,
+      "profit_factor": 0.9843,
+      "win_rate_pct": 30.26,
+      "median_risk_pct": 1.3336,
+      "half_expectancy_r": [
+        0.021612,
+        -0.045625
+      ],
+      "fold_expectancy_r": [
+        0.16931,
+        -0.12609,
+        -0.30969,
+        0.21844
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "short",
+      "target_r": 2,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 198,
+      "expectancy_r": 0.132832,
+      "t_stat": 1.298,
+      "profit_factor": 1.2171,
+      "win_rate_pct": 38.38,
+      "median_risk_pct": 1.3686,
+      "half_expectancy_r": [
+        0.242102,
+        0.023561
+      ],
+      "fold_expectancy_r": [
+        0.71429,
+        -0.22064,
+        0.04082,
+        0.00665
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "short",
+      "target_r": 2,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 198,
+      "expectancy_r": 0.097481,
+      "t_stat": 0.951,
+      "profit_factor": 1.1536,
+      "win_rate_pct": 38.38,
+      "median_risk_pct": 1.3686,
+      "half_expectancy_r": [
+        0.205083,
+        -0.010121
+      ],
+      "fold_expectancy_r": [
+        0.6782,
+        -0.25857,
+        0.00951,
+        -0.02936
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "short",
+      "target_r": 2,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 198,
+      "expectancy_r": 0.066549,
+      "t_stat": 0.648,
+      "profit_factor": 1.1016,
+      "win_rate_pct": 38.38,
+      "median_risk_pct": 1.3686,
+      "half_expectancy_r": [
+        0.172691,
+        -0.039593
+      ],
+      "fold_expectancy_r": [
+        0.64662,
+        -0.29176,
+        -0.01788,
+        -0.06087
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "short",
+      "target_r": 2,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 198,
+      "expectancy_r": 0.035617,
+      "t_stat": 0.346,
+      "profit_factor": 1.0528,
+      "win_rate_pct": 38.38,
+      "median_risk_pct": 1.3686,
+      "half_expectancy_r": [
+        0.1403,
+        -0.069065
+      ],
+      "fold_expectancy_r": [
+        0.61504,
+        -0.32495,
+        -0.04527,
+        -0.09238
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "short",
+      "target_r": 3,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 194,
+      "expectancy_r": 0.215226,
+      "t_stat": 1.696,
+      "profit_factor": 1.3258,
+      "win_rate_pct": 33.51,
+      "median_risk_pct": 1.3902,
+      "half_expectancy_r": [
+        0.335005,
+        0.095447
+      ],
+      "fold_expectancy_r": [
+        1.0507,
+        -0.36609,
+        0.08333,
+        0.10731
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "short",
+      "target_r": 3,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 194,
+      "expectancy_r": 0.179951,
+      "t_stat": 1.417,
+      "profit_factor": 1.2628,
+      "win_rate_pct": 33.51,
+      "median_risk_pct": 1.3902,
+      "half_expectancy_r": [
+        0.298082,
+        0.06182
+      ],
+      "fold_expectancy_r": [
+        1.01574,
+        -0.40493,
+        0.05204,
+        0.0714
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "short",
+      "target_r": 3,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 194,
+      "expectancy_r": 0.149085,
+      "t_stat": 1.173,
+      "profit_factor": 1.2112,
+      "win_rate_pct": 33.51,
+      "median_risk_pct": 1.3902,
+      "half_expectancy_r": [
+        0.265775,
+        0.032396
+      ],
+      "fold_expectancy_r": [
+        0.98514,
+        -0.43891,
+        0.02466,
+        0.03998
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "short",
+      "target_r": 3,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 194,
+      "expectancy_r": 0.11822,
+      "t_stat": 0.93,
+      "profit_factor": 1.1626,
+      "win_rate_pct": 33.51,
+      "median_risk_pct": 1.3902,
+      "half_expectancy_r": [
+        0.233467,
+        0.002972
+      ],
+      "fold_expectancy_r": [
+        0.95455,
+        -0.4729,
+        -0.00272,
+        0.00855
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "long",
+      "target_r": 2,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 214,
+      "expectancy_r": -0.050671,
+      "t_stat": -0.536,
+      "profit_factor": 0.9249,
+      "win_rate_pct": 32.24,
+      "median_risk_pct": 1.2985,
+      "half_expectancy_r": [
+        -0.053644,
+        -0.047699
+      ],
+      "fold_expectancy_r": [
+        -0.1083,
+        0.0,
+        -0.43592,
+        0.33333
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "long",
+      "target_r": 2,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 214,
+      "expectancy_r": -0.087492,
+      "t_stat": -0.925,
+      "profit_factor": 0.8749,
+      "win_rate_pct": 32.24,
+      "median_risk_pct": 1.2985,
+      "half_expectancy_r": [
+        -0.091457,
+        -0.083527
+      ],
+      "fold_expectancy_r": [
+        -0.14574,
+        -0.03818,
+        -0.46735,
+        0.29319
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "long",
+      "target_r": 2,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 214,
+      "expectancy_r": -0.11971,
+      "t_stat": -1.267,
+      "profit_factor": 0.8339,
+      "win_rate_pct": 32.24,
+      "median_risk_pct": 1.2985,
+      "half_expectancy_r": [
+        -0.124543,
+        -0.114876
+      ],
+      "fold_expectancy_r": [
+        -0.1785,
+        -0.07159,
+        -0.49486,
+        0.25807
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "long",
+      "target_r": 2,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 214,
+      "expectancy_r": -0.151927,
+      "t_stat": -1.608,
+      "profit_factor": 0.7954,
+      "win_rate_pct": 32.24,
+      "median_risk_pct": 1.2985,
+      "half_expectancy_r": [
+        -0.157629,
+        -0.146225
+      ],
+      "fold_expectancy_r": [
+        -0.21126,
+        -0.10499,
+        -0.52236,
+        0.22295
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "long",
+      "target_r": 3,
+      "round_trip_cost_bps": 0.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 210,
+      "expectancy_r": -0.046643,
+      "t_stat": -0.415,
+      "profit_factor": 0.9362,
+      "win_rate_pct": 26.67,
+      "median_risk_pct": 1.3047,
+      "half_expectancy_r": [
+        -0.054001,
+        -0.039284
+      ],
+      "fold_expectancy_r": [
+        -0.16848,
+        0.05832,
+        -0.43507,
+        0.34904
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "long",
+      "target_r": 3,
+      "round_trip_cost_bps": 4.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 210,
+      "expectancy_r": -0.083114,
+      "t_stat": -0.741,
+      "profit_factor": 0.8902,
+      "win_rate_pct": 26.67,
+      "median_risk_pct": 1.3047,
+      "half_expectancy_r": [
+        -0.091229,
+        -0.074998
+      ],
+      "fold_expectancy_r": [
+        -0.20424,
+        0.01965,
+        -0.46606,
+        0.30869
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "long",
+      "target_r": 3,
+      "round_trip_cost_bps": 7.5,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 210,
+      "expectancy_r": -0.115026,
+      "t_stat": -1.026,
+      "profit_factor": 0.8525,
+      "win_rate_pct": 26.67,
+      "median_risk_pct": 1.3047,
+      "half_expectancy_r": [
+        -0.123805,
+        -0.106248
+      ],
+      "fold_expectancy_r": [
+        -0.23553,
+        -0.01419,
+        -0.49318,
+        0.27338
+      ]
+    },
+    {
+      "guard": "A3",
+      "side": "long",
+      "target_r": 3,
+      "round_trip_cost_bps": 11.0,
+      "overlap_policy": "one_open_position_per_symbol",
+      "n": 210,
+      "expectancy_r": -0.146938,
+      "t_stat": -1.312,
+      "profit_factor": 0.8169,
+      "win_rate_pct": 26.67,
+      "median_risk_pct": 1.3047,
+      "half_expectancy_r": [
+        -0.15638,
+        -0.137497
+      ],
+      "fold_expectancy_r": [
+        -0.26682,
+        -0.04803,
+        -0.52029,
+        0.23808
+      ]
+    }
+  ],
+  "gate": {
+    "maker_pass_count": 1,
+    "taker_pass_count": 0,
+    "maker_passes": [
+      {
+        "guard": "A3",
+        "side": "short",
+        "target_r": 3,
+        "round_trip_cost_bps": 4.0,
+        "overlap_policy": "one_open_position_per_symbol",
+        "n": 194,
+        "expectancy_r": 0.179951,
+        "t_stat": 1.417,
+        "profit_factor": 1.2628,
+        "win_rate_pct": 33.51,
+        "median_risk_pct": 1.3902,
+        "half_expectancy_r": [
+          0.298082,
+          0.06182
+        ],
+        "fold_expectancy_r": [
+          1.01574,
+          -0.40493,
+          0.05204,
+          0.0714
+        ]
+      }
+    ],
+    "taker_passes": [],
+    "promotion": "REPAIR_EXACT_ATT1_REPLAY",
+    "binding_reason": "This audit uses Claude's proxy geometry, not the live ATT1 entry implementation. A passing row can justify an exact ATT1 challenger replay, never a live parameter change."
+  }
+}
