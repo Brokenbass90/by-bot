@@ -94,6 +94,9 @@ class TradeState:
     unrealized_pnl: Optional[float] = None
 
     reason_open: Optional[str] = None
+    signal_reason: str = ""
+    signal_geometry: Dict[str, Any] = field(default_factory=dict)
+    signal_geometry_path: str = ""
 
     # Канонический close_reason: используется ботом
     close_reason: Optional[str] = None

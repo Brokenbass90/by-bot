@@ -107,6 +107,11 @@ from bot.tpsl_policy import (
 )
 from bot.deepseek_overlay import DeepSeekOverlay
 from bot.ai_context import compact_ai_full_context
+from bot.position_geometry import (
+    build_position_geometry,
+    parse_signal_geometry,
+    write_position_geometry,
+)
 from bot.deepseek_autoresearch_agent import (
     results_report_text,
     tune_strategy,
@@ -2121,6 +2126,8 @@ def _append_live_trade_event(event: str, sym: str, tr=None, **extra) -> None:
                 "entry_limit_price": float(getattr(tr, "entry_limit_price", 0.0) or 0.0),
                 "entry_cancel_confirmed": bool(getattr(tr, "entry_cancel_confirmed", False)),
                 "signal_reason": str(getattr(tr, "signal_reason", "") or ""),
+                "signal_geometry": dict(getattr(tr, "signal_geometry", {}) or {}),
+                "signal_geometry_path": str(getattr(tr, "signal_geometry_path", "") or ""),
                 "close_reason": str(getattr(tr, "close_reason", "") or ""),
                 "runner": runner_snapshot_from_trade(tr),
             })
@@ -2151,6 +2158,28 @@ def _append_order_submitted_event(
             tr.requested_entry_price = float(request_price)
             tr.requested_tp_price = float(request_tp) if request_tp is not None else None
             tr.requested_sl_price = float(request_sl) if request_sl is not None else None
+            if signal_reason:
+                tr.signal_reason = str(signal_reason)
+            if signal_reason and not dict(getattr(tr, "signal_geometry", {}) or {}):
+                runner_tps = list(getattr(tr, "tps", None) or [])
+                tp_prices = runner_tps or ([request_tp] if request_tp is not None else [])
+                tr.signal_geometry = build_position_geometry(
+                    symbol=sym,
+                    strategy=str(getattr(tr, "strategy", "") or ""),
+                    side=str(getattr(tr, "side", "") or ""),
+                    entry_ts=int(getattr(tr, "entry_ts", 0) or time.time()),
+                    entry_price=request_price,
+                    sl_price=request_sl,
+                    tp_prices=tp_prices,
+                    signal_reason=signal_reason,
+                    order_id=str(getattr(tr, "entry_order_id", "") or ""),
+                )
+                geometry_path = write_position_geometry(
+                    POSITION_GEOMETRY_DIR,
+                    str(getattr(tr, "entry_order_id", "") or f"{sym}_{int(time.time())}"),
+                    tr.signal_geometry,
+                )
+                tr.signal_geometry_path = str(geometry_path)
         except Exception:
             pass
     _append_live_trade_event(
@@ -2420,6 +2449,10 @@ VOLADJ_TF                = os.getenv("VOLADJ_TF",    "240").strip()
 _voladj_cache: tuple[float, float, float] = (0.0, 1.0, 0.0)
 TRADE_CHARTS_PAD_BARS = int(os.getenv("TRADE_CHARTS_PAD_BARS", "80"))
 TRADE_CHARTS_OUT_DIR = os.getenv("TRADE_CHARTS_OUT_DIR", "/tmp/bybot_trade_charts").strip() or "/tmp/bybot_trade_charts"
+POSITION_GEOMETRY_DIR = (
+    os.getenv("POSITION_GEOMETRY_DIR", str(ROOT_DIR / "runtime" / "position_geometry")).strip()
+    or str(ROOT_DIR / "runtime" / "position_geometry")
+)
 
 # Symbol filters (allow/deny lists)
 SYMBOL_FILTERS_PATH = os.getenv("SYMBOL_FILTERS_PATH", "/tmp/bybot_symbol_filters.json").strip()
@@ -3820,6 +3853,24 @@ def _build_trade_review_summary(tr, sym: str, pnl_closed: float, fee_sum: float 
             risk_usd = 0.0
     r_mult = (float(pnl_closed) / risk_usd) if risk_usd > 1e-9 else None
     reason = str(getattr(tr, "close_reason", "") or "UNKNOWN")
+    signal_reason = str(getattr(tr, "signal_reason", "") or "")
+    signal_geometry = dict(getattr(tr, "signal_geometry", {}) or {})
+    if not signal_geometry:
+        signal_geometry = (
+            parse_signal_geometry(signal_reason)
+            if signal_reason
+            else _entry_signal_geometry(
+                sym,
+                str(getattr(tr, "side", "") or ""),
+                int(getattr(tr, "entry_ts", 0) or 0),
+            )
+        )
+    primary_level = signal_geometry.get("primary_level")
+    level_text = (
+        f", signal_level={float(primary_level):.8g}"
+        if primary_level is not None
+        else ", signal_level=unavailable"
+    )
     verdict = "clean_tp" if float(pnl_closed) > 0 and "TP" in reason.upper() else (
         "controlled_sl" if float(pnl_closed) < 0 and "SL" in reason.upper() else (
             "time_stop" if "TIME_STOP" in reason.upper() else ("small_win" if float(pnl_closed) > 0 else "loss_review")
@@ -3828,7 +3879,7 @@ def _build_trade_review_summary(tr, sym: str, pnl_closed: float, fee_sum: float 
     summary = (
         f"{sym} {getattr(tr, 'strategy', '')} {getattr(tr, 'side', '')}: "
         f"PnL {float(pnl_closed):+.4f} USDT, reason={reason}, "
-        f"hold≈{hold_sec}s"
+        f"hold≈{hold_sec}s{level_text}"
     )
     payload = {
         "symbol": str(sym),
@@ -3844,6 +3895,9 @@ def _build_trade_review_summary(tr, sym: str, pnl_closed: float, fee_sum: float 
         "r_mult": float(r_mult) if r_mult is not None else None,
         "hold_sec": int(max(0, hold_sec)),
         "close_reason": reason,
+        "signal_reason": signal_reason,
+        "signal_geometry": signal_geometry,
+        "signal_geometry_path": str(getattr(tr, "signal_geometry_path", "") or ""),
         "verdict": verdict,
     }
     return summary, payload
@@ -5786,6 +5840,32 @@ def _fetch_5m_bars_bybit(sym: str, start_ts: int | None = None, end_ts: int | No
         log_error(f"chart bybit fetch fail {sym}: {e}")
         return []
 
+def _entry_signal_geometry(sym: str, side: str, entry_ts: int) -> dict:
+    """Достать геометрию сигнала (наклонная/уровень) из reason входа в trade_events.
+
+    Стратегии кладут tl=<уровень> и slope=<%/сутки> в текстовый reason, но не в поля
+    сделки — поэтому график их раньше не видел и рисовал вместо них заглушки-квартили.
+    Возвращает {} при любой проблеме: график не должен падать из-за косметики.
+    """
+    try:
+        if not os.path.exists(TRADE_DB_PATH) or not entry_ts:
+            return {}
+        with sqlite3.connect(TRADE_DB_PATH) as con:
+            row = con.execute(
+                "SELECT reason FROM trade_events WHERE event='ENTRY' AND symbol=? AND side=? "
+                "AND ts BETWEEN ? AND ? ORDER BY ABS(ts-?) LIMIT 1",
+                (sym, side, int(entry_ts) - 120, int(entry_ts) + 120, int(entry_ts)),
+            ).fetchone()
+        if not row or not row[0]:
+            return {}
+        reason = str(row[0])
+        out = parse_signal_geometry(reason)
+        out["reason"] = reason
+        return out
+    except Exception:
+        return {}
+
+
 def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float | None = None, exit_px: float | None = None) -> str | None:
     if not TRADE_CHARTS_ENABLE:
         return None
@@ -5912,15 +5992,47 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             ax.axhline(ex_v, linestyle="-.", linewidth=1.0, color="#f59e0b", alpha=0.75)
             ax.text(x_lbl, ex_v, "EXIT", color="#f59e0b", fontsize=8, va="center", ha="left")
 
-        # Context levels (simple SR from window)
-        sr_hi = max(highs) if highs else None
-        sr_lo = min(lows) if lows else None
-        if sr_hi is not None and sr_lo is not None:
-            span = max(sr_hi - sr_lo, 1e-9)
-            lvl1 = sr_lo + span * 0.25
-            lvl2 = sr_lo + span * 0.75
-            ax.axhline(lvl1, color="#64748b", linewidth=0.8, alpha=0.35)
-            ax.axhline(lvl2, color="#64748b", linewidth=0.8, alpha=0.35)
+        # НАСТОЯЩАЯ геометрия сигнала вместо прежних заглушек-квартилей.
+        # Раньше здесь рисовались две линии на 25%% и 75%% диапазона окна — они выглядели
+        # как уровни, но были произвольными. Владелец справедливо жаловался, что бот
+        # "не рисует уровни": он рисовал не те. Теперь берём tl/slope из reason входа.
+        geom = dict(getattr(tr, "signal_geometry", {}) or {})
+        if not geom:
+            geom = _entry_signal_geometry(
+                sym,
+                str(getattr(tr, "side", "")),
+                int(getattr(tr, "entry_ts", 0) or 0),
+            )
+        drew_geometry = False
+        try:
+            sloped = list(geom.get("sloped_lines") or [])
+            trend = sloped[0] if sloped and isinstance(sloped[0], dict) else {}
+            tl = trend.get("projection_at_signal")
+            if tl is not None and entry_idx is not None:
+                slope_pd = float(trend.get("slope_pct_per_day") or 0.0)
+                # %/сутки -> абсолютное изменение цены за один 5-минутный бар
+                per_bar = tl * (slope_pd / 100.0) / 288.0
+                xs = list(range(len(seg)))
+                ys = [tl + per_bar * (x - entry_idx) for x in xs]
+                ax.plot(xs, ys, color="#facc15", linewidth=1.6, alpha=0.95, zorder=4)
+                ax.text(len(seg) + 0.6, ys[-1], "TREND", color="#facc15",
+                        fontsize=8, va="center", ha="left")
+                drew_geometry = True
+            for level in list(geom.get("horizontal_levels") or []):
+                if not isinstance(level, dict) or level.get("price") is None:
+                    continue
+                lvl = float(level["price"])
+                role = str(level.get("role") or "LEVEL").upper()
+                ax.axhline(lvl, color="#facc15", linestyle="--", linewidth=1.2, alpha=0.9)
+                ax.text(len(seg) + 0.6, lvl, role, color="#facc15",
+                        fontsize=8, va="center", ha="left")
+                drew_geometry = True
+        except Exception:
+            drew_geometry = False
+        if not drew_geometry:
+            # геометрии в reason нет — честно пишем это, а не рисуем выдуманные уровни
+            ax.text(0.02, 0.02, "нет геометрии сигнала в reason", transform=ax.transAxes,
+                    color="#64748b", fontsize=7, va="bottom", ha="left")
 
         # Inplay breakout reference level: prior 20-bar extreme before entry.
         # This helps see if entry is taken right into local exhaustion.
@@ -5965,6 +6077,7 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             ("#22c55e", "TP line"),
             ("#ef4444", "SL line"),
             ("#f59e0b", "EXIT line"),
+            ("#facc15", "уровень/наклонная сигнала"),
         ]
         for col, name in legend_lines:
             ax.plot([], [], color=col, label=name, linewidth=1.4)
@@ -6004,6 +6117,18 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             f"Late vs BRK_REF: {late_txt}",
             f"Vol(24h est): {vol24h:,.0f}",
         ]
+        geom_metrics = geom.get("metrics") if isinstance(geom.get("metrics"), dict) else {}
+        primary_level = geom.get("primary_level")
+        if primary_level is not None:
+            info.append(
+                f"Signal level: {float(primary_level):.6f} ({geom.get('primary_role') or 'unknown'})"
+            )
+        if geom_metrics.get("r2") is not None:
+            info.append(f"Signal R2: {float(geom_metrics['r2']):.3f}")
+        if geom_metrics.get("pivots") is not None:
+            info.append(f"Signal pivots: {int(geom_metrics['pivots'])}")
+        if geom_metrics.get("entry_distance_atr") is not None:
+            info.append(f"Entry distance: {float(geom_metrics['entry_distance_atr']):.3f} ATR")
         ax.text(
             0.01,
             0.99,
@@ -11353,6 +11478,32 @@ async def try_att1_entry_async(symbol: str, price: float):
         tr.entry_notional_usd = float(notional_real)
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
+        tr.signal_reason = signal_reason
+        tp_prices = [
+            float(value)
+            for value in (list(getattr(sig, "tps", None) or []) if use_runner else [tp_r])
+            if value is not None
+        ]
+        tr.signal_geometry = build_position_geometry(
+            symbol=symbol,
+            strategy=tr.strategy,
+            side=side,
+            entry_ts=now,
+            entry_price=entry,
+            sl_price=sl_r,
+            tp_prices=tp_prices,
+            signal_reason=signal_reason,
+            order_id=str(oid or ""),
+        )
+        try:
+            geometry_path = write_position_geometry(
+                POSITION_GEOMETRY_DIR,
+                str(oid or f"{symbol}_{now}"),
+                tr.signal_geometry,
+            )
+            tr.signal_geometry_path = str(geometry_path)
+        except Exception as e:
+            log_error(f"position geometry snapshot fail {symbol}: {e}")
         tr.att1_breaker_mult = float(breaker_mult)
         tr.att1_bus_id = _att1_wire.record_entry(
             symbol=symbol, side=("long" if side == "Buy" else "short"),

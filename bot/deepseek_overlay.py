@@ -11,6 +11,9 @@ import requests
 
 from bot.ai_context import assess_runtime_authority
 
+CURRENT_DEEPSEEK_MODEL = "deepseek-v4-flash"
+_RETIRED_DEEPSEEK_MODELS = {"deepseek-chat", "deepseek-reasoner"}
+
 
 def _env_bool(name: str, default: bool = False) -> bool:
     raw = str(os.getenv(name, "1" if default else "0")).strip().lower()
@@ -40,12 +43,20 @@ class DeepSeekConfig:
     shadow_max_items: int
 
 
+def _normalize_model(raw: str) -> str:
+    """Keep old deployments working after the July 2026 model retirement."""
+    model = str(raw or "").strip()
+    if not model or model.lower() in _RETIRED_DEEPSEEK_MODELS:
+        return CURRENT_DEEPSEEK_MODEL
+    return model
+
+
 def _load_config() -> DeepSeekConfig:
     return DeepSeekConfig(
         enabled=_env_bool("DEEPSEEK_ENABLE", False),
         api_key=str(os.getenv("DEEPSEEK_API_KEY", "") or "").strip(),
         base_url=str(os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com") or "https://api.deepseek.com").strip(),
-        model=str(os.getenv("DEEPSEEK_MODEL", "deepseek-chat") or "deepseek-chat").strip(),
+        model=_normalize_model(str(os.getenv("DEEPSEEK_MODEL", CURRENT_DEEPSEEK_MODEL) or "")),
         timeout_sec=float(os.getenv("DEEPSEEK_TIMEOUT_SEC", "30") or 30),
         timeout_retries=max(0, int(os.getenv("DEEPSEEK_TIMEOUT_RETRIES", "1") or 1)),
         retry_backoff_sec=max(0.0, float(os.getenv("DEEPSEEK_RETRY_BACKOFF_SEC", "1.5") or 1.5)),
@@ -69,6 +80,35 @@ def _safe_json(data: Any) -> str:
         return json.dumps(data, ensure_ascii=False, sort_keys=True)
     except Exception:
         return str(data)
+
+
+class DeepSeekHTTPError(RuntimeError):
+    """A sanitized API error suitable for Telegram and the audit log."""
+
+
+def _response_error_text(resp: requests.Response, *, model: str) -> str:
+    status = int(getattr(resp, "status_code", 0) or 0)
+    request_id = str(getattr(resp, "headers", {}).get("x-request-id", "") or "").strip()
+    message = ""
+    code = ""
+    try:
+        data = resp.json() or {}
+        error = data.get("error") if isinstance(data, dict) else None
+        if isinstance(error, dict):
+            message = str(error.get("message") or "").strip()
+            code = str(error.get("code") or error.get("type") or "").strip()
+    except Exception:
+        message = ""
+    if not message:
+        message = str(getattr(resp, "reason", "") or "request rejected").strip()
+    # Do not relay arbitrary HTML or request payloads into Telegram/logs.
+    message = " ".join(message.split())[:300]
+    parts = [f"HTTP {status}", f"model={model}", message]
+    if code:
+        parts.append(f"code={code[:80]}")
+    if request_id:
+        parts.append(f"request_id={request_id[:120]}")
+    return " | ".join(parts)
 
 
 def _repo_root() -> Path:
@@ -399,6 +439,10 @@ class DeepSeekOverlay:
             "temperature": 0.2,
             "stream": False,
             "max_tokens": self.cfg.completion_max_tokens,
+            # The Telegram operator should answer directly. DeepSeek V4 accepts
+            # an explicit thinking switch; disabling it also keeps latency and
+            # token spend bounded for routine operator questions.
+            "thinking": {"type": "disabled"},
         }
         headers = {
             "Authorization": f"Bearer {self.cfg.api_key}",
@@ -420,7 +464,8 @@ class DeepSeekOverlay:
             raise last_timeout_exc
         if resp is None:
             raise RuntimeError("DeepSeek request returned no response object")
-        resp.raise_for_status()
+        if not 200 <= int(resp.status_code) < 300:
+            raise DeepSeekHTTPError(_response_error_text(resp, model=self.cfg.model))
         data = resp.json() or {}
         choices = data.get("choices") or []
         if not choices:
