@@ -13,7 +13,8 @@ case "$SCREEN_NAME" in
     ;;
 esac
 
-if screen -ls 2>/dev/null | grep -Fq ".${SCREEN_NAME}"; then
+SCREEN_LIST="$(screen -ls 2>/dev/null || true)"
+if [[ "${SCREEN_LIST}" == *".${SCREEN_NAME}"* ]]; then
   echo "screen already exists: ${SCREEN_NAME}" >&2
   exit 2
 fi

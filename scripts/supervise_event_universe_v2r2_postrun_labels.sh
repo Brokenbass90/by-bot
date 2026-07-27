@@ -14,8 +14,10 @@ case "$COLLECTOR_SCREEN" in
 esac
 
 echo "postrun label gate waiting for collector: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-while screen -ls 2>/dev/null | grep -Fq ".${COLLECTOR_SCREEN}"; do
+SCREEN_LIST="$(screen -ls 2>/dev/null || true)"
+while [[ "${SCREEN_LIST}" == *".${COLLECTOR_SCREEN}"* ]]; do
   sleep 60
+  SCREEN_LIST="$(screen -ls 2>/dev/null || true)"
 done
 
 echo "collector stopped; running frozen local label scorer: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
