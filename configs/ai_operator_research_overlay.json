@@ -1,15 +1,16 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-07-26T16:04:29Z",
-  "generated_at_epoch": 1785081869,
+  "generated_at_utc": "2026-07-27T06:56:08Z",
+  "generated_at_epoch": 1785135368,
   "max_age_hours": 48,
   "authority": "audited_local_research_truth_not_live_authority",
   "facts": [
-    "XSEC V4 risk-zero daily shadow ACTIVE on owner host; day-0 decision exists. Backtest 49.1%, DD 6.8%, Sharpe 2.73 are research figures with PIT/survivorship and execution haircuts unresolved; planning range 8-18%/yr is not yet a forecast.",
-    "Cross-exchange funding public-data shadow ACTIVE on owner host. First 16 closed cycles were 1 win/15 losses and exposed a top-N absence/churn bug; policy repaired on 2026-07-26. Require at least 20 clean post-fix cycles before economics verdict.",
-    "Alpaca adaptive risk-zero shadow ACTIVE on owner host; live Alpaca remains separate SAFE_HOLD with no new entries.",
-    "FX V2 refresh completed 2026-07-26: all six long/short candidates NO_PROMOTION under stress. A separate 9-family diagnostic scan is running; no demo or live authority.",
+    "XSEC V4 risk-zero daily shadow ACTIVE on owner host; phase-0 and phase-1 decisions exist for 2026-07-26/27. Backtest 49.1%, DD 6.8%, Sharpe 2.73 remain research figures; PIT/survivorship, fill, cost and restart gates still block capital. Earliest possible August action is a tiny canary after 20-30 clean decisions, never an automatic launch.",
+    "Cross-exchange funding public-data shadow ACTIVE on owner host. There are 19 closed cycles, but only 3 are post-churn-fix: 1 positive and 2 negative. Five open pairs currently have aggregate paper markout about -1.61% of virtual pair capital. No trade keys or money are requested before at least 20 clean post-fix cycles and positive executable economics.",
+    "Alpaca adaptive risk-zero shadow ACTIVE on owner host; latest picks are PANW/CRWD/ABBV/DDOG. Live Alpaca remains separate SAFE_HOLD with no new entries. Massive Stocks Basic is the next free PIT/reference-data input.",
+    "FX 9-family scan completed with zero promoted pair/family combinations. A seeming XAU grid-reversion near-miss was invalid because the harness treated gold as a 0.0001-pip instrument and understated spread/swap. The XAU contract is fixed to 0.01 pip with conservative diagnostic costs and a corrected rerun is active; no demo or live authority.",
     "event_universe_v2r2 remains DATA_COLLECTION_ONLY. It is not the only new research candidate.",
-    "ATT1 A3/3R short-only remains a challenger, not a replacement for the live ATT1 champion."
+    "ATT1 A3/3R short-only remains a challenger, not a replacement for the live ATT1 champion. The causal three-H1-bar guard is now wired behind ATT1_TREND_GUARD_BARS=0 by default, and a fixed-3R research config/prereg exists with zero money authority.",
+    "Web trade charts now consume immutable position_geometry_v1, draw the traded horizontal or sloped level, and label exact snapshots separately from reconstructed or missing historical geometry."
   ]
 }
