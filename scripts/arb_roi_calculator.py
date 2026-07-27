@@ -23,6 +23,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_STATE = ROOT / "runtime" / "arb" / "cross_exchange_funding_shadow.json"
 DEFAULT_OUT = ROOT / "runtime" / "arb_roi_estimate.json"
 REQUIRED_MODEL_VERSION = "settlement_execution_v2"
+COHORT_CURRENT_MODEL = "current_model_all"
+COHORT_EXPLICIT_VALIDATION = "explicit_validation_v1"
 HOURS_PER_MONTH = 24.0 * 30.0
 
 
@@ -100,10 +102,35 @@ def _next_expected_close_utc(state: dict[str, Any]) -> str | None:
     return datetime.fromtimestamp(min(candidates), timezone.utc).isoformat()
 
 
-def _eligible_closed_cycles(state: dict[str, Any]) -> list[dict[str, Any]]:
+def _has_explicit_validation_evidence(cycle: dict[str, Any]) -> bool:
+    """Identify cycles closed under the repaired explicit-validation contract.
+
+    Older cycles treated absence from the validator's top-N output as a failed
+    validation.  The repaired lifecycle stores both `current_observed` and
+    `current_validated` on every markout, so the cohort can be selected without
+    relying on a mutable timestamp or a symbol allowlist.
+    """
+    last_update = cycle.get("last_update")
+    return (
+        isinstance(last_update, dict)
+        and "current_observed" in last_update
+        and "current_validated" in last_update
+    )
+
+
+def _eligible_closed_cycles(
+    state: dict[str, Any],
+    *,
+    cohort: str = COHORT_CURRENT_MODEL,
+) -> list[dict[str, Any]]:
     eligible = []
     for cycle in state.get("closed") or []:
         if cycle.get("model_version") != REQUIRED_MODEL_VERSION:
+            continue
+        if (
+            cohort == COHORT_EXPLICIT_VALIDATION
+            and not _has_explicit_validation_evidence(cycle)
+        ):
             continue
         result = cycle.get("final_shadow_pct_total_capital")
         try:
@@ -149,8 +176,16 @@ def build_report(
     *,
     capitals: list[float],
     min_closed_cycles: int = 10,
+    cohort: str = COHORT_CURRENT_MODEL,
+    require_positive_distribution: bool = True,
 ) -> dict[str, Any]:
-    closed = _eligible_closed_cycles(state)
+    if cohort not in {COHORT_CURRENT_MODEL, COHORT_EXPLICIT_VALIDATION}:
+        raise ValueError(f"unsupported cohort: {cohort}")
+    all_current_model = _eligible_closed_cycles(
+        state,
+        cohort=COHORT_CURRENT_MODEL,
+    )
+    closed = _eligible_closed_cycles(state, cohort=cohort)
     returns = [_f(cycle.get("final_shadow_pct_total_capital")) for cycle in closed]
     hold_hours = [hours for cycle in closed if (hours := _cycle_hold_hours(cycle)) > 0]
     settings = state.get("settings") or {}
@@ -158,7 +193,9 @@ def build_report(
     notional_per_leg = _f(settings.get("notional_usd_per_leg"))
 
     sample = {
+        "cohort": cohort,
         "closed_cycles": len(closed),
+        "excluded_current_model_cycles": len(all_current_model) - len(closed),
         "open_cycles": len(state.get("open") or []),
         "wins": sum(1 for value in returns if value > 0),
         "losses": sum(1 for value in returns if value < 0),
@@ -180,8 +217,12 @@ def build_report(
         "next_expected_close_utc": _next_expected_close_utc(state),
     }
 
-    sufficient = len(closed) >= max(1, int(min_closed_cycles)) and bool(hold_hours)
-    planning_return = _percentile(returns, 0.25) if sufficient else 0.0
+    enough_cycles = len(closed) >= max(1, int(min_closed_cycles)) and bool(hold_hours)
+    planning_return = _percentile(returns, 0.25) if enough_cycles else 0.0
+    positive_distribution = planning_return > 0.0
+    sufficient = enough_cycles and (
+        positive_distribution or not require_positive_distribution
+    )
     average_hold = statistics.mean(hold_hours) if hold_hours else 0.0
     monthly_return_deployed = (
         planning_return * (HOURS_PER_MONTH / average_hold)
@@ -191,19 +232,36 @@ def build_report(
 
     report = {
         "generated_at_utc": _utc_now(),
-        "status": "projection_available" if sufficient else "insufficient_closed_cycles",
+        "status": (
+            "projection_available"
+            if sufficient
+            else (
+                "non_positive_executable_distribution"
+                if enough_cycles and require_positive_distribution
+                else "insufficient_closed_cycles"
+            )
+        ),
         "model_version_required": REQUIRED_MODEL_VERSION,
         "model_version_seen": state.get("model_version"),
+        "cohort_required": cohort,
         "minimum_closed_cycles": max(1, int(min_closed_cycles)),
+        "positive_distribution_required": bool(require_positive_distribution),
         "sample": sample,
         "projection": None,
         "reason": None,
     }
     if not sufficient:
-        report["reason"] = (
-            f"need at least {max(1, int(min_closed_cycles))} closed "
-            f"{REQUIRED_MODEL_VERSION} cycles; found {len(closed)}"
-        )
+        if not enough_cycles:
+            report["reason"] = (
+                f"need at least {max(1, int(min_closed_cycles))} closed "
+                f"{REQUIRED_MODEL_VERSION} cycles in cohort {cohort}; "
+                f"found {len(closed)}"
+            )
+        else:
+            report["reason"] = (
+                "closed-cycle count passed, but the executable return "
+                f"distribution is not positive: p25={planning_return:.6f}%"
+            )
         return report
 
     report["projection"] = {
@@ -253,8 +311,22 @@ def main() -> int:
     parser.add_argument(
         "--min-closed-cycles",
         type=int,
-        default=10,
+        default=20,
         help="Minimum current-model closed cycles required before projection",
+    )
+    parser.add_argument(
+        "--cohort",
+        choices=[COHORT_CURRENT_MODEL, COHORT_EXPLICIT_VALIDATION],
+        default=COHORT_EXPLICIT_VALIDATION,
+        help=(
+            "Closed-cycle cohort. The default excludes cycles created before "
+            "the explicit validator-evidence repair."
+        ),
+    )
+    parser.add_argument(
+        "--allow-non-positive-distribution",
+        action="store_true",
+        help="Diagnostic only: allow a projection even when observed p25 <= 0",
     )
     args = parser.parse_args()
 
@@ -270,6 +342,8 @@ def main() -> int:
         state,
         capitals=args.capital,
         min_closed_cycles=args.min_closed_cycles,
+        cohort=args.cohort,
+        require_positive_distribution=not args.allow_non_positive_distribution,
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
