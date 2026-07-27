@@ -1,0 +1,54 @@
+{
+  "schema_id": "att1_a3_3r_exact_challenger_prereg_v1",
+  "created_at_utc": "2026-07-27T00:00:00Z",
+  "research_only": true,
+  "money_authority": false,
+  "champion_unchanged": "ATT1 short-only live x0.10",
+  "hypothesis": "The production ATT1 entry path with a causal three-H1-bar directional guard and fixed 3R exit improves net expectancy after costs without creating an unstable fold.",
+  "universe": [
+    "ADAUSDT",
+    "BTCUSDT",
+    "DOTUSDT",
+    "ETHUSDT",
+    "LINKUSDT",
+    "LTCUSDT",
+    "SOLUSDT",
+    "SUIUSDT"
+  ],
+  "side": "short_only",
+  "entry_change": {
+    "env": "ATT1_TREND_GUARD_BARS=3",
+    "rule": "reject short when close[-1] / close[-4] - 1 > 0"
+  },
+  "exit_change": {
+    "type": "fixed_3R",
+    "tp1_rr": 3.0,
+    "tp2_rr": 3.0,
+    "be_trigger_rr": 99.0,
+    "trail_activate_rr": 99.0
+  },
+  "comparison": [
+    "production ATT1 champion exit ladder",
+    "production ATT1 entries plus A3 and fixed 3R"
+  ],
+  "cost_scenarios_bps_round_trip": [
+    4.0,
+    7.5,
+    11.0
+  ],
+  "capital_gate": {
+    "min_trades": 100,
+    "min_positive_folds": 3,
+    "folds": 4,
+    "min_profit_factor_at_11bps": 1.05,
+    "min_expectancy_r_at_11bps": 0.03,
+    "min_single_fold_expectancy_r": -0.15,
+    "requires_forward_shadow_labels": true,
+    "requires_execution_parity": true
+  },
+  "forbidden": [
+    "changing thresholds after seeing the exact replay",
+    "replacing the live champion from the proxy result",
+    "sharing the champion clean cohort with the challenger"
+  ]
+}

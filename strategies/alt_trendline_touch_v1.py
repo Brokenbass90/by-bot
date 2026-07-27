@@ -56,6 +56,7 @@ Environment variables (ATT1_ prefix)
   ATT1_RSI_LONG_MAX          float  max RSI for long [55.0]
   ATT1_RSI_SHORT_MIN         float  min RSI for short [45.0]
   ATT1_RSI_SHORT_MAX         float  max RSI for short [100.0]
+  ATT1_TREND_GUARD_BARS      int    A3-style directional guard; 0 disables [0]
   ATT1_SL_ATR_MULT           float  SL buffer below/above trendline [1.10]
   ATT1_TP1_RR                float  TP1 R-multiple [1.20]
   ATT1_TP2_RR                float  TP2 R-multiple [2.50]
@@ -180,6 +181,22 @@ def _geometry_block_reason(
     if rr < float(min_rr):
         return f"{side}_rr_too_low_{rr:.2f}"
     return ""
+
+
+def _trend_guard_allows(side: str, closes: List[float], bars: int) -> bool:
+    """Causal A3-style guard used by the production ATT1 challenger.
+
+    A short is rejected after a positive return over the configured number of
+    completed signal bars; a long is mirrored.  ``bars=0`` preserves the
+    champion's behavior exactly.
+    """
+    lookback = max(0, int(bars))
+    if lookback == 0:
+        return True
+    if len(closes) <= lookback or closes[-1 - lookback] <= 0:
+        return False
+    trailing_return = closes[-1] / closes[-1 - lookback] - 1.0
+    return trailing_return <= 0.0 if str(side).lower() == "short" else trailing_return >= 0.0
 
 
 def _find_swing_lows(
@@ -329,6 +346,7 @@ class AltTrendlineTouchV1Config:
     rsi_long_max: float = 55.0
     rsi_short_min: float = 45.0
     rsi_short_max: float = 100.0
+    trend_guard_bars: int = 0
 
     # Trade management
     sl_atr_mult: float = 1.10
@@ -392,6 +410,7 @@ class AltTrendlineTouchV1Strategy:
         c.rsi_long_max = _env_float("ATT1_RSI_LONG_MAX", c.rsi_long_max)
         c.rsi_short_min = _env_float("ATT1_RSI_SHORT_MIN", c.rsi_short_min)
         c.rsi_short_max = _env_float("ATT1_RSI_SHORT_MAX", c.rsi_short_max)
+        c.trend_guard_bars = _env_int("ATT1_TREND_GUARD_BARS", c.trend_guard_bars)
         c.sl_atr_mult = _env_float("ATT1_SL_ATR_MULT", c.sl_atr_mult)
         c.max_entry_dist_atr = _env_float("ATT1_MAX_ENTRY_DIST_ATR", c.max_entry_dist_atr)
         c.min_rr = _env_float("ATT1_MIN_RR", c.min_rr)
@@ -647,7 +666,11 @@ class AltTrendlineTouchV1Strategy:
 
         # ── LONG check ────────────────────────────────────────────────
         if self.cfg.allow_longs:
-            result = self._check_long_trendline(lows, closes, opens, highs, atr, rsi)
+            if not _trend_guard_allows("long", closes, self.cfg.trend_guard_bars):
+                self._no_signal(f"long_trend_guard_{self.cfg.trend_guard_bars}")
+                result = None
+            else:
+                result = self._check_long_trendline(lows, closes, opens, highs, atr, rsi)
             if result is not None:
                 tl_level, slope = result
                 sl = tl_level - self.cfg.sl_atr_mult * atr
@@ -718,7 +741,11 @@ class AltTrendlineTouchV1Strategy:
 
         # ── SHORT check ───────────────────────────────────────────────
         if self.cfg.allow_shorts:
-            result = self._check_short_trendline(highs, closes, opens, lows, atr, rsi)
+            if not _trend_guard_allows("short", closes, self.cfg.trend_guard_bars):
+                self._no_signal(f"short_trend_guard_{self.cfg.trend_guard_bars}")
+                result = None
+            else:
+                result = self._check_short_trendline(highs, closes, opens, lows, atr, rsi)
             if result is not None:
                 tl_level, slope = result
                 sl = tl_level + self.cfg.sl_atr_mult * atr

@@ -560,7 +560,29 @@ def _normalise_trade(row: Dict[str, str]) -> Dict[str, Any]:
             except (ValueError, TypeError):
                 pass
 
+    # New live events carry the immutable geometry captured at signal time.
+    # CSV projections may store it as JSON text; decode it once so the web UI
+    # can distinguish the exact entry snapshot from an old reason-only record.
+    raw_geometry = t.get("signal_geometry")
+    if isinstance(raw_geometry, str) and raw_geometry.strip():
+        try:
+            parsed_geometry = json.loads(raw_geometry)
+        except (TypeError, ValueError, json.JSONDecodeError):
+            parsed_geometry = None
+        if isinstance(parsed_geometry, dict):
+            t["signal_geometry"] = parsed_geometry
+
     return t
+
+
+def _merge_live_event_record(rec: Dict[str, Any], event: Dict[str, Any]) -> None:
+    """Merge lifecycle events without erasing an earlier immutable geometry."""
+    for key, value in event.items():
+        if value in (None, ""):
+            continue
+        if key == "signal_geometry" and (not isinstance(value, dict) or not value):
+            continue
+        rec[key] = value
 
 
 def _load_all_trades() -> List[Dict[str, Any]]:
@@ -613,7 +635,7 @@ def _load_all_trades() -> List[Dict[str, Any]]:
                         ]
                     )
                 rec = buckets.setdefault(order_id, {})
-                rec.update({k: v for k, v in evt.items() if v not in (None, "")})
+                _merge_live_event_record(rec, evt)
                 if event_name == "order_submitted":
                     rec.setdefault("entry_ts", int(evt.get("ts") or 0))
                 elif event_name == "entry_filled":
@@ -656,6 +678,13 @@ def _load_all_trades() -> List[Dict[str, Any]]:
                     "open_time": datetime.fromtimestamp(entry_ts, tz=timezone.utc).strftime("%Y-%m-%d %H:%M") if entry_ts else "",
                     "close_time": datetime.fromtimestamp(exit_ts, tz=timezone.utc).strftime("%Y-%m-%d %H:%M") if exit_ts else "",
                     "pnl_pct": (pnl / entry_notional * 100.0) if entry_notional > 0 else None,
+                    "signal_reason": str(rec.get("signal_reason") or ""),
+                    "signal_geometry": (
+                        dict(rec.get("signal_geometry") or {})
+                        if isinstance(rec.get("signal_geometry"), dict)
+                        else {}
+                    ),
+                    "signal_geometry_path": str(rec.get("signal_geometry_path") or ""),
                 }
                 trades.append(trade)
         except Exception:

@@ -5,6 +5,7 @@ from scripts.cross_exchange_funding_shadow import (
     _pair_price_pnl_pct,
     _settle_funding,
     _update_validation_evidence,
+    _update_position,
 )
 from scripts import cross_exchange_funding_scan as scan
 
@@ -129,6 +130,39 @@ def test_recently_closed_pair_enters_reentry_cooldown():
         cooldown_hours=6.0,
     )
     assert keys == {"ERAUSDT:binance->bybit"}
+
+
+def test_shadow_position_persists_worst_intracycle_markout(monkeypatch):
+    pos = {
+        "symbol": "BTCUSDT",
+        "long_exchange": "bybit",
+        "short_exchange": "binance",
+        "long_entry_qty": 1.0,
+        "short_entry_qty": 1.0,
+        "long_entry_exec": 100.0,
+        "short_entry_exec": 100.0,
+        "opened_at_epoch": 1_000.0,
+        "hold_hours": 24.0,
+        "fee_cost_pct_per_leg": 0.0,
+        "funding_settled_pct_per_leg": 0.0,
+        "updates": [
+            {"total_shadow_pct_total_capital": -0.25},
+            {"total_shadow_pct_total_capital": -0.80},
+        ],
+    }
+    monkeypatch.setattr(
+        "scripts.cross_exchange_funding_shadow._execution_leg_for_qty",
+        lambda *args, **kwargs: {"avg_price": 100.0, "slippage_bps": 0.0},
+    )
+    monkeypatch.setattr(
+        "scripts.cross_exchange_funding_shadow._settle_funding",
+        lambda *args, **kwargs: 0.0,
+    )
+    monkeypatch.setattr("scripts.cross_exchange_funding_shadow.time.time", lambda: 1_100.0)
+
+    updated = _update_position(pos, {})
+
+    assert updated["worst_markout_pct_total_capital"] == -0.8
 
 
 def test_esports_uses_bitget_one_hour_interval_and_is_not_old_false_positive(monkeypatch):

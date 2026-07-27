@@ -610,6 +610,10 @@ PRESETS: Dict[str, Dict[str, Dict[str, float | int]]] = {
 
 def _default_spread(pair: str) -> float:
     p = pair.upper()
+    if p == "XAUUSD":
+        # XAU pip = $0.01. 35 pips means a diagnostic $0.35 spread; the
+        # account-specific broker contract remains a promotion blocker.
+        return 35.0
     if p.endswith("JPY"):
         return 1.0
     if p in {"EURUSD", "USDCHF"}:
@@ -623,6 +627,10 @@ def _default_spread(pair: str) -> float:
 
 def _default_swap(pair: str) -> float:
     p = pair.upper()
+    if p == "XAUUSD":
+        # Symmetric conservative placeholder until broker-specific long/short
+        # financing is materialized. Stress runs multiply this independently.
+        return -20.0
     if p in {"EURUSD", "USDJPY", "USDCHF"}:
         return -0.3
     if p in {"GBPUSD", "GBPJPY", "GBPAUD", "GBPCHF", "GBPCAD"}:
@@ -631,7 +639,10 @@ def _default_swap(pair: str) -> float:
 
 
 def _default_pip_size(pair: str) -> float:
-    return 0.01 if pair.endswith("JPY") else 0.0001
+    p = pair.upper()
+    if p == "XAUUSD" or p.endswith("JPY"):
+        return 0.01
+    return 0.0001
 
 
 def _parse_strategy_name(strategy_name: str) -> Tuple[str, str]:

@@ -298,6 +298,16 @@ def _update_position(pos: dict[str, Any], current_by_key: dict[str, dict[str, An
         "current_net_pct_for_hold": current.get("estimated_net_pct_for_hold") if current else None,
         "error": error,
     }
+    historical_markouts = [
+        _f(row.get("total_shadow_pct_total_capital"))
+        for row in list(pos.get("updates") or [])
+        if row.get("total_shadow_pct_total_capital") is not None
+    ]
+    historical_markouts.append(_f(update.get("total_shadow_pct_total_capital")))
+    # Persist MAE before any future stop threshold is selected.  The current
+    # paper lifecycle remains unchanged; this is evidence for a separately
+    # preregistered basis/markout breaker, not a post-hoc close rule.
+    pos["worst_markout_pct_total_capital"] = round(min(historical_markouts), 4)
     pos["last_update"] = update
     pos.setdefault("updates", []).append(update)
     pos["updates"] = pos["updates"][-96:]
@@ -308,6 +318,9 @@ def _update_position(pos: dict[str, Any], current_by_key: dict[str, dict[str, An
         pos["close_reason"] = "hold_time_elapsed"
         pos["final_shadow_pct_per_leg"] = update["total_shadow_pct_per_leg"]
         pos["final_shadow_pct_total_capital"] = update["total_shadow_pct_total_capital"]
+        pos["final_worst_markout_pct_total_capital"] = pos[
+            "worst_markout_pct_total_capital"
+        ]
     return pos
 
 
