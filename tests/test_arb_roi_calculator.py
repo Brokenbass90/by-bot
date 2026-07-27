@@ -128,3 +128,113 @@ def test_positive_distribution_is_required_after_count_gate() -> None:
     assert report["status"] == "non_positive_executable_distribution"
     assert report["projection"] is None
     assert "p25=" in report["reason"]
+    assert (
+        report["promotion_decision"]["decision"]
+        == "retire_standalone_sleeve"
+    )
+    assert report["promotion_decision"]["capital_authorized"] is False
+
+
+def test_initial_gate_collects_only_clean_cohort_until_twenty() -> None:
+    state = {
+        "model_version": "settlement_execution_v2",
+        "settings": {"max_open": 5, "notional_usd_per_leg": 100},
+        "open": [],
+        "closed": [
+            _closed(-0.1, explicit_validation=True) for _ in range(5)
+        ],
+    }
+
+    report = build_report(
+        state,
+        capitals=[1000],
+        min_closed_cycles=20,
+        confirmation_closed_cycles=30,
+        cohort=COHORT_EXPLICIT_VALIDATION,
+    )
+
+    decision = report["promotion_decision"]
+    assert decision["decision"] == "collect_to_initial_gate"
+    assert decision["cycles_remaining"] == 15
+    assert decision["provisional_economics_positive"] is False
+    assert decision["capital_authorized"] is False
+
+
+def test_positive_initial_gate_requires_confirmation_and_economic_floor() -> None:
+    state = {
+        "model_version": "settlement_execution_v2",
+        "settings": {"max_open": 5, "notional_usd_per_leg": 100},
+        "open": [],
+        "closed": [
+            _closed(0.4, age_hours=24.0, explicit_validation=True)
+            for _ in range(20)
+        ],
+    }
+
+    report = build_report(
+        state,
+        capitals=[1000],
+        min_closed_cycles=20,
+        confirmation_closed_cycles=30,
+        min_annualized_simple_pct=8.0,
+        cohort=COHORT_EXPLICIT_VALIDATION,
+    )
+
+    assert report["projection"]["annualized_simple_return_pct_deployed_capital"] > 8
+    decision = report["promotion_decision"]
+    assert decision["decision"] == "continue_to_confirmation_gate"
+    assert decision["cycles_remaining"] == 10
+    assert decision["capital_authorized"] is False
+
+
+def test_low_capacity_return_retires_after_initial_gate() -> None:
+    state = {
+        "model_version": "settlement_execution_v2",
+        "settings": {"max_open": 5, "notional_usd_per_leg": 100},
+        "open": [],
+        "closed": [
+            _closed(0.005, age_hours=24.0, explicit_validation=True)
+            for _ in range(20)
+        ],
+    }
+
+    report = build_report(
+        state,
+        capitals=[1000],
+        min_closed_cycles=20,
+        confirmation_closed_cycles=30,
+        min_annualized_simple_pct=8.0,
+        cohort=COHORT_EXPLICIT_VALIDATION,
+    )
+
+    decision = report["promotion_decision"]
+    assert decision["decision"] == "retire_standalone_sleeve"
+    assert "annualized_return_below_economic_floor" in decision[
+        "failed_economic_gates"
+    ]
+
+
+def test_confirmation_gate_never_authorizes_capital() -> None:
+    state = {
+        "model_version": "settlement_execution_v2",
+        "settings": {"max_open": 5, "notional_usd_per_leg": 100},
+        "open": [],
+        "closed": [
+            _closed(0.4, age_hours=24.0, explicit_validation=True)
+            for _ in range(30)
+        ],
+    }
+
+    report = build_report(
+        state,
+        capitals=[1000],
+        min_closed_cycles=20,
+        confirmation_closed_cycles=30,
+        min_annualized_simple_pct=8.0,
+        cohort=COHORT_EXPLICIT_VALIDATION,
+    )
+
+    decision = report["promotion_decision"]
+    assert decision["decision"] == "eligible_for_next_non_money_gate"
+    assert decision["capital_authorized"] is False
+    assert "settlement_execution_v3_parity" in decision["remaining_gates"]

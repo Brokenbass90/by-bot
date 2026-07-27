@@ -7,11 +7,23 @@ the parser into the monolith, so heartbeat parity cannot silently drift.
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import os
+from pathlib import Path
 from typing import Any
 
 from strategies.alt_trendline_touch_v1 import AltTrendlineTouchV1Strategy
+
+
+def _strategy_source_sha256() -> str:
+    source = inspect.getsourcefile(AltTrendlineTouchV1Strategy)
+    if not source:
+        return "unavailable"
+    try:
+        return hashlib.sha256(Path(source).read_bytes()).hexdigest()
+    except OSError:
+        return "unavailable"
 
 
 def build_att1_runtime_contract(*, risk_mult: float) -> dict[str, Any]:
@@ -23,6 +35,8 @@ def build_att1_runtime_contract(*, risk_mult: float) -> dict[str, Any]:
         "allow_shorts": bool(cfg.allow_shorts),
         "signal_tf": str(cfg.signal_tf),
         "signal_lookback": int(cfg.signal_lookback),
+        "atr_period": int(getattr(cfg, "atr_period", 14)),
+        "rsi_period": int(getattr(cfg, "rsi_period", 14)),
         "pivot_left": int(cfg.pivot_left),
         "pivot_right": int(cfg.pivot_right),
         "min_pivots": int(cfg.min_pivots),
@@ -30,6 +44,14 @@ def build_att1_runtime_contract(*, risk_mult: float) -> dict[str, Any]:
         "max_pivot_age": int(cfg.max_pivot_age),
         "min_slope_pct": round(float(cfg.min_slope_pct), 8),
         "max_slope_pct": round(float(cfg.max_slope_pct), 8),
+        "long_max_neg_slope": round(
+            float(getattr(cfg, "long_max_neg_slope", 0.5)),
+            8,
+        ),
+        "short_max_pos_slope": round(
+            float(getattr(cfg, "short_max_pos_slope", 0.5)),
+            8,
+        ),
         "min_r2": round(float(cfg.min_r2), 6),
         "touch_atr": round(float(cfg.touch_atr), 6),
         "reject_atr": round(float(cfg.reject_atr), 6),
@@ -41,7 +63,12 @@ def build_att1_runtime_contract(*, risk_mult: float) -> dict[str, Any]:
         # the newer strategy default of 100.0.  Keep telemetry compatible so a
         # truth-only deploy never forces a strategy-code upgrade.
         "rsi_short_max": round(float(getattr(cfg, "rsi_short_max", 100.0)), 6),
+        "trend_guard_bars": int(getattr(cfg, "trend_guard_bars", 0)),
         "sl_atr_mult": round(float(cfg.sl_atr_mult), 6),
+        "max_entry_dist_atr": round(
+            float(getattr(cfg, "max_entry_dist_atr", 2.0)),
+            6,
+        ),
         "min_rr": round(float(cfg.min_rr), 6),
         "min_stop_pct": round(float(cfg.min_stop_pct), 8),
         "max_stop_pct": round(float(cfg.max_stop_pct), 8),
@@ -55,6 +82,7 @@ def build_att1_runtime_contract(*, risk_mult: float) -> dict[str, Any]:
         "time_stop_bars_5m": int(cfg.time_stop_bars_5m),
         "cooldown_bars_5m": int(cfg.cooldown_bars_5m),
         "canary_expiry_utc": str(os.getenv("ATT1_CANARY_EXPIRY_UTC", "") or ""),
+        "strategy_source_sha256": _strategy_source_sha256(),
     }
     payload = json.dumps(params, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
     return {

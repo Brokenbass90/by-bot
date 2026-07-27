@@ -26,6 +26,8 @@ REQUIRED_MODEL_VERSION = "settlement_execution_v2"
 COHORT_CURRENT_MODEL = "current_model_all"
 COHORT_EXPLICIT_VALIDATION = "explicit_validation_v1"
 HOURS_PER_MONTH = 24.0 * 30.0
+DEFAULT_CONFIRMATION_CYCLES = 30
+DEFAULT_MIN_ANNUALIZED_SIMPLE_PCT = 8.0
 
 
 def _utc_now() -> str:
@@ -171,11 +173,130 @@ def _scenario_rows(
     return rows
 
 
+def _promotion_decision(
+    *,
+    closed_cycles: int,
+    initial_cycles: int,
+    confirmation_cycles: int,
+    p25_return_pct: float | None,
+    median_return_pct: float | None,
+    annualized_simple_return_pct: float | None,
+    min_annualized_simple_pct: float,
+) -> dict[str, Any]:
+    """Return a bounded research decision; never authorize live capital.
+
+    The first checkpoint answers whether the standalone sleeve has enough
+    executable economics to justify collecting a confirmation sample.  The
+    second checkpoint only permits the next non-money validation stage.
+    """
+    initial = max(1, int(initial_cycles))
+    confirmation = max(initial, int(confirmation_cycles))
+    p25 = None if p25_return_pct is None else float(p25_return_pct)
+    median = None if median_return_pct is None else float(median_return_pct)
+    annualized = (
+        None
+        if annualized_simple_return_pct is None
+        else float(annualized_simple_return_pct)
+    )
+    economics_positive = bool(
+        p25 is not None
+        and median is not None
+        and annualized is not None
+        and p25 > 0.0
+        and median > 0.0
+        and annualized >= float(min_annualized_simple_pct)
+    )
+
+    if closed_cycles < initial:
+        return {
+            "decision": "collect_to_initial_gate",
+            "capital_authorized": False,
+            "cycles_remaining": initial - closed_cycles,
+            "initial_gate_cycles": initial,
+            "confirmation_gate_cycles": confirmation,
+            "min_annualized_simple_return_pct": float(
+                min_annualized_simple_pct
+            ),
+            "provisional_economics_positive": economics_positive,
+            "reason": (
+                f"need {initial - closed_cycles} more clean post-fix cycles "
+                "before a standalone-sleeve decision"
+            ),
+        }
+
+    if not economics_positive:
+        failed = []
+        if p25 is None or p25 <= 0.0:
+            failed.append("p25_not_positive")
+        if median is None or median <= 0.0:
+            failed.append("median_not_positive")
+        if annualized is None or annualized < float(min_annualized_simple_pct):
+            failed.append("annualized_return_below_economic_floor")
+        return {
+            "decision": "retire_standalone_sleeve",
+            "capital_authorized": False,
+            "cycles_remaining": 0,
+            "initial_gate_cycles": initial,
+            "confirmation_gate_cycles": confirmation,
+            "min_annualized_simple_return_pct": float(
+                min_annualized_simple_pct
+            ),
+            "failed_economic_gates": failed,
+            "reuse_allowed": [
+                "public_market_collector",
+                "funding_as_directional_feature",
+                "execution_state_machine",
+            ],
+            "reason": (
+                "initial executable sample is large enough and does not meet "
+                "the preregistered economic floor"
+            ),
+        }
+
+    if closed_cycles < confirmation:
+        return {
+            "decision": "continue_to_confirmation_gate",
+            "capital_authorized": False,
+            "cycles_remaining": confirmation - closed_cycles,
+            "initial_gate_cycles": initial,
+            "confirmation_gate_cycles": confirmation,
+            "min_annualized_simple_return_pct": float(
+                min_annualized_simple_pct
+            ),
+            "reason": (
+                "initial economics passed; collect an untouched confirmation "
+                "sample before any next-stage review"
+            ),
+        }
+
+    return {
+        "decision": "eligible_for_next_non_money_gate",
+        "capital_authorized": False,
+        "cycles_remaining": 0,
+        "initial_gate_cycles": initial,
+        "confirmation_gate_cycles": confirmation,
+        "min_annualized_simple_return_pct": float(min_annualized_simple_pct),
+        "remaining_gates": [
+            "settlement_execution_v3_parity",
+            "account_specific_fee_receipts",
+            "maker_fill_and_nonfill_measurement",
+            "basis_and_partial_fill_breakers",
+            "exchange_and_margin_risk_review",
+        ],
+        "reason": (
+            "both bounded paper checkpoints passed; this permits validation "
+            "work only and does not authorize keys, capital, or orders"
+        ),
+    }
+
+
 def build_report(
     state: dict[str, Any],
     *,
     capitals: list[float],
     min_closed_cycles: int = 10,
+    confirmation_closed_cycles: int = DEFAULT_CONFIRMATION_CYCLES,
+    min_annualized_simple_pct: float = DEFAULT_MIN_ANNUALIZED_SIMPLE_PCT,
     cohort: str = COHORT_CURRENT_MODEL,
     require_positive_distribution: bool = True,
 ) -> dict[str, Any]:
@@ -248,6 +369,7 @@ def build_report(
         "positive_distribution_required": bool(require_positive_distribution),
         "sample": sample,
         "projection": None,
+        "promotion_decision": None,
         "reason": None,
     }
     if not sufficient:
@@ -262,6 +384,19 @@ def build_report(
                 "closed-cycle count passed, but the executable return "
                 f"distribution is not positive: p25={planning_return:.6f}%"
             )
+        report["promotion_decision"] = _promotion_decision(
+            closed_cycles=len(closed),
+            initial_cycles=min_closed_cycles,
+            confirmation_cycles=confirmation_closed_cycles,
+            p25_return_pct=sample[
+                "p25_return_pct_total_capital_per_cycle"
+            ],
+            median_return_pct=sample[
+                "median_return_pct_total_capital_per_cycle"
+            ],
+            annualized_simple_return_pct=None,
+            min_annualized_simple_pct=min_annualized_simple_pct,
+        )
         return report
 
     report["projection"] = {
@@ -284,6 +419,19 @@ def build_report(
             "latency, fees, liquidity, and exchange risk."
         ),
     }
+    report["promotion_decision"] = _promotion_decision(
+        closed_cycles=len(closed),
+        initial_cycles=min_closed_cycles,
+        confirmation_cycles=confirmation_closed_cycles,
+        p25_return_pct=sample["p25_return_pct_total_capital_per_cycle"],
+        median_return_pct=sample[
+            "median_return_pct_total_capital_per_cycle"
+        ],
+        annualized_simple_return_pct=report["projection"][
+            "annualized_simple_return_pct_deployed_capital"
+        ],
+        min_annualized_simple_pct=min_annualized_simple_pct,
+    )
     return report
 
 
@@ -315,6 +463,24 @@ def main() -> int:
         help="Minimum current-model closed cycles required before projection",
     )
     parser.add_argument(
+        "--confirmation-closed-cycles",
+        type=int,
+        default=DEFAULT_CONFIRMATION_CYCLES,
+        help=(
+            "Clean cycles required after an initial economics pass before the "
+            "next non-money validation stage"
+        ),
+    )
+    parser.add_argument(
+        "--min-annualized-simple-pct",
+        type=float,
+        default=DEFAULT_MIN_ANNUALIZED_SIMPLE_PCT,
+        help=(
+            "Minimum p25-derived annualized simple return needed to justify "
+            "the confirmation sample"
+        ),
+    )
+    parser.add_argument(
         "--cohort",
         choices=[COHORT_CURRENT_MODEL, COHORT_EXPLICIT_VALIDATION],
         default=COHORT_EXPLICIT_VALIDATION,
@@ -342,6 +508,8 @@ def main() -> int:
         state,
         capitals=args.capital,
         min_closed_cycles=args.min_closed_cycles,
+        confirmation_closed_cycles=args.confirmation_closed_cycles,
+        min_annualized_simple_pct=args.min_annualized_simple_pct,
         cohort=args.cohort,
         require_positive_distribution=not args.allow_non_positive_distribution,
     )

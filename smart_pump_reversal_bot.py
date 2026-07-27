@@ -82,6 +82,7 @@ from bot.health_truth import compact_age as _health_age_text, load_health_truth 
 from bot import att1_live_wiring as _att1_wire  # decision_bus + edge_monitor (flags default OFF)
 from bot.att1_challenger import classify_descending_rsi_50_70
 from bot.att1_runtime_contract import build_att1_runtime_contract
+from bot.portfolio_equity_guard import initialize_equity_anchors
 from bot.allowlist_watcher import AllowlistWatcher as _AllowlistWatcher  # dynamic allowlist hot-reload
 from bot.auth import (
     AUTH_DISABLED_UNTIL, AUTH_LAST_ERROR, BOT_START_TS,
@@ -9203,22 +9204,23 @@ def calc_position_usd(signal_score: int, atr_value: Optional[float]) -> float:
     return max(MIN_NOTIONAL_USD, min(usd, equity * 0.02))
      
 
-def portfolio_init_if_needed():
+def portfolio_init_if_needed() -> bool:
     today = _today_ymd()
     if PORTFOLIO_STATE["start_equity"] is None:
         eq = _get_effective_equity()
-        PORTFOLIO_STATE["start_equity"] = eq
-        PORTFOLIO_STATE["day_equity_start"] = eq
-        PORTFOLIO_STATE["day"] = today
-        PORTFOLIO_STATE["daily_pnl_usd"] = 0.0
-        PORTFOLIO_STATE["disabled"] = False
-        
+        return initialize_equity_anchors(
+            PORTFOLIO_STATE,
+            today=today,
+            equity=eq,
+        )
     elif PORTFOLIO_STATE["day"] != today:
         eq = _get_effective_equity()
-        PORTFOLIO_STATE["day"] = today
-        PORTFOLIO_STATE["day_equity_start"] = eq
-        PORTFOLIO_STATE["daily_pnl_usd"] = 0.0
-        PORTFOLIO_STATE["disabled"] = False
+        return initialize_equity_anchors(
+            PORTFOLIO_STATE,
+            today=today,
+            equity=eq,
+        )
+    return True
 
 
 def _trace_allocator_decision(
@@ -9269,7 +9271,6 @@ def portfolio_can_open(side: str = "") -> bool:
               also checked.  Pass empty string to skip that check (legacy).
     """
     global PORTFOLIO_LAST_DENY_REASON
-    portfolio_init_if_needed()
 
     def deny(reason: str, **extra) -> bool:
         global PORTFOLIO_LAST_DENY_REASON
@@ -9283,6 +9284,8 @@ def portfolio_can_open(side: str = "") -> bool:
         _trace_allocator_decision("portfolio_can_open", True, reason, side=side, extra=extra or None)
         return True
 
+    if not portfolio_init_if_needed():
+        return deny("equity_unavailable")
     if ALLOCATOR_HARD_BLOCK_NEW_ENTRIES:
         return deny("allocator_hard_block")
     if _ws_transport_guard_active() and WS_SELF_HEAL_BLOCK_NEW_ENTRIES:
@@ -9310,6 +9313,8 @@ def portfolio_can_open(side: str = "") -> bool:
     eq_start = PORTFOLIO_STATE["start_equity"]
     eq_day = PORTFOLIO_STATE["day_equity_start"]
     cur_eq = _get_effective_equity()
+    if cur_eq <= 0:
+        return deny("equity_unavailable")
     if eq_start and cur_eq < eq_start * (1 - MAX_DRAWDOWN_PCT/100.0):
         PORTFOLIO_STATE["disabled"] = True
         return deny("max_drawdown", equity=cur_eq, start_equity=eq_start)
@@ -9458,7 +9463,8 @@ def portfolio_can_add_open_risk(additional_risk_usd: float = 0.0) -> tuple[bool,
     return approved, total_pct, cap_pct
 
 def portfolio_reg_pnl(notional_usd: float, pnl_pct: float):
-    portfolio_init_if_needed()
+    if not portfolio_init_if_needed():
+        return
     pnl_usd = notional_usd * (pnl_pct / 100.0)
     PORTFOLIO_STATE["daily_pnl_usd"] += pnl_usd
     eq = _get_effective_equity()

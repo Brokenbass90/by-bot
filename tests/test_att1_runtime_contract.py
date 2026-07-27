@@ -16,6 +16,8 @@ def test_runtime_contract_reads_strategy_effective_environment(monkeypatch):
     monkeypatch.setenv("ATT1_MIN_R2", "0.55")
     monkeypatch.setenv("ATT1_TOUCH_ATR", "0.50")
     monkeypatch.setenv("ATT1_RSI_SHORT_MIN", "45")
+    monkeypatch.setenv("ATT1_TREND_GUARD_BARS", "3")
+    monkeypatch.setenv("ATT1_MAX_ENTRY_DIST_ATR", "1.25")
     monkeypatch.setenv("ATT1_CANARY_EXPIRY_UTC", "2026-07-20")
 
     contract = build_att1_runtime_contract(risk_mult=0.10)
@@ -31,6 +33,9 @@ def test_runtime_contract_reads_strategy_effective_environment(monkeypatch):
     assert params["min_r2"] == 0.55
     assert params["touch_atr"] == 0.50
     assert params["rsi_short_min"] == 45.0
+    assert params["trend_guard_bars"] == 3
+    assert params["max_entry_dist_atr"] == 1.25
+    assert len(params["strategy_source_sha256"]) == 64
     assert params["canary_expiry_utc"] == "2026-07-20"
 
     payload = json.dumps(params, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
@@ -45,6 +50,25 @@ def test_runtime_contract_hash_changes_when_entry_gate_changes(monkeypatch):
 
     assert first["params"]["rsi_short_min"] == 45.0
     assert second["params"]["rsi_short_min"] == 50.0
+    assert first["sha256"] != second["sha256"]
+
+
+def test_runtime_contract_hash_changes_when_source_changes(monkeypatch):
+    monkeypatch.setattr(
+        runtime_contract,
+        "_strategy_source_sha256",
+        lambda: "a" * 64,
+    )
+    first = build_att1_runtime_contract(risk_mult=0.10)
+    monkeypatch.setattr(
+        runtime_contract,
+        "_strategy_source_sha256",
+        lambda: "b" * 64,
+    )
+    second = build_att1_runtime_contract(risk_mult=0.10)
+
+    assert first["params"]["strategy_source_sha256"] == "a" * 64
+    assert second["params"]["strategy_source_sha256"] == "b" * 64
     assert first["sha256"] != second["sha256"]
 
 
