@@ -9,15 +9,15 @@
     "cards": [
       {
         "id": "funding_low_cost",
-        "description": "Суммарный OOS-результат четырёх последовательных 30-дневных блоков при условном полном круге 8 bps.",
+        "description": "Суммарный OOS-результат четырёх последовательных 30-дневных блоков при расчётном maker-полу 12 bps для Bybit VIP0 + MEXC futures API.",
         "dataset": "funding_costs",
         "sourceId": "funding_walkforward",
         "filter": {
-          "round_trip_cost_bps": 8
+          "round_trip_cost_bps": 12
         },
         "metrics": [
           {
-            "label": "Funding net, 4 OOS-блока",
+            "label": "Funding net при 12 bps",
             "field": "cumulative_net_bps",
             "format": "number",
             "unit": "bps"
@@ -82,7 +82,7 @@
       {
         "id": "funding_cost_curve",
         "title": "Funding walk-forward: чувствительность к затратам",
-        "subtitle": "Небольшой gross edge исчезает между 8 и 22 bps полного круга.",
+        "subtitle": "При расчётном retail API maker-поле 12 bps остаётся лишь около 3.5 bps до basis и fill-risk.",
         "type": "bar",
         "dataset": "funding_costs",
         "sourceId": "funding_walkforward",
@@ -212,7 +212,7 @@
       {
         "id": "executive_summary",
         "type": "markdown",
-        "body": "## Executive Summary\n\n**Доход от funding возможен в принципе, но текущая простая модель ещё не является готовым заработком.** На четырёх последовательных OOS-блоках она заработала только 19.5 bps при гипотетически дешёвом полном круге 8 bps и потеряла 36.5 bps при 22 bps. Реальные basis, очередь maker-заявок и риск несовпавших двух ног в этом backtest отсутствуют.\n\n**Главная частая crypto-ставка — не старый Elder и не обычный touch-bounce, а Pump Exhaustion Unwind Short.** Он сохранил PF 1.234 под стрессом, но имеет лишь 39 сделок и шесть holdout-сделок. Исправленный replay старого sweep/reclaim дал PF 0.963 и −4.61R, поэтому этот вариант остановлен; исследовать можно только новую причинную механику с замороженным кластерным уровнем и подтверждением структуры. Третья ставка — заново определённый event-triggered sloped break/retest.\n\n**Massive Stocks Basic уже подключён и проверен 3/3.** Платный тариф сейчас не нужен; можно начинать PIT/data-аудит Alpaca."
+        "body": "## Executive Summary\n\n**Доход от funding возможен в принципе, но текущая Bybit–MEXC retail-API связка ещё не является готовым заработком.** На четырёх последовательных OOS-блоках она заработала 19.5 bps при гипотетически дешёвом полном круге 8 bps, но расчётный maker-пол текущих публичных API-тарифов составляет около 12 bps. В таком сценарии остаётся лишь примерно +3.5 bps за четыре OOS-месяца, а при 22 bps результат равен −36.5 bps. Реальные basis, очередь maker-заявок и риск несовпавших двух ног в этом backtest отсутствуют.\n\n**Главная частая crypto-ставка — не старый Elder и не обычный touch-bounce, а Pump Exhaustion Unwind Short.** Он сохранил PF 1.234 под стрессом, но имеет лишь 39 сделок и шесть holdout-сделок. Исправленный replay старого sweep/reclaim дал PF 0.963 и −4.61R, поэтому этот вариант остановлен; исследовать можно только новую причинную механику с замороженным кластерным уровнем и подтверждением структуры. Третья ставка — заново определённый event-triggered sloped break/retest.\n\n**Massive Stocks Basic уже подключён и проверен 3/3.** Платный тариф сейчас не нужен; можно начинать PIT/data-аудит Alpaca."
       },
       {
         "id": "headline_metrics",
@@ -238,7 +238,7 @@
         "id": "funding_decision",
         "type": "markdown",
         "sourceId": "funding_walkforward",
-        "body": "**Практический вывод:** 8 bps — не подтверждённая реальная цена, а дешёвый сценарий. Даже в нём результат равен примерно 0.195% на капитал за четыре OOS-месяца до basis/legging/venue-risk. Поэтому paper нужен не вместо backtest, а для измерения того, чего funding-history принципиально не содержит."
+        "body": "**Практический вывод:** 8 bps — не подтверждённая реальная цена, а слишком дешёвый сценарий для текущей Bybit–MEXC retail API пары. Расчётный maker-пол 12 bps оставляет около 3.5 bps, то есть примерно 0.035% на капитал за четыре OOS-месяца до basis/legging/venue-risk. Поэтому сначала нужен поиск более дешёвой связки или подтверждённого fee tier, а paper измеряет то, чего funding-history принципиально не содержит."
       },
       {
         "id": "strategy_heading",
@@ -287,6 +287,11 @@
           "round_trip_cost_bps": 8,
           "cumulative_net_bps": 19.5027,
           "positive_blocks": 3
+        },
+        {
+          "round_trip_cost_bps": 12,
+          "cumulative_net_bps": 3.5027,
+          "positive_blocks": 2
         },
         {
           "round_trip_cost_bps": 22,
