@@ -1,4 +1,7 @@
+import json
+
 from scripts.cross_exchange_funding_shadow import (
+    _write_json_atomic,
     MODEL_VERSION,
     _aligned_next_epoch,
     _cooldown_pair_keys,
@@ -368,3 +371,13 @@ def test_binance_interval_is_fail_closed_without_authoritative_metadata(monkeypa
 
     monkeypatch.setattr(scan, "_get_json", fake_get)
     assert scan.fetch_binance() == []
+
+
+def test_shadow_state_json_is_replaced_atomically(tmp_path):
+    target = tmp_path / "shadow.json"
+    target.write_text('{"old": true}\n', encoding="utf-8")
+
+    _write_json_atomic(target, {"new": True})
+
+    assert json.loads(target.read_text(encoding="utf-8")) == {"new": True}
+    assert list(tmp_path.glob(".shadow.json.*.tmp")) == []

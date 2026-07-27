@@ -5,8 +5,42 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PYTHON="${ROOT}/.venv/bin/python"
 LOG_DIR="${ROOT}/runtime/arb/logs"
 INTERVAL_SECONDS="${CROSS_ARB_SHADOW_INTERVAL_SECONDS:-600}"
+LOCK_DIR="${ROOT}/runtime/arb/cross_exchange_funding_shadow_loop.lock"
+LOCK_PID="${LOCK_DIR}/pid"
 
 mkdir -p "${LOG_DIR}"
+
+acquire_lock() {
+  if mkdir "${LOCK_DIR}" 2>/dev/null; then
+    printf '%s\n' "$$" >"${LOCK_PID}"
+    return 0
+  fi
+
+  owner_pid=""
+  if [[ -f "${LOCK_PID}" ]]; then
+    owner_pid="$(sed -n '1p' "${LOCK_PID}" 2>/dev/null || true)"
+  fi
+  echo "funding shadow supervisor lock exists owner=${owner_pid:-unknown}" >&2
+  echo "refusing automatic stale-lock recovery; inspect the owner first" >&2
+  return 73
+}
+
+release_lock() {
+  current_owner=""
+  if [[ -f "${LOCK_PID}" ]]; then
+    current_owner="$(sed -n '1p' "${LOCK_PID}" 2>/dev/null || true)"
+  fi
+  if [[ "${current_owner}" != "$$" ]]; then
+    return 0
+  fi
+  rm -f "${LOCK_PID}"
+  rmdir "${LOCK_DIR}" 2>/dev/null || true
+}
+
+acquire_lock || exit $?
+trap release_lock EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 while true; do
   stamp="$(date -u +%Y%m%dT%H%M%SZ)"

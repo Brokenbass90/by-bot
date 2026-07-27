@@ -14,6 +14,8 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
+import tempfile
 import time
 import uuid
 from datetime import datetime, timezone
@@ -28,6 +30,25 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_VERSION = "settlement_execution_v2"
+
+
+def _write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
+    """Replace a JSON state file atomically after a durable temporary write."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=str(path.parent),
+    )
+    temporary_path = Path(temporary)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(json.dumps(payload, ensure_ascii=True, indent=2) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary_path, path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
 
 
 def _f(value: Any, default: float = 0.0) -> float:
@@ -425,8 +446,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "open": open_positions,
         "closed": closed_positions[-500:],
     }
-    state_path.parent.mkdir(parents=True, exist_ok=True)
-    state_path.write_text(json.dumps(new_state, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
+    _write_json_atomic(state_path, new_state)
     return new_state
 
 

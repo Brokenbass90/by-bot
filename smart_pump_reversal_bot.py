@@ -82,7 +82,7 @@ from bot.health_truth import compact_age as _health_age_text, load_health_truth 
 from bot import att1_live_wiring as _att1_wire  # decision_bus + edge_monitor (flags default OFF)
 from bot.att1_challenger import classify_descending_rsi_50_70
 from bot.att1_runtime_contract import build_att1_runtime_contract
-from bot.portfolio_equity_guard import initialize_equity_anchors
+from bot.portfolio_equity_guard import initialize_equity_anchors, is_valid_equity
 from bot.allowlist_watcher import AllowlistWatcher as _AllowlistWatcher  # dynamic allowlist hot-reload
 from bot.auth import (
     AUTH_DISABLED_UNTIL, AUTH_LAST_ERROR, BOT_START_TS,
@@ -9313,7 +9313,7 @@ def portfolio_can_open(side: str = "") -> bool:
     eq_start = PORTFOLIO_STATE["start_equity"]
     eq_day = PORTFOLIO_STATE["day_equity_start"]
     cur_eq = _get_effective_equity()
-    if cur_eq <= 0:
+    if not is_valid_equity(cur_eq):
         return deny("equity_unavailable")
     if eq_start and cur_eq < eq_start * (1 - MAX_DRAWDOWN_PCT/100.0):
         PORTFOLIO_STATE["disabled"] = True

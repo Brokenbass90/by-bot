@@ -6,6 +6,15 @@ import math
 from typing import Any, MutableMapping
 
 
+def is_valid_equity(equity: Any) -> bool:
+    """Return whether an equity reading is finite and strictly positive."""
+    try:
+        value = float(equity)
+    except (TypeError, ValueError):
+        return False
+    return math.isfinite(value) and value > 0.0
+
+
 def initialize_equity_anchors(
     state: MutableMapping[str, Any],
     *,
@@ -18,12 +27,9 @@ def initialize_equity_anchors(
     a cold-start broker/API failure must not permanently store ``0`` as the
     drawdown baseline.
     """
-    try:
-        value = float(equity)
-    except (TypeError, ValueError):
+    if not is_valid_equity(equity):
         return False
-    if not math.isfinite(value) or value <= 0.0:
-        return False
+    value = float(equity)
 
     if state.get("start_equity") is None:
         state["start_equity"] = value

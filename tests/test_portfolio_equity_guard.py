@@ -1,4 +1,6 @@
-from bot.portfolio_equity_guard import initialize_equity_anchors
+import math
+
+from bot.portfolio_equity_guard import initialize_equity_anchors, is_valid_equity
 
 
 def _state() -> dict:
@@ -61,3 +63,16 @@ def test_day_roll_waits_for_valid_equity() -> None:
     assert state["day"] == "2026-07-27"
     assert state["day_equity_start"] == 990.0
     assert state["disabled"] is False
+
+
+def test_non_finite_equity_is_rejected_after_valid_initialization() -> None:
+    state = _state()
+    assert initialize_equity_anchors(
+        state,
+        today="2026-07-27",
+        equity=1000.0,
+    ) is True
+
+    assert is_valid_equity(float("nan")) is False
+    assert is_valid_equity(float("inf")) is False
+    assert is_valid_equity(-math.inf) is False

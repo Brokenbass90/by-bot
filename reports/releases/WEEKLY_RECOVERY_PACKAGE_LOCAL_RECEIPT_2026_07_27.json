@@ -1,0 +1,51 @@
+{
+  "schema_id": "weekly_recovery_package_local_receipt_v1",
+  "generated_at_utc": "2026-07-27T11:15:00Z",
+  "scope": [
+    "canonical master roadmap and machine index",
+    "six-day research queue",
+    "funding single-writer lock and atomic state replacement",
+    "finite-positive portfolio equity gate",
+    "portable executive roadmap report"
+  ],
+  "live": {
+    "restart_performed": false,
+    "deploy_performed": false,
+    "att1_changed": false,
+    "alpaca_changed": false,
+    "reason": "Server-baseline selective patch preparation was stopped when the approval tool reported its usage limit. Full-file core copy and git pull were intentionally refused.",
+    "observed_before_block": {
+      "service_active": true,
+      "heartbeat_fresh": true,
+      "direct_bybit_position_count": 0,
+      "equity_usdt_approx": 1020.16,
+      "dry_run": false,
+      "money_sleeve": "att1 short-only x0.10"
+    },
+    "next_safe_action": "After approval access returns, patch only the equity guard hunks into the current remote baseline, deploy ATT1 telemetry contract, py_compile, direct-flat restart, and verify heartbeat/risk/universe/source SHA."
+  },
+  "research_operations": {
+    "duplicate_funding_process_removed": true,
+    "remaining_supervisor": "cross_arb_shadow_20260727",
+    "single_writer_lock_verified": true,
+    "duplicate_start_exit_code": 73,
+    "atomic_json_state_write": true,
+    "promotion_interval_quarantined": "2026-07-27T09:52:00Z/2026-07-27T10:53:00Z"
+  },
+  "validation": {
+    "focused_pytest": "35 passed",
+    "python_compile": "passed",
+    "shell_syntax": "passed",
+    "portable_report": {
+      "validation": "passed",
+      "package": "passed",
+      "verification": "structural_only",
+      "browser_limitation": "No installed Chromium headless-shell; enhanced-reader browser QA did not run."
+    }
+  },
+  "capital_authority": {
+    "new_capital_authorized": false,
+    "live_risk_increase_authorized": false,
+    "research_only_process_recovery_authorized": true
+  }
+}

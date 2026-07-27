@@ -1,0 +1,389 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Торговая станция: master roadmap 2026-07-27",
+    "description": "Executive roadmap активных денежных и исследовательских контуров.",
+    "generatedAt": "2026-07-27T11:10:00Z",
+    "sources": [
+      {
+        "id": "canonical_index",
+        "label": "Каноническая машинная карта 2026-07-27",
+        "path": "reports/PROJECT_CANONICAL_INDEX_2026_07_27.json",
+        "query": {
+          "description": "Проверенные live, capital-authority и active-contour поля.",
+          "engine": "duckdb",
+          "sql": "SELECT 1 AS live_money_sleeves, 0 AS direct_positions, 1020.16 AS equity_usdt, 3 AS target_sleeves_min",
+          "language": "json",
+          "executed_at": "2026-07-27T11:10:00Z",
+          "tables_used": [
+            "reports/PROJECT_CANONICAL_INDEX_2026_07_27.json"
+          ],
+          "filters": [
+            "Прямой Bybit и свежий heartbeat имеют приоритет над Git и AI snapshot",
+            "Research-only контуры не считаются денежными"
+          ],
+          "metric_definitions": [
+            "Live money sleeves — число sleeves, которым явно разрешён ненулевой live risk",
+            "Direct positions — число позиций из прямого ответа Bybit на момент проверки",
+            "Target sleeves — минимальная граница целевой архитектуры 3–6 доказанных sleeves"
+          ]
+        }
+      },
+      {
+        "id": "master_roadmap",
+        "label": "Master roadmap",
+        "path": "reports/PROJECT_MASTER_ROADMAP_2026_07_27.md",
+        "query": {
+          "description": "Свод активных gates, blockers, сроков и stop rules.",
+          "engine": "duckdb",
+          "sql": "SELECT * FROM (VALUES ('ATT1 live',9,20,'tiny live canary','N20 review, N30 scale gate',1),('XSEC',2,10,'risk-zero shadow','PIT universe and execution parity',2),('Funding',5,20,'quarantined paper sample','post-cutover clean cohort',3),('Alpaca',2,20,'pick shadow','PIT materializer and performance parity',4)) AS t(contour,observed,first_gate,stage,blocker,priority)",
+          "language": "markdown",
+          "executed_at": "2026-07-27T11:10:00Z",
+          "tables_used": [
+            "reports/PROJECT_MASTER_ROADMAP_2026_07_27.md"
+          ],
+          "filters": [
+            "Только активные контуры и ближайшие falsifiable gates",
+            "Срок означает дату evidence review, а не обещание прибыли"
+          ]
+        }
+      },
+      {
+        "id": "weekly_queue",
+        "label": "Недельная research-очередь",
+        "path": "reports/WEEKLY_RESEARCH_QUEUE_2026_07_27.md",
+        "query": {
+          "description": "Операционная очередь 27 июля — 2 августа.",
+          "language": "markdown",
+          "executed_at": "2026-07-27T11:10:00Z",
+          "filters": [
+            "Один тяжёлый новый backtest одновременно",
+            "Автовосстановление только risk-zero research"
+          ]
+        }
+      }
+    ],
+    "cards": [
+      {
+        "id": "live_sleeves",
+        "description": "Только ATT1 short имеет ненулевой crypto live risk.",
+        "dataset": "headline",
+        "sourceId": "canonical_index",
+        "metrics": [
+          {
+            "label": "Live money sleeves",
+            "field": "live_money_sleeves",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "direct_positions",
+        "description": "Прямой ответ Bybit перед подготовкой targeted deploy.",
+        "dataset": "headline",
+        "sourceId": "canonical_index",
+        "metrics": [
+          {
+            "label": "Direct positions",
+            "field": "direct_positions",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "equity",
+        "description": "Приблизительный equity основного Bybit аккаунта.",
+        "dataset": "headline",
+        "sourceId": "canonical_index",
+        "metrics": [
+          {
+            "label": "Bybit equity",
+            "field": "equity_usdt",
+            "format": "currency"
+          }
+        ]
+      },
+      {
+        "id": "target_sleeves",
+        "description": "Нижняя граница завершённой портфельной архитектуры.",
+        "dataset": "headline",
+        "sourceId": "canonical_index",
+        "metrics": [
+          {
+            "label": "Target proven sleeves",
+            "field": "target_sleeves_min",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "sample_progress",
+        "title": "Накопленная выборка и первый sample gate",
+        "subtitle": "Цифры показывают зрелость evidence, а не ожидаемую доходность.",
+        "type": "bar",
+        "dataset": "sample_progress",
+        "sourceId": "master_roadmap",
+        "encodings": {
+          "x": {
+            "field": "contour",
+            "type": "nominal",
+            "label": "Контур"
+          },
+          "y": {
+            "fields": [
+              "observed",
+              "first_gate"
+            ],
+            "type": "quantitative",
+            "label": "Решения / сделки"
+          },
+          "tooltip": [
+            {
+              "field": "stage",
+              "type": "text",
+              "label": "Stage"
+            },
+            {
+              "field": "blocker",
+              "type": "text",
+              "label": "Главный blocker"
+            }
+          ]
+        },
+        "valueFormat": "number",
+        "layout": "full",
+        "maxRows": 4
+      }
+    ],
+    "tables": [
+      {
+        "id": "contour_table",
+        "title": "Активные контуры и следующие решения",
+        "subtitle": "Promotion нигде не происходит автоматически.",
+        "dataset": "contours",
+        "sourceId": "master_roadmap",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "contour",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "contour",
+            "label": "Контур",
+            "type": "text"
+          },
+          {
+            "field": "stage",
+            "label": "Стадия",
+            "type": "text"
+          },
+          {
+            "field": "capital",
+            "label": "Деньги",
+            "type": "text"
+          },
+          {
+            "field": "next_gate",
+            "label": "Следующий gate",
+            "type": "text"
+          },
+          {
+            "field": "timing",
+            "label": "Ориентир evidence",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# Торговая станция: master roadmap 2026-07-27",
+        "layout": "full"
+      },
+      {
+        "id": "executive_summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n\nСистема жива, но пока не является законченной фабрикой дохода. Денежный crypto-контур один — ATT1 short `x0.10`; остальные кандидаты остаются без ордеров. Главный приоритет недели — не новый grid-search, а достоверность: single-writer funding, event frozen scorer, exact ATT1 replay, Alpaca PIT parity и XSEC clean decisions. Реалистичная ближайшая цель — получить несколько независимых evidence receipts и только после них добавлять tiny canaries.",
+        "layout": "full"
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "cardIds": [
+          "live_sleeves",
+          "direct_positions",
+          "equity",
+          "target_sleeves"
+        ],
+        "layout": "full"
+      },
+      {
+        "id": "maturity_heading",
+        "type": "markdown",
+        "body": "## Насколько созрели ближайшие кандидаты\n\nSample count — только один слой gate. PIT, costs, execution parity и независимый OOS остаются обязательными даже после достижения столбца «первый gate».",
+        "layout": "full"
+      },
+      {
+        "id": "sample_progress_block",
+        "type": "chart",
+        "chartId": "sample_progress",
+        "layout": "full"
+      },
+      {
+        "id": "contours_heading",
+        "type": "markdown",
+        "body": "## Путь к нескольким денежным рукавам\n\nATT1 продолжает tiny-canary без повышения риска. XSEC, event, Alpaca и FX могут стать новыми рукавами только после своих независимых gates; отрицательные исследования сохраняются как evidence и не перезапускаются без новой гипотезы.",
+        "layout": "full"
+      },
+      {
+        "id": "contour_table_block",
+        "type": "table",
+        "tableId": "contour_table",
+        "layout": "full"
+      },
+      {
+        "id": "week_plan",
+        "type": "markdown",
+        "body": "## План на шесть дней\n\n1. Довести funding single-writer и post-cutover cohort.\n2. Завершить event collection и frozen scorer, не скрывая ожидаемое покрытие около 75%.\n3. Реализовать exact ATT1 A3/3R replay вместо proxy.\n4. Материализовать Massive PIT/corporate actions для Alpaca exact-parity.\n5. Продолжить XSEC daily shadow без реальных ключей и ордеров.\n6. Подготовить новые FX D1/H4 prereg вместо повторения 0-PASS grid.\n7. Выполнить targeted live safety deploy только после direct-flat и восстановления approval-доступа.",
+        "sourceId": "weekly_queue",
+        "layout": "full"
+      },
+      {
+        "id": "decision_rules",
+        "type": "markdown",
+        "body": "## Правила решений\n\nЦель «0 красных месяцев» проверяется на untouched OOS портфеле, но не используется как параметр подгонки. Отрицательная executable distribution закрывает standalone sleeve, сохраняя полезные collectors/features. AI может понижать риск и предлагать challenger, но не повышать live risk и не менять сигнал без receipt и ручного разрешения.",
+        "layout": "full"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## Ограничения\n\nСроки означают окно получения доказательств, а не обещание PASS или доходности. ATT1 live sample мал. XSEC имеет survivorship/PIT и execution blockers. Alpaca shadow пока записывает picks, а не performance. Funding pre-cutover sample затронут incident review. FX 9-family и H4 stress завершены без promotion.",
+        "layout": "full"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-07-27T11:10:00Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {
+          "live_money_sleeves": 1,
+          "direct_positions": 0,
+          "equity_usdt": 1020.16,
+          "target_sleeves_min": 3
+        }
+      ],
+      "sample_progress": [
+        {
+          "contour": "ATT1 live",
+          "observed": 9,
+          "first_gate": 20,
+          "stage": "tiny live canary",
+          "blocker": "N20 review, N30 scale gate",
+          "priority": 1
+        },
+        {
+          "contour": "XSEC",
+          "observed": 2,
+          "first_gate": 10,
+          "stage": "risk-zero shadow",
+          "blocker": "PIT universe and execution parity",
+          "priority": 2
+        },
+        {
+          "contour": "Funding",
+          "observed": 5,
+          "first_gate": 20,
+          "stage": "quarantined paper sample",
+          "blocker": "post-cutover clean cohort",
+          "priority": 3
+        },
+        {
+          "contour": "Alpaca",
+          "observed": 2,
+          "first_gate": 20,
+          "stage": "pick shadow",
+          "blocker": "PIT materializer and performance parity",
+          "priority": 4
+        }
+      ],
+      "contours": [
+        {
+          "priority": 1,
+          "contour": "ATT1 short",
+          "stage": "tiny live canary",
+          "capital": "x0.10",
+          "next_gate": "N20 review; N30 scale eligibility",
+          "timing": "mid-Aug / early Sep"
+        },
+        {
+          "priority": 2,
+          "contour": "XSEC",
+          "stage": "risk-zero shadow",
+          "capital": "0",
+          "next_gate": "N10 interim; N20–30 + PIT/execution",
+          "timing": "4 / 14–24 Aug"
+        },
+        {
+          "priority": 3,
+          "contour": "Event retest",
+          "stage": "collector + frozen scorer",
+          "capital": "0",
+          "next_gate": "coverage/hash then 8 contracts",
+          "timing": "29–30 Jul verdict"
+        },
+        {
+          "priority": 4,
+          "contour": "Alpaca",
+          "stage": "SAFE_HOLD + pick shadow",
+          "capital": "new entries 0",
+          "next_gate": "PIT/exact broker parity",
+          "timing": "3–10 days repair"
+        },
+        {
+          "priority": 5,
+          "contour": "FX/CFD",
+          "stage": "research-only",
+          "capital": "0",
+          "next_gate": "new D1/H4 sealed OOS",
+          "timing": "3–14 days after runner"
+        },
+        {
+          "priority": 6,
+          "contour": "Funding arb",
+          "stage": "low-priority paper",
+          "capital": "0",
+          "next_gate": "post-cutover N20/N30 economics",
+          "timing": "5–10 days for N20 estimate"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "canonical_index",
+      "label": "Каноническая машинная карта 2026-07-27",
+      "path": "reports/PROJECT_CANONICAL_INDEX_2026_07_27.json"
+    },
+    {
+      "id": "master_roadmap",
+      "label": "Master roadmap",
+      "path": "reports/PROJECT_MASTER_ROADMAP_2026_07_27.md"
+    },
+    {
+      "id": "weekly_queue",
+      "label": "Недельная research-очередь",
+      "path": "reports/WEEKLY_RESEARCH_QUEUE_2026_07_27.md"
+    }
+  ]
+}
