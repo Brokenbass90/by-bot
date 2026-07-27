@@ -43,6 +43,16 @@ while true; do
       --close-invalid-after-hours 2 \
       --close-invalid-count 3 \
       --reentry-cooldown-hours 6
+
+    echo "[$(date -u +%FT%TZ)] bounded promotion gate"
+    "${PYTHON}" "${ROOT}/scripts/arb_roi_calculator.py" \
+      --state-json runtime/arb/cross_exchange_funding_shadow.json \
+      --output-json runtime/arb/arb_roi_estimate.json \
+      --capital 1000 \
+      --min-closed-cycles 20 \
+      --confirmation-closed-cycles 30 \
+      --min-annualized-simple-pct 8 \
+      --cohort explicit_validation_v1
   } >"${log}" 2>&1 || true
 
   ln -sfn "${log}" "${LOG_DIR}/latest.log"
