@@ -1,0 +1,106 @@
+{
+  "schema": "frequent_crypto_rehab_prereg_v2",
+  "frozen_at_utc": "2026-07-27T08:15:00Z",
+  "purpose": "Repair frequent crypto research without reviving disproven implementations or tuning on the next outcome.",
+  "authority": {
+    "research_only": true,
+    "live_orders": false,
+    "capital_authorized": false,
+    "promotion_authorized": false
+  },
+  "shared_execution_contract": {
+    "signals": "closed bars only",
+    "entry": "next tradable open or separately measured passive-fill model",
+    "base_cost_bps_per_side": 8.0,
+    "stress_cost_bps_per_side": 15.0,
+    "same_bar_collision": "stop_first",
+    "portfolio_overlap": "chronological shared-capital simulation",
+    "sides_scored_separately": true,
+    "point_in_time_universe_required_for_promotion": true
+  },
+  "lanes": [
+    {
+      "id": "pump_exhaustion_unwind_short_v2_prospective",
+      "priority": 1,
+      "inherits": "pump_exhaustion_unwind_short_v1",
+      "change_budget": [
+        "replace fixed survivor universe with prospective event-universe receipts",
+        "measure passive-fill and marketable-limit execution separately",
+        "add tape and order-book exhaustion features as preregistered ablations only"
+      ],
+      "do_not_change": [
+        "short-only identity",
+        "closed-bar expansion to exhaustion to bearish structure break causal order",
+        "v1 risk geometry while prospective labels are collected"
+      ],
+      "gate": {
+        "minimum_closed_trades": 60,
+        "minimum_holdout_trades": 15,
+        "minimum_stress_profit_factor": 1.15,
+        "minimum_positive_folds": 3,
+        "maximum_single_symbol_profit_concentration_pct": 35,
+        "required_loso_without_top_symbol_profit_factor": 1.05
+      }
+    },
+    {
+      "id": "level_memory_sweep_reclaim_v2_cost_repair",
+      "priority": 2,
+      "inherits": "crypto_level_memory_sweep_reclaim_20260707",
+      "frozen_development_candidate": {
+        "lookback_h1_bars": 48,
+        "minimum_respect_score": 0.75,
+        "reward_risk": 1.6,
+        "minimum_resolved_touches": 3
+      },
+      "change_budget": [
+        "correct round-trip costs to entry plus exit",
+        "score long and short separately",
+        "require first sweep and reclaim at a frozen pre-event level",
+        "test Elder and higher-timeframe regime only as ablations"
+      ],
+      "gate": {
+        "minimum_trades_per_side": 30,
+        "minimum_base_profit_factor": 1.25,
+        "minimum_stress_profit_factor": 1.05,
+        "minimum_positive_folds": 3,
+        "fresh_oos_required": true
+      }
+    },
+    {
+      "id": "sloped_break_retest_v2_event_triggered",
+      "priority": 3,
+      "supersedes": "sloped_break_retest_v1_grid",
+      "design": {
+        "level": "minimum three confirmed pivots, bounded slope dispersion, no post-fit break",
+        "event": "volatility expansion through the frozen line",
+        "entry": "first causal retest after break, next-open or measured passive fill",
+        "long_and_short": "separate hypotheses and scorecards",
+        "regime": "higher-timeframe alignment is an ablation, not a mandatory story"
+      },
+      "gate": {
+        "minimum_trades_per_side": 30,
+        "minimum_stress_profit_factor": 1.10,
+        "minimum_positive_folds": 3,
+        "minimum_positive_symbols": 5,
+        "fresh_oos_required": true
+      }
+    }
+  ],
+  "demotions": [
+    {
+      "id": "elder",
+      "role": "feature_or_filter_only",
+      "reason": "Canonical standalone replay is negative and fold-unstable."
+    },
+    {
+      "id": "generic_touch_bounce",
+      "role": "retired_as_money_candidate",
+      "reason": "The causal costed ASB2 repair remained deeply negative; only sweep-reclaim survives as a new causal hypothesis."
+    },
+    {
+      "id": "generic_bollinger_range_scalp",
+      "role": "no_live_promotion",
+      "reason": "The best short control was approximately flat under stress and the ADX repair made it worse."
+    }
+  ]
+}

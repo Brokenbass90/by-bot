@@ -1,0 +1,435 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Арбитраж и частые crypto-стратегии — решение 27 июля 2026",
+    "description": "Проверка экономической исполнимости funding и выбор трёх следующих crypto-веток.",
+    "generatedAt": "2026-07-27T08:30:00Z",
+    "cards": [
+      {
+        "id": "funding_low_cost",
+        "description": "Суммарный OOS-результат четырёх последовательных 30-дневных блоков при условном полном круге 8 bps.",
+        "dataset": "funding_costs",
+        "sourceId": "funding_walkforward",
+        "filter": {
+          "round_trip_cost_bps": 8
+        },
+        "metrics": [
+          {
+            "label": "Funding net, 4 OOS-блока",
+            "field": "cumulative_net_bps",
+            "format": "number",
+            "unit": "bps"
+          }
+        ]
+      },
+      {
+        "id": "pump_stress",
+        "description": "Profit factor Pump Exhaustion Unwind Short v1 после стрессовых затрат; выборка всё ещё недостаточна для promotion.",
+        "dataset": "strategy_evidence",
+        "sourceId": "frequent_crypto_audit",
+        "filter": {
+          "strategy": "Pump-unwind short"
+        },
+        "metrics": [
+          {
+            "label": "Pump stress PF",
+            "field": "profit_factor",
+            "format": "number"
+          },
+          {
+            "label": "Закрытые сделки",
+            "field": "trades",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "massive_checks",
+        "description": "Безопасные проверки бесплатного Massive Stocks Basic: reference, adjusted daily bars и splits.",
+        "dataset": "setup_checks",
+        "sourceId": "massive_audit",
+        "filter": {
+          "component": "Massive Stocks Basic"
+        },
+        "metrics": [
+          {
+            "label": "Massive API checks",
+            "field": "passed",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "live_ready",
+        "description": "Новые частые crypto-ветки, которым этот аудит разрешил реальные деньги.",
+        "dataset": "setup_checks",
+        "sourceId": "frequent_crypto_audit",
+        "filter": {
+          "component": "New frequent crypto money sleeves"
+        },
+        "metrics": [
+          {
+            "label": "Новых live-ready рукавов",
+            "field": "passed",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "funding_cost_curve",
+        "title": "Funding walk-forward: чувствительность к затратам",
+        "subtitle": "Небольшой gross edge исчезает между 8 и 22 bps полного круга.",
+        "type": "bar",
+        "dataset": "funding_costs",
+        "sourceId": "funding_walkforward",
+        "valueFormat": "number",
+        "encodings": {
+          "x": {
+            "field": "round_trip_cost_bps",
+            "type": "nominal",
+            "label": "Затраты полного круга, bps"
+          },
+          "y": {
+            "field": "cumulative_net_bps",
+            "type": "quantitative",
+            "label": "Суммарный OOS net, bps"
+          },
+          "tooltip": [
+            {
+              "field": "positive_blocks",
+              "type": "quantitative",
+              "label": "Положительных блоков"
+            }
+          ]
+        }
+      },
+      {
+        "id": "strategy_pf",
+        "title": "Стрессовый profit factor исследованных crypto-механик",
+        "subtitle": "PF выше 1 означает положительную сумму выигрышей относительно потерь, но не снимает требования к объёму и OOS.",
+        "type": "bar",
+        "dataset": "strategy_evidence",
+        "sourceId": "frequent_crypto_audit",
+        "valueFormat": "number",
+        "encodings": {
+          "x": {
+            "field": "strategy",
+            "type": "nominal",
+            "label": "Механика"
+          },
+          "y": {
+            "field": "profit_factor",
+            "type": "quantitative",
+            "label": "Profit factor"
+          },
+          "tooltip": [
+            {
+              "field": "trades",
+              "type": "quantitative",
+              "label": "Сделки"
+            },
+            {
+              "field": "decision",
+              "type": "nominal",
+              "label": "Решение"
+            }
+          ]
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "rehab_roadmap",
+        "title": "Следующие исследовательские ветки",
+        "subtitle": "Каждая ветка имеет отдельную причинную гипотезу и не получает деньги от этого документа.",
+        "dataset": "roadmap",
+        "sourceId": "rehab_prereg",
+        "defaultSort": {
+          "field": "priority",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "priority",
+            "label": "Приоритет",
+            "format": "number"
+          },
+          {
+            "field": "lane",
+            "label": "Ветка",
+            "type": "text"
+          },
+          {
+            "field": "repair",
+            "label": "Что меняем",
+            "type": "text"
+          },
+          {
+            "field": "next_gate",
+            "label": "Следующий честный gate",
+            "type": "text"
+          },
+          {
+            "field": "cadence",
+            "label": "Ожидаемая частота исследования",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "funding_walkforward",
+        "label": "Bybit–MEXC funding walk-forward",
+        "path": "reports/research/cross_exchange_funding_walk_forward_20260726.json"
+      },
+      {
+        "id": "frequent_crypto_audit",
+        "label": "Frequent crypto evidence receipt",
+        "path": "reports/research/frequent_crypto_rehab_v2_20260727.json"
+      },
+      {
+        "id": "rehab_prereg",
+        "label": "Frequent crypto rehab v2 preregistration",
+        "path": "configs/preregistered/frequent_crypto_rehab_v2_20260727.json"
+      },
+      {
+        "id": "massive_audit",
+        "label": "Sanitized Massive Basic audit",
+        "path": "runtime/massive_stocks_basic_audit.json"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# Арбитраж и частые crypto-стратегии — решение 27 июля 2026"
+      },
+      {
+        "id": "executive_summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n\n**Доход от funding возможен в принципе, но текущая простая модель ещё не является готовым заработком.** На четырёх последовательных OOS-блоках она заработала только 19.5 bps при гипотетически дешёвом полном круге 8 bps и потеряла 36.5 bps при 22 bps. Реальные basis, очередь maker-заявок и риск несовпавших двух ног в этом backtest отсутствуют.\n\n**Главная частая crypto-ставка — не старый Elder и не обычный touch-bounce, а Pump Exhaustion Unwind Short.** Он сохранил PF 1.234 под стрессом, но имеет лишь 39 сделок и шесть holdout-сделок. Исправленный replay старого sweep/reclaim дал PF 0.963 и −4.61R, поэтому этот вариант остановлен; исследовать можно только новую причинную механику с замороженным кластерным уровнем и подтверждением структуры. Третья ставка — заново определённый event-triggered sloped break/retest.\n\n**Massive Stocks Basic уже подключён и проверен 3/3.** Платный тариф сейчас не нужен; можно начинать PIT/data-аудит Alpaca."
+      },
+      {
+        "id": "headline_metrics",
+        "type": "metric-strip",
+        "cardIds": [
+          "funding_low_cost",
+          "pump_stress",
+          "massive_checks",
+          "live_ready"
+        ]
+      },
+      {
+        "id": "funding_heading",
+        "type": "markdown",
+        "body": "## Что на самом деле означает funding-арбитраж\n\nМы одновременно держим **short там, где funding выше**, и **long там, где он ниже**. Направление рынка почти нейтрализуется, а доход должен прийти из разницы выплат. Но открыть и закрыть две позиции — это четыре исполнения; поэтому маленькую разницу funding легко съедают комиссии и проскальзывание."
+      },
+      {
+        "id": "funding_chart",
+        "type": "chart",
+        "chartId": "funding_cost_curve"
+      },
+      {
+        "id": "funding_decision",
+        "type": "markdown",
+        "sourceId": "funding_walkforward",
+        "body": "**Практический вывод:** 8 bps — не подтверждённая реальная цена, а дешёвый сценарий. Даже в нём результат равен примерно 0.195% на капитал за четыре OOS-месяца до basis/legging/venue-risk. Поэтому paper нужен не вместо backtest, а для измерения того, чего funding-history принципиально не содержит."
+      },
+      {
+        "id": "strategy_heading",
+        "type": "markdown",
+        "body": "## Какие частые стратегии сохраняем\n\nСтарые названия не равны рабочим механикам. Elder оставляем как признак/фильтр. Обычный bounce и старый rolling-extrema sweep/reclaim остановлены. Новая гипотеза отскока должна использовать замороженный до события кластерный уровень, первый sweep/reclaim и отдельное подтверждение структуры. «Пилу» не лечим одним ADX: short-контроль был почти нулевым под стрессом, а ADX≤25 ухудшил PF. Pump-unwind получает первый исследовательский бюджет, потому что уже пережил стресс и три временных блока, хотя статистики пока мало."
+      },
+      {
+        "id": "strategy_chart",
+        "type": "chart",
+        "chartId": "strategy_pf"
+      },
+      {
+        "id": "roadmap_table",
+        "type": "table",
+        "tableId": "rehab_roadmap"
+      },
+      {
+        "id": "recommended_actions",
+        "type": "markdown",
+        "body": "## Рекомендованные действия\n\n1. Дождаться prospective event-tape и прогнать frozen Pump-unwind без подстройки уже увиденных 39 сделок.\n2. Зафиксировать новый bounce v3: кластерный уровень до события → первый sweep/reclaim → BOS/CHOCH; старый cost-repaired replay с PF 0.963 не перенастраивать.\n3. Реализовать sloped v2 только как «замороженная линия из ≥3 pivots → expansion → первый retest», а не новый широкий grid.\n4. Использовать Elder как A/B-фильтр этих трёх механик; самостоятельный Elder-рукав не реанимировать.\n5. Для funding продолжать paper до минимум 20 post-fix закрытий и положительного p25; реальные ключи и деньги пока не нужны.\n6. Для Alpaca начать бесплатный PIT/field audit через уже работающий Massive Basic."
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## Ограничения\n\n- Backtest не является обещанием доходности.\n- Funding walk-forward не моделирует basis, очередь maker, частичное исполнение, margin/liquidation и риск биржи.\n- Pump-unwind не прошёл минимумы по числу сделок и holdout.\n- Старые sweep/reclaim цифры использовали заниженный round-trip cost и не имеют promotion authority.\n- Оценки частоты в roadmap — цели сбора решений, а не прогноз сделок или прибыли."
+      },
+      {
+        "id": "further_questions",
+        "type": "markdown",
+        "body": "## Следующие вопросы\n\n- Есть ли устойчивый executable funding edge после реальных maker fill-rate и basis?\n- Сохраняется ли Pump-unwind без главного символа и на новых event-universe событиях?\n- Разделяются ли long и short sweep/reclaim по режимам без подгонки?\n- Даёт ли новая трёхточечная sloped-геометрия события на достаточной частоте?"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-07-27T08:30:00Z",
+    "status": "ready",
+    "datasets": {
+      "funding_costs": [
+        {
+          "round_trip_cost_bps": 0,
+          "cumulative_net_bps": 51.5027,
+          "positive_blocks": 4
+        },
+        {
+          "round_trip_cost_bps": 8,
+          "cumulative_net_bps": 19.5027,
+          "positive_blocks": 3
+        },
+        {
+          "round_trip_cost_bps": 22,
+          "cumulative_net_bps": -36.4973,
+          "positive_blocks": 1
+        },
+        {
+          "round_trip_cost_bps": 40,
+          "cumulative_net_bps": -108.4973,
+          "positive_blocks": 0
+        }
+      ],
+      "strategy_evidence": [
+        {
+          "strategy": "Pump-unwind short",
+          "profit_factor": 1.2342,
+          "trades": 39,
+          "decision": "Prospective rehab"
+        },
+        {
+          "strategy": "Range short",
+          "profit_factor": 1.005,
+          "trades": 106,
+          "decision": "Не продвигать"
+        },
+        {
+          "strategy": "Sweep/reclaim cost repair",
+          "profit_factor": 0.9625,
+          "trades": 189,
+          "decision": "Старый вариант остановить"
+        },
+        {
+          "strategy": "Generic bounce",
+          "profit_factor": 0.524,
+          "trades": 906,
+          "decision": "Заменить sweep/reclaim"
+        },
+        {
+          "strategy": "Elder standalone",
+          "profit_factor": 0.84,
+          "trades": 383,
+          "decision": "Только фильтр"
+        }
+      ],
+      "setup_checks": [
+        {
+          "component": "Massive Stocks Basic",
+          "passed": 3
+        },
+        {
+          "component": "New frequent crypto money sleeves",
+          "passed": 0
+        }
+      ],
+      "roadmap": [
+        {
+          "priority": 1,
+          "lane": "Pump Exhaustion Unwind Short v2",
+          "repair": "Prospective event-universe + execution ablations",
+          "next_gate": "N≥60, holdout≥15, stress PF≥1.15, LOSO",
+          "cadence": "Цель исследования: несколько событий в неделю"
+        },
+        {
+          "priority": 2,
+          "lane": "Level Sweep/Reclaim v2",
+          "repair": "Новый frozen cluster → sweep/reclaim → BOS/CHOCH",
+          "next_gate": "Механика → fixed replay → новый OOS",
+          "cadence": "Цель исследования: 2–8 решений в неделю"
+        },
+        {
+          "priority": 3,
+          "lane": "Sloped Break/Retest v2",
+          "repair": "≥3 pivots, expansion, первый retest",
+          "next_gate": "Механика → stress/WF/LOSO → shadow",
+          "cadence": "Цель исследования: 1–4 решения в неделю"
+        },
+        {
+          "priority": 4,
+          "lane": "Midterm / corrected TSM",
+          "repair": "Fixed UTC anchor, full costs/funding, liquidation survival",
+          "next_gate": "Immutable corrected rerun → 8-week parity",
+          "cadence": "Медленный диверсификатор, не ежедневный доход"
+        }
+      ]
+    },
+    "accessIssues": []
+  },
+  "sources": [
+    {
+      "id": "funding_walkforward",
+      "query": {
+        "engine": "duckdb",
+        "language": "sql",
+        "id": "cross_exchange_funding_walk_forward_v1",
+        "sql": "SELECT CAST(key AS INTEGER) AS round_trip_cost_bps, value.cumulative_net_bps, value.positive_blocks FROM json_each((SELECT aggregate_by_round_trip_cost_bps FROM read_json_auto('reports/research/cross_exchange_funding_walk_forward_20260726.json')))",
+        "description": "Four sequential 30-day OOS blocks selected from preceding 60-day training windows.",
+        "executed_at": "2026-07-25T21:42:28Z",
+        "tables_used": [
+          "reports/research/cross_exchange_funding_walk_forward_20260726.json"
+        ]
+      }
+    },
+    {
+      "id": "frequent_crypto_audit",
+      "query": {
+        "engine": "duckdb",
+        "language": "sql",
+        "id": "frequent_crypto_rehab_evidence_v2",
+        "sql": "SELECT * FROM read_json_auto('reports/research/frequent_crypto_rehab_v2_20260727.json')",
+        "description": "Deterministic extraction from frozen pump, range, bounce, sloped and Elder evidence.",
+        "executed_at": "2026-07-27T08:20:00Z",
+        "tables_used": [
+          "reports/research/frequent_crypto_rehab_v2_20260727.json"
+        ]
+      }
+    },
+    {
+      "id": "rehab_prereg",
+      "query": {
+        "engine": "duckdb",
+        "language": "sql",
+        "id": "frequent_crypto_rehab_prereg_v2",
+        "sql": "SELECT * FROM read_json_auto('configs/preregistered/frequent_crypto_rehab_v2_20260727.json')",
+        "description": "Frozen causal change budgets and research-only gates for three successor lanes.",
+        "executed_at": "2026-07-27T08:15:00Z",
+        "tables_used": [
+          "configs/preregistered/frequent_crypto_rehab_v2_20260727.json"
+        ]
+      }
+    },
+    {
+      "id": "massive_audit",
+      "query": {
+        "engine": "duckdb",
+        "language": "sql",
+        "id": "massive_stocks_basic_audit_v1",
+        "sql": "SELECT * FROM read_json_auto('runtime/massive_stocks_basic_audit.json')",
+        "description": "Sanitized endpoint checks for inactive tickers, adjusted daily bars and splits.",
+        "executed_at": "2026-07-27T08:05:00Z",
+        "tables_used": [
+          "runtime/massive_stocks_basic_audit.json"
+        ]
+      }
+    }
+  ]
+}

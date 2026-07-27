@@ -277,16 +277,38 @@ def _summarize(trades: Sequence[Trade]) -> Dict[str, float]:
     }
 
 
+def _pick_best(rows: Sequence[dict]) -> dict:
+    """Prefer an exploration-pass row, then rank by the frozen score.
+
+    The original exploration selected the largest score even when that row
+    missed the minimum-trade gate.  That made ``summary.md`` report FAIL while
+    ``grid.csv`` contained passing rows.  Passing the gate is the primary
+    ordering; score is only a tie-breaker inside the same gate status.
+    """
+
+    if not rows:
+        return {"score": -1e9, "pass_exploration": 0}
+    return dict(
+        max(
+            rows,
+            key=lambda row: (
+                int(row.get("pass_exploration", 0)),
+                float(row.get("score", -1e9)),
+            ),
+        )
+    )
+
+
 def _write_outputs(out_dir: Path, rows: List[dict], best_trades: Sequence[Trade], best: dict) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     if rows:
         with (out_dir / "grid.csv").open("w", newline="", encoding="utf-8") as f:
-            w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+            w = csv.DictWriter(f, fieldnames=list(rows[0].keys()), lineterminator="\n")
             w.writeheader()
             w.writerows(rows)
     with (out_dir / "trades.csv").open("w", newline="", encoding="utf-8") as f:
         fields = list(Trade.__dataclass_fields__.keys())
-        w = csv.DictWriter(f, fieldnames=fields)
+        w = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
         w.writeheader()
         for t in best_trades:
             w.writerow({k: getattr(t, k) for k in fields})
@@ -294,6 +316,7 @@ def _write_outputs(out_dir: Path, rows: List[dict], best_trades: Sequence[Trade]
         "# Crypto Level-Memory Sweep/Reclaim Exploration",
         "",
         f"- output: `{out_dir}`",
+        f"- passing candidates: `{sum(int(row.get('pass_exploration', 0)) for row in rows)}`",
         f"- best: `{best}`",
         f"- verdict: `{'PASS_EXPLORATION' if best.get('pass_exploration') else 'FAIL'}`",
         "",
@@ -317,6 +340,18 @@ def main(argv: Iterable[str] | None = None) -> int:
     ap.add_argument("--side", choices=("long", "short", "both"), default="both")
     ap.add_argument("--memory-bars", type=int, default=960)
     ap.add_argument("--elder-mode", choices=("off", "permissive", "strict"), default="off")
+    ap.add_argument(
+        "--entry-cost-bps",
+        type=float,
+        default=8.0,
+        help="All-in entry cost in bps (fee plus slippage).",
+    )
+    ap.add_argument(
+        "--exit-cost-bps",
+        type=float,
+        default=8.0,
+        help="All-in exit cost in bps (fee plus slippage).",
+    )
     ap.add_argument("--max-wall-sec", type=int, default=0)
     ap.add_argument("--out", default="")
     ap.add_argument("--quiet", action="store_true")
@@ -334,8 +369,7 @@ def main(argv: Iterable[str] | None = None) -> int:
 
     out_dir = Path(args.out) if args.out else ROOT / "reports" / "research" / f"crypto_level_memory_sweep_reclaim_20260707_{_utc_compact()}"
     grid_rows: List[dict] = []
-    best: dict = {"score": -1e9}
-    best_trades: List[Trade] = []
+    trades_by_key: Dict[tuple, List[Trade]] = {}
 
     lookbacks = [int(x) for x in args.lookbacks.split(",") if x.strip()]
     respect_grid = [float(x) for x in args.respect.split(",") if x.strip()]
@@ -370,8 +404,8 @@ def main(argv: Iterable[str] | None = None) -> int:
                             reclaim_atr=0.03,
                             sl_pad_atr=0.08,
                             max_hold_bars=36,
-                            fee_bps_entry=6.0,
-                            fee_bps_exit=2.0,
+                            fee_bps_entry=max(0.0, float(args.entry_cost_bps)),
+                            fee_bps_exit=max(0.0, float(args.exit_cost_bps)),
                             allow_longs=args.side in {"long", "both"},
                             allow_shorts=args.side in {"short", "both"},
                             memory_bars=max(30, int(args.memory_bars)),
@@ -389,14 +423,16 @@ def main(argv: Iterable[str] | None = None) -> int:
                     "rr": rr,
                     "side": args.side,
                     "elder_mode": args.elder_mode,
+                    "entry_cost_bps": round(max(0.0, float(args.entry_cost_bps)), 4),
+                    "exit_cost_bps": round(max(0.0, float(args.exit_cost_bps)), 4),
                     **stats,
                     "pass_exploration": int(pass_exploration),
                     "score": round(score, 4),
                 }
                 grid_rows.append(row)
-                if score > float(best.get("score", -1e9)):
-                    best = dict(row)
-                    best_trades = sorted(trades, key=lambda t: t.entry_ts)
+                trades_by_key[(lookback, respect_min, rr)] = sorted(
+                    trades, key=lambda t: t.entry_ts
+                )
                 if not args.quiet:
                     print(json.dumps({
                         "event": "combo_done",
@@ -405,6 +441,11 @@ def main(argv: Iterable[str] | None = None) -> int:
                         **row,
                     }, ensure_ascii=False), flush=True)
 
+    best = _pick_best(grid_rows)
+    best_trades = trades_by_key.get(
+        (best.get("lookback"), best.get("respect_min"), best.get("rr")),
+        [],
+    )
     _write_outputs(out_dir, grid_rows, best_trades, best)
     print(json.dumps({"out": str(out_dir), "symbols": list(data), "best": best}, ensure_ascii=False, indent=2))
     return 0

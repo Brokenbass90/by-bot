@@ -1,0 +1,68 @@
+{
+  "findings": {
+    "elder": {
+      "canonical_profit_factor": 0.84,
+      "canonical_trades": 383,
+      "decision": "FILTER_ABLATION_ONLY",
+      "positive_folds": 1,
+      "total_folds": 4
+    },
+    "generic_support_bounce": {
+      "decision": "RETIRE_TOUCH_BOUNCE_KEEP_SWEEP_RECLAIM_HYPOTHESIS",
+      "stress_profit_factor": 0.524,
+      "stress_trades": 906
+    },
+    "level_memory_sweep_reclaim": {
+      "cost_repair_net_r": -4.6054,
+      "cost_repair_positive_folds": 2,
+      "cost_repair_profit_factor": 0.9625,
+      "cost_repair_trades": 189,
+      "decision": "NO_PROMOTION_REDESIGN_CAUSAL_LEVEL_AND_STRUCTURE",
+      "legacy_cost_contract_valid": false,
+      "legacy_exploration_pass_rows": 7,
+      "legacy_grid_rows": 18
+    },
+    "pump_exhaustion_unwind_short_v1": {
+      "base_profit_factor": 1.409712374629694,
+      "decision": "PROSPECTIVE_REHAB_PRIORITY_1",
+      "failed_gates": [
+        "holdout_min_trades",
+        "min_trades"
+      ],
+      "holdout_trades": 6,
+      "positive_folds": 3,
+      "stress_profit_factor": 1.2341598397951055,
+      "trades": 39,
+      "verdict": "NO_PROMOTION"
+    },
+    "range_scalp": {
+      "decision": "DO_NOT_PROMOTE_OLD_RANGE",
+      "long_base_profit_factor": 0.765,
+      "short_adx25_stress_profit_factor": 0.55,
+      "short_base_profit_factor": 1.139,
+      "short_base_trades": 103,
+      "short_stress_profit_factor": 1.005
+    },
+    "sloped_break_retest_v1": {
+      "decision": "SUPERSEDE_WITH_EVENT_TRIGGERED_V2",
+      "passed_cases": 0,
+      "unique_parameter_cases": 64
+    }
+  },
+  "live_or_broker_calls": false,
+  "research_only": true,
+  "schema": "frequent_crypto_rehab_evidence_v2",
+  "sources": {
+    "pump": "reports/research/pump_exhaustion_unwind_short_v1_20260713_strict_gate/metrics.json",
+    "range_and_bounce": [
+      "backtest_runs/portfolio_20260711_143238_fc_20260711_ars1_short_control_adx0_360d_base_20260711_112429/summary.csv",
+      "backtest_runs/portfolio_20260711_143421_fc_20260711_ars1_short_control_adx0_360d_stress_20260711_112429/summary.csv",
+      "backtest_runs/portfolio_20260711_143755_fc_20260711_ars1_short_adx25_360d_stress_20260711_112429/summary.csv",
+      "backtest_runs/portfolio_20260711_142458_fc_20260711_ars1_long_control_adx0_360d_base_20260711_112429/summary.csv",
+      "backtest_runs/portfolio_20260711_145328_fc_20260711_asb2_nodescending_360d_stress_20260711_112429/summary.csv"
+    ],
+    "sloped": "research_lab/results/sloped_v1.jsonl",
+    "sweep": "reports/research/crypto_level_memory_sweep_reclaim_20260707_20260707_125758/grid.csv",
+    "sweep_cost_repair": "reports/research/level_memory_sweep_reclaim_v2_cost_repair_20260727/grid.csv"
+  }
+}
