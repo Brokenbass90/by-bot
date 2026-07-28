@@ -1,0 +1,30 @@
+{
+  "schema_id": "alpaca_adaptive_regime_exit_repair_prereg_v1",
+  "created_at_utc": "2026-07-28T11:48:00Z",
+  "research_only": true,
+  "capital_authorized": false,
+  "safe_hold_must_remain": true,
+  "parent_exit_attribution": "configs/preregistered/alpaca_adaptive_exit_attribution_20260728.json",
+  "question": "Can a causal stricter SPY regime gate remove the small 2022 loss while preserving the positive recent calendar-hold behaviour?",
+  "fixed": {
+    "selector": "AdaptiveConfig defaults",
+    "exit": {
+      "initial_stop_atr": 1000.0,
+      "profit_target_atr": 1000.0,
+      "break_even_trigger_r": 1000.0,
+      "trail_atr": 1000.0,
+      "max_hold_sessions": 22
+    },
+    "windows": ["bear_2022_survivor_proxy", "recent_2025_2026_survivor_proxy"],
+    "cost_bps_per_side": [5.0, 10.0],
+    "target_alloc_pct": 70.0,
+    "max_positions": 4
+  },
+  "regime_arms": {
+    "baseline_sma200": "SPY close >= SMA200",
+    "sma200_rising20": "SPY close >= SMA200 and SMA200 > its value 20 sessions ago",
+    "sma50_above_sma200": "SPY close >= SMA200 and SMA50 >= SMA200"
+  },
+  "candidate_gate": "positive in both windows at 10 bps/side, max monthly-endpoint DD <= 10%, and no worse than 25% haircut versus baseline recent return",
+  "promotion": "always RESEARCH_ONLY; winner, if any, must be frozen on PIT and untouched data"
+}

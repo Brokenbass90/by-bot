@@ -125,6 +125,7 @@ def _run_window(
     target_alloc_pct: float,
     max_positions: int,
     exit_contract: SharedExitContract = SharedExitContract(),
+    regime_mode: str = "baseline_sma200",
 ) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, str]]]:
     suffix = str(window["cache_suffix"])
     data: dict[str, pd.DataFrame] = {}
@@ -175,13 +176,34 @@ def _run_window(
             universe[symbol] = [float(value) for value in eligible["Close"].tolist()]
             signal_positions[symbol] = frame.index.get_loc(signal_date)
 
-        selection = select(
-            universe,
-            index_closes,
-            sectors=SECTOR_MAP,
-            cfg=cfg,
-            force_regime_ok=not use_gate,
-        )
+        strict_regime_ok = True
+        if use_gate and regime_mode != "baseline_sma200":
+            if len(index_closes) < 220:
+                strict_regime_ok = False
+            else:
+                sma200 = statistics.fmean(index_closes[-200:])
+                if regime_mode == "sma200_rising20":
+                    prior_sma200 = statistics.fmean(index_closes[-220:-20])
+                    strict_regime_ok = index_closes[-1] >= sma200 and sma200 > prior_sma200
+                elif regime_mode == "sma50_above_sma200":
+                    sma50 = statistics.fmean(index_closes[-50:])
+                    strict_regime_ok = index_closes[-1] >= sma200 and sma50 >= sma200
+                else:
+                    raise ValueError(f"unsupported regime_mode={regime_mode}")
+        if strict_regime_ok:
+            selection = select(
+                universe,
+                index_closes,
+                sectors=SECTOR_MAP,
+                cfg=cfg,
+                force_regime_ok=(not use_gate or regime_mode != "baseline_sma200"),
+            )
+        else:
+            selection = {
+                "regime_ok": False,
+                "reason": f"strict_regime_block:{regime_mode}",
+                "picks": [],
+            }
         month_return = 0.0
         pick_rows = []
         for pick in selection.get("picks") or []:
