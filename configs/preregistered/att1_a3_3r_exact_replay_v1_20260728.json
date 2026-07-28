@@ -1,0 +1,122 @@
+{
+  "schema_id": "att1_a3_3r_exact_replay_v1",
+  "created_at_utc": "2026-07-28T11:05:00Z",
+  "research_only": true,
+  "money_authority": false,
+  "parent_preregister": "research_lab/prereg/ATT1_A3_3R_EXACT_CHALLENGER_2026_07_27.json",
+  "hypothesis": "On the exact production ATT1 entry path, a causal three-H1-bar directional guard plus fixed 3R exits improves net expectancy after costs without introducing an unstable chronological fold.",
+  "window": {
+    "days": 360,
+    "end_utc": "2026-04-30",
+    "entry_execution": "next_open",
+    "base_interval_min": 5
+  },
+  "universe": [
+    "ADAUSDT",
+    "BTCUSDT",
+    "DOTUSDT",
+    "ETHUSDT",
+    "LINKUSDT",
+    "LTCUSDT",
+    "SOLUSDT",
+    "SUIUSDT"
+  ],
+  "portfolio": {
+    "starting_equity": 100.0,
+    "risk_pct": 0.0075,
+    "leverage": 1.0,
+    "max_positions": 3,
+    "cap_notional": 0.0
+  },
+  "common_effective_env": {
+    "BACKTEST_CACHE_ONLY": "1",
+    "ATT1_SIGNAL_TF": "60",
+    "ATT1_SIGNAL_LOOKBACK": "120",
+    "ATT1_ALLOW_LONGS": "0",
+    "ATT1_ALLOW_SHORTS": "1",
+    "ATT1_PIVOT_LEFT": "2",
+    "ATT1_PIVOT_RIGHT": "3",
+    "ATT1_MIN_PIVOTS": "2",
+    "ATT1_MAX_PIVOTS_USED": "3",
+    "ATT1_MAX_PIVOT_AGE": "16",
+    "ATT1_MIN_SLOPE_PCT": "0.03",
+    "ATT1_MAX_SLOPE_PCT": "4.0",
+    "ATT1_MIN_R2": "0.55",
+    "ATT1_TOUCH_ATR": "0.50",
+    "ATT1_REJECT_ATR": "0.08",
+    "ATT1_MIN_BODY_FRAC": "0.20",
+    "ATT1_RSI_SHORT_MIN": "45",
+    "ATT1_RSI_SHORT_MAX": "100",
+    "ATT1_SL_ATR_MULT": "1.10",
+    "ATT1_MIN_RR": "1.15",
+    "ATT1_MIN_STOP_PCT": "0.0015",
+    "ATT1_MAX_STOP_PCT": "0.06",
+    "ATT1_TIME_STOP_BARS_5M": "2016",
+    "ATT1_COOLDOWN_BARS_5M": "96"
+  },
+  "variants": {
+    "champion": {
+      "ATT1_TREND_GUARD_BARS": "0",
+      "ATT1_TP1_RR": "1.20",
+      "ATT1_TP2_RR": "2.50",
+      "ATT1_TP1_FRAC": "0.55",
+      "ATT1_BE_TRIGGER_RR": "1.00",
+      "ATT1_BE_LOCK_RR": "0.02",
+      "ATT1_TRAIL_ATR_MULT": "1.50",
+      "ATT1_TRAIL_ACTIVATE_RR": "1.00"
+    },
+    "a3_fixed_3r": {
+      "ATT1_TREND_GUARD_BARS": "3",
+      "ATT1_TP1_RR": "3.00",
+      "ATT1_TP2_RR": "3.00",
+      "ATT1_TP1_FRAC": "0.90",
+      "ATT1_BE_TRIGGER_RR": "99.0",
+      "ATT1_BE_LOCK_RR": "0.02",
+      "ATT1_TRAIL_ATR_MULT": "1.50",
+      "ATT1_TRAIL_ACTIVATE_RR": "99.0"
+    }
+  },
+  "cost_scenarios": [
+    {
+      "round_trip_bps": 4.0,
+      "fee_bps_per_side": 1.0,
+      "slippage_bps_per_side": 1.0
+    },
+    {
+      "round_trip_bps": 7.5,
+      "fee_bps_per_side": 2.5,
+      "slippage_bps_per_side": 1.25
+    },
+    {
+      "round_trip_bps": 11.0,
+      "fee_bps_per_side": 4.0,
+      "slippage_bps_per_side": 1.5
+    }
+  ],
+  "fold_method": {
+    "function": "bot.wf_folds.purge_embargo_folds",
+    "folds": 4,
+    "embargo_ms": 21600000,
+    "r_estimate": "pnl_pct_equity / fixed risk_pct"
+  },
+  "capital_gate": {
+    "evaluated_on_variant": "a3_fixed_3r",
+    "evaluated_at_round_trip_bps": 11.0,
+    "min_trades": 100,
+    "min_positive_folds": 3,
+    "min_profit_factor": 1.05,
+    "min_expectancy_r": 0.03,
+    "min_single_fold_expectancy_r": -0.15,
+    "requires_forward_shadow_labels": true,
+    "requires_execution_parity": true
+  },
+  "comparison_gate": {
+    "challenger_must_improve_expectancy_r_at_11bps": true,
+    "challenger_must_not_increase_negative_months": true
+  },
+  "forbidden": [
+    "change any threshold after reading the replay",
+    "mutate live ATT1 configuration or risk",
+    "promote from this replay without forward shadow and execution parity"
+  ]
+}
