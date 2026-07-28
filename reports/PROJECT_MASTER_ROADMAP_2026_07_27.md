@@ -195,7 +195,8 @@ backtest, но не достоверный demo/live verdict.
 
 ### P3 — инфраструктура
 
-1. Canonical strategy/module/claim matrices (Claude Package A, WIP=1).
+1. Canonical strategy/module/claim matrices (Claude Package A audited
+   PARTIAL/BLOCKED; archive moves remain uncommitted).
 2. LevelSnapshotV2 design и trade→decision→geometry provenance.
 3. Portfolio combiner на trade ledgers с three-slot constraints.
 4. AI truth freshness, proposal audit trail и bounded restart только
@@ -204,6 +205,13 @@ backtest, но не достоверный demo/live verdict.
 Недельный supervisor проверяет состояние каждые 12 часов. Он может продолжать
 или восстанавливать только research-only процессы; live risk/env/deploy остаются
 запрещены без отдельного receipt.
+
+Аудит Package A 28 июля выявил, что заявленный “ASB1 long” является
+`alt_support_bounce_v1/BOUNCE1`, а не live ASB1. Сохранённые цифры считаются
+exploratory: окна пересекаются, power недостаточна и `risk_mult=0` не создаёт
+virtual trade lifecycle. Поэтому архивные переносы не коммитятся, а следующий
+bounded implementation — отдельный BOUNCE1 decision/fill/exit shadow ledger и
+untouched prereg.
 
 ## 9. Stop/retire правила
 

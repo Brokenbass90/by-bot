@@ -101,7 +101,8 @@
     ],
     "terminal_research_receipts": [
         "reports/research/att1_seasonality_filter_v1_20260728/receipt.json",
-        "reports/research/att1_a3_3r_exact_replay_v1_20260728/receipt.json"
+        "reports/research/att1_a3_3r_exact_replay_v1_20260728/receipt.json",
+        "reports/research/CLAUDE_SUPPORT_BOUNCE_INDEPENDENT_AUDIT_2026_07_28.md"
     ],
     "superseded_policy": {
         "delete_now": false,

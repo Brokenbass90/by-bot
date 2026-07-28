@@ -20,7 +20,8 @@
 | ATT-1 | ATT1 seasonality/filter | completed FAIL | discovery hour 21 UTC failed validation and holdout | no live filter change |
 | ATT-2 | ATT1 A3/3R exact replay | completed FAIL | worse expectancy/red months/DD than champion | preserve champion; no forward shadow |
 | VOL-1 | Full owner volume setup | queued after Package A | causal dynamic universe | integrated smoke then OOS |
-| CLAUDE-A | Strategy/module/claim matrices | assigned, WIP=1 | no live/deploy authority | independent audit artifacts |
+| CLAUDE-A | Strategy/module/claim package | audited BLOCKED/PARTIAL | ASB1 name collision, overlapping evidence, no virtual shadow lifecycle | independent audit receipt |
+| BNC-1 | BOUNCE1/support-bounce rehabilitation | queued next | canonical rename + virtual decision/fill/exit ledger + untouched prereg | risk-zero shadow-ready receipt |
 | LEVEL-1 | LevelSnapshotV2 provenance design | queued | do not change ATT1 | parity/visual contract |
 | PORT-1 | Three-slot portfolio combiner | queued | only authoritative trade ledgers | OOS portfolio metrics |
 
@@ -74,3 +75,8 @@
   and `6.65%` DD; the combined challenger produced `+17.52%`, PF `1.196`,
   3/4 folds, 4 red months and `17.46%` DD. Champion stays unchanged; the
   combined A3/fixed-3R hypothesis does not enter forward shadow.
+- Claude support-bounce arithmetic reproduced, but promotion claims did not:
+  “ASB1 long” was actually `BOUNCE1`, 292 rows contained 278 unique trades,
+  the 46-trade power claim failed, and zero live risk cannot create virtual
+  closures. Archive moves remain uncommitted. Next implementation WIP is a
+  separate virtual BOUNCE1 lifecycle plus untouched prereg.
