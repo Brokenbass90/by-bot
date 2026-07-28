@@ -1,4 +1,4 @@
-"""Live wrapper for AltSupportBounceV1Strategy (Bounce1 / ASB1-long).
+"""Live wrapper for AltSupportBounceV1Strategy (BOUNCE1).
 
 Provides a simple interface compatible with the live bot's entry flow.
 Matches the pattern of asb1_live.py / hzbo1_live.py.
@@ -18,7 +18,7 @@ Env config:
   BOUNCE1_RISK_MULT=0.40
   BOUNCE1_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT
   BOUNCE1_MAX_OPEN_TRADES=1
-  ASB1_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT  (reused by strategy)
+  BOUNCE1_SYMBOL_ALLOWLIST=BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT
 """
 from __future__ import annotations
 

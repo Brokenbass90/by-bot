@@ -48,7 +48,7 @@ Exit plan
   • Time stop: time_stop_bars_5m
   • Cooldown: cooldown_bars_5m after any trade
 
-Environment variables (ASB1_ prefix)
+Environment variables (`ASLB1_` canonical prefix; `ASB1_` legacy fallback)
 ─────────────────────────────────────
   ASB1_SYMBOL_ALLOWLIST     csv    symbols to trade
   ASB1_SIGNAL_TF            str    kline timeframe [60]
@@ -123,6 +123,39 @@ def _env_bool(name: str, default: bool) -> bool:
 def _env_csv_set(name: str, default_csv: str = "") -> set:
     raw = os.getenv(name, default_csv) or ""
     return {x.strip().upper() for x in str(raw).replace(";", ",").split(",") if x.strip()}
+
+
+def _prefixed_env_name(suffix: str) -> str:
+    """Resolve the isolated slope-break env key with a legacy fallback.
+
+    `ASB1_` used to be shared by slope-break and support-bounce. New
+    configuration must use `ASLB1_`; the old name is read only when the
+    canonical key is absent so existing deployments remain reproducible.
+    """
+    canonical = f"ASLB1_{suffix}"
+    if canonical in os.environ:
+        return canonical
+    return f"ASB1_{suffix}"
+
+
+def _prefixed_env_str(suffix: str, default: str) -> str:
+    return str(os.getenv(_prefixed_env_name(suffix), default))
+
+
+def _prefixed_env_float(suffix: str, default: float) -> float:
+    return _env_float(_prefixed_env_name(suffix), default)
+
+
+def _prefixed_env_int(suffix: str, default: int) -> int:
+    return _env_int(_prefixed_env_name(suffix), default)
+
+
+def _prefixed_env_bool(suffix: str, default: bool) -> bool:
+    return _env_bool(_prefixed_env_name(suffix), default)
+
+
+def _prefixed_env_csv_set(suffix: str, default_csv: str = "") -> set:
+    return _env_csv_set(_prefixed_env_name(suffix), default_csv)
 
 
 # ---------------------------------------------------------------------------
@@ -339,45 +372,45 @@ class AltSlopeBreakV1Strategy:
 
     def _load_env(self) -> None:
         c = self.cfg
-        c.signal_tf = os.getenv("ASB1_SIGNAL_TF", c.signal_tf)
-        c.signal_lookback = _env_int("ASB1_SIGNAL_LOOKBACK", c.signal_lookback)
-        c.atr_period = _env_int("ASB1_ATR_PERIOD", c.atr_period)
-        c.rsi_period = _env_int("ASB1_RSI_PERIOD", c.rsi_period)
-        c.pivot_left = _env_int("ASB1_PIVOT_LEFT", c.pivot_left)
-        c.pivot_right = _env_int("ASB1_PIVOT_RIGHT", c.pivot_right)
-        c.min_pivots = _env_int("ASB1_MIN_PIVOTS", c.min_pivots)
-        c.max_pivot_age = _env_int("ASB1_MAX_PIVOT_AGE", c.max_pivot_age)
-        c.min_slope_pct = _env_float("ASB1_MIN_SLOPE_PCT", c.min_slope_pct)
-        c.max_slope_pct = _env_float("ASB1_MAX_SLOPE_PCT", c.max_slope_pct)
-        c.min_r2 = _env_float("ASB1_MIN_R2", c.min_r2)
-        c.break_atr = _env_float("ASB1_BREAK_ATR", c.break_atr)
-        c.min_body_frac = _env_float("ASB1_MIN_BODY_FRAC", c.min_body_frac)
-        c.rsi_short_max = _env_float("ASB1_RSI_SHORT_MAX", c.rsi_short_max)
-        c.rsi_long_min = _env_float("ASB1_RSI_LONG_MIN", c.rsi_long_min)
-        c.sl_atr_mult = _env_float("ASB1_SL_ATR_MULT", c.sl_atr_mult)
-        c.tp1_rr = _env_float("ASB1_TP1_RR", c.tp1_rr)
-        c.tp2_rr = _env_float("ASB1_TP2_RR", c.tp2_rr)
-        c.tp1_frac = _env_float("ASB1_TP1_FRAC", c.tp1_frac)
-        c.be_trigger_rr = _env_float("ASB1_BE_TRIGGER_RR", c.be_trigger_rr)
-        c.be_lock_rr = _env_float("ASB1_BE_LOCK_RR", c.be_lock_rr)
-        c.time_stop_bars_5m = _env_int("ASB1_TIME_STOP_BARS_5M", c.time_stop_bars_5m)
-        c.cooldown_bars_5m = _env_int("ASB1_COOLDOWN_BARS_5M", c.cooldown_bars_5m)
-        c.allow_longs = _env_bool("ASB1_ALLOW_LONGS", c.allow_longs)
-        c.allow_shorts = _env_bool("ASB1_ALLOW_SHORTS", c.allow_shorts)
-        c.macro_tf = os.getenv("ASB1_MACRO_TF", c.macro_tf).strip()
-        c.macro_require_bearish = _env_bool("ASB1_MACRO_REQUIRE_BEARISH", c.macro_require_bearish)
-        c.macro_require_bullish = _env_bool("ASB1_MACRO_REQUIRE_BULLISH", c.macro_require_bullish)
-        c.macro_macd_fast = _env_int("ASB1_MACRO_MACD_FAST", c.macro_macd_fast)
-        c.macro_macd_slow = _env_int("ASB1_MACRO_MACD_SLOW", c.macro_macd_slow)
-        c.macro_macd_signal = _env_int("ASB1_MACRO_MACD_SIGNAL", c.macro_macd_signal)
-        c.macro_consec_bars = _env_int("ASB1_MACRO_CONSEC_BARS", c.macro_consec_bars)
+        c.signal_tf = _prefixed_env_str("SIGNAL_TF", c.signal_tf)
+        c.signal_lookback = _prefixed_env_int("SIGNAL_LOOKBACK", c.signal_lookback)
+        c.atr_period = _prefixed_env_int("ATR_PERIOD", c.atr_period)
+        c.rsi_period = _prefixed_env_int("RSI_PERIOD", c.rsi_period)
+        c.pivot_left = _prefixed_env_int("PIVOT_LEFT", c.pivot_left)
+        c.pivot_right = _prefixed_env_int("PIVOT_RIGHT", c.pivot_right)
+        c.min_pivots = _prefixed_env_int("MIN_PIVOTS", c.min_pivots)
+        c.max_pivot_age = _prefixed_env_int("MAX_PIVOT_AGE", c.max_pivot_age)
+        c.min_slope_pct = _prefixed_env_float("MIN_SLOPE_PCT", c.min_slope_pct)
+        c.max_slope_pct = _prefixed_env_float("MAX_SLOPE_PCT", c.max_slope_pct)
+        c.min_r2 = _prefixed_env_float("MIN_R2", c.min_r2)
+        c.break_atr = _prefixed_env_float("BREAK_ATR", c.break_atr)
+        c.min_body_frac = _prefixed_env_float("MIN_BODY_FRAC", c.min_body_frac)
+        c.rsi_short_max = _prefixed_env_float("RSI_SHORT_MAX", c.rsi_short_max)
+        c.rsi_long_min = _prefixed_env_float("RSI_LONG_MIN", c.rsi_long_min)
+        c.sl_atr_mult = _prefixed_env_float("SL_ATR_MULT", c.sl_atr_mult)
+        c.tp1_rr = _prefixed_env_float("TP1_RR", c.tp1_rr)
+        c.tp2_rr = _prefixed_env_float("TP2_RR", c.tp2_rr)
+        c.tp1_frac = _prefixed_env_float("TP1_FRAC", c.tp1_frac)
+        c.be_trigger_rr = _prefixed_env_float("BE_TRIGGER_RR", c.be_trigger_rr)
+        c.be_lock_rr = _prefixed_env_float("BE_LOCK_RR", c.be_lock_rr)
+        c.time_stop_bars_5m = _prefixed_env_int("TIME_STOP_BARS_5M", c.time_stop_bars_5m)
+        c.cooldown_bars_5m = _prefixed_env_int("COOLDOWN_BARS_5M", c.cooldown_bars_5m)
+        c.allow_longs = _prefixed_env_bool("ALLOW_LONGS", c.allow_longs)
+        c.allow_shorts = _prefixed_env_bool("ALLOW_SHORTS", c.allow_shorts)
+        c.macro_tf = _prefixed_env_str("MACRO_TF", c.macro_tf).strip()
+        c.macro_require_bearish = _prefixed_env_bool("MACRO_REQUIRE_BEARISH", c.macro_require_bearish)
+        c.macro_require_bullish = _prefixed_env_bool("MACRO_REQUIRE_BULLISH", c.macro_require_bullish)
+        c.macro_macd_fast = _prefixed_env_int("MACRO_MACD_FAST", c.macro_macd_fast)
+        c.macro_macd_slow = _prefixed_env_int("MACRO_MACD_SLOW", c.macro_macd_slow)
+        c.macro_macd_signal = _prefixed_env_int("MACRO_MACD_SIGNAL", c.macro_macd_signal)
+        c.macro_consec_bars = _prefixed_env_int("MACRO_CONSEC_BARS", c.macro_consec_bars)
 
     def _refresh_lists(self) -> None:
-        self._allow = _env_csv_set(
-            "ASB1_SYMBOL_ALLOWLIST",
+        self._allow = _prefixed_env_csv_set(
+            "SYMBOL_ALLOWLIST",
             "BTCUSDT,ETHUSDT,SOLUSDT,LINKUSDT,LTCUSDT,ADAUSDT,DOTUSDT,SUIUSDT",
         )
-        self._deny = _env_csv_set("ASB1_SYMBOL_DENYLIST")
+        self._deny = _prefixed_env_csv_set("SYMBOL_DENYLIST")
 
     def _macro_trend_ok(self, store, side: str) -> bool:
         """Optional 4h MACD histogram macro filter.

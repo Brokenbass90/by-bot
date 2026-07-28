@@ -15,13 +15,17 @@ Key features:
 - TP2: resistance - 0.45% buffer
 
 Typical env config:
-    ASB1_SYMBOL_ALLOWLIST=ETHUSDT,ADAUSDT,DOTUSDT
-    ASB1_MIN_RSI=30.0
-    ASB1_MAX_RSI=42.0
-    ASB1_SL_ATR_MULT=0.85
-    ASB1_TP1_FRAC=0.60
-    ASB1_ALLOW_LONGS=1
-    ASB1_ALLOW_SHORTS=0
+    BOUNCE1_SYMBOL_ALLOWLIST=ETHUSDT,ADAUSDT,DOTUSDT
+    BOUNCE1_MIN_RSI=30.0
+    BOUNCE1_MAX_RSI=42.0
+    BOUNCE1_SL_ATR_MULT=0.85
+    BOUNCE1_TP1_FRAC=0.60
+    BOUNCE1_ALLOW_LONGS=1
+    BOUNCE1_ALLOW_SHORTS=0
+
+`ASB1_` remains a legacy fallback only. New configuration must use
+`BOUNCE1_` so the support-bounce and slope-break engines cannot tune each
+other accidentally.
 """
 from __future__ import annotations
 
@@ -63,6 +67,33 @@ def _env_bool(name: str, default: bool) -> bool:
 def _env_csv_set(name: str, default_csv: str = "") -> set[str]:
     raw = os.getenv(name, default_csv) or ""
     return {x.strip().upper() for x in str(raw).replace(";", ",").split(",") if x.strip()}
+
+
+def _prefixed_env_name(suffix: str) -> str:
+    canonical = f"BOUNCE1_{suffix}"
+    if canonical in os.environ:
+        return canonical
+    return f"ASB1_{suffix}"
+
+
+def _prefixed_env_str(suffix: str, default: str) -> str:
+    return str(os.getenv(_prefixed_env_name(suffix), default))
+
+
+def _prefixed_env_float(suffix: str, default: float) -> float:
+    return _env_float(_prefixed_env_name(suffix), default)
+
+
+def _prefixed_env_int(suffix: str, default: int) -> int:
+    return _env_int(_prefixed_env_name(suffix), default)
+
+
+def _prefixed_env_bool(suffix: str, default: bool) -> bool:
+    return _env_bool(_prefixed_env_name(suffix), default)
+
+
+def _prefixed_env_csv_set(suffix: str, default_csv: str = "") -> set[str]:
+    return _env_csv_set(_prefixed_env_name(suffix), default_csv)
 
 
 def _ema(values: List[float], period: int) -> float:
@@ -183,46 +214,46 @@ class AltSupportBounceV1Strategy:
     def __init__(self, cfg: Optional[AltSupportBounceV1Config] = None):
         self.cfg = cfg or AltSupportBounceV1Config()
 
-        self.cfg.regime_tf = os.getenv("ASB1_REGIME_TF", self.cfg.regime_tf)
-        self.cfg.regime_lookback = _env_int("ASB1_REGIME_LOOKBACK", self.cfg.regime_lookback)
-        self.cfg.regime_ema_fast = _env_int("ASB1_REGIME_EMA_FAST", self.cfg.regime_ema_fast)
-        self.cfg.regime_ema_slow = _env_int("ASB1_REGIME_EMA_SLOW", self.cfg.regime_ema_slow)
-        self.cfg.regime_max_gap_pct = _env_float("ASB1_REGIME_MAX_GAP_PCT", self.cfg.regime_max_gap_pct)
-        self.cfg.regime_max_slope_pct = _env_float("ASB1_REGIME_MAX_SLOPE_PCT", self.cfg.regime_max_slope_pct)
-        self.cfg.regime_min_atr_pct = _env_float("ASB1_REGIME_MIN_ATR_PCT", self.cfg.regime_min_atr_pct)
-        self.cfg.regime_max_atr_pct = _env_float("ASB1_REGIME_MAX_ATR_PCT", self.cfg.regime_max_atr_pct)
+        self.cfg.regime_tf = _prefixed_env_str("REGIME_TF", self.cfg.regime_tf)
+        self.cfg.regime_lookback = _prefixed_env_int("REGIME_LOOKBACK", self.cfg.regime_lookback)
+        self.cfg.regime_ema_fast = _prefixed_env_int("REGIME_EMA_FAST", self.cfg.regime_ema_fast)
+        self.cfg.regime_ema_slow = _prefixed_env_int("REGIME_EMA_SLOW", self.cfg.regime_ema_slow)
+        self.cfg.regime_max_gap_pct = _prefixed_env_float("REGIME_MAX_GAP_PCT", self.cfg.regime_max_gap_pct)
+        self.cfg.regime_max_slope_pct = _prefixed_env_float("REGIME_MAX_SLOPE_PCT", self.cfg.regime_max_slope_pct)
+        self.cfg.regime_min_atr_pct = _prefixed_env_float("REGIME_MIN_ATR_PCT", self.cfg.regime_min_atr_pct)
+        self.cfg.regime_max_atr_pct = _prefixed_env_float("REGIME_MAX_ATR_PCT", self.cfg.regime_max_atr_pct)
 
-        self.cfg.signal_tf = os.getenv("ASB1_SIGNAL_TF", self.cfg.signal_tf)
-        self.cfg.signal_lookback = _env_int("ASB1_SIGNAL_LOOKBACK", self.cfg.signal_lookback)
-        self.cfg.signal_ema_period = _env_int("ASB1_SIGNAL_EMA_PERIOD", self.cfg.signal_ema_period)
-        self.cfg.signal_atr_period = _env_int("ASB1_SIGNAL_ATR_PERIOD", self.cfg.signal_atr_period)
-        self.cfg.min_range_pct = _env_float("ASB1_MIN_RANGE_PCT", self.cfg.min_range_pct)
-        self.cfg.max_range_pct = _env_float("ASB1_MAX_RANGE_PCT", self.cfg.max_range_pct)
-        self.cfg.support_touch_buffer_atr = _env_float("ASB1_SUPP_TOUCH_BUFFER_ATR", self.cfg.support_touch_buffer_atr)
-        self.cfg.reclaim_above_supp_atr = _env_float("ASB1_RECLAIM_ABOVE_SUPP_ATR", self.cfg.reclaim_above_supp_atr)
-        self.cfg.min_body_frac = _env_float("ASB1_MIN_BODY_FRAC", self.cfg.min_body_frac)
-        self.cfg.max_close_vs_ema_pct = _env_float("ASB1_MAX_CLOSE_VS_EMA_PCT", self.cfg.max_close_vs_ema_pct)
-        self.cfg.rsi_period = _env_int("ASB1_RSI_PERIOD", self.cfg.rsi_period)
-        self.cfg.min_rsi = _env_float("ASB1_MIN_RSI", self.cfg.min_rsi)
-        self.cfg.max_rsi = _env_float("ASB1_MAX_RSI", self.cfg.max_rsi)
+        self.cfg.signal_tf = _prefixed_env_str("SIGNAL_TF", self.cfg.signal_tf)
+        self.cfg.signal_lookback = _prefixed_env_int("SIGNAL_LOOKBACK", self.cfg.signal_lookback)
+        self.cfg.signal_ema_period = _prefixed_env_int("SIGNAL_EMA_PERIOD", self.cfg.signal_ema_period)
+        self.cfg.signal_atr_period = _prefixed_env_int("SIGNAL_ATR_PERIOD", self.cfg.signal_atr_period)
+        self.cfg.min_range_pct = _prefixed_env_float("MIN_RANGE_PCT", self.cfg.min_range_pct)
+        self.cfg.max_range_pct = _prefixed_env_float("MAX_RANGE_PCT", self.cfg.max_range_pct)
+        self.cfg.support_touch_buffer_atr = _prefixed_env_float("SUPP_TOUCH_BUFFER_ATR", self.cfg.support_touch_buffer_atr)
+        self.cfg.reclaim_above_supp_atr = _prefixed_env_float("RECLAIM_ABOVE_SUPP_ATR", self.cfg.reclaim_above_supp_atr)
+        self.cfg.min_body_frac = _prefixed_env_float("MIN_BODY_FRAC", self.cfg.min_body_frac)
+        self.cfg.max_close_vs_ema_pct = _prefixed_env_float("MAX_CLOSE_VS_EMA_PCT", self.cfg.max_close_vs_ema_pct)
+        self.cfg.rsi_period = _prefixed_env_int("RSI_PERIOD", self.cfg.rsi_period)
+        self.cfg.min_rsi = _prefixed_env_float("MIN_RSI", self.cfg.min_rsi)
+        self.cfg.max_rsi = _prefixed_env_float("MAX_RSI", self.cfg.max_rsi)
 
-        self.cfg.sl_atr_mult = _env_float("ASB1_SL_ATR_MULT", self.cfg.sl_atr_mult)
-        self.cfg.tp1_frac = _env_float("ASB1_TP1_FRAC", self.cfg.tp1_frac)
-        self.cfg.tp2_buffer_pct = _env_float("ASB1_TP2_BUFFER_PCT", self.cfg.tp2_buffer_pct)
-        self.cfg.min_rr = _env_float("ASB1_MIN_RR", self.cfg.min_rr)
-        self.cfg.min_stop_pct = _env_float("ASB1_MIN_STOP_PCT", self.cfg.min_stop_pct)
-        self.cfg.max_stop_pct = _env_float("ASB1_MAX_STOP_PCT", self.cfg.max_stop_pct)
-        self.cfg.max_entry_dist_atr = _env_float("ASB1_MAX_ENTRY_DIST_ATR", self.cfg.max_entry_dist_atr)
-        self.cfg.reclaim_require_higher_close = _env_bool("ASB1_RECLAIM_REQUIRE_HIGHER_CLOSE", self.cfg.reclaim_require_higher_close)
-        self.cfg.trail_atr_mult = _env_float("ASB1_TRAIL_ATR_MULT", self.cfg.trail_atr_mult)
-        self.cfg.trail_atr_period = _env_int("ASB1_TRAIL_ATR_PERIOD", self.cfg.trail_atr_period)
-        self.cfg.time_stop_bars_5m = _env_int("ASB1_TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
-        self.cfg.cooldown_bars_5m = _env_int("ASB1_COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
-        self.cfg.allow_longs = _env_bool("ASB1_ALLOW_LONGS", self.cfg.allow_longs)
-        self.cfg.allow_shorts = _env_bool("ASB1_ALLOW_SHORTS", self.cfg.allow_shorts)
+        self.cfg.sl_atr_mult = _prefixed_env_float("SL_ATR_MULT", self.cfg.sl_atr_mult)
+        self.cfg.tp1_frac = _prefixed_env_float("TP1_FRAC", self.cfg.tp1_frac)
+        self.cfg.tp2_buffer_pct = _prefixed_env_float("TP2_BUFFER_PCT", self.cfg.tp2_buffer_pct)
+        self.cfg.min_rr = _prefixed_env_float("MIN_RR", self.cfg.min_rr)
+        self.cfg.min_stop_pct = _prefixed_env_float("MIN_STOP_PCT", self.cfg.min_stop_pct)
+        self.cfg.max_stop_pct = _prefixed_env_float("MAX_STOP_PCT", self.cfg.max_stop_pct)
+        self.cfg.max_entry_dist_atr = _prefixed_env_float("MAX_ENTRY_DIST_ATR", self.cfg.max_entry_dist_atr)
+        self.cfg.reclaim_require_higher_close = _prefixed_env_bool("RECLAIM_REQUIRE_HIGHER_CLOSE", self.cfg.reclaim_require_higher_close)
+        self.cfg.trail_atr_mult = _prefixed_env_float("TRAIL_ATR_MULT", self.cfg.trail_atr_mult)
+        self.cfg.trail_atr_period = _prefixed_env_int("TRAIL_ATR_PERIOD", self.cfg.trail_atr_period)
+        self.cfg.time_stop_bars_5m = _prefixed_env_int("TIME_STOP_BARS_5M", self.cfg.time_stop_bars_5m)
+        self.cfg.cooldown_bars_5m = _prefixed_env_int("COOLDOWN_BARS_5M", self.cfg.cooldown_bars_5m)
+        self.cfg.allow_longs = _prefixed_env_bool("ALLOW_LONGS", self.cfg.allow_longs)
+        self.cfg.allow_shorts = _prefixed_env_bool("ALLOW_SHORTS", self.cfg.allow_shorts)
 
-        self._allow = _env_csv_set("ASB1_SYMBOL_ALLOWLIST")
-        self._deny = _env_csv_set("ASB1_SYMBOL_DENYLIST")
+        self._allow = _prefixed_env_csv_set("SYMBOL_ALLOWLIST")
+        self._deny = _prefixed_env_csv_set("SYMBOL_DENYLIST")
         self._cooldown = 0
         self._last_tf_ts: Optional[int] = None
         self._last_regime_tf_ts: Optional[int] = None
@@ -230,8 +261,8 @@ class AltSupportBounceV1Strategy:
         self.last_no_signal_reason = ""
 
     def _refresh_runtime_allowlists(self) -> None:
-        self._allow = _env_csv_set("ASB1_SYMBOL_ALLOWLIST")
-        self._deny = _env_csv_set("ASB1_SYMBOL_DENYLIST")
+        self._allow = _prefixed_env_csv_set("SYMBOL_ALLOWLIST")
+        self._deny = _prefixed_env_csv_set("SYMBOL_DENYLIST")
 
     def _regime_ok(self, store) -> bool:
         """Check if regime is bullish/flat (EMA20 >= EMA50 or gap small on 4h)."""
