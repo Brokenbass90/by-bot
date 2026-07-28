@@ -47,8 +47,9 @@ execution contract, вести shadow, запускать маленький can
 - Alpaca — `SAFE_HOLD`: существующие ABBV/SCHW защищены брокерскими стопами;
   новая ротация не разрешена.
 - XSEC, event, funding, FX/CFD и новые crypto families — без реальных ордеров.
-- Funding paper после исправления имел 5 чистых закрытых циклов:
-  median `-0.0795%`, p25 `-0.1214%`; standalone economics пока отрицательная.
+- Funding paper теперь имеет 7 чистых post-cutover циклов после привязки ROI
+  calculator к `opened_at >= 2026-07-27 10:53 UTC`: `0` wins, median
+  `-0.1930%`, p25 `-0.2308%`; standalone economics остаётся отрицательной.
 - 27 июля найден двойной локальный funding supervisor. Старый процесс
   остановлен; спорный интервал до cutover не используется для promotion.
 
@@ -97,14 +98,14 @@ AI может собирать данные, диагностировать, р�
 | Контур | Сейчас | Блокер | Следующий gate | Реалистичный ориентир |
 |---|---|---|---|---|
 | ATT1 short champion | live tiny-canary `x0.10` | малая live-выборка | N20 — review; N30: net>0, PF≥1.20, DD≤3R, 0 incidents | N20 середина августа; N30 начало сентября при прежней частоте |
-| ATT1 A3/3R | research challenger | один OOS fold нестабилен, production parity | exact replay + forward side-by-side | 2–7 дней на replay/receipt |
-| ATT1 seasonality | preregistered filter study | sealed split и multiple testing | discovery 60% / validation 20% / holdout 20% | 1–3 дня |
-| XSEC | risk-zero shadow, 2 решения | survivorship/PIT, funding, fill/cost, Sharpe formula | 10–15 чистых решений interim; 20–30 final | N10 около 4 августа; N20 около 14 августа; N30 около 24 августа при daily cadence |
+| ATT1 A3/3R | completed FAIL | at 11 bps: 3/4 folds, 4 red months, DD 17.46%; worse than champion | do not forward; preserve evidence | terminal 28 июля |
+| ATT1 seasonality | completed FAIL | hour 21 UTC discovery не повторился | сохранить evidence; live filter не менять | terminal 28 июля |
+| XSEC | risk-zero shadow, 3 решения | survivorship/PIT, funding, fill/cost, Sharpe formula | 10–15 чистых решений interim; 20–30 final | N10 около 4 августа; N20 около 14 августа; N30 около 24 августа при daily cadence |
 | Event universe V2r2 | collector | ожидаемая coverage около 75%, не 100% | deadline 28 июля 18:19 UTC; frozen scorer | 29–30 июля PASS/FAIL/BLOCKED_DATA |
 | Event retest long | causal identity есть | 8 data/performance/additivity contracts | frozen scorer, затем только risk-zero shadow | 1–3 недели, если coverage достаточна |
 | Pump exhaustion short | frozen research | нужна новая post-window выборка | N≥40, sealed holdout N≥10 без retune | 2–5 недель по событиям |
-| Funding arb | low-priority paper | 5 clean cycles, отрицательная distribution; duplicate incident | N20/N30 post-cutover, p25>0, median>0, annual floor≥8% | первичный gate не раньше 1–2 недель; только по фактическим циклам |
-| Alpaca | SAFE_HOLD + shadow, 2 уникальных решения | Basic connector 3/3, но 9 exact-parity artifacts не закреплены; performance не считается | PIT materializer + exact broker-parity shadow | 3–10 дней на parity repair; 20 решений около 4 недель |
+| Funding arb | low-priority paper | 7 clean cycles, 0 wins, отрицательная distribution; duplicate incident | N20/N30 post-cutover, p25>0, median>0, annual floor≥8% | первичный gate только по фактическим циклам |
+| Alpaca | SAFE_HOLD + shadow, 5 уникальных решений | Basic connector 3/3, но 9 exact-parity artifacts не закреплены; performance не считается | PIT materializer + exact broker-parity shadow | 3–10 дней на parity repair; 20 решений около 4 недель |
 | FX/CFD | research-only | 9-family: 0 PASS; H4 stress 16/16 отрицательные | не rerun; новые prereg daily carry+trend и H4 families | 3–14 дней на новые sealed verdicts после реализации |
 | LevelSnapshotV2 | design/parity infrastructure | нельзя скрытно менять ATT1 | design → replay parity → отдельный challenger | 1–3 недели |
 | Web levels/reports | geometry snapshot уже сохраняется | нужна полная trade→decision→level связь | parity audit и visual regression | 2–7 дней |
@@ -185,6 +186,12 @@ backtest, но не достоверный demo/live verdict.
    dynamic volume universe → level/retest → measured entry → volume exit.
 4. После Package A: token unlock data-availability probe.
 5. FX D1 carry+trend prereg и H4 breakout/retest prereg.
+
+Первые два ATT1 bounded исследования уже terminal:
+
+- seasonality hour filter — `FAIL`, live filter unchanged;
+- combined A3/fixed-3R — `FAIL`; current champion was stronger at every cost
+  scenario and remains unchanged.
 
 ### P3 — инфраструктура
 

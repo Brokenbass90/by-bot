@@ -1,0 +1,303 @@
+{
+  "results": {
+    "a3_fixed_3r": {
+      "11.0": {
+        "ending_equity": 117.52,
+        "expectancy_r": 0.116338,
+        "folds": [
+          {
+            "expectancy_r": -0.299824,
+            "fold": 0,
+            "net_r": -14.091733,
+            "positive": false,
+            "trades": 47
+          },
+          {
+            "expectancy_r": 0.014653,
+            "fold": 1,
+            "net_r": 0.732667,
+            "positive": true,
+            "trades": 50
+          },
+          {
+            "expectancy_r": 0.319116,
+            "fold": 2,
+            "net_r": 15.636667,
+            "positive": true,
+            "trades": 49
+          },
+          {
+            "expectancy_r": 0.328039,
+            "fold": 3,
+            "net_r": 20.0104,
+            "positive": true,
+            "trades": 61
+          }
+        ],
+        "folds_embargoed": 1,
+        "folds_positive": 3,
+        "folds_purged": 4,
+        "folds_used_trades": 207,
+        "max_drawdown": 17.465,
+        "negative_month_labels": [
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08"
+        ],
+        "negative_months": 4,
+        "net_pnl": 17.52,
+        "net_r": 24.663733,
+        "profit_factor": 1.196222378387314,
+        "run_dir": "backtest_runs/portfolio_20260728_141726_att1_a3_exact_a3_fixed_3r_11p0bps_20260728",
+        "trades": 212
+      },
+      "4.0": {
+        "ending_equity": 123.09,
+        "expectancy_r": 0.14555,
+        "folds": [
+          {
+            "expectancy_r": -0.270085,
+            "fold": 0,
+            "net_r": -12.694,
+            "positive": false,
+            "trades": 47
+          },
+          {
+            "expectancy_r": 0.044461,
+            "fold": 1,
+            "net_r": 2.223067,
+            "positive": true,
+            "trades": 50
+          },
+          {
+            "expectancy_r": 0.347366,
+            "fold": 2,
+            "net_r": 17.020933,
+            "positive": true,
+            "trades": 49
+          },
+          {
+            "expectancy_r": 0.357266,
+            "fold": 3,
+            "net_r": 21.7932,
+            "positive": true,
+            "trades": 61
+          }
+        ],
+        "folds_embargoed": 1,
+        "folds_positive": 3,
+        "folds_purged": 4,
+        "folds_used_trades": 207,
+        "max_drawdown": 16.4871,
+        "negative_month_labels": [
+          "2025-05",
+          "2025-07",
+          "2025-08"
+        ],
+        "negative_months": 3,
+        "net_pnl": 23.09,
+        "net_r": 30.856667,
+        "profit_factor": 1.262448779816699,
+        "run_dir": "backtest_runs/portfolio_20260728_141401_att1_a3_exact_a3_fixed_3r_4p0bps_20260728",
+        "trades": 212
+      },
+      "7.5": {
+        "ending_equity": 120.27,
+        "expectancy_r": 0.130942,
+        "folds": [
+          {
+            "expectancy_r": -0.284956,
+            "fold": 0,
+            "net_r": -13.392933,
+            "positive": false,
+            "trades": 47
+          },
+          {
+            "expectancy_r": 0.029557,
+            "fold": 1,
+            "net_r": 1.477867,
+            "positive": true,
+            "trades": 50
+          },
+          {
+            "expectancy_r": 0.333233,
+            "fold": 2,
+            "net_r": 16.3284,
+            "positive": true,
+            "trades": 49
+          },
+          {
+            "expectancy_r": 0.342651,
+            "fold": 3,
+            "net_r": 20.901733,
+            "positive": true,
+            "trades": 61
+          }
+        ],
+        "folds_embargoed": 1,
+        "folds_positive": 3,
+        "folds_purged": 4,
+        "folds_used_trades": 207,
+        "max_drawdown": 16.9009,
+        "negative_month_labels": [
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08"
+        ],
+        "negative_months": 4,
+        "net_pnl": 20.27,
+        "net_r": 27.759733,
+        "profit_factor": 1.228697834429008,
+        "run_dir": "backtest_runs/portfolio_20260728_141543_att1_a3_exact_a3_fixed_3r_7p5bps_20260728",
+        "trades": 212
+      }
+    },
+    "champion": {
+      "11.0": {
+        "ending_equity": 141.7,
+        "expectancy_r": 0.149157,
+        "folds": [
+          {
+            "expectancy_r": 0.170014,
+            "fold": 0,
+            "net_r": 11.560933,
+            "positive": true,
+            "trades": 68
+          },
+          {
+            "expectancy_r": 0.087721,
+            "fold": 1,
+            "net_r": 5.7896,
+            "positive": true,
+            "trades": 66
+          },
+          {
+            "expectancy_r": 0.061212,
+            "fold": 2,
+            "net_r": 4.896933,
+            "positive": true,
+            "trades": 80
+          },
+          {
+            "expectancy_r": 0.265371,
+            "fold": 3,
+            "net_r": 27.067867,
+            "positive": true,
+            "trades": 102
+          }
+        ],
+        "folds_embargoed": 2,
+        "folds_positive": 4,
+        "folds_purged": 3,
+        "folds_used_trades": 316,
+        "max_drawdown": 6.6455,
+        "negative_month_labels": [
+          "2025-12"
+        ],
+        "negative_months": 1,
+        "net_pnl": 41.7,
+        "net_r": 47.879467,
+        "profit_factor": 1.475115314326625,
+        "run_dir": "backtest_runs/portfolio_20260728_141213_att1_a3_exact_champion_11p0bps_20260728",
+        "trades": 321
+      },
+      "4.0": {
+        "ending_equity": 152.52,
+        "expectancy_r": 0.179795,
+        "folds": [
+          {
+            "expectancy_r": 0.21461,
+            "fold": 0,
+            "net_r": 14.593467,
+            "positive": true,
+            "trades": 68
+          },
+          {
+            "expectancy_r": 0.112392,
+            "fold": 1,
+            "net_r": 7.417867,
+            "positive": true,
+            "trades": 66
+          },
+          {
+            "expectancy_r": 0.086412,
+            "fold": 2,
+            "net_r": 6.912933,
+            "positive": true,
+            "trades": 80
+          },
+          {
+            "expectancy_r": 0.294844,
+            "fold": 3,
+            "net_r": 30.074133,
+            "positive": true,
+            "trades": 102
+          }
+        ],
+        "folds_embargoed": 2,
+        "folds_positive": 4,
+        "folds_purged": 3,
+        "folds_used_trades": 316,
+        "max_drawdown": 5.9962,
+        "negative_month_labels": [],
+        "negative_months": 0,
+        "net_pnl": 52.52,
+        "net_r": 57.714133,
+        "profit_factor": 1.6013304311481853,
+        "run_dir": "backtest_runs/portfolio_20260728_140835_att1_a3_exact_champion_4p0bps_20260728",
+        "trades": 321
+      },
+      "7.5": {
+        "ending_equity": 147.54,
+        "expectancy_r": 0.165979,
+        "folds": [
+          {
+            "expectancy_r": 0.199808,
+            "fold": 0,
+            "net_r": 13.586933,
+            "positive": true,
+            "trades": 68
+          },
+          {
+            "expectancy_r": 0.097345,
+            "fold": 1,
+            "net_r": 6.4248,
+            "positive": true,
+            "trades": 66
+          },
+          {
+            "expectancy_r": 0.075667,
+            "fold": 2,
+            "net_r": 6.053333,
+            "positive": true,
+            "trades": 80
+          },
+          {
+            "expectancy_r": 0.280139,
+            "fold": 3,
+            "net_r": 28.574133,
+            "positive": true,
+            "trades": 102
+          }
+        ],
+        "folds_embargoed": 2,
+        "folds_positive": 4,
+        "folds_purged": 3,
+        "folds_used_trades": 316,
+        "max_drawdown": 6.2083,
+        "negative_month_labels": [
+          "2025-12"
+        ],
+        "negative_months": 1,
+        "net_pnl": 47.54,
+        "net_r": 53.2792,
+        "profit_factor": 1.542726355806003,
+        "run_dir": "backtest_runs/portfolio_20260728_141024_att1_a3_exact_champion_7p5bps_20260728",
+        "trades": 321
+      }
+    }
+  },
+  "updated_at_utc": "2026-07-28T11:20:32.799180+00:00"
+}

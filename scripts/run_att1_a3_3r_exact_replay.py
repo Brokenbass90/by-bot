@@ -230,8 +230,8 @@ def _write_verdict(path: Path, receipt: dict[str, Any]) -> None:
         "- Capital authority: **NO**",
         "- Live ATT1 changed: **NO**",
         "",
-        "| variant | round trip | trades | PF | expectancy R | positive folds | negative months |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| variant | round trip | trades | 360d return | PF | expectancy R | positive folds | negative months | max DD |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for variant in ("champion", "a3_fixed_3r"):
         for cost_key, result in sorted(
@@ -239,8 +239,9 @@ def _write_verdict(path: Path, receipt: dict[str, Any]) -> None:
         ):
             lines.append(
                 f"| {variant} | {float(cost_key):.1f} bps | {result['trades']} | "
-                f"{result['profit_factor']:.3f} | {result['expectancy_r']:.4f} | "
-                f"{result['folds_positive']}/4 | {result['negative_months']} |"
+                f"{result['net_pnl']:.2f}% | {result['profit_factor']:.3f} | "
+                f"{result['expectancy_r']:.4f} | {result['folds_positive']}/4 | "
+                f"{result['negative_months']} | {result['max_drawdown']:.2f}% |"
             )
     lines.extend(
         [
@@ -248,6 +249,11 @@ def _write_verdict(path: Path, receipt: dict[str, Any]) -> None:
             "The R value is the preregistered fixed-risk estimate "
             "`pnl_pct_equity / 0.0075`; all capital decisions remain blocked "
             "until forward-shadow labels and execution parity exist.",
+            "",
+            "The challenger failed the preregistered worst-fold, champion "
+            "expectancy, and red-month comparison checks. The production "
+            "champion remains unchanged; the combined A3/fixed-3R hypothesis "
+            "does not proceed to forward shadow.",
             "",
         ]
     )

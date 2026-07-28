@@ -1,0 +1,95 @@
+{
+  "schema_id": "research_supervisor_heartbeat_v1",
+  "generated_at_utc": "2026-07-28T11:09:32Z",
+  "automation_id": "trading-station-7-day-research-supervisor",
+  "live": {
+    "service_active": true,
+    "heartbeat_fresh": true,
+    "direct_bybit_query_ok": true,
+    "equity_usdt": 1020.01,
+    "available_usdt": 1020.01,
+    "open_positions": 0,
+    "trade_on": true,
+    "dry_run": false,
+    "money_sleeve": "att1",
+    "att1_side": "short_only",
+    "att1_risk_mult": 0.1,
+    "live_mutation_performed": false,
+    "deploy_performed": false,
+    "restart_performed": false
+  },
+  "research": {
+    "event_v2r2": {
+      "status": "running",
+      "sequence_observed": 1418,
+      "deadline_utc": "2026-07-28T18:19:58Z",
+      "duplicate_watcher_started": false
+    },
+    "xsec_v3_shadow": {
+      "status": "running",
+      "unique_decisions": 3,
+      "first_markout_expected_utc_date": "2026-07-29",
+      "capital_authorized": false
+    },
+    "alpaca_adaptive_shadow": {
+      "status": "running",
+      "unique_decisions": 5,
+      "latest_picks": [
+        "PANW",
+        "DDOG",
+        "ABBV",
+        "CRWD"
+      ],
+      "performance_verdict_available": false,
+      "capital_authorized_for_new_entries": false
+    },
+    "funding_paper": {
+      "status": "collecting_to_n20",
+      "single_writer_cutover_utc": "2026-07-27T10:53:00Z",
+      "closed_cycles": 7,
+      "wins": 0,
+      "losses": 7,
+      "median_return_pct_total_capital_per_cycle": -0.193,
+      "p25_return_pct_total_capital_per_cycle": -0.2308,
+      "excluded_pre_cutover_cycles": 10,
+      "remaining_to_n20": 13,
+      "orphan_pre_lock_writer_terminated": true,
+      "quarantined_mixed_receipt_closed_cycles": 17,
+      "capital_authorized": false
+    },
+    "att1_seasonality_filter": {
+      "status": "FAIL",
+      "discovery_excluded_hour_utc": 21,
+      "validation_improvement": false,
+      "sealed_holdout_improvement": false,
+      "live_filter_changed": false
+    },
+    "att1_a3_3r_exact_replay": {
+      "status": "FAIL",
+      "screen": "completed",
+      "scenarios": 6,
+      "cache_only": true,
+      "research_only": true,
+      "live_mutation": false,
+      "champion_11bps": {
+        "simulated_360d_return_pct": 41.7,
+        "profit_factor": 1.475,
+        "positive_folds": 4,
+        "negative_months": 1,
+        "max_drawdown_pct": 6.65
+      },
+      "challenger_11bps": {
+        "simulated_360d_return_pct": 17.52,
+        "profit_factor": 1.196,
+        "positive_folds": 3,
+        "negative_months": 4,
+        "max_drawdown_pct": 17.46
+      },
+      "forward_shadow_authorized": false
+    }
+  },
+  "capital_authority": {
+    "new_capital_authorized": false,
+    "live_risk_increase_authorized": false
+  }
+}
