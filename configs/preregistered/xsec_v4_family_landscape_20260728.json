@@ -1,0 +1,48 @@
+{
+  "schema_id": "xsec_v4_family_landscape_prereg_v1",
+  "created_at_utc": "2026-07-28T11:34:00Z",
+  "research_only": true,
+  "capital_authorized": false,
+  "question": "Is the survivor-only XSEC V4 edge broad across a fixed neighbouring family, or concentrated in the published champion?",
+  "data": {
+    "path": "research_lab/data/daily_338.json",
+    "universe_rule": "symbols with at least 390 locally available daily closes",
+    "known_bias": "survivor-only local universe; this diagnostic cannot replace PIT reconstruction"
+  },
+  "fixed_model": {
+    "factor": "momentum rank plus volatility rank",
+    "post_event_filter_sigma": 3.0,
+    "market_stress_percentile": 0.9,
+    "market_stress_lookback_days": 60,
+    "total_round_trip_cost_bps": 15.0,
+    "staggered_phases_equal_rebalance_days": true,
+    "leverage_cap": 1.0,
+    "vol_window_rebalances": 20
+  },
+  "grid": {
+    "lookback_sets": [
+      [7, 14, 21, 30, 45],
+      [7, 14, 30],
+      [5, 10, 21, 45, 60]
+    ],
+    "rebalance_days": [2, 3, 5],
+    "basket_k": [3, 5],
+    "target_annual_vol": [0.1, 0.15]
+  },
+  "n_trials_planned": 36,
+  "metrics_frozen_before_run": [
+    "compounded_total_return_pct",
+    "annualized_return_pct",
+    "annualized_sharpe",
+    "max_drawdown_pct",
+    "positive_time_folds",
+    "mean_and_median_across_all_36_variants",
+    "fraction_positive_after_costs",
+    "champion_percentile"
+  ],
+  "interpretation_gate": {
+    "pit_work_justified_if": "median compounded return > 0 AND positive fraction >= 0.60 AND at least 24 valid variants",
+    "pit_work_deprioritized_if": "median compounded return <= 0 OR positive fraction < 0.60",
+    "capital_gate": "always false; PIT, independent OOS, funding, slippage and execution parity remain mandatory"
+  }
+}
