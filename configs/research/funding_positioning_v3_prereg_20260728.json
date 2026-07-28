@@ -1,0 +1,38 @@
+{
+  "schema_id": "funding_positioning_v3_prereg",
+  "created_at_utc": "2026-07-28T18:00:00Z",
+  "research_only": true,
+  "executable": false,
+  "hypothesis": "The sign and relative magnitude of funding contains a cross-asset directional effect after point-in-time beta removal and executable portfolio constraints.",
+  "primary_run": {
+    "percentile": 70,
+    "hold_hours": 24,
+    "lookback_events": 90,
+    "beta_train_trades": 60,
+    "max_positions": 3,
+    "maker_round_trip_bps": 6,
+    "taker_round_trip_bps": 16
+  },
+  "robustness_grid": {
+    "percentiles": [60, 70, 85, 90],
+    "hold_hours": [8, 16, 24]
+  },
+  "required_repairs_vs_exploration": [
+    "strict percentile exceedance",
+    "point-in-time rolling beta from previously completed observations",
+    "funding cashflows included",
+    "no overlapping position per symbol",
+    "maximum three concurrent portfolio positions",
+    "maker and taker costs reported separately",
+    "per-symbol and point-in-time regime decomposition"
+  ],
+  "promotion_rule": {
+    "research_pass_only_if": [
+      "primary maker residual net return is positive",
+      "at least five of eight symbols are positive after maker costs",
+      "neighbouring grid cells do not collapse",
+      "result is not dominated by one symbol or one regime"
+    ],
+    "live_money_authorized": false
+  }
+}

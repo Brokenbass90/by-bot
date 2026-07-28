@@ -1,0 +1,1564 @@
+{
+  "schema_id": "funding_positioning_v3_audit",
+  "research_only": true,
+  "executable": false,
+  "method": {
+    "strict_percentile_exceedance": true,
+    "no_symbol_overlap": true,
+    "funding_cashflows_included": true,
+    "rolling_beta_uses_only_previously_completed_trades": true,
+    "max_positions": 3,
+    "maker_fill_probability_modelled": false,
+    "slot_ranking": "absolute_funding_rate"
+  },
+  "runs": [
+    {
+      "percentile": 60.0,
+      "hold_hours": 8,
+      "candidate_trades_after_symbol_nonoverlap": 4299,
+      "trades_after_beta_warmup": 3819,
+      "slot_rejections": 1708,
+      "selected_trades": 2111,
+      "maker_6bps": {
+        "n": 2111,
+        "avg_gross_bps": 15.879030328879788,
+        "avg_net_bps": 9.879030328879784,
+        "avg_residual_net_bps": 0.8300014892290298,
+        "sum_residual_net_pct": 17.521331437624816,
+        "positive_residual_share": 0.45570819516816674,
+        "mean_beta": 1.294118895927704
+      },
+      "taker_16bps": {
+        "n": 2111,
+        "avg_gross_bps": 15.879030328879788,
+        "avg_net_bps": -0.12096967112021415,
+        "avg_residual_net_bps": -9.169998510770972,
+        "sum_residual_net_pct": -193.5786685623752,
+        "positive_residual_share": 0.4168640454760777,
+        "mean_beta": 1.294118895927704
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 315,
+          "avg_gross_bps": 18.4317439752671,
+          "avg_net_bps": 12.4317439752671,
+          "avg_residual_net_bps": 2.4891045193672467,
+          "sum_residual_net_pct": 7.840679236006827,
+          "positive_residual_share": 0.5333333333333333,
+          "mean_beta": 1.439639950701091
+        },
+        "BTCUSDT": {
+          "n": 199,
+          "avg_gross_bps": -6.23595182167129,
+          "avg_net_bps": -12.235951821671291,
+          "avg_residual_net_bps": -5.513275376884422,
+          "sum_residual_net_pct": -10.971417999999998,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 410,
+          "avg_gross_bps": 14.039302587733271,
+          "avg_net_bps": 8.039302587733268,
+          "avg_residual_net_bps": 0.6455305423422237,
+          "sum_residual_net_pct": 2.646675223603117,
+          "positive_residual_share": 0.47560975609756095,
+          "mean_beta": 1.3227889770272852
+        },
+        "ETHUSDT": {
+          "n": 225,
+          "avg_gross_bps": 2.355832142644327,
+          "avg_net_bps": -3.6441678573556744,
+          "avg_residual_net_bps": -12.830366880725276,
+          "sum_residual_net_pct": -28.868325481631867,
+          "positive_residual_share": 0.44,
+          "mean_beta": 1.2603950917140219
+        },
+        "LINKUSDT": {
+          "n": 254,
+          "avg_gross_bps": 10.08115334790374,
+          "avg_net_bps": 4.081153347903738,
+          "avg_residual_net_bps": 5.300836600750559,
+          "sum_residual_net_pct": 13.464124965906421,
+          "positive_residual_share": 0.515748031496063,
+          "mean_beta": 1.339805314366609
+        },
+        "LTCUSDT": {
+          "n": 190,
+          "avg_gross_bps": 5.973681486976841,
+          "avg_net_bps": -0.026318513023161173,
+          "avg_residual_net_bps": -7.593734225600151,
+          "sum_residual_net_pct": -14.428095028640286,
+          "positive_residual_share": 0.47368421052631576,
+          "mean_beta": 0.9711384833252533
+        },
+        "SOLUSDT": {
+          "n": 362,
+          "avg_gross_bps": 39.16407610309971,
+          "avg_net_bps": 33.1640761030997,
+          "avg_residual_net_bps": 8.445389041930671,
+          "sum_residual_net_pct": 30.572308331789028,
+          "positive_residual_share": 0.5303867403314917,
+          "mean_beta": 1.382250178168066
+        },
+        "SUIUSDT": {
+          "n": 156,
+          "avg_gross_bps": 30.74617826466551,
+          "avg_net_bps": 24.746178264665506,
+          "avg_residual_net_bps": 11.067552686276652,
+          "sum_residual_net_pct": 17.26538219059158,
+          "positive_residual_share": 0.5576923076923077,
+          "mean_beta": 1.46323463101244
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 578,
+          "avg_gross_bps": 1.859767486016263,
+          "avg_net_bps": -4.140232513983738,
+          "avg_residual_net_bps": -7.468981255209895,
+          "sum_residual_net_pct": -43.170711655113195,
+          "positive_residual_share": 0.4013840830449827,
+          "mean_beta": 1.252255839049776
+        },
+        "neutral": {
+          "n": 549,
+          "avg_gross_bps": 6.629385264953414,
+          "avg_net_bps": 0.6293852649534125,
+          "avg_residual_net_bps": 0.47925601468418466,
+          "sum_residual_net_pct": 2.6311155206161736,
+          "positive_residual_share": 0.45719489981785066,
+          "mean_beta": 1.3171987313085471
+        },
+        "bear": {
+          "n": 984,
+          "avg_gross_bps": 29.274547669602036,
+          "avg_net_bps": 23.274547669602033,
+          "avg_residual_net_bps": 5.900500769524577,
+          "sum_residual_net_pct": 58.060927572121834,
+          "positive_residual_share": 0.4867886178861789,
+          "mean_beta": 1.3058323280937194
+        }
+      }
+    },
+    {
+      "percentile": 60.0,
+      "hold_hours": 16,
+      "candidate_trades_after_symbol_nonoverlap": 2498,
+      "trades_after_beta_warmup": 2018,
+      "slot_rejections": 1043,
+      "selected_trades": 975,
+      "maker_6bps": {
+        "n": 975,
+        "avg_gross_bps": 26.9800576650678,
+        "avg_net_bps": 20.980057665067793,
+        "avg_residual_net_bps": 3.5420315563328315,
+        "sum_residual_net_pct": 34.5348076742451,
+        "positive_residual_share": 0.4523076923076923,
+        "mean_beta": 1.3180208108906404
+      },
+      "taker_16bps": {
+        "n": 975,
+        "avg_gross_bps": 26.9800576650678,
+        "avg_net_bps": 10.980057665067799,
+        "avg_residual_net_bps": -6.457968443667169,
+        "sum_residual_net_pct": -62.96519232575489,
+        "positive_residual_share": 0.4287179487179487,
+        "mean_beta": 1.3180208108906404
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 127,
+          "avg_gross_bps": 56.459263209547416,
+          "avg_net_bps": 50.45926320954742,
+          "avg_residual_net_bps": 7.660916333067388,
+          "sum_residual_net_pct": 9.729363742995584,
+          "positive_residual_share": 0.49606299212598426,
+          "mean_beta": 1.5052829397310332
+        },
+        "BTCUSDT": {
+          "n": 87,
+          "avg_gross_bps": -1.713802523233161,
+          "avg_net_bps": -7.713802523233163,
+          "avg_residual_net_bps": -5.35945172413793,
+          "sum_residual_net_pct": -4.662722999999999,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 180,
+          "avg_gross_bps": 34.8895103230004,
+          "avg_net_bps": 28.889510323000394,
+          "avg_residual_net_bps": 5.268677933533657,
+          "sum_residual_net_pct": 9.483620280360583,
+          "positive_residual_share": 0.4722222222222222,
+          "mean_beta": 1.233274885610185
+        },
+        "ETHUSDT": {
+          "n": 110,
+          "avg_gross_bps": 10.163880194594178,
+          "avg_net_bps": 4.163880194594173,
+          "avg_residual_net_bps": -18.97981055547778,
+          "sum_residual_net_pct": -20.877791611025557,
+          "positive_residual_share": 0.4727272727272727,
+          "mean_beta": 1.2573469711631902
+        },
+        "LINKUSDT": {
+          "n": 121,
+          "avg_gross_bps": 14.014447541502717,
+          "avg_net_bps": 8.014447541502708,
+          "avg_residual_net_bps": 5.567614946124513,
+          "sum_residual_net_pct": 6.736814084810661,
+          "positive_residual_share": 0.5289256198347108,
+          "mean_beta": 1.3983811946889135
+        },
+        "LTCUSDT": {
+          "n": 77,
+          "avg_gross_bps": 51.492690611677574,
+          "avg_net_bps": 45.492690611677574,
+          "avg_residual_net_bps": 3.928457019180365,
+          "sum_residual_net_pct": 3.024911904768881,
+          "positive_residual_share": 0.4675324675324675,
+          "mean_beta": 1.0323234032595647
+        },
+        "SOLUSDT": {
+          "n": 197,
+          "avg_gross_bps": 24.517519875848016,
+          "avg_net_bps": 18.517519875848006,
+          "avg_residual_net_bps": 2.5668087673656155,
+          "sum_residual_net_pct": 5.056613271710264,
+          "positive_residual_share": 0.5025380710659898,
+          "mean_beta": 1.41428577566882
+        },
+        "SUIUSDT": {
+          "n": 76,
+          "avg_gross_bps": 18.36256829791283,
+          "avg_net_bps": 12.36256829791282,
+          "avg_residual_net_bps": 34.268419737664075,
+          "sum_residual_net_pct": 26.043999000624694,
+          "positive_residual_share": 0.5526315789473685,
+          "mean_beta": 1.5696629818374515
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 239,
+          "avg_gross_bps": 23.47981856321037,
+          "avg_net_bps": 17.479818563210365,
+          "avg_residual_net_bps": 9.761888332445974,
+          "sum_residual_net_pct": 23.330913114545876,
+          "positive_residual_share": 0.40585774058577406,
+          "mean_beta": 1.2561295126172398
+        },
+        "neutral": {
+          "n": 255,
+          "avg_gross_bps": -1.0904668528889012,
+          "avg_net_bps": -7.090466852888906,
+          "avg_residual_net_bps": 0.3104012013120075,
+          "sum_residual_net_pct": 0.7915230633456191,
+          "positive_residual_share": 0.4666666666666667,
+          "mean_beta": 1.3408287175112814
+        },
+        "bear": {
+          "n": 481,
+          "avg_gross_bps": 43.60072481147712,
+          "avg_net_bps": 37.600724811477114,
+          "avg_residual_net_bps": 2.1647341988261144,
+          "sum_residual_net_pct": 10.412371496353611,
+          "positive_residual_share": 0.4677754677754678,
+          "mean_beta": 1.3366819420737572
+        }
+      }
+    },
+    {
+      "percentile": 60.0,
+      "hold_hours": 24,
+      "candidate_trades_after_symbol_nonoverlap": 1799,
+      "trades_after_beta_warmup": 1319,
+      "slot_rejections": 718,
+      "selected_trades": 601,
+      "maker_6bps": {
+        "n": 601,
+        "avg_gross_bps": 39.57030975695212,
+        "avg_net_bps": 33.57030975695212,
+        "avg_residual_net_bps": 5.373098469054115,
+        "sum_residual_net_pct": 32.292321799015234,
+        "positive_residual_share": 0.45757071547420963,
+        "mean_beta": 1.4088352771090003
+      },
+      "taker_16bps": {
+        "n": 601,
+        "avg_gross_bps": 39.57030975695212,
+        "avg_net_bps": 23.57030975695213,
+        "avg_residual_net_bps": -4.626901530945883,
+        "sum_residual_net_pct": -27.807678200984753,
+        "positive_residual_share": 0.43427620632279534,
+        "mean_beta": 1.4088352771090003
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 105,
+          "avg_gross_bps": 16.195388162611458,
+          "avg_net_bps": 10.19538816261145,
+          "avg_residual_net_bps": 6.233184066402173,
+          "sum_residual_net_pct": 6.544843269722282,
+          "positive_residual_share": 0.49523809523809526,
+          "mean_beta": 1.5029105111157386
+        },
+        "BTCUSDT": {
+          "n": 54,
+          "avg_gross_bps": -13.076818717082121,
+          "avg_net_bps": -19.076818717082126,
+          "avg_residual_net_bps": -5.2982703703703695,
+          "sum_residual_net_pct": -2.8610659999999997,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 90,
+          "avg_gross_bps": 135.98487079409762,
+          "avg_net_bps": 129.98487079409762,
+          "avg_residual_net_bps": 55.729763882855536,
+          "sum_residual_net_pct": 50.156787494569976,
+          "positive_residual_share": 0.5555555555555556,
+          "mean_beta": 1.2753886060005948
+        },
+        "ETHUSDT": {
+          "n": 63,
+          "avg_gross_bps": 22.103802474558485,
+          "avg_net_bps": 16.103802474558474,
+          "avg_residual_net_bps": -6.379642757542872,
+          "sum_residual_net_pct": -4.019174937252009,
+          "positive_residual_share": 0.4603174603174603,
+          "mean_beta": 1.4369015839095918
+        },
+        "LINKUSDT": {
+          "n": 71,
+          "avg_gross_bps": 21.183197252763165,
+          "avg_net_bps": 15.18319725276315,
+          "avg_residual_net_bps": -14.84192524414032,
+          "sum_residual_net_pct": -10.537766923339627,
+          "positive_residual_share": 0.49295774647887325,
+          "mean_beta": 1.403180417138896
+        },
+        "LTCUSDT": {
+          "n": 65,
+          "avg_gross_bps": -25.98283689473342,
+          "avg_net_bps": -31.982836894733428,
+          "avg_residual_net_bps": -26.47972310446252,
+          "sum_residual_net_pct": -17.211820017900635,
+          "positive_residual_share": 0.4307692307692308,
+          "mean_beta": 1.0739452615392742
+        },
+        "SOLUSDT": {
+          "n": 109,
+          "avg_gross_bps": 84.94850808626278,
+          "avg_net_bps": 78.94850808626278,
+          "avg_residual_net_bps": 10.166945986003633,
+          "sum_residual_net_pct": 11.08197112474396,
+          "positive_residual_share": 0.5321100917431193,
+          "mean_beta": 1.6727767334237984
+        },
+        "SUIUSDT": {
+          "n": 44,
+          "avg_gross_bps": 1.8568341368030894,
+          "avg_net_bps": -4.143165863196923,
+          "avg_residual_net_bps": -1.9578459352925317,
+          "sum_residual_net_pct": -0.861452211528714,
+          "positive_residual_share": 0.5227272727272727,
+          "mean_beta": 1.7688569997475085
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 141,
+          "avg_gross_bps": 40.98339861351387,
+          "avg_net_bps": 34.98339861351386,
+          "avg_residual_net_bps": 15.490407578417182,
+          "sum_residual_net_pct": 21.841474685568226,
+          "positive_residual_share": 0.44680851063829785,
+          "mean_beta": 1.33018166204771
+        },
+        "neutral": {
+          "n": 155,
+          "avg_gross_bps": 14.054468188406485,
+          "avg_net_bps": 8.054468188406478,
+          "avg_residual_net_bps": -1.3831087187037374,
+          "sum_residual_net_pct": -2.143818513990793,
+          "positive_residual_share": 0.43870967741935485,
+          "mean_beta": 1.4196495654337207
+        },
+        "bear": {
+          "n": 305,
+          "avg_gross_bps": 51.884112754818915,
+          "avg_net_bps": 45.88411275481891,
+          "avg_residual_net_bps": 4.12939856637305,
+          "sum_residual_net_pct": 12.5946656274378,
+          "positive_residual_share": 0.4721311475409836,
+          "mean_beta": 1.4397006706608373
+        }
+      }
+    },
+    {
+      "percentile": 70.0,
+      "hold_hours": 8,
+      "candidate_trades_after_symbol_nonoverlap": 3388,
+      "trades_after_beta_warmup": 2908,
+      "slot_rejections": 981,
+      "selected_trades": 1927,
+      "maker_6bps": {
+        "n": 1927,
+        "avg_gross_bps": 17.189618860132672,
+        "avg_net_bps": 11.18961886013267,
+        "avg_residual_net_bps": 2.152545705332508,
+        "sum_residual_net_pct": 41.47955574175743,
+        "positive_residual_share": 0.4509600415153088,
+        "mean_beta": 1.2750926216201166
+      },
+      "taker_16bps": {
+        "n": 1927,
+        "avg_gross_bps": 17.189618860132672,
+        "avg_net_bps": 1.189618860132671,
+        "avg_residual_net_bps": -7.847454294667494,
+        "sum_residual_net_pct": -151.22044425824262,
+        "positive_residual_share": 0.4130773222625843,
+        "mean_beta": 1.2750926216201166
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 264,
+          "avg_gross_bps": 17.910029482101972,
+          "avg_net_bps": 11.91002948210197,
+          "avg_residual_net_bps": 5.399809477585113,
+          "sum_residual_net_pct": 14.2554970208247,
+          "positive_residual_share": 0.5340909090909091,
+          "mean_beta": 1.4332612390882706
+        },
+        "BTCUSDT": {
+          "n": 199,
+          "avg_gross_bps": 0.44886866420830623,
+          "avg_net_bps": -5.551131335791694,
+          "avg_residual_net_bps": -5.563879899497487,
+          "sum_residual_net_pct": -11.072121,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 346,
+          "avg_gross_bps": 17.42175799110211,
+          "avg_net_bps": 11.421757991102103,
+          "avg_residual_net_bps": 4.834744220528849,
+          "sum_residual_net_pct": 16.728215003029817,
+          "positive_residual_share": 0.4913294797687861,
+          "mean_beta": 1.3642495661709977
+        },
+        "ETHUSDT": {
+          "n": 220,
+          "avg_gross_bps": 9.422856243085798,
+          "avg_net_bps": 3.4228562430857976,
+          "avg_residual_net_bps": -15.412677961355374,
+          "sum_residual_net_pct": -33.90789151498183,
+          "positive_residual_share": 0.4318181818181818,
+          "mean_beta": 1.253597247184625
+        },
+        "LINKUSDT": {
+          "n": 202,
+          "avg_gross_bps": -2.420954301510326,
+          "avg_net_bps": -8.42095430151033,
+          "avg_residual_net_bps": 4.658712487055555,
+          "sum_residual_net_pct": 9.410599223852222,
+          "positive_residual_share": 0.4801980198019802,
+          "mean_beta": 1.3304852127455113
+        },
+        "LTCUSDT": {
+          "n": 218,
+          "avg_gross_bps": 7.419147050908439,
+          "avg_net_bps": 1.4191470509084374,
+          "avg_residual_net_bps": -1.7758429358081333,
+          "sum_residual_net_pct": -3.8713376000617306,
+          "positive_residual_share": 0.5045871559633027,
+          "mean_beta": 0.9373303243557631
+        },
+        "SOLUSDT": {
+          "n": 353,
+          "avg_gross_bps": 44.732753312258,
+          "avg_net_bps": 38.73275331225799,
+          "avg_residual_net_bps": 12.220943991396924,
+          "sum_residual_net_pct": 43.13993228963115,
+          "positive_residual_share": 0.5354107648725213,
+          "mean_beta": 1.3622208273660628
+        },
+        "SUIUSDT": {
+          "n": 125,
+          "avg_gross_bps": 26.294904401624425,
+          "avg_net_bps": 20.29490440162442,
+          "avg_residual_net_bps": 5.437329855570482,
+          "sum_residual_net_pct": 6.796662319463103,
+          "positive_residual_share": 0.536,
+          "mean_beta": 1.4235263577800699
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 494,
+          "avg_gross_bps": 3.3874410622631563,
+          "avg_net_bps": -2.612558937736844,
+          "avg_residual_net_bps": -5.113755487839309,
+          "sum_residual_net_pct": -25.261952109926185,
+          "positive_residual_share": 0.39068825910931176,
+          "mean_beta": 1.2383459958394156
+        },
+        "neutral": {
+          "n": 496,
+          "avg_gross_bps": 9.075212241032117,
+          "avg_net_bps": 3.075212241032114,
+          "avg_residual_net_bps": -0.9693488885755146,
+          "sum_residual_net_pct": -4.807970487334553,
+          "positive_residual_share": 0.4435483870967742,
+          "mean_beta": 1.265274878962974
+        },
+        "bear": {
+          "n": 937,
+          "avg_gross_bps": 28.76168024243941,
+          "avg_net_bps": 22.761680242439407,
+          "avg_residual_net_bps": 7.636016898507809,
+          "sum_residual_net_pct": 71.54947833901817,
+          "positive_residual_share": 0.48665955176093917,
+          "mean_beta": 1.2996629882088135
+        }
+      }
+    },
+    {
+      "percentile": 70.0,
+      "hold_hours": 16,
+      "candidate_trades_after_symbol_nonoverlap": 2125,
+      "trades_after_beta_warmup": 1645,
+      "slot_rejections": 752,
+      "selected_trades": 893,
+      "maker_6bps": {
+        "n": 893,
+        "avg_gross_bps": 25.043664429310553,
+        "avg_net_bps": 19.043664429310542,
+        "avg_residual_net_bps": 10.501014177503409,
+        "sum_residual_net_pct": 93.77405660510544,
+        "positive_residual_share": 0.46248600223964165,
+        "mean_beta": 1.3031883215216074
+      },
+      "taker_16bps": {
+        "n": 893,
+        "avg_gross_bps": 25.043664429310553,
+        "avg_net_bps": 9.043664429310548,
+        "avg_residual_net_bps": 0.5010141775034096,
+        "sum_residual_net_pct": 4.474056605105448,
+        "positive_residual_share": 0.4400895856662934,
+        "mean_beta": 1.3031883215216074
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 111,
+          "avg_gross_bps": 67.3894338446431,
+          "avg_net_bps": 61.389433844643094,
+          "avg_residual_net_bps": 5.732380697797461,
+          "sum_residual_net_pct": 6.3629425745551815,
+          "positive_residual_share": 0.4954954954954955,
+          "mean_beta": 1.4376085727253818
+        },
+        "BTCUSDT": {
+          "n": 90,
+          "avg_gross_bps": -0.12067471065211925,
+          "avg_net_bps": -6.120674710652121,
+          "avg_residual_net_bps": -5.538218888888888,
+          "sum_residual_net_pct": -4.9843969999999995,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 163,
+          "avg_gross_bps": 39.0807659066789,
+          "avg_net_bps": 33.08076590667889,
+          "avg_residual_net_bps": 29.4113946984432,
+          "sum_residual_net_pct": 47.940573358462416,
+          "positive_residual_share": 0.5153374233128835,
+          "mean_beta": 1.3195036620897778
+        },
+        "ETHUSDT": {
+          "n": 112,
+          "avg_gross_bps": 31.725443963366878,
+          "avg_net_bps": 25.725443963366864,
+          "avg_residual_net_bps": -3.3498598378491145,
+          "sum_residual_net_pct": -3.751843018391008,
+          "positive_residual_share": 0.5089285714285714,
+          "mean_beta": 1.2783348839950899
+        },
+        "LINKUSDT": {
+          "n": 93,
+          "avg_gross_bps": -12.760506384470284,
+          "avg_net_bps": -18.760506384470293,
+          "avg_residual_net_bps": 16.790789977418445,
+          "sum_residual_net_pct": 15.615434678999154,
+          "positive_residual_share": 0.5483870967741935,
+          "mean_beta": 1.3688140689877906
+        },
+        "LTCUSDT": {
+          "n": 97,
+          "avg_gross_bps": 23.49590303503257,
+          "avg_net_bps": 17.495903035032565,
+          "avg_residual_net_bps": -1.2099264232827456,
+          "sum_residual_net_pct": -1.1736286305842634,
+          "positive_residual_share": 0.4536082474226804,
+          "mean_beta": 1.0798381490917475
+        },
+        "SOLUSDT": {
+          "n": 165,
+          "avg_gross_bps": 21.621676292933188,
+          "avg_net_bps": 15.621676292933179,
+          "avg_residual_net_bps": 16.269416570256027,
+          "sum_residual_net_pct": 26.844537340922443,
+          "positive_residual_share": 0.5333333333333333,
+          "mean_beta": 1.399495111550803
+        },
+        "SUIUSDT": {
+          "n": 62,
+          "avg_gross_bps": 5.020310434120572,
+          "avg_net_bps": -0.979689565879437,
+          "avg_residual_net_bps": 11.161995647002477,
+          "sum_residual_net_pct": 6.920437301141535,
+          "positive_residual_share": 0.5483870967741935,
+          "mean_beta": 1.499343763460446
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 201,
+          "avg_gross_bps": 23.113391499967076,
+          "avg_net_bps": 17.113391499967076,
+          "avg_residual_net_bps": 10.066573566884912,
+          "sum_residual_net_pct": 20.233812869438676,
+          "positive_residual_share": 0.43283582089552236,
+          "mean_beta": 1.2540439626990407
+        },
+        "neutral": {
+          "n": 233,
+          "avg_gross_bps": -11.979098985470001,
+          "avg_net_bps": -17.979098985470007,
+          "avg_residual_net_bps": 4.837749828440061,
+          "sum_residual_net_pct": 11.271957100265341,
+          "positive_residual_share": 0.4334763948497854,
+          "mean_beta": 1.2907597528419645
+        },
+        "bear": {
+          "n": 459,
+          "avg_gross_bps": 44.682637706961756,
+          "avg_net_bps": 38.68263770696175,
+          "avg_residual_net_bps": 13.566075519695303,
+          "sum_residual_net_pct": 62.26828663540144,
+          "positive_residual_share": 0.49019607843137253,
+          "mean_beta": 1.331018109377147
+        }
+      }
+    },
+    {
+      "percentile": 70.0,
+      "hold_hours": 24,
+      "candidate_trades_after_symbol_nonoverlap": 1587,
+      "trades_after_beta_warmup": 1107,
+      "slot_rejections": 551,
+      "selected_trades": 556,
+      "maker_6bps": {
+        "n": 556,
+        "avg_gross_bps": 28.262329933700407,
+        "avg_net_bps": 22.2623299337004,
+        "avg_residual_net_bps": 15.509768394061059,
+        "sum_residual_net_pct": 86.23431227097949,
+        "positive_residual_share": 0.4460431654676259,
+        "mean_beta": 1.3773962816830065
+      },
+      "taker_16bps": {
+        "n": 556,
+        "avg_gross_bps": 28.262329933700407,
+        "avg_net_bps": 12.26232993370041,
+        "avg_residual_net_bps": 5.50976839406106,
+        "sum_residual_net_pct": 30.634312270979493,
+        "positive_residual_share": 0.42985611510791366,
+        "mean_beta": 1.3773962816830065
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 98,
+          "avg_gross_bps": 15.383725263300954,
+          "avg_net_bps": 9.383725263300947,
+          "avg_residual_net_bps": 28.412372404543177,
+          "sum_residual_net_pct": 27.844124956452315,
+          "positive_residual_share": 0.5204081632653061,
+          "mean_beta": 1.5240196161873714
+        },
+        "BTCUSDT": {
+          "n": 72,
+          "avg_gross_bps": -0.27366364856556735,
+          "avg_net_bps": -6.27366364856557,
+          "avg_residual_net_bps": -5.597970833333333,
+          "sum_residual_net_pct": -4.030538999999999,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 84,
+          "avg_gross_bps": 137.65983867713695,
+          "avg_net_bps": 131.65983867713692,
+          "avg_residual_net_bps": 80.84303293506294,
+          "sum_residual_net_pct": 67.90814766545286,
+          "positive_residual_share": 0.5833333333333334,
+          "mean_beta": 1.3131860179254968
+        },
+        "ETHUSDT": {
+          "n": 67,
+          "avg_gross_bps": -51.078506953887356,
+          "avg_net_bps": -57.07850695388736,
+          "avg_residual_net_bps": -29.807920950312933,
+          "sum_residual_net_pct": -19.971307036709664,
+          "positive_residual_share": 0.373134328358209,
+          "mean_beta": 1.3581068056254815
+        },
+        "LINKUSDT": {
+          "n": 53,
+          "avg_gross_bps": 46.09258947210754,
+          "avg_net_bps": 40.092589472107534,
+          "avg_residual_net_bps": 44.929111813505386,
+          "sum_residual_net_pct": 23.812429261157856,
+          "positive_residual_share": 0.6792452830188679,
+          "mean_beta": 1.4921836559272634
+        },
+        "LTCUSDT": {
+          "n": 60,
+          "avg_gross_bps": -77.45579919667314,
+          "avg_net_bps": -83.45579919667313,
+          "avg_residual_net_bps": -41.0529516844606,
+          "sum_residual_net_pct": -24.631771010676363,
+          "positive_residual_share": 0.4666666666666667,
+          "mean_beta": 1.0799944339836391
+        },
+        "SOLUSDT": {
+          "n": 89,
+          "avg_gross_bps": 66.12379485121046,
+          "avg_net_bps": 60.12379485121045,
+          "avg_residual_net_bps": 19.074557862235334,
+          "sum_residual_net_pct": 16.976356497389446,
+          "positive_residual_share": 0.5168539325842697,
+          "mean_beta": 1.6243157049224832
+        },
+        "SUIUSDT": {
+          "n": 33,
+          "avg_gross_bps": 72.85486772977461,
+          "avg_net_bps": 66.8548677297746,
+          "avg_residual_net_bps": -5.070088066930193,
+          "sum_residual_net_pct": -1.6731290620869637,
+          "positive_residual_share": 0.3939393939393939,
+          "mean_beta": 1.6584282183477552
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 126,
+          "avg_gross_bps": 21.731910388668084,
+          "avg_net_bps": 15.73191038866807,
+          "avg_residual_net_bps": -6.3492640195807315,
+          "sum_residual_net_pct": -8.000072664671722,
+          "positive_residual_share": 0.4126984126984127,
+          "mean_beta": 1.3282949564001916
+        },
+        "neutral": {
+          "n": 144,
+          "avg_gross_bps": 19.628702803571,
+          "avg_net_bps": 13.62870280357099,
+          "avg_residual_net_bps": 20.198210924943183,
+          "sum_residual_net_pct": 29.085423731918187,
+          "positive_residual_share": 0.4513888888888889,
+          "mean_beta": 1.37511948977282
+        },
+        "bear": {
+          "n": 286,
+          "avg_gross_bps": 35.486368987591,
+          "avg_net_bps": 29.486368987590993,
+          "avg_residual_net_bps": 22.779357064242316,
+          "sum_residual_net_pct": 65.14896120373302,
+          "positive_residual_share": 0.458041958041958,
+          "mean_beta": 1.4001746908462986
+        }
+      }
+    },
+    {
+      "percentile": 85.0,
+      "hold_hours": 8,
+      "candidate_trades_after_symbol_nonoverlap": 1532,
+      "trades_after_beta_warmup": 1052,
+      "slot_rejections": 112,
+      "selected_trades": 940,
+      "maker_6bps": {
+        "n": 940,
+        "avg_gross_bps": 12.202655204571597,
+        "avg_net_bps": 6.202655204571595,
+        "avg_residual_net_bps": -2.769236321168446,
+        "sum_residual_net_pct": -26.03082141898339,
+        "positive_residual_share": 0.40106382978723404,
+        "mean_beta": 1.2623428685759586
+      },
+      "taker_16bps": {
+        "n": 940,
+        "avg_gross_bps": 12.202655204571597,
+        "avg_net_bps": -3.7973447954284043,
+        "avg_residual_net_bps": -12.769236321168446,
+        "sum_residual_net_pct": -120.03082141898341,
+        "positive_residual_share": 0.3638297872340426,
+        "mean_beta": 1.2623428685759586
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 91,
+          "avg_gross_bps": 22.804779990642043,
+          "avg_net_bps": 16.80477999064204,
+          "avg_residual_net_bps": -2.975516367446766,
+          "sum_residual_net_pct": -2.7077198943765572,
+          "positive_residual_share": 0.4945054945054945,
+          "mean_beta": 1.5660251399682947
+        },
+        "BTCUSDT": {
+          "n": 154,
+          "avg_gross_bps": 4.2770783251776585,
+          "avg_net_bps": -1.7229216748223406,
+          "avg_residual_net_bps": -5.772644155844155,
+          "sum_residual_net_pct": -8.889871999999999,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 154,
+          "avg_gross_bps": 27.792701086041426,
+          "avg_net_bps": 21.792701086041422,
+          "avg_residual_net_bps": 22.431051089743843,
+          "sum_residual_net_pct": 34.54381867820552,
+          "positive_residual_share": 0.5194805194805194,
+          "mean_beta": 1.3360051957612447
+        },
+        "ETHUSDT": {
+          "n": 164,
+          "avg_gross_bps": 2.8594993126747434,
+          "avg_net_bps": -3.1405006873252583,
+          "avg_residual_net_bps": -13.151020759358534,
+          "sum_residual_net_pct": -21.567674045347996,
+          "positive_residual_share": 0.4024390243902439,
+          "mean_beta": 1.2460672590293096
+        },
+        "LINKUSDT": {
+          "n": 48,
+          "avg_gross_bps": 6.343756558368855,
+          "avg_net_bps": 0.3437565583688526,
+          "avg_residual_net_bps": -1.7423255097189332,
+          "sum_residual_net_pct": -0.836316244665088,
+          "positive_residual_share": 0.5416666666666666,
+          "mean_beta": 1.1986648207835688
+        },
+        "LTCUSDT": {
+          "n": 132,
+          "avg_gross_bps": -9.175734672425959,
+          "avg_net_bps": -15.17573467242596,
+          "avg_residual_net_bps": -19.954699976475997,
+          "sum_residual_net_pct": -26.340203968948316,
+          "positive_residual_share": 0.4393939393939394,
+          "mean_beta": 1.03614158670381
+        },
+        "SOLUSDT": {
+          "n": 126,
+          "avg_gross_bps": 18.90797611179417,
+          "avg_net_bps": 12.907976111794165,
+          "avg_residual_net_bps": -5.294365268011023,
+          "sum_residual_net_pct": -6.670900237693889,
+          "positive_residual_share": 0.49206349206349204,
+          "mean_beta": 1.3975254643658286
+        },
+        "SUIUSDT": {
+          "n": 71,
+          "avg_gross_bps": 35.37815025936527,
+          "avg_net_bps": 29.37815025936527,
+          "avg_residual_net_bps": 9.067670836398502,
+          "sum_residual_net_pct": 6.438046293842936,
+          "positive_residual_share": 0.5633802816901409,
+          "mean_beta": 1.543653080896327
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 188,
+          "avg_gross_bps": -9.756115808717617,
+          "avg_net_bps": -15.756115808717619,
+          "avg_residual_net_bps": -15.2143222823528,
+          "sum_residual_net_pct": -28.60292589082326,
+          "positive_residual_share": 0.3617021276595745,
+          "mean_beta": 1.1895653122029897
+        },
+        "neutral": {
+          "n": 253,
+          "avg_gross_bps": 20.979340868504444,
+          "avg_net_bps": 14.979340868504444,
+          "avg_residual_net_bps": 4.780937436966433,
+          "sum_residual_net_pct": 12.095771715525075,
+          "positive_residual_share": 0.4308300395256917,
+          "mean_beta": 1.23770103278985
+        },
+        "bear": {
+          "n": 499,
+          "avg_gross_bps": 16.025796442093363,
+          "avg_net_bps": 10.02579644209336,
+          "avg_residual_net_bps": -1.908550549836715,
+          "sum_residual_net_pct": -9.523667243685207,
+          "positive_residual_share": 0.40080160320641284,
+          "mean_beta": 1.302255824591998
+        }
+      }
+    },
+    {
+      "percentile": 85.0,
+      "hold_hours": 16,
+      "candidate_trades_after_symbol_nonoverlap": 1120,
+      "trades_after_beta_warmup": 640,
+      "slot_rejections": 138,
+      "selected_trades": 502,
+      "maker_6bps": {
+        "n": 502,
+        "avg_gross_bps": 9.481167878280619,
+        "avg_net_bps": 3.481167878280615,
+        "avg_residual_net_bps": -14.42568386467919,
+        "sum_residual_net_pct": -72.41693300068953,
+        "positive_residual_share": 0.37649402390438247,
+        "mean_beta": 1.2769958840630564
+      },
+      "taker_16bps": {
+        "n": 502,
+        "avg_gross_bps": 9.481167878280619,
+        "avg_net_bps": -6.518832121719381,
+        "avg_residual_net_bps": -24.425683864679193,
+        "sum_residual_net_pct": -122.61693300068954,
+        "positive_residual_share": 0.3426294820717131,
+        "mean_beta": 1.2769958840630564
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 49,
+          "avg_gross_bps": 5.0677203416536125,
+          "avg_net_bps": -0.9322796583463923,
+          "avg_residual_net_bps": -47.053636136708576,
+          "sum_residual_net_pct": -23.056281706987203,
+          "positive_residual_share": 0.3469387755102041,
+          "mean_beta": 1.5696988437328019
+        },
+        "BTCUSDT": {
+          "n": 82,
+          "avg_gross_bps": 6.437588305404149,
+          "avg_net_bps": 0.43758830540414745,
+          "avg_residual_net_bps": -5.554503658536584,
+          "sum_residual_net_pct": -4.554692999999999,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 86,
+          "avg_gross_bps": 10.83125832726965,
+          "avg_net_bps": 4.831258327269642,
+          "avg_residual_net_bps": 2.6332501808331297,
+          "sum_residual_net_pct": 2.2645951555164916,
+          "positive_residual_share": 0.5116279069767442,
+          "mean_beta": 1.3056223198154808
+        },
+        "ETHUSDT": {
+          "n": 89,
+          "avg_gross_bps": 18.455837356732385,
+          "avg_net_bps": 12.45583735673238,
+          "avg_residual_net_bps": -23.9850916674596,
+          "sum_residual_net_pct": -21.346731584039045,
+          "positive_residual_share": 0.38202247191011235,
+          "mean_beta": 1.2141620725884765
+        },
+        "LINKUSDT": {
+          "n": 22,
+          "avg_gross_bps": -5.599680565686,
+          "avg_net_bps": -11.599680565686004,
+          "avg_residual_net_bps": 10.916118077532285,
+          "sum_residual_net_pct": 2.401545977057103,
+          "positive_residual_share": 0.5454545454545454,
+          "mean_beta": 1.2828485972661845
+        },
+        "LTCUSDT": {
+          "n": 71,
+          "avg_gross_bps": -18.730844224924148,
+          "avg_net_bps": -24.73084422492415,
+          "avg_residual_net_bps": -25.155945917583498,
+          "sum_residual_net_pct": -17.860721601484283,
+          "positive_residual_share": 0.5070422535211268,
+          "mean_beta": 1.1192730191926445
+        },
+        "SOLUSDT": {
+          "n": 69,
+          "avg_gross_bps": 22.767809822186106,
+          "avg_net_bps": 16.7678098221861,
+          "avg_residual_net_bps": -17.9283554683145,
+          "sum_residual_net_pct": -12.370565273137005,
+          "positive_residual_share": 0.4492753623188406,
+          "mean_beta": 1.3913687533224368
+        },
+        "SUIUSDT": {
+          "n": 34,
+          "avg_gross_bps": 37.982118555946975,
+          "avg_net_bps": 31.98211855594696,
+          "avg_residual_net_bps": 6.193879507012976,
+          "sum_residual_net_pct": 2.105919032384412,
+          "positive_residual_share": 0.4411764705882353,
+          "mean_beta": 1.7087426179546843
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 107,
+          "avg_gross_bps": -24.88501995616067,
+          "avg_net_bps": -30.885019956160665,
+          "avg_residual_net_bps": -8.897256819863133,
+          "sum_residual_net_pct": -9.520064797253552,
+          "positive_residual_share": 0.34579439252336447,
+          "mean_beta": 1.2353040669190924
+        },
+        "neutral": {
+          "n": 137,
+          "avg_gross_bps": 39.15042849797979,
+          "avg_net_bps": 33.15042849797979,
+          "avg_residual_net_bps": 8.151174629007738,
+          "sum_residual_net_pct": 11.1671092417406,
+          "positive_residual_share": 0.41605839416058393,
+          "mean_beta": 1.2780684452297566
+        },
+        "bear": {
+          "n": 258,
+          "avg_gross_bps": 7.979204286755157,
+          "avg_net_bps": 1.9792042867551496,
+          "avg_residual_net_bps": -28.706968002006427,
+          "sum_residual_net_pct": -74.06397744517658,
+          "positive_residual_share": 0.3682170542635659,
+          "mean_beta": 1.2937171381505221
+        }
+      }
+    },
+    {
+      "percentile": 85.0,
+      "hold_hours": 24,
+      "candidate_trades_after_symbol_nonoverlap": 947,
+      "trades_after_beta_warmup": 467,
+      "slot_rejections": 141,
+      "selected_trades": 326,
+      "maker_6bps": {
+        "n": 326,
+        "avg_gross_bps": 13.571000314455036,
+        "avg_net_bps": 7.571000314455028,
+        "avg_residual_net_bps": -7.663537935126267,
+        "sum_residual_net_pct": -24.98313366851163,
+        "positive_residual_share": 0.401840490797546,
+        "mean_beta": 1.3892566556779047
+      },
+      "taker_16bps": {
+        "n": 326,
+        "avg_gross_bps": 13.571000314455036,
+        "avg_net_bps": -2.4289996855449645,
+        "avg_residual_net_bps": -17.663537935126264,
+        "sum_residual_net_pct": -57.58313366851162,
+        "positive_residual_share": 0.38650306748466257,
+        "mean_beta": 1.3892566556779047
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 34,
+          "avg_gross_bps": -33.34246765497175,
+          "avg_net_bps": -39.34246765497175,
+          "avg_residual_net_bps": -20.98596489885343,
+          "sum_residual_net_pct": -7.135228065610166,
+          "positive_residual_share": 0.5588235294117647,
+          "mean_beta": 1.6974834616172736
+        },
+        "BTCUSDT": {
+          "n": 60,
+          "avg_gross_bps": 21.312345030739216,
+          "avg_net_bps": 15.312345030739213,
+          "avg_residual_net_bps": -5.534685,
+          "sum_residual_net_pct": -3.320811,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 49,
+          "avg_gross_bps": 27.73692946466094,
+          "avg_net_bps": 21.736929464660932,
+          "avg_residual_net_bps": 4.063716734491218,
+          "sum_residual_net_pct": 1.991221199900697,
+          "positive_residual_share": 0.4897959183673469,
+          "mean_beta": 1.4983484891240653
+        },
+        "ETHUSDT": {
+          "n": 60,
+          "avg_gross_bps": 56.06840101795129,
+          "avg_net_bps": 50.068401017951274,
+          "avg_residual_net_bps": -16.497528929968063,
+          "sum_residual_net_pct": -9.898517357980838,
+          "positive_residual_share": 0.5,
+          "mean_beta": 1.3438592060159746
+        },
+        "LINKUSDT": {
+          "n": 15,
+          "avg_gross_bps": -7.679231728600153,
+          "avg_net_bps": -13.679231728600161,
+          "avg_residual_net_bps": 19.33387955330473,
+          "sum_residual_net_pct": 2.9000819329957097,
+          "positive_residual_share": 0.7333333333333333,
+          "mean_beta": 1.4375511451886152
+        },
+        "LTCUSDT": {
+          "n": 47,
+          "avg_gross_bps": -5.753357609655771,
+          "avg_net_bps": -11.753357609655774,
+          "avg_residual_net_bps": -18.290919104787996,
+          "sum_residual_net_pct": -8.596731979250357,
+          "positive_residual_share": 0.3829787234042553,
+          "mean_beta": 1.1402692095813627
+        },
+        "SOLUSDT": {
+          "n": 42,
+          "avg_gross_bps": 60.905084696236244,
+          "avg_net_bps": 54.905084696236244,
+          "avg_residual_net_bps": -11.46809355002987,
+          "sum_residual_net_pct": -4.816599291012545,
+          "positive_residual_share": 0.40476190476190477,
+          "mean_beta": 1.652013084713382
+        },
+        "SUIUSDT": {
+          "n": 19,
+          "avg_gross_bps": -137.71481987197546,
+          "avg_net_bps": -143.71481987197546,
+          "avg_residual_net_bps": 20.49184680234668,
+          "sum_residual_net_pct": 3.893450892445869,
+          "positive_residual_share": 0.631578947368421,
+          "mean_beta": 1.925901796939822
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 78,
+          "avg_gross_bps": -36.144264866708,
+          "avg_net_bps": -42.14426486670801,
+          "avg_residual_net_bps": -8.77281214995724,
+          "sum_residual_net_pct": -6.842793476966646,
+          "positive_residual_share": 0.38461538461538464,
+          "mean_beta": 1.3485839993924102
+        },
+        "neutral": {
+          "n": 103,
+          "avg_gross_bps": 65.91415211827155,
+          "avg_net_bps": 59.91415211827153,
+          "avg_residual_net_bps": 7.571639943262082,
+          "sum_residual_net_pct": 7.798789141559944,
+          "positive_residual_share": 0.42718446601941745,
+          "mean_beta": 1.3912008188737865
+        },
+        "bear": {
+          "n": 145,
+          "avg_gross_bps": 3.132697199542047,
+          "avg_net_bps": -2.8673028004579613,
+          "avg_residual_net_bps": -17.889054712486157,
+          "sum_residual_net_pct": -25.939129333104926,
+          "positive_residual_share": 0.3931034482758621,
+          "mean_beta": 1.4097547134785442
+        }
+      }
+    },
+    {
+      "percentile": 90.0,
+      "hold_hours": 8,
+      "candidate_trades_after_symbol_nonoverlap": 978,
+      "trades_after_beta_warmup": 498,
+      "slot_rejections": 31,
+      "selected_trades": 467,
+      "maker_6bps": {
+        "n": 467,
+        "avg_gross_bps": 17.753575705034827,
+        "avg_net_bps": 11.753575705034825,
+        "avg_residual_net_bps": -5.641791998310645,
+        "sum_residual_net_pct": -26.347168632110712,
+        "positive_residual_share": 0.3533190578158458,
+        "mean_beta": 1.2264916512297201
+      },
+      "taker_16bps": {
+        "n": 467,
+        "avg_gross_bps": 17.753575705034827,
+        "avg_net_bps": 1.7535757050348248,
+        "avg_residual_net_bps": -15.641791998310648,
+        "sum_residual_net_pct": -73.04716863211073,
+        "positive_residual_share": 0.3169164882226981,
+        "mean_beta": 1.2264916512297201
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 46,
+          "avg_gross_bps": 11.66958441973931,
+          "avg_net_bps": 5.669584419739309,
+          "avg_residual_net_bps": -11.121582482188431,
+          "sum_residual_net_pct": -5.115927941806678,
+          "positive_residual_share": 0.45652173913043476,
+          "mean_beta": 1.2962223608355687
+        },
+        "BTCUSDT": {
+          "n": 94,
+          "avg_gross_bps": 5.6457855971556,
+          "avg_net_bps": -0.35421440284440037,
+          "avg_residual_net_bps": -5.6918,
+          "sum_residual_net_pct": -5.350292,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 76,
+          "avg_gross_bps": 45.475402735675154,
+          "avg_net_bps": 39.475402735675154,
+          "avg_residual_net_bps": 31.46154931179272,
+          "sum_residual_net_pct": 23.91077747696247,
+          "positive_residual_share": 0.5131578947368421,
+          "mean_beta": 1.5100464036014878
+        },
+        "ETHUSDT": {
+          "n": 82,
+          "avg_gross_bps": 25.433319649496624,
+          "avg_net_bps": 19.43331964949662,
+          "avg_residual_net_bps": -15.3284209397611,
+          "sum_residual_net_pct": -12.569305170604103,
+          "positive_residual_share": 0.3902439024390244,
+          "mean_beta": 1.1593846494861684
+        },
+        "LINKUSDT": {
+          "n": 14,
+          "avg_gross_bps": 47.149521955880765,
+          "avg_net_bps": 41.149521955880765,
+          "avg_residual_net_bps": 18.867602463021043,
+          "sum_residual_net_pct": 2.6414643448229462,
+          "positive_residual_share": 0.7142857142857143,
+          "mean_beta": 1.1941422387706617
+        },
+        "LTCUSDT": {
+          "n": 68,
+          "avg_gross_bps": -0.41885188890869307,
+          "avg_net_bps": -6.418851888908693,
+          "avg_residual_net_bps": -27.996578306199734,
+          "sum_residual_net_pct": -19.03767324821582,
+          "positive_residual_share": 0.35294117647058826,
+          "mean_beta": 1.0325648767017057
+        },
+        "SOLUSDT": {
+          "n": 45,
+          "avg_gross_bps": -29.279706471400658,
+          "avg_net_bps": -35.27970647140066,
+          "avg_residual_net_bps": -26.348929677195315,
+          "sum_residual_net_pct": -11.857018354737892,
+          "positive_residual_share": 0.4444444444444444,
+          "mean_beta": 1.3010554963644148
+        },
+        "SUIUSDT": {
+          "n": 42,
+          "avg_gross_bps": 56.3744694742163,
+          "avg_net_bps": 50.37446947421629,
+          "avg_residual_net_bps": 2.454300622543713,
+          "sum_residual_net_pct": 1.0308062614683595,
+          "positive_residual_share": 0.4523809523809524,
+          "mean_beta": 1.5198191499847702
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 104,
+          "avg_gross_bps": -3.417621125258302,
+          "avg_net_bps": -9.4176211252583,
+          "avg_residual_net_bps": -13.143682442751759,
+          "sum_residual_net_pct": -13.669429740461828,
+          "positive_residual_share": 0.36538461538461536,
+          "mean_beta": 1.2043409095477136
+        },
+        "neutral": {
+          "n": 126,
+          "avg_gross_bps": 28.089641909890343,
+          "avg_net_bps": 22.089641909890343,
+          "avg_residual_net_bps": -6.326871199591508,
+          "sum_residual_net_pct": -7.9718577114853,
+          "positive_residual_share": 0.3333333333333333,
+          "mean_beta": 1.1820661515484423
+        },
+        "bear": {
+          "n": 237,
+          "avg_gross_bps": 21.548766120809887,
+          "avg_net_bps": 15.548766120809887,
+          "avg_residual_net_bps": -1.9856038734867447,
+          "sum_residual_net_pct": -4.705881180163585,
+          "positive_residual_share": 0.35864978902953587,
+          "mean_beta": 1.2598304280009
+        }
+      }
+    },
+    {
+      "percentile": 90.0,
+      "hold_hours": 16,
+      "candidate_trades_after_symbol_nonoverlap": 751,
+      "trades_after_beta_warmup": 271,
+      "slot_rejections": 30,
+      "selected_trades": 241,
+      "maker_6bps": {
+        "n": 241,
+        "avg_gross_bps": 31.66089922008559,
+        "avg_net_bps": 25.660899220085582,
+        "avg_residual_net_bps": -15.18762539826884,
+        "sum_residual_net_pct": -36.60217720982791,
+        "positive_residual_share": 0.36099585062240663,
+        "mean_beta": 1.2460324040076496
+      },
+      "taker_16bps": {
+        "n": 241,
+        "avg_gross_bps": 31.66089922008559,
+        "avg_net_bps": 15.660899220085586,
+        "avg_residual_net_bps": -25.187625398268846,
+        "sum_residual_net_pct": -60.70217720982791,
+        "positive_residual_share": 0.33195020746887965,
+        "mean_beta": 1.2460324040076496
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 23,
+          "avg_gross_bps": 38.03453210158876,
+          "avg_net_bps": 32.03453210158876,
+          "avg_residual_net_bps": 1.0072086958750164,
+          "sum_residual_net_pct": 0.23165800005125375,
+          "positive_residual_share": 0.43478260869565216,
+          "mean_beta": 1.3433572645890959
+        },
+        "BTCUSDT": {
+          "n": 56,
+          "avg_gross_bps": 29.125007537776984,
+          "avg_net_bps": 23.12500753777698,
+          "avg_residual_net_bps": -5.600519642857142,
+          "sum_residual_net_pct": -3.1362909999999995,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 33,
+          "avg_gross_bps": -45.6333486709578,
+          "avg_net_bps": -51.63334867095781,
+          "avg_residual_net_bps": -28.15876924347233,
+          "sum_residual_net_pct": -9.292393850345869,
+          "positive_residual_share": 0.42424242424242425,
+          "mean_beta": 1.2912384117221514
+        },
+        "ETHUSDT": {
+          "n": 49,
+          "avg_gross_bps": 76.37345085112565,
+          "avg_net_bps": 70.37345085112564,
+          "avg_residual_net_bps": -29.041104022599672,
+          "sum_residual_net_pct": -14.23014097107384,
+          "positive_residual_share": 0.42857142857142855,
+          "mean_beta": 1.2127756844251552
+        },
+        "LINKUSDT": {
+          "n": 8,
+          "avg_gross_bps": 45.989925113761075,
+          "avg_net_bps": 39.98992511376108,
+          "avg_residual_net_bps": 75.22343109185803,
+          "sum_residual_net_pct": 6.017874487348642,
+          "positive_residual_share": 0.875,
+          "mean_beta": 1.2965644785942165
+        },
+        "LTCUSDT": {
+          "n": 37,
+          "avg_gross_bps": 2.040002683765018,
+          "avg_net_bps": -3.9599973162349857,
+          "avg_residual_net_bps": -19.06476581037737,
+          "sum_residual_net_pct": -7.053963349839627,
+          "positive_residual_share": 0.4594594594594595,
+          "mean_beta": 1.1660149912114843
+        },
+        "SOLUSDT": {
+          "n": 20,
+          "avg_gross_bps": 47.37407219258533,
+          "avg_net_bps": 41.374072192585324,
+          "avg_residual_net_bps": 1.0750552494575694,
+          "sum_residual_net_pct": 0.21501104989151387,
+          "positive_residual_share": 0.5,
+          "mean_beta": 1.4132839614953747
+        },
+        "SUIUSDT": {
+          "n": 15,
+          "avg_gross_bps": 99.81350146426158,
+          "avg_net_bps": 93.81350146426158,
+          "avg_residual_net_bps": -62.35954383906656,
+          "sum_residual_net_pct": -9.353931575859983,
+          "positive_residual_share": 0.5333333333333333,
+          "mean_beta": 1.971931094876308
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 62,
+          "avg_gross_bps": 7.729877002635563,
+          "avg_net_bps": 1.7298770026355628,
+          "avg_residual_net_bps": 1.0478619490940417,
+          "sum_residual_net_pct": 0.6496744084383059,
+          "positive_residual_share": 0.4032258064516129,
+          "mean_beta": 1.2264542474583962
+        },
+        "neutral": {
+          "n": 73,
+          "avg_gross_bps": 55.912944505828705,
+          "avg_net_bps": 49.9129445058287,
+          "avg_residual_net_bps": -10.091518418665347,
+          "sum_residual_net_pct": -7.366808445625702,
+          "positive_residual_share": 0.3561643835616438,
+          "mean_beta": 1.2104976818096622
+        },
+        "bear": {
+          "n": 106,
+          "avg_gross_bps": 28.956409329733262,
+          "avg_net_bps": 22.956409329733255,
+          "avg_residual_net_bps": -28.19343695532124,
+          "sum_residual_net_pct": -29.885043172640515,
+          "positive_residual_share": 0.33962264150943394,
+          "mean_beta": 1.2819558042577137
+        }
+      }
+    },
+    {
+      "percentile": 90.0,
+      "hold_hours": 24,
+      "candidate_trades_after_symbol_nonoverlap": 658,
+      "trades_after_beta_warmup": 178,
+      "slot_rejections": 23,
+      "selected_trades": 155,
+      "maker_6bps": {
+        "n": 155,
+        "avg_gross_bps": 48.19703914633819,
+        "avg_net_bps": 42.19703914633818,
+        "avg_residual_net_bps": 7.6435610202016875,
+        "sum_residual_net_pct": 11.847519581312618,
+        "positive_residual_share": 0.3741935483870968,
+        "mean_beta": 1.3016605675579815
+      },
+      "taker_16bps": {
+        "n": 155,
+        "avg_gross_bps": 48.19703914633819,
+        "avg_net_bps": 32.197039146338184,
+        "avg_residual_net_bps": -2.356438979798312,
+        "sum_residual_net_pct": -3.6524804186873836,
+        "positive_residual_share": 0.36129032258064514,
+        "mean_beta": 1.3016605675579815
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 12,
+          "avg_gross_bps": -122.79489757636709,
+          "avg_net_bps": -128.7948975763671,
+          "avg_residual_net_bps": 4.759492495795658,
+          "sum_residual_net_pct": 0.5711390994954789,
+          "positive_residual_share": 0.5,
+          "mean_beta": 1.3507103444649873
+        },
+        "BTCUSDT": {
+          "n": 39,
+          "avg_gross_bps": 37.83579587430545,
+          "avg_net_bps": 31.83579587430545,
+          "avg_residual_net_bps": -5.529023076923077,
+          "sum_residual_net_pct": -2.156319,
+          "positive_residual_share": 0.0,
+          "mean_beta": 1.0
+        },
+        "DOTUSDT": {
+          "n": 16,
+          "avg_gross_bps": 156.0682300649412,
+          "avg_net_bps": 150.0682300649412,
+          "avg_residual_net_bps": 93.46886787924619,
+          "sum_residual_net_pct": 14.95501886067939,
+          "positive_residual_share": 0.625,
+          "mean_beta": 1.5481986341969058
+        },
+        "ETHUSDT": {
+          "n": 36,
+          "avg_gross_bps": 78.04106094441512,
+          "avg_net_bps": 72.04106094441511,
+          "avg_residual_net_bps": -24.03808723304091,
+          "sum_residual_net_pct": -8.653711403894727,
+          "positive_residual_share": 0.4444444444444444,
+          "mean_beta": 1.368747209907323
+        },
+        "LINKUSDT": {
+          "n": 6,
+          "avg_gross_bps": -3.465015385752729,
+          "avg_net_bps": -9.465015385752734,
+          "avg_residual_net_bps": 83.61953050211216,
+          "sum_residual_net_pct": 5.017171830126729,
+          "positive_residual_share": 0.8333333333333334,
+          "mean_beta": 1.5744087130136715
+        },
+        "LTCUSDT": {
+          "n": 30,
+          "avg_gross_bps": 4.124222366944617,
+          "avg_net_bps": -1.8757776330553904,
+          "avg_residual_net_bps": 5.976549295848619,
+          "sum_residual_net_pct": 1.7929647887545856,
+          "positive_residual_share": 0.43333333333333335,
+          "mean_beta": 1.2101633444005306
+        },
+        "SOLUSDT": {
+          "n": 9,
+          "avg_gross_bps": 66.7986652731911,
+          "avg_net_bps": 60.79866527319111,
+          "avg_residual_net_bps": -27.743380897795717,
+          "sum_residual_net_pct": -2.496904280801614,
+          "positive_residual_share": 0.3333333333333333,
+          "mean_beta": 1.6225810104792342
+        },
+        "SUIUSDT": {
+          "n": 7,
+          "avg_gross_bps": 208.25562261576647,
+          "avg_net_bps": 202.25562261576647,
+          "avg_residual_net_bps": 40.25942409932535,
+          "sum_residual_net_pct": 2.8181596869527747,
+          "positive_residual_share": 0.7142857142857143,
+          "mean_beta": 1.7354577756688745
+        }
+      },
+      "per_regime_maker_6bps": {
+        "bull": {
+          "n": 44,
+          "avg_gross_bps": 17.82540954655708,
+          "avg_net_bps": 11.82540954655707,
+          "avg_residual_net_bps": 40.74778216912689,
+          "sum_residual_net_pct": 17.929024154415835,
+          "positive_residual_share": 0.4090909090909091,
+          "mean_beta": 1.3118421185701428
+        },
+        "neutral": {
+          "n": 50,
+          "avg_gross_bps": 138.42490965570468,
+          "avg_net_bps": 132.42490965570468,
+          "avg_residual_net_bps": 4.780197032133208,
+          "sum_residual_net_pct": 2.3900985160666037,
+          "positive_residual_share": 0.42,
+          "mean_beta": 1.3393029254315219
+        },
+        "bear": {
+          "n": 61,
+          "avg_gross_bps": -3.8528268057594612,
+          "avg_net_bps": -9.852826805759477,
+          "avg_residual_net_bps": -13.887873916671838,
+          "sum_residual_net_pct": -8.471603089169822,
+          "positive_residual_share": 0.3114754098360656,
+          "mean_beta": 1.263462106275816
+        }
+      }
+    }
+  ]
+}
