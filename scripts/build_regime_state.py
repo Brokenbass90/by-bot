@@ -558,14 +558,16 @@ _REGIME_DECISIONS = {
             "ENABLE_BREAKOUT_TRADING":   "1",
             "BREAKOUT_ALLOW_LONGS":      "1",
             "BREAKOUT_ALLOW_SHORTS":     "0",
-            "ENABLE_ASB1_TRADING":       "1",   # ASB1 sloped-break sleeve
-            "ASB1_ALLOW_LONGS":          "1",
-            "ASB1_ALLOW_SHORTS":         "0",
+            "ENABLE_ASB1_TRADING":       "1",   # outer enable for sloped-break sleeve
+            "ASLB1_ALLOW_LONGS":         "1",
+            "ASLB1_ALLOW_SHORTS":        "0",
             "ENABLE_HZBO1_TRADING":      "1",   # horizontal breakout longs
             "HZBO1_ALLOW_LONGS":         "1",
             "HZBO1_ALLOW_SHORTS":        "0",
             "ENABLE_BOUNCE_TRADING":     "1",   # legacy alias only
             "ENABLE_BOUNCE1_TRADING":    "1",   # support bounce — primary bull strategy
+            "BOUNCE1_ALLOW_LONGS":       "1",
+            "BOUNCE1_ALLOW_SHORTS":      "0",
             "ENABLE_IVB1_TRADING":       "1",   # impulse volume breakout — longs
             "ENABLE_MIDTERM_TRADING":    "1",
             "ENABLE_ATT1_TRADING":       "1",   # trendline touch longs
@@ -602,14 +604,16 @@ _REGIME_DECISIONS = {
             "ENABLE_BREAKOUT_TRADING":   "1",
             "BREAKOUT_ALLOW_LONGS":      "1",
             "BREAKOUT_ALLOW_SHORTS":     "0",
-            "ENABLE_ASB1_TRADING":       "1",   # ASB1 sloped-break sleeve
-            "ASB1_ALLOW_LONGS":          "1",
-            "ASB1_ALLOW_SHORTS":         "0",
+            "ENABLE_ASB1_TRADING":       "1",   # outer enable for sloped-break sleeve
+            "ASLB1_ALLOW_LONGS":         "1",
+            "ASLB1_ALLOW_SHORTS":        "0",
             "ENABLE_HZBO1_TRADING":      "1",
             "HZBO1_ALLOW_LONGS":         "1",
             "HZBO1_ALLOW_SHORTS":        "0",
             "ENABLE_BOUNCE_TRADING":     "1",   # legacy alias only
             "ENABLE_BOUNCE1_TRADING":    "1",   # support bounce still active
+            "BOUNCE1_ALLOW_LONGS":       "1",
+            "BOUNCE1_ALLOW_SHORTS":      "0",
             "ENABLE_IVB1_TRADING":       "1",
             "ENABLE_MIDTERM_TRADING":    "1",
             "ENABLE_ATT1_TRADING":       "1",
@@ -649,12 +653,15 @@ _REGIME_DECISIONS = {
             "BREAKOUT_ALLOW_LONGS":      "0",
             "BREAKOUT_ALLOW_SHORTS":     "0",
             "ENABLE_ASB1_TRADING":       "0",   # no longs in bear chop
-            "ASB1_ALLOW_LONGS":          "0",
+            "ASLB1_ALLOW_LONGS":         "0",
+            "ASLB1_ALLOW_SHORTS":        "0",
             "ENABLE_HZBO1_TRADING":      "1",   # HZBO can do shorts
             "HZBO1_ALLOW_LONGS":         "0",
             "HZBO1_ALLOW_SHORTS":        "1",
             "ENABLE_BOUNCE_TRADING":     "0",
             "ENABLE_BOUNCE1_TRADING":    "0",
+            "BOUNCE1_ALLOW_LONGS":       "0",
+            "BOUNCE1_ALLOW_SHORTS":      "0",
             "ENABLE_IVB1_TRADING":       "0",
             "ENABLE_ATT1_TRADING":       "1",   # ATT1 keeps edge in bear_chop only on shorts
             "ATT1_ALLOW_LONGS":          "0",
@@ -695,11 +702,15 @@ _REGIME_DECISIONS = {
             "BREAKOUT_ALLOW_LONGS":      "0",
             "BREAKOUT_ALLOW_SHORTS":     "0",
             "ENABLE_ASB1_TRADING":       "0",
+            "ASLB1_ALLOW_LONGS":         "0",
+            "ASLB1_ALLOW_SHORTS":        "0",
             "ENABLE_HZBO1_TRADING":      "1",   # horizontal breakdown shorts
             "HZBO1_ALLOW_LONGS":         "0",
             "HZBO1_ALLOW_SHORTS":        "1",
             "ENABLE_BOUNCE_TRADING":     "0",
             "ENABLE_BOUNCE1_TRADING":    "0",
+            "BOUNCE1_ALLOW_LONGS":       "0",
+            "BOUNCE1_ALLOW_SHORTS":      "0",
             "ENABLE_IVB1_TRADING":       "0",
             "ENABLE_ATT1_TRADING":       "0",   # ATT1 off in strong trend down
             "ENABLE_BREAKDOWN_TRADING":  "1",

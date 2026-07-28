@@ -197,10 +197,10 @@ def compute_regime(
             "reason": " | ".join(reasons),
             "strategy_overrides": {
                 "elder_triple_screen_v2":      {"ETS2_ALLOW_SHORTS": "1", "ETS2_ALLOW_LONGS": "0"},
-                "alt_slope_break_v1":          {"ASB1_ALLOW_SHORTS": "1", "ASB1_ALLOW_LONGS": "0"},
+                "alt_slope_break_v1":          {"ASLB1_ALLOW_SHORTS": "1", "ASLB1_ALLOW_LONGS": "0"},
                 "alt_horizontal_break_v1":     {"HZBO1_ALLOW_SHORTS": "1", "HZBO1_ALLOW_LONGS": "0"},
                 "impulse_volume_breakout_v1":  {"IVB1_ALLOW_LONGS": "0"},
-                "alt_support_bounce_v1":       {"ASB1_ALLOW_LONGS": "0"},
+                "alt_support_bounce_v1":       {"BOUNCE1_ALLOW_LONGS": "0", "BOUNCE1_ALLOW_SHORTS": "0"},
             },
         })
         return result
@@ -223,10 +223,10 @@ def compute_regime(
             "reason": " | ".join(reasons),
             "strategy_overrides": {
                 "elder_triple_screen_v2":      {"ETS2_ALLOW_SHORTS": "0", "ETS2_ALLOW_LONGS": "1"},
-                "alt_slope_break_v1":          {"ASB1_ALLOW_SHORTS": "0", "ASB1_ALLOW_LONGS": "1"},
+                "alt_slope_break_v1":          {"ASLB1_ALLOW_SHORTS": "0", "ASLB1_ALLOW_LONGS": "1"},
                 "alt_horizontal_break_v1":     {"HZBO1_ALLOW_SHORTS": "0", "HZBO1_ALLOW_LONGS": "1"},
                 "impulse_volume_breakout_v1":  {"IVB1_ALLOW_LONGS": "1"},
-                "alt_support_bounce_v1":       {"ASB1_ALLOW_LONGS": "1"},
+                "alt_support_bounce_v1":       {"BOUNCE1_ALLOW_LONGS": "1", "BOUNCE1_ALLOW_SHORTS": "0"},
             },
         })
         return result
