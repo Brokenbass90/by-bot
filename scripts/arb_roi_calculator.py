@@ -120,10 +120,19 @@ def _has_explicit_validation_evidence(cycle: dict[str, Any]) -> bool:
     )
 
 
+def _cycle_opened_at_epoch(cycle: dict[str, Any]) -> float:
+    opened = _f(cycle.get("opened_at_epoch"))
+    if opened > 0:
+        return opened
+    parsed = _parse_utc(cycle.get("opened_at_utc"))
+    return parsed.timestamp() if parsed else 0.0
+
+
 def _eligible_closed_cycles(
     state: dict[str, Any],
     *,
     cohort: str = COHORT_CURRENT_MODEL,
+    opened_after_epoch: float | None = None,
 ) -> list[dict[str, Any]]:
     eligible = []
     for cycle in state.get("closed") or []:
@@ -132,6 +141,11 @@ def _eligible_closed_cycles(
         if (
             cohort == COHORT_EXPLICIT_VALIDATION
             and not _has_explicit_validation_evidence(cycle)
+        ):
+            continue
+        if (
+            opened_after_epoch is not None
+            and _cycle_opened_at_epoch(cycle) < opened_after_epoch
         ):
             continue
         result = cycle.get("final_shadow_pct_total_capital")
@@ -298,15 +312,28 @@ def build_report(
     confirmation_closed_cycles: int = DEFAULT_CONFIRMATION_CYCLES,
     min_annualized_simple_pct: float = DEFAULT_MIN_ANNUALIZED_SIMPLE_PCT,
     cohort: str = COHORT_CURRENT_MODEL,
+    opened_after_utc: str | None = None,
     require_positive_distribution: bool = True,
 ) -> dict[str, Any]:
     if cohort not in {COHORT_CURRENT_MODEL, COHORT_EXPLICIT_VALIDATION}:
         raise ValueError(f"unsupported cohort: {cohort}")
+    opened_after = None
+    opened_after_epoch = None
+    if opened_after_utc:
+        opened_after = _parse_utc(opened_after_utc)
+        if opened_after is None:
+            raise ValueError(f"invalid opened_after_utc: {opened_after_utc}")
+        opened_after_epoch = opened_after.timestamp()
     all_current_model = _eligible_closed_cycles(
         state,
         cohort=COHORT_CURRENT_MODEL,
     )
-    closed = _eligible_closed_cycles(state, cohort=cohort)
+    cohort_before_cutoff = _eligible_closed_cycles(state, cohort=cohort)
+    closed = _eligible_closed_cycles(
+        state,
+        cohort=cohort,
+        opened_after_epoch=opened_after_epoch,
+    )
     returns = [_f(cycle.get("final_shadow_pct_total_capital")) for cycle in closed]
     hold_hours = [hours for cycle in closed if (hours := _cycle_hold_hours(cycle)) > 0]
     settings = state.get("settings") or {}
@@ -315,8 +342,14 @@ def build_report(
 
     sample = {
         "cohort": cohort,
+        "opened_after_utc": (
+            opened_after.isoformat() if opened_after is not None else None
+        ),
         "closed_cycles": len(closed),
         "excluded_current_model_cycles": len(all_current_model) - len(closed),
+        "excluded_by_opened_after_cutoff": (
+            len(cohort_before_cutoff) - len(closed)
+        ),
         "open_cycles": len(state.get("open") or []),
         "wins": sum(1 for value in returns if value > 0),
         "losses": sum(1 for value in returns if value < 0),
@@ -365,6 +398,9 @@ def build_report(
         "model_version_required": REQUIRED_MODEL_VERSION,
         "model_version_seen": state.get("model_version"),
         "cohort_required": cohort,
+        "opened_after_utc_required": (
+            opened_after.isoformat() if opened_after is not None else None
+        ),
         "minimum_closed_cycles": max(1, int(min_closed_cycles)),
         "positive_distribution_required": bool(require_positive_distribution),
         "sample": sample,
@@ -490,6 +526,14 @@ def main() -> int:
         ),
     )
     parser.add_argument(
+        "--opened-after-utc",
+        default=None,
+        help=(
+            "Optional fail-closed cohort cutover. Only cycles opened at or "
+            "after this ISO-8601 UTC timestamp are eligible."
+        ),
+    )
+    parser.add_argument(
         "--allow-non-positive-distribution",
         action="store_true",
         help="Diagnostic only: allow a projection even when observed p25 <= 0",
@@ -511,6 +555,7 @@ def main() -> int:
         confirmation_closed_cycles=args.confirmation_closed_cycles,
         min_annualized_simple_pct=args.min_annualized_simple_pct,
         cohort=args.cohort,
+        opened_after_utc=args.opened_after_utc,
         require_positive_distribution=not args.allow_non_positive_distribution,
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)

@@ -11,6 +11,7 @@ def _closed(
     age_hours: float = 24.0,
     *,
     explicit_validation: bool = False,
+    opened_at_epoch: float | None = None,
 ) -> dict:
     cycle = {
         "model_version": "settlement_execution_v2",
@@ -24,6 +25,8 @@ def _closed(
                 "current_validated": False,
             }
         )
+    if opened_at_epoch is not None:
+        cycle["opened_at_epoch"] = opened_at_epoch
     return cycle
 
 
@@ -103,6 +106,44 @@ def test_explicit_validation_cohort_excludes_pre_fix_cycles() -> None:
     assert report["status"] == "insufficient_closed_cycles"
     assert report["sample"]["closed_cycles"] == 2
     assert report["sample"]["excluded_current_model_cycles"] == 1
+
+
+def test_opened_after_cutoff_quarantines_raced_cycles() -> None:
+    state = {
+        "model_version": "settlement_execution_v2",
+        "settings": {"max_open": 2, "notional_usd_per_leg": 100},
+        "open": [],
+        "closed": [
+            _closed(
+                99.0,
+                explicit_validation=True,
+                opened_at_epoch=1_785_149_579.0,
+            ),
+            _closed(
+                -0.2,
+                explicit_validation=True,
+                opened_at_epoch=1_785_149_580.0,
+            ),
+            _closed(
+                -0.1,
+                explicit_validation=True,
+                opened_at_epoch=1_785_150_000.0,
+            ),
+        ],
+    }
+
+    report = build_report(
+        state,
+        capitals=[200],
+        min_closed_cycles=3,
+        cohort=COHORT_EXPLICIT_VALIDATION,
+        opened_after_utc="2026-07-27T10:53:00Z",
+    )
+
+    assert report["sample"]["closed_cycles"] == 2
+    assert report["sample"]["excluded_by_opened_after_cutoff"] == 1
+    assert report["sample"]["best_return_pct_total_capital_per_cycle"] == -0.1
+    assert report["opened_after_utc_required"] == "2026-07-27T10:53:00+00:00"
 
 
 def test_positive_distribution_is_required_after_count_gate() -> None:

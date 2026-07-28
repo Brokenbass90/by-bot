@@ -86,7 +86,8 @@ while true; do
       --min-closed-cycles 20 \
       --confirmation-closed-cycles 30 \
       --min-annualized-simple-pct 8 \
-      --cohort explicit_validation_v1
+      --cohort explicit_validation_v1 \
+      --opened-after-utc 2026-07-27T10:53:00Z
   } >"${log}" 2>&1 || true
 
   ln -sfn "${log}" "${LOG_DIR}/latest.log"
