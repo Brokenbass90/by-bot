@@ -1,0 +1,57 @@
+{
+  "schema_id": "att1_seasonality_filter_prereg_v1",
+  "created_at_utc": "2026-07-28T11:00:00Z",
+  "research_only": true,
+  "executable": false,
+  "capital_authorized": false,
+  "input": {
+    "trade_ledger": "backtest_runs/portfolio_20260702_105444_att1_density_top_revalidate_20260626_r005/trades.csv",
+    "trade_ledger_sha256": "a128aa6420be6a4f5cd899d07d405a616279c21bbaa5fbaa98d8041e76cbe9f3",
+    "summary": "backtest_runs/portfolio_20260702_105444_att1_density_top_revalidate_20260626_r005/summary.csv",
+    "expected_trades": 442,
+    "cost_contract": "pnl and pnl_pct_equity are taken from the saved next-open run with 6 bps fee and 2 bps slippage per side"
+  },
+  "split": {
+    "method": "chronological_trade_count",
+    "discovery_fraction": 0.6,
+    "validation_fraction": 0.2,
+    "sealed_holdout_fraction": 0.2
+  },
+  "descriptive_bins": [
+    "entry_hour_utc",
+    "session_utc",
+    "weekday_utc",
+    "side"
+  ],
+  "blocked_bins": {
+    "funding_relative": "PIT per-symbol funding interval and settlement timestamp are not present in the saved ledger",
+    "regime": "causal regime label is not present in the saved ledger"
+  },
+  "primary_filter": {
+    "field": "entry_hour_utc",
+    "minimum_discovery_trades_per_hour": 10,
+    "test": "deterministic one-sided sign-flip test for negative mean pnl_pct_equity",
+    "sign_flip_draws": 20000,
+    "random_seed": 20260728,
+    "multiple_testing": "Benjamini-Hochberg",
+    "maximum_q_value": 0.1,
+    "maximum_excluded_hours": 4,
+    "selection_order": "lowest q then most negative discovery mean",
+    "baseline_no_entry_hours_utc": []
+  },
+  "pass_gate": {
+    "candidate_required": true,
+    "minimum_trade_retention_each_split": 0.7,
+    "validation_filtered_sum_return_gt_baseline": true,
+    "validation_filtered_sum_return_positive": true,
+    "holdout_filtered_sum_return_gte_baseline": true,
+    "holdout_filtered_sum_return_positive": true,
+    "both_sides_retained_each_evaluation_split": true
+  },
+  "fail_closed_rules": [
+    "No selected discovery hours means FAIL, not threshold relaxation",
+    "Validation or holdout failure means FAIL and no live env change",
+    "Missing funding-relative and regime inputs are reported, not reconstructed from future data",
+    "No parameter or live risk mutation is authorized"
+  ]
+}

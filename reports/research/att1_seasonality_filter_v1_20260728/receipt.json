@@ -1,0 +1,150 @@
+{
+  "schema_id": "att1_seasonality_filter_receipt_v1",
+  "generated_at_utc": "2026-07-28T11:14:24.689548+00:00",
+  "research_only": true,
+  "executable": false,
+  "capital_authorized": false,
+  "live_config_mutated": false,
+  "verdict": "FAIL",
+  "failure_reasons": [
+    "holdout_underperforms_baseline",
+    "validation_does_not_improve_baseline"
+  ],
+  "input_manifest": {
+    "trade_ledger": "backtest_runs/portfolio_20260702_105444_att1_density_top_revalidate_20260626_r005/trades.csv",
+    "trade_ledger_sha256": "a128aa6420be6a4f5cd899d07d405a616279c21bbaa5fbaa98d8041e76cbe9f3",
+    "trades": 442,
+    "first_entry_utc": "2025-05-10T16:00:00+00:00",
+    "last_entry_utc": "2026-03-29T14:00:00+00:00",
+    "prereg": "configs/preregistered/att1_seasonality_filter_v1_20260728.json",
+    "prereg_sha256": "f9a2255213635216a1424023a9dc3dda53040faa64d9607fd698147ef7c43924",
+    "script": "scripts/analyze_att1_seasonality_filter.py",
+    "script_sha256": "eebbabb65e59c6e8b107483b14638a5e15ed8bdb0cd178e40a7752aaf3218aa2"
+  },
+  "split_counts": {
+    "discovery": 265,
+    "validation": 88,
+    "holdout": 89
+  },
+  "excluded_hours_utc": [
+    21
+  ],
+  "selected_discovery_rows": [
+    {
+      "hour_utc": 21,
+      "trades": 12,
+      "mean_return": -0.00487575,
+      "p_negative": 0.00324984,
+      "bh_q": 0.04224789
+    }
+  ],
+  "split_results": {
+    "discovery": {
+      "baseline": {
+        "trades": 265,
+        "sum_return": 0.207449,
+        "compound_return": 0.22560729,
+        "mean_return": 0.00078283,
+        "median_return": 0.00306,
+        "win_rate": 0.584906,
+        "red_months": 1,
+        "months": 7,
+        "sides": [
+          "long",
+          "short"
+        ]
+      },
+      "filtered": {
+        "trades": 253,
+        "sum_return": 0.265958,
+        "compound_return": 0.29975259,
+        "mean_return": 0.00105122,
+        "median_return": 0.003216,
+        "win_rate": 0.608696,
+        "red_months": 0,
+        "months": 7,
+        "sides": [
+          "long",
+          "short"
+        ]
+      },
+      "retention": 0.954717,
+      "sum_return_improvement": 0.058509
+    },
+    "validation": {
+      "baseline": {
+        "trades": 88,
+        "sum_return": 0.047398,
+        "compound_return": 0.04745641,
+        "mean_return": 0.00053861,
+        "median_return": 0.002862,
+        "win_rate": 0.590909,
+        "red_months": 1,
+        "months": 4,
+        "sides": [
+          "long",
+          "short"
+        ]
+      },
+      "filtered": {
+        "trades": 83,
+        "sum_return": 0.042827,
+        "compound_return": 0.04273825,
+        "mean_return": 0.00051599,
+        "median_return": 0.002828,
+        "win_rate": 0.590361,
+        "red_months": 1,
+        "months": 4,
+        "sides": [
+          "long",
+          "short"
+        ]
+      },
+      "retention": 0.943182,
+      "sum_return_improvement": -0.004571
+    },
+    "holdout": {
+      "baseline": {
+        "trades": 89,
+        "sum_return": 0.064928,
+        "compound_return": 0.06589485,
+        "mean_return": 0.00072953,
+        "median_return": 0.00315,
+        "win_rate": 0.606742,
+        "red_months": 0,
+        "months": 2,
+        "sides": [
+          "long",
+          "short"
+        ]
+      },
+      "filtered": {
+        "trades": 85,
+        "sum_return": 0.048468,
+        "compound_return": 0.0485296,
+        "mean_return": 0.00057021,
+        "median_return": 0.00304,
+        "win_rate": 0.588235,
+        "red_months": 0,
+        "months": 2,
+        "sides": [
+          "long",
+          "short"
+        ]
+      },
+      "retention": 0.955056,
+      "sum_return_improvement": -0.01646
+    }
+  },
+  "blocked_bins": {
+    "funding_relative": "PIT per-symbol funding interval and settlement timestamp are not present in the saved ledger",
+    "regime": "causal regime label is not present in the saved ledger"
+  },
+  "artifacts": {
+    "bin_table": "bin_table.csv",
+    "discovery_ledger": "discovery_trades.csv",
+    "validation_ledger": "validation_trades.csv",
+    "holdout_ledger": "holdout_trades.csv"
+  },
+  "exact_command": ".venv/bin/python scripts/analyze_att1_seasonality_filter.py --prereg configs/preregistered/att1_seasonality_filter_v1_20260728.json --output-dir reports/research/att1_seasonality_filter_v1_20260728"
+}
