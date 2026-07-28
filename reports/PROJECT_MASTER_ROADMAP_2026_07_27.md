@@ -283,3 +283,23 @@ XSEC/Alpaca/FX/event:
 
 Файлы не перемещаются в грязном worktree до отдельной reference-map проверки.
 `PROJECT_STATE_LEDGER.md` остаётся append-only историей и не является roadmap.
+
+## 14. Checkpoint 28 июля 11:48 UTC
+
+- Claude package принят частично и пересобран через независимые receipts:
+  `reports/CLAUDE_PACKAGE_ACCEPTANCE_2026_07_28.md`.
+- Autoresearch теперь логирует raw search counts; effective independent trials
+  не подменяются количеством соседних grid rows. Significance toolkit покрыт
+  focused tests, DSR остаётся advisory до честного dependence contract.
+- XSEC V4 прошёл дешёвый family landscape: `36/36` положительных вариантов,
+  median `+35.86%`, champion 75th percentile. PIT work оправдан, capital
+  по-прежнему запрещён.
+- Alpaca исторический proxy локализовал дефект в shared exit. SPY gate полезен,
+  но текущая полная модель отрицательна. Calendar-hold arm сильно лучше на
+  recent survivor proxy, однако требует distant safety stop, PIT и untouched
+  replay. SAFE_HOLD сохранён.
+- BOUNCE1 не является ASB1; virtual lifecycle всё ещё следующий crypto repair.
+- Архивные moves и graph prototype не приняты: сначала registry/reference map
+  и visual/provenance gates.
+- Direct Bybit truth: service active, equity `$1020.10`, positions empty,
+  query OK. Live risk/signal/universe не менялись.
