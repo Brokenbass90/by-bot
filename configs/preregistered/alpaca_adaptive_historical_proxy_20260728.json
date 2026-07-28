@@ -1,0 +1,43 @@
+{
+  "schema_id": "alpaca_adaptive_historical_proxy_prereg_v1",
+  "created_at_utc": "2026-07-28T11:45:00Z",
+  "research_only": true,
+  "capital_authorized": false,
+  "safe_hold_must_remain": true,
+  "question": "Does the current Alpaca adaptive selector survive causal next-open execution and the frozen shared exit on the available bear and recent historical caches?",
+  "strategy": {
+    "implementation": "strategies/alpaca_adaptive_v1.py",
+    "config": "AdaptiveConfig defaults",
+    "signal": "last observed SPY session close of each calendar month",
+    "entry": "next observed SPY session open",
+    "selector_inputs": "completed closes through signal session only",
+    "target_alloc_pct": 70.0,
+    "max_positions": 4,
+    "shared_exit": "backtest.alpaca_exact_parity_contract.SharedExitContract defaults",
+    "atr_at_signal": "20-session Wilder-style true-range arithmetic mean",
+    "same_bar_collision": "stop_first"
+  },
+  "windows": [
+    {
+      "id": "bear_2022_survivor_proxy",
+      "cache_suffix": "20210101_20230101",
+      "evaluation_start": "2022-01-01",
+      "evaluation_end_exclusive": "2023-01-01",
+      "symbols": ["UNH", "GOOGL", "AAPL", "MSFT", "NVDA", "META", "AMZN", "TSLA", "AVGO", "ORCL", "JPM", "LLY", "V", "COST", "JNJ", "WMT", "PG", "KO"]
+    },
+    {
+      "id": "recent_2025_2026_survivor_proxy",
+      "cache_suffix": "20250101_20260727",
+      "evaluation_start": "2025-08-01",
+      "evaluation_end_exclusive": "2026-07-27",
+      "symbols": ["AAPL", "ABBV", "ABNB", "ABT", "ADBE", "AMAT", "AMD", "AMZN", "ARM", "AVGO", "AXP", "BA", "BAC", "BLK", "BRK-B", "CAT", "COIN", "COP", "COST", "CRM", "CRWD", "CVX", "DDOG", "DE", "DIS", "GE", "GOOGL", "GS", "HON", "HOOD", "ICE", "ISRG", "JNJ", "JPM", "KLAC", "KO", "LLY", "LMT", "LRCX", "MA", "MCD", "META", "MRK", "MRVL", "MS", "MSFT", "MU", "NFLX", "NKE", "NOW", "NVDA", "O", "ORCL", "OXY", "PANW", "PEP", "PFE", "PG", "PLTR", "QCOM", "RTX", "SBUX", "SCHW", "SLB", "SNOW", "SOFI", "SPGI", "T", "TGT", "TMO", "TSLA", "TXN", "UBER", "UNH", "V", "VZ", "WMT", "XOM"]
+    }
+  ],
+  "cost_bps_per_side": [5.0, 10.0],
+  "arms": ["adaptive_gated", "adaptive_ungated_negative_control"],
+  "metrics": ["return_pct", "annualized_return_pct", "profit_factor", "trades", "red_months", "months", "worst_month_pct", "monthly_endpoint_drawdown_pct"],
+  "interpretation": {
+    "candidate_repair_continues_if": "gated combined return > ungated combined return and no window has drawdown worse than 15%",
+    "not_promotion_grade_because": ["survivor-only fixed universes", "observed-session calendar rather than authoritative XNYS ledger", "monthly endpoint drawdown rather than daily portfolio MTM", "no broker lifecycle calibration", "sample is underpowered"]
+  }
+}
