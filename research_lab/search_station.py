@@ -73,13 +73,16 @@ def run(run_id, registry, is_symbols, oos_symbols):
             if k in done: continue
             fac=builder(params)
             tr,by=_bt(fac,is_symbols,"first"); ok,reason=_gate(tr,by)
-            rec={"key":k,"strategy":name,"params":params,"is_pass":ok,"is_reason":reason,"ts":int(time.time())}
+            rec={"key":k,"strategy":name,"params":params,"is_pass":ok,"is_reason":reason,
+                 "is_net_r":round(sum(t["r"] for t in tr),2),"is_n":len(tr),"ts":int(time.time())}
             if ok:  # forward + oos holdout
                 tr2,by2=_bt(fac,is_symbols,"second"); ok2,r2=_gate(tr2,by2)
                 tr3,by3=_bt(fac,oos_symbols,"all"); ok3,r3=_gate(tr3,by3)
                 rec["fwd_pass"]=ok2; rec["oos_sym_pass"]=ok3; rec["survivor"]=bool(ok2 and ok3)
+                rec["fwd_net_r"]=round(sum(t["r"] for t in tr2),2)
+                rec["oos_net_r"]=round(sum(t["r"] for t in tr3),2)
                 if rec["survivor"]:
-                    survivors+=1; rec["is_net_r"]=round(sum(t["r"] for t in tr),2)
+                    survivors+=1
                     print(f"  🟢 SURVIVOR {name} {params} is={rec['is_net_r']}R")
             with open(path,"a") as f: f.write(json.dumps(rec)+"\n")  # append after EACH -> resumable
             tested+=1
