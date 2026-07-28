@@ -1,0 +1,44 @@
+{
+  "schema_id": "preregistered_research_v1",
+  "research_id": "funding_positioning_filter_v2_20260728",
+  "frozen_before_run": true,
+  "research_only": true,
+  "capital_authorized": false,
+  "hypothesis": "Strict extreme funding may add incremental information to short strategies after removing market beta, funding cashflows, overlap and costs.",
+  "universe": [
+    "ADAUSDT",
+    "BTCUSDT",
+    "DOTUSDT",
+    "ETHUSDT",
+    "LINKUSDT",
+    "LTCUSDT",
+    "SOLUSDT",
+    "SUIUSDT"
+  ],
+  "percentile": 90,
+  "holding_hours": [4, 8, 12, 16],
+  "cost_scenarios_roundtrip_bps": {
+    "maker_proxy": 6,
+    "taker": 16
+  },
+  "required_repairs_vs_v1": [
+    "strict percentile exceedance",
+    "no overlapping positions per symbol",
+    "include crossed funding cashflows",
+    "point-in-time regime split",
+    "beta-one BTC residual for alts"
+  ],
+  "standalone_pass_gate": {
+    "maker_avg_net_bps_min": 6,
+    "maker_avg_residual_net_bps_min": 3,
+    "all_regime_sign_consistency_required": true,
+    "minimum_trades": 80
+  },
+  "filter_gate": {
+    "requires_incremental_ATT1_or_BREAKDOWN_replay": true,
+    "minimum_filtered_trades": 40,
+    "must_improve_oos_expectancy_after_costs": true,
+    "must_not_increase_drawdown": true
+  },
+  "automatic_action": "NONE"
+}

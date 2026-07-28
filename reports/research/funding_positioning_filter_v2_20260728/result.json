@@ -1,0 +1,511 @@
+{
+  "schema_id": "funding_positioning_v2_audit",
+  "research_only": true,
+  "executable": false,
+  "method": {
+    "strict_percentile_exceedance": true,
+    "no_symbol_overlap": true,
+    "funding_cashflows_included": true,
+    "regime": "point_in_time_btc_trailing_30d_return",
+    "residual": "alt_signed_return_minus_beta1_btc_return",
+    "maker_fill_probability_modelled": false
+  },
+  "runs": [
+    {
+      "percentile": 90.0,
+      "hold_hours": 4,
+      "symbols": [
+        "ADAUSDT",
+        "BTCUSDT",
+        "DOTUSDT",
+        "ETHUSDT",
+        "LINKUSDT",
+        "LTCUSDT",
+        "SOLUSDT",
+        "SUIUSDT"
+      ],
+      "data_start_utc": "2025-05-28T00:00:00+00:00",
+      "data_end_utc": "2026-04-24T16:00:00+00:00",
+      "maker_6bps": {
+        "n": 978,
+        "short_share": 0.16666666666666666,
+        "avg_gross_bps": 7.42370588493118,
+        "avg_net_bps": 1.4237058849311797,
+        "positive_net_share": 0.48773006134969327,
+        "avg_residual_net_bps": -5.534810976726914
+      },
+      "taker_16bps": {
+        "n": 978,
+        "short_share": 0.16666666666666666,
+        "avg_gross_bps": 7.42370588493118,
+        "avg_net_bps": -8.576294115068821,
+        "positive_net_share": 0.43558282208588955,
+        "avg_residual_net_bps": -15.534810976726915
+      },
+      "regimes_maker_6bps": {
+        "bull": {
+          "n": 232,
+          "short_share": 0.23275862068965517,
+          "avg_gross_bps": 6.7946514249737,
+          "avg_net_bps": 0.7946514249737013,
+          "positive_net_share": 0.4956896551724138,
+          "avg_residual_net_bps": -20.58682088336127
+        },
+        "neutral": {
+          "n": 298,
+          "short_share": 0.13758389261744966,
+          "avg_gross_bps": -7.214967394951505,
+          "avg_net_bps": -13.214967394951506,
+          "positive_net_share": 0.4463087248322148,
+          "avg_residual_net_bps": -3.804765364878615
+        },
+        "bear": {
+          "n": 448,
+          "short_share": 0.15178571428571427,
+          "avg_gross_bps": 17.486798010188267,
+          "avg_net_bps": 11.486798010188267,
+          "positive_net_share": 0.5111607142857143,
+          "avg_residual_net_bps": 0.9084264898786599
+        }
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 106,
+          "short_share": 0.009433962264150943,
+          "avg_gross_bps": 13.641250448264193,
+          "avg_net_bps": 7.641250448264193,
+          "positive_net_share": 0.5471698113207547,
+          "avg_residual_net_bps": -0.30001760058507415
+        },
+        "BTCUSDT": {
+          "n": 162,
+          "short_share": 0.35185185185185186,
+          "avg_gross_bps": 6.1841228823202625,
+          "avg_net_bps": 0.18412288232026425,
+          "positive_net_share": 0.4444444444444444,
+          "avg_residual_net_bps": null
+        },
+        "DOTUSDT": {
+          "n": 136,
+          "short_share": 0.1323529411764706,
+          "avg_gross_bps": 12.079117252414871,
+          "avg_net_bps": 6.079117252414871,
+          "positive_net_share": 0.4632352941176471,
+          "avg_residual_net_bps": 0.5176869493849099
+        },
+        "ETHUSDT": {
+          "n": 149,
+          "short_share": 0.24161073825503357,
+          "avg_gross_bps": 4.295639441572808,
+          "avg_net_bps": -1.704360558427192,
+          "positive_net_share": 0.4966442953020134,
+          "avg_residual_net_bps": -9.52850638885074
+        },
+        "LINKUSDT": {
+          "n": 79,
+          "short_share": 0.02531645569620253,
+          "avg_gross_bps": 6.91815845703522,
+          "avg_net_bps": 0.9181584570352198,
+          "positive_net_share": 0.46835443037974683,
+          "avg_residual_net_bps": 0.5728726081835087
+        },
+        "LTCUSDT": {
+          "n": 134,
+          "short_share": 0.21641791044776118,
+          "avg_gross_bps": 2.0804341223890574,
+          "avg_net_bps": -3.919565877610942,
+          "positive_net_share": 0.44776119402985076,
+          "avg_residual_net_bps": -15.905180752877428
+        },
+        "SOLUSDT": {
+          "n": 105,
+          "short_share": 0.13333333333333333,
+          "avg_gross_bps": 2.2909590271746247,
+          "avg_net_bps": -3.7090409728253753,
+          "positive_net_share": 0.5238095238095238,
+          "avg_residual_net_bps": -11.069438394704209
+        },
+        "SUIUSDT": {
+          "n": 107,
+          "short_share": 0.056074766355140186,
+          "avg_gross_bps": 13.68140457503536,
+          "avg_net_bps": 7.681404575035361,
+          "positive_net_share": 0.5420560747663551,
+          "avg_residual_net_bps": 1.0566958108251252
+        }
+      }
+    },
+    {
+      "percentile": 90.0,
+      "hold_hours": 8,
+      "symbols": [
+        "ADAUSDT",
+        "BTCUSDT",
+        "DOTUSDT",
+        "ETHUSDT",
+        "LINKUSDT",
+        "LTCUSDT",
+        "SOLUSDT",
+        "SUIUSDT"
+      ],
+      "data_start_utc": "2025-05-28T00:00:00+00:00",
+      "data_end_utc": "2026-04-24T16:00:00+00:00",
+      "maker_6bps": {
+        "n": 978,
+        "short_share": 0.16666666666666666,
+        "avg_gross_bps": 21.34783707247353,
+        "avg_net_bps": 15.347837072473528,
+        "positive_net_share": 0.523517382413088,
+        "avg_residual_net_bps": 2.5328366342022184
+      },
+      "taker_16bps": {
+        "n": 978,
+        "short_share": 0.16666666666666666,
+        "avg_gross_bps": 21.34783707247353,
+        "avg_net_bps": 5.347837072473529,
+        "positive_net_share": 0.4938650306748466,
+        "avg_residual_net_bps": -7.4671633657977825
+      },
+      "regimes_maker_6bps": {
+        "bull": {
+          "n": 232,
+          "short_share": 0.23275862068965517,
+          "avg_gross_bps": 15.788052532277755,
+          "avg_net_bps": 9.788052532277755,
+          "positive_net_share": 0.5344827586206896,
+          "avg_residual_net_bps": -15.26165641901705
+        },
+        "neutral": {
+          "n": 298,
+          "short_share": 0.13758389261744966,
+          "avg_gross_bps": 14.941108647618032,
+          "avg_net_bps": 8.941108647618032,
+          "positive_net_share": 0.5436241610738255,
+          "avg_residual_net_bps": 4.890691491368203
+        },
+        "bear": {
+          "n": 448,
+          "short_share": 0.15178571428571427,
+          "avg_gross_bps": 28.48862967053683,
+          "avg_net_bps": 22.488629670536824,
+          "positive_net_share": 0.5044642857142857,
+          "avg_residual_net_bps": 9.943573559075775
+        }
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 106,
+          "short_share": 0.009433962264150943,
+          "avg_gross_bps": 31.57142622755,
+          "avg_net_bps": 25.571426227549992,
+          "positive_net_share": 0.5849056603773585,
+          "avg_residual_net_bps": 14.24739210846
+        },
+        "BTCUSDT": {
+          "n": 162,
+          "short_share": 0.35185185185185186,
+          "avg_gross_bps": 0.8595461780393984,
+          "avg_net_bps": -5.140453821960602,
+          "positive_net_share": 0.4444444444444444,
+          "avg_residual_net_bps": null
+        },
+        "DOTUSDT": {
+          "n": 136,
+          "short_share": 0.1323529411764706,
+          "avg_gross_bps": 20.70666229849908,
+          "avg_net_bps": 14.706662298499076,
+          "positive_net_share": 0.5220588235294118,
+          "avg_residual_net_bps": 4.941067145596994
+        },
+        "ETHUSDT": {
+          "n": 149,
+          "short_share": 0.24161073825503357,
+          "avg_gross_bps": 18.37783759411427,
+          "avg_net_bps": 12.377837594114267,
+          "positive_net_share": 0.5167785234899329,
+          "avg_residual_net_bps": -10.838891683953268
+        },
+        "LINKUSDT": {
+          "n": 79,
+          "short_share": 0.02531645569620253,
+          "avg_gross_bps": 36.22935956625583,
+          "avg_net_bps": 30.229359566255827,
+          "positive_net_share": 0.569620253164557,
+          "avg_residual_net_bps": 25.936251557534714
+        },
+        "LTCUSDT": {
+          "n": 134,
+          "short_share": 0.21641791044776118,
+          "avg_gross_bps": 10.412616042940735,
+          "avg_net_bps": 4.4126160429407335,
+          "positive_net_share": 0.5298507462686567,
+          "avg_residual_net_bps": -18.66087508412441
+        },
+        "SOLUSDT": {
+          "n": 105,
+          "short_share": 0.13333333333333333,
+          "avg_gross_bps": 26.131771079419142,
+          "avg_net_bps": 20.131771079419135,
+          "positive_net_share": 0.5619047619047619,
+          "avg_residual_net_bps": 5.057543389784022
+        },
+        "SUIUSDT": {
+          "n": 107,
+          "short_share": 0.056074766355140186,
+          "avg_gross_bps": 45.20296451374066,
+          "avg_net_bps": 39.20296451374066,
+          "positive_net_share": 0.514018691588785,
+          "avg_residual_net_bps": 13.272263471216844
+        }
+      }
+    },
+    {
+      "percentile": 90.0,
+      "hold_hours": 12,
+      "symbols": [
+        "ADAUSDT",
+        "BTCUSDT",
+        "DOTUSDT",
+        "ETHUSDT",
+        "LINKUSDT",
+        "LTCUSDT",
+        "SOLUSDT",
+        "SUIUSDT"
+      ],
+      "data_start_utc": "2025-05-28T00:00:00+00:00",
+      "data_end_utc": "2026-04-24T16:00:00+00:00",
+      "maker_6bps": {
+        "n": 751,
+        "short_share": 0.1611185086551265,
+        "avg_gross_bps": 34.81948371054244,
+        "avg_net_bps": 28.819483710542443,
+        "positive_net_share": 0.521970705725699,
+        "avg_residual_net_bps": 11.597253288411235
+      },
+      "taker_16bps": {
+        "n": 751,
+        "short_share": 0.1611185086551265,
+        "avg_gross_bps": 34.81948371054244,
+        "avg_net_bps": 18.819483710542446,
+        "positive_net_share": 0.4966711051930759,
+        "avg_residual_net_bps": 1.5972532884112345
+      },
+      "regimes_maker_6bps": {
+        "bull": {
+          "n": 181,
+          "short_share": 0.23204419889502761,
+          "avg_gross_bps": 20.17269547466807,
+          "avg_net_bps": 14.17269547466807,
+          "positive_net_share": 0.49171270718232046,
+          "avg_residual_net_bps": -19.117816428320012
+        },
+        "neutral": {
+          "n": 231,
+          "short_share": 0.14285714285714285,
+          "avg_gross_bps": 24.173899768141606,
+          "avg_net_bps": 18.17389976814161,
+          "positive_net_share": 0.5151515151515151,
+          "avg_residual_net_bps": 14.507877826848008
+        },
+        "bear": {
+          "n": 339,
+          "short_share": 0.13569321533923304,
+          "avg_gross_bps": 49.89381575003464,
+          "avg_net_bps": 43.89381575003465,
+          "positive_net_share": 0.5427728613569321,
+          "avg_residual_net_bps": 25.91000983524126
+        }
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 84,
+          "short_share": 0.011904761904761904,
+          "avg_gross_bps": 54.5677485144244,
+          "avg_net_bps": 48.5677485144244,
+          "positive_net_share": 0.5357142857142857,
+          "avg_residual_net_bps": 30.856615220069575
+        },
+        "BTCUSDT": {
+          "n": 123,
+          "short_share": 0.3170731707317073,
+          "avg_gross_bps": 11.721094220943769,
+          "avg_net_bps": 5.721094220943769,
+          "positive_net_share": 0.4878048780487805,
+          "avg_residual_net_bps": null
+        },
+        "DOTUSDT": {
+          "n": 94,
+          "short_share": 0.14893617021276595,
+          "avg_gross_bps": 51.15677549119651,
+          "avg_net_bps": 45.15677549119652,
+          "positive_net_share": 0.5425531914893617,
+          "avg_residual_net_bps": 21.803366324497222
+        },
+        "ETHUSDT": {
+          "n": 114,
+          "short_share": 0.24561403508771928,
+          "avg_gross_bps": 18.46102157129024,
+          "avg_net_bps": 12.461021571290233,
+          "positive_net_share": 0.5350877192982456,
+          "avg_residual_net_bps": -14.451605033662299
+        },
+        "LINKUSDT": {
+          "n": 70,
+          "short_share": 0.02857142857142857,
+          "avg_gross_bps": 35.62709016514374,
+          "avg_net_bps": 29.627090165143738,
+          "positive_net_share": 0.5285714285714286,
+          "avg_residual_net_bps": 23.734203915635643
+        },
+        "LTCUSDT": {
+          "n": 104,
+          "short_share": 0.21153846153846154,
+          "avg_gross_bps": 37.3330644828083,
+          "avg_net_bps": 31.333064482808293,
+          "positive_net_share": 0.5480769230769231,
+          "avg_residual_net_bps": -3.9679700133062483
+        },
+        "SOLUSDT": {
+          "n": 81,
+          "short_share": 0.13580246913580246,
+          "avg_gross_bps": 6.386252348354184,
+          "avg_net_bps": 0.3862523483541808,
+          "positive_net_share": 0.48148148148148145,
+          "avg_residual_net_bps": -9.805938690218563
+        },
+        "SUIUSDT": {
+          "n": 81,
+          "short_share": 0.04938271604938271,
+          "avg_gross_bps": 77.98681467828729,
+          "avg_net_bps": 71.98681467828729,
+          "positive_net_share": 0.5185185185185185,
+          "avg_residual_net_bps": 47.3412539156572
+        }
+      }
+    },
+    {
+      "percentile": 90.0,
+      "hold_hours": 16,
+      "symbols": [
+        "ADAUSDT",
+        "BTCUSDT",
+        "DOTUSDT",
+        "ETHUSDT",
+        "LINKUSDT",
+        "LTCUSDT",
+        "SOLUSDT",
+        "SUIUSDT"
+      ],
+      "data_start_utc": "2025-05-28T00:00:00+00:00",
+      "data_end_utc": "2026-04-24T16:00:00+00:00",
+      "maker_6bps": {
+        "n": 751,
+        "short_share": 0.1611185086551265,
+        "avg_gross_bps": 47.02287945902782,
+        "avg_net_bps": 41.02287945902782,
+        "positive_net_share": 0.5366178428761651,
+        "avg_residual_net_bps": 17.734447814167368
+      },
+      "taker_16bps": {
+        "n": 751,
+        "short_share": 0.1611185086551265,
+        "avg_gross_bps": 47.02287945902782,
+        "avg_net_bps": 31.02287945902782,
+        "positive_net_share": 0.5179760319573902,
+        "avg_residual_net_bps": 7.734447814167369
+      },
+      "regimes_maker_6bps": {
+        "bull": {
+          "n": 181,
+          "short_share": 0.23204419889502761,
+          "avg_gross_bps": 27.171184585450636,
+          "avg_net_bps": 21.17118458545063,
+          "positive_net_share": 0.5303867403314917,
+          "avg_residual_net_bps": -7.798963513901427
+        },
+        "neutral": {
+          "n": 231,
+          "short_share": 0.14285714285714285,
+          "avg_gross_bps": 47.49108439606614,
+          "avg_net_bps": 41.491084396066135,
+          "positive_net_share": 0.5627705627705628,
+          "avg_residual_net_bps": 24.29430559294007
+        },
+        "bear": {
+          "n": 339,
+          "short_share": 0.13569321533923304,
+          "avg_gross_bps": 57.30311967041903,
+          "avg_net_bps": 51.30311967041902,
+          "positive_net_share": 0.5221238938053098,
+          "avg_residual_net_bps": 26.843403663339398
+        }
+      },
+      "per_symbol_maker_6bps": {
+        "ADAUSDT": {
+          "n": 84,
+          "short_share": 0.011904761904761904,
+          "avg_gross_bps": 88.18159573991431,
+          "avg_net_bps": 82.1815957399143,
+          "positive_net_share": 0.5952380952380952,
+          "avg_residual_net_bps": 43.764652312907714
+        },
+        "BTCUSDT": {
+          "n": 123,
+          "short_share": 0.3170731707317073,
+          "avg_gross_bps": 15.802816622547303,
+          "avg_net_bps": 9.802816622547303,
+          "positive_net_share": 0.4715447154471545,
+          "avg_residual_net_bps": null
+        },
+        "DOTUSDT": {
+          "n": 94,
+          "short_share": 0.14893617021276595,
+          "avg_gross_bps": 35.69019400514152,
+          "avg_net_bps": 29.690194005141517,
+          "positive_net_share": 0.5425531914893617,
+          "avg_residual_net_bps": 13.470887035656938
+        },
+        "ETHUSDT": {
+          "n": 114,
+          "short_share": 0.24561403508771928,
+          "avg_gross_bps": 32.86730047653847,
+          "avg_net_bps": 26.86730047653846,
+          "positive_net_share": 0.4824561403508772,
+          "avg_residual_net_bps": -12.42157278382023
+        },
+        "LINKUSDT": {
+          "n": 70,
+          "short_share": 0.02857142857142857,
+          "avg_gross_bps": 30.352587024722915,
+          "avg_net_bps": 24.35258702472291,
+          "positive_net_share": 0.5571428571428572,
+          "avg_residual_net_bps": 20.05757991704163
+        },
+        "LTCUSDT": {
+          "n": 104,
+          "short_share": 0.21153846153846154,
+          "avg_gross_bps": 47.347876218079904,
+          "avg_net_bps": 41.3478762180799,
+          "positive_net_share": 0.5769230769230769,
+          "avg_residual_net_bps": 9.851170496233065
+        },
+        "SOLUSDT": {
+          "n": 81,
+          "short_share": 0.13580246913580246,
+          "avg_gross_bps": 45.49431251483479,
+          "avg_net_bps": 39.49431251483478,
+          "positive_net_share": 0.5185185185185185,
+          "avg_residual_net_bps": 12.234335972122116
+        },
+        "SUIUSDT": {
+          "n": 81,
+          "short_share": 0.04938271604938271,
+          "avg_gross_bps": 100.33990079114261,
+          "avg_net_bps": 94.3399007911426,
+          "positive_net_share": 0.5925925925925926,
+          "avg_residual_net_bps": 51.74400999350085
+        }
+      }
+    }
+  ]
+}

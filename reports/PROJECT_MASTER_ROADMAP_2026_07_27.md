@@ -231,9 +231,16 @@ untouched prereg.
 ATT1:
 
 - N20 даёт только review;
-- N30 и gate выше позволяют обсудить `0.10 → 0.15/0.20`;
+- N30 и gate выше разрешают bounded step `0.10 → 0.15` без повторного
+  вопроса владельцу; следующий шаг до `0.20` требует ещё одного чистого
+  live-review;
 - переход к сумме `$500–1000` не происходит одним шагом: сначала ограничение
   риска на сделку, затем несколько ступеней с live execution health.
+
+Standing owner authorization от 28 июля распространяется только на маленькую
+ступень после заранее записанного gate. Она не разрешает повышать риск ради
+частоты, обходить OOS/shadow, менять signal/universe или включать новый money
+sleeve без deploy receipt.
 
 XSEC/Alpaca/FX/event:
 
@@ -319,6 +326,32 @@ XSEC/Alpaca/FX/event:
   and an eight-symbol frozen shadow config. No broker calls or live risk.
 - Massive Stocks Basic is already configured and reverified 3/3. No owner
   purchase or new key is required for the next Alpaca PIT prototype.
-- Live server is still on `f7ed011`; real signal-level chart geometry exists
-  in later Git history but is not deployed. Web replay remains a prototype
-  until it consumes the same immutable trade geometry receipt.
+- Live server Git HEAD is still `f7ed011`, but the dirty monolith already
+  contains the later signal-level geometry code. No new position has created a
+  geometry snapshot yet, so live visual proof and a reproducible deploy receipt
+  remain pending. Web replay remains a prototype until it consumes the same
+  immutable trade geometry receipt.
+
+## 16. Control-plane and funding checkpoint 28 июля
+
+- The two-layer D1/H4 regime detector, allocator, decision bus, health monitor,
+  cross-sectional ranker and exposure gate already exist. The missing layer is
+  competitive slot assignment: live allocator remains `disabled/approved_env`
+  and does not award the three slots by expected after-cost value.
+- Added a deterministic priority-router library. It ranks immutable candidates
+  by expected net R discounted by evidence, regime fit, live health, execution,
+  cost stress and symbol rank; it cannot create edge or authorize money.
+- Live wiring stays risk-zero until ATT1, BOUNCE1, BREAKDOWN and XSEC emit a
+  common parity-checked candidate schema and ledger replay improves the
+  portfolio versus first-signal-wins.
+- Regime builders no longer write the shared `ASB1_ALLOW_*` direction keys:
+  slope-break uses `ASLB1_*`, support-bounce uses `BOUNCE1_*`.
+- BOUNCE1 server/local SHA mismatch is explained by this prefix-only change.
+  The server file equals the exact pre-isolation Git version and legacy-env
+  replay parity is unchanged; a full re-tune is not required.
+- Funding positioning V2 repaired percentile ties, overlap, funding cashflows,
+  PIT regime and beta diagnostics. The result is not terminal: 8h maker proxy
+  remains mildly positive after beta, while longer holds look stronger but
+  require a three-slot untouched V2.1 and incremental ATT1/BREAKDOWN replay.
+- Hour-of-day seasonality remains `FAIL` for filtering: 52.6% of shuffled
+  controls produce an equally strong best-hour illusion.
