@@ -248,6 +248,8 @@ from bot.order_link import (
     log_order_link as _log_order_link_pure,
 )
 from bot.bybit_closed_pnl import aggregate_closed_pnl, closed_pnl_query_windows
+from bot.strategy_regime_gate import strategy_regime_gate_decision
+from bot.strategy_shadow_ledger import StrategyShadowLedger
 
 ORDER_LINK_ID_ENABLED = _env_bool("ORDER_LINK_ID_ENABLED", True)
 ORDER_LINK_LOG_PATH = ROOT_DIR / "runtime" / "order_link_id_log.jsonl"
@@ -833,6 +835,20 @@ BOUNCE1_MINQTY_FALLBACK_MAX_MULT = max(1.0, float(os.getenv("BOUNCE1_MINQTY_FALL
 BOUNCE1_MAX_OPEN_TRADES = int(os.getenv("BOUNCE1_MAX_OPEN_TRADES", "1"))
 BOUNCE1_SYMBOL_ALLOWLIST: set[str] = _csv_upper_set("BOUNCE1_SYMBOL_ALLOWLIST")
 BOUNCE1_ENGINE = None
+BOUNCE1_SHADOW_ENABLE = _env_bool("BOUNCE1_SHADOW_ENABLE", True)
+BOUNCE1_SHADOW_STATE_PATH = Path(
+    os.getenv(
+        "BOUNCE1_SHADOW_STATE_PATH",
+        str(ROOT_DIR / "runtime" / "bounce1_shadow_state.json"),
+    )
+).expanduser()
+BOUNCE1_SHADOW_LEDGER_PATH = Path(
+    os.getenv(
+        "BOUNCE1_SHADOW_LEDGER_PATH",
+        str(ROOT_DIR / "runtime" / "bounce1_shadow_ledger.jsonl"),
+    )
+).expanduser()
+BOUNCE1_SHADOW_LEDGER = None
 _BOUNCE1_LAST_TRY: dict[str, float] = {}
 
 # ===== ASM1 SLOPED MOMENTUM (live) =====
@@ -882,6 +898,11 @@ BREAKDOWN_BREAKER_SOFT_MULT = max(0.05, min(1.0, float(os.getenv("BREAKDOWN_BREA
 BREAKDOWN_BREAKER_HARD_NET_PNL = float(os.getenv("BREAKDOWN_BREAKER_HARD_NET_PNL", "-4.5") or -4.5)
 BREAKDOWN_BREAKER_ALERT_COOLDOWN_SEC = max(300, int(os.getenv("BREAKDOWN_BREAKER_ALERT_COOLDOWN_SEC", "1800") or 1800))
 BREAKDOWN_BREAKER_LAST_ALERT_TS = 0
+BREAKDOWN_REGIME_GATE_ENABLE = _env_bool("BREAKDOWN_REGIME_GATE_ENABLE", True)
+BREAKDOWN_REGIME_GATE_FAIL_CLOSED = _env_bool("BREAKDOWN_REGIME_GATE_FAIL_CLOSED", True)
+BREAKDOWN_REGIME_ALLOWED: set[str] = (
+    _csv_upper_set("BREAKDOWN_REGIME_ALLOWED") or {"BEAR_TREND"}
+)
 BREAKDOWN_ENGINE = None
 
 # ===== IMPULSE VOLUME BREAKOUT V1 (live/shadow) =====
@@ -8982,6 +9003,37 @@ def _ensure_bounce1_engine() -> bool:
         return False
 
 
+def _bounce1_shadow_active() -> bool:
+    return bool(
+        BOUNCE1_SHADOW_ENABLE
+        and ENABLE_BOUNCE1_TRADING
+        and float(BOUNCE1_RISK_MULT) <= 0.0
+    )
+
+
+def _ensure_bounce1_shadow_ledger() -> bool:
+    global BOUNCE1_SHADOW_LEDGER
+    if BOUNCE1_SHADOW_LEDGER is not None:
+        return True
+    if not _bounce1_shadow_active():
+        return False
+    try:
+        BOUNCE1_SHADOW_LEDGER = StrategyShadowLedger(
+            BOUNCE1_SHADOW_STATE_PATH,
+            BOUNCE1_SHADOW_LEDGER_PATH,
+            strategy="alt_support_bounce_v1",
+            execution_interval_ms=300_000,
+            fee_bps_per_side=6.0,
+            slippage_bps_per_side=2.0,
+        )
+        print("[BOUNCE1] risk-zero shadow ledger initialised")
+        return True
+    except Exception as e:
+        BOUNCE1_SHADOW_LEDGER = None
+        _log_engine_lazy_init_fail("BOUNCE1_SHADOW", e)
+        return False
+
+
 def _ensure_asm1_engine() -> bool:
     global ASM1_ENGINE
     if ASM1_ENGINE is not None:
@@ -12027,29 +12079,35 @@ async def try_bounce1_entry_async(symbol: str, price: float):
     if not _ensure_bounce1_engine():
         _diag_inc("bounce1_skip_no_engine")
         return
-    if not TRADE_ON or DRY_RUN:
-        _diag_inc("bounce1_skip_trade_off")
-        return
-    if TRADE_CLIENT is None:
-        _diag_inc("bounce1_skip_no_client")
-        return
-    if get_trade("Bybit", symbol) is not None:
-        _diag_inc("bounce1_skip_open_trade")
-        return
-    if BOUNCE1_MAX_OPEN_TRADES > 0:
-        open_b1 = 0
-        for tr in TRADES.values():
-            if getattr(tr, "strategy", "") != "alt_support_bounce_v1":
-                continue
-            if str(getattr(tr, "status", "") or "").upper() in {"CLOSED", "ERROR"}:
-                continue
-            open_b1 += 1
-        if open_b1 >= BOUNCE1_MAX_OPEN_TRADES:
-            _diag_inc("bounce1_skip_max_open")
+    shadow_mode = _bounce1_shadow_active()
+    if shadow_mode:
+        if not _ensure_bounce1_shadow_ledger():
+            _diag_inc("bounce1_skip_shadow_ledger")
             return
-    if not portfolio_can_open():
-        _diag_inc("bounce1_skip_portfolio")
-        return
+    else:
+        if not TRADE_ON or DRY_RUN:
+            _diag_inc("bounce1_skip_trade_off")
+            return
+        if TRADE_CLIENT is None:
+            _diag_inc("bounce1_skip_no_client")
+            return
+        if get_trade("Bybit", symbol) is not None:
+            _diag_inc("bounce1_skip_open_trade")
+            return
+        if BOUNCE1_MAX_OPEN_TRADES > 0:
+            open_b1 = 0
+            for tr in TRADES.values():
+                if getattr(tr, "strategy", "") != "alt_support_bounce_v1":
+                    continue
+                if str(getattr(tr, "status", "") or "").upper() in {"CLOSED", "ERROR"}:
+                    continue
+                open_b1 += 1
+            if open_b1 >= BOUNCE1_MAX_OPEN_TRADES:
+                _diag_inc("bounce1_skip_max_open")
+                return
+        if not portfolio_can_open():
+            _diag_inc("bounce1_skip_portfolio")
+            return
 
     now = now_s()
     last = int(_BOUNCE1_LAST_TRY.get(symbol, 0) or 0)
@@ -12066,6 +12124,24 @@ async def try_bounce1_entry_async(symbol: str, price: float):
         return
     if not sig:
         _diag_inc("bounce1_no_signal")
+        return
+
+    if shadow_mode:
+        accepted = bool(
+            BOUNCE1_SHADOW_LEDGER
+            and BOUNCE1_SHADOW_LEDGER.record_signal(
+                sig,
+                decision_ts_ms=int(now * 1000),
+            )
+        )
+        _diag_inc("bounce1_shadow_decision" if accepted else "bounce1_shadow_duplicate")
+        _append_signal_decision(
+            "bounce1",
+            symbol,
+            "shadow_signal" if accepted else "shadow_duplicate",
+            str(getattr(sig, "reason", "") or ""),
+            side=str(getattr(sig, "side", "") or ""),
+        )
         return
 
     side = "Buy"  # long-only strategy
@@ -12358,6 +12434,22 @@ async def try_breakdown_entry_async(symbol: str, price: float):
         _diag_inc("breakdown_skip_disabled")
         return
     if not _operator_strategy_entry_allowed("breakdown"):
+        return
+    regime_gate = strategy_regime_gate_decision(
+        REGIME_OVERLAY_LAST_APPLIED_REGIME or os.getenv("ORCH_REGIME", ""),
+        overlay_fresh=_regime_overlay_fresh_for_strategy_gate(),
+        allowed_regimes=BREAKDOWN_REGIME_ALLOWED,
+        enabled=BREAKDOWN_REGIME_GATE_ENABLE,
+        fail_closed=BREAKDOWN_REGIME_GATE_FAIL_CLOSED,
+    )
+    if not regime_gate.allowed:
+        _diag_inc("breakdown_skip_regime_gate")
+        _diag_inc(
+            "breakdown_skip_regime_"
+            + str(regime_gate.regime or regime_gate.reason)
+            .lower()
+            .replace(":", "_")
+        )
         return
     if not _ensure_breakdown_engine():
         _diag_inc("breakdown_skip_no_engine")
@@ -14042,6 +14134,31 @@ def detect(exch: str, sym: str, st: SymState, now: int):
     except Exception as _e:
         log_error(f"try_bounce_entry crash {sym}: {_e}")
 
+    if exch == "Bybit" and _bounce1_shadow_active() and _ensure_bounce1_shadow_ledger():
+        try:
+            shadow_events = BOUNCE1_SHADOW_LEDGER.on_price(
+                sym,
+                float(p1),
+                ts_ms=int(now * 1000),
+            )
+            for event in shadow_events:
+                _diag_inc("bounce1_shadow_" + event.replace(":", "_"))
+        except Exception as _e:
+            log_error(f"bounce1 shadow price update fail {sym}: {_e}")
+
+    if exch == "Bybit" and _bounce1_shadow_active() and not (TRADE_ON and (not DRY_RUN)):
+        if (
+            not BOUNCE1_SYMBOL_ALLOWLIST
+            or sym in BOUNCE1_SYMBOL_ALLOWLIST
+        ) and _health_gate.allow_entry("alt_support_bounce_v1", sym):
+            last = int(_BOUNCE1_LAST_TRY.get(sym, 0) or 0)
+            if now - last >= BOUNCE1_TRY_EVERY_SEC:
+                try:
+                    _diag_inc("bounce1_shadow_sched")
+                    asyncio.create_task(try_bounce1_entry_async(sym, p1))
+                except Exception as _e:
+                    log_error(f"try_bounce1_shadow schedule fail {sym}: {_e}")
+
     # Schedule live strategies before the legacy pump-detector gates below.
     # Otherwise weak/flat market structure can return early and starve breakout,
     # midterm, sloped, and other independent sleeves.
@@ -14992,6 +15109,22 @@ def _check_regime_overlay_health(*, notify: bool = True) -> bool:
         return False
 
     return True
+
+
+def _regime_overlay_fresh_for_strategy_gate() -> bool:
+    """Read-only freshness check used by fail-closed money-sleeve gates."""
+    if not REGIME_OVERLAY_ENABLE:
+        return False
+    if not REGIME_OVERLAY_PATH.exists():
+        return False
+    try:
+        age_sec = max(0, int(time.time()) - int(REGIME_OVERLAY_PATH.stat().st_mtime))
+    except Exception:
+        return False
+    return (
+        age_sec <= int(REGIME_OVERLAY_MAX_AGE_SEC)
+        and int(REGIME_OVERLAY_LAST_APPLY_TS or 0) > 0
+    )
 
 
 def _check_portfolio_allocator_health(*, notify: bool = True) -> bool:
