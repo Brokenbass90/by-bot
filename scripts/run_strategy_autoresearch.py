@@ -47,6 +47,10 @@ class CandidateResult:
     max_negative_streak: int
     worst_month_pnl: float
     overrides_json: str
+    search_n_trials_planned: int
+    search_n_trials_scheduled: int
+    selection_n_trials_evaluated: int
+    n_trials_effective_independent: str
 
 
 def _slug(text: str) -> str:
@@ -66,7 +70,14 @@ def _load_spec(path: Path) -> dict:
         return json.load(f)
 
 
-def _candidate_metadata(spec: dict, overrides: Dict[str, str]) -> dict:
+def _candidate_metadata(
+    spec: dict,
+    overrides: Dict[str, str],
+    *,
+    trial_ordinal: int | None = None,
+    n_trials_planned: int | None = None,
+    n_trials_scheduled: int | None = None,
+) -> dict:
     payload = {
         "name": str(spec.get("name", "")),
         "cache_only": bool(spec.get("cache_only", False)),
@@ -75,10 +86,21 @@ def _candidate_metadata(spec: dict, overrides: Dict[str, str]) -> dict:
         "overrides": overrides,
     }
     encoded = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    return {
+    metadata = {
         "fingerprint": hashlib.sha256(encoded).hexdigest(),
         "payload": payload,
     }
+    if trial_ordinal is not None:
+        metadata["search_context"] = {
+            "trial_ordinal": int(trial_ordinal),
+            "n_trials_planned": int(n_trials_planned or 0),
+            "n_trials_scheduled": int(n_trials_scheduled or 0),
+            # Grid rows share data and neighbouring parameter values, so the
+            # raw count must never be mislabeled as independent trials.
+            "n_trials_effective_independent": None,
+            "selection_n_trials_evaluated": None,
+        }
+    return metadata
 
 
 def _resume_matches(run_dir: Path, metadata: dict) -> bool:
@@ -95,6 +117,40 @@ def _resume_matches(run_dir: Path, metadata: dict) -> bool:
 def _write_candidate_metadata(run_dir: Path, metadata: dict) -> None:
     path = run_dir / "autoresearch_candidate.json"
     path.write_text(json.dumps(metadata, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
+
+
+def _stamp_summary_search_context(
+    run_dir: Path,
+    *,
+    n_trials_planned: int,
+    n_trials_scheduled: int,
+    n_trials_evaluated: int,
+) -> None:
+    """Attach selection provenance without pretending trials are independent."""
+    path = run_dir / "summary.csv"
+    if not path.exists():
+        return
+    with path.open(newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+        fields = list((rows[0].keys() if rows else []))
+    additions = [
+        "search_n_trials_planned",
+        "search_n_trials_scheduled",
+        "selection_n_trials_evaluated",
+        "n_trials_effective_independent",
+    ]
+    for field_name in additions:
+        if field_name not in fields:
+            fields.append(field_name)
+    for row in rows:
+        row["search_n_trials_planned"] = str(int(n_trials_planned))
+        row["search_n_trials_scheduled"] = str(int(n_trials_scheduled))
+        row["selection_n_trials_evaluated"] = str(int(n_trials_evaluated))
+        row["n_trials_effective_independent"] = ""
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def _iter_grid(grid: Dict[str, list]) -> Iterable[Dict[str, str]]:
@@ -327,10 +383,23 @@ def _score_candidate(summary: dict, spec: dict) -> tuple[bool, str, float]:
     return passed, ";".join(fail_reasons), score
 
 
-def _run_backtest(spec: dict, overrides: Dict[str, str], run_id: int) -> CandidateResult:
+def _run_backtest(
+    spec: dict,
+    overrides: Dict[str, str],
+    run_id: int,
+    *,
+    n_trials_planned: int = 0,
+    n_trials_scheduled: int = 0,
+) -> CandidateResult:
     name = _slug(spec["name"])
     tag = f"{name}_r{run_id:03d}"
-    candidate_metadata = _candidate_metadata(spec, overrides)
+    candidate_metadata = _candidate_metadata(
+        spec,
+        overrides,
+        trial_ordinal=run_id,
+        n_trials_planned=n_trials_planned,
+        n_trials_scheduled=n_trials_scheduled,
+    )
 
     # Resume support: if a run dir with this tag already exists and has a summary,
     # re-use it only when the full command/base-env/override fingerprint matches.
@@ -343,6 +412,7 @@ def _run_backtest(spec: dict, overrides: Dict[str, str], run_id: int) -> Candida
         if int(float(_check_summary.get("trades", 0) or 0)) == 0:
             existing_dir = None  # force re-run
     if existing_dir is not None and (existing_dir / "summary.csv").exists():
+        _write_candidate_metadata(existing_dir, candidate_metadata)
         summary = _read_summary(existing_dir / "summary.csv")
         passed, fail_reasons, score = _score_candidate(summary, spec)
         metrics = _extract_metrics(summary, spec)
@@ -373,6 +443,10 @@ def _run_backtest(spec: dict, overrides: Dict[str, str], run_id: int) -> Candida
             max_negative_streak=int(month_metrics["max_negative_streak"]),
             worst_month_pnl=float(month_metrics["worst_month_pnl"]),
             overrides_json=json.dumps(overrides, ensure_ascii=True, sort_keys=True),
+            search_n_trials_planned=int(n_trials_planned),
+            search_n_trials_scheduled=int(n_trials_scheduled),
+            selection_n_trials_evaluated=0,
+            n_trials_effective_independent="",
         )
 
     env = os.environ.copy()
@@ -477,6 +551,10 @@ def _run_backtest(spec: dict, overrides: Dict[str, str], run_id: int) -> Candida
         max_negative_streak=int(month_metrics["max_negative_streak"]),
         worst_month_pnl=float(month_metrics["worst_month_pnl"]),
         overrides_json=json.dumps(overrides, ensure_ascii=True, sort_keys=True),
+        search_n_trials_planned=int(n_trials_planned),
+        search_n_trials_scheduled=int(n_trials_scheduled),
+        selection_n_trials_evaluated=0,
+        n_trials_effective_independent="",
     )
 
 
@@ -548,6 +626,10 @@ def main() -> int:
         "max_negative_streak",
         "worst_month_pnl",
         "overrides_json",
+        "search_n_trials_planned",
+        "search_n_trials_scheduled",
+        "selection_n_trials_evaluated",
+        "n_trials_effective_independent",
     ]
     results_path = out_dir / "results.csv"
     ranked_path = out_dir / "ranked_results.csv"
@@ -563,6 +645,7 @@ def main() -> int:
         if args.limit and idx > args.limit:
             break
         candidates.append((idx, overrides))
+    scheduled_candidates = len(candidates)
 
     results: List[CandidateResult] = []
 
@@ -585,6 +668,10 @@ def main() -> int:
             max_negative_streak=0,
             worst_month_pnl=0.0,
             overrides_json=json.dumps(overrides, ensure_ascii=True, sort_keys=True),
+            search_n_trials_planned=int(total_candidates),
+            search_n_trials_scheduled=int(scheduled_candidates),
+            selection_n_trials_evaluated=0,
+            n_trials_effective_independent="",
         )
 
     def _record_result(done_count: int, result: CandidateResult) -> None:
@@ -604,14 +691,27 @@ def main() -> int:
     if jobs == 1 or len(candidates) <= 1:
         for done_count, (idx, overrides) in enumerate(candidates, start=1):
             try:
-                result = _run_backtest(spec, overrides, idx)
+                result = _run_backtest(
+                    spec,
+                    overrides,
+                    idx,
+                    n_trials_planned=total_candidates,
+                    n_trials_scheduled=scheduled_candidates,
+                )
             except Exception as exc:
                 result = _failed_result(idx, overrides, exc)
             _record_result(done_count, result)
     else:
         with concurrent.futures.ThreadPoolExecutor(max_workers=min(jobs, len(candidates))) as pool:
             future_map = {
-                pool.submit(_run_backtest, spec, overrides, idx): (idx, overrides)
+                pool.submit(
+                    _run_backtest,
+                    spec,
+                    overrides,
+                    idx,
+                    n_trials_planned=total_candidates,
+                    n_trials_scheduled=scheduled_candidates,
+                ): (idx, overrides)
                 for idx, overrides in candidates
             }
             for done_count, future in enumerate(concurrent.futures.as_completed(future_map), start=1):
@@ -621,6 +721,34 @@ def main() -> int:
                 except Exception as exc:
                     result = _failed_result(idx, overrides, exc)
                 _record_result(done_count, result)
+
+    evaluated_candidates = len(results)
+    for result in results:
+        result.selection_n_trials_evaluated = evaluated_candidates
+        if not result.run_dir:
+            continue
+        run_dir = Path(result.run_dir)
+        metadata_path = run_dir / "autoresearch_candidate.json"
+        if metadata_path.exists():
+            metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+            context = metadata.setdefault("search_context", {})
+            context["n_trials_planned"] = total_candidates
+            context["n_trials_scheduled"] = scheduled_candidates
+            context["selection_n_trials_evaluated"] = evaluated_candidates
+            context.setdefault("n_trials_effective_independent", None)
+            _write_candidate_metadata(run_dir, metadata)
+        _stamp_summary_search_context(
+            run_dir,
+            n_trials_planned=total_candidates,
+            n_trials_scheduled=scheduled_candidates,
+            n_trials_evaluated=evaluated_candidates,
+        )
+
+    with results_path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fields)
+        writer.writeheader()
+        for result in results:
+            writer.writerow(result.__dict__)
 
     ranked = _write_ranked(ranked_path, fields, results)
 

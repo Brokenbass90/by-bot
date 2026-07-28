@@ -2,6 +2,7 @@ from scripts.run_strategy_autoresearch import (
     _candidate_metadata,
     _resume_matches,
     _score_candidate,
+    _stamp_summary_search_context,
     _write_candidate_metadata,
 )
 
@@ -70,3 +71,40 @@ def test_score_candidate_enforces_winrate_and_avg_win_loss_ratio() -> None:
 
     assert passed is True
     assert reasons == ""
+
+
+def test_search_context_does_not_change_candidate_fingerprint() -> None:
+    spec = {"name": "package_test", "grid": {"A": [1, 2]}}
+    first = _candidate_metadata(
+        spec,
+        {"A": "1"},
+        trial_ordinal=1,
+        n_trials_planned=2,
+        n_trials_scheduled=2,
+    )
+    resumed = _candidate_metadata(
+        spec,
+        {"A": "1"},
+        trial_ordinal=1,
+        n_trials_planned=20,
+        n_trials_scheduled=1,
+    )
+
+    assert first["fingerprint"] == resumed["fingerprint"]
+    assert first["search_context"]["n_trials_effective_independent"] is None
+
+
+def test_summary_receives_raw_trial_counts_without_fake_independence(tmp_path) -> None:
+    summary = tmp_path / "summary.csv"
+    summary.write_text("trades,net_pnl\n12,3.5\n", encoding="utf-8")
+
+    _stamp_summary_search_context(
+        tmp_path,
+        n_trials_planned=12,
+        n_trials_scheduled=5,
+        n_trials_evaluated=4,
+    )
+
+    text = summary.read_text(encoding="utf-8")
+    assert "search_n_trials_planned" in text
+    assert "12,5,4," in text
