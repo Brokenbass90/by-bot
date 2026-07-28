@@ -303,3 +303,22 @@ XSEC/Alpaca/FX/event:
   и visual/provenance gates.
 - Direct Bybit truth: service active, equity `$1020.10`, positions empty,
   query OK. Live risk/signal/universe не менялись.
+
+## 15. Crypto expansion audit 28 июля
+
+- Claude regime-book arithmetic independently reproduced:
+  `+11.08 / +8.70 / +1.71`, but verdict is `SHADOW_GO / MONEY_NO_GO`.
+  Two windows have only 31–37 trades and BOUNCE1 was tuned on the same
+  windows. Expanded alt universe materially lowers PF; losing DOT is retained
+  in shadow to prevent symbol cherry-picking.
+- Config collision removed: slope-break uses canonical `ASLB1_*`,
+  support-bounce uses `BOUNCE1_*`; `ASB1_*` is legacy fallback only.
+- BREAKDOWN now has a separate fail-closed capital regime gate. A stale,
+  missing, bull or neutral overlay cannot silently authorize the short sleeve.
+- BOUNCE1 has a persistent risk-zero decision/fill/partial-target/exit ledger
+  and an eight-symbol frozen shadow config. No broker calls or live risk.
+- Massive Stocks Basic is already configured and reverified 3/3. No owner
+  purchase or new key is required for the next Alpaca PIT prototype.
+- Live server is still on `f7ed011`; real signal-level chart geometry exists
+  in later Git history but is not deployed. Web replay remains a prototype
+  until it consumes the same immutable trade geometry receipt.
