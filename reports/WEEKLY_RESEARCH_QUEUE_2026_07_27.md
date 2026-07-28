@@ -10,7 +10,7 @@
 | EVT-1 | Event V2r2 collection | running | deadline `2026-07-28 18:19:58 UTC` | coverage/hash receipt |
 | EVT-2 | Frozen event scorer | waiting | EVT-1 terminal | PASS/FAIL/BLOCKED_DATA |
 | XSEC-1 | XSEC risk-zero decisions | running, N3 | immutable daily ledger; first markout expected 29 Jul | interim at N10–15 |
-| XSEC-2 | PIT/execution repair spec | queued | no ledger rewrite | V5 prereg, not live |
+| XSEC-2 | PIT/execution repair spec | family gate PASS, PIT queued | 36/36 neighbouring V4 variants positive; no ledger rewrite | V5 PIT prereg, not live |
 | ARB-1 | Funding post-cutover paper | running low-priority, N7 | 7 losses; N20/N30 clean cycles | bounded economics decision |
 | ALP-1 | Massive Basic PIT materializer/parity repair | connector 3/3, implementation queued | API env available locally; close 9 unpinned artifacts | coverage/corporate-actions receipt |
 | ALP-2 | Exact broker-parity shadow | collection running, N5 unique decisions; performance blocked by ALP-1 | same picks/exits as future broker path | shadow ledger |
@@ -80,3 +80,9 @@
   the 46-trade power claim failed, and zero live risk cannot create virtual
   closures. Archive moves remain uncommitted. Next implementation WIP is a
   separate virtual BOUNCE1 lifecycle plus untouched prereg.
+- XSEC cheap family falsification completed from a preregistered 36-variant
+  grid. All `36/36` variants were positive after the fixed 15 bps cost contract;
+  median compounded return was `+35.86%`, and the published champion sat at
+  the 75th percentile rather than on an isolated island. This justifies the
+  PIT rebuild, but capital remains blocked by survivor-only data, absent
+  independent OOS, funding, slippage and execution parity.

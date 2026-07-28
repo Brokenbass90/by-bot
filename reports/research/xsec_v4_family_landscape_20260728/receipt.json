@@ -1,0 +1,54 @@
+{
+  "schema_id": "xsec_v4_family_landscape_receipt_v1",
+  "generated_at_utc": "2026-07-28T11:37:30.865057+00:00",
+  "research_only": true,
+  "capital_authorized": false,
+  "prereg_path": "configs/preregistered/xsec_v4_family_landscape_20260728.json",
+  "prereg_sha256": "c9df4e430f1545a75b86712d0dee6ddfc9a007cbe24037726f69341384fa4315",
+  "data_path": "research_lab/data/daily_338.json",
+  "data_sha256": "d4904db6c12b9ccf18ec35ec0489608243a2b8f191d23ea6eafd506a5b1245e0",
+  "survivor_only": true,
+  "n_trials_planned": 36,
+  "n_trials_evaluated": 36,
+  "n_trials_effective_independent": null,
+  "family": {
+    "mean_total_return_pct": 40.324913196612464,
+    "median_total_return_pct": 35.85701762826733,
+    "stdev_total_return_pct": 19.071979877253547,
+    "min_total_return_pct": 9.823097445105056,
+    "max_total_return_pct": 87.75013974075196,
+    "positive_fraction": 1.0,
+    "mean_annualized_sharpe": 2.1917942238750534,
+    "median_annualized_sharpe": 2.110373213946538
+  },
+  "published_champion": {
+    "trial": 8,
+    "lookbacks": "[7,14,21,30,45]",
+    "rebalance_days": 3,
+    "basket_k": 5,
+    "target_annual_vol": 0.15,
+    "n_rebalances": 117,
+    "compounded_total_return_pct": 49.07015782326805,
+    "annualized_return_pct": 51.46300890052178,
+    "annualized_sharpe": 2.7654790793589545,
+    "max_drawdown_pct": 6.885592938342477,
+    "positive_time_folds": 4,
+    "fold_returns_pct": [
+      18.31607597586682,
+      1.3751029603653375,
+      16.396426916406902,
+      6.776577567844533
+    ]
+  },
+  "champion_percentile": 75.0,
+  "pit_work_justified": true,
+  "promotion": "RESEARCH_ONLY",
+  "binding_reason": "PIT reconstruction is justified by a broad positive family.",
+  "capital_blockers": [
+    "survivor-only universe",
+    "no independent untouched OOS",
+    "funding absent",
+    "slippage unmeasured",
+    "execution parity absent"
+  ]
+}
