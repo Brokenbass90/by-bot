@@ -48,3 +48,54 @@ def test_pair_status_keeps_sides_and_risk_separate() -> None:
     assert status["lanes"][0]["side"] == "short_only"
     assert status["lanes"][1]["side"] == "long_only"
     assert status["prospective_discovery"]["postrun_label_gate_complete"] is False
+
+
+def test_pair_status_accepts_current_frozen_scorer_receipt() -> None:
+    pump = {
+        "verdict": "NO_PROMOTION",
+        "failed_gates": ["min_trades"],
+        "metrics": {
+            "base": {
+                "trades": 39,
+                "profit_factor": 1.4,
+                "return_pct": 2.1,
+                "max_drawdown_pct": 2.7,
+            },
+            "stress": {
+                "trades": 39,
+                "profit_factor": 1.2,
+                "return_pct": 1.2,
+                "max_drawdown_pct": 3.0,
+            },
+            "holdout_stress": {"trades": 6, "profit_factor": 6.3, "net_r": 1.0},
+            "traded_symbols": 13,
+            "positive_symbols": 8,
+        },
+    }
+    event = {
+        "status": "BLOCKED_RESEARCH_RUNNER_DATA",
+        "performance_permission": "PERFORMANCE_FORBIDDEN",
+        "live_permission": "LIVE_FORBIDDEN",
+        "identity": {"integrity_pass": True},
+        "blockers": [],
+    }
+    receipt = {
+        "validation_status": "passed",
+        "status_counts_by_horizon": {
+            "1h": {"scored": 1333, "pending": 1},
+            "4h": {"scored": 1236, "pending": 29},
+        },
+    }
+
+    status = build_status(
+        pump=pump,
+        event_preflight=event,
+        latest_state={"sequence": 1504, "as_of_ms": 1_785_262_522_896},
+        launch_receipt={"deadline_at_ms": 1_785_262_798_535},
+        label_receipts=[receipt],
+    )
+
+    discovery = status["prospective_discovery"]
+    assert discovery["successful_label_receipts_found"] == 1
+    assert discovery["postrun_label_gate_complete"] is True
+    assert discovery["next_action"] == "consume_frozen_labels_without_threshold_tuning"

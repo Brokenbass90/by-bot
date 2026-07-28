@@ -67,6 +67,21 @@ def _iso_from_ms(value: Any) -> str | None:
     return datetime.fromtimestamp(millis / 1000.0, timezone.utc).isoformat()
 
 
+def _receipt_has_scored_outcomes(receipt: Mapping[str, Any]) -> bool:
+    """Accept both the legacy marker and the frozen scorer's current receipt."""
+    if receipt.get("outcomes_scored") is True:
+        return True
+    if receipt.get("validation_status") != "passed":
+        return False
+    counts = receipt.get("status_counts_by_horizon")
+    if not isinstance(counts, Mapping):
+        return False
+    return any(
+        isinstance(row, Mapping) and int(row.get("scored") or 0) > 0
+        for row in counts.values()
+    )
+
+
 def build_status(
     *,
     pump: Mapping[str, Any],
@@ -92,8 +107,7 @@ def build_status(
     scored_receipts = [
         row
         for row in label_receipts
-        if row.get("validation_status") != "failed_closed_no_outcomes_scored"
-        and row.get("outcomes_scored") is True
+        if _receipt_has_scored_outcomes(row)
     ]
     source_finished = bool(scored_receipts)
 
