@@ -12,7 +12,7 @@
 | XSEC-1 | XSEC risk-zero decisions | running, N3 | immutable daily ledger; first markout expected 29 Jul | interim at N10–15 |
 | XSEC-2 | PIT/execution repair spec | family gate PASS, PIT queued | 36/36 neighbouring V4 variants positive; no ledger rewrite | V5 PIT prereg, not live |
 | ARB-1 | Funding post-cutover paper | running low-priority, N7 | 7 losses; N20/N30 clean cycles | bounded economics decision |
-| ALP-1 | Massive Basic PIT materializer/parity repair | connector 3/3; historical proxy REPAIR | current gated model: -1.61% bear / -3.58% recent; separate selector vs exit, then close PIT artifacts | exit-attribution + coverage/corporate-actions receipt |
+| ALP-1 | Massive Basic PIT materializer/parity repair | exit defect localized; PIT queued | shared exit -5.19% combined vs calendar-hold +53.91% survivor proxy; calendar arm lacks catastrophe stop | distant-stop prereg + PIT/corporate-actions receipt |
 | ALP-2 | Exact broker-parity shadow | collection running, N5 unique decisions; performance blocked by ALP-1 | same picks/exits as future broker path | shadow ledger |
 | FX-1 | Preserve current FX negative baseline | completed FAIL | 9-family 0 PASS; H4 stress 16/16 negative | no unchanged rerun |
 | FX-2 | D1 carry+trend prereg | queued | Dukascopy data + conservative costs | sealed OOS receipt |
@@ -91,3 +91,9 @@
   2022 proxy and `-3.58%` in the recent proxy, but beat its ungated controls
   (`-8.70%` and `-7.28%`). The SPY gate is retained; selector-versus-exit
   attribution and Massive PIT materialization are next. SAFE_HOLD is unchanged.
+- Alpaca exit attribution localized the main defect: unchanged gated selector
+  with the shared stop/target exit was `-5.19%` across the two proxy windows,
+  versus `+53.91%` arithmetic for a 22-session hold. The latter is not a
+  forecast or live candidate: it is survivor-only and lacks a broker
+  catastrophe stop. Two stricter causal SMA gates failed to remove the small
+  2022 loss, so that tuning branch is stopped without post-hoc optimization.
