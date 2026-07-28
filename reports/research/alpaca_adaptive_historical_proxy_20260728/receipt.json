@@ -1,0 +1,3848 @@
+{
+  "schema_id": "alpaca_adaptive_historical_proxy_receipt_v1",
+  "generated_at_utc": "2026-07-28T11:42:09.890566+00:00",
+  "research_only": true,
+  "capital_authorized": false,
+  "safe_hold_changed": false,
+  "broker_or_network_calls": false,
+  "prereg_path": "configs/preregistered/alpaca_adaptive_historical_proxy_20260728.json",
+  "prereg_sha256": "f0dafc80fe5f2d52bfd55b6eda43b8f24695f1a129a24e494f220c5d541cbfab",
+  "results": [
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "adaptive_gated",
+      "cost_bps_per_side": 5.0,
+      "summary": {
+        "return_pct": -1.6103492789818707,
+        "annualized_return_pct": -1.7554524477226607,
+        "profit_factor": 0.6475369740930519,
+        "trades": 11,
+        "red_months": 2,
+        "months": 11,
+        "worst_month_pct": -2.4315248588786793,
+        "monthly_endpoint_drawdown_pct": 2.4315248588786753
+      },
+      "decisions": [
+        {
+          "signal_month": "2022-01",
+          "signal_session": "2022-01-31",
+          "entry_session": "2022-02-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.02431524858878679,
+          "picks": [
+            {
+              "symbol": "KO",
+              "weight": 0.19143452024935448,
+              "atr_at_signal": 0.8866985703825992,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-24",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.016416691059842115,
+              "contribution": -0.003142721377122742
+            },
+            {
+              "symbol": "PG",
+              "weight": 0.19772882679370096,
+              "atr_at_signal": 2.863633880692929,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.04019979516802663,
+              "contribution": -0.007948658335920995
+            },
+            {
+              "symbol": "AAPL",
+              "weight": 0.10776114274617798,
+              "atr_at_signal": 4.914095001345485,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-22",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05821482455819238,
+              "contribution": -0.0062732960191590765
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.20307551021076656,
+              "atr_at_signal": 2.564887654362077,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03422654385735713,
+              "contribution": -0.006950572856583977
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-02",
+          "signal_session": "2022-02-28",
+          "entry_session": "2022-03-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-03",
+          "signal_session": "2022-03-31",
+          "entry_session": "2022-04-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.028211199491164633,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.1478281785720686,
+              "atr_at_signal": 5.903741422268617,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-06",
+              "exit_reason": "target",
+              "raw_return": 0.06791040076308374,
+              "contribution": 0.010039070850905886
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.1812993966679889,
+              "atr_at_signal": 0.8710575886696844,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-11",
+              "exit_reason": "stop_first",
+              "raw_return": 0.029839031776058178,
+              "contribution": 0.005409798458156296
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.18256823329651384,
+              "atr_at_signal": 2.704233262344964,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-12",
+              "exit_reason": "stop_gap_open",
+              "raw_return": 0.011131801415735998,
+              "contribution": 0.0020323133178785525
+            },
+            {
+              "symbol": "KO",
+              "weight": 0.1883041914634287,
+              "atr_at_signal": 0.9954197884477292,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-20",
+              "exit_reason": "target",
+              "raw_return": 0.05698235807091856,
+              "contribution": 0.0107300168642239
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-04",
+          "signal_session": "2022-04-29",
+          "entry_session": "2022-05-02",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-05",
+          "signal_session": "2022-05-31",
+          "entry_session": "2022-06-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-06",
+          "signal_session": "2022-06-30",
+          "entry_session": "2022-07-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-07",
+          "signal_session": "2022-07-29",
+          "entry_session": "2022-08-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-08",
+          "signal_session": "2022-08-31",
+          "entry_session": "2022-09-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-09",
+          "signal_session": "2022-09-30",
+          "entry_session": "2022-10-03",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-10",
+          "signal_session": "2022-10-31",
+          "entry_session": "2022-11-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-11",
+          "signal_session": "2022-11-30",
+          "entry_session": "2022-12-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.019251683678946002,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.14308494226723603,
+              "atr_at_signal": 9.281461330492496,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-16",
+              "exit_reason": "stop_first",
+              "raw_return": -0.051340585787677306,
+              "contribution": -0.007346064753395886
+            },
+            {
+              "symbol": "JPM",
+              "weight": 0.13149933600513822,
+              "atr_at_signal": 2.3801556024297725,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03791365915946476,
+              "contribution": -0.004985621004994743
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.17597678774918596,
+              "atr_at_signal": 0.9421583826894622,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03932335627365935,
+              "contribution": -0.006919997920555371
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "adaptive_ungated_negative_control",
+      "cost_bps_per_side": 5.0,
+      "summary": {
+        "return_pct": -8.703049912406247,
+        "annualized_return_pct": -9.455643837016892,
+        "profit_factor": 0.44248939685170613,
+        "trades": 33,
+        "red_months": 7,
+        "months": 11,
+        "worst_month_pct": -4.169658439435838,
+        "monthly_endpoint_drawdown_pct": 9.344869491480157
+      },
+      "decisions": [
+        {
+          "signal_month": "2022-01",
+          "signal_session": "2022-01-31",
+          "entry_session": "2022-02-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.02431524858878679,
+          "picks": [
+            {
+              "symbol": "KO",
+              "weight": 0.19143452024935448,
+              "atr_at_signal": 0.8866985703825992,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-24",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.016416691059842115,
+              "contribution": -0.003142721377122742
+            },
+            {
+              "symbol": "PG",
+              "weight": 0.19772882679370096,
+              "atr_at_signal": 2.863633880692929,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.04019979516802663,
+              "contribution": -0.007948658335920995
+            },
+            {
+              "symbol": "AAPL",
+              "weight": 0.10776114274617798,
+              "atr_at_signal": 4.914095001345485,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-22",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05821482455819238,
+              "contribution": -0.0062732960191590765
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.20307551021076656,
+              "atr_at_signal": 2.564887654362077,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03422654385735713,
+              "contribution": -0.006950572856583977
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-02",
+          "signal_session": "2022-02-28",
+          "entry_session": "2022-03-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.011947295127822312,
+          "picks": [
+            {
+              "symbol": "KO",
+              "weight": 0.28,
+              "atr_at_signal": 1.1559693875873518,
+              "entry_session": "2022-03-01",
+              "exit_session": "2022-03-08",
+              "exit_reason": "stop_first",
+              "raw_return": -0.042668911170793966,
+              "contribution": -0.011947295127822312
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-03",
+          "signal_session": "2022-03-31",
+          "entry_session": "2022-04-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.028211199491164633,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.1478281785720686,
+              "atr_at_signal": 5.903741422268617,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-06",
+              "exit_reason": "target",
+              "raw_return": 0.06791040076308374,
+              "contribution": 0.010039070850905886
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.1812993966679889,
+              "atr_at_signal": 0.8710575886696844,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-11",
+              "exit_reason": "stop_first",
+              "raw_return": 0.029839031776058178,
+              "contribution": 0.005409798458156296
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.18256823329651384,
+              "atr_at_signal": 2.704233262344964,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-12",
+              "exit_reason": "stop_gap_open",
+              "raw_return": 0.011131801415735998,
+              "contribution": 0.0020323133178785525
+            },
+            {
+              "symbol": "KO",
+              "weight": 0.1883041914634287,
+              "atr_at_signal": 0.9954197884477292,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-20",
+              "exit_reason": "target",
+              "raw_return": 0.05698235807091856,
+              "contribution": 0.0107300168642239
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-04",
+          "signal_session": "2022-04-29",
+          "entry_session": "2022-05-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.016968295187779245,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.1426919917841141,
+              "atr_at_signal": 7.435234448918067,
+              "entry_session": "2022-05-02",
+              "exit_session": "2022-05-17",
+              "exit_reason": "stop_first",
+              "raw_return": 0.025361244550276885,
+              "contribution": 0.0036188464990030175
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.18546310028670565,
+              "atr_at_signal": 0.9436912605664478,
+              "entry_session": "2022-05-02",
+              "exit_session": "2022-05-06",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03896174661246232,
+              "contribution": -0.0072259663193323135
+            },
+            {
+              "symbol": "KO",
+              "weight": 0.18967997333905745,
+              "atr_at_signal": 1.014277147589297,
+              "entry_session": "2022-05-02",
+              "exit_session": "2022-05-02",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03545280267715756,
+              "contribution": -0.00672468666659811
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.1821649345901228,
+              "atr_at_signal": 2.8898853456584503,
+              "entry_session": "2022-05-02",
+              "exit_session": "2022-05-19",
+              "exit_reason": "stop_first",
+              "raw_return": -0.036431208430887985,
+              "contribution": -0.00663648870085184
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-05",
+          "signal_session": "2022-05-31",
+          "entry_session": "2022-06-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.04169658439435838,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.21222926263135147,
+              "atr_at_signal": 9.546016675180402,
+              "entry_session": "2022-06-01",
+              "exit_session": "2022-06-13",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.07433722635576812,
+              "contribution": -0.015776534735544533
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.28,
+              "atr_at_signal": 2.933183716915167,
+              "entry_session": "2022-06-01",
+              "exit_session": "2022-06-10",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.03992239852545809,
+              "contribution": -0.011178271587128266
+            },
+            {
+              "symbol": "V",
+              "weight": 0.16236473617167665,
+              "atr_at_signal": 6.8368086706751825,
+              "entry_session": "2022-06-01",
+              "exit_session": "2022-06-13",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.09079421073365546,
+              "contribution": -0.014741778071685582
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-06",
+          "signal_session": "2022-06-30",
+          "entry_session": "2022-07-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.014231633282499736,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.2641392531449103,
+              "atr_at_signal": 8.849886691006802,
+              "entry_session": "2022-07-01",
+              "exit_session": "2022-08-02",
+              "exit_reason": "max_hold_close",
+              "raw_return": -0.012350412116216125,
+              "contribution": -0.0032622286324091787
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.28,
+              "atr_at_signal": 3.078280262102447,
+              "entry_session": "2022-07-01",
+              "exit_session": "2022-07-19",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03917644517889485,
+              "contribution": -0.010969404650090558
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-07",
+          "signal_session": "2022-07-29",
+          "entry_session": "2022-08-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.015138886813322757,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.21259263643803034,
+              "atr_at_signal": 6.71879425194488,
+              "entry_session": "2022-08-01",
+              "exit_session": "2022-08-03",
+              "exit_reason": "stop_first",
+              "raw_return": -0.04287154135309168,
+              "contribution": -0.009114174004415802
+            },
+            {
+              "symbol": "UNH",
+              "weight": 0.21246257844766242,
+              "atr_at_signal": 12.437214493788124,
+              "entry_session": "2022-08-01",
+              "exit_session": "2022-08-30",
+              "exit_reason": "max_hold_close",
+              "raw_return": -0.03679449584174799,
+              "contribution": -0.00781745345921957
+            },
+            {
+              "symbol": "ORCL",
+              "weight": 0.16477602909495215,
+              "atr_at_signal": 1.4354752761782705,
+              "entry_session": "2022-08-01",
+              "exit_session": "2022-08-22",
+              "exit_reason": "stop_first",
+              "raw_return": 0.004696167349384384,
+              "contribution": 0.0007738158077969256
+            },
+            {
+              "symbol": "AMZN",
+              "weight": 0.11016875601935507,
+              "atr_at_signal": 5.256999588012692,
+              "entry_session": "2022-08-01",
+              "exit_session": "2022-08-09",
+              "exit_reason": "stop_first",
+              "raw_return": 0.009248764162651302,
+              "contribution": 0.001018924842515686
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-08",
+          "signal_session": "2022-08-31",
+          "entry_session": "2022-09-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.008236584347697955,
+          "picks": [
+            {
+              "symbol": "COST",
+              "weight": 0.20588524722046397,
+              "atr_at_signal": 10.037891229206712,
+              "entry_session": "2022-09-01",
+              "exit_session": "2022-09-13",
+              "exit_reason": "stop_first",
+              "raw_return": 0.012685528150131464,
+              "contribution": 0.0026117630993119714
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.17749301999370398,
+              "atr_at_signal": 0.8835901156528998,
+              "entry_session": "2022-09-01",
+              "exit_session": "2022-09-15",
+              "exit_reason": "stop_first",
+              "raw_return": 0.010711700433802651,
+              "contribution": 0.0019012520592635016
+            },
+            {
+              "symbol": "AAPL",
+              "weight": 0.16523223402301787,
+              "atr_at_signal": 3.2128624186876706,
+              "entry_session": "2022-09-01",
+              "exit_session": "2022-09-13",
+              "exit_reason": "stop_first",
+              "raw_return": 0.01628892729672149,
+              "contribution": 0.002691455847075809
+            },
+            {
+              "symbol": "ORCL",
+              "weight": 0.15138949876281418,
+              "atr_at_signal": 1.1218847383578094,
+              "entry_session": "2022-09-01",
+              "exit_session": "2022-09-06",
+              "exit_reason": "stop_gap_open",
+              "raw_return": 0.006817601950474206,
+              "contribution": 0.0010321133420466743
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-09",
+          "signal_session": "2022-09-30",
+          "entry_session": "2022-10-03",
+          "regime_ok": true,
+          "reason": "no_qualifying_names",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-10",
+          "signal_session": "2022-10-31",
+          "entry_session": "2022-11-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.018459723487307948,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.1471054389596823,
+              "atr_at_signal": 8.791445302043652,
+              "entry_session": "2022-11-01",
+              "exit_session": "2022-11-11",
+              "exit_reason": "stop_first",
+              "raw_return": 0.02899164952980371,
+              "contribution": 0.004264829330247042
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.1927674638053123,
+              "atr_at_signal": 0.8928905878086251,
+              "entry_session": "2022-11-01",
+              "exit_session": "2022-11-21",
+              "exit_reason": "target",
+              "raw_return": 0.06210786228678389,
+              "contribution": 0.011972375095392934
+            },
+            {
+              "symbol": "JPM",
+              "weight": 0.13537931138635675,
+              "atr_at_signal": 3.3236382184417814,
+              "entry_session": "2022-11-01",
+              "exit_session": "2022-12-01",
+              "exit_reason": "target",
+              "raw_return": 0.09054262929351964,
+              "contribution": 0.012257598804866862
+            },
+            {
+              "symbol": "UNH",
+              "weight": 0.22474778584864866,
+              "atr_at_signal": 11.48496846370519,
+              "entry_session": "2022-11-01",
+              "exit_session": "2022-11-04",
+              "exit_reason": "stop_first",
+              "raw_return": -0.044650405365758705,
+              "contribution": -0.01003507974319889
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-11",
+          "signal_session": "2022-11-30",
+          "entry_session": "2022-12-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.019251683678946002,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.14308494226723603,
+              "atr_at_signal": 9.281461330492496,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-16",
+              "exit_reason": "stop_first",
+              "raw_return": -0.051340585787677306,
+              "contribution": -0.007346064753395886
+            },
+            {
+              "symbol": "JPM",
+              "weight": 0.13149933600513822,
+              "atr_at_signal": 2.3801556024297725,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03791365915946476,
+              "contribution": -0.004985621004994743
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.17597678774918596,
+              "atr_at_signal": 0.9421583826894622,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03932335627365935,
+              "contribution": -0.006919997920555371
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "adaptive_gated",
+      "cost_bps_per_side": 10.0,
+      "summary": {
+        "return_pct": -1.7271082571926777,
+        "annualized_return_pct": -1.8826311676334861,
+        "profit_factor": 0.6256641475339266,
+        "trades": 11,
+        "red_months": 2,
+        "months": 11,
+        "worst_month_pct": -2.4736821321711058,
+        "monthly_endpoint_drawdown_pct": 2.4736821321711067
+      },
+      "decisions": [
+        {
+          "signal_month": "2022-01",
+          "signal_session": "2022-01-31",
+          "entry_session": "2022-02-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.024736821321711056,
+          "picks": [
+            {
+              "symbol": "KO",
+              "weight": 0.19143452024935448,
+              "atr_at_signal": 0.8866985703825992,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-24",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.017399783314201223,
+              "contribution": -0.003330919171196834
+            },
+            {
+              "symbol": "PG",
+              "weight": 0.19772882679370096,
+              "atr_at_signal": 2.863633880692929,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.04066011519300616,
+              "contribution": -0.008039676874409844
+            },
+            {
+              "symbol": "AAPL",
+              "weight": 0.10776114274617798,
+              "atr_at_signal": 4.914095001345485,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-22",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05865713854779642,
+              "contribution": -0.006320960280131429
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.20307551021076656,
+              "atr_at_signal": 2.564887654362077,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03469283415149793,
+              "contribution": -0.007045264995972949
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-02",
+          "signal_session": "2022-02-28",
+          "entry_session": "2022-03-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-03",
+          "signal_session": "2022-03-31",
+          "entry_session": "2022-04-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.02765108224001369,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.1478281785720686,
+              "atr_at_signal": 5.903741422268617,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-06",
+              "exit_reason": "target",
+              "raw_return": 0.06734202451625593,
+              "contribution": 0.009955048825593702
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.1812993966679889,
+              "atr_at_signal": 0.8710575886696844,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-11",
+              "exit_reason": "stop_first",
+              "raw_return": 0.028809706892061415,
+              "contribution": 0.005223182477712336
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.18256823329651384,
+              "atr_at_signal": 2.704233262344964,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-12",
+              "exit_reason": "stop_gap_open",
+              "raw_return": 0.010121174422503376,
+              "contribution": 0.0018478049332023051
+            },
+            {
+              "symbol": "KO",
+              "weight": 0.1883041914634287,
+              "atr_at_signal": 0.9954197884477292,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-20",
+              "exit_reason": "target",
+              "raw_return": 0.05642490441095083,
+              "contribution": 0.010625046003505346
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-04",
+          "signal_session": "2022-04-29",
+          "entry_session": "2022-05-02",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-05",
+          "signal_session": "2022-05-31",
+          "entry_session": "2022-06-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-06",
+          "signal_session": "2022-06-30",
+          "entry_session": "2022-07-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-07",
+          "signal_session": "2022-07-29",
+          "entry_session": "2022-08-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-08",
+          "signal_session": "2022-08-31",
+          "entry_session": "2022-09-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-09",
+          "signal_session": "2022-09-30",
+          "entry_session": "2022-10-03",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-10",
+          "signal_session": "2022-10-31",
+          "entry_session": "2022-11-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-11",
+          "signal_session": "2022-11-30",
+          "entry_session": "2022-12-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.019457947307754506,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.14308494226723603,
+              "atr_at_signal": 9.281461330492496,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-16",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05178977058408385,
+              "contribution": -0.007410336334057036
+            },
+            {
+              "symbol": "JPM",
+              "weight": 0.13149933600513822,
+              "atr_at_signal": 2.3801556024297725,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03837626417909801,
+              "contribution": -0.005046453257909159
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.17597678774918596,
+              "atr_at_signal": 0.9421583826894622,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03978455229997058,
+              "contribution": -0.007001157715788311
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "adaptive_ungated_negative_control",
+      "cost_bps_per_side": 10.0,
+      "summary": {
+        "return_pct": -9.111875761999432,
+        "annualized_return_pct": -9.89786904692458,
+        "profit_factor": 0.4232725122388296,
+        "trades": 33,
+        "red_months": 7,
+        "months": 11,
+        "worst_month_pct": -4.230917581935032,
+        "monthly_endpoint_drawdown_pct": 9.629176746978697
+      },
+      "decisions": [
+        {
+          "signal_month": "2022-01",
+          "signal_session": "2022-01-31",
+          "entry_session": "2022-02-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.024736821321711056,
+          "picks": [
+            {
+              "symbol": "KO",
+              "weight": 0.19143452024935448,
+              "atr_at_signal": 0.8866985703825992,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-24",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.017399783314201223,
+              "contribution": -0.003330919171196834
+            },
+            {
+              "symbol": "PG",
+              "weight": 0.19772882679370096,
+              "atr_at_signal": 2.863633880692929,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.04066011519300616,
+              "contribution": -0.008039676874409844
+            },
+            {
+              "symbol": "AAPL",
+              "weight": 0.10776114274617798,
+              "atr_at_signal": 4.914095001345485,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-22",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05865713854779642,
+              "contribution": -0.006320960280131429
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.20307551021076656,
+              "atr_at_signal": 2.564887654362077,
+              "entry_session": "2022-02-01",
+              "exit_session": "2022-02-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03469283415149793,
+              "contribution": -0.007045264995972949
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-02",
+          "signal_session": "2022-02-28",
+          "entry_session": "2022-03-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.012075493727493966,
+          "picks": [
+            {
+              "symbol": "KO",
+              "weight": 0.28,
+              "atr_at_signal": 1.1559693875873518,
+              "entry_session": "2022-03-01",
+              "exit_session": "2022-03-08",
+              "exit_reason": "stop_first",
+              "raw_return": -0.043126763312478444,
+              "contribution": -0.012075493727493966
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-03",
+          "signal_session": "2022-03-31",
+          "entry_session": "2022-04-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.02765108224001369,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.1478281785720686,
+              "atr_at_signal": 5.903741422268617,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-06",
+              "exit_reason": "target",
+              "raw_return": 0.06734202451625593,
+              "contribution": 0.009955048825593702
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.1812993966679889,
+              "atr_at_signal": 0.8710575886696844,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-11",
+              "exit_reason": "stop_first",
+              "raw_return": 0.028809706892061415,
+              "contribution": 0.005223182477712336
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.18256823329651384,
+              "atr_at_signal": 2.704233262344964,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-12",
+              "exit_reason": "stop_gap_open",
+              "raw_return": 0.010121174422503376,
+              "contribution": 0.0018478049332023051
+            },
+            {
+              "symbol": "KO",
+              "weight": 0.1883041914634287,
+              "atr_at_signal": 0.9954197884477292,
+              "entry_session": "2022-04-01",
+              "exit_session": "2022-04-20",
+              "exit_reason": "target",
+              "raw_return": 0.05642490441095083,
+              "contribution": 0.010625046003505346
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-04",
+          "signal_session": "2022-04-29",
+          "entry_session": "2022-05-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.017372888635735488,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.1426919917841141,
+              "atr_at_signal": 7.435234448918067,
+              "entry_session": "2022-05-02",
+              "exit_session": "2022-05-17",
+              "exit_reason": "stop_first",
+              "raw_return": 0.024336395217968043,
+              "contribution": 0.0034726087064972494
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.18546310028670565,
+              "atr_at_signal": 0.9436912605664478,
+              "entry_session": "2022-05-02",
+              "exit_session": "2022-05-06",
+              "exit_reason": "stop_first",
+              "raw_return": -0.039423304067901066,
+              "contribution": -0.007311568195978426
+            },
+            {
+              "symbol": "KO",
+              "weight": 0.18967997333905745,
+              "atr_at_signal": 1.014277147589297,
+              "entry_session": "2022-05-02",
+              "exit_session": "2022-05-02",
+              "exit_reason": "stop_first",
+              "raw_return": -0.035917867324689046,
+              "contribution": -0.006812900116542821
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.1821649345901228,
+              "atr_at_signal": 2.8898853456584503,
+              "entry_session": "2022-05-02",
+              "exit_session": "2022-05-19",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03689529516113532,
+              "contribution": -0.006721029029711491
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-05",
+          "signal_session": "2022-05-31",
+          "entry_session": "2022-06-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.04230917581935033,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.21222926263135147,
+              "atr_at_signal": 9.546016675180402,
+              "entry_session": "2022-06-01",
+              "exit_session": "2022-06-13",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.07526242699169483,
+              "contribution": -0.01597288938429332
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.28,
+              "atr_at_signal": 2.933183716915167,
+              "entry_session": "2022-06-01",
+              "exit_session": "2022-06-10",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.04088199680759075,
+              "contribution": -0.01144695910612541
+            },
+            {
+              "symbol": "V",
+              "weight": 0.16236473617167665,
+              "atr_at_signal": 6.8368086706751825,
+              "entry_session": "2022-06-01",
+              "exit_session": "2022-06-13",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.09170296260136401,
+              "contribution": -0.0148893273289316
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-06",
+          "signal_session": "2022-06-30",
+          "entry_session": "2022-07-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.014621556065931776,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.2641392531449103,
+              "atr_at_signal": 8.849886691006802,
+              "entry_session": "2022-07-01",
+              "exit_session": "2022-08-02",
+              "exit_reason": "max_hold_close",
+              "raw_return": -0.013337568619426476,
+              "contribution": -0.003522975413904302
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.28,
+              "atr_at_signal": 3.078280262102447,
+              "entry_session": "2022-07-01",
+              "exit_session": "2022-07-19",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03963778804295526,
+              "contribution": -0.011098580652027474
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-07",
+          "signal_session": "2022-07-29",
+          "entry_session": "2022-08-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.0157173220712083,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.21259263643803034,
+              "atr_at_signal": 6.71879425194488,
+              "entry_session": "2022-08-01",
+              "exit_session": "2022-08-03",
+              "exit_reason": "stop_first",
+              "raw_return": -0.04332919096575716,
+              "contribution": -0.0092114669421372
+            },
+            {
+              "symbol": "UNH",
+              "weight": 0.21246257844766242,
+              "atr_at_signal": 12.437214493788124,
+              "entry_session": "2022-08-01",
+              "exit_session": "2022-08-30",
+              "exit_reason": "max_hold_close",
+              "raw_return": -0.037757220464957,
+              "contribution": -0.008021996415001611
+            },
+            {
+              "symbol": "ORCL",
+              "weight": 0.16477602909495215,
+              "atr_at_signal": 1.4354752761782705,
+              "entry_session": "2022-08-01",
+              "exit_session": "2022-08-22",
+              "exit_reason": "stop_first",
+              "raw_return": 0.003691972777223773,
+              "contribution": 0.0006083486137575957
+            },
+            {
+              "symbol": "AMZN",
+              "weight": 0.11016875601935507,
+              "atr_at_signal": 5.256999588012692,
+              "entry_session": "2022-08-01",
+              "exit_session": "2022-08-09",
+              "exit_reason": "stop_first",
+              "raw_return": 0.008240019266564369,
+              "contribution": 0.000907792672172915
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-08",
+          "signal_session": "2022-08-31",
+          "entry_session": "2022-09-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.007528701350907114,
+          "picks": [
+            {
+              "symbol": "COST",
+              "weight": 0.20588524722046397,
+              "atr_at_signal": 10.037891229206712,
+              "entry_session": "2022-09-01",
+              "exit_session": "2022-09-13",
+              "exit_reason": "stop_first",
+              "raw_return": 0.01167334820586352,
+              "contribution": 0.0024033701812547705
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.17749301999370398,
+              "atr_at_signal": 0.8835901156528998,
+              "entry_session": "2022-09-01",
+              "exit_session": "2022-09-15",
+              "exit_reason": "stop_first",
+              "raw_return": 0.009701493331816247,
+              "contribution": 0.001721947349912847
+            },
+            {
+              "symbol": "AAPL",
+              "weight": 0.16523223402301787,
+              "atr_at_signal": 3.2128624186876706,
+              "entry_session": "2022-09-01",
+              "exit_session": "2022-09-13",
+              "exit_reason": "stop_first",
+              "raw_return": 0.015273145752305872,
+              "contribution": 0.002523615993212665
+            },
+            {
+              "symbol": "ORCL",
+              "weight": 0.15138949876281418,
+              "atr_at_signal": 1.1218847383578094,
+              "entry_session": "2022-09-01",
+              "exit_session": "2022-09-06",
+              "exit_reason": "stop_gap_open",
+              "raw_return": 0.005811287002840171,
+              "contribution": 0.0008797678265268302
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-09",
+          "signal_session": "2022-09-30",
+          "entry_session": "2022-10-03",
+          "regime_ok": true,
+          "reason": "no_qualifying_names",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2022-10",
+          "signal_session": "2022-10-31",
+          "entry_session": "2022-11-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.018017517393587357,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.1471054389596823,
+              "atr_at_signal": 8.791445302043652,
+              "entry_session": "2022-11-01",
+              "exit_session": "2022-11-11",
+              "exit_reason": "stop_first",
+              "raw_return": 0.027963171604997283,
+              "contribution": 0.00411353463365805
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.1927674638053123,
+              "atr_at_signal": 0.8928905878086251,
+              "entry_session": "2022-11-01",
+              "exit_session": "2022-11-21",
+              "exit_reason": "target",
+              "raw_return": 0.061545285681511075,
+              "contribution": 0.01186392862999829
+            },
+            {
+              "symbol": "JPM",
+              "weight": 0.13537931138635675,
+              "atr_at_signal": 3.3236382184417814,
+              "entry_session": "2022-11-01",
+              "exit_session": "2022-12-01",
+              "exit_reason": "target",
+              "raw_return": 0.0899516321173155,
+              "contribution": 0.012177590014121064
+            },
+            {
+              "symbol": "UNH",
+              "weight": 0.22474778584864866,
+              "atr_at_signal": 11.48496846370519,
+              "entry_session": "2022-11-01",
+              "exit_session": "2022-11-04",
+              "exit_reason": "stop_first",
+              "raw_return": -0.045106277002510464,
+              "contribution": -0.010137535884190047
+            }
+          ]
+        },
+        {
+          "signal_month": "2022-11",
+          "signal_session": "2022-11-30",
+          "entry_session": "2022-12-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.019457947307754506,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.14308494226723603,
+              "atr_at_signal": 9.281461330492496,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-16",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05178977058408385,
+              "contribution": -0.007410336334057036
+            },
+            {
+              "symbol": "JPM",
+              "weight": 0.13149933600513822,
+              "atr_at_signal": 2.3801556024297725,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03837626417909801,
+              "contribution": -0.005046453257909159
+            },
+            {
+              "symbol": "WMT",
+              "weight": 0.17597678774918596,
+              "atr_at_signal": 0.9421583826894622,
+              "entry_session": "2022-12-01",
+              "exit_session": "2022-12-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03978455229997058,
+              "contribution": -0.007001157715788311
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "window": "recent_2025_2026_survivor_proxy",
+      "arm": "adaptive_gated",
+      "cost_bps_per_side": 5.0,
+      "summary": {
+        "return_pct": -3.5793112636322233,
+        "annualized_return_pct": -3.89828029493845,
+        "profit_factor": 0.8379278734484854,
+        "trades": 32,
+        "red_months": 5,
+        "months": 11,
+        "worst_month_pct": -7.987767485071768,
+        "monthly_endpoint_drawdown_pct": 9.206037865811755
+      },
+      "decisions": [
+        {
+          "signal_month": "2025-08",
+          "signal_session": "2025-08-29",
+          "entry_session": "2025-09-02",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2025-09",
+          "signal_session": "2025-09-30",
+          "entry_session": "2025-10-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2025-10",
+          "signal_session": "2025-10-31",
+          "entry_session": "2025-11-03",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.011891065025738086,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.11453918610797426,
+              "atr_at_signal": 10.308414709733267,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-11",
+              "exit_reason": "stop_first",
+              "raw_return": 0.03194268635824238,
+              "contribution": 0.003658689297575374
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.20086462627577234,
+              "atr_at_signal": 7.282748508709557,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-20",
+              "exit_reason": "stop_first",
+              "raw_return": 0.0368267744299966,
+              "contribution": 0.007397196282823436
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.2537952319083375,
+              "atr_at_signal": 5.262499237060543,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-06",
+              "exit_reason": "stop_first",
+              "raw_return": -0.04829960302389935,
+              "contribution": -0.012258208950531176
+            },
+            {
+              "symbol": "LRCX",
+              "weight": 0.13080095570791586,
+              "atr_at_signal": 6.480479209049378,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.08171761129539556,
+              "contribution": -0.01068874165560572
+            }
+          ]
+        },
+        {
+          "signal_month": "2025-11",
+          "signal_session": "2025-11-28",
+          "entry_session": "2025-12-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.00673703502796543,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.10730466700906946,
+              "atr_at_signal": 16.504859216793143,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-12",
+              "exit_reason": "stop_first",
+              "raw_return": 0.03202306266804267,
+              "contribution": 0.0034362240762048817
+            },
+            {
+              "symbol": "LLY",
+              "weight": 0.21140683642705832,
+              "atr_at_signal": 32.596476935465816,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-04",
+              "exit_reason": "stop_first",
+              "raw_return": -0.0613246558218028,
+              "contribution": -0.012964451482265514
+            },
+            {
+              "symbol": "AMAT",
+              "weight": 0.15296154038826903,
+              "atr_at_signal": 10.234570564874305,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-12",
+              "exit_reason": "stop_first",
+              "raw_return": 0.0408395971861899,
+              "contribution": 0.006246887694436025
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.2283269561756032,
+              "atr_at_signal": 10.923622054105596,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-31",
+              "exit_reason": "max_hold_close",
+              "raw_return": -0.015134854746117199,
+              "contribution": -0.0034556953163408215
+            }
+          ]
+        },
+        {
+          "signal_month": "2025-12",
+          "signal_session": "2025-12-31",
+          "entry_session": "2026-01-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.03972691608102053,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.21643215677092154,
+              "atr_at_signal": 24.499871300729456,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-08",
+              "exit_reason": "stop_first",
+              "raw_return": 0.003070682502681832,
+              "contribution": 0.0006645944368141599
+            },
+            {
+              "symbol": "MU",
+              "weight": 0.0856003677125089,
+              "atr_at_signal": 13.930011504183891,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-06",
+              "exit_reason": "target",
+              "raw_return": 0.15047427530984936,
+              "contribution": 0.012880653297796404
+            },
+            {
+              "symbol": "MRK",
+              "weight": 0.21124689861959317,
+              "atr_at_signal": 2.1379135101251223,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-08",
+              "exit_reason": "target",
+              "raw_return": 0.06521229930688843,
+              "contribution": 0.013775895980432827
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.18672057689697638,
+              "atr_at_signal": 6.627188612531813,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-13",
+              "exit_reason": "target",
+              "raw_return": 0.06644030653794553,
+              "contribution": 0.01240577236597714
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-01",
+          "signal_session": "2026-01-30",
+          "entry_session": "2026-02-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.04069844295942665,
+          "picks": [
+            {
+              "symbol": "JNJ",
+              "weight": 0.23457008440226437,
+              "atr_at_signal": 4.079725204356164,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-12",
+              "exit_reason": "target",
+              "raw_return": 0.05725582230701254,
+              "contribution": 0.013430503071076983
+            },
+            {
+              "symbol": "MRK",
+              "weight": 0.14957596686117583,
+              "atr_at_signal": 2.5816760693052516,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-04",
+              "exit_reason": "target",
+              "raw_return": 0.07554453335928968,
+              "contribution": 0.011299646618292105
+            },
+            {
+              "symbol": "XOM",
+              "weight": 0.17827691955681707,
+              "atr_at_signal": 2.9733639260737363,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-06",
+              "exit_reason": "target",
+              "raw_return": 0.06839477648673187,
+              "contribution": 0.012193210065831581
+            },
+            {
+              "symbol": "LMT",
+              "weight": 0.13757702917974265,
+              "atr_at_signal": 21.149348362768748,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-25",
+              "exit_reason": "stop_first",
+              "raw_return": 0.02743977847707324,
+              "contribution": 0.0037750832042259797
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-02",
+          "signal_session": "2026-02-27",
+          "entry_session": "2026-03-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.028948108666047204,
+          "picks": [
+            {
+              "symbol": "LMT",
+              "weight": 0.1359639441145262,
+              "atr_at_signal": 18.632181657680935,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05516203819636989,
+              "contribution": -0.007500048278574595
+            },
+            {
+              "symbol": "HON",
+              "weight": 0.1911509227646681,
+              "atr_at_signal": 4.586975046522049,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03670372560605595,
+              "contribution": -0.007015951018498771
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.22718822657234228,
+              "atr_at_signal": 3.802590078878306,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.031164444262544166,
+              "contribution": -0.007080194824120017
+            },
+            {
+              "symbol": "XOM",
+              "weight": 0.1456969065484635,
+              "atr_at_signal": 3.957709583119376,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-03",
+              "exit_reason": "stop_first",
+              "raw_return": -0.050460333846610084,
+              "contribution": -0.007351914544853819
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-03",
+          "signal_session": "2026-03-31",
+          "entry_session": "2026-04-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2026-04",
+          "signal_session": "2026-04-30",
+          "entry_session": "2026-05-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.02029363327612897,
+          "picks": [
+            {
+              "symbol": "MRVL",
+              "weight": 0.13169148450905171,
+              "atr_at_signal": 7.857314256244967,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.009221922784334646,
+              "contribution": 0.0012144487014968772
+            },
+            {
+              "symbol": "ARM",
+              "weight": 0.11625429752981084,
+              "atr_at_signal": 12.581747436523438,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.05888478591328172,
+              "contribution": 0.006845609421541867
+            },
+            {
+              "symbol": "UNH",
+              "weight": 0.2464196346217043,
+              "atr_at_signal": 10.12964174940008,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-18",
+              "exit_reason": "stop_first",
+              "raw_return": 0.04441356719015843,
+              "contribution": 0.010944374999245355
+            },
+            {
+              "symbol": "AVGO",
+              "weight": 0.20563458333943316,
+              "atr_at_signal": 13.025885993399665,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.006269374211811618,
+              "contribution": 0.0012892001538448692
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-05",
+          "signal_session": "2026-05-29",
+          "entry_session": "2026-06-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.004035668602890837,
+          "picks": [
+            {
+              "symbol": "MRVL",
+              "weight": 0.16605434498646632,
+              "atr_at_signal": 12.833831112108518,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-02",
+              "exit_reason": "target_frozen_no_gap_credit",
+              "raw_return": 0.2058110603921781,
+              "contribution": 0.034175820824393195
+            },
+            {
+              "symbol": "AMD",
+              "weight": 0.1639231744613771,
+              "atr_at_signal": 29.29300537109375,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.11751746157485754,
+              "contribution": -0.019263835355993554
+            },
+            {
+              "symbol": "ARM",
+              "weight": 0.12431208727780804,
+              "atr_at_signal": 21.756401824951176,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-03",
+              "exit_reason": "stop_first",
+              "raw_return": 0.012848358313845454,
+              "contribution": 0.0015972062400873067
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.24571039327434857,
+              "atr_at_signal": 11.873500061035152,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.08361412815142244,
+              "contribution": -0.020544860311377786
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-06",
+          "signal_session": "2026-06-30",
+          "entry_session": "2026-07-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.07987767485071769,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.1355294779801576,
+              "atr_at_signal": 100.97797905324748,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-15",
+              "exit_reason": "stop_first",
+              "raw_return": -0.18699099498684357,
+              "contribution": -0.025342791937557178
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.2634809758959712,
+              "atr_at_signal": 13.225505065917968,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.0070427158005181845,
+              "contribution": 0.0018556216320785072
+            },
+            {
+              "symbol": "AMD",
+              "weight": 0.17014022553101277,
+              "atr_at_signal": 37.26350402832031,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-17",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.14551084575734086,
+              "contribution": -0.024757248114362387
+            },
+            {
+              "symbol": "MRVL",
+              "weight": 0.1308493205928585,
+              "atr_at_signal": 34.09908841728631,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-15",
+              "exit_reason": "stop_first",
+              "raw_return": -0.24175331050670434,
+              "contribution": -0.031633256430876625
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "window": "recent_2025_2026_survivor_proxy",
+      "arm": "adaptive_ungated_negative_control",
+      "cost_bps_per_side": 5.0,
+      "summary": {
+        "return_pct": -7.276981426236517,
+        "annualized_return_pct": -7.91166674222813,
+        "profit_factor": 0.6989932137830764,
+        "trades": 36,
+        "red_months": 6,
+        "months": 11,
+        "worst_month_pct": -7.987767485071768,
+        "monthly_endpoint_drawdown_pct": 12.687926754265455
+      },
+      "decisions": [
+        {
+          "signal_month": "2025-08",
+          "signal_session": "2025-08-29",
+          "entry_session": "2025-09-02",
+          "regime_ok": true,
+          "reason": "no_qualifying_names",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2025-09",
+          "signal_session": "2025-09-30",
+          "entry_session": "2025-10-01",
+          "regime_ok": true,
+          "reason": "no_qualifying_names",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2025-10",
+          "signal_session": "2025-10-31",
+          "entry_session": "2025-11-03",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.011891065025738086,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.11453918610797426,
+              "atr_at_signal": 10.308414709733267,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-11",
+              "exit_reason": "stop_first",
+              "raw_return": 0.03194268635824238,
+              "contribution": 0.003658689297575374
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.20086462627577234,
+              "atr_at_signal": 7.282748508709557,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-20",
+              "exit_reason": "stop_first",
+              "raw_return": 0.0368267744299966,
+              "contribution": 0.007397196282823436
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.2537952319083375,
+              "atr_at_signal": 5.262499237060543,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-06",
+              "exit_reason": "stop_first",
+              "raw_return": -0.04829960302389935,
+              "contribution": -0.012258208950531176
+            },
+            {
+              "symbol": "LRCX",
+              "weight": 0.13080095570791586,
+              "atr_at_signal": 6.480479209049378,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.08171761129539556,
+              "contribution": -0.01068874165560572
+            }
+          ]
+        },
+        {
+          "signal_month": "2025-11",
+          "signal_session": "2025-11-28",
+          "entry_session": "2025-12-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.00673703502796543,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.10730466700906946,
+              "atr_at_signal": 16.504859216793143,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-12",
+              "exit_reason": "stop_first",
+              "raw_return": 0.03202306266804267,
+              "contribution": 0.0034362240762048817
+            },
+            {
+              "symbol": "LLY",
+              "weight": 0.21140683642705832,
+              "atr_at_signal": 32.596476935465816,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-04",
+              "exit_reason": "stop_first",
+              "raw_return": -0.0613246558218028,
+              "contribution": -0.012964451482265514
+            },
+            {
+              "symbol": "AMAT",
+              "weight": 0.15296154038826903,
+              "atr_at_signal": 10.234570564874305,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-12",
+              "exit_reason": "stop_first",
+              "raw_return": 0.0408395971861899,
+              "contribution": 0.006246887694436025
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.2283269561756032,
+              "atr_at_signal": 10.923622054105596,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-31",
+              "exit_reason": "max_hold_close",
+              "raw_return": -0.015134854746117199,
+              "contribution": -0.0034556953163408215
+            }
+          ]
+        },
+        {
+          "signal_month": "2025-12",
+          "signal_session": "2025-12-31",
+          "entry_session": "2026-01-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.03972691608102053,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.21643215677092154,
+              "atr_at_signal": 24.499871300729456,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-08",
+              "exit_reason": "stop_first",
+              "raw_return": 0.003070682502681832,
+              "contribution": 0.0006645944368141599
+            },
+            {
+              "symbol": "MU",
+              "weight": 0.0856003677125089,
+              "atr_at_signal": 13.930011504183891,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-06",
+              "exit_reason": "target",
+              "raw_return": 0.15047427530984936,
+              "contribution": 0.012880653297796404
+            },
+            {
+              "symbol": "MRK",
+              "weight": 0.21124689861959317,
+              "atr_at_signal": 2.1379135101251223,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-08",
+              "exit_reason": "target",
+              "raw_return": 0.06521229930688843,
+              "contribution": 0.013775895980432827
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.18672057689697638,
+              "atr_at_signal": 6.627188612531813,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-13",
+              "exit_reason": "target",
+              "raw_return": 0.06644030653794553,
+              "contribution": 0.01240577236597714
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-01",
+          "signal_session": "2026-01-30",
+          "entry_session": "2026-02-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.04069844295942665,
+          "picks": [
+            {
+              "symbol": "JNJ",
+              "weight": 0.23457008440226437,
+              "atr_at_signal": 4.079725204356164,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-12",
+              "exit_reason": "target",
+              "raw_return": 0.05725582230701254,
+              "contribution": 0.013430503071076983
+            },
+            {
+              "symbol": "MRK",
+              "weight": 0.14957596686117583,
+              "atr_at_signal": 2.5816760693052516,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-04",
+              "exit_reason": "target",
+              "raw_return": 0.07554453335928968,
+              "contribution": 0.011299646618292105
+            },
+            {
+              "symbol": "XOM",
+              "weight": 0.17827691955681707,
+              "atr_at_signal": 2.9733639260737363,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-06",
+              "exit_reason": "target",
+              "raw_return": 0.06839477648673187,
+              "contribution": 0.012193210065831581
+            },
+            {
+              "symbol": "LMT",
+              "weight": 0.13757702917974265,
+              "atr_at_signal": 21.149348362768748,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-25",
+              "exit_reason": "stop_first",
+              "raw_return": 0.02743977847707324,
+              "contribution": 0.0037750832042259797
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-02",
+          "signal_session": "2026-02-27",
+          "entry_session": "2026-03-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.028948108666047204,
+          "picks": [
+            {
+              "symbol": "LMT",
+              "weight": 0.1359639441145262,
+              "atr_at_signal": 18.632181657680935,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05516203819636989,
+              "contribution": -0.007500048278574595
+            },
+            {
+              "symbol": "HON",
+              "weight": 0.1911509227646681,
+              "atr_at_signal": 4.586975046522049,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03670372560605595,
+              "contribution": -0.007015951018498771
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.22718822657234228,
+              "atr_at_signal": 3.802590078878306,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.031164444262544166,
+              "contribution": -0.007080194824120017
+            },
+            {
+              "symbol": "XOM",
+              "weight": 0.1456969065484635,
+              "atr_at_signal": 3.957709583119376,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-03",
+              "exit_reason": "stop_first",
+              "raw_return": -0.050460333846610084,
+              "contribution": -0.007351914544853819
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-03",
+          "signal_session": "2026-03-31",
+          "entry_session": "2026-04-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.03834934401593439,
+          "picks": [
+            {
+              "symbol": "XOM",
+              "weight": 0.18609653325819497,
+              "atr_at_signal": 4.306270058662536,
+              "entry_session": "2026-04-01",
+              "exit_session": "2026-04-08",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.07482327061134464,
+              "contribution": -0.01392435126781102
+            },
+            {
+              "symbol": "CVX",
+              "weight": 0.21286072803953957,
+              "atr_at_signal": 4.651400143578629,
+              "entry_session": "2026-04-01",
+              "exit_session": "2026-04-08",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.05332602618748694,
+              "contribution": -0.011351016757724023
+            },
+            {
+              "symbol": "OXY",
+              "weight": 0.1333308022301403,
+              "atr_at_signal": 2.075292821350972,
+              "entry_session": "2026-04-01",
+              "exit_session": "2026-04-08",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.10872572974964356,
+              "contribution": -0.014496488770577408
+            },
+            {
+              "symbol": "COP",
+              "weight": 0.16771193647212518,
+              "atr_at_signal": 3.337694376021017,
+              "entry_session": "2026-04-01",
+              "exit_session": "2026-04-06",
+              "exit_reason": "stop_first",
+              "raw_return": 0.008481881552983461,
+              "contribution": 0.0014225127801780527
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-04",
+          "signal_session": "2026-04-30",
+          "entry_session": "2026-05-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.02029363327612897,
+          "picks": [
+            {
+              "symbol": "MRVL",
+              "weight": 0.13169148450905171,
+              "atr_at_signal": 7.857314256244967,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.009221922784334646,
+              "contribution": 0.0012144487014968772
+            },
+            {
+              "symbol": "ARM",
+              "weight": 0.11625429752981084,
+              "atr_at_signal": 12.581747436523438,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.05888478591328172,
+              "contribution": 0.006845609421541867
+            },
+            {
+              "symbol": "UNH",
+              "weight": 0.2464196346217043,
+              "atr_at_signal": 10.12964174940008,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-18",
+              "exit_reason": "stop_first",
+              "raw_return": 0.04441356719015843,
+              "contribution": 0.010944374999245355
+            },
+            {
+              "symbol": "AVGO",
+              "weight": 0.20563458333943316,
+              "atr_at_signal": 13.025885993399665,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.006269374211811618,
+              "contribution": 0.0012892001538448692
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-05",
+          "signal_session": "2026-05-29",
+          "entry_session": "2026-06-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.004035668602890837,
+          "picks": [
+            {
+              "symbol": "MRVL",
+              "weight": 0.16605434498646632,
+              "atr_at_signal": 12.833831112108518,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-02",
+              "exit_reason": "target_frozen_no_gap_credit",
+              "raw_return": 0.2058110603921781,
+              "contribution": 0.034175820824393195
+            },
+            {
+              "symbol": "AMD",
+              "weight": 0.1639231744613771,
+              "atr_at_signal": 29.29300537109375,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.11751746157485754,
+              "contribution": -0.019263835355993554
+            },
+            {
+              "symbol": "ARM",
+              "weight": 0.12431208727780804,
+              "atr_at_signal": 21.756401824951176,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-03",
+              "exit_reason": "stop_first",
+              "raw_return": 0.012848358313845454,
+              "contribution": 0.0015972062400873067
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.24571039327434857,
+              "atr_at_signal": 11.873500061035152,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.08361412815142244,
+              "contribution": -0.020544860311377786
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-06",
+          "signal_session": "2026-06-30",
+          "entry_session": "2026-07-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.07987767485071769,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.1355294779801576,
+              "atr_at_signal": 100.97797905324748,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-15",
+              "exit_reason": "stop_first",
+              "raw_return": -0.18699099498684357,
+              "contribution": -0.025342791937557178
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.2634809758959712,
+              "atr_at_signal": 13.225505065917968,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.0070427158005181845,
+              "contribution": 0.0018556216320785072
+            },
+            {
+              "symbol": "AMD",
+              "weight": 0.17014022553101277,
+              "atr_at_signal": 37.26350402832031,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-17",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.14551084575734086,
+              "contribution": -0.024757248114362387
+            },
+            {
+              "symbol": "MRVL",
+              "weight": 0.1308493205928585,
+              "atr_at_signal": 34.09908841728631,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-15",
+              "exit_reason": "stop_first",
+              "raw_return": -0.24175331050670434,
+              "contribution": -0.031633256430876625
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "window": "recent_2025_2026_survivor_proxy",
+      "arm": "adaptive_gated",
+      "cost_bps_per_side": 10.0,
+      "summary": {
+        "return_pct": -3.963337291605895,
+        "annualized_return_pct": -4.315756210221789,
+        "profit_factor": 0.8181226438683674,
+        "trades": 32,
+        "red_months": 5,
+        "months": 11,
+        "worst_month_pct": -8.036456429280841,
+        "monthly_endpoint_drawdown_pct": 9.38529681796013
+      },
+      "decisions": [
+        {
+          "signal_month": "2025-08",
+          "signal_session": "2025-08-29",
+          "entry_session": "2025-09-02",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2025-09",
+          "signal_session": "2025-09-30",
+          "entry_session": "2025-10-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2025-10",
+          "signal_session": "2025-10-31",
+          "entry_session": "2025-11-03",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.01238691654006453,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.11453918610797426,
+              "atr_at_signal": 10.308414709733267,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-11",
+              "exit_reason": "stop_first",
+              "raw_return": 0.030911258869914304,
+              "contribution": 0.0035405504325328845
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.20086462627577234,
+              "atr_at_signal": 7.282748508709557,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-20",
+              "exit_reason": "stop_first",
+              "raw_return": 0.035790465291981155,
+              "contribution": 0.0071890384351097954
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.2537952319083375,
+              "atr_at_signal": 5.262499237060543,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-06",
+              "exit_reason": "stop_first",
+              "raw_return": -0.04875182728485716,
+              "contribution": -0.01237298131171554
+            },
+            {
+              "symbol": "LRCX",
+              "weight": 0.13080095570791586,
+              "atr_at_signal": 6.480479209049378,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.08213643423204353,
+              "contribution": -0.01074352409599167
+            }
+          ]
+        },
+        {
+          "signal_month": "2025-11",
+          "signal_session": "2025-11-28",
+          "entry_session": "2025-12-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.0073244596583966984,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.10730466700906946,
+              "atr_at_signal": 16.504859216793143,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-12",
+              "exit_reason": "stop_first",
+              "raw_return": 0.03099155484353311,
+              "contribution": 0.003325538472578634
+            },
+            {
+              "symbol": "LLY",
+              "weight": 0.21140683642705832,
+              "atr_at_signal": 32.596476935465816,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-04",
+              "exit_reason": "stop_first",
+              "raw_return": -0.0617638615327285,
+              "contribution": -0.013057302572153014
+            },
+            {
+              "symbol": "AMAT",
+              "weight": 0.15296154038826903,
+              "atr_at_signal": 10.234570564874305,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-12",
+              "exit_reason": "stop_first",
+              "raw_return": 0.03979927722882226,
+              "contribution": 0.006087758751260412
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.2283269561756032,
+              "atr_at_signal": 10.923622054105596,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-31",
+              "exit_reason": "max_hold_close",
+              "raw_return": -0.016119228196832536,
+              "contribution": -0.0036804543100827296
+            }
+          ]
+        },
+        {
+          "signal_month": "2025-12",
+          "signal_session": "2025-12-31",
+          "entry_session": "2026-01-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.0392288593109203,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.21643215677092154,
+              "atr_at_signal": 24.499871300729456,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-08",
+              "exit_reason": "stop_first",
+              "raw_return": 0.0020681126038437636,
+              "contribution": 0.0004476060712950322
+            },
+            {
+              "symbol": "MU",
+              "weight": 0.0856003677125089,
+              "atr_at_signal": 13.930011504183891,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-06",
+              "exit_reason": "target",
+              "raw_return": 0.1498233764085406,
+              "contribution": 0.012824936112500705
+            },
+            {
+              "symbol": "MRK",
+              "weight": 0.21124689861959317,
+              "atr_at_signal": 2.1379135101251223,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-08",
+              "exit_reason": "target",
+              "raw_return": 0.06464661981448816,
+              "contribution": 0.013656397942050563
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.18672057689697638,
+              "atr_at_signal": 6.627188612531813,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-13",
+              "exit_reason": "target",
+              "raw_return": 0.06587339965139738,
+              "contribution": 0.012299919185074002
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-01",
+          "signal_session": "2026-01-30",
+          "entry_session": "2026-02-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.040238763934927674,
+          "picks": [
+            {
+              "symbol": "JNJ",
+              "weight": 0.23457008440226437,
+              "atr_at_signal": 4.079725204356164,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-12",
+              "exit_reason": "target",
+              "raw_return": 0.056698095319335895,
+              "contribution": 0.013299677004504252
+            },
+            {
+              "symbol": "MRK",
+              "weight": 0.14957596686117583,
+              "atr_at_signal": 2.5816760693052516,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-04",
+              "exit_reason": "target",
+              "raw_return": 0.07496852679121102,
+              "contribution": 0.011213489878953351
+            },
+            {
+              "symbol": "XOM",
+              "weight": 0.17827691955681707,
+              "atr_at_signal": 2.9733639260737363,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-09",
+              "exit_reason": "target",
+              "raw_return": 0.06782591610600508,
+              "contribution": 0.012091795389497692
+            },
+            {
+              "symbol": "LMT",
+              "weight": 0.13757702917974265,
+              "atr_at_signal": 21.149348362768748,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-25",
+              "exit_reason": "stop_first",
+              "raw_return": 0.02641285164854712,
+              "contribution": 0.003633801661972381
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-02",
+          "signal_session": "2026-02-27",
+          "entry_session": "2026-03-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.02926952483500482,
+          "picks": [
+            {
+              "symbol": "LMT",
+              "weight": 0.1359639441145262,
+              "atr_at_signal": 18.632181657680935,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05560740344823045,
+              "contribution": -0.007560601894789116
+            },
+            {
+              "symbol": "HON",
+              "weight": 0.1911509227646681,
+              "atr_at_signal": 4.586975046522049,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-06",
+              "exit_reason": "stop_first",
+              "raw_return": -0.037167539955182405,
+              "contribution": -0.0071046095593257875
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.22718822657234228,
+              "atr_at_signal": 3.802590078878306,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03163379512752473,
+              "contribution": -0.007186825814775147
+            },
+            {
+              "symbol": "XOM",
+              "weight": 0.1456969065484635,
+              "atr_at_signal": 3.957709583119376,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-03",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05091039845549139,
+              "contribution": -0.00741748756611477
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-03",
+          "signal_session": "2026-03-31",
+          "entry_session": "2026-04-01",
+          "regime_ok": false,
+          "reason": "market_below_regime_sma_cash",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2026-04",
+          "signal_session": "2026-04-30",
+          "entry_session": "2026-05-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.019573699249898994,
+          "picks": [
+            {
+              "symbol": "MRVL",
+              "weight": 0.13169148450905171,
+              "atr_at_signal": 7.857314256244967,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.00821320471622533,
+              "contribution": 0.0010816091216564586
+            },
+            {
+              "symbol": "ARM",
+              "weight": 0.11625429752981084,
+              "atr_at_signal": 12.581747436523438,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.05782642977625896,
+              "contribution": 0.0067225709722959215
+            },
+            {
+              "symbol": "UNH",
+              "weight": 0.2464196346217043,
+              "atr_at_signal": 10.12964174940008,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-18",
+              "exit_reason": "stop_first",
+              "raw_return": 0.04336967504709377,
+              "contribution": 0.010687139478766892
+            },
+            {
+              "symbol": "AVGO",
+              "weight": 0.20563458333943316,
+              "atr_at_signal": 13.025885993399665,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.005263607218213284,
+              "contribution": 0.0010823796771797214
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-05",
+          "signal_session": "2026-05-29",
+          "entry_session": "2026-06-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.004444016630099894,
+          "picks": [
+            {
+              "symbol": "MRVL",
+              "weight": 0.16605434498646632,
+              "atr_at_signal": 12.833831112108518,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-02",
+              "exit_reason": "target_frozen_no_gap_credit",
+              "raw_return": 0.20510485233271147,
+              "contribution": 0.034058551907654305
+            },
+            {
+              "symbol": "AMD",
+              "weight": 0.1639231744613771,
+              "atr_at_signal": 29.29300537109375,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.11790050253432349,
+              "contribution": -0.019326624646017945
+            },
+            {
+              "symbol": "ARM",
+              "weight": 0.12431208727780804,
+              "atr_at_signal": 21.756401824951176,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-03",
+              "exit_reason": "stop_first",
+              "raw_return": 0.011836015620706908,
+              "contribution": 0.0014713598068628164
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.24571039327434857,
+              "atr_at_signal": 11.873500061035152,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.08403105551805157,
+              "contribution": -0.02064730369859907
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-06",
+          "signal_session": "2026-06-30",
+          "entry_session": "2026-07-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.08036456429280842,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.1355294779801576,
+              "atr_at_signal": 100.97797905324748,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-15",
+              "exit_reason": "stop_first",
+              "raw_return": -0.1873045970976025,
+              "contribution": -0.02538529426792181
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.2634809758959712,
+              "atr_at_signal": 13.225505065917968,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.006036175851422021,
+              "contribution": 0.001590417504012369
+            },
+            {
+              "symbol": "AMD",
+              "weight": 0.17014022553101277,
+              "atr_at_signal": 37.26350402832031,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-17",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.14636490830733961,
+              "contribution": -0.024902558509236766
+            },
+            {
+              "symbol": "MRVL",
+              "weight": 0.1308493205928585,
+              "atr_at_signal": 34.09908841728631,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-15",
+              "exit_reason": "stop_first",
+              "raw_return": -0.24201217764206373,
+              "contribution": -0.03166712901966222
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "window": "recent_2025_2026_survivor_proxy",
+      "arm": "adaptive_ungated_negative_control",
+      "cost_bps_per_side": 10.0,
+      "summary": {
+        "return_pct": -7.709791305088832,
+        "annualized_return_pct": -8.38049144997839,
+        "profit_factor": 0.6811350665881165,
+        "trades": 36,
+        "red_months": 6,
+        "months": 11,
+        "worst_month_pct": -8.036456429280841,
+        "monthly_endpoint_drawdown_pct": 12.9202365882823
+      },
+      "decisions": [
+        {
+          "signal_month": "2025-08",
+          "signal_session": "2025-08-29",
+          "entry_session": "2025-09-02",
+          "regime_ok": true,
+          "reason": "no_qualifying_names",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2025-09",
+          "signal_session": "2025-09-30",
+          "entry_session": "2025-10-01",
+          "regime_ok": true,
+          "reason": "no_qualifying_names",
+          "month_return": 0.0,
+          "picks": []
+        },
+        {
+          "signal_month": "2025-10",
+          "signal_session": "2025-10-31",
+          "entry_session": "2025-11-03",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.01238691654006453,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.11453918610797426,
+              "atr_at_signal": 10.308414709733267,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-11",
+              "exit_reason": "stop_first",
+              "raw_return": 0.030911258869914304,
+              "contribution": 0.0035405504325328845
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.20086462627577234,
+              "atr_at_signal": 7.282748508709557,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-20",
+              "exit_reason": "stop_first",
+              "raw_return": 0.035790465291981155,
+              "contribution": 0.0071890384351097954
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.2537952319083375,
+              "atr_at_signal": 5.262499237060543,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-06",
+              "exit_reason": "stop_first",
+              "raw_return": -0.04875182728485716,
+              "contribution": -0.01237298131171554
+            },
+            {
+              "symbol": "LRCX",
+              "weight": 0.13080095570791586,
+              "atr_at_signal": 6.480479209049378,
+              "entry_session": "2025-11-03",
+              "exit_session": "2025-11-14",
+              "exit_reason": "stop_first",
+              "raw_return": -0.08213643423204353,
+              "contribution": -0.01074352409599167
+            }
+          ]
+        },
+        {
+          "signal_month": "2025-11",
+          "signal_session": "2025-11-28",
+          "entry_session": "2025-12-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.0073244596583966984,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.10730466700906946,
+              "atr_at_signal": 16.504859216793143,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-12",
+              "exit_reason": "stop_first",
+              "raw_return": 0.03099155484353311,
+              "contribution": 0.003325538472578634
+            },
+            {
+              "symbol": "LLY",
+              "weight": 0.21140683642705832,
+              "atr_at_signal": 32.596476935465816,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-04",
+              "exit_reason": "stop_first",
+              "raw_return": -0.0617638615327285,
+              "contribution": -0.013057302572153014
+            },
+            {
+              "symbol": "AMAT",
+              "weight": 0.15296154038826903,
+              "atr_at_signal": 10.234570564874305,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-12",
+              "exit_reason": "stop_first",
+              "raw_return": 0.03979927722882226,
+              "contribution": 0.006087758751260412
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.2283269561756032,
+              "atr_at_signal": 10.923622054105596,
+              "entry_session": "2025-12-01",
+              "exit_session": "2025-12-31",
+              "exit_reason": "max_hold_close",
+              "raw_return": -0.016119228196832536,
+              "contribution": -0.0036804543100827296
+            }
+          ]
+        },
+        {
+          "signal_month": "2025-12",
+          "signal_session": "2025-12-31",
+          "entry_session": "2026-01-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.0392288593109203,
+          "picks": [
+            {
+              "symbol": "LLY",
+              "weight": 0.21643215677092154,
+              "atr_at_signal": 24.499871300729456,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-08",
+              "exit_reason": "stop_first",
+              "raw_return": 0.0020681126038437636,
+              "contribution": 0.0004476060712950322
+            },
+            {
+              "symbol": "MU",
+              "weight": 0.0856003677125089,
+              "atr_at_signal": 13.930011504183891,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-06",
+              "exit_reason": "target",
+              "raw_return": 0.1498233764085406,
+              "contribution": 0.012824936112500705
+            },
+            {
+              "symbol": "MRK",
+              "weight": 0.21124689861959317,
+              "atr_at_signal": 2.1379135101251223,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-08",
+              "exit_reason": "target",
+              "raw_return": 0.06464661981448816,
+              "contribution": 0.013656397942050563
+            },
+            {
+              "symbol": "GOOGL",
+              "weight": 0.18672057689697638,
+              "atr_at_signal": 6.627188612531813,
+              "entry_session": "2026-01-02",
+              "exit_session": "2026-01-13",
+              "exit_reason": "target",
+              "raw_return": 0.06587339965139738,
+              "contribution": 0.012299919185074002
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-01",
+          "signal_session": "2026-01-30",
+          "entry_session": "2026-02-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.040238763934927674,
+          "picks": [
+            {
+              "symbol": "JNJ",
+              "weight": 0.23457008440226437,
+              "atr_at_signal": 4.079725204356164,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-12",
+              "exit_reason": "target",
+              "raw_return": 0.056698095319335895,
+              "contribution": 0.013299677004504252
+            },
+            {
+              "symbol": "MRK",
+              "weight": 0.14957596686117583,
+              "atr_at_signal": 2.5816760693052516,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-04",
+              "exit_reason": "target",
+              "raw_return": 0.07496852679121102,
+              "contribution": 0.011213489878953351
+            },
+            {
+              "symbol": "XOM",
+              "weight": 0.17827691955681707,
+              "atr_at_signal": 2.9733639260737363,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-09",
+              "exit_reason": "target",
+              "raw_return": 0.06782591610600508,
+              "contribution": 0.012091795389497692
+            },
+            {
+              "symbol": "LMT",
+              "weight": 0.13757702917974265,
+              "atr_at_signal": 21.149348362768748,
+              "entry_session": "2026-02-02",
+              "exit_session": "2026-02-25",
+              "exit_reason": "stop_first",
+              "raw_return": 0.02641285164854712,
+              "contribution": 0.003633801661972381
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-02",
+          "signal_session": "2026-02-27",
+          "entry_session": "2026-03-02",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.02926952483500482,
+          "picks": [
+            {
+              "symbol": "LMT",
+              "weight": 0.1359639441145262,
+              "atr_at_signal": 18.632181657680935,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05560740344823045,
+              "contribution": -0.007560601894789116
+            },
+            {
+              "symbol": "HON",
+              "weight": 0.1911509227646681,
+              "atr_at_signal": 4.586975046522049,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-06",
+              "exit_reason": "stop_first",
+              "raw_return": -0.037167539955182405,
+              "contribution": -0.0071046095593257875
+            },
+            {
+              "symbol": "JNJ",
+              "weight": 0.22718822657234228,
+              "atr_at_signal": 3.802590078878306,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-05",
+              "exit_reason": "stop_first",
+              "raw_return": -0.03163379512752473,
+              "contribution": -0.007186825814775147
+            },
+            {
+              "symbol": "XOM",
+              "weight": 0.1456969065484635,
+              "atr_at_signal": 3.957709583119376,
+              "entry_session": "2026-03-02",
+              "exit_session": "2026-03-03",
+              "exit_reason": "stop_first",
+              "raw_return": -0.05091039845549139,
+              "contribution": -0.00741748756611477
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-03",
+          "signal_session": "2026-03-31",
+          "entry_session": "2026-04-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.03901066434241539,
+          "picks": [
+            {
+              "symbol": "XOM",
+              "weight": 0.18609653325819497,
+              "atr_at_signal": 4.306270058662536,
+              "entry_session": "2026-04-01",
+              "exit_session": "2026-04-08",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.07574798544567363,
+              "contribution": -0.01409643749273207
+            },
+            {
+              "symbol": "CVX",
+              "weight": 0.21286072803953957,
+              "atr_at_signal": 4.651400143578629,
+              "entry_session": "2026-04-01",
+              "exit_session": "2026-04-08",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.05427222753372696,
+              "contribution": -0.011552425865156665
+            },
+            {
+              "symbol": "OXY",
+              "weight": 0.1333308022301403,
+              "atr_at_signal": 2.075292821350972,
+              "entry_session": "2026-04-01",
+              "exit_session": "2026-04-08",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.10961655905065815,
+              "contribution": -0.014615263755931796
+            },
+            {
+              "symbol": "COP",
+              "weight": 0.16771193647212518,
+              "atr_at_signal": 3.337694376021017,
+              "entry_session": "2026-04-01",
+              "exit_session": "2026-04-06",
+              "exit_reason": "stop_first",
+              "raw_return": 0.007473903156639539,
+              "contribution": 0.001253462771405146
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-04",
+          "signal_session": "2026-04-30",
+          "entry_session": "2026-05-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": 0.019573699249898994,
+          "picks": [
+            {
+              "symbol": "MRVL",
+              "weight": 0.13169148450905171,
+              "atr_at_signal": 7.857314256244967,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.00821320471622533,
+              "contribution": 0.0010816091216564586
+            },
+            {
+              "symbol": "ARM",
+              "weight": 0.11625429752981084,
+              "atr_at_signal": 12.581747436523438,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.05782642977625896,
+              "contribution": 0.0067225709722959215
+            },
+            {
+              "symbol": "UNH",
+              "weight": 0.2464196346217043,
+              "atr_at_signal": 10.12964174940008,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-18",
+              "exit_reason": "stop_first",
+              "raw_return": 0.04336967504709377,
+              "contribution": 0.010687139478766892
+            },
+            {
+              "symbol": "AVGO",
+              "weight": 0.20563458333943316,
+              "atr_at_signal": 13.025885993399665,
+              "entry_session": "2026-05-01",
+              "exit_session": "2026-05-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.005263607218213284,
+              "contribution": 0.0010823796771797214
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-05",
+          "signal_session": "2026-05-29",
+          "entry_session": "2026-06-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.004444016630099894,
+          "picks": [
+            {
+              "symbol": "MRVL",
+              "weight": 0.16605434498646632,
+              "atr_at_signal": 12.833831112108518,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-02",
+              "exit_reason": "target_frozen_no_gap_credit",
+              "raw_return": 0.20510485233271147,
+              "contribution": 0.034058551907654305
+            },
+            {
+              "symbol": "AMD",
+              "weight": 0.1639231744613771,
+              "atr_at_signal": 29.29300537109375,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.11790050253432349,
+              "contribution": -0.019326624646017945
+            },
+            {
+              "symbol": "ARM",
+              "weight": 0.12431208727780804,
+              "atr_at_signal": 21.756401824951176,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-03",
+              "exit_reason": "stop_first",
+              "raw_return": 0.011836015620706908,
+              "contribution": 0.0014713598068628164
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.24571039327434857,
+              "atr_at_signal": 11.873500061035152,
+              "entry_session": "2026-06-01",
+              "exit_session": "2026-06-09",
+              "exit_reason": "stop_first",
+              "raw_return": -0.08403105551805157,
+              "contribution": -0.02064730369859907
+            }
+          ]
+        },
+        {
+          "signal_month": "2026-06",
+          "signal_session": "2026-06-30",
+          "entry_session": "2026-07-01",
+          "regime_ok": true,
+          "reason": "ok",
+          "month_return": -0.08036456429280842,
+          "picks": [
+            {
+              "symbol": "MU",
+              "weight": 0.1355294779801576,
+              "atr_at_signal": 100.97797905324748,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-15",
+              "exit_reason": "stop_first",
+              "raw_return": -0.1873045970976025,
+              "contribution": -0.02538529426792181
+            },
+            {
+              "symbol": "PANW",
+              "weight": 0.2634809758959712,
+              "atr_at_signal": 13.225505065917968,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-07",
+              "exit_reason": "stop_first",
+              "raw_return": 0.006036175851422021,
+              "contribution": 0.001590417504012369
+            },
+            {
+              "symbol": "AMD",
+              "weight": 0.17014022553101277,
+              "atr_at_signal": 37.26350402832031,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-17",
+              "exit_reason": "stop_gap_open",
+              "raw_return": -0.14636490830733961,
+              "contribution": -0.024902558509236766
+            },
+            {
+              "symbol": "MRVL",
+              "weight": 0.1308493205928585,
+              "atr_at_signal": 34.09908841728631,
+              "entry_session": "2026-07-01",
+              "exit_session": "2026-07-15",
+              "exit_reason": "stop_first",
+              "raw_return": -0.24201217764206373,
+              "contribution": -0.03166712901966222
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "input_manifests": {
+    "bear_2022_survivor_proxy": [
+      {
+        "symbol": "UNH",
+        "path": "runtime/equities_yf_cache/UNH_20210101_20230101.csv",
+        "sha256": "4ef0a7f07a0a14e4277d26bf93197680b9773bed905a7dc68fd1d974915ef93a",
+        "rows": "503"
+      },
+      {
+        "symbol": "GOOGL",
+        "path": "runtime/equities_yf_cache/GOOGL_20210101_20230101.csv",
+        "sha256": "b81679cddf1c16f28b0e2bf47da6c912307fe514fcaba66de371b8577ab75924",
+        "rows": "503"
+      },
+      {
+        "symbol": "AAPL",
+        "path": "runtime/equities_yf_cache/AAPL_20210101_20230101.csv",
+        "sha256": "393e430fca4d24f20b6a06e5b11f9dba8c35da1a62c8bb55ed9f0339401b1fd9",
+        "rows": "503"
+      },
+      {
+        "symbol": "MSFT",
+        "path": "runtime/equities_yf_cache/MSFT_20210101_20230101.csv",
+        "sha256": "391bc0fc4025f71644013241be3e3c92a8e38020e1033e0e5c0cc725a195003a",
+        "rows": "503"
+      },
+      {
+        "symbol": "NVDA",
+        "path": "runtime/equities_yf_cache/NVDA_20210101_20230101.csv",
+        "sha256": "ec9f5e88b2e470221e8ef542a3656627c08f3d9a61124305fae2afca32325406",
+        "rows": "503"
+      },
+      {
+        "symbol": "META",
+        "path": "runtime/equities_yf_cache/META_20210101_20230101.csv",
+        "sha256": "715674989cb95a96fd36fef7e12b9e38b53b7bccdd1788645b240c262efbf6b4",
+        "rows": "503"
+      },
+      {
+        "symbol": "AMZN",
+        "path": "runtime/equities_yf_cache/AMZN_20210101_20230101.csv",
+        "sha256": "d349478b891e5e86b8d8d416267fe285e12fc1b4b8368a0f729ee12d5957d474",
+        "rows": "503"
+      },
+      {
+        "symbol": "TSLA",
+        "path": "runtime/equities_yf_cache/TSLA_20210101_20230101.csv",
+        "sha256": "5a9ad95e6bf5fbd50be50e2db6fad75cb7e2b39a47aedafb5739c6a38a6d370c",
+        "rows": "503"
+      },
+      {
+        "symbol": "AVGO",
+        "path": "runtime/equities_yf_cache/AVGO_20210101_20230101.csv",
+        "sha256": "678b6ddf51377e3844673f239480d3fe8433363ac660f9bd5a82fbac36a8f320",
+        "rows": "503"
+      },
+      {
+        "symbol": "ORCL",
+        "path": "runtime/equities_yf_cache/ORCL_20210101_20230101.csv",
+        "sha256": "3e2c9915507565d30d9531b1876b4923b029fe26b65222911f0864095527d3ee",
+        "rows": "503"
+      },
+      {
+        "symbol": "JPM",
+        "path": "runtime/equities_yf_cache/JPM_20210101_20230101.csv",
+        "sha256": "a1c87ac3fedf28ac478fb2f8d511366eadc302dd20d77aa6d960dfb69f6a49f3",
+        "rows": "503"
+      },
+      {
+        "symbol": "LLY",
+        "path": "runtime/equities_yf_cache/LLY_20210101_20230101.csv",
+        "sha256": "7bca3bdd0cb758b9b1709a94a4b41e23e4966fcc165c06456db7652dae98f62b",
+        "rows": "503"
+      },
+      {
+        "symbol": "V",
+        "path": "runtime/equities_yf_cache/V_20210101_20230101.csv",
+        "sha256": "816359beca254fbcf8014a289027e8135266975531de26bd061cd5b76b7d90fc",
+        "rows": "503"
+      },
+      {
+        "symbol": "COST",
+        "path": "runtime/equities_yf_cache/COST_20210101_20230101.csv",
+        "sha256": "a10dc869a0b04ec0e15eff411db6a40359ae92c3b7fe4cfa1f4f2f5e84f54c62",
+        "rows": "503"
+      },
+      {
+        "symbol": "JNJ",
+        "path": "runtime/equities_yf_cache/JNJ_20210101_20230101.csv",
+        "sha256": "3484f4829dafab6c90e96b0f2227553fe8d767318f7b342ae29dce8d20b5ba4b",
+        "rows": "503"
+      },
+      {
+        "symbol": "WMT",
+        "path": "runtime/equities_yf_cache/WMT_20210101_20230101.csv",
+        "sha256": "7c00bd76375c2403fcce864cebd785d091d33789295e722e9542c205b523bf79",
+        "rows": "503"
+      },
+      {
+        "symbol": "PG",
+        "path": "runtime/equities_yf_cache/PG_20210101_20230101.csv",
+        "sha256": "d45c70ab3f290dfe9f3e88044f9992954a303bc0cb6c278cd817e2b1a170d257",
+        "rows": "503"
+      },
+      {
+        "symbol": "KO",
+        "path": "runtime/equities_yf_cache/KO_20210101_20230101.csv",
+        "sha256": "41f89a8086ffa1c8dc21a4b873c12f7cf55a9018c56447a5971f5e08e6e97e54",
+        "rows": "503"
+      },
+      {
+        "symbol": "SPY",
+        "path": "runtime/equities_yf_cache/SPY_20210101_20230101.csv",
+        "sha256": "7dbd602f813e4fd2c065113c41e924fe42b57f7528bacd774300cbbf7ffbdc2c",
+        "rows": "503"
+      }
+    ],
+    "recent_2025_2026_survivor_proxy": [
+      {
+        "symbol": "AAPL",
+        "path": "runtime/equities_yf_cache/AAPL_20250101_20260727.csv",
+        "sha256": "630c8a688f00082d3f64bf1deae8adc34999f588d6de26b2c00d9dcbe19ab289",
+        "rows": "389"
+      },
+      {
+        "symbol": "ABBV",
+        "path": "runtime/equities_yf_cache/ABBV_20250101_20260727.csv",
+        "sha256": "e4c96a99e7c1cb6d289a43a3d1291fad44898d9d5fc1891c0aa28c398f69b0c0",
+        "rows": "389"
+      },
+      {
+        "symbol": "ABNB",
+        "path": "runtime/equities_yf_cache/ABNB_20250101_20260727.csv",
+        "sha256": "f29aa3835ec4115974765cfadc1a00777aaef3f9aa3d3fc4616968546ce41f3e",
+        "rows": "389"
+      },
+      {
+        "symbol": "ABT",
+        "path": "runtime/equities_yf_cache/ABT_20250101_20260727.csv",
+        "sha256": "bd258f23b688db149c0f2efdc58f76a7ea0844112b0b7852cb064205375f7dc8",
+        "rows": "389"
+      },
+      {
+        "symbol": "ADBE",
+        "path": "runtime/equities_yf_cache/ADBE_20250101_20260727.csv",
+        "sha256": "6916886efcf0c4f5f3da9c1e3eda75cb0de474aae2f059106005ea27d8830f9c",
+        "rows": "389"
+      },
+      {
+        "symbol": "AMAT",
+        "path": "runtime/equities_yf_cache/AMAT_20250101_20260727.csv",
+        "sha256": "4efc165c1f0822491cb16392d7b408d0241d7d3f04062856b517a5adc9ae0f50",
+        "rows": "389"
+      },
+      {
+        "symbol": "AMD",
+        "path": "runtime/equities_yf_cache/AMD_20250101_20260727.csv",
+        "sha256": "5f605df0e90eeaca8c9069efc8ce4eda1a841a9a930f2df1ae97084d590a17dc",
+        "rows": "389"
+      },
+      {
+        "symbol": "AMZN",
+        "path": "runtime/equities_yf_cache/AMZN_20250101_20260727.csv",
+        "sha256": "019a438709e4b5193c2b7dacb48fb32cd1792ab4d816e6935b8666aaadd1949e",
+        "rows": "389"
+      },
+      {
+        "symbol": "ARM",
+        "path": "runtime/equities_yf_cache/ARM_20250101_20260727.csv",
+        "sha256": "b77a36daacefc4f9477656254332b26cd0af9f3076318b85e03398eb7cbd3ec5",
+        "rows": "389"
+      },
+      {
+        "symbol": "AVGO",
+        "path": "runtime/equities_yf_cache/AVGO_20250101_20260727.csv",
+        "sha256": "27bdbbbcf6b80df3b9e0a871442fd09654f048b8602aacafa6b98a7688ef4172",
+        "rows": "389"
+      },
+      {
+        "symbol": "AXP",
+        "path": "runtime/equities_yf_cache/AXP_20250101_20260727.csv",
+        "sha256": "daec9d4475a3458e4908ad9a023932a4ea175cb170a285ce11f6eff642438a55",
+        "rows": "389"
+      },
+      {
+        "symbol": "BA",
+        "path": "runtime/equities_yf_cache/BA_20250101_20260727.csv",
+        "sha256": "0c0793dd20684ea0240c2cc1add78c640da453d0a2fe98e7e2d5e177041ec544",
+        "rows": "389"
+      },
+      {
+        "symbol": "BAC",
+        "path": "runtime/equities_yf_cache/BAC_20250101_20260727.csv",
+        "sha256": "b112c0f830d0092c208100dd27273b197a0c4c7472f96d3cc6c210a4ee9cc9a2",
+        "rows": "389"
+      },
+      {
+        "symbol": "BLK",
+        "path": "runtime/equities_yf_cache/BLK_20250101_20260727.csv",
+        "sha256": "50d908813e43aa91c170fa0a329fe186acd1185953cd68ad80bd8fa43d4adf7e",
+        "rows": "389"
+      },
+      {
+        "symbol": "BRK-B",
+        "path": "runtime/equities_yf_cache/BRK-B_20250101_20260727.csv",
+        "sha256": "fd1886b80b1a4aa820d86c9efdc172b25647ac803929e215ae44750d8e75d7ce",
+        "rows": "389"
+      },
+      {
+        "symbol": "CAT",
+        "path": "runtime/equities_yf_cache/CAT_20250101_20260727.csv",
+        "sha256": "e0cdcd7f008cfc0bbf32c1c196d88a0fd0cea0235fd44bca51c373588503086e",
+        "rows": "389"
+      },
+      {
+        "symbol": "COIN",
+        "path": "runtime/equities_yf_cache/COIN_20250101_20260727.csv",
+        "sha256": "c279b1e69de0b459389da6ff369248d7e08bbdc6b15b52b4c30bcf4122eacca5",
+        "rows": "389"
+      },
+      {
+        "symbol": "COP",
+        "path": "runtime/equities_yf_cache/COP_20250101_20260727.csv",
+        "sha256": "1c466337ebec339061dd5c21e5d86ee443faa3797a3d88a97c4d679a3f30616e",
+        "rows": "389"
+      },
+      {
+        "symbol": "COST",
+        "path": "runtime/equities_yf_cache/COST_20250101_20260727.csv",
+        "sha256": "50de3fdc6c52e4adcf60ea834eb6c8fdb742f61c73b6d5e206df4881274f1c2d",
+        "rows": "389"
+      },
+      {
+        "symbol": "CRM",
+        "path": "runtime/equities_yf_cache/CRM_20250101_20260727.csv",
+        "sha256": "f9828f9594b96a9c0d80facfb60b7769512deccb1bc0658684a487ab9a32baf9",
+        "rows": "389"
+      },
+      {
+        "symbol": "CRWD",
+        "path": "runtime/equities_yf_cache/CRWD_20250101_20260727.csv",
+        "sha256": "503c414a3dd66112c5d4fbdadea9433ec152a77eb269fe06db1fcd362f3b62df",
+        "rows": "389"
+      },
+      {
+        "symbol": "CVX",
+        "path": "runtime/equities_yf_cache/CVX_20250101_20260727.csv",
+        "sha256": "3b4180e74823197d224e73a88db22d180ce86366ba2e8294af8d214d75bfcac0",
+        "rows": "389"
+      },
+      {
+        "symbol": "DDOG",
+        "path": "runtime/equities_yf_cache/DDOG_20250101_20260727.csv",
+        "sha256": "1e73a767b2383b08e864a60e7e733622e85ea64c257669fbb19fc3d92ccee9de",
+        "rows": "389"
+      },
+      {
+        "symbol": "DE",
+        "path": "runtime/equities_yf_cache/DE_20250101_20260727.csv",
+        "sha256": "dbb01ec53e7bbc0c3b68922c810ae0899a9e2bd23469ed3e20cdfbfd26238554",
+        "rows": "389"
+      },
+      {
+        "symbol": "DIS",
+        "path": "runtime/equities_yf_cache/DIS_20250101_20260727.csv",
+        "sha256": "c12504992f82c310120c4829f97dfe88e42c5b60244b3984a96245daa022396d",
+        "rows": "389"
+      },
+      {
+        "symbol": "GE",
+        "path": "runtime/equities_yf_cache/GE_20250101_20260727.csv",
+        "sha256": "83900fc0160f538eeeea3f246fb9930c671c1aef5297dde33e3c9eee34d75c25",
+        "rows": "389"
+      },
+      {
+        "symbol": "GOOGL",
+        "path": "runtime/equities_yf_cache/GOOGL_20250101_20260727.csv",
+        "sha256": "824350c77c9dec18fc22ed3308875fe58ae5261e30c202ee82ab9cdde731fe7e",
+        "rows": "389"
+      },
+      {
+        "symbol": "GS",
+        "path": "runtime/equities_yf_cache/GS_20250101_20260727.csv",
+        "sha256": "e98f724bd9c0ae140786b858a789488bd086da383fd4c7178ac09c6a0676f6ce",
+        "rows": "389"
+      },
+      {
+        "symbol": "HON",
+        "path": "runtime/equities_yf_cache/HON_20250101_20260727.csv",
+        "sha256": "041d95b1f4731131ec0bbc2330f39e85dd43d6c899209021c30babd1d23fced0",
+        "rows": "389"
+      },
+      {
+        "symbol": "HOOD",
+        "path": "runtime/equities_yf_cache/HOOD_20250101_20260727.csv",
+        "sha256": "68eb7860a1d2551c8db4a406eea1031c9f5bb3c237ab54c3119bf2ab6db4e521",
+        "rows": "389"
+      },
+      {
+        "symbol": "ICE",
+        "path": "runtime/equities_yf_cache/ICE_20250101_20260727.csv",
+        "sha256": "38e67743c42cd815ac60412c8c6f440750810ef8a6395ff55df79cdd4d7d4069",
+        "rows": "389"
+      },
+      {
+        "symbol": "ISRG",
+        "path": "runtime/equities_yf_cache/ISRG_20250101_20260727.csv",
+        "sha256": "40f61abc7c5fbcafc2cd5f1b323344514978f7579b3b95ab7043dc4bed19bbad",
+        "rows": "389"
+      },
+      {
+        "symbol": "JNJ",
+        "path": "runtime/equities_yf_cache/JNJ_20250101_20260727.csv",
+        "sha256": "a875925782fedf872c948bc06ce23b7cd033236f7c2ef82dd2cf77f4f3a9be4b",
+        "rows": "389"
+      },
+      {
+        "symbol": "JPM",
+        "path": "runtime/equities_yf_cache/JPM_20250101_20260727.csv",
+        "sha256": "2d45c77174a53675bf816bae8feb4f7a8a6bd52de72773714a0677bc150879db",
+        "rows": "389"
+      },
+      {
+        "symbol": "KLAC",
+        "path": "runtime/equities_yf_cache/KLAC_20250101_20260727.csv",
+        "sha256": "89bca98fcc1149d5edccd3c832bba501c0d3923aa8a878fb7de2ad9654eb87f3",
+        "rows": "389"
+      },
+      {
+        "symbol": "KO",
+        "path": "runtime/equities_yf_cache/KO_20250101_20260727.csv",
+        "sha256": "fd40b5432e968ab053d9aba70c9f2298656794ecfd25f5cbfae3bf5d44d3f1f8",
+        "rows": "389"
+      },
+      {
+        "symbol": "LLY",
+        "path": "runtime/equities_yf_cache/LLY_20250101_20260727.csv",
+        "sha256": "abeae465b235aa195f5553a219f83924bdd3deb95641b869c9a708fa3e81091c",
+        "rows": "389"
+      },
+      {
+        "symbol": "LMT",
+        "path": "runtime/equities_yf_cache/LMT_20250101_20260727.csv",
+        "sha256": "4d2f2443a7f9888b42de3b91e5181d4cc0be14bc48351a37913e3a86c4b6bc00",
+        "rows": "389"
+      },
+      {
+        "symbol": "LRCX",
+        "path": "runtime/equities_yf_cache/LRCX_20250101_20260727.csv",
+        "sha256": "42f02f38a48874b576cdeca7ae287285f84506a4a797eabaed738c35721a050c",
+        "rows": "389"
+      },
+      {
+        "symbol": "MA",
+        "path": "runtime/equities_yf_cache/MA_20250101_20260727.csv",
+        "sha256": "ee4d83f5248ed57a2b8290dfdc1acb291b428c1239b03740d04bcc3f29cb6163",
+        "rows": "389"
+      },
+      {
+        "symbol": "MCD",
+        "path": "runtime/equities_yf_cache/MCD_20250101_20260727.csv",
+        "sha256": "d141ef6339704afab96fbe568faf1b990f702d8431d4cfc172d13d8b52e28eec",
+        "rows": "389"
+      },
+      {
+        "symbol": "META",
+        "path": "runtime/equities_yf_cache/META_20250101_20260727.csv",
+        "sha256": "b1209b9e2c5937609b8cf708c01792cf30ece9934ed81b39e8d12a5db30c87ff",
+        "rows": "389"
+      },
+      {
+        "symbol": "MRK",
+        "path": "runtime/equities_yf_cache/MRK_20250101_20260727.csv",
+        "sha256": "c34b19cc029740ec55a5032448d59dbce2737273938dbfe583a26e6735764692",
+        "rows": "389"
+      },
+      {
+        "symbol": "MRVL",
+        "path": "runtime/equities_yf_cache/MRVL_20250101_20260727.csv",
+        "sha256": "872902bd81465d71d9020257281fc9eac328e5be5528df1362a9c7c27177b5e6",
+        "rows": "389"
+      },
+      {
+        "symbol": "MS",
+        "path": "runtime/equities_yf_cache/MS_20250101_20260727.csv",
+        "sha256": "75a0f69752f2a6423c8aa8de43650b649663847595a1c39e177711f623e7d8e8",
+        "rows": "389"
+      },
+      {
+        "symbol": "MSFT",
+        "path": "runtime/equities_yf_cache/MSFT_20250101_20260727.csv",
+        "sha256": "d6d7a57f99b1562e14e0ce5adfdccb629d0584e948d9879191db46a48e697a06",
+        "rows": "389"
+      },
+      {
+        "symbol": "MU",
+        "path": "runtime/equities_yf_cache/MU_20250101_20260727.csv",
+        "sha256": "f3634ae121fca0399844e5ae6488a17a4b71d31e6a04264fa4e81ab8acf741fe",
+        "rows": "389"
+      },
+      {
+        "symbol": "NFLX",
+        "path": "runtime/equities_yf_cache/NFLX_20250101_20260727.csv",
+        "sha256": "2274e18b4ab0863f483ad3a6b67a37fddace88ad50fac04352bce27bb68b2b5c",
+        "rows": "389"
+      },
+      {
+        "symbol": "NKE",
+        "path": "runtime/equities_yf_cache/NKE_20250101_20260727.csv",
+        "sha256": "9b7cdc5678cb6f4408374f2146668c0e0efcdf08678e81c7317c25dd103dc5e8",
+        "rows": "389"
+      },
+      {
+        "symbol": "NOW",
+        "path": "runtime/equities_yf_cache/NOW_20250101_20260727.csv",
+        "sha256": "1f4b097c1136f736735f7287d1bf1c47ba6d8b7c429b182e38cfead203564610",
+        "rows": "389"
+      },
+      {
+        "symbol": "NVDA",
+        "path": "runtime/equities_yf_cache/NVDA_20250101_20260727.csv",
+        "sha256": "af3e756bec054b3cb739a52ecc6cd10547fe4bc23f9783e6e83827e322e2443b",
+        "rows": "389"
+      },
+      {
+        "symbol": "O",
+        "path": "runtime/equities_yf_cache/O_20250101_20260727.csv",
+        "sha256": "ae1ecfc4ca25797cd1218e07b1322f5d224015346331ed4dab9f00d0a7eb55be",
+        "rows": "389"
+      },
+      {
+        "symbol": "ORCL",
+        "path": "runtime/equities_yf_cache/ORCL_20250101_20260727.csv",
+        "sha256": "5ec1e32cb7f4b6e02f53cfb88a8d2a37073ee908f1160f710cd458fcbc2ff984",
+        "rows": "389"
+      },
+      {
+        "symbol": "OXY",
+        "path": "runtime/equities_yf_cache/OXY_20250101_20260727.csv",
+        "sha256": "7318279b229e203b58e55e11baf63b48e3d492382ed67f5e1d879a4daf44bf43",
+        "rows": "389"
+      },
+      {
+        "symbol": "PANW",
+        "path": "runtime/equities_yf_cache/PANW_20250101_20260727.csv",
+        "sha256": "0570703dc10e55b3b767daf8af453adba0d9c837859953b5b3236dcded5872ac",
+        "rows": "389"
+      },
+      {
+        "symbol": "PEP",
+        "path": "runtime/equities_yf_cache/PEP_20250101_20260727.csv",
+        "sha256": "7a43b86af5671f1c4ab2d582629281e951b61bad7c8d1883d7680af89cfad71d",
+        "rows": "389"
+      },
+      {
+        "symbol": "PFE",
+        "path": "runtime/equities_yf_cache/PFE_20250101_20260727.csv",
+        "sha256": "338004378ab82b6ae0d7c88f7765f5b08513b9da825db541e93b616a3d34c65b",
+        "rows": "389"
+      },
+      {
+        "symbol": "PG",
+        "path": "runtime/equities_yf_cache/PG_20250101_20260727.csv",
+        "sha256": "d69f16e1db87ea2a7bd248a06633131509b7542298d304e2f50e1916e338dcf6",
+        "rows": "389"
+      },
+      {
+        "symbol": "PLTR",
+        "path": "runtime/equities_yf_cache/PLTR_20250101_20260727.csv",
+        "sha256": "f2c2ddd50c14f88b25cd6609701f55f3752b03d85c9b9ae4564b3c55ace5823f",
+        "rows": "389"
+      },
+      {
+        "symbol": "QCOM",
+        "path": "runtime/equities_yf_cache/QCOM_20250101_20260727.csv",
+        "sha256": "a30f3e23ebf77b31ae36041ab0ba39d01d552553ac8d6b252162206491164f24",
+        "rows": "389"
+      },
+      {
+        "symbol": "RTX",
+        "path": "runtime/equities_yf_cache/RTX_20250101_20260727.csv",
+        "sha256": "a4f33a38482403d625fa7e23e212cdf07ff272c30407e753223088610a7fa610",
+        "rows": "389"
+      },
+      {
+        "symbol": "SBUX",
+        "path": "runtime/equities_yf_cache/SBUX_20250101_20260727.csv",
+        "sha256": "907619a42c57cc8fa138abae1ffce1af9de442a1844073f0d5c743c6ecc13de0",
+        "rows": "389"
+      },
+      {
+        "symbol": "SCHW",
+        "path": "runtime/equities_yf_cache/SCHW_20250101_20260727.csv",
+        "sha256": "ee0f9d668f4642f3827c18b735776eeca74955807b2a6d50f9ce5ac53e008f8c",
+        "rows": "389"
+      },
+      {
+        "symbol": "SLB",
+        "path": "runtime/equities_yf_cache/SLB_20250101_20260727.csv",
+        "sha256": "05b29c1630316b1b2c1c0422fecfd84da83d2fe579085f0d5099d1f75db12376",
+        "rows": "389"
+      },
+      {
+        "symbol": "SNOW",
+        "path": "runtime/equities_yf_cache/SNOW_20250101_20260727.csv",
+        "sha256": "a5eebc681f7b2972a95b3a6339901b41670ddbc1756d8a58edc616f92c0f4b0f",
+        "rows": "389"
+      },
+      {
+        "symbol": "SOFI",
+        "path": "runtime/equities_yf_cache/SOFI_20250101_20260727.csv",
+        "sha256": "413d4fa520922abe4c3ca7f793115e59337a7bd3f2e39ca03ec2da48cd9fb502",
+        "rows": "389"
+      },
+      {
+        "symbol": "SPGI",
+        "path": "runtime/equities_yf_cache/SPGI_20250101_20260727.csv",
+        "sha256": "b9d3b57301cf99b080e29f1c66af91a262960a461ccb7fd8cf498c8f436f3785",
+        "rows": "389"
+      },
+      {
+        "symbol": "T",
+        "path": "runtime/equities_yf_cache/T_20250101_20260727.csv",
+        "sha256": "c4b57ff713a1b61617da74c80addcbb6bc0340d668af3f37e65081e4ab3c514a",
+        "rows": "389"
+      },
+      {
+        "symbol": "TGT",
+        "path": "runtime/equities_yf_cache/TGT_20250101_20260727.csv",
+        "sha256": "8ab95daad59efd059a73ac6794ab757406abb3e558fd04434ea34e9d04758b78",
+        "rows": "389"
+      },
+      {
+        "symbol": "TMO",
+        "path": "runtime/equities_yf_cache/TMO_20250101_20260727.csv",
+        "sha256": "ca3d0bfa6e7c4552b3cc15acc25e40fb321489d188c263210a1fd8252f6442eb",
+        "rows": "389"
+      },
+      {
+        "symbol": "TSLA",
+        "path": "runtime/equities_yf_cache/TSLA_20250101_20260727.csv",
+        "sha256": "b1ba658342116785434ab9f387745ed80f431d8e3815f900aa47f207118f1776",
+        "rows": "389"
+      },
+      {
+        "symbol": "TXN",
+        "path": "runtime/equities_yf_cache/TXN_20250101_20260727.csv",
+        "sha256": "a7719a94704116cd120cd667e16604074ae6da25494ddb159101843a4b628848",
+        "rows": "389"
+      },
+      {
+        "symbol": "UBER",
+        "path": "runtime/equities_yf_cache/UBER_20250101_20260727.csv",
+        "sha256": "1ad3e76a4a22633f56bd32a699ff4b9c38c514da43befbf882fcb9fc3221f749",
+        "rows": "389"
+      },
+      {
+        "symbol": "UNH",
+        "path": "runtime/equities_yf_cache/UNH_20250101_20260727.csv",
+        "sha256": "84a99e983b967a26fcd10ba5bdc125f2feb26e97f5b5acc91def15ece55fd7bd",
+        "rows": "389"
+      },
+      {
+        "symbol": "V",
+        "path": "runtime/equities_yf_cache/V_20250101_20260727.csv",
+        "sha256": "05ddd48f076fa3f6fd8006b0269e7ac4a92f72335096e791dac1dc8191e91520",
+        "rows": "389"
+      },
+      {
+        "symbol": "VZ",
+        "path": "runtime/equities_yf_cache/VZ_20250101_20260727.csv",
+        "sha256": "572dffd837fdf3d9b1bd03106dbf9cd04ee58ec46948f65fc65733ee274cd8be",
+        "rows": "389"
+      },
+      {
+        "symbol": "WMT",
+        "path": "runtime/equities_yf_cache/WMT_20250101_20260727.csv",
+        "sha256": "9b07509fd7f535368fb783a3cc4d0d91a95e1480ff8fac15d2c40362c043cc0d",
+        "rows": "389"
+      },
+      {
+        "symbol": "XOM",
+        "path": "runtime/equities_yf_cache/XOM_20250101_20260727.csv",
+        "sha256": "649393c108848d70987963cfe9897a4249e676a85f83b996b58d15d57e1ae16d",
+        "rows": "389"
+      },
+      {
+        "symbol": "SPY",
+        "path": "runtime/equities_yf_cache/SPY_20250101_20260727.csv",
+        "sha256": "11c894797181b88688ec0b1163fc93ced7845ccc48bad3f3d87e75879cc4786c",
+        "rows": "389"
+      }
+    ]
+  },
+  "decision": "REPAIR_CONTINUES",
+  "decision_metrics": {
+    "gated_sum_window_returns_pct_at_5bps": -5.189660542614094,
+    "ungated_sum_window_returns_pct_at_5bps": -15.980031338642764,
+    "gated_all_window_dd_le_15pct": true
+  },
+  "promotion": "RESEARCH_ONLY",
+  "capital_blockers": [
+    "survivor-only fixed universes",
+    "observed-session calendar rather than authoritative XNYS ledger",
+    "monthly endpoint drawdown rather than daily portfolio MTM",
+    "no broker lifecycle calibration",
+    "sample is underpowered"
+  ]
+}
