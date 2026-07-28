@@ -124,6 +124,7 @@ def _run_window(
     use_gate: bool,
     target_alloc_pct: float,
     max_positions: int,
+    exit_contract: SharedExitContract = SharedExitContract(),
 ) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, str]]]:
     suffix = str(window["cache_suffix"])
     data: dict[str, pd.DataFrame] = {}
@@ -193,7 +194,7 @@ def _run_window(
             position_bars = _bars(
                 frame,
                 entry_date,
-                SharedExitContract().max_hold_sessions,
+                exit_contract.max_hold_sessions,
             )
             if atr <= 0 or not position_bars:
                 continue
@@ -201,6 +202,7 @@ def _run_window(
                 position_bars,
                 atr_at_signal=atr,
                 cost_bps_per_side=cost_bps_per_side,
+                contract=exit_contract,
             )
             if result["exit_fill"] is None:
                 continue

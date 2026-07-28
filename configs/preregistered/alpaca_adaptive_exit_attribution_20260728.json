@@ -1,0 +1,45 @@
+{
+  "schema_id": "alpaca_adaptive_exit_attribution_prereg_v1",
+  "created_at_utc": "2026-07-28T11:43:00Z",
+  "research_only": true,
+  "capital_authorized": false,
+  "safe_hold_must_remain": true,
+  "parent": "configs/preregistered/alpaca_adaptive_historical_proxy_20260728.json",
+  "question": "Is Adaptive V1 negative because of its selector or because the frozen shared exit stops positions too aggressively?",
+  "fixed": {
+    "selector": "AdaptiveConfig defaults with SPY gate",
+    "windows": ["bear_2022_survivor_proxy", "recent_2025_2026_survivor_proxy"],
+    "cost_bps_per_side": [5.0, 10.0],
+    "target_alloc_pct": 70.0,
+    "max_positions": 4
+  },
+  "exit_arms": {
+    "shared_default": {
+      "initial_stop_atr": 2.0,
+      "profit_target_atr": 3.2,
+      "break_even_trigger_r": 0.8,
+      "trail_atr": 1.5,
+      "max_hold_sessions": 22
+    },
+    "wide_same_shape": {
+      "initial_stop_atr": 3.0,
+      "profit_target_atr": 4.8,
+      "break_even_trigger_r": 0.8,
+      "trail_atr": 2.25,
+      "max_hold_sessions": 22
+    },
+    "calendar_hold_22": {
+      "initial_stop_atr": 1000.0,
+      "profit_target_atr": 1000.0,
+      "break_even_trigger_r": 1000.0,
+      "trail_atr": 1000.0,
+      "max_hold_sessions": 22
+    }
+  },
+  "decision_rule": {
+    "selector_binding": "calendar_hold_22 combined return <= 0 at 5 bps/side",
+    "exit_binding": "calendar_hold_22 combined return > 0 while shared_default combined return <= 0",
+    "wide_exit_candidate": "wide_same_shape is positive in both windows and no window DD exceeds 15%"
+  },
+  "promotion": "always RESEARCH_ONLY; this is attribution on survivor proxies"
+}
