@@ -101,6 +101,28 @@ def test_stress_repricing_cannot_improve_net_r():
     assert stressed[0]["r"] < result.trades[0]["r"]
 
 
+def test_side_specific_swap_debit_and_credit_change_net_r():
+    rows = _rows(80)
+    signed = FxExecutionCosts(
+        1.0, 0.1, 0.2, 0.05, 0.2, 0.0, "signed",
+        financing_long_bps_per_day=-2.0,
+        financing_short_bps_per_day=1.0,
+    )
+    long_trade = {
+        "side": "long",
+        "entry_type": "market_next_open",
+        "risk_frac": 0.01,
+        "duration_days": 2.0,
+        "gross_r": 0.0,
+        "synthetic_spread_bps": 1.0,
+    }
+    short_trade = {**long_trade, "side": "short"}
+    repriced = reprice_trades([long_trade, short_trade], signed)
+    assert repriced[0]["financing_cashflow_bps"] == -4.0
+    assert repriced[1]["financing_cashflow_bps"] == 2.0
+    assert repriced[1]["r"] > repriced[0]["r"]
+
+
 def test_spread_change_requires_complete_barrier_rerun():
     rows = _rows()
 

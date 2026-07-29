@@ -114,8 +114,10 @@ class FxExecutionCosts:
     """Universal price-bps cost contract.
 
     ``spread_bps`` is paid once per round trip.  Commission is per side.
-    Slippage is adverse and side-specific.  Financing is charged by elapsed
-    wall-clock days.  These are research assumptions until calibrated to fills.
+    Slippage is adverse and side-specific.  The legacy symmetric financing
+    field is an always-adverse daily cost.  Optional long/short fields are
+    signed broker cashflows: negative is a debit and positive is a credit.
+    These are research assumptions until calibrated to fills.
     """
 
     spread_bps: float
@@ -125,15 +127,26 @@ class FxExecutionCosts:
     exit_slippage_bps: float
     financing_bps_per_day: float = 0.0
     label: str = "base"
+    financing_long_bps_per_day: Optional[float] = None
+    financing_short_bps_per_day: Optional[float] = None
 
     def __post_init__(self) -> None:
-        values = (
+        non_negative_values = (
             self.spread_bps, self.commission_bps_per_side,
             self.market_entry_slippage_bps, self.limit_entry_slippage_bps,
             self.exit_slippage_bps, self.financing_bps_per_day,
         )
-        if not all(math.isfinite(float(value)) and float(value) >= 0 for value in values):
+        if not all(
+            math.isfinite(float(value)) and float(value) >= 0
+            for value in non_negative_values
+        ):
             raise ValueError("execution costs must be finite and non-negative")
+        for value in (
+            self.financing_long_bps_per_day,
+            self.financing_short_bps_per_day,
+        ):
+            if value is not None and not math.isfinite(float(value)):
+                raise ValueError("side-specific financing must be finite")
 
     def round_trip_bps(self, entry_type: str) -> float:
         entry_slip = (
@@ -152,6 +165,24 @@ class FxExecutionCosts:
     def non_spread_bps(self, entry_type: str) -> float:
         """Fees/slippage not already embedded in synthetic bid/ask quotes."""
         return max(0.0, self.round_trip_bps(entry_type) - float(self.spread_bps))
+
+    def financing_cashflow_bps_per_day(self, side: str) -> float:
+        """Return signed daily financing cashflow for the requested side.
+
+        A positive value increases trade PnL, while a negative value is a
+        financing debit.  If side-specific broker data are absent, preserve the
+        legacy contract by treating ``financing_bps_per_day`` as a debit.
+        """
+        if side not in {"long", "short"}:
+            raise ValueError("side must be long or short")
+        value = (
+            self.financing_long_bps_per_day
+            if side == "long"
+            else self.financing_short_bps_per_day
+        )
+        if value is None:
+            return -float(self.financing_bps_per_day)
+        return float(value)
 
 
 @dataclass(frozen=True)

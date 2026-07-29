@@ -361,3 +361,27 @@ XSEC/Alpaca/FX/event:
   require a three-slot untouched V2.1 and incremental ATT1/BREAKDOWN replay.
 - Hour-of-day seasonality remains `FAIL` for filtering: 52.6% of shuffled
   controls produce an equally strong best-hour illusion.
+
+## 17. Dynamic-universe, FX-cost and observability checkpoint 29 июля
+
+- Funding Positioning V4 now has two isolated prospective shadows: the frozen
+  eight-symbol control and a causal 16-symbol dynamic-liquidity challenger.
+  Dynamic selection uses listing age, turnover, spread and funding-history
+  coverage only; it never ranks on signal or PnL. First review is N20 closed
+  lifecycles, estimated at 5–10 days.
+- Cross-exchange funding paper is N12 with 2 wins, median `-0.1671%` and five
+  open cycles. At current cadence N20 is expected around 31 July–1 August. The
+  automatic standalone-sleeve retirement rule remains binding.
+- Public OANDA costs are now executable in the V2 harness with signed,
+  side-specific daily swap cashflows. No KYC/deposit is required for the
+  historical phase. New D1/H4 runs must use a fresh preregistration rather than
+  mutating old SHA-pinned receipts.
+- Onboard AI context now receives a conservative technology inventory.
+  `tested_static_runtime_not_observed` is discovery evidence, not a promotion
+  claim. The web has a read-only Book Status API/page for sleeve health and
+  gate counts.
+- Direct live truth remains flat and healthy. ATT1 is enabled; the last entry
+  was 24 July and current silence is explained by cooldown plus valid
+  no-signal geometry. No live money mutation was made.
+- Canonical operational handoff:
+  `reports/RECOVERY_EXECUTION_UPDATE_2026_07_29.md`.

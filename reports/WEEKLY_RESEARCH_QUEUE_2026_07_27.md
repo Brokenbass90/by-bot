@@ -14,6 +14,7 @@
 | ARB-1 | Funding post-cutover paper | running low-priority, N12 | 2 wins, median -0.1671%, p25 -0.2238%; N20/N30 | bounded economics decision |
 | FPOS-1 | Funding positioning V4 maker audit | completed PASS to shadow | 5bps fill 92.95%, realized +13.49bps/submitted, 8/8 symbols | prospective only |
 | FPOS-2 | Funding positioning V4 public shadow | running 72h | frozen p70/16h; no keys/orders | fill/nonfill/lifecycle receipt |
+| FPOS-3 | Dynamic Funding universe challenger | running risk-zero, N0 | 16 causal liquidity/history-qualified symbols; separate ledger | N20 frozen-vs-dynamic comparison |
 | ALP-1 | Massive Basic PIT materializer/parity repair | exit defect localized; PIT queued | shared exit -5.19% combined vs calendar-hold +53.91% survivor proxy; calendar arm lacks catastrophe stop | distant-stop prereg + PIT/corporate-actions receipt |
 | ALP-2 | Exact broker-parity shadow | collection running, N6 unique decisions; performance blocked by ALP-1 | same picks/exits as future broker path | shadow ledger |
 | FX-1 | Preserve current FX negative baseline | completed FAIL | 9-family 0 PASS; H4 stress 16/16 negative | no unchanged rerun |
@@ -56,6 +57,25 @@
 - фактическая funding скорость определяет N20; календарная дата не подменяет
   sample gate;
 - XSEC interim ожидается позже недели, если daily frequency сохранится.
+
+## Checkpoint 29 июля 08:55 UTC
+
+- Five risk-zero screens are active: cross-exchange arbitrage, Alpaca adaptive,
+  XSEC, frozen Funding V4 and dynamic Funding V4.
+- Dynamic Funding selector built a 16-symbol public-data universe without using
+  signal or PnL. The shadow started after the latest funding event, so N0 is
+  expected until the next event; frozen N8 remains the control.
+- Cross-exchange paper is N12, 2 wins/10 losses, median `-0.1671%`, with five
+  open cycles. N20 is approximately 2–3 days away if discovery cadence holds.
+- FX harness now supports signed long/short swap and the public OANDA contract.
+  FX-2 moves from data-blocked to implementation-ready; KYC/deposit is not
+  needed.
+- AI technology inventory and read-only web Book Status are implemented and
+  covered by focused tests. The inventory explicitly refuses to treat static
+  test references as readiness.
+- ATT1 live is healthy but quiet: last entry 24 July; latest attempts are
+  cooldown/no-signal, not execution failures. Live risk/universe/signals remain
+  unchanged.
 
 ## Checkpoint 28 июля 11:09 UTC
 

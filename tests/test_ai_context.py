@@ -21,6 +21,11 @@ def test_compact_ai_context_includes_open_positions(tmp_path):
             "heartbeat": {"open_trades": 1, "trade_on": True, "dry_run": False, "regime": "bear_chop"},
             "git_revision": {"head": "abc123"},
             "ai_context_brief": "HOUSE RULES",
+            "technology_registry": {
+                "schema_id": "technology_inventory_v2",
+                "authority": "static_inventory_not_promotion_evidence",
+                "totals": {"modules": 3},
+            },
             "att1_edge_health": {"status": "watch", "n": 4},
             "pnl_by_sleeve_usd": {
                 "lookback_days": 45,
@@ -75,6 +80,7 @@ def test_compact_ai_context_includes_open_positions(tmp_path):
     assert compact["open_positions"]["positions"][0]["runner"]["targets"][0]["price"] == 41.9
     assert compact["git_revision"]["head"] == "abc123"
     assert compact["ai_context_brief"] == "HOUSE RULES"
+    assert compact["technology_registry"]["totals"]["modules"] == 3
     assert compact["att1_edge_health"]["status"] == "watch"
     assert compact["pnl_by_sleeve_usd"]["rows"][0]["strategy"] == "att1_trendline_touch"
     assert compact["alpaca_account_state"]["api_snapshot"]["account"]["equity"] == "494.90"

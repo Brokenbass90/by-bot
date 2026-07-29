@@ -87,6 +87,215 @@ def _read_env(p: Path) -> Dict[str, str]:
     return out
 
 
+def _unique_jsonl_count(path: Path, key: str) -> int:
+    if not path.exists():
+        return 0
+    values: set[str] = set()
+    try:
+        for raw in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            if not raw.strip():
+                continue
+            row = json.loads(raw)
+            value = str(row.get(key) or "").strip()
+            if value:
+                values.add(value)
+    except Exception:
+        return 0
+    return len(values)
+
+
+def _book_status_payload() -> Dict[str, Any]:
+    """Decision-oriented status for live, shadow and research sleeves.
+
+    This is a read-only projection. Counts come from immutable ledgers or the
+    live heartbeat and never authorize promotion.
+    """
+    hb = _json(_rt("bot_heartbeat.json")) or _json(
+        _RUNTIME_ROOT / "live_mirror" / "bot_heartbeat.json"
+    ) or {}
+    runtime_cfg = hb.get("strategy_runtime_config")
+    runtime_cfg = runtime_cfg if isinstance(runtime_cfg, dict) else {}
+    risk = runtime_cfg.get("risk_mult")
+    risk = risk if isinstance(risk, dict) else {}
+    enabled = runtime_cfg.get("enabled")
+    enabled = enabled if isinstance(enabled, dict) else {}
+    breakers = runtime_cfg.get("breaker")
+    breakers = breakers if isinstance(breakers, dict) else {}
+
+    att1_breaker = breakers.get("att1")
+    att1_breaker = att1_breaker if isinstance(att1_breaker, dict) else {}
+    att1_n = int(att1_breaker.get("trades") or 0)
+
+    arb = _json(_rt("arb", "arb_roi_estimate.json")) or _json(
+        _rt("arb_roi_estimate.json")
+    ) or {}
+    arb_sample = arb.get("sample")
+    arb_sample = arb_sample if isinstance(arb_sample, dict) else {}
+    arb_gate = arb.get("promotion_decision")
+    arb_gate = arb_gate if isinstance(arb_gate, dict) else {}
+
+    funding_v4 = _json(_rt("funding_positioning_v4_shadow_summary.json")) or {}
+    funding_dynamic = _json(
+        _rt("funding_positioning_dynamic_shadow_summary.json")
+    ) or {}
+    xsec_n = _unique_jsonl_count(_rt("xsec_v3_shadow", "ledger.jsonl"), "decision_id")
+    alpaca_n = _unique_jsonl_count(
+        _rt("alpaca_adaptive_v1_shadow_ledger.jsonl"), "decision_id"
+    )
+    bounce_n = _unique_jsonl_count(
+        _rt("bounce1_shadow_ledger.jsonl"), "decision_id"
+    )
+
+    def row(
+        sleeve: str,
+        market: str,
+        stage: str,
+        *,
+        sample_n: int = 0,
+        gate_n: int | None = None,
+        risk_mult: float = 0.0,
+        health: str = "collecting",
+        next_gate: str = "",
+        detail: str = "",
+        capital_authorized: bool = False,
+    ) -> Dict[str, Any]:
+        remaining = max(0, int(gate_n) - int(sample_n)) if gate_n is not None else None
+        return {
+            "sleeve": sleeve,
+            "market": market,
+            "stage": stage,
+            "risk_mult": round(float(risk_mult), 4),
+            "sample_n": int(sample_n),
+            "gate_n": int(gate_n) if gate_n is not None else None,
+            "remaining": remaining,
+            "health": health,
+            "next_gate": next_gate,
+            "detail": detail,
+            "capital_authorized": bool(capital_authorized),
+        }
+
+    sleeves = [
+        row(
+            "ATT1 short",
+            "crypto",
+            "live tiny canary",
+            sample_n=att1_n,
+            gate_n=20,
+            risk_mult=float(risk.get("att1") or 0.0),
+            health="blocked" if att1_breaker.get("blocked") else "healthy/collecting",
+            next_gate="N20 review; N30 scale gate",
+            detail=(
+                str(att1_breaker.get("reason") or "")
+                or "Only money crypto sleeve; short-only."
+            ),
+            capital_authorized=bool(enabled.get("att1")) and float(risk.get("att1") or 0.0) > 0,
+        ),
+        row(
+            "BOUNCE1",
+            "crypto",
+            "risk-zero wiring",
+            sample_n=bounce_n,
+            gate_n=30,
+            risk_mult=float(risk.get("bounce1") or 0.0),
+            health="blocked_parity" if bounce_n == 0 else "collecting",
+            next_gate="virtual decision/fill/exit parity",
+            detail="Support-bounce candidate; exploratory windows are not promotion evidence.",
+        ),
+        row(
+            "BREAKDOWN",
+            "crypto",
+            "regime-gated research",
+            risk_mult=float(risk.get("breakdown") or 0.0),
+            health="awaiting_shadow",
+            next_gate="bear-only untouched shadow",
+            detail="May participate only under a fresh fail-closed bear regime.",
+        ),
+        row(
+            "XSEC",
+            "crypto relative",
+            "risk-zero shadow",
+            sample_n=xsec_n,
+            gate_n=20,
+            health="collecting",
+            next_gate="N10 interim; N20-30 final",
+            detail="PIT/execution/cost validation remains mandatory.",
+        ),
+        row(
+            "Funding positioning V4",
+            "crypto",
+            "public maker shadow",
+            sample_n=int(funding_v4.get("closed") or 0),
+            gate_n=20,
+            health="collecting",
+            next_gate="closed prospective fill lifecycles",
+            detail=(
+                f"trials={int(funding_v4.get('trials') or 0)} "
+                f"submitted={int(funding_v4.get('submitted') or 0)} "
+                f"fills={int(funding_v4.get('fills') or 0)}"
+            ),
+        ),
+        row(
+            "Funding positioning dynamic",
+            "crypto",
+            "public dynamic shadow",
+            sample_n=int(funding_dynamic.get("closed") or 0),
+            gate_n=20,
+            health="collecting",
+            next_gate="N20 versus fixed-eight control",
+            detail=(
+                f"universe={len(funding_dynamic.get('universe_symbols') or [])} "
+                f"trials={int(funding_dynamic.get('trials') or 0)} "
+                f"fills={int(funding_dynamic.get('fills') or 0)}"
+            ),
+        ),
+        row(
+            "Cross-exchange funding",
+            "crypto arb",
+            "paper lifecycle",
+            sample_n=int(arb_sample.get("closed_cycles") or 0),
+            gate_n=int(arb_gate.get("initial_gate_cycles") or 20),
+            health=(
+                "negative_distribution"
+                if arb_gate.get("provisional_economics_positive") is False
+                else "collecting"
+            ),
+            next_gate="N20 retire/continue rule",
+            detail=(
+                f"median={arb_sample.get('median_return_pct_total_capital_per_cycle')}% "
+                f"p25={arb_sample.get('p25_return_pct_total_capital_per_cycle')}%"
+            ),
+        ),
+        row(
+            "Alpaca adaptive",
+            "equities",
+            "shadow; live Safe Hold",
+            sample_n=alpaca_n,
+            gate_n=20,
+            health="blocked_exit_parity",
+            next_gate="PIT universe + broker-compatible exit",
+            detail="Existing broker positions remain protected; new rotation is not authorized.",
+        ),
+        row(
+            "FX/CFD D1/H4",
+            "FX/CFD",
+            "sealed research",
+            health="cost_contract_ready",
+            next_gate="side-specific swap base/stress OOS",
+            detail="Public OANDA swap data is available; no KYC or deposit needed for research.",
+        ),
+    ]
+    return {
+        "schema_id": "book_status_v1",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "authority": "read_only_observer",
+        "regime": hb.get("regime", "unknown"),
+        "live_money_sleeves": [
+            item["sleeve"] for item in sleeves if item["capital_authorized"]
+        ],
+        "sleeves": sleeves,
+    }
+
+
 def _resolve_rooted_path(raw: str) -> Optional[Path]:
     raw = str(raw or "").strip()
     if not raw:
@@ -1358,6 +1567,12 @@ async def get_allocator(_: str = Depends(require_auth)):
         "sleeves": sleeves_status,
         "env": env_vals,
     }
+
+
+@router.get("/book-status")
+async def get_book_status(_: str = Depends(require_auth)):
+    """One-screen book health, shadow progress and next decision gates."""
+    return _book_status_payload()
 
 
 # ── health ────────────────────────────────────────────────────────────────────

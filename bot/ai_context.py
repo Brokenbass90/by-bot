@@ -242,6 +242,11 @@ def compact_ai_full_context(
             if isinstance(ctx.get("project_capability_registry"), dict)
             else static_capability_registry
         ),
+        "technology_registry": (
+            ctx.get("technology_registry")
+            if isinstance(ctx.get("technology_registry"), dict)
+            else {}
+        ),
         "open_positions": _compact_positions(positions_payload, max_positions=max_positions),
         "router": {
             "status": router.get("status"),

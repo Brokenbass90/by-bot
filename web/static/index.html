@@ -1835,6 +1835,76 @@ function RegimePage() {
   );
 }
 
+function BookStatusPage() {
+  const { data, loading, error } = useFetch('/api/book-status', [], 15000);
+  if (loading) return React.createElement(Loader);
+  if (error || !data) return React.createElement('div', { className: 'empty' }, 'Book status unavailable');
+  const sleeves = data.sleeves || [];
+  const collecting = sleeves.filter(s => (s.gate_n || 0) > 0 && (s.remaining || 0) > 0).length;
+  return React.createElement('div', null,
+    React.createElement('div', { className: 'page-hdr' },
+      React.createElement('div', null,
+        React.createElement('div', { className: 'section-title' }, 'Book Status'),
+        React.createElement('div', { className: 'section-sub' },
+          'Live authority, shadow progress and the next falsifiable gate — one screen, no promotion by dashboard.')
+      )
+    ),
+    React.createElement('div', { className: 'stats-grid', style: { marginBottom: '16px' } },
+      React.createElement('div', { className: 'stat-box' },
+        React.createElement('div', { className: 'stat-label' }, 'Money sleeves'),
+        React.createElement('div', { className: 'stat-value green' }, (data.live_money_sleeves || []).length),
+        React.createElement('div', { className: 'stat-sub' }, (data.live_money_sleeves || []).join(', ') || 'none')
+      ),
+      React.createElement('div', { className: 'stat-box' },
+        React.createElement('div', { className: 'stat-label' }, 'Evidence queues'),
+        React.createElement('div', { className: 'stat-value blue' }, collecting),
+        React.createElement('div', { className: 'stat-sub' }, 'collecting toward a sample gate')
+      ),
+      React.createElement('div', { className: 'stat-box' },
+        React.createElement('div', { className: 'stat-label' }, 'Regime'),
+        React.createElement('div', { className: 'stat-value' }, data.regime || 'unknown'),
+        React.createElement('div', { className: 'stat-sub' }, 'observer context')
+      )
+    ),
+    React.createElement('div', { className: 'card' },
+      React.createElement('div', { className: 'card-title' }, 'Sleeves and decision gates'),
+      React.createElement('div', { className: 'tbl-wrap' },
+        React.createElement('table', null,
+          React.createElement('thead', null,
+            React.createElement('tr', null,
+              ['Sleeve','Market','Stage','Risk','Evidence','Health','Next gate'].map(h =>
+                React.createElement('th', { key: h }, h))
+            )
+          ),
+          React.createElement('tbody', null,
+            sleeves.map(s => {
+              const evidence = s.gate_n == null
+                ? '—'
+                : `${s.sample_n || 0}/${s.gate_n} · ${s.remaining || 0} left`;
+              const healthClass = s.capital_authorized
+                ? 'badge-ok'
+                : String(s.health || '').includes('negative') || String(s.health || '').includes('blocked')
+                  ? 'badge-warn'
+                  : 'badge-off';
+              return React.createElement('tr', { key: s.sleeve },
+                React.createElement('td', { style: { color: 'var(--blue)', fontWeight: 600 } }, s.sleeve),
+                React.createElement('td', null, s.market),
+                React.createElement('td', null, s.stage),
+                React.createElement('td', null, Number(s.risk_mult || 0).toFixed(2) + '×'),
+                React.createElement('td', null, evidence),
+                React.createElement('td', null,
+                  React.createElement('span', { className: `badge ${healthClass}`, title: s.detail || '' }, s.health || 'unknown')
+                ),
+                React.createElement('td', { className: 'dim', title: s.detail || '' }, s.next_gate || '—')
+              );
+            })
+          )
+        )
+      )
+    )
+  );
+}
+
 // ── Strategies page ────────────────────────────────────────────────────────
 
 function StrategiesPage() {
@@ -3473,6 +3543,7 @@ const NAV_GROUPS = [
     pages: [
       { id: 'position', label: 'Live Position', icon: '🎯' },
       { id: 'alpaca',  label: 'Alpaca',   icon: '📊' },
+      { id: 'book',    label: 'Book Status', icon: '▦' },
       { id: 'regime',  label: 'Regime',   icon: '⬡' },
       { id: 'sweep',   label: 'Sweeps',     icon: '🔬' },
       { id: 'tv',      label: 'TV Signals', icon: '📡' },
@@ -3541,6 +3612,7 @@ function App() {
 	    analytics:  StrategyAnalyticsPage,
 	    setups:     SetupScannerPage,
 	    alpaca:     AlpacaPage,
+    book:       BookStatusPage,
     regime:     RegimePage,
     journal:    JournalPage,
     position:   LivePositionPage,

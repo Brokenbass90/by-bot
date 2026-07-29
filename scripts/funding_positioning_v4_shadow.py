@@ -249,9 +249,11 @@ def _discover(
     offset_bps: float,
     timeout_minutes: int,
     max_positions: int,
+    symbols: tuple[str, ...],
+    universe_sha256: str,
 ) -> None:
     proposals: list[dict[str, Any]] = []
-    for symbol in SYMBOLS:
+    for symbol in symbols:
         history = _funding_history(symbol, limit=100)
         signal = _signal(history)
         if not signal or signal["event_ts"] < state["started_at_ms"]:
@@ -267,6 +269,7 @@ def _discover(
                 **signal,
                 "trial_id": trial_id,
                 "symbol": symbol,
+                "universe_sha256": universe_sha256,
                 "reference_price": reference,
                 "limit_price": reference
                 * (1.0 - signal["side"] * offset_bps / 10_000.0)
@@ -312,7 +315,12 @@ def _discover(
         )
 
 
-def _summary(state: dict[str, Any]) -> dict[str, Any]:
+def _summary(
+    state: dict[str, Any],
+    *,
+    symbols: tuple[str, ...],
+    universe_sha256: str,
+) -> dict[str, Any]:
     trials = list(state["trials"].values())
     closed = [row for row in trials if row["status"] == "closed"]
     fills = [row for row in trials if row["status"] in {"open", "closed"}]
@@ -338,7 +346,29 @@ def _summary(state: dict[str, Any]) -> dict[str, Any]:
             for status in ("no_signal", "slot_reject", "pending_fill", "nonfill", "open", "closed")
         },
         "capital_authorized": False,
+        "universe_symbols": list(symbols),
+        "universe_sha256": universe_sha256,
     }
+
+
+def _load_symbols(path: Path | None) -> tuple[tuple[str, ...], str]:
+    if path is None:
+        symbols = SYMBOLS
+    else:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if payload.get("authority") != "research_only_no_orders":
+            raise ValueError("dynamic universe must be research_only_no_orders")
+        symbols = tuple(
+            dict.fromkeys(
+                str(symbol or "").strip().upper()
+                for symbol in payload.get("symbols") or []
+                if str(symbol or "").strip().upper().endswith("USDT")
+            )
+        )
+        if not symbols:
+            raise ValueError("dynamic universe contains no USDT symbols")
+    digest = hashlib.sha256(",".join(symbols).encode()).hexdigest()
+    return symbols, digest
 
 
 def main() -> int:
@@ -351,7 +381,14 @@ def main() -> int:
     parser.add_argument("--hold-hours", type=int, default=16)
     parser.add_argument("--max-positions", type=int, default=3)
     parser.add_argument("--maker-round-trip-bps", type=float, default=6.0)
+    parser.add_argument(
+        "--symbols-json",
+        type=Path,
+        default=None,
+        help="Optional research-only dynamic universe JSON.",
+    )
     args = parser.parse_args()
+    symbols, universe_sha256 = _load_symbols(args.symbols_json)
 
     now_ms = int(time.time() * 1000)
     if args.state.exists():
@@ -379,11 +416,19 @@ def main() -> int:
         offset_bps=args.offset_bps,
         timeout_minutes=args.timeout_minutes,
         max_positions=args.max_positions,
+        symbols=symbols,
+        universe_sha256=universe_sha256,
     )
     state["updated_at_utc"] = _now_iso()
     _atomic_json(args.state, state)
-    _atomic_json(args.summary, _summary(state))
-    print(json.dumps(_summary(state), indent=2))
+    _atomic_json(
+        args.summary,
+        _summary(state, symbols=symbols, universe_sha256=universe_sha256),
+    )
+    print(json.dumps(
+        _summary(state, symbols=symbols, universe_sha256=universe_sha256),
+        indent=2,
+    ))
     return 0
 
 

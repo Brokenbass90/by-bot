@@ -40,10 +40,15 @@ def _cost_r(
     entry_type: str,
     risk_frac: float,
     duration_days: float,
+    side: str,
 ) -> tuple[float, float]:
     # The synthetic bid/ask path already pays the spread in executable prices.
     bps = costs.non_spread_bps(entry_type)
-    bps += max(0.0, duration_days) * max(0.0, costs.financing_bps_per_day)
+    financing_cashflow = (
+        max(0.0, duration_days) * costs.financing_cashflow_bps_per_day(side)
+    )
+    # Positive broker cashflow reduces total cost; a debit increases it.
+    bps -= financing_cashflow
     return bps, (bps / 1e4) / max(1e-12, risk_frac)
 
 
@@ -357,6 +362,7 @@ def backtest_fx_plan_strategy(
             entry_type=plan.entry_type,
             risk_frac=risk_frac,
             duration_days=duration_days,
+            side=plan.side,
         )
         result.trades.append({
             "strategy": plan.strategy,
@@ -375,6 +381,11 @@ def backtest_fx_plan_strategy(
             "gap_atr": float(fill.get("gap_atr", 0.0)),
             "risk_frac": risk_frac,
             "duration_days": duration_days,
+            "financing_cashflow_bps": round(
+                duration_days
+                * costs.financing_cashflow_bps_per_day(plan.side),
+                6,
+            ),
             "gross_r": round(gross_r, 6),
             "cost_bps": round(cost_bps, 6),
             "synthetic_spread_bps": float(costs.spread_bps),
@@ -411,6 +422,12 @@ def reprice_trades(trades: Sequence[Dict[str, Any]], costs: FxExecutionCosts) ->
             entry_type=str(row["entry_type"]),
             risk_frac=float(row["risk_frac"]),
             duration_days=float(row.get("duration_days", 0.0)),
+            side=str(row["side"]),
+        )
+        row["financing_cashflow_bps"] = round(
+            float(row.get("duration_days", 0.0))
+            * costs.financing_cashflow_bps_per_day(str(row["side"])),
+            6,
         )
         row["cost_bps"] = round(bps, 6)
         row["cost_r"] = round(cr, 6)

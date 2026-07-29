@@ -50,6 +50,8 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from bot.ai_context import assess_runtime_authority
+from scripts.build_tech_registry import build_registry as build_technology_registry
+from scripts.build_tech_registry import compact_registry as compact_technology_registry
 
 DEFAULT_OUT = REPO_ROOT / "runtime" / "ai_context" / "full_context.json"
 
@@ -571,6 +573,20 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         }
     else:
         ctx["project_capability_registry"] = None
+
+    # Static technology inventory is observer-only. It helps the onboard AI
+    # reuse existing modules, while its explicit authority/warnings prevent a
+    # test-file mention from being mistaken for promotion readiness.
+    try:
+        ctx["technology_registry"] = compact_technology_registry(
+            build_technology_registry(root=REPO_ROOT)
+        )
+    except Exception as exc:
+        ctx["technology_registry"] = {
+            "schema_id": "technology_inventory_v2",
+            "authority": "unavailable",
+            "error": f"{type(exc).__name__}: {exc}",
+        }
 
     # ---- Heartbeat (key live source) ----
     hb_path = source_path("heartbeat")
