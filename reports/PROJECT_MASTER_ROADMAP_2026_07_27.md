@@ -100,13 +100,14 @@ AI может собирать данные, диагностировать, р�
 | ATT1 short champion | live tiny-canary `x0.10` | малая live-выборка | N20 — review; N30: net>0, PF≥1.20, DD≤3R, 0 incidents | N20 середина августа; N30 начало сентября при прежней частоте |
 | ATT1 A3/3R | completed FAIL | at 11 bps: 3/4 folds, 4 red months, DD 17.46%; worse than champion | do not forward; preserve evidence | terminal 28 июля |
 | ATT1 seasonality | completed FAIL | hour 21 UTC discovery не повторился | сохранить evidence; live filter не менять | terminal 28 июля |
-| XSEC | risk-zero shadow, 3 решения | survivorship/PIT, funding, fill/cost, Sharpe formula | 10–15 чистых решений interim; 20–30 final | N10 около 4 августа; N20 около 14 августа; N30 около 24 августа при daily cadence |
-| Event universe V2r2 | collector | ожидаемая coverage около 75%, не 100% | deadline 28 июля 18:19 UTC; frozen scorer | 29–30 июля PASS/FAIL/BLOCKED_DATA |
+| XSEC | risk-zero shadow, 4 решения | survivorship/PIT, funding, fill/cost, Sharpe formula | 10–15 чистых решений interim; 20–30 final | N10 около 4 августа; N20 около 14 августа; N30 около 24 августа при daily cadence |
+| Event universe V2r2 | terminal: 1h/4h FAIL, 24h BLOCKED_DATA | aggregate negative; 24h incomplete | new short-only prereg with PIT regime/beta, no threshold reuse | discovery preserved; no money |
 | Event retest long | causal identity есть | 8 data/performance/additivity contracts | frozen scorer, затем только risk-zero shadow | 1–3 недели, если coverage достаточна |
 | Pump exhaustion short | frozen research | нужна новая post-window выборка | N≥40, sealed holdout N≥10 без retune | 2–5 недель по событиям |
-| Funding arb | low-priority paper | 7 clean cycles, 0 wins, отрицательная distribution; duplicate incident | N20/N30 post-cutover, p25>0, median>0, annual floor≥8% | первичный gate только по фактическим циклам |
-| Alpaca | SAFE_HOLD + shadow, 5 уникальных решений | Basic connector 3/3, но 9 exact-parity artifacts не закреплены; performance не считается | PIT materializer + exact broker-parity shadow | 3–10 дней на parity repair; 20 решений около 4 недель |
-| FX/CFD | research-only | 9-family: 0 PASS; H4 stress 16/16 отрицательные | не rerun; новые prereg daily carry+trend и H4 families | 3–14 дней на новые sealed verdicts после реализации |
+| Funding arb | low-priority paper | 12 clean cycles, 2 wins, median -0.1671%, p25 -0.2238% | N20/N30 post-cutover, p25>0, median>0, annual floor≥8% | 8 cycles remain to initial gate |
+| Funding positioning V4 | historical maker gate PASS to shadow | queue position and prospective fill lifecycle | public 72h shadow, then N20 | first lifecycle receipt 1–3 days |
+| Alpaca | SAFE_HOLD + shadow, 6 уникальных решений | Basic connector 3/3, но exact exit/parity не закреплены | PIT materializer + exact broker-parity shadow | 20 решений около 3 недель при daily cadence |
+| FX/CFD | research-only; public swap contract materialized | `.pro` commission unknown; prior H4 families failed | sealed D1 carry+trend and new H4 base/stress | first new verdicts after harness side-swap repair |
 | LevelSnapshotV2 | design/parity infrastructure | нельзя скрытно менять ATT1 | design → replay parity → отдельный challenger | 1–3 недели |
 | Web levels/reports | geometry snapshot уже сохраняется | нужна полная trade→decision→level связь | parity audit и visual regression | 2–7 дней |
 | AI operator | observer/proposal-only | truth freshness, retry/model errors | verified context, bounded tools, audit trail | непрерывно; authority не расширять |
@@ -186,6 +187,11 @@ backtest, но не достоверный demo/live verdict.
    dynamic volume universe → level/retest → measured entry → volume exit.
 4. После Package A: token unlock data-availability probe.
 5. FX D1 carry+trend prereg и H4 breakout/retest prereg.
+
+29 июля публичный OANDA swap contract снял data-blocker для исторического
+этапа. KYC, utility bill и депозит не требуются до demo/live execution.
+Финансирование обязано моделироваться отдельно по long/short, а неизвестная
+комиссия `.pro` покрывается обязательным stress-arm.
 
 Первые два ATT1 bounded исследования уже terminal:
 

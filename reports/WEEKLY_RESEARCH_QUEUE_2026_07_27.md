@@ -7,15 +7,17 @@
 |---|---|---|---|---|
 | OPS-1 | Funding duplicate quarantine | выполнено | оставить один screen supervisor | incident receipt + post-cutover cohort |
 | LIVE-1 | Equity fail-closed + ATT1 source telemetry | готовится | direct flat, py_compile, focused tests | targeted deploy receipt |
-| EVT-1 | Event V2r2 collection | running | deadline `2026-07-28 18:19:58 UTC` | coverage/hash receipt |
-| EVT-2 | Frozen event scorer | waiting | EVT-1 terminal | PASS/FAIL/BLOCKED_DATA |
-| XSEC-1 | XSEC risk-zero decisions | running, N3 | immutable daily ledger; first markout expected 29 Jul | interim at N10–15 |
+| EVT-1 | Event V2r2 collection | completed N1504 | immutable collector receipt | terminal |
+| EVT-2 | Frozen event scorer | completed: 1h/4h FAIL, 24h BLOCKED_DATA | aggregate unchanged; short discovery needs new prereg | no money |
+| XSEC-1 | XSEC risk-zero decisions | running, N4 | immutable daily ledger; first phase gross markout -0.44% | interim at N10–15 |
 | XSEC-2 | PIT/execution repair spec | family gate PASS, PIT queued | 36/36 neighbouring V4 variants positive; no ledger rewrite | V5 PIT prereg, not live |
-| ARB-1 | Funding post-cutover paper | running low-priority, N7 | 7 losses; N20/N30 clean cycles | bounded economics decision |
+| ARB-1 | Funding post-cutover paper | running low-priority, N12 | 2 wins, median -0.1671%, p25 -0.2238%; N20/N30 | bounded economics decision |
+| FPOS-1 | Funding positioning V4 maker audit | completed PASS to shadow | 5bps fill 92.95%, realized +13.49bps/submitted, 8/8 symbols | prospective only |
+| FPOS-2 | Funding positioning V4 public shadow | running 72h | frozen p70/16h; no keys/orders | fill/nonfill/lifecycle receipt |
 | ALP-1 | Massive Basic PIT materializer/parity repair | exit defect localized; PIT queued | shared exit -5.19% combined vs calendar-hold +53.91% survivor proxy; calendar arm lacks catastrophe stop | distant-stop prereg + PIT/corporate-actions receipt |
-| ALP-2 | Exact broker-parity shadow | collection running, N5 unique decisions; performance blocked by ALP-1 | same picks/exits as future broker path | shadow ledger |
+| ALP-2 | Exact broker-parity shadow | collection running, N6 unique decisions; performance blocked by ALP-1 | same picks/exits as future broker path | shadow ledger |
 | FX-1 | Preserve current FX negative baseline | completed FAIL | 9-family 0 PASS; H4 stress 16/16 negative | no unchanged rerun |
-| FX-2 | D1 carry+trend prereg | queued | Dukascopy data + conservative costs | sealed OOS receipt |
+| FX-2 | D1 carry+trend prereg | public OANDA side-specific swap contract ready | wire long/short swap + base/stress commission | sealed OOS receipt |
 | FX-3 | H4 breakout/retest prereg | queued after FX-2 | WIP control | sealed OOS receipt |
 | ATT-1 | ATT1 seasonality/filter | completed FAIL | discovery hour 21 UTC failed validation and holdout | no live filter change |
 | ATT-2 | ATT1 A3/3R exact replay | completed FAIL | worse expectancy/red months/DD than champion | preserve champion; no forward shadow |

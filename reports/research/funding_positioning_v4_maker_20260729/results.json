@@ -1,0 +1,512 @@
+{
+  "schema_id": "funding_positioning_v4_maker_audit",
+  "research_only": true,
+  "executable": false,
+  "method": {
+    "signal": "p70/16h frozen V3",
+    "beta_train_trades": 60,
+    "max_positions": 3,
+    "slot_rejections": 752,
+    "strict_trade_through": true,
+    "timeout_minutes": 60,
+    "maker_round_trip_bps": 6.0,
+    "queue_position_modelled": false
+  },
+  "runs": [
+    {
+      "offset_bps": 2.0,
+      "submitted": 893,
+      "filled": 867,
+      "nonfilled": 26,
+      "fill_rate": 0.9708846584546472,
+      "baseline_all_signals": {
+        "n": 893,
+        "mean_bps": 10.501014177503409,
+        "sum_pct": 93.77405660510544,
+        "positive_share": 0.46248600223964165
+      },
+      "filled_realized": {
+        "n": 867,
+        "mean_bps": 13.1531377839927,
+        "sum_pct": 114.03770458721671,
+        "positive_share": 0.4786620530565167
+      },
+      "nonfill_market_counterfactual": {
+        "n": 26,
+        "mean_bps": 32.23919127190449,
+        "sum_pct": 8.382189730695167,
+        "positive_share": 0.6153846153846154
+      },
+      "realized_per_submitted_signal": {
+        "n": 893,
+        "mean_bps": 12.770179685018668,
+        "sum_pct": 114.03770458721671,
+        "positive_share": 0.46472564389697646
+      },
+      "max_positive_symbol_concentration": 0.4807066614862489,
+      "per_symbol": {
+        "ADAUSDT": {
+          "submitted": 111,
+          "filled": 110,
+          "fill_rate": 0.990990990990991,
+          "realized_per_submitted_signal": {
+            "n": 111,
+            "mean_bps": 6.83954331639338,
+            "sum_pct": 7.591893081196652,
+            "positive_share": 0.5045045045045045
+          }
+        },
+        "BTCUSDT": {
+          "submitted": 90,
+          "filled": 84,
+          "fill_rate": 0.9333333333333333,
+          "realized_per_submitted_signal": {
+            "n": 90,
+            "mean_bps": -2.3211185239385177,
+            "sum_pct": -2.089006671544666,
+            "positive_share": 0.07777777777777778
+          }
+        },
+        "DOTUSDT": {
+          "submitted": 163,
+          "filled": 155,
+          "fill_rate": 0.950920245398773,
+          "realized_per_submitted_signal": {
+            "n": 163,
+            "mean_bps": 34.6602332555697,
+            "sum_pct": 56.49618020657861,
+            "positive_share": 0.48466257668711654
+          }
+        },
+        "ETHUSDT": {
+          "submitted": 112,
+          "filled": 110,
+          "fill_rate": 0.9821428571428571,
+          "realized_per_submitted_signal": {
+            "n": 112,
+            "mean_bps": -1.2505705921126438,
+            "sum_pct": -1.4006390631661612,
+            "positive_share": 0.5089285714285714
+          }
+        },
+        "LINKUSDT": {
+          "submitted": 93,
+          "filled": 89,
+          "fill_rate": 0.956989247311828,
+          "realized_per_submitted_signal": {
+            "n": 93,
+            "mean_bps": 14.943054847397972,
+            "sum_pct": 13.897041008080112,
+            "positive_share": 0.5376344086021505
+          }
+        },
+        "LTCUSDT": {
+          "submitted": 97,
+          "filled": 96,
+          "fill_rate": 0.9896907216494846,
+          "realized_per_submitted_signal": {
+            "n": 97,
+            "mean_bps": 2.5504408238460985,
+            "sum_pct": 2.4739275991307155,
+            "positive_share": 0.4639175257731959
+          }
+        },
+        "SOLUSDT": {
+          "submitted": 165,
+          "filled": 163,
+          "fill_rate": 0.9878787878787879,
+          "realized_per_submitted_signal": {
+            "n": 165,
+            "mean_bps": 18.28481318997424,
+            "sum_pct": 30.169941763457498,
+            "positive_share": 0.5272727272727272
+          }
+        },
+        "SUIUSDT": {
+          "submitted": 62,
+          "filled": 60,
+          "fill_rate": 0.967741935483871,
+          "realized_per_submitted_signal": {
+            "n": 62,
+            "mean_bps": 11.12639784432897,
+            "sum_pct": 6.898366663483961,
+            "positive_share": 0.5483870967741935
+          }
+        }
+      }
+    },
+    {
+      "offset_bps": 5.0,
+      "submitted": 893,
+      "filled": 830,
+      "nonfilled": 63,
+      "fill_rate": 0.9294512877939529,
+      "baseline_all_signals": {
+        "n": 893,
+        "mean_bps": 10.501014177503409,
+        "sum_pct": 93.77405660510544,
+        "positive_share": 0.46248600223964165
+      },
+      "filled_realized": {
+        "n": 830,
+        "mean_bps": 14.509891328007255,
+        "sum_pct": 120.43209802246022,
+        "positive_share": 0.5120481927710844
+      },
+      "nonfill_market_counterfactual": {
+        "n": 63,
+        "mean_bps": 49.742704449295985,
+        "sum_pct": 31.33790380305647,
+        "positive_share": 0.49206349206349204
+      },
+      "realized_per_submitted_signal": {
+        "n": 893,
+        "mean_bps": 13.486237180566652,
+        "sum_pct": 120.43209802246022,
+        "positive_share": 0.47592385218365063
+      },
+      "max_positive_symbol_concentration": 0.2957190248993139,
+      "per_symbol": {
+        "ADAUSDT": {
+          "submitted": 111,
+          "filled": 107,
+          "fill_rate": 0.963963963963964,
+          "realized_per_submitted_signal": {
+            "n": 111,
+            "mean_bps": 9.14786124675217,
+            "sum_pct": 10.154125983894907,
+            "positive_share": 0.4864864864864865
+          }
+        },
+        "BTCUSDT": {
+          "submitted": 90,
+          "filled": 77,
+          "fill_rate": 0.8555555555555555,
+          "realized_per_submitted_signal": {
+            "n": 90,
+            "mean_bps": 0.1835257605598621,
+            "sum_pct": 0.1651731845038759,
+            "positive_share": 0.2777777777777778
+          }
+        },
+        "DOTUSDT": {
+          "submitted": 163,
+          "filled": 148,
+          "fill_rate": 0.9079754601226994,
+          "realized_per_submitted_signal": {
+            "n": 163,
+            "mean_bps": 21.849118155693574,
+            "sum_pct": 35.61406259378053,
+            "positive_share": 0.4539877300613497
+          }
+        },
+        "ETHUSDT": {
+          "submitted": 112,
+          "filled": 104,
+          "fill_rate": 0.9285714285714286,
+          "realized_per_submitted_signal": {
+            "n": 112,
+            "mean_bps": 6.267197823910508,
+            "sum_pct": 7.019261562779769,
+            "positive_share": 0.5357142857142857
+          }
+        },
+        "LINKUSDT": {
+          "submitted": 93,
+          "filled": 83,
+          "fill_rate": 0.8924731182795699,
+          "realized_per_submitted_signal": {
+            "n": 93,
+            "mean_bps": 18.965488117325577,
+            "sum_pct": 17.637903949112786,
+            "positive_share": 0.5053763440860215
+          }
+        },
+        "LTCUSDT": {
+          "submitted": 97,
+          "filled": 94,
+          "fill_rate": 0.9690721649484536,
+          "realized_per_submitted_signal": {
+            "n": 97,
+            "mean_bps": 2.8372673132421684,
+            "sum_pct": 2.7521492938449033,
+            "positive_share": 0.4536082474226804
+          }
+        },
+        "SOLUSDT": {
+          "submitted": 165,
+          "filled": 159,
+          "fill_rate": 0.9636363636363636,
+          "realized_per_submitted_signal": {
+            "n": 165,
+            "mean_bps": 21.137046020491475,
+            "sum_pct": 34.87612593381094,
+            "positive_share": 0.5272727272727272
+          }
+        },
+        "SUIUSDT": {
+          "submitted": 62,
+          "filled": 58,
+          "fill_rate": 0.9354838709677419,
+          "realized_per_submitted_signal": {
+            "n": 62,
+            "mean_bps": 19.698863743116974,
+            "sum_pct": 12.21329552073252,
+            "positive_share": 0.5483870967741935
+          }
+        }
+      },
+      "gate_diagnostics": {
+        "positive_symbols": 8,
+        "positive_symbols_required": 5,
+        "fill_rate_pass": true,
+        "economics_pass": true,
+        "concentration_pass": true
+      }
+    },
+    {
+      "offset_bps": 10.0,
+      "submitted": 893,
+      "filled": 776,
+      "nonfilled": 117,
+      "fill_rate": 0.8689809630459127,
+      "baseline_all_signals": {
+        "n": 893,
+        "mean_bps": 10.501014177503409,
+        "sum_pct": 93.77405660510544,
+        "positive_share": 0.46248600223964165
+      },
+      "filled_realized": {
+        "n": 776,
+        "mean_bps": 20.820750849127343,
+        "sum_pct": 161.5690265892282,
+        "positive_share": 0.5760309278350515
+      },
+      "nonfill_market_counterfactual": {
+        "n": 117,
+        "mean_bps": 24.44512569008549,
+        "sum_pct": 28.600797057400023,
+        "positive_share": 0.42735042735042733
+      },
+      "realized_per_submitted_signal": {
+        "n": 893,
+        "mean_bps": 18.092836124213683,
+        "sum_pct": 161.5690265892282,
+        "positive_share": 0.5005599104143337
+      },
+      "max_positive_symbol_concentration": 0.29330776082973203,
+      "per_symbol": {
+        "ADAUSDT": {
+          "submitted": 111,
+          "filled": 100,
+          "fill_rate": 0.9009009009009009,
+          "realized_per_submitted_signal": {
+            "n": 111,
+            "mean_bps": 8.836953347985459,
+            "sum_pct": 9.80901821626386,
+            "positive_share": 0.4774774774774775
+          }
+        },
+        "BTCUSDT": {
+          "submitted": 90,
+          "filled": 68,
+          "fill_rate": 0.7555555555555555,
+          "realized_per_submitted_signal": {
+            "n": 90,
+            "mean_bps": 2.8485952001445294,
+            "sum_pct": 2.5637356801300766,
+            "positive_share": 0.6
+          }
+        },
+        "DOTUSDT": {
+          "submitted": 163,
+          "filled": 142,
+          "fill_rate": 0.8711656441717791,
+          "realized_per_submitted_signal": {
+            "n": 163,
+            "mean_bps": 27.88269773717063,
+            "sum_pct": 45.44879731158813,
+            "positive_share": 0.4539877300613497
+          }
+        },
+        "ETHUSDT": {
+          "submitted": 112,
+          "filled": 94,
+          "fill_rate": 0.8392857142857143,
+          "realized_per_submitted_signal": {
+            "n": 112,
+            "mean_bps": 12.395201716024177,
+            "sum_pct": 13.882625921947078,
+            "positive_share": 0.5089285714285714
+          }
+        },
+        "LINKUSDT": {
+          "submitted": 93,
+          "filled": 78,
+          "fill_rate": 0.8387096774193549,
+          "realized_per_submitted_signal": {
+            "n": 93,
+            "mean_bps": 20.897506327095765,
+            "sum_pct": 19.43468088419906,
+            "positive_share": 0.4838709677419355
+          }
+        },
+        "LTCUSDT": {
+          "submitted": 97,
+          "filled": 89,
+          "fill_rate": 0.9175257731958762,
+          "realized_per_submitted_signal": {
+            "n": 97,
+            "mean_bps": 5.905090124505533,
+            "sum_pct": 5.727937420770367,
+            "positive_share": 0.4536082474226804
+          }
+        },
+        "SOLUSDT": {
+          "submitted": 165,
+          "filled": 152,
+          "fill_rate": 0.9212121212121213,
+          "realized_per_submitted_signal": {
+            "n": 165,
+            "mean_bps": 28.72087842928846,
+            "sum_pct": 47.38944940832596,
+            "positive_share": 0.5272727272727272
+          }
+        },
+        "SUIUSDT": {
+          "submitted": 62,
+          "filled": 53,
+          "fill_rate": 0.8548387096774194,
+          "realized_per_submitted_signal": {
+            "n": 62,
+            "mean_bps": 27.923841525812378,
+            "sum_pct": 17.312781746003676,
+            "positive_share": 0.532258064516129
+          }
+        }
+      }
+    },
+    {
+      "offset_bps": 20.0,
+      "submitted": 893,
+      "filled": 648,
+      "nonfilled": 245,
+      "fill_rate": 0.7256438969764838,
+      "baseline_all_signals": {
+        "n": 893,
+        "mean_bps": 10.501014177503409,
+        "sum_pct": 93.77405660510544,
+        "positive_share": 0.46248600223964165
+      },
+      "filled_realized": {
+        "n": 648,
+        "mean_bps": 30.560628651281625,
+        "sum_pct": 198.03287366030494,
+        "positive_share": 0.5987654320987654
+      },
+      "nonfill_market_counterfactual": {
+        "n": 245,
+        "mean_bps": 10.360017699718126,
+        "sum_pct": 25.38204336430941,
+        "positive_share": 0.4204081632653061
+      },
+      "realized_per_submitted_signal": {
+        "n": 893,
+        "mean_bps": 22.176133668567186,
+        "sum_pct": 198.03287366030494,
+        "positive_share": 0.43449048152295633
+      },
+      "max_positive_symbol_concentration": 0.30472345767963166,
+      "per_symbol": {
+        "ADAUSDT": {
+          "submitted": 111,
+          "filled": 89,
+          "fill_rate": 0.8018018018018018,
+          "realized_per_submitted_signal": {
+            "n": 111,
+            "mean_bps": 10.296464118475786,
+            "sum_pct": 11.42907517150812,
+            "positive_share": 0.44144144144144143
+          }
+        },
+        "BTCUSDT": {
+          "submitted": 90,
+          "filled": 43,
+          "fill_rate": 0.4777777777777778,
+          "realized_per_submitted_signal": {
+            "n": 90,
+            "mean_bps": 3.3648041247924017,
+            "sum_pct": 3.028323712313161,
+            "positive_share": 0.3888888888888889
+          }
+        },
+        "DOTUSDT": {
+          "submitted": 163,
+          "filled": 127,
+          "fill_rate": 0.7791411042944786,
+          "realized_per_submitted_signal": {
+            "n": 163,
+            "mean_bps": 37.02163312638146,
+            "sum_pct": 60.345261996001774,
+            "positive_share": 0.4233128834355828
+          }
+        },
+        "ETHUSDT": {
+          "submitted": 112,
+          "filled": 75,
+          "fill_rate": 0.6696428571428571,
+          "realized_per_submitted_signal": {
+            "n": 112,
+            "mean_bps": 16.52749550101546,
+            "sum_pct": 18.51079496113731,
+            "positive_share": 0.42857142857142855
+          }
+        },
+        "LINKUSDT": {
+          "submitted": 93,
+          "filled": 68,
+          "fill_rate": 0.7311827956989247,
+          "realized_per_submitted_signal": {
+            "n": 93,
+            "mean_bps": 27.35354237138327,
+            "sum_pct": 25.43879440538644,
+            "positive_share": 0.4731182795698925
+          }
+        },
+        "LTCUSDT": {
+          "submitted": 97,
+          "filled": 68,
+          "fill_rate": 0.7010309278350515,
+          "realized_per_submitted_signal": {
+            "n": 97,
+            "mean_bps": 7.45715512206173,
+            "sum_pct": 7.233440468399878,
+            "positive_share": 0.32989690721649484
+          }
+        },
+        "SOLUSDT": {
+          "submitted": 165,
+          "filled": 132,
+          "fill_rate": 0.8,
+          "realized_per_submitted_signal": {
+            "n": 165,
+            "mean_bps": 30.953504911370917,
+            "sum_pct": 51.073283103762016,
+            "positive_share": 0.49696969696969695
+          }
+        },
+        "SUIUSDT": {
+          "submitted": 62,
+          "filled": 46,
+          "fill_rate": 0.7419354838709677,
+          "realized_per_submitted_signal": {
+            "n": 62,
+            "mean_bps": 33.8288707125746,
+            "sum_pct": 20.97389984179625,
+            "positive_share": 0.46774193548387094
+          }
+        }
+      }
+    }
+  ]
+}

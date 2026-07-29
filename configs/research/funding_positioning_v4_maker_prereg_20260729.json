@@ -1,0 +1,42 @@
+{
+  "schema_id": "funding_positioning_v4_maker_prereg",
+  "created_at_utc": "2026-07-29T07:15:00Z",
+  "research_only": true,
+  "live_money_authorized": false,
+  "hypothesis": "The p70/16h funding-positioning candidate retains positive per-signal residual economics after a causal post-only fill model and its non-filled opportunity cost.",
+  "frozen_signal": {
+    "percentile": 70,
+    "hold_hours": 16,
+    "lookback_events": 90,
+    "beta_train_trades": 60,
+    "max_positions": 3,
+    "slot_ranking": "absolute_funding_rate"
+  },
+  "execution": {
+    "primary_limit_offset_bps": 5,
+    "robustness_offsets_bps": [2, 5, 10, 20],
+    "timeout_minutes": 60,
+    "fill_rule": "strict_trade_through_5m_bar",
+    "maker_round_trip_bps": 6,
+    "nonfill_return": 0,
+    "hold_clock": "from_actual_fill"
+  },
+  "required_outputs": [
+    "fill rate",
+    "filled-trade residual net bps",
+    "non-filled counterfactual residual bps",
+    "realized residual bps per submitted signal including zero-return nonfills",
+    "per-symbol decomposition",
+    "concentration"
+  ],
+  "gate": {
+    "historical_shadow_candidate_only_if": [
+      "primary realized residual per signal > 0 after maker cost",
+      "primary fill rate >= 0.75",
+      "at least five of eight symbols have positive realized residual per signal",
+      "no symbol contributes more than 35 percent of positive residual economics",
+      "2 bps and 10 bps neighbouring offsets do not both collapse"
+    ],
+    "prospective_shadow_required": true
+  }
+}

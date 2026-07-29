@@ -21,7 +21,10 @@ from collections import defaultdict
 from dataclasses import asdict
 from pathlib import Path
 
-from audit_funding_positioning_v2 import Trade, build_trades
+try:
+    from scripts.audit_funding_positioning_v2 import Trade, build_trades
+except ModuleNotFoundError:
+    from audit_funding_positioning_v2 import Trade, build_trades
 
 
 def _beta(train: list[Trade]) -> float:
@@ -124,7 +127,10 @@ def run(
     beta_train_trades: int,
     max_positions: int,
 ) -> dict:
-    from audit_funding_positioning_v2 import FUNDING_DIR
+    try:
+        from scripts.audit_funding_positioning_v2 import FUNDING_DIR
+    except ModuleNotFoundError:
+        from audit_funding_positioning_v2 import FUNDING_DIR
 
     symbols = sorted(path.stem for path in FUNDING_DIR.glob("*.csv"))
     candidates = [
