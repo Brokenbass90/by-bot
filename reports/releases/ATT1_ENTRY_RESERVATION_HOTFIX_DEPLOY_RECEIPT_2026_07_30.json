@@ -1,0 +1,57 @@
+{
+  "receipt_id": "att1_entry_reservation_hotfix_20260730",
+  "deployed_at_utc": "2026-07-30T15:54:51Z",
+  "verified_at_utc": "2026-07-30T15:56:51Z",
+  "git": {
+    "branch": "codex/dynamic-symbol-filters",
+    "code_commit": "46541d6",
+    "helper_commit": "f1a0c98",
+    "pushed": true
+  },
+  "live_target": {
+    "host": "64.226.73.119",
+    "repo": "/root/by-bot",
+    "service": "bybot.service",
+    "deployment_mode": "server-specific targeted file hotfix; no git pull",
+    "reason": "server was approximately 150 commits behind and had unrelated dirty changes"
+  },
+  "pre_deploy_gate": {
+    "direct_bybit_flat_confirmations": 3,
+    "confirmation_interval_sec": 2,
+    "open_positions_each_check": 0,
+    "active_orders_each_check": 0
+  },
+  "files": {
+    "smart_pump_reversal_bot.py": {
+      "pre_sha256": "efae41144adeae39a9beca04922ce524bde8fad9ef3fd17d4b0037ce89a3677b",
+      "post_sha256": "85c482b57f9ad57f38fe5d1d5ed3e77031e7cf72530f525fbec1c1f15bab4180",
+      "backup": "smart_pump_reversal_bot.py.pre_att1_reservation_hotfix_20260730"
+    },
+    "scripts/restart_bybot_when_flat.py": {
+      "post_sha256": "e1b03fcdea2b03e1a58eb391256c8aae49832a472eab7846f872d5674d1804f1",
+      "backup": "scripts/restart_bybot_when_flat.py.pre_env_hydrate_20260730",
+      "service_restart_required": false
+    }
+  },
+  "validation": {
+    "local_relevant_tests": "17 passed",
+    "flat_helper_tests": "3 passed",
+    "local_py_compile": "PASS",
+    "server_py_compile": "PASS",
+    "service_state": "active/running",
+    "service_main_pid": 1751099,
+    "service_nrestarts": 0,
+    "heartbeat_age_sec_at_check": 18.4,
+    "heartbeat_open_trades": 0,
+    "heartbeat_trade_on": true,
+    "heartbeat_dry_run": false,
+    "heartbeat_ws_guard_active": 0,
+    "direct_account_equity_usdt_approx": 1020.43
+  },
+  "risk_scope": {
+    "att1_risk_mult_changed": false,
+    "att1_signal_changed": false,
+    "att1_universe_changed": false,
+    "real_orders_created_by_deploy": false
+  }
+}
