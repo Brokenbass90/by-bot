@@ -82,3 +82,27 @@ def test_restore_unknown_position_marks_missing_broker_protection(monkeypatch):
     assert trade.tpsl_on_exchange is False
     assert events[0][0:2] == ("bootstrap_adopted", "ETHUSDT")
     assert events[0][3]["missing_protection"] == ["tp"]
+
+
+def test_entry_reservation_does_not_mask_exchange_position(monkeypatch):
+    import smart_pump_reversal_bot as bot
+
+    reservation = bot.TradeState(symbol="ETHUSDT", side="Sell")
+    reservation.status = "PLACING_ENTRY"
+    reservation.strategy = "__entry_reservation__"
+    managed = bot.TradeState(symbol="DOTUSDT", side="Sell")
+    managed.status = "PENDING_ENTRY"
+    closed = bot.TradeState(symbol="BTCUSDT", side="Sell")
+    closed.status = "CLOSED"
+
+    tracked = bot._tracked_exchange_position_keys(
+        {
+            ("Bybit", "ETHUSDT"): reservation,
+            ("Bybit", "DOTUSDT"): managed,
+            ("Bybit", "BTCUSDT"): closed,
+        }
+    )
+
+    assert ("Bybit", "ETHUSDT") not in tracked
+    assert ("Bybit", "DOTUSDT") in tracked
+    assert ("Bybit", "BTCUSDT") not in tracked

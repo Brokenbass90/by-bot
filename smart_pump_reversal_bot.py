@@ -7060,11 +7060,7 @@ def _scan_untracked_exchange_positions() -> None:
         log_error(f"scan untracked exchange positions fail: {e}")
         return
 
-    tracked_keys = {
-        (exch, sym)
-        for (exch, sym), tr in TRADES.items()
-        if exch == "Bybit" and getattr(tr, "status", "") != "CLOSED"
-    }
+    tracked_keys = _tracked_exchange_position_keys(TRADES)
 
     for row in rows:
         sym = str(row.get("symbol") or "").upper().strip()
@@ -7101,6 +7097,24 @@ def _scan_untracked_exchange_positions() -> None:
             f"На бирже есть открытая позиция, которой нет в локальном state бота. "
             f"Это manual/внешний вход или потеря синхронизации. Проверь позицию немедленно."
         )
+
+
+def _tracked_exchange_position_keys(trades: dict) -> set[tuple[str, str]]:
+    """Return positions genuinely managed by the local runner.
+
+    ``PLACING_ENTRY`` reservations are concurrency locks, not position state.
+    Treating one as a tracked trade masks a filled exchange position from the
+    untracked-position safety alarm.
+    """
+    return {
+        (exch, sym)
+        for (exch, sym), tr in trades.items()
+        if (
+            exch == "Bybit"
+            and getattr(tr, "status", "") != "CLOSED"
+            and not _is_entry_reservation(tr)
+        )
+    }
 
 
 def _restore_trade_state_from_exchange_row(
@@ -11537,23 +11551,59 @@ async def try_att1_entry_async(symbol: str, price: float):
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
         tr.signal_reason = signal_reason
+        # The exchange has acknowledged a real order. Replace the concurrency
+        # reservation immediately, before any optional telemetry/geometry work,
+        # so sync and protection own the position even if an auxiliary hook
+        # fails.
+        TRADES[("Bybit", symbol)] = tr
+
+        try:
+            ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
+        except Exception as e:
+            ok = False
+            log_error(f"ATT1 initial protection exception {symbol}: {e}")
+        tr.tpsl_on_exchange = bool(ok)
+        tr.tpsl_last_set_ts = now_s()
+        if ok:
+            tr.tpsl_manual_lock = False
+
+        try:
+            _append_order_submitted_event(
+                symbol,
+                tr,
+                request_price=float(entry),
+                request_tp=tp_r,
+                request_sl=sl_r,
+                signal_reason=signal_reason,
+            )
+        except Exception as e:
+            log_error(f"ATT1 order-submitted event fail {symbol}: {e}")
+
+        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
+        tg_trade(
+            f"🔷 ATT1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
+            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
+            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
+            f"reason={signal_reason}"
+        )
+
         tp_prices = [
             float(value)
             for value in (list(getattr(sig, "tps", None) or []) if use_runner else [tp_r])
             if value is not None
         ]
-        tr.signal_geometry = build_position_geometry(
-            symbol=symbol,
-            strategy=tr.strategy,
-            side=side,
-            entry_ts=now,
-            entry_price=entry,
-            sl_price=sl_r,
-            tp_prices=tp_prices,
-            signal_reason=signal_reason,
-            order_id=str(oid or ""),
-        )
         try:
+            tr.signal_geometry = build_position_geometry(
+                symbol=symbol,
+                strategy=tr.strategy,
+                side=side,
+                entry_ts=now,
+                entry_price=entry,
+                sl_price=sl_r,
+                tp_prices=tp_prices,
+                signal_reason=signal_reason,
+                order_id=str(oid or ""),
+            )
             geometry_path = write_position_geometry(
                 POSITION_GEOMETRY_DIR,
                 str(oid or f"{symbol}_{now}"),
@@ -11563,38 +11613,20 @@ async def try_att1_entry_async(symbol: str, price: float):
         except Exception as e:
             log_error(f"position geometry snapshot fail {symbol}: {e}")
         tr.att1_breaker_mult = float(breaker_mult)
-        tr.att1_bus_id = _att1_wire.record_entry(
-            symbol=symbol, side=("long" if side == "Buy" else "short"),
-            entry=float(entry), sl=float(sl_r), tp=(float(tp_r) if tp_r is not None else None),
-            breaker_mult=float(breaker_mult), effective_risk_mult=float(effective_att1_risk_mult),
-            stop_pct=float(stop_pct), minqty_fallback=bool(minqty_fallback_used),
-            notional_usd=float(notional_real), qty=float(q),
-        )
-        apply_runner_state(tr, sig, q, use_runner=use_runner)
-        TRADES[("Bybit", symbol)] = tr
-
-        ok = set_tp_sl_retry(symbol, tr.side, tr.tp_price, tr.sl_price)
-        tr.tpsl_on_exchange = bool(ok)
-        tr.tpsl_last_set_ts = now_s()
-        if ok:
-            tr.tpsl_manual_lock = False
-
-        _append_order_submitted_event(
-            symbol,
-            tr,
-            request_price=float(entry),
-            request_tp=tp_r,
-            request_sl=sl_r,
-            signal_reason=str(getattr(sig, "reason", "") or ""),
-        )
-
-        tp_txt = f"{tr.tp_price:.6f}" if tr.tp_price is not None else "runner"
-        tg_trade(
-            f"🔷 ATT1 ENTRY [{TRADE_CLIENT.name}] {symbol} {sig.side}\n"
-            f"entry≈{entry:.6f} TP={tp_txt} SL={tr.sl_price:.6f}\n"
-            f"notional≈{notional_real:.2f}$ qty≈{q}\n"
-            f"reason={sig.reason}"
-        )
+        try:
+            tr.att1_bus_id = _att1_wire.record_entry(
+                symbol=symbol, side=("long" if side == "Buy" else "short"),
+                entry=float(entry), sl=float(sl_r), tp=(float(tp_r) if tp_r is not None else None),
+                breaker_mult=float(breaker_mult), effective_risk_mult=float(effective_att1_risk_mult),
+                stop_pct=float(stop_pct), minqty_fallback=bool(minqty_fallback_used),
+                notional_usd=float(notional_real), qty=float(q),
+            )
+        except Exception as e:
+            log_error(f"ATT1 decision-bus record fail {symbol}: {e}")
+        try:
+            apply_runner_state(tr, sig, q, use_runner=use_runner)
+        except Exception as e:
+            log_error(f"ATT1 runner init fail {symbol}: {e}")
 
 
 async def try_asm1_entry_async(symbol: str, price: float):

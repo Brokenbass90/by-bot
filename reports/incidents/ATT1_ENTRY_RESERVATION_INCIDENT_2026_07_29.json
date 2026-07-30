@@ -1,0 +1,54 @@
+{
+  "incident_id": "att1_entry_reservation_post_ack_20260729",
+  "status": "CLOSED_FLAT_QUARANTINED",
+  "direct_broker_verified_at_utc": "2026-07-30T15:50:11Z",
+  "strategy": "att1_trendline_touch",
+  "root_cause": {
+    "exception": "NameError: name 'signal_reason' is not defined",
+    "source": "smart_pump_reversal_bot.py:try_att1_entry_async",
+    "failure_window": "after exchange market-order acknowledgement and before reservation replacement, protection, Telegram entry notification, and trade ledger write",
+    "secondary_mask": "PLACING_ENTRY reservation was incorrectly treated as a tracked exchange position by the runtime untracked-position scan"
+  },
+  "sample_policy": {
+    "excluded_from_att1_live_edge_sample": true,
+    "reason": "execution lifecycle was not autonomous and both positions required owner intervention",
+    "database_rewrite_required": false,
+    "current_trade_db_presence": "ABSENT",
+    "future_broker_fill_rebuild_action": "preserve broker accounting, but tag both entry order ids INCIDENT_EXCLUDED for ATT1 promotion statistics"
+  },
+  "broker_result": {
+    "account_flat": true,
+    "open_orders_eth_dot": 0,
+    "combined_closed_pnl_usdt": 0.15959454
+  },
+  "trades": [
+    {
+      "symbol": "ETHUSDT",
+      "side": "Sell",
+      "entry_order_id": "8728ab6a-57b5-4a53-a2a5-3ecc2352b177",
+      "entry_order_link_id": "6a4eb6c10d84242c62d36c417ec1",
+      "entry_ts_utc": "2026-07-29T11:09:34Z",
+      "qty": 0.01,
+      "avg_entry_price": 1914.48,
+      "signal_reason": "att1_short_trendline tl=1922.9684 slope=-0.672%/d rsi=47.5",
+      "exit_order_id": "972901c2-c92b-4a03-b3c7-4c21ecdbd4b0",
+      "avg_exit_price": 1913.94,
+      "closed_pnl_usdt_after_fees": -0.01527334,
+      "owner_intervention": "manual close near breakeven"
+    },
+    {
+      "symbol": "DOTUSDT",
+      "side": "Sell",
+      "entry_order_id": "8b250dde-45d4-46c6-9bcd-6099d42fe944",
+      "entry_order_link_id": "f43474c6bc33cf76047d981fb8f5",
+      "entry_ts_utc": "2026-07-29T16:41:46Z",
+      "qty": 43.0,
+      "avg_entry_price": 0.76,
+      "signal_reason": "att1_short_trendline tl=0.7626 slope=-1.137%/d rsi=57.1",
+      "exit_order_id": "d044c054-17f4-4f9c-8266-a71d442ce00f",
+      "avg_exit_price": 0.7551,
+      "closed_pnl_usdt_after_fees": 0.17486788,
+      "owner_intervention": "manual take-profit order"
+    }
+  ]
+}
