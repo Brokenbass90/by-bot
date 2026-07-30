@@ -73,10 +73,10 @@ Receipt:
 
 - Strongest crypto research candidate: robustness and family tests are
   positive, but the evidence is survivor-only and not independent PIT/OOS.
-- Latest canonical receipt says risk-zero shadow N4. Current direct server
-  inspection found no XSEC process, screen or cron entry; therefore it must not
-  be described as currently collecting daily decisions until its supervisor is
-  restored and a fresh receipt is emitted.
+- XSEC intentionally runs in a detached local Mac research screen, not on the
+  live VPS. Direct local inspection confirms `xsec_v3_shadow_20260726` is alive,
+  with five immutable risk-zero ledger decisions through 30 July. The hourly
+  loop is idempotently reporting that today's decision is already complete.
 - Next work: PIT universe, execution/fill parity, immutable daily ledger, then
   N10 interim and N20-30 decision. No real money yet.
 
@@ -87,9 +87,14 @@ Receipt:
 - A separate dynamic selector already builds a causal universe from listing
   age, turnover, spread and funding-history coverage. This is the correct way
   to expand beyond eight manually named coins.
-- Current direct server inspection found no running/scheduled Funding
-  Positioning prospective shadow. Restore it risk-zero before making any live
-  claim; measure non-fill adverse selection and queue position.
+- Both prospective collectors intentionally run in detached local Mac research
+  screens. Their ledgers and summaries were fresh at the 30 July inspection:
+  frozen V4 had 40 trials, 9 submitted, 6 fills and 5 closed; the dynamic
+  challenger had 111 trials, 6 submitted, 6 fills and 3 closed. Both explicitly
+  have `capital_authorized=false`.
+- The dynamic summary's very large early mean is based on only three closes and
+  is diagnostic, not a return estimate. Continue measuring non-fill adverse
+  selection and queue position.
 
 ### Cross-exchange funding arbitrage
 
@@ -157,8 +162,8 @@ Qualified or rejected:
 
 1. Observe the first post-hotfix ATT1 entry end-to-end and emit a lifecycle
    receipt; do not alter ATT1 risk/signal/universe.
-2. Restore XSEC and Funding Positioning as bounded risk-zero supervisors with
-   fresh immutable receipts, or mark them explicitly stopped.
+2. Continue the already-running local XSEC and Funding Positioning risk-zero
+   supervisors; emit bounded interim receipts without restarting duplicates.
 3. Let cross-exchange funding reach its automatic N20 decision.
 4. Run the public-cost FX D1/H4 sealed package.
 5. Complete Alpaca adaptive exit/parity attribution before any real rotation.
