@@ -385,3 +385,34 @@ XSEC/Alpaca/FX/event:
   no-signal geometry. No live money mutation was made.
 - Canonical operational handoff:
   `reports/RECOVERY_EXECUTION_UPDATE_2026_07_29.md`.
+
+## 18. Strategy promotion queue checkpoint 30 июля
+
+Добавлена единая машинно-проверяемая очередь:
+
+- `configs/research/strategy_promotion_queue_20260730.json`;
+- `reports/STRATEGY_PROMOTION_QUEUE_2026_07_30.md`;
+- `scripts/validate_strategy_promotion_queue.py`.
+
+Очередь не создаёт live authority и фиксирует `capital_authorized=false`.
+Текущие пять risk-zero supervisor занимают WIP полностью; длинная шестая
+задача не стартует до bounded/terminal receipt.
+
+Порядок следующего запуска:
+
+1. первый свободный WIP — FX D1 carry+trend;
+2. второй — BOUNCE1 virtual lifecycle;
+3. отдельный short-slot — BREAKDOWN regime V2;
+4. после D1 base receipt — FX H4 break/retest;
+5. затем exact BTC/ETH midterm pullback.
+
+Crypto очередь содержит 11 физических кандидатов, FX/CFD — 6. Это не
+17 будущих money sleeves: очередь заранее фиксирует, какие кандидаты являются
+feature/data probes, какие могут стать самостоятельным sleeve, и какой receipt
+обязан существовать до следующей стадии.
+
+Dynamic universe определяется отдельно для каждой стратегии. Funding и XSEC
+уже используют причинные eligibility rules; BOUNCE/BREAKDOWN требуют
+level-quality eligibility, owner-volume setup — volume inflow, pump exhaustion
+— новый movers cohort. BTC/ETH midterm core не расширяется сегодняшним списком
+альтов; PIT-major expansion остаётся отдельным challenger.

@@ -1,0 +1,409 @@
+{
+  "schema_id": "strategy_promotion_queue_v1",
+  "created_at_utc": "2026-07-30T16:45:00Z",
+  "research_only": true,
+  "capital_authorized": false,
+  "live_invariants": {
+    "att1_risk_signal_and_universe_unchanged": true,
+    "alpaca_safe_hold_unchanged": true,
+    "maximum_open_positions": 3,
+    "ai_may_raise_live_risk": false,
+    "new_money_sleeve_requires_deploy_receipt": true
+  },
+  "wip": {
+    "maximum_concurrent_research_supervisors": 5,
+    "active": [
+      "xsec_v3_shadow_20260726",
+      "funding_position_v4_shadow_20260729",
+      "funding_position_dynamic_shadow_20260729",
+      "cross_arb_shadow_20260728",
+      "alpaca_adaptive_shadow_20260726"
+    ],
+    "policy": "Do not start a queued long-running job until one active supervisor reaches a terminal or bounded interim receipt."
+  },
+  "common_gate": {
+    "required_stages": [
+      "preregistered",
+      "causal_backtest",
+      "stress_and_oos",
+      "risk_zero_shadow",
+      "tiny_canary",
+      "scale_ladder"
+    ],
+    "required_evidence": [
+      "point_in_time_universe_or_fixed_causal_universe",
+      "long_short_split",
+      "regime_split",
+      "after_cost_metrics",
+      "negative_control",
+      "immutable_trade_or_decision_ledger",
+      "execution_fill_nonfill_receipt",
+      "concentration_and_loso",
+      "backtest_runtime_parameter_hash"
+    ],
+    "portfolio_metrics": [
+      "annualized_after_cost_return",
+      "negative_month_count",
+      "worst_month",
+      "max_drawdown",
+      "recovery_time",
+      "profit_factor",
+      "closed_lifecycles",
+      "largest_symbol_contribution_share"
+    ],
+    "optimization_target_zero_red_months": false
+  },
+  "crypto_queue": [
+    {
+      "rank": 1,
+      "id": "crypto_xsec_pit_v5",
+      "family": "cross_sectional_relative_strength",
+      "side": "market_neutral_long_short",
+      "portfolio_role": "relative",
+      "stage": "risk_zero_shadow",
+      "implementation": [
+        "scripts/xsec_shadow_cycle.py",
+        "research_lab/xsec_v4_validate.py"
+      ],
+      "universe": "Bybit linear perpetuals with causal listing-age and liquidity eligibility",
+      "data_quality": "MEDIUM",
+      "binding_risk": "Current historical headline uses survivor-selected symbols and lacks independent PIT execution parity.",
+      "next_artifact": "N10 interim plus PIT universe and measured cost/fill receipt",
+      "first_money_gate": "N20-30 decisions, positive after measured costs, no concentration breach, independent PIT/OOS pass",
+      "timing": "N10 early August; money review mid-to-late August"
+    },
+    {
+      "rank": 2,
+      "id": "crypto_funding_positioning_v4",
+      "family": "funding_positioning",
+      "side": "bidirectional",
+      "portfolio_role": "derivatives_event",
+      "stage": "risk_zero_shadow",
+      "implementation": [
+        "scripts/funding_positioning_v4_shadow.py",
+        "scripts/run_funding_positioning_v4_shadow_loop.sh"
+      ],
+      "universe": "Frozen eight-symbol control",
+      "data_quality": "MEDIUM",
+      "binding_risk": "Small prospective sample and optimistic queue-fill model.",
+      "next_artifact": "72h frozen-universe fill/nonfill/lifecycle receipt",
+      "first_money_gate": "N20 closed, fill rate >= 0.75, positive mean after measured costs, positive breadth, concentration <= 0.35",
+      "timing": "first review 3-8 August"
+    },
+    {
+      "rank": 3,
+      "id": "crypto_funding_positioning_dynamic",
+      "family": "funding_positioning",
+      "side": "bidirectional",
+      "portfolio_role": "derivatives_event_challenger",
+      "stage": "risk_zero_shadow",
+      "implementation": [
+        "scripts/build_funding_positioning_dynamic_universe.py",
+        "scripts/run_funding_positioning_dynamic_shadow_loop.sh"
+      ],
+      "universe": "Top 16 causally eligible Bybit crypto perpetuals ranked by turnover and spread",
+      "data_quality": "MEDIUM",
+      "binding_risk": "Only three closed lifecycles and an implausibly large early mean; frozen-control parity is mandatory.",
+      "next_artifact": "N20 frozen-versus-dynamic comparison with symbol and contribution attribution",
+      "first_money_gate": "Must beat or diversify the frozen control without lower fill quality or concentration breach",
+      "timing": "first review 3-8 August; N20 later"
+    },
+    {
+      "rank": 4,
+      "id": "crypto_bounce1_virtual_lifecycle",
+      "family": "level_rejection",
+      "side": "long_support_rejection",
+      "portfolio_role": "tactical_long",
+      "stage": "queued_preregistration",
+      "implementation": [
+        "strategies/alt_support_bounce_v1.py",
+        "strategies/bounce1_live.py",
+        "configs/bounce1_risk_zero_shadow_20260728.env"
+      ],
+      "universe": "PIT liquid crypto perpetuals; fixed before outcomes",
+      "data_quality": "LOW",
+      "binding_risk": "Claude sample is overlapping, underpowered and has no virtual decision/fill/exit ledger.",
+      "next_artifact": "Code/config SHA parity, untouched preregistration and risk-zero virtual lifecycle",
+      "first_money_gate": "Minimum powered OOS sample plus N20 shadow closes, positive stress economics and no single-symbol dependence",
+      "timing": "implementation after first WIP slot frees; evidence 1-3 weeks"
+    },
+    {
+      "rank": 5,
+      "id": "crypto_breakdown_regime_v2",
+      "family": "break_and_retest",
+      "side": "short_support_break",
+      "portfolio_role": "tactical_bear",
+      "stage": "queued_causal_backtest",
+      "implementation": [
+        "strategies/alt_inplay_breakdown_v1.py",
+        "strategies/breakdown_live.py",
+        "bot/strategy_regime_gate.py"
+      ],
+      "universe": "PIT liquid crypto perpetuals",
+      "data_quality": "LOW",
+      "binding_risk": "Historical improvement is regime-selected and exit-ladder interaction was not independently validated.",
+      "next_artifact": "Bear-only preregistered exit-ladder replay with untouched bull negative control and exact runtime parity",
+      "first_money_gate": "Positive bear OOS and stress, no trading in stale/unknown regime, then N20 risk-zero closes",
+      "timing": "start after BOUNCE1 prereg or a free short research slot"
+    },
+    {
+      "rank": 6,
+      "id": "crypto_btc_eth_midterm_pullback_v4",
+      "family": "midterm_trend_pullback",
+      "side": "long_then_separate_short_challenger",
+      "portfolio_role": "midterm_core",
+      "stage": "queued_causal_backtest",
+      "implementation": [
+        "strategies/btc_eth_midterm_pullback.py",
+        "backtest/midterm_trade_export.py"
+      ],
+      "universe": "BTCUSDT and ETHUSDT only for core; PIT majors are a separate challenger",
+      "data_quality": "LOW",
+      "binding_risk": "Existing family audit is not independent OOS and may mix runner or portfolio accounting.",
+      "next_artifact": "Exact standalone trade ledger, chronological walk-forward, funding/cost stress and one-position portfolio replay",
+      "first_money_gate": "Positive untouched OOS, acceptable funding drag, no overlap conflict with tactical sleeves, then N20 shadow decisions",
+      "timing": "historical verdict 1-2 weeks after launch"
+    },
+    {
+      "rank": 7,
+      "id": "crypto_owner_volume_level_setup_v1",
+      "family": "volume_selected_level_retest",
+      "side": "long_and_short_separate",
+      "portfolio_role": "tactical_owner_edge",
+      "stage": "queued_integration",
+      "implementation": [
+        "bot/inplay_volume_universe.py",
+        "bot/level_entry.py",
+        "bot/volume_exit.py"
+      ],
+      "universe": "Dynamic volume and liquidity qualified symbols",
+      "data_quality": "LOW",
+      "binding_risk": "The three owner-method components have never been tested as one causal lifecycle.",
+      "next_artifact": "Integrated decision ledger with universe-known-at, level snapshot, measured entry and volume-exit attribution",
+      "first_money_gate": "Blind owner-label agreement, OOS positive after costs and N20 prospective lifecycle",
+      "timing": "engineering 1-2 weeks; evidence event-driven"
+    },
+    {
+      "rank": 8,
+      "id": "crypto_pump_exhaustion_short_v2",
+      "family": "exhaustion",
+      "side": "short",
+      "portfolio_role": "event_short",
+      "stage": "queued_data_collection",
+      "implementation": [
+        "bot/pump_exhaustion.py",
+        "research_lab/pump_spike_fade.py"
+      ],
+      "universe": "PIT movers selected before post-event outcome",
+      "data_quality": "LOW",
+      "binding_risk": "Prior pump-fade results reuse viewed events and are vulnerable to event-selection leakage.",
+      "next_artifact": "New post-freeze event cohort with N>=40 and sealed holdout N>=10",
+      "first_money_gate": "Positive after-cost LOSO and untouched holdout, then prospective shadow",
+      "timing": "2-5 weeks by event cadence"
+    },
+    {
+      "rank": 9,
+      "id": "crypto_sweep_reclaim_v2",
+      "family": "liquidity_sweep_reclaim",
+      "side": "long_and_short_separate",
+      "portfolio_role": "countertrend_event",
+      "stage": "queued_preregistration",
+      "implementation": [
+        "research_lab/sweep_reclaim.py",
+        "bot/retest_quality.py"
+      ],
+      "universe": "PIT liquid crypto perpetuals",
+      "data_quality": "LOW",
+      "binding_risk": "Existing probes do not establish horizontal/sloped geometry parity or execution costs.",
+      "next_artifact": "Four physical hypotheses: horizontal/sloped times long/short, with shared causal level snapshot",
+      "first_money_gate": "At least one side/geometry survives OOS, stress and negative-control gates without family selection leakage",
+      "timing": "after BOUNCE1/BREAKDOWN measurement harness"
+    },
+    {
+      "rank": 10,
+      "id": "crypto_oi_divergence_collector_v1",
+      "family": "open_interest_positioning",
+      "side": "feature_first",
+      "portfolio_role": "orthogonal_feature_or_event",
+      "stage": "queued_data_collection",
+      "implementation": [],
+      "universe": "PIT liquid Bybit perpetuals",
+      "data_quality": "BLOCKED_DATA",
+      "binding_risk": "No causal historical OI store and likely overlap with funding positioning.",
+      "next_artifact": "Public OI collector with source timestamps, gaps, revisions and signal-overlap analysis versus Funding V4",
+      "first_money_gate": "Only a separate sleeve if incremental OOS value remains after conditioning on funding and beta",
+      "timing": "collector 1-3 days; evidence several weeks"
+    },
+    {
+      "rank": 11,
+      "id": "crypto_token_unlock_event_v1",
+      "family": "token_unlock",
+      "side": "short_event",
+      "portfolio_role": "orthogonal_supply_event",
+      "stage": "queued_data_probe",
+      "implementation": [],
+      "universe": "Tokens with announcements known before event time and liquid perpetual coverage",
+      "data_quality": "BLOCKED_DATA",
+      "binding_risk": "No versioned calendar with announcement-known-at timestamps.",
+      "next_artifact": "Source and coverage probe; no price test before known-at quality passes",
+      "first_money_gate": "Sufficient independent events, positive predeclared window after costs and no token concentration",
+      "timing": "data probe 1-3 days; evidence depends on coverage"
+    }
+  ],
+  "fx_cfd_queue": [
+    {
+      "rank": 1,
+      "id": "fx_d1_carry_trend_v1",
+      "family": "carry_plus_trend",
+      "side": "long_and_short_by_pair",
+      "portfolio_role": "slow_macro",
+      "stage": "queued_preregistration",
+      "implementation": [
+        "configs/research/fx_oanda_public_cost_contract_20260729.json",
+        "scripts/run_forex_multi_strategy_gate.py"
+      ],
+      "instruments": [
+        "EURUSD",
+        "GBPUSD",
+        "USDJPY",
+        "EURJPY",
+        "GBPJPY"
+      ],
+      "data_quality": "MEDIUM",
+      "binding_risk": "Public swaps are available, but broker .pro commission is unknown and must be stressed.",
+      "next_artifact": "Sealed D1 walk-forward with asymmetric daily swap and base/stress spread/commission",
+      "first_demo_gate": "Positive majority of chronological OOS folds and pairs, stress positive, drawdown and concentration within preregistered limits",
+      "timing": "first historical verdict 3-7 days after launch"
+    },
+    {
+      "rank": 2,
+      "id": "fx_h4_break_retest_v1",
+      "family": "break_and_retest",
+      "side": "long_and_short_separate",
+      "portfolio_role": "swing_tactical",
+      "stage": "queued_preregistration",
+      "implementation": [
+        "forex/strategies/trend_retest_session_v2.py",
+        "scripts/run_forex_multi_strategy_gate.py"
+      ],
+      "instruments": [
+        "EURUSD",
+        "GBPUSD",
+        "USDJPY",
+        "EURJPY",
+        "GBPJPY"
+      ],
+      "data_quality": "MEDIUM",
+      "binding_risk": "Prior H1 edge was six times smaller than transaction costs; H4 must prove larger move capture.",
+      "next_artifact": "H4 causal level/retest ledger with session, swap and stress-cost attribution",
+      "first_demo_gate": "Positive after stress costs with adequate trades and no one-pair dependence",
+      "timing": "after or parallel to D1 when WIP frees"
+    },
+    {
+      "rank": 3,
+      "id": "fx_h4_momentum_v1",
+      "family": "time_series_momentum",
+      "side": "long_and_short",
+      "portfolio_role": "swing_trend",
+      "stage": "queued_design",
+      "implementation": [
+        "bot/fx_setups_v3.py",
+        "scripts/run_fx_native_harness.py"
+      ],
+      "instruments": [
+        "EURUSD",
+        "GBPUSD",
+        "USDJPY",
+        "EURJPY",
+        "GBPJPY"
+      ],
+      "data_quality": "MEDIUM",
+      "binding_risk": "Must be distinct from D1 carry beta and H4 retest entries.",
+      "next_artifact": "Preregistered momentum baseline and incremental portfolio-additivity test",
+      "first_demo_gate": "Standalone stress pass plus positive marginal effect on D1/H4 book",
+      "timing": "second FX wave"
+    },
+    {
+      "rank": 4,
+      "id": "fx_h4_regime_mean_reversion_v1",
+      "family": "regime_mean_reversion",
+      "side": "long_and_short",
+      "portfolio_role": "range_diversifier",
+      "stage": "queued_design",
+      "implementation": [
+        "bot/fx_context.py",
+        "bot/fx_setups_v3.py"
+      ],
+      "instruments": [
+        "EURUSD",
+        "GBPUSD",
+        "USDJPY"
+      ],
+      "data_quality": "MEDIUM",
+      "binding_risk": "Old intraday range strategies were negative before costs; only H4 regime-conditioned form is admissible.",
+      "next_artifact": "Frozen range-regime definition and H4 walk-forward negative control",
+      "first_demo_gate": "Positive range OOS and no catastrophic trend-regime leakage",
+      "timing": "second FX wave"
+    },
+    {
+      "rank": 5,
+      "id": "cfd_xauusd_d1_h4_v1",
+      "family": "gold_trend_and_retest",
+      "side": "long_and_short_separate",
+      "portfolio_role": "commodity_cfd",
+      "stage": "queued_cost_validation",
+      "implementation": [
+        "configs/research/fx_oanda_public_cost_contract_20260729.json",
+        "scripts/run_forex_multi_strategy_gate.py"
+      ],
+      "instruments": [
+        "XAUUSD"
+      ],
+      "data_quality": "MEDIUM",
+      "binding_risk": "Gold swap and spread are structurally different from FX and prior pip-size defects invalidated old verdicts.",
+      "next_artifact": "Separate XAU contract validation, then D1 trend and H4 retest walk-forward",
+      "first_demo_gate": "Both pip/contract arithmetic tests and stress-cost OOS must pass",
+      "timing": "after FX contract harness is sealed"
+    },
+    {
+      "rank": 6,
+      "id": "cfd_index_trend_v1",
+      "family": "index_trend_pullback",
+      "side": "long_first",
+      "portfolio_role": "equity_index_cfd",
+      "stage": "blocked_data",
+      "implementation": [],
+      "instruments": [
+        "SPX500",
+        "NAS100"
+      ],
+      "data_quality": "BLOCKED_DATA",
+      "binding_risk": "No authoritative broker contract for symbol mapping, session, spread, financing and minimum size.",
+      "next_artifact": "Public broker specification and historical coverage receipt",
+      "first_demo_gate": "Only after account-specific costs and session gaps are materialized",
+      "timing": "after a crypto or FX sleeve reaches its next gate"
+    }
+  ],
+  "next_launch_order": [
+    {
+      "when": "first research WIP slot frees",
+      "launch": "fx_d1_carry_trend_v1"
+    },
+    {
+      "when": "second research WIP slot frees",
+      "launch": "crypto_bounce1_virtual_lifecycle"
+    },
+    {
+      "when": "short-strategy WIP slot frees",
+      "launch": "crypto_breakdown_regime_v2"
+    },
+    {
+      "when": "FX D1 base receipt exists",
+      "launch": "fx_h4_break_retest_v1"
+    },
+    {
+      "when": "measurement harness is free",
+      "launch": "crypto_btc_eth_midterm_pullback_v4"
+    }
+  ]
+}

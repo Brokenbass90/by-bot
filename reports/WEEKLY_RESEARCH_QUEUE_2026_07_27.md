@@ -119,3 +119,27 @@
   forecast or live candidate: it is survivor-only and lacks a broker
   catastrophe stop. Two stricter causal SMA gates failed to remove the small
   2022 loss, so that tuning branch is stopped without post-hoc optimization.
+
+## Checkpoint 30 июля — новая очередь
+
+- Live ATT1 incident repaired and targeted-deployed; statistics do not restart.
+- Five risk-zero screens are active and their ledgers are fresh. WIP is full.
+- XSEC has five immutable daily decisions.
+- Frozen Funding V4 has 40 trials, 9 submissions, 6 modeled fills and 5
+  closed lifecycles. Dynamic challenger has 111 trials and 3 closes; its very
+  large early mean is not interpreted before N20.
+- New long-running work is sequenced rather than started as a sixth competing
+  process.
+
+Next launch triggers:
+
+| Free resource | Next job | Required output |
+|---|---|---|
+| first WIP slot | FX D1 carry+trend | sealed base/stress OOS receipt |
+| second WIP slot | BOUNCE1 virtual lifecycle | exact SHA, immutable decisions/fills/exits |
+| short-strategy slot | BREAKDOWN regime V2 | bear OOS plus untouched bull control |
+| FX harness after D1 | H4 break/retest | side/pair/cost attribution |
+| measurement harness | BTC/ETH midterm V4 | standalone chronological ledger |
+
+Canonical queue:
+`configs/research/strategy_promotion_queue_20260730.json`.
