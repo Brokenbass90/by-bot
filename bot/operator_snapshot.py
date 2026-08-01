@@ -350,6 +350,7 @@ def _setup_scanner_block(root: Path, *, limit: int = 16) -> Dict[str, Any]:
                 "runtime": dict(card.get("runtime") or {}),
                 "reasons": list(card.get("reasons") or [])[:5],
                 "router_profiles": list(card.get("router_profiles") or [])[:3],
+                "geometry": dict(card.get("geometry") or {}),
             }
         )
     return {

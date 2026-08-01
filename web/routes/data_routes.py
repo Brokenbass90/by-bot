@@ -387,6 +387,8 @@ def _setup_card(
     router_hits: List[Dict[str, Any]],
     sleeve_map: Dict[str, Dict[str, Any]],
     channel: Optional[Dict[str, Any]] = None,
+    channel_role: str = "none",
+    pivot_trendlines: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     level_price = _as_float((level or {}).get("price"), 0.0)
     level_dist = _dist_atr(price, level_price, atr) if level_price else None
@@ -396,9 +398,15 @@ def _setup_card(
         0.0,
     )
     channel = channel or {}
+    channel_role = str(channel_role or "none")
+    channel_r2 = _as_float(channel.get("r2"), 0.0)
+    channel_qualified = bool(channel and channel_role != "none" and channel_r2 >= 0.35)
     channel_geometry = None
-    if channel:
+    if channel_qualified:
         channel_geometry = {
+            "kind": "close_regression_context_v1",
+            "role": channel_role,
+            "qualified": True,
             "lookback_bars": 72,
             "slope_per_bar": round(_as_float(channel.get("slope_per_bar"), 0.0), 10),
             "slope_pct_per_bar": round(_as_float(channel.get("slope_pct_per_bar"), 0.0), 8),
@@ -425,6 +433,12 @@ def _setup_card(
         "geometry": {
             "level_kind": "horizontal" if level_price else "none",
             "channel": channel_geometry,
+            "channel_status": (
+                "not_relevant_to_horizontal_setup"
+                if channel_role == "none"
+                else ("qualified" if channel_qualified else "suppressed_low_r2")
+            ),
+            "pivot_trendlines": dict(pivot_trendlines or {}),
         },
         "runtime": {
             "enabled": bool(sleeve.get("enabled", sleeve.get("runtime_enabled", False))),
@@ -455,6 +469,7 @@ def _build_setup_cards(
                 continue
             flags = snapshot.get("flags") or {}
             channel = snapshot.get("channel") or {}
+            pivot_trendlines = snapshot.get("pivot_trendlines") or {}
             compression = snapshot.get("compression") or {}
             trend = str(flags.get("trend_label") or "")
             level_context = str(flags.get("level_context") or "")
@@ -471,7 +486,7 @@ def _build_setup_cards(
                 trend.replace("_", " ") if trend else "",
                 level_context.replace("_", " ") if level_context else "",
                 "compressed" if is_compressed else "",
-                f"channel r2 {channel_r2:.2f}" if channel_r2 else "",
+                f"regression context r2 {channel_r2:.2f}" if channel_r2 >= 0.35 else "",
             ]
 
             if above and above_dist is not None and above_dist <= 0.9:
@@ -483,6 +498,7 @@ def _build_setup_cards(
                     invalidation=_as_float(above.get("price"), price) + atr * 0.35,
                     reasons=common_reasons + ["near resistance", "candidate for ARF1/flat"],
                     router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
+                    pivot_trendlines=pivot_trendlines,
                 ))
                 if is_compressed:
                     breakout_score = 58 + touches * 2 + max(0, 0.9 - above_dist) * 16 + (1 - compression_ratio) * 18
@@ -492,6 +508,7 @@ def _build_setup_cards(
                         invalidation=_as_float(above.get("price"), price) - atr * 0.45,
                         reasons=common_reasons + ["compressed below resistance", "wait for breakout + retest"],
                         router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
+                        pivot_trendlines=pivot_trendlines,
                     ))
 
             if below and below_dist is not None and below_dist <= 0.9:
@@ -503,6 +520,7 @@ def _build_setup_cards(
                     invalidation=_as_float(below.get("price"), price) - atr * 0.35,
                     reasons=common_reasons + ["near support", "candidate for BOUNCE1"],
                     router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
+                    pivot_trendlines=pivot_trendlines,
                 ))
                 if is_compressed or trend == "trend_down":
                     breakdown_score = 58 + touches * 2 + max(0, 0.9 - below_dist) * 16 + (1 - compression_ratio) * 18
@@ -512,6 +530,7 @@ def _build_setup_cards(
                         invalidation=_as_float(below.get("price"), price) + atr * 0.45,
                         reasons=common_reasons + ["support pressure", "wait for breakdown + retest"],
                         router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
+                        pivot_trendlines=pivot_trendlines,
                     ))
 
             if trend == "trend_down" and channel_pos >= 0.68:
@@ -523,6 +542,7 @@ def _build_setup_cards(
                     invalidation=price + atr * 1.2,
                     reasons=common_reasons + ["down-channel upper half", "BRC1 shadow candidate"],
                     router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
+                    channel_role="primary_context", pivot_trendlines=pivot_trendlines,
                 ))
 
             if trend == "trend_up" and channel_pos <= 0.32:
@@ -534,6 +554,7 @@ def _build_setup_cards(
                     invalidation=price - atr * 1.2,
                     reasons=common_reasons + ["up-channel pullback", "midterm candidate; not ATT1"],
                     router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
+                    channel_role="primary_context", pivot_trendlines=pivot_trendlines,
                 ))
 
             if is_compressed and (above_dist is None or above_dist > 0.9) and (below_dist is None or below_dist > 0.9):
@@ -544,6 +565,7 @@ def _build_setup_cards(
                     invalidation=None,
                     reasons=common_reasons + ["compressed away from nearest level", "needs trigger candle"],
                     router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
+                    pivot_trendlines=pivot_trendlines,
                 ))
 
     cards.sort(key=lambda x: x.get("score", 0.0), reverse=True)
@@ -1924,9 +1946,12 @@ async def get_setup_scanner_chart(
     geometry_state = _json(_rt("geometry", "geometry_state.json")) or {}
     snapshot = (((geometry_state.get("symbols") or {}).get(symbol.upper()) or {}).get(interval) or {})
     channel = snapshot.get("channel") if isinstance(snapshot, dict) else None
+    pivot_trendlines = snapshot.get("pivot_trendlines") if isinstance(snapshot, dict) else None
     channel_overlay = None
-    if isinstance(channel, dict) and channel:
+    if isinstance(channel, dict) and channel and _as_float(channel.get("r2"), 0.0) >= 0.35:
         channel_overlay = {
+            "kind": "close_regression_context_v1",
+            "qualified": True,
             "lookback_bars": 72,
             "slope_per_bar": _as_float(channel.get("slope_per_bar"), 0.0),
             "slope_pct_per_bar": _as_float(channel.get("slope_pct_per_bar"), 0.0),
@@ -1943,6 +1968,7 @@ async def get_setup_scanner_chart(
         "geometry": {
             "generated_at_utc": geometry_state.get("generated_at_utc"),
             "channel": channel_overlay,
+            "pivot_trendlines": dict(pivot_trendlines or {}),
         },
     }
 

@@ -2240,7 +2240,13 @@ function SetupCardChart({ card }) {
   const dist = parseFloat(card.distance_atr);
   const score = parseFloat(card.score);
   const fallbackCandles = chartData && Array.isArray(chartData.candles) ? chartData.candles : [];
-  const channelOverlay = chartData?.geometry?.channel || card?.geometry?.channel || null;
+  // A close-regression channel is context, not an ATT1 pivot trendline.  Only
+  // render it when this card explicitly marks that context as relevant.
+  const channelOverlay = card?.geometry?.channel
+    ? (chartData?.geometry?.channel || card?.geometry?.channel)
+    : null;
+  const pivotSource = chartData?.geometry?.pivot_trendlines || card?.geometry?.pivot_trendlines || {};
+  const pivotOverlays = Object.values(pivotSource).filter(line => line && line.valid === true);
 
   function renderFallbackChart() {
     if (!fallbackCandles.length) return null;
@@ -2249,7 +2255,8 @@ function SetupCardChart({ card }) {
     const highs = rows.map(c => Number(c.high)).filter(Number.isFinite);
     const lows = rows.map(c => Number(c.low)).filter(Number.isFinite);
     const channelPrices = channelOverlay ? [channelOverlay.upper_now, channelOverlay.lower_now, channelOverlay.mid_now].map(Number).filter(Number.isFinite) : [];
-    const prices = highs.concat(lows, channelPrices);
+    const pivotPrices = pivotOverlays.map(line => Number(line.projection_now)).filter(Number.isFinite);
+    const prices = highs.concat(lows, channelPrices, pivotPrices);
     if (!prices.length) return null;
     const extra = Math.max(1e-9, (Math.max(...prices) - Math.min(...prices)) * 0.08);
     const minP = Math.min(...prices, !isNaN(lvl) ? lvl : Infinity, !isNaN(inv) ? inv : Infinity) - extra;
@@ -2268,6 +2275,21 @@ function SetupCardChart({ card }) {
       return React.createElement('line', {
         x1: startX, y1: y(startPrice), x2: W - pad, y2: y(Number(endPrice)),
         stroke: color, strokeWidth: width || 1.5, strokeDasharray: dash || '', opacity: 0.9,
+      });
+    };
+    const pivotLine = trendline => {
+      const endPrice = Number(trendline?.projection_now);
+      const slope = Number(trendline?.slope_per_bar);
+      if (!Number.isFinite(endPrice) || !Number.isFinite(slope)) return null;
+      const barsAgo = Math.min(rows.length - 1, Math.max(1, Number(trendline?.first_pivot_bars_ago || rows.length - 1)));
+      const startPrice = endPrice - slope * barsAgo;
+      const startX = pad + Math.max(0, rows.length - 1 - barsAgo) * xStep;
+      const role = String(trendline?.role || '');
+      const color = role === 'support' ? '#3fb950' : '#f85149';
+      return React.createElement('line', {
+        key: `pivot-${role}`,
+        x1: startX, y1: y(startPrice), x2: W - pad, y2: y(endPrice),
+        stroke: color, strokeWidth: 2.4, opacity: 0.95,
       });
     };
     return React.createElement('div', { style: { width: '100%', height: '100%', padding: '10px 12px' } },
@@ -2293,7 +2315,8 @@ function SetupCardChart({ card }) {
         line(inv, '#e3b341', '8 6'),
         slopedLine(channelOverlay?.upper_now, '#d29922', '', 2),
         slopedLine(channelOverlay?.mid_now, '#58a6ff', '7 5', 1.25),
-        slopedLine(channelOverlay?.lower_now, '#d29922', '', 2)
+        slopedLine(channelOverlay?.lower_now, '#d29922', '', 2),
+        ...pivotOverlays.map(pivotLine)
       ),
       chartError ? React.createElement('div', {
         style: { position: 'absolute', left: 20, bottom: 14, color: 'var(--yellow)', fontSize: '11px' }
@@ -2350,9 +2373,14 @@ function SetupCardChart({ card }) {
             (card.strategy || '—').replace(/^(alt_|btc_eth_|inplay_)/g, ''))
         ),
         channelOverlay && React.createElement('div', { className: 'modal-stat' },
-          React.createElement('span', { className: 'ms-label' }, 'Наклонная'),
+          React.createElement('span', { className: 'ms-label' }, 'Регрессия'),
           React.createElement('span', { className: 'ms-val', style: { color: '#d29922', fontSize: '11px' } },
             `${Number(channelOverlay.slope_pct_per_bar || 0).toFixed(4)}%/bar · R² ${Number(channelOverlay.r2 || 0).toFixed(2)}`)
+        ),
+        pivotOverlays.length > 0 && React.createElement('div', { className: 'modal-stat' },
+          React.createElement('span', { className: 'ms-label' }, 'Swing-линии'),
+          React.createElement('span', { className: 'ms-val', style: { color: '#3fb950', fontSize: '11px' } },
+            `${pivotOverlays.length} валидн. · ${pivotOverlays.map(x => `${x.role} R² ${Number(x.r2 || 0).toFixed(2)}`).join(' / ')}`)
         ),
       ),
       // Chart area
@@ -2403,6 +2431,7 @@ function setupCardPrompt(c, fr) {
   const runtime = c.runtime || {};
   const funding = fr ? `${fr.rate_pct > 0 ? '+' : ''}${fr.rate_pct.toFixed(4)}% / 8h` : 'unknown';
   const channel = c?.geometry?.channel;
+  const pivotLines = Object.values(c?.geometry?.pivot_trendlines || {}).filter(x => x && x.valid === true);
   return [
     'Разбери эту карточку Setup Scanner как старший трейдер.',
     'Не предлагай live-вход без подтверждения risk/backtest gates; дай план: что должно подтвердиться, где инвалидация, какой риск, стоит ли ждать.',
@@ -2417,7 +2446,8 @@ function setupCardPrompt(c, fr) {
     `Level: ${c.level_price ?? '-'} (${c.level_touches || 0} touches)`,
     `Distance ATR: ${c.distance_atr ?? '-'}`,
     `Invalidation: ${c.invalidation ?? '-'}`,
-    `Channel: ${channel ? `${Number(channel.slope_pct_per_bar || 0).toFixed(4)}%/bar R2=${Number(channel.r2 || 0).toFixed(3)} upper=${channel.upper_now} lower=${channel.lower_now}` : '-'}`,
+    `Regression context: ${channel ? `${Number(channel.slope_pct_per_bar || 0).toFixed(4)}%/bar R2=${Number(channel.r2 || 0).toFixed(3)} upper=${channel.upper_now} lower=${channel.lower_now}` : `not used (${c?.geometry?.channel_status || 'not relevant'})`}`,
+    `Qualified swing-pivot trendlines: ${pivotLines.length ? pivotLines.map(x => `${x.role} level=${x.projection_now} slope=${Number(x.slope_pct_per_day || 0).toFixed(3)}%/day R2=${Number(x.r2 || 0).toFixed(3)} pivots=${x.pivot_count}`).join(' | ') : 'none'}`,
     `Runtime: ${runtime.enabled ? 'LIVE' : 'WATCH'} risk=${runtime.risk_mult ?? runtime.final_risk_mult ?? 0} health=${runtime.health || '-'}`,
     `Funding: ${funding}`,
     `Reasons: ${reasons}`,
@@ -2457,6 +2487,10 @@ function SetupCard({ c, sideBadge, frRates, frColor }) {
         funding_rate_pct: fr ? fr.rate_pct : null,
         channel_slope_pct_per_bar: c?.geometry?.channel?.slope_pct_per_bar ?? null,
         channel_r2: c?.geometry?.channel?.r2 ?? null,
+        pivot_trendlines_summary: Object.values(c?.geometry?.pivot_trendlines || {})
+          .filter(x => x && x.valid === true)
+          .map(x => `${x.role}: level=${x.projection_now}, slope=${Number(x.slope_pct_per_day || 0).toFixed(3)}%/day, r2=${Number(x.r2 || 0).toFixed(3)}, pivots=${x.pivot_count}`)
+          .join(' | ') || null,
       };
       const token = localStorage.getItem('auth_token') || '';
       const resp = await fetch('/api/ai/analyze-setup', {
@@ -2673,6 +2707,7 @@ function JournalPage() {
 function AIInlineSetupCard({ card }) {
   if (!card) return null;
   const channel = card?.geometry?.channel;
+  const pivots = Object.values(card?.geometry?.pivot_trendlines || {}).filter(x => x && x.valid === true);
   return React.createElement('div', {
     style: { minWidth: '300px', marginBottom: '8px', padding: '9px 10px', border: '1px solid var(--border2)', borderRadius: '8px', background: 'var(--bg2)' }
   },
@@ -2683,7 +2718,9 @@ function AIInlineSetupCard({ card }) {
     React.createElement('div', { style: { color: 'var(--text2)', fontSize: '11px', marginTop: '4px' } },
       `${card.setup_type || card.strategy || 'setup'} · level ${card.level_price ?? '—'} · dist ${card.distance_atr ?? '—'} ATR`),
     channel && React.createElement('div', { style: { color: '#d29922', fontSize: '11px', marginTop: '3px' } },
-      `наклон ${Number(channel.slope_pct_per_bar || 0).toFixed(4)}%/bar · R² ${Number(channel.r2 || 0).toFixed(2)}`),
+      `регрессионный контекст ${Number(channel.slope_pct_per_bar || 0).toFixed(4)}%/bar · R² ${Number(channel.r2 || 0).toFixed(2)}`),
+    pivots.length > 0 && React.createElement('div', { style: { color: '#3fb950', fontSize: '11px', marginTop: '3px' } },
+      `swing-линии: ${pivots.map(x => `${x.role} R² ${Number(x.r2 || 0).toFixed(2)}`).join(' / ')}`),
     React.createElement(SetupCardChart, { card })
   );
 }

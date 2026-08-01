@@ -93,15 +93,8 @@ def test_setup_scanner_marks_fresh_rank_output_authoritative(monkeypatch, tmp_pa
     assert payload["freshness_max_age_sec"]["allocator"] == 10_800
     assert payload["cards"]
     assert payload["active_sleeves"]
-    assert payload["cards"][0]["geometry"]["channel"] == {
-        "lookback_bars": 72,
-        "slope_per_bar": -0.1,
-        "slope_pct_per_bar": -0.1,
-        "r2": 0.5,
-        "mid_now": 100.0,
-        "upper_now": 102.0,
-        "lower_now": 98.0,
-    }
+    assert payload["cards"][0]["geometry"]["channel"] is None
+    assert payload["cards"][0]["geometry"]["channel_status"] == "not_relevant_to_horizontal_setup"
 
 
 def test_scanner_maps_bounce_and_trend_pullback_to_real_runtime_sleeves() -> None:
@@ -120,6 +113,28 @@ def test_scanner_maps_bounce_and_trend_pullback_to_real_runtime_sleeves() -> Non
     assert by_type["support bounce"]["strategy"] == "bounce1"
     assert by_type["trend pullback"]["strategy"] == "midterm"
     assert all(card["strategy"] != "att1" for card in cards if card["side"] == "LONG")
+
+
+def test_horizontal_cards_do_not_present_close_regression_as_strategy_trendline() -> None:
+    geometry = _scanner_sources(Path("/tmp/runtime"))[Path("/tmp/runtime/geometry/geometry_state.json")]
+    cards = data_routes._build_setup_cards(geometry, {"profiles": {}}, {"sleeves": {}})
+    resistance = next(card for card in cards if card["setup_type"] == "resistance fade")
+
+    assert resistance["geometry"]["channel"] is None
+    assert resistance["geometry"]["channel_status"] == "not_relevant_to_horizontal_setup"
+
+
+def test_low_r2_channel_is_suppressed_even_for_sloped_context_card() -> None:
+    geometry = _scanner_sources(Path("/tmp/runtime"))[Path("/tmp/runtime/geometry/geometry_state.json")]
+    snapshot = geometry["symbols"]["BTCUSDT"]["60"]
+    snapshot["flags"] = {"trend_label": "trend_down", "level_context": "near_resistance"}
+    snapshot["channel"]["position"] = 0.8
+    snapshot["channel"]["r2"] = 0.17
+    cards = data_routes._build_setup_cards(geometry, {"profiles": {}}, {"sleeves": {}})
+    continuation = next(card for card in cards if card["setup_type"] == "bear continuation")
+
+    assert continuation["geometry"]["channel"] is None
+    assert continuation["geometry"]["channel_status"] == "suppressed_low_r2"
 
 
 @pytest.mark.parametrize(
