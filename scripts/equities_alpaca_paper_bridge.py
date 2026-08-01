@@ -558,6 +558,14 @@ class AlpacaClient:
     def cancel_order(self, order_id: str) -> dict[str, Any]:
         return self._request("DELETE", f"/v2/orders/{order_id}")
 
+    def replace_order(self, order_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+        """Atomically replace an open Alpaca order.
+
+        Protective-exit tooling uses this instead of cancel-then-submit so a
+        live position is never deliberately left without broker protection.
+        """
+        return self._request("PATCH", f"/v2/orders/{order_id}", payload)
+
 
 def _load_picks(csv_path: Path, month: str | None) -> list[Pick]:
     out: list[Pick] = []
