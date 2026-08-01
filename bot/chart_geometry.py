@@ -276,6 +276,12 @@ def pivot_trendlines(
         slope_pct_day = slope / price_ref * 100.0 * bars_day
         age_bars = current_index - recent[-1].index
         blockers: List[str] = []
+        # Two pivots define a line exactly, so R² is always 1.0 and contains no
+        # evidence about fit quality.  Keep the candidate for diagnostics, but
+        # never label it as a qualified scanner line until a third confirmed
+        # pivot validates the geometry.
+        if len(recent) < 3:
+            blockers.append("insufficient_pivots_for_validation")
         if age_bars > int(max_pivot_age):
             blockers.append("pivot_stale")
         if abs(slope_pct_day) < float(min_slope_pct_day):
@@ -294,6 +300,7 @@ def pivot_trendlines(
             "valid": not blockers,
             "blockers": blockers,
             "pivot_count": len(recent),
+            "r2_informative": len(recent) > 2,
             "pivot_age_bars": int(age_bars),
             "r2": float(r2),
             "slope_per_bar": float(slope),

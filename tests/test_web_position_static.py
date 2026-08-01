@@ -40,3 +40,13 @@ def test_symbol_change_resets_chart_and_rejects_stale_responses():
     assert "resetChart(`Загрузка графика ${symbol}…`, symbol)" in source
     assert "const requestId = ++chartRequestId" in source
     assert source.count("requestId !== chartRequestId || symbol !== chartSymbol") == 2
+
+
+def test_live_position_chart_supports_zoom_pan_and_reset():
+    source = _source()
+
+    assert "function zoomPositionChart(delta)" in source
+    assert "function resetPositionViewport()" in source
+    assert 'positionCanvas.addEventListener("wheel"' in source
+    assert 'positionCanvas.addEventListener("pointermove"' in source
+    assert "chartCandles.slice" in source

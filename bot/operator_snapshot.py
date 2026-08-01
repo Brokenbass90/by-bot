@@ -348,6 +348,7 @@ def _setup_scanner_block(root: Path, *, limit: int = 16) -> Dict[str, Any]:
                 "distance_atr": card.get("distance_atr"),
                 "invalidation": card.get("invalidation"),
                 "runtime": dict(card.get("runtime") or {}),
+                "advisory": dict(card.get("advisory") or {}),
                 "reasons": list(card.get("reasons") or [])[:5],
                 "router_profiles": list(card.get("router_profiles") or [])[:3],
                 "geometry": dict(card.get("geometry") or {}),
@@ -368,6 +369,7 @@ def _setup_scanner_block(root: Path, *, limit: int = 16) -> Dict[str, Any]:
         "top_cards": compact_cards,
         "notes": [
             "Setup scanner cards are candidates, not trade approvals.",
+            "Scanner advisories may prioritize observation only; native strategy confirmation remains mandatory.",
             "Live promotion still requires annual/OOS/additivity checks.",
         ],
     }

@@ -124,6 +124,45 @@ def test_horizontal_cards_do_not_present_close_regression_as_strategy_trendline(
     assert resistance["geometry"]["channel_status"] == "not_relevant_to_horizontal_setup"
 
 
+def test_card_only_inherits_setup_relevant_swing_role_and_advisory_is_risk_zero() -> None:
+    geometry = _scanner_sources(Path("/tmp/runtime"))[Path("/tmp/runtime/geometry/geometry_state.json")]
+    snapshot = geometry["symbols"]["BTCUSDT"]["60"]
+    snapshot["pivot_trendlines"] = {
+        "support": {"role": "support", "valid": True, "pivot_count": 3},
+        "resistance": {"role": "resistance", "valid": True, "pivot_count": 3},
+    }
+    cards = data_routes._build_setup_cards(geometry, {"profiles": {}}, {"sleeves": {}})
+    resistance = next(card for card in cards if card["setup_type"] == "resistance fade")
+
+    assert set(resistance["geometry"]["pivot_trendlines"]) == {"resistance"}
+    assert resistance["geometry"]["pivot_roles_expected"] == ["resistance"]
+    assert resistance["advisory"]["recipient_strategy"] == "flat"
+    assert resistance["advisory"]["authority"] == "risk_zero_advisory"
+    assert resistance["advisory"]["may_open_trade"] is False
+    assert "native_strategy_confirmation_required" in resistance["advisory"]["blockers"]
+
+
+def test_setup_scanner_persists_atomic_advisory_snapshot(monkeypatch, tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    _write_scanner_sources(runtime)
+    max_ages = {
+        "geometry_state.json": data_routes.SETUP_SCANNER_GEOMETRY_MAX_AGE_SEC,
+        "symbol_router_state.json": data_routes.SETUP_SCANNER_ROUTER_MAX_AGE_SEC,
+        "portfolio_allocator_state.json": data_routes.SETUP_SCANNER_ALLOCATOR_MAX_AGE_SEC,
+    }
+    monkeypatch.setattr(data_routes, "_RUNTIME_ROOT", runtime)
+    monkeypatch.setattr(data_routes, "_file_age_sec", lambda path: max_ages[path.name])
+
+    asyncio.run(data_routes.get_setup_scanner(_="tester"))
+
+    state = json.loads((runtime / "setup_scanner" / "state.json").read_text())
+    assert state["authoritative"] is True
+    assert state["trade_authority"] == "none"
+    assert state["cards"]
+    assert state["cards"][0]["advisory"]["may_open_trade"] is False
+    assert len(state["content_sha256"]) == 64
+
+
 def test_low_r2_channel_is_suppressed_even_for_sloped_context_card() -> None:
     geometry = _scanner_sources(Path("/tmp/runtime"))[Path("/tmp/runtime/geometry/geometry_state.json")]
     snapshot = geometry["symbols"]["BTCUSDT"]["60"]

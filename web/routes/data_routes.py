@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import math
 import os
@@ -371,6 +372,100 @@ def _dist_atr(price: float, level_price: float, atr: float) -> Optional[float]:
     return abs(level_price - price) / atr
 
 
+def _pivot_roles_for_setup(setup_type: str, side: str) -> set[str]:
+    """Return swing-line roles that can explain this exact setup card.
+
+    A resistance-fade SHORT must not inherit an unrelated support line merely
+    because both lines exist in the same symbol snapshot.  This mapping is
+    intentionally conservative and affects observation only, never entries.
+    """
+    setup = str(setup_type or "").strip().lower()
+    normalized_side = str(side or "").strip().upper()
+    if setup in {"resistance fade", "breakout watch", "bear continuation"}:
+        return {"resistance"}
+    if setup in {"support bounce", "breakdown watch", "trend pullback"}:
+        return {"support"}
+    if setup == "volatility squeeze" or normalized_side == "BOTH":
+        return {"support", "resistance"}
+    return {"resistance"} if normalized_side == "SHORT" else {"support"}
+
+
+def _scanner_advisory(card: Dict[str, Any]) -> Dict[str, Any]:
+    runtime = dict(card.get("runtime") or {})
+    score = _as_float(card.get("score"), 0.0)
+    pivot_lines = dict((card.get("geometry") or {}).get("pivot_trendlines") or {})
+    qualified_roles = sorted(
+        str(role) for role, line in pivot_lines.items()
+        if isinstance(line, dict) and line.get("valid") is True
+    )
+    blockers = ["native_strategy_confirmation_required"]
+    if not bool(runtime.get("enabled")):
+        blockers.append("runtime_disabled")
+    if _as_float(runtime.get("risk_mult"), 0.0) <= 0:
+        blockers.append("zero_live_risk")
+    return {
+        "recipient_strategy": str(card.get("strategy") or ""),
+        "action": "observe_and_prioritize_scan_only",
+        "authority": "risk_zero_advisory",
+        "may_open_trade": False,
+        "score": round(score, 2),
+        "score_semantics": SETUP_SCANNER_SCORE_SEMANTICS,
+        "attention_tier": "high" if score >= 90 else ("watch" if score >= 75 else "low"),
+        "qualified_swing_roles": qualified_roles,
+        "blockers": blockers,
+    }
+
+
+def _persist_scanner_advisory_state(
+    *,
+    cards: List[Dict[str, Any]],
+    authoritative: bool,
+    blockers: List[str],
+    generated_at_utc: Optional[str],
+) -> None:
+    """Publish an atomic, risk-zero scanner→strategy/AI observation bus."""
+    path = _rt("setup_scanner", "state.json")
+    now = datetime.now(timezone.utc).isoformat()
+    compact_cards = []
+    for rank, card in enumerate(cards[:80], start=1):
+        compact_cards.append({
+            "rank": rank,
+            "symbol": card.get("symbol"),
+            "interval": card.get("interval"),
+            "setup_type": card.get("setup_type"),
+            "side": card.get("side"),
+            "strategy": card.get("strategy"),
+            "score": card.get("score"),
+            "level_price": card.get("level_price"),
+            "distance_atr": card.get("distance_atr"),
+            "invalidation": card.get("invalidation"),
+            "runtime": dict(card.get("runtime") or {}),
+            "geometry": dict(card.get("geometry") or {}),
+            "advisory": dict(card.get("advisory") or {}),
+            "reasons": list(card.get("reasons") or [])[:6],
+        })
+    payload: Dict[str, Any] = {
+        "schema_version": "scanner_strategy_advisory_v1",
+        "generated_at_utc": now,
+        "geometry_generated_at_utc": generated_at_utc,
+        "authoritative": bool(authoritative),
+        "blockers": list(blockers),
+        "score_semantics": SETUP_SCANNER_SCORE_SEMANTICS,
+        "trade_authority": "none",
+        "cards": compact_cards if authoritative else [],
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    payload["content_sha256"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        tmp.replace(path)
+    except OSError:
+        # Dashboard availability must not depend on an advisory cache write.
+        return
+
+
 def _setup_card(
     *,
     symbol: str,
@@ -415,7 +510,13 @@ def _setup_card(
             "upper_now": round(_as_float(channel.get("upper"), 0.0), 8),
             "lower_now": round(_as_float(channel.get("lower"), 0.0), 8),
         }
-    return {
+    relevant_roles = _pivot_roles_for_setup(setup_type, side)
+    relevant_pivots = {
+        str(role): dict(line)
+        for role, line in dict(pivot_trendlines or {}).items()
+        if str(role) in relevant_roles and isinstance(line, dict)
+    }
+    card = {
         "symbol": symbol,
         "interval": interval,
         "setup_type": setup_type,
@@ -438,7 +539,8 @@ def _setup_card(
                 if channel_role == "none"
                 else ("qualified" if channel_qualified else "suppressed_low_r2")
             ),
-            "pivot_trendlines": dict(pivot_trendlines or {}),
+            "pivot_trendlines": relevant_pivots,
+            "pivot_roles_expected": sorted(relevant_roles),
         },
         "runtime": {
             "enabled": bool(sleeve.get("enabled", sleeve.get("runtime_enabled", False))),
@@ -446,6 +548,8 @@ def _setup_card(
             "health": str(sleeve.get("health_status") or sleeve.get("runtime_health") or "unknown"),
         },
     }
+    card["advisory"] = _scanner_advisory(card)
+    return card
 
 
 def _build_setup_cards(
@@ -1867,6 +1971,13 @@ async def get_setup_scanner(
     allocator_state = source_states.get("allocator", {}) if authoritative else {}
     cards = _build_setup_cards(geometry_state, router_state, allocator_state) if authoritative else []
 
+    _persist_scanner_advisory_state(
+        cards=cards,
+        authoritative=authoritative,
+        blockers=blockers,
+        generated_at_utc=geometry_state.get("generated_at_utc") if authoritative else None,
+    )
+
     active_sleeves = []
     for name, sleeve in _allocator_sleeve_map(allocator_state).items():
         if bool(sleeve.get("enabled", sleeve.get("runtime_enabled", False))) or _as_float(sleeve.get("final_risk_mult"), 0.0) > 0:
@@ -1898,6 +2009,12 @@ async def get_setup_scanner(
         "safe_mode": bool(allocator_state.get("safe_mode")) if authoritative else None,
         "active_sleeves": active_sleeves,
         "cards": cards,
+        "advisory_bus": {
+            "schema_version": "scanner_strategy_advisory_v1",
+            "path": "runtime/setup_scanner/state.json",
+            "authority": "risk_zero_advisory",
+            "consumer_policy": "native_strategy_confirmation_required",
+        },
         "notes": [
             "Scanner cards are candidates, not trade approvals.",
             "Score is a heuristic rank, not a probability.",

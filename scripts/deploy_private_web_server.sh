@@ -25,6 +25,9 @@ required_local=(
   "web/routes/auth_routes.py"
   "web/routes/admin_routes.py"
   "web/static/index.html"
+  "web/static/position.html"
+  "bot/chart_geometry.py"
+  "bot/operator_snapshot.py"
   "scripts/run_web.sh"
 )
 
@@ -36,7 +39,7 @@ for rel in "${required_local[@]}"; do
 done
 
 echo "[deploy-web] uploading web files to $SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR"
-ssh "${SSH_OPTS[@]}" "$SERVER_USER@$SERVER_IP" "mkdir -p '$SERVER_BOT_DIR/web/routes' '$SERVER_BOT_DIR/web/static' '$SERVER_BOT_DIR/scripts' '$SERVER_BOT_DIR/configs'"
+ssh "${SSH_OPTS[@]}" "$SERVER_USER@$SERVER_IP" "mkdir -p '$SERVER_BOT_DIR/web/routes' '$SERVER_BOT_DIR/web/static' '$SERVER_BOT_DIR/bot' '$SERVER_BOT_DIR/scripts' '$SERVER_BOT_DIR/configs'"
 scp "${SSH_OPTS[@]}" web/main.py "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/web/main.py" >/dev/null
 scp "${SSH_OPTS[@]}" web/auth.py "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/web/auth.py" >/dev/null
 scp "${SSH_OPTS[@]}" web/deps.py "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/web/deps.py" >/dev/null
@@ -45,6 +48,12 @@ scp "${SSH_OPTS[@]}" web/routes/ai_routes.py "$SERVER_USER@$SERVER_IP:$SERVER_BO
 scp "${SSH_OPTS[@]}" web/routes/auth_routes.py "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/web/routes/auth_routes.py" >/dev/null
 scp "${SSH_OPTS[@]}" web/routes/admin_routes.py "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/web/routes/admin_routes.py" >/dev/null
 scp "${SSH_OPTS[@]}" web/static/index.html "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/web/static/index.html" >/dev/null
+scp "${SSH_OPTS[@]}" web/static/position.html "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/web/static/position.html" >/dev/null
+# These two modules feed read-only scanner/operator snapshots.  Copying them
+# does not restart or mutate the live trading process; fresh cron invocations
+# import the new versions while the existing core keeps its loaded code.
+scp "${SSH_OPTS[@]}" bot/chart_geometry.py "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/bot/chart_geometry.py" >/dev/null
+scp "${SSH_OPTS[@]}" bot/operator_snapshot.py "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/bot/operator_snapshot.py" >/dev/null
 scp "${SSH_OPTS[@]}" scripts/run_web.sh "$SERVER_USER@$SERVER_IP:$SERVER_BOT_DIR/scripts/run_web.sh" >/dev/null
 
 # Authentication state is instance-owned.  A normal code deploy must never

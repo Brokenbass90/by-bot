@@ -609,12 +609,15 @@ def _append_operator_snapshot_context(parts: List[str]) -> None:
         )
         for card in top_cards[:8]:
             runtime = dict(card.get("runtime") or {})
+            advisory = dict(card.get("advisory") or {})
             parts.append(
                 "SETUP CARD: "
                 f"{card.get('symbol')} {card.get('interval')} {card.get('side')} "
                 f"{card.get('setup_type')} strategy={card.get('strategy')} score={card.get('score')} "
                 f"level={card.get('level_price')} dist_atr={card.get('distance_atr')} "
                 f"runtime_enabled={runtime.get('enabled')} runtime_risk={runtime.get('risk_mult')} "
+                f"scanner_advisory={advisory.get('action') or 'none'} "
+                f"trade_authority={advisory.get('authority') or 'none'} "
                 f"reasons={'; '.join(str(x) for x in (card.get('reasons') or [])[:4])}\n"
             )
     latest_reports = list(trade_forensics.get("latest_reports") or [])

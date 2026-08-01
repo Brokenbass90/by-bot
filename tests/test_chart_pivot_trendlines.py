@@ -33,3 +33,15 @@ def test_stale_pivot_trendline_is_visible_as_diagnostic_but_not_qualified() -> N
 
     assert resistance["valid"] is False
     assert "pivot_stale" in resistance["blockers"]
+
+
+def test_two_pivot_line_is_diagnostic_not_false_r2_validation() -> None:
+    rows = _rows_with_descending_swing_highs()
+    rows[19][2] = rows[19][1] + 0.4
+    resistance = pivot_trendlines(rows)["resistance"]
+
+    assert resistance["pivot_count"] == 2
+    assert resistance["r2"] == 1.0
+    assert resistance["r2_informative"] is False
+    assert resistance["valid"] is False
+    assert "insufficient_pivots_for_validation" in resistance["blockers"]

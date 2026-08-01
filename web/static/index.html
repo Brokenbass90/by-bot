@@ -251,6 +251,10 @@ select.filter-input option{background:var(--bg3)}
 .modal-stat .ms-val{font-size:13px;font-weight:600;color:var(--text)}
 .modal-chart-wrap{flex:1;min-height:360px;padding:0;position:relative;overflow:hidden}
 .modal-chart-wrap>div{width:100%;height:100%}
+.chart-toolbar{position:absolute;right:14px;top:12px;z-index:4;display:flex;align-items:center;gap:5px;padding:5px 7px;border:1px solid var(--border2);border-radius:7px;background:rgba(13,17,23,.9);box-shadow:0 3px 14px rgba(0,0,0,.35)}
+.chart-tool-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text);border-radius:5px;min-width:30px;height:26px;padding:0 8px;cursor:pointer;font-size:12px}
+.chart-tool-btn:hover{background:var(--bg4);border-color:var(--blue)}
+.chart-tool-label{font-size:10px;color:var(--text3);white-space:nowrap;margin-left:3px}
 .modal-interval-bar{display:flex;gap:4px;padding:8px 20px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0}
 .interval-btn{background:none;border:1px solid var(--border);color:var(--text2);padding:3px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .15s}
 .interval-btn:hover{background:var(--bg4);color:var(--text)}
@@ -2109,8 +2113,11 @@ function SetupCardChart({ card }) {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [chartError, setChartError] = useState('');
+  const [viewBars, setViewBars] = useState(90);
+  const [panBars, setPanBars] = useState(0);
   const chartRef = useRef(null);
   const lwChartRef = useRef(null);
+  const dragRef = useRef(null);
   const USE_LIGHTWEIGHT_SETUP_CHART = false; // SVG fallback is deterministic and does not depend on CDN canvas quirks.
 
   const side = String(card.side || '').toLowerCase();
@@ -2130,6 +2137,11 @@ function SetupCardChart({ card }) {
   useEffect(() => {
     if (open) loadChart();
   }, [open, loadChart]);
+
+  useEffect(() => {
+    setViewBars(90);
+    setPanBars(0);
+  }, [interval, card.symbol]);
 
   // Cleanup chart + reset data when modal closes
   useEffect(() => {
@@ -2246,12 +2258,41 @@ function SetupCardChart({ card }) {
     ? (chartData?.geometry?.channel || card?.geometry?.channel)
     : null;
   const pivotSource = chartData?.geometry?.pivot_trendlines || card?.geometry?.pivot_trendlines || {};
-  const pivotOverlays = Object.values(pivotSource).filter(line => line && line.valid === true);
+  const pivotRolesExpected = card?.geometry?.pivot_roles_expected || Object.keys(card?.geometry?.pivot_trendlines || {});
+  const pivotOverlays = Object.values(pivotSource).filter(line =>
+    line && line.valid === true && pivotRolesExpected.includes(String(line.role || ''))
+  );
+
+  const zoomChart = delta => {
+    setViewBars(current => Math.max(24, Math.min(120, current + delta)));
+  };
+  const resetViewport = () => { setViewBars(90); setPanBars(0); };
+  const chartPointerDown = e => {
+    dragRef.current = { x: e.clientX, pan: panBars };
+    if (e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId);
+  };
+  const chartPointerMove = e => {
+    if (!dragRef.current) return;
+    const width = Math.max(1, e.currentTarget.getBoundingClientRect().width);
+    const delta = Math.round((e.clientX - dragRef.current.x) / width * viewBars);
+    const maxPan = Math.max(0, fallbackCandles.length - Math.min(fallbackCandles.length, viewBars));
+    setPanBars(Math.max(0, Math.min(maxPan, dragRef.current.pan + delta)));
+  };
+  const chartPointerUp = e => {
+    dragRef.current = null;
+    if (e.currentTarget.releasePointerCapture && e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+  };
 
   function renderFallbackChart() {
     if (!fallbackCandles.length) return null;
     const W = 1000, H = 330, pad = 28;
-    const rows = fallbackCandles.slice(-90);
+    const visible = Math.min(fallbackCandles.length, Math.max(24, viewBars));
+    const maxPan = Math.max(0, fallbackCandles.length - visible);
+    const safePan = Math.max(0, Math.min(maxPan, panBars));
+    const end = fallbackCandles.length - safePan;
+    const rows = fallbackCandles.slice(Math.max(0, end - visible), end);
     const highs = rows.map(c => Number(c.high)).filter(Number.isFinite);
     const lows = rows.map(c => Number(c.low)).filter(Number.isFinite);
     const channelPrices = channelOverlay ? [channelOverlay.upper_now, channelOverlay.lower_now, channelOverlay.mid_now].map(Number).filter(Number.isFinite) : [];
@@ -2292,7 +2333,14 @@ function SetupCardChart({ card }) {
         stroke: color, strokeWidth: 2.4, opacity: 0.95,
       });
     };
-    return React.createElement('div', { style: { width: '100%', height: '100%', padding: '10px 12px' } },
+    return React.createElement('div', {
+      style: { width: '100%', height: '100%', padding: '10px 12px', cursor: dragRef.current ? 'grabbing' : 'grab', touchAction: 'none' },
+      onWheel: e => { e.preventDefault(); zoomChart(e.deltaY > 0 ? 12 : -12); },
+      onPointerDown: chartPointerDown,
+      onPointerMove: chartPointerMove,
+      onPointerUp: chartPointerUp,
+      onPointerCancel: chartPointerUp,
+    },
       React.createElement('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', height: '100%', preserveAspectRatio: 'none' },
         [0, .25, .5, .75, 1].map(t => React.createElement('line', {
           key: `g-${t}`, x1: pad, x2: W - pad, y1: pad + t * (H - pad * 2), y2: pad + t * (H - pad * 2),
@@ -2380,7 +2428,7 @@ function SetupCardChart({ card }) {
         pivotOverlays.length > 0 && React.createElement('div', { className: 'modal-stat' },
           React.createElement('span', { className: 'ms-label' }, 'Swing-линии'),
           React.createElement('span', { className: 'ms-val', style: { color: '#3fb950', fontSize: '11px' } },
-            `${pivotOverlays.length} валидн. · ${pivotOverlays.map(x => `${x.role} R² ${Number(x.r2 || 0).toFixed(2)}`).join(' / ')}`)
+            `${pivotOverlays.length} валидн. · ${pivotOverlays.map(x => `${x.role} ${x.pivot_count} pivot · R² ${Number(x.r2 || 0).toFixed(2)}`).join(' / ')}`)
         ),
       ),
       // Chart area
@@ -2393,7 +2441,13 @@ function SetupCardChart({ card }) {
             ? React.createElement('div', { className: 'empty' }, chartError ? `📭 Свечи недоступны: ${chartError}` : '📭 Свечи недоступны')
             : (chartError || !USE_LIGHTWEIGHT_SETUP_CHART)
               ? renderFallbackChart()
-              : React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } })
+              : React.createElement('div', { ref: chartRef, style: { width: '100%', height: '100%' } }),
+        React.createElement('div', { className: 'chart-toolbar' },
+          React.createElement('button', { className: 'chart-tool-btn', onClick: () => zoomChart(-12), title: 'Приблизить' }, '+'),
+          React.createElement('button', { className: 'chart-tool-btn', onClick: () => zoomChart(12), title: 'Отдалить' }, '−'),
+          React.createElement('button', { className: 'chart-tool-btn', onClick: resetViewport, title: 'Последние 90 свечей' }, 'Сброс'),
+          React.createElement('span', { className: 'chart-tool-label' }, `${Math.min(viewBars, fallbackCandles.length || viewBars)} свечей · колесо/drag`)
+        )
       ),
       // Reasons row
       card.reasons && card.reasons.length > 0
@@ -2448,6 +2502,7 @@ function setupCardPrompt(c, fr) {
     `Invalidation: ${c.invalidation ?? '-'}`,
     `Regression context: ${channel ? `${Number(channel.slope_pct_per_bar || 0).toFixed(4)}%/bar R2=${Number(channel.r2 || 0).toFixed(3)} upper=${channel.upper_now} lower=${channel.lower_now}` : `not used (${c?.geometry?.channel_status || 'not relevant'})`}`,
     `Qualified swing-pivot trendlines: ${pivotLines.length ? pivotLines.map(x => `${x.role} level=${x.projection_now} slope=${Number(x.slope_pct_per_day || 0).toFixed(3)}%/day R2=${Number(x.r2 || 0).toFixed(3)} pivots=${x.pivot_count}`).join(' | ') : 'none'}`,
+    `Scanner advisory: ${c?.advisory?.action || 'none'}; authority=${c?.advisory?.authority || 'none'}; may_open_trade=${c?.advisory?.may_open_trade === true}`,
     `Runtime: ${runtime.enabled ? 'LIVE' : 'WATCH'} risk=${runtime.risk_mult ?? runtime.final_risk_mult ?? 0} health=${runtime.health || '-'}`,
     `Funding: ${funding}`,
     `Reasons: ${reasons}`,
@@ -2555,6 +2610,10 @@ function SetupCard({ c, sideBadge, frRates, frColor }) {
         c.runtime && c.runtime.enabled
           ? React.createElement('span', { className: 'badge badge-ok' }, `LIVE ×${Number(c.runtime.risk_mult || 0).toFixed(2)}`)
           : React.createElement('span', { className: 'badge badge-off' }, c.runtime?.health || 'watch')),
+      React.createElement('div', { className: 'dim' }, 'Подсказка'),
+      React.createElement('div', { style: { textAlign: 'right' } },
+        React.createElement('span', { className: 'badge badge-warn', title: 'Скринер может повысить приоритет проверки, но не открыть сделку.' },
+          `${c.advisory?.attention_tier || 'watch'} · risk-zero`)),
       React.createElement('div', { className: 'dim' }, 'Funding 8h'),
       React.createElement('div', { style: { textAlign: 'right', color: frColor((frRates[c.symbol] || {}).tier), fontWeight: 600 } },
         frRates[c.symbol]

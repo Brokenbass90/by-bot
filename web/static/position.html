@@ -32,6 +32,9 @@
   .rail .mark { position:absolute; top:-4px; bottom:-4px; width:2px; }
   .rail .lbl { position:absolute; top:28px; font-size:10px; color:#8b949e; transform:translateX(-50%); white-space:nowrap; }
   canvas { width:100%; height:220px; background:#0d1117; border:1px solid #21262d; border-radius:8px; }
+  .chartbar { display:flex; align-items:center; gap:6px; margin:4px 0 8px; }
+  .chartbar button { margin:0; padding:4px 9px; font-size:12px; background:#21262d; border:1px solid #30363d; }
+  .chartbar .muted { margin-left:auto; }
 </style>
 </head>
 <body>
@@ -39,7 +42,7 @@
 <div class="grid">
   <div>
     <div class="card" id="poscard"><div class="muted">Загрузка…</div></div>
-    <div class="card" style="margin-top:14px;"><div class="pos-title">📈 График (5м, вход/стоп/тейки)</div><canvas id="chart" width="640" height="220"></canvas><div class="muted" id="chartnote"></div></div>
+    <div class="card" style="margin-top:14px;"><div class="pos-title">📈 График (5м, вход/стоп/тейки)</div><div class="chartbar"><button onclick="zoomPositionChart(-24)">＋</button><button onclick="zoomPositionChart(24)">－</button><button onclick="resetPositionViewport()">Сброс</button><span class="muted">колесо — масштаб · drag — история</span></div><canvas id="chart" width="960" height="330"></canvas><div class="muted" id="chartnote"></div></div>
     <div class="card" style="margin-top:14px;" id="alpacacard" hidden>
       <div class="pos-title">🇺🇸 Alpaca (акции)</div>
       <div id="alpaca"></div>
@@ -83,11 +86,20 @@ function rail(p) {
 let chartLoaded = 0;
 let chartSymbol = null;
 let chartRequestId = 0;
+let chartCandles = [];
+let chartPosition = null;
+let chartViewBars = 120;
+let chartPanBars = 0;
+let chartDrag = null;
 
 function resetChart(note, symbol = null) {
   chartRequestId += 1;
   chartLoaded = 0;
   chartSymbol = symbol;
+  chartCandles = [];
+  chartPosition = null;
+  chartViewBars = 120;
+  chartPanBars = 0;
   const cv = document.getElementById("chart"), ctx = cv.getContext("2d");
   ctx.clearRect(0, 0, cv.width, cv.height);
   document.getElementById("chartnote").textContent = note;
@@ -117,10 +129,29 @@ async function drawChart(p) {
     if (requestId !== chartRequestId || symbol !== chartSymbol) return;
     const candles = d.candles || d.data || d;
     if (!Array.isArray(candles) || !candles.length) throw new Error("нет свечей");
-    const cv = document.getElementById("chart"), ctx = cv.getContext("2d");
-    const W = cv.width, H = cv.height;
-    ctx.clearRect(0,0,W,H);
-    const tps = p.tp_targets || [];
+    chartCandles = candles;
+    chartPosition = p;
+    chartPanBars = 0;
+    renderPositionChart();
+  } catch(e) {
+    if (requestId !== chartRequestId || symbol !== chartSymbol) return;
+    document.getElementById("chartnote").textContent = "график недоступен: " + e;
+  }
+}
+
+function renderPositionChart() {
+  if (!chartPosition || !chartCandles.length) return;
+  const p = chartPosition;
+  const sl = p.sl ?? p.exchange_sl ?? p.sl_price;
+  const tps = p.tp_targets || [];
+  const visible = Math.min(chartCandles.length, Math.max(24, chartViewBars));
+  const maxPan = Math.max(0, chartCandles.length - visible);
+  chartPanBars = Math.max(0, Math.min(maxPan, chartPanBars));
+  const end = chartCandles.length - chartPanBars;
+  const candles = chartCandles.slice(Math.max(0, end - visible), end);
+  const cv = document.getElementById("chart"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0,0,W,H);
     let lo = Infinity, hi = -Infinity;
     candles.forEach(c => {
       const h = Number(c.high), l = Number(c.low);
@@ -149,11 +180,18 @@ async function drawChart(p) {
     line(+(p.entry ?? p.entry_price), "#8b949e", "вход");
     line(sl!=null? +sl: null, "#f85149", "SL");
     tps.forEach((t,i)=>line(+t, "#3fb950", "TP"+(i+1)));
-    document.getElementById("chartnote").textContent = candles.length + " свечей 5м";
-  } catch(e) {
-    if (requestId !== chartRequestId || symbol !== chartSymbol) return;
-    document.getElementById("chartnote").textContent = "график недоступен: " + e;
-  }
+  document.getElementById("chartnote").textContent = `${candles.length} из ${chartCandles.length} свечей 5м`;
+}
+
+function zoomPositionChart(delta) {
+  chartViewBars = Math.max(24, Math.min(400, chartViewBars + delta));
+  renderPositionChart();
+}
+
+function resetPositionViewport() {
+  chartViewBars = 120;
+  chartPanBars = 0;
+  renderPositionChart();
 }
 const fmt = (x, d=4) => (typeof x === "number" ? x.toFixed(d) : (x ?? "?"));
 const fmtQty = x => {
@@ -261,6 +299,33 @@ async function ask() {
     log.scrollTop = log.scrollHeight;
   }
 }
+
+const positionCanvas = document.getElementById("chart");
+positionCanvas.addEventListener("wheel", event => {
+  event.preventDefault();
+  zoomPositionChart(event.deltaY > 0 ? 24 : -24);
+}, {passive:false});
+positionCanvas.addEventListener("pointerdown", event => {
+  chartDrag = {x: event.clientX, pan: chartPanBars};
+  positionCanvas.setPointerCapture(event.pointerId);
+  positionCanvas.style.cursor = "grabbing";
+});
+positionCanvas.addEventListener("pointermove", event => {
+  if (!chartDrag || !chartCandles.length) return;
+  const width = Math.max(1, positionCanvas.getBoundingClientRect().width);
+  const delta = Math.round((event.clientX - chartDrag.x) / width * chartViewBars);
+  const maxPan = Math.max(0, chartCandles.length - Math.min(chartCandles.length, chartViewBars));
+  chartPanBars = Math.max(0, Math.min(maxPan, chartDrag.pan + delta));
+  renderPositionChart();
+});
+const stopPositionDrag = event => {
+  chartDrag = null;
+  positionCanvas.style.cursor = "grab";
+  if (positionCanvas.hasPointerCapture(event.pointerId)) positionCanvas.releasePointerCapture(event.pointerId);
+};
+positionCanvas.addEventListener("pointerup", stopPositionDrag);
+positionCanvas.addEventListener("pointercancel", stopPositionDrag);
+positionCanvas.style.cursor = "grab";
 
 refresh();
 setInterval(refresh, 10000);
