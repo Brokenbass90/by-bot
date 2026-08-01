@@ -148,3 +148,21 @@ entry/rotation replay и отладка exit policy. Затем shadow, толь
 - Следующая FX-ветка должна менять источник edge; подготовлен independent brief
   `DEEPSEEK_FX_RESEARCH_BRIEF_2026_08_01.md`.
 - Детальный контракт: `SCANNER_ADVISORY_AND_RESEARCH_STACK_2026_08_01.md`.
+
+### Deploy truth 13:07 UTC
+
+- `cd6bf0f` и `9321508` pushed; web/snapshot пакет задеплоен узко.
+- Web service действительно перезапущен в `13:03:09 UTC`; core `bybot.service`
+  не перезапускался, risk/orders не менялись.
+- Server QA: 63 authoritative cards, 0 valid two-pivot lines, 0 wrong-role
+  lines, AI operator sees advisory, `trade_authority=none`.
+- Direct Bybit after deploy: DOTUSDT Sell 51, entry `0.7632`, exchange stop
+  `0.7722`; защита не изменилась.
+- Четыре local risk-zero supervisor screen остаются активны: Alpaca adaptive,
+  XSEC V3, funding dynamic и funding frozen V4.
+- Funding dynamic на N12 выглядит положительно, но все outcomes пока только
+  COTI/BANK и стороны противоположны; это concentration warning, не PASS.
+- Funding frozen V4: N11, 5 winners, median `−6.29 bps`, mean `−7.45 bps`.
+- Alpaca adaptive: 13 unique shadow decisions; LIVE по-прежнему SAFE_HOLD.
+- Полный receipt:
+  `releases/SCANNER_ADVISORY_INTERACTIVE_CHART_DEPLOY_RECEIPT_2026_08_01.json`.

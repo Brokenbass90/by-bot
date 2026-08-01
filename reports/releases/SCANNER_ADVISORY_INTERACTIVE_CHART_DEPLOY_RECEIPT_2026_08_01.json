@@ -1,0 +1,55 @@
+{
+  "generated_at_utc": "2026-08-01T13:07:42Z",
+  "scope": "web_and_read_only_observability_only",
+  "trading_core_restarted": false,
+  "live_risk_changed": false,
+  "orders_changed": false,
+  "commits": {
+    "scanner_advisory_and_chart_controls": "cd6bf0f",
+    "fx_research_receipts": "9321508",
+    "deploy_restart_contract_local": "4fa109d"
+  },
+  "tests": {
+    "targeted_pytest": "27 passed",
+    "python_compile": "pass",
+    "diff_check": "pass",
+    "browser_static_smoke": "pass"
+  },
+  "server": {
+    "web_service": "active_restarted_2026-08-01T13:03:09Z",
+    "trading_service": "active_not_restarted",
+    "ping": "pong",
+    "setup_cards": 63,
+    "scanner_authoritative": true,
+    "scanner_trade_authority": "none",
+    "valid_two_point_lines": 0,
+    "wrong_role_lines": 0,
+    "operator_snapshot_advisory_present": true,
+    "position_chart_controls": [
+      "zoom_in",
+      "zoom_out",
+      "reset",
+      "mouse_wheel_zoom",
+      "drag_pan"
+    ]
+  },
+  "live_bybit_truth_after_deploy": {
+    "retCode": 0,
+    "open_position_count": 1,
+    "symbol": "DOTUSDT",
+    "side": "Sell",
+    "size": 51.0,
+    "avg_price": 0.7632,
+    "stop_loss": 0.7722,
+    "take_profit_exchange": null,
+    "runner_ladder_unchanged": true
+  },
+  "file_sha256": {
+    "bot/chart_geometry.py": "99c25c6001f0a78e6aed01ae47212d3170fa17ccd0cbf95227165dcef8df008b",
+    "bot/operator_snapshot.py": "af0d1118a6224987b51a977b94a6fe4e9ee972c51d6d5c1fae00e87e09fff3c1",
+    "web/routes/data_routes.py": "8fbd4178b78f6ef65bc770e5688c95903fbf1a531a5cab585e04b36aa3776a39",
+    "web/routes/ai_routes.py": "3eb1c27259dc8affdfdb3b1dc173080fa39e638c6d31a527ddb55863e80575e4",
+    "web/static/index.html": "963b32e7732c558d7e17ef402a5a05188cd2a0a4b5b31500e6bd6a117b960572",
+    "web/static/position.html": "5bee627998678457effe8d4772a3342e0076d7dca7631336851edc22a22c735d"
+  }
+}
