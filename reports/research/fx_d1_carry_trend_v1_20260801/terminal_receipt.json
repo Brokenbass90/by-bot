@@ -1,0 +1,12 @@
+{
+  "generated_at_utc": "2026-08-01T06:26:56.922328+00:00",
+  "status": "FAIL_RESEARCH",
+  "research_only": true,
+  "checks": {
+    "stress_return_positive": false,
+    "stress_positive_folds": true,
+    "stress_positive_pairs": false,
+    "stress_drawdown": true,
+    "concentration": true
+  }
+}

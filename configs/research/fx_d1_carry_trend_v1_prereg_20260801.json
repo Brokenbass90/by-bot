@@ -1,0 +1,31 @@
+{
+  "schema_id": "fx_d1_carry_trend_v1_prereg",
+  "created_at_utc": "2026-08-01T06:25:00Z",
+  "research_only": true,
+  "instruments": ["EURUSD", "GBPUSD", "USDJPY", "EURJPY", "GBPJPY"],
+  "data_path_template": "data_cache/forex/{symbol}_M5.csv",
+  "data_transform": "resample M5 to UTC daily last close",
+  "signal_timing": "signal from completed UTC day close; applied to next trading-day close return",
+  "fixed": {
+    "momentum_lookback_days": 126,
+    "rebalance_days": 20,
+    "minimum_abs_momentum_pct": 1.5,
+    "max_pairs": 3,
+    "oos_folds": 4
+  },
+  "cost_contract": "configs/research/fx_oanda_public_cost_contract_20260729.json",
+  "arms": ["base", "stress"],
+  "promotion_gate": {
+    "stress_annualized_return_pct_gt": 0,
+    "stress_positive_folds_min": 3,
+    "stress_positive_pairs_min": 3,
+    "stress_max_drawdown_pct_lt": 15,
+    "largest_pair_abs_contribution_pct_lt": 50
+  },
+  "forbidden": [
+    "parameter changes after reading this run",
+    "same-day close execution",
+    "symmetric or zero swap substitution",
+    "demo or live promotion from base arm alone"
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "generated_at_utc": "2026-08-01T06:26:56.922328+00:00",
+  "status": "FAIL_RESEARCH",
+  "research_only": true,
+  "rows": 619,
+  "start": "2024-07-07 00:00:00+00:00",
+  "end": "2026-07-06 00:00:00+00:00",
+  "prereg": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/research/fx_d1_carry_trend_v1_prereg_20260801.json",
+  "checks": {
+    "stress_return_positive": false,
+    "stress_positive_folds": true,
+    "stress_positive_pairs": false,
+    "stress_drawdown": true,
+    "concentration": true
+  },
+  "arms": {
+    "base": {
+      "arm": "base",
+      "metrics": {
+        "days": 492,
+        "total_return_pct": -1.001416,
+        "annualized_return_pct": -0.514179,
+        "annualized_vol_pct": 5.959708,
+        "sharpe_zero_rf": -0.086276,
+        "max_drawdown_pct": 11.378987,
+        "calendar_months": 20,
+        "negative_months": 10
+      },
+      "folds": [
+        {
+          "fold": 1,
+          "start": "2024-12-02 00:00:00+00:00",
+          "end": "2025-04-23 00:00:00+00:00",
+          "days": 123,
+          "total_return_pct": -8.858885,
+          "annualized_return_pct": -17.307995,
+          "annualized_vol_pct": 7.062314,
+          "sharpe_zero_rf": -2.450754,
+          "max_drawdown_pct": 9.478555,
+          "calendar_months": 5,
+          "negative_months": 5
+        },
+        {
+          "fold": 2,
+          "start": "2025-04-24 00:00:00+00:00",
+          "end": "2025-09-22 00:00:00+00:00",
+          "days": 123,
+          "total_return_pct": 1.290469,
+          "annualized_return_pct": 2.661783,
+          "annualized_vol_pct": 5.308419,
+          "sharpe_zero_rf": 0.501427,
+          "max_drawdown_pct": 3.019191,
+          "calendar_months": 6,
+          "negative_months": 3
+        },
+        {
+          "fold": 3,
+          "start": "2025-09-23 00:00:00+00:00",
+          "end": "2026-02-12 00:00:00+00:00",
+          "days": 123,
+          "total_return_pct": 4.326986,
+          "annualized_return_pct": 9.066335,
+          "annualized_vol_pct": 6.307471,
+          "sharpe_zero_rf": 1.437396,
+          "max_drawdown_pct": 2.933657,
+          "calendar_months": 6,
+          "negative_months": 3
+        },
+        {
+          "fold": 4,
+          "start": "2026-02-13 00:00:00+00:00",
+          "end": "2026-07-06 00:00:00+00:00",
+          "days": 123,
+          "total_return_pct": 2.789654,
+          "annualized_return_pct": 5.799034,
+          "annualized_vol_pct": 4.729201,
+          "sharpe_zero_rf": 1.226219,
+          "max_drawdown_pct": 3.17115,
+          "calendar_months": 6,
+          "negative_months": 2
+        }
+      ],
+      "positive_folds": 3,
+      "pair_contribution_return_units": {
+        "EURUSD": -0.00574259,
+        "GBPUSD": -0.01508043,
+        "USDJPY": -0.01618012,
+        "EURJPY": 0.01077713,
+        "GBPJPY": 0.01963525
+      },
+      "positive_pairs": 2,
+      "largest_pair_abs_contribution_pct": 29.125708
+    },
+    "stress": {
+      "arm": "stress",
+      "metrics": {
+        "days": 492,
+        "total_return_pct": -1.896575,
+        "annualized_return_pct": -0.975953,
+        "annualized_vol_pct": 5.960434,
+        "sharpe_zero_rf": -0.163739,
+        "max_drawdown_pct": 11.689585,
+        "calendar_months": 20,
+        "negative_months": 10
+      },
+      "folds": [
+        {
+          "fold": 1,
+          "start": "2024-12-02 00:00:00+00:00",
+          "end": "2025-04-23 00:00:00+00:00",
+          "days": 123,
+          "total_return_pct": -9.143774,
+          "annualized_return_pct": -17.836695,
+          "annualized_vol_pct": 7.059887,
+          "sharpe_zero_rf": -2.526485,
+          "max_drawdown_pct": 9.651105,
+          "calendar_months": 5,
+          "negative_months": 5
+        },
+        {
+          "fold": 2,
+          "start": "2025-04-24 00:00:00+00:00",
+          "end": "2025-09-22 00:00:00+00:00",
+          "days": 123,
+          "total_return_pct": 1.004705,
+          "annualized_return_pct": 2.069266,
+          "annualized_vol_pct": 5.311116,
+          "sharpe_zero_rf": 0.38961,
+          "max_drawdown_pct": 3.05597,
+          "calendar_months": 6,
+          "negative_months": 3
+        },
+        {
+          "fold": 3,
+          "start": "2025-09-23 00:00:00+00:00",
+          "end": "2026-02-12 00:00:00+00:00",
+          "days": 123,
+          "total_return_pct": 4.188109,
+          "annualized_return_pct": 8.769089,
+          "annualized_vol_pct": 6.307471,
+          "sharpe_zero_rf": 1.39027,
+          "max_drawdown_pct": 2.952615,
+          "calendar_months": 6,
+          "negative_months": 3
+        },
+        {
+          "fold": 4,
+          "start": "2026-02-13 00:00:00+00:00",
+          "end": "2026-07-06 00:00:00+00:00",
+          "days": 123,
+          "total_return_pct": 2.605282,
+          "annualized_return_pct": 5.410604,
+          "annualized_vol_pct": 4.729019,
+          "sharpe_zero_rf": 1.144128,
+          "max_drawdown_pct": 3.200406,
+          "calendar_months": 6,
+          "negative_months": 2
+        }
+      ],
+      "positive_folds": 3,
+      "pair_contribution_return_units": {
+        "EURUSD": -0.00734021,
+        "GBPUSD": -0.01621821,
+        "USDJPY": -0.01900435,
+        "EURJPY": 0.0092907,
+        "GBPJPY": 0.01759924
+      },
+      "positive_pairs": 2,
+      "largest_pair_abs_contribution_pct": 27.363012
+    }
+  }
+}
