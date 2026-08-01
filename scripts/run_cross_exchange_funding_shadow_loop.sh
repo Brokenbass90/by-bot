@@ -91,5 +91,12 @@ while true; do
   } >"${log}" 2>&1 || true
 
   ln -sfn "${log}" "${LOG_DIR}/latest.log"
+  terminal_decision="$(${PYTHON} -c 'import json,sys; p=json.load(open(sys.argv[1])); print((p.get("promotion_decision") or {}).get("decision") or "")' "${ROOT}/runtime/arb/arb_roi_estimate.json" 2>/dev/null || true)"
+  if [[ "${terminal_decision}" == "retire_standalone_sleeve" ]]; then
+    receipt="${ROOT}/runtime/arb/cross_exchange_funding_terminal_receipt.json"
+    "${PYTHON}" -c 'import json,sys; from datetime import datetime,timezone; src=json.load(open(sys.argv[1])); out={"generated_at_utc":datetime.now(timezone.utc).isoformat(),"status":"terminal","decision":"retire_standalone_sleeve","capital_authorized":False,"source":sys.argv[1],"reason":(src.get("promotion_decision") or {}).get("reason"),"reuse_allowed":(src.get("promotion_decision") or {}).get("reuse_allowed") or []}; json.dump(out,open(sys.argv[2],"w"),indent=2); open(sys.argv[2],"a").write("\n")' "${ROOT}/runtime/arb/arb_roi_estimate.json" "${receipt}"
+    echo "[$(date -u +%FT%TZ)] terminal decision reached; supervisor exits and releases WIP slot" >>"${log}"
+    break
+  fi
   sleep "${INTERVAL_SECONDS}"
 done
