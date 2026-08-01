@@ -31,7 +31,15 @@ def _scanner_sources(runtime: Path) -> dict[Path, dict]:
                         "current_price": 100.0,
                         "atr": 2.0,
                         "flags": {"trend_label": "range_or_transition"},
-                        "channel": {"position": 0.8, "r2": 0.5},
+                        "channel": {
+                            "position": 0.8,
+                            "r2": 0.5,
+                            "slope_per_bar": -0.1,
+                            "slope_pct_per_bar": -0.1,
+                            "mid": 100.0,
+                            "upper": 102.0,
+                            "lower": 98.0,
+                        },
                         "compression": {"is_compressed": False},
                         "nearest_levels": {
                             "above": [{"price": 101.0, "touches": 3, "side_bias": "resistance"}],
@@ -85,6 +93,15 @@ def test_setup_scanner_marks_fresh_rank_output_authoritative(monkeypatch, tmp_pa
     assert payload["freshness_max_age_sec"]["allocator"] == 10_800
     assert payload["cards"]
     assert payload["active_sleeves"]
+    assert payload["cards"][0]["geometry"]["channel"] == {
+        "lookback_bars": 72,
+        "slope_per_bar": -0.1,
+        "slope_pct_per_bar": -0.1,
+        "r2": 0.5,
+        "mid_now": 100.0,
+        "upper_now": 102.0,
+        "lower_now": 98.0,
+    }
 
 
 @pytest.mark.parametrize(

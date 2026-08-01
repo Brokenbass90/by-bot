@@ -1673,6 +1673,8 @@ class SetupAnalysisRequest(BaseModel):
     interval: Optional[str] = None
     runtime_status: Optional[str] = None  # "live" / "watch" / "pause" etc.
     funding_rate_pct: Optional[float] = None  # e.g. +0.0120
+    channel_slope_pct_per_bar: Optional[float] = None
+    channel_r2: Optional[float] = None
 
 
 class SetupAnalysisResponse(BaseModel):
@@ -1721,6 +1723,10 @@ async def analyze_setup(body: SetupAnalysisRequest, _: str = Depends(require_aut
     inval_str = f"Invalidation: {body.invalidation}\n" if body.invalidation else ""
     level_str = f"Level: {body.level_price} ({body.distance_atr} ATR away)\n" if body.level_price else ""
     reasons_str = " · ".join(body.reasons) if body.reasons else "none"
+    channel_str = (
+        f"Channel: slope={body.channel_slope_pct_per_bar:+.4f}%/bar r2={body.channel_r2:.3f}\n"
+        if body.channel_slope_pct_per_bar is not None and body.channel_r2 is not None else ""
+    )
 
     user_msg = f"""Проанализируй setup crypto perpetual и дай вердикт.
 Ответ должен быть строго на русском языке.
@@ -1728,7 +1734,7 @@ async def analyze_setup(body: SetupAnalysisRequest, _: str = Depends(require_aut
 Symbol: {body.symbol} | Side: {body.side.upper()} | Interval: {body.interval or "?"}
 Setup type: {body.setup_type} | Strategy: {body.strategy}
 Score: {body.score or "?"} | Regime: {regime_label}
-Price: {body.price} | {level_str}{inval_str}{fr_str}Reasons: {reasons_str}
+Price: {body.price} | {level_str}{inval_str}{fr_str}{channel_str}Reasons: {reasons_str}
 Runtime health: {body.runtime_status or "unknown"}
 
 Respond with ONLY this JSON (no markdown):

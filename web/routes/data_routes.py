@@ -386,6 +386,7 @@ def _setup_card(
     reasons: List[str],
     router_hits: List[Dict[str, Any]],
     sleeve_map: Dict[str, Dict[str, Any]],
+    channel: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     level_price = _as_float((level or {}).get("price"), 0.0)
     level_dist = _dist_atr(price, level_price, atr) if level_price else None
@@ -394,6 +395,18 @@ def _setup_card(
         sleeve.get("final_risk_mult", sleeve.get("runtime_final_risk_mult", 0.0)),
         0.0,
     )
+    channel = channel or {}
+    channel_geometry = None
+    if channel:
+        channel_geometry = {
+            "lookback_bars": 72,
+            "slope_per_bar": round(_as_float(channel.get("slope_per_bar"), 0.0), 10),
+            "slope_pct_per_bar": round(_as_float(channel.get("slope_pct_per_bar"), 0.0), 8),
+            "r2": round(_as_float(channel.get("r2"), 0.0), 6),
+            "mid_now": round(_as_float(channel.get("mid"), 0.0), 8),
+            "upper_now": round(_as_float(channel.get("upper"), 0.0), 8),
+            "lower_now": round(_as_float(channel.get("lower"), 0.0), 8),
+        }
     return {
         "symbol": symbol,
         "interval": interval,
@@ -409,6 +422,10 @@ def _setup_card(
         "invalidation": round(invalidation, 8) if invalidation else None,
         "reasons": [r for r in reasons if r][:6],
         "router_profiles": router_hits[:4],
+        "geometry": {
+            "level_kind": "horizontal" if level_price else "none",
+            "channel": channel_geometry,
+        },
         "runtime": {
             "enabled": bool(sleeve.get("enabled", sleeve.get("runtime_enabled", False))),
             "risk_mult": round(runtime_risk, 3),
@@ -465,7 +482,7 @@ def _build_setup_cards(
                     side="SHORT", strategy="flat", score=score, price=price, level=above, atr=atr,
                     invalidation=_as_float(above.get("price"), price) + atr * 0.35,
                     reasons=common_reasons + ["near resistance", "candidate for ARF1/flat"],
-                    router_hits=router_hits, sleeve_map=sleeve_map,
+                    router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
                 ))
                 if is_compressed:
                     breakout_score = 58 + touches * 2 + max(0, 0.9 - above_dist) * 16 + (1 - compression_ratio) * 18
@@ -474,7 +491,7 @@ def _build_setup_cards(
                         side="LONG", strategy="breakout", score=breakout_score, price=price, level=above, atr=atr,
                         invalidation=_as_float(above.get("price"), price) - atr * 0.45,
                         reasons=common_reasons + ["compressed below resistance", "wait for breakout + retest"],
-                        router_hits=router_hits, sleeve_map=sleeve_map,
+                        router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
                     ))
 
             if below and below_dist is not None and below_dist <= 0.9:
@@ -485,7 +502,7 @@ def _build_setup_cards(
                     side="LONG", strategy="asb1", score=score, price=price, level=below, atr=atr,
                     invalidation=_as_float(below.get("price"), price) - atr * 0.35,
                     reasons=common_reasons + ["near support", "candidate for bounce/ASB1"],
-                    router_hits=router_hits, sleeve_map=sleeve_map,
+                    router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
                 ))
                 if is_compressed or trend == "trend_down":
                     breakdown_score = 58 + touches * 2 + max(0, 0.9 - below_dist) * 16 + (1 - compression_ratio) * 18
@@ -494,7 +511,7 @@ def _build_setup_cards(
                         side="SHORT", strategy="breakdown", score=breakdown_score, price=price, level=below, atr=atr,
                         invalidation=_as_float(below.get("price"), price) + atr * 0.45,
                         reasons=common_reasons + ["support pressure", "wait for breakdown + retest"],
-                        router_hits=router_hits, sleeve_map=sleeve_map,
+                        router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
                     ))
 
             if trend == "trend_down" and channel_pos >= 0.68:
@@ -505,7 +522,7 @@ def _build_setup_cards(
                     side="SHORT", strategy="brc1", score=score, price=price, level=ref_level, atr=atr,
                     invalidation=price + atr * 1.2,
                     reasons=common_reasons + ["down-channel upper half", "BRC1 shadow candidate"],
-                    router_hits=router_hits, sleeve_map=sleeve_map,
+                    router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
                 ))
 
             if trend == "trend_up" and channel_pos <= 0.32:
@@ -516,7 +533,7 @@ def _build_setup_cards(
                     side="LONG", strategy="att1", score=score, price=price, level=ref_level, atr=atr,
                     invalidation=price - atr * 1.2,
                     reasons=common_reasons + ["up-channel pullback", "ATT1/midterm candidate"],
-                    router_hits=router_hits, sleeve_map=sleeve_map,
+                    router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
                 ))
 
             if is_compressed and (above_dist is None or above_dist > 0.9) and (below_dist is None or below_dist > 0.9):
@@ -526,7 +543,7 @@ def _build_setup_cards(
                     side="BOTH", strategy="ivb1", score=score, price=price, level=None, atr=atr,
                     invalidation=None,
                     reasons=common_reasons + ["compressed away from nearest level", "needs trigger candle"],
-                    router_hits=router_hits, sleeve_map=sleeve_map,
+                    router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
                 ))
 
     cards.sort(key=lambda x: x.get("score", 0.0), reverse=True)
@@ -1904,11 +1921,29 @@ async def get_setup_scanner_chart(
                     continue
     except Exception:
         pass
+    geometry_state = _json(_rt("geometry", "geometry_state.json")) or {}
+    snapshot = (((geometry_state.get("symbols") or {}).get(symbol.upper()) or {}).get(interval) or {})
+    channel = snapshot.get("channel") if isinstance(snapshot, dict) else None
+    channel_overlay = None
+    if isinstance(channel, dict) and channel:
+        channel_overlay = {
+            "lookback_bars": 72,
+            "slope_per_bar": _as_float(channel.get("slope_per_bar"), 0.0),
+            "slope_pct_per_bar": _as_float(channel.get("slope_pct_per_bar"), 0.0),
+            "r2": _as_float(channel.get("r2"), 0.0),
+            "mid_now": _as_float(channel.get("mid"), 0.0),
+            "upper_now": _as_float(channel.get("upper"), 0.0),
+            "lower_now": _as_float(channel.get("lower"), 0.0),
+        }
     return {
         "symbol": symbol.upper(),
         "interval": interval,
         "source": "bybit_public" if candles else "unavailable",
         "candles": candles,
+        "geometry": {
+            "generated_at_utc": geometry_state.get("generated_at_utc"),
+            "channel": channel_overlay,
+        },
     }
 
 

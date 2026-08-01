@@ -2240,6 +2240,7 @@ function SetupCardChart({ card }) {
   const dist = parseFloat(card.distance_atr);
   const score = parseFloat(card.score);
   const fallbackCandles = chartData && Array.isArray(chartData.candles) ? chartData.candles : [];
+  const channelOverlay = chartData?.geometry?.channel || card?.geometry?.channel || null;
 
   function renderFallbackChart() {
     if (!fallbackCandles.length) return null;
@@ -2247,7 +2248,8 @@ function SetupCardChart({ card }) {
     const rows = fallbackCandles.slice(-90);
     const highs = rows.map(c => Number(c.high)).filter(Number.isFinite);
     const lows = rows.map(c => Number(c.low)).filter(Number.isFinite);
-    const prices = highs.concat(lows);
+    const channelPrices = channelOverlay ? [channelOverlay.upper_now, channelOverlay.lower_now, channelOverlay.mid_now].map(Number).filter(Number.isFinite) : [];
+    const prices = highs.concat(lows, channelPrices);
     if (!prices.length) return null;
     const extra = Math.max(1e-9, (Math.max(...prices) - Math.min(...prices)) * 0.08);
     const minP = Math.min(...prices, !isNaN(lvl) ? lvl : Infinity, !isNaN(inv) ? inv : Infinity) - extra;
@@ -2257,6 +2259,17 @@ function SetupCardChart({ card }) {
     const candleW = Math.max(3, Math.min(8, xStep * 0.55));
     const line = (price, color, dash) => isNaN(price) || price <= 0 ? null :
       React.createElement('line', { x1: pad, y1: y(price), x2: W - pad, y2: y(price), stroke: color, strokeWidth: 2, strokeDasharray: dash || '' });
+    const slopedLine = (endPrice, color, dash, width) => {
+      if (!channelOverlay || !Number.isFinite(Number(endPrice))) return null;
+      const lookback = Math.min(rows.length, Math.max(3, Number(channelOverlay.lookback_bars || 72)));
+      const slope = Number(channelOverlay.slope_per_bar || 0);
+      const startPrice = Number(endPrice) - slope * (lookback - 1);
+      const startX = pad + Math.max(0, rows.length - lookback) * xStep;
+      return React.createElement('line', {
+        x1: startX, y1: y(startPrice), x2: W - pad, y2: y(Number(endPrice)),
+        stroke: color, strokeWidth: width || 1.5, strokeDasharray: dash || '', opacity: 0.9,
+      });
+    };
     return React.createElement('div', { style: { width: '100%', height: '100%', padding: '10px 12px' } },
       React.createElement('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', height: '100%', preserveAspectRatio: 'none' },
         [0, .25, .5, .75, 1].map(t => React.createElement('line', {
@@ -2277,7 +2290,10 @@ function SetupCardChart({ card }) {
           );
         }),
         line(lvl, levelColor, ''),
-        line(inv, '#e3b341', '8 6')
+        line(inv, '#e3b341', '8 6'),
+        slopedLine(channelOverlay?.upper_now, '#d29922', '', 2),
+        slopedLine(channelOverlay?.mid_now, '#58a6ff', '7 5', 1.25),
+        slopedLine(channelOverlay?.lower_now, '#d29922', '', 2)
       ),
       chartError ? React.createElement('div', {
         style: { position: 'absolute', left: 20, bottom: 14, color: 'var(--yellow)', fontSize: '11px' }
@@ -2333,6 +2349,11 @@ function SetupCardChart({ card }) {
           React.createElement('span', { className: 'ms-val', style: { fontSize: '11px', fontWeight: 400 } },
             (card.strategy || '—').replace(/^(alt_|btc_eth_|inplay_)/g, ''))
         ),
+        channelOverlay && React.createElement('div', { className: 'modal-stat' },
+          React.createElement('span', { className: 'ms-label' }, 'Наклонная'),
+          React.createElement('span', { className: 'ms-val', style: { color: '#d29922', fontSize: '11px' } },
+            `${Number(channelOverlay.slope_pct_per_bar || 0).toFixed(4)}%/bar · R² ${Number(channelOverlay.r2 || 0).toFixed(2)}`)
+        ),
       ),
       // Chart area
       React.createElement('div', { className: 'modal-chart-wrap' },
@@ -2381,6 +2402,7 @@ function setupCardPrompt(c, fr) {
   const reasons = (c.reasons || []).join(' · ') || 'no reasons';
   const runtime = c.runtime || {};
   const funding = fr ? `${fr.rate_pct > 0 ? '+' : ''}${fr.rate_pct.toFixed(4)}% / 8h` : 'unknown';
+  const channel = c?.geometry?.channel;
   return [
     'Разбери эту карточку Setup Scanner как старший трейдер.',
     'Не предлагай live-вход без подтверждения risk/backtest gates; дай план: что должно подтвердиться, где инвалидация, какой риск, стоит ли ждать.',
@@ -2395,6 +2417,7 @@ function setupCardPrompt(c, fr) {
     `Level: ${c.level_price ?? '-'} (${c.level_touches || 0} touches)`,
     `Distance ATR: ${c.distance_atr ?? '-'}`,
     `Invalidation: ${c.invalidation ?? '-'}`,
+    `Channel: ${channel ? `${Number(channel.slope_pct_per_bar || 0).toFixed(4)}%/bar R2=${Number(channel.r2 || 0).toFixed(3)} upper=${channel.upper_now} lower=${channel.lower_now}` : '-'}`,
     `Runtime: ${runtime.enabled ? 'LIVE' : 'WATCH'} risk=${runtime.risk_mult ?? runtime.final_risk_mult ?? 0} health=${runtime.health || '-'}`,
     `Funding: ${funding}`,
     `Reasons: ${reasons}`,
@@ -2432,6 +2455,8 @@ function SetupCard({ c, sideBadge, frRates, frColor }) {
         interval:         String(c.interval || ''),
         runtime_status:   c.runtime?.health || (c.runtime?.enabled ? 'live' : 'watch'),
         funding_rate_pct: fr ? fr.rate_pct : null,
+        channel_slope_pct_per_bar: c?.geometry?.channel?.slope_pct_per_bar ?? null,
+        channel_r2: c?.geometry?.channel?.r2 ?? null,
       };
       const token = localStorage.getItem('auth_token') || '';
       const resp = await fetch('/api/ai/analyze-setup', {
@@ -2450,7 +2475,8 @@ function SetupCard({ c, sideBadge, frRates, frColor }) {
   const sendToAIChat = () => {
     const prompt = setupCardPrompt(c, frRates[c.symbol]);
     localStorage.setItem('ai_prefill', prompt);
-    window.dispatchEvent(new CustomEvent('open-ai-chat-card', { detail: { prompt } }));
+    localStorage.setItem('ai_prefill_card', JSON.stringify(c));
+    window.dispatchEvent(new CustomEvent('open-ai-chat-card', { detail: { prompt, card: c } }));
     setChatState('sent');
     setTimeout(() => setChatState(null), 1800);
   };
@@ -2644,6 +2670,24 @@ function JournalPage() {
 
 // ── AI Chat page ───────────────────────────────────────────────────────────
 
+function AIInlineSetupCard({ card }) {
+  if (!card) return null;
+  const channel = card?.geometry?.channel;
+  return React.createElement('div', {
+    style: { minWidth: '300px', marginBottom: '8px', padding: '9px 10px', border: '1px solid var(--border2)', borderRadius: '8px', background: 'var(--bg2)' }
+  },
+    React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'center' } },
+      React.createElement('strong', { style: { color: 'var(--blue)' } }, `${card.symbol} · ${card.side || 'WATCH'} · ${card.interval || '?'}m`),
+      React.createElement('span', { style: { color: 'var(--text3)', fontSize: '11px' } }, `score ${Number(card.score || 0).toFixed(1)}`)
+    ),
+    React.createElement('div', { style: { color: 'var(--text2)', fontSize: '11px', marginTop: '4px' } },
+      `${card.setup_type || card.strategy || 'setup'} · level ${card.level_price ?? '—'} · dist ${card.distance_atr ?? '—'} ATR`),
+    channel && React.createElement('div', { style: { color: '#d29922', fontSize: '11px', marginTop: '3px' } },
+      `наклон ${Number(channel.slope_pct_per_bar || 0).toFixed(4)}%/bar · R² ${Number(channel.r2 || 0).toFixed(2)}`),
+    React.createElement(SetupCardChart, { card })
+  );
+}
+
 function AIChatPage() {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Привет. Я вижу текущий snapshot бота: режим, рукава, сделки, Alpaca и health-состояние. Если данные старые или неполные, я должен сказать об этом прямо. Спроси, что проверить.' }
@@ -2653,6 +2697,7 @@ function AIChatPage() {
   const [pendingCmd, setPendingCmd] = useState(null);
   const [cmdConfirm, setCmdConfirm] = useState(false);
   const [feed, setFeed] = useState([]);
+  const [prefillCard, setPrefillCard] = useState(null);
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -2678,17 +2723,24 @@ function AIChatPage() {
   useEffect(() => {
     const loadPrefill = () => {
       const prompt = localStorage.getItem('ai_prefill') || '';
+      const rawCard = localStorage.getItem('ai_prefill_card') || '';
       if (prompt.trim()) {
         setInput(prompt);
         localStorage.removeItem('ai_prefill');
+      }
+      if (rawCard) {
+        try { setPrefillCard(JSON.parse(rawCard)); } catch (_) {}
+        localStorage.removeItem('ai_prefill_card');
       }
     };
     const onCard = e => {
       const prompt = e?.detail?.prompt || localStorage.getItem('ai_prefill') || '';
+      const card = e?.detail?.card || null;
       if (prompt.trim()) {
         setInput(prompt);
         localStorage.removeItem('ai_prefill');
       }
+      if (card) setPrefillCard(card);
     };
     loadPrefill();
     window.addEventListener('open-ai-chat-card', onCard);
@@ -2704,12 +2756,12 @@ function AIChatPage() {
   async function send(executeCmd = null) {
     const text = input.trim();
     if (!text && !executeCmd) return;
-    const userMsg = { role: 'user', content: text };
+    const userMsg = { role: 'user', content: text, setup_card: prefillCard };
     const newMsgs = text ? [...messages, userMsg] : messages;
-    if (text) { setMessages(newMsgs); setInput(''); }
+    if (text) { setMessages(newMsgs); setInput(''); setPrefillCard(null); }
     setLoading(true);
     try {
-      const body = { messages: newMsgs.filter(m => m.role !== 'system') };
+      const body = { messages: newMsgs.filter(m => m.role !== 'system').map(m => ({ role: m.role, content: m.content })) };
       if (executeCmd) body.execute_command = executeCmd;
       const res = await post('/api/ai/chat', body);
       const replies = [];
@@ -2789,7 +2841,10 @@ function AIChatPage() {
               color: m.role === 'system' ? 'var(--text2)' : 'var(--text)',
               fontSize: '13px', lineHeight: '1.6', whiteSpace: 'pre-wrap',
             }
-          }, m.content)
+          },
+            m.setup_card ? React.createElement(AIInlineSetupCard, { card: m.setup_card }) : null,
+            m.content
+          )
         )),
         loading && React.createElement('div', { style: { display: 'flex', gap: '4px', padding: '10px 14px' } },
           [0,1,2].map(i => React.createElement('div', { key: i, style: {
@@ -2843,6 +2898,7 @@ function AIChatPage() {
       ),
 
       // Input
+      prefillCard ? React.createElement(AIInlineSetupCard, { card: prefillCard }) : null,
       React.createElement('div', { style: { display: 'flex', gap: '8px', marginTop: '8px' } },
         React.createElement('textarea', {
           ref: textareaRef,
