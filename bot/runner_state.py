@@ -3,9 +3,41 @@ bot/runner_state.py — shared live-runner state hydration for TradeState.
 """
 from __future__ import annotations
 
+from decimal import Decimal, ROUND_DOWN
 from typing import Any
 
 from trade_state import TradeState
+
+
+def plan_runner_target_close(
+    *,
+    initial_qty: float,
+    remaining_qty: float,
+    target_frac: float,
+    qty_step: float,
+    final_target: bool,
+) -> tuple[float, float]:
+    """Return the step-aligned close quantity and expected remainder.
+
+    Intermediate ladder targets close their requested fraction rounded down to
+    the exchange quantity step.  The final target closes *all* remaining size;
+    otherwise rounding every fraction independently can leave protected but
+    unintended residual exposure (for example 1.2 * 55%/45% at a 0.1 step).
+    """
+    initial = max(0.0, float(initial_qty or 0.0))
+    remaining = max(0.0, float(remaining_qty or 0.0))
+    step = max(0.0, float(qty_step or 0.0))
+    if remaining <= 0.0 or step <= 0.0:
+        return 0.0, remaining
+
+    requested = remaining if final_target else min(
+        remaining,
+        initial * max(0.0, float(target_frac or 0.0)),
+    )
+    d_step = Decimal(str(step))
+    sent = (Decimal(str(requested)) / d_step).to_integral_value(rounding=ROUND_DOWN) * d_step
+    sent_f = min(remaining, max(0.0, float(sent)))
+    return sent_f, max(0.0, remaining - sent_f)
 
 
 def _float_or_none(value: Any) -> float | None:

@@ -145,6 +145,7 @@ from bot.circuit_breaker import get_circuit_breaker as _get_cb
 from bot.runner_state import (
     apply_runner_snapshot,
     apply_runner_state,
+    plan_runner_target_close,
     runner_snapshot_from_trade,
     sync_runner_qty_after_fill,
 )
@@ -8240,14 +8241,25 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
             hit = (price >= tp) if side == "Buy" else (price <= tp)
             if not hit:
                 continue
-            qty_target = float(tr.initial_qty) * float(tr.tp_fracs[i])
             qty_left = float(tr.remaining_qty or tr.qty or 0.0)
-            qty_to_close = min(qty_target, qty_left)
+            qty_step = float(_get_meta(symbol).get("qtyStep") or 0.0)
+            qty_to_close, qty_after_close = plan_runner_target_close(
+                initial_qty=float(tr.initial_qty),
+                remaining_qty=qty_left,
+                target_frac=float(tr.tp_fracs[i]),
+                qty_step=qty_step,
+                final_target=(
+                    i == len(tr.tps) - 1
+                    and sum(max(0.0, float(x)) for x in tr.tp_fracs) >= 1.0 - 1e-9
+                ),
+            )
             if qty_to_close <= 0:
-                tr.tp_hit[i] = True
+                # Keep the rung pending when the requested slice is below the
+                # exchange step.  A later/final target or stop remains able to
+                # close the actual live quantity.
                 continue
             TRADE_CLIENT.close_market(symbol, side, qty_to_close)
-            tr.remaining_qty = max(0.0, qty_left - qty_to_close)
+            tr.remaining_qty = qty_after_close
             tr.tp_hit[i] = True
             tr.last_runner_action_ts = now
             _append_live_trade_event(

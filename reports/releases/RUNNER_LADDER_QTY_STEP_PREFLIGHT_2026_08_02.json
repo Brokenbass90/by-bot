@@ -1,0 +1,84 @@
+{
+  "schema": "runner_ladder_qty_step_preflight_v1",
+  "generated_at_utc": "2026-08-01T22:58:45Z",
+  "status": "FIX_READY_DEPLOY_BLOCKED_OPEN_PROTECTED_POSITION",
+  "live_truth": {
+    "service": "active",
+    "open_position_count": 1,
+    "symbol": "LTCUSDT",
+    "side": "Sell",
+    "exchange_qty": 0.6,
+    "exchange_avg_price": 44.12,
+    "exchange_stop_loss": 44.64,
+    "exchange_take_profit": null,
+    "runner_enabled": true,
+    "tp1": {
+      "price": 43.827281,
+      "fraction": 0.55,
+      "hit": true
+    },
+    "tp2": {
+      "price": 43.347669,
+      "fraction": 0.45,
+      "hit": false
+    },
+    "runner_recorded_remaining_qty": 0.54,
+    "truth_mismatch_qty": 0.06,
+    "protection_verdict": "PROTECTED_BY_EXCHANGE_STOP"
+  },
+  "defect": {
+    "root_cause": "The runner subtracted the requested TP slice from remaining_qty, while the exchange close helper rounded that slice down to qtyStep before execution.",
+    "reproduction": "For initial_qty=1.2, TP1=55% requests 0.66 but qtyStep=0.1 sends 0.6. The old runner stored 0.54 instead of the actual 0.6 remainder.",
+    "live_risk": "At the last TP the old runtime can request 0.54, send 0.5, mark the ladder complete, and leave an unintended 0.1 LTC residual. The residual remains covered by the exchange stop but is not an intended terminal state."
+  },
+  "fix": {
+    "files": [
+      "bot/runner_state.py",
+      "smart_pump_reversal_bot.py",
+      "tests/test_runner_state_restore.py"
+    ],
+    "behavior": [
+      "Plan every close using the exchange qty step.",
+      "Persist the expected step-aligned remainder.",
+      "Flush all actual remaining quantity on a complete final ladder target.",
+      "Keep sub-step intermediate targets pending instead of falsely marking them hit.",
+      "Preserve intentional residual runners when TP fractions do not sum to 100%."
+    ]
+  },
+  "verification": {
+    "tests": "17 passed",
+    "py_compile": "PASS",
+    "diff_check": "PASS"
+  },
+  "deployment_gate": {
+    "action_now": "DO_NOT_RESTART_OR_DEPLOY_CORE_WHILE_LTCUSDT_IS_OPEN",
+    "next_action": "After direct Bybit truth is flat, deploy the isolated runner patch, restart once, confirm imports and heartbeat, then verify the next ladder against exchange fills.",
+    "live_risk_changed": false,
+    "att1_signal_or_universe_changed": false
+  },
+  "research_truth": {
+    "active_screens": [
+      "alpaca_adaptive_shadow_20260726",
+      "funding_position_dynamic_shadow_20260729",
+      "xsec_v3_shadow_20260726",
+      "funding_position_v4_shadow_20260801_cont"
+    ],
+    "funding_v4_frozen": {
+      "closed_cycles": 12,
+      "wins": 6,
+      "mean_net_bps": 0.373,
+      "median_net_bps": 19.204,
+      "fill_rate": 0.833,
+      "verdict": "COLLECT_TO_N20_NO_CAPITAL"
+    },
+    "funding_dynamic": {
+      "closed_cycles": 14,
+      "wins": 9,
+      "mean_net_bps": 260.477,
+      "median_net_bps": 494.696,
+      "binding_blocker": "All completed cycles remain concentrated in COTIUSDT and BANKUSDT; no promotion without symbol diversification."
+    },
+    "xsec_unique_decisions": 7,
+    "alpaca_unique_shadow_decisions": 13
+  }
+}
