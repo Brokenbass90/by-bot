@@ -1,0 +1,67 @@
+{
+  "generated_at_utc": "2026-08-01T06:30:00Z",
+  "git": {
+    "branch": "codex/dynamic-symbol-filters",
+    "head": "8f70781",
+    "pushed": true,
+    "commits": [
+      "06869be feat(alpaca): add protective exit only stop ratchet",
+      "3377672 feat(web): render scanner geometry in AI setup cards",
+      "756a9c3 fix(research): stop retired arbitrage supervisor",
+      "555348e fix(web): align scanner cards with runtime sleeves",
+      "8f70781 research(fx): seal D1 carry trend baseline"
+    ]
+  },
+  "bybit_live": {
+    "core_restarted": false,
+    "reason": "protected ATT1 position open during release",
+    "position_truth": "open position had broker stop and active runner; exact account details intentionally excluded from Git"
+  },
+  "web": {
+    "target": "root@64.226.73.119:/root/by-bot",
+    "service": "trading-journal-web.service",
+    "status": "active",
+    "ping": {"pong": true},
+    "deployed": [
+      "channel upper/mid/lower overlays with slope and R2",
+      "setup card embedded in AI chat with chart",
+      "support bounce maps to bounce1",
+      "long trend pullback maps to midterm and never ATT1"
+    ]
+  },
+  "alpaca_protective_exit": {
+    "target": "root@64.226.73.119:/root/by-bot",
+    "authority": "protective_exits_only_no_buys_no_rotation_no_market_close",
+    "cron": "every 15 minutes 13-21 UTC weekdays; broker clock gates execution",
+    "apply_enabled": true,
+    "market_open_during_deploy": false,
+    "orders_changed_during_deploy": 0,
+    "position_truth": "two protected fractional holdings found; one below activation and one eligible for an atomic upward stop ratchet at next open poll; exact account details intentionally excluded from Git"
+  },
+  "research": {
+    "cross_exchange_arbitrage": {
+      "decision": "retire_standalone_sleeve",
+      "closed_cycles": 35,
+      "wins": 5,
+      "losses": 30,
+      "median_return_pct_per_cycle": -0.143,
+      "capital_authorized": false,
+      "supervisor_exited": true,
+      "reusable": ["public_market_collector", "funding_as_directional_feature", "execution_state_machine"]
+    },
+    "fx_d1_carry_trend_v1": {
+      "status": "FAIL_RESEARCH",
+      "stress_annualized_return_pct": -0.975953,
+      "stress_max_drawdown_pct": 11.689585,
+      "stress_positive_folds": 3,
+      "stress_positive_pairs": 2,
+      "next": "attribute bad fold and pairs; keep parameters sealed; prepare asymmetric-cost H4 break/retest"
+    }
+  },
+  "verification": {
+    "tests": "50 focused tests passed",
+    "python_compile": "pass",
+    "bash_syntax": "pass",
+    "web_javascript_syntax": "pass"
+  }
+}
