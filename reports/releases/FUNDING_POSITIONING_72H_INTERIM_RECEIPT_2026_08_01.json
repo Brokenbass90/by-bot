@@ -1,0 +1,43 @@
+{
+  "schema_id": "funding_positioning_72h_interim_receipt_v1",
+  "generated_at_utc": "2026-08-01T10:54:17Z",
+  "research_only": true,
+  "capital_authorized": false,
+  "frozen_control": {
+    "status": "FAIL_RESEARCH_72H_ECONOMICS",
+    "closed": 11,
+    "positive_closes": 5,
+    "submitted": 14,
+    "fills": 12,
+    "nonfills": 2,
+    "fill_rate": 0.8571428571,
+    "mean_closed_raw_net_bps": -7.4472013752,
+    "median_closed_raw_net_bps": -6.2888509587,
+    "positive_symbols": 2,
+    "symbols_with_closes": 6,
+    "largest_symbol_abs_contribution_share": 0.279547537,
+    "binding_failure": "Both mean and median are negative after the first bounded 72h lifecycle. N20 money gate is not reached.",
+    "continuation": "A second bounded 72h research-only loop continues the same append-only state to the preregistered N20 gate.",
+    "screen": "funding_position_v4_shadow_20260801_cont"
+  },
+  "dynamic_challenger": {
+    "status": "BLOCKED_DATA_OUTLIER_AND_CONCENTRATION_AUDIT",
+    "closed": 12,
+    "positive_closes": 8,
+    "mean_closed_raw_net_bps": 344.9934217551,
+    "median_closed_raw_net_bps": 494.6962952977,
+    "symbols_with_closes": 2,
+    "largest_symbol_abs_contribution_share": 0.6295708833,
+    "binding_blockers": [
+      "Only COTIUSDT and BANKUSDT have closed outcomes.",
+      "COTIUSDT contributes +10057.71 bps while BANKUSDT contributes -5917.79 bps.",
+      "Largest-symbol absolute contribution share is 62.96%, above the 35% gate.",
+      "Price continuity, listing/re-denomination and markout arithmetic must be audited before interpreting the positive mean."
+    ]
+  },
+  "live_impact": {
+    "orders_sent": false,
+    "live_risk_changed": false,
+    "att1_changed": false
+  }
+}

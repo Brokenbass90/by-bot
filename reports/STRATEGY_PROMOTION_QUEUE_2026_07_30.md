@@ -24,8 +24,8 @@
 | № | Кандидат | Роль | Сейчас | Следующий доказательный шаг | Самый ранний money-review |
 |---:|---|---|---|---|---|
 | 1 | XSEC PIT V5 | relative/market-neutral | shadow, N5 | N10 + PIT/fill/cost receipt | середина–конец августа |
-| 2 | Funding Positioning V4 | derivatives event | shadow, 5 closes | 72h lifecycle, затем N20 | 3–8 августа review |
-| 3 | Dynamic Funding Positioning | dynamic derivatives event | shadow, 3 closes | N20 against frozen control | после frozen review |
+| 2 | Funding Positioning V4 | derivatives event | 72h FAIL economics, N11; bounded continuation active | N20; mean/median must turn positive | 3–8 августа review |
+| 3 | Dynamic Funding Positioning | dynamic derivatives event | N12 BLOCKED_DATA audit: only COTI/BANK, 62.96% concentration | continuity/outlier audit, then N20 control | после audit/frozen review |
 | 4 | BOUNCE1 virtual lifecycle | tactical long | code exists, evidence weak | exact SHA + untouched prereg + virtual fills/exits | после N20 shadow |
 | 5 | BREAKDOWN regime V2 | tactical bear | code/regime gate exist | bear OOS + bull control + exit ladder | после N20 shadow |
 | 6 | BTC/ETH Midterm Pullback V4 | slow core | old evidence non-independent | standalone ledger + walk-forward + funding stress | после N20 shadow |

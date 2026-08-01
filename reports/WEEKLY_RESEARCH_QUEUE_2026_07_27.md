@@ -13,8 +13,8 @@
 | XSEC-2 | PIT/execution repair spec | family gate PASS, PIT queued | 36/36 neighbouring V4 variants positive; no ledger rewrite | V5 PIT prereg, not live |
 | ARB-1 | Funding post-cutover paper | running low-priority, N12 | 2 wins, median -0.1671%, p25 -0.2238%; N20/N30 | bounded economics decision |
 | FPOS-1 | Funding positioning V4 maker audit | completed PASS to shadow | 5bps fill 92.95%, realized +13.49bps/submitted, 8/8 symbols | prospective only |
-| FPOS-2 | Funding positioning V4 public shadow | running 72h | frozen p70/16h; no keys/orders | fill/nonfill/lifecycle receipt |
-| FPOS-3 | Dynamic Funding universe challenger | running risk-zero, N0 | 16 causal liquidity/history-qualified symbols; separate ledger | N20 frozen-vs-dynamic comparison |
+| FPOS-2 | Funding positioning V4 public shadow | first 72h FAIL economics; continuing to prereg N20 | N11, mean −7.45 bps, median −6.29 bps, fill 85.7%; no keys/orders | N20 bounded decision |
+| FPOS-3 | Dynamic Funding universe challenger | BLOCKED_DATA audit, N12 | only COTI/BANK closes; 62.96% concentration; price continuity audit required | audited N20 frozen-vs-dynamic comparison |
 | ALP-1 | Massive Basic PIT materializer/parity repair | exit defect localized; PIT queued | shared exit -5.19% combined vs calendar-hold +53.91% survivor proxy; calendar arm lacks catastrophe stop | distant-stop prereg + PIT/corporate-actions receipt |
 | ALP-2 | Exact broker-parity shadow | collection running, N6 unique decisions; performance blocked by ALP-1 | same picks/exits as future broker path | shadow ledger |
 | FX-1 | Preserve current FX negative baseline | completed FAIL | 9-family 0 PASS; H4 stress 16/16 negative | no unchanged rerun |
