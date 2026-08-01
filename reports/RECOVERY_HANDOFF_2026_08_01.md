@@ -123,7 +123,7 @@ entry/rotation replay и отладка exit policy. Затем shadow, толь
 
 - Geometry/web commit: `371e692` pushed.
 - Web target deploy выполнен без рестарта core bot.
-- Новый FX runner, AI research allowlist и этот handoff должны быть закоммичены
-  и pushed отдельным изолированным коммитом.
+- Новый FX runner, AI research allowlist и этот handoff закоммичены и pushed:
+  `d7c31ac`.
 - Чужие dirty/untracked архивы, Claude WIP и historical data не удалялись и не
   добавлялись пачкой.

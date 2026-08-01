@@ -3,6 +3,7 @@
   "generated_at_utc": "2026-08-01T07:05:00Z",
   "branch": "codex/dynamic-symbol-filters",
   "geometry_source_commit": "371e6924a5fa6708092dce2422e8e56630c2e693",
+  "research_source_commit": "d7c31ac",
   "scope": {
     "live_risk_changed": false,
     "orders_changed": false,
