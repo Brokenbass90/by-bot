@@ -20,6 +20,8 @@
 | FX-1 | Preserve current FX negative baseline | completed FAIL | 9-family 0 PASS; H4 stress 16/16 negative | no unchanged rerun |
 | FX-2 | D1 carry+trend prereg | public OANDA side-specific swap contract ready | wire long/short swap + base/stress commission | sealed OOS receipt |
 | FX-3 | H4 breakout/retest prereg | queued after FX-2 | WIP control | sealed OOS receipt |
+| FX-4 | H4 time-series momentum | completed FAIL | stress −29.20%, 18/25 red months, 1/4 folds, 0/5 pairs | terminal negative control |
+| FX-5 | H4 regime mean reversion | completed FAIL | stress −10.58%, 16/24 red months, 1/4 folds, 0/5 pairs | terminal negative control |
 | ATT-1 | ATT1 seasonality/filter | completed FAIL | discovery hour 21 UTC failed validation and holdout | no live filter change |
 | ATT-2 | ATT1 A3/3R exact replay | completed FAIL | worse expectancy/red months/DD than champion | preserve champion; no forward shadow |
 | VOL-1 | Full owner volume setup | queued after Package A | causal dynamic universe | integrated smoke then OOS |
@@ -27,6 +29,7 @@
 | BNC-1 | BOUNCE1/support-bounce rehabilitation | queued next | canonical rename + virtual decision/fill/exit ledger + untouched prereg | risk-zero shadow-ready receipt |
 | LEVEL-1 | LevelSnapshotV2 provenance design | queued | do not change ATT1 | parity/visual contract |
 | PORT-1 | Three-slot portfolio combiner | queued | only authoritative trade ledgers | OOS portfolio metrics |
+| WEB-2 | Scanner geometry/advisory V1 | implemented, tests pending deploy receipt | 3+ pivot, role relevance, risk-zero authority | web-only deploy; no core restart |
 
 ## Operating rules
 

@@ -306,10 +306,11 @@
       "family": "time_series_momentum",
       "side": "long_and_short",
       "portfolio_role": "swing_trend",
-      "stage": "next_preregistration",
+      "stage": "terminal_fail_20260801",
       "implementation": [
-        "bot/fx_setups_v3.py",
-        "scripts/run_fx_native_harness.py"
+        "forex/strategies/h4_time_series_momentum_v1.py",
+        "scripts/run_fx_h4_momentum_v1.py",
+        "configs/research/fx_h4_momentum_v1_prereg_20260801.json"
       ],
       "instruments": [
         "EURUSD",
@@ -320,9 +321,9 @@
       ],
       "data_quality": "MEDIUM",
       "binding_risk": "Must be distinct from D1 carry beta and H4 retest entries.",
-      "next_artifact": "Preregistered momentum baseline and incremental portfolio-additivity test",
+      "next_artifact": "reports/research/fx_h4_momentum_v1_20260801/terminal_receipt.json",
       "first_demo_gate": "Standalone stress pass plus positive marginal effect on D1/H4 book",
-      "timing": "second FX wave"
+      "timing": "terminal receipt: stress -29.199536%, 18/25 negative months, 1/4 positive folds, 0/5 positive pairs"
     },
     {
       "rank": 4,
@@ -330,21 +331,24 @@
       "family": "regime_mean_reversion",
       "side": "long_and_short",
       "portfolio_role": "range_diversifier",
-      "stage": "queued_design",
+      "stage": "terminal_fail_20260801",
       "implementation": [
-        "bot/fx_context.py",
-        "bot/fx_setups_v3.py"
+        "forex/strategies/h4_regime_mean_reversion_v1.py",
+        "scripts/run_fx_h4_regime_mean_reversion_v1.py",
+        "configs/research/fx_h4_regime_mean_reversion_v1_prereg_20260801.json"
       ],
       "instruments": [
         "EURUSD",
         "GBPUSD",
-        "USDJPY"
+        "USDJPY",
+        "EURJPY",
+        "GBPJPY"
       ],
       "data_quality": "MEDIUM",
       "binding_risk": "Old intraday range strategies were negative before costs; only H4 regime-conditioned form is admissible.",
-      "next_artifact": "Frozen range-regime definition and H4 walk-forward negative control",
+      "next_artifact": "reports/research/fx_h4_regime_mean_reversion_v1_20260801/terminal_receipt.json",
       "first_demo_gate": "Positive range OOS and no catastrophic trend-regime leakage",
-      "timing": "second FX wave"
+      "timing": "terminal receipt: stress -10.583540%, 16/24 negative months, 1/4 positive folds, 0/5 positive pairs"
     },
     {
       "rank": 5,
@@ -388,19 +392,19 @@
   "next_launch_order": [
     {
       "when": "first research WIP slot frees",
-      "launch": "fx_d1_carry_trend_v1"
+      "launch": "crypto_bounce1_virtual_lifecycle"
     },
     {
       "when": "second research WIP slot frees",
-      "launch": "crypto_bounce1_virtual_lifecycle"
+      "launch": "crypto_owner_volume_level_setup_v1"
     },
     {
       "when": "short-strategy WIP slot frees",
       "launch": "crypto_breakdown_regime_v2"
     },
     {
-      "when": "FX research WIP slot is free after two terminal failures",
-      "launch": "fx_h4_momentum_v1"
+      "when": "FX research WIP slot is free after four terminal failures",
+      "launch": "cfd_xauusd_d1_h4_v1_cost_validation_then_new_prereg"
     },
     {
       "when": "measurement harness is free",

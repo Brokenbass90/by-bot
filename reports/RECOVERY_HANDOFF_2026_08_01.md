@@ -127,3 +127,24 @@ entry/rotation replay и отладка exit policy. Затем shadow, толь
   `d7c31ac`.
 - Чужие dirty/untracked архивы, Claude WIP и historical data не удалялись и не
   добавлялись пачкой.
+
+## Checkpoint 1 августа 12:53 UTC — scanner/advisory/FX wave
+
+- Найдена подтверждённая ошибка качества линий: 2 pivot давали формальное
+  `R²=1.00`, хотя это не оценка качества. Теперь такие линии diagnostic-only;
+  валидная swing-линия требует минимум 3 pivot.
+- Карточка получает только релевантную сторону swing-геометрии. SHORT
+  resistance fade больше не показывает support, LONG bounce — resistance.
+- Создан атомарный `scanner_strategy_advisory_v1`: risk-zero подсказка может
+  поднять приоритет native scan, но `may_open_trade=false` и native strategy
+  confirmation обязателен.
+- Setup chart и live position chart получили zoom/pan/reset.
+- Локальный geometry QA: 26 snapshots, 52 line candidates, 17 valid 3+ pivot,
+  64 cards, 0 wrong-role cards, 64 risk-zero advisories.
+- H4 Momentum terminal FAIL: stress `−29.20%`, 18/25 красных месяцев,
+  1/4 folds, 0/5 пар.
+- H4 Regime Mean Reversion terminal FAIL: stress `−10.58%`, 16/24 красных
+  месяцев, 1/4 folds, 0/5 пар.
+- Следующая FX-ветка должна менять источник edge; подготовлен independent brief
+  `DEEPSEEK_FX_RESEARCH_BRIEF_2026_08_01.md`.
+- Детальный контракт: `SCANNER_ADVISORY_AND_RESEARCH_STACK_2026_08_01.md`.

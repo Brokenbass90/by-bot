@@ -1,0 +1,40 @@
+{
+  "schema_id": "fx_h4_regime_mean_reversion_v1_prereg",
+  "created_at_utc": "2026-08-01T13:05:00Z",
+  "research_only": true,
+  "instruments": ["EURUSD", "GBPUSD", "USDJPY", "EURJPY", "GBPJPY"],
+  "data_path_template": "data_cache/forex/{symbol}_M5.csv",
+  "bar_contract": "completed UTC H4 bars resampled causally from M5",
+  "strategy": "H4 flat-regime excursion rejection back to 48 EMA",
+  "fixed": {
+    "ema_period": 48,
+    "slope_lookback": 12,
+    "atr_period": 14,
+    "max_ema_slope_atr": 0.22,
+    "entry_distance_atr": 1.35,
+    "min_rejection_wick_atr": 0.1,
+    "stop_atr": 1.0,
+    "min_reward_risk": 1.15,
+    "cooldown_bars": 3,
+    "risk_per_trade_pct": 0.5,
+    "oos_folds": 4
+  },
+  "cost_contract": "configs/research/fx_oanda_public_cost_contract_20260729.json",
+  "arms": ["base", "stress"],
+  "promotion_gate": {
+    "stress_return_pct_gt": 0,
+    "stress_sum_r_gt": 0,
+    "stress_positive_folds_min": 3,
+    "stress_positive_pairs_min": 3,
+    "stress_max_drawdown_pct_lt": 12,
+    "stress_min_trades": 60,
+    "largest_pair_abs_sum_r_pct_lt": 45
+  },
+  "forbidden": [
+    "parameter changes after reading this run",
+    "range regime inferred from future candles",
+    "same-bar stop or target evaluation on the signal bar",
+    "symmetric or zero swap substitution",
+    "promotion from base costs or aggregate return alone"
+  ]
+}

@@ -55,8 +55,8 @@ Dynamic universe не должен быть одним универсальны�
 |---:|---|---|---|---|
 | 1 | D1 Carry + Trend | D1 | **FAIL 2026-08-01:** stress annualized −0.98%, 10/20 красных месяцев | сохранить как отрицательный контроль; не продвигать |
 | 2 | H4 Break + Retest | H4 | **FAIL 2026-08-01:** stress −24.26%, 22/25 красных месяцев, 0/4 положительных folds | не подбирать эту реализацию после просмотра результата |
-| 3 | H4 Momentum | H4 | следующий независимый кандидат после двух terminal FAIL | sealed standalone OOS + portfolio additivity |
-| 4 | H4 Regime Mean Reversion | H4 | противовес трендовым ногам | range-only OOS и catastrophic trend control |
+| 3 | H4 Momentum | H4 | **FAIL 2026-08-01:** stress −29.20%, 18/25 красных месяцев, 1/4 folds, 0/5 пар | terminal negative control; не подгонять после результата |
+| 4 | H4 Regime Mean Reversion | H4 | **FAIL 2026-08-01:** stress −10.58%, 16/24 красных месяцев, 1/4 folds, 0/5 пар | terminal negative control; следующая FX-гипотеза должна менять источник edge |
 | 5 | XAUUSD D1/H4 | D1/H4 | отдельный commodity CFD | отдельная арифметика pip/contract/swap и stress |
 | 6 | SPX500/NAS100 CFD | D1/H4 | потенциальный equity-index sleeve | сначала broker contract/session/financing data |
 
@@ -66,10 +66,10 @@ OANDA KYC и депозит не нужны для первых пяти ист�
 
 ## Последовательность при освобождении WIP
 
-1. Первый свободный FX-слот — H4 Momentum; D1 Carry + Trend и H4 Break + Retest уже terminal FAIL.
+1. H4 Momentum и H4 Regime Mean Reversion завершены terminal FAIL; следующий FX-слот не повторяет price-only H4 геометрию.
 2. Второй — BOUNCE1 virtual lifecycle.
 3. Первый свободный short-slot — BREAKDOWN regime V2.
-4. После H4 Momentum — H4 Regime Mean Reversion с заранее замороженным range gate.
+4. Следующий FX design использует новый причинный источник: cross-pair relative strength, session carry или macro-rate differential; сначала prereg.
 5. После освобождения measurement harness — BTC/ETH Midterm Pullback V4.
 
 Cross-exchange funding при отрицательном N20 освобождает слот, но его scanner
