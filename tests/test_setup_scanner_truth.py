@@ -104,6 +104,24 @@ def test_setup_scanner_marks_fresh_rank_output_authoritative(monkeypatch, tmp_pa
     }
 
 
+def test_scanner_maps_bounce_and_trend_pullback_to_real_runtime_sleeves() -> None:
+    geometry = _scanner_sources(Path("/tmp/runtime"))[Path("/tmp/runtime/geometry/geometry_state.json")]
+    snapshot = geometry["symbols"]["BTCUSDT"]["60"]
+    snapshot["current_price"] = 100.0
+    snapshot["nearest_levels"] = {
+        "above": [],
+        "below": [{"price": 99.5, "touches": 3, "side_bias": "support"}],
+    }
+    snapshot["flags"] = {"trend_label": "trend_up", "level_context": "near_support"}
+    snapshot["channel"]["position"] = 0.2
+    cards = data_routes._build_setup_cards(geometry, {"profiles": {}}, {"sleeves": {}})
+
+    by_type = {card["setup_type"]: card for card in cards}
+    assert by_type["support bounce"]["strategy"] == "bounce1"
+    assert by_type["trend pullback"]["strategy"] == "midterm"
+    assert all(card["strategy"] != "att1" for card in cards if card["side"] == "LONG")
+
+
 @pytest.mark.parametrize(
     ("stale_name", "expected_blocker"),
     [

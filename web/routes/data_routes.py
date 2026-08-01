@@ -499,9 +499,9 @@ def _build_setup_cards(
                 score = 62 + touches * 3 + max(0, 0.9 - below_dist) * 18 + max(0, 0.35 - channel_pos) * 18
                 cards.append(_setup_card(
                     symbol=str(symbol), interval=str(interval), setup_type="support bounce",
-                    side="LONG", strategy="asb1", score=score, price=price, level=below, atr=atr,
+                    side="LONG", strategy="bounce1", score=score, price=price, level=below, atr=atr,
                     invalidation=_as_float(below.get("price"), price) - atr * 0.35,
-                    reasons=common_reasons + ["near support", "candidate for bounce/ASB1"],
+                    reasons=common_reasons + ["near support", "candidate for BOUNCE1"],
                     router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
                 ))
                 if is_compressed or trend == "trend_down":
@@ -530,9 +530,9 @@ def _build_setup_cards(
                 score = 60 + channel_r2 * 18 + max(0, 0.32 - channel_pos) * 25
                 cards.append(_setup_card(
                     symbol=str(symbol), interval=str(interval), setup_type="trend pullback",
-                    side="LONG", strategy="att1", score=score, price=price, level=ref_level, atr=atr,
+                    side="LONG", strategy="midterm", score=score, price=price, level=ref_level, atr=atr,
                     invalidation=price - atr * 1.2,
-                    reasons=common_reasons + ["up-channel pullback", "ATT1/midterm candidate"],
+                    reasons=common_reasons + ["up-channel pullback", "midterm candidate; not ATT1"],
                     router_hits=router_hits, sleeve_map=sleeve_map, channel=channel,
                 ))
 
