@@ -1,0 +1,52 @@
+{
+  "schema_id": "fx_h4_break_retest_v1_prereg",
+  "created_at_utc": "2026-08-01T07:25:00Z",
+  "research_only": true,
+  "instruments": ["EURUSD", "GBPUSD", "USDJPY", "EURJPY", "GBPJPY"],
+  "data_path_template": "data_cache/forex/{symbol}_M5.csv",
+  "bar_contract": "completed UTC H4 bars resampled causally from M5",
+  "strategy": "trend_retest_session_v2 fixed H4 baseline",
+  "fixed": {
+    "ema_fast": 12,
+    "ema_slow": 55,
+    "breakout_lookback": 18,
+    "retest_window_bars": 3,
+    "rr": 1.8,
+    "cooldown_bars": 6,
+    "trend_slope_bars": 4,
+    "min_ema_gap_atr": 0.1,
+    "min_slow_slope_atr": 0.04,
+    "min_range_width_atr": 1.2,
+    "max_range_width_atr": 8.0,
+    "breakout_buffer_atr": 0.08,
+    "min_breakout_body_atr": 0.12,
+    "max_breakout_body_atr": 1.2,
+    "retest_touch_atr": 0.2,
+    "retest_hold_atr": 0.04,
+    "min_retest_body_atr": 0.04,
+    "min_retest_reject_wick_atr": 0.04,
+    "max_entry_extension_atr": 0.5,
+    "level_sl_pad_atr": 0.12,
+    "max_risk_atr": 1.8,
+    "risk_per_trade_pct": 0.5,
+    "oos_folds": 4
+  },
+  "cost_contract": "configs/research/fx_oanda_public_cost_contract_20260729.json",
+  "arms": ["base", "stress"],
+  "promotion_gate": {
+    "stress_return_pct_gt": 0,
+    "stress_sum_r_gt": 0,
+    "stress_positive_folds_min": 3,
+    "stress_positive_pairs_min": 3,
+    "stress_max_drawdown_pct_lt": 15,
+    "stress_min_trades": 60,
+    "largest_pair_abs_sum_r_pct_lt": 50
+  },
+  "forbidden": [
+    "parameter changes after reading this run",
+    "M5 masquerading as H4",
+    "same-bar signal execution",
+    "symmetric or zero swap substitution",
+    "promotion from the base-cost arm alone"
+  ]
+}

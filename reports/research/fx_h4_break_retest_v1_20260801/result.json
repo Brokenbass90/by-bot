@@ -1,0 +1,242 @@
+{
+  "generated_at_utc": "2026-08-01T06:55:01.878819+00:00",
+  "status": "FAIL_RESEARCH",
+  "research_only": true,
+  "checks": {
+    "stress_return_positive": false,
+    "stress_sum_r_positive": false,
+    "stress_positive_folds": false,
+    "stress_positive_pairs": false,
+    "stress_drawdown": false,
+    "stress_trade_count": true,
+    "stress_concentration": true
+  },
+  "stress_largest_pair_abs_sum_r_pct": 42.273631,
+  "prereg": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/configs/research/fx_h4_break_retest_v1_prereg_20260801.json",
+  "arms": {
+    "base": {
+      "metrics": {
+        "trades": 135,
+        "wins": 37,
+        "win_rate_pct": 27.407407,
+        "sum_r": -39.233938,
+        "return_pct": -18.038871,
+        "max_drawdown_pct": 18.745144,
+        "calendar_months": 25,
+        "negative_months": 21
+      },
+      "positive_folds": 0,
+      "folds": [
+        {
+          "fold": 1,
+          "trades": 35,
+          "wins": 8,
+          "win_rate_pct": 22.857143,
+          "sum_r": -14.294138,
+          "return_pct": -6.960769,
+          "max_drawdown_pct": 7.762504,
+          "calendar_months": 6,
+          "negative_months": 5
+        },
+        {
+          "fold": 2,
+          "trades": 30,
+          "wins": 10,
+          "win_rate_pct": 33.333333,
+          "sum_r": -3.569282,
+          "return_pct": -1.833355,
+          "max_drawdown_pct": 3.364209,
+          "calendar_months": 7,
+          "negative_months": 5
+        },
+        {
+          "fold": 3,
+          "trades": 38,
+          "wins": 11,
+          "win_rate_pct": 28.947368,
+          "sum_r": -9.3272,
+          "return_pct": -4.631279,
+          "max_drawdown_pct": 6.589859,
+          "calendar_months": 6,
+          "negative_months": 5
+        },
+        {
+          "fold": 4,
+          "trades": 32,
+          "wins": 8,
+          "win_rate_pct": 25.0,
+          "sum_r": -12.043318,
+          "return_pct": -5.903837,
+          "max_drawdown_pct": 6.687301,
+          "calendar_months": 7,
+          "negative_months": 6
+        }
+      ],
+      "positive_pairs": 1,
+      "pairs": {
+        "EURUSD": {
+          "trades": 21,
+          "wins": 7,
+          "win_rate_pct": 33.333333,
+          "sum_r": -2.746768,
+          "return_pct": -1.409395,
+          "max_drawdown_pct": 4.330123,
+          "calendar_months": 15,
+          "negative_months": 8
+        },
+        "GBPUSD": {
+          "trades": 21,
+          "wins": 10,
+          "win_rate_pct": 47.619048,
+          "sum_r": 5.311151,
+          "return_pct": 2.637043,
+          "max_drawdown_pct": 2.160459,
+          "calendar_months": 15,
+          "negative_months": 7
+        },
+        "USDJPY": {
+          "trades": 27,
+          "wins": 2,
+          "win_rate_pct": 7.407407,
+          "sum_r": -22.600462,
+          "return_pct": -10.722691,
+          "max_drawdown_pct": 10.722691,
+          "calendar_months": 20,
+          "negative_months": 18
+        },
+        "EURJPY": {
+          "trades": 33,
+          "wins": 8,
+          "win_rate_pct": 24.242424,
+          "sum_r": -12.595364,
+          "return_pct": -6.16428,
+          "max_drawdown_pct": 7.732222,
+          "calendar_months": 19,
+          "negative_months": 12
+        },
+        "GBPJPY": {
+          "trades": 33,
+          "wins": 10,
+          "win_rate_pct": 30.30303,
+          "sum_r": -6.602495,
+          "return_pct": -3.315026,
+          "max_drawdown_pct": 5.729436,
+          "calendar_months": 18,
+          "negative_months": 12
+        }
+      }
+    },
+    "stress": {
+      "metrics": {
+        "trades": 135,
+        "wins": 37,
+        "win_rate_pct": 27.407407,
+        "sum_r": -55.001995,
+        "return_pct": -24.263577,
+        "max_drawdown_pct": 24.884808,
+        "calendar_months": 25,
+        "negative_months": 22
+      },
+      "positive_folds": 0,
+      "folds": [
+        {
+          "fold": 1,
+          "trades": 35,
+          "wins": 8,
+          "win_rate_pct": 22.857143,
+          "sum_r": -17.62506,
+          "return_pct": -8.500942,
+          "max_drawdown_pct": 9.251467,
+          "calendar_months": 6,
+          "negative_months": 5
+        },
+        {
+          "fold": 2,
+          "trades": 30,
+          "wins": 10,
+          "win_rate_pct": 33.333333,
+          "sum_r": -6.678132,
+          "return_pct": -3.349956,
+          "max_drawdown_pct": 4.535689,
+          "calendar_months": 7,
+          "negative_months": 5
+        },
+        {
+          "fold": 3,
+          "trades": 38,
+          "wins": 11,
+          "win_rate_pct": 28.947368,
+          "sum_r": -13.912285,
+          "return_pct": -6.795511,
+          "max_drawdown_pct": 8.408262,
+          "calendar_months": 6,
+          "negative_months": 5
+        },
+        {
+          "fold": 4,
+          "trades": 32,
+          "wins": 8,
+          "win_rate_pct": 25.0,
+          "sum_r": -16.786517,
+          "return_pct": -8.114013,
+          "max_drawdown_pct": 8.768661,
+          "calendar_months": 7,
+          "negative_months": 7
+        }
+      ],
+      "positive_pairs": 1,
+      "pairs": {
+        "EURUSD": {
+          "trades": 21,
+          "wins": 7,
+          "win_rate_pct": 33.333333,
+          "sum_r": -5.492857,
+          "return_pct": -2.754772,
+          "max_drawdown_pct": 4.939283,
+          "calendar_months": 15,
+          "negative_months": 8
+        },
+        "GBPUSD": {
+          "trades": 21,
+          "wins": 10,
+          "win_rate_pct": 47.619048,
+          "sum_r": 2.608472,
+          "return_pct": 1.260554,
+          "max_drawdown_pct": 2.431897,
+          "calendar_months": 15,
+          "negative_months": 7
+        },
+        "USDJPY": {
+          "trades": 27,
+          "wins": 2,
+          "win_rate_pct": 7.407407,
+          "sum_r": -25.456732,
+          "return_pct": -11.99491,
+          "max_drawdown_pct": 11.99491,
+          "calendar_months": 20,
+          "negative_months": 18
+        },
+        "EURJPY": {
+          "trades": 33,
+          "wins": 8,
+          "win_rate_pct": 24.242424,
+          "sum_r": -16.425971,
+          "return_pct": -7.94842,
+          "max_drawdown_pct": 9.353863,
+          "calendar_months": 19,
+          "negative_months": 12
+        },
+        "GBPJPY": {
+          "trades": 33,
+          "wins": 10,
+          "win_rate_pct": 30.30303,
+          "sum_r": -10.234907,
+          "return_pct": -5.058268,
+          "max_drawdown_pct": 6.744824,
+          "calendar_months": 18,
+          "negative_months": 12
+        }
+      }
+    }
+  }
+}

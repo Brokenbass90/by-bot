@@ -1,0 +1,32 @@
+{
+  "schema_id": "scanner_geometry_ai_research_deploy_receipt_v1",
+  "generated_at_utc": "2026-08-01T07:05:00Z",
+  "branch": "codex/dynamic-symbol-filters",
+  "geometry_source_commit": "371e6924a5fa6708092dce2422e8e56630c2e693",
+  "scope": {
+    "live_risk_changed": false,
+    "orders_changed": false,
+    "core_bot_restarted": false,
+    "web_service_restarted": true,
+    "research_autonomy": "exact_allowlist_only_no_shell_no_live_mutation"
+  },
+  "deployed_services": {
+    "trading-journal-web.service": "active",
+    "bybot.service": "active_not_restarted"
+  },
+  "verification": {
+    "web_ping": "pong_true",
+    "web_root_http": 200,
+    "geometry_snapshots": 40,
+    "valid_swing_pivot_lines": 18,
+    "tests": "50_passed",
+    "open_position_after_web_deploy": "DOTUSDT Sell qty=51 exchange_sl=0.7722 runner_enabled=true"
+  },
+  "file_sha256": {
+    "bot/chart_geometry.py": "1be84d640b8d52da2bbf40f6a12f3b90944150c07831c660795218e452c6df79",
+    "bot/operator_snapshot.py": "0ac1d2d8ed3add2cc58bed39e57b458e5cd6bcc51cfce2bfd528629747713989",
+    "web/routes/data_routes.py": "ec67fdd49e807b509838c793dfec1c8b71f3a364dd73b9927b09bc1895e4186c",
+    "web/routes/ai_routes.py": "dd27f8276d2e499fd00955e71a9a22977276e79645a588fd87d93443b1da3ec2",
+    "web/static/index.html": "b6d1c7697368b0743d7b5040a5c2855f8e314541fbeb9517f3c458b14f7eb199"
+  }
+}

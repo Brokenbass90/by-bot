@@ -20,6 +20,8 @@ from __future__ import annotations
 import json
 import os
 import re
+import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -45,6 +47,36 @@ _HISTORY_MAX = max(1, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "20") or 20
 _HISTORY_TTL_SEC = max(0, int(os.getenv("DEEPSEEK_HISTORY_TTL_SEC", "21600") or 21600))
 _CHAT_RATE: Dict[str, List[float]] = {}  # email → list of timestamps
 _MAX_RPM = 20  # requests per minute per user
+
+# Research autonomy is deliberately capability-based: the AI may start only
+# these exact, reviewable commands.  No user/LLM string ever reaches a shell.
+_RESEARCH_JOB_CATALOG = {
+    "scanner_geometry_refresh": {
+        "command": ["scripts/build_geometry_state.py", "--quiet"],
+        "market": "crypto",
+        "cooldown_sec": 300,
+    },
+    "operator_snapshot_refresh": {
+        "command": ["scripts/build_operator_snapshot.py", "--quiet"],
+        "market": "system",
+        "cooldown_sec": 300,
+    },
+    "crypto_setup_blocker_report": {
+        "command": ["scripts/build_crypto_setup_blocker_report.py"],
+        "market": "crypto",
+        "cooldown_sec": 3600,
+    },
+    "alpaca_adaptive_exit_audit": {
+        "command": ["scripts/audit_alpaca_adaptive_regime_exit_repair.py"],
+        "market": "equities",
+        "cooldown_sec": 21600,
+    },
+    "fx_h4_break_retest_v1": {
+        "command": ["scripts/run_fx_h4_break_retest_v1.py"],
+        "market": "fx_cfd",
+        "cooldown_sec": 21600,
+    },
+}
 
 HEARTBEAT_MAX_AGE_SEC = 120
 POSITIONS_MAX_AGE_SEC = 120
@@ -1127,6 +1159,8 @@ def _build_context() -> str:
         "To suggest a command, include a JSON block: ```command\n{\"action\": \"...\", \"params\": {...}, \"evidence\": [\"...\"], \"risk\": \"low|medium|high\", \"preconditions\": [\"...\"]}\n```\n"
         "Implemented actions:\n"
         "  run_backtest    {\"sleeve\": \"att1\", \"symbols\": [\"BTCUSDT\"], \"days\": 360} — add a validated request to the operator-review inbox; no automatic runner is connected\n"
+        "  start_research_job {\"job_id\": \"scanner_geometry_refresh\"} — start an exact allowlisted research/diagnostic job; never changes live risk or orders\n"
+        f"  allowed research job ids: {', '.join(sorted(_RESEARCH_JOB_CATALOG))}\n"
         "  add_user        {\"email\": \"x@y.com\"}         — pre-create user slot (no TOTP yet)\n"
         "  remove_user     {\"email\": \"x@y.com\"}         — revoke web access\n"
         "Trading mutations (enable/disable sleeve, safe mode, reload) are intentionally blocked: "
@@ -1167,6 +1201,7 @@ _COMMAND_TITLES = {
     "add_user": "Создать слот пользователя",
     "remove_user": "Удалить пользователя",
     "run_backtest": "Запросить бэктест",
+    "start_research_job": "Запустить безопасное исследование",
     "set_sleeve_params": "Предложить параметры рукава",
     "set_global_params": "Предложить глобальные параметры",
 }
@@ -1274,6 +1309,17 @@ def _validate_command(action: str, params: dict) -> Tuple[bool, List[str], str]:
             reasons.append("days/period must be between 30 and 3650")
         return (not reasons, reasons, market)
 
+    if action == "start_research_job":
+        job_id = str(params.get("job_id") or "").strip()
+        job = _RESEARCH_JOB_CATALOG.get(job_id)
+        if not job:
+            reasons.append(f"unknown or non-allowlisted research job '{job_id or '-'}'")
+            return (False, reasons, "research")
+        command = list(job.get("command") or [])
+        if not command or not (_ROOT / command[0]).is_file():
+            reasons.append(f"allowlisted research job is unavailable: {job_id}")
+        return (not reasons, reasons, str(job.get("market") or "research"))
+
     if action in {"set_sleeve_params", "set_global_params"}:
         reasons.append("direct parameter mutation is not enabled; create a proposal + backtest first")
         return (False, reasons, _infer_command_market(action, params))
@@ -1301,6 +1347,8 @@ def _decorate_command(raw: dict) -> dict:
         summary_bits.append(f"символы: {', '.join(symbols[:12])}")
     if params.get("period") or params.get("days"):
         summary_bits.append(f"период: {params.get('period') or params.get('days')}")
+    if params.get("job_id"):
+        summary_bits.append(f"job: {params.get('job_id')}")
     summary = "; ".join(summary_bits) or "параметры не указаны"
     cmd["title"] = title
     cmd["summary"] = summary
@@ -1380,6 +1428,49 @@ def execute_command(action: str, params: dict, email: str) -> str:
             "✓ Backtest request is valid and stored in the operator-review inbox. "
             "No automatic runner is connected, so it has not executed."
         )
+
+    elif action == "start_research_job":
+        job_id = str(params.get("job_id") or "").strip()
+        job = _RESEARCH_JOB_CATALOG[job_id]
+        state_dir = _ROOT / "runtime" / "ai_operator" / "research_jobs"
+        state_dir.mkdir(parents=True, exist_ok=True)
+        state_path = state_dir / f"{job_id}.json"
+        previous = _json(state_path) or {}
+        previous_ts = previous.get("started_at_epoch")
+        cooldown = int(job.get("cooldown_sec") or 0)
+        if previous_ts and time.time() - float(previous_ts) < cooldown:
+            result = f"Research job {job_id} is inside its {cooldown}s cooldown; duplicate launch blocked."
+            _audit(email, action, params, result)
+            return result
+        log_path = state_dir / f"{job_id}.log"
+        command = [sys.executable, *[str(item) for item in job["command"]]]
+        log_handle = log_path.open("ab")
+        try:
+            process = subprocess.Popen(
+                command,
+                cwd=str(_ROOT),
+                stdin=subprocess.DEVNULL,
+                stdout=log_handle,
+                stderr=subprocess.STDOUT,
+                shell=False,
+                start_new_session=True,
+            )
+        finally:
+            log_handle.close()
+        state = {
+            "job_id": job_id,
+            "status": "started_research_only",
+            "pid": process.pid,
+            "started_at_utc": datetime.now(timezone.utc).isoformat(),
+            "started_at_epoch": time.time(),
+            "market": job.get("market"),
+            "command_id": job_id,
+            "live_mutation_allowed": False,
+            "log_path": str(log_path),
+        }
+        state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+        _audit(email, action, params, f"started allowlisted research-only job pid={process.pid}")
+        return f"✓ Research-only job {job_id} started (pid={process.pid}). Live risk and orders are inaccessible to this job."
 
     else:
         return f"Unknown action: {action}"

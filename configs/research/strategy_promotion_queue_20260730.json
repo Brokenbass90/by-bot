@@ -257,7 +257,7 @@
       "family": "carry_plus_trend",
       "side": "long_and_short_by_pair",
       "portfolio_role": "slow_macro",
-      "stage": "queued_preregistration",
+      "stage": "terminal_fail_20260801",
       "implementation": [
         "configs/research/fx_oanda_public_cost_contract_20260729.json",
         "scripts/run_forex_multi_strategy_gate.py"
@@ -273,7 +273,7 @@
       "binding_risk": "Public swaps are available, but broker .pro commission is unknown and must be stressed.",
       "next_artifact": "Sealed D1 walk-forward with asymmetric daily swap and base/stress spread/commission",
       "first_demo_gate": "Positive majority of chronological OOS folds and pairs, stress positive, drawdown and concentration within preregistered limits",
-      "timing": "first historical verdict 3-7 days after launch"
+      "timing": "terminal receipt: stress annualized -0.976%, 10/20 negative months; retain as negative control"
     },
     {
       "rank": 2,
@@ -281,10 +281,11 @@
       "family": "break_and_retest",
       "side": "long_and_short_separate",
       "portfolio_role": "swing_tactical",
-      "stage": "queued_preregistration",
+      "stage": "terminal_fail_20260801",
       "implementation": [
         "forex/strategies/trend_retest_session_v2.py",
-        "scripts/run_forex_multi_strategy_gate.py"
+        "scripts/run_fx_h4_break_retest_v1.py",
+        "configs/research/fx_h4_break_retest_v1_prereg_20260801.json"
       ],
       "instruments": [
         "EURUSD",
@@ -295,9 +296,9 @@
       ],
       "data_quality": "MEDIUM",
       "binding_risk": "Prior H1 edge was six times smaller than transaction costs; H4 must prove larger move capture.",
-      "next_artifact": "H4 causal level/retest ledger with session, swap and stress-cost attribution",
+      "next_artifact": "reports/research/fx_h4_break_retest_v1_20260801/terminal_receipt.json",
       "first_demo_gate": "Positive after stress costs with adequate trades and no one-pair dependence",
-      "timing": "after or parallel to D1 when WIP frees"
+      "timing": "terminal receipt: stress -24.263577%, 22/25 negative months, 0/4 positive folds"
     },
     {
       "rank": 3,
@@ -305,7 +306,7 @@
       "family": "time_series_momentum",
       "side": "long_and_short",
       "portfolio_role": "swing_trend",
-      "stage": "queued_design",
+      "stage": "next_preregistration",
       "implementation": [
         "bot/fx_setups_v3.py",
         "scripts/run_fx_native_harness.py"
@@ -398,8 +399,8 @@
       "launch": "crypto_breakdown_regime_v2"
     },
     {
-      "when": "FX D1 base receipt exists",
-      "launch": "fx_h4_break_retest_v1"
+      "when": "FX research WIP slot is free after two terminal failures",
+      "launch": "fx_h4_momentum_v1"
     },
     {
       "when": "measurement harness is free",

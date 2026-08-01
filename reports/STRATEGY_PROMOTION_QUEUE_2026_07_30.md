@@ -53,9 +53,9 @@ Dynamic universe не должен быть одним универсальны�
 
 | № | Кандидат | Горизонт | Почему именно он | Следующий gate |
 |---:|---|---|---|---|
-| 1 | D1 Carry + Trend | D1 | широкое движение, swap является частью edge | sealed walk-forward с public OANDA swap и stress commission |
-| 2 | H4 Break + Retest | H4 | шанс захватить движение крупнее спреда | causal level/retest ledger по сторонам и парам |
-| 3 | H4 Momentum | H4 | диверсификатор D1 carry | standalone OOS + portfolio additivity |
+| 1 | D1 Carry + Trend | D1 | **FAIL 2026-08-01:** stress annualized −0.98%, 10/20 красных месяцев | сохранить как отрицательный контроль; не продвигать |
+| 2 | H4 Break + Retest | H4 | **FAIL 2026-08-01:** stress −24.26%, 22/25 красных месяцев, 0/4 положительных folds | не подбирать эту реализацию после просмотра результата |
+| 3 | H4 Momentum | H4 | следующий независимый кандидат после двух terminal FAIL | sealed standalone OOS + portfolio additivity |
 | 4 | H4 Regime Mean Reversion | H4 | противовес трендовым ногам | range-only OOS и catastrophic trend control |
 | 5 | XAUUSD D1/H4 | D1/H4 | отдельный commodity CFD | отдельная арифметика pip/contract/swap и stress |
 | 6 | SPX500/NAS100 CFD | D1/H4 | потенциальный equity-index sleeve | сначала broker contract/session/financing data |
@@ -66,10 +66,10 @@ OANDA KYC и депозит не нужны для первых пяти ист�
 
 ## Последовательность при освобождении WIP
 
-1. Первый свободный слот — FX D1 Carry + Trend.
+1. Первый свободный FX-слот — H4 Momentum; D1 Carry + Trend и H4 Break + Retest уже terminal FAIL.
 2. Второй — BOUNCE1 virtual lifecycle.
 3. Первый свободный short-slot — BREAKDOWN regime V2.
-4. После D1 base receipt — FX H4 Break + Retest.
+4. После H4 Momentum — H4 Regime Mean Reversion с заранее замороженным range gate.
 5. После освобождения measurement harness — BTC/ETH Midterm Pullback V4.
 
 Cross-exchange funding при отрицательном N20 освобождает слот, но его scanner
