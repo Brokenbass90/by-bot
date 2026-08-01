@@ -113,6 +113,7 @@ from bot.position_geometry import (
     parse_signal_geometry,
     write_position_geometry,
 )
+from bot.bybit_time_sync import BybitClock, is_auth_error as is_bybit_auth_error, is_timestamp_error
 from bot.deepseek_autoresearch_agent import (
     results_report_text,
     tune_strategy,
@@ -6036,8 +6037,13 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
                 per_bar = tl * (slope_pd / 100.0) / 288.0
                 xs = list(range(len(seg)))
                 ys = [tl + per_bar * (x - entry_idx) for x in xs]
-                ax.plot(xs, ys, color="#facc15", linewidth=1.6, alpha=0.95, zorder=4)
-                ax.text(len(seg) + 0.6, ys[-1], "TREND", color="#facc15",
+                ax.plot(xs, ys, color="#facc15", linewidth=2.2, alpha=0.98, zorder=4)
+                ax.scatter(
+                    [entry_idx], [float(tl)], color="#facc15", s=42, marker="o",
+                    zorder=5, edgecolors="#0f172a", linewidths=0.8,
+                )
+                slope_label = f"TREND {slope_pd:+.3f}%/d"
+                ax.text(len(seg) + 0.6, ys[-1], slope_label, color="#facc15",
                         fontsize=8, va="center", ha="left")
                 drew_geometry = True
             for level in list(geom.get("horizontal_levels") or []):
@@ -6145,6 +6151,11 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             info.append(
                 f"Signal level: {float(primary_level):.6f} ({geom.get('primary_role') or 'unknown'})"
             )
+        geom_sloped = list(geom.get("sloped_lines") or [])
+        if geom_sloped and isinstance(geom_sloped[0], dict):
+            signal_slope = geom_sloped[0].get("slope_pct_per_day")
+            if signal_slope is not None:
+                info.append(f"Signal slope: {float(signal_slope):+.3f}%/day")
         if geom_metrics.get("r2") is not None:
             info.append(f"Signal R2: {float(geom_metrics['r2']):.3f}")
         if geom_metrics.get("pivots") is not None:
@@ -6362,6 +6373,7 @@ class BybitClient:
         self.secret = secret
         self.base = base.rstrip("/")
         self._lev_set = set()
+        self._clock = BybitClock()
 
     def place_market(self, symbol: str, side: str, qty: float, allow_quote_fallback: bool = True) -> Tuple[str, float]:
 
@@ -6490,7 +6502,7 @@ class BybitClient:
 
     # --- общая подпись/хедеры/вызовы
     def _ts(self) -> str:
-        return str(int(time.time()*1000))
+        return self._clock.timestamp()
 
     def _sign(self, prehash: str) -> str:
         return hmac.new(self.secret.encode(), prehash.encode(), hashlib.sha256).hexdigest()
@@ -6511,23 +6523,35 @@ class BybitClient:
             last = AUTH_LAST_ERROR.get(self.name, "")
             raise RuntimeError(f"[{self.name}] AUTH_DISABLED: {last}")
         qs = urlencode(sorted(params.items()))
-        ts = self._ts()
-        headers = self._headers(ts, "5000", qs)
         url = f"{self.base}{path}"
         if qs:
             url += f"?{qs}"
-        r = _HTTP.get(url, headers=headers, timeout=timeout)
-        r.raise_for_status()
-        j = r.json()
+        j = {}
+        for attempt in range(2):
+            ts = self._ts()
+            recv_window = str(self._clock.recv_window_ms)
+            headers = self._headers(ts, recv_window, qs)
+            r = _HTTP.get(url, headers=headers, timeout=timeout)
+            r.raise_for_status()
+            j = r.json()
+            if is_timestamp_error(j) and attempt == 0 and self._clock.learn(j):
+                log_error(
+                    f"[{self.name}] GET {path} timestamp drift corrected "
+                    f"offset_ms={self._clock.offset_ms}; retrying once"
+                )
+                continue
+            break
 
         rc = str(j.get("retCode"))
 
         if rc != "0":
             log_error(f"[{self.name}] GET {path} failed. Params={qs}  Resp={j}")
 
-            # auth/permission errors -> ставим cooldown, чтобы не спамить приватные ручки
-            msg = (str(j.get("retMsg") or "")).lower()
-            if rc in ("33004", "10002", "10003", "10004", "10005") or ("api key" in msg) or ("expired" in msg) or ("invalid" in msg) or ("sign" in msg):
+            if is_timestamp_error(j):
+                raise RuntimeError(f"[{self.name}] Bybit TIME error after resync: {j}")
+
+            # Only credential/signature errors justify disabling all private calls.
+            if is_bybit_auth_error(j):
                 err = RuntimeError(f"[{self.name}] Bybit AUTH error: {j}")
                 mark_auth_fail(self.name, err, cooldown_sec=600)
                 raise err
@@ -6545,8 +6569,6 @@ class BybitClient:
 
 
         js = json.dumps(body, separators=(",", ":"))
-        ts = self._ts()
-        headers = self._headers(ts, "5000", js)
         url = f"{self.base}{path}"
         can_retry_order_create = bool(
             ORDER_LINK_ID_ENABLED
@@ -6554,9 +6576,21 @@ class BybitClient:
             and str((body or {}).get("orderLinkId") or "").strip()
         )
         session = _HTTP_ORDER_CREATE if can_retry_order_create else _HTTP
-        r = session.post(url, headers=headers, data=js, timeout=timeout)
-        r.raise_for_status()
-        j = r.json()        
+        j = {}
+        for attempt in range(2):
+            ts = self._ts()
+            recv_window = str(self._clock.recv_window_ms)
+            headers = self._headers(ts, recv_window, js)
+            r = session.post(url, headers=headers, data=js, timeout=timeout)
+            r.raise_for_status()
+            j = r.json()
+            if is_timestamp_error(j) and attempt == 0 and self._clock.learn(j):
+                log_error(
+                    f"[{self.name}] POST {path} timestamp drift corrected "
+                    f"offset_ms={self._clock.offset_ms}; retrying once"
+                )
+                continue
+            break
         rc = str(j.get("retCode"))
 
         if rc != "0":
@@ -6606,7 +6640,10 @@ class BybitClient:
             if rc not in ("34040", "110043") and ("not modified" not in msg):
                 log_error(f"[{self.name}] POST {path} failed. Body={js}  Resp={j}")
 
-            if rc in ("33004", "10002", "10003", "10004", "10005") or ("api key" in msg) or ("expired" in msg) or ("invalid" in msg) or ("sign" in msg):
+            if is_timestamp_error(j):
+                raise RuntimeError(f"[{self.name}] Bybit TIME error after resync: {j}")
+
+            if is_bybit_auth_error(j):
                 err = RuntimeError(f"[{self.name}] Bybit AUTH error: {j}")
                 mark_auth_fail(self.name, err, cooldown_sec=600)
                 raise err
@@ -8190,6 +8227,10 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                 tr.last_runner_action_ts = now
                 tr.be_armed = True
                 _append_live_trade_event("runner_breakeven", symbol, tr, new_sl=float(be_sl), price=float(price))
+                tg_trade(
+                    f"🟦 BREAKEVEN {symbol}: exchange SL moved to {float(be_sl):.8g} "
+                    f"at price≈{float(price):.8g}"
+                )
             tr.be_armed = True
 
     if tr.tps and tr.tp_fracs and tr.tp_hit:
@@ -8243,6 +8284,12 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                         tr.tpsl_last_set_ts = now_s()
                         tr.last_runner_action_ts = now
                         _append_live_trade_event("runner_trailing_sl", symbol, tr, new_sl=float(new_sl), price=float(price))
+                        tg_trade_throttled(
+                            f"runner_trail:{symbol}",
+                            f"🪢 TRAILING {symbol}: exchange SL moved to {float(new_sl):.8g} "
+                            f"at price≈{float(price):.8g}",
+                            cooldown_sec=60,
+                        )
             elif side == "Sell" and tr.ll is not None:
                 new_sl = tr.ll + float(tr.trail_mult) * atr
                 old_live = protective_stop_is_live(side, tr.sl_price, price)
@@ -8253,6 +8300,12 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                         tr.tpsl_last_set_ts = now_s()
                         tr.last_runner_action_ts = now
                         _append_live_trade_event("runner_trailing_sl", symbol, tr, new_sl=float(new_sl), price=float(price))
+                        tg_trade_throttled(
+                            f"runner_trail:{symbol}",
+                            f"🪢 TRAILING {symbol}: exchange SL moved to {float(new_sl):.8g} "
+                            f"at price≈{float(price):.8g}",
+                            cooldown_sec=60,
+                        )
 
 def _get_vol_adj_mult() -> float:
     """
