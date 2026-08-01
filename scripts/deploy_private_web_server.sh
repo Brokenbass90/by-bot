@@ -91,7 +91,8 @@ RestartSec=5
 WantedBy=multi-user.target
 UNIT
 systemctl daemon-reload
-systemctl enable --now $SERVICE_NAME
+systemctl enable $SERVICE_NAME
+systemctl restart $SERVICE_NAME
 sleep 2
 systemctl --no-pager --full status $SERVICE_NAME | sed -n '1,30p'
 curl -fsS http://127.0.0.1:8765/ping"
