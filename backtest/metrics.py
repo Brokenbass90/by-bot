@@ -23,6 +23,15 @@ class Trade:
     fees: float
     reason: str
     outcome: str  # "tp" | "sl" | "time" | "manual"
+    # Immutable entry-plan evidence for causal, chart-level audits.  Defaults
+    # preserve compatibility with historical ledgers and older constructors.
+    signal_ts: int = 0
+    signal_entry_price: float = 0.0
+    initial_sl: float = 0.0
+    tp_prices: str = ""
+    signal_reason: str = ""
+    initial_notional: float = 0.0
+    initial_risk_usd: float = 0.0
 
 
 @dataclass

@@ -54,6 +54,13 @@ def test_portfolio_next_open_fills_on_following_bar_and_processes_its_range():
     assert trade.entry_price == 105.0
     assert trade.exit_ts == 300_000
     assert trade.exit_price == 110.0
+    assert trade.signal_ts == 300_000
+    assert trade.signal_entry_price == 100.0
+    assert trade.initial_sl == 90.0
+    assert trade.tp_prices == "110"
+    assert trade.signal_reason == "test"
+    assert trade.initial_notional > 0.0
+    assert trade.initial_risk_usd > 0.0
 
 
 def test_portfolio_legacy_mode_keeps_signal_price_and_timestamp():

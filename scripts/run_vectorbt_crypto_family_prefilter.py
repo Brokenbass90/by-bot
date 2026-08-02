@@ -199,11 +199,18 @@ def _evaluate(
     fee_per_order: float,
     slippage_per_order: float,
     train_fraction: float,
+    split_timestamp: pd.Timestamp | None = None,
 ) -> dict[str, Any]:
     rows = []
     for symbol, full in frames.items():
-        split = max(1, min(len(full) - 1, int(len(full) * train_fraction)))
-        frame = full.iloc[:split] if segment == "train" else full.iloc[split:]
+        if split_timestamp is not None:
+            before = full.index < split_timestamp
+            frame = full.loc[before] if segment == "train" else full.loc[~before]
+        else:
+            split = max(1, min(len(full) - 1, int(len(full) * train_fraction)))
+            frame = full.iloc[:split] if segment == "train" else full.iloc[split:]
+        if frame.empty:
+            raise ValueError(f"{symbol} has no {segment} rows for split {split_timestamp}")
         metrics = _portfolio_metrics(
             frame,
             candidate,
@@ -225,6 +232,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--symbols", default=",".join(DEFAULT_SYMBOLS))
     parser.add_argument("--train-fraction", type=float, default=0.70)
+    parser.add_argument(
+        "--split-date",
+        default="",
+        help="Common UTC calendar boundary, for example 2025-08-10. Preferred over per-symbol fractions.",
+    )
     parser.add_argument("--top-per-family", type=int, default=3)
     parser.add_argument("--max-candidates", type=int, default=0)
     parser.add_argument(
@@ -234,6 +246,7 @@ def main() -> int:
     args = parser.parse_args()
     symbols = [item.strip().upper() for item in args.symbols.split(",") if item.strip()]
     frames = {symbol: _load_symbol(symbol) for symbol in symbols}
+    split_timestamp = pd.Timestamp(args.split_date, tz="UTC") if args.split_date else None
     candidates = _candidates()
     if args.max_candidates > 0:
         candidates = candidates[: args.max_candidates]
@@ -247,6 +260,7 @@ def main() -> int:
             fee_per_order=0.00025,
             slippage_per_order=0.00015,
             train_fraction=args.train_fraction,
+            split_timestamp=split_timestamp,
         )
         train_rows.append(
             {
@@ -262,9 +276,14 @@ def main() -> int:
         print(f"train {ordinal}/{len(candidates)} {candidate.family} {candidate.side}", flush=True)
 
     finalists: list[dict[str, Any]] = []
-    for family in sorted({row["family"] for row in train_rows}):
+    selection_groups = sorted({(row["family"], row["side"]) for row in train_rows})
+    for family, side in selection_groups:
         family_rows = sorted(
-            (row for row in train_rows if row["family"] == family),
+            (
+                row
+                for row in train_rows
+                if row["family"] == family and row["side"] == side
+            ),
             key=lambda row: float(row["score"]),
             reverse=True,
         )[: max(1, int(args.top_per_family))]
@@ -278,6 +297,7 @@ def main() -> int:
                 fee_per_order=0.00025,
                 slippage_per_order=0.00015,
                 train_fraction=args.train_fraction,
+                split_timestamp=split_timestamp,
             )
             row["oos_stress"] = _evaluate(
                 frames,
@@ -286,6 +306,7 @@ def main() -> int:
                 fee_per_order=0.00055,
                 slippage_per_order=0.00035,
                 train_fraction=args.train_fraction,
+                split_timestamp=split_timestamp,
             )
             finalists.append(row)
 
@@ -304,6 +325,9 @@ def main() -> int:
         "symbols": symbols,
         "bars": {symbol: len(frame) for symbol, frame in frames.items()},
         "train_fraction": args.train_fraction,
+        "split_timestamp_utc": split_timestamp.isoformat() if split_timestamp is not None else None,
+        "split_contract": "common_calendar" if split_timestamp is not None else "per_symbol_fraction_diagnostic_only",
+        "selection_groups": "family_x_side",
         "n_trials_planned": len(_candidates()),
         "n_trials_scheduled": len(candidates),
         "n_trials_evaluated": len(train_rows),

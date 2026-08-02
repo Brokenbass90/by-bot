@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from typing import Callable, Dict, List, Optional, Tuple
 
 from .metrics import Trade
+from bot.risk_sizing_contract import calculate_risk_size
 from strategies.signals import TradeSignal
 
 
@@ -243,6 +244,10 @@ class Position:
     entry_ts: int
     entry_i: int
 
+    signal_ts: int = 0
+    signal_entry_price: float = 0.0
+    signal_reason: str = ""
+
     initial_sl: float = 0.0
     equity_at_entry: float = 0.0
 
@@ -288,34 +293,17 @@ def _fees(notional: float, fee_bps: float) -> float:
 
 
 def _calc_qty(equity: float, sig: TradeSignal, risk_pct: float, cap_notional_usd: Optional[float]) -> float:
-    # risk sizing by stop distance
-    risk_usd = max(0.0, equity * risk_pct)
-    if risk_usd <= 0:
-        return 0.0
-
-    if sig.side == "long":
-        stop_dist = sig.entry - sig.sl
-    else:
-        stop_dist = sig.sl - sig.entry
-    if stop_dist <= 0:
-        return 0.0
-
-    qty = risk_usd / stop_dist
-
-    qty_raw = qty
-    if cap_notional_usd is not None and cap_notional_usd > 0:
-        max_qty = cap_notional_usd / max(1e-12, sig.entry)
-        qty = min(qty, max_qty)
-
-    # Skip micro-risk trades where desired size is heavily capped by notional limits
-    # (fees/slippage dominate, expectancy degrades).
     min_fill = float(os.getenv("MIN_NOTIONAL_FILL_FRAC", "0.40"))
-    if qty_raw > 0:
-        fill = qty / qty_raw
-        if fill < min_fill:
-            return 0.0
-
-    return max(0.0, qty)
+    decision = calculate_risk_size(
+        equity=equity,
+        entry=float(sig.entry),
+        stop=float(sig.sl),
+        side=str(sig.side),
+        target_risk_fraction=risk_pct,
+        max_notional_usd=cap_notional_usd,
+        min_fill_fraction=min_fill,
+    )
+    return max(0.0, decision.qty)
 
 
 def _compute_atr_series(candles: List[Candle], period: int) -> List[float]:
@@ -442,13 +430,27 @@ def run_symbol_backtest(
                 fees=fees,
                 outcome=_outcome_from_reason(final_reason),
                 reason=final_reason,
+                signal_ts=int(pos.signal_ts or pos.entry_ts),
+                signal_entry_price=float(pos.signal_entry_price or pos.entry_price),
+                initial_sl=float(pos.initial_sl),
+                tp_prices="|".join(f"{float(value):.12g}" for value in pos.tps),
+                signal_reason=str(pos.signal_reason or ""),
+                initial_notional=float(pos.entry_price * pos.qty),
+                initial_risk_usd=float(abs(pos.entry_price - pos.initial_sl) * pos.qty),
             )
         )
 
     pos: Optional[Position] = None
     pending_signal: Optional[Tuple[int, TradeSignal]] = None
 
-    def _open_position(sig: TradeSignal, bar: Candle, i: int, *, entry_ref: float) -> Optional[Position]:
+    def _open_position(
+        sig: TradeSignal,
+        bar: Candle,
+        i: int,
+        *,
+        entry_ref: float,
+        signal_ts: int,
+    ) -> Optional[Position]:
         nonlocal equity
 
         fill_sig = copy.copy(sig)
@@ -489,6 +491,9 @@ def run_symbol_backtest(
             remaining_qty=float(sig_qty),
             entry_ts=int(bar.ts),
             entry_i=int(i),
+            signal_ts=int(signal_ts),
+            signal_entry_price=float(getattr(sig, "entry", entry_ref) or entry_ref),
+            signal_reason=str(getattr(sig, "reason", "") or ""),
             initial_sl=float(fill_sig.sl),
             equity_at_entry=float(equity_before_entry),
             tps=tps,
@@ -512,7 +517,14 @@ def run_symbol_backtest(
             signal_i, sig = pending_signal
             pending_signal = None
             if signal_i < i:
-                pos = _open_position(sig, bar, i, entry_ref=float(bar.o))
+                signal_end_ts = int(exec_candles[signal_i].ts) + int(store.base_interval_min) * 60_000
+                pos = _open_position(
+                    sig,
+                    bar,
+                    i,
+                    entry_ref=float(bar.o),
+                    signal_ts=signal_end_ts,
+                )
                 entered_on_open = pos is not None
 
         # -------------------- Manage open position --------------------
@@ -657,7 +669,13 @@ def run_symbol_backtest(
                 if params.entry_on_next_open:
                     pending_signal = (i, sig)
                 else:
-                    pos = _open_position(sig, bar, i, entry_ref=float(sig.entry))
+                    pos = _open_position(
+                        sig,
+                        bar,
+                        i,
+                        entry_ref=float(sig.entry),
+                        signal_ts=int(bar.ts) + int(store.base_interval_min) * 60_000,
+                    )
 
         curve.append(equity)
 

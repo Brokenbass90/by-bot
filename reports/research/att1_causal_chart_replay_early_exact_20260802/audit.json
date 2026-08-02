@@ -1,0 +1,3061 @@
+{
+  "schema": "att1_causal_chart_replay_v1",
+  "source": "backtest_runs/portfolio_20260802_223018_att1_exact_chart_replay_early_v1_20260802_r001/trades.csv",
+  "forward_hours": 24,
+  "data_quality": {
+    "source_trades": 23,
+    "duplicate_trade_keys": 0,
+    "symbols": [
+      "ADAUSDT",
+      "BTCUSDT",
+      "DOTUSDT",
+      "ETHUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "SOLUSDT",
+      "SUIUSDT"
+    ],
+    "exact_plan_rows": 23,
+    "usable_for_exact_plan_claim": 20,
+    "reconstructed_rows": 0,
+    "minimum_forward_coverage": 0.0,
+    "verdict": "DIAGNOSTIC_ONLY"
+  },
+  "summaries": [
+    {
+      "research_class": "descending_line_pass_execution_or_room_fail",
+      "trades": 9,
+      "net_pnl": 1.54486796,
+      "profit_factor": 1.745947898874349,
+      "win_rate": 0.6666666666666666,
+      "median_mfe_r": 1.3223820196515907,
+      "median_mae_r": 0.8117848089312218,
+      "first_hit_counts": {
+        "+1R": 5,
+        "stop": 3,
+        "neither": 1
+      }
+    },
+    {
+      "research_class": "horizontal_resistance_reaction",
+      "trades": 8,
+      "net_pnl": 0.12680738000000003,
+      "profit_factor": 1.0660145956439964,
+      "win_rate": 0.5,
+      "median_mfe_r": 1.279553869967136,
+      "median_mae_r": 1.7304115308162962,
+      "first_hit_counts": {
+        "+1R": 4,
+        "stop": 4
+      }
+    },
+    {
+      "research_class": "line_quality_rejected",
+      "trades": 5,
+      "net_pnl": -0.66883202,
+      "profit_factor": 0.689510034684776,
+      "win_rate": 0.4,
+      "median_mfe_r": 0.7398328204886078,
+      "median_mae_r": 0.5174176780752566,
+      "first_hit_counts": {
+        "invalid_or_missing_path": 3,
+        "+1R": 1,
+        "neither": 1
+      }
+    },
+    {
+      "research_class": "valid_full_descending_trendline",
+      "trades": 1,
+      "net_pnl": -0.48732422,
+      "profit_factor": 0.0,
+      "win_rate": 0.0,
+      "median_mfe_r": 0.0919879926434252,
+      "median_mae_r": 7.600314199171138,
+      "first_hit_counts": {
+        "stop": 1
+      }
+    }
+  ],
+  "trades": [
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "DOTUSDT",
+      "side": "short",
+      "signal_ts": 1743922800000,
+      "entry_ts": 1743922800000,
+      "exit_ts": 1743947400000,
+      "entry_price": 3.92191546,
+      "initial_sl": 3.98295013,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.44878939,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=3.9513 slope=-2.342%/d rsi=53.6  r2=0.994 pivots=3 age=6 entrydist=0.995 touchdist=-0.145 reject=0.995 body=0.835 atrpct=0.733 anchors=1743800400000:4.0737|1743814800000:4.067|1743897600000:3.9736",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 3.9513,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 3.9513,
+            "slope_pct_per_day": -2.342,
+            "points_ts_px": [
+              {
+                "ts_ms": 1743800400000,
+                "price": 4.0737
+              },
+              {
+                "ts_ms": 1743814800000,
+                "price": 4.067
+              },
+              {
+                "ts_ms": 1743897600000,
+                "price": 3.9736
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 53.6,
+          "r2": 0.994,
+          "pivots": 3,
+          "age_bars": 6.0,
+          "entry_distance_atr": 0.995,
+          "touch_distance_atr": -0.145,
+          "reject_depth_atr": 0.995,
+          "body_atr": 0.835,
+          "atr_pct": 0.733
+        },
+        "source_reason": "att1_short_trendline tl=3.9513 slope=-2.342%/d rsi=53.6  r2=0.994 pivots=3 age=6 entrydist=0.995 touchdist=-0.145 reject=0.995 body=0.835 atrpct=0.733 anchors=1743800400000:4.0737|1743814800000:4.067|1743897600000:3.9736",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close"
+        ],
+        "atr": 0.028757142857142832,
+        "trendline_level": 3.95131726844584,
+        "slope_pct_per_day": -2.342457952842929,
+        "r2": 0.9939614913694363,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            86,
+            1743800400000,
+            4.0737
+          ],
+          [
+            90,
+            1743814800000,
+            4.067
+          ],
+          [
+            113,
+            1743897600000,
+            3.9736
+          ]
+        ],
+        "signal_high": 3.9555,
+        "entry": 3.92191546,
+        "entry_distance_atr": 1.0224175813257854,
+        "line_touch_gap_atr": -0.1454501782370454,
+        "horizontal_origin": 4.072966666666667,
+        "horizontal_origin_touches": 3,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 3.90665,
+        "nearest_support_source": "equal_low_liquidity",
+        "room_to_support_r": 0.2501112892066139,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 11,
+        "input_sha256": "79fa2accd6a5cd0235e12d0a5e1d6f07d14bdaa139efb2288e6ca91d64ed222b",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 0.061034669999999736,
+        "mfe_r": 10.553271771601336,
+        "mae_r": 0.3454518554782064,
+        "first_hit": "+1R",
+        "first_half_r_bar": 76,
+        "first_one_r_bar": 80,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "descending_line_pass_execution_or_room_fail",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "SOLUSDT",
+      "side": "short",
+      "signal_ts": 1739268000000,
+      "entry_ts": 1739268000000,
+      "exit_ts": 1739282700000,
+      "entry_price": 202.679456,
+      "initial_sl": 206.92579957,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.52993459,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=204.4587 slope=-2.523%/d rsi=54.8  r2=0.610 pivots=3 age=3 entrydist=0.775 touchdist=-0.259 reject=0.775 body=0.710 atrpct=1.106 anchors=1739196000000:209|1739235600000:204.59|1739253600000:206.18",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 204.4587,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 204.4587,
+            "slope_pct_per_day": -2.523,
+            "points_ts_px": [
+              {
+                "ts_ms": 1739196000000,
+                "price": 209.0
+              },
+              {
+                "ts_ms": 1739235600000,
+                "price": 204.59
+              },
+              {
+                "ts_ms": 1739253600000,
+                "price": 206.18
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 54.8,
+          "r2": 0.61,
+          "pivots": 3,
+          "age_bars": 3.0,
+          "entry_distance_atr": 0.775,
+          "touch_distance_atr": -0.259,
+          "reject_depth_atr": 0.775,
+          "body_atr": 0.71,
+          "atr_pct": 1.106
+        },
+        "source_reason": "att1_short_trendline tl=204.4587 slope=-2.523%/d rsi=54.8  r2=0.610 pivots=3 age=3 entrydist=0.775 touchdist=-0.259 reject=0.775 body=0.710 atrpct=1.106 anchors=1739196000000:209|1739235600000:204.59|1739253600000:206.18",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "horizontal_resistance_rejection",
+        "blockers": [
+          "pivot_fit_too_weak",
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close",
+          "setup_belongs_to_horizontal_family"
+        ],
+        "atr": 2.2428571428571433,
+        "trendline_level": 204.45865671641792,
+        "slope_pct_per_day": -2.5232951265770547,
+        "r2": 0.6101638317105101,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            100,
+            1739196000000,
+            209.0
+          ],
+          [
+            111,
+            1739235600000,
+            204.59
+          ],
+          [
+            116,
+            1739253600000,
+            206.18
+          ]
+        ],
+        "signal_high": 205.04,
+        "entry": 202.679456,
+        "entry_distance_atr": 0.7932742047723264,
+        "line_touch_gap_atr": -0.25919764236143333,
+        "horizontal_origin": 204.815,
+        "horizontal_origin_touches": 2,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 201.23000000000002,
+        "nearest_support_source": "equal_low_liquidity",
+        "room_to_support_r": 0.34134213967994165,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 12,
+        "input_sha256": "620387bf6b45ba8d46df0727a03b932e67c3c64fe5dfbdb18cdc7b47049c970c",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 4.246343570000022,
+        "mfe_r": 2.324224556328101,
+        "mae_r": 0.1484910463804066,
+        "first_hit": "+1R",
+        "first_half_r_bar": 41,
+        "first_one_r_bar": 46,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "horizontal_resistance_reaction",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "SOLUSDT",
+      "side": "short",
+      "signal_ts": 1739358000000,
+      "entry_ts": 1739358000000,
+      "exit_ts": 1739367600000,
+      "entry_price": 195.870818,
+      "initial_sl": 198.69779501,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.56846178,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=196.2338 slope=-3.593%/d rsi=47.7  r2=0.808 pivots=3 age=12 entrydist=0.145 touchdist=-0.284 reject=0.145 body=0.474 atrpct=1.143 anchors=1739235600000:204.59|1739253600000:206.18|1739311200000:199.34",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 196.2338,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 196.2338,
+            "slope_pct_per_day": -3.593,
+            "points_ts_px": [
+              {
+                "ts_ms": 1739235600000,
+                "price": 204.59
+              },
+              {
+                "ts_ms": 1739253600000,
+                "price": 206.18
+              },
+              {
+                "ts_ms": 1739311200000,
+                "price": 199.34
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 47.7,
+          "r2": 0.808,
+          "pivots": 3,
+          "age_bars": 12.0,
+          "entry_distance_atr": 0.145,
+          "touch_distance_atr": -0.284,
+          "reject_depth_atr": 0.145,
+          "body_atr": 0.474,
+          "atr_pct": 1.143
+        },
+        "source_reason": "att1_short_trendline tl=196.2338 slope=-3.593%/d rsi=47.7  r2=0.808 pivots=3 age=12 entrydist=0.145 touchdist=-0.284 reject=0.145 body=0.474 atrpct=1.143 anchors=1739235600000:204.59|1739253600000:206.18|1739311200000:199.34",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "horizontal_resistance_rejection",
+        "blockers": [
+          "opposing_support_too_close"
+        ],
+        "atr": 2.239999999999997,
+        "trendline_level": 196.23379501385043,
+        "slope_pct_per_day": -3.5926949892617044,
+        "r2": 0.8077495262177851,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            86,
+            1739235600000,
+            204.59
+          ],
+          [
+            91,
+            1739253600000,
+            206.18
+          ],
+          [
+            107,
+            1739311200000,
+            199.34
+          ]
+        ],
+        "signal_high": 196.87,
+        "entry": 195.870818,
+        "entry_distance_atr": 0.16204330975464815,
+        "line_touch_gap_atr": -0.28402008310249105,
+        "horizontal_origin": 196.215,
+        "horizontal_origin_touches": 2,
+        "horizontal_origin_source": "equal_high_liquidity",
+        "nearest_support": 194.735,
+        "nearest_support_source": "equal_low_liquidity",
+        "room_to_support_r": 0.40177829390979336,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 11,
+        "input_sha256": "243e2071c1b87904ff55a286e5f7ee5059c82f16de18c91146692f9bddb5edce",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 2.826977009999979,
+        "mfe_r": 2.670986701798497,
+        "mae_r": 0.9300330319983768,
+        "first_hit": "+1R",
+        "first_half_r_bar": 30,
+        "first_one_r_bar": 30,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "horizontal_resistance_reaction",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "LINKUSDT",
+      "side": "short",
+      "signal_ts": 1739386800000,
+      "entry_ts": 1739386800000,
+      "exit_ts": 1739398800000,
+      "entry_price": 18.636272,
+      "initial_sl": 19.12710714,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.80884382,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=18.7095 slope=-1.580%/d rsi=55.7  r2=0.739 pivots=3 age=5 entrydist=0.183 touchdist=-0.212 reject=0.183 body=0.428 atrpct=2.037 anchors=1739311200000:18.976|1739347200000:18.769|1739365200000:18.813",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 18.7095,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 18.7095,
+            "slope_pct_per_day": -1.58,
+            "points_ts_px": [
+              {
+                "ts_ms": 1739311200000,
+                "price": 18.976
+              },
+              {
+                "ts_ms": 1739347200000,
+                "price": 18.769
+              },
+              {
+                "ts_ms": 1739365200000,
+                "price": 18.813
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 55.7,
+          "r2": 0.739,
+          "pivots": 3,
+          "age_bars": 5.0,
+          "entry_distance_atr": 0.183,
+          "touch_distance_atr": -0.212,
+          "reject_depth_atr": 0.183,
+          "body_atr": 0.428,
+          "atr_pct": 2.037
+        },
+        "source_reason": "att1_short_trendline tl=18.7095 slope=-1.580%/d rsi=55.7  r2=0.739 pivots=3 age=5 entrydist=0.183 touchdist=-0.212 reject=0.183 body=0.428 atrpct=2.037 anchors=1739311200000:18.976|1739347200000:18.769|1739365200000:18.813",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "invalid",
+        "blockers": [
+          "invalid_or_short_geometry_input"
+        ],
+        "atr": 0.0,
+        "trendline_level": null,
+        "slope_pct_per_day": null,
+        "r2": null,
+        "pivot_count": 0,
+        "pivot_anchors": [],
+        "signal_high": 0.0,
+        "entry": 18.636272,
+        "entry_distance_atr": null,
+        "line_touch_gap_atr": null,
+        "horizontal_origin": null,
+        "horizontal_origin_touches": 0,
+        "horizontal_origin_source": null,
+        "nearest_support": null,
+        "nearest_support_source": null,
+        "room_to_support_r": null,
+        "signal_reached_line": false
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "insufficient_closed_bars",
+        "closed_bars": 0,
+        "confirmed_pivots": 0,
+        "input_sha256": null,
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 0,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": false
+      },
+      "forward": {
+        "risk_per_unit": 0.49083513999999795,
+        "mfe_r": null,
+        "mae_r": null,
+        "first_hit": "invalid_or_missing_path",
+        "bars": 0,
+        "coverage": 0.0,
+        "rows": 0,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": false
+      },
+      "research_class": "line_quality_rejected",
+      "usable_for_exact_plan_claim": false
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "SOLUSDT",
+      "side": "short",
+      "signal_ts": 1739408400000,
+      "entry_ts": 1739408400000,
+      "exit_ts": 1739451900000,
+      "entry_price": 195.400912,
+      "initial_sl": 200.15475914,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.62545164,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=196.3951 slope=-1.469%/d rsi=48.8  r2=0.735 pivots=3 age=7 entrydist=0.279 touchdist=-0.110 reject=0.279 body=0.637 atrpct=1.749 anchors=1739311200000:199.34|1739365200000:198.5|1739379600000:196.61",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 196.3951,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 196.3951,
+            "slope_pct_per_day": -1.469,
+            "points_ts_px": [
+              {
+                "ts_ms": 1739311200000,
+                "price": 199.34
+              },
+              {
+                "ts_ms": 1739365200000,
+                "price": 198.5
+              },
+              {
+                "ts_ms": 1739379600000,
+                "price": 196.61
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 48.8,
+          "r2": 0.735,
+          "pivots": 3,
+          "age_bars": 7.0,
+          "entry_distance_atr": 0.279,
+          "touch_distance_atr": -0.11,
+          "reject_depth_atr": 0.279,
+          "body_atr": 0.637,
+          "atr_pct": 1.749
+        },
+        "source_reason": "att1_short_trendline tl=196.3951 slope=-1.469%/d rsi=48.8  r2=0.735 pivots=3 age=7 entrydist=0.279 touchdist=-0.110 reject=0.279 body=0.637 atrpct=1.749 anchors=1739311200000:199.34|1739365200000:198.5|1739379600000:196.61",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "horizontal_resistance_rejection",
+        "blockers": [
+          "opposing_support_too_close"
+        ],
+        "atr": 3.4178571428571507,
+        "trendline_level": 196.39511627906978,
+        "slope_pct_per_day": -1.4693143199840033,
+        "r2": 0.7347001223990202,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            93,
+            1739311200000,
+            199.34
+          ],
+          [
+            108,
+            1739365200000,
+            198.5
+          ],
+          [
+            112,
+            1739379600000,
+            196.61
+          ]
+        ],
+        "signal_high": 196.77,
+        "entry": 195.400912,
+        "entry_distance_atr": 0.2908852645136227,
+        "line_touch_gap_atr": -0.10968384729411035,
+        "horizontal_origin": 196.34666666666666,
+        "horizontal_origin_touches": 3,
+        "horizontal_origin_source": "equal_high_liquidity",
+        "nearest_support": 194.13666666666666,
+        "nearest_support_source": "horizontal_pivots",
+        "room_to_support_r": 0.2659415198052304,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 11,
+        "input_sha256": "4c7783a2dc87ae4f8f7148283856603a651da82802a79e6c75df54d419f5214a",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 4.753847140000005,
+        "mfe_r": 1.4053695466531133,
+        "mae_r": 0.6287724261996313,
+        "first_hit": "+1R",
+        "first_half_r_bar": 72,
+        "first_one_r_bar": 143,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "horizontal_resistance_reaction",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "SUIUSDT",
+      "side": "short",
+      "signal_ts": 1739509200000,
+      "entry_ts": 1739509200000,
+      "exit_ts": 1739524800000,
+      "entry_price": 3.49160154,
+      "initial_sl": 3.58868524,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.80490897,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=3.5161 slope=-1.363%/d rsi=56.5  r2=0.958 pivots=3 age=6 entrydist=0.361 touchdist=-0.456 reject=0.361 body=0.720 atrpct=1.889 anchors=1739462400000:3.5392|1739473200000:3.5354|1739484000000:3.5273",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 3.5161,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 3.5161,
+            "slope_pct_per_day": -1.363,
+            "points_ts_px": [
+              {
+                "ts_ms": 1739462400000,
+                "price": 3.5392
+              },
+              {
+                "ts_ms": 1739473200000,
+                "price": 3.5354
+              },
+              {
+                "ts_ms": 1739484000000,
+                "price": 3.5273
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 56.5,
+          "r2": 0.958,
+          "pivots": 3,
+          "age_bars": 6.0,
+          "entry_distance_atr": 0.361,
+          "touch_distance_atr": -0.456,
+          "reject_depth_atr": 0.361,
+          "body_atr": 0.72,
+          "atr_pct": 1.889
+        },
+        "source_reason": "att1_short_trendline tl=3.5161 slope=-1.363%/d rsi=56.5  r2=0.958 pivots=3 age=6 entrydist=0.361 touchdist=-0.456 reject=0.361 body=0.720 atrpct=1.889 anchors=1739462400000:3.5392|1739473200000:3.5354|1739484000000:3.5273",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "horizontal_resistance_rejection",
+        "blockers": [
+          "opposing_support_too_close",
+          "setup_belongs_to_horizontal_family"
+        ],
+        "atr": 0.0659714285714286,
+        "trendline_level": 3.5161166666666666,
+        "slope_pct_per_day": -1.3629985969132368,
+        "r2": 0.9582919787061159,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            107,
+            1739462400000,
+            3.5392
+          ],
+          [
+            110,
+            1739473200000,
+            3.5354
+          ],
+          [
+            113,
+            1739484000000,
+            3.5273
+          ]
+        ],
+        "signal_high": 3.5462,
+        "entry": 3.49160154,
+        "entry_distance_atr": 0.37160217987584626,
+        "line_touch_gap_atr": -0.45600548578027844,
+        "horizontal_origin": 3.53925,
+        "horizontal_origin_touches": 4,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 3.4241,
+        "nearest_support_source": "horizontal_pivots",
+        "room_to_support_r": 0.6952922066217059,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 11,
+        "input_sha256": "48b144d1ce4b60624b63a5e4315f16d03ec6a385f78607b334100e95eea4a446",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 0.09708370000000022,
+        "mfe_r": 0.3677397956608548,
+        "mae_r": 2.5307900296342156,
+        "first_hit": "stop",
+        "first_half_r_bar": null,
+        "first_one_r_bar": null,
+        "first_stop_bar": 52,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "horizontal_resistance_reaction",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "SOLUSDT",
+      "side": "short",
+      "signal_ts": 1739538000000,
+      "entry_ts": 1739538000000,
+      "exit_ts": 1739543700000,
+      "entry_price": 196.930606,
+      "initial_sl": 199.06877809,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.36791532,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=197.1218 slope=-0.429%/d rsi=61.2  r2=0.947 pivots=3 age=9 entrydist=0.086 touchdist=-1.394 reject=0.086 body=0.839 atrpct=0.899 anchors=1739397600000:198.35|1739419200000:198.39|1739502000000:197.41",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 197.1218,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 197.1218,
+            "slope_pct_per_day": -0.429,
+            "points_ts_px": [
+              {
+                "ts_ms": 1739397600000,
+                "price": 198.35
+              },
+              {
+                "ts_ms": 1739419200000,
+                "price": 198.39
+              },
+              {
+                "ts_ms": 1739502000000,
+                "price": 197.41
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 61.2,
+          "r2": 0.947,
+          "pivots": 3,
+          "age_bars": 9.0,
+          "entry_distance_atr": 0.086,
+          "touch_distance_atr": -1.394,
+          "reject_depth_atr": 0.086,
+          "body_atr": 0.839,
+          "atr_pct": 0.899
+        },
+        "source_reason": "att1_short_trendline tl=197.1218 slope=-0.429%/d rsi=61.2  r2=0.947 pivots=3 age=9 entrydist=0.086 touchdist=-1.394 reject=0.086 body=0.839 atrpct=0.899 anchors=1739397600000:198.35|1739419200000:198.39|1739502000000:197.41",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "horizontal_resistance_rejection",
+        "blockers": [
+          "setup_belongs_to_horizontal_family"
+        ],
+        "atr": 1.769999999999996,
+        "trendline_level": 197.12177809388334,
+        "slope_pct_per_day": -0.42949403231358846,
+        "r2": 0.9465415727136411,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            81,
+            1739397600000,
+            198.35
+          ],
+          [
+            87,
+            1739419200000,
+            198.39
+          ],
+          [
+            110,
+            1739502000000,
+            197.41
+          ]
+        ],
+        "signal_high": 199.59,
+        "entry": 196.930606,
+        "entry_distance_atr": 0.10800683270244325,
+        "line_touch_gap_atr": -1.3944756531732618,
+        "horizontal_origin": 199.2,
+        "horizontal_origin_touches": 2,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 194.79333333333332,
+        "nearest_support_source": "horizontal_pivots",
+        "room_to_support_r": 0.999579349418365,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 12,
+        "input_sha256": "91b8bc1b965feeeb4143e5cf23dab52d58c8abdae4a4e78ca3e3d8f73f017287",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 2.1381720899999834,
+        "mfe_r": 1.4922119762586683,
+        "mae_r": 3.923628990966787,
+        "first_hit": "stop",
+        "first_half_r_bar": null,
+        "first_one_r_bar": null,
+        "first_stop_bar": 19,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "horizontal_resistance_reaction",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "ETHUSDT",
+      "side": "short",
+      "signal_ts": 1715634000000,
+      "entry_ts": 1715634000000,
+      "exit_ts": 1715667600000,
+      "entry_price": 2952.889304,
+      "initial_sl": 2997.90384524,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.51238769,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=2969.4154 slope=-1.933%/d rsi=59.5  r2=0.990 pivots=3 age=3 entrydist=0.615 touchdist=0.406 reject=0.615 body=0.229 atrpct=0.877 anchors=1715590800000:2996.12|1715605200000:2984.99|1715619600000:2977.09",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 2969.4154,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 2969.4154,
+            "slope_pct_per_day": -1.933,
+            "points_ts_px": [
+              {
+                "ts_ms": 1715590800000,
+                "price": 2996.12
+              },
+              {
+                "ts_ms": 1715605200000,
+                "price": 2984.99
+              },
+              {
+                "ts_ms": 1715619600000,
+                "price": 2977.09
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 59.5,
+          "r2": 0.99,
+          "pivots": 3,
+          "age_bars": 3.0,
+          "entry_distance_atr": 0.615,
+          "touch_distance_atr": 0.406,
+          "reject_depth_atr": 0.615,
+          "body_atr": 0.229,
+          "atr_pct": 0.877
+        },
+        "source_reason": "att1_short_trendline tl=2969.4154 slope=-1.933%/d rsi=59.5  r2=0.990 pivots=3 age=3 entrydist=0.615 touchdist=0.406 reject=0.615 body=0.229 atrpct=0.877 anchors=1715590800000:2996.12|1715605200000:2984.99|1715619600000:2977.09",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "projected_line_not_reached",
+          "opposing_support_too_close"
+        ],
+        "atr": 25.898571428571422,
+        "trendline_level": 2969.415416666667,
+        "slope_pct_per_day": -1.9329739832333126,
+        "r2": 0.9904883559877861,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            108,
+            1715590800000,
+            2996.12
+          ],
+          [
+            112,
+            1715605200000,
+            2984.99
+          ],
+          [
+            116,
+            1715619600000,
+            2977.09
+          ]
+        ],
+        "signal_high": 2958.89,
+        "entry": 2952.889304,
+        "entry_distance_atr": 0.638109044440794,
+        "line_touch_gap_atr": 0.40640916027729657,
+        "horizontal_origin": 2981.04,
+        "horizontal_origin_touches": 2,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 2947.6299999999997,
+        "nearest_support_source": "equal_low_liquidity",
+        "room_to_support_r": 0.11683566810021617,
+        "signal_reached_line": false
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 15,
+        "input_sha256": "82ec38890945aa0b1aa6593abec7c5ed6637e4f44cf997bd7efea10921b5d4af",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 45.0145412400002,
+        "mfe_r": 2.0904201488647547,
+        "mae_r": 0.15463216570148627,
+        "first_hit": "+1R",
+        "first_half_r_bar": 91,
+        "first_one_r_bar": 109,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "descending_line_pass_execution_or_room_fail",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "DOTUSDT",
+      "side": "short",
+      "signal_ts": 1744372800000,
+      "entry_ts": 1744372800000,
+      "exit_ts": 1744392900000,
+      "entry_price": 3.50789828,
+      "initial_sl": 3.5593125,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.48196003,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=3.5183 slope=-1.844%/d rsi=61.8  r2=0.831 pivots=3 age=7 entrydist=0.261 touchdist=-0.472 reject=0.261 body=0.757 atrpct=1.062 anchors=1744264800000:3.6077|1744286400000:3.5649|1744344000000:3.5414",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 3.5183,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 3.5183,
+            "slope_pct_per_day": -1.844,
+            "points_ts_px": [
+              {
+                "ts_ms": 1744264800000,
+                "price": 3.6077
+              },
+              {
+                "ts_ms": 1744286400000,
+                "price": 3.5649
+              },
+              {
+                "ts_ms": 1744344000000,
+                "price": 3.5414
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 61.8,
+          "r2": 0.831,
+          "pivots": 3,
+          "age_bars": 7.0,
+          "entry_distance_atr": 0.261,
+          "touch_distance_atr": -0.472,
+          "reject_depth_atr": 0.261,
+          "body_atr": 0.757,
+          "atr_pct": 1.062
+        },
+        "source_reason": "att1_short_trendline tl=3.5183 slope=-1.844%/d rsi=61.8  r2=0.831 pivots=3 age=7 entrydist=0.261 touchdist=-0.472 reject=0.261 body=0.757 atrpct=1.062 anchors=1744264800000:3.6077|1744286400000:3.5649|1744344000000:3.5414",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "opposing_support_too_close"
+        ],
+        "atr": 0.03725714285714278,
+        "trendline_level": 3.5183296391752577,
+        "slope_pct_per_day": -1.8435408489655203,
+        "r2": 0.8313748540878049,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            90,
+            1744264800000,
+            3.6077
+          ],
+          [
+            96,
+            1744286400000,
+            3.5649
+          ],
+          [
+            112,
+            1744344000000,
+            3.5414
+          ]
+        ],
+        "signal_high": 3.5359,
+        "entry": 3.50789828,
+        "entry_distance_atr": 0.27998279994939973,
+        "line_touch_gap_atr": -0.47159710802605614,
+        "horizontal_origin": 3.60195,
+        "horizontal_origin_touches": 2,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 3.4825,
+        "nearest_support_source": "horizontal_pivots",
+        "room_to_support_r": 0.49399329601810904,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 8,
+        "input_sha256": "898f448c44e7c493d8e1516695e67de44d905d1679309e93dda71e75af2a6076",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 0.051414219999999844,
+        "mfe_r": 0.47454342397881927,
+        "mae_r": 1.878891092775502,
+        "first_hit": "stop",
+        "first_half_r_bar": null,
+        "first_one_r_bar": null,
+        "first_stop_bar": 67,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "descending_line_pass_execution_or_room_fail",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "LINKUSDT",
+      "side": "short",
+      "signal_ts": 1739746800000,
+      "entry_ts": 1739746800000,
+      "exit_ts": 1739769000000,
+      "entry_price": 18.8922208,
+      "initial_sl": 19.31111154,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.68358573,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=19.0557 slope=-1.614%/d rsi=46.9  r2=0.999 pivots=3 age=5 entrydist=0.688 touchdist=0.119 reject=0.688 body=0.336 atrpct=1.229 anchors=1739685600000:19.258|1739707200000:19.185|1739725200000:19.118",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 19.0557,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 19.0557,
+            "slope_pct_per_day": -1.614,
+            "points_ts_px": [
+              {
+                "ts_ms": 1739685600000,
+                "price": 19.258
+              },
+              {
+                "ts_ms": 1739707200000,
+                "price": 19.185
+              },
+              {
+                "ts_ms": 1739725200000,
+                "price": 19.118
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 46.9,
+          "r2": 0.999,
+          "pivots": 3,
+          "age_bars": 5.0,
+          "entry_distance_atr": 0.688,
+          "touch_distance_atr": 0.119,
+          "reject_depth_atr": 0.688,
+          "body_atr": 0.336,
+          "atr_pct": 1.229
+        },
+        "source_reason": "att1_short_trendline tl=19.0557 slope=-1.614%/d rsi=46.9  r2=0.999 pivots=3 age=5 entrydist=0.688 touchdist=0.119 reject=0.688 body=0.336 atrpct=1.229 anchors=1739685600000:19.258|1739707200000:19.185|1739725200000:19.118",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "invalid",
+        "blockers": [
+          "invalid_or_short_geometry_input"
+        ],
+        "atr": 0.0,
+        "trendline_level": null,
+        "slope_pct_per_day": null,
+        "r2": null,
+        "pivot_count": 0,
+        "pivot_anchors": [],
+        "signal_high": 0.0,
+        "entry": 18.8922208,
+        "entry_distance_atr": null,
+        "line_touch_gap_atr": null,
+        "horizontal_origin": null,
+        "horizontal_origin_touches": 0,
+        "horizontal_origin_source": null,
+        "nearest_support": null,
+        "nearest_support_source": null,
+        "room_to_support_r": null,
+        "signal_reached_line": false
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "insufficient_closed_bars",
+        "closed_bars": 0,
+        "confirmed_pivots": 0,
+        "input_sha256": null,
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 0,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": false
+      },
+      "forward": {
+        "risk_per_unit": 0.4188907399999984,
+        "mfe_r": null,
+        "mae_r": null,
+        "first_hit": "invalid_or_missing_path",
+        "bars": 0,
+        "coverage": 0.0,
+        "rows": 0,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": false
+      },
+      "research_class": "line_quality_rejected",
+      "usable_for_exact_plan_claim": false
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "LTCUSDT",
+      "side": "short",
+      "signal_ts": 1739858400000,
+      "entry_ts": 1739858400000,
+      "exit_ts": 1739880900000,
+      "entry_price": 121.905614,
+      "initial_sl": 125.94977473,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.79412135,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=123.8338 slope=-3.301%/d rsi=49.6  r2=0.975 pivots=3 age=7 entrydist=0.990 touchdist=-0.159 reject=0.990 body=0.858 atrpct=1.578 anchors=1739775600000:127.4|1739800800000:126.58|1739829600000:124.9",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 123.8338,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 123.8338,
+            "slope_pct_per_day": -3.301,
+            "points_ts_px": [
+              {
+                "ts_ms": 1739775600000,
+                "price": 127.4
+              },
+              {
+                "ts_ms": 1739800800000,
+                "price": 126.58
+              },
+              {
+                "ts_ms": 1739829600000,
+                "price": 124.9
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 49.6,
+          "r2": 0.975,
+          "pivots": 3,
+          "age_bars": 7.0,
+          "entry_distance_atr": 0.99,
+          "touch_distance_atr": -0.159,
+          "reject_depth_atr": 0.99,
+          "body_atr": 0.858,
+          "atr_pct": 1.578
+        },
+        "source_reason": "att1_short_trendline tl=123.8338 slope=-3.301%/d rsi=49.6  r2=0.975 pivots=3 age=7 entrydist=0.990 touchdist=-0.159 reject=0.990 body=0.858 atrpct=1.578 anchors=1739775600000:127.4|1739800800000:126.58|1739829600000:124.9",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close"
+        ],
+        "atr": 1.9235714285714312,
+        "trendline_level": 123.83384615384614,
+        "slope_pct_per_day": -3.3007589474414694,
+        "r2": 0.9753714801740424,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            97,
+            1739775600000,
+            127.4
+          ],
+          [
+            104,
+            1739800800000,
+            126.58
+          ],
+          [
+            112,
+            1739829600000,
+            124.9
+          ]
+        ],
+        "signal_high": 124.14,
+        "entry": 121.905614,
+        "entry_distance_atr": 1.0024229540975087,
+        "line_touch_gap_atr": -0.15915907338113847,
+        "horizontal_origin": 127.65333333333335,
+        "horizontal_origin_touches": 3,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 120.43,
+        "nearest_support_source": "equal_low_liquidity",
+        "room_to_support_r": 0.36487521107994947,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 12,
+        "input_sha256": "ffc1780ad7122a0b84674bf816f5c496f884b73b5e004c07ba67c84094dceac8",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 4.0441607300000015,
+        "mfe_r": 0.5305461734207567,
+        "mae_r": 2.997998054345381,
+        "first_hit": "stop",
+        "first_half_r_bar": 1,
+        "first_one_r_bar": null,
+        "first_stop_bar": 75,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "descending_line_pass_execution_or_room_fail",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "ADAUSDT",
+      "side": "short",
+      "signal_ts": 1741474800000,
+      "entry_ts": 1741474800000,
+      "exit_ts": 1741518000000,
+      "entry_price": 0.80763844,
+      "initial_sl": 0.83450986,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.84203078,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=0.8199 slope=-2.239%/d rsi=45.6  r2=0.973 pivots=3 age=3 entrydist=0.916 touchdist=0.493 reject=0.916 body=0.363 atrpct=1.640 anchors=1741417200000:0.8316|1741442400000:0.8251|1741460400000:0.8227",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 0.8199,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 0.8199,
+            "slope_pct_per_day": -2.239,
+            "points_ts_px": [
+              {
+                "ts_ms": 1741417200000,
+                "price": 0.8316
+              },
+              {
+                "ts_ms": 1741442400000,
+                "price": 0.8251
+              },
+              {
+                "ts_ms": 1741460400000,
+                "price": 0.8227
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 45.6,
+          "r2": 0.973,
+          "pivots": 3,
+          "age_bars": 3.0,
+          "entry_distance_atr": 0.916,
+          "touch_distance_atr": 0.493,
+          "reject_depth_atr": 0.916,
+          "body_atr": 0.363,
+          "atr_pct": 1.64
+        },
+        "source_reason": "att1_short_trendline tl=0.8199 slope=-2.239%/d rsi=45.6  r2=0.973 pivots=3 age=3 entrydist=0.916 touchdist=0.493 reject=0.916 body=0.363 atrpct=1.640 anchors=1741417200000:0.8316|1741442400000:0.8251|1741460400000:0.8227",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "projected_line_not_reached",
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close"
+        ],
+        "atr": 0.013249999999999993,
+        "trendline_level": 0.8199348623853211,
+        "slope_pct_per_day": -2.239177196644647,
+        "r2": 0.97333702075001,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            104,
+            1741417200000,
+            0.8316
+          ],
+          [
+            111,
+            1741442400000,
+            0.8251
+          ],
+          [
+            116,
+            1741460400000,
+            0.8227
+          ]
+        ],
+        "signal_high": 0.8134,
+        "entry": 0.80763844,
+        "entry_distance_atr": 0.9280318781374448,
+        "line_touch_gap_atr": 0.4931971611563084,
+        "horizontal_origin": 0.8239,
+        "horizontal_origin_touches": 2,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 0.80665,
+        "nearest_support_source": "horizontal_pivots",
+        "room_to_support_r": 0.03678406277003508,
+        "signal_reached_line": false
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 14,
+        "input_sha256": "4cd8f623e7a5b269fa9154de455690fbacc79d5a2d180a1650fc74fcdbb5c49c",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 0.02687142000000009,
+        "mfe_r": 3.6260994022645465,
+        "mae_r": 0.35210495016638715,
+        "first_hit": "+1R",
+        "first_half_r_bar": 47,
+        "first_one_r_bar": 137,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "descending_line_pass_execution_or_room_fail",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "LINKUSDT",
+      "side": "short",
+      "signal_ts": 1739970000000,
+      "entry_ts": 1739970000000,
+      "exit_ts": 1740019800000,
+      "entry_price": 17.9024188,
+      "initial_sl": 18.21371357,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.56396076,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=17.9432 slope=-2.421%/d rsi=54.8  r2=0.637 pivots=3 age=5 entrydist=0.151 touchdist=-0.817 reject=0.151 body=0.826 atrpct=1.373 anchors=1739887200000:18.38|1739930400000:17.99|1739948400000:18.128",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 17.9432,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 17.9432,
+            "slope_pct_per_day": -2.421,
+            "points_ts_px": [
+              {
+                "ts_ms": 1739887200000,
+                "price": 18.38
+              },
+              {
+                "ts_ms": 1739930400000,
+                "price": 17.99
+              },
+              {
+                "ts_ms": 1739948400000,
+                "price": 18.128
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 54.8,
+          "r2": 0.637,
+          "pivots": 3,
+          "age_bars": 5.0,
+          "entry_distance_atr": 0.151,
+          "touch_distance_atr": -0.817,
+          "reject_depth_atr": 0.151,
+          "body_atr": 0.826,
+          "atr_pct": 1.373
+        },
+        "source_reason": "att1_short_trendline tl=17.9432 slope=-2.421%/d rsi=54.8  r2=0.637 pivots=3 age=5 entrydist=0.151 touchdist=-0.817 reject=0.151 body=0.826 atrpct=1.373 anchors=1739887200000:18.38|1739930400000:17.99|1739948400000:18.128",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "invalid",
+        "blockers": [
+          "invalid_or_short_geometry_input"
+        ],
+        "atr": 0.0,
+        "trendline_level": null,
+        "slope_pct_per_day": null,
+        "r2": null,
+        "pivot_count": 0,
+        "pivot_anchors": [],
+        "signal_high": 0.0,
+        "entry": 17.9024188,
+        "entry_distance_atr": null,
+        "line_touch_gap_atr": null,
+        "horizontal_origin": null,
+        "horizontal_origin_touches": 0,
+        "horizontal_origin_source": null,
+        "nearest_support": null,
+        "nearest_support_source": null,
+        "room_to_support_r": null,
+        "signal_reached_line": false
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "insufficient_closed_bars",
+        "closed_bars": 0,
+        "confirmed_pivots": 0,
+        "input_sha256": null,
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 0,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": false
+      },
+      "forward": {
+        "risk_per_unit": 0.31129476999999994,
+        "mfe_r": null,
+        "mae_r": null,
+        "first_hit": "invalid_or_missing_path",
+        "bars": 0,
+        "coverage": 0.0,
+        "rows": 0,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": false
+      },
+      "research_class": "line_quality_rejected",
+      "usable_for_exact_plan_claim": false
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "BTCUSDT",
+      "side": "short",
+      "signal_ts": 1716217200000,
+      "entry_ts": 1716217200000,
+      "exit_ts": 1716220800000,
+      "entry_price": 66946.608,
+      "initial_sl": 67671.18685625,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.36688705,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=67204.8733 slope=-0.658%/d rsi=59.7  r2=0.887 pivots=3 age=4 entrydist=0.578 touchdist=0.263 reject=0.578 body=0.293 atrpct=0.633 anchors=1716112800000:67737.7|1716181200000:67279.5|1716199200000:67350",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 67204.8733,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 67204.8733,
+            "slope_pct_per_day": -0.658,
+            "points_ts_px": [
+              {
+                "ts_ms": 1716112800000,
+                "price": 67737.7
+              },
+              {
+                "ts_ms": 1716181200000,
+                "price": 67279.5
+              },
+              {
+                "ts_ms": 1716199200000,
+                "price": 67350.0
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 59.7,
+          "r2": 0.887,
+          "pivots": 3,
+          "age_bars": 4.0,
+          "entry_distance_atr": 0.578,
+          "touch_distance_atr": 0.263,
+          "reject_depth_atr": 0.578,
+          "body_atr": 0.293,
+          "atr_pct": 0.633
+        },
+        "source_reason": "att1_short_trendline tl=67204.8733 slope=-0.658%/d rsi=59.7  r2=0.887 pivots=3 age=4 entrydist=0.578 touchdist=0.263 reject=0.578 body=0.293 atrpct=0.633 anchors=1716112800000:67737.7|1716181200000:67279.5|1716199200000:67350",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "horizontal_resistance_rejection",
+        "blockers": [
+          "projected_line_not_reached",
+          "opposing_support_too_close",
+          "setup_belongs_to_horizontal_family"
+        ],
+        "atr": 423.9214285714282,
+        "trendline_level": 67204.87328482329,
+        "slope_pct_per_day": -0.6579072869395404,
+        "r2": 0.8874581442126587,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            91,
+            1716112800000,
+            67737.7
+          ],
+          [
+            110,
+            1716181200000,
+            67279.5
+          ],
+          [
+            115,
+            1716199200000,
+            67350.0
+          ]
+        ],
+        "signal_high": 67093.4,
+        "entry": 66946.608,
+        "entry_distance_atr": 0.6092291340252013,
+        "line_touch_gap_atr": 0.26295741925325566,
+        "horizontal_origin": 67069.38,
+        "horizontal_origin_touches": 5,
+        "horizontal_origin_source": "equal_high_liquidity",
+        "nearest_support": 66704.94,
+        "nearest_support_source": "horizontal_pivots",
+        "room_to_support_r": 0.3335289153353452,
+        "signal_reached_line": false
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 10,
+        "input_sha256": "10b26f9883342356097360c5676bfa814ece2445511dbe1fe7001a69b6391cbf",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 724.5788562500093,
+        "mfe_r": 0.1290515161923563,
+        "mae_r": 7.059400030622877,
+        "first_hit": "stop",
+        "first_half_r_bar": null,
+        "first_one_r_bar": null,
+        "first_stop_bar": 12,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "horizontal_resistance_reaction",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "ETHUSDT",
+      "side": "short",
+      "signal_ts": 1716692400000,
+      "entry_ts": 1716692400000,
+      "exit_ts": 1716708600000,
+      "entry_price": 3738.372176,
+      "initial_sl": 3780.61443829,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.3811878,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=3761.3024 slope=-0.637%/d rsi=50.3  r2=0.973 pivots=3 age=7 entrydist=1.263 touchdist=-0.067 reject=1.263 body=0.684 atrpct=0.470 anchors=1716609600000:3782.36|1716634800000:3777.6|1716663600000:3767.58",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 3761.3024,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 3761.3024,
+            "slope_pct_per_day": -0.637,
+            "points_ts_px": [
+              {
+                "ts_ms": 1716609600000,
+                "price": 3782.36
+              },
+              {
+                "ts_ms": 1716634800000,
+                "price": 3777.6
+              },
+              {
+                "ts_ms": 1716663600000,
+                "price": 3767.58
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 50.3,
+          "r2": 0.973,
+          "pivots": 3,
+          "age_bars": 7.0,
+          "entry_distance_atr": 1.263,
+          "touch_distance_atr": -0.067,
+          "reject_depth_atr": 1.263,
+          "body_atr": 0.684,
+          "atr_pct": 0.47
+        },
+        "source_reason": "att1_short_trendline tl=3761.3024 slope=-0.637%/d rsi=50.3  r2=0.973 pivots=3 age=7 entrydist=1.263 touchdist=-0.067 reject=1.263 body=0.684 atrpct=0.470 anchors=1716609600000:3782.36|1716634800000:3777.6|1716663600000:3767.58",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "horizontal_resistance_rejection",
+        "blockers": [
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close",
+          "setup_belongs_to_horizontal_family"
+        ],
+        "atr": 17.556428571428665,
+        "trendline_level": 3761.3023668639053,
+        "slope_pct_per_day": -0.6365070742209338,
+        "r2": 0.9732863800228998,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            97,
+            1716609600000,
+            3782.36
+          ],
+          [
+            104,
+            1716634800000,
+            3777.6
+          ],
+          [
+            112,
+            1716663600000,
+            3767.58
+          ]
+        ],
+        "signal_high": 3762.47,
+        "entry": 3738.372176,
+        "entry_distance_atr": 1.3060851625154564,
+        "line_touch_gap_atr": -0.06650744092649591,
+        "horizontal_origin": 3763.2233333333334,
+        "horizontal_origin_touches": 3,
+        "horizontal_origin_source": "equal_high_liquidity",
+        "nearest_support": 3724.7574999999997,
+        "nearest_support_source": "equal_low_liquidity",
+        "room_to_support_r": 0.3222998784140176,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 13,
+        "input_sha256": "6f1a4a7d3bd1303f4eadecaa450b94d028b3d6ec243d7c2187cc09937e8969a0",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 42.242262290000326,
+        "mfe_r": 0.0606543272330003,
+        "mae_r": 4.840598322983389,
+        "first_hit": "stop",
+        "first_half_r_bar": null,
+        "first_one_r_bar": null,
+        "first_stop_bar": 54,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "horizontal_resistance_reaction",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "DOTUSDT",
+      "side": "short",
+      "signal_ts": 1745326800000,
+      "entry_ts": 1745326800000,
+      "exit_ts": 1745330400000,
+      "entry_price": 3.77064572,
+      "initial_sl": 3.82658476,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.48732422,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=3.7762 slope=-2.421%/d rsi=47.3  r2=0.921 pivots=3 age=4 entrydist=0.105 touchdist=-0.314 reject=0.105 body=0.261 atrpct=1.214 anchors=1745262000000:3.8454|1745283600000:3.8097|1745308800000:3.7953",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 3.7762,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 3.7762,
+            "slope_pct_per_day": -2.421,
+            "points_ts_px": [
+              {
+                "ts_ms": 1745262000000,
+                "price": 3.8454
+              },
+              {
+                "ts_ms": 1745283600000,
+                "price": 3.8097
+              },
+              {
+                "ts_ms": 1745308800000,
+                "price": 3.7953
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 47.3,
+          "r2": 0.921,
+          "pivots": 3,
+          "age_bars": 4.0,
+          "entry_distance_atr": 0.105,
+          "touch_distance_atr": -0.314,
+          "reject_depth_atr": 0.105,
+          "body_atr": 0.261,
+          "atr_pct": 1.214
+        },
+        "source_reason": "att1_short_trendline tl=3.7762 slope=-2.421%/d rsi=47.3  r2=0.921 pivots=3 age=4 entrydist=0.105 touchdist=-0.314 reject=0.105 body=0.261 atrpct=1.214 anchors=1745262000000:3.8454|1745283600000:3.8097|1745308800000:3.7953",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": true,
+        "classification": "descending_trendline_rejection",
+        "blockers": [],
+        "atr": 0.045785714285714284,
+        "trendline_level": 3.776220472440945,
+        "slope_pct_per_day": -2.420956064269874,
+        "r2": 0.9209052330942251,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            102,
+            1745262000000,
+            3.8454
+          ],
+          [
+            108,
+            1745283600000,
+            3.8097
+          ],
+          [
+            115,
+            1745308800000,
+            3.7953
+          ]
+        ],
+        "signal_high": 3.7906,
+        "entry": 3.77064572,
+        "entry_distance_atr": 0.12175746360877993,
+        "line_touch_gap_atr": -0.3140614443475357,
+        "horizontal_origin": 3.9158,
+        "horizontal_origin_touches": 2,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 3.71502,
+        "nearest_support_source": "horizontal_pivots",
+        "room_to_support_r": 0.9943989028056324,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 13,
+        "input_sha256": "22b254bed243f76f001e7c540480f5cfa006b6d97eb9de3e20b8f976928fe7cd",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 0.05593903999999972,
+        "mfe_r": 0.0919879926434252,
+        "mae_r": 7.600314199171138,
+        "first_hit": "stop",
+        "first_half_r_bar": null,
+        "first_one_r_bar": null,
+        "first_stop_bar": 12,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "valid_full_descending_trendline",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "DOTUSDT",
+      "side": "short",
+      "signal_ts": 1745445600000,
+      "entry_ts": 1745445600000,
+      "exit_ts": 1745468400000,
+      "entry_price": 4.08348314,
+      "initial_sl": 4.19930178,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.57899335,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=4.1327 slope=-3.017%/d rsi=48.1  r2=0.991 pivots=3 age=3 entrydist=0.800 touchdist=0.443 reject=0.800 body=0.223 atrpct=1.482 anchors=1745398800000:4.1958|1745413200000:4.1712|1745431200000:4.1493",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 4.1327,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 4.1327,
+            "slope_pct_per_day": -3.017,
+            "points_ts_px": [
+              {
+                "ts_ms": 1745398800000,
+                "price": 4.1958
+              },
+              {
+                "ts_ms": 1745413200000,
+                "price": 4.1712
+              },
+              {
+                "ts_ms": 1745431200000,
+                "price": 4.1493
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 48.1,
+          "r2": 0.991,
+          "pivots": 3,
+          "age_bars": 3.0,
+          "entry_distance_atr": 0.8,
+          "touch_distance_atr": 0.443,
+          "reject_depth_atr": 0.8,
+          "body_atr": 0.223,
+          "atr_pct": 1.482
+        },
+        "source_reason": "att1_short_trendline tl=4.1327 slope=-3.017%/d rsi=48.1  r2=0.991 pivots=3 age=3 entrydist=0.800 touchdist=0.443 reject=0.800 body=0.223 atrpct=1.482 anchors=1745398800000:4.1958|1745413200000:4.1712|1745431200000:4.1493",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "projected_line_not_reached",
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close"
+        ],
+        "atr": 0.060514285714285646,
+        "trendline_level": 4.132736065573771,
+        "slope_pct_per_day": -3.0170709670738347,
+        "r2": 0.9905096334990006,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            107,
+            1745398800000,
+            4.1958
+          ],
+          [
+            111,
+            1745413200000,
+            4.1712
+          ],
+          [
+            116,
+            1745431200000,
+            4.1493
+          ]
+        ],
+        "signal_high": 4.1059,
+        "entry": 4.08348314,
+        "entry_distance_atr": 0.8139057578290712,
+        "line_touch_gap_atr": 0.4434666171303004,
+        "horizontal_origin": null,
+        "horizontal_origin_touches": 0,
+        "horizontal_origin_source": null,
+        "nearest_support": 4.0491,
+        "nearest_support_source": "equal_low_liquidity",
+        "room_to_support_r": 0.29687052101458106,
+        "signal_reached_line": false
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 15,
+        "input_sha256": "b25ae8102a35a1005cf5abf8694e970aa5e734815eaf98105e8eb4fd16087a8e",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 0.11581863999999964,
+        "mfe_r": 1.3441976179309372,
+        "mae_r": 1.612148614419927,
+        "first_hit": "+1R",
+        "first_half_r_bar": 59,
+        "first_one_r_bar": 74,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "descending_line_pass_execution_or_room_fail",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "SOLUSDT",
+      "side": "short",
+      "signal_ts": 1740920400000,
+      "entry_ts": 1740920400000,
+      "exit_ts": 1740929100000,
+      "entry_price": 142.681458,
+      "initial_sl": 146.3745,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.79493184,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=144.3214 slope=-2.595%/d rsi=51.7  r2=0.964 pivots=3 age=3 entrydist=0.863 touchdist=0.392 reject=0.863 body=0.507 atrpct=1.308 anchors=1740877200000:146.07|1740895200000:145.11|1740906000000:144.87",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 144.3214,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 144.3214,
+            "slope_pct_per_day": -2.595,
+            "points_ts_px": [
+              {
+                "ts_ms": 1740877200000,
+                "price": 146.07
+              },
+              {
+                "ts_ms": 1740895200000,
+                "price": 145.11
+              },
+              {
+                "ts_ms": 1740906000000,
+                "price": 144.87
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 51.7,
+          "r2": 0.964,
+          "pivots": 3,
+          "age_bars": 3.0,
+          "entry_distance_atr": 0.863,
+          "touch_distance_atr": 0.392,
+          "reject_depth_atr": 0.863,
+          "body_atr": 0.507,
+          "atr_pct": 1.308
+        },
+        "source_reason": "att1_short_trendline tl=144.3214 slope=-2.595%/d rsi=51.7  r2=0.964 pivots=3 age=3 entrydist=0.863 touchdist=0.392 reject=0.863 body=0.507 atrpct=1.308 anchors=1740877200000:146.07|1740895200000:145.11|1740906000000:144.87",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "projected_line_not_reached",
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close"
+        ],
+        "atr": 1.866428571428577,
+        "trendline_level": 144.32142857142856,
+        "slope_pct_per_day": -2.59467251268804,
+        "r2": 0.9642857142857203,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            108,
+            1740877200000,
+            146.07
+          ],
+          [
+            113,
+            1740895200000,
+            145.11
+          ],
+          [
+            116,
+            1740906000000,
+            144.87
+          ]
+        ],
+        "signal_high": 143.59,
+        "entry": 142.681458,
+        "entry_distance_atr": 0.8786677382319101,
+        "line_touch_gap_atr": 0.3918867202449175,
+        "horizontal_origin": 145.0275,
+        "horizontal_origin_touches": 4,
+        "horizontal_origin_source": "equal_high_liquidity",
+        "nearest_support": 142.17000000000002,
+        "nearest_support_source": "equal_low_liquidity",
+        "room_to_support_r": 0.13849233233739922,
+        "signal_reached_line": false
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 9,
+        "input_sha256": "e68a5795f9bd12bdac46fdc47313ed307c49f2d497bdf2d83ffa621326bdce83",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 3.6930420000000197,
+        "mfe_r": 0.7233760135952927,
+        "mae_r": 10.175498139474124,
+        "first_hit": "stop",
+        "first_half_r_bar": 14,
+        "first_one_r_bar": null,
+        "first_stop_bar": 29,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "descending_line_pass_execution_or_room_fail",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "ADAUSDT",
+      "side": "short",
+      "signal_ts": 1742486400000,
+      "entry_ts": 1742486400000,
+      "exit_ts": 1742553600000,
+      "entry_price": 0.72515494,
+      "initial_sl": 0.74609174,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.80170024,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=0.7353 slope=-1.585%/d rsi=47.6  r2=0.574 pivots=3 age=7 entrydist=1.025 touchdist=-1.888 reject=1.025 body=0.940 atrpct=1.349 anchors=1742392800000:0.7454|1742428800000:0.7468|1742457600000:0.7363",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 0.7353,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 0.7353,
+            "slope_pct_per_day": -1.585,
+            "points_ts_px": [
+              {
+                "ts_ms": 1742392800000,
+                "price": 0.7454
+              },
+              {
+                "ts_ms": 1742428800000,
+                "price": 0.7468
+              },
+              {
+                "ts_ms": 1742457600000,
+                "price": 0.7363
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 47.6,
+          "r2": 0.574,
+          "pivots": 3,
+          "age_bars": 7.0,
+          "entry_distance_atr": 1.025,
+          "touch_distance_atr": -1.888,
+          "reject_depth_atr": 1.025,
+          "body_atr": 0.94,
+          "atr_pct": 1.349
+        },
+        "source_reason": "att1_short_trendline tl=0.7353 slope=-1.585%/d rsi=47.6  r2=0.574 pivots=3 age=7 entrydist=1.025 touchdist=-1.888 reject=1.025 body=0.940 atrpct=1.349 anchors=1742392800000:0.7454|1742428800000:0.7468|1742457600000:0.7363",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "pivot_fit_too_weak",
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close"
+        ],
+        "atr": 0.009785714285714262,
+        "trendline_level": 0.7353274590163935,
+        "slope_pct_per_day": -1.585324783639555,
+        "r2": 0.574367740341044,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            94,
+            1742392800000,
+            0.7454
+          ],
+          [
+            104,
+            1742428800000,
+            0.7468
+          ],
+          [
+            112,
+            1742457600000,
+            0.7363
+          ]
+        ],
+        "signal_high": 0.7538,
+        "entry": 0.72515494,
+        "entry_distance_atr": 1.0395274907263443,
+        "line_touch_gap_atr": -1.8877049180327867,
+        "horizontal_origin": 0.7449749999999999,
+        "horizontal_origin_touches": 4,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 0.7189666666666668,
+        "nearest_support_source": "horizontal_pivots",
+        "room_to_support_r": 0.2955692050997898,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 11,
+        "input_sha256": "1c5a3f372c267082ac653f04c951599d62e71641b83ccd6498ddcc7a881b8645",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 0.020936799999999978,
+        "mfe_r": 1.1871413014405268,
+        "mae_r": 0.2696238202590647,
+        "first_hit": "+1R",
+        "first_half_r_bar": 8,
+        "first_one_r_bar": 219,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "line_quality_rejected",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "ETHUSDT",
+      "side": "short",
+      "signal_ts": 1716969600000,
+      "entry_ts": 1716969600000,
+      "exit_ts": 1717053000000,
+      "entry_price": 3823.225202,
+      "initial_sl": 3906.43504633,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.57707181,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=3872.2706 slope=-1.698%/d rsi=49.3  r2=0.688 pivots=3 age=3 entrydist=1.555 touchdist=0.344 reject=1.555 body=0.952 atrpct=0.812 anchors=1716890400000:3934.33|1716937200000:3874.99|1716955200000:3894.05",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 3872.2706,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 3872.2706,
+            "slope_pct_per_day": -1.698,
+            "points_ts_px": [
+              {
+                "ts_ms": 1716890400000,
+                "price": 3934.33
+              },
+              {
+                "ts_ms": 1716937200000,
+                "price": 3874.99
+              },
+              {
+                "ts_ms": 1716955200000,
+                "price": 3894.05
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 49.3,
+          "r2": 0.688,
+          "pivots": 3,
+          "age_bars": 3.0,
+          "entry_distance_atr": 1.555,
+          "touch_distance_atr": 0.344,
+          "reject_depth_atr": 1.555,
+          "body_atr": 0.952,
+          "atr_pct": 0.812
+        },
+        "source_reason": "att1_short_trendline tl=3872.2706 slope=-1.698%/d rsi=49.3  r2=0.688 pivots=3 age=3 entrydist=1.555 touchdist=0.344 reject=1.555 body=0.952 atrpct=0.812 anchors=1716890400000:3934.33|1716937200000:3874.99|1716955200000:3894.05",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "projected_line_not_reached",
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close"
+        ],
+        "atr": 31.05857142857144,
+        "trendline_level": 3872.270617760617,
+        "slope_pct_per_day": -1.6976668359124845,
+        "r2": 0.6882255862500111,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            98,
+            1716890400000,
+            3934.33
+          ],
+          [
+            111,
+            1716937200000,
+            3874.99
+          ],
+          [
+            116,
+            1716955200000,
+            3894.05
+          ]
+        ],
+        "signal_high": 3861.59,
+        "entry": 3823.225202,
+        "entry_distance_atr": 1.5791265826057574,
+        "line_touch_gap_atr": 0.34388631766854033,
+        "horizontal_origin": 3887.796,
+        "horizontal_origin_touches": 5,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 3820.1099999999997,
+        "nearest_support_source": "horizontal_pivots",
+        "room_to_support_r": 0.03743790203050851,
+        "signal_reached_line": false
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 14,
+        "input_sha256": "e5351670c82923862b53fd1708320a5ad4214e039c9b8870e4c6ccf3be131365",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 83.20984433000012,
+        "mfe_r": 1.3223820196515907,
+        "mae_r": 0.23488564553116587,
+        "first_hit": "+1R",
+        "first_half_r_bar": 69,
+        "first_one_r_bar": 275,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "descending_line_pass_execution_or_room_fail",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "ADAUSDT",
+      "side": "short",
+      "signal_ts": 1742594400000,
+      "entry_ts": 1742594400000,
+      "exit_ts": 1742655900000,
+      "entry_price": 0.71015794,
+      "initial_sl": 0.71965571,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.32385851,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=0.7109 slope=-2.650%/d rsi=45.8  r2=0.649 pivots=3 age=4 entrydist=0.080 touchdist=-0.664 reject=0.080 body=0.343 atrpct=1.116 anchors=1742522400000:0.7275|1742558400000:0.713|1742576400000:0.7174",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 0.7109,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 0.7109,
+            "slope_pct_per_day": -2.65,
+            "points_ts_px": [
+              {
+                "ts_ms": 1742522400000,
+                "price": 0.7275
+              },
+              {
+                "ts_ms": 1742558400000,
+                "price": 0.713
+              },
+              {
+                "ts_ms": 1742576400000,
+                "price": 0.7174
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 45.8,
+          "r2": 0.649,
+          "pivots": 3,
+          "age_bars": 4.0,
+          "entry_distance_atr": 0.08,
+          "touch_distance_atr": -0.664,
+          "reject_depth_atr": 0.08,
+          "body_atr": 0.343,
+          "atr_pct": 1.116
+        },
+        "source_reason": "att1_short_trendline tl=0.7109 slope=-2.650%/d rsi=45.8  r2=0.649 pivots=3 age=4 entrydist=0.080 touchdist=-0.664 reject=0.080 body=0.343 atrpct=1.116 anchors=1742522400000:0.7275|1742558400000:0.713|1742576400000:0.7174",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "horizontal_resistance_rejection",
+        "blockers": [
+          "pivot_fit_too_weak",
+          "setup_belongs_to_horizontal_family"
+        ],
+        "atr": 0.00792857142857142,
+        "trendline_level": 0.7109342857142857,
+        "slope_pct_per_day": -2.6499869270529586,
+        "r2": 0.649196153945559,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            100,
+            1742522400000,
+            0.7275
+          ],
+          [
+            110,
+            1742558400000,
+            0.713
+          ],
+          [
+            115,
+            1742576400000,
+            0.7174
+          ]
+        ],
+        "signal_high": 0.7162,
+        "entry": 0.71015794,
+        "entry_distance_atr": 0.0979174774774825,
+        "line_touch_gap_atr": -0.6641441441441349,
+        "horizontal_origin": 0.718575,
+        "horizontal_origin_touches": 4,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 0.701125,
+        "nearest_support_source": "equal_low_liquidity",
+        "room_to_support_r": 0.951059038068939,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 12,
+        "input_sha256": "d95accb801ca6eab7e9f3d8cbbaba547738f9065e74027fc8f4b9cacf0f143a7",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 0.009497769999999961,
+        "mfe_r": 1.1537381932811586,
+        "mae_r": 0.5940404958216536,
+        "first_hit": "+1R",
+        "first_half_r_bar": 7,
+        "first_one_r_bar": 198,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "horizontal_resistance_reaction",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "DOTUSDT",
+      "side": "short",
+      "signal_ts": 1745604000000,
+      "entry_ts": 1745604000000,
+      "exit_ts": 1745730300000,
+      "entry_price": 4.2621474,
+      "initial_sl": 4.38170199,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": 0.65660816,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=4.3194 slope=-1.976%/d rsi=50.7  r2=0.915 pivots=3 age=3 entrydist=0.995 touchdist=-0.023 reject=0.995 body=0.603 atrpct=1.329 anchors=1745542800000:4.3712|1745564400000:4.3625|1745589600000:4.3262",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 4.3194,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 4.3194,
+            "slope_pct_per_day": -1.976,
+            "points_ts_px": [
+              {
+                "ts_ms": 1745542800000,
+                "price": 4.3712
+              },
+              {
+                "ts_ms": 1745564400000,
+                "price": 4.3625
+              },
+              {
+                "ts_ms": 1745589600000,
+                "price": 4.3262
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 50.7,
+          "r2": 0.915,
+          "pivots": 3,
+          "age_bars": 3.0,
+          "entry_distance_atr": 0.995,
+          "touch_distance_atr": -0.023,
+          "reject_depth_atr": 0.995,
+          "body_atr": 0.603,
+          "atr_pct": 1.329
+        },
+        "source_reason": "att1_short_trendline tl=4.3194 slope=-1.976%/d rsi=50.7  r2=0.915 pivots=3 age=3 entrydist=0.995 touchdist=-0.023 reject=0.995 body=0.603 atrpct=1.329 anchors=1745542800000:4.3712|1745564400000:4.3625|1745589600000:4.3262",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close"
+        ],
+        "atr": 0.056657142857142774,
+        "trendline_level": 4.319379133858267,
+        "slope_pct_per_day": -1.9755412346855623,
+        "r2": 0.9149424074478674,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            103,
+            1745542800000,
+            4.3712
+          ],
+          [
+            109,
+            1745564400000,
+            4.3625
+          ],
+          [
+            116,
+            1745589600000,
+            4.3262
+          ]
+        ],
+        "signal_high": 4.3207,
+        "entry": 4.2621474,
+        "entry_distance_atr": 1.0101415456577703,
+        "line_touch_gap_atr": -0.0233133207063351,
+        "horizontal_origin": 4.3668499999999995,
+        "horizontal_origin_touches": 2,
+        "horizontal_origin_source": "horizontal_pivots",
+        "nearest_support": 4.1997,
+        "nearest_support_source": "horizontal_pivots",
+        "room_to_support_r": 0.52233377237963,
+        "signal_reached_line": true
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 14,
+        "input_sha256": "4bfc137dd777e408d2b1693eda54e1f02da4b0aea31eae421005ee6d1c9680de",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 0.1195545899999999,
+        "mfe_r": 0.5398989700019007,
+        "mae_r": 0.8117848089312218,
+        "first_hit": "neither",
+        "first_half_r_bar": 237,
+        "first_one_r_bar": null,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "descending_line_pass_execution_or_room_fail",
+      "usable_for_exact_plan_claim": true
+    },
+    {
+      "strategy": "alt_trendline_touch_v1",
+      "symbol": "LTCUSDT",
+      "side": "short",
+      "signal_ts": 1741136400000,
+      "entry_ts": 1741136400000,
+      "exit_ts": 1741234200000,
+      "entry_price": 102.259544,
+      "initial_sl": 108.20620814,
+      "risk_source": "ledger_initial_sl",
+      "exact_plan": true,
+      "pnl": -0.78131341,
+      "outcome": "sl",
+      "signal_reason": "att1_short_trendline tl=104.7774 slope=-1.945%/d rsi=49.4  r2=0.560 pivots=3 age=5 entrydist=0.801 touchdist=0.249 reject=0.801 body=0.553 atrpct=3.048 anchors=1741064400000:106.14|1741096800000:106.2|1741114800000:104.81",
+      "parsed_geometry": {
+        "available": true,
+        "primary_level": 104.7774,
+        "primary_role": "trendline",
+        "horizontal_levels": [],
+        "sloped_lines": [
+          {
+            "role": "signal_trendline",
+            "projection_at_signal": 104.7774,
+            "slope_pct_per_day": -1.945,
+            "points_ts_px": [
+              {
+                "ts_ms": 1741064400000,
+                "price": 106.14
+              },
+              {
+                "ts_ms": 1741096800000,
+                "price": 106.2
+              },
+              {
+                "ts_ms": 1741114800000,
+                "price": 104.81
+              }
+            ],
+            "provenance": "signal_reason",
+            "exact_projection": true,
+            "exact_pivots": true
+          }
+        ],
+        "metrics": {
+          "rsi": 49.4,
+          "r2": 0.56,
+          "pivots": 3,
+          "age_bars": 5.0,
+          "entry_distance_atr": 0.801,
+          "touch_distance_atr": 0.249,
+          "reject_depth_atr": 0.801,
+          "body_atr": 0.553,
+          "atr_pct": 3.048
+        },
+        "source_reason": "att1_short_trendline tl=104.7774 slope=-1.945%/d rsi=49.4  r2=0.560 pivots=3 age=5 entrydist=0.801 touchdist=0.249 reject=0.801 body=0.553 atrpct=3.048 anchors=1741064400000:106.14|1741096800000:106.2|1741114800000:104.81",
+        "limitations": []
+      },
+      "geometry_v2": {
+        "allowed": false,
+        "classification": "descending_trendline_rejection",
+        "blockers": [
+          "pivot_fit_too_weak",
+          "projected_line_not_reached",
+          "entry_too_far_after_rejection",
+          "opposing_support_too_close"
+        ],
+        "atr": 3.117142857142857,
+        "trendline_level": 104.77735099337747,
+        "slope_pct_per_day": -1.9447976856156421,
+        "r2": 0.5599811832291557,
+        "pivot_count": 3,
+        "pivot_anchors": [
+          [
+            100,
+            1741064400000,
+            106.14
+          ],
+          [
+            109,
+            1741096800000,
+            106.2
+          ],
+          [
+            114,
+            1741114800000,
+            104.81
+          ]
+        ],
+        "signal_high": 104.0,
+        "entry": 102.259544,
+        "entry_distance_atr": 0.8077290996169678,
+        "line_touch_gap_atr": 0.2493793287645405,
+        "horizontal_origin": 106.17,
+        "horizontal_origin_touches": 2,
+        "horizontal_origin_source": "equal_high_liquidity",
+        "nearest_support": 100.97999999999999,
+        "nearest_support_source": "equal_low_liquidity",
+        "room_to_support_r": 0.21517004658010103,
+        "signal_reached_line": false
+      },
+      "strict_snapshot": {
+        "status": "rejected",
+        "reason": "fit_quality_below_minimum",
+        "closed_bars": 120,
+        "confirmed_pivots": 14,
+        "input_sha256": "ea5e59660b56e1c541548e110df99e4c3cf3a0670efee14b63ebca8ed7aabc46",
+        "snapshot": null
+      },
+      "prefix_quality": {
+        "rows": 120,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "forward": {
+        "risk_per_unit": 5.946664139999996,
+        "mfe_r": 0.29252433953668866,
+        "mae_r": 0.7652115358914485,
+        "first_hit": "neither",
+        "first_half_r_bar": null,
+        "first_one_r_bar": null,
+        "first_stop_bar": null,
+        "bars": 288,
+        "coverage": 1.0,
+        "rows": 288,
+        "duplicate_timestamps": 0,
+        "gap_count": 0,
+        "max_gap_ms": 0,
+        "contiguous": true
+      },
+      "research_class": "line_quality_rejected",
+      "usable_for_exact_plan_claim": true
+    }
+  ]
+}

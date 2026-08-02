@@ -1,0 +1,93 @@
+from __future__ import annotations
+
+import pytest
+
+from backtest.engine import _calc_qty
+from bot.risk_sizing_contract import calculate_risk_size
+from strategies.signals import TradeSignal
+
+
+def _signal(*, entry: float = 100.0, stop: float = 98.0) -> TradeSignal:
+    return TradeSignal(
+        symbol="TESTUSDT",
+        side="long",
+        entry=entry,
+        sl=stop,
+        tp=104.0,
+        strategy="parity_test",
+        reason="sizing parity",
+    )
+
+
+def test_uncapped_size_hits_fixed_risk_target() -> None:
+    decision = calculate_risk_size(
+        equity=1000.0,
+        entry=100.0,
+        stop=98.0,
+        side="long",
+        target_risk_fraction=0.01,
+        max_notional_usd=1000.0,
+    )
+    assert decision.accepted
+    assert decision.qty == pytest.approx(5.0)
+    assert decision.effective_risk_usd == pytest.approx(10.0)
+    assert decision.binding_constraint == "risk_target"
+
+
+def test_cap_exposes_effective_risk_instead_of_claiming_target_risk() -> None:
+    decision = calculate_risk_size(
+        equity=1000.0,
+        entry=100.0,
+        stop=98.0,
+        side="long",
+        target_risk_fraction=0.01,
+        max_notional_usd=250.0,
+        min_fill_fraction=0.40,
+    )
+    assert decision.accepted
+    assert decision.fill_fraction == pytest.approx(0.5)
+    assert decision.effective_risk_usd == pytest.approx(5.0)
+    assert decision.binding_constraint == "notional_cap"
+
+
+def test_heavily_capped_trade_is_rejected() -> None:
+    decision = calculate_risk_size(
+        equity=1000.0,
+        entry=100.0,
+        stop=98.0,
+        side="long",
+        target_risk_fraction=0.01,
+        max_notional_usd=150.0,
+        min_fill_fraction=0.40,
+    )
+    assert not decision.accepted
+    assert decision.reason == "below_min_fill_fraction"
+    assert decision.fill_fraction == pytest.approx(0.30)
+
+
+def test_backtest_uses_the_shared_contract(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MIN_NOTIONAL_FILL_FRAC", "0.40")
+    sig = _signal()
+    expected = calculate_risk_size(
+        equity=1000.0,
+        entry=sig.entry,
+        stop=sig.sl,
+        side=sig.side,
+        target_risk_fraction=0.01,
+        max_notional_usd=250.0,
+        min_fill_fraction=0.40,
+    )
+    assert _calc_qty(1000.0, sig, 0.01, 250.0) == pytest.approx(expected.qty)
+
+
+def test_wrong_side_stop_is_rejected() -> None:
+    decision = calculate_risk_size(
+        equity=1000.0,
+        entry=100.0,
+        stop=102.0,
+        side="long",
+        target_risk_fraction=0.01,
+        max_notional_usd=1000.0,
+    )
+    assert not decision.accepted
+    assert decision.reason == "nonpositive_stop_distance"

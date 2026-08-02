@@ -176,6 +176,13 @@ def run_portfolio_backtest(
                 fees=fees_total,
                 outcome=_outcome_from_reason(reason),
                 reason=reason,
+                signal_ts=int(p.signal_ts or p.entry_ts),
+                signal_entry_price=float(p.signal_entry_price or p.entry_price),
+                initial_sl=float(p.initial_sl),
+                tp_prices="|".join(f"{float(value):.12g}" for value in p.tps),
+                signal_reason=str(p.signal_reason or ""),
+                initial_notional=float(p.entry_price * p.qty),
+                initial_risk_usd=float(abs(p.entry_price - p.initial_sl) * p.qty),
             )
         )
 
@@ -198,7 +205,14 @@ def run_portfolio_backtest(
         pos_by_sym.pop(sym, None)
         pos_strat.pop(sym, None)
 
-    def _open(sym: str, sig: object, bar: Candle, *, entry_ref: float) -> bool:
+    def _open(
+        sym: str,
+        sig: object,
+        bar: Candle,
+        *,
+        entry_ref: float,
+        signal_ts: int,
+    ) -> bool:
         """Validate and open one position at the supplied executable price."""
         nonlocal equity
 
@@ -270,6 +284,9 @@ def run_portfolio_backtest(
             remaining_qty=qty,
             entry_ts=bar.ts,
             entry_i=i,
+            signal_ts=int(signal_ts),
+            signal_entry_price=float(getattr(sig, "entry", entry_ref) or entry_ref),
+            signal_reason=reason,
             initial_sl=float(fill_sig.sl),
             equity_at_entry=equity + entry_fee,
             tps=[float(x) for x in tps],
@@ -342,11 +359,31 @@ def run_portfolio_backtest(
                     if _limit_expired(signal_i, sig):
                         continue
                     if _limit_fillable(sig, bar):
-                        _open(sym, sig, bar, entry_ref=float(getattr(sig, "entry")))
+                        signal_end_ts = (
+                            int(stores[sym].exec_candles[signal_i].ts)
+                            + int(stores[sym].base_interval_min) * 60_000
+                        )
+                        _open(
+                            sym,
+                            sig,
+                            bar,
+                            entry_ref=float(getattr(sig, "entry")),
+                            signal_ts=signal_end_ts,
+                        )
                     else:
                         pending_signals[sym] = pending
                 else:
-                    _open(sym, sig, bar, entry_ref=float(bar.o))
+                    signal_end_ts = (
+                        int(stores[sym].exec_candles[signal_i].ts)
+                        + int(stores[sym].base_interval_min) * 60_000
+                    )
+                    _open(
+                        sym,
+                        sig,
+                        bar,
+                        entry_ref=float(bar.o),
+                        signal_ts=signal_end_ts,
+                    )
 
         # 1) Manage exits for all open positions first.
         for sym in list(pos_by_sym.keys()):
@@ -535,7 +572,13 @@ def run_portfolio_backtest(
                 if params.entry_on_next_open:
                     pending_signals[sym] = (i, sig)
                     continue
-                _open(sym, sig, bar, entry_ref=float(getattr(sig, "entry", bar.c)))
+                _open(
+                    sym,
+                    sig,
+                    bar,
+                    entry_ref=float(getattr(sig, "entry", bar.c)),
+                    signal_ts=int(signal_ts),
+                )
 
         curve.append(equity)
 

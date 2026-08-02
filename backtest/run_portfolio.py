@@ -2196,13 +2196,21 @@ def main():
     with trades_path.open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow([
-            "strategy","symbol","side","entry_ts","exit_ts","entry_price","exit_price","qty","pnl","pnl_pct_equity","fees","outcome","reason"
+            "strategy","symbol","side","entry_ts","exit_ts","entry_price","exit_price","qty","pnl","pnl_pct_equity","fees","outcome","reason",
+            "signal_ts","signal_entry_price","initial_sl","tp_prices","signal_reason","initial_notional","initial_risk_usd"
         ])
         for t in res.trades:
             w.writerow([
                 t.strategy, t.symbol, t.side, t.entry_ts, t.exit_ts,
                 f"{t.entry_price:.8f}", f"{t.exit_price:.8f}", f"{t.qty:.8f}",
-                f"{t.pnl:.8f}", f"{t.pnl_pct_equity:.6f}", f"{t.fees:.8f}", t.outcome, t.reason
+                f"{t.pnl:.8f}", f"{t.pnl_pct_equity:.6f}", f"{t.fees:.8f}", t.outcome, t.reason,
+                int(getattr(t, "signal_ts", 0) or 0),
+                f"{float(getattr(t, 'signal_entry_price', 0.0) or 0.0):.8f}",
+                f"{float(getattr(t, 'initial_sl', 0.0) or 0.0):.8f}",
+                str(getattr(t, "tp_prices", "") or ""),
+                str(getattr(t, "signal_reason", "") or ""),
+                f"{float(getattr(t, 'initial_notional', 0.0) or 0.0):.8f}",
+                f"{float(getattr(t, 'initial_risk_usd', 0.0) or 0.0):.8f}",
             ])
 
     # Save summary

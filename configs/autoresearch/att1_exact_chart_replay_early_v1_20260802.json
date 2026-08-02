@@ -1,0 +1,31 @@
+{
+  "name": "att1_exact_chart_replay_early_v1_20260802",
+  "description": "Independent earlier-window ATT1 run with exact entry-plan evidence for chart-level class replication.",
+  "cache_only": true,
+  "command": [
+    "{python}", "backtest/run_portfolio.py",
+    "--symbols", "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "--strategies", "alt_trendline_touch_v1",
+    "--days", "360", "--end", "2025-04-30", "--tag", "{tag}",
+    "--starting_equity", "100", "--risk_pct", "0.0075", "--leverage", "1",
+    "--max_positions", "3", "--fee_bps", "6", "--slippage_bps", "2",
+    "--entry-on-next-open"
+  ],
+  "base_env": {
+    "ATT1_ALLOW_LONGS": "0", "ATT1_ALLOW_SHORTS": "1",
+    "ATT1_PIVOT_LEFT": "2", "ATT1_PIVOT_RIGHT": "3", "ATT1_MIN_PIVOTS": "2",
+    "ATT1_MAX_PIVOTS_USED": "3", "ATT1_MAX_PIVOT_AGE": "16",
+    "ATT1_MIN_R2": "0.55", "ATT1_TOUCH_ATR": "0.50",
+    "ATT1_RSI_SHORT_MIN": "45", "ATT1_RSI_SHORT_MAX": "100",
+    "ATT1_MAX_ENTRY_DIST_ATR": "2.0", "ATT1_SHORT_MAX_POS_SLOPE": "0.5",
+    "ATT1_GEOMETRY_V2_ENABLE": "0"
+  },
+  "grid": {"ATT1_EXACT_PLAN_LEDGER": ["1"]},
+  "constraints": {
+    "min_trades": 10, "min_profit_factor": 0.0, "max_drawdown": 20.0,
+    "min_net_pnl": -100.0, "max_negative_months": 12, "max_negative_streak": 12
+  },
+  "selection_contract": "Independent mechanism replication only; no live authority.",
+  "live_authority": false,
+  "_combo_count": 1
+}

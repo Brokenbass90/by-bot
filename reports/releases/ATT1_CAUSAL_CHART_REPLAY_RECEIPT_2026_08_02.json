@@ -1,0 +1,38 @@
+{
+  "schema_id": "att1_causal_chart_replay_receipt_v1",
+  "created_at": "2026-08-02",
+  "authority": "research_only",
+  "verdict": "RESEARCH_MECHANISM_PASS_NO_LIVE_AUTHORITY",
+  "live_mutation": false,
+  "source_trade_plans": 65,
+  "exact_plan_rows": 65,
+  "usable_exact_rows": 61,
+  "duplicate_trade_keys": 0,
+  "windows": [
+    {
+      "name": "recent_exact",
+      "trades": 42,
+      "usable_exact_rows": 41,
+      "run_results": "backtest_runs/autoresearch_20260802_192806_att1_exact_chart_replay_v1_20260802/results.csv",
+      "audit": "reports/research/att1_causal_chart_replay_exact_20260802/audit.json"
+    },
+    {
+      "name": "early_exact",
+      "trades": 23,
+      "usable_exact_rows": 20,
+      "run_results": "backtest_runs/autoresearch_20260802_193011_att1_exact_chart_replay_early_v1_20260802/results.csv",
+      "audit": "reports/research/att1_causal_chart_replay_early_exact_20260802/audit.json"
+    }
+  ],
+  "replicated_candidate": "descending_line_pass_execution_or_room_fail",
+  "separate_families": [
+    "horizontal_resistance_reaction",
+    "rising_resistance_separate_family"
+  ],
+  "rejected_actions": [
+    "change_live_att1_slope_from_this_diagnostic",
+    "merge_horizontal_reactions_into_att1",
+    "deploy_or_restart_with_open_position"
+  ],
+  "next_gate": "preregistered_execution_room_matrix_with_negative_controls_and_untouched_oos"
+}
