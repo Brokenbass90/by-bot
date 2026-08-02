@@ -1,0 +1,44 @@
+{
+  "schema_version": "targeted_live_deploy_receipt_v1",
+  "deployed_at_utc": "2026-08-02T08:05:32Z",
+  "local_git_commit": "69ac253",
+  "branch": "codex/dynamic-symbol-filters",
+  "scope": [
+    "align runner ladder close quantities to Bybit qtyStep",
+    "persist the step-aligned expected remainder",
+    "flush the full actual remainder on a terminal ladder target"
+  ],
+  "risk_changes": false,
+  "att1_signal_changes": false,
+  "att1_universe_changes": false,
+  "order_entry_policy_changes": false,
+  "predeploy": {
+    "direct_bybit_flat_confirmations": 3,
+    "open_position_count": 0,
+    "backup_directory": "runtime/deploy_backups_20260802_runner_qty_step_69ac253"
+  },
+  "deployment": {
+    "method": "targeted patch; no git pull",
+    "files": {
+      "bot/runner_state.py": "98a1e667abf7a6ee035a00717aa9c35ea56325c4c27a75d526866ec39c42e2a1",
+      "smart_pump_reversal_bot.py": "d7fa820d7dc3f91990463d26f4d0f9632b08bb687a1c3537fa0827219200cb3e"
+    }
+  },
+  "server_verification": {
+    "pytest": "14 passed",
+    "py_compile": "PASS",
+    "service": "bybot.service",
+    "service_active": true,
+    "heartbeat_trade_on": true,
+    "heartbeat_dry_run": false,
+    "heartbeat_open_trades": 0,
+    "heartbeat_ws_guard_active": 0,
+    "direct_bybit_open_position_count": 0
+  },
+  "live_money_truth": "ATT1 x0.10 only",
+  "notes": [
+    "The fix was deployed only after the prior LTCUSDT lifecycle was flat.",
+    "The next partial-close lifecycle must still be reconciled against exchange fills as prospective verification.",
+    "The server checkout remains intentionally dirty; unrelated server files were not touched."
+  ]
+}

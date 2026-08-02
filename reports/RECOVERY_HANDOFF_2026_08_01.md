@@ -166,3 +166,35 @@ entry/rotation replay и отладка exit policy. Затем shadow, толь
 - Alpaca adaptive: 13 unique shadow decisions; LIVE по-прежнему SAFE_HOLD.
 - Полный receipt:
   `releases/SCANNER_ADVISORY_INTERACTIVE_CHART_DEPLOY_RECEIPT_2026_08_01.json`.
+
+## Checkpoint 2 августа — live runner, ATT1 geometry, research truth
+
+- Последние DOT/LTC lifecycle проверены по broker fills. DOT `−0.51013418`,
+  LTC partial TP + final stop `−0.18590756`; вместе `−0.69604174 USDT`.
+  Статистика сохраняет один lifecycle на сигнал и не должна считать partial TP
+  отдельной стратегической победой.
+- ATT1 не использует незавершённую часовую свечу. Он касается/rejects линию на
+  закрытом H1 и входит по close. Текущий `ATT1_MAX_ENTRY_DIST_ATR=2.0` разрешает
+  визуально поздний вход; preregistered single-variable OOS ablation записан в
+  `configs/research/att1_entry_distance_ablation_prereg_20260802.json`.
+- Signal chart хранит точную проекцию линии, но ещё не хранит pivot anchors.
+  Полный аудит: `ATT1_TRADE_AND_LEVEL_QUALITY_AUDIT_2026_08_02.md`.
+- Исправление runner qty-step из `69ac253` задеплоено узко после трёх direct-flat
+  подтверждений. Server `14 passed`, py_compile PASS, service active, Bybit flat,
+  `trade_on=1`, `dry_run=0`, `ws_guard=0`. Receipt:
+  `releases/RUNNER_QTY_STEP_TARGETED_DEPLOY_RECEIPT_69AC253_2026_08_02.json`.
+- Frozen Funding V4: N15, mean `−1.67 bps`, no capital; до N20 осталось 5
+  закрытий. Dynamic Funding: N16, mean `+243.53 bps`, но результат всё ещё
+  заблокирован концентрацией старых COTI/BANK outcomes. XSEC: 8 решений,
+  последний previous-phase markout `−2.84%`; promotion рано.
+- Alpaca adaptive shadow свежий и выбирает SNOW/PANW/DDOG/BAC без ордеров.
+  Live остаётся ABBV/SCHW с broker-stop 2/2. Protective manager для SCHW
+  рассчитал ratchet до `102.05976`, но рынок был закрыт; фактический broker stop
+  пока старый и прибыль ещё не зафиксирована.
+- В monthly Alpaca report исправлено zero-padding portfolio history, которое
+  могло показывать ложные `+48466%` в начале месяца. Локальный suite: 26 passed;
+  reporting-only patch задеплоен без рестарта core. Receipt:
+  `releases/ALPACA_MONTHLY_REPORT_ZERO_PADDING_DEPLOY_RECEIPT_2026_08_02.json`.
+- Remote branch всё ещё отстаёт от local HEAD на 3 коммита. Live targeted patch
+  выполнен, но Git remote не следует объявлять синхронизированным до отдельного
+  разрешённого push.

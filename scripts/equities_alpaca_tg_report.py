@@ -80,6 +80,19 @@ def _configured_env_bool(name: str, fallback_path: Path, default: bool = False) 
     return default
 
 
+def _positive_equity_history(values: list[Any]) -> list[float]:
+    """Drop Alpaca's zero/null padding before monthly return arithmetic."""
+    usable: list[float] = []
+    for value in values:
+        try:
+            parsed = float(value)
+        except (TypeError, ValueError):
+            continue
+        if parsed > 0:
+            usable.append(parsed)
+    return usable
+
+
 TG_TOKEN   = _env("TG_TOKEN")
 TG_CHAT_ID = _env("TG_CHAT_ID")
 ALPACA_KEY    = _env("ALPACA_API_KEY_ID")
@@ -688,7 +701,7 @@ def monthly_report() -> str:
 
     # Portfolio history last month
     history = get_portfolio_history(period="1M", timeframe="1D")
-    equity_arr  = history.get("equity") or []
+    equity_arr  = _positive_equity_history(history.get("equity") or [])
     timestamps  = history.get("timestamp") or []
     pnl_arr     = history.get("profit_loss") or []
     pnl_pct_arr = history.get("profit_loss_pct") or []

@@ -1,0 +1,16 @@
+{
+  "schema_version": "targeted_reporting_deploy_receipt_v1",
+  "deployed_at_utc": "2026-08-02T08:25:00Z",
+  "scope": "ignore zero/null broker history padding when calculating Alpaca monthly start and end equity",
+  "trading_logic_changes": false,
+  "order_authority_changes": false,
+  "deployed_file": "scripts/equities_alpaca_tg_report.py",
+  "server_sha256": "6aed6608d22864df4f81ca2c5ca6f92ddc847a3ae164b5f544c2341979874ed0",
+  "backup": "scripts/equities_alpaca_tg_report.py.bak_zero_padding_20260802T0825Z",
+  "verification": {
+    "local_pytest": "26 passed",
+    "server_py_compile": "PASS",
+    "bybot_service_restart": false,
+    "bybot_service_active": true
+  }
+}

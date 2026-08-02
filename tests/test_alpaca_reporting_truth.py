@@ -109,6 +109,28 @@ def test_report_reads_trail_setting_from_manager_profile_when_env_is_absent(tmp_
     assert report._configured_env_bool("MONTHLY_TRAIL_ENABLE", profile) is True
 
 
+def test_monthly_report_ignores_zero_padded_equity_history(monkeypatch):
+    monkeypatch.setattr(report, "get_account", lambda: {"equity": "484.66", "cash": "391.27"})
+    monkeypatch.setattr(
+        report,
+        "get_portfolio_history",
+        lambda **_kwargs: {"equity": [0, None, "483.50", "484.66"]},
+    )
+    monkeypatch.setattr(report, "get_closed_orders", lambda **_kwargs: [])
+    monkeypatch.setattr(report, "get_positions", lambda: [])
+    monkeypatch.setattr(report, "get_open_orders", lambda: [])
+    monkeypatch.setattr(report, "_read_current_cycle_picks", lambda: ("2026-08", []))
+    monkeypatch.setattr(report, "_intraday_ledger_verified", lambda: False)
+    monkeypatch.setattr(report, "_alpaca_ai_note", lambda **_kwargs: "")
+
+    text = report.monthly_report()
+
+    assert "Start equity: $483.50" in text
+    assert "End equity:   <b>$484.66</b>" in text
+    assert "+1.16 (+0.24%)" in text
+    assert "48466" not in text
+
+
 def test_monthly_digest_tells_live_safe_hold_broker_truth(tmp_path, monkeypatch):
     monkeypatch.setattr(digest, "ROOT", tmp_path)
     monkeypatch.setenv("ALPACA_BASE_URL", "https://api.alpaca.markets")
