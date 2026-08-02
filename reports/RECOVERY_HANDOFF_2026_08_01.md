@@ -229,3 +229,24 @@ entry/rotation replay и отладка exit policy. Затем shadow, толь
 - Пятый WIP-слот сразу переиспользован под
   `att1_entry_distance_ablation_20260802` (5 arms, только distance-to-line,
   live параметры и риск не меняются).
+
+### ATT1 distance interim и передача слота
+
+- Все 5 arms завершены. Более строгие расстояния не улучшили full-window
+  economics; текущий baseline `2.0 ATR` сохранил лучший net `+27.77`, PF
+  `1.402` и два отрицательных месяца на этом диагностическом replay.
+- Это не отменяет визуальную претензию и не является untouched OOS. Следующий
+  шаг — distance buckets × MFE/MAE × time/LOSO. Live оставлен без изменений.
+- Пятый слот передан `bounce1_exact_three_regime_20260802`: frozen source SHA,
+  8 символов, три окна, next-open и risk-zero research contract.
+
+### BOUNCE1 exact replay
+
+- Frozen eight-symbol replay дал сильный recent diagnostic (`59` сделок,
+  `+12.99`, PF `1.681`), но остановлен как `BLOCKED_DATA`: LINK/LTC/DOT не
+  имеют полного 2024 M5 покрытия. Universe после результата не сокращался.
+- Отдельно preregistered majors-only hypothesis BTC/ETH прошла 3/3 окна:
+  `+3.31 / PF 1.855`, `+9.12 / PF 3.352`, `+2.07 / PF 2.386`; всего 41 сделка.
+- Вердикт ограничен `PASS_TO_PROSPECTIVE_RISK_ZERO_MAJORS_ONLY`. На сервере нет
+  BOUNCE1 shadow state/ledger/env, поэтому никакой неоформленный live/shadow
+  deploy не объявляется состоявшимся и ATT1 остаётся неизменным.

@@ -1,0 +1,29 @@
+{
+  "schema_id": "bounce1_majors_exact_replay_pass_v1",
+  "generated_at_utc": "2026-08-02T11:00:57Z",
+  "status": "PASS_TO_PROSPECTIVE_RISK_ZERO_MAJORS_ONLY",
+  "research_only": true,
+  "capital_authorized": false,
+  "strategy_source_sha256": "d7f1508aac386e71aadd096b7715a9bac240691c68fdaa12216b24624e32b66a",
+  "symbols": ["BTCUSDT", "ETHUSDT"],
+  "windows": [
+    {"end": "2026-04-30", "days": 120, "trades": 14, "net_pct": 3.31, "profit_factor": 1.855, "max_drawdown_pct": 2.3703},
+    {"end": "2024-12-30", "days": 120, "trades": 18, "net_pct": 9.12, "profit_factor": 3.352, "max_drawdown_pct": 1.5720},
+    {"end": "2024-01-29", "days": 120, "trades": 9, "net_pct": 2.07, "profit_factor": 2.386, "max_drawdown_pct": 0.8061}
+  ],
+  "total_trades": 41,
+  "positive_windows": 3,
+  "limitations": [
+    "small sample",
+    "BTC_ETH_only_capacity",
+    "historical windows are not a prospective shadow",
+    "no money authority"
+  ],
+  "direct_server_check": {
+    "bybot_service_active": true,
+    "bounce1_shadow_state_present": false,
+    "bounce1_shadow_ledger_present": false,
+    "bounce1_shadow_env_present": false
+  },
+  "next_action": "Prepare a targeted risk-zero-only deploy receipt for BTC/ETH BOUNCE1 without changing ATT1, live risk or orders."
+}

@@ -1,0 +1,12 @@
+{
+  "schema_id": "bounce1_eight_symbol_replay_blocked_data_v1",
+  "generated_at_utc": "2026-08-02T10:59:00Z",
+  "status": "BLOCKED_DATA",
+  "research_only": true,
+  "capital_authorized": false,
+  "predeclared_universe": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"],
+  "available_recent_diagnostic": {"end": "2026-04-30", "days": 120, "trades": 59, "net_pct": 12.99, "profit_factor": 1.681, "max_drawdown_pct": 4.4958},
+  "binding_failure": "The frozen eight-symbol universe does not have causal 5m cache coverage for all symbols in both 2024 windows; LINKUSDT is the first observed missing symbol.",
+  "selection_protection": "The eight-symbol universe was not altered after seeing the recent result. A separate BTC/ETH capacity-limited hypothesis is preregistered independently.",
+  "next_action": "Backfill the exact frozen symbol/window data or keep this broad hypothesis blocked."
+}

@@ -1,0 +1,56 @@
+{
+  "capital_authorized": false,
+  "gate": {
+    "positive_windows": 3,
+    "status": "PASS_TO_PROSPECTIVE_RISK_ZERO",
+    "total_trades": 41
+  },
+  "generated_at_utc": "2026-08-02T11:00:57.355944+00:00",
+  "n_trials_effective_independent": null,
+  "n_trials_evaluated": 1,
+  "n_trials_planned": 1,
+  "research_only": true,
+  "schema_id": "bounce1_exact_three_regime_replay_v1",
+  "strategy_source_sha256": "d7f1508aac386e71aadd096b7715a9bac240691c68fdaa12216b24624e32b66a",
+  "windows": [
+    {
+      "max_drawdown_pct": 2.3703,
+      "net_pct": 3.31,
+      "profit_factor": 1.855,
+      "run_dir": "backtest_runs/portfolio_20260802_140025_bounce1_exact_recent_20260802",
+      "trades": 14,
+      "window": {
+        "days": 120,
+        "end": "2026-04-30",
+        "name": "recent"
+      },
+      "winrate": 0.571
+    },
+    {
+      "max_drawdown_pct": 1.572,
+      "net_pct": 9.12,
+      "profit_factor": 3.352,
+      "run_dir": "backtest_runs/portfolio_20260802_140036_bounce1_exact_bull_2024_late_20260802",
+      "trades": 18,
+      "window": {
+        "days": 120,
+        "end": "2024-12-30",
+        "name": "bull_2024_late"
+      },
+      "winrate": 0.722
+    },
+    {
+      "max_drawdown_pct": 0.8061,
+      "net_pct": 2.07,
+      "profit_factor": 2.386,
+      "run_dir": "backtest_runs/portfolio_20260802_140048_bounce1_exact_bull_2024_early_20260802",
+      "trades": 9,
+      "window": {
+        "days": 120,
+        "end": "2024-01-29",
+        "name": "bull_2024_early"
+      },
+      "winrate": 0.778
+    }
+  ]
+}

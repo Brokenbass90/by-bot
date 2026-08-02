@@ -16,8 +16,7 @@
       "xsec_v3_shadow_20260726",
       "funding_position_v4_shadow_20260801_cont",
       "funding_position_dynamic_shadow_20260729",
-      "alpaca_adaptive_shadow_20260726",
-      "att1_entry_distance_ablation_20260802"
+      "alpaca_adaptive_shadow_20260726"
     ],
     "policy": "Do not start a queued long-running job until one active supervisor reaches a terminal or bounded interim receipt."
   },
@@ -114,18 +113,18 @@
       "family": "level_rejection",
       "side": "long_support_rejection",
       "portfolio_role": "tactical_long",
-      "stage": "queued_preregistration",
+      "stage": "majors_exact_replay_pass_broad_universe_blocked_data",
       "implementation": [
         "strategies/alt_support_bounce_v1.py",
         "strategies/bounce1_live.py",
         "configs/bounce1_risk_zero_shadow_20260728.env"
       ],
       "universe": "PIT liquid crypto perpetuals; fixed before outcomes",
-      "data_quality": "LOW",
-      "binding_risk": "Claude sample is overlapping, underpowered and has no virtual decision/fill/exit ledger.",
-      "next_artifact": "Code/config SHA parity, untouched preregistration and risk-zero virtual lifecycle",
+      "data_quality": "MEDIUM_MAJORS_LOW_BREADTH",
+      "binding_risk": "BTC/ETH frozen candidate passed 3/3 historical windows with 41 trades, but the predeclared eight-symbol replay is BLOCKED_DATA and no prospective lifecycle exists.",
+      "next_artifact": "Targeted risk-zero BOUNCE1 majors lifecycle after explicit deploy receipt; separately backfill the frozen eight-symbol 2024 cache.",
       "first_money_gate": "Minimum powered OOS sample plus N20 shadow closes, positive stress economics and no single-symbol dependence",
-      "timing": "implementation after first WIP slot frees; evidence 1-3 weeks"
+      "timing": "risk-zero deploy review now; prospective evidence 1-3 weeks"
     },
     {
       "rank": 5,

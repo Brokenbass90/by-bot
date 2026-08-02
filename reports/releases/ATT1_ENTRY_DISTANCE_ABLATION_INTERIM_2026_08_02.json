@@ -1,0 +1,20 @@
+{
+  "schema_id": "att1_entry_distance_ablation_interim_v1",
+  "generated_at_utc": "2026-08-02T10:55:00Z",
+  "status": "INTERIM_BASELINE_RETAINS_LEAD_NO_LIVE_CHANGE",
+  "research_only": true,
+  "capital_authorized": false,
+  "source": "backtest_runs/autoresearch_20260802_084836_att1_entry_distance_ablation_20260802/results.csv",
+  "n_trials_planned": 5,
+  "n_trials_evaluated": 5,
+  "n_trials_effective_independent": null,
+  "arms": [
+    {"max_entry_dist_atr": 0.35, "trades": 100, "net_pct": 4.61, "profit_factor": 1.220, "max_drawdown_pct": 3.5759, "negative_months": 3},
+    {"max_entry_dist_atr": 0.50, "trades": 144, "net_pct": 9.46, "profit_factor": 1.310, "max_drawdown_pct": 3.8230, "negative_months": 3},
+    {"max_entry_dist_atr": 0.75, "trades": 223, "net_pct": 10.86, "profit_factor": 1.203, "max_drawdown_pct": 5.5103, "negative_months": 4},
+    {"max_entry_dist_atr": 1.00, "trades": 268, "net_pct": 17.66, "profit_factor": 1.272, "max_drawdown_pct": 6.8051, "negative_months": 3},
+    {"max_entry_dist_atr": 2.00, "trades": 290, "net_pct": 27.77, "profit_factor": 1.402, "max_drawdown_pct": 6.5524, "negative_months": 2}
+  ],
+  "interpretation": "Tightening distance monotonically removes activity and did not improve the full-window economics. The current 2.0 baseline retains the lead in net, PF and red-month count. This does not prove visual entry quality and is not untouched OOS.",
+  "required_followup": "Keep live unchanged. Measure entry-distance buckets, MFE/MAE and time/LOSO splits before closing the quality question."
+}
