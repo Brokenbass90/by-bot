@@ -1,0 +1,32 @@
+{
+  "schema_id": "dump_exhaustion_reversal_native_replay_prereg_v1",
+  "created_at_utc": "2026-08-02T09:20:00Z",
+  "status": "PREREGISTERED_BEFORE_NATIVE_REPLAY",
+  "research_only": true,
+  "capital_authorized": false,
+  "hypothesis": "A sharp multi-hour crypto decline accompanied by unusually high volume has a short-horizon long reversal premium after realistic costs.",
+  "discovery_source": "vectorbt_crypto_family_prefilter_20260802",
+  "data_disclosure": "The 70/30 discovery OOS has already been viewed. Native replay is parity and robustness evidence, not a new untouched OOS.",
+  "frozen_arms": [
+    {"lookback": 3, "threshold": 0.04, "volume_z": 1.0, "hold": 4},
+    {"lookback": 3, "threshold": 0.06, "volume_z": 1.0, "hold": 4},
+    {"lookback": 12, "threshold": 0.06, "volume_z": 1.0, "hold": 4}
+  ],
+  "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LINKUSDT", "ADAUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"],
+  "execution": {
+    "signal": "hourly close",
+    "entry": "next hourly open",
+    "exit": "open after frozen hold bars",
+    "overlap": "one position per symbol; additional signals ignored while open",
+    "base_round_trip_bps": 8.0,
+    "stress_round_trip_bps": 18.0
+  },
+  "robustness": {
+    "chronological_blocks": 4,
+    "required_positive_arms_base": 2,
+    "required_positive_arms_stress": 2,
+    "required_positive_symbols_per_arm": 5,
+    "maximum_single_symbol_contribution": 0.35
+  },
+  "next_gate": "If the family survives native replay, freeze one plateau contract and begin new prospective risk-zero decisions. No historical replay can authorize money."
+}

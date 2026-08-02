@@ -11,6 +11,7 @@ backtest_results/
 backtest_archive/
 .cache/
 .venv/
+.venv-research/
 .DS_Store
 
 .env.bak.*

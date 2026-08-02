@@ -14,10 +14,10 @@
     "maximum_concurrent_research_supervisors": 5,
     "active": [
       "xsec_v3_shadow_20260726",
-      "funding_position_v4_shadow_20260729",
+      "funding_position_v4_shadow_20260801_cont",
       "funding_position_dynamic_shadow_20260729",
-      "cross_arb_shadow_20260728",
-      "alpaca_adaptive_shadow_20260726"
+      "alpaca_adaptive_shadow_20260726",
+      "att1_entry_distance_ablation_20260802"
     ],
     "policy": "Do not start a queued long-running job until one active supervisor reaches a terminal or bounded interim receipt."
   },
@@ -67,8 +67,8 @@
       ],
       "universe": "Bybit linear perpetuals with causal listing-age and liquidity eligibility",
       "data_quality": "MEDIUM",
-      "binding_risk": "Current historical headline uses survivor-selected symbols and lacks independent PIT execution parity.",
-      "next_artifact": "N10 interim plus PIT universe and measured cost/fill receipt",
+      "binding_risk": "N8 prospective shadow includes negative recent phase markouts; latest previous-phase markout was -2.84%.",
+      "next_artifact": "N10 diagnostic plus PIT universe and measured cost/fill receipt; no promotion before N20-30",
       "first_money_gate": "N20-30 decisions, positive after measured costs, no concentration breach, independent PIT/OOS pass",
       "timing": "N10 early August; money review mid-to-late August"
     },
@@ -85,8 +85,8 @@
       ],
       "universe": "Frozen eight-symbol control",
       "data_quality": "MEDIUM",
-      "binding_risk": "Small prospective sample and optimistic queue-fill model.",
-      "next_artifact": "72h frozen-universe fill/nonfill/lifecycle receipt",
+      "binding_risk": "N15 mean is -1.67 bps with 71.4% fill rate; distribution is not executable-positive.",
+      "next_artifact": "Finish frozen N20 and seal terminal distribution receipt",
       "first_money_gate": "N20 closed, fill rate >= 0.75, positive mean after measured costs, positive breadth, concentration <= 0.35",
       "timing": "first review 3-8 August"
     },
@@ -103,8 +103,8 @@
       ],
       "universe": "Top 16 causally eligible Bybit crypto perpetuals ranked by turnover and spread",
       "data_quality": "MEDIUM",
-      "binding_risk": "Only three closed lifecycles and an implausibly large early mean; frozen-control parity is mandatory.",
-      "next_artifact": "N20 frozen-versus-dynamic comparison with symbol and contribution attribution",
+      "binding_risk": "N16 mean is +243.53 bps but completed history remains concentrated in the old COTI/BANK cohort; frozen-control parity is mandatory.",
+      "next_artifact": "N20+ frozen-versus-dynamic comparison with continuity, LOSO and contribution attribution",
       "first_money_gate": "Must beat or diversify the frozen control without lower fill quality or concentration breach",
       "timing": "first review 3-8 August; N20 later"
     },
@@ -185,6 +185,24 @@
     },
     {
       "rank": 8,
+      "id": "crypto_dump_exhaustion_reversal_long_v1",
+      "family": "exhaustion_reversal",
+      "side": "long_after_high_volume_dump",
+      "portfolio_role": "event_long",
+      "stage": "native_replay_fail_regime_concentration",
+      "implementation": [
+        "scripts/run_vectorbt_crypto_family_prefilter.py",
+        "scripts/run_native_dump_exhaustion_reversal_replay.py"
+      ],
+      "universe": "Frozen eight-symbol liquid crypto control",
+      "data_quality": "MEDIUM_VIEWED_OOS",
+      "binding_risk": "All three frozen arms were positive overall after stress costs, but the third chronological block was negative across nearly every symbol and the strict concentration gate failed.",
+      "next_artifact": "Preregister a causal regime discriminator on train blocks, retain the failed block as the negative control, then collect new prospective risk-zero decisions.",
+      "first_money_gate": "New prospective decisions positive after costs with regime breadth and concentration pass; viewed historical OOS cannot authorize money.",
+      "timing": "regime diagnosis 1-3 days; prospective evidence afterwards"
+    },
+    {
+      "rank": 9,
       "id": "crypto_pump_exhaustion_short_v2",
       "family": "exhaustion",
       "side": "short",
@@ -202,7 +220,7 @@
       "timing": "2-5 weeks by event cadence"
     },
     {
-      "rank": 9,
+      "rank": 10,
       "id": "crypto_sweep_reclaim_v2",
       "family": "liquidity_sweep_reclaim",
       "side": "long_and_short_separate",
@@ -220,7 +238,7 @@
       "timing": "after BOUNCE1/BREAKDOWN measurement harness"
     },
     {
-      "rank": 10,
+      "rank": 11,
       "id": "crypto_oi_divergence_collector_v1",
       "family": "open_interest_positioning",
       "side": "feature_first",
@@ -235,7 +253,7 @@
       "timing": "collector 1-3 days; evidence several weeks"
     },
     {
-      "rank": 11,
+      "rank": 12,
       "id": "crypto_token_unlock_event_v1",
       "family": "token_unlock",
       "side": "short_event",

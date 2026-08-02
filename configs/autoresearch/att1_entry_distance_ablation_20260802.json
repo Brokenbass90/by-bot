@@ -1,0 +1,58 @@
+{
+  "name": "att1_entry_distance_ablation_20260802",
+  "description": "Single-variable research-only ablation of ATT1 maximum close-to-trendline distance using the current short-only geometry contract. No auto-apply or live authority.",
+  "cache_only": true,
+  "command": [
+    "{python}",
+    "backtest/run_portfolio.py",
+    "--symbols",
+    "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "--strategies",
+    "alt_trendline_touch_v1",
+    "--days",
+    "360",
+    "--end",
+    "2026-04-30",
+    "--tag",
+    "{tag}",
+    "--starting_equity",
+    "100",
+    "--risk_pct",
+    "0.0075",
+    "--leverage",
+    "1",
+    "--max_positions",
+    "3",
+    "--fee_bps",
+    "6",
+    "--slippage_bps",
+    "2",
+    "--entry-on-next-open"
+  ],
+  "base_env": {
+    "ATT1_ALLOW_LONGS": "0",
+    "ATT1_ALLOW_SHORTS": "1",
+    "ATT1_PIVOT_LEFT": "2",
+    "ATT1_PIVOT_RIGHT": "3",
+    "ATT1_MIN_PIVOTS": "2",
+    "ATT1_MAX_PIVOT_AGE": "16",
+    "ATT1_MIN_R2": "0.55",
+    "ATT1_TOUCH_ATR": "0.50",
+    "ATT1_RSI_LONG_MAX": "52",
+    "ATT1_RSI_SHORT_MIN": "45"
+  },
+  "grid": {
+    "ATT1_MAX_ENTRY_DIST_ATR": [0.35, 0.50, 0.75, 1.00, 2.00]
+  },
+  "constraints": {
+    "min_trades": 40,
+    "min_profit_factor": 1.10,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 0.0,
+    "max_negative_months": 5,
+    "max_negative_streak": 3
+  },
+  "selection_contract": "Rank train only in follow-up split; this first exact replay is diagnostic and cannot authorize a live parameter change.",
+  "live_authority": false,
+  "_combo_count": 5
+}

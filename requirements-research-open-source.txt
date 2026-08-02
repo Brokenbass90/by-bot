@@ -1,0 +1,5 @@
+# Isolated research-only acceleration stack. Never install into the live VPS
+# runtime. Final candidates must be replayed by the repository's event-driven
+# engine before any promotion decision.
+optuna==4.9.0
+vectorbt==1.1.0

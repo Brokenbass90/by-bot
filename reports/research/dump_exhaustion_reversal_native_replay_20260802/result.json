@@ -1,0 +1,2643 @@
+{
+  "bars": {
+    "ADAUSDT": 17280,
+    "BTCUSDT": 26295,
+    "DOTUSDT": 11328,
+    "ETHUSDT": 26295,
+    "LINKUSDT": 11809,
+    "LTCUSDT": 12241,
+    "SOLUSDT": 17280,
+    "SUIUSDT": 17280
+  },
+  "capital_authorized": false,
+  "evidence_class": "viewed-data native parity and robustness; not untouched OOS",
+  "gate": {
+    "concentration_ok": false,
+    "positive_arms_base": 3,
+    "positive_arms_stress": 3,
+    "status": "FAIL_NATIVE_ROBUSTNESS"
+  },
+  "generated_at_utc": "2026-08-02T08:47:14.665737+00:00",
+  "n_trials_evaluated": 3,
+  "n_trials_planned": 3,
+  "n_trials_scheduled": 3,
+  "next_gate": "Freeze a plateau arm before new data and collect prospective risk-zero decisions; money remains forbidden.",
+  "promotion_authority": false,
+  "research_only": true,
+  "results": [
+    {
+      "arm_id": "lb3_drop0.04_vz1.0_h4",
+      "base": {
+        "aggregate": {
+          "largest_positive_symbol_contribution_share": 0.22753722928735393,
+          "mean_symbol_return": 0.19244998210533296,
+          "median_symbol_return": 0.1980224113690764,
+          "positive_symbols": 7,
+          "symbols": 8,
+          "total_trades": 624,
+          "worst_symbol_return": -0.13232718893537787
+        },
+        "blocks": [
+          {
+            "block": 1,
+            "mean_symbol_return": 0.10086969172891343,
+            "positive_symbols": 7,
+            "total_trades": 161
+          },
+          {
+            "block": 2,
+            "mean_symbol_return": 0.07800395319543127,
+            "positive_symbols": 6,
+            "total_trades": 173
+          },
+          {
+            "block": 3,
+            "mean_symbol_return": -0.05434298579501244,
+            "positive_symbols": 0,
+            "total_trades": 191
+          },
+          {
+            "block": 4,
+            "mean_symbol_return": 0.06204366721983018,
+            "positive_symbols": 7,
+            "total_trades": 99
+          }
+        ],
+        "per_symbol": [
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": -0.014983676830982229,
+                "max_drawdown": 0.03707558067267214,
+                "mean_trade_return": -0.002382448510519308,
+                "profit_factor": 0.6145133850047856,
+                "trades": 6,
+                "win_rate": 0.6666666666666666
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.06665408308223775,
+                "max_drawdown": 0.03757419191236444,
+                "mean_trade_return": 0.006883951840154269,
+                "profit_factor": 2.1601382762639956,
+                "trades": 10,
+                "win_rate": 0.6
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.012656175914253831,
+                "max_drawdown": 0.0314670439918846,
+                "mean_trade_return": -0.0012948241217820334,
+                "profit_factor": 0.8210164266221758,
+                "trades": 9,
+                "win_rate": 0.5555555555555556
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0438340687256662,
+                "max_drawdown": 0.04564980779085703,
+                "mean_trade_return": 0.005676058096366796,
+                "profit_factor": 1.7497960602072833,
+                "trades": 8,
+                "win_rate": 0.625
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.08284652922399882,
+              "max_drawdown": 0.06387004760722348,
+              "mean_trade_return": 0.002675753788282512,
+              "profit_factor": 1.3975869167230257,
+              "trades": 33,
+              "win_rate": 0.6060606060606061
+            },
+            "symbol": "BTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.11562220460901806,
+                "max_drawdown": 0.017005759487560446,
+                "mean_trade_return": 0.013986160459567363,
+                "profit_factor": 7.551419466363369,
+                "trades": 8,
+                "win_rate": 0.75
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.09471402861551292,
+                "max_drawdown": 0.13866942349398592,
+                "mean_trade_return": -0.006704123718351337,
+                "profit_factor": 0.5061127026665364,
+                "trades": 14,
+                "win_rate": 0.42857142857142855
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.08526587536541652,
+                "max_drawdown": 0.14785277225238613,
+                "mean_trade_return": -0.0024895935167975275,
+                "profit_factor": 0.7753601414829564,
+                "trades": 31,
+                "win_rate": 0.4838709677419355
+              },
+              {
+                "block": 4,
+                "compounded_return": -0.06079981849555205,
+                "max_drawdown": 0.17985048398680947,
+                "mean_trade_return": -0.0024399064508303374,
+                "profit_factor": 0.7697628681605725,
+                "trades": 23,
+                "win_rate": 0.4782608695652174
+              }
+            ],
+            "metrics": {
+              "compounded_return": -0.13232718893537787,
+              "max_drawdown": 0.3255356802180649,
+              "mean_trade_return": -0.0015166275759236965,
+              "profit_factor": 0.8549078767443267,
+              "trades": 76,
+              "win_rate": 0.5
+            },
+            "symbol": "ETHUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.09290370466742948,
+                "max_drawdown": 0.13793598616620895,
+                "mean_trade_return": 0.004540893558033808,
+                "profit_factor": 1.4651317323414752,
+                "trades": 24,
+                "win_rate": 0.5416666666666666
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.11411373575775308,
+                "max_drawdown": 0.08259154676742886,
+                "mean_trade_return": 0.003748608807403553,
+                "profit_factor": 1.4015650055789146,
+                "trades": 32,
+                "win_rate": 0.6875
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.126544515919504,
+                "max_drawdown": 0.14197926520050674,
+                "mean_trade_return": -0.005080576996876477,
+                "profit_factor": 0.4250351919791314,
+                "trades": 26,
+                "win_rate": 0.34615384615384615
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.052568663777086355,
+                "max_drawdown": 0.10747772880125839,
+                "mean_trade_return": 0.0038639263556967756,
+                "profit_factor": 1.3883647151016263,
+                "trades": 15,
+                "win_rate": 0.5333333333333333
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.1194446859788838,
+              "max_drawdown": 0.24771772767804612,
+              "mean_trade_return": 0.0015958847489318385,
+              "profit_factor": 1.1697367936879057,
+              "trades": 97,
+              "win_rate": 0.5360824742268041
+            },
+            "symbol": "SOLUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.28235949421511375,
+                "max_drawdown": 0.07018697806120155,
+                "mean_trade_return": 0.011926261745648519,
+                "profit_factor": 2.5679619514090857,
+                "trades": 22,
+                "win_rate": 0.7727272727272727
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.0030934273743080665,
+                "max_drawdown": 0.07523227891550299,
+                "mean_trade_return": 2.1063342061178788e-05,
+                "profit_factor": 1.0027014844406166,
+                "trades": 15,
+                "win_rate": 0.5333333333333333
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.03284376743847928,
+                "max_drawdown": 0.1319582500494091,
+                "mean_trade_return": -0.0012285327844409454,
+                "profit_factor": 0.8603429892309568,
+                "trades": 23,
+                "win_rate": 0.5217391304347826
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.11648304942120191,
+                "max_drawdown": 0.02900355918606412,
+                "mean_trade_return": 0.016196842682749766,
+                "profit_factor": 4.89996116585658,
+                "trades": 7,
+                "win_rate": 0.7142857142857143
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.38042564756692654,
+              "max_drawdown": 0.1803284660589688,
+              "mean_trade_return": 0.00519127392943719,
+              "profit_factor": 1.6744676701804173,
+              "trades": 67,
+              "win_rate": 0.6268656716417911
+            },
+            "symbol": "LINKUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.06576880078551572,
+                "max_drawdown": 0.08294111831453899,
+                "mean_trade_return": 0.002893056589753936,
+                "profit_factor": 1.3259793890959686,
+                "trades": 26,
+                "win_rate": 0.34615384615384615
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.2457542419749179,
+                "max_drawdown": 0.07978903963269379,
+                "mean_trade_return": 0.007378624200795098,
+                "profit_factor": 1.7859412272591948,
+                "trades": 32,
+                "win_rate": 0.59375
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.046925302502581534,
+                "max_drawdown": 0.0928149381015062,
+                "mean_trade_return": -0.0013472335418807982,
+                "profit_factor": 0.8221473646967884,
+                "trades": 32,
+                "win_rate": 0.4375
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.07154582020237799,
+                "max_drawdown": 0.09399939473492802,
+                "mean_trade_return": 0.005126611246393924,
+                "profit_factor": 1.4691776858045082,
+                "trades": 15,
+                "win_rate": 0.4666666666666667
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.3559168688058649,
+              "max_drawdown": 0.13927900735411647,
+              "mean_trade_return": 0.003286887058235893,
+              "profit_factor": 1.368140925639978,
+              "trades": 105,
+              "win_rate": 0.4666666666666667
+            },
+            "symbol": "ADAUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.10153680227726603,
+                "max_drawdown": 0.09490497463547332,
+                "mean_trade_return": 0.0053107491392541456,
+                "profit_factor": 1.569914970754671,
+                "trades": 20,
+                "win_rate": 0.8
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.03248599070610547,
+                "max_drawdown": 0.03526082964889066,
+                "mean_trade_return": 0.0037584753997065893,
+                "profit_factor": 1.6496751798616032,
+                "trades": 9,
+                "win_rate": 0.4444444444444444
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.04160930088999437,
+                "max_drawdown": 0.08717195616450524,
+                "mean_trade_return": -0.002322902178606309,
+                "profit_factor": 0.7085843189939461,
+                "trades": 17,
+                "win_rate": 0.4117647058823529
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.15522231035206424,
+                "max_drawdown": 0.004255557688615963,
+                "mean_trade_return": 0.029476675558235587,
+                "profit_factor": 35.63315235637477,
+                "trades": 5,
+                "win_rate": 0.8
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.2591902062225997,
+              "max_drawdown": 0.09490497463547332,
+              "mean_trade_return": 0.004861476512496332,
+              "profit_factor": 1.655565765828989,
+              "trades": 51,
+              "win_rate": 0.6078431372549019
+            },
+            "symbol": "LTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.0634357794887419,
+                "max_drawdown": 0.06267362488648087,
+                "mean_trade_return": 0.004227141600490996,
+                "profit_factor": 1.477661188134607,
+                "trades": 16,
+                "win_rate": 0.5625
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.03504693126282654,
+                "max_drawdown": 0.052354289161603784,
+                "mean_trade_return": 0.003134009158885939,
+                "profit_factor": 1.4568241835587596,
+                "trades": 12,
+                "win_rate": 0.5
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.014128510845776487,
+                "max_drawdown": 0.10131648562891782,
+                "mean_trade_return": -0.00023909942522823925,
+                "profit_factor": 0.9782509458602632,
+                "trades": 23,
+                "win_rate": 0.5217391304347826
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.047642992037530085,
+                "max_drawdown": 0.02344808934311382,
+                "mean_trade_return": 0.006969807027249086,
+                "profit_factor": 2.4979406636112085,
+                "trades": 7,
+                "win_rate": 0.42857142857142855
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.13685461651555308,
+              "max_drawdown": 0.11597657276568751,
+              "mean_trade_return": 0.0025608920331893323,
+              "profit_factor": 1.2916149297389758,
+              "trades": 58,
+              "win_rate": 0.5172413793103449
+            },
+            "symbol": "DOTUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.1003144246192047,
+                "max_drawdown": 0.1581598427501063,
+                "mean_trade_return": 0.00280891214629577,
+                "profit_factor": 1.2892813666902394,
+                "trades": 39,
+                "win_rate": 0.5897435897435898
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.2277840987694304,
+                "max_drawdown": 0.13016879517533253,
+                "mean_trade_return": 0.004957789325983161,
+                "profit_factor": 1.4252894974946946,
+                "trades": 49,
+                "win_rate": 0.5510204081632653
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.07477043748409351,
+                "max_drawdown": 0.14915760708054027,
+                "mean_trade_return": -0.002338184611679128,
+                "profit_factor": 0.7723764881214333,
+                "trades": 30,
+                "win_rate": 0.36666666666666664
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0698522517382667,
+                "max_drawdown": 0.14153685971213226,
+                "mean_trade_return": 0.004009989798134908,
+                "profit_factor": 1.4455479649393566,
+                "trades": 19,
+                "win_rate": 0.631578947368421
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.33724849146421465,
+              "max_drawdown": 0.2695831674843169,
+              "mean_trade_return": 0.002616959988999265,
+              "profit_factor": 1.2508787793677276,
+              "trades": 137,
+              "win_rate": 0.5328467153284672
+            },
+            "symbol": "SUIUSDT"
+          }
+        ]
+      },
+      "params": {
+        "hold": 4,
+        "lookback": 3,
+        "threshold": 0.04,
+        "volume_z": 1.0
+      },
+      "stress": {
+        "aggregate": {
+          "largest_positive_symbol_contribution_share": 0.28786142799110825,
+          "mean_symbol_return": 0.10199751691472651,
+          "median_symbol_return": 0.11954975178600424,
+          "positive_symbols": 7,
+          "symbols": 8,
+          "total_trades": 624,
+          "worst_symbol_return": -0.19599351639613805
+        },
+        "blocks": [
+          {
+            "block": 1,
+            "mean_symbol_return": 0.07886283112203014,
+            "positive_symbols": 7,
+            "total_trades": 161
+          },
+          {
+            "block": 2,
+            "mean_symbol_return": 0.05398000916411934,
+            "positive_symbols": 6,
+            "total_trades": 173
+          },
+          {
+            "block": 3,
+            "mean_symbol_return": -0.07654844484080106,
+            "positive_symbols": 0,
+            "total_trades": 191
+          },
+          {
+            "block": 4,
+            "mean_symbol_return": 0.04931096389263752,
+            "positive_symbols": 7,
+            "total_trades": 99
+          }
+        ],
+        "per_symbol": [
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": -0.020894619542905724,
+                "max_drawdown": 0.039037498474465915,
+                "mean_trade_return": -0.0033824485105193084,
+                "profit_factor": 0.4807177693535927,
+                "trades": 6,
+                "win_rate": 0.6666666666666666
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.056099237849761785,
+                "max_drawdown": 0.041455500972421566,
+                "mean_trade_return": 0.005883951840154269,
+                "profit_factor": 1.9289862687251105,
+                "trades": 10,
+                "win_rate": 0.6
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.02152035226792115,
+                "max_drawdown": 0.03440119023665633,
+                "mean_trade_return": -0.0022948241217820332,
+                "profit_factor": 0.701146626213989,
+                "trades": 9,
+                "win_rate": 0.5555555555555556
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.03555442124178332,
+                "max_drawdown": 0.046649807790857034,
+                "mean_trade_return": 0.004676058096366796,
+                "profit_factor": 1.588543498427443,
+                "trades": 8,
+                "win_rate": 0.625
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.04775294536428376,
+              "max_drawdown": 0.07139558607538832,
+              "mean_trade_return": 0.0016757537882825125,
+              "profit_factor": 1.2352290412477647,
+              "trades": 33,
+              "win_rate": 0.6060606060606061
+            },
+            "symbol": "BTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.1068469503455367,
+                "max_drawdown": 0.01898768085532665,
+                "mean_trade_return": 0.012986160459567362,
+                "profit_factor": 6.445321362792576,
+                "trades": 8,
+                "win_rate": 0.75
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.10740008237754561,
+                "max_drawdown": 0.14652166445709125,
+                "mean_trade_return": -0.007704123718351338,
+                "profit_factor": 0.4553706087182998,
+                "trades": 14,
+                "win_rate": 0.42857142857142855
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.11329145825849218,
+                "max_drawdown": 0.16320384125410792,
+                "mean_trade_return": -0.003489593516797527,
+                "profit_factor": 0.6991399879159655,
+                "trades": 31,
+                "win_rate": 0.4838709677419355
+              },
+              {
+                "block": 4,
+                "compounded_return": -0.08222918376191146,
+                "max_drawdown": 0.19061246751392769,
+                "mean_trade_return": -0.0034399064508303374,
+                "profit_factor": 0.6906309137437474,
+                "trades": 23,
+                "win_rate": 0.4782608695652174
+              }
+            ],
+            "metrics": {
+              "compounded_return": -0.19599351639613805,
+              "max_drawdown": 0.36127366917049397,
+              "mean_trade_return": -0.0025166275759236968,
+              "profit_factor": 0.7702309994286533,
+              "trades": 76,
+              "win_rate": 0.5
+            },
+            "symbol": "ETHUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.06704819717382349,
+                "max_drawdown": 0.14408237738613805,
+                "mean_trade_return": 0.003540893558033808,
+                "profit_factor": 1.3440305600308509,
+                "trades": 24,
+                "win_rate": 0.4166666666666667
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.07911305080118369,
+                "max_drawdown": 0.08907575064822881,
+                "mean_trade_return": 0.0027486088074035525,
+                "profit_factor": 1.2849037757040545,
+                "trades": 32,
+                "win_rate": 0.6875
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.14909075683433293,
+                "max_drawdown": 0.15994994508217253,
+                "mean_trade_return": -0.006080576996876476,
+                "profit_factor": 0.3592764889020546,
+                "trades": 26,
+                "win_rate": 0.34615384615384615
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.03693632147922221,
+                "max_drawdown": 0.11469678611215539,
+                "mean_trade_return": 0.002863926355696775,
+                "profit_factor": 1.2749574941620474,
+                "trades": 15,
+                "win_rate": 0.5333333333333333
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.015982692436940615,
+              "max_drawdown": 0.2745439775923839,
+              "mean_trade_return": 0.0005958847489318384,
+              "profit_factor": 1.0602895797393286,
+              "trades": 97,
+              "win_rate": 0.5051546391752577
+            },
+            "symbol": "SOLUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.2547372028807351,
+                "max_drawdown": 0.07487112174542421,
+                "mean_trade_return": 0.01092626174564852,
+                "profit_factor": 2.3925037942222827,
+                "trades": 22,
+                "win_rate": 0.7272727272727273
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.017949245935154123,
+                "max_drawdown": 0.07992142196240304,
+                "mean_trade_return": -0.0009789366579388214,
+                "profit_factor": 0.8815365513695067,
+                "trades": 15,
+                "win_rate": 0.5333333333333333
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.05488185763104847,
+                "max_drawdown": 0.14244150421838042,
+                "mean_trade_return": -0.0022285327844409454,
+                "profit_factor": 0.7597281279072982,
+                "trades": 23,
+                "win_rate": 0.5217391304347826
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.10880989764142845,
+                "max_drawdown": 0.030973487640487796,
+                "mean_trade_return": 0.015196842682749763,
+                "profit_factor": 4.423643620102708,
+                "trades": 7,
+                "win_rate": 0.7142857142857143
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.2913081804717541,
+              "max_drawdown": 0.19592742701995836,
+              "mean_trade_return": 0.00419127392943719,
+              "profit_factor": 1.519091590139522,
+              "trades": 67,
+              "win_rate": 0.6119402985074627
+            },
+            "symbol": "LINKUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.03845693719952337,
+                "max_drawdown": 0.0875986233731979,
+                "mean_trade_return": 0.0018930565897539357,
+                "profit_factor": 1.1982015590662882,
+                "trades": 26,
+                "win_rate": 0.3076923076923077
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.20674781401893028,
+                "max_drawdown": 0.08445860808028294,
+                "mean_trade_return": 0.006378624200795098,
+                "profit_factor": 1.6512445447196837,
+                "trades": 32,
+                "win_rate": 0.59375
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.07700462543613329,
+                "max_drawdown": 0.11531454912106742,
+                "mean_trade_return": -0.0023472335418807983,
+                "profit_factor": 0.7115534478071672,
+                "trades": 32,
+                "win_rate": 0.4375
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.055649500861109535,
+                "max_drawdown": 0.10400781480994004,
+                "mean_trade_return": 0.004126611246393923,
+                "profit_factor": 1.3600840178388554,
+                "trades": 15,
+                "win_rate": 0.4666666666666667
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.22102423516389091,
+              "max_drawdown": 0.17234882484144287,
+              "mean_trade_return": 0.002286887058235893,
+              "profit_factor": 1.2415587617552029,
+              "trades": 105,
+              "win_rate": 0.45714285714285713
+            },
+            "symbol": "ADAUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.07980816227831111,
+                "max_drawdown": 0.09861423567586769,
+                "mean_trade_return": 0.0043107491392541455,
+                "profit_factor": 1.4528814343661705,
+                "trades": 20,
+                "win_rate": 0.8
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.02326157881818358,
+                "max_drawdown": 0.03914874723037354,
+                "mean_trade_return": 0.002758475399706589,
+                "profit_factor": 1.435041600036584,
+                "trades": 9,
+                "win_rate": 0.4444444444444444
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.05781521261861422,
+                "max_drawdown": 0.09564710750229732,
+                "mean_trade_return": -0.003322902178606309,
+                "profit_factor": 0.6123923135612356,
+                "trades": 17,
+                "win_rate": 0.35294117647058826
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.14962031791824004,
+                "max_drawdown": 0.005255557688615964,
+                "mean_trade_return": 0.028476675558235586,
+                "profit_factor": 28.09196363681717,
+                "trades": 5,
+                "win_rate": 0.8
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.19680609470507227,
+              "max_drawdown": 0.09861423567586769,
+              "mean_trade_return": 0.0038614765124963314,
+              "profit_factor": 1.4942779065802594,
+              "trades": 51,
+              "win_rate": 0.5882352941176471
+            },
+            "symbol": "LTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.04660581771488004,
+                "max_drawdown": 0.06460985791083373,
+                "mean_trade_return": 0.0032271416004909952,
+                "profit_factor": 1.347484030518541,
+                "trades": 16,
+                "win_rate": 0.5625
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.022726539282513558,
+                "max_drawdown": 0.05901924876456721,
+                "mean_trade_return": 0.0021340091588859388,
+                "profit_factor": 1.2899300590376914,
+                "trades": 12,
+                "win_rate": 0.5
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.03657803377248847,
+                "max_drawdown": 0.10321153761600765,
+                "mean_trade_return": -0.0012390994252282394,
+                "profit_factor": 0.891987508545245,
+                "trades": 23,
+                "win_rate": 0.5217391304347826
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.04037766146089661,
+                "max_drawdown": 0.028344450470232485,
+                "mean_trade_return": 0.0059698070272490855,
+                "profit_factor": 2.1426879570949517,
+                "trades": 7,
+                "win_rate": 0.42857142857142855
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.07287773606471126,
+              "max_drawdown": 0.13359970901045914,
+              "mean_trade_return": 0.0015608920331893325,
+              "profit_factor": 1.1684806589431904,
+              "trades": 58,
+              "win_rate": 0.5172413793103449
+            },
+            "symbol": "DOTUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.058294000926337075,
+                "max_drawdown": 0.16418244110790936,
+                "mean_trade_return": 0.0018089121462957697,
+                "profit_factor": 1.1785503282281913,
+                "trades": 39,
+                "win_rate": 0.5641025641025641
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.16924118085508155,
+                "max_drawdown": 0.13549828746738157,
+                "mean_trade_return": 0.00395778932598316,
+                "profit_factor": 1.32639917272498,
+                "trades": 49,
+                "win_rate": 0.5306122448979592
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.10220526190737778,
+                "max_drawdown": 0.16531843827909531,
+                "mean_trade_return": -0.003338184611679128,
+                "profit_factor": 0.6938987341746965,
+                "trades": 30,
+                "win_rate": 0.36666666666666664
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.04976877430033144,
+                "max_drawdown": 0.14595478094922576,
+                "mean_trade_return": 0.0030099897981349087,
+                "profit_factor": 1.3212865727530305,
+                "trades": 19,
+                "win_rate": 0.631578947368421
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.16622176750729722,
+              "max_drawdown": 0.2871442027824277,
+              "mean_trade_return": 0.001616959988999265,
+              "profit_factor": 1.14823226389276,
+              "trades": 137,
+              "win_rate": 0.5182481751824818
+            },
+            "symbol": "SUIUSDT"
+          }
+        ]
+      }
+    },
+    {
+      "arm_id": "lb3_drop0.06_vz1.0_h4",
+      "base": {
+        "aggregate": {
+          "largest_positive_symbol_contribution_share": 0.345265862211905,
+          "mean_symbol_return": 0.14382648559898484,
+          "median_symbol_return": 0.0762960866492357,
+          "positive_symbols": 7,
+          "symbols": 8,
+          "total_trades": 171,
+          "worst_symbol_return": -0.09865035746808992
+        },
+        "blocks": [
+          {
+            "block": 1,
+            "mean_symbol_return": 0.09361779745574611,
+            "positive_symbols": 7,
+            "total_trades": 49
+          },
+          {
+            "block": 2,
+            "mean_symbol_return": 0.03420287100713859,
+            "positive_symbols": 5,
+            "total_trades": 55
+          },
+          {
+            "block": 3,
+            "mean_symbol_return": 2.0895802470680125e-05,
+            "positive_symbols": 4,
+            "total_trades": 51
+          },
+          {
+            "block": 4,
+            "mean_symbol_return": 0.013190270433810436,
+            "positive_symbols": 4,
+            "total_trades": 16
+          }
+        ],
+        "per_symbol": [
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.03608372607445376,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.03608372607445367,
+                "profit_factor": 999.0,
+                "trades": 1,
+                "win_rate": 1.0
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.0036242420598107117,
+                "max_drawdown": 0.032316501859480984,
+                "mean_trade_return": -0.0013330214746528398,
+                "profit_factor": 0.917502118239833,
+                "trades": 2,
+                "win_rate": 0.5
+              },
+              {
+                "block": 3,
+                "compounded_return": 0.0,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.0,
+                "profit_factor": 0.0,
+                "trades": 0,
+                "win_rate": 0.0
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.03423694362301921,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.03423694362301912,
+                "profit_factor": 999.0,
+                "trades": 1,
+                "win_rate": 1.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.06767248762825107,
+              "max_drawdown": 0.032316501859480984,
+              "mean_trade_return": 0.016913656687041777,
+              "profit_factor": 3.0935009315780477,
+              "trades": 4,
+              "win_rate": 0.75
+            },
+            "symbol": "BTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.09731037746771953,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.047538232379883326,
+                "profit_factor": 999.0,
+                "trades": 2,
+                "win_rate": 1.0
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.02224728676873633,
+                "max_drawdown": 0.08170911540036996,
+                "mean_trade_return": -0.0036669828781489486,
+                "profit_factor": 0.7768862380082019,
+                "trades": 5,
+                "win_rate": 0.6
+              },
+              {
+                "block": 3,
+                "compounded_return": 0.1302526764196308,
+                "max_drawdown": 0.027414951285958278,
+                "mean_trade_return": 0.012566252597164618,
+                "profit_factor": 3.333217687795523,
+                "trades": 10,
+                "win_rate": 0.8
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0890181145132618,
+                "max_drawdown": 0.005879526334169216,
+                "mean_trade_return": 0.021773203927114036,
+                "profit_factor": 15.812896610788428,
+                "trades": 4,
+                "win_rate": 0.75
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.320593526648546,
+              "max_drawdown": 0.08170911540036996,
+              "mean_trade_return": 0.013785566288053537,
+              "profit_factor": 3.0399317555199956,
+              "trades": 21,
+              "win_rate": 0.7619047619047619
+            },
+            "symbol": "ETHUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.15197537524826155,
+                "max_drawdown": 0.07253611802041715,
+                "mean_trade_return": 0.03159423417257148,
+                "profit_factor": 3.1514940327752354,
+                "trades": 5,
+                "win_rate": 0.6
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.01042717348203026,
+                "max_drawdown": 0.05341069245969532,
+                "mean_trade_return": 0.0014270169089414587,
+                "profit_factor": 1.1275870986991758,
+                "trades": 11,
+                "win_rate": 0.6363636363636364
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.04577909125112223,
+                "max_drawdown": 0.06156637938504894,
+                "mean_trade_return": -0.011384406695535232,
+                "profit_factor": 0.26976981972179176,
+                "trades": 4,
+                "win_rate": 0.25
+              },
+              {
+                "block": 4,
+                "compounded_return": -0.08898100557143374,
+                "max_drawdown": 0.08898100557143374,
+                "mean_trade_return": -0.022806640411177727,
+                "profit_factor": 0.0,
+                "trades": 4,
+                "win_rate": 0.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.011869658085503998,
+              "max_drawdown": 0.17487059082111922,
+              "mean_trade_return": 0.0015376736847650672,
+              "profit_factor": 1.1054277430385226,
+              "trades": 24,
+              "win_rate": 0.4583333333333333
+            },
+            "symbol": "SOLUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.0591170973049413,
+                "max_drawdown": 0.07039066491292245,
+                "mean_trade_return": 0.0071053725015316465,
+                "profit_factor": 1.5336965364594812,
+                "trades": 9,
+                "win_rate": 0.6666666666666666
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.018169810540209053,
+                "max_drawdown": 0.08108301886792446,
+                "mean_trade_return": 0.008407090649066222,
+                "profit_factor": 1.3110549199984947,
+                "trades": 3,
+                "win_rate": 0.6666666666666666
+              },
+              {
+                "block": 3,
+                "compounded_return": 0.006082036569460492,
+                "max_drawdown": 0.045799607832811895,
+                "mean_trade_return": 0.0010902603508248618,
+                "profit_factor": 1.1490972283804062,
+                "trades": 7,
+                "win_rate": 0.42857142857142855
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.0,
+                "profit_factor": 0.0,
+                "trades": 0,
+                "win_rate": 0.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.08491968567022035,
+              "max_drawdown": 0.08108301886792446,
+              "mean_trade_return": 0.005094812995618817,
+              "profit_factor": 1.3839933543722467,
+              "trades": 19,
+              "win_rate": 0.5789473684210527
+            },
+            "symbol": "LINKUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.09883683885796302,
+                "max_drawdown": 0.034797318521356146,
+                "mean_trade_return": 0.010225134384915914,
+                "profit_factor": 2.1250341207758363,
+                "trades": 10,
+                "win_rate": 0.4
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.2456576147482772,
+                "max_drawdown": 0.05538969909706237,
+                "mean_trade_return": 0.0165538294112934,
+                "profit_factor": 2.823106107924471,
+                "trades": 14,
+                "win_rate": 0.6428571428571429
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.12394705369275727,
+                "max_drawdown": 0.13476660365449156,
+                "mean_trade_return": -0.013947360462938282,
+                "profit_factor": 0.290984481846162,
+                "trades": 9,
+                "win_rate": 0.3333333333333333
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.06289582018471385,
+                "max_drawdown": 0.013024938875305647,
+                "mean_trade_return": 0.015626925748111968,
+                "profit_factor": 5.52137282893166,
+                "trades": 4,
+                "win_rate": 0.5
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.2745384797432606,
+              "max_drawdown": 0.13476660365449156,
+              "mean_trade_return": 0.007323957146845137,
+              "profit_factor": 1.6627602497020195,
+              "trades": 37,
+              "win_rate": 0.4864864864864865
+            },
+            "symbol": "ADAUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": -0.014256457645982268,
+                "max_drawdown": 0.10026266565741249,
+                "mean_trade_return": -0.0019721062946351344,
+                "profit_factor": 0.9040861514561153,
+                "trades": 5,
+                "win_rate": 0.6
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.024910253375070468,
+                "max_drawdown": 0.03152870939420549,
+                "mean_trade_return": 0.008641319392895941,
+                "profit_factor": 1.8222334081157245,
+                "trades": 3,
+                "win_rate": 0.6666666666666666
+              },
+              {
+                "block": 3,
+                "compounded_return": 0.04755240925091919,
+                "max_drawdown": 0.011577521170130889,
+                "mean_trade_return": 0.011813367825598354,
+                "profit_factor": 5.081484335723248,
+                "trades": 4,
+                "win_rate": 0.75
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.0,
+                "profit_factor": 0.0,
+                "trades": 0,
+                "win_rate": 0.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.058340799281520805,
+              "max_drawdown": 0.10026266565741249,
+              "mean_trade_return": 0.005276408167325465,
+              "profit_factor": 1.4339378669242608,
+              "trades": 12,
+              "win_rate": 0.6666666666666666
+            },
+            "symbol": "LTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.0962626793549104,
+                "max_drawdown": 0.005764049595975429,
+                "mean_trade_return": 0.01871347685730258,
+                "profit_factor": 17.232924913040968,
+                "trades": 5,
+                "win_rate": 0.8
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.18124260033688067,
+                "max_drawdown": 0.20610696065715528,
+                "mean_trade_return": -0.08739371315083769,
+                "profit_factor": 0.15195767409125868,
+                "trades": 2,
+                "win_rate": 0.5
+              },
+              {
+                "block": 3,
+                "compounded_return": 0.004207413854132813,
+                "max_drawdown": 0.051477543516407764,
+                "mean_trade_return": 0.0006847282840504546,
+                "profit_factor": 1.1005749845294368,
+                "trades": 8,
+                "win_rate": 0.5
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.0,
+                "profit_factor": 0.0,
+                "trades": 0,
+                "win_rate": 0.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": -0.09865035746808992,
+              "max_drawdown": 0.220401249011261,
+              "mean_trade_return": -0.005049481049517256,
+              "profit_factor": 0.715614166744012,
+              "trades": 15,
+              "win_rate": 0.6
+            },
+            "symbol": "DOTUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.2236127429837016,
+                "max_drawdown": 0.03341289516147372,
+                "mean_trade_return": 0.01744115877746619,
+                "profit_factor": 5.418897698908143,
+                "trades": 12,
+                "win_rate": 0.8333333333333334
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.18157224507694947,
+                "max_drawdown": 0.07742741286225252,
+                "mean_trade_return": 0.012319793945927877,
+                "profit_factor": 1.8798112910538167,
+                "trades": 15,
+                "win_rate": 0.5333333333333333
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.018201224730498344,
+                "max_drawdown": 0.09335498932930086,
+                "mean_trade_return": -0.001762629810581669,
+                "profit_factor": 0.835479780722168,
+                "trades": 9,
+                "win_rate": 0.5555555555555556
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.008352290720922362,
+                "max_drawdown": 0.006291232107956346,
+                "mean_trade_return": 0.0028144742019380925,
+                "profit_factor": 2.341757271272465,
+                "trades": 3,
+                "win_rate": 0.3333333333333333
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.4313276052026658,
+              "max_drawdown": 0.09335498932930064,
+              "mean_trade_return": 0.00991462996997671,
+              "profit_factor": 2.0737224287080456,
+              "trades": 39,
+              "win_rate": 0.6153846153846154
+            },
+            "symbol": "SUIUSDT"
+          }
+        ]
+      },
+      "params": {
+        "hold": 4,
+        "lookback": 3,
+        "threshold": 0.06,
+        "volume_z": 1.0
+      },
+      "stress": {
+        "aggregate": {
+          "largest_positive_symbol_contribution_share": 0.35143455982359645,
+          "mean_symbol_return": 0.11855343954715296,
+          "median_symbol_return": 0.06401839692023814,
+          "positive_symbols": 6,
+          "symbols": 8,
+          "total_trades": 171,
+          "worst_symbol_return": -0.11219730322621535
+        },
+        "blocks": [
+          {
+            "block": 1,
+            "mean_symbol_return": 0.08691037677299261,
+            "positive_symbols": 7,
+            "total_trades": 49
+          },
+          {
+            "block": 2,
+            "mean_symbol_return": 0.02665726453205887,
+            "positive_symbols": 4,
+            "total_trades": 55
+          },
+          {
+            "block": 3,
+            "mean_symbol_return": -0.00634494075504724,
+            "positive_symbols": 2,
+            "total_trades": 51
+          },
+          {
+            "block": 4,
+            "mean_symbol_return": 0.01116778509164891,
+            "positive_symbols": 4,
+            "total_trades": 16
+          }
+        ],
+        "per_symbol": [
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.03508372607445365,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.03508372607445367,
+                "profit_factor": 999.0,
+                "trades": 1,
+                "win_rate": 1.0
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.0056205760168616115,
+                "max_drawdown": 0.033316501859480985,
+                "mean_trade_return": -0.0023330214746528407,
+                "profit_factor": 0.8599479930700512,
+                "trades": 2,
+                "win_rate": 0.5
+              },
+              {
+                "block": 3,
+                "compounded_return": 0.0,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.0,
+                "profit_factor": 0.0,
+                "trades": 0,
+                "win_rate": 0.0
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0332369436230191,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.03323694362301912,
+                "profit_factor": 999.0,
+                "trades": 1,
+                "win_rate": 1.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.06347561397085633,
+              "max_drawdown": 0.033316501859480985,
+              "mean_trade_return": 0.015913656687041776,
+              "profit_factor": 2.910603550656167,
+              "trades": 4,
+              "win_rate": 0.75
+            },
+            "symbol": "BTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.09521630100295941,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.046538232379883325,
+                "profit_factor": 999.0,
+                "trades": 2,
+                "win_rate": 1.0
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.027152384410301322,
+                "max_drawdown": 0.08362593797560225,
+                "mean_trade_return": -0.004666982878148949,
+                "profit_factor": 0.7227889252360769,
+                "trades": 5,
+                "win_rate": 0.6
+              },
+              {
+                "block": 3,
+                "compounded_return": 0.11913446419108809,
+                "max_drawdown": 0.02841495128595828,
+                "mean_trade_return": 0.011566252597164619,
+                "profit_factor": 3.0706514394229436,
+                "trades": 10,
+                "win_rate": 0.8
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.08475924949174529,
+                "max_drawdown": 0.006879526334169217,
+                "mean_trade_return": 0.02077320392711404,
+                "profit_factor": 13.078275694033065,
+                "trades": 4,
+                "win_rate": 0.75
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.29348188268530206,
+              "max_drawdown": 0.08362593797560225,
+              "mean_trade_return": 0.012785566288053536,
+              "profit_factor": 2.827566366174517,
+              "trades": 21,
+              "win_rate": 0.7619047619047619
+            },
+            "symbol": "ETHUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.14637191272621752,
+                "max_drawdown": 0.0744616940794458,
+                "mean_trade_return": 0.030594234172571476,
+                "profit_factor": 3.0281513918878376,
+                "trades": 5,
+                "win_rate": 0.6
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.0006270633785231405,
+                "max_drawdown": 0.05801920236672564,
+                "mean_trade_return": 0.0004270169089414584,
+                "profit_factor": 1.0369766504295574,
+                "trades": 11,
+                "win_rate": 0.6363636363636364
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.04963612565685449,
+                "max_drawdown": 0.06443951843183426,
+                "mean_trade_return": -0.01238440669553523,
+                "profit_factor": 0.24208788064137515,
+                "trades": 4,
+                "win_rate": 0.25
+              },
+              {
+                "block": 4,
+                "compounded_return": -0.09270610031443594,
+                "max_drawdown": 0.09270610031443594,
+                "mean_trade_return": -0.023806640411177728,
+                "profit_factor": 0.0,
+                "trades": 4,
+                "win_rate": 0.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": -0.012149937906857367,
+              "max_drawdown": 0.1865080866202249,
+              "mean_trade_return": 0.0005376736847650668,
+              "profit_factor": 1.0355445325422785,
+              "trades": 24,
+              "win_rate": 0.4583333333333333
+            },
+            "symbol": "SOLUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.04967652965800373,
+                "max_drawdown": 0.07456776273717469,
+                "mean_trade_return": 0.0061053725015316465,
+                "profit_factor": 1.4473836003922103,
+                "trades": 9,
+                "win_rate": 0.6666666666666666
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.015129305321446962,
+                "max_drawdown": 0.08208301886792446,
+                "mean_trade_return": 0.007407090649066222,
+                "profit_factor": 1.2707170405483474,
+                "trades": 3,
+                "win_rate": 0.6666666666666666
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.0009349346064200237,
+                "max_drawdown": 0.04870451895215333,
+                "mean_trade_return": 9.02603508248619e-05,
+                "profit_factor": 1.0114487794195393,
+                "trades": 7,
+                "win_rate": 0.42857142857142855
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.0,
+                "profit_factor": 0.0,
+                "trades": 0,
+                "win_rate": 0.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.06456117986961996,
+              "max_drawdown": 0.08208301886792446,
+              "mean_trade_return": 0.004094812995618816,
+              "profit_factor": 1.2991311044345166,
+              "trades": 19,
+              "win_rate": 0.5789473684210527
+            },
+            "symbol": "LINKUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.08799207865205716,
+                "max_drawdown": 0.035797318521356036,
+                "mean_trade_return": 0.009225134384915913,
+                "profit_factor": 1.952150780201493,
+                "trades": 10,
+                "win_rate": 0.4
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.2285869557569058,
+                "max_drawdown": 0.0582763954954828,
+                "mean_trade_return": 0.015553829411293399,
+                "profit_factor": 2.6481477694976667,
+                "trades": 14,
+                "win_rate": 0.6428571428571429
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.13192133783033788,
+                "max_drawdown": 0.1400304078520529,
+                "mean_trade_return": -0.014947360462938283,
+                "profit_factor": 0.26505665869412987,
+                "trades": 9,
+                "win_rate": 0.3333333333333333
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.058713685458603004,
+                "max_drawdown": 0.014024938875305759,
+                "mean_trade_return": 0.014626925748111969,
+                "profit_factor": 4.697183505950062,
+                "trades": 4,
+                "win_rate": 0.5
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.22848325620839138,
+              "max_drawdown": 0.14003040785205279,
+              "mean_trade_return": 0.006323957146845137,
+              "profit_factor": 1.5468563309211565,
+              "trades": 37,
+              "win_rate": 0.4864864864864865
+            },
+            "symbol": "ADAUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": -0.01919391214363142,
+                "max_drawdown": 0.10215885952854908,
+                "mean_trade_return": -0.0029721062946351353,
+                "profit_factor": 0.8582093276953164,
+                "trades": 5,
+                "win_rate": 0.6
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.021862418118127946,
+                "max_drawdown": 0.03252870939420549,
+                "mean_trade_return": 0.007641319392895941,
+                "profit_factor": 1.7047300248183657,
+                "trades": 3,
+                "win_rate": 0.6666666666666666
+              },
+              {
+                "block": 3,
+                "compounded_return": 0.04341618162833161,
+                "max_drawdown": 0.01257752117013089,
+                "mean_trade_return": 0.010813367825598354,
+                "profit_factor": 4.438950387546306,
+                "trades": 4,
+                "win_rate": 0.75
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.0,
+                "profit_factor": 0.0,
+                "trades": 0,
+                "win_rate": 0.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.045762700080630214,
+              "max_drawdown": 0.10215885952854908,
+              "mean_trade_return": 0.004276408167325464,
+              "profit_factor": 1.3423126565670769,
+              "trades": 12,
+              "win_rate": 0.6666666666666666
+            },
+            "symbol": "LTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.09089090360031293,
+                "max_drawdown": 0.00676404959597543,
+                "mean_trade_return": 0.01771347685730258,
+                "profit_factor": 14.093840166282975,
+                "trades": 5,
+                "win_rate": 0.8
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.18306681291057902,
+                "max_drawdown": 0.20710696065715528,
+                "mean_trade_return": -0.08839371315083769,
+                "profit_factor": 0.14639553523104815,
+                "trades": 2,
+                "win_rate": 0.5
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.00379526802756347,
+                "max_drawdown": 0.054370814567133996,
+                "mean_trade_return": -0.00031527171594954563,
+                "profit_factor": 0.9568601804533267,
+                "trades": 8,
+                "win_rate": 0.5
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.0,
+                "profit_factor": 0.0,
+                "trades": 0,
+                "win_rate": 0.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": -0.11219730322621535,
+              "max_drawdown": 0.22605816362489006,
+              "mean_trade_return": -0.006049481049517256,
+              "profit_factor": 0.6668006431088238,
+              "trades": 15,
+              "win_rate": 0.6
+            },
+            "symbol": "DOTUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.2092454746135679,
+                "max_drawdown": 0.03441289516147383,
+                "mean_trade_return": 0.01644115877746619,
+                "profit_factor": 4.9626948127348545,
+                "trades": 12,
+                "win_rate": 0.75
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.16414627377625535,
+                "max_drawdown": 0.08026794752208,
+                "mean_trade_return": 0.011319793945927876,
+                "profit_factor": 1.7823245147107907,
+                "trades": 15,
+                "win_rate": 0.5333333333333333
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.02702250573862175,
+                "max_drawdown": 0.09706618308775428,
+                "mean_trade_return": -0.002762629810581669,
+                "profit_factor": 0.7524126460635269,
+                "trades": 9,
+                "win_rate": 0.5555555555555556
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.005338502474259821,
+                "max_drawdown": 0.0082839392986781,
+                "mean_trade_return": 0.0018144742019380936,
+                "profit_factor": 1.6564027247190158,
+                "trades": 3,
+                "win_rate": 0.3333333333333333
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.37701012469549644,
+              "max_drawdown": 0.09706618308775417,
+              "mean_trade_return": 0.00891462996997671,
+              "profit_factor": 1.9257736578373916,
+              "trades": 39,
+              "win_rate": 0.5897435897435898
+            },
+            "symbol": "SUIUSDT"
+          }
+        ]
+      }
+    },
+    {
+      "arm_id": "lb12_drop0.06_vz1.0_h4",
+      "base": {
+        "aggregate": {
+          "largest_positive_symbol_contribution_share": 0.3298183838243816,
+          "mean_symbol_return": 0.15954722817194478,
+          "median_symbol_return": 0.09099793180681304,
+          "positive_symbols": 7,
+          "symbols": 8,
+          "total_trades": 498,
+          "worst_symbol_return": -0.06750443871899126
+        },
+        "blocks": [
+          {
+            "block": 1,
+            "mean_symbol_return": 0.14751105821205815,
+            "positive_symbols": 8,
+            "total_trades": 118
+          },
+          {
+            "block": 2,
+            "mean_symbol_return": 0.013742775992368672,
+            "positive_symbols": 4,
+            "total_trades": 151
+          },
+          {
+            "block": 3,
+            "mean_symbol_return": -0.08349463588527192,
+            "positive_symbols": 1,
+            "total_trades": 127
+          },
+          {
+            "block": 4,
+            "mean_symbol_return": 0.09201226891455969,
+            "positive_symbols": 8,
+            "total_trades": 102
+          }
+        ],
+        "per_symbol": [
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.0488848045108774,
+                "max_drawdown": 0.006389010964701014,
+                "mean_trade_return": 0.009697213476767086,
+                "profit_factor": 8.58897858396532,
+                "trades": 5,
+                "win_rate": 0.8
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.10318467609682624,
+                "max_drawdown": 0.05226982895273902,
+                "mean_trade_return": 0.012936082404107093,
+                "profit_factor": 2.971106272682056,
+                "trades": 8,
+                "win_rate": 0.75
+              },
+              {
+                "block": 3,
+                "compounded_return": 0.03796912156291987,
+                "max_drawdown": 0.010233888701167038,
+                "mean_trade_return": 0.007548213997044528,
+                "profit_factor": 4.687852300066432,
+                "trades": 5,
+                "win_rate": 0.8
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.05335175581824925,
+                "max_drawdown": 0.045649807790857144,
+                "mean_trade_return": 0.005478521682986083,
+                "profit_factor": 1.779416053345492,
+                "trades": 10,
+                "win_rate": 0.7
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.26512626390777183,
+              "max_drawdown": 0.05226982895273924,
+              "mean_trade_return": 0.008732179051134844,
+              "profit_factor": 2.753753841274018,
+              "trades": 28,
+              "win_rate": 0.75
+            },
+            "symbol": "BTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.13834449900955859,
+                "max_drawdown": 0.0034379934847483806,
+                "mean_trade_return": 0.022040619671196828,
+                "profit_factor": 29.568319973507148,
+                "trades": 6,
+                "win_rate": 0.6666666666666666
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.1001829128707965,
+                "max_drawdown": 0.07601682309611502,
+                "mean_trade_return": 0.005621351439645144,
+                "profit_factor": 1.6102036415049745,
+                "trades": 19,
+                "win_rate": 0.5789473684210527
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.19193408936152323,
+                "max_drawdown": 0.22491274101909164,
+                "mean_trade_return": -0.007495164172828974,
+                "profit_factor": 0.5121212748637153,
+                "trades": 26,
+                "win_rate": 0.38461538461538464
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.07624373275347796,
+                "max_drawdown": 0.06375492315730025,
+                "mean_trade_return": 0.0035188586194152102,
+                "profit_factor": 1.4417625550711055,
+                "trades": 23,
+                "win_rate": 0.6086956521739131
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.08917090131342542,
+              "max_drawdown": 0.22715703246614105,
+              "mean_trade_return": 0.0016906604747761516,
+              "profit_factor": 1.1641202387295164,
+              "trades": 74,
+              "win_rate": 0.527027027027027
+            },
+            "symbol": "ETHUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.18204274964927936,
+                "max_drawdown": 0.07253611802041726,
+                "mean_trade_return": 0.013153661824491245,
+                "profit_factor": 2.8425309701626307,
+                "trades": 14,
+                "win_rate": 0.6428571428571429
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.09795871940630296,
+                "max_drawdown": 0.09981074249676247,
+                "mean_trade_return": 0.003552095013073139,
+                "profit_factor": 1.3340356454016356,
+                "trades": 30,
+                "win_rate": 0.6333333333333333
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.02899356753343696,
+                "max_drawdown": 0.057124325827655476,
+                "mean_trade_return": -0.0019762094315069804,
+                "profit_factor": 0.6890747377891758,
+                "trades": 14,
+                "win_rate": 0.35714285714285715
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.14523964812466672,
+                "max_drawdown": 0.06939939528288508,
+                "mean_trade_return": 0.007873972081616769,
+                "profit_factor": 2.35674766982369,
+                "trades": 18,
+                "win_rate": 0.8333333333333334
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.4432370763939151,
+              "max_drawdown": 0.09981074249676258,
+              "mean_trade_return": 0.005326035281093101,
+              "profit_factor": 1.6609625719128776,
+              "trades": 76,
+              "win_rate": 0.631578947368421
+            },
+            "symbol": "SOLUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.0910533071300832,
+                "max_drawdown": 0.08061014716413373,
+                "mean_trade_return": 0.005748976297341566,
+                "profit_factor": 1.8442183277433262,
+                "trades": 16,
+                "win_rate": 0.625
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.12191582682010982,
+                "max_drawdown": 0.15748923968848472,
+                "mean_trade_return": -0.011631814725371835,
+                "profit_factor": 0.3260651880319125,
+                "trades": 10,
+                "win_rate": 0.5
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.0273452399227313,
+                "max_drawdown": 0.0799855408476865,
+                "mean_trade_return": -0.0012748880840987224,
+                "profit_factor": 0.8727262069616508,
+                "trades": 18,
+                "win_rate": 0.5555555555555556
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.09129750398369962,
+                "max_drawdown": 0.004712618193674745,
+                "mean_trade_return": 0.017756256516172565,
+                "profit_factor": 19.839056959892293,
+                "trades": 5,
+                "win_rate": 0.8
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.016913464900520037,
+              "max_drawdown": 0.20960494979323785,
+              "mean_trade_return": 0.0008469136851190311,
+              "profit_factor": 1.088944474971754,
+              "trades": 49,
+              "win_rate": 0.5918367346938775
+            },
+            "symbol": "LINKUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.160858511367852,
+                "max_drawdown": 0.060121637557245866,
+                "mean_trade_return": 0.011340494853249125,
+                "profit_factor": 2.4247452692620386,
+                "trades": 14,
+                "win_rate": 0.5714285714285714
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.004379639281780756,
+                "max_drawdown": 0.205601179098735,
+                "mean_trade_return": 0.0009344353421269386,
+                "profit_factor": 1.0631178663240983,
+                "trades": 30,
+                "win_rate": 0.5666666666666667
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.13183140601656562,
+                "max_drawdown": 0.13677825200132343,
+                "mean_trade_return": -0.008907438307853911,
+                "profit_factor": 0.40622533106363135,
+                "trades": 15,
+                "win_rate": 0.4
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.01479247613542789,
+                "max_drawdown": 0.10391619817221232,
+                "mean_trade_return": 0.0013563692544701883,
+                "profit_factor": 1.1356303344405805,
+                "trades": 15,
+                "win_rate": 0.6
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.018249883862059724,
+              "max_drawdown": 0.2921141279505257,
+              "mean_trade_return": 0.0009937020595748654,
+              "profit_factor": 1.0790176557502082,
+              "trades": 74,
+              "win_rate": 0.5405405405405406
+            },
+            "symbol": "ADAUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.06755779312808263,
+                "max_drawdown": 0.10180759250681048,
+                "mean_trade_return": 0.003603951138841828,
+                "profit_factor": 1.4521399917591642,
+                "trades": 20,
+                "win_rate": 0.65
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.017181909048006094,
+                "max_drawdown": 0.03961249920090071,
+                "mean_trade_return": -0.0023797858562098176,
+                "profit_factor": 0.6631129089281713,
+                "trades": 7,
+                "win_rate": 0.2857142857142857
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.06672267166414636,
+                "max_drawdown": 0.07349684617305796,
+                "mean_trade_return": -0.006744085300449598,
+                "profit_factor": 0.2847893740160532,
+                "trades": 10,
+                "win_rate": 0.4
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.1160286752034001,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.03736381087996764,
+                "profit_factor": 999.0,
+                "trades": 3,
+                "win_rate": 1.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.09282496230020065,
+              "max_drawdown": 0.1036921190870691,
+              "mean_trade_return": 0.002501777535469369,
+              "profit_factor": 1.3300923693311901,
+              "trades": 40,
+              "win_rate": 0.55
+            },
+            "symbol": "LTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.069867919012361,
+                "max_drawdown": 0.06724946737893045,
+                "mean_trade_return": 0.004766588421427468,
+                "profit_factor": 1.7582233370964055,
+                "trades": 15,
+                "win_rate": 0.6
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.19435380311508854,
+                "max_drawdown": 0.22633367058011045,
+                "mean_trade_return": -0.027225308231957606,
+                "profit_factor": 0.20854226371497783,
+                "trades": 7,
+                "win_rate": 0.2857142857142857
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.05056489597871161,
+                "max_drawdown": 0.08330169512353358,
+                "mean_trade_return": -0.002976297826092688,
+                "profit_factor": 0.6872945635206567,
+                "trades": 16,
+                "win_rate": 0.5
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.13948066882520838,
+                "max_drawdown": 0.0058874403815579734,
+                "mean_trade_return": 0.01666669362796892,
+                "profit_factor": 16.580064136886968,
+                "trades": 8,
+                "win_rate": 0.75
+              }
+            ],
+            "metrics": {
+              "compounded_return": -0.06750443871899126,
+              "max_drawdown": 0.265761923575342,
+              "mean_trade_return": -0.0007253379890439758,
+              "profit_factor": 0.9327218975491196,
+              "trades": 46,
+              "win_rate": 0.5434782608695652
+            },
+            "symbol": "DOTUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.421478881888371,
+                "max_drawdown": 0.08944584330087213,
+                "mean_trade_return": 0.012994935292863715,
+                "profit_factor": 3.913822146881621,
+                "trades": 28,
+                "win_rate": 0.7857142857142857
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.14644707783000888,
+                "max_drawdown": 0.1843327291182606,
+                "mean_trade_return": 0.004084678252942362,
+                "profit_factor": 1.3574514158900082,
+                "trades": 40,
+                "win_rate": 0.65
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.20853433816798017,
+                "max_drawdown": 0.24229040058723872,
+                "mean_trade_return": -0.009453884988113887,
+                "profit_factor": 0.4139752634800566,
+                "trades": 23,
+                "win_rate": 0.30434782608695654
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.09966369047234758,
+                "max_drawdown": 0.1434674425081529,
+                "mean_trade_return": 0.005177954002577423,
+                "profit_factor": 1.5797374176046404,
+                "trades": 20,
+                "win_rate": 0.7
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.4183597114166566,
+              "max_drawdown": 0.3060704048843019,
+              "mean_trade_return": 0.003724009402187455,
+              "profit_factor": 1.3652814130317796,
+              "trades": 111,
+              "win_rate": 0.6216216216216216
+            },
+            "symbol": "SUIUSDT"
+          }
+        ]
+      },
+      "params": {
+        "hold": 4,
+        "lookback": 12,
+        "threshold": 0.06,
+        "volume_z": 1.0
+      },
+      "stress": {
+        "aggregate": {
+          "largest_positive_symbol_contribution_share": 0.37572092283338937,
+          "mean_symbol_return": 0.08798439693834273,
+          "median_symbol_return": 0.030762431991986694,
+          "positive_symbols": 5,
+          "symbols": 8,
+          "total_trades": 498,
+          "worst_symbol_return": -0.1095466231207487
+        },
+        "blocks": [
+          {
+            "block": 1,
+            "mean_symbol_return": 0.1303737094281467,
+            "positive_symbols": 8,
+            "total_trades": 118
+          },
+          {
+            "block": 2,
+            "mean_symbol_return": -0.005956487141721381,
+            "positive_symbols": 4,
+            "total_trades": 151
+          },
+          {
+            "block": 3,
+            "mean_symbol_return": -0.09758797665237964,
+            "positive_symbols": 1,
+            "total_trades": 127
+          },
+          {
+            "block": 4,
+            "mean_symbol_return": 0.07832996807230455,
+            "positive_symbols": 7,
+            "total_trades": 102
+          }
+        ],
+        "per_symbol": [
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.043699943776079,
+                "max_drawdown": 0.007389010964701015,
+                "mean_trade_return": 0.008697213476767086,
+                "profit_factor": 6.214135082046092,
+                "trades": 5,
+                "win_rate": 0.6
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.0944919737824017,
+                "max_drawdown": 0.05421632612188354,
+                "mean_trade_return": 0.011936082404107092,
+                "profit_factor": 2.751994487882767,
+                "trades": 8,
+                "win_rate": 0.75
+              },
+              {
+                "block": 3,
+                "compounded_return": 0.03282768696849603,
+                "max_drawdown": 0.011233888701166928,
+                "mean_trade_return": 0.00654821399704453,
+                "profit_factor": 3.9144912199300492,
+                "trades": 5,
+                "win_rate": 0.8
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.04291683178531969,
+                "max_drawdown": 0.046649807790857034,
+                "mean_trade_return": 0.004478521682986082,
+                "profit_factor": 1.6084309817656544,
+                "trades": 10,
+                "win_rate": 0.6
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.23045515295444785,
+              "max_drawdown": 0.05421632612188365,
+              "mean_trade_return": 0.007732179051134844,
+              "profit_factor": 2.465970040519034,
+              "trades": 28,
+              "win_rate": 0.6785714285714286
+            },
+            "symbol": "BTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.13167531847578018,
+                "max_drawdown": 0.0044379934847483815,
+                "mean_trade_return": 0.021040619671196827,
+                "profit_factor": 20.044060164555955,
+                "trades": 6,
+                "win_rate": 0.6666666666666666
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.07955759700022802,
+                "max_drawdown": 0.07701682309611502,
+                "mean_trade_return": 0.004621351439645144,
+                "profit_factor": 1.479726351649656,
+                "trades": 19,
+                "win_rate": 0.5789473684210527
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.21286665354469747,
+                "max_drawdown": 0.23895444481841577,
+                "mean_trade_return": -0.008495164172828975,
+                "profit_factor": 0.4683260208798111,
+                "trades": 26,
+                "win_rate": 0.38461538461538464
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.05182998117558624,
+                "max_drawdown": 0.07197189377456992,
+                "mean_trade_return": 0.0025188586194152102,
+                "profit_factor": 1.3014141776864647,
+                "trades": 23,
+                "win_rate": 0.6086956521739131
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.011489826972989059,
+              "max_drawdown": 0.2524791491170574,
+              "mean_trade_return": 0.0006906604747761513,
+              "profit_factor": 1.0641024312491925,
+              "trades": 74,
+              "win_rate": 0.527027027027027
+            },
+            "symbol": "ETHUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.16577822796522623,
+                "max_drawdown": 0.0744616940794458,
+                "mean_trade_return": 0.012153661824491244,
+                "profit_factor": 2.621341642933234,
+                "trades": 14,
+                "win_rate": 0.6428571428571429
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.06557881723943515,
+                "max_drawdown": 0.10260496193971069,
+                "mean_trade_return": 0.002552095013073139,
+                "profit_factor": 1.2314907157454105,
+                "trades": 30,
+                "win_rate": 0.6
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.04252956214430781,
+                "max_drawdown": 0.06368540194879602,
+                "mean_trade_return": -0.0029762094315069804,
+                "profit_factor": 0.5747516343164398,
+                "trades": 14,
+                "win_rate": 0.35714285714285715
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.12494536646194421,
+                "max_drawdown": 0.0741128641733112,
+                "mean_trade_return": 0.006873972081616768,
+                "profit_factor": 2.1451060718205346,
+                "trades": 18,
+                "win_rate": 0.7777777777777778
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.3380068099653437,
+              "max_drawdown": 0.11865134921746379,
+              "mean_trade_return": 0.004326035281093101,
+              "profit_factor": 1.5123413204859713,
+              "trades": 76,
+              "win_rate": 0.6052631578947368
+            },
+            "symbol": "SOLUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.07381524939024131,
+                "max_drawdown": 0.08436082631274078,
+                "mean_trade_return": 0.004748976297341566,
+                "profit_factor": 1.6593337742973036,
+                "trades": 16,
+                "win_rate": 0.5625
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.1307836421000368,
+                "max_drawdown": 0.16352492762861437,
+                "mean_trade_return": -0.012631814725371834,
+                "profit_factor": 0.2922897826647478,
+                "trades": 10,
+                "win_rate": 0.4
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.04473612667008353,
+                "max_drawdown": 0.0928609825487583,
+                "mean_trade_return": -0.0022748880840987224,
+                "profit_factor": 0.7825433033422438,
+                "trades": 18,
+                "win_rate": 0.5555555555555556
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.0859453822643228,
+                "max_drawdown": 0.0057126181936747455,
+                "mean_trade_return": 0.016756256516172564,
+                "profit_factor": 15.66600422790891,
+                "trades": 5,
+                "win_rate": 0.8
+              }
+            ],
+            "metrics": {
+              "compounded_return": -0.03174712652582912,
+              "max_drawdown": 0.22700828094272552,
+              "mean_trade_return": -0.00015308631488096893,
+              "profit_factor": 0.9846206944565602,
+              "trades": 49,
+              "win_rate": 0.5510204081632653
+            },
+            "symbol": "LINKUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.1448719607821598,
+                "max_drawdown": 0.06767435983458758,
+                "mean_trade_return": 0.010340494853249125,
+                "profit_factor": 2.232737669557195,
+                "trades": 14,
+                "win_rate": 0.5714285714285714
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.033857257867240365,
+                "max_drawdown": 0.2097645823779848,
+                "mean_trade_return": -6.556465787306186e-05,
+                "profit_factor": 0.9957013639209973,
+                "trades": 30,
+                "win_rate": 0.5333333333333333
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.1448911921224194,
+                "max_drawdown": 0.14635875135947252,
+                "mean_trade_return": -0.009907438307853912,
+                "profit_factor": 0.36556404482835136,
+                "trades": 15,
+                "win_rate": 0.3333333333333333
+              },
+              {
+                "block": 4,
+                "compounded_return": -0.0003142772873012678,
+                "max_drawdown": 0.11204909787097828,
+                "mean_trade_return": 0.0003563692544701881,
+                "profit_factor": 1.0342646734062482,
+                "trades": 15,
+                "win_rate": 0.6
+              }
+            ],
+            "metrics": {
+              "compounded_return": -0.05445307996783333,
+              "max_drawdown": 0.3289348076840546,
+              "mean_trade_return": -6.297940425134926e-06,
+              "profit_factor": 0.9995171780262155,
+              "trades": 74,
+              "win_rate": 0.5135135135135135
+            },
+            "symbol": "ADAUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.04646963575081231,
+                "max_drawdown": 0.10370228794005565,
+                "mean_trade_return": 0.0026039511388418275,
+                "profit_factor": 1.312324648296981,
+                "trades": 20,
+                "win_rate": 0.6
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.02405861563824474,
+                "max_drawdown": 0.04348722262480931,
+                "mean_trade_return": -0.003379785856209817,
+                "profit_factor": 0.5654870417806549,
+                "trades": 7,
+                "win_rate": 0.2857142857142857
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.07607895217993488,
+                "max_drawdown": 0.07760953648433011,
+                "mean_trade_return": -0.007744085300449598,
+                "profit_factor": 0.22963516383070126,
+                "trades": 10,
+                "win_rate": 0.3
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.1128037073953223,
+                "max_drawdown": 0.0,
+                "mean_trade_return": 0.03636381087996764,
+                "profit_factor": 999.0,
+                "trades": 3,
+                "win_rate": 1.0
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.05003503701098433,
+              "max_drawdown": 0.11822827616474718,
+              "mean_trade_return": 0.001501777535469369,
+              "profit_factor": 1.1867187735196616,
+              "trades": 40,
+              "win_rate": 0.5
+            },
+            "symbol": "LTCUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.0539988216830285,
+                "max_drawdown": 0.07104090362151017,
+                "mean_trade_return": 0.003766588421427469,
+                "profit_factor": 1.5633104740708388,
+                "trades": 15,
+                "win_rate": 0.6
+              },
+              {
+                "block": 2,
+                "compounded_return": -0.20017323638577134,
+                "max_drawdown": 0.22964395836421403,
+                "mean_trade_return": -0.028225308231957607,
+                "profit_factor": 0.19616308122001314,
+                "trades": 7,
+                "win_rate": 0.2857142857142857
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.06569503130720156,
+                "max_drawdown": 0.09175319702516282,
+                "mean_trade_return": -0.003976297826092688,
+                "profit_factor": 0.6030805448345411,
+                "trades": 16,
+                "win_rate": 0.5
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.13054139594477898,
+                "max_drawdown": 0.006887440381557974,
+                "mean_trade_return": 0.01566669362796892,
+                "profit_factor": 12.871001757482691,
+                "trades": 8,
+                "win_rate": 0.75
+              }
+            ],
+            "metrics": {
+              "compounded_return": -0.1095466231207487,
+              "max_drawdown": 0.2811493091796007,
+              "mean_trade_return": -0.0017253379890439758,
+              "profit_factor": 0.8464689194442057,
+              "trades": 46,
+              "win_rate": 0.5434782608695652
+            },
+            "symbol": "DOTUSDT"
+          },
+          {
+            "blocks": [
+              {
+                "block": 1,
+                "compounded_return": 0.3826805176018462,
+                "max_drawdown": 0.09226162911443059,
+                "mean_trade_return": 0.011994935292863714,
+                "profit_factor": 3.557991808652544,
+                "trades": 28,
+                "win_rate": 0.75
+              },
+              {
+                "block": 2,
+                "compounded_return": 0.1015924668354573,
+                "max_drawdown": 0.18776574692944203,
+                "mean_trade_return": 0.0030846782529423615,
+                "profit_factor": 1.2619189060896452,
+                "trades": 40,
+                "win_rate": 0.65
+              },
+              {
+                "block": 3,
+                "compounded_return": -0.22673398221888852,
+                "max_drawdown": 0.24930205462358568,
+                "mean_trade_return": -0.010453884988113886,
+                "profit_factor": 0.3787759042955128,
+                "trades": 23,
+                "win_rate": 0.30434782608695654
+              },
+              {
+                "block": 4,
+                "compounded_return": 0.07797135683846346,
+                "max_drawdown": 0.14617032305371247,
+                "mean_trade_return": 0.004177954002577423,
+                "profit_factor": 1.452573380582015,
+                "trades": 20,
+                "win_rate": 0.7
+              }
+            ],
+            "metrics": {
+              "compounded_return": 0.269635178217388,
+              "max_drawdown": 0.3268507624843814,
+              "mean_trade_return": 0.002724009402187455,
+              "profit_factor": 1.2575382187067772,
+              "trades": 111,
+              "win_rate": 0.6126126126126126
+            },
+            "symbol": "SUIUSDT"
+          }
+        ]
+      }
+    }
+  ],
+  "schema_id": "dump_exhaustion_reversal_native_replay_v1"
+}

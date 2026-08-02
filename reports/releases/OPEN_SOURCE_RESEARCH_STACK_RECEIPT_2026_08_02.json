@@ -1,0 +1,53 @@
+{
+  "schema_id": "open_source_research_stack_receipt_v1",
+  "generated_at_utc": "2026-08-02T11:38:05+03:00",
+  "status": "INSTALLED_SMOKE_PASSED_AND_FIRST_FULL_PREFILTER_COMPLETE",
+  "runtime": {
+    "path": ".venv-research",
+    "python": "3.12",
+    "isolated_from_live_runtime": true
+  },
+  "packages": {
+    "vectorbt": "1.1.0",
+    "optuna": "4.9.0",
+    "numpy": "2.4.6"
+  },
+  "smoke": {
+    "portfolio_total_return": 0.03792207792207796,
+    "optuna_trials": 3,
+    "optuna_best_x": 1.0,
+    "status": "PASS"
+  },
+  "authority": {
+    "live_orders": false,
+    "live_risk": false,
+    "live_env": false,
+    "promotion": false
+  },
+  "full_prefilter": {
+    "screen": "vectorbt_crypto_prefilter_20260802",
+    "candidate_count": 170,
+    "symbols": 8,
+    "status": "COMPLETE_RISK_ZERO",
+    "result": "reports/research/vectorbt_crypto_family_prefilter_20260802/result.json",
+    "families_rejected_at_prefilter": [
+      "ema_trend",
+      "z_reversion",
+      "donchian",
+      "sweep_reclaim"
+    ],
+    "family_advanced_to_native_replay": "dump_exhaustion_reversal_long",
+    "discovery_summary": "Three of three train-frozen exhaustion long arms were positive on viewed chronological OOS under 18 bps stress costs; the strongest-breadth arm was positive on 7/8 symbols. This is discovery evidence only."
+  },
+  "native_replay": {
+    "status": "FAIL_NATIVE_ROBUSTNESS_KEEP_AS_REGIME_CANDIDATE",
+    "result": "reports/research/dump_exhaustion_reversal_native_replay_20260802/result.json",
+    "positive_arms_base": 3,
+    "positive_arms_stress": 3,
+    "binding_failures": [
+      "one_of_four_chronological_blocks_negative_across_breadth",
+      "strict_single_symbol_contribution_limit_failed"
+    ],
+    "capital_authorized": false
+  }
+}

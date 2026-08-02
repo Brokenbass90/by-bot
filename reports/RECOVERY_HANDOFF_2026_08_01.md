@@ -198,3 +198,34 @@ entry/rotation replay и отладка exit policy. Затем shadow, толь
 - Remote branch всё ещё отстаёт от local HEAD на 3 коммита. Live targeted patch
   выполнен, но Git remote не следует объявлять синхронизированным до отдельного
   разрешённого push.
+
+## Checkpoint 2 августа — ускоренная research factory
+
+- Владелец явно разрешил push. Ветка `codex/dynamic-symbol-filters` успешно
+  синхронизирована с GitHub до `bb41e49` (`origin ahead/behind = 0/0`).
+- Создан отдельный Python 3.12 runtime `.venv-research`; live VPS и основной
+  `.venv` не изменены. VectorBT `1.1.0` и Optuna `4.9.0` прошли deterministic
+  smoke. Receipt: `releases/OPEN_SOURCE_RESEARCH_STACK_RECEIPT_2026_08_02.json`.
+- Запущен пятый bounded supervisor `vectorbt_crypto_prefilter_20260802`: 170
+  вариантов, 8 монет, пять long/short семейств. Selection только train; OOS
+  получают frozen top-3 каждого семейства; live authority отсутствует.
+- Smoke подтвердил ценность слоя: EMA arm показал около `+102%` train, но
+  `−45.77%` stress-OOS и был немедленно разоблачён без live-ожидания.
+- Полный контракт и очередь: `ACCELERATED_RESEARCH_FACTORY_2026_08_02.md`.
+- Claude significance module проверен существующим test suite и принимается как
+  research utility; raw trial count не называется числом независимых попыток.
+
+### Результат первой массовой волны
+
+- Full prefilter завершился: 170/170 вариантов. Четыре семейства остановлены на
+  отрицательном OOS; это экономит месяцы последовательного shadow.
+- Единственный survivor — `dump exhaustion reversal long`: 3/3 замороженных
+  arms положительны на discovery OOS и stress, широкий arm имеет 7/8
+  положительных символов.
+- Собственный causal replay также дал 3/3 положительных arms overall, но
+  fail-closed gate остановил promotion: третий временной блок отрицателен почти
+  по всей ширине и concentration test не пройден. Следующая проверка —
+  preregistered regime discriminator, а не подгонка параметров на этом же OOS.
+- Пятый WIP-слот сразу переиспользован под
+  `att1_entry_distance_ablation_20260802` (5 arms, только distance-to-line,
+  live параметры и риск не меняются).
