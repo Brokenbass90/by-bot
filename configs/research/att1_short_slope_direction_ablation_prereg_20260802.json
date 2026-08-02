@@ -1,0 +1,29 @@
+{
+  "schema_id": "att1_short_slope_direction_ablation_prereg_v1",
+  "created_at_utc": "2026-08-02T12:00:00Z",
+  "status": "INTERIM_COMPLETE_CURRENT_BASELINE_RETAINS_SMALL_SAME_WINDOW_LEAD_NO_LIVE_CHANGE",
+  "trigger": "Live LTCUSDT ATT1 short at 2026-08-02T11:51:29Z used a +0.168%/day resistance line with R2 approximately 0.584. The production strategy permits slightly rising resistance up to +0.5%/day, while its stated core idea is descending resistance.",
+  "hypothesis": "Restricting ATT1 shorts to genuinely descending or nearly flat resistance improves geometry quality without destroying the short-only edge.",
+  "frozen": {
+    "strategy": "ATT1 short-only",
+    "universe": "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "window": "360 days ending 2026-04-30",
+    "costs": "fee 6 bps plus slippage 2 bps",
+    "entry_execution": "next open",
+    "all_other_parameters": "production r001 geometry contract"
+  },
+  "single_variable_arms": {
+    "ATT1_SHORT_MAX_POS_SLOPE": [0.0, 0.1, 0.25, 0.5]
+  },
+  "required_followups": [
+    "untouched time OOS for any train-selected arm",
+    "symbol LOSO",
+    "bull bear chop split",
+    "base and stress costs",
+    "signed slope bucket attribution",
+    "R2 bucket attribution",
+    "entry distance ATR distribution"
+  ],
+  "selection_rule": "The 0.5 arm is the current baseline. No live change unless a stricter arm retains adequate power and improves a stable plateau on untouched OOS and LOSO. OOS is evaluation only, never parameter selection.",
+  "live_authority": false
+}

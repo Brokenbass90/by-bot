@@ -1,0 +1,41 @@
+{
+  "schema_id": "att1_short_slope_direction_ablation_interim_v1",
+  "created_at_utc": "2026-08-02T12:05:00Z",
+  "status": "INTERIM_COMPLETE_NO_LIVE_CHANGE",
+  "source": "backtest_runs/autoresearch_20260802_120031_att1_short_slope_direction_ablation_20260802/results.csv",
+  "search_n_trials_planned": 4,
+  "search_n_trials_scheduled": 4,
+  "selection_n_trials_evaluated": 4,
+  "frozen_window": {
+    "days": 360,
+    "end": "2026-04-30",
+    "symbols": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT",
+      "ADAUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "DOTUSDT",
+      "SUIUSDT"
+    ],
+    "fee_bps": 6,
+    "slippage_bps": 2,
+    "entry": "next_open"
+  },
+  "arms": [
+    {"short_max_pos_slope_pct_day": 0.0, "trades": 283, "net_pct": 26.69, "profit_factor": 1.394, "max_drawdown_pct": 6.5745, "negative_months": 1},
+    {"short_max_pos_slope_pct_day": 0.1, "trades": 283, "net_pct": 26.69, "profit_factor": 1.394, "max_drawdown_pct": 6.5745, "negative_months": 1},
+    {"short_max_pos_slope_pct_day": 0.25, "trades": 285, "net_pct": 26.76, "profit_factor": 1.393, "max_drawdown_pct": 6.5883, "negative_months": 1},
+    {"short_max_pos_slope_pct_day": 0.5, "trades": 290, "net_pct": 27.77, "profit_factor": 1.402, "max_drawdown_pct": 6.5524, "negative_months": 2}
+  ],
+  "interpretation": "The current 0.5 percent per day allowance retains a small same-window lead. Descending-only removes seven of 290 trades and nearly preserves aggregate economics. The incremental positive-slope sample is too small for a promotion decision.",
+  "required_next": [
+    "untouched time OOS",
+    "signed slope trade attribution",
+    "symbol LOSO",
+    "regime and cost stress"
+  ],
+  "live_authority": false,
+  "live_changed": false
+}
