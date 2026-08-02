@@ -1020,6 +1020,18 @@ function TradeCandlesSvg({ trade, chartData }) {
       strokeWidth: 2.2,
       opacity: 0.95,
     }));
+    const pivotPoints = Array.isArray(trend.points_ts_px) ? trend.points_ts_px : [];
+    pivotPoints.forEach((point, idx) => {
+      const price = parseFloat(point && point.price);
+      const ts = Number(point && point.ts_ms);
+      if (isNaN(price) || !ts) return;
+      const px = x(closestIdx(ts));
+      const py = y(price);
+      geometryLines.push(React.createElement('g', { key: `signal-pivot-${idx}` },
+        React.createElement('circle', { cx: px, cy: py, r: 5, fill: '#f2cc60', stroke: '#0d1117', strokeWidth: 2 }),
+        React.createElement('text', { x: px, y: py - 10, fill: '#f2cc60', fontSize: 10, textAnchor: 'middle', fontFamily: 'monospace' }, `P${idx + 1}`)
+      ));
+    });
   }
   const sourceText = chartData.source === 'bybit'
     ? 'Свечной график загружен с Bybit. Маркеры входа/выхода, SL и TP взяты из журнала сделки.'

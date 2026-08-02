@@ -18,6 +18,8 @@ _FIELD_PATTERNS = {
     "lower": re.compile(rf"\blower={_NUMBER}", re.IGNORECASE),
     "resistance": re.compile(rf"\b(?:res|resistance)={_NUMBER}", re.IGNORECASE),
     "support": re.compile(rf"\b(?:sup|support)={_NUMBER}", re.IGNORECASE),
+    "reaction_origin": re.compile(rf"\bg2origin={_NUMBER}", re.IGNORECASE),
+    "opposing_support": re.compile(rf"\bg2support={_NUMBER}", re.IGNORECASE),
 }
 _METRIC_PATTERNS = {
     "rsi": re.compile(rf"\brsi={_NUMBER}", re.IGNORECASE),
@@ -30,8 +32,10 @@ _METRIC_PATTERNS = {
     "body_atr": re.compile(rf"\bbody={_NUMBER}", re.IGNORECASE),
     "atr_pct": re.compile(rf"\batrpct={_NUMBER}", re.IGNORECASE),
     "quality": re.compile(rf"\bquality={_NUMBER}", re.IGNORECASE),
+    "room_r": re.compile(rf"\broomr={_NUMBER}", re.IGNORECASE),
 }
 _SLOPE = re.compile(rf"\bslope={_NUMBER}%/d", re.IGNORECASE)
+_ANCHORS = re.compile(r"\banchors=([0-9eE+.:|\-]+)", re.IGNORECASE)
 
 
 def _finite_float(value: Any) -> float | None:
@@ -67,6 +71,19 @@ def parse_signal_geometry(reason: str) -> dict[str, Any]:
 
     slope_match = _SLOPE.search(text)
     slope = _finite_float(slope_match.group(1)) if slope_match else None
+    anchor_match = _ANCHORS.search(text)
+    pivot_points: list[dict[str, Any]] = []
+    if anchor_match:
+        for raw_point in anchor_match.group(1).split("|"):
+            if ":" not in raw_point:
+                continue
+            raw_ts, raw_price = raw_point.split(":", 1)
+            ts_value = _finite_float(raw_ts)
+            price_value = _finite_float(raw_price)
+            if ts_value is None or price_value is None or price_value <= 0:
+                continue
+            ts_ms = int(ts_value if ts_value > 10**11 else ts_value * 1000)
+            pivot_points.append({"ts_ms": ts_ms, "price": float(price_value)})
     sloped_lines: list[dict[str, Any]] = []
     if trendline is not None:
         sloped_lines.append(
@@ -74,10 +91,10 @@ def parse_signal_geometry(reason: str) -> dict[str, Any]:
                 "role": "signal_trendline",
                 "projection_at_signal": trendline,
                 "slope_pct_per_day": slope,
-                "points_ts_px": [],
+                "points_ts_px": pivot_points,
                 "provenance": "signal_reason",
                 "exact_projection": True,
-                "exact_pivots": False,
+                "exact_pivots": bool(pivot_points),
             }
         )
 
@@ -105,7 +122,9 @@ def parse_signal_geometry(reason: str) -> dict[str, Any]:
         "metrics": metrics,
         "source_reason": text,
         "limitations": (
-            [] if not sloped_lines else ["pivot_points_not_serialized_by_strategy"]
+            []
+            if not sloped_lines or pivot_points
+            else ["pivot_points_not_serialized_by_strategy"]
         ),
     }
 

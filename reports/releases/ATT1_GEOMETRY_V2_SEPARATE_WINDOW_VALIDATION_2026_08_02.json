@@ -1,0 +1,37 @@
+{
+  "schema_id": "att1_geometry_v2_separate_window_validation_v1",
+  "generated_at_utc": "2026-08-02T12:41:00Z",
+  "status": "SHADOW_CLASSIFIER_CANDIDATE_NOT_LIVE_GATE",
+  "research_only": true,
+  "capital_authorized": false,
+  "live_change_authorized": false,
+  "n_trials_planned": 4,
+  "n_trials_evaluated": 4,
+  "sources": [
+    "backtest_runs/autoresearch_20260802_123544_att1_geometry_v2_line_quality_early_20260802/results.csv",
+    "backtest_runs/autoresearch_20260802_123544_att1_geometry_v2_line_quality_recent_20260802/results.csv"
+  ],
+  "windows": [
+    {
+      "name": "early_360d_ending_2025_04_30",
+      "baseline": {"trades": 23, "net_pct": 0.52, "profit_factor": 1.078, "win_rate": 0.522, "max_drawdown_pct": 2.6187, "negative_months": 1},
+      "line_quality": {"trades": 18, "net_pct": 0.21, "profit_factor": 1.04, "win_rate": 0.5, "max_drawdown_pct": 2.0508, "negative_months": 1},
+      "removed_baseline_trades": 5,
+      "removed_baseline_pnl": 0.31021917,
+      "power_status": "INSUFFICIENT_TRADES"
+    },
+    {
+      "name": "recent_92d_ending_2026_07_31",
+      "baseline": {"trades": 42, "net_pct": 8.70, "profit_factor": 2.167, "win_rate": 0.714, "max_drawdown_pct": 2.7804, "negative_months": 0},
+      "line_quality": {"trades": 37, "net_pct": 7.67, "profit_factor": 2.188, "win_rate": 0.73, "max_drawdown_pct": 2.7889, "negative_months": 0},
+      "removed_baseline_trades": 8,
+      "removed_baseline_pnl": 1.20586844,
+      "portfolio_induced_additions": 3,
+      "portfolio_induced_additions_pnl": 0.184476,
+      "power_status": "LIMITED_BUT_USABLE_DIAGNOSTIC"
+    }
+  ],
+  "verdict": "The line-quality rule improves causal strategy identity and blocks the audited LTC setup, but separate windows do not show a clear net-profit improvement.",
+  "implementation_decision": "Keep live champion unchanged. ATT1_GEOMETRY_V2_OBSERVE provides a non-blocking classification path for a later flat-state deploy; route profitable horizontal reactions to a separately validated resistance-fade sleeve.",
+  "next_falsifiable_experiment": "Run symbol LOSO and a risk-zero live parity ledger comparing champion decisions with valid-line, horizontal-reaction, and rejected-geometry classes."
+}

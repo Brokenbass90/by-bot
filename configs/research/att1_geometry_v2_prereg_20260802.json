@@ -1,0 +1,38 @@
+{
+  "schema_id": "att1_geometry_v2_prereg_v1",
+  "created_at_utc": "2026-08-02T12:30:00Z",
+  "status": "PREREGISTERED_RESEARCH_ONLY",
+  "question": "Does a liquidity-aware causal geometry gate remove mislabeled or obstructed ATT1 shorts while preserving economically useful descending-resistance entries?",
+  "motivation": "The 2026-08-02 LTCUSDT live entry was accepted by the champion as a trendline touch although the fitted resistance was rising, weak, not reached, roughly 1 ATR above entry, and a nearer horizontal liquidity structure better explained the reaction.",
+  "frozen_champion": {
+    "strategy": "alt_trendline_touch_v1 short-only",
+    "geometry_v2_enable": false,
+    "live_authority": false
+  },
+  "challenger": {
+    "ATT1_GEOMETRY_V2_ENABLE": true,
+    "ATT1_G2_MIN_DESC_SLOPE": 0.03,
+    "ATT1_G2_MIN_R2": 0.65,
+    "ATT1_G2_MAX_ENTRY_DIST_ATR": 0.75,
+    "ATT1_G2_MAX_TOUCH_MISS_ATR": 0.10,
+    "ATT1_G2_MIN_ROOM_R": 0.80,
+    "required_evidence": [
+      "three confirmed descending resistance pivots",
+      "signal candle reaches the projected line zone",
+      "entry remains close to the rejection",
+      "at least 0.80R room before equal-low or horizontal support",
+      "horizontal-resistance reactions are attributed to their own family"
+    ]
+  },
+  "evaluation_order": [
+    "same-window causal preflight",
+    "blocker and removed-trade attribution",
+    "untouched time OOS",
+    "symbol LOSO and concentration",
+    "bull bear chop regimes",
+    "base and stress costs"
+  ],
+  "decision_rule": "The same-window preflight can reject the challenger but cannot promote it. Promotion requires an untouched OOS pass, adequate sample size, no single-symbol dependence, and a stable neighborhood rather than one threshold island.",
+  "capital_authorized": false,
+  "live_change_authorized": false
+}

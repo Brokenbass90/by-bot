@@ -1,0 +1,63 @@
+{
+  "name": "att1_geometry_v2_profile_decomposition_20260802",
+  "description": "Research-only decomposition of ATT1 Geometry V2 blocker families after the strict bundle removed 84.5% of activity.",
+  "cache_only": true,
+  "command": [
+    "{python}", "backtest/run_portfolio.py",
+    "--symbols", "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "--strategies", "alt_trendline_touch_v1",
+    "--days", "360",
+    "--end", "2026-04-30",
+    "--tag", "{tag}",
+    "--starting_equity", "100",
+    "--risk_pct", "0.0075",
+    "--leverage", "1",
+    "--max_positions", "3",
+    "--fee_bps", "6",
+    "--slippage_bps", "2",
+    "--entry-on-next-open"
+  ],
+  "base_env": {
+    "ATT1_ALLOW_LONGS": "0",
+    "ATT1_ALLOW_SHORTS": "1",
+    "ATT1_PIVOT_LEFT": "2",
+    "ATT1_PIVOT_RIGHT": "3",
+    "ATT1_MIN_PIVOTS": "2",
+    "ATT1_MAX_PIVOTS_USED": "3",
+    "ATT1_MAX_PIVOT_AGE": "16",
+    "ATT1_MIN_R2": "0.55",
+    "ATT1_TOUCH_ATR": "0.50",
+    "ATT1_RSI_SHORT_MIN": "45",
+    "ATT1_RSI_SHORT_MAX": "100",
+    "ATT1_MAX_ENTRY_DIST_ATR": "2.0",
+    "ATT1_SHORT_MAX_POS_SLOPE": "0.5",
+    "ATT1_GEOMETRY_V2_ENABLE": "1",
+    "ATT1_G2_MIN_DESC_SLOPE": "0.03",
+    "ATT1_G2_MIN_R2": "0.65",
+    "ATT1_G2_MAX_ENTRY_DIST_ATR": "0.75",
+    "ATT1_G2_MAX_TOUCH_MISS_ATR": "0.10",
+    "ATT1_G2_MIN_ROOM_R": "0.80"
+  },
+  "grid": {
+    "ATT1_G2_PROFILE": [
+      "line_quality",
+      "touch_lateness",
+      "room",
+      "attribution",
+      "line_quality+touch_lateness",
+      "attribution+room",
+      "all"
+    ]
+  },
+  "constraints": {
+    "min_trades": 40,
+    "min_profit_factor": 1.10,
+    "max_drawdown": 10.0,
+    "min_net_pnl": 0.0,
+    "max_negative_months": 5,
+    "max_negative_streak": 3
+  },
+  "selection_contract": "Mechanism attribution only. No same-window winner may alter live. Select train-only in a new split after blocker attribution.",
+  "live_authority": false,
+  "_combo_count": 7
+}

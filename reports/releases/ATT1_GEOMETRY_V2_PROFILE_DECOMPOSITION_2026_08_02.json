@@ -1,0 +1,31 @@
+{
+  "schema_id": "att1_geometry_v2_profile_decomposition_v1",
+  "generated_at_utc": "2026-08-02T12:34:00Z",
+  "status": "LINE_QUALITY_SELECTED_FOR_SEPARATE_WINDOW_VALIDATION",
+  "research_only": true,
+  "capital_authorized": false,
+  "live_change_authorized": false,
+  "source": "backtest_runs/autoresearch_20260802_122747_att1_geometry_v2_profile_decomposition_20260802/results.csv",
+  "n_trials_planned": 7,
+  "n_trials_evaluated": 7,
+  "same_window_baseline": {
+    "trades": 290,
+    "net_pct": 27.77,
+    "profit_factor": 1.402,
+    "max_drawdown_pct": 6.5524,
+    "negative_months": 2
+  },
+  "profiles": [
+    {"name": "line_quality", "passed": true, "trades": 258, "net_pct": 25.76, "profit_factor": 1.421, "max_drawdown_pct": 4.7995, "negative_months": 3},
+    {"name": "touch_lateness", "passed": true, "trades": 186, "net_pct": 10.27, "profit_factor": 1.237, "max_drawdown_pct": 4.7421, "negative_months": 4},
+    {"name": "room", "passed": false, "trades": 113, "net_pct": 5.37, "profit_factor": 1.178, "max_drawdown_pct": 3.9823, "negative_months": 6},
+    {"name": "attribution", "passed": true, "trades": 232, "net_pct": 17.47, "profit_factor": 1.301, "max_drawdown_pct": 5.669, "negative_months": 4},
+    {"name": "line_quality+touch_lateness", "passed": true, "trades": 170, "net_pct": 7.65, "profit_factor": 1.189, "max_drawdown_pct": 5.1314, "negative_months": 4},
+    {"name": "attribution+room", "passed": false, "trades": 90, "net_pct": 3.02, "profit_factor": 1.121, "max_drawdown_pct": 5.223, "negative_months": 6},
+    {"name": "all", "passed": false, "trades": 45, "net_pct": 2.58, "profit_factor": 1.218, "max_drawdown_pct": 2.5194, "negative_months": 6}
+  ],
+  "selected_mechanism": "line_quality",
+  "selection_reason": "Retained 89.0% of trades and 92.8% of net while improving PF and drawdown; it directly blocks the audited rising weak LTC line.",
+  "limitation": "Selection used the same diagnostic window as the champion; it cannot authorize capital or a live parameter change.",
+  "next_falsifiable_experiment": "Freeze line_quality and compare it with the unchanged champion on separate earlier and later time windows, then run symbol LOSO and removed-trade attribution."
+}

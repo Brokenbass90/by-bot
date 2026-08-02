@@ -57,6 +57,14 @@ Environment variables (ATT1_ prefix)
   ATT1_RSI_SHORT_MIN         float  min RSI for short [45.0]
   ATT1_RSI_SHORT_MAX         float  max RSI for short [100.0]
   ATT1_TREND_GUARD_BARS      int    A3-style directional guard; 0 disables [0]
+  ATT1_GEOMETRY_V2_ENABLE    bool   research challenger; liquidity/room gate [0]
+  ATT1_GEOMETRY_V2_OBSERVE   bool   record V2 classification without blocking [0]
+  ATT1_G2_MIN_DESC_SLOPE     float  minimum descending short slope pct/day [0.03]
+  ATT1_G2_MIN_R2             float  minimum three-pivot fit [0.65]
+  ATT1_G2_MAX_ENTRY_DIST_ATR float  maximum post-rejection entry delay [0.75]
+  ATT1_G2_MAX_TOUCH_MISS_ATR float  maximum miss of projected line [0.10]
+  ATT1_G2_MIN_ROOM_R         float  minimum room to opposing support [0.80]
+  ATT1_G2_PROFILE            str    all|line_quality|touch_lateness|room|attribution [all]
   ATT1_SL_ATR_MULT           float  SL buffer below/above trendline [1.10]
   ATT1_TP1_RR                float  TP1 R-multiple [1.20]
   ATT1_TP2_RR                float  TP2 R-multiple [2.50]
@@ -289,6 +297,7 @@ def _entry_card_text(
     high: float,
     low: float,
     atr: float,
+    timestamps: Optional[List[int]] = None,
 ) -> str:
     """Stable, behavior-neutral entry features for causal ATT1 forensics."""
     _, _, r2 = _fit_line_points(points)
@@ -303,10 +312,19 @@ def _entry_card_text(
         touch_dist_atr = (touch_extreme - trendline_level) / max(1e-12, atr)
         reject_dist_atr = (close - trendline_level) / max(1e-12, atr)
     atr_pct = atr / max(1e-12, entry) * 100.0
+    anchors = ""
+    if timestamps:
+        serialized = []
+        for index, price in points:
+            if 0 <= int(index) < len(timestamps):
+                serialized.append(f"{int(timestamps[int(index)])}:{float(price):.8g}")
+        if serialized:
+            anchors = " anchors=" + "|".join(serialized)
     return (
         f"r2={r2:.3f} pivots={len(points)} age={pivot_age} "
         f"entrydist={entry_dist_atr:.3f} touchdist={touch_dist_atr:.3f} "
         f"reject={reject_dist_atr:.3f} body={body_frac:.3f} atrpct={atr_pct:.3f}"
+        f"{anchors}"
     )
 
 
@@ -347,6 +365,17 @@ class AltTrendlineTouchV1Config:
     rsi_short_min: float = 45.0
     rsi_short_max: float = 100.0
     trend_guard_bars: int = 0
+
+    # Research-only Geometry V2 challenger. Disabled by default so importing
+    # this build cannot silently alter the live ATT1 champion.
+    geometry_v2_enable: bool = False
+    geometry_v2_observe: bool = False
+    g2_min_desc_slope_pct_day: float = 0.03
+    g2_min_r2: float = 0.65
+    g2_max_entry_dist_atr: float = 0.75
+    g2_max_touch_miss_atr: float = 0.10
+    g2_min_room_r: float = 0.80
+    g2_profile: str = "all"
 
     # Trade management
     sl_atr_mult: float = 1.10
@@ -411,6 +440,20 @@ class AltTrendlineTouchV1Strategy:
         c.rsi_short_min = _env_float("ATT1_RSI_SHORT_MIN", c.rsi_short_min)
         c.rsi_short_max = _env_float("ATT1_RSI_SHORT_MAX", c.rsi_short_max)
         c.trend_guard_bars = _env_int("ATT1_TREND_GUARD_BARS", c.trend_guard_bars)
+        c.geometry_v2_enable = _env_bool("ATT1_GEOMETRY_V2_ENABLE", c.geometry_v2_enable)
+        c.geometry_v2_observe = _env_bool("ATT1_GEOMETRY_V2_OBSERVE", c.geometry_v2_observe)
+        c.g2_min_desc_slope_pct_day = _env_float(
+            "ATT1_G2_MIN_DESC_SLOPE", c.g2_min_desc_slope_pct_day
+        )
+        c.g2_min_r2 = _env_float("ATT1_G2_MIN_R2", c.g2_min_r2)
+        c.g2_max_entry_dist_atr = _env_float(
+            "ATT1_G2_MAX_ENTRY_DIST_ATR", c.g2_max_entry_dist_atr
+        )
+        c.g2_max_touch_miss_atr = _env_float(
+            "ATT1_G2_MAX_TOUCH_MISS_ATR", c.g2_max_touch_miss_atr
+        )
+        c.g2_min_room_r = _env_float("ATT1_G2_MIN_ROOM_R", c.g2_min_room_r)
+        c.g2_profile = str(os.getenv("ATT1_G2_PROFILE", c.g2_profile) or c.g2_profile).strip().lower()
         c.sl_atr_mult = _env_float("ATT1_SL_ATR_MULT", c.sl_atr_mult)
         c.max_entry_dist_atr = _env_float("ATT1_MAX_ENTRY_DIST_ATR", c.max_entry_dist_atr)
         c.min_rr = _env_float("ATT1_MIN_RR", c.min_rr)
@@ -731,6 +774,7 @@ class AltTrendlineTouchV1Strategy:
                                 high=highs[-1],
                                 low=lows[-1],
                                 atr=atr,
+                                timestamps=[int(float(row[0])) for row in rows],
                             )
                         ),
                     )
@@ -755,6 +799,51 @@ class AltTrendlineTouchV1Strategy:
                     if entry_dist_atr > self.cfg.max_entry_dist_atr:
                         self._no_signal("short_entry_too_far_from_line")
                         return None
+                    geometry_v2_text = ""
+                    if self.cfg.geometry_v2_enable or self.cfg.geometry_v2_observe:
+                        # Lazy import keeps the production champion independent
+                        # unless the explicitly enabled research challenger is
+                        # under test.  The evaluator is causal and sees only the
+                        # same closed signal bars that ATT1 already consumed.
+                        from bot.att1_geometry_v2 import (
+                            enforced_geometry_v2_blockers,
+                            evaluate_att1_short_geometry_v2,
+                        )
+
+                        geometry_v2 = evaluate_att1_short_geometry_v2(
+                            rows,
+                            entry=cur,
+                            sl=sl,
+                            pivot_left=self.cfg.pivot_left,
+                            pivot_right=self.cfg.pivot_right,
+                            max_pivots_used=self.cfg.max_pivots_used,
+                            max_pivot_age=self.cfg.max_pivot_age,
+                            min_descending_slope_pct_day=self.cfg.g2_min_desc_slope_pct_day,
+                            min_r2=self.cfg.g2_min_r2,
+                            max_entry_distance_atr=self.cfg.g2_max_entry_dist_atr,
+                            max_touch_miss_atr=self.cfg.g2_max_touch_miss_atr,
+                            min_room_to_support_r=self.cfg.g2_min_room_r,
+                        )
+                        enforced = enforced_geometry_v2_blockers(
+                            geometry_v2,
+                            self.cfg.g2_profile,
+                        )
+                        if self.cfg.geometry_v2_enable and enforced:
+                            self._no_signal(f"short_geometry_v2_{enforced[0]}")
+                            return None
+                        room_r = geometry_v2.room_to_support_r
+                        origin = geometry_v2.horizontal_origin
+                        support = geometry_v2.nearest_support
+                        geometry_v2_text = (
+                            f" g2={geometry_v2.classification}"
+                            f" g2profile={self.cfg.g2_profile}"
+                            f" g2block={'none' if not enforced else '|'.join(enforced)}"
+                            f" roomr={'inf' if room_r is None else f'{room_r:.3f}'}"
+                            f" g2origin={'none' if origin is None else f'{origin:.8g}'}"
+                            f" g2originsrc={geometry_v2.horizontal_origin_source or 'none'}"
+                            f" g2support={'none' if support is None else f'{support:.8g}'}"
+                            f" g2supportsrc={geometry_v2.nearest_support_source or 'none'}"
+                        )
                     tp1 = cur - self.cfg.tp1_rr * risk
                     tp2 = cur - self.cfg.tp2_rr * risk
                     if tp2 > 0:
@@ -793,6 +882,7 @@ class AltTrendlineTouchV1Strategy:
                                 f"tl={tl_level:.4f} "
                                 f"slope={slope * 24 / max(1e-12, cur) * 100:.3f}%/d "
                                 f"rsi={rsi:.1f} "
+                                f"{geometry_v2_text} "
                                 + _entry_card_text(
                                     side="short",
                                     points=_find_swing_highs(highs, self.cfg.pivot_left, self.cfg.pivot_right)[
@@ -807,6 +897,7 @@ class AltTrendlineTouchV1Strategy:
                                     high=highs[-1],
                                     low=lows[-1],
                                     atr=atr,
+                                    timestamps=[int(float(row[0])) for row in rows],
                                 )
                             ),
                         )

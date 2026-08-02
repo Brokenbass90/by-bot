@@ -14,10 +14,12 @@ def test_att1_entry_card_exposes_richer_geometry_without_changing_signal() -> No
         high=107.35,
         low=106.60,
         atr=1.0,
+        timestamps=[1_700_000_000_000 + i * 3_600_000 for i in range(31)],
     )
 
     for field in ("r2=", "pivots=3", "age=6", "entrydist=", "touchdist=", "reject=", "body=", "atrpct="):
         assert field in card
+    assert "anchors=1700028800000:110|1700057600000:109|1700086400000:108" in card
 
 
 def test_att1_short_rsi_max_loads_from_env(monkeypatch) -> None:
@@ -26,6 +28,24 @@ def test_att1_short_rsi_max_loads_from_env(monkeypatch) -> None:
     strategy = att1.AltTrendlineTouchV1Strategy()
 
     assert strategy.cfg.rsi_short_max == 70.0
+
+
+def test_att1_geometry_v2_is_opt_in(monkeypatch) -> None:
+    monkeypatch.delenv("ATT1_GEOMETRY_V2_ENABLE", raising=False)
+    monkeypatch.delenv("ATT1_GEOMETRY_V2_OBSERVE", raising=False)
+    champion = att1.AltTrendlineTouchV1Strategy()
+    assert champion.cfg.geometry_v2_enable is False
+    assert champion.cfg.geometry_v2_observe is False
+
+    monkeypatch.setenv("ATT1_GEOMETRY_V2_ENABLE", "1")
+    challenger = att1.AltTrendlineTouchV1Strategy()
+    assert challenger.cfg.geometry_v2_enable is True
+
+    monkeypatch.setenv("ATT1_GEOMETRY_V2_ENABLE", "0")
+    monkeypatch.setenv("ATT1_GEOMETRY_V2_OBSERVE", "1")
+    observer = att1.AltTrendlineTouchV1Strategy()
+    assert observer.cfg.geometry_v2_enable is False
+    assert observer.cfg.geometry_v2_observe is True
 
 
 def test_att1_short_rejects_rsi_above_configured_max(monkeypatch) -> None:

@@ -1,0 +1,19 @@
+{
+  "schema_id": "att1_geometry_v2_observer_parity_v1",
+  "generated_at_utc": "2026-08-02T12:40:00Z",
+  "status": "PASS_BEHAVIOR_NEUTRAL_RESEARCH_ONLY",
+  "research_only": true,
+  "capital_authorized": false,
+  "live_change_authorized": false,
+  "source": "backtest_runs/autoresearch_20260802_123855_att1_geometry_v2_observe_parity_20260802/results.csv",
+  "window": "92d ending 2026-07-31",
+  "n_trials_planned": 2,
+  "n_trials_evaluated": 2,
+  "observer_off": {"trades": 42, "net_pct": 8.70, "profit_factor": 2.167, "win_rate": 0.714, "max_drawdown_pct": 2.7804},
+  "observer_on": {"trades": 42, "net_pct": 8.70, "profit_factor": 2.167, "win_rate": 0.714, "max_drawdown_pct": 2.7804},
+  "canonical_trade_sha256_off": "36bd7b718369784d60af148a03a71362c7d6164aaffd67a55913c3a71fb41433",
+  "canonical_trade_sha256_on": "36bd7b718369784d60af148a03a71362c7d6164aaffd67a55913c3a71fb41433",
+  "exact_decision_and_economics_parity": true,
+  "interpretation": "ATT1_GEOMETRY_V2_OBSERVE changes diagnostic reason text only; it does not change decisions or economics in this parity window.",
+  "deployment_note": "No live deployment is authorized by this receipt. A later flat-state telemetry-only deploy still requires a direct live receipt."
+}

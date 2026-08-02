@@ -1,5 +1,13 @@
 # LTCUSDT ATT1 live entry audit — 2026-08-02
 
+> **Superseded geometry interpretation.** The direct execution/protection facts
+> below remain valid, but the first verdict treated reproducibility of the
+> fitted line as stronger evidence than it was.  The liquidity-aware follow-up
+> in `reports/ATT1_GEOMETRY_V2_FORENSIC_2026_08_02.md` shows that horizontal
+> liquidity around 44.79-44.82 better explains the reaction and that the entry
+> had only about 0.21R room before the equal-low pool at 44.57.  Read the entry
+> as a mislabeled/late boundary setup, not a clean ATT1 trendline example.
+
 ## Direct truth
 
 - Execution: `Sell 1.1 LTCUSDT @ 44.65`, 2026-08-02 11:51:29 UTC.

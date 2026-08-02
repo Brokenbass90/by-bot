@@ -1,0 +1,36 @@
+{
+  "schema_id": "att1_geometry_v2_strict_preflight_v1",
+  "generated_at_utc": "2026-08-02T12:25:00Z",
+  "status": "REPAIR_STRICT_BUNDLE_REJECTED_PROFILE_DECOMPOSITION_RUNNING",
+  "research_only": true,
+  "capital_authorized": false,
+  "live_change_authorized": false,
+  "source": "backtest_runs/autoresearch_20260802_122358_att1_geometry_v2_preflight_20260802/results.csv",
+  "n_trials_planned": 2,
+  "n_trials_evaluated": 2,
+  "arms": [
+    {
+      "name": "current_champion",
+      "geometry_v2_enable": false,
+      "trades": 290,
+      "net_pct": 27.77,
+      "profit_factor": 1.402,
+      "win_rate": 0.593,
+      "max_drawdown_pct": 6.5524,
+      "negative_months": 2
+    },
+    {
+      "name": "strict_geometry_v2",
+      "geometry_v2_enable": true,
+      "trades": 45,
+      "net_pct": 2.58,
+      "profit_factor": 1.218,
+      "win_rate": 0.533,
+      "max_drawdown_pct": 2.5194,
+      "negative_months": 6
+    }
+  ],
+  "binding_failure": "Strict V2 removed 84.5% of champion trades and increased negative months from 2 to 6.",
+  "interpretation": "The forensic blockers correctly reject the 2026-08-02 LTC boundary setup, but enforcing all blocker families together is too selective to replace ATT1.",
+  "next_falsifiable_experiment": "Decompose line quality, touch/lateness, room, and horizontal attribution on the same causal harness; no same-window arm has live authority."
+}
