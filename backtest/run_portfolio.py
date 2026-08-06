@@ -818,6 +818,33 @@ def _load_symbol_base(
         v = float(r[5]) if len(r) > 5 else 0.0
         out.append(Candle(ts=ts, o=o, h=h, l=l, c=c, v=v))
 
+    # 2026-08-04 (Claude): СТРАЖ ПОКРЫТИЯ.
+    # _pick_best_cached_rows() принимает слайс с ЛЮБЫМ ненулевым пересечением
+    # с запрошенным окном. Поэтому файл, покрывающий треть периода, проходит
+    # молча, и прогон считает «540 дней», имея 180. Ровно так прогон на
+    # 13 символах читал .cache/klines, где у 11 из 13 альтов покрытие 67%.
+    # Печатаем покрытие всегда; падаем, только если порог задан явно.
+    _interval_ms = int(base_interval_min) * 60_000
+    _expected = max(1, (end_ms - start_ms) // _interval_ms)
+    _cov = len(out) / _expected
+    _min_cov_raw = str(os.getenv("BACKTEST_MIN_COVERAGE_FRAC", "")).strip()
+    if _cov < 0.999 or _min_cov_raw:
+        print(
+            f"[coverage] {symbol}: {len(out)}/{_expected} баров = {_cov*100:.1f}% "
+            f"окна {start_ms}..{end_ms}"
+        )
+    if _min_cov_raw:
+        try:
+            _min_cov = float(_min_cov_raw)
+        except ValueError:
+            _min_cov = 0.0
+        if _cov + 1e-9 < _min_cov:
+            raise ValueError(
+                f"Coverage too low for {symbol}: {_cov*100:.1f}% < "
+                f"{_min_cov*100:.1f}% (BACKTEST_MIN_COVERAGE_FRAC). "
+                f"Кэш {cache_dir} не покрывает запрошенное окно."
+            )
+
     if require_exact_cache:
         interval_ms = int(base_interval_min) * 60_000
         expected_count = max(0, (end_ms - start_ms) // interval_ms)
@@ -2105,8 +2132,23 @@ def main():
                 directional = _directional_regime_at_bar(store, int(i))
                 regime_hint = directional.lower()
                 htf_bias = "short" if directional.startswith("BEAR") else "long"
+                # 2026-08-05 (Claude): передавали ВСЮ историю до бара i на КАЖДОМ баре,
+                # и _bars_from_candles конвертировала её целиком. Сложность O(n^2):
+                # на 155 520 барах x 13 символов прогон не заканчивался часами,
+                # тогда как четырёхногий прогон того же окна занимает 8 минут.
+                # Стратегии нужно ровно period+lookback+10 баров (её же min_bars),
+                # берём с запасом. Эквивалентность проверена на уровне стратегии:
+                # 5000 баров SOLUSDT, полная история против окна — 0 расхождений
+                # по (side, entry, sl). 120 дней на символе: было минуты, стало 9 с.
+                _sqb_need = (
+                    int(alt_squeeze_breakout_v1[sym].params.get("BB_PERIOD", 20))
+                    + int(alt_squeeze_breakout_v1[sym].params.get("SQUEEZE_LOOKBACK", 50))
+                    + int(alt_squeeze_breakout_v1[sym].params.get("ATR_PERIOD", 14))
+                    + 60
+                )
+                _sqb_lo = max(0, int(i) + 1 - max(_sqb_need, 150))
                 raw = alt_squeeze_breakout_v1[sym].evaluate(
-                    _bars_from_candles(store.c5[: int(i) + 1]),
+                    _bars_from_candles(store.c5[_sqb_lo : int(i) + 1]),
                     regime_hint,
                     sym,
                     htf_60m_bias=htf_bias,

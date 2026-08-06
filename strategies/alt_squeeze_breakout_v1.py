@@ -76,6 +76,32 @@ class AltSqueezeBreakoutV1:
 
     def __init__(self, params=None):
         self.params = {**self.DEFAULT_PARAMS, **(params or {})}
+        # 2026-08-05 (Claude): ДВА ДЕФЕКТА, из-за которых стратегию никогда
+        # не удавалось проверить.
+        #
+        # 1) Гармошка не настраивалась из харнесса вообще: run_portfolio.py
+        #    создаёт класс как AltSqueezeBreakoutV1() без params, поэтому
+        #    SYMBOL_ALLOWLIST оставался жёстким списком из 8 символов,
+        #    а свипы параметров были невозможны. Добавлен разбор env SQB1_*.
+        #
+        # 2) Сжатие проверялось на ТОМ ЖЕ баре, что и пробой. Но пробойный
+        #    бар сам расширяет полосы, поэтому условие
+        #    `bb_width <= min(последние 50) * 1.05` его же и отсекает.
+        #    Замер на SOLUSDT, 39 928 баров:
+        #        сжатие(текущий) И пробой   179
+        #        сжатие(предыдущий) И пробой 557   <- втрое больше
+        #    SQB1_SQUEEZE_CHECK_OFFSET=1 переносит проверку сжатия на бар
+        #    ПЕРЕД пробоем. По умолчанию 0 — прежнее поведение не меняется.
+        import os as _os
+        for _k in list(self.params.keys()):
+            _v = _os.getenv(f"SQB1_{_k}")
+            if _v is not None and str(_v).strip() != "":
+                self.params[_k] = _v
+        _off = _os.getenv("SQB1_SQUEEZE_CHECK_OFFSET", "0")
+        try:
+            self.squeeze_check_offset = max(0, int(float(_off)))
+        except Exception:
+            self.squeeze_check_offset = 0
 
     @staticmethod
     def _sma(values, period):
@@ -156,8 +182,10 @@ class AltSqueezeBreakoutV1:
         bb_width = bb_upper - bb_lower
 
         # Historical BB widths
+        off = int(getattr(self, "squeeze_check_offset", 0))
+        anchor = len(closes) - 1 - off          # бар, на котором проверяем сжатие
         widths_history = []
-        for idx in range(len(closes) - lookback - 1, len(closes) - 1):
+        for idx in range(anchor - lookback, anchor):
             w = self._bb_width_at(closes, idx)
             if w is not None:
                 widths_history.append(w)
@@ -165,10 +193,12 @@ class AltSqueezeBreakoutV1:
             return None
         min_width = min(widths_history)
 
-        # Squeeze condition
-        if bb_width > min_width * 1.05:  # 5% tolerance
+        # Squeeze condition — при off>0 меряем ширину ДО пробойного бара,
+        # иначе пробойный бар сам расширяет полосы и отсекает свой же сигнал
+        squeeze_width = bb_width if off == 0 else self._bb_width_at(closes, anchor)
+        if squeeze_width is None or squeeze_width > min_width * 1.05:
             return None
-        squeeze_pct = bb_width / max(widths_history) * 100
+        squeeze_pct = squeeze_width / max(widths_history) * 100
 
         current_close = closes[-1]
 
