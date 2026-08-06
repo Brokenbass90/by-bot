@@ -601,6 +601,18 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         ctx["counters_by_sleeve"] = {}
         ctx["grouped_no_signal"] = {}
 
+    # Safe credential-rotation truth. Contains only a one-way fingerprint,
+    # permission booleans and apply verification; never API key/secret values.
+    credential_rotation_path = REPO_ROOT / "runtime" / "bybit_credential_rotation_status.json"
+    ctx["sources_used"]["bybit_credential_rotation"] = (
+        str(credential_rotation_path.relative_to(REPO_ROOT))
+        if credential_rotation_path.exists() else None
+    )
+    ctx["bybit_credential_rotation"] = load_json(
+        credential_rotation_path,
+        fallback={"status": "no_rotation_receipt"},
+    )
+
     # ---- Open positions (2026-06-11 Claude): ИИ был слеп на открытые позиции —
     # видел только open_trades=N из heartbeat без тикеров/сторон/входов.
     # Теперь полные детали: symbol, side, entry, qty, sl/tp, unrealized pnl.

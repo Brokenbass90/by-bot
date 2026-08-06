@@ -53,3 +53,12 @@ def test_operator_console_points_to_supported_api_key_navigation() -> None:
 
     assert '<a class="btn" href="/">Основная консоль</a>' in source
     assert "Tools → API Keys" in source
+
+
+def test_main_api_key_ui_requires_apply_proof_and_never_echoes_secrets() -> None:
+    root = Path(__file__).resolve().parents[1]
+    text = (root / "web" / "static" / "index.html").read_text(encoding="utf-8")
+    assert "apply_when_flat" in text
+    assert "fresh heartbeat + auth OK" in text
+    assert "Withdrawal permission" in text
+    assert "ANY IP" in text

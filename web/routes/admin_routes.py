@@ -13,6 +13,8 @@ from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
+from bot.bybit_credential_rotation import RotationError, rotate_and_optionally_apply
+
 from ..auth import _load_config, _save_config, hash_password
 from ..deps import require_admin
 
@@ -373,6 +375,7 @@ class RotateBybitKeyRequest(BaseModel):
     new_key: str
     new_secret: str
     confirm_phrase: str  # должен быть "ROTATE BYBIT KEY" — защита от случайного нажатия
+    apply_when_flat: bool = True
 
 
 def _backup_env(reason: str) -> Path:
@@ -440,7 +443,7 @@ def _rotate_key_in_env(account_name: str, new_key: str, new_secret: str) -> Dict
     return {"account": account_name, "configured": True}
 
 
-def _audit_rotate(email: str, account: str) -> None:
+def _audit_rotate(email: str, account: str, result: Dict[str, Any]) -> None:
     audit_path = _rt("web_audit_log.jsonl")
     audit_path.parent.mkdir(parents=True, exist_ok=True)
     rec = {
@@ -448,7 +451,13 @@ def _audit_rotate(email: str, account: str) -> None:
         "user": email,
         "action": "rotate_bybit_key",
         "params": {"account": account},
-        "result": "credentials replaced; protected backup created; restart required",
+        "result": str(result.get("status") or "unknown"),
+        "safe_meta": {
+            "key_fingerprint": result.get("key_fingerprint"),
+            "need_restart": bool(result.get("need_restart")),
+            "withdrawal_permissions": (result.get("preflight") or {}).get("withdrawal_permissions"),
+            "ip_restricted": (result.get("preflight") or {}).get("ip_restricted"),
+        },
     }
     try:
         with open(audit_path, "a", encoding="utf-8") as f:
@@ -461,15 +470,10 @@ def _audit_rotate(email: str, account: str) -> None:
 async def rotate_bybit_key(body: RotateBybitKeyRequest, email: str = Depends(require_admin)):
     """Безопасная ротация Bybit API key через web UI.
 
-    Шаги:
-      1. Validate confirm_phrase (защита от accident click).
-      2. Backup .env → state/env_backups/.env.<ts>.bybit_key_rotate.bak.
-      3. Replace key+secret в BYBIT_ACCOUNTS_JSON для указанного account_name.
-      4. Audit log в runtime/web_audit_log.jsonl.
-      5. Возвращает только статус + need_restart=True (бот должен перечитать .env).
-
-    Бот сам не перезагружается — это решает админ через systemctl restart
-    bybot.service либо через /api/admin/reload-bot endpoint (если есть).
+    Кандидат сначала проверяется у Bybit: identity, ContractTrade permissions,
+    отсутствие Wallet/withdraw permissions и позиции. Затем env заменяется
+    атомарно. На flat сервис перезапускается и endpoint ждёт свежий heartbeat с
+    ``auth OK``. При неудаче выполняется rollback на защищённую копию.
     """
     if body.confirm_phrase != "ROTATE BYBIT KEY":
         raise HTTPException(status_code=400, detail="confirm_phrase must be 'ROTATE BYBIT KEY'")
@@ -478,29 +482,24 @@ async def rotate_bybit_key(body: RotateBybitKeyRequest, email: str = Depends(req
     if len(body.new_key) < 12 or len(body.new_secret) < 20:
         raise HTTPException(status_code=400, detail="key/secret look too short")
 
-    # 1. Backup
-    _backup_env("bybit_key_rotate")
+    try:
+        result = rotate_and_optionally_apply(
+            repo_root=_ROOT,
+            account_name=body.account_name,
+            new_key=body.new_key,
+            new_secret=body.new_secret,
+            apply_when_flat=body.apply_when_flat,
+        )
+    except RotationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"credential rotation failed safely: {type(exc).__name__}",
+        ) from exc
 
-    # 2. Rotate
-    info = _rotate_key_in_env(body.account_name, body.new_key, body.new_secret)
-
-    # 3. Audit
-    _audit_rotate(email, info["account"])
-
-    return {
-        "status": "ok",
-        "account": info["account"],
-        "configured": info["configured"],
-        "credential_values_returned": False,
-        "protected_backup_created": True,
-        "need_restart": True,
-        "restart_command": "systemctl restart bybot.service",
-        "next_steps": [
-            "Run `systemctl restart bybot.service` on the server",
-            "Check `journalctl -u bybot.service -n 20 --no-pager` for AUTH FAIL",
-            "If no auth errors — rotation successful",
-        ],
-    }
+    _audit_rotate(email, str(result.get("account") or body.account_name), result)
+    return result
 
 
 @router.get("/bybit-key-info")
@@ -542,6 +541,14 @@ async def get_bybit_key_info(_: str = Depends(require_admin)):
             "risk_pct": acc.get("trade", {}).get("risk_pct"),
             "expiry": expiry_by_account.get(name, {"status": "unknown"}),
         })
+    rotation_status = {}
+    rotation_path = _rt("bybit_credential_rotation_status.json")
+    if rotation_path.exists():
+        try:
+            rotation_status = json.loads(rotation_path.read_text(encoding="utf-8"))
+        except Exception:
+            rotation_status = {"status": "status_file_invalid"}
+
     arb_status = _load_runtime_arb_account_status()
     arb_exchanges_status = arb_status.get("exchanges") or {}
 
@@ -571,6 +578,7 @@ async def get_bybit_key_info(_: str = Depends(require_admin)):
     ]
     return {
         "accounts": out,
+        "rotation": rotation_status,
         "arb_exchanges": other_exchanges,
         "expiry_checked_at_utc": expiry_report.get("checked_at_utc"),
         "arb_status_checked_at_utc": arb_status.get("generated_at_utc"),

@@ -3120,6 +3120,7 @@ function CredentialsPage() {
   const [account, setAccount] = useState('main');
   const [newKey, setNewKey] = useState('');
   const [newSecret, setNewSecret] = useState('');
+  const [applyWhenFlat, setApplyWhenFlat] = useState(true);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -3153,9 +3154,14 @@ function CredentialsPage() {
         new_key: newKey,
         new_secret: newSecret,
         confirm_phrase: 'ROTATE BYBIT KEY',
+        apply_when_flat: applyWhenFlat,
       });
       setNewKey(''); setNewSecret('');
-      setMessage(result.need_restart ? 'Credentials replaced. Controlled bot restart required.' : 'Credentials replaced.');
+      setMessage(result.status === 'applied_verified'
+        ? 'New credentials verified, applied and confirmed by a fresh bot heartbeat.'
+        : result.need_restart
+          ? 'New credentials verified and stored. Bot restart is pending because the account is not flat or auto-apply is off.'
+          : `Credential rotation status: ${result.status}`);
       load();
     } catch (e) {
       setMessage(`Error: ${e.message}`);
@@ -3197,6 +3203,28 @@ function CredentialsPage() {
       className: 'section-sub',
       style: { marginBottom: '16px' },
     }, `Bybit expiry check: ${data.expiry_checked_at_utc}. Alerts should fire at 7/3/1 days before expiry.`),
+    data?.rotation?.status && React.createElement('div', {
+      className: 'card', style: { maxWidth: '760px', marginBottom: '16px' },
+    },
+      React.createElement('div', { className: 'card-title' }, 'Last credential rotation'),
+      React.createElement('div', { className: 'info-row' },
+        React.createElement('span', { className: 'label' }, 'State'),
+        React.createElement('span', { className: `badge ${data.rotation.status === 'applied_verified' ? 'badge-ok' : 'badge-warn'}` }, data.rotation.status)
+      ),
+      React.createElement('div', { className: 'info-row' },
+        React.createElement('span', { className: 'label' }, 'Applied proof'),
+        React.createElement('span', null, data.rotation.verification?.auth_verified ? 'fresh heartbeat + auth OK' : 'not confirmed')
+      ),
+      React.createElement('div', { className: 'info-row' },
+        React.createElement('span', { className: 'label' }, 'IP restriction'),
+        React.createElement('span', { className: `badge ${data.rotation.preflight?.ip_restricted ? 'badge-ok' : 'badge-warn'}` }, data.rotation.preflight?.ip_restricted ? 'restricted' : 'ANY IP — tighten in Bybit')
+      ),
+      React.createElement('div', { className: 'info-row' },
+        React.createElement('span', { className: 'label' }, 'Withdrawal permission'),
+        React.createElement('span', { className: `badge ${data.rotation.preflight?.withdrawal_permissions ? 'badge-dead' : 'badge-ok'}` }, data.rotation.preflight?.withdrawal_permissions ? 'PRESENT — rejected' : 'absent')
+      ),
+      React.createElement('div', { className: 'section-sub' }, `Updated ${data.rotation.updated_at_utc || '—'} · fingerprint ${data.rotation.key_fingerprint || '—'}`)
+    ),
     React.createElement('div', { className: 'card', style: { maxWidth: '760px', marginBottom: '16px' } },
       React.createElement('div', { className: 'card-title' }, 'Cross-exchange arbitrage keys'),
       React.createElement('div', { className: 'section-sub', style: { marginBottom: '12px' } },
@@ -3237,6 +3265,10 @@ function CredentialsPage() {
           (data?.accounts || [{ name: 'main' }]).map(a => React.createElement('option', { key: a.name, value: a.name }, a.name))),
         React.createElement('input', { className: 'filter-input', type: 'password', autoComplete: 'new-password', placeholder: 'New API key', value: newKey, onChange: e => setNewKey(e.target.value) }),
         React.createElement('input', { className: 'filter-input', type: 'password', autoComplete: 'new-password', placeholder: 'New API secret', value: newSecret, onChange: e => setNewSecret(e.target.value) }),
+        React.createElement('label', { style: { display: 'flex', gap: '8px', alignItems: 'center', fontSize: '12px', color: 'var(--text2)' } },
+          React.createElement('input', { type: 'checkbox', checked: applyWhenFlat, onChange: e => setApplyWhenFlat(e.target.checked) }),
+          'Validate, restart automatically only when flat, then require fresh auth proof'
+        ),
         React.createElement('button', { className: 'auth-btn', disabled: busy || !newKey || !newSecret, onClick: rotate },
           busy ? 'Saving...' : 'Rotate credentials'),
         message && React.createElement('div', { style: { fontSize: '12px', color: 'var(--yellow)' } }, message)
