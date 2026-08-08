@@ -5,6 +5,9 @@
 - The Mac research station is installed as `com.tradingstation.research-station`
   with `RunAtLoad` and `KeepAlive`. It owns five research-only loops and has no
   broker/order authority.
+- The public Bybit liquidation collector is moved from an orphanable VPS
+  `screen` session into `liquidation-collector.service` with automatic restart.
+  It uses no API key and has no order authority.
 - A false-green defect was found and fixed: GNU screen's `(Dead ???)` sockets
   were previously counted as live processes. Regression coverage now rejects
   dead sockets; the frozen-funding and project-audit loops were materially

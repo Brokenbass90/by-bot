@@ -1,0 +1,52 @@
+[Unit]
+# Сборщик публичных ликвидаций Bybit. Только чтение: ключей нет, ордеров нет,
+# пишет единственный файл runtime/liquidations/bybit_liquidations.jsonl
+#
+# УСТАНОВКА (на сервере, где живёт бот):
+#   1. поправить User и WorkingDirectory под свой сервер
+#   2. sudo cp deploy/liquidation-collector.service /etc/systemd/system/
+#   3. sudo systemctl daemon-reload
+#   4. sudo systemctl enable --now liquidation-collector
+#
+# ПРОВЕРКА:
+#   systemctl status liquidation-collector
+#   wc -l runtime/liquidations/bybit_liquidations.jsonl     # должно расти
+#
+# ОСТАНОВКА:
+#   sudo systemctl stop liquidation-collector
+
+Description=Bybit public liquidation collector (read-only research data)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=20
+
+[Service]
+Type=simple
+
+User=root
+WorkingDirectory=/root/by-bot
+
+ExecStart=/root/by-bot/.venv/bin/python scripts/collect_bybit_liquidations.py \
+    --out runtime/liquidations/bybit_liquidations.jsonl \
+    --symbols BTCUSDT,ETHUSDT,SOLUSDT,SUIUSDT,DOGEUSDT,LINKUSDT,LTCUSDT,ADAUSDT,BNBUSDT,AVAXUSDT,XRPUSDT,NEARUSDT \
+    --min-usd 0 \
+    --duration-sec 0
+
+# Перезапуск при любом падении. Именно этого не хватало: скрипт умеет
+# переподключаться при обрыве сети, но не умеет воскресать после смерти
+# процесса или перезагрузки сервера.
+Restart=always
+RestartSec=10
+
+StandardOutput=append:/root/by-bot/logs/liquidation_collector.log
+StandardError=append:/root/by-bot/logs/liquidation_collector.log
+
+# Минимальные привилегии: сборщику не нужно ничего, кроме своей папки
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/root/by-bot/runtime/liquidations /root/by-bot/logs
+
+[Install]
+WantedBy=multi-user.target
