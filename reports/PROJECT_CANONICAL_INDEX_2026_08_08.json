@@ -1,0 +1,116 @@
+{
+  "schema_id": "project_canonical_index_v3",
+  "as_of_utc": "2026-08-08T05:23:00Z",
+  "canonical_handoff": "reports/ANTICRISIS_STATUS_AND_NEXT_HANDOFF_2026_08_08.md",
+  "canonical_roadmap": "reports/PROJECT_MASTER_ROADMAP_2026_07_27.md",
+  "branch": "codex/dynamic-symbol-filters",
+  "live_truth": {
+    "server_git_head_observed": "f7ed0116a5f5",
+    "server_head_is_not_release_authority": true,
+    "targeted_deploys_after_server_head": true,
+    "service": "active",
+    "heartbeat_fresh": true,
+    "direct_bybit_position_count": 0,
+    "direct_bybit_equity_usdt_approx": 1021.31,
+    "trade_on": true,
+    "dry_run": false,
+    "regime": "bull_trend",
+    "credential_status": "applied_verified",
+    "live_money": {
+      "att1": {
+        "risk_mult": 0.1,
+        "side": "short_only",
+        "owner_approval": "CONTINUE_UNTIL_EXPLICIT_PAUSE",
+        "calendar_expiry": null
+      }
+    }
+  },
+  "active_contours": [
+    {
+      "id": "att1_short",
+      "stage": "tiny_live_canary",
+      "capital_authorized": true,
+      "risk_mult": 0.1,
+      "cohort_start_utc": "2026-08-08T05:04:01Z",
+      "next_gate": "broker-reconciled cohort review; no risk increase from mixed historical accounting"
+    },
+    {
+      "id": "bounce1_btc_eth",
+      "stage": "prospective_risk_zero_shadow",
+      "capital_authorized": false,
+      "historical_evidence": "3/3 positive exact windows, 41 trades",
+      "next_gate": "N20 unique prospective outcomes plus geometry/source/config parity"
+    },
+    {
+      "id": "xsec_v3",
+      "stage": "risk_zero_shadow_no_go_interim",
+      "capital_authorized": false,
+      "closed_decisions": 11,
+      "positive_decisions": 4,
+      "sum_markout_pct": -6.537,
+      "next_gate": "phase and executable-cost diagnosis"
+    },
+    {
+      "id": "funding_positioning_dynamic",
+      "stage": "risk_zero_shadow_promising_fail_concentration",
+      "capital_authorized": false,
+      "closed_outcomes": 42,
+      "positive_outcomes": 28,
+      "median_bps": 746.8,
+      "binding_failure": "BLESS contributes about 69 percent of aggregate net",
+      "next_gate": "freeze prospective cohort and repeat robust LOSO/concentration after 20-30 new outcomes"
+    },
+    {
+      "id": "funding_arbitrage",
+      "stage": "low_priority_paper",
+      "capital_authorized": false,
+      "next_gate": "positive executable distribution after all costs and adverse selection"
+    },
+    {
+      "id": "alpaca_live",
+      "stage": "safe_hold_protective_exits_only",
+      "capital_authorized_for_new_entries": false,
+      "holdings": ["ABBV", "SCHW"],
+      "broker_stop_coverage": "2/2",
+      "next_gate": "market-open fractional stop acceptance, fill reconciliation, full rotation parity"
+    },
+    {
+      "id": "alpaca_adaptive",
+      "stage": "risk_zero_shadow",
+      "capital_authorized": false,
+      "symbol_coverage": 79,
+      "next_gate": "PIT data plus 20-30 unique decisions"
+    },
+    {
+      "id": "fx_cfd",
+      "stage": "research_rebuild",
+      "capital_authorized": false,
+      "binding_failure": "all legacy price-only D1/H4 families failed OOS or stress costs",
+      "next_gate": "new cross-pair, session, macro and cross-market causal families"
+    }
+  ],
+  "terminal_or_rejected": [
+    "SQB1 offset-1 squeeze breakout",
+    "legacy FX D1 carry+trend",
+    "legacy FX H4 momentum",
+    "legacy FX H4 break-retest",
+    "legacy FX H4 regime mean-reversion"
+  ],
+  "release_receipts": [
+    "reports/releases/ATT1_PERSISTENT_OWNER_APPROVAL_DEPLOY_RECEIPT_2026_08_08.json",
+    "reports/releases/BOUNCE1_MAJORS_RISK_ZERO_SHADOW_DEPLOY_RECEIPT_2026_08_08.json",
+    "reports/releases/ALPACA_FRACTIONAL_TRAIL_AND_DIGEST_DEDUPE_DEPLOY_RECEIPT_2026_08_08.json"
+  ],
+  "research_receipts": [
+    "reports/research/FUNDING_POSITIONING_DYNAMIC_N42_ROBUSTNESS_2026_08_08.md",
+    "reports/CLAUDE_RESEARCH_PACKAGE_ACCEPTANCE_2026_08_06.md",
+    "reports/releases/BOUNCE1_MAJORS_EXACT_REPLAY_PASS_2026_08_02.json"
+  ],
+  "interpretation_contract": {
+    "direct_broker_and_service_truth_overrides_stale_ai_context": true,
+    "missing_forensic_candles_are_not_live_transport_failure": true,
+    "mixed_rolling_accounting_is_not_a_current_strategy_verdict": true,
+    "research_only_and_shadow_are_not_money_sleeves": true,
+    "no_profit_forecast_from_small_or_selected_samples": true
+  }
+}

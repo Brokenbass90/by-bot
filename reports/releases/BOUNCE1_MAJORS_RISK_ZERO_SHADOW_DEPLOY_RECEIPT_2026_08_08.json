@@ -1,0 +1,42 @@
+{
+  "schema_id": "bounce1_majors_risk_zero_shadow_deploy_receipt_v1",
+  "generated_at_utc": "2026-08-08T05:22:00Z",
+  "status": "DEPLOYED_ACTIVE_RISK_ZERO",
+  "evidence_source": "reports/releases/BOUNCE1_MAJORS_EXACT_REPLAY_PASS_2026_08_02.json",
+  "historical_gate": {
+    "symbols": ["BTCUSDT", "ETHUSDT"],
+    "positive_windows": "3/3",
+    "total_trades": 41,
+    "net_pct_by_window": [3.31, 9.12, 2.07],
+    "limitations": ["small sample", "BTC_ETH_only capacity", "not prospective evidence"]
+  },
+  "effective_shadow_config": {
+    "ENABLE_BOUNCE1_TRADING": "1",
+    "BOUNCE1_RISK_MULT": "0.00",
+    "BOUNCE1_SHADOW_ENABLE": "1",
+    "BOUNCE1_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT",
+    "BOUNCE1_SL_ATR_MULT": "1.6",
+    "BOUNCE1_TP1_FRAC": "0.15",
+    "BOUNCE1_TRAIL_ATR_MULT": "0.0"
+  },
+  "server": {
+    "backup": "/root/by-bot/state/deploy_backups/bounce1_majors_shadow_20260808/approved_strategy_params.env.before",
+    "restart": "flat confirmed 3/3 before bybot.service restart",
+    "service": "active",
+    "bybit_auth": "OK",
+    "post_restart_equity_usdt_approx": 1021.31,
+    "post_restart_money_sleeves": "live_money=att1 x0.10; bounce1 x0 shadow_or_paused",
+    "post_restart_counters": {
+      "bounce1_sched": 46,
+      "bounce1_try": 30,
+      "bounce1_no_signal": 30
+    }
+  },
+  "capital_authorized": false,
+  "orders_authorized": false,
+  "promotion_gate": "At least 20 unique prospective decision/fill/exit outcomes plus source/config parity, executable-cost and concentration review",
+  "git": {
+    "branch": "codex/dynamic-symbol-filters",
+    "commit": null
+  }
+}
