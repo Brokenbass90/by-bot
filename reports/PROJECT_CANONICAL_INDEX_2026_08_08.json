@@ -1,8 +1,9 @@
 {
   "schema_id": "project_canonical_index_v3",
-  "as_of_utc": "2026-08-08T05:23:00Z",
+  "as_of_utc": "2026-08-08T05:45:36Z",
   "canonical_handoff": "reports/ANTICRISIS_STATUS_AND_NEXT_HANDOFF_2026_08_08.md",
   "canonical_roadmap": "reports/PROJECT_MASTER_ROADMAP_2026_07_27.md",
+  "canonical_audit_pipeline": "reports/SELF_HEALING_AUDIT_PIPELINE_2026_08_08.md",
   "branch": "codex/dynamic-symbol-filters",
   "live_truth": {
     "server_git_head_observed": "f7ed0116a5f5",
@@ -15,6 +16,7 @@
     "trade_on": true,
     "dry_run": false,
     "regime": "bull_trend",
+    "verified_heartbeat_age_sec_approx": 25,
     "credential_status": "applied_verified",
     "live_money": {
       "att1": {
@@ -61,6 +63,15 @@
       "next_gate": "freeze prospective cohort and repeat robust LOSO/concentration after 20-30 new outcomes"
     },
     {
+      "id": "funding_positioning_post_n42_frozen",
+      "stage": "prospective_risk_zero_shadow_n0",
+      "capital_authorized": false,
+      "started_at_utc": "2026-08-08T05:52:23Z",
+      "universe_symbols": 16,
+      "universe_sha256": "77ebae410c48d6e4d71e0e6ba384fa0394691daaa628b4ec83728221ed368c1f",
+      "next_gate": "20-30 new closed outcomes; capped distribution, p25, LOSO, beta, concentration and adverse-selection audit"
+    },
+    {
       "id": "funding_arbitrage",
       "stage": "low_priority_paper",
       "capital_authorized": false,
@@ -72,6 +83,8 @@
       "capital_authorized_for_new_entries": false,
       "holdings": ["ABBV", "SCHW"],
       "broker_stop_coverage": "2/2",
+      "equity_usd_observed": 485.07,
+      "fractional_trail_status": "patch_deployed_broker_acceptance_pending_next_market_open",
       "next_gate": "market-open fractional stop acceptance, fill reconciliation, full rotation parity"
     },
     {
@@ -99,13 +112,28 @@
   "release_receipts": [
     "reports/releases/ATT1_PERSISTENT_OWNER_APPROVAL_DEPLOY_RECEIPT_2026_08_08.json",
     "reports/releases/BOUNCE1_MAJORS_RISK_ZERO_SHADOW_DEPLOY_RECEIPT_2026_08_08.json",
-    "reports/releases/ALPACA_FRACTIONAL_TRAIL_AND_DIGEST_DEDUPE_DEPLOY_RECEIPT_2026_08_08.json"
+    "reports/releases/ALPACA_FRACTIONAL_TRAIL_AND_DIGEST_DEDUPE_DEPLOY_RECEIPT_2026_08_08.json",
+    "reports/releases/LOCAL_PROJECT_AUDIT_SUPERVISOR_RECEIPT_2026_08_08.json",
+    "reports/releases/FUNDING_POSITIONING_POST_N42_FROZEN_SHADOW_RECEIPT_2026_08_08.json"
   ],
   "research_receipts": [
     "reports/research/FUNDING_POSITIONING_DYNAMIC_N42_ROBUSTNESS_2026_08_08.md",
     "reports/CLAUDE_RESEARCH_PACKAGE_ACCEPTANCE_2026_08_06.md",
     "reports/releases/BOUNCE1_MAJORS_EXACT_REPLAY_PASS_2026_08_02.json"
   ],
+  "project_audit": {
+    "stage": "proposal_only_background_supervisor_active",
+    "tests_passed": 11,
+    "registry_path": "runtime/project_audit/registry.json",
+    "current_findings": 211,
+    "actionable_after_noise_suppression": 6,
+    "inventory_needs_triage": 187,
+    "confirmed": 2,
+    "ollama_model": "qwen3:8b",
+    "full_liveness_refresh": "running",
+    "cheap_cycle_interval_hours": 6,
+    "automatic_live_mutation": false
+  },
   "interpretation_contract": {
     "direct_broker_and_service_truth_overrides_stale_ai_context": true,
     "missing_forensic_candles_are_not_live_transport_failure": true,

@@ -416,3 +416,35 @@ Dynamic universe определяется отдельно для каждой �
 level-quality eligibility, owner-volume setup — volume inflow, pump exhaustion
 — новый movers cohort. BTC/ETH midterm core не расширяется сегодняшним списком
 альтов; PIT-major expansion остаётся отдельным challenger.
+
+## 19. Anticrisis and self-healing checkpoint 8 августа
+
+- ATT1 calendar expiry removed under standing owner approval. Live remains
+  short-only, risk 0.10 and the same eight-symbol universe. Fresh cohort starts
+  2026-08-08; previous mixed accounting cannot be used to scale it.
+- BOUNCE1 BTC/ETH exact replay produced 3/3 positive windows and 41 trades.
+  It is deployed as prospective risk-zero shadow; N20 and exact
+  geometry/source/config parity remain binding before a money decision.
+- Funding-positioning has 42 closed outcomes and promising central tendency,
+  but fails concentration because BLESS contributes about 69% of total net.
+  A separate post-N42 frozen 16-symbol cohort is now running from N0; its
+  20–30 new outcomes are the next falsification.
+- XSEC v3 remains no-go interim (4/11 positive, aggregate markout negative).
+  SQB1 offset-1 and all legacy FX price-only families are terminal for their
+  current formulations, not for the wider themes.
+- Alpaca remains SAFE_HOLD. Fractional stop-replace payload is fixed, but a
+  market-open broker acceptance receipt, broker-fill reconstruction and one
+  exact rotation are required before staged capital expansion.
+- A unified proposal-only project-audit registry now joins deterministic
+  static checks, all-strategy liveness, technology reachability and bounded
+  Ollama/Qwen review. First registry has only 6 actionable findings after
+  noisy-rule suppression; 187 additional records are inventory triage, not
+  proven defects. Full liveness refresh is running, then the cheap cycle runs
+  every six hours.
+- Next foundation increment is strategy failure phenotypes plus an isolated
+  patch/test queue. The self-healing path is observe → reproduce → patch in an
+  isolated branch → parity/OOS tests → reviewed targeted deploy. Local AI is
+  never allowed to mutate live risk or orders directly.
+
+Current handoff: `reports/ANTICRISIS_STATUS_AND_NEXT_HANDOFF_2026_08_08.md`.
+Audit contract: `reports/SELF_HEALING_AUDIT_PIPELINE_2026_08_08.md`.

@@ -1,0 +1,36 @@
+{
+  "schema_id": "local_project_audit_supervisor_receipt_v1",
+  "generated_at_utc": "2026-08-08T05:45:36Z",
+  "host_role": "owner_mac_research_worker",
+  "mode": "proposal_only",
+  "live_mutation": false,
+  "components": [
+    "research_lab/continuous_audit.py",
+    "research_lab/ai_auditor.py",
+    "research_lab/audit_registry.py",
+    "scripts/build_tech_registry.py",
+    "scripts/liveness_sweep.sh",
+    "scripts/run_project_audit_supervisor.sh"
+  ],
+  "artifacts": [
+    "runtime/project_audit/registry.json",
+    "runtime/project_audit/registry.csv",
+    "runtime/project_audit/registry.md",
+    "runtime/project_audit/supervisor_status.json"
+  ],
+  "verification": {
+    "targeted_tests_passed": 11,
+    "ollama_model": "qwen3:8b",
+    "ollama_request_completed": true,
+    "registry_actionable_after_noise_suppression": 6,
+    "full_liveness_refresh": "running",
+    "subsequent_interval_sec": 21600,
+    "stale_lock_recovery": true
+  },
+  "authority_boundaries": {
+    "can_edit_live_risk": false,
+    "can_submit_orders": false,
+    "can_deploy": false,
+    "model_findings_require_human_reproduction": true
+  }
+}

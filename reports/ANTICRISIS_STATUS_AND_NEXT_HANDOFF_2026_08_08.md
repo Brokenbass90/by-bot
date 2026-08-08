@@ -21,7 +21,7 @@ short-only и может долго не находить валидный си�
 | ATT1 crypto | live tiny 0.10, short-only, auth OK, flat | продолжать новый broker-reconciled cohort; не повышать риск по старому mixed cohort |
 | BOUNCE1 BTC/ETH | exact replay: 3/3 положительных окна, 41 сделка; targeted shadow deployed 2026-08-08 | prospective risk-zero lifecycle активен; малая выборка, денег нет |
 | XSEC v3 | 11 закрытых markout, 4 положительных, сумма −6.54% | не продвигать; продолжать диагностику фаз и executable costs |
-| Funding positioning | 42 закрытия, 66.7% положительных, median +746.8 bps | продолжать; FAIL concentration из-за BLESS 69% |
+| Funding positioning | 42 закрытия, 66.7% положительных, median +746.8 bps | FAIL concentration из-за BLESS 69%; отдельный frozen post-N42 cohort запущен с N0 |
 | Funding arbitrage | прежняя экономика после полного исполнения недостаточна | оставить дешёвый paper lifecycle, не основной исследовательский бюджет |
 | SQB1 squeeze breakout | offset-1 replay 747–3567 сделок, все сетки глубоко отрицательны после затрат | terminal FAIL текущей формулировки; holdout не трогать |
 | FX/CFD legacy | D1 carry, H4 momentum/retest/mean-reversion отрицательны OOS/stress | старые price-only семьи закрыты; строить новые cross-pair/session/cross-market гипотезы |
@@ -65,16 +65,50 @@ research. `LIVE_TRUTH_STALE_OR_CONFLICTING` был верным fail-closed от
 3. Telegram daily digest оставлен один раз в 08:00 UTC. Повторный Alpaca-only
    digest и его watchdog удалены. Отдельный proof-of-life каждые три часа
    оставлен как инфраструктурная телеметрия.
-4. Локальный deterministic AI-аудитор запущен; он нашёл stale AI context и
-   много потенциально недостижимых модулей. Ollama установлена, но ещё не
+4. Локальный deterministic AI-аудитор и единый реестр находок запущены;
+   Ollama/Qwen проверена как proposal-only критик. Полный all-strategy liveness
+   sweep идёт в фоне, затем дешёвый цикл повторяется каждые шесть часов. Детали:
+   `reports/SELF_HEALING_AUDIT_PIPELINE_2026_08_08.md`. Ollama ещё не
    подключена к Telegram/web-чату и не имеет права менять риск или ордера.
+
+## Direct truth после повторной проверки 2026-08-08
+
+Crypto service active, heartbeat fresh (25 секунд на момент проверки),
+`trade_on=true`, `dry_run=false`, `open_trades=0`, `regime=bull_trend`.
+ATT1 сканирует и получает `no_signal`; свежих expiry/auth блокировок нет.
+Отсутствие short-only входа в bull trend сейчас не является неисправностью.
+
+Alpaca LIVE: equity `$485.07`, holdings ABBV/SCHW, broker stop coverage 2/2.
+SCHW около +6.0%, ABBV около −0.6%. Исторический fractional trail всё ещё
+показывает broker 422 `qty must be an integer`; исправленный replace без qty
+задеплоен 2026-08-08, но broker acceptance можно подтвердить только при
+следующем открытом рынке. До такого receipt нельзя говорить, что прибыль уже
+надёжно закрепляется software-trailing.
+
+## Стадия проекта и вектор
+
+Текущая стадия — **зрелая исследовательская платформа / ранняя валидация
+мульти-рукавного портфеля**, а не законченная автономная станция. Исполнение,
+стопы, heartbeat, owner-control, shadow lifecycle и большая часть мониторинга
+существуют. Незавершены: единый parity слой, калибровка защит, promotion
+factory, автономная rotation Alpaca, новые FX/CFD семьи и model-router.
+
+Вектор на ближайший цикл: не добавлять сотни случайных ног, а параллельно
+довести BOUNCE1, funding-positioning, Alpaca rotation и новые FX/CFD families,
+пока фоновый аудитор ищет блокираторы и негативные фенотипы.
+
+Funding-positioning universe теперь фактически заморожен отдельным процессом,
+а не только записан как следующий шаг: post-N42 cohort стартовал
+`2026-08-08T05:52:23Z` с N0, 16 символами и universe SHA
+`77ebae410c48d6e4d71e0e6ba384fa0394691daaa628b4ec83728221ed368c1f`.
+Старый dynamic loop оставлен контрольным и не смешивается с новым ledger.
 
 ## Ближайшая очередь
 
 1. Накопить N20 в уже запущенном BOUNCE1 BTC/ETH prospective risk-zero
    lifecycle; проверить exact source SHA и geometry decision/fill/exit parity.
-2. Заморозить новый funding-positioning cohort и повторить robustness после
-   20–30 новых закрытий.
+2. Накопить 20–30 закрытий в уже запущенном frozen post-N42
+   funding-positioning cohort и повторить robustness.
 3. На открытии рынка подтвердить Alpaca fractional stop replace, затем
    восстановить broker-fill ledger и провести одну полную безопасную rotation.
 4. Реализовать новые FX/CFD causal families: cross-pair residual strength,
@@ -100,5 +134,7 @@ $500 → $1000 → $1500 → $3000. Текущая live Alpaca — защищё�
 Для связной следующей версии, а не «идеального навсегда» продукта: примерно
 7–10 сфокусированных сессий. Из них 2–3 на следующий crypto shadow и
 геометрию/parity, 2 на Alpaca reconciliation/rotation, 2–3 на новые FX/CFD
-семьи, 1–2 на open-source parity и Ollama router. Новый чат можно начинать
-сразу с этого файла; ждать завершения всей очереди не требуется.
+семьи, 1–2 на open-source parity и Ollama router. Фоновый audit pipeline теперь
+уже собран и не входит в эту оценку. Новый чат можно начинать сразу с этого
+файла и `reports/SELF_HEALING_AUDIT_PIPELINE_2026_08_08.md`; ждать завершения
+всей очереди не требуется.

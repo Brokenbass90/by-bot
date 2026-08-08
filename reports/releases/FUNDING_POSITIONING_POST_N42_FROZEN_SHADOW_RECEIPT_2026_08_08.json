@@ -1,0 +1,20 @@
+{
+  "schema_id": "funding_positioning_post_n42_frozen_shadow_receipt_v1",
+  "started_at_utc": "2026-08-08T05:52:23Z",
+  "capital_authorized": false,
+  "credentials_read": false,
+  "orders_sent": false,
+  "universe_path": "configs/research/funding_positioning_post_n42_frozen_20260808.json",
+  "universe_sha256": "77ebae410c48d6e4d71e0e6ba384fa0394691daaa628b4ec83728221ed368c1f",
+  "symbol_count": 16,
+  "state_path": "runtime/funding_positioning_post_n42_frozen_state.json",
+  "ledger_path": "runtime/funding_positioning_post_n42_frozen_ledger.jsonl",
+  "summary_path": "runtime/funding_positioning_post_n42_frozen_summary.json",
+  "initial_summary": {
+    "trials": 0,
+    "open": 0,
+    "closed": 0
+  },
+  "next_gate": "20-30 new closed outcomes and full frozen robustness audit",
+  "promotion_by_this_receipt": false
+}

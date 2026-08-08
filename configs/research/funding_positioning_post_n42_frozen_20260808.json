@@ -1,0 +1,42 @@
+{
+  "schema_id": "funding_positioning_post_n42_frozen_universe_v1",
+  "frozen_at_utc": "2026-08-08T05:43:37Z",
+  "authority": "research_only_no_orders",
+  "capital_authorized": false,
+  "parent_summary": "runtime/funding_positioning_dynamic_shadow_summary.json",
+  "parent_closed_outcomes": 42,
+  "selection_used_future_pnl": false,
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT",
+    "HYPEUSDT",
+    "ACEUSDT",
+    "HFTUSDT",
+    "ADAUSDT",
+    "BLESSUSDT",
+    "ZECUSDT",
+    "BICOUSDT",
+    "XAUTUSDT",
+    "DOGEUSDT",
+    "ENAUSDT",
+    "SUIUSDT",
+    "LINKUSDT"
+  ],
+  "source_universe_sha256": "77ebae410c48d6e4d71e0e6ba384fa0394691daaa628b4ec83728221ed368c1f",
+  "gate": {
+    "min_new_closed_outcomes": 20,
+    "target_new_closed_outcomes": 30,
+    "required_checks": [
+      "median_and_p25_after_costs",
+      "capped_and_winsorized_distribution",
+      "tail_loss",
+      "regime_and_btc_beta",
+      "leave_one_symbol_out",
+      "largest_symbol_contribution_lte_35pct",
+      "missed_fill_and_adverse_selection"
+    ],
+    "promotion_by_this_file": false
+  }
+}
