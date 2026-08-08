@@ -33,6 +33,8 @@ Config:
     ALLOW_AUTO_APPLY_OVERRIDES=0                 # startup auto-apply authorization
     ALLOW_AUTO_APPLY_HOT_RELOAD=0                # separate runtime authorization
     ALLOW_DYNAMIC_PARAM_HOT_RELOAD=0             # symbol/router metadata only by default
+    ALLOWLIST_WATCHER_TG_MODE=live_only          # live_only | all | off
+    ALLOWLIST_WATCHER_TG_INCLUDE=ATT1             # optional comma-separated exceptions
 """
 from __future__ import annotations
 
@@ -98,6 +100,23 @@ HOT_RELOAD_PREFIXES: tuple[str, ...] = (
 RESTART_REQUIRED_VARS: Set[str] = {
     "MICRO_SCALPER_SYMBOL_ALLOWLIST",
     "SUPPORT_RECLAIM_SYMBOL_ALLOWLIST",
+}
+
+# Telegram is an operator channel, not a dump of every shadow-router mutation.
+# A strategy is considered live for notification purposes only when one of its
+# explicit risk variables is positive.  Unknown / research-only sleeves remain
+# fully logged to CHANGE_LOG but are quiet by default.
+TG_STRATEGY_RISK_VARS: Dict[str, tuple[str, ...]] = {
+    "ATT1": ("ATT1_RISK_MULT",),
+    "ASC1": ("ASC1_RISK_MULT",),
+    "ASM1": ("ASM1_RISK_MULT",),
+    "ARF1": ("ARF1_RISK_MULT", "FLAT_RISK_MULT"),
+    "ARS1": ("ARS1_RISK_MULT",),
+    "ASB1": ("ASB1_RISK_MULT", "BOUNCE1_RISK_MULT"),
+    "IVB1": ("IVB1_RISK_MULT",),
+    "BREAKDOWN": ("BREAKDOWN_RISK_MULT",),
+    "BREAKOUT": ("BREAKOUT_RISK_MULT",),
+    "MIDTERM": ("MIDTERM_RISK_MULT",),
 }
 
 
@@ -225,6 +244,32 @@ def _symbols_changed(old: str, new: str) -> tuple[Set[str], Set[str]]:
     old_set = parse(old)
     new_set = parse(new)
     return new_set - old_set, old_set - new_set
+
+
+def _strategy_from_var(var: str) -> str:
+    for suffix in ("_SYMBOL_ALLOWLIST", "_SYMBOL_DENYLIST", "_SYMBOLS"):
+        if var.endswith(suffix):
+            return var[: -len(suffix)].upper()
+    return var.split("_", 1)[0].upper()
+
+
+def _positive_env(name: str) -> bool:
+    try:
+        return float(str(os.getenv(name, "0") or "0").strip()) > 0.0
+    except (TypeError, ValueError):
+        return False
+
+
+def _tg_strategy_relevant(strategy: str) -> bool:
+    strategy = str(strategy or "").strip().upper()
+    includes = {
+        item.strip().upper()
+        for item in str(os.getenv("ALLOWLIST_WATCHER_TG_INCLUDE", "") or "").split(",")
+        if item.strip()
+    }
+    if strategy in includes:
+        return True
+    return any(_positive_env(name) for name in TG_STRATEGY_RISK_VARS.get(strategy, ()))
 
 
 class AllowlistWatcher:
@@ -382,6 +427,29 @@ class AllowlistWatcher:
         *,
         source: str,
     ) -> None:
+        mode = str(os.getenv("ALLOWLIST_WATCHER_TG_MODE", "live_only") or "live_only").strip().lower()
+        if mode == "off":
+            return
+        if mode not in {"all", "live_only"}:
+            logger.warning("[AllowlistWatcher] Unknown TG mode %r; using live_only", mode)
+            mode = "live_only"
+        if mode == "live_only":
+            hot = {
+                var: change
+                for var, change in hot.items()
+                if _tg_strategy_relevant(_strategy_from_var(var))
+            }
+            restart = {
+                var: change
+                for var, change in restart.items()
+                if _tg_strategy_relevant(_strategy_from_var(var))
+            }
+            if not hot and not restart:
+                logger.info(
+                    "[AllowlistWatcher] Telegram digest suppressed: only inactive/shadow sleeves changed"
+                )
+                return
+
         lines = [f"🔄 <b>Runtime Params Updated</b>\nsource={source}"]
 
         for var, (old, new) in hot.items():

@@ -3,6 +3,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 mkdir -p logs runtime/xsec_v3_shadow
+source scripts/research_loop_lock.sh
+acquire_research_loop_lock "runtime/xsec_v3_shadow_loop.lock" || exit 0
 
 while true; do
   stamp="$(date -u +%Y%m%d_%H%M%S)"

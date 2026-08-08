@@ -1,0 +1,57 @@
+{
+  "schema": "consolidation_level_impulse_v1_preregistration",
+  "created_at_utc": "2026-08-08T00:00:00Z",
+  "research_only": true,
+  "promotion_eligible": false,
+  "owner_hypothesis": "Catch the first bounded impulse out of a real consolidation located at a meaningful horizontal or sloped level.",
+  "not_xsec": "This is a per-symbol event strategy; XSEC remains a separate cross-sectional portfolio.",
+  "universe": {
+    "mode": "point_in_time_dynamic",
+    "minimum_listing_age_days": 30,
+    "minimum_liquidity": "top PIT tranche by executable turnover",
+    "fixed_today_universe_forbidden": true
+  },
+  "event": {
+    "signal_timeframe": "H1",
+    "execution_timeframe": "M5",
+    "compression_lookback_h1": [12, 24, 36],
+    "compression_atr_ratio_max": [0.55, 0.70],
+    "minimum_level_touches": 2,
+    "location": ["horizontal_support_resistance", "validated_sloped_level"],
+    "directions_split": true,
+    "trigger": ["close_outside_range_then_next_open", "break_then_first_retest"],
+    "minimum_room_to_next_level_atr": 1.0,
+    "maximum_entry_lateness_atr": 0.35,
+    "target_atr": [0.75, 1.0, 1.5],
+    "time_stop_h1": [3, 6, 12]
+  },
+  "required_controls": [
+    "same direction random-time control",
+    "breakout without compression",
+    "compression away from levels",
+    "fixed-universe versus PIT-universe",
+    "one-entry versus retest entry",
+    "base and doubled executable costs"
+  ],
+  "gates": {
+    "minimum_events_total": 200,
+    "minimum_symbols_positive": 0.60,
+    "minimum_positive_time_folds": "3/4",
+    "minimum_net_excess_after_stress_bps": 5.0,
+    "maximum_largest_symbol_profit_share": 0.35,
+    "holdout_must_remain_sealed": true
+  },
+  "required_geometry_receipt": [
+    "range_start_ts",
+    "range_end_ts",
+    "range_high",
+    "range_low",
+    "level_kind",
+    "level_anchor_points",
+    "break_ts",
+    "entry_ts",
+    "entry_lateness_atr",
+    "next_level",
+    "room_atr"
+  ]
+}

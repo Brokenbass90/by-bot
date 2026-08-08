@@ -152,3 +152,74 @@ def test_dynamic_overlay_param_reload_requires_explicit_authorization(monkeypatc
     )
 
     assert os.environ["ATT1_RSI_SHORT_MIN"] == "50"
+
+
+def test_tg_live_only_suppresses_inactive_shadow_sleeves(monkeypatch):
+    sent = []
+    monkeypatch.setenv("ALLOWLIST_WATCHER_TG_MODE", "live_only")
+    monkeypatch.setenv("ASM1_RISK_MULT", "0")
+    monkeypatch.setenv("FLAT_RISK_MULT", "0")
+    monkeypatch.setattr("bot.allowlist_watcher._tg", lambda token, chat, msg: sent.append(msg))
+
+    watcher = AllowlistWatcher(poll_interval=999)
+    watcher._tg_token = "test"
+    watcher._tg_chat = "test"
+    watcher._send_tg_digest(
+        {
+            "ASM1_SYMBOL_ALLOWLIST": ("XAGUSDT", "XAUUSDT"),
+            "ARF1_SYMBOL_ALLOWLIST": ("LTCUSDT", ""),
+        },
+        {},
+        source="dynamic_allowlist_latest.env",
+    )
+
+    assert sent == []
+
+
+def test_tg_live_only_keeps_live_sleeve_and_filters_shadow(monkeypatch):
+    sent = []
+    monkeypatch.setenv("ALLOWLIST_WATCHER_TG_MODE", "live_only")
+    monkeypatch.setenv("ATT1_RISK_MULT", "0.10")
+    monkeypatch.setenv("ASM1_RISK_MULT", "0")
+    monkeypatch.setattr("bot.allowlist_watcher._tg", lambda token, chat, msg: sent.append(msg))
+
+    watcher = AllowlistWatcher(poll_interval=999)
+    watcher._tg_token = "test"
+    watcher._tg_chat = "test"
+    watcher._send_tg_digest(
+        {
+            "ATT1_SYMBOL_ALLOWLIST": ("BTCUSDT", "BTCUSDT,ETHUSDT"),
+            "ASM1_SYMBOL_ALLOWLIST": ("XAGUSDT", "XAUUSDT"),
+        },
+        {},
+        source="dynamic_allowlist_latest.env",
+    )
+
+    assert len(sent) == 1
+    assert "ATT1" in sent[0]
+    assert "ETHUSDT" in sent[0]
+    assert "ASM1" not in sent[0]
+
+
+def test_tg_modes_all_and_off(monkeypatch):
+    sent = []
+    monkeypatch.setattr("bot.allowlist_watcher._tg", lambda token, chat, msg: sent.append(msg))
+    watcher = AllowlistWatcher(poll_interval=999)
+    watcher._tg_token = "test"
+    watcher._tg_chat = "test"
+
+    monkeypatch.setenv("ALLOWLIST_WATCHER_TG_MODE", "all")
+    watcher._send_tg_digest(
+        {"ASM1_SYMBOL_ALLOWLIST": ("XAGUSDT", "XAUUSDT")},
+        {},
+        source="dynamic_allowlist_latest.env",
+    )
+    assert len(sent) == 1
+
+    monkeypatch.setenv("ALLOWLIST_WATCHER_TG_MODE", "off")
+    watcher._send_tg_digest(
+        {"ATT1_SYMBOL_ALLOWLIST": ("BTCUSDT", "ETHUSDT")},
+        {},
+        source="dynamic_allowlist_latest.env",
+    )
+    assert len(sent) == 1

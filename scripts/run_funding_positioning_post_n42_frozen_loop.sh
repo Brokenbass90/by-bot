@@ -11,11 +11,8 @@ LOCK_DIR="$ROOT/runtime/funding_positioning_post_n42_frozen_loop.lock"
 LOG="$ROOT/logs/funding_positioning_post_n42_frozen.log"
 
 mkdir -p "$ROOT/runtime" "$ROOT/logs"
-if ! mkdir "$LOCK_DIR" 2>/dev/null; then
-  echo "funding positioning post-N42 frozen shadow already running"
-  exit 0
-fi
-trap 'rmdir "$LOCK_DIR" 2>/dev/null || true' EXIT
+source "$ROOT/scripts/research_loop_lock.sh"
+acquire_research_loop_lock "$LOCK_DIR" || exit 0
 
 while true; do
   "$PYTHON_BIN" scripts/funding_positioning_v4_shadow.py \
