@@ -1,0 +1,47 @@
+{
+  "schema_id": "project_audit_hardening_and_negative_evidence_receipt_v1",
+  "generated_at_utc": "2026-08-08T06:25:00Z",
+  "mode": "proposal_only_read_only_live_mirror",
+  "live_mutation": false,
+  "changes": [
+    "atomic liveness publication with completion marker",
+    "per-strategy timeout on macOS",
+    "fail-closed rejection of partial liveness tables",
+    "self-health with seeded deterministic canary",
+    "persistent negative evidence registry",
+    "research contour adapters for XSEC, funding positioning and Alpaca adaptive",
+    "bounded 25-hour Mac awake worker"
+  ],
+  "artifacts": [
+    "runtime/project_audit/health.json",
+    "runtime/project_audit/health.md",
+    "runtime/strategy_diagnostics/registry.json",
+    "runtime/strategy_diagnostics/registry.csv",
+    "runtime/strategy_diagnostics/registry.md",
+    "runtime/liveness_status.json"
+  ],
+  "verification": {
+    "targeted_tests_passed": 17,
+    "shell_syntax_passed": true,
+    "diff_check_passed": true,
+    "seeded_canary_detected": true,
+    "negative_registry_current_findings": 8,
+    "negative_registry_profit_verdict_safe": 0,
+    "full_liveness_state": "running",
+    "health_until_completion": "DEGRADED_FAIL_CLOSED"
+  },
+  "continuity": {
+    "screen_supervisor_active": true,
+    "loop_interval_sec": 21600,
+    "mac_awake_for_sec": 90000,
+    "launchagent_active": false,
+    "launchagent_blocker": "macOS TCC denied background access to Documents",
+    "survives_reboot": false
+  },
+  "authority_boundaries": {
+    "can_edit_live_risk": false,
+    "can_submit_orders": false,
+    "can_promote_strategy": false,
+    "findings_require_reproduction": true
+  }
+}

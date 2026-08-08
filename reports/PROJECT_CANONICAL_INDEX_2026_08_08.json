@@ -1,6 +1,6 @@
 {
   "schema_id": "project_canonical_index_v3",
-  "as_of_utc": "2026-08-08T05:45:36Z",
+  "as_of_utc": "2026-08-08T06:25:00Z",
   "canonical_handoff": "reports/ANTICRISIS_STATUS_AND_NEXT_HANDOFF_2026_08_08.md",
   "canonical_roadmap": "reports/PROJECT_MASTER_ROADMAP_2026_07_27.md",
   "canonical_audit_pipeline": "reports/SELF_HEALING_AUDIT_PIPELINE_2026_08_08.md",
@@ -114,6 +114,7 @@
     "reports/releases/BOUNCE1_MAJORS_RISK_ZERO_SHADOW_DEPLOY_RECEIPT_2026_08_08.json",
     "reports/releases/ALPACA_FRACTIONAL_TRAIL_AND_DIGEST_DEDUPE_DEPLOY_RECEIPT_2026_08_08.json",
     "reports/releases/LOCAL_PROJECT_AUDIT_SUPERVISOR_RECEIPT_2026_08_08.json",
+    "reports/releases/PROJECT_AUDIT_HARDENING_AND_NEGATIVE_EVIDENCE_RECEIPT_2026_08_08.json",
     "reports/releases/FUNDING_POSITIONING_POST_N42_FROZEN_SHADOW_RECEIPT_2026_08_08.json"
   ],
   "research_receipts": [
@@ -123,15 +124,21 @@
   ],
   "project_audit": {
     "stage": "proposal_only_background_supervisor_active",
-    "tests_passed": 11,
+    "tests_passed": 17,
     "registry_path": "runtime/project_audit/registry.json",
+    "health_path": "runtime/project_audit/health.json",
+    "negative_evidence_registry_path": "runtime/strategy_diagnostics/registry.json",
     "current_findings": 211,
     "actionable_after_noise_suppression": 6,
     "inventory_needs_triage": 187,
     "confirmed": 2,
     "ollama_model": "qwen3:8b",
     "full_liveness_refresh": "running",
+    "health": "DEGRADED_FAIL_CLOSED_UNTIL_FULL_LIVENESS_COMPLETES",
     "cheap_cycle_interval_hours": 6,
+    "screen_supervisor_active": true,
+    "launchagent_active": false,
+    "survives_reboot": false,
     "automatic_live_mutation": false
   },
   "interpretation_contract": {

@@ -99,6 +99,14 @@ def collect_liveness(
     t = table
     if not t.exists():
         return []
+    text = t.read_text(encoding="utf-8", errors="ignore")
+    if "LIVENESS_SWEEP_COMPLETE " not in text:
+        return [{
+            "rule": "L0",
+            "where": str(t),
+            "what": "таблица живости неполная: отсутствует completion marker",
+            "how_to_refute": "завершить supervisor --full; частичная таблица не должна заменять authoritative result",
+        }]
     now_epoch = float(now_epoch if now_epoch is not None else time.time())
     age_hours = max(0.0, (now_epoch - t.stat().st_mtime) / 3600.0)
     if age_hours > max_age_hours:
@@ -109,7 +117,7 @@ def collect_liveness(
             "how_to_refute": "запустить supervisor с --full и убедиться, что mtime и результаты обновились",
         }]
     found = []
-    for line in t.read_text(encoding="utf-8").splitlines()[2:]:
+    for line in text.splitlines()[2:]:
         parts = line.split()
         if len(parts) < 4:
             continue
