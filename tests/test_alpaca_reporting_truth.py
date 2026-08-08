@@ -198,9 +198,9 @@ def test_postclose_watchdog_requires_real_same_day_delivery():
     assert watchdog.evaluate_delivery({}, weekend) == {"due": False, "ok": True, "reason": "not_due"}
 
 
-def test_managed_cron_has_recurring_postclose_report_and_watchdog():
+def test_managed_cron_has_one_morning_digest_without_postclose_duplicates():
     text = (ROOT / "scripts" / "setup_server_crons.sh").read_text(encoding="utf-8")
-    assert "10 22 * * 1-5" in text
-    assert "--alpaca-only --status-key alpaca_postclose" in text
-    assert "0 23 * * 1-5" in text
-    assert "alpaca_report_freshness_watchdog.py" in text
+    assert text.count("python3 scripts/tg_daily_digest.py >>") == 1
+    assert "0 8 * * *" in text
+    assert "--alpaca-only --status-key alpaca_postclose" not in text
+    assert "alpaca_report_freshness_watchdog.py >>" not in text

@@ -1,4 +1,4 @@
-from scripts.alpaca_protective_exit_manager import build_ratchet_plan
+from scripts.alpaca_protective_exit_manager import build_ratchet_plan, build_stop_replace_payload
 
 
 def _position(price=105.0, entry=100.0, qty=0.5):
@@ -57,3 +57,10 @@ def test_excluded_symbols_are_not_managed():
     )
     assert plan == []
     assert state == {}
+
+
+def test_fractional_stop_replace_preserves_existing_qty():
+    payload = build_stop_replace_payload(105.0306)
+    assert payload == {"stop_price": "105.0306"}
+    assert "qty" not in payload
+    assert "time_in_force" not in payload

@@ -1,0 +1,45 @@
+{
+  "schema_id": "att1_persistent_owner_approval_deploy_receipt_v1",
+  "generated_at_utc": "2026-08-08T05:15:00Z",
+  "status": "DEPLOYED_VERIFIED_FLAT",
+  "owner_authority": "Continue ATT1 trading until an explicit owner pause",
+  "change": {
+    "ATT1_CANARY_EXPIRY_UTC": "",
+    "ATT1_OWNER_APPROVAL": "CONTINUE_UNTIL_EXPLICIT_PAUSE"
+  },
+  "unchanged": {
+    "ATT1_RISK_MULT": "0.10",
+    "ATT1_ALLOW_LONGS": "0",
+    "ATT1_ALLOW_SHORTS": "1",
+    "ATT1_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "live_money_sleeves": ["att1"]
+  },
+  "safety_contract": [
+    "calendar expiry no longer silently pauses the owner-approved tiny canary",
+    "loss, consecutive-loss, portfolio and infrastructure breakers remain authoritative",
+    "no order, position, signal parameter, universe or risk increase was introduced"
+  ],
+  "server": {
+    "service": "bybot.service",
+    "restart_method": "scripts/restart_bybot_when_flat.py --confirmations 3 --interval-sec 2",
+    "backup": "/root/by-bot/state/deploy_backups/att1_persistent_owner_approval_20260808/att1_r001_plus_ivb1_r003_shadow_20260705.env.before",
+    "post_restart_service_state": "active",
+    "post_restart_open_trades": 0,
+    "post_restart_trade_on": true,
+    "post_restart_dry_run": false,
+    "post_restart_regime": "bull_trend",
+    "bybit_auth": "verified",
+    "credential_status": "applied_verified",
+    "credential_need_restart": false
+  },
+  "cohort": {
+    "start_utc": "2026-08-08T05:04:01Z",
+    "label": "ATT1_PERSISTENT_OWNER_APPROVAL_RISK_0_10_SHORT_ONLY",
+    "rule": "Broker-reconciled trades after this timestamp form the new operational cohort; older mixed accounting remains historical context."
+  },
+  "git": {
+    "branch": "codex/dynamic-symbol-filters",
+    "commit": null,
+    "note": "Commit is filled by Git history; server deployment was targeted before the receipt commit."
+  }
+}

@@ -60,8 +60,15 @@ def _format_price(price: float) -> str:
     return f"{price:.8f}".rstrip("0").rstrip(".")
 
 
-def _format_qty(qty: float) -> str:
-    return f"{qty:.9f}".rstrip("0").rstrip(".")
+def build_stop_replace_payload(target_stop: float) -> dict[str, str]:
+    """Raise only the stop price while preserving the broker order quantity.
+
+    Alpaca accepts an existing fractional stop order, but its replace endpoint
+    rejects a fractional ``qty`` field with ``qty must be an integer``.  The
+    plan already verifies that the existing order covers the whole position,
+    so resending quantity is both unnecessary and harmful.
+    """
+    return {"stop_price": _format_price(target_stop)}
 
 
 def build_ratchet_plan(
@@ -226,11 +233,10 @@ def main() -> int:
             applied.append({"symbol": row["symbol"], "status": "blocked", "reason": "missing_order_id"})
             continue
         try:
-            result = client.replace_order(order_id, {
-                "qty": _format_qty(float(row["qty"])),
-                "stop_price": _format_price(float(row["target_stop"])),
-                "time_in_force": row.get("time_in_force") or "gtc",
-            })
+            result = client.replace_order(
+                order_id,
+                build_stop_replace_payload(float(row["target_stop"])),
+            )
             applied.append({
                 "symbol": row["symbol"],
                 "status": str(result.get("status") or "accepted"),

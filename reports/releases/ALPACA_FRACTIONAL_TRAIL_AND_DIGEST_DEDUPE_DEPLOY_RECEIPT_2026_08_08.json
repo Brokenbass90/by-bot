@@ -1,0 +1,33 @@
+{
+  "schema_id": "alpaca_fractional_trail_digest_dedupe_deploy_receipt_v1",
+  "generated_at_utc": "2026-08-08T05:40:00Z",
+  "status": "DEPLOYED_PENDING_MARKET_OPEN_BROKER_ACCEPTANCE",
+  "protective_exit_fix": {
+    "root_cause": "Alpaca replace-order rejected fractional qty with HTTP 422: qty must be an integer",
+    "change": "Replace the existing stop by sending stop_price only; preserve broker-side quantity and time-in-force",
+    "scope": "protective exits only; no authority to buy, rotate or submit discretionary market exits",
+    "tests": "30 passed across protective-exit, reporting and Alpaca truth suites",
+    "dry_run_after_deploy": {
+      "ABBV": "hold; trail not armed",
+      "SCHW": "replace_stop proposed from 96.47 to 105.0306; approximately 3.425% gain lock versus entry"
+    },
+    "broker_acceptance": "Must be verified while the US market is open; not claimed complete before then"
+  },
+  "telegram_digest_fix": {
+    "before": "08:00 UTC full digest plus 22:10 UTC Alpaca-only digest with the same daily-report title",
+    "after": "one full daily digest at 08:00 UTC; one monthly Alpaca report; no recurring post-close duplicate",
+    "proof_of_life": "The separate three-hour service-health message remains enabled and is not a daily PnL digest",
+    "llm_tokens": "The deterministic daily digest does not call an LLM; the weekly AI forensics report does"
+  },
+  "server": {
+    "backup": "/root/by-bot/state/deploy_backups/alpaca_trail_digest_20260808/",
+    "protective_manager_schedule": "every 15 minutes, weekdays 13:00-21:59 UTC",
+    "daily_digest_schedule": "08:00 UTC",
+    "monthly_report_schedule": "22:20 UTC on day 1"
+  },
+  "capital_authorized": false,
+  "git": {
+    "branch": "codex/dynamic-symbol-filters",
+    "commit": null
+  }
+}
