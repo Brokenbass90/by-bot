@@ -46,3 +46,45 @@ def test_verified_status_is_deterministic_and_conservative() -> None:
     assert "Весь проект проверен: НЕТ" in status
     assert "tf_ts в ms" in status
     assert "PF 0.305" in status
+
+
+def test_verified_status_reports_live_mirror_provenance(tmp_path: Path) -> None:
+    context_dir = tmp_path / "runtime/live_mirror/ai_context"
+    context_dir.mkdir(parents=True)
+    (context_dir / "full_context.json").write_text(
+        '{"generated_at_utc":"2026-08-09T05:10:02+00:00"}', encoding="utf-8"
+    )
+    manifest = tmp_path / "runtime/live_mirror/sync_bundle_manifest.json"
+    manifest.write_text('{"status":"complete"}', encoding="utf-8")
+
+    status = verified_status_text(tmp_path)
+
+    assert "2026-08-09T05:10:02+00:00" in status
+    assert "bundle status: complete" in status
+
+
+def test_context_fact_index_contains_bounded_research_verdicts(tmp_path: Path) -> None:
+    fx_path = tmp_path / "reports/research/fx_smart_grid_v2_20260809_initial/verdict.json"
+    fx_path.parent.mkdir(parents=True)
+    fx_path.write_text(
+        '{"generated_at_utc":"2026-08-09T05:14:21Z",'
+        '"decision":"FAIL_OR_REBUILD","live_authorized":false,'
+        '"best_stress":{"trades":5}}',
+        encoding="utf-8",
+    )
+    pair_path = tmp_path / "reports/research/pairs_statarb_v2_20260809_initial/verdict.json"
+    pair_path.parent.mkdir(parents=True, exist_ok=True)
+    pair_path.write_text(
+        '{"generated_at_utc":"2026-08-09T05:18:49Z",'
+        '"decision":"FAIL_OR_REBUILD","live_authorized":false,'
+        '"best":{"trades":756}}',
+        encoding="utf-8",
+    )
+
+    context, sources = build_project_context(tmp_path)
+
+    assert "reports/research/fx_smart_grid_v2_20260809_initial/verdict.json" in sources
+    assert "reports/research/pairs_statarb_v2_20260809_initial/verdict.json" in sources
+    assert '"fx_smart_grid_v2"' in context
+    assert '"pairs_statarb_v2"' in context
+    assert '"trades": 756' in context

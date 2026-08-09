@@ -21,6 +21,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SAFE_CONTEXT_FILES = (
     "reports/CODEX_PROGRESS_2026_08_09.md",
+    "runtime/live_mirror/sync_bundle_manifest.json",
     "PROJECT_MAP.md",
     "reports/PROJECT_STATE_LEDGER.md",
     "reports/RESEARCH_STATION_LTC_AND_FX_GRID_2026_08_08.md",
@@ -31,6 +32,8 @@ SAFE_CONTEXT_FILES = (
     "runtime/funding_positioning_dynamic_shadow_summary.json",
     "runtime/funding_positioning_post_n42_frozen_summary.json",
     "runtime/fx_smart_grid_v1_latest.json",
+    "reports/research/fx_smart_grid_v2_20260809_initial/verdict.json",
+    "reports/research/pairs_statarb_v2_20260809_initial/verdict.json",
 )
 
 SYSTEM_RULES = """Ты локальный AI-аудитор торговой станции. Отвечай по-русски.
@@ -43,10 +46,16 @@ SYSTEM_RULES = """Ты локальный AI-аудитор торговой с�
 """
 
 
-def verified_status_text() -> str:
+def verified_status_text(root: Path = ROOT) -> str:
     """Return deterministic facts without asking the language model."""
+    live = _json_object(root / "runtime/live_mirror/ai_context/full_context.json")
+    manifest = _json_object(root / "runtime/live_mirror/sync_bundle_manifest.json")
+    generated = live.get("generated_at_utc") or "missing"
+    mirror_status = manifest.get("status") or "missing"
     return "\n".join((
         "VERIFIED STATUS (без генерации Ollama)",
+        f"- VPS live-mirror context generated_at_utc: {generated}.",
+        f"- Atomic mirror bundle status: {mirror_status}.",
         "- Весь проект проверен: НЕТ.",
         "- Аудит: 272 записи; 210 актуальных; 5 требуют разбора; 187 inventory.",
         "- SBR1 bug: tf_ts в ms, retest-window ошибочно прибавлялся в sec.",
@@ -80,9 +89,25 @@ def _fact_index(root: Path) -> str:
     station = _json_object(root / "runtime/local_research_station/status.json")
     audit = _json_object(root / "runtime/project_audit/supervisor_status.json")
     fx_grid = _json_object(root / "runtime/fx_smart_grid_v1_latest.json")
+    fx_grid_v2 = _json_object(
+        root / "reports/research/fx_smart_grid_v2_20260809_initial/verdict.json"
+    )
+    pairs_v2 = _json_object(
+        root / "reports/research/pairs_statarb_v2_20260809_initial/verdict.json"
+    )
     alpaca = _json_object(root / "runtime/alpaca_adaptive_v1_shadow_latest.json")
     funding = _json_object(root / "runtime/funding_positioning_dynamic_shadow_summary.json")
+    live = _json_object(root / "runtime/live_mirror/ai_context/full_context.json")
+    mirror_manifest = _json_object(root / "runtime/live_mirror/sync_bundle_manifest.json")
     facts = {
+        "vps_live_mirror": {
+            "context_generated_at_utc": live.get("generated_at_utc"),
+            "git_revision": live.get("git_revision"),
+            "critical_truth_assessment": live.get("critical_truth_assessment"),
+            "bundle_status": mirror_manifest.get("status"),
+            "bundle_finished_at_utc": mirror_manifest.get("sync_finished_utc"),
+            "source": mirror_manifest.get("source"),
+        },
         "verification_scope": {
             "whole_project_verified": False,
             "audit_registry_total": 272,
@@ -122,6 +147,18 @@ def _fact_index(root: Path) -> str:
             "generated_at_utc": fx_grid.get("generated_at_utc"),
             "decision": fx_grid.get("decision"),
             "best_stress": fx_grid.get("best_stress"),
+        },
+        "fx_smart_grid_v2": {
+            "generated_at_utc": fx_grid_v2.get("generated_at_utc"),
+            "decision": fx_grid_v2.get("decision"),
+            "best_stress": fx_grid_v2.get("best_stress"),
+            "live_authorized": fx_grid_v2.get("live_authorized"),
+        },
+        "pairs_statarb_v2": {
+            "generated_at_utc": pairs_v2.get("generated_at_utc"),
+            "decision": pairs_v2.get("decision"),
+            "best": pairs_v2.get("best"),
+            "live_authorized": pairs_v2.get("live_authorized"),
         },
         "alpaca_adaptive": {
             "generated_at_utc": alpaca.get("generated_at_utc"),

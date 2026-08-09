@@ -1,0 +1,55 @@
+{
+  "best_rejection_counts": {
+    "directional_efficiency": 746,
+    "directional_volume_spike": 10,
+    "fresh_breakout": 94,
+    "insufficient_touches": 1390,
+    "not_at_boundary": 426,
+    "range_width": 65477,
+    "regression_drift": 4155,
+    "session_gate": 5
+  },
+  "best_stress": {
+    "arm": "stress",
+    "breakout_close_atr": 0.1,
+    "breakout_cooldown_bars": 5,
+    "entry_band_atr": 0.2,
+    "er_max": 0.12,
+    "fold_net_bps": [
+      57.1252,
+      3.2001,
+      23.9226,
+      -19.6192
+    ],
+    "kill_buffer_atr": 0.3,
+    "lookback": 72,
+    "max_hold_h1": 12,
+    "max_layers": 1,
+    "mean_bps": 12.9258,
+    "min_alternating_touches": 3,
+    "net_bps": 64.6288,
+    "pf": 4.2942,
+    "positive_folds": 3,
+    "slope_span_atr_max": 0.75,
+    "spacing_atr": 0.35,
+    "touch_band_atr": 0.25,
+    "trades": 5,
+    "volume_spike_mult": 2.0,
+    "win_rate": 0.6
+  },
+  "cost_contract": "configs/research/fx_oanda_public_cost_contract_20260729.json",
+  "cost_contract_expired_for_promotion": true,
+  "data": "public Dukascopy M5 aggregated to complete H1",
+  "decision": "FAIL_OR_REBUILD",
+  "generated_at_utc": "2026-08-09T05:14:21.150903+00:00",
+  "limitations": [
+    "32 configurations are diagnostic selection, not OOS evidence",
+    "H1 OHLC cannot model limit queue priority or intrabar layer ordering",
+    "public cost contract is expired for promotion",
+    "news blackout is not yet available in the public dataset"
+  ],
+  "live_authorized": false,
+  "research_only": true,
+  "schema": "fx_smart_grid_v2_bounded_diagnostic",
+  "search_trials": 32
+}

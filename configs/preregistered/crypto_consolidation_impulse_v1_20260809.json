@@ -1,0 +1,43 @@
+{
+  "prereg_id": "CRYPTO_CONSOLIDATION_IMPULSE_V1_20260809",
+  "frozen_at_utc": "2026-08-09T05:30:00Z",
+  "status": "PREREGISTERED_NOT_RUN",
+  "research_only": true,
+  "live_authorized": false,
+  "owner_hypothesis": "После устойчивой проторговки у подтвержденного горизонтального или наклонного уровня торговать только исполнимый импульс выхода, отдельно для long и short.",
+  "data_contract": {
+    "universe": "point-in-time Bybit linear perps with listing timestamps",
+    "bars": ["5m", "1h"],
+    "minimum_history_days": 180,
+    "exclude_incomplete_listing_warmup": true
+  },
+  "frozen_families": {
+    "balance_definition": [
+      "minimum 12 completed 5m bars",
+      "range width between 1.5 and 5.0 ATR",
+      "directional efficiency <= 0.25",
+      "at least two alternating boundary interactions"
+    ],
+    "level_context": [
+      "horizontal support or resistance with timestamped touches",
+      "sloped level only when pivot anchors and unbroken validation are persisted"
+    ],
+    "long_trigger": "close above balance high plus 0.10 ATR, then executable retest or next-bar continuation",
+    "short_trigger": "close below balance low minus 0.10 ATR, then executable retest or next-bar continuation",
+    "false_break_guard": "reject immediate close back inside balance before fill",
+    "exit_family": ["1.5R fixed", "2.0R fixed", "1R partial plus ATR trail"],
+    "costs": "two-sided Bybit fee, spread, slippage and missed maker fills"
+  },
+  "validation": {
+    "time_oos_folds": 4,
+    "symbol_oos": true,
+    "minimum_closed_trades": 120,
+    "minimum_positive_folds": 3,
+    "minimum_stress_pf": 1.10,
+    "maximum_single_symbol_profit_share": 0.35,
+    "negative_controls": ["shuffled trigger timestamps", "random side matched by regime"],
+    "n_trials_must_be_logged": true
+  },
+  "decision_rule": "FAIL if activity, costs or OOS gates fail. PASS means shadow-only eligibility, never direct money promotion.",
+  "next_artifact": "event ledger with exact balance bounds, level anchors, trigger, fill assumption, MFE, MAE and blocker reason"
+}

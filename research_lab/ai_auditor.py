@@ -417,8 +417,12 @@ def main() -> int:
     mono = _read(MONOLITH)
     findings: list[Finding] = []
     findings += check_claimed_but_unwired(mono)
+    # Audit the atomic VPS mirror actually consumed by local Web/AI tooling.
+    # The old runtime/ai_context path is a historical local build and its age
+    # does not prove that the VPS context is stale.
     findings += check_stale_runtime({
-        "runtime/ai_context/full_context.json": 2.0,
+        "runtime/live_mirror/ai_context/full_context.json": 0.05,
+        "runtime/live_mirror/sync_bundle_manifest.json": 0.05,
     })
     findings += check_config_drift(mono)
     findings += check_data_collectors()

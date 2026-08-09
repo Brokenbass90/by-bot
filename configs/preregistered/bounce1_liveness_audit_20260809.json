@@ -1,0 +1,28 @@
+{
+  "prereg_id": "BOUNCE1_LIVENESS_AUDIT_20260809",
+  "frozen_at_utc": "2026-08-09T05:30:00Z",
+  "status": "PREREGISTERED_NOT_RUN",
+  "research_only": true,
+  "live_authorized": false,
+  "observed_live_snapshot": {
+    "attempts": 1347,
+    "no_signal": 1347,
+    "shadow_decisions": 0,
+    "risk_multiplier": 0.0
+  },
+  "question": "Какие точные предикаты блокируют BOUNCE1 и совпадают ли live и exact replay на одних timestamp/symbol?",
+  "frozen_method": [
+    "log every predicate outcome before changing thresholds",
+    "replay the same timestamp and symbol set through the exact strategy module",
+    "compare live and replay decisions field by field",
+    "rank blockers by marginal and joint frequency",
+    "measure signals recovered by removing one blocker at a time, diagnostic only"
+  ],
+  "success_gate": "At least 95 percent live/replay predicate parity and an identified dominant blocker with reproducible examples.",
+  "forbidden": [
+    "changing live thresholds during audit",
+    "enabling money risk",
+    "selecting a threshold from outcome PnL before untouched OOS"
+  ],
+  "next_artifact": "BOUNCE1 blocker distribution, parity mismatches and timestamped chart deck"
+}
