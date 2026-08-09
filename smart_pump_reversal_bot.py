@@ -147,6 +147,7 @@ from bot.runner_state import (
     apply_runner_snapshot,
     apply_runner_state,
     plan_runner_target_close,
+    reconcile_runner_qty_with_exchange,
     runner_snapshot_from_trade,
     sync_runner_qty_after_fill,
 )
@@ -253,6 +254,7 @@ from bot.order_link import (
 from bot.bybit_closed_pnl import aggregate_closed_pnl, closed_pnl_query_windows
 from bot.strategy_regime_gate import strategy_regime_gate_decision
 from bot.strategy_shadow_ledger import StrategyShadowLedger
+from bot.legacy_position_policy import should_apply_legacy_pump_fade_dca
 
 ORDER_LINK_ID_ENABLED = _env_bool("ORDER_LINK_ID_ENABLED", True)
 ORDER_LINK_LOG_PATH = ROOT_DIR / "runtime" / "order_link_id_log.jsonl"
@@ -2134,6 +2136,17 @@ def _append_live_trade_event(event: str, sym: str, tr=None, **extra) -> None:
             "event": str(event or "").strip(),
             "exchange": "Bybit",
             "symbol": str(sym or "").upper(),
+            # Persist the decision-time macro context. ATT1 currently scales
+            # risk through the orchestrator but does not hard-block bull
+            # regimes, so post-trade review must be able to separate those
+            # cohorts instead of inferring regime from a later heartbeat.
+            "regime": str(
+                REGIME_OVERLAY_LAST_APPLIED_REGIME
+                or os.getenv("ORCH_REGIME", "unknown")
+                or "unknown"
+            ),
+            "regime_confidence": _to_float_safe(os.getenv("ORCH_CONFIDENCE", "")),
+            "orchestrator_risk_mult": float(ORCH_GLOBAL_RISK_MULT or 0.0),
         }
         if tr is not None:
             payload.update({
@@ -7047,8 +7060,30 @@ def sync_trades_with_exchange():
                         pass
                 continue
 
-            # обновим qty/side, если частично закрыли руками
+            # Broker size is authoritative. A manual/external/legacy order may
+            # change an already-open runner position after its initial fill.
+            # Without this reconciliation the TP ladder can leave an orphaned
+            # residual even though the exchange stop protects the full size.
+            old_runner_qty = float(getattr(tr, "remaining_qty", 0.0) or 0.0)
             tr.qty = float(size)
+            if reconcile_runner_qty_with_exchange(tr, float(size)):
+                _diag_inc("runner_exchange_qty_reconciled")
+                _append_live_trade_event(
+                    "runner_exchange_qty_reconciled",
+                    sym,
+                    tr,
+                    previous_runner_qty=float(old_runner_qty),
+                    exchange_qty=float(size),
+                )
+                tg_trade_throttled(
+                    f"runner_exchange_qty_reconciled:{sym}:{old_runner_qty}:{size}",
+                    (
+                        f"⚠️ RUNNER QTY RECONCILED {sym}: local={old_runner_qty:.8g} "
+                        f"broker={float(size):.8g}. Broker size is now authoritative; "
+                        "inspect manual/external/duplicate orders."
+                    ),
+                    3600,
+                )
             if side in ("Buy", "Sell"):
                 tr.side = side
             if tp_ex is not None or sl_ex is not None:
@@ -14851,8 +14886,11 @@ def detect(exch: str, sym: str, st: SymState, now: int):
         tr = get_trade(exch, sym)
         if tr and tr.qty > 0 and p1 is not None:
 
-            # ✅ Bounce: без DCA, просто менеджим TP/SL
-            if getattr(tr, "strategy", "pump") in ("bounce", "range"):
+            # The block below is the legacy pump-fade DCA manager.  It must not
+            # touch ATT1, BREAKDOWN, IVB1, or any other sleeve.  A previous
+            # negative exclusion (only bounce/range) let ATT1 inherit a second
+            # averaging leg and desynchronised its runner quantity from Bybit.
+            if not should_apply_legacy_pump_fade_dca(getattr(tr, "strategy", "")):
                 return
 
 

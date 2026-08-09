@@ -156,6 +156,31 @@ def sync_runner_qty_after_fill(tr: TradeState, actual_qty: float) -> bool:
     return True
 
 
+def reconcile_runner_qty_with_exchange(tr: TradeState, exchange_qty: float) -> bool:
+    """Make broker size authoritative for an already-open runner position.
+
+    Manual orders, duplicate legacy paths, or partial broker fills can change a
+    position after its initial fill. Keeping a stale ``remaining_qty`` can
+    leave residual exposure after the ladder finishes. Preserve the original
+    ladder denominator unless exposure increased; always manage the actual
+    remaining broker size and let the caller emit an audit alert.
+    """
+
+    if not bool(getattr(tr, "runner_enabled", False)):
+        return False
+    qty = float(exchange_qty or 0.0)
+    if qty <= 0.0:
+        return False
+    old_remaining = float(getattr(tr, "remaining_qty", 0.0) or 0.0)
+    if abs(old_remaining - qty) <= 1e-12:
+        return False
+    old_initial = float(getattr(tr, "initial_qty", 0.0) or 0.0)
+    if qty > old_initial or old_initial <= 0.0:
+        tr.initial_qty = qty
+    tr.remaining_qty = qty
+    return True
+
+
 def runner_snapshot_from_trade(tr: TradeState) -> dict[str, Any]:
     """Serialize live runner fields for durable event logs.
 
