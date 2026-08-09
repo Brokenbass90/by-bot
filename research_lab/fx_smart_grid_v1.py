@@ -149,6 +149,7 @@ def run_symbol(
             i += 1
             continue
         entries = [entry]
+        entry_timestamps = [int(rows[entry_index][0])]
         next_layer = entry - side * params.spacing_atr * a
         stop = (low - params.kill_buffer_atr * a) if side > 0 else (high + params.kill_buffer_atr * a)
         exit_index = min(len(rows) - 1, entry_index + params.max_hold_h1)
@@ -171,15 +172,27 @@ def run_symbol(
                 crossed = close <= next_layer if side > 0 else close >= next_layer
                 if crossed:
                     entries.append(close)
+                    entry_timestamps.append(int(rows[j][0]))
                     next_layer = close - side * params.spacing_atr * a
         cost_bps = roundtrip_cost_bps(symbol, statistics.fmean(entries), cost, arm)
         pnl_bps = _finish(side, entries, exit_price, cost_bps)
         trades.append({
             "symbol": symbol,
+            "signal_ts": int(rows[i - 1][0]),
             "entry_ts": int(rows[entry_index][0]),
             "exit_ts": int(rows[exit_index][0]),
             "side": "long" if side > 0 else "short",
             "layers": len(entries),
+            "entry_prices": json.dumps([round(x, 8) for x in entries]),
+            "entry_timestamps": json.dumps(entry_timestamps),
+            "average_entry": round(statistics.fmean(entries), 8),
+            "exit_price": round(exit_price, 8),
+            "range_low": round(low, 8),
+            "range_center": round(center, 8),
+            "range_high": round(high, 8),
+            "range_atr": round(a, 8),
+            "kill_price": round(stop, 8),
+            "cost_bps": round(cost_bps, 6),
             "pnl_bps": pnl_bps,
             "reason": reason,
         })
@@ -245,6 +258,21 @@ def main() -> int:
         row for row in stress
         if (row["lookback"], row["entry_atr"], row["er_max"]) == baseline_key and row["max_layers"] == 1
     )
+    best_params = Params(
+        lookback=int(best["lookback"]),
+        entry_atr=float(best["entry_atr"]),
+        er_max=float(best["er_max"]),
+        max_layers=int(best["max_layers"]),
+        spacing_atr=float(best["spacing_atr"]),
+        kill_buffer_atr=float(best["kill_buffer_atr"]),
+        max_hold_h1=int(best["max_hold_h1"]),
+    )
+    best_trades = [
+        trade
+        for symbol in pairs
+        for trade in run_symbol(symbol, data[symbol], best_params, cost, "stress")
+    ]
+    write_csv(outdir / "best_stress_trades.csv", best_trades)
     passes = (
         best["max_layers"] == 3 and best["trades"] >= 100 and best["pf"] >= 1.05
         and best["positive_folds"] >= 3 and best["net_bps"] > baseline["net_bps"]

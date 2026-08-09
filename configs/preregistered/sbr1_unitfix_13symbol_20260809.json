@@ -1,0 +1,34 @@
+{
+  "schema": "preregistered_research_v1",
+  "created_at_utc": "2026-08-09T05:00:00Z",
+  "hypothesis": "Fixing the ms/sec retest expiry restores liveness but the unchanged default SBR1 may or may not have positive net economics across a broad universe.",
+  "strategy": "sloped_break_retest_v1",
+  "symbols": [
+    "BTCUSDT", "ETHUSDT", "SOLUSDT", "XRPUSDT", "ADAUSDT",
+    "DOGEUSDT", "LINKUSDT", "DOTUSDT", "AVAXUSDT", "BNBUSDT",
+    "LTCUSDT", "NEARUSDT", "SUIUSDT"
+  ],
+  "window": {"days": 90, "end_utc": "2026-06-11"},
+  "data_amendment_before_economics": {
+    "original_window": {"days": 120, "end_utc": "2026-07-04"},
+    "reason": "LINKUSDT coverage was 75% versus the preregistered 99% minimum",
+    "blocked_data_symbols": ["NEARUSDT"],
+    "blocked_reason": "NEARUSDT has 0 cached rows in the common 90-day window",
+    "covered_symbols_used": 12
+  },
+  "execution": {
+    "entry_on_next_open": true,
+    "fee_bps_per_side": 6.0,
+    "slippage_bps_per_side": 1.0,
+    "cache_only": true,
+    "min_coverage_fraction": 0.99
+  },
+  "search_trials": 1,
+  "no_parameter_optimization": true,
+  "decision": {
+    "fail": "aggregate net <= 0 or PF <= 1.0",
+    "rebuild": "aggregate positive but concentrated in fewer than 5 symbols or PF < 1.10",
+    "advance_to_untouched_oos": "PF >= 1.10, aggregate net > 0, at least 5 positive symbols among the 12 covered"
+  },
+  "live_authorized": false
+}

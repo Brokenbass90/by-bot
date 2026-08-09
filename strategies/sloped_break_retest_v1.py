@@ -56,6 +56,18 @@ def _tf_to_seconds(tf: str) -> int:
         return 3600
 
 
+def _retest_expiry_ms(tf_ts_ms: int, retest_window_bars: int, tf_seconds: int) -> int:
+    """Return the retest deadline in the same millisecond unit as ``tf_ts_ms``.
+
+    Candle timestamps in the portfolio engine are milliseconds while
+    ``_tf_to_seconds`` deliberately returns seconds.  Keeping the conversion
+    at this boundary prevents a pending retest from expiring after only a few
+    seconds instead of the configured number of signal bars.
+    """
+    bars = max(2, int(retest_window_bars))
+    return int(tf_ts_ms) + bars * int(tf_seconds) * 1000
+
+
 def _atr_from_rows(rows: List[list], period: int) -> float:
     if len(rows) < period + 1:
         return float("nan")
@@ -420,9 +432,9 @@ class SlopedBreakRetestV1Strategy:
             self._pending_long = {
                 "level": float(upper),
                 "atr": float(atr_now),
-                "expire_ts": float(
-                    tf_ts + max(2, int(self.cfg.retest_window_bars)) * int(self._tf_seconds)
-                ),
+                "expire_ts": float(_retest_expiry_ms(
+                    tf_ts, self.cfg.retest_window_bars, self._tf_seconds
+                )),
             }
             self._pending_short = None
 
@@ -439,9 +451,9 @@ class SlopedBreakRetestV1Strategy:
             self._pending_short = {
                 "level": float(lower),
                 "atr": float(atr_now),
-                "expire_ts": float(
-                    tf_ts + max(2, int(self.cfg.retest_window_bars)) * int(self._tf_seconds)
-                ),
+                "expire_ts": float(_retest_expiry_ms(
+                    tf_ts, self.cfg.retest_window_bars, self._tf_seconds
+                )),
             }
             self._pending_long = None
 

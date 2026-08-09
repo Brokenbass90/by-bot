@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from research_lab.fx_smart_grid_v1 import (
+    Params,
     aggregate_h1,
     efficiency,
     roundtrip_cost_bps,
@@ -37,3 +38,11 @@ def test_stress_cost_is_stricter_than_base() -> None:
 
     assert base > 0
     assert stress > base
+
+
+def test_params_keep_grid_layers_equal_and_bounded() -> None:
+    params = Params(lookback=48, entry_atr=0.8, er_max=0.3, max_layers=3)
+
+    assert params.max_layers == 3
+    assert params.spacing_atr > 0
+    assert params.kill_buffer_atr > 0
