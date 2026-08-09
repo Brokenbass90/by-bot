@@ -1,6 +1,12 @@
 from pathlib import Path
 
-from scripts.chat_with_local_ai import SAFE_CONTEXT_FILES, build_project_context, verified_status_text
+from scripts.chat_with_local_ai import (
+    SAFE_CONTEXT_FILES,
+    SYSTEM_RULES,
+    build_project_context,
+    scope_text,
+    verified_status_text,
+)
 
 
 def test_project_context_reads_only_explicit_allowlist(tmp_path: Path) -> None:
@@ -88,3 +94,13 @@ def test_context_fact_index_contains_bounded_research_verdicts(tmp_path: Path) -
     assert '"fx_smart_grid_v2"' in context
     assert '"pairs_statarb_v2"' in context
     assert '"trades": 756' in context
+
+
+def test_local_ai_scope_is_explicitly_bounded() -> None:
+    scope = scope_text(["runtime/project_audit/registry.md"])
+
+    assert "Весь репозиторий и каждая строка кода видны: НЕТ" in scope
+    assert "API-ключи" in scope
+    assert "runtime/project_audit/registry.md" in scope
+    assert "НЕ видишь весь репозиторий" in SYSTEM_RULES
+    assert "Отсутствие сигнала не лечится стоп-лоссом" in SYSTEM_RULES

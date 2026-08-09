@@ -38,6 +38,10 @@ SAFE_CONTEXT_FILES = (
 
 SYSTEM_RULES = """Ты локальный AI-аудитор торговой станции. Отвечай по-русски.
 Твоя роль proposal-only: анализировать, объяснять и предлагать проверки.
+Ты НЕ видишь весь репозиторий: тебе передан только ограниченный allowlist
+источников, перечисленный командой /sources. Не утверждай, что просмотрел весь
+код, все связи или все задачи. Запись статического реестра — гипотеза для
+проверки, а не доказанный дефект. Отсутствие сигнала не лечится стоп-лоссом.
 Ты не имеешь права открывать ордера, менять риск, ключи, live-конфиги или
 утверждать, что исследовательский результат готов к деньгам. Различай Git,
 деплой, heartbeat, shadow и прямую брокерскую истину. Всегда называй дату и
@@ -52,18 +56,39 @@ def verified_status_text(root: Path = ROOT) -> str:
     manifest = _json_object(root / "runtime/live_mirror/sync_bundle_manifest.json")
     generated = live.get("generated_at_utc") or "missing"
     mirror_status = manifest.get("status") or "missing"
+    audit = _json_object(root / "runtime/project_audit/supervisor_status.json")
+    audit_summary = audit.get("registry_summary") if isinstance(audit.get("registry_summary"), dict) else {}
     return "\n".join((
         "VERIFIED STATUS (без генерации Ollama)",
         f"- VPS live-mirror context generated_at_utc: {generated}.",
         f"- Atomic mirror bundle status: {mirror_status}.",
         "- Весь проект проверен: НЕТ.",
-        "- Аудит: 272 записи; 210 актуальных; 5 требуют разбора; 187 inventory.",
+        (
+            "- Аудит: "
+            f"last_success={audit.get('last_success_utc') or 'missing'}; "
+            f"summary={json.dumps(audit_summary, ensure_ascii=False, sort_keys=True)}."
+        ),
         "- SBR1 bug: tf_ts в ms, retest-window ошибочно прибавлялся в sec.",
         "- SBR1 fix: retest_window_bars * tf_seconds * 1000; 2 unit-теста.",
         "- SBR1 liveness после fix: 9 сигналов на SOLUSDT.",
         "- SBR1 economics 120d SOL: 10 сделок, net -0.65%, PF 0.305; не кандидат.",
         "- FX smart-grid v1: stress PF 0.8783, 0/4 positive folds; rebuild/close.",
         "Изменчивый live truth проверяйте отдельным direct broker/VPS запросом.",
+    ))
+
+
+def scope_text(sources: list[str]) -> str:
+    """Explain the actual local-model visibility without model generation."""
+
+    return "\n".join((
+        "VERIFIED SCOPE (без генерации Ollama)",
+        f"- Загружено источников: {len(sources)}.",
+        "- Весь репозиторий и каждая строка кода видны: НЕТ.",
+        "- .env, API-ключи и брокерские функции передаются модели: НЕТ.",
+        "- Реестр содержит кандидаты на проверку; inventory не равен дефекту.",
+        "- Ollama может объяснять и предлагать проверки, но не подтверждать live truth.",
+        "Источники:",
+        *(f"  - {source}" for source in sources),
     ))
 
 
@@ -264,7 +289,7 @@ def main() -> int:
 
     print(f"Local Trading Station AI | model={args.model} | proposal-only")
     print(f"Project sources loaded: {len(sources)}")
-    print("Commands: /status, /refresh, /sources, /clear, /exit")
+    print("Commands: /status, /scope, /refresh, /sources, /clear, /exit")
 
     def ask(question: str) -> str:
         answer = ollama_chat(
@@ -301,6 +326,9 @@ def main() -> int:
             continue
         if question == "/sources":
             print("\n".join(sources) if sources else "Контекст отключён.")
+            continue
+        if question == "/scope":
+            print(scope_text(sources))
             continue
         if question == "/refresh":
             context, sources = build_project_context()
