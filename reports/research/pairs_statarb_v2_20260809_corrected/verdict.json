@@ -1,0 +1,40 @@
+{
+  "best": {
+    "ar1_phi_max": 0.98,
+    "cost_bps_per_leg_side": 8.0,
+    "fold_net_bps": [
+      -29858.9819,
+      -85684.0838,
+      4348.2739,
+      -19162.3332
+    ],
+    "max_hold_days": 20,
+    "mean_bps": -108.9032,
+    "net_bps": -130357.125,
+    "pairs_traded": 184,
+    "pf": 0.7401,
+    "positive_folds": 1,
+    "positive_pairs": 68,
+    "top_positive_pair_share": 0.0446,
+    "trades": 1197,
+    "train_days": 180,
+    "win_rate": 0.4595,
+    "z_entry": 1.5,
+    "z_exit": 0.25
+  },
+  "candidate_pairs": 190,
+  "data": "research_lab/data/daily_closes.json",
+  "decision": "FAIL_OR_REBUILD",
+  "generated_at_utc": "2026-08-09T07:22:44.163469+00:00",
+  "limitations": [
+    "AR1 residual gate is a stationarity proxy, not an ADF cointegration test",
+    "16 configurations are selected on the diagnostic sample",
+    "overlapping pair positions are not portfolio-capacity simulated",
+    "daily closes cannot model intraday legging and execution"
+  ],
+  "live_authorized": false,
+  "research_only": true,
+  "schema": "pairs_statarb_v2_walk_forward_diagnostic",
+  "search_trials": 16,
+  "symbols": 20
+}

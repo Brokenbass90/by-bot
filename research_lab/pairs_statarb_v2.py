@@ -20,6 +20,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Sequence
 
+from research_lab.result_receipt_validator import validate_receipt
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -66,6 +68,50 @@ def run_pair(series: Sequence[tuple[int, float, float]], a: str, b: str, params:
     trades: list[dict[str, Any]] = []
     position: dict[str, Any] | None = None
     for index in range(params.train_days, len(series)):
+        day, log_a, log_b = series[index]
+
+        # Manage an existing spread with the model frozen at entry.  The
+        # previous implementation refit first and skipped the whole bar when
+        # the new AR(1) estimate failed its gate.  That allowed a configured
+        # 20-day position to remain open for more than 200 days.
+        if position is not None:
+            entry_model_z = (
+                log_a
+                - float(position["alpha"])
+                - float(position["beta"]) * log_b
+                - float(position["residual_mean"])
+            ) / float(position["residual_std"])
+            held = index - int(position["entry_index"])
+            if abs(entry_model_z) > params.z_exit and held < params.max_hold_days:
+                continue
+            beta_entry = float(position["beta"])
+            weight_a = 1.0 / (1.0 + abs(beta_entry))
+            weight_b = abs(beta_entry) / (1.0 + abs(beta_entry))
+            leg_return = (
+                weight_a * (log_a - float(position["entry_log_a"]))
+                - weight_b * (log_b - float(position["entry_log_b"]))
+            )
+            gross_bps = int(position["side"]) * leg_return * 10_000.0
+            # Two legs, each opened and closed: four charged leg-sides.
+            costs = 4.0 * params.cost_bps_per_leg_side
+            trades.append({
+                "pair": f"{a}/{b}",
+                "entry_day": int(position["entry_day"]),
+                "exit_day": day,
+                "held_days": held,
+                "side": "long_spread" if int(position["side"]) > 0 else "short_spread",
+                "entry_z": round(float(position["entry_z"]), 6),
+                "exit_z": round(entry_model_z, 6),
+                "beta": round(beta_entry, 6),
+                "ar1_phi": round(float(position["phi"]), 6),
+                "gross_bps": round(gross_bps, 6),
+                "cost_bps": costs,
+                "pnl_bps": gross_bps - costs,
+                "reason": "z_exit" if abs(entry_model_z) <= params.z_exit else "max_hold",
+            })
+            position = None
+            continue
+
         train = series[index - params.train_days:index]
         ys, xs = [row[1] for row in train], [row[2] for row in train]
         alpha, beta = fit_ols(ys, xs)
@@ -74,50 +120,22 @@ def run_pair(series: Sequence[tuple[int, float, float]], a: str, b: str, params:
         phi = ar1_phi(residuals)
         if std <= 0 or not -0.50 < phi < params.ar1_phi_max:
             continue
-        day, log_a, log_b = series[index]
         z = (log_a - alpha - beta * log_b - mean) / std
-        if position is None:
-            if abs(z) < params.z_entry or beta <= 0:
-                continue
-            position = {
-                "entry_index": index,
-                "entry_day": day,
-                "entry_log_a": log_a,
-                "entry_log_b": log_b,
-                "entry_z": z,
-                "side": -1 if z > 0 else 1,
-                "beta": beta,
-                "phi": phi,
-            }
+        if abs(z) < params.z_entry or beta <= 0:
             continue
-        held = index - int(position["entry_index"])
-        if abs(z) > params.z_exit and held < params.max_hold_days:
-            continue
-        beta_entry = float(position["beta"])
-        weight_a = 1.0 / (1.0 + abs(beta_entry))
-        weight_b = abs(beta_entry) / (1.0 + abs(beta_entry))
-        leg_return = (
-            weight_a * (log_a - float(position["entry_log_a"]))
-            - weight_b * (log_b - float(position["entry_log_b"]))
-        )
-        gross_bps = int(position["side"]) * leg_return * 10_000.0
-        costs = 2.0 * params.cost_bps_per_leg_side
-        trades.append({
-            "pair": f"{a}/{b}",
-            "entry_day": int(position["entry_day"]),
-            "exit_day": day,
-            "held_days": held,
-            "side": "long_spread" if int(position["side"]) > 0 else "short_spread",
-            "entry_z": round(float(position["entry_z"]), 6),
-            "exit_z": round(z, 6),
-            "beta": round(beta_entry, 6),
-            "ar1_phi": round(float(position["phi"]), 6),
-            "gross_bps": round(gross_bps, 6),
-            "cost_bps": costs,
-            "pnl_bps": gross_bps - costs,
-            "reason": "z_exit" if abs(z) <= params.z_exit else "max_hold",
-        })
-        position = None
+        position = {
+            "entry_index": index,
+            "entry_day": day,
+            "entry_log_a": log_a,
+            "entry_log_b": log_b,
+            "entry_z": z,
+            "side": -1 if z > 0 else 1,
+            "alpha": alpha,
+            "beta": beta,
+            "residual_mean": mean,
+            "residual_std": std,
+            "phi": phi,
+        }
     return trades
 
 
@@ -211,6 +229,14 @@ def main() -> int:
             "daily closes cannot model intraday legging and execution",
         ],
     }
+    receipt = validate_receipt(verdict, best_trades)
+    (outdir / "validation_receipt.json").write_text(
+        json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    verdict["measurement_validation_passed"] = bool(receipt["passed"])
+    verdict["measurement_validation_receipt"] = "validation_receipt.json"
+    if not receipt["passed"]:
+        verdict["decision"] = "MEASUREMENT_INVALID"
     (outdir / "verdict.json").write_text(json.dumps(verdict, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     latest = ROOT / "runtime/pairs_statarb_v2_latest.json"
     latest.parent.mkdir(parents=True, exist_ok=True)

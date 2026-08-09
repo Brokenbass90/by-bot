@@ -1,0 +1,10 @@
+{
+  "arithmetic_failures": 0,
+  "failures": [],
+  "generated_at_utc": "2026-08-09T07:23:46.526180+00:00",
+  "lifecycle_failures": 0,
+  "passed": true,
+  "recomputed_net_bps": -130357.124986,
+  "schema": "research_result_validation_receipt_v1",
+  "trade_count": 1197
+}

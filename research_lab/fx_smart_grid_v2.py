@@ -32,6 +32,7 @@ from research_lab.fx_smart_grid_v1 import (
     summarize,
     write_csv,
 )
+from research_lab.result_receipt_validator import validate_receipt
 
 
 @dataclass(frozen=True)
@@ -292,6 +293,14 @@ def main() -> int:
             "news blackout is not yet available in the public dataset",
         ],
     }
+    receipt = validate_receipt(verdict, best_trades)
+    (outdir / "validation_receipt.json").write_text(
+        json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    verdict["measurement_validation_passed"] = bool(receipt["passed"])
+    verdict["measurement_validation_receipt"] = "validation_receipt.json"
+    if not receipt["passed"]:
+        verdict["decision"] = "MEASUREMENT_INVALID"
     (outdir / "verdict.json").write_text(json.dumps(verdict, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     latest = ROOT / "runtime/fx_smart_grid_v2_latest.json"
     latest.parent.mkdir(parents=True, exist_ok=True)
