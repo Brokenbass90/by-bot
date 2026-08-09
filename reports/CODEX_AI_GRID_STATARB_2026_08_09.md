@@ -91,6 +91,13 @@ cointegration experiment may be justified, but this V2 is closed.
 The BOUNCE1 blocker is therefore liveness, not insufficient trade count. It needs
 a blocker-distribution audit before any threshold change.
 
+The live path previously incremented only a generic `bounce1_no_signal` counter,
+discarding the strategy's existing reason string. The instrumentation patch now
+maps reasons to a bounded vocabulary (regime, history, RSI, touch, reclaim, body,
+EMA extension, distance and risk) and appends the timestamped decision. It does
+not change a predicate, threshold, order or risk. Collection begins only after a
+separate reviewed live deployment.
+
 ## Next falsifiable gates
 
 1. Produce a BOUNCE1 blocker-distribution report and compare live and exact

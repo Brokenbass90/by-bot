@@ -305,17 +305,22 @@ class AltSupportBounceV1Strategy:
 
     def maybe_signal(self, store, ts_ms: int, o: float, h: float, l: float, c: float, v: float = 0.0) -> Optional[TradeSignal]:
         _ = (o, h, l, v)
+        self.last_no_signal_reason = ""
         self._refresh_runtime_allowlists()
 
         sym = str(getattr(store, "symbol", "")).upper()
         if self._allow and sym not in self._allow:
+            self.last_no_signal_reason = "symbol_not_allowed"
             return None
         if sym in self._deny:
+            self.last_no_signal_reason = "symbol_denied"
             return None
         if self._cooldown > 0:
             self._cooldown -= 1
+            self.last_no_signal_reason = "cooldown"
             return None
         if not self.cfg.allow_longs:
+            self.last_no_signal_reason = "longs_disabled"
             return None
 
         if not self._regime_ok(store):
@@ -331,8 +336,10 @@ class AltSupportBounceV1Strategy:
         tf_ts = int(float(rows[-1][0]))
         if self._last_tf_ts is None:
             self._last_tf_ts = tf_ts
+            self.last_no_signal_reason = "first_signal_bar"
             return None
         if tf_ts == self._last_tf_ts:
+            self.last_no_signal_reason = "same_signal_bar"
             return None
         self._last_tf_ts = tf_ts
 
@@ -377,14 +384,20 @@ class AltSupportBounceV1Strategy:
         close_vs_ema_pct = (cur - ema) / max(1e-12, ema) * 100.0
         entry_dist_atr = (cur - support) / max(1e-12, atr)
 
-        if not (
-            touched_supp
-            and reclaimed_above
-            and body_frac >= self.cfg.min_body_frac
-            and close_vs_ema_pct <= self.cfg.max_close_vs_ema_pct
-            and entry_dist_atr <= self.cfg.max_entry_dist_atr
-        ):
-            self.last_no_signal_reason = f"entry_conditions_not_met"
+        if not touched_supp:
+            self.last_no_signal_reason = "no_support_touch"
+            return None
+        if not reclaimed_above:
+            self.last_no_signal_reason = "no_reclaim"
+            return None
+        if body_frac < self.cfg.min_body_frac:
+            self.last_no_signal_reason = f"body_weak_{body_frac:.3f}"
+            return None
+        if close_vs_ema_pct > self.cfg.max_close_vs_ema_pct:
+            self.last_no_signal_reason = f"ema_extension_{close_vs_ema_pct:.3f}"
+            return None
+        if entry_dist_atr > self.cfg.max_entry_dist_atr:
+            self.last_no_signal_reason = f"entry_too_far_{entry_dist_atr:.3f}atr"
             return None
 
         # SL below support
@@ -431,4 +444,7 @@ class AltSupportBounceV1Strategy:
             time_stop_bars=max(0, int(self.cfg.time_stop_bars_5m)),
             reason="asb1_support_bounce",
         )
-        return sig if sig.validate() else None
+        if not sig.validate():
+            self.last_no_signal_reason = "signal_invalid_post"
+            return None
+        return sig

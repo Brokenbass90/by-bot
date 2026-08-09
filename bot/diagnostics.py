@@ -121,6 +121,12 @@ DIAG_KEYS = [
     "flat_ns_touch", "flat_ns_reject", "flat_ns_body",
     "flat_ns_dist", "flat_ns_rsi", "flat_ns_ema",
     "flat_ns_risk", "flat_ns_blank", "flat_ns_unknown", "flat_ns_other",
+    "bounce1_ns_blank", "bounce1_ns_symbol", "bounce1_ns_cooldown",
+    "bounce1_ns_direction", "bounce1_ns_regime", "bounce1_ns_history",
+    "bounce1_ns_same_bar", "bounce1_ns_calc", "bounce1_ns_range",
+    "bounce1_ns_rsi", "bounce1_ns_touch", "bounce1_ns_reclaim",
+    "bounce1_ns_body", "bounce1_ns_ema", "bounce1_ns_dist",
+    "bounce1_ns_risk", "bounce1_ns_unknown",
     "breakdown_sched", "breakdown_try", "breakdown_signal", "breakdown_entry",
     "breakdown_skip_no_engine", "breakdown_skip_trade_off",
     "breakdown_skip_no_client", "breakdown_skip_open_trade",
@@ -337,6 +343,44 @@ def _flat_no_signal_diag_key(reason: str) -> str:
     if "sl_below_entry" in r or "tp_above_entry" in r or "signal_invalid_post" in r:
         return "flat_ns_risk"
     return "flat_ns_unknown"
+
+
+def _bounce1_no_signal_diag_key(reason: str) -> str:
+    """Map BOUNCE1 no-signal reasons to a bounded diagnostic vocabulary."""
+    r = str(reason or "").strip().lower()
+    if not r:
+        return "bounce1_ns_blank"
+    if "symbol_" in r:
+        return "bounce1_ns_symbol"
+    if "cooldown" in r:
+        return "bounce1_ns_cooldown"
+    if "longs_disabled" in r:
+        return "bounce1_ns_direction"
+    if "regime_" in r:
+        return "bounce1_ns_regime"
+    if "not_enough" in r or "first_signal_bar" in r:
+        return "bounce1_ns_history"
+    if "same_signal_bar" in r:
+        return "bounce1_ns_same_bar"
+    if "calc_error" in r:
+        return "bounce1_ns_calc"
+    if "range_invalid" in r:
+        return "bounce1_ns_range"
+    if "rsi_invalid" in r:
+        return "bounce1_ns_rsi"
+    if "no_support_touch" in r:
+        return "bounce1_ns_touch"
+    if "no_reclaim" in r:
+        return "bounce1_ns_reclaim"
+    if "body_weak" in r:
+        return "bounce1_ns_body"
+    if "ema_extension" in r:
+        return "bounce1_ns_ema"
+    if "entry_too_far" in r:
+        return "bounce1_ns_dist"
+    if any(token in r for token in ("stop_", "sl_", "tp_", "rr_", "signal_invalid")):
+        return "bounce1_ns_risk"
+    return "bounce1_ns_unknown"
 
 
 def _sloped_no_signal_diag_key(reason: str) -> str:

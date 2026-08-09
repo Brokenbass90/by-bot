@@ -96,7 +96,8 @@ from bot.diagnostics import (
     RUNTIME_DIAG_ENABLE, RUNTIME_COUNTER, MSG_COUNTER,
     _diag_inc, _diag_get_int, _runtime_diag_snapshot,
     _breakout_no_signal_diag_key, _ivb1_no_signal_diag_key, _elder_no_signal_diag_key,
-    _flat_no_signal_diag_key, _sloped_no_signal_diag_key, _att1_no_signal_diag_key, _asm1_no_signal_diag_key,
+    _flat_no_signal_diag_key, _bounce1_no_signal_diag_key,
+    _sloped_no_signal_diag_key, _att1_no_signal_diag_key, _asm1_no_signal_diag_key,
     _breakdown_no_signal_diag_key, _midterm_no_signal_diag_key,
 )
 from bot.tpsl_policy import (
@@ -12221,6 +12222,12 @@ async def try_bounce1_entry_async(symbol: str, price: float):
         return
     if not sig:
         _diag_inc("bounce1_no_signal")
+        try:
+            ns_reason = BOUNCE1_ENGINE.last_no_signal_reason(symbol)
+        except Exception:
+            ns_reason = ""
+        _diag_inc(_bounce1_no_signal_diag_key(ns_reason))
+        _append_signal_decision("bounce1", symbol, "no_signal", ns_reason or "unknown")
         return
 
     if shadow_mode:
