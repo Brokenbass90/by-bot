@@ -10,6 +10,13 @@ but the software TP ladder could have left an unmanaged residual.
 Do not use this trade as clean ATT1 evidence and do not increase ATT1 risk from
 the pre-fix cohort.
 
+The reproducible order-lifecycle audit found the same contamination in two
+older ADA ATT1 lifecycles as well: 116 + 104 units and 97 + 94 units. Together
+with the current 180 + 90 lifecycle, 3 of 25 ATT1 lifecycles in the supplied
+journals contain a confirmed extra non-reduce order. The order-link journal may
+be retention-limited, so this is a lower bound rather than proof that the other
+22 lifecycles were clean.
+
 ## Direct live truth
 
 - Original ATT1 fill: ADAUSDT short 180 at 0.1980 on 2026-08-08 22:48:55 UTC.
@@ -78,7 +85,8 @@ code change.
 1. Confirm the broker is flat, then deploy the exact safety commit and verify
    deployed SHA, service heartbeat, broker flat truth and first clean sync.
 2. Start a new ATT1 clean cohort after the DCA fix; preserve the incident as a
-   contaminated record instead of deleting it.
+   contaminated record instead of deleting it. Use
+   `scripts/audit_att1_order_contamination.py` to tag historical lifecycles.
 3. Deploy BOUNCE1 reason telemetry at risk zero and identify the dominant
    blocker before changing any threshold.
 4. Run an ATT1 regime OOS A/B (risk scaling only versus an explicit bull gate).
