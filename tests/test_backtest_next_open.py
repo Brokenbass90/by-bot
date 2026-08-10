@@ -222,3 +222,90 @@ def test_portfolio_limit_signal_expires_unfilled():
     )
 
     assert result.trades == []
+
+
+def test_portfolio_maker_requires_trade_through_and_preserves_signal_price(monkeypatch):
+    monkeypatch.setenv("BACKTEST_MAKER_THROUGH_BPS", "2")
+    candles = [
+        Candle(ts=0, o=101.0, h=102.0, l=100.5, c=101.0, v=1.0),
+        # Bare touch at 100 is not enough for a maker fill.
+        Candle(ts=300_000, o=101.0, h=101.5, l=100.0, c=100.5, v=1.0),
+        # A 2 bps trade-through fills the resting order at 100.
+        Candle(ts=600_000, o=100.5, h=101.0, l=99.9, c=100.2, v=1.0),
+        Candle(ts=900_000, o=100.2, h=103.0, l=100.0, c=102.0, v=1.0),
+    ]
+    emitted = False
+
+    def selector(symbol, store, ts_ms, last_price):
+        nonlocal emitted
+        if emitted:
+            return None
+        emitted = True
+        sig = TradeSignal("maker_demo", symbol, "long", 100.0, 95.0, 102.0)
+        sig.entry_order_type = "limit"
+        sig.limit_validity_bars = 3
+        sig.maker_entry = True
+        sig.maker_signal_entry = 101.0
+        return sig
+
+    result = run_portfolio_backtest(
+        {"BTCUSDT": KlineStore("BTCUSDT", candles)},
+        selector,
+        params=BacktestParams(
+            starting_equity=100.0,
+            risk_pct=0.01,
+            cap_notional_usd=1_000.0,
+            fee_bps=0.0,
+            slippage_bps=0.0,
+            entry_on_next_open=True,
+        ),
+    )
+
+    assert len(result.trades) == 1
+    assert result.trades[0].entry_ts == 600_000
+    assert result.trades[0].entry_price == 100.0
+    assert result.trades[0].signal_entry_price == 101.0
+    assert result.execution_stats["maker_orders_placed"] == 1
+    assert result.execution_stats["maker_orders_filled"] == 1
+    assert result.execution_stats["maker_fill_rate"] == 1.0
+
+
+def test_portfolio_does_not_replace_resting_maker_and_records_nonfill(monkeypatch):
+    monkeypatch.setenv("BACKTEST_MAKER_THROUGH_BPS", "2")
+    candles = [
+        Candle(ts=i * 300_000, o=101.0, h=101.5, l=100.4, c=101.4, v=1.0)
+        for i in range(5)
+    ]
+    calls = 0
+
+    def selector(symbol, store, ts_ms, last_price):
+        nonlocal calls
+        calls += 1
+        sig = TradeSignal("maker_demo", symbol, "long", 100.0, 95.0, 110.0)
+        sig.entry_order_type = "limit"
+        sig.limit_validity_bars = 2
+        sig.maker_entry = True
+        sig.maker_signal_entry = 101.0
+        return sig
+
+    result = run_portfolio_backtest(
+        {"BTCUSDT": KlineStore("BTCUSDT", candles)},
+        selector,
+        params=BacktestParams(
+            starting_equity=100.0,
+            fee_bps=0.0,
+            slippage_bps=0.0,
+            entry_on_next_open=True,
+        ),
+    )
+
+    assert result.trades == []
+    # One lifecycle is held until expiry; a fresh signal can only be created
+    # after it expires, rather than overwriting it on every bar.
+    assert calls == 2
+    assert result.execution_stats["maker_orders_placed"] == 2
+    assert result.execution_stats["maker_orders_filled"] == 0
+    assert result.execution_stats["maker_orders_expired"] == 1
+    assert result.execution_stats["maker_orders_pending_eop"] == 1
+    assert result.execution_stats["maker_fill_rate_resolved"] == 0.0
+    assert result.execution_stats["maker_expiry_markout_n"] == 1

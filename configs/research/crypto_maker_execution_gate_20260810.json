@@ -1,0 +1,72 @@
+{
+  "schema_id": "crypto_maker_execution_gate_v1",
+  "created_at_utc": "2026-08-10T08:45:00Z",
+  "status": "preregistered_diagnostic_only",
+  "capital_authorized": false,
+  "live_mutation_authorized": false,
+  "hypothesis": "A resting post-only entry can improve net expectancy only if the filled subset remains positive after queue-through, nonfill adverse selection, taker exit and stress costs.",
+  "families": [
+    "alt_trendline_touch_v1",
+    "alt_inplay_breakdown_v1",
+    "alt_resistance_fade_v1"
+  ],
+  "universe": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT",
+    "ADAUSDT",
+    "DOGEUSDT",
+    "AVAXUSDT",
+    "BNBUSDT",
+    "SUIUSDT",
+    "TAOUSDT",
+    "ONDOUSDT",
+    "WIFUSDT",
+    "1000PEPEUSDT"
+  ],
+  "data_window": {
+    "end_utc": "2026-06-30",
+    "days": 540,
+    "minimum_coverage_fraction": 0.99,
+    "point_in_time_universe": false,
+    "promotion_eligible": false,
+    "reason": "The historical window has already been inspected; it is valid for execution diagnosis, not a new OOS promotion verdict."
+  },
+  "search": {
+    "offset_bps": [2, 5],
+    "validity_bars": [3, 6, 12],
+    "queue_through_bps": [2, 5],
+    "n_trials_per_family": 12,
+    "selection": "train folds only; report every cell; no best-cell-only conclusion"
+  },
+  "costs": {
+    "maker_entry_fee_bps": 2,
+    "taker_exit_fee_bps": 6,
+    "exit_slippage_bps": 2,
+    "stress_taker_exit_fee_bps": 10,
+    "stress_exit_slippage_bps": 5
+  },
+  "required_outputs": [
+    "orders_placed",
+    "orders_filled",
+    "orders_expired",
+    "orders_pending_eop",
+    "resolved_fill_rate",
+    "unfilled_expiry_markout_mean_r",
+    "unfilled_favourable_share",
+    "net_r_and_pf_by_time_fold",
+    "net_r_and_pf_by_symbol",
+    "profit_concentration",
+    "taker_baseline_on_identical_signal_code"
+  ],
+  "diagnostic_gate": {
+    "minimum_resolved_orders": 30,
+    "minimum_resolved_fill_rate": 0.5,
+    "minimum_stress_profit_factor": 1.2,
+    "minimum_positive_time_folds": "3_of_4",
+    "maximum_symbol_profit_concentration": 0.35,
+    "maximum_unfilled_favourable_share": 0.65
+  },
+  "promotion_contract": "No result from this reused window can authorize money. A passing diagnostic must be followed by prospective risk-zero shadow and a fresh point-in-time OOS gate."
+}

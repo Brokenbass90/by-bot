@@ -1152,6 +1152,30 @@ def main():
         if s not in allowed:
             raise SystemExit(f"Unsupported strategy '{s}'. Allowed: {sorted(allowed)}")
 
+    # ── МОДЕЛЬ МЕЙКЕРСКОГО ВХОДА (2026-08-09, Claude) ──────────────────────
+    # Замерено: валовой эдж почти всех ног 0.02-0.05R на сделку, а стоимость
+    # круга 0.057R (12 bps / стоп 2%). Ноги умирают об арифметику, а не
+    # об рынок. Единственный способ это проверить — не пересчёт множителем,
+    # а честная модель лимитного входа.
+    #
+    # Движок УЖЕ умеет лимитные заявки (`entry_order_type="limit"`,
+    # `_limit_fillable`, `limit_validity_bars`), но стратегии их не выдают.
+    # Здесь рыночный сигнал превращается в лимитный ПО ЛУЧШЕЙ цене:
+    #   шорт  -> заявка ВЫШЕ сигнальной на offset
+    #   лонг  -> заявка НИЖЕ сигнальной на offset
+    # Заявка живёт validity баров. Не дошла цена — сделки нет.
+    # Это ключевое отличие от пересчёта: часть сделок ПРОПАДАЕТ, и состав
+    # меняется. Верхняя граница выигрыша тут не гарантирована.
+    maker_entry = str(os.getenv("BACKTEST_MAKER_ENTRY", "0")).strip().lower() in {"1","true","yes","on"}
+    maker_offset_bps = float(os.getenv("BACKTEST_MAKER_OFFSET_BPS", "2") or 2)
+    maker_validity = max(1, int(float(os.getenv("BACKTEST_MAKER_VALIDITY_BARS", "6") or 6)))
+    maker_fee_bps = float(os.getenv("BACKTEST_MAKER_FEE_BPS", "2") or 2)
+    maker_through_bps = max(0.0, float(os.getenv("BACKTEST_MAKER_THROUGH_BPS", "2") or 2))
+    if maker_entry:
+        print(f"[maker] лимитный вход: offset {maker_offset_bps} bps, "
+              f"жизнь заявки {maker_validity} баров, проход {maker_through_bps} bps, "
+              f"комиссия входа {maker_fee_bps} bps")
+
     end_ts = _parse_end(args.end)
     start_ts = end_ts - int(args.days) * 86400
 
@@ -2210,6 +2234,20 @@ def main():
                         continue
                 if not _session_allowed(st_name, ts_ms):
                     continue
+                if maker_entry:
+                    # превращаем рыночный сигнал в лимитный по ЛУЧШЕЙ цене
+                    try:
+                        side = str(getattr(sig, "side", "") or "").lower()
+                        px = float(getattr(sig, "entry"))
+                        if px > 0 and side in ("long", "short"):
+                            k = maker_offset_bps / 10000.0
+                            setattr(sig, "maker_signal_entry", px)
+                            setattr(sig, "entry", px * (1.0 - k) if side == "long" else px * (1.0 + k))
+                            setattr(sig, "entry_order_type", "limit")
+                            setattr(sig, "limit_validity_bars", maker_validity)
+                            setattr(sig, "maker_entry", True)
+                    except Exception:
+                        pass
                 return sig
         return None
 
@@ -2263,7 +2301,10 @@ def main():
         w.writerow([
             "tag","days","end_date_utc","symbols","strategies","starting_equity","ending_equity",
             "trades","net_pnl","profit_factor","winrate","avg_win","avg_loss","max_drawdown","news_blocked_signals",
-            "entry_execution","fee_bps_per_side","slippage_bps_per_side"
+            "entry_execution","fee_bps_per_side","slippage_bps_per_side",
+            "maker_orders_placed","maker_orders_filled","maker_orders_expired","maker_orders_pending_eop",
+            "maker_fill_rate","maker_fill_rate_resolved",
+            "maker_expiry_markout_mean_r","maker_expiry_favourable_share","maker_through_bps"
         ])
         # Compute avg win / avg loss in $ terms (not %)
         wins_ = [t.pnl for t in res.trades if getattr(t, "pnl", 0.0) > 0]
@@ -2292,6 +2333,15 @@ def main():
             "next_open" if args.entry_on_next_open else "signal_price",
             f"{args.fee_bps:.4f}",
             f"{args.slippage_bps:.4f}",
+            int(res.execution_stats.get("maker_orders_placed", 0)),
+            int(res.execution_stats.get("maker_orders_filled", 0)),
+            int(res.execution_stats.get("maker_orders_expired", 0)),
+            int(res.execution_stats.get("maker_orders_pending_eop", 0)),
+            f"{res.execution_stats.get('maker_fill_rate', 0.0):.6f}",
+            f"{res.execution_stats.get('maker_fill_rate_resolved', 0.0):.6f}",
+            f"{res.execution_stats.get('maker_expiry_markout_mean_r', 0.0):.6f}",
+            f"{res.execution_stats.get('maker_expiry_favourable_share', 0.0):.6f}",
+            f"{res.execution_stats.get('maker_through_bps', 0.0):.4f}",
         ])
 
     if news_events:
@@ -2305,6 +2355,16 @@ def main():
     print(f"Saved portfolio run to: {out_dir}")
     print(f"  trades:   {trades_path}")
     print(f"  summary:  {summary_path}")
+    if maker_entry:
+        print(
+            "  maker:    "
+            f"placed={int(res.execution_stats.get('maker_orders_placed', 0))} "
+            f"filled={int(res.execution_stats.get('maker_orders_filled', 0))} "
+            f"expired={int(res.execution_stats.get('maker_orders_expired', 0))} "
+            f"pending_eop={int(res.execution_stats.get('maker_orders_pending_eop', 0))} "
+            f"resolved_fill_rate={res.execution_stats.get('maker_fill_rate_resolved', 0.0):.1%} "
+            f"unfilled_markout={res.execution_stats.get('maker_expiry_markout_mean_r', 0.0):+.3f}R"
+        )
     if bt_breakout_quality_enable and bt_quality_checked > 0:
         print(
             f"  breakout_quality: checked={bt_quality_checked} "

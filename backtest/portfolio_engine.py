@@ -17,7 +17,7 @@ Assumptions / current limitations (intentional for speed and safety):
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import asyncio
 import copy
 import inspect
@@ -70,6 +70,7 @@ from backtest.metrics import Trade
 class PortfolioResult:
     trades: List[Trade]
     equity_curve: List[float]
+    execution_stats: Dict[str, float] = field(default_factory=dict)
 
 
 # Signature: given (symbol, store, ts_ms, last_price) -> TradeSignal|None
@@ -109,6 +110,11 @@ def run_portfolio_backtest(
     pos_strat: Dict[str, str] = {}
     cooldown_until_i: Dict[str, int] = {}
     pending_signals: Dict[str, Tuple[int, object]] = {}
+    maker_orders_placed = 0
+    maker_orders_filled = 0
+    maker_orders_expired = 0
+    maker_expiry_markout_r: List[float] = []
+    maker_through_bps = max(0.0, float(os.getenv("BACKTEST_MAKER_THROUGH_BPS", "2") or 2))
 
     sl_cooldown_bars = max(0, int(os.getenv("PORTFOLIO_SL_COOLDOWN_BARS", "0") or 0))
     sl_cooldown_strategies = _csv_set("PORTFOLIO_SL_COOLDOWN_STRATEGIES") or {"inplay_breakout"}
@@ -250,8 +256,16 @@ def run_portfolio_backtest(
         if qty <= 0:
             return False
 
-        entry_px = _apply_slippage(fill_sig.entry, fill_sig.side, is_entry=True, slippage_bps=params.slippage_bps)
-        entry_fee = _fees(entry_px * qty, params.fee_bps)
+        # Лимитный (мейкерский) вход: цена НЕ проскальзывает — заявка уже стоит
+        # в стакане, и комиссия входа мейкерская. Тейкерский вход остаётся как был.
+        _is_maker = bool(getattr(fill_sig, "maker_entry", False)) and _is_limit_signal(fill_sig)
+        if _is_maker:
+            entry_px = float(fill_sig.entry)
+            _entry_fee_bps = float(os.getenv("BACKTEST_MAKER_FEE_BPS", "2") or 2)
+        else:
+            entry_px = _apply_slippage(fill_sig.entry, fill_sig.side, is_entry=True, slippage_bps=params.slippage_bps)
+            _entry_fee_bps = params.fee_bps
+        entry_fee = _fees(entry_px * qty, _entry_fee_bps)
         equity -= entry_fee
 
         legacy_tp = getattr(fill_sig, "tp", 0.0)
@@ -285,7 +299,9 @@ def run_portfolio_backtest(
             entry_ts=bar.ts,
             entry_i=i,
             signal_ts=int(signal_ts),
-            signal_entry_price=float(getattr(sig, "entry", entry_ref) or entry_ref),
+            signal_entry_price=float(
+                getattr(sig, "maker_signal_entry", getattr(sig, "entry", entry_ref)) or entry_ref
+            ),
             signal_reason=reason,
             initial_sl=float(fill_sig.sl),
             equity_at_entry=equity + entry_fee,
@@ -316,11 +332,38 @@ def run_portfolio_backtest(
         except (TypeError, ValueError):
             return False
         side = str(getattr(sig, "side", "") or "").lower()
+        through = (
+            entry * maker_through_bps / 10_000.0
+            if bool(getattr(sig, "maker_entry", False)) else 0.0
+        )
         if side == "long":
-            return float(bar.l) <= entry
+            return float(bar.l) <= entry - through
         if side == "short":
-            return float(bar.h) >= entry
+            return float(bar.h) >= entry + through
         return False
+
+    def _record_maker_expiry(sig: object, bar: Candle) -> None:
+        """Record whether an unfilled order missed a favourable move.
+
+        This is deliberately only an expiry-horizon markout, not a claim about
+        the eventual trade PnL.  It makes adverse selection visible instead of
+        treating every nonfill as economically neutral.
+        """
+        nonlocal maker_orders_expired
+        maker_orders_expired += 1
+        try:
+            side = str(getattr(sig, "side", "") or "").lower()
+            original_entry = float(getattr(sig, "maker_signal_entry"))
+            initial_sl = float(getattr(sig, "sl"))
+            risk = abs(original_entry - initial_sl)
+            if side not in {"long", "short"} or risk <= 0:
+                return
+            move = float(bar.c) - original_entry
+            if side == "short":
+                move = -move
+            maker_expiry_markout_r.append(move / risk)
+        except (AttributeError, TypeError, ValueError):
+            return
 
     def _limit_expired(signal_i: int, sig: object) -> bool:
         try:
@@ -349,27 +392,35 @@ def run_portfolio_backtest(
                 if len(pos_by_sym) >= int(params.max_positions):
                     if _is_limit_signal(sig) and not _limit_expired(signal_i, sig):
                         pending_signals[sym] = pending
+                    elif _is_limit_signal(sig) and bool(getattr(sig, "maker_entry", False)):
+                        _record_maker_expiry(sig, stores[sym].exec_candles[i])
                     continue
                 if int(cooldown_until_i.get(sym, -1)) > i:
                     if _is_limit_signal(sig) and not _limit_expired(signal_i, sig):
                         pending_signals[sym] = pending
+                    elif _is_limit_signal(sig) and bool(getattr(sig, "maker_entry", False)):
+                        _record_maker_expiry(sig, stores[sym].exec_candles[i])
                     continue
                 bar = stores[sym].exec_candles[i]
                 if _is_limit_signal(sig):
                     if _limit_expired(signal_i, sig):
+                        if bool(getattr(sig, "maker_entry", False)):
+                            _record_maker_expiry(sig, bar)
                         continue
                     if _limit_fillable(sig, bar):
                         signal_end_ts = (
                             int(stores[sym].exec_candles[signal_i].ts)
                             + int(stores[sym].base_interval_min) * 60_000
                         )
-                        _open(
+                        opened = _open(
                             sym,
                             sig,
                             bar,
                             entry_ref=float(getattr(sig, "entry")),
                             signal_ts=signal_end_ts,
                         )
+                        if opened and bool(getattr(sig, "maker_entry", False)):
+                            maker_orders_filled += 1
                     else:
                         pending_signals[sym] = pending
                 else:
@@ -557,6 +608,10 @@ def run_portfolio_backtest(
                     break
                 if sym in pos_by_sym:
                     continue
+                # A resting order is an actual lifecycle.  Do not silently
+                # replace it with a newer signal before its validity expires.
+                if sym in pending_signals:
+                    continue
                 if int(cooldown_until_i.get(sym, -1)) > i:
                     continue
 
@@ -571,6 +626,8 @@ def run_portfolio_backtest(
 
                 if params.entry_on_next_open:
                     pending_signals[sym] = (i, sig)
+                    if _is_limit_signal(sig) and bool(getattr(sig, "maker_entry", False)):
+                        maker_orders_placed += 1
                     continue
                 _open(
                     sym,
@@ -603,4 +660,37 @@ def run_portfolio_backtest(
     if curve[-1] != equity:
         curve.append(equity)
 
-    return PortfolioResult(trades=trades, equity_curve=curve)
+    maker_orders_pending_eop = sum(
+        1 for _, sig in pending_signals.values()
+        if _is_limit_signal(sig) and bool(getattr(sig, "maker_entry", False))
+    )
+    maker_orders_resolved = maker_orders_filled + maker_orders_expired
+    mean_expiry_markout = (
+        sum(maker_expiry_markout_r) / len(maker_expiry_markout_r)
+        if maker_expiry_markout_r else 0.0
+    )
+    return PortfolioResult(
+        trades=trades,
+        equity_curve=curve,
+        execution_stats={
+            "maker_orders_placed": float(maker_orders_placed),
+            "maker_orders_filled": float(maker_orders_filled),
+            "maker_orders_expired": float(maker_orders_expired),
+            "maker_orders_pending_eop": float(maker_orders_pending_eop),
+            "maker_fill_rate": (
+                float(maker_orders_filled) / maker_orders_placed
+                if maker_orders_placed else 0.0
+            ),
+            "maker_fill_rate_resolved": (
+                float(maker_orders_filled) / maker_orders_resolved
+                if maker_orders_resolved else 0.0
+            ),
+            "maker_expiry_markout_n": float(len(maker_expiry_markout_r)),
+            "maker_expiry_markout_mean_r": float(mean_expiry_markout),
+            "maker_expiry_favourable_share": (
+                sum(1 for value in maker_expiry_markout_r if value > 0) / len(maker_expiry_markout_r)
+                if maker_expiry_markout_r else 0.0
+            ),
+            "maker_through_bps": float(maker_through_bps),
+        },
+    )
