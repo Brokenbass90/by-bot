@@ -156,6 +156,23 @@ def sync_runner_qty_after_fill(tr: TradeState, actual_qty: float) -> bool:
     return True
 
 
+def mark_accounting_contamination_if_position_grew(
+    tr: TradeState,
+    expected_qty: float,
+    broker_qty: float,
+) -> bool:
+    """Persist a quality flag when broker exposure exceeds the recorded fill."""
+
+    expected = float(expected_qty or 0.0)
+    broker = float(broker_qty or 0.0)
+    if expected <= 0.0 or broker <= expected + max(1e-12, expected * 1e-6):
+        return False
+    tr.accounting_contaminated = True
+    tr.accounting_expected_qty = expected
+    tr.accounting_broker_qty = broker
+    return True
+
+
 def reconcile_runner_qty_with_exchange(tr: TradeState, exchange_qty: float) -> bool:
     """Make broker size authoritative for an already-open runner position.
 
@@ -175,6 +192,9 @@ def reconcile_runner_qty_with_exchange(tr: TradeState, exchange_qty: float) -> b
     if abs(old_remaining - qty) <= 1e-12:
         return False
     old_initial = float(getattr(tr, "initial_qty", 0.0) or 0.0)
+    # An increase after the original fill is not a normal runner action.  Keep
+    # it managed, but never promote its outcome as clean strategy evidence.
+    mark_accounting_contamination_if_position_grew(tr, old_initial, qty)
     if qty > old_initial or old_initial <= 0.0:
         tr.initial_qty = qty
     tr.remaining_qty = qty

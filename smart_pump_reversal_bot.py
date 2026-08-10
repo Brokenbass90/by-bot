@@ -146,6 +146,7 @@ from bot.circuit_breaker import get_circuit_breaker as _get_cb
 from bot.runner_state import (
     apply_runner_snapshot,
     apply_runner_state,
+    mark_accounting_contamination_if_position_grew,
     plan_runner_target_close,
     reconcile_runner_qty_with_exchange,
     runner_snapshot_from_trade,
@@ -2259,7 +2260,17 @@ def _append_signal_decision(sleeve: str, sym: str, outcome: str, reason: str = "
     except Exception as e:
         log_error(f"signal decision trace fail: {e}")
 
-def _db_log_event(event: str, tr, sym: str, *, pnl: float | None = None, fees: float | None = None, exit_px: float | None = None, reason: str | None = None):
+def _db_log_event(
+    event: str,
+    tr,
+    sym: str,
+    *,
+    pnl: float | None = None,
+    fees: float | None = None,
+    exit_px: float | None = None,
+    reason: str | None = None,
+    strategy_override: str | None = None,
+):
     try:
         with sqlite3.connect(TRADE_DB_PATH) as con:
             con.execute(
@@ -2274,7 +2285,7 @@ def _db_log_event(event: str, tr, sym: str, *, pnl: float | None = None, fees: f
                     "Bybit",
                     str(sym),
                     str(getattr(tr, "side", "")),
-                    str(getattr(tr, "strategy", "")),
+                    str(strategy_override if strategy_override is not None else getattr(tr, "strategy", "")),
                     float(getattr(tr, "qty", 0) or 0),
                     float(getattr(tr, "entry_price", getattr(tr, "avg", 0) or 0) or 0),
                     float(exit_px) if exit_px is not None else None,
@@ -7065,15 +7076,26 @@ def sync_trades_with_exchange():
             # Without this reconciliation the TP ladder can leave an orphaned
             # residual even though the exchange stop protects the full size.
             old_runner_qty = float(getattr(tr, "remaining_qty", 0.0) or 0.0)
+            old_initial_qty = float(getattr(tr, "initial_qty", 0.0) or 0.0)
             tr.qty = float(size)
             if reconcile_runner_qty_with_exchange(tr, float(size)):
+                if avg_ex is not None and float(avg_ex) > 0.0:
+                    # Closed-PnL rows identify the lifecycle by broker average
+                    # entry.  If exposure grew, keeping the old average would
+                    # make the finalizer reject the complete broker outcome.
+                    tr.avg = float(avg_ex)
                 _diag_inc("runner_exchange_qty_reconciled")
                 _append_live_trade_event(
                     "runner_exchange_qty_reconciled",
                     sym,
                     tr,
                     previous_runner_qty=float(old_runner_qty),
+                    previous_initial_qty=float(old_initial_qty),
                     exchange_qty=float(size),
+                    exchange_avg=float(avg_ex) if avg_ex is not None else None,
+                    accounting_contaminated=bool(
+                        getattr(tr, "accounting_contaminated", False)
+                    ),
                 )
                 tg_trade_throttled(
                     f"runner_exchange_qty_reconciled:{sym}:{old_runner_qty}:{size}",
@@ -7238,6 +7260,11 @@ def _restore_trade_state_from_exchange_row(
     tr.entry_price_req = float(entry_px or avg_ex or 0.0)
     tr.tp_price = float(tp_px) if tp_px not in (None, "") else None
     tr.sl_price = float(sl_px) if sl_px not in (None, "") else None
+    mark_accounting_contamination_if_position_grew(
+        tr,
+        float((ev or {}).get("qty") or 0.0),
+        float(qty),
+    )
     runner_event = _get_latest_runner_snapshot_event(sym, side=side, since_ts=entry_ts)
     if runner_event and apply_runner_snapshot(
         tr,
@@ -7975,18 +8002,47 @@ def _finalize_and_report_closed(tr, sym: str):
     except Exception:
         pass
 
+    accounting_contaminated = bool(getattr(tr, "accounting_contaminated", False))
+    accounting_reason = str(getattr(tr, "close_reason", "") or "")
+    if accounting_contaminated:
+        accounting_reason = (
+            f"{accounting_reason}|CONTAMINATED_QTY:"
+            f"expected={float(getattr(tr, 'accounting_expected_qty', 0.0) or 0.0):.8g},"
+            f"broker={float(getattr(tr, 'accounting_broker_qty', 0.0) or 0.0):.8g}"
+        ).strip("|")
+
     _append_live_trade_event(
-        "close",
+        "close_contaminated" if accounting_contaminated else "close",
         sym,
         tr,
         pnl=float(pnl_closed or 0.0),
         fees=float(fee_sum or 0.0),
         exit_price=float(exit_px) if exit_px is not None else None,
+        accounting_contaminated=accounting_contaminated,
+        accounting_reason=accounting_reason,
     )
-    _db_log_event("CLOSE", tr, sym, pnl=pnl_closed, fees=fee_sum, exit_px=exit_px)
-    _att1_wire.record_outcome(tr, sym, pnl=float(pnl_closed or 0.0),
-                              exit_reason=str(getattr(tr, "close_reason", "") or ""))
-    _db_log_ml_close(tr, sym, pnl=pnl_closed, fees=fee_sum)
+    _db_log_event(
+        "CLOSE",
+        tr,
+        sym,
+        pnl=pnl_closed,
+        fees=fee_sum,
+        exit_px=exit_px,
+        reason=accounting_reason,
+        strategy_override=(
+            f"{str(getattr(tr, 'strategy', '') or 'unknown')}__contaminated"
+            if accounting_contaminated
+            else None
+        ),
+    )
+    if not accounting_contaminated:
+        _att1_wire.record_outcome(
+            tr,
+            sym,
+            pnl=float(pnl_closed or 0.0),
+            exit_reason=str(getattr(tr, "close_reason", "") or ""),
+        )
+        _db_log_ml_close(tr, sym, pnl=pnl_closed, fees=fee_sum)
     _maybe_schedule_ai_trade_review(tr, sym, pnl_closed, fee_sum, exit_px)
     # A losing range close invalidates the current level thesis. Keep the
     # symbol blocked through at least one full range-rescan cycle. The close

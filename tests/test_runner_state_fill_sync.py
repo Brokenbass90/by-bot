@@ -2,6 +2,7 @@ from trade_state import TradeState
 
 from bot.runner_state import (
     apply_runner_state,
+    mark_accounting_contamination_if_position_grew,
     reconcile_runner_qty_with_exchange,
     sync_runner_qty_after_fill,
 )
@@ -53,6 +54,9 @@ def test_reconcile_open_runner_uses_increased_broker_size() -> None:
     assert reconcile_runner_qty_with_exchange(tr, 270.0) is True
     assert tr.initial_qty == 270.0
     assert tr.remaining_qty == 270.0
+    assert tr.accounting_contaminated is True
+    assert tr.accounting_expected_qty == 180.0
+    assert tr.accounting_broker_qty == 270.0
 
 
 def test_reconcile_open_runner_preserves_initial_size_after_partial_close() -> None:
@@ -65,3 +69,13 @@ def test_reconcile_open_runner_preserves_initial_size_after_partial_close() -> N
     assert reconcile_runner_qty_with_exchange(tr, 81.0) is True
     assert tr.initial_qty == 180.0
     assert tr.remaining_qty == 81.0
+    assert not bool(getattr(tr, "accounting_contaminated", False))
+
+
+def test_restore_helper_marks_growth_against_persisted_entry_qty() -> None:
+    tr = TradeState(symbol="ADAUSDT", side="Sell")
+    assert mark_accounting_contamination_if_position_grew(tr, 180.0, 270.0) is True
+    assert tr.accounting_expected_qty == 180.0
+    assert tr.accounting_broker_qty == 270.0
+    clean = TradeState(symbol="DOTUSDT", side="Sell")
+    assert mark_accounting_contamination_if_position_grew(clean, 180.0, 81.0) is False
