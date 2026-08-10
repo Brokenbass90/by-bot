@@ -3,6 +3,7 @@ from pathlib import Path
 
 from research_lab.audit_registry import (
     collect_continuous,
+    collect_operational_incidents,
     collect_technology_inventory,
     finding_id,
     merge_registry,
@@ -100,3 +101,28 @@ def test_noisy_continuous_rule_is_triage_not_actionable(tmp_path: Path):
     rows = collect_continuous(tmp_path)
     assert rows[0]["status"] == "needs_triage"
     assert rows[0]["severity"] == "info"
+
+
+def test_operational_incident_enters_registry_as_confirmed_evidence(tmp_path: Path):
+    path = tmp_path / "runtime" / "project_audit" / "operational_incidents.jsonl"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps({
+        "external_id": "ATT1_ADA_HIDDEN_DCA_20260808",
+        "rule": "broker_qty_exceeds_runner_qty",
+        "severity": "critical",
+        "status": "confirmed",
+        "where": "ADAUSDT broker lifecycle",
+        "what": "broker qty rose from 180 to 270 outside the ATT1 entry event",
+        "why": "legacy pump-fade DCA shared the symbol",
+        "how_to_verify": "reconcile broker executions with entry and runner events",
+        "how_to_falsify": "show an ATT1-authorized add event for the extra 90 ADA",
+        "occurred_at_utc": "2026-08-08T00:00:00+00:00",
+    }) + "\n", encoding="utf-8")
+
+    rows = collect_operational_incidents(tmp_path)
+
+    assert len(rows) == 1
+    assert rows[0]["source"] == "operational_reconciliation"
+    assert rows[0]["status"] == "confirmed"
+    assert rows[0]["severity"] == "critical"
+    assert rows[0]["external_id"] == "ATT1_ADA_HIDDEN_DCA_20260808"

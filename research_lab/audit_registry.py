@@ -162,6 +162,48 @@ def collect_technology_inventory(root: Path = ROOT) -> list[dict[str, Any]]:
     return rows
 
 
+def collect_operational_incidents(root: Path = ROOT) -> list[dict[str, Any]]:
+    """Import confirmed runtime/broker reconciliation incidents.
+
+    The JSONL ledger is deliberately non-secret and append/replace-only.  It
+    lets the static/model audit see defects that are only observable by
+    comparing broker truth with the bot event/accounting trail.
+    """
+
+    path = root / "runtime" / "project_audit" / "operational_incidents.jsonl"
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return []
+    rows: list[dict[str, Any]] = []
+    for line in lines:
+        try:
+            item = json.loads(line)
+        except (ValueError, TypeError):
+            continue
+        if not isinstance(item, dict):
+            continue
+        row = _normalise(
+            source="operational_reconciliation",
+            rule=str(item.get("rule") or "broker_runtime_mismatch"),
+            where=str(item.get("where") or "runtime/broker"),
+            what=str(item.get("what") or "operational incident without summary"),
+            why=str(item.get("why") or ""),
+            how_to_verify=str(item.get("how_to_verify") or ""),
+            how_to_falsify=str(item.get("how_to_falsify") or ""),
+            severity=str(item.get("severity") or "high"),
+            status=str(item.get("status") or "confirmed"),
+            external_id=str(item.get("external_id") or ""),
+        )
+        row["current"] = bool(item.get("current", True))
+        if item.get("occurred_at_utc"):
+            row["occurred_at_utc"] = str(item["occurred_at_utc"])
+        if item.get("evidence"):
+            row["evidence"] = str(item["evidence"])
+        rows.append(row)
+    return rows
+
+
 def merge_registry(
     current_rows: Iterable[dict[str, Any]],
     previous: dict[str, Any] | None = None,
@@ -316,7 +358,12 @@ def main() -> int:
         status = "confirmed" if args.confirm else "dismissed" if args.dismiss else "resolved"
         return _set_status(registry_path, str(item_id), status, args.note)
 
-    current = collect_continuous(root) + collect_ai(root) + collect_technology_inventory(root)
+    current = (
+        collect_continuous(root)
+        + collect_ai(root)
+        + collect_technology_inventory(root)
+        + collect_operational_incidents(root)
+    )
     payload = merge_registry(current, _read_json(registry_path, {}))
     registry_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (out_dir / "registry.md").write_text(render_markdown(payload), encoding="utf-8")

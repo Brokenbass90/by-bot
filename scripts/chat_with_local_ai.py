@@ -20,6 +20,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 SAFE_CONTEXT_FILES = (
+    "reports/CODEX_ATT1_CONTAMINATION_MAKER_AND_AUDIT_STATUS_2026_08_10.md",
     "reports/CODEX_PROGRESS_2026_08_09.md",
     "runtime/live_mirror/sync_bundle_manifest.json",
     "PROJECT_MAP.md",
@@ -124,6 +125,17 @@ def _fact_index(root: Path) -> str:
     funding = _json_object(root / "runtime/funding_positioning_dynamic_shadow_summary.json")
     live = _json_object(root / "runtime/live_mirror/ai_context/full_context.json")
     mirror_manifest = _json_object(root / "runtime/live_mirror/sync_bundle_manifest.json")
+    registry = _json_object(root / "runtime/project_audit/registry.json")
+    registry_summary = (
+        registry.get("summary") if isinstance(registry.get("summary"), dict) else {}
+    )
+    registry_findings = registry.get("findings") if isinstance(registry.get("findings"), list) else []
+    operational_incidents = [
+        item for item in registry_findings
+        if isinstance(item, dict)
+        and item.get("current")
+        and item.get("source") == "operational_reconciliation"
+    ]
     facts = {
         "vps_live_mirror": {
             "context_generated_at_utc": live.get("generated_at_utc"),
@@ -135,11 +147,13 @@ def _fact_index(root: Path) -> str:
         },
         "verification_scope": {
             "whole_project_verified": False,
-            "audit_registry_total": 272,
-            "audit_registry_current": 210,
-            "audit_registry_needs_review": 5,
-            "technology_inventory_items": 187,
+            "audit_registry_total": registry_summary.get("total"),
+            "audit_registry_current": registry_summary.get("current"),
+            "audit_registry_needs_review": registry_summary.get("actionable"),
+            "technology_inventory_items": registry_summary.get("inventory_needs_triage"),
+            "operational_incidents_current": len(operational_incidents),
         },
+        "operational_incidents": operational_incidents[:12],
         "validated_repairs": {
             "sloped_break_retest_v1": {
                 "bug": "tf_ts is milliseconds but retest window was added as seconds",

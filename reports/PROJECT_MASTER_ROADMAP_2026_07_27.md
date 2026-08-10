@@ -481,3 +481,18 @@ Audit contract: `reports/SELF_HEALING_AUDIT_PIPELINE_2026_08_08.md`.
 
 Detailed receipt:
 `reports/CODEX_ATT1_CONTAMINATION_MAKER_AND_AUDIT_STATUS_2026_08_10.md`.
+
+### 20.1 Operational reconciliation is now an audit source
+
+- `runtime/project_audit/operational_incidents.jsonl` is the non-secret,
+  idempotent evidence ledger for defects visible only by comparing broker
+  truth, strategy authority, runner ownership and accounting events.
+- `research_lab/audit_registry.py` imports those incidents into the same
+  proposal-only registry used by local AI and human triage.
+- The ADA hidden-DCA lifecycle is the first confirmed critical incident. It is
+  evidence that static scans alone cannot validate the live system.
+- `scripts/chat_with_local_ai.py` now reads live registry counts and current
+  operational incidents; old hardcoded registry counts were removed.
+- This does not give Ollama order/risk authority and does not make it
+  self-proving. Every incident still needs deterministic reproduction and a
+  test or direct receipt before repair or promotion.

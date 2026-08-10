@@ -159,8 +159,9 @@ because it received a manifest.
    job while the WIP cap is full.
 3. At the first measurement slot, run the preregistered strict maker grid for
    ATT1, BREAKDOWN and ARF1. No best-cell-only reporting.
-4. Feed quantity/authority/reconciliation incidents into the audit registry so
-   the local AI sees operational contradictions, not just static files.
+4. **DONE 2026-08-10:** quantity/authority/reconciliation incidents now feed
+   the audit registry from a non-secret idempotent JSONL ledger. The confirmed
+   ADA `180 -> 270` mismatch is present as critical finding `0aa5368872f8`;
+   Ollama's fact index reads current registry counts instead of hardcoded ones.
 5. Review ATT1 risk only after the new post-fix clean cohort reaches its
    declared N/PF/DD/zero-incident gate. No calendar promise substitutes for N.
-

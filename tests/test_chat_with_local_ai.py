@@ -96,6 +96,24 @@ def test_context_fact_index_contains_bounded_research_verdicts(tmp_path: Path) -
     assert '"trades": 756' in context
 
 
+def test_fact_index_uses_current_registry_not_hardcoded_counts(tmp_path: Path) -> None:
+    registry_path = tmp_path / "runtime/project_audit/registry.json"
+    registry_path.parent.mkdir(parents=True)
+    registry_path.write_text(
+        '{"summary":{"total":17,"current":11,"actionable":3,'
+        '"inventory_needs_triage":4},"findings":[{"current":true,'
+        '"source":"operational_reconciliation","what":"broker mismatch"}]}',
+        encoding="utf-8",
+    )
+
+    context, _ = build_project_context(tmp_path)
+
+    assert '"audit_registry_total": 17' in context
+    assert '"audit_registry_current": 11' in context
+    assert '"operational_incidents_current": 1' in context
+    assert "broker mismatch" in context
+
+
 def test_local_ai_scope_is_explicitly_bounded() -> None:
     scope = scope_text(["runtime/project_audit/registry.md"])
 
