@@ -5,6 +5,7 @@ from pathlib import Path
 
 from research_lab.audit_health import build_health
 from research_lab.audit_health import _pid_alive
+from research_lab.audit_health import _scanner_canary
 
 
 def _seed(root: Path, now: float, *, complete: bool = True) -> None:
@@ -52,3 +53,8 @@ def test_pid_permission_error_means_process_exists(monkeypatch):
 
     monkeypatch.setattr(os, "kill", denied)
     assert _pid_alive(12345) is True
+
+
+def test_seeded_scanner_canary_matches_strict_ms_contract():
+    ok, detail = _scanner_canary()
+    assert ok is True, detail

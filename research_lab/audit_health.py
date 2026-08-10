@@ -57,9 +57,14 @@ def _pid_alive(pid: int) -> bool:
 
 
 def _scanner_canary() -> tuple[bool, str]:
+    # Keep the fixture aligned with E1's production contract.  The scanner
+    # deliberately requires explicit millisecond evidence to avoid flagging
+    # valid second-based timestamps.  The previous canary used the ambiguous
+    # name ``tf_ts`` and therefore tested a pattern that E1 intentionally no
+    # longer accepts; that made a healthy scanner look broken.
     source = """
-def broken(tf_ts, window, tf_seconds):
-    return tf_ts + window * tf_seconds
+def broken(tf_ts_ms, window, tf_seconds):
+    return tf_ts_ms + window * tf_seconds
 """
     with tempfile.TemporaryDirectory(prefix="audit_canary_") as tmp:
         path = Path(tmp) / "seeded_ms_seconds_bug.py"
