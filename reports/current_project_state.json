@@ -185,6 +185,12 @@
       "realistic_first_scale_window": "late_September_2026_conditional_on_gates"
     }
   },
+  "bybit_sizing_parity": {
+    "pure_contract": "shared_between_backtest_and_live",
+    "golden_pre_round_fixtures": "pass",
+    "covered": ["uncapped", "notional_cap", "min_fill_reject", "dot_like_geometry"],
+    "remaining": ["qty_step", "min_qty", "fees", "partial_fills", "legacy_dca_block"]
+  },
   "retest3": {
     "old_run": "quarantined_noop",
     "contract": "repaired",

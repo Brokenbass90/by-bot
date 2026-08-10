@@ -23,6 +23,7 @@ REQUIRED_ANCESTOR = "f290463"
 DEFAULT_PATHS = (
     "smart_pump_reversal_bot.py",
     "bot/maker_execution.py",
+    "bot/risk_sizing_contract.py",
     "bot/att1_challenger.py",
     "bot/health_truth.py",
     "bot/portfolio_equity_guard.py",

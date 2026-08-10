@@ -77,6 +77,42 @@ def calculate_risk_size(
     )
 
 
+def calculate_notional_from_stop_pct(
+    *,
+    equity: float,
+    stop_pct: float,
+    target_risk_fraction: float,
+    risk_multiplier: float,
+    volatility_multiplier: float,
+    max_notional_usd: Optional[float],
+    min_fill_fraction: float = 0.40,
+) -> RiskSizeDecision:
+    """Resolve the live stop-percent model through the shared fixed-R contract.
+
+    A synthetic entry of 1.0 makes quantity numerically equal to notional. This
+    keeps the stop-percent live interface while guaranteeing that cap and
+    minimum-fill behavior are identical to the backtest sizing engine.
+    Exchange qty-step rounding deliberately remains a later execution layer.
+    """
+    try:
+        distance_fraction = float(stop_pct) / 100.0
+        combined_risk_fraction = (
+            float(target_risk_fraction)
+            * float(risk_multiplier)
+            * float(volatility_multiplier)
+        )
+    except (TypeError, ValueError):
+        return _reject("non_finite_input")
+    return calculate_risk_size(
+        equity=float(equity),
+        entry=1.0,
+        stop=1.0 - distance_fraction,
+        target_risk_fraction=combined_risk_fraction,
+        max_notional_usd=max_notional_usd,
+        min_fill_fraction=min_fill_fraction,
+    )
+
+
 def _reject(reason: str) -> RiskSizeDecision:
     return RiskSizeDecision(
         accepted=False,

@@ -58,6 +58,7 @@ def main() -> int:
     dependency_paths = {}
     for name in (
         "bot.maker_execution",
+        "bot.risk_sizing_contract",
         "bot.att1_challenger",
         "bot.health_truth",
         "bot.portfolio_equity_guard",

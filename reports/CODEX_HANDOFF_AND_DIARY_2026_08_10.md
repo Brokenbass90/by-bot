@@ -331,3 +331,13 @@ Bounded server main-loop smoke жил 20 секунд с `DRY_RUN=1`, `TRADE_ON=
 `0b22d4...e220` и `b31f71...e9ee`, config подтверждает
 `INTRADAY_DRY_RUN_TG_ENABLE=0`. Cron 18:40 UTC после deploy завершил обычный
 DRY-RUN scan, не отправлял ордеров. Bybit service не перезапускался.
+
+### Backtest ↔ live sizing parity — pure core wired
+
+Бэктест уже вызывал `calculate_risk_size`, а live дублировал формулу через
+stop-percent. Добавлен pure adapter `calculate_notional_from_stop_pct`; live
+теперь использует тот же cap/min-fill contract без изменения текущих
+множителей риска. Golden fixtures сравнивают effective notional/risk при
+одинаковых equity/entry/stop/risk/cap, включая DOT-подобную геометрию,
+uncapped, capped и reject paths. Exchange qty-step/min-qty и fill parity
+остаются отдельным следующим слоем.

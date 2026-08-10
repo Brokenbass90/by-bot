@@ -83,6 +83,7 @@ from bot import att1_live_wiring as _att1_wire  # decision_bus + edge_monitor (f
 from bot.att1_challenger import classify_descending_rsi_50_70
 from bot.att1_runtime_contract import build_att1_runtime_contract
 from bot.portfolio_equity_guard import initialize_equity_anchors, is_valid_equity
+from bot.risk_sizing_contract import calculate_notional_from_stop_pct
 from bot.allowlist_watcher import AllowlistWatcher as _AllowlistWatcher  # dynamic allowlist hot-reload
 from bot.auth import (
     AUTH_DISABLED_UNTIL, AUTH_LAST_ERROR, BOT_START_TS,
@@ -8500,17 +8501,18 @@ def calc_notional_usd_candidate_from_stop_pct(stop_pct: float, risk_mult: float 
     if risk_mult_f <= 0:
         return 0.0
 
-    mult = max(0.1, risk_mult_f) * _get_vol_adj_mult()
-    risk_usd = equity * (RISK_PER_TRADE_PCT / 100.0) * mult
-
-    notional_raw = risk_usd / (stop_pct / 100.0)
-    notional = min(notional_raw, max_notional_allowed(equity))
-
-    fill = notional / notional_raw if notional_raw > 0 else 0.0
-    if fill < MIN_NOTIONAL_FILL_FRAC:
+    decision = calculate_notional_from_stop_pct(
+        equity=equity,
+        stop_pct=float(stop_pct),
+        target_risk_fraction=float(RISK_PER_TRADE_PCT) / 100.0,
+        risk_multiplier=max(0.1, risk_mult_f),
+        volatility_multiplier=_get_vol_adj_mult(),
+        max_notional_usd=max_notional_allowed(equity),
+        min_fill_fraction=MIN_NOTIONAL_FILL_FRAC,
+    )
+    if not decision.accepted:
         return 0.0
-
-    return float(notional)
+    return float(decision.effective_notional_usd)
 
 
 def calc_notional_usd_from_stop_pct(stop_pct: float, risk_mult: float = 1.0) -> float:

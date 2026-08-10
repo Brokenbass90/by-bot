@@ -151,11 +151,14 @@ freshness. Конфликт по символу автоматически за�
 мешает защитному TP/SL для уже открытой позиции. Incident попадает в изолированную
 очередь `finding -> reproduction -> patch -> tests -> deploy`.
 
-### P1.2 Backtest ↔ live sizing parity
+### P1.2 Backtest ↔ live sizing parity — CORE WIRED, EXCHANGE LAYER OPEN
 
-Golden fixtures для одинаковых signal, equity, price, stop и risk. Проверить
-rounding, min qty, leverage, fees, partial fills и запрет legacy-DCA. Любое
-расхождение — fail-fast, не предупреждение.
+Live stop-percent sizing теперь проходит через тот же pure
+`bot/risk_sizing_contract.py`, что и backtest fixed-R sizing. Golden fixtures
+доказывают одинаковые pre-round notional и effective risk для uncapped,
+notional-capped и reject cases, включая геометрию DOT. Остается проверить
+exchange qty-step/min-qty rounding, fees, partial fills и запрет legacy-DCA.
+Любое расхождение — fail-fast, не предупреждение.
 
 ### P1.3 Clean cohort registry
 

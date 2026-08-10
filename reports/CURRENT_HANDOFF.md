@@ -186,7 +186,8 @@ Alpaca focused suite: `34 passed`, включая golden backtest↔live weight 
    новый runner вторым engine; SAFE_HOLD не снимать по positive recent proxy.
 3. Добавить broker ↔ runner ↔ owner ↔ accounting reconciler и symbol-level
    fail-close новых добавок.
-4. Добавить golden test backtest/live sizing parity.
+4. Общий pre-round sizing contract и golden fixtures готовы; завершить
+   parity exchange-слоя: qty-step/min-qty, fees, partial fills, legacy-DCA.
 5. Начать чистую ATT1 cohort после фиксов, не меняя `risk_mult=0.10`.
 6. Preregister и воспроизвести четыре H4 FX leads на fresh bid/ask+swap с
    chronological OOS; H1 USDJPY не реанимировать без отдельного cost mechanism.
