@@ -80,9 +80,11 @@ equity `$485.87`, cash `$391.27`, ABBV/SCHW, stop coverage `2/2`; SCHW stop
 
 Оставшийся риск: дробные equity stop-ордера имеют `DAY`, поэтому защита зависит
 от ежедневного rearm и polling; stop/trailing не устраняет overnight gap risk.
-Следующие проверки: receipt после следующего cron, rearm на следующей сессии,
-freshness alert и восстановление HWM после рестарта. Для будущих входов отдельно
-сравнить fractional DAY с whole-share GTC/native-trailing контрактом.
+Автоматический cron 14:45 UTC уже перечитал новый stop `105.03` и корректно
+вернул `hold/no_material_stop_raise` без повторного PATCH. Следующие проверки:
+rearm на следующей сессии, freshness alert и восстановление HWM после рестарта.
+Для будущих входов отдельно сравнить fractional DAY с whole-share
+GTC/native-trailing контрактом.
 
 Routine PAPER HOLD/dry-run Telegram отключен по умолчанию в paper-launcher;
 paper broker receipts и логи сохранены. Отдельные live/actionable сообщения не

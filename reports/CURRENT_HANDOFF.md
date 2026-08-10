@@ -86,6 +86,8 @@ patch того же defect.
 - исправлена price-grid quantization, server stage smoke PASS, `26 passed`;
 - 14:44 UTC apply receipt: SCHW stop `96.47 -> 105.03`, qty
   `0.563776973`, new order `27473b37-9c6d-4a2c-b3a9-493c04cef21b`;
+- 14:45 UTC automatic cron receipt: SCHW `hold/no_material_stop_raise`,
+  current stop `105.03`, errors/results отсутствуют;
 - 14:44 UTC direct broker-read: equity `$485.87`, cash `$391.27`, positions
   ABBV/SCHW, stop coverage `2/2`, account/trading not blocked;
 - ABBV qty `0.135734866`, stop `235.17`, trail not armed;
@@ -110,8 +112,8 @@ patch того же defect.
 
 ## Следующие действия в точном порядке
 
-1. Проверить следующий Alpaca protective cron receipt и next-session rearm;
-   добавить freshness alert на missing/expired DAY stop и stale HWM.
+1. Проверить next-session rearm; добавить freshness alert на missing/expired
+   DAY stop и stale HWM. Текущий 15-minute cron уже подтвержден после patch.
 2. Завершить Alpaca exact selection/exit parity; SAFE_HOLD не снимать по одному
    успешному protective receipt.
 3. Добавить broker ↔ runner ↔ owner ↔ accounting reconciler и symbol-level

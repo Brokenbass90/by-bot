@@ -39,6 +39,8 @@
     "open_protective_orders": 2,
     "new_entries_allowed": false,
     "protective_scheduler": "server_cron_every_15m",
+    "protective_scheduler_post_patch_receipt_utc": "2026-08-10T14:45:08Z",
+    "protective_scheduler_post_patch_status": "pass_hold_no_material_stop_raise",
     "protective_authority": "protective_exits_only_no_buys_no_rotation_no_market_close",
     "paper_telegram_routine_reports": "disabled_by_default",
     "schw_stop_receipt": {
@@ -79,7 +81,7 @@
     "plan": "reports/WORKTREE_CLEANUP_PLAN_2026_08_10.md"
   },
   "priority_queue": [
-    "alpaca_next_cron_and_next_session_rearm_proof",
+    "alpaca_next_session_day_stop_rearm_proof",
     "alpaca_exact_selection_exit_parity",
     "broker_runner_owner_accounting_reconciliation",
     "backtest_live_sizing_parity",

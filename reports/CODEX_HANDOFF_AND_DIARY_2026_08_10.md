@@ -201,6 +201,11 @@ broker-read: SCHW order `27473b37-9c6d-4a2c-b3a9-493c04cef21b`, status `new`,
 qty `0.563776973`, stop `105.03`, TIF `day`; ABBV stop `235.17`; account equity
 `$485.87`, cash `$391.27`, coverage `2/2`. Покупок/ротаций/market-close не было.
 
+Следующий automatic cron в 14:45 UTC использовал новый код: SCHW
+`hold/no_material_stop_raise`, current stop `105.03`, ошибок и новых broker
+actions нет. Непрерывность внутри текущей сессии подтверждена; next-session
+DAY-stop rearm остается отдельным обязательным proof.
+
 Paper launcher теперь отключает routine Telegram по умолчанию, сохраняя paper
 orders, receipts и logs. Read-only worktree inventory: `1,138` paths, из них
 `27` tracked и `1,111` untracked; массовой очистки не выполнялось.
