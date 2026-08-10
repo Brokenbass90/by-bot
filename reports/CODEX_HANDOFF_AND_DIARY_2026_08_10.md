@@ -313,3 +313,21 @@ Status/ledger/summary находятся в
 - FX H4 annual reproduction: каждый из четырех lead меняет знак между годами;
   ни одна стабильная нога не получена. Broker bid/ask, swap и news остаются
   обязательным следующим gate.
+
+### Release preparation и точечный Alpaca deploy — 18:40–18:44 UTC
+
+Scoped commit `d43ecb0` pushed в `origin/codex/dynamic-symbol-filters`.
+Committed atomic bundle содержит семь файлов, включая новую зависимость
+`bot/maker_execution.py`; archive SHA256
+`0886910710f6b9e1fea1a184309c9279267ac24bbd7c0ed7bc9cb5b9279f1a00`.
+Локальный full-tree stage и server stage `/root/bybot-staging/d43ecb061978`
+дали manifest `7/7`, exact staged dependency imports и PASS no-order import.
+Bounded server main-loop smoke жил 20 секунд с `DRY_RUN=1`, `TRADE_ON=0` и
+отключенными market/broker sources, ошибок не показал. Live monolith не менялся,
+потому что DOT position открыта.
+
+Независимо доставлены только Alpaca v3 shadow bridge/config: backup
+`/root/by-bot/backups/alpaca-dryrun-tg-d43ecb0-20260810T1840Z`, server hashes
+`0b22d4...e220` и `b31f71...e9ee`, config подтверждает
+`INTRADAY_DRY_RUN_TG_ENABLE=0`. Cron 18:40 UTC после deploy завершил обычный
+DRY-RUN scan, не отправлял ордеров. Bybit service не перезапускался.

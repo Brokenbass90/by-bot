@@ -1,6 +1,6 @@
 {
   "schema_id": "current_project_state_v1",
-  "generated_at_utc": "2026-08-10T18:35:00Z",
+  "generated_at_utc": "2026-08-10T18:44:00Z",
   "read_first": [
     "reports/CURRENT_HANDOFF.md",
     "reports/current_project_state.json",
@@ -37,6 +37,15 @@
       "clean_cohort_eligible": false,
       "patch": "tested_not_deployed_until_flat"
     },
+    "candidate_release": {
+      "revision": "d43ecb06197832a8ecb99723d0da5dd0b5f712e5",
+      "bundle_sha256": "0886910710f6b9e1fea1a184309c9279267ac24bbd7c0ed7bc9cb5b9279f1a00",
+      "manifest": "pass_7_of_7",
+      "server_stage": "/root/bybot-staging/d43ecb061978",
+      "server_python_import_smoke": "pass",
+      "bounded_no_order_main_smoke": "pass_20_seconds",
+      "deploy_blocker": "broker_not_flat"
+    },
     "authority_complete": true,
     "money_authority": [
       {
@@ -61,6 +70,15 @@
     "protective_scheduler_post_patch_status": "pass_hold_no_material_stop_raise",
     "protective_authority": "protective_exits_only_no_buys_no_rotation_no_market_close",
     "paper_telegram_routine_reports": "disabled_by_default",
+    "intraday_shadow_dry_run_telegram_deploy": {
+      "revision": "d43ecb0",
+      "deployed_at_utc": "2026-08-10T18:40:00Z",
+      "bridge_sha256": "0b22d4283db8ec3b61666b4c239b2ec20449794d8bff76487aff4cb9ed6ed220",
+      "config_sha256": "b31f713cd09672d5687cbd057dee0ebbb7c6adf354021b4ea78ee40384b1e9ee",
+      "backup": "/root/by-bot/backups/alpaca-dryrun-tg-d43ecb0-20260810T1840Z",
+      "post_deploy_cron_utc": "2026-08-10T18:40:00Z",
+      "orders_submitted": false
+    },
     "schw_stop_receipt": {
       "qty": 0.563776973,
       "old_stop": 96.47,

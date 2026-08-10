@@ -22,8 +22,13 @@
   и adverse drift >25 bps до заявки и после fill. `50 passed`.
 - Patch нельзя выпускать до flat. После flat: committed bundle, server-Python
   verify, no-order smoke, три flat receipts, atomic deploy.
+- Candidate release commit `d43ecb06197832a8ecb99723d0da5dd0b5f712e5` уже
+  pushed. Bundle SHA256 `0886910710f6b9e1fea1a184309c9279267ac24bbd7c0ed7bc9cb5b9279f1a00`,
+  manifest `7/7`; server stage `/root/bybot-staging/d43ecb061978` прошел
+  server-Python hash/import и bounded 20s no-order main smoke.
 - Routine GS `[DRY-RUN]` происходили из Alpaca v3 shadow cron. Telegram noise
-  отключен по умолчанию; research receipts остаются.
+  отключен по умолчанию и точечно доставлен на сервер без Bybit restart;
+  18:40 UTC shadow cron прошел после deploy, research receipts остаются.
 - Запущены screen `bybit_history_150_20260810` и долговечный supervisor
   `six_day_crypto_20260810`; 48 research-only cases, reserved holdout не читается.
 - Heartbeat `Six-day trading research guard` проверяет процесс каждые шесть
