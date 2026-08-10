@@ -84,7 +84,7 @@ flowchart TB
         AL["Alpaca ABBV + SCHW<br/>equity $485.87 · stops 2/2<br/>SAFE_HOLD"]
     end
 
-    ATT --> REC["Reconciliation gate"]
+    ATT --> REC["Reconciliation gate<br/>pure four-source contract tested<br/>live wiring open"]
     B1 --> REP["Independent replay"]
     MK --> REP
     RT --> REP

@@ -228,6 +228,23 @@
     "covered": ["uncapped", "notional_cap", "min_fill_reject", "dot_like_geometry"],
     "remaining": ["qty_step", "min_qty", "fees", "partial_fills", "legacy_dca_block"]
   },
+  "position_reconciliation": {
+    "pure_contract": "bot/position_reconciliation.py",
+    "schema_id": "position_reconciliation_v1",
+    "covered_conflicts": [
+      "source_stale_or_missing",
+      "broker_runner_owner_accounting_presence",
+      "broker_stop_missing",
+      "qty_mismatch",
+      "side_mismatch",
+      "strategy_owner_mismatch",
+      "duplicate_or_hedged_rows"
+    ],
+    "scope": "block_new_entries_only_existing_management_continues",
+    "focused_tests_passed": 18,
+    "live_wired": false,
+    "next_gate": "runtime_adapters_durable_receipt_and_all_submit_path_entry_gate"
+  },
   "retest3": {
     "old_run": "quarantined_noop",
     "contract": "repaired",
@@ -258,7 +275,7 @@
     "monitor_six_day_crypto_research_pipeline",
     "alpaca_next_session_day_stop_rearm_proof",
     "alpaca_pit_xnys_corporate_action_cost_bundle_and_second_engine",
-    "broker_runner_owner_accounting_reconciliation",
+    "wire_position_reconciliation_runtime_adapters_and_entry_gate",
     "backtest_live_sizing_parity",
     "clean_att1_cohort",
     "preregistered_h4_fx_reproduction_then_demo_shadow",

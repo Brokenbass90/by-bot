@@ -148,13 +148,19 @@ code checkout по manifest, затем разбирать 61 code candidate м�
 
 ## P1. Control plane — неделя 1–2
 
-### P1.1 Broker ↔ runner ↔ owner ↔ accounting reconciliation
+### P1.1 Broker ↔ runner ↔ owner ↔ accounting reconciliation — PURE CORE READY
 
-Создать единый record на symbol/order/position: intent, strategy owner, risk
-authority, broker order/fill/position, event/accounting linkage, source и
-freshness. Конфликт по символу автоматически запрещает новые добавки, но не
-мешает защитному TP/SL для уже открытой позиции. Incident попадает в изолированную
-очередь `finding -> reproduction -> patch -> tests -> deploy`.
+`bot/position_reconciliation.py` теперь строит единый deterministic receipt из
+четырех position views, проверяет freshness, broker stop, qty/side/strategy,
+missing и duplicate/hedged rows. Stale/malformed source означает глобальный
+fail-close новых входов; локальный конфликт блокирует только затронутый символ,
+не мешая защитному TP/SL и runner management. Совместный focused suite:
+`18 passed`.
+
+Открытый gate: материализовать четыре runtime adapters, durable receipt и
+подключить `entry_allowed()` ко всем реальным submit paths отдельным релизом.
+До этого pure core — проверенный контракт, но не live protection. Incident
+должен попадать в очередь `finding -> reproduction -> patch -> tests -> deploy`.
 
 ### P1.2 Backtest ↔ live sizing parity — CORE WIRED, EXCHANGE LAYER OPEN
 

@@ -370,3 +370,18 @@ Focused suite после sizing parity: `60 passed`.
 подтвердил активный `PreventUserIdleSystemSleep`; дисплей не удерживается
 включенным. Это защищает от обычного idle sleep, но не от power loss, reboot
 или network outage; шестичасовой heartbeat остается отдельным watchdog.
+
+### Reconciliation contract — pure core
+
+Read-only аудит показал, что runner уже синхронизирует broker qty и помечает
+увеличившийся lifecycle contaminated, но untracked/mismatch события в основном
+дают alert и не создают единого durable symbol block. Добавлен независимый
+`bot/position_reconciliation.py`: четыре источника, freshness, presence,
+stop/qty/side/strategy, duplicate/hedged rows и явный receipt scope
+`block_new_entries_only_existing_management_continues`.
+
+Stale/malformed source дает глобальный fail-close новых входов; локальная
+нестыковка блокирует только символ. Семь новых unit tests и совместный suite с
+runner sync/operator controls/bundle tests: `18 passed`. В monolith модуль пока
+не импортирован и в live не задеплоен: следующий отдельный gate — adapters,
+durable receipt и подключение ко всем submit paths после ATT1 execution release.

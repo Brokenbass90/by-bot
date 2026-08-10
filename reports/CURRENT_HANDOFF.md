@@ -205,8 +205,9 @@ Alpaca focused suite: `34 passed`, включая golden backtest↔live weight 
    DAY stop и stale HWM. Текущий 15-minute cron уже подтвержден после patch.
 4. Материализовать PIT/XNYS/corporate-action/cost bundle для Alpaca, сверить
    новый runner вторым engine; SAFE_HOLD не снимать по positive recent proxy.
-5. Добавить broker ↔ runner ↔ owner ↔ accounting reconciler и symbol-level
-   fail-close новых добавок.
+5. Pure broker ↔ runner ↔ owner ↔ accounting contract готов и имеет 18 passed;
+   добавить runtime adapters/durable receipt и подключить symbol-level
+   `entry_allowed()` ко всем submit paths отдельным release.
 6. Общий pre-round sizing contract и golden fixtures готовы; завершить
    parity exchange-слоя: qty-step/min-qty, fees, partial fills, legacy-DCA.
 7. Preregister и воспроизвести четыре H4 FX leads на fresh bid/ask+swap с
