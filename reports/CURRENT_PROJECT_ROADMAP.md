@@ -1,6 +1,6 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-10 15:25 UTC. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-10 15:31 UTC. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
 
@@ -213,12 +213,14 @@ history в parquet. Любой тест хранит data hash, coverage, exclus
 
 ### P2.6 Load-aware night queue
 
-Пять постоянных research loops остаются `5 healthy / 0 degraded`. При host load
-около `12/12` тяжелый шестой sweep запрещен. Легкий supervisor
-`research_backlog_guard_20260810` ждет load `<=9`, затем с `nice +10`
-последовательно запускает два risk-zero fixed probes: USDJPY H1 reproduction и
-H4 medium-term major/JPY/XAU search. Deadline 2026-08-11 06:00 UTC; если ресурс
-не освободится, status будет `deferred_deadline`, а не ложный результат.
+Пять постоянных research loops остаются `5 healthy / 0 degraded`. Load-aware
+очередь `research_backlog_guard_20260810` завершила два risk-zero fixed probes,
+без broker calls и live authority. USDJPY H1 полностью заблокирован cost gate:
+`feeR=0.515 > 0.35`, сделок не симулировали. На H4 лучшие диагностические
+строки: EURJPY trend pullback `+3.366R` (13 сделок, 2/4 positive folds), GBPUSD
+trend pullback `+1.732R` (9, 3/4), USDJPY breakout/retest `+1.321R` (10, 2/4),
+EURUSD breakout/retest `+1.221R` (4, 2/4). Все `preflight=false`: это очередь
+для prereg reproduction с fresh bid/ask, swap и news exclusions, не promotion.
 
 ## P3. Несколько контуров дохода — неделя 3–12+
 
@@ -229,7 +231,7 @@ H4 medium-term major/JPY/XAU search. Deadline 2026-08-11 06:00 UTC; если р�
 | Funding/basis | два `PROCESS_OK` shadow; capital false | concentration, adverse selection, realistic costs, frozen N20–30 | только reproduced net edge |
 | XSEC market-neutral | `PROCESS_OK`, risk zero | outlier-resistant/median analysis, costs, independent replay | только stable folds и broker-ready controls |
 | Alpaca equities | SAFE_HOLD + verified daily diagnostic: v38 recent `+30.16%`, 2022 `-2.89%` stress | PIT/XNYS/corp-actions/cost bundle, second engine, sealed Aug-Nov forward | текущий cap не расширять; SAFE_HOLD не ротировать по proxy |
-| FX/CFD medium-term | intraday families mostly fail; USDJPY H1 breakout/round-level is a thin lead; H4 fixed probe queued | stress reproduction, fresh bid/ask+swap/news, then prereg chronological OOS | сначала shadow/demo; money только после stable folds и broker-cost parity |
+| FX/CFD medium-term | USDJPY H1 rejected by cost gate; H4 has four thin diagnostic leads, all preflight false | prereg H4 reproduction, fresh bid/ask+swap/news, chronological OOS | сначала shadow/demo; money только после stable folds и broker-cost parity |
 | Arbitrage/volatility | inventory/research only | executable quotes, transfer/borrow/funding risks, kill switches | отдельный canary после end-to-end shadow |
 
 Желаемое состояние: в каждом денежном контуре минимум две независимо

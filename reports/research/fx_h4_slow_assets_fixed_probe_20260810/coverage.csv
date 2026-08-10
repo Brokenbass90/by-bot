@@ -1,0 +1,7 @@
+symbol,coverage_ok,coverage,actual_bars,expected_bars,n_gaps,max_gap_bars,flat_frac,dup_bars,coverage_reasons
+EURUSD,True,0.993785,3198,3218,6,5,0.0,0,
+GBPUSD,True,0.993802,3207,3227,7,5,0.0,0,
+USDJPY,True,0.992558,3201,3225,9,5,0.0,0,
+EURJPY,True,0.989593,3138,3171,10,5,0.0,0,
+GBPJPY,True,0.994422,3209,3227,5,5,0.0,0,
+XAUUSD,True,0.991586,3182,3209,8,6,0.0,0,

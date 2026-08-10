@@ -1,6 +1,6 @@
 {
   "schema_id": "current_project_state_v1",
-  "generated_at_utc": "2026-08-10T15:25:00Z",
+  "generated_at_utc": "2026-08-10T15:31:00Z",
   "read_first": [
     "reports/CURRENT_HANDOFF.md",
     "reports/current_project_state.json",
@@ -56,20 +56,31 @@
     "remaining_risk": "fractional_day_stops_require_rearm_and_do_not_remove_overnight_gap_risk"
   },
   "research_station": {
-    "checked_at_utc": "2026-08-10T15:23:13Z",
+    "checked_at_utc": "2026-08-10T15:28:24Z",
     "healthy": 5,
     "degraded": 0,
     "live_order_authority": false,
     "wip_cap_full": true,
     "load_guarded_backlog": {
-      "state": "waiting_for_load",
+      "state": "complete",
       "session": "research_backlog_guard_20260810",
       "max_load_1m": 9.0,
-      "observed_load_1m": 12.12,
       "deadline_utc": "2026-08-11T06:00:00Z",
       "jobs": ["fx_usdjpy_h1_focused_stress", "fx_h4_slow_assets_fixed_probe"],
       "live_order_authority": false
     }
+  },
+  "fx_research": {
+    "live_order_authority": false,
+    "h1_usdjpy": "rejected_cost_infeasible_feeR_0.515_above_0.35",
+    "h4_preflight_passed": false,
+    "h4_diagnostic_leads": [
+      "EURJPY_trend_pullback_3.366R_13_trades_2_of_4_folds",
+      "GBPUSD_trend_pullback_1.732R_9_trades_3_of_4_folds",
+      "USDJPY_session_breakout_retest_1.321R_10_trades_2_of_4_folds",
+      "EURUSD_session_breakout_retest_1.221R_4_trades_2_of_4_folds"
+    ],
+    "next_gate": "preregistered_reproduction_fresh_bid_ask_swap_news_chronological_oos"
   },
   "alpaca_research": {
     "runner": "scripts/run_alpaca_honest_diagnostic.py",
@@ -127,7 +138,7 @@
     "broker_runner_owner_accounting_reconciliation",
     "backtest_live_sizing_parity",
     "clean_att1_cohort",
-    "load_guarded_fx_research_then_maker_execution_shadow",
+    "preregistered_h4_fx_reproduction_then_demo_shadow",
     "strategy_edge_cards_and_loss_phenotypes",
     "independent_replay",
     "owner_tagged_worktree_cleanup_batches",

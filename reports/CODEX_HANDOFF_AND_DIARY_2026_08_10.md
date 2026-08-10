@@ -249,3 +249,17 @@ suite после patch: `34 passed`, включая golden backtest↔live weigh
 последовательно выполнит USDJPY H1 focused stress reproduction и фиксированный
 H4 medium-term probe major/JPY/XAU. Deadline 2026-08-11 06:00 UTC; risk zero,
 broker calls false, live authority false. Текущий status: `waiting_for_load`.
+
+## Продолжение работ — 15:28–15:31 UTC
+
+Load guard дождался ресурса и завершил оба задания с return code 0. USDJPY H1
+не прошел экономический gate: `feeR=0.515` выше лимита `0.35`, поэтому harness
+не создал искусственных сделок. H4 probe дал диагностические плюсы EURJPY
+trend pullback `+3.366R` (13 сделок, 2/4 positive folds), GBPUSD trend pullback
+`+1.732R` (9, 3/4), USDJPY breakout/retest `+1.321R` (10, 2/4) и EURUSD
+breakout/retest `+1.221R` (4, 2/4). Все кандидаты `preflight=false`; следующий
+этап только prereg reproduction на fresh bid/ask, swap и news exclusions.
+
+Scoped commit `1b6ba04` (`repair Alpaca honest backtest and sizing parity`)
+отправлен в `origin/codex/dynamic-symbol-filters`. Чужие изменения Клода и
+остальной грязный worktree в commit не захвачены. Это Git receipt, не live deploy.

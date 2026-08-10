@@ -1,6 +1,6 @@
 # Текущий handoff между чатами
 
-Обновлено: 2026-08-10 15:25 UTC.
+Обновлено: 2026-08-10 15:31 UTC.
 
 ## Читать в новом чате
 
@@ -77,16 +77,20 @@ patch того же defect.
 ручная трассировка и независимый replay еще обязательны. Не добавлять шестой
 долгий research job до освобождения WIP-слота.
 
-Load-aware backlog watcher `research_backlog_guard_20260810` добавлен как
-почти не потребляющий CPU guard, а не шестой sweep. При последней проверке он
-был `waiting_for_load`: 1-minute load около `12.1`, порог запуска `9.0` на
-12 logical CPU. До 2026-08-11 06:00 UTC он последовательно запустит, только
-если ресурс освободится:
+Load-aware backlog watcher `research_backlog_guard_20260810` завершился
+`complete`: он последовательно выполнил два bounded задания и исчез из screen,
+не затронув пять постоянных supervisors:
 
 1. USDJPY H1 `session_breakout_retest + round_level_sweep` под stress costs;
 2. H4 fixed probe для major/JPY/XAU.
 
 Оба задания research-only, `risk_pct=0`, без broker calls и live authority.
+USDJPY H1 был честно остановлен cost gate: `feeR=0.515 > 0.35`, поэтому все
+8 комбинаций имеют ноль симулированных сделок. H4 дал четыре слабых lead:
+EURJPY trend pullback `+3.366R/13 trades/2 of 4 folds`, GBPUSD trend pullback
+`+1.732R/9/3 of 4`, USDJPY breakout/retest `+1.321R/10/2 of 4`, EURUSD
+breakout/retest `+1.221R/4/2 of 4`. Все строки `preflight=false`; ни одна не
+готова к shadow или капиталу без prereg reproduction и реальных costs.
 
 ### Alpaca honest diagnostic
 
@@ -156,8 +160,9 @@ Alpaca focused suite: `34 passed`, включая golden backtest↔live weight 
    fail-close новых добавок.
 4. Добавить golden test backtest/live sizing parity.
 5. Начать чистую ATT1 cohort после фиксов, не меняя `risk_mult=0.10`.
-6. Дождаться load-aware FX queue; утром разобрать receipts. При освобождении
-   полноценного WIP-слота запустить maker shadow и differentiating retest3 smoke.
+6. Preregister и воспроизвести четыре H4 FX leads на fresh bid/ask+swap с
+   chronological OOS; H1 USDJPY не реанимировать без отдельного cost mechanism.
+   При освобождении WIP-слота запустить maker shadow и differentiating retest3 smoke.
 7. Реализовать edge cards и phenotype loss analysis; второй engine сверяет
    только кандидатов, прошедших первые gates.
 8. Разбирать worktree небольшими owner-tagged batches; сначала data/backups,

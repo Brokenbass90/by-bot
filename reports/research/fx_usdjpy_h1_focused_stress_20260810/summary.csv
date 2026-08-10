@@ -1,0 +1,9 @@
+symbol,setup,tp_rr,sl_atr,max_hold,coverage_ok,coverage_reasons,cost_ok,fee_r,cost_reason,skip_reason,trades,net_r,pf,win_rate,folds_positive,min_fold_trades,preflight_go,preflight_reasons
+USDJPY,session_breakout_retest,1.5,1.3,24,True,,False,0.5152,fee_r_0.52_exceeds_0.35,cost_infeasible,0,0.0,0.0,0.0,0,0,False,fee_r_0.52_exceeds_0.35
+USDJPY,session_breakout_retest,1.5,1.3,72,True,,False,0.5152,fee_r_0.52_exceeds_0.35,cost_infeasible,0,0.0,0.0,0.0,0,0,False,fee_r_0.52_exceeds_0.35
+USDJPY,session_breakout_retest,2.5,1.3,24,True,,False,0.5152,fee_r_0.52_exceeds_0.35,cost_infeasible,0,0.0,0.0,0.0,0,0,False,fee_r_0.52_exceeds_0.35
+USDJPY,session_breakout_retest,2.5,1.3,72,True,,False,0.5152,fee_r_0.52_exceeds_0.35,cost_infeasible,0,0.0,0.0,0.0,0,0,False,fee_r_0.52_exceeds_0.35
+USDJPY,round_level_sweep,1.5,1.3,24,True,,False,0.5152,fee_r_0.52_exceeds_0.35,cost_infeasible,0,0.0,0.0,0.0,0,0,False,fee_r_0.52_exceeds_0.35
+USDJPY,round_level_sweep,1.5,1.3,72,True,,False,0.5152,fee_r_0.52_exceeds_0.35,cost_infeasible,0,0.0,0.0,0.0,0,0,False,fee_r_0.52_exceeds_0.35
+USDJPY,round_level_sweep,2.5,1.3,24,True,,False,0.5152,fee_r_0.52_exceeds_0.35,cost_infeasible,0,0.0,0.0,0.0,0,0,False,fee_r_0.52_exceeds_0.35
+USDJPY,round_level_sweep,2.5,1.3,72,True,,False,0.5152,fee_r_0.52_exceeds_0.35,cost_infeasible,0,0.0,0.0,0.0,0,0,False,fee_r_0.52_exceeds_0.35

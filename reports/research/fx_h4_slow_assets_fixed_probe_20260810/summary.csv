@@ -1,0 +1,13 @@
+symbol,setup,tp_rr,sl_atr,max_hold,coverage_ok,coverage_reasons,cost_ok,fee_r,cost_reason,skip_reason,trades,net_r,pf,win_rate,folds_positive,min_fold_trades,preflight_go,preflight_reasons
+EURUSD,trend_pullback,2.0,1.5,30,True,,True,0.185,,,10,0.794,1.118,0.4,2,2,False,too_few_total_10<30;thin_fold_0<5
+EURUSD,session_breakout_retest,2.0,1.5,30,True,,True,0.185,,,4,1.221,1.512,0.5,2,1,False,too_few_total_4<30;thin_fold_0<5
+GBPUSD,trend_pullback,2.0,1.5,30,True,,True,0.1638,,,9,1.732,1.302,0.444,3,2,False,too_few_total_9<30;thin_fold_1<5
+GBPUSD,session_breakout_retest,2.0,1.5,30,True,,True,0.1638,,,7,-2.018,0.646,0.286,1,1,False,too_few_total_7<30;thin_fold_1<5
+USDJPY,trend_pullback,2.0,1.5,30,True,,True,0.1108,,,13,0.593,1.082,0.385,2,3,False,too_few_total_13<30;thin_fold_2<5
+USDJPY,session_breakout_retest,2.0,1.5,30,True,,True,0.1108,,,10,1.321,1.212,0.4,2,2,False,too_few_total_10<30;thin_fold_1<5
+EURJPY,trend_pullback,2.0,1.5,30,True,,True,0.1665,,,13,3.366,1.432,0.462,2,3,False,too_few_total_13<30;thin_fold_1<5
+EURJPY,session_breakout_retest,2.0,1.5,30,True,,True,0.1665,,,8,-0.012,0.998,0.375,3,2,False,too_few_total_8<30;thin_fold_1<5
+GBPJPY,trend_pullback,2.0,1.5,30,True,,True,0.1649,,,14,-1.582,0.826,0.357,1,3,False,too_few_total_14<30;thin_fold_0<5
+GBPJPY,session_breakout_retest,2.0,1.5,30,True,,True,0.1649,,,10,-7.188,0.208,0.1,1,2,False,too_few_total_10<30;thin_fold_1<5
+XAUUSD,trend_pullback,2.0,1.5,30,True,,True,0.0412,,,10,-0.746,0.885,0.3,1,2,False,too_few_total_10<30;thin_fold_0<5
+XAUUSD,session_breakout_retest,2.0,1.5,30,True,,True,0.0412,,,5,0.625,1.192,0.4,2,1,False,too_few_total_5<30;thin_fold_0<5
