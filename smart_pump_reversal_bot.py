@@ -8294,7 +8294,10 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                 tr.close_reason = "TIME_STOP"
                 tr.last_runner_action_ts = now
                 _append_live_trade_event("runner_time_stop", symbol, tr, close_qty=float(qty), price=float(price))
-                tg_trade(f"🟧 INPLAY TIME STOP {symbol}: closed qty≈{qty}")
+                tg_trade(
+                    f"🟧 RUNNER TIME STOP {symbol} "
+                    f"[{_ru_strategy_label(getattr(tr, 'strategy', ''))}]: closed qty≈{qty}"
+                )
             return
 
     risk = 0.0
@@ -8363,7 +8366,10 @@ def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
                 close_qty=float(qty_to_close),
                 price=float(price),
             )
-            tg_trade(f"🟩 INPLAY TP{i+1} {symbol}: closed≈{qty_to_close}")
+            tg_trade(
+                f"🟩 RUNNER TP{i+1} {symbol} "
+                f"[{_ru_strategy_label(getattr(tr, 'strategy', ''))}]: closed≈{qty_to_close}"
+            )
 
     trail_ready = bool((tr.trail_activate_rr or 0.0) <= 0.0 or tr.trail_armed)
     if (not trail_ready) and tr.trail_mult and tr.trail_mult > 0 and risk > 0:
