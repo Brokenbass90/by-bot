@@ -1,0 +1,86 @@
+{
+  "schema_id": "six_day_crypto_research_pipeline_v1",
+  "created_at_utc": "2026-08-10T18:45:00Z",
+  "deadline_utc": "2026-08-16T18:45:00Z",
+  "research_only": true,
+  "live_order_authority": false,
+  "private_api_calls": false,
+  "promotion_forbidden": true,
+  "data_contract": {
+    "cache_dir": "data_cache",
+    "downloader_log": "logs/fetch_bybit_history_150_20260810.log",
+    "min_coverage": 0.98,
+    "max_gap_bars": 24,
+    "max_symbols": 30,
+    "universe_warning": "current surviving contracts only; discovery, never promotion"
+  },
+  "windows": [
+    {"id": "discovery_2023h2", "start_utc": "2023-07-01", "end_utc_exclusive": "2024-01-01"},
+    {"id": "replication_2024h1", "start_utc": "2024-01-01", "end_utc_exclusive": "2024-07-01"},
+    {"id": "oos_2024h2", "start_utc": "2024-07-01", "end_utc_exclusive": "2025-01-01"}
+  ],
+  "reserved_holdout": {
+    "start_utc": "2025-10-01",
+    "end_utc_exclusive": "2026-07-01",
+    "must_not_be_read": true,
+    "reason": "preserve the unspent squeeze and new-leg holdout"
+  },
+  "cost_scenarios": [
+    {"id": "base", "fee_bps": 6.0, "slippage_bps": 2.0},
+    {"id": "stress", "fee_bps": 8.0, "slippage_bps": 4.0}
+  ],
+  "families": [
+    {
+      "id": "att1_current_short",
+      "strategy": "alt_trendline_touch_v1",
+      "env": {
+        "ATT1_ALLOW_LONGS": "0", "ATT1_ALLOW_SHORTS": "1",
+        "ATT1_MIN_R2": "0.55", "ATT1_MIN_PIVOTS": "2",
+        "ATT1_MAX_LINE_AGE_BARS": "16", "ATT1_PIVOT_LEFT": "2",
+        "ATT1_PIVOT_RIGHT": "3", "ATT1_MAX_SLOPE_PCT": "4.0",
+        "ATT1_TOUCH_ATR": "0.50", "ATT1_RSI_SHORT_MIN": "45"
+      }
+    },
+    {
+      "id": "att1_shallow_short",
+      "strategy": "alt_trendline_touch_v1",
+      "env": {
+        "ATT1_ALLOW_LONGS": "0", "ATT1_ALLOW_SHORTS": "1",
+        "ATT1_MIN_R2": "0.55", "ATT1_MIN_PIVOTS": "2",
+        "ATT1_MAX_LINE_AGE_BARS": "16", "ATT1_PIVOT_LEFT": "2",
+        "ATT1_PIVOT_RIGHT": "3", "ATT1_MAX_SLOPE_PCT": "0.7",
+        "ATT1_TOUCH_ATR": "0.50", "ATT1_RSI_SHORT_MIN": "45"
+      }
+    },
+    {
+      "id": "horizontal_break_long",
+      "strategy": "alt_horizontal_break_v1",
+      "env": {"HZBO1_ALLOW_LONGS": "1", "HZBO1_ALLOW_SHORTS": "0"}
+    },
+    {
+      "id": "horizontal_break_short",
+      "strategy": "alt_horizontal_break_v1",
+      "env": {"HZBO1_ALLOW_LONGS": "0", "HZBO1_ALLOW_SHORTS": "1"}
+    },
+    {
+      "id": "support_reclaim_long_strict",
+      "strategy": "alt_support_reclaim_v1",
+      "env": {"ASR1_MAX_RSI": "50", "ASR1_TRAIL_ATR_MULT": "0"}
+    },
+    {
+      "id": "support_reclaim_long_relaxed",
+      "strategy": "alt_support_reclaim_v1",
+      "env": {"ASR1_MAX_RSI": "60", "ASR1_TRAIL_ATR_MULT": "0"}
+    },
+    {
+      "id": "squeeze_breakout_long",
+      "strategy": "alt_squeeze_breakout_v1",
+      "env": {"SQB1_ALLOW_LONGS": "1", "SQB1_ALLOW_SHORTS": "0", "SQB1_SQUEEZE_CHECK_OFFSET": "1"}
+    },
+    {
+      "id": "squeeze_breakout_short",
+      "strategy": "alt_squeeze_breakout_v1",
+      "env": {"SQB1_ALLOW_LONGS": "0", "SQB1_ALLOW_SHORTS": "1", "SQB1_SQUEEZE_CHECK_OFFSET": "1"}
+    }
+  ]
+}

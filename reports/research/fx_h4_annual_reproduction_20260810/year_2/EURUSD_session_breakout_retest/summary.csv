@@ -1,0 +1,2 @@
+symbol,setup,tp_rr,sl_atr,max_hold,coverage_ok,coverage_reasons,cost_ok,fee_r,cost_reason,skip_reason,trades,net_r,pf,win_rate,folds_positive,min_fold_trades,preflight_go,preflight_reasons
+EURUSD,session_breakout_retest,2.0,1.5,30,True,,True,0.185,,,3,-0.59,0.753,0.333,1,0,False,too_few_total_3<30;thin_fold_0<5

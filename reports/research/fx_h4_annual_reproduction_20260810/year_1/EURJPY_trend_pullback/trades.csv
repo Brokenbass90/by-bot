@@ -1,0 +1,7 @@
+entry_ts,exit_ts,r,side,symbol,setup,tp_rr,sl_atr,max_hold
+1724241600.0,1724328000.0,-1.0754,short,EURJPY,trend_pullback,2.0,1.5,30
+1725350400.0,1725451200.0,1.8997,short,EURJPY,trend_pullback,2.0,1.5,30
+1731585600.0,1731657600.0,-1.1077,long,EURJPY,trend_pullback,2.0,1.5,30
+1736308800.0,1736424000.0,-1.0931,long,EURJPY,trend_pullback,2.0,1.5,30
+1736884800.0,1736913600.0,-1.0922,long,EURJPY,trend_pullback,2.0,1.5,30
+1745179200.0,1745294400.0,-1.1291,long,EURJPY,trend_pullback,2.0,1.5,30

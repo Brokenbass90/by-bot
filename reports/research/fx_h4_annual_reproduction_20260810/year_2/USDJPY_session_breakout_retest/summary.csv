@@ -1,0 +1,2 @@
+symbol,setup,tp_rr,sl_atr,max_hold,coverage_ok,coverage_reasons,cost_ok,fee_r,cost_reason,skip_reason,trades,net_r,pf,win_rate,folds_positive,min_fold_trades,preflight_go,preflight_reasons
+USDJPY,session_breakout_retest,2.0,1.5,30,True,,True,0.1108,,,6,-3.981,0.317,0.167,1,1,False,too_few_total_6<30;thin_fold_1<5

@@ -6938,8 +6938,6 @@ def sync_trades_with_exchange():
                         if planned_rr is not None and rr_after_fill is not None:
                             feats["rr_drift"] = float(rr_after_fill) - float(planned_rr)
 
-                strategy_key = str(getattr(tr, "strategy", "") or "").strip().lower()
-                execution_mode = str(getattr(tr, "entry_execution_mode", "") or "").strip().lower()
                 planned_entry = float(
                     getattr(tr, "requested_entry_price", 0.0)
                     or getattr(tr, "entry_price_req", 0.0)
@@ -6952,10 +6950,7 @@ def sync_trades_with_exchange():
                 )
                 actual_entry = float(getattr(tr, "avg", 0.0) or 0.0)
                 if (
-                    MAKER_ENTRY_ENABLE
-                    and strategy_key in MAKER_ENTRY_STRATEGIES
-                    and execution_mode in {"maker", "maker_partial", "market_fallback"}
-                    and planned_entry > 0.0
+                    planned_entry > 0.0
                     and planned_sl > 0.0
                     and actual_entry > 0.0
                 ):
@@ -6966,6 +6961,11 @@ def sync_trades_with_exchange():
                         actual_entry=actual_entry,
                         stop_price=planned_sl,
                         max_risk_expansion=POST_FILL_MAX_RISK_EXPANSION,
+                        max_adverse_bps=POST_FILL_MAX_ADVERSE_BPS,
+                        target_prices=(
+                            list(getattr(tr, "tps", None) or [])
+                            or ([getattr(tr, "tp_price", None)] if getattr(tr, "tp_price", None) else [])
+                        ),
                     )
                     tr.post_fill_planned_risk_usd = post_fill_risk.planned_risk_usd
                     tr.post_fill_actual_risk_usd = post_fill_risk.actual_risk_usd
@@ -8272,6 +8272,8 @@ def max_notional_allowed(equity: float) -> float:
 
 def _manage_inplay_runner(symbol: str, tr: TradeState, price: float):
     if TRADE_CLIENT is None:
+        return
+    if bool(getattr(tr, "close_requested", False)):
         return
     now = now_s()
     if now - int(getattr(tr, "last_runner_action_ts", 0) or 0) < 2:
@@ -9718,6 +9720,7 @@ MAKER_ENTRY_CANCEL_SETTLE_SEC = max(0.2, float(os.getenv("MAKER_ENTRY_CANCEL_SET
 MAKER_ENTRY_MAX_ADVERSE_BPS = max(0.0, float(os.getenv("MAKER_ENTRY_MAX_ADVERSE_BPS", "10.0") or 10.0))
 MAKER_ENTRY_MAX_RISK_EXPANSION = max(1.0, float(os.getenv("MAKER_ENTRY_MAX_RISK_EXPANSION", "1.15") or 1.15))
 POST_FILL_MAX_RISK_EXPANSION = max(1.0, float(os.getenv("POST_FILL_MAX_RISK_EXPANSION", "1.20") or 1.20))
+POST_FILL_MAX_ADVERSE_BPS = max(0.0, float(os.getenv("POST_FILL_MAX_ADVERSE_BPS", "25.0") or 25.0))
 _ENTRY_CIRCUIT = EntryCircuitBreaker(
     failure_threshold=ENTRY_CIRCUIT_FAILURES,
     cooldown_sec=ENTRY_CIRCUIT_COOLDOWN_SEC,
@@ -11668,6 +11671,55 @@ async def try_att1_entry_async(symbol: str, price: float):
         _diag_inc("att1_skip_minqty")
         _att1_wire.record_skip(symbol, str(sig.side), "skip_minqty", detail=str(reason))
         tg_skip_throttled("att1", symbol, f"minqty:{reason}", f"🟡 ATT1 SKIP {symbol}: {reason} (need≈{dyn_usd:.2f}$)")
+        return
+
+    # The strategy is evaluated from completed candles, but the market order
+    # executes against the current websocket price. A fast move can cross TP1
+    # before submission. Treat that as a missed setup rather than turning a
+    # stale target into an immediate loss labelled as TP.
+    entry_preflight = assess_entry_risk(
+        side=side,
+        qty=float(qty_floor),
+        planned_entry=float(entry),
+        actual_entry=float(price),
+        stop_price=float(sl_r),
+        max_risk_expansion=POST_FILL_MAX_RISK_EXPANSION,
+        max_adverse_bps=POST_FILL_MAX_ADVERSE_BPS,
+        target_prices=(
+            list(getattr(sig, "tps", None) or [])
+            if use_runner
+            else ([tp_r] if tp_r is not None else [])
+        ),
+    )
+    if not entry_preflight.allowed:
+        _diag_inc(f"att1_skip_entry_price_{entry_preflight.reason}")
+        _att1_wire.record_skip(
+            symbol,
+            str(sig.side),
+            "skip_entry_price_contract",
+            detail=str(entry_preflight.reason),
+            risk_expansion=float(entry_preflight.expansion_ratio),
+            adverse_bps=float(entry_preflight.adverse_bps),
+        )
+        _append_signal_decision(
+            "att1",
+            symbol,
+            "skip_entry_price_contract",
+            str(entry_preflight.reason),
+            side=str(sig.side),
+            planned_entry=float(entry),
+            current_price=float(price),
+            planned_sl=float(sl_r),
+            risk_expansion=float(entry_preflight.expansion_ratio),
+            adverse_bps=float(entry_preflight.adverse_bps),
+        )
+        tg_trade_throttled(
+            f"att1_entry_price_contract:{symbol}:{entry_preflight.reason}",
+            f"🟡 ATT1 MISSED ENTRY {symbol}: {entry_preflight.reason} | "
+            f"signal={entry:.8g} now={float(price):.8g} "
+            f"risk={entry_preflight.expansion_ratio:.2f}x",
+            1800,
+        )
         return
     proposed_risk_usd = qty_floor * abs(float(entry) - float(sl_r))
     can_add, total_risk_pct, cap_risk_pct = portfolio_can_add_open_risk(proposed_risk_usd)

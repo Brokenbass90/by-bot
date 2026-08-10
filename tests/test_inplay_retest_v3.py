@@ -223,6 +223,26 @@ def test_stop_geometry_uses_entry_atr_not_structure_atr(monkeypatch):
     assert sig.entry - sig.sl < 0.60
 
 
+def test_stop_buffer_environment_changes_stop_geometry(monkeypatch):
+    structure = _structure_with_levels()
+    entry = [_row(70 + i, 100.4, 100.6, 100.2, 100.4, 100) for i in range(40)]
+    trigger = _long_retest_bar(110)
+    entry.append(trigger)
+
+    stop_distances = []
+    for value in (0.35, 0.525, 0.70, 0.875):
+        monkeypatch.setenv("IRV3_STOP_BUFFER_ATR", str(value))
+        strategy = InplayRetestV3Strategy(_cfg())
+        sig = _call(strategy, _Store(structure, entry), trigger)
+
+        assert strategy.cfg.stop_buffer_atr == pytest.approx(value)
+        assert sig is not None
+        stop_distances.append(sig.entry - sig.sl)
+
+    assert stop_distances == sorted(stop_distances)
+    assert len({round(value, 8) for value in stop_distances}) == 4
+
+
 def test_sloped_channel_levels_are_projected_to_signal_time():
     rows = []
     for i in range(80):

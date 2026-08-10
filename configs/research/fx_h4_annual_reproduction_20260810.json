@@ -1,0 +1,43 @@
+{
+  "schema_id": "fx_h4_annual_reproduction_v1",
+  "created_at_utc": "2026-08-10T18:20:00Z",
+  "research_only": true,
+  "live_order_authority": false,
+  "broker_calls": false,
+  "selection_provenance": "four thin leads selected by fixed H4 probe; both annual windows must be reported",
+  "cost_contract": {
+    "fee_bps_per_side": 1.5,
+    "slippage_bps_per_side": 1.0,
+    "swap_included": false,
+    "binding_caveat": "diagnostic until broker bid_ask_swap calibration"
+  },
+  "windows": [
+    {
+      "id": "year_1",
+      "start_utc": "2024-07-08",
+      "end_utc_exclusive": "2025-07-08"
+    },
+    {
+      "id": "year_2",
+      "start_utc": "2025-07-08",
+      "end_utc_exclusive": "2026-07-07"
+    }
+  ],
+  "fixed_setups": [
+    "EURJPY:trend_pullback",
+    "GBPUSD:trend_pullback",
+    "USDJPY:session_breakout_retest",
+    "EURUSD:session_breakout_retest"
+  ],
+  "fixed_parameters": {
+    "interval_min": 240,
+    "tp_rr": 2.0,
+    "sl_atr": 1.5,
+    "max_hold_bars": 30,
+    "min_coverage": 0.98,
+    "max_gap_bars": 8,
+    "max_fee_r": 0.35
+  },
+  "promotion_forbidden": true,
+  "next_gate": "fresh broker bid_ask swap and news-aware chronological OOS"
+}

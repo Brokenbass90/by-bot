@@ -1,6 +1,6 @@
 {
   "schema_id": "current_project_state_v1",
-  "generated_at_utc": "2026-08-10T15:31:00Z",
+  "generated_at_utc": "2026-08-10T18:35:00Z",
   "read_first": [
     "reports/CURRENT_HANDOFF.md",
     "reports/current_project_state.json",
@@ -15,10 +15,28 @@
     "deploy_receipt": "/root/by-bot/runtime/deploy_receipts/atomic_live_c5eba1ccb244_20260810T130547Z.json",
     "backup": "/root/by-bot/backups/atomic_live_c5eba1ccb244_20260810T130547Z",
     "manifest": "pass_6_of_6",
-    "service": "active_at_last_check",
-    "direct_broker": "flat_at_last_check",
-    "last_direct_check_utc": "2026-08-10T13:31:41Z",
-    "heartbeat_open_trades": 0,
+    "service": "active_pid_2276002_at_last_check",
+    "direct_broker": "one_open_dotusdt_short_protected_by_stop",
+    "last_direct_check_utc": "2026-08-10T18:34:00Z",
+    "heartbeat_open_trades": 1,
+    "open_position": {
+      "symbol": "DOTUSDT",
+      "side": "Sell",
+      "qty": 29.7,
+      "entry": 0.8023,
+      "stop": 0.8205,
+      "take_profit": null
+    },
+    "execution_incident": {
+      "type": "stale_fill_beyond_tp1_and_risk_expansion",
+      "planned_entry": 0.8136,
+      "actual_entry": 0.8023,
+      "planned_tp1": 0.805391,
+      "risk_expansion": 2.6377,
+      "adverse_bps": 138.89,
+      "clean_cohort_eligible": false,
+      "patch": "tested_not_deployed_until_flat"
+    },
     "authority_complete": true,
     "money_authority": [
       {
@@ -56,11 +74,31 @@
     "remaining_risk": "fractional_day_stops_require_rearm_and_do_not_remove_overnight_gap_risk"
   },
   "research_station": {
-    "checked_at_utc": "2026-08-10T15:28:24Z",
+    "checked_at_utc": "2026-08-10T18:35:00Z",
     "healthy": 5,
     "degraded": 0,
     "live_order_authority": false,
     "wip_cap_full": true,
+    "temporary_research_sessions": [
+      {
+        "session": "bybit_history_150_20260810",
+        "state": "running",
+        "purpose": "public_5m_history_download",
+        "live_order_authority": false
+      },
+      {
+        "session": "six_day_crypto_20260810",
+        "state": "waiting_for_history_then_48_cases",
+        "status_receipt": "reports/research/six_day_crypto_pipeline_20260810/status.json",
+        "live_order_authority": false
+      }
+    ],
+    "heartbeat_automation": {
+      "id": "six-day-trading-research-guard",
+      "cadence_hours": 6,
+      "ends_utc": "2026-08-16T18:45:00Z",
+      "notifications": "failed_runs_only"
+    },
     "load_guarded_backlog": {
       "state": "complete",
       "session": "research_backlog_guard_20260810",
@@ -74,6 +112,7 @@
     "live_order_authority": false,
     "h1_usdjpy": "rejected_cost_infeasible_feeR_0.515_above_0.35",
     "h4_preflight_passed": false,
+    "annual_reproduction": "all_four_leads_flip_sign_across_two_years_no_stable_leg",
     "h4_diagnostic_leads": [
       "EURJPY_trend_pullback_3.366R_13_trades_2_of_4_folds",
       "GBPUSD_trend_pullback_1.732R_9_trades_3_of_4_folds",
@@ -114,13 +153,33 @@
       "sealed_forward"
     ]
   },
+  "att1_research": {
+    "shallow_oos": {
+      "baseline": "100_trades_2.76R_t0.27",
+      "shallow": "9_trades_-1.99R_t-0.63",
+      "shallow_maker": "9_trades_0.18R_t0.06",
+      "verdict": "old_0.3203R_per_trade_not_reproduced_and_sample_too_small"
+    },
+    "promotion_cohort": {
+      "state": "not_started_waiting_for_execution_fix_release",
+      "observed_cadence": "9_trades_per_21_days",
+      "estimated_n20_days_after_release": 47,
+      "realistic_first_scale_window": "late_September_2026_conditional_on_gates"
+    }
+  },
   "retest3": {
     "old_run": "quarantined_noop",
     "contract": "repaired",
     "config_preflight": "pass",
     "smoke_trade_counts": [0, 0, 1, 1],
-    "strategy_verdict": "not_proven",
-    "focused_tests_passed": 18
+    "full_ladder": {
+      "stop_0_35": "204_trades_17.33R_0.085R_per_trade_t0.64",
+      "stop_0_525": "510_trades_-45.43R",
+      "stop_0_70": "2494_trades_-610.42R",
+      "stop_0_875": "1941_trades_-296.04R"
+    },
+    "strategy_verdict": "differentiated_but_edge_gate_failed",
+    "focused_tests_passed": 50
   },
   "worktree_cleanup": {
     "inventory_at_head": "c5eba1c",
@@ -133,6 +192,8 @@
     "plan": "reports/WORKTREE_CLEANUP_PLAN_2026_08_10.md"
   },
   "priority_queue": [
+    "wait_for_broker_flat_then_atomic_att1_execution_fix_release",
+    "monitor_six_day_crypto_research_pipeline",
     "alpaca_next_session_day_stop_rearm_proof",
     "alpaca_pit_xnys_corporate_action_cost_bundle_and_second_engine",
     "broker_runner_owner_accounting_reconciliation",

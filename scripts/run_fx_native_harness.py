@@ -160,6 +160,14 @@ def _fmt(v: Any, nd: int = 3) -> str:
     return f"{x:.{nd}f}"
 
 
+def _parse_utc_boundary(value: str) -> float | None:
+    raw = str(value or "").strip()
+    if not raw:
+        return None
+    parsed = datetime.strptime(raw, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    return parsed.timestamp()
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-dir", default="data_cache/forex")
@@ -172,6 +180,8 @@ def main() -> int:
     ap.add_argument("--fee-bps", type=float, default=1.0)
     ap.add_argument("--slippage-bps", type=float, default=0.5)
     ap.add_argument("--tail-rows", type=int, default=0, help="Use only the latest N rows per symbol; 0 = all.")
+    ap.add_argument("--start-utc", default="", help="Inclusive YYYY-MM-DD research boundary.")
+    ap.add_argument("--end-utc", default="", help="Exclusive YYYY-MM-DD research boundary.")
     ap.add_argument("--interval-min", type=int, default=5, help="Aggregate M5 input to this interval before screening, preserving FX second timestamps.")
     ap.add_argument("--disable-coverage-gate", action="store_true", help="Research override: run even when candle coverage fails.")
     ap.add_argument("--disable-cost-gate", action="store_true", help="Research override: run even when round-trip cost is too large in R.")
@@ -189,6 +199,10 @@ def main() -> int:
     tp_rrs = [float(x) for x in args.tp_rr.split(",") if x.strip()]
     sl_atrs = [float(x) for x in args.sl_atr.split(",") if x.strip()]
     max_holds = [int(x) for x in args.max_hold.split(",") if x.strip()]
+    start_ts = _parse_utc_boundary(args.start_utc)
+    end_ts = _parse_utc_boundary(args.end_utc)
+    if start_ts is not None and end_ts is not None and end_ts <= start_ts:
+        raise SystemExit("--end-utc must be later than --start-utc")
     data_dir = Path(args.data_dir)
     run_id = datetime.now(timezone.utc).strftime("fx_native_harness_%Y%m%d_%H%M%S")
     outdir = Path(args.outdir or f"reports/research/{run_id}")
@@ -203,6 +217,10 @@ def main() -> int:
             print(f"[skip] {pair} no data: {path}", flush=True)
             continue
         rows = _load_rows(path)
+        if start_ts is not None:
+            rows = [row for row in rows if float(row[0]) >= start_ts]
+        if end_ts is not None:
+            rows = [row for row in rows if float(row[0]) < end_ts]
         if args.tail_rows and args.tail_rows > 0:
             rows = rows[-int(args.tail_rows):]
         rows = _aggregate_rows_seconds(rows, args.interval_min)
@@ -354,11 +372,11 @@ def main() -> int:
     coverage_path = outdir / "coverage.csv"
     if coverage_rows_out:
         with coverage_path.open("w", newline="", encoding="utf-8") as f:
-            w = csv.DictWriter(f, fieldnames=list(coverage_rows_out[0].keys()))
+            w = csv.DictWriter(f, fieldnames=list(coverage_rows_out[0].keys()), lineterminator="\n")
             w.writeheader(); w.writerows(coverage_rows_out)
     if summaries:
         with summary_path.open("w", newline="", encoding="utf-8") as f:
-            w = csv.DictWriter(f, fieldnames=list(summaries[0].keys()))
+            w = csv.DictWriter(f, fieldnames=list(summaries[0].keys()), lineterminator="\n")
             w.writeheader(); w.writerows(summaries)
     if all_trades:
         keys: List[str] = []
@@ -367,7 +385,7 @@ def main() -> int:
                 if k not in keys:
                     keys.append(k)
         with trades_path.open("w", newline="", encoding="utf-8") as f:
-            w = csv.DictWriter(f, fieldnames=keys)
+            w = csv.DictWriter(f, fieldnames=keys, lineterminator="\n")
             w.writeheader(); w.writerows(all_trades)
 
     top = sorted(summaries, key=lambda r: (bool(r["preflight_go"]), float(r["net_r"]), float(r["pf"])), reverse=True)[:20]
@@ -377,6 +395,7 @@ def main() -> int:
         f"- rows: {len(summaries)}",
         f"- data_dir: `{data_dir}`",
         f"- interval_min: `{args.interval_min}`",
+        f"- requested_window_utc: `{args.start_utc or 'source_start'}..{args.end_utc or 'source_end'}` (end exclusive)",
         f"- coverage_gate: `{not args.disable_coverage_gate}`",
         f"- cost_gate: `{not args.disable_cost_gate}`",
         "",

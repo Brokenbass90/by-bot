@@ -1,6 +1,6 @@
 # Текущий handoff между чатами
 
-Обновлено: 2026-08-10 15:31 UTC.
+Обновлено: 2026-08-10 18:35 UTC.
 
 ## Читать в новом чате
 
@@ -9,6 +9,27 @@
 3. `reports/CURRENT_PROJECT_ROADMAP.md` — приоритеты и promotion gates.
 4. `reports/CODEX_HANDOFF_AND_DIARY_2026_08_10.md` — хронология и receipts.
 5. Свежие прямые broker/service/runtime данные — они важнее любого Markdown.
+
+## Критическое обновление 18:35 UTC
+
+- Bybit больше не flat: прямой broker-read подтверждает DOTUSDT short `29.7`,
+  entry `0.8023`, stop `0.8205`; service active.
+- Исходный ATT1 fill был уже ниже TP1: signal `0.8136`, fill `0.8023`, TP1
+  `0.805391`; риск вырос с `$0.4554` до `$1.2012` (`2.6377x`).
+- Это execution-contract incident, а не нормальная ATT1 сделка. Остаток
+  защищен broker stop; ручного закрытия и рестарта monolith не было.
+- Локальный fail-close patch блокирует target-crossed, risk expansion >1.20x
+  и adverse drift >25 bps до заявки и после fill. `50 passed`.
+- Patch нельзя выпускать до flat. После flat: committed bundle, server-Python
+  verify, no-order smoke, три flat receipts, atomic deploy.
+- Routine GS `[DRY-RUN]` происходили из Alpaca v3 shadow cron. Telegram noise
+  отключен по умолчанию; research receipts остаются.
+- Запущены screen `bybit_history_150_20260810` и долговечный supervisor
+  `six_day_crypto_20260810`; 48 research-only cases, reserved holdout не читается.
+- Heartbeat `Six-day trading research guard` проверяет процесс каждые шесть
+  часов до 16 августа и не имеет полномочий отправлять/отменять ордера.
+
+Полный incident: `reports/live/ATT1_DOT_EXECUTION_CONTRACT_INCIDENT_20260810.md`.
 
 ## Истина всегда четырехслойная
 
@@ -74,8 +95,10 @@ patch того же defect.
   205 current, 4 actionable, 2 confirmed, 117 dismissed.
 
 Вывод: scheduler/liveness работает. Контур доказательства работает частично;
-ручная трассировка и независимый replay еще обязательны. Не добавлять шестой
-долгий research job до освобождения WIP-слота.
+ручная трассировка и независимый replay еще обязательны. Временные jobs
+добавлены по прямому запросу владельца с `nice +10`: downloader и шестидневная
+очередь. Они не меняют пять официальных supervisors, имеют
+`live_order_authority=false`, deadline и resumable ledger.
 
 Load-aware backlog watcher `research_backlog_guard_20260810` завершился
 `complete`: он последовательно выполнил два bounded задания и исчез из screen,

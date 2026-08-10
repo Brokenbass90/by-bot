@@ -34,7 +34,7 @@ flowchart TD
 
     G -. "f290463 включен в atomic bundle" .-> P
     P -. "bundle c5eba1c · manifest 6/6" .-> S
-    BR -. "Bybit flat 13:31 UTC" .-> RC
+    BR -. "DOT short open 18:34 UTC<br/>broker stop present" .-> RC
 ```
 
 Нижний слой не может быть доказан верхним: active service не доказывает flat,
@@ -65,7 +65,7 @@ flowchart LR
 ```mermaid
 flowchart TB
     subgraph Money["Money authority"]
-        ATT["ATT1 short-only<br/>risk 0.10<br/>clean cohort required"]
+        ATT["ATT1 short-only<br/>risk 0.10<br/>DOT execution incident"]
     end
 
     subgraph RiskZero["Risk-zero / shadow"]
@@ -77,6 +77,7 @@ flowchart TB
         XS["XSEC v3<br/>median negative; outlier-dominated"]
         AP["Alpaca adaptive<br/>shadow_no_orders"]
         LG["Long-leg program<br/>largest portfolio gap"]
+        SD["Six-day research queue<br/>48 bounded cases<br/>no order authority"]
     end
 
     subgraph SafeHold["Protected but not promotion-ready"]
@@ -92,6 +93,7 @@ flowchart TB
     XS --> REP
     AP --> REP
     LG --> REP
+    SD --> REP
     AL --> MKT["Protective apply PASS<br/>SCHW stop 96.47 → 105.03<br/>DAY rearm proof remains"]
 ```
 

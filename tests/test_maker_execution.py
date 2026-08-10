@@ -74,6 +74,46 @@ def test_assess_entry_risk_blocks_expansion() -> None:
     assert result.expansion_ratio == pytest.approx(1.4)
 
 
+@pytest.mark.parametrize(
+    ("side", "planned", "actual", "stop", "targets"),
+    [
+        ("Sell", 0.8136, 0.8023, 0.8205, [0.805391, 0.796499]),
+        ("Buy", 100.0, 101.2, 99.0, [101.0, 102.0]),
+    ],
+)
+def test_assess_entry_risk_rejects_fill_that_already_crossed_target(
+    side, planned, actual, stop, targets
+) -> None:
+    result = assess_entry_risk(
+        side=side,
+        qty=10,
+        planned_entry=planned,
+        actual_entry=actual,
+        stop_price=stop,
+        max_risk_expansion=10.0,
+        max_adverse_bps=1000.0,
+        target_prices=targets,
+    )
+
+    assert result.allowed is False
+    assert result.reason == "target_crossed_before_fill"
+
+
+def test_assess_entry_risk_accepts_targets_still_ahead_of_fill() -> None:
+    result = assess_entry_risk(
+        side="Sell",
+        qty=10,
+        planned_entry=100.0,
+        actual_entry=99.95,
+        stop_price=101.0,
+        max_risk_expansion=1.20,
+        max_adverse_bps=25.0,
+        target_prices=[99.0, 98.0],
+    )
+
+    assert result.allowed is True
+
+
 def test_maker_fill_never_calls_market() -> None:
     client = FakeClient([{"orderStatus": "Filled", "cumExecQty": "2", "avgPrice": "99.98"}])
     result = asyncio.run(

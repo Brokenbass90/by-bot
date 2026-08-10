@@ -1,0 +1,7 @@
+entry_ts,exit_ts,r,side,symbol,setup,tp_rr,sl_atr,max_hold
+1758009600.0,1758124800.0,1.846,short,USDJPY,session_breakout_retest,2.0,1.5,30
+1765483200.0,1765540800.0,-1.1275,short,USDJPY,session_breakout_retest,2.0,1.5,30
+1767686400.0,1767873600.0,-1.1401,short,USDJPY,session_breakout_retest,2.0,1.5,30
+1772539200.0,1772611200.0,-1.104,long,USDJPY,session_breakout_retest,2.0,1.5,30
+1775548800.0,1775592000.0,-1.2098,long,USDJPY,session_breakout_retest,2.0,1.5,30
+1779465600.0,1779652800.0,-1.2458,long,USDJPY,session_breakout_retest,2.0,1.5,30

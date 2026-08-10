@@ -1,0 +1,4 @@
+entry_ts,exit_ts,r,side,symbol,setup,tp_rr,sl_atr,max_hold
+1764763200.0,1764950400.0,-1.1954,long,EURUSD,session_breakout_retest,2.0,1.5,30
+1766491200.0,1767124800.0,-1.19,long,EURUSD,session_breakout_retest,2.0,1.5,30
+1767182400.0,1767571200.0,1.7955,short,EURUSD,session_breakout_retest,2.0,1.5,30

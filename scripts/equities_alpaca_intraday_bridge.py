@@ -527,6 +527,11 @@ def _should_send_dry_run_tg(
     return True
 
 
+def _dry_run_tg_enabled() -> bool:
+    """Keep routine shadow signals in receipts unless explicitly requested."""
+    return _env_bool("INTRADAY_DRY_RUN_TG_ENABLE", False)
+
+
 def _load_monthly_managed_symbols() -> set[str]:
     """Return the set of symbols owned by the monthly Alpaca sleeve.
 
@@ -1832,13 +1837,15 @@ def run_once(client: AlpacaClient, dry_run: bool,
             })
             advisory["symbols"].append(symbol_status)
             print(f"    → [DRY-RUN] Would submit bracket order")
-            if _should_send_dry_run_tg(symbol, sig.side, entry_price, sl_price, tp_price, qty, sig.reason or "", now_ts):
+            if _dry_run_tg_enabled() and _should_send_dry_run_tg(symbol, sig.side, entry_price, sl_price, tp_price, qty, sig.reason or "", now_ts):
                 _tg(tg_token, tg_chat,
                     f"🔍 <b>[DRY-RUN] {symbol}</b> {sig.side.upper()}\n"
                     f"e≈${entry_price:.2f} | SL=${sl_price:.2f} | TP=${tp_price:.2f} | {rr_label}\n"
                     f"Qty={qty} | Risk≈${risk_usd:.2f}{qty_adjustment} | {now_str}")
-            else:
+            elif _dry_run_tg_enabled():
                 print("    → TG skipped: duplicate dry-run signal inside cooldown")
+            else:
+                print("    → TG skipped: routine dry-run notifications disabled")
         else:
             try:
                 alpaca_side = "buy" if sig.side == "long" else "sell"

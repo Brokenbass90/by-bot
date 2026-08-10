@@ -9,7 +9,7 @@ from __future__ import annotations
 import asyncio
 import math
 from dataclasses import dataclass
-from typing import Any, Awaitable, Callable
+from typing import Any, Awaitable, Callable, Iterable
 
 
 _DONE = {"filled"}
@@ -63,8 +63,14 @@ def assess_entry_risk(
     stop_price: float,
     max_risk_expansion: float,
     max_adverse_bps: float | None = None,
+    target_prices: Iterable[float] | None = None,
 ) -> RiskAssessment:
-    """Check that an actual/fallback entry still respects planned stop risk."""
+    """Check that an actual/fallback entry still respects the trade contract.
+
+    Reject a fill that has already crossed a planned profit target. Such a fill
+    is a missed setup, not a valid entry: accepting it can make a short target
+    sit above the actual sell fill (or a long target below the buy fill).
+    """
     side_n = str(side or "").strip().lower()
     qty_f = max(0.0, _finite_float(qty))
     planned = _finite_float(planned_entry)
@@ -82,6 +88,29 @@ def assess_entry_risk(
         return RiskAssessment(False, 0.0, 0.0, math.inf, math.inf, "invalid_side")
     if not geometry_ok:
         return RiskAssessment(False, 0.0, 0.0, math.inf, adverse_bps, "stop_crossed")
+
+    targets = [
+        parsed
+        for parsed in (_finite_float(value) for value in (target_prices or []))
+        if parsed > 0.0
+    ]
+    target_crossed = (
+        any(target <= actual for target in targets)
+        if side_n in {"buy", "long"}
+        else any(target >= actual for target in targets)
+    )
+    if target_crossed:
+        planned_risk = qty_f * abs(planned - stop)
+        actual_risk = qty_f * abs(actual - stop)
+        expansion = actual_risk / planned_risk if planned_risk > 0.0 else math.inf
+        return RiskAssessment(
+            False,
+            planned_risk,
+            actual_risk,
+            expansion,
+            adverse_bps,
+            "target_crossed_before_fill",
+        )
 
     planned_risk = qty_f * abs(planned - stop)
     actual_risk = qty_f * abs(actual - stop)

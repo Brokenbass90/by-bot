@@ -1,0 +1,30 @@
+{
+  "checks": {
+    "att1_slope": [
+      0.7,
+      4.0
+    ],
+    "hzbo_longs": [
+      0.0,
+      1.0
+    ],
+    "hzbo_shorts": [
+      0.0,
+      1.0
+    ],
+    "squeeze_longs": [
+      0.0,
+      1.0
+    ],
+    "squeeze_shorts": [
+      0.0,
+      1.0
+    ],
+    "support_rsi": [
+      50.0,
+      60.0
+    ]
+  },
+  "schema_id": "six_day_experiment_preflight_v1",
+  "status": "pass"
+}

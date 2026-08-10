@@ -17,8 +17,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Iterable, List
 
-
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from research_lab.experiment_preflight import assert_autoresearch_spec_preflight
+
+
 BACKTEST_RUNS = ROOT / "backtest_runs"
 
 
@@ -603,11 +608,25 @@ def main() -> int:
     if not spec_path.is_absolute():
         spec_path = (ROOT / spec_path).resolve()
     spec = _load_spec(spec_path)
+    preflight_receipt = assert_autoresearch_spec_preflight(spec)
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_dir = BACKTEST_RUNS / f"autoresearch_{stamp}_{_slug(spec['name'])}"
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "spec.json").write_text(json.dumps(spec, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
+    (out_dir / "preflight_receipt.json").write_text(
+        json.dumps(
+            {
+                "schema_id": "autoresearch_preflight_receipt_v1",
+                "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+                "status": "pass",
+                "checks": preflight_receipt,
+            },
+            ensure_ascii=True,
+            indent=2,
+        ) + "\n",
+        encoding="utf-8",
+    )
 
     fields = [
         "run_id",

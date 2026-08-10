@@ -1,0 +1,2 @@
+symbol,coverage_ok,coverage,actual_bars,expected_bars,n_gaps,max_gap_bars,flat_frac,dup_bars,coverage_reasons
+EURUSD,True,0.992547,1598,1610,4,5,0.0,0,

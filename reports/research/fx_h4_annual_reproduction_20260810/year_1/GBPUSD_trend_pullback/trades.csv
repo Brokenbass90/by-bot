@@ -1,0 +1,4 @@
+entry_ts,exit_ts,r,side,symbol,setup,tp_rr,sl_atr,max_hold
+1726200000.0,1726660800.0,1.8544,long,GBPUSD,trend_pullback,2.0,1.5,30
+1749801600.0,1750176000.0,-1.1003,long,GBPUSD,trend_pullback,2.0,1.5,30
+1750708800.0,1750881600.0,1.9034,long,GBPUSD,trend_pullback,2.0,1.5,30

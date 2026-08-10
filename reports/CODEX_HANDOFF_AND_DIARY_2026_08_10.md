@@ -263,3 +263,53 @@ breakout/retest `+1.221R` (4, 2/4). Все кандидаты `preflight=false`;
 Scoped commit `1b6ba04` (`repair Alpaca honest backtest and sizing parity`)
 отправлен в `origin/codex/dynamic-symbol-filters`. Чужие изменения Клода и
 остальной грязный worktree в commit не захвачены. Это Git receipt, не live deploy.
+
+## Продолжение работ — 17:55–18:35 UTC
+
+### Прямая live-трассировка нашла stale-fill defect ATT1
+
+Новый вход оказался DOTUSDT short, а не Alpaca GS dry-run. Signal entry
+`0.8136`, stop `0.8205`, qty `66`; broker fill `0.8023` уже находился ниже
+планового TP1 `0.805391`. Planned risk `$0.4554`, actual fill-to-stop risk
+`$1.2012`, expansion `2.6377x`, adverse drift `138.89 bps`. Runner немедленно
+закрыл 55% как TP1, но broker receipt показал `-$0.03929984` с fees.
+
+Остаток `29.7` остается под broker stop `0.8205`; read-only проверка 18:34 UTC
+подтвердила одну открытую позицию и active service. Ручного закрытия, отмены
+stop и monolith restart не было.
+
+Исправлен контракт исполнения: pre-submit и post-fill проверки блокируют уже
+пересеченную цель, risk expansion >1.20x, adverse drift >25 bps и invalid stop.
+Runner не делает второе действие после fail-close. Bundle builder и staged
+import smoke включают `bot/maker_execution.py`. Exact DOT geometry покрыта
+тестом. Совокупный focused suite: `50 passed`; diff check clean.
+
+### Шестидневная очередь
+
+Исправлен Bybit downloader: API возвращает klines newest-first, поэтому старый
+forward cursor сохранял только последние 1000 баров. Multi-page public smoke
+на BTC дал 2305 уникальных строк за восемь дней. Screen
+`bybit_history_150_20260810` продолжает top-150 загрузку; supervisor
+`six_day_crypto_20260810` ждет completion и затем выполнит 48 cases.
+
+Queue исследует восемь вариантов на трех pre-2025 окнах под base/stress costs.
+Current-survivor bias записан в manifest, promotion запрещен, reserved holdout
+2025-10..2026-06 не читается. Все varied handles прошли executable preflight.
+Status/ledger/summary находятся в
+`reports/research/six_day_crypto_pipeline_20260810/`.
+
+Создан thread heartbeat `Six-day trading research guard`: каждые шесть часов
+до 16 августа проверяет процессы, диск, receipts и direct broker state. Он не
+может отправлять/отменять ордера; deploy допустим только после трех flat checks
+и server-side no-order smoke.
+
+### Новые подтвержденные research verdicts
+
+- ATT1 shallow OOS: baseline `100 trades, +2.76R, t=0.27`; shallow `9,
+  -1.99R`; shallow+maker `9, +0.18R`. Старое `+0.3203R/trade` не
+  воспроизвелось, объема недостаточно.
+- Retest3 ladder differentiates, но edge gate не пройден: лучший stop 0.35
+  `204 trades, +17.33R, +0.085R/trade, t=0.64`; остальные три отрицательны.
+- FX H4 annual reproduction: каждый из четырех lead меняет знак между годами;
+  ни одна стабильная нога не получена. Broker bid/ask, swap и news остаются
+  обязательным следующим gate.
