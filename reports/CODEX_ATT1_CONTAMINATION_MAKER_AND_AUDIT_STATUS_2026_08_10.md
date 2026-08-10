@@ -165,3 +165,19 @@ because it received a manifest.
    Ollama's fact index reads current registry counts instead of hardcoded ones.
 5. Review ATT1 risk only after the new post-fix clean cohort reaches its
    declared N/PF/DD/zero-incident gate. No calendar promise substitutes for N.
+
+## 08:53 UTC runner-label deployment rollback
+
+Commit `f290463` replaces the misleading generic `INPLAY TP`/`INPLAY TIME STOP`
+Telegram labels with the actual strategy owner. The code and local tests pass,
+but the targeted live deployment was rejected by runtime evidence: the local
+monolith imports `bot.health_truth`, which is absent from the current server
+tree. Syntax-only preflight did not detect the missing deployed dependency.
+
+The pre-deploy monolith backup was restored immediately. Post-rollback truth:
+`bybot.service=active`, direct Bybit `open_position_count=0`, auth OK, ATT1 tiny
+live remains enabled. Therefore `f290463` is in Git but **not deployed live**.
+The dependency mismatch is confirmed audit incident
+`LIVE_TARGETED_DEPLOY_MISSING_HEALTH_TRUTH_20260810`; future monolith deploys
+require a server-venv import/startup smoke over an exact dependency manifest,
+not `py_compile` alone.

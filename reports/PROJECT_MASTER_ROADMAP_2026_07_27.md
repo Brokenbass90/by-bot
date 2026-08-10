@@ -496,3 +496,7 @@ Detailed receipt:
 - This does not give Ollama order/risk authority and does not make it
   self-proving. Every incident still needs deterministic reproduction and a
   test or direct receipt before repair or promotion.
+- A same-day targeted monolith deploy proved that syntax-only preflight is
+  insufficient: `bot.health_truth` was absent on the server. The backup was
+  restored and live recovered flat. Exact dependency-manifest plus server-venv
+  import/startup smoke is now a binding release gate for monolith deploys.
