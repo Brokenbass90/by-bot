@@ -448,3 +448,36 @@ level-quality eligibility, owner-volume setup — volume inflow, pump exhaustion
 
 Current handoff: `reports/ANTICRISIS_STATUS_AND_NEXT_HANDOFF_2026_08_08.md`.
 Audit contract: `reports/SELF_HEALING_AUDIT_PIPELINE_2026_08_08.md`.
+
+## 20. ATT1 contamination and execution checkpoint 10 августа
+
+- Direct broker reconstruction proved that one ADA lifecycle was contaminated:
+  ATT1 opened 180 ADA and a legacy pump-fade DCA path added 90 ADA. TP1 and the
+  final trailing stop closed all 270 ADA for broker PnL `+0.73928972 USDT`.
+  The trailing path worked; the authority boundary and clean accounting did not.
+- Legacy DCA is now confined to pump/pump-fade. Unexpected broker quantity
+  growth contaminates the lifecycle permanently, reconciles runner quantity and
+  average entry, and excludes the close from clean ATT1 outcomes/ML updates.
+  Old rows remain available as tagged evidence; clean promotion N starts after
+  the deployed fix, not after the calendar date alone.
+- Claude's maker-entry prototype was accepted only after hardening. A resting
+  order can no longer be overwritten every bar, requires configurable
+  trade-through, and reports fill/expiry/EOP pending plus expiry markout of
+  nonfills. The first 30-day smoke was worse than taker baseline, proving that
+  fee arithmetic alone cannot promote maker execution.
+- The strict diagnostic grid is preregistered in
+  `configs/research/crypto_maker_execution_gate_20260810.json`. It waits for the
+  first measurement WIP slot; the reused history is explicitly not eligible to
+  authorize money.
+- The project-auditor's seeded self-check had drifted after E1 was tightened.
+  Its fixture is repaired, 4/4 audit-health tests pass and health is again
+  fail-closed. Ollama remains proposal-only; runtime broker contradictions must
+  be ingested from reconciliation events because static source review cannot
+  observe them.
+- Alpaca fractional protective-stop replacement had historically failed with
+  an integer-quantity broker error. The August 8 repair still requires its first
+  market-open broker acceptance receipt on the next US session; until then it
+  is deployed-but-unproven, not active protection.
+
+Detailed receipt:
+`reports/CODEX_ATT1_CONTAMINATION_MAKER_AND_AUDIT_STATUS_2026_08_10.md`.
