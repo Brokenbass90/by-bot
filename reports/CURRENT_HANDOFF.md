@@ -1,6 +1,6 @@
 # Текущий handoff между чатами
 
-Обновлено: 2026-08-10 14:46 UTC.
+Обновлено: 2026-08-10 15:25 UTC.
 
 ## Читать в новом чате
 
@@ -77,6 +77,42 @@ patch того же defect.
 ручная трассировка и независимый replay еще обязательны. Не добавлять шестой
 долгий research job до освобождения WIP-слота.
 
+Load-aware backlog watcher `research_backlog_guard_20260810` добавлен как
+почти не потребляющий CPU guard, а не шестой sweep. При последней проверке он
+был `waiting_for_load`: 1-minute load около `12.1`, порог запуска `9.0` на
+12 logical CPU. До 2026-08-11 06:00 UTC он последовательно запустит, только
+если ресурс освободится:
+
+1. USDJPY H1 `session_breakout_retest + round_level_sweep` под stress costs;
+2. H4 fixed probe для major/JPY/XAU.
+
+Оба задания research-only, `risk_pct=0`, без broker calls и live authority.
+
+### Alpaca honest diagnostic
+
+Создан новый причинный daily-portfolio runner и preregistration. Он не читает
+sealed forward с 2026-08-03 и не меняет SAFE_HOLD. Исправлены: calendar-month
+signal -> next-open, cash/70% exposure, fractional qty, true hard cap, costs на
+каждом fill, retained positions, deployable simple-stop/ratchet daily proxy и
+daily MTM/DD с initial capital.
+
+Ключевой stress `10 bps/side`:
+
+- v38 successor + SPY200: 2022 `-2.89%`, DD `4.00%`, PF `0.363`; recent
+  live-universe 2024-05..2026-04 `+30.16%`, DD `7.84%`, PF `1.863`;
+- Adaptive + SPY200: 2022 `-5.63%`, DD `6.58%`; recent `+18.75%`, DD `4.94%`.
+
+Independent receipt validation: results `16/16`, source pins `6/6`, cost stress
+`8/8` PASS. Promotion false, data rating `NEEDS_REVISION`: survivor bias,
+authoritative XNYS/PIT/corporate actions/cost calibration и intraday exit path
+остаются blockers; XYZ coverage `63.9%`. Старые v38 `+50.77% / DD 2.28%` не
+использовать для капитала. Новый replay — repaired diagnostic, не money proof.
+
+Дополнительно исправлен будущий live sizing path: bridge больше не делает
+cap 60% -> renormalize обратно до 100%; при недостатке имен unused sleeve
+остается cash. SAFE_HOLD не изменен, new entries по-прежнему off. Совместный
+Alpaca focused suite: `34 passed`, включая golden backtest↔live weight parity.
+
 ### Alpaca live
 
 - SAFE_HOLD активен, новые входы и ротация запрещены;
@@ -114,14 +150,14 @@ patch того же defect.
 
 1. Проверить next-session rearm; добавить freshness alert на missing/expired
    DAY stop и stale HWM. Текущий 15-minute cron уже подтвержден после patch.
-2. Завершить Alpaca exact selection/exit parity; SAFE_HOLD не снимать по одному
-   успешному protective receipt.
+2. Материализовать PIT/XNYS/corporate-action/cost bundle для Alpaca, сверить
+   новый runner вторым engine; SAFE_HOLD не снимать по positive recent proxy.
 3. Добавить broker ↔ runner ↔ owner ↔ accounting reconciler и symbol-level
    fail-close новых добавок.
 4. Добавить golden test backtest/live sizing parity.
 5. Начать чистую ATT1 cohort после фиксов, не меняя `risk_mult=0.10`.
-6. При освобождении WIP-слота запустить preregistered maker shadow и
-   differentiating retest3 smoke.
+6. Дождаться load-aware FX queue; утром разобрать receipts. При освобождении
+   полноценного WIP-слота запустить maker shadow и differentiating retest3 smoke.
 7. Реализовать edge cards и phenotype loss analysis; второй engine сверяет
    только кандидатов, прошедших первые gates.
 8. Разбирать worktree небольшими owner-tagged batches; сначала data/backups,

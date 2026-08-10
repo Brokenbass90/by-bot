@@ -1,6 +1,6 @@
 {
   "schema_id": "current_project_state_v1",
-  "generated_at_utc": "2026-08-10T14:46:00Z",
+  "generated_at_utc": "2026-08-10T15:25:00Z",
   "read_first": [
     "reports/CURRENT_HANDOFF.md",
     "reports/current_project_state.json",
@@ -56,11 +56,52 @@
     "remaining_risk": "fractional_day_stops_require_rearm_and_do_not_remove_overnight_gap_risk"
   },
   "research_station": {
-    "checked_at_utc": "2026-08-10T13:05:38Z",
+    "checked_at_utc": "2026-08-10T15:23:13Z",
     "healthy": 5,
     "degraded": 0,
     "live_order_authority": false,
-    "wip_cap_full": true
+    "wip_cap_full": true,
+    "load_guarded_backlog": {
+      "state": "waiting_for_load",
+      "session": "research_backlog_guard_20260810",
+      "max_load_1m": 9.0,
+      "observed_load_1m": 12.12,
+      "deadline_utc": "2026-08-11T06:00:00Z",
+      "jobs": ["fx_usdjpy_h1_focused_stress", "fx_h4_slow_assets_fixed_probe"],
+      "live_order_authority": false
+    }
+  },
+  "alpaca_research": {
+    "runner": "scripts/run_alpaca_honest_diagnostic.py",
+    "prereg": "configs/preregistered/alpaca_honest_diagnostic_v1_20260810.json",
+    "receipt": "reports/research/alpaca_honest_diagnostic_v1_20260810/receipt.json",
+    "validation": "reports/research/alpaca_honest_diagnostic_v1_20260810/validation_receipt.json",
+    "forward_outcomes_read": false,
+    "promotion_ready": false,
+    "live_bridge_weight_cap_repaired": true,
+    "focused_tests_passed": 34,
+    "data_quality_rating": "needs_revision",
+    "invariants": "16_of_16_results_6_of_6_pins_8_of_8_cost_stress_pass",
+    "v38_gated_stress": {
+      "bear_2022_return_pct": -2.885989,
+      "bear_2022_daily_dd_pct": 3.999085,
+      "recent_2024_2026_return_pct": 30.164229,
+      "recent_2024_2026_daily_dd_pct": 7.841996
+    },
+    "adaptive_gated_stress": {
+      "bear_2022_return_pct": -5.627509,
+      "bear_2022_daily_dd_pct": 6.581035,
+      "recent_2024_2026_return_pct": 18.750701,
+      "recent_2024_2026_daily_dd_pct": 4.937231
+    },
+    "capital_blockers": [
+      "point_in_time_universe",
+      "authoritative_xnys_ledger",
+      "corporate_actions_and_delistings",
+      "broker_cost_calibration",
+      "intraday_exit_path",
+      "sealed_forward"
+    ]
   },
   "retest3": {
     "old_run": "quarantined_noop",
@@ -82,11 +123,11 @@
   },
   "priority_queue": [
     "alpaca_next_session_day_stop_rearm_proof",
-    "alpaca_exact_selection_exit_parity",
+    "alpaca_pit_xnys_corporate_action_cost_bundle_and_second_engine",
     "broker_runner_owner_accounting_reconciliation",
     "backtest_live_sizing_parity",
     "clean_att1_cohort",
-    "maker_execution_shadow",
+    "load_guarded_fx_research_then_maker_execution_shadow",
     "strategy_edge_cards_and_loss_phenotypes",
     "independent_replay",
     "owner_tagged_worktree_cleanup_batches",

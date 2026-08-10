@@ -1,0 +1,125 @@
+{
+  "schema_id": "alpaca_honest_diagnostic_prereg_v1",
+  "frozen_at_utc": "2026-08-10T15:17:00Z",
+  "source_pin_repaired_at_utc": "2026-08-10T15:29:00Z",
+  "source_pin_repair_reason": "live bridge cap-then-renormalize defect repaired to match the already frozen true 60 percent hard-cap methodology; no diagnostic parameter or outcome window changed",
+  "question": "Do the v38 successor and Adaptive V1 selectors retain useful pre-forward behaviour when the portfolio uses next-open execution, real cash exposure, the deployable fractional protection proxy, per-fill costs, and daily mark-to-market?",
+  "research_only": true,
+  "capital_authorized_false": true,
+  "safe_hold_unchanged": true,
+  "forward_outcomes_embargoed": true,
+  "no_broker_calls": true,
+  "no_parameter_scan": true,
+  "outcome_embargo_start_session": "2026-08-03",
+  "initial_capital": 1000.0,
+  "target_gross_exposure": 0.70,
+  "cost_bps_per_side": [5.0, 10.0],
+  "arms": [
+    "v38_successor_gated",
+    "v38_successor_ungated",
+    "adaptive_v1_gated",
+    "adaptive_v1_ungated"
+  ],
+  "common_schedule": {
+    "signal": "last observed completed session of each calendar month",
+    "entry": "next observed session open",
+    "same_close_entry": false,
+    "retained_selected_positions": "hold without fictional sell and rebuy",
+    "stale_positions": "sell at next observed session open"
+  },
+  "common_execution": {
+    "fractional_quantities": true,
+    "cash_left_unallocated": true,
+    "costs": "adverse on every buy and sell",
+    "drawdown": "daily close MTM including initial capital",
+    "v38_weighting": "score_div_sqrt_atr_with_true_60pct_hard_cap",
+    "adaptive_weighting": "inverse_realized_vol_cap_without_upward_renormalization"
+  },
+  "exit_proxy": {
+    "id": "live_fractional_protection_daily_proxy_v1",
+    "initial_v38_stop": "signal close minus 2 ATR20",
+    "initial_adaptive_stop": "5 percent bridge fallback",
+    "profit_target": null,
+    "ratchet_activation_gain_pct": 3.5,
+    "ratchet_trail_pct": 3.5,
+    "minimum_locked_gain_pct": 0.5,
+    "ratchet_observation": "completed daily close for next session; conservative proxy for live 15 minute manager",
+    "reentry_block_calendar_days": 21
+  },
+  "windows": [
+    {
+      "id": "bear_2022_survivor_proxy",
+      "data_source": "yfinance_auto_adjust_true_cache",
+      "cache_suffix": "20210101_20230101",
+      "evaluation_start": "2022-01-01",
+      "evaluation_end_exclusive": "2023-01-01",
+      "symbols": [
+        "UNH", "GOOGL", "AAPL", "MSFT", "NVDA", "META", "AMZN", "TSLA", "AVGO",
+        "ORCL", "JPM", "LLY", "V", "COST", "JNJ", "WMT", "PG", "KO"
+      ]
+    },
+    {
+      "id": "live_universe_2024_2026_cached_intraday_proxy",
+      "data_source": "cached_intraday_aggregate",
+      "data_directory": "data_cache/equities_1h",
+      "evaluation_start": "2024-05-01",
+      "evaluation_end_exclusive": "2026-04-28",
+      "symbols": [
+        "AAPL", "ADBE", "AMD", "AMZN", "AVGO", "CRWD", "GOOGL", "JPM", "META", "MSFT",
+        "NFLX", "NVDA", "ORCL", "PANW", "PLTR", "TSLA", "UBER", "XOM", "CRM", "COIN",
+        "SHOP", "XYZ", "SNOW", "NET", "DDOG", "MDB", "ABNB", "GS", "V", "MA", "BAC",
+        "CVX", "CAT", "GE", "LMT", "UNH", "LLY", "ABBV", "JNJ", "MRK", "COST", "WMT",
+        "HD", "NKE", "SBUX", "TSM", "QCOM", "TXN", "NOW", "INTU", "ADSK", "WFC", "SCHW",
+        "REGN", "ISRG", "PG", "KO"
+      ]
+    }
+  ],
+  "clusters": [
+    ["AAPL", "MSFT", "GOOGL", "AMZN", "META"],
+    ["NVDA", "AMD", "AVGO", "TSM", "QCOM", "TXN"],
+    ["ADBE", "CRM", "ORCL", "NOW", "INTU", "ADSK"],
+    ["META", "NFLX", "ABNB"],
+    ["CRWD", "PANW", "NET", "DDOG", "SNOW", "MDB"],
+    ["PLTR", "UBER", "SHOP", "COIN", "XYZ"],
+    ["JPM", "GS", "BAC", "V", "MA", "WFC", "SCHW"],
+    ["XOM", "CVX"],
+    ["CAT", "GE", "LMT"],
+    ["UNH", "LLY", "ABBV", "JNJ", "MRK", "REGN", "ISRG"],
+    ["COST", "WMT", "HD", "NKE", "SBUX", "PG", "KO"],
+    ["TSLA"]
+  ],
+  "source_pins": {
+    "portfolio_engine": {
+      "path": "backtest/alpaca_honest_portfolio.py",
+      "sha256": "d00ee3bf1789e91822c67953e262b0b2d47dc8751df3b4a095501cf66cf5945f"
+    },
+    "runner": {
+      "path": "scripts/run_alpaca_honest_diagnostic.py",
+      "sha256": "1d14dd1dd1dda5e258a0a510c83215d91a9a393267730ea6eb16c060bd1bdca8"
+    },
+    "bakeoff_contract": {
+      "path": "backtest/alpaca_bakeoff_v2_contract.py",
+      "sha256": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee"
+    },
+    "exact_exit_primitives": {
+      "path": "backtest/alpaca_exact_parity_contract.py",
+      "sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50"
+    },
+    "adaptive_selector": {
+      "path": "strategies/alpaca_adaptive_v1.py",
+      "sha256": "9c936a6f387c693e8f388d82c2eefbac939314c55d8633666efbcbe79baa8b7b"
+    },
+    "live_bridge_reference": {
+      "path": "scripts/equities_alpaca_paper_bridge.py",
+      "sha256": "13671f7e6fe6158245e831de59493a00b2649c19af815b3a8097b10c6aa38100"
+    }
+  },
+  "capital_blockers": [
+    "fixed current-survivor universes rather than point-in-time membership",
+    "calendar inferred from observed SPY sessions rather than authoritative Alpaca XNYS ledger",
+    "cached data lacks a pinned corporate-action and delisting ledger",
+    "daily close ratchet proxy cannot reproduce the live 15-minute observation path",
+    "historical cost assumptions are not yet calibrated to broker order lifecycle receipts",
+    "the untouched August-November 2026 forward outcome remains sealed"
+  ]
+}

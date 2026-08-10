@@ -1,0 +1,1034 @@
+{
+  "schema_id": "alpaca_honest_diagnostic_validation_v1",
+  "generated_at_utc": "2026-08-10T15:26:44.501093+00:00",
+  "receipt_path": "reports/research/alpaca_honest_diagnostic_v1_20260810/receipt.json",
+  "receipt_sha256": "5ef856d6b77a2bf3ba831d854761dd46f65d8d9a6ba65fd9b82aac50afab4993",
+  "independent_invariants_pass": true,
+  "data_quality_rating": "NEEDS_REVISION",
+  "promotion_ready": false,
+  "status": "PASS_INVARIANTS_WITH_CRITICAL_DATA_CAVEATS",
+  "result_checks": [
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "v38_successor_gated",
+      "cost_bps_per_side": 5.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "v38_successor_gated",
+      "cost_bps_per_side": 10.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "v38_successor_ungated",
+      "cost_bps_per_side": 5.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "v38_successor_ungated",
+      "cost_bps_per_side": 10.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "adaptive_v1_gated",
+      "cost_bps_per_side": 5.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "adaptive_v1_gated",
+      "cost_bps_per_side": 10.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "adaptive_v1_ungated",
+      "cost_bps_per_side": 5.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "adaptive_v1_ungated",
+      "cost_bps_per_side": 10.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "v38_successor_gated",
+      "cost_bps_per_side": 5.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "v38_successor_gated",
+      "cost_bps_per_side": 10.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "v38_successor_ungated",
+      "cost_bps_per_side": 5.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "v38_successor_ungated",
+      "cost_bps_per_side": 10.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "adaptive_v1_gated",
+      "cost_bps_per_side": 5.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "adaptive_v1_gated",
+      "cost_bps_per_side": 10.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "adaptive_v1_ungated",
+      "cost_bps_per_side": 5.0,
+      "ok": true,
+      "issues": []
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "adaptive_v1_ungated",
+      "cost_bps_per_side": 10.0,
+      "ok": true,
+      "issues": []
+    }
+  ],
+  "source_pin_checks": [
+    {
+      "name": "portfolio_engine",
+      "ok": true,
+      "actual_sha256": "d00ee3bf1789e91822c67953e262b0b2d47dc8751df3b4a095501cf66cf5945f"
+    },
+    {
+      "name": "runner",
+      "ok": true,
+      "actual_sha256": "1d14dd1dd1dda5e258a0a510c83215d91a9a393267730ea6eb16c060bd1bdca8"
+    },
+    {
+      "name": "bakeoff_contract",
+      "ok": true,
+      "actual_sha256": "d2a69eb34d4dd2ee823142888d16708c24360a5e619b912ae4e7f25505151fee"
+    },
+    {
+      "name": "exact_exit_primitives",
+      "ok": true,
+      "actual_sha256": "366ced46e1625f978ea853536a3d5a3dc65083b2af4378f9291867309b539f50"
+    },
+    {
+      "name": "adaptive_selector",
+      "ok": true,
+      "actual_sha256": "9c936a6f387c693e8f388d82c2eefbac939314c55d8633666efbcbe79baa8b7b"
+    },
+    {
+      "name": "live_bridge_reference",
+      "ok": true,
+      "actual_sha256": "13671f7e6fe6158245e831de59493a00b2649c19af815b3a8097b10c6aa38100"
+    }
+  ],
+  "cost_stress_checks": [
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "v38_successor_gated",
+      "ok": true,
+      "returns_by_cost": {
+        "5.0": -2.750793180514277,
+        "10.0": -2.885988986125576
+      }
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "v38_successor_ungated",
+      "ok": true,
+      "returns_by_cost": {
+        "5.0": -4.409095939176422,
+        "10.0": -4.80937427714847
+      }
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "adaptive_v1_gated",
+      "ok": true,
+      "returns_by_cost": {
+        "5.0": -5.383218100556608,
+        "10.0": -5.627509487037541
+      }
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "arm": "adaptive_v1_ungated",
+      "ok": true,
+      "returns_by_cost": {
+        "5.0": -11.016376262730432,
+        "10.0": -11.436316615162067
+      }
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "v38_successor_gated",
+      "ok": true,
+      "returns_by_cost": {
+        "5.0": 31.8760879796439,
+        "10.0": 30.164228780085622
+      }
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "v38_successor_ungated",
+      "ok": true,
+      "returns_by_cost": {
+        "5.0": 24.433998511424292,
+        "10.0": 22.671005903670437
+      }
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "adaptive_v1_gated",
+      "ok": true,
+      "returns_by_cost": {
+        "5.0": 20.657887413674093,
+        "10.0": 18.750701267009728
+      }
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "arm": "adaptive_v1_ungated",
+      "ok": true,
+      "returns_by_cost": {
+        "5.0": 16.605811684062456,
+        "10.0": 14.619917608690258
+      }
+    }
+  ],
+  "coverage_checks": [
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "UNH",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "GOOGL",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "AAPL",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "MSFT",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "NVDA",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "META",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "AMZN",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "TSLA",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "AVGO",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "ORCL",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "JPM",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "LLY",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "V",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "COST",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "JNJ",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "WMT",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "PG",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "KO",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "bear_2022_survivor_proxy",
+      "symbol": "SPY",
+      "expected_sessions": 251,
+      "observed_sessions": 251,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "AAPL",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "ADBE",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "AMD",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "AMZN",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "AVGO",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "CRWD",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "GOOGL",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "JPM",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "META",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "MSFT",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "NFLX",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "NVDA",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "ORCL",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "PANW",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "PLTR",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "TSLA",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "UBER",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "XOM",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "CRM",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "COIN",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "SHOP",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "XYZ",
+      "expected_sessions": 498,
+      "observed_sessions": 318,
+      "coverage_pct": 63.85542168674698,
+      "missing_session_count": 180,
+      "first_missing_sessions": [
+        "2024-05-01",
+        "2024-05-02",
+        "2024-05-03",
+        "2024-05-06",
+        "2024-05-07"
+      ],
+      "ok": false
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "SNOW",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "NET",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "DDOG",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "MDB",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "ABNB",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "GS",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "V",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "MA",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "BAC",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "CVX",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "CAT",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "GE",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "LMT",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "UNH",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "LLY",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "ABBV",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "JNJ",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "MRK",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "COST",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "WMT",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "HD",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "NKE",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "SBUX",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "TSM",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "QCOM",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "TXN",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "NOW",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "INTU",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "ADSK",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "WFC",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "SCHW",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "REGN",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "ISRG",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "PG",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "KO",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    },
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "SPY",
+      "expected_sessions": 498,
+      "observed_sessions": 498,
+      "coverage_pct": 100.0,
+      "missing_session_count": 0,
+      "first_missing_sessions": [],
+      "ok": true
+    }
+  ],
+  "coverage_below_95pct": [
+    {
+      "window": "live_universe_2024_2026_cached_intraday_proxy",
+      "symbol": "XYZ",
+      "expected_sessions": 498,
+      "observed_sessions": 318,
+      "coverage_pct": 63.85542168674698,
+      "missing_session_count": 180,
+      "first_missing_sessions": [
+        "2024-05-01",
+        "2024-05-02",
+        "2024-05-03",
+        "2024-05-06",
+        "2024-05-07"
+      ],
+      "ok": false
+    }
+  ],
+  "critical_caveats": [
+    "survivorship_bias_unresolved",
+    "authoritative_xnys_ledger_unpinned",
+    "corporate_actions_and_delistings_unpinned",
+    "daily_exit_proxy_not_intraday_live_parity",
+    "broker_cost_calibration_unpinned"
+  ],
+  "issues": []
+}

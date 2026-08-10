@@ -178,6 +178,45 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
         return default
 
 
+def _hard_capped_normalized_weights(
+    raw_weights: dict[str, float], *, maximum_weight: float = 0.60
+) -> dict[str, float]:
+    """Normalize weights without ever re-breaching the per-name hard cap.
+
+    If too few eligible names exist to fill the sleeve under the cap, the
+    unallocated remainder stays cash.  The former cap-then-renormalize path
+    could turn one capped 60% name back into 100% of the allocated sleeve.
+    """
+    if not 0.0 < maximum_weight <= 1.0:
+        raise ValueError("maximum_weight must be in (0, 1]")
+    clean = {
+        str(symbol): float(value)
+        for symbol, value in raw_weights.items()
+        if str(symbol) and math.isfinite(float(value)) and float(value) > 0.0
+    }
+    if not clean:
+        return {}
+    result = {symbol: 0.0 for symbol in clean}
+    remaining = set(clean)
+    remaining_mass = min(1.0, len(clean) * maximum_weight)
+    while remaining and remaining_mass > 1e-12:
+        total_raw = sum(clean[symbol] for symbol in remaining)
+        capped = [
+            symbol
+            for symbol in sorted(remaining)
+            if remaining_mass * clean[symbol] / total_raw >= maximum_weight - 1e-12
+        ]
+        if not capped:
+            for symbol in remaining:
+                result[symbol] = remaining_mass * clean[symbol] / total_raw
+            break
+        for symbol in capped:
+            result[symbol] = maximum_weight
+            remaining.remove(symbol)
+            remaining_mass -= maximum_weight
+    return result
+
+
 def _safe_int(value: Any, default: int = 0) -> int:
     try:
         return int(float(value))
@@ -1568,13 +1607,9 @@ def _main_unlocked() -> int:
 
     if (weighted_sizing or atr_adjusted_sizing) and all_active:
         raw = {p.ticker: _raw_weight(p) for p in all_active}
-        total_raw = sum(raw.values()) or 1.0
-        score_weights = {t: w / total_raw for t, w in raw.items()}
-        # Clamp: no single position > 60% of allocation
-        max_w = min(0.60, max(score_weights.values()) if score_weights else 0.60)
-        score_weights = {t: min(w, max_w) for t, w in score_weights.items()}
-        sw_total = sum(score_weights.values()) or 1.0
-        score_weights = {t: w / sw_total for t, w in score_weights.items()}
+        # Hard clamp: no position may exceed 60% of the sleeve.  Do not
+        # renormalize capped weights upward; the unused sleeve remains cash.
+        score_weights = _hard_capped_normalized_weights(raw, maximum_weight=0.60)
         per_ticker_notional: dict[str, float] = {
             t: max(min_dollar_order, effective_capital * target_alloc_pct * w)
             for t, w in score_weights.items()

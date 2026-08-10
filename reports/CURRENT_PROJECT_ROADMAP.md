@@ -1,6 +1,6 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-10 14:46 UTC. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-10 15:25 UTC. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
 
@@ -144,11 +144,36 @@ shadow gate; старые нулевые результаты до unit fix не
 
 Текущий live — SAFE_HOLD старых ABBV/SCHW, а adaptive shadow выбирает
 SNOW/BAC/PANW/CRWD. Это разные cohort и не доказательство работы одной стратегии.
-Старые красивые v38 цифры не совпадают с intended live contract по universe,
-70% exposure, weighting, sector/earnings gates и daily MTM. Promotion остается
-`BLOCKED_FAIL_CLOSED` до PIT universe/data, broker lifecycle/cost calibration,
-общего executable exit и трех sealed monthly forward cycles. Защитный ratchet
-теперь рабочий, но он не исправляет логику выбора и прежний daily-rotation bug.
+Старые красивые v38 цифры не совпадали с intended live contract по universe,
+70% exposure, weighting, exit и daily MTM. Новый preregistered diagnostic
+`alpaca_honest_diagnostic_v1_20260810` уже исправляет next-open, единый cash
+ledger, fractional qty, hard weight cap, per-fill costs, retained positions,
+deployable fractional stop/ratchet proxy и daily drawdown.
+
+Первый результат после независимой проверки арифметических invariants:
+
+| окно / arm | 5 bps/side | 10 bps/side | daily DD stress | статус |
+|---|---:|---:|---:|---|
+| 2022 v38 successor + SPY200 | `-2.75%` | `-2.89%` | `4.00%` | bear edge не доказан |
+| 2024-05..2026-04 v38 successor + SPY200 | `+31.88%` | `+30.16%` | `7.84%` | promising diagnostic |
+| 2022 Adaptive V1 + SPY200 | `-5.38%` | `-5.63%` | `6.58%` | bear edge не доказан |
+| 2024-05..2026-04 Adaptive V1 + SPY200 | `+20.66%` | `+18.75%` | `4.94%` | lower-DD diagnostic |
+
+Старое v38 `+50.77% / DD 2.28%` больше не является рабочей оценкой: новый
+cash-aware replay дает ниже доход и выше честную дневную просадку. Средняя
+реальная экспозиция v38 получилась лишь `26.6%`, потому что cash, hard cap,
+защитные выходы и reentry blocks больше не скрываются нормализацией до 100%.
+В live bridge найден и исправлен тот же sizing-defect: прежний cap 60% затем
+повторно нормализовался и мог стать 100%. Теперь остаток остается cash; текущий
+SAFE_HOLD не затронут, поскольку new entries выключены. Focused suite `34 PASS`.
+
+Validator: `16/16` result invariants, `6/6` source pins и `8/8` cost-stress
+monotonicity PASS. Data quality всё ещё `NEEDS_REVISION`: universe survivor-only,
+XNYS ledger не authoritative, corporate actions/delistings и broker cost bundle
+не pinned, daily proxy не воспроизводит 15-minute HWM path; XYZ имеет лишь
+`63.9%` покрытия двухлетнего окна из-за своей более короткой истории. Forward
+с 2026-08-03 не читался. Поэтому promotion остается `BLOCKED_FAIL_CLOSED` до
+PIT/input bundle, второго engine и трех sealed monthly forward cycles.
 
 ## P2. Исследовательский завод — неделя 2–6
 
@@ -186,6 +211,15 @@ history в parquet. Любой тест хранит data hash, coverage, exclus
 книги нет доказанной long-ноги. `strategy_priority_router` сначала проверяется
 в shadow на opportunity cost; не подключать к live только по старому aggregate.
 
+### P2.6 Load-aware night queue
+
+Пять постоянных research loops остаются `5 healthy / 0 degraded`. При host load
+около `12/12` тяжелый шестой sweep запрещен. Легкий supervisor
+`research_backlog_guard_20260810` ждет load `<=9`, затем с `nice +10`
+последовательно запускает два risk-zero fixed probes: USDJPY H1 reproduction и
+H4 medium-term major/JPY/XAU search. Deadline 2026-08-11 06:00 UTC; если ресурс
+не освободится, status будет `deferred_deadline`, а не ложный результат.
+
 ## P3. Несколько контуров дохода — неделя 3–12+
 
 | Контур | Сейчас | Следующий falsifiable gate | Условие капитала |
@@ -194,8 +228,8 @@ history в parquet. Любой тест хранит data hash, coverage, exclus
 | Crypto long/retest | research-integrity repaired, edge не доказан | liveness + geometry + independent folds | отдельная доказанная нога, затем shadow/canary |
 | Funding/basis | два `PROCESS_OK` shadow; capital false | concentration, adverse selection, realistic costs, frozen N20–30 | только reproduced net edge |
 | XSEC market-neutral | `PROCESS_OK`, risk zero | outlier-resistant/median analysis, costs, independent replay | только stable folds и broker-ready controls |
-| Alpaca equities | реальный SAFE_HOLD + adaptive shadow | protective receipt, broker-fill reconstruction, exact rotation parity | текущий cap не расширять до gates |
-| FX/CFD medium-term | H1/H4 data gates blocked; V2 `0/6`; grid v2 лишь `N=5` | свежие bid/ask+swap/news inputs; prereg USDJPY short round-level/trend-carry families | сначала shadow/demo, money только после stable folds и broker-cost parity |
+| Alpaca equities | SAFE_HOLD + verified daily diagnostic: v38 recent `+30.16%`, 2022 `-2.89%` stress | PIT/XNYS/corp-actions/cost bundle, second engine, sealed Aug-Nov forward | текущий cap не расширять; SAFE_HOLD не ротировать по proxy |
+| FX/CFD medium-term | intraday families mostly fail; USDJPY H1 breakout/round-level is a thin lead; H4 fixed probe queued | stress reproduction, fresh bid/ask+swap/news, then prereg chronological OOS | сначала shadow/demo; money только после stable folds и broker-cost parity |
 | Arbitrage/volatility | inventory/research only | executable quotes, transfer/borrow/funding risks, kill switches | отдельный canary после end-to-end shadow |
 
 Желаемое состояние: в каждом денежном контуре минимум две независимо

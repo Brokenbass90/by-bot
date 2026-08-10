@@ -209,3 +209,43 @@ DAY-stop rearm остается отдельным обязательным proo
 Paper launcher теперь отключает routine Telegram по умолчанию, сохраняя paper
 orders, receipts и logs. Read-only worktree inventory: `1,138` paths, из них
 `27` tracked и `1,111` untracked; массовой очистки не выполнялось.
+
+## Продолжение работ — 15:18–15:25 UTC
+
+### Старый v38 replay заменен repaired diagnostic
+
+Добавлены `backtest/alpaca_honest_portfolio.py`, preregistered runner
+`scripts/run_alpaca_honest_diagnostic.py` и независимый receipt validator.
+Новый contract использует month-close -> next-open, один cash ledger,
+fractional quantities, 70% target exposure, hard per-name cap без повторного
+нарушения после renormalization, adverse costs на каждом fill, retained
+positions без фиктивного round-trip, deployable simple-stop + daily ratchet
+proxy и daily MTM/DD с initial capital.
+
+На stress `10 bps/side` v38 successor + SPY200 дал `-2.89% / DD 4.00%` на
+bear-2022 survivor proxy и `+30.16% / DD 7.84% / PF 1.863` на полном текущем
+v38 universe за 2024-05..2026-04. Adaptive + SPY200: `-5.63% / DD 6.58%` и
+`+18.75% / DD 4.94%`. Это materially слабее старого v38 `+50.77% / DD 2.28%`
+и честнее: средняя v38 exposure лишь `26.6%`, а не скрытая 100% normalization.
+
+Validator независимо пересчитал return, daily DD, trade PnL/PF, causal dates,
+cash/exposure bounds и cost monotonicity: result invariants `16/16`, source pins
+`6/6`, stress checks `8/8` PASS. Data quality `NEEDS_REVISION`, promotion false:
+PIT, authoritative XNYS, corporate actions/delistings, broker cost calibration
+и 15-minute exit path не материализованы; XYZ coverage `63.9%`. Forward с
+2026-08-03 не читался, SAFE_HOLD и live не менялись.
+
+Parity-аудит выявил отдельный будущий live sizing defect: bridge ограничивал
+вес 60%, затем renormalize мог вернуть единственный символ к 100% allocated
+sleeve. Добавлен true hard-cap allocator; unused sleeve остается cash. Текущие
+позиции не менялись, потому что SAFE_HOLD запрещает новые входы. Focused Alpaca
+suite после patch: `34 passed`, включая golden backtest↔live weight parity.
+
+### Ночная очередь поставлена под load guard
+
+Официальная research station остается `5 healthy / 0 degraded`. При load около
+`12.1/12` тяжелый шестой job не запущен. Screen
+`research_backlog_guard_20260810` ждет load `<=9`, затем с `nice +10`
+последовательно выполнит USDJPY H1 focused stress reproduction и фиксированный
+H4 medium-term probe major/JPY/XAU. Deadline 2026-08-11 06:00 UTC; risk zero,
+broker calls false, live authority false. Текущий status: `waiting_for_load`.

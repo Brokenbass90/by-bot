@@ -11,6 +11,7 @@ from scripts.equities_alpaca_paper_bridge import (
     _add_reentry_block,
     _broker_truth_snapshot,
     _broker_stop_rearm_symbols,
+    _hard_capped_normalized_weights,
     _new_entry_allowed,
     _select_monthly_cycle_picks,
     _trail_stop_triggered,
@@ -94,6 +95,20 @@ class TestAlpacaMonthlySelection(unittest.TestCase):
         )
 
         assert selected == []
+
+    def test_single_name_weight_cap_leaves_unused_sleeve_in_cash(self):
+        weights = _hard_capped_normalized_weights({"NVDA": 10.0}, maximum_weight=0.60)
+
+        assert weights == {"NVDA": 0.60}
+
+    def test_dominant_name_cannot_rebreach_weight_cap(self):
+        weights = _hard_capped_normalized_weights(
+            {"NVDA": 10.0, "KO": 1.0, "JPM": 1.0},
+            maximum_weight=0.60,
+        )
+
+        assert abs(sum(weights.values()) - 1.0) < 1e-12
+        assert max(weights.values()) <= 0.60
 
     def test_safe_hold_disables_every_new_entry(self):
         assert not _new_entry_allowed("PANW", enabled=False, blocked_symbols=set())
