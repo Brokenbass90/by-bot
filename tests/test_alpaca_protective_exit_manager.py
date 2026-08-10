@@ -20,7 +20,7 @@ def test_arms_and_only_raises_existing_broker_stop():
     )
     row = plan[0]
     assert row["action"] == "replace_stop"
-    assert row["target_stop"] == 101.325
+    assert row["target_stop"] == 101.32
     assert state["SCHW"]["hwm"] == 105.0
 
 
@@ -31,7 +31,7 @@ def test_high_water_mark_ratchets_but_never_lowers_stop():
         min_raise_bps=10, market_gap_bps=10,
     )
     assert plan[0]["action"] == "replace_stop"
-    assert plan[0]["target_stop"] == 105.894
+    assert plan[0]["target_stop"] == 105.89
 
 
 def test_unarmed_position_and_missing_coverage_fail_closed():
@@ -61,6 +61,10 @@ def test_excluded_symbols_are_not_managed():
 
 def test_fractional_stop_replace_preserves_existing_qty():
     payload = build_stop_replace_payload(105.0306)
-    assert payload == {"stop_price": "105.0306"}
+    assert payload == {"stop_price": "105.03"}
     assert "qty" not in payload
     assert "time_in_force" not in payload
+
+
+def test_stop_price_uses_four_decimals_below_one_dollar():
+    assert build_stop_replace_payload(0.456789) == {"stop_price": "0.4567"}

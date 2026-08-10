@@ -1,0 +1,93 @@
+{
+  "schema_id": "current_project_state_v1",
+  "generated_at_utc": "2026-08-10T14:46:00Z",
+  "read_first": [
+    "reports/CURRENT_HANDOFF.md",
+    "reports/current_project_state.json",
+    "reports/CURRENT_PROJECT_ROADMAP.md",
+    "reports/CODEX_HANDOFF_AND_DIARY_2026_08_10.md"
+  ],
+  "live_truth_warning": "refresh_git_deploy_service_heartbeat_broker_before_mutation",
+  "bybit": {
+    "bundle_revision": "c5eba1ccb244584bb432dd902d22599290fca900",
+    "contains_fix_commit": "f290463",
+    "bundle_sha256": "5c7b4be781aed95b5df9f9f2a38b5912b70a1d523ade7896806b329490702e46",
+    "deploy_receipt": "/root/by-bot/runtime/deploy_receipts/atomic_live_c5eba1ccb244_20260810T130547Z.json",
+    "backup": "/root/by-bot/backups/atomic_live_c5eba1ccb244_20260810T130547Z",
+    "manifest": "pass_6_of_6",
+    "service": "active_at_last_check",
+    "direct_broker": "flat_at_last_check",
+    "last_direct_check_utc": "2026-08-10T13:31:41Z",
+    "heartbeat_open_trades": 0,
+    "authority_complete": true,
+    "money_authority": [
+      {
+        "strategy": "att1",
+        "side": "short_only",
+        "risk_mult": 0.1
+      }
+    ]
+  },
+  "alpaca": {
+    "mode": "live_safe_hold",
+    "checked_at_utc": "2026-08-10T14:44:29Z",
+    "market_open": true,
+    "account_blocked": false,
+    "equity_usd": 485.87,
+    "cash_usd": 391.27,
+    "positions": 2,
+    "open_protective_orders": 2,
+    "new_entries_allowed": false,
+    "protective_scheduler": "server_cron_every_15m",
+    "protective_authority": "protective_exits_only_no_buys_no_rotation_no_market_close",
+    "paper_telegram_routine_reports": "disabled_by_default",
+    "schw_stop_receipt": {
+      "qty": 0.563776973,
+      "old_stop": 96.47,
+      "new_stop": 105.03,
+      "locked_gain_pct_at_stop": 3.424846,
+      "broker_order_id": "27473b37-9c6d-4a2c-b3a9-493c04cef21b",
+      "broker_status": "new",
+      "time_in_force": "day"
+    },
+    "selection_parity": "blocked_fail_closed_live_abbv_schw_vs_adaptive_shadow_snow_bac_panw_crwd",
+    "remaining_risk": "fractional_day_stops_require_rearm_and_do_not_remove_overnight_gap_risk"
+  },
+  "research_station": {
+    "checked_at_utc": "2026-08-10T13:05:38Z",
+    "healthy": 5,
+    "degraded": 0,
+    "live_order_authority": false,
+    "wip_cap_full": true
+  },
+  "retest3": {
+    "old_run": "quarantined_noop",
+    "contract": "repaired",
+    "config_preflight": "pass",
+    "smoke_trade_counts": [0, 0, 1, 1],
+    "strategy_verdict": "not_proven",
+    "focused_tests_passed": 18
+  },
+  "worktree_cleanup": {
+    "inventory_at_head": "c5eba1c",
+    "record_count": 1138,
+    "tracked_changes": 27,
+    "untracked_paths": 1111,
+    "manual_code_candidates": 61,
+    "archive_or_backup_candidates": 100,
+    "destructive_actions_taken": false,
+    "plan": "reports/WORKTREE_CLEANUP_PLAN_2026_08_10.md"
+  },
+  "priority_queue": [
+    "alpaca_next_cron_and_next_session_rearm_proof",
+    "alpaca_exact_selection_exit_parity",
+    "broker_runner_owner_accounting_reconciliation",
+    "backtest_live_sizing_parity",
+    "clean_att1_cohort",
+    "maker_execution_shadow",
+    "strategy_edge_cards_and_loss_phenotypes",
+    "independent_replay",
+    "owner_tagged_worktree_cleanup_batches",
+    "nonsecret_code_index"
+  ]
+}

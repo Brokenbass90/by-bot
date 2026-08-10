@@ -14,6 +14,7 @@ import json
 import os
 import sys
 from datetime import datetime, timezone
+from decimal import Decimal, ROUND_DOWN
 from pathlib import Path
 from typing import Any
 
@@ -57,7 +58,15 @@ def _write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
 
 
 def _format_price(price: float) -> str:
-    return f"{price:.8f}".rstrip("0").rstrip(".")
+    """Format an Alpaca equity stop on the broker's legal price grid.
+
+    Alpaca accepts at most two decimals at or above $1 and four decimals below
+    $1.  Round a sell stop down so quantization cannot move it above the
+    already-checked market ceiling.
+    """
+    value = Decimal(str(max(0.0, price)))
+    quantum = Decimal("0.01") if value >= Decimal("1") else Decimal("0.0001")
+    return format(value.quantize(quantum, rounding=ROUND_DOWN), "f")
 
 
 def build_stop_replace_payload(target_stop: float) -> dict[str, str]:
@@ -152,6 +161,7 @@ def build_ratchet_plan(
         locked_floor = entry * (1.0 + min_lock_gain_pct / 100.0)
         market_ceiling = current * (1.0 - market_gap_bps / 10000.0)
         target_stop = min(max(current_stop, trail_floor, locked_floor), market_ceiling)
+        target_stop = float(_format_price(target_stop))
         min_raise = current_stop * (1.0 + min_raise_bps / 10000.0)
         if target_stop + 1e-12 < min_raise:
             plan.append({**base, "action": "hold", "reason": "no_material_stop_raise", "current_stop": current_stop})

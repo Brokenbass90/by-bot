@@ -1,0 +1,223 @@
+# Текущий roadmap проекта
+
+Обновлено: 2026-08-10 14:46 UTC. Это стабильная точка входа между чатами.
+Датированные отчеты остаются журналом, но при конфликте планов сначала читать
+`CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
+
+Визуальная архитектура и promotion flow:
+`reports/CODEX_PROJECT_VISUAL_MAP_2026_08_10.md`.
+
+## Решение после сравнения планов
+
+План Клода правильно начинает с экономики ноги: издержек, качества входа,
+избирательности, карточек эджа и поиска рабочей long-ноги. Антикризисный план
+Codex правильно ставит раньше них операционную истину: broker truth, безопасный
+release, reconciliation, чистые когорты и независимую проверку. Итоговый порядок:
+
+1. не потерять капитал и доказать, что live исполняет именно тот код;
+2. сделать измерения воспроизводимыми и независимыми;
+3. улучшать экономику каждой ноги одним изменением за эксперимент;
+4. только затем давать капитал нескольким независимым контурам;
+5. отображать ту же истину в Web, Telegram и AI-ассистенте.
+
+Цель не «запустить побольше стратегий», а получить несколько независимых
+контуров, в каждом из которых есть минимум две отдельно доказанные ноги,
+понятные издержки, ограничения риска и механизм автоматического отключения.
+
+## Нулевая шкала статусов
+
+- `PROCESS_OK`: процесс жив и выпускает свежие receipts.
+- `MEASURED`: есть корректный результат на заявленном окне.
+- `REPRODUCED`: результат повторен независимым способом или движком.
+- `SHADOW`: работает на текущем рынке без права ордеров.
+- `CANARY`: имеет явно ограниченное право на минимальный риск.
+- `MONEY`: прошел promotion gates и имеет капитал.
+
+`PROCESS_OK` никогда не подменяет `MONEY`, а положительный shadow PnL не
+считается заработком счета.
+
+## P0. Безопасность и операционная истина — сейчас
+
+### P0.1 RUNNER TP1 dependency bundle — DONE
+
+- bundle собран из Git revision `c5eba1ccb244584bb432dd902d22599290fca900`;
+- архив SHA256 `5c7b4be781aed95b5df9f9f2a38b5912b70a1d523ade7896806b329490702e46`;
+- server-Python import и bounded no-order startup smoke прошли вне live;
+- direct Bybit flat подтвержден до остановки, после остановки и после старта;
+- шесть файлов заменены атомарно, пять отсутствовавших зависимостей добавлены;
+- live manifest `6/6 PASS`, service и heartbeat восстановлены;
+- money authority не расширена: ATT1 short-only, `risk_mult=0.10`.
+
+Следующий контроль: периодически сверять live manifest/deployed receipt, service,
+heartbeat и прямого брокера; Git-коммит сам по себе не считать деплоем.
+
+### P0.2 Retest3 research-integrity — REPAIRED, RESULT NOT PROVEN
+
+Старый ladder был no-op: экспортировал неиспользуемую переменную. Скрипт теперь
+передает реальную ручку `IRV3_STOP_BUFFER_ATR`, выполняет preflight четырех
+разных конфигураций и запрещает интерпретацию, если stop distributions не
+различаются. Старые результаты изолированы новыми тегами.
+
+Дешевый 90d smoke честно заблокирован: две конфигурации дали ноль сделок, две —
+по одной. Это доказательство работы fail-close, но не результат стратегии.
+Следующее действие — differentiating smoke на достаточном окне после
+освобождения одного из пяти исследовательских слотов.
+
+### P0.3 Alpaca protective exits — LIVE RECEIPT PASS, MONITORING REQUIRED
+
+На сервере обнаружены действующие protective-only authority и cron каждые 15
+минут. Последовательно исправлены два broker-contract дефекта: fractional
+`qty` больше не отправляется в PATCH, а stop-price округляется вниз на
+разрешенную Alpaca сетку (2 decimals при цене >= `$1`, 4 ниже `$1`). Staged
+server-Python smoke и 26 focused tests прошли.
+
+2026-08-10 14:44 UTC Alpaca приняла replace SCHW `96.47 -> 105.03`, точный
+защищенный qty `0.563776973`, статус нового ордера `new`. Прямое broker-read:
+equity `$485.87`, cash `$391.27`, ABBV/SCHW, stop coverage `2/2`; SCHW stop
+находится примерно на `+3.42%` к entry до gap/slippage. ABBV пока не достигла
+порога arm и сохраняет stop `235.17`. Новых покупок, ротаций и market-close не
+было; SAFE_HOLD сохраняется.
+
+Оставшийся риск: дробные equity stop-ордера имеют `DAY`, поэтому защита зависит
+от ежедневного rearm и polling; stop/trailing не устраняет overnight gap risk.
+Следующие проверки: receipt после следующего cron, rearm на следующей сессии,
+freshness alert и восстановление HWM после рестарта. Для будущих входов отдельно
+сравнить fractional DAY с whole-share GTC/native-trailing контрактом.
+
+Routine PAPER HOLD/dry-run Telegram отключен по умолчанию в paper-launcher;
+paper broker receipts и логи сохранены. Отдельные live/actionable сообщения не
+отключались.
+
+### P0.4 Грязная рабочая область — INVENTORIED, TRIAGE OPEN
+
+Read-only inventory на HEAD `c5eba1c`: `1,138` paths (`27` tracked changes,
+`1,111` untracked). Крупные классы: `429` document/metadata, `344` reports,
+`100` archive/backup, `61` manual-code candidates, `29` runtime/log и `14`
+secret/env-looking names. Контент секретов не печатался. Подробный порядок —
+`reports/WORKTREE_CLEANUP_PLAN_2026_08_10.md`.
+
+До owner/reference/test triage массово не удалять и не архивировать. Работа
+Клода и параллельные research artifacts считаются чужими до доказательства
+обратного. Первый безопасный выигрыш — вынести bulk data/runtime и backups из
+code checkout по manifest, затем разбирать 61 code candidate малыми batches.
+
+## P1. Control plane — неделя 1–2
+
+### P1.1 Broker ↔ runner ↔ owner ↔ accounting reconciliation
+
+Создать единый record на symbol/order/position: intent, strategy owner, risk
+authority, broker order/fill/position, event/accounting linkage, source и
+freshness. Конфликт по символу автоматически запрещает новые добавки, но не
+мешает защитному TP/SL для уже открытой позиции. Incident попадает в изолированную
+очередь `finding -> reproduction -> patch -> tests -> deploy`.
+
+### P1.2 Backtest ↔ live sizing parity
+
+Golden fixtures для одинаковых signal, equity, price, stop и risk. Проверить
+rounding, min qty, leverage, fees, partial fills и запрет legacy-DCA. Любое
+расхождение — fail-fast, не предупреждение.
+
+### P1.3 Clean cohort registry
+
+Каждая правка signal/sizing/execution/accounting начинает новую когорту с code
+SHA, config hash, data version и timestamp. ATT1 promotion использует только
+чистые post-fix сделки; старые contaminated события сохраняются как evidence.
+
+### P1.4 Maker execution shadow и slope shadow
+
+- ATT1/BREAKDOWN: frozen post-only grid, fill/nonfill markout, opportunity cost,
+  adverse selection, symbol/time folds;
+- ATT1 slope `0.7`: только shadow, поскольку порог выбран на просмотренном окне;
+- не включать maker в деньги по одному улучшению комиссии.
+
+### P1.5 `sloped_break_retest_v1` — UNIT FIX DONE, REACHABILITY OPEN
+
+Повторная проверка показала, что пункт старого roadmap уже частично устарел:
+`_retest_expiry_ms()` переводит секунды в миллисекунды, а два contract tests
+проходят; последняя история файла указывает на commit `2d04e3f`. Повторно чинить
+код не нужно. Остались reachability proof, bounded smoke, geometry receipt и
+shadow gate; старые нулевые результаты до unit fix не использовать как приговор.
+
+### P1.6 Alpaca selection/exit exact parity
+
+Текущий live — SAFE_HOLD старых ABBV/SCHW, а adaptive shadow выбирает
+SNOW/BAC/PANW/CRWD. Это разные cohort и не доказательство работы одной стратегии.
+Старые красивые v38 цифры не совпадают с intended live contract по universe,
+70% exposure, weighting, sector/earnings gates и daily MTM. Promotion остается
+`BLOCKED_FAIL_CLOSED` до PIT universe/data, broker lifecycle/cost calibration,
+общего executable exit и трех sealed monthly forward cycles. Защитный ratchet
+теперь рабочий, но он не исправляет логику выбора и прежний daily-rotation bug.
+
+## P2. Исследовательский завод — неделя 2–6
+
+### P2.1 Карточка эджа для каждой ноги
+
+Единый `strategy_edge_report`: вход signal/next-open/limit; выход MFE/MAE и
+отданный ход; отбор по измеримым признакам; gross edge, costs, net edge,
+uncertainty, data/PIT coverage и failure phenotypes. Один эксперимент меняет
+только один рычаг.
+
+Порядок: liveness -> ablation -> edge card -> one-change experiment ->
+preregistered fold -> independent replay -> shadow -> canary.
+
+### P2.2 Независимый replay
+
+VectorBT — быстрый prefilter, causal harness — основной исследовательский
+движок, LEAN или второй независимо реализованный engine — сверка ключевых
+кандидатов. Два движка не должны разделять одну и ту же реализацию signal/exit.
+
+### P2.3 Анализ отрицательных сделок по фенотипам
+
+Кластеризовать по regime, slope, geometry, liquidity/spread, fill path,
+markout, symbol age, volatility, funding/basis и времени. LLM может назвать
+кластер и предложить тест, но не имеет права объявлять причинность или promotion.
+
+### P2.4 Данные и честные окна
+
+150–200 perpetual symbols с listing dates, 5m history с 2023-01 и funding
+history в parquet. Любой тест хранит data hash, coverage, exclusions и PIT
+ограничения. Holdout squeeze `2025-10..2026-06` не расходовать на другие ноги.
+
+### P2.5 Long family и slot arbitration
+
+Приоритет поиска: `inplay -> breakout -> continuation -> retest`, потому что у
+книги нет доказанной long-ноги. `strategy_priority_router` сначала проверяется
+в shadow на opportunity cost; не подключать к live только по старому aggregate.
+
+## P3. Несколько контуров дохода — неделя 3–12+
+
+| Контур | Сейчас | Следующий falsifiable gate | Условие капитала |
+|---|---|---|---|
+| Crypto directional | ATT1 `CANARY 0.10`; остальные zero-risk | clean N20/N30, maker/slope shadow, size parity | по ступеням `0.10 -> 0.25 -> 0.50`, только после gates |
+| Crypto long/retest | research-integrity repaired, edge не доказан | liveness + geometry + independent folds | отдельная доказанная нога, затем shadow/canary |
+| Funding/basis | два `PROCESS_OK` shadow; capital false | concentration, adverse selection, realistic costs, frozen N20–30 | только reproduced net edge |
+| XSEC market-neutral | `PROCESS_OK`, risk zero | outlier-resistant/median analysis, costs, independent replay | только stable folds и broker-ready controls |
+| Alpaca equities | реальный SAFE_HOLD + adaptive shadow | protective receipt, broker-fill reconstruction, exact rotation parity | текущий cap не расширять до gates |
+| FX/CFD medium-term | H1/H4 data gates blocked; V2 `0/6`; grid v2 лишь `N=5` | свежие bid/ask+swap/news inputs; prereg USDJPY short round-level/trend-carry families | сначала shadow/demo, money только после stable folds и broker-cost parity |
+| Arbitrage/volatility | inventory/research only | executable quotes, transfer/borrow/funding risks, kill switches | отдельный canary после end-to-end shadow |
+
+Желаемое состояние: в каждом денежном контуре минимум две независимо
+проверенные стратегии/ноги. Но недоказанная нога не является диверсификацией:
+она отнимает слоты и добавляет неизвестный риск.
+
+## P4. Web, Telegram и AI — параллельно после P1 truth model
+
+Один источник состояния для Web/TG/assistant: broker positions/equity,
+protected exposure, money sleeves, strategy authority, deployed revision,
+heartbeat freshness, reconciliation conflicts и research-only статус.
+
+AI/Ollama индексирует весь несекретный код по path/SHA/chunk, извлекает source
+и свежие receipts, отвечает `NOT_CONFIRMED` при stale/conflict. AI предлагает
+finding и experiment, но не получает credentials, право ордера или изменение
+риска. Web/TG ручные действия требуют подтверждения и immutable receipt.
+
+## Метрики движения
+
+1. число ног с reproduced net edge на независимом окне;
+2. число clean live lifecycles с broker/runner/accounting parity;
+3. защищенная экспозиция и число reconciliation conflicts;
+4. maker fill rate, nonfill opportunity cost и adverse selection;
+5. число findings, прошедших reproduction, а не число сырых предупреждений;
+6. число денежных контуров с отдельной authority и kill switch.
+
+Сроки — окна получения доказательств, не обещание доходности.
