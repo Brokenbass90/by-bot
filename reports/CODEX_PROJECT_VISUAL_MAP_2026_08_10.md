@@ -1,6 +1,6 @@
 # Визуальная карта торговой станции
 
-Срез: 2026-08-10. Сплошные смысловые связи — целевая архитектура; статусы live
+Срез: 2026-08-10 18:55 UTC. Сплошные смысловые связи — целевая архитектура; статусы live
 следует читать только вместе со временем и источником.
 
 ## 1. Какой это проект
@@ -33,8 +33,8 @@ flowchart TD
     RC --> UI["Operator truth<br/>web/TG с freshness и source"]
 
     G -. "f290463 включен в atomic bundle" .-> P
-    P -. "bundle c5eba1c · manifest 6/6" .-> S
-    BR -. "DOT short open 18:34 UTC<br/>broker stop present" .-> RC
+    P -. "live c5eba1c · 6/6<br/>staged 4757451 · 8/8" .-> S
+    BR -. "ADA + DOT shorts open 18:54 UTC<br/>broker stops present" .-> RC
 ```
 
 Нижний слой не может быть доказан верхним: active service не доказывает flat,
@@ -65,7 +65,7 @@ flowchart LR
 ```mermaid
 flowchart TB
     subgraph Money["Money authority"]
-        ATT["ATT1 short-only<br/>risk 0.10<br/>DOT execution incident"]
+        ATT["ATT1 short-only · risk 0.10<br/>ADA + DOT execution incidents<br/>pause new entries required"]
     end
 
     subgraph RiskZero["Risk-zero / shadow"]

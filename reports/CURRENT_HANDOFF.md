@@ -1,6 +1,6 @@
 # Текущий handoff между чатами
 
-Обновлено: 2026-08-10 18:35 UTC.
+Обновлено: 2026-08-10 18:55 UTC.
 
 ## Читать в новом чате
 
@@ -10,31 +10,46 @@
 4. `reports/CODEX_HANDOFF_AND_DIARY_2026_08_10.md` — хронология и receipts.
 5. Свежие прямые broker/service/runtime данные — они важнее любого Markdown.
 
-## Критическое обновление 18:35 UTC
+## Критическое обновление 18:55 UTC
 
-- Bybit больше не flat: прямой broker-read подтверждает DOTUSDT short `29.7`,
-  entry `0.8023`, stop `0.8205`; service active.
+- Bybit больше не flat: последний прямой broker-read подтверждает две
+  защищенные позиции: DOTUSDT short `29.7`, entry `0.8023`, stop `0.8205`, и
+  ADAUSDT short `116`, entry `0.1931`, stop `0.1992`; service active.
 - Исходный ATT1 fill был уже ниже TP1: signal `0.8136`, fill `0.8023`, TP1
   `0.805391`; риск вырос с `$0.4554` до `$1.2012` (`2.6377x`).
 - Это execution-contract incident, а не нормальная ATT1 сделка. Остаток
   защищен broker stop; ручного закрытия и рестарта monolith не было.
+- Старый live-код после этого допустил ADA fill `0.1931` вместо signal entry
+  `0.1953`: stop-distance выросла в `1.5641x`, выше нового лимита `1.20x`.
+  ADA также является execution-contract incident и исключается из N20.
 - Локальный fail-close patch блокирует target-crossed, risk expansion >1.20x
-  и adverse drift >25 bps до заявки и после fill. `50 passed`.
-- Patch нельзя выпускать до flat. После flat: committed bundle, server-Python
+  и adverse drift >25 bps до заявки и после fill. Shared sizing parity и
+  полный focused suite: `60 passed`.
+- Просто ждать flat уже недостаточно: старый процесс может открыть следующую
+  позицию. Первый ручной шаг в Telegram —
+  `/strategy_pause att1 execution_fix_release`. Он блокирует только новые
+  входы, но не сопровождение и защиту существующих позиций.
+- Patch нельзя выпускать до flat. После operator pause и flat: committed bundle, server-Python
   verify, no-order smoke, три flat receipts, atomic deploy.
-- Candidate release commit `d43ecb06197832a8ecb99723d0da5dd0b5f712e5` уже
-  pushed. Bundle SHA256 `0886910710f6b9e1fea1a184309c9279267ac24bbd7c0ed7bc9cb5b9279f1a00`,
-  manifest `7/7`; server stage `/root/bybot-staging/d43ecb061978` прошел
+- Candidate release commit `475745108b5e7ff0668011694646181ba6d9bd00` уже
+  pushed. Bundle SHA256 `01eebc0541c77be78df496b3b261e76ab03e583fed4f2d91d3beaf944e7f4a01`,
+  manifest `8/8`; server stage `/root/bybot-staging/475745108b5e` прошел
   server-Python hash/import и bounded 20s no-order main smoke.
 - Routine GS `[DRY-RUN]` происходили из Alpaca v3 shadow cron. Telegram noise
   отключен по умолчанию и точечно доставлен на сервер без Bybit restart;
   18:40 UTC shadow cron прошел после deploy, research receipts остаются.
 - Запущены screen `bybit_history_150_20260810` и долговечный supervisor
   `six_day_crypto_20260810`; 48 research-only cases, reserved holdout не читается.
+- На host подтвержден отдельный `caffeinate` idle-sleep assertion на `518400`
+  секунд с 18:58 UTC; экран не удерживается включенным. Power loss/reboot/network
+  outage он не переживает, поэтому heartbeat остается вторым уровнем контроля.
 - Heartbeat `Six-day trading research guard` проверяет процесс каждые шесть
   часов до 16 августа и не имеет полномочий отправлять/отменять ордера.
 
-Полный incident: `reports/live/ATT1_DOT_EXECUTION_CONTRACT_INCIDENT_20260810.md`.
+Полные incidents:
+
+- `reports/live/ATT1_DOT_EXECUTION_CONTRACT_INCIDENT_20260810.md`;
+- `reports/live/ATT1_ADA_EXECUTION_CONTRACT_INCIDENT_20260810.md`.
 
 ## Истина всегда четырехслойная
 
@@ -180,23 +195,28 @@ Alpaca focused suite: `34 passed`, включая golden backtest↔live weight 
 
 ## Следующие действия в точном порядке
 
-1. Проверить next-session rearm; добавить freshness alert на missing/expired
+1. В Telegram выполнить `/strategy_pause att1 execution_fix_release` и
+   подтвердить receipt: запрет только новых ATT1-входов, сопровождение текущих
+   ADA/DOT и broker stops продолжает работать.
+2. После естественного broker flat получить три прямых flat receipt, применить
+   staged bundle `4757451`, сверить hashes/service/heartbeat/broker и только
+   затем разрешать ATT1 resume и новую clean cohort.
+3. Проверить next-session rearm; добавить freshness alert на missing/expired
    DAY stop и stale HWM. Текущий 15-minute cron уже подтвержден после patch.
-2. Материализовать PIT/XNYS/corporate-action/cost bundle для Alpaca, сверить
+4. Материализовать PIT/XNYS/corporate-action/cost bundle для Alpaca, сверить
    новый runner вторым engine; SAFE_HOLD не снимать по positive recent proxy.
-3. Добавить broker ↔ runner ↔ owner ↔ accounting reconciler и symbol-level
+5. Добавить broker ↔ runner ↔ owner ↔ accounting reconciler и symbol-level
    fail-close новых добавок.
-4. Общий pre-round sizing contract и golden fixtures готовы; завершить
+6. Общий pre-round sizing contract и golden fixtures готовы; завершить
    parity exchange-слоя: qty-step/min-qty, fees, partial fills, legacy-DCA.
-5. Начать чистую ATT1 cohort после фиксов, не меняя `risk_mult=0.10`.
-6. Preregister и воспроизвести четыре H4 FX leads на fresh bid/ask+swap с
+7. Preregister и воспроизвести четыре H4 FX leads на fresh bid/ask+swap с
    chronological OOS; H1 USDJPY не реанимировать без отдельного cost mechanism.
    При освобождении WIP-слота запустить maker shadow и differentiating retest3 smoke.
-7. Реализовать edge cards и phenotype loss analysis; второй engine сверяет
+8. Реализовать edge cards и phenotype loss analysis; второй engine сверяет
    только кандидатов, прошедших первые gates.
-8. Разбирать worktree небольшими owner-tagged batches; сначала data/backups,
+9. Разбирать worktree небольшими owner-tagged batches; сначала data/backups,
    затем 61 code candidate.
-9. Индексировать несекретный код для Ollama с path/SHA/freshness/provenance.
+10. Индексировать несекретный код для Ollama с path/SHA/freshness/provenance.
 
 ## Запреты, которые сохраняются
 

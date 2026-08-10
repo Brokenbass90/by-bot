@@ -341,3 +341,32 @@ stop-percent. Добавлен pure adapter `calculate_notional_from_stop_pct`; 
 одинаковых equity/entry/stop/risk/cap, включая DOT-подобную геометрию,
 uncapped, capped и reject paths. Exchange qty-step/min-qty и fill parity
 остаются отдельным следующим слоем.
+
+## Продолжение работ — 18:41–18:55 UTC
+
+До выпуска staged fix старый live-процесс открыл вторую ATT1 позицию: ADAUSDT
+short `116`, signal entry `0.1953`, fill `0.1931`, stop `0.1992`, TP1
+`0.19071964174685418`. Fill еще не прошел TP1, однако stop-distance выросла с
+`0.0039` до `0.0061`, то есть примерно в `1.5641x` против нового fail-close
+порога `1.20x`. Прямой broker-read около 18:54 UTC показал две защищенные
+позиции — ADA и остаток DOT; service active, PID не менялся.
+
+Вывод изменен: пассивно ждать flat нельзя, поскольку старый процесс способен
+добавлять новые позиции. В коде уже есть hot-read операторского контроля с
+scope `new_entries_only`; команда `/strategy_pause att1 execution_fix_release`
+не отключает сопровождение существующих позиций. Ее должен подтвердить
+владелец через Telegram, затем после естественного flat выполняются три прямые
+flat-проверки и atomic deploy.
+
+Финальный staged кандидат теперь `475745108b5e7ff0668011694646181ba6d9bd00`:
+он добавляет общий для backtest/live fixed-R sizing contract. Bundle SHA256
+`01eebc0541c77be78df496b3b261e76ab03e583fed4f2d91d3beaf944e7f4a01`,
+manifest `8/8`, server stage `/root/bybot-staging/475745108b5e`, server-Python
+hash/import и 20-second no-order main smoke PASS. В live bundle не применен.
+Focused suite после sizing parity: `60 passed`.
+
+Для непрерывности локальной шестидневной работы macOS host получил отдельный
+`caffeinate` idle-sleep assertion на `518400` секунд. `pmset -g assertions`
+подтвердил активный `PreventUserIdleSystemSleep`; дисплей не удерживается
+включенным. Это защищает от обычного idle sleep, но не от power loss, reboot
+или network outage; шестичасовой heartbeat остается отдельным watchdog.

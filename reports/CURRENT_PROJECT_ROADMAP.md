@@ -1,18 +1,21 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-10 18:35 UTC. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-10 18:55 UTC. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
 
-## Emergency execution update — 18:35 UTC
+## Emergency execution update — 18:55 UTC
 
 ATT1 временно не может начать clean cohort: DOT fill исполнился уже за TP1 и
 расширил stop risk в `2.64x`. Исправление stale/current/fill contract готово и
 прошло focused tests, но монолит не перезапускается при открытой позиции.
-Первый P0 gate теперь: дождаться broker flat под действующим stop, затем
-выпустить atomic bundle с новой зависимостью `bot/maker_execution.py`.
+Затем старый live-код допустил ADA fill с расширением риска `1.56x`. Поэтому
+первый P0 gate теперь не пассивное ожидание, а горячая остановка только новых
+ATT1-входов командой `/strategy_pause att1 execution_fix_release`. Сопровождение
+и broker stops текущих позиций сохраняются. После broker flat — три прямые
+проверки flat и atomic release; resume только после полной сверки release.
 
-Эта DOT-сделка и все события до release receipt исключаются из N20. При
+Обе incident-сделки и все события до release receipt исключаются из N20. При
 наблюдаемом темпе ATT1 `9 сделок / 21 день` двадцать чистых сделок займут около
 `47 дней` после release, то есть реалистичный decision window для
 `risk 0.10 -> 0.25` — конец сентября 2026, а не 2–3 недели. Ускорение возможно
@@ -37,6 +40,8 @@ Gate `0.10 -> 0.25`:
 - every varied strategy handle passes executable preflight;
 - every run uses next-open execution, coverage gate, R metrics and audit;
 - 2025-10..2026-06 holdout is code-blocked from reading;
+- host idle sleep блокируется ограниченным шестью сутками `caffeinate` assertion;
+  это не защита от power loss, reboot или network outage;
 - status: `reports/research/six_day_crypto_pipeline_20260810/status.json`.
 
 This lane searches a second leg and failure mechanisms. It cannot promote a

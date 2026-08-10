@@ -1,6 +1,6 @@
 {
   "schema_id": "current_project_state_v1",
-  "generated_at_utc": "2026-08-10T18:44:00Z",
+  "generated_at_utc": "2026-08-10T18:55:00Z",
   "read_first": [
     "reports/CURRENT_HANDOFF.md",
     "reports/current_project_state.json",
@@ -16,35 +16,65 @@
     "backup": "/root/by-bot/backups/atomic_live_c5eba1ccb244_20260810T130547Z",
     "manifest": "pass_6_of_6",
     "service": "active_pid_2276002_at_last_check",
-    "direct_broker": "one_open_dotusdt_short_protected_by_stop",
-    "last_direct_check_utc": "2026-08-10T18:34:00Z",
-    "heartbeat_open_trades": 1,
-    "open_position": {
-      "symbol": "DOTUSDT",
-      "side": "Sell",
-      "qty": 29.7,
-      "entry": 0.8023,
-      "stop": 0.8205,
-      "take_profit": null
-    },
-    "execution_incident": {
-      "type": "stale_fill_beyond_tp1_and_risk_expansion",
-      "planned_entry": 0.8136,
-      "actual_entry": 0.8023,
-      "planned_tp1": 0.805391,
-      "risk_expansion": 2.6377,
-      "adverse_bps": 138.89,
-      "clean_cohort_eligible": false,
-      "patch": "tested_not_deployed_until_flat"
-    },
+    "direct_broker": "two_open_att1_shorts_both_protected_by_stops",
+    "last_direct_check_utc": "2026-08-10T18:54:00Z",
+    "heartbeat_open_trades": null,
+    "heartbeat_warning": "not_refreshed_after_second_broker_position_direct_broker_truth_wins",
+    "broker_open_position_count": 2,
+    "open_positions": [
+      {
+        "symbol": "ADAUSDT",
+        "side": "Sell",
+        "qty": 116,
+        "entry": 0.1931,
+        "stop": 0.1992,
+        "take_profit": null
+      },
+      {
+        "symbol": "DOTUSDT",
+        "side": "Sell",
+        "qty": 29.7,
+        "entry": 0.8023,
+        "stop": 0.8205,
+        "take_profit": null
+      }
+    ],
+    "execution_incidents": [
+      {
+        "symbol": "DOTUSDT",
+        "type": "stale_fill_beyond_tp1_and_risk_expansion",
+        "planned_entry": 0.8136,
+        "actual_entry": 0.8023,
+        "planned_tp1": 0.805391,
+        "risk_expansion": 2.6377,
+        "adverse_bps": 138.89,
+        "clean_cohort_eligible": false
+      },
+      {
+        "symbol": "ADAUSDT",
+        "type": "post_fill_risk_expansion",
+        "planned_entry": 0.1953,
+        "actual_entry": 0.1931,
+        "planned_tp1": 0.19071964174685418,
+        "risk_expansion": 1.5641,
+        "clean_cohort_eligible": false
+      }
+    ],
+    "execution_patch": "tested_and_staged_not_deployed_until_flat",
     "candidate_release": {
-      "revision": "d43ecb06197832a8ecb99723d0da5dd0b5f712e5",
-      "bundle_sha256": "0886910710f6b9e1fea1a184309c9279267ac24bbd7c0ed7bc9cb5b9279f1a00",
-      "manifest": "pass_7_of_7",
-      "server_stage": "/root/bybot-staging/d43ecb061978",
+      "revision": "475745108b5e7ff0668011694646181ba6d9bd00",
+      "bundle_sha256": "01eebc0541c77be78df496b3b261e76ab03e583fed4f2d91d3beaf944e7f4a01",
+      "manifest": "pass_8_of_8",
+      "server_stage": "/root/bybot-staging/475745108b5e",
       "server_python_import_smoke": "pass",
       "bounded_no_order_main_smoke": "pass_20_seconds",
-      "deploy_blocker": "broker_not_flat"
+      "deploy_blocker": "broker_not_flat_and_new_att1_entries_not_yet_operator_paused"
+    },
+    "required_operator_control": {
+      "command": "/strategy_pause att1 execution_fix_release",
+      "scope": "new_entries_only",
+      "existing_position_management_continues": true,
+      "confirmed_current": false
     },
     "authority_complete": true,
     "money_authority": [
@@ -116,6 +146,13 @@
       "cadence_hours": 6,
       "ends_utc": "2026-08-16T18:45:00Z",
       "notifications": "failed_runs_only"
+    },
+    "host_keep_awake": {
+      "mechanism": "macos_caffeinate_idle_sleep_assertion",
+      "confirmed_at_utc": "2026-08-10T18:58:00Z",
+      "duration_seconds": 518400,
+      "display_forced_on": false,
+      "limitations": ["power_loss", "reboot", "network_outage"]
     },
     "load_guarded_backlog": {
       "state": "complete",
@@ -216,7 +253,8 @@
     "plan": "reports/WORKTREE_CLEANUP_PLAN_2026_08_10.md"
   },
   "priority_queue": [
-    "wait_for_broker_flat_then_atomic_att1_execution_fix_release",
+    "operator_pause_att1_new_entries_then_wait_for_broker_flat",
+    "three_flat_checks_then_atomic_att1_execution_fix_release",
     "monitor_six_day_crypto_research_pipeline",
     "alpaca_next_session_day_stop_rearm_proof",
     "alpaca_pit_xnys_corporate_action_cost_bundle_and_second_engine",
