@@ -1,0 +1,2331 @@
+{
+  "_meta": {
+    "schema_id": "btc_state_table_descriptive_v2",
+    "status": "DESCRIPTIVE_ONLY_NOT_A_TRADING_GATE",
+    "search_end_utc": "2025-09-30",
+    "reserved_holdout_used": false,
+    "symbol_count": 99,
+    "pooled_row_count": 121503,
+    "limitations": [
+      "pooled rows are cross-sectionally dependent",
+      "levels are generic weekly extrema, not strategy-native levels",
+      "no costed R or prospective shadow evidence"
+    ]
+  },
+  "trend": [
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "trend": "выше_недели",
+      "n": 26718,
+      "доля_вверх": 0.474,
+      "средний_bps": 14.966
+    },
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "trend": "ниже_недели",
+      "n": 22225,
+      "доля_вверх": 0.502,
+      "средний_bps": 12.59
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "trend": "выше_недели",
+      "n": 26626,
+      "доля_вверх": 0.472,
+      "средний_bps": 30.851
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "trend": "ниже_недели",
+      "n": 22133,
+      "доля_вверх": 0.49,
+      "средний_bps": 45.518
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "trend": "выше_недели",
+      "n": 1135,
+      "доля_вверх": 0.504,
+      "средний_bps": 36.819
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "trend": "ниже_недели",
+      "n": 5145,
+      "доля_вверх": 0.529,
+      "средний_bps": 21.433
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "trend": "выше_недели",
+      "n": 1129,
+      "доля_вверх": 0.517,
+      "средний_bps": 86.23
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "trend": "ниже_недели",
+      "n": 5137,
+      "доля_вверх": 0.519,
+      "средний_bps": 81.535
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 24,
+      "trend": "выше_недели",
+      "n": 4860,
+      "доля_вверх": 0.468,
+      "средний_bps": 36.015
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 24,
+      "trend": "ниже_недели",
+      "n": 773,
+      "доля_вверх": 0.42,
+      "средний_bps": 3.555
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 72,
+      "trend": "выше_недели",
+      "n": 4850,
+      "доля_вверх": 0.474,
+      "средний_bps": 88.547
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 72,
+      "trend": "ниже_недели",
+      "n": 772,
+      "доля_вверх": 0.437,
+      "средний_bps": 74.286
+    }
+  ],
+  "power": [
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "power": "вбок",
+      "n": 29690,
+      "доля_вверх": 0.478,
+      "средний_bps": -5.047
+    },
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "power": "сильно_вверх",
+      "n": 14973,
+      "доля_вверх": 0.482,
+      "средний_bps": 36.112
+    },
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "power": "сильно_вниз",
+      "n": 4280,
+      "доля_вверх": 0.557,
+      "средний_bps": 67.472
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "power": "вбок",
+      "n": 29506,
+      "доля_вверх": 0.465,
+      "средний_bps": -20.025
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "power": "сильно_вверх",
+      "n": 14973,
+      "доля_вверх": 0.49,
+      "средний_bps": 123.632
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "power": "сильно_вниз",
+      "n": 4280,
+      "доля_вверх": 0.55,
+      "средний_bps": 132.851
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "power": "вбок",
+      "n": 4137,
+      "доля_вверх": 0.511,
+      "средний_bps": 6.884
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "power": "сильно_вверх",
+      "n": 1328,
+      "доля_вверх": 0.52,
+      "средний_bps": 23.796
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "power": "сильно_вниз",
+      "n": 815,
+      "доля_вверх": 0.601,
+      "средний_bps": 112.858
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "power": "вбок",
+      "n": 4123,
+      "доля_вверх": 0.491,
+      "средний_bps": 3.961
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "power": "сильно_вверх",
+      "n": 1328,
+      "доля_вверх": 0.574,
+      "средний_bps": 224.702
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "power": "сильно_вниз",
+      "n": 815,
+      "доля_вверх": 0.568,
+      "средний_bps": 247.191
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 24,
+      "power": "вбок",
+      "n": 3121,
+      "доля_вверх": 0.459,
+      "средний_bps": 10.122
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 24,
+      "power": "сильно_вверх",
+      "n": 2275,
+      "доля_вверх": 0.469,
+      "средний_bps": 72.97
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 24,
+      "power": "сильно_вниз",
+      "n": 237,
+      "доля_вверх": 0.422,
+      "средний_bps": -83.605
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 72,
+      "power": "вбок",
+      "n": 3110,
+      "доля_вверх": 0.444,
+      "средний_bps": -19.606
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 72,
+      "power": "сильно_вверх",
+      "n": 2275,
+      "доля_вверх": 0.497,
+      "средний_bps": 234.358
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 72,
+      "power": "сильно_вниз",
+      "n": 237,
+      "доля_вверх": 0.536,
+      "средний_bps": 61.664
+    }
+  ],
+  "vola": [
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "vola": "норма",
+      "n": 22147,
+      "доля_вверх": 0.492,
+      "средний_bps": 16.658
+    },
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "vola": "расширение",
+      "n": 12064,
+      "доля_вверх": 0.511,
+      "средний_bps": 71.815
+    },
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "vola": "сжатие",
+      "n": 14732,
+      "доля_вверх": 0.457,
+      "средний_bps": -37.717
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "vola": "норма",
+      "n": 22137,
+      "доля_вверх": 0.468,
+      "средний_bps": 5.327
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "vola": "расширение",
+      "n": 12064,
+      "доля_вверх": 0.521,
+      "средний_bps": 168.472
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "vola": "сжатие",
+      "n": 14558,
+      "доля_вверх": 0.465,
+      "средний_bps": -22.082
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "vola": "норма",
+      "n": 2989,
+      "доля_вверх": 0.532,
+      "средний_bps": 34.167
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "vola": "расширение",
+      "n": 1731,
+      "доля_вверх": 0.592,
+      "средний_bps": 154.687
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "vola": "сжатие",
+      "n": 1560,
+      "доля_вверх": 0.434,
+      "средний_bps": -139.632
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "vola": "норма",
+      "n": 2985,
+      "доля_вверх": 0.513,
+      "средний_bps": 60.599
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "vola": "расширение",
+      "n": 1731,
+      "доля_вверх": 0.576,
+      "средний_bps": 200.78
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "vola": "сжатие",
+      "n": 1550,
+      "доля_вверх": 0.465,
+      "средний_bps": -7.898
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 24,
+      "vola": "норма",
+      "n": 2615,
+      "доля_вверх": 0.481,
+      "средний_bps": 58.969
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 24,
+      "vola": "расширение",
+      "n": 1485,
+      "доля_вверх": 0.452,
+      "средний_bps": 39.606
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 24,
+      "vola": "сжатие",
+      "n": 1533,
+      "доля_вверх": 0.436,
+      "средний_bps": -22.984
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 72,
+      "vola": "норма",
+      "n": 2610,
+      "доля_вверх": 0.464,
+      "средний_bps": 67.541
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 72,
+      "vola": "расширение",
+      "n": 1485,
+      "доля_вверх": 0.496,
+      "средний_bps": 209.73
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 72,
+      "vola": "сжатие",
+      "n": 1527,
+      "доля_вверх": 0.451,
+      "средний_bps": -0.608
+    }
+  ],
+  "place": [
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "place": "в_середине",
+      "n": 29447,
+      "доля_вверх": 0.474,
+      "средний_bps": -14.283
+    },
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "place": "у_вершины_месяца",
+      "n": 14783,
+      "доля_вверх": 0.48,
+      "средний_bps": 44.373
+    },
+    {
+      "event": "БАЗА",
+      "hor": 24,
+      "place": "у_дна_месяца",
+      "n": 4713,
+      "доля_вверх": 0.58,
+      "средний_bps": 94.265
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "place": "в_середине",
+      "n": 29335,
+      "доля_вверх": 0.454,
+      "средний_bps": -50.61
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "place": "у_вершины_месяца",
+      "n": 14783,
+      "доля_вверх": 0.5,
+      "средний_bps": 149.005
+    },
+    {
+      "event": "БАЗА",
+      "hor": 72,
+      "place": "у_дна_месяца",
+      "n": 4641,
+      "доля_вверх": 0.582,
+      "средний_bps": 239.345
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "place": "в_середине",
+      "n": 4170,
+      "доля_вверх": 0.486,
+      "средний_bps": -34.215
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "place": "у_вершины_месяца",
+      "n": 824,
+      "доля_вверх": 0.538,
+      "средний_bps": 87.128
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "place": "у_дна_месяца",
+      "n": 1286,
+      "доля_вверх": 0.639,
+      "средний_bps": 173.363
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "place": "в_середине",
+      "n": 4162,
+      "доля_вверх": 0.453,
+      "средний_bps": -68.104
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "place": "у_вершины_месяца",
+      "n": 824,
+      "доля_вверх": 0.583,
+      "средний_bps": 318.037
+    },
+    {
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "place": "у_дна_месяца",
+      "n": 1280,
+      "доля_вверх": 0.691,
+      "средний_bps": 419.986
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 24,
+      "place": "в_середине",
+      "n": 2632,
+      "доля_вверх": 0.454,
+      "средний_bps": 1.367
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 24,
+      "place": "у_вершины_месяца",
+      "n": 2887,
+      "доля_вверх": 0.469,
+      "средний_bps": 66.107
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 72,
+      "place": "в_середине",
+      "n": 2622,
+      "доля_вверх": 0.42,
+      "средний_bps": -60.455
+    },
+    {
+      "event": "пробой_вверх",
+      "hor": 72,
+      "place": "у_вершины_месяца",
+      "n": 2887,
+      "доля_вверх": 0.513,
+      "средний_bps": 223.078
+    }
+  ],
+  "_validation": [
+    {
+      "dimension": "trend",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "выше_недели",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 221,
+          "base_n": 5115,
+          "delta_up_pp": 5.97,
+          "delta_mean_bps": 27.705
+        },
+        {
+          "fold": "2024",
+          "event_n": 352,
+          "base_n": 9678,
+          "delta_up_pp": -0.392,
+          "delta_mean_bps": 10.638
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 562,
+          "base_n": 11925,
+          "delta_up_pp": 4.017,
+          "delta_mean_bps": 28.573
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 107,
+      "weekly_mean_delta_bps": 44.77,
+      "weekly_t_return": 1.774
+    },
+    {
+      "dimension": "trend",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "ниже_недели",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 918,
+          "base_n": 4926,
+          "delta_up_pp": 6.745,
+          "delta_mean_bps": 12.865
+        },
+        {
+          "fold": "2024",
+          "event_n": 1739,
+          "base_n": 7483,
+          "delta_up_pp": -0.053,
+          "delta_mean_bps": -36.707
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 2488,
+          "base_n": 9816,
+          "delta_up_pp": 3.235,
+          "delta_mean_bps": 40.923
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 123,
+      "weekly_mean_delta_bps": 45.907,
+      "weekly_t_return": 1.928
+    },
+    {
+      "dimension": "trend",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "выше_недели",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 221,
+          "base_n": 5115,
+          "delta_up_pp": 6.995,
+          "delta_mean_bps": 99.194
+        },
+        {
+          "fold": "2024",
+          "event_n": 352,
+          "base_n": 9678,
+          "delta_up_pp": -0.315,
+          "delta_mean_bps": -43.666
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 556,
+          "base_n": 11833,
+          "delta_up_pp": 6.71,
+          "delta_mean_bps": 105.23
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 106,
+      "weekly_mean_delta_bps": 50.694,
+      "weekly_t_return": 1.178
+    },
+    {
+      "dimension": "trend",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "ниже_недели",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 918,
+          "base_n": 4926,
+          "delta_up_pp": 2.73,
+          "delta_mean_bps": -37.784
+        },
+        {
+          "fold": "2024",
+          "event_n": 1739,
+          "base_n": 7483,
+          "delta_up_pp": -3.832,
+          "delta_mean_bps": -86.548
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 2480,
+          "base_n": 9724,
+          "delta_up_pp": 7.754,
+          "delta_mean_bps": 153.135
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        -1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 123,
+      "weekly_mean_delta_bps": 48.739,
+      "weekly_t_return": 0.836
+    },
+    {
+      "dimension": "trend",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "выше_недели",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 928,
+          "base_n": 5115,
+          "delta_up_pp": -2.316,
+          "delta_mean_bps": 25.087
+        },
+        {
+          "fold": "2024",
+          "event_n": 1825,
+          "base_n": 9678,
+          "delta_up_pp": -0.134,
+          "delta_mean_bps": 30.969
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 2107,
+          "base_n": 11925,
+          "delta_up_pp": -0.195,
+          "delta_mean_bps": 10.074
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 128,
+      "weekly_mean_delta_bps": -46.445,
+      "weekly_t_return": -2.057
+    },
+    {
+      "dimension": "trend",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "ниже_недели",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 188,
+          "base_n": 4926,
+          "delta_up_pp": -8.75,
+          "delta_mean_bps": 54.88
+        },
+        {
+          "fold": "2024",
+          "event_n": 291,
+          "base_n": 7483,
+          "delta_up_pp": -9.073,
+          "delta_mean_bps": -42.497
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 294,
+          "base_n": 9816,
+          "delta_up_pp": -6.823,
+          "delta_mean_bps": -21.232
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        -1
+      ],
+      "weekly_cluster_count": 108,
+      "weekly_mean_delta_bps": -112.184,
+      "weekly_t_return": -2.176
+    },
+    {
+      "dimension": "trend",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "выше_недели",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 928,
+          "base_n": 5115,
+          "delta_up_pp": -0.493,
+          "delta_mean_bps": 91.372
+        },
+        {
+          "fold": "2024",
+          "event_n": 1825,
+          "base_n": 9678,
+          "delta_up_pp": 1.393,
+          "delta_mean_bps": 111.918
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 2097,
+          "base_n": 11833,
+          "delta_up_pp": -0.579,
+          "delta_mean_bps": -5.729
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        -1
+      ],
+      "weekly_cluster_count": 127,
+      "weekly_mean_delta_bps": -68.148,
+      "weekly_t_return": -2.016
+    },
+    {
+      "dimension": "trend",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "ниже_недели",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 188,
+          "base_n": 4926,
+          "delta_up_pp": -12.6,
+          "delta_mean_bps": 106.432
+        },
+        {
+          "fold": "2024",
+          "event_n": 291,
+          "base_n": 7483,
+          "delta_up_pp": -2.481,
+          "delta_mean_bps": 33.835
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 293,
+          "base_n": 9724,
+          "delta_up_pp": -4.181,
+          "delta_mean_bps": -42.203
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        -1
+      ],
+      "weekly_cluster_count": 108,
+      "weekly_mean_delta_bps": -131.389,
+      "weekly_t_return": -1.578
+    },
+    {
+      "dimension": "power",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "вбок",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 717,
+          "base_n": 4705,
+          "delta_up_pp": 3.153,
+          "delta_mean_bps": -23.421
+        },
+        {
+          "fold": "2024",
+          "event_n": 1241,
+          "base_n": 9602,
+          "delta_up_pp": 1.716,
+          "delta_mean_bps": 7.1
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 2179,
+          "base_n": 15383,
+          "delta_up_pp": 4.129,
+          "delta_mean_bps": 27.258
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        -1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 102,
+      "weekly_mean_delta_bps": 92.079,
+      "weekly_t_return": 3.36
+    },
+    {
+      "dimension": "power",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "сильно_вверх",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 273,
+          "base_n": 4318,
+          "delta_up_pp": 19.33,
+          "delta_mean_bps": 124.7
+        },
+        {
+          "fold": "2024",
+          "event_n": 512,
+          "base_n": 6097,
+          "delta_up_pp": 0.046,
+          "delta_mean_bps": -57.83
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 543,
+          "base_n": 4558,
+          "delta_up_pp": 0.516,
+          "delta_mean_bps": -14.892
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        -1
+      ],
+      "weekly_cluster_count": 60,
+      "weekly_mean_delta_bps": 65.573,
+      "weekly_t_return": 1.641
+    },
+    {
+      "dimension": "power",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "сильно_вниз",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 149,
+          "base_n": 1018,
+          "delta_up_pp": 10.615,
+          "delta_mean_bps": 110.673
+        },
+        {
+          "fold": "2024",
+          "event_n": 338,
+          "base_n": 1462,
+          "delta_up_pp": -5.022,
+          "delta_mean_bps": -109.361
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 328,
+          "base_n": 1800,
+          "delta_up_pp": 10.493,
+          "delta_mean_bps": 166.729
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 29,
+      "weekly_mean_delta_bps": 84.329,
+      "weekly_t_return": 1.856
+    },
+    {
+      "dimension": "power",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "вбок",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 717,
+          "base_n": 4705,
+          "delta_up_pp": 0.502,
+          "delta_mean_bps": -73.44
+        },
+        {
+          "fold": "2024",
+          "event_n": 1241,
+          "base_n": 9602,
+          "delta_up_pp": -1.682,
+          "delta_mean_bps": -4.634
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 2165,
+          "base_n": 15199,
+          "delta_up_pp": 6.014,
+          "delta_mean_bps": 75.152
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        -1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 101,
+      "weekly_mean_delta_bps": 165.696,
+      "weekly_t_return": 3.946
+    },
+    {
+      "dimension": "power",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "сильно_вверх",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 273,
+          "base_n": 4318,
+          "delta_up_pp": 13.5,
+          "delta_mean_bps": 106.388
+        },
+        {
+          "fold": "2024",
+          "event_n": 512,
+          "base_n": 6097,
+          "delta_up_pp": 2.78,
+          "delta_mean_bps": -45.547
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 543,
+          "base_n": 4558,
+          "delta_up_pp": 13.598,
+          "delta_mean_bps": 310.675
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 60,
+      "weekly_mean_delta_bps": 180.505,
+      "weekly_t_return": 2.907
+    },
+    {
+      "dimension": "power",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "сильно_вниз",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 149,
+          "base_n": 1018,
+          "delta_up_pp": 14.56,
+          "delta_mean_bps": 311.296
+        },
+        {
+          "fold": "2024",
+          "event_n": 338,
+          "base_n": 1462,
+          "delta_up_pp": -9.891,
+          "delta_mean_bps": -191.612
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 328,
+          "base_n": 1800,
+          "delta_up_pp": 7.363,
+          "delta_mean_bps": 312.28
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 29,
+      "weekly_mean_delta_bps": 87.13,
+      "weekly_t_return": 0.763
+    },
+    {
+      "dimension": "power",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "вбок",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 351,
+          "base_n": 4705,
+          "delta_up_pp": -4.606,
+          "delta_mean_bps": 11.955
+        },
+        {
+          "fold": "2024",
+          "event_n": 1035,
+          "base_n": 9602,
+          "delta_up_pp": -3.573,
+          "delta_mean_bps": -5.046
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 1735,
+          "base_n": 15383,
+          "delta_up_pp": -0.545,
+          "delta_mean_bps": 26.083
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 103,
+      "weekly_mean_delta_bps": -94.59,
+      "weekly_t_return": -3.245
+    },
+    {
+      "dimension": "power",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "сильно_вверх",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 745,
+          "base_n": 4318,
+          "delta_up_pp": -4.252,
+          "delta_mean_bps": 20.031
+        },
+        {
+          "fold": "2024",
+          "event_n": 989,
+          "base_n": 6097,
+          "delta_up_pp": 0.202,
+          "delta_mean_bps": 46.723
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 541,
+          "base_n": 4558,
+          "delta_up_pp": -0.974,
+          "delta_mean_bps": 18.433
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 68,
+      "weekly_mean_delta_bps": -4.572,
+      "weekly_t_return": -0.151
+    },
+    {
+      "dimension": "power",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "сильно_вниз",
+      "folds": [
+        {
+          "fold": "2024",
+          "event_n": 92,
+          "base_n": 1462,
+          "delta_up_pp": -2.842,
+          "delta_mean_bps": -41.33
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 125,
+          "base_n": 1800,
+          "delta_up_pp": -20.656,
+          "delta_mean_bps": -244.176
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        -1,
+        -1
+      ],
+      "weekly_cluster_count": 24,
+      "weekly_mean_delta_bps": -242.204,
+      "weekly_t_return": -2.826
+    },
+    {
+      "dimension": "power",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "вбок",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 351,
+          "base_n": 4705,
+          "delta_up_pp": -3.447,
+          "delta_mean_bps": 9.885
+        },
+        {
+          "fold": "2024",
+          "event_n": 1035,
+          "base_n": 9602,
+          "delta_up_pp": -4.618,
+          "delta_mean_bps": 2.307
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 1724,
+          "base_n": 15199,
+          "delta_up_pp": -0.853,
+          "delta_mean_bps": -8.198
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        -1
+      ],
+      "weekly_cluster_count": 102,
+      "weekly_mean_delta_bps": -142.06,
+      "weekly_t_return": -2.985
+    },
+    {
+      "dimension": "power",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "сильно_вверх",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 745,
+          "base_n": 4318,
+          "delta_up_pp": -4.43,
+          "delta_mean_bps": 86.52
+        },
+        {
+          "fold": "2024",
+          "event_n": 989,
+          "base_n": 6097,
+          "delta_up_pp": 2.603,
+          "delta_mean_bps": 121.754
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 541,
+          "base_n": 4558,
+          "delta_up_pp": 1.424,
+          "delta_mean_bps": 48.755
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 68,
+      "weekly_mean_delta_bps": -20.788,
+      "weekly_t_return": -0.378
+    },
+    {
+      "dimension": "power",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "сильно_вниз",
+      "folds": [
+        {
+          "fold": "2024",
+          "event_n": 92,
+          "base_n": 1462,
+          "delta_up_pp": 17.476,
+          "delta_mean_bps": 209.231
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 125,
+          "base_n": 1800,
+          "delta_up_pp": -12.622,
+          "delta_mean_bps": -257.619
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1
+      ],
+      "weekly_cluster_count": 24,
+      "weekly_mean_delta_bps": -352.796,
+      "weekly_t_return": -3.605
+    },
+    {
+      "dimension": "vola",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "норма",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 488,
+          "base_n": 4241,
+          "delta_up_pp": 8.667,
+          "delta_mean_bps": 23.74
+        },
+        {
+          "fold": "2024",
+          "event_n": 1023,
+          "base_n": 8233,
+          "delta_up_pp": 3.112,
+          "delta_mean_bps": -19.409
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 1478,
+          "base_n": 9673,
+          "delta_up_pp": 3.103,
+          "delta_mean_bps": 42.058
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 130,
+      "weekly_mean_delta_bps": 93.659,
+      "weekly_t_return": 4.206
+    },
+    {
+      "dimension": "vola",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "расширение",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 340,
+          "base_n": 2956,
+          "delta_up_pp": 7.119,
+          "delta_mean_bps": 13.692
+        },
+        {
+          "fold": "2024",
+          "event_n": 683,
+          "base_n": 4662,
+          "delta_up_pp": -1.691,
+          "delta_mean_bps": -20.896
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 708,
+          "base_n": 4446,
+          "delta_up_pp": 18.003,
+          "delta_mean_bps": 215.046
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 89,
+      "weekly_mean_delta_bps": 131.072,
+      "weekly_t_return": 3.733
+    },
+    {
+      "dimension": "vola",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "сжатие",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 311,
+          "base_n": 2844,
+          "delta_up_pp": 5.425,
+          "delta_mean_bps": -15.295
+        },
+        {
+          "fold": "2024",
+          "event_n": 385,
+          "base_n": 4266,
+          "delta_up_pp": -0.916,
+          "delta_mean_bps": -79.644
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 864,
+          "base_n": 7622,
+          "delta_up_pp": -5.722,
+          "delta_mean_bps": -139.118
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "weekly_cluster_count": 104,
+      "weekly_mean_delta_bps": 50.026,
+      "weekly_t_return": 1.852
+    },
+    {
+      "dimension": "vola",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "норма",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 488,
+          "base_n": 4241,
+          "delta_up_pp": 5.786,
+          "delta_mean_bps": -21.412
+        },
+        {
+          "fold": "2024",
+          "event_n": 1023,
+          "base_n": 8233,
+          "delta_up_pp": -1.611,
+          "delta_mean_bps": -64.251
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 1474,
+          "base_n": 9663,
+          "delta_up_pp": 8.97,
+          "delta_mean_bps": 175.601
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        -1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 129,
+      "weekly_mean_delta_bps": 188.231,
+      "weekly_t_return": 5.137
+    },
+    {
+      "dimension": "vola",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "расширение",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 340,
+          "base_n": 2956,
+          "delta_up_pp": 5.841,
+          "delta_mean_bps": 21.324
+        },
+        {
+          "fold": "2024",
+          "event_n": 683,
+          "base_n": 4662,
+          "delta_up_pp": -3.839,
+          "delta_mean_bps": -120.539
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 708,
+          "base_n": 4446,
+          "delta_up_pp": 14.478,
+          "delta_mean_bps": 198.231
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 89,
+      "weekly_mean_delta_bps": 149.393,
+      "weekly_t_return": 2.792
+    },
+    {
+      "dimension": "vola",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "сжатие",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 311,
+          "base_n": 2844,
+          "delta_up_pp": -3.759,
+          "delta_mean_bps": -143.84
+        },
+        {
+          "fold": "2024",
+          "event_n": 385,
+          "base_n": 4266,
+          "delta_up_pp": 0.899,
+          "delta_mean_bps": 54.285
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 854,
+          "base_n": 7448,
+          "delta_up_pp": 0.745,
+          "delta_mean_bps": 52.069
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        -1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 103,
+      "weekly_mean_delta_bps": 73.938,
+      "weekly_t_return": 1.755
+    },
+    {
+      "dimension": "vola",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "норма",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 451,
+          "base_n": 4241,
+          "delta_up_pp": -5.765,
+          "delta_mean_bps": 7.023
+        },
+        {
+          "fold": "2024",
+          "event_n": 1106,
+          "base_n": 8233,
+          "delta_up_pp": -0.663,
+          "delta_mean_bps": 51.72
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 1058,
+          "base_n": 9673,
+          "delta_up_pp": 0.667,
+          "delta_mean_bps": 49.602
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 130,
+      "weekly_mean_delta_bps": -103.151,
+      "weekly_t_return": -4.754
+    },
+    {
+      "dimension": "vola",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "расширение",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 428,
+          "base_n": 2956,
+          "delta_up_pp": -5.322,
+          "delta_mean_bps": 42.115
+        },
+        {
+          "fold": "2024",
+          "event_n": 528,
+          "base_n": 4662,
+          "delta_up_pp": -3.709,
+          "delta_mean_bps": -25.191
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 529,
+          "base_n": 4446,
+          "delta_up_pp": -8.623,
+          "delta_mean_bps": -97.086
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        -1
+      ],
+      "weekly_cluster_count": 91,
+      "weekly_mean_delta_bps": -76.487,
+      "weekly_t_return": -1.456
+    },
+    {
+      "dimension": "vola",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "сжатие",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 237,
+          "base_n": 2844,
+          "delta_up_pp": -0.774,
+          "delta_mean_bps": 43.132
+        },
+        {
+          "fold": "2024",
+          "event_n": 482,
+          "base_n": 4266,
+          "delta_up_pp": -4.357,
+          "delta_mean_bps": -2.028
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 814,
+          "base_n": 7622,
+          "delta_up_pp": -1.195,
+          "delta_mean_bps": 15.771
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 118,
+      "weekly_mean_delta_bps": -23.083,
+      "weekly_t_return": -0.714
+    },
+    {
+      "dimension": "vola",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "норма",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 451,
+          "base_n": 4241,
+          "delta_up_pp": -4.581,
+          "delta_mean_bps": 79.266
+        },
+        {
+          "fold": "2024",
+          "event_n": 1106,
+          "base_n": 8233,
+          "delta_up_pp": -0.941,
+          "delta_mean_bps": 67.796
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 1053,
+          "base_n": 9663,
+          "delta_up_pp": 1.555,
+          "delta_mean_bps": 43.375
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 129,
+      "weekly_mean_delta_bps": -156.042,
+      "weekly_t_return": -3.177
+    },
+    {
+      "dimension": "vola",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "расширение",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 428,
+          "base_n": 2956,
+          "delta_up_pp": 0.651,
+          "delta_mean_bps": 184.097
+        },
+        {
+          "fold": "2024",
+          "event_n": 528,
+          "base_n": 4662,
+          "delta_up_pp": -0.917,
+          "delta_mean_bps": 79.31
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 529,
+          "base_n": 4446,
+          "delta_up_pp": -6.405,
+          "delta_mean_bps": -114.051
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        -1
+      ],
+      "weekly_cluster_count": 91,
+      "weekly_mean_delta_bps": -191.398,
+      "weekly_t_return": -2.732
+    },
+    {
+      "dimension": "vola",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "сжатие",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 237,
+          "base_n": 2844,
+          "delta_up_pp": -5.556,
+          "delta_mean_bps": 9.135
+        },
+        {
+          "fold": "2024",
+          "event_n": 482,
+          "base_n": 4266,
+          "delta_up_pp": 0.723,
+          "delta_mean_bps": 101.273
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 808,
+          "base_n": 7448,
+          "delta_up_pp": -1.666,
+          "delta_mean_bps": -22.931
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        -1
+      ],
+      "weekly_cluster_count": 116,
+      "weekly_mean_delta_bps": -16.133,
+      "weekly_t_return": -0.254
+    },
+    {
+      "dimension": "place",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "в_середине",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 732,
+          "base_n": 5372,
+          "delta_up_pp": 4.842,
+          "delta_mean_bps": -16.285
+        },
+        {
+          "fold": "2024",
+          "event_n": 1448,
+          "base_n": 9332,
+          "delta_up_pp": 2.822,
+          "delta_mean_bps": -0.012
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 1990,
+          "base_n": 14743,
+          "delta_up_pp": -1.288,
+          "delta_mean_bps": -36.795
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "weekly_cluster_count": 117,
+      "weekly_mean_delta_bps": 32.053,
+      "weekly_t_return": 1.641
+    },
+    {
+      "dimension": "place",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "у_вершины_месяца",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 170,
+          "base_n": 3642,
+          "delta_up_pp": 17.404,
+          "delta_mean_bps": 171.505
+        },
+        {
+          "fold": "2024",
+          "event_n": 275,
+          "base_n": 6248,
+          "delta_up_pp": 0.675,
+          "delta_mean_bps": 2.242
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 379,
+          "base_n": 4893,
+          "delta_up_pp": 4.793,
+          "delta_mean_bps": 20.605
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 60,
+      "weekly_mean_delta_bps": 91.2,
+      "weekly_t_return": 2.455
+    },
+    {
+      "dimension": "place",
+      "event": "отскок_от_низа",
+      "hor": 24,
+      "state": "у_дна_месяца",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 237,
+          "base_n": 1027,
+          "delta_up_pp": 3.44,
+          "delta_mean_bps": 2.779
+        },
+        {
+          "fold": "2024",
+          "event_n": 368,
+          "base_n": 1581,
+          "delta_up_pp": -8.095,
+          "delta_mean_bps": -117.854
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 681,
+          "base_n": 2105,
+          "delta_up_pp": 14.207,
+          "delta_mean_bps": 204.278
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 40,
+      "weekly_mean_delta_bps": 21.254,
+      "weekly_t_return": 0.429
+    },
+    {
+      "dimension": "place",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "в_середине",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 732,
+          "base_n": 5372,
+          "delta_up_pp": 0.915,
+          "delta_mean_bps": -84.91
+        },
+        {
+          "fold": "2024",
+          "event_n": 1448,
+          "base_n": 9332,
+          "delta_up_pp": -1.93,
+          "delta_mean_bps": -33.932
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 1982,
+          "base_n": 14631,
+          "delta_up_pp": 0.654,
+          "delta_mean_bps": 14.936
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        -1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 116,
+      "weekly_mean_delta_bps": 99.324,
+      "weekly_t_return": 3.214
+    },
+    {
+      "dimension": "place",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "у_вершины_месяца",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 170,
+          "base_n": 3642,
+          "delta_up_pp": 13.647,
+          "delta_mean_bps": 240.381
+        },
+        {
+          "fold": "2024",
+          "event_n": 275,
+          "base_n": 6248,
+          "delta_up_pp": -0.838,
+          "delta_mean_bps": -57.706
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 379,
+          "base_n": 4893,
+          "delta_up_pp": 13.206,
+          "delta_mean_bps": 313.028
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        -1,
+        1
+      ],
+      "weekly_cluster_count": 60,
+      "weekly_mean_delta_bps": 125.768,
+      "weekly_t_return": 1.967
+    },
+    {
+      "dimension": "place",
+      "event": "отскок_от_низа",
+      "hor": 72,
+      "state": "у_дна_месяца",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 237,
+          "base_n": 1027,
+          "delta_up_pp": 4.479,
+          "delta_mean_bps": 5.312
+        },
+        {
+          "fold": "2024",
+          "event_n": 368,
+          "base_n": 1581,
+          "delta_up_pp": -1.013,
+          "delta_mean_bps": 8.337
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 675,
+          "base_n": 2033,
+          "delta_up_pp": 19.587,
+          "delta_mean_bps": 324.12
+        }
+      ],
+      "fold_delta_up_signs": [
+        1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 40,
+      "weekly_mean_delta_bps": 64.107,
+      "weekly_t_return": 1.247
+    },
+    {
+      "dimension": "place",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "в_середине",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 400,
+          "base_n": 5372,
+          "delta_up_pp": -6.277,
+          "delta_mean_bps": 27.208
+        },
+        {
+          "fold": "2024",
+          "event_n": 838,
+          "base_n": 9332,
+          "delta_up_pp": -0.463,
+          "delta_mean_bps": 26.007
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 1394,
+          "base_n": 14743,
+          "delta_up_pp": -1.831,
+          "delta_mean_bps": 7.958
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 119,
+      "weekly_mean_delta_bps": -54.48,
+      "weekly_t_return": -1.744
+    },
+    {
+      "dimension": "place",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "у_вершины_месяца",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 695,
+          "base_n": 3642,
+          "delta_up_pp": -1.297,
+          "delta_mean_bps": 35.717
+        },
+        {
+          "fold": "2024",
+          "event_n": 1244,
+          "base_n": 6248,
+          "delta_up_pp": -2.194,
+          "delta_mean_bps": 11.034
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 948,
+          "base_n": 4893,
+          "delta_up_pp": 0.599,
+          "delta_mean_bps": 25.262
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 74,
+      "weekly_mean_delta_bps": -17.381,
+      "weekly_t_return": -0.574
+    },
+    {
+      "dimension": "place",
+      "event": "пробой_вверх",
+      "hor": 24,
+      "state": "у_дна_месяца",
+      "folds": [
+        {
+          "fold": "2025_pre",
+          "event_n": 59,
+          "base_n": 2105,
+          "delta_up_pp": -5.937,
+          "delta_mean_bps": -247.505
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        -1
+      ],
+      "weekly_cluster_count": 23,
+      "weekly_mean_delta_bps": -273.867,
+      "weekly_t_return": -3.925
+    },
+    {
+      "dimension": "place",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "в_середине",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 400,
+          "base_n": 5372,
+          "delta_up_pp": -6.554,
+          "delta_mean_bps": 62.018
+        },
+        {
+          "fold": "2024",
+          "event_n": 838,
+          "base_n": 9332,
+          "delta_up_pp": -2.61,
+          "delta_mean_bps": 26.671
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 1384,
+          "base_n": 14631,
+          "delta_up_pp": -3.094,
+          "delta_mean_bps": -47.448
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        -1,
+        -1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        -1
+      ],
+      "weekly_cluster_count": 118,
+      "weekly_mean_delta_bps": -120.054,
+      "weekly_t_return": -2.161
+    },
+    {
+      "dimension": "place",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "у_вершины_месяца",
+      "folds": [
+        {
+          "fold": "2023",
+          "event_n": 695,
+          "base_n": 3642,
+          "delta_up_pp": -0.856,
+          "delta_mean_bps": 112.854
+        },
+        {
+          "fold": "2024",
+          "event_n": 1244,
+          "base_n": 6248,
+          "delta_up_pp": 1.675,
+          "delta_mean_bps": 93.171
+        },
+        {
+          "fold": "2025_pre",
+          "event_n": 948,
+          "base_n": 4893,
+          "delta_up_pp": 2.204,
+          "delta_mean_bps": 20.913
+        }
+      ],
+      "fold_delta_up_signs": [
+        -1,
+        1,
+        1
+      ],
+      "fold_delta_bps_signs": [
+        1,
+        1,
+        1
+      ],
+      "weekly_cluster_count": 74,
+      "weekly_mean_delta_bps": -107.138,
+      "weekly_t_return": -2.325
+    },
+    {
+      "dimension": "place",
+      "event": "пробой_вверх",
+      "hor": 72,
+      "state": "у_дна_месяца",
+      "folds": [
+        {
+          "fold": "2025_pre",
+          "event_n": 58,
+          "base_n": 2033,
+          "delta_up_pp": 0.578,
+          "delta_mean_bps": -161.626
+        }
+      ],
+      "fold_delta_up_signs": [
+        1
+      ],
+      "fold_delta_bps_signs": [
+        -1
+      ],
+      "weekly_cluster_count": 23,
+      "weekly_mean_delta_bps": -259.41,
+      "weekly_t_return": -2.431
+    }
+  ]
+}
