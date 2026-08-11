@@ -1,0 +1,74 @@
+{
+  "schema_id": "l2_tape_launch_receipt_v1",
+  "generated_at_utc": "2026-08-11T19:52:45Z",
+  "authority": {
+    "research_only": true,
+    "public_only": true,
+    "authentication": false,
+    "order_capability": false,
+    "live_monolith_touched": false
+  },
+  "code_sha256": {
+    "bot/bybit_l2_tape.py": "e4df2b1e270b472923da5c5b9f3897df8af6506bd0ca2c0fd635d14749bf4a5c",
+    "scripts/collect_bybit_l2_tape.py": "e000c8423b2a731a31dcb0000e55235a38948e275ed8d177453aa8c7615ff849",
+    "scripts/validate_bybit_l2_tape.py": "030bcc99c54454909fd8eeb227d85d06f6ce7a7f8578cedd28ae7950a4930277"
+  },
+  "local_collectors": [
+    {
+      "screen": "research_l2_tape_btc_eth_20260811",
+      "symbols": ["BTCUSDT", "ETHUSDT"],
+      "streams": ["orderbook.200", "publicTrade"],
+      "status": "collecting",
+      "last_frame_lag_ms": 4,
+      "disk_cap_gib": 15,
+      "min_free_gib": 50
+    },
+    {
+      "screen": "research_l2_ondo_20260811",
+      "symbols": ["ONDOUSDT"],
+      "streams": ["orderbook.50", "publicTrade"],
+      "status": "collecting",
+      "last_frame_lag_ms": 2,
+      "disk_cap_gib": 15,
+      "min_free_gib": 50
+    },
+    {
+      "screen": "research_trades_micro_20260811",
+      "symbols": ["ONDOUSDT", "WIFUSDT", "SUIUSDT", "DOGEUSDT", "1000PEPEUSDT", "FILUSDT"],
+      "streams": ["publicTrade"],
+      "status": "collecting",
+      "last_frame_lag_ms": 4,
+      "disk_cap_gib": 8,
+      "min_free_gib": 50
+    }
+  ],
+  "server_collector": {
+    "host_role": "isolated_research_vps",
+    "root": "/root/research-l2",
+    "screen": "research_l2_tape_btc_eth_20260811",
+    "symbols": ["BTCUSDT", "ETHUSDT"],
+    "streams": ["orderbook.200", "publicTrade"],
+    "status": "collecting",
+    "last_frame_lag_ms": 2,
+    "disk_cap_gib": 2,
+    "min_free_gib": 5,
+    "server_free_gib": 7.6,
+    "separate_venv": true
+  },
+  "smoke_validation": {
+    "local": {
+      "BTCUSDT": {"book_records": 195, "book_coverage": 0.9931, "book_gaps": 0, "unique_trades": 183, "trade_gaps": 0},
+      "ETHUSDT": {"book_records": 198, "book_coverage": 0.9931, "book_gaps": 0, "unique_trades": 312, "trade_gaps": 0}
+    },
+    "server": {
+      "BTCUSDT": {"book_records": 212, "book_coverage_min": 0.986, "book_gaps": 0, "unique_trades": 228},
+      "ETHUSDT": {"book_records": 197, "book_coverage_min": 0.986, "book_gaps": 0, "unique_trades": 183}
+    }
+  },
+  "prior_data_recovered": {
+    "approx_total_mib": 931,
+    "stopped_on": "2026-07-22",
+    "reason": "storage_guard_min_free_80_gib",
+    "code_failure": false
+  }
+}

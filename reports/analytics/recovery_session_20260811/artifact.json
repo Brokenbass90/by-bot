@@ -1,0 +1,187 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Trading Station Recovery — проверенное состояние 11 августа 2026",
+    "description": "Технический отчёт по live-истине, исследовательским воротам, Alpaca, crypto-ногам и непрерывному сбору данных.",
+    "generatedAt": "2026-08-11T19:55:00Z",
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# Trading Station Recovery — проверенное состояние 11 августа 2026\n\nATT1 остаётся единственным tiny-live рукавом. XSEC, funding и Alpaca research работают без торговых полномочий; второй направленный crypto-кандидат — inplay ETH 24h. Новые деньги блокируются до чистых forward-ворот и parity."
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "body": "## Главный результат сессии\n\nСистема не стояла: пять контролируемых research-процессов живы, четыре L2/tape collector копят публичные данные, а обязательный паспорт прогона закрывает класс ошибок «сравнили разные условия». Одновременно два оптимистичных вывода отправлены в карантин: 24 из 48 строк шестидневного прогона не прошли независимый аудит, а level detector использовал нестрого независимые проверки. Это не потеря работы — это восстановление права доверять следующим цифрам."
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "cardIds": ["research_jobs", "l2_collectors", "valid_cases", "invalid_cases", "xsec_forward"]
+      },
+      {
+        "id": "matrix_header",
+        "type": "markdown",
+        "body": "## Половина матрицы завершилась технически, но не измерила стратегию\n\nНаличие валидного артефакта не означает прибыльность. Четыре семейства дали воспроизводимые отрицательные или слабые числа; ещё четыре семейства дали нулевые строки с `audit_rc=1` и не могут участвовать в выводе."
+      },
+      {
+        "id": "family_chart_block",
+        "type": "chart",
+        "chartId": "family_validity"
+      },
+      {
+        "id": "roadmap_header",
+        "type": "markdown",
+        "body": "## Путь к минимально рабочей версии\n\nКалендарь ниже условный: срок открывает review, но не заменяет критерий. Годовую доходность и число красных месяцев по ATT1, Alpaca и inplay сейчас честно назвать нельзя — live-contract monthly replay ещё не принят."
+      },
+      {
+        "id": "roadmap_table_block",
+        "type": "table",
+        "tableId": "roadmap_table"
+      },
+      {
+        "id": "interpretation",
+        "type": "markdown",
+        "body": "## Что имеет наибольший шанс\n\n1. **Crypto neutral:** XSEC/funding — лучший шанс получить независимый от направления рынка контур, но пока только risk-zero.\n2. **Crypto directional:** ATT1 majors-only tiny canary и inplay ETH 24h. Расширять ATT1 на весь рынок нельзя: широкий прогон ухудшил результат.\n3. **Equities:** Alpaca — защищённый пилот, а не доказанная стратегия; главный рычаг сейчас — точный PIT/live-contract replay и общий exit model.\n4. **FX/CFD:** следующий дешёвый эксперимент — XAU с фиксированным data/cost contract.\n5. **AI:** DeepSeek/Ollama полезны как proposal-only аудиторы, классификаторы отрицательных сделок и генераторы воспроизводимых гипотез; секреты, риск и ордера им не выдаются."
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## Ограничения и защита от самообмана\n\n- Прямое чтение брокера подтвердило flat в 19:22 и 20:00 UTC; это не вечный статус и перед live-изменением проверяется заново трижды.\n- Sealed holdout 2025-10..2026-06 не читался в этом аудите. Старые результаты без доказанного cutoff считаются потенциально загрязнёнными.\n- XSEC search-window показал CAGR 8,7% / 12,8% / 7,5% / −5,2% для maturity 180/270/390/540 дней: семейство нестабильно и остаётся shadow.\n- Отчёт — снимок, а не live-dashboard. Текущее состояние подтверждается heartbeat и прямым broker read перед каждым решением."
+      }
+    ],
+    "cards": [
+      {
+        "id": "research_jobs",
+        "description": "Процессы research supervisor, healthy и без live order authority.",
+        "dataset": "kpis",
+        "sourceId": "research_station",
+        "metrics": [{"label": "Research jobs healthy", "field": "healthy_jobs", "format": "number"}]
+      },
+      {
+        "id": "l2_collectors",
+        "description": "Публичные локальные и изолированные серверные collectors без аутентификации.",
+        "dataset": "kpis",
+        "sourceId": "l2_receipt",
+        "metrics": [{"label": "L2/tape collectors", "field": "l2_collectors", "format": "number"}]
+      },
+      {
+        "id": "valid_cases",
+        "description": "Строки матрицы с audit_rc=0; это техническая валидность, не promotion.",
+        "dataset": "kpis",
+        "sourceId": "six_day_summary",
+        "metrics": [{"label": "Admissible measurements", "field": "valid_cases", "format": "number"}]
+      },
+      {
+        "id": "invalid_cases",
+        "description": "Завершённые строки, отвергнутые независимым аудитом.",
+        "dataset": "kpis",
+        "sourceId": "six_day_status",
+        "metrics": [{"label": "Invalid measurements", "field": "invalid_cases", "format": "number"}]
+      },
+      {
+        "id": "xsec_forward",
+        "description": "Risk-zero решения; orders_sent=false и capital_authorized=false.",
+        "dataset": "kpis",
+        "sourceId": "xsec_ledger",
+        "metrics": [{"label": "XSEC forward decisions", "field": "xsec_decisions", "format": "number"}]
+      }
+    ],
+    "charts": [
+      {
+        "id": "family_validity",
+        "title": "Допустимые измерения по семействам",
+        "subtitle": "Четыре семейства имеют 0 из 6 пригодных строк; 6 из 6 означает только audit_rc=0, не положительный эдж.",
+        "question": "Какие семейства фактически произвели пригодные для анализа измерения?",
+        "rationale": "Горизонтальная шкала сразу отделяет технически пустые прогоны от измеренных отрицательных результатов.",
+        "intent": "comparison",
+        "type": "bar",
+        "dataset": "family_evidence",
+        "sourceId": "six_day_summary",
+        "encodings": {
+          "x": {"field": "family", "type": "nominal", "aggregate": "none", "label": "Семейство"},
+          "y": {"field": "valid_cases", "type": "quantitative", "aggregate": "none", "label": "Валидных строк"},
+          "tooltip": [
+            {"field": "valid_cases", "type": "quantitative", "label": "Валидно"},
+            {"field": "invalid_cases", "type": "quantitative", "label": "Невалидно"},
+            {"field": "replication_base_net_r", "type": "quantitative", "label": "Replication base, R"},
+            {"field": "oos_base_net_r", "type": "quantitative", "label": "OOS base, R"},
+            {"field": "interpretation", "type": "text", "label": "Интерпретация"}
+          ]
+        },
+        "xAxisTitle": "Семейство",
+        "yAxisTitle": "Пригодных строк из 6",
+        "valueFormat": "number",
+        "layout": "full",
+        "maxRows": 8
+      }
+    ],
+    "tables": [
+      {
+        "id": "roadmap_table",
+        "title": "Контуры, ворота и ближайший честный срок review",
+        "subtitle": "Review не равен разрешению капитала.",
+        "dataset": "roadmap",
+        "sourceId": "roadmap_source",
+        "defaultSort": {"field": "priority", "direction": "asc"},
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {"field": "priority", "label": "№", "format": "number"},
+          {"field": "contour", "label": "Контур", "type": "text"},
+          {"field": "current_state", "label": "Сейчас", "type": "text"},
+          {"field": "money_gate", "label": "Следующий денежный gate", "type": "text"},
+          {"field": "conditional_timing", "label": "Ориентир", "type": "text"}
+        ]
+      }
+    ],
+    "sources": [
+      {"id": "research_station", "label": "Local research station status", "path": "runtime/local_research_station/status.json", "query": {"engine": "sqlite", "language": "sql", "sql": "SELECT 5 AS healthy_jobs;", "description": "Reviewed extraction of summary.healthy from the station status snapshot.", "tables_used": ["runtime/local_research_station/status.json"], "filters": ["research_only=true", "live_order_authority=false"]}},
+      {"id": "l2_receipt", "label": "L2 tape launch receipt", "path": "reports/research/L2_TAPE_LAUNCH_RECEIPT_2026_08_11.json", "query": {"engine": "sqlite", "language": "sql", "sql": "SELECT 4 AS l2_collectors;", "description": "Count of three local collectors plus one isolated server collector in the reviewed receipt.", "tables_used": ["reports/research/L2_TAPE_LAUNCH_RECEIPT_2026_08_11.json"], "filters": ["public_only=true", "order_capability=false"]}},
+      {"id": "six_day_summary", "label": "Six-day crypto matrix summary", "path": "reports/research/six_day_crypto_pipeline_20260810/summary.csv", "query": {"engine": "sqlite", "language": "sql", "sql": "WITH family_evidence(family,valid_cases,invalid_cases,total_cases,replication_base_net_r,oos_base_net_r) AS (VALUES ('ATT1 current short',0,6,6,0.0,0.0),('ATT1 shallow short',0,6,6,0.0,0.0),('Horizontal break long',0,6,6,0.0,0.0),('Horizontal break short',0,6,6,0.0,0.0),('Support reclaim strict',6,0,6,-12.6131,-26.1287),('Support reclaim relaxed',6,0,6,-15.0706,-30.3749),('Squeeze breakout long',6,0,6,-281.2166,-292.5153),('Squeeze breakout short',6,0,6,-230.3441,-204.4571)) SELECT * FROM family_evidence;", "description": "Reviewed aggregation of 48 matrix rows by family; validity is audit_rc=0.", "tables_used": ["reports/research/six_day_crypto_pipeline_20260810/summary.csv"], "filters": ["8 families", "3 windows", "base and stress costs"], "metric_definitions": ["valid_cases=count rows where audit_rc=0", "invalid_cases=count rows where audit_rc!=0"]}},
+      {"id": "six_day_status", "label": "Six-day crypto matrix fail-closed status", "path": "reports/research/six_day_crypto_pipeline_20260810/status.json", "query": {"engine": "sqlite", "language": "sql", "sql": "SELECT 24 AS invalid_cases;", "description": "Count of invalid_cases in the fail-closed status snapshot.", "tables_used": ["reports/research/six_day_crypto_pipeline_20260810/status.json"]}},
+      {"id": "xsec_ledger", "label": "XSEC risk-zero shadow ledger", "path": "runtime/xsec_v3_shadow/ledger.jsonl", "query": {"engine": "sqlite", "language": "sql", "sql": "SELECT 17 AS xsec_decisions;", "description": "Reviewed line count of risk-zero shadow decisions through 2026-08-11.", "tables_used": ["runtime/xsec_v3_shadow/ledger.jsonl"], "filters": ["orders_sent=false", "capital_authorized=false"]}},
+      {"id": "roadmap_source", "label": "Canonical recovery roadmap", "path": "ROADMAP_2026_08_11.md", "query": {"engine": "sqlite", "language": "sql", "sql": "WITH roadmap(priority,contour) AS (VALUES (1,'ATT1'),(2,'Alpaca'),(3,'XSEC'),(4,'Funding'),(5,'Inplay ETH 24h'),(6,'BTC/ETH medium-term'),(7,'FX/XAU')) SELECT * FROM roadmap ORDER BY priority;", "description": "Ordered contour priorities from the verified roadmap block.", "tables_used": ["ROADMAP_2026_08_11.md"]}}
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-11T19:55:00Z",
+    "status": "partial",
+    "datasets": {
+      "kpis": [
+        {"healthy_jobs": 5, "l2_collectors": 4, "valid_cases": 24, "invalid_cases": 24, "xsec_decisions": 17}
+      ],
+      "family_evidence": [
+        {"family": "ATT1 current short", "valid_cases": 0, "invalid_cases": 6, "total_cases": 6, "replication_base_net_r": 0.0, "oos_base_net_r": 0.0, "interpretation": "инструмент не измерил семейство"},
+        {"family": "ATT1 shallow short", "valid_cases": 0, "invalid_cases": 6, "total_cases": 6, "replication_base_net_r": 0.0, "oos_base_net_r": 0.0, "interpretation": "инструмент не измерил семейство"},
+        {"family": "Horizontal break long", "valid_cases": 0, "invalid_cases": 6, "total_cases": 6, "replication_base_net_r": 0.0, "oos_base_net_r": 0.0, "interpretation": "инструмент не измерил семейство"},
+        {"family": "Horizontal break short", "valid_cases": 0, "invalid_cases": 6, "total_cases": 6, "replication_base_net_r": 0.0, "oos_base_net_r": 0.0, "interpretation": "инструмент не измерил семейство"},
+        {"family": "Support reclaim strict", "valid_cases": 6, "invalid_cases": 0, "total_cases": 6, "replication_base_net_r": -12.6131, "oos_base_net_r": -26.1287, "interpretation": "измерено; OOS отрицательный"},
+        {"family": "Support reclaim relaxed", "valid_cases": 6, "invalid_cases": 0, "total_cases": 6, "replication_base_net_r": -15.0706, "oos_base_net_r": -30.3749, "interpretation": "измерено; OOS отрицательный"},
+        {"family": "Squeeze breakout long", "valid_cases": 6, "invalid_cases": 0, "total_cases": 6, "replication_base_net_r": -281.2166, "oos_base_net_r": -292.5153, "interpretation": "честно отклонено"},
+        {"family": "Squeeze breakout short", "valid_cases": 6, "invalid_cases": 0, "total_cases": 6, "replication_base_net_r": -230.3441, "oos_base_net_r": -204.4571, "interpretation": "честно отклонено"}
+      ],
+      "roadmap": [
+        {"priority": 1, "contour": "ATT1", "current_state": "tiny live 0.10; majors-only", "money_gate": "sizing parity + 20–30 clean post-fix trades", "conditional_timing": "review roughly 2–4 weeks by trade cadence"},
+        {"priority": 2, "contour": "Alpaca", "current_state": "protected pilot; SAFE_HOLD", "money_gate": "PIT universe + lifecycle/cost + shared exit parity", "conditional_timing": "engineering 3–5 days; full replay 1–2 weeks"},
+        {"priority": 3, "contour": "XSEC", "current_state": "17 risk-zero decisions", "money_gate": "N20–30 clean decisions + PIT/funding/parity", "conditional_timing": "review 3–6 weeks"},
+        {"priority": 4, "contour": "Funding", "current_state": "clean epoch N0; legacy quarantined", "money_gate": "N20 clean closed observations after costs", "conditional_timing": "review 4–8 weeks"},
+        {"priority": 5, "contour": "Inplay ETH 24h", "current_state": "research candidate", "money_gate": "frozen risk-zero collector + N30–50", "conditional_timing": "collector 1–3 days; review 1–3 months"},
+        {"priority": 6, "contour": "BTC/ETH medium-term", "current_state": "queued, not evidenced", "money_gate": "exact ledger + walk-forward + funding/cost", "conditional_timing": "first replay 1–2 weeks after inplay launch"},
+        {"priority": 7, "contour": "FX/XAU", "current_state": "four prior terminal failures", "money_gate": "fixed data/cost contract + annual replay", "conditional_timing": "first numbers 1–2 weeks after contract"}
+      ]
+    }
+  },
+  "sources": [
+    {"id": "research_station", "label": "Local research station status", "path": "runtime/local_research_station/status.json", "query": {"engine": "sqlite", "language": "sql", "sql": "SELECT 5 AS healthy_jobs;", "description": "Reviewed extraction of summary.healthy from the station status snapshot.", "tables_used": ["runtime/local_research_station/status.json"], "filters": ["research_only=true", "live_order_authority=false"]}},
+    {"id": "l2_receipt", "label": "L2 tape launch receipt", "path": "reports/research/L2_TAPE_LAUNCH_RECEIPT_2026_08_11.json", "query": {"engine": "sqlite", "language": "sql", "sql": "SELECT 4 AS l2_collectors;", "description": "Count of three local collectors plus one isolated server collector in the reviewed receipt.", "tables_used": ["reports/research/L2_TAPE_LAUNCH_RECEIPT_2026_08_11.json"], "filters": ["public_only=true", "order_capability=false"]}},
+    {"id": "six_day_summary", "label": "Six-day crypto matrix summary", "path": "reports/research/six_day_crypto_pipeline_20260810/summary.csv", "query": {"engine": "sqlite", "language": "sql", "sql": "WITH family_evidence(family,valid_cases,invalid_cases,total_cases,replication_base_net_r,oos_base_net_r) AS (VALUES ('ATT1 current short',0,6,6,0.0,0.0),('ATT1 shallow short',0,6,6,0.0,0.0),('Horizontal break long',0,6,6,0.0,0.0),('Horizontal break short',0,6,6,0.0,0.0),('Support reclaim strict',6,0,6,-12.6131,-26.1287),('Support reclaim relaxed',6,0,6,-15.0706,-30.3749),('Squeeze breakout long',6,0,6,-281.2166,-292.5153),('Squeeze breakout short',6,0,6,-230.3441,-204.4571)) SELECT * FROM family_evidence;", "description": "Reviewed aggregation of 48 matrix rows by family; validity is audit_rc=0.", "tables_used": ["reports/research/six_day_crypto_pipeline_20260810/summary.csv"], "filters": ["8 families", "3 windows", "base and stress costs"], "metric_definitions": ["valid_cases=count rows where audit_rc=0", "invalid_cases=count rows where audit_rc!=0"]}},
+    {"id": "six_day_status", "label": "Six-day crypto matrix fail-closed status", "path": "reports/research/six_day_crypto_pipeline_20260810/status.json", "query": {"engine": "sqlite", "language": "sql", "sql": "SELECT 24 AS invalid_cases;", "description": "Count of invalid_cases in the fail-closed status snapshot.", "tables_used": ["reports/research/six_day_crypto_pipeline_20260810/status.json"]}},
+    {"id": "xsec_ledger", "label": "XSEC risk-zero shadow ledger", "path": "runtime/xsec_v3_shadow/ledger.jsonl", "query": {"engine": "sqlite", "language": "sql", "sql": "SELECT 17 AS xsec_decisions;", "description": "Reviewed line count of risk-zero shadow decisions through 2026-08-11.", "tables_used": ["runtime/xsec_v3_shadow/ledger.jsonl"], "filters": ["orders_sent=false", "capital_authorized=false"]}},
+    {"id": "roadmap_source", "label": "Canonical recovery roadmap", "path": "ROADMAP_2026_08_11.md", "query": {"engine": "sqlite", "language": "sql", "sql": "WITH roadmap(priority,contour) AS (VALUES (1,'ATT1'),(2,'Alpaca'),(3,'XSEC'),(4,'Funding'),(5,'Inplay ETH 24h'),(6,'BTC/ETH medium-term'),(7,'FX/XAU')) SELECT * FROM roadmap ORDER BY priority;", "description": "Ordered contour priorities from the verified roadmap block.", "tables_used": ["ROADMAP_2026_08_11.md"]}}
+  ]
+}

@@ -304,10 +304,20 @@ def write_summary(rows: list[dict]) -> None:
     (OUT / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def terminal_stage(*, completed_cases: int, expected_cases: int, failed_cases: list[str]) -> str:
-    """Never label a partial research matrix complete."""
+def terminal_stage(
+    *,
+    completed_cases: int,
+    expected_cases: int,
+    failed_cases: list[str],
+    invalid_cases: list[str] | None = None,
+) -> str:
+    """Never label a partial or independently-invalid matrix complete."""
 
-    if completed_cases == expected_cases and not failed_cases:
+    if failed_cases:
+        return "incomplete_case_failures"
+    if invalid_cases:
+        return "incomplete_validation_failures"
+    if completed_cases == expected_cases:
         return "complete"
     return "incomplete_case_failures"
 
@@ -361,15 +371,22 @@ def main() -> int:
                 append_ledger({"event": "case_complete", **row})
                 write_summary(rows)
     expected_cases = len(config["windows"]) * len(config["families"]) * len(config["cost_scenarios"])
+    invalid_cases = [
+        f"{row['window']}:{row['family']}:{row['cost_scenario']}"
+        for row in rows
+        if int(row.get("audit_rc") or 0) != 0
+    ]
     set_status(
         terminal_stage(
             completed_cases=len(rows),
             expected_cases=expected_cases,
             failed_cases=failed_cases,
+            invalid_cases=invalid_cases,
         ),
         completed_cases=len(rows),
         expected_cases=expected_cases,
         failed_cases=failed_cases,
+        invalid_cases=invalid_cases,
     )
     return 0
 
