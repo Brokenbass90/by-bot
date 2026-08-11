@@ -109,25 +109,43 @@
     },
     {
       "rank": 4,
+      "id": "crypto_inplay_breakout_24h_v1",
+      "family": "inplay_breakout_continuation",
+      "side": "long_first",
+      "portfolio_role": "directional_swing_candidate",
+      "stage": "queued_integration",
+      "implementation": [
+        "strategies/inplay_breakout.py",
+        "research_lab/path_sim.py"
+      ],
+      "universe": "ETHUSDT first prospective collector; expansion only after a fixed-config receipt",
+      "data_quality": "MEDIUM",
+      "binding_risk": "Clean pre-holdout fixed 0.75 ATR / 24h path was positive in 3/4 folds but one fold was -0.460R; 11/30 multi-window winners is only slightly above the 9.375 null expectation.",
+      "next_artifact": "Risk-zero signal-to-exit shadow collector with exact 24h path, market-entry baseline, costs and no parameter selection during the epoch",
+      "first_money_gate": "N30-50 prospective closed signals, positive fixed-config mean after measured costs, no single-regime dependence, then untouched time holdout",
+      "timing": "build collector when one research WIP slot is free; evidence then accumulates by signal cadence"
+    },
+    {
+      "rank": 5,
       "id": "crypto_bounce1_virtual_lifecycle",
       "family": "level_rejection",
       "side": "long_support_rejection",
       "portfolio_role": "tactical_long",
-      "stage": "majors_exact_replay_pass_broad_universe_blocked_data",
+      "stage": "blocked_data",
       "implementation": [
         "strategies/alt_support_bounce_v1.py",
         "strategies/bounce1_live.py",
         "configs/bounce1_risk_zero_shadow_20260728.env"
       ],
       "universe": "PIT liquid crypto perpetuals; fixed before outcomes",
-      "data_quality": "MEDIUM_MAJORS_LOW_BREADTH",
+      "data_quality": "MEDIUM",
       "binding_risk": "BTC/ETH frozen candidate passed 3/3 historical windows with 41 trades, but the predeclared eight-symbol replay is BLOCKED_DATA and no prospective lifecycle exists.",
       "next_artifact": "Targeted risk-zero BOUNCE1 majors lifecycle after explicit deploy receipt; separately backfill the frozen eight-symbol 2024 cache.",
       "first_money_gate": "Minimum powered OOS sample plus N20 shadow closes, positive stress economics and no single-symbol dependence",
       "timing": "risk-zero deploy review now; prospective evidence 1-3 weeks"
     },
     {
-      "rank": 5,
+      "rank": 6,
       "id": "crypto_breakdown_regime_v2",
       "family": "break_and_retest",
       "side": "short_support_break",
@@ -146,7 +164,7 @@
       "timing": "start after BOUNCE1 prereg or a free short research slot"
     },
     {
-      "rank": 6,
+      "rank": 7,
       "id": "crypto_btc_eth_midterm_pullback_v4",
       "family": "midterm_trend_pullback",
       "side": "long_then_separate_short_challenger",
@@ -164,7 +182,7 @@
       "timing": "historical verdict 1-2 weeks after launch"
     },
     {
-      "rank": 7,
+      "rank": 8,
       "id": "crypto_owner_volume_level_setup_v1",
       "family": "volume_selected_level_retest",
       "side": "long_and_short_separate",
@@ -183,25 +201,25 @@
       "timing": "engineering 1-2 weeks; evidence event-driven"
     },
     {
-      "rank": 8,
+      "rank": 9,
       "id": "crypto_dump_exhaustion_reversal_long_v1",
       "family": "exhaustion_reversal",
       "side": "long_after_high_volume_dump",
       "portfolio_role": "event_long",
-      "stage": "native_replay_fail_regime_concentration",
+      "stage": "queued_preregistration",
       "implementation": [
         "scripts/run_vectorbt_crypto_family_prefilter.py",
         "scripts/run_native_dump_exhaustion_reversal_replay.py"
       ],
       "universe": "Frozen eight-symbol liquid crypto control",
-      "data_quality": "MEDIUM_VIEWED_OOS",
+      "data_quality": "LOW",
       "binding_risk": "All three frozen arms were positive overall after stress costs, but the third chronological block was negative across nearly every symbol and the strict concentration gate failed.",
       "next_artifact": "Preregister a causal regime discriminator on train blocks, retain the failed block as the negative control, then collect new prospective risk-zero decisions.",
       "first_money_gate": "New prospective decisions positive after costs with regime breadth and concentration pass; viewed historical OOS cannot authorize money.",
       "timing": "regime diagnosis 1-3 days; prospective evidence afterwards"
     },
     {
-      "rank": 9,
+      "rank": 10,
       "id": "crypto_pump_exhaustion_short_v2",
       "family": "exhaustion",
       "side": "short",
@@ -219,7 +237,7 @@
       "timing": "2-5 weeks by event cadence"
     },
     {
-      "rank": 10,
+      "rank": 11,
       "id": "crypto_sweep_reclaim_v2",
       "family": "liquidity_sweep_reclaim",
       "side": "long_and_short_separate",
@@ -237,7 +255,7 @@
       "timing": "after BOUNCE1/BREAKDOWN measurement harness"
     },
     {
-      "rank": 11,
+      "rank": 12,
       "id": "crypto_oi_divergence_collector_v1",
       "family": "open_interest_positioning",
       "side": "feature_first",
@@ -252,7 +270,7 @@
       "timing": "collector 1-3 days; evidence several weeks"
     },
     {
-      "rank": 12,
+      "rank": 13,
       "id": "crypto_token_unlock_event_v1",
       "family": "token_unlock",
       "side": "short_event",
@@ -274,7 +292,7 @@
       "family": "carry_plus_trend",
       "side": "long_and_short_by_pair",
       "portfolio_role": "slow_macro",
-      "stage": "terminal_fail_20260801",
+      "stage": "terminal_fail",
       "implementation": [
         "configs/research/fx_oanda_public_cost_contract_20260729.json",
         "scripts/run_forex_multi_strategy_gate.py"
@@ -298,7 +316,7 @@
       "family": "break_and_retest",
       "side": "long_and_short_separate",
       "portfolio_role": "swing_tactical",
-      "stage": "terminal_fail_20260801",
+      "stage": "terminal_fail",
       "implementation": [
         "forex/strategies/trend_retest_session_v2.py",
         "scripts/run_fx_h4_break_retest_v1.py",
@@ -323,7 +341,7 @@
       "family": "time_series_momentum",
       "side": "long_and_short",
       "portfolio_role": "swing_trend",
-      "stage": "terminal_fail_20260801",
+      "stage": "terminal_fail",
       "implementation": [
         "forex/strategies/h4_time_series_momentum_v1.py",
         "scripts/run_fx_h4_momentum_v1.py",
@@ -348,7 +366,7 @@
       "family": "regime_mean_reversion",
       "side": "long_and_short",
       "portfolio_role": "range_diversifier",
-      "stage": "terminal_fail_20260801",
+      "stage": "terminal_fail",
       "implementation": [
         "forex/strategies/h4_regime_mean_reversion_v1.py",
         "scripts/run_fx_h4_regime_mean_reversion_v1.py",
@@ -409,10 +427,14 @@
   "next_launch_order": [
     {
       "when": "first research WIP slot frees",
-      "launch": "crypto_bounce1_virtual_lifecycle"
+      "launch": "crypto_inplay_breakout_24h_v1"
     },
     {
       "when": "second research WIP slot frees",
+      "launch": "crypto_bounce1_virtual_lifecycle"
+    },
+    {
+      "when": "third research WIP slot frees",
       "launch": "crypto_owner_volume_level_setup_v1"
     },
     {
@@ -421,7 +443,7 @@
     },
     {
       "when": "FX research WIP slot is free after four terminal failures",
-      "launch": "cfd_xauusd_d1_h4_v1_cost_validation_then_new_prereg"
+      "launch": "cfd_xauusd_d1_h4_v1"
     },
     {
       "when": "measurement harness is free",

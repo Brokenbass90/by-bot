@@ -1,6 +1,6 @@
 # Текущий handoff между чатами
 
-Обновлено: 2026-08-11 13:16 UTC.
+Обновлено: 2026-08-11 18:37 UTC.
 
 ## Читать в новом чате
 
@@ -9,6 +9,53 @@
 3. `reports/CURRENT_PROJECT_ROADMAP.md` — приоритеты и promotion gates.
 4. `reports/CODEX_HANDOFF_AND_DIARY_2026_08_10.md` — хронология и receipts.
 5. Свежие прямые broker/service/runtime данные — они важнее любого Markdown.
+
+## Final six-day guard receipt — 2026-08-11 18:37 UTC
+
+- Six-day research pipeline остается terminal `complete`: `48/48`, current
+  `failed_cases=[]`, `live_order_authority=false`. Ledger содержит `48`
+  уникальных complete keys; восемь старых failure events сохранены только как
+  append-only история уже исправленного zero-width incident.
+- Временные screens `six_day_crypto_20260810` и `bybit_history_150_20260810`
+  штатно отсутствуют после завершения. Пять постоянных proposal/risk-zero
+  research/shadow screens живы.
+- Direct Bybit REST в `18:37 UTC`: `open_position_count=0`. Ордера не
+  отправлялись/отменялись, позиции не закрывались, restart/deploy не выполнялся.
+- Funding dynamic/frozen summaries свежие и остаются на clean evidence
+  contract; legacy quarantine `1059/272`, новая статистика `N=0`.
+- Диск: `81 GiB` свободно. Reserved `2025-10..2026-06` holdout не читался.
+- Scoped code/report changes снова прошли focused tests. Commit/push остается
+  заблокирован stale `.git/index.lock`: zero-byte с `16:25`, открыт read-only
+  process `com.apple` PID `75785`. Без явного owner-разрешения lock не удалять.
+
+## Validation update — 2026-08-11 17:08 UTC
+
+- Direct Bybit REST: `open_position_count=0`. Fresh heartbeat:
+  `open_trades=0`, `trade_on=true`, ATT1 short-only `risk_mult=0.10`,
+  `ws_guard_active=0`; release/authority не менялись.
+- Funding dynamic и frozen screen приняли новый evidence contract. Legacy
+  `1059` и `272` records изолированы; новая эпоха начала счет с нуля. Причина:
+  прежние closed trials многократно перекрывались по символу и не были
+  независимы; теперь действует one-active-trial-per-symbol и BTC-hedged metric.
+- `8` funding symbols — fixed historical/control bundle, не отсутствие
+  dynamic selector. Dynamic top-16 screen существует; не хватает широкой
+  исторической cross-exchange funding базы.
+- Inplay ETH `0.75/24h` остается лучшим directional candidate: fixed-fold R
+  `+0.235/-0.460/+0.106/+0.378`, median `+0.171`, но `11/30` survivors против
+  null `9.375`. В queue поставлен первым на collector, капитал `0`.
+- Elder rejected: `9/30` survivors против null `9.375`; execution fix не
+  исправляет signal/path edge.
+- BTC leader — только candidate feature. Support bounce при BTC strongly up
+  сохранил accuracy sign `3/3` folds, но return sign лишь `2/3`; breakout/down
+  не стабилен.
+- XSEC modern recount раскрыл reserved holdout и помещен в quarantine. XSEC
+  остается risk-zero shadow; script теперь hard-denies reveal.
+- ORCL alert — Alpaca PAPER intraday bracket, не счет `$485`; broker TP/SL были
+  активны. Telegram теперь маркирует PAPER и contour. Реальный SAFE_HOLD account
+  держит ABBV/SCHW, equity около `$485.93`, stop coverage `2/2`, buys disabled.
+- Promotion queue снова проходит fail-closed validator: `13` crypto, `6`
+  FX/CFD, active WIP `4/5`, capital authority false.
+- Полный отчет: `reports/CODEX_RECOVERY_SESSION_2026_08_11.md`.
 
 ## Codex recovery update — 2026-08-11 12:42–13:10 UTC
 

@@ -22,6 +22,7 @@ ALLOWED_STAGES = {
     "queued_design",
     "queued_cost_validation",
     "blocked_data",
+    "terminal_fail",
 }
 
 

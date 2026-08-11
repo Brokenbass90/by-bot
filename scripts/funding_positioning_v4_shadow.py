@@ -24,6 +24,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_URL = "https://api.bybit.com"
+EVIDENCE_CONTRACT = "one_active_trial_per_symbol_btc_hedged_diagnostics_v2"
 SYMBOLS = (
     "ADAUSDT",
     "BTCUSDT",
@@ -219,6 +220,11 @@ def _update_trials(
                 side=trial["side"],
             )
             net_raw = trial["side"] * asset_return + funding - maker_round_trip_bps / 10_000.0
+            net_btc_hedged = (
+                trial["side"] * (asset_return - btc_return)
+                + funding
+                - maker_round_trip_bps / 10_000.0
+            )
             trial.update(
                 {
                     "status": "closed",
@@ -226,6 +232,7 @@ def _update_trials(
                     "btc_return": btc_return,
                     "funding_cashflow": funding,
                     "net_raw_return": net_raw,
+                    "net_btc_hedged_return": net_btc_hedged,
                 }
             )
             _record(
@@ -238,6 +245,7 @@ def _update_trials(
                 btc_return=btc_return,
                 funding_cashflow=funding,
                 net_raw_bps=net_raw * 10_000,
+                net_btc_hedged_bps=net_btc_hedged * 10_000,
             )
 
 
@@ -278,19 +286,26 @@ def _discover(
             }
         )
 
-    active = sum(
-        trial["status"] in {"pending_fill", "open"}
-        for trial in state["trials"].values()
-    )
+    active_trials = [
+        trial for trial in state["trials"].values()
+        if trial["status"] in {"pending_fill", "open"}
+    ]
+    active = len(active_trials)
+    active_symbols = {str(trial.get("symbol") or "") for trial in active_trials}
     available = max(0, max_positions - active)
     signalled = sorted(
-        (row for row in proposals if row["side"]),
+        (
+            row for row in proposals
+            if row["side"] and row["symbol"] not in active_symbols
+        ),
         key=lambda row: (-abs(row["funding_rate"]), row["symbol"]),
     )
     accepted = {row["trial_id"] for row in signalled[:available]}
     for proposal in proposals:
         if not proposal["side"]:
             status = "no_signal"
+        elif proposal["symbol"] in active_symbols:
+            status = "symbol_conflict_reject"
         elif proposal["trial_id"] not in accepted:
             status = "slot_reject"
         else:
@@ -321,14 +336,35 @@ def _summary(
     symbols: tuple[str, ...],
     universe_sha256: str,
 ) -> dict[str, Any]:
-    trials = list(state["trials"].values())
+    all_trials = list(state["trials"].values())
+    epoch_ms = int(state.get("evidence_epoch_ms") or state.get("started_at_ms") or 0)
+    trials = [row for row in all_trials if int(row.get("event_ts") or 0) >= epoch_ms]
     closed = [row for row in trials if row["status"] == "closed"]
     fills = [row for row in trials if row["status"] in {"open", "closed"}]
-    submitted = [row for row in trials if row["side"] and row["status"] != "slot_reject"]
+    submitted = [
+        row for row in trials
+        if row["side"] and row["status"] not in {"slot_reject", "symbol_conflict_reject"}
+    ]
+    raw_values = [float(row["net_raw_return"]) for row in closed]
+    hedged_values = [
+        float(row["net_btc_hedged_return"])
+        for row in closed
+        if row.get("net_btc_hedged_return") is not None
+    ]
+    by_symbol: dict[str, float] = {}
+    for row in closed:
+        symbol = str(row.get("symbol") or "")
+        by_symbol[symbol] = by_symbol.get(symbol, 0.0) + float(row["net_raw_return"])
+    positive = {symbol: max(0.0, value) for symbol, value in by_symbol.items()}
+    positive_total = sum(positive.values())
+    concentration = max(positive.values()) / positive_total if positive_total > 0 else None
     return {
         "schema_id": "funding_positioning_v4_shadow_summary",
         "generated_at_utc": _now_iso(),
         "started_at_ms": state["started_at_ms"],
+        "evidence_contract": state.get("evidence_contract"),
+        "evidence_epoch_ms": epoch_ms,
+        "legacy_trials_quarantined": len(all_trials) - len(trials),
         "trials": len(trials),
         "submitted": len(submitted),
         "fills": len(fills),
@@ -336,14 +372,18 @@ def _summary(
         "open": sum(row["status"] == "open" for row in trials),
         "closed": len(closed),
         "fill_rate": len(fills) / len(submitted) if submitted else None,
-        "mean_closed_raw_net_bps": (
-            statistics.fmean(row["net_raw_return"] for row in closed) * 10_000
-            if closed
-            else None
+        "mean_closed_raw_net_bps": statistics.fmean(raw_values) * 10_000 if raw_values else None,
+        "median_closed_raw_net_bps": statistics.median(raw_values) * 10_000 if raw_values else None,
+        "mean_closed_btc_hedged_net_bps": (
+            statistics.fmean(hedged_values) * 10_000 if hedged_values else None
         ),
+        "max_positive_symbol_concentration": concentration,
         "status_counts": {
             status: sum(row["status"] == status for row in trials)
-            for status in ("no_signal", "slot_reject", "pending_fill", "nonfill", "open", "closed")
+            for status in (
+                "no_signal", "symbol_conflict_reject", "slot_reject",
+                "pending_fill", "nonfill", "open", "closed",
+            )
         },
         "capital_authorized": False,
         "universe_symbols": list(symbols),
@@ -400,6 +440,14 @@ def main() -> int:
             "created_at_utc": _now_iso(),
             "trials": {},
         }
+    if state.get("evidence_contract") != EVIDENCE_CONTRACT:
+        state["legacy_quarantine"] = {
+            "reason": "prior shadow allowed overlapping trials on the same symbol and lacked BTC-hedged outcomes",
+            "quarantined_at_utc": _now_iso(),
+            "trial_count": len(state.get("trials") or {}),
+        }
+        state["evidence_contract"] = EVIDENCE_CONTRACT
+        state["evidence_epoch_ms"] = now_ms
     _update_trials(
         state,
         ledger=args.ledger,

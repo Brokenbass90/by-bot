@@ -160,3 +160,89 @@ research/shadow процессов; следующий тяжелый lane ст�
 5. Equities: PIT-aware daily bundle и exact Alpaca live-contract replay.
 6. Elder: V2/V3 одинаковый adapter/data/universe/cost/exit manifest.
 7. AI graph analysis: proposal-only chart cards, затем machine reproduction.
+
+## 10. Восемь монет funding: точный ответ
+
+Динамический подбор уже существует: public selector строит causal top-16 по
+возрасту листинга, turnover, spread и funding coverage, а отдельный screen
+`funding_position_dynamic_shadow_20260729` жив. Число `8` относится к старому
+фиксированному control bundle и cross-exchange funding history на
+`ADA/BTC/DOT/ETH/LINK/LTC/SOL/SUI`, а не к отсутствию selector.
+
+Реальная недостающая часть — широкая историческая cross-exchange funding база
+с listing/delisting timestamps. Текущий dynamic shadow умеет выбирать шире,
+но не может задним числом дать честную историю на 100+ символах.
+
+## 11. Funding shadow: красивый результат изолирован
+
+Аудит прежних `57` закрытий нашел `29` соседних перекрывающихся пар по одному
+символу: один market move многократно считался как независимые trials. Кроме
+того, отчет был направленным raw return, хотя сохранял BTC return и назывался
+positioning/neutral candidate.
+
+Исправленный контракт:
+
+- не более одного active trial на символ;
+- второй сигнал по конфликтному символу получает `symbol_conflict_reject`;
+- отдельно сохраняется BTC-hedged return;
+- концентрация и median обязательны;
+- все старые trials карантинизируются при первом запуске нового кода.
+
+Оба действующих screen приняли контракт автоматически. Dynamic epoch начал
+чистую статистику с `0` trials и изолировал `1,059` legacy records; frozen
+control изолировал `272`. Старые `+466 bps` и сходные цифры не являются edge.
+
+## 12. BTC-state, Inplay и Elder после чистого replay
+
+`BTC strongly up` для support bounce сохранил положительную разницу точности во
+всех трех календарных folds. Return sign положителен только в двух из трех;
+weekly-cluster test: `60` недель, `+180.5 bps`, `t=2.91`. Это кандидат-признак,
+не live gate. Тезис про запрет breakout при BTC strongly down переворачивает
+знак между 2024 и 2025 и не считается подтвержденным.
+
+`inplay_breakout` ETH, fixed `0.75/24h`, clean pre-holdout: `+0.2352`,
+`-0.4602`, `+0.1059`, `+0.3782 R/trade`; медиана `+0.1705`, но `11/30`
+multi-window survivors лишь немного выше null expectation `9.375`. Это лучший
+directional candidate, а не готовая вторая нога. Он первым поставлен в
+promotion queue на risk-zero collector; money authority ноль.
+
+`alt_elder_revived_v1` дал `9/30` survivors против null `9.375`; один fold
+отрицателен даже у локального чемпиона. Нога остается rejected/parked.
+Execution fix не исправляет signal/path robustness.
+
+## 13. Holdout incident
+
+Claude XSEC recount был запущен с `--reveal-modern` и раскрыл reserved
+`2025-10..2026-06`. Значения этого блока намеренно не использованы в текущем
+решении, отчет помечен quarantine, а script теперь hard-denies reveal и режет
+данные по search cutoff. Безопасная часть `2023-01..2025-09` имеет Sharpe лишь
+около `0.51..0.84` при maturity `180..390`, `t<=1.36`, и `-0.41` при `540`.
+XSEC остается только prospective risk-zero shadow.
+
+## 14. Alpaca и ORCL
+
+Прямой read-only PAPER broker check подтвердил: сообщение `📈 ORCL SHORT
+entry` было исполненной Alpaca PAPER intraday bracket-позицией, а не сигналом
+на реальные `$485`. У позиции были broker TP `143.42` и stop `145.38`.
+Telegram-текст теперь всегда печатает `PAPER` и имя контура.
+
+Реальный Alpaca SAFE_HOLD account: equity около `$485.93`, cash `$391.27`,
+позиции ABBV и SCHW; broker stop coverage `2/2`, новые входы выключены.
+SCHW защищен stop выше entry, ABBV — hard stop ниже entry. Fractional DAY
+orders требуют ежедневного rearm, а overnight gap не устранен. Старые v38
+backtests не имеют live parity, поэтому это защищенный pilot, не доказанная
+среднесрочная стратегия.
+
+## 15. Где сейчас наибольшая надежда
+
+1. **Crypto:** самый зрелый контур — tiny ATT1 canary, XSEC/funding shadow и
+   inplay candidate. Но полноценной второй money-leg пока нет.
+2. **Alpaca:** реальный защищенный pilot уже работает, но selection/backtest
+   contract надо пересобрать честно до новых денег.
+3. **FX/CFD:** четыре FX семьи завершились terminal fail; следующий осмысленный
+   тест — отдельный XAUUSD contract/cost gate, не запуск старых стратегий.
+4. **Arbitrage/DeFi:** текущий arb dry-run имеет отрицательную среднюю economics;
+   DeFi не имеет проверенной ноги и добавляет contract/custody risk. Сейчас это
+   research lane, а не путь к быстрому live доходу.
+
+Такой порядок отражает доказательность проекта, а не обещание доходности.

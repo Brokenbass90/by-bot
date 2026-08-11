@@ -1,8 +1,33 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-11 13:10 UTC. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-11 17:08 UTC. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
+
+## Latest reprioritization — 2026-08-11 17:08 UTC
+
+1. **ATT1:** сохранять tiny canary `0.10`; считать только сделки после release
+   `475745108b5e`. Перед повышением риска: exact parity + N20 clean + cohort
+   gates. Сегодняшние DOT/ADA положительны, но contaminated.
+2. **Second crypto leg:** построить fixed `inplay_breakout ETH 0.75/24h`
+   risk-zero collector. Не включать в monolith до отдельного shadow contract;
+   maker-entry тестировать как challenger, не default.
+3. **Neutral crypto:** продолжать XSEC forward shadow; funding dynamic/frozen
+   начали новую clean epoch после карантина перекрывающихся legacy trials.
+4. **Research integrity:** reserved holdout больше не раскрывать; любой explicit
+   symbol mismatch и timeout fail-close; каждое число несет cutoff/passport.
+5. **BTC-state:** один prereg interaction test для support bounce/strong-up;
+   не превращать descriptive table в live switch.
+6. **Alpaca:** SAFE_HOLD ABBV/SCHW сохранять; закончить live-contract backtest
+   parity перед новыми среднесрочными деньгами. PAPER intraday отделять в TG.
+7. **FX/CFD:** четыре terminal fail не перезапускать; следующий gate — XAUUSD
+   contract/cost validation. Index CFD остается blocked-data.
+8. **AI/research:** пять supervisor screens продолжают proposal/risk-zero
+   работу. AI не имеет secrets/order/risk authority; тяжелый новый run только
+   после освобождения WIP и с preregistration.
+
+Очередь `configs/research/strategy_promotion_queue_20260730.json` снова валидна:
+`13 crypto`, `6 FX/CFD`, `active=4/max=5`, `capital_authorized=false`.
 
 ## Update 2026-08-11 — что изменилось и что делать дальше
 

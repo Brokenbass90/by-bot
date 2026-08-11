@@ -1879,11 +1879,12 @@ def run_once(client: AlpacaClient, dry_run: bool,
                 })
                 advisory["symbols"].append(symbol_status)
                 reason_label = _humanize_reason(sig.reason)
+                contour_label = ADVISORY_DIR.name
                 _tg(tg_token, tg_chat,
-                    f"📈 <b>{symbol}</b> {sig.side.upper()} entry\n"
+                    f"📈 <b>{symbol}</b> {sig.side.upper()} entry — {broker_mode_label}\n"
                     f"Price≈${entry_price:.2f} | SL=${sl_price:.2f} | TP=${tp_price:.2f} | {rr_label}\n"
                     f"Qty={qty} | Notional≈${actual_notional:.2f} | Risk≈${risk_usd:.2f}\n"
-                    f"Reason: {reason_label} | {now_str}")
+                    f"Contour: {contour_label} | Reason: {reason_label} | {now_str}")
             except Exception as exc:
                 symbol_status.update({"status": "order_failed", "error": str(exc)})
                 advisory["symbols"].append(symbol_status)
