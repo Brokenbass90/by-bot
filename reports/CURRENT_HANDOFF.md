@@ -1,6 +1,6 @@
 # Текущий handoff между чатами
 
-Обновлено: 2026-08-11 06:38 UTC.
+Обновлено: 2026-08-11 12:42 UTC.
 
 ## Читать в новом чате
 
@@ -9,6 +9,33 @@
 3. `reports/CURRENT_PROJECT_ROADMAP.md` — приоритеты и promotion gates.
 4. `reports/CODEX_HANDOFF_AND_DIARY_2026_08_10.md` — хронология и receipts.
 5. Свежие прямые broker/service/runtime данные — они важнее любого Markdown.
+
+## Heartbeat update — 2026-08-11 12:36–12:42 UTC
+
+- Six-day matrix осталась terminal и неизменной: `complete`, `48/48`,
+  `failed_cases=[]`, 48 уникальных case keys. Оба временных screen завершены;
+  пять постоянных research/shadow sessions присутствуют. Reserved holdout не
+  читался. Диск: `83 GiB` free; caffeinate active.
+- Direct Bybit перешел в flat. Broker REST подтвердил `open_position_count=0`
+  трижды, затем еще раз непосредственно перед остановкой сервиса. Ордера не
+  отправлялись/отменялись, позиции вручную не закрывались.
+- Candidate `475745108b5e7ff0668011694646181ba6d9bd00` повторно прошел server-venv
+  manifest `8/8`, archive SHA256
+  `01eebc0541c77be78df496b3b261e76ab03e583fed4f2d91d3beaf944e7f4a01`,
+  import smoke и bounded 20-second no-order main smoke.
+- Atomic ATT1 stale-fill/fixed-R release задеплоен в `12:40:41–12:40:46 UTC`.
+  Receipt: `/root/by-bot/runtime/deploy_receipts/atomic_live_475745108b5e_20260811T124041Z.json`;
+  backup: `/root/by-bot/backups/atomic_live_475745108b5e_20260811T124041Z`;
+  receipt status `DEPLOYED`, error пустой.
+- После deploy stage-verifier подтвердил live hashes `8/8`; bybot active,
+  PID `2334168`. Свежий heartbeat: `trade_on=true`, `dry_run=false`,
+  `open_trades=0`, `ws_guard_active=0`; direct broker также flat.
+- Effective money authority не расширялась: только ATT1 short-only
+  `risk_mult=0.10`; midterm/bounce1/IVB1 и остальные sleeves без money risk.
+  Старые DOT/ADA incidents навсегда исключены из clean N20. Следующая clean
+  ATT1 cohort начинается только с этого release receipt.
+- Локальная ветка перед записью этого handoff ahead upstream на пять scoped
+  commits; чужой dirty worktree сохранен без очистки или захвата.
 
 ## Heartbeat update — 2026-08-11 06:36–06:38 UTC
 

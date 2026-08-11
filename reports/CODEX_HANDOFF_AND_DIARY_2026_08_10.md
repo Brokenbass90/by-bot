@@ -439,3 +439,50 @@ ADAUSDT Sell `53`, stop `0.1992`; service active. Operator pause отсутст�
 control file `exists=false`, `paused_sleeves=[]`. Deploy/restart и любые order
 mutations не выполнялись. Пять постоянных screen sessions присутствуют,
 temporary downloader/pipeline завершены, диск `93 GiB`, caffeinate active.
+
+## Heartbeat и atomic ATT1 execution release — 2026-08-11 12:36–12:42 UTC
+
+Six-day outputs после завершения не переписывались: status `complete`, `48/48`,
+`failed_cases=[]`; summary `49` строк с header, ledger `104` events и `48`
+уникальных complete keys. Восемь `case_failed` остаются append-only историей
+починенного zero-width defect. Target screen sessions отсутствуют штатно, пять
+постоянных research/shadow sessions alive. Reserved holdout не читался. Диск
+имел `83 GiB` free, host caffeinate assertion active.
+
+Direct broker truth материально изменился: Bybit вернул flat три раза подряд в
+12:38 UTC и еще раз непосредственно перед stop. Server stage
+`/root/bybot-staging/475745108b5e` повторно проверен server venv:
+
+- revision `475745108b5e7ff0668011694646181ba6d9bd00`;
+- archive SHA256
+  `01eebc0541c77be78df496b3b261e76ab03e583fed4f2d91d3beaf944e7f4a01`;
+- manifest `8/8`;
+- exact dependency import smoke PASS;
+- bounded 20-second no-order main smoke PASS (`DRY_RUN=1`, broker/market
+  sources disabled, expected timeout rc `124`).
+
+После финального fail-close flat check сервис остановлен и bundle применен
+штатным rollback-capable atomic deployer. Receipt:
+`/root/by-bot/runtime/deploy_receipts/atomic_live_475745108b5e_20260811T124041Z.json`;
+backup: `/root/by-bot/backups/atomic_live_475745108b5e_20260811T124041Z`;
+status `DEPLOYED`, error `""`, originally absent только
+`bot/risk_sizing_contract.py`.
+
+Фактические live SHA256 после deploy совпали с manifest:
+
+- `smart_pump_reversal_bot.py` — `206bad8509cca54ea731c0d354f9e585b542f35993b132ce8fc045b3d4bf87bb`;
+- `bot/maker_execution.py` — `c3a140dfcfe60df219d14b01ba9aee1a171b3cb1341318ffe6b9854000639df8`;
+- `bot/risk_sizing_contract.py` — `16a6efc492cd18cd7e625147debed5351365faa084a2bc38fd4e8318a8b308e7`;
+- `bot/att1_challenger.py` — `831605a1425405f8c253c201d5f8d4d9c90889bbfb498d358bf4be90f2020624`;
+- `bot/health_truth.py` — `848d29a86d0f49f3f7d7f4b0fa1420b6dec6f6de1716f6b110f6da050c052791`;
+- `bot/portfolio_equity_guard.py` — `b6ce10f1de758070e2db9de8f4f7aa648a4e3ba785e661f1fd95f6dabbd6e4bc`;
+- `bot/strategy_regime_gate.py` — `5dd6997c9b7efab328588d945258c540549d2df8ff5f4c562566f7e7c0108714`;
+- `bot/strategy_shadow_ledger.py` — `46e1a08985488f6e267ce20ec2ff95ebf5edc95dbbe46ad11ff8fedaf71b7b70`.
+
+Post-deploy: bybot active, PID `2334168`; fresh heartbeat `trade_on=true`,
+`dry_run=false`, `open_trades=0`, `ws_guard_active=0`; final direct broker check
+flat. Effective authority complete и не расширена: единственная money sleeve —
+ATT1 short-only `risk_mult=0.10`; midterm/bounce1/IVB1 имеют zero money risk.
+Ни одного order submit/cancel/manual close в ходе heartbeat не выполнялось.
+DOT/ADA execution incidents не входят в N20; clean cohort начинается после
+receipt timestamp `2026-08-11T12:40:46.527271+00:00`.
