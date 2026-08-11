@@ -61,6 +61,10 @@
 Полный фактический отчет этой сессии:
 `reports/CODEX_RECOVERY_SESSION_2026_08_11.md`.
 
+Scoped implementation commit `1bf5293` и machine-state commit `9702162`
+запушены в `origin/codex/dynamic-symbol-filters`; чужие dirty changes в них не
+попали.
+
 ## Heartbeat update — 2026-08-11 12:36–12:42 UTC
 
 - Six-day matrix осталась terminal и неизменной: `complete`, `48/48`,

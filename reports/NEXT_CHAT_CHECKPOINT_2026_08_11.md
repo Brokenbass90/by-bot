@@ -31,7 +31,8 @@
 
 ## Следующие действия в порядке
 
-1. Сохранить scoped changes отдельным commit, не захватывая Claude artifacts.
+1. Подтвердить, что `1bf5293` и `9702162` доступны в remote branch; не
+   захватывать Claude artifacts в следующие scoped commits.
 2. Не трогать reserved holdout.
 3. Держать XSEC shadow; проверять только новые attributable markouts.
 4. Когда освободится compute lane — preregistered retest3 wide reachability.
