@@ -198,7 +198,13 @@ class AltSqueezeBreakoutV1:
         squeeze_width = bb_width if off == 0 else self._bb_width_at(closes, anchor)
         if squeeze_width is None or squeeze_width > min_width * 1.05:
             return None
-        squeeze_pct = squeeze_width / max(widths_history) * 100
+        max_width = max(widths_history)
+        # A perfectly flat synthetic/listing segment has zero BB width across
+        # the whole lookback.  It is not a squeeze breakout opportunity and
+        # must not crash a portfolio-wide research run with 0/0.
+        if max_width <= 0:
+            return None
+        squeeze_pct = squeeze_width / max_width * 100
 
         current_close = closes[-1]
 

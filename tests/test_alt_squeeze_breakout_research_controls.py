@@ -23,3 +23,20 @@ def test_squeeze_research_controls_are_read_from_environment(monkeypatch):
     assert strategy.squeeze_check_offset == 1
     assert strategy.params["SYMBOL_ALLOWLIST"] == "WIFUSDT,SOLUSDT"
     assert int(strategy.params["BB_PERIOD"]) == 34
+
+
+def test_zero_width_history_is_not_a_signal_or_exception(monkeypatch):
+    monkeypatch.setenv("SQB1_SQUEEZE_CHECK_OFFSET", "1")
+    strategy = AltSqueezeBreakoutV1()
+    bars = [
+        {
+            "open": 100.0,
+            "high": 100.0,
+            "low": 100.0,
+            "close": 100.0,
+            "volume": 100.0,
+        }
+        for _ in range(120)
+    ]
+
+    assert strategy.evaluate(bars, "bull_chop", "BTCUSDT") is None

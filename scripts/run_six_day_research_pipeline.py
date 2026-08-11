@@ -304,6 +304,14 @@ def write_summary(rows: list[dict]) -> None:
     (OUT / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def terminal_stage(*, completed_cases: int, expected_cases: int, failed_cases: list[str]) -> str:
+    """Never label a partial research matrix complete."""
+
+    if completed_cases == expected_cases and not failed_cases:
+        return "complete"
+    return "incomplete_case_failures"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default=str(DEFAULT_CONFIG))
@@ -330,6 +338,7 @@ def main() -> int:
     experiment_preflight()
     ensure_download(config, deadline)
     rows: list[dict] = []
+    failed_cases: list[str] = []
     for window in config["windows"]:
         symbols = coverage_preflight(config, window)
         append_ledger({"event": "window_ready", "window": window["id"], "symbols": symbols})
@@ -346,13 +355,22 @@ def main() -> int:
                 except Exception as exc:
                     append_ledger({"event": "case_failed", "case": case_id, "error": repr(exc)})
                     set_status("case_failed_continuing", case=case_id, error=repr(exc))
+                    failed_cases.append(case_id)
                     continue
                 rows.append(row)
                 append_ledger({"event": "case_complete", **row})
                 write_summary(rows)
-    set_status("complete", completed_cases=len(rows), expected_cases=(
-        len(config["windows"]) * len(config["families"]) * len(config["cost_scenarios"])
-    ))
+    expected_cases = len(config["windows"]) * len(config["families"]) * len(config["cost_scenarios"])
+    set_status(
+        terminal_stage(
+            completed_cases=len(rows),
+            expected_cases=expected_cases,
+            failed_cases=failed_cases,
+        ),
+        completed_cases=len(rows),
+        expected_cases=expected_cases,
+        failed_cases=failed_cases,
+    )
     return 0
 
 
