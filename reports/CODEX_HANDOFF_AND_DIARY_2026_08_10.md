@@ -416,3 +416,26 @@ Read-only server check в 00:40 UTC: Bybit `retCode=0`, позиции DOTUSDT S
 `0.1992`; service active. Отдельный operator-control read: control file
 отсутствует, `paused_sleeves=[]`. Account не flat, поэтому deploy/restart не
 выполнялись; ордера не отправлялись, не отменялись и вручную не закрывались.
+
+## Heartbeat — 2026-08-11 06:36–06:38 UTC
+
+Repair дошел до строгого terminal receipt: `complete`, `48/48`,
+`failed_cases=[]`; summary имеет 48 строк и 48 уникальных case keys. Ledger
+append-only: 88 `case_complete` events включают повторные receipts 40 уже
+готовых runs, а восемь старых `case_failed` остаются историей defect. Coverage
+по выбранным current survivors: discovery `27/27`, replication/OOS `30/30`,
+все `100%`, zero gaps. Reserved holdout не читался.
+
+Экономический итог отрицательный. ATT1 current/shallow и horizontal long/short
+дали по нулю сделок во всех шести cells каждой семьи и audit nonzero — это
+liveness/wiring failure, не вердикт ручному/live ATT1. Support reclaim strict
+aggregate `-77.27R`, relaxed `-91.88R`: слабый discovery плюс исчез на
+replication и ухудшился в OOS. Squeeze long `-1684.50R/6222 trades`, short
+`-1418.10R/6754`; отрицателен во всех окнах/costs. Promotion: none. Durable
+verdict: `reports/research/SIX_DAY_CRYPTO_MATRIX_VERDICT_20260811.md`.
+
+Read-only server check 06:37 UTC: DOTUSDT Sell `29.7`, stop `0.8205`;
+ADAUSDT Sell `53`, stop `0.1992`; service active. Operator pause отсутствует:
+control file `exists=false`, `paused_sleeves=[]`. Deploy/restart и любые order
+mutations не выполнялись. Пять постоянных screen sessions присутствуют,
+temporary downloader/pipeline завершены, диск `93 GiB`, caffeinate active.

@@ -1,6 +1,6 @@
 {
   "schema_id": "current_project_state_v1",
-  "generated_at_utc": "2026-08-11T00:45:00Z",
+  "generated_at_utc": "2026-08-11T06:38:00Z",
   "read_first": [
     "reports/CURRENT_HANDOFF.md",
     "reports/current_project_state.json",
@@ -15,9 +15,9 @@
     "deploy_receipt": "/root/by-bot/runtime/deploy_receipts/atomic_live_c5eba1ccb244_20260810T130547Z.json",
     "backup": "/root/by-bot/backups/atomic_live_c5eba1ccb244_20260810T130547Z",
     "manifest": "pass_6_of_6",
-    "service": "active_at_2026-08-11T00:40Z",
+    "service": "active_at_2026-08-11T06:37Z",
     "direct_broker": "two_open_att1_shorts_both_protected_by_stops",
-    "last_direct_check_utc": "2026-08-11T00:40:00Z",
+    "last_direct_check_utc": "2026-08-11T06:37:00Z",
     "heartbeat_open_trades": null,
     "heartbeat_warning": "not_refreshed_after_second_broker_position_direct_broker_truth_wins",
     "broker_open_position_count": 2,
@@ -75,7 +75,7 @@
       "scope": "new_entries_only",
       "existing_position_management_continues": true,
       "confirmed_current": false,
-      "last_checked_utc": "2026-08-11T00:41:00Z",
+      "last_checked_utc": "2026-08-11T06:37:00Z",
       "server_state": "file_absent_no_paused_sleeves"
     },
     "authority_complete": true,
@@ -124,7 +124,7 @@
     "remaining_risk": "fractional_day_stops_require_rearm_and_do_not_remove_overnight_gap_risk"
   },
   "research_station": {
-    "checked_at_utc": "2026-08-11T00:41:00Z",
+    "checked_at_utc": "2026-08-11T06:38:00Z",
     "healthy": 5,
     "degraded": 0,
     "live_order_authority": false,
@@ -138,24 +138,28 @@
       },
       {
         "session": "six_day_crypto_20260810",
-        "state": "detached_watchdog_active_repair_pid_29789_lock_confirmed",
+        "state": "complete_exact_48_of_48_watchdog_exited",
         "status_receipt": "reports/research/six_day_crypto_pipeline_20260810/status.json",
         "live_order_authority": false
       }
     ],
     "six_day_integrity_incident": {
       "observed_terminal_status": "complete_40_of_48_invalid",
-      "ledger_case_complete": 40,
-      "ledger_case_failed": 8,
+      "repaired_terminal_status": "complete_48_of_48_zero_current_failures",
+      "ledger_case_complete_events": 88,
+      "ledger_unique_case_complete": 48,
+      "ledger_historical_case_failed": 8,
       "failed_scope": "squeeze_long_short_discovery_2023h2_and_replication_2024h1_base_stress",
       "root_cause": "zero_division_on_all_zero_bollinger_width_history",
       "repair_commit": "25bcb57",
       "focused_tests_passed": 11,
       "durable_watchdog": "screen_six_day_crypto_20260810_requires_exact_48_of_48_and_zero_failures",
-      "resume_progress": "13_of_48_current_matrix_rows_first_missing_case_repaired_second_running",
+      "resume_progress": "complete",
       "first_repaired_case": "discovery_2023h2_squeeze_long_base_620_trades_-131.34R_mean_-0.21184_t_-6.74_pf_0.537",
       "resume_live_order_authority": false,
-      "reserved_holdout_read": false
+      "reserved_holdout_read": false,
+      "verdict": "no_family_eligible_for_promotion",
+      "verdict_report": "reports/research/SIX_DAY_CRYPTO_MATRIX_VERDICT_20260811.md"
     },
     "heartbeat_automation": {
       "id": "six-day-trading-research-guard",
@@ -304,7 +308,7 @@
     "branch": "codex/dynamic-symbol-filters",
     "upstream_head": "4757451",
     "local_code_head_before_handoff_commit": "25bcb57",
-    "ahead_commits": 4,
+    "ahead_commits": 5,
     "current_head_includes_this_handoff_commit": true,
     "foreign_dirty_worktree_preserved": true
   }

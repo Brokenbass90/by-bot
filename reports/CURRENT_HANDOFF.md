@@ -1,6 +1,6 @@
 # Текущий handoff между чатами
 
-Обновлено: 2026-08-11 00:45 UTC.
+Обновлено: 2026-08-11 06:38 UTC.
 
 ## Читать в новом чате
 
@@ -9,6 +9,29 @@
 3. `reports/CURRENT_PROJECT_ROADMAP.md` — приоритеты и promotion gates.
 4. `reports/CODEX_HANDOFF_AND_DIARY_2026_08_10.md` — хронология и receipts.
 5. Свежие прямые broker/service/runtime данные — они важнее любого Markdown.
+
+## Heartbeat update — 2026-08-11 06:36–06:38 UTC
+
+- Six-day repair завершен строго: status `complete`, `48/48`,
+  `failed_cases=[]`; summary имеет 48 уникальных cases. Detached watchdog
+  штатно завершился после exact gate.
+- Append-only ledger содержит 88 complete events из-за повторных receipts для
+  40 переиспользованных runs, но только 48 уникальных keys. Восемь старых
+  failed events сохранены как история zero-width incident и не являются
+  текущими failures.
+- Coverage selected universe: `27/27`, `30/30`, `30/30`, везде `100%` и zero
+  gaps. Это current-survivor data, не PIT; holdout не читался.
+- Денежных кандидатов нет. ATT1/horizontal дали zero trades и требуют liveness
+  trace; support reclaim сломался на replication/OOS; squeeze отрицателен во
+  всех окнах, направлениях и costs. Полный verdict:
+  `reports/research/SIX_DAY_CRYPTO_MATRIX_VERDICT_20260811.md`.
+- Direct Bybit REST в 06:37 UTC неизменен: DOT short `29.7` stop `0.8205`, ADA
+  short `53` stop `0.1992`, service active. Operator pause по-прежнему
+  отсутствует (`exists=false`, `paused_sleeves=[]`). Deploy/restart запрещены.
+- Пять постоянных research screens присутствуют; downloader и temporary
+  pipeline screens штатно завершены. Диск `93 GiB` free, caffeinate active.
+- Локальная ветка ahead upstream на пять scoped commits после этого handoff;
+  чужой dirty worktree сохранен.
 
 ## Heartbeat update — 2026-08-11 00:35–00:41 UTC
 
