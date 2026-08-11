@@ -1,6 +1,6 @@
 {
   "schema_id": "current_project_state_v1",
-  "generated_at_utc": "2026-08-11T12:42:00Z",
+  "generated_at_utc": "2026-08-11T13:16:53Z",
   "read_first": [
     "reports/CURRENT_HANDOFF.md",
     "reports/current_project_state.json",
@@ -15,13 +15,41 @@
     "deploy_receipt": "/root/by-bot/runtime/deploy_receipts/atomic_live_475745108b5e_20260811T124041Z.json",
     "backup": "/root/by-bot/backups/atomic_live_475745108b5e_20260811T124041Z",
     "manifest": "pass_8_of_8_live_hashes_exact",
-    "service": "active_pid_2334168_at_2026-08-11T12:42Z",
+    "service": "active_pid_2334168_at_2026-08-11T13:16Z",
     "direct_broker": "flat_after_release",
-    "last_direct_check_utc": "2026-08-11T12:42:00Z",
+    "last_direct_check_utc": "2026-08-11T13:16:53Z",
     "heartbeat_open_trades": 0,
     "heartbeat_warning": null,
     "broker_open_position_count": 0,
     "open_positions": [],
+    "heartbeat": {
+      "age_seconds_at_check": 0.4,
+      "open_trades": 0,
+      "bybit_msgs": 152536,
+      "trade_on": true,
+      "dry_run": false,
+      "regime": "bear_chop"
+    },
+    "ws_transport_guard": {
+      "active": false,
+      "critical_streak": 0,
+      "last_status": "NO_ACTIVITY",
+      "root_cause_confirmed": false
+    },
+    "closed_incident_results": [
+      {
+        "symbol": "DOTUSDT",
+        "net_broker_pnl_usdt": 0.1072467,
+        "exit_path": "TP1+TP2",
+        "clean_cohort_eligible": false
+      },
+      {
+        "symbol": "ADAUSDT",
+        "net_broker_pnl_usdt": 0.4193142,
+        "exit_path": "TP1+BE+ATR_TRAIL+EXCHANGE_STOP",
+        "clean_cohort_eligible": false
+      }
+    ],
     "execution_incidents": [
       {
         "symbol": "DOTUSDT",
@@ -216,6 +244,17 @@
     ]
   },
   "att1_research": {
+    "wide_universe": {
+      "trades": 823,
+      "traded_symbols": 64,
+      "gross_r": 19.33946,
+      "cost_r": 48.109293,
+      "net_r": -28.769833,
+      "mean_net_r": -0.034957,
+      "t_stat": -0.987,
+      "profit_factor": 0.932,
+      "verdict": "rejected_wide_rollout_major_only_hypothesis_remains_separate"
+    },
     "shallow_oos": {
       "baseline": "100_trades_2.76R_t0.27",
       "shallow": "9_trades_-1.99R_t-0.63",
@@ -223,11 +262,43 @@
       "verdict": "old_0.3203R_per_trade_not_reproduced_and_sample_too_small"
     },
     "promotion_cohort": {
-      "state": "not_started_waiting_for_execution_fix_release",
+      "state": "started_after_atomic_release_2026-08-11T12:40:46Z",
       "observed_cadence": "9_trades_per_21_days",
       "estimated_n20_days_after_release": 47,
       "realistic_first_scale_window": "late_September_2026_conditional_on_gates"
     }
+  },
+  "negative_trade_lab": {
+    "implementation": "research_lab/negative_trade_lab.py",
+    "authority": "research_only_proposal_only_ai_packet",
+    "squeeze_long_discovery_base": {
+      "trades": 620,
+      "symbols": 24,
+      "gross_r": -40.372844,
+      "cost_r": 90.968881,
+      "net_r": -131.341724,
+      "t_stat": -6.7415,
+      "profit_factor": 0.53684,
+      "diagnostic_class": "negative_gross_edge_plus_cost_drag",
+      "mfe_mae_coverage": "620_of_620"
+    },
+    "focused_suite_passed": 40,
+    "claim_boundary": "descriptive_buckets_require_preregistered_time_and_symbol_replication"
+  },
+  "xsec_shadow": {
+    "mode": "v3_zero_risk_shadow",
+    "screen": "xsec_v3_shadow_20260726",
+    "capital_authorized": false,
+    "current_maturity_audit": "62_of_62_pass_at_390_days",
+    "integrity_repairs": [
+      "immutable_entry_prices",
+      "per_symbol_markout_contributions",
+      "incomplete_attribution_rejected",
+      "symbol_and_portfolio_anomaly_gate",
+      "legacy_return_sanitization"
+    ],
+    "historical_extreme_markouts_promotion_eligible": false,
+    "next_gate": "forward_attributable_markouts_and_independent_replication"
   },
   "bybit_sizing_parity": {
     "pure_contract": "shared_between_backtest_and_live",
@@ -279,6 +350,12 @@
   "priority_queue": [
     "monitor_post_release_att1_execution_receipts_and_clean_cohort",
     "monitor_completed_six_day_crypto_matrix_integrity",
+    "run_preregistered_negative_trade_phenotype_ablations",
+    "accumulate_xsec_v3_attributable_zero_risk_shadow",
+    "retest3_wide_reachability_after_compute_slot_frees",
+    "broaden_public_funding_history_and_listing_metadata",
+    "build_pit_aware_equities_daily_bundle",
+    "elder_v2_v3_exact_parity_replay",
     "alpaca_next_session_day_stop_rearm_proof",
     "alpaca_pit_xnys_corporate_action_cost_bundle_and_second_engine",
     "wire_position_reconciliation_runtime_adapters_and_entry_gate",
@@ -292,9 +369,10 @@
   ],
   "scoped_git": {
     "branch": "codex/dynamic-symbol-filters",
-    "upstream_head": "4757451",
-    "local_code_head_before_handoff_commit": "34d0881",
-    "ahead_commits": 6,
+    "upstream_head": "475745108b5e7ff0668011694646181ba6d9bd00",
+    "session_content_commit": "1bf5293e4ef5daca0886991d9b02714218ca3afd",
+    "state_snapshot_commit": "self",
+    "ahead_commits_including_state_snapshot": 8,
     "current_head_includes_this_handoff_commit": true,
     "foreign_dirty_worktree_preserved": true
   }
