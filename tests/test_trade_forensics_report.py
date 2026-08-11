@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 
 import scripts.trade_forensics_report as report
-from scripts.trade_forensics_report import Trade, _cache_file_range, _load_live_events
+from scripts.trade_forensics_report import Trade, _cache_file_range, _load_backtest_csv, _load_live_events
 
 
 def test_live_events_use_matching_fill_timestamp_and_price(tmp_path) -> None:
@@ -66,6 +66,20 @@ def test_cache_file_range_accepts_compact_utc_dates(tmp_path) -> None:
 
     assert start_ms == 1_781_654_400_000
     assert end_ms == 1_781_827_200_000
+
+
+def test_backtest_loader_reads_initial_risk_geometry(tmp_path) -> None:
+    path = tmp_path / "trades.csv"
+    path.write_text(
+        "strategy,symbol,side,entry_ts,exit_ts,entry_price,exit_price,qty,pnl,fees,outcome,reason,initial_sl,tp_prices\n"
+        "s,TESTUSDT,long,1700000000000,1700000060000,100,102,1,2,0.1,tp,x+TP1,99,102|104\n",
+        encoding="utf-8",
+    )
+
+    trade = _load_backtest_csv(path)[0]
+
+    assert trade.sl_price == 99.0
+    assert trade.tp_price == 102.0
 
 
 def test_analyze_trade_excludes_pre_entry_candles(tmp_path, monkeypatch) -> None:

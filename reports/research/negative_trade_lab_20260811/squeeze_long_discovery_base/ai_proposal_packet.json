@@ -1,0 +1,243 @@
+{
+  "schema_id": "negative_trade_ai_proposal_packet_v1",
+  "tag": "squeeze_long_discovery_base",
+  "authority": "proposal_only_no_secrets_no_raw_orders_no_code_write_no_live_mutation",
+  "facts": {
+    "overall": {
+      "trades": 620,
+      "symbols": 24,
+      "net_r": -131.34172419883612,
+      "gross_r": -40.37284351740075,
+      "cost_r": 90.96888068143538,
+      "mean_net_r": -0.21184149064328406,
+      "mean_gross_r": -0.06511748954419476,
+      "mean_cost_r": 0.1467240010990893,
+      "t_stat_net_r": -6.74151359571114,
+      "profit_factor_net_r": 0.5368375465087956,
+      "win_rate": 0.3919354838709677
+    },
+    "diagnostic_class": "negative_gross_edge_plus_cost_drag",
+    "worst_material_buckets": [
+      {
+        "dimension": "exit_path",
+        "bucket": "TRAIL_SL",
+        "trades": 309,
+        "net_r": -206.47808423102515,
+        "gross_r": -161.68660314730232,
+        "cost_r": 44.79148108372284,
+        "mean_net_r": -0.6682138648253241,
+        "t_stat_net_r": -43.84622710533551
+      },
+      {
+        "dimension": "hold_minutes",
+        "bucket": "(-inf,15]m",
+        "trades": 400,
+        "net_r": -174.4149224791596,
+        "gross_r": -116.17951778394402,
+        "cost_r": 58.23540469521558,
+        "mean_net_r": -0.436037306197899,
+        "t_stat_net_r": -13.071750153872415
+      },
+      {
+        "dimension": "atr_pct",
+        "bucket": "(0.25,0.5]%",
+        "trades": 417,
+        "net_r": -119.94688611763561,
+        "gross_r": -47.24837389438388,
+        "cost_r": 72.69851222325174,
+        "mean_net_r": -0.28764241275212377,
+        "t_stat_net_r": -7.797608863880438
+      },
+      {
+        "dimension": "initial_stop_pct",
+        "bucket": "(0.5,1]%",
+        "trades": 357,
+        "net_r": -102.38346250564159,
+        "gross_r": -41.613332803209055,
+        "cost_r": 60.770129702432534,
+        "mean_net_r": -0.28678841037994846,
+        "t_stat_net_r": -6.909489993528501
+      },
+      {
+        "dimension": "cost_r",
+        "bucket": "(0.15,0.25]R",
+        "trades": 239,
+        "net_r": -91.44550139881447,
+        "gross_r": -45.35736033106154,
+        "cost_r": 46.088141067752936,
+        "mean_net_r": -0.3826171606644957,
+        "t_stat_net_r": -7.164727305333287
+      },
+      {
+        "dimension": "exit_path",
+        "bucket": "SL",
+        "trades": 62,
+        "net_r": -76.0223780979042,
+        "gross_r": -63.99805384688629,
+        "cost_r": 12.024324251017902,
+        "mean_net_r": -1.2261673886758742,
+        "t_stat_net_r": -123.15976035425112
+      },
+      {
+        "dimension": "terminal_exit",
+        "bucket": "SL",
+        "trades": 62,
+        "net_r": -76.0223780979042,
+        "gross_r": -63.99805384688629,
+        "cost_r": 12.024324251017902,
+        "mean_net_r": -1.2261673886758742,
+        "t_stat_net_r": -123.15976035425112
+      },
+      {
+        "dimension": "regime",
+        "bucket": "bull_trend",
+        "trades": 417,
+        "net_r": -66.51625538356684,
+        "gross_r": -10.04254510348765,
+        "cost_r": 56.4737102800792,
+        "mean_net_r": -0.1595114037975224,
+        "t_stat_net_r": -4.124249387572125
+      },
+      {
+        "dimension": "regime",
+        "bucket": "bull_chop",
+        "trades": 203,
+        "net_r": -64.82546881526928,
+        "gross_r": -30.33029841391311,
+        "cost_r": 34.49517040135617,
+        "mean_net_r": -0.31933728480428214,
+        "t_stat_net_r": -6.00463094211083
+      },
+      {
+        "dimension": "terminal_exit",
+        "bucket": "TRAIL_SL",
+        "trades": 554,
+        "net_r": -54.4209166751717,
+        "gross_r": 23.871682377917505,
+        "cost_r": 78.2925990530892,
+        "mean_net_r": -0.09823270157973232,
+        "t_stat_net_r": -3.100753927280807
+      },
+      {
+        "dimension": "squeeze_pct",
+        "bucket": "(20,30]%",
+        "trades": 210,
+        "net_r": -47.71616577850282,
+        "gross_r": -17.0322966762992,
+        "cost_r": 30.68386910220362,
+        "mean_net_r": -0.22721983704048962,
+        "t_stat_net_r": -4.067324288588683
+      },
+      {
+        "dimension": "volume_multiple",
+        "bucket": "(2,3]x",
+        "trades": 178,
+        "net_r": -45.29369722022862,
+        "gross_r": -18.61303136628883,
+        "cost_r": 26.680665853939797,
+        "mean_net_r": -0.25445897314735183,
+        "t_stat_net_r": -4.530978910735583
+      }
+    ],
+    "best_material_buckets": [
+      {
+        "dimension": "exit_path",
+        "bucket": "TP1+TP2+TRAIL_SL",
+        "trades": 139,
+        "net_r": 127.14655238553848,
+        "gross_r": 145.42132672566552,
+        "cost_r": 18.27477434012704,
+        "mean_net_r": 0.9147233984571114,
+        "t_stat_net_r": 23.856697059389045
+      },
+      {
+        "dimension": "hold_minutes",
+        "bucket": "(15,60]m",
+        "trades": 205,
+        "net_r": 32.862852309504824,
+        "gross_r": 63.59735931998865,
+        "cost_r": 30.734507010483828,
+        "mean_net_r": 0.16030659663173086,
+        "t_stat_net_r": 2.9210629562813875
+      },
+      {
+        "dimension": "exit_path",
+        "bucket": "TP1+TRAIL_SL",
+        "trades": 106,
+        "net_r": 24.910615170314962,
+        "gross_r": 40.13695879955429,
+        "cost_r": 15.226343629239329,
+        "mean_net_r": 0.2350058034935374,
+        "t_stat_net_r": 16.041437271902765
+      },
+      {
+        "dimension": "atr_pct",
+        "bucket": "(1,2]%",
+        "trades": 45,
+        "net_r": 10.655236833314287,
+        "gross_r": 12.917095162502374,
+        "cost_r": 2.2618583291880867,
+        "mean_net_r": 0.2367830407403175,
+        "t_stat_net_r": 1.9688535292877254
+      },
+      {
+        "dimension": "hold_minutes",
+        "bucket": "(60,240]m",
+        "trades": 15,
+        "net_r": 10.210345970818652,
+        "gross_r": 12.209314946554617,
+        "cost_r": 1.998968975735965,
+        "mean_net_r": 0.6806897313879101,
+        "t_stat_net_r": 2.5493672098566362
+      },
+      {
+        "dimension": "initial_stop_pct",
+        "bucket": "(2,4]%",
+        "trades": 51,
+        "net_r": 7.3708452200939005,
+        "gross_r": 9.604014902559655,
+        "cost_r": 2.2331696824657543,
+        "mean_net_r": 0.14452637686458628,
+        "t_stat_net_r": 1.2987453444593686
+      },
+      {
+        "dimension": "symbol",
+        "bucket": "1000BONKUSDT",
+        "trades": 70,
+        "net_r": 1.7410163322327759,
+        "gross_r": 7.666736107775816,
+        "cost_r": 5.92571977554304,
+        "mean_net_r": 0.024871661889039654,
+        "t_stat_net_r": 0.24240000545189483
+      },
+      {
+        "dimension": "cost_r",
+        "bucket": "(-inf,0.05]R",
+        "trades": 46,
+        "net_r": 1.3135729096927278,
+        "gross_r": 3.0544621714015725,
+        "cost_r": 1.7408892617088452,
+        "mean_net_r": 0.028555932819407125,
+        "t_stat_net_r": 0.2626334039493724
+      }
+    ],
+    "claim_boundary": "Buckets are descriptive diagnostics, not causal filters. Any proposed exclusion or parameter change requires preregistration and untouched time/symbol replication."
+  },
+  "requested_output": {
+    "max_hypotheses": 5,
+    "fields": [
+      "hypothesis",
+      "mechanism",
+      "falsifying_test",
+      "required_data",
+      "leakage_risk",
+      "do_not_change"
+    ],
+    "rules": [
+      "Do not claim causality from descriptive buckets.",
+      "Do not recommend live risk or order changes.",
+      "Use one primary change per preregistered experiment.",
+      "Preserve untouched holdout windows."
+    ]
+  }
+}

@@ -166,6 +166,73 @@ def assert_param_handle_differentiates(
     return resolved
 
 
+def assert_symbol_handle_differentiates(
+    module_name: str,
+    env_name: str,
+    cfg_field: str,
+    values: list[str],
+    *,
+    quiet: bool = False,
+) -> list[tuple[str, ...]]:
+    """Prove that a CSV universe handle resolves to distinct symbol sets.
+
+    Numeric preflight cannot validate universe handles. This check compares
+    normalized sets and therefore catches both an unwired env var and two
+    differently formatted values that select the same universe.
+    """
+    cls = _strategy_class(module_name)
+    saved = os.environ.get(env_name)
+    resolved: list[tuple[str, ...]] = []
+    try:
+        for want in values:
+            os.environ[env_name] = str(want)
+            inst = cls()
+            cfg = getattr(inst, "cfg", None)
+            if cfg is None or not hasattr(cfg, cfg_field):
+                raise PreflightError(
+                    f"{module_name}.cfg has no universe field {cfg_field}"
+                )
+            got = tuple(
+                sorted(
+                    {
+                        item.strip().upper()
+                        for item in str(getattr(cfg, cfg_field) or "")
+                        .replace(";", ",")
+                        .split(",")
+                        if item.strip()
+                    }
+                )
+            )
+            expected = tuple(
+                sorted(
+                    {
+                        item.strip().upper()
+                        for item in str(want).replace(";", ",").split(",")
+                        if item.strip()
+                    }
+                )
+            )
+            if got != expected:
+                raise PreflightError(
+                    f"universe handle unread: {env_name}={want} -> {cfg_field}={got}"
+                )
+            resolved.append(got)
+    finally:
+        if saved is None:
+            os.environ.pop(env_name, None)
+        else:
+            os.environ[env_name] = saved
+
+    if len(set(resolved)) != len(values):
+        raise PreflightError(f"universe values do not differentiate: {resolved}")
+    if not quiet:
+        print(
+            f"[preflight] {module_name}.{cfg_field} <- {env_name}: "
+            f"{resolved}  PASS"
+        )
+    return resolved
+
+
 def assert_results_differ(values: list, what: str = "результаты") -> None:
     """ПОСЛЕ прогона: варианты обязаны отличаться.
 

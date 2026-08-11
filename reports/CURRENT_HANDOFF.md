@@ -1,6 +1,6 @@
 # Текущий handoff между чатами
 
-Обновлено: 2026-08-11 12:42 UTC.
+Обновлено: 2026-08-11 13:16 UTC.
 
 ## Читать в новом чате
 
@@ -9,6 +9,57 @@
 3. `reports/CURRENT_PROJECT_ROADMAP.md` — приоритеты и promotion gates.
 4. `reports/CODEX_HANDOFF_AND_DIARY_2026_08_10.md` — хронология и receipts.
 5. Свежие прямые broker/service/runtime данные — они важнее любого Markdown.
+
+## Codex recovery update — 2026-08-11 12:42–13:10 UTC
+
+- После двух положительно закрытых incident-сделок Bybit напрямую снова
+  подтвержден flat: `open_position_count=0`. Service активен на PID `2334168`,
+  свежий heartbeat сообщает `open_trades=0`; atomic ATT1 release остается
+  `475745108b5e7ff0668011694646181ba6d9bd00`. Money authority не расширялась.
+  Последняя read-only перепроверка: `13:16 UTC`, heartbeat age `0.4s`,
+  `bybit_msgs=152536`, receipt `DEPLOYED`, WS guard inactive/streak `0`.
+- DOT принес `+0.1072467 USDT` после TP1+TP2. ADA принес `+0.4193142 USDT`:
+  TP1, перевод stop к breakeven и ATR-trail; остаток закрыт биржевым stop.
+  Значит profit protection реально исполнилась. Обе сделки начаты старым кодом
+  и навсегда остаются contaminated, а не входят в clean post-release N20.
+- WS transport guard сейчас не активен. Alert `ACTIVE` означал fail-close новых
+  входов после серии reconnect/handshake failures; `RECOVERED` — нормализацию
+  контрольных окон. Existing exchange stops при этом сохранялись. Причина
+  обрывов не доказана: без `mtr`/host metrics нельзя объявлять ее внешней сетью.
+- Six-day research matrix завершена `48/48`, failures пусты; reserved
+  `2025-10..2026-06` holdout не читался. Пять постоянных research/shadow screen
+  живы; шестой тяжелый процесс не добавлялся поверх занятых слотов.
+- Добавлен `research_lab/negative_trade_lab.py`: deterministic research-only
+  разложение net/gross/cost в R, фенотипы losses/exits и proposal-only packet
+  для AI без секретов, ордеров, code-write или promotion authority.
+- Squeeze-long case `620` сделок: gross `-40.37R`, costs `90.97R`, net
+  `-131.34R`, `t=-6.74`, PF `0.537`. Это не только комиссия: исходный сигнал
+  отрицателен. Plain `TRAIL_SL` дал `-206.48R`, но сделки с `TP1+TRAIL_SL`
+  дали `+24.91R`, а `TP1+TP2+TRAIL_SL` — `+127.15R`; следующий тест должен
+  менять entry/confirmation и exit-path раздельно, а не просто «расширить stop».
+- 5m forensics получил полное `MFE_R/MAE_R 620/620`: `276` stop-then-reversed,
+  `175` stopped-no-reversal-yet, `133` gave-back-profit, `36`
+  entry-failed-fast. Это описательная диагностика, не causal proof.
+- ATT1 wide run: `823` сделки на `64` фактически торговавшихся символах, gross
+  `+19.34R`, costs `48.11R`, net `-28.77R`, `t=-0.99`. Wide rollout отклонен;
+  major-only ATT1 остается отдельной узкой гипотезой, а прежние заявления о
+  широком `--symbols` universe недействительны из-за скрытых allowlists.
+- `inplay_retest_v3` получил discoverable standard universe handle с
+  сохранением legacy aliases и прежнего default поведения; preflight теперь
+  доказывает, что два CSV universe действительно различаются до дорогого run.
+- XSEC V3 продолжает zero-risk shadow. Добавлены maturity audit `>=390` дней,
+  immutable entry prices и per-symbol markout contributions, anomaly flags и
+  запрет использовать phase return `|r|>25%` в leverage history. Текущий
+  universe: `62/62` mature, но старые экстремальные markout нельзя считать
+  доказательством без сохраненных entry contributions.
+- Совместный focused suite: `40 passed`; py_compile/diff checks прошли. Новый
+  код не задеплоен в money-live и не расширяет order authority.
+- Elder-verдикт Клода не подтвержден: monolith импортирует V2, но policy
+  держит его на risk zero после плохих OOS; V3 research-only и давала zero
+  annual trades. Нужен exact parity-replay, не включение одной из версий.
+
+Полный фактический отчет этой сессии:
+`reports/CODEX_RECOVERY_SESSION_2026_08_11.md`.
 
 ## Heartbeat update — 2026-08-11 12:36–12:42 UTC
 

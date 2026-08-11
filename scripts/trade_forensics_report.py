@@ -91,6 +91,11 @@ def _optional_float(value: Any) -> float | None:
         return None
 
 
+def _first_pipe_float(value: Any) -> float | None:
+    raw = str(value or "").split("|", 1)[0].strip()
+    return _optional_float(raw)
+
+
 def _ts_ms(value: Any) -> int:
     try:
         raw = int(float(value))
@@ -133,8 +138,11 @@ def _load_backtest_csv(path: Path) -> list[Trade]:
                     fees=_float(row.get("fees")),
                     outcome=(row.get("outcome") or "").strip().lower(),
                     reason=(row.get("reason") or "").strip(),
-                    sl_price=_optional_float(row.get("sl_price")),
-                    tp_price=_optional_float(row.get("tp_price")),
+                    sl_price=_optional_float(row.get("sl_price") or row.get("initial_sl")),
+                    tp_price=(
+                        _optional_float(row.get("tp_price"))
+                        or _first_pipe_float(row.get("tp_prices"))
+                    ),
                 )
             )
     return [t for t in out if t.symbol and t.entry_ts_ms and t.exit_ts_ms and t.entry_price > 0]
@@ -388,27 +396,37 @@ def _risk_pct(trade: Trade) -> float | None:
     return raw if raw > 0 else None
 
 
-def _classify(trade: Trade, mfe_pct: float | None, mae_pct: float | None, post_pct: float | None, candles: int) -> str:
+def _classify(
+    trade: Trade,
+    mfe_pct: float | None,
+    mae_pct: float | None,
+    post_pct: float | None,
+    candles: int,
+    risk_pct: float | None = None,
+) -> str:
     outcome = (trade.outcome or trade.reason or "").lower()
     if candles <= 0:
         return "missing_candles"
+    mfe_r = mfe_pct / risk_pct if risk_pct and mfe_pct is not None else None
+    mae_r = mae_pct / risk_pct if risk_pct and mae_pct is not None else None
+    post_r = post_pct / risk_pct if risk_pct and post_pct is not None else None
     explicit_stop = outcome in {"sl", "stop", "stop_loss"} or outcome.startswith("bounce_sl")
     explicit_take = outcome in {"tp", "take_profit"} or outcome.startswith("bounce_tp")
     if explicit_stop or trade.pnl < 0:
-        if post_pct is not None and post_pct > 0.45:
+        if post_r is not None and post_r > 0.45:
             return "stop_then_reversed"
-        if mae_pct is not None and mae_pct < -1.25 and (mfe_pct is None or mfe_pct < 0.35):
+        if mae_r is not None and mae_r < -1.25 and (mfe_r is None or mfe_r < 0.35):
             return "entry_failed_fast"
-        if mfe_pct is not None and mfe_pct > 0.75:
+        if mfe_r is not None and mfe_r > 0.75:
             return "gave_back_profit"
         return "stopped_no_reversal_yet"
     if explicit_take or trade.pnl > 0:
-        if post_pct is not None and post_pct > 0.75:
+        if post_r is not None and post_r > 0.75:
             return "tp_then_continued"
-        if mfe_pct is not None and mfe_pct < 0.35:
+        if mfe_r is not None and mfe_r < 0.35:
             return "thin_win"
         return "clean_win"
-    if mfe_pct is not None and mfe_pct < 0.25 and mae_pct is not None and mae_pct < -0.75:
+    if mfe_r is not None and mfe_r < 0.25 and mae_r is not None and mae_r < -0.75:
         return "no_followthrough"
     return "neutral"
 
@@ -444,7 +462,7 @@ def analyze_trade(trade: Trade, cache_dir: Path, interval: str, post_bars: int) 
     risk = _risk_pct(trade)
     mfe_r = (mfe_pct / risk) if (risk and mfe_pct is not None) else None
     mae_r = (mae_pct / risk) if (risk and mae_pct is not None) else None
-    verdict = _classify(trade, mfe_pct, mae_pct, post_pct, len(trade_rows))
+    verdict = _classify(trade, mfe_pct, mae_pct, post_pct, len(trade_rows), risk)
     return Forensic(
         source=trade.source,
         strategy=trade.strategy,

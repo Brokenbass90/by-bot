@@ -80,3 +80,42 @@ def test_params_backed_handle_rejects_unwired_env(monkeypatch):
         preflight.assert_param_handle_differentiates(
             "fake", "FAKE_ALLOW_LONGS", "ALLOW_LONGS", [0, 1], quiet=True
         )
+
+
+def test_symbol_handle_resolves_distinct_normalized_universes(monkeypatch):
+    monkeypatch.setattr(
+        preflight,
+        "_strategy_class",
+        lambda module: lambda: SimpleNamespace(
+            cfg=SimpleNamespace(symbol_allowlist=__import__("os").environ["FAKE_UNIVERSE"])
+        ),
+    )
+
+    resolved = preflight.assert_symbol_handle_differentiates(
+        "fake",
+        "FAKE_UNIVERSE",
+        "symbol_allowlist",
+        ["btcusdt,ETHUSDT", "SOLUSDT"],
+        quiet=True,
+    )
+
+    assert resolved == [("BTCUSDT", "ETHUSDT"), ("SOLUSDT",)]
+
+
+def test_symbol_handle_rejects_unwired_env(monkeypatch):
+    monkeypatch.setattr(
+        preflight,
+        "_strategy_class",
+        lambda module: lambda: SimpleNamespace(
+            cfg=SimpleNamespace(symbol_allowlist="BTCUSDT")
+        ),
+    )
+
+    with pytest.raises(preflight.PreflightError, match="universe handle unread"):
+        preflight.assert_symbol_handle_differentiates(
+            "fake",
+            "FAKE_UNIVERSE",
+            "symbol_allowlist",
+            ["BTCUSDT", "ETHUSDT"],
+            quiet=True,
+        )

@@ -35,6 +35,9 @@ from research_lab.xsec_v3_reference import leverage, target_weights
 
 BYBIT_BASE = "https://api.bybit.com"
 DEFAULT_RUNTIME = ROOT / "runtime" / "xsec_v3_shadow"
+MATURITY_DAYS = 390
+MAX_SYMBOL_MARKOUT_ABS = 0.75
+MAX_PORTFOLIO_MARKOUT_ABS = 0.25
 
 
 class ShadowCycleError(RuntimeError):
@@ -119,15 +122,29 @@ def _freeze_universe(
     daily = json.loads(daily_path.read_text(encoding="utf-8"))
     instruments = json.loads(instruments_path.read_text(encoding="utf-8"))
     current = {
-        str(row.get("symbol") or "").upper()
+        str(row.get("symbol") or "").upper(): int(row.get("launchTime") or 0)
         for row in instruments.get("records", [])
         if row.get("status") == "Trading"
         and row.get("contractType") == "LinearPerpetual"
         and row.get("quoteCoin") == "USDT"
     }
+    cutoff_ms = int(
+        (
+            datetime.combine(
+                datetime.now(timezone.utc).date(),
+                datetime_time.min,
+                tzinfo=timezone.utc,
+            )
+            .timestamp()
+            - MATURITY_DAYS * 86_400
+        )
+        * 1000
+    )
     symbols = sorted(
         symbol for symbol, values in daily.items()
-        if len(values) >= 390 and symbol in current
+        if len(values) >= MATURITY_DAYS
+        and symbol in current
+        and 0 < current[symbol] <= cutoff_ms
     )
     if len(symbols) < 14:
         raise ShadowCycleError(
@@ -137,6 +154,8 @@ def _freeze_universe(
         "schema_id": "xsec_v3_shadow_universe_v1",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "survivor_only": True,
+        "maturity_days": MATURITY_DAYS,
+        "maturity_source": "bybit_instruments_linear.records[].launchTime",
         "capital_authorized": False,
         "symbols": symbols,
         "symbol_count": len(symbols),
@@ -148,6 +167,41 @@ def _freeze_universe(
     value["universe_sha256"] = _sha256(value["symbols"])
     _atomic_json(output, value)
     return value
+
+
+def _maturity_audit(
+    symbols: list[str], instruments_path: Path, as_of: date
+) -> dict[str, Any]:
+    instruments = json.loads(instruments_path.read_text(encoding="utf-8"))
+    launch = {
+        str(row.get("symbol") or "").upper(): int(row.get("launchTime") or 0)
+        for row in instruments.get("records", [])
+    }
+    cutoff_ms = int(
+        (
+            datetime.combine(as_of, datetime_time.min, tzinfo=timezone.utc).timestamp()
+            - MATURITY_DAYS * 86_400
+        )
+        * 1000
+    )
+    eligible = sorted(
+        symbol for symbol in symbols if 0 < launch.get(symbol, 0) <= cutoff_ms
+    )
+    eligible_set = set(eligible)
+    excluded = {
+        symbol: launch.get(symbol, 0)
+        for symbol in symbols
+        if symbol not in eligible_set
+    }
+    return {
+        "as_of": as_of.isoformat(),
+        "maturity_days": MATURITY_DAYS,
+        "source": str(instruments_path),
+        "eligible_symbols": eligible,
+        "eligible_count": len(eligible),
+        "excluded_launch_time": excluded,
+        "status": "pass" if len(eligible) >= 14 else "fail",
+    }
 
 
 def _daily_history(symbol: str, limit: int = 60) -> list[float]:
@@ -202,19 +256,45 @@ def _markout(previous: dict[str, Any], tickers: dict[str, dict[str, float]]) -> 
     entry_prices = previous.get("entry_prices") or {}
     pnl = 0.0
     covered = 0
+    contributions: list[dict[str, Any]] = []
+    anomaly_symbols: list[str] = []
     for symbol, notional in targets.items():
         ticker = tickers.get(symbol)
         entry = float(entry_prices.get(symbol) or 0.0)
         if ticker is None or entry <= 0:
             continue
-        pnl += float(notional) * (ticker["last"] / entry - 1.0)
+        simple_return = ticker["last"] / entry - 1.0
+        symbol_pnl = float(notional) * simple_return
+        pnl += symbol_pnl
         covered += 1
+        if abs(simple_return) > MAX_SYMBOL_MARKOUT_ABS:
+            anomaly_symbols.append(symbol)
+        contributions.append({
+            "symbol": symbol,
+            "target_usd": round(float(notional), 6),
+            "entry_price": entry,
+            "mark_price": ticker["last"],
+            "simple_return": round(simple_return, 8),
+            "gross_pnl_usd": round(symbol_pnl, 6),
+        })
     capital = float(previous.get("phase_capital_usd") or 0.0)
+    missing_symbols = sorted(set(targets) - {row["symbol"] for row in contributions})
+    coverage_complete = bool(targets) and not missing_symbols
+    gross_return = round(pnl / capital, 8) if capital > 0 and coverage_complete else None
+    portfolio_anomaly = gross_return is not None and abs(gross_return) > MAX_PORTFOLIO_MARKOUT_ABS
     return {
         "covered_symbols": covered,
         "symbols": len(targets),
         "gross_pnl_usd": round(pnl, 6),
-        "gross_return": round(pnl / capital, 8) if capital > 0 else None,
+        "gross_return": gross_return,
+        "coverage_complete": coverage_complete,
+        "missing_symbols": missing_symbols,
+        "contributions": sorted(contributions, key=lambda row: row["gross_pnl_usd"]),
+        "anomaly_symbols": sorted(anomaly_symbols),
+        "portfolio_anomaly": portfolio_anomaly,
+        "eligible_for_leverage_history": (
+            coverage_complete and not anomaly_symbols and not portfolio_anomaly
+        ),
         "previous_estimated_entry_cost_usd": previous.get(
             "estimated_entry_cost_usd"
         ),
@@ -259,6 +339,23 @@ def _order_plan(
     return orders, estimated_cost
 
 
+def _sanitize_returns(values: list[Any]) -> tuple[list[float], list[Any]]:
+    """Keep only finite, plausible phase returns without crashing old state."""
+    accepted: list[float] = []
+    dropped: list[Any] = []
+    for value in values:
+        try:
+            parsed = float(value)
+        except (TypeError, ValueError):
+            dropped.append(value)
+            continue
+        if math.isfinite(parsed) and abs(parsed) <= MAX_PORTFOLIO_MARKOUT_ABS:
+            accepted.append(parsed)
+        else:
+            dropped.append(value)
+    return accepted, dropped
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--runtime-dir", default=str(DEFAULT_RUNTIME))
@@ -293,6 +390,13 @@ def main() -> int:
         }
 
     today = datetime.now(timezone.utc).date()
+    maturity = _maturity_audit(
+        list(universe["symbols"]), ROOT / args.instruments_source, today
+    )
+    if maturity["status"] != "pass":
+        raise ShadowCycleError(
+            f"PIT maturity gate failed: eligible={maturity['eligible_count']}"
+        )
     start = date.fromisoformat(state["shadow_start_date"])
     day_index = (today - start).days
     phase_id = str(day_index % 3)
@@ -309,7 +413,7 @@ def main() -> int:
 
     histories: dict[str, list[float]] = {}
     failures: dict[str, str] = {}
-    for symbol in universe["symbols"]:
+    for symbol in maturity["eligible_symbols"]:
         try:
             values = _daily_history(symbol)
             if len(values) >= 46:
@@ -327,9 +431,14 @@ def main() -> int:
     raw_weights = target_weights(histories)
     if not raw_weights:
         raise ShadowCycleError("XSEC target_weights returned no portfolio")
-    past_returns = list(previous.get("past_rebalance_returns") or [])
+    raw_past_returns = list(previous.get("past_rebalance_returns") or [])
+    past_returns, dropped_past_returns = _sanitize_returns(raw_past_returns)
     markout = _markout(previous, quotes) if previous else None
-    if markout and markout.get("gross_return") is not None:
+    if (
+        markout
+        and markout.get("gross_return") is not None
+        and markout.get("eligible_for_leverage_history") is True
+    ):
         past_returns.append(float(markout["gross_return"]))
     past_returns = past_returns[-20:]
     leverage_value = leverage(past_returns)
@@ -367,12 +476,14 @@ def main() -> int:
         "capital_authorized": False,
         "universe_sha256": universe["universe_sha256"],
         "frozen_universe_symbols": universe["symbol_count"],
+        "maturity_audit": maturity,
         "usable_symbols": len(histories),
         "data_failures": failures,
         "leverage": round(leverage_value, 6),
         "phase_capital_usd": phase_capital,
         "raw_weights": raw_weights,
         "target_usd": target_usd,
+        "entry_prices": entry_prices,
         "gross_target_usd": round(sum(abs(value) for value in target_usd.values()), 4),
         "net_target_usd": round(sum(target_usd.values()), 4),
         "planned_orders": orders,
@@ -381,6 +492,8 @@ def main() -> int:
         ),
         "estimated_entry_cost_usd": round(estimated_cost, 6),
         "previous_phase_markout": markout,
+        "past_rebalance_returns_used": past_returns,
+        "past_rebalance_returns_dropped": dropped_past_returns,
     }
     decision_core["decision_id"] = _sha256(decision_core)
     _atomic_json(runtime_dir / "decision_latest.json", decision_core)

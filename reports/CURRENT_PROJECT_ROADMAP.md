@@ -1,8 +1,74 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-10 18:55 UTC. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-11 13:10 UTC. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
+
+## Update 2026-08-11 — что изменилось и что делать дальше
+
+### Завершено сейчас
+
+1. **ATT1 execution release:** atomic revision `475745108b5e` находится в live,
+   broker flat, service/heartbeat живы. Clean N20 начинается только после этого
+   receipt; DOT/ADA положительны, но contaminated.
+2. **Автономная матрица:** terminal `48/48`; ни одного money-кандидата.
+   Reserved holdout не читался.
+3. **Лаборатория отрицательных сделок:** первая reproducible версия готова.
+   Она отличает negative gross edge от cost-killed edge, строит exit-path и
+   market/context buckets, а AI получает только proposal packet.
+4. **Скрытый universe contract:** стандартная ручка добавлена в
+   `inplay_retest_v3`, preflight теперь обязан доказать различие universe.
+5. **XSEC shadow integrity:** maturity, entry attribution и anomaly gate
+   добавлены без broker/order authority.
+
+### Новые измеренные границы
+
+- **ATT1 major-only:** остается единственной money-canary, но еще не доказана
+  clean live cohort. Не экстраполировать на весь рынок.
+- **ATT1 wide:** `823` trades, gross `+19.34R`, costs `48.11R`, net `-28.77R`,
+  `t=-0.99`; отклонена как широкий контур.
+- **Squeeze long 2023H2:** `620` trades, gross `-40.37R`, costs `90.97R`, net
+  `-131.34R`, `t=-6.74`; отклонена в текущем виде. Причина не сводится к fees.
+- **XSEC:** `SHADOW`, zero risk; forward evidence еще не накоплена.
+- **Alpaca:** live SAFE_HOLD/protective-exit contour, но стратегия selection
+  остается diagnostic, не доказанным источником дохода.
+
+### Следующие P0/P1 — без календарного простоя
+
+1. **Live truth loop:** на каждом цикле reconcile broker ↔ runner ↔ owner ↔
+   accounting; конфликт символа fail-closes только новые добавки, protection
+   продолжает работать.
+2. **Clean ATT1:** собирать N20, одновременно завершить exact
+   backtest↔live parity для rounding/fees/partial fills. Gate риска остается
+   `20 clean closed`, `netR>=+2`, `PF>=1.20`, drawdown `<=5R`, zero unresolved
+   execution conflicts; ориентир при прежней частоте — конец сентября.
+3. **Second-leg lane A — XSEC:** держать V3 в shadow, ежедневно валидировать
+   maturity/markout attribution/anomalies. До forward sample капитал нулевой.
+4. **Second-leg lane B — retest/level reaction:** провести differentiating
+   wide-universe smoke после освобождения compute slot; затем time/symbol OOS.
+   Для возвратных сетапов maker моделировать отдельно; импульсным breakout
+   maker не навязывать из-за adverse selection.
+5. **Negative lab experiments:** preregister три отдельных falsification-теста:
+   delayed/confirmed entry для `entry_failed_fast`; state-aware entry для
+   `stopped_no_reversal_yet`; exit redesign для `gave_back_profit`. Не смешивать
+   три изменения в одном варианте и не читать reserved holdout.
+6. **Data lane:** после освобождения слота расширить public funding history и
+   получить PIT-aware equities daily universe. Текущие 8-symbol funding data и
+   yfinance/survivor equity data недостаточны для финального вердикта.
+7. **Elder:** построить один contract manifest V2/V3 и replay на одинаковом
+   universe/data/cost/exits; обе версии остаются risk zero до результата.
+8. **AI/graph analysis:** AI имеет read-only timestamped snapshots, OHLC cards,
+   regime probabilities и proposal-only findings. Он не включает модули, не
+   меняет risk и не отправляет ордера. Visual pattern claim обязан иметь
+   machine reproduction и preregistered test.
+
+### Что не считать прогрессом
+
+- `141 symbols downloaded` — это coverage, не edge и не live activation.
+- `85 modules indexed` — inventory coverage, не доказанная полезность.
+- старый красивый backtest без exact universe/weights/exits/cost contract;
+- один положительный shadow markout или две contaminated live сделки;
+- AI-объяснение причины без воспроизводимого finding и source receipt.
 
 ## Emergency execution update — 18:55 UTC
 

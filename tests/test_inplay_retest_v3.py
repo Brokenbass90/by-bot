@@ -301,3 +301,32 @@ def test_cooldown_is_tied_to_entry_bar_time():
     entry.append(second)
     assert _call(strategy, _Store(structure, entry), second) is None
     assert strategy.last_no_signal_reason == "cooldown"
+
+
+def test_standard_symbol_allowlist_is_discoverable_and_enforced(monkeypatch):
+    monkeypatch.setenv("IRV3_SYMBOL_ALLOWLIST", "btcusdt, ETHUSDT")
+
+    strategy = InplayRetestV3Strategy(_cfg())
+
+    assert strategy.cfg.symbol_allowlist == "btcusdt, ETHUSDT"
+    assert strategy._allow == {"BTCUSDT", "ETHUSDT"}
+    strategy.maybe_signal(_Store([], []), 1, 1, 1, 1, 1, 1)
+    assert strategy.last_no_signal_reason == "symbol_not_allowed"
+
+
+def test_legacy_symbol_allowlist_still_works(monkeypatch):
+    monkeypatch.setenv("IRV3_ALLOW", "TESTUSDT")
+
+    strategy = InplayRetestV3Strategy(_cfg())
+
+    assert strategy.cfg.symbol_allowlist == "TESTUSDT"
+    assert strategy._allow == {"TESTUSDT"}
+
+
+def test_standard_symbol_allowlist_overrides_legacy_handle(monkeypatch):
+    monkeypatch.setenv("IRV3_ALLOW", "BTCUSDT")
+    monkeypatch.setenv("IRV3_SYMBOL_ALLOWLIST", "TESTUSDT,ETHUSDT")
+
+    strategy = InplayRetestV3Strategy(_cfg())
+
+    assert strategy._allow == {"TESTUSDT", "ETHUSDT"}

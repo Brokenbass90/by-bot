@@ -76,6 +76,19 @@ def _env_csv_set(name: str, default_csv: str = "") -> set[str]:
     return {x.strip().upper() for x in str(raw).replace(";", ",").split(",") if x.strip()}
 
 
+def _resolve_csv_env(primary: str, legacy: str, primary_default: str, legacy_default: str) -> str:
+    """Resolve a standard universe handle without breaking the legacy one.
+
+    Presence, rather than truthiness, decides precedence so callers can set the
+    standard handle to an empty string to deliberately clear an older value.
+    """
+    if primary in os.environ:
+        return str(os.environ.get(primary) or "")
+    if legacy in os.environ:
+        return str(os.environ.get(legacy) or "")
+    return str(primary_default or legacy_default or "")
+
+
 def _atr(rows: List[list], period: int) -> float:
     if len(rows) < period + 1:
         return float("nan")
@@ -195,6 +208,10 @@ class InplayRetestV3Config:
     # (The entry-distance cap above is the universal anti-blowup, regime-agnostic.)
     use_regime: bool = False
 
+    # Standard names are discoverable by research_lab.strategy_adapter. The
+    # legacy fields/env handles remain supported for old launch scripts.
+    symbol_allowlist: str = ""
+    symbol_denylist: str = ""
     allow_csv: str = ""
     deny_csv: str = ""
 
@@ -251,8 +268,22 @@ class InplayRetestV3Strategy:
         c.allow_short = _env_bool("IRV3_ALLOW_SHORT", c.allow_short)
         c.cooldown_bars = _env_int("IRV3_COOLDOWN_BARS", c.cooldown_bars)
         c.use_regime = _env_bool("IRV3_USE_REGIME", c.use_regime)
-        self._allow = _env_csv_set("IRV3_ALLOW", c.allow_csv)
-        self._deny = _env_csv_set("IRV3_DENY", c.deny_csv)
+        c.symbol_allowlist = _resolve_csv_env(
+            "IRV3_SYMBOL_ALLOWLIST", "IRV3_ALLOW", c.symbol_allowlist, c.allow_csv
+        )
+        c.symbol_denylist = _resolve_csv_env(
+            "IRV3_SYMBOL_DENYLIST", "IRV3_DENY", c.symbol_denylist, c.deny_csv
+        )
+        self._allow = {
+            x.strip().upper()
+            for x in c.symbol_allowlist.replace(";", ",").split(",")
+            if x.strip()
+        }
+        self._deny = {
+            x.strip().upper()
+            for x in c.symbol_denylist.replace(";", ",").split(",")
+            if x.strip()
+        }
 
     # ---------- level mapping ----------
     def _candidate_levels(
