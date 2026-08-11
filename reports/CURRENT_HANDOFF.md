@@ -1,6 +1,6 @@
 # Текущий handoff между чатами
 
-Обновлено: 2026-08-10 18:55 UTC.
+Обновлено: 2026-08-11 00:45 UTC.
 
 ## Читать в новом чате
 
@@ -9,6 +9,33 @@
 3. `reports/CURRENT_PROJECT_ROADMAP.md` — приоритеты и promotion gates.
 4. `reports/CODEX_HANDOFF_AND_DIARY_2026_08_10.md` — хронология и receipts.
 5. Свежие прямые broker/service/runtime данные — они важнее любого Markdown.
+
+## Heartbeat update — 2026-08-11 00:35–00:41 UTC
+
+- Direct Bybit REST: две позиции, service active. DOTUSDT Sell `29.7`, entry
+  `0.8023`, stop `0.8205`; ADAUSDT Sell теперь `53`, entry `0.1931`, stop
+  `0.1992`. Оба stop присутствуют, account не flat.
+- Operator-control read подтвердил, что ATT1 pause **не установлена**:
+  `exists=false`, `paused_sleeves=[]`. Поэтому первым ручным действием остается
+  `/strategy_pause att1 execution_fix_release`; deploy/restart запрещены.
+- Six-day pipeline ложно сообщил `complete` при `40/48`: ledger содержал
+  `8 case_failed`. Все восемь — squeeze discovery/replication, одна причина:
+  `ZeroDivisionError` на полностью нулевой BB-width history.
+- Исправлено: нулевая история теперь означает no-signal; terminal status больше
+  не может быть `complete` при failed/missing case. Commit `25bcb57`, focused
+  suite `11 passed`.
+- Research-only repair resume запущен: supervisor PID `29789` держит lock.
+  Первый missing case уже восстановлен: squeeze-long discovery/base `620`
+  сделок, `-131.34R`, `-0.212R/trade`, `t=-6.74`, PF `0.537`; считается stress.
+  `TRADE_ON=0`,
+  private API/order authority отсутствуют. Detached screen
+  `six_day_crypto_20260810` служит watchdog: после освобождения lock он требует
+  exact `48/48` и пустой failed list, иначе безопасно повторяет resume. Reserved
+  holdout не читался.
+- Пять постоянных screen-процессов healthy; downloader завершен и его screen
+  штатно исчез. Свободно `92 GiB`, six-day `caffeinate` assertion активен.
+- Git branch локально ahead upstream на четыре scoped commits; чужой dirty
+  worktree не очищался и не попадал в commits.
 
 ## Критическое обновление 18:55 UTC
 

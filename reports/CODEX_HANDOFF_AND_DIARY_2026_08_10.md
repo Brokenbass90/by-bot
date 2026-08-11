@@ -385,3 +385,34 @@ Stale/malformed source дает глобальный fail-close новых вх�
 runner sync/operator controls/bundle tests: `18 passed`. В monolith модуль пока
 не импортирован и в live не задеплоен: следующий отдельный gate — adapters,
 durable receipt и подключение ко всем submit paths после ATT1 execution release.
+
+## Heartbeat — 2026-08-11 00:35–00:41 UTC
+
+Проверка обнаружила ложный terminal status шестидневной очереди: status писал
+`complete`, но одновременно `completed_cases=40`, `expected_cases=48`. Ledger
+подтвердил `40 case_complete` и `8 case_failed`. Все восемь пропусков относятся
+к squeeze long/short на discovery 2023H2 и replication 2024H1 под base/stress.
+Логи дали одну точную причину: `ZeroDivisionError` при вычислении
+`squeeze_width / max(widths_history)`, когда история BB width полностью нулевая.
+
+Стратегия теперь трактует max-width `<=0` как no-signal. Supervisor получил
+fail-closed terminal status: `complete` допустим только при exact expected count
+и пустом failed list. Focused suite `11 passed`, py_compile/diff check PASS,
+scoped commit `25bcb57`. Repair resume запущен без private API и order authority;
+PID `29789` держит pipeline lock, первый missing squeeze case считается.
+Detached screen `six_day_crypto_20260810` теперь является durable watchdog: он
+ждет освобождения lock, принимает только exact `48/48` с пустым failed list и
+иначе повторно запускает research-only resume.
+В 00:44 UTC первый ранее missing case завершился без исключения: squeeze-long
+discovery/base, `620` сделок, `-131.34R`, `-0.21184R/trade`, `t=-6.74`,
+PF `0.537`, audit PASS. Это подтверждает repair и одновременно отвергает этот
+вариант на discovery; supervisor перешел к stress case.
+Reserved holdout 2025-10..2026-06 не читался. Downloader завершился; пять
+официальных research screens остались alive, диск имеет `92 GiB`, host
+`caffeinate` assertion активен.
+
+Read-only server check в 00:40 UTC: Bybit `retCode=0`, позиции DOTUSDT Sell
+`29.7`/entry `0.8023`/stop `0.8205` и ADAUSDT Sell `53`/entry `0.1931`/stop
+`0.1992`; service active. Отдельный operator-control read: control file
+отсутствует, `paused_sleeves=[]`. Account не flat, поэтому deploy/restart не
+выполнялись; ордера не отправлялись, не отменялись и вручную не закрывались.
