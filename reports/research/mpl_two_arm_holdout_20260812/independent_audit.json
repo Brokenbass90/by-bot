@@ -1,0 +1,11 @@
+{
+  "authority": "research_only_no_live_or_promotion",
+  "capital_authorized": false,
+  "code_file_count": 4,
+  "errors": [],
+  "input_file_count": 62,
+  "manifest_sha256": "ba667c50e9a307df64394a8b906e2af32a062b41e6702dc8c03a0af4a3ba813d",
+  "result_sha256": "f1988d97e090d5a66e892594d616482e938c812633697b370d0cfee4385754f2",
+  "schema_id": "mpl_two_arm_independent_audit_v1",
+  "verdict": "PASS"
+}
