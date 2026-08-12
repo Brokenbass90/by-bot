@@ -1,65 +1,69 @@
-# Current handoff — 2026-08-12 11:12 UTC
+# Current handoff — 2026-08-12 11:55 UTC
 
-Это первая точка входа после паузы или перехода в новый чат. Подробности:
+Это единственная короткая точка входа после паузы или перехода в новый чат.
+Сначала читать этот файл, затем
 `reports/PROJECT_STATE_AND_RESEARCH_REPORT_20260812.md`, затем
 `reports/CURRENT_PROJECT_ROADMAP.md`.
 
 ## Git truth
 
-- branch: `codex/dynamic-symbol-filters`
-- pushed remote SHA: `3201b7449bb05dbdda24ddbb1c195ef297306e54`
-- последние commits:
-  - `fb4500b` — MPL two-arm receipt, обе руки REJECT;
-  - `7c03cc5` — causal Inplay + prospective zero-risk collector;
-  - `3201b74` — worktree audit, data contracts, canonical report.
-- сотни чужих/Claude dirty files сохранены и не входят в эти commits.
+- branch: `codex/dynamic-symbol-filters`;
+- functional commits pushed:
+  - `206c6cf` — Alpaca LIVE/PAPER truth + GTC standalone protection;
+  - `df51ed6` — passported dirty-candidate batch + wide public-data runner;
+- остальные сотни Claude/user dirty paths не staged, не удалены и не попали в
+  эти commits;
+- GitHub CLI отсутствует, поэтому draft PR не открыт; branch push подтверждён.
 
-## Live truth
+## Direct live truth
 
-- server-side direct Bybit checker: `retCode=0`, open positions `0` на 11:03 UTC;
-- local Bybit read-only key expired (`33004`), его вывод не использовать;
-- live monolith, orders, risk и services в сессии не менялись;
-- ATT1 остаётся tiny canary `0.10`; повышение только после clean N20 и parity.
+- Bybit server checker в этой сессии: `retCode=0`, open positions `0`;
+- ATT1 post-release clean cohort: `1/20` на последней ledger-сверке, risk
+  `0.10`; повышение только после exact parity + clean cohort gates;
+- Alpaca GET-only LIVE: account `ACTIVE`, equity `$485.91`, cash `$391.27`,
+  ABBV/SCHW, broker stop coverage `2/2`;
+- SCHW current stop `96.47` имеет `DAY`; прежний raised stop `105.32` был
+  отменён/rearmed ниже. Local fix `GTC` запушен, но не deployed; текущие ордера
+  не изменялись.
+
+## Research completed now
+
+- Alpaca PIT download `1000/1000`, failures `0`;
+- validator full pool: `FAIL_CLOSED`; `24` post-delist ticker conflicts + `14`
+  empty, quarantined `38`; clean research-only subset `962`, promotion `false`;
+- TPB1 ETH rejected: `247` trades, PF `0.828`, `-0.046R/trade`;
+- RMR1 major8 rejected: `733` trades, PF `0.789`, `-0.209R/trade` at 16 bps;
+  8 bps remains negative, PF `0.892`, `-0.106R/trade`;
+- sealed `2025-10..2026-06` holdout was not read; passports and independent
+  validation receipts are saved.
 
 ## Research continuity
 
-- local supervisor: `6/6 healthy`;
-- Inplay screen: `research_inplay_prospective_20260812`;
-- Inplay authority: public-only, authentication/order/risk/capital `false`;
-- Alpaca PIT: на последнем срезе `816/1000`, failures `0`, GET-only;
-- alt24 L2: `29,562` observations, 24 symbols, collecting;
-- server L2: tape `1.31GB`, free `6.4GB`, guard `5GB`; guard не обходить.
+- local supervisor: `6/6 healthy`, no live order authority;
+- Inplay ETH prospective: public-only, zero risk, current `N=0`;
+- funding dynamic/frozen: each has `3` open, `0` closed shadow trials;
+- alt24 L2: more than `35k` observations, `24` symbols, disk guard healthy;
+- dirty audit after first adopted batch: `166` code candidates; process only in
+  batches of 5–10, no mass cleanup.
 
-## Ноги
+## Exact next actions
 
-- ATT1 majors: единственная crypto money-canary, wide universe отрицателен;
-- Inplay ETH: `CAUSAL_VIABLE_SHADOW_ONLY`, N455, 3/4 positive folds;
-- MPL: обе prereg hands REJECT, не спасать tuning;
-- XSEC causal V1: REJECT, stress total `-5.82%`;
-- funding dynamic/frozen: только forward shadow;
-- Alpaca: SAFE_HOLD, annual conclusion только после PIT validator/replay.
+1. Review and stage the generated wide-RMR + Alpaca PIT evidence together with
+   this handoff/roadmap; run focused tests and push one evidence commit.
+2. Prepare, but do not silently deploy, a protection-only Alpaca GTC bundle;
+   require server-Python smoke and an owner-approved order-safe window.
+3. Build exact Alpaca base/stress live-contract replay on clean subset `962`;
+   keep current-liquidity selection bias and promotion fail-closed.
+4. Leave Inplay parameters frozen; issue first 7-day cadence card. Continue
+   funding until closed net trials exist.
+5. Next dirty batch: strategy adapter, sweep/reclaim, backtest auditor; each
+   through passport → reproduction → accept/reject.
 
-## Блокеры и следующий порядок
+## Promotion gates
 
-1. В кабинетах перевыпустить Alpaca/Massive keys; обновить secrets, выполнить
-   GET-only smoke, затем отозвать старые. Восстановить отдельный local Bybit
-   read-only checker key.
-2. Дождаться Alpaca `1000/1000`, запустить validator и exact live-contract
-   annual base/stress replay.
-3. Не менять Inplay: накопить prospective N30–50, затем regime/symbol OOS.
-4. Собрать spot↔perp exact mapping и causal funding/carry replay.
-5. Разбирать `176` dirty code candidates пакетами 5–10 через reproduction;
-   ничего массово не удалять.
-
-## Проверка после паузы
-
-```bash
-cd /Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28
-./CHECK_RESEARCH_STATION.command
-screen -ls
-python3 -m json.tool runtime/inplay_prospective_shadow_v1/status.json
-python3 -m json.tool research_lab/data/alpaca_pit_daily_v1/status.json
-```
-
-Для direct broker truth использовать server checker read-only. Не делать
-deploy/restart только на основании локальных status-файлов.
+- ATT1 `0.10 → 0.25`: clean N20, netR `>=+2`, PF `>=1.20`, drawdown `<=5R`,
+  zero unresolved execution conflicts, exact backtest/live lifecycle parity.
+- Alpaca: clean-subset exact replay + base/stress + daily MTM + exit parity;
+  then tiny new-selection canary, never automatic scale.
+- Any research/shadow status is zero capital unless a separate receipt grants
+  explicit money authority.

@@ -52,6 +52,8 @@ def validate_archive(archive: Path) -> tuple[dict[str, Any], dict[str, Any]]:
     errors: list[str] = []
     warnings: list[str] = []
     intervals: list[dict[str, Any]] = []
+    quarantined: list[dict[str, str]] = []
+    quarantine_errors: set[str] = set()
 
     if status.get("state") != "complete":
         errors.append(f"materialization_not_complete:{status.get('state')}")
@@ -86,6 +88,7 @@ def validate_archive(archive: Path) -> tuple[dict[str, Any], dict[str, Any]]:
             if not times:
                 empty += 1
                 warnings.append(f"{symbol}:no_daily_bars")
+                quarantined.append({"symbol": symbol, "reason": "no_daily_bars"})
                 continue
             first = date_from_ms(times[0])
             last = date_from_ms(times[-1])
@@ -94,7 +97,14 @@ def validate_archive(archive: Path) -> tuple[dict[str, Any], dict[str, Any]]:
             delisted = dt.date.fromisoformat(delisted_text) if delisted_text else None
             if delisted and last > delisted:
                 bars_after_delist += 1
-                errors.append(f"{symbol}:bar_after_delist:{last}>{delisted}")
+                error = f"{symbol}:bar_after_delist:{last}>{delisted}"
+                errors.append(error)
+                quarantine_errors.add(error)
+                quarantined.append({
+                    "symbol": symbol,
+                    "reason": "ticker_identity_conflict_bar_after_delist",
+                })
+                continue
             intervals.append({
                 "symbol": symbol,
                 "observed_from": first.isoformat(),
@@ -110,6 +120,13 @@ def validate_archive(archive: Path) -> tuple[dict[str, Any], dict[str, Any]]:
     if missing:
         errors.append(f"missing_bar_files:{len(missing)}")
     integrity_pass = not errors
+    clean_subset_integrity_pass = (
+        status.get("state") == "complete"
+        and not status.get("failed")
+        and not missing
+        and not [error for error in errors if error not in quarantine_errors]
+        and bool(intervals)
+    )
     receipt = {
         "schema_id": "alpaca_pit_daily_validation_v1",
         "authority": "research_only_no_orders_no_risk_mutation",
@@ -117,10 +134,13 @@ def validate_archive(archive: Path) -> tuple[dict[str, Any], dict[str, Any]]:
         "archive_state": status.get("state"),
         "requested_symbols": len(symbols),
         "validated_symbols": len(intervals),
+        "clean_subset_symbols": len(intervals),
         "missing_symbols": missing,
         "empty_symbols": empty,
         "bars_after_delist": bars_after_delist,
+        "quarantined_symbols": quarantined,
         "integrity_pass": integrity_pass,
+        "clean_subset_integrity_pass": clean_subset_integrity_pass,
         "point_in_time_membership_within_selected_pool": integrity_pass,
         "full_market_point_in_time_universe": False,
         "selection_bias_resolved": False,
@@ -135,8 +155,12 @@ def validate_archive(archive: Path) -> tuple[dict[str, Any], dict[str, Any]]:
     }
     manifest = {
         "schema_id": "alpaca_candidate_pool_membership_intervals_v1",
-        "semantics": "PIT intervals within selected pool; not a complete historical market universe",
+        "semantics": "clean PIT intervals within selected pool; ambiguous or empty tickers quarantined",
         "source_universe_sha256": canonical_sha(universe),
+        "source_archive_integrity_pass": integrity_pass,
+        "clean_subset_integrity_pass": clean_subset_integrity_pass,
+        "promotion_authorized": False,
+        "quarantined": quarantined,
         "intervals": intervals,
         "payload_sha256": canonical_sha(intervals),
     }

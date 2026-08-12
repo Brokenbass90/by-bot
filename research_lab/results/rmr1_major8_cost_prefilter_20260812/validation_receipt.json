@@ -1,0 +1,27 @@
+{
+  "schema_id": "candidate_prefilter_validation_receipt_v1",
+  "authority": "research_only_no_live_or_promotion",
+  "passport_sha256": "484bab466f073729604fb5b4209a3a3db615f997c4cc3bc8cdb7188bf46886fb",
+  "validated_results": [
+    {
+      "path": "research_lab/results/rmr1_major8_cost_prefilter_20260812/rmr1_cost16.json",
+      "strategy": "rmr1",
+      "trades": 733,
+      "expectancy_R": -0.209,
+      "profit_factor": 0.789,
+      "months_positive": 4,
+      "months_total": 19
+    },
+    {
+      "path": "research_lab/results/rmr1_major8_cost_prefilter_20260812/rmr1_cost8.json",
+      "strategy": "rmr1",
+      "trades": 733,
+      "expectancy_R": -0.106,
+      "profit_factor": 0.892,
+      "months_positive": 6,
+      "months_total": 19
+    }
+  ],
+  "errors": [],
+  "status": "pass"
+}

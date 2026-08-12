@@ -1,0 +1,218 @@
+{
+  "archive_state": "complete",
+  "authority": "research_only_no_orders_no_risk_mutation",
+  "bars_after_delist": 24,
+  "capital_authorized": false,
+  "clean_subset_integrity_pass": true,
+  "clean_subset_symbols": 962,
+  "empty_symbols": 14,
+  "errors": [
+    "ADTX:bar_after_delist:2026-08-11>2026-06-25",
+    "ALUR:bar_after_delist:2026-06-17>2026-03-09",
+    "ANEB:bar_after_delist:2026-08-11>2026-03-02",
+    "AREB:bar_after_delist:2026-08-11>2026-05-13",
+    "ASNS:bar_after_delist:2026-08-11>2026-04-10",
+    "BNBX:bar_after_delist:2026-08-11>2026-07-14",
+    "BURU:bar_after_delist:2026-08-11>2026-07-20",
+    "CREG:bar_after_delist:2026-08-11>2026-07-21",
+    "LYRA:bar_after_delist:2026-08-11>2026-03-18",
+    "MAPS:bar_after_delist:2026-08-11>2026-04-27",
+    "MEHA:bar_after_delist:2026-08-11>2026-06-16",
+    "NOTE:bar_after_delist:2026-08-11>2026-03-26",
+    "NVVE:bar_after_delist:2026-08-11>2026-07-24",
+    "PMNT:bar_after_delist:2026-08-11>2026-06-18",
+    "RBOT:bar_after_delist:2026-08-11>2026-03-04",
+    "RVPH:bar_after_delist:2026-08-11>2026-05-14",
+    "SBDS:bar_after_delist:2026-08-10>2026-04-06",
+    "SGMO:bar_after_delist:2026-06-23>2026-05-05",
+    "SGRP:bar_after_delist:2026-08-11>2026-07-23",
+    "STRS:bar_after_delist:2026-08-11>2026-08-10",
+    "VSEE:bar_after_delist:2026-08-11>2026-08-06",
+    "VSTD:bar_after_delist:2026-08-10>2026-07-27",
+    "WORX:bar_after_delist:2026-08-03>2026-04-14",
+    "ZSPC:bar_after_delist:2026-08-11>2026-04-28"
+  ],
+  "full_market_point_in_time_universe": false,
+  "integrity_pass": false,
+  "missing_symbols": [],
+  "point_in_time_membership_within_selected_pool": false,
+  "promotion_authorized": false,
+  "quarantined_symbols": [
+    {
+      "reason": "no_daily_bars",
+      "symbol": "ADIGW"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "ADTX"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "ALUR"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "ANEB"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "APTVW"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "AREB"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "ASNS"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "BNBX"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "BURU"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "CREG"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "CUX"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "FDXFW"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "FDXW"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "LYRA"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "MAPS"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "MBGLW"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "MEHA"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "NOTE"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "NVRIW"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "NVVE"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "PMNT"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "QVC"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "RBOT"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "REZIW"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "RVPH"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "SBDS"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "SFPT"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "SGMO"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "SGRP"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "SPGIW"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "STRS"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "TARX"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "USPE"
+    },
+    {
+      "reason": "no_daily_bars",
+      "symbol": "VGNTW"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "VSEE"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "VSTD"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "WORX"
+    },
+    {
+      "reason": "ticker_identity_conflict_bar_after_delist",
+      "symbol": "ZSPC"
+    }
+  ],
+  "requested_symbols": 1000,
+  "schema_id": "alpaca_pit_daily_validation_v1",
+  "selection_bias_resolved": false,
+  "validated_symbols": 962,
+  "verdict": "FAIL_CLOSED",
+  "warnings": [
+    "ADIGW:no_daily_bars",
+    "APTVW:no_daily_bars",
+    "CUX:no_daily_bars",
+    "FDXFW:no_daily_bars",
+    "FDXW:no_daily_bars",
+    "MBGLW:no_daily_bars",
+    "NVRIW:no_daily_bars",
+    "QVC:no_daily_bars",
+    "REZIW:no_daily_bars",
+    "SFPT:no_daily_bars",
+    "SPGIW:no_daily_bars",
+    "TARX:no_daily_bars",
+    "USPE:no_daily_bars",
+    "VGNTW:no_daily_bars",
+    "active side selected using current recent liquidity",
+    "provider plan exposes only a bounded recent history",
+    "membership intervals do not reconstruct every historical US listing"
+  ]
+}

@@ -1,0 +1,401 @@
+{
+  "schema_id": "candidate_hourly_next_open_replay_v1",
+  "authority": "research_only_no_live_or_promotion",
+  "strategy": "rmr1",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "LINKUSDT",
+    "ADAUSDT",
+    "DOTUSDT",
+    "SUIUSDT",
+    "AVAXUSDT"
+  ],
+  "input_json": null,
+  "input_root": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930",
+  "input_files": {
+    "BTCUSDT": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/BTCUSDT/BTCUSDT.json",
+    "ETHUSDT": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/ETHUSDT/ETHUSDT.json",
+    "SOLUSDT": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/SOLUSDT/SOLUSDT.json",
+    "LINKUSDT": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/LINKUSDT/LINKUSDT.json",
+    "ADAUSDT": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/ADAUSDT/ADAUSDT.json",
+    "DOTUSDT": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/DOTUSDT/DOTUSDT.json",
+    "SUIUSDT": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/SUIUSDT/SUIUSDT.json",
+    "AVAXUSDT": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/AVAXUSDT/AVAXUSDT.json"
+  },
+  "fee_round_trip_bps": 16.0,
+  "time_stop_1h_bars": 96,
+  "sealed_holdout_rows_decoded": 0,
+  "bar_ranges": {
+    "BTCUSDT": {
+      "bars_1h": 13896,
+      "first_ts_ms": 1709251200000,
+      "last_ts_ms": 1759273200000
+    },
+    "ETHUSDT": {
+      "bars_1h": 13896,
+      "first_ts_ms": 1709251200000,
+      "last_ts_ms": 1759273200000
+    },
+    "SOLUSDT": {
+      "bars_1h": 13896,
+      "first_ts_ms": 1709251200000,
+      "last_ts_ms": 1759273200000
+    },
+    "LINKUSDT": {
+      "bars_1h": 13896,
+      "first_ts_ms": 1709251200000,
+      "last_ts_ms": 1759273200000
+    },
+    "ADAUSDT": {
+      "bars_1h": 13896,
+      "first_ts_ms": 1709251200000,
+      "last_ts_ms": 1759273200000
+    },
+    "DOTUSDT": {
+      "bars_1h": 13896,
+      "first_ts_ms": 1709251200000,
+      "last_ts_ms": 1759273200000
+    },
+    "SUIUSDT": {
+      "bars_1h": 13896,
+      "first_ts_ms": 1709251200000,
+      "last_ts_ms": 1759273200000
+    },
+    "AVAXUSDT": {
+      "bars_1h": 13896,
+      "first_ts_ms": 1709251200000,
+      "last_ts_ms": 1759273200000
+    }
+  },
+  "aggregate": {
+    "trades": 733,
+    "win_rate": 0.356,
+    "profit_factor": 0.789,
+    "expectancy_pct": -0.1519,
+    "expectancy_R": -0.209,
+    "total_pct_on_notional": -111.36,
+    "median_month_pf": 0.74,
+    "months_positive": 4,
+    "months_total": 19,
+    "month_pf": {
+      "2024-03": 0.49,
+      "2024-04": 0.42,
+      "2024-05": 0.74,
+      "2024-06": 0.52,
+      "2024-07": 0.65,
+      "2024-08": 0.68,
+      "2024-09": 0.84,
+      "2024-10": 0.75,
+      "2024-11": 1.01,
+      "2024-12": 1.75,
+      "2025-01": 1.2,
+      "2025-02": 0.72,
+      "2025-03": 1.0,
+      "2025-04": 0.56,
+      "2025-05": 0.81,
+      "2025-06": 0.94,
+      "2025-07": 0.39,
+      "2025-08": 1.61,
+      "2025-09": 0.56
+    },
+    "exits": {
+      "SL": 472,
+      "TP": 261,
+      "time": 0,
+      "eod": 0
+    }
+  },
+  "results": {
+    "BTCUSDT": {
+      "trades": 228,
+      "win_rate": 0.316,
+      "profit_factor": 0.628,
+      "expectancy_pct": -0.1943,
+      "expectancy_R": -0.376,
+      "total_pct_on_notional": -44.31,
+      "median_month_pf": 0.63,
+      "months_positive": 5,
+      "months_total": 19,
+      "month_pf": {
+        "2024-03": 0.79,
+        "2024-04": 0.69,
+        "2024-05": 0.75,
+        "2024-06": 0.18,
+        "2024-07": 1.18,
+        "2024-08": 0.28,
+        "2024-09": 0.46,
+        "2024-10": 0.23,
+        "2024-11": 0.63,
+        "2024-12": 1.06,
+        "2025-01": 1.37,
+        "2025-02": 0.48,
+        "2025-03": 0.58,
+        "2025-04": 0.6,
+        "2025-05": 1.04,
+        "2025-06": 0.84,
+        "2025-07": 0.15,
+        "2025-08": 0.55,
+        "2025-09": 1.03
+      },
+      "exits": {
+        "SL": 156,
+        "TP": 72,
+        "time": 0,
+        "eod": 0
+      }
+    },
+    "ETHUSDT": {
+      "trades": 151,
+      "win_rate": 0.424,
+      "profit_factor": 0.962,
+      "expectancy_pct": -0.024,
+      "expectancy_R": -0.028,
+      "total_pct_on_notional": -3.63,
+      "median_month_pf": 1.06,
+      "months_positive": 10,
+      "months_total": 19,
+      "month_pf": {
+        "2024-03": 0.32,
+        "2024-04": 0.89,
+        "2024-05": 1.27,
+        "2024-06": 0.72,
+        "2024-07": 1.07,
+        "2024-08": 1.13,
+        "2024-09": 1.06,
+        "2024-10": 1.43,
+        "2024-11": 0.68,
+        "2024-12": 3.79,
+        "2025-01": 0.77,
+        "2025-02": 0.98,
+        "2025-03": 2.35,
+        "2025-04": 0.2,
+        "2025-05": 0.42,
+        "2025-06": 1.11,
+        "2025-07": 2.51,
+        "2025-08": 0.75,
+        "2025-09": 1.12
+      },
+      "exits": {
+        "SL": 87,
+        "TP": 64,
+        "time": 0,
+        "eod": 0
+      }
+    },
+    "SOLUSDT": {
+      "trades": 70,
+      "win_rate": 0.471,
+      "profit_factor": 1.244,
+      "expectancy_pct": 0.1746,
+      "expectancy_R": 0.16,
+      "total_pct_on_notional": 12.22,
+      "median_month_pf": 1.41,
+      "months_positive": 10,
+      "months_total": 18,
+      "month_pf": {
+        "2024-03": 0.0,
+        "2024-04": 1.51,
+        "2024-05": 0.0,
+        "2024-06": 0.0,
+        "2024-07": 2.24,
+        "2024-08": 2.34,
+        "2024-09": 0.67,
+        "2024-11": 3.02,
+        "2024-12": 3.19,
+        "2025-01": 1.41,
+        "2025-02": 0.55,
+        "2025-03": 1.64,
+        "2025-04": 99.0,
+        "2025-05": 1.34,
+        "2025-06": 0.87,
+        "2025-07": 0.0,
+        "2025-08": 0.97,
+        "2025-09": 2.69
+      },
+      "exits": {
+        "SL": 37,
+        "TP": 33,
+        "time": 0,
+        "eod": 0
+      }
+    },
+    "LINKUSDT": {
+      "trades": 52,
+      "win_rate": 0.346,
+      "profit_factor": 0.697,
+      "expectancy_pct": -0.2566,
+      "expectancy_R": -0.239,
+      "total_pct_on_notional": -13.34,
+      "median_month_pf": 0.52,
+      "months_positive": 6,
+      "months_total": 16,
+      "month_pf": {
+        "2024-03": 99.0,
+        "2024-04": 0.48,
+        "2024-05": 1.44,
+        "2024-06": 0.52,
+        "2024-07": 0.0,
+        "2024-08": 0.88,
+        "2024-09": 1.1,
+        "2024-12": 0.0,
+        "2025-01": 0.46,
+        "2025-02": 1.31,
+        "2025-03": 0.0,
+        "2025-04": 0.0,
+        "2025-05": 1.56,
+        "2025-06": 0.51,
+        "2025-08": 1.66,
+        "2025-09": 0.46
+      },
+      "exits": {
+        "SL": 34,
+        "TP": 18,
+        "time": 0,
+        "eod": 0
+      }
+    },
+    "ADAUSDT": {
+      "trades": 80,
+      "win_rate": 0.312,
+      "profit_factor": 0.642,
+      "expectancy_pct": -0.3341,
+      "expectancy_R": -0.303,
+      "total_pct_on_notional": -26.73,
+      "median_month_pf": 0.55,
+      "months_positive": 6,
+      "months_total": 17,
+      "month_pf": {
+        "2024-04": 0.0,
+        "2024-05": 0.55,
+        "2024-06": 0.49,
+        "2024-07": 0.0,
+        "2024-08": 0.0,
+        "2024-09": 0.0,
+        "2024-10": 0.55,
+        "2024-12": 2.19,
+        "2025-01": 2.2,
+        "2025-02": 99.0,
+        "2025-03": 0.62,
+        "2025-04": 1.14,
+        "2025-05": 0.0,
+        "2025-06": 1.08,
+        "2025-07": 0.0,
+        "2025-08": 1.95,
+        "2025-09": 0.26
+      },
+      "exits": {
+        "SL": 55,
+        "TP": 25,
+        "time": 0,
+        "eod": 0
+      }
+    },
+    "DOTUSDT": {
+      "trades": 65,
+      "win_rate": 0.292,
+      "profit_factor": 0.553,
+      "expectancy_pct": -0.4058,
+      "expectancy_R": -0.35,
+      "total_pct_on_notional": -26.38,
+      "median_month_pf": 0.39,
+      "months_positive": 3,
+      "months_total": 17,
+      "month_pf": {
+        "2024-03": 0.39,
+        "2024-04": 0.0,
+        "2024-05": 0.88,
+        "2024-06": 0.9,
+        "2024-07": 0.0,
+        "2024-08": 0.36,
+        "2024-09": 1.36,
+        "2024-10": 0.52,
+        "2025-01": 0.0,
+        "2025-02": 1.17,
+        "2025-03": 0.27,
+        "2025-04": 0.0,
+        "2025-05": 0.95,
+        "2025-06": 0.49,
+        "2025-07": 0.0,
+        "2025-08": 99.0,
+        "2025-09": 0.0
+      },
+      "exits": {
+        "SL": 46,
+        "TP": 19,
+        "time": 0,
+        "eod": 0
+      }
+    },
+    "SUIUSDT": {
+      "trades": 35,
+      "win_rate": 0.343,
+      "profit_factor": 0.975,
+      "expectancy_pct": -0.0245,
+      "expectancy_R": -0.221,
+      "total_pct_on_notional": -0.86,
+      "median_month_pf": 0.87,
+      "months_positive": 6,
+      "months_total": 14,
+      "month_pf": {
+        "2024-04": 1.41,
+        "2024-05": 0.66,
+        "2024-06": 0.45,
+        "2024-10": 2.54,
+        "2024-12": 1.23,
+        "2025-01": 4.27,
+        "2025-02": 0.0,
+        "2025-03": 99.0,
+        "2025-04": 0.0,
+        "2025-05": 1.29,
+        "2025-06": 0.0,
+        "2025-07": 0.87,
+        "2025-08": 0.0,
+        "2025-09": 0.0
+      },
+      "exits": {
+        "SL": 23,
+        "TP": 12,
+        "time": 0,
+        "eod": 0
+      }
+    },
+    "AVAXUSDT": {
+      "trades": 52,
+      "win_rate": 0.346,
+      "profit_factor": 0.836,
+      "expectancy_pct": -0.1603,
+      "expectancy_R": -0.141,
+      "total_pct_on_notional": -8.34,
+      "median_month_pf": 0.76,
+      "months_positive": 7,
+      "months_total": 17,
+      "month_pf": {
+        "2024-04": 0.0,
+        "2024-05": 0.0,
+        "2024-06": 1.17,
+        "2024-07": 0.0,
+        "2024-08": 0.8,
+        "2024-09": 1.26,
+        "2024-10": 0.4,
+        "2024-12": 2.29,
+        "2025-01": 0.76,
+        "2025-02": 0.0,
+        "2025-03": 1.92,
+        "2025-04": 0.47,
+        "2025-05": 1.47,
+        "2025-06": 2.75,
+        "2025-07": 0.66,
+        "2025-08": 4.3,
+        "2025-09": 0.0
+      },
+      "exits": {
+        "SL": 34,
+        "TP": 18,
+        "time": 0,
+        "eod": 0
+      }
+    }
+  }
+}

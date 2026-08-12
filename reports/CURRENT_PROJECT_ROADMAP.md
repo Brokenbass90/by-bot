@@ -4,6 +4,80 @@
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
 
+## Latest recovery update — 2026-08-12 11:55 UTC
+
+### Решение одним абзацем
+
+Проект ещё не стал диверсифицированной денежной станцией: в crypto есть одна
+tiny-canary ATT1, Alpaca остаётся защищённым SAFE_HOLD, остальные ноги только
+в research/shadow. Но за сессию закрыты три системных риска: LIVE/PAPER truth
+Alpaca, откат raised stop между сессиями и непрослеживаемые кандидаты из грязной
+рабочей области. Одновременно завершены два больших набора данных и честно
+отклонены TPB1/RMR1. Следующий денежный шанс — не «ещё один случайный модуль», а
+три параллельные дорожки: Inplay prospective, funding/carry economics и exact
+Alpaca replay на чистом subset.
+
+### Новая фактическая база
+
+- Git functional commits запушены в `codex/dynamic-symbol-filters`:
+  `206c6cf` (Alpaca LIVE truth + persistent GTC stops) и `df51ed6`
+  (passported dirty-candidate batch + wide public-data runner).
+- Direct Alpaca GET-only: LIVE account `ACTIVE`, equity `$485.91`, cash
+  `$391.27`, ABBV/SCHW, broker stop coverage `2/2`.
+- SCHW raised stop `105.32` был `DAY`, затем rearm восстановил `96.47`.
+  Локальный контракт исправлен на `GTC`; текущий ордер и live-сервер не
+  изменялись. Нужен отдельный protection-only deploy receipt.
+- ATT1 post-release clean cohort: `1/20` закрытая сделка на последней прямой
+  сверке. Risk остаётся `0.10`; ориентир решения `0.10 → 0.25` при прежнем
+  темпе — конец сентября, только если выполнены все cohort/parity gates.
+- Alpaca archive: `1000/1000`, download failures `0`; full-pool validator
+  `FAIL_CLOSED` из-за `24` ticker-identity conflicts и `14` пустых историй.
+  Clean research subset `962`, quarantined `38`, promotion authority `false`.
+- RMR1 wide major8: `733` сделки, PF `0.789`, `-0.209R/сделку` при `16 bps`;
+  при `8 bps` PF `0.892`, `-0.106R/сделку`. TPB1 ETH: PF `0.828`,
+  `-0.046R/сделку`. Обе формулировки не идут в shadow.
+- Inplay prospective ETH остаётся `N=0`; дата N30 неизвестна до измерения
+  фактической частоты. Funding dynamic/frozen: по `3` открытых shadow trials,
+  закрытых `0`. Это процесс, не edge.
+- Dirty worktree не чистится массово: осталось `166` code candidates, из них
+  `6` test-backed, `117` evidence-backed/reproduction, `16` referenced-review,
+  `27` quarantine. Следующая пачка — 5–10 файлов.
+
+### Условные сроки, не обещания доходности
+
+| Контур | Следующий доказательный результат | Возможный money-gate |
+|---|---|---|
+| ATT1 | exact lifecycle parity + clean N20 | конец сентября 2026 при прежней частоте и положительной cohort |
+| Inplay ETH | первая недельная cadence card и измеренная signal rate | сентябрь–октябрь, только если N/edge/stress проходят shadow gates |
+| Funding/carry | closed forward trials + spot/perp exact economics | 2–6 недель до содержательного shadow verdict; money позже |
+| Alpaca | clean-subset base/stress exact live-contract replay | tiny new-selection canary не раньше начала сентября при PASS; scale после 1–2 monthly cycles |
+| FX/CFD | XAUUSD data/cost/swap/news contract и annual replay | demo/shadow 3–6 недель; tiny money не раньше октября при PASS |
+
+### Приоритет на следующие 72 часа
+
+1. Подготовить protection-only Alpaca bundle с `GTC`, server-Python smoke и
+   точным diff; не менять текущие ордера без отдельного owner-approved окна.
+2. Построить exact Alpaca replay, который принимает только clean subset `962`,
+   использует next-open, live weights/exposure, shared stop/trail, daily MTM и
+   base/stress costs. Selection bias оставить отдельным blocker, не замазывать.
+3. Не тюнить Inplay; раз в 7 дней выпускать forward cadence card. Funding
+   закрыть до net markout и exact spot/perp mapping.
+4. Следующий dirty batch: strategy adapter / sweep-reclaim / backtest auditor;
+   каждый кандидат проходит passport → reproduction → accept/reject.
+5. Key rotation: Alpaca — в ближайшей авторизованной сессии (целевой SLA
+   24–48 часов), Massive — следом. До признаков компрометации это P0 hygiene,
+   но не причина аварийно отключать защищённые позиции.
+
+### Шкала пути к цели (управленческая оценка)
+
+Это не статистическая метрика готовности, а WIP-карта: operational truth
+`~75%`, research integrity `~65%`, Alpaca money contour `~40%`, crypto
+portfolio `~25%`, FX/CFD `~15%`, AI-assisted autonomy `~25%`. Минимально
+работоспособная станция по owner-определению (3–4 crypto legs + полноценная
+Alpaca) находится примерно на `40–45%`; полный автономный multi-market vision —
+на `20–25%`. Главный прогресс сейчас — скорость отбраковки ложных результатов,
+а не число включённых стратегий.
+
 ## Latest reprioritization — 2026-08-11 17:08 UTC
 
 1. **ATT1:** сохранять tiny canary `0.10`; считать только сделки после release
@@ -212,8 +286,11 @@ equity `$485.87`, cash `$391.27`, ABBV/SCHW, stop coverage `2/2`; SCHW stop
 порога arm и сохраняет stop `235.17`. Новых покупок, ротаций и market-close не
 было; SAFE_HOLD сохраняется.
 
-Оставшийся риск: дробные equity stop-ордера имеют `DAY`, поэтому защита зависит
-от ежедневного rearm и polling; stop/trailing не устраняет overnight gap risk.
+Этот старый вывод теперь уточнён: зависимость от `DAY` действительно привела к
+откату SCHW `105.32 → 96.47`. Локальный контракт standalone stop исправлен на
+`GTC` в commit `206c6cf`, но server/live ещё не обновлён и текущий broker stop
+остаётся `DAY`; поэтому риск сохраняется до отдельного deploy receipt.
+Stop/trailing в любом случае не устраняет overnight gap risk.
 Автоматический cron 14:45 UTC уже перечитал новый stop `105.03` и корректно
 вернул `hold/no_material_stop_raise` без повторного PATCH. Следующие проверки:
 rearm на следующей сессии, freshness alert и восстановление HWM после рестарта.

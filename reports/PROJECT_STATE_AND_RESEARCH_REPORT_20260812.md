@@ -1,6 +1,6 @@
 # Состояние торговой станции — 12 августа 2026
 
-Срез доказательств: 11:05 UTC. Это ответ «что реально работает, что сыро и куда
+Срез доказательств: 11:55 UTC. Это ответ «что реально работает, что сыро и куда
 двигаться», а не рекламный список модулей.
 
 ## Короткий вывод
@@ -16,6 +16,34 @@ Live Bybit напрямую подтверждён с сервера: `0` отк
 read-only ключ истёк (`retCode=33004`), поэтому локальный checker временно не
 является источником истины; server checker вернул `retCode=0` и broker flat.
 Live-код, ордера, риск и сервисы в этой сессии не менялись.
+
+## Дополнение 11:55 UTC — что изменилось в этой рабочей сессии
+
+1. **Alpaca LIVE truth восстановлен.** Direct CLI-checker теперь по умолчанию
+   читает защищённый live-v38 env, явно печатает источник env и различает
+   `LIVE/PAPER`. GET-only broker truth: счёт `ACTIVE`, equity `$485.91`, cash
+   `$391.27`, позиции ABBV/SCHW, broker stops `2/2`.
+2. **Найден откат защиты прибыли между сессиями.** SCHW stop был поднят до
+   `105.32`, но имел `DAY`; после закрытия сессии он был отменён и восстановлен
+   на исходном `96.47`. Для standalone fractional stops контракт и три configs
+   исправлены на `GTC`. Исправление протестировано и запушено, но текущий
+   брокерский ордер не менялся и серверный live не перезапускался.
+3. **Alpaca PIT archive завершён:** `1000/1000`, download failures `0`.
+   Валидатор нашёл `24` ticker-identity конфликта (бары после delist) и `14`
+   пустых историй. Полный pool остаётся `FAIL_CLOSED`; `38` имён помещены в
+   карантин, чистый research-only subset содержит `962` имени. Selection bias
+   не снят, капитал и promotion не разрешены.
+4. **Первая пачка грязного research-кода измерена.** TPB1 на ETH отклонён
+   (`247` сделок, PF `0.828`, `-0.046R/сделку`). RMR1 на ETH был около нуля,
+   поэтому автоматически получил wide-test; на восьми мажорах `733` сделки,
+   PF `0.789`, `-0.209R/сделку` при `16 bps`, а при `8 bps` PF `0.892`,
+   `-0.106R/сделку`. Универсальная версия отклонена; post-hoc выбор SOL не
+   допускается как новая нога.
+5. **Исследовательская непрерывность подтверждена.** Основной supervisor
+   `6/6 healthy`, Inplay продолжает zero-risk сбор (`N=0` пока), funding
+   dynamic/frozen имеют по три открытых shadow trials и ноль закрытых, alt24
+   L2 накопил более `35k` наблюдений по `24` символам. Никакой контур не имеет
+   новых ордерных или рисковых прав.
 
 ## Карта системы и ворота капитала
 
@@ -45,9 +73,9 @@ AI помогает искать дефекты, фенотипы убытков
 | Funding positioning | `SHADOW`, zero risk | два свежих dynamic/frozen epoch; капитала нет | закрытые forward trials и net economics |
 | XSEC crypto | `REJECT` для текущего causal V1 | base 15bps CAGR `3.81%`, Sharpe `0.41`, DD `25.72%`; stress 30bps total `-5.82%` | новая гипотеза, не спасение старой параметрами |
 | MPL | `REJECT` обеих рук | V4 excess `+0.064R`, но bootstrap lower `-0.180`; V3 excess `+0.042R`, lower `-0.239` | закрыть формулировку; новый механизм = новая версия/новые данные |
-| Alpaca equities | `SAFE_HOLD` | счёт около `$486`, ABBV/SCHW имели broker stops; старый v38 backtest не соответствует live-контракту | завершить PIT 1000, validator, exact live-contract replay |
+| Alpaca equities | `SAFE_HOLD` | счёт `$485.91`, ABBV/SCHW, stops `2/2`; PIT download `1000/1000`, clean subset `962`, полный pool fail-closed | exact live-contract replay на clean subset + устранение ticker identity/selection bias |
 | FX/CFD | `RESEARCH`, низкий приоритет | старые H4 варианты слишком редкие, preflight false | XAUUSD/OANDA contract, реальные spread/swap/news, затем честный annual replay |
-| L2 / recent levels | `DATA_COLLECTION` | alt24: 24 символа, `28,544` observations; server BTC/ETH tape `1.31GB` | 2+ недели и различающий контроль `wall` vs обычный recent traded level |
+| L2 / recent levels | `DATA_COLLECTION` | alt24: 24 символа, более `35k` observations; server BTC/ETH tape продолжает сбор под disk guard | 2+ недели и различающий контроль `wall` vs обычный recent traded level |
 
 Ни одну строку нельзя складывать в прогноз годовой прибыли. У контуров разные
 стадии, разные окна и только ATT1 имеет ограниченную crypto money-authority.
@@ -82,16 +110,17 @@ AI помогает искать дефекты, фенотипы убытков
 ## Что обнаружено в 500+ грязных файлах
 
 Массовая зачистка не выполнена и не должна выполняться вслепую. Новый read-only
-аудит выделил `176` кодовых кандидатов:
+аудит после первой принятой пачки выделяет `166` оставшихся кодовых кандидатов:
 
 | Корзина | Количество | Действие |
 |---|---:|---|
-| test-backed candidate | 15 | отдельный diff, тест, тематический commit |
-| evidence-backed, needs reproduction | 118 | восстановить точную команду/data contract, затем повторить |
+| test-backed candidate | 6 | отдельный diff, тест, тематический commit |
+| evidence-backed, needs reproduction | 117 | восстановить точную команду/data contract, затем повторить |
 | referenced, needs review | 16 | проверить реального consumer и актуальность |
 | unreferenced quarantine candidate | 27 | не удалять; вынести только после reference-map и receipt |
 
-В этом пуле scanner не нашёл order authority или credential touch. Первая
+В этом пуле scanner нашёл один известный legitimate order-authority файл —
+Alpaca bridge — и `0` credential-touch кандидатов. Первая
 полезная очередь: ATT1 filter diff, range mean-reversion, strategy adapter,
 tech registry, trend pullback, Alpaca validator, sweep/reclaim, negative-trade
 tools. ATT1 dirty filter не принят: это live-risk файл, пока нет reproduction.
@@ -123,7 +152,8 @@ tools. ATT1 dirty filter не принят: это live-risk файл, пока 
 
 - Inplay prospective ETH;
 - funding/carry после exact spot↔perp mapping и survivorship/PIT;
-- среднесрочный cross-sectional equities после завершения PIT;
+- среднесрочный cross-sectional equities после exact replay на clean subset и
+  отдельного решения ticker-identity/current-liquidity selection bias;
 - L2 target/false-break/maker fill после накопления недель ленты;
 - отдельные BTC/ETH midterm families с дневным/4h горизонтом, но только через
   новый causal contract и реальные издержки.
@@ -131,8 +161,11 @@ tools. ATT1 dirty filter не принят: это live-risk файл, пока 
 ## Секреты и безопасность
 
 В `configs/alpaca_live_v38.env` и `configs/massive_stocks_local.env` лежат
-не-placeholder ключи. Они mode `600` и игнорируются Git, но должны быть
-перевыпущены в кабинетах провайдеров. Автоматически завершить rotation нельзя
+не-placeholder ключи. Они mode `600`, игнорируются Git и не имеют истории по
+этим путям. Подтверждения утечки в этой сессии не найдено, поэтому торговля и
+GET-доступ технически продолжаются; Alpaca key всё равно следует планово
+перевыпустить в ближайшей авторизованной сессии, Massive key — следом.
+Автоматически завершить rotation нельзя
 без авторизованной dashboard-сессии. Безопасный порядок: создать новые ключи →
 обновить локальные/server secrets → GET-only account/data smoke → отозвать
 старые → записать только non-secret receipt. Значения ключей не копировать в
@@ -169,8 +202,10 @@ slippage/funding/swap, портфельные веса/слоты и едина�
 
 ### P2 — Alpaca и честные годовые числа
 
-1. Дождаться `1000/1000` GET-only pool (на срезе `783/1000`, failures `0`).
-2. Запустить независимый PIT validator и repaired live-contract replay.
+1. GET-only pool завершён `1000/1000`; сохранить `38` имён в карантине и
+   использовать только clean subset `962` для следующего research replay.
+2. Запустить repaired exact live-contract base/stress replay; результат не
+   снимает current-liquidity selection bias и сам по себе не даёт promotion.
 3. Сравнить baseline, trailing/protective exits и regime sizing по одной
    степени свободы; AI — challenger/risk overlay, не автономный трейдер.
 
@@ -191,3 +226,6 @@ slippage/funding/swap, портфельные веса/слоты и едина�
 - `reports/research/BYBIT_ACCOUNT_FEE_READONLY_20260812.json`
 - `reports/research/BYBIT_SPOT_DAILY_PREHOLDOUT_VALIDATION_20260812.json`
 - `reports/evidence/DIRTY_RESEARCH_WORKBENCH_AUDIT_20260812.json`
+- `reports/evidence/ALPACA_PIT_DAILY_VALIDATION_20260812.json`
+- `research_lab/results/dirty_top2_eth_prefilter_20260812/validation_receipt.json`
+- `research_lab/results/rmr1_major8_cost_prefilter_20260812/validation_receipt.json`
