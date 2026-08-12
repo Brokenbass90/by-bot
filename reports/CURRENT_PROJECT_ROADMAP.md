@@ -534,3 +534,28 @@ Canonical artifact:
   завершены первые 133 из 1000, failures `0`. Direct Bybit position checker
   один раз подтвердил broker flat (`open_position_count=0`). Это не deploy gate:
   live monolith не перезапускался, risk/order state не менялся.
+
+## Superseding recovery update — 2026-08-12 11:05 UTC
+
+Полная сводка и приоритеты находятся в
+`reports/PROJECT_STATE_AND_RESEARCH_REPORT_20260812.md`. Этот раздел заменяет
+устаревшие выше формулировки «MPL не вскрыт» и «Inplay ждёт causal replay».
+
+- MPL V4/V3 вскрыт один раз после freeze/push: обе руки `REJECT`, independent
+  audit PASS. Текущую формулировку закрыть, капитал/shadow не давать.
+- Causal Inplay ETH replay на физически изолированном pre-holdout input:
+  `N=455`, `3/4` positive folds, median `+0.1705R`, один fold `-0.4602R`.
+  Вердикт только `CAUSAL_VIABLE_SHADOW_ONLY`.
+- Prospective public-only Inplay collector запущен в screen
+  `research_inplay_prospective_20260812`; local research supervisor теперь
+  `6/6 healthy`. Collector не имеет authentication/order/risk authority.
+- Dirty worktree разобран read-only на `176` code candidates: 15 test-backed,
+  118 evidence-backed/reproduce, 16 referenced/review, 27 quarantine. Ничего
+  не удалено; ATT1 live-risk diff не принят без reproduction.
+- Alpaca PIT progress на срезе `783/1000`, failures `0`; честный v38 replay
+  только после validator. Spot Bybit pre-holdout: 67 symbols с данными из 74
+  поддерживаемых, 46,742 bars; частичное покрытие не скрывать.
+- Server Bybit checker вернул broker flat (`retCode=0`, positions `0`). Local
+  checker key expired и отдельно требует replacement. Server L2 collector:
+  collecting, lag `2ms`, tape `1.31GB`, free `6.4GB` при guard `5GB`.
+- Focused suite: `41 passed`. Live monolith, orders и risk не менялись.

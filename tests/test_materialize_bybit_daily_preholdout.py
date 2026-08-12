@@ -18,6 +18,20 @@ def test_daily_fetch_is_sorted_and_strictly_before_holdout():
     assert all(row["ts_ms"] < 4000 for row in rows)
 
 
+def test_daily_fetch_passes_spot_category():
+    calls = []
+
+    def fake(_url, params):
+        calls.append(params)
+        return {"retCode": 0, "result": {"list": []}}
+
+    assert fetch_daily(
+        "BTCUSDT", start_ms=1000, end_exclusive_ms=4000,
+        category="spot", get_json=fake,
+    ) == []
+    assert calls[0]["category"] == "spot"
+
+
 def test_materializer_records_zero_holdout_rows(tmp_path):
     def fake(_url, _params):
         return {"retCode": 0, "result": {"list": [[1000, "1", "2", "0.5", "1.5", "10", "15"]]}}

@@ -66,6 +66,46 @@ def has_1000(node: ast.AST) -> bool:
     return False
 
 
+def _assigned_name(node: ast.AST) -> str | None:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        return node.attr
+    return None
+
+
+def _time_scales(tree: ast.AST, src: str) -> tuple[set[str], set[str]]:
+    """Infer only timestamp scales that have local syntactic evidence."""
+    milliseconds: set[str] = set()
+    seconds: set[str] = set()
+    file_fetches_klines = "fetch_klines" in src
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.Assign, ast.AnnAssign)):
+            continue
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+        value = node.value
+        if value is None:
+            continue
+        target_names = {name for target in targets if (name := _assigned_name(target))}
+        if not target_names:
+            continue
+        value_names = {name.lower() for name in names(value)}
+        value_text = ast.unparse(value).lower()
+        if (
+            any(TS.search(name) and "ms" in name.lower() for name in value_names)
+            or re.search(r"(?:\*|//?|/)\s*(?:1000|1e3)\b", value_text)
+        ):
+            milliseconds.update(target_names)
+        if "_seconds" in value_names or "time" in value_names and "time.time" in value_text:
+            seconds.update(target_names)
+        # Bybit kline rows use millisecond open timestamps in column zero.
+        # Require both the fetch source and a direct row[0] extraction; a
+        # generic ``*_ts`` name is not enough.
+        if file_fetches_klines and re.search(r"\[[^]]+\]\s*\[\s*0\s*\]", value_text):
+            milliseconds.update(name for name in target_names if TS.search(name))
+    return milliseconds, seconds
+
+
 def scan_file(path: Path) -> list[tuple[int, str, str]]:
     try:
         src = path.read_text(encoding="utf-8")
@@ -74,6 +114,7 @@ def scan_file(path: Path) -> list[tuple[int, str, str]]:
         return [(0, "PARSE", f"не разобрался: {e}")]
     lines = src.splitlines()
     out: list[tuple[int, str, str]] = []
+    milliseconds, _seconds = _time_scales(tree, src)
 
     for node in ast.walk(tree):
         # E1 / E2
@@ -83,7 +124,13 @@ def scan_file(path: Path) -> list[tuple[int, str, str]]:
             r_ts = any(TS.search(x) for x in rn)
             l_sec = any(SEC.search(x) for x in ln)
             r_sec = any(SEC.search(x) for x in rn)
-            if ((l_ts and r_sec) or (r_ts and l_sec)) and not has_1000(node):
+            l_ms = any(name in milliseconds or "ms" in name.lower() for name in ln)
+            r_ms = any(name in milliseconds or "ms" in name.lower() for name in rn)
+            # File-level hints were too broad: unrelated ``fetch_klines``
+            # made valid second arithmetic look suspicious. E1 now requires
+            # millisecond evidence for the timestamp on this expression.
+            mixed = ((l_ts and l_ms and r_sec) or (r_ts and r_ms and l_sec))
+            if mixed and not has_1000(node):
                 out.append((node.lineno, "E1",
                             (lines[node.lineno - 1].strip()[:96]
                              if node.lineno <= len(lines) else "")))
@@ -91,7 +138,10 @@ def scan_file(path: Path) -> list[tuple[int, str, str]]:
             all_n = names(node)
             if any(TS.search(x) for x in all_n):
                 txt = lines[node.lineno - 1] if node.lineno <= len(lines) else ""
-                if "time.time()" in txt and "1000" not in txt:
+                # E2 ВЫКЛЮЧЕНО 9 августа: 16 находок, 0 подтверждённых.
+                # Правило ловило `now = now_ts if now_ts is not None else time.time()`
+                # — это значение по умолчанию, а не смешение масштабов.
+                if False:
                     out.append((node.lineno, "E2", txt.strip()[:96]))
 
         # E4
@@ -150,7 +200,6 @@ def scan_foreign_prefix(files: list[Path]) -> list[tuple[Path, str, str]]:
                 out.append((f, "E5",
                             f"использует `{pref}_` x{n} — канонический префикс "
                             f"{owner.name}; возможна коллизия переменных"))
-    return out
     return out
 
 

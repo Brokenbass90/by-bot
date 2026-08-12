@@ -55,4 +55,10 @@ def test_compact_registry_keeps_warning_and_bounded_candidates(tmp_path: Path) -
     compact = compact_registry(build_registry(root=tmp_path), limit=2)
 
     assert len(compact["tested_static_runtime_not_observed"]) == 2
+    assert len(compact["not_wired_catalog"]) == 4
+    assert {row["name"] for row in compact["not_wired_catalog"]} == {
+        "tool_0", "tool_1", "tool_2", "tool_3",
+    }
+    assert compact["wired_names"] == []
+    assert "не доказательство пользы" in compact["reading_guide"]
     assert compact["warnings"]

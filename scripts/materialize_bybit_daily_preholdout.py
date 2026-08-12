@@ -65,13 +65,16 @@ def fetch_daily(
     *,
     start_ms: int,
     end_exclusive_ms: int,
+    category: str = "linear",
     get_json: Callable[[str, dict[str, Any]], dict[str, Any]] = _public_get_json,
 ) -> list[dict[str, Any]]:
+    if category not in {"linear", "spot"}:
+        raise DailyArchiveError(f"unsupported category: {category}")
     out: dict[int, dict[str, Any]] = {}
     cursor_end = end_exclusive_ms - 1
     for _ in range(20):
         payload = get_json(f"{BYBIT_BASE}/v5/market/kline", {
-            "category": "linear", "symbol": symbol, "interval": "D",
+            "category": category, "symbol": symbol, "interval": "D",
             "start": start_ms, "end": cursor_end, "limit": 1000,
         })
         result = _bybit_result(payload, f"Bybit daily {symbol}")
@@ -117,7 +120,7 @@ def fetch_daily(
 
 def materialize(
     symbols: list[str], *, out_dir: Path, start_ms: int, end_exclusive_ms: int,
-    min_free_gb: float, sleep_seconds: float,
+    min_free_gb: float, sleep_seconds: float, category: str = "linear",
     get_json: Callable[[str, dict[str, Any]], dict[str, Any]] = _public_get_json,
 ) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -126,6 +129,7 @@ def materialize(
         "private_api_calls": False, "orders_or_risk_mutation": False,
         "sealed_holdout_rows_decoded": 0, "start_ms": start_ms,
         "end_exclusive_ms": end_exclusive_ms, "requested": len(symbols),
+        "category": category,
         "completed": [], "skipped": [], "failed": {}, "state": "running",
     }
     bars_dir = out_dir / "bars"
@@ -143,6 +147,7 @@ def materialize(
                 if (
                     prior.get("payload_sha256") == canonical_sha(rows)
                     and prior.get("end_exclusive_ms") == end_exclusive_ms
+                    and prior.get("category", "linear") == category
                 ):
                     status["skipped"].append(symbol)
                     continue
@@ -150,12 +155,14 @@ def materialize(
                 pass
         try:
             rows = fetch_daily(
-                symbol, start_ms=start_ms, end_exclusive_ms=end_exclusive_ms, get_json=get_json
+                symbol, start_ms=start_ms, end_exclusive_ms=end_exclusive_ms,
+                category=category, get_json=get_json,
             )
             payload = {
                 "schema_id": "bybit_public_daily_symbol_v1", "authority": AUTHORITY,
                 "symbol": symbol, "start_ms": start_ms,
                 "end_exclusive_ms": end_exclusive_ms, "interval": "D",
+                "category": category,
                 "records": rows, "payload_sha256": canonical_sha(rows),
             }
             atomic_json(path, payload)
@@ -185,6 +192,7 @@ def main() -> int:
     parser.add_argument("--end-exclusive", default="2025-10-01")
     parser.add_argument("--min-free-gb", type=float, default=50.0)
     parser.add_argument("--sleep-seconds", type=float, default=0.1)
+    parser.add_argument("--category", choices=("linear", "spot"), default="linear")
     args = parser.parse_args()
     if not args.allow_public_network:
         raise DailyArchiveError("--allow-public-network acknowledgement required")
@@ -192,6 +200,7 @@ def main() -> int:
         symbols_from_h1(args.h1_dir), out_dir=args.out_dir,
         start_ms=day_ms(args.start), end_exclusive_ms=day_ms(args.end_exclusive),
         min_free_gb=args.min_free_gb, sleep_seconds=args.sleep_seconds,
+        category=args.category,
     )
     print(json.dumps(status, indent=2, sort_keys=True))
     return 0 if not status["failed"] else 2

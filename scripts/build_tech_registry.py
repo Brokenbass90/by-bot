@@ -208,7 +208,57 @@ def build_registry(*, root: Path = ROOT) -> dict[str, Any]:
     }
 
 
+def _one_line(text: str, width: int = 110) -> str:
+    """Purpose docstrings are multi-line; the operator context needs one line."""
+    flat = " ".join(str(text or "").split())
+    return flat if len(flat) <= width else flat[: width - 1] + "\u2026"
+
+
 def compact_registry(payload: dict[str, Any], *, limit: int = 24) -> dict[str, Any]:
+    """Shrink the registry for the operator context WITHOUT hiding module names.
+
+    Before 2026-08-11 this returned counts plus at most ``limit`` unwired
+    modules. The operator could therefore read "74 modules built and not
+    wired" and name only 24 of them, and could name none of the 45 modules
+    that ARE wired. Asking it "what could improve this leg" was answerable
+    only for a third of the inventory it was supposedly reporting on.
+
+    The registry costs about 4 KB inside a 438 KB context. Truncation was
+    saving nothing that mattered and was removing the half of the answer the
+    question depended on. Both halves are now listed by name and purpose;
+    ``limit`` still bounds the legacy field so existing callers and tests keep
+    their contract.
+    """
+    modules = payload.get("modules")
+    modules = modules if isinstance(modules, list) else []
+
+    def _catalog(rows: list, *, cap: int, width: int = 46) -> list[dict[str, Any]]:
+        out = []
+        for row in rows[: max(0, int(cap))]:
+            if not isinstance(row, dict):
+                continue
+            # "lines" \u0434\u0440\u043e\u043f\u043d\u0443\u0442\u043e: \u0440\u0430\u0437\u043c\u0435\u0440 \u043d\u0435 \u0433\u043e\u0432\u043e\u0440\u0438\u0442 \u043e \u043f\u043e\u043b\u044c\u0437\u0435, \u0430 \u0431\u044e\u0434\u0436\u0435\u0442 \u0435\u0441\u0442.
+            out.append({
+                "name": row.get("name"),
+                "purpose": _one_line(row.get("purpose"), width=width),
+                "tests": len(row.get("test_reference_files") or []),
+            })
+        return out
+
+    unwired = [
+        r for r in modules
+        if isinstance(r, dict) and not r.get("static_runtime_reachable")
+    ]
+    wired = [
+        r for r in modules
+        if isinstance(r, dict) and r.get("static_runtime_reachable")
+    ]
+    # Tested first, then largest: a module with tests is closest to usable,
+    # and size is a crude proxy for how much work already exists in it.
+    unwired.sort(key=lambda r: (-len(r.get("test_reference_files") or []),
+                                -int(r.get("lines") or 0)))
+    wired.sort(key=lambda r: str(r.get("name") or ""))
+
     return {
         "schema_id": payload.get("schema_id"),
         "generated_at_utc": payload.get("generated_at_utc"),
@@ -218,6 +268,13 @@ def compact_registry(payload: dict[str, Any], *, limit: int = 24) -> dict[str, A
         "tested_static_runtime_not_observed": list(
             payload.get("tested_static_runtime_not_observed") or []
         )[: max(0, int(limit))],
+        "reading_guide": (
+            "not_wired = \u0441\u0431\u043e\u0440\u043a\u0430 \u0435\u0441\u0442\u044c, \u0432 \u0436\u0438\u0432\u043e\u043c \u043f\u0443\u0442\u0438 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430. "
+            "\u042d\u0442\u043e \u0441\u0442\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u0444\u0430\u043a\u0442 \u043e \u0441\u0441\u044b\u043b\u043a\u0430\u0445, \u0430 \u043d\u0435 \u0434\u043e\u043a\u0430\u0437\u0430\u0442\u0435\u043b\u044c\u0441\u0442\u0432\u043e \u043f\u043e\u043b\u044c\u0437\u044b: "
+            "\u043f\u0440\u0435\u0434\u043b\u0430\u0433\u0430\u0442\u044c \u043c\u043e\u0434\u0443\u043b\u044c \u043c\u043e\u0436\u043d\u043e, \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0442\u044c \u0435\u0433\u043e \u044d\u0444\u0444\u0435\u043a\u0442 \u2014 \u043d\u0435\u043b\u044c\u0437\u044f."
+        ),
+        "not_wired_catalog": _catalog(unwired, cap=90),
+        "wired_names": [r.get("name") for r in wired][:60],
     }
 
 

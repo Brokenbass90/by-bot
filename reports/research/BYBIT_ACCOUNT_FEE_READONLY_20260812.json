@@ -1,0 +1,41 @@
+{
+  "authority": "read_only_no_orders",
+  "fees": [
+    {
+      "category": "spot",
+      "maker_bps": 10.0,
+      "maker_fee_rate": 0.001,
+      "symbol": "BTCUSDT",
+      "taker_bps": 10.0,
+      "taker_fee_rate": 0.001
+    },
+    {
+      "category": "linear",
+      "maker_bps": 2.0,
+      "maker_fee_rate": 0.0002,
+      "symbol": "BTCUSDT",
+      "taker_bps": 5.5,
+      "taker_fee_rate": 0.00055
+    },
+    {
+      "category": "linear",
+      "maker_bps": 2.0,
+      "maker_fee_rate": 0.0002,
+      "symbol": "ADAUSDT",
+      "taker_bps": 5.5,
+      "taker_fee_rate": 0.00055
+    },
+    {
+      "category": "linear",
+      "maker_bps": 2.0,
+      "maker_fee_rate": 0.0002,
+      "symbol": "DOTUSDT",
+      "taker_bps": 5.5,
+      "taker_fee_rate": 0.00055
+    }
+  ],
+  "observed_at_utc": "2026-08-12T10:44:16.442734+00:00",
+  "orders_or_risk_mutation": false,
+  "schema_id": "bybit_account_fee_readonly_v1",
+  "source": "Bybit V5 GET /v5/account/fee-rate from existing VPS credentials"
+}
