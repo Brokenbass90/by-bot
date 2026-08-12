@@ -39,17 +39,30 @@ _HOUR_MS = 3_600_000
 WINDOW = 260  # bars of history passed to signal() (bounded => O(n) total)
 
 
-def load_1h_ohlc(sym: str, cache_dir: str = "data_cache"):
+def load_1h_ohlc(sym: str, cache_dir: str = "data_cache", input_json: str = ""):
     """Merge all 5m cache files, resample to 1h OHLC. Returns (ts, o, h, l, c) lists."""
     five: Dict[int, Tuple[float, float, float, float]] = {}
-    for f in sorted(glob.glob(f"{cache_dir}/{sym}_5_*.json")):
+    source_files = [input_json] if input_json else sorted(glob.glob(f"{cache_dir}/{sym}_5_*.json"))
+    for f in source_files:
         try:
-            rows = json.load(open(f))
+            payload = json.load(open(f))
         except Exception:
             continue
+        if input_json:
+            if not isinstance(payload, dict) or payload.get("symbol") != sym:
+                raise ValueError(f"explicit input symbol mismatch: requested={sym} payload={payload.get('symbol') if isinstance(payload, dict) else None}")
+            rows = payload.get("records") or []
+        else:
+            rows = payload
         for r in rows:
             try:
-                five[int(r["ts"])] = (float(r["o"]), float(r["h"]), float(r["l"]), float(r["c"]))
+                ts = int(r.get("ts", r.get("ts_ms")))
+                five[ts] = (
+                    float(r.get("o", r.get("open"))),
+                    float(r.get("h", r.get("high"))),
+                    float(r.get("l", r.get("low"))),
+                    float(r.get("c", r.get("close"))),
+                )
             except Exception:
                 continue
     hours: Dict[int, List[Tuple[int, Tuple[float, float, float, float]]]] = defaultdict(list)
@@ -152,28 +165,63 @@ def main() -> int:
     ap.add_argument("--symbols", default="BTCUSDT,ETHUSDT,SOLUSDT")
     ap.add_argument("--fee-rt-bps", type=float, default=16.0)
     ap.add_argument("--time-stop", type=int, default=96)
+    ap.add_argument("--input-json", default="", help="explicit single-symbol immutable M5 input")
+    ap.add_argument("--input-root", default="", help="root containing SYMBOL/SYMBOL.json immutable inputs")
+    ap.add_argument("--result-out", default="")
     args = ap.parse_args()
+    symbols = [sym.strip() for sym in args.symbols.split(",") if sym.strip()]
+    if args.input_json and args.input_root:
+        ap.error("use only one of --input-json or --input-root")
+    if args.input_json and len(symbols) != 1:
+        ap.error("--input-json requires exactly one --symbols value")
     out = {}
     all_trades: List[dict] = []
-    for sym in args.symbols.split(","):
-        sym = sym.strip()
+    bar_ranges = {}
+    input_files = {}
+    for sym in symbols:
         if args.strategy == "rmr1":
             strat = RangeMeanReversionV1()
         elif args.strategy == "tpb1":
             strat = TrendPullbackV1()
         else:
             strat = LiquiditySweepReversalV1()
-        ts, o, h, l, c = load_1h_ohlc(sym)
+        explicit_input = args.input_json
+        if args.input_root:
+            explicit_input = str(Path(args.input_root) / sym / f"{sym}.json")
+        ts, o, h, l, c = load_1h_ohlc(sym, input_json=explicit_input)
         if len(ts) < WINDOW + 100:
             out[sym] = {"error": f"not_enough_bars_{len(ts)}"}
             continue
+        bar_ranges[sym] = {"bars_1h": len(ts), "first_ts_ms": ts[0], "last_ts_ms": ts[-1]}
+        if explicit_input:
+            input_files[sym] = explicit_input
         trades = run_symbol(strat, ts, o, h, l, c,
                             fee_rt=args.fee_rt_bps / 10000.0, time_stop=args.time_stop)
         for trade in trades:
             trade["symbol"] = sym
         all_trades.extend(trades)
         out[sym] = metrics(trades)
-    print(json.dumps({"strategy": args.strategy, "aggregate": metrics(all_trades), "results": out}, indent=2))
+    result = {
+        "schema_id": "candidate_hourly_next_open_replay_v1",
+        "authority": "research_only_no_live_or_promotion",
+        "strategy": args.strategy,
+        "symbols": symbols,
+        "input_json": args.input_json or None,
+        "input_root": args.input_root or None,
+        "input_files": input_files,
+        "fee_round_trip_bps": args.fee_rt_bps,
+        "time_stop_1h_bars": args.time_stop,
+        "sealed_holdout_rows_decoded": 0 if (args.input_json or args.input_root) else None,
+        "bar_ranges": bar_ranges,
+        "aggregate": metrics(all_trades),
+        "results": out,
+    }
+    rendered = json.dumps(result, indent=2)
+    if args.result_out:
+        path = Path(args.result_out)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(rendered + "\n", encoding="utf-8")
+    print(rendered)
     return 0
 
 

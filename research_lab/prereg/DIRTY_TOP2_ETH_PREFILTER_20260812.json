@@ -1,0 +1,49 @@
+{
+  "schema_id": "research_run_passport_request_v1",
+  "authority": "research_only_no_live_or_promotion",
+  "promotion_authority": false,
+  "live_or_broker_calls": false,
+  "experiment_id": "dirty_top2_eth_prefilter_20260812",
+  "code_paths": [
+    "scripts/backtest_candidates.py",
+    "strategies/range_mean_reversion_v1.py",
+    "strategies/trend_pullback_v1.py"
+  ],
+  "inputs": [
+    {
+      "path": "research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/ETHUSDT.json",
+      "role": "immutable_public_m5_preholdout",
+      "temporal_data": true,
+      "data_window": {
+        "start_utc": "2024-03-01T00:00:00Z",
+        "end_utc_exclusive": "2025-10-01T00:00:00Z"
+      },
+      "contains_sealed_holdout": false
+    }
+  ],
+  "measurement_contract": {
+    "engine": "candidate_hourly_next_open_replay_v1",
+    "timeframe": "1h_resampled_from_immutable_5m",
+    "universe": ["ETHUSDT"],
+    "window": {
+      "start_utc": "2024-03-01T00:00:00Z",
+      "end_utc_exclusive": "2025-10-01T00:00:00Z"
+    },
+    "costs": {"round_trip_bps": 16.0},
+    "label_contract": "signal_on_close_entry_next_1h_open_stop_wins_intrabar_tie",
+    "split_contract": "monthly_positive_share_and_median_month_pf_no_parameter_search"
+  },
+  "search_contract": {
+    "variant_count": 2,
+    "random_seed": 20260812,
+    "pre_registered": true
+  },
+  "sealed_holdouts": [
+    {
+      "id": "reserved_2025_10_to_2026_06",
+      "start_utc": "2025-10-01T00:00:00Z",
+      "end_utc_exclusive": "2026-07-01T00:00:00Z",
+      "must_not_be_read": true
+    }
+  ]
+}

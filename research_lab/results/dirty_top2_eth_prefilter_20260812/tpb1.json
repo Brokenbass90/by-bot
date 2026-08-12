@@ -1,0 +1,101 @@
+{
+  "schema_id": "candidate_hourly_next_open_replay_v1",
+  "authority": "research_only_no_live_or_promotion",
+  "strategy": "tpb1",
+  "symbols": [
+    "ETHUSDT"
+  ],
+  "input_json": "research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/ETHUSDT.json",
+  "input_root": null,
+  "input_files": {
+    "ETHUSDT": "research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/ETHUSDT.json"
+  },
+  "fee_round_trip_bps": 16.0,
+  "time_stop_1h_bars": 96,
+  "sealed_holdout_rows_decoded": 0,
+  "bar_ranges": {
+    "ETHUSDT": {
+      "bars_1h": 13896,
+      "first_ts_ms": 1709251200000,
+      "last_ts_ms": 1759273200000
+    }
+  },
+  "aggregate": {
+    "trades": 247,
+    "win_rate": 0.348,
+    "profit_factor": 0.828,
+    "expectancy_pct": -0.2599,
+    "expectancy_R": -0.046,
+    "total_pct_on_notional": -64.2,
+    "median_month_pf": 0.72,
+    "months_positive": 6,
+    "months_total": 19,
+    "month_pf": {
+      "2024-03": 1.21,
+      "2024-04": 1.19,
+      "2024-05": 0.57,
+      "2024-06": 1.54,
+      "2024-07": 0.7,
+      "2024-08": 0.77,
+      "2024-09": 1.14,
+      "2024-10": 2.45,
+      "2024-11": 0.67,
+      "2024-12": 0.69,
+      "2025-01": 0.59,
+      "2025-02": 0.67,
+      "2025-03": 0.53,
+      "2025-04": 0.44,
+      "2025-05": 0.91,
+      "2025-06": 0.3,
+      "2025-07": 0.72,
+      "2025-08": 1.87,
+      "2025-09": 0.73
+    },
+    "exits": {
+      "SL": 159,
+      "TP": 84,
+      "time": 4,
+      "eod": 0
+    }
+  },
+  "results": {
+    "ETHUSDT": {
+      "trades": 247,
+      "win_rate": 0.348,
+      "profit_factor": 0.828,
+      "expectancy_pct": -0.2599,
+      "expectancy_R": -0.046,
+      "total_pct_on_notional": -64.2,
+      "median_month_pf": 0.72,
+      "months_positive": 6,
+      "months_total": 19,
+      "month_pf": {
+        "2024-03": 1.21,
+        "2024-04": 1.19,
+        "2024-05": 0.57,
+        "2024-06": 1.54,
+        "2024-07": 0.7,
+        "2024-08": 0.77,
+        "2024-09": 1.14,
+        "2024-10": 2.45,
+        "2024-11": 0.67,
+        "2024-12": 0.69,
+        "2025-01": 0.59,
+        "2025-02": 0.67,
+        "2025-03": 0.53,
+        "2025-04": 0.44,
+        "2025-05": 0.91,
+        "2025-06": 0.3,
+        "2025-07": 0.72,
+        "2025-08": 1.87,
+        "2025-09": 0.73
+      },
+      "exits": {
+        "SL": 159,
+        "TP": 84,
+        "time": 4,
+        "eod": 0
+      }
+    }
+  }
+}
