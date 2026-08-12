@@ -6,7 +6,7 @@
     "safe_hold_pilots": 1,
     "summary": "Infrastructure and measurement advanced materially; no new money sleeve is honestly promotable yet."
   },
-  "generated_at_utc": "2026-08-12T08:17:22.565910+00:00",
+  "generated_at_utc": "2026-08-12T08:22:47.036797+00:00",
   "next_gates": [
     {
       "eta": "same session after explicit push authorization",
@@ -36,7 +36,7 @@
   ],
   "overnight": {
     "alpaca_pit": {
-      "completed": 44,
+      "completed": 69,
       "failed": 0,
       "requested": 1000,
       "state": "running"
@@ -48,9 +48,9 @@
       "symbols": 137
     },
     "l2_alt24": {
-      "file_bytes": 5636284,
-      "free_bytes": 82672676864,
-      "observations": 5318,
+      "file_bytes": 6439331,
+      "free_bytes": 80467869696,
+      "observations": 6088,
       "state": "collecting",
       "symbols": 24
     },
@@ -65,6 +65,7 @@
   "quality_corrections": [
     "MPL contract rebuilt to next-open, isolated input and write-once result before one-time holdout.",
     "Inplay +0.2352R result revoked because the simulator entered on the signal-bar close; next-open replay required.",
+    "XSEC 7.5-9.5% research scenario revoked for the same same-close execution defect; causal contract added.",
     "XSEC modern metrics are quarantined; accepted scenario uses pre-holdout search only.",
     "Claude live env/try-except bug claims were not reproduced in the actual live state contract and were not patched.",
     "DOT live/backtest size parity: PASS."
@@ -82,18 +83,15 @@
       "stage": "CANARY"
     },
     {
-      "admissibility": "NOT_ADMISSIBLE",
-      "basis": "pre-holdout CAGR 7.5%; symbol-holdout search CAGR 9.5%",
-      "blocker": "survivorship/PIT and funding cashflows unresolved; t-stat weak",
-      "illustrative_end_usd": 1075.0,
+      "admissibility": "NO_ESTIMATE",
+      "basis": "prior 7.5-9.5% figures revoked: signal close was also used as entry close",
+      "blocker": "next-open replay, funding cashflows and closed-contract PIT all required",
+      "illustrative_end_usd": null,
       "initial_usd": 1000.0,
       "name": "XSEC neutral crypto",
-      "range_usd": [
-        1075.0,
-        1095.0
-      ],
-      "red_months": "not emitted by accepted search-only receipt",
-      "stage": "SHADOW"
+      "range_usd": null,
+      "red_months": "unknown after causal correction",
+      "stage": "RESEARCH_REPLAY_REQUIRED"
     },
     {
       "admissibility": "NOT_ADMISSIBLE",

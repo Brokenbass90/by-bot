@@ -510,3 +510,7 @@ receipt timestamp `2026-08-11T12:40:46.527271+00:00`.
   targeted py_compile PASS.
 - Durable scenario artifact:
   `reports/analytics/trading_recovery_20260812/{artifact.json,report.md,report.html}`.
+- Post-report causal audit revoked XSEC `7.5–9.5%`: same daily close was used
+  for signal and entry. Added a tested next-open/open-to-open/funding contract;
+  started an isolated public pre-holdout funding archive ending before
+  `2025-10-01`. XSEC now has no admissible annual estimate until replay.

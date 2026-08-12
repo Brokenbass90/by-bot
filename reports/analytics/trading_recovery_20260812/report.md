@@ -7,7 +7,7 @@
 | Sleeve | Stage | Mechanical year-end | Evidence range | Red months | Status |
 |---|---|---:|---:|---|---|
 | ATT1 Bybit canary | CANARY | $1,008.86 | — | 2/12 in older narrow replay; live clean N still insufficient | MECHANICAL_ONLY |
-| XSEC neutral crypto | SHADOW | $1,075.00 | $1,075.00–$1,095.00 | not emitted by accepted search-only receipt | NOT_ADMISSIBLE |
+| XSEC neutral crypto | RESEARCH_REPLAY_REQUIRED | — | — | unknown after causal correction | NO_ESTIMATE |
 | Alpaca monthly equities | SAFE_HOLD_PILOT | $1,140.90 | $971.14–$1,140.90 | bear 1/12; recent 10/24 | NOT_ADMISSIBLE |
 | FX H4 candidate basket | RESEARCH | — | $1,007.34–$1,030.87 | not meaningful at 1-7 trades per variant | NOT_ADMISSIBLE |
 | MPL / inplay next leg | RESEARCH_BLOCKED | — | — | unknown | NO_ESTIMATE |
@@ -18,6 +18,7 @@ The rows must not be added into a promised portfolio return: each has a differen
 
 - MPL contract rebuilt to next-open, isolated input and write-once result before one-time holdout.
 - Inplay +0.2352R result revoked because the simulator entered on the signal-bar close; next-open replay required.
+- XSEC 7.5-9.5% research scenario revoked for the same same-close execution defect; causal contract added.
 - XSEC modern metrics are quarantined; accepted scenario uses pre-holdout search only.
 - Claude live env/try-except bug claims were not reproduced in the actual live state contract and were not patched.
 - DOT live/backtest size parity: PASS.

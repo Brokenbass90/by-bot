@@ -472,7 +472,7 @@ Canonical artifact:
 | sleeve | mechanical evidence | допустимость |
 |---|---:|---|
 | ATT1 current tiny canary | `$1,008.86` | только перевод старого narrow anchor при 0.044% risk; не forecast |
-| XSEC | `$1,075–1,095` | funding/PIT unresolved; деньги запрещены |
+| XSEC | no estimate | старые 7.5–9.5% отозваны: same-close execution; funding/PIT unresolved |
 | Alpaca monthly | `$971–1,141` | bear/recent survivor proxies; SAFE_HOLD cap не расширять |
 | FX H4 basket | `$1,007–1,031` | 1–7 trades/variant, all preflight false; не использовать для allocation |
 | MPL/inplay | no estimate | executable accepted replay отсутствует |
@@ -492,3 +492,12 @@ Canonical artifact:
 4. Выполнить causal pre-holdout replay inplay; shadow только если переживёт.
 5. Продолжать ATT1 clean cohort: при наблюдаемой частоте N20 ориентировочно
    около 47 календарных дней после release, не искусственно ускорять риском.
+
+Дополнительный causal-аудит после записи матрицы нашёл в XSEC тот же дефект,
+что в inplay: веса рассчитывались по завершённому daily close и доходность
+начиналась с цены этого же close. Поэтому сохранённые `7.5–9.5%` больше не
+являются даже research-сценарием. Добавлен pure contract
+`research_lab/xsec_causal_contract.py`: next-day-open entry, open-to-open hold,
+фактические crossed funding cashflows со знаком `-weight*rate`, fail-close при
+отсутствующей исполнимой цене. Отдельный физический pre-holdout funding archive
+до `2025-10-01` запущен public-only; основной sealed outcome не читается.

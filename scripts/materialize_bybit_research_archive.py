@@ -6,6 +6,8 @@ materializes the exact symbol inventory present in ``research_lab/data/h1``
 by default, including current Bybit ``Trading``, ``PreLaunch`` and ``Closed``
 instrument metadata, then downloads Bybit funding history from 2023 onward.
 One atomic file per symbol makes the job safely resumable.
+``--as-of-exclusive`` can freeze a physically isolated pre-holdout archive
+without reading a newer local dataset.
 """
 from __future__ import annotations
 
@@ -219,6 +221,11 @@ def main() -> int:
     parser.add_argument("--h1-dir", type=Path, default=DEFAULT_H1_DIR)
     parser.add_argument("--symbols", default="", help="Optional comma-separated override")
     parser.add_argument("--start", default="2023-01-01")
+    parser.add_argument(
+        "--as-of-exclusive",
+        default="",
+        help="Optional YYYY-MM-DD upper bound; fetch strictly before this UTC day",
+    )
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--min-free-gb", type=float, default=5.0)
     parser.add_argument("--sleep-seconds", type=float, default=0.15)
@@ -230,11 +237,15 @@ def main() -> int:
         sorted({item.strip().upper() for item in args.symbols.split(",") if item.strip()})
         if args.symbols else symbols_from_h1(args.h1_dir)
     )
+    start_ms = _parse_day(args.start)
+    as_of_ms = _parse_day(args.as_of_exclusive) - 1 if args.as_of_exclusive else int(time.time() * 1000)
+    if as_of_ms <= start_ms:
+        raise ArchiveError("--as-of-exclusive must be after --start")
     status = build_archive(
         symbols=symbols,
         out_dir=args.out_dir,
-        start_ms=_parse_day(args.start),
-        as_of_ms=int(time.time() * 1000),
+        start_ms=start_ms,
+        as_of_ms=as_of_ms,
         min_free_gb=args.min_free_gb,
         sleep_seconds=args.sleep_seconds,
         max_symbols=args.max_symbols,
