@@ -1,0 +1,26 @@
+{
+  "authority": "research_only_shadow_zero_risk_at_most",
+  "capital_authorized": false,
+  "errors": [],
+  "fixed_contract": {
+    "hours": 24,
+    "stop_typical_move_multiplier": 0.75
+  },
+  "fold_mean_r": [
+    0.2352,
+    -0.4602,
+    0.1059,
+    0.3782
+  ],
+  "limitations": [
+    "preholdout period was used during discovery and is not independent confirmation",
+    "one of four fixed folds is materially negative",
+    "portfolio overlap, slot use, prospective fills and drawdown are not measured"
+  ],
+  "median_fold_r": 0.17054999999999998,
+  "passport_sha256": "3b1ccc789e692a4d9e577a1763ae058f334ab73e7ceb648b7ee7fd81112c3d59",
+  "positive_folds": 3,
+  "result_sha256": "bb5264662b2f00d5b01f4ac1395231766a0636cb018b9c6bcf746627f084f0be",
+  "schema_id": "inplay_causal_receipt_audit_v1",
+  "verdict": "CAUSAL_VIABLE_SHADOW_ONLY"
+}

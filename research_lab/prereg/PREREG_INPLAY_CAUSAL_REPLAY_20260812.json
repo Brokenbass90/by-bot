@@ -1,0 +1,63 @@
+{
+  "schema_id": "research_run_passport_request_v1",
+  "authority": "research_only_no_live_or_promotion",
+  "promotion_authority": false,
+  "live_or_broker_calls": false,
+  "experiment_id": "inplay_breakout_eth_causal_next_open_preholdout_v1",
+  "code_paths": [
+    "research_lab/path_sim.py",
+    "research_lab/strategy_adapter.py",
+    "strategies/inplay_breakout.py",
+    "sr_inplay_retest.py",
+    "backtest/engine.py",
+    "backtest/bt_types.py"
+  ],
+  "inputs": [
+    {
+      "path": "research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/ETHUSDT.json",
+      "role": "physically isolated public Bybit ETHUSDT M5 bars",
+      "temporal_data": true,
+      "data_window": {
+        "start_utc": "2024-03-01T00:00:00Z",
+        "end_utc_exclusive": "2025-10-01T00:00:00Z"
+      },
+      "contains_sealed_holdout": false
+    },
+    {
+      "path": "research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/status.json",
+      "role": "public materialization boundary and integrity receipt",
+      "temporal_data": false,
+      "contains_sealed_holdout": false
+    }
+  ],
+  "measurement_contract": {
+    "engine": "path_sim_fail_closed_v4_next_open",
+    "timeframe": "5m signal close to next 5m open; stop-first within bars",
+    "universe": ["ETHUSDT"],
+    "window": {
+      "start_utc": "2024-03-01T00:00:00Z",
+      "end_utc_exclusive": "2025-10-01T00:00:00Z"
+    },
+    "costs": "16 bps full round trip converted to R using entry price and stop width",
+    "label_contract": "first stop touch or fixed-horizon close; signal-bar close is never an executable entry",
+    "split_contract": "four trailing non-overlapping 40000-bar windows; partial timeout output forbidden; discovery-period repair only, not confirmation"
+  },
+  "search_contract": {
+    "variant_count": 30,
+    "random_seed": 0,
+    "pre_registered": true,
+    "grid": {
+      "stop_typical_move_multipliers": [0.5, 0.75, 1.0, 1.5, 2.0],
+      "hours": [3, 4, 6, 8, 12, 24]
+    },
+    "interpretation": "viability replay after execution repair; no variant may authorize shadow or capital without a new forward contract"
+  },
+  "sealed_holdouts": [
+    {
+      "id": "reserved_2025_10_through_2026_06",
+      "start_utc": "2025-10-01T00:00:00Z",
+      "end_utc_exclusive": "2026-07-01T00:00:00Z",
+      "must_not_be_read": true
+    }
+  ]
+}

@@ -82,6 +82,14 @@ JOBS = (
         "runtime/project_audit/supervisor_status.json",
         8 * 3600,
     ),
+    Job(
+        "inplay_eth_prospective_shadow",
+        "research_inplay_prospective",
+        ("research_inplay_prospective",),
+        "scripts/run_inplay_prospective_shadow_loop.sh",
+        "runtime/inplay_prospective_shadow_v1/status.json",
+        30 * 60,
+    ),
 )
 
 

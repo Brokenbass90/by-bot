@@ -1,10 +1,35 @@
 # Карточка ноги: inplay_breakout
 
-Обновлено 11 августа 2026. Дописывать сюда, новых файлов не плодить.
+Обновлено 12 августа 2026. Дописывать сюда, новых файлов не плодить.
 
-## Статус: КАНДИДАТ НА ПОВТОРНЫЙ CAUSAL REPLAY; СТАРЫЕ ЧИСЛА ОТОЗВАНЫ
+## Статус: CAUSAL-VIABLE, ТОЛЬКО PROSPECTIVE ZERO-RISK SHADOW
 
-Капитал: `0`. В Bybit money-live и shadow пока не включать.
+Капитал: `0`. В Bybit money-live не включать. Следующий разрешенный этап —
+изолированный prospective collector без API-ключей и без прав ордера.
+
+## Исправленный causal replay 12 августа
+
+Контракт заранее зафиксирован: `ETHUSDT`, сигнал только по закрытому 5-минутному
+бару, вход по `open` следующего бара, stop-first внутри входного бара, стоп
+`0.75 × typical move`, выход через `24h`, круговые издержки внутри path
+simulation. Физический пакет заканчивается `2025-09-30 23:55 UTC`; запечатанный
+период `2025-10..2026-06` не открывался.
+
+| окно | N | R/сделку | winrate |
+|---|---:|---:|---:|
+| 2025-05-15..09-30 | 205 | `+0.2352` | 50.2% |
+| 2024-12-27..2025-05-15 | 62 | **`-0.4602`** | 29.0% |
+| 2024-08-10..12-27 | 124 | `+0.1059` | 63.7% |
+| 2024-03-24..08-10 | 64 | `+0.3782` | 43.8% |
+
+Итого `N=455`, положительны `3/4` окна, медиана fold mean `+0.1705R`. Один
+режимный провал остается тяжелым. Результат технически воспроизводим, но не
+является независимым holdout: этот pre-holdout период участвовал в разработке.
+Вердикт независимого receipt-аудита: `CAUSAL_VIABLE_SHADOW_ONLY`.
+
+Почему числа совпали со старым same-close replay: на этих свечах следующий
+`open` часто равен предыдущему `close`. Совпадение результата не оправдывает
+старый контракт; исправление гарантирует исполнимую временную причинность.
 
 ## Аудит Codex 12 августа: same-close execution
 
@@ -52,13 +77,12 @@ round-trip costs внутри path simulation, cutoff `2025-09-30`. Reserved hol
 
 ## Следующий замороженный эксперимент
 
-1. Пересчитать causal next-open replay на изолированном pre-holdout input.
-2. Если он не умер — построить risk-zero collector с точным signal timestamp, next executable
+1. Построить risk-zero collector с точным signal timestamp, next executable
    price, stop, 24h exit, costs, MFE/MAE и режимом BTC.
-3. Первый epoch — только ETH, market baseline, `0.75/24h`; без tuning.
-4. Gate диагностики: `N30-50` закрытых prospective сигналов, положительный
+2. Первый epoch — только ETH, market baseline, `0.75/24h`; без tuning.
+3. Gate диагностики: `N30-50` закрытых prospective сигналов, положительный
    after-cost mean R и отсутствие зависимости от одного режима.
-5. Затем — symbol expansion и untouched time holdout. Деньги только после них.
+4. Затем — symbol expansion и untouched time holdout. Деньги только после них.
 
 ## Условие смерти
 
@@ -67,4 +91,8 @@ round-trip costs внутри path simulation, cutoff `2025-09-30`. Reserved hol
 regime/symbol exclusion. Новый entry/exit mechanism оформляется новой
 предрегистрацией, а не спасает эту когорту задним числом.
 
-Receipt: `research_lab/results/path_sim_v3_preholdout/inplay_breakout__ETHUSDT.json`.
+Receipts:
+
+- `research_lab/results/path_sim_v4_causal_preholdout_r2/run_passport.json`
+- `research_lab/results/path_sim_v4_causal_preholdout_r2/inplay_breakout__ETHUSDT.json`
+- `reports/research/INPLAY_CAUSAL_RECEIPT_AUDIT_20260812.json`

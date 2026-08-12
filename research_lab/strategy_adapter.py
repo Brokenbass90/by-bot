@@ -43,30 +43,44 @@ CONVENTIONS = ("ohlcv", "last_price", "async_last_price", "async_ohlcv", "flat_b
 
 
 # ------------------------------------------------------------------ данные
-def load_candles(symbol: str, limit: int, tail: bool = True, end_ms: int | None = None):
+def load_candles(
+    symbol: str, limit: int, tail: bool = True, end_ms: int | None = None,
+    input_path: str | Path | None = None,
+):
     """Свечи символа. tail=True -> САМЫЕ СВЕЖИЕ бары (важно: прежняя проба
     брала самые старые и мерила стратегии на начале 2023 года)."""
     from backtest.engine import Candle
     best, n = None, 0
-    for p in glob.glob(f"data_cache/{symbol}_5_*.json"):
-        try:
-            rows = json.loads(Path(p).read_text(encoding="utf-8"))
-        except Exception:
-            continue
-        if len(rows) > n:
-            best, n = rows, len(rows)
+    if input_path is not None:
+        payload = json.loads(Path(input_path).read_text(encoding="utf-8"))
+        if not isinstance(payload, dict) or payload.get("symbol") != symbol:
+            return []
+        best = payload.get("records")
+        n = len(best) if isinstance(best, list) else 0
+    else:
+        for p in glob.glob(f"data_cache/{symbol}_5_*.json"):
+            try:
+                rows = json.loads(Path(p).read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if len(rows) > n:
+                best, n = rows, len(rows)
     if not best:
         return []
     if end_ms is not None:
         def _ts(row):
-            return int(float(row["ts"] if isinstance(row, dict) else row[0]))
+            return int(float(row.get("ts", row.get("ts_ms")) if isinstance(row, dict) else row[0]))
         best = [row for row in best if _ts(row) <= int(end_ms)]
     chunk = best[-limit:] if tail else best[:limit]
     out = []
     for x in chunk:
         if isinstance(x, dict):
-            out.append(Candle(ts=int(float(x["ts"])), o=float(x["o"]), h=float(x["h"]),
-                              l=float(x["l"]), c=float(x["c"]), v=float(x.get("v", 0) or 0)))
+            out.append(Candle(
+                ts=int(float(x.get("ts", x.get("ts_ms")))),
+                o=float(x.get("o", x.get("open"))), h=float(x.get("h", x.get("high"))),
+                l=float(x.get("l", x.get("low"))), c=float(x.get("c", x.get("close"))),
+                v=float(x.get("v", x.get("volume", 0)) or 0),
+            ))
         else:
             out.append(Candle(ts=int(float(x[0])), o=float(x[1]), h=float(x[2]),
                               l=float(x[3]), c=float(x[4]),
@@ -215,6 +229,7 @@ def open_strategy(
     regime="bull_trend",
     tail=True,
     end_ms: int | None = None,
+    input_path: str | Path | None = None,
 ):
     """Открыть стратегию единообразно.
 
@@ -264,7 +279,7 @@ def open_strategy(
             )
     chosen = chosen or "SOLUSDT"
 
-    cs = load_candles(chosen, limit, tail=tail, end_ms=end_ms)
+    cs = load_candles(chosen, limit, tail=tail, end_ms=end_ms, input_path=input_path)
     if len(cs) < 500:
         return dict(ok=False, conv=conv, symbol=chosen, cls=cls_name,
                     note=f"мало данных по {chosen}: {len(cs)} баров")

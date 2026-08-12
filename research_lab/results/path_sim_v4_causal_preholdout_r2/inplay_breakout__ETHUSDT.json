@@ -1,0 +1,1253 @@
+{
+  "_meta": {
+    "schema_id": "path_sim_fail_closed_v4_next_open",
+    "strategy": "inplay_breakout",
+    "symbol": "ETHUSDT",
+    "search_end_utc": "2025-09-30T23:59:59Z",
+    "reserved_holdout_used": false,
+    "timeout_seconds": 60.0,
+    "partial_timeout_results_allowed": false,
+    "signal_information_time": "completed_5m_close",
+    "entry_execution": "next_5m_open",
+    "same_close_entry": false,
+    "variant_count": 30,
+    "physical_input": "research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/ETHUSDT.json",
+    "passport_sha256": "c49263af7d5cdd6659fd91a5ff4e8b4463ad6786ac7101eccebe3b936fc12987"
+  },
+  "0": {
+    "shift": 0,
+    "start": "2025-05-15",
+    "end": "2025-09-30",
+    "signals": 215,
+    "days": 138,
+    "grid": [
+      {
+        "stop": 3.0,
+        "mult": 0.5,
+        "hours": 3,
+        "n": 215,
+        "R_per_trade": 0.0645,
+        "winrate": 0.437,
+        "total_R": 13.9,
+        "stopped": 0.349
+      },
+      {
+        "stop": 3.46,
+        "mult": 0.5,
+        "hours": 4,
+        "n": 215,
+        "R_per_trade": 0.1604,
+        "winrate": 0.488,
+        "total_R": 34.5,
+        "stopped": 0.34
+      },
+      {
+        "stop": 4.24,
+        "mult": 0.5,
+        "hours": 6,
+        "n": 215,
+        "R_per_trade": 0.0175,
+        "winrate": 0.502,
+        "total_R": 3.8,
+        "stopped": 0.353
+      },
+      {
+        "stop": 4.9,
+        "mult": 0.5,
+        "hours": 8,
+        "n": 215,
+        "R_per_trade": 0.2908,
+        "winrate": 0.567,
+        "total_R": 62.5,
+        "stopped": 0.33
+      },
+      {
+        "stop": 6.0,
+        "mult": 0.5,
+        "hours": 12,
+        "n": 215,
+        "R_per_trade": 0.1741,
+        "winrate": 0.507,
+        "total_R": 37.4,
+        "stopped": 0.307
+      },
+      {
+        "stop": 8.49,
+        "mult": 0.5,
+        "hours": 24,
+        "n": 205,
+        "R_per_trade": 0.3127,
+        "winrate": 0.468,
+        "total_R": 64.1,
+        "stopped": 0.395
+      },
+      {
+        "stop": 4.5,
+        "mult": 0.75,
+        "hours": 3,
+        "n": 215,
+        "R_per_trade": 0.0622,
+        "winrate": 0.493,
+        "total_R": 13.4,
+        "stopped": 0.186
+      },
+      {
+        "stop": 5.2,
+        "mult": 0.75,
+        "hours": 4,
+        "n": 215,
+        "R_per_trade": 0.1423,
+        "winrate": 0.54,
+        "total_R": 30.6,
+        "stopped": 0.149
+      },
+      {
+        "stop": 6.36,
+        "mult": 0.75,
+        "hours": 6,
+        "n": 215,
+        "R_per_trade": 0.0273,
+        "winrate": 0.54,
+        "total_R": 5.9,
+        "stopped": 0.177
+      },
+      {
+        "stop": 7.35,
+        "mult": 0.75,
+        "hours": 8,
+        "n": 215,
+        "R_per_trade": 0.1407,
+        "winrate": 0.567,
+        "total_R": 30.3,
+        "stopped": 0.186
+      },
+      {
+        "stop": 9.0,
+        "mult": 0.75,
+        "hours": 12,
+        "n": 215,
+        "R_per_trade": 0.0818,
+        "winrate": 0.521,
+        "total_R": 17.6,
+        "stopped": 0.181
+      },
+      {
+        "stop": 12.73,
+        "mult": 0.75,
+        "hours": 24,
+        "n": 205,
+        "R_per_trade": 0.2352,
+        "winrate": 0.502,
+        "total_R": 48.2,
+        "stopped": 0.156
+      },
+      {
+        "stop": 6.0,
+        "mult": 1.0,
+        "hours": 3,
+        "n": 215,
+        "R_per_trade": 0.06,
+        "winrate": 0.498,
+        "total_R": 12.9,
+        "stopped": 0.047
+      },
+      {
+        "stop": 6.93,
+        "mult": 1.0,
+        "hours": 4,
+        "n": 215,
+        "R_per_trade": 0.0994,
+        "winrate": 0.54,
+        "total_R": 21.4,
+        "stopped": 0.07
+      },
+      {
+        "stop": 8.49,
+        "mult": 1.0,
+        "hours": 6,
+        "n": 215,
+        "R_per_trade": 0.0111,
+        "winrate": 0.54,
+        "total_R": 2.4,
+        "stopped": 0.088
+      },
+      {
+        "stop": 9.8,
+        "mult": 1.0,
+        "hours": 8,
+        "n": 215,
+        "R_per_trade": 0.1017,
+        "winrate": 0.567,
+        "total_R": 21.9,
+        "stopped": 0.102
+      },
+      {
+        "stop": 12.0,
+        "mult": 1.0,
+        "hours": 12,
+        "n": 215,
+        "R_per_trade": 0.0479,
+        "winrate": 0.521,
+        "total_R": 10.3,
+        "stopped": 0.112
+      },
+      {
+        "stop": 16.97,
+        "mult": 1.0,
+        "hours": 24,
+        "n": 205,
+        "R_per_trade": 0.1598,
+        "winrate": 0.502,
+        "total_R": 32.8,
+        "stopped": 0.112
+      },
+      {
+        "stop": 9.0,
+        "mult": 1.5,
+        "hours": 3,
+        "n": 215,
+        "R_per_trade": 0.0356,
+        "winrate": 0.498,
+        "total_R": 7.7,
+        "stopped": 0.019
+      },
+      {
+        "stop": 10.39,
+        "mult": 1.5,
+        "hours": 4,
+        "n": 215,
+        "R_per_trade": 0.0651,
+        "winrate": 0.54,
+        "total_R": 14.0,
+        "stopped": 0.019
+      },
+      {
+        "stop": 12.73,
+        "mult": 1.5,
+        "hours": 6,
+        "n": 215,
+        "R_per_trade": -0.004,
+        "winrate": 0.54,
+        "total_R": -0.9,
+        "stopped": 0.047
+      },
+      {
+        "stop": 14.7,
+        "mult": 1.5,
+        "hours": 8,
+        "n": 215,
+        "R_per_trade": 0.0547,
+        "winrate": 0.567,
+        "total_R": 11.8,
+        "stopped": 0.051
+      },
+      {
+        "stop": 18.0,
+        "mult": 1.5,
+        "hours": 12,
+        "n": 215,
+        "R_per_trade": 0.0332,
+        "winrate": 0.526,
+        "total_R": 7.1,
+        "stopped": 0.033
+      },
+      {
+        "stop": 25.46,
+        "mult": 1.5,
+        "hours": 24,
+        "n": 205,
+        "R_per_trade": 0.1192,
+        "winrate": 0.502,
+        "total_R": 24.4,
+        "stopped": 0.02
+      },
+      {
+        "stop": 12.0,
+        "mult": 2.0,
+        "hours": 3,
+        "n": 215,
+        "R_per_trade": 0.022,
+        "winrate": 0.498,
+        "total_R": 4.7,
+        "stopped": 0.019
+      },
+      {
+        "stop": 13.86,
+        "mult": 2.0,
+        "hours": 4,
+        "n": 215,
+        "R_per_trade": 0.0442,
+        "winrate": 0.54,
+        "total_R": 9.5,
+        "stopped": 0.019
+      },
+      {
+        "stop": 16.97,
+        "mult": 2.0,
+        "hours": 6,
+        "n": 215,
+        "R_per_trade": 0.0083,
+        "winrate": 0.54,
+        "total_R": 1.8,
+        "stopped": 0.0
+      },
+      {
+        "stop": 19.6,
+        "mult": 2.0,
+        "hours": 8,
+        "n": 215,
+        "R_per_trade": 0.0423,
+        "winrate": 0.567,
+        "total_R": 9.1,
+        "stopped": 0.019
+      },
+      {
+        "stop": 24.0,
+        "mult": 2.0,
+        "hours": 12,
+        "n": 215,
+        "R_per_trade": 0.0329,
+        "winrate": 0.526,
+        "total_R": 7.1,
+        "stopped": 0.0
+      },
+      {
+        "stop": 33.94,
+        "mult": 2.0,
+        "hours": 24,
+        "n": 205,
+        "R_per_trade": 0.0947,
+        "winrate": 0.502,
+        "total_R": 19.4,
+        "stopped": 0.0
+      }
+    ]
+  },
+  "1": {
+    "shift": 1,
+    "start": "2024-12-27",
+    "end": "2025-05-15",
+    "signals": 62,
+    "days": 138,
+    "grid": [
+      {
+        "stop": 3.0,
+        "mult": 0.5,
+        "hours": 3,
+        "n": 62,
+        "R_per_trade": -0.2298,
+        "winrate": 0.484,
+        "total_R": -14.2,
+        "stopped": 0.403
+      },
+      {
+        "stop": 3.46,
+        "mult": 0.5,
+        "hours": 4,
+        "n": 62,
+        "R_per_trade": -0.367,
+        "winrate": 0.387,
+        "total_R": -22.8,
+        "stopped": 0.403
+      },
+      {
+        "stop": 4.24,
+        "mult": 0.5,
+        "hours": 6,
+        "n": 62,
+        "R_per_trade": -0.5407,
+        "winrate": 0.242,
+        "total_R": -33.5,
+        "stopped": 0.419
+      },
+      {
+        "stop": 4.9,
+        "mult": 0.5,
+        "hours": 8,
+        "n": 62,
+        "R_per_trade": -0.6517,
+        "winrate": 0.113,
+        "total_R": -40.4,
+        "stopped": 0.435
+      },
+      {
+        "stop": 6.0,
+        "mult": 0.5,
+        "hours": 12,
+        "n": 62,
+        "R_per_trade": -0.6025,
+        "winrate": 0.258,
+        "total_R": -37.4,
+        "stopped": 0.452
+      },
+      {
+        "stop": 8.49,
+        "mult": 0.5,
+        "hours": 24,
+        "n": 62,
+        "R_per_trade": -0.5435,
+        "winrate": 0.29,
+        "total_R": -33.7,
+        "stopped": 0.629
+      },
+      {
+        "stop": 4.5,
+        "mult": 0.75,
+        "hours": 3,
+        "n": 62,
+        "R_per_trade": -0.238,
+        "winrate": 0.484,
+        "total_R": -14.8,
+        "stopped": 0.339
+      },
+      {
+        "stop": 5.2,
+        "mult": 0.75,
+        "hours": 4,
+        "n": 62,
+        "R_per_trade": -0.3057,
+        "winrate": 0.387,
+        "total_R": -19.0,
+        "stopped": 0.29
+      },
+      {
+        "stop": 6.36,
+        "mult": 0.75,
+        "hours": 6,
+        "n": 62,
+        "R_per_trade": -0.4317,
+        "winrate": 0.242,
+        "total_R": -26.8,
+        "stopped": 0.274
+      },
+      {
+        "stop": 7.35,
+        "mult": 0.75,
+        "hours": 8,
+        "n": 62,
+        "R_per_trade": -0.5269,
+        "winrate": 0.113,
+        "total_R": -32.7,
+        "stopped": 0.306
+      },
+      {
+        "stop": 9.0,
+        "mult": 0.75,
+        "hours": 12,
+        "n": 62,
+        "R_per_trade": -0.477,
+        "winrate": 0.258,
+        "total_R": -29.6,
+        "stopped": 0.258
+      },
+      {
+        "stop": 12.73,
+        "mult": 0.75,
+        "hours": 24,
+        "n": 62,
+        "R_per_trade": -0.4602,
+        "winrate": 0.29,
+        "total_R": -28.5,
+        "stopped": 0.452
+      },
+      {
+        "stop": 6.0,
+        "mult": 1.0,
+        "hours": 3,
+        "n": 62,
+        "R_per_trade": -0.195,
+        "winrate": 0.484,
+        "total_R": -12.1,
+        "stopped": 0.226
+      },
+      {
+        "stop": 6.93,
+        "mult": 1.0,
+        "hours": 4,
+        "n": 62,
+        "R_per_trade": -0.2749,
+        "winrate": 0.387,
+        "total_R": -17.0,
+        "stopped": 0.258
+      },
+      {
+        "stop": 8.49,
+        "mult": 1.0,
+        "hours": 6,
+        "n": 62,
+        "R_per_trade": -0.3685,
+        "winrate": 0.242,
+        "total_R": -22.8,
+        "stopped": 0.226
+      },
+      {
+        "stop": 9.8,
+        "mult": 1.0,
+        "hours": 8,
+        "n": 62,
+        "R_per_trade": -0.4504,
+        "winrate": 0.113,
+        "total_R": -27.9,
+        "stopped": 0.258
+      },
+      {
+        "stop": 12.0,
+        "mult": 1.0,
+        "hours": 12,
+        "n": 62,
+        "R_per_trade": -0.4223,
+        "winrate": 0.258,
+        "total_R": -26.2,
+        "stopped": 0.258
+      },
+      {
+        "stop": 16.97,
+        "mult": 1.0,
+        "hours": 24,
+        "n": 62,
+        "R_per_trade": -0.458,
+        "winrate": 0.29,
+        "total_R": -28.4,
+        "stopped": 0.452
+      },
+      {
+        "stop": 9.0,
+        "mult": 1.5,
+        "hours": 3,
+        "n": 62,
+        "R_per_trade": -0.1613,
+        "winrate": 0.484,
+        "total_R": -10.0,
+        "stopped": 0.145
+      },
+      {
+        "stop": 10.39,
+        "mult": 1.5,
+        "hours": 4,
+        "n": 62,
+        "R_per_trade": -0.1662,
+        "winrate": 0.403,
+        "total_R": -10.3,
+        "stopped": 0.145
+      },
+      {
+        "stop": 12.73,
+        "mult": 1.5,
+        "hours": 6,
+        "n": 62,
+        "R_per_trade": -0.3139,
+        "winrate": 0.242,
+        "total_R": -19.5,
+        "stopped": 0.194
+      },
+      {
+        "stop": 14.7,
+        "mult": 1.5,
+        "hours": 8,
+        "n": 62,
+        "R_per_trade": -0.3863,
+        "winrate": 0.113,
+        "total_R": -23.9,
+        "stopped": 0.258
+      },
+      {
+        "stop": 18.0,
+        "mult": 1.5,
+        "hours": 12,
+        "n": 62,
+        "R_per_trade": -0.3675,
+        "winrate": 0.258,
+        "total_R": -22.8,
+        "stopped": 0.258
+      },
+      {
+        "stop": 25.46,
+        "mult": 1.5,
+        "hours": 24,
+        "n": 62,
+        "R_per_trade": -0.3698,
+        "winrate": 0.29,
+        "total_R": -22.9,
+        "stopped": 0.258
+      },
+      {
+        "stop": 12.0,
+        "mult": 2.0,
+        "hours": 3,
+        "n": 62,
+        "R_per_trade": -0.1572,
+        "winrate": 0.484,
+        "total_R": -9.7,
+        "stopped": 0.145
+      },
+      {
+        "stop": 13.86,
+        "mult": 2.0,
+        "hours": 4,
+        "n": 62,
+        "R_per_trade": -0.161,
+        "winrate": 0.403,
+        "total_R": -10.0,
+        "stopped": 0.145
+      },
+      {
+        "stop": 16.97,
+        "mult": 2.0,
+        "hours": 6,
+        "n": 62,
+        "R_per_trade": -0.2818,
+        "winrate": 0.242,
+        "total_R": -17.5,
+        "stopped": 0.177
+      },
+      {
+        "stop": 19.6,
+        "mult": 2.0,
+        "hours": 8,
+        "n": 62,
+        "R_per_trade": -0.3542,
+        "winrate": 0.113,
+        "total_R": -22.0,
+        "stopped": 0.258
+      },
+      {
+        "stop": 24.0,
+        "mult": 2.0,
+        "hours": 12,
+        "n": 62,
+        "R_per_trade": -0.3145,
+        "winrate": 0.258,
+        "total_R": -19.5,
+        "stopped": 0.145
+      },
+      {
+        "stop": 33.94,
+        "mult": 2.0,
+        "hours": 24,
+        "n": 62,
+        "R_per_trade": -0.1642,
+        "winrate": 0.29,
+        "total_R": -10.2,
+        "stopped": 0.016
+      }
+    ]
+  },
+  "2": {
+    "shift": 2,
+    "start": "2024-08-10",
+    "end": "2024-12-27",
+    "signals": 124,
+    "days": 138,
+    "grid": [
+      {
+        "stop": 3.0,
+        "mult": 0.5,
+        "hours": 3,
+        "n": 124,
+        "R_per_trade": -0.3604,
+        "winrate": 0.403,
+        "total_R": -44.7,
+        "stopped": 0.395
+      },
+      {
+        "stop": 3.46,
+        "mult": 0.5,
+        "hours": 4,
+        "n": 124,
+        "R_per_trade": -0.5021,
+        "winrate": 0.363,
+        "total_R": -62.3,
+        "stopped": 0.492
+      },
+      {
+        "stop": 4.24,
+        "mult": 0.5,
+        "hours": 6,
+        "n": 124,
+        "R_per_trade": -0.4215,
+        "winrate": 0.379,
+        "total_R": -52.3,
+        "stopped": 0.492
+      },
+      {
+        "stop": 4.9,
+        "mult": 0.5,
+        "hours": 8,
+        "n": 124,
+        "R_per_trade": -0.368,
+        "winrate": 0.331,
+        "total_R": -45.6,
+        "stopped": 0.427
+      },
+      {
+        "stop": 6.0,
+        "mult": 0.5,
+        "hours": 12,
+        "n": 124,
+        "R_per_trade": -0.3868,
+        "winrate": 0.371,
+        "total_R": -48.0,
+        "stopped": 0.444
+      },
+      {
+        "stop": 8.49,
+        "mult": 0.5,
+        "hours": 24,
+        "n": 124,
+        "R_per_trade": -0.0743,
+        "winrate": 0.532,
+        "total_R": -9.2,
+        "stopped": 0.323
+      },
+      {
+        "stop": 4.5,
+        "mult": 0.75,
+        "hours": 3,
+        "n": 124,
+        "R_per_trade": -0.2981,
+        "winrate": 0.403,
+        "total_R": -37.0,
+        "stopped": 0.298
+      },
+      {
+        "stop": 5.2,
+        "mult": 0.75,
+        "hours": 4,
+        "n": 124,
+        "R_per_trade": -0.3184,
+        "winrate": 0.411,
+        "total_R": -39.5,
+        "stopped": 0.274
+      },
+      {
+        "stop": 6.36,
+        "mult": 0.75,
+        "hours": 6,
+        "n": 124,
+        "R_per_trade": -0.313,
+        "winrate": 0.379,
+        "total_R": -38.8,
+        "stopped": 0.306
+      },
+      {
+        "stop": 7.35,
+        "mult": 0.75,
+        "hours": 8,
+        "n": 124,
+        "R_per_trade": -0.253,
+        "winrate": 0.355,
+        "total_R": -31.4,
+        "stopped": 0.274
+      },
+      {
+        "stop": 9.0,
+        "mult": 0.75,
+        "hours": 12,
+        "n": 124,
+        "R_per_trade": 0.2196,
+        "winrate": 0.548,
+        "total_R": 27.2,
+        "stopped": 0.105
+      },
+      {
+        "stop": 12.73,
+        "mult": 0.75,
+        "hours": 24,
+        "n": 124,
+        "R_per_trade": 0.1059,
+        "winrate": 0.637,
+        "total_R": 13.1,
+        "stopped": 0.137
+      },
+      {
+        "stop": 6.0,
+        "mult": 1.0,
+        "hours": 3,
+        "n": 124,
+        "R_per_trade": -0.1542,
+        "winrate": 0.411,
+        "total_R": -19.1,
+        "stopped": 0.089
+      },
+      {
+        "stop": 6.93,
+        "mult": 1.0,
+        "hours": 4,
+        "n": 124,
+        "R_per_trade": -0.2085,
+        "winrate": 0.419,
+        "total_R": -25.8,
+        "stopped": 0.129
+      },
+      {
+        "stop": 8.49,
+        "mult": 1.0,
+        "hours": 6,
+        "n": 124,
+        "R_per_trade": -0.1772,
+        "winrate": 0.411,
+        "total_R": -22.0,
+        "stopped": 0.145
+      },
+      {
+        "stop": 9.8,
+        "mult": 1.0,
+        "hours": 8,
+        "n": 124,
+        "R_per_trade": 0.1351,
+        "winrate": 0.5,
+        "total_R": 16.7,
+        "stopped": 0.097
+      },
+      {
+        "stop": 12.0,
+        "mult": 1.0,
+        "hours": 12,
+        "n": 124,
+        "R_per_trade": 0.1647,
+        "winrate": 0.556,
+        "total_R": 20.4,
+        "stopped": 0.097
+      },
+      {
+        "stop": 16.97,
+        "mult": 1.0,
+        "hours": 24,
+        "n": 124,
+        "R_per_trade": 0.0562,
+        "winrate": 0.637,
+        "total_R": 7.0,
+        "stopped": 0.097
+      },
+      {
+        "stop": 9.0,
+        "mult": 1.5,
+        "hours": 3,
+        "n": 124,
+        "R_per_trade": -0.0772,
+        "winrate": 0.419,
+        "total_R": -9.6,
+        "stopped": 0.0
+      },
+      {
+        "stop": 10.39,
+        "mult": 1.5,
+        "hours": 4,
+        "n": 124,
+        "R_per_trade": -0.0939,
+        "winrate": 0.419,
+        "total_R": -11.6,
+        "stopped": 0.0
+      },
+      {
+        "stop": 12.73,
+        "mult": 1.5,
+        "hours": 6,
+        "n": 124,
+        "R_per_trade": -0.0286,
+        "winrate": 0.476,
+        "total_R": -3.5,
+        "stopped": 0.0
+      },
+      {
+        "stop": 14.7,
+        "mult": 1.5,
+        "hours": 8,
+        "n": 124,
+        "R_per_trade": 0.0879,
+        "winrate": 0.5,
+        "total_R": 10.9,
+        "stopped": 0.04
+      },
+      {
+        "stop": 18.0,
+        "mult": 1.5,
+        "hours": 12,
+        "n": 124,
+        "R_per_trade": 0.0776,
+        "winrate": 0.556,
+        "total_R": 9.6,
+        "stopped": 0.097
+      },
+      {
+        "stop": 25.46,
+        "mult": 1.5,
+        "hours": 24,
+        "n": 124,
+        "R_per_trade": 0.0613,
+        "winrate": 0.661,
+        "total_R": 7.6,
+        "stopped": 0.04
+      },
+      {
+        "stop": 12.0,
+        "mult": 2.0,
+        "hours": 3,
+        "n": 124,
+        "R_per_trade": -0.0579,
+        "winrate": 0.419,
+        "total_R": -7.2,
+        "stopped": 0.0
+      },
+      {
+        "stop": 13.86,
+        "mult": 2.0,
+        "hours": 4,
+        "n": 124,
+        "R_per_trade": -0.0704,
+        "winrate": 0.419,
+        "total_R": -8.7,
+        "stopped": 0.0
+      },
+      {
+        "stop": 16.97,
+        "mult": 2.0,
+        "hours": 6,
+        "n": 124,
+        "R_per_trade": -0.0214,
+        "winrate": 0.476,
+        "total_R": -2.7,
+        "stopped": 0.0
+      },
+      {
+        "stop": 19.6,
+        "mult": 2.0,
+        "hours": 8,
+        "n": 124,
+        "R_per_trade": 0.0559,
+        "winrate": 0.5,
+        "total_R": 6.9,
+        "stopped": 0.04
+      },
+      {
+        "stop": 24.0,
+        "mult": 2.0,
+        "hours": 12,
+        "n": 124,
+        "R_per_trade": 0.0587,
+        "winrate": 0.556,
+        "total_R": 7.3,
+        "stopped": 0.065
+      },
+      {
+        "stop": 33.94,
+        "mult": 2.0,
+        "hours": 24,
+        "n": 124,
+        "R_per_trade": 0.0727,
+        "winrate": 0.661,
+        "total_R": 9.0,
+        "stopped": 0.0
+      }
+    ]
+  },
+  "3": {
+    "shift": 3,
+    "start": "2024-03-24",
+    "end": "2024-08-10",
+    "signals": 64,
+    "days": 138,
+    "grid": [
+      {
+        "stop": 3.0,
+        "mult": 0.5,
+        "hours": 3,
+        "n": 64,
+        "R_per_trade": -0.1464,
+        "winrate": 0.391,
+        "total_R": -9.4,
+        "stopped": 0.438
+      },
+      {
+        "stop": 3.46,
+        "mult": 0.5,
+        "hours": 4,
+        "n": 64,
+        "R_per_trade": 0.0373,
+        "winrate": 0.359,
+        "total_R": 2.4,
+        "stopped": 0.375
+      },
+      {
+        "stop": 4.24,
+        "mult": 0.5,
+        "hours": 6,
+        "n": 64,
+        "R_per_trade": 0.4208,
+        "winrate": 0.406,
+        "total_R": 26.9,
+        "stopped": 0.422
+      },
+      {
+        "stop": 4.9,
+        "mult": 0.5,
+        "hours": 8,
+        "n": 64,
+        "R_per_trade": 1.1826,
+        "winrate": 0.438,
+        "total_R": 75.7,
+        "stopped": 0.422
+      },
+      {
+        "stop": 6.0,
+        "mult": 0.5,
+        "hours": 12,
+        "n": 64,
+        "R_per_trade": 1.0609,
+        "winrate": 0.422,
+        "total_R": 67.9,
+        "stopped": 0.422
+      },
+      {
+        "stop": 8.49,
+        "mult": 0.5,
+        "hours": 24,
+        "n": 64,
+        "R_per_trade": 0.718,
+        "winrate": 0.438,
+        "total_R": 46.0,
+        "stopped": 0.531
+      },
+      {
+        "stop": 4.5,
+        "mult": 0.75,
+        "hours": 3,
+        "n": 64,
+        "R_per_trade": -0.1833,
+        "winrate": 0.391,
+        "total_R": -11.7,
+        "stopped": 0.344
+      },
+      {
+        "stop": 5.2,
+        "mult": 0.75,
+        "hours": 4,
+        "n": 64,
+        "R_per_trade": -0.0893,
+        "winrate": 0.359,
+        "total_R": -5.7,
+        "stopped": 0.359
+      },
+      {
+        "stop": 6.36,
+        "mult": 0.75,
+        "hours": 6,
+        "n": 64,
+        "R_per_trade": 0.1481,
+        "winrate": 0.406,
+        "total_R": 9.5,
+        "stopped": 0.406
+      },
+      {
+        "stop": 7.35,
+        "mult": 0.75,
+        "hours": 8,
+        "n": 64,
+        "R_per_trade": 0.7115,
+        "winrate": 0.438,
+        "total_R": 45.5,
+        "stopped": 0.328
+      },
+      {
+        "stop": 9.0,
+        "mult": 0.75,
+        "hours": 12,
+        "n": 64,
+        "R_per_trade": 0.6413,
+        "winrate": 0.422,
+        "total_R": 41.0,
+        "stopped": 0.328
+      },
+      {
+        "stop": 12.73,
+        "mult": 0.75,
+        "hours": 24,
+        "n": 64,
+        "R_per_trade": 0.3782,
+        "winrate": 0.438,
+        "total_R": 24.2,
+        "stopped": 0.297
+      },
+      {
+        "stop": 6.0,
+        "mult": 1.0,
+        "hours": 3,
+        "n": 64,
+        "R_per_trade": -0.2142,
+        "winrate": 0.391,
+        "total_R": -13.7,
+        "stopped": 0.328
+      },
+      {
+        "stop": 6.93,
+        "mult": 1.0,
+        "hours": 4,
+        "n": 64,
+        "R_per_trade": -0.1118,
+        "winrate": 0.359,
+        "total_R": -7.2,
+        "stopped": 0.281
+      },
+      {
+        "stop": 8.49,
+        "mult": 1.0,
+        "hours": 6,
+        "n": 64,
+        "R_per_trade": 0.1006,
+        "winrate": 0.406,
+        "total_R": 6.4,
+        "stopped": 0.234
+      },
+      {
+        "stop": 9.8,
+        "mult": 1.0,
+        "hours": 8,
+        "n": 64,
+        "R_per_trade": 0.4992,
+        "winrate": 0.438,
+        "total_R": 31.9,
+        "stopped": 0.203
+      },
+      {
+        "stop": 12.0,
+        "mult": 1.0,
+        "hours": 12,
+        "n": 64,
+        "R_per_trade": 0.4206,
+        "winrate": 0.422,
+        "total_R": 26.9,
+        "stopped": 0.203
+      },
+      {
+        "stop": 16.97,
+        "mult": 1.0,
+        "hours": 24,
+        "n": 64,
+        "R_per_trade": 0.2897,
+        "winrate": 0.438,
+        "total_R": 18.5,
+        "stopped": 0.156
+      },
+      {
+        "stop": 9.0,
+        "mult": 1.5,
+        "hours": 3,
+        "n": 64,
+        "R_per_trade": -0.1299,
+        "winrate": 0.391,
+        "total_R": -8.3,
+        "stopped": 0.078
+      },
+      {
+        "stop": 10.39,
+        "mult": 1.5,
+        "hours": 4,
+        "n": 64,
+        "R_per_trade": -0.0582,
+        "winrate": 0.359,
+        "total_R": -3.7,
+        "stopped": 0.078
+      },
+      {
+        "stop": 12.73,
+        "mult": 1.5,
+        "hours": 6,
+        "n": 64,
+        "R_per_trade": 0.0243,
+        "winrate": 0.406,
+        "total_R": 1.6,
+        "stopped": 0.172
+      },
+      {
+        "stop": 14.7,
+        "mult": 1.5,
+        "hours": 8,
+        "n": 64,
+        "R_per_trade": 0.2983,
+        "winrate": 0.438,
+        "total_R": 19.1,
+        "stopped": 0.125
+      },
+      {
+        "stop": 18.0,
+        "mult": 1.5,
+        "hours": 12,
+        "n": 64,
+        "R_per_trade": 0.2706,
+        "winrate": 0.422,
+        "total_R": 17.3,
+        "stopped": 0.109
+      },
+      {
+        "stop": 25.46,
+        "mult": 1.5,
+        "hours": 24,
+        "n": 64,
+        "R_per_trade": 0.1815,
+        "winrate": 0.438,
+        "total_R": 11.6,
+        "stopped": 0.062
+      },
+      {
+        "stop": 12.0,
+        "mult": 2.0,
+        "hours": 3,
+        "n": 64,
+        "R_per_trade": -0.117,
+        "winrate": 0.391,
+        "total_R": -7.5,
+        "stopped": 0.078
+      },
+      {
+        "stop": 13.86,
+        "mult": 2.0,
+        "hours": 4,
+        "n": 64,
+        "R_per_trade": -0.0552,
+        "winrate": 0.359,
+        "total_R": -3.5,
+        "stopped": 0.047
+      },
+      {
+        "stop": 16.97,
+        "mult": 2.0,
+        "hours": 6,
+        "n": 64,
+        "R_per_trade": 0.0272,
+        "winrate": 0.406,
+        "total_R": 1.7,
+        "stopped": 0.031
+      },
+      {
+        "stop": 19.6,
+        "mult": 2.0,
+        "hours": 8,
+        "n": 64,
+        "R_per_trade": 0.2163,
+        "winrate": 0.438,
+        "total_R": 13.8,
+        "stopped": 0.062
+      },
+      {
+        "stop": 24.0,
+        "mult": 2.0,
+        "hours": 12,
+        "n": 64,
+        "R_per_trade": 0.2042,
+        "winrate": 0.422,
+        "total_R": 13.1,
+        "stopped": 0.016
+      },
+      {
+        "stop": 33.94,
+        "mult": 2.0,
+        "hours": 24,
+        "n": 64,
+        "R_per_trade": 0.1441,
+        "winrate": 0.438,
+        "total_R": 9.2,
+        "stopped": 0.0
+      }
+    ]
+  }
+}

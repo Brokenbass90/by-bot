@@ -48,6 +48,8 @@ COST_BPS = 16.0                        # круг: комиссия + слипп
 ATR_N = 24
 PER = float(os.getenv("PATH_SIM_PER_SECONDS", "60"))
 SEARCH_END_UTC = os.getenv("RESEARCH_SEARCH_END_UTC", "").strip()
+INPUT_PATH = os.getenv("PATH_SIM_INPUT", "").strip()
+PASSPORT_PATH = os.getenv("PATH_SIM_PASSPORT", "").strip()
 SEARCH_END_MS = None
 if SEARCH_END_UTC:
     parsed_end = datetime.fromisoformat(SEARCH_END_UTC.replace("Z", "+00:00"))
@@ -59,6 +61,33 @@ OUT = os.getenv("PATH_SIM_OUT", "research_lab/results/path_sim_v2")
 
 class _Slow(Exception):
     pass
+
+
+def _verify_passport():
+    if not INPUT_PATH or not PASSPORT_PATH or not SEARCH_END_UTC:
+        raise RuntimeError(
+            "PATH_SIM_INPUT, PATH_SIM_PASSPORT and RESEARCH_SEARCH_END_UTC are required"
+        )
+    from pathlib import Path
+    from research_lab.run_passport import sha256_file, validate_passport
+    passport = validate_passport(json.loads(Path(PASSPORT_PATH).read_text(encoding="utf-8")))
+    if SYM not in (passport.get("measurement_contract") or {}).get("universe", []):
+        raise RuntimeError("passport universe does not contain requested symbol")
+    expected = {str(Path(row["path"]).resolve()): row["sha256"] for row in passport["inputs"]}
+    input_resolved = str(Path(INPUT_PATH).resolve())
+    if expected.get(input_resolved) != sha256_file(Path(INPUT_PATH)):
+        raise RuntimeError("physical input is not bound to passport hash")
+    for row in passport["code"]:
+        if sha256_file(Path(row["path"])) != row["sha256"]:
+            raise RuntimeError(f"passport code hash drift: {Path(row['path']).name}")
+    return passport
+
+
+def _require_complete_windows(acc):
+    good = [value for key, value in acc.items() if key != "_meta" and value.get("grid")]
+    if len(good) != N_WIN:
+        raise RuntimeError(f"incomplete experiment: {len(good)}/{N_WIN} valid windows")
+    return good
 
 
 signal.signal(signal.SIGALRM, lambda s, f: (_ for _ in ()).throw(_Slow()))
@@ -114,6 +143,7 @@ def run_window(shift):
         symbol=SYM,
         limit=WIN * (shift + 1),
         end_ms=SEARCH_END_MS,
+        input_path=INPUT_PATH,
     )
     if not h.get("ok") or h["symbol"] != SYM:
         return None, h.get("note", "не открылась")[:60]
@@ -179,6 +209,7 @@ def run_window(shift):
 
 
 def main():
+    passport = _verify_passport()
     os.makedirs(OUT, exist_ok=True)
     fp = os.path.join(OUT, f"{NAME}__{SYM}.json")
     acc = json.load(open(fp)) if os.path.exists(fp) else {}
@@ -194,6 +225,8 @@ def main():
         "entry_execution": "next_5m_open",
         "same_close_entry": False,
         "variant_count": len(STOP_MULT) * len(HOURS),
+        "physical_input": str(INPUT_PATH),
+        "passport_sha256": passport["passport_sha256"],
     }
     print(f"{NAME} на {SYM}: стоп x горизонт = {len(STOP_MULT)}x{len(HOURS)} на окно\n")
     for sh in range(N_WIN):
@@ -213,7 +246,7 @@ def main():
         else:
             print(f"  окно {sh}: {err}", flush=True)
 
-    good = [v for v in acc.values() if v.get("grid")]
+    good = _require_complete_windows(acc)
     if len(good) >= 2:
         keys = {(g.get("mult", g["stop"]), g["hours"]) for v in good for g in v["grid"]}
         N = len(keys) * len(good)
@@ -241,6 +274,7 @@ def main():
             print(f"  наблюдаемая частота сигналов ~{per_year:.0f}/год")
             print("  ВАЖНО: частота × средний R не является портфельной годовой доходностью; "
                   "нужны симуляция перекрывающихся позиций, слоты, капитал и просадка")
+    _verify_passport()  # fail closed if code/input changed during the run
     print(f"\n[сохранено] {fp}")
 
 
