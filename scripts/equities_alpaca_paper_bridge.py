@@ -859,6 +859,17 @@ def _new_entry_allowed(symbol: str, *, enabled: bool, blocked_symbols: set[str])
     return bool(enabled) and symbol.strip().upper() not in blocked_symbols
 
 
+def _default_broker_protection_tif(order_class: str) -> str:
+    """Keep standalone SAFE_HOLD stops alive across session boundaries.
+
+    A DAY simple stop expires after the session. Re-arming it from the original
+    entry stop can silently undo a higher stop set by the protective ratchet.
+    Bracket entries retain Alpaca's DAY default; standalone stops default to
+    GTC so a raised stop is not recreated lower overnight.
+    """
+    return "gtc" if order_class.strip().lower() == "simple_stop" else "day"
+
+
 def _save_hwm_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(state, indent=2), encoding="utf-8")
@@ -1289,7 +1300,10 @@ def _main_unlocked() -> int:
     broker_protection_required = _env_bool("ALPACA_BROKER_PROTECTION_REQUIRED", broker_protection_enable)
     broker_protection_order_class = _env("ALPACA_BROKER_PROTECTION_ORDER_CLASS", "bracket").lower()
     broker_protection_size_mode = _env("ALPACA_BROKER_PROTECTION_SIZE_MODE", "qty").lower()
-    broker_protection_tif = _env("ALPACA_BROKER_PROTECTION_TIF", "day").lower()
+    broker_protection_tif = _env(
+        "ALPACA_BROKER_PROTECTION_TIF",
+        _default_broker_protection_tif(broker_protection_order_class),
+    ).lower()
     broker_target_pct = max(0.0, _env_float("ALPACA_BROKER_TARGET_PCT", 0.08))
     broker_wait_fill_sec = max(1.0, _env_float("ALPACA_BROKER_PROTECTION_WAIT_FILL_SEC", 20.0))
     native_trailing_enable = _env_bool("ALPACA_NATIVE_TRAIL_ENABLE", False)

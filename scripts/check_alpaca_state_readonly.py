@@ -8,10 +8,19 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from scripts import equities_alpaca_intraday_bridge as bridge
+
+
+DEFAULT_LIVE_ENV_FILE = bridge.ROOT / "configs" / "alpaca_live_v38.env"
 
 
 def _finite_text(value: Any) -> str | None:
@@ -39,6 +48,7 @@ def _order_view(row: dict[str, Any]) -> dict[str, Any]:
         "side": _finite_text(row.get("side")),
         "type": _finite_text(row.get("type")),
         "status": _finite_text(row.get("status")),
+        "time_in_force": _finite_text(row.get("time_in_force")),
         "qty": _finite_text(row.get("qty")),
         "filled_qty": _finite_text(row.get("filled_qty")),
         "limit_price": _finite_text(row.get("limit_price")),
@@ -60,8 +70,9 @@ def _order_view(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def collect(symbol: str = "") -> dict[str, Any]:
-    bridge._load_env_file(bridge.ENV_FILE)
+def collect(symbol: str = "", env_file: str | Path | None = None) -> dict[str, Any]:
+    selected_env_file = Path(env_file) if env_file else DEFAULT_LIVE_ENV_FILE
+    bridge._load_env_file(selected_env_file)
     bridge._refresh_runtime_paths()
     key_id = bridge._env("ALPACA_API_KEY_ID")
     secret = bridge._env("ALPACA_API_SECRET_KEY")
@@ -85,6 +96,7 @@ def collect(symbol: str = "") -> dict[str, Any]:
     return {
         "schema_id": "alpaca_broker_truth_readonly_v1",
         "authority": "read_only_get_no_order_mutation",
+        "configured_env_file": str(selected_env_file),
         "broker_mode": "PAPER" if "paper-api" in base_url.lower() else "LIVE",
         "account": {
             "status": _finite_text(account.get("status")),
@@ -104,8 +116,13 @@ def collect(symbol: str = "") -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--symbol", default="")
+    parser.add_argument(
+        "--env-file",
+        default=str(DEFAULT_LIVE_ENV_FILE),
+        help="credential env file; defaults to the protected Alpaca live v38 file",
+    )
     args = parser.parse_args()
-    print(json.dumps(collect(args.symbol), ensure_ascii=False, indent=2))
+    print(json.dumps(collect(args.symbol, args.env_file), ensure_ascii=False, indent=2))
     return 0
 
 

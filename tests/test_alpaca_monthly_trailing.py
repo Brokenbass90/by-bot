@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 import fcntl
 import os
 
@@ -11,6 +12,7 @@ from scripts.equities_alpaca_paper_bridge import (
     _add_reentry_block,
     _broker_truth_snapshot,
     _broker_stop_rearm_symbols,
+    _default_broker_protection_tif,
     _hard_capped_normalized_weights,
     _new_entry_allowed,
     _select_monthly_cycle_picks,
@@ -19,6 +21,21 @@ from scripts.equities_alpaca_paper_bridge import (
 
 
 class TestAlpacaMonthlyTrailing(unittest.TestCase):
+    def test_simple_stop_defaults_to_gtc_so_ratchet_survives_session_boundary(self):
+        self.assertEqual(_default_broker_protection_tif("simple_stop"), "gtc")
+        self.assertEqual(_default_broker_protection_tif("bracket"), "day")
+
+    def test_simple_stop_candidate_configs_pin_gtc(self):
+        root = Path(__file__).resolve().parents[1]
+        for relative in (
+            "configs/alpaca_v38_hybrid_top4_candidate.env",
+            "configs/alpaca_v38_active_paper_candidate.env",
+            "configs/alpaca_paper_v36_candidate.env",
+        ):
+            text = (root / relative).read_text(encoding="utf-8")
+            self.assertIn("ALPACA_BROKER_PROTECTION_ORDER_CLASS=simple_stop", text)
+            self.assertIn("ALPACA_BROKER_PROTECTION_TIF=gtc", text)
+
     def test_peak_arms_software_trail_after_current_gain_drops_below_trigger(self):
         state = {
             "GOOGL": {
