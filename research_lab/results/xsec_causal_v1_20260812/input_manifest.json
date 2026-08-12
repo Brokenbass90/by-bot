@@ -1,0 +1,971 @@
+{
+  "files": [
+    {
+      "daily_file_sha256": "f0c8b2fd6535f959a27448a6389f6c98d54c1725a65b8fb1c1f09b16f27d8ed6",
+      "daily_rows": 999,
+      "funding_file_sha256": "4862798125fd549b21285def35b9d546561aaadd8c798379cba956a98fb50c7d",
+      "funding_rows": 3772,
+      "symbol": "1000BONKUSDT"
+    },
+    {
+      "daily_file_sha256": "5b145e6fc4a404ad7334789c1d0c516fa092b2cf4bc6145ff3321bca0ffd20fd",
+      "daily_rows": 882,
+      "funding_file_sha256": "c8d94b948c73f447c9e1019f523f68ec39639152c46068a52ca07163422f7cc8",
+      "funding_rows": 2645,
+      "symbol": "1000PEPEUSDT"
+    },
+    {
+      "daily_file_sha256": "4886c4b03544ff34326aea994402a5bacbd9bcdd86f303acb590d454c70f4fcc",
+      "daily_rows": 679,
+      "funding_file_sha256": "ae96e142817f30e02970e7f47163fc4f8335f48cee8d071e066a2c0f93af99be",
+      "funding_rows": 2812,
+      "symbol": "1000RATSUSDT"
+    },
+    {
+      "daily_file_sha256": "c6c36ceae7d5cb7fb248eb3ab04de2c789a6d838192aaefb54feda4567513635",
+      "daily_rows": 1004,
+      "funding_file_sha256": "9dd7b19fca3d9d55a1dc82d4ef8a1178da0dd4793d4a2e022801881c25ba00ac",
+      "funding_rows": 3012,
+      "symbol": "AAVEUSDT"
+    },
+    {
+      "daily_file_sha256": "5753a0dbbfc30cc25131a06b4ede5a2bc9499abe30b5b285e0559bc626365b8f",
+      "daily_rows": 653,
+      "funding_file_sha256": "942962a45af52261f05e82130788a32337056a078f1ac712f13ed4566b48175e",
+      "funding_rows": 2734,
+      "symbol": "ACEUSDT"
+    },
+    {
+      "daily_file_sha256": "e7c52bb904cc7eb02ef487d29eec5438915e74416d809b0314acfa843fd3cd19",
+      "daily_rows": 324,
+      "funding_file_sha256": "bfd72c988f6bd48b57a119cbd67f25b45bc1501c225e64d2141cf9921121bc92",
+      "funding_rows": 1747,
+      "symbol": "ACTUSDT"
+    },
+    {
+      "daily_file_sha256": "0c1b07dd6923b76154268e51ba07f037e62f8c2f13c05fabab943a853fecb6e0",
+      "daily_rows": 1004,
+      "funding_file_sha256": "f894f716603ae24bd2e09ba4408a2d89bf3c18771e5a70a6743fd869fc56bb4d",
+      "funding_rows": 3012,
+      "symbol": "ADAUSDT"
+    },
+    {
+      "daily_file_sha256": "ed8f35cfcd6e8b9211c6f03ed02ec4c64ed1c50bd40a4dca9c9b3c98db1f9afd",
+      "daily_rows": 443,
+      "funding_file_sha256": "2eb55bf2d3761bac889477e38913f892ddedf582978992f19e9a6f86196bb143",
+      "funding_rows": 2104,
+      "symbol": "AEROUSDT"
+    },
+    {
+      "daily_file_sha256": "e0bd3005cc40366aad7d3c52ce23a43d4df45874194c4cf3e56c2915443d000d",
+      "daily_rows": 5,
+      "funding_file_sha256": "e999918108e1d962b432cb57cfcc55816451f6e2336034c9e58b589ae4d7b0ba",
+      "funding_rows": 27,
+      "symbol": "AKEUSDT"
+    },
+    {
+      "daily_file_sha256": "874bf4c316572eb28069cacb426dce109fec4990372612423242e858403f977d",
+      "daily_rows": 1004,
+      "funding_file_sha256": "b6c824ab4574910095f8ed0078966db418dceefb484c9e97d0494b5c392afd81",
+      "funding_rows": 3012,
+      "symbol": "ALGOUSDT"
+    },
+    {
+      "daily_file_sha256": "bf04568e7fdd81ee9c78a01ff36814817f10682cbbd20f2380e0b80fcf9f4c74",
+      "daily_rows": 0,
+      "funding_file_sha256": "ba07128171eec051f02fa4efcbe69dfde31f8324866b48978d9eb200fd792476",
+      "funding_rows": 0,
+      "symbol": "ALLOUSDT"
+    },
+    {
+      "daily_file_sha256": "233be55e141bac8a843278ca0ca585911d617be3d8d18ebf74a469109d8efbff",
+      "daily_rows": 1004,
+      "funding_file_sha256": "d089f9cef1b2c8479b4083f13ec73a0278bd266a8f2e857149f4cd37e6884622",
+      "funding_rows": 3012,
+      "symbol": "APTUSDT"
+    },
+    {
+      "daily_file_sha256": "d700ba16d4dab181e2dd7dd540c3a98f699ffc992f373cb09a24a7ccfc5e73a3",
+      "daily_rows": 923,
+      "funding_file_sha256": "96a2561501204f0f3819755f74cb879e5593fd36b1ca041b9d114d1986c7033e",
+      "funding_rows": 2768,
+      "symbol": "ARBUSDT"
+    },
+    {
+      "daily_file_sha256": "28f12445df0c1729d1d782861692dff87654e27b634691a0c9bee33f63260a77",
+      "daily_rows": 12,
+      "funding_file_sha256": "127970b9873ba8583f92ce61fcd03da02fb026f741ebe3c6e2a646bb62275363",
+      "funding_rows": 70,
+      "symbol": "ASTERUSDT"
+    },
+    {
+      "daily_file_sha256": "6a5e34c9fc1e62953448cdf354bf9e60dd6a2a1397c72c4377443ac2e8c4df58",
+      "daily_rows": 1004,
+      "funding_file_sha256": "c21212d9e055faa7cc0c36378abb61a449e00ebc67c9d729bf637d970c656767",
+      "funding_rows": 3012,
+      "symbol": "ATOMUSDT"
+    },
+    {
+      "daily_file_sha256": "6492ec4f81ba0812a538d609483c68f74e1e1d1ad01d640fe41088637fc658be",
+      "daily_rows": 1004,
+      "funding_file_sha256": "1f79ade69bceb2ffa2439b66b40249991ba6208a015c2e1963227db71aff8f25",
+      "funding_rows": 3012,
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "daily_file_sha256": "23eef70cde5b42ab1abab0d81bb1d3b97c97d80976cf02bbab244272b9c26cde",
+      "daily_rows": 187,
+      "funding_file_sha256": "f94fd85d62df9493b1c9aaf53555eaf4dc6f7b4e641ab23f92d69693d367c801",
+      "funding_rows": 1120,
+      "symbol": "BANANAS31USDT"
+    },
+    {
+      "daily_file_sha256": "d367620a2348dfde61fbb5eee3e988783ee2fcaacd2bd1c0b7887c7aa5dd8e35",
+      "daily_rows": 146,
+      "funding_file_sha256": "84436521d6ff6cd31caba9788f38cefd6b77506327301aaad5da027e5c1e8ce2",
+      "funding_rows": 874,
+      "symbol": "BANKUSDT"
+    },
+    {
+      "daily_file_sha256": "96dc35c429528a056366b3d91abb74a604a5f2214e6d0da8f709831a3527d302",
+      "daily_rows": 1004,
+      "funding_file_sha256": "c1a0f81dbf3701f3e539b9f3e8b5cdb01c7dde97cfd32bbf9a7c9f2f2f83d116",
+      "funding_rows": 3012,
+      "symbol": "BCHUSDT"
+    },
+    {
+      "daily_file_sha256": "295a2017227e46e681afe3a78a4e7f5923e885bc142f97a88d38e048d6622df7",
+      "daily_rows": 0,
+      "funding_file_sha256": "45bfa8ef35eca1ca58624693da447f0854f62aeecc6a2fd39d5c12cad9cb2a5e",
+      "funding_rows": 0,
+      "symbol": "BEATUSDT"
+    },
+    {
+      "daily_file_sha256": "5ada9b834e2192585cb4652c614ab636f10ffc8166fc71f8b10311e0161d7d71",
+      "daily_rows": 1004,
+      "funding_file_sha256": "e2ec0c55656048cd657156f3eda2b1fd5085da4a2851e79893326006e751a0a3",
+      "funding_rows": 3012,
+      "symbol": "BICOUSDT"
+    },
+    {
+      "daily_file_sha256": "4037a8cbfaa92c3f76b7e8c82da5b8da431fdc18bc033a102ef75cfd93cd8768",
+      "daily_rows": 280,
+      "funding_file_sha256": "d0111a665d8c94cf1d52279137dea9237d52b4b188fd95e054e11cb380bf016a",
+      "funding_rows": 1357,
+      "symbol": "BIOUSDT"
+    },
+    {
+      "daily_file_sha256": "f1f40b938b6e2b65e7dbf871b0c7cc24f57c177a9d6f08c837ae6ae1cc425ac0",
+      "daily_rows": 7,
+      "funding_file_sha256": "7a82cc6507a4cce3fa444ac7c58d3e031420dd931030595fafa3194604ea4ed6",
+      "funding_rows": 40,
+      "symbol": "BLESSUSDT"
+    },
+    {
+      "daily_file_sha256": "efe9a9c6823db8a53a4968d5529bc258f4795ed193d3a2cd1b1d077bf63d84a8",
+      "daily_rows": 0,
+      "funding_file_sha256": "ce7ef32be50f9e63457c75991856ae429091ebb3a934c2c00e2f98aeff8bdcfa",
+      "funding_rows": 0,
+      "symbol": "BLUAIUSDT"
+    },
+    {
+      "daily_file_sha256": "76cd1e7f2b4d012fcb228e793b8949c5bf16dba1f9110ec2c35cef5260592aa9",
+      "daily_rows": 202,
+      "funding_file_sha256": "d49fbb28cb15b47b7aa9c0102a99450bcc76999ab7a55cfa9b065370d9c74069",
+      "funding_rows": 1210,
+      "symbol": "BMTUSDT"
+    },
+    {
+      "daily_file_sha256": "a3600aceafa3ad2408d75d9500b1baca64c8f7fa4f4b8f5ccb9dc373e78b9b8b",
+      "daily_rows": 1004,
+      "funding_file_sha256": "c41adc55b840ef2f56f6dc7f2a1419fc1dc466b1bb6a2dc5b5feccd494e0b4e6",
+      "funding_rows": 3012,
+      "symbol": "BNBUSDT"
+    },
+    {
+      "daily_file_sha256": "adf857926f1f0c6207d57b11c430470c9260f22327af271c52d4a4225a50d853",
+      "daily_rows": 565,
+      "funding_file_sha256": "3c7eb45426166c6e95a97589b8d0376c40f6d30a5e488e6da2a860cb5c5ca401",
+      "funding_rows": 2470,
+      "symbol": "BOMEUSDT"
+    },
+    {
+      "daily_file_sha256": "379490557c1c6433209b998594c3b91f39675fa1637fc4c5aa4a3cb8ba728cd7",
+      "daily_rows": 229,
+      "funding_file_sha256": "0db672243a6de6d71d5d3e3291d0500f28fd83081b8c56dc6f1346441cb5e947",
+      "funding_rows": 1371,
+      "symbol": "BROCCOLIUSDT"
+    },
+    {
+      "daily_file_sha256": "b461316d6200bddf8af89360973a1e976b8bd56f2b3189df2c8384fd8c166430",
+      "daily_rows": 1004,
+      "funding_file_sha256": "0f50c11666117e40daae9ec831dc259bfe56cd167f8022fdf42ec038782c57d8",
+      "funding_rows": 3012,
+      "symbol": "BTCUSDT"
+    },
+    {
+      "daily_file_sha256": "67490af341ac46695248b5e507bb79f24e5369f7f28f7d222b1d3425003577df",
+      "daily_rows": 35,
+      "funding_file_sha256": "2d1d56e02066d99b0f5ec1b1327729dcd8e002aca6d046c65919be7c084d5c86",
+      "funding_rows": 208,
+      "symbol": "BTRUSDT"
+    },
+    {
+      "daily_file_sha256": "a9a59330aa2a3a33c8caeb5fc0cf10d636acf4f6aeec87a303e768931cd4fd49",
+      "daily_rows": 0,
+      "funding_file_sha256": "a133ca5f8db39b57c3548aa5296cdc0e4dc16648ce406fa8e42ad08ee6e6b8e4",
+      "funding_rows": 0,
+      "symbol": "BZUSDT"
+    },
+    {
+      "daily_file_sha256": "3d20530ddb722f530072dfefb12513a9e0808ccd21d81edc94c0a9ee164e7811",
+      "daily_rows": 1004,
+      "funding_file_sha256": "f5ca00c090239a2a03f452be257aa8347fc92238ada977bb42b02e681bb0510c",
+      "funding_rows": 3012,
+      "symbol": "C98USDT"
+    },
+    {
+      "daily_file_sha256": "bb29f48f77c9a698da27f6f020f97304d91e186a912e368c3b1ba745c1fdeb0a",
+      "daily_rows": 0,
+      "funding_file_sha256": "830616418d62f3b0bd58b00d43d8c1e858575cda1b5e8f82d7bcf688bf7356d7",
+      "funding_rows": 0,
+      "symbol": "CBRSUSDT"
+    },
+    {
+      "daily_file_sha256": "8e8adc820ba0d35b0ab49e9b9d2a66a4333f58206449b0333a23151ab46e9c3a",
+      "daily_rows": 0,
+      "funding_file_sha256": "4f1b222a259c0c4b3453399fbc9ac5b3afcb04691ffe041d44a8f74ae3c7ae11",
+      "funding_rows": 0,
+      "symbol": "CCUSDT"
+    },
+    {
+      "daily_file_sha256": "a1aeac9cffdb52301e79534191a899dc8206d19a49d7d65ee1bc800529460131",
+      "daily_rows": 0,
+      "funding_file_sha256": "68a2db398115f85aea5bb2718ba1984523f0a49acbce65575650c21756b7c082",
+      "funding_rows": 0,
+      "symbol": "CLUSDT"
+    },
+    {
+      "daily_file_sha256": "ada8a8d6654937915798cbbd67a7f7a865364ae030d8766560bfdbbce1bb99a0",
+      "daily_rows": 0,
+      "funding_file_sha256": "5dbacae608494b8bbd558508e135a8cc6f00036fcfeb9c2ce3aecc315d0a3410",
+      "funding_rows": 0,
+      "symbol": "COAIUSDT"
+    },
+    {
+      "daily_file_sha256": "d8bf35229408ac405ab61da1bef639c690c2645a1ce057b9646513bf49e62b39",
+      "daily_rows": 267,
+      "funding_file_sha256": "fa2de80dc3a781a2e101f8e582159a52f9cc5e009be1851549543b761ac227c0",
+      "funding_rows": 1499,
+      "symbol": "COOKIEUSDT"
+    },
+    {
+      "daily_file_sha256": "c664498914caa30d334c853c0c264c6d539f14a0ffd65714e5a819ecdb19f680",
+      "daily_rows": 1004,
+      "funding_file_sha256": "1da5d743d5347f8563686ddef5009f31bedd8945ec98905c251720f083ae7e29",
+      "funding_rows": 3012,
+      "symbol": "COTIUSDT"
+    },
+    {
+      "daily_file_sha256": "fd3bd3fac22f48ec9027f51e827a9ccd119b1165f3a46749fbf2088be0d921bf",
+      "daily_rows": 0,
+      "funding_file_sha256": "18086d76e31ac38f62817565f7378b0020f9e02629a809d889edda8b33bdce36",
+      "funding_rows": 0,
+      "symbol": "CRCLUSDT"
+    },
+    {
+      "daily_file_sha256": "d76b9d3a61b9739a5637dd4c002748b2c3c8133812db837bb8871644e8d20f5e",
+      "daily_rows": 1004,
+      "funding_file_sha256": "9dbdf228ecd7de25a951369ef595baaf9f7487c4d0e84a327a5267e7cd71bdb3",
+      "funding_rows": 3012,
+      "symbol": "CRVUSDT"
+    },
+    {
+      "daily_file_sha256": "03c0c95fe4d551d347f2ec5bcc797883917427ea51ceab5ae8171aace070bac5",
+      "daily_rows": 0,
+      "funding_file_sha256": "bed37303d80b5439c8d129c25c3149e1c3180e00995b5be47ede0f860578b0e8",
+      "funding_rows": 0,
+      "symbol": "CYSUSDT"
+    },
+    {
+      "daily_file_sha256": "306bcaa1d22a23387db540b2392ca9293d9d74538cac782ae04e6db19fe9f0e3",
+      "daily_rows": 433,
+      "funding_file_sha256": "37429f73b45e80afb90a120aa427a530a4fc49dabcde8de161621061f2b77acf",
+      "funding_rows": 2074,
+      "symbol": "DEXEUSDT"
+    },
+    {
+      "daily_file_sha256": "ee0d7c115d2e6c1bbd115018b2c926c7cd5ad63ff54cd83b20eabf2ae6cc0ea7",
+      "daily_rows": 1004,
+      "funding_file_sha256": "2dab11b031da3444d0c2fee9ab681f590a690537534217443ebab8208813424f",
+      "funding_rows": 3012,
+      "symbol": "DOGEUSDT"
+    },
+    {
+      "daily_file_sha256": "69995ae220bd7e43c52995e4708e4698b5c88c0b95a5bb57fca4444188a50a26",
+      "daily_rows": 0,
+      "funding_file_sha256": "1bba76bbfa2f3d787e07dc7dd5ecd40ac734f46946792b70e38493d74a0d47d7",
+      "funding_rows": 0,
+      "symbol": "DRAMUSDT"
+    },
+    {
+      "daily_file_sha256": "2a8f8f36b77dbc70afc5b6b722b8abddc80aa760fc349560ac78fc519a705b9a",
+      "daily_rows": 547,
+      "funding_file_sha256": "4f841603caba6c874c4ae00a7a851d6ac8b21cdca6999fb89fbaffd8d61a3c70",
+      "funding_rows": 2416,
+      "symbol": "ENAUSDT"
+    },
+    {
+      "daily_file_sha256": "e85ae9e9cc09d0ce0a0e0790651c1dc5cd244ec80f9b7092e507c9dcfc400223",
+      "daily_rows": 201,
+      "funding_file_sha256": "f68ed95a5eb712e53cb81d40c06ccc1a0b9803e3d6e3dd6556820cc770001d82",
+      "funding_rows": 1204,
+      "symbol": "EPICUSDT"
+    },
+    {
+      "daily_file_sha256": "5709b5a05705a8d3e05a95aa902e91dde44a3cca3acb8690fbfa94158cbe4295",
+      "daily_rows": 64,
+      "funding_file_sha256": "62582feb2f466d683e9adbd25f20d0d1e6a3fa818c6b8e568450f7ab57f7953d",
+      "funding_rows": 382,
+      "symbol": "ESPORTSUSDT"
+    },
+    {
+      "daily_file_sha256": "497a8dde4735ed3eb93263892228f1d8141434f5c172a8f8c069864660ca26f1",
+      "daily_rows": 0,
+      "funding_file_sha256": "986fbfa26fd824135f347d254e393c140b2ce6a39c2ce7a0c6bcee43b720b586",
+      "funding_rows": 0,
+      "symbol": "ESPUSDT"
+    },
+    {
+      "daily_file_sha256": "6cd992df7c279aa6eec6faaf0729bba3981b7254e563968cba22830083fc186a",
+      "daily_rows": 1004,
+      "funding_file_sha256": "29b033df6aee93e6278e4173ee7c16d937fe781b7648da58a5e8efc134a3627d",
+      "funding_rows": 3012,
+      "symbol": "ETCUSDT"
+    },
+    {
+      "daily_file_sha256": "b9aea27e79aa7d1be5861504b224aab685c85bc798fe0942336d74ac12aaea4c",
+      "daily_rows": 562,
+      "funding_file_sha256": "48f336770fad300cd7e7b43922fbaf24cc108b164a08643bff63cc58dcb57ae0",
+      "funding_rows": 2461,
+      "symbol": "ETHFIUSDT"
+    },
+    {
+      "daily_file_sha256": "787a097837570c30147af4ff4eea8f45aaf27c874a822efb418224ade3c234d8",
+      "daily_rows": 1004,
+      "funding_file_sha256": "1dbaac6976505131dca8b7b53d650b3d46f4eb6ce313b1ffd237d728b33fd534",
+      "funding_rows": 3012,
+      "symbol": "ETHUSDT"
+    },
+    {
+      "daily_file_sha256": "906f583c1b0763ff032cc703a7c46feffbf73d722a4bb4c873b6c08de9563a05",
+      "daily_rows": 0,
+      "funding_file_sha256": "399cdc9b0c0783e947e3e95653ba43a3ba969a275148e345d58ef02bba4bdc77",
+      "funding_rows": 0,
+      "symbol": "EWYUSDT"
+    },
+    {
+      "daily_file_sha256": "a9216f8eafe5412d871ddb775fc50b1569f67f9c4113051d07b7efde0fa8e9b5",
+      "daily_rows": 285,
+      "funding_file_sha256": "4d161fb34a66d12b3fe9c140ebd9077b94a89859db9c0106c640afbaccfb2d35",
+      "funding_rows": 1630,
+      "symbol": "FARTCOINUSDT"
+    },
+    {
+      "daily_file_sha256": "db63de7f887c1453773ef910fdf609b2d630d3b1ade3d656bb000c0c45c7b5e0",
+      "daily_rows": 1004,
+      "funding_file_sha256": "7680270a104fe55a9d1b2e103802007be82442abca3b7e475974c3abad7abff8",
+      "funding_rows": 3012,
+      "symbol": "FILUSDT"
+    },
+    {
+      "daily_file_sha256": "dcf104846a4e8116cc7b619b8d05e2804f89f065aed8e2e842b76cd6f0c95640",
+      "daily_rows": 1004,
+      "funding_file_sha256": "4ee905a8d76bb65d6c483dd7a8137a3be7aa36c4806f0f0ebc750025058230cc",
+      "funding_rows": 3012,
+      "symbol": "GALAUSDT"
+    },
+    {
+      "daily_file_sha256": "14b4ec52f6f720bac37cfd3782ccc7e946025776f7f14e30dcf443dfd7db4170",
+      "daily_rows": 349,
+      "funding_file_sha256": "c3f93b7b913f18704ed6a3876f8d0047b6b7d6f1fd0f17ea2928c50e26e2dacc",
+      "funding_rows": 1822,
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "daily_file_sha256": "73e02cdc53c2bf997e1d195539977b340f0983f927634b27291ee2cc167250ae",
+      "daily_rows": 184,
+      "funding_file_sha256": "ac37d5d50fbd31700f43f347ffc9ca2d9a924311405ac5c8f748d7bbc3081176",
+      "funding_rows": 1101,
+      "symbol": "GUNUSDT"
+    },
+    {
+      "daily_file_sha256": "86071d363c855b5d6944fa6b64945be710d67f63591391804b7da19ffa6edbf4",
+      "daily_rows": 0,
+      "funding_file_sha256": "69fdaebce790b9b35d40c565005249b9ae7ddfdebd1736466a6b0c297b4a0524",
+      "funding_rows": 0,
+      "symbol": "GWEIUSDT"
+    },
+    {
+      "daily_file_sha256": "eb9ce8af52bef782b5eb097a669974e86a5e589b0bd616f84aed6b8352168b25",
+      "daily_rows": 1004,
+      "funding_file_sha256": "2cbed48310617f064fd87f295aacf9c84b989225f717ce99ba495a1bb554d3e3",
+      "funding_rows": 3012,
+      "symbol": "HBARUSDT"
+    },
+    {
+      "daily_file_sha256": "242b3385085f3dcfc5ff6c0d5566dcf97488c06b05c2d3ce95173f58a3167a3a",
+      "daily_rows": 229,
+      "funding_file_sha256": "a54a7f2644821295b84aa2291efd6c0782b756b6e7e3cd2fe79dca0474ee66ed",
+      "funding_rows": 1372,
+      "symbol": "HEIUSDT"
+    },
+    {
+      "daily_file_sha256": "005dd506592d6e34b3b62bd0e4fca783517285a9e2d83a1d949b5ddd4b43505e",
+      "daily_rows": 932,
+      "funding_file_sha256": "8752f7caab9e14e9e4fe1b3daa394d412a240846c250f7518e5ac9fd39a2f900",
+      "funding_rows": 2795,
+      "symbol": "HFTUSDT"
+    },
+    {
+      "daily_file_sha256": "647f2e787776502bd1386fe58c69a1047bd17e2760984e809b6b1c0fc58d00d7",
+      "daily_rows": 113,
+      "funding_file_sha256": "19948d16a06b93ac6f8051714d6890d2ca1796b9b2b4bc7cf3eb85c673989dde",
+      "funding_rows": 676,
+      "symbol": "HOMEUSDT"
+    },
+    {
+      "daily_file_sha256": "09e27e117081f600a3c0b2e91ad68c07e88c83bfe4ff6787bd68159390e392e7",
+      "daily_rows": 300,
+      "funding_file_sha256": "72ba1b91d385a859edd828bdf53bf7fcd440fe8cc3731dd1a5c1022ba56d0ec2",
+      "funding_rows": 899,
+      "symbol": "HYPEUSDT"
+    },
+    {
+      "daily_file_sha256": "7ee083d25633e97706669e2e809137ef67e8eb4ed714b3f2e1341a0d7b81fa0f",
+      "daily_rows": 1004,
+      "funding_file_sha256": "9c22cb3e01b1fe4ac4f8749500a03ce4c0b8d44cf11137ec80c7231c1c056bec",
+      "funding_rows": 3012,
+      "symbol": "ICPUSDT"
+    },
+    {
+      "daily_file_sha256": "0969584b691ee7aa59e4b32bfe65ad064506a6c4f2115c49ba3b80bfbc33fca9",
+      "daily_rows": 1004,
+      "funding_file_sha256": "85a9d8c62e6c75ee7cd168d4b5f97f6673a34b59f9b2f207796c3e88fe873435",
+      "funding_rows": 3012,
+      "symbol": "INJUSDT"
+    },
+    {
+      "daily_file_sha256": "ef9aef14d6cb2f441a22832046ed2a37fba5b1077397595ae0b09a22fb0932a2",
+      "daily_rows": 0,
+      "funding_file_sha256": "149763eea42de55b5445812715c169535ab78b4c072cb0010f2109a62179a365",
+      "funding_rows": 0,
+      "symbol": "INTCUSDT"
+    },
+    {
+      "daily_file_sha256": "c94f0d51daa5101c1bde56ce5b3620181f331193c3950968405a1030b1d4d2b0",
+      "daily_rows": 663,
+      "funding_file_sha256": "264788b9d3669181e869aa99401875cb58edc0aeea0c33a63bd65f608ed3c526",
+      "funding_rows": 2765,
+      "symbol": "JTOUSDT"
+    },
+    {
+      "daily_file_sha256": "1d0c811b0658fe6c41caebe6a1278b16c3f7782cf5445356b38e7ada48c90199",
+      "daily_rows": 223,
+      "funding_file_sha256": "e0281ae861b34b907ca3aa5477a5cea887c9fc2d613f0be6c1b813113203e938",
+      "funding_rows": 4706,
+      "symbol": "KAITOUSDT"
+    },
+    {
+      "daily_file_sha256": "8cec62b7f63453a1106d613b2fd6bd1f672ac84e4fe96dddf0c61ac5c7773db5",
+      "daily_rows": 118,
+      "funding_file_sha256": "c4c7adf90bcc506da8eaa4517c6dc364f2a79017c016ded95143b2971002aa11",
+      "funding_rows": 2822,
+      "symbol": "LAUSDT"
+    },
+    {
+      "daily_file_sha256": "1bf9591b24b4bedea79702d36601764ac4b1da5478a900c487e9d72edaf032e4",
+      "daily_rows": 1004,
+      "funding_file_sha256": "f36e64183970fa80fe1aac8c6752d3d36dea2f7d36784d3707eea62233ca5b00",
+      "funding_rows": 3012,
+      "symbol": "LDOUSDT"
+    },
+    {
+      "daily_file_sha256": "addb15a8eff2b89a5fa2f087b87b96009a09ed258f06547c9361edfc57dc7468",
+      "daily_rows": 0,
+      "funding_file_sha256": "acd5de004a66e7d7a30d170b93b98a1a1ee116deaf3bbd1368967549076d4948",
+      "funding_rows": 0,
+      "symbol": "LITEUSDT"
+    },
+    {
+      "daily_file_sha256": "f3742ea0d01ba4cc0ac28226151267511787f1dacfdc042e7d8c4f1aa17dbce5",
+      "daily_rows": 0,
+      "funding_file_sha256": "2518e8df61d9acc024ab5f69d94e65201dae412b87a11c79929d59de62e83eba",
+      "funding_rows": 0,
+      "symbol": "LITUSDT"
+    },
+    {
+      "daily_file_sha256": "cf00389bfa8f85ed6ae7f977ec55f0f5ca09268d35ee05e07c92fdabfe96a371",
+      "daily_rows": 0,
+      "funding_file_sha256": "acaf15ad601debc6d4f68b0ab374aa098dc8fab4c35a530f63c68a1da5e94e1c",
+      "funding_rows": 0,
+      "symbol": "METAUSDT"
+    },
+    {
+      "daily_file_sha256": "25f26de1177d80151e326039ae86d6afe274abef9d2d6ca2a24befb95ac0c9e8",
+      "daily_rows": 309,
+      "funding_file_sha256": "293e1e676c85da2399d0b56f98bb85f6d5ba52502e6d81fb373b30b003604a88",
+      "funding_rows": 1785,
+      "symbol": "MEUSDT"
+    },
+    {
+      "daily_file_sha256": "ebc8a221c721d9cdc66d0d37ea575c170a9a2b46530192cf9a6c0c133907a4ee",
+      "daily_rows": 0,
+      "funding_file_sha256": "d7ee00c3f67c8314cf61a0086493e1d848bf483285cc1a36ba9892f5467e7a29",
+      "funding_rows": 0,
+      "symbol": "MMTUSDT"
+    },
+    {
+      "daily_file_sha256": "e6dc00d3f823199f80f148f2b6a02679349d53e354b4b110c2afae152ad4394a",
+      "daily_rows": 730,
+      "funding_file_sha256": "13d85abbd184d56568efd17f6fd43e902c7aab05934ccf2e15296cfde44c00b5",
+      "funding_rows": 2190,
+      "symbol": "MNTUSDT"
+    },
+    {
+      "daily_file_sha256": "c117358273a2f86e87156689eca0795075675432b7f55c7c66dc59480d8a58f2",
+      "daily_rows": 0,
+      "funding_file_sha256": "88938d7461dcc73c12f72153e08cd9ea80c6fda8b923969659adb09ad096ce1d",
+      "funding_rows": 0,
+      "symbol": "MONUSDT"
+    },
+    {
+      "daily_file_sha256": "39c9ede3d83ccbba8a2cb52f9c1a8cbcaf61cbfb3c13640a9edecaf4d68c05d0",
+      "daily_rows": 0,
+      "funding_file_sha256": "499d94cd8e0ef0dde64f59233ad94cbd12a0e10f0b46bf9d843be89cd52982ff",
+      "funding_rows": 0,
+      "symbol": "MRVLUSDT"
+    },
+    {
+      "daily_file_sha256": "606493bd664138acc4eb746731eedd815f5580686f254e51cb581ddbd2ea839f",
+      "daily_rows": 0,
+      "funding_file_sha256": "20cfc3cbad8f4cd88c33feb26a64f30979db5fe65bd7c853b2e2165342def4c9",
+      "funding_rows": 0,
+      "symbol": "MSFTUSDT"
+    },
+    {
+      "daily_file_sha256": "d7a925f925f34f30a9b9552ecab0b84debc2a2faac8fc2bfd255feeb06ca3a67",
+      "daily_rows": 0,
+      "funding_file_sha256": "b4a9f8f8f8358b93e9da0781bc128ace6d96895685d18f5c3c4df1b0ec8c8cc0",
+      "funding_rows": 0,
+      "symbol": "MSTRUSDT"
+    },
+    {
+      "daily_file_sha256": "7a52bf8fb611d0fd8f7ffe4e5972fe3022c8ad5db13efc6a6121dea18f87ac97",
+      "daily_rows": 198,
+      "funding_file_sha256": "bff37fe2d7b5b5e3067b525f46ab5a7790ceb9cdd065a39fa832973e5a7d7b55",
+      "funding_rows": 1187,
+      "symbol": "MUBARAKUSDT"
+    },
+    {
+      "daily_file_sha256": "a54f148e14f66cbe069758869524409a0c35ad609b53c9585d330a4162503bce",
+      "daily_rows": 0,
+      "funding_file_sha256": "51962cd306a1698fb788e5b94f81b5e1b181da19d7d32e48c442ce4442de5cfb",
+      "funding_rows": 0,
+      "symbol": "MUUSDT"
+    },
+    {
+      "daily_file_sha256": "7bab01b47b51515a8095375dfd5468bf1b8bc46bd52b782f79c13de9080de7c4",
+      "daily_rows": 0,
+      "funding_file_sha256": "24ea85eab8a2ef16ad744bd9128c923adb5d8937f3e0c0a18ba6076ffa6739f2",
+      "funding_rows": 0,
+      "symbol": "NBISUSDT"
+    },
+    {
+      "daily_file_sha256": "309b9caa1b5fdb19c62d08326c06640b0819a80497c84dacc73260b66bf3f40c",
+      "daily_rows": 195,
+      "funding_file_sha256": "a28b0f783563ca1f36b25b4a3e3a0f26f1e2f131b44db15481481c52b6e6fc7b",
+      "funding_rows": 1167,
+      "symbol": "NILUSDT"
+    },
+    {
+      "daily_file_sha256": "dbcbde771a4d62ea6e733fa66805a0af9c746c85f47ca63bcc869569f0a2f5a2",
+      "daily_rows": 0,
+      "funding_file_sha256": "b0f897ccc2a8399c6030a6280d165d405c0935295d186e8704a1cd25795a4f9a",
+      "funding_rows": 0,
+      "symbol": "NVDAUSDT"
+    },
+    {
+      "daily_file_sha256": "513e49a7280c9a98dfae295ba5775790c104e50d93d714623a3700bf99a40b94",
+      "daily_rows": 617,
+      "funding_file_sha256": "ade9b8293ae1f63e03716208cdf44773ff491692057001b62e29c27ca5b25f3c",
+      "funding_rows": 2626,
+      "symbol": "ONDOUSDT"
+    },
+    {
+      "daily_file_sha256": "b8f4480879ea84ac90e8500b8413d7a3fccbeb0b50896ce9833e1b82ccb01a1e",
+      "daily_rows": 1004,
+      "funding_file_sha256": "c7cba056a572c63f328ca976b4b640866b46097ac2534d77112f28b4431393ed",
+      "funding_rows": 3012,
+      "symbol": "OPUSDT"
+    },
+    {
+      "daily_file_sha256": "3f1f910eb9bd14a5b96016fd08359c229dccbe0d29248bd9fb09ba82f4e63144",
+      "daily_rows": 863,
+      "funding_file_sha256": "67890c248f10493a5df5fe5f49a96380633c4cdac2279dcd264fff8395bf0346",
+      "funding_rows": 3365,
+      "symbol": "ORDIUSDT"
+    },
+    {
+      "daily_file_sha256": "a7bed70f401ab1d4ef9e044dbd8c5501fd29163d21106f254689ff598cde9513",
+      "daily_rows": 1004,
+      "funding_file_sha256": "6f946ecd720a9a467e64f108b2218a71c1aaa2dc202abda1ba882a876833dfdb",
+      "funding_rows": 3530,
+      "symbol": "PAXGUSDT"
+    },
+    {
+      "daily_file_sha256": "d73f3e4acda26c6c53c2f904abd9ab7805b057e2bb79eda5f9c37415b544fe06",
+      "daily_rows": 288,
+      "funding_file_sha256": "8f665afba05ef993f66245fe727160f19ed3d7cf0ce4fb055036d7343f3a2630",
+      "funding_rows": 1725,
+      "symbol": "PENGUUSDT"
+    },
+    {
+      "daily_file_sha256": "ef838571ecb89ffdd2140539d48f18a17ce50b00fd1ab101e936e58fbfa7541d",
+      "daily_rows": 1004,
+      "funding_file_sha256": "b96506a63c50b4b9762622162d2678e9e8d8ba842895ce34b9ca5663175f0cfd",
+      "funding_rows": 3012,
+      "symbol": "PEOPLEUSDT"
+    },
+    {
+      "daily_file_sha256": "ef81955a98aa3f08737ac1e5969e9f302ebc5a2e32c6a28458f67f0a2e0c71e9",
+      "daily_rows": 0,
+      "funding_file_sha256": "09881259e87a8f6dfaaefaa7d2ef2f45f12b5ca775d2545ef970947b46d73e2b",
+      "funding_rows": 0,
+      "symbol": "PLTRUSDT"
+    },
+    {
+      "daily_file_sha256": "bf1d5fc525bd2ac70464b7284da760e6e7b8a2a3e0af9aedb0a814a54b91b800",
+      "daily_rows": 391,
+      "funding_file_sha256": "bf6b41f26cab74a6ae5882a01187b19c5944fbe3716d1975c016fd749aa06928",
+      "funding_rows": 1948,
+      "symbol": "POLUSDT"
+    },
+    {
+      "daily_file_sha256": "d104784555135b619777db25ac356e6ee2222a709c60d2b16bddccb28d14d4e9",
+      "daily_rows": 83,
+      "funding_file_sha256": "d65569847b0cdabd84533f46077f987798dae25fd554f4cba1c48b2a7bf118b0",
+      "funding_rows": 497,
+      "symbol": "PUMPFUNUSDT"
+    },
+    {
+      "daily_file_sha256": "96d5dab8e74f37bf9407e025a06f60330eeaeb4fa83f5b86c24e026ba9a44757",
+      "daily_rows": 0,
+      "funding_file_sha256": "9d1a4d9173141c8917fe82176f133433210340f7e4444cf7c1ac450303877a13",
+      "funding_rows": 0,
+      "symbol": "QQQUSDT"
+    },
+    {
+      "daily_file_sha256": "0e6fa7f3688b14d91af727c0d4ca3bbfa72ee83b41e27dcbbc81206799372ee5",
+      "daily_rows": 432,
+      "funding_file_sha256": "0a924ca92ddb0e3428c3d5bf70cb6ee190ec6b28160049c479a6e250b82f2c0c",
+      "funding_rows": 2071,
+      "symbol": "RENDERUSDT"
+    },
+    {
+      "daily_file_sha256": "7df35fb13b78909be2bbbd19d5a56efaa5ffacfa15b23f8c5a7548063b844a44",
+      "daily_rows": 0,
+      "funding_file_sha256": "74a12b40e4a3e9b53e44dc1710e1a39d0d0753afacdba77041df9fd610511a6f",
+      "funding_rows": 0,
+      "symbol": "RKLBUSDT"
+    },
+    {
+      "daily_file_sha256": "35a9636f8a592ac15e3e0061bb57143a4ca460d77391594a35e26035da49b8b4",
+      "daily_rows": 0,
+      "funding_file_sha256": "994cc1e13997313c4f81b1697d33ccf3f1cb8b787c87bfe2f1d69867ab24a8ab",
+      "funding_rows": 0,
+      "symbol": "ROBOUSDT"
+    },
+    {
+      "daily_file_sha256": "9e8f9d512d9243ca73af80238190dab1b6bb953e5d66e2ba63f6aed9ee11f821",
+      "daily_rows": 777,
+      "funding_file_sha256": "5f9f771c50dc8d40e4a5c133e6ea7a157c6c3f61d1b131253a58d701a74c83aa",
+      "funding_rows": 2331,
+      "symbol": "SEIUSDT"
+    },
+    {
+      "daily_file_sha256": "c4c7549a0d07438a5824ec3d79039dd4379e7653c1f412e7ccaa5aa25a394b7d",
+      "daily_rows": 1004,
+      "funding_file_sha256": "ade2372c9b11e0dc744e53e3eb0bc79b470a8e71086c8975e362b194a5fabae7",
+      "funding_rows": 3012,
+      "symbol": "SHIB1000USDT"
+    },
+    {
+      "daily_file_sha256": "921193b4bfc701907d906ee6e15341c37a141c11339f5d955e4d742c7173f668",
+      "daily_rows": 193,
+      "funding_file_sha256": "fac06c2e6a0f522b331b2db48becee942768dd84e2f34ecadabfd317b554152c",
+      "funding_rows": 1158,
+      "symbol": "SIRENUSDT"
+    },
+    {
+      "daily_file_sha256": "d3f9294ec47f2bdea6814965f10190f18ca7f5d5b06f7662ad527f69cee876dc",
+      "daily_rows": 0,
+      "funding_file_sha256": "08596ccba4a0599c03b1d1e36583d2f3762099468009f453d2249830033e4590",
+      "funding_rows": 0,
+      "symbol": "SKYAI1USDT"
+    },
+    {
+      "daily_file_sha256": "573bda20ee08c2fc35a96a6f9f29b76ab2a7e898827afdd4e5cc74ca090b295c",
+      "daily_rows": 0,
+      "funding_file_sha256": "fedf9d0351f3dbdd1cb888b32a2b7782efedd27ee6eae4e8f9f06036ef48496e",
+      "funding_rows": 0,
+      "symbol": "SNDKUSDT"
+    },
+    {
+      "daily_file_sha256": "faea894f8ad029136fa61470eda00f66da05c142096463c0dabfa2777e944eba",
+      "daily_rows": 1004,
+      "funding_file_sha256": "693666c237e49835f74875830c08b20eb73ed0dd9c6d3c499a466e4d8eca4de1",
+      "funding_rows": 3012,
+      "symbol": "SOLUSDT"
+    },
+    {
+      "daily_file_sha256": "e36326cd999ff8bfc1befb36cfae1081be153cbd487d4610e24925010c9e9440",
+      "daily_rows": 0,
+      "funding_file_sha256": "8bc5075aa510c17d20b813d40d88fd22ff87fd11cc84fdf655a80a8db4b60c7f",
+      "funding_rows": 0,
+      "symbol": "SOXLUSDT"
+    },
+    {
+      "daily_file_sha256": "d9ae75fac2bf6d22156783b833a9c46111d5a38f1b8ddfcccbaca3aa0d81785a",
+      "daily_rows": 112,
+      "funding_file_sha256": "63e8a60819a91519819bc0e88fbf608d0935bea08edcfbb2c7e0b6451d811d19",
+      "funding_rows": 670,
+      "symbol": "SQDUSDT"
+    },
+    {
+      "daily_file_sha256": "d4e182e1cd1ab7e8fc294f706adbd9db489982ffe3a785cdb438430a1bb11631",
+      "daily_rows": 589,
+      "funding_file_sha256": "a214d897fca7aa9e5743e72a2a60b7de60e8eeee27df8042beefea42d734b2dc",
+      "funding_rows": 2542,
+      "symbol": "STRKUSDT"
+    },
+    {
+      "daily_file_sha256": "277b318a17937ce7a06cb4c11856951e5919b42ec6bbbabe127d6f6c8e354239",
+      "daily_rows": 882,
+      "funding_file_sha256": "fe402f29785a7111329e550880a3cf5db2055055eba33edf4c3f3d965bc0faaf",
+      "funding_rows": 2645,
+      "symbol": "SUIUSDT"
+    },
+    {
+      "daily_file_sha256": "d43ed50bdc8c6d144af08897442f4908fd92119789202c748cf1912c8331450e",
+      "daily_rows": 610,
+      "funding_file_sha256": "fd721199fb35ff549a7bfe8fe2a9a877f0921b597fe8be638885087320905693",
+      "funding_rows": 2605,
+      "symbol": "TAOUSDT"
+    },
+    {
+      "daily_file_sha256": "56ede72d6a11ed28d3b9026904a44b24523b152636437e458d4eaf79d0a93b1a",
+      "daily_rows": 308,
+      "funding_file_sha256": "8a461d37edca28fb52a1254982db19810807f3c7352d924c907f8db8a07347b6",
+      "funding_rows": 1699,
+      "symbol": "THEUSDT"
+    },
+    {
+      "daily_file_sha256": "c52c46c75d41767ee18bdcbeaeaa6171837b1c2c374e150da72643769587d355",
+      "daily_rows": 701,
+      "funding_file_sha256": "d1556f846fa74ee21ba597730e4ae847b280d433212bd9fba8fc7dd54e428f89",
+      "funding_rows": 2877,
+      "symbol": "TIAUSDT"
+    },
+    {
+      "daily_file_sha256": "db48ffc2b463e001ff7b0e18b1f742b22488fdd46b1931ae42e710bab99a6081",
+      "daily_rows": 256,
+      "funding_file_sha256": "33f36a154fba11958b086c6f7be0ec2777ac0a514808489592e1f63498568000",
+      "funding_rows": 1534,
+      "symbol": "TRUMPUSDT"
+    },
+    {
+      "daily_file_sha256": "950a7003865d04c4a2fb6ec30f07fc4d5bc84da1f1142391d4c5dd9aadffc659",
+      "daily_rows": 1004,
+      "funding_file_sha256": "242b803fdd130653a0eff237261d5451543a086e99649fa1da21400cf85d2d67",
+      "funding_rows": 3012,
+      "symbol": "TRXUSDT"
+    },
+    {
+      "daily_file_sha256": "1d01bf343814200dace8e3dc895b5a9baa7c3237be5be7d5e5f99908b6a50e4c",
+      "daily_rows": 0,
+      "funding_file_sha256": "ba3e6bc53ce2d706a9a8a19b21a93cc05614b20878446188404615ce0640c1a8",
+      "funding_rows": 0,
+      "symbol": "TSLAUSDT"
+    },
+    {
+      "daily_file_sha256": "b67e4bfc7acddba7fe7e7eab3500b273e97df3ed9e5fabfe5590ec09414b5365",
+      "daily_rows": 196,
+      "funding_file_sha256": "bf2766e06b35acd2f7d3fb71610390b371d1fc7877bf40972d2934d803dd4bae",
+      "funding_rows": 1174,
+      "symbol": "TUTUSDT"
+    },
+    {
+      "daily_file_sha256": "7777e21c113953ec41de36ad6764e5b53b5c1b244dbe093e0132a631a2a397a9",
+      "daily_rows": 19,
+      "funding_file_sha256": "43ac64a41a8e2ab4fb17f16b02678860bd82bba6dc6b3faea7572ca2a137208b",
+      "funding_rows": 112,
+      "symbol": "UBUSDT"
+    },
+    {
+      "daily_file_sha256": "e0f6f38508664cd34a7ed14e6da9570c71840dcfd0e9c6d34ea84a7b597a7cce",
+      "daily_rows": 1004,
+      "funding_file_sha256": "404d08c5f88fbb719a83783f43d5e9555e26f57aba93a82bf732449bf33139d1",
+      "funding_rows": 3012,
+      "symbol": "UNIUSDT"
+    },
+    {
+      "daily_file_sha256": "6929da9b2dab0c85dfa1def58385b2cb4dad756f06267e77f743b4e2770f87fb",
+      "daily_rows": 1004,
+      "funding_file_sha256": "0a6a3201781e9e0dbe7c8e386e0d355fb8f4f3f0e401fbb84eb2625405d467b2",
+      "funding_rows": 3131,
+      "symbol": "USDCUSDT"
+    },
+    {
+      "daily_file_sha256": "4e72ff438180505c86b9713c296319dcbdcbbf1efec4f9abf0eb8c399f73edff",
+      "daily_rows": 83,
+      "funding_file_sha256": "231986013b41d023e41ee08b3adc5e72a80b0cf54b24c8c637d0d1ccaacf455e",
+      "funding_rows": 496,
+      "symbol": "USELESSUSDT"
+    },
+    {
+      "daily_file_sha256": "c9365fb4a0f70ba541b740e029bca871fb035d597afbcd70f4e66216b7ce56cd",
+      "daily_rows": 0,
+      "funding_file_sha256": "e20f080b6c54d08f7ac4a0f1e3d074013a1cf52c26dee392b85037249e1b45e6",
+      "funding_rows": 0,
+      "symbol": "USUSDT"
+    },
+    {
+      "daily_file_sha256": "94ea935b4417a1ea44d1b6d6632e9385e3477d21587b294a2aa430b5a839d84a",
+      "daily_rows": 292,
+      "funding_file_sha256": "2cbf51e0ae2551abcc4897df0aea73606da383b8f36cbdb580b792f90037133e",
+      "funding_rows": 1651,
+      "symbol": "VELODROMEUSDT"
+    },
+    {
+      "daily_file_sha256": "1d8a23cd1ea6fb2f7d709b3e452eb8a3c5fae8bf34def92f50efe54cbc907be5",
+      "daily_rows": 334,
+      "funding_file_sha256": "03ead01c6297d4a6927affa8e091cab7dc8cf50c22cd4b894bffc76d35a3f19a",
+      "funding_rows": 1777,
+      "symbol": "VIRTUALUSDT"
+    },
+    {
+      "daily_file_sha256": "1c5d0261c9a1f4cd4d31abb46dfd14012299913713746b5fd6d9412d977e05a6",
+      "daily_rows": 246,
+      "funding_file_sha256": "c030276ee1933af0132b9bb2b639fbb4deac94f2ee44f204f857edd4fa2a69fc",
+      "funding_rows": 1475,
+      "symbol": "VVVUSDT"
+    },
+    {
+      "daily_file_sha256": "2c6e9c9b632944904857241edec8d98c805471b174b8e741b638858fa516578a",
+      "daily_rows": 629,
+      "funding_file_sha256": "288c3df531ff5d95145f998c9b6220824ef867aa170ab1b1e3f91c93f8d3fe12",
+      "funding_rows": 2662,
+      "symbol": "WIFUSDT"
+    },
+    {
+      "daily_file_sha256": "f374ac381ec01c1a4947d2d1f00d73a84569082ef3a3931130a508fba5714db1",
+      "daily_rows": 800,
+      "funding_file_sha256": "3ffb6869dcb65dddb3d61cea5714cd175fde87a6b4847584f0d386a9fd445a9c",
+      "funding_rows": 2399,
+      "symbol": "WLDUSDT"
+    },
+    {
+      "daily_file_sha256": "9aea64f5d1841af5991e012ce9c7d8896ea9e4d5788b3e367968d451baf59962",
+      "daily_rows": 39,
+      "funding_file_sha256": "9f23e777199cfabc69b60c49638f09315e91b7a1eb91d9078df3406fc000ea99",
+      "funding_rows": 232,
+      "symbol": "WLFIUSDT"
+    },
+    {
+      "daily_file_sha256": "e0b5e2666e9027b63c8f3aee7a9061b582ea9da5cba7334a716f54f3f32e2df2",
+      "daily_rows": 0,
+      "funding_file_sha256": "464b390ae1e626a97dbe5e80a64a7a7f183d40c6316fe63357b64e538b97a222",
+      "funding_rows": 0,
+      "symbol": "XAGUSDT"
+    },
+    {
+      "daily_file_sha256": "3936cbb9b785628a24df3b1512bc39c97df7892417df9a1b774e29bacad345d1",
+      "daily_rows": 2,
+      "funding_file_sha256": "d4a9cd69c30ee8a4bde413986d62b067634d38ccbc95c34e83dabde35f6c2efc",
+      "funding_rows": 10,
+      "symbol": "XANUSDT"
+    },
+    {
+      "daily_file_sha256": "d77e358c8931733a03a2714388fbb160c41435c59cd7723f3fb3012b5378a0c9",
+      "daily_rows": 181,
+      "funding_file_sha256": "8f7f968753a5ab3d92fecf5eaccd07fd9f13dfdb2b17df17049a96efc92ec72e",
+      "funding_rows": 1084,
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "daily_file_sha256": "de8de702a34b51a3fee4eaa84679c367486ddc241be05405377f5c5285d30afb",
+      "daily_rows": 0,
+      "funding_file_sha256": "88a05b504cf4a7a6ef1cfb7e39b420563dcb9c5e8845bf856c021dcfd28c3d72",
+      "funding_rows": 0,
+      "symbol": "XAUUSDT"
+    },
+    {
+      "daily_file_sha256": "4152c13b55ca42340cf3c534cb5fcddb7bed1ef1839a354026905a08cb9d75e3",
+      "daily_rows": 1004,
+      "funding_file_sha256": "abb4a50109e455adf7c82f1a7842d2880992a24b4ef31f2acfe8c26aee422409",
+      "funding_rows": 3012,
+      "symbol": "XLMUSDT"
+    },
+    {
+      "daily_file_sha256": "d67d9874e86f0bb1a7b45dbda2970307ce40498e44c343f686e702757073359d",
+      "daily_rows": 1004,
+      "funding_file_sha256": "cfe964228d74a3ff07a187a1db55c014d4d4b8d64ee7165b964dc1af087305e1",
+      "funding_rows": 3012,
+      "symbol": "XMRUSDT"
+    },
+    {
+      "daily_file_sha256": "fa9974311d30838e4f1254a23845d3429bf2ed493eae56964183fa82e1e374cc",
+      "daily_rows": 40,
+      "funding_file_sha256": "b1d03fae33572e85e0e1c8a1dfce02884aeb350ac6b7b736dd6921cc4ee06f65",
+      "funding_rows": 238,
+      "symbol": "XPLUSDT"
+    },
+    {
+      "daily_file_sha256": "9b20c92fbeec0cd048f91494b0ac55e3f73515823ead61a2a77d6b755e1c722f",
+      "daily_rows": 1004,
+      "funding_file_sha256": "d0608d6d846eec5fb58ca50c8d6d26b222e74dc4d8dde820b87b41b24666df04",
+      "funding_rows": 3012,
+      "symbol": "XRPUSDT"
+    },
+    {
+      "daily_file_sha256": "b875fef5b2c0f5e113848af89deaab53856edaa63f5ea98480d5c857a214577f",
+      "daily_rows": 0,
+      "funding_file_sha256": "3eeccc8a04cc952a031d5dad38024e4abb6192a276efeaac319ae2cc263b66ab",
+      "funding_rows": 0,
+      "symbol": "ZBTUSDT"
+    },
+    {
+      "daily_file_sha256": "8821061dae31ae85998a109821ab1dea4f5a61c0e8d3d5239c406a23ff5a8cef",
+      "daily_rows": 1004,
+      "funding_file_sha256": "193bf9d9286f85ab530d0811500f25e6811957521c88c0668014df8260af5c01",
+      "funding_rows": 3012,
+      "symbol": "ZECUSDT"
+    },
+    {
+      "daily_file_sha256": "22330afdbaf6b114b4c065ef11a6cf5f4af2367e8fad1642e141c6c2f4313a36",
+      "daily_rows": 468,
+      "funding_file_sha256": "dc070c5671888bdaa65dc6e1c3f97cc9e435987cdb876182ea2867d5090101bd",
+      "funding_rows": 2179,
+      "symbol": "ZROUSDT"
+    }
+  ],
+  "payload_sha256": "813fd6c8d6c7ed12bcd387a0720bb715fdfb0fd62bb5dc7eb2727b33304c6e64",
+  "schema_id": "xsec_causal_v1_input_manifest",
+  "sealed_holdout_rows_decoded": 0,
+  "symbols": 137,
+  "window": [
+    "2023-01-01 00:00:00+00:00",
+    "2025-10-01 00:00:00+00:00"
+  ]
+}

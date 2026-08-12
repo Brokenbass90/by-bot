@@ -55,11 +55,20 @@ def validate(root: Path) -> dict[str, Any]:
         if payload.get("payload_sha256") != _sha256(rows):
             errors.append(f"{symbol}:payload_hash_mismatch")
         times = [int(row.get("funding_time_ms") or 0) for row in rows]
-        if not times or times != sorted(times) or len(times) != len(set(times)):
+        expected_upper_bound = int(coverage.get("expected_observations_upper_bound") or 0)
+        # A currently traded contract may have launched after the sealed
+        # pre-holdout boundary.  Such a file is intentionally empty and is a
+        # valid point-in-time absence, not corrupt funding history.
+        if (
+            (not times and expected_upper_bound > 0)
+            or times != sorted(times)
+            or len(times) != len(set(times))
+        ):
             errors.append(f"{symbol}:timestamps_invalid")
         if times and (times[0] < int(payload.get("requested_start_ms") or 0) or times[-1] > int(payload.get("as_of_ms") or 0)):
             errors.append(f"{symbol}:timestamp_outside_requested_window")
-        if int(coverage.get("observations") or -1) != len(rows):
+        observations = coverage.get("observations")
+        if observations is None or int(observations) != len(rows):
             errors.append(f"{symbol}:coverage_count_mismatch")
         ratio = coverage.get("coverage_vs_upper_bound")
         if ratio is not None:

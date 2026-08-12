@@ -56,3 +56,40 @@ def test_archive_hash_mismatch_fails_integrity(tmp_path: Path):
     result = validate(tmp_path)
     assert result["integrity_pass"] is False
     assert "AAAUSDT:payload_hash_mismatch" in result["errors"]
+
+
+def test_post_boundary_listing_with_zero_observations_is_valid_absence(tmp_path: Path):
+    provider = {"records": [{"symbol": "NEWUSDT", "status": "Trading"}]}
+    listing = {
+        "requested_symbols": ["NEWUSDT"],
+        "provider_snapshot": provider,
+        "payload_sha256": _sha256(provider),
+    }
+    rows = []
+    funding = {
+        "symbol": "NEWUSDT",
+        "requested_start_ms": 1000,
+        "as_of_ms": 2000,
+        "instrument": {"status": "Trading", "launchTime": "3000"},
+        "coverage": {
+            "observations": 0,
+            "expected_observations_upper_bound": 0,
+            "coverage_vs_upper_bound": None,
+        },
+        "records": rows,
+        "payload_sha256": _sha256(rows),
+    }
+    _write(tmp_path / "status.json", {
+        "state": "complete",
+        "private_api_calls": False,
+        "orders_or_risk_mutation": False,
+        "failed": {},
+    })
+    _write(tmp_path / "listing_intervals.json", listing)
+    _write(tmp_path / "funding/NEWUSDT.json", funding)
+
+    result = validate(tmp_path)
+
+    assert result["integrity_pass"] is True
+    assert "NEWUSDT:timestamps_invalid" not in result["errors"]
+    assert "NEWUSDT:coverage_count_mismatch" not in result["errors"]

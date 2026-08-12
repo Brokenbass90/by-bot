@@ -501,3 +501,36 @@ Canonical artifact:
 фактические crossed funding cashflows со знаком `-weight*rate`, fail-close при
 отсутствующей исполнимой цене. Отдельный физический pre-holdout funding archive
 до `2025-10-01` запущен public-only; основной sealed outcome не читается.
+
+## Continuity receipt — 2026-08-12 08:29–08:38 UTC
+
+- Пять supervisor jobs подтверждены текущим status как `5 healthy / 0
+  degraded`: Alpaca adaptive shadow, XSEC shadow, funding dynamic/frozen и
+  project audit. Три локальных public Bybit tape-контура свежие и продолжают
+  запись: BTC/ETH `2.19 GB`, ONDO `849 MB`, micro-trades `368 MB`; у всех
+  `public_only=true`, `authentication=false`, `order_capability=false`,
+  disk guards green. Alt24 density также жив: `8,092` observations.
+- Изолированный `/root/research-l2` на сервере подтверждён read-only:
+  heartbeat `collecting`, lag `1 ms`, BTC/ETH snapshot synchronized,
+  `921.9 MB` tape при cap `2 GiB`, свободно `7.2 GB` при guard `5 GiB`.
+  Storage guard не переопределялся.
+- Найдена причина двух молча завершавшихся запусков daily pre-holdout:
+  direct-file import не видел пакет `scripts`. После исправления CLI и focused
+  suite `11 PASS`; архив дневных Bybit bars завершён `137/137`, `0 failed`,
+  end-exclusive `2025-10-01`, `sealed_holdout_rows_decoded=0`.
+- Независимый funding validator сначала корректно fail-closed, затем в нём
+  исправлена собственная zero-observation ошибка для контрактов, запущенных
+  после границы окна. Повторная проверка: integrity PASS, `213,109` funding
+  observations, но verdict `INTEGRITY_PASS_PIT_NOT_READY`, 26 coverage warnings
+  и survivorship unresolved. Это не разрешает promotion.
+- Один write-once XSEC causal V1 завершён с валидным passport
+  `63201839a44f06710840526f49c076bf632b921b97a751eb8e99aaa0b45f8971`.
+  Verdict `REJECT`: base 15 bps `+9.08%` total / `3.81%` CAGR / Sharpe `0.41` /
+  DD `25.72%`, но 2023 `-7.80%`, одна phase `-11.18%`; stress 30 bps
+  `-5.82%` total / `-2.54%` CAGR. Красных месяцев `15/31` base и `17/31`
+  stress. Старый XSEC shadow остаётся только процессным наблюдением, не ногой с
+  доказанным net edge.
+- Alpaca PIT daily materialization продолжает GET-only сбор: на 08:37 UTC
+  завершены первые 133 из 1000, failures `0`. Direct Bybit position checker
+  один раз подтвердил broker flat (`open_position_count=0`). Это не deploy gate:
+  live monolith не перезапускался, risk/order state не менялся.

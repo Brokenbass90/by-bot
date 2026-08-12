@@ -1,0 +1,52 @@
+{
+  "authority": "research_only_no_orders_no_risk_mutation",
+  "capital_authorized": false,
+  "coverage_warning_count": 26,
+  "errors": [],
+  "funding_file_count": 137,
+  "funding_observation_count": 213109,
+  "integrity_pass": true,
+  "minimum_coverage_vs_upper_bound": 0.585989,
+  "pit_ohlcv_survivorship_resolved": false,
+  "provider_instrument_count": 1749,
+  "provider_status_counts": {
+    "Closed": 936,
+    "PreLaunch": 5,
+    "Trading": 808
+  },
+  "requested_status_counts": {
+    "Trading": 137
+  },
+  "requested_symbol_count": 137,
+  "schema_id": "bybit_research_archive_validation_v1",
+  "verdict": "INTEGRITY_PASS_PIT_NOT_READY",
+  "warnings": [
+    "1000BONKUSDT:coverage_vs_upper_bound=0.629296",
+    "1000RATSUSDT:coverage_vs_upper_bound=0.690400",
+    "ACEUSDT:coverage_vs_upper_bound=0.697983",
+    "ACTUSDT:coverage_vs_upper_bound=0.899588",
+    "AEROUSDT:coverage_vs_upper_bound=0.792169",
+    "BIOUSDT:coverage_vs_upper_bound=0.805819",
+    "BOMEUSDT:coverage_vs_upper_bound=0.729044",
+    "COOKIEUSDT:coverage_vs_upper_bound=0.936290",
+    "DEXEUSDT:coverage_vs_upper_bound=0.798921",
+    "ENAUSDT:coverage_vs_upper_bound=0.736585",
+    "ETHFIUSDT:coverage_vs_upper_bound=0.730484",
+    "GRASSUSDT:coverage_vs_upper_bound=0.865970",
+    "JTOUSDT:coverage_vs_upper_bound=0.694724",
+    "ONDOUSDT:coverage_vs_upper_bound=0.708581",
+    "ORDIUSDT:coverage_vs_upper_bound=0.649990",
+    "PAXGUSDT:coverage_vs_upper_bound=0.585989",
+    "POLUSDT:coverage_vs_upper_bound=0.831058",
+    "RENDERUSDT:coverage_vs_upper_bound=0.799614",
+    "STRKUSDT:coverage_vs_upper_bound=0.719909",
+    "TAOUSDT:coverage_vs_upper_bound=0.711943",
+    "THEUSDT:coverage_vs_upper_bound=0.920368",
+    "TIAUSDT:coverage_vs_upper_bound=0.684674",
+    "VELODROMEUSDT:coverage_vs_upper_bound=0.943429",
+    "VIRTUALUSDT:coverage_vs_upper_bound=0.887612",
+    "WIFUSDT:coverage_vs_upper_bound=0.705726",
+    "ZROUSDT:coverage_vs_upper_bound=0.776827",
+    "survivorship_bias_unresolved: provider exposes closed contracts but funding/OHLCV universe contains only current requested symbols"
+  ]
+}
