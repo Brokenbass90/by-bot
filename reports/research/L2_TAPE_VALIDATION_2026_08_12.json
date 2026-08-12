@@ -1,0 +1,62 @@
+{
+  "schema_id": "l2_tape_completed_day_validation_v1",
+  "generated_at_utc": "2026-08-12T01:59:35Z",
+  "partition_day_utc": "20260811",
+  "validation": {
+    "read_only": true,
+    "network_calls": false,
+    "files_written_by_validator": false,
+    "minimum_coverage": 0.98,
+    "all_results_valid": true,
+    "duplicate_trade_count": 0
+  },
+  "local": {
+    "disk_free_gib": 78,
+    "collectors_currently_healthy": 3,
+    "results": [
+      {"symbol": "BTCUSDT", "stream": "book", "records": 116681, "coverage": 0.99752334, "gaps": 2, "valid": true},
+      {"symbol": "BTCUSDT", "stream": "trades", "records": 104720, "coverage": 0.99758049, "gaps": 1, "valid": true},
+      {"symbol": "ETHUSDT", "stream": "book", "records": 113599, "coverage": 0.99749437, "gaps": 2, "valid": true},
+      {"symbol": "ETHUSDT", "stream": "trades", "records": 159030, "coverage": 0.99758042, "gaps": 1, "valid": true},
+      {"symbol": "ONDOUSDT", "stream": "book", "records": 97731, "coverage": 0.99731037, "gaps": 3, "valid": true},
+      {"symbol": "ONDOUSDT", "stream": "trades_l2_collector", "records": 8248, "coverage": 0.99733075, "gaps": 2, "valid": true},
+      {"symbol": "ONDOUSDT", "stream": "trades_micro_collector", "records": 8252, "coverage": 0.99765088, "gaps": 2, "valid": true},
+      {"symbol": "WIFUSDT", "stream": "trades", "records": 3695, "coverage": 0.99765197, "gaps": 2, "valid": true},
+      {"symbol": "SUIUSDT", "stream": "trades", "records": 22448, "coverage": 0.99765197, "gaps": 2, "valid": true},
+      {"symbol": "DOGEUSDT", "stream": "trades", "records": 67711, "coverage": 0.99765326, "gaps": 2, "valid": true},
+      {"symbol": "1000PEPEUSDT", "stream": "trades", "records": 12723, "coverage": 0.99764896, "gaps": 2, "valid": true},
+      {"symbol": "FILUSDT", "stream": "trades", "records": 5259, "coverage": 0.99765038, "gaps": 2, "valid": true}
+    ]
+  },
+  "server": {
+    "isolated_root": "/root/research-l2",
+    "disk_free_gib": 7.3,
+    "disk_min_free_gib": 5,
+    "disk_cap_gib": 2,
+    "collector_currently_healthy": true,
+    "results": [
+      {"symbol": "BTCUSDT", "stream": "book", "records": 152325, "coverage": 0.99999294, "gaps": 0, "valid": true},
+      {"symbol": "BTCUSDT", "stream": "trades", "records": 119197, "coverage": 1.0, "gaps": 0, "valid": true},
+      {"symbol": "ETHUSDT", "stream": "book", "records": 147752, "coverage": 0.99998213, "gaps": 0, "valid": true},
+      {"symbol": "ETHUSDT", "stream": "trades", "records": 179952, "coverage": 1.0, "gaps": 0, "valid": true}
+    ]
+  },
+  "research_station": {
+    "healthy_jobs": 5,
+    "total_jobs": 5,
+    "research_only": true,
+    "live_order_authority": false
+  },
+  "broker_read_only": {
+    "checked_at_utc": "2026-08-12T01:59:35Z",
+    "retCode": 0,
+    "open_position_count": 0
+  },
+  "actions": {
+    "processes_restarted": 0,
+    "storage_guards_overridden": false,
+    "orders_submitted_or_cancelled": false,
+    "risk_changed": false,
+    "live_monolith_restarted_or_deployed": false
+  }
+}
