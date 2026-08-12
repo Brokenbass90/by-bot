@@ -7,6 +7,7 @@ from research_lab.audit_registry import (
     collect_technology_inventory,
     finding_id,
     merge_registry,
+    validate_lifecycle,
 )
 
 
@@ -43,6 +44,21 @@ def test_merge_preserves_manual_status_and_marks_missing_not_seen():
     gone = merge_registry([], second, now="2026-08-08T12:00:00+00:00")
     assert gone["findings"][0]["current"] is False
     assert gone["findings"][0]["status"] == "confirmed"
+
+
+def test_audit_lifecycle_requires_confirmation_evidence_and_resolution_note():
+    base = {
+        "id": "abc",
+        "status": "confirmed",
+        "confirmation_evidence": "",
+        "resolution_note": "",
+    }
+    assert validate_lifecycle({"findings": [base]}) == ["abc:confirmed_without_evidence"]
+    confirmed = dict(base, confirmation_evidence="reproduced with trace")
+    assert validate_lifecycle({"findings": [confirmed]}) == []
+    resolved = dict(confirmed, status="resolved", resolution_note="")
+    assert validate_lifecycle({"findings": [resolved]}) == ["abc:resolved_without_resolution_note"]
+    assert validate_lifecycle({"findings": [dict(resolved, resolution_note="commit + tests")]}) == []
 
 
 def test_info_inventory_is_counted_separately_from_actionable_defects():

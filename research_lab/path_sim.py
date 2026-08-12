@@ -79,25 +79,29 @@ def side_of(sig):
     return +1
 
 
-def simulate(c, hi, lo, atr, idx, sides, stop_atr, hb, cost_bps):
+def simulate(o, c, hi, lo, atr, idx, sides, stop_atr, hb, cost_bps):
     """stop_atr здесь — УЖЕ пересчитанная в ATR ширина под данный горизонт."""
     """Идём по барам: что случилось раньше — стоп или конец горизонта."""
     out = []
     n = len(c)
     for j, s in zip(idx, sides):
-        if j + hb >= n or not np.isfinite(atr[j]) or atr[j] <= 0:
+        # The strategy sees the completed signal bar.  The earliest executable
+        # market fill is the next 5m open; using c[j] was same-close lookahead.
+        entry_i = int(j) + 1
+        exit_i = entry_i + int(hb) - 1
+        if exit_i >= n or not np.isfinite(atr[j]) or atr[j] <= 0:
             continue
         risk = stop_atr * atr[j]
-        entry = c[j]
+        entry = o[entry_i]
         stop = entry - s * risk
         res = None
-        for k in range(j + 1, j + hb + 1):
+        for k in range(entry_i, exit_i + 1):
             # консервативно: сначала проверяем неблагоприятную сторону бара
             if (s > 0 and lo[k] <= stop) or (s < 0 and hi[k] >= stop):
                 res = -1.0
                 break
         if res is None:
-            res = s * (c[j + hb] - entry) / risk
+            res = s * (c[exit_i] - entry) / risk
         # издержки в R: круг в bps от цены, делённый на риск в тех же единицах
         res -= (cost_bps / 1e4) * entry / risk
         out.append(res)
@@ -124,7 +128,7 @@ def run_window(shift):
     call = A.make_caller(h["conv"], h["obj"], SYM)
 
     n = len(cs)
-    c = np.array([x.c for x in cs]); hi = np.array([x.h for x in cs]); lo = np.array([x.l for x in cs])
+    o = np.array([x.o for x in cs]); c = np.array([x.c for x in cs]); hi = np.array([x.h for x in cs]); lo = np.array([x.l for x in cs])
     pc = np.r_[c[0], c[:-1]]
     tr = np.maximum.reduce([hi - lo, np.abs(hi - pc), np.abs(lo - pc)])
     atr = pd.Series(tr).ewm(alpha=1 / ATR_N, adjust=False, min_periods=ATR_N).mean().to_numpy()
@@ -160,7 +164,7 @@ def run_window(shift):
         for hrs in HOURS:
             hb = hrs * 12
             st = mult * math.sqrt(hb)      # типичный ход за горизонт в ATR
-            R = simulate(c, hi, lo, atr, idx, sides, st, hb, COST_BPS)
+            R = simulate(o, c, hi, lo, atr, idx, sides, st, hb, COST_BPS)
             if len(R) < 15:
                 continue
             wr = float((R > 0).mean())
@@ -179,13 +183,16 @@ def main():
     fp = os.path.join(OUT, f"{NAME}__{SYM}.json")
     acc = json.load(open(fp)) if os.path.exists(fp) else {}
     acc["_meta"] = {
-        "schema_id": "path_sim_fail_closed_v3",
+        "schema_id": "path_sim_fail_closed_v4_next_open",
         "strategy": NAME,
         "symbol": SYM,
         "search_end_utc": SEARCH_END_UTC or None,
         "reserved_holdout_used": False if SEARCH_END_UTC else None,
         "timeout_seconds": PER,
         "partial_timeout_results_allowed": False,
+        "signal_information_time": "completed_5m_close",
+        "entry_execution": "next_5m_open",
+        "same_close_entry": False,
         "variant_count": len(STOP_MULT) * len(HOURS),
     }
     print(f"{NAME} на {SYM}: стоп x горизонт = {len(STOP_MULT)}x{len(HOURS)} на окно\n")

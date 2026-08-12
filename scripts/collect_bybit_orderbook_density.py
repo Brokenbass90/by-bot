@@ -18,6 +18,8 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
+import shutil
 import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
@@ -108,6 +110,71 @@ def extract_densities(
     return out
 
 
+def density_snapshot(
+    book: Dict[str, Dict[float, float]],
+    *,
+    symbol: str,
+    ts_ms: int,
+    min_mult: float,
+    max_dist_pct: float,
+    top_n: int,
+) -> Optional[Dict[str, Any]]:
+    """Compact control-capable observation, including cases with no wall.
+
+    Persisting only detected walls makes a later plate study selection-biased:
+    there is no matched control set.  This row records the full decision-time
+    denominator at a fixed cadence while remaining orders of magnitude smaller
+    than raw L2 deltas.
+    """
+    bids, asks = book.get("bids") or {}, book.get("asks") or {}
+    if not bids or not asks:
+        return None
+    best_bid, best_ask = max(bids), min(asks)
+    if not (best_bid > 0 and best_ask > best_bid):
+        return None
+    mid = 0.5 * (best_bid + best_ask)
+    bid_usd = sum(price * size for price, size in bids.items())
+    ask_usd = sum(price * size for price, size in asks.items())
+    total = bid_usd + ask_usd
+    walls = extract_densities(
+        book,
+        symbol=symbol,
+        ts_ms=ts_ms,
+        min_mult=min_mult,
+        max_dist_pct=max_dist_pct,
+        top_n=top_n,
+    )
+    return {
+        "schema": "bybit_density_observation_v2",
+        "ts_ms": int(ts_ms),
+        "symbol": symbol,
+        "best_bid": best_bid,
+        "best_ask": best_ask,
+        "mid": mid,
+        "spread_bps": (best_ask - best_bid) / mid * 10_000.0,
+        "bid_depth_usd": round(bid_usd, 2),
+        "ask_depth_usd": round(ask_usd, 2),
+        "depth_imbalance": round((bid_usd - ask_usd) / total, 6) if total > 0 else 0.0,
+        "bid_levels": len(bids),
+        "ask_levels": len(asks),
+        "wall_count": len(walls),
+        "walls": walls,
+        "public_only": True,
+        "order_capability": False,
+    }
+
+
+def _atomic_json(path: Path, payload: Dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    with tmp.open("w", encoding="utf-8") as handle:
+        json.dump(payload, handle, ensure_ascii=True, sort_keys=True)
+        handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(tmp, path)
+
+
 def _chunks(items: List[str], size: int) -> Iterable[List[str]]:
     for i in range(0, len(items), size):
         yield items[i:i + size]
@@ -121,23 +188,52 @@ async def collect(args: argparse.Namespace) -> None:  # pragma: no cover - netwo
     symbols = [s.strip().upper() for s in args.symbols.split(",") if s.strip()]
     if not symbols:
         raise SystemExit("no symbols")
+    if len(symbols) != len(set(symbols)):
+        raise SystemExit("duplicate symbols")
+    if len(symbols) > int(args.max_symbols):
+        raise SystemExit(f"symbol count {len(symbols)} exceeds --max-symbols={args.max_symbols}")
+    if args.ws_url != "wss://stream.bybit.com/v5/public/linear":
+        raise SystemExit("only the public Bybit linear websocket is allowed")
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
+    heartbeat_path = Path(args.heartbeat) if args.heartbeat else out_path.parent / "heartbeat.json"
+    max_file_bytes = int(float(args.max_file_gb) * 1024**3)
+    min_free_bytes = int(float(args.min_free_gb) * 1024**3)
     topics = [f"orderbook.{args.depth}.{s}" for s in symbols]
     books: Dict[str, Dict[str, Dict[float, float]]] = {s: {"bids": {}, "asks": {}} for s in symbols}
     last_emit: Dict[str, float] = {s: 0.0 for s in symbols}
+    reconnect_count = 0
+    observations = 0
+    last_heartbeat = 0.0
     stop_at = time.time() + float(args.duration_sec) if args.duration_sec > 0 else 0.0
 
     while True:
         if stop_at and time.time() >= stop_at:
             return
         try:
+            if shutil.disk_usage(out_path.parent).free < min_free_bytes:
+                _atomic_json(heartbeat_path, {
+                    "status": "stopped_disk_guard", "public_only": True,
+                    "order_capability": False, "symbols": symbols,
+                    "min_free_bytes": min_free_bytes,
+                })
+                raise SystemExit("disk guard activated")
+            if out_path.exists() and out_path.stat().st_size >= max_file_bytes:
+                _atomic_json(heartbeat_path, {
+                    "status": "stopped_file_cap", "public_only": True,
+                    "order_capability": False, "symbols": symbols,
+                    "max_file_bytes": max_file_bytes,
+                })
+                raise SystemExit("file cap activated")
+            # A fresh exchange snapshot is required after every reconnect.
+            books = {s: {"bids": {}, "asks": {}} for s in symbols}
+            reconnect_count += 1
             async with websockets.connect(args.ws_url, ping_interval=args.ping_interval_sec, ping_timeout=20) as ws:
                 for chunk in _chunks(topics, max(1, int(args.chunk_size))):
                     await ws.send(json.dumps({"op": "subscribe", "args": chunk}))
                     await asyncio.sleep(0.1)
                 print(f"subscribed symbols={len(symbols)} depth={args.depth} out={out_path}", flush=True)
-                with out_path.open("a", encoding="utf-8") as f:
+                with out_path.open("a", encoding="utf-8", buffering=1) as f:
                     while True:
                         if stop_at and time.time() >= stop_at:
                             return
@@ -157,17 +253,46 @@ async def collect(args: argparse.Namespace) -> None:  # pragma: no cover - netwo
                         now = time.time()
                         if now - last_emit[sym] >= float(args.emit_every_sec):
                             last_emit[sym] = now
-                            dens = extract_densities(
+                            observation = density_snapshot(
                                 books[sym], symbol=sym, ts_ms=int(now * 1000),
                                 min_mult=args.min_mult, max_dist_pct=args.max_dist_pct,
                                 top_n=args.top_n,
                             )
-                            for d in dens:
-                                if d["size_usd"] < args.min_usd:
-                                    continue
-                                f.write(json.dumps(d, separators=(",", ":"), sort_keys=True) + "\n")
-                            if dens:
-                                f.flush()
+                            if observation is not None:
+                                observation["walls"] = [
+                                    wall for wall in observation["walls"]
+                                    if float(wall["size_usd"]) >= float(args.min_usd)
+                                ]
+                                observation["wall_count"] = len(observation["walls"])
+                                f.write(json.dumps(observation, separators=(",", ":"), sort_keys=True) + "\n")
+                                observations += 1
+                        if now - last_heartbeat >= float(args.heartbeat_interval_sec):
+                            last_heartbeat = now
+                            free = shutil.disk_usage(out_path.parent).free
+                            file_bytes = out_path.stat().st_size if out_path.exists() else 0
+                            status = "collecting"
+                            if free < min_free_bytes:
+                                status = "stopped_disk_guard"
+                            elif file_bytes >= max_file_bytes:
+                                status = "stopped_file_cap"
+                            _atomic_json(heartbeat_path, {
+                                "schema": "bybit_density_collector_heartbeat_v2",
+                                "status": status,
+                                "generated_ts_ms": int(now * 1000),
+                                "symbols": symbols,
+                                "symbol_count": len(symbols),
+                                "observations": observations,
+                                "reconnect_count": reconnect_count,
+                                "file_bytes": file_bytes,
+                                "free_bytes": free,
+                                "max_file_bytes": max_file_bytes,
+                                "min_free_bytes": min_free_bytes,
+                                "public_only": True,
+                                "authentication": False,
+                                "order_capability": False,
+                            })
+                            if status != "collecting":
+                                raise SystemExit(status)
         except asyncio.TimeoutError:
             print("idle timeout; reconnecting", flush=True)
         except Exception as exc:
@@ -191,6 +316,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--idle-timeout-sec", type=float, default=60.0)
     p.add_argument("--reconnect-sleep-sec", type=float, default=5.0)
     p.add_argument("--duration-sec", type=float, default=0.0, help="0 = run forever")
+    p.add_argument("--max-symbols", type=int, default=30)
+    p.add_argument("--heartbeat", default="")
+    p.add_argument("--heartbeat-interval-sec", type=float, default=15.0)
+    p.add_argument("--max-file-gb", type=float, default=8.0)
+    p.add_argument("--min-free-gb", type=float, default=50.0)
     return p
 
 

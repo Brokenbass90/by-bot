@@ -2165,6 +2165,11 @@ def _append_live_trade_event(event: str, sym: str, tr=None, **extra) -> None:
                 "entry_maker_order_id": str(getattr(tr, "entry_maker_order_id", "") or ""),
                 "entry_limit_price": float(getattr(tr, "entry_limit_price", 0.0) or 0.0),
                 "entry_cancel_confirmed": bool(getattr(tr, "entry_cancel_confirmed", False)),
+                # Reproducible, non-secret inputs used by the shared live /
+                # backtest sizing contract.  Older events do not have this
+                # field; future order receipts must, otherwise exact parity is
+                # NOT_CONFIRMED rather than inferred from the submitted qty.
+                "sizing_contract": dict(getattr(tr, "sizing_contract", {}) or {}),
                 "signal_reason": str(getattr(tr, "signal_reason", "") or ""),
                 "signal_geometry": dict(getattr(tr, "signal_geometry", {}) or {}),
                 "signal_geometry_path": str(getattr(tr, "signal_geometry_path", "") or ""),
@@ -11491,6 +11496,26 @@ async def try_sloped_entry_async(symbol: str, price: float):
         tr.avg = float(entry)
         tr.entry_price = float(entry)
         tr.entry_notional_usd = float(notional_real)
+        meta = _get_meta(symbol)
+        tr.sizing_contract = {
+            "schema_id": "live_order_sizing_contract_v1",
+            "effective_equity_usd": float(_get_effective_equity() or 0.0),
+            "planned_entry_price": float(entry),
+            "sizing_price": float(price),
+            "stop_price": float(sl_r),
+            "stop_pct": float(stop_pct),
+            "target_risk_fraction": float(RISK_PER_TRADE_PCT) / 100.0,
+            "strategy_risk_multiplier": float(effective_att1_risk_mult),
+            "volatility_multiplier": float(_get_vol_adj_mult()),
+            "orchestrator_risk_multiplier": float(ORCH_GLOBAL_RISK_MULT or 0.0),
+            "allocator_risk_multiplier": float(ALLOCATOR_GLOBAL_RISK_MULT or 0.0),
+            "candidate_notional_usd": float(dyn_usd),
+            "rounded_notional_usd": float(notional_real),
+            "qty_step": float(meta.get("qtyStep") or 0.0),
+            "min_qty": float(meta.get("minOrderQty") or 0.0),
+            "submitted_qty": float(q),
+            "min_fill_fraction": float(MIN_NOTIONAL_FILL_FRAC),
+        }
         tr.tp_price = float(tp_r) if tp_r is not None else None
         tr.sl_price = float(sl_r)
         apply_runner_state(tr, sig, q, use_runner=use_runner)

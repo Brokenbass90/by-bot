@@ -1,0 +1,26 @@
+{
+  "receipt_id": "att1_dot_20260812_052100_utc",
+  "authority": "sanitized_read_only_broker_and_runtime_evidence",
+  "symbol": "DOTUSDT",
+  "side": "short",
+  "effective_equity_usd": 1021.71271589,
+  "effective_equity_derivation": "direct totalEquity 1022.06789312 after close minus broker closedPnl 0.35517723; no intervening position or external cash-flow observed",
+  "planned_entry_price": 0.7922,
+  "sizing_price": 0.7944,
+  "sizing_price_derivation": "broker avgEntryPrice; runtime sizing tick was 0.7943 and produces the same 0.1-step floor",
+  "stop_price": 0.7981,
+  "target_risk_fraction": 0.0044,
+  "strategy_risk_multiplier": 0.1,
+  "volatility_multiplier": 1.0,
+  "max_notional_usd": 1021.71271589,
+  "min_fill_fraction": 0.4,
+  "qty_step": 0.1,
+  "min_qty": 0.1,
+  "submitted_qty": 75.9,
+  "broker_closed_pnl_usd": 0.35517723,
+  "broker_avg_exit_price": 0.78884968,
+  "limitations": [
+    "Historical live event did not persist sizing inputs; equity is independently reconstructed.",
+    "Future events must carry sizing_contract_v1, eliminating this reconstruction step."
+  ]
+}

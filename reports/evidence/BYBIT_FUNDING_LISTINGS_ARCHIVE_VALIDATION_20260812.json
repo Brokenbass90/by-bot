@@ -1,0 +1,47 @@
+{
+  "authority": "research_only_no_orders_no_risk_mutation",
+  "capital_authorized": false,
+  "coverage_warning_count": 21,
+  "errors": [],
+  "funding_file_count": 137,
+  "funding_observation_count": 413356,
+  "integrity_pass": true,
+  "minimum_coverage_vs_upper_bound": 0.684942,
+  "pit_ohlcv_survivorship_resolved": false,
+  "provider_instrument_count": 1749,
+  "provider_status_counts": {
+    "Closed": 936,
+    "PreLaunch": 5,
+    "Trading": 808
+  },
+  "requested_status_counts": {
+    "Trading": 137
+  },
+  "requested_symbol_count": 137,
+  "schema_id": "bybit_research_archive_validation_v1",
+  "verdict": "INTEGRITY_PASS_PIT_NOT_READY",
+  "warnings": [
+    "1000BONKUSDT:coverage_vs_upper_bound=0.718235",
+    "1000RATSUSDT:coverage_vs_upper_bound=0.788600",
+    "ACTUSDT:coverage_vs_upper_bound=0.949139",
+    "AEROUSDT:coverage_vs_upper_bound=0.878628",
+    "BOMEUSDT:coverage_vs_upper_bound=0.826136",
+    "DEXEUSDT:coverage_vs_upper_bound=0.916667",
+    "ENAUSDT:coverage_vs_upper_bound=0.832947",
+    "ETHFIUSDT:coverage_vs_upper_bound=0.827409",
+    "GRASSUSDT:coverage_vs_upper_bound=0.929429",
+    "JTOUSDT:coverage_vs_upper_bound=0.821666",
+    "ONDOUSDT:coverage_vs_upper_bound=0.807074",
+    "ORDIUSDT:coverage_vs_upper_bound=0.743670",
+    "PAXGUSDT:coverage_vs_upper_bound=0.684942",
+    "POLUSDT:coverage_vs_upper_bound=0.906516",
+    "RENDERUSDT:coverage_vs_upper_bound=0.884203",
+    "STRKUSDT:coverage_vs_upper_bound=0.817629",
+    "TAOUSDT:coverage_vs_upper_bound=0.810270",
+    "TIAUSDT:coverage_vs_upper_bound=0.782573",
+    "VIRTUALUSDT:coverage_vs_upper_bound=0.942219",
+    "WIFUSDT:coverage_vs_upper_bound=0.804025",
+    "ZROUSDT:coverage_vs_upper_bound=0.866723",
+    "survivorship_bias_unresolved: provider exposes closed contracts but funding/OHLCV universe contains only current requested symbols"
+  ]
+}

@@ -486,3 +486,27 @@ ATT1 short-only `risk_mult=0.10`; midterm/bounce1/IVB1 имеют zero money ris
 Ни одного order submit/cancel/manual close в ходе heartbeat не выполнялось.
 DOT/ADA execution incidents не входят в N20; clean cohort начинается после
 receipt timestamp `2026-08-11T12:40:46.527271+00:00`.
+
+## Session receipt — 2026-08-12 07:50–08:15 UTC
+
+- Direct Bybit: flat after DOT short close; DOT broker PnL `+0.35517723 USDT`,
+  total equity `1022.06789312`; no order/risk mutation by Codex.
+- Exact order-size parity for DOT: `5/5 PASS`, expected/observed qty `75.9`.
+- Public funding archive: `137/137`, `413,356` rows, integrity PASS, PIT
+  survivorship unresolved because provider exposes `936` closed contracts.
+- Public L2 density denominator started for `24` alts; at final poll `4,999`
+  rows, public-only, order capability false, disk/file guards green.
+- Alpaca PIT candidate materializer running toward `1000` symbols; independent
+  offline validator added for hashes, timestamps, delisting and pool-membership
+  intervals. Full-market PIT remains explicitly false.
+- MPL V3 contract repaired and frozen in local commit `2811242`; holdout remains
+  sealed pending explicit authorization to push that commit to the named
+  GitHub remote/branch.
+- Inplay prior `+0.2352R` revoked due same-close execution; simulator now
+  next-open, tests PASS; shadow remains blocked before causal replay.
+- Audit registry lifecycle fields/validator PASS; current registry has zero
+  confirmed-without-evidence and zero resolved-without-resolution violations.
+- Focused combined tests: `28 passed`; report/validator tests `3 passed`;
+  targeted py_compile PASS.
+- Durable scenario artifact:
+  `reports/analytics/trading_recovery_20260812/{artifact.json,report.md,report.html}`.

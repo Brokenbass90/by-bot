@@ -1,0 +1,171 @@
+{
+  "answer_first": {
+    "material_step_forward": true,
+    "money_legs_now": 1,
+    "promotion_ready_new_legs": 0,
+    "safe_hold_pilots": 1,
+    "summary": "Infrastructure and measurement advanced materially; no new money sleeve is honestly promotable yet."
+  },
+  "generated_at_utc": "2026-08-12T08:17:22.565910+00:00",
+  "next_gates": [
+    {
+      "eta": "same session after explicit push authorization",
+      "item": "Push immutable MPL commit, then one-time unseal",
+      "priority": 1
+    },
+    {
+      "eta": "hours for data; 1-2 days for repaired replay",
+      "item": "Finish and validate Alpaca 1000-name pool",
+      "priority": 2
+    },
+    {
+      "eta": "2-5 engineering days, then shadow time",
+      "item": "Funding-adjust XSEC and reconstruct closed-contract PIT universe",
+      "priority": 3
+    },
+    {
+      "eta": "1-2 engineering days; shadow only if it survives",
+      "item": "Causal pre-holdout inplay replay",
+      "priority": 4
+    },
+    {
+      "eta": "about 47 calendar days at observed frequency",
+      "item": "Accumulate clean ATT1 cohort",
+      "priority": 5
+    }
+  ],
+  "overnight": {
+    "alpaca_pit": {
+      "completed": 44,
+      "failed": 0,
+      "requested": 1000,
+      "state": "running"
+    },
+    "funding": {
+      "integrity_pass": true,
+      "observations": 413356,
+      "pit_ready": false,
+      "symbols": 137
+    },
+    "l2_alt24": {
+      "file_bytes": 5636284,
+      "free_bytes": 82672676864,
+      "observations": 5318,
+      "state": "collecting",
+      "symbols": 24
+    },
+    "research_jobs_visible": 10,
+    "six_day_pipeline": {
+      "completed": 48,
+      "expected": 48,
+      "invalid": 24,
+      "stage": "incomplete_validation_failures"
+    }
+  },
+  "quality_corrections": [
+    "MPL contract rebuilt to next-open, isolated input and write-once result before one-time holdout.",
+    "Inplay +0.2352R result revoked because the simulator entered on the signal-bar close; next-open replay required.",
+    "XSEC modern metrics are quarantined; accepted scenario uses pre-holdout search only.",
+    "Claude live env/try-except bug claims were not reproduced in the actual live state contract and were not patched.",
+    "DOT live/backtest size parity: PASS."
+  ],
+  "scenarios": [
+    {
+      "admissibility": "MECHANICAL_ONLY",
+      "basis": "30.20R/18m narrow 8-major anchor × current effective 0.044% risk",
+      "blocker": "20 clean post-fix closes and full reconciliation",
+      "illustrative_end_usd": 1008.86,
+      "initial_usd": 1000.0,
+      "name": "ATT1 Bybit canary",
+      "range_usd": null,
+      "red_months": "2/12 in older narrow replay; live clean N still insufficient",
+      "stage": "CANARY"
+    },
+    {
+      "admissibility": "NOT_ADMISSIBLE",
+      "basis": "pre-holdout CAGR 7.5%; symbol-holdout search CAGR 9.5%",
+      "blocker": "survivorship/PIT and funding cashflows unresolved; t-stat weak",
+      "illustrative_end_usd": 1075.0,
+      "initial_usd": 1000.0,
+      "name": "XSEC neutral crypto",
+      "range_usd": [
+        1075.0,
+        1095.0
+      ],
+      "red_months": "not emitted by accepted search-only receipt",
+      "stage": "SHADOW"
+    },
+    {
+      "admissibility": "NOT_ADMISSIBLE",
+      "basis": "stress 10bps: 2022 -2.89%; recent 24m +30.16% (14.09% CAGR)",
+      "blocker": "PIT pool incomplete and current-survivor selection remains",
+      "illustrative_end_usd": 1140.9,
+      "initial_usd": 1000.0,
+      "name": "Alpaca monthly equities",
+      "range_usd": [
+        971.14,
+        1140.9
+      ],
+      "red_months": "bear 1/12; recent 10/24",
+      "stage": "SAFE_HOLD_PILOT"
+    },
+    {
+      "admissibility": "NOT_ADMISSIBLE",
+      "basis": "mechanical 0.5%/R translation of +1.467R to +6.173R annual baskets",
+      "blocker": "all variants preflight false; swap/bid-ask/news absent",
+      "illustrative_end_usd": null,
+      "initial_usd": 1000.0,
+      "name": "FX H4 candidate basket",
+      "range_usd": [
+        1007.34,
+        1030.87
+      ],
+      "red_months": "not meaningful at 1-7 trades per variant",
+      "stage": "RESEARCH"
+    },
+    {
+      "admissibility": "NO_ESTIMATE",
+      "basis": "no executable accepted backtest yet",
+      "blocker": "MPL one-time holdout frozen but not unsealed; inplay same-close result revoked",
+      "illustrative_end_usd": null,
+      "initial_usd": 1000.0,
+      "name": "MPL / inplay next leg",
+      "range_usd": null,
+      "red_months": "unknown",
+      "stage": "RESEARCH_BLOCKED"
+    }
+  ],
+  "schema_id": "trading_recovery_session_report_v1",
+  "source_registry": [
+    "reports/evidence/ATT1_DOT_ORDER_SIZE_PARITY_20260812.json",
+    "reports/evidence/BYBIT_FUNDING_LISTINGS_ARCHIVE_VALIDATION_20260812.json",
+    "research_lab/data/alpaca_pit_daily_v1/status.json",
+    "runtime/orderbook/alt24_density_v2/heartbeat.json",
+    "reports/research/alpaca_honest_diagnostic_v1_20260810/receipt.json",
+    "research_lab/results/xsec_recount/xsec_recount.json",
+    "research_lab/results/xsec_recount/symbol_holdout.json",
+    "reports/research/fx_h4_annual_reproduction_20260810/summary.csv",
+    "reports/research/six_day_crypto_pipeline_20260810/status.json"
+  ],
+  "xsec_evidence": {
+    "modern_keys_excluded": true,
+    "preholdout_baseline": {
+      "cagr": 7.5,
+      "dd": 17.5,
+      "n": 317,
+      "sharpe_ann": 0.51,
+      "tot": 20.7,
+      "tstat": 0.83,
+      "years": 2.61
+    },
+    "preholdout_symbol_holdout_180": {
+      "cagr": 9.5,
+      "dd": 20.9,
+      "n": 319,
+      "sharpe_ann": 0.65,
+      "tot": 27.0,
+      "tstat": 1.06,
+      "years": 2.62
+    }
+  }
+}

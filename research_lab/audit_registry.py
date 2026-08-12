@@ -66,6 +66,9 @@ def _normalise(
         "why": why,
         "how_to_verify": how_to_verify,
         "how_to_falsify": how_to_falsify,
+        "confirmation_evidence": "",
+        "resolution_note": "",
+        "resolution_state": "resolved" if status == "resolved" else "unresolved",
     }
 
 
@@ -200,6 +203,10 @@ def collect_operational_incidents(root: Path = ROOT) -> list[dict[str, Any]]:
             row["occurred_at_utc"] = str(item["occurred_at_utc"])
         if item.get("evidence"):
             row["evidence"] = str(item["evidence"])
+            row["confirmation_evidence"] = str(item["evidence"])
+        if item.get("resolution_note"):
+            row["resolution_note"] = str(item["resolution_note"])
+            row["resolution_state"] = "resolved" if row["status"] == "resolved" else "unresolved"
         rows.append(row)
     return rows
 
@@ -221,8 +228,9 @@ def merge_registry(
         prior = prior_rows.get(item_id, {})
         if str(prior.get("status")) in MANUAL_STATUSES:
             row["status"] = prior["status"]
-            if prior.get("resolution_note"):
-                row["resolution_note"] = prior["resolution_note"]
+            for field in ("confirmation_evidence", "resolution_note", "resolution_state", "status_updated_at_utc"):
+                if prior.get(field):
+                    row[field] = prior[field]
         row["first_seen_utc"] = prior.get("first_seen_utc") or now
         row["last_seen_utc"] = now
         row["occurrences"] = int(prior.get("occurrences") or 0) + 1
@@ -253,6 +261,16 @@ def merge_registry(
         if row.get("status") in {"open", "confirmed"}
         and row.get("severity") in {"critical", "high", "medium"}
     ]
+    confirmed_missing_evidence = [
+        row for row in rows
+        if row.get("status") == "confirmed"
+        and not str(row.get("confirmation_evidence") or row.get("evidence") or "").strip()
+    ]
+    resolved_missing_resolution = [
+        row for row in rows
+        if row.get("status") == "resolved"
+        and not str(row.get("resolution_note") or "").strip()
+    ]
     return {
         "schema_id": "project_audit_registry_v1",
         "generated_at_utc": now,
@@ -267,6 +285,8 @@ def merge_registry(
             "confirmed": sum(row.get("status") == "confirmed" for row in rows),
             "dismissed": sum(row.get("status") == "dismissed" for row in rows),
             "model_candidates": sum(str(row.get("source", "")).endswith(":model") for row in current),
+            "confirmed_missing_evidence": len(confirmed_missing_evidence),
+            "resolved_missing_resolution": len(resolved_missing_resolution),
         },
         "findings": rows,
     }
@@ -285,6 +305,8 @@ def render_markdown(payload: dict[str, Any], *, limit: int = 60) -> str:
         f"Всего: **{summary['total']}**; актуальных: **{summary['current']}**; "
         f"требуют разбора: **{summary['actionable']}**; инвентаризация подключения: "
         f"**{summary['inventory_needs_triage']}**; подтверждено: **{summary['confirmed']}**.",
+        f"Нарушения петли: confirmed без evidence — **{summary.get('confirmed_missing_evidence', 0)}**; "
+        f"resolved без resolution — **{summary.get('resolved_missing_resolution', 0)}**.",
         "",
         "| ID | Sev | Status | Source | Где | Что найдено |",
         "|---|---|---|---|---|---|",
@@ -324,18 +346,42 @@ def _write_csv(path: Path, findings: list[dict[str, Any]]) -> None:
 
 
 def _set_status(path: Path, item_id: str, status: str, note: str) -> int:
+    note = str(note or "").strip()
+    if not note:
+        print("non-empty --note is required for every manual status change")
+        return 2
     payload = _read_json(path, {})
     for row in list(payload.get("findings") or []):
         if str(row.get("id")) != item_id:
             continue
         row["status"] = status
-        row["resolution_note"] = note
+        if status == "confirmed":
+            row["confirmation_evidence"] = note
+            row["resolution_state"] = "unresolved"
+        else:
+            row["resolution_note"] = note
+            row["resolution_state"] = "resolved" if status == "resolved" else "dismissed"
         row["status_updated_at_utc"] = _now()
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"{item_id}: {status}")
         return 0
     print(f"finding not found: {item_id}")
     return 1
+
+
+def validate_lifecycle(payload: dict[str, Any]) -> list[str]:
+    """Return fail-closed audit-loop violations without mutating the registry."""
+    issues: list[str] = []
+    for row in list(payload.get("findings") or []):
+        status = str(row.get("status") or "")
+        item_id = str(row.get("id") or "unknown")
+        if status == "confirmed" and not str(
+            row.get("confirmation_evidence") or row.get("evidence") or ""
+        ).strip():
+            issues.append(f"{item_id}:confirmed_without_evidence")
+        if status == "resolved" and not str(row.get("resolution_note") or "").strip():
+            issues.append(f"{item_id}:resolved_without_resolution_note")
+    return issues
 
 
 def main() -> int:
@@ -347,12 +393,17 @@ def main() -> int:
     action.add_argument("--dismiss")
     action.add_argument("--resolve")
     parser.add_argument("--note", default="")
+    parser.add_argument("--validate-loop", action="store_true")
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
     out_dir = Path(args.out_dir).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
     registry_path = out_dir / "registry.json"
+    if args.validate_loop:
+        issues = validate_lifecycle(_read_json(registry_path, {}))
+        print(json.dumps({"pass": not issues, "issues": issues}, ensure_ascii=False, sort_keys=True))
+        return 0 if not issues else 3
     if args.confirm or args.dismiss or args.resolve:
         item_id = args.confirm or args.dismiss or args.resolve
         status = "confirmed" if args.confirm else "dismissed" if args.dismiss else "resolved"

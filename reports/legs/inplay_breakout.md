@@ -2,12 +2,25 @@
 
 Обновлено 11 августа 2026. Дописывать сюда, новых файлов не плодить.
 
-## Статус: ЛУЧШИЙ НАПРАВЛЕННЫЙ КАНДИДАТ, НО ВТОРАЯ НОГА ЕЩЕ НЕ ДОКАЗАНА
+## Статус: КАНДИДАТ НА ПОВТОРНЫЙ CAUSAL REPLAY; СТАРЫЕ ЧИСЛА ОТОЗВАНЫ
 
-Капитал: `0`. Следующий допустимый этап: фиксированный risk-zero shadow после
-готовности отдельного signal-to-exit collector. В Bybit money-live не включать.
+Капитал: `0`. В Bybit money-live и shadow пока не включать.
 
-## Чистый pre-holdout replay
+## Аудит Codex 12 августа: same-close execution
+
+`research_lab/path_sim.py` рассчитывал сигнал на закрытом 5-минутном баре и
+исполнял вход по `close` этого же бара. Это неисполняемый контракт. Поэтому все
+числа раздела ниже, включая `+0.2352R`, являются **отозванными**, а не текущим
+ожиданием ноги.
+
+Симулятор исправлен до `path_sim_fail_closed_v4_next_open`: вход только по
+`open` следующего 5-минутного бара, сам входной бар уже участвует в
+консервативном stop-first пути. Следующий допустимый шаг — повторить ровно
+замороженную конфигурацию на физически изолированном pre-holdout пакете до
+`2025-09-30`; запечатанный период для этого не читается. Только если causal
+replay остаётся живым, запускать prospective risk-zero collector.
+
+## Отозванный pre-holdout replay (same-close; только история дефекта)
 
 Контракт: `ETHUSDT`, market-entry baseline, horizon `24h`, stop-scale `0.75`,
 round-trip costs внутри path simulation, cutoff `2025-09-30`. Reserved holdout
@@ -39,12 +52,13 @@ round-trip costs внутри path simulation, cutoff `2025-09-30`. Reserved hol
 
 ## Следующий замороженный эксперимент
 
-1. Построить risk-zero collector с точным signal timestamp, next executable
+1. Пересчитать causal next-open replay на изолированном pre-holdout input.
+2. Если он не умер — построить risk-zero collector с точным signal timestamp, next executable
    price, stop, 24h exit, costs, MFE/MAE и режимом BTC.
-2. Первый epoch — только ETH, market baseline, `0.75/24h`; без tuning.
-3. Gate диагностики: `N30-50` закрытых prospective сигналов, положительный
+3. Первый epoch — только ETH, market baseline, `0.75/24h`; без tuning.
+4. Gate диагностики: `N30-50` закрытых prospective сигналов, положительный
    after-cost mean R и отсутствие зависимости от одного режима.
-4. Затем — symbol expansion и untouched time holdout. Деньги только после них.
+5. Затем — symbol expansion и untouched time holdout. Деньги только после них.
 
 ## Условие смерти
 

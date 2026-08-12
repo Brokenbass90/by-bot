@@ -402,3 +402,93 @@ finding и experiment, но не получает credentials, право орд
 6. число денежных контуров с отдельной authority и kill switch.
 
 Сроки — окна получения доказательств, не обещание доходности.
+
+## Recovery session — 2026-08-12 07:50–08:15 UTC
+
+### Live truth и последняя сделка
+
+Direct Bybit read после закрытия подтвердил flat и equity
+`1022.06789312 USDT`. Последний DOTUSDT short: average entry `0.7944`, average
+exit `0.78884968`, qty `75.9`, broker closed PnL `+0.35517723 USDT`. Позиция
+сначала получила breakeven, затем биржевой trailing stop; ручного закрытия,
+submit/cancel или изменения риска в этой сессии не было. Текущая authority не
+расширялась: ATT1 short-only `risk_mult=0.10`, effective risk около `0.044%`
+equity на сделку.
+
+Actual DOT order теперь имеет golden sizing receipt:
+`reports/evidence/ATT1_DOT_ORDER_SIZE_PARITY_20260812.json`. Shared fixed-R
+contract дал тот же pre-round notional и после qty-step `0.1` ровно тот же
+submitted qty `75.9`; `5/5 PASS`. Для будущих live events добавлена non-secret
+телеметрия `sizing_contract`, но monolith с этой телеметрией не деплоился.
+
+### Что из работы Claude принято, а что отозвано
+
+- MPL — идея принята, но исходный holdout-контракт был неисполняемым и
+  неоднозначным. Он пересобран: exact `[2025-10-01, 2026-07-01)`, next-15m-open,
+  no-overlap, causal liquidity/slippage, time-matched random control, exact 62
+  symbols, input integrity, write-once manifest/result. Изолированный bundle
+  готов, focused tests `6 PASS`, immutable local commit `2811242`. Холдаут не
+  вскрыт: push этого commit заблокирован security review до явного разрешения
+  владельца на конкретный Git remote/branch.
+- Inplay `+0.2352R` отозван: `research_lab/path_sim.py` видел close сигнального
+  5m бара и входил по тому же close. Исправлено на next-open и conservative
+  stop-first; `2 PASS`. До causal pre-holdout replay shadow не запускать.
+- XSEC `Sharpe 0.65` — сильный research lead, не `ГОТОВО К ДЕНЬГАМ`: clean
+  symbol-holdout имеет слабый `t=0.60`, funding cashflows ещё не включены, а
+  closed-contract PIT universe не восстановлен. Modern keys в старом JSON
+  quarantined; сценарий использует только pre-holdout search.
+- Два заявленных live-багa про runtime env и отсутствие try/except не
+  воспроизведены: open `TradeState` хранит stop/runner fields, async signal и
+  runner pulse уже имеют exception boundaries. Код live по этим утверждениям
+  не менялся.
+
+### Данные и лаборатория
+
+- Bybit funding/listing archive: `137/137`, `413,356` observations, `0` failed,
+  public/read-only. Integrity PASS, но PIT `NOT_READY`: provider inventory
+  содержит `936 Closed`, тогда как OHLC/funding set выбран из текущих 137.
+- Alpaca/Massive PIT candidate pool: `1000` symbols, resumable, GET-only,
+  текущий прогресс сохраняется в
+  `research_lab/data/alpaca_pit_daily_v1/status.json`. Добавлен независимый
+  validator hashes/timestamps/delist dates и membership intervals. Он может
+  доказать PIT только внутри выбранного пула и fail-close запрещает называть
+  current-liquidity selection полным историческим PIT universe.
+- Bybit L2: BTC/ETH, ONDO, public trades и новый density denominator по `24`
+  альтам собираются непрерывно. На 08:15 UTC alt24 имел `4,999` observations,
+  `5.3 MB`, public-only, order-capability false, storage guards green.
+- Audit registry loop закрыт полями confirmation evidence/resolution note и
+  fail-closed validator: `298` total, `211` current, `3` actionable, `0`
+  lifecycle violations.
+- Шестидневный wide rerun больше нельзя называть завершённым успешным:
+  текущий status `48/48`, но `24` cases invalid после исправления universe
+  contract. Ранее terminal `complete` относится к старому узкому контракту.
+
+### $1,000 mechanical matrix — не прогноз
+
+Canonical artifact:
+`reports/analytics/trading_recovery_20260812/report.html` и machine-readable
+`artifact.json`.
+
+| sleeve | mechanical evidence | допустимость |
+|---|---:|---|
+| ATT1 current tiny canary | `$1,008.86` | только перевод старого narrow anchor при 0.044% risk; не forecast |
+| XSEC | `$1,075–1,095` | funding/PIT unresolved; деньги запрещены |
+| Alpaca monthly | `$971–1,141` | bear/recent survivor proxies; SAFE_HOLD cap не расширять |
+| FX H4 basket | `$1,007–1,031` | 1–7 trades/variant, all preflight false; не использовать для allocation |
+| MPL/inplay | no estimate | executable accepted replay отсутствует |
+
+Эти строки нельзя складывать как обещанную portfolio return. Новый money sleeve
+не продвинут; продвижение этой сессии — достоверность измерений, данные и
+готовые gates.
+
+### Следующий порядок
+
+1. Получить явное разрешение push `2811242` в указанный remote/branch и только
+   затем один раз вскрыть MPL V3 holdout.
+2. Дождаться `1000/1000` Alpaca, запустить независимый validator и repaired
+   monthly replay; текущий сбор займёт часы, аналитика 1–2 рабочих дня.
+3. Построить funding-adjusted XSEC и closed-contract PIT universe; затем
+   prospective shadow, а не money.
+4. Выполнить causal pre-holdout replay inplay; shadow только если переживёт.
+5. Продолжать ATT1 clean cohort: при наблюдаемой частоте N20 ориентировочно
+   около 47 календарных дней после release, не искусственно ускорять риском.

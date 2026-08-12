@@ -1,0 +1,22 @@
+{
+  "authority": "read_only_no_orders_no_risk_mutation",
+  "checks": {
+    "live_accepted_equals_backtest": true,
+    "pre_round_notional_equal": true,
+    "pre_round_risk_equal": true,
+    "submitted_qty_equals_step_floor": true,
+    "submitted_qty_meets_minimum": true
+  },
+  "computed": {
+    "backtest_notional_usd": 60.362094568193996,
+    "expected_qty": 75.9,
+    "observed_qty": 75.9,
+    "pre_round_notional_usd": 60.36209456819432,
+    "pre_round_risk_usd": 0.4495535949916001,
+    "stop_pct": 0.7447614238828599
+  },
+  "input_sha256": "cd097d473c97dda92a6530fff159874c47d2a18bf41ebec676e0989d1563b281",
+  "pass": true,
+  "schema_id": "order_size_parity_result_v1",
+  "source_receipt_id": "att1_dot_20260812_052100_utc"
+}
