@@ -115,6 +115,7 @@ from bot.position_geometry import (
     parse_signal_geometry,
     write_position_geometry,
 )
+from bot.trade_chart_labels import signal_timeframe_label
 from bot.bybit_time_sync import BybitClock, is_auth_error as is_bybit_auth_error, is_timestamp_error
 from bot.deepseek_autoresearch_agent import (
     results_report_text,
@@ -6058,6 +6059,11 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
                 str(getattr(tr, "side", "")),
                 int(getattr(tr, "entry_ts", 0) or 0),
             )
+        signal_tf, signal_tf_source = signal_timeframe_label(
+            str(getattr(tr, "strategy", "")),
+            geom,
+            att1_default=os.getenv("ATT1_SIGNAL_TF", "60"),
+        )
         drew_geometry = False
         try:
             sloped = list(geom.get("sloped_lines") or [])
@@ -6074,7 +6080,7 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
                     [entry_idx], [float(tl)], color="#facc15", s=42, marker="o",
                     zorder=5, edgecolors="#0f172a", linewidths=0.8,
                 )
-                slope_label = f"TREND {slope_pd:+.3f}%/d"
+                slope_label = f"REGRESSION TREND {slope_pd:+.3f}%/d"
                 ax.text(len(seg) + 0.6, ys[-1], slope_label, color="#facc15",
                         fontsize=8, va="center", ha="left")
                 drew_geometry = True
@@ -6122,11 +6128,14 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
             y_exit = float(exit_px) if exit_px is not None else closes[exit_idx]
             ax.scatter([exit_idx], [y_exit], color="#f59e0b", s=80, marker=m, zorder=5, edgecolors="#0f172a", linewidths=0.8)
 
-        title = f"{sym} {getattr(tr, 'side', '')} [{getattr(tr, 'strategy', '')}] {stage}"
+        title = (
+            f"{sym} {getattr(tr, 'side', '')} [{getattr(tr, 'strategy', '')}] {stage}"
+            f" | signal {signal_tf} · execution 5m"
+        )
         if pnl is not None:
             title += f" pnl={float(pnl):+.4f}"
         ax.set_title(title, color="#e2e8f0", fontsize=12, fontweight="bold")
-        ax.set_xlabel("5m candles", color="#cbd5e1")
+        ax.set_xlabel("execution candles: 5m", color="#cbd5e1")
         ax.set_ylabel("price", color="#cbd5e1")
         ax.tick_params(colors="#94a3b8")
         for spine in ax.spines.values():
@@ -6167,6 +6176,8 @@ def _make_trade_chart(sym: str, tr: TradeState, stage: str = "close", pnl: float
                     late = (entry_px - brk_ref) / brk_ref * 100.0
                 late_txt = f"{late:+.2f}%"
         info = [
+            f"Signal TF: {signal_tf} ({signal_tf_source})",
+            "Execution chart TF: 5m",
             f"Entry: {entry_px:.6f}" if entry_px > 0 else "Entry: -",
             f"Exit: {float(exit_px):.6f}" if exit_px is not None else "Exit: -",
             f"TP: {float(tp):.6f}" if tp is not None else "TP: -",
@@ -7039,11 +7050,17 @@ def sync_trades_with_exchange():
                     if TRADE_CHARTS_SEND_ON_ENTRY:
                         p = _make_trade_chart(sym, tr, stage="entry")
                         if p:
+                            chart_tf, chart_tf_source = signal_timeframe_label(
+                                str(getattr(tr, "strategy", "")),
+                                dict(getattr(tr, "signal_geometry", {}) or {}),
+                                att1_default=os.getenv("ATT1_SIGNAL_TF", "60"),
+                            )
                             tg_send_photo(
                                 p,
                                 caption=(
                                     f"график входа {sym} {_ru_side(getattr(tr, 'side', ''))} "
-                                    f"[{_ru_strategy_label(getattr(tr, 'strategy', ''))}]"
+                                    f"[{_ru_strategy_label(getattr(tr, 'strategy', ''))}]\n"
+                                    f"signal TF={chart_tf} ({chart_tf_source}) · execution chart=5m"
                                 ),
                             )
                 continue
@@ -8075,11 +8092,17 @@ def _finalize_and_report_closed(tr, sym: str):
     if TRADE_CHARTS_SEND_ON_CLOSE:
         p = _make_trade_chart(sym, tr, stage="close", pnl=pnl_closed, exit_px=exit_px)
         if p:
+            chart_tf, chart_tf_source = signal_timeframe_label(
+                str(getattr(tr, "strategy", "")),
+                dict(getattr(tr, "signal_geometry", {}) or {}),
+                att1_default=os.getenv("ATT1_SIGNAL_TF", "60"),
+            )
             tg_send_photo(
                 p,
                 caption=(
                     f"график закрытия {sym} "
-                    f"[{_ru_strategy_label(getattr(tr, 'strategy', ''))}] pnl={pnl_closed:+.4f}"
+                    f"[{_ru_strategy_label(getattr(tr, 'strategy', ''))}] pnl={pnl_closed:+.4f}\n"
+                    f"signal TF={chart_tf} ({chart_tf_source}) · execution chart=5m"
                 ),
             )
 

@@ -1,0 +1,60 @@
+{
+  "authority": "research_only_no_live_or_promotion",
+  "breadth": {
+    "improved_symbol_count": 6,
+    "improved_symbols": [
+      "ADAUSDT",
+      "AVAXUSDT",
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT",
+      "SUIUSDT"
+    ],
+    "shared_symbols": 8
+  },
+  "capital_authorized": false,
+  "computed": {
+    "baseline": {
+      "bad_initial_risk_rows": 0,
+      "by_symbol_net_r": {
+        "ADAUSDT": -0.7018732130470889,
+        "AVAXUSDT": -5.490995195554653,
+        "BTCUSDT": -5.337695487969592,
+        "DOTUSDT": 6.291543681765301,
+        "ETHUSDT": -8.461063598554428,
+        "LINKUSDT": 10.042601939007415,
+        "SOLUSDT": -14.310550320037033,
+        "SUIUSDT": 0.05159301268162608
+      },
+      "net_r": -17.916439181708448,
+      "net_r_per_trade": -0.033301931564513845,
+      "profit_factor": 0.9551344444959192,
+      "sha256": "988488d57a9a3367ba423bd7245cf42a0547f6f5e4d547cb5191e3517429f4f4",
+      "trades": 538
+    },
+    "challenger": {
+      "bad_initial_risk_rows": 0,
+      "by_symbol_net_r": {
+        "ADAUSDT": 3.4699655486674366,
+        "AVAXUSDT": 1.9931342857218572,
+        "BTCUSDT": -3.3521847255453574,
+        "DOTUSDT": 2.2561011934093944,
+        "ETHUSDT": -8.31345244199905,
+        "LINKUSDT": 3.1752303341275914,
+        "SOLUSDT": -8.266622891885255,
+        "SUIUSDT": 6.569837559360299
+      },
+      "net_r": -2.467991138143082,
+      "net_r_per_trade": -0.006279875669575272,
+      "profit_factor": 0.9981150387355026,
+      "sha256": "0aa0d43f684e4a9076a36a7fe335ca319eab5bb39b289afa0a7ec337efc9d26e",
+      "trades": 393
+    }
+  },
+  "failures": [],
+  "interpretation": "receipt and arithmetic valid; challenger remains negative and may only advance to a separately frozen validation, never directly to live",
+  "passed": true,
+  "passport_sha256": "2ad76f242974fc0683e401511916e2317c530801f4b505a2dd84461e90b9d391",
+  "result_sha256": "56b35ce6112598d900919ab91477445ffa91e6e0e44beeadf221b47467d0948a",
+  "schema_id": "att1_pivot_sequence_v1_independent_audit"
+}

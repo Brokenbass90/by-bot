@@ -9,7 +9,7 @@ explicit for the Geometry V2 challenger without changing the live champion.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from math import inf
+from math import inf, isfinite
 from typing import Any, Sequence
 
 from bot.chart_geometry import (
@@ -32,6 +32,9 @@ class Att1ShortGeometryV2Decision:
     r2: float | None
     pivot_count: int
     pivot_anchors: tuple[tuple[int, int, float], ...]
+    pivot_sequence_descending: bool | None
+    countertrend_pivot_steps: int
+    max_countertrend_pivot_step_atr: float | None
     signal_high: float
     entry: float
     entry_distance_atr: float | None
@@ -61,6 +64,7 @@ _PROFILE_BLOCKERS: dict[str, frozenset[str]] = {
             "pivot_fit_too_weak",
         }
     ),
+    "pivot_sequence": frozenset({"non_monotonic_resistance_pivots"}),
     "touch_lateness": frozenset(
         {
             "projected_line_not_reached",
@@ -102,6 +106,38 @@ def _f(value: Any, default: float = 0.0) -> float:
         return float(value)
     except Exception:
         return float(default)
+
+
+def descending_pivot_sequence_quality(
+    prices: Sequence[float],
+    *,
+    atr: float,
+    max_countertrend_step_atr: float = 0.0,
+) -> dict[str, Any]:
+    """Describe whether short resistance anchors are actual lower highs.
+
+    A negative regression slope can hide a final higher high when the oldest
+    anchor is far above the others.  This helper records that distinction for
+    a research-only challenger; it does not alter the ATT1 champion by itself.
+    """
+    values = [float(value) for value in prices]
+    if len(values) < 2 or not isfinite(float(atr)) or float(atr) <= 0.0:
+        return {
+            "descending": None,
+            "countertrend_steps": 0,
+            "max_countertrend_step_atr": None,
+        }
+    tolerance = max(0.0, float(max_countertrend_step_atr))
+    steps_atr = [
+        (values[index] - values[index - 1]) / float(atr)
+        for index in range(1, len(values))
+    ]
+    countertrend = [step for step in steps_atr if step > tolerance]
+    return {
+        "descending": not countertrend,
+        "countertrend_steps": len(countertrend),
+        "max_countertrend_step_atr": max(countertrend, default=0.0),
+    }
 
 
 def evaluate_att1_short_geometry_v2(
@@ -146,6 +182,9 @@ def evaluate_att1_short_geometry_v2(
             r2=None,
             pivot_count=0,
             pivot_anchors=(),
+            pivot_sequence_descending=None,
+            countertrend_pivot_steps=0,
+            max_countertrend_pivot_step_atr=None,
             signal_high=float(signal_high),
             entry=float(entry),
             entry_distance_atr=None,
@@ -183,6 +222,10 @@ def evaluate_att1_short_geometry_v2(
         )
         for point in list(resistance.get("pivots") or [])
     )
+    pivot_sequence = descending_pivot_sequence_quality(
+        [point[2] for point in pivot_anchors],
+        atr=float(atr),
+    )
 
     if not resistance:
         blockers.append("no_resistance_trendline")
@@ -194,6 +237,8 @@ def evaluate_att1_short_geometry_v2(
             blockers.append("insufficient_confirmed_pivots")
         if slope_pct_day > -abs(float(min_descending_slope_pct_day)):
             blockers.append("resistance_not_descending")
+        if pivot_sequence["descending"] is False:
+            blockers.append("non_monotonic_resistance_pivots")
         if r2 < float(min_r2):
             blockers.append("pivot_fit_too_weak")
 
@@ -286,6 +331,13 @@ def evaluate_att1_short_geometry_v2(
         r2=None if r2 != r2 else float(r2),
         pivot_count=int(pivot_count),
         pivot_anchors=pivot_anchors,
+        pivot_sequence_descending=pivot_sequence["descending"],
+        countertrend_pivot_steps=int(pivot_sequence["countertrend_steps"]),
+        max_countertrend_pivot_step_atr=(
+            None
+            if pivot_sequence["max_countertrend_step_atr"] is None
+            else float(pivot_sequence["max_countertrend_step_atr"])
+        ),
         signal_high=float(signal_high),
         entry=float(entry),
         entry_distance_atr=None if entry_distance_atr is None else float(entry_distance_atr),

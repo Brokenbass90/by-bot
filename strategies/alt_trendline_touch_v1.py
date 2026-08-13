@@ -380,6 +380,12 @@ class AltTrendlineTouchV1Config:
     # Trade management
     sl_atr_mult: float = 1.10
     max_entry_dist_atr: float = 2.0
+    # Минимальная дистанция входа от линии, в ATR. По умолчанию 0.0 —
+    # поведение НЕ меняется. Добавлено Claude 2026-08-03 для проверки находки:
+    # входы вплотную к линии (<0.5 ATR) дают винрейт 47% против 76% у дальних
+    # и делают ногу убыточной на бычьих окнах.
+    # См. reports/CLAUDE_FOR_CODEX_2026_08_02.md, раздел «САМОЕ ДЕНЕЖНОЕ».
+    min_entry_dist_atr: float = 0.0
     min_rr: float = 1.15
     min_stop_pct: float = 0.0015
     max_stop_pct: float = 0.06
@@ -456,6 +462,7 @@ class AltTrendlineTouchV1Strategy:
         c.g2_profile = str(os.getenv("ATT1_G2_PROFILE", c.g2_profile) or c.g2_profile).strip().lower()
         c.sl_atr_mult = _env_float("ATT1_SL_ATR_MULT", c.sl_atr_mult)
         c.max_entry_dist_atr = _env_float("ATT1_MAX_ENTRY_DIST_ATR", c.max_entry_dist_atr)
+        c.min_entry_dist_atr = _env_float("ATT1_MIN_ENTRY_DIST_ATR", c.min_entry_dist_atr)
         c.min_rr = _env_float("ATT1_MIN_RR", c.min_rr)
         c.min_stop_pct = _env_float("ATT1_MIN_STOP_PCT", c.min_stop_pct)
         c.max_stop_pct = _env_float("ATT1_MAX_STOP_PCT", c.max_stop_pct)
@@ -720,6 +727,9 @@ class AltTrendlineTouchV1Strategy:
                 risk = cur - sl
                 if risk > 0:
                     entry_dist_atr = (cur - tl_level) / max(1e-12, atr)
+                    if entry_dist_atr < self.cfg.min_entry_dist_atr:
+                        self._no_signal("long_entry_too_close_to_line")
+                        return None
                     if entry_dist_atr > self.cfg.max_entry_dist_atr:
                         self._no_signal("long_entry_too_far_from_line")
                         return None
@@ -757,6 +767,7 @@ class AltTrendlineTouchV1Strategy:
                         time_stop_bars=max(0, self.cfg.time_stop_bars_5m),
                         reason=(
                             f"att1_long_trendline "
+                            f"tf={self.cfg.signal_tf} "
                             f"tl={tl_level:.4f} "
                             f"slope={slope * 24 / max(1e-12, cur) * 100:.3f}%/d "
                             f"rsi={rsi:.1f} "
@@ -796,6 +807,9 @@ class AltTrendlineTouchV1Strategy:
                 risk = sl - cur
                 if risk > 0:
                     entry_dist_atr = (tl_level - cur) / max(1e-12, atr)
+                    if entry_dist_atr < self.cfg.min_entry_dist_atr:
+                        self._no_signal("short_entry_too_close_to_line")
+                        return None
                     if entry_dist_atr > self.cfg.max_entry_dist_atr:
                         self._no_signal("short_entry_too_far_from_line")
                         return None
@@ -879,6 +893,7 @@ class AltTrendlineTouchV1Strategy:
                             time_stop_bars=max(0, self.cfg.time_stop_bars_5m),
                             reason=(
                                 f"att1_short_trendline "
+                                f"tf={self.cfg.signal_tf} "
                                 f"tl={tl_level:.4f} "
                                 f"slope={slope * 24 / max(1e-12, cur) * 100:.3f}%/d "
                                 f"rsi={rsi:.1f} "

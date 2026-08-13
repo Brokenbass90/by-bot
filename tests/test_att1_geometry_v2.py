@@ -1,9 +1,23 @@
 from __future__ import annotations
 
+import pytest
+
 from bot.att1_geometry_v2 import (
+    descending_pivot_sequence_quality,
     enforced_geometry_v2_blockers,
     evaluate_att1_short_geometry_v2,
 )
+
+
+def test_btc_20260813_regression_hides_last_higher_high() -> None:
+    quality = descending_pivot_sequence_quality(
+        [64477.0, 63690.0, 63994.4],
+        atr=220.0,
+    )
+
+    assert quality["descending"] is False
+    assert quality["countertrend_steps"] == 1
+    assert quality["max_countertrend_step_atr"] == pytest.approx(1.383636, rel=1e-5)
 
 
 def _rows_with_descending_resistance_and_room() -> list[list[float]]:
@@ -86,6 +100,9 @@ def test_geometry_v2_profiles_decompose_independent_failure_families() -> None:
     )
 
     assert enforced_geometry_v2_blockers(decision, "line_quality")
+    assert enforced_geometry_v2_blockers(decision, "pivot_sequence") == (
+        "non_monotonic_resistance_pivots",
+    )
     assert enforced_geometry_v2_blockers(decision, "room") == ("opposing_support_too_close",)
     assert enforced_geometry_v2_blockers(decision, "attribution") == (
         "setup_belongs_to_horizontal_family",

@@ -36,6 +36,7 @@ _METRIC_PATTERNS = {
 }
 _SLOPE = re.compile(rf"\bslope={_NUMBER}%/d", re.IGNORECASE)
 _ANCHORS = re.compile(r"\banchors=([0-9eE+.:|\-]+)", re.IGNORECASE)
+_SIGNAL_TIMEFRAME = re.compile(r"\btf=([A-Za-z0-9]+)", re.IGNORECASE)
 
 
 def _finite_float(value: Any) -> float | None:
@@ -71,6 +72,8 @@ def parse_signal_geometry(reason: str) -> dict[str, Any]:
 
     slope_match = _SLOPE.search(text)
     slope = _finite_float(slope_match.group(1)) if slope_match else None
+    timeframe_match = _SIGNAL_TIMEFRAME.search(text)
+    signal_timeframe = timeframe_match.group(1) if timeframe_match else None
     anchor_match = _ANCHORS.search(text)
     pivot_points: list[dict[str, Any]] = []
     if anchor_match:
@@ -120,6 +123,7 @@ def parse_signal_geometry(reason: str) -> dict[str, Any]:
         "horizontal_levels": horizontal_levels,
         "sloped_lines": sloped_lines,
         "metrics": metrics,
+        "signal_timeframe": signal_timeframe,
         "source_reason": text,
         "limitations": (
             []

@@ -69,6 +69,10 @@ def build_att1_runtime_contract(*, risk_mult: float) -> dict[str, Any]:
             float(getattr(cfg, "max_entry_dist_atr", 2.0)),
             6,
         ),
+        "min_entry_dist_atr": round(
+            float(getattr(cfg, "min_entry_dist_atr", 0.0)),
+            6,
+        ),
         "min_rr": round(float(cfg.min_rr), 6),
         "min_stop_pct": round(float(cfg.min_stop_pct), 8),
         "max_stop_pct": round(float(cfg.max_stop_pct), 8),

@@ -18,6 +18,7 @@ def test_runtime_contract_reads_strategy_effective_environment(monkeypatch):
     monkeypatch.setenv("ATT1_RSI_SHORT_MIN", "45")
     monkeypatch.setenv("ATT1_TREND_GUARD_BARS", "3")
     monkeypatch.setenv("ATT1_MAX_ENTRY_DIST_ATR", "1.25")
+    monkeypatch.setenv("ATT1_MIN_ENTRY_DIST_ATR", "0.50")
     monkeypatch.setenv("ATT1_CANARY_EXPIRY_UTC", "2026-07-20")
 
     contract = build_att1_runtime_contract(risk_mult=0.10)
@@ -35,6 +36,7 @@ def test_runtime_contract_reads_strategy_effective_environment(monkeypatch):
     assert params["rsi_short_min"] == 45.0
     assert params["trend_guard_bars"] == 3
     assert params["max_entry_dist_atr"] == 1.25
+    assert params["min_entry_dist_atr"] == 0.50
     assert len(params["strategy_source_sha256"]) == 64
     assert params["canary_expiry_utc"] == "2026-07-20"
 

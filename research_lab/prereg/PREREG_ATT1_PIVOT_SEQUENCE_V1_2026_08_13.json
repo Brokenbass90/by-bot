@@ -1,0 +1,41 @@
+{
+  "schema_id": "research_run_passport_request_v1",
+  "authority": "research_only_no_live_or_promotion",
+  "promotion_authority": false,
+  "live_or_broker_calls": false,
+  "experiment_id": "att1_pivot_sequence_preholdout_v1_20260813",
+  "code_paths": [
+    "research_lab/prereg/PREREG_ATT1_PIVOT_SEQUENCE_V1_2026_08_13.md",
+    "configs/autoresearch/att1_pivot_sequence_preholdout_v1_20260813.json",
+    "bot/att1_geometry_v2.py",
+    "strategies/alt_trendline_touch_v1.py",
+    "backtest/run_portfolio.py",
+    "backtest/portfolio_engine.py",
+    "backtest/engine.py",
+    "scripts/run_strategy_autoresearch.py",
+    "research_lab/experiment_preflight.py"
+  ],
+  "inputs": [
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/BTCUSDT/BTCUSDT.json", "role": "BTCUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/ETHUSDT/ETHUSDT.json", "role": "ETHUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/SOLUSDT/SOLUSDT.json", "role": "SOLUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/ADAUSDT/ADAUSDT.json", "role": "ADAUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/LINKUSDT/LINKUSDT.json", "role": "LINKUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/DOTUSDT/DOTUSDT.json", "role": "DOTUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/AVAXUSDT/AVAXUSDT.json", "role": "AVAXUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/SUIUSDT/SUIUSDT.json", "role": "SUIUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false}
+  ],
+  "measurement_contract": {
+    "engine": "portfolio_next_open_exact_cache_v1",
+    "timeframe": "60m signal from exact 5m base; next 5m open execution",
+    "costs": {"fee_bps_per_side": 6.0, "slippage_bps_per_side": 2.0, "round_trip_bps": 16.0},
+    "label_contract": "portfolio path simulation with stop-first intrabar handling and recorded initial risk",
+    "split_contract": "full fixed window plus symbol and calendar-month attribution; no parameter selection",
+    "universe": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "DOTUSDT", "AVAXUSDT", "SUIUSDT"],
+    "window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}
+  },
+  "search_contract": {"pre_registered": true, "random_seed": 0, "variant_count": 2},
+  "sealed_holdouts": [
+    {"id": "reserved_2025_10_through_2026_06", "start_utc": "2025-10-01T00:00:00Z", "end_utc_exclusive": "2026-07-01T00:00:00Z", "must_not_be_read": true}
+  ]
+}

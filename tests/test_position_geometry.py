@@ -12,7 +12,7 @@ from bot.position_geometry import (
 
 def test_parse_att1_signal_geometry() -> None:
     parsed = parse_signal_geometry(
-        "short touch tl=184.25 slope=-1.70%/d rsi=63.4 r2=0.91 "
+        "short touch tf=60 tl=184.25 slope=-1.70%/d rsi=63.4 r2=0.91 "
         "pivots=4 age=9 entrydist=0.21 touchdist=0.08 reject=0.72 "
         "body=0.44 atrpct=1.20 "
         "anchors=1700000000000:186.2|1700003600000:185.4|1700007200000:184.8"
@@ -29,6 +29,7 @@ def test_parse_att1_signal_geometry() -> None:
         {"ts_ms": 1700003600000, "price": 185.4},
         {"ts_ms": 1700007200000, "price": 184.8},
     ]
+    assert parsed["signal_timeframe"] == "60"
     assert parsed["limitations"] == []
     assert parsed["metrics"] == {
         "rsi": 63.4,

@@ -33,6 +33,7 @@ if ROOT_DIR not in sys.path:
 
 import argparse
 import csv
+import hashlib
 import json
 import os
 import time
@@ -695,6 +696,25 @@ def _load_symbol_base(
     end_ms = int(end_ts) * 1000
     fname = cache_dir / f"{symbol}_{interval}_{start_ms}_{end_ms}.json"
 
+    def _decode_cache_payload(raw: object, *, source: Path) -> list:
+        if isinstance(raw, list):
+            return raw
+        if not isinstance(raw, dict) or not isinstance(raw.get("records"), list):
+            raise ValueError(f"Unsupported cache payload in {source}")
+        records = list(raw["records"])
+        expected_sha = str(raw.get("payload_sha256") or "").strip()
+        if expected_sha:
+            encoded = json.dumps(
+                records,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=True,
+            ).encode()
+            actual_sha = hashlib.sha256(encoded).hexdigest()
+            if actual_sha != expected_sha:
+                raise ValueError(f"Research cache payload hash mismatch in {source}")
+        return records
+
     def _pick_best_cached_rows() -> tuple[Optional[Path], Optional[list]]:
         candidates = sorted(
             cache_dir.glob(f"{symbol}_{interval}_*.json"),
@@ -708,7 +728,10 @@ def _load_symbol_base(
         best_key = None
         for cand in candidates:
             try:
-                cand_rows = json.loads(cand.read_text(encoding="utf-8"))
+                cand_rows = _decode_cache_payload(
+                    json.loads(cand.read_text(encoding="utf-8")),
+                    source=cand,
+                )
             except Exception:
                 continue
             if not cand_rows:
@@ -749,7 +772,10 @@ def _load_symbol_base(
         "on",
     }
     if fname.exists():
-        rows = json.loads(fname.read_text(encoding="utf-8"))
+        rows = _decode_cache_payload(
+            json.loads(fname.read_text(encoding="utf-8")),
+            source=fname,
+        )
     elif require_exact_cache:
         raise FileNotFoundError(
             f"Exact cached slice required but missing for {symbol}: {fname}"
@@ -800,12 +826,17 @@ def _load_symbol_base(
         # failure in cache-only runs. Handle both.
         if isinstance(r, dict):
             try:
-                ts = int(float(r.get("ts", 0)))
+                ts = int(float(r.get("ts", r.get("ts_ms", 0))))
                 if ts < start_ms or ts >= end_ms:
                     continue
-                out.append(Candle(ts=ts, o=float(r["o"]), h=float(r["h"]),
-                                  l=float(r["l"]), c=float(r["c"]),
-                                  v=float(r.get("v", 0.0) or 0.0)))
+                out.append(Candle(
+                    ts=ts,
+                    o=float(r.get("o", r.get("open"))),
+                    h=float(r.get("h", r.get("high"))),
+                    l=float(r.get("l", r.get("low"))),
+                    c=float(r.get("c", r.get("close"))),
+                    v=float(r.get("v", r.get("volume", 0.0)) or 0.0),
+                ))
             except Exception:
                 continue
             continue

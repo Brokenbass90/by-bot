@@ -30,6 +30,16 @@ def test_att1_short_rsi_max_loads_from_env(monkeypatch) -> None:
     assert strategy.cfg.rsi_short_max == 70.0
 
 
+def test_att1_min_entry_distance_is_default_noop_and_explicit_challenger(monkeypatch) -> None:
+    monkeypatch.delenv("ATT1_MIN_ENTRY_DIST_ATR", raising=False)
+    champion = att1.AltTrendlineTouchV1Strategy()
+    assert champion.cfg.min_entry_dist_atr == 0.0
+
+    monkeypatch.setenv("ATT1_MIN_ENTRY_DIST_ATR", "0.5")
+    challenger = att1.AltTrendlineTouchV1Strategy()
+    assert challenger.cfg.min_entry_dist_atr == 0.5
+
+
 def test_att1_geometry_v2_is_opt_in(monkeypatch) -> None:
     monkeypatch.delenv("ATT1_GEOMETRY_V2_ENABLE", raising=False)
     monkeypatch.delenv("ATT1_GEOMETRY_V2_OBSERVE", raising=False)
@@ -77,3 +87,47 @@ def test_att1_short_rejects_rsi_above_configured_max(monkeypatch) -> None:
 
     assert result is None
     assert strategy._last_no_signal_reason == "short_rsi_too_high"
+
+
+def test_att1_short_min_entry_distance_blocks_too_close_challenger(monkeypatch) -> None:
+    cfg = att1.AltTrendlineTouchV1Config(
+        signal_lookback=20,
+        pivot_left=1,
+        pivot_right=1,
+        min_pivots=2,
+        max_pivots_used=2,
+        max_pivot_age=20,
+        min_slope_pct=0.01,
+        max_slope_pct=10.0,
+        short_max_pos_slope=1.0,
+        min_r2=0.0,
+        touch_atr=1.0,
+        reject_atr=0.0,
+        min_body_frac=0.0,
+        rsi_short_min=50.0,
+        rsi_short_max=70.0,
+        min_entry_dist_atr=0.5,
+        allow_longs=False,
+    )
+    strategy = att1.AltTrendlineTouchV1Strategy(cfg)
+    rows = [
+        [index * 3_600_000, 108.0, 108.3, 107.4, 107.7, 1.0]
+        for index in range(20)
+    ]
+
+    class Store:
+        symbol = "BTCUSDT"
+
+        @staticmethod
+        def fetch_klines(*_args):
+            return rows
+
+    strategy._last_tf_ts = -1
+    monkeypatch.setattr(att1, "_atr_from_rows", lambda *_: 1.0)
+    monkeypatch.setattr(att1, "_rsi", lambda *_: 60.0)
+    monkeypatch.setattr(strategy, "_check_short_trendline", lambda *_: (108.1, -0.1))
+
+    result = strategy.maybe_signal(Store(), rows[-1][0], 0.0, 0.0, 0.0, 0.0)
+
+    assert result is None
+    assert strategy._last_no_signal_reason == "short_entry_too_close_to_line"
