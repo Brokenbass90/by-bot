@@ -67,20 +67,17 @@ def _bybit_get(base: str, key: str, secret: str, path: str, params: dict[str, st
         return json.loads(response.read().decode("utf-8"))
 
 
-def main() -> int:
-    env = {**os.environ, **_load_env(ROOT / ".env")}
-    key, secret, base = _first_bybit_account(env)
-    if not key or not secret:
-        print(json.dumps({"error": "missing_bybit_credentials"}))
-        return 2
+def _position_snapshot(data: dict) -> dict:
+    ret_code = data.get("retCode")
+    if ret_code != 0:
+        return {
+            "retCode": ret_code,
+            "retMsg": data.get("retMsg"),
+            "broker_state": "NOT_CONFIRMED",
+            "open_position_count": None,
+            "positions": None,
+        }
 
-    data = _bybit_get(
-        base,
-        key,
-        secret,
-        "/v5/position/list",
-        {"category": "linear", "settleCoin": "USDT"},
-    )
     rows = []
     for pos in (((data or {}).get("result") or {}).get("list") or []):
         try:
@@ -100,17 +97,30 @@ def main() -> int:
                 "stopLoss": pos.get("stopLoss"),
             }
         )
-    print(
-        json.dumps(
-            {
-                "retCode": data.get("retCode"),
-                "retMsg": data.get("retMsg"),
-                "open_position_count": len(rows),
-                "positions": rows,
-            },
-            ensure_ascii=False,
-        )
+    return {
+        "retCode": ret_code,
+        "retMsg": data.get("retMsg"),
+        "broker_state": "CONFIRMED",
+        "open_position_count": len(rows),
+        "positions": rows,
+    }
+
+
+def main() -> int:
+    env = {**os.environ, **_load_env(ROOT / ".env")}
+    key, secret, base = _first_bybit_account(env)
+    if not key or not secret:
+        print(json.dumps({"error": "missing_bybit_credentials", "broker_state": "NOT_CONFIRMED"}))
+        return 2
+
+    data = _bybit_get(
+        base,
+        key,
+        secret,
+        "/v5/position/list",
+        {"category": "linear", "settleCoin": "USDT"},
     )
+    print(json.dumps(_position_snapshot(data), ensure_ascii=False))
     return 0 if data.get("retCode") == 0 else 1
 
 

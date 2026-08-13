@@ -9,6 +9,7 @@ bars AFTER entry; one position at a time (cooldown). Pure stdlib + market_contex
 from __future__ import annotations
 
 import inspect
+from datetime import datetime, timezone
 from typing import Any, Callable, Dict, List, Sequence
 
 from bot.market_context import atr, HIGH, LOW, CLOSE, TS
@@ -89,6 +90,7 @@ def backtest_fx_setup(
     max_hold: int = 240,
     warmup: int = 80,
     atr_period: int = 14,
+    force_flat_utc_minute: int | None = None,
 ) -> List[Dict[str, Any]]:
     """Run one fx_setup over rows; return net-of-fee trades [{entry_ts,exit_ts,r,side}]."""
     setup_kwargs = setup_kwargs or {}
@@ -101,6 +103,12 @@ def backtest_fx_setup(
         accepts_atr_value = False
     i = max(warmup, atr_period + 2)
     while i < n - 1:
+        if force_flat_utc_minute is not None:
+            entry_dt = datetime.fromtimestamp(_f(rows[i], TS), tz=timezone.utc)
+            entry_minute = entry_dt.hour * 60 + entry_dt.minute
+            if entry_minute >= int(force_flat_utc_minute):
+                i += 1
+                continue
         a = _atr_at(fin_sums, cnt_at, i, atr_period)
         kwargs = setup_kwargs
         if accepts_atr_value:
@@ -129,18 +137,29 @@ def backtest_fx_setup(
         # resolve on subsequent bars (causal), SL-first on same bar
         exit_j = min(n - 1, i + max_hold)
         r_gross = None
+        exit_reason = "time"
+        entry_day = datetime.fromtimestamp(_f(rows[i], TS), tz=timezone.utc).date()
         for j in range(i + 1, min(n, i + 1 + max_hold)):
+            if force_flat_utc_minute is not None:
+                exit_dt = datetime.fromtimestamp(_f(rows[j], TS), tz=timezone.utc)
+                exit_minute = exit_dt.hour * 60 + exit_dt.minute
+                if exit_dt.date() != entry_day or exit_minute >= int(force_flat_utc_minute):
+                    exit_j = j
+                    exit_price = _f(rows[j], 1)  # scheduled flat executes at the bar open
+                    r_gross = ((exit_price - entry) if side == "long" else (entry - exit_price)) / risk
+                    exit_reason = "force_flat_utc"
+                    break
             hi, lo = _f(rows[j], HIGH), _f(rows[j], LOW)
             if side == "long":
                 if lo <= stop:
-                    r_gross = -1.0; exit_j = j; break
+                    r_gross = -1.0; exit_j = j; exit_reason = "stop"; break
                 if hi >= tp:
-                    r_gross = tp_rr; exit_j = j; break
+                    r_gross = tp_rr; exit_j = j; exit_reason = "target"; break
             else:
                 if hi >= stop:
-                    r_gross = -1.0; exit_j = j; break
+                    r_gross = -1.0; exit_j = j; exit_reason = "stop"; break
                 if lo <= tp:
-                    r_gross = tp_rr; exit_j = j; break
+                    r_gross = tp_rr; exit_j = j; exit_reason = "target"; break
         if r_gross is None:
             # timed out: mark-to-close in R
             c = _f(rows[exit_j], CLOSE)
@@ -150,8 +169,11 @@ def backtest_fx_setup(
         risk_frac = risk / entry
         fee_r = (2.0 * (fee_bps + slippage_bps) / 1e4) / max(1e-9, risk_frac)
         r_net = r_gross - fee_r
-        trades.append({"entry_ts": _f(rows[i], TS), "exit_ts": _f(rows[exit_j], TS),
-                       "r": round(r_net, 4), "side": side})
+        trade = {"entry_ts": _f(rows[i], TS), "exit_ts": _f(rows[exit_j], TS),
+                 "r": round(r_net, 4), "side": side}
+        if force_flat_utc_minute is not None:
+            trade["exit_reason"] = exit_reason
+        trades.append(trade)
         i = exit_j + 1     # cooldown: no overlapping positions
     return trades
 

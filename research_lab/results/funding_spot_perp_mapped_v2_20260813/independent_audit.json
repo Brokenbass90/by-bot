@@ -1,0 +1,35 @@
+{
+  "schema_id": "funding_spot_perp_mapped_v2_independent_audit_v1",
+  "generated_at_utc": "2026-08-13T05:15:04+00:00",
+  "authority": "research_only_no_live_or_promotion",
+  "result_sha256": "19745613bc59b70cc70fde2cec67eff919aab48224dbffa5bb74c5553c2097f5",
+  "passport_sha256": "d6c57898fbe54ade8f0e6a64748fbe60e85c087a48f5f55a0dc1762d6e8735bc",
+  "recomputed": {
+    "base_31bps": {
+      "periods": 31,
+      "selected_annualized_pair_notional_pct": 7.534336510542619,
+      "basket_annualized_pair_notional_pct": 5.506227419216627,
+      "selection_edge_annualized_pct": 2.0281090913259923,
+      "selection_edge_halves_annualized_pct": [
+        4.030426457337734,
+        0.1509365606899852
+      ],
+      "positive_periods": 26,
+      "red_periods": 5
+    },
+    "stress_51bps": {
+      "periods": 31,
+      "selected_annualized_pair_notional_pct": 5.101003177209284,
+      "basket_annualized_pair_notional_pct": 3.0728940858832923,
+      "selection_edge_annualized_pct": 2.0281090913259923,
+      "selection_edge_halves_annualized_pct": [
+        4.030426457337733,
+        0.1509365606899856
+      ],
+      "positive_periods": 23,
+      "red_periods": 8
+    }
+  },
+  "errors": [],
+  "verdict": "PASS"
+}

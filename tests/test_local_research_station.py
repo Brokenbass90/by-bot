@@ -50,3 +50,10 @@ def test_fresh_evidence_without_process_is_not_false_green(tmp_path: Path, monke
 
     assert result["state"] == "stopped_with_fresh_evidence"
     assert result["process_alive"] is False
+
+
+def test_xsec_health_uses_daily_decision_receipt() -> None:
+    job = next(item for item in station.JOBS if item.name == "xsec_v3_shadow")
+
+    assert job.evidence == "runtime/xsec_v3_shadow/decision_latest.json"
+    assert job.max_age_seconds == 30 * 3600

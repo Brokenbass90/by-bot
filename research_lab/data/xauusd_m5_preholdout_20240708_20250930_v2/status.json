@@ -1,0 +1,18 @@
+{
+  "boundary_timestamp_rows_read": 1,
+  "first_ts": 1720396800,
+  "last_ts": 1759276500,
+  "outcome_rows_at_or_after_end_used": 0,
+  "output": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/xauusd_m5_preholdout_20240708_20250930_v2/XAUUSD_M5.csv",
+  "output_sha256": "fe4560a864401be9f62deb4ccc361eaa601729517a0bc7398c86981623c3abf7",
+  "rows": 87439,
+  "schema_id": "bounded_csv_materialization_v1",
+  "source": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/data_cache/forex/XAUUSD_M5.csv",
+  "source_mtime_ns": 1783370094700676175,
+  "source_rows_before_boundary": 87463,
+  "source_size_bytes": 11401250,
+  "window": {
+    "end_utc_exclusive": "2025-10-01T00:00:00Z",
+    "start_utc": "2024-07-08T00:00:00Z"
+  }
+}

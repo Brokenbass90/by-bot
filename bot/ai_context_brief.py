@@ -70,6 +70,37 @@ def _load_json(path: Path) -> Optional[Any]:
         return None
 
 
+def _freshest_heartbeat(root: Path) -> tuple[Optional[Dict[str, Any]], Optional[Path]]:
+    """Return the freshest valid direct/mirrored heartbeat.
+
+    On the live host ``runtime/bot_heartbeat.json`` is authoritative.  On the
+    owner workstation the read-only sync lives under ``runtime/live_mirror``.
+    Selecting by embedded timestamp prevents an old local file from making the
+    operator call a healthy live service offline.
+    """
+    candidates: List[tuple[float, Path, Dict[str, Any]]] = []
+    for path in (
+        root / "runtime" / "bot_heartbeat.json",
+        root / "runtime" / "live_mirror" / "bot_heartbeat.json",
+    ):
+        payload = _load_json(path)
+        if not isinstance(payload, dict):
+            continue
+        embedded = payload.get("ts")
+        try:
+            freshness_key = float(embedded)
+        except (TypeError, ValueError):
+            try:
+                freshness_key = path.stat().st_mtime
+            except OSError:
+                continue
+        candidates.append((freshness_key, path, payload))
+    if not candidates:
+        return None, None
+    _, path, payload = max(candidates, key=lambda item: item[0])
+    return payload, path
+
+
 def build_brief(
     *,
     no_go: Optional[Sequence[str]] = None,
@@ -131,7 +162,7 @@ def compose_from_repo(root: Path | str = ".") -> str:
     extra = _load_json(root / "runtime" / "ai_brief_extra.json") or {}
     canonical = _load_json(root / "configs" / "ai_operator_canonical_state.json") or {}
     research_overlay = _load_json(root / "configs" / "ai_operator_research_overlay.json") or {}
-    hb = _load_json(root / "runtime" / "bot_heartbeat.json")
+    hb, hb_path = _freshest_heartbeat(root)
     live: Dict[str, Any] = {}
     if isinstance(hb, dict):
         hb_ts = hb.get("ts")
@@ -148,6 +179,16 @@ def compose_from_repo(root: Path | str = ".") -> str:
         live["торгует"] = bool(hb.get("trade_on")) and not bool(hb.get("dry_run"))
         live["open_trades"] = hb.get("open_trades", "?")
         live["heartbeat_age_sec"] = hb_age if hb_age is not None else "unknown"
+        live["heartbeat_source"] = (
+            str(hb_path.relative_to(root)) if hb_path is not None else "unknown"
+        )
+        live["bybit_msgs"] = hb.get("bybit_msgs", "unknown")
+        if hb_age is None:
+            live["service_state"] = "UNKNOWN_HEARTBEAT_TIMESTAMP"
+        elif hb_age <= 120:
+            live["service_state"] = "ONLINE"
+        else:
+            live["service_state"] = "STALE_NOT_CONFIRMED"
         live["live_money_sleeves_by_heartbeat"] = money
         live["strategy_runtime_summary"] = {
             "enabled": sorted(str(name) for name, value in enabled.items() if bool(value)),

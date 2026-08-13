@@ -1,0 +1,756 @@
+{
+  "cross_market_parity_gate": {
+    "max_abs_basis_fraction": 0.05
+  },
+  "exact_mapped_symbols": [
+    "AAVEUSDT",
+    "ADAUSDT",
+    "AEROUSDT",
+    "ALGOUSDT",
+    "APTUSDT",
+    "ARBUSDT",
+    "ASTERUSDT",
+    "ATOMUSDT",
+    "AVAXUSDT",
+    "BCHUSDT",
+    "BICOUSDT",
+    "BMTUSDT",
+    "BNBUSDT",
+    "BOMEUSDT",
+    "BTCUSDT",
+    "C98USDT",
+    "CCUSDT",
+    "COOKIEUSDT",
+    "CRVUSDT",
+    "DOGEUSDT",
+    "ENAUSDT",
+    "ETCUSDT",
+    "ETHFIUSDT",
+    "ETHUSDT",
+    "FARTCOINUSDT",
+    "FILUSDT",
+    "GALAUSDT",
+    "GRASSUSDT",
+    "HBARUSDT",
+    "HFTUSDT",
+    "HOMEUSDT",
+    "HYPEUSDT",
+    "ICPUSDT",
+    "INJUSDT",
+    "JTOUSDT",
+    "LAUSDT",
+    "LDOUSDT",
+    "LITUSDT",
+    "MEUSDT",
+    "MMTUSDT",
+    "MNTUSDT",
+    "MONUSDT",
+    "ONDOUSDT",
+    "OPUSDT",
+    "ORDIUSDT",
+    "PAXGUSDT",
+    "PENGUUSDT",
+    "PEOPLEUSDT",
+    "POLUSDT",
+    "RENDERUSDT",
+    "ROBOUSDT",
+    "SEIUSDT",
+    "SOLUSDT",
+    "SQDUSDT",
+    "STRKUSDT",
+    "SUIUSDT",
+    "TIAUSDT",
+    "TRUMPUSDT",
+    "TRXUSDT",
+    "UNIUSDT",
+    "USDCUSDT",
+    "VIRTUALUSDT",
+    "VVVUSDT",
+    "WIFUSDT",
+    "WLDUSDT",
+    "WLFIUSDT",
+    "XANUSDT",
+    "XAUTUSDT",
+    "XLMUSDT",
+    "XPLUSDT",
+    "XRPUSDT",
+    "ZBTUSDT",
+    "ZECUSDT",
+    "ZROUSDT"
+  ],
+  "files": [
+    {
+      "funding_bytes": 282345,
+      "funding_sha256": "9dd7b19fca3d9d55a1dc82d4ef8a1178da0dd4793d4a2e022801881c25ba00ac",
+      "perp_bytes": 121868,
+      "perp_sha256": "c6c36ceae7d5cb7fb248eb3ab04de2c789a6d838192aaefb54feda4567513635",
+      "spot_bytes": 128791,
+      "spot_sha256": "af49c53741a104a24789e26fd239021d9f5e01e3ddd79fa117805a3db4c1ccb9",
+      "symbol": "AAVEUSDT"
+    },
+    {
+      "funding_bytes": 279376,
+      "funding_sha256": "f894f716603ae24bd2e09ba4408a2d89bf3c18771e5a70a6743fd869fc56bb4d",
+      "perp_bytes": 126451,
+      "perp_sha256": "0c1b07dd6923b76154268e51ba07f037e62f8c2f13c05fabab943a853fecb6e0",
+      "spot_bytes": 127498,
+      "spot_sha256": "f8400e8a7e2b7c1a31f178ae2a7ec5bab7558d9f38f0c72960498ff4fb9d0a61",
+      "symbol": "ADAUSDT"
+    },
+    {
+      "funding_bytes": 196719,
+      "funding_sha256": "2eb55bf2d3761bac889477e38913f892ddedf582978992f19e9a6f86196bb143",
+      "perp_bytes": 54867,
+      "perp_sha256": "ed8f35cfcd6e8b9211c6f03ed02ec4c64ed1c50bd40a4dca9c9b3c98db1f9afd",
+      "spot_bytes": 36768,
+      "spot_sha256": "76304eba0e11d5cdd9341d3e26d1047e41f06cf2f2c3975830cbf64dd2530c1f",
+      "symbol": "AEROUSDT"
+    },
+    {
+      "funding_bytes": 281986,
+      "funding_sha256": "b6c824ab4574910095f8ed0078966db418dceefb484c9e97d0494b5c392afd81",
+      "perp_bytes": 125791,
+      "perp_sha256": "874bf4c316572eb28069cacb426dce109fec4990372612423242e858403f977d",
+      "spot_bytes": 130481,
+      "spot_sha256": "ae9ddca8a0243dd3f18a3eed026d420d2e445c9bfda965bd5d7065702d5ecad2",
+      "symbol": "ALGOUSDT"
+    },
+    {
+      "funding_bytes": 280992,
+      "funding_sha256": "d089f9cef1b2c8479b4083f13ec73a0278bd266a8f2e857149f4cd37e6884622",
+      "perp_bytes": 125396,
+      "perp_sha256": "233be55e141bac8a843278ca0ca585911d617be3d8d18ebf74a469109d8efbff",
+      "spot_bytes": 124866,
+      "spot_sha256": "5338070ea92441576a4b5fb42f4e2728dce91fbfbb0e5b84e902e4457052e5f2",
+      "symbol": "APTUSDT"
+    },
+    {
+      "funding_bytes": 256531,
+      "funding_sha256": "96a2561501204f0f3819755f74cb879e5593fd36b1ca041b9d114d1986c7033e",
+      "perp_bytes": 116557,
+      "perp_sha256": "d700ba16d4dab181e2dd7dd540c3a98f699ffc992f373cb09a24a7ccfc5e73a3",
+      "spot_bytes": 113577,
+      "spot_sha256": "82d191ebe9dcbcc1c7108edb8b7172c667ec058406ad422983c3b99b724eaf81",
+      "symbol": "ARBUSDT"
+    },
+    {
+      "funding_bytes": 7488,
+      "funding_sha256": "127970b9873ba8583f92ce61fcd03da02fb026f741ebe3c6e2a646bb62275363",
+      "perp_bytes": 1796,
+      "perp_sha256": "28f12445df0c1729d1d782861692dff87654e27b634691a0c9bee33f63260a77",
+      "spot_bytes": 1579,
+      "spot_sha256": "ef9aac4f2c9da5bafc8b8ad7b8931bbe603120664bd98ff4cd975d40b3b71556",
+      "symbol": "ASTERUSDT"
+    },
+    {
+      "funding_bytes": 283688,
+      "funding_sha256": "c21212d9e055faa7cc0c36378abb61a449e00ebc67c9d729bf637d970c656767",
+      "perp_bytes": 121065,
+      "perp_sha256": "6a5e34c9fc1e62953448cdf354bf9e60dd6a2a1397c72c4377443ac2e8c4df58",
+      "spot_bytes": 127007,
+      "spot_sha256": "f6fe526e73ef6985585d9182f59955cb998ac27f4245392fd725c7396d76040d",
+      "symbol": "ATOMUSDT"
+    },
+    {
+      "funding_bytes": 283235,
+      "funding_sha256": "1f79ade69bceb2ffa2439b66b40249991ba6208a015c2e1963227db71aff8f25",
+      "perp_bytes": 122685,
+      "perp_sha256": "6492ec4f81ba0812a538d609483c68f74e1e1d1ad01d640fe41088637fc658be",
+      "spot_bytes": 128607,
+      "spot_sha256": "039082aa183f742da1923f8590321e7da23636ac507abcd2de03de59a2aaf5e4",
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "funding_bytes": 282143,
+      "funding_sha256": "c1a0f81dbf3701f3e539b9f3e8b5cdb01c7dde97cfd32bbf9a7c9f2f2f83d116",
+      "perp_bytes": 120802,
+      "perp_sha256": "96dc35c429528a056366b3d91abb74a604a5f2214e6d0da8f709831a3527d302",
+      "spot_bytes": 118772,
+      "spot_sha256": "ca32b22fb5a5ea6b297104c7ccb479f391a38693326fedadcd4d29b6e42af8ab",
+      "symbol": "BCHUSDT"
+    },
+    {
+      "funding_bytes": 281205,
+      "funding_sha256": "e2ec0c55656048cd657156f3eda2b1fd5085da4a2851e79893326006e751a0a3",
+      "perp_bytes": 123712,
+      "perp_sha256": "5ada9b834e2192585cb4652c614ab636f10ffc8166fc71f8b10311e0161d7d71",
+      "spot_bytes": 123961,
+      "spot_sha256": "d17a2adb578a44e6340979af6081d0e325b648eb3fd0049f2106684d6938ab5a",
+      "symbol": "BICOUSDT"
+    },
+    {
+      "funding_bytes": 111148,
+      "funding_sha256": "d49fbb28cb15b47b7aa9c0102a99450bcc76999ab7a55cfa9b065370d9c74069",
+      "perp_bytes": 26238,
+      "perp_sha256": "76cd1e7f2b4d012fcb228e793b8949c5bf16dba1f9110ec2c35cef5260592aa9",
+      "spot_bytes": 25787,
+      "spot_sha256": "f88e1ad3a3b1da6207483eadba3ab539b94d1aade3928294b341fa3142334210",
+      "symbol": "BMTUSDT"
+    },
+    {
+      "funding_bytes": 282005,
+      "funding_sha256": "c41adc55b840ef2f56f6dc7f2a1419fc1dc466b1bb6a2dc5b5feccd494e0b4e6",
+      "perp_bytes": 121440,
+      "perp_sha256": "a3600aceafa3ad2408d75d9500b1baca64c8f7fa4f4b8f5ccb9dc373e78b9b8b",
+      "spot_bytes": 131716,
+      "spot_sha256": "06cbd65b6af6460f4340c51030c838cf109b09dd7318ea5247ab41f0b3e9bf69",
+      "symbol": "BNBUSDT"
+    },
+    {
+      "funding_bytes": 229009,
+      "funding_sha256": "3c7eb45426166c6e95a97589b8d0376c40f6d30a5e488e6da2a860cb5c5ca401",
+      "perp_bytes": 76149,
+      "perp_sha256": "adf857926f1f0c6207d57b11c430470c9260f22327af271c52d4a4225a50d853",
+      "spot_bytes": 77751,
+      "spot_sha256": "4b3a48428cf0a219cdb52da643b775b54efddae0e2840aa203c9762cebab9554",
+      "symbol": "BOMEUSDT"
+    },
+    {
+      "funding_bytes": 280363,
+      "funding_sha256": "0f50c11666117e40daae9ec831dc259bfe56cd167f8022fdf42ec038782c57d8",
+      "perp_bytes": 131956,
+      "perp_sha256": "b461316d6200bddf8af89360973a1e976b8bd56f2b3189df2c8384fd8c166430",
+      "spot_bytes": 138830,
+      "spot_sha256": "e95414df995f62511bea89ca0b3b150965a2444249dacfcc2264c9325d1666a8",
+      "symbol": "BTCUSDT"
+    },
+    {
+      "funding_bytes": 277328,
+      "funding_sha256": "f5ca00c090239a2a03f452be257aa8347fc92238ada977bb42b02e681bb0510c",
+      "perp_bytes": 125295,
+      "perp_sha256": "3d20530ddb722f530072dfefb12513a9e0808ccd21d81edc94c0a9ee164e7811",
+      "spot_bytes": 125533,
+      "spot_sha256": "e8111c4e64be0a74fa937ff1e11dad8d26b3481f583291f2a320769dc2e8103c",
+      "symbol": "C98USDT"
+    },
+    {
+      "funding_bytes": 749,
+      "funding_sha256": "4f1b222a259c0c4b3453399fbc9ac5b3afcb04691ffe041d44a8f74ae3c7ae11",
+      "perp_bytes": 283,
+      "perp_sha256": "8e8adc820ba0d35b0ab49e9b9d2a66a4333f58206449b0333a23151ab46e9c3a",
+      "spot_bytes": 301,
+      "spot_sha256": "fb1d8936f83ca7526e8fceaefd13f24c81ae772725ece1ce4f86d31b691f97f0",
+      "symbol": "CCUSDT"
+    },
+    {
+      "funding_bytes": 141233,
+      "funding_sha256": "fa2de80dc3a781a2e101f8e582159a52f9cc5e009be1851549543b761ac227c0",
+      "perp_bytes": 33389,
+      "perp_sha256": "d8bf35229408ac405ab61da1bef639c690c2645a1ce057b9646513bf49e62b39",
+      "spot_bytes": 60934,
+      "spot_sha256": "09b0dc579b4320d6c1d9c9a2279bfc744fbc4179940e3c0470ca41cbfa90e3d1",
+      "symbol": "COOKIEUSDT"
+    },
+    {
+      "funding_bytes": 278608,
+      "funding_sha256": "9dbdf228ecd7de25a951369ef595baaf9f7487c4d0e84a327a5267e7cd71bdb3",
+      "perp_bytes": 124669,
+      "perp_sha256": "d76b9d3a61b9739a5637dd4c002748b2c3c8133812db837bb8871644e8d20f5e",
+      "spot_bytes": 125655,
+      "spot_sha256": "af6c7ebb32b54d9cfe4aa29caf2d800401fa493509dee497bc250c55c7e3ee5b",
+      "symbol": "CRVUSDT"
+    },
+    {
+      "funding_bytes": 282788,
+      "funding_sha256": "2dab11b031da3444d0c2fee9ab681f590a690537534217443ebab8208813424f",
+      "perp_bytes": 132749,
+      "perp_sha256": "ee0d7c115d2e6c1bbd115018b2c926c7cd5ad63ff54cd83b20eabf2ae6cc0ea7",
+      "spot_bytes": 131664,
+      "spot_sha256": "3fec9db9e2ae23cdfaea8ac3bda29f2b808d7b7dcc61331108141356ea861f49",
+      "symbol": "DOGEUSDT"
+    },
+    {
+      "funding_bytes": 225660,
+      "funding_sha256": "4f841603caba6c874c4ae00a7a851d6ac8b21cdca6999fb89fbaffd8d61a3c70",
+      "perp_bytes": 69100,
+      "perp_sha256": "2a8f8f36b77dbc70afc5b6b722b8abddc80aa760fc349560ac78fc519a705b9a",
+      "spot_bytes": 69769,
+      "spot_sha256": "4e01612f688d2f36abb69f41b7a4cc8eeada4a80642aa91a36f26cdf03ae9af3",
+      "symbol": "ENAUSDT"
+    },
+    {
+      "funding_bytes": 278979,
+      "funding_sha256": "29b033df6aee93e6278e4173ee7c16d937fe781b7648da58a5e8efc134a3627d",
+      "perp_bytes": 122784,
+      "perp_sha256": "6cd992df7c279aa6eec6faaf0729bba3981b7254e563968cba22830083fc186a",
+      "spot_bytes": 117816,
+      "spot_sha256": "e375fa716df87ee51ee8b29d69ea1026dcc730a6268ce12111f799466f06bc59",
+      "symbol": "ETCUSDT"
+    },
+    {
+      "funding_bytes": 232929,
+      "funding_sha256": "48f336770fad300cd7e7b43922fbaf24cc108b164a08643bff63cc58dcb57ae0",
+      "perp_bytes": 69406,
+      "perp_sha256": "b9aea27e79aa7d1be5861504b224aab685c85bc798fe0942336d74ac12aaea4c",
+      "spot_bytes": 68927,
+      "spot_sha256": "c019d464cfb45c7c3e1cb6d4a9a228c63e4526fbad29c10999124ff91a135eed",
+      "symbol": "ETHFIUSDT"
+    },
+    {
+      "funding_bytes": 280425,
+      "funding_sha256": "1dbaac6976505131dca8b7b53d650b3d46f4eb6ce313b1ffd237d728b33fd534",
+      "perp_bytes": 130093,
+      "perp_sha256": "787a097837570c30147af4ff4eea8f45aaf27c874a822efb418224ade3c234d8",
+      "spot_bytes": 134358,
+      "spot_sha256": "7567053a870f3eb5716e489f4fb66c0da3f94d8397c1d9a997a4d90373c4d89a",
+      "symbol": "ETHUSDT"
+    },
+    {
+      "funding_bytes": 158757,
+      "funding_sha256": "4d161fb34a66d12b3fe9c140ebd9077b94a89859db9c0106c640afbaccfb2d35",
+      "perp_bytes": 36293,
+      "perp_sha256": "a9216f8eafe5412d871ddb775fc50b1569f67f9c4113051d07b7efde0fa8e9b5",
+      "spot_bytes": 307,
+      "spot_sha256": "2a918eaf5b16ad12da87385cf55ced40156103c5fbbb029f7b223d7d55e1b487",
+      "symbol": "FARTCOINUSDT"
+    },
+    {
+      "funding_bytes": 279028,
+      "funding_sha256": "7680270a104fe55a9d1b2e103802007be82442abca3b7e475974c3abad7abff8",
+      "perp_bytes": 119984,
+      "perp_sha256": "db63de7f887c1453773ef910fdf609b2d630d3b1ade3d656bb000c0c45c7b5e0",
+      "spot_bytes": 120285,
+      "spot_sha256": "5ce9ece79269aee620b3e4b405a39d57560403b912c0f4062d0ed39da4380f90",
+      "symbol": "FILUSDT"
+    },
+    {
+      "funding_bytes": 281936,
+      "funding_sha256": "4ee905a8d76bb65d6c483dd7a8137a3be7aa36c4806f0f0ebc750025058230cc",
+      "perp_bytes": 132326,
+      "perp_sha256": "dcf104846a4e8116cc7b619b8d05e2804f89f065aed8e2e842b76cd6f0c95640",
+      "spot_bytes": 132721,
+      "spot_sha256": "90919b648c923b7bc624e8293f8ae55e876701fc02630d53d8a8e3a84349b103",
+      "symbol": "GALAUSDT"
+    },
+    {
+      "funding_bytes": 171780,
+      "funding_sha256": "c3f93b7b913f18704ed6a3876f8d0047b6b7d6f1fd0f17ea2928c50e26e2dacc",
+      "perp_bytes": 43410,
+      "perp_sha256": "14b4ec52f6f720bac37cfd3782ccc7e946025776f7f14e30dcf443dfd7db4170",
+      "spot_bytes": 42007,
+      "spot_sha256": "81a98c40df6a8a19670c976b9cbcf0c48f57adb6d13f1ef267e485e071f801a5",
+      "symbol": "GRASSUSDT"
+    },
+    {
+      "funding_bytes": 282381,
+      "funding_sha256": "2cbed48310617f064fd87f295aacf9c84b989225f717ce99ba495a1bb554d3e3",
+      "perp_bytes": 130409,
+      "perp_sha256": "eb9ce8af52bef782b5eb097a669974e86a5e589b0bd616f84aed6b8352168b25",
+      "spot_bytes": 131720,
+      "spot_sha256": "3040ae020d50a1187ff057d4b309625916b4edaef7aad6e5edb59914eebfe27e",
+      "symbol": "HBARUSDT"
+    },
+    {
+      "funding_bytes": 257644,
+      "funding_sha256": "8752f7caab9e14e9e4fe1b3daa394d412a240846c250f7518e5ac9fd39a2f900",
+      "perp_bytes": 115479,
+      "perp_sha256": "005dd506592d6e34b3b62bd0e4fca783517285a9e2d83a1d949b5ddd4b43505e",
+      "spot_bytes": 126112,
+      "spot_sha256": "aec702c788ea93ef6994d6c5b3bb2d8ff1267cb70dfbbf17c03b05c23a288d1f",
+      "symbol": "HFTUSDT"
+    },
+    {
+      "funding_bytes": 63588,
+      "funding_sha256": "19948d16a06b93ac6f8051714d6890d2ca1796b9b2b4bc7cf3eb85c673989dde",
+      "perp_bytes": 14792,
+      "perp_sha256": "647f2e787776502bd1386fe58c69a1047bd17e2760984e809b6b1c0fc58d00d7",
+      "spot_bytes": 15448,
+      "spot_sha256": "3e29ba0fb229bbde4ccf4d13dbcba5137eea3d773e6f9342f76aa9045e7b8e36",
+      "symbol": "HOMEUSDT"
+    },
+    {
+      "funding_bytes": 84606,
+      "funding_sha256": "72ba1b91d385a859edd828bdf53bf7fcd440fe8cc3731dd1a5c1022ba56d0ec2",
+      "perp_bytes": 38069,
+      "perp_sha256": "09e27e117081f600a3c0b2e91ad68c07e88c83bfe4ff6787bd68159390e392e7",
+      "spot_bytes": 10266,
+      "spot_sha256": "efefc69d91e10fc9ed0eb7672db1e807a9ebbfc042c95e3eb810a7565fba75a2",
+      "symbol": "HYPEUSDT"
+    },
+    {
+      "funding_bytes": 278653,
+      "funding_sha256": "9c22cb3e01b1fe4ac4f8749500a03ce4c0b8d44cf11137ec80c7231c1c056bec",
+      "perp_bytes": 120300,
+      "perp_sha256": "7ee083d25633e97706669e2e809137ef67e8eb4ed714b3f2e1341a0d7b81fa0f",
+      "spot_bytes": 124292,
+      "spot_sha256": "a186f9bec3bc20550520da2c441aa6648bb7ecb51674d86a58e58639096be3ac",
+      "symbol": "ICPUSDT"
+    },
+    {
+      "funding_bytes": 281312,
+      "funding_sha256": "85a9d8c62e6c75ee7cd168d4b5f97f6673a34b59f9b2f207796c3e88fe873435",
+      "perp_bytes": 124113,
+      "perp_sha256": "0969584b691ee7aa59e4b32bfe65ad064506a6c4f2115c49ba3b80bfbc33fca9",
+      "spot_bytes": 123506,
+      "spot_sha256": "c2a22f0b62e5d9d8ead567a26cfb193ff7dcc398091ebdd7d33961ee9f2b5f92",
+      "symbol": "INJUSDT"
+    },
+    {
+      "funding_bytes": 254036,
+      "funding_sha256": "264788b9d3669181e869aa99401875cb58edc0aeea0c33a63bd65f608ed3c526",
+      "perp_bytes": 79580,
+      "perp_sha256": "c94f0d51daa5101c1bde56ce5b3620181f331193c3950968405a1030b1d4d2b0",
+      "spot_bytes": 83737,
+      "spot_sha256": "8b6b3981ef11cd8283dce3ddcdf6c3436faaf45127e2464aceca013a4df150e2",
+      "symbol": "JTOUSDT"
+    },
+    {
+      "funding_bytes": 261769,
+      "funding_sha256": "c4c7adf90bcc506da8eaa4517c6dc364f2a79017c016ded95143b2971002aa11",
+      "perp_bytes": 15013,
+      "perp_sha256": "8cec62b7f63453a1106d613b2fd6bd1f672ac84e4fe96dddf0c61ac5c7773db5",
+      "spot_bytes": 15023,
+      "spot_sha256": "70f2144798932b8bb961ff500025998ea6d92fb5776a71b2f7241626c2b3cf05",
+      "symbol": "LAUSDT"
+    },
+    {
+      "funding_bytes": 279096,
+      "funding_sha256": "f36e64183970fa80fe1aac8c6752d3d36dea2f7d36784d3707eea62233ca5b00",
+      "perp_bytes": 124125,
+      "perp_sha256": "1bf9591b24b4bedea79702d36601764ac4b1da5478a900c487e9d72edaf032e4",
+      "spot_bytes": 125132,
+      "spot_sha256": "08630478fd4b3d62ac58b9939edbfb6cb9cf9087d05ab1ad66772001d174ac41",
+      "symbol": "LDOUSDT"
+    },
+    {
+      "funding_bytes": 751,
+      "funding_sha256": "2518e8df61d9acc024ab5f69d94e65201dae412b87a11c79929d59de62e83eba",
+      "perp_bytes": 284,
+      "perp_sha256": "f3742ea0d01ba4cc0ac28226151267511787f1dacfdc042e7d8c4f1aa17dbce5",
+      "spot_bytes": 302,
+      "spot_sha256": "75cca0b92236e0b35ab5a576fc7ed930c76c406804e1c56b195d50e0304bb9c3",
+      "symbol": "LITUSDT"
+    },
+    {
+      "funding_bytes": 162784,
+      "funding_sha256": "293e1e676c85da2399d0b56f98bb85f6d5ba52502e6d81fb373b30b003604a88",
+      "perp_bytes": 38129,
+      "perp_sha256": "25f26de1177d80151e326039ae86d6afe274abef9d2d6ca2a24befb95ac0c9e8",
+      "spot_bytes": 36225,
+      "spot_sha256": "9ee8a93ffd334f51f80a9f3bf35e93a52847523728ab8d1e3b236483ef456b37",
+      "symbol": "MEUSDT"
+    },
+    {
+      "funding_bytes": 751,
+      "funding_sha256": "d7ee00c3f67c8314cf61a0086493e1d848bf483285cc1a36ba9892f5467e7a29",
+      "perp_bytes": 284,
+      "perp_sha256": "ebc8a221c721d9cdc66d0d37ea575c170a9a2b46530192cf9a6c0c133907a4ee",
+      "spot_bytes": 302,
+      "spot_sha256": "0e6e8f3292e22959c7015cc8e739398817c2b5055e681fadb75885e31b01708a",
+      "symbol": "MMTUSDT"
+    },
+    {
+      "funding_bytes": 203756,
+      "funding_sha256": "13d85abbd184d56568efd17f6fd43e902c7aab05934ccf2e15296cfde44c00b5",
+      "perp_bytes": 90803,
+      "perp_sha256": "e6dc00d3f823199f80f148f2b6a02679349d53e354b4b110c2afae152ad4394a",
+      "spot_bytes": 103739,
+      "spot_sha256": "bd3640382f3370c0635c91eb9faa575238eebca5661ad975796b9244fe356827",
+      "symbol": "MNTUSDT"
+    },
+    {
+      "funding_bytes": 751,
+      "funding_sha256": "88938d7461dcc73c12f72153e08cd9ea80c6fda8b923969659adb09ad096ce1d",
+      "perp_bytes": 284,
+      "perp_sha256": "c117358273a2f86e87156689eca0795075675432b7f55c7c66dc59480d8a58f2",
+      "spot_bytes": 302,
+      "spot_sha256": "be5003950aece3cc1fdd97c366095363ed1754db200af32c3c9943485d6a36c6",
+      "symbol": "MONUSDT"
+    },
+    {
+      "funding_bytes": 245578,
+      "funding_sha256": "ade9b8293ae1f63e03716208cdf44773ff491692057001b62e29c27ca5b25f3c",
+      "perp_bytes": 77581,
+      "perp_sha256": "513e49a7280c9a98dfae295ba5775790c104e50d93d714623a3700bf99a40b94",
+      "spot_bytes": 81388,
+      "spot_sha256": "e7378fa971523b8008ec5070b597e7437f33811c50e397c7049c30c19f5ae950",
+      "symbol": "ONDOUSDT"
+    },
+    {
+      "funding_bytes": 277010,
+      "funding_sha256": "c7cba056a572c63f328ca976b4b640866b46097ac2534d77112f28b4431393ed",
+      "perp_bytes": 126320,
+      "perp_sha256": "b8f4480879ea84ac90e8500b8413d7a3fccbeb0b50896ce9833e1b82ccb01a1e",
+      "spot_bytes": 125693,
+      "spot_sha256": "00001e829edcea60bca66a79d44c970e4bcf6c733286df09799487f57a00714c",
+      "symbol": "OPUSDT"
+    },
+    {
+      "funding_bytes": 312847,
+      "funding_sha256": "67890c248f10493a5df5fe5f49a96380633c4cdac2279dcd264fff8395bf0346",
+      "perp_bytes": 106944,
+      "perp_sha256": "3f1f910eb9bd14a5b96016fd08359c229dccbe0d29248bd9fb09ba82f4e63144",
+      "spot_bytes": 95260,
+      "spot_sha256": "9d039d325edf52e3115e15bc3ea0332ca9e716e2d8826da6e78a164ca4d4bca0",
+      "symbol": "ORDIUSDT"
+    },
+    {
+      "funding_bytes": 328254,
+      "funding_sha256": "6f946ecd720a9a467e64f108b2218a71c1aaa2dc202abda1ba882a876833dfdb",
+      "perp_bytes": 120747,
+      "perp_sha256": "a7bed70f401ab1d4ef9e044dbd8c5501fd29163d21106f254689ff598cde9513",
+      "spot_bytes": 103597,
+      "spot_sha256": "f42175daba7191ac177713f474b891d6adc5eb0a6b5ebd4376d9e28039afe89f",
+      "symbol": "PAXGUSDT"
+    },
+    {
+      "funding_bytes": 161528,
+      "funding_sha256": "8f665afba05ef993f66245fe727160f19ed3d7cf0ce4fb055036d7343f3a2630",
+      "perp_bytes": 38999,
+      "perp_sha256": "d73f3e4acda26c6c53c2f904abd9ab7805b057e2bb79eda5f9c37415b544fe06",
+      "spot_bytes": 38178,
+      "spot_sha256": "e58431264f902ae881a361dfcc2c021c6703f69a430f8847bc6bed71cb3e8fc2",
+      "symbol": "PENGUUSDT"
+    },
+    {
+      "funding_bytes": 286359,
+      "funding_sha256": "b96506a63c50b4b9762622162d2678e9e8d8ba842895ce34b9ca5663175f0cfd",
+      "perp_bytes": 129837,
+      "perp_sha256": "ef838571ecb89ffdd2140539d48f18a17ce50b00fd1ab101e936e58fbfa7541d",
+      "spot_bytes": 130462,
+      "spot_sha256": "bcf2a50f39c167e8532a7700a056baa19bf720c9402595ccf88eed98dfe5b0de",
+      "symbol": "PEOPLEUSDT"
+    },
+    {
+      "funding_bytes": 178343,
+      "funding_sha256": "bf6b41f26cab74a6ae5882a01187b19c5944fbe3716d1975c016fd749aa06928",
+      "perp_bytes": 48903,
+      "perp_sha256": "bf1d5fc525bd2ac70464b7284da760e6e7b8a2a3e0af9aedb0a814a54b91b800",
+      "spot_bytes": 87760,
+      "spot_sha256": "b5441f9229d7276009087242441ea030c0c56b1c3290bfc3bb7ffa23ca217113",
+      "symbol": "POLUSDT"
+    },
+    {
+      "funding_bytes": 196134,
+      "funding_sha256": "0a924ca92ddb0e3428c3d5bf70cb6ee190ec6b28160049c479a6e250b82f2c0c",
+      "perp_bytes": 51895,
+      "perp_sha256": "0e6fa7f3688b14d91af727c0d4ca3bbfa72ee83b41e27dcbbc81206799372ee5",
+      "spot_bytes": 51567,
+      "spot_sha256": "7da77bcf4cb880ec901be5b03543db2027dcc893eab81379bcbb85b951bfba96",
+      "symbol": "RENDERUSDT"
+    },
+    {
+      "funding_bytes": 753,
+      "funding_sha256": "994cc1e13997313c4f81b1697d33ccf3f1cb8b787c87bfe2f1d69867ab24a8ab",
+      "perp_bytes": 285,
+      "perp_sha256": "35a9636f8a592ac15e3e0061bb57143a4ca460d77391594a35e26035da49b8b4",
+      "spot_bytes": 303,
+      "spot_sha256": "90a6ab077224d1e01c4376c45705a3fca1c495354998070379d74fca907e15c3",
+      "symbol": "ROBOUSDT"
+    },
+    {
+      "funding_bytes": 218132,
+      "funding_sha256": "5f9f771c50dc8d40e4a5c133e6ea7a157c6c3f61d1b131253a58d701a74c83aa",
+      "perp_bytes": 98842,
+      "perp_sha256": "9e8f9d512d9243ca73af80238190dab1b6bb953e5d66e2ba63f6aed9ee11f821",
+      "spot_bytes": 98496,
+      "spot_sha256": "6c3e53aa7fbd0a5587a49ce1cb7513b6c797b5de56daa792a8b8c64d09496387",
+      "symbol": "SEIUSDT"
+    },
+    {
+      "funding_bytes": 280585,
+      "funding_sha256": "693666c237e49835f74875830c08b20eb73ed0dd9c6d3c499a466e4d8eca4de1",
+      "perp_bytes": 125769,
+      "perp_sha256": "faea894f8ad029136fa61470eda00f66da05c142096463c0dabfa2777e944eba",
+      "spot_bytes": 125390,
+      "spot_sha256": "af1210689cdace32fd82fc38222fd04894d3d708bb4a17da463a038fec9177f2",
+      "symbol": "SOLUSDT"
+    },
+    {
+      "funding_bytes": 61885,
+      "funding_sha256": "63e8a60819a91519819bc0e88fbf608d0935bea08edcfbb2c7e0b6451d811d19",
+      "perp_bytes": 14100,
+      "perp_sha256": "d9ae75fac2bf6d22156783b833a9c46111d5a38f1b8ddfcccbaca3aa0d81785a",
+      "spot_bytes": 64905,
+      "spot_sha256": "93b5cdf83ebadfe6a568f25fba07167800e731a2b58468ffae2b19ab2c59985d",
+      "symbol": "SQDUSDT"
+    },
+    {
+      "funding_bytes": 235827,
+      "funding_sha256": "a214d897fca7aa9e5743e72a2a60b7de60e8eeee27df8042beefea42d734b2dc",
+      "perp_bytes": 73026,
+      "perp_sha256": "d4e182e1cd1ab7e8fc294f706adbd9db489982ffe3a785cdb438430a1bb11631",
+      "spot_bytes": 73525,
+      "spot_sha256": "9ac69ee9f44b6add7d862c24a522ee20efa882bf4d363eb1f9da6a9f5697b456",
+      "symbol": "STRKUSDT"
+    },
+    {
+      "funding_bytes": 246164,
+      "funding_sha256": "fe402f29785a7111329e550880a3cf5db2055055eba33edf4c3f3d965bc0faaf",
+      "perp_bytes": 111110,
+      "perp_sha256": "277b318a17937ce7a06cb4c11856951e5919b42ec6bbbabe127d6f6c8e354239",
+      "spot_bytes": 111748,
+      "spot_sha256": "bd52bbebba88ca6da04a8a8b04dedd83fe2009ddb707c335190197a127de678e",
+      "symbol": "SUIUSDT"
+    },
+    {
+      "funding_bytes": 267012,
+      "funding_sha256": "d1556f846fa74ee21ba597730e4ae847b280d433212bd9fba8fc7dd54e428f89",
+      "perp_bytes": 85563,
+      "perp_sha256": "c52c46c75d41767ee18bdcbeaeaa6171837b1c2c374e150da72643769587d355",
+      "spot_bytes": 87147,
+      "spot_sha256": "0fea48dd2a0d175e36e820b0677173cca0055d71be25beb2d315cce4eb7ea93d",
+      "symbol": "TIAUSDT"
+    },
+    {
+      "funding_bytes": 144832,
+      "funding_sha256": "33f36a154fba11958b086c6f7be0ec2777ac0a514808489592e1f63498568000",
+      "perp_bytes": 31714,
+      "perp_sha256": "db48ffc2b463e001ff7b0e18b1f742b22488fdd46b1931ae42e710bab99a6081",
+      "spot_bytes": 31265,
+      "spot_sha256": "fa39d8e489adc54a17dbc966307ec8f9038f5509a4a421501ba9ead3bb7f355e",
+      "symbol": "TRUMPUSDT"
+    },
+    {
+      "funding_bytes": 281016,
+      "funding_sha256": "242b803fdd130653a0eff237261d5451543a086e99649fa1da21400cf85d2d67",
+      "perp_bytes": 129909,
+      "perp_sha256": "950a7003865d04c4a2fb6ec30f07fc4d5bc84da1f1142391d4c5dd9aadffc659",
+      "spot_bytes": 131508,
+      "spot_sha256": "b670de858d5a5f6ca81034e6824f1e16ec723fc5e261fb00c53941d556c5f223",
+      "symbol": "TRXUSDT"
+    },
+    {
+      "funding_bytes": 279123,
+      "funding_sha256": "404d08c5f88fbb719a83783f43d5e9555e26f57aba93a82bf732449bf33139d1",
+      "perp_bytes": 120539,
+      "perp_sha256": "e0f6f38508664cd34a7ed14e6da9570c71840dcfd0e9c6d34ea84a7b597a7cce",
+      "spot_bytes": 126069,
+      "spot_sha256": "99d437c50004962268b796720f127370f001644c33ce6cb185b5dc9fd34276a2",
+      "symbol": "UNIUSDT"
+    },
+    {
+      "funding_bytes": 284296,
+      "funding_sha256": "0a6a3201781e9e0dbe7c8e386e0d355fb8f4f3f0e401fbb84eb2625405d467b2",
+      "perp_bytes": 122315,
+      "perp_sha256": "6929da9b2dab0c85dfa1def58385b2cb4dad756f06267e77f743b4e2770f87fb",
+      "spot_bytes": 128175,
+      "spot_sha256": "332fa59dec9e5890cfcb9f3241969a8dbb2bfeee087b949217343118cf0be07f",
+      "symbol": "USDCUSDT"
+    },
+    {
+      "funding_bytes": 171438,
+      "funding_sha256": "03ead01c6297d4a6927affa8e091cab7dc8cf50c22cd4b894bffc76d35a3f19a",
+      "perp_bytes": 41977,
+      "perp_sha256": "1d8a23cd1ea6fb2f7d709b3e452eb8a3c5fae8bf34def92f50efe54cbc907be5",
+      "spot_bytes": 39966,
+      "spot_sha256": "d6e4db30f3e362cf33ee784c44a151cd81c23ffa1eef184c10d585070869f8f9",
+      "symbol": "VIRTUALUSDT"
+    },
+    {
+      "funding_bytes": 135906,
+      "funding_sha256": "c030276ee1933af0132b9bb2b639fbb4deac94f2ee44f204f857edd4fa2a69fc",
+      "perp_bytes": 29814,
+      "perp_sha256": "1c5d0261c9a1f4cd4d31abb46dfd14012299913713746b5fd6d9412d977e05a6",
+      "spot_bytes": 23129,
+      "spot_sha256": "9a43df4fe1a25f83fd34d7b0747471022da7257b4d3a941a6d3d81702e61528f",
+      "symbol": "VVVUSDT"
+    },
+    {
+      "funding_bytes": 245259,
+      "funding_sha256": "288c3df531ff5d95145f998c9b6220824ef867aa170ab1b1e3f91c93f8d3fe12",
+      "perp_bytes": 79504,
+      "perp_sha256": "2c6e9c9b632944904857241edec8d98c805471b174b8e741b638858fa516578a",
+      "spot_bytes": 64639,
+      "spot_sha256": "2c250aa72c920cbd78051e314b5d549b9d9f199cbbea506d1ec030b051a399bd",
+      "symbol": "WIFUSDT"
+    },
+    {
+      "funding_bytes": 222980,
+      "funding_sha256": "3ffb6869dcb65dddb3d61cea5714cd175fde87a6b4847584f0d386a9fd445a9c",
+      "perp_bytes": 97881,
+      "perp_sha256": "f374ac381ec01c1a4947d2d1f00d73a84569082ef3a3931130a508fba5714db1",
+      "spot_bytes": 100306,
+      "spot_sha256": "5e2e5aae426770c019404dfb7f2e5b3557fadb4385ea9502edf938fb0df94313",
+      "symbol": "WLDUSDT"
+    },
+    {
+      "funding_bytes": 22042,
+      "funding_sha256": "9f23e777199cfabc69b60c49638f09315e91b7a1eb91d9078df3406fc000ea99",
+      "perp_bytes": 5211,
+      "perp_sha256": "9aea64f5d1841af5991e012ce9c7d8896ea9e4d5788b3e367968d451baf59962",
+      "spot_bytes": 4139,
+      "spot_sha256": "1e295bec3b6481bec206edb371de0f2b1b4f3ebab2181caa98c99c1ca78a014f",
+      "symbol": "WLFIUSDT"
+    },
+    {
+      "funding_bytes": 1688,
+      "funding_sha256": "d4a9cd69c30ee8a4bde413986d62b067634d38ccbc95c34e83dabde35f6c2efc",
+      "perp_bytes": 544,
+      "perp_sha256": "3936cbb9b785628a24df3b1512bc39c97df7892417df9a1b774e29bacad345d1",
+      "spot_bytes": 559,
+      "spot_sha256": "d8011f6346ed63d89d9613ba98a536c3461ca43ba5d88f42cb8e9f7a6e0183cb",
+      "symbol": "XANUSDT"
+    },
+    {
+      "funding_bytes": 100880,
+      "funding_sha256": "8f7f968753a5ab3d92fecf5eaccd07fd9f13dfdb2b17df17049a96efc92ec72e",
+      "perp_bytes": 22917,
+      "perp_sha256": "d77e358c8931733a03a2714388fbb160c41435c59cd7723f3fb3012b5378a0c9",
+      "spot_bytes": 21936,
+      "spot_sha256": "5ccf189f2ce73317f0b27b9b1cb825686ce36e5a8fc9fdaec5b68152f4e3af37",
+      "symbol": "XAUTUSDT"
+    },
+    {
+      "funding_bytes": 279601,
+      "funding_sha256": "abb4a50109e455adf7c82f1a7842d2880992a24b4ef31f2acfe8c26aee422409",
+      "perp_bytes": 129197,
+      "perp_sha256": "4152c13b55ca42340cf3c534cb5fcddb7bed1ef1839a354026905a08cb9d75e3",
+      "spot_bytes": 129040,
+      "spot_sha256": "99aa0eae7162d3b1702652f95cf3d33bf8fe5c670e1dda25e37f58bfd70c2f47",
+      "symbol": "XLMUSDT"
+    },
+    {
+      "funding_bytes": 22273,
+      "funding_sha256": "b1d03fae33572e85e0e1c8a1dfce02884aeb350ac6b7b736dd6921cc4ee06f65",
+      "perp_bytes": 5223,
+      "perp_sha256": "fa9974311d30838e4f1254a23845d3429bf2ed493eae56964183fa82e1e374cc",
+      "spot_bytes": 1060,
+      "spot_sha256": "e7ec39ec9edb21b87b0639ca30b59fc4a00aa070c1688ab5b82c61ef1c98d1c7",
+      "symbol": "XPLUSDT"
+    },
+    {
+      "funding_bytes": 279672,
+      "funding_sha256": "d0608d6d846eec5fb58ca50c8d6d26b222e74dc4d8dde820b87b41b24666df04",
+      "perp_bytes": 127375,
+      "perp_sha256": "9b20c92fbeec0cd048f91494b0ac55e3f73515823ead61a2a77d6b755e1c722f",
+      "spot_bytes": 128787,
+      "spot_sha256": "f855ee303dda8c86201d62fd57667a042ee79f37f17ef13dc37af9be125994a4",
+      "symbol": "XRPUSDT"
+    },
+    {
+      "funding_bytes": 751,
+      "funding_sha256": "3eeccc8a04cc952a031d5dad38024e4abb6192a276efeaac319ae2cc263b66ab",
+      "perp_bytes": 284,
+      "perp_sha256": "b875fef5b2c0f5e113848af89deaab53856edaa63f5ea98480d5c857a214577f",
+      "spot_bytes": 302,
+      "spot_sha256": "f2e862505319525a71ffb07c556ba3bedc238e05beae6748a8acf7e22cad7d4e",
+      "symbol": "ZBTUSDT"
+    },
+    {
+      "funding_bytes": 277332,
+      "funding_sha256": "193bf9d9286f85ab530d0811500f25e6811957521c88c0668014df8260af5c01",
+      "perp_bytes": 117722,
+      "perp_sha256": "8821061dae31ae85998a109821ab1dea4f5a61c0e8d3d5239c406a23ff5a8cef",
+      "spot_bytes": 83553,
+      "spot_sha256": "468c35ee97a909c85c264ff37ee546a834ec5ead10733810aa6684568a0a0a16",
+      "symbol": "ZECUSDT"
+    },
+    {
+      "funding_bytes": 202681,
+      "funding_sha256": "dc070c5671888bdaa65dc6e1c3f97cc9e435987cdb876182ea2867d5090101bd",
+      "perp_bytes": 58459,
+      "perp_sha256": "22330afdbaf6b114b4c065ef11a6cf5f4af2367e8fad1642e141c6c2f4313a36",
+      "spot_bytes": 57779,
+      "spot_sha256": "4cf508474f8373aa9cc6caa9dbd69b2780df6f1ada772845aa727402438b0d03",
+      "symbol": "ZROUSDT"
+    }
+  ],
+  "files_sha256": "7c5dea5051b5f6972b82e8d1702b1c2f933f653011fd83af2b78bd09163d9fbf",
+  "schema_id": "funding_spot_perp_mapped_input_manifest_v1",
+  "sealed_holdout_rows_decoded": 0,
+  "window": {
+    "end_utc_exclusive": "2025-10-01T00:00:00Z",
+    "start_utc": "2023-01-01T00:00:00Z"
+  }
+}

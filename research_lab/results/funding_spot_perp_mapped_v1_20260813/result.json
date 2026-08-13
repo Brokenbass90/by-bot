@@ -1,0 +1,596 @@
+{
+  "authority": "research_only_no_live_or_promotion",
+  "capital_authorized": false,
+  "exact_mapped_symbols": 74,
+  "exact_mapping": [
+    "AAVEUSDT",
+    "ADAUSDT",
+    "AEROUSDT",
+    "ALGOUSDT",
+    "APTUSDT",
+    "ARBUSDT",
+    "ASTERUSDT",
+    "ATOMUSDT",
+    "AVAXUSDT",
+    "BCHUSDT",
+    "BICOUSDT",
+    "BMTUSDT",
+    "BNBUSDT",
+    "BOMEUSDT",
+    "BTCUSDT",
+    "C98USDT",
+    "CCUSDT",
+    "COOKIEUSDT",
+    "CRVUSDT",
+    "DOGEUSDT",
+    "ENAUSDT",
+    "ETCUSDT",
+    "ETHFIUSDT",
+    "ETHUSDT",
+    "FARTCOINUSDT",
+    "FILUSDT",
+    "GALAUSDT",
+    "GRASSUSDT",
+    "HBARUSDT",
+    "HFTUSDT",
+    "HOMEUSDT",
+    "HYPEUSDT",
+    "ICPUSDT",
+    "INJUSDT",
+    "JTOUSDT",
+    "LAUSDT",
+    "LDOUSDT",
+    "LITUSDT",
+    "MEUSDT",
+    "MMTUSDT",
+    "MNTUSDT",
+    "MONUSDT",
+    "ONDOUSDT",
+    "OPUSDT",
+    "ORDIUSDT",
+    "PAXGUSDT",
+    "PENGUUSDT",
+    "PEOPLEUSDT",
+    "POLUSDT",
+    "RENDERUSDT",
+    "ROBOUSDT",
+    "SEIUSDT",
+    "SOLUSDT",
+    "SQDUSDT",
+    "STRKUSDT",
+    "SUIUSDT",
+    "TIAUSDT",
+    "TRUMPUSDT",
+    "TRXUSDT",
+    "UNIUSDT",
+    "USDCUSDT",
+    "VIRTUALUSDT",
+    "VVVUSDT",
+    "WIFUSDT",
+    "WLDUSDT",
+    "WLFIUSDT",
+    "XANUSDT",
+    "XAUTUSDT",
+    "XLMUSDT",
+    "XPLUSDT",
+    "XRPUSDT",
+    "ZBTUSDT",
+    "ZECUSDT",
+    "ZROUSDT"
+  ],
+  "limitations": [
+    "current-survivor universe; PIT delistings unresolved",
+    "spot archive covers only exact Bybit spot symbols and failed unsupported aliases",
+    "daily open proxy omits spread, book impact, borrow, transfer and hedge-failure risk",
+    "historical selection rule was previously explored on eight symbols"
+  ],
+  "passport_sha256": "69bc202188b09779d0b57183ac8bef543132b1c623d0c4ff74db987a67e2c1e2",
+  "periods": [
+    {
+      "basket_gross_return": 0.003757981759832226,
+      "eligible_count": 25,
+      "entry_ts_ms": 1677801600000,
+      "exit_ts_ms": 1680393600000,
+      "selected": [
+        "ZECUSDT",
+        "ICPUSDT",
+        "AAVEUSDT"
+      ],
+      "selected_basis_return": -0.0005841115833420396,
+      "selected_funding_received": 0.008091373333333334,
+      "selected_gross_return": 0.007507261749991295,
+      "signal_ts_ms": 1677715200000
+    },
+    {
+      "basket_gross_return": 0.006012034161499939,
+      "eligible_count": 28,
+      "entry_ts_ms": 1680393600000,
+      "exit_ts_ms": 1682985600000,
+      "selected": [
+        "ZECUSDT",
+        "ICPUSDT",
+        "LDOUSDT"
+      ],
+      "selected_basis_return": -0.0003263654205153029,
+      "selected_funding_received": 0.008718483333333334,
+      "selected_gross_return": 0.00839211791281803,
+      "signal_ts_ms": 1680307200000
+    },
+    {
+      "basket_gross_return": 0.007097671009873374,
+      "eligible_count": 27,
+      "entry_ts_ms": 1682985600000,
+      "exit_ts_ms": 1685577600000,
+      "selected": [
+        "C98USDT",
+        "ETCUSDT",
+        "ZECUSDT"
+      ],
+      "selected_basis_return": 0.006715138856001797,
+      "selected_funding_received": 0.008371823333333334,
+      "selected_gross_return": 0.015086962189335132,
+      "signal_ts_ms": 1682899200000
+    },
+    {
+      "basket_gross_return": 0.003129738663613859,
+      "eligible_count": 30,
+      "entry_ts_ms": 1685577600000,
+      "exit_ts_ms": 1688169600000,
+      "selected": [
+        "HBARUSDT",
+        "C98USDT",
+        "ARBUSDT"
+      ],
+      "selected_basis_return": 0.0013606152547640527,
+      "selected_funding_received": 0.0052284566666666666,
+      "selected_gross_return": 0.006589071921430719,
+      "signal_ts_ms": 1685491200000
+    },
+    {
+      "basket_gross_return": 0.007351778299920843,
+      "eligible_count": 28,
+      "entry_ts_ms": 1688169600000,
+      "exit_ts_ms": 1690761600000,
+      "selected": [
+        "PAXGUSDT",
+        "PEOPLEUSDT",
+        "C98USDT"
+      ],
+      "selected_basis_return": -0.0022189571612902803,
+      "selected_funding_received": 0.008877283333333335,
+      "selected_gross_return": 0.006658326172043053,
+      "signal_ts_ms": 1688083200000
+    },
+    {
+      "basket_gross_return": 0.003225347631909579,
+      "eligible_count": 28,
+      "entry_ts_ms": 1690761600000,
+      "exit_ts_ms": 1693353600000,
+      "selected": [
+        "PAXGUSDT",
+        "PEOPLEUSDT",
+        "C98USDT"
+      ],
+      "selected_basis_return": -0.0020842908067835917,
+      "selected_funding_received": 0.005232196666666667,
+      "selected_gross_return": 0.0031479058598830757,
+      "signal_ts_ms": 1690675200000
+    },
+    {
+      "basket_gross_return": 0.0019728479258604627,
+      "eligible_count": 32,
+      "entry_ts_ms": 1693353600000,
+      "exit_ts_ms": 1695945600000,
+      "selected": [
+        "PEOPLEUSDT",
+        "ZECUSDT",
+        "ORDIUSDT"
+      ],
+      "selected_basis_return": 0.0006818802862748052,
+      "selected_funding_received": 0.008759910000000001,
+      "selected_gross_return": 0.009441790286274806,
+      "signal_ts_ms": 1693267200000
+    },
+    {
+      "basket_gross_return": 0.005060543425502729,
+      "eligible_count": 29,
+      "entry_ts_ms": 1695945600000,
+      "exit_ts_ms": 1698537600000,
+      "selected": [
+        "PEOPLEUSDT",
+        "ZECUSDT",
+        "ORDIUSDT"
+      ],
+      "selected_basis_return": 0.0102995156269395,
+      "selected_funding_received": 0.008905613333333335,
+      "selected_gross_return": 0.019205128960272835,
+      "signal_ts_ms": 1695859200000
+    },
+    {
+      "basket_gross_return": -0.02475747010508697,
+      "eligible_count": 29,
+      "entry_ts_ms": 1698537600000,
+      "exit_ts_ms": 1701129600000,
+      "selected": [
+        "PEOPLEUSDT",
+        "ZECUSDT",
+        "C98USDT"
+      ],
+      "selected_basis_return": -0.33891216428499504,
+      "selected_funding_received": 0.010018843333333334,
+      "selected_gross_return": -0.32889332095166174,
+      "signal_ts_ms": 1698451200000
+    },
+    {
+      "basket_gross_return": 0.018997838556107628,
+      "eligible_count": 37,
+      "entry_ts_ms": 1701129600000,
+      "exit_ts_ms": 1703721600000,
+      "selected": [
+        "TIAUSDT",
+        "LDOUSDT",
+        "ORDIUSDT"
+      ],
+      "selected_basis_return": -0.0037400779850382073,
+      "selected_funding_received": 0.025625563333333334,
+      "selected_gross_return": 0.021885485348295125,
+      "signal_ts_ms": 1701043200000
+    },
+    {
+      "basket_gross_return": 0.024458457398138938,
+      "eligible_count": 40,
+      "entry_ts_ms": 1703721600000,
+      "exit_ts_ms": 1706313600000,
+      "selected": [
+        "TIAUSDT",
+        "LDOUSDT",
+        "XRPUSDT"
+      ],
+      "selected_basis_return": 0.0009320326684176446,
+      "selected_funding_received": 0.013737560000000001,
+      "selected_gross_return": 0.014669592668417645,
+      "signal_ts_ms": 1703635200000
+    },
+    {
+      "basket_gross_return": 0.006881079476386527,
+      "eligible_count": 39,
+      "entry_ts_ms": 1706313600000,
+      "exit_ts_ms": 1708905600000,
+      "selected": [
+        "C98USDT",
+        "INJUSDT",
+        "LDOUSDT"
+      ],
+      "selected_basis_return": -0.0017373046071712899,
+      "selected_funding_received": 0.01944081,
+      "selected_gross_return": 0.017703505392828712,
+      "signal_ts_ms": 1706227200000
+    },
+    {
+      "basket_gross_return": 0.0388118592796836,
+      "eligible_count": 40,
+      "entry_ts_ms": 1708905600000,
+      "exit_ts_ms": 1711497600000,
+      "selected": [
+        "INJUSDT",
+        "ZECUSDT",
+        "APTUSDT"
+      ],
+      "selected_basis_return": 0.015877358401801933,
+      "selected_funding_received": 0.05426006,
+      "selected_gross_return": 0.07013741840180193,
+      "signal_ts_ms": 1708819200000
+    },
+    {
+      "basket_gross_return": 0.02248617405789787,
+      "eligible_count": 42,
+      "entry_ts_ms": 1711497600000,
+      "exit_ts_ms": 1714089600000,
+      "selected": [
+        "ZECUSDT",
+        "ONDOUSDT",
+        "INJUSDT"
+      ],
+      "selected_basis_return": 0.088684033214894,
+      "selected_funding_received": 0.023220229999999998,
+      "selected_gross_return": 0.111904263214894,
+      "signal_ts_ms": 1711411200000
+    },
+    {
+      "basket_gross_return": 0.0019728205867345886,
+      "eligible_count": 43,
+      "entry_ts_ms": 1714089600000,
+      "exit_ts_ms": 1716681600000,
+      "selected": [
+        "ZECUSDT",
+        "ONDOUSDT",
+        "STRKUSDT"
+      ],
+      "selected_basis_return": -0.037435663049698364,
+      "selected_funding_received": 0.0091956,
+      "selected_gross_return": -0.028240063049698363,
+      "signal_ts_ms": 1714003200000
+    },
+    {
+      "basket_gross_return": 0.01637474856030732,
+      "eligible_count": 42,
+      "entry_ts_ms": 1716681600000,
+      "exit_ts_ms": 1719273600000,
+      "selected": [
+        "WIFUSDT",
+        "ZECUSDT",
+        "ONDOUSDT"
+      ],
+      "selected_basis_return": 0.10262483028809137,
+      "selected_funding_received": 0.011584893333333334,
+      "selected_gross_return": 0.11420972362142469,
+      "signal_ts_ms": 1716595200000
+    },
+    {
+      "basket_gross_return": -0.006468701248205229,
+      "eligible_count": 42,
+      "entry_ts_ms": 1719273600000,
+      "exit_ts_ms": 1721865600000,
+      "selected": [
+        "WIFUSDT",
+        "C98USDT",
+        "ZECUSDT"
+      ],
+      "selected_basis_return": -0.14628090302769825,
+      "selected_funding_received": 0.0072518,
+      "selected_gross_return": -0.13902910302769825,
+      "signal_ts_ms": 1719187200000
+    },
+    {
+      "basket_gross_return": -0.008550779784656745,
+      "eligible_count": 40,
+      "entry_ts_ms": 1721865600000,
+      "exit_ts_ms": 1724457600000,
+      "selected": [
+        "WIFUSDT",
+        "C98USDT",
+        "HFTUSDT"
+      ],
+      "selected_basis_return": 7.435700514076456e-05,
+      "selected_funding_received": 0.006118620000000001,
+      "selected_gross_return": 0.006192977005140765,
+      "signal_ts_ms": 1721779200000
+    },
+    {
+      "basket_gross_return": 0.011408295220386569,
+      "eligible_count": 36,
+      "entry_ts_ms": 1724457600000,
+      "exit_ts_ms": 1727049600000,
+      "selected": [
+        "C98USDT",
+        "BICOUSDT",
+        "HFTUSDT"
+      ],
+      "selected_basis_return": 0.00012465666699904934,
+      "selected_funding_received": 0.005695266666666667,
+      "selected_gross_return": 0.005819923333665717,
+      "signal_ts_ms": 1724371200000
+    },
+    {
+      "basket_gross_return": -0.0009545478381654999,
+      "eligible_count": 37,
+      "entry_ts_ms": 1727049600000,
+      "exit_ts_ms": 1729641600000,
+      "selected": [
+        "BICOUSDT",
+        "ZECUSDT",
+        "C98USDT"
+      ],
+      "selected_basis_return": -0.08646015177887068,
+      "selected_funding_received": 0.00742634,
+      "selected_gross_return": -0.07903381177887069,
+      "signal_ts_ms": 1726963200000
+    },
+    {
+      "basket_gross_return": 0.006604113044339559,
+      "eligible_count": 41,
+      "entry_ts_ms": 1729641600000,
+      "exit_ts_ms": 1732233600000,
+      "selected": [
+        "ZECUSDT",
+        "BICOUSDT",
+        "STRKUSDT"
+      ],
+      "selected_basis_return": -0.04968964485173958,
+      "selected_funding_received": 0.01256727,
+      "selected_gross_return": -0.03712237485173958,
+      "signal_ts_ms": 1729555200000
+    },
+    {
+      "basket_gross_return": 0.025143679865181328,
+      "eligible_count": 45,
+      "entry_ts_ms": 1732233600000,
+      "exit_ts_ms": 1734825600000,
+      "selected": [
+        "WIFUSDT",
+        "ZECUSDT",
+        "POLUSDT"
+      ],
+      "selected_basis_return": 0.023569504019227194,
+      "selected_funding_received": 0.032619126666666665,
+      "selected_gross_return": 0.05618863068589386,
+      "signal_ts_ms": 1732147200000
+    },
+    {
+      "basket_gross_return": 0.009313082560364273,
+      "eligible_count": 50,
+      "entry_ts_ms": 1734825600000,
+      "exit_ts_ms": 1737417600000,
+      "selected": [
+        "ZECUSDT",
+        "AEROUSDT",
+        "WIFUSDT"
+      ],
+      "selected_basis_return": 0.06874851413607323,
+      "selected_funding_received": 0.00894197,
+      "selected_gross_return": 0.07769048413607323,
+      "signal_ts_ms": 1734739200000
+    },
+    {
+      "basket_gross_return": 0.5251398555131513,
+      "eligible_count": 52,
+      "entry_ts_ms": 1737417600000,
+      "exit_ts_ms": 1740009600000,
+      "selected": [
+        "ZECUSDT",
+        "VIRTUALUSDT",
+        "WIFUSDT"
+      ],
+      "selected_basis_return": 9.091791572485691,
+      "selected_funding_received": 0.0058521733333333345,
+      "selected_gross_return": 9.097643745819026,
+      "signal_ts_ms": 1737331200000
+    },
+    {
+      "basket_gross_return": 0.00013612679059547649,
+      "eligible_count": 46,
+      "entry_ts_ms": 1740009600000,
+      "exit_ts_ms": 1742601600000,
+      "selected": [
+        "TRUMPUSDT",
+        "PENGUUSDT",
+        "VIRTUALUSDT"
+      ],
+      "selected_basis_return": 6.58892501790298e-05,
+      "selected_funding_received": 0.0011367333333333336,
+      "selected_gross_return": 0.0012026225835123636,
+      "signal_ts_ms": 1739923200000
+    },
+    {
+      "basket_gross_return": 0.0009497740084616263,
+      "eligible_count": 39,
+      "entry_ts_ms": 1742601600000,
+      "exit_ts_ms": 1745193600000,
+      "selected": [
+        "PENGUUSDT",
+        "PEOPLEUSDT",
+        "WLDUSDT"
+      ],
+      "selected_basis_return": -0.0003322395376966399,
+      "selected_funding_received": 0.005272450000000001,
+      "selected_gross_return": 0.00494021046230336,
+      "signal_ts_ms": 1742515200000
+    },
+    {
+      "basket_gross_return": 0.005154343456909539,
+      "eligible_count": 35,
+      "entry_ts_ms": 1745193600000,
+      "exit_ts_ms": 1747785600000,
+      "selected": [
+        "PENGUUSDT",
+        "PEOPLEUSDT",
+        "OPUSDT"
+      ],
+      "selected_basis_return": 0.00033494015070748934,
+      "selected_funding_received": 0.0017448633333333335,
+      "selected_gross_return": 0.002079803484040823,
+      "signal_ts_ms": 1745107200000
+    },
+    {
+      "basket_gross_return": 0.0038164230584465746,
+      "eligible_count": 40,
+      "entry_ts_ms": 1747785600000,
+      "exit_ts_ms": 1750377600000,
+      "selected": [
+        "COOKIEUSDT",
+        "BICOUSDT",
+        "BOMEUSDT"
+      ],
+      "selected_basis_return": -0.00010273636194109888,
+      "selected_funding_received": 0.00501927,
+      "selected_gross_return": 0.0049165336380589016,
+      "signal_ts_ms": 1747699200000
+    },
+    {
+      "basket_gross_return": 0.00188867689353091,
+      "eligible_count": 45,
+      "entry_ts_ms": 1750377600000,
+      "exit_ts_ms": 1752969600000,
+      "selected": [
+        "BICOUSDT",
+        "LDOUSDT",
+        "HFTUSDT"
+      ],
+      "selected_basis_return": -0.0030049836431374675,
+      "selected_funding_received": -0.004208409999999999,
+      "selected_gross_return": -0.007213393643137466,
+      "signal_ts_ms": 1750291200000
+    },
+    {
+      "basket_gross_return": 0.0073407432622780095,
+      "eligible_count": 44,
+      "entry_ts_ms": 1752969600000,
+      "exit_ts_ms": 1755561600000,
+      "selected": [
+        "HYPEUSDT",
+        "STRKUSDT",
+        "COOKIEUSDT"
+      ],
+      "selected_basis_return": 0.0011485193489653895,
+      "selected_funding_received": 0.008032756666666667,
+      "selected_gross_return": 0.009181276015632057,
+      "signal_ts_ms": 1752883200000
+    },
+    {
+      "basket_gross_return": 0.00593537085334412,
+      "eligible_count": 50,
+      "entry_ts_ms": 1755561600000,
+      "exit_ts_ms": 1758153600000,
+      "selected": [
+        "STRKUSDT",
+        "HYPEUSDT",
+        "AEROUSDT"
+      ],
+      "selected_basis_return": -0.0012395890025792184,
+      "selected_funding_received": 0.008512406666666666,
+      "selected_gross_return": 0.007272817664087448,
+      "signal_ts_ms": 1755475200000
+    }
+  ],
+  "promotion_authorized": false,
+  "requested_symbols": 137,
+  "scenarios": {
+    "base_31bps": {
+      "basket_annualized_pair_notional_pct": 24.866700625334698,
+      "basket_total_simple_pct": 63.35899063441444,
+      "cost_bps": 31.0,
+      "periods": 31,
+      "positive_periods": 23,
+      "red_periods": 8,
+      "selected_annualized_on_two_leg_gross_capital_pct": 176.2996215912303,
+      "selected_annualized_pair_notional_pct": 352.5992431824606,
+      "selected_total_simple_pct": 898.403551122434,
+      "selection_edge_annualized_pct": 327.7325425571259,
+      "selection_edge_halves_annualized_pct": [
+        -13.891352990799192,
+        648.0049446333057
+      ]
+    },
+    "stress_51bps": {
+      "basket_annualized_pair_notional_pct": 22.433367292001368,
+      "basket_total_simple_pct": 57.158990634414444,
+      "cost_bps": 51.0,
+      "periods": 31,
+      "positive_periods": 20,
+      "red_periods": 11,
+      "selected_annualized_on_two_leg_gross_capital_pct": 175.0829549245636,
+      "selected_annualized_pair_notional_pct": 350.1659098491272,
+      "selected_total_simple_pct": 892.2035511224339,
+      "selection_edge_annualized_pct": 327.7325425571259,
+      "selection_edge_halves_annualized_pct": [
+        -13.891352990799186,
+        648.0049446333057
+      ]
+    }
+  },
+  "schema_id": "funding_spot_perp_mapped_result_v1",
+  "sealed_holdout_rows_decoded": 0,
+  "spot_completed_symbols": 74,
+  "survivorship_resolved": false,
+  "verdict": "REJECT"
+}

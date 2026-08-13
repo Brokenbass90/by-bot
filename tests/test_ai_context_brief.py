@@ -67,11 +67,40 @@ def test_compose_prefers_heartbeat_runtime_truth_and_canonical_memory(tmp_path, 
     brief = compose_from_repo(tmp_path)
 
     assert "live_money_sleeves_by_heartbeat: ['att1']" in brief
+    assert "service_state: ONLINE" in brief
+    assert "open_trades: 0" in brief
     assert "strategy_runtime_summary" in brief
     assert "'enabled': ['att1', 'ivb1']" in brief
     assert "'positive_risk_mult': {'att1': 0.1}" in brief
     assert "legacy_inplay_short" in brief
     assert "pump_exhaustion_unwind_short_v1" in brief
+
+
+def test_compose_prefers_fresher_live_mirror_heartbeat(tmp_path, monkeypatch):
+    monkeypatch.setattr("bot.ai_context_brief.time.time", lambda: 1_000.0)
+    runtime = tmp_path / "runtime"
+    mirror = runtime / "live_mirror"
+    mirror.mkdir(parents=True)
+    (runtime / "bot_heartbeat.json").write_text(json.dumps({
+        "ts": 100,
+        "trade_on": False,
+        "dry_run": False,
+        "open_trades": 0,
+    }))
+    (mirror / "bot_heartbeat.json").write_text(json.dumps({
+        "ts": 990,
+        "trade_on": True,
+        "dry_run": False,
+        "open_trades": 0,
+        "bybit_msgs": 12345,
+    }))
+
+    brief = compose_from_repo(tmp_path)
+
+    assert "heartbeat_source: runtime/live_mirror/bot_heartbeat.json" in brief
+    assert "service_state: ONLINE" in brief
+    assert "торгует: True" in brief
+    assert "bybit_msgs: 12345" in brief
 
 
 def test_compose_includes_fresh_research_overlay_and_expires_it(tmp_path, monkeypatch):

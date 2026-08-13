@@ -1,0 +1,57 @@
+{
+  "schema_id": "research_run_passport_request_v1",
+  "authority": "research_only_no_live_or_promotion",
+  "promotion_authority": false,
+  "live_or_broker_calls": false,
+  "experiment_id": "xau_intraday_flat_baseline_v2_20260813",
+  "code_paths": [
+    "scripts/run_fx_native_harness.py",
+    "bot/fx_harness.py",
+    "bot/fx_setups.py",
+    "research_lab/prereg/PREREG_XAU_INTRADAY_FLAT_BASELINE_V2_2026_08_13.md"
+  ],
+  "inputs": [
+    {
+      "path": "research_lab/data/xauusd_m5_preholdout_20240708_20250930_v2/XAUUSD_M5.csv",
+      "role": "physically bounded public XAUUSD M5 bars",
+      "temporal_data": true,
+      "data_window": {
+        "start_utc": "2024-07-08T00:00:00Z",
+        "end_utc_exclusive": "2025-10-01T00:00:00Z"
+      },
+      "contains_sealed_holdout": false
+    },
+    {
+      "path": "research_lab/data/xauusd_m5_preholdout_20240708_20250930_v2/status.json",
+      "role": "early-stop bounded materialization receipt",
+      "temporal_data": false,
+      "contains_sealed_holdout": false
+    }
+  ],
+  "measurement_contract": {
+    "engine": "fx_native_harness_h1_force_flat_v2",
+    "timeframe": "H1 aggregated from M5; forced flat on first H1 bar at or after 20:55 UTC",
+    "universe": ["XAUUSD"],
+    "window": {
+      "start_utc": "2024-07-08T00:00:00Z",
+      "end_utc_exclusive": "2025-10-01T00:00:00Z"
+    },
+    "data_gate": "coverage >= 0.95; max non-scheduled gap <= 30 H1 bars; closure threshold 36 H1 bars",
+    "costs": "base 1.0 fee/spread proxy + 0.5 slippage bps per side; stress 2.0 + 1.0 bps per side",
+    "label_contract": "2R target, 1.5 ATR stop, six H1 bars maximum, stop-first within bar",
+    "split_contract": "three fixed families and four chronological trade folds"
+  },
+  "search_contract": {
+    "variant_count": 3,
+    "random_seed": 20260813,
+    "pre_registered": true
+  },
+  "sealed_holdouts": [
+    {
+      "id": "reserved_2025_10_through_2026_06",
+      "start_utc": "2025-10-01T00:00:00Z",
+      "end_utc_exclusive": "2026-07-01T00:00:00Z",
+      "must_not_be_read": true
+    }
+  ]
+}

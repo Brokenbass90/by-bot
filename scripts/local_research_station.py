@@ -55,8 +55,11 @@ JOBS = (
         "research_xsec_v3",
         ("research_xsec_v3", "xsec_v3_shadow"),
         "scripts/run_xsec_shadow_loop.sh",
-        "logs/xsec_v3_shadow_*.log",
-        2 * 3600,
+        # XSEC is an idempotent daily decision job.  Later hourly loop ticks
+        # deliberately do no work once the UTC decision is materialized, so a
+        # rotating stdout log is not evidence of a new research decision.
+        "runtime/xsec_v3_shadow/decision_latest.json",
+        30 * 3600,
     ),
     Job(
         "funding_positioning_dynamic_shadow",

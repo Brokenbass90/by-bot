@@ -192,7 +192,23 @@ def main() -> int:
     ap.add_argument("--min-coverage-bars", type=int, default=200)
     ap.add_argument("--market-closure-gap-bars", type=int, default=0, help="FX scheduled-closure threshold after aggregation; 0 = auto by --interval-min.")
     ap.add_argument("--max-fee-r", type=float, default=0.25)
+    ap.add_argument(
+        "--force-flat-utc",
+        default="",
+        help="Optional HH:MM cutoff. Entries at/after it are blocked and open positions close at that bar open.",
+    )
     args = ap.parse_args()
+
+    force_flat_utc_minute: int | None = None
+    if args.force_flat_utc:
+        try:
+            hh_raw, mm_raw = args.force_flat_utc.split(":", 1)
+            hh, mm = int(hh_raw), int(mm_raw)
+        except (TypeError, ValueError) as exc:
+            raise SystemExit("--force-flat-utc must be HH:MM") from exc
+        if not (0 <= hh <= 23 and 0 <= mm <= 59):
+            raise SystemExit("--force-flat-utc must be HH:MM")
+        force_flat_utc_minute = hh * 60 + mm
 
     pairs = [x.strip().upper() for x in args.pairs.split(",") if x.strip()]
     setup_names = [x.strip() for x in args.setups.split(",") if x.strip()]
@@ -318,6 +334,7 @@ def main() -> int:
                             max_hold=max_hold,
                             fee_bps=args.fee_bps,
                             slippage_bps=args.slippage_bps,
+                            force_flat_utc_minute=force_flat_utc_minute,
                         )
                         for t in trades:
                             t.update({
@@ -398,6 +415,7 @@ def main() -> int:
         f"- requested_window_utc: `{args.start_utc or 'source_start'}..{args.end_utc or 'source_end'}` (end exclusive)",
         f"- coverage_gate: `{not args.disable_coverage_gate}`",
         f"- cost_gate: `{not args.disable_cost_gate}`",
+        f"- force_flat_utc: `{args.force_flat_utc or 'disabled'}`",
         "",
         "| symbol | setup | rr | sl_atr | hold | coverage | cost | feeR | skip | trades | netR | PF | WR | folds+ | preflight |",
         "|---|---|---:|---:|---:|---|---|---:|---|---:|---:|---:|---:|---:|---|",

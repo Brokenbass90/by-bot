@@ -1,5 +1,6 @@
 """Tests for bot.fx_harness — run fx_setups over FX data, feed the gate."""
 import random
+from datetime import datetime, timezone
 from bot.fx_harness import backtest_fx_setup, summarize_trades
 from bot.fx_setups import session_range_fade
 
@@ -59,3 +60,35 @@ def test_trend_yields_few_or_losing_fades():
     # fading a clean trend should not be a free win; harness must run without error
     tr = backtest_fx_setup(_trend(), session_range_fade, setup_kwargs={"block_asia": False})
     assert isinstance(tr, list)
+
+
+def test_force_flat_closes_at_cutoff_open_and_blocks_late_entries():
+    start = int(datetime(2026, 1, 5, 18, 0, tzinfo=timezone.utc).timestamp())
+    rows = []
+    for i in range(72):
+        price = 100.0 + i * 0.1
+        rows.append([start + i * 300, price, price + 0.2, price - 0.2, price + 0.1, 1.0])
+
+    def always_long(_rows):
+        class Signal:
+            side = "long"
+        return Signal()
+
+    trades = backtest_fx_setup(
+        rows,
+        always_long,
+        warmup=10,
+        sl_atr=20.0,
+        tp_rr=100.0,
+        max_hold=60,
+        fee_bps=0.0,
+        slippage_bps=0.0,
+        force_flat_utc_minute=20 * 60,
+    )
+    assert trades
+    assert trades[0]["exit_reason"] == "force_flat_utc"
+    exit_dt = datetime.fromtimestamp(trades[0]["exit_ts"], tz=timezone.utc)
+    assert (exit_dt.hour, exit_dt.minute) == (20, 0)
+    for trade in trades:
+        entry_dt = datetime.fromtimestamp(trade["entry_ts"], tz=timezone.utc)
+        assert entry_dt.hour < 20

@@ -1,0 +1,61 @@
+{
+  "arms": {
+    "base_5bps_side": {
+      "checks": {
+        "average_gross_exposure_pct": true,
+        "final_equity": true,
+        "lifecycle": true,
+        "max_drawdown_pct": true,
+        "month_count": true,
+        "profit_factor": true,
+        "red_months": true,
+        "return_pct": true,
+        "trade_count": true,
+        "worst_month_pct": true
+      },
+      "recomputed": {
+        "average_gross_exposure_pct": 10.237272008291953,
+        "max_drawdown_pct": 23.711122437559627,
+        "months": 25,
+        "profit_factor": 1.2695371583615915,
+        "red_months": 8,
+        "return_pct": 23.47618070136328,
+        "worst_month_pct": -14.539298780588972
+      }
+    },
+    "stress_10bps_side": {
+      "checks": {
+        "average_gross_exposure_pct": true,
+        "final_equity": true,
+        "lifecycle": true,
+        "max_drawdown_pct": true,
+        "month_count": true,
+        "profit_factor": true,
+        "red_months": true,
+        "return_pct": true,
+        "trade_count": true,
+        "worst_month_pct": true
+      },
+      "recomputed": {
+        "average_gross_exposure_pct": 10.236653894127826,
+        "max_drawdown_pct": 23.799729140849536,
+        "months": 25,
+        "profit_factor": 1.2493580471759878,
+        "red_months": 8,
+        "return_pct": 21.85698435301786,
+        "worst_month_pct": -14.594731793018678
+      }
+    }
+  },
+  "failures": [],
+  "generated_at_utc": "2026-08-13T05:30:32.480569+00:00",
+  "interpretation": "arithmetic/lifecycle only; does not cure PIT, sector, calendar, corporate-action, or intraday-parity blockers",
+  "passed": true,
+  "schema_id": "alpaca_clean_v38_proxy_independent_audit_v1",
+  "selection_diagnostics": {
+    "decision_count": 24,
+    "selected_slots": 43,
+    "unknown_sector_fraction": 0.9302325581395349,
+    "unknown_sector_slots": 40
+  }
+}
