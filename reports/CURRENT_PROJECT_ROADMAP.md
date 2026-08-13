@@ -4,6 +4,47 @@
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
 
+## Latest recovery update — 2026-08-13 05:45 UTC
+
+- Direct VPS truth: `bybot.service active/running`, fresh heartbeat,
+  `trade_on=true`, `dry_run=false`, `open_trades=0`, `ws_guard_active=0`,
+  broker API `retCode=0`, `open_position_count=0`. Единственная money-authority
+  — ATT1 short `risk_mult=0.10`; остальные включённые стратегии имеют zero-risk.
+- Локальный Bybit checker использовал истёкший ключ (`33004`) и раньше печатал
+  ложнопохожее `open_position_count=0`. Теперь API error выдаёт
+  `broker_state=NOT_CONFIRMED`, count/positions=`null`; тесты `2 PASS`.
+- Research station после reload использует canonical XSEC receipt: `6/6
+  healthy`. Inplay ETH prospective по-прежнему `N=0`; историческая частота
+  `435 / 556 дней = 0.782 сигнала/день`, оценка N30 `5.5 недели` с диапазоном
+  примерно `3.8–7.7` недели.
+- Funding spot/perp V2: exact-mapped `74`, quarantined `16`; при spot
+  `10+10 bps` и perp `5.5+5.5 bps` selection edge исторически остаётся
+  `+2.03%`, но gross two-leg capital CAGR только `3.77%` base / `2.55%`
+  stress, половины `4.03%` и `0.15%`. Diagnostic only; forward N4 отрицателен.
+- Alpaca clean-962 proxy: `+11.14%` annualized base, `+10.41%` stress, DD около
+  `23.8%`, 40 сделок, `8/25` красных месяцев. Это не exact replay: `93%`
+  выбранных слотов не получили sector classification, а gap/stop geometry дала
+  хвост потерь до `-22..-28%`. Следующий gate — sector/PIT completion и
+  entry-relative stop/gap challenger.
+- RMR1 SOL: положительный pocket не объяснён режимом; первая половина
+  `+0.525R`, вторая `+0.057R`, ни один режим не держится в обеих половинах.
+- Inplay BTC portability rejected: 437 сигналов, ни один из 30 фиксированных
+  вариантов не положителен в >=3/4 окон. BTC требует отдельной long-механики.
+- XAU intraday-flat V2: session breakout/retest `+3.92R` base / `+3.01R`
+  stress, `3/4` positive folds, но только 13 сделок; trend pullback и
+  round-level sweep отрицательны. Кандидат остаётся research/shadow only.
+- Публичные локальные коллекторы свежие: BTC/ETH L2+tape, ONDO L2+tape,
+  micro-tape и alt24 density (`157,181` observations); disk guard green,
+  свободно `94 GiB`. Резервный VPS collector корректно остановлен собственным
+  cap `2 GiB`; guard не переопределять, локальный поток продолжает сбор.
+- AI truth и idea intake усилены: stale heartbeat больше не превращается в
+  «бот offline»; внешние источники считаются untrusted, идеи допускаются только
+  как proposal с mechanism/data/costs/fixed test/death criterion, без ключей,
+  запуска и capital authority.
+
+Полный отчёт и ускоренный план:
+`reports/PROJECT_STATE_AND_ACCELERATION_2026_08_13.md`.
+
 ## Latest recovery update — 2026-08-12 11:55 UTC
 
 ### Решение одним абзацем
