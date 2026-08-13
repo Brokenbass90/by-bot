@@ -1,8 +1,81 @@
 # Состояние станции и ускоренный план — 13 августа 2026
 
-Cutoff: 2026-08-13 05:45 UTC. Это evidence-backed срез, а не обещание
+Cutoff: 2026-08-13 14:25 UTC. Это evidence-backed срез, а не обещание
 доходности. Все новые исследования были public/read-only, без broker/order/risk
 authority.
+
+## Дополнение большой сессии — 14:25 UTC
+
+### Что реально изменилось
+
+1. Последняя BTC ATT1 закрылась по биржевому stop: fill `63560.8`, close
+   `63827.2`, net `-0.3364634 USDT` или `-1.288638R` после комиссии. Runner
+   TP/BE/trailing был включён, но не активировался: цена не дошла до `1R`.
+   Actual fill был лучше requested price для short; это не latency/chasing bug.
+2. Найден геометрический failure mode сигнала: pivot highs
+   `64477 -> 63690 -> 63994.4`. Линейная регрессия осталась наклонена вниз из-за
+   первого высокого anchor, хотя последний high вырос. Поэтому пользовательская
+   характеристика «ступенька, а не чистая наклонная» подтверждается числами.
+3. Frozen pre-holdout ATT1 pivot-sequence challenger на восьми major symbols:
+   baseline `538` сделок, `-17.916439R`; challenger `393`, `-2.467991R`.
+   Убыток резко уменьшен, результат лучше на `6/8` символах, retention `73.0%`,
+   independent audit PASS. Но `-0.00628R/trade` всё ещё не положительный edge:
+   это подтверждённый ремонт классификации, а не новая money-нога.
+4. Clean ATT1 cohort после release пересчитан из broker/runner events:
+   `2/20`, DOT `+1.264741R`, BTC `-1.288638R`, итого `-0.023897R`, PF `0.981`.
+   Gate `0.10 -> 0.25` не пройден. Неизменные условия: exact parity, N20,
+   net `>=+2R`, PF `>=1.20`, DD `<=5R`, zero unresolved conflicts.
+5. Alpaca protection challenger дал заметный механизм. Текущий proxy:
+   `11.14%` annual / DD `23.71%`. Entry-relative stop: `25.65%` / DD `14.36%`;
+   тот же вариант в stress: `24.87%` / DD `14.43%`. Entry-stop + gap guard 2%:
+   `23.69%` / DD `9.21%`, но только `29` trades и поэтому prereg gate FAIL
+   (`N>=30`). Independent audit PASS, capital authority false. Следующий шаг —
+   отдельная validation/PIT/live-manager parity, а не немедленная смена live.
+6. Direct GET-only Alpaca truth: account LIVE/ACTIVE, equity `$487.38`, cash
+   `$391.27`; ABBV и SCHW защищены broker stops. SCHW stop уже поднят до
+   `106.13` при entry `101.552`, то есть контур действительно фиксирует часть
+   прибыли. ABBV ещё не достиг activation threshold.
+7. Inplay supervisor исправлен на single-instance `fcntl` lock. Дублирующиеся
+   research-only loops остановлены после диагностики; один collector работает,
+   второй запуск fail-closes. Prospective sample пока `N=0`.
+8. Для XAUUSD запущен resumable public-only Dukascopy M5 backfill
+   `2021-01-01 .. 2025-10-01` с month chunks, SHA receipt, `20 GiB` disk guard
+   и жёсткой границей sealed holdout. Процесс активен, первый chunk ещё не
+   завершён; интерпретации до receipt нет.
+9. Web password reset utility размещён на VPS и сверён SHA-256
+   `a61f519a6c0a21b8de46dfe62cc5664ea40bea0052057e8f4e649dc06ef572f8`.
+   Пароль вводится только скрыто в локальном Terminal; TOTP/роль сохраняются,
+   сервис не рестартует. Пока пользователь не завершит prompt и login smoke,
+   смена пароля считается `PENDING`, а не подтверждённой.
+10. График сделки теперь различает `signal TF` и `execution 5m`, а reason
+    сериализует `tf=...`. Старые reason без TF получают явно помеченный config
+    fallback. Исправление локально проверено, но live monolith не деплоился.
+
+### Исторические тесты не запрещены
+
+Запрета нет. Запрещены только несопоставимые цифры: чтение sealed holdout,
+same-bar execution, скрытая смена universe, отсутствие реальных издержек и
+подгонка после просмотра результата. Рабочий конвейер остаётся быстрым:
+`prereg -> passport -> causal replay -> cost stress -> independent audit ->
+prospective shadow`. В этой сессии через него уже прошли ATT1 и Alpaca; XAU
+получает более длинную историю.
+
+### Следующие fixed исследования
+
+- ATT1: отдельное frozen validation pivot-sequence, затем observe-only parity;
+- Alpaca: PIT/sector/corporate-action/live-manager parity для entry-relative
+  stop, затем независимое окно; gap 2% остаётся отдельным challenger;
+- XAU: после data receipt — session breakout/retest V3, затем отдельно
+  sweep/reclaim, first-correction и causal sloped break/retest;
+- liquid crypto: BTC/ETH H4/D1 trend-pullback и support-reclaim как отдельные
+  long families, не копия отвергнутого BTC Inplay;
+- legacy batch: sweep-reclaim, sloped-retest и L2-density, максимум один fixed
+  механизм на вариант.
+
+Focused suite: `58 passed`; `git diff --check` PASS. Тематические receipts:
+`2a7ea8c` (private web password reset), `757049c` (ATT1 geometry/chart/audit),
+`f0e9cae` (Alpaca/Inplay/XAU lanes). Live orders, risk и monolith в этой
+сессии не изменялись.
 
 ## Решение одним абзацем
 

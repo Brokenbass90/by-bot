@@ -1,8 +1,48 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-11 17:08 UTC. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-13 14:25 UTC. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
+
+## Latest recovery update — 2026-08-13 14:25 UTC
+
+- BTC ATT1 lifecycle закрыт прямыми events: `-1.288638R`; trailing был готов,
+  но не активировался, потому что MFE не достиг `1R`. Слабое место — geometry:
+  pivots `64477 -> 63690 -> 63994.4` образуют regression-down, но не строгую
+  последовательность lower highs.
+- Pivot-sequence challenger прошёл passport/audit: baseline `-17.916439R/538`,
+  challenger `-2.467991R/393`, лучше на `6/8` symbols. Это repair candidate,
+  не edge и не live change.
+- Clean ATT1 cohort: `2/20`, total `-0.023897R`, PF `0.981`. Risk `0.10`
+  сохраняется. Gate `0.25`: exact parity + N20 + net `>=2R` + PF `>=1.20` +
+  DD `<=5R` + zero conflicts.
+- Alpaca protection V2: entry-relative stop дал `25.65% annual / 14.36% DD`
+  base и `24.87% / 14.43%` stress против current `11.14% / 23.71%`;
+  independent audit PASS, capital false. Gap-2% challenger `23.69% / 9.21%`
+  отклонён своим gate из-за `29 < 30` trades. Нужна PIT/parity validation.
+- Direct Alpaca GET-only: LIVE/ACTIVE `$487.38`, ABBV/SCHW, broker stop coverage
+  `2/2`; SCHW stop ratcheted to `106.13` from entry `101.552`.
+- Inplay loop теперь single-instance; один research-only collector, N0.
+- XAU public Dukascopy backfill `2021-01-01..2025-10-01` активен; holdout не
+  читается, disk guard `20 GiB`. Результат только после SHA/validation receipt.
+- Web password reset helper установлен и hash-verified; смена `PENDING` до
+  скрытого ввода пользователем и login smoke. Chart TF/provenance исправлены
+  локально; live monolith не рестартовал и не деплоился.
+- Focused tests: `58 passed`; functional commits `2a7ea8c`, `757049c`,
+  `f0e9cae`. Полный отчёт:
+  `reports/PROJECT_STATE_AND_ACCELERATION_2026_08_13.md`.
+
+### Следующие 72 часа
+
+1. Закончить XAU data receipt; заморозить и прогнать session breakout/retest V3.
+2. Провести независимую validation ATT1 pivot-sequence, без live-enforcement.
+3. Закрыть Alpaca PIT/sector/corporate-action/15m-manager parity; только затем
+   решать, переносить ли stop anchor на actual fill.
+4. Продолжать prospective Inplay и L2/tape; не считать отсутствие сигнала
+   остановкой процесса.
+5. Один fixed legacy batch: sweep-reclaim, sloped-retest, L2-density.
+6. Собрать chart/password изменения в staged server bundle только в отдельном
+   flat-gated release; монолитный copy/restart запрещён.
 
 ## Latest recovery update — 2026-08-13 05:45 UTC
 
