@@ -45,8 +45,10 @@ authority.
 9. Web password reset utility размещён на VPS и сверён SHA-256
    `a61f519a6c0a21b8de46dfe62cc5664ea40bea0052057e8f4e649dc06ef572f8`.
    Пароль вводится только скрыто в локальном Terminal; TOTP/роль сохраняются,
-   сервис не рестартует. Пока пользователь не завершит prompt и login smoke,
-   смена пароля считается `PENDING`, а не подтверждённой.
+   сервис не рестартует. Server config обновлён после запуска utility: один
+   enabled admin, TOTP/password hash присутствуют, mode `0600`; server-side
+   reset `COMPLETE`. Остался пользовательский login smoke новым паролем и
+   существующим Authenticator code.
 10. График сделки теперь различает `signal TF` и `execution 5m`, а reason
     сериализует `tf=...`. Старые reason без TF получают явно помеченный config
     fallback. Исправление локально проверено, но live monolith не деплоился.
@@ -76,6 +78,10 @@ Focused suite: `58 passed`; `git diff --check` PASS. Тематические re
 `2a7ea8c` (private web password reset), `757049c` (ATT1 geometry/chart/audit),
 `f0e9cae` (Alpaca/Inplay/XAU lanes). Live orders, risk и monolith в этой
 сессии не изменялись.
+
+Post-push live recheck: broker `retCode=0`, positions `0`; `bybot.service` и
+`trading-journal-web.service` active; heartbeat age `6.5s`, `trade_on=true`,
+`dry_run=false`, `open_trades=0`, `bear_chop`, `ws_guard_active=0`.
 
 ## Решение одним абзацем
 

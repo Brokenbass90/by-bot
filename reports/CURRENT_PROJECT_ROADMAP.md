@@ -25,12 +25,15 @@
 - Inplay loop теперь single-instance; один research-only collector, N0.
 - XAU public Dukascopy backfill `2021-01-01..2025-10-01` активен; holdout не
   читается, disk guard `20 GiB`. Результат только после SHA/validation receipt.
-- Web password reset helper установлен и hash-verified; смена `PENDING` до
-  скрытого ввода пользователем и login smoke. Chart TF/provenance исправлены
-  локально; live monolith не рестартовал и не деплоился.
+- Web password reset helper установлен/hash-verified; server config обновлён,
+  enabled admin/TOTP/hash сохранены, mode `0600`. Остался login smoke новым
+  паролем. Chart TF/provenance исправлены локально; live monolith не рестартовал
+  и не деплоился.
 - Focused tests: `58 passed`; functional commits `2a7ea8c`, `757049c`,
   `f0e9cae`. Полный отчёт:
   `reports/PROJECT_STATE_AND_ACCELERATION_2026_08_13.md`.
+- Post-push live: direct broker positions `0`, both services active, heartbeat
+  age `6.5s`, `trade_on=true`, `dry_run=false`, `open_trades=0`, WS guard `0`.
 
 ### Следующие 72 часа
 
