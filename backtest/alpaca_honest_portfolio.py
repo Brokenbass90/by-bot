@@ -66,6 +66,8 @@ class LiveProtectionDailyProxy:
     minimum_lock_gain_pct: float = 0.5
     market_gap_bps: float = 10.0
     reentry_block_calendar_days: int = 21
+    initial_stop_anchor: str = "signal_close"
+    maximum_positive_entry_gap_pct: float | None = None
 
 
 def _finite_positive(value: float) -> bool:
@@ -329,6 +331,13 @@ def simulate_live_protection_daily_proxy(
         raise HonestPortfolioError("target gross exposure must be in [0, 1]")
     if list(sessions) != sorted(set(sessions)):
         raise HonestPortfolioError("sessions must be unique and ordered")
+    if policy.initial_stop_anchor not in {"signal_close", "entry_fill"}:
+        raise HonestPortfolioError("initial_stop_anchor must be signal_close or entry_fill")
+    if (
+        policy.maximum_positive_entry_gap_pct is not None
+        and policy.maximum_positive_entry_gap_pct < 0
+    ):
+        raise HonestPortfolioError("maximum_positive_entry_gap_pct must be non-negative")
     bars_by_symbol = _bar_map(data)
     decision_by_entry = {decision.entry_session: decision for decision in decisions}
     if len(decision_by_entry) != len(decisions):
@@ -386,6 +395,7 @@ def simulate_live_protection_daily_proxy(
 
             bought: list[str] = []
             blocked: list[str] = []
+            gap_blocked: list[str] = []
             for candidate in decision.picks:
                 if candidate.symbol in positions:
                     continue
@@ -395,6 +405,14 @@ def simulate_live_protection_daily_proxy(
                 bar = bars_by_symbol.get(candidate.symbol, {}).get(session)
                 if bar is None:
                     raise HonestPortfolioError(f"{candidate.symbol}: missing entry bar on {session}")
+                positive_gap_pct = (bar.open / candidate.signal_close - 1.0) * 100.0
+                if (
+                    policy.maximum_positive_entry_gap_pct is not None
+                    and positive_gap_pct > policy.maximum_positive_entry_gap_pct
+                ):
+                    blocked.append(candidate.symbol)
+                    gap_blocked.append(candidate.symbol)
+                    continue
                 requested = open_equity * target_gross_exposure * max(0.0, candidate.weight)
                 notional = min(cash, requested)
                 if notional <= 0:
@@ -402,7 +420,11 @@ def simulate_live_protection_daily_proxy(
                 entry_fill = adverse_fill_price(bar.open, side="buy", cost_bps=cost_bps_per_side)
                 qty = notional / entry_fill
                 cash -= qty * entry_fill
-                signal_stop = candidate.signal_close - 2.0 * candidate.atr_at_signal
+                stop_anchor = (
+                    entry_fill if policy.initial_stop_anchor == "entry_fill"
+                    else candidate.signal_close
+                )
+                signal_stop = stop_anchor - 2.0 * candidate.atr_at_signal
                 fallback_stop = entry_fill * (1.0 - policy.fallback_stop_pct)
                 initial_stop = quantize_sell_stop(signal_stop if signal_stop > 0 else fallback_stop)
                 positions[candidate.symbol] = _Position(
@@ -422,6 +444,7 @@ def simulate_live_protection_daily_proxy(
                     "selected": sorted(selected),
                     "bought": bought,
                     "reentry_blocked": blocked,
+                    "gap_blocked": gap_blocked,
                 }
             )
 

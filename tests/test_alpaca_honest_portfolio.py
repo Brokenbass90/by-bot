@@ -5,6 +5,7 @@ import pytest
 from backtest.alpaca_exact_parity_contract import DailyBar
 from backtest.alpaca_honest_portfolio import (
     Candidate,
+    LiveProtectionDailyProxy,
     MonthlyDecision,
     capped_normalized_weights,
     quantize_sell_stop,
@@ -89,3 +90,33 @@ def test_daily_drawdown_includes_initial_capital() -> None:
         cost_bps_per_side=0.0,
     )
     assert result["daily_max_drawdown_pct"] == pytest.approx(5.6)
+
+
+def test_entry_relative_stop_and_executable_positive_gap_guard() -> None:
+    data = {
+        "AAA": [_bar(2, 103.0, 104.0, 100.5, 102.0)],
+        "BBB": [_bar(2, 101.0, 102.0, 98.5, 100.0)],
+    }
+    decision = MonthlyDecision(
+        signal_session=date(2025, 12, 31),
+        entry_session=date(2026, 1, 2),
+        picks=(
+            Candidate("AAA", 1.0, 1.0, 1.0, 100.0, 0.5),
+            Candidate("BBB", 1.0, 1.0, 1.0, 100.0, 0.5),
+        ),
+        reason="test",
+    )
+    result = simulate_live_protection_daily_proxy(
+        data,
+        [date(2026, 1, 2)],
+        [decision],
+        cost_bps_per_side=0.0,
+        policy=LiveProtectionDailyProxy(
+            initial_stop_anchor="entry_fill",
+            maximum_positive_entry_gap_pct=2.0,
+        ),
+    )
+    assert result["decisions"][0]["gap_blocked"] == ["AAA"]
+    assert result["decisions"][0]["bought"] == ["BBB"]
+    # BBB's entry-relative stop is 99.0 and is hit intraday.
+    assert result["trades"][0]["exit_fill"] == pytest.approx(99.0)

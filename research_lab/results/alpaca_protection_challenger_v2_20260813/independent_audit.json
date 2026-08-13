@@ -1,0 +1,94 @@
+{
+  "authority": "research_only_no_live_or_promotion",
+  "capital_authorized": false,
+  "computed": {
+    "current_contract": {
+      "base": {
+        "average_gross_exposure_pct": 10.237272008291953,
+        "daily_max_drawdown_pct": 23.711122437559627,
+        "gap_blocks": 0,
+        "lifecycle_errors": 0,
+        "months": 25,
+        "profit_factor_realized": 1.2695371583615915,
+        "realized_trades": 40,
+        "red_months": 8,
+        "return_pct": 23.47618070136328,
+        "worst_month_pct": -14.539298780588972
+      },
+      "stress": {
+        "average_gross_exposure_pct": 10.236653894127826,
+        "daily_max_drawdown_pct": 23.799729140849536,
+        "gap_blocks": 0,
+        "lifecycle_errors": 0,
+        "months": 25,
+        "profit_factor_realized": 1.2493580471759878,
+        "realized_trades": 40,
+        "red_months": 8,
+        "return_pct": 21.85698435301786,
+        "worst_month_pct": -14.594731793018678
+      }
+    },
+    "entry_relative_stop": {
+      "base": {
+        "average_gross_exposure_pct": 10.52604825104437,
+        "daily_max_drawdown_pct": 14.364809203378858,
+        "gap_blocks": 0,
+        "lifecycle_errors": 0,
+        "months": 25,
+        "profit_factor_realized": 1.8373812070516946,
+        "realized_trades": 40,
+        "red_months": 5,
+        "return_pct": 57.73826243659273,
+        "worst_month_pct": -11.321171347567882
+      },
+      "stress": {
+        "average_gross_exposure_pct": 10.52541648127247,
+        "daily_max_drawdown_pct": 14.433559603777923,
+        "gap_blocks": 0,
+        "lifecycle_errors": 0,
+        "months": 25,
+        "profit_factor_realized": 1.8087683564905883,
+        "realized_trades": 40,
+        "red_months": 5,
+        "return_pct": 55.77132071386455,
+        "worst_month_pct": -11.365753900690878
+      }
+    },
+    "entry_stop_gap2": {
+      "base": {
+        "average_gross_exposure_pct": 8.90539021519221,
+        "daily_max_drawdown_pct": 9.2063651740234,
+        "gap_blocks": 11,
+        "lifecycle_errors": 0,
+        "months": 25,
+        "profit_factor_realized": 2.875681659523712,
+        "realized_trades": 29,
+        "red_months": 6,
+        "return_pct": 52.86316811789149,
+        "worst_month_pct": -4.771872226280016
+      },
+      "stress": {
+        "average_gross_exposure_pct": 8.904270490978893,
+        "daily_max_drawdown_pct": 9.267865128628372,
+        "gap_blocks": 11,
+        "lifecycle_errors": 0,
+        "months": 25,
+        "profit_factor_realized": 2.820244068774009,
+        "realized_trades": 29,
+        "red_months": 6,
+        "return_pct": 51.49313857763536,
+        "worst_month_pct": -4.781355567509415
+      }
+    }
+  },
+  "failures": [],
+  "interpretation": "arithmetic and V1 baseline parity only; PIT and 15-minute live parity blockers remain",
+  "passed": true,
+  "passport_sha256": "e523e04d6c4eeacb2247ef02332046212e8fd3a6e5c9cee1a9567de10538e9c4",
+  "recomputed_gates": {
+    "entry_relative_stop": true,
+    "entry_stop_gap2": false
+  },
+  "result_sha256": "50b97cb5972856832514634c127d4917060ba19b93787e2847b9ad6663801ef1",
+  "schema_id": "alpaca_protection_challenger_v2_independent_audit"
+}
