@@ -9,6 +9,7 @@ It never imports credentials and has no order, broker, risk, or promotion path.
 from __future__ import annotations
 
 import argparse
+import collections
 import datetime as dt
 import json
 import math
@@ -145,12 +146,25 @@ def replay(candles: list[Candle], state: dict[str, Any]) -> dict[str, Any]:
     started_at = int(state["prospective_start_ts_ms"])
     existing = {str(row["signal_information_ts_ms"]): row for row in state.get("events", [])}
     signal_indices: dict[str, int] = {}
+    raw_signal_information_times: list[int] = []
+    no_signal_reasons: collections.Counter[str] = collections.Counter()
+    no_signal_reasons_after: collections.Counter[str] = collections.Counter()
+    impulse_ratios: list[float] = []
     for index, candle in enumerate(candles):
         store.set_index(index)
         signal = caller(store, candles, index)
-        if signal is None:
-            continue
         information_ts = int(candle.ts) + INTERVAL_MS
+        if signal is None:
+            reason = str(getattr(wrapper, "last_no_signal_reason", "") or "unreported")
+            no_signal_reasons[reason] += 1
+            if information_ts >= started_at:
+                no_signal_reasons_after[reason] += 1
+            impl = getattr(wrapper, "impl", None)
+            ratio = float(getattr(impl, "last_impulse_ratio", 0.0) or 0.0)
+            if math.isfinite(ratio) and ratio >= 0.0:
+                impulse_ratios.append(ratio)
+            continue
+        raw_signal_information_times.append(information_ts)
         key = str(information_ts)
         if information_ts >= started_at and key not in existing:
             existing[key] = {
@@ -175,6 +189,21 @@ def replay(candles: list[Candle], state: dict[str, Any]) -> dict[str, Any]:
             settle_event(event, candles, signal_index=index, atr=atr)
     events = [existing[key] for key in sorted(existing, key=int)]
     closed = [row for row in events if row.get("state") == "closed"]
+    raw_before = [value for value in raw_signal_information_times if value < started_at]
+    raw_after = [value for value in raw_signal_information_times if value >= started_at]
+    lookback_days = max(
+        (int(candles[-1].ts) + INTERVAL_MS - int(candles[0].ts)) / 86_400_000.0,
+        1 / 288,
+    )
+    ratio_quantiles: dict[str, float] = {}
+    if impulse_ratios:
+        values = np.asarray(impulse_ratios, dtype=float)
+        ratio_quantiles = {
+            "p50": round(float(np.quantile(values, 0.50)), 6),
+            "p90": round(float(np.quantile(values, 0.90)), 6),
+            "p99": round(float(np.quantile(values, 0.99)), 6),
+            "max": round(float(np.max(values)), 6),
+        }
     state.update({
         "schema_id": SCHEMA_ID,
         "authority": AUTHORITY,
@@ -189,6 +218,16 @@ def replay(candles: list[Candle], state: dict[str, Any]) -> dict[str, Any]:
         "closed_count": len(closed),
         "open_count": len(events) - len(closed),
         "closed_net_r": round(sum(float(row.get("net_r", 0.0)) for row in closed), 6),
+        "raw_signal_count_lookback": len(raw_signal_information_times),
+        "raw_signal_count_before_prospective": len(raw_before),
+        "raw_signal_count_after_prospective": len(raw_after),
+        "raw_signal_frequency_per_day_lookback": round(len(raw_signal_information_times) / lookback_days, 6),
+        "last_raw_signal_information_ts_ms": raw_signal_information_times[-1] if raw_signal_information_times else None,
+        "no_signal_reason_counts_lookback": dict(no_signal_reasons.most_common()),
+        "no_signal_reason_counts_after_prospective": dict(no_signal_reasons_after.most_common()),
+        "impulse_ratio_quantiles_lookback": ratio_quantiles,
+        "diagnostic_note": "Observation-only rejection counters; they do not alter the fixed signal contract.",
+        "collector_parity_note": "raw signals and prospective events use the same wrapper/caller in this replay",
         "last_completed_bar_ts_ms": int(candles[-1].ts),
         "updated_at_utc": _utc_now().isoformat(),
         "status": "collecting",

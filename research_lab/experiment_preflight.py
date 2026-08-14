@@ -233,6 +233,52 @@ def assert_symbol_handle_differentiates(
     return resolved
 
 
+def assert_callable_env_handle_differentiates(
+    module_name: str,
+    callable_name: str,
+    env_name: str,
+    result_field: str,
+    values: list,
+    *,
+    quiet: bool = False,
+) -> list[float]:
+    """Prove an engine-level env handle through a pure resolver callable."""
+    module = importlib.import_module(module_name)
+    resolver = getattr(module, callable_name, None)
+    if not callable(resolver):
+        raise PreflightError(f"{module_name}.{callable_name} is not callable")
+    saved = os.environ.get(env_name)
+    resolved: list[float] = []
+    try:
+        for want in values:
+            os.environ[env_name] = str(want)
+            settings = resolver()
+            if not isinstance(settings, dict) or result_field not in settings:
+                raise PreflightError(
+                    f"{module_name}.{callable_name}() has no field {result_field}"
+                )
+            got = float(settings[result_field])
+            expected = float(want)
+            if abs(got - expected) > 1e-12:
+                raise PreflightError(
+                    f"engine handle unread: {env_name}={want} -> {result_field}={got}"
+                )
+            resolved.append(got)
+    finally:
+        if saved is None:
+            os.environ.pop(env_name, None)
+        else:
+            os.environ[env_name] = saved
+    if len(set(resolved)) != len(values):
+        raise PreflightError(f"engine values do not differentiate: {resolved}")
+    if not quiet:
+        print(
+            f"[preflight] {module_name}.{callable_name}().{result_field} "
+            f"<- {env_name}: {resolved} PASS"
+        )
+    return resolved
+
+
 def assert_results_differ(values: list, what: str = "результаты") -> None:
     """ПОСЛЕ прогона: варианты обязаны отличаться.
 
@@ -277,6 +323,7 @@ def assert_autoresearch_spec_preflight(spec: dict[str, Any]) -> list[dict[str, A
         module = str(raw.get("module") or "").strip()
         env_name = str(raw.get("env") or "").strip()
         cfg_field = str(raw.get("cfg_field") or "").strip()
+        callable_name = str(raw.get("callable") or "").strip()
         values = raw.get("values")
         if not isinstance(values, list) or len(values) < 2:
             values = grid.get(env_name)
@@ -284,19 +331,30 @@ def assert_autoresearch_spec_preflight(spec: dict[str, Any]) -> list[dict[str, A
             raise PreflightError(
                 f"invalid preflight row for {env_name or '?'}: module/env/cfg_field and two values required"
             )
-        resolved = assert_handle_differentiates(
-            module,
-            env_name,
-            cfg_field,
-            list(values),
-            quiet=True,
-        )
+        if callable_name:
+            resolved = assert_callable_env_handle_differentiates(
+                module,
+                callable_name,
+                env_name,
+                cfg_field,
+                list(values),
+                quiet=True,
+            )
+        else:
+            resolved = assert_handle_differentiates(
+                module,
+                env_name,
+                cfg_field,
+                list(values),
+                quiet=True,
+            )
         covered.add(env_name)
         receipt.append(
             {
                 "module": module,
                 "env": env_name,
                 "cfg_field": cfg_field,
+                **({"callable": callable_name} if callable_name else {}),
                 "resolved": resolved,
                 "status": "pass",
             }

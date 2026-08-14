@@ -119,3 +119,23 @@ def test_symbol_handle_rejects_unwired_env(monkeypatch):
             ["BTCUSDT", "ETHUSDT"],
             quiet=True,
         )
+
+
+def test_callable_engine_preflight_proves_volume_exit_handle():
+    spec = {
+        "grid": {"VOLUME_EXIT_ENABLE": [0, 1]},
+        "experiment_preflight": [
+            {
+                "module": "backtest.portfolio_engine",
+                "callable": "volume_exit_settings_from_env",
+                "env": "VOLUME_EXIT_ENABLE",
+                "cfg_field": "enable",
+                "values": [0, 1],
+            }
+        ],
+    }
+
+    receipt = preflight.assert_autoresearch_spec_preflight(spec)
+
+    assert receipt[0]["resolved"] == [0.0, 1.0]
+    assert receipt[0]["callable"] == "volume_exit_settings_from_env"

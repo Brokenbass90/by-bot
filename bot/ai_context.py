@@ -86,6 +86,8 @@ def _compact_positions(payload: Any, *, max_positions: int) -> dict[str, Any]:
         )
     return {
         "count": payload.get("count", len(compact)),
+        "source_kind": payload.get("source_kind", "runner_local_export"),
+        "broker_state": payload.get("broker_state"),
         "dry_run": payload.get("dry_run"),
         "trade_on": payload.get("trade_on"),
         "ts": payload.get("ts"),
@@ -216,6 +218,7 @@ def compact_ai_full_context(
     git_rev = ctx.get("git_revision") if isinstance(ctx.get("git_revision"), dict) else {}
     errors_tail = ctx.get("errors_tail") if isinstance(ctx.get("errors_tail"), dict) else {}
     truth = ctx.get("critical_truth_assessment") if isinstance(ctx.get("critical_truth_assessment"), dict) else {}
+    position_truth = ctx.get("position_truth_assessment") if isinstance(ctx.get("position_truth_assessment"), dict) else {}
     freshness = ctx.get("source_freshness") if isinstance(ctx.get("source_freshness"), dict) else {}
     canonical = ctx.get("canonical_project_state") if isinstance(ctx.get("canonical_project_state"), dict) else {}
 
@@ -235,6 +238,7 @@ def compact_ai_full_context(
             "strategy_runtime_config": heartbeat.get("strategy_runtime_config"),
         },
         "critical_truth_assessment": truth,
+        "position_truth_assessment": position_truth,
         "source_freshness": freshness,
         "canonical_project_state": canonical,
         "project_capability_registry": (
@@ -320,6 +324,14 @@ def append_ai_context_lines(parts: list[str], repo_root: Path) -> None:
         f"recommendations_allowed={truth.get('control_recommendations_allowed')} "
         f"blockers={truth.get('blockers') or []} "
         f"live_money_sleeves={truth.get('live_money_sleeves_by_heartbeat') or []}\n"
+    )
+    position_truth = compact.get("position_truth_assessment") if isinstance(compact.get("position_truth_assessment"), dict) else {}
+    parts.append(
+        "POSITION TRUTH: "
+        f"status={position_truth.get('status')} source={position_truth.get('source_kind')} "
+        f"broker_confirmed={position_truth.get('broker_confirmed')} "
+        f"counts_match={position_truth.get('counts_match')} "
+        f"blockers={position_truth.get('blockers') or []}\n"
     )
 
     capability = compact.get("project_capability_registry")

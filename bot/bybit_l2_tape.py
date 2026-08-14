@@ -839,7 +839,20 @@ def iter_tape_files(root: Path) -> Iterator[Path]:
     if not root.exists():
         return
     for current, dirs, files in os.walk(root, followlinks=False):
-        dirs[:] = [name for name in dirs if not (Path(current) / name).is_symlink()]
+        current_path = Path(current)
+        owned_dirs: List[str] = []
+        for name in dirs:
+            child = current_path / name
+            if child.is_symlink():
+                continue
+            # Multiple collectors may intentionally live below a common
+            # runtime/tape parent.  A directory with its own control pair is a
+            # separate storage owner; recursing into it makes retention and
+            # background compression race the child collector.
+            if child != root and (child / "manifest.json").is_file() and (child / "heartbeat.json").is_file():
+                continue
+            owned_dirs.append(name)
+        dirs[:] = owned_dirs
         for name in files:
             path = Path(current) / name
             if name.endswith(_TAPE_SUFFIXES) and not path.is_symlink() and path.is_file():

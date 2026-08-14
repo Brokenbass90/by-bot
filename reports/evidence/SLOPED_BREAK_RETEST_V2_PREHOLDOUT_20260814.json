@@ -1,0 +1,57 @@
+{
+  "schema_id": "sloped_break_retest_v2_result_v1",
+  "generated_at_utc": "2026-08-14T13:37:09Z",
+  "authority": "research_only_no_live_or_promotion_authority",
+  "experiment_id": "sloped_break_retest_v2_preholdout_v1_20260814",
+  "contract": {
+    "window_start_utc": "2024-03-01T00:00:00Z",
+    "window_end_utc_exclusive": "2025-10-01T00:00:00Z",
+    "sealed_holdout_rows_read": 0,
+    "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "DOTUSDT", "AVAXUSDT", "SUIUSDT"],
+    "signal": "confirmed 4h pivot-line break, first 15m retest, later 15m BOS",
+    "execution": "next 5m open",
+    "round_trip_cost_bps": 16.0,
+    "parameter_variants": 1
+  },
+  "passport": {
+    "path": "research_lab/results/sloped_break_retest_v2_preholdout_v1_20260814/run_passport.json",
+    "sha256": "33a28c420bffe88142ea09aebdaf6055f7fdd73afb59ac1ddc486dd15bd6910e",
+    "comparison_contract_sha256": "248e7203e5b628e32cfa0cdb6fc2427930a26513b3e22735a1ae5d39b7d016eb"
+  },
+  "result": {
+    "trades": 18,
+    "net_pnl_usd": -1.27,
+    "profit_factor_usd": 0.668,
+    "win_rate": 0.278,
+    "portfolio_max_drawdown_usd": 2.5846,
+    "net_r": -2.738628582798834,
+    "mean_r": -0.152146032377713,
+    "profit_factor_r": 0.7035623174474239,
+    "sides": {
+      "long": {"trades": 9, "net_r": -0.5361006797484903},
+      "short": {"trades": 9, "net_r": -2.2025279030503433}
+    },
+    "symbols": {
+      "ADAUSDT": {"trades": 3, "net_r": 0.013603180221545233},
+      "AVAXUSDT": {"trades": 1, "net_r": -1.0926997083736572},
+      "BTCUSDT": {"trades": 2, "net_r": 1.0135083064137922},
+      "DOTUSDT": {"trades": 3, "net_r": 0.17977804217661447},
+      "ETHUSDT": {"trades": 3, "net_r": -0.8439044053142699},
+      "LINKUSDT": {"trades": 0, "net_r": 0.0},
+      "SOLUSDT": {"trades": 3, "net_r": -1.2540053752855422},
+      "SUIUSDT": {"trades": 3, "net_r": -0.7549086226373165}
+    }
+  },
+  "verdict": {
+    "status": "REJECT_FROZEN_V2_DEVELOPMENT_CONTRACT",
+    "failed_gates": [
+      "18 total trades is below 80",
+      "9 trades per side is below 30",
+      "aggregate net R is negative",
+      "PF(R) 0.704 is below 1.10",
+      "only three of eight symbols are non-negative"
+    ],
+    "live_change_authorized": false,
+    "next_falsifiable_step": "Use the separately passported state-transition funnel to locate whether V3 should change event density, retest validity, or exit geometry. Do not sweep parameters on this result."
+  }
+}

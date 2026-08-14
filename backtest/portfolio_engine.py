@@ -82,6 +82,31 @@ def _csv_set(name: str) -> set[str]:
     return {p.strip().lower() for p in str(raw).split(",") if p.strip()}
 
 
+def volume_exit_settings_from_env() -> dict[str, object]:
+    """Resolve the additive volume-stall exit contract once per backtest.
+
+    Keeping this resolution in a pure helper lets experiment preflight prove
+    that a grid handle changes the engine configuration before an expensive
+    run. Defaults and runtime behavior are unchanged.
+    """
+    baseline = max(2, int(os.getenv("VOLUME_EXIT_BASELINE_WINDOW", "20") or 20))
+    impulse = max(1, int(os.getenv("VOLUME_EXIT_IMPULSE_WINDOW", "3") or 3))
+    return {
+        "enable": (
+            str(os.getenv("VOLUME_EXIT_ENABLE", "0")).strip().lower() in {"1", "true", "yes", "on"}
+            and _volume_fade_exit is not None
+        ),
+        "strategies": _csv_set("VOLUME_EXIT_STRATEGIES"),
+        "baseline_window": baseline,
+        "impulse_window": impulse,
+        "fade_ratio": float(os.getenv("VOLUME_EXIT_FADE_RATIO", "0.70") or 0.70),
+        "peak_fade_ratio": float(os.getenv("VOLUME_EXIT_PEAK_FADE_RATIO", "0.45") or 0.45),
+        "require_stall": str(os.getenv("VOLUME_EXIT_REQUIRE_STALL", "1")).strip().lower() in {"1", "true", "yes", "on"},
+        "require_be_armed": str(os.getenv("VOLUME_EXIT_REQUIRE_BE_ARMED", "0")).strip().lower() in {"1", "true", "yes", "on"},
+        "bars": max(baseline + 2 * impulse + 2, 30),
+    }
+
+
 def run_portfolio_backtest(
     stores: Dict[str, KlineStore],
     selector: SignalSelector,
@@ -121,17 +146,16 @@ def run_portfolio_backtest(
 
     # Volume-fade early exit (owner setup A): close the runner when the impulse's
     # volume dies before reaching target. Additive, default OFF. See bot/volume_exit.py.
-    _vol_exit_enable = (
-        str(os.getenv("VOLUME_EXIT_ENABLE", "0")).strip().lower() in {"1", "true", "yes", "on"}
-        and _volume_fade_exit is not None
-    )
-    _vol_exit_strats = _csv_set("VOLUME_EXIT_STRATEGIES")  # empty = all strategies
-    _vol_exit_baseline = max(2, int(os.getenv("VOLUME_EXIT_BASELINE_WINDOW", "20") or 20))
-    _vol_exit_impulse = max(1, int(os.getenv("VOLUME_EXIT_IMPULSE_WINDOW", "3") or 3))
-    _vol_exit_fade = float(os.getenv("VOLUME_EXIT_FADE_RATIO", "0.70") or 0.70)
-    _vol_exit_peakfade = float(os.getenv("VOLUME_EXIT_PEAK_FADE_RATIO", "0.45") or 0.45)
-    _vol_exit_stall = str(os.getenv("VOLUME_EXIT_REQUIRE_STALL", "1")).strip().lower() in {"1", "true", "yes", "on"}
-    _vol_exit_bars = max(_vol_exit_baseline + 2 * _vol_exit_impulse + 2, 30)
+    _vol_settings = volume_exit_settings_from_env()
+    _vol_exit_enable = bool(_vol_settings["enable"])
+    _vol_exit_strats = set(_vol_settings["strategies"])  # empty = all strategies
+    _vol_exit_baseline = int(_vol_settings["baseline_window"])
+    _vol_exit_impulse = int(_vol_settings["impulse_window"])
+    _vol_exit_fade = float(_vol_settings["fade_ratio"])
+    _vol_exit_peakfade = float(_vol_settings["peak_fade_ratio"])
+    _vol_exit_stall = bool(_vol_settings["require_stall"])
+    _vol_exit_require_be = bool(_vol_settings["require_be_armed"])
+    _vol_exit_bars = int(_vol_settings["bars"])
 
     # Global strategy-level cooldown: after any SL in strategy X, ALL symbols
     # of that strategy are blocked for PORTFOLIO_GLOBAL_SL_COOLDOWN_BARS bars.
@@ -529,6 +553,7 @@ def run_portfolio_backtest(
             if (
                 _vol_exit_enable
                 and p.remaining_qty > 1e-12
+                and (not _vol_exit_require_be or p.be_armed)
                 and (not _vol_exit_strats or any(k in pos_strat.get(sym, "").lower() for k in _vol_exit_strats))
             ):
                 _vtail = stores[sym].exec_candles[max(0, i - _vol_exit_bars):i + 1]

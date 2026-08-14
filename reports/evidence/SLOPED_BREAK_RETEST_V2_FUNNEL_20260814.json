@@ -1,0 +1,173 @@
+{
+  "authority": "research_only_no_live_or_promotion_authority",
+  "experiment_id": "sloped_break_retest_v2_funnel_preholdout_v1_20260814",
+  "generated_at_utc": "2026-08-14T13:39:42.592743+00:00",
+  "passport_sha256": "b52dadb62be69ce3943b573d70d47f04d913732e7b3ffe6624e22ed0eba9e67f",
+  "schema_id": "sloped_break_retest_v2_funnel_v1",
+  "sealed_holdout_rows_read": 0,
+  "symbols": [
+    {
+      "bars": 166752,
+      "counts": {
+        "break_events": 16,
+        "break_long": 9,
+        "break_short": 7,
+        "completed_4h_evaluations": 3474,
+        "first_retests_held": 3,
+        "retest_expired": 13,
+        "retest_long": 1,
+        "retest_short": 2,
+        "signal_long": 1,
+        "signal_short": 2,
+        "signals": 3
+      },
+      "input": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/BTCUSDT/BTCUSDT.json",
+      "input_sha256": "354e88594ad2d25b244db935bb260c6a9de43467738e6c02dbfce9c527060ebf",
+      "symbol": "BTCUSDT"
+    },
+    {
+      "bars": 166752,
+      "counts": {
+        "break_events": 13,
+        "break_long": 6,
+        "break_short": 7,
+        "completed_4h_evaluations": 3474,
+        "first_retests_held": 4,
+        "retest_expired": 9,
+        "retest_invalidated": 1,
+        "retest_long": 2,
+        "retest_short": 2,
+        "signal_long": 2,
+        "signal_short": 1,
+        "signals": 3
+      },
+      "input": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/ETHUSDT/ETHUSDT.json",
+      "input_sha256": "f437f2edb5cde9a2b950027ac415bd5f4ef57f7e799939752b141beda246454b",
+      "symbol": "ETHUSDT"
+    },
+    {
+      "bars": 166752,
+      "counts": {
+        "break_events": 21,
+        "break_long": 10,
+        "break_short": 11,
+        "completed_4h_evaluations": 3474,
+        "first_retests_held": 4,
+        "retest_expired": 18,
+        "retest_long": 2,
+        "retest_short": 2,
+        "signal_long": 1,
+        "signal_short": 2,
+        "signals": 3
+      },
+      "input": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/SOLUSDT/SOLUSDT.json",
+      "input_sha256": "8f136aa0ff169b6ec1b9d25c39e5938f99229944f949a0a47961397dcd5c9051",
+      "symbol": "SOLUSDT"
+    },
+    {
+      "bars": 166752,
+      "counts": {
+        "break_events": 23,
+        "break_long": 13,
+        "break_short": 10,
+        "completed_4h_evaluations": 3474,
+        "first_retests_held": 9,
+        "retest_expired": 16,
+        "retest_invalidated": 3,
+        "retest_long": 5,
+        "retest_short": 4,
+        "signal_long": 1,
+        "signal_short": 3,
+        "signals": 4
+      },
+      "input": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/ADAUSDT/ADAUSDT.json",
+      "input_sha256": "59735774138dce8c7c58fbee75883f860dbfe7caaf7799df3dc466d2ef19f26e",
+      "symbol": "ADAUSDT"
+    },
+    {
+      "bars": 166752,
+      "counts": {
+        "break_events": 10,
+        "break_long": 7,
+        "break_short": 3,
+        "completed_4h_evaluations": 3474,
+        "retest_expired": 10
+      },
+      "input": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/LINKUSDT/LINKUSDT.json",
+      "input_sha256": "b75b9c124d1421409773d0718412ba94dc93d6c2feb9e52f39478620a145d148",
+      "symbol": "LINKUSDT"
+    },
+    {
+      "bars": 166752,
+      "counts": {
+        "break_events": 14,
+        "break_long": 8,
+        "break_short": 6,
+        "completed_4h_evaluations": 3474,
+        "first_retests_held": 5,
+        "retest_expired": 10,
+        "retest_invalidated": 1,
+        "retest_long": 1,
+        "retest_short": 4,
+        "signal_long": 1,
+        "signal_short": 2,
+        "signals": 3
+      },
+      "input": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/DOTUSDT/DOTUSDT.json",
+      "input_sha256": "8c6ee595a2877d8a9b8d74d1c794621da9b540dd41795ca2febcb06b8096fd44",
+      "symbol": "DOTUSDT"
+    },
+    {
+      "bars": 166752,
+      "counts": {
+        "break_events": 17,
+        "break_long": 10,
+        "break_short": 7,
+        "completed_4h_evaluations": 3474,
+        "first_retests_held": 4,
+        "retest_expired": 14,
+        "retest_invalidated": 2,
+        "retest_long": 2,
+        "retest_short": 2,
+        "signal_short": 1,
+        "signals": 1
+      },
+      "input": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/AVAXUSDT/AVAXUSDT.json",
+      "input_sha256": "d9465576c3f49429904ed360d9be2d5542d5f5aa3f0beba69dc28a70be64aece",
+      "symbol": "AVAXUSDT"
+    },
+    {
+      "bars": 166752,
+      "counts": {
+        "break_events": 17,
+        "break_long": 12,
+        "break_short": 5,
+        "completed_4h_evaluations": 3474,
+        "first_retests_held": 6,
+        "retest_expired": 12,
+        "retest_invalidated": 2,
+        "retest_long": 5,
+        "retest_short": 1,
+        "signal_long": 3,
+        "signals": 3
+      },
+      "input": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/SUIUSDT/SUIUSDT.json",
+      "input_sha256": "43de9d96c6cb6f9c2ee66cfd8f9de806780acece7e637fc93c29239a06e4a74c",
+      "symbol": "SUIUSDT"
+    }
+  ],
+  "total": {
+    "break_events": 131,
+    "break_long": 75,
+    "break_short": 56,
+    "completed_4h_evaluations": 27792,
+    "first_retests_held": 35,
+    "retest_expired": 102,
+    "retest_invalidated": 9,
+    "retest_long": 18,
+    "retest_short": 17,
+    "signal_long": 9,
+    "signal_short": 11,
+    "signals": 20
+  }
+}

@@ -182,8 +182,49 @@ def source_freshness(sources_used: dict[str, Any], *, now: float | None = None) 
     return result
 
 
+def position_truth_assessment(*, heartbeat: Any, positions: Any) -> dict[str, Any]:
+    """Label position provenance instead of calling runner-local state broker truth."""
+    hb = heartbeat if isinstance(heartbeat, dict) else {}
+    payload = positions if isinstance(positions, dict) else {}
+    source_kind = str(payload.get("source_kind") or "runner_local_export")
+    broker_confirmed = bool(
+        payload.get("broker_state") == "CONFIRMED"
+        and source_kind in {"broker_direct_readonly", "broker_direct_signed_get"}
+    )
+    try:
+        heartbeat_count = int(hb.get("open_trades"))
+    except (TypeError, ValueError):
+        heartbeat_count = None
+    try:
+        position_count = int(payload.get("count"))
+    except (TypeError, ValueError):
+        position_count = None
+    counts_match = (
+        heartbeat_count is not None
+        and position_count is not None
+        and heartbeat_count == position_count
+    )
+    blockers: list[str] = []
+    if not broker_confirmed:
+        blockers.append("broker_position_truth_not_confirmed")
+    if not counts_match:
+        blockers.append(
+            f"heartbeat_position_count_conflict:heartbeat={heartbeat_count}:positions={position_count}"
+        )
+    return {
+        "status": "CONFIRMED" if not blockers else "NOT_CONFIRMED",
+        "source_kind": source_kind,
+        "broker_confirmed": broker_confirmed,
+        "heartbeat_open_trades": heartbeat_count,
+        "position_count": position_count,
+        "counts_match": counts_match,
+        "blockers": blockers,
+    }
+
+
 def critical_truth_assessment(
-    *, heartbeat: Any, freshness: dict[str, Any], canonical_state: Any
+    *, heartbeat: Any, freshness: dict[str, Any], canonical_state: Any,
+    position_truth: Any = None,
 ) -> dict[str, Any]:
     """Fail closed when live-control evidence is stale or contradicts reviewed truth."""
     blockers: list[str] = []
@@ -230,11 +271,13 @@ def critical_truth_assessment(
         not isinstance(actual_att1, (int, float)) or abs(float(actual_att1) - float(expected_att1)) > 1e-9
     ):
         blockers.append(f"att1_risk_conflict:expected={expected_att1}:actual={actual_att1}")
+    if isinstance(position_truth, dict):
+        blockers.extend(str(row) for row in (position_truth.get("blockers") or []))
     return {
         "control_recommendations_allowed": not blockers,
         "blockers": blockers,
         "live_money_sleeves_by_heartbeat": actual_money,
-        "source_precedence": ["fresh_heartbeat", "broker_positions", "human_reviewed_canonical", "allocator", "env"],
+        "source_precedence": ["broker_direct_readonly", "fresh_heartbeat", "runner_local_export", "human_reviewed_canonical", "allocator", "env"],
     }
 
 
@@ -625,6 +668,8 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         str(pos_path.relative_to(REPO_ROOT)) if pos_path.exists() else None
     )
     ctx["open_positions"] = load_json(pos_path, fallback={"count": None, "positions": []})
+    if isinstance(ctx["open_positions"], dict):
+        ctx["open_positions"].setdefault("source_kind", "runner_local_export")
 
     # ---- Regime ----
     regime_path = source_path("regime")
@@ -836,10 +881,15 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
     ctx["active_configs_hint"] = collect_active_configs()
 
     ctx["source_freshness"] = source_freshness(ctx["sources_used"])
+    ctx["position_truth_assessment"] = position_truth_assessment(
+        heartbeat=ctx.get("heartbeat"),
+        positions=ctx.get("open_positions"),
+    )
     ctx["critical_truth_assessment"] = critical_truth_assessment(
         heartbeat=ctx.get("heartbeat"),
         freshness=ctx["source_freshness"],
         canonical_state=ctx.get("canonical_project_state"),
+        position_truth=ctx["position_truth_assessment"],
     )
 
     return ctx

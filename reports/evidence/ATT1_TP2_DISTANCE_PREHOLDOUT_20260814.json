@@ -1,0 +1,52 @@
+{
+  "schema_id": "att1_tp2_distance_result_v1",
+  "generated_at_utc": "2026-08-14T12:52:00Z",
+  "authority": "research_only_no_live_or_promotion_authority",
+  "experiment_id": "att1_tp2_distance_preholdout_v1_20260814",
+  "question": "Does moving ATT1 TP2 from 2.5R to 1.8R improve net R without materially worsening drawdown?",
+  "contract": {
+    "window_start_utc": "2024-03-01T00:00:00Z",
+    "window_end_utc_exclusive": "2025-10-01T00:00:00Z",
+    "sealed_holdout_rows_read": 0,
+    "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "DOTUSDT", "AVAXUSDT", "SUIUSDT"],
+    "signal_timeframe": "60m",
+    "execution": "next 5m open",
+    "round_trip_cost_bps": 16.0,
+    "fixed_geometry": "ATT1 Geometry V2 pivot_sequence",
+    "variant_count": 2
+  },
+  "passport": {
+    "path": "research_lab/results/att1_tp2_distance_preholdout_v1_20260814/run_passport.json",
+    "sha256": "30de8ebf252f33138bf30c39995ea6d031e5ee9f201826271950a4c1d8005cff",
+    "comparison_contract_sha256": "b97d164718f55d3fbaa45003d6f54ec8eac495137c762009707e832a94bdfc04"
+  },
+  "arms": [
+    {
+      "tp2_r": 2.5,
+      "trades": 393,
+      "net_r": -2.467991138143089,
+      "mean_r": -0.00627987566957529,
+      "profit_factor_r": 0.9877369695660385,
+      "win_rate": 0.5241730279898219,
+      "portfolio_max_drawdown": 13.5098,
+      "run_dir": "backtest_runs/portfolio_20260814_153108_att1_tp2_distance_preholdout_v1_20260814_r001"
+    },
+    {
+      "tp2_r": 1.8,
+      "trades": 394,
+      "net_r": -3.9895924576374373,
+      "mean_r": -0.010125869181820906,
+      "profit_factor_r": 0.9802878847819881,
+      "win_rate": 0.5228426395939086,
+      "portfolio_max_drawdown": 13.4631,
+      "run_dir": "backtest_runs/portfolio_20260814_153437_att1_tp2_distance_preholdout_v1_20260814_r002"
+    }
+  ],
+  "comparison": {
+    "challenger_minus_baseline_net_r": -1.5216013194943484,
+    "challenger_minus_baseline_drawdown": -0.046700000000001296,
+    "verdict": "REJECT_TP2_1_8R",
+    "live_change_authorized": false,
+    "interpretation": "A closer fixed TP2 reduced net R while leaving drawdown essentially unchanged. This does not test a causal momentum-stall exit, which remains a separate pre-registered challenger."
+  }
+}

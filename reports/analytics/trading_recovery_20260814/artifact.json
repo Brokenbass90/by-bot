@@ -1,0 +1,240 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Антикризисная сессия торговой станции — 14 августа 2026",
+    "description": "Честный статус ATT1, следующих криптоног, Alpaca, XAU и исследовательского конвейера.",
+    "generatedAt": "2026-08-14T13:41:31Z",
+    "sources": [
+      {
+        "id": "att1_live",
+        "label": "ATT1 clean forward lifecycle",
+        "path": "reports/evidence/ATT1_LIVE_LIFECYCLE_20260814.json",
+        "query": {
+          "engine": "workspace",
+          "language": "read-only-ledger-audit",
+          "sql": "SELECT clean_closed AS att1_clean_closed, 20-clean_closed AS att1_remaining, net_r AS att1_net_r, profit_factor_r AS att1_pf_r FROM read_json_auto('reports/evidence/ATT1_LIVE_LIFECYCLE_20260814.json')",
+          "description": "Aggregation of clean post-fix ATT1 closes from the read-only server ledger copy.",
+          "executed_at": "2026-08-14T12:30:00Z",
+          "tables_used": ["reports/evidence/ATT1_LIVE_LIFECYCLE_20260814.json"],
+          "filters": ["entry_ts >= 1786452046", "closed ATT1 trades only"],
+          "metric_definitions": ["net R = net broker PnL / actual initial broker risk", "PF(R) = positive R / absolute negative R"]
+        }
+      },
+      {
+        "id": "att1_tp2",
+        "label": "ATT1 TP2 passported experiment",
+        "path": "reports/evidence/ATT1_TP2_DISTANCE_PREHOLDOUT_20260814.json",
+        "query": {
+          "engine": "workspace",
+          "language": "causal-backtest",
+          "sql": "SELECT * FROM (VALUES ('TP2 2.5R (champion)', -2.4679911381, 393, 0.9877369696, 13.5098), ('TP2 1.8R (challenger)', -3.9895924576, 394, 0.9802878848, 13.4631)) AS t(arm, net_r, trades, pf_r, max_drawdown)",
+          "description": "Two-arm fixed pre-holdout comparison of TP2=2.5R versus TP2=1.8R.",
+          "executed_at": "2026-08-14T12:45:00Z",
+          "tables_used": ["reports/evidence/ATT1_TP2_DISTANCE_PREHOLDOUT_20260814.json", "research_lab/results/att1_tp2_distance_preholdout_v1_20260814/run_passport.json"],
+          "filters": ["2024-03-01 through 2025-09-30", "eight majors", "next 5m open", "16 bps round trip"],
+          "metric_definitions": ["net R = sum of trade PnL divided by each trade initial risk", "incremental net R = challenger net R minus baseline net R"]
+        }
+      },
+      {
+        "id": "att1_stall",
+        "label": "ATT1 momentum-stall passported experiment",
+        "path": "reports/evidence/ATT1_MOMENTUM_STALL_EXIT_PREHOLDOUT_20260814.json",
+        "query": {
+          "engine": "workspace",
+          "language": "causal-backtest",
+          "sql": "SELECT * FROM (VALUES ('existing runner', -2.4679911381, 393, 0.9877369696, 13.5098, 0), ('BE-gated stall exit', -2.0765442800, 393, 0.9896820028, 13.2539, 14)) AS t(arm, net_r, trades, pf_r, max_drawdown_usd, changed_exits)",
+          "description": "Two-arm fixed pre-holdout comparison of the existing runner and a pre-registered BE-gated volume-fade plus price-stall exit.",
+          "executed_at": "2026-08-14T13:16:22Z",
+          "tables_used": ["reports/evidence/ATT1_MOMENTUM_STALL_EXIT_PREHOLDOUT_20260814.json", "research_lab/results/att1_momentum_stall_exit_preholdout_v1_20260814/run_passport.json"],
+          "filters": ["2024-03-01 through 2025-09-30", "eight majors", "next 5m open", "16 bps round trip", "stall exit only after BE protection"],
+          "metric_definitions": ["net R = sum of trade PnL divided by each trade initial risk", "incremental net R = challenger net R minus baseline net R"]
+        }
+      },
+      {
+        "id": "lane_evidence",
+        "label": "Recovery session evidence registry",
+        "path": "reports/RECOVERY_SESSION_20260814.md",
+        "query": {
+          "engine": "workspace",
+          "language": "evidence-reconciliation",
+          "sql": "SELECT * FROM (VALUES (1, 'ATT1', 'tiny canary'), (2, 'Sloped break/retest V2', 'proposal queue'), (3, 'Inplay ETH 24h', 'prospective shadow'), (4, 'XSEC / funding', 'research repair'), (5, 'Alpaca V38', 'SAFE_HOLD pilot'), (6, 'XAU intraday', 'data acquisition')) AS t(priority, lane, stage) ORDER BY priority",
+          "description": "Stage, positive evidence, binding blocker, and next gate for each active research lane.",
+          "executed_at": "2026-08-14T13:00:00Z",
+          "tables_used": ["reports/RECOVERY_SESSION_20260814.md", "reports/evidence/STRATEGY_INVENTORY_20260814.json", "reports/evidence/INPLAY_PROSPECTIVE_PARITY_20260814.json", "research_lab/results/alpaca_clean_v38_proxy_v1_20260813/independent_audit.json"]
+        }
+      }
+    ],
+    "cards": [
+      {
+        "id": "att1_n",
+        "description": "Clean ATT1 closes after the cohort boundary; the scale gate is N20.",
+        "dataset": "headline",
+        "sourceId": "att1_live",
+        "metrics": [
+          {"label": "ATT1 clean closes", "field": "att1_clean_closed", "format": "number"},
+          {"label": "Remaining to N20", "field": "att1_remaining", "format": "number"}
+        ]
+      },
+      {
+        "id": "att1_r",
+        "description": "Forward result in initial-risk units. N=5 is encouraging, not promotion proof.",
+        "dataset": "headline",
+        "sourceId": "att1_live",
+        "metrics": [
+          {"label": "ATT1 clean net R", "field": "att1_net_r", "format": "number", "signed": true},
+          {"label": "PF(R)", "field": "att1_pf_r", "format": "number"}
+        ]
+      },
+      {
+        "id": "research_queue",
+        "description": "Complete falsifiable cards accepted into the proposal-only queue.",
+        "dataset": "headline",
+        "sourceId": "lane_evidence",
+        "metrics": [
+          {"label": "Research cards", "field": "research_cards", "format": "number"},
+          {"label": "New money legs", "field": "new_money_legs", "format": "number"}
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "tp2_net_r",
+        "title": "Приближение TP2 ухудшило ATT1",
+        "subtitle": "Фиксированный pre-holdout, восемь мажоров, next-open, 16 bps полного круга",
+        "showDescription": true,
+        "intent": "comparison",
+        "question": "Улучшает ли TP2=1.8R итог относительно текущих 2.5R?",
+        "rationale": "Два столбца показывают прямое сравнение единственной изменённой ручки.",
+        "comparisonContext": {"grain": "TP2 arm", "unit": "R", "normalization": "sum of trade-level R", "denominator": "initial trade risk"},
+        "type": "bar",
+        "dataset": "tp2_arms",
+        "sourceId": "att1_tp2",
+        "encodings": {
+          "x": {"field": "arm", "type": "nominal", "label": "TP2 arm"},
+          "y": {"field": "net_r", "type": "quantitative", "aggregate": "none", "format": "number", "label": "Net R"},
+          "tooltip": [
+            {"field": "trades", "type": "quantitative", "format": "number", "label": "Trades"},
+            {"field": "pf_r", "type": "quantitative", "format": "number", "label": "PF(R)"},
+            {"field": "max_drawdown", "type": "quantitative", "format": "number", "label": "Portfolio DD"}
+          ]
+        },
+        "valueFormat": "number",
+        "unit": "R",
+        "layout": "full",
+        "labels": {"values": "all"}
+      }
+    ],
+    "tables": [
+      {
+        "id": "lane_table",
+        "title": "Активные денежные и исследовательские контуры",
+        "subtitle": "Стадия не смешивается с качеством идеи; каждый контур имеет отдельный следующий gate.",
+        "showDescription": true,
+        "dataset": "research_lanes",
+        "sourceId": "lane_evidence",
+        "layout": "full",
+        "defaultSort": {"field": "priority", "direction": "asc"},
+        "columns": [
+          {"field": "priority", "label": "Приоритет", "format": "number", "type": "number"},
+          {"field": "lane", "label": "Контур", "type": "text"},
+          {"field": "stage", "label": "Стадия", "type": "text"},
+          {"field": "positive", "label": "Что уже полезно", "type": "text"},
+          {"field": "blocker", "label": "Что блокирует деньги", "type": "text"},
+          {"field": "next_gate", "label": "Следующий gate", "type": "text"}
+        ]
+      }
+    ],
+    "blocks": [
+      {"id": "title", "type": "markdown", "layout": "full", "body": "# Антикризисная сессия торговой станции — 14 августа 2026"},
+      {"id": "executive_summary", "type": "markdown", "layout": "full", "body": "## Executive Summary\n\n- **Позитив появился в правильном месте:** чистая forward-когорта ATT1 сейчас N5, +2.950R и PF(R) 3.289. Это мало для масштабирования, но это уже не старый подогнанный бэктест.\n- **ATT1 не объявлена ни рабочей навсегда, ни мёртвой:** corrected Geometry V2 исторически около нуля/в минусе, поэтому tiny canary сохраняется, а N20 и контрактная сверка остаются обязательными.\n- **Два выхода проверены:** TP2=1.8R ухудшил net на 1.522R; BE-gated stall улучшил net на 0.391R, но весь arm остался отрицательным. Live runner не меняется.\n- **Пробой наклонной уже не обещание:** отдельная V2 дала 18 сделок, -2.739R и PF(R) 0.704. Funnel локализовал главный дефицит: 131 пробой -> 35 удержанных первых ретестов -> 20 сигналов.\n- **Основа стала наблюдаемее:** XAU теперь резюмируется по дням, L2-коллекторы больше не спорят за чужие файлы, а AI различает runner-local и broker-direct truth."},
+      {"id": "headline_metrics", "type": "metric-strip", "layout": "full", "cardIds": ["att1_n", "att1_r", "research_queue"]},
+      {"id": "tp2_heading", "type": "markdown", "layout": "full", "sourceId": "att1_tp2", "body": "## TP2: ощущение превратилось в проверяемый результат\n\nTP2 действительно редко достигается, но простое приближение цели не решило проблему: оно отрезало часть сильных движений и практически не изменило просадку."},
+      {"id": "tp2_chart", "type": "chart", "layout": "full", "chartId": "tp2_net_r", "sourceId": "att1_tp2"},
+      {"id": "stall_result", "type": "markdown", "layout": "full", "sourceId": "att1_stall", "body": "## Затухание импульса: полезный механизм, но ещё не live-фикс\n\nЗамороженный BE-gated volume-fade + price-stall challenger изменил 14 из 393 выходов и добавил +0.391R относительно текущего runner. Просадка слегка снизилась, однако весь corrected arm остался отрицательным (-2.077R), эффект смешан по символам, а BTC/ETH вообще не изменились. Решение: сохранить как validation-кандидат, live не менять."},
+      {"id": "lanes_heading", "type": "markdown", "layout": "full", "body": "## Следующие ноги идут параллельно, но не получают деньги авансом\n\nInplay уже имеет доказанную частотную parity на старых окнах, sloped-break V2 быстро прошёл от идеи до честного отрицательного verdict, funding собран на 137 символах, а XAU-история снова качается после ремонта. Это широкий конвейер; денежная книга остаётся узкой до прохождения ворот."},
+      {"id": "lanes_table", "type": "table", "layout": "full", "tableId": "lane_table", "sourceId": "lane_evidence"},
+      {"id": "timing", "type": "markdown", "layout": "full", "sourceId": "lane_evidence", "body": "## Условные сроки\n\n- ATT1 0.10 → 0.25: после ещё 15 чистых закрытий и свежей сверки риска; при недавней частоте это ориентир 1–3 недели, не обещание.\n- Вторая криптонога: дни до historical verdict, но честнее 3–6 недель до tiny canary, если кандидат переживёт replay и forward.\n- Три–четыре денежные криптоноги: агрессивный условный диапазон 6–12 недель.\n- Alpaca: защита и exact replay — дни инженерии; расширение капитала — недели forward.\n- XAU: первые цифры только после полного guarded materialization и замороженного внутридневного контракта."},
+      {"id": "caveats", "type": "markdown", "layout": "full", "body": "## Ограничения и решения\n\nВ сессии не отправлялись и не отменялись заявки, не закрывались позиции, не менялся риск и не перезапускался live-монолит. Bitget проверен только read-only: futures-баланс равен нулю, а полноценного multi-exchange execution/reconciliation слоя пока нет. Alpaca остаётся SAFE_HOLD из-за несовпадения proxy/live и обнаруженного сброса внутридневного stop обратно в DAY-контракт. Скриншоты из Desktop недоступны текущему процессу macOS и поэтому не использованы как доказательство."}
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-14T13:41:31Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {"att1_clean_closed": 5, "att1_remaining": 15, "att1_net_r": 2.9500882633, "att1_pf_r": 3.2893070852, "research_cards": 4, "new_money_legs": 0}
+      ],
+      "tp2_arms": [
+        {"arm": "TP2 2.5R (champion)", "net_r": -2.4679911381, "trades": 393, "pf_r": 0.9877369696, "max_drawdown": 13.5098, "mean_r": -0.0062798757},
+        {"arm": "TP2 1.8R (challenger)", "net_r": -3.9895924576, "trades": 394, "pf_r": 0.9802878848, "max_drawdown": 13.4631, "mean_r": -0.0101258692}
+      ],
+      "research_lanes": [
+        {"priority": 1, "lane": "ATT1", "stage": "tiny canary", "positive": "clean N5, +2.950R", "blocker": "N20; historical robustness conflict", "next_gate": "15 closes + exact reconciliation"},
+        {"priority": 2, "lane": "Sloped break/retest V2", "stage": "frozen contract rejected", "positive": "131 breaks; failure localized", "blocker": "35 held retests; N18; -2.739R; PF(R) 0.704", "next_gate": "one preregistered retest-definition V3"},
+        {"priority": 3, "lane": "Inplay ETH 24h", "stage": "prospective shadow", "positive": "code parity; 0.91–2.31 signals/day on old slices", "blocker": "current N0; mixed edge windows", "next_gate": "prospective events without contract drift"},
+        {"priority": 4, "lane": "XSEC / funding", "stage": "research repair", "positive": "137 funding; 74 spot histories", "blocker": "PIT, mapping, fees, parity", "next_gate": "exact hedgeable-pair replay"},
+        {"priority": 5, "lane": "Alpaca V38", "stage": "SAFE_HOLD pilot", "positive": "+11.14% annualized clean proxy", "blocker": "DD 23.71%; 93% unknown sectors; stop reset", "next_gate": "GTC protection + exact replay"},
+        {"priority": 6, "lane": "XAU intraday", "stage": "data acquisition", "positive": "daily atomic resume works", "blocker": "history incomplete; quarantine gap", "next_gate": "complete data + session sweep prereg"}
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "att1_live",
+      "label": "ATT1 clean forward lifecycle",
+      "path": "reports/evidence/ATT1_LIVE_LIFECYCLE_20260814.json",
+      "query": {
+        "engine": "workspace",
+        "language": "read-only-ledger-audit",
+        "sql": "SELECT clean_closed AS att1_clean_closed, 20-clean_closed AS att1_remaining, net_r AS att1_net_r, profit_factor_r AS att1_pf_r FROM read_json_auto('reports/evidence/ATT1_LIVE_LIFECYCLE_20260814.json')",
+        "description": "Aggregation of clean post-fix ATT1 closes from the read-only server ledger copy.",
+        "tables_used": ["reports/evidence/ATT1_LIVE_LIFECYCLE_20260814.json"],
+        "filters": ["entry_ts >= 1786452046", "closed ATT1 trades only"],
+        "metric_definitions": ["net R = net broker PnL / actual initial broker risk", "PF(R) = positive R / absolute negative R"]
+      }
+    },
+    {
+      "id": "att1_tp2",
+      "label": "ATT1 TP2 passported experiment",
+      "path": "reports/evidence/ATT1_TP2_DISTANCE_PREHOLDOUT_20260814.json",
+      "query": {
+        "engine": "workspace",
+        "language": "causal-backtest",
+        "sql": "SELECT * FROM (VALUES ('TP2 2.5R (champion)', -2.4679911381, 393, 0.9877369696, 13.5098), ('TP2 1.8R (challenger)', -3.9895924576, 394, 0.9802878848, 13.4631)) AS t(arm, net_r, trades, pf_r, max_drawdown)",
+        "description": "Two-arm fixed pre-holdout comparison of TP2=2.5R versus TP2=1.8R.",
+        "tables_used": ["reports/evidence/ATT1_TP2_DISTANCE_PREHOLDOUT_20260814.json", "research_lab/results/att1_tp2_distance_preholdout_v1_20260814/run_passport.json"],
+        "filters": ["2024-03-01 through 2025-09-30", "eight majors", "next 5m open", "16 bps round trip"],
+        "metric_definitions": ["net R = sum of trade PnL divided by each trade initial risk", "incremental net R = challenger net R minus baseline net R"]
+      }
+    },
+    {
+      "id": "att1_stall",
+      "label": "ATT1 momentum-stall passported experiment",
+      "path": "reports/evidence/ATT1_MOMENTUM_STALL_EXIT_PREHOLDOUT_20260814.json",
+      "query": {
+        "engine": "workspace",
+        "language": "causal-backtest",
+        "sql": "SELECT * FROM (VALUES ('existing runner', -2.4679911381, 393, 0.9877369696, 13.5098, 0), ('BE-gated stall exit', -2.0765442800, 393, 0.9896820028, 13.2539, 14)) AS t(arm, net_r, trades, pf_r, max_drawdown_usd, changed_exits)",
+        "description": "Two-arm fixed pre-holdout comparison of the existing runner and a pre-registered BE-gated volume-fade plus price-stall exit.",
+        "tables_used": ["reports/evidence/ATT1_MOMENTUM_STALL_EXIT_PREHOLDOUT_20260814.json", "research_lab/results/att1_momentum_stall_exit_preholdout_v1_20260814/run_passport.json"],
+        "filters": ["2024-03-01 through 2025-09-30", "eight majors", "next 5m open", "16 bps round trip", "stall exit only after BE protection"],
+        "metric_definitions": ["net R = sum of trade PnL divided by each trade initial risk", "incremental net R = challenger net R minus baseline net R"]
+      }
+    },
+    {
+      "id": "lane_evidence",
+      "label": "Recovery session evidence registry",
+      "path": "reports/RECOVERY_SESSION_20260814.md",
+      "query": {
+        "engine": "workspace",
+        "language": "evidence-reconciliation",
+        "sql": "SELECT * FROM (VALUES (1, 'ATT1', 'tiny canary'), (2, 'Sloped break/retest V2', 'proposal queue'), (3, 'Inplay ETH 24h', 'prospective shadow'), (4, 'XSEC / funding', 'research repair'), (5, 'Alpaca V38', 'SAFE_HOLD pilot'), (6, 'XAU intraday', 'data acquisition')) AS t(priority, lane, stage) ORDER BY priority",
+        "description": "Stage, positive evidence, binding blocker, and next gate for each active research lane.",
+        "tables_used": ["reports/RECOVERY_SESSION_20260814.md", "reports/evidence/STRATEGY_INVENTORY_20260814.json", "reports/evidence/INPLAY_PROSPECTIVE_PARITY_20260814.json", "research_lab/results/alpaca_clean_v38_proxy_v1_20260813/independent_audit.json"]
+      }
+    }
+  ]
+}

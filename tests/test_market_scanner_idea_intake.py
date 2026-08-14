@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 from pathlib import Path
+import subprocess
+import sys
 
 from research_lab.hypothesis_memory import HypothesisMemory
 from research_lab.idea_intake import ingest, normalize_card
@@ -60,3 +62,40 @@ def test_intake_rejects_incomplete_and_deduplicates(tmp_path: Path):
     assert len(accepted) == 1
     assert len(rejected) == 2
     assert any("duplicate_proposal_key" in row["errors"] for row in rejected)
+
+
+def test_intake_cli_is_directly_executable():
+    proc = subprocess.run(
+        [sys.executable, "research_lab/idea_intake.py", "--help"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert "--input" in proc.stdout
+
+
+def test_att1_closed_slope_does_not_quarantine_other_sloped_family(tmp_path: Path):
+    memory = HypothesisMemory(str(tmp_path / "closed.json"))
+    sloped, errors = normalize_card(
+        _card(
+            target_strategy="sloped_break_retest_v2",
+            description="Пробой наклонной slope линии и retest",
+            mechanism="Каузальный slope break после подтвержденной наклонной линии",
+        ),
+        memory,
+    )
+    assert not errors
+    assert sloped["status"] == "awaiting_owner_approval"
+    assert not sloped["closed_hypothesis_matches"]
+
+    att1, errors = normalize_card(
+        _card(
+            target_strategy="att1_trendline_touch",
+            description="ATT1 минимальный slope наклон",
+            mechanism="Изменить min slope наклон ATT1",
+        ),
+        memory,
+    )
+    assert not errors
+    assert any(row["key"] == "att1_min_slope" for row in att1["closed_hypothesis_matches"])

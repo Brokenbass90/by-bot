@@ -11,9 +11,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from research_lab.hypothesis_memory import HypothesisMemory
 
@@ -21,6 +26,14 @@ from research_lab.hypothesis_memory import HypothesisMemory
 REQUIRED_TEXT = ("description", "rationale", "mechanism", "cost_model", "test_contract", "death_criteria", "risk_note", "acceptance_gate")
 REQUIRED_LISTS = ("data_required", "source_ids")
 ALLOWED_TYPES = {"new_strategy_idea", "new_sweep"}
+STRATEGY_SCOPED_CLOSED_PREFIXES = {"att1"}
+
+
+def _matches_target_scope(key: str, target_strategy: Any) -> bool:
+    prefix = str(key or "").split("_", 1)[0].lower()
+    if prefix not in STRATEGY_SCOPED_CLOSED_PREFIXES:
+        return True
+    return prefix in str(target_strategy or "").lower()
 
 
 def _stable_key(card: dict[str, Any]) -> str:
@@ -55,7 +68,10 @@ def normalize_card(raw: Any, memory: HypothesisMemory) -> tuple[dict[str, Any] |
     card["source_ids"] = [value.strip()[:120] for value in card["source_ids"][:20]]
     card["proposal_key"] = _stable_key(card)
     query = f"{card['description']} {card['mechanism']} {card.get('target_strategy') or ''}"
-    closed = memory.check(query)
+    closed = [
+        item for item in memory.check(query)
+        if _matches_target_scope(item.key, card.get("target_strategy"))
+    ]
     card["closed_hypothesis_matches"] = [
         {"key": item.key, "verdict": item.verdict, "mechanism": item.mechanism, "reopen_if": item.reopen_if, "evidence": item.evidence}
         for item in closed[:5]

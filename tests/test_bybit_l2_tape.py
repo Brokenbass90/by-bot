@@ -23,6 +23,7 @@ from bot.bybit_l2_tape import (
     compress_jsonl_partition,
     enforce_storage_budget,
     expired_partition_files,
+    iter_tape_files,
     iter_jsonl,
     marker_record,
     normalize_book_frame,
@@ -376,6 +377,23 @@ def test_storage_cap_fails_closed_and_retention_only_selects_known_old_partition
     deleted = prune_expired_partitions(root, now_ms=now_ms, retention_days=30)
     assert deleted == [str(old)]
     assert unrelated.exists()
+
+
+def test_parent_collector_does_not_claim_nested_collector_partitions(tmp_path: Path):
+    root = tmp_path / "tape"
+    owned = root / "BTCUSDT" / "20260813.book.jsonl"
+    owned.parent.mkdir(parents=True)
+    owned.write_text("owned\n")
+    nested = root / "bybit_l2_ondo_v1"
+    nested.mkdir()
+    (nested / "manifest.json").write_text("{}")
+    (nested / "heartbeat.json").write_text("{}")
+    foreign = nested / "ONDOUSDT" / "20260813.book.jsonl"
+    foreign.parent.mkdir()
+    foreign.write_text("foreign\n")
+
+    assert list(iter_tape_files(root)) == [owned]
+    assert list(iter_tape_files(nested)) == [foreign]
 
 
 def test_validate_file_and_partition_selector_are_read_only(tmp_path: Path):

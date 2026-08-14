@@ -1,6 +1,7 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from bot.volume_exit import volume_fade_exit
+from backtest.portfolio_engine import volume_exit_settings_from_env
 
 
 def _row(ts, o, h, l, c, v):
@@ -100,3 +101,20 @@ def test_zero_volume_safe():
 def test_bad_side():
     r = volume_fade_exit(_series([100] * 20), side="sideways")
     assert r["exit"] is False and r["reason"] == "bad_side"
+
+
+def test_portfolio_volume_exit_settings_resolve_once(monkeypatch):
+    monkeypatch.setenv("VOLUME_EXIT_ENABLE", "1")
+    monkeypatch.setenv("VOLUME_EXIT_STRATEGIES", "alt_trendline_touch_v1")
+    monkeypatch.setenv("VOLUME_EXIT_BASELINE_WINDOW", "24")
+    monkeypatch.setenv("VOLUME_EXIT_IMPULSE_WINDOW", "4")
+    monkeypatch.setenv("VOLUME_EXIT_REQUIRE_BE_ARMED", "1")
+
+    settings = volume_exit_settings_from_env()
+
+    assert settings["enable"] is True
+    assert settings["strategies"] == {"alt_trendline_touch_v1"}
+    assert settings["baseline_window"] == 24
+    assert settings["impulse_window"] == 4
+    assert settings["require_be_armed"] is True
+    assert settings["bars"] == 34

@@ -1,0 +1,72 @@
+{
+  "name": "sloped_break_retest_v2_preholdout_v1_20260814",
+  "description": "Frozen no-grid 4h pivot-line break, first 15m retest, and later 15m BOS development replay.",
+  "cache_only": true,
+  "command": [
+    "{python}", "backtest/run_portfolio.py",
+    "--symbols", "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,DOTUSDT,AVAXUSDT,SUIUSDT",
+    "--strategies", "sloped_break_retest_v2",
+    "--days", "579", "--end", "2025-10-01", "--tag", "{tag}",
+    "--starting_equity", "100", "--risk_pct", "0.005", "--leverage", "1",
+    "--max_positions", "3", "--fee_bps", "6", "--slippage_bps", "2",
+    "--entry-on-next-open",
+    "--cache", "research_lab/results/att1_pivot_sequence_preholdout_v1_20260813/cache"
+  ],
+  "base_env": {
+    "BACKTEST_REQUIRE_EXACT_CACHE": "1",
+    "BACKTEST_MIN_COVERAGE_FRAC": "1.0",
+    "SLBR2_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,DOTUSDT,AVAXUSDT,SUIUSDT",
+    "SLBR2_LINE_TF": "240",
+    "SLBR2_TRIGGER_TF": "15",
+    "SLBR2_LINE_LOOKBACK": "120",
+    "SLBR2_TRIGGER_LOOKBACK": "40",
+    "SLBR2_PIVOT_LEFT": "2",
+    "SLBR2_PIVOT_RIGHT": "2",
+    "SLBR2_MIN_PIVOTS": "3",
+    "SLBR2_MAX_PIVOTS": "4",
+    "SLBR2_MAX_PIVOT_AGE": "40",
+    "SLBR2_MIN_SLOPE_PCT_DAY": "0.10",
+    "SLBR2_MAX_SLOPE_PCT_DAY": "8.0",
+    "SLBR2_MAX_FIT_ERROR_ATR": "0.35",
+    "SLBR2_POST_FIT_BREAK_TOLERANCE_ATR": "0.15",
+    "SLBR2_BREAKOUT_EXTENSION_ATR": "0.25",
+    "SLBR2_BREAKOUT_BODY_FRACTION": "0.55",
+    "SLBR2_BREAKOUT_VOLUME_MULTIPLE": "1.20",
+    "SLBR2_RETEST_WINDOW_BARS": "16",
+    "SLBR2_RETEST_TOUCH_ATR": "0.20",
+    "SLBR2_RETEST_HOLD_ATR": "0.08",
+    "SLBR2_INVALIDATION_ATR": "0.35",
+    "SLBR2_STRUCTURE_LOOKBACK": "2",
+    "SLBR2_STOP_BUFFER_ATR": "0.20",
+    "SLBR2_TP1_RR": "1.50",
+    "SLBR2_TP2_RR": "3.00",
+    "SLBR2_TP1_FRAC": "0.55",
+    "SLBR2_TP2_FRAC": "0.25",
+    "SLBR2_BE_TRIGGER_RR": "1.00",
+    "SLBR2_TRAIL_ACTIVATE_RR": "1.50",
+    "SLBR2_TRAIL_ATR_MULT": "1.70",
+    "SLBR2_TIME_STOP_BARS_5M": "288",
+    "SLBR2_ALLOW_LONGS": "1",
+    "SLBR2_ALLOW_SHORTS": "1"
+  },
+  "grid": {},
+  "experiment_preflight": [
+    {
+      "module": "sloped_break_retest_v2",
+      "env": "SLBR2_ALLOW_LONGS",
+      "cfg_field": "allow_longs",
+      "values": [0, 1]
+    }
+  ],
+  "constraints": {
+    "min_trades": 0,
+    "min_profit_factor": 0.0,
+    "max_drawdown": 100.0,
+    "min_net_pnl": -100.0,
+    "max_negative_months": 30,
+    "max_negative_streak": 30
+  },
+  "selection_contract": "One frozen development contract. No parameter selection and no live or promotion authority.",
+  "live_authority": false,
+  "_combo_count": 1
+}

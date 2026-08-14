@@ -1,0 +1,67 @@
+{
+  "schema_id": "att1_momentum_stall_exit_result_v1",
+  "generated_at_utc": "2026-08-14T13:16:22Z",
+  "authority": "research_only_no_live_or_promotion_authority",
+  "experiment_id": "att1_momentum_stall_exit_preholdout_v1_20260814",
+  "question": "After ATT1 protection is armed, does a fixed volume-fade plus price-stall exit preserve more R than the existing runner?",
+  "contract": {
+    "window_start_utc": "2024-03-01T00:00:00Z",
+    "window_end_utc_exclusive": "2025-10-01T00:00:00Z",
+    "sealed_holdout_rows_read": 0,
+    "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "DOTUSDT", "AVAXUSDT", "SUIUSDT"],
+    "signal_timeframe": "60m",
+    "execution": "next 5m open with causal 5m exit observation",
+    "round_trip_cost_bps": 16.0,
+    "fixed_geometry": "ATT1 Geometry V2 pivot_sequence",
+    "volume_exit": {
+      "require_be_armed": true,
+      "baseline_bars": 20,
+      "impulse_bars": 3,
+      "fade_ratio": 0.7,
+      "peak_ratio": 0.45,
+      "require_price_stall": true
+    },
+    "variant_count": 2
+  },
+  "passport": {
+    "path": "research_lab/results/att1_momentum_stall_exit_preholdout_v1_20260814/run_passport.json",
+    "sha256": "36c0c91bf1fc0ae5f5097fec817f71fc6c6ae27a4fa3387fda2b43845f243496",
+    "comparison_contract_sha256": "e20515f31e9b994f5a46b692c303c316fcbb056569bcd438f6477da027ba5035"
+  },
+  "arms": [
+    {
+      "volume_exit_enabled": false,
+      "trades": 393,
+      "net_r": -2.467991138143089,
+      "mean_r": -0.00627987566957529,
+      "profit_factor_r": 0.9877369695660385,
+      "portfolio_max_drawdown_usd": 13.5098,
+      "sequential_max_drawdown_r": 27.617101981766034,
+      "volume_fade_exits": 0,
+      "run_dir": "backtest_runs/portfolio_20260814_160823_att1_momentum_stall_exit_preholdout_v1_20260814_r001"
+    },
+    {
+      "volume_exit_enabled": true,
+      "trades": 393,
+      "net_r": -2.0765442799524827,
+      "mean_r": -0.005283827684357463,
+      "profit_factor_r": 0.9896820027790968,
+      "portfolio_max_drawdown_usd": 13.2539,
+      "sequential_max_drawdown_r": 27.325219307287856,
+      "volume_fade_exits": 14,
+      "run_dir": "backtest_runs/portfolio_20260814_161151_att1_momentum_stall_exit_preholdout_v1_20260814_r002"
+    }
+  ],
+  "comparison": {
+    "challenger_minus_baseline_net_r": 0.3914468581906063,
+    "challenger_minus_baseline_profit_factor_r": 0.001945033213058286,
+    "challenger_minus_baseline_portfolio_drawdown_usd": -0.25590000000000046,
+    "changed_trades": 14,
+    "positive_symbol_deltas": ["DOTUSDT", "LINKUSDT", "SOLUSDT", "SUIUSDT"],
+    "negative_symbol_deltas": ["ADAUSDT", "AVAXUSDT"],
+    "unchanged_symbols": ["BTCUSDT", "ETHUSDT"],
+    "verdict": "PROMISING_BUT_INSUFFICIENT_RESEARCH_ONLY",
+    "live_change_authorized": false,
+    "interpretation": "The fixed BE-gated stall exit modestly improves net R, profit factor, and drawdown, but the full arm remains negative, only 14 exits changed, and the effect is mixed by symbol. It is a validation candidate, not a live patch."
+  }
+}

@@ -1,6 +1,33 @@
 from scripts import build_ai_full_context as builder
 
 
+def test_position_truth_does_not_mislabel_runner_export_as_broker_truth() -> None:
+    result = builder.position_truth_assessment(
+        heartbeat={"open_trades": 2},
+        positions={"source_kind": "runner_local_export", "count": 2, "positions": []},
+    )
+
+    assert result["counts_match"] is True
+    assert result["broker_confirmed"] is False
+    assert result["status"] == "NOT_CONFIRMED"
+    assert "broker_position_truth_not_confirmed" in result["blockers"]
+
+
+def test_position_truth_accepts_explicit_direct_broker_snapshot() -> None:
+    result = builder.position_truth_assessment(
+        heartbeat={"open_trades": 1},
+        positions={
+            "source_kind": "broker_direct_readonly",
+            "broker_state": "CONFIRMED",
+            "count": 1,
+            "positions": [{"symbol": "BTCUSDT"}],
+        },
+    )
+
+    assert result["status"] == "CONFIRMED"
+    assert result["blockers"] == []
+
+
 def test_critical_truth_allows_only_fresh_matching_live_state():
     heartbeat = {
         "strategy_runtime_config": {

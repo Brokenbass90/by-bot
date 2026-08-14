@@ -1,0 +1,73 @@
+{
+  "name": "att1_momentum_stall_exit_preholdout_v1_20260814",
+  "description": "Frozen binary ATT1 Geometry V2 momentum-stall exit test on physically isolated pre-holdout M5 data.",
+  "cache_only": true,
+  "command": [
+    "{python}", "backtest/run_portfolio.py",
+    "--symbols", "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,DOTUSDT,AVAXUSDT,SUIUSDT",
+    "--strategies", "alt_trendline_touch_v1",
+    "--days", "579", "--end", "2025-10-01", "--tag", "{tag}",
+    "--starting_equity", "100", "--risk_pct", "0.0075", "--leverage", "1",
+    "--max_positions", "3", "--fee_bps", "6", "--slippage_bps", "2",
+    "--entry-on-next-open",
+    "--cache", "research_lab/results/att1_pivot_sequence_preholdout_v1_20260813/cache"
+  ],
+  "base_env": {
+    "BACKTEST_REQUIRE_EXACT_CACHE": "1",
+    "BACKTEST_MIN_COVERAGE_FRAC": "1.0",
+    "ATT1_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,DOTUSDT,AVAXUSDT,SUIUSDT",
+    "ATT1_ALLOW_LONGS": "0",
+    "ATT1_ALLOW_SHORTS": "1",
+    "ATT1_SIGNAL_TF": "60",
+    "ATT1_PIVOT_LEFT": "2",
+    "ATT1_PIVOT_RIGHT": "3",
+    "ATT1_MIN_PIVOTS": "2",
+    "ATT1_MAX_PIVOTS_USED": "3",
+    "ATT1_MAX_PIVOT_AGE": "16",
+    "ATT1_MIN_R2": "0.55",
+    "ATT1_TOUCH_ATR": "0.50",
+    "ATT1_RSI_SHORT_MIN": "45",
+    "ATT1_RSI_SHORT_MAX": "100",
+    "ATT1_MIN_ENTRY_DIST_ATR": "0.0",
+    "ATT1_MAX_ENTRY_DIST_ATR": "2.0",
+    "ATT1_SHORT_MAX_POS_SLOPE": "0.5",
+    "ATT1_G2_PROFILE": "pivot_sequence",
+    "ATT1_GEOMETRY_V2_ENABLE": "1",
+    "ATT1_TP1_RR": "1.2",
+    "ATT1_TP2_RR": "2.5",
+    "ATT1_TP1_FRAC": "0.55",
+    "ATT1_BE_TRIGGER_RR": "1.0",
+    "ATT1_TRAIL_ACTIVATE_RR": "1.0",
+    "ATT1_TRAIL_ATR_MULT": "1.5",
+    "VOLUME_EXIT_STRATEGIES": "alt_trendline_touch_v1",
+    "VOLUME_EXIT_BASELINE_WINDOW": "20",
+    "VOLUME_EXIT_IMPULSE_WINDOW": "3",
+    "VOLUME_EXIT_FADE_RATIO": "0.70",
+    "VOLUME_EXIT_PEAK_FADE_RATIO": "0.45",
+    "VOLUME_EXIT_REQUIRE_STALL": "1",
+    "VOLUME_EXIT_REQUIRE_BE_ARMED": "1"
+  },
+  "grid": {
+    "VOLUME_EXIT_ENABLE": ["0", "1"]
+  },
+  "experiment_preflight": [
+    {
+      "module": "backtest.portfolio_engine",
+      "callable": "volume_exit_settings_from_env",
+      "env": "VOLUME_EXIT_ENABLE",
+      "cfg_field": "enable",
+      "values": [0, 1]
+    }
+  ],
+  "constraints": {
+    "min_trades": 20,
+    "min_profit_factor": 0.0,
+    "max_drawdown": 100.0,
+    "min_net_pnl": -100.0,
+    "max_negative_months": 30,
+    "max_negative_streak": 30
+  },
+  "selection_contract": "Binary causal exit diagnostic only. No live or promotion authority.",
+  "live_authority": false,
+  "_combo_count": 2
+}

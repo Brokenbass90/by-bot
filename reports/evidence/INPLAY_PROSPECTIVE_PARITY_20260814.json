@@ -1,0 +1,53 @@
+{
+  "schema_id": "inplay_prospective_parity_audit_v1",
+  "authority": "research_only_no_live_or_promotion",
+  "sealed_holdout_rows_decoded": 0,
+  "data_path": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28/research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/ETHUSDT.json",
+  "data_sha256": "f437f2edb5cde9a2b950027ac415bd5f4ef57f7e799939752b141beda246454b",
+  "reference_passport_sha256": "c49263af7d5cdd6659fd91a5ff4e8b4463ad6786ac7101eccebe3b936fc12987",
+  "reference_code_hashes": {
+    "strategy_adapter.py": "acaa0b6b68b523b3c78a7ded03735d7f772f755f5dbb36933bce26033591915a",
+    "inplay_breakout.py": "318be191060e40f923abfcc1b163240d9ddf8c775c8dd2c18795d44911f8aba7"
+  },
+  "current_code_hashes": {
+    "inplay_breakout.py": "318be191060e40f923abfcc1b163240d9ddf8c775c8dd2c18795d44911f8aba7",
+    "strategy_adapter.py": "acaa0b6b68b523b3c78a7ded03735d7f772f755f5dbb36933bce26033591915a"
+  },
+  "current_code_matches_reference": true,
+  "slice_days": 35,
+  "slices": [
+    {
+      "slice": 0,
+      "start_ts_ms": 1756252800000,
+      "end_exclusive_ts_ms": 1759276800000,
+      "bars": 10080,
+      "raw_signals": 32,
+      "frequency_per_day": 0.914286
+    },
+    {
+      "slice": 1,
+      "start_ts_ms": 1753228800000,
+      "end_exclusive_ts_ms": 1756252800000,
+      "bars": 10080,
+      "raw_signals": 40,
+      "frequency_per_day": 1.142857
+    },
+    {
+      "slice": 2,
+      "start_ts_ms": 1750204800000,
+      "end_exclusive_ts_ms": 1753228800000,
+      "bars": 10080,
+      "raw_signals": 62,
+      "frequency_per_day": 1.771429
+    },
+    {
+      "slice": 3,
+      "start_ts_ms": 1747180800000,
+      "end_exclusive_ts_ms": 1750204800000,
+      "bars": 10080,
+      "raw_signals": 81,
+      "frequency_per_day": 2.314286
+    }
+  ],
+  "interpretation": "Exact prospective code on pre-holdout slices; signal frequency only, not edge or promotion evidence."
+}

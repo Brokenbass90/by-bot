@@ -44,11 +44,31 @@ def month_windows(start: dt.datetime, end: dt.datetime):
         cursor = nxt
 
 
+def day_windows(start: dt.datetime, end: dt.datetime):
+    cursor = start.replace(hour=0, minute=0, second=0, microsecond=0)
+    while cursor < end:
+        nxt = cursor + dt.timedelta(days=1)
+        left, right = max(start, cursor), min(end, nxt)
+        if left < right:
+            yield left, right
+        cursor = nxt
+
+
 def _atomic_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_suffix(path.suffix + ".tmp")
     temp.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     os.replace(temp, path)
+
+
+def _load_status(path: Path) -> dict:
+    if not path.is_file():
+        return {}
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return value if isinstance(value, dict) else {}
 
 
 def _sha256(path: Path) -> str:
@@ -126,8 +146,18 @@ def materialize(args: argparse.Namespace) -> int:
     chunks_dir = out / "chunks"
     chunks_dir.mkdir(parents=True, exist_ok=True)
     status_path = out / "status.json"
-    windows = list(month_windows(start, end))
+    windows = list(day_windows(start, end))
+    known_days = {left.strftime("%Y-%m-%d") for left, _right in windows}
+    previous = _load_status(status_path)
     completed: list[str] = []
+    empty_market_days: list[str] = sorted({
+        str(value) for value in previous.get("empty_market_days", [])
+        if str(value) in known_days
+    })
+    quarantined_days: list[dict] = [
+        value for value in previous.get("quarantined_days", [])
+        if isinstance(value, dict) and str(value.get("day") or "") in known_days
+    ]
     for index, (left, right) in enumerate(windows, start=1):
         free = shutil.disk_usage(out).free
         if free < int(args.min_free_gb * 1024**3):
@@ -136,24 +166,51 @@ def materialize(args: argparse.Namespace) -> int:
                 "free_bytes": free,
                 "min_free_bytes": int(args.min_free_gb * 1024**3),
                 "completed": completed,
+                "empty_market_days": empty_market_days,
+                "quarantined_days": quarantined_days,
                 "sealed_holdout_rows_decoded": 0,
             })
             return 3
-        name = left.strftime("%Y-%m")
+        name = left.strftime("%Y-%m-%d")
         chunk = chunks_dir / f"XAUUSD_M5_{name}.csv"
         if _valid_chunk(chunk, left, right):
             completed.append(name)
             continue
+        if left.weekday() >= 5:
+            if name not in empty_market_days:
+                empty_market_days.append(name)
+                empty_market_days.sort()
+            _atomic_json(status_path, {
+                "state": "collecting_with_quarantine" if quarantined_days else "collecting",
+                "progress": f"{index}/{len(windows)}",
+                "last_day": name,
+                "completed": completed,
+                "empty_market_days": empty_market_days,
+                "quarantined_days": quarantined_days,
+                "authority": "research_only_public_data_no_orders",
+                "sealed_holdout_rows_decoded": 0,
+            })
+            continue
+        if name in empty_market_days:
+            continue
+        previous_quarantine = next((item for item in quarantined_days if item.get("day") == name), None)
+        if previous_quarantine and not bool(getattr(args, "retry_quarantined", False)):
+            continue
+        if previous_quarantine:
+            quarantined_days.remove(previous_quarantine)
         _atomic_json(status_path, {
             "state": "collecting",
             "progress": f"{index - 1}/{len(windows)}",
-            "current_month": name,
+            "current_day": name,
             "completed": completed,
+            "empty_market_days": empty_market_days,
+            "quarantined_days": quarantined_days,
             "authority": "research_only_public_data_no_orders",
             "sealed_holdout_rows_decoded": 0,
         })
         last_error = ""
-        for attempt in range(1, max(1, args.month_attempts) + 1):
+        last_stats: dict = {}
+        for attempt in range(1, max(1, args.window_attempts) + 1):
             rows, stats, last_error = _build_rows_for_pair(
                 pair="XAUUSD",
                 start_utc=left,
@@ -163,45 +220,87 @@ def materialize(args: argparse.Namespace) -> int:
                 retries=args.hour_retries,
                 max_hours=0,
             )
+            last_stats = dict(stats)
             if rows and stats["hours_fail"] == 0:
                 _write_rows(chunk, rows)
                 completed.append(name)
                 break
-            if attempt < args.month_attempts:
+            if not rows and stats["hours_fail"] == 0:
+                empty_market_days.append(name)
+                break
+            if attempt < args.window_attempts:
                 time.sleep(args.retry_delay_sec)
         else:
+            quarantined_days.append({
+                "day": name,
+                "left_utc": left.isoformat(),
+                "right_utc_exclusive": right.isoformat(),
+                "last_error": last_error,
+                "stats": last_stats,
+            })
             _atomic_json(status_path, {
-                "state": "transient_failure",
-                "month": name,
+                "state": "collecting_with_quarantine",
+                "day": name,
                 "last_error": last_error,
                 "completed": completed,
+                "empty_market_days": empty_market_days,
+                "quarantined_days": quarantined_days,
                 "sealed_holdout_rows_decoded": 0,
             })
-            return 2
+            if len(quarantined_days) > args.max_quarantined_days:
+                _atomic_json(status_path, {
+                    "state": "quarantine_guard",
+                    "completed": completed,
+                    "empty_market_days": empty_market_days,
+                    "quarantined_days": quarantined_days,
+                    "max_quarantined_days": args.max_quarantined_days,
+                    "promotion_eligible": False,
+                    "sealed_holdout_rows_decoded": 0,
+                })
+                return 2
         _atomic_json(status_path, {
-            "state": "collecting",
+            "state": "collecting_with_quarantine" if quarantined_days else "collecting",
             "progress": f"{index}/{len(windows)}",
             "completed": completed,
-            "last_month": name,
+            "empty_market_days": empty_market_days,
+            "quarantined_days": quarantined_days,
+            "last_day": name,
             "authority": "research_only_public_data_no_orders",
             "sealed_holdout_rows_decoded": 0,
         })
 
-    chunk_paths = [chunks_dir / f"XAUUSD_M5_{left.strftime('%Y-%m')}.csv" for left, _ in windows]
+    chunk_paths = [
+        chunks_dir / f"XAUUSD_M5_{left.strftime('%Y-%m-%d')}.csv"
+        for left, right in windows
+        if _valid_chunk(chunks_dir / f"XAUUSD_M5_{left.strftime('%Y-%m-%d')}.csv", left, right)
+    ]
+    if not chunk_paths:
+        _atomic_json(status_path, {
+            "state": "no_data",
+            "completed": completed,
+            "empty_market_days": empty_market_days,
+            "quarantined_days": quarantined_days,
+            "promotion_eligible": False,
+            "sealed_holdout_rows_decoded": 0,
+        })
+        return 2
     receipt = _merge(chunk_paths, out / "XAUUSD_M5.csv")
     _atomic_json(status_path, {
-        "state": "complete",
+        "state": "complete_with_quarantine" if quarantined_days else "complete",
         "authority": "research_only_public_data_no_orders",
         "private_api_calls": False,
         "orders_or_risk_mutation": False,
         "start_utc": start.isoformat(),
         "end_utc_exclusive": end.isoformat(),
-        "months": len(windows),
+        "days": len(windows),
         "completed": completed,
+        "empty_market_days": empty_market_days,
+        "quarantined_days": quarantined_days,
+        "promotion_eligible": not quarantined_days,
         "output": receipt,
         "sealed_holdout_rows_decoded": 0,
     })
-    return 0
+    return 4 if quarantined_days else 0
 
 
 def main() -> int:
@@ -212,7 +311,20 @@ def main() -> int:
     parser.add_argument("--sleep-sec", type=float, default=0.01)
     parser.add_argument("--timeout-sec", type=float, default=15.0)
     parser.add_argument("--hour-retries", type=int, default=2)
-    parser.add_argument("--month-attempts", type=int, default=4)
+    parser.add_argument(
+        "--window-attempts",
+        "--month-attempts",
+        dest="window_attempts",
+        type=int,
+        default=4,
+        help="Attempts per atomic day (the legacy --month-attempts spelling is retained).",
+    )
+    parser.add_argument("--max-quarantined-days", type=int, default=31)
+    parser.add_argument(
+        "--retry-quarantined",
+        action="store_true",
+        help="Explicitly retry days already quarantined by an earlier resumable run.",
+    )
     parser.add_argument("--retry-delay-sec", type=float, default=30.0)
     parser.add_argument("--min-free-gb", type=float, default=20.0)
     args = parser.parse_args()
