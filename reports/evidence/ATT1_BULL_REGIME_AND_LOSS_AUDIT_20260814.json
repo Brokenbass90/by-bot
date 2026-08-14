@@ -1,0 +1,39 @@
+{
+  "schema_id": "att1_bull_regime_and_loss_audit_v1",
+  "generated_at_utc": "2026-08-14T15:05:00Z",
+  "authority": "read_only_audit_and_exploratory_research_no_live_change",
+  "live_contract": {
+    "source": "configs/approved_strategy_params.env",
+    "risk_mult": 0.10,
+    "allow_longs": false,
+    "allow_shorts": true,
+    "symbol_allowlist": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"]
+  },
+  "code_path_audit": {
+    "entry_function": "smart_pump_reversal_bot.py:11571 try_att1_entry_async",
+    "direct_bull_regime_side_gate_present": false,
+    "reactive_breaker_present": true,
+    "reactive_breaker_basis": "recent realized PnL and consecutive losses, not market regime",
+    "strategy_implementation_supports_longs": true,
+    "proven_live_long_analog_present": false
+  },
+  "corrected_preholdout_exploratory_result": {
+    "source": "reports/evidence/ATT1_NEGATIVE_PHENOTYPES_PREHOLDOUT_20260814.json",
+    "trades": 393,
+    "net_r": -2.467991138143089,
+    "btc_30d_bull_gt_10pct": {"trades": 91, "net_r": 1.2634538244399323, "profit_factor_r": 1.028225294573517},
+    "btc_30d_neutral": {"trades": 252, "net_r": 5.57245204339727, "profit_factor_r": 1.044002674955359},
+    "btc_30d_bear_lt_minus_10pct": {"trades": 35, "net_r": -11.355837398280809, "profit_factor_r": 0.5148193629620662},
+    "worst_symbols": [
+      {"symbol": "ETHUSDT", "trades": 43, "net_r": -8.313452441999054},
+      {"symbol": "SOLUSDT", "trades": 60, "net_r": -8.266622891885257}
+    ],
+    "important_caveat": "These buckets were inspected after the aggregate result and cannot authorize a filter or symbol removal."
+  },
+  "verdict": {
+    "will_att1_necessarily_lose_in_a_bull_run": false,
+    "can_att1_keep_opening_shorts_in_a_bull_run_without_a_direct_regime_gate": true,
+    "does_current_corrected_history_identify_bull_as_the_main_loss_regime": false,
+    "next_falsifiable_experiment": "Freeze a causal short-side impulse/bear-regime guard and validate it on a disjoint window; separately build and test a genuine long continuation/retest leg. Do not invert ATT1 shorts and call that a long analog."
+  }
+}

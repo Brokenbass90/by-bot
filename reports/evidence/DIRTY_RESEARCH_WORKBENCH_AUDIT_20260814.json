@@ -1,0 +1,4788 @@
+{
+  "schema_id": "dirty_research_workbench_audit_v1",
+  "generated_at_utc": "2026-08-14T15:05:24.637653+00:00",
+  "root": "/Users/nikolay.bulgakov/Documents/Work/bot-new/bybit-bot-clean-v28",
+  "read_only_analysis": true,
+  "deleted_or_moved": 0,
+  "candidate_count": 163,
+  "category_counts": {
+    "evidence_backed_needs_reproduction": 115,
+    "referenced_needs_review": 16,
+    "test_backed_candidate": 5,
+    "unreferenced_quarantine_candidate": 27
+  },
+  "possible_order_authority_count": 0,
+  "possible_credential_touch_count": 0,
+  "candidates": [
+    {
+      "path": "backtest/run_portfolio.py",
+      "git_status": " M",
+      "bytes": 141015,
+      "mtime_utc": "2026-08-14T14:51:15.754426+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [
+        "tests/test_alt_resistance_fade_v2.py",
+        "tests/test_exact_backtest_cache.py",
+        "tests/test_explicit_strategy_risk_mult.py",
+        "tests/test_spike_fade_v3.py"
+      ],
+      "prereg_refs": [
+        "research_lab/prereg/PREREG_ATT1_PIVOT_SEQUENCE_V1_2026_08_13.json"
+      ],
+      "evidence_refs": [
+        "reports/AI_CODEMAP.json",
+        "reports/AI_CODEMAP.md",
+        "reports/AUDIT_BUNDLE_2026_06_30.md",
+        "reports/BRC1_SANITY_VERDICT_2026_07_02.md",
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/CLAUDE_LEDGER.md",
+        "reports/CLAUDE_PLAN_AND_RESULTS_2026_08_10.md",
+        "reports/CLAUDE_RESEARCH_PACKAGE_ACCEPTANCE_2026_08_06.md",
+        "reports/CLAUDE_TO_CODEX_2026_08_05.md",
+        "reports/EXTERNAL_AUDIT_PACKET_20260814.md",
+        "reports/MORNING_STATUS_2026_07_01.md",
+        "reports/SMART_GRID_SMOKE_VERDICT_2026_07_02.md",
+        "reports/SMART_GRID_V2_SMOKE_VERDICT_2026_07_02.md",
+        "reports/STRATEGIES_FOR_REVIEW_2026_06_11.md",
+        "reports/STRATEGY_LOGIC_HUMAN_2026_06_26.md",
+        "reports/VOLUME_EXIT_WIRING_2026_06_29.md",
+        "reports/archive/claude_20260803/CLAUDE_4DAY_HANDOFF_2026_06_28.md",
+        "reports/archive/claude_20260803/CLAUDE_JOINT_BACKTEST_2026_07_27.md",
+        "reports/archive/claude_20260803/CLAUDE_NOTIONAL_CAP_CORRECTION_2026_07_29.md",
+        "reports/archive/claude_20260803/CLAUDE_PHASE0_REGIME_TEST_2026_07_28.md",
+        "reports/archive/claude_20260803/CLAUDE_TO_CODEX_HANDOFF_2026_07_28.md",
+        "reports/audit_bundle_20260619/AUDITOR_README.md",
+        "reports/audit_bundle_20260619/STRATEGY_EVIDENCE_2026_06_19.md",
+        "reports/research/frequent_crypto_prereg_20260711/20260711_112429/preregistration.json",
+        "research_lab/results/att1_momentum_stall_exit_preholdout_v1_20260814/run_passport.json",
+        "research_lab/results/att1_momentum_stall_exit_preholdout_v1_20260814/run_passport_request.json",
+        "research_lab/results/att1_pivot_sequence_preholdout_v1_20260813/run_passport.json",
+        "research_lab/results/att1_tp2_distance_preholdout_v1_20260814/run_passport.json",
+        "research_lab/results/att1_tp2_distance_preholdout_v1_20260814/run_passport_request.json"
+      ],
+      "other_refs": [
+        "AUDIT_AND_FIXES_2026_06_08.md",
+        "CLAUDE_FINAL_REPORT_20260504.md",
+        "CODEX_2DAY_HANDOFF_20260503.md",
+        "CODEX_HANDOFF_2026_06_26.md",
+        "CODEX_HANDOFF_2026_06_28.md",
+        "CODEX_HANDOFF_2026_06_29.md",
+        "CODEX_NIGHT_HANDOFF_20260503.md",
+        "CODEX_QUEUE_3DAY_20260419.md",
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "OPUS_AUDIT_2026_05_27.md",
+        "PROJECT_DESCRIPTION_FOR_REVIEW.md",
+        "ROADMAP_SELF_IMPROVING.md",
+        "archive/strategies_rejected/breakdown_recent_bear_window_v2_entry_quality.rejected_20260627.json",
+        "archive/strategies_retired/MANIFEST.md",
+        "backtest/lab.py",
+        "backtest/prefetch_klines.py",
+        "backtest_archive/autoresearch_20260401_174434_sloped_resistance_choch_v1_probe/spec.json",
+        "backtest_archive/autoresearch_20260402_080346_breakdown_recent_bear_window_v1/spec.json",
+        "backtest_archive/autoresearch_20260402_112859_pump_fade_v4r_bear_window/spec.json",
+        "backtest_archive/autoresearch_20260402_130328_breakout_live_bridge_v6_regime_quality_compare/spec.json"
+      ],
+      "reference_counts": {
+        "tests": 4,
+        "prereg": 1,
+        "evidence": 34,
+        "other": 5651
+      },
+      "category": "test_backed_candidate",
+      "priority_score": 43,
+      "recommended_action": "scope-review and run focused tests; commit separately if reproducible"
+    },
+    {
+      "path": "research_lab/xsec_v3_reference.py",
+      "git_status": "??",
+      "bytes": 9205,
+      "mtime_utc": "2026-07-22T12:21:04.945394+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [
+        "research_lab/prereg/PREREG_XSEC_CAUSAL_V1_2026_08_12.md",
+        "research_lab/prereg/PREREG_XSEC_RECOUNT_2026_08_11.md",
+        "research_lab/prereg/xsec_mature_shadow_spec.json"
+      ],
+      "evidence_refs": [
+        "reports/CLAUDE_TO_CODEX_2026_08_11.md",
+        "reports/CODEX_TASK_2026_07_22.md",
+        "reports/READY_FOR_CODEX_2026_07_23.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md",
+        "research_lab/results/xsec_causal_v1_20260812/run_passport.json"
+      ],
+      "other_refs": [
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md",
+        "research_lab/xsec_causal_replay.py",
+        "research_lab/xsec_recount_2026_08_11.py",
+        "scripts/xsec_shadow_cycle.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 3,
+        "evidence": 5,
+        "other": 4
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 27,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/audit_backtest_run.py",
+      "git_status": "??",
+      "bytes": 13144,
+      "mtime_utc": "2026-08-05T06:22:03.257538+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/CLAUDE_LEDGER.md",
+        "reports/CLAUDE_TO_CODEX_2026_08_05.md",
+        "reports/HANDOFF_2026_08_11.md",
+        "reports/PROJECT_STATE_AND_ACCELERATION_2026_08_13.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md",
+        "ROADMAP_2026_08_10.md",
+        "scripts/att1_negative_control.sh",
+        "scripts/att1_shallow_oos.sh",
+        "scripts/fetch_bybit_universe.py",
+        "scripts/portfolio_13symbols_oos_volfilter.sh",
+        "scripts/retest3_stop_ladder.sh",
+        "scripts/run_six_day_research_pipeline.py",
+        "scripts/second_leg_hunt.sh",
+        "scripts/slot_rules_wide.sh",
+        "scripts/squeeze_breakout_research.sh",
+        "scripts/three_levers.sh"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 6,
+        "other": 13
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 19,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/sweep_reclaim.py",
+      "git_status": "??",
+      "bytes": 4499,
+      "mtime_utc": "2026-07-20T17:20:12.819803+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/NEXT_CHAT_CHECKPOINT_2026_08_13.md",
+        "reports/PROJECT_STATE_AND_ACCELERATION_2026_08_13.md",
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/archive/claude_20260803/CLAUDE_FULL_STRATEGY_PACKAGE_2026_07_27.md",
+        "reports/releases/OPEN_SOURCE_RESEARCH_STACK_RECEIPT_2026_08_02.json",
+        "reports/research/vectorbt_crypto_family_prefilter_20260802/result.json",
+        "reports/research/vectorbt_crypto_family_prefilter_common_split_20260802/result.json",
+        "reports/research/vectorbt_crypto_family_prefilter_common_split_side_20260802/result.json",
+        "reports/research/vectorbt_crypto_family_prefilter_full_20260802/result.json"
+      ],
+      "other_refs": [
+        "configs/research/strategy_promotion_queue_20260730.json",
+        "research_lab/station_movers_v1.py",
+        "research_lab/station_sweep_v1.py",
+        "scripts/run_vectorbt_crypto_family_prefilter.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 10,
+        "other": 4
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 17,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/sloped_break_retest.py",
+      "git_status": "??",
+      "bytes": 10036,
+      "mtime_utc": "2026-07-20T17:14:37.638667+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/NEXT_CHAT_CHECKPOINT_2026_08_13.md",
+        "reports/PROJECT_STATE_AND_ACCELERATION_2026_08_13.md",
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/SLOPED_BREAK_RETEST_PREREG_2026_07_20.md",
+        "reports/archive/claude_20260803/CLAUDE_AUDIT_2026_06_22.md"
+      ],
+      "other_refs": [
+        "research_lab/station_movers_v1.py",
+        "research_lab/station_sloped_v1.py",
+        "research_lab/station_wide_v1.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 6,
+        "other": 3
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 16,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/trial_ledger.py",
+      "git_status": "??",
+      "bytes": 10079,
+      "mtime_utc": "2026-08-03T12:21:46.493170+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/PREMISE_CATALOGUE.md",
+        "reports/PROJECT_STATE_AND_ACCELERATION_2026_08_13.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md",
+        "ROADMAP_2026_08_10.md",
+        "research_lab/hypothesis_memory.py",
+        "scripts/att1_shallow_oos.sh",
+        "scripts/portfolio_13symbols_oos_2024h2.sh",
+        "scripts/portfolio_13symbols_oos_volfilter.sh",
+        "scripts/squeeze_breakout_research.sh"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 4,
+        "other": 8
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 15,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/validate_swing_alpaca.py",
+      "git_status": "??",
+      "bytes": 7437,
+      "mtime_utc": "2026-06-09T04:41:16.973313+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [
+        "tests/test_validate_swing_alpaca.py"
+      ],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/INDEPENDENT_REVIEW_PACKET_2026_06_11.md",
+        "reports/REDESIGN_REVIEW_FILE_LIST_2026_06_11.md",
+        "reports/review_bundle_20260611/INDEPENDENT_REVIEW_PACKET_2026_06_11.md"
+      ],
+      "other_refs": [
+        "AUDIT_AND_FIXES_2026_06_08.md"
+      ],
+      "reference_counts": {
+        "tests": 1,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 1
+      },
+      "category": "test_backed_candidate",
+      "priority_score": 15,
+      "recommended_action": "scope-review and run focused tests; commit separately if reproducible"
+    },
+    {
+      "path": "strategies/sc1_live.py",
+      "git_status": "??",
+      "bytes": 2515,
+      "mtime_utc": "2026-06-04T13:30:15.018501+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/STRATEGY_AUDIT_AND_TAXONOMY_2026_06_17.md",
+        "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+        "research_lab/results/strategy_census.json",
+        "research_lab/results/strategy_census_v1.json"
+      ],
+      "other_refs": [
+        "AUDIT_AND_FIXES_2026_06_08.md",
+        "CODEX_HANDOFF_2026_06_15.md",
+        "docs/SESSION_LOG_2026_06_03.md",
+        "scripts/archive_dead_strategies.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 5,
+        "other": 4
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 15,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "strategies/sloped_break_retest_v3.py",
+      "git_status": "??",
+      "bytes": 4022,
+      "mtime_utc": "2026-08-14T14:51:15.687062+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [
+        "tests/test_sloped_break_retest_v3.py"
+      ],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "research_lab/results/sloped_break_retest_v3_preholdout_v1_20260814/run_passport.json",
+        "research_lab/results/sloped_break_retest_v3_preholdout_v1_20260814/run_passport_request.json"
+      ],
+      "other_refs": [
+        "backtest/run_portfolio.py",
+        "backtest_runs/autoresearch_20260814_145514_sloped_break_retest_v3_preholdout_v1_20260814/spec.json",
+        "backtest_runs/portfolio_20260814_175527_sloped_break_retest_v3_preholdout_v1_20260814_r001/autoresearch_candidate.json",
+        "configs/autoresearch/sloped_break_retest_v3_preholdout_v1_20260814.json"
+      ],
+      "reference_counts": {
+        "tests": 1,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 4
+      },
+      "category": "test_backed_candidate",
+      "priority_score": 15,
+      "recommended_action": "scope-review and run focused tests; commit separately if reproducible"
+    },
+    {
+      "path": "research_lab/hypothesis_memory.py",
+      "git_status": "??",
+      "bytes": 11674,
+      "mtime_utc": "2026-08-03T12:27:21.975682+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [
+        "tests/test_market_scanner_idea_intake.py"
+      ],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md",
+        "research_lab/idea_intake.py"
+      ],
+      "reference_counts": {
+        "tests": 1,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 3
+      },
+      "category": "test_backed_candidate",
+      "priority_score": 13,
+      "recommended_action": "scope-review and run focused tests; commit separately if reproducible"
+    },
+    {
+      "path": "research_lab/level_dca_v1.py",
+      "git_status": "??",
+      "bytes": 13626,
+      "mtime_utc": "2026-07-20T06:19:27.444405+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/LEVEL_DCA_V1_VERDICT_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [
+        "research_lab/horizontal_break_retest.py",
+        "research_lab/level_dca_v2_midterm.py",
+        "research_lab/level_dca_v3_variants.py",
+        "research_lab/station_tsm_v1.py",
+        "research_lab/station_tsm_v2_holdout.py",
+        "research_lab/sweep_reclaim.py",
+        "research_lab/weekly_tsm_v1.py",
+        "research_lab/xs_momentum_v1.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 8
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 13,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_v2_run.py",
+      "git_status": "??",
+      "bytes": 3465,
+      "mtime_utc": "2026-07-22T10:39:36.505670+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [
+        "research_lab/prereg/xsec_mature_shadow_spec.json",
+        "research_lab/prereg/xsec_mature_universe_v2.json"
+      ],
+      "evidence_refs": [
+        "reports/CLAUDE_TO_CODEX_2026_08_11.md",
+        "reports/CODEX_TASK_2026_07_22.md"
+      ],
+      "other_refs": [
+        "research_lab/xsec_v3_reference.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 2,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 13,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/l2_density_edge.py",
+      "git_status": "??",
+      "bytes": 7645,
+      "mtime_utc": "2026-08-12T05:39:51.484081+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/DLYA_CODEX_POZITIV_2026_08_12.md",
+        "reports/NEXT_CHAT_CHECKPOINT_2026_08_13.md",
+        "reports/PLOTNOSTI_VERDIKT_2026_08_12.md",
+        "reports/PROJECT_STATE_AND_ACCELERATION_2026_08_13.md"
+      ],
+      "other_refs": [
+        "OCHERED_RABOT.md",
+        "research_lab/l2_density_causal.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 4,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 12,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/liquidation_cascade.py",
+      "git_status": "??",
+      "bytes": 7894,
+      "mtime_utc": "2026-07-29T15:39:43.491153+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/archive/claude_20260803/CLAUDE_LIQUIDATION_CASCADE_2026_07_29.md"
+      ],
+      "other_refs": [
+        "AUDIT_AND_FIXES_2026_06_08.md",
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "docs/HANDOFF_CLAUDE_20260424.md",
+        "research_lab/hypothesis_memory.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 4
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 12,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/options_expiry.py",
+      "git_status": "??",
+      "bytes": 7819,
+      "mtime_utc": "2026-07-29T09:31:05.043793+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/archive/claude_20260803/CLAUDE_ATR_WEEKEND_BIAS_2026_07_29.md",
+        "reports/archive/claude_20260803/CLAUDE_OPTIONS_EXPIRY_CLOSED_2026_07_29.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "research_lab/hypothesis_memory.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 4,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 12,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_eventfilter.py",
+      "git_status": "??",
+      "bytes": 4059,
+      "mtime_utc": "2026-07-22T12:19:43.510267+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [
+        "research_lab/prereg/PREREG_XSEC_RECOUNT_2026_08_11.md"
+      ],
+      "evidence_refs": [
+        "reports/CLAUDE_TO_CODEX_2026_08_11.md",
+        "reports/archive/claude_20260803/CLAUDE_INDEPENDENT_AUDIT_2026_07_27.md"
+      ],
+      "other_refs": [
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md",
+        "research_lab/xsec_recount_2026_08_11.py",
+        "research_lab/xsec_robustness_audit.py",
+        "research_lab/xsec_v4_validate.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 1,
+        "evidence": 2,
+        "other": 4
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 12,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "strategies/smart_grid_v1.py",
+      "git_status": "??",
+      "bytes": 5171,
+      "mtime_utc": "2026-06-10T14:00:39.029697+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/STRATEGY_AUDIT_AND_TAXONOMY_2026_06_17.md",
+        "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+        "research_lab/results/strategy_census.json",
+        "research_lab/results/strategy_census_v1.json"
+      ],
+      "other_refs": [
+        "AUDIT_AND_FIXES_2026_06_08.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 5,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 12,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "bot/loso_concentration.py",
+      "git_status": "??",
+      "bytes": 3618,
+      "mtime_utc": "2026-07-13T16:39:17.274485+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_HANDOFF_TO_NEXT_CHAT_2026_07_19.md",
+        "reports/COWORK_MASTER_HANDOFF_2026_07_13.md",
+        "reports/COWORK_SESSION_RECORD_2026_07_13.md",
+        "reports/NEXT_COWORK_CHAT_START_PROMPT_2026_07_13.md"
+      ],
+      "other_refs": [
+        "research_lab/search_station.py",
+        "research_lab/station_tsm_v1.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 4,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 11,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/strategy_liveness_probe.py",
+      "git_status": "??",
+      "bytes": 7945,
+      "mtime_utc": "2026-08-05T08:02:58.833019+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_PLAN_AND_RESULTS_2026_08_10.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "research_lab/probe_batch.py",
+        "research_lab/static_defect_scan.py",
+        "research_lab/strategy_adapter.py",
+        "research_lab/strategy_gate_ablation.py",
+        "scripts/liveness_sweep.sh"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 6
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 11,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/vol_regime_filter.py",
+      "git_status": "??",
+      "bytes": 11428,
+      "mtime_utc": "2026-08-03T13:34:10.920614+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/archive/claude_20260803/CLAUDE_PURGED_CV_AND_AI_AUDITOR_2026_08_02.md",
+        "reports/archive/claude_20260803/CLAUDE_WHERE_WE_STAND_2026_08_03.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 4,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 11,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/entry_ladder.py",
+      "git_status": "??",
+      "bytes": 6525,
+      "mtime_utc": "2026-07-29T15:15:16.498076+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/archive/claude_20260803/CLAUDE_ENTRY_LADDER_2026_07_29.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "research_lab/hypothesis_memory.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 10,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/equity_gap_drift.py",
+      "git_status": "??",
+      "bytes": 5741,
+      "mtime_utc": "2026-07-28T15:52:08.562087+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/MORNING_RECOVERY_CHECKPOINT_2026_07_29.md",
+        "reports/archive/claude_20260803/CLAUDE_TO_CODEX_HANDOFF_2026_07_28.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "research_lab/hypothesis_memory.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 10,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/equity_overnight.py",
+      "git_status": "??",
+      "bytes": 5098,
+      "mtime_utc": "2026-07-28T15:45:50.711485+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/MORNING_RECOVERY_CHECKPOINT_2026_07_29.md",
+        "reports/archive/claude_20260803/CLAUDE_TO_CODEX_HANDOFF_2026_07_28.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "research_lab/hypothesis_memory.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 10,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/fetch_daily_history.py",
+      "git_status": "??",
+      "bytes": 2551,
+      "mtime_utc": "2026-07-20T17:20:12.834628+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/TSM_HOLDOUT_PREREG_2026_07_20.md"
+      ],
+      "other_refs": [
+        "research_lab/station_tsm_v2_holdout.py",
+        "research_lab/tsm_shadow_local.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 10,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/heat_selector.py",
+      "git_status": "??",
+      "bytes": 8270,
+      "mtime_utc": "2026-07-29T15:09:35.938576+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/archive/claude_20260803/CLAUDE_HEAT_SELECTOR_2026_07_29.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "research_lab/hypothesis_memory.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 10,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/station_tsm_v2_holdout.py",
+      "git_status": "??",
+      "bytes": 4893,
+      "mtime_utc": "2026-07-20T11:04:44.102930+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/TSM_HOLDOUT_PREREG_2026_07_20.md",
+        "reports/TSM_PROVISIONAL_DOWNGRADE_AUDIT_2026_07_21.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 4,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 10,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/strategy_census.py",
+      "git_status": "??",
+      "bytes": 5248,
+      "mtime_utc": "2026-08-11T12:28:22.005928+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/evidence/STRATEGY_INVENTORY_20260814.json",
+        "research_lab/results/strategy_census.json"
+      ],
+      "other_refs": [
+        "ROADMAP_2026_08_11.md",
+        "research_lab/major_hunt.py",
+        "research_lab/strategy_edge_probe.py",
+        "research_lab/variant_lab.py",
+        "scripts/build_strategy_inventory.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 5
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 10,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/funding_squeeze_v2.py",
+      "git_status": "??",
+      "bytes": 5012,
+      "mtime_utc": "2026-07-28T13:31:12.794663+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/archive/claude_20260803/CLAUDE_TO_CODEX_HANDOFF_2026_07_28.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md",
+        "research_lab/funding_gates.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 3
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 9,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/level_dca_v2_midterm.py",
+      "git_status": "??",
+      "bytes": 11294,
+      "mtime_utc": "2026-07-20T06:56:34.757297+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/LEVEL_DCA_V2_MIDTERM_VERDICT_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [
+        "research_lab/level_dca_v3_variants.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 9,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/negative_control.py",
+      "git_status": "??",
+      "bytes": 6982,
+      "mtime_utc": "2026-07-28T10:58:11.846939+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md",
+        "configs/preregistered/alpaca_monthly_exact_parity_replay_20260713.json",
+        "configs/research/strategy_promotion_queue_20260730.json",
+        "scripts/att1_negative_control.sh",
+        "scripts/preflight_alpaca_monthly_exact_parity.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 6
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 9,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/station_sloped_v1.py",
+      "git_status": "??",
+      "bytes": 2511,
+      "mtime_utc": "2026-07-20T03:18:44.537154+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/SLOPED_BREAK_RETEST_PREREG_2026_07_20.md"
+      ],
+      "other_refs": [
+        "research_lab/run_station.sh"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 9,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/station_tsm_v1.py",
+      "git_status": "??",
+      "bytes": 7540,
+      "mtime_utc": "2026-07-20T11:03:12.923417+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/WEEKLY_TSM_V1_SCREEN_2026_07_20.md"
+      ],
+      "other_refs": [
+        "research_lab/station_tsm_v2_holdout.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 9,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/portfolio_13symbols.sh",
+      "git_status": "??",
+      "bytes": 10066,
+      "mtime_utc": "2026-08-04T11:53:56.828985+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_LEDGER.md",
+        "reports/CLAUDE_TO_CODEX_2026_08_05.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "scripts/fetch_bybit_universe.py",
+        "scripts/portfolio_13symbols_oos_2024h2.sh"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 3
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 9,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "backtest/funding_carry_maximizer.py",
+      "git_status": "??",
+      "bytes": 6396,
+      "mtime_utc": "2026-06-24T03:15:00.980721+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/SERVER_TEST_RUNBOOK.md",
+        "reports/STATE_AND_MIGRATION_2026_06_28.md",
+        "reports/archive/claude_20260803/CLAUDE_AUDIT_2026_06_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 8,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "backtest/portfolio_combiner.py",
+      "git_status": "??",
+      "bytes": 6821,
+      "mtime_utc": "2026-06-24T09:08:10.833821+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/SERVER_TEST_RUNBOOK.md",
+        "reports/STATE_AND_MIGRATION_2026_06_28.md",
+        "reports/archive/claude_20260803/CLAUDE_AUDIT_2026_06_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 8,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "backtest/red_month_doctor.py",
+      "git_status": "??",
+      "bytes": 7162,
+      "mtime_utc": "2026-06-24T09:21:48.909369+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/SERVER_TEST_RUNBOOK.md",
+        "reports/STATE_AND_MIGRATION_2026_06_28.md",
+        "reports/archive/claude_20260803/CLAUDE_AUDIT_2026_06_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 8,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/att1_negative_phenotypes.py",
+      "git_status": "??",
+      "bytes": 8221,
+      "mtime_utc": "2026-08-14T14:59:53.811801+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [
+        "tests/test_att1_negative_phenotypes.py"
+      ],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 1,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "test_backed_candidate",
+      "priority_score": 8,
+      "recommended_action": "scope-review and run focused tests; commit separately if reproducible"
+    },
+    {
+      "path": "research_lab/forward_horizon_study.py",
+      "git_status": "??",
+      "bytes": 21375,
+      "mtime_utc": "2026-08-11T09:25:38.427707+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_HORIZON_STUDY_2026_08_11.md",
+        "reports/CLAUDE_TO_CODEX_2026_08_11.md"
+      ],
+      "other_refs": [
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md",
+        "ROADMAP_2026_08_11.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 8,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/pump_spike_fade.py",
+      "git_status": "??",
+      "bytes": 3974,
+      "mtime_utc": "2026-07-21T04:49:56.811652+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [
+        "configs/research/strategy_promotion_queue_20260730.json",
+        "research_lab/station_movers_v1.py",
+        "research_lab/station_pumpfade_v1.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 3
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 8,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/tsm_shadow_local.py",
+      "git_status": "??",
+      "bytes": 2353,
+      "mtime_utc": "2026-07-21T04:45:44.920152+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/TSM_PROVISIONAL_DOWNGRADE_AUDIT_2026_07_21.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 8,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/att1_negative_control.sh",
+      "git_status": "??",
+      "bytes": 7012,
+      "mtime_utc": "2026-08-04T15:29:35.521868+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/CLAUDE_LEDGER.md",
+        "reports/CLAUDE_TO_CODEX_2026_08_05.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 4,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 8,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/render_levels.py",
+      "git_status": "??",
+      "bytes": 6814,
+      "mtime_utc": "2026-06-30T10:39:24.055918+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/PROJECT_SYSTEM_AND_ROADMAP_2026_07_10.md",
+        "reports/archive/claude_20260803/CLAUDE_NEW_CHAT_HANDOFF_2026_06_30.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 8,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/bounce_or_break.py",
+      "git_status": "??",
+      "bytes": 10410,
+      "mtime_utc": "2026-08-11T18:44:53.024612+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COMPONENT_level_detector.md",
+        "reports/DETEKTOR_UROVNEY_2026_08_11.md"
+      ],
+      "other_refs": [
+        "research_lab/bounce_or_break2.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/build_h1_bundle.py",
+      "git_status": "??",
+      "bytes": 7408,
+      "mtime_utc": "2026-08-11T08:43:27.339529+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_HORIZON_STUDY_2026_08_11.md",
+        "reports/CLAUDE_TO_CODEX_2026_08_11.md"
+      ],
+      "other_refs": [
+        "ROADMAP_2026_08_11.md",
+        "research_lab/build_m15_bundle.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/fetch_movers_5m.py",
+      "git_status": "??",
+      "bytes": 3797,
+      "mtime_utc": "2026-07-21T04:45:44.921894+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [
+        "research_lab/station_movers_v1.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/guard_calibration.py",
+      "git_status": "??",
+      "bytes": 8534,
+      "mtime_utc": "2026-08-03T13:09:16.567502+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/horizontal_break_retest.py",
+      "git_status": "??",
+      "bytes": 5904,
+      "mtime_utc": "2026-07-20T17:15:03.072709+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [
+        "research_lab/station_movers_v1.py",
+        "research_lab/station_wide_v1.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/pairs_statarb.py",
+      "git_status": "??",
+      "bytes": 3600,
+      "mtime_utc": "2026-07-22T07:40:55.119499+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CODEX_PROGRESS_2026_08_09.md",
+        "reports/FOREIGN_WIP_TRIAGE_2026_08_09.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/station_movers_v1.py",
+      "git_status": "??",
+      "bytes": 6798,
+      "mtime_utc": "2026-07-21T05:20:22.521484+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [
+        "research_lab/station_pumpfade_v1.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/validate_xsec_v2.py",
+      "git_status": "??",
+      "bytes": 2594,
+      "mtime_utc": "2026-07-22T11:13:48.105068+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [
+        "research_lab/prereg/xsec_mature_universe_v2.json"
+      ],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 1,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/weekly_tsm_v1.py",
+      "git_status": "??",
+      "bytes": 4019,
+      "mtime_utc": "2026-07-20T07:05:49.855812+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [
+        "research_lab/station_tsm_v1.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/analyze_portfolio_run.py",
+      "git_status": "??",
+      "bytes": 4518,
+      "mtime_utc": "2026-08-04T11:54:29.129482+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/CLAUDE_TO_CODEX_2026_08_05.md"
+      ],
+      "other_refs": [
+        "scripts/portfolio_13symbols_diagnostics.sh"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/portfolio_13symbols_oos_volfilter.sh",
+      "git_status": "??",
+      "bytes": 7822,
+      "mtime_utc": "2026-08-04T12:32:18.266048+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md",
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/CLAUDE_TO_CODEX_2026_08_05.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/run_ivb1_dynamic_symbol_selector_20260705.py",
+      "git_status": "??",
+      "bytes": 19228,
+      "mtime_utc": "2026-07-05T19:06:02.489431+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CODEX_HANDOFF_2026_07_05.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [
+        "scripts/run_overnight_sleeve_hunt_20260705.sh"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/score_labels.py",
+      "git_status": "??",
+      "bytes": 5781,
+      "mtime_utc": "2026-08-04T17:45:57.325509+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_TO_CODEX_2026_08_05.md"
+      ],
+      "other_refs": [
+        ".venv-research/lib/python3.12/site-packages/sklearn/metrics/tests/test_common.py",
+        ".venv-research/lib/python3.13/site-packages/sklearn/metrics/tests/test_common.py",
+        "scripts/build_label_deck.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 3
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 7,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "backtest/ai_vet_ab_run.py",
+      "git_status": "??",
+      "bytes": 7347,
+      "mtime_utc": "2026-06-24T08:59:05.501130+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/SERVER_TEST_RUNBOOK.md",
+        "reports/archive/claude_20260803/CLAUDE_AUDIT_2026_06_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/bounce_or_break2.py",
+      "git_status": "??",
+      "bytes": 12023,
+      "mtime_utc": "2026-08-11T19:05:24.809316+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CODEX_LEVEL_DETECTOR_AUDIT_2026_08_11.md",
+        "reports/COMPONENT_level_detector.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/level_dca_v3_variants.py",
+      "git_status": "??",
+      "bytes": 3416,
+      "mtime_utc": "2026-07-20T06:54:11.300614+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/LEVEL_DCA_V3_FINAL_VERDICT_2026_07_20.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/mm_toxicity.py",
+      "git_status": "??",
+      "bytes": 1451,
+      "mtime_utc": "2026-07-22T08:21:34.556879+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [
+        "OCHERED_RABOT.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/mpl_v1.py",
+      "git_status": "??",
+      "bytes": 13705,
+      "mtime_utc": "2026-08-12T06:02:35.002646+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/MPL_V1_2026_08_12.md"
+      ],
+      "other_refs": [
+        "research_lab/mpl_hold_lab.py",
+        "research_lab/mpl_hold_lab2.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/station_sweep_v1.py",
+      "git_status": "??",
+      "bytes": 1252,
+      "mtime_utc": "2026-07-20T17:20:12.821859+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/station_wide_v1.py",
+      "git_status": "??",
+      "bytes": 2083,
+      "mtime_utc": "2026-07-20T17:15:20.636528+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/COWORK_TO_CODEX_DEPLOY_2026_07_20.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_reversal.py",
+      "git_status": "??",
+      "bytes": 2938,
+      "mtime_utc": "2026-07-22T07:53:01.991131+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/_check_universe_used.py",
+      "git_status": "??",
+      "bytes": 1392,
+      "mtime_utc": "2026-08-11T06:34:06.542316+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_LEDGER.md",
+        "reports/HANDOFF_2026_08_11.md"
+      ],
+      "other_refs": [
+        "scripts/slot_rules_wide.sh"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/build_label_deck.py",
+      "git_status": "??",
+      "bytes": 13567,
+      "mtime_utc": "2026-08-04T17:42:38.026512+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_TO_CODEX_2026_08_05.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md",
+        "scripts/score_labels.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/sight_one_knob_three_regimes.sh",
+      "git_status": "??",
+      "bytes": 1095,
+      "mtime_utc": "2026-07-28T06:52:48.197783+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/archive/claude_20260803/CLAUDE_SCOPE_TO_COMBAT_STATE_2026_07_28.md",
+        "reports/archive/claude_20260803/CLAUDE_SIGHTING_ASB1_FULL_2026_07_28.md",
+        "reports/archive/claude_20260803/CLAUDE_TO_CODEX_HANDOFF_2026_07_28.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/summarize_overnight_screen.py",
+      "git_status": "??",
+      "bytes": 5429,
+      "mtime_utc": "2026-08-03T18:38:33.629390+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md"
+      ],
+      "other_refs": [
+        "scripts/day_strategy_screen.sh",
+        "scripts/overnight_strategy_screen.sh"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 2
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "web/static/live_chart_prototype.html",
+      "git_status": "??",
+      "bytes": 42783,
+      "mtime_utc": "2026-06-23T09:44:56.178869+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/SERVER_TEST_RUNBOOK.md",
+        "reports/archive/claude_20260803/CLAUDE_AUDIT_2026_06_22.md",
+        "reports/archive/claude_20260803/CLAUDE_PACKAGE_ACCEPTANCE_2026_07_28.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 3,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 6,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/control_check.py",
+      "git_status": "??",
+      "bytes": 6583,
+      "mtime_utc": "2026-08-11T16:45:36.198484+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "research_lab/results/control_check/inplay_breakout__ETHUSDT.json"
+      ],
+      "other_refs": [
+        "ROADMAP_2026_08_11.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/equity_xsec.py",
+      "git_status": "??",
+      "bytes": 2394,
+      "mtime_utc": "2026-07-22T08:34:31.925754+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/funding_gates.py",
+      "git_status": "??",
+      "bytes": 4747,
+      "mtime_utc": "2026-07-28T13:34:56.574933+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/archive/claude_20260803/CLAUDE_TO_CODEX_HANDOFF_2026_07_28.md"
+      ],
+      "other_refs": [
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/funding_squeeze.py",
+      "git_status": "??",
+      "bytes": 5281,
+      "mtime_utc": "2026-07-28T12:49:46.222946+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "research_lab/funding_gates.py",
+        "research_lab/funding_squeeze_v2.py",
+        "scripts/audit_funding_positioning_v2.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 3
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 5,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/idea_funnel.py",
+      "git_status": "??",
+      "bytes": 8033,
+      "mtime_utc": "2026-08-12T04:58:03.920629+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/DLYA_CODEX_POZITIV_2026_08_12.md"
+      ],
+      "other_refs": [
+        "OCHERED_RABOT.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/level_bounce_vs_break.py",
+      "git_status": "??",
+      "bytes": 11209,
+      "mtime_utc": "2026-08-05T07:53:33.603067+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/mm_flow.py",
+      "git_status": "??",
+      "bytes": 2048,
+      "mtime_utc": "2026-07-22T08:22:07.993849+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/mm_markout.py",
+      "git_status": "??",
+      "bytes": 2016,
+      "mtime_utc": "2026-07-22T08:21:02.410209+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/mm_screen.py",
+      "git_status": "??",
+      "bytes": 1017,
+      "mtime_utc": "2026-07-22T08:23:15.647568+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/mm_spread.py",
+      "git_status": "??",
+      "bytes": 1875,
+      "mtime_utc": "2026-07-22T08:22:45.325290+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/strategy_gate_ablation.py",
+      "git_status": "??",
+      "bytes": 7002,
+      "mtime_utc": "2026-08-05T08:36:26.824700+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_PLAN_AND_RESULTS_2026_08_10.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_adaptive.py",
+      "git_status": "??",
+      "bytes": 3107,
+      "mtime_utc": "2026-07-22T08:08:20.617380+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_costs.py",
+      "git_status": "??",
+      "bytes": 1976,
+      "mtime_utc": "2026-07-22T08:07:43.680101+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_recent.py",
+      "git_status": "??",
+      "bytes": 1881,
+      "mtime_utc": "2026-07-22T08:06:34.094463+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_regime.py",
+      "git_status": "??",
+      "bytes": 2117,
+      "mtime_utc": "2026-07-22T08:07:08.210779+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_stability.py",
+      "git_status": "??",
+      "bytes": 3074,
+      "mtime_utc": "2026-07-22T08:03:05.883511+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/verify_composition_2023.sh",
+      "git_status": "??",
+      "bytes": 5714,
+      "mtime_utc": "2026-08-04T09:48:47.641241+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_BOOK_COMPOSITION_2026_08_04.md",
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 5,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/l2_density_causal.py",
+      "git_status": "??",
+      "bytes": 9017,
+      "mtime_utc": "2026-08-12T05:39:51.125152+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PLOTNOSTI_VERDIKT_2026_08_12.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/major_hunt.py",
+      "git_status": "??",
+      "bytes": 7096,
+      "mtime_utc": "2026-08-11T16:26:52.504776+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "research_lab/results/major_hunt.json"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/setup_features.py",
+      "git_status": "??",
+      "bytes": 8588,
+      "mtime_utc": "2026-08-11T18:34:34.753882+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "research_lab/results/setup_features/inplay_breakout__ETHUSDT.json"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/side_split.py",
+      "git_status": "??",
+      "bytes": 6938,
+      "mtime_utc": "2026-08-11T16:43:59.792013+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "research_lab/results/side_split.json"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/station_pumpfade_v1.py",
+      "git_status": "??",
+      "bytes": 4101,
+      "mtime_utc": "2026-07-21T08:29:58.638399+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xs_momentum_v1.py",
+      "git_status": "??",
+      "bytes": 4077,
+      "mtime_utc": "2026-07-20T11:28:16.599270+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_established.py",
+      "git_status": "??",
+      "bytes": 2466,
+      "mtime_utc": "2026-07-22T09:57:40.934438+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_portfolio.py",
+      "git_status": "??",
+      "bytes": 1950,
+      "mtime_utc": "2026-07-22T08:08:49.311263+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/PROJECT_STATE_LEDGER.md",
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_universe3.py",
+      "git_status": "??",
+      "bytes": 2434,
+      "mtime_utc": "2026-07-22T09:57:06.984715+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [
+        "PLAN_NEUTRAL_BOOK_2026_08_11.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/deploy_alpaca_live_v38_env.sh",
+      "git_status": "??",
+      "bytes": 1022,
+      "mtime_utc": "2026-07-05T13:14:50.093982+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CODEX_HANDOFF_2026_07_05.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/portfolio_13symbols_diagnostics.sh",
+      "git_status": "??",
+      "bytes": 5281,
+      "mtime_utc": "2026-08-04T12:01:29.302250+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/CLAUDE_TO_CODEX_2026_08_05.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/run_bull_side_repair_20260705.sh",
+      "git_status": "??",
+      "bytes": 1035,
+      "mtime_utc": "2026-07-05T12:29:04.259491+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CODEX_HANDOFF_2026_07_05.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/run_crypto_breakout_overnight_20260705.sh",
+      "git_status": "??",
+      "bytes": 1007,
+      "mtime_utc": "2026-07-05T19:09:11.423307+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CODEX_HANDOFF_2026_07_05.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/run_crypto_next_research_20260705.sh",
+      "git_status": "??",
+      "bytes": 875,
+      "mtime_utc": "2026-07-05T15:29:44.602398+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CODEX_HANDOFF_2026_07_05.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/run_fx_cfd_overnight_20260705.sh",
+      "git_status": "??",
+      "bytes": 2112,
+      "mtime_utc": "2026-07-05T19:09:11.287874+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CODEX_HANDOFF_2026_07_05.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/run_overnight_sleeve_hunt_20260705.sh",
+      "git_status": "??",
+      "bytes": 2987,
+      "mtime_utc": "2026-07-05T16:29:32.591437+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CODEX_HANDOFF_2026_07_05.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/setup_alpaca_live_v38_env.sh",
+      "git_status": "??",
+      "bytes": 2199,
+      "mtime_utc": "2026-07-05T13:01:10.427882+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CODEX_HANDOFF_2026_07_05.md",
+        "reports/PROJECT_STATE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/sight_knob_with_base.sh",
+      "git_status": "??",
+      "bytes": 1140,
+      "mtime_utc": "2026-07-28T07:07:55.970431+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/archive/claude_20260803/CLAUDE_SCOPE_TO_COMBAT_STATE_2026_07_28.md",
+        "reports/archive/claude_20260803/CLAUDE_TO_CODEX_HANDOFF_2026_07_28.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/squeeze_breakout_research.sh",
+      "git_status": "??",
+      "bytes": 8805,
+      "mtime_utc": "2026-08-04T15:51:57.282047+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md",
+        "reports/CLAUDE_TO_CODEX_2026_08_05.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 2,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 4,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/eld_v1.py",
+      "git_status": "??",
+      "bytes": 11315,
+      "mtime_utc": "2026-08-12T08:47:02.802282+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "ZAPROS_CODEXU_2026_08_12_v2.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/fnd_v1.py",
+      "git_status": "??",
+      "bytes": 10548,
+      "mtime_utc": "2026-08-12T09:04:27.502449+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "ZAPROS_CODEXU_2026_08_12_v2.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/intraday_diag.py",
+      "git_status": "??",
+      "bytes": 1845,
+      "mtime_utc": "2026-07-22T12:36:12.068466+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/intraday_reversal.py",
+      "git_status": "??",
+      "bytes": 2659,
+      "mtime_utc": "2026-07-22T12:35:22.366029+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/l2_density.py",
+      "git_status": "??",
+      "bytes": 9867,
+      "mtime_utc": "2026-08-12T05:03:05.232172+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "research_lab/l2_density_causal.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/l2_limit_entry.py",
+      "git_status": "??",
+      "bytes": 10783,
+      "mtime_utc": "2026-08-12T09:27:45.389571+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "ZAPROS_CODEXU_2026_08_12_v2.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/l2_reconstruct.py",
+      "git_status": "??",
+      "bytes": 6858,
+      "mtime_utc": "2026-08-12T03:40:57.263760+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "research_lab/l2_predict.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/liq_fuse.py",
+      "git_status": "??",
+      "bytes": 7180,
+      "mtime_utc": "2026-08-11T14:33:26.252599+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "ROADMAP_2026_08_11.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/movers_fade.py",
+      "git_status": "??",
+      "bytes": 1284,
+      "mtime_utc": "2026-07-22T08:59:05.087555+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/movers_impulse.py",
+      "git_status": "??",
+      "bytes": 1819,
+      "mtime_utc": "2026-07-22T08:58:35.245104+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/mpl_stop_lab.py",
+      "git_status": "??",
+      "bytes": 6766,
+      "mtime_utc": "2026-08-12T09:45:15.341643+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "ZAPROS_CODEXU_2026_08_12_v2.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/window_forensics.py",
+      "git_status": "??",
+      "bytes": 7675,
+      "mtime_utc": "2026-08-11T16:54:27.022297+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "ROADMAP_2026_08_11.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/xsec_momentum.py",
+      "git_status": "??",
+      "bytes": 3413,
+      "mtime_utc": "2026-07-22T07:26:39.523950+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_momentum_v2.py",
+      "git_status": "??",
+      "bytes": 2969,
+      "mtime_utc": "2026-07-22T07:47:06.336759+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_prereg_majors.py",
+      "git_status": "??",
+      "bytes": 2530,
+      "mtime_utc": "2026-07-22T10:03:55.738569+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_prereg_run.py",
+      "git_status": "??",
+      "bytes": 3977,
+      "mtime_utc": "2026-07-22T10:03:29.985614+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_v4_validate.py",
+      "git_status": "??",
+      "bytes": 3350,
+      "mtime_utc": "2026-07-22T12:20:19.152518+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/archive/claude_20260803/CLAUDE_INDEPENDENT_AUDIT_2026_07_27.md"
+      ],
+      "other_refs": [
+        "configs/research/strategy_promotion_queue_20260730.json"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/ai_setup_scorer_cron.py",
+      "git_status": "??",
+      "bytes": 15413,
+      "mtime_utc": "2026-06-03T10:46:30.950213+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "docs/SESSION_LOG_2026_06_03.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "scripts/arb_pair_discovery_ai.py",
+      "git_status": "??",
+      "bytes": 15327,
+      "mtime_utc": "2026-06-03T10:35:13.210439+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "docs/SESSION_LOG_2026_06_03.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "scripts/day_strategy_screen.sh",
+      "git_status": "??",
+      "bytes": 6894,
+      "mtime_utc": "2026-08-04T06:01:09.306620+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/portfolio_18m_monthly.sh",
+      "git_status": "??",
+      "bytes": 5329,
+      "mtime_utc": "2026-08-04T07:46:03.465328+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_CONSOLIDATED_2026_08_03.md"
+      ],
+      "other_refs": [
+        "HANDOFF_FOR_NEXT_CHAT_2026_08_02.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 1
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 3,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/survival_calculator.py",
+      "git_status": "??",
+      "bytes": 8533,
+      "mtime_utc": "2026-05-29T12:20:28.570931+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "CLAUDE_HANDOFF_2026_05_29.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "scripts/system_manifest.py",
+      "git_status": "??",
+      "bytes": 4513,
+      "mtime_utc": "2026-06-08T11:35:39.415643+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "AUDIT_AND_FIXES_2026_06_08.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 3,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/build_daily_338.py",
+      "git_status": "??",
+      "bytes": 703,
+      "mtime_utc": "2026-07-22T09:56:21.183540+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 2,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/fnd_hold_lab.py",
+      "git_status": "??",
+      "bytes": 4892,
+      "mtime_utc": "2026-08-12T09:04:27.909298+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "ZAPROS_CODEXU_2026_08_12_v2.md"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 2,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/followthrough_filter.py",
+      "git_status": "??",
+      "bytes": 9238,
+      "mtime_utc": "2026-08-11T18:11:30.687109+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 2,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/l2_plate_magnet.py",
+      "git_status": "??",
+      "bytes": 11002,
+      "mtime_utc": "2026-08-12T07:18:09.914349+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 2,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/l2_predict.py",
+      "git_status": "??",
+      "bytes": 5427,
+      "mtime_utc": "2026-08-12T03:58:49.826694+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 2,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/mpl_hold_lab.py",
+      "git_status": "??",
+      "bytes": 3673,
+      "mtime_utc": "2026-08-12T06:21:20.784825+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 2,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/mpl_hold_lab2.py",
+      "git_status": "??",
+      "bytes": 4890,
+      "mtime_utc": "2026-08-12T06:28:11.325763+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 2,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/mpl_side_check.py",
+      "git_status": "??",
+      "bytes": 3635,
+      "mtime_utc": "2026-08-12T07:02:27.912012+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 2,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/mpl_v2.py",
+      "git_status": "??",
+      "bytes": 10752,
+      "mtime_utc": "2026-08-12T06:48:55.257022+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 2,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/xsec_volfactor.py",
+      "git_status": "??",
+      "bytes": 3326,
+      "mtime_utc": "2026-07-22T11:46:11.074935+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 2,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/xsec_volfactor_validate.py",
+      "git_status": "??",
+      "bytes": 3636,
+      "mtime_utc": "2026-07-22T11:46:39.999710+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/XSEC_MOMENTUM_FIRST_SIGNAL_2026_07_22.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 2,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/diag_bybit_paging.py",
+      "git_status": "??",
+      "bytes": 4223,
+      "mtime_utc": "2026-08-11T04:26:14.338847+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": true,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 2,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "scripts/screen_strategies_oos.sh",
+      "git_status": "??",
+      "bytes": 721,
+      "mtime_utc": "2026-08-03T18:31:59.786584+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_FOR_CODEX_2026_08_02.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 2,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/slot_rules_wide.sh",
+      "git_status": "??",
+      "bytes": 11785,
+      "mtime_utc": "2026-08-11T06:39:40.701601+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_LEDGER.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 2,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "scripts/three_levers.sh",
+      "git_status": "??",
+      "bytes": 9040,
+      "mtime_utc": "2026-08-10T06:33:14.047193+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [
+        "reports/CLAUDE_PLAN_AND_RESULTS_2026_08_10.md"
+      ],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 1,
+        "other": 0
+      },
+      "category": "evidence_backed_needs_reproduction",
+      "priority_score": 2,
+      "recommended_action": "bind to prereg/passport and reproduce before adoption"
+    },
+    {
+      "path": "research_lab/carry_selection.py",
+      "git_status": "??",
+      "bytes": 2317,
+      "mtime_utc": "2026-07-22T13:41:29.669144+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 1,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/classic_families.py",
+      "git_status": "??",
+      "bytes": 4147,
+      "mtime_utc": "2026-07-22T15:11:49.037079+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "configs/ai_operator_canonical_state.json"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 1,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/intraday_regime.py",
+      "git_status": "??",
+      "bytes": 3205,
+      "mtime_utc": "2026-07-22T13:11:58.194762+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 1,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/movers_fade_gate.py",
+      "git_status": "??",
+      "bytes": 2465,
+      "mtime_utc": "2026-07-22T09:10:38.962871+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 1,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/movers_fade_rr.py",
+      "git_status": "??",
+      "bytes": 2956,
+      "mtime_utc": "2026-07-22T09:11:28.799342+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 1,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/probe_batch.py",
+      "git_status": "??",
+      "bytes": 4431,
+      "mtime_utc": "2026-08-11T11:41:51.349869+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 1,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/xsec_levers.py",
+      "git_status": "??",
+      "bytes": 3614,
+      "mtime_utc": "2026-07-22T10:26:29.169901+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 1,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/xsec_lowvol.py",
+      "git_status": "??",
+      "bytes": 4240,
+      "mtime_utc": "2026-07-22T10:38:00.229005+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 1,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/xsec_monthly.py",
+      "git_status": "??",
+      "bytes": 2756,
+      "mtime_utc": "2026-07-22T11:12:55.596116+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 1,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/xsec_phase_check.py",
+      "git_status": "??",
+      "bytes": 2761,
+      "mtime_utc": "2026-07-22T10:38:41.754098+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 1,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/xsec_realistic_exec.py",
+      "git_status": "??",
+      "bytes": 2471,
+      "mtime_utc": "2026-07-22T09:12:48.996733+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": true,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 1,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "scripts/overnight_strategy_screen.sh",
+      "git_status": "??",
+      "bytes": 5557,
+      "mtime_utc": "2026-08-03T18:43:02.629173+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [
+        "scripts/summarize_overnight_screen.py"
+      ],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 1
+      },
+      "category": "referenced_needs_review",
+      "priority_score": 1,
+      "recommended_action": "trace callers and compare with canonical implementation"
+    },
+    {
+      "path": "research_lab/att1_geometry.py",
+      "git_status": "??",
+      "bytes": 4384,
+      "mtime_utc": "2026-07-22T13:45:58.388174+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 0,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/att1_trendguard.py",
+      "git_status": "??",
+      "bytes": 5140,
+      "mtime_utc": "2026-07-22T14:07:51.465404+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 0,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "research_lab/xsec_frequency.py",
+      "git_status": "??",
+      "bytes": 3959,
+      "mtime_utc": "2026-07-22T13:00:32.192974+00:00",
+      "syntax_ok": true,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 0,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "scripts/cleanup_repo_20260519.sh",
+      "git_status": "??",
+      "bytes": 4165,
+      "mtime_utc": "2026-05-19T10:21:17.117068+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 0,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "scripts/midterm_wide.sh",
+      "git_status": "??",
+      "bytes": 9041,
+      "mtime_utc": "2026-08-11T07:44:25.946306+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 0,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "scripts/portfolio_13symbols_oos_2024h2.sh",
+      "git_status": "??",
+      "bytes": 9210,
+      "mtime_utc": "2026-08-04T11:53:39.261603+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 0,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "scripts/run_ivb1_hype_followup_20260705.sh",
+      "git_status": "??",
+      "bytes": 2410,
+      "mtime_utc": "2026-07-05T15:23:45.035662+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 0,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "scripts/second_leg_hunt.sh",
+      "git_status": "??",
+      "bytes": 6504,
+      "mtime_utc": "2026-08-10T11:11:57.410027+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 0,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    },
+    {
+      "path": "scripts/sight_any_strategy.sh",
+      "git_status": "??",
+      "bytes": 1011,
+      "mtime_utc": "2026-07-28T07:24:37.638929+00:00",
+      "syntax_ok": null,
+      "syntax_error": null,
+      "has_module_docstring": false,
+      "has_main_guard": false,
+      "possible_order_authority": false,
+      "possible_credential_touch": false,
+      "test_refs": [],
+      "prereg_refs": [],
+      "evidence_refs": [],
+      "other_refs": [],
+      "reference_counts": {
+        "tests": 0,
+        "prereg": 0,
+        "evidence": 0,
+        "other": 0
+      },
+      "category": "unreferenced_quarantine_candidate",
+      "priority_score": 0,
+      "recommended_action": "preserve outside active tree; delete only after owner review"
+    }
+  ]
+}

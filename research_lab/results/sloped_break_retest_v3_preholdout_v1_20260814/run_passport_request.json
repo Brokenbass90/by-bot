@@ -1,0 +1,40 @@
+{
+  "schema_id": "research_run_passport_request_v1",
+  "authority": "research_only_no_live_or_promotion",
+  "promotion_authority": false,
+  "live_or_broker_calls": false,
+  "experiment_id": "sloped_break_retest_v3_preholdout_v1_20260814",
+  "code_paths": [
+    "research_lab/prereg/PREREG_SLOPED_BREAK_RETEST_V3_2026_08_14.md",
+    "configs/autoresearch/sloped_break_retest_v3_preholdout_v1_20260814.json",
+    "strategies/sloped_break_retest_v3.py",
+    "strategies/sloped_break_retest_v2.py",
+    "backtest/run_portfolio.py",
+    "backtest/portfolio_engine.py",
+    "scripts/run_strategy_autoresearch.py",
+    "research_lab/experiment_preflight.py"
+  ],
+  "inputs": [
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/BTCUSDT/BTCUSDT.json", "role": "BTCUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/ETHUSDT/ETHUSDT.json", "role": "ETHUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/SOLUSDT/SOLUSDT.json", "role": "SOLUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/ADAUSDT/ADAUSDT.json", "role": "ADAUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/LINKUSDT/LINKUSDT.json", "role": "LINKUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/DOTUSDT/DOTUSDT.json", "role": "DOTUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/AVAXUSDT/AVAXUSDT.json", "role": "AVAXUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false},
+    {"path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/SUIUSDT/SUIUSDT.json", "role": "SUIUSDT exact public M5", "temporal_data": true, "data_window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"}, "contains_sealed_holdout": false}
+  ],
+  "measurement_contract": {
+    "engine": "portfolio_next_open_exact_cache_v1",
+    "timeframe": "completed 4h pivot line, completed 15m touch, later reclaim/BOS, exact 5m next-open execution and exits",
+    "window": {"start_utc": "2024-03-01T00:00:00Z", "end_utc_exclusive": "2025-10-01T00:00:00Z"},
+    "universe": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "DOTUSDT", "AVAXUSDT", "SUIUSDT"],
+    "costs": {"fee_bps_per_side": 6.0, "slippage_bps_per_side": 2.0, "round_trip_bps": 16.0},
+    "label_contract": "first confirmed pivot-line break, first causal touch, later reclaim, still later BOS, stop-first path simulation",
+    "split_contract": "single frozen development contract; no parameter selection and no confirmation claim"
+  },
+  "search_contract": {"variant_count": 1, "random_seed": 0, "pre_registered": true},
+  "sealed_holdouts": [
+    {"id": "reserved_2025_10_through_2026_06", "start_utc": "2025-10-01T00:00:00Z", "end_utc_exclusive": "2026-07-01T00:00:00Z", "must_not_be_read": true}
+  ]
+}

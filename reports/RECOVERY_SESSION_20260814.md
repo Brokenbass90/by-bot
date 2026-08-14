@@ -4,6 +4,44 @@
 
 The project made a real step forward: ATT1 now has a clean positive forward cohort, both the TP2 concern and a causal momentum-stall exit were tested rather than guessed, a distinct sloped-break V2 was implemented and rejected in one frozen historical run, Inplay silence was explained by evidence rather than a stale allowlist verdict, XAU download was repaired to resume daily, and a cross-collector compression race was removed. No second money sleeve is promoted by this checkpoint.
 
+## Completion update — 15:13 UTC
+
+The session was continued beyond the first checkpoint. The additional work did
+not manufacture a second leg, but it materially shortened the path to reliable
+decisions:
+
+- Sloped Break/Retest V3 changed exactly one mechanism: the first completed 15m
+  reclaim could occur after the touch bar. It was preregistered, passported and
+  run on the same pre-holdout contract. Result: 18 trades, `-5.371R`, PF(R)
+  `0.521`; V3 underperformed V2 by `-2.632R`. Retest timing is now closed as the
+  next tuning axis. The next sloped hypothesis must alter the upstream 4h break
+  or be a separate long mechanism.
+- ATT1 corrected history was decomposed into reproducible negative phenotypes.
+  The largest exploratory pockets were entry distance below 0.5 ATR
+  (`-24.699R/141`), horizontal resistance geometry (`-15.296R/166`), ETH
+  (`-8.313R/43`) and SOL (`-8.267R/60`). These are hypothesis generators, not
+  same-window live filters.
+- ATT1 did not historically collapse in the measured bull bucket: BTC 30d
+  return above 10% produced `+1.263R/91`; the worst regime was below -10%
+  (`-11.356R/35`). Operationally, however, ATT1 is short-only with no direct
+  bull/bear side gate, and there is no proven long analogue.
+- The research pipeline audit found six healthy continuous research jobs, but
+  no complete machine-verifiable loop from idea card to audited result. Its
+  status is `PARTIAL_PIPELINE_NOT_SELF_IMPROVING_CLOSED_LOOP`, with a concrete
+  repair contract: lifecycle IDs, hash-bound approvals, mandatory preflight and
+  passport, bounded scheduler receipt, independent-audit fail-close.
+- The dirty workbench was re-inventoried without deleting or moving anything:
+  163 code candidates split into 5 test-backed, 115 evidence-backed requiring
+  reproduction, 16 referenced requiring review, and 27 quarantine candidates.
+- Alpaca HWM, re-entry and Telegram dedupe state now use atomic durable local
+  writes. This closes a valid crash-consistency issue from the external review;
+  it does not change selections, orders, SAFE_HOLD or the live server.
+- Read-only Bybit truth at 15:02 UTC was broker flat and service active. No
+  order, risk, deploy or restart authority was exercised.
+
+The canonical matrix is `reports/LIVE_READINESS_AUDIT_20260814.md`; machine
+evidence is under `reports/evidence/*_20260814.json`.
+
 ## Direct live truth at the checkpoint
 
 - Bybit broker: flat, zero open positions at the read-only check.

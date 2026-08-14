@@ -63,6 +63,39 @@ def _tg_dedupe_state_path() -> Path:
     return Path(__file__).resolve().parent.parent / "runtime" / "alpaca_tg_dedupe.json"
 
 
+def _atomic_write_json(path: Path, payload: Any) -> None:
+    """Durably replace one JSON state file without exposing a partial value."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.{uuid.uuid4().hex}.tmp")
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+    fd: int | None = None
+    try:
+        fd = os.open(tmp, flags, 0o600)
+        data = (json.dumps(payload, ensure_ascii=True, indent=2, sort_keys=True) + "\n").encode("utf-8")
+        view = memoryview(data)
+        while view:
+            written = os.write(fd, view)
+            if written <= 0:
+                raise OSError("short JSON state write")
+            view = view[written:]
+        os.fsync(fd)
+        os.close(fd)
+        fd = None
+        os.replace(tmp, path)
+        directory_fd = os.open(path.parent, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    finally:
+        if fd is not None:
+            os.close(fd)
+        try:
+            tmp.unlink()
+        except FileNotFoundError:
+            pass
+
+
 def _is_actionable_equities_report(report: dict[str, Any]) -> bool:
     passive_actions = {"hold_existing", "hold_pending_buy"}
     results = report.get("results") or []
@@ -97,9 +130,8 @@ def _tg_send_equities_report(token: str, chat_id: str, msg: str, report: dict[st
     ):
         return
 
-    path.parent.mkdir(parents=True, exist_ok=True)
     state["equities_hold_only"] = {"digest": digest, "ts": now}
-    path.write_text(json.dumps(state, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
+    _atomic_write_json(path, state)
     _tg_send(token, chat_id, msg)
 
 
@@ -790,9 +822,8 @@ def _load_reentry_block_state(path: Path) -> dict[str, dict[str, Any]]:
 
 
 def _save_reentry_block_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
     payload = {"symbols": dict(sorted(state.items()))}
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    _atomic_write_json(path, payload)
 
 
 def _active_reentry_blocks(
@@ -871,8 +902,7 @@ def _default_broker_protection_tif(order_class: str) -> str:
 
 
 def _save_hwm_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    _atomic_write_json(path, state)
 
 
 def _update_hwm(

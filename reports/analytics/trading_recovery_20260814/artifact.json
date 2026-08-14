@@ -5,7 +5,7 @@
     "surface": "report",
     "title": "Антикризисная сессия торговой станции — 14 августа 2026",
     "description": "Честный статус ATT1, следующих криптоног, Alpaca, XAU и исследовательского конвейера.",
-    "generatedAt": "2026-08-14T13:56:50Z",
+    "generatedAt": "2026-08-14T15:13:03Z",
     "sources": [
       {
         "id": "att1_live",
@@ -148,20 +148,21 @@
     ],
     "blocks": [
       {"id": "title", "type": "markdown", "layout": "full", "body": "# Антикризисная сессия торговой станции — 14 августа 2026"},
-      {"id": "executive_summary", "type": "markdown", "layout": "full", "body": "## Executive Summary\n\n- **Позитив появился в правильном месте:** чистая forward-когорта ATT1 сейчас N5, +2.950R и PF(R) 3.289. Это мало для масштабирования, но это уже не старый подогнанный бэктест.\n- **ATT1 не объявлена ни рабочей навсегда, ни мёртвой:** corrected Geometry V2 исторически около нуля/в минусе, поэтому tiny canary сохраняется, а N20 и контрактная сверка остаются обязательными.\n- **Два выхода проверены:** TP2=1.8R ухудшил net на 1.522R; BE-gated stall улучшил net на 0.391R, но весь arm остался отрицательным. Live runner не меняется.\n- **Пробой наклонной уже не обещание:** отдельная V2 дала 18 сделок, -2.739R и PF(R) 0.704. Funnel локализовал главный дефицит: 131 пробой -> 35 удержанных первых ретестов -> 20 сигналов.\n- **Основа стала наблюдаемее:** XAU теперь резюмируется по дням, AI различает runner-local и broker-direct truth, локальная L2 compression-race устранена, а остановленный серверный collector восстановлен штатной проверяемой компрессией без обхода storage guard."},
+      {"id": "executive_summary", "type": "markdown", "layout": "full", "body": "## Executive Summary\n\n- **Позитив появился в правильном месте:** чистая forward-когорта ATT1 сейчас N5, +2.950R и PF(R) 3.289. Это мало для масштабирования, но это уже не старый подогнанный бэктест.\n- **ATT1 не объявлена ни рабочей навсегда, ни мёртвой:** corrected Geometry V2 исторически -2.468R/393, поэтому tiny canary сохраняется, а N20 и контрактная сверка остаются обязательными.\n- **Негатив превращён в гипотезы:** сильные отрицательные pockets найдены у близкого входа, horizontal-resistance geometry, ETH/SOL и сильного падения BTC; это ещё не разрешённые live-фильтры.\n- **Sloped V3 честно закрыта:** delayed reclaim дал 18 сделок, -5.371R и PF(R) 0.521, хуже V2 на -2.632R. Следующая формулировка должна менять upstream break, а не снова тюнить ретест.\n- **Лаборатория работает, но не замкнута:** 6/6 research-only jobs здоровы, однако idea cards не связаны с prereg/spec/passport/result и scheduler receipt протух. Вердикт PARTIAL, план ремонта зафиксирован.\n- **Основа стала безопаснее:** Alpaca state пишет атомарно, 163 грязных code candidates классифицированы без удаления, а серверный L2 collector восстановлен проверяемой компрессией без обхода storage guard."},
       {"id": "headline_metrics", "type": "metric-strip", "layout": "full", "cardIds": ["att1_n", "att1_r", "research_queue"]},
       {"id": "tp2_heading", "type": "markdown", "layout": "full", "sourceId": "att1_tp2", "body": "## TP2: ощущение превратилось в проверяемый результат\n\nTP2 действительно редко достигается, но простое приближение цели не решило проблему: оно отрезало часть сильных движений и практически не изменило просадку."},
       {"id": "tp2_chart", "type": "chart", "layout": "full", "chartId": "tp2_net_r", "sourceId": "att1_tp2"},
       {"id": "stall_result", "type": "markdown", "layout": "full", "sourceId": "att1_stall", "body": "## Затухание импульса: полезный механизм, но ещё не live-фикс\n\nЗамороженный BE-gated volume-fade + price-stall challenger изменил 14 из 393 выходов и добавил +0.391R относительно текущего runner. Просадка слегка снизилась, однако весь corrected arm остался отрицательным (-2.077R), эффект смешан по символам, а BTC/ETH вообще не изменились. Решение: сохранить как validation-кандидат, live не менять."},
-      {"id": "lanes_heading", "type": "markdown", "layout": "full", "body": "## Следующие ноги идут параллельно, но не получают деньги авансом\n\nInplay уже имеет доказанную частотную parity на старых окнах, sloped-break V2 быстро прошёл от идеи до честного отрицательного verdict, funding собран на 137 символах, а XAU-история снова качается после ремонта. Это широкий конвейер; денежная книга остаётся узкой до прохождения ворот."},
+      {"id": "lanes_heading", "type": "markdown", "layout": "full", "body": "## Следующие ноги идут параллельно, но не получают деньги авансом\n\nInplay сохраняет фиксированный prospective contract, Sloped V2 и V3 быстро прошли до честных отрицательных verdict, funding собран широко, а XAU materialization продолжает fail-close на плохих днях. Это широкий исследовательский конвейер; денежная книга остаётся узкой до прохождения ворот."},
       {"id": "lanes_table", "type": "table", "layout": "full", "tableId": "lane_table", "sourceId": "lane_evidence"},
-      {"id": "timing", "type": "markdown", "layout": "full", "sourceId": "lane_evidence", "body": "## Условные сроки\n\n- ATT1 0.10 → 0.25: после ещё 15 чистых закрытий и свежей сверки риска; при недавней частоте это ориентир 1–3 недели, не обещание.\n- Вторая криптонога: дни до historical verdict, но честнее 3–6 недель до tiny canary, если кандидат переживёт replay и forward.\n- Три–четыре денежные криптоноги: агрессивный условный диапазон 6–12 недель.\n- Alpaca: защита и exact replay — дни инженерии; расширение капитала — недели forward.\n- XAU: первые цифры только после полного guarded materialization и замороженного внутридневного контракта."},
+      {"id": "pipeline", "type": "markdown", "layout": "full", "body": "## Лаборатория: следующий инженерный рычаг\n\nШесть continuous jobs и четыре public-data collectors здоровы, но идея пока не получает один сквозной ID и hash-bound approval. Нужен ledger idea → approval → prereg → code SHA → preflight → passport → result → independent audit → decision. Только существующий bounded research-code может запускаться автоматически; AI не получает order/risk authority."},
+      {"id": "timing", "type": "markdown", "layout": "full", "sourceId": "lane_evidence", "body": "## Условные сроки\n\n- ATT1 0.10 → 0.25: после ещё 15 чистых закрытий и свежей сверки риска; при недавней частоте это ориентир 1–3 недели, не обещание.\n- Вторая криптонога: historical verdict можно получать за часы/дни, но tiny canary честнее оценивать в 3–6 недель только при replay и forward PASS.\n- Три–четыре денежные криптоноги: агрессивный условный диапазон 6–12 недель, без гарантии.\n- Alpaca: exact PIT/live-contract replay — дни инженерии; расширение капитала — недели forward.\n- XAU: текущие 12/1734 календарных дней недостаточны; сначала нужен проверяемый более быстрый источник, затем frozen annual replay."},
       {"id": "caveats", "type": "markdown", "layout": "full", "body": "## Ограничения и решения\n\nВ сессии не отправлялись и не отменялись заявки, не закрывались позиции, не менялся риск и не перезапускался live-монолит. Bitget проверен только read-only: futures-баланс равен нулю, а полноценного multi-exchange execution/reconciliation слоя пока нет. Alpaca остаётся SAFE_HOLD из-за несовпадения proxy/live и обнаруженного сброса внутридневного stop обратно в DAY-контракт. Скриншоты из Desktop недоступны текущему процессу macOS и поэтому не использованы как доказательство."}
     ]
   },
   "snapshot": {
     "version": 1,
-    "generatedAt": "2026-08-14T13:56:50Z",
+    "generatedAt": "2026-08-14T15:13:03Z",
     "status": "ready",
     "datasets": {
       "headline": [
@@ -173,11 +174,11 @@
       ],
       "research_lanes": [
         {"priority": 1, "lane": "ATT1", "stage": "tiny canary", "positive": "clean N5, +2.950R", "blocker": "N20; historical robustness conflict", "next_gate": "15 closes + exact reconciliation"},
-        {"priority": 2, "lane": "Sloped break/retest V2", "stage": "frozen contract rejected", "positive": "131 breaks; failure localized", "blocker": "35 held retests; N18; -2.739R; PF(R) 0.704", "next_gate": "one preregistered retest-definition V3"},
+        {"priority": 2, "lane": "Sloped break/retest V2/V3", "stage": "both frozen contracts rejected", "positive": "failure localized; one-change V3 completed", "blocker": "V2 -2.739R; V3 -5.371R; N18 each", "next_gate": "new upstream 4h break or distinct long mechanism"},
         {"priority": 3, "lane": "Inplay ETH 24h", "stage": "prospective shadow", "positive": "code parity; 0.91–2.31 signals/day on old slices", "blocker": "current N0; mixed edge windows", "next_gate": "prospective events without contract drift"},
         {"priority": 4, "lane": "XSEC / funding", "stage": "research repair", "positive": "137 funding; 74 spot histories", "blocker": "PIT, mapping, fees, parity", "next_gate": "exact hedgeable-pair replay"},
-        {"priority": 5, "lane": "Alpaca V38", "stage": "SAFE_HOLD pilot", "positive": "+11.14% annualized clean proxy", "blocker": "DD 23.71%; 93% unknown sectors; stop reset", "next_gate": "GTC protection + exact replay"},
-        {"priority": 6, "lane": "XAU intraday", "stage": "data acquisition", "positive": "daily atomic resume works", "blocker": "history incomplete; provider 503 rejects request fanout", "next_gate": "adaptive throttle or validated bulk source, then frozen replay"}
+        {"priority": 5, "lane": "Alpaca V38", "stage": "SAFE_HOLD pilot", "positive": "entry-relative proxy +25.65% annual, DD 14.36%; atomic local state", "blocker": "not exact live contract; PIT/sector/corporate actions", "next_gate": "exact replay before selection canary"},
+        {"priority": 6, "lane": "XAU intraday", "stage": "data acquisition", "positive": "daily atomic resume and quarantine work", "blocker": "12/1734 days; only 3 market days complete", "next_gate": "validated bulk/alternate source, then frozen replay"}
       ]
     }
   },

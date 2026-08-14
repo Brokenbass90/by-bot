@@ -1,0 +1,48 @@
+{
+  "authority": "read_only_no_experiment_no_live_or_promotion_authority",
+  "capabilities": {
+    "ai_can_auto_generate_strategy_code": false,
+    "ai_can_promote_or_trade": false,
+    "ai_can_propose_complete_falsifiable_cards": true,
+    "approval_is_content_hash_bound": false,
+    "approved_existing_specs_can_be_executed_research_only": true,
+    "idea_to_runnable_experiment_is_fully_automatic": false
+  },
+  "continuous_station": {
+    "healthy": true,
+    "healthy_jobs": 6,
+    "jobs": 6,
+    "live_order_authority": false,
+    "status_age_hours": 0.07753144777777778
+  },
+  "findings": [
+    "continuous_shadow_and_audit_collectors_healthy",
+    "idea_to_prereg_spec_passport_result_bridge_open",
+    "nightly_autoresearch_scheduler_status_stale",
+    "approved_specs_are_name_bound_not_content_hash_bound",
+    "ai_proposals_do_not_generate_or_modify_strategy_code"
+  ],
+  "generated_at_utc": "2026-08-14T15:06:46.113212+00:00",
+  "historical_execution": {
+    "approved_spec_entries": 30,
+    "hash_pinned_approved_entries": 0,
+    "nightly_status_age_hours": 2230.671952591389,
+    "nightly_status_fresh_le_24h": false,
+    "pending_gate_proposals": 0
+  },
+  "idea_intake": {
+    "cards": 4,
+    "cards_with_explicit_experiment_prereg_spec_links": 0,
+    "status_counts": {
+      "awaiting_owner_approval": 4
+    }
+  },
+  "required_next_controls": [
+    "Add an explicit lifecycle ledger linking proposal_key to owner approval, prereg, spec, passport, result, independent audit and final verdict.",
+    "Bind approvals to spec SHA256 and require experiment_preflight plus run_passport before launch.",
+    "Run only bounded existing code automatically; AI-generated code remains review-and-test gated.",
+    "Publish one fresh scheduler receipt per cycle and fail closed on stale status or nonzero independent audit."
+  ],
+  "schema_id": "research_pipeline_audit_v1",
+  "verdict": "PARTIAL_PIPELINE_NOT_SELF_IMPROVING_CLOSED_LOOP"
+}

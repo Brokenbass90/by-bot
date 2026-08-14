@@ -1,0 +1,112 @@
+{
+  "schema_id": "live_readiness_matrix_v1",
+  "generated_at_utc": "2026-08-14T15:10:00Z",
+  "authority": "read_only_audit_no_order_risk_or_deploy_authority",
+  "direct_live_truth": {
+    "bybit_broker_checked_at_utc": "2026-08-14T15:02:00Z",
+    "bybit_open_position_count": 0,
+    "bybit_service_active": true,
+    "orders_or_risk_changed": false
+  },
+  "lanes": [
+    {
+      "lane": "ATT1 short",
+      "stage": "tiny_live_canary",
+      "capital_authorized": true,
+      "risk_mult": 0.10,
+      "evidence": "5 clean closes, +2.950R, PF(R) 3.289; corrected historical 393 trades, -2.468R",
+      "blockers": ["N20", "fresh exact risk/runtime/broker/accounting reconciliation", "historical robustness unresolved", "no direct bull-regime side gate"],
+      "decision": "KEEP_TINY_DO_NOT_SCALE"
+    },
+    {
+      "lane": "ATT1 long analog",
+      "stage": "absent",
+      "capital_authorized": false,
+      "evidence": "strategy code supports long geometry but live contract disables longs and no long OOS/forward proof exists",
+      "blockers": ["new causal long mechanism", "preholdout replay", "independent validation", "prospective shadow"],
+      "decision": "BUILD_SEPARATE_LONG_LEG_DO_NOT_INVERT_SHORTS"
+    },
+    {
+      "lane": "Inplay ETH 24h",
+      "stage": "prospective_shadow",
+      "capital_authorized": false,
+      "evidence": "fresh collector, N0; exact code hash parity; historical frequency 0.91-2.31 raw signals/day on four 35-day slices only",
+      "blockers": ["no prospective signal yet", "signal frequency is not edge", "mixed historical economics", "no order parity receipt"],
+      "decision": "CONTINUE_FIXED_SHADOW_NO_MICRO_CANARY"
+    },
+    {
+      "lane": "Sloped break/retest",
+      "stage": "development_rejected",
+      "capital_authorized": false,
+      "evidence": "V2 18 trades -2.739R PF 0.704; V3 18 trades -5.371R PF 0.521",
+      "blockers": ["negative economics", "thin event count", "retest timing change failed"],
+      "decision": "STOP_RETEST_TUNING_REDEFINE_UPSTREAM_EVENT"
+    },
+    {
+      "lane": "XSEC",
+      "stage": "research_shadow",
+      "capital_authorized": false,
+      "evidence": "daily decision fresh and orderless; six prior returns include large positive and negative outliers",
+      "blockers": ["same-close/PIT/funding attribution", "outlier concentration", "exact next-open replay", "forward sample"],
+      "decision": "KEEP_SHADOW"
+    },
+    {
+      "lane": "Funding/carry",
+      "stage": "research_shadow_and_data_repair",
+      "capital_authorized": false,
+      "evidence": "mapped historical base 3.77% annualized on two-leg gross capital, stress 2.55%; dynamic shadow 10 closed median -52.7 bps and 60.7% positive concentration; frozen shadow 9 closed median -162.1 bps",
+      "blockers": ["weak economic return after two-leg capital", "PIT survivorship unresolved", "exact spot/perp mapping incomplete", "forward medians negative", "concentration"],
+      "decision": "NO_MONEY_CONTINUE_DIAGNOSTICS"
+    },
+    {
+      "lane": "Alpaca V38",
+      "stage": "protected_safe_hold_pilot",
+      "capital_authorized": true,
+      "evidence": "clean proxy current +11.14% annual/DD 23.71%; entry-relative challenger +25.65% annual/DD 14.36%, research-only",
+      "blockers": ["not exact live contract", "PIT/sector/corporate actions", "selection-canary disabled", "forward protection receipt for changed contract"],
+      "decision": "PRESERVE_HOLDINGS_COMPLETE_EXACT_REPLAY"
+    },
+    {
+      "lane": "XAU intraday",
+      "stage": "data_acquisition",
+      "capital_authorized": false,
+      "evidence": "12/1734 calendar days processed, 3 completed market days, 5 quarantined provider-failure days; prior 13-trade proxy was positive but too thin",
+      "blockers": ["current downloader throughput is inadequate", "gap-free bid/ask data", "DST/session/news contract", "annual causal replay"],
+      "decision": "CHANGE_DATA_SOURCE_OR_ACCELERATION_BEFORE_STRATEGY_SWEEP"
+    },
+    {
+      "lane": "FX/CFD other",
+      "stage": "harness_only",
+      "capital_authorized": false,
+      "evidence": "FX harness and legacy reports exist but no current promotion-grade annual replay",
+      "blockers": ["trusted data", "broker costs/spread/swap", "PIT macro calendar", "paper execution adapter"],
+      "decision": "START_AFTER_XAU_DATA_CONTRACT"
+    },
+    {
+      "lane": "Bitget multi-exchange",
+      "stage": "read_only_integration_audit",
+      "capital_authorized": false,
+      "evidence": "futures balance was 0 USDT at last signed GET audit",
+      "blockers": ["owner transfer", "order sizing parity", "exchange-specific protection", "cross-exchange reconciliation"],
+      "decision": "NO_TRANSFER_OR_TRADING_BY_CODEX"
+    }
+  ],
+  "foundation": {
+    "direct_broker_truth": "working read-only but not yet continuously fed to every AI answer",
+    "strategy_execution": "production-proven for ATT1 only; candidate integrations remain partial",
+    "position_protection": "exchange stops and ATT1 runner active; Alpaca GTC state hardened locally",
+    "four_source_reconciliation": "pure tested contract exists but no fresh periodic deployed receipt confirmed",
+    "research_integrity": "passport/preflight available and used for new V3, not universal across legacy work",
+    "continuous_research": "6/6 supervised research-only jobs healthy; historical scheduler stale",
+    "self_improvement": "proposal generation works; idea-to-experiment closed loop is incomplete",
+    "dynamic_universe": "several strategy-specific prototypes exist; IVB1 rolling selector failed; no shared promotion-grade selector API",
+    "web_and_ai_truth": "source labelling improved locally; deployment parity and fresh broker snapshot still need verification"
+  },
+  "minimum_start_definition": {
+    "target": "3-4 crypto money legs plus full Alpaca",
+    "current_money_legs": 1,
+    "current_full_alpaca": false,
+    "estimated_completion_percent": "40-45% of minimum station, 20-25% of full autonomous multi-market vision",
+    "note": "management estimate, not a statistical confidence interval"
+  }
+}

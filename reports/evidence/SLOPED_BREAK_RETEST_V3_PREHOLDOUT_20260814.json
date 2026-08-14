@@ -1,0 +1,55 @@
+{
+  "schema_id": "sloped_break_retest_v3_result_v1",
+  "generated_at_utc": "2026-08-14T14:58:00Z",
+  "authority": "research_only_no_live_or_promotion_authority",
+  "experiment_id": "sloped_break_retest_v3_preholdout_v1_20260814",
+  "contract": {
+    "window_start_utc": "2024-03-01T00:00:00Z",
+    "window_end_utc_exclusive": "2025-10-01T00:00:00Z",
+    "sealed_holdout_rows_read": 0,
+    "symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "DOTUSDT", "AVAXUSDT", "SUIUSDT"],
+    "single_change_from_v2": "first 15m touch, later 15m reclaim, still later 15m BOS",
+    "execution": "next 5m open",
+    "round_trip_cost_bps": 16.0,
+    "parameter_variants": 1
+  },
+  "passport": {
+    "path": "research_lab/results/sloped_break_retest_v3_preholdout_v1_20260814/run_passport.json",
+    "sha256": "b803abb8264d3b1bef227d4acfda5dcc46dfca3969d1cd415cf79c1bd24b7195",
+    "comparison_contract_sha256": "8645f136b06e57582c48eff1dbc3cc1bea29771038fe924b6bbfb5d1df949f09"
+  },
+  "result": {
+    "run_dir": "backtest_runs/portfolio_20260814_175527_sloped_break_retest_v3_preholdout_v1_20260814_r001",
+    "trades": 18,
+    "net_pnl_usd": -2.43,
+    "profit_factor_usd": 0.481,
+    "win_rate": 0.2777777777777778,
+    "portfolio_max_drawdown_usd": 2.6385,
+    "net_r": -5.370630242959581,
+    "mean_r": -0.2983683468310878,
+    "profit_factor_r": 0.5207237921686318,
+    "sides": {
+      "long": {"trades": 9, "net_r": -0.8739413442366523, "profit_factor_r": 0.8427404848807283},
+      "short": {"trades": 9, "net_r": -4.496688898722928, "profit_factor_r": 0.2038991127222905}
+    },
+    "symbols_non_negative": 1
+  },
+  "comparison_to_v2": {
+    "v2_trades": 18,
+    "v2_net_r": -2.738628582798834,
+    "v3_minus_v2_net_r": -2.632001660160747,
+    "interpretation": "Separating touch and reclaim did not increase event density and materially worsened economics. The short side remains the dominant failure."
+  },
+  "verdict": {
+    "status": "REJECT_FROZEN_V3_DEVELOPMENT_CONTRACT",
+    "failed_gates": [
+      "18 total trades is below 80",
+      "9 trades per side is below 30",
+      "aggregate net R is negative",
+      "PF(R) 0.521 is below 1.10",
+      "only one of eight requested symbols is non-negative and LINKUSDT produced no trade"
+    ],
+    "live_change_authorized": false,
+    "next_falsifiable_step": "Stop modifying retest timing on this geometry. Revisit the upstream 4h break event or a distinct long-only mechanism under a new preregistration; do not sweep V3."
+  }
+}

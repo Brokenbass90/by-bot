@@ -1,4 +1,5 @@
 import unittest
+import json
 from pathlib import Path
 import fcntl
 import os
@@ -16,6 +17,8 @@ from scripts.equities_alpaca_paper_bridge import (
     _hard_capped_normalized_weights,
     _new_entry_allowed,
     _select_monthly_cycle_picks,
+    _save_hwm_state,
+    _save_reentry_block_state,
     _trail_stop_triggered,
 )
 
@@ -182,7 +185,6 @@ class TestAlpacaMonthlySelection(unittest.TestCase):
         assert truth["stop_coverage_count"] == 1
         assert truth["position_count"] == 2
         assert truth["stop_coverage_complete"] is False
-
     def test_broker_truth_requires_full_remaining_stop_quantity(self):
         truth = _broker_truth_snapshot(
             account={"equity": "485.0"},
@@ -240,6 +242,22 @@ class TestAlpacaMonthlySelection(unittest.TestCase):
                     os.environ.pop("ALPACA_BRIDGE_LOCK_PATH", None)
                 else:
                     os.environ["ALPACA_BRIDGE_LOCK_PATH"] = previous
+
+
+def test_hwm_state_is_atomically_replaced(tmp_path):
+    path = tmp_path / "hwm.json"
+    _save_hwm_state(path, {"SCHW": {"hwm": 108.25}})
+
+    assert json.loads(path.read_text(encoding="utf-8")) == {"SCHW": {"hwm": 108.25}}
+    assert list(tmp_path.glob(".hwm.json.*.tmp")) == []
+
+
+def test_reentry_state_is_atomically_replaced_and_sorted(tmp_path):
+    path = tmp_path / "reentry.json"
+    _save_reentry_block_state(path, {"SCHW": {"blocked_until": "2026-09-01T00:00:00Z"}})
+
+    assert json.loads(path.read_text(encoding="utf-8"))["symbols"]["SCHW"]["blocked_until"] == "2026-09-01T00:00:00Z"
+    assert list(tmp_path.glob(".reentry.json.*.tmp")) == []
 
 
 if __name__ == "__main__":

@@ -1,8 +1,93 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-13 14:25 UTC. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-14 15:13 UTC. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
+
+## Latest recovery update — 2026-08-14 15:13 UTC
+
+### Ответ одним абзацем
+
+Шаг большой по качеству системы, но не по числу денежных ног: ATT1 остаётся
+единственной tiny-canary, второй подтверждённой ноги пока нет. Зато Sloped V3
+за одну сессию прошла полный prereg → passport → causal replay → evidence и
+была честно отклонена; ATT1 разложена по отрицательным фенотипам и режимам;
+Alpaca state persistence укреплена атомарной записью; 163 кодовых кандидата из
+грязного хвоста получили воспроизводимую очередь; исследовательский конвейер
+проверен как `PARTIAL`, а не ошибочно объявлен самосовершенствующимся.
+
+### Прямое состояние и денежные контуры
+
+- Read-only Bybit check в `15:02 UTC`: broker flat, service active. За сессию
+  не отправлялись/не отменялись заявки, не менялся риск и не было deploy/restart.
+- ATT1 short: live risk `0.10`, clean cohort `N5`, `+2.950R`, PF(R) `3.289`;
+  corrected pre-holdout `-2.468R/393`. Решение: tiny оставить, не масштабировать.
+- ATT1 bull audit: в историческом bull bucket результат не был хуже
+  (`+1.263R/91`), основной минус был в сильном 30d падении BTC
+  (`-11.356R/35`). Но direct regime gate отсутствует, а доказанного long-аналога
+  нет. Long continuation/retest строить отдельной ногой, не инверсией шорта.
+- Inplay ETH: prospective shadow жив, `N0`; контракт не ослаблять ради частоты.
+- Sloped V2: `-2.739R/18`; V3 delayed reclaim: `-5.371R/18`, PF(R) `0.521`.
+  Ретестовый тюнинг остановить; следующая версия должна менять upstream 4h break
+  либо формулировать отдельный long-механизм.
+- XSEC остаётся orderless shadow. Funding/carry остаётся diagnostic: исторически
+  `3.77%` base / `2.55%` stress на двухногий gross capital, а свежие forward
+  медианы отрицательны и прибыль сконцентрирована.
+- Alpaca остаётся SAFE_HOLD. Entry-relative challenger `25.65% annual / 14.36%`
+  DD пока proxy, не exact live contract. HWM, re-entry и TG dedupe state локально
+  переведены на atomic write; торговая логика и live не менялись.
+- XAU materialization: `12/1734` календарных дней, лишь `3` завершённых
+  рыночных дня и `5` quarantine. Текущий источник/скорость недостаточны для
+  annual replay; нужен bulk/alternate source с теми же gap/DST guards.
+
+### Что теперь известно про лабораторию
+
+- `6/6` supervised research-only jobs и четыре public L2/tape collectors живы.
+- Четыре полные idea cards существуют, но `0/4` связаны явным experiment ID с
+  prereg/spec/passport/result.
+- Nightly historical scheduler имеет status возрастом около `2231` часов.
+- `30` approved specs привязаны к имени, `0` — к SHA256.
+- Поэтому текущий verdict:
+  `PARTIAL_PIPELINE_NOT_SELF_IMPROVING_CLOSED_LOOP`.
+
+Следующая версия лаборатории: lifecycle ledger
+`idea → approval → prereg → code SHA → preflight → passport → result → audit → decision`;
+hash-bound owner approval; автоматический запуск только уже существующего
+bounded research-кода; любой nonzero independent audit — fail-close. ИИ может
+генерировать гипотезы и разбирать фенотипы, но не получает order/risk authority.
+
+### Грязный worktree и динамический universe
+
+- Недеструктивно классифицировано `163` code-кандидата: `5` test-backed,
+  `115` evidence-backed/reproduction, `16` referenced/review, `27` quarantine.
+  Остальные 500+ entries в основном данные, отчёты, логи, backup и результаты.
+  Удаление только после reference map и quarantine receipt.
+- Strategy-specific dynamic selection реален: IVB1 и Inplay прототипы есть.
+  IVB1 rolling OOS честно провалился (aggregate PF `0.365`). Общего
+  promotion-grade selector API пока нет. Следующая версия выбирает universe
+  только из прошлых liquidity/setup-frequency/cost/stability данных и
+  замораживает его на следующий месяц.
+
+### Следующие 72 часа
+
+1. Ввести lifecycle ledger и hash-bound approval; восстановить один bounded
+   historical scheduler receipt без доступа к sealed holdout.
+2. Alpaca: exact replay entry-relative stop на PIT/sector/corporate-action
+   контракте; SAFE_HOLD не снимать по proxy.
+3. Inplay: продолжать fixed prospective и считать причины молчания; не менять
+   правила до первой cadence card.
+4. Funding/XSEC: закрыть exact spot/perp mapping, real fees и concentration
+   audit; деньги не подключать при отрицательной forward median.
+5. Новая crypto long-нога: prereg upstream 4h break/continuation на BTC/ETH и
+   major universe, отдельно от отвергнутого Sloped retest.
+6. XAU: заменить медленный источник на проверяемый bulk/alternate source и
+   только затем заморозить annual session-breakout/retest replay.
+7. Dirty batch №1: portfolio engine, XSEC reference, backtest auditor,
+   sweep-reclaim, trial ledger и Alpaca validator через reproduction receipts.
+8. Server L2 retention: copy на Mac → SHA/decompression verify → receipt →
+   только затем prune server source; storage cap вручную не обходить.
+
+Полный новый статус: `reports/LIVE_READINESS_AUDIT_20260814.md`.
 
 ## Latest recovery update — 2026-08-13 14:25 UTC
 
