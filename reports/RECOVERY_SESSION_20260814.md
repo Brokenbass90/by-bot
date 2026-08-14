@@ -63,6 +63,7 @@ The old downloader could lose a full month when one hourly request failed. It no
 - External model execution was deliberately not given fresh private/live telemetry. A sanitized audit packet was produced instead.
 - The onboard AI context now labels `live_positions.json` as a runner-local export instead of silently treating it as direct broker truth. Until a fresh signed GET snapshot is included, position authority is `NOT_CONFIRMED` even when heartbeat and runner counts agree.
 - Public L2/tape collection is fresh and order-incapable. The parent BTC/ETH collector no longer recursively owns nested ONDO/micro collector roots, eliminating the observed background-compression race. It was safely restarted; at 2026-08-14T13:42:51Z both books were synced, frame lag was 6 ms, storage had about 78 GiB free, and no compression warning or current-process coverage alert was present. Historical ONDO/micro coverage alerts remain evidence and are not erased by this restart.
+- The isolated server collector was separately found blocked since 2026-08-12 because 2,147,714,319 tape bytes exceeded its 2 GiB cap. The guard was not overridden. Four completed partitions were compressed by the existing verify-by-decompression/SHA path, reducing tape usage to 280,871,694 bytes. A no-network preflight passed with config SHA `1d8943b7968054d6cde41ccf42b08031df91102aa40b450d1e21c56176b24810`; at 2026-08-14T13:49:48Z the collector was again `collecting`, both books were synced, and frame lag was 2 ms.
 
 Sources:
 
@@ -70,6 +71,7 @@ Sources:
 - `reports/evidence/RESEARCH_IDEA_BATCH_20260814.jsonl`
 - `reports/evidence/SLOPED_BREAK_RETEST_V2_PREHOLDOUT_20260814.json`
 - `reports/evidence/SLOPED_BREAK_RETEST_V2_FUNNEL_20260814.json`
+- `reports/evidence/SERVER_L2_COLLECTOR_RECOVERY_20260814.json`
 - `reports/EXTERNAL_AUDIT_PACKET_20260814.md`
 
 ### Sloped break/retest V2 failure localization
