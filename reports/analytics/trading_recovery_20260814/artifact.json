@@ -5,7 +5,7 @@
     "surface": "report",
     "title": "Антикризисная сессия торговой станции — 14 августа 2026",
     "description": "Честный статус ATT1, следующих криптоног, Alpaca, XAU и исследовательского конвейера.",
-    "generatedAt": "2026-08-14T13:50:22Z",
+    "generatedAt": "2026-08-14T13:56:50Z",
     "sources": [
       {
         "id": "att1_live",
@@ -161,7 +161,7 @@
   },
   "snapshot": {
     "version": 1,
-    "generatedAt": "2026-08-14T13:50:22Z",
+    "generatedAt": "2026-08-14T13:56:50Z",
     "status": "ready",
     "datasets": {
       "headline": [
@@ -177,7 +177,7 @@
         {"priority": 3, "lane": "Inplay ETH 24h", "stage": "prospective shadow", "positive": "code parity; 0.91–2.31 signals/day on old slices", "blocker": "current N0; mixed edge windows", "next_gate": "prospective events without contract drift"},
         {"priority": 4, "lane": "XSEC / funding", "stage": "research repair", "positive": "137 funding; 74 spot histories", "blocker": "PIT, mapping, fees, parity", "next_gate": "exact hedgeable-pair replay"},
         {"priority": 5, "lane": "Alpaca V38", "stage": "SAFE_HOLD pilot", "positive": "+11.14% annualized clean proxy", "blocker": "DD 23.71%; 93% unknown sectors; stop reset", "next_gate": "GTC protection + exact replay"},
-        {"priority": 6, "lane": "XAU intraday", "stage": "data acquisition", "positive": "daily atomic resume works", "blocker": "history incomplete; quarantine gap", "next_gate": "complete data + session sweep prereg"}
+        {"priority": 6, "lane": "XAU intraday", "stage": "data acquisition", "positive": "daily atomic resume works", "blocker": "history incomplete; provider 503 rejects request fanout", "next_gate": "adaptive throttle or validated bulk source, then frozen replay"}
       ]
     }
   },

@@ -55,6 +55,8 @@ Sources:
 
 The old downloader could lose a full month when one hourly request failed. It now writes daily atomic chunks, records empty-market and quarantined days, enforces disk/quarantine guards, and leaves the sealed holdout unread. At this checkpoint progress is 6/1734 calendar days: 2021-01-04 and 2021-01-06 are persisted, 2021-01-07 is in progress, weekend days are recorded as empty, and 2021-01-01 plus a partially downloaded 2021-01-05 are quarantined after provider failures. Promotion remains fail-closed until gaps are repaired.
 
+A bounded four-worker public-network smoke was also attempted on one already known market day to test a simple speed-up. Dukascopy returned HTTP 503 for all 24 hourly requests, so that acceleration was rejected and its code was not retained. The running single-worker collector was not interrupted. The next speed experiment must use adaptive provider throttling or a separately validated bulk source; raw request fanout is not acceptable.
+
 ## Research system and project inventory
 
 - Strategy inventory: 90 strategy files; 20 live entry handlers; 22 enable flags; five unreferenced archive candidates.
