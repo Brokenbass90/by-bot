@@ -1,0 +1,58 @@
+{
+  "authority": "research_only_no_live_or_promotion",
+  "breadth": {
+    "improved_symbol_count": 4,
+    "improved_symbols": [
+      "ADAUSDT",
+      "BTCUSDT",
+      "SOLUSDT",
+      "SUIUSDT"
+    ],
+    "shared_symbols": 8
+  },
+  "capital_authorized": false,
+  "computed": {
+    "baseline": {
+      "bad_initial_risk_rows": 0,
+      "by_symbol_net_r": {
+        "ADAUSDT": 0.4464322175314157,
+        "BTCUSDT": -3.641822292461999,
+        "DOTUSDT": 3.4231398332143366,
+        "ETHUSDT": -6.481516243872571,
+        "LINKUSDT": 9.724134985099349,
+        "LTCUSDT": -3.7063555668081185,
+        "SOLUSDT": -15.469785163942452,
+        "SUIUSDT": 0.05159297561166076
+      },
+      "net_r": -15.654179255628375,
+      "net_r_per_trade": -0.028104451087304083,
+      "profit_factor": 0.9601999064975915,
+      "sha256": "d2697c9cb3c77ce9366df939b4b0a91ecbc5f487bc92201b27441d816a4fa8b1",
+      "trades": 557
+    },
+    "challenger": {
+      "bad_initial_risk_rows": 0,
+      "by_symbol_net_r": {
+        "ADAUSDT": 5.11726513776553,
+        "BTCUSDT": -1.9760996376667521,
+        "DOTUSDT": 2.256101202700532,
+        "ETHUSDT": -7.239341528188193,
+        "LINKUSDT": 3.175230378305346,
+        "LTCUSDT": -12.094192969280726,
+        "SOLUSDT": -9.419378403463083,
+        "SUIUSDT": 6.56983757700278
+      },
+      "net_r": -13.610578242824575,
+      "net_r_per_trade": -0.03385715980802133,
+      "profit_factor": 0.9439378100712446,
+      "sha256": "a1770dadb2ddc1cb4daa4b3ce093865e2d6c2e9a905a6593fdd802535e49fac6",
+      "trades": 402
+    }
+  },
+  "failures": [],
+  "interpretation": "receipt and arithmetic valid; challenger remains negative and may only advance to a separately frozen validation, never directly to live",
+  "passed": true,
+  "passport_sha256": "648cf65245b135016e48c3ae6b202038ab58e8eb0c5a592dc0d7a9bf5d0186fc",
+  "result_sha256": "c84847624a726d4be84a3025c1fab08ac18c104654b3d15dc4fab18f7b54aa78",
+  "schema_id": "att1_pivot_sequence_v1_independent_audit"
+}

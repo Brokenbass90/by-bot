@@ -1,0 +1,44 @@
+{
+  "schema_id": "xau_data_source_decision_v1",
+  "generated_at_utc": "2026-08-15T04:49:50Z",
+  "authority": "research_only_public_or_read_only_market_data",
+  "current_dukascopy_state": {
+    "state": "quarantine_guard",
+    "completed_market_days": 30,
+    "empty_days": 26,
+    "quarantined_days": 32,
+    "max_quarantined_days": 31,
+    "promotion_eligible": false,
+    "sealed_holdout_rows_decoded": 0
+  },
+  "candidate_sources": [
+    {
+      "source": "OANDA v20 candles",
+      "official_url": "https://developer.oanda.com/rest-live-v20/pricing-ep/",
+      "supports_m5": true,
+      "maximum_candles_per_page": 5000,
+      "requires_bearer_token_and_account": true,
+      "assessment": "preferred reproducible paged source when an authorized practice or live market-data token is available"
+    },
+    {
+      "source": "HistData free archive",
+      "official_url": "https://ftpsite.histdata.com/",
+      "lists_xauusd": true,
+      "assessment": "fallback archive candidate; must be independently validated for timezone, gaps, duplicates, bid or ask convention and licensing before use"
+    }
+  ],
+  "implementation": {
+    "path": "scripts/materialize_xau_oanda_preholdout.py",
+    "resumable_pages": true,
+    "atomic_page_receipts": true,
+    "final_bundle_sha256": true,
+    "sealed_holdout_guard": true,
+    "token_persisted_or_logged": false,
+    "preflight_pass": true,
+    "focused_tests_passed": 6,
+    "network_fetch_started": false
+  },
+  "decision": "DO_NOT_OVERRIDE_DUKASCOPY_GUARD; OANDA_RESUMABLE_FETCHER_READY_FOR_AUTHORIZED_MARKET_DATA_TOKEN",
+  "next_gate": "complete a pre-holdout-only SHA-bound XAUUSD M5 bundle and run gap, DST, duplicate and price-source validation before any strategy replay",
+  "capital_authorized": false
+}

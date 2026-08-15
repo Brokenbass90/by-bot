@@ -1,0 +1,51 @@
+{
+  "schema_id": "alpaca_exact_readiness_v1",
+  "generated_at_utc": "2026-08-15T04:49:50Z",
+  "authority": "research_and_code_review_only_no_orders_no_risk_change",
+  "current_state": "SAFE_HOLD",
+  "clean_subset": {
+    "requested_symbols": 1000,
+    "validated_symbols": 962,
+    "quarantined_symbols": 38,
+    "bars_after_delist_conflicts": 24,
+    "full_market_point_in_time_universe": false,
+    "promotion_verdict": "FAIL_CLOSED"
+  },
+  "entry_relative_challenger": {
+    "base_total_return_pct_25_months": 57.73826243659273,
+    "base_annualized_return_pct": 25.6528,
+    "base_daily_max_drawdown_pct": 14.364809203378858,
+    "base_profit_factor": 1.8373812070516946,
+    "base_red_months": 5,
+    "stress_total_return_pct_25_months": 55.77132071386455,
+    "stress_daily_max_drawdown_pct": 14.433559603777923,
+    "stress_profit_factor": 1.8087683564905883,
+    "realized_trades": 40,
+    "arithmetic_independent_audit_pass": true,
+    "exact_live_contract": false
+  },
+  "implementation": {
+    "bridge_code_present": true,
+    "feature_flag": "ALPACA_ENTRY_RELATIVE_STOP_ENABLE",
+    "default_enabled": false,
+    "requires_simple_stop_fill_then_protect": true,
+    "uses_actual_broker_fill_price": true,
+    "focused_tests_passed": 35,
+    "deployed_or_enabled_live": false
+  },
+  "blocking_gates": [
+    "official XNYS session calendar and exact selection timestamps",
+    "point-in-time membership for the research universe",
+    "corporate actions, symbol changes and delistings",
+    "broker order-lifecycle and cost calibration",
+    "paper replay proving signal to fill to protection parity",
+    "fresh prospective selection cohort"
+  ],
+  "conditional_timing": {
+    "research_bridge_and_paper_replay": "2-4 engineering days",
+    "bounded_clean_subset_micro_canary_decision": "1-2 weeks only if paper parity passes and owner accepts remaining PIT limitation",
+    "promotion_grade_exact_contract": "requires external PIT/corporate-action data or a new prospective monthly cycle"
+  },
+  "decision": "KEEP_SAFE_HOLD_AND_TEST_DEFAULT_OFF_CHALLENGER",
+  "capital_authorized": false
+}

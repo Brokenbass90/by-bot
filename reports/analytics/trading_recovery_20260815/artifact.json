@@ -1,0 +1,176 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Утренняя recovery-сессия торговой станции — 15 августа 2026",
+    "description": "Сверка ATT1, Alpaca, Inplay, Sloped, XAU и исследовательского lifecycle после ночного накопления данных.",
+    "generatedAt": "2026-08-15T04:50:00Z",
+    "sources": [
+      {
+        "id": "att1_exact",
+        "label": "ATT1 exact live-major8 experiment",
+        "path": "research_lab/results/att1_live_major8_corrected_preholdout_v1_20260815/result.json",
+        "query": {
+          "engine": "workspace",
+          "language": "causal-backtest-and-ledger-reconciliation",
+          "sql": "SELECT arm, trades, net_r, profit_factor FROM att1_exact_major8 UNION ALL SELECT 'live forward', clean_closed, net_r, profit_factor_r FROM att1_live_lifecycle",
+          "description": "Reconciles the exact live eight-symbol historical contract with the separate clean live forward cohort.",
+          "executed_at": "2026-08-15T04:50:00Z",
+          "tables_used": ["research_lab/results/att1_live_major8_corrected_preholdout_v1_20260815/result.json", "reports/evidence/ATT1_LIVE_LIFECYCLE_20260814.json"],
+          "filters": ["historical window ends 2025-09-30", "sealed holdout rows decoded = 0", "live cohort starts after stale-fill repair"],
+          "metric_definitions": ["net R uses actual initial risk denominator", "live and backtest evidence are not pooled"]
+        }
+      },
+      {
+        "id": "research_state",
+        "label": "Research station and lifecycle audit",
+        "path": "reports/evidence/RESEARCH_PIPELINE_AUDIT_20260815.json",
+        "query": {
+          "engine": "workspace",
+          "language": "read-only-control-audit",
+          "sql": "SELECT healthy_jobs, records, terminal_experiments, verdict FROM research_pipeline_audit",
+          "description": "Control-plane and experiment-lifecycle integrity audit.",
+          "executed_at": "2026-08-15T04:48:25Z",
+          "tables_used": ["reports/evidence/RESEARCH_PIPELINE_AUDIT_20260815.json", "reports/evidence/EXPERIMENT_LIFECYCLE_20260815.json"]
+        }
+      },
+      {
+        "id": "lane_evidence",
+        "label": "Active-lane evidence",
+        "path": "reports/MORNING_RECOVERY_20260815.md",
+        "query": {
+          "engine": "workspace",
+          "language": "evidence-reconciliation",
+          "sql": "SELECT * FROM active_lanes ORDER BY priority",
+          "description": "Current stage, overnight evidence, blocker and next gate for each active lane.",
+          "executed_at": "2026-08-15T04:50:00Z",
+          "tables_used": ["reports/evidence/INPLAY_CADENCE_20260815.json", "reports/evidence/ALPACA_EXACT_READINESS_20260815.json", "reports/evidence/XAU_DATA_SOURCE_DECISION_20260815.json", "runtime/funding_positioning_dynamic_shadow_summary.json", "runtime/funding_positioning_post_n42_frozen_summary.json"]
+        }
+      }
+    ],
+    "cards": [
+      {
+        "id": "att1_forward",
+        "description": "Clean live forward cohort remains intact; N5 is not a scale proof.",
+        "dataset": "headline",
+        "sourceId": "att1_exact",
+        "metrics": [
+          {"label": "ATT1 clean N", "field": "att1_clean_n", "format": "number"},
+          {"label": "ATT1 live net R", "field": "att1_live_net_r", "format": "number", "signed": true}
+        ]
+      },
+      {
+        "id": "att1_history",
+        "description": "Exact current live-major8 historical challenger failed its promotion gate.",
+        "dataset": "headline",
+        "sourceId": "att1_exact",
+        "metrics": [
+          {"label": "Historical trades", "field": "att1_historical_trades", "format": "number"},
+          {"label": "Historical net R", "field": "att1_historical_net_r", "format": "number", "signed": true}
+        ]
+      },
+      {
+        "id": "lab_state",
+        "description": "First complete hash-chained experiment and continuous station health.",
+        "dataset": "headline",
+        "sourceId": "research_state",
+        "metrics": [
+          {"label": "Healthy research jobs", "field": "healthy_jobs", "format": "number"},
+          {"label": "Lifecycle records", "field": "lifecycle_records", "format": "number"}
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "att1_symbol_net_r",
+        "title": "ATT1 pivot challenger по символам",
+        "subtitle": "Exact live-major8, 2024-03-01..2025-09-30, 402 сделки; net R с нулевой линией",
+        "showDescription": true,
+        "intent": "comparison",
+        "question": "На каких символах exact ATT1 challenger создаёт или теряет historical net R?",
+        "rationale": "Восемь категорий показывают, что общий минус сосредоточен в LTC, SOL и ETH, а не равномерно распределён по universe.",
+        "comparisonContext": {"grain": "symbol", "unit": "R", "normalization": "sum of trade-level R", "denominator": "actual initial risk"},
+        "type": "bar",
+        "dataset": "att1_symbols",
+        "sourceId": "att1_exact",
+        "encodings": {
+          "x": {"field": "symbol", "type": "nominal", "label": "Symbol"},
+          "y": {"field": "net_r", "type": "quantitative", "aggregate": "none", "format": "number", "label": "Net R"},
+          "tooltip": [
+            {"field": "net_r", "type": "quantitative", "format": "number", "label": "Net R"}
+          ]
+        },
+        "valueFormat": "number",
+        "unit": "R",
+        "layout": "full",
+        "labels": {"values": "all"}
+      }
+    ],
+    "tables": [
+      {
+        "id": "lane_table",
+        "title": "Денежные и исследовательские контуры",
+        "subtitle": "Положительный факт и blocker показаны отдельно; research не выдается за live.",
+        "showDescription": true,
+        "dataset": "research_lanes",
+        "sourceId": "lane_evidence",
+        "layout": "full",
+        "defaultSort": {"field": "priority", "direction": "asc"},
+        "columns": [
+          {"field": "priority", "label": "Приоритет", "format": "number", "type": "number"},
+          {"field": "lane", "label": "Контур", "type": "text"},
+          {"field": "stage", "label": "Стадия", "type": "text"},
+          {"field": "evidence", "label": "Новый факт", "type": "text"},
+          {"field": "blocker", "label": "Blocker", "type": "text"},
+          {"field": "next_gate", "label": "Следующий gate", "type": "text"}
+        ]
+      }
+    ],
+    "blocks": [
+      {"id": "title", "type": "markdown", "layout": "full", "body": "# Утренняя recovery-сессия — 15 августа 2026"},
+      {"id": "executive_summary", "type": "markdown", "layout": "full", "body": "## Executive Summary\n\n- ATT1 не начала статистику заново: clean forward остаётся N5, +2.950R, PF(R) 3.289.\n- Точный historical live-major8 contract впервые включает LTC вместо ошибочного AVAX и отклонён: -13.611R/402, PF 0.944. Это запрещает scale, но не стирает отдельный live forward.\n- Alpaca entry-relative stop перенесён в default-off paper bridge: actual fill → сохранённая risk distance → protective stop. Live не менялся.\n- Лаборатория впервые закрыла полный hash-chained lifecycle из 9 стадий; ATT1 корректно завершена DECISION_REJECTED.\n- Inplay жив и совпадает с frozen code, но prospective N0; funding имеет отрицательные медианы; Sloped V3 отвергает только delayed-reclaim формулировку.\n- XAU Dukascopy guard не обходился. Resumable OANDA M5 materializer готов и прошёл offline preflight; сеть ждёт authorized token."},
+      {"id": "headline", "type": "metric-strip", "layout": "full", "cardIds": ["att1_forward", "att1_history", "lab_state"]},
+      {"id": "att1", "type": "markdown", "layout": "full", "sourceId": "att1_exact", "body": "## ATT1: сверка, а не перезапуск\n\nLive N5 и historical replay отвечают на разные вопросы. Небольшой положительный forward сохраняется; отрицательные 19 месяцев на точном live-universe закрывают повышение риска. Основные historical потери challenger: LTC -12.09R, SOL -9.42R, ETH -7.24R. Нельзя выбирать только положительные символы после просмотра; нужна новая preregistered causal гипотеза."},
+      {"id": "att1_symbol_chart", "type": "chart", "layout": "full", "chartId": "att1_symbol_net_r", "sourceId": "att1_exact"},
+      {"id": "lanes", "type": "table", "layout": "full", "tableId": "lane_table", "sourceId": "lane_evidence"},
+      {"id": "lab", "type": "markdown", "layout": "full", "sourceId": "research_state", "body": "## Лаборатория стала строже\n\nНовый ledger связывает idea, owner approval, prereg, spec, preflight, passport, result, audit и decision хэшами. Порча артефакта, нарушение порядка, повтор стадии или nonzero audit дают fail-close. Остаток честно виден: 4 idea cards ещё не связаны с experiment IDs, 30 legacy approvals привязаны к именам, nightly receipt протух."},
+      {"id": "next", "type": "markdown", "layout": "full", "body": "## Следующие 72 часа\n\n1. Alpaca paper lifecycle parity, без снятия SAFE_HOLD.\n2. Inplay cadence/data-path audit без ослабления контракта.\n3. Две frozen crypto-long/upstream-break руки вместо нового широкого свипа.\n4. Funding tail/concentration и exact fee decomposition.\n5. Запуск готового XAU OANDA fetcher или HistData overlap validation.\n6. Idea-to-lifecycle bridge и свежий bounded scheduler receipt.\n7. Следующий небольшой dirty-workbench batch с reproduction receipts."},
+      {"id": "further_questions", "type": "markdown", "layout": "full", "body": "## Further Questions\n\n- Сохраняется ли Alpaca improvement после paper fill/protection parity и PIT-aware selection?\n- Почему ATT1 теряет edge именно на LTC/SOL/ETH: market regime, geometry phenotype или execution-cost denominator?\n- Почему prospective Inplay N0 при исторической частоте: текущий режим или data-path drift?\n- Держится ли funding median после exact hedgeable mapping и реальных комиссий?\n- Совпадут ли OANDA и Dukascopy на валидном overlap после timezone/price-side normalization?"},
+      {"id": "caveats", "type": "markdown", "layout": "full", "body": "## Ограничения\n\nВ сессии не выполнялись заявки, отмены, ручные закрытия, изменение риска, deploy или restart. Запечатанный holdout не читался. Доходности Alpaca — proxy на bounded clean subset, не обещание и не promotion-grade exact contract. Старые 500+ worktree entries не удалялись и не включались массово в commit."}
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-15T04:50:00Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {"att1_clean_n": 5, "att1_live_net_r": 2.9500882633, "att1_historical_trades": 402, "att1_historical_net_r": -13.6105782428, "healthy_jobs": 6, "lifecycle_records": 9}
+      ],
+      "att1_symbols": [
+        {"symbol": "LTCUSDT", "net_r": -12.094193},
+        {"symbol": "SOLUSDT", "net_r": -9.419378},
+        {"symbol": "ETHUSDT", "net_r": -7.239342},
+        {"symbol": "BTCUSDT", "net_r": -1.976100},
+        {"symbol": "DOTUSDT", "net_r": 2.256101},
+        {"symbol": "LINKUSDT", "net_r": 3.175230},
+        {"symbol": "ADAUSDT", "net_r": 5.117265},
+        {"symbol": "SUIUSDT", "net_r": 6.569838}
+      ],
+      "research_lanes": [
+        {"priority": 1, "lane": "ATT1", "stage": "tiny live canary", "evidence": "N5, +2.950R; exact history -13.611R/402", "blocker": "historical gate failed; N20/parity", "next_gate": "15 closes plus phenotype prereg"},
+        {"priority": 2, "lane": "Alpaca V38", "stage": "SAFE_HOLD / default-off challenger", "evidence": "entry-relative bridge built; proxy 25.65% annual, DD 14.36%", "blocker": "PIT/corporate actions/paper parity", "next_gate": "2-4 day paper lifecycle replay"},
+        {"priority": 3, "lane": "Inplay ETH", "stage": "prospective shadow", "evidence": "code parity PASS; process healthy", "blocker": "N0; current cadence unknown", "next_gate": "data-path audit plus untouched forward"},
+        {"priority": 4, "lane": "Funding / XSEC", "stage": "research-only shadow", "evidence": "dynamic 13 closed; frozen 11 closed", "blocker": "median -128/-162 bps; concentration", "next_gate": "exact fees, mapping and tail audit"},
+        {"priority": 5, "lane": "Sloped break/retest", "stage": "V2/V3 rejected", "evidence": "delayed-reclaim V3 localized: -5.371R/18", "blocker": "short arm -4.497R", "next_gate": "upstream 4h break or separate long"},
+        {"priority": 6, "lane": "XAU intraday", "stage": "data acquisition", "evidence": "OANDA resumable fetcher preflight PASS; Dukascopy guard intact", "blocker": "authorized OANDA token or validated HistData bulk", "next_gate": "SHA-bound annual bundle"}
+      ]
+    }
+  },
+  "sources": [
+    {"id": "att1_exact", "label": "ATT1 exact live-major8 experiment", "path": "research_lab/results/att1_live_major8_corrected_preholdout_v1_20260815/result.json"},
+    {"id": "research_state", "label": "Research station and lifecycle audit", "path": "reports/evidence/RESEARCH_PIPELINE_AUDIT_20260815.json"},
+    {"id": "lane_evidence", "label": "Active-lane evidence", "path": "reports/MORNING_RECOVERY_20260815.md"}
+  ]
+}

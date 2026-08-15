@@ -1,0 +1,27 @@
+{
+  "artifacts_verified": true,
+  "authority": "research_only_no_live_risk_order_or_promotion_authority",
+  "capital_or_promotion_authority": false,
+  "experiments": {
+    "att1_live_major8_corrected_preholdout_v1_20260815": {
+      "last_record_sha256": "6186d8c29ae7c336e0c6afdd8386d50a7e0263b0453179523ab5f1eba3246067",
+      "stages": [
+        "IDEA_REGISTERED",
+        "OWNER_APPROVED",
+        "PREREG_FROZEN",
+        "SPEC_BOUND",
+        "PREFLIGHT_PASSED",
+        "PASSPORT_WRITTEN",
+        "RESULT_WRITTEN",
+        "INDEPENDENT_AUDIT_PASSED",
+        "DECISION_REJECTED"
+      ],
+      "status": "DECISION_REJECTED",
+      "terminal": true
+    }
+  },
+  "integrity_pass": true,
+  "live_or_broker_calls": false,
+  "records": 9,
+  "schema_id": "research_experiment_lifecycle_summary_v1"
+}

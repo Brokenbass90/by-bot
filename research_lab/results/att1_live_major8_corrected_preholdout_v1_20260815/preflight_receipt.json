@@ -1,0 +1,17 @@
+{
+  "schema_id": "autoresearch_preflight_receipt_v1",
+  "generated_at_utc": "2026-08-15T04:38:17.782005+00:00",
+  "status": "pass",
+  "checks": [
+    {
+      "module": "alt_trendline_touch_v1",
+      "env": "ATT1_GEOMETRY_V2_ENABLE",
+      "cfg_field": "geometry_v2_enable",
+      "resolved": [
+        0.0,
+        1.0
+      ],
+      "status": "pass"
+    }
+  ]
+}

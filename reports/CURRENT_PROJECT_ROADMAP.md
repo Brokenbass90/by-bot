@@ -1,8 +1,109 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-14 15:13 UTC. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-15 04:50 UTC. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
+
+## Latest recovery update — 2026-08-15 04:50 UTC
+
+### Решение одним абзацем
+
+ATT1 не начала отсчёт заново: clean live-когорта остаётся `N5/20`, `+2.950R`,
+PF(R) `3.289`; новых закрытий за проверенный интервал нет. Но впервые точно
+пересчитан именно live-universe из BTC/ETH/SOL/ADA/LINK/LTC/DOT/SUI, а не
+похожая восьмёрка с AVAX: current geometry дала `-13.611R/402`, PF `0.944`,
+поэтому исторический promotion gate отклонён и риск не повышается. Параллельно
+Alpaca entry-relative stop перенесён в реальный paper bridge под default-off
+флаг и покрыт тестами; лаборатория получила hash-chained lifecycle и провела
+через него ATT1 от идеи до `DECISION_REJECTED`; XAU получил проверяемый маршрут
+через OANDA/HistData вместо обхода Dukascopy quarantine guard.
+
+### Что принято из последних работ Claude
+
+- Нового отдельного git-коммита Claude поверх `5cc1b39` за ночь нет; большой
+  незакоммиченный хвост остаётся старым общим workbench, а не «новой готовой
+  поставкой».
+- Идея `research_lab/trial_ledger.py` правильная, но сам файл не принят:
+  повреждённые строки пропускаются, разрешение не связано с SHA и возможны
+  повторные результаты. Нужная функция реализована заново в
+  `research_lab/experiment_lifecycle.py` с fail-close поведением.
+- Старые находки Claude не выброшены: `163` code-кандидата уже имеют очередь
+  `test-backed / evidence-backed / referenced-review / quarantine`. Массовой
+  зачистки и случайного захвата 500+ файлов нет.
+
+### Прямое состояние исследований
+
+- Research station: `6/6` процессов healthy, live/order authority отсутствует.
+- Inplay ETH: фиксированный код совпадает с замороженным SHA; prospective `N0`.
+  После старта причины молчания: `impulse_weak=547`, `no_breakout_side=144`,
+  `impulse_body_weak=96`. На четырёх старых 35-дневных срезах тот же код давал
+  `0.91–2.31` raw signals/day, но это cadence, не edge; при текущем нулевом
+  темпе дата N30 неизвестна.
+- Funding shadow: dynamic `13` закрытых и `2` открытых, медиана `-127.8 bps`;
+  frozen `11+2`, медиана `-162.1 bps`. Положительные средние вызваны хвостом и
+  концентрацией, поэтому это пока не денежная нога.
+- Sloped V3 — это не «все наклонки», а один delayed-reclaim контракт:
+  4h confirmed break → первый 15m retest/hold → reclaim → BOS. Он дал `18`
+  сделок, `-5.371R`, PF(R) `0.521`, особенно слабая short-рука. Следующий тест
+  меняет upstream quality самого 4h break либо формулирует отдельный long,
+  а не продолжает подгонять момент ретеста.
+- XAU Dukascopy остановлен своим guard: `30` completed, `26` market-empty,
+  `32` quarantined при лимите `31`; holdout не читался. OANDA официально даёт
+  M5 и страницы до 5000 свечей, но требует bearer token/account; HistData
+  перечисляет XAUUSD как bulk fallback и требует отдельной проверки качества.
+  Resumable OANDA materializer уже реализован и прошёл offline preflight; сеть
+  не запускалась без авторизованного market-data token.
+
+### Лаборатория стала честнее в коде, а не только в плане
+
+- Новый lifecycle:
+  `idea → hash-bound owner approval → prereg → spec SHA → preflight → passport → result → independent audit → decision`.
+- Глобальная SHA256-цепочка, проверка неизменности артефактов, атомарный audit
+  receipt; неверный порядок, повтор стадии, испорченный файл или nonzero audit
+  дают fail-close.
+- Первый полный проход: `9` стадий, артефакты verified, ATT1 завершена как
+  `DECISION_REJECTED`; capital/order/promotion authority отсутствует.
+- Focused suite: `50 passed`. Остаток: связать 4 idea cards с experiment IDs,
+  заменить протухший scheduler receipt и только с повторным owner approval
+  мигрировать `30` legacy name-only разрешений на SHA.
+
+### Alpaca: что уже сделано и когда следующий gate
+
+- Proxy-сигнал сохраняется: entry-relative stop `25.65% annualized`, DD
+  `14.36%`, PF `1.837`, `5/25` красных месяцев; stress почти такой же.
+- Реальный bridge теперь умеет дождаться fill, взять `filled_avg_price` и
+  перенести на него замороженную signal-time risk distance. Флаг
+  `ALPACA_ENTRY_RELATIVE_STOP_ENABLE` выключен по умолчанию; bracket-путь
+  fail-close, допускается только fill-then-protect `simple_stop`.
+- Это не включено и не задеплоено. `962/1000` файлов пригодны для bounded
+  replay, но promotion всё ещё блокируют PIT membership, 24 after-delist
+  conflicts, corporate actions, XNYS calendar и broker lifecycle parity.
+- Условный срок: `2–4` инженерных дня до paper replay; решение о bounded
+  micro-canary — `1–2` недели только при PASS и явном принятии остаточного PIT
+  ограничения. Promotion-grade exact требует внешних PIT/corporate-action
+  данных либо нового prospective monthly cycle.
+
+### Следующие 72 часа
+
+1. Alpaca: собрать exact paper lifecycle replay `signal → fill → stop/trail`,
+   не снимая SAFE_HOLD и не включая новый флаг в live.
+2. Inplay: сохранить контракт; выпускать cadence evidence и отдельно проверить
+   входной data path, не ослабляя фильтры ради количества.
+3. Crypto long: предзарегистрировать BTC/ETH upstream-break/continuation
+   candidate; Sloped V4 — максимум две заранее объявленные руки с учётом
+   multiplicity, не параметрический свип.
+4. Funding: разложить медиану/хвост/концентрацию и exact spot-perp fees;
+   текущий forward не продвигать.
+5. XAU: запустить готовый resumable M5 fetcher, когда будет authorized
+   OANDA market-data token; иначе валидировать HistData bulk против короткого
+   Dukascopy overlap. Только потом frozen annual replay.
+6. Лаборатория: закрыть explicit idea-to-experiment bridge и fresh bounded
+   scheduler receipt; AI остаётся proposal-only.
+7. Dirty workbench: следующий небольшой batch — `trial_ledger`, Alpaca
+   validator, sweep-reclaim, portfolio auditor; на каждый файл reproduction
+   receipt и решение keep/quarantine.
+
+Полный отчёт с доказательствами: `reports/MORNING_RECOVERY_20260815.md`.
 
 ## Latest recovery update — 2026-08-14 15:13 UTC
 

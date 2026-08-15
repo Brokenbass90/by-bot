@@ -1218,12 +1218,23 @@ def _write_manager_receipt(path: Path, report: dict[str, Any]) -> None:
             pass
 
 
-def _wait_for_filled_qty(client: AlpacaClient, order: dict[str, Any], *, timeout_sec: float) -> tuple[float, str]:
+def _wait_for_fill_details(
+    client: AlpacaClient,
+    order: dict[str, Any],
+    *,
+    timeout_sec: float,
+) -> tuple[float, str, float]:
     order_id = str(order.get("id") or "").strip()
     status = str(order.get("status") or "").strip().lower()
     filled_qty = _safe_float(order.get("filled_qty"), 0.0)
+    filled_avg_price = _safe_float(order.get("filled_avg_price"), 0.0)
     deadline = time.time() + max(0.0, timeout_sec)
-    while order_id and filled_qty <= 0 and status not in {"canceled", "expired", "rejected"} and time.time() < deadline:
+    while (
+        order_id
+        and (filled_qty <= 0 or filled_avg_price <= 0)
+        and status not in {"canceled", "expired", "rejected"}
+        and time.time() < deadline
+    ):
         time.sleep(1.0)
         try:
             order = client.get_order(order_id)
@@ -1231,7 +1242,43 @@ def _wait_for_filled_qty(client: AlpacaClient, order: dict[str, Any], *, timeout
             break
         status = str(order.get("status") or "").strip().lower()
         filled_qty = _safe_float(order.get("filled_qty"), 0.0)
+        filled_avg_price = _safe_float(order.get("filled_avg_price"), 0.0)
+    return filled_qty, status, filled_avg_price
+
+
+def _wait_for_filled_qty(client: AlpacaClient, order: dict[str, Any], *, timeout_sec: float) -> tuple[float, str]:
+    """Backward-compatible quantity-only wrapper used by older callers/tests."""
+
+    filled_qty, status, _ = _wait_for_fill_details(client, order, timeout_sec=timeout_sec)
     return filled_qty, status
+
+
+def _entry_relative_stop_price(
+    pick: Pick,
+    *,
+    filled_avg_price: float,
+    fallback_stop_loss_pct: float,
+) -> float:
+    """Move the frozen signal-time risk distance to the actual entry fill.
+
+    The challenger changes only the stop anchor.  If a pick carries a valid
+    signal entry and stop, their absolute distance is retained.  Otherwise the
+    already configured percentage stop is anchored to the fill.  No future bar
+    or same-session high/low is consulted.
+    """
+
+    if not math.isfinite(filled_avg_price) or filled_avg_price <= 0:
+        raise RuntimeError("entry_relative_stop requires positive filled_avg_price")
+    reference = _safe_float(pick.entry_price, 0.0)
+    frozen_stop = _safe_float(pick.stop_price, 0.0)
+    if reference > 0 and frozen_stop > 0 and reference > frozen_stop:
+        risk_distance = reference - frozen_stop
+    else:
+        risk_distance = filled_avg_price * max(0.01, float(fallback_stop_loss_pct))
+    stop = filled_avg_price - risk_distance
+    if not math.isfinite(stop) or stop <= 0 or stop >= filled_avg_price:
+        raise RuntimeError("entry_relative_stop produced invalid stop")
+    return stop
 
 
 def _pick_age_days(picks: list[Pick]) -> tuple[str, int | None]:
@@ -1336,6 +1383,7 @@ def _main_unlocked() -> int:
     ).lower()
     broker_target_pct = max(0.0, _env_float("ALPACA_BROKER_TARGET_PCT", 0.08))
     broker_wait_fill_sec = max(1.0, _env_float("ALPACA_BROKER_PROTECTION_WAIT_FILL_SEC", 20.0))
+    entry_relative_stop_enable = _env_bool("ALPACA_ENTRY_RELATIVE_STOP_ENABLE", False)
     native_trailing_enable = _env_bool("ALPACA_NATIVE_TRAIL_ENABLE", False)
     native_trailing_required = _env_bool("ALPACA_NATIVE_TRAIL_REQUIRED", False)
     native_trailing_tif = _env("ALPACA_NATIVE_TRAIL_TIF", broker_protection_tif).lower()
@@ -1758,6 +1806,7 @@ def _main_unlocked() -> int:
         "broker_protection_tif": broker_protection_tif,
         "broker_target_pct": round(broker_target_pct * 100, 2),
         "broker_wait_fill_sec": broker_wait_fill_sec,
+        "entry_relative_stop_enabled": entry_relative_stop_enable,
         "midmonth_rotation_enabled": midmonth_rotation,
         "midmonth_day_threshold": midmonth_day_threshold,
         "midmonth_dd_pct": round(midmonth_dd_pct * 100, 2),
@@ -1837,6 +1886,7 @@ def _main_unlocked() -> int:
                 "qty": None if spec is None or spec.get("qty") is None else _format_qty(float(spec["qty"])),
                 "stop_price": None if spec is None else round(float(spec["stop_loss_price"]), 4),
                 "target_price": None if spec is None else round(float(spec["take_profit_price"]), 4),
+                "stop_anchor": "actual_fill" if entry_relative_stop_enable else "signal_reference",
             }
         )
 
@@ -1856,6 +1906,19 @@ def _main_unlocked() -> int:
             )
             return
         if broker_protection_enable:
+            if entry_relative_stop_enable and broker_protection_order_class != "simple_stop":
+                reason = "entry_relative_stop_requires_simple_stop_fill_then_protect"
+                report["results"].append(
+                    {
+                        "ticker": pick.ticker,
+                        "action": action,
+                        "status": "skipped_unprotected",
+                        "error": reason,
+                        "notional": round(notional, 2),
+                        "score_weight": score_weight,
+                    }
+                )
+                return
             if broker_protection_order_class not in {"bracket", "simple_stop"}:
                 reason = f"unsupported_broker_protection_order_class:{broker_protection_order_class}"
                 if broker_protection_required:
@@ -1897,7 +1960,7 @@ def _main_unlocked() -> int:
                     if qty <= 0:
                         raise RuntimeError("simple_stop requires qty sizing")
                     entry_order = client.submit_market_buy_qty(pick.ticker, qty)  # type: ignore[union-attr]
-                    filled_qty, entry_status = _wait_for_filled_qty(
+                    filled_qty, entry_status, filled_avg_price = _wait_for_fill_details(
                         client,  # type: ignore[arg-type]
                         entry_order,
                         timeout_sec=broker_wait_fill_sec,
@@ -1910,10 +1973,17 @@ def _main_unlocked() -> int:
                             except RuntimeError:
                                 pass
                         raise RuntimeError(f"entry_not_filled_before_stop status={entry_status}")
+                    stop_price = float(spec["stop_loss_price"])
+                    if entry_relative_stop_enable:
+                        stop_price = _entry_relative_stop_price(
+                            pick,
+                            filled_avg_price=filled_avg_price,
+                            fallback_stop_loss_pct=stop_loss_pct,
+                        )
                     stop_order = client.submit_stop_sell(  # type: ignore[union-attr]
                         pick.ticker,
                         qty=filled_qty,
-                        stop_price=float(spec["stop_loss_price"]),
+                        stop_price=stop_price,
                         time_in_force=broker_protection_tif,
                     )
                     report["results"].append(
@@ -1926,7 +1996,9 @@ def _main_unlocked() -> int:
                             "stop_status": stop_order.get("status"),
                             "notional": round(notional, 2),
                             "qty": _format_qty(filled_qty),
-                            "stop_price": round(float(spec["stop_loss_price"]), 4),
+                            "filled_avg_price": round(filled_avg_price, 4) if filled_avg_price > 0 else None,
+                            "stop_price": round(stop_price, 4),
+                            "stop_anchor": "actual_fill" if entry_relative_stop_enable else "signal_reference",
                             "target_price": round(float(spec["take_profit_price"]), 4),
                             "score_weight": score_weight,
                         }

@@ -14,6 +14,7 @@ from scripts.equities_alpaca_paper_bridge import (
     _broker_truth_snapshot,
     _broker_stop_rearm_symbols,
     _default_broker_protection_tif,
+    _entry_relative_stop_price,
     _hard_capped_normalized_weights,
     _new_entry_allowed,
     _select_monthly_cycle_picks,
@@ -27,6 +28,50 @@ class TestAlpacaMonthlyTrailing(unittest.TestCase):
     def test_simple_stop_defaults_to_gtc_so_ratchet_survives_session_boundary(self):
         self.assertEqual(_default_broker_protection_tif("simple_stop"), "gtc")
         self.assertEqual(_default_broker_protection_tif("bracket"), "day")
+
+    def test_entry_relative_stop_preserves_frozen_signal_risk_distance(self):
+        pick = Pick(
+            month="2026-08",
+            ticker="BAC",
+            entry_day="2026-08-03",
+            score=1.0,
+            atr20_pct=2.0,
+            momentum20_pct=3.0,
+            momentum60_pct=8.0,
+            pullback60_pct=-4.0,
+            universe_score=1.0,
+            entry_price=100.0,
+            stop_price=94.0,
+        )
+
+        stop = _entry_relative_stop_price(
+            pick,
+            filled_avg_price=103.0,
+            fallback_stop_loss_pct=0.08,
+        )
+
+        self.assertEqual(stop, 97.0)
+
+    def test_entry_relative_stop_falls_back_to_fill_anchored_percent(self):
+        pick = Pick(
+            month="2026-08",
+            ticker="BAC",
+            entry_day="2026-08-03",
+            score=1.0,
+            atr20_pct=2.0,
+            momentum20_pct=3.0,
+            momentum60_pct=8.0,
+            pullback60_pct=-4.0,
+            universe_score=1.0,
+        )
+
+        stop = _entry_relative_stop_price(
+            pick,
+            filled_avg_price=100.0,
+            fallback_stop_loss_pct=0.08,
+        )
+
+        self.assertEqual(stop, 92.0)
 
     def test_simple_stop_candidate_configs_pin_gtc(self):
         root = Path(__file__).resolve().parents[1]

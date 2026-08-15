@@ -1,0 +1,29 @@
+{
+  "schema_id": "inplay_cadence_reconciliation_v1",
+  "generated_at_utc": "2026-08-15T04:49:50Z",
+  "authority": "research_only_no_live_or_promotion",
+  "symbol": "ETHUSDT",
+  "prospective": {
+    "status": "collecting",
+    "updated_at_utc": "2026-08-15T04:38:57.292211+00:00",
+    "events": 0,
+    "closed": 0,
+    "raw_signals_after_start": 0,
+    "last_completed_bar_ts_ms": 1786768200000,
+    "rejection_reasons_after_start": {
+      "impulse_weak": 547,
+      "no_breakout_side": 144,
+      "impulse_body_weak": 96
+    }
+  },
+  "historical_frequency_only": {
+    "current_code_matches_frozen_reference": true,
+    "slice_days": 35,
+    "signals_per_day": [0.914286, 1.142857, 1.771429, 2.314286],
+    "implied_days_to_n30_if_old_rate_repeats": [32.8125, 26.25, 16.9355, 12.963]
+  },
+  "decision": "KEEP_FIXED_PROSPECTIVE_CONTRACT",
+  "interpretation": "Current N0 does not establish that the filters are defective. The older slices measure signal cadence only, not edge, and cannot provide a reliable calendar ETA while the current observed rate is zero.",
+  "sealed_holdout_rows_decoded": 0,
+  "capital_authorized": false
+}

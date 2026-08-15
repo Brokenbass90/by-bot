@@ -8,9 +8,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from research_lab.experiment_lifecycle import LifecycleError, LifecycleLedger
 
 
 def _json(path: Path, default: Any) -> Any:
@@ -64,6 +71,24 @@ def audit(root: Path, *, now: datetime | None = None) -> dict[str, Any]:
     station = _json(root / "runtime/local_research_station/status.json", {})
     nightly = _json(root / "runtime/research_nightly/status.json", {})
     approved = _approved_lines(root / "configs/autoresearch/approved_specs.txt")
+    lifecycle_path = root / "runtime/research/experiment_lifecycle.jsonl"
+    lifecycle_code_available = (root / "research_lab/experiment_lifecycle.py").is_file()
+    lifecycle_integrity = False
+    lifecycle_error: str | None = None
+    lifecycle_summary: dict[str, Any] = {
+        "records": 0,
+        "experiments": {},
+        "artifacts_verified": False,
+    }
+    if lifecycle_path.exists():
+        try:
+            lifecycle_summary = LifecycleLedger(
+                lifecycle_path,
+                project_root=root,
+            ).summary(verify_artifacts=True)
+            lifecycle_integrity = True
+        except LifecycleError as exc:
+            lifecycle_error = str(exc)
     proposals = []
     for path in sorted((root / "configs/research_proposals").glob("*.json")):
         proposal = _json(path, {})
@@ -89,6 +114,12 @@ def audit(root: Path, *, now: datetime | None = None) -> dict[str, Any]:
     nightly_fresh = nightly_age is not None and nightly_age <= 24.0
     bridge_closed = bool(ideas) and explicit_links == len(ideas)
     approvals_hash_bound = bool(approved) and hash_pinned_approvals == len(approved)
+    lifecycle_experiments = lifecycle_summary.get("experiments") or {}
+    lifecycle_terminal = sum(bool(item.get("terminal")) for item in lifecycle_experiments.values())
+    lifecycle_approved = sum(
+        "OWNER_APPROVED" in (item.get("stages") or [])
+        for item in lifecycle_experiments.values()
+    )
     findings = []
     if station_healthy:
         findings.append("continuous_shadow_and_audit_collectors_healthy")
@@ -100,6 +131,12 @@ def audit(root: Path, *, now: datetime | None = None) -> dict[str, Any]:
         findings.append("nightly_autoresearch_scheduler_status_stale")
     if not approvals_hash_bound:
         findings.append("approved_specs_are_name_bound_not_content_hash_bound")
+    if lifecycle_code_available and not lifecycle_path.exists():
+        findings.append("hash_chained_lifecycle_control_available_but_not_yet_used")
+    elif lifecycle_path.exists() and not lifecycle_integrity:
+        findings.append("lifecycle_ledger_integrity_failed")
+    elif lifecycle_path.exists() and lifecycle_integrity and not lifecycle_experiments:
+        findings.append("lifecycle_ledger_valid_but_empty")
     findings.append("ai_proposals_do_not_generate_or_modify_strategy_code")
 
     return {
@@ -125,19 +162,31 @@ def audit(root: Path, *, now: datetime | None = None) -> dict[str, Any]:
             "hash_pinned_approved_entries": hash_pinned_approvals,
             "pending_gate_proposals": sum(p.get("status") == "pending" for p in proposals),
         },
+        "lifecycle": {
+            "control_code_available": lifecycle_code_available,
+            "ledger_present": lifecycle_path.exists(),
+            "integrity_pass": lifecycle_integrity,
+            "integrity_error": lifecycle_error,
+            "records": int(lifecycle_summary.get("records") or 0),
+            "experiments": len(lifecycle_experiments),
+            "owner_approved_experiments": lifecycle_approved,
+            "terminal_experiments": lifecycle_terminal,
+            "artifacts_verified": bool(lifecycle_summary.get("artifacts_verified")),
+        },
         "capabilities": {
             "ai_can_propose_complete_falsifiable_cards": True,
             "approved_existing_specs_can_be_executed_research_only": True,
             "idea_to_runnable_experiment_is_fully_automatic": bridge_closed,
             "approval_is_content_hash_bound": approvals_hash_bound,
+            "hash_bound_lifecycle_control_is_implemented": lifecycle_code_available,
             "ai_can_auto_generate_strategy_code": False,
             "ai_can_promote_or_trade": False,
         },
         "findings": findings,
         "verdict": "PARTIAL_PIPELINE_NOT_SELF_IMPROVING_CLOSED_LOOP" if findings[1:] else "CLOSED_RESEARCH_LOOP",
         "required_next_controls": [
-            "Add an explicit lifecycle ledger linking proposal_key to owner approval, prereg, spec, passport, result, independent audit and final verdict.",
-            "Bind approvals to spec SHA256 and require experiment_preflight plus run_passport before launch.",
+            "Route the next owner-approved idea through the hash-chained lifecycle ledger from idea through final decision.",
+            "Migrate legacy name-only approvals only after owner re-approval of their current content hashes.",
             "Run only bounded existing code automatically; AI-generated code remains review-and-test gated.",
             "Publish one fresh scheduler receipt per cycle and fail closed on stale status or nonzero independent audit."
         ]
