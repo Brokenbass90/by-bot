@@ -116,11 +116,15 @@ def audit(mod, cls, prefix, files, verbose=False):
             # стратегии пропускают самый первый вызов (_last_tf_ts is None).
             try:
                 s2 = Strategy(); c2 = Store(sym)
-                pb = bars[i - 1]
-                c2.rows = bars[max(0, i - 400): i]
-                s2.maybe_signal(c2, pb[0], pb[1], pb[2], pb[3], pb[4], pb[5])
-                c2.rows = bars[max(0, i - 399): i + 1]
-                sc = s2.maybe_signal(c2, b[0], b[1], b[2], b[3], b[4], b[5])
+                sc = None
+                # ПРОГРЕВ 10 БАРОВ. Часть стратегий — двухступенчатые
+                # автоматы (сначала «заготовка», через N баров
+                # подтверждение). Одного вызова им мало, и без прогрева
+                # тест ловит собственную недоработку, а не баг стратегии.
+                for j in range(i - 10, i + 1):
+                    c2.rows = bars[max(0, j - 399): j + 1]
+                    pb = bars[j]
+                    sc = s2.maybe_signal(c2, pb[0], pb[1], pb[2], pb[3], pb[4], pb[5])
                 if sig_key(sc) != k:
                     r["future"] += 1
             except Exception:
