@@ -158,6 +158,8 @@ def main():
     ap.add_argument("--data", default="h1")
     ap.add_argument("--tag", required=True)
     ap.add_argument("--root", default="/mnt/user-data/uploads/bybit-bot-clean-v28")
+    ap.add_argument("--regime-file", default="",
+                    help="откуда брать режим рынка; по умолчанию BTCUSDT.npz из папки данных")
     ap.add_argument("--cooldown", type=int, default=0,
                     help="пауза между сделками в БАРАХ вызова. Штатное значение "
                          "задано в пятиминутках, а счётчик тикает раз в вызов, "
@@ -178,8 +180,9 @@ def main():
     Strategy = getattr(importlib.import_module(f"strategies.{a.strategy}"), a.cls)
 
     btc = None
-    for f in files:
-        if Path(f).stem == "BTCUSDT":
+    rf = a.regime_file or next((f for f in files if Path(f).stem == "BTCUSDT"), "")
+    for f in ([rf] if rf else []):
+        if True:
             d = np.load(f)
             c = d["ohlcv"][:, 3].astype(float)
             e = ema(c, 200)

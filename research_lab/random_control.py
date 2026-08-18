@@ -86,9 +86,12 @@ def main():
     hold = int(sys.argv[6]) if len(sys.argv) > 6 else 336
     regime = sys.argv[7] if len(sys.argv) > 7 else "флет-"
     cooldown = sys.argv[8] if len(sys.argv) > 8 else "0"
+    data_dir = sys.argv[9] if len(sys.argv) > 9 else DATA
+    globals()["DATA"] = data_dir
+    reg_src = sys.argv[10] if len(sys.argv) > 10 else f"{data_dir}/BTCUSDT.npz"
 
     sys.path.insert(0, ROOT)
-    files = sorted(glob.glob(f"{DATA}/*.npz"))
+    files = sorted(glob.glob(f"{data_dir}/*.npz"))
     syms = ",".join(Path(f).stem for f in files)
     os.environ.update({f"{pfx}_SYMBOL_ALLOWLIST": syms, f"{pfx}_ALLOW_LONGS": "1",
                        f"{pfx}_ALLOW_SHORTS": "1"})
@@ -96,7 +99,7 @@ def main():
         os.environ[f"{pfx}_COOLDOWN_BARS_5M"] = cooldown
     S = getattr(importlib.import_module(f"strategies.{mod}"), cls)
 
-    d = np.load(f"{DATA}/BTCUSDT.npz")
+    d = np.load(reg_src)
     c = d["ohlcv"][:, 3].astype(float); em = ema(c, 200)
     bts, bdist = d["ts"], (c - em) / em
 
