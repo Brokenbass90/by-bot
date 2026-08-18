@@ -43,16 +43,20 @@ LOOKBACK = 120
 FLAT = 0.02
 SLOTS = 3                      # как в живом боте, не подбирается
 
-# нога: модуль, класс, префикс, сторона, множитель стопа, удержание, режимы
+# нога: модуль, класс, префикс, сторона, множитель стопа, удержание, режимы, пауза
+#
+# Пауза — в барах вызова. Штатное значение стратегии задано в
+# пятиминутках, а счётчик тикает раз в вызов. На часовых данных
+# его надо делить на 12, иначе пауза длиннее живой в двенадцать раз.
 LEGS = [
     ("alt_trendline_touch_v1", "AltTrendlineTouchV1Strategy", "ATT1",
-     "short", 6.0, 336, ("флет-",)),
+     "short", 6.0, 336, ("флет-",), 8),      # штатно 96
     ("alt_support_reclaim_v1", "AltSupportReclaimV1Strategy", "ASR1",
-     "long", 4.0, 168, ("флет+",)),
+     "long", 4.0, 168, ("флет+",), 6),       # штатно 72
     ("elder_triple_screen_v2", "ElderTripleScreenV2Strategy", "ETS2",
-     "short", 4.0, 168, ("флет-",)),
+     "short", 4.0, 168, ("флет-",), 3),      # штатно 36
     ("spike_fade_v3", "SpikeFadeV3Strategy", "SF3",
-     "short", 4.0, 336, ("флет-",)),
+     "short", 4.0, 336, ("флет-",), 0),      # у неё пауза уже в барах
 ]
 
 
@@ -123,11 +127,13 @@ def build_trades(files, btc_ts, btc_dist):
         return float(btc_dist[j]) if j < len(btc_dist) else None
 
     trades = []
-    for mod, cls, pfx, side_want, mult, hold, _regs in LEGS:
+    for mod, cls, pfx, side_want, mult, hold, _regs, cd in LEGS:
         syms = ",".join(sorted(Path(f).stem for f in files))
         os.environ[f"{pfx}_SYMBOL_ALLOWLIST"] = syms
         os.environ.setdefault(f"{pfx}_ALLOW_LONGS", "1")
         os.environ.setdefault(f"{pfx}_ALLOW_SHORTS", "1")
+        if cd > 0:
+            os.environ[f"{pfx}_COOLDOWN_BARS_5M"] = str(cd)
         Strategy = getattr(importlib.import_module(f"strategies.{mod}"), cls)
         cnt = 0
         for k, fp in enumerate(files):
@@ -168,7 +174,7 @@ def build_trades(files, btc_ts, btc_dist):
 
 def portfolio(trades, use_orchestrator, wstart, wend):
     """хронологический проход со слотами; вход отклоняется, если мест нет"""
-    legreg = {p: set(r) for _, _, p, _, _, _, r in LEGS}
+    legreg = {p: set(r) for _, _, p, _, _, _, r, _ in LEGS}
     open_until = []        # (ts_exit, symbol)
     taken, skipped_full, skipped_reg, skipped_sym = [], 0, 0, 0
     for t in trades:
@@ -249,7 +255,7 @@ def main():
                   f"нет слота: {on['skip_full']}, символ занят: {on['skip_sym']}")
         if on:
             print("\n  вклад ног (с диспетчером):")
-            for _, _, pfx, _, _, _, _ in LEGS:
+            for _, _, pfx, _, _, _, _, _ in LEGS:
                 g = [x for x in on["taken"] if x["leg"] == pfx]
                 if not g:
                     print(f"    {pfx:<6} сделок нет"); continue

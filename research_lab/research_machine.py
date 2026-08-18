@@ -148,6 +148,10 @@ def main():
     ap.add_argument("--data", default="h1")
     ap.add_argument("--tag", required=True)
     ap.add_argument("--root", default="/mnt/user-data/uploads/bybit-bot-clean-v28")
+    ap.add_argument("--cooldown", type=int, default=0,
+                    help="пауза между сделками в БАРАХ вызова. Штатное значение "
+                         "задано в пятиминутках, а счётчик тикает раз в вызов, "
+                         "поэтому на часах его надо делить на 12. 0 = не трогать.")
     a = ap.parse_args()
 
     sys.path.insert(0, a.root)
@@ -158,6 +162,9 @@ def main():
     os.environ[f"{a.prefix}_SYMBOL_ALLOWLIST"] = syms
     os.environ.setdefault(f"{a.prefix}_ALLOW_LONGS", "1")
     os.environ.setdefault(f"{a.prefix}_ALLOW_SHORTS", "1")
+    if a.cooldown > 0:
+        os.environ[f"{a.prefix}_COOLDOWN_BARS_5M"] = str(a.cooldown)
+        print(f"пауза между сделками: {a.cooldown} баров вызова", flush=True)
     Strategy = getattr(importlib.import_module(f"strategies.{a.strategy}"), a.cls)
 
     btc = None
