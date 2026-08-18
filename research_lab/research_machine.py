@@ -60,7 +60,7 @@ REGIMES = (
 )
 FEE_BPS_SIDE = 6.0
 LOOKBACK = 120
-SIGMA_R = 1.03
+SIGMA_R = 1.03    # исторический разброс одной сделки при стопе ×1, только для справки
 
 
 class Store:
@@ -131,7 +131,11 @@ def stats(rows):
     ts = np.array([x["ts"] for x in rows])
     g = R + lev * 2 * FEE_BPS_SIDE / 1e4
     se = R.std(ddof=1) / math.sqrt(len(R))
-    mde = 1.96 * SIGMA_R / math.sqrt(len(R))
+    # Порог различимости считается по ФАКТИЧЕСКОМУ разбросу этой
+    # конфигурации, а не по константе. Константа 1.03R измерена при
+    # стопе ×1; при стопе ×6 разброс 0.44R, и порог по константе
+    # завышен в 2.4 раза. Мы этим сами себе занижали результаты.
+    mde = 1.96 * float(R.std(ddof=1)) / math.sqrt(len(R))
     lo, hi = week_boot(R, ts)
     return dict(n=len(R), signal=float(g.mean()), cost=float((lev * 2 * FEE_BPS_SIDE / 1e4).mean()),
                 net=float(R.mean()), sigma=float(R.mean() / se) if se else 0.0,
