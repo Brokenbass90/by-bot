@@ -92,15 +92,21 @@ def simulate(bars, i, side, sl0, tps, f1, mult, hold):
     lev = entry / risk
     cost = lev * 2 * FEE_BPS_SIDE / 1e4
     tp1, tp2 = (list(tps) + [None, None])[:2]
-    stop, rem, gross = sl, 1.0, 0.0
+    stop, rem, gross, tp1_done = sl, 1.0, 0.0, False
     for j in range(e, min(e + hold, len(bars))):
         h, l = float(bars[j][2]), float(bars[j][3])
         if (h >= stop) if short else (l <= stop):
             gross += rem * ((entry - stop) if short else (stop - entry)) / risk
             return dict(R=gross - cost, bars=j - e, lev=lev)
-        if tp1 and rem > f1 - 1e-9 and ((l <= tp1) if short else (h >= tp1)):
+        if tp1 and not tp1_done and ((l <= tp1) if short else (h >= tp1)):
+            # БЫЛО: условие rem > f1 - 1e-9. При доле ровно 0.5 после
+            # первого срабатывания rem становится равным f1, условие
+            # остаётся истинным, и первая цель исполнялась ВТОРОЙ раз.
+            # Позиция целиком закрывалась по tp1 вместо того, чтобы
+            # оставить половину под вторую цель или под стоп.
             gross += f1 * ((entry - tp1) if short else (tp1 - entry)) / risk
             rem -= f1
+            tp1_done = True
         if tp2 and rem > 1e-9 and ((l <= tp2) if short else (h >= tp2)):
             gross += rem * ((entry - tp2) if short else (tp2 - entry)) / risk
             return dict(R=gross - cost, bars=j - e, lev=lev)
