@@ -1,0 +1,167 @@
+{
+  "spec_id": "XSEC_V3_SHADOW",
+  "prereg_source": "research_lab/prereg/XSEC_MATURE_V2_STAGGERED_2026_07_22.json",
+  "gate_result": "PASS 6/6 (G1..G6) на РАЗНЕСЁННОЙ конструкции",
+  "sleeve_name": "xsec_mature",
+  "sleeve_type": "market_neutral_cross_sectional",
+  "risk_mult": 0.0,
+  "purpose": "ЦЕЛЬ SHADOW — ИЗМЕРИТЬ ИСПОЛНИМОСТЬ, А НЕ ДОХОДНОСТЬ. Доходность уже измерена на истории. Неизвестны: доля неисполнения лимиток, реальное проскальзывание, стоимость переноса.",
+  "universe": {
+    "source": "Bybit linear USDT perpetuals",
+    "maturity_rule": "listing_age_days >= 390 НА МОМЕНТ РЕБАЛАНСА",
+    "listing_age_source": "ВАЖНО: брать из /v5/market/instruments-info поле launchTime (мс). listing_age_days = (now - launchTime)/86400000. НЕ использовать длину локальной истории свечей — это даёт ошибку выжившего и зависит от даты начала сбора.",
+    "additional_filters": [
+      "status == Trading",
+      "quoteCoin == USDT",
+      "исключить leveraged-токены и индексы"
+    ],
+    "expected_size": "около 60-120 монет; если < 14 — ребаланс ПРОПУСКАЕТСЯ (нужно 2*K+4)",
+    "universe_snapshot": "сохранять состав универсума на каждый ребаланс в decision_bus для последующего аудита"
+  },
+  "signal": {
+    "lookbacks_days": [
+      7,
+      14,
+      21,
+      30,
+      45
+    ],
+    "score_per_lookback": "ret(L) = close[t]/close[t-L] - 1, close = ПОСЛЕДНЯЯ ЗАКРЫТАЯ дневная свеча UTC",
+    "ranking": "по убыванию ret(L), отдельно для каждого L",
+    "K": 5,
+    "position": "для каждого L: лонг топ-5, шорт дно-5, равными долями",
+    "portfolio": "итоговая позиция = среднее по 5 lookback-портфелям (монета может встретиться в нескольких — доли СУММИРУЮТСЯ)",
+    "no_lookahead": "использовать ТОЛЬКО завершённые дневные свечи; решение принимается после закрытия дня UTC"
+  },
+  "rebalance": {
+    "structure": "ТРИ подпортфеля по 1/3 капитала, фазы 0/1/2",
+    "each_phase_frequency_days": 3,
+    "effective_daily_action": "каждый день ребалансится ровно одна треть портфеля",
+    "time_utc": "00:15 UTC после закрытия дневной свечи",
+    "phase_assignment": "фаза = (номер дня от старта) mod 3; закрепить в конфиге при запуске и НЕ менять",
+    "holding": "каждая треть держится 3 дня до своего следующего ребаланса"
+  },
+  "position_sizing": {
+    "method": "таргетирование волатильности",
+    "target_annual_vol": 0.15,
+    "algorithm": "1) вести историю доходностей портфеля по ребалансам; 2) sd = стандартное отклонение последних 20 ребалансов; 3) ann_vol = sd * sqrt(365/3); 4) leverage = min(1.0, 0.15/ann_vol); 5) если истории < 8 ребалансов — leverage = 0.5",
+    "leverage_cap": 1.0,
+    "gross_exposure": "leverage * capital, поровну между длинной и короткой сторонами",
+    "applied_per_phase": "таргетирование волатильности считается ОТДЕЛЬНО для каждого подпортфеля по его собственной истории"
+  },
+  "execution": {
+    "entry": "post-only лимитный ордер по лучшей цене своей стороны",
+    "entry_timeout_sec": 30,
+    "entry_on_timeout": "снять и переставить по новой лучшей цене, максимум 3 попытки; после 3 неудач — ПРОПУСТИТЬ эту ногу и записать nonfill в decision_bus",
+    "exit": "рыночный ордер (тейкер) — позицию обязаны закрыть, ждать нельзя",
+    "assumed_costs_in_backtest": {
+      "entry_bps": 2,
+      "exit_bps": 5.5
+    },
+    "CRITICAL": "если фактическая доля неисполнения входов > 30%, экономика бэктеста НЕВЕРНА и кандидат возвращается на пересчёт"
+  },
+  "telemetry_required": {
+    "per_order": [
+      "symbol",
+      "side",
+      "intended_price",
+      "filled_price",
+      "slippage_bps",
+      "fill_or_nonfill",
+      "attempts",
+      "time_to_fill_sec",
+      "realised_slippage_vs_mid_bps"
+    ],
+    "per_rebalance": [
+      "universe_size",
+      "leverage_applied",
+      "realised_ann_vol",
+      "gross_exposure",
+      "legs_intended",
+      "legs_filled"
+    ],
+    "aggregate_weekly": [
+      "fill_rate_pct",
+      "median_slippage_bps",
+      "mean_time_to_fill_sec",
+      "skipped_legs_pct"
+    ]
+  },
+  "promotion_criteria_declared_now": {
+    "min_shadow_rebalances": 20,
+    "fill_rate_required_pct": 70,
+    "max_median_slippage_bps": 4,
+    "then": "risk_mult 0.05 при одобрении владельца; масштабирование ТОЛЬКО по пре-регистрированной лестнице",
+    "NOTE": "если медианное проскальзывание > 10 bps, экономика бэктеста неверна и кандидат возвращается на пересчёт с реальными издержками"
+  },
+  "known_open_risks_do_not_hide": [
+    "survivorship: универсум не PIT, делистнутые монеты отсутствуют во всех трёх протестированных наборах",
+    "порог зрелости 390 дней выбран пост-фактум",
+    "тот же конфиг на 20 мажорах даёт Sharpe 0.63 и провалил бы G2 — эдж узкий",
+    "ожидание 10-33% годовых при просадке около 10%, НЕ сотни процентов",
+    "V1 прошла ворота на удачной фазе — дефект найден и исправлен ДО развёртывания; V2 включает худшую фазу в состав"
+  ],
+  "CRITICAL_CHANGE_READ_FIRST": {
+    "problem_found_before_deployment": "V1 проходила ворота только на удачной фазе сетки. Замер по 9 стартовым дням: фаза 1 -> Sharpe 1.57/1.62/1.32, фаза 2 -> 1.63/1.39/0.88, фаза 0 -> 0.43/0.43/0.28.",
+    "consequence_if_ignored": "Живой результат зависел бы от того, в какой день ты запустил shadow. Могли получить Sharpe 0.28 вместо 1.57 и не понять почему.",
+    "fix": "РАЗНЕСЕНИЕ: капитал делится на 3 равные части, три подпортфеля стартуют со сдвигом в 1 день, каждый ребалансится раз в 3 дня.",
+    "why_not_tuning": "Число подпортфелей равно периоду ребаланса. Другого значения быть не может — подгонять нечего.",
+    "bonus": "Ребаланс происходит КАЖДЫЙ день (по одной трети портфеля) -> статистика по исполнению копится в 3 раза быстрее."
+  },
+  "expected_performance_honest": {
+    "staggered_total_pct": 25.9,
+    "max_dd_pct": 8.5,
+    "sharpe": 1.59,
+    "halves_pct": [
+      10.9,
+      13.5
+    ],
+    "worst_single_phase_pct": 7.2,
+    "note": "Разнесённая доходность НИЖЕ лучшей фазы (25.9 против 36.0) и это правильно: лучшая фаза была удачей, а не эджем."
+  },
+  "CRITICAL_LIQUIDITY_WARNING_READ_BEFORE_DEPLOY": {
+    "finding": "62 монеты универсума - НЕ мажоры, а альты и мемкоины, прожившие 13+ месяцев (ANIMEUSDT, BANANAS31USDT, BROCCOLIUSDT, BABYUSDT...). Название 'зрелые' вводит в заблуждение.",
+    "median_daily_turnover_usd": 409969,
+    "coins_above_1m_daily": "13 из 62",
+    "coins_above_5m_daily": "3 из 62",
+    "least_liquid": {
+      "RONINUSDT": 42412,
+      "BMTUSDT": 58418,
+      "PROMPTUSDT": 60827
+    },
+    "capacity_limit": {
+      "cap_500_usd": "ОК, только 1 монета проблемная",
+      "cap_5000_usd": "35 из 62 монет: нога > 0.1% дневного оборота",
+      "cap_50000_usd": "59 из 62 - НЕТОРГУЕМО"
+    },
+    "UNTESTED_ASSUMPTION": "Бэктест закладывал тейкер 5.5 bps. На монете с оборотом $410k/день реальное ПРОСКАЛЬЗЫВАНИЕ рыночного ордера почти наверняка ВЫШЕ комиссии. Этого в бэктесте нет.",
+    "implication": "Ожидаемая доходность в live будет НИЖЕ бэктеста на величину проскальзывания. Насколько - неизвестно, это главное, что должен измерить shadow.",
+    "recommendation": "стартовать shadow на капитале <= $1000 эквивалента; при расширении капитала добавить фильтр по обороту в универсум",
+    "why_edge_may_exist_here": "неликвидные углы рынка недоступны крупным игрокам - это правдоподобный источник эджа, но и причина ограниченной ёмкости"
+  },
+  "READ_THIS_FIRST_V3_SUPERSEDES_V2": {
+    "message": "V2 УСТАРЕЛА. Портировать research_lab/xsec_v3_reference.py, НЕ xsec_v2_run.py.",
+    "difference": "score = rank(momentum) + rank(volatility) вместо только rank(momentum). Всё остальное идентично.",
+    "why": {
+      "V2": {
+        "sharpe": 1.59,
+        "weak_phase_pct": 7.2,
+        "symbol_holdout": [
+          25.7,
+          12.8
+        ]
+      },
+      "V3": {
+        "sharpe": 2.19,
+        "weak_phase_eliminated": true,
+        "symbol_holdout": [
+          31.0,
+          30.6
+        ]
+      }
+    },
+    "reference_module": "research_lab/xsec_v3_reference.py",
+    "api": "target_weights(history) -> {symbol: weight}; leverage(past_returns) -> float; phase_of(day) -> int",
+    "integration_trap": "сумма длинных весов будет ~0.92, а не 1.0 - это НЕТТИНГ, а не ошибка. НЕ нормировать обратно к 1.0, иначе экспозиция вырастет и совпадение с бэктестом сломается."
+  }
+}
