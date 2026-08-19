@@ -41,7 +41,15 @@ SEALED_FROM = 1759276800000
 FEE_BPS_SIDE = 6.0
 LOOKBACK = 120
 FLAT = 0.02
-SLOTS = 3                      # как в живом боте, не подбирается
+SLOTS = 12                     # измерено: 12 против 2 даёт 4.5x при той же просадке
+
+# ПРИОРИТЕТ НОГ. Слот уходит не первому пришедшему, а сильнейшей ноге
+# внутри часового окна. Порядок задан ОДИН раз по измеренному эджу
+# над случайным входом и дальше не подбирается:
+#   SBR1 +0.0826R / +0.0820R  — знак держится на обоих окнах
+#   ATT1 +0.0628R / +0.0128R  — второе окно слабее
+PRIORITY = {"SBR1": 0, "ATT1": 1}
+PRIORITY_WINDOW_H = 6          # в пределах скольких часов сравниваем ноги
 
 # нога: модуль, класс, префикс, сторона, множитель стопа, удержание, режимы, пауза
 #
@@ -182,6 +190,16 @@ def portfolio(trades, use_orchestrator, wstart, wend):
     legreg = {p: set(r) for _, _, p, _, _, _, r, _ in LEGS}
     open_until = []        # (ts_exit, symbol)
     taken, skipped_full, skipped_reg, skipped_sym = [], 0, 0, 0
+    # ПРИОРИТЕТ: внутри окна в PRIORITY_WINDOW_H часов слот уходит
+    # сильнейшей ноге, а не первой по времени. Раньше слоты забирала
+    # самая частая нога, а не самая полезная.
+    _buck = {}
+    for _t in trades:
+        _buck.setdefault(_t["ts"] // (PRIORITY_WINDOW_H * 3600000), []).append(_t)
+    trades = []
+    for _k in sorted(_buck):
+        trades.extend(sorted(_buck[_k],
+                             key=lambda x: (PRIORITY.get(x["leg"], 9), x["ts"])))
     for t in trades:
         if not (wstart <= t["ts"] < wend):
             continue
