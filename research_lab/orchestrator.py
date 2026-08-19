@@ -49,14 +49,13 @@ SLOTS = 3                      # как в живом боте, не подби�
 # пятиминутках, а счётчик тикает раз в вызов. На часовых данных
 # его надо делить на 12, иначе пауза длиннее живой в двенадцать раз.
 LEGS = [
+    # Две ноги, каждая прошла контроль случайным входом НА ОБОИХ окнах.
+    # Больше в портфеле никого: остальные либо только на одном окне,
+    # либо значимо хуже случайного входа.
     ("alt_trendline_touch_v1", "AltTrendlineTouchV1Strategy", "ATT1",
-     "short", 6.0, 336, ("флет-",), 8),      # штатно 96
-    ("alt_support_reclaim_v1", "AltSupportReclaimV1Strategy", "ASR1",
-     "long", 4.0, 168, ("флет+",), 6),       # штатно 72
-    ("elder_triple_screen_v2", "ElderTripleScreenV2Strategy", "ETS2",
-     "short", 4.0, 168, ("флет-",), 3),      # штатно 36
-    ("spike_fade_v3", "SpikeFadeV3Strategy", "SF3",
-     "short", 4.0, 336, ("флет-",), 0),      # у неё пауза уже в барах
+     "short", 6.0, 336, ("флет-",), 8),
+    ("sloped_break_retest_v1", "SlopedBreakRetestV1Strategy", "SBR1",
+     "long", 4.0, 168, ("флет+",), 0),
 ]
 
 
