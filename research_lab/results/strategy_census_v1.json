@@ -1,0 +1,920 @@
+{
+  "alpaca_adaptive_v1": {
+    "name": "alpaca_adaptive_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "alpaca_dynamic_v3_event": {
+    "name": "alpaca_dynamic_v3_event",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "alpaca_dynamic_v4_event": {
+    "name": "alpaca_dynamic_v4_event",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "alt_bear_regime_continuation_v1": {
+    "name": "alt_bear_regime_continuation_v1",
+    "status": "ЖИВАЯ",
+    "signals": 1,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltBearRegimeContinuationV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_channel_bounce_v1": {
+    "name": "alt_channel_bounce_v1",
+    "status": "ЖИВАЯ",
+    "signals": 3,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltChannelBounceV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_elder_revived_v1": {
+    "name": "alt_elder_revived_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltElderRevivedV1",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_horizontal_break_v1": {
+    "name": "alt_horizontal_break_v1",
+    "status": "ЖИВАЯ",
+    "signals": 3,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltHorizontalBreakV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_inplay_breakdown_v1": {
+    "name": "alt_inplay_breakdown_v1",
+    "status": "ЖИВАЯ",
+    "signals": 4,
+    "exc": 0,
+    "conv": "async_last_price",
+    "symbol": "SOLUSDT",
+    "cls": "AltInplayBreakdownV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_inplay_breakdown_v2": {
+    "name": "alt_inplay_breakdown_v2",
+    "status": "ЖИВАЯ",
+    "signals": 2,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltInplayBreakdownV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_liquidity_sweep_reversal_v2": {
+    "name": "alt_liquidity_sweep_reversal_v2",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "alt_momentum_breakout_v1": {
+    "name": "alt_momentum_breakout_v1",
+    "status": "ЖИВАЯ",
+    "signals": 75,
+    "exc": 0,
+    "conv": "flat_bars",
+    "symbol": "BTCUSDT",
+    "cls": "AltMomentumBreakoutV1",
+    "bars": 6000,
+    "note": "символ взят из аллоулиста: ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'LINKUSDT']",
+    "detail": ""
+  },
+  "alt_pullback_continuation_v1": {
+    "name": "alt_pullback_continuation_v1",
+    "status": "ПАДАЕТ",
+    "signals": 0,
+    "exc": 6000,
+    "conv": "evaluate_i",
+    "symbol": "BTCUSDT",
+    "cls": "AltPullbackContinuationV1",
+    "bars": 6000,
+    "note": "символ взят из аллоулиста: ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'LINKUSDT']",
+    "detail": "TypeError: AltPullbackContinuationV1.evaluate() missing 2 required positional arguments: 'regime' and 'symbol'"
+  },
+  "alt_range_reclaim_v1": {
+    "name": "alt_range_reclaim_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltRangeReclaimV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_range_scalp_v1": {
+    "name": "alt_range_scalp_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltRangeScalpV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_resistance_fade_v1": {
+    "name": "alt_resistance_fade_v1",
+    "status": "ЖИВАЯ",
+    "signals": 1,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltResistanceFadeV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_resistance_fade_v2": {
+    "name": "alt_resistance_fade_v2",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltResistanceFadeV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_slope_break_v1": {
+    "name": "alt_slope_break_v1",
+    "status": "ЖИВАЯ",
+    "signals": 4,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltSlopeBreakV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_sloped_channel_v1": {
+    "name": "alt_sloped_channel_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltSlopedChannelV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_sloped_momentum_v1": {
+    "name": "alt_sloped_momentum_v1",
+    "status": "ЖИВАЯ",
+    "signals": 1,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltSlopedMomentumV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_squeeze_breakout_v1": {
+    "name": "alt_squeeze_breakout_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "flat_bars",
+    "symbol": "BTCUSDT",
+    "cls": "AltSqueezeBreakoutV1",
+    "bars": 6000,
+    "note": "символ взят из аллоулиста: ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'LINKUSDT']",
+    "detail": ""
+  },
+  "alt_support_bounce_v1": {
+    "name": "alt_support_bounce_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltSupportBounceV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_support_bounce_v2": {
+    "name": "alt_support_bounce_v2",
+    "status": "ЖИВАЯ",
+    "signals": 5,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltSupportBounceV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_support_reclaim_v1": {
+    "name": "alt_support_reclaim_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltSupportReclaimV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_trendline_touch_v1": {
+    "name": "alt_trendline_touch_v1",
+    "status": "ЖИВАЯ",
+    "signals": 6,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltTrendlineTouchV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_trendline_touch_v2": {
+    "name": "alt_trendline_touch_v2",
+    "status": "ЖИВАЯ",
+    "signals": 6,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltTrendlineTouchV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "alt_volume_spike_momentum_v1": {
+    "name": "alt_volume_spike_momentum_v1",
+    "status": "ЖИВАЯ",
+    "signals": 18,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "AltVolumeSpikeV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "asb1_live": {
+    "name": "asb1_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "asm1_live": {
+    "name": "asm1_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "att1_live": {
+    "name": "att1_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "att1_v2_live": {
+    "name": "att1_v2_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "basis_arb_v1": {
+    "name": "basis_arb_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "bounce1_live": {
+    "name": "bounce1_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "breakdown_live": {
+    "name": "breakdown_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "breakdown_retest_v3": {
+    "name": "breakdown_retest_v3",
+    "status": "ЖИВАЯ",
+    "signals": 6,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BreakdownRetestV3Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_cycle_continuation_v1": {
+    "name": "btc_cycle_continuation_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCCycleContinuationV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_cycle_level_target_v2": {
+    "name": "btc_cycle_level_target_v2",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCCycleLevelTargetV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_cycle_pullback_v1": {
+    "name": "btc_cycle_pullback_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCCyclePullbackV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_eth_midterm_pullback": {
+    "name": "btc_eth_midterm_pullback",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCETHMidtermPullbackStrategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_eth_midterm_pullback_v2": {
+    "name": "btc_eth_midterm_pullback_v2",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCETHMidtermPullbackV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_eth_midterm_short_v1": {
+    "name": "btc_eth_midterm_short_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCETHMidtermShortV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_eth_midterm_short_v2": {
+    "name": "btc_eth_midterm_short_v2",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCETHMidtermShortV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_eth_midterm_v3": {
+    "name": "btc_eth_midterm_v3",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCETHMidtermV3Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_regime_flip_continuation_v1": {
+    "name": "btc_regime_flip_continuation_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCRegimeFlipContinuationV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_regime_retest_v1": {
+    "name": "btc_regime_retest_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCRegimeRetestV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "btc_sloped_reclaim_v1": {
+    "name": "btc_sloped_reclaim_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "BTCSlopedReclaimV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "elder_crypto_v1": {
+    "name": "elder_crypto_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "ElderCryptoV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "elder_triple_screen_v2": {
+    "name": "elder_triple_screen_v2",
+    "status": "ЖИВАЯ",
+    "signals": 48,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "ElderTripleScreenV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "elder_triple_screen_v3": {
+    "name": "elder_triple_screen_v3",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "ElderTripleScreenV3Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "equities_swing_active_v1": {
+    "name": "equities_swing_active_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "event_expansion_retest_long_mtf_v1": {
+    "name": "event_expansion_retest_long_mtf_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "event_expansion_retest_long_v1": {
+    "name": "event_expansion_retest_long_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "flat_resistance_fade_live": {
+    "name": "flat_resistance_fade_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "funding_hold_v1": {
+    "name": "funding_hold_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "funding_rate_reversion_v1": {
+    "name": "funding_rate_reversion_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "FundingRateReversionV1",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "grid_smart_v1": {
+    "name": "grid_smart_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "GridSmartV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "gs1_live": {
+    "name": "gs1_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "hzbo1_live": {
+    "name": "hzbo1_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "impulse_volume_breakout_v1": {
+    "name": "impulse_volume_breakout_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "ImpulseVolumeBreakoutV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "inplay_breakout": {
+    "name": "inplay_breakout",
+    "status": "ЖИВАЯ",
+    "signals": 12,
+    "exc": 0,
+    "conv": "async_last_price",
+    "symbol": "SOLUSDT",
+    "cls": "InPlayBreakoutWrapper",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "inplay_retest_v3": {
+    "name": "inplay_retest_v3",
+    "status": "ЖИВАЯ",
+    "signals": 7,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "InplayRetestV3Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "inplay_retest_v4": {
+    "name": "inplay_retest_v4",
+    "status": "ЖИВАЯ",
+    "signals": 14,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "InplayRetestV4Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "inplay_wrapper": {
+    "name": "inplay_wrapper",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "liquidation_cascade_entry_v1": {
+    "name": "liquidation_cascade_entry_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "LiquidationCascadeEntryV1",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "live_kline_utils": {
+    "name": "live_kline_utils",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "micro_scalper_breakout_v1": {
+    "name": "micro_scalper_breakout_v1",
+    "status": "ЖИВАЯ",
+    "signals": 29,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "MicroScalperBreakoutV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "micro_scalper_live": {
+    "name": "micro_scalper_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "micro_scalper_v1": {
+    "name": "micro_scalper_v1",
+    "status": "ЖИВАЯ",
+    "signals": 103,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "MicroScalperV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "pair_arb_executor_v1": {
+    "name": "pair_arb_executor_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "pair_stat_arb_v1": {
+    "name": "pair_stat_arb_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "pfs1_live": {
+    "name": "pfs1_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "pump_exhaustion_unwind_short_v1": {
+    "name": "pump_exhaustion_unwind_short_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "PumpExhaustionUnwindShortV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "pump_fade_simple": {
+    "name": "pump_fade_simple",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "PumpFadeSimpleStrategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "pump_fade_smart_v1": {
+    "name": "pump_fade_smart_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "PumpFadeSmartV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "pump_fade_v2": {
+    "name": "pump_fade_v2",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "PumpFadeV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "pump_fade_v4r": {
+    "name": "pump_fade_v4r",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "PumpFadeV4RStrategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "pump_momentum_v1": {
+    "name": "pump_momentum_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "PumpMomentumV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "range_mean_reversion_v1": {
+    "name": "range_mean_reversion_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "sc1_live": {
+    "name": "sc1_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "scalper_bounce_v2": {
+    "name": "scalper_bounce_v2",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "ScalperBounceV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "scalper_breakout_v2": {
+    "name": "scalper_breakout_v2",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "ScalperBreakoutV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "scalper_classic_v1": {
+    "name": "scalper_classic_v1",
+    "status": "ЖИВАЯ",
+    "signals": 5,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "ScalperClassicV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "scalper_sweep_v2": {
+    "name": "scalper_sweep_v2",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "ScalperSweepV2Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "session_open_breakout_v1": {
+    "name": "session_open_breakout_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 405,
+    "conv": "last_price",
+    "symbol": "SOLUSDT",
+    "cls": "SessionOpenBreakoutV1",
+    "bars": 6000,
+    "note": "",
+    "detail": "AttributeError: 'list' object has no attribute 'get'"
+  },
+  "signals": {
+    "name": "signals",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "sloped_break_retest_v1": {
+    "name": "sloped_break_retest_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "SlopedBreakRetestV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "sloped_channel_live": {
+    "name": "sloped_channel_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "sloped_resistance_choch_v1": {
+    "name": "sloped_resistance_choch_v1",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "SlopedResistanceChochV1Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "smart_grid": {
+    "name": "smart_grid",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "SmartGridStrategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "smart_grid_v1": {
+    "name": "smart_grid_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "spike_fade_v3": {
+    "name": "spike_fade_v3",
+    "status": "НОЛЬ",
+    "signals": 0,
+    "exc": 0,
+    "conv": "ohlcv",
+    "symbol": "SOLUSDT",
+    "cls": "SpikeFadeV3Strategy",
+    "bars": 6000,
+    "note": "",
+    "detail": ""
+  },
+  "support_reclaim_live": {
+    "name": "support_reclaim_live",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  },
+  "trend_pullback_v1": {
+    "name": "trend_pullback_v1",
+    "status": "НЕТ_КЛАССА",
+    "conv": null,
+    "detail": "класс стратегии не найден"
+  }
+}

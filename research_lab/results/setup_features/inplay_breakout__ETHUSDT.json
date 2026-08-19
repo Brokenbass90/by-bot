@@ -1,0 +1,37 @@
+[
+  {
+    "feature": "ext",
+    "gap": 0.594,
+    "best": "сред",
+    "consistent": false,
+    "accepted": false
+  },
+  {
+    "feature": "runup",
+    "gap": 0.642,
+    "best": "верх",
+    "consistent": false,
+    "accepted": false
+  },
+  {
+    "feature": "vol_rel",
+    "gap": 0.714,
+    "best": "низ",
+    "consistent": false,
+    "accepted": false
+  },
+  {
+    "feature": "atr_rel",
+    "gap": 0.197,
+    "best": "низ",
+    "consistent": false,
+    "accepted": false
+  },
+  {
+    "feature": "dist_ma",
+    "gap": 0.789,
+    "best": "верх",
+    "consistent": false,
+    "accepted": false
+  }
+]

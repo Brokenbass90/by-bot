@@ -1,0 +1,125 @@
+[
+ {
+  "params": {
+   "kind": "tsm",
+   "L": 4,
+   "mode": "long_short",
+   "vol_target": null
+  },
+  "pooled_r": 61.39,
+  "n": 141,
+  "per_sym": {
+   "BTCUSDT": 41.36,
+   "ETHUSDT": 5.14,
+   "SOLUSDT": 0.49,
+   "XRPUSDT": -5.26,
+   "DOGEUSDT": 5.92,
+   "ADAUSDT": 13.74
+  },
+  "by_year": {
+   "2020": 2.23,
+   "2021": 46.86,
+   "2022": 13.24,
+   "2023": -0.94
+  },
+  "gates": {
+   "pooled>=10": true,
+   "btc&eth>0": true,
+   "year>=-15": true,
+   ">=2y_plus": true
+  },
+  "verdict": "PASS"
+ },
+ {
+  "params": {
+   "kind": "tsm",
+   "L": 4,
+   "mode": "long_only",
+   "vol_target": null
+  },
+  "pooled_r": 39.44,
+  "n": 70,
+  "per_sym": {
+   "BTCUSDT": 40.79,
+   "ETHUSDT": 3.16,
+   "SOLUSDT": -7.0,
+   "XRPUSDT": -2.06,
+   "DOGEUSDT": 1.54,
+   "ADAUSDT": 3.0
+  },
+  "by_year": {
+   "2020": 1.94,
+   "2021": 55.75,
+   "2022": -23.44,
+   "2023": 5.18
+  },
+  "gates": {
+   "pooled>=10": true,
+   "btc&eth>0": true,
+   "year>=-15": false,
+   ">=2y_plus": true
+  },
+  "verdict": "FAIL"
+ },
+ {
+  "params": {
+   "kind": "tsm",
+   "L": 5,
+   "mode": "long_short",
+   "vol_target": null
+  },
+  "pooled_r": 28.05,
+  "n": 139,
+  "per_sym": {
+   "BTCUSDT": 33.26,
+   "ETHUSDT": -0.5,
+   "SOLUSDT": -4.02,
+   "XRPUSDT": -2.91,
+   "DOGEUSDT": -9.0,
+   "ADAUSDT": 11.22
+  },
+  "by_year": {
+   "2020": -0.74,
+   "2021": 35.49,
+   "2022": 0.44,
+   "2023": -7.16
+  },
+  "gates": {
+   "pooled>=10": true,
+   "btc&eth>0": false,
+   "year>=-15": true,
+   ">=2y_plus": true
+  },
+  "verdict": "FAIL"
+ },
+ {
+  "params": {
+   "kind": "ens",
+   "mode": "long_short",
+   "vol_target": null
+  },
+  "pooled_r": 19.43,
+  "n": 104,
+  "per_sym": {
+   "BTCUSDT": 30.4,
+   "ETHUSDT": -4.0,
+   "SOLUSDT": -3.19,
+   "XRPUSDT": -7.89,
+   "DOGEUSDT": -2.91,
+   "ADAUSDT": 7.03
+  },
+  "by_year": {
+   "2020": 1.83,
+   "2021": 26.99,
+   "2022": -0.11,
+   "2023": -9.32
+  },
+  "gates": {
+   "pooled>=10": true,
+   "btc&eth>0": false,
+   "year>=-15": true,
+   ">=2y_plus": true
+  },
+  "verdict": "FAIL"
+ }
+]

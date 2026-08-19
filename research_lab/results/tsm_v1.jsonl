@@ -1,0 +1,32 @@
+{"key": "39ef04ecb358", "params": {"kind": "tsm", "L": 3, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": 19.26, "is_n": 98}
+{"key": "f126014b3621", "params": {"kind": "tsm", "L": 3, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": 22.25, "is_n": 98}
+{"key": "b4ee3ea29d00", "params": {"kind": "tsm", "L": 3, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": 49.37, "is_n": 47}
+{"key": "2220a1922b4d", "params": {"kind": "tsm", "L": 3, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": 41.42, "is_n": 47}
+{"key": "ab47b2316e25", "params": {"kind": "tsm", "L": 4, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": 44.96, "is_n": 88}
+{"key": "d437b7ebaa4b", "params": {"kind": "tsm", "L": 4, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": 30.97, "is_n": 88}
+{"key": "ede62730a431", "params": {"kind": "tsm", "L": 4, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_insufficient_trades_21", "is_net_r": 59.45, "is_n": 41}
+{"key": "ad85671eeb27", "params": {"kind": "tsm", "L": 4, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_insufficient_trades_21", "is_net_r": 44.63, "is_n": 41}
+{"key": "b287825e2513", "params": {"kind": "tsm", "L": 5, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "is_net_r": 48.83, "is_n": 88}
+{"key": "e4f3d90c8d88", "params": {"kind": "tsm", "L": 5, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "is_net_r": 31.7, "is_n": 88}
+{"key": "0955a6b60c1f", "params": {"kind": "tsm", "L": 5, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_insufficient_trades_21", "is_net_r": 62.65, "is_n": 41}
+{"key": "f869507e6764", "params": {"kind": "tsm", "L": 5, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_insufficient_trades_21", "is_net_r": 44.4, "is_n": 41}
+{"key": "77dd582bc76e", "params": {"kind": "tsm", "L": 6, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": 20.07, "is_n": 77}
+{"key": "4c016a5bada8", "params": {"kind": "tsm", "L": 6, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": 16.0, "is_n": 77}
+{"key": "6360ee330bdf", "params": {"kind": "tsm", "L": 6, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_insufficient_trades_17", "is_net_r": 51.97, "is_n": 36}
+{"key": "d5a5e0efce6f", "params": {"kind": "tsm", "L": 6, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_insufficient_trades_17", "is_net_r": 39.6, "is_n": 36}
+{"key": "34210783f0e3", "params": {"kind": "skip", "L": 4, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 15.9, "is_n": 87}
+{"key": "16e0aef7e076", "params": {"kind": "skip", "L": 4, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 2.31, "is_n": 87}
+{"key": "8e493019703f", "params": {"kind": "skip", "L": 4, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_insufficient_trades_26", "is_net_r": 40.66, "is_n": 41}
+{"key": "30216df35d36", "params": {"kind": "skip", "L": 4, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_insufficient_trades_26", "is_net_r": 22.03, "is_n": 41}
+{"key": "ecb5b3d52ae8", "params": {"kind": "ens", "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 37.43, "is_n": 48}
+{"key": "6912c5a4b915", "params": {"kind": "ens", "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 26.26, "is_n": 48}
+{"key": "13ba361f008e", "params": {"kind": "ens", "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "low_N_25", "is_net_r": 44.74, "is_n": 25}
+{"key": "cdcce661d522", "params": {"kind": "ens", "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "low_N_25", "is_net_r": 32.8, "is_n": 25}
+{"key": "ab37c40b9d11", "params": {"kind": "macross", "fast": 10, "slow": 40, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "low_N_29", "is_net_r": 13.39, "is_n": 29}
+{"key": "9d40e6b52492", "params": {"kind": "macross", "fast": 10, "slow": 40, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "low_N_29", "is_net_r": 7.82, "is_n": 29}
+{"key": "a15aaa034f91", "params": {"kind": "macross", "fast": 10, "slow": 40, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "low_N_13", "is_net_r": -1.56, "is_n": 13}
+{"key": "1abdeb0e76ed", "params": {"kind": "macross", "fast": 10, "slow": 40, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "low_N_13", "is_net_r": 0.9, "is_n": 13}
+{"key": "beda32866f1f", "params": {"kind": "macross", "fast": 20, "slow": 100, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "low_N_25", "is_net_r": -16.61, "is_n": 25}
+{"key": "57d247c91504", "params": {"kind": "macross", "fast": 20, "slow": 100, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "low_N_25", "is_net_r": -7.85, "is_n": 25}
+{"key": "a4a772200193", "params": {"kind": "macross", "fast": 20, "slow": 100, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "low_N_13", "is_net_r": -18.13, "is_n": 13}
+{"key": "3cff69243662", "params": {"kind": "macross", "fast": 20, "slow": 100, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "low_N_13", "is_net_r": -7.57, "is_n": 13}

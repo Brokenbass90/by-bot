@@ -1,0 +1,178 @@
+{
+  "micro_scalper_v1|BTCUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 630,
+    "n_variants": 12,
+    "n_stable": 0,
+    "best": null
+  },
+  "micro_scalper_v1|ETHUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 674,
+    "n_variants": 12,
+    "n_stable": 0,
+    "best": null
+  },
+  "alt_momentum_breakout_v1|BTCUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 521,
+    "n_variants": 12,
+    "n_stable": 0,
+    "best": null
+  },
+  "alt_momentum_breakout_v1|ETHUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 532,
+    "n_variants": 12,
+    "n_stable": 0,
+    "best": null
+  },
+  "elder_triple_screen_v2|BTCUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 353,
+    "n_variants": 12,
+    "n_stable": 0,
+    "best": null
+  },
+  "elder_triple_screen_v2|ETHUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 326,
+    "n_variants": 12,
+    "n_stable": 3,
+    "best": {
+      "variant": "0.5_24",
+      "R": 0.0682,
+      "wr": 0.405
+    }
+  },
+  "micro_scalper_breakout_v1|BTCUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 251,
+    "n_variants": 12,
+    "n_stable": 0,
+    "best": null
+  },
+  "micro_scalper_breakout_v1|ETHUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 229,
+    "n_variants": 12,
+    "n_stable": 1,
+    "best": {
+      "variant": "0.5_24",
+      "R": 0.0009,
+      "wr": 0.407
+    }
+  },
+  "inplay_retest_v4|BTCUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 110,
+    "n_variants": 12,
+    "n_stable": 0,
+    "best": null
+  },
+  "inplay_retest_v4|ETHUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 107,
+    "n_variants": 12,
+    "n_stable": 2,
+    "best": {
+      "variant": "0.5_24",
+      "R": 0.0249,
+      "wr": 0.406
+    }
+  },
+  "inplay_retest_v3|BTCUSDT": {
+    "status": "ОК",
+    "windows": 2,
+    "signals": 29,
+    "n_variants": 12,
+    "n_stable": 2,
+    "best": {
+      "variant": "2.0_12",
+      "R": 0.0441,
+      "wr": 0.566
+    }
+  },
+  "inplay_retest_v3|ETHUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 38,
+    "n_variants": 12,
+    "n_stable": 0,
+    "best": null
+  },
+  "inplay_breakout|BTCUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 103,
+    "n_variants": 12,
+    "n_stable": 0,
+    "best": null
+  },
+  "inplay_breakout|ETHUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 105,
+    "n_variants": 12,
+    "n_stable": 10,
+    "best": {
+      "variant": "0.5_8",
+      "R": 0.4375,
+      "wr": 0.454
+    }
+  },
+  "alt_volume_spike_momentum_v1|BTCUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 93,
+    "n_variants": 12,
+    "n_stable": 0,
+    "best": null
+  },
+  "alt_volume_spike_momentum_v1|ETHUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 108,
+    "n_variants": 12,
+    "n_stable": 4,
+    "best": {
+      "variant": "0.5_24",
+      "R": 0.0418,
+      "wr": 0.41
+    }
+  },
+  "alt_elder_revived_v1|BTCUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 61,
+    "n_variants": 12,
+    "n_stable": 1,
+    "best": {
+      "variant": "0.5_8",
+      "R": 0.0055,
+      "wr": 0.413
+    }
+  },
+  "alt_elder_revived_v1|ETHUSDT": {
+    "status": "ОК",
+    "windows": 3,
+    "signals": 63,
+    "n_variants": 12,
+    "n_stable": 3,
+    "best": {
+      "variant": "1.0_24",
+      "R": 0.1042,
+      "wr": 0.468
+    }
+  }
+}

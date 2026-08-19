@@ -1,0 +1,50 @@
+{"key": "001530e3bf25", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.0, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053297}
+{"key": "3f681bcabd20", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.0, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053300}
+{"key": "6e9ca5a1a6f7", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.0, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053415}
+{"key": "c616f9d7a078", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.5, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053417}
+{"key": "e89b965d3ffc", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.5, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053420}
+{"key": "3060d9544c68", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.5, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053423}
+{"key": "38e09f66c219", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 3.5, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053426}
+{"key": "153987054230", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 3.5, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053429}
+{"key": "b0c3a1c3eb1a", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 3.5, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053431}
+{"key": "3b668490844c", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 5.0, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053434}
+{"key": "591afab1d83a", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 5.0, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053437}
+{"key": "2bb20dabfb36", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 5.0, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053440}
+{"key": "1fcc59c4a5c0", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.0, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053442}
+{"key": "2444c27e49e5", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.0, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053445}
+{"key": "d4defe49bc0a", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.0, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053448}
+{"key": "38fbb61b0af5", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.5, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053451}
+{"key": "f911ab4c8ff9", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.5, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053454}
+{"key": "2042ed9c4036", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 2.5, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053472}
+{"key": "483914cfd266", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 3.5, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053474}
+{"key": "b5ba15a03493", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 3.5, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053477}
+{"key": "0be4fa22570a", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 3.5, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053480}
+{"key": "d49912caa450", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 5.0, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053483}
+{"key": "bf52da9d9c2a", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 5.0, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053486}
+{"key": "8a2b5f9204be", "strategy": "att1", "params": {"tp1": 1.2, "tp2": 5.0, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053489}
+{"key": "b246dfa82793", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.0, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053491}
+{"key": "7a87dd58ee0d", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.0, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053494}
+{"key": "2edf923fc262", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.0, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053497}
+{"key": "4385ed4b90b2", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.5, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053500}
+{"key": "e0b5e6ce48d7", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.5, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053503}
+{"key": "a611431c0083", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 2.5, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053505}
+{"key": "826032c4474e", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 3.5, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053508}
+{"key": "64df6b34f9e4", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 3.5, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053511}
+{"key": "45c368b13142", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 3.5, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053541}
+{"key": "d930a1a16b19", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 5.0, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053543}
+{"key": "2067707d242b", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 5.0, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053546}
+{"key": "dd1b695b310e", "strategy": "att1", "params": {"tp1": 1.5, "tp2": 5.0, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784053549}
+{"key": "94225b491ceb", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053554}
+{"key": "e94e3b8fc1de", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784053559}
+{"key": "40d091ffb944", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053563}
+{"key": "0a886e7c918d", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053568}
+{"key": "336a0e049fe9", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "ts": 1784053573}
+{"key": "79dbec27407f", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 15, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053577}
+{"key": "1dfa3b7b3e2f", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053598}
+{"key": "efb1d2f87fc4", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053603}
+{"key": "61bcacebddc1", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.2, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053608}
+{"key": "7110817a5e89", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.4, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053613}
+{"key": "078c117b0773", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.4, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053618}
+{"key": "e29f7279c819", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 20, "band": 0.4, "rr": 2.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053623}
+{"key": "1e6adaaa9b24", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 30, "band": 0.2, "rr": 1.5}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053628}
+{"key": "eec51b3faadf", "strategy": "levelfade_regime", "params": {"er": 0.2, "lb": 30, "band": 0.2, "rr": 2.0}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.00", "ts": 1784053634}

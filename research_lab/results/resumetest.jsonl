@@ -1,0 +1,12 @@
+{"key": "001530e3bf25", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.0, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035164}
+{"key": "3f681bcabd20", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.0, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035167}
+{"key": "6e9ca5a1a6f7", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.0, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035169}
+{"key": "c616f9d7a078", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.5, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035173}
+{"key": "e89b965d3ffc", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.5, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035175}
+{"key": "3060d9544c68", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 2.5, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035178}
+{"key": "38e09f66c219", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 3.5, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035183}
+{"key": "153987054230", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 3.5, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035186}
+{"key": "b0c3a1c3eb1a", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 3.5, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035189}
+{"key": "3b668490844c", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 5.0, "trail": 1.0}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035192}
+{"key": "591afab1d83a", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 5.0, "trail": 1.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035194}
+{"key": "2bb20dabfb36", "strategy": "att1", "params": {"tp1": 1.0, "tp2": 5.0, "trail": 2.5}, "is_pass": false, "is_reason": "low_N_6", "ts": 1784035197}

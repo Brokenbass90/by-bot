@@ -1,0 +1,32 @@
+{"key": "39ef04ecb358", "params": {"kind": "tsm", "L": 3, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": 4.24, "is_n": 118}
+{"key": "f126014b3621", "params": {"kind": "tsm", "L": 3, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 15.86, "is_n": 118}
+{"key": "b4ee3ea29d00", "params": {"kind": "tsm", "L": 3, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 48.65, "is_n": 57}
+{"key": "2220a1922b4d", "params": {"kind": "tsm", "L": 3, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_13.4", "is_net_r": 44.71, "is_n": 57}
+{"key": "ab47b2316e25", "params": {"kind": "tsm", "L": 4, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 39.48, "is_n": 106}
+{"key": "d437b7ebaa4b", "params": {"kind": "tsm", "L": 4, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 30.29, "is_n": 106}
+{"key": "ede62730a431", "params": {"kind": "tsm", "L": 4, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_9.9", "is_net_r": 63.24, "is_n": 50}
+{"key": "ad85671eeb27", "params": {"kind": "tsm", "L": 4, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_7.1", "is_net_r": 49.85, "is_n": 50}
+{"key": "b287825e2513", "params": {"kind": "tsm", "L": 5, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_11.1", "is_net_r": 59.67, "is_n": 90}
+{"key": "e4f3d90c8d88", "params": {"kind": "tsm", "L": 5, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_7.0", "is_net_r": 44.98, "is_n": 90}
+{"key": "0955a6b60c1f", "params": {"kind": "tsm", "L": 5, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_thin_fold_1", "is_net_r": 76.62, "is_n": 43}
+{"key": "f869507e6764", "params": {"kind": "tsm", "L": 5, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_thin_fold_1", "is_net_r": 58.95, "is_n": 43}
+{"key": "77dd582bc76e", "params": {"kind": "tsm", "L": 6, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 33.61, "is_n": 86}
+{"key": "4c016a5bada8", "params": {"kind": "tsm", "L": 6, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 31.46, "is_n": 86}
+{"key": "6360ee330bdf", "params": {"kind": "tsm", "L": 6, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_thin_fold_2", "is_net_r": 66.04, "is_n": 41}
+{"key": "d5a5e0efce6f", "params": {"kind": "tsm", "L": 6, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_thin_fold_2", "is_net_r": 54.38, "is_n": 41}
+{"key": "34210783f0e3", "params": {"kind": "skip", "L": 4, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_3.0", "is_net_r": 28.63, "is_n": 104}
+{"key": "16e0aef7e076", "params": {"kind": "skip", "L": 4, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_3.8", "is_net_r": 17.79, "is_n": 104}
+{"key": "8e493019703f", "params": {"kind": "skip", "L": 4, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_5.7", "is_net_r": 54.96, "is_n": 50}
+{"key": "30216df35d36", "params": {"kind": "skip", "L": 4, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_3.2", "is_net_r": 37.91, "is_n": 50}
+{"key": "ecb5b3d52ae8", "params": {"kind": "ens", "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 37.5, "is_n": 61}
+{"key": "6912c5a4b915", "params": {"kind": "ens", "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.50", "is_net_r": 29.01, "is_n": 61}
+{"key": "13ba361f008e", "params": {"kind": "ens", "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_16.4", "is_net_r": 53.64, "is_n": 33}
+{"key": "cdcce661d522", "params": {"kind": "ens", "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_one_window_hero_peak_9.9", "is_net_r": 41.93, "is_n": 33}
+{"key": "ab37c40b9d11", "params": {"kind": "macross", "fast": 10, "slow": 40, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": -0.68, "is_n": 45}
+{"key": "9d40e6b52492", "params": {"kind": "macross", "fast": 10, "slow": 40, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_unstable_frac_pos_0.25", "is_net_r": 1.07, "is_n": 45}
+{"key": "a15aaa034f91", "params": {"kind": "macross", "fast": 10, "slow": 40, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "low_N_21", "is_net_r": -1.42, "is_n": 21}
+{"key": "1abdeb0e76ed", "params": {"kind": "macross", "fast": 10, "slow": 40, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "low_N_21", "is_net_r": 3.99, "is_n": 21}
+{"key": "beda32866f1f", "params": {"kind": "macross", "fast": 20, "slow": 100, "mode": "long_short", "vol_target": null}, "is_pass": false, "is_reason": "folds_insufficient_trades_20", "is_net_r": -11.65, "is_n": 31}
+{"key": "57d247c91504", "params": {"kind": "macross", "fast": 20, "slow": 100, "mode": "long_short", "vol_target": 0.02}, "is_pass": false, "is_reason": "folds_insufficient_trades_20", "is_net_r": -2.78, "is_n": 31}
+{"key": "a4a772200193", "params": {"kind": "macross", "fast": 20, "slow": 100, "mode": "long_only", "vol_target": null}, "is_pass": false, "is_reason": "low_N_16", "is_net_r": -7.97, "is_n": 16}
+{"key": "3cff69243662", "params": {"kind": "macross", "fast": 20, "slow": 100, "mode": "long_only", "vol_target": 0.02}, "is_pass": false, "is_reason": "low_N_16", "is_net_r": 0.58, "is_n": 16}

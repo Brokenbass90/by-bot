@@ -1,0 +1,118 @@
+{
+  "BTCUSDT_20260812_1000ms.csv": {
+    "5s_imb1": {
+      "train_gap": 0.4335,
+      "test_gap": 0.4173,
+      "shuffled": 0.01,
+      "n": 2519,
+      "ok": true
+    },
+    "5s_imb5": {
+      "train_gap": 0.4586,
+      "test_gap": 0.4261,
+      "shuffled": 0.0129,
+      "n": 2519,
+      "ok": true
+    },
+    "5s_imb20": {
+      "train_gap": 0.3887,
+      "test_gap": 0.4049,
+      "shuffled": -0.0602,
+      "n": 2519,
+      "ok": true
+    },
+    "5s_slope": {
+      "train_gap": 0.1063,
+      "test_gap": 0.023,
+      "shuffled": 0.0266,
+      "n": 2519,
+      "ok": false
+    },
+    "15s_imb1": {
+      "train_gap": 0.6615,
+      "test_gap": 0.697,
+      "shuffled": -0.1873,
+      "n": 839,
+      "ok": true
+    },
+    "15s_imb5": {
+      "train_gap": 0.6797,
+      "test_gap": 0.7046,
+      "shuffled": -0.2139,
+      "n": 839,
+      "ok": true
+    },
+    "15s_imb20": {
+      "train_gap": 0.5677,
+      "test_gap": 0.477,
+      "shuffled": -0.1477,
+      "n": 839,
+      "ok": true
+    },
+    "15s_slope": {
+      "train_gap": -0.0407,
+      "test_gap": 0.0905,
+      "shuffled": 0.0202,
+      "n": 839,
+      "ok": false
+    }
+  },
+  "ETHUSDT_20260812_1000ms.csv": {
+    "5s_imb1": {
+      "train_gap": 0.5398,
+      "test_gap": 0.414,
+      "shuffled": 0.0234,
+      "n": 2722,
+      "ok": true
+    },
+    "5s_imb5": {
+      "train_gap": 0.5473,
+      "test_gap": 0.4444,
+      "shuffled": 0.026,
+      "n": 2722,
+      "ok": true
+    },
+    "5s_imb20": {
+      "train_gap": 0.4388,
+      "test_gap": 0.4111,
+      "shuffled": 0.0218,
+      "n": 2722,
+      "ok": true
+    },
+    "5s_slope": {
+      "train_gap": 0.164,
+      "test_gap": 0.0258,
+      "shuffled": -0.0085,
+      "n": 2722,
+      "ok": false
+    },
+    "15s_imb1": {
+      "train_gap": 0.5998,
+      "test_gap": 0.1852,
+      "shuffled": 0.2388,
+      "n": 907,
+      "ok": false
+    },
+    "15s_imb5": {
+      "train_gap": 0.6485,
+      "test_gap": 0.2167,
+      "shuffled": 0.275,
+      "n": 907,
+      "ok": false
+    },
+    "15s_imb20": {
+      "train_gap": 0.394,
+      "test_gap": 0.2769,
+      "shuffled": 0.197,
+      "n": 907,
+      "ok": false
+    },
+    "15s_slope": {
+      "train_gap": 0.0172,
+      "test_gap": -0.1961,
+      "shuffled": 0.0329,
+      "n": 907,
+      "ok": false
+    }
+  }
+}

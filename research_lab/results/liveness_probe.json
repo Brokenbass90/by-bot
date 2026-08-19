@@ -1,0 +1,180 @@
+{
+  "alt_range_scalp_v1": {
+    "group": "флэт / отскок / пила",
+    "status": "ЖИВАЯ",
+    "signals": 6,
+    "detail": ""
+  },
+  "alt_support_bounce_v1": {
+    "group": "флэт / отскок / пила",
+    "status": "ЖИВАЯ",
+    "signals": 1,
+    "detail": ""
+  },
+  "alt_support_bounce_v2": {
+    "group": "флэт / отскок / пила",
+    "status": "ЖИВАЯ",
+    "signals": 12,
+    "detail": ""
+  },
+  "range_mean_reversion_v1": {
+    "group": "флэт / отскок / пила",
+    "status": "ДРУГОЙ_ИНТЕРФЕЙС",
+    "signals": null,
+    "detail": ""
+  },
+  "alt_channel_bounce_v1": {
+    "group": "флэт / отскок / пила",
+    "status": "ЖИВАЯ",
+    "signals": 15,
+    "detail": ""
+  },
+  "alt_range_reclaim_v1": {
+    "group": "флэт / отскок / пила",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "flat_resistance_fade_live": {
+    "group": "флэт / отскок / пила",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "scalper_bounce_v2": {
+    "group": "флэт / отскок / пила",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "scalper_classic_v1": {
+    "group": "флэт / отскок / пила",
+    "status": "ЖИВАЯ",
+    "signals": 35,
+    "detail": ""
+  },
+  "inplay_breakout": {
+    "group": "инплей / разгон",
+    "status": "ПАДАЕТ",
+    "signals": null,
+    "detail": "s = cls() | TypeError: InPlayBreakoutStrategy.__init__() missing 1 required positional argument: 'fetch_klines'"
+  },
+  "inplay_retest_v3": {
+    "group": "инплей / разгон",
+    "status": "TIMEOUT",
+    "signals": null
+  },
+  "inplay_retest_v4": {
+    "group": "инплей / разгон",
+    "status": "ЖИВАЯ",
+    "signals": 43,
+    "detail": ""
+  },
+  "alt_inplay_breakdown_v1": {
+    "group": "инплей / разгон",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "alt_inplay_breakdown_v2": {
+    "group": "инплей / разгон",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "pump_fade_v2": {
+    "group": "инплей / разгон",
+    "status": "ЖИВАЯ",
+    "signals": 12,
+    "detail": ""
+  },
+  "pump_momentum_v1": {
+    "group": "инплей / разгон",
+    "status": "ЖИВАЯ",
+    "signals": 6,
+    "detail": ""
+  },
+  "alt_momentum_breakout_v1": {
+    "group": "пробои",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "alt_squeeze_breakout_v1": {
+    "group": "пробои",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "impulse_volume_breakout_v1": {
+    "group": "пробои",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "session_open_breakout_v1": {
+    "group": "пробои",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "scalper_breakout_v2": {
+    "group": "пробои",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "micro_scalper_breakout_v1": {
+    "group": "пробои",
+    "status": "ЖИВАЯ",
+    "signals": 90,
+    "detail": ""
+  },
+  "breakdown_retest_v3": {
+    "group": "ретесты",
+    "status": "TIMEOUT",
+    "signals": null
+  },
+  "sloped_break_retest_v1": {
+    "group": "ретесты",
+    "status": "ЖИВАЯ",
+    "signals": 1,
+    "detail": ""
+  },
+  "event_expansion_retest_long_v1": {
+    "group": "ретесты",
+    "status": "ДРУГОЙ_ИНТЕРФЕЙС",
+    "signals": null,
+    "detail": ""
+  },
+  "btc_regime_retest_v1": {
+    "group": "ретесты",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "elder_crypto_v1": {
+    "group": "элдер",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "elder_triple_screen_v2": {
+    "group": "элдер",
+    "status": "ЖИВАЯ",
+    "signals": 95,
+    "detail": ""
+  },
+  "elder_triple_screen_v3": {
+    "group": "элдер",
+    "status": "НОЛЬ_СИГНАЛОВ",
+    "signals": 0,
+    "detail": ""
+  },
+  "alt_elder_revived_v1": {
+    "group": "элдер",
+    "status": "ЖИВАЯ",
+    "signals": 1,
+    "detail": ""
+  }
+}

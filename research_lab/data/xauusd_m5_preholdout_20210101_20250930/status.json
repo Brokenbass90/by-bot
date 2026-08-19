@@ -1,0 +1,516 @@
+{
+  "completed": [
+    "2021-01-04",
+    "2021-01-06",
+    "2021-01-12",
+    "2021-01-25",
+    "2021-01-27",
+    "2021-01-28",
+    "2021-02-05",
+    "2021-02-10",
+    "2021-02-11",
+    "2021-02-12",
+    "2021-02-15",
+    "2021-02-16",
+    "2021-02-17",
+    "2021-02-18",
+    "2021-02-19",
+    "2021-02-22",
+    "2021-02-23",
+    "2021-02-24",
+    "2021-02-25",
+    "2021-02-26",
+    "2021-03-01",
+    "2021-03-02",
+    "2021-03-04",
+    "2021-03-08",
+    "2021-03-10",
+    "2021-03-11",
+    "2021-03-17",
+    "2021-03-22",
+    "2021-03-23",
+    "2021-03-24"
+  ],
+  "empty_market_days": [
+    "2021-01-02",
+    "2021-01-03",
+    "2021-01-09",
+    "2021-01-10",
+    "2021-01-16",
+    "2021-01-17",
+    "2021-01-23",
+    "2021-01-24",
+    "2021-01-30",
+    "2021-01-31",
+    "2021-02-06",
+    "2021-02-07",
+    "2021-02-13",
+    "2021-02-14",
+    "2021-02-20",
+    "2021-02-21",
+    "2021-02-27",
+    "2021-02-28",
+    "2021-03-06",
+    "2021-03-07",
+    "2021-03-13",
+    "2021-03-14",
+    "2021-03-20",
+    "2021-03-21",
+    "2021-03-27",
+    "2021-03-28"
+  ],
+  "max_quarantined_days": 31,
+  "promotion_eligible": false,
+  "quarantined_days": [
+    {
+      "day": "2021-01-01",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/01/23h_ticks.bi5",
+      "left_utc": "2021-01-01T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-02T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 13,
+        "hours_fail": 11,
+        "hours_ok": 0,
+        "hours_total": 24,
+        "ticks": 0
+      }
+    },
+    {
+      "day": "2021-01-05",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/05/14h_ticks.bi5: <urlopen error timed out>",
+      "left_utc": "2021-01-05T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-06T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 11,
+        "hours_ok": 12,
+        "hours_total": 24,
+        "ticks": 114394
+      }
+    },
+    {
+      "day": "2021-01-07",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/07/23h_ticks.bi5: <urlopen error timed out>",
+      "left_utc": "2021-01-07T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-08T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 2,
+        "hours_ok": 21,
+        "hours_total": 24,
+        "ticks": 211241
+      }
+    },
+    {
+      "day": "2021-01-08",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/08/23h_ticks.bi5: <urlopen error [Errno 8] nodename nor servname provided, or not known>",
+      "left_utc": "2021-01-08T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-09T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 20,
+        "hours_ok": 4,
+        "hours_total": 24,
+        "ticks": 20677
+      }
+    },
+    {
+      "day": "2021-01-11",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/11/20h_ticks.bi5: <urlopen error timed out>",
+      "left_utc": "2021-01-11T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-12T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 7,
+        "hours_ok": 16,
+        "hours_total": 24,
+        "ticks": 187623
+      }
+    },
+    {
+      "day": "2021-01-13",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/13/23h_ticks.bi5",
+      "left_utc": "2021-01-13T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-14T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 10,
+        "hours_ok": 14,
+        "hours_total": 24,
+        "ticks": 107532
+      }
+    },
+    {
+      "day": "2021-01-14",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/14/23h_ticks.bi5",
+      "left_utc": "2021-01-14T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-15T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 8,
+        "hours_ok": 16,
+        "hours_total": 24,
+        "ticks": 167154
+      }
+    },
+    {
+      "day": "2021-01-15",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/15/23h_ticks.bi5: The read operation timed out",
+      "left_utc": "2021-01-15T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-16T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 12,
+        "hours_ok": 11,
+        "hours_total": 24,
+        "ticks": 134246
+      }
+    },
+    {
+      "day": "2021-01-18",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/18/23h_ticks.bi5",
+      "left_utc": "2021-01-18T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-19T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 14,
+        "hours_ok": 10,
+        "hours_total": 24,
+        "ticks": 92760
+      }
+    },
+    {
+      "day": "2021-01-19",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/19/22h_ticks.bi5: <urlopen error timed out>",
+      "left_utc": "2021-01-19T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-20T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 5,
+        "hours_ok": 18,
+        "hours_total": 24,
+        "ticks": 142726
+      }
+    },
+    {
+      "day": "2021-01-20",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/20/23h_ticks.bi5: The read operation timed out",
+      "left_utc": "2021-01-20T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-21T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 18,
+        "hours_ok": 6,
+        "hours_total": 24,
+        "ticks": 46678
+      }
+    },
+    {
+      "day": "2021-01-21",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/21/23h_ticks.bi5",
+      "left_utc": "2021-01-21T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-22T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 3,
+        "hours_ok": 20,
+        "hours_total": 24,
+        "ticks": 207101
+      }
+    },
+    {
+      "day": "2021-01-22",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/22/23h_ticks.bi5: The read operation timed out",
+      "left_utc": "2021-01-22T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-23T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 12,
+        "hours_ok": 12,
+        "hours_total": 24,
+        "ticks": 123002
+      }
+    },
+    {
+      "day": "2021-01-26",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/26/21h_ticks.bi5: <urlopen error timed out>",
+      "left_utc": "2021-01-26T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-27T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 8,
+        "hours_ok": 15,
+        "hours_total": 24,
+        "ticks": 148897
+      }
+    },
+    {
+      "day": "2021-01-29",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/00/29/23h_ticks.bi5",
+      "left_utc": "2021-01-29T00:00:00+00:00",
+      "right_utc_exclusive": "2021-01-30T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 7,
+        "hours_ok": 17,
+        "hours_total": 24,
+        "ticks": 329908
+      }
+    },
+    {
+      "day": "2021-02-01",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/01/01/18h_ticks.bi5: <urlopen error _ssl.c:1011: The handshake operation timed out>",
+      "left_utc": "2021-02-01T00:00:00+00:00",
+      "right_utc_exclusive": "2021-02-02T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 8,
+        "hours_ok": 15,
+        "hours_total": 24,
+        "ticks": 267621
+      }
+    },
+    {
+      "day": "2021-02-02",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/01/02/23h_ticks.bi5: The read operation timed out",
+      "left_utc": "2021-02-02T00:00:00+00:00",
+      "right_utc_exclusive": "2021-02-03T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 6,
+        "hours_ok": 18,
+        "hours_total": 24,
+        "ticks": 286134
+      }
+    },
+    {
+      "day": "2021-02-03",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/01/03/23h_ticks.bi5: <urlopen error _ssl.c:1011: The handshake operation timed out>",
+      "left_utc": "2021-02-03T00:00:00+00:00",
+      "right_utc_exclusive": "2021-02-04T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 6,
+        "hours_ok": 17,
+        "hours_total": 24,
+        "ticks": 196400
+      }
+    },
+    {
+      "day": "2021-02-04",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/01/04/06h_ticks.bi5: The read operation timed out",
+      "left_utc": "2021-02-04T00:00:00+00:00",
+      "right_utc_exclusive": "2021-02-05T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 5,
+        "hours_ok": 18,
+        "hours_total": 24,
+        "ticks": 250561
+      }
+    },
+    {
+      "day": "2021-02-08",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/01/08/23h_ticks.bi5: <urlopen error timed out>",
+      "left_utc": "2021-02-08T00:00:00+00:00",
+      "right_utc_exclusive": "2021-02-09T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 14,
+        "hours_ok": 9,
+        "hours_total": 24,
+        "ticks": 84648
+      }
+    },
+    {
+      "day": "2021-02-09",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/01/09/22h_ticks.bi5: <urlopen error _ssl.c:1011: The handshake operation timed out>",
+      "left_utc": "2021-02-09T00:00:00+00:00",
+      "right_utc_exclusive": "2021-02-10T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 6,
+        "hours_ok": 17,
+        "hours_total": 24,
+        "ticks": 197945
+      }
+    },
+    {
+      "day": "2021-03-03",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/03/20h_ticks.bi5: <urlopen error _ssl.c:1011: The handshake operation timed out>",
+      "left_utc": "2021-03-03T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-04T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 10,
+        "hours_ok": 13,
+        "hours_total": 24,
+        "ticks": 119817
+      }
+    },
+    {
+      "day": "2021-03-05",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/05/23h_ticks.bi5",
+      "left_utc": "2021-03-05T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-06T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 4,
+        "hours_ok": 20,
+        "hours_total": 24,
+        "ticks": 316749
+      }
+    },
+    {
+      "day": "2021-03-09",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/09/20h_ticks.bi5: <urlopen error timed out>",
+      "left_utc": "2021-03-09T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-10T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 3,
+        "hours_ok": 20,
+        "hours_total": 24,
+        "ticks": 304529
+      }
+    },
+    {
+      "day": "2021-03-12",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/12/21h_ticks.bi5: The read operation timed out",
+      "left_utc": "2021-03-12T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-13T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 2,
+        "hours_fail": 13,
+        "hours_ok": 9,
+        "hours_total": 24,
+        "ticks": 73747
+      }
+    },
+    {
+      "day": "2021-03-15",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/15/23h_ticks.bi5",
+      "left_utc": "2021-03-15T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-16T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 5,
+        "hours_ok": 19,
+        "hours_total": 24,
+        "ticks": 235880
+      }
+    },
+    {
+      "day": "2021-03-16",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/16/23h_ticks.bi5: <urlopen error _ssl.c:1011: The handshake operation timed out>",
+      "left_utc": "2021-03-16T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-17T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 0,
+        "hours_fail": 1,
+        "hours_ok": 23,
+        "hours_total": 24,
+        "ticks": 245031
+      }
+    },
+    {
+      "day": "2021-03-18",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/18/23h_ticks.bi5",
+      "left_utc": "2021-03-18T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-19T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 5,
+        "hours_ok": 18,
+        "hours_total": 24,
+        "ticks": 284481
+      }
+    },
+    {
+      "day": "2021-03-19",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/19/22h_ticks.bi5",
+      "left_utc": "2021-03-19T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-20T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 2,
+        "hours_fail": 14,
+        "hours_ok": 8,
+        "hours_total": 24,
+        "ticks": 72713
+      }
+    },
+    {
+      "day": "2021-03-25",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/25/22h_ticks.bi5: <urlopen error _ssl.c:1011: The handshake operation timed out>",
+      "left_utc": "2021-03-25T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-26T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 7,
+        "hours_ok": 16,
+        "hours_total": 24,
+        "ticks": 194753
+      }
+    },
+    {
+      "day": "2021-03-26",
+      "last_error": "HTTP 503 on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/26/22h_ticks.bi5",
+      "left_utc": "2021-03-26T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-27T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 11,
+        "hours_ok": 12,
+        "hours_total": 24,
+        "ticks": 104178
+      }
+    },
+    {
+      "day": "2021-03-29",
+      "last_error": "request error on https://datafeed.dukascopy.com/datafeed/XAUUSD/2021/02/29/18h_ticks.bi5: The read operation timed out",
+      "left_utc": "2021-03-29T00:00:00+00:00",
+      "right_utc_exclusive": "2021-03-30T00:00:00+00:00",
+      "stats": {
+        "hours_404": 0,
+        "hours_empty": 1,
+        "hours_fail": 13,
+        "hours_ok": 10,
+        "hours_total": 24,
+        "ticks": 84393
+      }
+    }
+  ],
+  "sealed_holdout_rows_decoded": 0,
+  "state": "quarantine_guard"
+}

@@ -1,0 +1,74 @@
+{
+  "clean_mod_180": {
+    "n": 103,
+    "tot": 8.1,
+    "cagr": 9.7,
+    "dd": 15.7,
+    "sharpe_ann": 0.65,
+    "tstat": 0.6,
+    "years": 0.85
+  },
+  "dirty_mod_180": {
+    "n": 103,
+    "tot": 5.6,
+    "cagr": 6.7,
+    "dd": 24.5,
+    "sharpe_ann": 0.39,
+    "tstat": 0.36,
+    "years": 0.85
+  },
+  "clean_mod_270": {
+    "n": 103,
+    "tot": 8.0,
+    "cagr": 9.6,
+    "dd": 15.7,
+    "sharpe_ann": 0.65,
+    "tstat": 0.6,
+    "years": 0.85
+  },
+  "dirty_mod_270": {
+    "n": 103,
+    "tot": 72.0,
+    "cagr": 89.8,
+    "dd": 4.7,
+    "sharpe_ann": 3.02,
+    "tstat": 2.78,
+    "years": 0.85
+  },
+  "clean_srch_180": {
+    "n": 319,
+    "tot": 27.0,
+    "cagr": 9.5,
+    "dd": 20.9,
+    "sharpe_ann": 0.65,
+    "tstat": 1.06,
+    "years": 2.62
+  },
+  "dirty_srch_180": {
+    "n": 319,
+    "tot": 0.0,
+    "cagr": 0.0,
+    "dd": 0.0,
+    "sharpe_ann": 0.0,
+    "tstat": 0.0,
+    "years": 2.62
+  },
+  "clean_srch_270": {
+    "n": 319,
+    "tot": 40.6,
+    "cagr": 13.9,
+    "dd": 22.4,
+    "sharpe_ann": 0.89,
+    "tstat": 1.44,
+    "years": 2.62
+  },
+  "dirty_srch_270": {
+    "n": 319,
+    "tot": 0.0,
+    "cagr": 0.0,
+    "dd": 0.0,
+    "sharpe_ann": 0.0,
+    "tstat": 0.0,
+    "years": 2.62
+  }
+}

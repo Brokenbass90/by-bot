@@ -1,0 +1,37 @@
+{
+  "tag": "main",
+  "generated": "2026-08-11T08:47:16Z",
+  "sig_start": "2023-01-01 00:00:00+00:00",
+  "sig_end": "2025-09-27 00:00:00+00:00",
+  "n_symbols": 88,
+  "majors": [
+    "1000BONKUSDT",
+    "AAVEUSDT",
+    "APTUSDT",
+    "ARBUSDT",
+    "BTCUSDT",
+    "CRVUSDT",
+    "ETCUSDT",
+    "ETHUSDT",
+    "FILUSDT",
+    "GALAUSDT",
+    "INJUSDT",
+    "LDOUSDT",
+    "OPUSDT",
+    "SHIB1000USDT",
+    "SOLUSDT"
+  ],
+  "btc_proxy": "BTCUSDT",
+  "n_rows": 432,
+  "params": {
+    "IMPULSE_Q": 0.95,
+    "LEVEL_LOOKBACK": 168,
+    "SWEEP_LOOKBACK": 72,
+    "TREND_MA": 168,
+    "DECLUSTER_H": 24,
+    "BURN_IN_H": 720,
+    "N_BOOT": 2000,
+    "T_MIN": 3.4,
+    "EFFECT_BPS_MIN": 40.0
+  }
+}

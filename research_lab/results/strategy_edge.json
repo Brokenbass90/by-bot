@@ -1,0 +1,666 @@
+{
+  "alt_bear_regime_continuation_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 1,
+    "side_known": 1.0,
+    "slow": false
+  },
+  "alt_channel_bounce_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 47,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 47,
+      "weeks": 17,
+      "atr": -0.119,
+      "t": -0.11,
+      "base_atr": -0.875,
+      "excess": 0.756
+    },
+    "24ч": {
+      "n": 47,
+      "weeks": 17,
+      "atr": -0.751,
+      "t": -0.33,
+      "base_atr": 0.104,
+      "excess": -0.856
+    },
+    "72ч": {
+      "n": 47,
+      "weeks": 17,
+      "atr": -2.072,
+      "t": -0.51,
+      "base_atr": -0.375,
+      "excess": -1.697
+    }
+  },
+  "alt_elder_revived_v1": {
+    "status": "ОК",
+    "symbol": "ETHUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 86,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 86,
+      "weeks": 14,
+      "atr": 0.521,
+      "t": 0.75,
+      "base_atr": -0.424,
+      "excess": 0.946
+    },
+    "24ч": {
+      "n": 86,
+      "weeks": 14,
+      "atr": 1.968,
+      "t": 1.52,
+      "base_atr": 0.725,
+      "excess": 1.243
+    },
+    "72ч": {
+      "n": 86,
+      "weeks": 14,
+      "atr": 3.708,
+      "t": 1.23,
+      "base_atr": 1.003,
+      "excess": 2.705
+    }
+  },
+  "alt_horizontal_break_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 31,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 31,
+      "weeks": 17,
+      "atr": -0.743,
+      "t": -0.72,
+      "base_atr": -0.875,
+      "excess": 0.133
+    },
+    "24ч": {
+      "n": 31,
+      "weeks": 17,
+      "atr": -1.69,
+      "t": -0.6,
+      "base_atr": 0.104,
+      "excess": -1.794
+    },
+    "72ч": {
+      "n": 31,
+      "weeks": 17,
+      "atr": 0.218,
+      "t": 0.04,
+      "base_atr": -0.375,
+      "excess": 0.592
+    }
+  },
+  "alt_inplay_breakdown_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "async_last_price",
+    "bars": 40000,
+    "signals": 32,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 32,
+      "weeks": 13,
+      "atr": -0.456,
+      "t": -0.57,
+      "base_atr": -0.875,
+      "excess": 0.42
+    },
+    "24ч": {
+      "n": 32,
+      "weeks": 13,
+      "atr": -0.542,
+      "t": -0.34,
+      "base_atr": 0.104,
+      "excess": -0.646
+    },
+    "72ч": {
+      "n": 32,
+      "weeks": 13,
+      "atr": 1.114,
+      "t": 0.25,
+      "base_atr": -0.375,
+      "excess": 1.489
+    }
+  },
+  "alt_inplay_breakdown_v2": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 5,
+    "side_known": 1.0,
+    "slow": false
+  },
+  "alt_momentum_breakout_v1": {
+    "status": "ОК",
+    "symbol": "BTCUSDT",
+    "conv": "flat_bars",
+    "bars": 40000,
+    "signals": 507,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 507,
+      "weeks": 21,
+      "atr": -0.126,
+      "t": -0.31,
+      "base_atr": -0.789,
+      "excess": 0.662
+    },
+    "24ч": {
+      "n": 503,
+      "weeks": 20,
+      "atr": -1.334,
+      "t": -1.11,
+      "base_atr": 0.654,
+      "excess": -1.988
+    },
+    "72ч": {
+      "n": 496,
+      "weeks": 20,
+      "atr": -0.292,
+      "t": -0.07,
+      "base_atr": 0.67,
+      "excess": -0.963
+    }
+  },
+  "alt_range_scalp_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 5,
+    "side_known": 1.0,
+    "slow": false
+  },
+  "alt_resistance_fade_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 8,
+    "side_known": 1.0,
+    "slow": false
+  },
+  "alt_slope_break_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 40,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 40,
+      "weeks": 20,
+      "atr": 1.056,
+      "t": 1.14,
+      "base_atr": -0.875,
+      "excess": 1.931
+    },
+    "24ч": {
+      "n": 39,
+      "weeks": 19,
+      "atr": 0.755,
+      "t": 0.35,
+      "base_atr": 0.104,
+      "excess": 0.651
+    },
+    "72ч": {
+      "n": 39,
+      "weeks": 19,
+      "atr": 0.703,
+      "t": 0.19,
+      "base_atr": -0.375,
+      "excess": 1.078
+    }
+  },
+  "alt_sloped_momentum_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 11,
+    "side_known": 1.0,
+    "slow": false
+  },
+  "alt_support_bounce_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 13,
+    "side_known": 1.0,
+    "slow": false
+  },
+  "alt_support_bounce_v2": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 54,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 54,
+      "weeks": 18,
+      "atr": -0.039,
+      "t": -0.05,
+      "base_atr": -0.875,
+      "excess": 0.836
+    },
+    "24ч": {
+      "n": 54,
+      "weeks": 18,
+      "atr": -0.916,
+      "t": -0.42,
+      "base_atr": 0.104,
+      "excess": -1.02
+    },
+    "72ч": {
+      "n": 54,
+      "weeks": 18,
+      "atr": -2.02,
+      "t": -0.43,
+      "base_atr": -0.375,
+      "excess": -1.646
+    }
+  },
+  "alt_trendline_touch_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 36,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 36,
+      "weeks": 17,
+      "atr": -0.346,
+      "t": -0.28,
+      "base_atr": -0.875,
+      "excess": 0.529
+    },
+    "24ч": {
+      "n": 35,
+      "weeks": 16,
+      "atr": -2.019,
+      "t": -0.59,
+      "base_atr": 0.104,
+      "excess": -2.123
+    },
+    "72ч": {
+      "n": 34,
+      "weeks": 16,
+      "atr": 0.368,
+      "t": 0.07,
+      "base_atr": -0.375,
+      "excess": 0.743
+    }
+  },
+  "alt_trendline_touch_v2": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 43,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 43,
+      "weeks": 18,
+      "atr": -1.135,
+      "t": -1.55,
+      "base_atr": -0.875,
+      "excess": -0.259
+    },
+    "24ч": {
+      "n": 43,
+      "weeks": 18,
+      "atr": -2.324,
+      "t": -1.22,
+      "base_atr": 0.104,
+      "excess": -2.428
+    },
+    "72ч": {
+      "n": 43,
+      "weeks": 18,
+      "atr": -0.9,
+      "t": -0.23,
+      "base_atr": -0.375,
+      "excess": -0.526
+    }
+  },
+  "alt_volume_spike_momentum_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 114,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 113,
+      "weeks": 21,
+      "atr": -0.543,
+      "t": -1.21,
+      "base_atr": -0.875,
+      "excess": 0.332
+    },
+    "24ч": {
+      "n": 112,
+      "weeks": 21,
+      "atr": -1.049,
+      "t": -0.88,
+      "base_atr": 0.104,
+      "excess": -1.153
+    },
+    "72ч": {
+      "n": 108,
+      "weeks": 20,
+      "atr": 4.322,
+      "t": 2.48,
+      "base_atr": -0.375,
+      "excess": 4.697
+    }
+  },
+  "breakdown_retest_v3": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 8,
+    "side_known": 1.0,
+    "slow": true
+  },
+  "elder_triple_screen_v2": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 354,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 353,
+      "weeks": 20,
+      "atr": 0.034,
+      "t": 0.06,
+      "base_atr": -0.875,
+      "excess": 0.909
+    },
+    "24ч": {
+      "n": 352,
+      "weeks": 19,
+      "atr": -0.421,
+      "t": -0.29,
+      "base_atr": 0.104,
+      "excess": -0.525
+    },
+    "72ч": {
+      "n": 350,
+      "weeks": 19,
+      "atr": -2.175,
+      "t": -1.1,
+      "base_atr": -0.375,
+      "excess": -1.8
+    }
+  },
+  "inplay_breakout": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "async_last_price",
+    "bars": 40000,
+    "signals": 122,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 122,
+      "weeks": 11,
+      "atr": 2.626,
+      "t": 1.63,
+      "base_atr": -0.875,
+      "excess": 3.502
+    },
+    "24ч": {
+      "n": 122,
+      "weeks": 11,
+      "atr": -0.275,
+      "t": -0.11,
+      "base_atr": 0.104,
+      "excess": -0.379
+    },
+    "72ч": {
+      "n": 122,
+      "weeks": 11,
+      "atr": -4.906,
+      "t": -1.51,
+      "base_atr": -0.375,
+      "excess": -4.531
+    }
+  },
+  "inplay_retest_v3": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 56,
+    "side_known": 1.0,
+    "slow": true,
+    "6ч": {
+      "n": 56,
+      "weeks": 11,
+      "atr": -0.419,
+      "t": -0.41,
+      "base_atr": -0.875,
+      "excess": 0.456
+    },
+    "24ч": {
+      "n": 56,
+      "weeks": 11,
+      "atr": -0.738,
+      "t": -0.35,
+      "base_atr": 0.104,
+      "excess": -0.842
+    },
+    "72ч": {
+      "n": 56,
+      "weeks": 11,
+      "atr": -3.891,
+      "t": -0.93,
+      "base_atr": -0.375,
+      "excess": -3.517
+    }
+  },
+  "inplay_retest_v4": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 115,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 115,
+      "weeks": 20,
+      "atr": 0.035,
+      "t": 0.09,
+      "base_atr": -0.875,
+      "excess": 0.91
+    },
+    "24ч": {
+      "n": 114,
+      "weeks": 19,
+      "atr": -0.219,
+      "t": -0.23,
+      "base_atr": 0.104,
+      "excess": -0.323
+    },
+    "72ч": {
+      "n": 114,
+      "weeks": 19,
+      "atr": -0.982,
+      "t": -0.68,
+      "base_atr": -0.375,
+      "excess": -0.607
+    }
+  },
+  "liquidation_cascade_entry_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 4,
+    "side_known": 1.0,
+    "slow": false
+  },
+  "micro_scalper_breakout_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 238,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 238,
+      "weeks": 21,
+      "atr": -0.444,
+      "t": -1.07,
+      "base_atr": -0.875,
+      "excess": 0.431
+    },
+    "24ч": {
+      "n": 235,
+      "weeks": 20,
+      "atr": -1.36,
+      "t": -1.11,
+      "base_atr": 0.104,
+      "excess": -1.464
+    },
+    "72ч": {
+      "n": 231,
+      "weeks": 20,
+      "atr": -1.139,
+      "t": -0.5,
+      "base_atr": -0.375,
+      "excess": -0.765
+    }
+  },
+  "micro_scalper_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 690,
+    "side_known": 1.0,
+    "slow": false,
+    "6ч": {
+      "n": 690,
+      "weeks": 21,
+      "atr": -0.047,
+      "t": -0.13,
+      "base_atr": -0.875,
+      "excess": 0.828
+    },
+    "24ч": {
+      "n": 685,
+      "weeks": 20,
+      "atr": -0.367,
+      "t": -0.53,
+      "base_atr": 0.104,
+      "excess": -0.471
+    },
+    "72ч": {
+      "n": 675,
+      "weeks": 20,
+      "atr": 0.219,
+      "t": 0.14,
+      "base_atr": -0.375,
+      "excess": 0.594
+    }
+  },
+  "pump_exhaustion_unwind_short_v1": {
+    "status": "НЕТ_СИГНАЛОВ",
+    "slow": true
+  },
+  "scalper_breakout_v2": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 2,
+    "side_known": 1.0,
+    "slow": true
+  },
+  "scalper_classic_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 45,
+    "side_known": 1.0,
+    "slow": true,
+    "6ч": {
+      "n": 45,
+      "weeks": 14,
+      "atr": -0.14,
+      "t": -0.15,
+      "base_atr": -0.875,
+      "excess": 0.735
+    },
+    "24ч": {
+      "n": 45,
+      "weeks": 14,
+      "atr": 0.722,
+      "t": 0.57,
+      "base_atr": 0.104,
+      "excess": 0.618
+    },
+    "72ч": {
+      "n": 45,
+      "weeks": 14,
+      "atr": 1.715,
+      "t": 0.52,
+      "base_atr": -0.375,
+      "excess": 2.09
+    }
+  },
+  "scalper_sweep_v2": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 2,
+    "side_known": 1.0,
+    "slow": false
+  },
+  "sloped_break_retest_v1": {
+    "status": "ОК",
+    "symbol": "SOLUSDT",
+    "conv": "ohlcv",
+    "bars": 40000,
+    "signals": 12,
+    "side_known": 1.0,
+    "slow": false
+  }
+}

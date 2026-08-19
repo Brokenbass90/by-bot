@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "schema_id": "path_sim_fail_closed_v4_next_open",
+    "strategy": "inplay_breakout",
+    "symbol": "ETHUSDT",
+    "search_end_utc": "2025-09-30T23:59:59Z",
+    "reserved_holdout_used": false,
+    "timeout_seconds": 60.0,
+    "partial_timeout_results_allowed": false,
+    "signal_information_time": "completed_5m_close",
+    "entry_execution": "next_5m_open",
+    "same_close_entry": false,
+    "variant_count": 30,
+    "physical_input": "research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/ETHUSDT.json",
+    "passport_sha256": "4a9650f44d97def8377b0805121cad07d577de5afc8c41aee60a5f48e6c5557d"
+  },
+  "0": {
+    "shift": 0,
+    "skipped": "KeyError: 'ts'"
+  },
+  "1": {
+    "shift": 1,
+    "skipped": "KeyError: 'ts'"
+  },
+  "2": {
+    "shift": 2,
+    "skipped": "KeyError: 'ts'"
+  },
+  "3": {
+    "shift": 3,
+    "skipped": "KeyError: 'ts'"
+  }
+}

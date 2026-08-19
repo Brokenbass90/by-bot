@@ -1,0 +1,132 @@
+{
+  "source": "density_all.csv",
+  "target": "fwd_bps",
+  "n_tested": 31,
+  "n_passed": 9,
+  "passed": [
+    {
+      "feats": [
+        "dist_bps",
+        "eaten_frac"
+      ],
+      "cells": [
+        2,
+        2
+      ],
+      "n": 21397,
+      "eff": 0.87938,
+      "eff_time": 0.93098,
+      "eff_sym": 0.88622
+    },
+    {
+      "feats": [
+        "dist_bps",
+        "life_s"
+      ],
+      "cells": [
+        2,
+        2
+      ],
+      "n": 26079,
+      "eff": 0.61536,
+      "eff_time": 0.64321,
+      "eff_sym": 0.45456
+    },
+    {
+      "feats": [
+        "life_s",
+        "eaten_frac"
+      ],
+      "cells": [
+        2,
+        0
+      ],
+      "n": 4155,
+      "eff": -0.50655,
+      "eff_time": -0.4986,
+      "eff_sym": -0.79997
+    },
+    {
+      "feats": [
+        "dist_bps",
+        "life_s"
+      ],
+      "cells": [
+        0,
+        2
+      ],
+      "n": 43562,
+      "eff": -0.42901,
+      "eff_time": -0.45502,
+      "eff_sym": -0.678
+    },
+    {
+      "feats": [
+        "dist_bps",
+        "max_size"
+      ],
+      "cells": [
+        0,
+        2
+      ],
+      "n": 31873,
+      "eff": -0.30396,
+      "eff_time": -0.3913,
+      "eff_sym": -0.30071
+    },
+    {
+      "feats": [
+        "dist_bps",
+        "eaten_frac"
+      ],
+      "cells": [
+        0,
+        2
+      ],
+      "n": 44347,
+      "eff": -0.26387,
+      "eff_time": -0.31734,
+      "eff_sym": -0.37524
+    },
+    {
+      "feats": [
+        "max_size",
+        "eaten_frac"
+      ],
+      "cells": [
+        2,
+        2
+      ],
+      "n": 47773,
+      "eff": 0.21021,
+      "eff_time": 0.19762,
+      "eff_sym": 0.25031
+    },
+    {
+      "feats": [
+        "dist_bps",
+        "max_size"
+      ],
+      "cells": [
+        2,
+        2
+      ],
+      "n": 51052,
+      "eff": 0.19315,
+      "eff_time": 0.21991,
+      "eff_sym": 0.12145
+    },
+    {
+      "feats": [
+        "dist_bps"
+      ],
+      "cells": [
+        2
+      ],
+      "n": 102710,
+      "eff": 0.15049,
+      "eff_time": 0.17491,
+      "eff_sym": 0.12145
+    }
+  ]
+}
