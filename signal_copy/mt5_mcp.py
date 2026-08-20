@@ -51,6 +51,13 @@ class MT5MCP:
                 detail = e.read().decode("utf-8", "replace")[:300]
             except Exception:
                 detail = ""
+            if e.code == 401:
+                raise MT5Error(
+                    "ключ доступа к MCP не подошёл. В MetaTrader 5 открой "
+                    "Сервис → Настройки → MCP, скопируй поле «Ключ API» и положи "
+                    "его в signal_copy/.env строкой SIGCOPY_MT5_TOKEN=<ключ>, "
+                    "затем перезапусти app.py"
+                ) from None
             raise MT5Error(f"терминал ответил HTTP {e.code}: {detail}") from None
         except urllib.error.URLError as e:
             raise MT5Error(f"терминал недоступен ({e.reason}). MT5 запущен?") from None

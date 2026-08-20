@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import hashlib
+import secrets
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -102,7 +103,7 @@ def build_cards(text: str, mcp, conn, use_llm: bool = True) -> list[Card]:
         engine = "rules"
 
         # правила не справились — зовём модель, но только тогда
-        if use_llm and p.kind in ("UNKNOWN",) or (p.kind == "SIGNAL" and p.errors):
+        if use_llm and (p.kind == "UNKNOWN" or (p.kind == "SIGNAL" and p.errors)):
             try:
                 from llm import parse_with_llm
                 got, note = parse_with_llm(block)
@@ -299,7 +300,16 @@ def persist_and_arm(cards: list[Card], text: str, mcp, conn, source: str = "past
             "take_profits": c.take_profits, "chosen_tp": c.chosen_tp,
         }, account, c.market_bid)
         c.group_id = gid
+        try:
+            import journal
+            journal.remember_planned_risk(conn, gid, c.risk_cash or 0.0)
+        except Exception:
+            pass
+        # Ключ идемпотентности рождается ВМЕСТЕ с подтверждением, до отправки.
+        # Так повторный клик или ретрай сети не смогут открыть вторую позицию.
+        client_id = f"sc-{gid}-{secrets.token_hex(4)}"
         c.token = store.issue_approval(conn, gid, {
+            "client_id": client_id,
             "symbol": c.symbol, "side": c.side, "lot": c.lot,
             "sl": c.stop_loss, "tp": c.chosen_tp, "group_id": gid,
             "risk_cash": c.risk_cash, "equity_ccy": c.currency,

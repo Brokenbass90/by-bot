@@ -5,6 +5,30 @@
 переопределить переменной окружения — удобно, чтобы не править файл.
 """
 import os
+from pathlib import Path
+
+
+def _load_env_file() -> None:
+    """Читаем signal_copy/.env, если он есть.
+
+    Ключ MCP терминал перевыпускает при нажатии «Генерировать», и лазить за
+    ним в код каждый раз — плохо. Держим его в .env рядом с модулем: файл
+    не в git, правится одной строкой, перезапуск подхватывает.
+    """
+    path = Path(__file__).parent / ".env"
+    if not path.exists():
+        return
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key, value = key.strip(), value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
+_load_env_file()
 
 
 def _flag(name: str, default: str = "1") -> bool:
@@ -25,7 +49,19 @@ def _ints(name: str, default: tuple[int, ...]) -> tuple[int, ...]:
 
 # ── связь с терминалом ───────────────────────────────────────────────────
 MT5_URL   = os.getenv("SIGCOPY_MT5_URL", "http://127.0.0.1:22346/mcp")
-MT5_TOKEN = os.getenv("SIGCOPY_MT5_TOKEN", "")
+# Ключа по умолчанию НЕТ и быть не должно. Он живёт только в signal_copy/.env,
+# который не попадает в git. Один раз зашитый в код секрет уже утёк в коммит —
+# больше такой возможности нет: без .env модуль просто не стартует.
+MT5_TOKEN = os.getenv("SIGCOPY_MT5_TOKEN", "").strip()
+
+if not MT5_TOKEN:
+    raise SystemExit(
+        "\n  Нет ключа MCP.\n"
+        "  1. MetaTrader 5 -> Сервис -> Настройки -> MCP -> нажми «Генерировать»\n"
+        "  2. Скопируй поле «Ключ API»\n"
+        "  3. Положи в signal_copy/.env строкой:  SIGCOPY_MT5_TOKEN=<ключ>\n"
+        "  4. Запусти снова\n"
+    )
 
 # ── главный рубильник ────────────────────────────────────────────────────
 # 0 — бот разбирает сигналы и считает лот, но ордера не отправляет вообще.

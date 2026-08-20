@@ -18,16 +18,18 @@ from fastapi import FastAPI, Body
 from fastapi.responses import HTMLResponse, JSONResponse, Response
 import uvicorn
 
+import json
 import traceback
 from datetime import datetime, timedelta, timezone
 
 import chat
 import config
+import journal
 import store
 from mt5_mcp import MT5MCP, MT5Error
 from pipeline import build_cards, persist_and_arm
 from executor import (execute_approved, move_sl, list_positions,
-                      close_position, breakeven)
+                      prepare_position_action, execute_position_action)
 
 app = FastAPI(title="signal_copy", docs_url=None, redoc_url=None)
 _mcp = MT5MCP(config.MT5_URL, config.MT5_TOKEN)
@@ -100,26 +102,44 @@ def api_move_sl(group_id: int = Body(...), new_sl: float = Body(...)):
 @app.get("/api/positions")
 def api_positions():
     try:
-        return {"ok": True, "positions": list_positions(mcp(), store.connect())}
+        m, conn = mcp(), store.connect()
+        pos = list_positions(m, conn)
+        # Сверяем с журналом: если позиция пропала — значит закрылась,
+        # и её итог надо записать, пока он не потерялся.
+        closed = journal.reconcile(conn, m, pos)
+        return {"ok": True, "positions": pos, "just_closed": closed}
     except MT5Error as e:
         _mcp.session_id = None
         return {"ok": False, "error": str(e), "positions": []}
 
 
-@app.post("/api/close")
-def api_close(ticket: int = Body(...), symbol: str = Body(...)):
+@app.post("/api/action/prepare")
+def api_action_prepare(action: str = Body(...), ticket: int = Body(...),
+                       symbol: str = Body(...)):
     try:
-        return close_position(ticket, symbol, mcp(), store.connect())
+        return prepare_position_action(action, ticket, symbol, mcp(), store.connect())
     except MT5Error as e:
+        _mcp.session_id = None
         return {"ok": False, "error": str(e)}
+
+
+@app.post("/api/action/execute")
+def api_action_execute(token: str = Body(..., embed=True)):
+    try:
+        return execute_position_action(token, mcp(), store.connect())
+    except MT5Error as e:
+        _mcp.session_id = None
+        return {"ok": False, "error": str(e)}
+
+
+@app.post("/api/close")
+def api_close_disabled():
+    return {"ok": False, "error": "прямое закрытие отключено; требуется одноразовое owner approval"}
 
 
 @app.post("/api/breakeven")
-def api_breakeven(ticket: int = Body(...), symbol: str = Body(...)):
-    try:
-        return breakeven(ticket, symbol, mcp(), store.connect())
-    except MT5Error as e:
-        return {"ok": False, "error": str(e)}
+def api_breakeven_disabled():
+    return {"ok": False, "error": "прямой безубыток отключён; требуется одноразовое owner approval"}
 
 
 @app.post("/api/chat")
@@ -162,9 +182,7 @@ def api_chart(symbol: str = "EURUSD", period: str = "H1", bars: int = 300):
     except MT5Error as e:
         _mcp.session_id = None
         return {"ok": False, "error": str(e)}
-    rows = got.get("rates") or got.get("candles") or got.get("bars") or []
-    if isinstance(got, list):
-        rows = got
+    rows = _find_candles(got)
     out = []
     for r in rows:
         t = r.get("time") or r.get("datetime") or r.get("ts")
@@ -178,8 +196,13 @@ def api_chart(symbol: str = "EURUSD", period: str = "H1", bars: int = 300):
                     "open": float(r.get("open", 0)), "high": float(r.get("high", 0)),
                     "low": float(r.get("low", 0)), "close": float(r.get("close", 0))})
     out.sort(key=lambda x: x["time"])
+    debug = {}
+    if not out:
+        debug = {"got_type": type(got).__name__,
+                 "top_keys": list(got)[:12] if isinstance(got, dict) else None,
+                 "sample": json.dumps(got, ensure_ascii=False, default=str)[:600]}
     return {"ok": True, "symbol": symbol, "period": period, "candles": out,
-            "raw_keys": list(rows[0].keys()) if rows else []}
+            "raw_keys": list(rows[0].keys()) if rows else [], "debug": debug}
 
 
 @app.post("/api/input")
@@ -245,6 +268,36 @@ def api_testsignal(symbol: str = "EURUSD", side: str = "BUY", risk_r: float = 1.
             "note": "сигнал собран вокруг текущей цены, поэтому не протухший"}
 
 
+def _find_candles(node, depth: int = 0):
+    """Терминал может назвать список свечей как угодно. Ищем по содержимому:
+    список словарей, в которых есть open/high/low/close."""
+    if depth > 6:
+        return []
+    if isinstance(node, list):
+        if node and isinstance(node[0], dict):
+            keys = {k.lower() for k in node[0]}
+            if {"open", "high", "low", "close"} <= keys:
+                return node
+        for item in node[:5]:
+            got = _find_candles(item, depth + 1)
+            if got:
+                return got
+        return []
+    if isinstance(node, dict):
+        for value in node.values():
+            got = _find_candles(value, depth + 1)
+            if got:
+                return got
+    return []
+
+
+@app.get("/api/journal")
+def api_journal():
+    conn = store.connect()
+    return {"ok": True, "results": journal.results(conn, 100),
+            "metrics": journal.metrics(conn)}
+
+
 @app.get("/api/trades")
 def api_trades():
     conn = store.connect()
@@ -254,7 +307,6 @@ def api_trades():
 PAGE = r"""<!doctype html><html lang=ru><meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
 <title>signal_copy</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/4.1.3/lightweight-charts.standalone.production.js"></script>
 <style>
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
@@ -270,11 +322,18 @@ body{background:#12141a;color:#e8eaf0;font:15px/1.5 -apple-system,system-ui,sans
 .feed{flex:1 1 auto;display:flex;flex-direction:column;min-width:0;border-right:1px solid #1f2430}
 #log{flex:1 1 auto;overflow-y:auto;padding:16px}
 .rail{width:290px;flex:0 0 290px;overflow-y:auto;padding:12px;background:#0f1117}
+.railtabs{display:flex;gap:4px;margin-bottom:8px}
+.rt{padding:5px 11px;font-size:12px;color:#6e7681;cursor:pointer;border-radius:6px}
+.rt.act{color:#fff;background:#272b38}
+.rpane{display:none}.rpane.act{display:block}
+.stat{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;
+  border-bottom:1px solid #181c25}
+.stat b{color:#e8eaf0;font-family:ui-monospace,Menlo,monospace}
 .rail h3{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#6e7681;
   margin:12px 0 7px;font-weight:600}
 .bottom{flex:0 0 auto;border-top:1px solid #1f2430;background:#0f1117}
 .chartbar{padding:7px 14px;display:flex;gap:8px;align-items:center;font-size:13px}
-#chart{height:230px}
+#chart{width:100%;height:230px;display:block}
 .compose{padding:10px 16px;border-top:1px solid #1f2430;flex:0 0 auto}
 textarea{width:100%;background:#0d0f14;color:#e8eaf0;border:1px solid #272b38;
   border-radius:10px;padding:10px;font:14px/1.45 ui-monospace,Menlo,monospace;
@@ -343,8 +402,18 @@ pre{background:#0d0f14;border-radius:8px;padding:8px;font-size:12px;overflow:aut
   </div>
 
   <div class=rail>
-    <h3>Открытые позиции</h3><div id=pos></div>
-    <h3>Разобранные сигналы</h3><div id=sigs></div>
+    <div class=railtabs>
+      <span class="rt act" onclick="rtab(0,this)">Позиции</span>
+      <span class=rt onclick="rtab(1,this)">Журнал</span>
+    </div>
+    <div class="rpane act">
+      <div id=pos></div>
+      <h3>Разобранные сигналы</h3><div id=sigs></div>
+    </div>
+    <div class=rpane>
+      <div id=stats></div>
+      <h3>Закрытые сделки</h3><div id=hist></div>
+    </div>
   </div>
 </div>
 
@@ -358,7 +427,7 @@ pre{background:#0d0f14;border-radius:8px;padding:8px;font-size:12px;overflow:aut
     <button class="ghost mini" onclick=drawChart()>Обновить</button>
     <span id=cinfo style="color:#6e7681;font-size:12px"></span>
   </div>
-  <div id=chart></div>
+  <canvas id=chart></canvas>
 </div>
 
 <script>
@@ -477,11 +546,21 @@ async function go(token,btn){
   if(!r.ok&&r.response)box.insertAdjacentHTML('beforeend','<pre>'+esc(JSON.stringify(r.response,null,1))+'</pre>');
   scroll();boot();loadRail();
 }
+async function approvedAction(action,ticket,symbol){
+  const label=action==='close'?'ЗАКРЫТЬ позицию':'ПЕРЕНЕСТИ стоп в безубыток';
+  if(!confirm(`${label} ${symbol}, ticket ${ticket}?`))
+    return {ok:false,cancelled:true,error:'отменено владельцем'};
+  const prep=await (await fetch('/api/action/prepare',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action,ticket,symbol})})).json();
+  if(!prep.ok)return prep;
+  return await (await fetch('/api/action/execute',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({token:prep.token})})).json();
+}
 async function chatAct(action,ticket,symbol,btn){
   btn.disabled=true;
-  const r=await (await fetch(action==='close'?'/api/close':'/api/breakeven',
-    {method:'POST',headers:{'Content-Type':'application/json'},
-     body:JSON.stringify({ticket,symbol})})).json();
+  const r=await approvedAction(action,ticket,symbol);
   btn.insertAdjacentHTML('afterend', r.ok?'<div class="msg good">✅ выполнено</div>'
     :'<div class="msg err">⛔ '+esc(r.error)+'</div>');
   loadRail();boot();
@@ -500,6 +579,10 @@ async function loadRail(){
   const [p,t]=await Promise.all([
     (await fetch('/api/positions')).json(),
     (await fetch('/api/trades')).json()]);
+  (p.just_closed||[]).forEach(c=>bubble('assistant',
+    `📕 ${c.symbol}: позиция закрыта — ${c.outcome}, ${c.profit>0?'+':''}${(+c.profit).toFixed(2)}`+
+    (c.r!=null?` (${c.r}R)`:'')));
+  if((p.just_closed||[]).length)loadJournal();
   const pb=$('#pos');
   if(!p.ok){pb.innerHTML='<div class=sub style="color:#6e7681">нет связи</div>'}
   else if(!p.positions.length){pb.innerHTML='<div class=sub style="color:#6e7681">пусто</div>'}
@@ -523,59 +606,157 @@ async function loadRail(){
     : '<div class=sub style="color:#6e7681">пока ничего</div>';
 }
 loadRail();setInterval(loadRail,5000);
+loadJournal();setInterval(loadJournal,15000);
+
+function rtab(i,el){
+  document.querySelectorAll('.rt').forEach(x=>x.classList.remove('act'));
+  document.querySelectorAll('.rpane').forEach(x=>x.classList.remove('act'));
+  el.classList.add('act');
+  document.querySelectorAll('.rpane')[i].classList.add('act');
+  if(i===1)loadJournal();
+}
+
+async function loadJournal(){
+  const r=await (await fetch('/api/journal')).json();
+  const m=r.metrics||{}, sb=$('#stats');
+  if(!m.trades){
+    sb.innerHTML='<div class=sub style="color:#6e7681">Закрытых сделок пока нет. '+
+      'Появятся сами, как только позиция закроется по стопу, цели или вручную.</div>';
+  }else{
+    const row=(k,v)=>`<div class=stat><span>${k}</span><b>${v}</b></div>`;
+    sb.innerHTML=
+      row('сделок', m.trades)+
+      row('винрейт', m.win_rate+'% ('+m.wins+'/'+m.trades+')')+
+      row('итог', (m.total_profit>0?'+':'')+m.total_profit)+
+      row('средний плюс', '+'+m.avg_win)+
+      row('средний минус', '−'+m.avg_loss)+
+      row('ожидание на сделку', (m.expectancy>0?'+':'')+m.expectancy)+
+      row('profit factor', m.profit_factor??'—')+
+      row('просадка', m.max_drawdown)+
+      row('средний R', m.avg_r??'—')+
+      row('суммарно R', m.total_r??'—')+
+      (m.r_error_band?`<div class=sub style="color:#6e7681;margin-top:6px;font-size:11px">
+        При таком числе сделок средний R различим с точностью ±${m.r_error_band}R.
+        Пока разброс шире самого значения, выводы делать рано.</div>`:'');
+  }
+  const hb=$('#hist'), rows=r.results||[];
+  hb.innerHTML=rows.length?rows.map(x=>{
+    const dg=dgOf(x.symbol), pl=+x.profit+(+x.swap||0);
+    const when=new Date((x.closed_ts||0)*1000).toLocaleString('ru-RU',
+      {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return `<div class="pin ${pl>=0?'win':'lose'}"
+        onclick="showOn('${x.symbol}',${x.price_open},${x.sl||0},${x.tp||0})">
+      <b>${x.symbol} ${String(x.side).includes('b')?'BUY':'SELL'} ${x.volume}</b>
+      <span style="float:right;color:${pl>=0?'#3fb950':'#f85149'}">${pl>0?'+':''}${pl.toFixed(2)}</span>
+      <div class=sub>${x.outcome} · ${x.r_multiple!=null?x.r_multiple+'R':'—'} · ${when}</div>
+      <div class=sub style="font-size:11px">вход ${n(x.price_open,dg)} → выход ${n(x.price_exit,dg)}</div>
+    </div>`}).join('') : '<div class=sub style="color:#6e7681">пусто</div>';
+}
 
 async function be(ticket,symbol,btn){
   btn.disabled=true;
-  const r=await (await fetch('/api/breakeven',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({ticket,symbol})})).json();
+  const r=await approvedAction('breakeven',ticket,symbol);
   bubble('assistant', r.ok?`✅ ${symbol}: стоп перенесён в ${r.new_sl}`:`⛔ ${symbol}: ${r.error}`);
   loadRail();
 }
 async function closePos(ticket,symbol,btn){
   btn.disabled=true;btn.textContent='…';
-  const r=await (await fetch('/api/close',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({ticket,symbol})})).json();
+  const r=await approvedAction('close',ticket,symbol);
   bubble('assistant', r.ok?`✅ ${symbol}: позиция закрыта`:`⛔ ${symbol}: ${r.error}`);
   loadRail();boot();
 }
 
-/* ───────── график ───────── */
-let chartObj=null,series=null,lines=[];
+/* ───────── график: рисуем сами, без внешних библиотек ───────── */
+let CANDLES=[], CHART_INFO="";
 function showOn(symbol,entry,sl,tp){
   const sel=$('#cs');
   if(![...sel.options].some(o=>o.value===symbol||o.textContent===symbol)){
     const o=document.createElement('option');o.textContent=symbol;sel.appendChild(o)}
   sel.value=symbol;SEL={entry,sl,tp};
-  document.querySelectorAll('.pin').forEach(x=>x.classList.remove('sel'));
   drawChart();
 }
+
 async function drawChart(){
   const symbol=$('#cs').value||'EURUSD', period=$('#cp').value;
   $('#cinfo').textContent='загружаю…';
-  const r=await (await fetch(`/api/chart?symbol=${symbol}&period=${period}&bars=300`)).json();
+  let r;
+  try{ r=await (await fetch(`/api/chart?symbol=${symbol}&period=${period}&bars=300`)).json(); }
+  catch(e){ $('#cinfo').textContent='не смог получить свечи: '+e; return }
   if(!r.ok||!(r.candles||[]).length){
-    $('#cinfo').textContent='нет данных'+(r.error?': '+r.error:'');return}
-  if(!chartObj){
-    chartObj=LightweightCharts.createChart($('#chart'),{
-      layout:{background:{color:'#0d0f14'},textColor:'#9aa3b2'},
-      grid:{vertLines:{color:'#181c25'},horzLines:{color:'#181c25'}},
-      timeScale:{timeVisible:true,borderColor:'#272b38'},
-      rightPriceScale:{borderColor:'#272b38'},autoSize:true});
-    series=chartObj.addCandlestickSeries({upColor:'#3fb950',downColor:'#f85149',
-      borderVisible:false,wickUpColor:'#3fb950',wickDownColor:'#f85149'});
-    new ResizeObserver(()=>chartObj&&chartObj.timeScale().fitContent()).observe($('#chart'));
+    CANDLES=[];paint();
+    $('#cinfo').textContent='нет свечей'+(r.error?': '+r.error:'')+
+      (r.debug&&r.debug.top_keys?' · терминал вернул: '+r.debug.top_keys.join(', '):'');
+    if(r.debug)console.log('ответ терминала по свечам:',r.debug);
+    return;
   }
-  series.setData(r.candles);
-  lines.forEach(l=>{try{series.removePriceLine(l)}catch(e){}});lines=[];
-  if(SEL){
-    const add=(price,color,title)=>{if(price&&+price>0)
-      lines.push(series.createPriceLine({price:+price,color,lineWidth:1,
-        lineStyle:2,axisLabelVisible:true,title}))};
-    add(SEL.entry,'#2f6feb','вход');add(SEL.sl,'#f85149','стоп');add(SEL.tp,'#3fb950','цель');
-  }
-  chartObj.timeScale().fitContent();
-  $('#cinfo').textContent=`${symbol} ${period} · ${r.candles.length} свечей`;
+  CANDLES=r.candles;
+  CHART_INFO=`${symbol} ${period} · ${r.candles.length} свечей`;
+  paint();
 }
+
+function paint(){
+  const cv=$('#chart'); if(!cv)return;
+  const dpr=window.devicePixelRatio||1;
+  const W=cv.clientWidth||800, H=cv.clientHeight||230;
+  cv.width=W*dpr; cv.height=H*dpr;
+  const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
+  g.clearRect(0,0,W,H);
+  g.fillStyle='#0d0f14'; g.fillRect(0,0,W,H);
+  $('#cinfo').textContent=CHART_INFO;
+  if(!CANDLES.length){
+    g.fillStyle='#3a3f4d';g.font='13px -apple-system,system-ui';
+    g.fillText('нет данных',14,H/2);return;
+  }
+  const padR=62, padT=8, padB=16, padL=6;
+  const w=W-padR-padL, h=H-padT-padB;
+
+  let lo=Infinity, hi=-Infinity;
+  CANDLES.forEach(c=>{lo=Math.min(lo,c.low);hi=Math.max(hi,c.high)});
+  [SEL&&SEL.entry, SEL&&SEL.sl, SEL&&SEL.tp].forEach(v=>{
+    if(v&&+v>0){lo=Math.min(lo,+v);hi=Math.max(hi,+v)}});
+  if(!(hi>lo)){hi=lo+1}
+  const pad=(hi-lo)*0.06; lo-=pad; hi+=pad;
+  const y=v=>padT+(hi-v)/(hi-lo)*h;
+  const step=w/CANDLES.length, bw=Math.max(1,Math.min(9,step*0.68));
+
+  // сетка и подписи цены
+  const dg=dgOf($('#cs').value);
+  g.strokeStyle='#181c25';g.fillStyle='#5b6270';
+  g.font='10px ui-monospace,Menlo,monospace';g.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const v=lo+(hi-lo)*i/4, yy=Math.round(y(v))+0.5;
+    g.beginPath();g.moveTo(padL,yy);g.lineTo(padL+w,yy);g.stroke();
+    g.fillText((+v).toFixed(dg),padL+w+6,yy+3);
+  }
+
+  // свечи
+  CANDLES.forEach((c,i)=>{
+    const x=padL+i*step+step/2, up=c.close>=c.open;
+    g.strokeStyle=g.fillStyle=up?'#3fb950':'#f85149';
+    g.beginPath();g.moveTo(Math.round(x)+0.5,y(c.high));
+    g.lineTo(Math.round(x)+0.5,y(c.low));g.stroke();
+    const yo=y(c.open), yc=y(c.close);
+    g.fillRect(x-bw/2, Math.min(yo,yc), bw, Math.max(1,Math.abs(yc-yo)));
+  });
+
+  // линии сделки
+  if(SEL){
+    const line=(v,color,label)=>{
+      if(!v||+v<=0)return;
+      const yy=Math.round(y(+v))+0.5;
+      if(yy<padT||yy>padT+h)return;
+      g.strokeStyle=color;g.setLineDash([5,4]);g.lineWidth=1;
+      g.beginPath();g.moveTo(padL,yy);g.lineTo(padL+w,yy);g.stroke();
+      g.setLineDash([]);
+      g.fillStyle=color;g.font='10px -apple-system,system-ui';
+      g.fillText(label,padL+4,yy-3);
+    };
+    line(SEL.entry,'#2f6feb','вход');
+    line(SEL.sl,'#f85149','стоп');
+    line(SEL.tp,'#3fb950','цель');
+  }
+}
+addEventListener('resize',paint);
 </script></html>"""
 
 
