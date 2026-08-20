@@ -11528,7 +11528,7 @@ async def try_sloped_entry_async(symbol: str, price: float):
             "stop_price": float(sl_r),
             "stop_pct": float(stop_pct),
             "target_risk_fraction": float(RISK_PER_TRADE_PCT) / 100.0,
-            "strategy_risk_multiplier": float(effective_att1_risk_mult),
+            "strategy_risk_multiplier": float(SLOPED_RISK_MULT),
             "volatility_multiplier": float(_get_vol_adj_mult()),
             "orchestrator_risk_multiplier": float(ORCH_GLOBAL_RISK_MULT or 0.0),
             "allocator_risk_multiplier": float(ALLOCATOR_GLOBAL_RISK_MULT or 0.0),
