@@ -19,6 +19,7 @@ from scripts.collect_inplay_prospective_shadow import INTERVAL_MS, replay
 
 DEFAULT_DATA = ROOT / "research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/ETHUSDT.json"
 DEFAULT_REFERENCE = ROOT / "research_lab/results/path_sim_v4_causal_preholdout_r2/run_passport.json"
+FROZEN_BASELINE_RAW_COUNTS = (32, 40, 62, 81)
 
 
 def _sha256(path: Path) -> str:
@@ -91,6 +92,30 @@ def audit(data_path: Path, reference_passport: Path, *, slice_days: int, slices:
     }
 
 
+def frozen_baseline_errors(result: dict[str, Any]) -> list[str]:
+    """Return hard startup blockers for the frozen prospective contract.
+
+    These checks deliberately bind only code identity and signal *frequency* on
+    pre-holdout data.  They do not make any claim about edge or promotion.
+    """
+    errors: list[str] = []
+    sealed_rows = result.get("sealed_holdout_rows_decoded")
+    if sealed_rows is None or int(sealed_rows) != 0:
+        errors.append("sealed_holdout_was_decoded")
+    if not bool(result.get("current_code_matches_reference")):
+        errors.append("code_hash_mismatch")
+    observed = tuple(
+        int(row.get("raw_signals") or 0)
+        for row in list(result.get("slices") or [])
+    )
+    if observed != FROZEN_BASELINE_RAW_COUNTS:
+        errors.append(
+            "historical_frequency_mismatch:"
+            f"expected={list(FROZEN_BASELINE_RAW_COUNTS)}:observed={list(observed)}"
+        )
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=DEFAULT_DATA)
@@ -98,6 +123,11 @@ def main() -> int:
     parser.add_argument("--slice-days", type=int, default=35)
     parser.add_argument("--slices", type=int, default=4)
     parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--require-frozen-baseline",
+        action="store_true",
+        help="exit nonzero unless hashes and pre-holdout signal counts match the frozen contract",
+    )
     args = parser.parse_args()
     result = audit(args.data, args.reference_passport, slice_days=args.slice_days, slices=args.slices)
     text = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
@@ -105,6 +135,12 @@ def main() -> int:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(text, encoding="utf-8")
     print(text, end="")
+    if args.require_frozen_baseline:
+        errors = frozen_baseline_errors(result)
+        if errors:
+            print(json.dumps({"startup_gate": "FAIL", "errors": errors}, ensure_ascii=False))
+            return 2
+        print(json.dumps({"startup_gate": "PASS", "authority": "research_only"}, ensure_ascii=False))
     return 0
 
 
