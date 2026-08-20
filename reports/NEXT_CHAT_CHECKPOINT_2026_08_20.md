@@ -11,13 +11,14 @@
 
 ## Проверить первым
 
-1. `screen -ls`: `research_inplay_prospective`, `research_att1_limit_paper`, `research_bybit_wide_m5_20260820`.
-2. Freshness:
+1. MT5 security: старый токен отозван; owner явно разрешил/не разрешил `force-with-lease`; local safe head начинается с `4e55586`.
+2. `screen -ls`: `research_inplay_prospective`, `research_att1_limit_paper`, `research_bybit_wide_m5_20260820`.
+3. Freshness:
    - `runtime/inplay_prospective_shadow_v1/historical_frequency_startup_gate.json`;
    - `runtime/att1_limit_execution_paper/status.json`;
    - `logs/bybit_wide_m5_preholdout_20260820.log`.
-3. Direct broker truth before any live statement.
-4. Scoped Git status; do not capture the remaining dirty worktree.
+4. Direct broker truth before any live statement.
+5. Scoped Git status; do not capture the remaining dirty worktree.
 
 ## Следующая разработка
 
