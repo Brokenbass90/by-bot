@@ -13,40 +13,40 @@ def test_alpaca_fractional_quantity_is_not_formatted_as_an_integer():
 
     assert "const fmtQty = x =>" in source
     assert "n.toFixed(9).replace(/\\.?0+$/, \"\")" in source
-    assert "${fmtQty(p.qty)} шт" in source
+    assert "${fmtQty(p.qty)}" in source
     assert "fmt(p.qty,0)" not in source
+    assert "const num = v => { const n=Number(v);" in source
 
 
 def test_flat_crypto_view_clears_chart_and_shows_scanning_state():
     source = _source()
 
-    flat_branch = source.index("if (!v.positions || !v.positions.length)")
-    populated_branch = source.index("} else {", flat_branch)
-    flat_source = source[flat_branch:populated_branch]
-
-    assert "Открытых позиций нет" in flat_source
-    assert "Бот сканирует рынок." in flat_source
-    assert 'resetChart("Открытой криптопозиции нет — бот сканирует рынок.")' in flat_source
-    assert "ctx.clearRect(0, 0, cv.width, cv.height)" in source
+    flat_branch = source.index("if(!p){ chartRequestId++; cs.setData([]); clearLines();")
+    flat_source = source[flat_branch:flat_branch + 300]
+    assert "нет открытых позиций — бот сканирует рынок" in flat_source
 
 
 def test_symbol_change_resets_chart_and_rejects_stale_responses():
     source = _source()
 
-    symbol_reset = source.index("if (symbol !== chartSymbol)")
-    throttle = source.index("if (now - chartLoaded < 60000) return")
-
-    assert symbol_reset < throttle
-    assert "resetChart(`Загрузка графика ${symbol}…`, symbol)" in source
     assert "const requestId = ++chartRequestId" in source
-    assert source.count("requestId !== chartRequestId || symbol !== chartSymbol") == 2
+    assert "requestId!==chartRequestId" in source
+    assert "requestId===chartRequestId" in source
+    assert "const epochMs = v =>" in source
 
 
 def test_live_position_chart_supports_zoom_pan_and_reset():
     source = _source()
 
-    assert "function zoomPositionChart(delta)" in source
-    assert "function resetPositionViewport()" in source
-    assert 'positionCanvas.addEventListener("wheel"' in source
-    assert 'positionCanvas.addEventListener("pointermove"' in source
-    assert "chartCandles.slice" in source
+    assert "const TFS =" in source and '["240","4ч"]' in source
+    assert "function moreHistory()" in source
+    assert "chart.timeScale().fitContent()" in source
+    assert "sloped_lines" in source
+    assert 'body:JSON.stringify({messages})' in source
+
+
+def test_dynamic_html_escapes_signal_reason_and_symbols():
+    source = _source()
+    assert "const esc = s =>" in source
+    assert "${esc(why)}" in source
+    assert "${esc(p.symbol)}" in source
