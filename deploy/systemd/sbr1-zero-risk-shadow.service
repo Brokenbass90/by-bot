@@ -1,0 +1,34 @@
+[Unit]
+Description=SBR1 public zero-risk shadow (no orders, no private API)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/by-bot
+Environment=PYTHONHASHSEED=0
+Environment=TZ=UTC
+UMask=0077
+ExecStartPre=/root/by-bot/.venv/bin/python scripts/run_sbr1_zero_risk_shadow.py --config /root/by-bot/runtime/config/sbr1_zero_risk_shadow.json
+ExecStart=/root/by-bot/.venv/bin/python scripts/run_sbr1_zero_risk_shadow.py --config /root/by-bot/runtime/config/sbr1_zero_risk_shadow.json --once --ack ZERO_RISK_SHADOW_ONLY
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=read-only
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+ReadWritePaths=/root/by-bot/runtime/sbr1_zero_risk_shadow
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6
+SystemCallArchitectures=native
+MemoryMax=768M
+CPUQuota=75%

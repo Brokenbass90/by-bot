@@ -1,0 +1,12 @@
+[Unit]
+Description=Run SBR1 zero-risk shadow every five minutes at second 20 UTC
+
+[Timer]
+OnCalendar=*-*-* *:0/5:20 UTC
+AccuracySec=1s
+RandomizedDelaySec=0
+Persistent=false
+Unit=sbr1-zero-risk-shadow.service
+
+[Install]
+WantedBy=timers.target
