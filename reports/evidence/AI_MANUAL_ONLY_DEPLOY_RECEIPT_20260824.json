@@ -1,0 +1,37 @@
+{
+  "schema_id": "ai_manual_only_deploy_receipt_v1",
+  "as_of_utc": "2026-08-24T08:14:00Z",
+  "server": "64.226.73.119",
+  "paid_background_routes_active": 0,
+  "manual_deepseek_available": true,
+  "bot_operator_use_api": false,
+  "bot_trade_review_use_api": false,
+  "post_trade_ai_enabled": false,
+  "disabled_cron_routes": [
+    "post_trade_ai_review.py --prefer-deepseek",
+    "deepseek_weekly_cron.py",
+    "weekly_trade_forensics_ai_report.py --ai"
+  ],
+  "crontab_backup_path": "/root/by-bot/runtime/cron_backups/crontab_before_manual_only_ai_20260824T0748Z.txt",
+  "crontab_backup_sha256": "c8029109780671ded9a305136f7f1fc0eae0fbd18a297cd0101b5b417b3ceff0",
+  "installed_crontab_sha256": "bbfc2c95f643bb3c9921f77e3f2e67837fc95c98651eab72aa56536f6825ce78",
+  "auto_apply_cron_mode": "explicit_dry_run",
+  "deployed_files": {
+    "scripts/auto_apply_research_winner.py": "2b65abf19608d7ae54d9cdddc7431dcc839967779e30e63921d80fbc1db2896e",
+    "scripts/setup_server_crons.sh": "53afc949c54db2994150adc7eddd9da6a1c430a63acac4f72b78617e9e0df4f1",
+    "bot/deepseek_overlay.py": "6f6c124c65c0e1f5cdfb21b69e8142a7f5c42b9509c2cfd83de091d4e178f35e",
+    "bot/deepseek_usage.py": "5cc482026c9e6a254ccfe3e615e373dc7aa477f8e054cead80f08d37dad5c3f4",
+    "scripts/deepseek_weekly_cron.py": "7dc7f986a0696ca7a628d7c70c32f70f5e36dd75b78acad32ddbd4849d160197"
+  },
+  "deploy_backup_dir": "/root/by-bot/runtime/deploy_backups/ai_safety_20260824T0814Z",
+  "validation": {
+    "py_compile": "PASS",
+    "bash_n": "PASS",
+    "recovery_tests": "50 passed",
+    "services_after_deploy": {
+      "bybot.service": "active",
+      "trading-journal-web.service": "active",
+      "sbr1-zero-risk-shadow.timer": "active"
+    }
+  }
+}
