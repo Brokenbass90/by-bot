@@ -57,7 +57,7 @@
     "bot/live_native_signal_adapters.py": "72872f023d32156c4dd0344b461c0a7606f06f8bbdc2621d775d30bd77e84e02",
     "bot/sbr1_zero_risk_shadow.py": "573cacad782484644747002e6dbfdd02f4429fca5eb7bbbc440081b172902cc6",
     "scripts/run_sbr1_zero_risk_shadow.py": "5d15b3551ae79c988f2cb590e1f99d805d84fe0b13114c16ef38e917eed258fc",
-    "deploy/systemd/sbr1-zero-risk-shadow.service": "1c6d9e4618da9a8f22daf34010e5eac9164cec4c22e466a480f7bce6cfb13f65",
+    "deploy/systemd/sbr1-zero-risk-shadow.service": "e5aaa02c58aeeb19d0b4f4e8b9f9bc80a704f22018cf03bad1a033831c8955c0",
     "deploy/systemd/sbr1-zero-risk-shadow.timer": "c0aaf99667e5bd7a8380898a0bf580caba5478d92554e5e1035c48fdf5ede138"
   }
 }
