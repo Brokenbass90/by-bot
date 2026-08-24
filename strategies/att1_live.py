@@ -5,7 +5,6 @@ Matches the pattern of sloped_channel_live.py and flat_resistance_fade_live.py.
 """
 from __future__ import annotations
 
-import os
 from typing import Optional, Dict
 
 from strategies.alt_trendline_touch_v1 import AltTrendlineTouchV1Strategy
@@ -19,9 +18,17 @@ class _ATT1Store:
     def __init__(self, symbol: str, fetch_klines):
         self.symbol = symbol
         self._fetch = fetch_klines
+        self._last_closed_rows: Dict[str, list] = {}
 
     def fetch_klines(self, symbol: str, interval: str, limit: int):
-        return fetch_closed_klines(self._fetch, symbol, interval, limit)
+        rows = fetch_closed_klines(self._fetch, symbol, interval, limit)
+        self._last_closed_rows[str(interval)] = list(rows)
+        return rows
+
+    def last_closed_rows(self, interval: str = "60") -> list:
+        """Return the exact parsed rows consumed by the latest evaluation."""
+
+        return list(self._last_closed_rows.get(str(interval), []))
 
 
 class ATT1LiveEngine:
@@ -64,13 +71,18 @@ class ATT1LiveEngine:
     ) -> Optional[TradeSignal]:
         store = self._get_store(symbol)
         strat = self._get_strategy(symbol)
-        try:
-            sig = strat.maybe_signal(store, ts_ms, o, h, l, c, v)
-        except Exception:
-            sig = None
+        # Do not turn an engine failure into an ordinary no-signal.  The real
+        # monolith caller already catches and logs strategy exceptions; parity
+        # and liveness monitors must be able to distinguish a quiet market from
+        # a broken strategy boundary.
+        sig = strat.maybe_signal(store, ts_ms, o, h, l, c, v)
         if sig is None:
             self._no_signal_reasons[symbol] = getattr(strat, "_last_no_signal_reason", "")
         return sig
+
+    def last_closed_rows(self, symbol: str, interval: str = "60") -> list:
+        store = self._stores.get(symbol)
+        return store.last_closed_rows(interval) if store is not None else []
 
     def last_no_signal_reason(self, symbol: str) -> str:
         return self._no_signal_reasons.get(symbol, "")

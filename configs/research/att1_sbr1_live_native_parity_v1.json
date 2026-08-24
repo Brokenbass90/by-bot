@@ -1,0 +1,122 @@
+{
+  "schema_id": "att1_sbr1_live_native_parity_manifest_v1",
+  "authority": "research_only_no_live_no_broker_no_promotion",
+  "default_off": true,
+  "enabled": false,
+  "money_authority": false,
+  "live_or_broker_calls": false,
+  "window": {
+    "start_utc": "2024-03-01T00:00:00Z",
+    "end_utc_exclusive": "2025-10-01T00:00:00Z"
+  },
+  "sealed_holdout_guard": {
+    "start_utc": "2025-10-01T00:00:00Z",
+    "end_utc_exclusive": "2026-07-01T00:00:00Z",
+    "must_not_read": true
+  },
+  "universe": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "ADAUSDT",
+    "LINKUSDT",
+    "LTCUSDT",
+    "DOTUSDT",
+    "SUIUSDT"
+  ],
+  "data_files": [
+    {"symbol": "BTCUSDT", "path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/BTCUSDT/BTCUSDT.json", "bytes": 21101545, "sha256": "354e88594ad2d25b244db935bb260c6a9de43467738e6c02dbfce9c527060ebf"},
+    {"symbol": "ETHUSDT", "path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/ETHUSDT/ETHUSDT.json", "bytes": 20739696, "sha256": "f437f2edb5cde9a2b950027ac415bd5f4ef57f7e799939752b141beda246454b"},
+    {"symbol": "SOLUSDT", "path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/SOLUSDT/SOLUSDT.json", "bytes": 19964994, "sha256": "8f136aa0ff169b6ec1b9d25c39e5938f99229944f949a0a47961397dcd5c9051"},
+    {"symbol": "ADAUSDT", "path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/ADAUSDT/ADAUSDT.json", "bytes": 20126269, "sha256": "59735774138dce8c7c58fbee75883f860dbfe7caaf7799df3dc466d2ef19f26e"},
+    {"symbol": "LINKUSDT", "path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/LINKUSDT/LINKUSDT.json", "bytes": 19847299, "sha256": "b75b9c124d1421409773d0718412ba94dc93d6c2feb9e52f39478620a145d148"},
+    {"symbol": "LTCUSDT", "path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/LTCUSDT/LTCUSDT.json", "bytes": 19036868, "sha256": "f309fac9e4d17451056329f7edbf53bed52271bcc7795ba1cc25c944d996efe2"},
+    {"symbol": "DOTUSDT", "path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/DOTUSDT/DOTUSDT.json", "bytes": 19446521, "sha256": "8c6ee595a2877d8a9b8d74d1c794621da9b540dd41795ca2febcb06b8096fd44"},
+    {"symbol": "SUIUSDT", "path": "research_lab/data/bybit_major8_m5_preholdout_20240301_20250930/SUIUSDT/SUIUSDT.json", "bytes": 19926576, "sha256": "43de9d96c6cb6f9c2ee66cfd8f9de806780acece7e637fc93c29239a06e4a74c"}
+  ],
+  "source_files": [
+    {"path": "strategies/alt_trendline_touch_v1.py", "bytes": 41984, "sha256": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"},
+    {"path": "strategies/att1_live.py", "bytes": 3468, "sha256": "846febc99ebd3f103d79146e10276059adab59a6353cfca9893baabac25e3018"},
+    {"path": "strategies/sloped_break_retest_v1.py", "bytes": 18330, "sha256": "44d67f0e4056f97fd454625a7629d020be5e563965d488671b18bc6e496cd19f"},
+    {"path": "strategies/sbr1_live.py", "bytes": 2862, "sha256": "44dcd958c9a2109808bc90e05954825d88e783dba9566393cac8f37bc0b73227"},
+    {"path": "strategies/live_kline_utils.py", "bytes": 1473, "sha256": "800fb4c575c9840cf9807fbae5c40c5762b1c128dd47cdcb29d7b22aa2eb15f8"},
+    {"path": "strategies/signals.py", "bytes": 3378, "sha256": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"},
+    {"path": "bot/att1_runtime_contract.py", "bytes": 4084, "sha256": "4774784858f99fcfe14affb6e91db82134e89fc0dec5f94be6b1b24bc4535c78"},
+    {"path": "bot/live_native_signal_adapters.py", "bytes": 21657, "sha256": "72872f023d32156c4dd0344b461c0a7606f06f8bbdc2621d775d30bd77e84e02"},
+    {"path": "bot/live_native_fill_adapter.py", "bytes": 12566, "sha256": "63de7c2dcb500805885b3115e78fec0013dbe0f8ea1cf095d9da343ad65d71c0"},
+    {"path": "bot/live_native_decision_contract.py", "bytes": 38173, "sha256": "a8ad6115d1bb7d86f64c2cddb70695a814e4f7acf0db13fbc977acbd88f95f70"},
+    {"path": "bot/live_native_regime_gate.py", "bytes": 7293, "sha256": "cd34e715ec8b6d77d104d9b5413fa330550424e1ed7858b94eadcd0b0b8173ef"},
+    {"path": "bot/live_native_manifest.py", "bytes": 10390, "sha256": "603331bde55bf16973f66e4102770120e3c8ef0176d0efdcf7ed25df654eea8d"},
+    {"path": "research_lab/live_native_adapter_emitters.py", "bytes": 13470, "sha256": "b8948c7591cea1803ef23f81919c00c793116043d0ba310c7e6cd8518903a3fc"},
+    {"path": "research_lab/adapter_parity.py", "bytes": 16153, "sha256": "ba9c4229c19f19cc2b0fd1691319b496db729e08b8fe1629a35a4fcda2b40e65"},
+    {"path": "research_lab/run_att1_sbr1_actual_adapter_parity.py", "bytes": 30593, "sha256": "f4a3057652350abc4fa9fff5bcab827b8aa9c340da01f694e3c5e140e904bcac"},
+    {"path": "research_lab/prereg/PREREG_ATT1_SBR1_ADAPTER_PARITY_2026_08_20.md", "bytes": 4851, "sha256": "a91398c7f02ea1506fe7af6c026d311a8ec82e74084c860b7c2b1c76710c933f"}
+  ],
+  "exchange_filters_observed_at_utc": "2026-08-23T00:00:00Z",
+  "exchange_filters_source": "https://api.bybit.com/v5/market/instruments-info?category=linear",
+  "exchange_filters": {
+    "BTCUSDT": {"tick_size": "0.10", "qty_step": "0.001", "min_notional": "5"},
+    "ETHUSDT": {"tick_size": "0.01", "qty_step": "0.01", "min_notional": "5"},
+    "SOLUSDT": {"tick_size": "0.010", "qty_step": "0.1", "min_notional": "5"},
+    "ADAUSDT": {"tick_size": "0.0001", "qty_step": "1", "min_notional": "5"},
+    "LINKUSDT": {"tick_size": "0.001", "qty_step": "0.1", "min_notional": "5"},
+    "LTCUSDT": {"tick_size": "0.01", "qty_step": "0.1", "min_notional": "5"},
+    "DOTUSDT": {"tick_size": "0.0001", "qty_step": "0.1", "min_notional": "5"},
+    "SUIUSDT": {"tick_size": "0.00010", "qty_step": "10", "min_notional": "5"}
+  },
+  "profiles": {
+    "ATT1": {
+      "side": "short",
+      "signal_tf": "60",
+      "sl_atr_mult": "6.6",
+      "max_stop_pct": "0.25",
+      "tp_rrs": ["1.2", "2.5"],
+      "tp_fractions": ["0.55", "0.45"],
+      "residual_fraction": "0",
+      "time_stop_bars_5m": 4032,
+      "cooldown_bars_5m": 96,
+      "be_trigger_rr": "0",
+      "trail_atr_mult": "0"
+    },
+    "SBR1": {
+      "side": "long",
+      "signal_tf": "60",
+      "sl_atr_mult": "4.6",
+      "tp_rrs": ["1.1", "2.6"],
+      "tp_fractions": ["0.5", "0.3"],
+      "residual_fraction": "0.2",
+      "time_stop_bars_5m": 2016,
+      "cooldown_tf_bars": 6,
+      "be_trigger_rr": "0",
+      "trail_atr_mult": "0"
+    }
+  },
+  "regime_contract": {
+    "symbol": "BTCUSDT",
+    "timeframe": "60",
+    "closed_only": true,
+    "ema_period": 200,
+    "ema_method": "continuous_causal_seed_first_contiguous_window_bar",
+    "ema_seed_start_utc": "2024-03-01T00:00:00Z",
+    "ema_reseed_each_window": false,
+    "flat_band_fraction": "0.02",
+    "ATT1": "-0.02 <= deviation < 0",
+    "SBR1": "0 <= deviation < 0.02",
+    "max_age_ms": 300000
+  },
+  "execution_contract": {
+    "entry": "next_m5_open",
+    "stop_first_intrabar": true,
+    "max_fill_age_ms": 300000,
+    "max_finalize_delay_ms": 60000,
+    "max_adverse_risk_expansion": "0.20",
+    "max_open_slots_total": 12,
+    "max_open_slots_sbr1": 6,
+    "exposure_gate_required": true,
+    "max_correlated_cluster_risk_fraction": "0.04"
+  },
+  "cost_contracts": {
+    "base": {"fee_bps_per_side": "6", "slippage_bps_per_side": "2", "adverse_funding_bps_per_8h": "0"},
+    "stress": {"fee_bps_per_side": "6", "slippage_bps_per_side": "5", "adverse_funding_bps_per_8h": "1"}
+  }
+}

@@ -31,9 +31,32 @@ live-adapter обязаны прочитать одни и те же pre-sealed 
 Все несовпадения сохраняются в отчёте. PASS comparator-а доказывает только
 паритет двух адаптеров на заявленных данных; он сам по себе не разрешает деньги.
 
-## Следующий шаг после PASS
+## Fail-closed amendment 2026-08-23
 
-Только после PASS заново считается pre-sealed backtest выбранной геометрии.
-Положительный результат затем идёт в отдельный zero-risk shadow sleeve с новым
-ID, полным runtime contract и prospective ledger. Решение о tiny canary —
-отдельный owner gate после независимой проверки.
+Независимый аудит понизил первоначальный результат до
+`COMPONENT_PARITY_PASS / LIVE_CALLER_PARITY_BLOCKED`. До следующего прогона
+фиксируются дополнительные условия:
+
+1. BTC EMA200 один раз seed-ится с начала непрерывного окна и затем обновляется
+   каузально; повторное наблюдение того же H1 не обновляет EMA второй раз.
+2. ATT1 cooldown `96 × M5` означает восемь часов wall-clock, а не 96 вызовов
+   H1-scheduler. SBR1 меняет cooldown только на новом закрытом H1.
+3. Защитный стоп округляется наружу до exchange tick; цели заново строятся от
+   этого frozen stop. Market/fractional fill может быть вне tick.
+4. Research и live-shaped ветви отдельно строят fill, outcome, context и
+   receipt. Передача research receipt в live emitter запрещена.
+5. Ledger содержит фактический replay `exit_ts_ms`; stop-gap исполняется по
+   худшему open, а stress включает adverse funding `1 bps / 8h` дополнительно
+   к fees/slippage.
+6. Source closure включает общие `live_kline_utils.py` и `signals.py`. Хэши
+   каждого нормализованного ledger сохраняются в parity report.
+7. Этот runner всё ещё моделирует idealized `closed H1 → next M5 open` на
+   major8 и не проверяет production caller, intended wide universe, portfolio
+   slots/correlation/exposure либо брокера. Поэтому даже зелёный comparator
+   не открывает sealed window и не выдаёт money authority.
+
+Следующий gate: default-off production caller parity и prospective zero-order
+shadow с durable simulated decision/fill/exit ledger. Настоящие broker fills
+возможны только в отдельной owner-approved minimum-notional canary. Запечатанный
+период открывается один раз лишь после исправленного frozen portfolio scorer,
+полного manifest и независимой проверки; старый `read_sealed.py` не используется.

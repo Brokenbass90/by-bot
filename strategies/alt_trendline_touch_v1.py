@@ -88,6 +88,23 @@ from typing import List, Optional, Tuple
 from .signals import TradeSignal
 
 
+M5_MS = 5 * 60 * 1000
+
+
+def _cooldown_deadline_ms(decision_ts: int | float, bars_5m: int) -> int:
+    """Translate the public ``*_BARS_5M`` contract into wall-clock time.
+
+    ATT1 is evaluated from an H1 wrapper roughly once per hour in production.
+    Decrementing a counter on each wrapper call silently turned the documented
+    96 five-minute bars (8h) into roughly four days.  A timestamp deadline is
+    invariant to scheduler cadence and repeated evaluations of the same H1 bar.
+    """
+
+    raw = int(decision_ts)
+    ts_ms = raw * 1000 if raw < 10_000_000_000 else raw
+    return ts_ms + max(0, int(bars_5m)) * M5_MS
+
+
 # ---------------------------------------------------------------------------
 # Env helpers
 # ---------------------------------------------------------------------------
@@ -413,7 +430,7 @@ class AltTrendlineTouchV1Strategy:
     def __init__(self, cfg: Optional[AltTrendlineTouchV1Config] = None):
         self.cfg = cfg or AltTrendlineTouchV1Config()
         self._load_env()
-        self._cooldown = 0
+        self._cooldown_until_ms: Optional[int] = None
         self._last_tf_ts: Optional[int] = None
         self._allow: set = set()
         self._deny: set = set()
@@ -678,10 +695,14 @@ class AltTrendlineTouchV1Strategy:
         if sym in self._deny:
             self._no_signal("symbol_denied")
             return None
-        if self._cooldown > 0:
-            self._cooldown -= 1
+        decision_ts_ms = int(ts_ms) * 1000 if int(ts_ms) < 10_000_000_000 else int(ts_ms)
+        if (
+            self._cooldown_until_ms is not None
+            and decision_ts_ms < self._cooldown_until_ms
+        ):
             self._no_signal("cooldown")
             return None
+        self._cooldown_until_ms = None
 
         rows = store.fetch_klines(store.symbol, self.cfg.signal_tf, self.cfg.signal_lookback) or []
         if len(rows) < self.cfg.signal_lookback:
@@ -757,7 +778,13 @@ class AltTrendlineTouchV1Strategy:
                         tps=[float(tp1), float(tp2)],
                         tp_fracs=[
                             min(0.90, max(0.10, self.cfg.tp1_frac)),
-                            max(0.05, 1.0 - min(0.90, max(0.10, self.cfg.tp1_frac))),
+                            round(
+                                max(
+                                    0.05,
+                                    1.0 - min(0.90, max(0.10, self.cfg.tp1_frac)),
+                                ),
+                                12,
+                            ),
                         ],
                         be_trigger_rr=max(0.0, self.cfg.be_trigger_rr),
                         be_lock_rr=max(0.0, self.cfg.be_lock_rr),
@@ -790,7 +817,9 @@ class AltTrendlineTouchV1Strategy:
                         ),
                     )
                     if sig.validate():
-                        self._cooldown = max(0, self.cfg.cooldown_bars_5m)
+                        self._cooldown_until_ms = _cooldown_deadline_ms(
+                            decision_ts_ms, self.cfg.cooldown_bars_5m
+                        )
                         return sig
                 self._no_signal("long_invalid_risk")
 
@@ -883,7 +912,13 @@ class AltTrendlineTouchV1Strategy:
                             tps=[float(tp1), float(tp2)],
                             tp_fracs=[
                                 min(0.90, max(0.10, self.cfg.tp1_frac)),
-                                max(0.05, 1.0 - min(0.90, max(0.10, self.cfg.tp1_frac))),
+                                round(
+                                    max(
+                                        0.05,
+                                        1.0 - min(0.90, max(0.10, self.cfg.tp1_frac)),
+                                    ),
+                                    12,
+                                ),
                             ],
                             be_trigger_rr=max(0.0, self.cfg.be_trigger_rr),
                             be_lock_rr=max(0.0, self.cfg.be_lock_rr),
@@ -917,7 +952,9 @@ class AltTrendlineTouchV1Strategy:
                             ),
                         )
                         if sig.validate():
-                            self._cooldown = max(0, self.cfg.cooldown_bars_5m)
+                            self._cooldown_until_ms = _cooldown_deadline_ms(
+                                decision_ts_ms, self.cfg.cooldown_bars_5m
+                            )
                             return sig
                 self._no_signal("short_invalid_risk")
 
