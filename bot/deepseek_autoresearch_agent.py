@@ -438,9 +438,9 @@ def _ds_chat(system: str, user: str, model: str | None = None) -> str:
     if not api_key:
         return "DEEPSEEK_API_KEY не задан."
     base_url = _env("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
-    m = model or _env("DEEPSEEK_MODEL", "deepseek-chat")
+    m = model or _env("DEEPSEEK_MODEL", "deepseek-v4-flash")
     timeout = float(_env("DEEPSEEK_TIMEOUT_SEC", "15") or 15)
-    timeout_retries = max(0, int(_env("DEEPSEEK_TIMEOUT_RETRIES", "2") or 2))
+    timeout_retries = max(0, int(_env("DEEPSEEK_TIMEOUT_RETRIES", "0") or 0))
     retry_backoff_sec = max(0.0, float(_env("DEEPSEEK_RETRY_BACKOFF_SEC", "1.5") or 1.5))
     url = base_url.rstrip("/") + "/chat/completions"
     payload = {
@@ -450,9 +450,9 @@ def _ds_chat(system: str, user: str, model: str | None = None) -> str:
             {"role": "user", "content": user},
         ],
         "temperature": 0.15,
-        "max_tokens": max(200, int(_env("DEEPSEEK_COMPLETION_MAX_TOKENS", "700") or 700)),
+        "max_tokens": max(200, int(_env("DEEPSEEK_COMPLETION_MAX_TOKENS", "400") or 400)),
     }
-    max_parts = max(1, int(_env("DEEPSEEK_CONTINUATION_MAX_PARTS", "4") or 4))
+    max_parts = max(1, int(_env("DEEPSEEK_CONTINUATION_MAX_PARTS", "1") or 1))
     try:
         headers = {
             "Authorization": f"Bearer {api_key}",
@@ -933,7 +933,7 @@ def audit_bot_full(snapshot: dict[str, Any]) -> str:
         "Без воды. Только конкретика."
     )
 
-    answer = _ds_chat(system, user, model=_env("DEEPSEEK_MODEL", "deepseek-chat"))
+    answer = _ds_chat(system, user, model=_env("DEEPSEEK_MODEL", "deepseek-v4-flash"))
     return "🔍 DeepSeek Аудит бота\n\n" + answer
 
 

@@ -231,7 +231,7 @@ NEW_CRONS=$(cat << CRONEOF
 */5 * * * * cd $BOT_DIR && $PYTHON scripts/funding_rate_fetcher.py --once --symbols BTCUSDT,ETHUSDT,SOLUSDT,BNBUSDT,AVAXUSDT >> logs/funding_rate_fetcher.log 2>&1 $CRON_TAG
 #
 # 16. Auto-apply research winners — daily at 06:00 UTC, after nightly research completes
-0 6 * * * cd $BOT_DIR && $PYTHON scripts/auto_apply_research_winner.py >> logs/auto_apply.log 2>&1 $CRON_TAG
+0 6 * * * cd $BOT_DIR && $PYTHON scripts/auto_apply_research_winner.py --dry-run >> logs/auto_apply.log 2>&1 $CRON_TAG
 #
 # 17. Daily Telegram health digest — every morning at 08:00 UTC
 # Reports: CB state, regime, allocator, open trades, Alpaca P&L + picks

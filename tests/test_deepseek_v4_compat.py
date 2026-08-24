@@ -11,6 +11,14 @@ from bot.deepseek_overlay import (
 )
 
 
+@pytest.fixture(autouse=True)
+def _isolated_attempt_ledger(monkeypatch, tmp_path):
+    monkeypatch.setenv(
+        "DEEPSEEK_ATTEMPT_LEDGER_PATH", str(tmp_path / "attempts.sqlite3")
+    )
+    monkeypatch.setenv("DEEPSEEK_AUDIT_LOG_PATH", str(tmp_path / "audit.jsonl"))
+
+
 class _FakeResponse:
     def __init__(self, status_code=200, payload=None, *, reason="", headers=None):
         self.status_code = status_code

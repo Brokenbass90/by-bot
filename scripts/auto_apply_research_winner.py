@@ -174,6 +174,13 @@ SAFE_PARAMS = {
     "MTPB3_RSI_LONG_MAX", "MTPB3_RSI_SHORT_MIN",
 }
 
+EVIDENCE_RECEIPT_REQUIRED = (
+    "authority", "operator_identity", "prereg_hash", "holdout_status",
+    "adapter_parity_status", "zero_risk_shadow_status", "clean_incident_count",
+    "sha_linkage",
+)
+PASS_FIELDS = ("holdout_status", "adapter_parity_status", "zero_risk_shadow_status")
+
 # Params that are NEVER auto-applied (risk controls — require human review)
 FORBIDDEN_PARAMS = {
     # Capital / risk
@@ -379,12 +386,33 @@ def _filter_safe_params(overrides: Dict[str, str]) -> Dict[str, str]:
             continue
         if k in SAFE_PARAMS:
             safe[k] = v
-        else:
-            # Unknown param: apply if it starts with a known strategy prefix
-            family = _get_strategy_family({k: v})
-            if family:
-                safe[k] = v
+        # Fail closed: strategy-prefix resemblance is not authorization.
+        # New parameters must be reviewed into SAFE_PARAMS explicitly.
     return safe
+
+
+def _validate_evidence_receipt(path: str) -> Dict[str, Any]:
+    """Validate the independent evidence receipt required for apply mode."""
+    receipt_path = Path(path).expanduser()
+    try:
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise RuntimeError(f"FAIL_CLOSED: cannot read evidence receipt: {exc}") from exc
+    if not isinstance(receipt, dict):
+        raise RuntimeError("FAIL_CLOSED: evidence receipt must be a JSON object")
+    missing = [key for key in EVIDENCE_RECEIPT_REQUIRED if not str(receipt.get(key, "")).strip()]
+    if missing:
+        raise RuntimeError("FAIL_CLOSED: evidence receipt missing " + ", ".join(missing))
+    for key in PASS_FIELDS:
+        if str(receipt[key]).strip().upper() != "PASS":
+            raise RuntimeError(f"FAIL_CLOSED: {key} must be PASS")
+    try:
+        incidents = int(receipt["clean_incident_count"])
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError("FAIL_CLOSED: clean_incident_count must be integer zero") from exc
+    if incidents != 0:
+        raise RuntimeError("FAIL_CLOSED: clean_incident_count must be 0")
+    return receipt
 
 
 # ---------------------------------------------------------------------------
@@ -442,12 +470,30 @@ def main() -> int:
         action="store_true",
         help="Write approved proposal parameters to the override file. Never use from unattended cron.",
     )
+    ap.add_argument(
+        "--evidence-receipt",
+        default="",
+        help="Independent JSON receipt required for --apply-approved.",
+    )
     ap.add_argument("--force",   action="store_true", help="Skip cooldown check.")
     ap.add_argument("--strategy", default="", help="Only process this strategy family (e.g. ARF1).")
     ap.add_argument("--lookback-days", type=int, default=LOOKBACK_DAYS)
     ap.add_argument("--min-score",     type=float, default=MIN_SCORE)
     ap.add_argument("--quiet",         action="store_true")
     args = ap.parse_args()
+
+    if args.apply_approved and args.force:
+        ap.error("FAIL_CLOSED: --force is forbidden in apply mode")
+    if args.apply_approved and args.min_score < MIN_SCORE:
+        ap.error("FAIL_CLOSED: apply mode cannot lower AUTOAPPLY_MIN_SCORE")
+    evidence_receipt: Dict[str, Any] | None = None
+    if args.apply_approved:
+        if not args.evidence_receipt:
+            ap.error("FAIL_CLOSED: --evidence-receipt is required with --apply-approved")
+        try:
+            evidence_receipt = _validate_evidence_receipt(args.evidence_receipt)
+        except RuntimeError as exc:
+            ap.error(str(exc))
 
     dry_run = args.dry_run or not args.apply_approved
     strategy = args.strategy.strip().upper() or None
@@ -560,6 +606,7 @@ def main() -> int:
                 "trades":  w["trades"],
                 "tag":     w["tag"],
                 "changed": chg,
+                "evidence_receipt": evidence_receipt,
             })
 
             # TG message

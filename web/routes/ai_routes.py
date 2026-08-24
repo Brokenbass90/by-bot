@@ -18,6 +18,7 @@ All executed commands are written to runtime/web_audit_log.jsonl.
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import re
 import subprocess
@@ -31,6 +32,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
 from bot.ai_context import assess_runtime_authority, append_ai_context_lines, compact_ai_full_context
+from bot.deepseek_usage import (
+    append_deepseek_usage,
+    normalize_deepseek_model,
+    prompt_char_count,
+)
 
 from ..deps import require_admin, require_auth
 
@@ -43,10 +49,51 @@ _OVERLAY_ENV = _ROOT / "configs" / "web_control_overlay.env"
 _SHARED_HISTORY_PATH = Path(
     str(os.getenv("DEEPSEEK_CHAT_STATE_PATH", _ROOT / "runtime" / "web_ai_history.json"))
 )
-_HISTORY_MAX = max(1, int(os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "20") or 20))
+_HISTORY_MAX = min(
+    12,
+    max(
+        1,
+        int(
+            os.getenv(
+                "DEEPSEEK_WEB_HISTORY_MAX_MESSAGES",
+                os.getenv("DEEPSEEK_HISTORY_MAX_MESSAGES", "8"),
+            )
+            or 8
+        ),
+    ),
+)
 _HISTORY_TTL_SEC = max(0, int(os.getenv("DEEPSEEK_HISTORY_TTL_SEC", "21600") or 21600))
 _CHAT_RATE: Dict[str, List[float]] = {}  # email → list of timestamps
 _MAX_RPM = 20  # requests per minute per user
+_WEB_CHAT_MAX_TOKENS = min(
+    1200,
+    max(200, int(os.getenv("DEEPSEEK_WEB_CHAT_MAX_TOKENS", "600") or 600)),
+)
+_WEB_SETUP_MAX_TOKENS = min(
+    500,
+    max(100, int(os.getenv("DEEPSEEK_WEB_SETUP_MAX_TOKENS", "250") or 250)),
+)
+_WEB_CONTEXT_MAX_CHARS = min(
+    50_000,
+    max(8_000, int(os.getenv("DEEPSEEK_WEB_CONTEXT_MAX_CHARS", "18000") or 18_000)),
+)
+_WEB_MESSAGE_MAX_CHARS = min(
+    12_000,
+    max(1_000, int(os.getenv("DEEPSEEK_WEB_MESSAGE_MAX_CHARS", "4000") or 4_000)),
+)
+_WEB_HISTORY_MAX_CHARS = min(
+    30_000,
+    max(4_000, int(os.getenv("DEEPSEEK_WEB_HISTORY_MAX_CHARS", "12000") or 12_000)),
+)
+_SETUP_CACHE_TTL_SEC = min(
+    3_600,
+    max(0, int(os.getenv("DEEPSEEK_SETUP_CACHE_TTL_SEC", "900") or 900)),
+)
+_SETUP_CACHE_MAX_ITEMS = min(
+    2_000,
+    max(16, int(os.getenv("DEEPSEEK_SETUP_CACHE_MAX_ITEMS", "512") or 512)),
+)
+_SETUP_AI_CACHE: Dict[str, Tuple[float, Dict[str, str]]] = {}
 
 # Research autonomy is deliberately capability-based: the AI may start only
 # these exact, reviewable commands.  No user/LLM string ever reaches a shell.
@@ -202,6 +249,81 @@ def _http_error_summary(exc: Exception) -> str:
     if code:
         return f"AI provider returned HTTP {code}"
     return str(exc)[:160] or exc.__class__.__name__
+
+
+def _deepseek_chat_completion(
+    *,
+    api_key: str,
+    model: str,
+    messages: List[Dict[str, str]],
+    max_tokens: int,
+    temperature: float,
+    timeout_sec: float,
+    source: str,
+) -> Tuple[str, str]:
+    """Call DeepSeek and emit secret-free usage accounting for this request."""
+    import ssl as _ssl
+    import urllib.request as _urllib_req
+
+    selected_model = normalize_deepseek_model(model)
+    clean_messages = [
+        {"role": str(item.get("role") or "user"), "content": str(item.get("content") or "")}
+        for item in messages
+    ]
+    payload_obj = {
+        "model": selected_model,
+        "max_tokens": int(max_tokens),
+        "temperature": float(temperature),
+        "thinking": {"type": "disabled"},
+        "messages": clean_messages,
+    }
+    payload = json.dumps(payload_obj).encode()
+    req = _urllib_req.Request(
+        "https://api.deepseek.com/chat/completions",
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        },
+    )
+    started = time.perf_counter()
+    input_chars = prompt_char_count(clean_messages)
+    try:
+        with _urllib_req.urlopen(
+            req,
+            context=_ssl.create_default_context(),
+            timeout=float(timeout_sec),
+        ) as resp:
+            response_payload = json.loads(resp.read().decode())
+    except Exception as exc:
+        code = getattr(exc, "code", None) or getattr(exc, "status", None)
+        append_deepseek_usage(
+            source=source,
+            model=selected_model,
+            max_tokens=max_tokens,
+            prompt_chars=input_chars,
+            latency_ms=int((time.perf_counter() - started) * 1000),
+            status="error",
+            error_type=f"http_{code}" if code else type(exc).__name__,
+        )
+        raise
+
+    append_deepseek_usage(
+        source=source,
+        model=selected_model,
+        max_tokens=max_tokens,
+        prompt_chars=input_chars,
+        latency_ms=int((time.perf_counter() - started) * 1000),
+        status="ok",
+        response_payload=response_payload,
+    )
+    choices = response_payload.get("choices") or []
+    if not choices:
+        raise RuntimeError("DeepSeek returned no choices")
+    reply = str(((choices[0] or {}).get("message") or {}).get("content") or "").strip()
+    if not reply:
+        raise RuntimeError("DeepSeek returned empty content")
+    return reply, selected_model
 
 
 def _local_chat_fallback(command_result: Optional[str] = None, reason: str = "") -> "ChatResponse":
@@ -950,6 +1072,70 @@ def _check_rate(email: str) -> None:
 
 # ── Context builder ───────────────────────────────────────────────────────────
 
+_MANDATORY_CONTEXT_PREFIXES = (
+    "=== BOT CONTEXT",
+    "BOT MIRROR:",
+    "SERVER STATUS:",
+    "REGIME:",
+    "STALE_EXCLUDED regime:",
+    "ALLOCATOR:",
+    "ALLOCATOR HUMAN MEANING:",
+    "SLEEVES ACTIVE:",
+    "SLEEVES OFF:",
+    "WEB LIVE TRUTH GATE:",
+    "=== AVAILABLE CONTROL COMMANDS ===",
+    "Trading mutations",
+)
+
+
+def _bounded_web_context(text: str, max_chars: int | None = None) -> str:
+    """Bound cost while retaining the truth gate and control-authority rules."""
+    raw = str(text or "")
+    limit = int(max_chars or _WEB_CONTEXT_MAX_CHARS)
+    if len(raw) <= limit:
+        return raw
+
+    mandatory = "\n".join(
+        line
+        for line in raw.splitlines()
+        if line.startswith(_MANDATORY_CONTEXT_PREFIXES)
+    )
+    marker = (
+        "\n=== CONTEXT COST BOUNDARY ===\n"
+        "Middle evidence rows were truncated for token control. Missing rows are "
+        "non-authoritative; request a deterministic refresh instead of guessing.\n"
+    )
+    reserved = len(mandatory) + len(marker) + 4
+    remaining = max(1_000, limit - reserved)
+    head_size = int(remaining * 0.60)
+    tail_size = remaining - head_size
+    head = raw[:head_size].rsplit("\n", 1)[0]
+    tail = raw[-tail_size:].split("\n", 1)[-1]
+    bounded = head + marker + mandatory + "\n" + tail
+    return bounded[:limit]
+
+
+def _bounded_chat_messages(messages: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+    """Keep the newest useful turns under deterministic per-turn/total bounds."""
+    remaining = _WEB_HISTORY_MAX_CHARS
+    selected: List[Dict[str, str]] = []
+    for item in reversed(messages[-_HISTORY_MAX:]):
+        role = str(item.get("role") or "").strip().lower()
+        content = str(item.get("content") or "").strip()
+        if role not in {"user", "assistant", "system"} or not content:
+            continue
+        content = content[:_WEB_MESSAGE_MAX_CHARS]
+        if len(content) > remaining:
+            content = content[:remaining]
+        if not content:
+            break
+        selected.append({"role": role, "content": content})
+        remaining -= len(content)
+        if remaining <= 0:
+            break
+    return list(reversed(selected))
+
+
 def _build_context() -> str:
     """Build a compact context string injected into every AI request."""
     parts: List[str] = []
@@ -1170,7 +1356,7 @@ def _build_context() -> str:
         "the current web overlay has no acknowledged live-consumer path. Describe them as proposals, not executed controls.\n"
     )
 
-    return "".join(parts)
+    return _bounded_web_context("".join(parts))
 
 
 # ── Control command executor ──────────────────────────────────────────────────
@@ -1569,34 +1755,24 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
         "Never suggest reload/restart while open trades exist unless the injected context proves an active emergency.\n\n"
         + _build_context()
     )
-    current_messages = [{"role": m.role, "content": m.content} for m in body.messages[-20:]]
-    messages_payload = _merge_history(current_messages)
+    current_messages = [
+        {"role": m.role, "content": m.content}
+        for m in body.messages[-_HISTORY_MAX:]
+    ]
+    messages_payload = _bounded_chat_messages(_merge_history(current_messages))
 
     try:
         if deepseek_key:
             # ── DeepSeek (OpenAI-compatible API) ─────────────────────────────
-            import urllib.request as _urllib_req
-            import ssl as _ssl
-
-            model = os.getenv("WEB_AI_MODEL", "deepseek-chat")
-            payload = json.dumps({
-                "model": model,
-                "max_tokens": 1500,
-                "temperature": 0.4,
-                "messages": [{"role": "system", "content": system_prompt}] + messages_payload,
-            }).encode()
-            req = _urllib_req.Request(
-                "https://api.deepseek.com/chat/completions",
-                data=payload,
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": f"Bearer {deepseek_key}",
-                },
+            reply_text, model = _deepseek_chat_completion(
+                api_key=deepseek_key,
+                model=os.getenv("WEB_AI_MODEL", "deepseek-v4-flash"),
+                messages=[{"role": "system", "content": system_prompt}] + messages_payload,
+                max_tokens=_WEB_CHAT_MAX_TOKENS,
+                temperature=0.4,
+                timeout_sec=60,
+                source="web_chat",
             )
-            ctx = _ssl.create_default_context()
-            with _urllib_req.urlopen(req, context=ctx, timeout=60) as resp:
-                js = json.loads(resp.read().decode())
-            reply_text = js["choices"][0]["message"]["content"].strip()
 
         else:
             # ── Anthropic Claude ──────────────────────────────────────────────
@@ -1605,7 +1781,7 @@ async def chat(body: ChatRequest, email: str = Depends(require_admin)):
             model = os.getenv("WEB_AI_MODEL", "claude-sonnet-4-6")
             response = client.messages.create(
                 model=model,
-                max_tokens=1500,
+                max_tokens=_WEB_CHAT_MAX_TOKENS,
                 system=system_prompt,
                 messages=messages_payload,
             )
@@ -1779,11 +1955,73 @@ class SetupAnalysisResponse(BaseModel):
     model:      str   # model used
 
 
+def _setup_cache_key(
+    body: SetupAnalysisRequest,
+    *,
+    regime: str,
+    provider: str,
+    model: str,
+) -> str:
+    if hasattr(body, "model_dump"):
+        request_payload = body.model_dump(mode="json")
+    else:  # pydantic v1 compatibility
+        request_payload = body.dict()
+    encoded = json.dumps(
+        {
+            "request": request_payload,
+            "regime": regime,
+            "provider": provider,
+            "model": model,
+        },
+        ensure_ascii=False,
+        sort_keys=True,
+        default=str,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _setup_cache_get(key: str, *, now: float | None = None) -> Optional[Dict[str, str]]:
+    if _SETUP_CACHE_TTL_SEC <= 0:
+        return None
+    current = time.time() if now is None else float(now)
+    item = _SETUP_AI_CACHE.get(key)
+    if not item:
+        return None
+    created, payload = item
+    if current - created > _SETUP_CACHE_TTL_SEC:
+        _SETUP_AI_CACHE.pop(key, None)
+        return None
+    return dict(payload)
+
+
+def _setup_cache_set(
+    key: str,
+    response: SetupAnalysisResponse,
+    *,
+    now: float | None = None,
+) -> None:
+    if _SETUP_CACHE_TTL_SEC <= 0:
+        return
+    if len(_SETUP_AI_CACHE) >= _SETUP_CACHE_MAX_ITEMS:
+        oldest = min(_SETUP_AI_CACHE, key=lambda item_key: _SETUP_AI_CACHE[item_key][0])
+        _SETUP_AI_CACHE.pop(oldest, None)
+    _SETUP_AI_CACHE[key] = (
+        time.time() if now is None else float(now),
+        {
+            "verdict": response.verdict,
+            "reasoning": response.reasoning,
+            "risk_note": response.risk_note,
+            "model": response.model,
+        },
+    )
+
+
 @router.post("/analyze-setup", response_model=SetupAnalysisResponse)
 async def analyze_setup(body: SetupAnalysisRequest, _: str = Depends(require_auth)):
     """
     Fast AI analysis of a single setup card.
-    Uses claude-haiku for low latency. Returns verdict + reasoning in ~1-2s.
+    Uses the configured advisory provider (DeepSeek by default) with a short
+    TTL cache. It never grants trade or risk authority.
     """
     truth_ok, truth_blockers = _web_live_truth_gate()
     if not truth_ok:
@@ -1847,72 +2085,64 @@ Respond with ONLY this JSON (no markdown):
         "Use SKIP when the setup conflicts with regime or has weak reasons."
     )
 
-    try:
-        model = "local-setup-fallback"
-        prefer_anthropic = os.getenv("WEB_SETUP_AI_PROVIDER", "deepseek").strip().lower() == "anthropic"
-        if deepseek_key and not prefer_anthropic:
-            import ssl as _ssl
-            import urllib.request as _urllib_req
+    prefer_anthropic = (
+        os.getenv("WEB_SETUP_AI_PROVIDER", "deepseek").strip().lower() == "anthropic"
+    )
+    if deepseek_key and (not prefer_anthropic or not anthropic_key):
+        provider = "deepseek"
+        model = normalize_deepseek_model(
+            os.getenv("WEB_SETUP_AI_MODEL", os.getenv("WEB_AI_MODEL", "deepseek-v4-flash"))
+        )
+    elif anthropic_key:
+        provider = "anthropic"
+        model = os.getenv("WEB_SETUP_AI_MODEL", "claude-haiku-4-5-20251001")
+    else:
+        return _local_setup_analysis(body, reason="no AI API key configured")
 
-            model = os.getenv("WEB_SETUP_AI_MODEL", os.getenv("WEB_AI_MODEL", "deepseek-chat"))
-            payload = json.dumps({
-                "model": model,
-                "max_tokens": 400,
-                "temperature": 0.2,
-                "messages": [
+    cache_key = _setup_cache_key(
+        body,
+        regime=str(regime_label),
+        provider=provider,
+        model=model,
+    )
+    cached = _setup_cache_get(cache_key)
+    if cached:
+        if provider == "deepseek":
+            append_deepseek_usage(
+                source="web_setup_analysis",
+                model=model,
+                max_tokens=_WEB_SETUP_MAX_TOKENS,
+                prompt_chars=0,
+                latency_ms=0,
+                status="cache_hit",
+            )
+        return SetupAnalysisResponse(**cached)
+
+    try:
+        if provider == "deepseek":
+            raw, model = _deepseek_chat_completion(
+                api_key=deepseek_key,
+                model=model,
+                messages=[
                     {"role": "system", "content": system_msg},
                     {"role": "user", "content": user_msg},
                 ],
-            }).encode()
-            req = _urllib_req.Request(
-                "https://api.deepseek.com/chat/completions",
-                data=payload,
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": f"Bearer {deepseek_key}",
-                },
+                max_tokens=_WEB_SETUP_MAX_TOKENS,
+                temperature=0.2,
+                timeout_sec=30,
+                source="web_setup_analysis",
             )
-            with _urllib_req.urlopen(req, context=_ssl.create_default_context(), timeout=30) as resp:
-                js = json.loads(resp.read().decode())
-            raw = js["choices"][0]["message"]["content"].strip()
-        elif anthropic_key:
+        else:
             import anthropic as _ant
+
             client = _ant.Anthropic(api_key=anthropic_key)
-            model = os.getenv("WEB_SETUP_AI_MODEL", "claude-haiku-4-5-20251001")
             resp = client.messages.create(
                 model=model,
-                max_tokens=400,
+                max_tokens=_WEB_SETUP_MAX_TOKENS,
                 system=system_msg,
                 messages=[{"role": "user", "content": user_msg}],
             )
             raw = resp.content[0].text.strip()
-        elif deepseek_key:
-            import ssl as _ssl
-            import urllib.request as _urllib_req
-
-            model = os.getenv("WEB_SETUP_AI_MODEL", os.getenv("WEB_AI_MODEL", "deepseek-chat"))
-            payload = json.dumps({
-                "model": model,
-                "max_tokens": 400,
-                "temperature": 0.2,
-                "messages": [
-                    {"role": "system", "content": system_msg},
-                    {"role": "user", "content": user_msg},
-                ],
-            }).encode()
-            req = _urllib_req.Request(
-                "https://api.deepseek.com/chat/completions",
-                data=payload,
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": f"Bearer {deepseek_key}",
-                },
-            )
-            with _urllib_req.urlopen(req, context=_ssl.create_default_context(), timeout=30) as resp:
-                js = json.loads(resp.read().decode())
-            raw = js["choices"][0]["message"]["content"].strip()
-        else:
-            return _local_setup_analysis(body, reason="no AI API key configured")
 
         # Strip markdown code fences if model adds them anyway
         if raw.startswith("```"):
@@ -1928,12 +2158,14 @@ Respond with ONLY this JSON (no markdown):
         if not _has_cyrillic(reasoning + " " + risk_note):
             return _local_setup_analysis(body, reason="external AI returned non-Russian text")
 
-        return SetupAnalysisResponse(
+        response = SetupAnalysisResponse(
             verdict=verdict,
             reasoning=reasoning,
             risk_note=risk_note,
             model=model,
         )
+        _setup_cache_set(cache_key, response)
+        return response
 
     except json.JSONDecodeError as exc:
         # Model didn't return valid JSON — return raw as reasoning

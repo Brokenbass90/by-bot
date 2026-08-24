@@ -381,10 +381,23 @@ def _ds_universe_suggest(strategy_family: str, current_symbols: list[str],
 # Strategy tune via existing agent
 # ---------------------------------------------------------------------------
 
-def _run_tune_phase(strategies: list[str], dry_run: bool, quiet: bool) -> list[str]:
+def _run_tune_phase(
+    strategies: list[str],
+    dry_run: bool,
+    quiet: bool,
+    *,
+    request_cap: int | None = None,
+) -> list[str]:
     """Call tune_strategy for each strategy. Returns list of result strings."""
+    cap = len(strategies) if request_cap is None else max(0, int(request_cap))
+    selected = list(strategies)[:cap]
     if dry_run:
-        return [f"[dry-run] Would tune: {', '.join(strategies)}"]
+        results = [f"[dry-run] Would tune: {', '.join(selected) or 'none'}"]
+        if len(strategies) > len(selected):
+            results.append(
+                f"[tune] skipped_by_weekly_api_cap={len(strategies) - len(selected)}"
+            )
+        return results
     try:
         from deepseek_autoresearch_agent import tune_strategy, build_research_context
         from deepseek_overlay import DeepSeekOverlay
@@ -399,7 +412,7 @@ def _run_tune_phase(strategies: list[str], dry_run: bool, quiet: bool) -> list[s
     if build_operator_snapshot is not None:
         snapshot["operator_context"] = build_operator_snapshot(ROOT)
     results = []
-    for st in strategies:
+    for st in selected:
         if not quiet:
             print(f"[tune] Analyzing {st}...")
         try:
@@ -408,6 +421,10 @@ def _run_tune_phase(strategies: list[str], dry_run: bool, quiet: bool) -> list[s
         except Exception as e:
             results.append(f"<b>{st}</b>: ошибка — {e}")
         time.sleep(2)  # polite delay between API calls
+    if len(strategies) > len(selected):
+        results.append(
+            f"[tune] skipped_by_weekly_api_cap={len(strategies) - len(selected)}"
+        )
     return results
 
 
@@ -462,6 +479,9 @@ def _format_universe_section(suggestions: dict[str, dict[str, Any]]) -> str:
         "  Не применять к live без liquidity check + acceptance gate.",
     ]
     for family, s in suggestions.items():
+        if s.get("skipped"):
+            lines.append(f"  ⏭ {family}: skipped ({s['skipped']})")
+            continue
         if "error" in s:
             lines.append(f"  ❌ {family}: {s['error'][:80]}")
             continue
@@ -523,11 +543,26 @@ def main() -> int:
     tg_chat_id = _env("TG_CHAT_ID") or _env("TG_CHAT")
     api_key = _env("DEEPSEEK_API_KEY")
     base_url = _env("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
-    model = _env("DEEPSEEK_MODEL", "deepseek-chat")
+    model = _env("DEEPSEEK_MODEL", "deepseek-v4-flash")
     now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
+    # No implicit paid weekly work.  A positive explicit cap is the enable
+    # switch; this keeps paid API use manual-only when the env is absent.
+    weekly_request_cap = max(0, int(_env("DEEPSEEK_WEEKLY_REQUEST_CAP", "0") or 0))
+    weekly_tune_cap = max(0, int(_env("DEEPSEEK_WEEKLY_TUNE_CAP", "1") or 1))
+    try:
+        from bot.deepseek_overlay import DeepSeekOverlay
+
+        shared_daily_remaining = DeepSeekOverlay().request_budget_remaining()
+    except Exception:
+        shared_daily_remaining = 0
+    weekly_remaining = min(weekly_request_cap, shared_daily_remaining)
+    if args.dry_run:
+        weekly_remaining = weekly_request_cap
+
     report_sections: list[str] = [
-        f"🤖 <b>DeepSeek Weekly Report</b>\n📅 {now_str}"
+        f"🤖 <b>DeepSeek Weekly Report</b>\n📅 {now_str}\n"
+        f"AI request budget: weekly={weekly_request_cap}, shared_daily_remaining={shared_daily_remaining}"
     ]
 
     # ── Phase 0: Research gate status ────────────────────────────────────────
@@ -581,7 +616,15 @@ def main() -> int:
     if "tune" in phases:
         if not args.quiet:
             print(f"[2/5] Running DeepSeek tune for: {', '.join(strategies)}...")
-        tune_results = _run_tune_phase(strategies, dry_run=args.dry_run, quiet=args.quiet)
+        tune_slots = min(weekly_tune_cap, weekly_remaining)
+        tune_results = _run_tune_phase(
+            strategies,
+            dry_run=args.dry_run,
+            quiet=args.quiet,
+            request_cap=tune_slots,
+        )
+        if not args.dry_run:
+            weekly_remaining = max(0, weekly_remaining - tune_slots)
         section = "🔧 <b>DeepSeek param proposals</b>\n" + "\n\n".join(tune_results[:3])
         report_sections.append(section)
 
@@ -602,6 +645,9 @@ def main() -> int:
         universe_suggestions: dict[str, dict[str, Any]] = {}
         if not args.dry_run and api_key:
             for family, symbols in UNIVERSE_FAMILIES.items():
+                if weekly_remaining <= 0:
+                    universe_suggestions[family] = {"skipped": "weekly_api_cap"}
+                    continue
                 if not args.quiet:
                     print(f"  Universe expand: {family}...")
                 evidence_name = UNIVERSE_EVIDENCE_STRATEGIES.get(family, "")
@@ -621,6 +667,7 @@ def main() -> int:
                     )
                 sugg = _ds_universe_suggest(family, symbols, perf, api_key, base_url, model)
                 universe_suggestions[family] = sugg
+                weekly_remaining -= 1
                 time.sleep(3)
         elif args.dry_run:
             universe_suggestions = {f: {"add": ["EXAMPLE1USDT"], "remove": [], "rationale": "dry-run"} for f in UNIVERSE_FAMILIES}
