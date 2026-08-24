@@ -5,12 +5,12 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-WorkingDirectory=/root/by-bot-research/sbr1-zero-risk-shadow
+WorkingDirectory=/opt/bybot-research/sbr1-zero-risk-shadow
 Environment=PYTHONHASHSEED=0
 Environment=TZ=UTC
 UMask=0077
-ExecStartPre=/root/by-bot/.venv/bin/python scripts/run_sbr1_zero_risk_shadow.py --config /root/by-bot-research/sbr1-zero-risk-shadow/runtime/config/sbr1_zero_risk_shadow.json
-ExecStart=/root/by-bot/.venv/bin/python scripts/run_sbr1_zero_risk_shadow.py --config /root/by-bot-research/sbr1-zero-risk-shadow/runtime/config/sbr1_zero_risk_shadow.json --once --ack ZERO_RISK_SHADOW_ONLY
+ExecStartPre=/root/by-bot/.venv/bin/python scripts/run_sbr1_zero_risk_shadow.py --config /opt/bybot-research/sbr1-zero-risk-shadow/runtime/config/sbr1_zero_risk_shadow.json
+ExecStart=/root/by-bot/.venv/bin/python scripts/run_sbr1_zero_risk_shadow.py --config /opt/bybot-research/sbr1-zero-risk-shadow/runtime/config/sbr1_zero_risk_shadow.json --once --ack ZERO_RISK_SHADOW_ONLY
 NoNewPrivileges=true
 PrivateDevices=true
 PrivateTmp=true
@@ -21,7 +21,7 @@ ProtectKernelLogs=true
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectSystem=strict
-ReadWritePaths=/root/by-bot-research/sbr1-zero-risk-shadow/runtime/sbr1_zero_risk_shadow
+ReadWritePaths=/opt/bybot-research/sbr1-zero-risk-shadow/runtime/sbr1_zero_risk_shadow
 RestrictNamespaces=true
 RestrictRealtime=true
 RestrictSUIDSGID=true

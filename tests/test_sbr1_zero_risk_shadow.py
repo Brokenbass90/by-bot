@@ -380,9 +380,9 @@ def test_systemd_timer_covers_h1_decision_and_next_m5_fill_without_catchup():
     timer = (ROOT / "deploy/systemd/sbr1-zero-risk-shadow.timer").read_text()
     assert "--once --ack ZERO_RISK_SHADOW_ONLY" in service
     assert "ProtectSystem=strict" in service
-    assert "WorkingDirectory=/root/by-bot-research/sbr1-zero-risk-shadow" in service
+    assert "WorkingDirectory=/opt/bybot-research/sbr1-zero-risk-shadow" in service
     assert (
-        "ReadWritePaths=/root/by-bot-research/sbr1-zero-risk-shadow/"
+        "ReadWritePaths=/opt/bybot-research/sbr1-zero-risk-shadow/"
         "runtime/sbr1_zero_risk_shadow" in service
     )
     assert "WorkingDirectory=/root/by-bot\n" not in service
