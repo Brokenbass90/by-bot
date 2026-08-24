@@ -2,6 +2,20 @@
 
 **Authority:** verified operational handoff. Research and shadow results below do not grant money authority.
 
+## Continuation receipt — 2026-08-24 10:29 UTC
+
+- Fresh direct Alpaca broker GET showed account equity `490.85`, cash `391.47`, and two positions with full-quantity protective stops still above entry:
+  - `ABBV`: current mark `265.30`, unrealized P&L `+2.409294`, entry `247.55`, stop `257.37`, quantity `0.135734866`, `DAY`, status `new`.
+  - `SCHW`: current mark `112.40`, unrealized P&L `+6.115853`, entry `101.552`, stop `108.20`, quantity `0.563776973`, `DAY`, status `new`.
+- Current combined unrealized P&L was approximately `+$8.5251`. The two stop levels lock approximately `+$5.0809` before gaps, slippage and fees. The latter is a floor estimate, not a profit target and not a guaranteed fill.
+- The live HWM ledger remained lifecycle-bound and monotonic: `ABBV hwm=266.71 / accepted_stop_floor=257.37`; `SCHW hwm=112.30 / accepted_stop_floor=108.20`. The protective manager arms after a `+3.5%` peak gain, proposes `max(current stop, broker-accepted floor, HWM minus 3.5%, entry plus 0.5%)`, caps the replacement below the current market, and only raises by at least 10 bps. It never intentionally lowers a broker-accepted floor.
+- The deployed and recovery-branch source hashes now match exactly: bridge `1237fafb...`, protective manager `32390140...`. Scheduled coverage is the live bridge every 30 minutes and the exit-only protective manager every 15 minutes on weekdays.
+- Larger account equity does **not** currently switch entries to whole-share sizing or native trailing automatically. The bridge sizes `qty = notional / entry`, which is normally fractional; fractional stop orders require `DAY`, and the native-trailing path skips fractional quantities. A future whole-share profile must explicitly floor quantity, preserve cash reserve and reject candidates that cannot buy at least one share. With three positions and 70% target allocation, `$5,000` supplies roughly `$1,167` per equal-weight slot, enough for at least one whole share for names priced below that amount, but this is only mechanical capacity.
+- No current evidence supports a `4-5%` monthly Alpaca expectation. The strongest diagnostic challenger produced `+57.74%` over 25 months, `25.65%` annualized, about `1.84%` geometric monthly, PF `1.84`, 40 realized trades and `14.36%` daily max drawdown. It remains `exact_live_contract=false` and `capital_authorized=false`; the current-contract proxy was weaker (`11.14%` annualized, `23.71%` drawdown).
+- Research is active: ten local screen sessions are alive. At `10:21 UTC`, the local station reported six of six supervised jobs healthy and `live_order_authority=false`. Orderbook/L2/trades collectors, ATT1 maker paper, two funding shadows, Alpaca adaptive shadow, XSEC and in-play prospective work continue; none grants capital authority.
+- Disk remained `351 GiB` used with approximately `59 GiB` available. Large non-project consumers now isolated include `~/Library/Application Support/Claude` about `16 GiB` (`vm_bundles` about `12 GiB`, cache/code cache about `1.4 GiB`), `~/Library/Developer/Xcode` about `7.6 GiB` (old iOS 26.3 device support about `5.4 GiB`), `.codex` about `20 GiB`, and `.ollama` about `4.9 GiB`. No deletion was performed. The safest immediate non-project candidates are the old iOS 26.3 support (`5.4 GiB`, re-downloadable), Claude cache/code cache (`~1.4 GiB`, only after Claude exits), and Ollama update cache (`~180 MiB`).
+- Proposed next bounded feature, not yet implemented: a read-only Alpaca health auditor that reconciles broker positions/orders, stop coverage and monotonic floors, deployed source hashes, schedule freshness, candidate age and money-authority flags; it writes a signed/hash-bound receipt and alerts Telegram, but cannot mutate orders or enable entries.
+
 ## Continuation receipt — 2026-08-24 09:00 UTC
 
 - Direct Alpaca broker truth still showed two full-quantity protective stops above entry while the market was closed:
