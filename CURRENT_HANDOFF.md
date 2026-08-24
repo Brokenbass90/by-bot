@@ -26,6 +26,10 @@ Live money truth:
   yet connected to its live caller; do not increase risk.
 - SBR1 is zero-risk public shadow only. XAU/MT5 is pure paper code only.
 
+Owner-only credential action: rotate the MT5 MCP token, then double-click
+`START_MT5_DEMO_KEY_SETUP.command`. The shortcut writes a demo-only local env
+with execution/live/remote-AI disabled; it does not connect or trade.
+
 Next strong-model task, and only that task:
 
 > Complete `LIVE_CALLER_PARITY`: persisted causal BTC H1 regime bootstrap,

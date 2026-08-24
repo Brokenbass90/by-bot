@@ -46,6 +46,11 @@
   surface, passes 18 focused tests and is not deployed. Authenticated Bullwaves
   demo acquisition waits for MT5 token rotation and exact demo identity
   verification.
+- `START_MT5_DEMO_KEY_SETUP.command` is the owner-facing rotation shortcut. It
+  writes `signal_copy/.env` with mode `600`, preserves a mode-`600` backup,
+  hides the token from output and forces execution, live-account access and
+  remote AI off. It never connects or trades; `signal_copy/check_live.py`
+  remains a separate manual read-only verification after rotation.
 - Bybit heartbeat at `13:11 UTC` was 18 seconds old: `trade_on=true`,
   `dry_run=false`, `regime=bull_trend`, zero open trades,
   `ws_guard_active=0`, and 12,165,707 messages. `ws_connect=28` and
