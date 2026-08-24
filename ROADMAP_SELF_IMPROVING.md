@@ -1,10 +1,36 @@
 # Roadmap: Self-Improving Algobot
 
-**Цель:** Полностью автономная система, которая сама обнаруживает возможности, оптимизирует стратегии, адаптируется к рынку и масштабирует прибыльные идеи — без ручного вмешательства.
+**Цель:** Контролируемая самообучающаяся система, которая сама обнаруживает
+возможности, проверяет их и адаптируется к рынку через воспроизводимые gates.
+Автоматическая генерация не даёт права на деньги: AI/Ollama/DeepSeek работают
+в режиме `proposal-only`, а promotion, риск и ордера требуют hash-bound
+доказательств и явного owner-approved release.
 
 **Дата создания:** 2026-04-10  
-**Обновлено:** 2026-04-20  
-**Статус:** Фаза 2 (финал) → переход к Фазе 3
+**Обновлено:** 2026-08-24
+**Статус:** архитектура и исследовательский pipeline частично готовы; closed-loop
+самооптимизация НЕ считается завершённой до live/research parity, shadow
+control и paper lifecycle gates.
+
+## Канонический жизненный цикл идеи
+
+Для каждой ноги порядок неизменен:
+
+`propose → preregister → parity → shadow + random control → paper lifecycle → tiny canary → scale`
+
+Исследовательская вселенная должна быть шире денежной: evidence-shadow и
+контроль собирают статистику на заранее зафиксированной широкой universe,
+тогда как live money sleeve остаётся узким до отдельного parity и
+exposure/correlation gate. AI только предлагает finding/experiment и не может
+сам продвигать кандидата, менять конфиг, риск или включать торговлю.
+
+## Фактическая граница текущей автономности
+
+Оркестратор, router, allocator, watchdogs и исследовательская очередь существуют
+как компоненты, но наличие компонента не означает, что он подключён к каждому
+денежному caller. Для ATT1/SBR1 это проверяется caller receipt и fixed-universe
+ON/OFF replay. Самоисправление означает безопасное обнаружение → reproduction →
+patch → tests → deploy receipt; не бесконтрольное изменение live.
 
 ---
 
@@ -71,8 +97,9 @@
 ### 3.1 Auto-Apply Winners (ПРИОРИТЕТ #1)
 ```python
 # scripts/auto_apply_research_winner.py
-# Когда autoresearch находит WF-22 pass: автоматически патчит env + перезагружает allocator
-# Защита: ≥3 разных run с похожими params + тихое окно 02:00-04:00 UTC
+# Research winner может только сформировать проверяемый apply proposal.
+# Применение требует независимого receipt, hash/config parity, owner approval
+# и тихого окна; отсутствие любого условия = fail-closed, без изменения live.
 ```
 
 ### 3.2 Performance Degradation Detector (ПРИОРИТЕТ #2)
@@ -151,21 +178,24 @@ SELF-RESEARCH
 ├── bot/deepseek_autoresearch_agent.py    — AI анализ
 │
 SELF-OPTIMIZE (НЕТ — ФАЗА 3)
-├── scripts/auto_apply_research_winner.py   — TODO
+├── scripts/auto_apply_research_winner.py   — fail-closed proposal/apply gate
 ├── scripts/live_vs_backtest_monitor.py     — TODO
 └── runtime/params_history.jsonl           — TODO
 ```
 
 ---
 
-## Приоритеты прямо сейчас (апрель 2026)
+## Приоритеты прямо сейчас (август 2026)
 
-1. **Ждём серверных результатов**: breakdown_v1 WF-22 + elder_v3 sweep + att1 WF-22 — 3-4 дня
-2. **Когда вернётся Codex**: inplay_breakout retune sweep с HTF SL params
-3. **Добавить build_btc_dominance_state.py в cron**: `0 */4 * * * python3 scripts/build_btc_dominance_state.py`
-4. **Зарегистрировать SOB1 в режимах**: добавить `ENABLE_SOB1_TRADING=1` в bull/bear оверлеи
-5. **Alpaca paper trading**: ещё 3-4 недели paper → реальные деньги при положительных результатах
-6. **V7 sleeves risk reduction**: выставить `risk_mult=0.3` для всех 5 непроверенных рукавов до прохождения WF-22
+1. Закрыть live-native caller parity ATT1/SBR1 и доказать фактическое
+   подключение режима/аллокатора, не меняя деньги до PASS.
+2. Расширить SBR1/ATT1 evidence-shadow и random control на заранее записанную
+   universe, оставив money universe узкой.
+3. Завершить Alpaca paper lifecycle и protection health auditor; SAFE_HOLD
+   снимать только отдельным promotion receipt.
+4. Провести XAU/Forex и Polymarket только как data/paper research, с exact
+   costs, settlement и no-order authority.
+5. Вести 30/90-дневные gates и receipts вместо календарных обещаний доходности.
 
 ---
 

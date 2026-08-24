@@ -4,6 +4,58 @@
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
 
+## Canonical operating sequence — 2026-08-24
+
+Это единая последовательность для любой новой ноги и для изменений уже живой
+ноги:
+
+`propose → preregister → parity → shadow + random control → paper lifecycle → tiny canary → scale`
+
+ИИ, Ollama и DeepSeek могут индексировать код, искать аномалии, предлагать
+гипотезы и готовить reproduction-пакеты. Они остаются `proposal-only`: у них нет
+самостоятельного права менять параметры, риск, аллокатор, ордера или переводить
+стратегию между стадиями. Переход выполняется только через hash-bound receipt,
+детерминированный gate и owner-approved release.
+
+### Разделение вселенных доказательства и денег
+
+Для ATT1 и SBR1 это разные контракты:
+
+- `evidence universe` — широкая фиксированная вселенная для безрискового shadow,
+  random control и prospective evidence;
+- `money universe` — узкая вселенная с отдельным live-native parity, лимитом
+  слотов, корреляционным/exposure gate и собственной money authority.
+
+Текущий ориентир для SBR1 получен прямым подсчётом доступной истории, а не
+обещанием частоты: major-8 около `13.4` месяцев до 50 regime-eligible решений,
+fixed-51 около `2.5` месяцев, full-137 около `1.9` месяца. Это оценки при
+сохранении исторической частоты; они не заменяют parity, контроль случайности,
+качество покрытия и фактическую prospective cadence. Для ATT1 те же universe
+должны быть пересчитаны отдельным receipt, их нельзя переносить с SBR1.
+
+### Цели ускоренного цикла
+
+**30 дней:** закрыть live-caller parity ATT1/SBR1; запустить широкий
+evidence-shadow с предрегистрацией и random control; завершить Alpaca
+signal→fill→protection→management→exit paper replay; сделать health auditor
+наблюдаемым; получить XAU/MT5 demo paper-tracker без ордеров. Ни один из этих
+результатов не расширяет money authority сам по себе.
+
+**90 дней:** получить минимум одну чистую prospective cohort с независимым
+контролем, два подтверждённых lifecycle-receipt на каждом money-контуре,
+reconciled allocator/regime stack и только затем рассматривать tiny canary;
+масштабирование — ступенчато, после стабильной экономики, а не по календарю.
+Цели доходности являются управленческими ориентирами, не прогнозом и не
+основанием занимать капитал.
+
+### Polymarket — research-only backlog
+
+Идея добавлена в backlog как отдельный data/research контур: проверить API и
+историческую доступность, комиссию, spread/liquidity, правила settlement,
+oracle/resolve risk, latency и возможность причинного paper-replay. До этого
+нет wallet, private key, deposit, order или market-making authority; любые
+результаты проходят ту же prereg→replay→shadow последовательность.
+
 ## Latest recovery update — 2026-08-15 04:50 UTC
 
 ### Решение одним абзацем
