@@ -141,6 +141,17 @@ def _candidate_asof_from_bridge(bridge_event: dict[str, Any]) -> str:
     return parsed.isoformat()
 
 
+def _bridge_success_at(bridge_event: dict[str, Any]) -> str:
+    """Return causal completion time from the bridge's actual receipt schema."""
+    direct = str(bridge_event.get("generated_at_utc") or "").strip()
+    if direct:
+        return direct
+    broker_truth_after = bridge_event.get("broker_truth_after")
+    if isinstance(broker_truth_after, dict):
+        return str(broker_truth_after.get("generated_at_utc") or "").strip()
+    return ""
+
+
 def build_operations_from_manifest(
     manifest: dict[str, Any],
     *,
@@ -201,7 +212,7 @@ def build_operations_from_manifest(
             manifest.get("protection_max_age_minutes"), 30.0
         ),
         "bridge_last_success_at_utc": str(
-            bridge_event.get("generated_at_utc") or ""
+            _bridge_success_at(bridge_event)
         ),
         "bridge_max_age_minutes": _number(
             manifest.get("bridge_max_age_minutes"), 90.0

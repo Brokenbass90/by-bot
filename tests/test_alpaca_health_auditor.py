@@ -212,7 +212,8 @@ def test_manifest_collector_calculates_source_hashes_logs_and_safe_hold(tmp_path
     bridge_log = tmp_path / "bridge.log"
     protection_log = tmp_path / "protection.log"
     bridge_log.write_text(
-        '{"generated_at_utc":"2026-08-24T13:40:00+00:00","latest_entry_day":"2026-07-31"}\n',
+        '{"status":"send_orders","latest_entry_day":"2026-07-31",'
+        '"broker_truth_after":{"generated_at_utc":"2026-08-24T13:40:00+00:00"}}\n',
         encoding="utf-8",
     )
     protection_log.write_text(
@@ -255,6 +256,7 @@ def test_manifest_collector_calculates_source_hashes_logs_and_safe_hold(tmp_path
     assert operations["authority"] == "calculated_local_files_and_logs"
     assert operations["allow_new_entries"] is False
     assert operations["schedule_expected_active"] is True
+    assert operations["bridge_last_success_at_utc"] == "2026-08-24T13:40:00+00:00"
     assert operations["candidate_asof_utc"].startswith("2026-07-31")
     assert all(
         row["expected"] == row["observed"]

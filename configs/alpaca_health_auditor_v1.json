@@ -23,7 +23,7 @@
   "source_files": {
     "health_auditor": {
       "path": "scripts/alpaca_health_auditor.py",
-      "expected_sha256": "0c81432d365187cdf3c81bc4304124a36b44465c64a36d2ac2edd3b6ecac331b"
+      "expected_sha256": "963d55b776821dd254569a51296c4a963f68546aad30c8ee245a589bd6ec64d4"
     },
     "readonly_collector": {
       "path": "scripts/check_alpaca_state_readonly.py",
