@@ -9,15 +9,20 @@ from datetime import datetime, timezone
 
 from scripts.equities_alpaca_paper_bridge import (
     Pick,
+    _accepted_floor_preflight_violations,
     _active_reentry_blocks,
     _add_reentry_block,
+    _broker_protection_policy_violations,
     _broker_truth_snapshot,
     _broker_stop_rearm_symbols,
     _default_broker_protection_tif,
     _entry_relative_stop_price,
     _hard_capped_normalized_weights,
     _new_entry_allowed,
+    _persistent_exit_tif_for_qty,
+    _protected_rearm_stop_price,
     _select_monthly_cycle_picks,
+    _single_covering_stop_needing_update,
     _save_hwm_state,
     _save_reentry_block_state,
     _trail_stop_triggered,
@@ -25,9 +30,180 @@ from scripts.equities_alpaca_paper_bridge import (
 
 
 class TestAlpacaMonthlyTrailing(unittest.TestCase):
-    def test_simple_stop_defaults_to_gtc_so_ratchet_survives_session_boundary(self):
+    def test_broad_default_is_overridden_by_exact_quantity_policy(self):
         self.assertEqual(_default_broker_protection_tif("simple_stop"), "gtc")
         self.assertEqual(_default_broker_protection_tif("bracket"), "day")
+
+    def test_exit_tif_obeys_alpaca_fractional_order_matrix(self):
+        self.assertEqual(_persistent_exit_tif_for_qty("gtc", 0.563776973), "day")
+        self.assertEqual(_persistent_exit_tif_for_qty("day", 0.135734866), "day")
+        self.assertEqual(_persistent_exit_tif_for_qty("day", 1.0), "gtc")
+        self.assertEqual(_persistent_exit_tif_for_qty("gtc", 2.0), "gtc")
+        self.assertEqual(_persistent_exit_tif_for_qty("day", 1.5), "day")
+        self.assertEqual(_persistent_exit_tif_for_qty("day", 1.0), "gtc")
+        self.assertEqual(_persistent_exit_tif_for_qty("day", 0.999999999), "day")
+        self.assertEqual(_persistent_exit_tif_for_qty("day", 1.000000001), "day")
+
+    def test_single_covering_day_stop_is_updated_only_for_whole_qty_policy(self):
+        stop = {
+            "id": "day-stop",
+            "qty": "0.563776973",
+            "filled_qty": "0",
+            "time_in_force": "day",
+            "stop_price": "108.20",
+            "type": "stop",
+        }
+        fractional_tif = _persistent_exit_tif_for_qty("gtc", 0.563776973)
+        self.assertIsNone(_single_covering_stop_needing_update(
+            [stop],
+            0.563776973,
+            fractional_tif,
+            108.20,
+        ))
+        whole_stop = {**stop, "qty": "1"}
+        selected = _single_covering_stop_needing_update(
+            [whole_stop],
+            1.0,
+            _persistent_exit_tif_for_qty("day", 1.0),
+            108.20,
+        )
+        self.assertIs(selected, whole_stop)
+
+    def test_covering_fractional_day_stop_is_raised_when_hwm_floor_is_higher(self):
+        stop = {
+            "id": "day-stop",
+            "qty": "0.563776973",
+            "filled_qty": "0",
+            "time_in_force": "day",
+            "stop_price": "96.47",
+            "type": "stop",
+        }
+        selected = _single_covering_stop_needing_update(
+            [stop],
+            0.563776973,
+            "day",
+            108.20,
+        )
+        self.assertIs(selected, stop)
+        self.assertIsNone(
+            _single_covering_stop_needing_update(
+                [{**stop, "type": "trailing_stop"}],
+                0.563776973,
+                "day",
+                108.20,
+            )
+        )
+
+    def test_rearm_floor_uses_only_reconciled_protective_hwm(self):
+        position = {
+            "symbol": "ABBV",
+            "qty": "0.135734866",
+            "avg_entry_price": "247.55",
+            "current_price": "265.50",
+        }
+        state = {
+            "ABBV": {
+                "entry_price": 247.55,
+                "hwm": 266.71,
+                "qty": 0.135734866,
+                "lifecycle_first_seen_at_utc": "2026-08-10T13:30:00Z",
+                "accepted_stop_floor": 257.37,
+            }
+        }
+        protected = _protected_rearm_stop_price(
+            "ABBV",
+            235.17,
+            position,
+            [],
+            state,
+        )
+        self.assertEqual(protected, 257.37)
+
+        stale_state = {
+            "ABBV": {
+                "entry_price": 200.0,
+                "hwm": 300.0,
+                "qty": 0.135734866,
+                "lifecycle_first_seen_at_utc": "2026-08-01T13:30:00Z",
+                "accepted_stop_floor": 290.0,
+            }
+        }
+        self.assertEqual(
+            _protected_rearm_stop_price(
+                "ABBV",
+                235.17,
+                position,
+                [],
+                stale_state,
+            ),
+            235.17,
+        )
+
+        hwm_only = {
+            "ABBV": {
+                "entry_price": 247.55,
+                "hwm": 300.0,
+                "qty": 0.135734866,
+                "lifecycle_first_seen_at_utc": "2026-08-10T13:30:00Z",
+            }
+        }
+        self.assertEqual(
+            _protected_rearm_stop_price("ABBV", 235.17, position, [], hwm_only),
+            235.17,
+        )
+
+    def test_rearm_never_lowers_an_existing_broker_stop(self):
+        protected = _protected_rearm_stop_price(
+            "SCHW",
+            96.47,
+            {"qty": "0.5", "avg_entry_price": "101.552"},
+            [{"stop_price": "109.25"}],
+            {},
+        )
+        self.assertEqual(protected, 109.25)
+
+    def test_existing_lifecycle_must_have_authoritative_floor_before_mutation(self):
+        position = {
+            "symbol": "SCHW",
+            "qty": "0.563776973",
+            "avg_entry_price": "101.552",
+        }
+        state = {
+            "SCHW": {
+                "entry_price": 101.552,
+                "lifecycle_first_seen_at_utc": "2026-08-10T13:30:00Z",
+                "accepted_stop_floor": 108.20,
+            }
+        }
+        self.assertEqual(
+            _accepted_floor_preflight_violations(
+                positions=[position],
+                intraday_managed_symbols=set(),
+                protective_floor_state=state,
+                state_error="",
+            ),
+            [],
+        )
+        missing = _accepted_floor_preflight_violations(
+            positions=[position],
+            intraday_managed_symbols=set(),
+            protective_floor_state={},
+            state_error="state_missing",
+        )
+        self.assertEqual(missing[0]["reason"], "protective_floor_state_not_authoritative")
+        mismatched = _accepted_floor_preflight_violations(
+            positions=[position],
+            intraday_managed_symbols=set(),
+            protective_floor_state={
+                "SCHW": {
+                    "entry_price": 99.0,
+                    "lifecycle_first_seen_at_utc": "2026-08-10T13:30:00Z",
+                    "accepted_stop_floor": 108.20,
+                }
+            },
+            state_error="",
+        )
+        self.assertEqual(mismatched[0]["reason"], "existing_lifecycle_floor_not_reconciled")
 
     def test_entry_relative_stop_preserves_frozen_signal_risk_distance(self):
         pick = Pick(
@@ -82,7 +258,15 @@ class TestAlpacaMonthlyTrailing(unittest.TestCase):
         ):
             text = (root / relative).read_text(encoding="utf-8")
             self.assertIn("ALPACA_BROKER_PROTECTION_ORDER_CLASS=simple_stop", text)
-            self.assertIn("ALPACA_BROKER_PROTECTION_TIF=gtc", text)
+            self.assertIn("ALPACA_BROKER_PROTECTION_TIF=day", text)
+            self.assertIn("ALPACA_NATIVE_TRAIL_TIF=day", text)
+
+    def test_live_wrapper_sources_the_same_protective_exit_parameters(self):
+        root = Path(__file__).resolve().parents[1]
+        text = (root / "scripts/run_alpaca_live_v38_once.sh").read_text(encoding="utf-8")
+        protective_at = text.index("source configs/alpaca_protective_exit.env")
+        safe_hold_at = text.index("source configs/alpaca_live_v38_safe_hold.env")
+        self.assertLess(protective_at, safe_hold_at)
 
     def test_peak_arms_software_trail_after_current_gain_drops_below_trigger(self):
         state = {
@@ -269,13 +453,80 @@ class TestAlpacaMonthlySelection(unittest.TestCase):
         assert truth["stop_coverage_count"] == 0
         assert truth["stop_coverage_complete"] is False
 
+    def test_exact_protection_policy_accepts_fractional_day_stop_at_floor(self):
+        violations = _broker_protection_policy_violations(
+            positions=[
+                {
+                    "symbol": "SCHW",
+                    "qty": "0.563776973",
+                    "avg_entry_price": "101.552",
+                }
+            ],
+            open_orders=[
+                {
+                    "id": "stop-1",
+                    "symbol": "SCHW",
+                    "side": "sell",
+                    "type": "stop",
+                    "status": "new",
+                    "qty": "0.563776973",
+                    "filled_qty": "0",
+                    "stop_price": "108.20",
+                    "time_in_force": "day",
+                }
+            ],
+            intraday_managed_symbols=set(),
+            protective_floor_state={
+                "SCHW": {
+                    "entry_price": 101.552,
+                    "lifecycle_first_seen_at_utc": "2026-08-10T13:30:00Z",
+                    "accepted_stop_floor": 108.20,
+                }
+            },
+            requested_tif="gtc",
+        )
+        assert violations == []
+
+    def test_exact_protection_policy_rejects_low_floor_wrong_tif_and_missing_state(self):
+        base = {
+            "id": "stop-1",
+            "symbol": "SCHW",
+            "side": "sell",
+            "type": "stop",
+            "status": "new",
+            "qty": "0.563776973",
+            "filled_qty": "0",
+            "stop_price": "96.47",
+            "time_in_force": "gtc",
+        }
+        violations = _broker_protection_policy_violations(
+            positions=[
+                {
+                    "symbol": "SCHW",
+                    "qty": "0.563776973",
+                    "avg_entry_price": "101.552",
+                }
+            ],
+            open_orders=[base],
+            intraday_managed_symbols=set(),
+            protective_floor_state={},
+            requested_tif="gtc",
+        )
+        reasons = {row["reason"] for row in violations}
+        assert reasons == {
+            "fixed_stop_tif_mismatch",
+            "accepted_stop_floor_not_reconciled",
+        }
+
     def test_bridge_single_writer_lock_fails_closed(self):
         from tempfile import TemporaryDirectory
 
         with TemporaryDirectory() as directory:
             path = os.path.join(directory, "alpaca.lock")
             previous = os.environ.get("ALPACA_BRIDGE_LOCK_PATH")
+            previous_wait = os.environ.get("ALPACA_WRITER_LOCK_WAIT_SEC")
             os.environ["ALPACA_BRIDGE_LOCK_PATH"] = path
+            os.environ["ALPACA_WRITER_LOCK_WAIT_SEC"] = "0"
             fd = os.open(path, os.O_RDWR | os.O_CREAT, 0o600)
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
             try:
@@ -287,6 +538,10 @@ class TestAlpacaMonthlySelection(unittest.TestCase):
                     os.environ.pop("ALPACA_BRIDGE_LOCK_PATH", None)
                 else:
                     os.environ["ALPACA_BRIDGE_LOCK_PATH"] = previous
+                if previous_wait is None:
+                    os.environ.pop("ALPACA_WRITER_LOCK_WAIT_SEC", None)
+                else:
+                    os.environ["ALPACA_WRITER_LOCK_WAIT_SEC"] = previous_wait
 
 
 def test_hwm_state_is_atomically_replaced(tmp_path):

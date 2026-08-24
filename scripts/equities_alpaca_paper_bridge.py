@@ -16,6 +16,7 @@ import uuid
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 from urllib import error, request
@@ -278,7 +279,13 @@ def _format_qty(qty: float) -> str:
 
 
 def _is_fractional_qty(qty: float) -> bool:
-    return abs(qty - round(qty)) > 1e-8
+    try:
+        value = Decimal(str(qty))
+    except (InvalidOperation, ValueError):
+        return True
+    if not value.is_finite() or value <= 0:
+        return True
+    return value != value.to_integral_value()
 
 
 def _latest_summary_path(picks_csv: Path) -> Path | None:
@@ -891,14 +898,194 @@ def _new_entry_allowed(symbol: str, *, enabled: bool, blocked_symbols: set[str])
 
 
 def _default_broker_protection_tif(order_class: str) -> str:
-    """Keep standalone SAFE_HOLD stops alive across session boundaries.
+    """Return the broad default before exact broker quantity is known.
 
-    A DAY simple stop expires after the session. Re-arming it from the original
-    entry stop can silently undo a higher stop set by the protective ratchet.
-    Bracket entries retain Alpaca's DAY default; standalone stops default to
-    GTC so a raised stop is not recreated lower overnight.
+    ``_persistent_exit_tif_for_qty`` is the authoritative final policy:
+    fractional equity exits must remain DAY while whole-share exits may use
+    GTC.  A default alone must never decide the submitted TIF.
     """
     return "gtc" if order_class.strip().lower() == "simple_stop" else "day"
+
+
+def _persistent_exit_tif_for_qty(configured_tif: str, qty: float) -> str:
+    """Choose the strongest Alpaca TIF legal for the exact equity quantity.
+
+    Alpaca accepts fractional equity stop orders only with DAY. Whole-share
+    stop and trailing-stop orders can use GTC. The broker quantity therefore
+    has authority over a stale or over-broad configuration value.
+    """
+    del configured_tif
+    return "day" if _is_fractional_qty(qty) else "gtc"
+
+
+def _alpaca_account_lock_path(base_url: str, key_id: str) -> Path:
+    configured = _env("ALPACA_BRIDGE_LOCK_PATH", "")
+    if configured:
+        return Path(configured)
+    identity = f"{base_url}|{key_id}"
+    digest = hashlib.sha256(identity.encode("utf-8", errors="replace")).hexdigest()[:16]
+    return (
+        Path(__file__).resolve().parent.parent
+        / "runtime"
+        / "locks"
+        / f"alpaca_bridge_{digest}.lock"
+    )
+
+
+def _acquire_account_writer_lock(fd: int, wait_seconds: float) -> bool:
+    """Acquire the shared broker-writer lock with a bounded retry window."""
+    deadline = time.monotonic() + max(0.0, float(wait_seconds))
+    while True:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return True
+        except BlockingIOError:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return False
+            time.sleep(min(0.25, remaining))
+
+
+def _protective_exit_hwm_state_path() -> Path:
+    raw = _env("ALPACA_PROTECTIVE_EXIT_HWM_PATH", "")
+    if raw:
+        return Path(raw)
+    runtime_raw = _env("ALPACA_PROTECTIVE_EXIT_RUNTIME_DIR", "")
+    runtime_dir = (
+        Path(runtime_raw)
+        if runtime_raw
+        else Path(__file__).resolve().parent.parent / "runtime" / "alpaca_live_v38"
+    )
+    return runtime_dir / "protective_exit_hwm.json"
+
+
+def _load_protective_floor_state(path: Path) -> tuple[dict[str, Any], str]:
+    """Load the broker-accepted floor ledger without hiding corruption."""
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return {}, "state_missing"
+    except Exception as exc:
+        return {}, f"state_read_error:{type(exc).__name__}"
+    try:
+        payload = json.loads(raw)
+    except Exception as exc:
+        return {}, f"state_json_error:{type(exc).__name__}"
+    if not isinstance(payload, dict):
+        return {}, "state_root_not_object"
+    return payload, ""
+
+
+def _matching_protective_floor_record(
+    symbol: str,
+    position: dict[str, Any],
+    hwm_state: dict[str, Any],
+) -> dict[str, Any]:
+    """Return a broker-accepted floor bound to the current SAFE_HOLD lifecycle."""
+    record = hwm_state.get(str(symbol).strip().upper())
+    if not isinstance(record, dict):
+        return {}
+    position_entry = _safe_float(position.get("avg_entry_price"), 0.0)
+    record_entry = _safe_float(record.get("entry_price"), 0.0)
+    first_seen = str(record.get("lifecycle_first_seen_at_utc") or "").strip()
+    accepted_floor = _safe_float(record.get("accepted_stop_floor"), 0.0)
+    if position_entry <= 0 or record_entry <= 0 or not first_seen or accepted_floor <= 0:
+        return {}
+    entry_tolerance = max(0.01, position_entry * 1e-4)
+    if abs(record_entry - position_entry) > entry_tolerance:
+        return {}
+    return record
+
+
+def _accepted_floor_preflight_violations(
+    *,
+    positions: Iterable[dict[str, Any]],
+    intraday_managed_symbols: Iterable[str],
+    protective_floor_state: dict[str, Any],
+    state_error: str,
+) -> list[dict[str, Any]]:
+    """Block all mutations when an existing lifecycle has no trusted floor."""
+    intraday = {
+        str(symbol).strip().upper()
+        for symbol in intraday_managed_symbols
+        if str(symbol).strip()
+    }
+    managed_positions = [
+        dict(raw or {})
+        for raw in positions
+        if str((raw or {}).get("symbol") or "").strip().upper() not in intraday
+        and str((raw or {}).get("symbol") or "").strip()
+    ]
+    if not managed_positions:
+        return []
+    if state_error:
+        return [
+            {
+                "symbol": "*",
+                "reason": "protective_floor_state_not_authoritative",
+                "state_error": state_error,
+            }
+        ]
+    violations: list[dict[str, Any]] = []
+    for position in managed_positions:
+        symbol = str(position.get("symbol") or "").strip().upper()
+        if not _matching_protective_floor_record(
+            symbol,
+            position,
+            protective_floor_state,
+        ):
+            violations.append(
+                {
+                    "symbol": symbol,
+                    "reason": "existing_lifecycle_floor_not_reconciled",
+                }
+            )
+    return violations
+
+
+def _protected_rearm_stop_price(
+    symbol: str,
+    plan_stop_price: float,
+    position: dict[str, Any],
+    existing_stops: Iterable[dict[str, Any]],
+    hwm_state: dict[str, Any],
+) -> float:
+    """Never re-arm below a broker-observed/confirmed lifecycle floor."""
+    candidates = [max(0.0, _safe_float(plan_stop_price, 0.0))]
+    candidates.extend(
+        max(0.0, _safe_float(order.get("stop_price"), 0.0))
+        for order in existing_stops
+        if isinstance(order, dict)
+        and str(order.get("type") or order.get("order_type") or "stop").lower()
+        in {"stop", "stop_limit"}
+    )
+    record = _matching_protective_floor_record(symbol, position, hwm_state)
+    candidates.append(max(0.0, _safe_float(record.get("accepted_stop_floor"), 0.0)))
+    return max(candidates)
+
+
+def _single_covering_stop_needing_update(
+    existing_stops: list[dict[str, Any]],
+    position_qty: float,
+    required_tif: str,
+    target_stop_price: float,
+) -> dict[str, Any] | None:
+    """Find one covering stop whose TIF or locked price needs an atomic raise."""
+    if len(existing_stops) != 1 or position_qty <= 0:
+        return None
+    tolerance = max(1e-9, position_qty * 1e-6)
+    if abs(_protected_stop_qty(existing_stops) - position_qty) > tolerance:
+        return None
+    order = existing_stops[0]
+    order_type = str(order.get("type") or order.get("order_type") or "").strip().lower()
+    if order_type not in {"stop", "stop_limit"}:
+        return None
+    current_tif = str(order.get("time_in_force") or "").strip().lower()
+    current_stop = _safe_float(order.get("stop_price"), 0.0)
+    formatted_target = _safe_float(_format_price(target_stop_price), 0.0)
+    needs_tif = current_tif != str(required_tif).strip().lower()
+    needs_raise = formatted_target > current_stop + 1e-12
+    return order if needs_tif or needs_raise else None
 
 
 def _save_hwm_state(path: Path, state: dict[str, dict[str, Any]]) -> None:
@@ -1128,7 +1315,9 @@ def _broker_truth_snapshot(
                 "qty": str(row.get("qty") or ""),
                 "filled_qty": str(row.get("filled_qty") or ""),
                 "protected_remaining_qty": protected_qty,
+                "order_id": str(row.get("id") or ""),
                 "stop_price": str(row.get("stop_price") or ""),
+                "time_in_force": str(row.get("time_in_force") or "").lower(),
                 "trail_percent": str(row.get("trail_percent") or ""),
             }
         )
@@ -1178,6 +1367,121 @@ def _broker_truth_snapshot(
         "position_count": len(position_symbols),
         "stop_coverage_complete": not protection_gaps,
     }
+
+
+def _broker_protection_policy_violations(
+    *,
+    positions: Iterable[dict[str, Any]],
+    open_orders: Iterable[dict[str, Any]],
+    intraday_managed_symbols: Iterable[str],
+    protective_floor_state: dict[str, Any],
+    requested_tif: str,
+) -> list[dict[str, Any]]:
+    """Reconcile the exact fixed-stop invariant against fresh broker truth.
+
+    Quantity coverage alone is insufficient: a full-size stop can still be
+    illegal for the quantity, expire under the wrong TIF, or sit below a
+    previously broker-confirmed lifecycle floor.
+    """
+    intraday = {
+        str(symbol).strip().upper()
+        for symbol in intraday_managed_symbols
+        if str(symbol).strip()
+    }
+    positions_by_symbol = {
+        str(row.get("symbol") or "").strip().upper(): dict(row or {})
+        for row in positions
+        if str(row.get("symbol") or "").strip().upper() not in intraday
+        and str(row.get("symbol") or "").strip()
+    }
+    active_statuses = {
+        "accepted",
+        "new",
+        "pending_new",
+        "partially_filled",
+        "accepted_for_bidding",
+        "held",
+    }
+    fixed_by_symbol: dict[str, list[dict[str, Any]]] = {}
+    protective_by_symbol: dict[str, list[dict[str, Any]]] = {}
+    for raw in open_orders:
+        order = dict(raw or {})
+        symbol = str(order.get("symbol") or "").strip().upper()
+        order_type = str(order.get("type") or order.get("order_type") or "").strip().lower()
+        if (
+            symbol not in positions_by_symbol
+            or str(order.get("side") or "").strip().lower() != "sell"
+            or str(order.get("status") or "").strip().lower() not in active_statuses
+            or order_type not in {"stop", "stop_limit", "trailing_stop"}
+        ):
+            continue
+        protective_by_symbol.setdefault(symbol, []).append(order)
+        if order_type in {"stop", "stop_limit"}:
+            fixed_by_symbol.setdefault(symbol, []).append(order)
+
+    violations: list[dict[str, Any]] = []
+    for symbol, position in sorted(positions_by_symbol.items()):
+        qty = abs(_safe_float(position.get("qty"), 0.0))
+        fixed = fixed_by_symbol.get(symbol, [])
+        protective = protective_by_symbol.get(symbol, [])
+        if qty <= 0:
+            violations.append({"symbol": symbol, "reason": "invalid_position_qty"})
+            continue
+        if len(fixed) != 1 or len(protective) != 1:
+            violations.append(
+                {
+                    "symbol": symbol,
+                    "reason": "expected_exactly_one_fixed_stop",
+                    "fixed_stop_count": len(fixed),
+                    "protective_order_count": len(protective),
+                }
+            )
+            continue
+        order = fixed[0]
+        remaining = _remaining_sell_order_qty(order)
+        tolerance = max(1e-9, qty * 1e-6)
+        if abs(remaining - qty) > tolerance:
+            violations.append(
+                {
+                    "symbol": symbol,
+                    "reason": "fixed_stop_qty_mismatch",
+                    "position_qty": qty,
+                    "protected_qty": remaining,
+                }
+            )
+        expected_tif = _persistent_exit_tif_for_qty(requested_tif, qty)
+        actual_tif = str(order.get("time_in_force") or "").strip().lower()
+        if actual_tif != expected_tif:
+            violations.append(
+                {
+                    "symbol": symbol,
+                    "reason": "fixed_stop_tif_mismatch",
+                    "expected_tif": expected_tif,
+                    "actual_tif": actual_tif,
+                }
+            )
+        record = _matching_protective_floor_record(
+            symbol,
+            position,
+            protective_floor_state,
+        )
+        if not record:
+            violations.append(
+                {"symbol": symbol, "reason": "accepted_stop_floor_not_reconciled"}
+            )
+            continue
+        accepted_floor = _safe_float(record.get("accepted_stop_floor"), 0.0)
+        actual_stop = _safe_float(order.get("stop_price"), 0.0)
+        if actual_stop + 1e-12 < accepted_floor:
+            violations.append(
+                {
+                    "symbol": symbol,
+                    "reason": "fixed_stop_below_accepted_floor",
+                    "actual_stop": actual_stop,
+                    "accepted_stop_floor": accepted_floor,
+                }
+            )
+    return violations
 
 
 def _write_manager_receipt(path: Path, report: dict[str, Any]) -> None:
@@ -1377,16 +1681,18 @@ def _main_unlocked() -> int:
     broker_protection_required = _env_bool("ALPACA_BROKER_PROTECTION_REQUIRED", broker_protection_enable)
     broker_protection_order_class = _env("ALPACA_BROKER_PROTECTION_ORDER_CLASS", "bracket").lower()
     broker_protection_size_mode = _env("ALPACA_BROKER_PROTECTION_SIZE_MODE", "qty").lower()
-    broker_protection_tif = _env(
+    broker_protection_tif_requested = _env(
         "ALPACA_BROKER_PROTECTION_TIF",
         _default_broker_protection_tif(broker_protection_order_class),
     ).lower()
+    broker_protection_tif = broker_protection_tif_requested
     broker_target_pct = max(0.0, _env_float("ALPACA_BROKER_TARGET_PCT", 0.08))
     broker_wait_fill_sec = max(1.0, _env_float("ALPACA_BROKER_PROTECTION_WAIT_FILL_SEC", 20.0))
     entry_relative_stop_enable = _env_bool("ALPACA_ENTRY_RELATIVE_STOP_ENABLE", False)
     native_trailing_enable = _env_bool("ALPACA_NATIVE_TRAIL_ENABLE", False)
     native_trailing_required = _env_bool("ALPACA_NATIVE_TRAIL_REQUIRED", False)
-    native_trailing_tif = _env("ALPACA_NATIVE_TRAIL_TIF", broker_protection_tif).lower()
+    native_trailing_tif_requested = _env("ALPACA_NATIVE_TRAIL_TIF", broker_protection_tif).lower()
+    native_trailing_tif = native_trailing_tif_requested
     native_trailing_min_gain_pct = max(
         0.0,
         _env_float("ALPACA_NATIVE_TRAIL_MIN_GAIN_PCT", trail_min_gain_pct),
@@ -1725,6 +2031,25 @@ def _main_unlocked() -> int:
         else "selected_current_cycle" if selected
         else "filtered_to_zero_candidates"
     )
+    protective_floor_state_path = _protective_exit_hwm_state_path()
+    protective_floor_state: dict[str, Any] = {}
+    protective_floor_state_error = ""
+    if broker_protection_enable and broker_protection_order_class == "simple_stop":
+        protective_floor_state, protective_floor_state_error = (
+            _load_protective_floor_state(protective_floor_state_path)
+        )
+    protection_preflight_violations: list[dict[str, Any]] = []
+    if (
+        send_orders
+        and broker_protection_required
+        and broker_protection_order_class == "simple_stop"
+    ):
+        protection_preflight_violations = _accepted_floor_preflight_violations(
+            positions=current_positions.values(),
+            intraday_managed_symbols=intraday_managed_symbols,
+            protective_floor_state=protective_floor_state,
+            state_error=protective_floor_state_error,
+        )
 
     report = {
         "status": (
@@ -1789,7 +2114,9 @@ def _main_unlocked() -> int:
         "trail_details": trail_details,
         "native_trailing_enabled": native_trailing_enable,
         "native_trailing_required": native_trailing_required,
+        "native_trailing_tif_requested": native_trailing_tif_requested,
         "native_trailing_tif": native_trailing_tif,
+        "native_trailing_tif_policy": "fractional_day_whole_gtc",
         "native_trailing_min_gain_pct": native_trailing_min_gain_pct,
         "native_trailing_percent": round(native_trailing_percent, 4),
         "native_trailing_candidates": native_trailing_candidates,
@@ -1803,7 +2130,13 @@ def _main_unlocked() -> int:
         "broker_protection_required": broker_protection_required,
         "broker_protection_order_class": broker_protection_order_class,
         "broker_protection_size_mode": broker_protection_size_mode,
+        "broker_protection_tif_requested": broker_protection_tif_requested,
         "broker_protection_tif": broker_protection_tif,
+        "broker_protection_tif_policy": "fractional_day_whole_gtc",
+        "protective_floor_state_path": str(protective_floor_state_path),
+        "protective_floor_state_error": protective_floor_state_error,
+        "protection_preflight_violations": protection_preflight_violations,
+        "protection_mutations_allowed": not protection_preflight_violations,
         "broker_target_pct": round(broker_target_pct * 100, 2),
         "broker_wait_fill_sec": broker_wait_fill_sec,
         "entry_relative_stop_enabled": entry_relative_stop_enable,
@@ -1984,7 +2317,10 @@ def _main_unlocked() -> int:
                         pick.ticker,
                         qty=filled_qty,
                         stop_price=stop_price,
-                        time_in_force=broker_protection_tif,
+                        time_in_force=_persistent_exit_tif_for_qty(
+                            broker_protection_tif_requested,
+                            filled_qty,
+                        ),
                     )
                     report["results"].append(
                         {
@@ -2102,7 +2438,7 @@ def _main_unlocked() -> int:
                 )
         return not cancel_failed
 
-    if send_orders:
+    if send_orders and not protection_preflight_violations:
         # ── 1. Stop-loss closes (highest priority) ────────────────────────────
         if enable_stop_loss:
             for symbol in sl_triggered_symbols:
@@ -2202,7 +2538,10 @@ def _main_unlocked() -> int:
                             symbol,
                             qty=qty,
                             stop_price=float(spec["stop_loss_price"]),
-                            time_in_force=broker_protection_tif,
+                            time_in_force=_persistent_exit_tif_for_qty(
+                                broker_protection_tif_requested,
+                                qty,
+                            ),
                         )
                         report["results"].append({
                             "ticker": symbol,
@@ -2309,7 +2648,10 @@ def _main_unlocked() -> int:
                         symbol,
                         qty=qty,
                         trail_percent=native_trailing_percent,
-                        time_in_force=native_trailing_tif,
+                        time_in_force=_persistent_exit_tif_for_qty(
+                            native_trailing_tif_requested,
+                            qty,
+                        ),
                     )
                     det = native_trailing_details.get(symbol, {})
                     report["results"].append(
@@ -2360,7 +2702,10 @@ def _main_unlocked() -> int:
                             symbol,
                             qty=qty,
                             stop_price=float(spec["stop_loss_price"]),
-                            time_in_force=broker_protection_tif,
+                            time_in_force=_persistent_exit_tif_for_qty(
+                                broker_protection_tif_requested,
+                                qty,
+                            ),
                         )
                         report["results"].append(
                             {
@@ -2472,7 +2817,160 @@ def _main_unlocked() -> int:
                 existing_stops = list(open_stop_sell_orders.get(symbol) or [])
                 protected_qty = _protected_stop_qty(existing_stops)
                 tolerance = max(1e-9, qty * 1e-6)
+                required_stop_tif = _persistent_exit_tif_for_qty(
+                    broker_protection_tif_requested,
+                    qty,
+                )
+                protected_stop_price = _protected_rearm_stop_price(
+                    symbol,
+                    float(spec["stop_loss_price"]),
+                    pos,
+                    existing_stops,
+                    protective_floor_state,
+                )
+                protection_update_order = _single_covering_stop_needing_update(
+                    existing_stops,
+                    qty,
+                    required_stop_tif,
+                    protected_stop_price,
+                )
                 if existing_stops and abs(protected_qty - qty) <= tolerance:
+                    if protection_update_order is not None:
+                        order_id = str(protection_update_order.get("id") or "").strip()
+                        if not order_id:
+                            report["results"].append(
+                                {
+                                    "ticker": symbol,
+                                    "action": "rearm_replace_protection",
+                                    "status": "error",
+                                    "error": "missing_order_id",
+                                }
+                            )
+                            continue
+                        stop_price = protected_stop_price
+                        cur = _safe_float(pos.get("current_price"), 0.0)
+                        if cur > 0 and cur <= stop_price:
+                            cancel_failed = False
+                            for order in existing_stops:
+                                existing_order_id = str(order.get("id") or "").strip()
+                                if not existing_order_id:
+                                    cancel_failed = True
+                                    continue
+                                try:
+                                    client.cancel_order(existing_order_id)
+                                except RuntimeError as exc:
+                                    cancel_failed = True
+                                    report["results"].append(
+                                        {
+                                            "ticker": symbol,
+                                            "action": "floor_breach_cancel_stop",
+                                            "order_id": existing_order_id,
+                                            "status": "error",
+                                            "error": str(exc),
+                                        }
+                                    )
+                            if cancel_failed:
+                                report["results"].append(
+                                    {
+                                        "ticker": symbol,
+                                        "action": "floor_breach_exit",
+                                        "status": "blocked",
+                                        "error": "could_not_cancel_existing_stop",
+                                        "current_price": round(cur, 4),
+                                        "accepted_floor": round(stop_price, 4),
+                                    }
+                                )
+                                continue
+                            try:
+                                result = client.close_position(symbol)
+                                report["results"].append(
+                                    {
+                                        "ticker": symbol,
+                                        "action": "floor_breach_exit",
+                                        "order_id": result.get("id"),
+                                        "status": result.get("status"),
+                                        "current_price": round(cur, 4),
+                                        "accepted_floor": round(stop_price, 4),
+                                    }
+                                )
+                            except RuntimeError as exc:
+                                report["results"].append(
+                                    {
+                                        "ticker": symbol,
+                                        "action": "floor_breach_exit",
+                                        "status": "error",
+                                        "error": str(exc),
+                                        "mutation_outcome": "NOT_CONFIRMED_until_broker_refresh",
+                                    }
+                                )
+                                # The close may have failed after the fixed stop
+                                # was canceled. Restore emergency DAY/GTC coverage
+                                # below the current mark; the final accepted-floor
+                                # gate remains failed and alerts until reconciled.
+                                emergency_stop = min(
+                                    float(spec["stop_loss_price"]),
+                                    cur * (1.0 - 0.001),
+                                )
+                                if emergency_stop > 0:
+                                    try:
+                                        emergency = client.submit_stop_sell(
+                                            symbol,
+                                            qty=qty,
+                                            stop_price=emergency_stop,
+                                            time_in_force=required_stop_tif,
+                                        )
+                                        report["results"].append(
+                                            {
+                                                "ticker": symbol,
+                                                "action": "floor_breach_emergency_stop",
+                                                "order_id": emergency.get("id"),
+                                                "status": emergency.get("status"),
+                                                "stop_price": round(emergency_stop, 4),
+                                            }
+                                        )
+                                    except RuntimeError as emergency_exc:
+                                        report["results"].append(
+                                            {
+                                                "ticker": symbol,
+                                                "action": "floor_breach_emergency_stop",
+                                                "status": "error",
+                                                "error": str(emergency_exc),
+                                            }
+                                        )
+                            continue
+                        try:
+                            result = client.replace_order(
+                                order_id,
+                                {
+                                    "stop_price": _format_price(stop_price),
+                                    "time_in_force": required_stop_tif,
+                                },
+                            )
+                            report["results"].append(
+                                {
+                                    "ticker": symbol,
+                                    "action": "rearm_replace_protection",
+                                    "old_order_id": order_id,
+                                    "order_id": result.get("id"),
+                                    "status": result.get("status"),
+                                    "qty": _format_qty(qty),
+                                    "old_tif": str(protection_update_order.get("time_in_force") or "").lower(),
+                                    "time_in_force": required_stop_tif,
+                                    "old_stop_price": _safe_float(protection_update_order.get("stop_price"), 0.0),
+                                    "stop_price": round(stop_price, 4),
+                                }
+                            )
+                        except RuntimeError as exc:
+                            report["results"].append(
+                                {
+                                    "ticker": symbol,
+                                    "action": "rearm_replace_protection",
+                                    "status": "error",
+                                    "error": str(exc),
+                                    "mutation_outcome": "NOT_CONFIRMED_until_broker_refresh",
+                                }
+                            )
+                        continue
                     continue
                 if existing_stops:
                     cancel_failed = False
@@ -2540,7 +3038,21 @@ def _main_unlocked() -> int:
                     qty = abs(_safe_float(pos.get("qty"), 0.0))
                     if qty <= 0:
                         continue
-                stop_price = float(spec["stop_loss_price"])
+                    # A partially filled stop can change whole/fractional
+                    # status. Recompute both the legal TIF and lifecycle-bound
+                    # floor from the refreshed broker position.
+                    required_stop_tif = _persistent_exit_tif_for_qty(
+                        broker_protection_tif_requested,
+                        qty,
+                    )
+                    protected_stop_price = _protected_rearm_stop_price(
+                        symbol,
+                        float(spec["stop_loss_price"]),
+                        pos,
+                        existing_stops,
+                        protective_floor_state,
+                    )
+                stop_price = protected_stop_price
                 cur = _safe_float(pos.get("current_price"), 0.0)
                 try:
                     if cur > 0 and cur <= stop_price:
@@ -2556,7 +3068,12 @@ def _main_unlocked() -> int:
                             }
                         )
                     else:
-                        result = client.submit_stop_sell(symbol, qty=qty, stop_price=stop_price, time_in_force=broker_protection_tif)
+                        result = client.submit_stop_sell(
+                            symbol,
+                            qty=qty,
+                            stop_price=stop_price,
+                            time_in_force=required_stop_tif,
+                        )
                         report["results"].append(
                             {
                                 "ticker": symbol,
@@ -2676,6 +3193,51 @@ def _main_unlocked() -> int:
         open_orders=truth_orders,
         intraday_managed_symbols=intraday_managed_symbols,
     )
+    protection_fatal = False
+    protection_policy_violations: list[dict[str, Any]] = []
+    if send_orders and broker_protection_required:
+        truth = report["broker_truth_after"]
+        if protection_preflight_violations:
+            protection_fatal = True
+            report["fatal_protection_error"] = "pre_action_protective_floor_not_confirmed"
+        if not report["broker_truth_authoritative"]:
+            protection_fatal = True
+            report["fatal_protection_error"] = "post_action_broker_truth_not_confirmed"
+        elif not bool(truth.get("stop_coverage_complete")):
+            protection_fatal = True
+            report["fatal_protection_error"] = "post_action_broker_stop_coverage_incomplete"
+        if (
+            report["broker_truth_authoritative"]
+            and broker_protection_order_class == "simple_stop"
+        ):
+            final_floor_state, final_floor_error = _load_protective_floor_state(
+                protective_floor_state_path
+            )
+            if final_floor_error and int(truth.get("position_count") or 0) > 0:
+                protection_policy_violations.append(
+                    {
+                        "symbol": "*",
+                        "reason": "protective_floor_state_not_authoritative",
+                        "state_error": final_floor_error,
+                    }
+                )
+            protection_policy_violations.extend(
+                _broker_protection_policy_violations(
+                    positions=truth_positions,
+                    open_orders=truth_orders,
+                    intraday_managed_symbols=intraday_managed_symbols,
+                    protective_floor_state=final_floor_state,
+                    requested_tif=broker_protection_tif_requested,
+                )
+            )
+            if protection_policy_violations:
+                protection_fatal = True
+                report["fatal_protection_error"] = (
+                    "post_action_broker_stop_policy_not_confirmed"
+                )
+    report["protection_policy_violations"] = protection_policy_violations
+    report["protection_gate_passed"] = not protection_fatal
+    report["protection_gate_status"] = "PASS" if not protection_fatal else "NOT_CONFIRMED"
 
     advisory = _alpaca_ai_advisory(report=report, summary_row=summary_row, picks_csv=picks_csv)
     if advisory:
@@ -2794,21 +3356,14 @@ def _main_unlocked() -> int:
             lines += ["", "🧠 <b>AI advisory</b>", str(advisory.get("note") or "").strip()]
         _tg_send_equities_report(tg_token, tg_chat_id, "\n".join(lines), report)
 
-    return 0
+    return 4 if protection_fatal else 0
 
 
 def main() -> int:
-    """Run one broker cycle under a non-blocking per-account writer lock."""
-    identity = f"{_env('ALPACA_BASE_URL')}|{_env('ALPACA_API_KEY_ID')}"
-    digest = hashlib.sha256(identity.encode("utf-8", errors="replace")).hexdigest()[:16]
-    configured_lock = _env("ALPACA_BRIDGE_LOCK_PATH", "")
-    lock_path = (
-        Path(configured_lock)
-        if configured_lock
-        else Path(__file__).resolve().parent.parent
-        / "runtime"
-        / "locks"
-        / f"alpaca_bridge_{digest}.lock"
+    """Run one broker cycle under a bounded-wait per-account writer lock."""
+    lock_path = _alpaca_account_lock_path(
+        _env("ALPACA_BASE_URL"),
+        _env("ALPACA_API_KEY_ID"),
     )
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     flags = os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)
@@ -2819,10 +3374,11 @@ def main() -> int:
             print("error=alpaca_bridge_lock_not_regular", file=sys.stderr)
             return 75
         os.fchmod(fd, 0o600)
-        try:
-            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            print("status=skipped_single_writer_lock_busy", file=sys.stderr)
+        if not _acquire_account_writer_lock(
+            fd,
+            _env_float("ALPACA_WRITER_LOCK_WAIT_SEC", 60.0),
+        ):
+            print("status=failed_single_writer_lock_timeout", file=sys.stderr)
             return 75
         return _main_unlocked()
     finally:

@@ -13,6 +13,9 @@ fi
 set -a
 source configs/alpaca_v38_hybrid_top4_candidate.env
 source configs/alpaca_live_v38.env
+if [[ -f configs/alpaca_protective_exit.env ]]; then
+  source configs/alpaca_protective_exit.env
+fi
 source configs/alpaca_live_v38_safe_hold.env
 set +a
 
