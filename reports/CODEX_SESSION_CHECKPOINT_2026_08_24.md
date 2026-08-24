@@ -2,6 +2,29 @@
 
 **Authority:** verified operational handoff. Research and shadow results below do not grant money authority.
 
+## Continuation receipt — 2026-08-24 09:00 UTC
+
+- Direct Alpaca broker truth still showed two full-quantity protective stops above entry while the market was closed:
+  - `ABBV`: `0.135734866` shares, entry `247.55`, stop `257.37`, status `new`, `DAY`, expires at the 2026-08-24 close.
+  - `SCHW`: `0.563776973` shares, entry `101.552`, stop `108.20`, status `new`, `DAY`, expires at the 2026-08-24 close.
+- Both orders were submitted after Friday's close and remained accepted as `new` through the weekend. The claim that there was no broker order for approximately 80% of the week is rejected. Alpaca queues non-extended-hours `DAY` orders submitted after close for the next trading day. Fractional stop orders do not support `GTC`. Gap/slippage risk remains because stops do not trigger outside regular market hours.
+- The live protection implementation had not been preserved in the recovery branch. The deployed hashes matched the dirty source tree for `equities_alpaca_paper_bridge.py` and `alpaca_protective_exit_manager.py`. Their complete live dependency set was reviewed, copied into the isolated recovery branch, tested, and pushed as `7a39b99`.
+- Fresh protection verification for that commit: `40 passed` for the two protection suites, `19 passed` for adjacent Alpaca truth/order-guard suites, standalone monotonic-floor invariant `17/17`, plus `py_compile`, `bash -n`, secret scan and `git diff --check` PASS. The old frozen Alpaca bakeoff preregistration still detects the intentional live-bridge hash drift; do not rewrite that historical hash merely to make the old preflight green.
+- Alpaca new entries remain disabled. The current candidate list (`SNOW`, `MSFT`, `MA`) is derived from the 2026-07-31 cycle and would be a stale mid-cycle entry if armed now. The prospective 2026-08 month-end lifecycle manifest does not yet exist.
+- SBR1 zero-risk timer remained active and successful at `2026-08-24 08:55 UTC`: nine hash-chained events (one regime bootstrap and eight evaluations), zero admitted decisions, zero fills/outcomes/orders/private calls. There has not yet been a shadow entry.
+- ATT1 effective money geometry remains `sl_atr_mult=1.10`, `max_stop_pct=0.06`, risk multiplier `0.10`, short-only, and `MAX_POSITIONS=3`. The regime producer reports `bull_trend`, but the approved money config forces `REGIME_OVERLAY_ENABLE=0`, `PORTFOLIO_ALLOCATOR_ENABLE=0`, and static orchestrator multiplier `0.55`; the ATT1 caller has no regime-side gate.
+- The proposed ATT1 `6.60/0.25` pair repairs raw-signal survival, but old research widened a completed stop while retaining old targets whereas live construction recomputes targets from the wider risk. It is not authorized for live until the live-caller parity and one-contract ON/OFF replay pass.
+- The 12-slot historical table shows approximately `4.53x` monthly R versus three slots, but drawdown rose from `7.1R` to `8.7R` (about `22.5%`) and the monolith exposure/correlation gate is absent. Keep 12 slots shadow-only until that gate is wired and replayed.
+- Local research had ten screen sessions alive; five of six supervisor jobs were healthy and project-audit was stale/degraded. Active collectors were above their 50 GiB disk guard. Local disk had about 60 GiB free. Reproducible cleanup candidates total roughly 944 MiB; no evidence or cache was deleted in this continuation.
+- Local `qwen3:8b` is proposal-only and occupies about 4.9 GiB. The VPS has one CPU, 961 MiB RAM and 7.9 GiB free disk, so that model must not be installed there. Paid DeepSeek background cron lines remain commented out; manual `/ai` remains the only paid path.
+
+### Updated immediate gates
+
+1. Freeze a technically corrected SBR1 random-control preregistration before the first admitted shadow decision; the draft written after the first nine evaluations must say `pre-first-admitted-decision`, not `before any shadow result`.
+2. Implement the control with a deterministic per-decision seed, real UTC calendar months, causal regime evaluation at the sampled hour, the exact SBR1 cost/outcome contract, pending future draws, and a separate hash-chained journal. Do not reuse `research_lab/random_control.py` unchanged.
+3. Finish the prospective live-native caller receipt and fixed-major8 ATT1 regime gate ON/OFF replay. Only a matching live-call contract may change ATT1 geometry, risk or slots.
+4. At the completed 2026-08 Alpaca month-end, write the immutable lifecycle manifest and run signal -> fill -> protection -> management -> exit paper parity. Prepare, but do not arm, a one-slot bounded live canary profile.
+
 ## Executive truth
 
 - Alpaca LIVE protection is present. At `2026-08-24 07:43:44 UTC` broker GET returned two full-quantity stop orders above entry:
