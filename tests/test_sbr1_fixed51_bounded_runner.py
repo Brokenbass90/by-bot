@@ -403,7 +403,7 @@ def test_lifecycle_rejects_admitted_nonmoney_symbol():
         runner._journal_index(events, money_universe=("BTCUSDT", "LINKUSDT"))
 
 
-def test_service_runtime_limit_finishes_before_three_minute_retry() -> None:
+def test_oneshot_start_timeout_finishes_before_three_minute_retry() -> None:
     root = Path(__file__).resolve().parents[1]
     service = (root / "deploy/systemd/sbr1-zero-risk-shadow.service").read_text(
         encoding="utf-8"
@@ -411,6 +411,7 @@ def test_service_runtime_limit_finishes_before_three_minute_retry() -> None:
     values = [
         int(line.split("=", 1)[1])
         for line in service.splitlines()
-        if line.startswith("RuntimeMaxSec=")
+        if line.startswith("TimeoutStartSec=")
     ]
     assert values == [120]
+    assert "RuntimeMaxSec=" not in service

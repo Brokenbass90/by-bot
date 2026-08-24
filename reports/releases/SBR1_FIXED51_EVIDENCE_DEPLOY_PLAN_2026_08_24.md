@@ -85,7 +85,7 @@ deploy. The reviewed public 54-symbol cycle at `2026-08-24T18:57Z` completed in
 `22.71s`; it was intentionally outside the H1 decision window and therefore
 returned degraded status while still proving 50/51 public coverage, one
 expected HFT structural gap, and zero order/private/broker authority.
-`RuntimeMaxSec=120` is pinned in the service: more than five times this observed
+`TimeoutStartSec=120` is pinned for the oneshot service: more than five times this observed
 runtime and below the three-minute retry boundary. A timeout fails closed and
 lets the retry run; it never widens the evidence contract. There is no broker
 rollback because this unit has no execution surface.
@@ -114,7 +114,7 @@ rollback because this unit has no execution surface.
 - Coverage expected / observed / error / unavailable: `________________`;
 - Preserved config SHA-256 before/after: `________________`;
 - Preserved journal tip and event count before/after: `________________`;
-- Measured cycle runtime and selected `RuntimeMaxSec`: `________________`;
+- Measured cycle runtime and selected `TimeoutStartSec`: `________________`;
 - Rollback verification and operator: `________________`.
 
 ## Atomic rollback (if required)

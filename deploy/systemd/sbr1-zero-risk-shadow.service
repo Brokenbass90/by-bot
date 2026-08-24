@@ -32,4 +32,4 @@ RestrictAddressFamilies=AF_INET AF_INET6
 SystemCallArchitectures=native
 MemoryMax=768M
 CPUQuota=75%
-RuntimeMaxSec=120
+TimeoutStartSec=120
