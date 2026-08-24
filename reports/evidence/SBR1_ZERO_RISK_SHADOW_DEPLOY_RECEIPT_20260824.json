@@ -1,0 +1,52 @@
+{
+  "schema_id": "sbr1_zero_risk_shadow_deploy_receipt_v1",
+  "as_of_utc": "2026-08-24T08:10:38Z",
+  "authority": "zero_risk_public_shadow_no_orders_no_money_no_promotion",
+  "server": "64.226.73.119",
+  "research_root": "/opt/bybot-research/sbr1-zero-risk-shadow",
+  "live_repository_modified": false,
+  "live_service_restarted": false,
+  "money_authority": false,
+  "orders_allowed": false,
+  "private_api_allowed": false,
+  "release_or_promotion_authority": false,
+  "sealed_data_rows_read": 0,
+  "bundle_sha256": "9f6c3e2718ffba6c60920b245b4840074a107485e32e1fb462fbfc2439f9abb7",
+  "repo_config_file_sha256": "91b944225b201d71fe8063a300ec7f073d5c51a29a64e9fb46904e3922dcf95e",
+  "runtime_opt_in_config_file_sha256": "c59f622ce4550b1d7f2d8aee8495dcffe8bd61550ea59e7c332059fad2646207",
+  "parity_manifest_sha256": "aa7392aecec96414c314ff14f03f4df6340d78094f03b75da636e1c2095433bb",
+  "source_closure_sha256": "34b6683c57ecd5cc68f1b68e823737f9d1e51bbcbfb87b834fd17d032c6e0c71",
+  "service_sha256": "4732a7f1f4ee771520ade488755358970b682f1cf559cd42ba2ed79b7ae1aa39",
+  "timer_sha256": "c0aaf99667e5bd7a8380898a0bf580caba5478d92554e5e1035c48fdf5ede138",
+  "installed_unit_hash_match": true,
+  "timer_enabled": true,
+  "timer_active": true,
+  "automatic_cycle": {
+    "finished_at_utc": "2026-08-24T08:10:23Z",
+    "result": "success",
+    "exec_main_status": 0,
+    "receipt_status": "ZERO_RISK_SHADOW_OK",
+    "orders_created_or_changed": 0,
+    "private_api_calls": false,
+    "broker_calls": false,
+    "journal_events": 9,
+    "journal_tip_sha256": "d59172995c12f7ee276628010b28abd6b86b9cb060dec3372e3233af5c52fca8"
+  },
+  "live_services_after_cycle": {
+    "bybot.service": "active",
+    "trading-journal-web.service": "active"
+  },
+  "known_failed_attempts": [
+    {
+      "at_utc": "2026-08-24T08:05:20Z",
+      "reason": "release under protected home was unreadable to a capability-stripped unit",
+      "orders_created_or_changed": 0
+    },
+    {
+      "at_utc": "2026-08-24T08:07:21Z",
+      "reason": "archive retained local uid 502 while the unit had no CAP_DAC_OVERRIDE",
+      "orders_created_or_changed": 0
+    }
+  ],
+  "remediation": "release moved to /opt and recursively owned by root:root before re-enabling the timer"
+}

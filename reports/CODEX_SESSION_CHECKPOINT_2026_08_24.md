@@ -47,7 +47,9 @@ Recovery branch: `codex/recovery-20260824`.
 - `8c86aa4` — default-off SBR1 zero-risk public shadow.
   - verification: `12 passed`.
   - no-argument preflight: `RESEARCH_ONLY_DISABLED`, no network, no writes, no private API, no orders, no money/promotion authority.
-- SBR1 shadow is **not deployed or enabled**. Deploy only after independent source-closure review and an explicit zero-risk acknowledgement.
+- `07f5880` — isolated systemd release path outside the live repository.
+- SBR1 shadow is deployed at `/opt/bybot-research/sbr1-zero-risk-shadow` and its five-minute timer is enabled. The first automatic cycle finished at `2026-08-24 08:10:23 UTC` with `Result=success`, `ZERO_RISK_SHADOW_OK`, `orders_created_or_changed=0`, `private_api_calls=false`, and journal tip `d59172995c12f7ee276628010b28abd6b86b9cb060dec3372e3233af5c52fca8`.
+- This remains zero-risk research authority only; it is not a canary and cannot promote itself.
 
 ## DeepSeek cost incident
 
@@ -90,7 +92,7 @@ Auto-apply now explicitly runs with `--dry-run`. The running bot also had `DEEPS
 
 1. Build one prospective live-native decision caller with a persisted, hash-bound BTC H1 EMA200 bootstrap and durable decision receipts.
 2. Run fixed major-8 ATT1 gate `ON/OFF`; neutral/missing/stale evidence must fail closed in money mode.
-3. When parity is green, deploy SBR1 as zero-risk public shadow only and collect clean prospective outcomes.
+3. Keep the deployed SBR1 zero-risk public shadow healthy and collect clean prospective outcomes.
 4. Reconcile economics and slot/concentration policy; only then consider SBR1 tiny canary or ATT1 risk changes.
 5. Separately finish Alpaca paper-parity for signal -> fill -> stop -> management -> exit before enabling new stock entries.
 
