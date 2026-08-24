@@ -1178,6 +1178,28 @@ def _position_gain_pct(pos: dict[str, Any], hwm_state: dict[str, dict[str, Any]]
     return max(0.0, (cur - entry) / entry * 100.0)
 
 
+def _quantity_for_notional(
+    notional: float,
+    entry: float,
+    *,
+    whole_share_only: bool,
+) -> tuple[float | None, str]:
+    """Translate a cash budget into a quantity without exceeding that budget."""
+    if not math.isfinite(notional) or notional <= 0:
+        return None, "non_positive_notional"
+    if not math.isfinite(entry) or entry <= 0:
+        return None, "missing_entry_price_for_qty"
+    raw_qty = notional / entry
+    if whole_share_only:
+        qty = float(math.floor(raw_qty + 1e-12))
+        if qty < 1.0:
+            return None, "whole_share_budget_below_one_share"
+        return qty, ""
+    if raw_qty <= 0:
+        return None, "non_positive_qty"
+    return raw_qty, ""
+
+
 def _build_bracket_buy_spec(
     pick: Pick,
     *,
@@ -1185,6 +1207,7 @@ def _build_bracket_buy_spec(
     stop_loss_pct: float,
     target_pct: float,
     size_mode: str,
+    whole_share_only: bool = False,
 ) -> tuple[dict[str, Any] | None, str]:
     entry = pick.entry_price
     stop = pick.stop_price
@@ -1209,15 +1232,20 @@ def _build_bracket_buy_spec(
         "size_mode": size_mode,
     }
     if size_mode == "qty":
-        if entry is None or entry <= 0:
-            return None, "missing_entry_price_for_qty"
-        qty = notional / entry
-        if qty <= 0:
-            return None, "non_positive_qty"
+        qty, qty_reason = _quantity_for_notional(
+            notional,
+            _safe_float(entry, 0.0),
+            whole_share_only=whole_share_only,
+        )
+        if qty is None:
+            return None, qty_reason
         spec["qty"] = qty
         spec["notional"] = None
+        spec["estimated_notional"] = qty * float(entry)
     elif size_mode != "notional":
         return None, f"unsupported_size_mode:{size_mode}"
+    elif whole_share_only:
+        return None, "whole_share_policy_requires_qty_size_mode"
     return spec, ""
 
 
@@ -1681,6 +1709,7 @@ def _main_unlocked() -> int:
     broker_protection_required = _env_bool("ALPACA_BROKER_PROTECTION_REQUIRED", broker_protection_enable)
     broker_protection_order_class = _env("ALPACA_BROKER_PROTECTION_ORDER_CLASS", "bracket").lower()
     broker_protection_size_mode = _env("ALPACA_BROKER_PROTECTION_SIZE_MODE", "qty").lower()
+    whole_share_only = _env_bool("ALPACA_WHOLE_SHARE_ONLY", False)
     broker_protection_tif_requested = _env(
         "ALPACA_BROKER_PROTECTION_TIF",
         _default_broker_protection_tif(broker_protection_order_class),
@@ -1720,6 +1749,14 @@ def _main_unlocked() -> int:
     key_id = _env("ALPACA_API_KEY_ID")
     secret_key = _env("ALPACA_API_SECRET_KEY")
     base_url = _env("ALPACA_BASE_URL", "https://paper-api.alpaca.markets")
+    if whole_share_only and (
+        not broker_protection_enable
+        or not broker_protection_required
+        or broker_protection_order_class != "simple_stop"
+        or broker_protection_size_mode != "qty"
+    ):
+        print("error=whole_share_policy_requires_required_simple_stop_qty_protection", file=sys.stderr)
+        return 8
     live_guard_errors = _live_order_guard_errors(
         base_url=base_url,
         send_orders=send_orders,
@@ -2130,6 +2167,7 @@ def _main_unlocked() -> int:
         "broker_protection_required": broker_protection_required,
         "broker_protection_order_class": broker_protection_order_class,
         "broker_protection_size_mode": broker_protection_size_mode,
+        "whole_share_only": whole_share_only,
         "broker_protection_tif_requested": broker_protection_tif_requested,
         "broker_protection_tif": broker_protection_tif,
         "broker_protection_tif_policy": "fractional_day_whole_gtc",
@@ -2208,6 +2246,7 @@ def _main_unlocked() -> int:
             stop_loss_pct=stop_loss_pct,
             target_pct=broker_target_pct,
             size_mode=broker_protection_size_mode,
+            whole_share_only=whole_share_only,
         )
         report["planned_broker_orders"].append(
             {
@@ -2273,6 +2312,7 @@ def _main_unlocked() -> int:
                 stop_loss_pct=stop_loss_pct,
                 target_pct=broker_target_pct,
                 size_mode=broker_protection_size_mode,
+                whole_share_only=whole_share_only,
             )
             if spec is None:
                 if broker_protection_required:

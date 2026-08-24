@@ -21,6 +21,7 @@ from scripts.equities_alpaca_paper_bridge import (
     _new_entry_allowed,
     _persistent_exit_tif_for_qty,
     _protected_rearm_stop_price,
+    _quantity_for_notional,
     _select_monthly_cycle_picks,
     _single_covering_stop_needing_update,
     _save_hwm_state,
@@ -30,6 +31,25 @@ from scripts.equities_alpaca_paper_bridge import (
 
 
 class TestAlpacaMonthlyTrailing(unittest.TestCase):
+    def test_whole_share_quantity_is_floored_without_exceeding_budget(self):
+        qty, reason = _quantity_for_notional(350.0, 100.0, whole_share_only=True)
+
+        self.assertEqual(qty, 3.0)
+        self.assertEqual(reason, "")
+        self.assertLessEqual(qty * 100.0, 350.0)
+
+    def test_whole_share_quantity_rejects_candidate_below_one_share(self):
+        qty, reason = _quantity_for_notional(80.0, 100.0, whole_share_only=True)
+
+        self.assertIsNone(qty)
+        self.assertEqual(reason, "whole_share_budget_below_one_share")
+
+    def test_fractional_quantity_policy_is_unchanged_by_default(self):
+        qty, reason = _quantity_for_notional(80.0, 100.0, whole_share_only=False)
+
+        self.assertEqual(qty, 0.8)
+        self.assertEqual(reason, "")
+
     def test_broad_default_is_overridden_by_exact_quantity_policy(self):
         self.assertEqual(_default_broker_protection_tif("simple_stop"), "gtc")
         self.assertEqual(_default_broker_protection_tif("bracket"), "day")
@@ -260,6 +280,38 @@ class TestAlpacaMonthlyTrailing(unittest.TestCase):
             self.assertIn("ALPACA_BROKER_PROTECTION_ORDER_CLASS=simple_stop", text)
             self.assertIn("ALPACA_BROKER_PROTECTION_TIF=day", text)
             self.assertIn("ALPACA_NATIVE_TRAIL_TIF=day", text)
+
+    def test_whole_share_paper_profile_is_default_off_and_fail_closed(self):
+        root = Path(__file__).resolve().parents[1]
+        profile = root / "configs" / "alpaca_v38_whole_share_paper_default_off.env"
+        launcher = root / "scripts" / "run_alpaca_whole_share_paper_once.sh"
+
+        profile_text = profile.read_text(encoding="utf-8")
+        self.assertIn("ALPACA_WHOLE_SHARE_ONLY=1", profile_text)
+        self.assertIn("ALPACA_BASE_URL=https://paper-api.alpaca.markets", profile_text)
+        self.assertIn("ALPACA_SEND_ORDERS=0", profile_text)
+        self.assertIn("ALPACA_ALLOW_NEW_ENTRIES=0", profile_text)
+        self.assertIn("ALPACA_TARGET_ALLOC_PCT=0.70", profile_text)
+        self.assertIn("ALPACA_BROKER_PROTECTION_REQUIRED=1", profile_text)
+        self.assertIn("ALPACA_BROKER_PROTECTION_TIF=gtc", profile_text)
+        self.assertIn("ALPACA_NATIVE_TRAIL_ENABLE=0", profile_text)
+        self.assertIn(
+            "ALPACA_AUTOPILOT_RUNTIME_DIR=runtime/equities_monthly_v38_whole_share_paper",
+            profile_text,
+        )
+        self.assertIn(
+            "MONTHLY_HWM_STATE_PATH=runtime/equities_monthly_v38_whole_share_paper/monthly_hwm.json",
+            profile_text,
+        )
+        self.assertIn(
+            "MONTHLY_REENTRY_BLOCK_STATE_PATH=runtime/equities_monthly_v38_whole_share_paper/reentry_block.json",
+            profile_text,
+        )
+
+        launcher_text = launcher.read_text(encoding="utf-8")
+        self.assertNotIn("--send-orders", launcher_text)
+        self.assertIn("ALPACA_SEND_ORDERS=0", launcher_text)
+        self.assertIn("ALPACA_ALLOW_NEW_ENTRIES=0", launcher_text)
 
     def test_live_wrapper_sources_the_same_protective_exit_parameters(self):
         root = Path(__file__).resolve().parents[1]

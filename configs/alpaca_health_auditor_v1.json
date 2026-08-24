@@ -1,0 +1,49 @@
+{
+  "schema_id": "alpaca_health_auditor_manifest_v1",
+  "authority": "read_only_health_observation_no_order_mutation",
+  "source_hash_scope": "currently_deployed_live_files_pinned_2026-08-24_not_repository_head",
+  "expected_broker_mode": "LIVE",
+  "safe_hold_expected": true,
+  "send_orders": true,
+  "broker_truth_max_age_minutes": 5,
+  "candidate_max_age_days": 45,
+  "bridge_max_age_minutes": 90,
+  "protection_max_age_minutes": 30,
+  "schedule": {
+    "weekdays_utc": [0, 1, 2, 3, 4],
+    "start_utc": "13:30",
+    "end_utc": "22:00"
+  },
+  "env_files": [
+    "configs/alpaca_live_v38.env",
+    "configs/alpaca_live_v38_safe_hold.env"
+  ],
+  "bridge_log_path": "logs/alpaca_live_v38_manager.log",
+  "protection_log_path": "logs/alpaca_protective_exit.log",
+  "source_files": {
+    "health_auditor": {
+      "path": "scripts/alpaca_health_auditor.py",
+      "expected_sha256": "0c81432d365187cdf3c81bc4304124a36b44465c64a36d2ac2edd3b6ecac331b"
+    },
+    "readonly_collector": {
+      "path": "scripts/check_alpaca_state_readonly.py",
+      "expected_sha256": "0e2fb6980538e1fce9951dd2f8fa86456c3c8246353a2d6615a37af36b7b1860"
+    },
+    "bridge": {
+      "path": "scripts/equities_alpaca_paper_bridge.py",
+      "expected_sha256": "1237fafbe73930eb5c3a0b53f4d2e426539c4f463086e02c4eae942a78c14ae1"
+    },
+    "protective_manager": {
+      "path": "scripts/alpaca_protective_exit_manager.py",
+      "expected_sha256": "3239014036c8126e52e8deba5b29080624caf0cc631acd80bb7f7ba76097256e"
+    },
+    "live_launcher": {
+      "path": "scripts/run_alpaca_live_v38_once.sh",
+      "expected_sha256": "0005a906c690eab9d3985bbadb1915ef21fa6bc23900d30d4404eba4ad7943a1"
+    },
+    "protective_launcher": {
+      "path": "scripts/run_alpaca_protective_exit_manager.sh",
+      "expected_sha256": "13dedb46659f38609c47e3f89e3e236326d2f60fb1d8b879e825dd5561883dc9"
+    }
+  }
+}

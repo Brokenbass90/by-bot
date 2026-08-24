@@ -96,6 +96,7 @@ def collect(symbol: str = "", env_file: str | Path | None = None) -> dict[str, A
     return {
         "schema_id": "alpaca_broker_truth_readonly_v1",
         "authority": "read_only_get_no_order_mutation",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "configured_env_file": str(selected_env_file),
         "broker_mode": "PAPER" if "paper-api" in base_url.lower() else "LIVE",
         "account": {
