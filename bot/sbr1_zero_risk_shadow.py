@@ -119,7 +119,12 @@ class ZeroRiskShadowConfig:
     enabled: bool
     authority: str
     public_base: str
-    universe: tuple[str, ...]
+    evidence_universe: tuple[str, ...]
+    money_universe: tuple[str, ...]
+    evidence_universe_manifest_path: str | None
+    expected_evidence_universe_manifest_sha256: str | None
+    evidence_universe_sha256: str | None
+    money_universe_sha256: str | None
     parity_manifest_path: str
     expected_parity_manifest_sha256: str
     expected_preregistration_sha256: str
@@ -155,7 +160,6 @@ class ZeroRiskShadowConfig:
             "release_or_promotion_authority",
             "sealed_data_allowed",
             "public_base",
-            "universe",
             "parity_manifest_path",
             "expected_parity_manifest_sha256",
             "expected_preregistration_sha256",
@@ -177,8 +181,19 @@ class ZeroRiskShadowConfig:
             "shadow_risk_fraction_per_slot",
             "max_cluster_risk_fraction",
         }
-        if set(raw) != required:
+        optional = {
+            "money_universe",
+            "evidence_universe",
+            "universe",
+            "evidence_universe_manifest_path",
+            "expected_evidence_universe_manifest_sha256",
+            "evidence_universe_sha256",
+            "money_universe_sha256",
+        }
+        if set(raw) - required - optional or required - set(raw):
             raise ShadowViolation("config_fields_mismatch")
+        if ("evidence_universe" in raw) == ("universe" in raw):
+            raise ShadowViolation("config_universe_field_mismatch")
         if raw.get("schema_id") != CONFIG_SCHEMA_ID:
             raise ShadowViolation("wrong_config_schema")
         if not isinstance(raw.get("enabled"), bool):
@@ -196,16 +211,58 @@ class ZeroRiskShadowConfig:
                 raise ShadowViolation(f"unsafe_authority:{field}")
         if str(raw.get("public_base") or "").strip() != "https://api.bybit.com":
             raise ShadowViolation("unapproved_public_base")
-        universe_raw = raw.get("universe")
+        universe_raw = raw.get("evidence_universe", raw.get("universe"))
         if not isinstance(universe_raw, list) or not universe_raw:
             raise ShadowViolation("invalid_universe")
         universe = tuple(str(value or "").strip().upper() for value in universe_raw)
         if (
-            any(re.fullmatch(r"[A-Z0-9]{3,20}USDT", value) is None for value in universe)
+            any(re.fullmatch(r"[A-Z0-9]{2,20}USDT", value) is None for value in universe)
             or len(set(universe)) != len(universe)
             or "BTCUSDT" not in universe
         ):
             raise ShadowViolation("invalid_universe")
+        if "money_universe" in raw:
+            money_raw = raw.get("money_universe")
+            if not isinstance(money_raw, list) or not money_raw:
+                raise ShadowViolation("invalid_money_universe")
+            money_universe = tuple(str(value or "").strip().upper() for value in money_raw)
+            if (
+                any(re.fullmatch(r"[A-Z0-9]{2,20}USDT", value) is None for value in money_universe)
+                or len(set(money_universe)) != len(money_universe)
+                or "BTCUSDT" not in money_universe
+            ):
+                raise ShadowViolation("invalid_money_universe")
+            if not {
+                "evidence_universe_manifest_path",
+                "expected_evidence_universe_manifest_sha256",
+                "evidence_universe_sha256",
+                "money_universe_sha256",
+            }.issubset(raw):
+                raise ShadowViolation("fixed51_manifest_fields_missing")
+            evidence_manifest_path = _relative_path(
+                raw.get("evidence_universe_manifest_path"),
+                "evidence_universe_manifest_path",
+            )
+            evidence_manifest_hash = _sha256_text(
+                raw.get("expected_evidence_universe_manifest_sha256"),
+                "expected_evidence_universe_manifest_sha256",
+            )
+            evidence_universe_hash = _sha256_text(
+                raw.get("evidence_universe_sha256"), "evidence_universe_sha256"
+            )
+            money_universe_hash = _sha256_text(
+                raw.get("money_universe_sha256"), "money_universe_sha256"
+            )
+            if evidence_universe_hash != _sha(list(universe)):
+                raise ShadowViolation("evidence_universe_hash_mismatch")
+            if money_universe_hash != _sha(list(money_universe)):
+                raise ShadowViolation("money_universe_hash_mismatch")
+        else:
+            money_universe = universe
+            evidence_manifest_path = None
+            evidence_manifest_hash = None
+            evidence_universe_hash = None
+            money_universe_hash = None
         max_decision_age = _strict_int(raw.get("max_decision_age_ms"), "max_decision_age_ms")
         max_regime_age = _strict_int(raw.get("max_regime_age_ms"), "max_regime_age_ms")
         history_limit = _strict_int(raw.get("h1_history_limit"), "h1_history_limit")
@@ -249,15 +306,23 @@ class ZeroRiskShadowConfig:
             raise ShadowViolation("unsafe_shadow_slot_limits")
         if Decimal(max_cluster) * shadow_risk > max_cluster_risk:
             raise ShadowViolation("cluster_slot_risk_exceeds_limit")
+        evaluation_universe = tuple(dict.fromkeys((*universe, *money_universe)))
         clusters_raw = raw.get("symbol_clusters")
-        if not isinstance(clusters_raw, Mapping) or set(clusters_raw) != set(universe):
+        if (
+            not isinstance(clusters_raw, Mapping)
+            or set(clusters_raw) != set(evaluation_universe)
+        ):
             raise ShadowViolation("invalid_symbol_clusters")
         clusters = {
             symbol: str(clusters_raw.get(symbol) or "").strip().lower()
-            for symbol in universe
+            for symbol in evaluation_universe
         }
         if any(re.fullmatch(r"[a-z0-9_-]{1,32}", value) is None for value in clusters.values()):
             raise ShadowViolation("invalid_symbol_clusters")
+        if "money_universe" in raw and any(
+            clusters[symbol] != "major8" for symbol in money_universe
+        ):
+            raise ShadowViolation("money_universe_cluster_mismatch")
         closure_raw = raw.get("source_closure")
         required_closure = {
             "strategies/sloped_break_retest_v1.py",
@@ -270,6 +335,7 @@ class ZeroRiskShadowConfig:
             "bot/live_native_manifest.py",
             "bot/live_native_signal_adapters.py",
             "bot/sbr1_zero_risk_shadow.py",
+            "bot/sbr1_universe.py",
             "bot/sbr1_shadow_random_control.py",
             "scripts/run_sbr1_zero_risk_shadow.py",
             "deploy/systemd/sbr1-zero-risk-shadow.service",
@@ -285,7 +351,12 @@ class ZeroRiskShadowConfig:
             enabled=bool(raw["enabled"]),
             authority=AUTHORITY,
             public_base="https://api.bybit.com",
-            universe=universe,
+            evidence_universe=universe,
+            money_universe=money_universe,
+            evidence_universe_manifest_path=evidence_manifest_path,
+            expected_evidence_universe_manifest_sha256=evidence_manifest_hash,
+            evidence_universe_sha256=evidence_universe_hash,
+            money_universe_sha256=money_universe_hash,
             parity_manifest_path=_relative_path(raw.get("parity_manifest_path"), "parity_manifest_path"),
             expected_parity_manifest_sha256=_sha256_text(
                 raw.get("expected_parity_manifest_sha256"),
@@ -324,6 +395,10 @@ class ZeroRiskShadowConfig:
                 "exit_slippage_bps": _decimal_text(self.exit_slippage_bps, "exit_slippage_bps"),
                 "expected_parity_manifest_sha256": self.expected_parity_manifest_sha256,
                 "expected_preregistration_sha256": self.expected_preregistration_sha256,
+                "evidence_universe": list(self.evidence_universe),
+                "evidence_universe_manifest_path": self.evidence_universe_manifest_path,
+                "expected_evidence_universe_manifest_sha256": self.expected_evidence_universe_manifest_sha256,
+                "evidence_universe_sha256": self.evidence_universe_sha256,
                 "fee_bps_per_side": _decimal_text(self.fee_bps_per_side, "fee_bps_per_side"),
                 "h1_history_limit": self.h1_history_limit,
                 "journal_path": self.journal_path,
@@ -349,9 +424,34 @@ class ZeroRiskShadowConfig:
                     "shadow_risk_fraction_per_slot",
                 ),
                 "symbol_clusters": dict(self.symbol_clusters),
-                "universe": list(self.universe),
+                "evidence_universe": list(self.evidence_universe),
+                "money_universe": list(self.money_universe),
+                "money_universe_sha256": self.money_universe_sha256,
             }
         )
+
+    @property
+    def universe(self) -> tuple[str, ...]:
+        """Compatibility alias for the complete public evaluation surface."""
+        return self.evaluation_universe
+
+    @property
+    def evaluation_universe(self) -> tuple[str, ...]:
+        """Frozen fixed-51 evidence plus any legacy major-8-only symbols.
+
+        The preregistered fixed-51 list and the old major-8 money/lifecycle
+        list are independent identities.  Their union currently contains 54
+        symbols because LINK/LTC/DOT are not members of the frozen fixed-51.
+        """
+
+        return tuple(dict.fromkeys((*self.evidence_universe, *self.money_universe)))
+
+    @property
+    def raw_evidence_universe(self) -> tuple[str, ...]:
+        """Fixed-51 members that are not eligible for the major-8 lifecycle."""
+
+        money = set(self.money_universe)
+        return tuple(symbol for symbol in self.evidence_universe if symbol not in money)
 
 
 def load_config(path: Path) -> ZeroRiskShadowConfig:

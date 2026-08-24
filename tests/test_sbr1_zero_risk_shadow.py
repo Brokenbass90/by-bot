@@ -54,6 +54,7 @@ def _closure() -> dict[str, str]:
         "bot/live_native_manifest.py",
         "bot/live_native_signal_adapters.py",
         "bot/sbr1_zero_risk_shadow.py",
+        "bot/sbr1_universe.py",
         "bot/sbr1_shadow_random_control.py",
         "scripts/run_sbr1_zero_risk_shadow.py",
         "deploy/systemd/sbr1-zero-risk-shadow.service",
@@ -176,7 +177,7 @@ def test_repository_config_pins_verified_manifest_and_full_source_closure():
     assert manifest.manifest_sha256 == config.expected_parity_manifest_sha256
     prereg = ROOT / "research_lab/prereg/PREREG_SBR1_SHADOW_RANDOM_CONTROL_2026_08_24.md"
     assert hashlib.sha256(prereg.read_bytes()).hexdigest() == config.expected_preregistration_sha256
-    assert tuple(manifest.universe) == config.universe
+    assert tuple(manifest.universe) == config.money_universe
     assert len(verify_source_closure(ROOT, config)) == 64
 
 

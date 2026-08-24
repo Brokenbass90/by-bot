@@ -1,0 +1,26 @@
+{
+  "schema_id": "sbr1_fixed51_evidence_manifest_v1",
+  "authority": "research_only_no_orders_no_private_api_no_money_no_promotion",
+  "source_preregistration_path": "research_lab/prereg/PREREG_SBR1_SHADOW_RANDOM_CONTROL_2026_08_24.md",
+  "source_preregistration_sha256": "dffa60b17b785b9182560b1bace7105eef9d715488866dd665df77825cac7b68",
+  "universe_sha256": "fa5c61703cac5c72218022f15d92ee46d6fa577df84c9cfcbf8cc005893bfe19",
+  "universe": [
+    "1000BONKUSDT", "1000PEPEUSDT", "1000RATSUSDT", "AAVEUSDT", "ACEUSDT",
+    "ADAUSDT", "ALGOUSDT", "APTUSDT", "ARBUSDT", "ATOMUSDT", "AVAXUSDT",
+    "BCHUSDT", "BICOUSDT", "BNBUSDT", "BTCUSDT", "C98USDT", "COTIUSDT",
+    "CRVUSDT", "DOGEUSDT", "ETCUSDT", "ETHUSDT", "FILUSDT", "GALAUSDT",
+    "HBARUSDT", "HFTUSDT", "ICPUSDT", "INJUSDT", "JTOUSDT", "LDOUSDT",
+    "MNTUSDT", "ONDOUSDT", "OPUSDT", "ORDIUSDT", "PAXGUSDT", "PEOPLEUSDT",
+    "SEIUSDT", "SHIB1000USDT", "SOLUSDT", "STRKUSDT", "SUIUSDT", "TAOUSDT",
+    "TIAUSDT", "TRXUSDT", "UNIUSDT", "USDCUSDT", "WIFUSDT", "WLDUSDT",
+    "XLMUSDT", "XMRUSDT", "XRPUSDT", "ZECUSDT"
+  ],
+  "money_universe_sha256": "c9e0e9ff37725938c25a30e1bdcd25e615092f89e330111612a214a458c90940",
+  "money_universe": [
+    "BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT",
+    "DOTUSDT", "SUIUSDT"
+  ],
+  "expected_structurally_unavailable": {
+    "HFTUSDT": "bybit_linear_status_closed_observed_2026-08-24"
+  }
+}

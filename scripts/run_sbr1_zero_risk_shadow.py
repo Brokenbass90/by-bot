@@ -56,6 +56,11 @@ from bot.sbr1_shadow_random_control import (  # noqa: E402
     persist_controlled_admission,
     preregistration_sha256,
 )
+from bot.sbr1_universe import (  # noqa: E402
+    UniverseViolation,
+    load_fixed51_manifest,
+    verify_fixed51_manifest,
+)
 from strategies.live_kline_utils import closed_kline_rows  # noqa: E402
 from strategies.sbr1_live import SBR1LiveEngine  # noqa: E402
 
@@ -66,6 +71,8 @@ PUBLIC_HOST = "api.bybit.com"
 PUBLIC_PATH = "/v5/market/kline"
 PUBLIC_INSTRUMENT_PATH = "/v5/market/instruments-info"
 H1_MS = 3_600_000
+RAW_EVIDENCE_ROLE = "preparity_raw_not_final_n"
+MAJOR8_EVIDENCE_ROLE = "major8_existing_lifecycle"
 
 
 def _canonical_bytes(value: object) -> bytes:
@@ -199,6 +206,15 @@ def verify_public_filters(snapshot: PublicFilterSnapshot, frozen: Mapping[str, o
                 raise ShadowViolation(f"exchange_filter_drift:{snapshot.symbol}:{field}")
         except InvalidOperation as exc:
             raise ShadowViolation(f"exchange_filter_invalid:{snapshot.symbol}:{field}") from exc
+
+
+def _observed_filter_mapping(snapshot: PublicFilterSnapshot) -> dict[str, str]:
+    """Return a validated public filter contract for an evidence symbol."""
+    return {
+        "tick_size": snapshot.tick_size,
+        "qty_step": snapshot.qty_step,
+        "min_notional": snapshot.min_notional,
+    }
 
 
 def fetch_public_klines(
@@ -535,7 +551,10 @@ def _advance_regime(
     return state
 
 
-def _journal_index(events: Sequence[Mapping[str, object]]):
+def _journal_index(
+    events: Sequence[Mapping[str, object]],
+    money_universe: Sequence[str] | None = None,
+):
     decisions: dict[str, Mapping[str, object]] = {}
     fills: dict[str, Mapping[str, object]] = {}
     terminal: set[str] = set()
@@ -546,12 +565,69 @@ def _journal_index(events: Sequence[Mapping[str, object]]):
             continue
         decision_id = str(payload.get("decision_id") or "")
         if event.get("event_type") == "evaluation" and payload.get("admitted") is True:
+            symbol = str(payload.get("symbol") or "").strip().upper()
+            if money_universe is not None and symbol not in set(money_universe):
+                raise ShadowViolation(f"admitted_non_money_symbol:{symbol}")
             decisions[decision_id] = payload
         elif event.get("event_type") == "fill":
             fills[decision_id] = payload
         elif event.get("event_type") in {"outcome", "fill_rejected"}:
             terminal.add(decision_id)
     return decisions, fills, terminal, claims
+
+
+def _coverage_for_close(
+    events: Sequence[Mapping[str, object]],
+    *,
+    expected_symbols: Sequence[str],
+    expected_close: int,
+) -> dict[str, object]:
+    """Build stable fixed-universe coverage from the durable journal.
+
+    A successful evaluation wins over an earlier retryable error.  Expected
+    structural unavailability is a separate, explicit state and never causes
+    a symbol substitution.
+    """
+
+    expected = tuple(expected_symbols)
+    expected_set = set(expected)
+    observed: set[str] = set()
+    errors: set[str] = set()
+    unavailable: set[str] = set()
+    for event in events:
+        payload = event.get("payload")
+        if not isinstance(payload, Mapping):
+            continue
+        try:
+            close = int(str(payload.get("closed_h1_ts_ms") or 0))
+        except ValueError:
+            continue
+        if close != expected_close:
+            continue
+        symbol = str(payload.get("symbol") or "").strip().upper()
+        if symbol not in expected_set:
+            continue
+        event_type = event.get("event_type")
+        if event_type == "evaluation":
+            observed.add(symbol)
+        elif event_type == "evaluation_unavailable":
+            unavailable.add(symbol)
+        elif event_type in {"evaluation_fetch_error", "evaluation_data_error"}:
+            errors.add(symbol)
+    errors -= observed | unavailable
+    missing = expected_set - observed - unavailable - errors
+    return {
+        "expected_count": len(expected),
+        "expected_symbols": list(expected),
+        "observed_count": len(observed),
+        "observed_symbols": sorted(observed),
+        "error_count": len(errors),
+        "error_symbols": sorted(errors),
+        "structurally_unavailable_count": len(unavailable),
+        "structurally_unavailable_symbols": sorted(unavailable),
+        "missing_count": len(missing),
+        "missing_symbols": sorted(missing),
+    }
 
 
 def _preflight(root: Path, config_path: Path) -> dict[str, object]:
@@ -564,8 +640,33 @@ def _preflight(root: Path, config_path: Path) -> dict[str, object]:
     )
     if manifest.manifest_sha256 != config.expected_parity_manifest_sha256:
         raise ShadowViolation("parity_manifest_hash_mismatch")
-    if tuple(manifest.universe) != config.universe:
-        raise ShadowViolation("shadow_manifest_universe_mismatch")
+    if tuple(manifest.universe) != config.money_universe:
+        raise ShadowViolation("shadow_money_manifest_universe_mismatch")
+    if not config.evidence_universe_manifest_path or not config.expected_evidence_universe_manifest_sha256:
+        raise ShadowViolation("fixed51_manifest_fields_missing")
+    evidence_manifest_path = root / config.evidence_universe_manifest_path
+    try:
+        evidence_manifest_sha256 = hashlib.sha256(evidence_manifest_path.read_bytes()).hexdigest()
+    except OSError as exc:
+        raise ShadowViolation("fixed51_manifest_unreadable") from exc
+    if evidence_manifest_sha256 != config.expected_evidence_universe_manifest_sha256:
+        raise ShadowViolation("fixed51_manifest_hash_mismatch")
+    try:
+        evidence_manifest = load_fixed51_manifest(evidence_manifest_path)
+        verify_fixed51_manifest(root, evidence_manifest)
+    except UniverseViolation as exc:
+        raise ShadowViolation(str(exc)) from exc
+    if evidence_manifest.universe != config.evidence_universe:
+        raise ShadowViolation("fixed51_config_universe_mismatch")
+    if evidence_manifest.money_universe != config.money_universe:
+        raise ShadowViolation("fixed51_money_universe_mismatch")
+    if config.evidence_universe_sha256 != evidence_manifest.universe_sha256:
+        raise ShadowViolation("fixed51_config_hash_mismatch")
+    if config.money_universe_sha256 != evidence_manifest.money_universe_sha256:
+        raise ShadowViolation("fixed51_money_hash_mismatch")
+    unavailable = dict(evidence_manifest.expected_structurally_unavailable)
+    if not set(unavailable).issubset(config.evidence_universe):
+        raise ShadowViolation("fixed51_expected_unavailable_outside_universe")
     prereg_sha = preregistration_sha256(root / PREREG_RELATIVE_PATH)
     if prereg_sha != config.expected_preregistration_sha256:
         raise ShadowViolation("random_control_preregistration_hash_mismatch")
@@ -586,6 +687,15 @@ def _preflight(root: Path, config_path: Path) -> dict[str, object]:
         "sealed_data_rows_read": 0,
         "config_hash": config.config_hash,
         "manifest_sha256": manifest.manifest_sha256,
+        "money_universe": list(config.money_universe),
+        "evidence_universe": list(config.evidence_universe),
+        "evaluation_universe": list(config.evaluation_universe),
+        "evidence_universe_sha256": evidence_manifest.universe_sha256,
+        "evidence_manifest_sha256": evidence_manifest_sha256,
+        "expected_structurally_unavailable": unavailable,
+        "evidence_role": RAW_EVIDENCE_ROLE,
+        "fixed51_final_n_eligible": False,
+        "promotion_eligible": False,
         "random_control_preregistration_sha256": prereg_sha,
         "source_closure_sha256": closure_hash,
     }
@@ -610,6 +720,7 @@ def run_once(
     )
     source_files, source_hashes = _manifest_source_bundle(root, manifest)
     filters = manifest.payload["exchange_filters"]
+    observed_filters: dict[str, dict[str, str]] = {}
     timeout = float(config.request_timeout_seconds)
     journal = AppendOnlyShadowJournal(root / config.journal_path)
     before = journal.read()
@@ -633,14 +744,47 @@ def run_once(
     regime_age = btc.observed_at_ms - regime.closed_h1_ts_ms
 
     events = journal.read()
-    decisions, fills, terminal, claims = _journal_index(events)
+    decisions, fills, terminal, claims = _journal_index(
+        events, money_universe=config.money_universe
+    )
     active_ids = [decision_id for decision_id in decisions if decision_id not in terminal]
     active_symbols = [str(decisions[decision_id]["symbol"]) for decision_id in active_ids]
     expected_close = regime.closed_h1_ts_ms
+    expected_unavailable = {
+        str(symbol): str(reason)
+        for symbol, reason in dict(
+            preflight.get("expected_structurally_unavailable") or {}
+        ).items()
+    }
+    for symbol, reason in sorted(expected_unavailable.items()):
+        claim = f"evaluation-unavailable:SBR1:{symbol}:{expected_close}"
+        if claim not in claims:
+            journal.append(
+                "evaluation_unavailable",
+                claim,
+                {
+                    "admitted": False,
+                    "authority": AUTHORITY,
+                    "availability": "structurally_unavailable",
+                    "closed_h1_ts_ms": expected_close,
+                    "config_hash": config.config_hash,
+                    "evidence_role": RAW_EVIDENCE_ROLE,
+                    "expected_gap": True,
+                    "money_authority": False,
+                    "observed_at_ms": btc.observed_at_ms,
+                    "orders_allowed": False,
+                    "promotion_eligible": False,
+                    "reason": reason,
+                    "status": "expected_structural_gap",
+                    "symbol": symbol,
+                },
+            )
+            claims.add(claim)
     pending_symbols = tuple(
         symbol
-        for symbol in config.universe
-        if f"evaluation:SBR1:{symbol}:{expected_close}" not in claims
+        for symbol in config.evaluation_universe
+        if symbol not in expected_unavailable
+        and f"evaluation:SBR1:{symbol}:{expected_close}" not in claims
     )
     snapshots, snapshot_errors = _fetch_h1_decision_snapshots(
         config,
@@ -653,6 +797,7 @@ def run_once(
     decisions_admitted = 0
     control_assignments_written = 0
     fetch_errors_written = 0
+    cycle_error_symbols: set[str] = set(snapshot_errors)
     attempt_minute = btc.observed_at_ms // 60_000
     for symbol, reason in sorted(snapshot_errors.items()):
         if journal.append(
@@ -662,9 +807,15 @@ def run_once(
                 "authority": AUTHORITY,
                 "closed_h1_ts_ms": expected_close,
                 "config_hash": config.config_hash,
+                "evidence_role": (
+                    MAJOR8_EVIDENCE_ROLE
+                    if symbol in config.money_universe
+                    else RAW_EVIDENCE_ROLE
+                ),
                 "money_authority": False,
                 "observed_at_ms": btc.observed_at_ms,
                 "orders_allowed": False,
+                "promotion_eligible": False,
                 "reason": reason,
                 "retryable": True,
                 "status": "public_h1_fetch_error",
@@ -672,8 +823,8 @@ def run_once(
             },
         ):
             fetch_errors_written += 1
-    with _frozen_sbr1_env(config.universe):
-        for symbol in config.universe:
+    with _frozen_sbr1_env(config.evaluation_universe):
+        for symbol in config.evaluation_universe:
             snapshot = snapshots.get(symbol)
             if snapshot is None:
                 continue
@@ -686,9 +837,15 @@ def run_once(
                         "authority": AUTHORITY,
                         "closed_h1_ts_ms": expected_close,
                         "config_hash": config.config_hash,
+                        "evidence_role": (
+                            MAJOR8_EVIDENCE_ROLE
+                            if symbol in config.money_universe
+                            else RAW_EVIDENCE_ROLE
+                        ),
                         "money_authority": False,
                         "observed_at_ms": snapshot.observed_at_ms,
                         "orders_allowed": False,
+                        "promotion_eligible": False,
                         "reason": "h1_history_short",
                         "received_rows": len(closed),
                         "required_rows": config.h1_history_limit,
@@ -698,6 +855,7 @@ def run_once(
                     },
                 ):
                     fetch_errors_written += 1
+                    cycle_error_symbols.add(symbol)
                 continue
             closed = closed[-config.h1_history_limit :]
             latest_start = int(str(closed[-1][0]))
@@ -720,10 +878,16 @@ def run_once(
                         "closed_h1_ts_ms": latest_close,
                         "config_hash": config.config_hash,
                         "decision_age_ms": age,
+                        "evidence_role": (
+                            MAJOR8_EVIDENCE_ROLE
+                            if symbol in config.money_universe
+                            else RAW_EVIDENCE_ROLE
+                        ),
                         "manifest_sha256": manifest.manifest_sha256,
                         "money_authority": False,
                         "observed_at_ms": snapshot.observed_at_ms,
                         "orders_allowed": False,
+                        "promotion_eligible": False,
                         "reason": "production_or_regime_decision_clock_missed",
                         "regime_age_ms": regime_age,
                         "response_sha256": snapshot.response_sha256,
@@ -734,6 +898,7 @@ def run_once(
                 ):
                     evaluations_written += 1
                     missed_evaluations += 1
+                    cycle_error_symbols.add(symbol)
                 continue
             if regime.closed_h1_ts_ms != latest_close:
                 raise ShadowViolation(f"regime_symbol_clock_mismatch:{symbol}")
@@ -749,6 +914,7 @@ def run_once(
                 "money_authority": False,
                 "observed_at_ms": snapshot.observed_at_ms,
                 "orders_allowed": False,
+                "promotion_eligible": False,
                 "regime": regime.to_dict(),
                 "response_sha256": snapshot.response_sha256,
                 "signal": raw_signal,
@@ -759,6 +925,22 @@ def run_once(
                     {"rows": consumed, "schema_id": "sbr1_consumed_h1_v1"}
                 ),
             }
+            is_money_symbol = symbol in config.money_universe
+            payload["evidence_role"] = (
+                MAJOR8_EVIDENCE_ROLE if is_money_symbol else RAW_EVIDENCE_ROLE
+            )
+            if not is_money_symbol:
+                payload.update(
+                    {
+                        "regime_gate": "context_only_not_admission",
+                        "status": (
+                            "raw_signal_observed" if signal is not None else "raw_no_signal"
+                        ),
+                    }
+                )
+                if journal.append("evaluation", claim, payload):
+                    evaluations_written += 1
+                continue
             admitted = False
             if signal is not None:
                 try:
@@ -768,7 +950,10 @@ def run_once(
                         timeout=timeout,
                         get_bytes=get_bytes,
                     )
-                    verify_public_filters(current_filter, filters[symbol])
+                    frozen_filter = filters.get(symbol)
+                    if frozen_filter is not None:
+                        verify_public_filters(current_filter, frozen_filter)
+                    observed_filters[symbol] = _observed_filter_mapping(current_filter)
                 except ShadowViolation as exc:
                     if journal.append(
                         "evaluation_data_error",
@@ -777,9 +962,11 @@ def run_once(
                             "authority": AUTHORITY,
                             "closed_h1_ts_ms": latest_close,
                             "config_hash": config.config_hash,
+                            "evidence_role": MAJOR8_EVIDENCE_ROLE,
                             "money_authority": False,
                             "observed_at_ms": snapshot.observed_at_ms,
                             "orders_allowed": False,
+                            "promotion_eligible": False,
                             "reason": getattr(exc, "code", str(exc)),
                             "retryable": True,
                             "status": "public_filter_error",
@@ -787,6 +974,7 @@ def run_once(
                         },
                     ):
                         fetch_errors_written += 1
+                        cycle_error_symbols.add(symbol)
                     continue
                 evidence = closed_h1_evidence_from_row(
                     consumed[-1],
@@ -870,7 +1058,9 @@ def run_once(
                     decisions_admitted += 1
 
     events = journal.read()
-    decisions, fills, terminal, _ = _journal_index(events)
+    decisions, fills, terminal, _ = _journal_index(
+        events, money_universe=config.money_universe
+    )
     fills_written = 0
     outcomes_written = 0
     rejected_written = 0
@@ -879,7 +1069,12 @@ def run_once(
         if decision_id in terminal:
             continue
         plan = plan_from_payload(decision_payload["decision_plan"], decision_id)  # type: ignore[arg-type]
-        tick = filters[plan.symbol]["tick_size"]
+        if plan.symbol not in config.money_universe:
+            raise ShadowViolation(f"admitted_non_money_symbol:{plan.symbol}")
+        filter_contract = observed_filters.get(plan.symbol) or filters.get(plan.symbol)
+        if filter_contract is None:
+            raise ShadowViolation(f"public_filter_missing:{plan.symbol}")
+        tick = filter_contract["tick_size"]
         policy = policy_for_plan(plan, tick)
         fill_payload = fills.get(decision_id)
         tick_execution: TickNativeShadowExecution
@@ -893,7 +1088,11 @@ def run_once(
                     timeout=timeout,
                     get_bytes=get_bytes,
                 )
-                verify_public_filters(current_filter, filters[plan.symbol])
+                frozen_filter = filters.get(plan.symbol)
+                if frozen_filter is not None:
+                    verify_public_filters(current_filter, frozen_filter)
+                filter_contract = _observed_filter_mapping(current_filter)
+                observed_filters[plan.symbol] = filter_contract
                 fill_rows, response_hashes, observed = fetch_closed_m5_path(
                     config.public_base,
                     plan.symbol,
@@ -910,8 +1109,8 @@ def run_once(
                     row,
                     row_bytes=_row_bytes(row),
                     adverse_slippage_bps=config.entry_slippage_bps,
-                    qty_step=filters[plan.symbol]["qty_step"],
-                    min_notional=filters[plan.symbol]["min_notional"],
+                    qty_step=filter_contract["qty_step"],
+                    min_notional=filter_contract["min_notional"],
                 )
             except (ContractViolation, ShadowViolation) as exc:
                 code = getattr(exc, "code", str(exc))
@@ -993,19 +1192,33 @@ def run_once(
             outcomes_written += 1
 
     final_events = journal.read()
+    coverage = _coverage_for_close(
+        final_events,
+        expected_symbols=config.evidence_universe,
+        expected_close=expected_close,
+    )
+    coverage_degraded = bool(
+        coverage["error_count"] or coverage["missing_count"] or cycle_error_symbols
+    )
+    expected_gap = bool(coverage["structurally_unavailable_count"])
+    if coverage_degraded:
+        cycle_status = "ZERO_RISK_SHADOW_DEGRADED_PUBLIC_DATA"
+    elif expected_gap:
+        cycle_status = "ZERO_RISK_SHADOW_OK_EXPECTED_STRUCTURAL_GAP"
+    else:
+        cycle_status = "ZERO_RISK_SHADOW_OK"
     return {
         "schema_id": "sbr1_zero_risk_shadow_cycle_receipt_v1",
-        "status": (
-            "ZERO_RISK_SHADOW_DEGRADED_PUBLIC_DATA"
-            if snapshot_errors
-            else "ZERO_RISK_SHADOW_OK"
-        ),
+        "status": cycle_status,
         "authority": AUTHORITY,
         "broker_calls": False,
         "private_api_calls": False,
         "orders_created_or_changed": 0,
         "money_authority": False,
         "release_or_promotion_authority": False,
+        "promotion_eligible": False,
+        "evidence_role": RAW_EVIDENCE_ROLE,
+        "fixed51_final_n_eligible": False,
         "sealed_data_rows_read": 0,
         "regime": regime.to_dict(),
         "evaluations_written": evaluations_written,
@@ -1014,6 +1227,8 @@ def run_once(
         "control_assignments_written": control_assignments_written,
         "fetch_errors_written": fetch_errors_written,
         "fetch_error_symbols": sorted(snapshot_errors),
+        "cycle_error_symbols": sorted(cycle_error_symbols),
+        "coverage": coverage,
         "fills_written": fills_written,
         "fill_rejections_written": rejected_written,
         "outcomes_written": outcomes_written,
@@ -1023,7 +1238,15 @@ def run_once(
 
 
 def _cycle_exit_code(result: Mapping[str, object]) -> int:
-    return 0 if result.get("status") == "ZERO_RISK_SHADOW_OK" else 3
+    return (
+        0
+        if result.get("status")
+        in {
+            "ZERO_RISK_SHADOW_OK",
+            "ZERO_RISK_SHADOW_OK_EXPECTED_STRUCTURAL_GAP",
+        }
+        else 3
+    )
 
 
 def main() -> int:

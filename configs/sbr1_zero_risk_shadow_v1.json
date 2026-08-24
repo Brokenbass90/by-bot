@@ -8,16 +8,25 @@
   "release_or_promotion_authority": false,
   "sealed_data_allowed": false,
   "public_base": "https://api.bybit.com",
-  "universe": [
-    "BTCUSDT",
-    "ETHUSDT",
-    "SOLUSDT",
-    "ADAUSDT",
-    "LINKUSDT",
-    "LTCUSDT",
-    "DOTUSDT",
-    "SUIUSDT"
+  "evidence_universe": [
+    "1000BONKUSDT", "1000PEPEUSDT", "1000RATSUSDT", "AAVEUSDT", "ACEUSDT",
+    "ADAUSDT", "ALGOUSDT", "APTUSDT", "ARBUSDT", "ATOMUSDT", "AVAXUSDT",
+    "BCHUSDT", "BICOUSDT", "BNBUSDT", "BTCUSDT", "C98USDT", "COTIUSDT",
+    "CRVUSDT", "DOGEUSDT", "ETCUSDT", "ETHUSDT", "FILUSDT", "GALAUSDT",
+    "HBARUSDT", "HFTUSDT", "ICPUSDT", "INJUSDT", "JTOUSDT", "LDOUSDT",
+    "MNTUSDT", "ONDOUSDT", "OPUSDT", "ORDIUSDT", "PAXGUSDT", "PEOPLEUSDT",
+    "SEIUSDT", "SHIB1000USDT", "SOLUSDT", "STRKUSDT", "SUIUSDT", "TAOUSDT",
+    "TIAUSDT", "TRXUSDT", "UNIUSDT", "USDCUSDT", "WIFUSDT", "WLDUSDT",
+    "XLMUSDT", "XMRUSDT", "XRPUSDT", "ZECUSDT"
   ],
+  "money_universe": [
+    "BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT",
+    "DOTUSDT", "SUIUSDT"
+  ],
+  "evidence_universe_manifest_path": "configs/research/sbr1_fixed51_evidence_manifest_v1.json",
+  "expected_evidence_universe_manifest_sha256": "597154e23c592c6db5fcb2eca2b5e5f9559526646f0a9444a1ccfd22bb100624",
+  "evidence_universe_sha256": "fa5c61703cac5c72218022f15d92ee46d6fa577df84c9cfcbf8cc005893bfe19",
+  "money_universe_sha256": "c9e0e9ff37725938c25a30e1bdcd25e615092f89e330111612a214a458c90940",
   "parity_manifest_path": "configs/research/att1_sbr1_live_native_parity_v1.json",
   "expected_parity_manifest_sha256": "aa7392aecec96414c314ff14f03f4df6340d78094f03b75da636e1c2095433bb",
   "expected_preregistration_sha256": "dffa60b17b785b9182560b1bace7105eef9d715488866dd665df77825cac7b68",
@@ -37,14 +46,25 @@
   "shadow_risk_fraction_per_slot": "0.02",
   "max_cluster_risk_fraction": "0.04",
   "symbol_clusters": {
-    "BTCUSDT": "major8",
-    "ETHUSDT": "major8",
-    "SOLUSDT": "major8",
-    "ADAUSDT": "major8",
-    "LINKUSDT": "major8",
-    "LTCUSDT": "major8",
-    "DOTUSDT": "major8",
-    "SUIUSDT": "major8"
+    "1000BONKUSDT": "fixed51_1000bonk", "1000PEPEUSDT": "fixed51_1000pepe",
+    "1000RATSUSDT": "fixed51_1000rats", "AAVEUSDT": "fixed51_aave",
+    "ACEUSDT": "fixed51_ace", "ADAUSDT": "major8", "ALGOUSDT": "fixed51_algo",
+    "APTUSDT": "fixed51_apt", "ARBUSDT": "fixed51_arb", "ATOMUSDT": "fixed51_atom",
+    "AVAXUSDT": "fixed51_avax", "BCHUSDT": "fixed51_bch", "BICOUSDT": "fixed51_bico",
+    "BNBUSDT": "fixed51_bnb", "BTCUSDT": "major8", "C98USDT": "fixed51_c98",
+    "COTIUSDT": "fixed51_coti", "CRVUSDT": "fixed51_crv", "DOGEUSDT": "fixed51_doge",
+    "ETCUSDT": "fixed51_etc", "ETHUSDT": "major8", "FILUSDT": "fixed51_fil",
+    "GALAUSDT": "fixed51_gala", "HBARUSDT": "fixed51_hbar", "HFTUSDT": "fixed51_hft",
+    "ICPUSDT": "fixed51_icp", "INJUSDT": "fixed51_inj", "JTOUSDT": "fixed51_jto",
+    "LDOUSDT": "fixed51_ldo", "MNTUSDT": "fixed51_mnt", "ONDOUSDT": "fixed51_ondo",
+    "OPUSDT": "fixed51_op", "ORDIUSDT": "fixed51_ordi", "PAXGUSDT": "fixed51_paxg",
+    "PEOPLEUSDT": "fixed51_people", "SEIUSDT": "fixed51_sei", "SHIB1000USDT": "fixed51_shib1000",
+    "SOLUSDT": "major8", "STRKUSDT": "fixed51_strk", "SUIUSDT": "major8",
+    "TAOUSDT": "fixed51_tao", "TIAUSDT": "fixed51_tia", "TRXUSDT": "fixed51_trx",
+    "UNIUSDT": "fixed51_uni", "USDCUSDT": "fixed51_usdc", "WIFUSDT": "fixed51_wif",
+    "WLDUSDT": "fixed51_wld", "XLMUSDT": "fixed51_xlm", "XMRUSDT": "fixed51_xmr",
+    "XRPUSDT": "fixed51_xrp", "ZECUSDT": "fixed51_zec",
+    "LINKUSDT": "major8", "LTCUSDT": "major8", "DOTUSDT": "major8"
   },
   "source_closure": {
     "strategies/sloped_break_retest_v1.py": "44d67f0e4056f97fd454625a7629d020be5e563965d488671b18bc6e496cd19f",
@@ -56,10 +76,11 @@
     "bot/live_native_regime_gate.py": "cd34e715ec8b6d77d104d9b5413fa330550424e1ed7858b94eadcd0b0b8173ef",
     "bot/live_native_manifest.py": "603331bde55bf16973f66e4102770120e3c8ef0176d0efdcf7ed25df654eea8d",
     "bot/live_native_signal_adapters.py": "72872f023d32156c4dd0344b461c0a7606f06f8bbdc2621d775d30bd77e84e02",
-    "bot/sbr1_zero_risk_shadow.py": "8ab8524441e47b1df2535cbe6f02248d5af531f9934dc33ac94d2273eeb559af",
+    "bot/sbr1_zero_risk_shadow.py": "2a0611a72c36a644d162773ce5537a5ff94b97a135f0abff8c1d5ebf0b529609",
+    "bot/sbr1_universe.py": "4594c3a9192d1620f207d5591495d4e7f1640f6e17dabbb6aa8016290964de07",
     "bot/sbr1_shadow_random_control.py": "6aa96cbb4e696a012c2e5ab91b1dcdc952a99c890fda0ba2f6136a7a91cfab1e",
-    "scripts/run_sbr1_zero_risk_shadow.py": "5ebc2fa9e6f5fb42e1d0065ab9722f2d7790ddf4364ea81e35f83571a29ec75c",
-    "deploy/systemd/sbr1-zero-risk-shadow.service": "4732a7f1f4ee771520ade488755358970b682f1cf559cd42ba2ed79b7ae1aa39",
+    "scripts/run_sbr1_zero_risk_shadow.py": "8794ec5bc9b21b168668997229038b5ddc11babd11c091a8483636fc10138f20",
+    "deploy/systemd/sbr1-zero-risk-shadow.service": "9932ab23cbec4d89a27237f2012046b8f9c4afa2794c8b58838c40c0158f0a05",
     "deploy/systemd/sbr1-zero-risk-shadow.timer": "98d3d4e1af5216bb38e22f605c449b3976bbb64ff4c6015dea8858f017900d02"
   }
 }
