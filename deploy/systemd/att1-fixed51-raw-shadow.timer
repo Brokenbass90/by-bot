@@ -1,0 +1,12 @@
+[Unit]
+Description=Run ATT1 fixed-51 raw shadow two minutes after each H1 close
+
+[Timer]
+OnCalendar=*-*-* *:02:20 UTC
+AccuracySec=1s
+RandomizedDelaySec=0
+Persistent=false
+Unit=att1-fixed51-raw-shadow.service
+
+[Install]
+WantedBy=timers.target

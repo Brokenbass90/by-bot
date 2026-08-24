@@ -1,0 +1,50 @@
+{
+  "schema_id": "att1_fixed51_public_shadow_manifest_v1",
+  "authority": "zero_risk_public_att1_fixed51_evidence_no_orders_no_money_no_promotion",
+  "default_off": true,
+  "enabled": false,
+  "money_authority": false,
+  "orders_allowed": false,
+  "private_api_allowed": false,
+  "release_or_promotion_authority": false,
+  "measurement_authority": "raw_decision_only",
+  "evidence_admitted": false,
+  "performance_authority": false,
+  "final_n_eligible": false,
+  "public_base": "https://api.bybit.com",
+  "max_decision_age_ms": 300000,
+  "min_replay_bars": 121,
+  "expected_unavailable_symbols": ["HFTUSDT"],
+  "money_universe": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"],
+  "evidence_universe": ["1000BONKUSDT", "1000PEPEUSDT", "1000RATSUSDT", "AAVEUSDT", "ACEUSDT", "ADAUSDT", "ALGOUSDT", "APTUSDT", "ARBUSDT", "ATOMUSDT", "AVAXUSDT", "BCHUSDT", "BICOUSDT", "BNBUSDT", "BTCUSDT", "C98USDT", "COTIUSDT", "CRVUSDT", "DOGEUSDT", "ETCUSDT", "ETHUSDT", "FILUSDT", "GALAUSDT", "HBARUSDT", "HFTUSDT", "ICPUSDT", "INJUSDT", "JTOUSDT", "LDOUSDT", "MNTUSDT", "ONDOUSDT", "OPUSDT", "ORDIUSDT", "PAXGUSDT", "PEOPLEUSDT", "SEIUSDT", "SHIB1000USDT", "SOLUSDT", "STRKUSDT", "SUIUSDT", "TAOUSDT", "TIAUSDT", "TRXUSDT", "UNIUSDT", "USDCUSDT", "WIFUSDT", "WLDUSDT", "XLMUSDT", "XMRUSDT", "XRPUSDT", "ZECUSDT"],
+  "evidence_universe_sha256": "fa5c61703cac5c72218022f15d92ee46d6fa577df84c9cfcbf8cc005893bfe19",
+  "preregistration_path": "research_lab/prereg/PREREG_ATT1_FIXED51_ZERO_RISK_SHADOW_2026_08_24.md",
+  "preregistration_sha256": "5e856b01940248e1adf784d6a1e53562543e7a5cc60765f3739694e5fe42cac4",
+  "signal_contract": {
+    "wrapper": "strategies.att1_live.ATT1LiveEngine",
+    "mode": "causal_replay_latest_raw_decision_only",
+    "closed_timeframe": "60",
+    "side": "short",
+    "min_replay_bars": 121,
+    "max_decision_age_ms": 300000,
+    "regime_role": "diagnostic_only_never_admission"
+  },
+  "cost_contract": {
+    "base": {"fee_bps_per_side": "6", "slippage_bps_per_side": "2"},
+    "stress": {"fee_bps_per_side": "6", "slippage_bps_per_side": "5"}
+  },
+  "source_closure_sha256": "fe788a5e63344ca1e6bffcc0b975ce6e25b65799dca166b10a44fbe04c00ffaf",
+  "source_files": [
+    {"path": "strategies/alt_trendline_touch_v1.py", "bytes": 41984, "sha256": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"},
+    {"path": "strategies/att1_live.py", "bytes": 3468, "sha256": "846febc99ebd3f103d79146e10276059adab59a6353cfca9893baabac25e3018"},
+    {"path": "strategies/live_kline_utils.py", "bytes": 1473, "sha256": "800fb4c575c9840cf9807fbae5c40c5762b1c128dd47cdcb29d7b22aa2eb15f8"},
+    {"path": "strategies/signals.py", "bytes": 3378, "sha256": "5f9408f203f303853360dd79e31fe0893b6db95329abbd758401a89f3258755c"},
+    {"path": "bot/live_native_regime_gate.py", "bytes": 7293, "sha256": "cd34e715ec8b6d77d104d9b5413fa330550424e1ed7858b94eadcd0b0b8173ef"},
+    {"path": "bot/live_native_decision_contract.py", "bytes": 38173, "sha256": "a8ad6115d1bb7d86f64c2cddb70695a814e4f7acf0db13fbc977acbd88f95f70"},
+    {"path": "bot/att1_runtime_contract.py", "bytes": 4084, "sha256": "4774784858f99fcfe14affb6e91db82134e89fc0dec5f94be6b1b24bc4535c78"},
+    {"path": "bot/att1_fixed51_shadow.py", "bytes": 13412, "sha256": "89fd7e63ffbc3acfded093984ca6c8f7c405b3c142b7f16edb542e239f6ecaa4"},
+    {"path": "scripts/run_att1_fixed51_zero_risk_shadow.py", "bytes": 33256, "sha256": "159caac186acc159bc1036d68dc5dfc394159c1e187173680dd8657c82e2aa30"},
+    {"path": "deploy/systemd/att1-fixed51-raw-shadow.service", "bytes": 1352, "sha256": "cdf644f675e950ce16683ad7cd2926bafb4f586ae5c51c7499dd4e54c1b8297f"},
+    {"path": "deploy/systemd/att1-fixed51-raw-shadow.timer", "bytes": 242, "sha256": "88781a7749e379482b6a87a835f4dfc9f0e1241fda4ccc70b2b196452c2e3051"}
+  ]
+}

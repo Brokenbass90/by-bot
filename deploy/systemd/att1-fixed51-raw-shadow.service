@@ -1,0 +1,35 @@
+[Unit]
+Description=ATT1 fixed-51 public raw-decision shadow (no orders, no private API)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/bybot-research/att1-fixed51-raw-shadow
+Environment=PYTHONHASHSEED=0
+Environment=TZ=UTC
+UMask=0077
+ExecStartPre=/root/by-bot/.venv/bin/python scripts/run_att1_fixed51_zero_risk_shadow.py --root /opt/bybot-research/att1-fixed51-raw-shadow --config /opt/bybot-research/att1-fixed51-raw-shadow/runtime/config/att1_fixed51_zero_risk_shadow.json
+ExecStart=/root/by-bot/.venv/bin/python scripts/run_att1_fixed51_zero_risk_shadow.py --root /opt/bybot-research/att1-fixed51-raw-shadow --config /opt/bybot-research/att1-fixed51-raw-shadow/runtime/config/att1_fixed51_zero_risk_shadow.json --once --ack ATT1_FIXED51_ZERO_RISK_SHADOW
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=read-only
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+ReadWritePaths=/opt/bybot-research/att1-fixed51-raw-shadow/runtime
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6
+SystemCallArchitectures=native
+MemoryMax=768M
+CPUQuota=75%
+TimeoutStartSec=150
