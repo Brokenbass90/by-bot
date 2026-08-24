@@ -79,7 +79,7 @@
     "bot/sbr1_zero_risk_shadow.py": "2a0611a72c36a644d162773ce5537a5ff94b97a135f0abff8c1d5ebf0b529609",
     "bot/sbr1_universe.py": "4594c3a9192d1620f207d5591495d4e7f1640f6e17dabbb6aa8016290964de07",
     "bot/sbr1_shadow_random_control.py": "6aa96cbb4e696a012c2e5ab91b1dcdc952a99c890fda0ba2f6136a7a91cfab1e",
-    "scripts/run_sbr1_zero_risk_shadow.py": "8794ec5bc9b21b168668997229038b5ddc11babd11c091a8483636fc10138f20",
+    "scripts/run_sbr1_zero_risk_shadow.py": "58ff898badd64a9e602919f48682114242f791944ffb9a18b45ec7cf5db5a0c7",
     "deploy/systemd/sbr1-zero-risk-shadow.service": "ea1a7670a1cc5b97f1e0ddcd0fd2418ea5fad55fa967e6a39bfba4701e6b2754",
     "deploy/systemd/sbr1-zero-risk-shadow.timer": "98d3d4e1af5216bb38e22f605c449b3976bbb64ff4c6015dea8858f017900d02"
   }

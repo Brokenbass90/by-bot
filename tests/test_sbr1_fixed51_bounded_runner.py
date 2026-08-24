@@ -403,6 +403,28 @@ def test_lifecycle_rejects_admitted_nonmoney_symbol():
         runner._journal_index(events, money_universe=("BTCUSDT", "LINKUSDT"))
 
 
+def test_durable_missed_window_never_becomes_observed_coverage() -> None:
+    close = 1_800_000_000_000
+    events = [
+        {
+            "event_type": "evaluation",
+            "payload": {
+                "symbol": "BTCUSDT",
+                "closed_h1_ts_ms": close,
+                "status": "missed_decision_window",
+                "reason": "production_or_regime_decision_clock_missed",
+            },
+        }
+    ]
+    coverage = runner._coverage_for_close(
+        events,
+        expected_symbols=("BTCUSDT",),
+        expected_close=close,
+    )
+    assert coverage["observed_symbols"] == []
+    assert coverage["error_symbols"] == ["BTCUSDT"]
+
+
 def test_oneshot_start_timeout_finishes_before_three_minute_retry() -> None:
     root = Path(__file__).resolve().parents[1]
     service = (root / "deploy/systemd/sbr1-zero-risk-shadow.service").read_text(

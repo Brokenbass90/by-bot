@@ -609,7 +609,14 @@ def _coverage_for_close(
             continue
         event_type = event.get("event_type")
         if event_type == "evaluation":
-            observed.add(symbol)
+            if (
+                payload.get("status") == "missed_decision_window"
+                or payload.get("reason")
+                == "production_or_regime_decision_clock_missed"
+            ):
+                errors.add(symbol)
+            else:
+                observed.add(symbol)
         elif event_type == "evaluation_unavailable":
             unavailable.add(symbol)
         elif event_type in {"evaluation_fetch_error", "evaluation_data_error"}:
