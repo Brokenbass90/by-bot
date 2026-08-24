@@ -50,6 +50,12 @@ from bot.sbr1_zero_risk_shadow import (  # noqa: E402
     tick_native_shadow_execution,
     verify_source_closure,
 )
+from bot.sbr1_shadow_random_control import (  # noqa: E402
+    PREREG_RELATIVE_PATH,
+    build_control_assignments,
+    persist_controlled_admission,
+    preregistration_sha256,
+)
 from strategies.live_kline_utils import closed_kline_rows  # noqa: E402
 from strategies.sbr1_live import SBR1LiveEngine  # noqa: E402
 
@@ -252,6 +258,36 @@ def fetch_public_klines(
         observed_at_ms=observed,
         response_sha256=hashlib.sha256(raw).hexdigest(),
     )
+
+
+def _fetch_h1_decision_snapshots(
+    config,
+    btc: PublicKlineSnapshot,
+    *,
+    get_bytes: Callable[..., bytes],
+    fetcher: Callable[..., PublicKlineSnapshot] = fetch_public_klines,
+    symbols: Sequence[str] | None = None,
+) -> tuple[dict[str, PublicKlineSnapshot], dict[str, str]]:
+    """Fetch symbols independently so one public-data error cannot starve later symbols."""
+    snapshots: dict[str, PublicKlineSnapshot] = {}
+    errors: dict[str, str] = {}
+    selected_symbols = config.universe if symbols is None else symbols
+    for symbol in selected_symbols:
+        if symbol == "BTCUSDT":
+            snapshots[symbol] = btc
+            continue
+        try:
+            snapshots[symbol] = fetcher(
+                config.public_base,
+                symbol,
+                "60",
+                config.h1_history_limit + 1,
+                timeout=float(config.request_timeout_seconds),
+                get_bytes=get_bytes,
+            )
+        except Exception as exc:
+            errors[symbol] = f"{type(exc).__name__}:{exc}"[:500]
+    return snapshots, errors
 
 
 def _closed_rows(snapshot: PublicKlineSnapshot) -> list[list[object]]:
@@ -530,6 +566,9 @@ def _preflight(root: Path, config_path: Path) -> dict[str, object]:
         raise ShadowViolation("parity_manifest_hash_mismatch")
     if tuple(manifest.universe) != config.universe:
         raise ShadowViolation("shadow_manifest_universe_mismatch")
+    prereg_sha = preregistration_sha256(root / PREREG_RELATIVE_PATH)
+    if prereg_sha != config.expected_preregistration_sha256:
+        raise ShadowViolation("random_control_preregistration_hash_mismatch")
     closure_hash = verify_source_closure(root, config)
     return {
         "schema_id": "sbr1_zero_risk_shadow_preflight_v1",
@@ -547,6 +586,7 @@ def _preflight(root: Path, config_path: Path) -> dict[str, object]:
         "sealed_data_rows_read": 0,
         "config_hash": config.config_hash,
         "manifest_sha256": manifest.manifest_sha256,
+        "random_control_preregistration_sha256": prereg_sha,
         "source_closure_sha256": closure_hash,
     }
 
@@ -596,22 +636,69 @@ def run_once(
     decisions, fills, terminal, claims = _journal_index(events)
     active_ids = [decision_id for decision_id in decisions if decision_id not in terminal]
     active_symbols = [str(decisions[decision_id]["symbol"]) for decision_id in active_ids]
+    expected_close = regime.closed_h1_ts_ms
+    pending_symbols = tuple(
+        symbol
+        for symbol in config.universe
+        if f"evaluation:SBR1:{symbol}:{expected_close}" not in claims
+    )
+    snapshots, snapshot_errors = _fetch_h1_decision_snapshots(
+        config,
+        btc,
+        get_bytes=get_bytes,
+        symbols=pending_symbols,
+    )
     evaluations_written = 0
     missed_evaluations = 0
     decisions_admitted = 0
+    control_assignments_written = 0
+    fetch_errors_written = 0
+    attempt_minute = btc.observed_at_ms // 60_000
+    for symbol, reason in sorted(snapshot_errors.items()):
+        if journal.append(
+            "evaluation_fetch_error",
+            f"evaluation-fetch-error:SBR1:{symbol}:{expected_close}:{attempt_minute}",
+            {
+                "authority": AUTHORITY,
+                "closed_h1_ts_ms": expected_close,
+                "config_hash": config.config_hash,
+                "money_authority": False,
+                "observed_at_ms": btc.observed_at_ms,
+                "orders_allowed": False,
+                "reason": reason,
+                "retryable": True,
+                "status": "public_h1_fetch_error",
+                "symbol": symbol,
+            },
+        ):
+            fetch_errors_written += 1
     with _frozen_sbr1_env(config.universe):
         for symbol in config.universe:
-            snapshot = btc if symbol == "BTCUSDT" else fetch_public_klines(
-                config.public_base,
-                symbol,
-                "60",
-                config.h1_history_limit + 1,
-                timeout=timeout,
-                get_bytes=get_bytes,
-            )
+            snapshot = snapshots.get(symbol)
+            if snapshot is None:
+                continue
             closed = _closed_rows(snapshot)
             if len(closed) < config.h1_history_limit:
-                raise ShadowViolation(f"h1_history_short:{symbol}")
+                if journal.append(
+                    "evaluation_data_error",
+                    f"evaluation-data-error:SBR1:{symbol}:{expected_close}:{attempt_minute}",
+                    {
+                        "authority": AUTHORITY,
+                        "closed_h1_ts_ms": expected_close,
+                        "config_hash": config.config_hash,
+                        "money_authority": False,
+                        "observed_at_ms": snapshot.observed_at_ms,
+                        "orders_allowed": False,
+                        "reason": "h1_history_short",
+                        "received_rows": len(closed),
+                        "required_rows": config.h1_history_limit,
+                        "retryable": True,
+                        "status": "public_h1_data_error",
+                        "symbol": symbol,
+                    },
+                ):
+                    fetch_errors_written += 1
+                continue
             closed = closed[-config.h1_history_limit :]
             latest_start = int(str(closed[-1][0]))
             latest_close = latest_start + H1_MS
@@ -672,14 +759,35 @@ def run_once(
                     {"rows": consumed, "schema_id": "sbr1_consumed_h1_v1"}
                 ),
             }
+            admitted = False
             if signal is not None:
-                current_filter = fetch_public_filters(
-                    config.public_base,
-                    symbol,
-                    timeout=timeout,
-                    get_bytes=get_bytes,
-                )
-                verify_public_filters(current_filter, filters[symbol])
+                try:
+                    current_filter = fetch_public_filters(
+                        config.public_base,
+                        symbol,
+                        timeout=timeout,
+                        get_bytes=get_bytes,
+                    )
+                    verify_public_filters(current_filter, filters[symbol])
+                except ShadowViolation as exc:
+                    if journal.append(
+                        "evaluation_data_error",
+                        f"evaluation-filter-error:SBR1:{symbol}:{latest_close}:{attempt_minute}",
+                        {
+                            "authority": AUTHORITY,
+                            "closed_h1_ts_ms": latest_close,
+                            "config_hash": config.config_hash,
+                            "money_authority": False,
+                            "observed_at_ms": snapshot.observed_at_ms,
+                            "orders_allowed": False,
+                            "reason": getattr(exc, "code", str(exc)),
+                            "retryable": True,
+                            "status": "public_filter_error",
+                            "symbol": symbol,
+                        },
+                    ):
+                        fetch_errors_written += 1
+                    continue
                 evidence = closed_h1_evidence_from_row(
                     consumed[-1],
                     row_bytes=_row_bytes(consumed[-1]),
@@ -708,11 +816,58 @@ def run_once(
                         "strategy_h1_rows": [list(row) for row in closed],
                     }
                 )
+            if admitted:
+                decision_id = str(payload.get("decision_id") or "").strip()
+                if not decision_id:
+                    raise ShadowViolation("admitted_decision_id_missing")
+                prereg_sha = preregistration_sha256(root / PREREG_RELATIVE_PATH)
+                if prereg_sha != config.expected_preregistration_sha256:
+                    raise ShadowViolation("random_control_preregistration_hash_mismatch")
+                assignments = build_control_assignments(
+                    prereg_sha256=prereg_sha,
+                    main_decision_id=decision_id,
+                    main_decision_ts_ms=latest_close,
+                    now_ms=snapshot.observed_at_ms,
+                    main_context={
+                        "symbol": plan.symbol,
+                        "side": plan.side,
+                        "geometry_sha256": plan.profile_hash,
+                        "source_sha256": plan.source_hash,
+                        "data_sha256": plan.data_hash,
+                        "config_sha256": plan.config_hash,
+                        "cost_contract_sha256": _sha(
+                            {
+                                "entry_slippage_bps": str(
+                                    config.entry_slippage_bps
+                                ),
+                                "exit_slippage_bps": str(config.exit_slippage_bps),
+                                "fee_bps_per_side": str(config.fee_bps_per_side),
+                                "parity_manifest_sha256": manifest.manifest_sha256,
+                                "schema_id": "sbr1_shadow_cost_contract_v1",
+                            }
+                        ),
+                    },
+                )
+                control_journal = AppendOnlyShadowJournal(
+                    root
+                    / Path(config.journal_path).parent
+                    / "random_control_events.jsonl"
+                )
+                main_written, control_written = persist_controlled_admission(
+                    main_journal=journal,
+                    main_claim=claim,
+                    main_payload=payload,
+                    control_journal=control_journal,
+                    assignments=assignments,
+                )
+                control_assignments_written += control_written
+            else:
+                main_written = journal.append("evaluation", claim, payload)
+            if main_written:
+                evaluations_written += 1
                 if admitted:
                     active_symbols.append(symbol)
                     decisions_admitted += 1
-            if journal.append("evaluation", claim, payload):
-                evaluations_written += 1
 
     events = journal.read()
     decisions, fills, terminal, _ = _journal_index(events)
@@ -840,7 +995,11 @@ def run_once(
     final_events = journal.read()
     return {
         "schema_id": "sbr1_zero_risk_shadow_cycle_receipt_v1",
-        "status": "ZERO_RISK_SHADOW_OK",
+        "status": (
+            "ZERO_RISK_SHADOW_DEGRADED_PUBLIC_DATA"
+            if snapshot_errors
+            else "ZERO_RISK_SHADOW_OK"
+        ),
         "authority": AUTHORITY,
         "broker_calls": False,
         "private_api_calls": False,
@@ -852,12 +1011,19 @@ def run_once(
         "evaluations_written": evaluations_written,
         "missed_evaluations": missed_evaluations,
         "decisions_admitted": decisions_admitted,
+        "control_assignments_written": control_assignments_written,
+        "fetch_errors_written": fetch_errors_written,
+        "fetch_error_symbols": sorted(snapshot_errors),
         "fills_written": fills_written,
         "fill_rejections_written": rejected_written,
         "outcomes_written": outcomes_written,
         "journal_events": len(final_events),
         "journal_tip_sha256": final_events[-1]["event_hash"] if final_events else None,
     }
+
+
+def _cycle_exit_code(result: Mapping[str, object]) -> int:
+    return 0 if result.get("status") == "ZERO_RISK_SHADOW_OK" else 3
 
 
 def main() -> int:
@@ -882,7 +1048,7 @@ def main() -> int:
         )
         return 2
     print(json.dumps(result, sort_keys=True))
-    return 0
+    return _cycle_exit_code(result) if args.once else 0
 
 
 if __name__ == "__main__":

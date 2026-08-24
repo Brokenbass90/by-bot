@@ -122,6 +122,7 @@ class ZeroRiskShadowConfig:
     universe: tuple[str, ...]
     parity_manifest_path: str
     expected_parity_manifest_sha256: str
+    expected_preregistration_sha256: str
     journal_path: str
     max_decision_age_ms: int
     max_regime_age_ms: int
@@ -157,6 +158,7 @@ class ZeroRiskShadowConfig:
             "universe",
             "parity_manifest_path",
             "expected_parity_manifest_sha256",
+            "expected_preregistration_sha256",
             "journal_path",
             "max_decision_age_ms",
             "max_regime_age_ms",
@@ -268,6 +270,7 @@ class ZeroRiskShadowConfig:
             "bot/live_native_manifest.py",
             "bot/live_native_signal_adapters.py",
             "bot/sbr1_zero_risk_shadow.py",
+            "bot/sbr1_shadow_random_control.py",
             "scripts/run_sbr1_zero_risk_shadow.py",
             "deploy/systemd/sbr1-zero-risk-shadow.service",
             "deploy/systemd/sbr1-zero-risk-shadow.timer",
@@ -287,6 +290,10 @@ class ZeroRiskShadowConfig:
             expected_parity_manifest_sha256=_sha256_text(
                 raw.get("expected_parity_manifest_sha256"),
                 "expected_parity_manifest_sha256",
+            ),
+            expected_preregistration_sha256=_sha256_text(
+                raw.get("expected_preregistration_sha256"),
+                "expected_preregistration_sha256",
             ),
             journal_path=_relative_path(raw.get("journal_path"), "journal_path"),
             max_decision_age_ms=max_decision_age,
@@ -316,6 +323,7 @@ class ZeroRiskShadowConfig:
                 "entry_slippage_bps": _decimal_text(self.entry_slippage_bps, "entry_slippage_bps"),
                 "exit_slippage_bps": _decimal_text(self.exit_slippage_bps, "exit_slippage_bps"),
                 "expected_parity_manifest_sha256": self.expected_parity_manifest_sha256,
+                "expected_preregistration_sha256": self.expected_preregistration_sha256,
                 "fee_bps_per_side": _decimal_text(self.fee_bps_per_side, "fee_bps_per_side"),
                 "h1_history_limit": self.h1_history_limit,
                 "journal_path": self.journal_path,

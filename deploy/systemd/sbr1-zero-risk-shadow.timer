@@ -3,6 +3,9 @@ Description=Run SBR1 zero-risk shadow every five minutes at second 20 UTC
 
 [Timer]
 OnCalendar=*-*-* *:0/5:20 UTC
+# One retry remains inside the 300-second H1 decision-parity window.  It lets
+# a transient public-data failure at :00 recover without widening the contract.
+OnCalendar=*-*-* *:03:20 UTC
 AccuracySec=1s
 RandomizedDelaySec=0
 Persistent=false

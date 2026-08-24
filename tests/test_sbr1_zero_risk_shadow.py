@@ -27,6 +27,9 @@ from bot.sbr1_zero_risk_shadow import (
     verify_source_closure,
 )
 from scripts.run_sbr1_zero_risk_shadow import (
+    PublicKlineSnapshot,
+    _cycle_exit_code,
+    _fetch_h1_decision_snapshots,
     _public_get_bytes,
     fetch_public_filters,
     fetch_public_klines,
@@ -51,6 +54,7 @@ def _closure() -> dict[str, str]:
         "bot/live_native_manifest.py",
         "bot/live_native_signal_adapters.py",
         "bot/sbr1_zero_risk_shadow.py",
+        "bot/sbr1_shadow_random_control.py",
         "scripts/run_sbr1_zero_risk_shadow.py",
         "deploy/systemd/sbr1-zero-risk-shadow.service",
         "deploy/systemd/sbr1-zero-risk-shadow.timer",
@@ -74,6 +78,7 @@ def _config(**updates: object) -> ZeroRiskShadowConfig:
         "universe": ["BTCUSDT", "ETHUSDT", "SOLUSDT"],
         "parity_manifest_path": "configs/research/att1_sbr1_live_native_parity_v1.json",
         "expected_parity_manifest_sha256": "a" * 64,
+        "expected_preregistration_sha256": "b" * 64,
         "journal_path": "runtime/sbr1_zero_risk_shadow/events.jsonl",
         "max_decision_age_ms": 300_000,
         "max_regime_age_ms": 300_000,
@@ -169,6 +174,8 @@ def test_repository_config_pins_verified_manifest_and_full_source_closure():
         verify_source_bytes=True,
     )
     assert manifest.manifest_sha256 == config.expected_parity_manifest_sha256
+    prereg = ROOT / "research_lab/prereg/PREREG_SBR1_SHADOW_RANDOM_CONTROL_2026_08_24.md"
+    assert hashlib.sha256(prereg.read_bytes()).hexdigest() == config.expected_preregistration_sha256
     assert tuple(manifest.universe) == config.universe
     assert len(verify_source_closure(ROOT, config)) == 64
 
@@ -320,6 +327,43 @@ def test_public_kline_decoder_preserves_exchange_clock_and_sorts_rows():
     assert snapshot.rows[0][0] == "1799999700000"
 
 
+def test_h1_snapshot_collection_isolates_one_symbol_failure_and_continues():
+    btc = PublicKlineSnapshot(
+        symbol="BTCUSDT",
+        interval="60",
+        rows=tuple(tuple(row) for row in _h1_rows(260)),
+        observed_at_ms=1_800_000_020_000,
+        response_sha256="a" * 64,
+    )
+    visited = []
+
+    def fetcher(base, symbol, interval, limit, *, timeout, get_bytes):
+        del base, interval, limit, timeout, get_bytes
+        visited.append(symbol)
+        if symbol == "ETHUSDT":
+            raise ShadowViolation("public_kline_retcode_nonzero")
+        return PublicKlineSnapshot(
+            symbol=symbol,
+            interval="60",
+            rows=btc.rows,
+            observed_at_ms=btc.observed_at_ms,
+            response_sha256="b" * 64,
+        )
+
+    snapshots, errors = _fetch_h1_decision_snapshots(
+        _config(), btc, get_bytes=lambda *_args, **_kwargs: b"", fetcher=fetcher
+    )
+
+    assert set(snapshots) == {"BTCUSDT", "SOLUSDT"}
+    assert errors == {"ETHUSDT": "ShadowViolation:public_kline_retcode_nonzero"}
+    assert visited == ["ETHUSDT", "SOLUSDT"]
+
+
+def test_degraded_public_data_cycle_is_visible_to_systemd():
+    assert _cycle_exit_code({"status": "ZERO_RISK_SHADOW_OK"}) == 0
+    assert _cycle_exit_code({"status": "ZERO_RISK_SHADOW_DEGRADED_PUBLIC_DATA"}) == 3
+
+
 def test_public_exchange_filters_must_match_frozen_tick_qty_and_notional():
     payload = {
         "retCode": 0,
@@ -387,4 +431,5 @@ def test_systemd_timer_covers_h1_decision_and_next_m5_fill_without_catchup():
     )
     assert "WorkingDirectory=/root/by-bot\n" not in service
     assert "OnCalendar=*-*-* *:0/5:20 UTC" in timer
+    assert "OnCalendar=*-*-* *:03:20 UTC" in timer
     assert "Persistent=false" in timer

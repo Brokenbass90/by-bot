@@ -20,6 +20,7 @@
   ],
   "parity_manifest_path": "configs/research/att1_sbr1_live_native_parity_v1.json",
   "expected_parity_manifest_sha256": "aa7392aecec96414c314ff14f03f4df6340d78094f03b75da636e1c2095433bb",
+  "expected_preregistration_sha256": "dffa60b17b785b9182560b1bace7105eef9d715488866dd665df77825cac7b68",
   "journal_path": "runtime/sbr1_zero_risk_shadow/events.jsonl",
   "max_decision_age_ms": 300000,
   "max_regime_age_ms": 300000,
@@ -55,9 +56,10 @@
     "bot/live_native_regime_gate.py": "cd34e715ec8b6d77d104d9b5413fa330550424e1ed7858b94eadcd0b0b8173ef",
     "bot/live_native_manifest.py": "603331bde55bf16973f66e4102770120e3c8ef0176d0efdcf7ed25df654eea8d",
     "bot/live_native_signal_adapters.py": "72872f023d32156c4dd0344b461c0a7606f06f8bbdc2621d775d30bd77e84e02",
-    "bot/sbr1_zero_risk_shadow.py": "573cacad782484644747002e6dbfdd02f4429fca5eb7bbbc440081b172902cc6",
-    "scripts/run_sbr1_zero_risk_shadow.py": "5d15b3551ae79c988f2cb590e1f99d805d84fe0b13114c16ef38e917eed258fc",
+    "bot/sbr1_zero_risk_shadow.py": "8ab8524441e47b1df2535cbe6f02248d5af531f9934dc33ac94d2273eeb559af",
+    "bot/sbr1_shadow_random_control.py": "6aa96cbb4e696a012c2e5ab91b1dcdc952a99c890fda0ba2f6136a7a91cfab1e",
+    "scripts/run_sbr1_zero_risk_shadow.py": "5ebc2fa9e6f5fb42e1d0065ab9722f2d7790ddf4364ea81e35f83571a29ec75c",
     "deploy/systemd/sbr1-zero-risk-shadow.service": "4732a7f1f4ee771520ade488755358970b682f1cf559cd42ba2ed79b7ae1aa39",
-    "deploy/systemd/sbr1-zero-risk-shadow.timer": "c0aaf99667e5bd7a8380898a0bf580caba5478d92554e5e1035c48fdf5ede138"
+    "deploy/systemd/sbr1-zero-risk-shadow.timer": "98d3d4e1af5216bb38e22f605c449b3976bbb64ff4c6015dea8858f017900d02"
   }
 }
