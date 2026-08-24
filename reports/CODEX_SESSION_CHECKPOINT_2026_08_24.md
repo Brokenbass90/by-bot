@@ -2,6 +2,75 @@
 
 **Authority:** verified operational handoff. Research and shadow results below do not grant money authority.
 
+## Continuation receipt — 2026-08-24 13:12 UTC
+
+- Scoped work is preserved on the canonical recovery branch. Verified commits:
+  `98d75f1` (Alpaca deterministic auditor and default-off whole-share paper
+  profile), `2be11c2` (SBR1 pre-first-admitted random control and resilient
+  public-data shadow runner), `f05f8e6` (pure zero-order XAU paper core), and
+  `4ea7d61` (deployment receipts and consolidated controlled roadmap).
+- The Alpaca auditor is deployed read-only at `/root/by-bot`, has no broker
+  mutation path, and is scheduled independently. Its first automatic receipt
+  at `13:07:03 UTC` reported `WARN`, full broker stop coverage `2/2`, preserved
+  floors `ABBV=257.37` and `SCHW=108.20`, new entries `false`, promotion
+  authority `false`. The only warnings are the explicit fractional-`DAY`
+  session/gap limitation. Deployment and rollback hashes are in
+  `reports/releases/ALPACA_HEALTH_AUDITOR_DEPLOYMENT_2026_08_24.md`.
+- The stop floor has not reset to the old entry-minus-five-percent levels since
+  the invariant repair. `DAY` orders still cannot execute outside the regular
+  session, so gaps/slippage remain possible and locked P&L is not a guaranteed
+  fill. Whole-share/GTC is a separate default-off paper profile; account size
+  never switches it on automatically.
+- Frozen Alpaca diagnostics over 501 sessions/approximately 25 months remain
+  diagnostic rather than live proof. The current 3.5% ratchet proxy produced
+  about `0.847%` geometric monthly, PF `1.270`, 40 trades and `23.711%` daily
+  drawdown. The entry-relative challenger produced about `1.840%` geometric
+  monthly, PF `1.837`, 40 trades and `14.365%` drawdown. Neither authorizes new
+  entries or supports a 4-5% monthly promise.
+- The corrected SBR1 control is deployed atomically in the public zero-risk
+  shadow. The `13:05` and `13:10` cycles both returned
+  `ZERO_RISK_SHADOW_OK`, with zero orders, private/broker calls, admitted
+  decisions and control assignments. No control is expected before the first
+  admitted decision. The current major-8 deployment is a smoke universe; the
+  preregistered evidence universe is fixed-51 and remains gated by coverage and
+  live-native parity. Receipt:
+  `reports/releases/SBR1_RANDOM_CONTROL_DEPLOYMENT_2026_08_24.md`.
+- Direct cached SBR1 history gives a better cadence estimate than linear symbol
+  scaling: major-8 had 72 regime-eligible events (about 13.4 months to 50),
+  fixed-51 had 413 (about 2.5 months), and available-137 had 579 (about 1.9
+  months), including the holding horizon. These are planning estimates, not
+  prospective evidence.
+- A pure XAU zero-order paper-accounting core now covers immutable signal,
+  quote, paper position/outcome, costs, gaps, stop-first ties, deterministic
+  controls and a locked `0600` hash-chain journal. It has no MT5/network/order
+  surface, passes 18 focused tests and is not deployed. Authenticated Bullwaves
+  demo acquisition waits for MT5 token rotation and exact demo identity
+  verification.
+- Bybit heartbeat at `13:11 UTC` was 18 seconds old: `trade_on=true`,
+  `dry_run=false`, `regime=bull_trend`, zero open trades,
+  `ws_guard_active=0`, and 12,165,707 messages. `ws_connect=28` and
+  `ws_disconnect=25` are cumulative reconnect counters; they do not establish a
+  current critical outage. ATT1 has two recorded entries, but regime/allocator
+  still do not govern its money caller and risk must not increase before
+  `LIVE_CALLER_PARITY` plus fixed-universe ON/OFF replay.
+- User-approved non-project cleanup removed the re-downloadable Xcode iOS 26.3
+  device-support image (about 5.4 GiB) and Ollama update cache (about 180 MiB).
+  Free disk rose to approximately 60 GiB. Claude data, project evidence,
+  `.codex` history and the local Ollama model were preserved.
+- Paid DeepSeek background cron remains disabled; manual `/ai` is the only paid
+  path. Do not top up merely to keep a balance. Local `qwen3:8b` remains
+  proposal-only; the 1 CPU/961 MiB VPS cannot safely host it.
+- The canonical roadmap now records the controlled lifecycle, separate evidence
+  and money universes, 30/90-day gates and Polymarket as research-only backlog.
+
+### Exact next strong-model gate
+
+Work only on `LIVE_CALLER_PARITY`: persisted causal BTC H1 regime bootstrap,
+ATT1 caller receipt, fixed-major8 regime gate ON/OFF replay, SBR1 fixed-51
+coverage/parity manifest and `verify_live_config`. Do not change ATT1 risk,
+slots or geometry, enable SBR1 money, or release Alpaca entries from this work
+without their separate promotion receipts.
+
 ## Continuation receipt — 2026-08-24 10:29 UTC
 
 - Fresh direct Alpaca broker GET showed account equity `490.85`, cash `391.47`, and two positions with full-quantity protective stops still above entry:
