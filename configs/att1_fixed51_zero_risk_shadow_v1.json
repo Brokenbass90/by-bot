@@ -10,7 +10,7 @@
   "money_universe": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"],
   "evidence_universe": ["1000BONKUSDT", "1000PEPEUSDT", "1000RATSUSDT", "AAVEUSDT", "ACEUSDT", "ADAUSDT", "ALGOUSDT", "APTUSDT", "ARBUSDT", "ATOMUSDT", "AVAXUSDT", "BCHUSDT", "BICOUSDT", "BNBUSDT", "BTCUSDT", "C98USDT", "COTIUSDT", "CRVUSDT", "DOGEUSDT", "ETCUSDT", "ETHUSDT", "FILUSDT", "GALAUSDT", "HBARUSDT", "HFTUSDT", "ICPUSDT", "INJUSDT", "JTOUSDT", "LDOUSDT", "MNTUSDT", "ONDOUSDT", "OPUSDT", "ORDIUSDT", "PAXGUSDT", "PEOPLEUSDT", "SEIUSDT", "SHIB1000USDT", "SOLUSDT", "STRKUSDT", "SUIUSDT", "TAOUSDT", "TIAUSDT", "TRXUSDT", "UNIUSDT", "USDCUSDT", "WIFUSDT", "WLDUSDT", "XLMUSDT", "XMRUSDT", "XRPUSDT", "ZECUSDT"],
   "manifest_path": "configs/research/att1_fixed51_public_shadow_manifest_v1.json",
-  "expected_manifest_sha256": "0f664417d4ff1d650f48a0e82e7f6c3efe775c82e2cfe21f81378a11c2f61880",
+  "expected_manifest_sha256": "e14766cbb3a4f5fa69047898ff9f8d881056937ee39f863158f711a2f8f00da5",
   "expected_preregistration_sha256": "5e856b01940248e1adf784d6a1e53562543e7a5cc60765f3739694e5fe42cac4",
   "evidence_universe_sha256": "fa5c61703cac5c72218022f15d92ee46d6fa577df84c9cfcbf8cc005893bfe19",
   "journal_path": "runtime/att1_fixed51_zero_risk_shadow/events.jsonl",

@@ -211,6 +211,36 @@ def test_replay_uses_real_wrapper_state_and_can_emit_on_final_bar(monkeypatch) -
     assert result["no_signal_reason"] == ""
 
 
+def test_replay_accepts_causal_cooldown_without_claiming_latest_rows_consumed(
+    monkeypatch,
+) -> None:
+    import strategies.alt_trendline_touch_v1 as strategy_module
+
+    payload = json.loads(_aligned_public_payload(count=122).decode("utf-8"))
+    rows = validate_closed_h1_window(
+        list(reversed(payload["result"]["list"])),
+        observed_at_ms=payload["time"],
+        max_age_ms=300_000,
+        min_bars=121,
+    )
+    monkeypatch.setattr(strategy_module, "_atr_from_rows", lambda *_args: 1.0)
+    monkeypatch.setattr(strategy_module, "_rsi", lambda *_args: 60.0)
+    monkeypatch.setattr(
+        strategy_module.AltTrendlineTouchV1Strategy,
+        "_check_short_trendline",
+        lambda *_args: (101.0, -0.1),
+    )
+
+    result = replay_att1_latest("BTCUSDT", rows, signal_lookback=120)
+
+    assert result["replay_evaluations"] == 3
+    assert result["raw_signal"] is None
+    assert result["no_signal_reason"] == "cooldown"
+    assert result["consumed_is_latest_window"] is False
+    assert result["consumed_latest_start_ts_ms"] == int(rows[-2][0])
+    assert result["decision_latest_start_ts_ms"] == int(rows[-1][0])
+
+
 def test_observation_and_open_bar_changes_are_idempotent_but_closed_mutation_conflicts(tmp_path) -> None:
     config_path, journal = _cycle_config(tmp_path)
     cycle = 0

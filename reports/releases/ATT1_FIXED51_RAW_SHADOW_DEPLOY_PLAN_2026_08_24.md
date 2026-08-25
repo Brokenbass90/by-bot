@@ -9,10 +9,10 @@ universe remains major-8. The fixed-51 stream is raw decision telemetry only.
 - authority: `zero_risk_public_att1_fixed51_evidence_no_orders_no_money_no_promotion`;
 - fixed-51 universe SHA-256: `fa5c61703cac5c72218022f15d92ee46d6fa577df84c9cfcbf8cc005893bfe19`;
 - preregistration SHA-256: `5e856b01940248e1adf784d6a1e53562543e7a5cc60765f3739694e5fe42cac4`;
-- source closure SHA-256: `fe788a5e63344ca1e6bffcc0b975ce6e25b65799dca166b10a44fbe04c00ffaf`;
-- canonical manifest SHA-256: `0f664417d4ff1d650f48a0e82e7f6c3efe775c82e2cfe21f81378a11c2f61880`;
-- raw manifest-file SHA-256: `1d419ceaacce7d7575f6f2477d0c01485ee91f8e0ebf29e40a0f0b5448a9074e`;
-- default-off config-file SHA-256: `612228824a9abf62ab064d5d78770a4c8dd45d912ca516ccdf7aa8f2a023af6f`.
+- source closure SHA-256: `5a2dcfe0c5698f4a0b51b51bf234631a8a90d530fb796aacd48962a66d01bf87`;
+- canonical manifest SHA-256: `e14766cbb3a4f5fa69047898ff9f8d881056937ee39f863158f711a2f8f00da5`;
+- raw manifest-file SHA-256: `82ed61bb05d6127b46467a363d64d62ef704486d4b4c27f2ead81cb049ac21da`;
+- default-off config-file SHA-256: `c126a905bbcd5e267b6ccb51a5f2f24ada26194c775c4573972958cc897f62dc`.
 
 `HFTUSDT` remains a frozen member and is expected to be stale/unavailable. It
 may not be replaced. Any unknown symbol gap makes the service run fail partial;

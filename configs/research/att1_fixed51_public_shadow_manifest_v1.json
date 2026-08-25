@@ -33,7 +33,7 @@
     "base": {"fee_bps_per_side": "6", "slippage_bps_per_side": "2"},
     "stress": {"fee_bps_per_side": "6", "slippage_bps_per_side": "5"}
   },
-  "source_closure_sha256": "fe788a5e63344ca1e6bffcc0b975ce6e25b65799dca166b10a44fbe04c00ffaf",
+  "source_closure_sha256": "5a2dcfe0c5698f4a0b51b51bf234631a8a90d530fb796aacd48962a66d01bf87",
   "source_files": [
     {"path": "strategies/alt_trendline_touch_v1.py", "bytes": 41984, "sha256": "add37efedc4097923a73fbe4f245df54d8b785e5a54e12981cad2c8bdb9b5812"},
     {"path": "strategies/att1_live.py", "bytes": 3468, "sha256": "846febc99ebd3f103d79146e10276059adab59a6353cfca9893baabac25e3018"},
@@ -43,7 +43,7 @@
     {"path": "bot/live_native_decision_contract.py", "bytes": 38173, "sha256": "a8ad6115d1bb7d86f64c2cddb70695a814e4f7acf0db13fbc977acbd88f95f70"},
     {"path": "bot/att1_runtime_contract.py", "bytes": 4084, "sha256": "4774784858f99fcfe14affb6e91db82134e89fc0dec5f94be6b1b24bc4535c78"},
     {"path": "bot/att1_fixed51_shadow.py", "bytes": 13412, "sha256": "89fd7e63ffbc3acfded093984ca6c8f7c405b3c142b7f16edb542e239f6ecaa4"},
-    {"path": "scripts/run_att1_fixed51_zero_risk_shadow.py", "bytes": 33256, "sha256": "159caac186acc159bc1036d68dc5dfc394159c1e187173680dd8657c82e2aa30"},
+    {"path": "scripts/run_att1_fixed51_zero_risk_shadow.py", "bytes": 35371, "sha256": "0105330f2d581546010fdcacc89718bea753d31a3d85d22a1737a5ce73f12820"},
     {"path": "deploy/systemd/att1-fixed51-raw-shadow.service", "bytes": 1352, "sha256": "cdf644f675e950ce16683ad7cd2926bafb4f586ae5c51c7499dd4e54c1b8297f"},
     {"path": "deploy/systemd/att1-fixed51-raw-shadow.timer", "bytes": 242, "sha256": "88781a7749e379482b6a87a835f4dfc9f0e1241fda4ccc70b2b196452c2e3051"}
   ]

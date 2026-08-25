@@ -290,8 +290,36 @@ def replay_att1_latest(
         final_reason = "" if final_signal is not None else str(engine.last_no_signal_reason(symbol) or "unknown_no_signal")
         evaluations += 1
     consumed = engine.last_closed_rows(symbol)
-    if consumed != rows[-signal_lookback:]:
+    if len(consumed) != signal_lookback:
         raise ShadowViolation("att1_replay_consumed_rows_mismatch")
+    decision_latest_start = _strict_int(rows[-1][0], "decision_latest_start_ts_ms")
+    consumed_latest_start = _strict_int(
+        consumed[-1][0], "consumed_latest_start_ts_ms"
+    )
+    consumed_is_latest = consumed == rows[-signal_lookback:]
+    if not consumed_is_latest:
+        # The real wrapper deliberately returns before fetching klines while
+        # its post-signal cooldown is active.  That is a causal no-signal, not
+        # a data-integrity error.  Prove that the retained consumed window is
+        # an exact historical prefix and report the lag explicitly.
+        if final_reason != "cooldown" or consumed_latest_start >= decision_latest_start:
+            raise ShadowViolation("att1_replay_consumed_rows_mismatch")
+        matching_end = next(
+            (
+                index
+                for index, row in enumerate(rows)
+                if _strict_int(row[0], "replay_prefix_start_ts_ms")
+                == consumed_latest_start
+            ),
+            None,
+        )
+        if (
+            matching_end is None
+            or matching_end + 1 < signal_lookback
+            or consumed
+            != rows[matching_end + 1 - signal_lookback : matching_end + 1]
+        ):
+            raise ShadowViolation("att1_replay_consumed_rows_mismatch")
     if final_signal is None and final_reason in {"", "first_signal_bar", "same_signal_bar"}:
         raise ShadowViolation("att1_replay_not_causal")
     return {
@@ -299,6 +327,9 @@ def replay_att1_latest(
         "no_signal_reason": final_reason,
         "replay_evaluations": evaluations,
         "consumed_rows_sha256": _sha(consumed),
+        "consumed_is_latest_window": consumed_is_latest,
+        "consumed_latest_start_ts_ms": consumed_latest_start,
+        "decision_latest_start_ts_ms": decision_latest_start,
     }
 
 
@@ -600,6 +631,15 @@ def run_cycle(
                             "latest_closed_row_sha256": _sha(closed[-1]),
                             "btc_regime_history_sha256": btc_history_hash,
                             "consumed_rows_sha256": replay["consumed_rows_sha256"],
+                            "consumed_is_latest_window": replay[
+                                "consumed_is_latest_window"
+                            ],
+                            "consumed_latest_start_ts_ms": replay[
+                                "consumed_latest_start_ts_ms"
+                            ],
+                            "decision_latest_start_ts_ms": replay[
+                                "decision_latest_start_ts_ms"
+                            ],
                             "replay_evaluations": replay["replay_evaluations"],
                             "raw_signal": raw_signal,
                             "no_signal_reason": no_signal_reason,
@@ -623,6 +663,9 @@ def run_cycle(
                             "raw_signal",
                             "no_signal_reason",
                             "regime_eligible",
+                            "consumed_is_latest_window",
+                            "consumed_latest_start_ts_ms",
+                            "decision_latest_start_ts_ms",
                         )
                     }
                     if journal_writer.append(
