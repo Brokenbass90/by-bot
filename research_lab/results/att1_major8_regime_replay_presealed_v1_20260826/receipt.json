@@ -1,7 +1,7 @@
 {
   "authority": "research_only_no_live_no_broker_no_promotion",
   "binding": {
-    "caller_receipt_sha256": "e5cf321b2bc441707a58c211a9c5839f4f2f9a467916afab2a1bd5b5960710e7",
+    "caller_receipt_sha256": "e8febce81c44b8b5b73a7e986e5fcd4315dafafb6c9d2fdc9a9d9af47d77e159",
     "data_bundle_sha256": "546249840af7ab4a3ea47bbda9f749b10f43b3eab249581681d21b95c9779c4a",
     "manifest_sha256": "aa7392aecec96414c314ff14f03f4df6340d78094f03b75da636e1c2095433bb",
     "presealed_window": {
@@ -28,7 +28,12 @@
   "metrics": {
     "base": {
       "gate_off": {
-        "admitted_regimes": {"above_band": 111, "below_band": 98, "flat_down": 122, "flat_up": 137},
+        "admitted_regimes": {
+          "above_band": 111,
+          "below_band": 98,
+          "flat_down": 122,
+          "flat_up": 137
+        },
         "by_symbol_r": {
           "ADAUSDT": "13.55109141994021933635269444",
           "BTCUSDT": "-3.7016337251878155233546878",
@@ -50,7 +55,9 @@
         "sum_r": "13.85795132124044809230610489"
       },
       "gate_on": {
-        "admitted_regimes": {"flat_down": 122},
+        "admitted_regimes": {
+          "flat_down": 122
+        },
         "by_symbol_r": {
           "ADAUSDT": "0.9456565994972912204235353946",
           "BTCUSDT": "4.790437832374818113855179307",
@@ -74,7 +81,12 @@
     },
     "stress": {
       "gate_off": {
-        "admitted_regimes": {"above_band": 111, "below_band": 98, "flat_down": 122, "flat_up": 137},
+        "admitted_regimes": {
+          "above_band": 111,
+          "below_band": 98,
+          "flat_down": 122,
+          "flat_up": 137
+        },
         "by_symbol_r": {
           "ADAUSDT": "10.55045228459077671966663266",
           "BTCUSDT": "-8.550203663987309565482354472",
@@ -96,7 +108,9 @@
         "sum_r": "-4.379657675096413686979691753"
       },
       "gate_on": {
-        "admitted_regimes": {"flat_down": 122},
+        "admitted_regimes": {
+          "flat_down": 122
+        },
         "by_symbol_r": {
           "ADAUSDT": "0.6075933466091736560334686257",
           "BTCUSDT": "3.106337894196278271002391997",
@@ -121,8 +135,17 @@
   },
   "money_authority": false,
   "orders_created_or_changed": 0,
-  "receipt_sha256": "785d19637e80551aa3d252b4c789e82a22854c8d46b28dea55025a69757b7c58",
+  "receipt_sha256": "e2d3be6a6142342cd5292c45712dc95478e3dca335085f5d5438b587f8896dde",
   "schema_id": "att1_major8_regime_replay_receipt_v1",
   "sealed_holdout_rows_decoded": 0,
-  "universe": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"]
+  "universe": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "ADAUSDT",
+    "LINKUSDT",
+    "LTCUSDT",
+    "DOTUSDT",
+    "SUIUSDT"
+  ]
 }

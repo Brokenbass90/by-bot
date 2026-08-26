@@ -1,0 +1,42 @@
+{
+  "schema_id": "live_caller_parity_final_verification_receipt_v1",
+  "created_at_utc": "2026-08-26T17:12:00Z",
+  "decision": "PASS_DEFAULT_OFF_ZERO_RISK_CANDIDATE",
+  "scope": "post_reconciliation_post_deployment_hash_bound_verification",
+  "authority": "verification_only_no_money_no_orders_no_risk_or_promotion",
+  "bindings": {
+    "release_receipt": {
+      "path": "reports/receipts/LIVE_CALLER_PARITY_RELEASE_2026_08_26.json",
+      "sha256": "e8febce81c44b8b5b73a7e986e5fcd4315dafafb6c9d2fdc9a9d9af47d77e159",
+      "self_hash_verified": true
+    },
+    "p2_engineering_receipt": {
+      "path": "reports/receipts/LIVE_CALLER_PARITY_P2_ENGINEERING_2026_08_26.json",
+      "sha256": "3ce034976273c5ef5152158801b70050abaefee19a3a9e8da1aaa656a439078b"
+    },
+    "p2_deployment_receipt": {
+      "path": "reports/receipts/LIVE_CALLER_PARITY_P2_DEPLOYMENT_2026_08_26.json",
+      "sha256": "d2f26d16ee2a4ba3dea3420d0f4fc94abbf5b9898f3d1072169733a45853f015"
+    },
+    "p3_replay_receipt": {
+      "path": "research_lab/results/att1_major8_regime_replay_presealed_v1_20260826/receipt.json",
+      "sha256": "9f68b3662ad80fb8953c57118f291c2001dd1b4075e589e916a2d1b9aa2605df",
+      "receipt_sha256": "e2d3be6a6142342cd5292c45712dc95478e3dca335085f5d5438b587f8896dde"
+    }
+  },
+  "verification": {
+    "focused_and_adjacent_tests": 216,
+    "pytest_result": "PASS",
+    "release_binding_loaded_by_p3_runner": "PASS",
+    "p3_metrics_reproduced_byte_stable_except_updated_release_binding": true,
+    "sealed_holdout_rows_decoded": 0,
+    "server_service_after_deployment": "active_running_no_restart_loop",
+    "broker_position_and_stop_equal_before_after_restart": true,
+    "caller_feature_enabled": false,
+    "caller_journal_absent_default_off": true,
+    "live_money_config_changed": false
+  },
+  "money_authority": false,
+  "orders_created_or_changed": 0,
+  "promotion_authority": false
+}

@@ -1,0 +1,90 @@
+{
+  "schema_id": "live_caller_parity_p2_default_off_deployment_receipt_v1",
+  "created_at_utc": "2026-08-26T17:05:20Z",
+  "decision": "PASS_DEFAULT_OFF_SERVER_DEPLOYMENT",
+  "scope": "production_code_present_feature_disabled_no_money_behavior_change",
+  "authority": "deployment_and_observability_only_no_new_orders_no_risk_or_geometry_change_no_promotion",
+  "git": {
+    "branch": "codex/recovery-20260824",
+    "commit": "8b287ea",
+    "remote": "origin/codex/recovery-20260824",
+    "pushed": true
+  },
+  "server": {
+    "host": "64.226.73.119",
+    "service": "bybot.service",
+    "active_state": "active",
+    "sub_state": "running",
+    "exec_main_pid_after_restart": 3157366,
+    "restart_counter_after_deployment": 0,
+    "heartbeat": {
+      "path": "/root/by-bot/runtime/bot_heartbeat.json",
+      "ts": 1787763879,
+      "trade_on": true,
+      "dry_run": false,
+      "open_trades": 1,
+      "regime": "bull_chop",
+      "ws_guard_active": 0,
+      "last_error": null
+    }
+  },
+  "feature_flags": {
+    "ATT1_CALLER_RECEIPT_ENABLE": "absent_from_process_environment_default_false",
+    "ATT1_CALLER_REGIME_RECEIPT_REQUIRED": "absent_from_process_environment_default_true_if_feature_enabled",
+    "DEEPSEEK_OPERATOR_USE_API": "0",
+    "DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE": "0",
+    "caller_journal_absent_after_restart": true
+  },
+  "deployed_sha256": {
+    "smart_pump_reversal_bot.py": "8e8ccea73fa94d1d4d262b0d3d1415159637b3a463a81c8b132a15bb1ff9585d",
+    "bot/att1_live_caller_receipt.py": "7353e5510708219e62fe5e1796cdb8a1230155e911a0f59451446114c63eaa25",
+    "bot/live_native_decision_contract.py": "a8ad6115d1bb7d86f64c2cddb70695a814e4f7acf0db13fbc977acbd88f95f70",
+    "bot/live_native_signal_adapters.py": "72872f023d32156c4dd0344b461c0a7606f06f8bbdc2621d775d30bd77e84e02",
+    "bot/persisted_btc_h1_regime.py": "6cb773fa6538b986cca4c4aa544f58a9a51a47e6dca6409ed9a44043474e4e4d",
+    "bot/live_native_regime_gate.py": "cd34e715ec8b6d77d104d9b5413fa330550424e1ed7858b94eadcd0b0b8173ef",
+    "bot/trade_chart_labels.py": "bf1f2f210b029e43437546256c58e6c183f2fac65279065ea31bbe858e6b6907"
+  },
+  "rollback": {
+    "path": "/root/by-bot/deploy_backups/live_caller_p2_20260826T170117Z/smart_pump_reversal_bot.py.before",
+    "sha256": "e7e159be1fc5239ea84c46e65bb85e1e4af2d231a41345bb9d0c96c40d415b9e",
+    "staged_candidate_path": "/root/by-bot/deploy_backups/live_caller_p2_20260826T170117Z/stage"
+  },
+  "verification": {
+    "local_targeted_tests": "107_passed",
+    "local_reconciliation_and_caller_tests": "18_passed",
+    "local_py_compile": "PASS",
+    "server_module_import_smoke": "PASS",
+    "server_monolith_import_smoke": "PASS",
+    "server_monolith_import_flags": {
+      "ATT1_CALLER_RECEIPT_ENABLE": false,
+      "DEEPSEEK_OPERATOR_USE_API": false,
+      "DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE": false
+    },
+    "deployed_hash_match": "PASS",
+    "caller_journal_absent_default_off": "PASS"
+  },
+  "broker_truth_before": {
+    "authority": "read_only_get",
+    "symbol": "ETHUSDT",
+    "side": "Sell",
+    "size": "0.01",
+    "avg_price": "2449.16",
+    "stop_loss": "2491.34"
+  },
+  "broker_truth_after": {
+    "authority": "read_only_get",
+    "symbol": "ETHUSDT",
+    "side": "Sell",
+    "size": "0.01",
+    "avg_price": "2449.16",
+    "stop_loss": "2491.34"
+  },
+  "live_money_config_changed": false,
+  "orders_created_or_changed_by_deployment": 0,
+  "sealed_holdout_rows_decoded": 0,
+  "promotion_authority": false,
+  "bindings": {
+    "engineering_receipt": "reports/receipts/LIVE_CALLER_PARITY_P2_ENGINEERING_2026_08_26.json",
+    "release_receipt": "reports/receipts/LIVE_CALLER_PARITY_RELEASE_2026_08_26.json"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schema_id": "live_caller_parity_release_gate_v1",
-  "created_at_utc": "2026-08-26T16:45:51Z",
+  "created_at_utc": "2026-08-26T17:09:36Z",
   "decision": "LIVE_CALLER_PARITY_PASS",
   "scope": "default_off_zero_risk_research_candidate_only",
   "authority": "research_only_no_live_money_no_broker_no_promotion",
@@ -21,7 +21,7 @@
   "gates": {
     "P2": {
       "path": "reports/receipts/LIVE_CALLER_PARITY_P2_ENGINEERING_2026_08_26.json",
-      "sha256": "f78cf746da9275573b87adaa06b64a6dd1b674dbb144049483e0fed989e3ea4a",
+      "sha256": "3ce034976273c5ef5152158801b70050abaefee19a3a9e8da1aaa656a439078b",
       "decision": "P2_ENGINEERING_PASS_P5_STILL_REQUIRED"
     },
     "P4": {
@@ -35,11 +35,17 @@
       "decision": "PASS"
     }
   },
+  "post_deployment": {
+    "path": "reports/receipts/LIVE_CALLER_PARITY_P2_DEPLOYMENT_2026_08_26.json",
+    "sha256": "d2f26d16ee2a4ba3dea3420d0f4fc94abbf5b9898f3d1072169733a45853f015",
+    "decision": "PASS_DEFAULT_OFF_SERVER_DEPLOYMENT",
+    "live_money_config_changed": false
+  },
   "current_money_config": {
     "decision": "FAIL_EXPECTED_MONEY_CONFIG_UNCHANGED",
     "path": "reports/receipts/LIVE_CALLER_PARITY_P5_CURRENT_MONEY_AUDIT_2026_08_26.json",
     "sha256": "cb119bc719ebd467d0cdb1588ccf2e62ea68ae851d9ed242c101cacd3ccebc02",
     "meaning": "This release does not claim that the current ATT1 money process reproduces the frozen research geometry."
   },
-  "receipt_sha256": "71a9c43a7adc54275bafa4d4328e487ae6868cdba98d9702119255ca435fbcbe"
+  "receipt_sha256": "d7604e7b8475e8ac528b22a65eea904391ce9e3443839ba4eb83e731fdb7f2cc"
 }

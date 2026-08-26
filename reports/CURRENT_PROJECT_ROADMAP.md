@@ -1,8 +1,29 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-15 04:50 UTC. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-26 17:05 UTC. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
+
+## Latest operational update — 2026-08-26 17:05 UTC
+
+`LIVE_CALLER_PARITY` завершён с verdict `PASS` строго в области
+`default_off_zero_risk_research_candidate_only`. P1 persisted causal BTC H1,
+P2 caller receipts, P3 ATT1 regime ON/OFF replay, P4 fixed-51 coverage и P5
+candidate config verification закрыты. Текущий ATT1 money config отдельно
+остаётся `FAIL_EXPECTED_MONEY_CONFIG_UNCHANGED`; риск, геометрия, слоты и money
+authority не менялись, sealed rows не читались.
+
+P2-код развёрнут в реальном монолите default-off. После рестарта bybot active,
+heartbeat fresh, direct Bybit position/stop совпали до/после, DeepSeek paid
+background flags остаются `0`. Все critical commits отправлены в
+`origin/codex/recovery-20260824`.
+
+Следующая сильная сессия имеет одну цель: `SEALED_RELEASE_PREFLIGHT`. Она
+замораживает exact configs/universe/costs/hashes и готовит one-shot команду, но
+не открывает sealed period без нового явного owner-разрешения.
+
+Единый подробный отчёт:
+`reports/PROJECT_STATE_AND_EXECUTION_PLAN_2026_08_26.md`.
 
 ## Canonical operating sequence — 2026-08-24
 
