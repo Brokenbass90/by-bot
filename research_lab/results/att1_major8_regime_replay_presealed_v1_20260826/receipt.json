@@ -1,0 +1,128 @@
+{
+  "authority": "research_only_no_live_no_broker_no_promotion",
+  "binding": {
+    "caller_receipt_sha256": "e5cf321b2bc441707a58c211a9c5839f4f2f9a467916afab2a1bd5b5960710e7",
+    "data_bundle_sha256": "546249840af7ab4a3ea47bbda9f749b10f43b3eab249581681d21b95c9779c4a",
+    "manifest_sha256": "aa7392aecec96414c314ff14f03f4df6340d78094f03b75da636e1c2095433bb",
+    "presealed_window": {
+      "end_utc_exclusive": "2025-10-01T00:00:00Z",
+      "start_utc": "2024-03-01T00:00:00Z"
+    },
+    "sealed_holdout_guard": {
+      "end_utc_exclusive": "2026-07-01T00:00:00Z",
+      "must_not_read": true,
+      "start_utc": "2025-10-01T00:00:00Z"
+    },
+    "source_bundle_sha256": "732c0702f543c30a287a1278c55eac6d1a1538cf319f4e2396ed83762427ce08"
+  },
+  "decision": "REPLAY_COMPLETE_RESEARCH_ONLY",
+  "event_ledger_sha256": {
+    "base": "f765a752302567983c40e5458241d4f9cd7ad52cdface5479af04c5722d55b22",
+    "stress": "ddb4e26df1b51c5d74ddb5cdbfeca87e1478abfcae276d8fee0db944eeb2f78f"
+  },
+  "gate_contract": {
+    "off": "all events",
+    "on": "flat_down only"
+  },
+  "live_or_broker_calls": false,
+  "metrics": {
+    "base": {
+      "gate_off": {
+        "admitted_regimes": {"above_band": 111, "below_band": 98, "flat_down": 122, "flat_up": 137},
+        "by_symbol_r": {
+          "ADAUSDT": "13.55109141994021933635269444",
+          "BTCUSDT": "-3.7016337251878155233546878",
+          "DOTUSDT": "-5.933573257582113504250029332",
+          "ETHUSDT": "-1.364228066603055388366121198",
+          "LINKUSDT": "16.82989981529736857362170326",
+          "LTCUSDT": "-4.739391360983692587446990901",
+          "SOLUSDT": "0.251810692863804949113645587",
+          "SUIUSDT": "-1.036024196504267763364109097"
+        },
+        "event_ledger_sha256": "1f459ba0e176a9de1f479b50746fcce9e505c66a8bc6041ae6a46de61dad57ac",
+        "max_drawdown_r": "46.22422264306521878379074144",
+        "months": 19,
+        "n": 468,
+        "positive_month_fraction": "0.5789473684210526315789473684",
+        "positive_months": 11,
+        "positive_symbol_concentration": "0.5494077836823096683338084706",
+        "profit_factor": "1.057045641678423602444402994",
+        "sum_r": "13.85795132124044809230610489"
+      },
+      "gate_on": {
+        "admitted_regimes": {"flat_down": 122},
+        "by_symbol_r": {
+          "ADAUSDT": "0.9456565994972912204235353946",
+          "BTCUSDT": "4.790437832374818113855179307",
+          "DOTUSDT": "-3.042509623107055380792172828",
+          "ETHUSDT": "-5.683752415252161504226910505",
+          "LINKUSDT": "6.888973631103946697178793721",
+          "LTCUSDT": "7.714751333170093594203694498",
+          "SOLUSDT": "4.62673611561242808725207573",
+          "SUIUSDT": "-2.219573800124845899595768262"
+        },
+        "event_ledger_sha256": "972dd28a04f9da14dcad555ed9eab3ab6887bb64ebabc582a1c98215f8e717b6",
+        "max_drawdown_r": "18.33431518651117745066348544",
+        "months": 19,
+        "n": 122,
+        "positive_month_fraction": "0.5263157894736842105263157895",
+        "positive_months": 10,
+        "positive_symbol_concentration": "0.3090034317924494120911184722",
+        "profit_factor": "1.249160905581759753838160818",
+        "sum_r": "14.02071967327451492829842705"
+      }
+    },
+    "stress": {
+      "gate_off": {
+        "admitted_regimes": {"above_band": 111, "below_band": 98, "flat_down": 122, "flat_up": 137},
+        "by_symbol_r": {
+          "ADAUSDT": "10.55045228459077671966663266",
+          "BTCUSDT": "-8.550203663987309565482354472",
+          "DOTUSDT": "-7.903330775092563569235058815",
+          "ETHUSDT": "-3.079508877875717461053162613",
+          "LINKUSDT": "14.90014365602610876161717862",
+          "LTCUSDT": "-7.445276024607323462213688328",
+          "SOLUSDT": "-0.873241033118181813166370669",
+          "SUIUSDT": "-1.978693241032203297112868064"
+        },
+        "event_ledger_sha256": "a1e31377e804c0251aef1b3c97696d85ad6f69423792b4c8740440a63f60a6ee",
+        "max_drawdown_r": "52.18762594613694187958229455",
+        "months": 19,
+        "n": 468,
+        "positive_month_fraction": "0.5789473684210526315789473684",
+        "positive_months": 11,
+        "positive_symbol_concentration": "0.5854536251643053243290123164",
+        "profit_factor": "0.9824939902128566736569834449",
+        "sum_r": "-4.379657675096413686979691753"
+      },
+      "gate_on": {
+        "admitted_regimes": {"flat_down": 122},
+        "by_symbol_r": {
+          "ADAUSDT": "0.6075933466091736560334686257",
+          "BTCUSDT": "3.106337894196278271002391997",
+          "DOTUSDT": "-3.607469676441478988820457393",
+          "ETHUSDT": "-6.256108772722362444159669721",
+          "LINKUSDT": "6.544271317194167807191582939",
+          "LTCUSDT": "7.051042277201316965953420848",
+          "SOLUSDT": "4.344192353195751051022912161",
+          "SUIUSDT": "-2.420061653766299914301910379"
+        },
+        "event_ledger_sha256": "8f85c8c6d232066388742fafc847ceaf591fdb4d10354bfee76903573e59128a",
+        "max_drawdown_r": "19.0432095487179528535826119",
+        "months": 19,
+        "n": 122,
+        "positive_month_fraction": "0.5263157894736842105263157895",
+        "positive_months": 10,
+        "positive_symbol_concentration": "0.3256315482781514935967660067",
+        "profit_factor": "1.162057132633585598258563333",
+        "sum_r": "9.369797085466546403921739086"
+      }
+    }
+  },
+  "money_authority": false,
+  "orders_created_or_changed": 0,
+  "receipt_sha256": "785d19637e80551aa3d252b4c789e82a22854c8d46b28dea55025a69757b7c58",
+  "schema_id": "att1_major8_regime_replay_receipt_v1",
+  "sealed_holdout_rows_decoded": 0,
+  "universe": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"]
+}

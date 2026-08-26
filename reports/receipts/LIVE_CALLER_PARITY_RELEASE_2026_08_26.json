@@ -1,0 +1,45 @@
+{
+  "schema_id": "live_caller_parity_release_gate_v1",
+  "created_at_utc": "2026-08-26T16:45:51Z",
+  "decision": "LIVE_CALLER_PARITY_PASS",
+  "scope": "default_off_zero_risk_research_candidate_only",
+  "authority": "research_only_no_live_money_no_broker_no_promotion",
+  "money_authority": false,
+  "live_or_broker_calls": false,
+  "orders_created_or_changed": 0,
+  "sealed_holdout_rows_decoded": 0,
+  "parity_manifest_sha256": "aa7392aecec96414c314ff14f03f4df6340d78094f03b75da636e1c2095433bb",
+  "P1": {
+    "decision": "PASS",
+    "path": "reports/receipts/LIVE_CALLER_PARITY_P1_DEPLOYMENT_2026_08_26.json",
+    "sha256": "a8b410734f153233c8ca1df572c524b6572e668cd1a70dfbd032eaed426ddf07",
+    "state_sha256": "18676118797a835e49f50d37e7fa5a484e6ad3ce3f4cb2221b510639f0efef24",
+    "receipt_sha256": "e3b4370f41d8e6e96332d28723183e77bee242484ed8f14845a7b41cea372aba",
+    "money_authority": false,
+    "orders_allowed": false
+  },
+  "gates": {
+    "P2": {
+      "path": "reports/receipts/LIVE_CALLER_PARITY_P2_ENGINEERING_2026_08_26.json",
+      "sha256": "f78cf746da9275573b87adaa06b64a6dd1b674dbb144049483e0fed989e3ea4a",
+      "decision": "P2_ENGINEERING_PASS_P5_STILL_REQUIRED"
+    },
+    "P4": {
+      "path": "reports/receipts/LIVE_CALLER_PARITY_P4_RUNTIME_2026_08_26.json",
+      "sha256": "507174ce21121582a7322c546c8a77531229588e3d09dea0f790423341822421",
+      "decision": "PASS"
+    },
+    "P5": {
+      "path": "reports/receipts/LIVE_CALLER_PARITY_P5_CANDIDATE_2026_08_26.json",
+      "sha256": "92f87b4532fa68ddbf6a69709ef97b414be6d53ca37521ab9a0b76737e6025cb",
+      "decision": "PASS"
+    }
+  },
+  "current_money_config": {
+    "decision": "FAIL_EXPECTED_MONEY_CONFIG_UNCHANGED",
+    "path": "reports/receipts/LIVE_CALLER_PARITY_P5_CURRENT_MONEY_AUDIT_2026_08_26.json",
+    "sha256": "cb119bc719ebd467d0cdb1588ccf2e62ea68ae851d9ed242c101cacd3ccebc02",
+    "meaning": "This release does not claim that the current ATT1 money process reproduces the frozen research geometry."
+  },
+  "receipt_sha256": "71a9c43a7adc54275bafa4d4328e487ae6868cdba98d9702119255ca435fbcbe"
+}
