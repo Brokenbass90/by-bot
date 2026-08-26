@@ -80,8 +80,11 @@ from bot.utils import now_s, _to_float_safe, _today_ymd, base_from_usdt, dist_pc
 from bot.health_gate import gate as _health_gate  # equity-curve live entry gate
 from bot.health_truth import compact_age as _health_age_text, load_health_truth as _load_health_truth
 from bot import att1_live_wiring as _att1_wire  # decision_bus + edge_monitor (flags default OFF)
+from bot import att1_live_caller_receipt as _att1_caller_receipt
+from bot.live_native_decision_contract import ContractViolation as _LiveContractViolation
 from bot.att1_challenger import classify_descending_rsi_50_70
 from bot.att1_runtime_contract import build_att1_runtime_contract
+from bot.persisted_btc_h1_regime import load_btc_h1_regime
 from bot.portfolio_equity_guard import initialize_equity_anchors, is_valid_equity
 from bot.risk_sizing_contract import calculate_notional_from_stop_pct
 from bot.allowlist_watcher import AllowlistWatcher as _AllowlistWatcher  # dynamic allowlist hot-reload
@@ -811,6 +814,32 @@ ATT1_MAX_OPEN_TRADES = int(os.getenv("ATT1_MAX_OPEN_TRADES", "2"))
 ATT1_SYMBOL_ALLOWLIST: set[str] = _csv_upper_set("ATT1_SYMBOL_ALLOWLIST")
 ATT1_ENGINE = None
 _ATT1_LAST_TRY: dict[str, float] = {}
+ATT1_CALLER_RECEIPT_ENABLE = _env_bool("ATT1_CALLER_RECEIPT_ENABLE", False)
+ATT1_CALLER_REGIME_RECEIPT_REQUIRED = _env_bool(
+    "ATT1_CALLER_REGIME_RECEIPT_REQUIRED", True
+)
+ATT1_CALLER_RECEIPT_JOURNAL = Path(
+    os.getenv(
+        "ATT1_CALLER_RECEIPT_JOURNAL",
+        str(ROOT_DIR / "runtime" / "live_native_parity" / "att1_caller.jsonl"),
+    )
+)
+ATT1_CALLER_SOURCE_MANIFEST = Path(
+    os.getenv(
+        "ATT1_CALLER_SOURCE_MANIFEST",
+        "configs/research/att1_sbr1_live_native_parity_v1.json",
+    )
+)
+ATT1_CALLER_REGIME_RECEIPT_PATH = Path(
+    os.getenv(
+        "ATT1_CALLER_REGIME_RECEIPT_PATH",
+        str(ROOT_DIR / "runtime" / "live_native_parity" / "btc_h1_regime.json"),
+    )
+)
+ATT1_CALLER_MAX_DECISION_AGE_MS = max(
+    1,
+    int(os.getenv("ATT1_CALLER_MAX_DECISION_AGE_MS", "300000") or 300000),
+)
 
 # ===== ASB1 SLOPE BREAKOUT (live) =====
 ENABLE_ASB1_TRADING = os.getenv("ENABLE_ASB1_TRADING", "0").strip() == "1"
@@ -11568,6 +11597,153 @@ async def try_sloped_entry_async(symbol: str, price: float):
         )
 
 
+def _att1_record_caller_receipt(
+    *,
+    symbol: str,
+    observed_at_ms: int,
+    signal=None,
+    no_signal_reason: str = "",
+    evaluation_error: Exception | None = None,
+) -> bool:
+    """Persist the default-off parity boundary before any ATT1 order action.
+
+    ``False`` means an explicitly enabled boundary failed closed (including a
+    hash/config/regime violation or journal failure).  The disabled path exits
+    before touching rows, files, state, or the journal and always preserves the
+    pre-existing caller behavior.
+    """
+
+    if not ATT1_CALLER_RECEIPT_ENABLE:
+        return True
+
+    boundary_error = evaluation_error
+    if not ATT1_CALLER_REGIME_RECEIPT_REQUIRED and boundary_error is None:
+        boundary_error = _LiveContractViolation(
+            "att1_regime_receipt_requirement_disabled"
+        )
+    consumed_rows = []
+    try:
+        consumed_rows = list(ATT1_ENGINE.last_closed_rows(symbol, "60"))
+    except Exception as exc:
+        if boundary_error is None:
+            boundary_error = exc
+
+    runtime_contract = {}
+    try:
+        runtime_contract = build_att1_runtime_contract(
+            risk_mult=ATT1_RISK_MULT
+        )
+    except Exception as exc:
+        if boundary_error is None:
+            boundary_error = exc
+
+    source_files = {}
+    expected_source_hashes = {}
+    source_manifest_sha256 = ""
+    try:
+        (
+            source_files,
+            expected_source_hashes,
+            source_manifest_sha256,
+        ) = _att1_caller_receipt.load_att1_source_inputs(
+            ROOT_DIR,
+            ATT1_CALLER_SOURCE_MANIFEST,
+        )
+    except Exception as exc:
+        if boundary_error is None:
+            boundary_error = exc
+
+    persisted_regime_receipt = None
+    if ATT1_CALLER_REGIME_RECEIPT_REQUIRED and boundary_error is None:
+        regime_path = ATT1_CALLER_REGIME_RECEIPT_PATH
+        if not regime_path.is_absolute():
+            regime_path = ROOT_DIR / regime_path
+        try:
+            # Read d2bb9f0's hash-bound, 0600 receipt.  Never rebuild EMA200 in
+            # the money caller: missing, stale, forged, or unsafe state fails.
+            persisted_regime_receipt = load_btc_h1_regime(regime_path)
+        except Exception as exc:
+            boundary_error = exc
+
+    # Bind the actual caller-visible exchange/portfolio state.  The existing
+    # money path still has no correlation exposure gate; record that gap
+    # explicitly without pretending it was enforced.  Wiring/enforcing that
+    # gate remains the separate P6 task.  This block reads in-memory state only.
+    meta = dict(_BYBIT_META.get(str(symbol).strip().upper()) or {})
+    caller_context = {
+        "schema_id": "live_native_caller_context_v1",
+        "exchange_filter": {
+            "symbol": str(symbol).strip().upper(),
+            "tick_size": str(meta.get("tickSize") or ""),
+            "qty_step": str(meta.get("qtyStep") or ""),
+            "min_notional": str(meta.get("minOrderAmt") or ""),
+        },
+        "intended_fill": {
+            "entry_order": "market",
+            "fill_source": "terminal_order_plus_complete_executions",
+            "max_fill_age_ms": 300_000,
+            "max_finalize_delay_ms": 60_000,
+            "max_adverse_risk_expansion": "0.20",
+        },
+        "portfolio": {
+            "slot_allowed": True,
+            "open_positions": len(TRADES),
+            "max_positions": int(MAX_POSITIONS),
+            "exposure_gate_required": True,
+            "exposure_gate_enforced": False,
+            "exposure_allowed": None,
+            "drop_reason": "production_exposure_gate_not_connected",
+        },
+    }
+
+    receipt = _att1_caller_receipt.build_att1_decision_receipt(
+        symbol=symbol,
+        observed_at_ms=observed_at_ms,
+        consumed_closed_rows=consumed_rows,
+        signal=signal,
+        no_signal_reason=no_signal_reason,
+        runtime_contract=runtime_contract,
+        source_files=source_files,
+        expected_source_hashes=expected_source_hashes,
+        source_manifest_sha256=source_manifest_sha256,
+        regime_required=ATT1_CALLER_REGIME_RECEIPT_REQUIRED,
+        persisted_regime_receipt=persisted_regime_receipt,
+        max_decision_age_ms=ATT1_CALLER_MAX_DECISION_AGE_MS,
+        caller_context=caller_context,
+        evaluation_error=boundary_error,
+        error_stage=(
+            "strategy_evaluation"
+            if evaluation_error is not None
+            else "caller_precondition"
+        ),
+    )
+    journal_path = ATT1_CALLER_RECEIPT_JOURNAL
+    if not journal_path.is_absolute():
+        journal_path = ROOT_DIR / journal_path
+    try:
+        _att1_caller_receipt.append_att1_decision_receipt(journal_path, receipt)
+    except Exception as exc:
+        _diag_inc("att1_caller_receipt_journal_fail")
+        log_error(f"ATT1 caller receipt persist fail {symbol}: {type(exc).__name__}")
+        return False
+
+    status = str(receipt.get("status") or "FAIL_CLOSED")
+    if status in {"FAIL_CLOSED", "REGIME_BLOCKED"}:
+        _diag_inc(f"att1_caller_receipt_{status.lower()}")
+        exception = receipt.get("exception")
+        error_code = (
+            str(exception.get("code") or "")
+            if isinstance(exception, dict)
+            else ""
+        )
+        log_error(
+            f"ATT1 caller receipt blocked {symbol}: status={status} "
+            f"code={error_code or '-'}"
+        )
+        return False
+    return True
+
+
 async def try_att1_entry_async(symbol: str, price: float):
     """Try ATT1 trendline-touch entry for a symbol."""
     if not ENABLE_ATT1_TRADING:
@@ -11614,12 +11790,33 @@ async def try_att1_entry_async(symbol: str, price: float):
         sig = ATT1_ENGINE.signal(symbol, int(now * 1000), 0, 0, 0, price, 0)
     except Exception as e:
         log_error(f"att1 signal error {symbol}: {e}")
+        _att1_record_caller_receipt(
+            symbol=symbol,
+            observed_at_ms=int(now * 1000),
+            signal=None,
+            no_signal_reason="",
+            evaluation_error=e,
+        )
         return
     if not sig:
         _diag_inc("att1_no_signal")
         ns_reason = ATT1_ENGINE.last_no_signal_reason(symbol)
+        _att1_record_caller_receipt(
+            symbol=symbol,
+            observed_at_ms=int(now * 1000),
+            signal=None,
+            no_signal_reason=ns_reason,
+        )
         _diag_inc(_att1_no_signal_diag_key(ns_reason))
         _append_signal_decision("att1", symbol, "no_signal", ns_reason)
+        return
+
+    if not _att1_record_caller_receipt(
+        symbol=symbol,
+        observed_at_ms=int(now * 1000),
+        signal=sig,
+        no_signal_reason="",
+    ):
         return
 
     _diag_inc("att1_signal")

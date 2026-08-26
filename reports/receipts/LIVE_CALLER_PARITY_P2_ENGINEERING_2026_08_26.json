@@ -1,0 +1,49 @@
+{
+  "schema_id": "live_caller_parity_p2_engineering_receipt_v1",
+  "created_at_utc": "2026-08-26T11:54:56Z",
+  "decision": "P2_ENGINEERING_PASS_P5_STILL_REQUIRED",
+  "authority": "research_and_engineering_only_no_live_no_broker_no_promotion",
+  "ATT1": {
+    "production_call_site": "smart_pump_reversal_bot.py:try_att1_entry_async",
+    "boundary": "bot.att1_live_caller_receipt.build_att1_decision_receipt",
+    "replay": "research_lab.att1_live_caller_receipt_replay.build_att1_replay_receipt",
+    "all_outcomes_wired": ["signal", "no_signal", "strategy_exception"],
+    "default_off": true,
+    "persisted_regime_required_when_enabled": true,
+    "byte_equal_live_shaped_and_replay_fixture": true,
+    "durable_journal_mode": "0600_locked_fsync_jsonl",
+    "source_hashes": {
+      "smart_pump_reversal_bot.py": "73c934a3ac00c182cb5855f4da502b5a90716cd15d3b0bf40126ed4cf4bfc6a6",
+      "bot/att1_live_caller_receipt.py": "7353e5510708219e62fe5e1796cdb8a1230155e911a0f59451446114c63eaa25",
+      "research_lab/att1_live_caller_receipt_replay.py": "c878f452e122cc354c10585f952d3a095358b5ed7bfd692806025bf34f0b8782"
+    }
+  },
+  "SBR1": {
+    "production_shaped_call_site": "scripts/run_sbr1_zero_risk_shadow.py",
+    "wrapper": "strategies.sbr1_live.SBR1LiveEngine",
+    "adapter": "bot.live_native_signal_adapters.adapt_sbr1_live_signal_to_plan",
+    "money_call_site": false,
+    "reason_money_call_site_absent": "money_authority_forbidden_before_full_gate",
+    "strategy_exceptions_are_not_coerced_to_no_signal": true,
+    "server_runtime_coverage_receipt": "reports/receipts/LIVE_CALLER_PARITY_P4_RUNTIME_2026_08_26.json",
+    "source_hashes": {
+      "strategies/sbr1_live.py": "44dcd958c9a2109808bc90e05954825d88e783dba9566393cac8f37bc0b73227",
+      "scripts/run_sbr1_zero_risk_shadow.py": "58ff898badd64a9e602919f48682114242f791944ffb9a18b45ec7cf5db5a0c7"
+    }
+  },
+  "verification": {
+    "focused_and_adjacent_tests": 134,
+    "result": "PASS",
+    "py_compile": "PASS",
+    "sealed_holdout_rows_decoded": 0
+  },
+  "known_separate_gate": {
+    "exposure_gate_enforced": false,
+    "next_package": "P6_after_P1_P5",
+    "live_money_config_changed": false
+  },
+  "money_authority": false,
+  "orders_created_or_changed": 0,
+  "private_api_calls": false,
+  "release_or_promotion_authority": false
+}
