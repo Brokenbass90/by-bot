@@ -532,6 +532,10 @@ def _dry_run_tg_enabled() -> bool:
     return _env_bool("INTRADAY_DRY_RUN_TG_ENABLE", False)
 
 
+class MonthlyOwnershipRegistryError(RuntimeError):
+    """An ownership artifact exists but cannot safely authorize cleanup."""
+
+
 def _load_monthly_managed_symbols() -> set[str]:
     """Return the set of symbols owned by the monthly Alpaca sleeve.
 
@@ -577,7 +581,9 @@ def _load_monthly_managed_symbols() -> set[str]:
         if d.is_dir():
             candidate_paths.append(d / "current_cycle_picks.csv")
 
+    registry_paths: list[Path] = []
     for csv_path in candidate_paths:
+        registry_paths.append(csv_path.parent / "owned_position_lifecycles.json")
         if not csv_path.exists():
             continue
         try:
@@ -594,6 +600,44 @@ def _load_monthly_managed_symbols() -> set[str]:
                 # liquidate a newly promoted paper sleeve between ticks.
         except Exception:
             continue
+
+    # Adaptive PAPER ownership is lifecycle-bound, not selection-bound.  Only
+    # an exact schema can extend protection; malformed registries grant no new
+    # close/protection authority and leave the legacy CSV behavior unchanged.
+    seen_registry_paths: set[Path] = set()
+    for registry_path in registry_paths:
+        if registry_path in seen_registry_paths or not registry_path.exists():
+            continue
+        seen_registry_paths.add(registry_path)
+        try:
+            payload = json.loads(registry_path.read_text(encoding="utf-8"))
+            owned = payload.get("owned_symbols") if isinstance(payload, dict) else None
+            if (
+                payload.get("schema_id") != "alpaca_adaptive_paper_owned_positions_v1"
+                or not isinstance(owned, list)
+            ):
+                raise MonthlyOwnershipRegistryError(
+                    f"invalid_adaptive_ownership_registry:{registry_path}"
+                )
+            loaded = {
+                str(value or "").strip().upper()
+                for value in owned
+                if str(value or "").strip()
+            }
+            if any(
+                not value.replace(".", "").replace("-", "").isalnum()
+                for value in loaded
+            ):
+                raise MonthlyOwnershipRegistryError(
+                    f"invalid_adaptive_ownership_registry:{registry_path}"
+                )
+            symbols.update(loaded)
+        except MonthlyOwnershipRegistryError:
+            raise
+        except Exception as exc:
+            raise MonthlyOwnershipRegistryError(
+                f"unreadable_adaptive_ownership_registry:{registry_path}"
+            ) from exc
 
     return symbols
 
@@ -1619,7 +1663,20 @@ def run_once(client: AlpacaClient, dry_run: bool,
             }
             print(f"\n  [PM-CLEANUP] {cleanup_msg}")
 
-        monthly_managed_symbols = _load_monthly_managed_symbols()
+        ownership_registry_error = ""
+        try:
+            monthly_managed_symbols = _load_monthly_managed_symbols()
+        except MonthlyOwnershipRegistryError as exc:
+            monthly_managed_symbols = set()
+            ownership_registry_error = str(exc)
+            entries_blocked = True
+            advisory["entries_blocked"] = True
+            advisory["protection"]["ownership_registry"] = {
+                "enabled": True,
+                "ok": False,
+                "message": ownership_registry_error,
+            }
+            print(f"\n  [OWNERSHIP-BLOCK] {ownership_registry_error}")
         pending_close_symbols = broker_pending_close_symbols - set(state.keys())
         remote_only_symbols = sorted(
             sym for sym in open_positions.keys()
@@ -1631,7 +1688,10 @@ def run_once(client: AlpacaClient, dry_run: bool,
         advisory["pending_close_positions"] = sorted(pending_close_symbols)
         advisory["monthly_managed_symbols"] = sorted(monthly_managed_symbols)
         advisory["monthly_managed_positions"] = list(protected_remote_symbols)
-        close_unknown_remote = _env_bool("INTRADAY_CLOSE_UNKNOWN_REMOTE_POSITIONS", False)
+        close_unknown_remote = (
+            _env_bool("INTRADAY_CLOSE_UNKNOWN_REMOTE_POSITIONS", False)
+            and not ownership_registry_error
+        )
         if protected_remote_symbols:
             print(f"\n  [INFO] Monthly-managed remote paper positions preserved: {', '.join(protected_remote_symbols)}")
         if remote_only_symbols:
@@ -1662,7 +1722,17 @@ def run_once(client: AlpacaClient, dry_run: bool,
         open_positions = {}
         pending_close_symbols = set()
         remote_only_symbols = []
-        monthly_managed_symbols = _load_monthly_managed_symbols()
+        try:
+            monthly_managed_symbols = _load_monthly_managed_symbols()
+        except MonthlyOwnershipRegistryError as exc:
+            monthly_managed_symbols = set()
+            entries_blocked = True
+            advisory["entries_blocked"] = True
+            advisory["protection"]["ownership_registry"] = {
+                "enabled": True,
+                "ok": False,
+                "message": str(exc),
+            }
         protected_remote_symbols = []
         advisory["position_management"] = {"enabled": _env_bool("INTRADAY_POSITION_MANAGER_ENABLE", True), "dry_run": True, "actions": []}
         advisory["monthly_managed_symbols"] = sorted(monthly_managed_symbols)

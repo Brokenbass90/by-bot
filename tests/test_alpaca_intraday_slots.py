@@ -3,7 +3,10 @@ from __future__ import annotations
 
 import sys
 import csv
+import json
 from pathlib import Path
+
+import pytest
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -59,6 +62,7 @@ def test_monthly_ownership_unions_legacy_and_adaptive_cycles(tmp_path, monkeypat
 
     legacy = tmp_path / "runtime" / "equities_monthly_v36" / "current_cycle_picks.csv"
     adaptive = tmp_path / "runtime" / "equities_alpaca_adaptive_v1" / "current_cycle_picks.csv"
+    adaptive_ownership = adaptive.parent / "owned_position_lifecycles.json"
     for path, symbols in ((legacy, ["GE", "SNOW"]), (adaptive, ["AAPL", "JPM", "UNH"])):
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("w", newline="", encoding="utf-8") as f:
@@ -66,6 +70,15 @@ def test_monthly_ownership_unions_legacy_and_adaptive_cycles(tmp_path, monkeypat
             writer.writeheader()
             for symbol in symbols:
                 writer.writerow({"ticker": symbol})
+    adaptive_ownership.write_text(
+        json.dumps(
+            {
+                "schema_id": "alpaca_adaptive_paper_owned_positions_v1",
+                "owned_symbols": ["TMO", "UNH"],
+            }
+        ),
+        encoding="utf-8",
+    )
 
     monkeypatch.setattr(bridge, "ROOT", tmp_path)
     monkeypatch.setattr(bridge, "MONTHLY_RUNTIME_DIR", legacy.parent)
@@ -75,4 +88,37 @@ def test_monthly_ownership_unions_legacy_and_adaptive_cycles(tmp_path, monkeypat
     monkeypatch.delenv("EQ_V35_RUNTIME_DIR", raising=False)
     monkeypatch.delenv("EQ_BASELINE_RUNTIME_DIR", raising=False)
 
-    assert bridge._load_monthly_managed_symbols() == {"AAPL", "GE", "JPM", "SNOW", "UNH"}
+    assert bridge._load_monthly_managed_symbols() == {
+        "AAPL",
+        "GE",
+        "JPM",
+        "SNOW",
+        "TMO",
+        "UNH",
+    }
+
+
+def test_malformed_adaptive_ownership_registry_disables_cleanup(tmp_path, monkeypatch):
+    from scripts import equities_alpaca_intraday_bridge as bridge
+
+    adaptive_dir = tmp_path / "runtime" / "equities_alpaca_adaptive_v1"
+    adaptive_dir.mkdir(parents=True)
+    (adaptive_dir / "owned_position_lifecycles.json").write_text(
+        '{"schema_id":"wrong","owned_symbols":["TMO"]}',
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(bridge, "ROOT", tmp_path)
+    monkeypatch.setattr(
+        bridge,
+        "MONTHLY_RUNTIME_DIR",
+        tmp_path / "runtime" / "equities_monthly_v36",
+    )
+    monkeypatch.delenv("ALPACA_CURRENT_CYCLE_PICKS_CSV", raising=False)
+    monkeypatch.delenv("ALPACA_ADAPTIVE_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("ALPACA_AUTOPILOT_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("EQ_V35_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("EQ_BASELINE_RUNTIME_DIR", raising=False)
+
+    with pytest.raises(bridge.MonthlyOwnershipRegistryError):
+        bridge._load_monthly_managed_symbols()
