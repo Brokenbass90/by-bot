@@ -582,6 +582,10 @@ def _ws_health_from_delta(connect_delta: int, disconnect_delta: int, handshake_d
         return "NO_ACTIVITY", 0.0, 0.0
     disc_conn_pct = (100.0 * d) / max(1, c)
     hs_conn_pct = (100.0 * h) / max(1, c)
+    # One or two reconnects make ratio labels statistically meaningless. Keep
+    # the classifier aligned with the transport guard and operator alert floor.
+    if c < int(WS_HEALTH_MIN_CONNECT_DELTA):
+        return "LOW_SAMPLE", disc_conn_pct, hs_conn_pct
     if disc_conn_pct >= WS_HEALTH_CRIT_DISC_CONN_PCT or hs_conn_pct >= WS_HEALTH_CRIT_HANDSHAKE_CONN_PCT:
         return "CRITICAL", disc_conn_pct, hs_conn_pct
     if disc_conn_pct >= WS_HEALTH_WARN_DISC_CONN_PCT or hs_conn_pct >= WS_HEALTH_WARN_HANDSHAKE_CONN_PCT:
@@ -2492,9 +2496,9 @@ WS_HEALTH_CRIT_DISC_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_CRIT_DISC_CON
 WS_HEALTH_WARN_HANDSHAKE_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_WARN_HANDSHAKE_CONN_PCT", "30")))
 WS_HEALTH_CRIT_HANDSHAKE_CONN_PCT = max(0.0, float(os.getenv("WS_HEALTH_CRIT_HANDSHAKE_CONN_PCT", "80")))
 DEEPSEEK_OPERATOR_ENABLE = _env_bool("DEEPSEEK_OPERATOR_ENABLE", True)
-DEEPSEEK_OPERATOR_USE_API = _env_bool("DEEPSEEK_OPERATOR_USE_API", True)
+DEEPSEEK_OPERATOR_USE_API = _env_bool("DEEPSEEK_OPERATOR_USE_API", False)
 DEEPSEEK_OPERATOR_PROACTIVE_ENABLE = _env_bool("DEEPSEEK_OPERATOR_PROACTIVE_ENABLE", True)
-DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE = _env_bool("DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE", True)
+DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE = _env_bool("DEEPSEEK_OPERATOR_TRADE_REVIEW_ENABLE", False)
 DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC = max(300, int(os.getenv("DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC", "3600")))
 DEEPSEEK_OPERATOR_DUPLICATE_SUPPRESS_SEC = max(1800, int(os.getenv("DEEPSEEK_OPERATOR_DUPLICATE_SUPPRESS_SEC", "21600")))
 DEEPSEEK_OPERATOR_NO_TRADES_HOURS = max(1, int(os.getenv("DEEPSEEK_OPERATOR_NO_TRADES_HOURS", "24")))
@@ -3924,6 +3928,20 @@ def _ai_operator_duplicate_signature(kind: str, payload: dict[str, Any] | None) 
     return ""
 
 
+def _ws_operator_attention_required(ws_status: str, d_connect: int) -> bool:
+    """Require sustained or adequately sampled evidence before escalation."""
+    if _ws_transport_guard_active():
+        return True
+    status = str(ws_status or "").strip().upper()
+    if status == "CRITICAL":
+        return int(d_connect) >= int(WS_HEALTH_MIN_CONNECT_DELTA)
+    if status == "CRITICAL_NO_CONNECT":
+        return int(WS_TRANSPORT_GUARD.get("critical_streak", 0) or 0) >= int(
+            WS_HEALTH_NO_CONNECT_STREAK_ALERT
+        )
+    return False
+
+
 def _build_trade_review_summary(tr, sym: str, pnl_closed: float, fee_sum: float | None, exit_px: float | None) -> tuple[str, dict[str, Any]]:
     entry_px = float(getattr(tr, "entry_price", getattr(tr, "avg", 0.0) or 0.0) or 0.0)
     sl_px = getattr(tr, "sl_price", None)
@@ -4035,7 +4053,16 @@ async def _ai_operator_emit(
         summary=body_text,
         payload=payload,
     )
-    tg_trade(f"{tg_prefix}\n{body_text}")
+    effective_prefix = str(tg_prefix or "").strip()
+    if memory_source != "api":
+        effective_prefix = (
+            "🧭 Rule-based operator"
+            if effective_prefix == "🧠 AI operator"
+            else "🧭 Rule-based trade review"
+            if effective_prefix == "🧠 ИИ-разбор сделки"
+            else effective_prefix
+        )
+    tg_trade(f"{effective_prefix}\n{body_text}")
 
 
 def _maybe_schedule_ai_trade_review(tr, sym: str, pnl_closed: float, fee_sum: float | None, exit_px: float | None) -> None:
@@ -4143,7 +4170,7 @@ async def _maybe_run_ai_operator_tick(
     )
     ws_guard_active = _ws_transport_guard_active()
     ws_guard_reason = _ws_transport_guard_reason()
-    transport_issue = bool(ws_guard_active or ws_status in {"CRITICAL", "CRITICAL_NO_CONNECT"})
+    transport_issue = _ws_operator_attention_required(ws_status, d_connect)
     quiet_operator_attention_needed = (
         quiet_skip_tech > 0
         or quiet_skip_capacity >= max(50, int(0.15 * quiet_try_safe))
@@ -4195,7 +4222,7 @@ async def _maybe_run_ai_operator_tick(
             )
         )
 
-    if (ws_guard_active or ws_status in {"CRITICAL", "CRITICAL_NO_CONNECT"}) and _throttle_gate(
+    if _ws_operator_attention_required(ws_status, d_connect) and _throttle_gate(
         f"aiop:ws:{ws_status}", DEEPSEEK_OPERATOR_ALERT_COOLDOWN_SEC
     ):
         fallback = (
