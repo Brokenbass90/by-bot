@@ -169,6 +169,32 @@ def verify_fixed51_evidence_manifest(root: Path, manifest_path: Path, *, verify_
         details = {}
     if attached["ATT1"].get("journal_path") == attached["SBR1"].get("journal_path"):
         raise ParityGateViolation("p4_shadow_journals_not_separate")
+    candidate = raw.get("candidate_profile")
+    if not isinstance(candidate, Mapping):
+        raise ParityGateViolation("p5_candidate_profile_missing")
+    candidate_rel = _relative(candidate.get("path"), "candidate_profile")
+    candidate_path = root / candidate_rel
+    expected_candidate_sha = _sha_field(
+        candidate.get("sha256"), "candidate_profile"
+    )
+    if sha256_file(candidate_path) != expected_candidate_sha:
+        raise ParityGateViolation("p5_candidate_profile_hash_mismatch")
+    try:
+        expected_candidate_bytes = int(candidate.get("bytes"))
+    except (TypeError, ValueError) as exc:
+        raise ParityGateViolation("p5_candidate_profile_bytes_invalid") from exc
+    if expected_candidate_bytes <= 0 or candidate_path.stat().st_size != expected_candidate_bytes:
+        raise ParityGateViolation("p5_candidate_profile_bytes_mismatch")
+    for field in (
+        "default_off",
+        "money_authority",
+        "orders_allowed",
+        "private_api_allowed",
+        "release_or_promotion_authority",
+    ):
+        expected = True if field == "default_off" else False
+        if candidate.get(field) is not expected:
+            raise ParityGateViolation(f"p5_candidate_profile_authority:{field}")
     return {
         "schema_id": P4_SCHEMA_ID,
         "decision": "PASS",
@@ -177,6 +203,7 @@ def verify_fixed51_evidence_manifest(root: Path, manifest_path: Path, *, verify_
         "money_universe": list(MAJOR8),
         "expected_structurally_unavailable": dict(UNAVAILABLE),
         "attached": details,
+        "candidate_profile_sha256": expected_candidate_sha,
         "manifest_sha256": sha256_file(path),
         "sealed_holdout_rows_decoded": 0,
     }

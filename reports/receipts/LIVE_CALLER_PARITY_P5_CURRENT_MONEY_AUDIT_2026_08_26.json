@@ -1,0 +1,42 @@
+{
+  "schema_id": "live_caller_parity_p5_current_money_audit_v1",
+  "observed_at_epoch_s": 1787745702,
+  "decision": "FAIL_EXPECTED_MONEY_CONFIG_UNCHANGED",
+  "source": "/root/by-bot/runtime/bot_heartbeat.json",
+  "source_contract_sha256": "fb5aee0749e3573d35a2c6a2d53d9c064069ff496d33e97306e16451ae67c506",
+  "current": {
+    "trade_on": true,
+    "dry_run": false,
+    "regime": "bull_chop",
+    "max_positions": 3,
+    "att1_risk_mult": 0.1,
+    "att1_allowlist": ["ADAUSDT", "BTCUSDT", "DOTUSDT", "ETHUSDT", "LINKUSDT", "LTCUSDT", "SOLUSDT", "SUIUSDT"],
+    "sl_atr_mult": 1.1,
+    "max_stop_pct": 0.06,
+    "be_trigger_rr": 1.0,
+    "trail_atr_mult": 1.5,
+    "time_stop_bars_5m": 2016,
+    "orch_global_risk_mult": 0.55,
+    "allocator_global_risk_mult": 0.8
+  },
+  "candidate": {
+    "risk_mult": 0,
+    "sl_atr_mult": 6.6,
+    "max_stop_pct": 0.25,
+    "be_trigger_rr": 0,
+    "trail_atr_mult": 0,
+    "time_stop_bars_5m": 4032,
+    "caller_receipt_required": true,
+    "persisted_regime_required": true
+  },
+  "binding_fail_codes": [
+    "current_money_risk_nonzero",
+    "current_money_geometry_not_candidate",
+    "current_money_caller_receipt_not_deployed",
+    "current_money_persisted_regime_not_consumed"
+  ],
+  "live_money_config_changed": false,
+  "money_authority_granted": false,
+  "orders_created_or_changed": 0,
+  "sealed_holdout_rows_decoded": 0
+}

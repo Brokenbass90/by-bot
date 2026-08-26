@@ -40,13 +40,51 @@
       "journal_path": "runtime/sbr1_zero_risk_shadow/events.jsonl"
     }
   },
+  "candidate_profile": {
+    "path": "configs/research/att1_sbr1_live_native_parity_candidate.env",
+    "bytes": 1051,
+    "sha256": "7313e322e36373b62e27ffa6c55dd9f4b05a7e6bd0b5e996df93e4160159efe9",
+    "default_off": true,
+    "money_authority": false,
+    "orders_allowed": false,
+    "private_api_allowed": false,
+    "release_or_promotion_authority": false
+  },
   "effective_config_contract": {
+    "ENABLE_ATT1_TRADING": "0",
+    "ATT1_RISK_MULT": "0",
+    "ATT1_ALLOW_LONGS": "0",
+    "ATT1_ALLOW_SHORTS": "1",
+    "ATT1_SIGNAL_TF": "60",
     "ATT1_SL_ATR_MULT": "6.60",
     "ATT1_MAX_STOP_PCT": "0.25",
+    "ATT1_TP1_RR": "1.20",
+    "ATT1_TP2_RR": "2.50",
+    "ATT1_TP1_FRAC": "0.55",
     "ATT1_BE_TRIGGER_RR": "0",
     "ATT1_TRAIL_ATR_MULT": "0",
     "ATT1_TIME_STOP_BARS_5M": "4032",
-    "REGIME_OVERLAY_ENABLE": "1",
-    "PORTFOLIO_ALLOCATOR_ENABLE": "1"
+    "ATT1_COOLDOWN_BARS_5M": "96",
+    "ATT1_SYMBOL_ALLOWLIST": "BTCUSDT,ETHUSDT,SOLUSDT,ADAUSDT,LINKUSDT,LTCUSDT,DOTUSDT,SUIUSDT",
+    "ATT1_CALLER_RECEIPT_ENABLE": "1",
+    "ATT1_CALLER_REGIME_RECEIPT_REQUIRED": "1",
+    "ATT1_CALLER_MAX_DECISION_AGE_MS": "300000",
+    "SBR1_RISK_MULT": "0",
+    "SBR1_ALLOW_LONGS": "1",
+    "SBR1_ALLOW_SHORTS": "0",
+    "SBR1_SIGNAL_TF": "60",
+    "SBR1_SL_ATR_MULT": "4.60",
+    "SBR1_TP1_RR": "1.10",
+    "SBR1_TP2_RR": "2.60",
+    "SBR1_TP1_FRAC": "0.50",
+    "SBR1_TP2_FRAC": "0.30",
+    "SBR1_BE_TRIGGER_RR": "0",
+    "SBR1_TRAIL_ATR_MULT": "0",
+    "SBR1_TIME_STOP_BARS_5M": "2016",
+    "SBR1_COOLDOWN_TF_BARS": "6",
+    "MONEY_AUTHORITY": "0",
+    "ORDERS_ALLOWED": "0",
+    "PRIVATE_API_ALLOWED": "0",
+    "RELEASE_OR_PROMOTION_AUTHORITY": "0"
   }
 }

@@ -10,7 +10,7 @@
     "sbr1-zero-risk-shadow.service_last_result": "success",
     "bybot.service": "active"
   },
-  "static_manifest_sha256": "2ad09a4a0323c3788db9a87ed6d8d56fba4519b20c225265d13cda5591a0edb2",
+  "static_manifest_sha256": "6024ca2478f14d1cc810689e1dc2afa82a806ac474cf90a1d70ae8dd64d0956d",
   "inputs": {
     "ATT1": {
       "source": "/opt/bybot-research/att1-fixed51-raw-shadow/runtime/att1_fixed51_zero_risk_shadow/events.jsonl",

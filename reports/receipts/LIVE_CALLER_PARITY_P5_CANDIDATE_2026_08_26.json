@@ -1,0 +1,23 @@
+{
+  "schema_id": "live_caller_parity_p5_candidate_receipt_v1",
+  "created_at_utc": "2026-08-26T11:59:00Z",
+  "decision": "PASS",
+  "target": "default_off_zero_risk_production_caller_candidate",
+  "authority": "research_only_fixed51_evidence_no_orders_no_private_api_no_money_no_promotion",
+  "bindings": {
+    "p4_manifest_sha256": "6024ca2478f14d1cc810689e1dc2afa82a806ac474cf90a1d70ae8dd64d0956d",
+    "candidate_profile_sha256": "7313e322e36373b62e27ffa6c55dd9f4b05a7e6bd0b5e996df93e4160159efe9",
+    "effective_config_contract_sha256": "701f9eb25bb9aa924b58ce6a78081a03c395a09c6d3a780822e75cb46eed9213",
+    "runtime_coverage_receipt_sha256": "fd86170a5d4b6d06b49d6d7efe5904a2c534e7b7a6055695f901ba3064694fa3",
+    "p2_engineering_receipt": "reports/receipts/LIVE_CALLER_PARITY_P2_ENGINEERING_2026_08_26.json"
+  },
+  "fail_codes": [],
+  "evidence_universe_count": 51,
+  "money_universe_count": 8,
+  "expected_structurally_unavailable": ["HFTUSDT"],
+  "money_authority": false,
+  "orders_created_or_changed": 0,
+  "private_api_calls": false,
+  "release_or_promotion_authority": false,
+  "sealed_holdout_rows_decoded": 0
+}

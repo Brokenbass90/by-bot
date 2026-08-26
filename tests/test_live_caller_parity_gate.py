@@ -30,6 +30,7 @@ def _fixture(tmp_path: Path) -> Path:
         "configs/research/sbr1_fixed51_evidence_manifest_v1.json",
         "configs/att1_fixed51_zero_risk_shadow_v1.json",
         "configs/sbr1_zero_risk_shadow_v1.json",
+        "configs/research/att1_sbr1_live_native_parity_candidate.env",
     ):
         target = tmp_path / rel
         target.parent.mkdir(parents=True, exist_ok=True)

@@ -26,7 +26,7 @@ from bot.live_caller_parity_gate import (
 
 
 DEFAULT_MANIFEST = ROOT / "configs/research/att1_sbr1_fixed51_evidence_parity_v1.json"
-DEFAULT_ENV = ROOT / "configs/approved_strategy_params.env"
+DEFAULT_ENV = ROOT / "configs/research/att1_sbr1_live_native_parity_candidate.env"
 
 
 def main() -> int:
