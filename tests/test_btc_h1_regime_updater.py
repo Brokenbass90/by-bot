@@ -238,3 +238,19 @@ def test_cli_defaults_to_fail_closed_without_mutation(tmp_path: Path, capsys) ->
     assert update_cli(["--state-path", str(path)]) == 2
     assert not path.exists()
     assert json.loads(capsys.readouterr().out)["status"] == "FAIL_CLOSED"
+
+
+def test_systemd_release_is_hourly_public_zero_risk_and_hardened() -> None:
+    root = Path(__file__).resolve().parents[1]
+    service = (root / "deploy/systemd/btc-h1-regime-updater.service").read_text()
+    timer = (root / "deploy/systemd/btc-h1-regime-updater.timer").read_text()
+
+    assert "scripts/update_btc_h1_regime.py --enable" in service
+    assert "--max-age-ms 300000" in service
+    assert "WorkingDirectory=/opt/bybot-research/live-caller-parity" in service
+    assert "ProtectSystem=strict" in service
+    assert "ProtectHome=true" in service
+    assert "NoNewPrivileges=true" in service
+    assert "ReadWritePaths=/opt/bybot-research/live-caller-parity/runtime" in service
+    assert "OnCalendar=*-*-* *:03:00 UTC" in timer
+    assert "Persistent=true" in timer

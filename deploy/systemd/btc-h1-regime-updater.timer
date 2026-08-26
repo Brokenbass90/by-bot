@@ -1,0 +1,12 @@
+[Unit]
+Description=Update persisted BTC H1 EMA200 state after every UTC hour close
+
+[Timer]
+OnCalendar=*-*-* *:03:00 UTC
+Persistent=true
+RandomizedDelaySec=10
+AccuracySec=1s
+Unit=btc-h1-regime-updater.service
+
+[Install]
+WantedBy=timers.target

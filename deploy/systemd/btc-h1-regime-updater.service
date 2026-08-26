@@ -1,0 +1,24 @@
+[Unit]
+Description=Public zero-risk persisted BTC H1 EMA200 updater
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/bybot-research/live-caller-parity
+ExecStart=/usr/bin/python3 scripts/update_btc_h1_regime.py --enable --state-path runtime/live_native_parity/btc_h1_regime.json --max-age-ms 300000 --history-limit 1000 --timeout 15
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/bybot-research/live-caller-parity/runtime
+RestrictAddressFamilies=AF_INET AF_INET6
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target
