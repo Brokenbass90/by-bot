@@ -1,0 +1,52 @@
+{
+  "schema_id": "att1_sbr1_fixed51_evidence_parity_manifest_v1",
+  "authority": "research_only_fixed51_evidence_no_orders_no_private_api_no_money_no_promotion",
+  "default_off": true,
+  "enabled": false,
+  "money_authority": false,
+  "orders_allowed": false,
+  "private_api_allowed": false,
+  "release_or_promotion_authority": false,
+  "sealed_data_allowed": false,
+  "evidence_universe": ["1000BONKUSDT", "1000PEPEUSDT", "1000RATSUSDT", "AAVEUSDT", "ACEUSDT", "ADAUSDT", "ALGOUSDT", "APTUSDT", "ARBUSDT", "ATOMUSDT", "AVAXUSDT", "BCHUSDT", "BICOUSDT", "BNBUSDT", "BTCUSDT", "C98USDT", "COTIUSDT", "CRVUSDT", "DOGEUSDT", "ETCUSDT", "ETHUSDT", "FILUSDT", "GALAUSDT", "HBARUSDT", "HFTUSDT", "ICPUSDT", "INJUSDT", "JTOUSDT", "LDOUSDT", "MNTUSDT", "ONDOUSDT", "OPUSDT", "ORDIUSDT", "PAXGUSDT", "PEOPLEUSDT", "SEIUSDT", "SHIB1000USDT", "SOLUSDT", "STRKUSDT", "SUIUSDT", "TAOUSDT", "TIAUSDT", "TRXUSDT", "UNIUSDT", "USDCUSDT", "WIFUSDT", "WLDUSDT", "XLMUSDT", "XMRUSDT", "XRPUSDT", "ZECUSDT"],
+  "money_universe": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"],
+  "evidence_universe_sha256": "fa5c61703cac5c72218022f15d92ee46d6fa577df84c9cfcbf8cc005893bfe19",
+  "money_universe_sha256": "c9e0e9ff37725938c25a30e1bdcd25e615092f89e330111612a214a458c90940",
+  "expected_structurally_unavailable": {"HFTUSDT": "bybit_linear_status_closed_observed_2026-08-24"},
+  "coverage_contract": {
+    "mode": "public_zero_risk_shadow",
+    "expected_symbol_count": 51,
+    "expected_available_symbol_count": 50,
+    "structurally_unavailable": {"HFTUSDT": "bybit_linear_status_closed_observed_2026-08-24"},
+    "substitution_allowed": false,
+    "orders_allowed": false,
+    "private_api_allowed": false,
+    "first_causal_evaluation_required": true,
+    "random_control_required_for_sbr1": true
+  },
+  "shadows": {
+    "ATT1": {
+      "manifest_path": "configs/research/att1_fixed51_public_shadow_manifest_v1.json",
+      "manifest_sha256": "82ed61bb05d6127b46467a363d64d62ef704486d4b4c27f2ead81cb049ac21da",
+      "config_path": "configs/att1_fixed51_zero_risk_shadow_v1.json",
+      "config_sha256": "c126a905bbcd5e267b6ccb51a5f2f24ada26194c775c4573972958cc897f62dc",
+      "journal_path": "runtime/att1_fixed51_zero_risk_shadow/events.jsonl"
+    },
+    "SBR1": {
+      "manifest_path": "configs/research/sbr1_fixed51_evidence_manifest_v1.json",
+      "manifest_sha256": "597154e23c592c6db5fcb2eca2b5e5f9559526646f0a9444a1ccfd22bb100624",
+      "config_path": "configs/sbr1_zero_risk_shadow_v1.json",
+      "config_sha256": "2561dc878f17047a3ae63ad06e0b98fba4d2f7709fe6edbbf66c1b3421d270a5",
+      "journal_path": "runtime/sbr1_zero_risk_shadow/events.jsonl"
+    }
+  },
+  "effective_config_contract": {
+    "ATT1_SL_ATR_MULT": "6.60",
+    "ATT1_MAX_STOP_PCT": "0.25",
+    "ATT1_BE_TRIGGER_RR": "0",
+    "ATT1_TRAIL_ATR_MULT": "0",
+    "ATT1_TIME_STOP_BARS_5M": "4032",
+    "REGIME_OVERLAY_ENABLE": "1",
+    "PORTFOLIO_ALLOCATOR_ENABLE": "1"
+  }
+}
