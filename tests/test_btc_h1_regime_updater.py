@@ -254,3 +254,36 @@ def test_systemd_release_is_hourly_public_zero_risk_and_hardened() -> None:
     assert "ReadWritePaths=/opt/bybot-research/live-caller-parity/runtime" in service
     assert "OnCalendar=*-*-* *:03:00 UTC" in timer
     assert "Persistent=true" in timer
+
+
+def test_systemd_release_manifest_contains_complete_python_import_closure() -> None:
+    root = Path(__file__).resolve().parents[1]
+    manifest = root / "deploy/systemd/btc-h1-regime-updater.files"
+    paths = tuple(
+        line.strip()
+        for line in manifest.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    )
+
+    assert paths == (
+        "bot/__init__.py",
+        "bot/btc_h1_regime_updater.py",
+        "bot/persisted_btc_h1_regime.py",
+        "bot/live_native_regime_gate.py",
+        "bot/live_native_decision_contract.py",
+        "scripts/update_btc_h1_regime.py",
+        "deploy/systemd/btc-h1-regime-updater.service",
+        "deploy/systemd/btc-h1-regime-updater.timer",
+    )
+    assert all((root / rel).is_file() for rel in paths)
+
+    updater = (root / "bot/btc_h1_regime_updater.py").read_text(encoding="utf-8")
+    persisted = (root / "bot/persisted_btc_h1_regime.py").read_text(encoding="utf-8")
+    regime = (root / "bot/live_native_regime_gate.py").read_text(encoding="utf-8")
+    cli = (root / "scripts/update_btc_h1_regime.py").read_text(encoding="utf-8")
+    assert "from bot.persisted_btc_h1_regime import" in updater
+    assert "from bot.live_native_regime_gate import H1_MS" in updater
+    assert "from bot.live_native_regime_gate import" in persisted
+    assert "from bot.live_native_decision_contract import" in regime
+    assert "from bot.btc_h1_regime_updater import" in cli
+    assert "from bot.persisted_btc_h1_regime import" in cli

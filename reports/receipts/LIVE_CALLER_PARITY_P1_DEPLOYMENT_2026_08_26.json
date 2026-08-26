@@ -1,0 +1,49 @@
+{
+  "schema_id": "live_caller_parity_p1_deployment_receipt_v1",
+  "created_at_utc": "2026-08-26T16:42:33Z",
+  "decision": "PASS",
+  "target": "public_persisted_causal_btc_h1_ema200",
+  "server": "64.226.73.119",
+  "authority": "research_only_public_market_data_no_orders_no_money_no_promotion",
+  "deployment": {
+    "working_directory": "/opt/bybot-research/live-caller-parity",
+    "closure_manifest": "deploy/systemd/btc-h1-regime-updater.files",
+    "local_and_server_hashes_equal": true,
+    "files": {
+      "bot/__init__.py": "478c50ca9d992ea59fa40405ec37c2de81771b152b852a5dc0e749d43d34f7ed",
+      "bot/btc_h1_regime_updater.py": "aaaf4593e5cc3a2804837595779df582d30270dc7053dd088d63eac51ef1a88e",
+      "bot/persisted_btc_h1_regime.py": "6cb773fa6538b986cca4c4aa544f58a9a51a47e6dca6409ed9a44043474e4e4d",
+      "bot/live_native_regime_gate.py": "cd34e715ec8b6d77d104d9b5413fa330550424e1ed7858b94eadcd0b0b8173ef",
+      "bot/live_native_decision_contract.py": "a8ad6115d1bb7d86f64c2cddb70695a814e4f7acf0db13fbc977acbd88f95f70",
+      "scripts/update_btc_h1_regime.py": "9f78aeca97d470ddcbbc59ff7f82e1bef675f21b2082311719836c1cb7be159f",
+      "deploy/systemd/btc-h1-regime-updater.service": "141054a1286626744a71421bfb11023b0168b30ba1e9deed9b848db8438ed061",
+      "deploy/systemd/btc-h1-regime-updater.timer": "2f83fdbf18b50722b1e91126bdcbaa5af0d0847f137b741547b9325ddba64831"
+    }
+  },
+  "runtime": {
+    "timer_active": true,
+    "timer_last_trigger_utc": "2026-08-26T16:03:07Z",
+    "timer_next_trigger_utc": "2026-08-26T17:03:08Z",
+    "service_result": "success",
+    "state_file_mode": "0600",
+    "state_file_bytes": 1178,
+    "state_file_sha256": "f6a0bf74e705cfc85f193482d15aa9b7ee4585ee257760ea4381f7df41529104",
+    "state_sha256": "18676118797a835e49f50d37e7fa5a484e6ad3ce3f4cb2221b510639f0efef24",
+    "receipt_sha256": "e3b4370f41d8e6e96332d28723183e77bee242484ed8f14845a7b41cea372aba",
+    "last_closed_h1_ts_ms": 1787760000000,
+    "regime_value": "above_band",
+    "restart_check": "PASS"
+  },
+  "incident": {
+    "initial_result": "FAIL_CLOSED",
+    "cause": "deployment closure omitted bot/live_native_decision_contract.py",
+    "orders_created_or_changed": 0,
+    "state_created_before_repair": false,
+    "repair": "dependency added and target import closure reverified"
+  },
+  "money_authority": false,
+  "orders_allowed": false,
+  "private_api_calls": false,
+  "release_or_promotion_authority": false,
+  "sealed_holdout_rows_decoded": 0
+}
