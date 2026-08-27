@@ -76,3 +76,19 @@ Additional verification after this fix round:
 ```text
 19 passed in 9.90s
 ```
+
+## Review fix round 2
+
+- `fetch_m5` now independently requires the explicit
+  `--allow-reserved-public-network` acknowledgement before it can invoke its
+  public GET dependency. `materialize` passes that acknowledgement only after
+  its own guard; injected synthetic fetchers keep their existing clean
+  function signature.
+- A direct primitive-call regression test proves the refusal occurs with zero
+  injected GET calls.
+
+Additional verification after this fix round:
+
+```text
+20 passed in 10.16s
+```

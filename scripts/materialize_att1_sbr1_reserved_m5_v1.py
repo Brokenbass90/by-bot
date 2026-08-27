@@ -131,8 +131,11 @@ def _row(raw: Sequence[Any], symbol: str) -> dict[str, Any]:
 
 
 def fetch_m5(symbol: str, *, start_ms: int = START_MS, end_exclusive_ms: int = END_EXCLUSIVE_MS,
+             allow_reserved_public_network: bool = False,
              get_json: JsonGetter = _public_get_json) -> list[dict[str, Any]]:
     """Fetch public Bybit linear M5 history, detecting conflicting duplicates."""
+    if not allow_reserved_public_network:
+        raise MaterializationError("--allow-reserved-public-network acknowledgement required before any fetch")
     found: dict[int, dict[str, Any]] = {}
     cursor_end = end_exclusive_ms - 1
     for _ in range(400):
@@ -297,7 +300,13 @@ def materialize(*, out_dir: Path = DEFAULT_OUT_DIR, manifest_path: Path = DEFAUL
                 raise MaterializationError(f"{symbol}: corrupt or drifted payload; acknowledgement required before refetch")
             if not allow_reserved_public_network:
                 raise MaterializationError("--allow-reserved-public-network acknowledgement required before any fetch")
-            rows = fetcher(symbol, start_ms=START_MS, end_exclusive_ms=END_EXCLUSIVE_MS)
+            if fetcher is fetch_m5:
+                rows = fetcher(
+                    symbol, start_ms=START_MS, end_exclusive_ms=END_EXCLUSIVE_MS,
+                    allow_reserved_public_network=True,
+                )
+            else:
+                rows = fetcher(symbol, start_ms=START_MS, end_exclusive_ms=END_EXCLUSIVE_MS)
             validate_rows(rows, symbol=symbol)
             payload = _payload(symbol, rows)
             _atomic_json(path, payload, replace=path.exists())

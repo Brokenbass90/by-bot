@@ -14,6 +14,7 @@ from scripts.materialize_att1_sbr1_reserved_m5_v1 import (
     END_UTC_EXCLUSIVE,
     MaterializationError,
     canonical_sha,
+    fetch_m5,
     materialize,
     main,
     utc_ms,
@@ -77,6 +78,19 @@ def test_materialize_requires_acknowledgement_before_fetch(tmp_path: Path) -> No
             allow_reserved_public_network=False,
             fetcher=fetcher,
         )
+    assert calls == 0
+
+
+def test_direct_public_fetch_requires_acknowledgement_before_get() -> None:
+    calls = 0
+
+    def get_json(_url: str, _params: dict[str, object]) -> dict[str, object]:
+        nonlocal calls
+        calls += 1
+        return {"retCode": 0, "result": {"list": []}}
+
+    with pytest.raises(MaterializationError, match="allow-reserved-public-network"):
+        fetch_m5("BTCUSDT", get_json=get_json)
     assert calls == 0
 
 
