@@ -1,0 +1,263 @@
+{
+  "authority": "metadata_only_no_reserved_market_decode_no_live_no_broker_no_money_no_promotion",
+  "blockers": [
+    "RESERVED_M5_INPUT_MANIFEST_MISSING",
+    "ONE_SHOT_RUNNER_NOT_FROZEN",
+    "INDEPENDENT_AUDIT_NOT_FROZEN"
+  ],
+  "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION",
+  "decision": "BLOCKED_FAIL_CLOSED",
+  "frozen_candidate": {
+    "contract_label": "post_prereg_live_native_major8_exact_candidate",
+    "cost_contracts": {
+      "base": {
+        "adverse_funding_bps_per_8h": "0",
+        "fee_bps_per_side": "6",
+        "slippage_bps_per_side": "2"
+      },
+      "stress": {
+        "adverse_funding_bps_per_8h": "1",
+        "fee_bps_per_side": "6",
+        "slippage_bps_per_side": "5"
+      }
+    },
+    "decision_contract": {
+      "automatic_money_or_promotion": false,
+      "negative_stress_sum_r_is_fail_when_n_gte": 20,
+      "no_parameter_changes_after_preflight": true,
+      "pass_requires_base_and_stress_all_thresholds": true,
+      "publish_any_sign": true,
+      "three_way": [
+        "PASS_ZERO_RISK_INTEGRATION_ONLY",
+        "FAIL_CLOSED",
+        "INCONCLUSIVE_LOW_N"
+      ]
+    },
+    "decision_thresholds": {
+      "ATT1": {
+        "both_halves_r_gt": "0",
+        "max_sequential_drawdown_r_lte": "10",
+        "mean_r_gt": "0.10",
+        "minimum_leave_one_symbol_out_r_gt": "0",
+        "n_gte": 40,
+        "positive_month_fraction_gte": "0.55",
+        "positive_symbol_concentration_lte": "0.35",
+        "profit_factor_gte": "1.40"
+      },
+      "SBR1": {
+        "both_halves_r_gt": "0",
+        "max_sequential_drawdown_r_lte": "10",
+        "mean_r_gt": "0.10",
+        "minimum_leave_one_symbol_out_r_gt": "0",
+        "n_gte": 40,
+        "positive_month_fraction_gte": "0.55",
+        "positive_symbol_concentration_lte": "0.35",
+        "profit_factor_gte": "1.40"
+      }
+    },
+    "execution_contract": {
+      "entry": "next_m5_open",
+      "exposure_gate_required": true,
+      "max_adverse_risk_expansion": "0.20",
+      "max_correlated_cluster_risk_fraction": "0.04",
+      "max_fill_age_ms": 300000,
+      "max_finalize_delay_ms": 60000,
+      "max_open_slots_sbr1": 6,
+      "max_open_slots_total": 12,
+      "stop_first_intrabar": true
+    },
+    "manifest_path": "configs/research/att1_sbr1_live_native_parity_v1.json",
+    "manifest_sha256": "18c04cd8579bcfc294661bfce74f6d635359726e1af845ffb0e650ed59405d42",
+    "profiles": {
+      "ATT1": {
+        "be_trigger_rr": "0",
+        "cooldown_bars_5m": 96,
+        "max_stop_pct": "0.25",
+        "residual_fraction": "0",
+        "side": "short",
+        "signal_tf": "60",
+        "sl_atr_mult": "6.6",
+        "time_stop_bars_5m": 4032,
+        "tp_fractions": [
+          "0.55",
+          "0.45"
+        ],
+        "tp_rrs": [
+          "1.2",
+          "2.5"
+        ],
+        "trail_atr_mult": "0"
+      },
+      "SBR1": {
+        "be_trigger_rr": "0",
+        "cooldown_tf_bars": 6,
+        "residual_fraction": "0.2",
+        "side": "long",
+        "signal_tf": "60",
+        "sl_atr_mult": "4.6",
+        "time_stop_bars_5m": 2016,
+        "tp_fractions": [
+          "0.5",
+          "0.3"
+        ],
+        "tp_rrs": [
+          "1.1",
+          "2.6"
+        ],
+        "trail_atr_mult": "0"
+      }
+    },
+    "regime_contract": {
+      "ATT1": "-0.02 <= deviation < 0",
+      "SBR1": "0 <= deviation < 0.02",
+      "closed_only": true,
+      "ema_method": "continuous_causal_seed_first_contiguous_window_bar",
+      "ema_period": 200,
+      "ema_reseed_each_window": false,
+      "ema_seed_start_utc": "2024-03-01T00:00:00Z",
+      "flat_band_fraction": "0.02",
+      "max_age_ms": 300000,
+      "symbol": "BTCUSDT",
+      "timeframe": "60"
+    },
+    "universe": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "SOLUSDT",
+      "ADAUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "DOTUSDT",
+      "SUIUSDT"
+    ]
+  },
+  "generated_at_utc": "2026-08-27T15:04:45.307002Z",
+  "known_accesses": [
+    {
+      "effect": "reserved H1 rows for 62 symbols were owner-authorized, decoded and scored",
+      "evidence": [
+        {
+          "bytes": 8270,
+          "path": "reports/research/mpl_two_arm_holdout_20260812/unseal_manifest.json",
+          "sha256": "ba667c50e9a307df64394a8b906e2af32a062b41e6702dc8c03a0af4a3ba813d"
+        },
+        {
+          "bytes": 19372,
+          "path": "research_lab/mpl_v4_holdout.py",
+          "sha256": "aad4926234f9ec80b7ab5224026f1c9e034bd876e27184d529e2031c461160d2"
+        }
+      ],
+      "id": "mpl_two_arm_holdout_20260812",
+      "window_intersection": "exact_reserved_window"
+    },
+    {
+      "effect": "XSEC modern-market recount intentionally evaluated 2025-10 onward",
+      "evidence": [
+        {
+          "bytes": 7026,
+          "path": "research_lab/prereg/PREREG_XSEC_RECOUNT_2026_08_11.md",
+          "sha256": "fa267ac28983155f7036e24f7e4d39cca2d31af114d5bb14f7434dc84d986d8d"
+        },
+        {
+          "bytes": 11411,
+          "path": "research_lab/results/xsec_recount/xsec_recount.json",
+          "sha256": "9ffa58d6a3c3e07357942ad1d0fc7ea20fb70112d6e7833b4624c15bbe565de1"
+        }
+      ],
+      "id": "xsec_recount_reveal_modern_20260811",
+      "window_intersection": "reserved_window_plus_later_rows"
+    }
+  ],
+  "legacy_contracts": [
+    {
+      "cost_bps_per_side": "6",
+      "id": "flat_down_att1_all137_20260818",
+      "path": "research_lab/prereg/PREREG_FLAT_DOWN_2026_08_18.md",
+      "release_authority_for_this_candidate": false,
+      "sha256": "59bca22e77abd9e44511c1a2c7a0210c33bd94c8b78de086fd1b79804d8aae05",
+      "sl_atr_mult": "6.0",
+      "universe": "all137"
+    },
+    {
+      "cost_bps_per_side": "6",
+      "id": "flat_up_sbr1_all137_20260819",
+      "path": "research_lab/prereg/PREREG_FLAT_UP_2026_08_19.md",
+      "release_authority_for_this_candidate": false,
+      "sha256": "5d423a9754bd4cce69ecfa482b268aab41bf3b08e085188ad85d77b8d92b8e5c",
+      "sl_atr_mult": "4.0",
+      "universe": "all137"
+    }
+  ],
+  "legacy_contracts_are_not_release_authority": true,
+  "live_or_broker_calls": false,
+  "money_authority": false,
+  "one_shot_command_ready": false,
+  "orders_created_or_changed": 0,
+  "performance_computed": false,
+  "preflight_implementation": {
+    "path": "scripts/preflight_att1_sbr1_reserved_oos_v1.py",
+    "sha256": "87b46ed680784f54782cd589e58b079cbba89658537b12dd27b35123ad5f63ee"
+  },
+  "promotion_authority": false,
+  "purity": "KNOWN_CONTAMINATED",
+  "receipt_sha256": "c0fad30e2f24521e06170b3eaf0fe7820a56d763cd5decb31290ebb6854534f4",
+  "reserved_data_contract": {
+    "entry": "next_m5_open",
+    "h1_identity_manifest": {
+      "identity_only_known_contaminated": true,
+      "path": "reports/research/mpl_two_arm_holdout_20260812/unseal_manifest.json",
+      "sha256": "ba667c50e9a307df64394a8b906e2af32a062b41e6702dc8c03a0af4a3ba813d"
+    },
+    "preflight_may_open_or_hash_market_files": false,
+    "required_execution_timeframe": "5",
+    "required_signal_timeframe": "60",
+    "reserved_m5_input_manifest": null
+  },
+  "reserved_market_files_opened": 0,
+  "reserved_market_rows_decoded": 0,
+  "reserved_window": {
+    "calendar_days": 273,
+    "end_utc_exclusive": "2026-07-01T00:00:00Z",
+    "start_utc": "2025-10-01T00:00:00Z"
+  },
+  "schema_id": "att1_sbr1_reserved_oos_preflight_receipt_v1",
+  "verified_reserved_m5_manifest": null,
+  "verified_source_pins": [
+    {
+      "bytes": 7271,
+      "path": "configs/research/att1_sbr1_live_native_parity_v1.json",
+      "role": "live_native_candidate",
+      "sha256": "18c04cd8579bcfc294661bfce74f6d635359726e1af845ffb0e650ed59405d42"
+    },
+    {
+      "bytes": 4288,
+      "path": "configs/research/att1_sbr1_fixed51_evidence_parity_v1.json",
+      "role": "fixed51_evidence_contract",
+      "sha256": "6024ca2478f14d1cc810689e1dc2afa82a806ac474cf90a1d70ae8dd64d0956d"
+    },
+    {
+      "bytes": 20863,
+      "path": "research_lab/results/att1_sbr1_presealed_economics_diagnostic_20260823/receipt.json",
+      "role": "presealed_thresholds",
+      "sha256": "1c127714d4b73f9e61418fb937e8238cbb7cc4e7d51ff710dcfcc8038effa63e"
+    },
+    {
+      "bytes": 1897,
+      "path": "reports/receipts/LIVE_CALLER_PARITY_FINAL_VERIFICATION_2026_08_26.json",
+      "role": "live_caller_parity_receipt",
+      "sha256": "6522340565eb8bfa60b4f7edd01a8bcc774809e22360d1c53dde82477654ebba"
+    },
+    {
+      "bytes": 4422,
+      "path": "research_lab/prereg/PREREG_FLAT_DOWN_2026_08_18.md",
+      "role": "legacy_att1_prereg",
+      "sha256": "59bca22e77abd9e44511c1a2c7a0210c33bd94c8b78de086fd1b79804d8aae05"
+    },
+    {
+      "bytes": 4783,
+      "path": "research_lab/prereg/PREREG_FLAT_UP_2026_08_19.md",
+      "role": "legacy_sbr1_prereg",
+      "sha256": "5d423a9754bd4cce69ecfa482b268aab41bf3b08e085188ad85d77b8d92b8e5c"
+    }
+  ]
+}

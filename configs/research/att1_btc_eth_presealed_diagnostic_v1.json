@@ -1,0 +1,21 @@
+{
+  "schema_id": "att1_btc_eth_presealed_diagnostic_contract_v1",
+  "authority": "research_only_exact_frozen_input_no_live_no_broker_no_money_no_promotion",
+  "universe": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "ADAUSDT", "LINKUSDT", "LTCUSDT", "DOTUSDT", "SUIUSDT"],
+  "expected_source": {
+    "receipt_file_sha256": "14ca81844a5207d1bcdc99a8f7169b91a748eeb5451d74993cb31f796b575241",
+    "receipt_sha256": "3e6044be830537dca4f5eb8b591ed4d66d0c84bd4114a8b9716e8768ae8b4a28",
+    "manifest_path": "configs/research/att1_sbr1_live_native_parity_v1.json",
+    "manifest_sha256": "aa7392aecec96414c314ff14f03f4df6340d78094f03b75da636e1c2095433bb",
+    "data_bundle_sha256": "546249840af7ab4a3ea47bbda9f749b10f43b3eab249581681d21b95c9779c4a",
+    "source_bundle_sha256": "732c0702f543c30a287a1278c55eac6d1a1538cf319f4e2396ed83762427ce08",
+    "att1_base_live_sha256": "a46bbd885b031f4a5bc91a59b6f19f346bf8f205042d16002af2cf1b83003ddd",
+    "att1_stress_live_sha256": "de4493715a8d6746ac2d13b00a913bcd3e74460e5ba1ea32d1718800963c481d"
+  },
+  "sealed_holdout_guard": {
+    "start_utc": "2025-10-01T00:00:00Z",
+    "end_utc_exclusive": "2026-07-01T00:00:00Z",
+    "must_not_read": true
+  },
+  "config_fingerprint_sha256": "97ea3b0fa409ec795f9212e42bf11c2e004d08f91108e1a57d1453f0c24d82e2"
+}

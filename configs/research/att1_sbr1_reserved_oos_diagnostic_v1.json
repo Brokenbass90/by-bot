@@ -1,0 +1,144 @@
+{
+  "schema_id": "att1_sbr1_reserved_oos_diagnostic_preflight_config_v1",
+  "authority": "metadata_only_no_reserved_market_decode_no_live_no_broker_no_money_no_promotion",
+  "default_off": true,
+  "money_authority": false,
+  "orders_allowed": false,
+  "private_api_allowed": false,
+  "performance_allowed": false,
+  "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION",
+  "purity": "KNOWN_CONTAMINATED",
+  "reserved_window": {
+    "start_utc": "2025-10-01T00:00:00Z",
+    "end_utc_exclusive": "2026-07-01T00:00:00Z",
+    "calendar_days": 273
+  },
+  "candidate_manifest": {
+    "path": "configs/research/att1_sbr1_live_native_parity_v1.json",
+    "sha256": "18c04cd8579bcfc294661bfce74f6d635359726e1af845ffb0e650ed59405d42",
+    "contract_label": "post_prereg_live_native_major8_exact_candidate"
+  },
+  "threshold_source": {
+    "path": "research_lab/results/att1_sbr1_presealed_economics_diagnostic_20260823/receipt.json",
+    "sha256": "1c127714d4b73f9e61418fb937e8238cbb7cc4e7d51ff710dcfcc8038effa63e",
+    "json_pointer": "/sleeves/{LEG}/zero_risk_shadow_gate/thresholds"
+  },
+  "decision_contract": {
+    "three_way": [
+      "PASS_ZERO_RISK_INTEGRATION_ONLY",
+      "FAIL_CLOSED",
+      "INCONCLUSIVE_LOW_N"
+    ],
+    "pass_requires_base_and_stress_all_thresholds": true,
+    "negative_stress_sum_r_is_fail_when_n_gte": 20,
+    "no_parameter_changes_after_preflight": true,
+    "publish_any_sign": true,
+    "automatic_money_or_promotion": false
+  },
+  "reserved_data_contract": {
+    "h1_identity_manifest": {
+      "path": "reports/research/mpl_two_arm_holdout_20260812/unseal_manifest.json",
+      "sha256": "ba667c50e9a307df64394a8b906e2af32a062b41e6702dc8c03a0af4a3ba813d",
+      "identity_only_known_contaminated": true
+    },
+    "required_signal_timeframe": "60",
+    "required_execution_timeframe": "5",
+    "entry": "next_m5_open",
+    "reserved_m5_input_manifest": null,
+    "preflight_may_open_or_hash_market_files": false
+  },
+  "future_one_shot": {
+    "runner_path": "scripts/run_att1_sbr1_reserved_oos_v1.py",
+    "runner_sha256": null,
+    "audit_path": "scripts/audit_att1_sbr1_reserved_oos_v1.py",
+    "audit_sha256": null,
+    "atomic_claim_before_market_decode": true,
+    "refuse_second_attempt": true,
+    "owner_authorization_required": true
+  },
+  "legacy_contracts": [
+    {
+      "id": "flat_down_att1_all137_20260818",
+      "path": "research_lab/prereg/PREREG_FLAT_DOWN_2026_08_18.md",
+      "sha256": "59bca22e77abd9e44511c1a2c7a0210c33bd94c8b78de086fd1b79804d8aae05",
+      "universe": "all137",
+      "sl_atr_mult": "6.0",
+      "cost_bps_per_side": "6",
+      "release_authority_for_this_candidate": false
+    },
+    {
+      "id": "flat_up_sbr1_all137_20260819",
+      "path": "research_lab/prereg/PREREG_FLAT_UP_2026_08_19.md",
+      "sha256": "5d423a9754bd4cce69ecfa482b268aab41bf3b08e085188ad85d77b8d92b8e5c",
+      "universe": "all137",
+      "sl_atr_mult": "4.0",
+      "cost_bps_per_side": "6",
+      "release_authority_for_this_candidate": false
+    }
+  ],
+  "known_accesses": [
+    {
+      "id": "mpl_two_arm_holdout_20260812",
+      "window_intersection": "exact_reserved_window",
+      "effect": "reserved H1 rows for 62 symbols were owner-authorized, decoded and scored",
+      "evidence": [
+        {
+          "path": "reports/research/mpl_two_arm_holdout_20260812/unseal_manifest.json",
+          "sha256": "ba667c50e9a307df64394a8b906e2af32a062b41e6702dc8c03a0af4a3ba813d"
+        },
+        {
+          "path": "research_lab/mpl_v4_holdout.py",
+          "sha256": "aad4926234f9ec80b7ab5224026f1c9e034bd876e27184d529e2031c461160d2"
+        }
+      ]
+    },
+    {
+      "id": "xsec_recount_reveal_modern_20260811",
+      "window_intersection": "reserved_window_plus_later_rows",
+      "effect": "XSEC modern-market recount intentionally evaluated 2025-10 onward",
+      "evidence": [
+        {
+          "path": "research_lab/prereg/PREREG_XSEC_RECOUNT_2026_08_11.md",
+          "sha256": "fa267ac28983155f7036e24f7e4d39cca2d31af114d5bb14f7434dc84d986d8d"
+        },
+        {
+          "path": "research_lab/results/xsec_recount/xsec_recount.json",
+          "sha256": "9ffa58d6a3c3e07357942ad1d0fc7ea20fb70112d6e7833b4624c15bbe565de1"
+        }
+      ]
+    }
+  ],
+  "source_pins": [
+    {
+      "role": "live_native_candidate",
+      "path": "configs/research/att1_sbr1_live_native_parity_v1.json",
+      "sha256": "18c04cd8579bcfc294661bfce74f6d635359726e1af845ffb0e650ed59405d42"
+    },
+    {
+      "role": "fixed51_evidence_contract",
+      "path": "configs/research/att1_sbr1_fixed51_evidence_parity_v1.json",
+      "sha256": "6024ca2478f14d1cc810689e1dc2afa82a806ac474cf90a1d70ae8dd64d0956d"
+    },
+    {
+      "role": "presealed_thresholds",
+      "path": "research_lab/results/att1_sbr1_presealed_economics_diagnostic_20260823/receipt.json",
+      "sha256": "1c127714d4b73f9e61418fb937e8238cbb7cc4e7d51ff710dcfcc8038effa63e"
+    },
+    {
+      "role": "live_caller_parity_receipt",
+      "path": "reports/receipts/LIVE_CALLER_PARITY_FINAL_VERIFICATION_2026_08_26.json",
+      "sha256": "6522340565eb8bfa60b4f7edd01a8bcc774809e22360d1c53dde82477654ebba"
+    },
+    {
+      "role": "legacy_att1_prereg",
+      "path": "research_lab/prereg/PREREG_FLAT_DOWN_2026_08_18.md",
+      "sha256": "59bca22e77abd9e44511c1a2c7a0210c33bd94c8b78de086fd1b79804d8aae05"
+    },
+    {
+      "role": "legacy_sbr1_prereg",
+      "path": "research_lab/prereg/PREREG_FLAT_UP_2026_08_19.md",
+      "sha256": "5d423a9754bd4cce69ecfa482b268aab41bf3b08e085188ad85d77b8d92b8e5c"
+    }
+  ],
+  "config_fingerprint_sha256": "0562f11bed749560b355f1d9ae0b1648989cbcf92cbc8a398673f24aa6e18296"
+}
