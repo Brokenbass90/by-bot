@@ -26,8 +26,21 @@ from scripts.materialize_public_market_inputs import BYBIT_BASE, _bybit_result, 
 
 START_UTC = "2025-10-01T00:00:00Z"
 END_UTC_EXCLUSIVE = "2026-07-01T00:00:00Z"
-START_MS = 1_759_276_800_000
-END_EXCLUSIVE_MS = 1_782_864_000_000
+
+
+def utc_ms(value: str) -> int:
+    """Convert an explicit UTC ISO-8601 instant to epoch milliseconds."""
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise MaterializationError(f"invalid UTC instant: {value!r}") from exc
+    if parsed.tzinfo != timezone.utc or not value.endswith("Z"):
+        raise MaterializationError(f"instant must be explicit UTC Z: {value!r}")
+    return int(parsed.timestamp() * 1000)
+
+
+START_MS = utc_ms(START_UTC)
+END_EXCLUSIVE_MS = utc_ms(END_UTC_EXCLUSIVE)
 INTERVAL_MS = 5 * 60 * 1000
 EXPECTED_ROWS_PER_SYMBOL = 273 * 288
 EXPECTED_UNIVERSE = (
@@ -37,6 +50,11 @@ DEFAULT_OUT_DIR = ROOT / "data_cache/immutable/att1_sbr1_reserved_m5_v1"
 DEFAULT_MANIFEST_PATH = ROOT / "configs/research/att1_sbr1_reserved_m5_input_manifest_v1.json"
 DEFAULT_CANDIDATE_MANIFEST = ROOT / "configs/research/att1_sbr1_live_native_parity_v1.json"
 AUTHORITY = "identity_only_materialized_without_scoring_no_live_no_broker"
+PAYLOAD_KEYS = frozenset({
+    "schema_id", "authority", "symbol", "window", "timeframe_minutes", "records",
+    "records_sha256", "performance_computed", "money_authority",
+})
+RECORD_KEYS = frozenset({"ts_ms", "open", "high", "low", "close", "volume", "turnover"})
 
 JsonGetter = Callable[[str, dict[str, Any]], dict[str, Any]]
 Fetcher = Callable[..., list[dict[str, Any]]]
@@ -55,7 +73,11 @@ def sha256_file(path: Path) -> str:
 
 
 def canonical_sha(value: Any) -> str:
-    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8")).hexdigest()
+    return hashlib.sha256(_canonical_json_bytes(value)).hexdigest()
+
+
+def _canonical_json_bytes(value: Any) -> bytes:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8") + b"\n"
 
 
 def _atomic_json(path: Path, payload: Mapping[str, Any], *, replace: bool) -> None:
@@ -67,8 +89,7 @@ def _atomic_json(path: Path, payload: Mapping[str, Any], *, replace: bool) -> No
     fd, tmp_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            json.dump(payload, handle, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False)
-            handle.write("\n")
+            handle.write(_canonical_json_bytes(payload).decode("utf-8"))
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(tmp_name, path)
@@ -153,6 +174,8 @@ def validate_rows(rows: Sequence[Mapping[str, Any]], *, symbol: str) -> None:
         raise MaterializationError(f"{symbol}: expected {EXPECTED_ROWS_PER_SYMBOL} M5 rows, got {len(rows)}")
     timestamps: list[int] = []
     for item in rows:
+        if set(item) != RECORD_KEYS:
+            raise MaterializationError(f"{symbol}: record schema changed")
         try:
             timestamp = int(item["ts_ms"])
             values = [float(item[key]) for key in ("open", "high", "low", "close")]
@@ -195,13 +218,50 @@ def _load_verified_payload(path: Path, *, symbol: str) -> dict[str, Any]:
         "window": {"start_utc": START_UTC, "end_utc_exclusive": END_UTC_EXCLUSIVE}, "timeframe_minutes": 5,
         "performance_computed": False, "money_authority": False,
     }
-    if not isinstance(payload, dict) or any(payload.get(key) != value for key, value in expected.items()):
+    if (
+        not isinstance(payload, dict)
+        or set(payload) != PAYLOAD_KEYS
+        or any(payload.get(key) != value for key, value in expected.items())
+    ):
         raise MaterializationError(f"{symbol}: corrupt or drifted payload")
     rows = payload.get("records")
     if not isinstance(rows, list) or payload.get("records_sha256") != canonical_sha(rows):
         raise MaterializationError(f"{symbol}: corrupt or drifted payload")
     validate_rows(rows, symbol=symbol)
     return payload
+
+
+def _is_exact_manifest(path: Path, expected: Mapping[str, Any]) -> bool:
+    if path.is_symlink() or not path.is_file():
+        return False
+    try:
+        return path.read_bytes() == _canonical_json_bytes(expected)
+    except OSError:
+        return False
+
+
+def _validate_fixed_path(path: Path) -> None:
+    """Reject fixed-path symlink escapes before the production CLI uses them."""
+    try:
+        relative = path.relative_to(ROOT)
+    except ValueError as exc:
+        raise MaterializationError(f"fixed path escaped repository: {path}") from exc
+    cursor = ROOT
+    if cursor.is_symlink():
+        raise MaterializationError("repository root must not be a symlink")
+    for part in relative.parts:
+        cursor = cursor / part
+        if cursor.exists() and cursor.is_symlink():
+            raise MaterializationError(f"fixed path contains symlink: {cursor}")
+    try:
+        path.resolve(strict=False).relative_to(ROOT.resolve())
+    except ValueError as exc:
+        raise MaterializationError(f"fixed path escaped repository: {path}") from exc
+
+
+def validate_production_paths() -> None:
+    for path in (DEFAULT_OUT_DIR, DEFAULT_MANIFEST_PATH, DEFAULT_CANDIDATE_MANIFEST):
+        _validate_fixed_path(path)
 
 
 def _repo_relative(path: Path) -> str:
@@ -227,6 +287,7 @@ def materialize(*, out_dir: Path = DEFAULT_OUT_DIR, manifest_path: Path = DEFAUL
     """Materialize all frozen inputs or reuse only payloads that fully validate."""
     symbols = frozen_universe(candidate_manifest)
     verified: list[tuple[Path, dict[str, Any]]] = []
+    fetched = False
     for symbol in symbols:
         path = out_dir / f"{symbol}.json"
         try:
@@ -240,10 +301,10 @@ def materialize(*, out_dir: Path = DEFAULT_OUT_DIR, manifest_path: Path = DEFAUL
             validate_rows(rows, symbol=symbol)
             payload = _payload(symbol, rows)
             _atomic_json(path, payload, replace=path.exists())
+            fetched = True
         verified.append((path, payload))
     manifest = {
         "schema_id": "att1_sbr1_reserved_m5_input_manifest_v1", "authority": AUTHORITY,
-        "generated_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "materializer": {"path": "scripts/materialize_att1_sbr1_reserved_m5_v1.py", "sha256": sha256_file(Path(__file__).resolve())},
         "expected_rows_per_symbol": EXPECTED_ROWS_PER_SYMBOL,
         "public_network_only": True, "private_live_order_authority": False,
@@ -251,20 +312,21 @@ def materialize(*, out_dir: Path = DEFAULT_OUT_DIR, manifest_path: Path = DEFAUL
         "window": {"start_utc": START_UTC, "end_utc_exclusive": END_UTC_EXCLUSIVE}, "timeframe_minutes": 5,
         "inputs": [_input_identity(path, payload) for path, payload in verified],
     }
-    _atomic_json(manifest_path, manifest, replace=True)
+    if manifest_path.exists():
+        if _is_exact_manifest(manifest_path, manifest):
+            return manifest
+        if not fetched:
+            raise MaterializationError("input manifest is corrupt or drifted; refuse to rewrite without materialization")
+    _atomic_json(manifest_path, manifest, replace=manifest_path.exists())
     return manifest
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--allow-reserved-public-network", action="store_true")
-    parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
-    parser.add_argument("--manifest-path", type=Path, default=DEFAULT_MANIFEST_PATH)
-    parser.add_argument("--candidate-manifest", type=Path, default=DEFAULT_CANDIDATE_MANIFEST)
     args = parser.parse_args()
-    print(json.dumps(materialize(out_dir=args.out_dir, manifest_path=args.manifest_path,
-        candidate_manifest=args.candidate_manifest,
-        allow_reserved_public_network=args.allow_reserved_public_network), indent=2, sort_keys=True))
+    validate_production_paths()
+    print(json.dumps(materialize(allow_reserved_public_network=args.allow_reserved_public_network), indent=2, sort_keys=True))
     return 0
 
 

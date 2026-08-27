@@ -53,3 +53,26 @@ No real reserved data was fetched or opened. No network command was run.
 - The system Python does not have pytest installed; verification used the
   already-present sibling project virtual environment. This is an execution
   environment constraint, not an implementation dependency.
+
+## Review fix round 1
+
+- Reuse now requires the exact payload top-level key set and exact record key
+  set, before checksum/row validation. Extra private, trade, or performance
+  fields therefore fail closed even if an attacker recomputes `records_sha256`.
+- Production CLI accepts only the explicit public-network acknowledgement and
+  always uses the fixed output, manifest, and frozen-candidate paths. It
+  rejects containment escapes and any existing symlink in a fixed path's
+  ancestor chain; function-level path injection remains available for
+  synthetic temporary-directory tests only.
+- The manifest is deterministic (no volatile generation timestamp). When all
+  payloads validate and its exact canonical bytes already match, reuse does
+  not rewrite it. A drifted manifest without a new acknowledged materialization
+  fails closed.
+- Epoch bounds are derived from the explicit UTC strings and regression-tested
+  against the hand-checked millisecond values.
+
+Additional verification after this fix round:
+
+```text
+19 passed in 9.90s
+```

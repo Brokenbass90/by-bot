@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -9,8 +10,14 @@ from scripts.materialize_att1_sbr1_reserved_m5_v1 import (
     END_EXCLUSIVE_MS,
     EXPECTED_ROWS_PER_SYMBOL,
     START_MS,
+    START_UTC,
+    END_UTC_EXCLUSIVE,
     MaterializationError,
+    canonical_sha,
     materialize,
+    main,
+    utc_ms,
+    validate_production_paths,
     validate_rows,
 )
 
@@ -101,6 +108,7 @@ def test_complete_payload_is_reused_without_network_and_manifest_is_exact(tmp_pa
     assert first["money_authority"] is False
     assert all(set(row) == {"symbol", "source_path", "sha256", "bytes", "rows", "first_ts_ms", "last_ts_ms"} for row in first["inputs"])
     assert all("price" not in json.dumps(row).lower() for row in first["inputs"])
+    manifest_before_reuse = manifest_path.read_bytes()
 
     def no_network(*_args: object, **_kwargs: object) -> list[dict[str, object]]:
         raise AssertionError("network must not be used for verified reuse")
@@ -113,6 +121,38 @@ def test_complete_payload_is_reused_without_network_and_manifest_is_exact(tmp_pa
         fetcher=no_network,
     )
     assert reused["inputs"] == first["inputs"]
+    assert manifest_path.read_bytes() == manifest_before_reuse
+
+
+@pytest.mark.parametrize(
+    ("target", "field"),
+    [("payload", "private_trade_result"), ("record", "performance_bps")],
+)
+def test_reuse_rejects_extra_payload_or_record_fields_even_with_recomputed_checksum(
+    tmp_path: Path, target: str, field: str,
+) -> None:
+    candidate = _candidate(tmp_path / "candidate.json")
+    payload_dir = tmp_path / "payloads"
+    materialize(
+        out_dir=payload_dir, manifest_path=tmp_path / "manifest.json",
+        candidate_manifest=candidate, allow_reserved_public_network=True,
+        fetcher=lambda *_args, **_kwargs: _rows(),
+    )
+    path = payload_dir / "BTCUSDT.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if target == "payload":
+        payload[field] = 1
+    else:
+        payload["records"][0][field] = 1
+        payload["records_sha256"] = canonical_sha(payload["records"])
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(MaterializationError, match="corrupt or drifted"):
+        materialize(
+            out_dir=payload_dir, manifest_path=tmp_path / "manifest.json",
+            candidate_manifest=candidate, allow_reserved_public_network=False,
+            fetcher=lambda *_args, **_kwargs: _rows(),
+        )
 
 
 def test_interruption_keeps_completed_payload_and_writes_no_manifest(tmp_path: Path) -> None:
@@ -150,5 +190,29 @@ def test_corrupt_existing_payload_fails_closed_without_acknowledgement(tmp_path:
 
 
 def test_exact_reserved_constants_are_closed_interval_boundaries() -> None:
+    assert utc_ms(START_UTC) == 1_759_276_800_000
+    assert utc_ms(END_UTC_EXCLUSIVE) == 1_782_864_000_000
     assert END_EXCLUSIVE_MS - START_MS == 273 * 86_400_000
     assert EXPECTED_ROWS_PER_SYMBOL == 273 * 288
+
+
+def test_production_fixed_path_rejects_symlink_ancestor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import scripts.materialize_att1_sbr1_reserved_m5_v1 as module
+
+    target = tmp_path / "target"
+    target.mkdir()
+    link = tmp_path / "unsafe-link"
+    link.symlink_to(target, target_is_directory=True)
+    monkeypatch.setattr(module, "ROOT", tmp_path)
+    monkeypatch.setattr(module, "DEFAULT_OUT_DIR", link / "payloads")
+    monkeypatch.setattr(module, "DEFAULT_MANIFEST_PATH", tmp_path / "manifest.json")
+    monkeypatch.setattr(module, "DEFAULT_CANDIDATE_MANIFEST", tmp_path / "candidate.json")
+    with pytest.raises(MaterializationError, match="contains symlink"):
+        validate_production_paths()
+
+
+def test_cli_rejects_destination_override_before_materialization(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(sys, "argv", ["materializer", "--out-dir", "/tmp/not-allowed"])
+    with pytest.raises(SystemExit) as raised:
+        main()
+    assert raised.value.code == 2
