@@ -126,7 +126,7 @@ def _bundle_sha(rows: list[dict[str, object]], role: str) -> str:
 
 
 def build_reserved_manifest_view(
-    candidate: Mapping[str, Any], reserved_manifest: Mapping[str, Any], reserved_manifest_sha256: str
+    candidate: Mapping[str, Any], reserved_manifest: Mapping[str, Any], reserved_manifest_sha256: str, source_candidate_manifest_sha256: str | None = None
 ):
     """Create a strict in-memory candidate bound only to the reserved inputs."""
     from bot.live_native_manifest import VerifiedParityManifest
@@ -155,7 +155,7 @@ def build_reserved_manifest_view(
     view = {
         "schema_id": "att1_sbr1_reserved_oos_scoring_view_v1",
         "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion",
-        "source_candidate_manifest_sha256": _canonical_sha(candidate),
+        "source_candidate_manifest_sha256": source_candidate_manifest_sha256 or _canonical_sha(candidate),
         "input_manifest_sha256": reserved_manifest_sha256,
         "window": {"start_utc": START_UTC, "end_utc_exclusive": END_UTC},
         "universe": list(MAJOR8), "profiles": candidate["profiles"],
@@ -349,7 +349,7 @@ def three_way_decision(base: Mapping[str, object], stress: Mapping[str, object],
     return "INCONCLUSIVE_LOW_N"
 
 
-def _decode_inputs(root: Path, manifest: Mapping[str, Any], opener: Callable[[Path], bytes]) -> dict[str, dict[str, Any]]:
+def _decode_inputs(root: Path, manifest: Mapping[str, Any], opener: Callable[[Path], bytes], accounting: dict[str, object] | None = None) -> dict[str, dict[str, Any]]:
     decoded: dict[str, dict[str, Any]] = {}
     for item in manifest["inputs"]:
         assert isinstance(item, Mapping)
@@ -379,7 +379,7 @@ def _decode_inputs(root: Path, manifest: Mapping[str, Any], opener: Callable[[Pa
                 opening, high, low, close, volume, turnover = (float(row[key]) for key in ("open", "high", "low", "close", "volume", "turnover"))
             except (TypeError, ValueError) as exc:
                 raise OneShotViolation(f"reserved input OHLC drift:{symbol}") from exc
-            if not all(math.isfinite(value) and value > 0 for value in (opening, high, low, close, volume, turnover)) or high < max(opening, close) or low > min(opening, close):
+            if not all(math.isfinite(value) and value > 0 for value in (opening, high, low, close)) or not all(math.isfinite(value) for value in (volume, turnover)) or high < max(opening, close) or low > min(opening, close):
                 raise OneShotViolation(f"reserved input OHLC drift:{symbol}")
         timestamps = [int(row["ts_ms"]) for row in records if isinstance(row, Mapping)]
         if len(timestamps) != EXPECTED_ROWS or timestamps[0] != START_MS or timestamps[-1] != END_MS - M5_MS or any(right - left != M5_MS for left, right in zip(timestamps, timestamps[1:])):
@@ -387,6 +387,8 @@ def _decode_inputs(root: Path, manifest: Mapping[str, Any], opener: Callable[[Pa
         if int(item["first_ts_ms"]) != START_MS or int(item["last_ts_ms"]) != END_MS - M5_MS:
             raise OneShotViolation(f"reserved input identity drift:{symbol}")
         decoded[symbol] = payload
+        if accounting is not None:
+            accounting[symbol] = {"path": str(item["source_path"]), "sha256": str(item["sha256"]), "bytes": int(item["bytes"]), "rows": len(records), "start_ts_ms": timestamps[0], "end_ts_ms": timestamps[-1]}
     return decoded
 
 
@@ -410,13 +412,15 @@ def _thresholds(root: Path, config: Mapping[str, Any]) -> dict[str, Mapping[str,
 
 
 def _real_scorer(
-    *, root: Path, output: Path, candidate: Mapping[str, Any], market: Mapping[str, Mapping[str, Any]], manifest_view=None
+    *, root: Path, output: Path, candidate: Mapping[str, Any], market: Mapping[str, Mapping[str, Any]], manifest_view=None, decode_accounting: dict[str, object] | None = None
 ) -> object:
     """Invoke the unchanged live-native sleeve boundary on verified in-memory data."""
     from bot.live_native_manifest import VerifiedParityManifest
     from research_lab import run_att1_sbr1_actual_adapter_parity as parity
 
     bootstrap_h1: dict[str, tuple[tuple[object, ...], ...]] = {}
+    bootstrap_accounting: dict[str, object] = {}
+    bootstrap_started = _utc_now()
     rows = candidate.get("data_files")
     if not isinstance(rows, list) or {row.get("symbol") for row in rows if isinstance(row, Mapping)} != set(MAJOR8):
         raise OneShotViolation("TASK3_BOOTSTRAP_PREHOLDOUT_IDENTITY_MISSING")
@@ -437,6 +441,9 @@ def _real_scorer(
         if len(m5) != len(records):
             raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_RECORD_SCHEMA_DRIFT:{symbol}")
         bootstrap_h1[symbol] = parity._aggregate_h1(m5)
+        bootstrap_accounting[symbol] = {"path": str(bootstrap_row["path"]), "sha256": str(bootstrap_row["sha256"]), "bytes": int(bootstrap_row["bytes"]), "rows": len(records), "start_ts_ms": int(m5[0][0]), "end_ts_ms": int(m5[-1][0])}
+    if decode_accounting is not None:
+        decode_accounting["bootstrap"] = {"started_at_utc": bootstrap_started, "finished_at_utc": _utc_now(), "inputs": bootstrap_accounting, "rows": sum(int(row["rows"]) for row in bootstrap_accounting.values())}
     market_data = {}
     for symbol, payload in market.items():
         rows = tuple(
@@ -533,25 +540,29 @@ def run_one_shot(root: Path = ROOT, *, market_opener: Callable[[Path], bytes] | 
     claim_sha = _sha_file(claim_path)
     decode_started = _utc_now()
     decode_finished: str | None = None
+    accounting: dict[str, object] = {"reserved": {"started_at_utc": decode_started, "inputs": {}}}
     try:
-        market = _decode_inputs(root, manifest, market_opener or (lambda path: path.read_bytes()))
+        market = _decode_inputs(root, manifest, market_opener or (lambda path: path.read_bytes()), accounting["reserved"]["inputs"])
         decode_finished = _utc_now()
-        view = build_reserved_manifest_view(candidate, manifest, _sha_file(manifest_path))
-        (scorer or _real_scorer)(root=root, output=output, candidate=candidate, market=market, manifest_view=view)
+        accounting["reserved"]["finished_at_utc"] = decode_finished
+        accounting["reserved"]["rows"] = sum(len(payload["records"]) for payload in market.values())
+        view = build_reserved_manifest_view(candidate, manifest, _sha_file(manifest_path), str(config["candidate_manifest"]["sha256"]))
+        (scorer or _real_scorer)(root=root, output=output, candidate=candidate, market=market, manifest_view=view, decode_accounting=accounting)
         inventory = _verify_scoring_inventory(output)
         thresholds = _thresholds(root, config)
         sleeves = (summarizer or _summarize_ledgers)(
             output, thresholds,
             negative_stress_n=int(config["decision_contract"]["negative_stress_sum_r_is_fail_when_n_gte"]),
         )
-        receipt: dict[str, object] = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", **forensic, "claim_sha256": claim_sha, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": decode_finished, "exact_rows_decoded": {symbol: len(payload["records"]) for symbol, payload in market.items()}}
+        receipt: dict[str, object] = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", **forensic, "claim_sha256": claim_sha, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": _utc_now(), "exact_rows_decoded": {symbol: len(payload["records"]) for symbol, payload in market.items()}, "decode_accounting": accounting}
         receipt["sleeves"] = sleeves
         receipt["output_file_sha256"] = inventory
         receipt["receipt_sha256"] = _canonical_sha(receipt)
         _atomic_json(root / RECEIPT_REL, receipt)
         return receipt
     except BaseException as exc:
-        failure = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "terminal_state": "FAIL_CLOSED_AFTER_CLAIM", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", **forensic, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": decode_finished, "error": f"{type(exc).__name__}:{exc}", "claim_sha256": claim_sha}
+        partial_inventory = {path.name: _sha_file(path) for path in output.iterdir() if path.name in _expected_scoring_artifacts() and path.is_file() and not path.is_symlink()} if output.exists() else {}
+        failure = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "terminal_state": "FAIL_CLOSED_AFTER_CLAIM", "terminal_at_utc": _utc_now(), "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", **forensic, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": decode_finished, "decode_accounting": accounting, "partial_output_file_sha256": partial_inventory, "error": f"{type(exc).__name__}:{exc}", "claim_sha256": claim_sha}
         failure["receipt_sha256"] = _canonical_sha(failure)
         _atomic_json(root / RECEIPT_REL, failure)
         if isinstance(exc, (KeyboardInterrupt, SystemExit)):

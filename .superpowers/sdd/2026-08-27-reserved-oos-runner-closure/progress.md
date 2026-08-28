@@ -57,3 +57,10 @@ controller operation after local verification.
   and producer-comparison test; made the reserved scoring view self-describing
   and removed copied sealed-holdout metadata; excluded the terminal closed-H1
   decision at the half-open end boundary.
+
+## Task 2 review — fix round 3 (in progress)
+
+- Added partial reserved/bootstrap decode accounting and audit-complete
+  terminal receipt fields. Remaining mutation-fixture rebinding and full
+  preparation-boundary integration coverage are still required before final
+  review closure.

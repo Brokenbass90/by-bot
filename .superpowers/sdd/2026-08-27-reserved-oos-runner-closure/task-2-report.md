@@ -74,3 +74,14 @@ no authorization, real payload, network, broker, or live path was accessed.
   reserved-input identities plus only the frozen scoring bundles.
 - Excluded the terminal H1 bar closing at `END_MS` from all decision H1 views.
   The full reserved M5 series remains available for outcome paths.
+
+## Independent review fix round 3 (partial)
+
+- Runner now records reserved input decode identities incrementally and exposes
+  bootstrap decode identities/timing from the production scorer. Terminal
+  failure receipts retain classification, terminal time, partial decode
+  accounting, and hashes of safe partial expected artifacts.
+- The scoring-view source candidate identity is the exact frozen config file
+  SHA in production. Row validation mirrors the Task-1 producer: OHLC must be
+  finite and positive; volume/turnover are numeric finite values and may be
+  zero.
