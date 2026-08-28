@@ -94,3 +94,9 @@ no authorization, real payload, network, broker, or live path was accessed.
 - Added the pure warm-prefix preparation boundary test: 200 preholdout H1
   bars, first reserved H1 at index 200, continuous BTC regime timestamps, and
   half-open terminal-H1 exclusion.
+
+## Independent review fix round 5 (partial)
+
+- Production scorer now delegates its H1/M5 warm-prefix and regime preparation
+  to the tested pure boundary. Bootstrap accounting is initialized and updated
+  per decoded file, so a later bootstrap failure retains earlier identities.

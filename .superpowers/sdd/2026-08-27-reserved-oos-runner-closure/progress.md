@@ -69,3 +69,8 @@ controller operation after local verification.
 
 - Rebound synthetic outer identities for semantic payload drift and added the
   pure exact-200 warm-prefix/half-open boundary test.
+
+## Task 2 review — fix round 5 (partial)
+
+- Production scorer now uses the pure preparation boundary; bootstrap accounting
+  is updated incrementally.

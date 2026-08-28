@@ -421,6 +421,8 @@ def _real_scorer(
     bootstrap_h1: dict[str, tuple[tuple[object, ...], ...]] = {}
     bootstrap_accounting: dict[str, object] = {}
     bootstrap_started = _utc_now()
+    if decode_accounting is not None:
+        decode_accounting["bootstrap"] = {"started_at_utc": bootstrap_started, "inputs": bootstrap_accounting, "rows": 0}
     rows = candidate.get("data_files")
     if not isinstance(rows, list) or {row.get("symbol") for row in rows if isinstance(row, Mapping)} != set(MAJOR8):
         raise OneShotViolation("TASK3_BOOTSTRAP_PREHOLDOUT_IDENTITY_MISSING")
@@ -442,27 +444,22 @@ def _real_scorer(
             raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_RECORD_SCHEMA_DRIFT:{symbol}")
         bootstrap_h1[symbol] = parity._aggregate_h1(m5)
         bootstrap_accounting[symbol] = {"path": str(bootstrap_row["path"]), "sha256": str(bootstrap_row["sha256"]), "bytes": int(bootstrap_row["bytes"]), "rows": len(records), "start_ts_ms": int(m5[0][0]), "end_ts_ms": int(m5[-1][0])}
+        if decode_accounting is not None:
+            decode_accounting["bootstrap"]["rows"] = sum(int(row["rows"]) for row in bootstrap_accounting.values())
     if decode_accounting is not None:
         decode_accounting["bootstrap"] = {"started_at_utc": bootstrap_started, "finished_at_utc": _utc_now(), "inputs": bootstrap_accounting, "rows": sum(int(row["rows"]) for row in bootstrap_accounting.values())}
-    market_data = {}
+    reserved_m5: dict[str, tuple[tuple[object, ...], ...]] = {}
+    reserved_h1: dict[str, tuple[tuple[object, ...], ...]] = {}
     for symbol, payload in market.items():
-        rows = tuple(
+        raw_m5 = tuple(
             (int(row["ts_ms"]), row["open"], row["high"], row["low"], row["close"], row["volume"])
             for row in payload["records"]
         )
-        reserved_h1 = tuple(row for row in parity._aggregate_h1(rows) if int(row[0]) + 3_600_000 < END_MS)
-        h1 = bootstrap_h1[symbol][-200:] + reserved_h1
-        market_data[symbol] = parity.MarketData(
-            symbol=symbol, m5=rows, h1=h1,
-            m5_index={int(row[0]): index for index, row in enumerate(rows)},
-            h1_index={int(row[0]): index for index, row in enumerate(h1)},
-        )
+        reserved_m5[symbol] = raw_m5
+        reserved_h1[symbol] = parity._aggregate_h1(raw_m5)
     manifest = manifest_view or build_reserved_manifest_view(candidate, {"inputs": []}, "0" * 64)
     output.mkdir(parents=True, exist_ok=True)
-    regime = warm_btc_regime(list(bootstrap_h1["BTCUSDT"]), list(tuple(row for row in parity._aggregate_h1(tuple(
-        (int(row["ts_ms"]), row["open"], row["high"], row["low"], row["close"], row["volume"])
-        for row in market["BTCUSDT"]["records"]
-    )) if int(row[0]) + 3_600_000 < END_MS)))
+    market_data, regime = _prepare_scoring_market(preholdout_h1=bootstrap_h1, reserved_m5=reserved_m5, reserved_h1=reserved_h1)
     with parity._frozen_env(manifest.universe):
         return {
             sleeve: parity._run_sleeve(sleeve, root, output, manifest, market_data, regime)
@@ -575,13 +572,15 @@ def run_one_shot(root: Path = ROOT, *, market_opener: Callable[[Path], bytes] | 
             output, thresholds,
             negative_stress_n=int(config["decision_contract"]["negative_stress_sum_r_is_fail_when_n_gte"]),
         )
-        receipt: dict[str, object] = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", **forensic, "claim_sha256": claim_sha, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": _utc_now(), "exact_rows_decoded": {symbol: len(payload["records"]) for symbol, payload in market.items()}, "decode_accounting": accounting}
+        receipt: dict[str, object] = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", **forensic, "claim_sha256": claim_sha, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": accounting.get("bootstrap", {}).get("finished_at_utc", decode_finished), "exact_rows_decoded": {symbol: len(payload["records"]) for symbol, payload in market.items()}, "decode_accounting": accounting}
         receipt["sleeves"] = sleeves
         receipt["output_file_sha256"] = inventory
         receipt["receipt_sha256"] = _canonical_sha(receipt)
         _atomic_json(root / RECEIPT_REL, receipt)
         return receipt
     except BaseException as exc:
+        if isinstance(accounting.get("bootstrap"), dict) and "finished_at_utc" not in accounting["bootstrap"]:
+            accounting["bootstrap"]["finished_at_utc"] = _utc_now()
         partial_inventory = {path.name: _sha_file(path) for path in output.iterdir() if path.name in _expected_scoring_artifacts() and path.is_file() and not path.is_symlink()} if output.exists() else {}
         failure = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "terminal_state": "FAIL_CLOSED_AFTER_CLAIM", "terminal_at_utc": _utc_now(), "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", **forensic, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": decode_finished, "decode_accounting": accounting, "partial_output_file_sha256": partial_inventory, "error": f"{type(exc).__name__}:{exc}", "claim_sha256": claim_sha}
         failure["receipt_sha256"] = _canonical_sha(failure)
