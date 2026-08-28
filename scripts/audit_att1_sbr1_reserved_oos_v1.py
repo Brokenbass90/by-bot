@@ -319,6 +319,55 @@ def verify_ledger_parity(research: Mapping[Any, Any], live: Mapping[Any, Any], s
     return parity
 
 
+_EVALUATION_KEYS = {
+    "bar_ts", "eligible_regime", "regime_bar_ts", "regime_value", "side_contract",
+    "sleeve_id", "symbol", "exception", "signal",
+}
+_EVALUATION_SIGNAL_KEYS = {
+    "strategy", "symbol", "side", "entry", "sl", "tp", "tps", "tp_fracs",
+    "time_stop_bars", "reason",
+}
+
+
+def _read_evaluation_ledger(path: Path, sleeve: str) -> tuple[dict[str, object], ...]:
+    if path.is_symlink() or not path.is_file():
+        raise AuditViolation(f"evaluation ledger missing or unsafe:{sleeve}")
+    rows: list[dict[str, object]] = []
+    keys: set[tuple[str, int]] = set()
+    for line_no, raw in enumerate(path.read_bytes().splitlines(), 1):
+        if not raw:
+            raise AuditViolation(f"evaluation blank row:{sleeve}:{line_no}")
+        try:
+            row = json.loads(raw)
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise AuditViolation(f"evaluation JSON drift:{sleeve}:{line_no}") from exc
+        if not isinstance(row, dict) or set(row) != _EVALUATION_KEYS:
+            raise AuditViolation(f"evaluation schema drift:{sleeve}:{line_no}")
+        canonical = json.dumps(row, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("ascii")
+        if raw != canonical:
+            raise AuditViolation(f"evaluation noncanonical row:{sleeve}:{line_no}")
+        if row["sleeve_id"] != sleeve or row["symbol"] not in MAJOR8 or not isinstance(row["bar_ts"], int) or row["bar_ts"] <= 0 or not isinstance(row["regime_bar_ts"], int) or row["regime_bar_ts"] <= 0 or not isinstance(row["eligible_regime"], bool) or row["side_contract"] not in {"long", "short"} or row["exception"] is not None:
+            raise AuditViolation(f"evaluation value drift:{sleeve}:{line_no}")
+        signal = row["signal"]
+        if signal is not None and (not isinstance(signal, dict) or set(signal) != _EVALUATION_SIGNAL_KEYS):
+            raise AuditViolation(f"evaluation signal schema drift:{sleeve}:{line_no}")
+        key = (str(row["symbol"]), int(row["bar_ts"]))
+        if key in keys:
+            raise AuditViolation(f"evaluation duplicate key:{sleeve}:{line_no}")
+        keys.add(key)
+        rows.append(row)
+    if not rows:
+        raise AuditViolation(f"evaluation ledger empty:{sleeve}")
+    return tuple(rows)
+
+
+def verify_evaluation_parity(research_path: Path, live_path: Path, sleeve: str) -> None:
+    research = _read_evaluation_ledger(research_path, sleeve)
+    live = _read_evaluation_ledger(live_path, sleeve)
+    if research_path.read_bytes() != live_path.read_bytes() or research != live:
+        raise AuditViolation(f"research/live ledger mismatch:{sleeve}:evaluation")
+
+
 def _decimal(value: object, field: str) -> Decimal:
     try:
         result = Decimal(str(value))
@@ -416,10 +465,11 @@ def audit_postexecution(root: Path = ROOT) -> dict[str, Any]:
             parity = verify_ledger_parity(research, live, sleeve, mode)
             accepted = chronological_symbol_occupancy(tuple(live.values()), sleeve)
             modes[mode] = {"raw_signals": len(live), "accepted_signals": len(accepted.rows), "same_symbol_occupancy_drops": accepted.overlap_drops, "metrics": metrics(accepted.rows), "parity": "PASS"}
-        for mode in ("evaluation",):
-            research = read_jsonl(output / f"{sleeve.lower()}_{mode}_research.jsonl")
-            live = read_jsonl(output / f"{sleeve.lower()}_{mode}_live.jsonl")
-            verify_ledger_parity(research, live, sleeve, mode)
+        verify_evaluation_parity(
+            output / f"{sleeve.lower()}_evaluation_research.jsonl",
+            output / f"{sleeve.lower()}_evaluation_live.jsonl",
+            sleeve,
+        )
         thresholds = thresholds_by_sleeve[sleeve]
         decision = three_way_decision(modes["base"]["metrics"], modes["stress"]["metrics"], thresholds, negative_stress_n=int(config["decision_contract"]["negative_stress_sum_r_is_fail_when_n_gte"]))
         independent_sleeves[sleeve] = {"modes": modes, "thresholds": thresholds, "checks": {mode: threshold_checks(modes[mode]["metrics"], thresholds) for mode in ("base", "stress")}, "decision": decision}

@@ -142,6 +142,20 @@ def _fixture_row(sleeve: str) -> dict[str, object]:
     }
 
 
+def _fixture_evaluation_row(sleeve: str) -> dict[str, object]:
+    return {
+        "bar_ts": 1_759_276_800_000,
+        "eligible_regime": True,
+        "regime_bar_ts": 1_759_276_800_000,
+        "regime_value": 0.01,
+        "side_contract": "long",
+        "sleeve_id": sleeve,
+        "symbol": "BTCUSDT",
+        "exception": None,
+        "signal": None,
+    }
+
+
 def _synthetic_postexecution_tree(tmp_path: Path) -> Path:
     from scripts.audit_att1_sbr1_reserved_oos_v1 import OUTPUT_REL, canonical_sha256, sha256_file, threshold_checks, three_way_decision
     from research_lab.adapter_parity import read_jsonl
@@ -161,7 +175,8 @@ def _synthetic_postexecution_tree(tmp_path: Path) -> Path:
     for sleeve in ("ATT1", "SBR1"):
         for mode in ("evaluation", "base", "stress"):
             for shaped in ("research", "live"):
-                (output / f"{sleeve.lower()}_{mode}_{shaped}.jsonl").write_text(json.dumps(_fixture_row(sleeve)) + "\n")
+                row = _fixture_evaluation_row(sleeve) if mode == "evaluation" else _fixture_row(sleeve)
+                (output / f"{sleeve.lower()}_{mode}_{shaped}.jsonl").write_text(json.dumps(row, sort_keys=True, separators=(",", ":")) + "\n")
         for mode in ("base", "stress"):
             (output / f"{sleeve.lower()}_{mode}_parity_report.json").write_text('{"decision":"PASS"}\n')
     claim = {"schema_id": "att1_sbr1_reserved_oos_one_shot_claim_v1", "state": "CLAIMED_BEFORE_MARKET_DECODE", "claim_created_at_utc": "2026-08-27T00:00:00Z", "reserved_window": {"start_utc": "2025-10-01T00:00:00Z", "end_utc_exclusive": "2026-07-01T00:00:00Z"}, "output_path": OUTPUT_REL.as_posix(), "claim_path": (OUTPUT_REL / "one_shot_claim.json").as_posix(), "private_api_calls": 0, "live_or_broker_calls": False, "orders_created_or_changed": 0, "money_authority": False, "promotion_authority": False, **identities}
@@ -259,8 +274,8 @@ def test_postexecution_rejects_rehashed_evaluation_ledger_mismatch(tmp_path: Pat
     output = root / OUTPUT_REL
     path = output / "att1_evaluation_live.jsonl"
     row = json.loads(path.read_text())
-    row["net_r"] = "2"
-    path.write_text(json.dumps(row) + "\n")
+    row["eligible_regime"] = False
+    path.write_text(json.dumps(row, sort_keys=True, separators=(",", ":")) + "\n")
     _rewrite_result(root, lambda result: result["output_file_sha256"].update({path.name: _sha(path)}))
 
     with pytest.raises(AuditViolation, match="research/live ledger mismatch:ATT1:evaluation"):

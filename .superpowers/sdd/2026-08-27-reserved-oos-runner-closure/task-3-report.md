@@ -63,6 +63,13 @@ output inventory, and signed receipt. `audit_postexecution` returns
 `AUDIT_PASS_RESEARCH_ONLY` for that fixture without importing or invoking the
 runner and without creating or resolving any reserved input payload.
 
+The compact producer evaluation ledgers are now audited separately from the
+normalized economics ledgers: each row has its exact producer schema and
+canonical JSON encoding validated, duplicate `(symbol, bar_ts)` keys are
+rejected, and research/live bytes must match exactly. The synthetic integrated
+tamper case verifies an evaluation-row mismatch is fail-closed through
+`audit_postexecution`.
+
 ## Safety status and next gate
 
 No owner authorization, claim, one-shot output, runner execution, reserved

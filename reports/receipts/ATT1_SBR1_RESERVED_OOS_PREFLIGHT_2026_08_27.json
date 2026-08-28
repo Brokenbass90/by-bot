@@ -127,7 +127,7 @@
       "SUIUSDT"
     ]
   },
-  "generated_at_utc": "2026-08-28T12:11:09.537609Z",
+  "generated_at_utc": "2026-08-28T12:15:24.418124Z",
   "known_accesses": [
     {
       "effect": "reserved H1 rows for 62 symbols were owner-authorized, decoded and scored",
@@ -196,7 +196,7 @@
   },
   "promotion_authority": false,
   "purity": "KNOWN_CONTAMINATED",
-  "receipt_sha256": "ad6aaa53ad7e2d99b4101d58427020b045c1d50213cc537c9ea4969f3d009fcb",
+  "receipt_sha256": "c37d8cfc4b9e1a72f82e0163810bfe402b2fa1bfa1b0d6eae332e74ec7e4f3b8",
   "reserved_data_contract": {
     "entry": "next_m5_open",
     "h1_identity_manifest": {
