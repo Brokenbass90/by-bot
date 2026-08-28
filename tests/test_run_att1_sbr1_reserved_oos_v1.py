@@ -110,8 +110,25 @@ def _fixture_tree(tmp_path: Path, *, with_authorization: bool = True) -> dict[st
     authorization_path = tmp_path / "configs/research/att1_sbr1_reserved_oos_owner_authorization_v1.json"
     if with_authorization:
         _json(authorization_path, authorization)
-    return {"config": config, "authorization": authorization, "authorization_path": authorization_path,
+    return {"config": config, "config_path": config_path, "authorization": authorization, "authorization_path": authorization_path,
             "manifest": manifest, "manifest_path": manifest_path, "payloads": payloads}
+
+
+def _rebind_payload_and_authority(fixture: dict[str, object], symbol: str, mutated_bytes: bytes) -> None:
+    payloads, manifest = fixture["payloads"], fixture["manifest"]
+    payloads[symbol] = mutated_bytes
+    row = next(item for item in manifest["inputs"] if item["symbol"] == symbol)
+    row["sha256"], row["bytes"] = _sha_bytes(mutated_bytes), len(mutated_bytes)
+    _json(fixture["manifest_path"], manifest)
+    config = fixture["config"]
+    config["reserved_data_contract"]["reserved_m5_input_manifest"]["sha256"] = _sha_file(fixture["manifest_path"])
+    config.pop("config_fingerprint_sha256", None)
+    config["config_fingerprint_sha256"] = _canonical_sha(config)
+    _json(fixture["config_path"], config)
+    authorization = fixture["authorization"]
+    authorization["input_manifest_sha256"] = _sha_file(fixture["manifest_path"])
+    authorization["config_sha256"] = _sha_file(fixture["config_path"])
+    _json(fixture["authorization_path"], authorization)
 
 
 def test_missing_authorization_never_opens_market_or_creates_claim(tmp_path: Path) -> None:
@@ -187,25 +204,36 @@ def test_existing_claim_refuses_before_scorer_callback(tmp_path: Path) -> None:
         run_one_shot(tmp_path, scorer=lambda **_kwargs: (_ for _ in ()).throw(AssertionError("scored")))
 
 
-@pytest.mark.parametrize("drift", ["hash", "schema", "window", "gap"])
+@pytest.mark.parametrize("drift", ["hash", "schema", "window", "gap", "records_sha", "infinite_ohlc"])
 def test_market_input_drift_consumes_attempt_and_cannot_retry(tmp_path: Path, drift: str) -> None:
     from scripts.run_att1_sbr1_reserved_oos_v1 import OneShotViolation, run_one_shot
 
     fixture = _fixture_tree(tmp_path)
-    payloads = dict(fixture["payloads"])
+    payloads = fixture["payloads"]
     if drift == "hash":
         payloads["BTCUSDT"] = b"{}"
     elif drift == "schema":
         value = json.loads(payloads["BTCUSDT"])
         value["schema_id"] = "wrong"
-        payloads["BTCUSDT"] = json.dumps(value).encode()
+        _rebind_payload_and_authority(fixture, "BTCUSDT", json.dumps(value).encode())
     elif drift == "window":
         value = json.loads(payloads["BTCUSDT"])
         value["window"]["end_utc_exclusive"] = "2026-06-30T00:00:00Z"
-        payloads["BTCUSDT"] = json.dumps(value).encode()
+        _rebind_payload_and_authority(fixture, "BTCUSDT", json.dumps(value).encode())
+    elif drift == "records_sha":
+        value = json.loads(payloads["BTCUSDT"])
+        value["records_sha256"] = "0" * 64
+        _rebind_payload_and_authority(fixture, "BTCUSDT", json.dumps(value).encode())
+    elif drift == "infinite_ohlc":
+        from scripts.materialize_att1_sbr1_reserved_m5_v1 import canonical_sha
+        value = json.loads(payloads["BTCUSDT"])
+        value["records"][0]["high"] = "Infinity"
+        value["records_sha256"] = canonical_sha(value["records"])
+        _rebind_payload_and_authority(fixture, "BTCUSDT", json.dumps(value).encode())
     else:
-        payloads["BTCUSDT"] = _payload("BTCUSDT", gap=True)
-    with pytest.raises(OneShotViolation):
+        _rebind_payload_and_authority(fixture, "BTCUSDT", _payload("BTCUSDT", gap=True))
+    expected = {"hash": "hash drift", "schema": "schema/window", "window": "schema/window", "gap": "M5 gap", "records_sha": "records SHA", "infinite_ohlc": "OHLC"}[drift]
+    with pytest.raises(OneShotViolation, match=expected):
         run_one_shot(tmp_path, market_opener=lambda path: payloads[path.stem])
     claim = tmp_path / "research_lab/results/att1_sbr1_reserved_oos_v1/one_shot_claim.json"
     assert claim.is_file()
@@ -340,3 +368,20 @@ def test_success_receipt_has_exact_forensic_identity_and_inventory(tmp_path: Pat
     assert receipt["reserved_window"] == {"start_utc": "2025-10-01T00:00:00Z", "end_utc_exclusive": "2026-07-01T00:00:00Z"}
     assert set(receipt["output_file_sha256"]) == _expected_scoring_artifacts()
     assert receipt["market_decode_started_at_utc"] <= receipt["market_decode_finished_at_utc"]
+
+
+def test_prepare_scoring_market_keeps_exact_warm_prefix_and_half_open_decisions() -> None:
+    from scripts.run_att1_sbr1_reserved_oos_v1 import MAJOR8, START_MS, END_MS, _prepare_scoring_market
+
+    hour = 3_600_000
+    prefix = tuple((START_MS - 201 * hour + index * hour, 10, 11, 9, 10 + index / 100, 1) for index in range(201))
+    reserved = tuple((START_MS + index * hour, 20, 21, 19, 20 + index / 10, 1) for index in range(273 * 24))
+    m5 = tuple((START_MS + index * 300_000, 10, 11, 9, 10, 1) for index in range(12))
+    market, regime = _prepare_scoring_market(
+        preholdout_h1={symbol: prefix for symbol in MAJOR8}, reserved_m5={symbol: m5 for symbol in MAJOR8}, reserved_h1={symbol: reserved for symbol in MAJOR8},
+    )
+    for data in market.values():
+        assert len(data.h1[:200]) == 200
+        assert data.h1[200][0] == START_MS
+        assert all(START_MS < row[0] + hour < END_MS for row in data.h1[200:])
+    assert set(regime) == {row[0] + hour for row in reserved if row[0] + hour < END_MS}

@@ -64,3 +64,8 @@ controller operation after local verification.
   terminal receipt fields. Remaining mutation-fixture rebinding and full
   preparation-boundary integration coverage are still required before final
   review closure.
+
+## Task 2 review — fix round 4
+
+- Rebound synthetic outer identities for semantic payload drift and added the
+  pure exact-200 warm-prefix/half-open boundary test.

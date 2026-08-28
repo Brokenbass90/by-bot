@@ -85,3 +85,12 @@ no authorization, real payload, network, broker, or live path was accessed.
   SHA in production. Row validation mirrors the Task-1 producer: OHLC must be
   finite and positive; volume/turnover are numeric finite values and may be
   zero.
+
+## Independent review fix round 4
+
+- Added outer-identity rebinding for schema/window/gap/record-hash/OHLC drift
+  fixtures, while keeping raw file-hash drift separate. Each path now reaches
+  its intended post-claim failure invariant.
+- Added the pure warm-prefix preparation boundary test: 200 preholdout H1
+  bars, first reserved H1 at index 200, continuous BTC regime timestamps, and
+  half-open terminal-H1 exclusion.

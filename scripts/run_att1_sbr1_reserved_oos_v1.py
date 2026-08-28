@@ -470,6 +470,27 @@ def _real_scorer(
         }
 
 
+def _prepare_scoring_market(*, preholdout_h1: Mapping[str, tuple[tuple[object, ...], ...]], reserved_m5: Mapping[str, tuple[tuple[object, ...], ...]], reserved_h1: Mapping[str, tuple[tuple[object, ...], ...]]):
+    """Pure boundary: 200 warm H1 bars plus only half-open reserved decisions."""
+    from research_lab import run_att1_sbr1_actual_adapter_parity as parity
+    market = {}
+    trimmed_btc: tuple[tuple[object, ...], ...] | None = None
+    for symbol in MAJOR8:
+        bars = tuple(row for row in reserved_h1[symbol] if START_MS <= int(row[0]) and int(row[0]) + 3_600_000 < END_MS)
+        if not bars or int(bars[0][0]) != START_MS:
+            raise OneShotViolation("reserved H1 boundary drift")
+        h1 = preholdout_h1[symbol][-200:] + bars
+        if len(preholdout_h1[symbol]) < 200 or int(h1[200][0]) != START_MS:
+            raise OneShotViolation("bootstrap H1 prefix drift")
+        rows = reserved_m5[symbol]
+        market[symbol] = parity.MarketData(symbol, rows, h1, {int(row[0]): i for i, row in enumerate(rows)}, {int(row[0]): i for i, row in enumerate(h1)})
+        if symbol == "BTCUSDT":
+            trimmed_btc = bars
+    assert trimmed_btc is not None
+    regime = warm_btc_regime(list(preholdout_h1["BTCUSDT"]), list(trimmed_btc))
+    return market, regime
+
+
 def _summarize_ledgers(
     output: Path, thresholds_by_sleeve: Mapping[str, Mapping[str, object]], *, negative_stress_n: int
 ) -> dict[str, object]:
