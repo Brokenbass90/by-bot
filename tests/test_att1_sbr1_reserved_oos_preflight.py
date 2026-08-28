@@ -39,6 +39,10 @@ def test_canonical_preflight_is_metadata_only_and_known_contaminated() -> None:
     assert receipt["performance_computed"] is False
     assert receipt["orders_created_or_changed"] == 0
     assert receipt["money_authority"] is False
+    assert receipt["decision"] == "READY_FOR_OWNER_AUTHORIZATION"
+    assert receipt["blockers"] == []
+    assert receipt["one_shot_command_ready"] is True
+    assert receipt["verified_reserved_m5_manifest"]["inputs"] == 8
     assert {row["id"] for row in receipt["known_accesses"]} >= {
         "mpl_two_arm_holdout_20260812",
         "xsec_recount_reveal_modern_20260811",
@@ -69,12 +73,29 @@ def test_preflight_freezes_live_native_major8_not_old_all137_contract() -> None:
     assert receipt["legacy_contracts_are_not_release_authority"] is True
 
 
-def test_missing_reserved_m5_manifest_blocks_one_shot_release() -> None:
-    receipt = build_preflight(ROOT, CONFIG)
+@pytest.mark.parametrize(
+    ("field", "blocker"),
+    [
+        ("reserved_m5_input_manifest", "RESERVED_M5_INPUT_MANIFEST_MISSING"),
+        ("runner_sha256", "ONE_SHOT_RUNNER_NOT_FROZEN"),
+        ("audit_sha256", "INDEPENDENT_AUDIT_NOT_FROZEN"),
+    ],
+)
+def test_missing_frozen_identity_blocks_one_shot_release(tmp_path: Path, field: str, blocker: str) -> None:
+    config = json.loads(CONFIG.read_text(encoding="utf-8"))
+    if field == "reserved_m5_input_manifest":
+        config["reserved_data_contract"][field] = None
+    else:
+        config["future_one_shot"][field] = None
+    _refingerprint(config)
+    config_path = tmp_path / "config.json"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
 
+    receipt = build_preflight(ROOT, config_path)
     assert receipt["decision"] == "BLOCKED_FAIL_CLOSED"
-    assert "RESERVED_M5_INPUT_MANIFEST_MISSING" in receipt["blockers"]
-    assert receipt["one_shot_command_ready"] is False
+    assert blocker in receipt["blockers"]
+    assert receipt["reserved_market_files_opened"] == 0
+    assert receipt["reserved_market_rows_decoded"] == 0
 
 
 def _refingerprint(config: dict[str, object]) -> None:

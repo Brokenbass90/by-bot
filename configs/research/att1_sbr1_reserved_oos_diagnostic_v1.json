@@ -44,14 +44,17 @@
     "required_signal_timeframe": "60",
     "required_execution_timeframe": "5",
     "entry": "next_m5_open",
-    "reserved_m5_input_manifest": null,
+    "reserved_m5_input_manifest": {
+      "path": "configs/research/att1_sbr1_reserved_m5_input_manifest_v1.json",
+      "sha256": "8f82bb7f6e5fad56e78acb4e9ffe567d2cf045c7901a7e1744a4ad5d12b7434c"
+    },
     "preflight_may_open_or_hash_market_files": false
   },
   "future_one_shot": {
     "runner_path": "scripts/run_att1_sbr1_reserved_oos_v1.py",
-    "runner_sha256": null,
+    "runner_sha256": "9194e5c1e5841ebe9df579b0a15eb4a7fc27ecad3028d2a71eb2af69198b16b4",
     "audit_path": "scripts/audit_att1_sbr1_reserved_oos_v1.py",
-    "audit_sha256": null,
+    "audit_sha256": "2adb6416590c7f5c1c27cf547daa47da98e3f1e83915d923da78d6e7bf8b6324",
     "atomic_claim_before_market_decode": true,
     "refuse_second_attempt": true,
     "owner_authorization_required": true
@@ -140,5 +143,5 @@
       "sha256": "5d423a9754bd4cce69ecfa482b268aab41bf3b08e085188ad85d77b8d92b8e5c"
     }
   ],
-  "config_fingerprint_sha256": "0562f11bed749560b355f1d9ae0b1648989cbcf92cbc8a398673f24aa6e18296"
+  "config_fingerprint_sha256": "eefec36a9e73064bae50c34446d24f63af001e7ee1505245ae108be6457cb8f9"
 }
