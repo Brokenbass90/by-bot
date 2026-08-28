@@ -350,45 +350,76 @@ def three_way_decision(base: Mapping[str, object], stress: Mapping[str, object],
 
 
 def _decode_inputs(root: Path, manifest: Mapping[str, Any], opener: Callable[[Path], bytes], accounting: dict[str, object] | None = None) -> dict[str, dict[str, Any]]:
+    """Decode reserved inputs while retaining evidence for every validation stage."""
     decoded: dict[str, dict[str, Any]] = {}
     for item in manifest["inputs"]:
         assert isinstance(item, Mapping)
-        symbol, path = str(item["symbol"]), _safe_file(root, Path(str(item["source_path"])))
-        raw = opener(path)
-        if len(raw) != int(item["bytes"]) or hashlib.sha256(raw).hexdigest() != item["sha256"]:
-            raise OneShotViolation(f"reserved input hash drift:{symbol}")
-        try:
-            payload = json.loads(raw)
-        except json.JSONDecodeError as exc:
-            raise OneShotViolation(f"reserved input JSON drift:{symbol}") from exc
-        expected = {"schema_id": "att1_sbr1_reserved_m5_payload_v1", "authority": "identity_only_materialized_without_scoring_no_live_no_broker", "symbol": symbol, "window": {"start_utc": START_UTC, "end_utc_exclusive": END_UTC}, "timeframe_minutes": 5, "performance_computed": False, "money_authority": False}
-        payload_keys = {"schema_id", "authority", "symbol", "window", "timeframe_minutes", "records", "records_sha256", "performance_computed", "money_authority"}
-        if not isinstance(payload, dict) or set(payload) != payload_keys or any(payload.get(key) != value for key, value in expected.items()):
-            raise OneShotViolation(f"reserved input schema/window drift:{symbol}")
-        records = payload.get("records")
-        if not isinstance(records, list) or len(records) != EXPECTED_ROWS or int(item["rows"]) != EXPECTED_ROWS:
-            raise OneShotViolation(f"reserved input row-count drift:{symbol}")
-        record_keys = {"ts_ms", "open", "high", "low", "close", "volume", "turnover"}
-        if any(not isinstance(row, Mapping) or set(row) != record_keys for row in records):
-            raise OneShotViolation(f"reserved input record schema drift:{symbol}")
-        expected_records_sha = _producer_records_sha(records)
-        if payload.get("records_sha256") != expected_records_sha:
-            raise OneShotViolation(f"reserved input records SHA drift:{symbol}")
-        for row in records:
-            try:
-                opening, high, low, close, volume, turnover = (float(row[key]) for key in ("open", "high", "low", "close", "volume", "turnover"))
-            except (TypeError, ValueError) as exc:
-                raise OneShotViolation(f"reserved input OHLC drift:{symbol}") from exc
-            if not all(math.isfinite(value) and value > 0 for value in (opening, high, low, close)) or not all(math.isfinite(value) for value in (volume, turnover)) or high < max(opening, close) or low > min(opening, close):
-                raise OneShotViolation(f"reserved input OHLC drift:{symbol}")
-        timestamps = [int(row["ts_ms"]) for row in records if isinstance(row, Mapping)]
-        if len(timestamps) != EXPECTED_ROWS or timestamps[0] != START_MS or timestamps[-1] != END_MS - M5_MS or any(right - left != M5_MS for left, right in zip(timestamps, timestamps[1:])):
-            raise OneShotViolation(f"reserved input M5 gap drift:{symbol}")
-        if int(item["first_ts_ms"]) != START_MS or int(item["last_ts_ms"]) != END_MS - M5_MS:
-            raise OneShotViolation(f"reserved input identity drift:{symbol}")
-        decoded[symbol] = payload
+        symbol = str(item["symbol"])
+        entry: dict[str, object] | None = None
         if accounting is not None:
-            accounting[symbol] = {"path": str(item["source_path"]), "sha256": str(item["sha256"]), "bytes": int(item["bytes"]), "rows": len(records), "start_ts_ms": timestamps[0], "end_ts_ms": timestamps[-1]}
+            inputs = accounting.setdefault("inputs", {})
+            assert isinstance(inputs, dict)
+            entry = {
+                "path": str(item["source_path"]), "sha256": str(item["sha256"]), "bytes": int(item["bytes"]),
+                "opened_bytes": None, "opened_sha256": None, "json_decoded": False, "rows_observed": 0,
+                "validation_status": "PENDING", "validation_error": None,
+            }
+            inputs[symbol] = entry
+        try:
+            path = _safe_file(root, Path(str(item["source_path"])))
+            raw = opener(path)
+            opened_sha = hashlib.sha256(raw).hexdigest()
+            if entry is not None:
+                entry["opened_bytes"] = len(raw)
+                entry["opened_sha256"] = opened_sha
+                accounting["inputs_opened"] = int(accounting.get("inputs_opened", 0)) + 1
+            if len(raw) != int(item["bytes"]) or opened_sha != item["sha256"]:
+                raise OneShotViolation(f"reserved input hash drift:{symbol}")
+            try:
+                payload = json.loads(raw)
+            except json.JSONDecodeError as exc:
+                raise OneShotViolation(f"reserved input JSON drift:{symbol}") from exc
+            if entry is not None:
+                entry["json_decoded"] = True
+                accounting["inputs_decoded"] = int(accounting.get("inputs_decoded", 0)) + 1
+            expected = {"schema_id": "att1_sbr1_reserved_m5_payload_v1", "authority": "identity_only_materialized_without_scoring_no_live_no_broker", "symbol": symbol, "window": {"start_utc": START_UTC, "end_utc_exclusive": END_UTC}, "timeframe_minutes": 5, "performance_computed": False, "money_authority": False}
+            payload_keys = {"schema_id", "authority", "symbol", "window", "timeframe_minutes", "records", "records_sha256", "performance_computed", "money_authority"}
+            if not isinstance(payload, dict) or set(payload) != payload_keys or any(payload.get(key) != value for key, value in expected.items()):
+                raise OneShotViolation(f"reserved input schema/window drift:{symbol}")
+            records = payload.get("records")
+            if isinstance(records, list) and entry is not None:
+                entry["rows_observed"] = len(records)
+                accounting["rows_observed"] = int(accounting.get("rows_observed", 0)) + len(records)
+            if not isinstance(records, list) or len(records) != EXPECTED_ROWS or int(item["rows"]) != EXPECTED_ROWS:
+                raise OneShotViolation(f"reserved input row-count drift:{symbol}")
+            record_keys = {"ts_ms", "open", "high", "low", "close", "volume", "turnover"}
+            if any(not isinstance(row, Mapping) or set(row) != record_keys for row in records):
+                raise OneShotViolation(f"reserved input record schema drift:{symbol}")
+            expected_records_sha = _producer_records_sha(records)
+            if payload.get("records_sha256") != expected_records_sha:
+                raise OneShotViolation(f"reserved input records SHA drift:{symbol}")
+            for row in records:
+                try:
+                    opening, high, low, close, volume, turnover = (float(row[key]) for key in ("open", "high", "low", "close", "volume", "turnover"))
+                except (TypeError, ValueError) as exc:
+                    raise OneShotViolation(f"reserved input OHLC drift:{symbol}") from exc
+                if not all(math.isfinite(value) and value > 0 for value in (opening, high, low, close)) or not all(math.isfinite(value) for value in (volume, turnover)) or high < max(opening, close) or low > min(opening, close):
+                    raise OneShotViolation(f"reserved input OHLC drift:{symbol}")
+            timestamps = [int(row["ts_ms"]) for row in records if isinstance(row, Mapping)]
+            if len(timestamps) != EXPECTED_ROWS or timestamps[0] != START_MS or timestamps[-1] != END_MS - M5_MS or any(right - left != M5_MS for left, right in zip(timestamps, timestamps[1:])):
+                raise OneShotViolation(f"reserved input M5 gap drift:{symbol}")
+            if int(item["first_ts_ms"]) != START_MS or int(item["last_ts_ms"]) != END_MS - M5_MS:
+                raise OneShotViolation(f"reserved input identity drift:{symbol}")
+            decoded[symbol] = payload
+            if entry is not None:
+                entry.update({"rows": len(records), "start_ts_ms": timestamps[0], "end_ts_ms": timestamps[-1], "validation_status": "VALIDATED"})
+                accounting["inputs_validated"] = int(accounting.get("inputs_validated", 0)) + 1
+                accounting["rows_validated"] = int(accounting.get("rows_validated", 0)) + len(records)
+        except BaseException as exc:
+            if entry is not None:
+                entry["validation_status"] = "FAILED"
+                entry["validation_error"] = f"{type(exc).__name__}:{exc}"
+            raise
     return decoded
 
 
@@ -411,43 +442,73 @@ def _thresholds(root: Path, config: Mapping[str, Any]) -> dict[str, Mapping[str,
     return out
 
 
-def _real_scorer(
-    *, root: Path, output: Path, candidate: Mapping[str, Any], market: Mapping[str, Mapping[str, Any]], manifest_view=None, decode_accounting: dict[str, object] | None = None
-) -> object:
-    """Invoke the unchanged live-native sleeve boundary on verified in-memory data."""
-    from bot.live_native_manifest import VerifiedParityManifest
-    from research_lab import run_att1_sbr1_actual_adapter_parity as parity
-
+def _load_bootstrap_h1(
+    *, root: Path, candidate: Mapping[str, Any], aggregate_h1: Callable[[tuple[tuple[object, ...], ...]], tuple[tuple[object, ...], ...]],
+    opener: Callable[[Path], str], accounting: dict[str, object] | None = None,
+) -> dict[str, tuple[tuple[object, ...], ...]]:
+    """Load frozen preholdout history and retain a partial inventory on failure."""
     bootstrap_h1: dict[str, tuple[tuple[object, ...], ...]] = {}
-    bootstrap_accounting: dict[str, object] = {}
-    bootstrap_started = _utc_now()
-    if decode_accounting is not None:
-        decode_accounting["bootstrap"] = {"started_at_utc": bootstrap_started, "inputs": bootstrap_accounting, "rows": 0}
     rows = candidate.get("data_files")
     if not isinstance(rows, list) or {row.get("symbol") for row in rows if isinstance(row, Mapping)} != set(MAJOR8):
         raise OneShotViolation("TASK3_BOOTSTRAP_PREHOLDOUT_IDENTITY_MISSING")
     for bootstrap_row in rows:
         assert isinstance(bootstrap_row, Mapping)
         symbol = str(bootstrap_row["symbol"])
-        bootstrap_path, _ = _pin(root, bootstrap_row)
+        entry: dict[str, object] | None = None
+        if accounting is not None:
+            inputs = accounting.setdefault("inputs", {})
+            assert isinstance(inputs, dict)
+            entry = {
+                "path": str(bootstrap_row["path"]), "sha256": str(bootstrap_row["sha256"]), "bytes": int(bootstrap_row["bytes"]),
+                "validation_status": "PENDING", "validation_error": None,
+            }
+            inputs[symbol] = entry
         try:
-            bootstrap = json.loads(bootstrap_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
-            raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_UNREADABLE:{symbol}") from exc
-        if not isinstance(bootstrap, Mapping) or bootstrap.get("schema_id") != "bybit_public_m5_preholdout_v1" or bootstrap.get("symbol") != symbol:
-            raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_SCHEMA_DRIFT:{symbol}")
-        records = bootstrap.get("records")
-        if not isinstance(records, list):
-            raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_RECORDS_MISSING:{symbol}")
-        m5 = tuple((int(row["ts_ms"]), row["open"], row["high"], row["low"], row["close"], row["volume"]) for row in records if isinstance(row, Mapping))
-        if len(m5) != len(records):
-            raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_RECORD_SCHEMA_DRIFT:{symbol}")
-        bootstrap_h1[symbol] = parity._aggregate_h1(m5)
-        bootstrap_accounting[symbol] = {"path": str(bootstrap_row["path"]), "sha256": str(bootstrap_row["sha256"]), "bytes": int(bootstrap_row["bytes"]), "rows": len(records), "start_ts_ms": int(m5[0][0]), "end_ts_ms": int(m5[-1][0])}
-        if decode_accounting is not None:
-            decode_accounting["bootstrap"]["rows"] = sum(int(row["rows"]) for row in bootstrap_accounting.values())
+            bootstrap_path, pinned_sha = _pin(root, bootstrap_row)
+            if entry is not None:
+                entry["pinned_sha256"] = pinned_sha
+            try:
+                bootstrap = json.loads(opener(bootstrap_path))
+            except (OSError, json.JSONDecodeError) as exc:
+                raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_UNREADABLE:{symbol}") from exc
+            if not isinstance(bootstrap, Mapping) or bootstrap.get("schema_id") != "bybit_public_m5_preholdout_v1" or bootstrap.get("symbol") != symbol:
+                raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_SCHEMA_DRIFT:{symbol}")
+            records = bootstrap.get("records")
+            if not isinstance(records, list):
+                raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_RECORDS_MISSING:{symbol}")
+            m5 = tuple((int(row["ts_ms"]), row["open"], row["high"], row["low"], row["close"], row["volume"]) for row in records if isinstance(row, Mapping))
+            if not m5 or len(m5) != len(records):
+                raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_RECORD_SCHEMA_DRIFT:{symbol}")
+            bootstrap_h1[symbol] = aggregate_h1(m5)
+            if entry is not None:
+                entry.update({"rows": len(records), "start_ts_ms": int(m5[0][0]), "end_ts_ms": int(m5[-1][0]), "validation_status": "VALIDATED"})
+                accounting["rows"] = int(accounting.get("rows", 0)) + len(records)
+        except BaseException as exc:
+            if entry is not None:
+                entry["validation_status"] = "FAILED"
+                entry["validation_error"] = f"{type(exc).__name__}:{exc}"
+            raise
+    return bootstrap_h1
+
+
+def _real_scorer(
+    *, root: Path, output: Path, candidate: Mapping[str, Any], market: Mapping[str, Mapping[str, Any]], manifest_view=None,
+    decode_accounting: dict[str, object] | None = None, bootstrap_opener: Callable[[Path], str] | None = None,
+) -> object:
+    """Invoke the unchanged live-native sleeve boundary on verified in-memory data."""
+    from research_lab import run_att1_sbr1_actual_adapter_parity as parity
+
+    bootstrap_started = _utc_now()
+    bootstrap_accounting: dict[str, object] | None = None
     if decode_accounting is not None:
-        decode_accounting["bootstrap"] = {"started_at_utc": bootstrap_started, "finished_at_utc": _utc_now(), "inputs": bootstrap_accounting, "rows": sum(int(row["rows"]) for row in bootstrap_accounting.values())}
+        bootstrap_accounting = {"started_at_utc": bootstrap_started, "inputs": {}, "rows": 0}
+        decode_accounting["bootstrap"] = bootstrap_accounting
+    bootstrap_h1 = _load_bootstrap_h1(
+        root=root, candidate=candidate, aggregate_h1=parity._aggregate_h1,
+        opener=bootstrap_opener or (lambda path: path.read_text(encoding="utf-8")), accounting=bootstrap_accounting,
+    )
+    if bootstrap_accounting is not None:
+        bootstrap_accounting["finished_at_utc"] = _utc_now()
     reserved_m5: dict[str, tuple[tuple[object, ...], ...]] = {}
     reserved_h1: dict[str, tuple[tuple[object, ...], ...]] = {}
     for symbol, payload in market.items():
@@ -543,6 +604,47 @@ def _verify_scoring_inventory(output: Path) -> dict[str, str]:
     return inventory
 
 
+def _observed_output_entries(output: Path) -> list[dict[str, object]]:
+    """Inventory every post-claim output entry without following symlinks."""
+    if not output.exists():
+        return []
+    try:
+        paths = sorted(output.iterdir(), key=lambda path: path.name)
+    except OSError as exc:
+        return [{"name": None, "kind": "directory", "is_symlink": False, "is_regular_file": False, "sha256": None, "status": "INVENTORY_UNAVAILABLE", "error": f"{type(exc).__name__}:{exc}"}]
+    observed: list[dict[str, object]] = []
+    for path in paths:
+        entry: dict[str, object] = {"name": path.name, "kind": "other", "is_symlink": False, "is_regular_file": False, "sha256": None, "status": "UNHASHED", "error": None}
+        try:
+            entry["is_symlink"] = path.is_symlink()
+            if entry["is_symlink"]:
+                entry.update({"kind": "symlink", "status": "UNHASHED_SYMLINK"})
+            elif path.is_file():
+                entry.update({"kind": "regular_file", "is_regular_file": True})
+                try:
+                    entry.update({"sha256": _sha_file(path), "status": "HASHED"})
+                except OSError as exc:
+                    entry.update({"status": "HASH_FAILED", "error": f"{type(exc).__name__}:{exc}"})
+            elif path.is_dir():
+                entry.update({"kind": "directory", "status": "UNHASHED_DIRECTORY"})
+            else:
+                entry.update({"status": "UNHASHED_OTHER"})
+        except OSError as exc:
+            entry.update({"kind": "unreadable", "status": "STAT_FAILED", "error": f"{type(exc).__name__}:{exc}"})
+        observed.append(entry)
+    return observed
+
+
+def _decode_finished_at(accounting: Mapping[str, object], fallback: str | None) -> str | None:
+    bootstrap = accounting.get("bootstrap")
+    if isinstance(bootstrap, Mapping) and bootstrap.get("started_at_utc"):
+        return str(bootstrap.get("finished_at_utc") or bootstrap.get("ended_at_utc") or fallback)
+    reserved = accounting.get("reserved")
+    if isinstance(reserved, Mapping):
+        return str(reserved.get("finished_at_utc") or reserved.get("ended_at_utc") or fallback)
+    return fallback
+
+
 def run_one_shot(root: Path = ROOT, *, market_opener: Callable[[Path], bytes] | None = None, scorer: Callable[..., object] | None = None, summarizer: Callable[..., dict[str, object]] | None = None) -> dict[str, object]:
     """Run a frozen diagnostic; any post-claim failure irreversibly consumes it."""
     root = root.resolve()
@@ -558,12 +660,12 @@ def run_one_shot(root: Path = ROOT, *, market_opener: Callable[[Path], bytes] | 
     claim_sha = _sha_file(claim_path)
     decode_started = _utc_now()
     decode_finished: str | None = None
-    accounting: dict[str, object] = {"reserved": {"started_at_utc": decode_started, "inputs": {}}}
+    accounting: dict[str, object] = {"reserved": {"started_at_utc": decode_started, "inputs": {}, "inputs_opened": 0, "inputs_decoded": 0, "inputs_validated": 0, "rows_observed": 0, "rows_validated": 0}}
     try:
-        market = _decode_inputs(root, manifest, market_opener or (lambda path: path.read_bytes()), accounting["reserved"]["inputs"])
+        market = _decode_inputs(root, manifest, market_opener or (lambda path: path.read_bytes()), accounting["reserved"])
         decode_finished = _utc_now()
         accounting["reserved"]["finished_at_utc"] = decode_finished
-        accounting["reserved"]["rows"] = sum(len(payload["records"]) for payload in market.values())
+        accounting["reserved"]["rows"] = int(accounting["reserved"]["rows_validated"])
         view = build_reserved_manifest_view(candidate, manifest, _sha_file(manifest_path), str(config["candidate_manifest"]["sha256"]))
         (scorer or _real_scorer)(root=root, output=output, candidate=candidate, market=market, manifest_view=view, decode_accounting=accounting)
         inventory = _verify_scoring_inventory(output)
@@ -572,17 +674,21 @@ def run_one_shot(root: Path = ROOT, *, market_opener: Callable[[Path], bytes] | 
             output, thresholds,
             negative_stress_n=int(config["decision_contract"]["negative_stress_sum_r_is_fail_when_n_gte"]),
         )
-        receipt: dict[str, object] = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", **forensic, "claim_sha256": claim_sha, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": accounting.get("bootstrap", {}).get("finished_at_utc", decode_finished), "exact_rows_decoded": {symbol: len(payload["records"]) for symbol, payload in market.items()}, "decode_accounting": accounting}
+        receipt: dict[str, object] = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", **forensic, "claim_sha256": claim_sha, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": _decode_finished_at(accounting, decode_finished), "exact_rows_decoded": {symbol: len(payload["records"]) for symbol, payload in market.items()}, "decode_accounting": accounting}
         receipt["sleeves"] = sleeves
         receipt["output_file_sha256"] = inventory
         receipt["receipt_sha256"] = _canonical_sha(receipt)
         _atomic_json(root / RECEIPT_REL, receipt)
         return receipt
     except BaseException as exc:
+        terminal_at = _utc_now()
+        if decode_finished is None:
+            accounting["reserved"]["ended_at_utc"] = terminal_at
+            decode_finished = terminal_at
         if isinstance(accounting.get("bootstrap"), dict) and "finished_at_utc" not in accounting["bootstrap"]:
-            accounting["bootstrap"]["finished_at_utc"] = _utc_now()
+            accounting["bootstrap"]["ended_at_utc"] = terminal_at
         partial_inventory = {path.name: _sha_file(path) for path in output.iterdir() if path.name in _expected_scoring_artifacts() and path.is_file() and not path.is_symlink()} if output.exists() else {}
-        failure = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "terminal_state": "FAIL_CLOSED_AFTER_CLAIM", "terminal_at_utc": _utc_now(), "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", **forensic, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": decode_finished, "decode_accounting": accounting, "partial_output_file_sha256": partial_inventory, "error": f"{type(exc).__name__}:{exc}", "claim_sha256": claim_sha}
+        failure = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "terminal_state": "FAIL_CLOSED_AFTER_CLAIM", "terminal_at_utc": terminal_at, "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", **forensic, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": _decode_finished_at(accounting, decode_finished), "decode_accounting": accounting, "partial_output_file_sha256": partial_inventory, "observed_output_entries": _observed_output_entries(output), "error": f"{type(exc).__name__}:{exc}", "claim_sha256": claim_sha}
         failure["receipt_sha256"] = _canonical_sha(failure)
         _atomic_json(root / RECEIPT_REL, failure)
         if isinstance(exc, (KeyboardInterrupt, SystemExit)):

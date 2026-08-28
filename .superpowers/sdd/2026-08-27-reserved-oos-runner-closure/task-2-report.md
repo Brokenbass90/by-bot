@@ -100,3 +100,22 @@ no authorization, real payload, network, broker, or live path was accessed.
 - Production scorer now delegates its H1/M5 warm-prefix and regime preparation
   to the tested pure boundary. Bootstrap accounting is initialized and updated
   per decoded file, so a later bootstrap failure retains earlier identities.
+
+## Independent review fix round 6
+
+- Reserved decoding now records opened bytes/SHA, JSON decode, observed rows,
+  validation state and the exact failure for every attempted symbol. A semantic
+  failure can no longer under-report already decoded rows.
+- Bootstrap decoding is factored into the production path with incremental
+  per-file accounting. A forced second-file failure proves the durable claim,
+  partial bootstrap inventory and top-level decode end remain consistent.
+- Terminal receipts inventory every observed output entry without following
+  symlinks, including unexpected files that caused exact-inventory refusal.
+- A capture test proves the production scorer calls the exact tested
+  200-H1/half-open preparation boundary once and passes the returned market and
+  regime objects unchanged to both ATT1 and SBR1 sleeves.
+
+Fresh controller verification after round 6: focused suite `26 passed in
+43.08s`; `py_compile` and `git diff --check` both exited 0. The real CLI,
+owner authorization, claim, reserved payloads, broker, network and live paths
+were not invoked.

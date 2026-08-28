@@ -74,3 +74,13 @@ controller operation after local verification.
 
 - Production scorer now uses the pure preparation boundary; bootstrap accounting
   is updated incrementally.
+
+## Task 2 review — fix round 6
+
+- Closed the two remaining forensic findings: stage-aware reserved row
+  accounting and complete terminal output/decode evidence.
+- Added production-boundary capture, mid-bootstrap failure, semantic-row and
+  unexpected/symlink output tests. Controller verification: `26 passed`,
+  `py_compile` PASS, `git diff --check` PASS.
+- Task 2 is ready for one final independent review. No owner authorization,
+  claim, result, reserved-market replay or live mutation occurred.

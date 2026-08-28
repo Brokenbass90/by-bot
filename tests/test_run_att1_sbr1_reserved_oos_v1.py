@@ -3,7 +3,9 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+from contextlib import nullcontext
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -111,7 +113,8 @@ def _fixture_tree(tmp_path: Path, *, with_authorization: bool = True) -> dict[st
     if with_authorization:
         _json(authorization_path, authorization)
     return {"config": config, "config_path": config_path, "authorization": authorization, "authorization_path": authorization_path,
-            "manifest": manifest, "manifest_path": manifest_path, "payloads": payloads}
+            "candidate_path": tmp_path / config["candidate_manifest"]["path"], "manifest": manifest,
+            "manifest_path": manifest_path, "payloads": payloads}
 
 
 def _rebind_payload_and_authority(fixture: dict[str, object], symbol: str, mutated_bytes: bytes) -> None:
@@ -127,6 +130,47 @@ def _rebind_payload_and_authority(fixture: dict[str, object], symbol: str, mutat
     _json(fixture["config_path"], config)
     authorization = fixture["authorization"]
     authorization["input_manifest_sha256"] = _sha_file(fixture["manifest_path"])
+    authorization["config_sha256"] = _sha_file(fixture["config_path"])
+    _json(fixture["authorization_path"], authorization)
+
+
+def _bootstrap_payload(symbol: str) -> bytes:
+    return json.dumps(
+        {
+            "schema_id": "bybit_public_m5_preholdout_v1",
+            "symbol": symbol,
+            "records": [{"ts_ms": 1_700_000_000_000, "open": 10, "high": 11, "low": 9, "close": 10, "volume": 1}],
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode()
+
+
+def _install_tiny_bootstrap(fixture: dict[str, object], *, corrupt_second: bool = False) -> None:
+    candidate_path = fixture["candidate_path"]
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    rows = []
+    for index, symbol in enumerate(SYMBOLS):
+        relative = f"research_lab/data/tiny-bootstrap/{symbol}.json"
+        raw = b"not-json" if corrupt_second and index == 1 else _bootstrap_payload(symbol)
+        path = candidate_path.parents[2] / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(raw)
+        rows.append({"symbol": symbol, "path": relative, "sha256": _sha_bytes(raw), "bytes": len(raw)})
+    candidate["data_files"] = rows
+    _json(candidate_path, candidate)
+
+    config = fixture["config"]
+    candidate_sha = _sha_file(candidate_path)
+    config["candidate_manifest"]["sha256"] = candidate_sha
+    for pin in config["source_pins"]:
+        if pin["path"] == config["candidate_manifest"]["path"]:
+            pin["sha256"] = candidate_sha
+    config.pop("config_fingerprint_sha256", None)
+    config["config_fingerprint_sha256"] = _canonical_sha(config)
+    _json(fixture["config_path"], config)
+
+    authorization = fixture["authorization"]
     authorization["config_sha256"] = _sha_file(fixture["config_path"])
     _json(fixture["authorization_path"], authorization)
 
@@ -385,3 +429,127 @@ def test_prepare_scoring_market_keeps_exact_warm_prefix_and_half_open_decisions(
         assert data.h1[200][0] == START_MS
         assert all(START_MS < row[0] + hour < END_MS for row in data.h1[200:])
     assert set(regime) == {row[0] + hour for row in reserved if row[0] + hour < END_MS}
+
+
+def test_real_scorer_prepares_market_once_and_reuses_exact_objects_for_both_sleeves(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from research_lab import run_att1_sbr1_actual_adapter_parity as parity
+    from scripts import run_att1_sbr1_reserved_oos_v1 as runner
+
+    bootstrap_rows = []
+    for symbol in SYMBOLS:
+        relative = f"bootstrap/{symbol}.json"
+        raw = _bootstrap_payload(symbol)
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(raw)
+        bootstrap_rows.append({"symbol": symbol, "path": relative, "sha256": _sha_bytes(raw), "bytes": len(raw)})
+
+    prepared_market, prepared_regime = object(), object()
+    prepare_calls: list[tuple[object, object, object]] = []
+    sleeve_calls: list[tuple[str, object, object]] = []
+
+    def prepare(**kwargs: object) -> tuple[object, object]:
+        prepare_calls.append((kwargs["preholdout_h1"], kwargs["reserved_m5"], kwargs["reserved_h1"]))
+        return prepared_market, prepared_regime
+
+    def run_sleeve(sleeve: str, _root: Path, _output: Path, _manifest: object, market_data: object, regime: object) -> str:
+        sleeve_calls.append((sleeve, market_data, regime))
+        return sleeve
+
+    monkeypatch.setattr(runner, "_prepare_scoring_market", prepare)
+    monkeypatch.setattr(parity, "_aggregate_h1", lambda _rows: ((1_700_000_000_000, 10, 11, 9, 10, 1),))
+    monkeypatch.setattr(parity, "_frozen_env", lambda _universe: nullcontext())
+    monkeypatch.setattr(parity, "_run_sleeve", run_sleeve)
+
+    result = runner._real_scorer(
+        root=tmp_path,
+        output=tmp_path / "output",
+        candidate={"data_files": bootstrap_rows},
+        market={symbol: {"records": []} for symbol in SYMBOLS},
+        manifest_view=SimpleNamespace(universe=tuple(SYMBOLS)),
+    )
+
+    assert result == {"ATT1": "ATT1", "SBR1": "SBR1"}
+    assert len(prepare_calls) == 1
+    assert sleeve_calls == [("ATT1", prepared_market, prepared_regime), ("SBR1", prepared_market, prepared_regime)]
+    assert all(market_data is prepared_market and regime is prepared_regime for _, market_data, regime in sleeve_calls)
+
+
+def test_semantic_reserved_failure_preserves_observed_rows_and_staged_accounting(tmp_path: Path) -> None:
+    from scripts.run_att1_sbr1_reserved_oos_v1 import OneShotViolation, run_one_shot
+
+    fixture = _fixture_tree(tmp_path)
+    payload = json.loads(fixture["payloads"]["BTCUSDT"])
+    payload["records_sha256"] = "0" * 64
+    _rebind_payload_and_authority(fixture, "BTCUSDT", json.dumps(payload).encode())
+
+    with pytest.raises(OneShotViolation, match="records SHA"):
+        run_one_shot(tmp_path, market_opener=lambda path: fixture["payloads"][path.stem])
+
+    receipt = json.loads((tmp_path / "research_lab/results/att1_sbr1_reserved_oos_v1/receipt.json").read_text())
+    reserved = receipt["decode_accounting"]["reserved"]
+    bitcoin = reserved["inputs"]["BTCUSDT"]
+    assert receipt["market_decode_finished_at_utc"]
+    assert bitcoin["opened_bytes"] == len(fixture["payloads"]["BTCUSDT"])
+    assert bitcoin["opened_sha256"] == _sha_bytes(fixture["payloads"]["BTCUSDT"])
+    assert bitcoin["json_decoded"] is True
+    assert bitcoin["rows_observed"] == ROWS
+    assert bitcoin["validation_status"] == "FAILED"
+    assert "records SHA drift:BTCUSDT" in bitcoin["validation_error"]
+    assert reserved["inputs_opened"] == 1
+    assert reserved["inputs_decoded"] == 1
+    assert reserved["inputs_validated"] == 0
+    assert reserved["rows_observed"] == ROWS
+    assert reserved["rows_validated"] == 0
+
+
+def test_bootstrap_parse_failure_keeps_consumed_claim_and_partial_forensics(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.run_att1_sbr1_reserved_oos_v1 import OneShotViolation, run_one_shot
+    from research_lab import run_att1_sbr1_actual_adapter_parity as parity
+
+    fixture = _fixture_tree(tmp_path)
+    _install_tiny_bootstrap(fixture, corrupt_second=True)
+    monkeypatch.setattr(parity, "_aggregate_h1", lambda _rows: ((1_700_000_000_000, 10, 11, 9, 10, 1),))
+
+    with pytest.raises(OneShotViolation, match="TASK3_BOOTSTRAP_PREHOLDOUT_UNREADABLE:ETHUSDT"):
+        run_one_shot(tmp_path, market_opener=lambda path: fixture["payloads"][path.stem])
+
+    output = tmp_path / "research_lab/results/att1_sbr1_reserved_oos_v1"
+    receipt = json.loads((output / "receipt.json").read_text())
+    bootstrap = receipt["decode_accounting"]["bootstrap"]
+    assert (output / "one_shot_claim.json").is_file()
+    assert receipt["terminal_state"] == "FAIL_CLOSED_AFTER_CLAIM"
+    assert receipt["classification"] == "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION"
+    assert receipt["terminal_at_utc"]
+    assert set(bootstrap["inputs"]) == {"BTCUSDT", "ETHUSDT"}
+    assert bootstrap["inputs"]["BTCUSDT"]["validation_status"] == "VALIDATED"
+    assert bootstrap["inputs"]["ETHUSDT"]["validation_status"] == "FAILED"
+    assert receipt["decode_accounting"]["reserved"]["inputs_validated"] == len(SYMBOLS)
+    assert receipt["partial_output_file_sha256"] == {}
+    assert receipt["market_decode_finished_at_utc"] == bootstrap["ended_at_utc"]
+    assert receipt["market_decode_finished_at_utc"] >= bootstrap["started_at_utc"]
+
+
+@pytest.mark.parametrize("artifact", ["extra", "symlink"])
+def test_failure_receipt_observes_unexpected_or_symlinked_output_entry(tmp_path: Path, artifact: str) -> None:
+    from scripts.run_att1_sbr1_reserved_oos_v1 import OneShotViolation, run_one_shot
+
+    fixture = _fixture_tree(tmp_path)
+
+    def scorer(*, output: Path, **_kwargs: object) -> None:
+        output.mkdir(parents=True, exist_ok=True)
+        if artifact == "extra":
+            (output / "unexpected.txt").write_text("unexpected\n", encoding="utf-8")
+        else:
+            target = tmp_path / "symlink-target.txt"
+            target.write_text("target\n", encoding="utf-8")
+            (output / "unexpected-link").symlink_to(target)
+
+    with pytest.raises(OneShotViolation, match="unexpected scorer output inventory"):
+        run_one_shot(tmp_path, market_opener=lambda path: fixture["payloads"][path.stem], scorer=scorer)
+
+    receipt = json.loads((tmp_path / "research_lab/results/att1_sbr1_reserved_oos_v1/receipt.json").read_text())
+    name = "unexpected.txt" if artifact == "extra" else "unexpected-link"
+    observed = next(entry for entry in receipt["observed_output_entries"] if entry["name"] == name)
+    assert observed["status"] == ("HASHED" if artifact == "extra" else "UNHASHED_SYMLINK")
+    assert observed["is_symlink"] is (artifact == "symlink")
