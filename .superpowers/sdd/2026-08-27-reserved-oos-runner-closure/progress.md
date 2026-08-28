@@ -50,3 +50,10 @@ controller operation after local verification.
   inventory, success receipt coverage, and a materializer-producer hash test.
 - The controller manifest remains untracked and untouched. No owner
   authorization or one-shot execution is part of this fix round.
+
+## Task 2 review — fix round 2
+
+- Replaced the unpinned producer runtime import with a local contract helper
+  and producer-comparison test; made the reserved scoring view self-describing
+  and removed copied sealed-holdout metadata; excluded the terminal closed-H1
+  decision at the half-open end boundary.

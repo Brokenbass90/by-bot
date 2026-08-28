@@ -63,3 +63,14 @@ irreversible: any post-claim failure remains consumed and fail-closed.
 Verification after fix round 1: focused suite `18 passed in 26.49s`,
 `py_compile` exit 0, and `git diff --check` exit 0. The CLI was not invoked;
 no authorization, real payload, network, broker, or live path was accessed.
+
+## Independent review fix round 2
+
+- Removed the runner's runtime import of the unpinned materializer. Its local
+  record-hash helper mirrors the producer contract; a focused test compares it
+  against the producer at test time.
+- Replaced the contradictory copied live-manifest view with the explicit
+  `att1_sbr1_reserved_oos_scoring_view_v1`, carrying exact source-candidate and
+  reserved-input identities plus only the frozen scoring bundles.
+- Excluded the terminal H1 bar closing at `END_MS` from all decision H1 views.
+  The full reserved M5 series remains available for outcome paths.

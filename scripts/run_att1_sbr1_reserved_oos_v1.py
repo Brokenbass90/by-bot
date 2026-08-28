@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import sys
 import tempfile
@@ -48,6 +49,12 @@ def _utc_now() -> str:
 def _canonical_sha(value: object) -> str:
     payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("ascii")
     return hashlib.sha256(payload).hexdigest()
+
+
+def _producer_records_sha(value: object) -> str:
+    """Match the pinned Task-1 producer's canonical JSON byte contract."""
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8")
+    return hashlib.sha256(payload + b"\n").hexdigest()
 
 
 def _sha_file(path: Path) -> str:
@@ -143,10 +150,19 @@ def build_reserved_manifest_view(
     ]
     if [row["symbol"] for row in reserved_files] != list(MAJOR8):
         raise OneShotViolation("reserved view universe drift")
-    view = dict(candidate)
-    view["window"] = {"start_utc": START_UTC, "end_utc_exclusive": END_UTC}
-    view["data_files"] = reserved_files
-    view["reserved_input_manifest_sha256"] = reserved_manifest_sha256
+    if set(candidate.get("exchange_filters", {})) != set(MAJOR8) or set(candidate.get("cost_contracts", {})) != {"base", "stress"}:
+        raise OneShotViolation("candidate view bundle drift")
+    view = {
+        "schema_id": "att1_sbr1_reserved_oos_scoring_view_v1",
+        "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion",
+        "source_candidate_manifest_sha256": _canonical_sha(candidate),
+        "input_manifest_sha256": reserved_manifest_sha256,
+        "window": {"start_utc": START_UTC, "end_utc_exclusive": END_UTC},
+        "universe": list(MAJOR8), "profiles": candidate["profiles"],
+        "regime_contract": candidate["regime_contract"], "execution_contract": candidate["execution_contract"],
+        "cost_contracts": candidate["cost_contracts"], "exchange_filters": candidate["exchange_filters"],
+        "source_files": source_files, "data_files": reserved_files,
+    }
     return VerifiedParityManifest(
         path=Path("<verified-reserved-in-memory>"), manifest_sha256=_canonical_sha(view),
         universe=MAJOR8, source_bundle_sha256=_bundle_sha(
@@ -355,16 +371,15 @@ def _decode_inputs(root: Path, manifest: Mapping[str, Any], opener: Callable[[Pa
         record_keys = {"ts_ms", "open", "high", "low", "close", "volume", "turnover"}
         if any(not isinstance(row, Mapping) or set(row) != record_keys for row in records):
             raise OneShotViolation(f"reserved input record schema drift:{symbol}")
-        from scripts.materialize_att1_sbr1_reserved_m5_v1 import canonical_sha
-        expected_records_sha = canonical_sha(records)
+        expected_records_sha = _producer_records_sha(records)
         if payload.get("records_sha256") != expected_records_sha:
             raise OneShotViolation(f"reserved input records SHA drift:{symbol}")
         for row in records:
             try:
-                opening, high, low, close = (float(row[key]) for key in ("open", "high", "low", "close"))
+                opening, high, low, close, volume, turnover = (float(row[key]) for key in ("open", "high", "low", "close", "volume", "turnover"))
             except (TypeError, ValueError) as exc:
                 raise OneShotViolation(f"reserved input OHLC drift:{symbol}") from exc
-            if not all(value > 0 for value in (opening, high, low, close)) or high < max(opening, close) or low > min(opening, close):
+            if not all(math.isfinite(value) and value > 0 for value in (opening, high, low, close, volume, turnover)) or high < max(opening, close) or low > min(opening, close):
                 raise OneShotViolation(f"reserved input OHLC drift:{symbol}")
         timestamps = [int(row["ts_ms"]) for row in records if isinstance(row, Mapping)]
         if len(timestamps) != EXPECTED_ROWS or timestamps[0] != START_MS or timestamps[-1] != END_MS - M5_MS or any(right - left != M5_MS for left, right in zip(timestamps, timestamps[1:])):
@@ -428,7 +443,7 @@ def _real_scorer(
             (int(row["ts_ms"]), row["open"], row["high"], row["low"], row["close"], row["volume"])
             for row in payload["records"]
         )
-        reserved_h1 = parity._aggregate_h1(rows)
+        reserved_h1 = tuple(row for row in parity._aggregate_h1(rows) if int(row[0]) + 3_600_000 < END_MS)
         h1 = bootstrap_h1[symbol][-200:] + reserved_h1
         market_data[symbol] = parity.MarketData(
             symbol=symbol, m5=rows, h1=h1,
@@ -437,10 +452,10 @@ def _real_scorer(
         )
     manifest = manifest_view or build_reserved_manifest_view(candidate, {"inputs": []}, "0" * 64)
     output.mkdir(parents=True, exist_ok=True)
-    regime = warm_btc_regime(list(bootstrap_h1["BTCUSDT"]), list(parity._aggregate_h1(tuple(
+    regime = warm_btc_regime(list(bootstrap_h1["BTCUSDT"]), list(tuple(row for row in parity._aggregate_h1(tuple(
         (int(row["ts_ms"]), row["open"], row["high"], row["low"], row["close"], row["volume"])
         for row in market["BTCUSDT"]["records"]
-    ))))
+    )) if int(row[0]) + 3_600_000 < END_MS)))
     with parity._frozen_env(manifest.universe):
         return {
             sleeve: parity._run_sleeve(sleeve, root, output, manifest, market_data, regime)

@@ -265,7 +265,7 @@ def test_reserved_manifest_view_replaces_preholdout_data_identities(tmp_path: Pa
 
     assert view.payload["window"] == {"start_utc": "2025-10-01T00:00:00Z", "end_utc_exclusive": "2026-07-01T00:00:00Z"}
     assert view.manifest_sha256 != _sha_file(fixture["manifest_path"])
-    assert view.payload["reserved_input_manifest_sha256"] == _sha_file(fixture["manifest_path"])
+    assert view.payload["input_manifest_sha256"] == _sha_file(fixture["manifest_path"])
     assert [row["path"] for row in view.payload["data_files"]] == [row["source_path"] for row in fixture["manifest"]["inputs"]]
     assert all("preholdout" not in row["path"] for row in view.payload["data_files"])
 
