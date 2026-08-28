@@ -10,6 +10,11 @@
   research/live stable-comparator parity, occupancy, metrics, threshold checks,
   and three-way decisions. It validates reported decisions rather than using
   them as an authority.
+- Review-fix hardening additionally enforces the runner's complete owner
+  authorization and claim-forensic contracts, exact presealed-threshold pin
+  linkage, exact on-disk output directory inventory, evaluation-ledger parity,
+  and full sleeve evidence equality. The reserved M5 manifest now has an exact
+  top-level metadata schema check; it still never resolves any payload path.
 - Pinned the controller-created reserved M5 metadata manifest, runner, and
   audit hashes in the diagnostic config, then recomputed its canonical
   fingerprint.

@@ -95,3 +95,23 @@ def test_missing_output_artifact_fails_exact_inventory(tmp_path: Path) -> None:
 
     with pytest.raises(AuditViolation, match="output hash inventory drift"):
         verify_output_inventory(tmp_path, {})
+
+
+def test_manifest_top_level_schema_rejects_extra_or_missing_metadata() -> None:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import AuditViolation, _validate_manifest_metadata
+
+    manifest = json.loads((ROOT / "configs/research/att1_sbr1_reserved_m5_input_manifest_v1.json").read_text())
+    manifest["unexpected"] = True
+    with pytest.raises(AuditViolation, match="reserved manifest top-level schema drift"):
+        _validate_manifest_metadata(manifest)
+
+
+def test_runner_sleeve_comparison_rejects_raw_occupancy_parity_or_threshold_drift() -> None:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import AuditViolation, verify_reported_sleeves
+
+    mode = {"raw_signals": 2, "accepted_signals": 1, "same_symbol_occupancy_drops": 1, "metrics": {"n": 1}, "parity": {"decision": "PASS"}}
+    independent = {sleeve: {"modes": {"base": dict(mode), "stress": dict(mode)}, "thresholds": {"n_gte": 2}, "checks": {"base": {"n_gte": False}, "stress": {"n_gte": False}}, "decision": "INCONCLUSIVE_LOW_N"} for sleeve in ("ATT1", "SBR1")}
+    reported = json.loads(json.dumps(independent))
+    reported["ATT1"]["modes"]["base"]["raw_signals"] = 3
+    with pytest.raises(AuditViolation, match="runner sleeve metrics drift:ATT1:base"):
+        verify_reported_sleeves(reported, independent)

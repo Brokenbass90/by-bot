@@ -54,7 +54,7 @@
     "runner_path": "scripts/run_att1_sbr1_reserved_oos_v1.py",
     "runner_sha256": "9194e5c1e5841ebe9df579b0a15eb4a7fc27ecad3028d2a71eb2af69198b16b4",
     "audit_path": "scripts/audit_att1_sbr1_reserved_oos_v1.py",
-    "audit_sha256": "2adb6416590c7f5c1c27cf547daa47da98e3f1e83915d923da78d6e7bf8b6324",
+    "audit_sha256": "19bc2e9c50e84940bb1711101788862cd0a30380f7efc43736569d5b59318c12",
     "atomic_claim_before_market_decode": true,
     "refuse_second_attempt": true,
     "owner_authorization_required": true
@@ -143,5 +143,5 @@
       "sha256": "5d423a9754bd4cce69ecfa482b268aab41bf3b08e085188ad85d77b8d92b8e5c"
     }
   ],
-  "config_fingerprint_sha256": "eefec36a9e73064bae50c34446d24f63af001e7ee1505245ae108be6457cb8f9"
+  "config_fingerprint_sha256": "c1bd339e1e6eddc83363b80fdf93ad5d2ee59230138fe6094b5bcfce140a2913"
 }

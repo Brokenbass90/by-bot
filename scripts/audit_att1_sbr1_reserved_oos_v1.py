@@ -107,6 +107,14 @@ def _pin(root: Path, row: Mapping[str, object], expected: Path) -> tuple[Path, s
 
 
 def _validate_manifest_metadata(manifest: Mapping[str, Any]) -> None:
+    expected_keys = {
+        "schema_id", "authority", "expected_rows_per_symbol", "inputs",
+        "market_rows_decoded_by_preflight", "materializer", "money_authority",
+        "performance_computed", "private_live_order_authority", "public_network_only",
+        "timeframe_minutes", "window",
+    }
+    if set(manifest) != expected_keys:
+        raise AuditViolation("reserved manifest top-level schema drift")
     exact = {
         "schema_id": "att1_sbr1_reserved_m5_input_manifest_v1",
         "authority": "identity_only_materialized_without_scoring_no_live_no_broker",
@@ -118,6 +126,14 @@ def _validate_manifest_metadata(manifest: Mapping[str, Any]) -> None:
     }
     if any(manifest.get(key) != value for key, value in exact.items()):
         raise AuditViolation("reserved manifest metadata drift")
+    if manifest.get("expected_rows_per_symbol") != 273 * 288 or manifest.get("private_live_order_authority") is not False or manifest.get("public_network_only") is not True:
+        raise AuditViolation("reserved manifest authority or row contract drift")
+    materializer = manifest.get("materializer")
+    if not isinstance(materializer, Mapping) or set(materializer) != {"path", "sha256"}:
+        raise AuditViolation("reserved manifest materializer drift")
+    _path, digest = materializer.get("path"), str(materializer.get("sha256") or "")
+    if _path != "scripts/materialize_att1_sbr1_reserved_m5_v1.py" or len(digest) != 64 or any(ch not in "0123456789abcdef" for ch in digest):
+        raise AuditViolation("reserved manifest materializer drift")
     inputs = manifest.get("inputs")
     required = {"symbol", "source_path", "sha256", "bytes", "rows", "first_ts_ms", "last_ts_ms"}
     if not isinstance(inputs, list) or len(inputs) != len(MAJOR8):
@@ -161,6 +177,10 @@ def _validate_config(root: Path, config: Mapping[str, Any]) -> tuple[Path, Path,
             raise AuditViolation("source pin malformed")
         path = Path(str(row.get("path") or ""))
         _pin(root, row, path)
+    threshold = config.get("threshold_source")
+    presealed = next((row for row in source_pins if isinstance(row, Mapping) and row.get("role") == "presealed_thresholds"), None)
+    if not isinstance(threshold, Mapping) or not isinstance(presealed, Mapping) or threshold.get("path") != presealed.get("path") or threshold.get("sha256") != presealed.get("sha256") or threshold.get("json_pointer") != "/sleeves/{LEG}/zero_risk_shadow_gate/thresholds":
+        raise AuditViolation("threshold source pin drift")
     data = config.get("reserved_data_contract")
     if not isinstance(data, Mapping) or data.get("preflight_may_open_or_hash_market_files") is not False:
         raise AuditViolation("reserved data contract drift")
@@ -172,7 +192,7 @@ def _validate_config(root: Path, config: Mapping[str, Any]) -> tuple[Path, Path,
     future = config.get("future_one_shot")
     if not isinstance(future, Mapping) or any(future.get(key) is not True for key in ("atomic_claim_before_market_decode", "refuse_second_attempt", "owner_authorization_required")):
         raise AuditViolation("one-shot contract drift")
-    runner_path, _ = _pin(root, future, RUNNER_REL) if False else _pin(root, {"path": future.get("runner_path"), "sha256": future.get("runner_sha256")}, RUNNER_REL)
+    runner_path, _ = _pin(root, {"path": future.get("runner_path"), "sha256": future.get("runner_sha256")}, RUNNER_REL)
     audit_path, _ = _pin(root, {"path": future.get("audit_path"), "sha256": future.get("audit_sha256")}, AUDIT_REL)
     config_path = _safe_file(root, CONFIG_REL)
     return config_path, manifest_path, runner_path, audit_path
@@ -238,6 +258,49 @@ def verify_output_inventory(output: Path, inventory: Mapping[str, object]) -> No
             raise AuditViolation(f"output hash drift:{name}")
 
 
+def _validate_actual_output_inventory(output: Path, inventory: Mapping[str, object]) -> None:
+    if output.is_symlink() or not output.is_dir():
+        raise AuditViolation("output directory missing or unsafe")
+    actual = {path.name for path in output.iterdir()}
+    allowed = _expected_artifacts() | {CLAIM_REL.name, RECEIPT_REL.name}
+    if actual != allowed:
+        raise AuditViolation("actual output directory inventory drift")
+    for path in output.iterdir():
+        if path.is_symlink() or not path.is_file():
+            raise AuditViolation(f"actual output artifact unsafe:{path.name}")
+    verify_output_inventory(output, inventory)
+
+
+def _validate_authorization(authorization: Mapping[str, Any], identities: Mapping[str, str]) -> None:
+    exact = {
+        "schema_id": "att1_sbr1_reserved_oos_owner_authorization_v1",
+        "authority": "owner_explicit_one_shot_reserved_diagnostic_only",
+        "execute_once": True, "known_contamination_acknowledged": True,
+        "money_authority": False,
+        "reserved_window": {"start_utc": START_UTC, "end_utc_exclusive": END_UTC, "calendar_days": 273},
+        "output_path": OUTPUT_REL.as_posix(), "claim_path": CLAIM_REL.as_posix(),
+    }
+    if any(authorization.get(key) != value for key, value in exact.items()) or not str(authorization.get("owner_authorization_id") or "").strip():
+        raise AuditViolation("authorization contract drift")
+    if any(authorization.get(key) != identities[key] for key in ("config_sha256", "input_manifest_sha256", "runner_sha256", "audit_sha256")):
+        raise AuditViolation("authorization identity drift")
+
+
+def _validate_claim(claim: Mapping[str, Any], identities: Mapping[str, str]) -> None:
+    exact = {
+        "schema_id": "att1_sbr1_reserved_oos_one_shot_claim_v1",
+        "state": "CLAIMED_BEFORE_MARKET_DECODE",
+        "reserved_window": {"start_utc": START_UTC, "end_utc_exclusive": END_UTC},
+        "output_path": OUTPUT_REL.as_posix(), "claim_path": CLAIM_REL.as_posix(),
+        "private_api_calls": 0, "live_or_broker_calls": False,
+        "orders_created_or_changed": 0, "money_authority": False, "promotion_authority": False,
+    }
+    if any(claim.get(key) != value for key, value in exact.items()) or not claim.get("claim_created_at_utc"):
+        raise AuditViolation("claim forensic contract drift")
+    if any(claim.get(key) != value for key, value in identities.items()):
+        raise AuditViolation("claim identity drift")
+
+
 def verify_claim_timing(claim_created_at_utc: object, market_decode_started_at_utc: object, market_decode_finished_at_utc: object) -> None:
     claim_time = _parse_utc(claim_created_at_utc, "claim_created")
     decode_start = _parse_utc(market_decode_started_at_utc, "decode_start")
@@ -298,11 +361,13 @@ def verify_reported_sleeves(reported: Mapping[str, Any], independent: Mapping[st
             raise AuditViolation(f"runner sleeve decision drift:{sleeve}")
         if runner_sleeve.get("checks") != audit_sleeve.get("checks"):
             raise AuditViolation(f"runner sleeve checks drift:{sleeve}")
+        if runner_sleeve.get("thresholds") != audit_sleeve.get("thresholds"):
+            raise AuditViolation(f"runner sleeve thresholds drift:{sleeve}")
         runner_modes, audit_modes = runner_sleeve.get("modes"), audit_sleeve.get("modes")
         if not isinstance(runner_modes, Mapping) or not isinstance(audit_modes, Mapping):
             raise AuditViolation(f"runner sleeve modes missing:{sleeve}")
         for mode in ("base", "stress"):
-            if not isinstance(runner_modes.get(mode), Mapping) or runner_modes[mode].get("metrics") != audit_modes[mode]["metrics"]:
+            if not isinstance(runner_modes.get(mode), Mapping) or runner_modes[mode] != audit_modes[mode]:
                 raise AuditViolation(f"runner sleeve metrics drift:{sleeve}:{mode}")
 
 
@@ -316,18 +381,16 @@ def audit_postexecution(root: Path = ROOT) -> dict[str, Any]:
     claim_path = _safe_file(root, CLAIM_REL)
     receipt_path = _safe_file(root, RECEIPT_REL)
     claim, result = _read_object(claim_path, "one-shot claim"), _read_object(receipt_path, "one-shot receipt")
-    if claim.get("schema_id") != "att1_sbr1_reserved_oos_one_shot_claim_v1" or claim.get("state") != "CLAIMED_BEFORE_MARKET_DECODE":
-        raise AuditViolation("claim schema or state drift")
     if result.get("schema_id") != "att1_sbr1_reserved_oos_one_shot_receipt_v1" or result.get("authority") != RESULT_AUTHORITY:
         raise AuditViolation("receipt schema or authority drift")
     unsigned = dict(result); actual_receipt_sha = str(unsigned.pop("receipt_sha256", ""))
     if actual_receipt_sha != canonical_sha256(unsigned):
         raise AuditViolation("receipt self hash drift")
     identities = {"config_sha256": sha256_file(config_path), "input_manifest_sha256": sha256_file(manifest_path), "runner_sha256": sha256_file(runner_path), "audit_sha256": sha256_file(audit_path), "authorization_sha256": sha256_file(authorization_path)}
-    if any(claim.get(key) != value or result.get(key) != value for key, value in identities.items()):
-        raise AuditViolation("claim or receipt identity drift")
-    if authorization.get("config_sha256") != identities["config_sha256"] or authorization.get("input_manifest_sha256") != identities["input_manifest_sha256"] or authorization.get("runner_sha256") != identities["runner_sha256"] or authorization.get("audit_sha256") != identities["audit_sha256"]:
-        raise AuditViolation("authorization identity drift")
+    _validate_authorization(authorization, identities)
+    _validate_claim(claim, identities)
+    if any(result.get(key) != value for key, value in identities.items()):
+        raise AuditViolation("receipt identity drift")
     if result.get("claim_sha256") != sha256_file(claim_path):
         raise AuditViolation("receipt claim hash drift")
     verify_claim_timing(claim.get("claim_created_at_utc"), result.get("market_decode_started_at_utc"), result.get("market_decode_finished_at_utc"))
@@ -339,7 +402,7 @@ def audit_postexecution(root: Path = ROOT) -> dict[str, Any]:
     inventory = result.get("output_file_sha256")
     if not isinstance(inventory, Mapping):
         raise AuditViolation("output hash inventory drift")
-    verify_output_inventory(output, inventory)
+    _validate_actual_output_inventory(output, inventory)
     from research_lab.adapter_parity import read_jsonl
     from research_lab.summarize_att1_sbr1_presealed_economics import chronological_symbol_occupancy, metrics
     threshold_receipt = _read_object(_safe_file(root, Path(str(config["threshold_source"]["path"]))), "threshold receipt")
@@ -352,7 +415,11 @@ def audit_postexecution(root: Path = ROOT) -> dict[str, Any]:
             live = read_jsonl(output / f"{sleeve.lower()}_{mode}_live.jsonl")
             parity = verify_ledger_parity(research, live, sleeve, mode)
             accepted = chronological_symbol_occupancy(tuple(live.values()), sleeve)
-            modes[mode] = {"raw_signals": len(live), "accepted_signals": len(accepted.rows), "same_symbol_occupancy_drops": accepted.overlap_drops, "metrics": metrics(accepted.rows), "parity": parity}
+            modes[mode] = {"raw_signals": len(live), "accepted_signals": len(accepted.rows), "same_symbol_occupancy_drops": accepted.overlap_drops, "metrics": metrics(accepted.rows), "parity": "PASS"}
+        for mode in ("evaluation",):
+            research = read_jsonl(output / f"{sleeve.lower()}_{mode}_research.jsonl")
+            live = read_jsonl(output / f"{sleeve.lower()}_{mode}_live.jsonl")
+            verify_ledger_parity(research, live, sleeve, mode)
         thresholds = thresholds_by_sleeve[sleeve]
         decision = three_way_decision(modes["base"]["metrics"], modes["stress"]["metrics"], thresholds, negative_stress_n=int(config["decision_contract"]["negative_stress_sum_r_is_fail_when_n_gte"]))
         independent_sleeves[sleeve] = {"modes": modes, "thresholds": thresholds, "checks": {mode: threshold_checks(modes[mode]["metrics"], thresholds) for mode in ("base", "stress")}, "decision": decision}
