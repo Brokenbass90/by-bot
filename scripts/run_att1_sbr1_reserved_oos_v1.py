@@ -109,6 +109,81 @@ def _validate_manifest_metadata(manifest: Mapping[str, Any]) -> None:
         raise OneShotViolation("reserved input inventory drift")
     if [str(row.get("symbol") or "") for row in inputs if isinstance(row, Mapping)] != list(MAJOR8):
         raise OneShotViolation("reserved input universe drift")
+    required = {"symbol", "source_path", "sha256", "bytes", "rows", "first_ts_ms", "last_ts_ms"}
+    if any(not isinstance(row, Mapping) or set(row) != required for row in inputs):
+        raise OneShotViolation("reserved input manifest schema drift")
+
+
+def _bundle_sha(rows: list[dict[str, object]], role: str) -> str:
+    return _canonical_sha({"files": sorted(rows, key=lambda row: str(row["path"])), "role": role})
+
+
+def build_reserved_manifest_view(
+    candidate: Mapping[str, Any], reserved_manifest: Mapping[str, Any], reserved_manifest_sha256: str
+):
+    """Create a strict in-memory candidate bound only to the reserved inputs."""
+    from bot.live_native_manifest import VerifiedParityManifest
+
+    _validate_manifest_metadata(reserved_manifest)
+    if candidate.get("schema_id") != "att1_sbr1_live_native_parity_manifest_v1" or candidate.get("universe") != list(MAJOR8):
+        raise OneShotViolation("candidate view contract drift")
+    regime = candidate.get("regime_contract")
+    if not isinstance(regime, Mapping) or regime.get("ema_period") != 200 or regime.get("ema_seed_start_utc") != "2024-03-01T00:00:00Z" or regime.get("ema_reseed_each_window") is not False:
+        raise OneShotViolation("TASK3_BOOTSTRAP_REGIME_CONTRACT_DRIFT")
+    if not isinstance(candidate.get("profiles"), Mapping) or not isinstance(candidate.get("cost_contracts"), Mapping) or not isinstance(candidate.get("exchange_filters"), Mapping):
+        raise OneShotViolation("candidate view economics contract drift")
+    if len(reserved_manifest_sha256) != 64:
+        raise OneShotViolation("reserved manifest SHA malformed")
+    source_files = candidate.get("source_files")
+    if not isinstance(source_files, list) or not source_files:
+        raise OneShotViolation("candidate source bundle missing")
+    reserved_files = [
+        {"path": str(row["source_path"]), "sha256": str(row["sha256"]), "bytes": int(row["bytes"]), "symbol": str(row["symbol"])}
+        for row in reserved_manifest["inputs"]
+    ]
+    if [row["symbol"] for row in reserved_files] != list(MAJOR8):
+        raise OneShotViolation("reserved view universe drift")
+    view = dict(candidate)
+    view["window"] = {"start_utc": START_UTC, "end_utc_exclusive": END_UTC}
+    view["data_files"] = reserved_files
+    view["reserved_input_manifest_sha256"] = reserved_manifest_sha256
+    return VerifiedParityManifest(
+        path=Path("<verified-reserved-in-memory>"), manifest_sha256=_canonical_sha(view),
+        universe=MAJOR8, source_bundle_sha256=_bundle_sha(
+            [{"path": str(row["path"]), "sha256": str(row["sha256"]), "bytes": int(row["bytes"])} for row in source_files], "source"
+        ), data_bundle_sha256=_bundle_sha(reserved_files, "data"), payload=view,
+    )
+
+
+def warm_btc_regime(preholdout_h1: list[tuple[object, ...]], reserved_h1: list[tuple[object, ...]]):
+    """Continue the BTC EMA200 state from the preholdout, never reseeding OOS."""
+    from research_lab import run_att1_sbr1_actual_adapter_parity as parity
+
+    if len(preholdout_h1) < 200 or not reserved_h1:
+        raise OneShotViolation("TASK3_BOOTSTRAP_BTC_H1_HISTORY_INSUFFICIENT")
+    full = [*preholdout_h1, *reserved_h1]
+    if any(int(right[0]) != int(left[0]) + 3_600_000 for left, right in zip(full, full[1:])):
+        raise OneShotViolation("TASK3_BOOTSTRAP_BTC_H1_CONTIGUITY_DRIFT")
+    complete = parity._build_regime_map(full)
+    reserved_closes = {int(row[0]) + 3_600_000 for row in reserved_h1}
+    warm = {close: evidence for close, evidence in complete.items() if close in reserved_closes}
+    if set(warm) != reserved_closes:
+        raise OneShotViolation("TASK3_BOOTSTRAP_BTC_H1_WARM_STATE_MISSING")
+    return warm
+
+
+def _prepare_output(root: Path) -> tuple[Path, Path]:
+    output = root / OUTPUT_REL
+    current = root.resolve()
+    for part in OUTPUT_REL.parts:
+        current = current / part
+        if current.is_symlink():
+            raise OneShotViolation("symlinked fixed output ancestor")
+    if output.exists() and not output.is_dir():
+        raise OneShotViolation("fixed output is not a directory")
+    if output.exists() and any(output.iterdir()):
+        raise OneShotViolation("stale output artifacts before claim")
+    return output, root / CLAIM_REL
 
 
 def _validate_config(root: Path) -> tuple[dict[str, Any], Path, dict[str, Any], Path, dict[str, Any]]:
@@ -271,11 +346,26 @@ def _decode_inputs(root: Path, manifest: Mapping[str, Any], opener: Callable[[Pa
         except json.JSONDecodeError as exc:
             raise OneShotViolation(f"reserved input JSON drift:{symbol}") from exc
         expected = {"schema_id": "att1_sbr1_reserved_m5_payload_v1", "authority": "identity_only_materialized_without_scoring_no_live_no_broker", "symbol": symbol, "window": {"start_utc": START_UTC, "end_utc_exclusive": END_UTC}, "timeframe_minutes": 5, "performance_computed": False, "money_authority": False}
-        if not isinstance(payload, dict) or any(payload.get(key) != value for key, value in expected.items()):
+        payload_keys = {"schema_id", "authority", "symbol", "window", "timeframe_minutes", "records", "records_sha256", "performance_computed", "money_authority"}
+        if not isinstance(payload, dict) or set(payload) != payload_keys or any(payload.get(key) != value for key, value in expected.items()):
             raise OneShotViolation(f"reserved input schema/window drift:{symbol}")
         records = payload.get("records")
         if not isinstance(records, list) or len(records) != EXPECTED_ROWS or int(item["rows"]) != EXPECTED_ROWS:
             raise OneShotViolation(f"reserved input row-count drift:{symbol}")
+        record_keys = {"ts_ms", "open", "high", "low", "close", "volume", "turnover"}
+        if any(not isinstance(row, Mapping) or set(row) != record_keys for row in records):
+            raise OneShotViolation(f"reserved input record schema drift:{symbol}")
+        from scripts.materialize_att1_sbr1_reserved_m5_v1 import canonical_sha
+        expected_records_sha = canonical_sha(records)
+        if payload.get("records_sha256") != expected_records_sha:
+            raise OneShotViolation(f"reserved input records SHA drift:{symbol}")
+        for row in records:
+            try:
+                opening, high, low, close = (float(row[key]) for key in ("open", "high", "low", "close"))
+            except (TypeError, ValueError) as exc:
+                raise OneShotViolation(f"reserved input OHLC drift:{symbol}") from exc
+            if not all(value > 0 for value in (opening, high, low, close)) or high < max(opening, close) or low > min(opening, close):
+                raise OneShotViolation(f"reserved input OHLC drift:{symbol}")
         timestamps = [int(row["ts_ms"]) for row in records if isinstance(row, Mapping)]
         if len(timestamps) != EXPECTED_ROWS or timestamps[0] != START_MS or timestamps[-1] != END_MS - M5_MS or any(right - left != M5_MS for left, right in zip(timestamps, timestamps[1:])):
             raise OneShotViolation(f"reserved input M5 gap drift:{symbol}")
@@ -305,33 +395,52 @@ def _thresholds(root: Path, config: Mapping[str, Any]) -> dict[str, Mapping[str,
 
 
 def _real_scorer(
-    *, root: Path, output: Path, candidate: Mapping[str, Any], market: Mapping[str, Mapping[str, Any]]
+    *, root: Path, output: Path, candidate: Mapping[str, Any], market: Mapping[str, Mapping[str, Any]], manifest_view=None
 ) -> object:
     """Invoke the unchanged live-native sleeve boundary on verified in-memory data."""
     from bot.live_native_manifest import VerifiedParityManifest
     from research_lab import run_att1_sbr1_actual_adapter_parity as parity
 
+    bootstrap_h1: dict[str, tuple[tuple[object, ...], ...]] = {}
+    rows = candidate.get("data_files")
+    if not isinstance(rows, list) or {row.get("symbol") for row in rows if isinstance(row, Mapping)} != set(MAJOR8):
+        raise OneShotViolation("TASK3_BOOTSTRAP_PREHOLDOUT_IDENTITY_MISSING")
+    for bootstrap_row in rows:
+        assert isinstance(bootstrap_row, Mapping)
+        symbol = str(bootstrap_row["symbol"])
+        bootstrap_path, _ = _pin(root, bootstrap_row)
+        try:
+            bootstrap = json.loads(bootstrap_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_UNREADABLE:{symbol}") from exc
+        if not isinstance(bootstrap, Mapping) or bootstrap.get("schema_id") != "bybit_public_m5_preholdout_v1" or bootstrap.get("symbol") != symbol:
+            raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_SCHEMA_DRIFT:{symbol}")
+        records = bootstrap.get("records")
+        if not isinstance(records, list):
+            raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_RECORDS_MISSING:{symbol}")
+        m5 = tuple((int(row["ts_ms"]), row["open"], row["high"], row["low"], row["close"], row["volume"]) for row in records if isinstance(row, Mapping))
+        if len(m5) != len(records):
+            raise OneShotViolation(f"TASK3_BOOTSTRAP_PREHOLDOUT_RECORD_SCHEMA_DRIFT:{symbol}")
+        bootstrap_h1[symbol] = parity._aggregate_h1(m5)
     market_data = {}
     for symbol, payload in market.items():
         rows = tuple(
             (int(row["ts_ms"]), row["open"], row["high"], row["low"], row["close"], row["volume"])
             for row in payload["records"]
         )
-        h1 = parity._aggregate_h1(rows)
+        reserved_h1 = parity._aggregate_h1(rows)
+        h1 = bootstrap_h1[symbol][-200:] + reserved_h1
         market_data[symbol] = parity.MarketData(
             symbol=symbol, m5=rows, h1=h1,
             m5_index={int(row[0]): index for index, row in enumerate(rows)},
             h1_index={int(row[0]): index for index, row in enumerate(h1)},
         )
-    view = dict(candidate)
-    view["window"] = {"start_utc": START_UTC, "end_utc_exclusive": END_UTC}
-    manifest = VerifiedParityManifest(
-        path=Path("<verified-reserved-in-memory>"), manifest_sha256=_canonical_sha(view),
-        universe=MAJOR8, source_bundle_sha256="verified-candidate-sources",
-        data_bundle_sha256="verified-reserved-inputs", payload=view,
-    )
+    manifest = manifest_view or build_reserved_manifest_view(candidate, {"inputs": []}, "0" * 64)
     output.mkdir(parents=True, exist_ok=True)
-    regime = parity._build_regime_map(market_data["BTCUSDT"].h1)
+    regime = warm_btc_regime(list(bootstrap_h1["BTCUSDT"]), list(parity._aggregate_h1(tuple(
+        (int(row["ts_ms"]), row["open"], row["high"], row["low"], row["close"], row["volume"])
+        for row in market["BTCUSDT"]["records"]
+    ))))
     with parity._frozen_env(manifest.universe):
         return {
             sleeve: parity._run_sleeve(sleeve, root, output, manifest, market_data, regime)
@@ -371,35 +480,67 @@ def _summarize_ledgers(
     return sleeves
 
 
-def run_one_shot(root: Path = ROOT, *, market_opener: Callable[[Path], bytes] | None = None, scorer: Callable[..., object] | None = None) -> dict[str, object]:
+def _expected_scoring_artifacts() -> set[str]:
+    names: set[str] = set()
+    for sleeve in ("att1", "sbr1"):
+        names.update({f"{sleeve}_evaluation_research.jsonl", f"{sleeve}_evaluation_live.jsonl"})
+        for mode in ("base", "stress"):
+            names.update({f"{sleeve}_{mode}_research.jsonl", f"{sleeve}_{mode}_live.jsonl", f"{sleeve}_{mode}_parity_report.json"})
+    return names
+
+
+def _verify_scoring_inventory(output: Path) -> dict[str, str]:
+    expected = _expected_scoring_artifacts()
+    actual = {path.name for path in output.iterdir() if path.name != "one_shot_claim.json"}
+    if actual != expected:
+        raise OneShotViolation("unexpected scorer output inventory")
+    inventory: dict[str, str] = {}
+    for name in sorted(expected):
+        path = output / name
+        if path.is_symlink() or not path.is_file():
+            raise OneShotViolation("symlinked or nonregular scorer output")
+        inventory[name] = _sha_file(path)
+    return inventory
+
+
+def run_one_shot(root: Path = ROOT, *, market_opener: Callable[[Path], bytes] | None = None, scorer: Callable[..., object] | None = None, summarizer: Callable[..., dict[str, object]] | None = None) -> dict[str, object]:
     """Run a frozen diagnostic; any post-claim failure irreversibly consumes it."""
     root = root.resolve()
     config, config_path, candidate, manifest_path, manifest = _validate_config(root)
     _, authorization_path = _validate_authorization(root, config_path, manifest_path)
-    output, claim_path = root / OUTPUT_REL, root / CLAIM_REL
+    claim_path = root / CLAIM_REL
     if claim_path.exists() or claim_path.is_symlink():
         raise OneShotViolation("ONE_SHOT_ALREADY_CONSUMED")
-    claim = {"schema_id": "att1_sbr1_reserved_oos_one_shot_claim_v1", "state": "CLAIMED_BEFORE_MARKET_DECODE", "claim_created_at_utc": _utc_now(), "authorization_sha256": _sha_file(authorization_path), "config_sha256": _sha_file(config_path), "input_manifest_sha256": _sha_file(manifest_path), "runner_sha256": _sha_file(_safe_file(root, RUNNER_REL)), "audit_sha256": _sha_file(_safe_file(root, AUDIT_REL)), "output_path": OUTPUT_REL.as_posix(), "claim_path": CLAIM_REL.as_posix()}
+    output, claim_path = _prepare_output(root)
+    forensic = {"reserved_window": {"start_utc": START_UTC, "end_utc_exclusive": END_UTC}, "authorization_sha256": _sha_file(authorization_path), "config_sha256": _sha_file(config_path), "input_manifest_sha256": _sha_file(manifest_path), "runner_sha256": _sha_file(_safe_file(root, RUNNER_REL)), "audit_sha256": _sha_file(_safe_file(root, AUDIT_REL)), "output_path": OUTPUT_REL.as_posix(), "claim_path": CLAIM_REL.as_posix(), "private_api_calls": 0, "live_or_broker_calls": False, "orders_created_or_changed": 0, "money_authority": False, "promotion_authority": False}
+    claim = {"schema_id": "att1_sbr1_reserved_oos_one_shot_claim_v1", "state": "CLAIMED_BEFORE_MARKET_DECODE", "claim_created_at_utc": _utc_now(), **forensic}
     _exclusive_claim(claim_path, claim)
+    claim_sha = _sha_file(claim_path)
     decode_started = _utc_now()
+    decode_finished: str | None = None
     try:
         market = _decode_inputs(root, manifest, market_opener or (lambda path: path.read_bytes()))
-        (scorer or _real_scorer)(root=root, output=output, candidate=candidate, market=market)
+        decode_finished = _utc_now()
+        view = build_reserved_manifest_view(candidate, manifest, _sha_file(manifest_path))
+        (scorer or _real_scorer)(root=root, output=output, candidate=candidate, market=market, manifest_view=view)
+        inventory = _verify_scoring_inventory(output)
         thresholds = _thresholds(root, config)
-        sleeves = _summarize_ledgers(
+        sleeves = (summarizer or _summarize_ledgers)(
             output, thresholds,
             negative_stress_n=int(config["decision_contract"]["negative_stress_sum_r_is_fail_when_n_gte"]),
         )
-        receipt: dict[str, object] = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", "money_authority": False, "promotion_authority": False, "live_or_broker_calls": False, "orders_created_or_changed": 0, "authorization_sha256": _sha_file(authorization_path), "config_sha256": _sha_file(config_path), "input_manifest_sha256": _sha_file(manifest_path), "runner_sha256": _sha_file(_safe_file(root, RUNNER_REL)), "audit_sha256": _sha_file(_safe_file(root, AUDIT_REL)), "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": _utc_now(), "exact_rows_decoded": {symbol: len(payload["records"]) for symbol, payload in market.items()}, "output_path": OUTPUT_REL.as_posix(), "claim_path": CLAIM_REL.as_posix()}
+        receipt: dict[str, object] = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", "classification": "RESERVED_OOS_DIAGNOSTIC_WITH_KNOWN_CONTAMINATION", **forensic, "claim_sha256": claim_sha, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": decode_finished, "exact_rows_decoded": {symbol: len(payload["records"]) for symbol, payload in market.items()}}
         receipt["sleeves"] = sleeves
-        receipt["output_file_sha256"] = {path.name: _sha_file(path) for path in sorted(output.glob("*.json*")) if path.name != "receipt.json"}
+        receipt["output_file_sha256"] = inventory
         receipt["receipt_sha256"] = _canonical_sha(receipt)
         _atomic_json(root / RECEIPT_REL, receipt)
         return receipt
-    except Exception as exc:
-        failure = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "terminal_state": "FAIL_CLOSED_AFTER_CLAIM", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", "money_authority": False, "promotion_authority": False, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": _utc_now(), "error": f"{type(exc).__name__}:{exc}", "claim_sha256": _sha_file(claim_path)}
+    except BaseException as exc:
+        failure = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "terminal_state": "FAIL_CLOSED_AFTER_CLAIM", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", **forensic, "market_decode_started_at_utc": decode_started, "market_decode_finished_at_utc": decode_finished, "error": f"{type(exc).__name__}:{exc}", "claim_sha256": claim_sha}
         failure["receipt_sha256"] = _canonical_sha(failure)
         _atomic_json(root / RECEIPT_REL, failure)
+        if isinstance(exc, (KeyboardInterrupt, SystemExit)):
+            raise
         if isinstance(exc, OneShotViolation):
             raise
         raise OneShotViolation(f"FAIL_CLOSED_AFTER_CLAIM:{type(exc).__name__}") from exc

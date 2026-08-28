@@ -42,3 +42,24 @@ exit 0
 An owner must separately freeze the audit/runner/manifest pins and create the
 exact authorization before any one-shot execution is considered. A claim is
 irreversible: any post-claim failure remains consumed and fail-closed.
+
+## Independent review fix round 1
+
+- Repaired the scoring boundary so every signal sleeve receives exactly the
+  final 200 preholdout H1 bars plus reserved H1 bars, while BTC regime evidence
+  is continued from the full causal preholdout history and restricted to
+  reserved close timestamps. No reserved-window EMA reseed or first-200-hour
+  drop is allowed.
+- Bound the in-memory view to the reserved input-manifest SHA and its exact
+  data bundle; preholdout `data_files` are excluded from the scoring view.
+- Added pre-claim output/claim symlink and stale-artifact refusal; exact scorer
+  inventory; richer success/failure forensic receipts; and catchable
+  interruption terminal receipts.
+- Enforced the materializer's exact payload/record contracts, including its
+  producer `canonical_sha(records)` implementation. The producer adds a final
+  newline to canonical JSON bytes; the focused regression test calls that
+  producer rather than duplicating the hash convention.
+
+Verification after fix round 1: focused suite `18 passed in 26.49s`,
+`py_compile` exit 0, and `git diff --check` exit 0. The CLI was not invoked;
+no authorization, real payload, network, broker, or live path was accessed.
