@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import shutil
 from pathlib import Path
 
 import pytest
@@ -115,3 +117,72 @@ def test_runner_sleeve_comparison_rejects_raw_occupancy_parity_or_threshold_drif
     reported["ATT1"]["modes"]["base"]["raw_signals"] = 3
     with pytest.raises(AuditViolation, match="runner sleeve metrics drift:ATT1:base"):
         verify_reported_sleeves(reported, independent)
+
+
+def _sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _fixture_row(sleeve: str) -> dict[str, object]:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import canonical_sha256
+
+    digest = "a" * 64
+    frozen = {"config_hash": digest, "source_hash": digest, "data_hash": digest, "profile_hash": digest}
+    decision_id = canonical_sha256(frozen)
+    final_fill = {"decision_id": decision_id, "fill_id": "fill-1", "order_id": "order-1"}
+    policy = {"spec_id": "spec-1", "profile_hash": digest}
+    receipt = {"schema_id": "research_live_adapter_parity_receipt_v2", "claim_key": "claim-1", "decision_id": decision_id, "order_id": "order-1", "fill_id": "fill-1", "fill_fingerprint": canonical_sha256(final_fill), "policy_fingerprint": canonical_sha256(policy), "execution_fingerprint": digest}
+    receipt["receipt_id"] = canonical_sha256(receipt)
+    return {
+        "schema_id": "research_live_adapter_parity_v2", "release_or_promotion_authority": False, "adapter_emitters_default_off": True,
+        "sleeve_id": sleeve, "spec_id": "spec-1", "profile_id": "profile-1", "profile_hash": digest, "symbol": "BTCUSDT", "bar_ts": 1_759_276_800_000, "side": "long", "signal_id": decision_id, "decision_id": decision_id,
+        "entry": "1", "sl": "0.9", "tp1": "1.1", "tp2": "1.2", "tp_fracs": ["0.5", "0.5"], "runner_fraction": "1", "time_stop": {"deadline_ms": 1_759_277_100_000}, "cooldown_state": {}, "regime_value": "0", "regime_bar_ts": 1_759_276_800_000, "validator_drop_reason": None,
+        "config_hash": digest, "source_hash": digest, "data_hash": digest, "tick_size": "0.1", "fill_id": "fill-1", "order_id": "order-1", "fill_lifecycle": "finalized", "fill_ts_ms": 1_759_276_800_000, "fill_finalized_ts_ms": 1_759_276_800_000, "fill_age_ms": 0, "fill_finalization_delay_ms": 0, "exit_ts_ms": 1_759_276_900_000,
+        "fill_fingerprint": canonical_sha256(final_fill), "policy_fingerprint": canonical_sha256(policy), "rebase_claim_key": "claim-1", "rebase_receipt_id": receipt["receipt_id"], "execution_fingerprint": digest, "frozen_decision": frozen, "final_fill": final_fill, "rebase_policy": policy, "rebase_receipt": receipt, "cost_contract_hash": digest, "outcome": {}, "net_r": "1", "exception": None,
+    }
+
+
+def _synthetic_postexecution_tree(tmp_path: Path) -> Path:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import OUTPUT_REL, canonical_sha256, sha256_file, threshold_checks, three_way_decision
+    from research_lab.adapter_parity import read_jsonl
+    from research_lab.summarize_att1_sbr1_presealed_economics import chronological_symbol_occupancy, metrics
+
+    config = json.loads(CONFIG.read_text())
+    for row in config["source_pins"]:
+        target = tmp_path / row["path"]; target.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(ROOT / row["path"], target)
+    for path in ("scripts/run_att1_sbr1_reserved_oos_v1.py", "scripts/audit_att1_sbr1_reserved_oos_v1.py", "configs/research/att1_sbr1_reserved_m5_input_manifest_v1.json"):
+        target = tmp_path / path; target.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(ROOT / path, target)
+    config_path = tmp_path / "configs/research/att1_sbr1_reserved_oos_diagnostic_v1.json"; config_path.write_text(json.dumps(config, sort_keys=True))
+    identities = {"config_sha256": _sha(config_path), "input_manifest_sha256": _sha(tmp_path / "configs/research/att1_sbr1_reserved_m5_input_manifest_v1.json"), "runner_sha256": _sha(tmp_path / "scripts/run_att1_sbr1_reserved_oos_v1.py"), "audit_sha256": _sha(tmp_path / "scripts/audit_att1_sbr1_reserved_oos_v1.py")}
+    auth = {"schema_id": "att1_sbr1_reserved_oos_owner_authorization_v1", "authority": "owner_explicit_one_shot_reserved_diagnostic_only", "owner_authorization_id": "synthetic-owner", "execute_once": True, "known_contamination_acknowledged": True, "money_authority": False, "reserved_window": config["reserved_window"], "output_path": OUTPUT_REL.as_posix(), "claim_path": (OUTPUT_REL / "one_shot_claim.json").as_posix(), **identities}
+    auth_path = tmp_path / "configs/research/att1_sbr1_reserved_oos_owner_authorization_v1.json"; auth_path.write_text(json.dumps(auth, sort_keys=True))
+    identities["authorization_sha256"] = _sha(auth_path)
+    output = tmp_path / OUTPUT_REL; output.mkdir(parents=True)
+    for sleeve in ("ATT1", "SBR1"):
+        for mode in ("evaluation", "base", "stress"):
+            for shaped in ("research", "live"):
+                (output / f"{sleeve.lower()}_{mode}_{shaped}.jsonl").write_text(json.dumps(_fixture_row(sleeve)) + "\n")
+        for mode in ("base", "stress"):
+            (output / f"{sleeve.lower()}_{mode}_parity_report.json").write_text('{"decision":"PASS"}\n')
+    claim = {"schema_id": "att1_sbr1_reserved_oos_one_shot_claim_v1", "state": "CLAIMED_BEFORE_MARKET_DECODE", "claim_created_at_utc": "2026-08-27T00:00:00Z", "reserved_window": {"start_utc": "2025-10-01T00:00:00Z", "end_utc_exclusive": "2026-07-01T00:00:00Z"}, "output_path": OUTPUT_REL.as_posix(), "claim_path": (OUTPUT_REL / "one_shot_claim.json").as_posix(), "private_api_calls": 0, "live_or_broker_calls": False, "orders_created_or_changed": 0, "money_authority": False, "promotion_authority": False, **identities}
+    claim_path = output / "one_shot_claim.json"; claim_path.write_text(json.dumps(claim, sort_keys=True))
+    thresholds = json.loads((tmp_path / config["threshold_source"]["path"]).read_text())["sleeves"]
+    sleeves = {}
+    for sleeve in ("ATT1", "SBR1"):
+        modes = {}
+        for mode in ("base", "stress"):
+            rows = read_jsonl(output / f"{sleeve.lower()}_{mode}_live.jsonl"); accepted = chronological_symbol_occupancy(tuple(rows.values()), sleeve)
+            modes[mode] = {"raw_signals": len(rows), "accepted_signals": len(accepted.rows), "same_symbol_occupancy_drops": accepted.overlap_drops, "metrics": metrics(accepted.rows), "parity": "PASS"}
+        threshold = thresholds[sleeve]["zero_risk_shadow_gate"]["thresholds"]
+        sleeves[sleeve] = {"modes": modes, "thresholds": threshold, "checks": {mode: threshold_checks(modes[mode]["metrics"], threshold) for mode in ("base", "stress")}, "decision": three_way_decision(modes["base"]["metrics"], modes["stress"]["metrics"], threshold, negative_stress_n=20)}
+    inventory = {path.name: sha256_file(path) for path in output.iterdir() if path.name != "one_shot_claim.json"}
+    result = {"schema_id": "att1_sbr1_reserved_oos_one_shot_receipt_v1", "authority": "research_only_reserved_diagnostic_no_live_no_broker_no_money_no_promotion", "classification": config["classification"], **identities, "claim_sha256": _sha(claim_path), "reserved_window": {"start_utc": "2025-10-01T00:00:00Z", "end_utc_exclusive": "2026-07-01T00:00:00Z"}, "output_path": OUTPUT_REL.as_posix(), "claim_path": (OUTPUT_REL / "one_shot_claim.json").as_posix(), "private_api_calls": 0, "live_or_broker_calls": False, "orders_created_or_changed": 0, "money_authority": False, "promotion_authority": False, "market_decode_started_at_utc": "2026-08-27T00:00:01Z", "market_decode_finished_at_utc": "2026-08-27T00:00:02Z", "sleeves": sleeves, "output_file_sha256": inventory}
+    result["receipt_sha256"] = canonical_sha256(result)
+    (output / "receipt.json").write_text(json.dumps(result, sort_keys=True))
+    return tmp_path
+
+
+def test_synthetic_postexecution_happy_path_is_independently_audited(tmp_path: Path) -> None:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import audit_postexecution
+
+    assert audit_postexecution(_synthetic_postexecution_tree(tmp_path))["decision"] == "AUDIT_PASS_RESEARCH_ONLY"

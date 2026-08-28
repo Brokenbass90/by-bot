@@ -38,6 +38,12 @@ timing inversion, ledger mismatch, and missing output inventory. Preflight
 tests keep the no-market-open/row-decode assertions and verify missing
 manifest, runner, or audit freezes block fail-closed.
 
+The audit suite also builds a fully synthetic completed one-shot tree with
+valid normalized research/live ledgers, authorization, durable claim, exact
+output inventory, and signed receipt. `audit_postexecution` returns
+`AUDIT_PASS_RESEARCH_ONLY` for that fixture without importing or invoking the
+runner and without creating or resolving any reserved input payload.
+
 ## Safety status and next gate
 
 No owner authorization, claim, one-shot output, runner execution, reserved
