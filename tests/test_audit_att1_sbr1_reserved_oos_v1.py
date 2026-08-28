@@ -186,3 +186,95 @@ def test_synthetic_postexecution_happy_path_is_independently_audited(tmp_path: P
     from scripts.audit_att1_sbr1_reserved_oos_v1 import audit_postexecution
 
     assert audit_postexecution(_synthetic_postexecution_tree(tmp_path))["decision"] == "AUDIT_PASS_RESEARCH_ONLY"
+
+
+def _rewrite_result(root: Path, mutation) -> None:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import OUTPUT_REL, canonical_sha256
+
+    path = root / OUTPUT_REL / "receipt.json"
+    result = json.loads(path.read_text())
+    mutation(result)
+    result.pop("receipt_sha256", None)
+    result["receipt_sha256"] = canonical_sha256(result)
+    path.write_text(json.dumps(result, sort_keys=True))
+
+
+def test_postexecution_rejects_rehashed_authorization_contract_tamper(tmp_path: Path) -> None:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import AUTHORIZATION_REL, AuditViolation, audit_postexecution
+
+    root = _synthetic_postexecution_tree(tmp_path)
+    path = root / AUTHORIZATION_REL
+    authorization = json.loads(path.read_text())
+    authorization["schema_id"] = "forged_owner_authorization_v2"
+    path.write_text(json.dumps(authorization, sort_keys=True))
+
+    with pytest.raises(AuditViolation, match="authorization contract drift"):
+        audit_postexecution(root)
+
+
+def test_postexecution_rejects_rehashed_claim_authority_tamper(tmp_path: Path) -> None:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import CLAIM_REL, AuditViolation, audit_postexecution
+
+    root = _synthetic_postexecution_tree(tmp_path)
+    path = root / CLAIM_REL
+    claim = json.loads(path.read_text())
+    claim["money_authority"] = True
+    path.write_text(json.dumps(claim, sort_keys=True))
+    _rewrite_result(root, lambda result: result.update({"claim_sha256": _sha(path)}))
+
+    with pytest.raises(AuditViolation, match="claim forensic contract drift"):
+        audit_postexecution(root)
+
+
+def test_postexecution_rejects_refingerprinted_threshold_source_tamper(tmp_path: Path) -> None:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import AuditViolation, canonical_sha256, audit_postexecution
+
+    root = _synthetic_postexecution_tree(tmp_path)
+    path = root / "configs/research/att1_sbr1_reserved_oos_diagnostic_v1.json"
+    config = json.loads(path.read_text())
+    config["threshold_source"]["json_pointer"] = "/forged/thresholds"
+    config.pop("config_fingerprint_sha256", None)
+    config["config_fingerprint_sha256"] = canonical_sha256(config)
+    path.write_text(json.dumps(config, sort_keys=True))
+
+    with pytest.raises(AuditViolation, match="threshold source pin drift"):
+        audit_postexecution(root)
+
+
+def test_postexecution_rejects_extra_output_symlink(tmp_path: Path) -> None:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import OUTPUT_REL, AuditViolation, audit_postexecution
+
+    root = _synthetic_postexecution_tree(tmp_path)
+    output = root / OUTPUT_REL
+    (output / "forged-extra").symlink_to(output / "att1_base_live.jsonl")
+
+    with pytest.raises(AuditViolation, match="actual output directory inventory drift"):
+        audit_postexecution(root)
+
+
+def test_postexecution_rejects_rehashed_evaluation_ledger_mismatch(tmp_path: Path) -> None:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import OUTPUT_REL, AuditViolation, audit_postexecution
+
+    root = _synthetic_postexecution_tree(tmp_path)
+    output = root / OUTPUT_REL
+    path = output / "att1_evaluation_live.jsonl"
+    row = json.loads(path.read_text())
+    row["net_r"] = "2"
+    path.write_text(json.dumps(row) + "\n")
+    _rewrite_result(root, lambda result: result["output_file_sha256"].update({path.name: _sha(path)}))
+
+    with pytest.raises(AuditViolation, match="research/live ledger mismatch:ATT1:evaluation"):
+        audit_postexecution(root)
+
+
+def test_postexecution_rejects_rehashed_runner_sleeve_evidence_tamper(tmp_path: Path) -> None:
+    from scripts.audit_att1_sbr1_reserved_oos_v1 import AuditViolation, audit_postexecution
+
+    root = _synthetic_postexecution_tree(tmp_path)
+
+    def mutate(result: dict[str, object]) -> None:
+        result["sleeves"]["ATT1"]["modes"]["base"]["accepted_signals"] = 2
+
+    _rewrite_result(root, mutate)
+    with pytest.raises(AuditViolation, match="runner sleeve metrics drift:ATT1:base"):
+        audit_postexecution(root)

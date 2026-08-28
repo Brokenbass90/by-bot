@@ -38,6 +38,25 @@ timing inversion, ledger mismatch, and missing output inventory. Preflight
 tests keep the no-market-open/row-decode assertions and verify missing
 manifest, runner, or audit freezes block fail-closed.
 
+Independent review then found eight post-execution validation gaps. Commits
+`5a7f3ab` and the follow-up test closure added exact authorization and claim
+contracts, frozen threshold linkage, actual directory inventory, evaluation
+ledger parity, full sleeve-evidence comparison, strict manifest schema, a
+complete synthetic post-execution PASS, and integrated rehashed tamper cases.
+
+Final controller verification after those fixes:
+
+```text
+tests/test_audit_att1_sbr1_reserved_oos_v1.py
+18 passed in 0.21s
+
+Task 1-3 combined focused suite
+66 passed in 52.29s
+
+py_compile and git diff --check
+exit 0
+```
+
 The audit suite also builds a fully synthetic completed one-shot tree with
 valid normalized research/live ledgers, authorization, durable claim, exact
 output inventory, and signed receipt. `audit_postexecution` returns
