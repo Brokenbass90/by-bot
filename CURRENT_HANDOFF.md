@@ -1,38 +1,38 @@
-# Current handoff — 2026-08-24 13:12 UTC
+# Current handoff — 2026-08-29
 
-This is the short canonical entrypoint after a pause.
-
-1. Read `reports/CODEX_SESSION_CHECKPOINT_2026_08_24.md`.
-2. Then read `reports/CURRENT_PROJECT_ROADMAP.md`.
-3. Treat older dated reports as history when they conflict with the checkpoint.
-
+Canonical tree: `bybit-bot-recovery-20260824`.
 Canonical branch: `codex/recovery-20260824`.
 
-Latest preserved implementation commits:
+Read first:
 
-- `98d75f1` — Alpaca deterministic read-only auditor and default-off
-  whole-share paper profile;
-- `2be11c2` — SBR1 pre-first-admitted deterministic random control and
-  resilient zero-risk runner;
-- `f05f8e6` — pure zero-order XAU paper-accounting core;
-- `4ea7d61` — live deployment receipts and consolidated roadmap.
+1. `reports/CODEX_SESSION_CHECKPOINT_2026_08_29.md`;
+2. `reports/CURRENT_PROJECT_ROADMAP.md`;
+3. older dated reports only as history.
 
-Live money truth:
+## Current gate
 
-- Alpaca protection is live and audited; entries remain `SAFE_HOLD` pending a
-  prospective lifecycle receipt. Fractional `DAY` stops preserve their
-  monotonic floor but retain overnight gap risk.
-- ATT1 remains the only tiny crypto money sleeve. Regime and allocator are not
-  yet connected to its live caller; do not increase risk.
-- SBR1 is zero-risk public shadow only. XAU/MT5 is pure paper code only.
+`RESERVED_OOS_RUNNER_CLOSURE` is complete and independently reviewed:
 
-Owner-only credential action: rotate the MT5 MCP token, then double-click
-`START_MT5_DEMO_KEY_SETUP.command`. The shortcut writes a demo-only local env
-with execution/live/remote-AI disabled; it does not connect or trade.
+- spec verdict: `PASS`;
+- code-quality verdict: `PASS`;
+- Task 1-3 focused suite: `66 passed`;
+- preflight: `READY_FOR_OWNER_AUTHORIZATION`;
+- owner authorization, one-shot claim and scored result: absent;
+- live/broker/order/risk/money changes: zero.
 
-Next strong-model task, and only that task:
+Public major-8 M5 rows for `[2025-10-01, 2026-07-01)` were materialized and
+validated under the separately authorized no-score operation. They were not
+scored. The metadata-only preflight and independent pre-execution audit opened
+zero market payloads and decoded zero rows.
 
-> Complete `LIVE_CALLER_PARITY`: persisted causal BTC H1 regime bootstrap,
-> ATT1/SBR1 caller receipts, fixed-major8 ON/OFF replay, fixed-51 evidence
-> coverage/parity manifest, and `verify_live_config`. Do not change live orders,
-> risk, geometry, slots or money authority without the corresponding gates.
+## Next action requires the owner
+
+Do not run the one-shot implicitly. Ask for one explicit owner decision. If the
+owner authorizes it, create the hash-bound one-shot authorization, run the
+frozen diagnostic exactly once, then run the independent post-execution audit
+and publish any sign. A PASS grants only zero-risk integration review; it does
+not grant money, order, risk, slot, universe or promotion authority.
+
+Alpaca remains a separate SAFE_HOLD track. Historical replay can compress most
+selector, gap, restart, partial-fill and stop-ratchet checks, but cannot replace
+a short prospective broker paper lifecycle under the real bridge.

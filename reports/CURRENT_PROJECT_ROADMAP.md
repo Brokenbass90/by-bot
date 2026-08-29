@@ -1,8 +1,35 @@
 # Текущий roadmap проекта
 
-Обновлено: 2026-08-26 17:05 UTC. Это стабильная точка входа между чатами.
+Обновлено: 2026-08-29. Это стабильная точка входа между чатами.
 Датированные отчеты остаются журналом, но при конфликте планов сначала читать
 `CURRENT_HANDOFF.md`, затем этот файл и только потом старые roadmap.
+
+## Latest operational update — 2026-08-29
+
+`RESERVED_OOS_RUNNER_CLOSURE` завершён: materializer, one-shot runner и
+независимый audit получили `Spec PASS` и `Code-quality PASS`; объединённая
+focused-suite — `66 passed`. Текущее состояние —
+`READY_FOR_OWNER_AUTHORIZATION`, а не разрешение на запуск. Authorization,
+claim и scored result отсутствуют; live-риск, ордера, слоты, universe и money
+authority не менялись.
+
+Следующий шаг требует отдельного явного решения владельца: один раз запустить
+замороженный diagnostic и затем независимый post-execution audit. Любой PASS
+даёт лишь право обсуждать zero-risk integration, но не деньги. Точный статус и
+SHA находятся в `reports/CODEX_SESSION_CHECKPOINT_2026_08_29.md`.
+
+Целевая система строится шестью связанными контурами:
+
+`idea intake → frozen causal validation → zero-risk shadow/control → allocator + regime governor → degradation monitor → gated release`.
+
+ИИ остаётся proposal-only. Детерминированный governor может только уменьшить
+или отключить риск при нарушении; обратное включение и увеличение капитала
+требуют нового evidence receipt и owner-approved gate.
+
+Alpaca остаётся отдельным SAFE_HOLD-треком. История должна закрыть
+PIT/selector, gap/restart/partial-fill и stop-ratchet stress; затем короткий
+prospective paper lifecycle проверяет реальное поведение брокера. История
+ускоряет этот путь, но не заменяет его полностью.
 
 ## Latest operational update — 2026-08-26 17:05 UTC
 
