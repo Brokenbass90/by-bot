@@ -1,0 +1,19 @@
+{
+  "schema_id": "att1_sbr1_reserved_oos_owner_authorization_v1",
+  "authority": "owner_explicit_one_shot_reserved_diagnostic_only",
+  "owner_authorization_id": "owner-authorization-20260829T080646Z-6862987",
+  "execute_once": true,
+  "known_contamination_acknowledged": true,
+  "money_authority": false,
+  "reserved_window": {
+    "start_utc": "2025-10-01T00:00:00Z",
+    "end_utc_exclusive": "2026-07-01T00:00:00Z",
+    "calendar_days": 273
+  },
+  "config_sha256": "6f4b3b2e5387cf7755617ec0a68ae4e63d4b6cc502332c755eb795117e7eab96",
+  "input_manifest_sha256": "8f82bb7f6e5fad56e78acb4e9ffe567d2cf045c7901a7e1744a4ad5d12b7434c",
+  "runner_sha256": "9194e5c1e5841ebe9df579b0a15eb4a7fc27ecad3028d2a71eb2af69198b16b4",
+  "audit_sha256": "da72992ee68c653a4c16274c8f4559caab211217d89e2f9bcd99e8e1b113b9b8",
+  "output_path": "research_lab/results/att1_sbr1_reserved_oos_v1",
+  "claim_path": "research_lab/results/att1_sbr1_reserved_oos_v1/one_shot_claim.json"
+}
