@@ -2,13 +2,22 @@
 
 ## Outcome
 
-The frozen ATT1/SBR1 reserved diagnostic is now technically ready for a separate
-owner authorization. The materializer, one-shot runner and independent audit
-all passed independent review. The one-shot was **not** executed: there is no
-owner authorization, durable claim or scored result, and no live/broker/order,
-risk or money authority changed.
+The owner-authorized ATT1/SBR1 reserved diagnostic was executed exactly once.
+It created its durable claim before decode, wrote all scorer artifacts and then
+terminated `FAIL_CLOSED_AFTER_CLAIM` because the runner summarizer passed tuple
+dictionary keys where rows were required. The v1 authorization is consumed and
+no retry was made.
 
-## Completed
+The independent failure-forensic audit validates exact input/output inventory,
+accounting and parity. It reconstructs the pre-frozen economics without turning
+the failed formal attempt into a success: ATT1 is `FAIL_CLOSED` because the
+stress second half is `-0.337197R`; SBR1 is `INCONCLUSIVE_LOW_N` at `N=16` and
+is negative in base and stress. No live, broker, private API, order, risk,
+promotion or money authority changed.
+
+Full publication: `reports/ATT1_SBR1_RESERVED_OOS_RESULT_2026_08_29.md`.
+
+## Completed before execution
 
 1. Materialized the exact public major-8 M5 identity set for
    `[2025-10-01, 2026-07-01)` under the owner-authorized no-score boundary:
@@ -29,10 +38,43 @@ risk or money authority changed.
    Critical/Important/Minor findings.
 5. Combined Task 1-3 focused suite: `66 passed in 52.59s`; `py_compile` and
    `git diff --check` passed.
-6. Metadata-only preflight and pre-execution audit both return
+6. Metadata-only preflight and pre-execution audit both returned
    `READY_FOR_OWNER_AUTHORIZATION`, with zero market files opened, zero rows
    decoded, no performance, no broker/live calls, no orders and no money or
    promotion authority.
+
+## Execution and independent failure forensics
+
+1. Owner authorization ID:
+   `owner-authorization-20260829T080646Z-6862987`; authorization commit:
+   `9baa5f8`.
+2. One-shot claim was written before market decode. Claim SHA:
+   `3f3dcf0decaa8352608c2204e9805494ac7fa3d1b17544dd4b95175080a179cb`.
+3. The exact failure is `AttributeError:'tuple' object has no attribute 'get'`.
+   `read_jsonl()` returned a keyed dictionary and `_summarize_ledgers()` passed
+   that dictionary rather than `live.values()` to occupancy.
+4. The original success-oriented post-audit correctly refused the terminal
+   failure inventory as `BLOCKED_FAIL_CLOSED`; it was not weakened or rewritten.
+   A separate read-only failure-forensic auditor was added for this terminal
+   state.
+5. All 8 reserved inputs (`628,992` rows), all 8 causal bootstrap inputs
+   (`1,334,016` rows), and all 16 partial outputs match their frozen hashes.
+   Research/live byte parity and normalized comparator parity pass in all four
+   base/stress cells.
+6. ATT1: base `N61`, `+21.3471R`, PF `1.7921`; stress `N61`,
+   `+19.5021R`, PF `1.7030`, halves `+19.8393/-0.3372R`; decision
+   `FAIL_CLOSED`.
+7. SBR1: base `N16`, `-3.3131R`, PF `0.6418`; stress `N16`,
+   `-3.6881R`, PF `0.6080`; decision `INCONCLUSIVE_LOW_N`.
+8. Live/broker calls are false, private calls `0`, orders `0`, money and
+   promotion authority false. No live deployment occurred.
+9. The dedicated failure-forensic suite passes `26/26`; post-authorization
+   Task 1–3 regression is `64 passed, 2 deselected`. The two deselected tests
+   require owner authorization to be absent and cannot be made applicable
+   without destroying the consumed evidence.
+10. Final independent verdict after coordinated tamper probes:
+    `Spec PASS`, `Code-quality PASS`. CLI fresh-versus-tracked receipt equality,
+    `py_compile`, `git diff --check` and the scoped secret scan pass.
 
 ## Exact frozen identities
 
@@ -46,22 +88,17 @@ The 273-day range is not pristine sealed proof: earlier MPL/XSEC work touched
 intersecting H1 data. It is an honest reserved diagnostic with known
 contamination, and every sign must be published.
 
-## Next owner gate
+## Next gate
 
-One explicit decision is required: authorize or decline the one-shot. If
-authorized, the sequence is fixed:
+Do not rerun v1. A hypothetical formal v2 would require a new output directory,
+claim, config and explicit owner authorization, while preserving v1 byte for
+byte. It is not the recommended next spend: the forensic economics already
+answer the promotion question.
 
-1. create the hash-bound owner authorization;
-2. execute the runner once;
-3. run the independent post-execution audit;
-4. report `PASS_ZERO_RISK_INTEGRATION_ONLY`, `FAIL_CLOSED` or
-   `INCONCLUSIVE_LOW_N` without changing money authority.
-
-Expected runtime is hours, not months. A PASS starts a separate 2-5 engineering
-day zero-risk integration/lifecycle gate; it is not automatic permission to
-increase ATT1 risk or launch SBR1 with money. A FAIL changes the research queue
-the same day. An inconclusive result remains inconclusive rather than being
-tuned after seeing it.
+The next falsifiable work is a preregistered Plan B: bull-continuation and XSEC
+PIT rebuild. ATT1 temporal degradation may be diagnosed, but the consumed
+window must not be used for parameter selection. SBR1 current geometry gets no
+money integration. Alpaca stays on its separate SAFE_HOLD lifecycle gate.
 
 ## Alpaca boundary
 

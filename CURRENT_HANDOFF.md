@@ -11,27 +11,36 @@ Read first:
 
 ## Current gate
 
-`RESERVED_OOS_RUNNER_CLOSURE` is complete and independently reviewed:
+The owner-authorized ATT1/SBR1 reserved diagnostic was run exactly once and is
+consumed. It terminated `FAIL_CLOSED_AFTER_CLAIM` on an `AttributeError` in the
+runner summarizer after all scorer artifacts had been written. It must not be
+retried under the consumed authorization.
 
-- spec verdict: `PASS`;
-- code-quality verdict: `PASS`;
-- Task 1-3 focused suite: `66 passed`;
-- preflight: `READY_FOR_OWNER_AUTHORIZATION`;
-- owner authorization, one-shot claim and scored result: absent;
-- live/broker/order/risk/money changes: zero.
+Independent failure-forensic reconstruction validates exact inputs, outputs,
+research/live parity, normalized comparator parity and zero live/private/order
+impact. The formal attempt remains failed. Offline pre-frozen decisions are:
 
-Public major-8 M5 rows for `[2025-10-01, 2026-07-01)` were materialized and
-validated under the separately authorized no-score operation. They were not
-scored. The metadata-only preflight and independent pre-execution audit opened
-zero market payloads and decoded zero rows.
+- ATT1: `FAIL_CLOSED`; stress second half `-0.337197R` despite total
+  `+19.502091R`;
+- SBR1: `INCONCLUSIVE_LOW_N`; `N=16`, stress `-3.688072R`, PF `0.6080`;
+- money authority, promotion authority and live risk changes: zero.
 
-## Next action requires the owner
+Final independent review is `Spec PASS` / `Code-quality PASS`; the dedicated
+failure-forensic suite is `26 passed`. The post-authorization regression suite
+is `64 passed, 2 deselected`; the two omitted tests require authorization to be
+absent and are intentionally inapplicable after the consumed run.
 
-Do not run the one-shot implicitly. Ask for one explicit owner decision. If the
-owner authorizes it, create the hash-bound one-shot authorization, run the
-frozen diagnostic exactly once, then run the independent post-execution audit
-and publish any sign. A PASS grants only zero-risk integration review; it does
-not grant money, order, risk, slot, universe or promotion authority.
+Read `reports/ATT1_SBR1_RESERVED_OOS_RESULT_2026_08_29.md` for the complete
+publication and exact hashes.
+
+## Next action
+
+Do not spend a new authorization on a mechanical rerun: the immutable forensic
+economics already rejects promotion. Preserve v1 byte-for-byte. Move research
+to a preregistered bull-continuation candidate and XSEC PIT rebuild; separately
+analyze ATT1 temporal degradation without tuning against the consumed window.
+Any future formal v2 needs a new output path, claim, config and explicit owner
+authorization.
 
 Alpaca remains a separate SAFE_HOLD track. Historical replay can compress most
 selector, gap, restart, partial-fill and stop-ratchet checks, but cannot replace

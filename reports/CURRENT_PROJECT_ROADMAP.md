@@ -6,17 +6,28 @@
 
 ## Latest operational update — 2026-08-29
 
-`RESERVED_OOS_RUNNER_CLOSURE` завершён: materializer, one-shot runner и
-независимый audit получили `Spec PASS` и `Code-quality PASS`; объединённая
-focused-suite — `66 passed`. Текущее состояние —
-`READY_FOR_OWNER_AUTHORIZATION`, а не разрешение на запуск. Authorization,
-claim и scored result отсутствуют; live-риск, ордера, слоты, universe и money
-authority не менялись.
+Авторизованный ATT1/SBR1 reserved diagnostic выполнен ровно один раз и
+безвозвратно потреблён. Он завершился `FAIL_CLOSED_AFTER_CLAIM` на технической
+ошибке суммаризатора после записи scorer-артефактов; повторного запуска не было.
+Независимый failure-forensic audit подтвердил exact inventory, accounting,
+research/live и normalized parity, а также нулевое воздействие на live и
+деньги.
 
-Следующий шаг требует отдельного явного решения владельца: один раз запустить
-замороженный diagnostic и затем независимый post-execution audit. Любой PASS
-даёт лишь право обсуждать zero-risk integration, но не деньги. Точный статус и
-SHA находятся в `reports/CODEX_SESSION_CHECKPOINT_2026_08_29.md`.
+Предварительно замороженные решения восстановлены без подбора параметров:
+
+- ATT1 — `FAIL_CLOSED`: stress `+19.5021R`, но вторая хронологическая половина
+  `-0.3372R`, поэтому promotion gate не пройден;
+- SBR1 — `INCONCLUSIVE_LOW_N`: `N16`, stress `-3.6881R`, PF `0.6080`; текущая
+  геометрия не продвигается;
+- money/risk/order/promotion authority не менялись.
+
+Полная публикация и SHA:
+`reports/ATT1_SBR1_RESERVED_OOS_RESULT_2026_08_29.md`. V1 сохраняется
+byte-for-byte. Новый формальный v2 возможен только по новой owner authorization,
+но сейчас не является разумным использованием времени: forensic результат уже
+запрещает promotion. Главная очередь меняется на preregistered
+bull-continuation и XSEC PIT rebuild; отдельно — диагностика временной
+деградации ATT1 без тюнинга по просмотренному окну.
 
 Целевая система строится шестью связанными контурами:
 

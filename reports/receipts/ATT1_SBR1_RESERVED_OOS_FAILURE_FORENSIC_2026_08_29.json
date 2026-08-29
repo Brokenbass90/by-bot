@@ -1,0 +1,400 @@
+{
+  "authority": "research_only_failure_forensic_no_money_no_promotion",
+  "claim_sha256": "3f3dcf0decaa8352608c2204e9805494ac7fa3d1b17544dd4b95175080a179cb",
+  "decision": "AUDIT_CONFIRMED_FAIL_CLOSED_AFTER_CLAIM",
+  "economics": {
+    "ATT1": {
+      "checks": {
+        "base": {
+          "both_halves_r_gt": true,
+          "max_sequential_drawdown_r_lte": true,
+          "mean_r_gt": true,
+          "minimum_leave_one_symbol_out_r_gt": true,
+          "n_gte": true,
+          "positive_month_fraction_gte": true,
+          "positive_symbol_concentration_lte": true,
+          "profit_factor_gte": true
+        },
+        "stress": {
+          "both_halves_r_gt": false,
+          "max_sequential_drawdown_r_lte": true,
+          "mean_r_gt": true,
+          "minimum_leave_one_symbol_out_r_gt": true,
+          "n_gte": true,
+          "positive_month_fraction_gte": true,
+          "positive_symbol_concentration_lte": true,
+          "profit_factor_gte": true
+        }
+      },
+      "decision": "FAIL_CLOSED",
+      "evaluation_sha256": "d187ec363200db9374f5458e6ad3a9b9a370ee5b7c086b4d2df80d3bfbabf2fd",
+      "modes": {
+        "base": {
+          "accepted_signals": 61,
+          "metrics": {
+            "by_month": {
+              "2025-10": {
+                "n": 5,
+                "sum_r": "6.965521669660061960224465664"
+              },
+              "2025-11": {
+                "n": 3,
+                "sum_r": "4.857918948041908255188778836"
+              },
+              "2025-12": {
+                "n": 13,
+                "sum_r": "0.92489012003527818014781841"
+              },
+              "2026-01": {
+                "n": 7,
+                "sum_r": "6.763349186201442395328853494"
+              },
+              "2026-02": {
+                "n": 4,
+                "sum_r": "0.337422710888635691457627726"
+              },
+              "2026-03": {
+                "n": 10,
+                "sum_r": "4.676682959591377431400909439"
+              },
+              "2026-04": {
+                "n": 8,
+                "sum_r": "-8.297798038239164973185850581"
+              },
+              "2026-05": {
+                "n": 6,
+                "sum_r": "7.429804818402145789654867654"
+              },
+              "2026-06": {
+                "n": 5,
+                "sum_r": "-2.310670498060054736768628276"
+              }
+            },
+            "by_symbol_r": {
+              "ADAUSDT": "4.772250775005465390241307305",
+              "BTCUSDT": "3.095340267461897634816929673",
+              "DOTUSDT": "5.220289137406009610228716997",
+              "ETHUSDT": "1.187049030786744505025188918",
+              "LINKUSDT": "-1.417191036370102215203535377",
+              "LTCUSDT": "0.085892451236290414670418075",
+              "SOLUSDT": "5.81225309150902600042688797",
+              "SUIUSDT": "2.591238159486298653242928805"
+            },
+            "chronological_halves_r": [
+              "20.68425329164388236051509113",
+              "0.662868584877747632933751219"
+            ],
+            "leave_one_symbol_out_r": {
+              "ADAUSDT": "16.57487110151616460320753502",
+              "BTCUSDT": "18.25178160905973235863191265",
+              "DOTUSDT": "16.12683273911562038322012532",
+              "ETHUSDT": "20.1600728457348854884236534",
+              "LINKUSDT": "22.7643129128917322086523777",
+              "LTCUSDT": "21.26122942528533957877842424",
+              "SOLUSDT": "15.53486878501260399302195435",
+              "SUIUSDT": "18.75588371703533134020591352"
+            },
+            "max_sequential_drawdown_r": "8.51504446775061126492472939",
+            "mean_r": "0.3499528176478955736630957757",
+            "minimum_leave_one_symbol_out_r": "15.53486878501260399302195435",
+            "months": 9,
+            "n": 61,
+            "positive_month_fraction": "0.7777777777777777777777777778",
+            "positive_months": 7,
+            "positive_symbol_concentration": "0.2553230186981602250189357796",
+            "profit_factor": "1.792077241471123639074823275",
+            "sum_r": "21.34712187652162999344884232",
+            "win_rate": "0.5573770491803278688524590164"
+          },
+          "raw_signals": 76,
+          "same_symbol_occupancy_drops": 15
+        },
+        "stress": {
+          "accepted_signals": 61,
+          "metrics": {
+            "by_month": {
+              "2025-10": {
+                "n": 5,
+                "sum_r": "6.836131640752766952528848752"
+              },
+              "2025-11": {
+                "n": 3,
+                "sum_r": "4.797187011783001095396699597"
+              },
+              "2025-12": {
+                "n": 13,
+                "sum_r": "0.497774901901125537780424388"
+              },
+              "2026-01": {
+                "n": 7,
+                "sum_r": "6.600002350911086436509865346"
+              },
+              "2026-02": {
+                "n": 4,
+                "sum_r": "0.209264132988231777032458796"
+              },
+              "2026-03": {
+                "n": 10,
+                "sum_r": "4.271877476257192986854033084"
+              },
+              "2026-04": {
+                "n": 8,
+                "sum_r": "-8.53510428102605313014806313"
+              },
+              "2026-05": {
+                "n": 6,
+                "sum_r": "7.223354735507741894366774834"
+              },
+              "2026-06": {
+                "n": 5,
+                "sum_r": "-2.398397097336609267385715119"
+              }
+            },
+            "by_symbol_r": {
+              "ADAUSDT": "4.476026479699079026013980443",
+              "BTCUSDT": "2.882458445154887452468613676",
+              "DOTUSDT": "5.101555523035946701765084475",
+              "ETHUSDT": "1.005713008330969157563214657",
+              "LINKUSDT": "-1.680843294429616182503358656",
+              "LTCUSDT": "-0.249059079506568569053898384",
+              "SOLUSDT": "5.590159501362881353534123215",
+              "SUIUSDT": "2.376080288090905343147567123"
+            },
+            "chronological_halves_r": [
+              "19.83928834959731422394888666",
+              "-0.33719747785882994101356012"
+            ],
+            "leave_one_symbol_out_r": {
+              "ADAUSDT": "15.02606439203940525692134613",
+              "BTCUSDT": "16.61963242658359683046671289",
+              "DOTUSDT": "14.4005353487025375811702421",
+              "ETHUSDT": "18.49637786340751512537211191",
+              "LINKUSDT": "21.18293416616810046543868523",
+              "LTCUSDT": "19.75114995124505285198922495",
+              "SOLUSDT": "13.91193137037560292940120336",
+              "SUIUSDT": "17.12601058364757893978775945"
+            },
+            "max_sequential_drawdown_r": "8.85122534371681376666040083",
+            "mean_r": "0.3197064077334177751300873208",
+            "minimum_leave_one_symbol_out_r": "13.91193137037560292940120336",
+            "months": 9,
+            "n": 61,
+            "positive_month_fraction": "0.7777777777777777777777777778",
+            "positive_months": 7,
+            "positive_symbol_concentration": "0.2608324590850208515077807868",
+            "profit_factor": "1.702988159779617235177682849",
+            "sum_r": "19.50209087173848428293532657",
+            "win_rate": "0.5573770491803278688524590164"
+          },
+          "raw_signals": 76,
+          "same_symbol_occupancy_drops": 15
+        }
+      },
+      "thresholds": {
+        "both_halves_r_gt": "0",
+        "max_sequential_drawdown_r_lte": "10",
+        "mean_r_gt": "0.10",
+        "minimum_leave_one_symbol_out_r_gt": "0",
+        "n_gte": 40,
+        "positive_month_fraction_gte": "0.55",
+        "positive_symbol_concentration_lte": "0.35",
+        "profit_factor_gte": "1.40"
+      }
+    },
+    "SBR1": {
+      "checks": {
+        "base": {
+          "both_halves_r_gt": false,
+          "max_sequential_drawdown_r_lte": true,
+          "mean_r_gt": false,
+          "minimum_leave_one_symbol_out_r_gt": false,
+          "n_gte": false,
+          "positive_month_fraction_gte": false,
+          "positive_symbol_concentration_lte": false,
+          "profit_factor_gte": false
+        },
+        "stress": {
+          "both_halves_r_gt": false,
+          "max_sequential_drawdown_r_lte": true,
+          "mean_r_gt": false,
+          "minimum_leave_one_symbol_out_r_gt": false,
+          "n_gte": false,
+          "positive_month_fraction_gte": false,
+          "positive_symbol_concentration_lte": false,
+          "profit_factor_gte": false
+        }
+      },
+      "decision": "INCONCLUSIVE_LOW_N",
+      "evaluation_sha256": "cc5cdc0e3dc19d878ab0374b26cf9400ce3b569676efec6b8a17548b161e26b0",
+      "modes": {
+        "base": {
+          "accepted_signals": 16,
+          "metrics": {
+            "by_month": {
+              "2025-12": {
+                "n": 1,
+                "sum_r": "-1.024771393656482407194826132"
+              },
+              "2026-01": {
+                "n": 2,
+                "sum_r": "-0.2595082819280369418198278185"
+              },
+              "2026-02": {
+                "n": 3,
+                "sum_r": "-2.020579261196997179549540043"
+              },
+              "2026-03": {
+                "n": 5,
+                "sum_r": "4.127298511659396037958259866"
+              },
+              "2026-04": {
+                "n": 1,
+                "sum_r": "-1.025754466629730651210364814"
+              },
+              "2026-05": {
+                "n": 2,
+                "sum_r": "-2.063482970151699808993193449"
+              },
+              "2026-06": {
+                "n": 2,
+                "sum_r": "-1.046272097860646787131246429"
+              }
+            },
+            "by_symbol_r": {
+              "ADAUSDT": "1.417486261336387687613208007",
+              "BTCUSDT": "-1.049102174355671838943999911",
+              "DOTUSDT": "-2.053570606677652670011159524",
+              "ETHUSDT": "-1.025754466629730651210364814",
+              "LINKUSDT": "0.367181812123466503490867704",
+              "LTCUSDT": "0.1635875978461665345434150141",
+              "SOLUSDT": "0.907722444018495164710722041",
+              "SUIUSDT": "-2.040620827425658468133427337"
+            },
+            "chronological_halves_r": [
+              "-0.94521867929800275700245624",
+              "-2.367851280466194980938282579"
+            ],
+            "leave_one_symbol_out_r": {
+              "ADAUSDT": "-4.730556221100585425553946826",
+              "BTCUSDT": "-2.263967785408525898996738908",
+              "DOTUSDT": "-1.259499353086545067929579295",
+              "ETHUSDT": "-2.287315493134467086730374005",
+              "LINKUSDT": "-3.680251771887664241431606523",
+              "LTCUSDT": "-3.476657557610364272484153833",
+              "SOLUSDT": "-4.22079240378269290265146086",
+              "SUIUSDT": "-1.272449132338539269807311482"
+            },
+            "max_sequential_drawdown_r": "5.156248420588335345317612893",
+            "mean_r": "-0.2070668724852623586212961762",
+            "minimum_leave_one_symbol_out_r": "-4.730556221100585425553946826",
+            "months": 7,
+            "n": 16,
+            "positive_month_fraction": "0.1428571428571428571428571429",
+            "positive_months": 1,
+            "positive_symbol_concentration": "0.4963225221266526205297772653",
+            "profit_factor": "0.641847305446359730883970765",
+            "sum_r": "-3.313069959764197737940738819",
+            "win_rate": "0.4375"
+          },
+          "raw_signals": 16,
+          "same_symbol_occupancy_drops": 0
+        },
+        "stress": {
+          "accepted_signals": 16,
+          "metrics": {
+            "by_month": {
+              "2025-12": {
+                "n": 1,
+                "sum_r": "-1.042033466894517061118983744"
+              },
+              "2026-01": {
+                "n": 2,
+                "sum_r": "-0.3081534281573001520741899361"
+              },
+              "2026-02": {
+                "n": 3,
+                "sum_r": "-2.062207396706660003941526802"
+              },
+              "2026-03": {
+                "n": 5,
+                "sum_r": "3.953097039772169594164044991"
+              },
+              "2026-04": {
+                "n": 1,
+                "sum_r": "-1.036555343609845675742486846"
+              },
+              "2026-05": {
+                "n": 2,
+                "sum_r": "-2.085401753637285467910156255"
+              },
+              "2026-06": {
+                "n": 2,
+                "sum_r": "-1.106817344319365861143393322"
+              }
+            },
+            "by_symbol_r": {
+              "ADAUSDT": "1.362947817296093500931655316",
+              "BTCUSDT": "-1.087003226035780928164661811",
+              "DOTUSDT": "-2.077866132637306816745572974",
+              "ETHUSDT": "-1.036555343609845675742486846",
+              "LINKUSDT": "0.315011890759358504089061954",
+              "LTCUSDT": "0.07786603635532719949760198706",
+              "SOLUSDT": "0.824328744425452440618577577",
+              "SUIUSDT": "-2.066801480106102852250867117"
+            },
+            "chronological_halves_r": [
+              "-1.131391305123153604202295731",
+              "-2.556680388429651023564396183"
+            ],
+            "leave_one_symbol_out_r": {
+              "ADAUSDT": "-5.05101951084889812869834723",
+              "BTCUSDT": "-2.601068467517023699602030103",
+              "DOTUSDT": "-1.61020556091549781102111894",
+              "ETHUSDT": "-2.651516349942958952024205068",
+              "LINKUSDT": "-4.003083584312163131855753868",
+              "LTCUSDT": "-3.765937729908131827264293901",
+              "SOLUSDT": "-4.512400437978257068385269491",
+              "SUIUSDT": "-1.621270213446701775515824797"
+            },
+            "max_sequential_drawdown_r": "5.264860603552599006962532374",
+            "mean_r": "-0.2305044808470502892354182446",
+            "minimum_leave_one_symbol_out_r": "-5.05101951084889812869834723",
+            "months": 7,
+            "n": 16,
+            "positive_month_fraction": "0.1428571428571428571428571429",
+            "positive_months": 1,
+            "positive_symbol_concentration": "0.5282427169354675574438413883",
+            "profit_factor": "0.6080492444705599888514853176",
+            "sum_r": "-3.688071693552804627766691914",
+            "win_rate": "0.375"
+          },
+          "raw_signals": 16,
+          "same_symbol_occupancy_drops": 0
+        }
+      },
+      "thresholds": {
+        "both_halves_r_gt": "0",
+        "max_sequential_drawdown_r_lte": "10",
+        "mean_r_gt": "0.10",
+        "minimum_leave_one_symbol_out_r_gt": "0",
+        "n_gte": 40,
+        "positive_month_fraction_gte": "0.55",
+        "positive_symbol_concentration_lte": "0.35",
+        "profit_factor_gte": "1.40"
+      }
+    }
+  },
+  "forensic_receipt_sha256": "f2f75cead491dc375b7f68c63fe521ba8ef5b3de1bc0ec7027d62f7ab2a0f7a2",
+  "identities": {
+    "audit_sha256": "da72992ee68c653a4c16274c8f4559caab211217d89e2f9bcd99e8e1b113b9b8",
+    "authorization_sha256": "1ec5f5b165bb503441d59f02e913617f0398d5f7e47eb3a7c77c9db07876d65f",
+    "config_sha256": "6f4b3b2e5387cf7755617ec0a68ae4e63d4b6cc502332c755eb795117e7eab96",
+    "input_manifest_sha256": "8f82bb7f6e5fad56e78acb4e9ffe567d2cf045c7901a7e1744a4ad5d12b7434c",
+    "runner_sha256": "9194e5c1e5841ebe9df579b0a15eb4a7fc27ecad3028d2a71eb2af69198b16b4"
+  },
+  "money_authority": false,
+  "promotion_authority": false,
+  "receipt_sha256": "cc128cd201ea5568fc225b1ad945767613b7743321f74713da65b55f7b9d4e67",
+  "root_cause": "AttributeError:'tuple' object has no attribute 'get'",
+  "schema_id": "att1_sbr1_reserved_oos_failure_forensic_receipt_v1"
+}

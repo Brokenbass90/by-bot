@@ -1,0 +1,18 @@
+{
+  "schema_id": "research_live_adapter_parity_report_v2",
+  "decision": "PASS",
+  "release_or_promotion_authority": false,
+  "research_rows": 16,
+  "live_rows": 16,
+  "matched_rows": 16,
+  "matched_coverage": 1.0,
+  "research_signal_count": 16,
+  "live_signal_count": 16,
+  "raw_signal_count_difference": 0.0,
+  "failures": [],
+  "research_only": [],
+  "live_only": [],
+  "mismatches": [],
+  "research_ledger_sha256": "77460701cc1c306728cf5a8b69967b6b4e183fe3e4b6a43746ba57c12576d550",
+  "live_ledger_sha256": "77460701cc1c306728cf5a8b69967b6b4e183fe3e4b6a43746ba57c12576d550"
+}
