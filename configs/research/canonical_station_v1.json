@@ -1,0 +1,72 @@
+{
+  "schema_id": "canonical_research_station_v1",
+  "authority": "research_only_no_live_or_promotion",
+  "promotion_authority": false,
+  "network_authority": false,
+  "private_api_authority": false,
+  "order_authority": false,
+  "live_write_authority": false,
+  "canonical_runtime_root": "runtime/local_research_station",
+  "jobs": [
+    {
+      "name": "alpaca_adaptive_shadow",
+      "process_kind": "deterministic_decision_loop",
+      "screen_session": "canonical_alpaca_adaptive",
+      "launcher": ["scripts/run_alpaca_adaptive_shadow_loop.sh"],
+      "evidence_paths": ["runtime/alpaca_adaptive_v1_shadow_latest.json", "runtime/alpaca_adaptive_v1_shadow_ledger.jsonl"],
+      "source_paths": ["scripts/alpaca_adaptive_shadow.py", "scripts/run_alpaca_adaptive_shadow_loop.sh"],
+      "config_paths": ["configs/preregistered/alpaca_adaptive_historical_proxy_20260728.json"],
+      "input_paths": ["research_lab/data/alpaca_pit_daily_v1/status.json"]
+    },
+    {
+      "name": "xsec_v3_shadow",
+      "process_kind": "market_snapshot_loop",
+      "screen_session": "canonical_xsec_v3",
+      "launcher": ["scripts/run_xsec_shadow_loop.sh"],
+      "evidence_paths": ["runtime/xsec_v3_shadow/decision_latest.json", "runtime/xsec_v3_shadow/ledger.jsonl"],
+      "source_paths": ["scripts/xsec_shadow_cycle.py", "research_lab/xsec_v3_reference.py", "scripts/run_xsec_shadow_loop.sh"],
+      "config_paths": ["configs/preregistered/xsec_v4_family_landscape_20260728.json"],
+      "input_paths": ["research_lab/data/bybit_instruments_linear.json"]
+    },
+    {
+      "name": "funding_positioning_dynamic_shadow",
+      "process_kind": "market_snapshot_loop",
+      "screen_session": "canonical_funding_dynamic",
+      "launcher": ["scripts/run_funding_positioning_dynamic_shadow_loop.sh"],
+      "evidence_paths": ["runtime/funding_positioning_dynamic_shadow_summary.json", "runtime/funding_positioning_dynamic_shadow_ledger.jsonl"],
+      "source_paths": ["scripts/build_funding_positioning_dynamic_universe.py", "scripts/funding_positioning_v4_shadow.py", "scripts/run_funding_positioning_dynamic_shadow_loop.sh"],
+      "config_paths": ["configs/research/funding_positioning_dynamic_universe_prereg_20260729.json"],
+      "input_paths": ["research_lab/data/cross_exchange_funding_history_180d.json"]
+    },
+    {
+      "name": "funding_positioning_frozen_shadow",
+      "process_kind": "market_snapshot_loop",
+      "screen_session": "canonical_funding_frozen",
+      "launcher": ["scripts/run_funding_positioning_post_n42_frozen_loop.sh"],
+      "evidence_paths": ["runtime/funding_positioning_post_n42_frozen_summary.json", "runtime/funding_positioning_post_n42_frozen_ledger.jsonl"],
+      "source_paths": ["scripts/funding_positioning_v4_shadow.py", "scripts/run_funding_positioning_post_n42_frozen_loop.sh"],
+      "config_paths": ["configs/research/funding_positioning_post_n42_frozen_20260808.json"],
+      "input_paths": ["research_lab/data/cross_exchange_funding_history_180d.json"]
+    },
+    {
+      "name": "project_audit",
+      "process_kind": "collector_supervisor",
+      "screen_session": "canonical_project_audit",
+      "launcher": ["scripts/run_project_audit_supervisor.sh", "--with-model", "--auto-full", "--loop", "--interval-sec", "21600"],
+      "evidence_paths": ["runtime/project_audit/supervisor_status.json", "runtime/project_audit/registry.json"],
+      "source_paths": ["scripts/run_project_audit_supervisor.sh", "research_lab/continuous_audit.py", "research_lab/ai_auditor.py"],
+      "config_paths": [],
+      "input_paths": ["configs/project_capability_registry_v1.json"]
+    },
+    {
+      "name": "inplay_eth_prospective_shadow",
+      "process_kind": "market_snapshot_loop",
+      "screen_session": "canonical_inplay_prospective",
+      "launcher": ["scripts/run_inplay_prospective_shadow_loop.sh"],
+      "evidence_paths": ["runtime/inplay_prospective_shadow_v1/status.json"],
+      "source_paths": ["scripts/run_inplay_prospective_shadow_loop.py", "scripts/collect_inplay_prospective_shadow.py"],
+      "config_paths": ["research_lab/prereg/PREREG_INPLAY_CAUSAL_REPLAY_20260812.json"],
+      "input_paths": ["research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/status.json"]
+    }
+  ]
+}
