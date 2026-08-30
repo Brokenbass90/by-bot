@@ -164,7 +164,7 @@ def jobs_from_manifest(
                 max_age_seconds=int(row["max_age_seconds"]),
                 evidence_paths=evidence_paths,
                 runtime_requirements=tuple(
-                    (root / relative).resolve()
+                    root / relative
                     for relative in row.get("runtime_requirements", [])
                 ),
                 runtime_dir=runtime_dir,

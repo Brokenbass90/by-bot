@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -112,6 +113,10 @@ def test_dry_run_launch_receipt_has_no_process_or_money_authority(tmp_path: Path
     assert receipt["jobs"][0]["state"] == "DRY_RUN"
     assert receipt["jobs"][0]["pid"] is None
     assert receipt["jobs"][0]["orders_sent"] is False
+    assert set(receipt["orchestrator_hashes"]) == {
+        "research_lab/canonical_station.py",
+        "scripts/canonical_station_migration.py",
+    }
     assert receipt["jobs"][0]["evidence_epoch"] == "epoch_20260830_100000_abcd"
     assert receipt["jobs"][0]["cwd"] == str(tmp_path.resolve())
     receipt_path = (
@@ -166,6 +171,23 @@ def test_missing_runtime_dependency_blocks_even_dry_run_receipt(tmp_path: Path) 
         str(tmp_path / ".venv/bin/python")
     ]
     assert receipt["jobs"][0]["pid"] is None
+
+
+def test_project_local_venv_symlink_is_valid_runtime_requirement(tmp_path: Path) -> None:
+    _materialize_fixture(tmp_path)
+    python_link = tmp_path / ".venv/bin/python"
+    python_link.parent.mkdir(parents=True)
+    python_link.symlink_to(Path(sys.executable))
+    manifest = _manifest()
+    manifest["jobs"][0]["runtime_requirements"] = [".venv/bin/python"]
+
+    plan = build_canonical_launch_plan(
+        manifest, project_root=tmp_path, epoch="epoch_20260830_100000_abcd"
+    )
+    receipt = launch_canonical_jobs(plan, dry_run=True)
+
+    assert receipt["jobs"][0]["state"] == "DRY_RUN"
+    assert receipt["jobs"][0]["runtime_missing"] == []
 
 
 def test_supervisor_never_starts_canonical_job_with_missing_runtime(

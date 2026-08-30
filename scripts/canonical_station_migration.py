@@ -94,7 +94,7 @@ def build_canonical_launch_plan(
         )
         source_hashes = _launch_identity_hashes(job, root)
         runtime_requirements = tuple(
-            (root / relative).resolve()
+            root / relative
             for relative in job.get("runtime_requirements", [])
         )
         for requirement in runtime_requirements:
@@ -238,6 +238,10 @@ def launch_canonical_jobs(
             row["returncode"] = completed.returncode
             row["stderr"] = completed.stderr[-500:]
         rows.append(row)
+    orchestrator_paths = {
+        "research_lab/canonical_station.py": ROOT / "research_lab/canonical_station.py",
+        "scripts/canonical_station_migration.py": Path(__file__).resolve(),
+    }
     receipt = {
         "schema_id": "canonical_station_launch_v1",
         "authority": AUTHORITY,
@@ -248,6 +252,10 @@ def launch_canonical_jobs(
         "live_write_authority": False,
         "public_data_read_authority": True,
         "dry_run": bool(dry_run),
+        "orchestrator_hashes": {
+            name: _sha256_bytes(path.read_bytes())
+            for name, path in orchestrator_paths.items()
+        },
         "jobs": rows,
     }
     receipt["launch_sha256"] = _sha256_canonical(receipt)
