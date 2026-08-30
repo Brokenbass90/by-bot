@@ -13,6 +13,7 @@ import fcntl
 import hashlib
 import json
 import os
+import re
 import shlex
 import socket
 import subprocess
@@ -41,6 +42,10 @@ STATUS_PATH = RUNTIME / "status.json"
 PID_PATH = RUNTIME / "supervisor.pid"
 LOCK_PATH = RUNTIME / "supervisor.lock"
 SAFE_CANONICAL_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+SENSITIVE_ENV_NAME = re.compile(
+    r"(?:api.?key|secret|token|credential|password|passwd|cookie|session|auth|account|private|webhook|dsn)",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -331,9 +336,17 @@ def _canonical_child_environment(job: Job) -> dict[str, str]:
     }
 
 
+def _screen_control_environment() -> dict[str, str]:
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if not SENSITIVE_ENV_NAME.search(key) and not key.upper().endswith("_JSON")
+    }
+
+
 def _start(job: Job) -> dict[str, Any]:
     command = f"cd {shlex.quote(str(ROOT))} && exec /bin/bash {job.script}"
-    child_env = None
+    screen_env = None
     if job.canonical:
         if job.runtime_dir is None:
             raise RuntimeError(f"canonical job has no runtime dir: {job.name}")
@@ -342,12 +355,20 @@ def _start(job: Job) -> dict[str, Any]:
         home.mkdir(parents=True, exist_ok=True)
         tmp.mkdir(parents=True, exist_ok=True)
         child_env = _canonical_child_environment(job)
+        assignments = shlex.join(
+            [f"{key}={value}" for key, value in sorted(child_env.items())]
+        )
+        command = (
+            f"cd {shlex.quote(str(ROOT))} && exec /usr/bin/env -i "
+            f"{assignments} /bin/bash {job.script}"
+        )
+        screen_env = _screen_control_environment()
     result = subprocess.run(
         ["screen", "-dmS", job.session, "/bin/bash", "-lc", command],
         capture_output=True,
         text=True,
         check=False,
-        env=child_env,
+        env=screen_env,
     )
     return {
         "attempted": True,

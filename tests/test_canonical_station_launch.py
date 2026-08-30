@@ -11,6 +11,7 @@ import scripts.local_research_station as station
 from research_lab.canonical_station import MigrationError
 from scripts.canonical_station_migration import (
     _safe_child_environment,
+    _screen_control_environment,
     build_canonical_launch_plan,
     launch_canonical_jobs,
 )
@@ -143,6 +144,58 @@ def test_child_environment_does_not_inherit_secrets(
     assert child_env["PRIVATE_API_AUTHORITY"] == "false"
     assert child_env["PUBLIC_DATA_READ_AUTHORITY"] == "true"
     assert Path(child_env["HOME"]).is_relative_to(spec.runtime_dir)
+
+
+def test_screen_control_environment_preserves_socket_paths_but_filters_secrets(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("HOME", "/Users/fixture")
+    monkeypatch.setenv("TMPDIR", "/private/tmp/fixture/")
+    monkeypatch.setenv("BYBIT_ACCOUNTS_JSON", "must-not-leak")
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "must-not-leak")
+
+    screen_env = _screen_control_environment()
+
+    assert screen_env["HOME"] == "/Users/fixture"
+    assert screen_env["TMPDIR"] == "/private/tmp/fixture/"
+    assert "BYBIT_ACCOUNTS_JSON" not in screen_env
+    assert "TELEGRAM_BOT_TOKEN" not in screen_env
+
+
+def test_launch_isolates_child_env_after_screen_controller(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _materialize_fixture(tmp_path)
+    spec = build_canonical_launch_plan(
+        _manifest(), project_root=tmp_path, epoch="epoch_20260830_100000_abcd"
+    )[0]
+    calls: list[tuple[list[str], dict[str, str] | None]] = []
+
+    def fake_run(argv, **kwargs):
+        calls.append((list(argv), kwargs.get("env")))
+        if list(argv) == ["screen", "-ls"]:
+            return subprocess.CompletedProcess(
+                argv,
+                0,
+                stdout=f"\t123.{spec.screen_session}\t(Detached)\n",
+                stderr="",
+            )
+        return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(
+        "scripts.canonical_station_migration.subprocess.run", fake_run
+    )
+    monkeypatch.setenv("BYBIT_API_SECRET", "must-not-leak")
+
+    receipt = launch_canonical_jobs((spec,), dry_run=False)
+
+    start_argv, screen_env = calls[0]
+    assert start_argv[:4] == ["screen", "-dmS", spec.screen_session, "/usr/bin/env"]
+    assert "-i" in start_argv
+    assert not any("must-not-leak" in part for part in start_argv)
+    assert screen_env is not None and "BYBIT_API_SECRET" not in screen_env
+    assert receipt["jobs"][0]["state"] == "STARTED"
+    assert receipt["jobs"][0]["pid"] == 123
 
 
 def test_manual_hold_job_is_not_in_canonical_launch_plan(tmp_path: Path) -> None:

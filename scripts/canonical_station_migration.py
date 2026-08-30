@@ -37,6 +37,10 @@ _SECRET_COMMAND = re.compile(
     re.IGNORECASE,
 )
 _SAFE_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+_SENSITIVE_ENV_NAME = re.compile(
+    r"(?:api.?key|secret|token|credential|password|passwd|cookie|session|auth|account|private|webhook|dsn)",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -171,6 +175,15 @@ def _safe_child_environment(spec: LaunchSpec) -> dict[str, str]:
     }
 
 
+def _screen_control_environment() -> dict[str, str]:
+    """Keep Screen's native HOME/TMP socket contract without leaking credentials."""
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if not _SENSITIVE_ENV_NAME.search(key) and not key.upper().endswith("_JSON")
+    }
+
+
 def launch_canonical_jobs(
     plan: Sequence[LaunchSpec], *, dry_run: bool
 ) -> dict[str, Any]:
@@ -210,10 +223,20 @@ def launch_canonical_jobs(
             spec.runtime_dir.mkdir(parents=True, exist_ok=False)
             (spec.runtime_dir / "home").mkdir()
             (spec.runtime_dir / "tmp").mkdir()
+            child_env = _safe_child_environment(spec)
             completed = subprocess.run(
-                ["screen", "-dmS", spec.screen_session, "/bin/bash", *spec.argv],
+                [
+                    "screen",
+                    "-dmS",
+                    spec.screen_session,
+                    "/usr/bin/env",
+                    "-i",
+                    *[f"{key}={value}" for key, value in sorted(child_env.items())],
+                    "/bin/bash",
+                    *spec.argv,
+                ],
                 cwd=spec.cwd,
-                env=_safe_child_environment(spec),
+                env=_screen_control_environment(),
                 capture_output=True,
                 text=True,
                 check=False,
@@ -223,7 +246,7 @@ def launch_canonical_jobs(
                 screen_result = subprocess.run(
                     ["screen", "-ls"],
                     cwd=spec.cwd,
-                    env=_safe_child_environment(spec),
+                    env=_screen_control_environment(),
                     capture_output=True,
                     text=True,
                     check=False,
