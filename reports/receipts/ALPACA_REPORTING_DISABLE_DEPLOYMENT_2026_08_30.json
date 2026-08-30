@@ -1,0 +1,49 @@
+{
+  "schema_id": "alpaca_reporting_disable_deployment_v1",
+  "decision": "PASS",
+  "verified_at_utc": "2026-08-30T17:08:41Z",
+  "scope": "telegram_reporting_only",
+  "authority": {
+    "broker_calls": false,
+    "live_order_authority": false,
+    "money_authority": false,
+    "orders_mutated_by_deployment": false,
+    "risk_changed": false,
+    "service_restart_invoked": false
+  },
+  "source": {
+    "branch": "codex/recovery-20260824",
+    "feature_commit": "e58ec6d",
+    "files": {
+      "scripts/equities_alpaca_tg_report.py": "803e7fb14ff14cf3a130c592c7351b616e48b4e2c3049964f0d7c7e466403d51",
+      "scripts/tg_daily_digest.py": "3d14de0fceef952ae4401af84b2b9bf5b69d91fb07b0e377853533446dd9f2f8"
+    }
+  },
+  "target": {
+    "branch_before_deployment": "codex/dynamic-symbol-filters",
+    "head_before_deployment": "f7ed0116a5f5b8fed59dbf8a339a85989bcf2f3b",
+    "host": "64.226.73.119",
+    "project_root": "/root/by-bot"
+  },
+  "behavior": {
+    "alpaca_deepseek_note_default": false,
+    "alpaca_intraday_digest_default": false,
+    "daily_digest_cron_preserved": "0 8 * * *",
+    "monthly_mechanical_report_preserved": true,
+    "monthly_report_cron_preserved": "20 22 1 * *"
+  },
+  "rollback": {
+    "available": true,
+    "files": {
+      "/root/by-bot/runtime/deploy_backups/alpaca_report_disable_20260830_v1/equities_alpaca_tg_report.py": "6aed6608d22864df4f81ca2c5ca6f92ddc847a3ae164b5f544c2341979874ed0",
+      "/root/by-bot/runtime/deploy_backups/alpaca_report_disable_20260830_v1/tg_daily_digest.py": "d02e2b9703bc8ef6aa9d8932fd3aa853ed25f810afb47983f5d7250347c82f76"
+    }
+  },
+  "verification": {
+    "active_reporting_processes_during_swap": 0,
+    "deployed_hashes_match_source": true,
+    "python_compile": "PASS",
+    "remote_cron_changed": false,
+    "rollback_hashes_match_predeployment": true
+  }
+}

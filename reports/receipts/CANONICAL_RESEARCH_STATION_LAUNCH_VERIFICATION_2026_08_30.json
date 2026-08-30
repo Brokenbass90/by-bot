@@ -1,0 +1,74 @@
+{
+  "schema_id": "canonical_research_station_launch_verification_v1",
+  "decision": "PASS_LAUNCH_AND_FRESH_EVIDENCE_ONLY",
+  "observed_at_utc": "2026-08-30T17:08:41Z",
+  "authority": {
+    "live_order_authority": false,
+    "live_write_authority": false,
+    "money_authority": false,
+    "order_authority": false,
+    "private_api_authority": false,
+    "promotion_authority": false,
+    "public_data_read_authority": true,
+    "research_only": true
+  },
+  "canonical_source": {
+    "branch": "codex/recovery-20260824",
+    "launch_fix_commit": "2964da7",
+    "manifest": "configs/research/canonical_station_v1.json",
+    "routing_commit": "fa156c3"
+  },
+  "runtime": {
+    "evidence_epoch": "epoch_20260830_122258_canonical_v1",
+    "launch_receipt_sha256": "cea1e911a69506c7dba4772def8b39b8e573c2508671f84727306ab0acb2301e",
+    "status_generated_at_utc": "2026-08-30T17:02:30+00:00",
+    "status_sha256": "2592e925cb16b36b1d05d71250cd74db5c7b048a1b1038c1cfaa821ee454ac9a",
+    "supervisor_pid": 58433
+  },
+  "jobs": [
+    {
+      "evidence_sha256": "992e48cb25b3d57cbe97cce1b7b3c1ef1151938818d3feaccb7c3c2cb8ac8ecb",
+      "name": "alpaca_adaptive_shadow",
+      "screen": "canonical_alpaca_adaptive_e0d0e52815",
+      "state": "healthy"
+    },
+    {
+      "evidence_sha256": "38b43b84cf484439845198ec33edaad3e7d78ade8044a3ce7ca42613cf23916d",
+      "name": "xsec_v3_shadow",
+      "screen": "canonical_xsec_v3_e0d0e52815",
+      "state": "healthy"
+    },
+    {
+      "evidence_sha256": "26eef6a8fd84862c6cfa4ca16f67d5aa1488ac0967c77e062ce2cb849c7f5ce0",
+      "name": "funding_positioning_dynamic_shadow",
+      "screen": "canonical_funding_dynamic_e0d0e52815",
+      "state": "healthy"
+    },
+    {
+      "evidence_sha256": "0145292fdb3c5345cd942845b44efa45084aa17cf67590a31e0c08830fa5d9b8",
+      "name": "funding_positioning_frozen_shadow",
+      "screen": "canonical_funding_frozen_e0d0e52815",
+      "state": "healthy"
+    },
+    {
+      "evidence_sha256": "27f410dd08628a35c1324d086ecc532e7b5434da79d502bdc60aad9c886c5ba5",
+      "name": "inplay_eth_prospective_shadow",
+      "screen": "canonical_inplay_prospective_e0d0e52815",
+      "state": "healthy"
+    }
+  ],
+  "summary": {
+    "fresh_evidence_jobs": 5,
+    "healthy_jobs": 5,
+    "jobs": 5,
+    "legacy_jobs_stopped": 0,
+    "project_audit_migration_mode": "manual_hold"
+  },
+  "limits": {
+    "collector_parity_evaluated": false,
+    "deterministic_parity_evaluated": false,
+    "legacy_shutdown_authorized": false,
+    "market_snapshot_parity_evaluated": false,
+    "next_gate": "Task 4 deterministic, market-snapshot, and collector parity"
+  }
+}
