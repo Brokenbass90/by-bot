@@ -160,6 +160,22 @@ def validate_authority_manifest(manifest: Mapping[str, Any]) -> None:
         if session in sessions:
             raise MigrationError(f"duplicate screen session: {session}")
         sessions.add(session)
+        legacy_markers = job.get("legacy_session_markers")
+        if not isinstance(legacy_markers, list) or not legacy_markers or not all(
+            isinstance(marker, str) and _SCREEN_NAME.fullmatch(marker)
+            for marker in legacy_markers
+        ):
+            raise MigrationError(
+                f"jobs[{index}].legacy_session_markers must be explicit safe session prefixes"
+            )
+        command_markers = job.get("legacy_command_markers")
+        if not isinstance(command_markers, list) or not command_markers or not all(
+            isinstance(marker, str) and _SCREEN_NAME.fullmatch(marker)
+            for marker in command_markers
+        ):
+            raise MigrationError(
+                f"jobs[{index}].legacy_command_markers must be explicit safe basenames"
+            )
         if job.get("process_kind") not in supported_kinds:
             raise MigrationError(f"jobs[{index}].process_kind is unsupported")
         _validate_launcher(job, index=index)

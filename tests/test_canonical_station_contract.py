@@ -26,6 +26,8 @@ def _manifest() -> dict:
                 "name": "fixture",
                 "process_kind": "deterministic_decision_loop",
                 "screen_session": "canonical_fixture",
+                "legacy_session_markers": ["legacy_fixture"],
+                "legacy_command_markers": ["fixture.sh"],
                 "launcher": ["scripts/fixture.sh"],
                 "evidence_paths": ["runtime/fixture/decision.json"],
                 "source_paths": [],
@@ -109,3 +111,21 @@ def test_manifest_rejects_duplicate_jobs_and_unknown_process_kind(tmp_path: Path
     unknown["jobs"][0]["process_kind"] = "ai_money_router"
     with pytest.raises(MigrationError, match="process_kind"):
         load_manifest(_write_manifest(tmp_path, unknown, "unknown-kind.json"), project_root=tmp_path)
+
+
+@pytest.mark.parametrize("marker", ("../unsafe", "contains space", "*"))
+def test_manifest_rejects_unsafe_legacy_session_markers(marker: str, tmp_path: Path) -> None:
+    _write_launcher(tmp_path)
+    broken = _manifest()
+    broken["jobs"][0]["legacy_session_markers"] = [marker]
+    with pytest.raises(MigrationError, match="legacy_session_markers"):
+        load_manifest(_write_manifest(tmp_path, broken), project_root=tmp_path)
+
+
+@pytest.mark.parametrize("marker", ("../unsafe.py", "contains space", "--live"))
+def test_manifest_rejects_unsafe_legacy_command_markers(marker: str, tmp_path: Path) -> None:
+    _write_launcher(tmp_path)
+    broken = _manifest()
+    broken["jobs"][0]["legacy_command_markers"] = [marker]
+    with pytest.raises(MigrationError, match="legacy_command_markers"):
+        load_manifest(_write_manifest(tmp_path, broken), project_root=tmp_path)
