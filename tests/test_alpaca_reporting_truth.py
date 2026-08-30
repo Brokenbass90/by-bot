@@ -204,3 +204,78 @@ def test_managed_cron_has_one_morning_digest_without_postclose_duplicates():
     assert "0 8 * * *" in text
     assert "--alpaca-only --status-key alpaca_postclose" not in text
     assert "alpaca_report_freshness_watchdog.py >>" not in text
+
+
+def _run_digest_main_for_sections(monkeypatch) -> str:
+    sent: list[str] = []
+    monkeypatch.setattr(digest, "_load_env_file", lambda _path: None)
+    monkeypatch.setattr(digest, "_bybit_section", lambda: "BYBIT_SECTION")
+    monkeypatch.setattr(digest, "_alpaca_intraday_section", lambda: "INTRADAY_SECTION")
+    monkeypatch.setattr(digest, "_alpaca_monthly_section", lambda: "MONTHLY_SECTION")
+    monkeypatch.setattr(digest, "_write_latest_digest", lambda _msg: None)
+    monkeypatch.setattr(digest, "_write_delivery_status", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(
+        digest,
+        "_tg_send",
+        lambda _token, _chat_id, msg, dry_run=False: sent.append(msg) or True,
+    )
+    monkeypatch.setattr(sys, "argv", ["tg_daily_digest.py"])
+
+    assert digest.main() == 0
+    assert len(sent) == 1
+    return sent[0]
+
+
+def test_daily_digest_omits_intraday_by_default_but_keeps_other_sections(monkeypatch):
+    monkeypatch.delenv("TG_DAILY_DIGEST_ALPACA_INTRADAY_ENABLE", raising=False)
+
+    text = _run_digest_main_for_sections(monkeypatch)
+
+    assert "INTRADAY_SECTION" not in text
+    assert "BYBIT_SECTION" in text
+    assert "MONTHLY_SECTION" in text
+
+
+def test_daily_digest_omits_intraday_when_explicitly_disabled(monkeypatch):
+    monkeypatch.setenv("TG_DAILY_DIGEST_ALPACA_INTRADAY_ENABLE", "0")
+
+    text = _run_digest_main_for_sections(monkeypatch)
+
+    assert "INTRADAY_SECTION" not in text
+    assert "BYBIT_SECTION" in text
+    assert "MONTHLY_SECTION" in text
+
+
+def test_daily_digest_can_explicitly_enable_intraday(monkeypatch):
+    monkeypatch.setenv("TG_DAILY_DIGEST_ALPACA_INTRADAY_ENABLE", "1")
+
+    text = _run_digest_main_for_sections(monkeypatch)
+
+    assert "INTRADAY_SECTION" in text
+    assert "BYBIT_SECTION" in text
+    assert "MONTHLY_SECTION" in text
+
+
+def test_alpaca_deepseek_note_is_fail_closed_without_explicit_opt_in(monkeypatch):
+    monkeypatch.delenv("ALPACA_DEEPSEEK_NOTE_ENABLE", raising=False)
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "test-key-present")
+    fail_closed_report = _load(
+        "equities_alpaca_tg_report_deepseek_default_off_test",
+        "scripts/equities_alpaca_tg_report.py",
+    )
+    monkeypatch.setattr(
+        fail_closed_report,
+        "_deepseek_chat",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            AssertionError("DeepSeek must not be called without explicit opt-in")
+        ),
+    )
+
+    note = fail_closed_report._alpaca_ai_note(
+        monthly=False,
+        equity=500.0,
+        cash=400.0,
+        positions=[],
+    )
+
+    assert note == ""

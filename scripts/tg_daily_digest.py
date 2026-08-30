@@ -846,8 +846,9 @@ def main() -> int:
 
     if not args.bybit_only:
         sections.append("")
-        sections.append(_alpaca_intraday_section())
-        sections.append("")
+        if _env_bool("TG_DAILY_DIGEST_ALPACA_INTRADAY_ENABLE", False):
+            sections.append(_alpaca_intraday_section())
+            sections.append("")
         sections.append(_alpaca_monthly_section())
 
     msg = "\n".join(sections)
