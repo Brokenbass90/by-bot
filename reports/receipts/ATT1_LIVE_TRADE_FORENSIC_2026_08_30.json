@@ -1,0 +1,59 @@
+{
+  "schema_id": "att1_live_trade_forensic_v1",
+  "decision": "OBSERVED_REGIME_BINDING_MISSING",
+  "observed_at_utc": "2026-08-30T17:12:17Z",
+  "authority": "read_only_no_order_or_risk_change",
+  "source": {
+    "live_trade_events_sha256": "bda7885db85b1c2d9dc7871d914d024e74e69164e7728202355f0b48c18d680b",
+    "bot_heartbeat_sha256": "1da7b69e39772e5a1fd82f56c6d2d3b41be669e14a4924571aa4098123ad39fe",
+    "host": "64.226.73.119",
+    "project_root": "/root/by-bot"
+  },
+  "trade": {
+    "accounting_contaminated": false,
+    "entry_price": 0.2012,
+    "entry_ts_utc": "2026-08-29T21:40:56Z",
+    "exit_price": 0.2039,
+    "exit_reason": "SL",
+    "exit_ts_utc": "2026-08-30T13:43:51Z",
+    "fees_usdt": 0.0401049,
+    "initial_risk_usdt": 0.468,
+    "net_pnl_usdt": -0.52452977,
+    "net_r": -1.1207901068,
+    "quantity": 180.0,
+    "side": "short",
+    "strategy": "att1_trendline_touch",
+    "symbol": "ADAUSDT"
+  },
+  "geometry": {
+    "initial_stop": 0.2038,
+    "stop_distance_pct": 1.2922465209,
+    "take_profit_1": 0.19832913473256603,
+    "take_profit_1_distance_pct": 1.4268714053,
+    "take_profit_2": 0.19511069735951256,
+    "take_profit_2_distance_pct": 3.026492366,
+    "take_profit_fractions": [
+      0.55,
+      0.45
+    ],
+    "weighted_full_target_r_after_fill_rebase": 1.6612161867,
+    "stop_wider_than_take_profit_1": false,
+    "stop_wider_than_take_profit_2": false
+  },
+  "causal_entry_context": {
+    "recorded_regime": "unknown",
+    "recorded_regime_confidence": 0.0,
+    "signal_rsi": 57.0,
+    "signal_trendline_r2": 0.996,
+    "signal_trendline_slope_pct_per_day": -0.655
+  },
+  "current_context_not_used_to_relabel_entry": {
+    "heartbeat_regime": "bull_chop",
+    "heartbeat_ts_utc": "2026-08-30T17:12:17Z"
+  },
+  "limits": {
+    "entry_trend_was_not_reconstructed_from_future_bars": true,
+    "single_trade_does_not_establish_strategy_edge": true,
+    "reopen_condition": "causal regime receipt at entry plus preregistered ON/OFF replay and prospective cohort"
+  }
+}
