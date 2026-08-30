@@ -20,6 +20,7 @@ def _manifest() -> dict:
         "private_api_authority": False,
         "order_authority": False,
         "live_write_authority": False,
+        "public_data_read_authority": True,
         "canonical_runtime_root": "runtime/local_research_station",
         "jobs": [
             {
@@ -29,7 +30,10 @@ def _manifest() -> dict:
                 "legacy_session_markers": ["legacy_fixture"],
                 "legacy_command_markers": ["fixture.sh"],
                 "launcher": ["scripts/fixture.sh"],
+                "migration_mode": "canonical",
+                "max_age_seconds": 60,
                 "evidence_paths": ["runtime/fixture/decision.json"],
+                "canonical_evidence_files": ["decision.json"],
                 "source_paths": [],
                 "config_paths": [],
                 "input_paths": [],
@@ -72,6 +76,14 @@ def test_manifest_rejects_every_unsafe_authority(field: str, tmp_path: Path) -> 
         load_manifest(_write_manifest(tmp_path, broken), project_root=tmp_path)
 
 
+def test_manifest_requires_explicit_public_read_only_acknowledgement(tmp_path: Path) -> None:
+    _write_launcher(tmp_path)
+    broken = _manifest()
+    broken["public_data_read_authority"] = False
+    with pytest.raises(MigrationError, match="public_data_read_authority"):
+        load_manifest(_write_manifest(tmp_path, broken), project_root=tmp_path)
+
+
 @pytest.mark.parametrize("value", ("runtime/*.json", "/tmp/unsafe.json", "runtime/[ab].json"))
 def test_manifest_rejects_globs_and_absolute_job_paths(value: str, tmp_path: Path) -> None:
     _write_launcher(tmp_path)
@@ -111,6 +123,22 @@ def test_manifest_rejects_duplicate_jobs_and_unknown_process_kind(tmp_path: Path
     unknown["jobs"][0]["process_kind"] = "ai_money_router"
     with pytest.raises(MigrationError, match="process_kind"):
         load_manifest(_write_manifest(tmp_path, unknown, "unknown-kind.json"), project_root=tmp_path)
+
+
+def test_manifest_requires_canonical_evidence_files(tmp_path: Path) -> None:
+    _write_launcher(tmp_path)
+    broken = _manifest()
+    broken["jobs"][0]["canonical_evidence_files"] = []
+    with pytest.raises(MigrationError, match="canonical_evidence_files"):
+        load_manifest(_write_manifest(tmp_path, broken), project_root=tmp_path)
+
+
+def test_manifest_rejects_job_name_that_can_escape_epoch_root(tmp_path: Path) -> None:
+    _write_launcher(tmp_path)
+    broken = _manifest()
+    broken["jobs"][0]["name"] = "../../escaped"
+    with pytest.raises(MigrationError, match="name is invalid"):
+        load_manifest(_write_manifest(tmp_path, broken), project_root=tmp_path)
 
 
 @pytest.mark.parametrize("marker", ("../unsafe", "contains space", "*"))

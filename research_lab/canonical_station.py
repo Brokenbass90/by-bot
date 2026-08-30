@@ -19,11 +19,19 @@ REQUIRED_FALSE_AUTHORITY = (
     "order_authority",
     "live_write_authority",
 )
-_PATH_FIELDS = ("evidence_paths", "source_paths", "config_paths", "input_paths")
+_PATH_FIELDS = (
+    "evidence_paths",
+    "canonical_evidence_files",
+    "source_paths",
+    "config_paths",
+    "input_paths",
+    "runtime_requirements",
+)
 _GLOB_CHARS = frozenset("*?[")
 _FORBIDDEN_LAUNCH_ARGUMENTS = ("--live", "--place-order", "--private-api")
 _CREDENTIAL_FRAGMENT = re.compile(r"(?:^|[_-])(?:api[_-]?key|secret|token|credential)(?:$|[_=:.-])", re.IGNORECASE)
 _SCREEN_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{2,63}")
+_JOB_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{2,63}")
 
 
 class MigrationError(RuntimeError):
@@ -49,6 +57,7 @@ class CanonicalJob:
     screen_session: str
     launcher: Sequence[str]
     evidence_paths: Sequence[str]
+    canonical_evidence_files: Sequence[str] = ()
     source_paths: Sequence[str] = ()
     config_paths: Sequence[str] = ()
     input_paths: Sequence[str] = ()
@@ -79,6 +88,13 @@ class ParityReceipt:
     stop_allowed: bool
     compared_fields: Sequence[str] = ()
     observed_at_utc: str | None = None
+
+
+def canonical_screen_name(base: str, epoch: str) -> str:
+    if not _SCREEN_NAME.fullmatch(base):
+        raise MigrationError("canonical screen base is invalid")
+    suffix = hashlib.sha256(epoch.encode("utf-8")).hexdigest()[:10]
+    return f"{base}_{suffix}"
 
 
 def _canonical_json(value: Any) -> bytes:
@@ -134,6 +150,8 @@ def validate_authority_manifest(manifest: Mapping[str, Any]) -> None:
     for key in REQUIRED_FALSE_AUTHORITY:
         if manifest.get(key) is not False:
             raise MigrationError(f"{key} must be false")
+    if manifest.get("public_data_read_authority") is not True:
+        raise MigrationError("public_data_read_authority must be true")
     runtime_root = manifest.get("canonical_runtime_root")
     if not isinstance(runtime_root, str) or not runtime_root:
         raise MigrationError("canonical_runtime_root is required")
@@ -149,8 +167,8 @@ def validate_authority_manifest(manifest: Mapping[str, Any]) -> None:
         if not isinstance(job, dict):
             raise MigrationError(f"jobs[{index}] must be an object")
         name = job.get("name")
-        if not isinstance(name, str) or not name:
-            raise MigrationError(f"jobs[{index}].name is required")
+        if not isinstance(name, str) or not _JOB_NAME.fullmatch(name):
+            raise MigrationError(f"jobs[{index}].name is invalid")
         if name in names:
             raise MigrationError(f"duplicate job name: {name}")
         names.add(name)
@@ -178,6 +196,20 @@ def validate_authority_manifest(manifest: Mapping[str, Any]) -> None:
             )
         if job.get("process_kind") not in supported_kinds:
             raise MigrationError(f"jobs[{index}].process_kind is unsupported")
+        migration_mode = job.get("migration_mode", "canonical")
+        if migration_mode not in {"canonical", "manual_hold"}:
+            raise MigrationError(f"jobs[{index}].migration_mode is unsupported")
+        if migration_mode == "manual_hold" and not job.get("migration_blocked_reason"):
+            raise MigrationError(
+                f"jobs[{index}].migration_blocked_reason is required for manual_hold"
+            )
+        max_age_seconds = job.get("max_age_seconds")
+        if (
+            not isinstance(max_age_seconds, int)
+            or isinstance(max_age_seconds, bool)
+            or max_age_seconds <= 0
+        ):
+            raise MigrationError(f"jobs[{index}].max_age_seconds must be positive")
         _validate_launcher(job, index=index)
         for field in _PATH_FIELDS:
             values = job.get(field, [])
@@ -185,6 +217,8 @@ def validate_authority_manifest(manifest: Mapping[str, Any]) -> None:
                 isinstance(value, str) and value for value in values
             ):
                 raise MigrationError(f"jobs[{index}].{field} must be explicit relative paths")
+            if field in {"evidence_paths", "canonical_evidence_files"} and not values:
+                raise MigrationError(f"jobs[{index}].{field} must not be empty")
             for value in values:
                 _explicit_relative_path(value, field=f"jobs[{index}].{field}")
 

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 import shlex
@@ -25,10 +26,21 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from research_lab.canonical_station import (
+    AUTHORITY,
+    canonical_screen_name,
+    load_manifest,
+    validate_authority_manifest,
+)
+
 RUNTIME = ROOT / "runtime" / "local_research_station"
 STATUS_PATH = RUNTIME / "status.json"
 PID_PATH = RUNTIME / "supervisor.pid"
 LOCK_PATH = RUNTIME / "supervisor.lock"
+SAFE_CANONICAL_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 
 @dataclass(frozen=True)
@@ -39,6 +51,11 @@ class Job:
     script: str
     evidence: str
     max_age_seconds: int
+    evidence_paths: tuple[str, ...] = ()
+    runtime_requirements: tuple[Path, ...] = ()
+    runtime_dir: Path | None = None
+    authority_env: tuple[tuple[str, str], ...] = ()
+    canonical: bool = False
 
 
 JOBS = (
@@ -94,6 +111,154 @@ JOBS = (
         30 * 60,
     ),
 )
+
+
+def load_canonical_manifest() -> dict[str, Any]:
+    return load_manifest(
+        ROOT / "configs/research/canonical_station_v1.json", project_root=ROOT
+    )
+
+
+def jobs_from_manifest(
+    manifest: dict[str, Any], *, epoch: str, project_root: Path | None = None
+) -> tuple[Job, ...]:
+    """Project launch/health identity from the canonical manifest into one epoch."""
+    validate_authority_manifest(manifest)
+    if not epoch:
+        raise ValueError("canonical jobs require a non-empty evidence epoch")
+    root = (project_root or ROOT).resolve()
+    epoch_root = (
+        root
+        / str(manifest["canonical_runtime_root"])
+        / "epochs"
+        / epoch
+    ).resolve()
+    jobs: list[Job] = []
+    for row in manifest["jobs"]:
+        if row.get("migration_mode", "canonical") != "canonical":
+            continue
+        runtime_dir = (epoch_root / str(row["name"])).resolve()
+        try:
+            runtime_dir.relative_to(epoch_root)
+        except ValueError as exc:
+            raise ValueError(f"job runtime escapes evidence epoch: {row['name']}") from exc
+        launcher = (root / str(row["launcher"][0])).resolve()
+        argv = [
+            str(launcher),
+            *[str(value) for value in row["launcher"][1:]],
+            "--runtime-dir",
+            str(runtime_dir),
+        ]
+        evidence_paths = tuple(
+            str(runtime_dir / relative)
+            for relative in row["canonical_evidence_files"]
+        )
+        session = canonical_screen_name(str(row["screen_session"]), epoch)
+        jobs.append(
+            Job(
+                name=str(row["name"]),
+                session=session,
+                session_markers=(session,),
+                script=shlex.join(argv),
+                evidence=evidence_paths[0],
+                max_age_seconds=int(row["max_age_seconds"]),
+                evidence_paths=evidence_paths,
+                runtime_requirements=tuple(
+                    (root / relative).resolve()
+                    for relative in row.get("runtime_requirements", [])
+                ),
+                runtime_dir=runtime_dir,
+                authority_env=(
+                    ("RESEARCH_STATION_EVIDENCE_EPOCH", epoch),
+                    ("RESEARCH_ONLY", "true"),
+                    ("PROMOTION_AUTHORITY", "false"),
+                    ("NETWORK_AUTHORITY", "false"),
+                    ("PRIVATE_API_AUTHORITY", "false"),
+                    ("ORDER_AUTHORITY", "false"),
+                    ("LIVE_WRITE_AUTHORITY", "false"),
+                    ("PUBLIC_DATA_READ_AUTHORITY", "true"),
+                ),
+                canonical=True,
+            )
+        )
+    return tuple(jobs)
+
+
+def _manifest_hashes(
+    manifest: dict[str, Any], *, epoch: str
+) -> tuple[dict[str, str], dict[str, str]]:
+    source_hashes: dict[str, str] = {}
+    run_id_identities: dict[str, str] = {}
+    for job in manifest.get("jobs", []):
+        if job.get("migration_mode", "canonical") != "canonical":
+            continue
+        job_hashes: dict[str, str] = {}
+        for field in ("source_paths", "config_paths", "input_paths"):
+            for logical_path in job.get(field, []):
+                path = ROOT / logical_path
+                digest = (
+                    hashlib.sha256(path.read_bytes()).hexdigest()
+                    if path.is_file()
+                    else "MISSING"
+                )
+                source_hashes[logical_path] = digest
+                job_hashes[logical_path] = digest
+        identity_payload = json.dumps(
+            {
+                "job_name": job.get("name"),
+                "process_kind": job.get("process_kind"),
+                "launcher": job.get("launcher"),
+                "canonical_evidence_files": job.get("canonical_evidence_files"),
+                "evidence_epoch": epoch,
+                "hashes": job_hashes,
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        run_id_identities[str(job.get("name"))] = hashlib.sha256(
+            identity_payload
+        ).hexdigest()
+    return dict(sorted(source_hashes.items())), dict(sorted(run_id_identities.items()))
+
+
+def canonical_status(
+    jobs: list[dict[str, Any]],
+    *,
+    epoch: str,
+    source_hashes: dict[str, str],
+    run_id_identities: dict[str, str],
+) -> dict[str, Any]:
+    evidence_paths = sorted({
+        str(path)
+        for item in jobs
+        for path in (
+            item.get("evidence_paths")
+            or ([item["evidence_path"]] if item.get("evidence_path") else [])
+        )
+    })
+    healthy = bool(jobs) and all(item.get("state") == "healthy" for item in jobs)
+    healthy = healthy and bool(epoch) and all(
+        digest != "MISSING" for digest in source_hashes.values()
+    )
+    return {
+        "schema_id": "local_research_station_status_v1",
+        "authority": AUTHORITY,
+        "promotion_authority": False,
+        "network_authority": False,
+        "private_api_authority": False,
+        "order_authority": False,
+        "live_write_authority": False,
+        "public_data_read_authority": True,
+        "research_only": True,
+        "live_order_authority": False,
+        "evidence_epoch": epoch,
+        "runtime_root": "runtime/local_research_station",
+        "evidence_paths": evidence_paths,
+        "source_hashes": dict(sorted(source_hashes.items())),
+        "run_id_identities": dict(sorted(run_id_identities.items())),
+        "healthy": healthy,
+        "jobs": jobs,
+    }
 
 
 def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
@@ -152,13 +317,37 @@ def _matching_sessions(job: Job) -> list[str]:
     ]
 
 
+def _canonical_child_environment(job: Job) -> dict[str, str]:
+    if not job.canonical or job.runtime_dir is None:
+        raise RuntimeError(f"canonical job has no runtime dir: {job.name}")
+    return {
+        "PATH": SAFE_CANONICAL_PATH,
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "TZ": "UTC",
+        "HOME": str(job.runtime_dir / "home"),
+        "TMPDIR": str(job.runtime_dir / "tmp"),
+        **dict(job.authority_env),
+    }
+
+
 def _start(job: Job) -> dict[str, Any]:
     command = f"cd {shlex.quote(str(ROOT))} && exec /bin/bash {job.script}"
+    child_env = None
+    if job.canonical:
+        if job.runtime_dir is None:
+            raise RuntimeError(f"canonical job has no runtime dir: {job.name}")
+        home = job.runtime_dir / "home"
+        tmp = job.runtime_dir / "tmp"
+        home.mkdir(parents=True, exist_ok=True)
+        tmp.mkdir(parents=True, exist_ok=True)
+        child_env = _canonical_child_environment(job)
     result = subprocess.run(
         ["screen", "-dmS", job.session, "/bin/bash", "-lc", command],
         capture_output=True,
         text=True,
         check=False,
+        env=child_env,
     )
     return {
         "attempted": True,
@@ -170,17 +359,21 @@ def _start(job: Job) -> dict[str, Any]:
 def evaluate_job(job: Job, *, now: float, start_missing: bool) -> dict[str, Any]:
     sessions = _matching_sessions(job)
     launch = {"attempted": False, "returncode": None, "stderr": ""}
-    if not sessions and start_missing:
+    runtime_missing = [
+        str(path)
+        for path in job.runtime_requirements
+        if not path.is_file() or not os.access(path, os.X_OK)
+    ]
+    if not sessions and start_missing and not runtime_missing:
         launch = _start(job)
         time.sleep(0.35)
         sessions = _matching_sessions(job)
 
     evidence_pattern = Path(job.evidence)
-    evidence_candidates = (
-        [evidence_pattern]
-        if evidence_pattern.is_absolute() and evidence_pattern.exists()
-        else sorted(ROOT.glob(job.evidence))
-    )
+    if evidence_pattern.is_absolute():
+        evidence_candidates = [evidence_pattern] if evidence_pattern.exists() else []
+    else:
+        evidence_candidates = sorted(ROOT.glob(job.evidence))
     evidence_path = (
         max(evidence_candidates, key=lambda item: item.stat().st_mtime)
         if evidence_candidates
@@ -191,7 +384,9 @@ def evaluate_job(job: Job, *, now: float, start_missing: bool) -> dict[str, Any]
     age = max(0.0, now - modified) if modified is not None else None
     fresh = bool(age is not None and age <= job.max_age_seconds)
     process_alive = bool(sessions)
-    if process_alive and fresh:
+    if runtime_missing:
+        state = "blocked_runtime"
+    elif process_alive and fresh:
         state = "healthy"
     elif process_alive and not exists:
         state = "starting"
@@ -215,33 +410,55 @@ def evaluate_job(job: Job, *, now: float, start_missing: bool) -> dict[str, Any]
             if evidence_path.is_relative_to(ROOT)
             else str(evidence_path)
         ),
+        "evidence_paths": list(job.evidence_paths or (job.evidence,)),
         "evidence_exists": exists,
         "evidence_age_seconds": round(age, 3) if age is not None else None,
         "evidence_max_age_seconds": job.max_age_seconds,
         "evidence_fresh": fresh,
         "launch": launch,
+        "runtime_missing": runtime_missing,
     }
 
 
 def run_cycle(*, start_missing: bool) -> dict[str, Any]:
     now = time.time()
-    jobs = [evaluate_job(job, now=now, start_missing=start_missing) for job in JOBS]
-    healthy = all(item["state"] == "healthy" for item in jobs)
-    payload = {
-        "schema_id": "local_research_station_status_v1",
+    manifest = load_canonical_manifest()
+    epoch = os.environ.get("RESEARCH_STATION_EVIDENCE_EPOCH", "")
+    configured_jobs = (
+        jobs_from_manifest(manifest, epoch=epoch, project_root=ROOT)
+        if epoch
+        else JOBS
+    )
+    jobs = [
+        evaluate_job(job, now=now, start_missing=start_missing)
+        for job in configured_jobs
+    ]
+    source_hashes, run_id_identities = _manifest_hashes(manifest, epoch=epoch)
+    payload = canonical_status(
+        jobs,
+        epoch=epoch,
+        source_hashes=source_hashes,
+        run_id_identities=run_id_identities,
+    )
+    payload.update({
         "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "host": socket.gethostname(),
         "supervisor_pid": os.getpid(),
-        "research_only": True,
-        "live_order_authority": False,
-        "healthy": healthy,
         "summary": {
             "jobs": len(jobs),
             "healthy": sum(item["state"] == "healthy" for item in jobs),
             "degraded": sum(item["state"] != "healthy" for item in jobs),
         },
-        "jobs": jobs,
-    }
+        "held_legacy_jobs": [
+            {
+                "name": str(row["name"]),
+                "migration_mode": str(row.get("migration_mode")),
+                "reason": str(row.get("migration_blocked_reason", "")),
+            }
+            for row in manifest["jobs"]
+            if row.get("migration_mode") != "canonical"
+        ],
+    })
     _atomic_json(STATUS_PATH, payload)
     return payload
 

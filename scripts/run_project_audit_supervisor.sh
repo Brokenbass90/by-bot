@@ -16,6 +16,9 @@ AUTO_FULL=0
 SYNC_LIVE=0
 LOOP=0
 INTERVAL_SEC=21600
+RUNTIME_DIR="$ROOT/runtime/project_audit"
+CANONICAL=0
+PRINT_CONFIG=0
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --with-model) WITH_MODEL=1 ;;
@@ -25,15 +28,42 @@ while [ "$#" -gt 0 ]; do
     --sync-live) SYNC_LIVE=1 ;;
     --loop) LOOP=1 ;;
     --interval-sec) shift; INTERVAL_SEC="${1:?missing interval}" ;;
+    --runtime-dir)
+      shift
+      RUNTIME_DIR="$(python3 -c 'import pathlib,sys; print(pathlib.Path(sys.argv[1]).resolve())' "${1:?missing runtime directory}")"
+      CANONICAL=1
+      ;;
+    --print-config) PRINT_CONFIG=1 ;;
     *) echo "unknown argument: $1" >&2; exit 2 ;;
   esac
   shift
 done
 
-mkdir -p runtime/project_audit logs
+if [ "$CANONICAL" = "1" ]; then
+  AUDIT_LOG="$RUNTIME_DIR/logs/supervisor.log"
+else
+  AUDIT_LOG="$ROOT/logs/project_audit_supervisor.log"
+fi
+CONFIG_CMD=(python3 scripts/research_loop_runtime_config.py --runtime-dir "$RUNTIME_DIR")
+for path in "$RUNTIME_DIR/run.lock" "$RUNTIME_DIR/supervisor_status.json" "$RUNTIME_DIR/registry.json" "$RUNTIME_DIR/registry.md" "$RUNTIME_DIR/registry.csv" "$AUDIT_LOG"; do
+  CONFIG_CMD+=(--write-path "$path")
+done
+if [ "$CANONICAL" = "1" ] && { [ "$WITH_MODEL" = "1" ] || [ "$SYNC_LIVE" = "1" ] || [ "$FULL" = "1" ] || [ "$AUTO_FULL" = "1" ]; }; then
+  echo "canonical project audit cannot preserve these legacy semantics" >&2
+  exit 2
+fi
+if [ "$PRINT_CONFIG" = "1" ]; then
+  exec "${CONFIG_CMD[@]}"
+fi
+if [ "$CANONICAL" = "1" ]; then
+  echo "canonical project audit is MANUAL_HOLD until snapshot parity adapter exists" >&2
+  exit 3
+fi
+
+mkdir -p "$RUNTIME_DIR" "$(dirname "$AUDIT_LOG")"
 
 run_cycle() (
-  local lock="runtime/project_audit/run.lock"
+  local lock="$RUNTIME_DIR/run.lock"
   if ! mkdir "$lock" 2>/dev/null; then
     local old_pid=""
     if [ -r "$lock/pid" ]; then
@@ -85,13 +115,14 @@ run_cycle() (
   python3 research_lab/negative_outcome_registry.py || true
   python3 research_lab/audit_health.py || true
 
-  AUDIT_WITH_MODEL="$WITH_MODEL" AUDIT_FULL="$FULL" python3 - <<'PY'
+  AUDIT_RUNTIME_DIR="$RUNTIME_DIR" AUDIT_WITH_MODEL="$WITH_MODEL" AUDIT_FULL="$FULL" python3 - <<'PY'
 import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-p = Path("runtime/project_audit/supervisor_status.json")
-registry_path = Path("runtime/project_audit/registry.json")
+runtime_dir = Path(os.environ["AUDIT_RUNTIME_DIR"])
+p = runtime_dir / "supervisor_status.json"
+registry_path = runtime_dir / "registry.json"
 try:
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
 except (OSError, ValueError):
@@ -109,7 +140,7 @@ PY
 )
 
 while :; do
-  run_cycle 2>&1 | tee -a logs/project_audit_supervisor.log
+  run_cycle 2>&1 | tee -a "$AUDIT_LOG"
   [ "$LOOP" = "1" ] || break
   if [ "$FULL_FIRST" = "1" ]; then
     FULL=0

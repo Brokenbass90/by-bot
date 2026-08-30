@@ -4,9 +4,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -19,7 +21,9 @@ from research_lab.canonical_station import (
     AUTHORITY,
     MigrationError,
     atomic_write_json,
+    canonical_screen_name,
     load_manifest,
+    validate_authority_manifest,
 )
 
 
@@ -32,6 +36,225 @@ _SECRET_COMMAND = re.compile(
     r")",
     re.IGNORECASE,
 )
+_SAFE_PATH = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+
+@dataclass(frozen=True)
+class LaunchSpec:
+    job_name: str
+    screen_session: str
+    argv: tuple[str, ...]
+    cwd: Path
+    runtime_dir: Path
+    env: dict[str, str]
+    evidence_paths: tuple[Path, ...]
+    source_hashes: dict[str, str]
+    identity_fingerprint: str
+    runtime_requirements: tuple[Path, ...] = ()
+
+
+def _launch_identity_hashes(job: Mapping[str, Any], root: Path) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+    for field in ("source_paths", "config_paths", "input_paths"):
+        for logical_path in job.get(field, []):
+            path = (root / logical_path).resolve()
+            try:
+                path.relative_to(root)
+            except ValueError as exc:
+                raise MigrationError(f"launch identity path escapes root: {logical_path}") from exc
+            if not path.is_file():
+                raise MigrationError(f"missing launch identity path: {logical_path}")
+            hashes[logical_path] = _sha256_bytes(path.read_bytes())
+    return dict(sorted(hashes.items()))
+
+
+def build_canonical_launch_plan(
+    manifest: Mapping[str, Any], *, project_root: Path, epoch: str
+) -> tuple[LaunchSpec, ...]:
+    validate_authority_manifest(manifest)
+    if not _EPOCH.fullmatch(epoch):
+        raise MigrationError("evidence_epoch must be a unique explicit identifier")
+    root = project_root.resolve()
+    epoch_root = root / str(manifest["canonical_runtime_root"]) / "epochs" / epoch
+    plan: list[LaunchSpec] = []
+    for job in manifest["jobs"]:
+        if job.get("migration_mode", "canonical") != "canonical":
+            continue
+        runtime_dir = (epoch_root / str(job["name"])).resolve()
+        try:
+            runtime_dir.relative_to(epoch_root.resolve())
+        except ValueError as exc:
+            raise MigrationError(f"canonical runtime escapes epoch: {job['name']}") from exc
+        launcher = (root / job["launcher"][0]).resolve()
+        if not launcher.is_file():
+            raise MigrationError(f"launcher does not exist: {launcher}")
+        argv = tuple(
+            [str(launcher), *[str(value) for value in job["launcher"][1:]]]
+            + ["--runtime-dir", str(runtime_dir)]
+        )
+        source_hashes = _launch_identity_hashes(job, root)
+        runtime_requirements = tuple(
+            (root / relative).resolve()
+            for relative in job.get("runtime_requirements", [])
+        )
+        for requirement in runtime_requirements:
+            try:
+                requirement.relative_to(root)
+            except ValueError as exc:
+                raise MigrationError(
+                    f"runtime requirement escapes project root: {requirement}"
+                ) from exc
+        evidence_paths = tuple(
+            runtime_dir / relative for relative in job["canonical_evidence_files"]
+        )
+        env = {
+            "RESEARCH_STATION_EVIDENCE_EPOCH": epoch,
+            "RESEARCH_ONLY": "true",
+            "PROMOTION_AUTHORITY": "false",
+            "NETWORK_AUTHORITY": "false",
+            "PRIVATE_API_AUTHORITY": "false",
+            "ORDER_AUTHORITY": "false",
+            "LIVE_WRITE_AUTHORITY": "false",
+            "PUBLIC_DATA_READ_AUTHORITY": "true",
+        }
+        identity = {
+            "job_name": job["name"],
+            "process_kind": job["process_kind"],
+            "argv": list(argv),
+            "evidence_epoch": epoch,
+            "evidence_paths": [str(path) for path in evidence_paths],
+            "source_hashes": source_hashes,
+            "runtime_requirements": [str(path) for path in runtime_requirements],
+        }
+        plan.append(
+            LaunchSpec(
+                job_name=str(job["name"]),
+                screen_session=canonical_screen_name(str(job["screen_session"]), epoch),
+                argv=argv,
+                cwd=root,
+                runtime_dir=runtime_dir,
+                env=env,
+                evidence_paths=evidence_paths,
+                source_hashes=source_hashes,
+                identity_fingerprint=_sha256_canonical(identity),
+                runtime_requirements=runtime_requirements,
+            )
+        )
+    return tuple(plan)
+
+
+def _validate_launch_spec_authority(spec: LaunchSpec) -> None:
+    expected = {
+        "RESEARCH_ONLY": "true",
+        "PROMOTION_AUTHORITY": "false",
+        "NETWORK_AUTHORITY": "false",
+        "PRIVATE_API_AUTHORITY": "false",
+        "ORDER_AUTHORITY": "false",
+        "LIVE_WRITE_AUTHORITY": "false",
+        "PUBLIC_DATA_READ_AUTHORITY": "true",
+    }
+    if any(spec.env.get(key) != value for key, value in expected.items()):
+        raise MigrationError(f"unsafe launch authority for {spec.job_name}")
+
+
+def _safe_child_environment(spec: LaunchSpec) -> dict[str, str]:
+    """Build a secret-free child environment; canonical jobs never inherit host env."""
+    _validate_launch_spec_authority(spec)
+    return {
+        "PATH": _SAFE_PATH,
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "TZ": "UTC",
+        "HOME": str(spec.runtime_dir / "home"),
+        "TMPDIR": str(spec.runtime_dir / "tmp"),
+        **spec.env,
+    }
+
+
+def launch_canonical_jobs(
+    plan: Sequence[LaunchSpec], *, dry_run: bool
+) -> dict[str, Any]:
+    rows: list[dict[str, Any]] = []
+    for spec in plan:
+        _validate_launch_spec_authority(spec)
+        runtime_missing = [
+            str(path)
+            for path in spec.runtime_requirements
+            if not path.is_file() or not os.access(path, os.X_OK)
+        ]
+        row = {
+            "job_name": spec.job_name,
+            "screen_session": spec.screen_session,
+            "runtime_dir": str(spec.runtime_dir),
+            "argv": list(spec.argv),
+            "evidence_paths": [str(path) for path in spec.evidence_paths],
+            "source_hashes": spec.source_hashes,
+            "identity_fingerprint": spec.identity_fingerprint,
+            "evidence_epoch": spec.env["RESEARCH_STATION_EVIDENCE_EPOCH"],
+            "cwd": str(spec.cwd),
+            "pid": None,
+            "orders_sent": False,
+            "private_api_calls": False,
+            "live_write_authority": False,
+            "public_data_read_authority": True,
+            "runtime_requirements": [str(path) for path in spec.runtime_requirements],
+            "runtime_missing": runtime_missing,
+        }
+        if runtime_missing:
+            row["state"] = "BLOCKED_RUNTIME"
+            row["returncode"] = None
+        elif dry_run:
+            row["state"] = "DRY_RUN"
+            row["returncode"] = None
+        else:
+            spec.runtime_dir.mkdir(parents=True, exist_ok=False)
+            (spec.runtime_dir / "home").mkdir()
+            (spec.runtime_dir / "tmp").mkdir()
+            completed = subprocess.run(
+                ["screen", "-dmS", spec.screen_session, "/bin/bash", *spec.argv],
+                cwd=spec.cwd,
+                env=_safe_child_environment(spec),
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            session_pid = None
+            if completed.returncode == 0:
+                screen_result = subprocess.run(
+                    ["screen", "-ls"],
+                    cwd=spec.cwd,
+                    env=_safe_child_environment(spec),
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                session_pid = _screen_pid_map(screen_result.stdout).get(spec.screen_session)
+            row["pid"] = session_pid
+            row["state"] = (
+                "STARTED"
+                if completed.returncode == 0 and session_pid is not None
+                else "FAIL_CLOSED"
+            )
+            row["returncode"] = completed.returncode
+            row["stderr"] = completed.stderr[-500:]
+        rows.append(row)
+    receipt = {
+        "schema_id": "canonical_station_launch_v1",
+        "authority": AUTHORITY,
+        "promotion_authority": False,
+        "network_authority": False,
+        "private_api_authority": False,
+        "order_authority": False,
+        "live_write_authority": False,
+        "public_data_read_authority": True,
+        "dry_run": bool(dry_run),
+        "jobs": rows,
+    }
+    receipt["launch_sha256"] = _sha256_canonical(receipt)
+    if plan:
+        receipt_path = plan[0].runtime_dir.parent / "launch_receipt.json"
+        atomic_write_json(receipt_path, receipt)
+    return receipt
 
 
 def _sha256_bytes(payload: bytes) -> str:
@@ -312,6 +535,7 @@ def inventory_legacy_processes(
         "private_api_authority": False,
         "order_authority": False,
         "live_write_authority": False,
+        "public_data_read_authority": True,
         "legacy_epoch": f"legacy_{now_utc}",
         "observed_at_utc": now_utc,
         "processes": processes,

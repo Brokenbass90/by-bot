@@ -6,6 +6,7 @@
   "private_api_authority": false,
   "order_authority": false,
   "live_write_authority": false,
+  "public_data_read_authority": true,
   "canonical_runtime_root": "runtime/local_research_station",
   "jobs": [
     {
@@ -15,8 +16,12 @@
       "legacy_session_markers": ["research_alpaca_adaptive", "alpaca_adaptive_shadow"],
       "legacy_command_markers": ["run_alpaca_adaptive_shadow_loop.sh", "alpaca_adaptive_shadow.py"],
       "launcher": ["scripts/run_alpaca_adaptive_shadow_loop.sh"],
+      "migration_mode": "canonical",
+      "max_age_seconds": 28800,
+      "runtime_requirements": [".venv/bin/python"],
       "evidence_paths": ["runtime/alpaca_adaptive_v1_shadow_latest.json", "runtime/alpaca_adaptive_v1_shadow_ledger.jsonl"],
-      "source_paths": ["scripts/alpaca_adaptive_shadow.py", "scripts/run_alpaca_adaptive_shadow_loop.sh"],
+      "canonical_evidence_files": ["shadow_latest.json", "shadow_ledger.jsonl"],
+      "source_paths": ["scripts/alpaca_adaptive_shadow.py", "scripts/run_alpaca_adaptive_shadow_loop.sh", "scripts/research_loop_runtime_config.py", "scripts/research_loop_lock.sh"],
       "config_paths": ["configs/preregistered/alpaca_adaptive_historical_proxy_20260728.json"],
       "input_paths": ["research_lab/data/alpaca_pit_daily_v1/status.json"]
     },
@@ -27,10 +32,14 @@
       "legacy_session_markers": ["research_xsec_v3", "xsec_v3_shadow"],
       "legacy_command_markers": ["run_xsec_shadow_loop.sh", "xsec_shadow_cycle.py"],
       "launcher": ["scripts/run_xsec_shadow_loop.sh"],
+      "migration_mode": "canonical",
+      "max_age_seconds": 108000,
+      "runtime_requirements": [".venv/bin/python"],
       "evidence_paths": ["runtime/xsec_v3_shadow/decision_latest.json", "runtime/xsec_v3_shadow/ledger.jsonl"],
-      "source_paths": ["scripts/xsec_shadow_cycle.py", "research_lab/xsec_v3_reference.py", "scripts/run_xsec_shadow_loop.sh"],
+      "canonical_evidence_files": ["decision_latest.json", "ledger.jsonl"],
+      "source_paths": ["scripts/xsec_shadow_cycle.py", "research_lab/xsec_v3_reference.py", "scripts/run_xsec_shadow_loop.sh", "scripts/research_loop_runtime_config.py", "scripts/research_loop_lock.sh"],
       "config_paths": ["configs/preregistered/xsec_v4_family_landscape_20260728.json"],
-      "input_paths": ["research_lab/data/bybit_instruments_linear.json"]
+      "input_paths": ["research_lab/data/bybit_instruments_linear.json", "research_lab/data/daily_338.json"]
     },
     {
       "name": "funding_positioning_dynamic_shadow",
@@ -39,8 +48,12 @@
       "legacy_session_markers": ["research_funding_dynamic", "funding_position_dynamic_shadow"],
       "legacy_command_markers": ["run_funding_positioning_dynamic_shadow_loop.sh", "funding_positioning_v4_shadow.py"],
       "launcher": ["scripts/run_funding_positioning_dynamic_shadow_loop.sh"],
+      "migration_mode": "canonical",
+      "max_age_seconds": 1200,
+      "runtime_requirements": [".venv/bin/python"],
       "evidence_paths": ["runtime/funding_positioning_dynamic_shadow_summary.json", "runtime/funding_positioning_dynamic_shadow_ledger.jsonl"],
-      "source_paths": ["scripts/build_funding_positioning_dynamic_universe.py", "scripts/funding_positioning_v4_shadow.py", "scripts/run_funding_positioning_dynamic_shadow_loop.sh"],
+      "canonical_evidence_files": ["summary.json", "ledger.jsonl"],
+      "source_paths": ["scripts/build_funding_positioning_dynamic_universe.py", "scripts/funding_positioning_v4_shadow.py", "scripts/run_funding_positioning_dynamic_shadow_loop.sh", "scripts/research_loop_runtime_config.py", "scripts/research_loop_lock.sh"],
       "config_paths": ["configs/research/funding_positioning_dynamic_universe_prereg_20260729.json"],
       "input_paths": ["research_lab/data/cross_exchange_funding_history_180d.json"]
     },
@@ -51,8 +64,12 @@
       "legacy_session_markers": ["research_funding_frozen", "funding_positioning_frozen_shadow"],
       "legacy_command_markers": ["run_funding_positioning_post_n42_frozen_loop.sh", "funding_positioning_v4_shadow.py"],
       "launcher": ["scripts/run_funding_positioning_post_n42_frozen_loop.sh"],
+      "migration_mode": "canonical",
+      "max_age_seconds": 1200,
+      "runtime_requirements": [".venv/bin/python"],
       "evidence_paths": ["runtime/funding_positioning_post_n42_frozen_summary.json", "runtime/funding_positioning_post_n42_frozen_ledger.jsonl"],
-      "source_paths": ["scripts/funding_positioning_v4_shadow.py", "scripts/run_funding_positioning_post_n42_frozen_loop.sh"],
+      "canonical_evidence_files": ["summary.json", "ledger.jsonl"],
+      "source_paths": ["scripts/funding_positioning_v4_shadow.py", "scripts/run_funding_positioning_post_n42_frozen_loop.sh", "scripts/research_loop_runtime_config.py", "scripts/research_loop_lock.sh"],
       "config_paths": ["configs/research/funding_positioning_post_n42_frozen_20260808.json"],
       "input_paths": ["research_lab/data/cross_exchange_funding_history_180d.json"]
     },
@@ -63,8 +80,13 @@
       "legacy_session_markers": ["research_project_audit", "project_audit_local"],
       "legacy_command_markers": ["run_project_audit_supervisor.sh", "continuous_audit.py", "ai_auditor.py"],
       "launcher": ["scripts/run_project_audit_supervisor.sh", "--with-model", "--auto-full", "--loop", "--interval-sec", "21600"],
+      "migration_mode": "manual_hold",
+      "migration_blocked_reason": "collector semantics and immutable snapshot adapter are not parity-complete",
+      "max_age_seconds": 28800,
+      "runtime_requirements": [],
       "evidence_paths": ["runtime/project_audit/supervisor_status.json", "runtime/project_audit/registry.json"],
-      "source_paths": ["scripts/run_project_audit_supervisor.sh", "research_lab/continuous_audit.py", "research_lab/ai_auditor.py"],
+      "canonical_evidence_files": ["supervisor_status.json", "registry.json"],
+      "source_paths": ["scripts/run_project_audit_supervisor.sh", "scripts/build_tech_registry.py", "research_lab/continuous_audit.py", "research_lab/ai_auditor.py", "research_lab/audit_registry.py", "research_lab/negative_outcome_registry.py", "research_lab/audit_health.py", "scripts/research_loop_runtime_config.py"],
       "config_paths": [],
       "input_paths": ["configs/project_capability_registry_v1.json"]
     },
@@ -75,10 +97,14 @@
       "legacy_session_markers": ["research_inplay_prospective"],
       "legacy_command_markers": ["run_inplay_prospective_shadow_loop.sh", "run_inplay_prospective_shadow_loop.py", "collect_inplay_prospective_shadow.py"],
       "launcher": ["scripts/run_inplay_prospective_shadow_loop.sh"],
+      "migration_mode": "canonical",
+      "max_age_seconds": 1800,
+      "runtime_requirements": [".venv/bin/python"],
       "evidence_paths": ["runtime/inplay_prospective_shadow_v1/status.json"],
-      "source_paths": ["scripts/run_inplay_prospective_shadow_loop.py", "scripts/collect_inplay_prospective_shadow.py"],
+      "canonical_evidence_files": ["status.json"],
+      "source_paths": ["scripts/run_inplay_prospective_shadow_loop.sh", "scripts/run_inplay_prospective_shadow_loop.py", "scripts/collect_inplay_prospective_shadow.py", "scripts/audit_inplay_prospective_parity.py", "scripts/research_loop_runtime_config.py", "scripts/materialize_bybit_5m_preholdout.py", "scripts/materialize_bybit_daily_preholdout.py", "strategies/inplay_breakout.py", "research_lab/strategy_adapter.py", "backtest/engine.py"],
       "config_paths": ["research_lab/prereg/PREREG_INPLAY_CAUSAL_REPLAY_20260812.json"],
-      "input_paths": ["research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/status.json"]
+      "input_paths": ["research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/status.json", "research_lab/data/bybit_eth_m5_preholdout_20240301_20250930/ETHUSDT.json", "research_lab/results/path_sim_v4_causal_preholdout_r2/run_passport.json"]
     }
   ]
 }
