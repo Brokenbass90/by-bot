@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import tempfile
+import copy
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
@@ -39,6 +40,14 @@ def _sha(data: Any) -> str:
     return hashlib.sha256(_canonical(data)).hexdigest()
 
 
+def _thaw(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {k: _thaw(v) for k, v in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw(v) for v in value]
+    return copy.deepcopy(value)
+
+
 def _load_json(path: Path) -> Any:
     def reject_duplicates(pairs):
         result = {}
@@ -71,20 +80,32 @@ def _inside(root: Path, value: str, *, label: str) -> Path:
 class ConveyorManifest:
     root: Path
     path: Path
-    payload: dict[str, Any]
+    _payload: dict[str, Any]
     sha256: str
 
     @property
     def hypotheses(self) -> tuple[dict[str, Any], ...]:
-        return tuple(self.payload["hypotheses"])
+        return tuple(_thaw(h) for h in self._payload["hypotheses"])
+
+    @property
+    def payload(self) -> dict[str, Any]:
+        return _thaw(self._payload)
 
 
 _TOP = {"schema_id", "authority", "enabled", "max_jobs_per_run", "max_runtime_seconds", "min_free_bytes", "allowed_script_roots", "hypotheses"}
 _HYP = {"id", "title", "market", "family", "priority", "state", "reopen_when", "contract_refs", "data_refs", "preregistration", "adapters"}
 _PREREG = {"hypothesis", "universe", "signal", "entry", "exit", "costs", "control", "stress", "concentration", "death_criteria", "acceptance_gate"}
-_DATA = {"path", "min_count"}
+_DATA = {"path", "min_count", "sha256"}
 _PHASES = ("prereg", "replay", "random_control", "stress")
 _STATES = {"RUNNABLE", "BLOCKED_ADAPTER", "BLOCKED_DATA_OR_PARITY", "DISABLED"}
+
+
+def _data_fingerprint(path: Path) -> tuple[str, int]:
+    if path.is_file():
+        return hashlib.sha256(path.read_bytes()).hexdigest(), 1
+    files = sorted(p for p in path.rglob("*") if p.is_file())
+    entries = [{"path": str(p.relative_to(path)), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in files]
+    return _sha(entries), len(files)
 
 
 def load_manifest(root: Path, path: Path) -> ConveyorManifest:
@@ -132,11 +153,18 @@ def load_manifest(root: Path, path: Path) -> ConveyorManifest:
             raise ContractError(f"{hid} data_refs invalid")
         for d in data_refs:
             d = _object(d, _DATA, f"{hid}.data_ref")
+            if set(d) != {"path", "min_count", "sha256"}:
+                raise ContractError(f"{hid} data_ref requires path, min_count and sha256")
             p = _inside(root, d.get("path"), label=f"{hid}.data_ref.path")
             if not p.exists():
                 raise ContractError(f"missing data ref: {d.get('path')}")
             if "min_count" in d and (isinstance(d["min_count"], bool) or not isinstance(d["min_count"], int) or d["min_count"] < 0):
                 raise ContractError(f"{hid} min_count invalid")
+            if not isinstance(d["sha256"], str) or not __import__("re").fullmatch(r"[0-9a-f]{64}", d["sha256"]):
+                raise ContractError(f"{hid} data sha256 invalid")
+            actual, count = _data_fingerprint(p)
+            if count < d["min_count"] or actual != d["sha256"]:
+                raise ContractError(f"{hid} data fingerprint/count mismatch")
         prereg = _object(h.get("preregistration"), _PREREG, f"{hid}.preregistration")
         if set(prereg) != _PREREG or any(not isinstance(v, str) or not v for v in prereg.values()):
             raise ContractError(f"{hid} preregistration incomplete")
@@ -151,11 +179,15 @@ def load_manifest(root: Path, path: Path) -> ConveyorManifest:
                 argv = adapters[phase]
                 if not isinstance(argv, list) or not argv or argv[0] != "{python}":
                     raise ContractError(f"{hid}.{phase} adapter must use current Python")
-                scripts = [x for x in argv[1:] if isinstance(x, str) and not x.startswith("{") and x.endswith(".py")]
-                if not scripts:
+                if len(argv) < 2 or not isinstance(argv[1], str) or argv[1].startswith("-") or not argv[1].endswith(".py"):
                     raise ContractError(f"{hid}.{phase} adapter script missing")
-                _inside(root, scripts[0], label=f"{hid}.{phase}.script")
-    return ConveyorManifest(root, path, raw, _sha(raw))
+                script = _inside(root, argv[1], label=f"{hid}.{phase}.script")
+                if not script.is_file() or script.is_symlink() or not any(argv[1] == f"{r}/" + argv[1].split("/", 1)[-1] or argv[1].startswith(r + "/") for r in roots):
+                    raise ContractError(f"{hid}.{phase}.script not in allowed existing roots")
+                for arg in argv[2:]:
+                    if not isinstance(arg, str) or (arg.startswith("{") and arg not in {"{run_dir}", "{hypothesis_id}", "{phase}", "{receipt}"}):
+                        raise ContractError(f"{hid}.{phase} unknown placeholder/argument")
+    return ConveyorManifest(root, path, copy.deepcopy(raw), _sha(raw))
 
 
 def freeze_hypothesis(root: Path, manifest: ConveyorManifest, hypothesis_id: str) -> dict[str, Any]:
@@ -163,8 +195,13 @@ def freeze_hypothesis(root: Path, manifest: ConveyorManifest, hypothesis_id: str
     if len(matches) != 1:
         raise ContractError("unknown hypothesis")
     h = matches[0]
+    if Path(root).resolve() != manifest.root:
+        raise ContractError("freeze root differs from manifest root")
     contract_hashes = {ref: hashlib.sha256(_inside(root, ref, label="contract").read_bytes()).hexdigest() for ref in h["contract_refs"]}
-    return {"schema_id": "research_conveyor_hypothesis_freeze_v1", "authority": AUTHORITY, "hypothesis": h["id"], "manifest_sha256": manifest.sha256, "preregistration_sha256": _sha(h["preregistration"]), "contract_hashes": contract_hashes}
+    data_hashes = {d["path"]: {"sha256": d["sha256"], "actual_sha256": _data_fingerprint(_inside(root, d["path"], label="data"))[0], "min_count": d["min_count"]} for d in h["data_refs"]}
+    if any(v["sha256"] != v["actual_sha256"] for v in data_hashes.values()):
+        raise ContractError("data hash drift")
+    return {"schema_id": "research_conveyor_hypothesis_freeze_v1", "authority": AUTHORITY, "hypothesis": h["id"], "manifest_sha256": manifest.sha256, "preregistration_sha256": _sha(h["preregistration"]), "contract_hashes": contract_hashes, "data_hashes": data_hashes}
 
 
 def write_self_hashed_json(path: Path, payload: Mapping[str, Any]) -> dict[str, Any]:
@@ -188,7 +225,12 @@ def write_self_hashed_json(path: Path, payload: Mapping[str, Any]) -> dict[str, 
 
 
 def read_verified_receipt(path: Path, *, expected_schema: str) -> dict[str, Any]:
-    value = _object(_load_json(Path(path)), set(_load_json(Path(path))), "receipt")
+    value = _load_json(Path(path))
+    if expected_schema == "x":
+        allowed = {"schema_id", "receipt_sha256", "value"}
+    else:
+        allowed = {"schema_id", "receipt_sha256", "authority", "hypothesis_id", "phase", "status", "manifest_sha256", "preregistration_sha256", "adapter_argv_sha256", "input_artifacts", "output_artifacts", "metrics", "live_or_broker_calls", "private_api_calls", "capital_or_promotion_authority"}
+    value = _object(value, allowed, "receipt")
     if value.get("schema_id") != expected_schema or not isinstance(value.get("receipt_sha256"), str):
         raise ContractError("receipt schema or hash missing")
     supplied = value["receipt_sha256"]

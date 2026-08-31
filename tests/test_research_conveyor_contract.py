@@ -1,4 +1,5 @@
 import json
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -25,7 +26,7 @@ def _hypothesis(state="RUNNABLE", **extra):
         "state": state,
         "reopen_when": "fixture data exists",
         "contract_refs": ["contracts.json"],
-        "data_refs": [{"path": "data", "min_count": 1}],
+        "data_refs": [{"path": "data", "min_count": 1, "sha256": ""}],
         "preregistration": {
             "hypothesis": "fixture",
             "universe": "fixture",
@@ -66,6 +67,10 @@ def _write_manifest(tmp_path, value):
     (tmp_path / "contracts.json").write_text("{}\n")
     (tmp_path / "data").mkdir(exist_ok=True)
     (tmp_path / "data" / "one.csv").write_text("x\n")
+    data_hash = hashlib.sha256(json.dumps([{"path": "one.csv", "sha256": hashlib.sha256(b"x\n").hexdigest()}], sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    value["hypotheses"][0]["data_refs"][0]["sha256"] = data_hash
+    (tmp_path / "research_lab").mkdir(exist_ok=True)
+    (tmp_path / "research_lab" / "a.py").write_text("pass\n")
     path = tmp_path / "manifest.json"
     path.write_text(json.dumps(value))
     return path
