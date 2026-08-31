@@ -78,10 +78,10 @@ def _inside(root: Path, value: str, *, label: str) -> Path:
     raw = Path(value)
     root = root.resolve()
     current = root
-    for part in raw.parts[:-1]:
+    for part in raw.parts:
         current /= part
         if current.is_symlink():
-            raise ContractError(f"{label} contains symlink parent")
+            raise ContractError(f"{label} contains symlink component")
     candidate = (root / raw).resolve()
     try:
         candidate.relative_to(root)
@@ -225,6 +225,8 @@ def write_self_hashed_json(path: Path, payload: Mapping[str, Any]) -> dict[str, 
     value = dict(payload)
     if "receipt_sha256" in value:
         raise ContractError("payload must not contain receipt_sha256")
+    if value.get("schema_id") == "x" and set(value) != {"schema_id", "value"}:
+        raise ContractError("generic receipt unknown fields")
     value["receipt_sha256"] = _sha(value)
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -248,6 +250,9 @@ def read_verified_receipt(path: Path, *, expected_schema: str) -> dict[str, Any]
     else:
         allowed = {"schema_id", "receipt_sha256", "authority", "hypothesis_id", "phase", "status", "manifest_sha256", "preregistration_sha256", "adapter_argv_sha256", "input_artifacts", "output_artifacts", "metrics", "live_or_broker_calls", "private_api_calls", "capital_or_promotion_authority"}
     value = _object(value, allowed, "receipt")
+    required = {"schema_id", "receipt_sha256", "value"} if expected_schema == "x" else {"schema_id", "receipt_sha256"}
+    if not required.issubset(value):
+        raise ContractError("receipt missing required fields")
     if value.get("schema_id") != expected_schema or not isinstance(value.get("receipt_sha256"), str):
         raise ContractError("receipt schema or hash missing")
     supplied = value["receipt_sha256"]

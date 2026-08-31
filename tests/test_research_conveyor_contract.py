@@ -127,3 +127,65 @@ def test_self_hash_is_atomic_and_tampering_is_rejected(tmp_path: Path):
     path.write_text(path.read_text().replace("3", "4"))
     with pytest.raises(ContractError):
         read_verified_receipt(path, expected_schema="x")
+
+
+def test_nested_unknown_fields_are_rejected(tmp_path: Path):
+    for section, key in (("preregistration", "nested"), ("data_refs", "extra")):
+        value = _manifest()
+        if section == "preregistration":
+            value["hypotheses"][0][section][key] = 1
+        else:
+            value["hypotheses"][0][section][0][key] = 1
+        with pytest.raises(ContractError):
+            load_manifest(tmp_path, _write_manifest(tmp_path, value))
+
+
+@pytest.mark.parametrize("argv", [
+    ["{python}", "-c", "pass"],
+    ["{python}", "research_lab/missing.py"],
+    ["{python}", "research_lab/../scripts/a.py"],
+    ["{python}", str(Path.cwd() / "research_lab/a.py")],
+])
+def test_adapter_shape_and_paths_fail_closed(tmp_path: Path, argv):
+    value = _manifest()
+    value["hypotheses"][0]["adapters"]["replay"] = argv
+    with pytest.raises(ContractError):
+        load_manifest(tmp_path, _write_manifest(tmp_path, value))
+
+
+def test_direct_and_parent_symlink_fail_closed(tmp_path: Path):
+    value = _manifest()
+    _write_manifest(tmp_path, value)
+    (tmp_path / "research_lab" / "linked.py").symlink_to(tmp_path / "research_lab" / "a.py")
+    value["hypotheses"][0]["adapters"]["replay"][1] = "research_lab/linked.py"
+    with pytest.raises(ContractError):
+        load_manifest(tmp_path, _write_manifest(tmp_path, value))
+
+
+def test_receipt_unknown_and_missing_fields_fail_closed(tmp_path: Path):
+    path = tmp_path / "r.json"
+    with pytest.raises(ContractError):
+        write_self_hashed_json(path, {"schema_id": "x", "unknown": 1})
+    write_self_hashed_json(path, {"schema_id": "x", "value": 1})
+    data = json.loads(path.read_text()); data["unknown"] = 2; path.write_text(json.dumps(data))
+    with pytest.raises(ContractError):
+        read_verified_receipt(path, expected_schema="x")
+
+
+def test_data_drift_min_count_and_root_mismatch_fail_closed(tmp_path: Path):
+    value = _manifest()
+    manifest_path = _write_manifest(tmp_path, value)
+    manifest = load_manifest(tmp_path, manifest_path)
+    (tmp_path / "data" / "two.csv").write_text("y\n")
+    with pytest.raises(ContractError):
+        freeze_hypothesis(tmp_path, manifest, "h1")
+    with pytest.raises(ContractError):
+        freeze_hypothesis(tmp_path / "other", manifest, "h1")
+
+
+def test_symlinked_data_member_is_rejected(tmp_path: Path):
+    value = _manifest()
+    manifest_path = _write_manifest(tmp_path, value)
+    (tmp_path / "data" / "link.csv").symlink_to(tmp_path / "data" / "one.csv")
+    with pytest.raises(ContractError):
+        load_manifest(tmp_path, manifest_path)
