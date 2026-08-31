@@ -25,7 +25,7 @@ def _hypothesis(state="RUNNABLE", **extra):
         "priority": 1,
         "state": state,
         "reopen_when": "fixture data exists",
-        "contract_refs": ["contracts.json"],
+        "contract_refs": ["contracts.json", "research_lab/a.py"],
         "data_refs": [{"path": "data", "min_count": 1, "sha256": ""}],
         "preregistration": {
             "hypothesis": "fixture",
@@ -103,7 +103,7 @@ def test_manifest_loads_and_freezes_deterministically(tmp_path: Path):
     first = freeze_hypothesis(tmp_path, manifest, "h1")
     second = freeze_hypothesis(tmp_path, manifest, "h1")
     assert first["preregistration_sha256"] == second["preregistration_sha256"]
-    assert len(first["contract_hashes"]) == 1
+    assert len(first["contract_hashes"]) == 2
     assert first["authority"] == AUTH
 
 

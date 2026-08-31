@@ -6,6 +6,7 @@ import json
 import os
 import tempfile
 import copy
+import re
 from types import MappingProxyType
 from dataclasses import dataclass
 from pathlib import Path
@@ -112,6 +113,7 @@ _PREREG = {"hypothesis", "universe", "signal", "entry", "exit", "costs", "contro
 _DATA = {"path", "min_count", "sha256"}
 _PHASES = ("prereg", "replay", "random_control", "stress")
 _STATES = {"RUNNABLE", "BLOCKED_ADAPTER", "BLOCKED_DATA_OR_PARITY", "DISABLED"}
+_HYPOTHESIS_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}")
 
 
 def _data_fingerprint(path: Path) -> tuple[str, int]:
@@ -146,8 +148,8 @@ def load_manifest(root: Path, path: Path) -> ConveyorManifest:
     for i, item in enumerate(hypotheses):
         h = _object(item, _HYP, f"hypotheses[{i}]")
         hid = h.get("id")
-        if not isinstance(hid, str) or not hid or hid in ids:
-            raise ContractError("hypothesis IDs must be unique non-empty strings")
+        if not isinstance(hid, str) or not _HYPOTHESIS_ID.fullmatch(hid) or hid in ids:
+            raise ContractError("hypothesis IDs must be unique safe path components")
         ids.add(hid)
         if not all(isinstance(h.get(k), str) and h[k] for k in ("title", "market", "family", "reopen_when")):
             raise ContractError(f"{hid} descriptive fields invalid")
@@ -201,6 +203,8 @@ def load_manifest(root: Path, path: Path) -> ConveyorManifest:
                 allowed = [(root / r).resolve() for r in roots]
                 if not script.is_file() or script.is_symlink() or not any(script.is_relative_to(base) for base in allowed):
                     raise ContractError(f"{hid}.{phase}.script not in allowed existing roots")
+                if argv[1] not in refs:
+                    raise ContractError(f"{hid}.{phase} adapter script must be a contract ref")
                 for arg in argv[2:]:
                     if not isinstance(arg, str) or (arg.startswith("{") and arg not in {"{run_dir}", "{hypothesis_id}", "{phase}", "{receipt}"}):
                         raise ContractError(f"{hid}.{phase} unknown placeholder/argument")
