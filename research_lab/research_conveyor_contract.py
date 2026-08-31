@@ -6,6 +6,7 @@ import json
 import os
 import tempfile
 import copy
+from types import MappingProxyType
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
@@ -47,6 +48,13 @@ def _thaw(value: Any) -> Any:
         return [_thaw(v) for v in value]
     return copy.deepcopy(value)
 
+def _freeze(value: Any) -> Any:
+    if isinstance(value, dict):
+        return MappingProxyType({k: _freeze(v) for k, v in value.items()})
+    if isinstance(value, list):
+        return tuple(_freeze(v) for v in value)
+    return value
+
 
 def _load_json(path: Path) -> Any:
     def reject_duplicates(pairs):
@@ -65,10 +73,16 @@ def _load_json(path: Path) -> Any:
 
 
 def _inside(root: Path, value: str, *, label: str) -> Path:
-    if not isinstance(value, str) or not value or any(ch in value for ch in "*?[]"):
+    if not isinstance(value, str) or not value or Path(value).is_absolute() or ".." in Path(value).parts or any(ch in value for ch in "*?[]"):
         raise ContractError(f"{label} must be an explicit relative path")
+    raw = Path(value)
     root = root.resolve()
-    candidate = (root / value).resolve()
+    current = root
+    for part in raw.parts[:-1]:
+        current /= part
+        if current.is_symlink():
+            raise ContractError(f"{label} contains symlink parent")
+    candidate = (root / raw).resolve()
     try:
         candidate.relative_to(root)
     except ValueError as exc:
@@ -80,7 +94,7 @@ def _inside(root: Path, value: str, *, label: str) -> Path:
 class ConveyorManifest:
     root: Path
     path: Path
-    _payload: dict[str, Any]
+    _payload: Mapping[str, Any]
     sha256: str
 
     @property
@@ -158,6 +172,8 @@ def load_manifest(root: Path, path: Path) -> ConveyorManifest:
             p = _inside(root, d.get("path"), label=f"{hid}.data_ref.path")
             if not p.exists():
                 raise ContractError(f"missing data ref: {d.get('path')}")
+            if p.is_symlink() or any(x.is_symlink() for x in p.rglob("*")):
+                raise ContractError(f"{hid} data ref contains symlink")
             if "min_count" in d and (isinstance(d["min_count"], bool) or not isinstance(d["min_count"], int) or d["min_count"] < 0):
                 raise ContractError(f"{hid} min_count invalid")
             if not isinstance(d["sha256"], str) or not __import__("re").fullmatch(r"[0-9a-f]{64}", d["sha256"]):
@@ -182,12 +198,13 @@ def load_manifest(root: Path, path: Path) -> ConveyorManifest:
                 if len(argv) < 2 or not isinstance(argv[1], str) or argv[1].startswith("-") or not argv[1].endswith(".py"):
                     raise ContractError(f"{hid}.{phase} adapter script missing")
                 script = _inside(root, argv[1], label=f"{hid}.{phase}.script")
-                if not script.is_file() or script.is_symlink() or not any(argv[1] == f"{r}/" + argv[1].split("/", 1)[-1] or argv[1].startswith(r + "/") for r in roots):
+                allowed = [(root / r).resolve() for r in roots]
+                if not script.is_file() or script.is_symlink() or not any(script.is_relative_to(base) for base in allowed):
                     raise ContractError(f"{hid}.{phase}.script not in allowed existing roots")
                 for arg in argv[2:]:
                     if not isinstance(arg, str) or (arg.startswith("{") and arg not in {"{run_dir}", "{hypothesis_id}", "{phase}", "{receipt}"}):
                         raise ContractError(f"{hid}.{phase} unknown placeholder/argument")
-    return ConveyorManifest(root, path, copy.deepcopy(raw), _sha(raw))
+    return ConveyorManifest(root, path, _freeze(copy.deepcopy(raw)), _sha(raw))
 
 
 def freeze_hypothesis(root: Path, manifest: ConveyorManifest, hypothesis_id: str) -> dict[str, Any]:
